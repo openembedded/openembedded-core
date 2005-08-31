@@ -20,11 +20,12 @@
 # expansion.  Stuff like starting with ${HOME} or ${TOPDIR} is ok).
 
 # Use this to specify where BitBake should place the downloaded sources into
-DL_DIR = "${HOME}/sources"
+DL_DIR = "POKYROOT/sources"
 
 # Delete the line below. Then specify which .bb files to consider for
 # your build. Typically this will be something like BBFILES = "/path/to/openembedded/packages/*/*.bb"
-BBFILES := "${@bb.fatal('Edit your conf/local.conf: BBFILES')}"
+#BBFILES := "${@bb.fatal('Edit your conf/local.conf: BBFILES')}"
+BBFILES := "POKYROOT/openembedded/packages/*/*.bb"
 
 # Use the BBMASK below to instruct BitBake to _NOT_ consider some .bb files
 # This is a regulary expression, so be sure to get your parenthesis balanced.
@@ -119,4 +120,4 @@ BBINCLUDELOGS = "yes"
 CVS_TARBALL_STASH = "http://www.oesources.org/source/current/"
 
 # EDIT THIS FILE and then remove the line below before using!
-REMOVE_THIS_LINE:="${@oe.fatal('Read the comments in your conf/local.conf')}"
+#REMOVE_THIS_LINE:="${@oe.fatal('Read the comments in your conf/local.conf')}"
