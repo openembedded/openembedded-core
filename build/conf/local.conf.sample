@@ -1,6 +1,6 @@
 # Where to cache the files OE downloads
-DL_DIR = "/usr/oe/sources"
-BBFILES := "/usr/ohoe/openembedded/packages/*/*.bb"
+DL_DIR = "POKYROOT/sources"
+BBFILES := "POKYROOT/openembedded/packages/*/*.bb"
 
 BBMASK = ""
 PREFERRED_PROVIDERS = "virtual/qte:qte-for-opie virtual/libqpe:libqpe-opie"
