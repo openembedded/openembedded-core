@@ -1,4 +1,4 @@
-PR = "r0"
+PR = "r1"
 
 export IMAGE_BASENAME = "oh-image"
 
@@ -10,8 +10,8 @@ DEPENDS = "task-bootstrap \
 	   meta-oh"
 
 export IPKG_INSTALL = "task-bootstrap \
+                       oh-task-base \
           	       ${XSERVER} "
-#oh-task-base \
 
 ROOTFS_POSTPROCESS_COMMAND += "zap_root_password; "
 
