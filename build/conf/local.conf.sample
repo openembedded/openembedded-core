@@ -20,6 +20,7 @@ PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}g++:gcc-cross"
 # BBDEBUG = "yes"
 
 MACHINE = "c7x0"
+#MACHINE = "nokia770"
 
 DISTRO = "openzaurus-3.5.4"
 
