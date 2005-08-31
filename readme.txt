@@ -1,7 +1,4 @@
-Alter the paths in setdevenv and conf/local/conf to point to where 
-this was checked out to.
-
-Running 
+run;
 
 source setdevenv
 bitbake oh-image
