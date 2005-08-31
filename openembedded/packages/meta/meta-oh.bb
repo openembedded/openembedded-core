@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY = "1"
 
@@ -16,6 +16,7 @@ DEPENDS += " ${oh-base-depends}"
 oh-task-base = "\
     matchbox \
     xcursor-transparent-theme \
+    x11-common \
     rxvt \
     xhost \
     ttf-bitstream-vera \
