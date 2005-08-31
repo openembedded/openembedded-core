@@ -1,0 +1,88 @@
+From libc-alpha-return-17227-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com Tue Mar 22 15:57:25 2005
+Return-Path: <libc-alpha-return-17227-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com>
+Delivered-To: listarch-libc-alpha at sources dot redhat dot com
+Received: (qmail 12343 invoked by alias); 22 Mar 2005 15:57:24 -0000
+Mailing-List: contact libc-alpha-help at sources dot redhat dot com; run by ezmlm
+Precedence: bulk
+List-Subscribe: <mailto:libc-alpha-subscribe at sources dot redhat dot com>
+List-Archive: <http://sources.redhat.com/ml/libc-alpha/>
+List-Post: <mailto:libc-alpha at sources dot redhat dot com>
+List-Help: <mailto:libc-alpha-help at sources dot redhat dot com>, <http://sources dot redhat dot com/ml/#faqs>
+Sender: libc-alpha-owner at sources dot redhat dot com
+Delivered-To: mailing list libc-alpha at sources dot redhat dot com
+Received: (qmail 12264 invoked from network); 22 Mar 2005 15:57:19 -0000
+Received: from unknown (HELO nevyn.them.org) (66.93.172.17)
+  by sourceware dot org with SMTP; 22 Mar 2005 15:57:19 -0000
+Received: from drow by nevyn.them.org with local (Exim 4.50 #1 (Debian))
+	id 1DDll5-0006ip-R3; Tue, 22 Mar 2005 10:57:31 -0500
+Date: Tue, 22 Mar 2005 10:57:31 -0500
+From: Daniel Jacobowitz <drow at false dot org>
+To: libc-alpha at sources dot redhat dot com
+Cc: Phil Blundell <pb at reciva dot com>
+Subject: Common bits for the ARM EABI port
+Message-ID: <20050322155731.GA25613@nevyn.them.org>
+Mail-Followup-To: libc-alpha at sources dot redhat dot com,
+	Phil Blundell <pb at reciva dot com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.6+20040907i
+
+The changes to common files for the ARM EABI port; search the new directory,
+use GLIBC_2.4 as a base version, and generate ld-linux.so.3 (so that old and
+new ABI libraries can be installed on the same system, in case someone needs
+to do that).  Generic ARM changes coming up next.
+
+I noticed that the "configure: Regenerated" messages are often left out of
+glibc changelogs; should I skip them?
+
+-- 
+Daniel Jacobowitz
+CodeSourcery, LLC
+
+2005-03-22  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* configure.in: Add arm*-*-linux-gnueabi support.  Remove
+	unused arm32 entry from $machine.
+	* configure: Regenerated.
+	* shlib-versions: Add arm*-*-linux-gnueabi.
+
+Index: glibc/configure.in
+===================================================================
+--- glibc.orig/configure.in	2005-03-18 17:10:34.000000000 -0500
++++ glibc/configure.in	2005-03-21 10:04:41.000000000 -0500
+@@ -423,7 +423,12 @@ changequote(,)dnl
+ test -n "$base_machine" || case "$machine" in
+ a29k | am29000)	base_machine=a29k machine=a29k ;;
+ alpha*)		base_machine=alpha machine=alpha/$machine ;;
+-arm*)		base_machine=arm machine=arm/arm32/$machine ;;
++arm*)		base_machine=arm 
++		case $config_os in
++		linux-gnueabi) machine=arm/eabi/$machine ;;
++		*) machine=arm/$machine ;;
++		esac
++		;;
+ c3[012])	base_machine=cx0 machine=cx0/c30 ;;
+ c4[04])		base_machine=cx0 machine=cx0/c40 ;;
+ hppa*64*)	base_machine=hppa machine=hppa/hppa64 ;;
+Index: glibc/shlib-versions
+===================================================================
+--- glibc.orig/shlib-versions	2005-02-13 21:53:05.000000000 -0500
++++ glibc/shlib-versions	2005-03-21 10:06:54.000000000 -0500
+@@ -31,6 +31,7 @@ cris-.*-linux.*		DEFAULT			GLIBC_2.2
+ x86_64-.*-linux.*       DEFAULT			GLIBC_2.2.5
+ powerpc64-.*-linux.*	DEFAULT			GLIBC_2.3
+ .*-.*-gnu-gnu.*		DEFAULT			GLIBC_2.2.6
++arm.*-.*-linux-gnueabi	DEFAULT			GLIBC_2.4
+ 
+ # Configuration		WORDSIZE[32|64]		Alternate configuration
+ # -------------		----------		-----------------------
+@@ -80,6 +81,7 @@ i.86-.*-linux.*		ld=ld-linux.so.2
+ sparc64-.*-linux.*	ld=ld-linux.so.2	GLIBC_2.2
+ sparc.*-.*-linux.*	ld=ld-linux.so.2
+ alpha.*-.*-linux.*	ld=ld-linux.so.2
++arm.*-.*-linux-gnueabi	ld=ld-linux.so.3
+ arm.*-.*-linux.*	ld=ld-linux.so.2
+ sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
+ ia64-.*-linux.*		ld=ld-linux-ia64.so.2	GLIBC_2.2
+

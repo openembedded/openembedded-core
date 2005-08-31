@@ -1,0 +1,20 @@
+--- driver/modules/hostap_compat.h.orig	2004-08-09 16:16:48.359929856 +0200
++++ driver/modules/hostap_compat.h	2004-08-09 16:17:12.383277752 +0200
+@@ -13,7 +13,7 @@
+ MOD_INC_USE_COUNT; \
+ if (schedule_task((q)) == 0) \
+ 	MOD_DEC_USE_COUNT;
+-
++/*
+ static inline void flush_scheduled_work(void)
+ {
+ 	flush_scheduled_tasks();
+@@ -27,7 +27,7 @@
+ 	tq->routine = routine;
+ 	tq->data = data;
+ }
+-
++*/
+ #else /* kernel < 2.5.44 */
+ 
+ #define HOSTAP_QUEUE struct work_struct

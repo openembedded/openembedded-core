@@ -1,0 +1,23 @@
+Index: networking/libiproute/iproute.c
+===================================================================
+RCS file: /var/cvs/busybox/networking/libiproute/iproute.c,v
+retrieving revision 1.14
+diff -u -r1.14 iproute.c
+--- networking/libiproute/iproute.c	11 Aug 2004 08:10:58 -0000	1.14
++++ networking/libiproute/iproute.c	30 Nov 2004 20:43:44 -0000
+@@ -537,6 +537,15 @@
+ 			} else if (matches(*argv, "match") == 0) {
+ 				NEXT_ARG();
+ 				get_prefix(&filter.mdst, *argv, do_ipv6);
++			} else if (matches(*argv, "table") == 0) {
++				NEXT_ARG();
++				if (matches(*argv, "cache") == 0) {
++					filter.tb = -1;
++				} else if (matches(*argv, "main") != 0) {
++					invarg("invalid \"table\"", *argv);
++				}
++			} else if (matches(*argv, "cache") == 0) {
++				filter.tb = -1;
+ 			} else {
+ 				if (matches(*argv, "exact") == 0) {
+ 					NEXT_ARG();

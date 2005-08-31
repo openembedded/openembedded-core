@@ -1,0 +1,21 @@
+diff -Nurd dropbear-0.45/options.h dropbear-0.45.patched/options.h
+--- dropbear-0.45/options.h	2005-03-06 20:27:02.000000000 -0800
++++ dropbear-0.45.patched/options.h	2005-03-08 15:25:09.368742090 -0800
+@@ -143,7 +143,7 @@
+  * however significantly reduce the security of your ssh connections
+  * if the PRNG state becomes guessable - make sure you know what you are
+  * doing if you change this. */
+-#define DROPBEAR_RANDOM_DEV "/dev/random"
++#define DROPBEAR_RANDOM_DEV "/dev/urandom"
+ 
+ /* prngd must be manually set up to produce output */
+ /*#define DROPBEAR_PRNGD_SOCKET "/var/run/dropbear-rng"*/
+@@ -167,7 +167,7 @@
+ /* The command to invoke for xauth when using X11 forwarding.
+  * "-q" for quiet */
+ #ifndef XAUTH_COMMAND
+-#define XAUTH_COMMAND "/usr/X11R6/bin/xauth -q"
++#define XAUTH_COMMAND "xauth -q"
+ #endif
+ 
+ /* if you want to enable running an sftp server (such as the one included with

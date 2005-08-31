@@ -1,0 +1,10 @@
+auto lo
+auto eth1
+
+iface lo inet loopback
+
+iface eth0 inet dhcp
+
+iface eth1 inet dhcp
+	wireless_mode managed
+	wireless_essid any

@@ -1,0 +1,25 @@
+--- busybox/networking/udhcp/dhcpc.c	2005-05-25 11:49:24.000000000 +0100
++++ busybox/networking/udhcp/dhcpc.c	2005-05-25 12:54:30.000000000 +0100
+@@ -193,6 +193,7 @@
+ 	long now;
+ 	int max_fd;
+ 	int sig;
++	char hostbuf[256];	/* SUSv2: hostnames are <= 255 bytes */
+ 
+ 	static const struct option arg_options[] = {
+ 		{"clientid",	required_argument,	0, 'c'},
+@@ -211,6 +212,14 @@
+ 		{0, 0, 0, 0}
+ 	};
+ 
++	if (gethostname (hostbuf, sizeof (hostbuf)) == 0) {
++		len = strlen (hostbuf);
++		client_config.hostname = xmalloc (len + 2);
++		client_config.hostname[OPT_CODE] = DHCP_HOST_NAME;
++		client_config.hostname[OPT_LEN] = len;
++		strncpy(client_config.hostname + 2, hostbuf, len);
++	}
++
+ 	/* get options */
+ 	while (1) {
+ 		int option_index = 0;

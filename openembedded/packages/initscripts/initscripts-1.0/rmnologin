@@ -1,0 +1,14 @@
+#! /bin/sh
+#
+# rmnologin	This script removes the /etc/nologin file as the last
+#		step in the boot process.
+#
+# Version:	@(#)rmnologin  1.00  22-Jun-1998  miquels@cistron.nl
+#
+
+if test -f /etc/nologin.boot
+then
+	rm -f /etc/nologin /etc/nologin.boot
+fi
+
+: exit 0

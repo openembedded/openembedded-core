@@ -1,0 +1,8 @@
+--- base-passwd/passwd.master.orig	2005-07-08 06:26:22.000000000 +0200
++++ base-passwd/passwd.master	2005-07-08 06:31:58.000000000 +0200
+@@ -1,4 +1,4 @@
+-root::0:0:root:/root:/bin/sh
++root:Xm./49bYkrkuo:0:0:root:/root:/bin/sh
+ daemon:*:1:1:daemon:/usr/sbin:/bin/sh
+ bin:*:2:2:bin:/bin:/bin/sh
+ sys:*:3:3:sys:/dev:/bin/sh

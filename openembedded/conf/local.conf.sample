@@ -1,0 +1,122 @@
+#
+# OpenEmbedded local configuration file (sample)
+#
+# Please visit the Wiki at http://openembedded.org/ for more info.
+#
+#
+# Be SURE to read this file in its entirety and the GettingStarted page on the
+# wiki before proceeding.
+#
+# Once you have done that, remove the line at the end of this
+# file and build away.
+# 
+# WARNING: lines starting with a space (' ') will result in parse failures.
+# Remove '# ' from commented lines to activate them.
+#
+# NOTE: Do NOT use $HOME in your paths, BitBake does NOT expand ~ for you.  If you
+# must have paths relative to your homedir use ${HOME} (note the {}'s there
+# you MUST have them for the variable expansion to be done by BitBake).  Your
+# paths should all be absolute paths (They should all start with a / after
+# expansion.  Stuff like starting with ${HOME} or ${TOPDIR} is ok).
+
+# Use this to specify where BitBake should place the downloaded sources into
+DL_DIR = "${HOME}/sources"
+
+# Delete the line below. Then specify which .bb files to consider for
+# your build. Typically this will be something like BBFILES = "/path/to/openembedded/packages/*/*.bb"
+BBFILES := "${@bb.fatal('Edit your conf/local.conf: BBFILES')}"
+
+# Use the BBMASK below to instruct BitBake to _NOT_ consider some .bb files
+# This is a regulary expression, so be sure to get your parenthesis balanced.
+BBMASK = ""
+
+# Uncomment this if you want to use a prebuilt toolchain. You will need to
+# provide packages for toolchain and additional libraries yourself. You also
+# have to set PATH in your environment to make sure BitBake finds additional binaries.
+# Note: You will definitely need to say:
+#     ASSUME_PROVIDED = "virtual/arm-linux-gcc-2.95"
+# to build any of two Linux 2.4 Embedix kernels,
+# i.e. openzaurus-sa-2.4.18 and openzaurus-pxa-2.4.18 - and don't forget
+# to rename the binaries as instructed in the Wiki.
+# ASSUME_PROVIDED = "virtual/${TARGET_PREFIX}gcc virtual/libc"
+
+# Select between multiple alternative providers, if more than one is eligible.
+PREFERRED_PROVIDERS = "virtual/qte:qte virtual/libqpe:libqpe-opie"
+PREFERRED_PROVIDERS += " virtual/libsdl:libsdl-qpe"
+PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}gcc-initial:gcc-cross-initial"
+PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}gcc:gcc-cross"
+PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}g++:gcc-cross"
+
+# Uncomment this to specify where BitBake should create its temporary files.
+# Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
+# disk space, so make sure to free enough space. The default TMPDIR is
+# <build directory>/tmp
+# Don't use symlinks in in the path to avoid problems
+# TMPDIR = /usr/local/projects/oetmp
+
+# Uncomment this to specify a machine to build for. See the conf directory
+# for machines currently known to OpenEmbedded.
+# MACHINE = "collie"
+
+# Use this to specify the target architecture. Note that this is only
+# needed when building for a machine not known to OpenEmbedded. Better use
+# the MACHINE attribute (see above)
+# TARGET_ARCH = "arm"
+
+# Use this to specify the target operating system.  The default is "linux",
+# for a normal linux system with glibc. Set this to "linux-uclibc" if you want
+# to build a uclibc based system.
+# TARGET_OS = "linux"
+# TARGET_OS = "linux-uclibc"
+
+# Uncomment this to select a distribution policy. See the conf directory
+# for distributions currently known to OpenEmbedded.
+# DISTRO = "familiar"
+
+# Uncomment this to select a particular kernel version if supported by 
+# your MACHINE setting. Currently only supported on Zaurus Clamshells.
+# KERNEL_VERSION = "2.6"
+
+# Uncomment one of these to build packages during the build process.
+# This is done automatically if you set DISTRO (see above)
+# INHERIT = "package_ipk"
+# INHERIT = "package_tar"
+
+# Add the required image file system types below. Valid are jffs2, tar, cramfs
+IMAGE_FSTYPES = "jffs2 tar"
+
+# Uncomment this to disable the parse cache (not recommended).
+# CACHE = ""
+
+# Uncomment this if you want BitBake to emit debugging output
+# BBDEBUG = "yes"
+
+# Uncomment these two if you want BitBake to build images useful for debugging.
+# DEBUG_BUILD = "1"
+# INHIBIT_PACKAGE_STRIP = "1"
+
+# Uncomment these to build a package such that you can use gprof to profile it.
+# NOTE: This will only work with 'linux' targets, not
+# 'linux-uclibc', as uClibc doesn't provide the necessary
+# object files.  Also, don't build glibc itself with these
+# flags, or it'll fail to build.
+#
+# PROFILE_OPTIMIZATION = "-pg"
+# SELECTED_OPTIMIZATION = "${PROFILE_OPTIMIZATION}"
+# LDFLAGS =+ "-pg"
+
+# Uncomment this to enable parallel make.
+# This allows make to spawn mutliple processes to take advantage of multiple 
+# processors. Useful on SMP machines. This may break some packages - we're
+# in the process of marking these so let us know if you find any.
+# PARALLEL_MAKE = "-j 4"
+
+# Uncomment this if you want BitBake to emit the log if a build fails.
+BBINCLUDELOGS = "yes"
+
+# Specifies a location to search for pre-generated tarballs when fetching
+# a cvs:// URI. Outcomment this, if you always want to pull directly from CVS.
+CVS_TARBALL_STASH = "http://www.oesources.org/source/current/"
+
+# EDIT THIS FILE and then remove the line below before using!
+REMOVE_THIS_LINE:="${@oe.fatal('Read the comments in your conf/local.conf')}"

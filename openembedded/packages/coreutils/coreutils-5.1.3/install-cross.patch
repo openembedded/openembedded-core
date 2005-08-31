@@ -1,0 +1,27 @@
+--- src/install.c~	2003-08-09 18:46:45.000000000 +0100
++++ src/install.c	2004-03-27 18:38:45.000000000 +0000
+@@ -516,7 +516,14 @@
+ strip (const char *path)
+ {
+   int status;
+-  pid_t pid = fork ();
++  pid_t pid;
++  char *strip_name;
++
++  strip_name = getenv ("STRIP");
++  if (strip_name == NULL)
++    strip_name = "strip";
++
++  pid = fork ();
+ 
+   switch (pid)
+     {
+@@ -524,7 +531,7 @@
+       error (EXIT_FAILURE, errno, _("fork system call failed"));
+       break;
+     case 0:			/* Child. */
+-      execlp ("strip", "strip", path, NULL);
++      execlp (strip_name, "strip", path, NULL);
+       error (EXIT_FAILURE, errno, _("cannot run strip"));
+       break;
+     default:			/* Parent. */

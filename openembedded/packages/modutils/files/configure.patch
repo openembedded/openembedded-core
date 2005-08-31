@@ -1,0 +1,33 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- modutils-2.4.25/./configure.in~configure
++++ modutils-2.4.25/./configure.in
+@@ -1,4 +1,5 @@
+-AC_INIT(insmod/insmod.c)
++AC_INIT
++AC_CONFIG_SRCDIR([insmod/insmod.c])
+ AC_PREFIX_DEFAULT(/usr)
+ 
+ # Canonical system uses CC_FOR_BUILD while Linux may use BUILDCC
+@@ -15,7 +16,7 @@
+ BUILDCC="$CC_FOR_BUILD"
+ export CC_FOR_BUILD
+ 
+-AC_CANONICAL_SYSTEM
++AC_CANONICAL_TARGET([])
+ 
+ # Handle target_cpu for compatibility.
+ if test "$host_cpu" != "$target_cpu"; then
+@@ -350,6 +351,7 @@
+   fi
+ fi
+ 
+-AC_OUTPUT(Makefile Makefile.common depmod/Makefile genksyms/Makefile
++AC_CONFIG_FILES([Makefile Makefile.common depmod/Makefile genksyms/Makefile
+ 	  insmod/Makefile $kerneld_Makefiles obj/Makefile util/Makefile
+-	  man/Makefile)
++	  man/Makefile])
++AC_OUTPUT

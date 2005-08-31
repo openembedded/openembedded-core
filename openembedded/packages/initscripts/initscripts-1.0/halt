@@ -1,0 +1,31 @@
+#! /bin/sh
+#
+# halt		Execute the halt command.
+#
+# Version:      @(#)halt  2.84-2  07-Jan-2002  miquels@cistron.nl
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Update the timestamp, if there is already one
+if test -e /etc/timestamp
+then
+        date +%2m%2d%2H%2M%Y > /etc/timestamp
+fi
+
+# See if we need to cut the power.
+if test -x /etc/init.d/ups-monitor
+then
+	/etc/init.d/ups-monitor poweroff
+fi
+
+# Don't shut down drives if we're using RAID.
+hddown="-h"
+if grep -qs '^md.*active' /proc/mdstat
+then
+	hddown=""
+fi
+
+halt -d -f -i -p $hddown
+
+: exit 0

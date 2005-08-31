@@ -1,0 +1,11 @@
+--- sysdeps/arm/machine-gmon.h~	2001-07-06 00:55:48.000000000 -0400
++++ sysdeps/arm/machine-gmon.h	2004-04-25 03:56:20.000000000 -0400
+@@ -35,7 +35,7 @@
+ static void mcount_internal (u_long frompc, u_long selfpc);
+ 
+ #define _MCOUNT_DECL(frompc, selfpc) \
+-static void mcount_internal (u_long frompc, u_long selfpc)
++static __attribute__((used)) void mcount_internal (u_long frompc, u_long selfpc)
+ 
+ /* This macro/func MUST save r0, r1 because the compiler inserts
+ 	blind calls to _mount(), ignoring the fact that _mcount may

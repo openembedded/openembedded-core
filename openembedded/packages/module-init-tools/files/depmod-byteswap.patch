@@ -1,0 +1,288 @@
+diff -u module-init-tools-3.1/orig/depmod.c module-init-tools-3.1/depmod.c
+--- module-init-tools-3.1/orig/depmod.c	2005-04-07 18:50:25.829635704 -0700
++++ module-init-tools-3.1/depmod.c	2005-04-07 19:46:43.842099752 -0700
+@@ -17,6 +17,7 @@
+ #include <dirent.h>
+ #include <sys/utsname.h>
+ #include <sys/mman.h>
++#include <endian.h>
+ 
+ #include "zlibsupport.h"
+ #include "depmod.h"
+@@ -303,16 +304,38 @@
+ 		goto fail;
+ 	}
+ 
+-	switch (((char *)new->data)[EI_CLASS]) {
+-	case ELFCLASS32:
++	switch (((char *)new->data)[EI_CLASS] + (((char *)new->data)[EI_DATA] << 8)) {
++	case ELFCLASS32 + (ELFDATA2LSB << 8): /* 32 bit little endian */
++#if __BYTE_ORDER == __LITTLE_ENDIAN
+ 		new->ops = &mod_ops32;
++#else
++		new->ops = &mod_ops32swap;
++#endif
++		break;
++	case ELFCLASS32 + (ELFDATA2MSB << 8): /* 32 bit big endian */
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++		new->ops = &mod_ops32swap;
++#else
++		new->ops = &mod_ops32;
++#endif
+ 		break;
+-	case ELFCLASS64:
++	case ELFCLASS64 + (ELFDATA2LSB << 8): /* 64 bit little endian */
++#if __BYTE_ORDER == __LITTLE_ENDIAN
+ 		new->ops = &mod_ops64;
++#else
++		new->ops = &mod_ops64swap;
++#endif
++		break;
++	case ELFCLASS64 + (ELFDATA2MSB << 8): /* 64 bit big endian */
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++		new->ops = &mod_ops64swap;
++#else
++		new->ops = &mod_ops64;
++#endif
+ 		break;
+ 	default:
+-		warn("Module %s has elf unknown identifier %i\n",
+-		     new->pathname, ((char *)new->data)[EI_CLASS]);
++		warn("Module %s has elf unknown identifier %i,%i\n",
++		     new->pathname, ((char *)new->data)[EI_CLASS], ((char *)new->data)[EI_DATA]);
+ 		goto fail;
+ 	}
+ 	return new;
+diff -u module-init-tools-3.1/orig/moduleops.c module-init-tools-3.1/moduleops.c
+--- module-init-tools-3.1/orig/moduleops.c	2005-04-07 18:50:25.829635704 -0700
++++ module-init-tools-3.1/moduleops.c	2005-04-07 19:52:11.166338904 -0700
+@@ -9,15 +9,64 @@
+ #include "moduleops.h"
+ #include "tables.h"
+ 
++/* This deals with both mis-aligned reads and endianness issues,
++ * it may seem crude however the compiler knows 'size' at compile
++ * time (because it comes from sizeof) therefore generates fairly
++ * optimal code.
++ */
++static inline void read_native(const void *src, void *dest, unsigned int size)
++{
++	unsigned int i;
++	for (i = 0; i < size; i++)
++		((unsigned char*)dest)[i] = ((unsigned char*)src)[i];
++}
++
++#define NATIVE(x)\
++({\
++	typeof(x) __x;\
++	read_native(&(x), &__x, sizeof __x);\
++	__x;\
++})
++
++static inline void read_swapped(const void *src, void *dest, unsigned int size)
++{
++	unsigned int i;
++	for (i = 0; i < size; i++)
++		((unsigned char*)dest)[i] = ((unsigned char*)src)[size - i-1];
++}
++
++#define SWAPPED(x)\
++({\
++	typeof(x) __x;\
++	read_swapped(&(x), &__x, sizeof __x);\
++	__x;\
++})
++
++#define PERBITCOUNT(x) x##32
+ #define PERBIT(x) x##32
+ #define ElfPERBIT(x) Elf32_##x
+ #define ELFPERBIT(x) ELF32_##x
++#define READ(x) NATIVE(x)
++#include "moduleops_core.c"
++#undef PERBIT
++#undef READ
++#define PERBIT(x) x##32swap
++#define READ(x) SWAPPED(x)
+ #include "moduleops_core.c"
+ 
++#undef PERBITCOUNT
+ #undef PERBIT
+ #undef ElfPERBIT
+ #undef ELFPERBIT
++#undef READ
++#define PERBITCOUNT(x) x##64
+ #define PERBIT(x) x##64
+ #define ElfPERBIT(x) Elf64_##x
+ #define ELFPERBIT(x) ELF64_##x
++#define READ(x) NATIVE(x)
++#include "moduleops_core.c"
++#undef PERBIT
++#undef READ
++#define PERBIT(x) x##64swap
++#define READ(x) SWAPPED(x)
+ #include "moduleops_core.c"
+diff -u module-init-tools-3.1/orig/moduleops.h module-init-tools-3.1/moduleops.h
+--- module-init-tools-3.1/orig/moduleops.h	2005-04-07 18:50:25.829635704 -0700
++++ module-init-tools-3.1/moduleops.h	2005-04-07 19:36:26.184997904 -0700
+@@ -24,5 +24,6 @@
+ };
+ 
+ extern struct module_ops mod_ops32, mod_ops64;
++extern struct module_ops mod_ops32swap, mod_ops64swap;
+ 
+ #endif /* MODINITTOOLS_MODULEOPS_H */
+diff -u module-init-tools-3.1/orig/moduleops_core.c module-init-tools-3.1/moduleops_core.c
+--- module-init-tools-3.1/orig/moduleops_core.c	2005-04-07 18:50:25.829635704 -0700
++++ module-init-tools-3.1/moduleops_core.c	2005-04-07 19:56:18.794693672 -0700
+@@ -8,14 +8,14 @@
+ 	char *secnames;
+ 
+ 	/* Grab section headers and strings so we can tell who is who */
+-	sechdrs = (void *)hdr + hdr->e_shoff;
+-	secnames = (void *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
++	sechdrs = (void *)hdr + READ(hdr->e_shoff);
++	secnames = (void *)hdr + READ(sechdrs[READ(hdr->e_shstrndx)].sh_offset);
+ 
+ 	/* Find the section they want */
+-	for (i = 1; i < hdr->e_shnum; i++) {
+-		if (strcmp(secnames+sechdrs[i].sh_name, secname) == 0) {
+-			*size = sechdrs[i].sh_size;
+-			return (void *)hdr + sechdrs[i].sh_offset;
++	for (i = 1; i < READ(hdr->e_shnum); i++) {
++		if (strcmp(secnames+READ(sechdrs[i].sh_name), secname) == 0) {
++			*size = READ(sechdrs[i].sh_size);
++			return (void *)hdr + READ(sechdrs[i].sh_offset);
+ 		}
+ 	}
+ 	*size = 0;
+@@ -24,7 +24,7 @@
+ 
+ static void PERBIT(load_symbols)(struct module *module)
+ {
+-	struct PERBIT(kernel_symbol) *ksyms;
++	struct PERBITCOUNT(kernel_symbol) *ksyms;
+ 	char *ksymstrings;
+ 	unsigned long i, size;
+ 
+@@ -58,10 +58,10 @@
+ 
+ 	/* Old-style. */
+ 	ksyms = PERBIT(load_section)(module->data, "__ksymtab", &size);
+-	for (i = 0; i < size / sizeof(struct PERBIT(kernel_symbol)); i++)
++	for (i = 0; i < size / sizeof(struct PERBITCOUNT(kernel_symbol)); i++)
+ 		add_symbol(ksyms[i].name, module);
+ 	ksyms = PERBIT(load_section)(module->data, "__gpl_ksymtab", &size);
+-	for (i = 0; i < size / sizeof(struct PERBIT(kernel_symbol)); i++)
++	for (i = 0; i < size / sizeof(struct PERBITCOUNT(kernel_symbol)); i++)
+ 		add_symbol(ksyms[i].name, module);
+ }
+ 
+@@ -100,16 +100,16 @@
+ 
+ 	hdr = module->data;
+ 	handle_register_symbols = 0;
+-	if (hdr->e_machine == EM_SPARC ||
+-	    hdr->e_machine == EM_SPARCV9)
++	if (READ(hdr->e_machine) == EM_SPARC ||
++	    READ(hdr->e_machine) == EM_SPARCV9)
+ 		handle_register_symbols = 1;
+ 
+ 	module->num_deps = 0;
+ 	module->deps = NULL;
+ 	for (i = 1; i < size / sizeof(syms[0]); i++) {
+-		if (syms[i].st_shndx == SHN_UNDEF) {
++		if (READ(syms[i].st_shndx) == SHN_UNDEF) {
+ 			/* Look for symbol */
+-			const char *name = strings + syms[i].st_name;
++			const char *name = strings + READ(syms[i].st_name);
+ 			struct module *owner;
+ 			int weak;
+ 
+@@ -118,11 +118,11 @@
+                            variables, to avoid anyone else misusing
+                            them. */
+ 			if (handle_register_symbols
+-			    && (ELFPERBIT(ST_TYPE)(syms[i].st_info)
++			    && (ELFPERBIT(ST_TYPE)(READ(syms[i].st_info))
+ 				== STT_REGISTER))
+ 				continue;
+ 
+-			weak = ELFPERBIT(ST_BIND)(syms[i].st_info) == STB_WEAK;
++			weak = ELFPERBIT(ST_BIND)(READ(syms[i].st_info)) == STB_WEAK;
+ 			owner = find_symbol(name, module->pathname, weak);
+ 			if (owner) {
+ 				if (verbose)
+@@ -143,7 +143,7 @@
+ 	ElfPERBIT(Sym) *syms;
+ 	ElfPERBIT(Shdr) *sechdrs;
+ 
+-	sechdrs = (void *)hdr + hdr->e_shoff;
++	sechdrs = (void *)hdr + READ(hdr->e_shoff);
+ 	strings = PERBIT(load_section)(hdr, ".strtab", &size);
+ 	syms = PERBIT(load_section)(hdr, ".symtab", &size);
+ 
+@@ -152,14 +152,14 @@
+ 		return NULL;
+ 
+ 	for (i = 0; i < size / sizeof(syms[0]); i++) {
+-		if (strcmp(strings + syms[i].st_name, name) == 0) {
++		if (strcmp(strings + READ(syms[i].st_name), name) == 0) {
+ 			/* In BSS?  Happens for empty device tables on
+ 			 * recent GCC versions. */
+-			if (sechdrs[syms[i].st_shndx].sh_type == SHT_NOBITS)
++			if (READ(sechdrs[READ(syms[i].st_shndx)].sh_type) == SHT_NOBITS)
+ 				return NULL;
+ 			return (void *)hdr
+-				+ sechdrs[syms[i].st_shndx].sh_offset
+-				+ syms[i].st_value;
++				+ READ(sechdrs[READ(syms[i].st_shndx)].sh_offset)
++				+ READ(syms[i].st_value);
+ 		}
+ 	}
+ 	return NULL;
+@@ -168,36 +168,36 @@
+ /* FIXME: Check size, unless we end up using aliases anyway --RR */
+ static void PERBIT(fetch_tables)(struct module *module)
+ {
+-	module->pci_size = PERBIT(PCI_DEVICE_SIZE);
++	module->pci_size = PERBITCOUNT(PCI_DEVICE_SIZE);
+ 	module->pci_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_pci_device_table");
+ 
+-	module->usb_size = PERBIT(USB_DEVICE_SIZE);
++	module->usb_size = PERBITCOUNT(USB_DEVICE_SIZE);
+ 	module->usb_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_usb_device_table");
+ 
+-	module->ccw_size = PERBIT(CCW_DEVICE_SIZE);
++	module->ccw_size = PERBITCOUNT(CCW_DEVICE_SIZE);
+ 	module->ccw_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_ccw_device_table");
+ 
+-	module->ieee1394_size = PERBIT(IEEE1394_DEVICE_SIZE);
++	module->ieee1394_size = PERBITCOUNT(IEEE1394_DEVICE_SIZE);
+ 	module->ieee1394_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_ieee1394_device_table");
+ 
+-	module->pnp_size = PERBIT(PNP_DEVICE_SIZE);
++	module->pnp_size = PERBITCOUNT(PNP_DEVICE_SIZE);
+ 	module->pnp_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_pnp_device_table");
+ 
+-	module->pnp_card_size = PERBIT(PNP_CARD_DEVICE_SIZE);
++	module->pnp_card_size = PERBITCOUNT(PNP_CARD_DEVICE_SIZE);
+ 	module->pnp_card_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_pnp_card_device_table");
+-	module->pnp_card_offset = PERBIT(PNP_CARD_DEVICE_OFFSET);
++	module->pnp_card_offset = PERBITCOUNT(PNP_CARD_DEVICE_OFFSET);
+ 
+-	module->input_size = PERBIT(INPUT_DEVICE_SIZE);
++	module->input_size = PERBITCOUNT(INPUT_DEVICE_SIZE);
+ 	module->input_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_input_device_table");
+ 
+-	module->soc_size = PERBIT(SOC_DEVICE_SIZE);
++	module->soc_size = PERBITCOUNT(SOC_DEVICE_SIZE);
+ 	module->soc_table = PERBIT(deref_sym)(module->data,
+ 					"__mod_soc_device_table");
+ 

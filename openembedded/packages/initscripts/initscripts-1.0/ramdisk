@@ -1,0 +1,46 @@
+#!/bin/sh
+
+. /etc/default/rcS
+
+FSTYPE=ext2
+
+if test ! -e /proc/mtd
+then
+	test "$VERBOSE" != "no" && echo >&2 "/proc not mounted, or mtd support not enabled in kernel."
+	exit
+fi
+
+RAM_MTD_NO=`cat /proc/mtd | grep mtdram | tail -n 1 | cut -d: -f1 | cut -dd -f2`
+if test -z "$RAM_MTD_NO"; then exit 0; fi
+
+if test -e /dev/mtdblock/0
+then
+	RAM_MTD=/dev/mtd/$RAM_MTD_NO
+	RAM_MTDBLK=/dev/mtdblock/$RAM_MTD_NO
+else
+	RAM_MTD=/dev/mtd$RAM_MTD_NO
+	RAM_MTDBLK=/dev/mtdblock$RAM_MTD_NO
+fi
+
+RAM_MNTPT=/mnt/ram
+RAM_MTD_SIZE_HEX=`cat /proc/mtd | grep mtdram | tail -n 1 | cut -d" " -f 2`
+RAM_MTD_SIZE=`dc 0x$RAM_MTD_SIZE_HEX 1024 / p`
+test -e /etc/ramdisk.conf && OLD_MTD_SIZE=`cat /etc/ramdisk.conf`
+echo $RAM_MTD_SIZE > /etc/ramdisk.conf
+
+if test ! -d "$RAM_MNTPT"; then echo >&2 "Mountpoint $RAM_MNTPT does not exist!"; exit 0; fi
+
+if (test ! -e /etc/.configured) || test "$OLD_MTD_SIZE" != "$RAM_MTD_SIZE"; then
+  test "$VERBOSE" != "no" && echo -n "Wiping ramdisk: "
+  dd if=/dev/zero bs=1024 count=$RAM_MTD_SIZE of=$RAM_MTD 2>/dev/null >&2 || exit 1
+  test "$VERBOSE" != "no" && echo "$RAM_MTD";
+  test "$VERBOSE" != "no" && echo -n "Creating filesystem on ramdisk: "
+  mkfs.$FSTYPE $RAM_MTDBLK 2>/dev/null >&2 || exit 1
+  test "$VERBOSE" != "no" && echo "$RAM_MTDBLK";
+fi
+
+test "$VERBOSE" != "no" && echo -n "Mounting ramdisk: "
+mount -t $FSTYPE $RAM_MTDBLK $RAM_MNTPT 2>/dev/null >&2 || exit 1
+test "$VERBOSE" != "no" && echo "$RAM_MTDBLK";
+
+exit 0

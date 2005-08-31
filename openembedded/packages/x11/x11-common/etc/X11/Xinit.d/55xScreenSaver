@@ -1,0 +1,4 @@
+#!/bin/sh
+
+xset s 30 180
+xset s off

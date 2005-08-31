@@ -1,0 +1,14 @@
+This test disables the annoying
+   Note: /etc/modules.conf is more recent than /lib/modules/2.4.19-rmk6-pxa1/modules.dep
+message.
+
+--- modutils-2.4.6/insmod/modprobe.c~notest	Mon Feb 26 02:07:17 2001
++++ modutils-2.4.6/insmod/modprobe.c	Wed Feb 19 14:31:52 2003
+@@ -785,7 +785,6 @@
+ 		return -1;
+ 	}
+ 
+-#define EXTREMELY_CAUTIOUS
+ #ifdef EXTREMELY_CAUTIOUS
+ 	if (fstat(fileno(fin), &statbuf) != 0)
+ 		error("Could not stat %s", depfile);

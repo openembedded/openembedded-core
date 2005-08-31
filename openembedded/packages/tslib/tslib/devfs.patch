@@ -1,0 +1,18 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- tslib/tests/fbutils.c~devfs.patch
++++ tslib/tests/fbutils.c
+@@ -44,8 +44,8 @@
+ static unsigned colormap [256];
+ int xres, yres;
+ 
+-static char *defaultfbdevice = "/dev/fb0";
+-static char *defaultconsoledevice = "/dev/tty";
++static char *defaultfbdevice = "/dev/fb/0";
++static char *defaultconsoledevice = "/dev/vc/";
+ static char *fbdevice = NULL;
+ static char *consoledevice = NULL;
+ 

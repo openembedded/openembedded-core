@@ -1,0 +1,27 @@
+Index: update-rc.d
+===================================================================
+RCS file: /cvs/apps/update-rc.d/update-rc.d,v
+retrieving revision 1.6
+retrieving revision 1.7
+diff -u -r1.6 -r1.7
+--- update-rc.d/update-rc.d	31 Dec 2004 12:21:40 -0000	1.6
++++ update-rc.d/update-rc.d	31 Dec 2004 16:39:09 -0000	1.7
+@@ -2,8 +2,17 @@
+ #
+ # update-rc.d	Update the links in /etc/rc[0-9S].d/
+ #
+-# Phil Blundell <pb@nexus.co.uk> 2003-06-26
++# (c) 2003, 2004 Phil Blundell <pb@handhelds.org>
+ #
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2, or (at your option)
++# any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
+ 
+ initd="/etc/init.d"
+ etcd="/etc/rc"

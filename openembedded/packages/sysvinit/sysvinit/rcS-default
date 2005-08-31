@@ -1,0 +1,21 @@
+#
+#	Defaults for the boot scripts in /etc/rcS.d
+#
+
+# Time files in /tmp are kept in days.
+TMPTIME=0
+# Set to yes if you want sulogin to be spawned on bootup
+SULOGIN=no
+# Set to no if you want to be able to login over telnet/rlogin
+# before system startup is complete (as soon as inetd is started)
+DELAYLOGIN=no
+# Set UTC=yes if your system clock is set to UTC (GMT), and UTC=no if not.
+# UTC=yes
+# Set VERBOSE to "no" if you would like a more quiet bootup.
+VERBOSE=no
+# Set EDITMOTD to "no" if you don't want /etc/motd to be editted automatically
+EDITMOTD=no
+# Set FSCKFIX to "yes" if you want to add "-y" to the fsck at startup.
+FSCKFIX=yes
+# Set TICKADJ to the correct tick value for this specific machine
+#TICKADJ=10000

@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# load keymap, if existing
+
+KERNEL_MAJMIN=`uname -r | cut -d '.' -f 1,2`
+if [ -e /etc/keymap-$KERNEL_MAJMIN.map ]; then
+	loadkeys /etc/keymap-$KERNEL_MAJMIN.map
+fi

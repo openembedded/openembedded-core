@@ -1,0 +1,889 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- /dev/null
++++ wpa_supplicant/driver_hermes.c
+@@ -0,0 +1,705 @@
++/*
++ * WPA Supplicant - testing driver interface
++ * Copyright (c) 2004-2005, Jouni Malinen <jkmaline@cc.hut.fi>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * Alternatively, this software may be distributed under the terms of BSD
++ * license.
++ *
++ * See README and COPYING for more details.
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <errno.h>
++#include <net/if_arp.h>
++
++#include "wireless_copy.h"
++#include "common.h"
++#include "driver.h"
++
++#include "eloop.h"
++#include "wpa_supplicant.h"
++#include "priv_netlink.h"
++
++#include "hostap_common.h"
++#include "driver_wext.h"
++#include "driver_hermes.h"
++
++
++
++/* Enumeration for supported Hermes Types */
++enum
++{
++    WL_HERMES_UNKNOWN = 0,
++    WL_HERMES_1       = 1,
++    WL_HERMES_2       = 2,
++    WL_HERMES_25      = 3
++};
++
++
++
++
++struct wpa_driver_hermes_data {
++	void *wext; /* private data for driver_wext */
++	void *ctx;
++	char ifname[IFNAMSIZ + 1];
++	int sock;
++	int type;
++};
++
++
++
++/****************************************************************************/
++/*                                                                          */
++/* Routines for basic device access to Agere Hermes-I/Hermes-II via the UIL */
++/*                                                                          */
++/****************************************************************************/
++
++IFBP _connect(void *priv)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++	int		result = 0;
++	IFBP		ifbp = NULL;
++	struct uilreq	urq;
++
++	//wpa_printf(MSG_DEBUG, "%s: %s %d", __FUNCTION__, drv->ifname, drv->sock);
++
++	memset(&urq, 0, sizeof(urq));
++
++	strcpy(urq.ifr_name, drv->ifname);
++	urq.command = UIL_FUN_CONNECT;
++	
++	result = ioctl(drv->sock, WVLAN2_IOCTL_UIL, &urq);
++	if (result == 0 && urq.result == UIL_SUCCESS) {
++		ifbp = urq.hcfCtx;
++	} else {
++		wpa_printf(MSG_DEBUG, "%s: could not set IFBP, result %d", __FUNCTION__, result);
++	}
++	
++	return ifbp;
++}
++
++
++void _disconnect(void *priv, IFBP ifbp)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++	int result = 0;
++	struct uilreq urq;
++
++	//wpa_printf(MSG_DEBUG, "%s: %s", __FUNCTION__, drv->ifname);
++
++	if (ifbp != NULL) {
++		memset(&urq, 0, sizeof(struct uilreq));
++
++		strcpy(urq.ifr_name, drv->ifname);
++		urq.command = UIL_FUN_DISCONNECT;
++		urq.hcfCtx = ifbp;
++
++		result = ioctl(drv->sock, WVLAN2_IOCTL_UIL, &urq);
++	
++		if (result != 0 || urq.result != UIL_SUCCESS) {
++			wpa_printf( MSG_WARNING, "wl_disconnect(): ioctl() failed, errno: %d", errno );
++			wpa_printf( MSG_WARNING, "wl_disconnect(): urq.result: %d", urq.result );
++		}
++	} else {
++		wpa_printf(MSG_WARNING, "wl_disconnect(): called with NULL ifbp");
++	}
++
++	return;
++}
++
++int _get_info(void *priv, ltv_t *ltv)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++	int result = 0;
++	IFBP ifbp = NULL;
++	struct uilreq urq;
++
++	//wpa_printf(MSG_DEBUG, "%s: %s", __FUNCTION__, drv->ifname);
++
++	/* First, connect to the device */
++	ifbp = _connect(priv);
++	if (ifbp != NULL && ltv != NULL) {
++		memset(&urq, 0, sizeof(struct uilreq));
++
++		strcpy(urq.ifr_name, drv->ifname);
++		urq.hcfCtx = ifbp;
++		urq.command = UIL_FUN_GET_INFO;
++		urq.len = sizeof(ltv_t);
++		urq.data = ltv;
++		
++		result = ioctl(drv->sock, WVLAN2_IOCTL_UIL, &urq);
++
++		if (result != 0 || urq.result != UIL_SUCCESS) {
++			wpa_printf(MSG_WARNING, "wl_disconnect(): ioctl() failed, errno: %d", errno);
++			wpa_printf(MSG_WARNING, "wl_disconnect(): urq.result: %d", urq.result);
++		}
++		_disconnect(priv, ifbp);
++	} else {
++		wpa_printf( MSG_WARNING, "Could not connect to the device, or LTV NULL");
++		result = -1;
++	}
++	
++	return result;
++}
++
++int _put_info(void *priv, ltv_t *ltv)
++{
++	struct wpa_driver_hermes_data *drv = priv;
++	int result = 0;
++	IFBP ifbp = NULL;
++	struct uilreq  urq;
++
++	//wpa_printf(MSG_DEBUG, "%s: %s", __FUNCTION__, drv->ifname);
++
++	/* First, connect to the device */
++	ifbp = _connect(priv);
++	if (ifbp != NULL && ltv != NULL) {
++		memset(&urq, 0, sizeof(struct uilreq));
++
++		strcpy(urq.ifr_name, drv->ifname);
++		urq.hcfCtx = ifbp;
++		urq.command = UIL_FUN_PUT_INFO;
++		urq.len = sizeof( ltv_t );
++		urq.data = ltv;
++		
++		result = ioctl(drv->sock, WVLAN2_IOCTL_UIL, &urq);
++		
++		if (result != 0 || urq.result != UIL_SUCCESS) {
++			wpa_printf(MSG_WARNING, "_put_info(): ioctl() failed, errno: %d", errno);
++			wpa_printf(MSG_WARNING, "_put_info(): urq.result: %d", urq.result);
++		}
++
++		_disconnect(priv, ifbp);
++	} else {
++		wpa_printf(MSG_WARNING, "%s: could not connect to the device, or LTV NULL", __FUNCTION__ );
++		result = -1;
++	}
++	
++	return result;
++}
++
++
++static void _detect_hermes_type(void *priv)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++	CFG_FW_IDENTITY_STRCT *fw_id;
++	ltv_t ltv;
++	int result;
++
++	//wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	drv->type = WL_HERMES_UNKNOWN;
++
++	if (drv->sock >= 0) {
++		fw_id = (CFG_FW_IDENTITY_STRCT *)&ltv;
++		fw_id->len = ( sizeof(CFG_FW_IDENTITY_STRCT) / sizeof( hcf_16 )) - 1;
++		fw_id->typ = CFG_FW_IDENTITY;
++
++		result = _get_info(priv, (ltv_t *)fw_id);
++		if (result == HCF_SUCCESS) {
++			//wpa_printf(MSG_DEBUG, "PRI CompID  : %d", fw_id->comp_id);
++			//wpa_printf(MSG_DEBUG, "PRI Variant : %d", fw_id->variant);
++			//wpa_printf(MSG_DEBUG, "PRI Version : %d.%02d", fw_id->version_major, fw_id->version_minor);
++
++			switch(fw_id->comp_id) {
++			case COMP_ID_FW_STA:
++				switch (fw_id->variant) {
++				case 1:
++				case 2:
++					wpa_printf(MSG_DEBUG, "found Hermes 1 STA");
++					drv->type = WL_HERMES_1;
++					break;
++
++				case 3:
++					wpa_printf(MSG_DEBUG, "found Hermes 2 STA");
++					drv->type = WL_HERMES_2;
++					break;
++				case 4:
++					wpa_printf(MSG_DEBUG, "found Hermes 2.5 STA");
++					drv->type = WL_HERMES_25;
++					break;
++				}
++				break;
++
++			case COMP_ID_FW_AP:
++				switch (fw_id->variant) {
++				case 1:
++					wpa_printf(MSG_DEBUG, "found Hermes 1 AP");
++					drv->type = WL_HERMES_1;
++					break;
++
++				case 2:
++					wpa_printf(MSG_DEBUG, "found Hermes 2 AP" );
++					drv->type = WL_HERMES_2;
++					break;
++				}
++				break;
++
++			default:
++				wpa_printf(MSG_WARNING, "could not detect Hermes type!");
++				break;
++			}
++		}
++	}
++}
++
++
++
++/****************************************************************************/
++
++
++static int wpa_driver_hermes_set_wpa_ie(void *priv, const char *wpa_ie,
++                                        size_t wpa_ie_len)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++	ltv_t   ltv;
++
++	wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	ltv.len = 2;
++	ltv.typ = CFG_SET_WPA_AUTH_KEY_MGMT_SUITE;
++
++	switch(drv->type) {
++	case WL_HERMES_1:
++		ltv.u.u16[0] = 2;
++		break;
++
++	case WL_HERMES_2:
++	case WL_HERMES_25:
++		ltv.u.u16[0] = 4;
++		break;
++
++	default:
++		ltv.u.u16[0] = 0;
++		break;
++	}
++
++	return _put_info(priv, &ltv);
++}
++
++
++static int wpa_driver_hermes_set_wpa(void *priv, int enabled)
++{
++	ltv_t ltv;
++
++	wpa_printf(MSG_DEBUG, "%s: enabled=%d", __func__, enabled);
++
++        ltv.len = 2;
++        ltv.typ = CFG_CNF_ENCRYPTION;
++        ltv.u.u16[0] = enabled ? 2 : 0;		/* Setting CFG_CNF_ENCRYPTION to 2 sets WPA: TKIP or better */
++
++        return _put_info(priv, &ltv);
++}
++
++
++static int wpa_driver_hermes_set_key(void *priv, wpa_alg alg,
++                                     const u8 *addr, int key_idx,
++                                     int set_tx, const u8 *seq, size_t seq_len,
++                                     const u8 *key, size_t key_len)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++	int ret = 0;
++	char *alg_name;
++	ltv_t ltv;
++	int count = 0;
++	int buf_idx = 0;
++	hcf_8 tsc[] = { 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00 };
++	hcf_8 rsc[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
++
++
++	switch (alg) {
++	case WPA_ALG_NONE:
++		alg_name = "none";
++		break;
++	case WPA_ALG_WEP:
++		alg_name = "WEP";
++		break;
++	case WPA_ALG_TKIP:
++		alg_name = "TKIP";
++		break;
++	case WPA_ALG_CCMP:
++		alg_name = "CCMP";
++		break;
++	default:
++		return -1;
++	}
++
++	wpa_printf(MSG_DEBUG, "%s: alg=%s key_idx=%d set_tx=%d seq_len=%d "
++		   "key_len=%d", __FUNCTION__, alg_name, key_idx, set_tx,
++		   seq_len, key_len);
++
++        if (seq_len > IW_ENCODE_SEQ_MAX_SIZE) {
++                wpa_printf(MSG_DEBUG, "%s: Invalid seq_len %lu", __FUNCTION__, (unsigned long) seq_len);
++                return -2;
++        }
++
++	/* Check the key index here; if 0, load as Pairwise Key, otherwise, load as
++	   a group key. Note that for the Hermes, the RIDs for group/pairwise keys
++	   are different from each other and different than the default WEP keys as
++	   well. */
++        switch (alg) {
++        case WPA_ALG_TKIP:
++                /* Make sure that there is no data queued up in the firmware before
++                   setting the TKIP keys. If this check is not performed, some data
++                   may be sent out with incorrect MIC and cause synchronizarion
++                   errors with the AP */
++                /* Check every 1ms for 100ms */
++                for (count = 0; count < 100; count++) {
++                        usleep(1000);
++
++                        ltv.len = 2;
++                        ltv.typ = 0xFD91;  // This RID not defined in HCF yet!!!
++                        ltv.u.u16[0] = 0;
++
++                        _get_info( priv, &ltv);
++                        
++                        if (ltv.u.u16[0] == 0) 
++                                break;
++                }
++
++                if (count == 100)
++                        wpa_printf(MSG_DEBUG, "%s: Timed out waiting for TxQ!", __FUNCTION__);
++                
++
++                switch (key_idx) {
++                case 0:
++                        /* Only load key as pairwise key for Hermes-II and II.5. For Hermes-I,
++                           fall through to the next case and load the pairwise key as
++                           a Group Key at index 0. */
++                        if (drv->type == WL_HERMES_2 || drv->type == WL_HERMES_25) {
++                                ltv.len = 28;
++                                ltv.typ = CFG_ADD_TKIP_MAPPED_KEY;
++
++                                /* Load the BSSID */
++                                memcpy(&ltv.u.u8[buf_idx], addr, ETH_ALEN);
++                                buf_idx += ETH_ALEN;
++
++                                /* Load the TKIP key */
++                                memcpy(&ltv.u.u8[buf_idx], &key[0], 16);
++                                buf_idx += 16;
++
++                                /* Load the TSC */
++                                memcpy(&ltv.u.u8[buf_idx], tsc, 8);
++                                buf_idx += 8;
++
++                                /* Load the RSC */
++                                /* Copy the RSC from the supplicant to a local buffer, because
++                                the RSC doesn't always contain the padding needed */
++                                memcpy(rsc, seq, seq_len);
++                                memcpy(&ltv.u.u8[buf_idx], rsc, 8);
++                                buf_idx += 8;
++
++                                /* Load the TxMIC key */
++                                memcpy(&ltv.u.u8[buf_idx], &key[16], 8);
++                                buf_idx += 8;
++
++                                /* Load the RxMIC key */
++                                memcpy(&ltv.u.u8[buf_idx], &key[24], 8);
++
++                                /* Send the request to the Hermes */
++                                _put_info(priv, &ltv);
++                                break;
++                        }
++
++                case 1:
++                case 2:
++                case 3:
++                        ltv.len = 26;
++                        ltv.typ = CFG_ADD_TKIP_DEFAULT_KEY;
++
++                        /* Load the key Index */
++                        ltv.u.u16[buf_idx] = key_idx;
++
++                        /* If this is a Tx Key, set bit 8000 */
++                        if (set_tx)
++                                ltv.u.u16[buf_idx] |= 0x8000;
++
++                        buf_idx += 2;
++
++                        /* Load the RSC */
++                        /* Copy the RSC from the supplicant to a local buffer, because
++                           the RSC doesn't always contain the padding needed */
++                        memcpy(rsc, seq, seq_len);
++                        memcpy(&ltv.u.u8[buf_idx], rsc, 8);
++                        buf_idx += 8;
++
++                        /* Load the TKIP, TxMIC, and RxMIC keys in one shot, because in
++                           CFG_ADD_TKIP_DEFAULT_KEY they are back-to-back */
++                        memcpy(&ltv.u.u8[buf_idx], key, key_len);
++                        buf_idx += key_len;
++
++                        /* Load the TSC */
++                        memcpy(&ltv.u.u8[buf_idx], tsc, 8);
++
++                        /* Send the request to the Hermes */
++                        _put_info(priv, &ltv);
++                        break;
++
++                default:
++                        break;
++                }
++
++                break;
++
++        case WPA_ALG_WEP:
++        case WPA_ALG_CCMP:
++                break;
++
++        case WPA_ALG_NONE:
++                switch (key_idx) {
++                case 0:
++                        if (drv->type == WL_HERMES_2 || drv->type == WL_HERMES_25) {
++                                /* Only clear a pairwise key for Hermes-II. For Hermes-I,
++                                   fall through to the next case and clear the key as a
++                                   Group Key at index 0. */
++                                if (addr) {
++                                        ltv.len = 7;
++                                        ltv.typ = CFG_REMOVE_TKIP_MAPPED_KEY;
++
++                                        memcpy(&ltv.u.u8[0], addr, ETH_ALEN);
++                                        
++                                        _put_info(priv, &ltv);
++                                }
++                                break;
++                        }
++
++                case 1:
++                case 2:
++                case 3:
++                        /* Clear the Group TKIP keys by index */
++                        ltv.len = 2;
++                        ltv.typ = CFG_REMOVE_TKIP_DEFAULT_KEY;
++
++                        ltv.u.u16[0] = key_idx;
++                        
++                        _put_info(priv, &ltv);
++                        break;
++
++                default:
++                        break;
++                }
++                break;
++
++        default:
++                break;
++        }
++
++	return ret;
++}
++
++
++static int wpa_driver_hermes_set_countermeasures(void *priv, int enabled)
++{
++	ltv_t ltv;
++
++	/* The supplicant handles all the timers related to MIC failure and
++	   countermeasures. When countermeasures are enabled, shut down the card;
++	   when disable, re-enable the card. Make sure that the EAPOL message
++	   is getting out before card disable */
++
++	wpa_printf(MSG_DEBUG, "%s: enabled=%d", __FUNCTION__, enabled);
++
++        ltv.len      = 2;
++        ltv.typ      = CFG_DRIVER_ENABLE;
++        ltv.u.u16[0] = enabled ? 0 : 1;
++
++        return _put_info(priv, &ltv);
++}
++
++
++static int wpa_driver_hermes_set_drop_unencrypted(void *priv, int enabled)
++{
++	ltv_t   ltv;
++
++	wpa_printf(MSG_DEBUG, "%s: enabled=%d", __FUNCTION__, enabled);
++
++	ltv.len = 2;
++	ltv.typ = CFG_CNF_EXCL_UNENCRYPTED;
++	ltv.u.u16[0] = enabled;
++
++	return _put_info(priv, &ltv);
++}
++
++
++static int wpa_driver_hermes_deauthenticate(void *priv, const u8 *addr,
++					  int reason_code)
++{
++	wpa_printf(MSG_DEBUG, "%s: *DUMMY* %d", __FUNCTION__, reason_code);
++
++	return 0;
++}
++
++
++static int wpa_driver_hermes_disassociate(void *priv, const u8 *addr, int reason_code)
++{
++	ltv_t   ltv;
++
++	wpa_printf(MSG_DEBUG, "%s: reason=%d", __FUNCTION__, reason_code);
++
++	ltv.len = 2;
++	ltv.typ = 0xFCC8;   // This RID not defined in HCF yet!!!
++	memcpy( &ltv.u.u8[0], addr, ETH_ALEN );
++	ltv.u.u16[ETH_ALEN / 2] = reason_code;
++
++	return _put_info( priv, &ltv);
++}
++
++
++static int wpa_driver_hermes_associate(
++	void *priv, struct wpa_driver_associate_params *params)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++
++#if 0
++	wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++#else
++	wpa_printf(MSG_DEBUG, "%s: priv=%p freq=%d pairwise_suite=%d "
++		   "group_suite=%d key_mgmt_suite=%d auth_alg=%d mode=%d",
++		   __func__, priv, params->freq, params->pairwise_suite,
++		   params->group_suite, params->key_mgmt_suite,
++		   params->auth_alg, params->mode);
++	if (params->bssid) {
++		wpa_printf(MSG_DEBUG, "   bssid=" MACSTR,
++			   MAC2STR(params->bssid));
++	}
++	if (params->ssid) {
++		wpa_hexdump_ascii(MSG_DEBUG, "   ssid",
++				  params->ssid, params->ssid_len);
++	}
++	if (params->wpa_ie) {
++		wpa_hexdump(MSG_DEBUG, "   wpa_ie",
++			    params->wpa_ie, params->wpa_ie_len);
++	}
++#endif
++
++        if (wpa_driver_hermes_set_wpa_ie(priv, params->wpa_ie, params->wpa_ie_len) < 0)
++                return -1;
++        if (wpa_driver_wext_set_freq(drv->wext, params->freq) < 0)
++                return -1;
++        if (wpa_driver_wext_set_ssid(drv->wext, params->ssid, params->ssid_len) < 0)
++                return -1;
++#ifdef UNSUPPORTED_IN_HERMES_DRIVER
++        if (wpa_driver_wext_hermes_bssid(drv->wext, params->bssid) < 0)
++                return -1;
++#endif
++
++	return 0;
++}
++
++
++static int wpa_driver_hermes_get_bssid(void *priv, u8 *bssid)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++        return wpa_driver_wext_get_bssid(drv->wext, bssid);
++}
++
++
++static int wpa_driver_hermes_get_ssid(void *priv, u8 *ssid)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++        return wpa_driver_wext_get_ssid(drv->wext, ssid);
++}
++
++
++static int wpa_driver_hermes_scan(void *priv, const u8 *ssid, size_t ssid_len)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++	return wpa_driver_wext_scan(drv->wext, ssid, ssid_len);
++}
++
++
++static int wpa_driver_hermes_get_scan_results(void *priv,
++                                            struct wpa_scan_result *results,
++                                            size_t max_size)
++{
++        struct wpa_driver_hermes_data *drv = priv;
++        return wpa_driver_wext_get_scan_results(drv->wext, results, max_size);
++}
++
++
++static void * wpa_driver_hermes_init(void *ctx, const char *ifname)
++{
++	struct wpa_driver_hermes_data *drv;
++
++	wpa_printf(MSG_DEBUG, "%s: %s", __FUNCTION__, ifname);
++
++	drv = malloc(sizeof(*drv));
++	if (drv == NULL)
++		return NULL;
++	memset(drv, 0, sizeof(*drv));
++
++	/* Initialize wireless context */
++	drv->wext = wpa_driver_wext_init(ctx, ifname);
++	if (drv->wext == NULL) {
++		perror("no wext context");
++		goto no_wext;
++	}
++
++	drv->ctx = ctx;
++	strncpy(drv->ifname, ifname, sizeof(drv->ifname));
++
++	drv->sock = socket(PF_INET, SOCK_DGRAM, 0);
++	if (drv->sock < 0) {
++		perror("socket(PF_INET,SOCK_DGRAM)");
++		goto no_sock;
++	}
++
++	_detect_hermes_type(drv);
++
++	return drv;
++
++no_sock:
++	wpa_driver_wext_deinit(drv->wext);
++no_wext:
++	free(drv);
++	return NULL;	
++}
++
++
++static void wpa_driver_hermes_deinit(void *priv)
++{
++	struct wpa_driver_hermes_data *drv = priv;
++	wpa_driver_wext_deinit(drv->wext);
++	close(drv->sock);
++	free(drv);
++}
++
++
++
++
++struct wpa_driver_ops wpa_driver_hermes_ops = {
++	.name = "hermes",
++	.desc = "wpa_supplicant hermes driver",
++
++	.init = wpa_driver_hermes_init,
++	.deinit = wpa_driver_hermes_deinit,
++
++	// from old driver_hermes.c:
++	.get_bssid = wpa_driver_hermes_get_bssid,
++	.get_ssid = wpa_driver_hermes_get_ssid,
++	.set_wpa = wpa_driver_hermes_set_wpa,
++	.set_key = wpa_driver_hermes_set_key,
++	//.events_init = wpa_driver_wext_events_init,
++	//.events_deinit = wpa_driver_wext_events_deinit,
++        .set_countermeasures = wpa_driver_hermes_set_countermeasures,
++	.set_drop_unencrypted = wpa_driver_hermes_set_drop_unencrypted,
++	.scan = wpa_driver_hermes_scan,
++	.get_scan_results = wpa_driver_hermes_get_scan_results,
++	.deauthenticate = wpa_driver_hermes_deauthenticate,
++	.disassociate = wpa_driver_hermes_disassociate,
++	.associate = wpa_driver_hermes_associate,
++
++
++#if 0
++	/* Not possible with current Hermes driver:
++	.set_auth_alg = wpa_driver_hermes_set_auth_alg, */
++#endif
++};
+--- /dev/null
++++ wpa_supplicant/driver_hermes.h
+@@ -0,0 +1,173 @@
++#ifndef HERMES_DRIVER_H
++#define HERMES_DRIVER_H
++
++typedef unsigned char hcf_8;
++typedef unsigned short hcf_16;
++typedef unsigned long hcf_32;
++typedef hcf_16 hcf_io;
++typedef hcf_8 *wci_bufp;
++
++typedef struct {
++  hcf_16 len;
++  hcf_16 typ;
++  unsigned short * bufp;
++} RID_LOG_STRCT;
++typedef RID_LOG_STRCT *RID_LOGP;
++
++typedef struct {
++  hcf_16 len;
++  hcf_16 typ;
++  hcf_16 comp_id;
++  hcf_16 variant;
++  hcf_16 version_major;
++  hcf_16 version_minor;
++} CFG_FW_IDENTITY_STRCT;
++
++typedef struct {
++  hcf_32 TxUnicastFrames;
++  hcf_32 TxMulticastFrames;
++  hcf_32 TxFragments;
++  hcf_32 TxUnicastOctets;
++  hcf_32 TxMulticastOctets;
++  hcf_32 TxDeferredTransmissions;
++  hcf_32 TxSingleRetryFrames;
++  hcf_32 TxMultipleRetryFrames;
++  hcf_32 TxRetryLimitExceeded;
++  hcf_32 TxDiscards;
++  hcf_32 RxUnicastFrames;
++  hcf_32 RxMulticastFrames;
++  hcf_32 RxFragments;
++  hcf_32 RxUnicastOctets;
++  hcf_32 RxMulticastOctets;
++  hcf_32 RxFCSErrors;
++  hcf_32 RxDiscardsNoBuffer;
++  hcf_32 TxDiscardsWrongSA;
++  hcf_32 RxWEPUndecryptable;
++  hcf_32 RxMsgInMsgFragments;
++  hcf_32 RxMsgInBadMsgFragments;
++  hcf_32 RxDiscardsWEPICVError;
++  hcf_32 RxDiscardsWEPExcluded;
++} CFG_HERMES_TALLIES_STRCT;
++
++typedef struct {
++  hcf_32 not_used_NoBufInq;
++  hcf_32 NoBufInfo;
++  hcf_32 NoBufMB;
++  hcf_32 MiscErr;
++  hcf_32 EngCnt;
++} CFG_HCF_TALLIES_STRCT;
++
++typedef struct {
++  hcf_io IFB_IOBase;
++  hcf_16 IFB_IORange;
++
++  hcf_32 IFB_TickIni;
++
++  hcf_16 IFB_Version;
++  hcf_16 IFB_CardStat;
++  hcf_16 IFB_TraceLvl;
++  hcf_16 *IFB_MBp;
++  hcf_16 IFB_MBSize;
++  hcf_16 IFB_MBWp;
++  hcf_16 IFB_MBRp;
++  hcf_16 IFB_MBInfoLen;
++
++  hcf_16 IFB_DLMode;
++  hcf_16 IFB_Magic;
++  hcf_16 IFB_Cmd;
++  hcf_16 IFB_RxFID;
++  RID_LOGP IFB_RIDLogp;
++  hcf_16 IFB_Monitor;
++  hcf_16 IFB_TxFid;
++  hcf_16 IFB_RxLen;
++  hcf_16 IFB_DefunctStat;
++
++  hcf_16 IFB_ErrCmd;
++  hcf_16 IFB_ErrQualifier;
++  hcf_16 IFB_lal;
++  wci_bufp IFB_lap;
++  hcf_16 IFB_LinkStat;
++
++  void (*IFB_MICRxRtn)( hcf_32*, hcf_32 );
++  void (*IFB_MICTxRtn)( hcf_32*, hcf_32 );
++  hcf_16 IFB_rx_tlen;
++  hcf_16 IFB_tx_tlen;
++  hcf_8 IFB_rx_32[4];
++  hcf_8 IFB_tx_32[4];
++  hcf_16 IFB_RscInd;
++  hcf_16 IFB_MB_FID;
++  hcf_16 IFB_DLTarget[2];
++
++  hcf_16 IFB_DLPage;
++  hcf_16 IFB_DLOffset;
++  hcf_16 IFB_DLLen;
++
++  hcf_16 volatile IFB_IntOffCnt;
++  hcf_16 IFB_IntEnMask;
++
++  CFG_FW_IDENTITY_STRCT IFB_FWIdentity;
++  hcf_16 IFB_Tally;
++  hcf_16 IFB_TallyTyp;
++
++  CFG_HERMES_TALLIES_STRCT IFB_NIC_Tallies;
++  CFG_HCF_TALLIES_STRCT IFB_HCF_Tallies;
++
++  void *IFB_MSFSup;
++} IFB_STRCT;
++
++typedef IFB_STRCT* IFBP;
++
++struct uilreq
++{
++    union
++    {
++        char ifrn_name[16];
++    } ifr_ifrn;
++
++    IFBP hcfCtx;
++    __u8 command;
++    __u8 result;
++    __u16 len;
++    void *data;
++};
++
++typedef struct
++{
++    hcf_16 len;
++    hcf_16 typ;
++    union
++    {
++        hcf_8 u8[(512 - (sizeof(hcf_16) * 2)) / sizeof(hcf_8)];
++        hcf_16 u16[(512 - (sizeof(hcf_16) * 2)) / sizeof(hcf_16)];
++        hcf_32 u32[(512 - (sizeof(hcf_16) * 2)) / sizeof(hcf_32)];
++    } u;
++} ltv_t;
++
++
++#define UIL_FUN_CONNECT                 0x00
++#define UIL_FUN_DISCONNECT              0x01
++#define UIL_FUN_GET_INFO                0x04
++#define UIL_FUN_PUT_INFO                0x05
++
++#define GENERIC_INFO_ELEM                   0xdd
++#define RSN_INFO_ELEM 0x30
++
++#define CFG_DRIVER_ENABLE               0x0902 
++#define CFG_CNF_ENCRYPTION              0xFC20
++#define CFG_ADD_TKIP_DEFAULT_KEY        0xFCB4
++#define CFG_SET_WPA_AUTH_KEY_MGMT_SUITE 0xFCB5
++#define CFG_REMOVE_TKIP_DEFAULT_KEY     0xFCB6
++#define CFG_ADD_TKIP_MAPPED_KEY         0xFCB7 
++#define CFG_REMOVE_TKIP_MAPPED_KEY      0xFCB8
++#define CFG_FW_IDENTITY                 0xFD20
++#define CFG_CNF_EXCL_UNENCRYPTED        0xFC22
++
++#define HCF_SUCCESS			0x00
++#define UIL_SUCCESS                     0x00
++
++#define COMP_ID_FW_STA			31
++#define COMP_ID_FW_AP			32
++
++#define WVLAN2_IOCTL_UIL		SIOCDEVPRIVATE
++
++#endif

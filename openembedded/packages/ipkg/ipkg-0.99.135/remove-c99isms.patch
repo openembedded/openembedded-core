@@ -1,0 +1,42 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- C/ipkg_install.c~remove-c99isms.patch
++++ C/ipkg_install.c
+@@ -186,14 +186,16 @@
+ {
+      abstract_pkg_vec_t *providers = pkg_hash_fetch_all_installation_candidates (&conf->pkg_hash, pkg_name);
+      int i;
++     ipkg_error_t err;
++     abstract_pkg_t *ppkg;
+ 
+      if (providers == NULL)
+ 	  return IPKG_PKG_HAS_NO_CANDIDATE;
+ 
+      for (i = 0; i < providers->len; i++) {
+-	  abstract_pkg_t *ppkg = abstract_pkg_vec_get(providers, i);
+-     ipkg_message(conf, IPKG_DEBUG2,"Function: %s calling ipkg_install_by_name %d \n",__FUNCTION__, i);
+-	  ipkg_error_t err = ipkg_install_by_name(conf, ppkg->name);
++	  ppkg = abstract_pkg_vec_get(providers, i);
++          ipkg_message(conf, IPKG_DEBUG2,"Function: %s calling ipkg_install_by_name %d \n",__FUNCTION__, i);
++	  err = ipkg_install_by_name(conf, ppkg->name);
+ 	  if (err)
+ 	       return err;
+      }
+@@ -614,12 +616,13 @@
+ int pkg_remove_installed_replacees_unwind(ipkg_conf_t *conf, pkg_vec_t *replacees)
+ {
+      int i;
++     int err;
+      int replaces_count = replacees->len;
+      for (i = 0; i < replaces_count; i++) {
+ 	  pkg_t *replacee = replacees->pkgs[i];
+ 	  if (replacee->state_status != SS_INSTALLED) {
+                ipkg_message(conf, IPKG_DEBUG2,"Function: %s calling ipkg_install_pkg \n",__FUNCTION__);
+-	       int err = ipkg_install_pkg(conf, replacee);
++	       err = ipkg_install_pkg(conf, replacee);
+ 	       if (err)
+ 		    return err;
+ 	  }

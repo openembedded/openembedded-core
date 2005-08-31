@@ -1,0 +1,25 @@
+#!/bin/busybox ash
+
+action="$1"
+oldversion="$2"
+
+umask 022
+
+if /bin/busybox [ "$action" != configure ]
+then
+	exit 0
+fi
+
+. /etc/default/functions
+
+setup_init_hwclock() {
+	updatercd hwclock.sh start 50 S . stop 25 0 1 6 .
+	/etc/init.d/hwclock.sh restart
+}
+
+/bin/busybox ash /usr/bin/update-alternatives --install /bin/vi vi /bin/busybox 100
+/bin/busybox ash /usr/bin/update-alternatives --install /bin/sh sh /bin/busybox 100
+
+setup_init_hwclock
+
+exit 0

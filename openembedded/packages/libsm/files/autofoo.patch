@@ -1,0 +1,21 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- libSM-6.0.3/configure.ac~autofoo	2004-05-11 01:51:21.000000000 -0400
++++ libSM-6.0.3/configure.ac	2005-01-18 12:15:50.405356376 -0500
+@@ -8,12 +8,12 @@
+         libSM)
+ 
+ AC_CONFIG_SRCDIR([Makefile.am])
++AC_CONFIG_AUX_DIR(.)
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ 
+ AM_MAINTAINER_MODE
+ 
+ AM_CONFIG_HEADER([config.h])
+-AC_CONFIG_AUX_DIR(.)
+ 
+ # Checks for programs.
+ AC_PROG_LIBTOOL

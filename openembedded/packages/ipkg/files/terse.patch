@@ -1,0 +1,18 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- C/ipkg_cmd.c~terse
++++ C/ipkg_cmd.c
+@@ -148,9 +146,7 @@
+ 	int result;
+ 	p_userdata = userdata;
+ 	result = (cmd->fun)(conf, argc, argv);
+-        if ( result == 0 ) {
+-           ipkg_message(conf, IPKG_NOTICE, "Successfully terminated.\n");
+-        } else {
++        if ( result != 0 ) {
+            ipkg_message(conf, IPKG_NOTICE, "An error ocurred, return value: %d.\n", result);
+         }
+    

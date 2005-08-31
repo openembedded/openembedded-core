@@ -1,0 +1,33 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- src/configure~binutils-2.15.90.0.3-uclibc-200-build_modules.patch
++++ src/configure
+@@ -940,6 +940,11 @@
+   build_configdirs=`echo ${build_libs} ${build_tools}`
+ fi
+ 
++case "$target" in
++  *-*-*-uclibc*)
++    build_modules=
++    ;;
++esac
+ ################################################################################
+ 
+ srcname="gnu development package"
+--- src/configure.in~binutils-2.15.90.0.3-uclibc-200-build_modules.patch
++++ src/configure.in
+@@ -189,6 +189,11 @@
+   build_configdirs=`echo ${build_libs} ${build_tools}`
+ fi
+ 
++case "$target" in
++  *-*-*-uclibc*)
++    build_modules=
++    ;;
++esac
+ ################################################################################
+ 
+ srcname="gnu development package"

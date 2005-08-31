@@ -1,0 +1,20 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- libXrandr-1.0.2/configure.ac~autofoo	2004-01-15 03:23:00.000000000 -0500
++++ libXrandr-1.0.2/configure.ac	2005-01-16 11:18:35.924069872 -0500
+@@ -33,11 +33,11 @@
+ dnl protocol, so Xrandr version l.n.m corresponds to protocol version l.n
+ dnl
+ AC_INIT(libXrandr, 1.0.2, [keithp@keithp.com], libXrandr)
++AC_CONFIG_AUX_DIR(.)
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ AM_MAINTAINER_MODE
+ 
+ AM_CONFIG_HEADER(config.h)
+-AC_CONFIG_AUX_DIR(.)
+ 
+ # Check for progs
+ AC_PROG_CC

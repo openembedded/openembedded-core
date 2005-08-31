@@ -1,0 +1,16 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- orinoco-0.15rc1/spectrum_cs.c~spectrum-firmware	2004-04-19 07:08:24.000000000 +0200
++++ orinoco-0.15rc1/spectrum_cs.c	2004-05-28 01:20:05.000000000 +0200
+@@ -57,7 +57,7 @@
+  * hotplug firmware directory (typically /usr/lib/hotplug/firmware) and
+  * make sure that you have hotplug installed and enabled in the kernel.
+  */
+-/* #define SPECTRUM_FW_INCLUDED 1 */
++#define SPECTRUM_FW_INCLUDED 1
+ 
+ #ifdef SPECTRUM_FW_INCLUDED
+ /* Header with the firmware */

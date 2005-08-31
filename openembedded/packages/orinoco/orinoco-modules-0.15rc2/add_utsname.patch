@@ -1,0 +1,21 @@
+Index: orinoco-0.15rc1/kcompat.h
+===================================================================
+--- orinoco-0.15rc1.orig/kcompat.h	2005-08-03 14:51:18.000000000 +0000
++++ orinoco-0.15rc1/kcompat.h	2005-08-03 15:11:02.000000000 +0000
+@@ -1,3 +1,4 @@
++#include <linux/utsname.h>
+ #include <linux/version.h>
+ 
+ /********************************************************************/
+Index: orinoco-0.15rc2/orinoco.h
+===================================================================
+--- orinoco-0.15rc2.orig/orinoco.h	2004-07-28 07:06:45.000000000 +0100
++++ orinoco-0.15rc2/orinoco.h	2005-08-03 18:43:46.000000000 +0100
+@@ -13,6 +13,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/netdevice.h>
+ #include <linux/wireless.h>
++#include <linux/utsname.h>
+ #include <linux/version.h>
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 4, 25)
+ #include <linux/moduleparam.h>

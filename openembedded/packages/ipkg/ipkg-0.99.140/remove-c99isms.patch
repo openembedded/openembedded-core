@@ -1,0 +1,124 @@
+Index: C/pkg_depends.c
+===================================================================
+--- C.orig/pkg_depends.c	2005-02-08 14:32:46.000000000 +0000
++++ C/pkg_depends.c	2005-02-08 15:50:50.000000000 +0000
+@@ -251,15 +251,16 @@
+   really conflicts 
+   returns 0 if conflicts <> replaces or 1 if conflicts == replaces 
+ */
+-int is_pkg_a_replaces(pkg_t *pkg_scout,pkg_t *pkg){
+-
+-int i ;
+-int replaces_count = pkg->replaces_count;
++int is_pkg_a_replaces(pkg_t *pkg_scout,pkg_t *pkg)
++{
++    int i ;
++    int replaces_count = pkg->replaces_count;
++    abstract_pkg_t **replaces;
+ 
+- if (pkg->replaces_count==0)    // No replaces, it's surely a conflict
+-    return 0;
++    if (pkg->replaces_count==0)    // No replaces, it's surely a conflict
++        return 0;
+ 
+-    abstract_pkg_t **replaces = pkg->replaces;
++    replaces = pkg->replaces;
+ 
+     for (i = 0; i < replaces_count; i++) {
+         if (strcmp(pkg_scout->name,pkg->replaces[i]->name)==0)       // Found
+@@ -280,6 +281,8 @@
+     register int i, j, k;
+     int count;
+     abstract_pkg_t * ab_pkg;
++    pkg_t **pkg_scouts; 
++    pkg_t *pkg_scout; 
+ 
+     /* 
+      * this is a setup to check for redundant/cyclic dependency checks, 
+@@ -316,9 +319,9 @@
+ 	    if (test_vec) {
+                 /* pkg_vec found, it is an actual package conflict
+ 		 * cruise this possiblity's pkg_vec looking for an installed version */
+-		pkg_t **pkg_scouts = test_vec->pkgs;
++		pkg_scouts = test_vec->pkgs;
+ 		for(k = 0; k < test_vec->len; k++){
+-                    pkg_t *pkg_scout = pkg_scouts[k];
++                    pkg_scout = pkg_scouts[k];
+                     if (!pkg_scout) {
+                         fprintf(stderr,  "%s: null pkg scout\n", __FUNCTION__);
+                         continue; 
+@@ -381,13 +384,16 @@
+      abstract_pkg_vec_t *provider_apkgs = apkg->provided_by;
+      int n_providers = provider_apkgs->len;
+      abstract_pkg_t **apkgs = provider_apkgs->pkgs;
++     pkg_vec_t *pkg_vec;
++     int n_pkgs ; 
+      int i;
++     int j;
++
+      for (i = 0; i < n_providers; i++) {
+ 	  abstract_pkg_t *papkg = apkgs[i];
+-	  pkg_vec_t *pkg_vec = papkg->pkgs;
++	  pkg_vec = papkg->pkgs;
+ 	  if (pkg_vec) {
+-	       int n_pkgs = pkg_vec->len;
+-	       int j;
++	       n_pkgs = pkg_vec->len;
+ 	       for (j = 0; j < n_pkgs; j++) {
+ 		    pkg_t *pkg = pkg_vec->pkgs[j];
+ 		    if (version_constraints_satisfied(depend, pkg)) {
+@@ -406,12 +412,14 @@
+      int n_providers = provider_apkgs->len;
+      abstract_pkg_t **apkgs = provider_apkgs->pkgs;
+      int i;
++     int n_pkgs;
++     int j;
++
+      for (i = 0; i < n_providers; i++) {
+ 	  abstract_pkg_t *papkg = apkgs[i];
+ 	  pkg_vec_t *pkg_vec = papkg->pkgs;
+ 	  if (pkg_vec) {
+-	       int n_pkgs = pkg_vec->len;
+-	       int j;
++	       n_pkgs = pkg_vec->len;
+ 	       for (j = 0; j < n_pkgs; j++) {
+ 		    pkg_t *pkg = pkg_vec->pkgs[j];
+ 		    if (version_constraints_satisfied(depend, pkg)) {
+@@ -532,11 +540,15 @@
+      abstract_pkg_t **conflictee_provides = conflictee->provides;
+      int conflictee_provides_count = conflictee->provides_count;
+      int i, j, k;
++     int possibility_count;
++     struct depend **possibilities;
++     abstract_pkg_t *possibility ;
++
+      for (i = 0; i < conflicts_count; i++) {
+-	  int possibility_count = conflicts[i].possibility_count;
+-	  struct depend **possibilities = conflicts[i].possibilities;
++	  possibility_count = conflicts[i].possibility_count;
++	  possibilities = conflicts[i].possibilities;
+ 	  for (j = 0; j < possibility_count; j++) {
+-	       abstract_pkg_t *possibility = possibilities[j]->pkg;
++	       possibility = possibilities[j]->pkg;
+ 	       for (k = 0; k < conflictee_provides_count; k++) {
+ 		    if (possibility == conflictee_provides[k]) {
+ 			 return 1;
+@@ -832,6 +844,8 @@
+      compound_depend_t * depends;
+      int count, othercount;
+      register int i, j;
++     abstract_pkg_t * ab_depend;
++     abstract_pkg_t ** temp;
+ 
+      count = pkg->pre_depends_count + pkg->depends_count;
+      depends = pkg->depends;
+@@ -843,8 +857,7 @@
+ 	  if (0 && pkg->pre_depends_count)
+ 	       fprintf(stderr, "  i=%d possibility_count=%x depends=%p\n", i, depends->possibility_count, depends);
+ 	  for (j = 0; j < depends->possibility_count; j++){
+-	       abstract_pkg_t * ab_depend = depends->possibilities[j]->pkg;
+-	       abstract_pkg_t ** temp;
++	       ab_depend = depends->possibilities[j]->pkg;
+ 	       if(!ab_depend->depended_upon_by)
+ 		    ab_depend->depended_upon_by = (abstract_pkg_t **)calloc(1, sizeof(abstract_pkg_t *));
+ 

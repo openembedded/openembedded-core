@@ -1,0 +1,52 @@
+#
+# Patch to allow /dev to reside permanently in the file
+# system.
+#
+--- old/devices	2005-05-28 21:51:39.012078699 -0700
++++ new/devices	2005-06-12 00:16:29.222686303 -0700
+@@ -6,7 +6,7 @@
+ . /etc/default/rcS
+ 
+ # exit without doing anything if udev is active
+-if test -e /dev/.udevdb; then
++if test -e /dev/.udevdb -o -e /dev/.permanent; then
+ 	exit 0
+ fi
+ 
+@@ -37,12 +37,20 @@
+ 	mknod /dev/ppp c 108 0
+ 	if test "$VERBOSE" != "no"; then echo "done"; fi
+ else
+-	if test "$VERBOSE" != "no"; then echo -n "Mounting /dev ramdisk: "; fi
+-	mount -t ramfs ramfs /dev || mount -t tmpfs ramfs /dev
+-	if test $? -ne 0; then
+-		if test "$VERBOSE" != "no"; then echo "failed"; fi
++	if test -e /dev/.noram
++	then
++		# There should be no files, any files will damage the
++		# makedevs script below.
++		rm $(find /dev -type f -print)
++		:>/dev/.noram
+ 	else
+-		if test "$VERBOSE" != "no"; then echo "done"; fi
++		if test "$VERBOSE" != "no"; then echo -n "Mounting /dev ramdisk: "; fi
++		mount -t ramfs ramfs /dev || mount -t tmpfs ramfs /dev
++		if test $? -ne 0; then
++			if test "$VERBOSE" != "no"; then echo "failed"; fi
++		else
++			if test "$VERBOSE" != "no"; then echo "done"; fi
++		fi
+ 	fi
+ 	if test "$VERBOSE" != "no"; then echo -n "Populating /dev: "; fi
+ 	cd /
+@@ -60,6 +68,10 @@
+ 		if test "$VERBOSE" != "no"; then echo "failed"; fi
+ 	else
+ 		if test "$VERBOSE" != "no"; then echo "done"; fi
++		if test -e /dev/.noram
++		then
++			:>/dev/.permanent
++		fi
+ 	fi
+ fi
+ 

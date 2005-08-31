@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if [ -f /proc/hal/model ]; then
+  xmodmap -e 'keycode 104 = Return'
+fi

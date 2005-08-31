@@ -1,0 +1,27 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- flex-2.5.31/Makefile.am~include
++++ flex-2.5.31/Makefile.am
+@@ -141,7 +141,7 @@
+ 	tests
+ 
+ localedir = $(datadir)/locale
+-AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
++AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/intl
+ LIBS = @LIBINTL@ @LIBS@
+ 
+ skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
+--- flex-2.5.31/Makefile.in~include
++++ flex-2.5.31/Makefile.in
+@@ -292,7 +292,7 @@
+ 
+ 
+ localedir = $(datadir)/locale
+-AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
++AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/intl
+ 
+ # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
+ #

@@ -1,0 +1,44 @@
+Index: modutils/rmmod.c
+===================================================================
+RCS file: /var/cvs/busybox/modutils/rmmod.c,v
+retrieving revision 1.31
+diff -u -r1.31 rmmod.c
+--- busybox/modutils/rmmod.c	20 Jul 2004 18:36:51 -0000	1.31
++++ busybox/modutils/rmmod.c	10 Dec 2004 22:56:36 -0000
+@@ -28,6 +28,7 @@
+ #include <fcntl.h>
+ #include <string.h>
+ #include <sys/syscall.h>
++#include <sys/utsname.h>
+ #include "busybox.h"
+ 
+ #ifdef CONFIG_FEATURE_2_6_MODULES
+@@ -63,6 +64,16 @@
+ 	void *buf; /* hold the module names which we ignore but must get */
+ 	size_t bufsize = 0;
+ #endif
++#ifdef CONFIG_FEATURE_2_6_MODULES
++	int k_version = 0;
++	struct utsname myuname;	
++
++	if (uname(&myuname) == 0) {
++		if (myuname.release[0] == '2') {
++			k_version = myuname.release[2] - '0';
++		}
++	}
++#endif
+ 
+ 	/* Parse command line. */
+ 	while ((n = getopt(argc, argv, "a")) != EOF) {
+@@ -109,7 +120,10 @@
+ 		for (n = optind; n < argc; n++) {
+ #ifdef CONFIG_FEATURE_2_6_MODULES
+ 			char module_name[strlen(argv[n]) + 1];
+-			filename2modname(module_name, argv[n]);
++			if (k_version != 4)
++				filename2modname(module_name, argv[n]);
++			else
++				strcpy(module_name, argv[n]);
+ #else
+ #define module_name		argv[n]
+ #endif

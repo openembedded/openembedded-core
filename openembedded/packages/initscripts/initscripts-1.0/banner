@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ ! -e /dev/tty ]; then
+    /bin/mknod -m 0666 /dev/tty c 5 0
+fi
+
+if ( > /dev/tty0 ) 2>/dev/null; then
+    vtmaster=/dev/tty0
+elif ( > /dev/vc/0 ) 2>/dev/null; then
+    vtmaster=/dev/vc/0
+else
+    vtmaster=/dev/null
+fi
+echo > $vtmaster
+echo "Please wait: booting..." > $vtmaster

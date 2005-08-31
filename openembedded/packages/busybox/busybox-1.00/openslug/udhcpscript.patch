@@ -1,0 +1,133 @@
+--- busybox-1.00/.pc/udhcpscript.patch/examples/udhcp/simple.script	2004-10-13 00:18:05.000000000 -0700
++++ busybox-1.00/examples/udhcp/simple.script	2005-06-05 15:08:28.432605118 -0700
+@@ -1,40 +1,101 @@
+ #!/bin/sh
++# openslug UDHCP client script
++# this must set the HW address (MAC) on the interface
++#
++. /etc/default/functions
+ 
+-# udhcpc script edited by Tim Riker <Tim@Rikers.org>
+ 
+-[ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
++echodns(){
++	local dns
++	if test $# -gt 0
++	then
++		for dns in "$@"
++		do
++			echo "nameserver $dns"
++		done
++	fi
++}
++
++# Output the correct contents for resolv.conf
++mkresolv() {
++	test -n "$domain" && echo "search $domain"
++	echodns $dns
++}
++
++# checksum of a file (or stdin if -)
++md5strm() {
++	md5sum $1 2>/dev/null | sed -n 's/^\([0-9A-Za-z]*\).*$/\1/p'
++}
++
++bind() {
++	local B N metric i olddomain
++	B=
++	test -n "$broadcast" && B="broadcast $broadcast"
++	N=
++	test -n "$subnet" && N="netmask $subnet"
++	ifconfig "$interface" "$ip" $B $N up
++
++	# If given router information delete the old information and
++	# enter new stuff, routers get metrics incremented by 1
++	# between each (this is somewhat arbitrary)
++	if test -n "$router"
++	then
++		while route del default gw 0.0.0.0 dev $interface 2>/dev/null
++		do
++			:
++		done
+ 
+-RESOLV_CONF="/etc/resolv.conf"
+-[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
+-[ -n "$subnet" ] && NETMASK="netmask $subnet"
++		metric=0
++		for i in $router
++		do
++			route add default gw "$i" dev "$interface" metric $((metric++))
++		done
++	fi
++
++	olddomain=
++	test -r /etc/defaultdomain && olddomain="$(cat /etc/defaultdomain)"
++	if test -n "$domain" -a "$domain" != "$olddomain"
++	then
++		echo "$domain" >/etc/defaultdomain
++		# and update the kernel view too
++		echo "$domain" >/proc/sys/kernel/domainname
++	fi
++
++	# Update /etc/resolv.conf to reflect domain and dns information,
++	# this always clears resolv.conf if none is given
++	md5old="$(md5strm /etc/resolv.conf)"
++	md5new="$(mkresolv | md5strm -)"
++	test "$md5old" != "$md5new" && mkresolv >/etc/resolv.conf
++}
+ 
+ case "$1" in
+-	deconfig)
+-		/sbin/ifconfig $interface 0.0.0.0
+-		;;
+-
+-	renew|bound)
+-		/sbin/ifconfig $interface $ip $BROADCAST $NETMASK
+-
+-		if [ -n "$router" ] ; then
+-			echo "deleting routers"
+-			while route del default gw 0.0.0.0 dev $interface ; do
+-				:
+-			done
+-
+-			metric=0
+-			for i in $router ; do
+-				route add default gw $i dev $interface metric $((metric++))
+-			done
++deconfig)
++	# Bring the interface up (without inet at this point)
++	ifconfig "$interface" up;;
++
++renew|bound)
++	bind;;
++
++leasefail)
++	# Pull the values from the config data if (only only if) this
++	# is the config interface
++	if test "$interface" = "$(config iface)"
++	then
++		ip="$(config ip)"
++		if test -n "$ip"
++		then
++			router="$(config gateway)"
++			subnet="$(config netmask)"
++			broadcast="$(config broadcast)"
++			domain="$(config domain)"
++			dns="$(config dns)"
++
++			bind
+ 		fi
++	fi;;
+ 
+-		echo -n > $RESOLV_CONF
+-		[ -n "$domain" ] && echo search $domain >> $RESOLV_CONF
+-		for i in $dns ; do
+-			echo adding dns $i
+-			echo nameserver $i >> $RESOLV_CONF
+-		done
+-		;;
++*)	echo "udhcpc: $*: unknown command" >&2
++	exit 1;;
+ esac
+ 
+ exit 0

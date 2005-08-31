@@ -1,0 +1,210 @@
+# Default kernel keymap. This uses 7 modifier combinations.
+keymaps 0-2,4-5,8,12
+# Change the above line into
+#	keymaps 0-2,4-6,8,12
+# in case you want the entries
+#	altgr   control keycode  83 = Boot            
+#	altgr   control keycode 111 = Boot            
+# below.
+#
+keycode   1 =        
+keycode  14 = BackSpace
+	altgr keycode 14 = Delete
+keycode  15 = Tab
+	altgr keycode 65 = Caps_Lock
+keycode  16 = q
+	altgr keycode 16 = one
+keycode  17 = w               
+	altgr keycode 17 = two
+keycode  18 = e
+	altgr keycode 18 = three
+keycode  19 = r          
+	altgr keycode 19 = four
+keycode  20 = t               
+	altgr keycode 20 = five
+keycode  21 = y               
+	altgr keycode 21 = six
+keycode  22 = u      
+	altgr keycode 22 = seven
+keycode  23 = i           
+	altgr keycode 23 = eight
+keycode  24 = o               
+	altgr keycode 24 = nine
+keycode  25 = p               
+	altgr keycode 25 = zero
+keycode  26 = 
+keycode  27 =
+keycode  28 = Return          
+	altgr     keycode  28 = greater     
+keycode  29 = Control         
+keycode  30 = a
+	altgr keycode 30 = exclam
+keycode  31 = s               
+	altgr keycode 31 = at
+keycode  32 = d
+	altgr keycode 32 = numbersign
+keycode  33 = f
+	altgr keycode 33 = dollar
+keycode  34 = g               
+	altgr keycode 34 = percent
+keycode  35 = h         
+	altgr keycode 35 = underscore
+keycode  36 = j        
+	altgr keycode 36 = ampersand
+keycode  37 = k   
+    altgr keycode 37 = asterisk
+keycode  38 = l         
+	altgr keycode 38 = parenleft
+keycode  39 =  
+keycode  40 = apostrophe
+	altgr keycode 40 = asciitilde
+	shift keycode 40 = quotedbl
+keycode  41 =     
+keycode  42 = Shift           
+keycode  43 =  
+keycode  44 = z               
+	altgr keycode 44 = bar
+keycode  45 = x               
+keycode  46 = c
+keycode  47 = v               
+keycode  48 = b
+	altgr keycode 48 = minus
+keycode  49 = n               
+	altgr keycode 49 = plus
+keycode  50 = m               
+	altgr keycode 50 = equal
+keycode  51 = comma
+	altgr keycode 51 = parenright
+	shift keycode 51 = semicolon
+keycode  52 = period           
+	shift keycode 52 = colon
+	altgr keycode 52 = less
+
+keycode  53 = slash
+	shift keycode 53 = question
+	altgr keycode 53 = Num_Lock
+
+keycode  54 = Shift           
+keycode  55 = 
+keycode  56 = Alt             
+keycode  57 = space            space           
+	control keycode  57 = nul   
+keycode 59 = F9
+keycode 60 = F10
+keycode 61 = AltGr
+keycode 62 = Escape
+keycode 63 = Return
+keycode 64 = Escape
+keycode 65 = Down
+keycode 66 = Up
+keycode 67 = Control
+keycode 68 = F13
+keycode 79 = F15
+keycode 80 = F16
+keycode 82 = F17
+keycode 87 = Return
+keycode 88 = F11	          
+keycode 97 = Control  
+keycode 99 = F12       
+keycode 103 = Up              
+keycode 105 = Left            
+	altgr     keycode 105 = Decr_Console
+keycode 106 = Right           
+	altgr     keycode 106 = Incr_Console
+keycode 108 = Down  
+string F1 = "\033[[A"
+string F2 = "\033[[B"
+string F3 = "\033[[C"
+string F4 = "\033[[D"
+string F5 = "\033[[E"
+string F6 = "\033[17~"
+string F7 = "\033[18~"
+string F8 = "\033[19~"
+string F9 = "\033[20~"
+string F10 = "\033[21~"
+string F11 = "\033[23~"
+string F12 = "\033[24~"
+string F13 = "\033[25~"
+string F14 = "\033[26~"
+string F15 = "\033[28~"
+string F16 = "\033[29~"
+string F17 = "\033[31~"
+string F18 = "\033[32~"
+string F19 = "\033[33~"
+string F20 = "\033[34~"
+string Find = "\033[1~"
+string Insert = "\033[2~"
+string Remove = "\033[3~"
+string Select = "\033[4~"
+string Prior = "\033[5~"
+string Next = "\033[6~"
+string Macro = "\033[M"
+string Pause = "\033[P"
+compose '`' 'A' to 'À'
+compose '`' 'a' to 'à'
+compose '\'' 'A' to 'Á'
+compose '\'' 'a' to 'á'
+compose '^' 'A' to 'Â'
+compose '^' 'a' to 'â'
+compose '~' 'A' to 'Ã'
+compose '~' 'a' to 'ã'
+compose '"' 'A' to 'Ä'
+compose '"' 'a' to 'ä'
+compose 'O' 'A' to 'Å'
+compose 'o' 'a' to 'å'
+compose '0' 'A' to 'Å'
+compose '0' 'a' to 'å'
+compose 'A' 'A' to 'Å'
+compose 'a' 'a' to 'å'
+compose 'A' 'E' to 'Æ'
+compose 'a' 'e' to 'æ'
+compose ',' 'C' to 'Ç'
+compose ',' 'c' to 'ç'
+compose '`' 'E' to 'È'
+compose '`' 'e' to 'è'
+compose '\'' 'E' to 'É'
+compose '\'' 'e' to 'é'
+compose '^' 'E' to 'Ê'
+compose '^' 'e' to 'ê'
+compose '"' 'E' to 'Ë'
+compose '"' 'e' to 'ë'
+compose '`' 'I' to 'Ì'
+compose '`' 'i' to 'ì'
+compose '\'' 'I' to 'Í'
+compose '\'' 'i' to 'í'
+compose '^' 'I' to 'Î'
+compose '^' 'i' to 'î'
+compose '"' 'I' to 'Ï'
+compose '"' 'i' to 'ï'
+compose '-' 'D' to 'Ð'
+compose '-' 'd' to 'ð'
+compose '~' 'N' to 'Ñ'
+compose '~' 'n' to 'ñ'
+compose '`' 'O' to 'Ò'
+compose '`' 'o' to 'ò'
+compose '\'' 'O' to 'Ó'
+compose '\'' 'o' to 'ó'
+compose '^' 'O' to 'Ô'
+compose '^' 'o' to 'ô'
+compose '~' 'O' to 'Õ'
+compose '~' 'o' to 'õ'
+compose '"' 'O' to 'Ö'
+compose '"' 'o' to 'ö'
+compose '/' 'O' to 'Ø'
+compose '/' 'o' to 'ø'
+compose '`' 'U' to 'Ù'
+compose '`' 'u' to 'ù'
+compose '\'' 'U' to 'Ú'
+compose '\'' 'u' to 'ú'
+compose '^' 'U' to 'Û'
+compose '^' 'u' to 'û'
+compose '"' 'U' to 'Ü'
+compose '"' 'u' to 'ü'
+compose '\'' 'Y' to 'Ý'
+compose '\'' 'y' to 'ý'
+compose 'T' 'H' to 'Þ'
+compose 't' 'h' to 'þ'
+compose 's' 's' to 'ß'
+compose '"' 'y' to 'ÿ'
+compose 's' 'z' to 'ß'
+compose 'i' 'j' to 'ÿ'

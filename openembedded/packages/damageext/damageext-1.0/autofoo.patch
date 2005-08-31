@@ -1,0 +1,18 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- damageext-1.0/configure.ac~autofoo	2003-11-25 22:47:58.000000000 -0500
++++ damageext-1.0/configure.ac	2005-01-16 11:47:08.123775952 -0500
+@@ -25,9 +25,9 @@
+ 
+ AC_PREREQ([2.57])
+ AC_INIT([damageext], [1.0], [keithp@keithp.com], damageext)
++AC_CONFIG_AUX_DIR(.)
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ AM_MAINTAINER_MODE
+-AC_CONFIG_AUX_DIR(.)
+ 
+ PKG_CHECK_MODULES(FIXESEXT, fixesext)
+ 

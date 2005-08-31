@@ -1,0 +1,15 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- popt-1.7/Makefile.am~intl
++++ popt-1.7/Makefile.am
+@@ -33,6 +33,7 @@
+ 
+ include_HEADERS = popt.h
+ lib_LTLIBRARIES = libpopt.la
++libpopt_la_LIBADD = $(LTLIBINTL)
+ libpopt_la_SOURCES = popt.c findme.c poptparse.c poptconfig.c popthelp.c
+ 
+ man_MANS = popt.3

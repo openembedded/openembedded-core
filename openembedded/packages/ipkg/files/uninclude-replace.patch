@@ -1,0 +1,10 @@
+--- C/includes.h	2003-03-28 19:36:22.000000000 +0000
++++ C/includes.h	2004-07-28 03:41:11.000000000 +0100
+@@ -48,6 +48,6 @@
+ # include <unistd.h>
+ #endif
+ 
+-#include "replace/replace.h"
++//#include "replace/replace.h"
+ 
+ #endif

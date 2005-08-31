@@ -1,0 +1,13 @@
+This patch overrides the root-home.patch for DISTRO=openslug
+
+The patch sets a root password on /etc/passwd, this password is
+
+opeNSLUg
+
+This allows ssh (dropbear) login to an OpenSlug NSLU2 using that
+password.
+
+The password is NO MORE SECURE than the previous empty string,
+however, because ssh logins can now succeed the NSLU2 is LESS
+secure!  This password must be changed as soon as possible after
+initial configuration of the NSLU2.

@@ -1,0 +1,82 @@
+Index: 2.6-bk/drivers/serial/8250.c
+===================================================================
+--- 2.6-bk.orig/drivers/serial/8250.c	2004-09-15 11:00:58.000000000 +0100
++++ 2.6-bk/drivers/serial/8250.c	2004-09-30 13:23:22.202968787 +0100
+@@ -2033,7 +2033,12 @@
+ 	.devfs_name		= "tts/",
+ 	.dev_name		= "ttyS",
+ 	.major			= TTY_MAJOR,
++#ifdef CONFIG_SERIAL_PXA
++	.minor			= 64 + 3,
++	.name_base		= 3,
++#else
+ 	.minor			= 64,
++#endif
+ 	.nr			= UART_NR,
+ 	.cons			= SERIAL8250_CONSOLE,
+ };
+Index: 2.6-bk/drivers/serial/serial_core.c
+===================================================================
+--- 2.6-bk.orig/drivers/serial/serial_core.c	2004-09-30 09:03:27.000000000 +0100
++++ 2.6-bk/drivers/serial/serial_core.c	2004-09-30 13:23:22.205967977 +0100
+@@ -1958,7 +1958,7 @@
+ static inline void
+ uart_report_port(struct uart_driver *drv, struct uart_port *port)
+ {
+-	printk("%s%d", drv->dev_name, port->line);
++	printk("%s%d", drv->dev_name, port->line + drv->name_base);
+ 	printk(" at ");
+ 	switch (port->iotype) {
+ 	case UPIO_PORT:
+@@ -2127,6 +2127,7 @@
+ 	normal->driver_name	= drv->driver_name;
+ 	normal->devfs_name	= drv->devfs_name;
+ 	normal->name		= drv->dev_name;
++	normal->name_base	= drv->name_base;
+ 	normal->major		= drv->major;
+ 	normal->minor_start	= drv->minor;
+ 	normal->type		= TTY_DRIVER_TYPE_SERIAL;
+Index: 2.6-bk/include/linux/serial_core.h
+===================================================================
+--- 2.6-bk.orig/include/linux/serial_core.h	2004-09-15 11:00:59.000000000 +0100
++++ 2.6-bk/include/linux/serial_core.h	2004-09-30 13:23:22.206967707 +0100
+@@ -290,6 +290,7 @@
+ 	const char		*driver_name;
+ 	const char		*dev_name;
+ 	const char		*devfs_name;
++	int			 name_base;
+ 	int			 major;
+ 	int			 minor;
+ 	int			 nr;
+Index: linux-2.6.11/drivers/serial/serial_cs.c
+===================================================================
+--- linux-2.6.11.orig/drivers/serial/serial_cs.c	2005-06-13 23:28:12.000000000 +0100
++++ linux-2.6.11/drivers/serial/serial_cs.c	2005-06-14 00:18:08.000000000 +0100
+@@ -331,7 +331,7 @@
+ 			kio_addr_t iobase, int irq)
+ {
+ 	struct uart_port port;
+-	int line;
++	int line, linestart;
+ 
+ 	memset(&port, 0, sizeof (struct uart_port));
+ 	port.iobase = iobase;
+@@ -348,10 +348,16 @@
+ 		return -EINVAL;
+ 	}
+ 
++#if CONFIG_SERIAL_PXA
++	linestart = 3;
++#else
++	linestart = 0;
++#endif
++
+ 	info->line[info->ndev] = line;
+-	sprintf(info->node[info->ndev].dev_name, "ttyS%d", line);
++	sprintf(info->node[info->ndev].dev_name, "ttyS%d", line+linestart);
+ 	info->node[info->ndev].major = TTY_MAJOR;
+-	info->node[info->ndev].minor = 0x40 + line;
++	info->node[info->ndev].minor = 0x40 + line + linestart;
+ 	if (info->ndev > 0)
+ 		info->node[info->ndev - 1].next = &info->node[info->ndev];
+ 	info->ndev++;

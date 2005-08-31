@@ -1,0 +1,63 @@
+#!/bin/sh
+# Original author: ???
+#
+# Additions by Steph Meslin-Weber:
+# x Percentage display
+# x Dot display of dependency installations
+# - removed both of above
+# - display is now X of Y packages and current package name being installed
+
+#. /etc/default/rcS
+
+reconfigure () {
+	pkg=$1
+	path=$2
+	isdependent=$3
+	test -e "$path/info/$pkg.control" || return 1
+	depends="`cat $path/info/$pkg.control|grep Depends|cut -d: -f2`"
+	
+	# make sure we haven't already installed this package
+	isthere=`cat /tmp/.configured.list|grep $pkg`
+	if test "$isthere" != ""; then
+		return 1
+	fi	
+
+	if test "$depends" != ""; then
+		for dep in $depends; do
+			(echo $log|grep $dep >/dev/null 2>&1) || ( reconfigure $dep $path "$max" "$pkg" && log="$log $dep"; )
+		done
+	fi
+
+	echo -ne " ${pkg}"
+	
+	test -e "$path/info/$pkg.prerm" && $path/info/$pkg.prerm unconfigure >/dev/null 2>&1
+	test -e "$path/info/$pkg.postinst" && $path/info/$pkg.postinst configure >/dev/null 2>&1
+	
+	log="$log $pkg"
+
+	# append the installed package name to the list
+	echo -ne "$pkg\n" >> /tmp/.configured.list
+
+	echo
+	return 0
+}
+
+if test ! -e /etc/.configured; then
+	echo "Reconfiguring all packages installed to root:"
+
+	# create unique packages list file
+	rm -f /tmp/.configured.list
+	touch /tmp/.configured.list
+
+	log=""
+
+	for control in /usr/lib/ipkg/info/*.control; do
+		package=`echo $control|sed -e 's,.*/,,g; s,\.control,,g;'`
+		(echo $log|grep $package >/dev/null 2>&1) || reconfigure $package /usr/lib/ipkg
+	done
+
+	# cleanup unique packages list file
+	rm -f /tmp/.configured.list
+fi	
+
+test -f	/usr/lib/ipkg/info/task-ramses || ipkg install task-ramses

@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# start/stop portmap daemon.
+
+test -f /sbin/portmap || exit 0
+
+case "$1" in
+    start)
+	echo -n "Starting portmap daemon:"
+	echo -n " portmap"
+        start-stop-daemon --start --quiet --exec /sbin/portmap
+	echo "."
+
+	if [ -f /var/run/portmap.upgrade-state ]; then
+          echo -n "Restoring old RPC service information..."
+          sleep 1 # needs a short pause or pmap_set won't work. :(
+	  pmap_set </var/run/portmap.upgrade-state
+	  rm -f /var/run/portmap.upgrade-state
+          echo "done."
+        fi
+
+	;;
+    stop)
+        echo -n "Stopping portmap daemon:"
+        echo -n " portmap" ; start-stop-daemon --stop --quiet --exec /sbin/portmap
+        echo "."
+	;;
+    reload)
+	;;
+    force-reload)
+        $0 restart
+	;;
+    restart)
+	pmap_dump >/var/run/portmap.state
+        $0 stop
+        $0 start
+	if [ ! -f /var/run/portmap.upgrade-state ]; then
+          sleep 1
+	  pmap_set </var/run/portmap.state
+	fi
+	rm -f /var/run/portmap.state
+	;;
+    *)
+	echo "Usage: /etc/init.d/portmap {start|stop|reload|restart}"
+	exit 1
+	;;
+esac
+
+exit 0
+

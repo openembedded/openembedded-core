@@ -1,0 +1,110 @@
+#!/bin/sh
+#
+# rcS		Call all S??* scripts in /etc/rcS.d in
+#		numerical/alphabetical order.
+#
+# Version:	@(#)/etc/init.d/rcS  2.76  19-Apr-1999  miquels@cistron.nl
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+runlevel=S
+prevlevel=N
+umask 022
+export PATH runlevel prevlevel
+
+#	Make sure proc is mounted
+#
+[ -d "/proc/1" ] || mount /proc
+
+#
+#	See if system needs to be setup. This is ONLY meant to
+#	be used for the initial setup after a fresh installation!
+#
+if [ -x /sbin/unconfigured.sh ]
+then
+  /sbin/unconfigured.sh
+fi
+
+#
+#	Source defaults.
+#
+. /etc/default/rcS
+
+#
+#	Trap CTRL-C &c only in this shell so we can interrupt subprocesses.
+#
+trap ":" INT QUIT TSTP
+
+#
+#       Do we have /proc/progress and set VERBOSE to "no" ?
+#       If so, calculate the number of scripts and the incremental step
+#
+if [ "$VERBOSE" = no ]; then
+    if [ -e /proc/progress ]; then
+        set `ls -1 /etc/rc$runlevel.d/S* | wc`
+        numscripts=$1
+        PROGRESS_incstep=`expr 90 / $1`
+        PROGRESS_value=10
+        PROGRESS=yes
+        export PROGRESS_value PROGRESS_incstep
+    fi
+fi
+export VERBOSE PROGRESS
+
+#
+#	Call all parts in order.
+#
+for i in /etc/rcS.d/S??*
+do
+	# Ignore dangling symlinks for now.
+	[ ! -f "$i" ] && continue
+
+	# Handle verbosity
+	[ "$VERBOSE" = very ] && echo "INIT: Running $i..."
+	if [ "$PROGRESS" = yes ]; then
+		export PROGRESS_value=`expr $PROGRESS_value + $PROGRESS_incstep`
+		echo "$PROGRESS_value Starting $i..." >/proc/progress
+	fi
+
+	case "$i" in
+		*.sh)
+			# Source shell script for speed.
+			(
+				trap - INT QUIT TSTP
+				set start
+				. $i
+			)
+			;;
+		*)
+			# No sh extension, so fork subprocess.
+			$i start
+			;;
+	esac
+
+        #
+        # Report status based on result code
+        #
+        result=$?
+        if [ "$PROGRESS" = yes ]; then
+                if [ "$result" = 0 ]; then
+                    echo "=s" >/proc/progress
+                else
+                    echo "=f" >/proc/progress
+                fi
+        fi
+done
+
+#
+#	For compatibility, run the files in /etc/rc.boot too.
+#
+[ -d /etc/rc.boot ] && run-parts /etc/rc.boot
+
+#
+#	Finish setup if needed. The comment above about
+#	/sbin/unconfigured.sh applies here as well!
+#
+if [ -x /sbin/setup.sh ]
+then
+  /sbin/setup.sh
+fi
+

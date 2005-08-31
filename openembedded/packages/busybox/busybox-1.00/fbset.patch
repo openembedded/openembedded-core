@@ -1,0 +1,24 @@
+--- busybox/util-linux/fbset.c~	2004-07-03 16:24:23.000000000 +0100
++++ busybox/util-linux/fbset.c	2004-12-30 20:09:26.000000000 +0000
+@@ -337,7 +337,7 @@
+ {
+ 	struct fb_var_screeninfo var, varset;
+ 	int fh, i;
+-	char *fbdev = DEFAULTFBDEV;
++	char *fbdev = NULL;
+ 	char *modefile = DEFAULTFBMODE;
+ 	char *thisarg, *mode = NULL;
+ 
+@@ -404,7 +404,12 @@
+ 		}
+ 	}
+ 
++	if (fbdev == NULL)
++		fbdev = DEFAULTFBDEV;
+ 	if ((fh = open(fbdev, O_RDONLY)) < 0)
++#ifdef CONFIG_FEATURE_DEVFS
++		if ((fh = open("/dev/fb0", O_RDONLY)) < 0)
++#endif
+ 		bb_perror_msg_and_die("fbset(open)");
+ 	if (ioctl(fh, FBIOGET_VSCREENINFO, &var))
+ 		bb_perror_msg_and_die("fbset(ioctl)");

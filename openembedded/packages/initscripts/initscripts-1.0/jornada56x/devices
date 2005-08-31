@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# Devfs handling script.  Since we arent running devfsd due to various reasons
+# which I will not lay out here, we need to create some links for compatibility.
+
+# exit without doing anything if udev is active
+if test -e /dev/.udevdb; then
+    exit 0
+fi
+
+    test -n "$VERBOSE" && echo -n "Setting up device links for devfs: "
+    (
+    ln -s /dev/vc/0 /dev/tty0
+    ln -s /dev/vc/1 /dev/tty1
+    ln -s /dev/vc/2 /dev/tty2
+    ln -s /dev/vc/3 /dev/tty3
+    ln -s /dev/vc/4 /dev/tty4
+    ln -s /dev/vc/5 /dev/tty5
+    ln -s /dev/fb/0 /dev/fb0
+    # ln -s /dev/tts/0 /dev/ttySA0
+    # ln -s /dev/tts/1 /dev/ttySA1
+    # ln -s /dev/tts/2 /dev/ttySA2
+
+    ln -s /dev/sound/dsp /dev/dsp
+    ln -s /dev/sound/mixer /dev/mixer
+
+    ln -s /dev/v4l/video0 /dev/video0
+    ln -s /dev/v4l/video0 /dev/video
+    ln -s /dev/misc/rtc /dev/rtc
+    ln -s /dev/misc/apm_bios /dev/apm_bios
+
+    ## need this so that ppp will autoload the ppp modules
+    mknod /dev/ppp c 108 0
+    )  > /dev/null 2>&1
+
+
+    test -n "$VERBOSE" && echo "done"

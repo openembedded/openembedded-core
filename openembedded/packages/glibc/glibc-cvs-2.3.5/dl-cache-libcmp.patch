@@ -1,0 +1,10 @@
+--- libc/elf/Versions.old	2005-06-27 13:38:25.000000000 +0100
++++ libc/elf/Versions	2005-06-27 14:03:54.000000000 +0100
+@@ -56,5 +56,7 @@
+     _dl_make_stack_executable;
+     # Only here for gdb while a better method is developed.
+     _dl_debug_state;
++    # for ldconfig
++    _dl_cache_libcmp;
+   }
+ }

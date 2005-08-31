@@ -1,0 +1,30 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- gcc-3.4.1/gcc/config.gcc~gcc-3.4.0-arm-bigendian-uclibc
++++ gcc-3.4.1/gcc/config.gcc
+@@ -666,6 +666,11 @@
+ 	;;
+ arm*-*-linux-uclibc*)		# ARM GNU/Linux with ELF - uClibc
+ 	tm_file="dbxelf.h elfos.h linux.h arm/elf.h  arm/linux-gas.h arm/linux-elf.h arm/aout.h arm/arm.h"
++	case $target in
++	arm*b-*)
++		tm_defines="TARGET_BIG_ENDIAN_DEFAULT=1 $tm_defines"
++		;;
++	esac
+ 	tmake_file="t-slibgcc-elf-ver t-linux-uclibc arm/t-linux"
+ 	extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
+ 	gnu_ld=yes
+--- gcc-3.4.1/gcc/config/arm/linux-elf.h~gcc-3.4.0-arm-bigendian-uclibc
++++ gcc-3.4.1/gcc/config/arm/linux-elf.h
+@@ -120,7 +120,7 @@
+    %{rdynamic:-export-dynamic} \
+    %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2} \
+    -X \
+-   %{mbig-endian:-EB}" \
++   %{mbig-endian:-EB} %{mlittle-endian:-EL}" \
+    SUBTARGET_EXTRA_LINK_SPEC
+ #endif
+ 

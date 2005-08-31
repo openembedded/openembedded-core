@@ -1,0 +1,107 @@
+Index: ipkg_cmd.c
+===================================================================
+RCS file: /cvs/familiar/dist/ipkg/C/ipkg_cmd.c,v
+retrieving revision 1.99
+diff -u -r1.99 ipkg_cmd.c
+--- ipkg/ipkg_cmd.c	6 Jan 2005 00:21:49 -0000	1.99
++++ ipkg/ipkg_cmd.c	8 Jan 2005 13:11:16 -0000
+@@ -1150,7 +1150,7 @@
+ 
+ int pkg_mark_provides(pkg_t *pkg)
+ {
+-     int provides_count = pkg->provides_count;
++     int provides_count = pkg->provides_count + 1;
+      abstract_pkg_t **provides = pkg->provides;
+      int i;
+      pkg->parent->state_flag |= SF_MARKED;
+@@ -1207,7 +1207,7 @@
+ 	       for (j = 0; j < available_pkgs->len; j++) {
+ 		    pkg_t *pkg = available_pkgs->pkgs[j];
+ 		    int k;
+-		    int count = (what_field_type == WHATPROVIDES) ? pkg->provides_count : pkg->replaces_count;
++		    int count = (what_field_type == WHATPROVIDES) ? pkg->provides_count + 1 : pkg->replaces_count;
+ 		    for (k = 0; k < count; k++) {
+ 			 abstract_pkg_t *apkg = 
+ 			      ((what_field_type == WHATPROVIDES) 
+Index: ipkg_remove.c
+===================================================================
+RCS file: /cvs/familiar/dist/ipkg/C/ipkg_remove.c,v
+retrieving revision 1.40
+diff -u -r1.40 ipkg_remove.c
+--- ipkg/ipkg_remove.c	10 May 2004 21:37:07 -0000	1.40
++++ ipkg/ipkg_remove.c	8 Jan 2005 13:11:19 -0000
+@@ -39,7 +39,7 @@
+  */
+ int pkg_has_installed_dependents(ipkg_conf_t *conf, abstract_pkg_t *parent_apkg, pkg_t *pkg, abstract_pkg_t *** pdependents)
+ {
+-     int nprovides = pkg->provides_count;
++     int nprovides = pkg->provides_count + 1;
+      abstract_pkg_t **provides = pkg->provides;
+      int n_installed_dependents = 0;
+      int i;
+Index: pkg_depends.c
+===================================================================
+RCS file: /cvs/familiar/dist/ipkg/C/pkg_depends.c,v
+retrieving revision 1.61
+diff -u -r1.61 pkg_depends.c
+--- ipkg/pkg_depends.c	1 Sep 2004 20:30:39 -0000	1.61
++++ ipkg/pkg_depends.c	8 Jan 2005 13:11:21 -0000
+@@ -420,9 +420,9 @@
+ int pkg_has_common_provides(pkg_t *pkg, pkg_t *replacee)
+ {
+      abstract_pkg_t **provides = pkg->provides;
+-     int provides_count = pkg->provides_count;
++     int provides_count = pkg->provides_count + 1;
+      abstract_pkg_t **replacee_provides = replacee->provides;
+-     int replacee_provides_count = replacee->provides_count;
++     int replacee_provides_count = replacee->provides_count + 1;
+      int i, j;
+      for (i = 0; i < provides_count; i++) {
+ 	  abstract_pkg_t *apkg = provides[i];
+@@ -443,7 +443,7 @@
+ int pkg_provides_abstract(pkg_t *pkg, abstract_pkg_t *providee)
+ {
+      abstract_pkg_t **provides = pkg->provides;
+-     int provides_count = pkg->provides_count;
++     int provides_count = pkg->provides_count + 1;
+      int i;
+      for (i = 0; i < provides_count; i++) {
+ 	  if (provides[i] == providee)
+@@ -461,7 +461,7 @@
+      abstract_pkg_t **replaces = pkg->replaces;
+      int replaces_count = pkg->replaces_count;
+      abstract_pkg_t **replacee_provides = pkg->provides;
+-     int replacee_provides_count = pkg->provides_count;
++     int replacee_provides_count = pkg->provides_count + 1;
+      int i, j;
+      for (i = 0; i < replaces_count; i++) {
+ 	  abstract_pkg_t *abstract_replacee = replaces[i];
+@@ -504,7 +504,7 @@
+      compound_depend_t *conflicts = pkg->conflicts;
+      int conflicts_count = pkg->conflicts_count;
+      abstract_pkg_t **conflictee_provides = conflictee->provides;
+-     int conflictee_provides_count = conflictee->provides_count;
++     int conflictee_provides_count = conflictee->provides_count + 1;
+      int i, j, k;
+      for (i = 0; i < conflicts_count; i++) {
+ 	  int possibility_count = conflicts[i].possibility_count;
+@@ -605,9 +605,6 @@
+     /* every pkg provides itself */
+     abstract_pkg_vec_insert(ab_pkg->provided_by, ab_pkg);
+ 
+-    if (!pkg->provides_count)
+-      return 0;
+-
+     pkg->provides = (abstract_pkg_t **)malloc(sizeof(abstract_pkg_t *) * (pkg->provides_count + 1));
+     if (pkg->provides == NULL) {
+        fprintf(stderr, "%s: out of memory\n", __FUNCTION__);
+@@ -615,6 +612,9 @@
+     }
+     pkg->provides[0] = ab_pkg;
+ 
++    if (pkg->provides_count == 0)
++      return 0;
++
+     // if (strcmp(ab_pkg->name, pkg->name))
+     //     fprintf(stderr, __FUNCTION__ ": ab_pkg=%s pkg=%s\n", ab_pkg->name, pkg->name);
+ 

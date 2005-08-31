@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$1" != "upgrade" ]; then
+	update-alternatives --remove need /sbin/need.sysvinit
+	update-alternatives --remove provide /sbin/provide.sysvinit
+	update-alternatives --remove init /sbin/sysvinit
+fi
+
+exit 0

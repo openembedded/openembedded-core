@@ -1,0 +1,24 @@
+# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+ 
+# The loopback interface
+auto lo
+iface lo inet loopback
+
+# Wireless interfaces
+iface wlan0 inet dhcp
+  wireless_type wlan-ng
+  wireless_mode Managed
+  pre-up modprobe prism2_usb
+  pre-up /sbin/usbctl on 1
+  post-down /sbin/usbctl off 1
+  post-down rmmod prism2_usb
+
+# Wired or wireless interfaces
+iface eth0 inet dhcp
+iface eth1 inet dhcp
+
+# Zaurus usbnet
+iface usbd0 inet dhcp
+
+# usbnet from the other side
+iface usb0 inet dhcp

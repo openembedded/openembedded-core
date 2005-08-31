@@ -1,0 +1,23 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- base-passwd/configure.in~configure
++++ base-passwd/configure.in
+@@ -1,5 +1,6 @@
+ dnl Initialize the autoconf process
+-AC_INIT(update-passwd.c)
++AC_INIT
++AC_CONFIG_SRCDIR([update-passwd.c])
+ AC_CONFIG_HEADER(config.h)
+ AC_PREFIX_DEFAULT(/usr)
+ 
+@@ -12,5 +13,6 @@
+ AC_CHECK_FUNCS(putgrent)
+ 
+ dnl Finally output everything
+-AC_OUTPUT(Makefile)
++AC_CONFIG_FILES([Makefile])
++AC_OUTPUT
+ 

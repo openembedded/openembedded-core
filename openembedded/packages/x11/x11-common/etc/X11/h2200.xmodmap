@@ -1,0 +1,5 @@
+keycode 75 = XF86Calendar
+keycode 76 = telephone
+keycode 77 = XF86Mail
+keycode 78 = XF86Start
+keycode 124 = XF86PowerDown

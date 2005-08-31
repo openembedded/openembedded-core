@@ -1,0 +1,276 @@
+--- busybox-1.00/networking/udhcp/pidfile.h-dist	2004-04-15 03:51:26.000000000 +1000
++++ busybox-1.00/networking/udhcp/pidfile.h	2004-10-27 15:46:38.000000000 +1000
+@@ -21,5 +21,5 @@
+ 
+ 
+ int pidfile_acquire(const char *pidfile);
+-void pidfile_write_release(int pid_fd);
++int pidfile_reassign(const char *pidfile, int newpid);
+ 
+--- busybox-1.00/networking/udhcp/pidfile.c-dist	2004-04-15 03:51:25.000000000 +1000
++++ busybox-1.00/networking/udhcp/pidfile.c	2004-10-27 19:43:40.000000000 +1000
+@@ -25,6 +25,7 @@
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <errno.h>
+ 
+ #include "pidfile.h"
+ #include "common.h"
+@@ -37,39 +38,146 @@
+ }
+ 
+ 
+-int pidfile_acquire(const char *pidfile)
++static int pidfile_open(const char *pidfile)
+ {
+-	int pid_fd;
+-	if (!pidfile) return -1;
++	int fd;
+ 
+-	pid_fd = open(pidfile, O_CREAT | O_WRONLY, 0644);
+-	if (pid_fd < 0) {
+-		LOG(LOG_ERR, "Unable to open pidfile %s: %m\n", pidfile);
+-	} else {
+-		lockf(pid_fd, F_LOCK, 0);
+-		if (!saved_pidfile)
+-			atexit(pidfile_delete);
+-		saved_pidfile = (char *) pidfile;
++	if ((fd = open(pidfile, O_CREAT | O_RDWR, 0644)) < 0) {
++		LOG(LOG_ERR, "pidfile_open: open %s failed: %m\n", pidfile);
++		return (-1);
++	}
++
++	/* NOTE: lockf is not inherited by child after fork */
++	if (lockf(fd, F_LOCK, 0) < 0) {
++		LOG(LOG_ERR, "pidfile_open: lock %s failed: %m\n", pidfile);
++		close(fd);
++		return (-1);
++	}
++
++	return (fd);
++}
++
++
++static int pidfile_check(int fd, const char *pidfile)
++{
++	int len, pid;
++	char buf[20];
++
++	if (lseek(fd, 0L, SEEK_SET) < 0) {
++		LOG(LOG_ERR, "pidfile_check: lseek %s failed: %m\n", pidfile);
++		return (-1);
++	}
++
++	if ((len = read(fd, buf, sizeof buf - 1)) < 0) {
++		LOG(LOG_ERR, "pidfile_check: read %s failed: %m\n", pidfile);
++		return (-1);
++	}
++
++	if (len == 0)
++		return (0);
++
++	buf[len] = '\0';
++
++	if ((pid = atoi(buf)) <= 1) {
++		LOG(LOG_WARNING,
++			"pidfile_check: ignoring bogus pid (%s) in %s\n",
++			buf, pidfile);
++		return (0);
++	}
++
++	if (kill((pid_t)pid, 0) == 0) {
++		LOG(LOG_ERR, "pidfile_check: process %d exists (%s)\n",
++			pid, pidfile);
++		return (-1);
++	}
++
++	if (errno != ESRCH) {
++		LOG(LOG_ERR, "pidfile_check: kill %d failed (%s): %m\n",
++			pid, pidfile);
++		return (-1);
++	}
++
++	return (0);
++}
++
++
++static int pidfile_store(int fd, const char *pidfile, int pid)
++{
++	int len;
++	char buf[20];
++
++	if (lseek(fd, 0L, SEEK_SET) < 0) {
++		LOG(LOG_ERR, "pidfile_store: lseek %s failed: %m\n", pidfile);
++		return (-1);
++	}
++
++	len = snprintf(buf, sizeof buf - 1, "%d\n", pid);
++	buf[len] = '\0';
++
++	if (write(fd, buf, len) < 0) {
++		LOG(LOG_ERR, "pidfile_store: write %s failed: %m\n",
++			pidfile);
++		return (-1);
++	}
++
++	if (ftruncate(fd, len) < 0) {
++		LOG(LOG_ERR, "pidfile_store: ftruncate %d failed (%s): %m\n",
++			len, pidfile);
++		return (-1);
+ 	}
+ 
+-	return pid_fd;
++	return (0);
+ }
+ 
+ 
+-void pidfile_write_release(int pid_fd)
++static void pidfile_close(int fd)
+ {
+-	FILE *out;
++	(void)lseek(fd, 0L, SEEK_SET);
++	(void)lockf(fd, F_ULOCK, 0);
++	(void)close(fd);
++}
+ 
+-	if (pid_fd < 0) return;
+ 
+-	if ((out = fdopen(pid_fd, "w")) != NULL) {
+-		fprintf(out, "%d\n", getpid());
+-		fclose(out);
++int pidfile_acquire(const char *pidfile)
++{
++	int fd, result;
++	if (!pidfile) return (-1);
++
++	if ((fd = pidfile_open(pidfile)) < 0)
++		return (-1);
++
++	if ((result = pidfile_check(fd, pidfile)) == 0)
++		result = pidfile_store(fd, pidfile, getpid());
++
++	pidfile_close(fd);
++
++	if (result == 0) {
++		saved_pidfile = (char *) pidfile;
++		atexit(pidfile_delete);
+ 	}
+-	lockf(pid_fd, F_UNLCK, 0);
+-	close(pid_fd);
++
++	return (result);
+ }
+ 
+ 
++/*
++ * reassign the pid in a pidfile - used just after a fork so a parent
++ * can store the pid of its child into the file without any window
++ * where the pid in the file is a dead process (which might let another
++ * instance of the program start). Note the parent must use _exit() to
++ * avoid triggering the unlink scheduled above in pidfile_acquire()
++ */
++int pidfile_reassign(const char *pidfile, int pid)
++{
++	int fd, result;
++	if (!pidfile) return (-1);
++
++	if ((fd = pidfile_open(pidfile)) < 0)
++		return (-1);
+ 
++	result = pidfile_store(fd, pidfile, pid);
+ 
++	pidfile_close(fd);
++
++	return (result);
++}
+--- busybox-1.00/networking/udhcp/common.c-dist	2004-05-19 19:18:04.000000000 +1000
++++ busybox-1.00/networking/udhcp/common.c	2004-10-27 19:58:10.000000000 +1000
+@@ -64,16 +64,34 @@
+ #ifdef __uClinux__
+ 	LOG(LOG_ERR, "Cannot background in uclinux (yet)");
+ #else /* __uClinux__ */
+-	int pid_fd;
++	int pid, fd;
+ 
+-	/* hold lock during fork. */
+-	pid_fd = pidfile_acquire(pidfile);
+-	if (daemon(0, 0) == -1) {
++	/* NOTE: lockf is not inherited by the child after fork */
++	if ((pid = fork()) < 0) {
+ 		perror("fork");
+ 		exit(1);
+ 	}
++
++	if (pid > 0) {
++		/* parent */
++		if (pidfile_reassign(pidfile, pid) < 0) {
++			(void)kill(pid, SIGKILL);
++			exit(1);
++		} else
++			_exit(0);
++	}
++
++	/* child */
++	(void)chdir("/");
++	if ((fd = open("/dev/null", O_RDWR)) >= 0) {
++		(void)dup2(fd, 0);
++		(void)dup2(fd, 1);
++		(void)dup2(fd, 2);
++		(void)close(fd);
++	}
++	(void)setsid();
++
+ 	daemonized++;
+-	pidfile_write_release(pid_fd);
+ #endif /* __uClinux__ */
+ }
+ 
+@@ -97,14 +115,12 @@
+ 
+ void start_log_and_pid(const char *client_server, const char *pidfile)
+ {
+-	int pid_fd;
+-
+ 	/* Make sure our syslog fd isn't overwritten */
+ 	sanitize_fds();
+ 
+ 	/* do some other misc startup stuff while we are here to save bytes */
+-	pid_fd = pidfile_acquire(pidfile);
+-	pidfile_write_release(pid_fd);
++	if (pidfile_acquire(pidfile) < 0)
++		exit(1);
+ 
+ 	/* equivelent of doing a fflush after every \n */
+ 	setlinebuf(stdout);
+@@ -150,8 +166,8 @@
+ 	sanitize_fds();
+ 
+ 	/* do some other misc startup stuff while we are here to save bytes */
+-	pid_fd = pidfile_acquire(pidfile);
+-	pidfile_write_release(pid_fd);
++	if (pidfile_acquire(pidfile) < 0)
++		exit(1);
+ 
+ 	/* equivelent of doing a fflush after every \n */
+ 	setlinebuf(stdout);
+--- busybox-1.00/networking/udhcp/common.h-dist	2004-05-19 18:29:05.000000000 +1000
++++ busybox-1.00/networking/udhcp/common.h	2004-10-27 15:10:16.000000000 +1000
+@@ -42,7 +42,6 @@
+ long uptime(void);
+ void background(const char *pidfile);
+ void start_log_and_pid(const char *client_server, const char *pidfile);
+-void background(const char *pidfile);
+ void udhcp_logging(int level, const char *fmt, ...);
+                                                             
+ #define LOG(level, str, args...) udhcp_logging(level, str, ## args)
+--- busybox-1.00/networking/udhcp/script.c-dist	2004-05-19 17:45:47.000000000 +1000
++++ busybox-1.00/networking/udhcp/script.c	2004-10-27 15:54:04.000000000 +1000
+@@ -228,6 +228,6 @@
+ 		execle(client_config.script, client_config.script,
+ 		       name, NULL, envp);
+ 		LOG(LOG_ERR, "script %s failed: %m", client_config.script);
+-		exit(1);
++		_exit(1);
+ 	}
+ }

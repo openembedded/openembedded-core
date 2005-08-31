@@ -1,0 +1,16 @@
+#!/bin/sh
+# Unloads/loads usb-eth so it always works
+
+. /etc/default/usbd
+
+if [ "$1" = suspend ]; then
+	rmmod usb-eth
+	rmmod sa1100usb_core
+elif [ "$1" = resume ] && [ "$2" != standby ]; then
+	modprobe usb-eth
+	modprobe -r $usbdmodule
+	modprobe $usbdmodule
+fi
+
+: exit 0
+

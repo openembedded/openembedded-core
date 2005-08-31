@@ -1,0 +1,4 @@
+rootfs  /               rootfs  defaults,errors=remount-ro,noatime      0 0
+/dev/mmcblk0p1  /media/card     auto defaults,noauto,noatime,user,exec,suid  0  0
+tmpfs           /var    tmpfs   defaults             0  0
+tmpfs           /media/ram      tmpfs   defaults        0  0

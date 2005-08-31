@@ -1,0 +1,62 @@
+--- elf/Makefile	13 Mar 2003 21:50:57 -0000	1.258
++++ elf/Makefile	27 Mar 2003 20:36:07 -0000
+@@ -109,12 +109,13 @@
+ 
+ ifeq (yes,$(use-ldconfig))
+ ifeq (yes,$(build-shared))
+-others-static	+= ldconfig
++#others-static	+= ldconfig
+ others		+= ldconfig
+ install-rootsbin += ldconfig
+ 
+ ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon
+ extra-objs	+= $(ldconfig-modules:=.o)
++CPPFLAGS-readlib.c = -DNOT_IN_libc=1
+ 
+ # To find xmalloc.c and xstrdup.c
+ vpath %.c ../locale/programs
+--- elf/ldconfig.c	13 Jan 2003 08:53:14 -0000	1.31
++++ elf/ldconfig.c	27 Mar 2003 20:36:09 -0000
+@@ -149,6 +149,9 @@
+ static int
+ is_hwcap_platform (const char *name)
+ {
++#if 1
++  return 0;
++#else
+   int hwcap_idx = _dl_string_hwcap (name);
+ 
+   if (hwcap_idx != -1 && ((1 << hwcap_idx) & hwcap_mask))
+@@ -164,6 +167,7 @@
+ #endif
+ 
+   return 0;
++#endif
+ }
+ 
+ /* Get hwcap (including platform) encoding of path.  */
+@@ -175,6 +179,7 @@
+   uint64_t hwcap = 0;
+   uint64_t h;
+ 
++#if 0
+   size_t len;
+ 
+   len = strlen (str);
+@@ -210,6 +215,7 @@
+       *ptr = '\0';
+     }
+ 
++#endif
+   free (str);
+   return hwcap;
+ }
+--- elf/Versions.old	2004-06-26 13:18:35.000000000 +0100
++++ elf/Versions	2004-06-26 14:41:09.000000000 +0100
+@@ -54,5 +54,6 @@
+     _dl_get_tls_static_info; _dl_allocate_tls_init;
+     _dl_tls_setup; _dl_rtld_di_serinfo;
+     _dl_make_stack_executable;
++    _dl_cache_libcmp;
+   }
+ }

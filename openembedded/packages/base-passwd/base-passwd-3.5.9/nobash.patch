@@ -1,0 +1,13 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- base-passwd/passwd.master~nobash
++++ base-passwd/passwd.master
+@@ -1,4 +1,4 @@
+-root::0:0:root:/root:/bin/bash
++root::0:0:root:/root:/bin/sh
+ daemon:*:1:1:daemon:/usr/sbin:/bin/sh
+ bin:*:2:2:bin:/bin:/bin/sh
+ sys:*:3:3:sys:/dev:/bin/sh

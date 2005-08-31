@@ -1,0 +1,17 @@
+#! /bin/sh
+#
+# reboot	Execute the reboot command.
+#
+# Version:      @(#)reboot  2.75  22-Jun-1998  miquels@cistron.nl
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Update the timestamp, if there is one
+if test -e /etc/timestamp
+then
+        date +%2m%2d%2H%2M%Y > /etc/timestamp
+fi
+
+echo -n "Rebooting... "
+reboot -d -f -i

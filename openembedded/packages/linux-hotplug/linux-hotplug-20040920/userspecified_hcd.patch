@@ -1,0 +1,55 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- hotplug-2004_09_20/etc/hotplug/usb.rc~userspecified_hcd.patch
++++ hotplug-2004_09_20/etc/hotplug/usb.rc
+@@ -24,6 +24,7 @@
+ unset I_WANT_A_BROKEN_PS
+ PS_PERSONALITY=linux
+ 
++HCD=
+ STATIC_MODULE_LIST=
+ X11_USBMICE_HACK=false
+ 
+@@ -166,20 +167,25 @@
+     # FIXME: some of this should be driven by PCI hotplugging, and have
+     # the blacklist control which uhci driver gets used (before 2.5).
+ 
+-    # "new style" HCDs ... more common code
+-    modprobe -q ehci-hcd >/dev/null 2>&1
+-    modprobe -q ohci-hcd >/dev/null 2>&1
+-    modprobe -q uhci-hcd >/dev/null 2>&1
+-
+-    # "old style" HCDs ... more driver-specific bugs
+-    modprobe -q usb-ohci >/dev/null 2>&1
+-    # NOTE: this prefers "uhci"; you may prefer "usb-uhci".
+-    # modprobe -q usb-uhci >/dev/null 2>&1 || modprobe -q uhci >/dev/null 2>&1
+-    modprobe -q uhci >/dev/null 2>&1 || modprobe -q usb-uhci >/dev/null 2>&1
+-
+-    # ... add any non-PCI HCDS here.  Examples include the
+-    # CRIS usb-host, Philips ISP-1161, Symlogic 811HS, and so on.
+-    # ohci-hcd can handle some non-pci variants.
++    # If the user specified which HCD they want, trust them.
++    if [ -n "$HCD" ]; then
++        modprobe -q $HCD >/dev/null 2>&1
++    else
++        # "new style" HCDs ... more common code
++        modprobe -q ehci-hcd >/dev/null 2>&1
++        modprobe -q ohci-hcd >/dev/null 2>&1
++        modprobe -q uhci-hcd >/dev/null 2>&1
++    
++        # "old style" HCDs ... more driver-specific bugs
++        modprobe -q usb-ohci >/dev/null 2>&1
++        # NOTE: this prefers "uhci"; you may prefer "usb-uhci".
++        # modprobe -q usb-uhci >/dev/null 2>&1 || modprobe -q uhci >/dev/null 2>&1
++        modprobe -q uhci >/dev/null 2>&1 || modprobe -q usb-uhci >/dev/null 2>&1
++    
++        # ... add any non-PCI HCDS here.  Examples include the
++        # CRIS usb-host, Philips ISP-1161, Symlogic 811HS, and so on.
++        # ohci-hcd can handle some non-pci variants.
++    fi
+ 
+     if [ -d /proc/bus/usb ]; then
+ 	# If we see there are no busses, we "failed" and

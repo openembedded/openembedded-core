@@ -1,0 +1,17 @@
+#!/bin/busybox ash
+
+action="$1"
+oldversion="$2"
+
+umask 022
+
+if [ "$action" != configure ]
+then
+	exit 0
+fi
+
+update-alternatives --install /sbin/init init /sbin/sysvinit 25
+update-alternatives --install /sbin/need need /sbin/need.sysvinit 25
+update-alternatives --install /sbin/provide provide /sbin/provide.sysvinit 25
+
+exit 0

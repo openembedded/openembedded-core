@@ -1,0 +1,33 @@
+diff -urN modutils-2.4.27.orig/include/module.h modutils-2.4.27/include/module.h
+--- modutils-2.4.27.orig/include/module.h	2003-01-27 11:22:02.000000000 -0500
++++ modutils-2.4.27/include/module.h	2004-08-23 19:52:34.756772712 -0400
+@@ -88,6 +88,20 @@
+ /* For sizeof() which are related to the module platform and not to the
+    environment isnmod is running in, use sizeof_xx instead of sizeof(xx).  */
+ 
++/* Additional test for OE, set tgt_blah correct for the target arch, *not* the
++   native arch. If int isn't 32bit on the native machine we're in trouble. */
++
++#ifdef ARCH_arm
++#define tgt_sizeof_char		sizeof(char)
++#define tgt_sizeof_short	sizeof(short)
++#define tgt_sizeof_int		sizeof(int)
++#define tgt_sizeof_long		4
++#define tgt_sizeof_char_p	4
++#define tgt_sizeof_void_p	4
++#define tgt_long		int
++#define tgt_long_fmt		"l"
++#define tgt_strtoul		strtoul
++#else
+ #define tgt_sizeof_char		sizeof(char)
+ #define tgt_sizeof_short	sizeof(short)
+ #define tgt_sizeof_int		sizeof(int)
+@@ -97,7 +111,7 @@
+ #define tgt_long		long
+ #define tgt_long_fmt		"l"
+ #define tgt_strtoul		strtoul
+-
++#endif
+ /* This assumes that long long on a 32 bit system is equivalent to long on the
+  * equivalent 64 bit system.  Also that void and char pointers are 8 bytes on
+  * all 64 bit systems.  Add per system tweaks if it ever becomes necessary.

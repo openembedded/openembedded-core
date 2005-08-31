@@ -1,0 +1,18 @@
+Index: libXpm-3.5.1/configure.ac
+===================================================================
+--- libXpm-3.5.1.orig/configure.ac	2004-05-11 02:00:35.000000000 -0400
++++ libXpm-3.5.1/configure.ac	2005-01-19 18:35:57.187402008 -0500
+@@ -1,12 +1,12 @@
+ AC_PREREQ(2.57)
+ AC_INIT([libXpm], 3.5.1, [daniel@freedesktop.org], libXpm)
+ AC_CONFIG_SRCDIR([Makefile.am])
++AC_CONFIG_AUX_DIR(.)
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ 
+ AM_MAINTAINER_MODE
+ 
+ AM_CONFIG_HEADER([lib/config.h])
+-AC_CONFIG_AUX_DIR(.)
+ 
+ # Checks for programs.
+ AC_PROG_LIBTOOL

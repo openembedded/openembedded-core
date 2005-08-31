@@ -1,0 +1,125 @@
+--- autoconf-2.59/bin/autoreconf.in	2004-05-06 00:27:34.000000000 -0400
++++ autoconf-2.59.new/bin/autoreconf.in	2004-05-06 00:27:46.000000000 -0400
+@@ -75,6 +75,7 @@
+   -f, --force              consider all files obsolete
+   -i, --install            copy missing auxiliary files
+   -s, --symlink            with -i, install symbolic links instead of copies
++  -x, --exclude=STEPS      steps we should not run
+   -m, --make               when applicable, re-run ./configure && make
+   -W, --warnings=CATEGORY  report the warnings falling in CATEGORY [syntax]
+ 
+@@ -127,6 +128,13 @@
+ # Rerun `./configure && make'?
+ my $make = 0;
+ 
++# Steps to exclude
++my @exclude;
++my @ex;
++
++my $uses_gettext;
++my $configure_ac;
++
+ ## ---------- ##
+ ## Routines.  ##
+ ## ---------- ##
+@@ -144,6 +152,7 @@
+ 	  'B|prepend-include=s'	 => \@prepend_include,
+ 	  'i|install'            => \$install,
+ 	  's|symlink'            => \$symlink,
++	  'x|exclude=s'            => \@exclude,
+ 	  'm|make'               => \$make);
+ 
+   # Split the warnings as a list of elements instead of a list of
+@@ -152,6 +161,8 @@
+   parse_WARNINGS;
+   parse_warnings '--warnings', @warning;
+ 
++  @exclude = map { split /,/ } @exclude;
++
+   # Even if the user specified a configure.ac, trim to get the
+   # directory, and look for configure.ac again.  Because (i) the code
+   # is simpler, and (ii) we are still able to diagnose simultaneous
+@@ -237,6 +249,11 @@
+ {
+   my ($aclocal, $flags) = @_;
+ 
++  @ex = grep (/^aclocal$/, @exclude);
++  if ($#ex != -1) {
++    return;
++  }
++
+   # aclocal 1.8+ does all this for free.  It can be recognized by its
+   # --force support.
+   if ($aclocal_supports_force)
+@@ -348,7 +365,10 @@
+     }
+   else
+     {
+-      xsystem "$autopoint";
++      @ex = grep (/^autopoint$/, @exclude);
++      if ($#ex == -1) {
++        xsystem ("$autopoint");
++      }
+     }
+ 
+ 
+@@ -501,7 +521,10 @@
+     }
+   elsif ($install)
+     {
+-      xsystem ($libtoolize);
++      @ex = grep (/^libtoolize$/, @exclude);
++      if ($#ex == -1) {
++        xsystem ("$libtoolize");
++      }
+       $rerun_aclocal = 1;
+     }
+   else
+@@ -541,7 +564,10 @@
+   # latter runs the former, and (ii) autoconf is stricter than
+   # autoheader.  So all in all, autoconf should give better error
+   # messages.
+-  xsystem ($autoconf);
++  @ex = grep (/^autoconf$/, @exclude);
++  if ($#ex == -1) {
++    xsystem ("$autoconf");
++  }
+ 
+ 
+   # -------------------- #
+@@ -562,7 +588,10 @@
+     }
+   else
+     {
+-      xsystem ($autoheader);
++      @ex = grep (/^autoheader$/, @exclude);
++      if ($#ex == -1) {
++        xsystem ("$autoheader");
++      }
+     }
+ 
+ 
+@@ -580,7 +609,10 @@
+       # We should always run automake, and let it decide whether it shall
+       # update the file or not.  In fact, the effect of `$force' is already
+       # included in `$automake' via `--no-force'.
+-      xsystem ($automake);
++      @ex = grep (/^automake$/, @exclude);
++      if ($#ex == -1) {
++        xsystem ("$automake");
++      }
+     }
+ 
+ 
+@@ -604,7 +636,10 @@
+ 	    }
+ 	  else
+ 	    {
+-	      xsystem ("make");
++              @ex = grep (/^make$/, @exclude);
++              if ($#ex == -1) {
++                xsystem ("make");
++              }
+ 	    }
+ 	}
+     }

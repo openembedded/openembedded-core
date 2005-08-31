@@ -1,0 +1,64 @@
+From libc-alpha-return-17230-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com Tue Mar 22 16:25:01 2005
+Return-Path: <libc-alpha-return-17230-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com>
+Delivered-To: listarch-libc-alpha at sources dot redhat dot com
+Received: (qmail 7764 invoked by alias); 22 Mar 2005 16:24:20 -0000
+Mailing-List: contact libc-alpha-help at sources dot redhat dot com; run by ezmlm
+Precedence: bulk
+List-Subscribe: <mailto:libc-alpha-subscribe at sources dot redhat dot com>
+List-Archive: <http://sources.redhat.com/ml/libc-alpha/>
+List-Post: <mailto:libc-alpha at sources dot redhat dot com>
+List-Help: <mailto:libc-alpha-help at sources dot redhat dot com>, <http://sources dot redhat dot com/ml/#faqs>
+Sender: libc-alpha-owner at sources dot redhat dot com
+Delivered-To: mailing list libc-alpha at sources dot redhat dot com
+Received: (qmail 7316 invoked from network); 22 Mar 2005 16:23:45 -0000
+Received: from unknown (HELO nevyn.them.org) (66.93.172.17)
+  by sourceware dot org with SMTP; 22 Mar 2005 16:23:45 -0000
+Received: from drow by nevyn.them.org with local (Exim 4.50 #1 (Debian))
+	id 1DDmAg-000798-P7
+	for <libc-alpha at sources dot redhat dot com>; Tue, 22 Mar 2005 11:23:58 -0500
+Date: Tue, 22 Mar 2005 11:23:58 -0500
+From: Daniel Jacobowitz <drow at false dot org>
+To: libc-alpha at sources dot redhat dot com
+Subject: Re: Define PT_ARM_EXIDX
+Message-ID: <20050322162358.GA27424@nevyn.them.org>
+Mail-Followup-To: libc-alpha at sources dot redhat dot com
+References: <20050322155140.GA25312@nevyn.them.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20050322155140 dot GA25312 at nevyn dot them dot org>
+User-Agent: Mutt/1.5.6+20040907i
+
+On Tue, Mar 22, 2005 at 10:51:40AM -0500, Daniel Jacobowitz wrote:
+> The ARM EABI uses a program header to locate exception tables for shared
+> objects, just like PT_GNU_EH_FRAME.  But the format is a little different,
+> and the header is above PT_LOPROC because it was assigned by a processor
+> vendor.  This just adds the constant to elf/elf.h.
+
+Oops, Ulrich pointed out that I put the constant in the wrong place.
+
+-- 
+Daniel Jacobowitz
+CodeSourcery, LLC
+
+2005-03-22  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* elf/elf.h (PT_ARM_EXIDX): Define.
+
+Index: glibc/elf/elf.h
+===================================================================
+--- glibc.orig/elf/elf.h	2005-03-22 11:21:34.961464117 -0500
++++ glibc/elf/elf.h	2005-03-22 11:22:49.872172922 -0500
+@@ -2138,7 +2138,11 @@ typedef Elf32_Addr Elf32_Conflict;
+ #define PF_ARM_SB          0x10000000   /* Segment contains the location
+ 					   addressed by the static base */
+ 
++/* Processor specific values for the Phdr p_type field.  */
++#define PT_ARM_EXIDX	0x70000001	/* .ARM.exidx segment */
++
+ /* ARM relocs.  */
++
+ #define R_ARM_NONE		0	/* No reloc */
+ #define R_ARM_PC24		1	/* PC relative 26 bit branch */
+ #define R_ARM_ABS32		2	/* Direct 32 bit  */
+

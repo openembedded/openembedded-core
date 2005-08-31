@@ -1,0 +1,29 @@
+#!/bin/sh -e
+#
+# Since ifupdown of Debian is different than one of RedHat.
+# So we need to fix it
+
+topdir=$1
+dir=$topdir/etc/hotplug
+test -f $dir/net.agent || exit 1
+mv $dir/net.agent $dir/net.agent.orig
+
+sed -e '/^\*)/i\
+unregister)\
+    # Assume that we want to run ifdown no matter what,  \
+    # because it is not going to remove the data from the \
+    # ifstate database otherwise.\
+    if [ -x /sbin/ifdown ]; then\
+       debug_mesg invoke ifdown $INTERFACE\
+        exec /sbin/ifdown $INTERFACE\
+    else\
+       # mesg "how do I bring interfaces up on this distro?"\
+       mesg "E: /sbin/ifdown not found. You need to install ifupdown package"\
+    fi\
+    mesg $1 $ACTION event not handled\
+    ;;\
+' $dir/net.agent.orig > $dir/net.agent
+rm -f $dir/net.agent.orig
+chmod 755 $dir/net.agent
+exit 0
+

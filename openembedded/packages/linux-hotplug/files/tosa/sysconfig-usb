@@ -1,0 +1,2 @@
+## Specify the USB host controller driver
+HCD="usb_ohci_tc6393"

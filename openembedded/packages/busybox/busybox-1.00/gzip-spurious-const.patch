@@ -1,0 +1,11 @@
+--- busybox-1.00/archival/gzip.c.old	2005-06-05 22:57:32.000000000 +0100
++++ busybox-1.00/archival/gzip.c	2005-06-05 22:57:38.000000000 +0100
+@@ -2162,7 +2162,7 @@
+  * Construct the Huffman tree for the bit lengths and return the index in
+  * bl_order of the last bit length code to send.
+  */
+-static const int build_bl_tree()
++static int build_bl_tree()
+ {
+ 	int max_blindex;	/* index of last bit length code of non zero freq */
+ 

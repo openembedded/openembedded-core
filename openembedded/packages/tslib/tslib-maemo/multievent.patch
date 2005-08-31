@@ -1,0 +1,843 @@
+--- tslib/plugins/linear.c~multievent
++++ tslib/plugins/linear.c
+@@ -39,14 +39,12 @@
+ linear_read(struct tslib_module_info *info, struct ts_sample *samp, int nr)
+ {
+ 	struct tslib_linear *lin = (struct tslib_linear *)info;
+-	int ret;
++	int ret, i = 0;
+ 	int xtemp,ytemp;
+ 
+ 	ret = info->next->ops->read(info->next, samp, nr);
+ 	if (ret >= 0) {
+-		int nr;
+-
+-		for (nr = 0; nr < ret; nr++, samp++) {
++		for (i = 0; i < ret; i++, samp++) {
+ #ifdef DEBUG
+ 			fprintf(stderr,"BEFORE CALIB--------------------> %d %d %d\n",samp->x, samp->y, samp->pressure);
+ #endif /*DEBUG*/
+@@ -66,6 +64,7 @@
+ 				samp->y = tmp;
+ 			}
+ 		}
++		ret = i;
+ 	}
+ 
+ 	return ret;
+--- tslib/plugins/dejitter.c~multievent
++++ tslib/plugins/dejitter.c
+@@ -24,7 +24,6 @@
+ 
+ struct tslib_threshold {
+ 	struct tslib_module_info	module;
+-	int			pthreshold;
+ 	int			xdelta;
+ 	int			ydelta;
+ 	int			delta2;
+@@ -36,40 +35,28 @@
+ static int threshold_read(struct tslib_module_info *info, struct ts_sample *samp, int nr)
+ {
+ 	struct tslib_threshold *thr = (struct tslib_threshold *)info;
+-	struct ts_sample *s;
+-	int ret;
++	struct ts_sample *src = samp, *dest = samp;
++	int ret, i = 0;
+ 
+ 	ret = info->next->ops->read(info->next, samp, nr);
+ 	if (ret >= 0) {
+-		int nr = 0;
+-
+-		for (s = samp; s < samp + ret; s++) {
++		for (i = 0; i < ret; i++, samp++) {
+ 			int dr2;
+ #ifdef DEBUG
+-			fprintf(stderr,"BEFORE DEJITTER---------------> %d %d %d\n",s->x,s->y,s->pressure);
++			fprintf(stderr,"BEFORE DEJITTER---------------> %d %d %d\n", samp->x, samp->y, samp->pressure);
+ #endif /*DEBUG*/
+-			thr->down = (s->pressure >= thr->pthreshold);
+-			if (thr->down) {
+-				dr2 = (thr->x - s->x)*(thr->x - s->x) 
+-					+ (thr->y - s->y)*(thr->y - s->y);
+-				if(dr2 < thr->delta2) {
+-					s->x = thr->x;
+-					s->y = thr->y;
+-				} else {
+-					thr->x = s->x;
+-					thr->y = s->y;
+-				}
+-
++			dr2 = (thr->x - samp->x)*(thr->x - samp->x) 
++				+ (thr->y - samp->y)*(thr->y - samp->y);
++			if(dr2 < thr->delta2) {
++				samp->x = thr->x;
++				samp->y = thr->y;
+ 			} else {
+-				s->x = thr->x;
+-				s->y = thr->y;
++				thr->x = samp->x;
++				thr->y = samp->y;
+ 			}
+-
+-
+-			samp[nr++] = *s;
+ 		}
+ 
+-		ret = nr;
++		ret = i;
+ 	}
+ 	return ret;
+ }
+@@ -106,10 +93,6 @@
+ 		thr->ydelta = v;
+ 		break;
+ 
+-	case 3:
+-		thr->pthreshold = v;
+-		break;
+-
+ 	default:
+ 		return -1;
+ 	}
+@@ -120,7 +103,6 @@
+ {
+ 	{ "xdelta",	(void *)1, threshold_limit },
+ 	{ "ydelta",	(void *)2, threshold_limit },
+-	{ "pthreshold",	(void *)3, threshold_limit }
+ };
+ 
+ //#define NR_VARS (sizeof(threshold_vars) / sizeof(threshold_vars[0]))
+@@ -138,7 +120,6 @@
+ 
+ 	thr->xdelta = 10;
+ 	thr->ydelta = 10;
+-	thr->pthreshold = 100;
+ 
+ 	if (tslib_parse_vars(&thr->module, threshold_vars, NR_VARS, params)) {
+ 		free(thr);
+--- tslib/plugins/variance.c~multievent
++++ tslib/plugins/variance.c
+@@ -9,25 +9,36 @@
+  * $Id: variance.c,v 1.3 2002/11/08 23:28:55 dlowder Exp $
+  *
+  * Variance filter for touchscreen values
++ *
++ * Policy question (applies to all tslib modules that consume events):
++ * 	1) User requests a read of 5 events using nr.
++ * 	2) Lower layers return us 4 events.
++ * 	3) Perform variance calculation, we now only have _1_ event.
++ * 	4) Do we, a) duplicate this data across the user requested 4 events,
++ * 		  b) push up the single event
++ * 		  c) loop on the read from the lower layers to obtain
++ * 		     the user's requested number of events, unless we hit
++ * 		     a pen_up.
+  */
++
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <limits.h>
+-
+ #include <stdio.h>
+ 
+ #include "tslib.h"
+ #include "tslib-filter.h"
+ 
++#define NR_INIT -1
+ #define NR_LAST	4
+ 
+ struct tslib_variance {
+ 	struct tslib_module_info	module;
+ 	int				nr;
+-	unsigned int			pthreshold;
+ 	unsigned int			xlimit;
+ 	unsigned int			ylimit;
++	unsigned int			pthreshold;
+ 	struct ts_sample		last[NR_LAST];
+ };
+ 
+@@ -37,8 +48,7 @@
+  * least variance, and average them.
+  */
+ static int
+-variance_calculate(struct tslib_variance *var, struct ts_sample *samp,
+-		   struct ts_sample *s)
++variance_calculate(struct tslib_variance *var, struct ts_sample *dest, struct ts_sample *src)
+ {
+ 	int i, j;
+ 	int diff_x, min_x, i_x, j_x;
+@@ -100,11 +110,11 @@
+ 		}
+ 	}
+ 
+-	samp->x		 = (var->last[i_x].x + var->last[j_x].x) / 2;
+-	samp->y		 = (var->last[i_y].y + var->last[j_y].y) / 2;
+-	samp->pressure   = (var->last[i_p].pressure + var->last[j_p].pressure) / 2;
+-	samp->tv.tv_sec  = s->tv.tv_sec;
+-	samp->tv.tv_usec = s->tv.tv_usec;
++	dest->x		 = (var->last[i_x].x + var->last[j_x].x) / 2;
++	dest->y		 = (var->last[i_y].y + var->last[j_y].y) / 2;
++	dest->pressure   = (var->last[i_p].pressure + var->last[j_p].pressure) / 2;
++	dest->tv.tv_sec  = src->tv.tv_sec;
++	dest->tv.tv_usec = src->tv.tv_usec;
+ 
+ 	return 1;
+ }
+@@ -112,55 +122,57 @@
+ static int variance_read(struct tslib_module_info *info, struct ts_sample *samp, int nr)
+ {
+ 	struct tslib_variance *var = (struct tslib_variance *)info;
+-	struct ts_sample *s;
+-	int ret;
+-
+-	ret = info->next->ops->read(info->next, samp, nr);
+-	if (ret >= 0) {
+-		int nr = 0;
+-
+-		for (s = samp; s < samp + ret; s++) {
+-			if (s->pressure < var->pthreshold) {
+-				/*
+-				 * Pen was released.  Reset our state and
+-				 * pass up the release information.
+-				 */
+-//				samp[nr].x = 0;
+-//				samp[nr].y = 0;
+-				samp[nr].pressure = s->pressure;
+-				samp[nr].tv.tv_sec = s->tv.tv_sec;
+-				samp[nr].tv.tv_usec = s->tv.tv_usec;
+-
+-				nr++;
+-
+-				var->nr = 0;
+-				continue;
+-			} else if (var->nr == -1) {
+-				/*
+-				 * Pen was pressed.  Inform upper layers
+-				 * immediately.
+-				 */
+-				samp[nr] = *s;
+-				nr++;
+-			}
+-
+-			if (var->nr >= 0) {
+-				var->last[var->nr].x = s->x;
+-				var->last[var->nr].y = s->y;
+-				var->last[var->nr].pressure = s->pressure;
+-			}
+-
+-			var->nr++;
++	struct ts_sample *src = samp, *dest = samp;
++	int ret, i = 0;
+ 
+-			if (var->nr == NR_LAST) {
+-				if (variance_calculate(var, samp + nr, s))
+-					nr++;
+-				var->nr = 0;
++	/*
++	 * NOTES:
++	 *
++	 * Loop on read, collecting events until we hit nr, unless
++	 * we hit a pen up or encounter a failure.
++	 */
++	while ((i < nr) && (ret != -1)) {
++		ret = info->next->ops->read(info->next, dest + i, nr - i);
++		if (ret >= 0) {
++			for (src = dest + i; src < dest + ret; src++) {
++				if (src->pressure < var->pthreshold) {
++					/* pen released, reset var->nr,
++					 * do a calc based on what we have so
++					 * far, and let this event flow up */
++					if (variance_calculate(var, dest + i, src))
++						i++;
++					var->nr = NR_INIT;
++					ret = -1; /* break outer loop, push up event */
++					break;
++				} else if (var->nr == NR_INIT) {
++					/*
++					 * First pen down event. Inform upper layers
++					 * immediately for responsiveness.
++					 */
++					var->nr = 0;
++					i++;
++					ret = -1; /* break outer loop */
++					break;
++				}
++	
++				if (var->nr >= 0) {
++					var->last[var->nr].x = src->x;
++					var->last[var->nr].y = src->y;
++					var->last[var->nr].pressure = src->pressure;
++				}
++	
++				var->nr++;
++	
++				if (var->nr == NR_LAST) {
++					if (variance_calculate(var, dest + i, src))
++						i++;
++					var->nr = 0;
++				}
+ 			}
+ 		}
+-
+-		ret = nr;
+ 	}
++	/* if we've collected at least one event, send it up */
++	if (i != 0) ret = i;
+ 	return ret;
+ }
+ 
+@@ -196,10 +208,6 @@
+ 		var->ylimit = v;
+ 		break;
+ 
+-	case 3:
+-		var->pthreshold = v;
+-		break;
+-
+ 	default:
+ 		return -1;
+ 	}
+@@ -210,7 +218,6 @@
+ {
+ 	{ "xlimit",	(void *)1, variance_limit },
+ 	{ "ylimit",	(void *)2, variance_limit },
+-	{ "pthreshold",	(void *)3, variance_limit }
+ };
+ 
+ #define NR_VARS (sizeof(variance_vars) / sizeof(variance_vars[0]))
+@@ -218,6 +225,7 @@
+ struct tslib_module_info *mod_init(struct tsdev *dev, const char *params)
+ {
+ 	struct tslib_variance *var;
++	char *pthresvar;
+ 
+ 	var = malloc(sizeof(struct tslib_variance));
+ 	if (var == NULL)
+@@ -225,10 +233,15 @@
+ 
+ 	var->module.ops = &variance_ops;
+ 
+-	var->nr = -1;
++	var->nr = NR_INIT;
+ 	var->xlimit = 160;
+ 	var->ylimit = 160;
+ 	var->pthreshold = 100;
++	pthresvar = getenv("TSLIB_PTHRES");
++	if (pthresvar != NULL) {
++		int p = strtol(pthresvar, (char **)NULL, 10);
++		if (p != -1) var->pthreshold = p;
++	}
+ 
+ 	if (tslib_parse_vars(&var->module, variance_vars, NR_VARS, params)) {
+ 		free(var);
+--- tslib/README~multievent
++++ tslib/README
+@@ -36,6 +36,19 @@
+ usages.  They are by no means exhaustive, nor probably even good examples.
+ They are basically the programs I used to test this library.
+ 
++Module Creation Notes
++=====================
++
++For those creating tslib modules, it is important to note a couple things with
++regard to handling of the ability for a user to request more than one ts event
++at a time.  The first thing to note is that the lower layers may send up less
++events than the user requested, but only if that was a result of a pen release.
++Next, your module should send up just as many events as the user requested in
++nr.  If your module is one that consumes events, such as variance, then you
++loop on the read from the lower layers, and only send the events up when
++1) you have the number of events requested by the user, or 2) one of the events
++from the lower layers was a pen release.
++
+ 
+ Module Parameters
+ =================
+--- tslib/src/ts_read_raw.c~multievent
++++ tslib/src/ts_read_raw.c
+@@ -14,10 +14,10 @@
+  *
+  * Read raw pressure, x, y, and timestamp from a touchscreen device.
+  */
++
+ #include "config.h"
+ 
+ #include <stdio.h>
+-
+ #include <stdlib.h>
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+@@ -25,79 +25,27 @@
+ #include <sys/time.h>
+ #include <sys/types.h>
+ 
+-#ifdef USE_INPUT_API
+-#include <linux/input.h>
+-#else
+-struct ts_event  {   /* Used in UCB1x00 style touchscreens (the default) */
+-	unsigned short pressure;
+-	unsigned short x;
+-	unsigned short y;
+-	unsigned short pad;
+-	struct timeval stamp;
+-};
+-struct h3600_ts_event { /* Used in the Compaq IPAQ */
+-	unsigned short pressure;
+-	unsigned short x;
+-	unsigned short y;
+-	unsigned short pad;
+-};
+-struct mk712_ts_event { /* Used in the Hitachi Webpad */
+-	unsigned int header;
+-	unsigned int x;
+-	unsigned int y;
+-	unsigned int reserved;
+-};
+-struct arctic2_ts_event { /* Used in the IBM Arctic II */
+-	signed short pressure;
+-	signed int x;
+-	signed int y;
+-	int millisecs;
+-	int flags;
+-};
+-struct collie_ts_event { /* Used in the Sharp Zaurus SL-5000d and SL-5500 */
+-	long y;
+-	long x;
+-	long pressure;
+-	long long millisecs;
+-};
+-struct corgi_ts_event { /* Used in the Sharp Zaurus SL-C700 */
+-	short pressure;
+-	short x;
+-	short y;
+-	short millisecs;
+-};
+-#endif /* USE_INPUT_API */
+-
+ #include "tslib-private.h"
+ 
+-int ts_read_raw(struct tsdev *ts, struct ts_sample *samp, int nr)
+-{
+ #ifdef USE_INPUT_API
++#include <linux/input.h>
++
++static inline int get_input_event(struct tsdev *ts, struct ts_sample *samp) {
+ 	struct input_event ev;
+-#else
+-	struct ts_event *evt;
+-	struct h3600_ts_event *hevt;
+-	struct mk712_ts_event *mevt;
+-	struct arctic2_ts_event *aevt;
+-	struct collie_ts_event *collie_evt;
+-	struct corgi_ts_event *corgi_evt;
+-#endif /* USE_INPUT_API */
+-	int ret;
+-	int total = 0;
++	struct timeval tv = {0, 0};
++	fd_set fdset;
++	int ret = 0;
+ 
+-	char *tseventtype=NULL;
+-	char *defaulttseventtype="UCB1x00";
++	/* event vars */
++	static int curr_x = 0, curr_y = 0;
++	int curr_p = 0, next_x = 0, next_y = 0;
+ 
+-#ifdef USE_INPUT_API
+-	/* warning: maybe those static vars should be part of the tsdev struct? */
+-	static int curr_x = 0, curr_y = 0, curr_p = 0;
+-	static int got_curr_x = 0, got_curr_y = 0;
+-	int got_curr_p = 0;
+-	int next_x, next_y;
++	/* state variables */
++	int got_curr_x = 0, got_curr_y = 0, got_curr_p = 0;
+ 	int got_next_x = 0, got_next_y = 0;
+ 	int got_tstamp = 0;
+ 
+-	while (total < nr) {
++	while (1) {
+ 		ret = read(ts->fd, &ev, sizeof(struct input_event));
+ 		if (ret < sizeof(struct input_event)) break;
+ 
+@@ -146,177 +94,231 @@
+ 			samp->tv = ev.time;
+ 		}
+ 
+-		if ( (!got_curr_x || !got_curr_y) && !got_curr_p &&
+-		     !got_next_x && !got_next_y ) {
+-			/*
+-			 * The current event is not complete yet.
+-			 * Give the kernel a chance to feed us more.
+-			 */
+-			struct timeval tv = {0, 0};
+-			fd_set fdset;
+-			FD_ZERO(&fdset);
+-			FD_SET(ts->fd, &fdset);
+-			ret = select(ts->fd+1, &fdset, NULL, NULL, &tv);
+-		       	if (ret == 1) continue;
+-			if (ret == -1) break;
++		if (got_curr_x && got_curr_y && got_curr_p) {
++			/* we have a complete event */
++			samp->x = curr_x;
++			samp->y = curr_y;
++			samp->pressure = curr_p;
++			ret = 0; /* indicate success */
++			if (got_next_x) curr_x = next_x;
++			if (got_next_y) curr_y = next_y;
++			break;
+ 		}
+ 
+-		/* We consider having a complete ts event */
+-		samp->x = curr_x;
+-		samp->y = curr_y;
+-		samp->pressure = curr_p;
+-#ifdef DEBUG
+-        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x,samp->y,samp->pressure);
+-#endif /*DEBUG*/
+-		samp++;
+-		total++;
+-        
+-		/* get ready for next event */
+-		if (got_next_x) curr_x = next_x; else got_curr_x = 0;
+-		if (got_next_y) curr_y = next_y; else got_curr_y = 0;
+-		got_next_x = got_next_y = got_tstamp = 0;
++		/*
++		 * The current event is not complete yet.
++		 * Give the kernel a chance to feed us more.
++		 */
++		FD_ZERO(&fdset);
++		FD_SET(ts->fd, &fdset);
++		ret = select(ts->fd+1, &fdset, NULL, NULL, &tv);
++	       	if (ret == 1) continue;
++		if (ret == -1) break;
+ 	}
+ 
+-	if (ret) ret = -1;
+-	if (total) ret = total;
++//	fprintf(stdout, "%s: returning %d\n", __FUNCTION__, ret);
++	if (ret != 0) ret = -1;
++	return ret;
++}
++
+ #else
++
++struct ucb1x00_ts_event  {   /* Used in UCB1x00 style touchscreens (the default) */
++	unsigned short pressure;
++	unsigned short x;
++	unsigned short y;
++	unsigned short pad;
++	struct timeval stamp;
++};
++struct h3600_ts_event { /* Used in the Compaq IPAQ */
++	unsigned short pressure;
++	unsigned short x;
++	unsigned short y;
++	unsigned short pad;
++};
++struct mk712_ts_event { /* Used in the Hitachi Webpad */
++	unsigned int header;
++	unsigned int x;
++	unsigned int y;
++	unsigned int reserved;
++};
++struct arctic2_ts_event { /* Used in the IBM Arctic II */
++	signed short pressure;
++	signed int x;
++	signed int y;
++	int millisecs;
++	int flags;
++};
++struct collie_ts_event { /* Used in the Sharp Zaurus SL-5000d and SL-5500 */
++	long y;
++	long x;
++	long pressure;
++	long long millisecs;
++};
++struct corgi_ts_event { /* Used in the Sharp Zaurus SL-C700 */
++	short pressure;
++	short x;
++	short y;
++	short millisecs;
++};
++
++static inline int get_ucb1x00_event(struct tsdev *ts, struct ts_sample *samp) {
++	struct ucb1x00_ts_event evt;
++	int ret = read(ts->fd, &evt, sizeof(struct ucb1x00_ts_event));
++	if (ret > 0) {
++		samp->x = evt.x;
++		samp->y = evt.y;
++		samp->pressure = evt.pressure;
++		samp->tv.tv_usec = evt.stamp.tv_usec;
++		samp->tv.tv_sec = evt.stamp.tv_sec;
++		ret = 0; /* success */
++	}
++	return ret;
++}
++
++static inline int get_h3600_event(struct tsdev *ts, struct ts_sample *samp) {
++	struct h3600_ts_event evt;
++	int ret = read(ts->fd, &evt, sizeof(struct h3600_ts_event));
++	if (ret > 0) {
++		samp->x = evt.x;
++		samp->y = evt.y;
++		samp->pressure = evt.pressure;
++		gettimeofday(&samp->tv, NULL);
++		ret = 0; /* success */
++	}
++	return ret;
++}
++
++static inline int get_mk712_event(struct tsdev *ts, struct ts_sample *samp) {
++	struct mk712_ts_event evt;
++	int ret = read(ts->fd, &evt, sizeof(struct mk712_ts_event));
++	if (ret > 0) {
++		samp->x = (short)evt.x;
++		samp->y = (short)evt.y;
++		if(evt.header==0)
++			samp->pressure=1;
++		else
++			samp->pressure=0;
++		gettimeofday(&samp->tv, NULL);
++		ret = 0; /* success */
++	}
++	return ret;
++}
++
++static inline int get_arctic2_event(struct tsdev *ts, struct ts_sample *samp) {
++	struct arctic2_ts_event evt;
++	int ret = read(ts->fd, &evt, sizeof(struct arctic2_ts_event));
++	if (ret > 0) {
++		samp->x = (short)evt.x;
++		samp->y = (short)evt.y;
++		samp->pressure = evt.pressure;
++		gettimeofday(&samp->tv, NULL);
++		ret = 0; /* success */
++	}
++	return ret;
++}
++
++static inline int get_collie_event(struct tsdev *ts, struct ts_sample *samp) {
++	struct collie_ts_event evt;
++	int ret = read(ts->fd, &evt, sizeof(struct collie_ts_event));
++	if (ret > 0) {
++		samp->x = evt.x;
++		samp->y = evt.y;
++		samp->pressure = evt.pressure;
++		samp->tv.tv_usec = evt.millisecs % 1000;
++		samp->tv.tv_sec = evt.millisecs / 1000;
++		ret = 0; /* success */
++	}
++	return ret;
++}
++
++static inline int get_corgi_event(struct tsdev *ts, struct ts_sample *samp) {
++	struct corgi_ts_event evt;
++	int ret = read(ts->fd, &evt, sizeof(struct corgi_ts_event));
++	if (ret > 0) {
++		samp->x = evt.x;
++		samp->y = evt.y;
++		samp->pressure = evt.pressure;
++		samp->tv.tv_usec = evt.millisecs % 1000;
++		samp->tv.tv_sec = evt.millisecs / 1000;
++		ret = 0; /* success */
++	}
++	return ret;
++}
++
++#endif
++
++int ts_read_raw(struct tsdev *ts, struct ts_sample *samp, int nr)
++{
++	int ret;
++	int total = 0;
++	int pen_down = 1;
++	static short x_save = 0, y_save = 0;
++	static int pthres = -1;
++
++#ifndef USE_INPUT_API
++	char *tseventtype=NULL;
++	char *defaulttseventtype="UCB1x00";
+ 	tseventtype = getenv("TSLIB_TSEVENTTYPE");
+ 	if(tseventtype==NULL) tseventtype=defaulttseventtype;
++#endif
+ 
+-	if( strcmp(tseventtype,"H3600") == 0) { /* iPAQ style h3600 touchscreen events */
+-		hevt = alloca(sizeof(*hevt) * nr);
+-		ret = read(ts->fd, hevt, sizeof(*hevt) * nr);
+-		if(ret > 0) {
+-			int nr = ret / sizeof(*hevt);
+-			while(ret >= sizeof(*hevt)) {
+-				samp->x = hevt->x;
+-				samp->y = hevt->y;
+-				samp->pressure = hevt->pressure;
+-#ifdef DEBUG
+-        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x,samp->y,samp->pressure);
+-#endif /*DEBUG*/
+-				gettimeofday(&samp->tv,NULL);
+-				samp++;
+-				hevt++;
+-				ret -= sizeof(*hevt);
+-			}
+-		} else {
+-			return -1;
+-		}
+-	} else if( strcmp(tseventtype,"MK712") == 0) { /* Hitachi Webpad events */
+-		mevt = alloca(sizeof(*mevt) * nr);
+-		ret = read(ts->fd, mevt, sizeof(*mevt) * nr);
+-		if(ret > 0) {
+-			int nr = ret / sizeof(*mevt);
+-			while(ret >= sizeof(*mevt)) {
+-				samp->x = (short)mevt->x;
+-				samp->y = (short)mevt->y;
+-				if(mevt->header==0)
+-					samp->pressure=1;
+-				else
+-					samp->pressure=0;
+-#ifdef DEBUG
+-        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x,samp->y,samp->pressure);
+-#endif /*DEBUG*/
+-				gettimeofday(&samp->tv,NULL);
+-				samp++;
+-				mevt++;
+-				ret -= sizeof(*mevt);
+-			}
+-		} else {
+-			return -1;
+-		}
+-
+-	} else if( strcmp(tseventtype,"ARCTIC2") == 0) { /* IBM Arctic II events */
+-		aevt = alloca(sizeof(*aevt) * nr);
+-		ret = read(ts->fd, aevt, sizeof(*aevt) * nr);
+-		if(ret > 0) {
+-			int nr = ret / sizeof(*aevt);
+-			while(ret >= sizeof(*aevt)) {
+-				samp->x = (short)aevt->x;
+-				samp->y = (short)aevt->y;
+-				samp->pressure = aevt->pressure;
+-#ifdef DEBUG
+-        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x,samp->y,samp->pressure);
+-#endif /*DEBUG*/
+-				gettimeofday(&samp->tv,NULL);
+-				samp++;
+-				aevt++;
+-				ret -= sizeof(*aevt);
+-			}
++	while ((total < nr) && pen_down) {
++//		fprintf(stdout, "total: %d, nr: %d\n", total, nr);
++#ifdef USE_INPUT_API
++		ret = get_input_event(ts, samp);
++#else
++		if (strcmp(tseventtype, "H3600") == 0) {
++			/* iPAQ style h3600 touchscreen events */
++			ret = get_h3600_event(ts, samp);
++		} else if (strcmp(tseventtype, "MK712") == 0) {
++			/* Hitachi Webpad events */
++			ret = get_mk712_event(ts, samp);
++		} else if (strcmp(tseventtype, "ARCTIC2") == 0) {
++			/* IBM Arctic II events */
++			ret = get_arctic2_event(ts, samp);
++		} else if (strcmp(tseventtype, "COLLIE") == 0) {
++			/* Sharp Zaurus SL-5000d/5500 events */
++			ret = get_collie_event(ts, samp);
++		} else if (strcmp(tseventtype,"CORGI") == 0) {
++			/* Sharp Zaurus SL-C700 events */
++			ret = get_corgi_event(ts, samp);
+ 		} else {
+-			return -1;
++			/* Use normal UCB1x00 type events */
++			ret = get_ucb1x00_event(ts, samp);
+ 		}
++#endif
++		if (ret != 0) break;
+ 
+-	} else if( strcmp(tseventtype,"COLLIE") == 0) { /* Sharp Zaurus SL-5000d/5500 events */
+-		collie_evt = alloca(sizeof(*collie_evt) * nr);
+-		ret = read(ts->fd, collie_evt, sizeof(*collie_evt) * nr);
+-		if(ret > 0) {
+-			int nr = ret / sizeof(*collie_evt);
+-			while(ret >= sizeof(*collie_evt)) {
+-				samp->x = collie_evt->x;
+-				samp->y = collie_evt->y;
+-				samp->pressure = collie_evt->pressure;
+-#ifdef DEBUG
+-        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x,samp->y,samp->pressure);
+-#endif /*DEBUG*/
+-				samp->tv.tv_usec = collie_evt->millisecs % 1000;
+-				samp->tv.tv_sec = collie_evt->millisecs / 1000;
+-				samp++;
+-				collie_evt++;
+-				ret -= sizeof(*collie_evt);
++		if (pthres == -1) {
++			char *pthresvar = getenv("TSLIB_PTHRES");
++			pthres = 100;
++			if (pthresvar != NULL) {
++				int p = strtol(pthresvar, (char **)NULL, 10);
++				if (p != -1) pthres = p;
+ 			}
+-		} else {
+-			return -1;
+ 		}
+ 
+-	} else if( strcmp(tseventtype,"CORGI") == 0) { /* Sharp Zaurus SL-C700 events */
+-		corgi_evt = alloca(sizeof(*corgi_evt) * nr);
+-		ret = read(ts->fd, corgi_evt, sizeof(*corgi_evt) * nr);
+-		if(ret > 0) {
+-			int nr = ret / sizeof(*corgi_evt);
+-			while(ret >= sizeof(*corgi_evt)) {
+-				samp->x = corgi_evt->x;
+-				samp->y = corgi_evt->y;
+-				samp->pressure = corgi_evt->pressure;
+-#ifdef DEBUG
+-        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x,samp->y,samp->pressure);
+-#endif /*DEBUG*/
+-				samp->tv.tv_usec = corgi_evt->millisecs % 1000;
+-				samp->tv.tv_sec = corgi_evt->millisecs / 1000;
+-				samp++;
+-				corgi_evt++;
+-				ret -= sizeof(*corgi_evt);
+-			}
++		if (samp->pressure < pthres) {
++			/* pen released, send events up */
++			pen_down = 0;
++			/* set x and y to previous values */
++			samp->x = x_save;
++			samp->y = y_save;
+ 		} else {
+-			return -1;
++			pen_down = 1;
++			x_save = samp->x;
++			y_save = samp->y;
+ 		}
+-
+-	} else { /* Use normal UCB1x00 type events */
+-		evt = alloca(sizeof(*evt) * nr);
+-		ret = read(ts->fd, evt, sizeof(*evt) * nr);
+-		if(ret > 0) {
+-			int nr = ret / sizeof(*evt);
+-			while(ret >= sizeof(*evt)) {
+-				samp->x = evt->x;
+-				samp->y = evt->y;
+-				samp->pressure = evt->pressure;
+ #ifdef DEBUG
+-        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x,samp->y,samp->pressure);
++	        fprintf(stderr,"RAW---------------------------> %d %d %d\n",samp->x, samp->y, samp->pressure);
+ #endif /*DEBUG*/
+-				samp->tv.tv_usec = evt->stamp.tv_usec;
+-				samp->tv.tv_sec = evt->stamp.tv_sec;
+-				samp++;
+-				evt++;
+-				ret -= sizeof(*evt);
+-			}
+-		} else {
+-			return -1;
+-		}
++		samp++;
++		total++;
+ 	}
+-	ret = nr;
+-#endif /* USE_INPUT_API */
+ 
++	if (ret != 0) ret = -1;
++	if (total) ret = total;
+ 	return ret;
+ }
+ 

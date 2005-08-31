@@ -1,0 +1,59 @@
+--- stdlib/longlong.h~	2002-09-29 18:45:58.000000000 +0100
++++ stdlib/longlong.h	2004-03-20 19:16:44.000000000 +0000
+@@ -210,6 +210,14 @@
+ 	     "rI" ((USItype) (bh)),					\
+ 	     "r" ((USItype) (al)),					\
+ 	     "rI" ((USItype) (bl)))
++/* v3m and all higher arches have long multiply support.  */
++#if !defined(__ARM_ARCH_2__) && !defined(__ARM_ARCH_3__)
++#define umul_ppmm(xh, xl, a, b) \
++  __asm__ ("umull %0,%1,%2,%3" : "=&r" (xl), "=&r" (xh) : "r" (a), "r" (b))
++#define UMUL_TIME 5
++#define smul_ppmm(xh, xl, a, b) \
++  __asm__ ("smull %0,%1,%2,%3" : "=&r" (xl), "=&r" (xh) : "r" (a), "r" (b))
++#else
+ #define umul_ppmm(xh, xl, a, b) \
+ {register USItype __t0, __t1, __t2;					\
+   __asm__ ("%@ Inlined umul_ppmm\n"					\
+@@ -231,7 +239,14 @@
+ 	   : "r" ((USItype) (a)),					\
+ 	     "r" ((USItype) (b)));}
+ #define UMUL_TIME 20
++#endif
+ #define UDIV_TIME 100
++
++#if defined(__ARM_ARCH_5__) || defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__)
++#define count_leading_zeros(COUNT,X)	((COUNT) = __builtin_clz (X))
++#define COUNT_LEADING_ZEROS_0 32
++#endif
++
+ #endif /* __arm__ */
+ 
+ #if defined (__hppa) && W_TYPE_SIZE == 32
+--- /dev/null	2004-02-02 20:32:13.000000000 +0000
++++ sysdeps/arm/mp_clz_tab.c	2004-03-20 19:24:26.000000000 +0000
+@@ -0,0 +1,24 @@
++/* __clz_tab -- support for longlong.h
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#if defined(__ARM_ARCH_5__) || defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__)
++/* Nothing required.  */
++#else
++#include <sysdeps/generic/mp_clz_tab.c>
++#endif

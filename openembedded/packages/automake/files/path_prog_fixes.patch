@@ -1,0 +1,60 @@
+Index: automake-1.9.3/Makefile.am
+===================================================================
+--- automake-1.9.3.orig/Makefile.am	2004-10-25 14:57:30.000000000 -0400
++++ automake-1.9.3/Makefile.am	2005-03-09 16:47:38.241364016 -0500
+@@ -66,7 +66,8 @@
+   -e 's,[@]SHELL[@],$(SHELL),g' \
+   -e 's,[@]VERSION[@],$(VERSION),g' \
+   -e 's,[@]configure_input[@],Generated from $@.in; do not edit by hand.,g' \
+-  -e 's,[@]datadir[@],$(datadir),g'
++  -e 's,[@]datadir[@],$(datadir),g' \
++  -e 's,[@]bindir[@],$(bindir),g'
+ 
+ ## These files depend on Makefile so they are rebuilt if $(VERSION),
+ ## $(datadir) or other do_subst'ituted variables change.
+Index: automake-1.9.3/Makefile.in
+===================================================================
+--- automake-1.9.3.orig/Makefile.in	2004-11-01 05:23:54.000000000 -0500
++++ automake-1.9.3/Makefile.in	2005-03-09 16:47:54.712859968 -0500
+@@ -161,7 +161,8 @@
+   -e 's,[@]SHELL[@],$(SHELL),g' \
+   -e 's,[@]VERSION[@],$(VERSION),g' \
+   -e 's,[@]configure_input[@],Generated from $@.in; do not edit by hand.,g' \
+-  -e 's,[@]datadir[@],$(datadir),g'
++  -e 's,[@]datadir[@],$(datadir),g' \
++  -e 's,[@]bindir[@],$(bindir),g'
+ 
+ WGET = wget
+ WGETSGO = $(WGET) http://savannah.gnu.org/cgi-bin/viewcvs/~checkout~
+Index: automake-1.9.3/aclocal.in
+===================================================================
+--- automake-1.9.3.orig/aclocal.in	2004-10-10 12:10:24.000000000 -0400
++++ automake-1.9.3/aclocal.in	2005-03-09 16:47:38.241364016 -0500
+@@ -1,8 +1,8 @@
+-#!@PERL@
++#!@bindir@/env perl
+ # -*- perl -*-
+ # @configure_input@
+ 
+-eval 'case $# in 0) exec @PERL@ -S "$0";; *) exec @PERL@ -S "$0" "$@";; esac'
++eval 'case $# in 0) exec @bindir@/env perl -S "$0";; *) exec @bindir@/env perl -S "$0" "$@";; esac'
+     if 0;
+ 
+ # aclocal - create aclocal.m4 by scanning configure.ac
+Index: automake-1.9.3/automake.in
+===================================================================
+--- automake-1.9.3.orig/automake.in	2004-10-21 16:23:26.000000000 -0400
++++ automake-1.9.3/automake.in	2005-03-09 16:47:38.245363408 -0500
+@@ -1,8 +1,10 @@
+-#!@PERL@ -w
++#!@bindir@/env perl
+ # -*- perl -*-
+ # @configure_input@
+ 
+-eval 'case $# in 0) exec @PERL@ -S "$0";; *) exec @PERL@ -S "$0" "$@";; esac'
++use warnings;
++
++eval 'case $# in 0) exec @bindir@/env perl -S "$0";; *) exec @bindir@/env perl -S "$0" "$@";; esac'
+     if 0;
+ 
+ # automake - create Makefile.in from Makefile.am

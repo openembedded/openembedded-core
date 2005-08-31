@@ -1,0 +1,17 @@
+#! /bin/sh
+#
+# sendsigs	Kill all remaining processes.
+#
+# Version:      @(#)sendsigs  2.75  22-Jun-1998  miquels@cistron.nl
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Kill all processes.
+echo "Sending all processes the TERM signal..."
+killall5 -15
+sleep 5
+echo "Sending all processes the KILL signal..."
+killall5 -9
+
+: exit 0

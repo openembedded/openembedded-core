@@ -1,0 +1,30 @@
+case `awk 'BEGIN { FS=":" } /Processor/ { gsub(/ /, "", $2) ; print $2 } ' </proc/cpuinfo` in
+  *XScale-PXA2*)
+
+    case "`uname -r`" in
+        2.4*)
+		PCIC=pxa_cs
+		;;
+	2.6*)
+		PCIC=pxa2xx_core
+		;;
+    esac
+    ;;
+  *StrongARM-1100* | *StrongARM-1110*)
+    PCIC=sa1100_cs
+    ;;
+  *)
+    echo "Unable to determine PCIC value for this CPU"
+    exit 1
+    ;;
+esac
+
+if grep -q iPAQ /proc/cpuinfo; then
+  case `module_id` in
+    "HP iPAQ H2200")
+	;;
+    *)
+	PCIC_EXTRA=h3600_generic_sleeve
+	;;
+  esac
+fi

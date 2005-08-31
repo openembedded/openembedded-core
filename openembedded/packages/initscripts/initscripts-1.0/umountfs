@@ -1,0 +1,18 @@
+#! /bin/sh
+#
+# umountfs	Turn off swap and unmount all local filesystems.
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+echo "Deactivating swap..."
+swapoff -a
+
+# We leave /proc mounted.
+echo "Unmounting local filesystems..."
+mount -o remount,ro /mnt/ram
+umount -f -a -r
+
+mount -o remount,ro /
+
+: exit 0

@@ -1,0 +1,4 @@
+
+# Uncomment to move ipkg server-data into RAM
+# lists_dir ext /var/lib/ipkg
+

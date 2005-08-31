@@ -1,0 +1,102 @@
+#!/bin/sh
+#
+# manage network interfaces and configure some networking options
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+if ! [ -x /sbin/ifup ]; then
+    exit 0
+fi
+
+spoofprotect_rp_filter () {
+    # This is the best method: turn on Source Address Verification and get
+    # spoof protection on all current and future interfaces.
+    
+    if [ -e /proc/sys/net/ipv4/conf/all/rp_filter ]; then
+        for f in /proc/sys/net/ipv4/conf/*; do
+	    [ -e $f/rp_filter ] && echo 1 > $f/rp_filter
+        done
+        return 0
+    else
+        return 1
+    fi
+}
+
+spoofprotect () {
+    echo -n "Setting up IP spoofing protection: "
+    if spoofprotect_rp_filter; then
+        echo "rp_filter."
+    else
+        echo "FAILED."
+    fi
+}
+
+ip_forward () {
+    if [ -e /proc/sys/net/ipv4/ip_forward ]; then
+        echo -n "Enabling packet forwarding... "
+        echo 1 > /proc/sys/net/ipv4/ip_forward
+        echo "done."
+    fi
+}
+
+syncookies () {
+    if [ -e /proc/sys/net/ipv4/tcp_syncookies ]; then
+        echo -n "Enabling TCP/IP SYN cookies... "
+        echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+        echo "done."
+    fi
+}
+
+doopt () {
+    optname=$1
+    default=$2
+    opt=`grep "^$optname=" /etc/network/options`
+    if [ -z "$opt" ]; then
+        opt="$optname=$default"
+    fi
+    optval=${opt#$optname=}
+    if [ "$optval" = "yes" ]; then
+        eval $optname
+    fi
+}
+
+case "$1" in
+    start)
+	doopt spoofprotect yes
+        doopt syncookies no
+        doopt ip_forward no
+
+        echo -n "Configuring network interfaces... "
+        ifup -a
+	echo "done."
+	;;
+    stop)
+        if sed -n 's/^[^ ]* \([^ ]*\) \([^ ]*\) .*$/\1 \2/p' /proc/mounts | 
+          grep -q "^/ nfs$"; then
+            echo "NOT deconfiguring network interfaces: / is an NFS mount"
+        elif sed -n 's/^[^ ]* \([^ ]*\) \([^ ]*\) .*$/\1 \2/p' /proc/mounts |  
+          grep -q "^/ smbfs$"; then
+            echo "NOT deconfiguring network interfaces: / is an SMB mount"
+	elif sed -n 's/^[^ ]* \([^ ]*\) \([^ ]*\) .*$/\2/p' /proc/mounts | 
+          grep -qE '^(nfs|smbfs|ncp|coda)$'; then
+            echo "NOT deconfiguring network interfaces: network shares still mounted."
+        else
+            echo -n "Deconfiguring network interfaces... "
+            ifdown -a
+	    echo "done."
+        fi
+	;;
+    force-reload|restart)
+        echo -n "Reconfiguring network interfaces... "
+        ifdown -a
+        ifup -a
+	echo "done."
+	;;
+    *)
+	echo "Usage: /etc/init.d/networking {start|stop|restart|force-reload}"
+	exit 1
+	;;
+esac
+
+exit 0
+

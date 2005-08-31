@@ -1,0 +1,14 @@
+--- gmp-4.1.4/longlong.h.orig	2004-04-22 00:34:28.000000000 +0200
++++ gmp-4.1.4/longlong.h	2005-07-18 01:13:06.000000000 +0200
+@@ -738,8 +738,10 @@
+    count is only an int. */
+ #define count_trailing_zeros(count, x)					\
+   do {									\
++    UDItype __cbtmp;							\
+     ASSERT ((x) != 0);							\
+-    __asm__ ("bsfq %1,%q0" : "=r" (count) : "rm" ((UDItype)(x)));	\
++    __asm__ ("bsfq %1,%0" : "=r" (__cbtmp) : "rm" ((UDItype)(x)));	\
++    (count) = __cbtmp;							\
+   } while (0)
+ #endif /* x86_64 */
+ 

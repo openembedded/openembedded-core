@@ -1,0 +1,11 @@
+--- udev-063/etc/udev/udev.rules.devfs.orig	2005-07-27 19:55:51 +0200
++++ udev-063/etc/udev/udev.rules.devfs	2005-07-27 19:56:49 +0200
+@@ -103,3 +103,8 @@
+ 
+ # raw devices
+ KERNEL="raw[0-9]*",     NAME="raw/%k" 
++
++# tty devices
++KERNEL=="tty[0-9]*",            SYMLINK="%k"
++KERNEL=="ttyS[0-9]*",           SYMLINK="%k"
++

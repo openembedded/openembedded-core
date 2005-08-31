@@ -1,0 +1,66 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- udev-065/Makefile~flags
++++ udev-065/Makefile
+@@ -106,11 +106,11 @@
+ # check if compiler option is supported
+ cc-supports = ${shell if $(CC) ${1} -S -o /dev/null -xc /dev/null > /dev/null 2>&1; then echo "$(1)"; else echo "$(2)"; fi;}
+ 
+-CFLAGS		+= -Wall -fno-builtin -Wchar-subscripts -Wpointer-arith \
++override CFLAGS		+= -Wall -fno-builtin -Wchar-subscripts -Wpointer-arith \
+ 		   -Wstrict-prototypes -Wsign-compare
+-CFLAGS		+= $(call cc-supports, -Wdeclaration-after-statement, )
+-CFLAGS		+= -pipe
+-CFLAGS		+= -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
++override CFLAGS		+= $(call cc-supports, -Wdeclaration-after-statement, )
++override CFLAGS		+= -pipe
++override CFLAGS		+= -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
+ 
+ # use '-Os' optimization if available, else use -O2
+ OPTFLAGS := $(call cc-supports, -Os, -O2)
+@@ -154,16 +154,16 @@
+ 
+ SYSFS = $(PWD)/libsysfs/sysfs.a
+ 
+-CFLAGS +=	-I$(PWD)/libsysfs/sysfs	\
++override CFLAGS +=	-I$(PWD)/libsysfs/sysfs	\
+ 		-I$(PWD)/libsysfs
+ 
+ ifeq ($(strip $(USE_LOG)),true)
+-	CFLAGS += -DUSE_LOG
++	override CFLAGS += -DUSE_LOG
+ endif
+ 
+ # if DEBUG is enabled, then we do not strip or optimize
+ ifeq ($(strip $(DEBUG)),true)
+-	CFLAGS  += -O1 -g -DDEBUG
++	override CFLAGS  += -DDEBUG
+ 	LDFLAGS += -Wl
+ 	STRIPCMD = /bin/true -Since_we_are_debugging
+ else
+@@ -180,18 +180,18 @@
+ 	CC		= $(KLCC)
+ 	LD		= $(KLCC)
+ else
+-	CFLAGS		+= -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
++	override CFLAGS		+= -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
+ endif
+ 
+ ifeq ($(strip $(USE_SELINUX)),true)
+ 	UDEV_OBJS += udev_selinux.o
+ 	LIB_OBJS += -lselinux
+-	CFLAGS += -DUSE_SELINUX
++	override CFLAGS += -DUSE_SELINUX
+ endif
+ 
+ ifeq ($(strip $(USE_STATIC)),true)
+-	CFLAGS += -DUSE_STATIC
+-	LDFLAGS += -static
++	override CFLAGS += -DUSE_STATIC
++	override LDFLAGS += -static
+ endif
+ 
+ ifeq ($(strip $(V)),false)

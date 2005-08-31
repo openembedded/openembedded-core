@@ -1,0 +1,26 @@
+# don't mount /dev/mtdblock2 since Spitz uses pivot_root
+# /dev/mtdblock2     /            jffs2   rw,noatime              1  1
+rootfs             /            auto    defaults                1  1
+proc               /proc        proc    defaults                0  0
+tmpfs              /var         tmpfs   defaults                0  0
+tmpfs              /media/ram   tmpfs   defaults                0  0
+
+# Compact Flash memory cards
+/dev/hdb1       /media/cf       auto    defaults,sync,noauto    0  0
+# SD/MMC in kernel 2.4
+/dev/mmcda1     /media/card     auto    defaults,sync,noauto    0  0
+# SD/MMC in kernel 2.6
+#/dev/mmcblk0p1  /media/card     auto    defaults,sync,noauto    0  0
+
+#
+# USB
+#
+/dev/sda1       /media/usbhdd   vfat            noauto,umask=000,noatime,iocharset=utf8,codepage=932    0  0
+devpts          /dev/pts        devpts          mode=0620,gid=5       0  0
+usbdevfs        /proc/bus/usb   usbdevfs        noauto                0  0
+
+#
+# Harddisk
+#
+/dev/hda1           /media/hdd      ext3	noauto,defaults,noatime    0  0
+

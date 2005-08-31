@@ -1,0 +1,15 @@
+--- Makeconfig~ 	2001/09/12 18:49:45	1.265
++++ Makeconfig 	2001/10/07 20:56:17
+@@ -532,10 +532,11 @@
+ $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
+ 				       $(filter -Wl$(comma)-rpath-link=%,\
+ 						$(sysdep-LDFLAGS)))))
++ld_envlib_path = $(shell test x$$LD_LIBRARY_PATH = x || echo -n :$$LD_LIBRARY_PATH)
+ run-program-prefix = $(if $(filter $(notdir $(built-program-file)),\
+ 				   $(tests-static)),, \
+ 			  $(elf-objpfx)$(rtld-installed-name) \
+-			  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)))
++			  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path))$(ld_envlib_path))
+ else
+ run-program-prefix =
+ endif

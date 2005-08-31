@@ -1,0 +1,39 @@
+Index: module-init-tools-3.1/configure.in
+===================================================================
+--- module-init-tools-3.1.orig/configure.in	2004-11-12 00:05:25.000000000 -0500
++++ module-init-tools-3.1/configure.in	2005-01-20 02:23:16.409792288 -0500
+@@ -41,5 +41,14 @@
+ fi])
+ AC_SUBST(MODULE_DIR)
+ 
+-AC_OUTPUT([Makefile])
++AC_ARG_ENABLE(manpages,
++[  --disable-manpages      Disable man page generation.],
++[if test x"$enableval" != x"no"; then
++  enable_manpages=yes
++else
++  enable_manpages=no
++fi],
++[enable_manpages=yes])
++AM_CONDITIONAL([MANPAGES], test x"$enable_manpages" = x"yes")
+ 
++AC_OUTPUT([Makefile])
+--- module-init-tools-3.2-pre7/Makefile.am.orig	2005-07-05 13:55:06.000000000 +0200
++++ module-init-tools-3.2-pre7/Makefile.am	2005-07-05 13:55:31.000000000 +0200
+@@ -21,13 +21,14 @@
+ MAN5 = modprobe.conf.5 modules.dep.5
+ MAN8 = depmod.8 insmod.8 lsmod.8 rmmod.8 modprobe.8 modinfo.8
+ SGML = $(addprefix doc/,  $(MAN5:%.5=%.sgml) $(MAN8:%.8=%.sgml))
+-man_MANS = $(MAN5) $(MAN8)
+ # If they haven't overridden mandir, fix it (never /man!)
+ mandir =$(shell if [ @mandir@ = $(prefix)/man ]; then if [ $(prefix) = / ]; then echo /usr/share/man; else echo $(prefix)/share/man; fi; else echo @mandir@; fi)
+ 
+ TESTSUITE := $(shell find tests -type f ! -name '*~')
+ 
+-EXTRA_DIST = generate-modprobe.conf modprobe.devfs FAQ CODING stress_modules.sh install-with-care $(SGML) $(man_MANS) $(TESTSUITE)
++if MANPAGES
++man_MANS = $(MAN5) $(MAN8)
++endif
+ 
+ sbin_PROGRAMS = insmod modprobe rmmod depmod modinfo insmod.static
+ bin_PROGRAMS = lsmod

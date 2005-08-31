@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+# SoC hotplug agent for 2.6 kernels 
+#
+#	ACTION=add
+#	SOC_ID=1234
+#
+
+cd /etc/hotplug
+. ./hotplug.functions
+
+MAP_CURRENT=$MODULE_DIR/modules.socmap
+
+#
+# stdin is "modules.socmap" syntax
+# on return, all matching modules were added to $DRIVERS
+#
+soc_map_modules ()
+{
+    while read line
+    do
+        # comments are lines that start with "#" ...
+	# be careful, they still get parsed by bash!
+	case "$line" in
+	\#*) continue ;;
+	esac
+
+	set $line
+
+	module="$1"
+	id="$2"
+
+	if [ "$id" != "0x$SOC_ID" ]; then
+		continue
+	fi
+
+	# It was a match!
+	case " $DRIVERS " in
+	    *" $module "* )
+		: already found
+	    ;;
+	    * )
+		DRIVERS="$module $DRIVERS"
+	    ;;
+	esac
+	: drivers $DRIVERS
+    done
+}
+
+case $ACTION in
+
+add)
+
+    load_drivers soc $MAP_CURRENT "$SOC_ID"
+    ;;
+
+*)
+    debug_mesg SoC $ACTION event not supported
+    exit 1
+    ;;
+
+esac

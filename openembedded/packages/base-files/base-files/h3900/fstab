@@ -1,0 +1,8 @@
+/dev/mtdblock/1	/ 	jffs2	defaults	1  1 
+#breaks h51xx
+#/dev/mtdblock/2 /home   jffs2   defaults        1  1
+proc            /proc   proc    defaults        0  0
+/dev/hda1	/media/cf	auto	defaults,noauto,noatime,user,exec,suid	0  0
+/dev/mmc/part1	/media/card	auto	defaults,noauto,noatime,user,exec,suid	0  0
+tmpfs		/var	tmpfs	defaults	0  0
+tmpfs		/media/ram	tmpfs	defaults	0  0

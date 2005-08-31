@@ -1,0 +1,85 @@
+#! /bin/sh
+#
+# bootlogd	One of the first scripts to be executed. Starts or stops
+#		the bootlogd log program. If this script is called as
+#		"stop-bootlogd", it will stop the daemon instead of
+#		starting it even when called with the "start" argument.
+#
+# Version:	@(#)bootlogd  2.85-12  21-Mar-2004  miquels@cistron.nl
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/sbin/bootlogd
+NAME=bootlogd
+DESC="Bootlog daemon"
+
+test -f $DAEMON || exit 0
+
+[ -r /etc/default/bootlogd ] && . /etc/default/bootlogd
+
+## set -e # not needed
+
+case "$BOOTLOGD_ENABLE" in
+	[Nn]*)
+		exit 0
+		;;
+esac
+
+STOPPER=
+ACTION="$1"
+case "$0" in
+	*stop-bootlog*)
+		STOPPER=Y
+		if [ "$ACTION" = start ]
+		then
+			ACTION=stop
+		fi
+		;;
+esac
+
+case "$ACTION" in
+	start)
+		echo -n "Starting $DESC: "
+		if [ -d /proc/1/. ]
+		then
+			umask 027
+			start-stop-daemon --start --quiet \
+				--exec $DAEMON -- -r
+		else
+			$DAEMON -r
+		fi
+		echo "$NAME."
+		;;
+	stop)
+		echo -n "Stopping $DESC: "
+		start-stop-daemon --stop --quiet --exec $DAEMON
+
+		if [ "$STOPPER" ] && [ -f /var/log/boot ] && \
+		   [ -f /var/log/boot~ ]
+		then
+			cd /var/log
+			chgrp adm boot
+			savelog -p -c 5 boot > /dev/null 2>&1
+			mv boot.0 boot
+			mv boot~ boot.0
+		fi
+
+		echo "$NAME."
+		;;
+	 restart|force-reload)
+		echo -n "Restarting $DESC: "
+		start-stop-daemon --stop --quiet --exec $DAEMON
+		sleep 1
+		start-stop-daemon --start --quiet --exec $DAEMON
+		echo "$NAME."
+		;;
+	*)
+		N=${0##*/}
+		N=${N#[SK]??}
+		echo "Usage: $N {start|stop|restart|force-reload}" >&2
+		exit 1
+		;;
+esac
+
+exit 0
+

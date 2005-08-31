@@ -1,0 +1,12 @@
+--- driver_madwifi.c.orig	2005-03-18 15:12:53.392793216 +0100
++++ driver_madwifi.c	2005-03-18 15:13:09.246383104 +0100
+@@ -25,7 +25,8 @@
+ #include "eloop.h"
+ #include "wpa_supplicant.h"
+ 
+-#include <include/compat.h>
++#include <net80211/compat.h>
++#include <net80211/_ieee80211.h>
+ #include <net80211/ieee80211.h>
+ #include <net80211/ieee80211_crypto.h>
+ #include <net80211/ieee80211_ioctl.h>

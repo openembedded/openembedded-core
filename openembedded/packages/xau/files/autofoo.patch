@@ -1,0 +1,21 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- libXau-0.1.1/configure.ac~autofoo
++++ libXau-0.1.1/configure.ac
+@@ -25,11 +25,10 @@
+ 
+ AC_PREREQ([2.57])
+ AC_INIT(libXau, [0.1.1], [keithp@keithp.com],libXau)
+-AM_INIT_AUTOMAKE([dist-bzip2])
+-AM_MAINTAINER_MODE
+-
+ AM_CONFIG_HEADER(config.h)
+ AC_CONFIG_AUX_DIR(.)
++AM_INIT_AUTOMAKE([dist-bzip2])
++AM_MAINTAINER_MODE
+ 
+ AC_PROG_CC
+ AC_PROG_INSTALL

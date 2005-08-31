@@ -1,0 +1,11 @@
+--- glibc-2.1.1/sysdeps/unix/sysv/linux/paths.h~	Thu May 27 13:16:33 1999
++++ glibc-2.1.1/sysdeps/unix/sysv/linux/paths.h	Thu May 27 13:17:55 1999
+@@ -71,7 +71,7 @@
+ /* Provide trailing slash, since mostly used for building pathnames. */
+ #define	_PATH_DEV	"/dev/"
+ #define	_PATH_TMP	"/tmp/"
+-#define	_PATH_VARDB	"/var/db/"
++#define	_PATH_VARDB	"/var/lib/misc/"
+ #define	_PATH_VARRUN	"/var/run/"
+ #define	_PATH_VARTMP	"/var/tmp/"
+ 

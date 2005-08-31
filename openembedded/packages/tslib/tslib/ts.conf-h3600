@@ -1,0 +1,5 @@
+module_raw input
+module pthres pmin=1
+module variance delta=30
+module dejitter delta=100
+module linear

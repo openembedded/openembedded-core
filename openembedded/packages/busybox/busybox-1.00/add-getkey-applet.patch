@@ -1,0 +1,157 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- /dev/null
++++ busybox-1.00/console-tools/getkey.c
+@@ -0,0 +1,94 @@
++/* vi: set sw=4 ts=4: */
++/*
++ * getkey.c - Michael 'Mickey' Lauer
++ *
++ * Version 0.1
++ *
++ * A simple keygrapper. Displays a configurable message and waits a dedicated number
++ * of seconds for a keypress. Sets the exit code accordingly (SUCCESS on keypress).
++ */
++#include <stdio.h>
++#include <fcntl.h>
++#include <memory.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <sys/types.h>
++#include <errno.h>
++#include <sys/ioctl.h>
++#include <sys/kd.h>
++#include "busybox.h"
++
++extern int getkey_main(int argc, char **argv)
++{
++    int status = EXIT_FAILURE;
++
++    if ( argc < 2 )
++    {
++	bb_show_usage();
++    }
++
++    /*
++     * If no terminal is attached it is quite useless
++     * to treat it like one.
++     */
++    if( !isatty(STDIN_FILENO) )
++    {
++	goto error_hard;
++    }
++
++    //bb_printf( "DEBUG: time = '%s'\n", argv[1] );
++    //bb_printf( "DEBUG: mesg = '%s'\n", argv[2] );
++
++    struct termios orig;
++    struct termios attr;
++
++    if ( tcgetattr(STDIN_FILENO, &orig) == -1 )
++    {
++	goto error_hard;
++    }
++
++    attr = orig;
++    attr.c_cc[VMIN] = 0;
++    attr.c_cc[VTIME] = 0;
++    attr.c_iflag |= INLCR;
++    attr.c_oflag |= OPOST|ONLCR;
++    attr.c_cflag &= ~PARENB;
++    attr.c_lflag &= ~(ICANON/*|ECHO*/);
++    if ( tcsetattr(STDIN_FILENO,TCSANOW,&attr) == -1 )
++    {
++	goto error_hard;
++    }
++
++    fd_set rfds;
++    struct timeval tv;
++    int retval;
++
++    FD_ZERO(&rfds);
++    FD_SET(0, &rfds);
++
++    tv.tv_sec = atoi( argv[1] );
++    tv.tv_usec = 0;
++
++    if ( argc == 3 )
++    {
++	bb_printf( argv[2], tv.tv_sec );
++	bb_printf( "\n" );
++	fflush(stdout);
++    }
++    retval = select(1, &rfds, NULL, NULL, &tv);
++    if (retval > 0)
++    {
++	status = EXIT_SUCCESS;
++    }
++
++    if (tcsetattr(STDIN_FILENO,TCSANOW,&orig) == -1 )
++    {
++	goto error_hard;
++    }
++
++    return status;
++
++error_hard   :
++    return EXIT_FAILURE;
++};
++
+--- busybox-1.00/console-tools/Makefile.in~add-getkey-applet.patch
++++ busybox-1.00/console-tools/Makefile.in
+@@ -28,6 +28,7 @@
+ CONSOLETOOLS_DIR-$(CONFIG_CLEAR)	+= clear.o
+ CONSOLETOOLS_DIR-$(CONFIG_DEALLOCVT)	+= deallocvt.o
+ CONSOLETOOLS_DIR-$(CONFIG_DUMPKMAP)	+= dumpkmap.o
++CONSOLETOOLS_DIR-$(CONFIG_GETKEY)	+= getkey.o
+ CONSOLETOOLS_DIR-$(CONFIG_LOADFONT)	+= loadfont.o
+ CONSOLETOOLS_DIR-$(CONFIG_LOADKMAP)	+= loadkmap.o
+ CONSOLETOOLS_DIR-$(CONFIG_OPENVT)	+= openvt.o
+--- busybox-1.00/console-tools/Config.in~add-getkey-applet.patch
++++ busybox-1.00/console-tools/Config.in
+@@ -31,6 +31,14 @@
+ 	  This program dumps the kernel's keyboard translation table to
+ 	  stdout, in binary format. You can then use loadkmap to load it.
+ 
++config CONFIG_GETKEY
++	bool "getkey"
++	default n
++	help
++	  This program displays a configurable message and waits
++	  a dedicated number of seconds for a keypress. It sets
++	  the exit code accordingly, i.e. SUCCESS if there was a keypress.
++
+ config CONFIG_LOADFONT
+ 	bool "loadfont"
+ 	default n
+--- busybox-1.00/include/applets.h~add-getkey-applet.patch
++++ busybox-1.00/include/applets.h
+@@ -223,6 +223,9 @@
+ #ifdef CONFIG_FTPPUT
+ 	APPLET(ftpput, ftpgetput_main, _BB_DIR_USR_BIN, _BB_SUID_NEVER)
+ #endif
++#ifdef CONFIG_GETKEY
++	APPLET(getkey, getkey_main, _BB_DIR_SBIN, _BB_SUID_NEVER)
++#endif
+ #ifdef CONFIG_GETOPT
+ 	APPLET(getopt, getopt_main, _BB_DIR_BIN, _BB_SUID_NEVER)
+ #endif
+--- busybox-1.00/include/usage.h~add-getkey-applet.patch
++++ busybox-1.00/include/usage.h
+@@ -734,6 +734,13 @@
+ 	"\t-p, --password         Password to be used\n" \
+ 	"\t-P, --port             Port number to be used"
+ 
++#define getkey_trivial_usage \
++	"time [message]"
++#define getkey_full_usage \
++	"Display a message and wait for a keypress."
++#define getkey_example_usage \
++	"$ getkey 5 'Press a key within %d seconds to interrupt autoboot.'"
++
+ #define getopt_trivial_usage \
+ 	"[OPTIONS]..."
+ #define getopt_full_usage \

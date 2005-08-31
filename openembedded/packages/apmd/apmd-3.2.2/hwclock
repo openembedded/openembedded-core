@@ -1,0 +1,16 @@
+#!/bin/sh
+# Preserve the system clock around suspend/resume.
+
+INIT="/etc/init.d/hwclock.sh"
+[ -x "${INIT}" ] || exit 0
+
+case "${1},${2}" in
+(suspend,*)
+    "${INIT}" stop
+    ;;
+(resume,suspend)
+    "${INIT}" start
+    ;;
+esac
+
+exit 0

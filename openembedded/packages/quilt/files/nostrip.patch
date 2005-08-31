@@ -1,0 +1,16 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- quilt-0.32/Makefile.in~nostrip
++++ quilt-0.32/Makefile.in
+@@ -240,7 +240,7 @@
+ 	@INSTALL@ -m 644 scripts/patchfns $(BUILD_ROOT)$(SCRIPTS_DIR)
+ 
+ 	@INSTALL@ -d $(BUILD_ROOT)$(LIB_DIR)
+-	@INSTALL@ -m 755 -s $(LIB:%=lib/%) $(BUILD_ROOT)$(LIB_DIR)/
++	@INSTALL@ -m 755 $(LIB:%=lib/%) $(BUILD_ROOT)$(LIB_DIR)/
+ 
+ 	@INSTALL@ -d $(BUILD_ROOT)$(docdir)/$(PACKAGE)-$(VERSION)/
+ 	@INSTALL@ -m 644 doc/README \

@@ -1,0 +1,13 @@
+apmd\[[0-9]+\]: (Normal|Standby|Critical) Resume
+apmd\[[0-9]+\]: (Now using|Using) (AC|battery|backup) power
+apmd\[[0-9]+\]: (System|User) (Standby|Suspend)
+apmd\[[0-9]+\]: (apmd_)?call_proxy:
+apmd\[[0-9]+\]: Battery: [0-9]+%,
+apmd\[[0-9]+\]: Battery: absent
+apmd\[[0-9]+\]: Capability Change
+apmd\[[0-9]+\]: Exiting
+apmd\[[0-9]+\]: Performing APM status check
+apmd\[[0-9]+\]: Suspending now
+apmd\[[0-9]+\]: Update Time
+apmd\[[0-9]+\]: Version: apmd [0-9.]+, (apm )?driver [0-9.]+, APM BIOS [0-9.]+
+apmd\[[0-9]+\]: apmd [0-9.]+ interfacing with apm driver [0-9.]+ and APM BIOS [0-9.]+

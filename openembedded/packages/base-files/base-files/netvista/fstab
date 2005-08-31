@@ -1,0 +1,5 @@
+/dev/hdc2	/ 	ext2	rw,noatime		1  1 
+tmpfs		/var	tmpfs	defaults	0  0
+proc		/proc	proc	defaults	0  0
+tmpfs		/tmp	tmpfs	defaults	0  0
+devfs		/dev/devfs devfs defaults	0  0

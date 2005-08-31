@@ -1,0 +1,11 @@
+--- include/asm-mips/atomic.h.orig	2004-10-01 10:10:05.487734944 +0200
++++ include/asm-mips/atomic.h	2004-10-01 10:10:15.837161592 +0200
+@@ -15,8 +15,6 @@
+ #define _ASM_ATOMIC_H
+ 
+ 
+-#include <asm/system.h>
+-
+ typedef struct { volatile int counter; } atomic_t;
+ typedef struct { volatile __s64 counter; } atomic64_t;
+ 

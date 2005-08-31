@@ -1,0 +1,49 @@
+Index: modutils/modprobe.c
+===================================================================
+RCS file: /var/cvs/busybox/modutils/modprobe.c,v
+retrieving revision 1.41
+diff -u -r1.41 modprobe.c
+--- busybox/modutils/modprobe.c	24 Sep 2004 09:18:55 -0000	1.41
++++ busybox/modutils/modprobe.c	29 Dec 2004 11:56:07 -0000
+@@ -357,6 +357,41 @@
+ 					}
+ 				}
+ 			}
++			else if ((strncmp (buffer, "below", 5) == 0) && isspace (buffer[5])) {
++				char *mod, *deps;
++				if (parse_tag_value (buffer + 6, &mod, &deps)) {
++					struct dep_t *dt;
++
++					for (dt = first; dt; dt = dt->m_next) {
++						if (strcmp (dt->m_name, mod) == 0)
++							break;
++					}
++					if (dt) {
++						char *pp;
++						char *name;
++
++						pp = name = deps;
++
++						for (;;) {
++							while (*pp != 0 && !isspace (*pp))
++								pp++;
++							if (isspace (*pp))
++								*(pp++) = 0;
++							
++							dt->m_depcnt++;
++							dt->m_deparr = (char **) xrealloc (dt->m_deparr,
++											   sizeof (char *) * dt->m_depcnt);
++							dt->m_deparr[dt->m_depcnt - 1] = bb_xstrdup (name);
++
++							while (isspace (*pp))
++								pp++;
++							name = pp;
++							if (*pp == 0)
++								break;
++						}
++					}
++				}
++			}
+ 		}
+ 	}
+ 	close ( fd );

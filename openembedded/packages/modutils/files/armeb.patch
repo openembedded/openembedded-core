@@ -1,0 +1,14 @@
+--- modutils-2.4.27/include/elf_arm.h.orig	2004-09-21 18:37:00.000000000 -0400
++++ modutils-2.4.27/include/elf_arm.h	2004-09-21 18:38:18.000000000 -0400
+@@ -1,7 +1,11 @@
+ /* Machine-specific elf macros for ARM.  */
+ 
+ #define ELFCLASSM	ELFCLASS32
++#ifdef __ARMEB__
++#define ELFDATAM	ELFDATA2MSB
++#else
+ #define ELFDATAM	ELFDATA2LSB
++#endif
+ 
+ #define MATCH_MACHINE(x)  (x == EM_ARM)
+ 

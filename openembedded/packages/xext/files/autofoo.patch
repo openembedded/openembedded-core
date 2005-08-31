@@ -1,0 +1,18 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- Xext/configure.ac~autofoo
++++ Xext/configure.ac
+@@ -8,9 +8,8 @@
+         libXext)
+ 
+ AC_CONFIG_SRCDIR([Makefile.am])
+-AM_INIT_AUTOMAKE([dist-bzip2])
+-
+ AC_CONFIG_AUX_DIR(.)
++AM_INIT_AUTOMAKE([dist-bzip2])
+ 
+ AM_MAINTAINER_MODE
+ 

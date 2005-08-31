@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# this location MUST be consistent with /etc/X11/gpe-login.pre-session
+HOME_VOLATILE=/home/$USER/ramdisk
+export HOME_VOLATILE
+
+if [ -f /usr/bin/dbus-launch ]; then
+  ## test for an existing bus daemon, just to be safe
+  if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
+     ## if not found, launch a new one
+     eval `dbus-launch --auto-syntax --exit-with-session`
+     echo "D-BUS per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS"
+  fi
+fi
+
+. /etc/profile
+
+if [ -f $HOME/.profile ]; then
+ . $HOME/.profile
+fi
+
+SYSSESSIONDIR=/etc/X11/Xsession-gpe.d
+
+if [ ! -d $SYSSESSIONDIR ]; then
+  SYSSESSIONDIR=/etc/X11/Xsession.d
+fi
+
+# Use run-parts to source every file in the session directory; we source
+# instead of executing so that the variables and functions defined above
+# are available to the scripts, and so that they can pass variables to each
+# other.
+
+# Can't use run-parts like this, busybox doesn't support it. Use ls instead
+#SESSIONFILES=$(run-parts --list $SYSSESSIONDIR)
+
+SESSIONFILES=`ls -X $SYSSESSIONDIR`
+if [ -n "$SESSIONFILES" ]; then
+  for SESSIONFILE in $SESSIONFILES; do
+  # Test if script is executable first before sourcing it
+    if [ -x "$SYSSESSIONDIR/$SESSIONFILE" ]; then
+      . $SYSSESSIONDIR/$SESSIONFILE
+    fi
+  done
+fi
+
+exit 0
+

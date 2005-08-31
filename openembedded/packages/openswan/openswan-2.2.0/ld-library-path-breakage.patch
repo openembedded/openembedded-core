@@ -1,0 +1,26 @@
+--- openswan-2.2.0.orig/programs/Makefile.program	2004-06-03 03:06:27.000000000 +0200
++++ openswan-2.2.0/programs/Makefile.program	2005-03-05 13:50:19.000000000 +0100
+@@ -30,10 +30,6 @@
+ 
+ CFLAGS+= ${WERROR}
+ 
+-ifneq ($(LD_LIBRARY_PATH),)
+-LDFLAGS=-L$(LD_LIBRARY_PATH)
+-endif
+-
+ MANDIR8=$(MANTREE)/man8
+ MANDIR5=$(MANTREE)/man5
+ 
+--- openswan-2.2.0.orig/programs/pluto/Makefile	2005-01-03 20:40:45.000000000 +0100
++++ openswan-2.2.0/programs/pluto/Makefile	2005-03-05 13:51:21.000000000 +0100
+@@ -234,10 +234,6 @@
+ LIBSPLUTO+=${CURL_LIBS} 
+ LIBSPLUTO+= -lgmp -lresolv # -lefence
+ 
+-ifneq ($(LD_LIBRARY_PATH),)
+-LDFLAGS=-L$(LD_LIBRARY_PATH)
+-endif
+-
+ LIBSADNS = $(OPENSWANLIB)
+ LIBSADNS += -lresolv # -lefence
+ 

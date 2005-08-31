@@ -1,0 +1,78 @@
+--- kernel/include/linux/keyboard.h	2004-01-17 23:04:30.000000000 +0000
++++ kernel/include/linux/keyboard.h	2004-08-30 12:49:41.000000000 +0100
+@@ -37,6 +44,8 @@
+ #define KT_ASCII	9
+ #define KT_LOCK		10
+ #define KT_SLOCK	12
++#define KT_X		13	/* A few useful symbols from the base X Keysym set, that go with... */
++#define KT_XF		14	/* The XFree86 Internet multimedia and PDA keyboard symbols */
+ 
+ #define K(t,v)		(((t)<<8)|(v))
+ #define KTYP(x)		((x) >> 8)
+@@ -421,4 +430,66 @@
+ #define NR_LOCK		8
+ 
+ #define MAX_DIACR	256
++
++/*
++ * modifications to this section of this list should be coordinated with
++ * the X Window System keysym list; life is much easier that way
++ *
++ */
++
++/* These don't correspond identically. */
++#define K_XMENU 		K(KT_X, 0x1)
++#define K_XTELEPHONE		K(KT_X, 0x2)
++
++/*
++ * XFree86 vendor specific keysyms.
++ *
++ * These map to XFree86 X keysym range is 0x1008FF01 - 0x1008FFFF;
++ * for simplicity's sake, we'll define a simple identity mapping for these.
++ *
++ * Please coordinate changes here with XFree86.org, so this simple
++ * identity mapping can be maintained (and old code "just works").
++ *
++ * Keys found on some "Internet" keyboards.
++ */
++#define K_XFSTANDBY		K(KT_XF,0x10)
++#define K_XFAUDIOLOWERVOLUME	K(KT_XF,0x11)
++#define K_XFAUDIOMUTE		K(KT_XF,0x12)
++#define K_XFAUDIORAISEVOLUME	K(KT_XF,0x13)
++#define K_XFAUDIOPLAY		K(KT_XF,0x14)
++#define K_XFAUDIOSTOP		K(KT_XF,0x15)
++#define K_XFAUDIOPREV		K(KT_XF,0x16)
++#define K_XFAUDIONEXT		K(KT_XF,0x17)
++#define K_XFHOMEPAGE		K(KT_XF,0x18)
++#define K_XFMAIL		K(KT_XF,0x19)
++#define K_XFSTART		K(KT_XF,0x1A)
++#define K_XFSEARCH		K(KT_XF,0x1B)
++#define K_XFAUDIORECORD		K(KT_XF,0x1C)
++
++/* These are sometimes found on PDA's (e.g. Palm, PocketPC or elsewhere) */
++#define K_XFCALCULATOR		K(KT_XF,0x1D)
++#define K_XFMEMO		K(KT_XF,0x1E)
++#define K_XFTODOLIST		K(KT_XF,0x1F)
++#define K_XFCALENDAR		K(KT_XF,0x20)
++#define K_XFPOWERDOWN		K(KT_XF,0x21)
++#define K_XFCONTRASTADJUST	K(KT_XF,0x22)
++#define K_XFROCKERUP		K(KT_XF,0x23)
++#define K_XFROCKERDOWN		K(KT_XF,0x24)
++#define K_XFROCKERENTER		K(KT_XF,0x25)
++
++/* Some more "Internet" keyboard symbols */
++#define K_XFBACK		K(KT_XF,0x26)
++#define K_XFFORWARD		K(KT_XF,0x27)
++#define K_XFSTOP		K(KT_XF,0x28)
++#define K_XFREFRESH		K(KT_XF,0x29)
++
++/* Some more ... */
++#define K_XFFAVORITES		K(KT_XF,0x30)
++#define K_XFAUDIOPAUSE		K(KT_XF,0x31)
++#define K_XFAUDIOMEDIA		K(KT_XF,0x32)
++#define K_XFMYCOMPUTER		K(KT_XF,0x33)
++#define K_XFVENDORHOME		K(KT_XF,0x34)
++#define K_XFLIGHTBULB		K(KT_XF,0x35)
++#define K_XFSHOP		K(KT_XF,0x36)
++
+ #endif

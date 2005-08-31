@@ -1,0 +1,34 @@
+# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+ 
+# The loopback interface
+auto lo
+iface lo inet loopback
+
+# Wireless interfaces
+iface wlan0 inet dhcp
+wireless_mode managed
+wireless_essid any
+iface atml0 inet dhcp
+
+# Wired or wireless interfaces
+iface eth0 inet dhcp
+iface eth1 inet dhcp
+
+# Ethernet/RNDIS gadget (g_ether)
+# ... or on host side, usbnet and random hwaddr
+iface usb0 inet dhcp
+
+# Zaurus 2.4 Lineo net_fd; obsolete
+iface usbd0 inet dhcp
+
+# iPAQ 2.4 mach-sa1100/usb-eth
+# (192.168.0.202 is the iPAQ's IP, 192.168.0.200 is the host's IP)
+iface usbf inet static
+        address 192.168.0.202
+        netmask 255.255.255.0
+        network 192.168.0.0
+        gateway 192.168.0.200
+
+# Bluetooth networking
+iface bnep0 inet dhcp
+

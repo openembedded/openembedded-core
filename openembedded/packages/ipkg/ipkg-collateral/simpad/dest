@@ -1,0 +1,3 @@
+dest root /
+dest cf /mnt/cf/packages/
+dest ram /mnt/ram/packages/

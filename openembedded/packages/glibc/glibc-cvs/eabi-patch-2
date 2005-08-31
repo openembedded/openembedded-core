@@ -1,0 +1,2446 @@
+From libc-alpha-return-17231-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com Tue Mar 22 17:39:38 2005
+Return-Path: <libc-alpha-return-17231-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com>
+Delivered-To: listarch-libc-alpha at sources dot redhat dot com
+Received: (qmail 15063 invoked by alias); 22 Mar 2005 17:39:38 -0000
+Mailing-List: contact libc-alpha-help at sources dot redhat dot com; run by ezmlm
+Precedence: bulk
+List-Subscribe: <mailto:libc-alpha-subscribe at sources dot redhat dot com>
+List-Archive: <http://sources.redhat.com/ml/libc-alpha/>
+List-Post: <mailto:libc-alpha at sources dot redhat dot com>
+List-Help: <mailto:libc-alpha-help at sources dot redhat dot com>, <http://sources dot redhat dot com/ml/#faqs>
+Sender: libc-alpha-owner at sources dot redhat dot com
+Delivered-To: mailing list libc-alpha at sources dot redhat dot com
+Received: (qmail 13714 invoked from network); 22 Mar 2005 17:38:53 -0000
+Received: from unknown (HELO nevyn.them.org) (66.93.172.17)
+  by sourceware dot org with SMTP; 22 Mar 2005 17:38:53 -0000
+Received: from drow by nevyn.them.org with local (Exim 4.50 #1 (Debian))
+	id 1DDnLP-00007R-0B; Tue, 22 Mar 2005 12:39:07 -0500
+Date: Tue, 22 Mar 2005 12:39:06 -0500
+From: Daniel Jacobowitz <drow at false dot org>
+To: libc-alpha at sources dot redhat dot com, Phil Blundell <pb at reciva dot com>
+Subject: Re: Remainder of ARM EABI support
+Message-ID: <20050322173906.GA316@nevyn.them.org>
+Mail-Followup-To: libc-alpha at sources dot redhat dot com,
+	Phil Blundell <pb at reciva dot com>
+References: <20050322162137.GA26662@nevyn.them.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20050322162137 dot GA26662 at nevyn dot them dot org>
+User-Agent: Mutt/1.5.6+20040907i
+
+On Tue, Mar 22, 2005 at 11:21:37AM -0500, Daniel Jacobowitz wrote:
+> This patch is the remaining pieces of ARM EABI support, the
+> arm*-*-linux-gnueabi target.
+> 
+> Highlights of the new ABI compared to the old one:
+>   - Eight byte stack alignment instead of four.
+>   - VFP floating point support instead of FPA; there's actually hardware
+>     which supports VFP...
+>   - More standard structure layout.  The old ABI (APCS) always rounded
+>     structures up to 32-bit alignment even if they contained only chars;
+>     it also aligned 64-bit fields to four bytes.
+>   - Some types have been grown to accomodate modern ARM cores, particularly
+>     jmp_buf.
+> 
+> The EABI also defines some additional symbols that a C library has to
+> define, which allow "portable" ARM objects to be linked to multiple C
+> libraries even if certain implementation-defined constants differ.
+> They're added to ARM-specific files in libc_nonshared.a.
+> 
+> Most of the contents of sysdeps/unix/sysv/linux/arm/eabi are wrappers for
+> syscalls whose types have changed between the old and new ABI.  The kernel
+> developers are discussing an EABI syscall interface, but for now the swi
+> based syscalls take the same argument types they used to for APCS.  Only
+> a handful of syscalls are affected.
+
+My track record is not very good this morning; I apologize.  I sent the
+wrong version of the patch.  This one includes a couple of VFP fixes
+left out of the last posting, and a complete changelog.
+
+-- 
+Daniel Jacobowitz
+CodeSourcery, LLC
+
+2005-03-22  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Mark Mitchell  <mark@codesourcery.com>
+	    Paul Brook  <paul@codesourcery.com>
+
+	* sysdeps/arm/eabi/Makefile, sysdeps/arm/eabi/Versions,
+	sysdeps/arm/eabi/aeabi_assert.c, sysdeps/arm/eabi/aeabi_atexit.c,
+	sysdeps/arm/eabi/aeabi_errno_addr.c, sysdeps/arm/eabi/aeabi_lcsts.c,
+	sysdeps/arm/eabi/aeabi_localeconv.c, sysdeps/arm/eabi/aeabi_math.c,
+	sysdeps/arm/eabi/aeabi_mb_cur_max.c,
+	sysdeps/arm/eabi/aeabi_sighandlers.S,
+	sysdeps/arm/eabi/aeabi_unwind_cpp_pr1.c,
+	sysdeps/arm/eabi/bits/huge_val.h, sysdeps/arm/eabi/bits/setjmp.h,
+	sysdeps/arm/eabi/find_exidx.c, sysdeps/arm/eabi/fpu/__longjmp.S,
+	sysdeps/arm/eabi/fpu/bits/fenv.h, sysdeps/arm/eabi/fpu/fclrexcpt.c,
+	sysdeps/arm/eabi/fpu/fegetround.c, sysdeps/arm/eabi/fpu/fesetenv.c,
+	sysdeps/arm/eabi/fpu/fesetround.c, sysdeps/arm/eabi/fpu/fpu_control.h,
+	sysdeps/arm/eabi/fpu/feholdexcpt.c,
+	sysdeps/arm/eabi/fpu/fraiseexcpt.c,
+	sysdeps/arm/eabi/fpu/setjmp.S,
+	sysdeps/unix/sysv/linux/arm/eabi/configure,
+	sysdeps/unix/sysv/linux/arm/eabi/configure.in,
+	sysdeps/unix/sysv/linux/arm/eabi/epoll_ctl.c,
+	sysdeps/unix/sysv/linux/arm/eabi/epoll_wait.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fstatfs64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fxstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/kernel_stat.h,
+	sysdeps/unix/sysv/linux/arm/eabi/lxstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/oldgetrlimit.c,
+	sysdeps/unix/sysv/linux/arm/eabi/oldsetrlimit.c,
+	sysdeps/unix/sysv/linux/arm/eabi/semop.c,
+	sysdeps/unix/sysv/linux/arm/eabi/semtimedop.c,
+	sysdeps/unix/sysv/linux/arm/eabi/statfs64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/uname.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstatconv.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstatconv.h: New files.
+
+
+Index: glibc/sysdeps/arm/eabi/Makefile
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/Makefile	2005-03-22 11:53:10.049703870 -0500
+@@ -0,0 +1,15 @@
++ifeq ($(subdir),csu)
++aeabi_constants = aeabi_lcsts aeabi_sighandlers aeabi_math
++aeabi_routines = aeabi_assert aeabi_localeconv aeabi_errno_addr \
++	aeabi_mb_cur_max aeabi_atexit
++
++sysdep_routines += $(aeabi_constants) $(aeabi_routines)
++static-only-routines += $(aeabi_constants) $(aeabi_routines)
++endif
++
++ifeq ($(subdir),elf)
++sysdep_routines += aeabi_unwind_cpp_pr1 find_exidx
++shared-only-routines += aeabi_unwind_cpp_pr1
++sysdep-rtld-routines += aeabi_unwind_cpp_pr1
++endif
++
+Index: glibc/sysdeps/arm/eabi/Versions
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/Versions	2005-03-22 11:53:10.049703870 -0500
+@@ -0,0 +1,6 @@
++libc {  
++  GLIBC_2.4 {
++    # Helper routines
++    __gnu_Unwind_Find_exidx;
++  }
++}
+Index: glibc/sysdeps/arm/eabi/aeabi_assert.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_assert.c	2005-03-22 11:53:10.049703870 -0500
+@@ -0,0 +1,27 @@
++/* Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <assert.h>
++#include <stdlib.h>
++
++void attribute_hidden
++__aeabi_assert (const char *assertion, const char *file,
++		unsigned int line)
++{
++  __assert_fail (assertion, file, line, NULL);
++}
+Index: glibc/sysdeps/arm/eabi/aeabi_atexit.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_atexit.c	2005-03-22 11:53:10.050703627 -0500
+@@ -0,0 +1,28 @@
++/* Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <stdlib.h>
++
++/* Register a function to be called by exit or when a shared library
++   is unloaded.  This routine is like __cxa_atexit, but uses the
++   calling sequence required by the ARM EABI.  */
++int attribute_hidden
++__aeabi_atexit (void *arg, void (*func) (void *), void *d)
++{
++  return __cxa_atexit (func, arg, d);
++}
+Index: glibc/sysdeps/arm/eabi/aeabi_errno_addr.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_errno_addr.c	2005-03-22 11:53:10.050703627 -0500
+@@ -0,0 +1,26 @@
++/* Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++
++attribute_hidden
++volatile int *
++__aeabi_errno_addr (void)
++{
++  return &errno;
++}
+Index: glibc/sysdeps/arm/eabi/aeabi_lcsts.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_lcsts.c	2005-03-22 11:53:10.050703627 -0500
+@@ -0,0 +1,67 @@
++/* Link-time constants for ARM EABI.
++   Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++/* The ARM EABI requires that we provide ISO compile-time constants as
++   link-time constants.  Some portable applications may reference these.  */
++
++#include <errno.h>
++#include <limits.h>
++#include <locale.h>
++#include <setjmp.h>
++#include <signal.h>
++#include <stdio.h>
++#include <time.h>
++
++#define eabi_constant2(X,Y) const int __aeabi_##X attribute_hidden = Y
++#define eabi_constant(X) const int __aeabi_##X attribute_hidden = X
++
++eabi_constant (EDOM);
++eabi_constant (ERANGE);
++eabi_constant (EILSEQ);
++
++eabi_constant (MB_LEN_MAX);
++
++eabi_constant (LC_COLLATE);
++eabi_constant (LC_CTYPE);
++eabi_constant (LC_MONETARY);
++eabi_constant (LC_NUMERIC);
++eabi_constant (LC_TIME);
++eabi_constant (LC_ALL);
++
++/* The value of __aeabi_JMP_BUF_SIZE is the number of doublewords in a
++   jmp_buf.  */
++eabi_constant2 (JMP_BUF_SIZE, sizeof (jmp_buf) / 8);
++
++eabi_constant (SIGABRT);
++eabi_constant (SIGFPE);
++eabi_constant (SIGILL);
++eabi_constant (SIGINT);
++eabi_constant (SIGSEGV);
++eabi_constant (SIGTERM);
++
++eabi_constant2 (IOFBF, _IOFBF);
++eabi_constant2 (IOLBF, _IOLBF);
++eabi_constant2 (IONBF, _IONBF);
++eabi_constant (BUFSIZ);
++eabi_constant (FOPEN_MAX);
++eabi_constant (TMP_MAX);
++eabi_constant (FILENAME_MAX);
++eabi_constant (L_tmpnam);
++
++eabi_constant (CLOCKS_PER_SEC);
+Index: glibc/sysdeps/arm/eabi/aeabi_localeconv.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_localeconv.c	2005-03-22 11:53:10.050703627 -0500
+@@ -0,0 +1,26 @@
++/* Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <locale.h>
++
++attribute_hidden
++struct lconv *
++__aeabi_localeconv (void)
++{
++  return localeconv ();
++}
+Index: glibc/sysdeps/arm/eabi/aeabi_math.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_math.c	2005-03-22 11:53:10.050703627 -0500
+@@ -0,0 +1,25 @@
++/* Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <math.h>
++
++const double __aeabi_HUGE_VAL attribute_hidden = HUGE_VAL;
++const long double __aeabi_HUGE_VALL attribute_hidden = HUGE_VALL;
++const float __aeabi_HUGE_VALF attribute_hidden = HUGE_VALF;
++const float __aeabi_INFINITY attribute_hidden = INFINITY;
++const float __aeabi_NAN attribute_hidden = NAN;
+Index: glibc/sysdeps/arm/eabi/aeabi_mb_cur_max.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_mb_cur_max.c	2005-03-22 11:53:10.051703385 -0500
+@@ -0,0 +1,28 @@
++/* Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <langinfo.h>
++#include <locale.h>
++#include <stdlib.h>
++#include <locale/localeinfo.h>
++
++int attribute_hidden
++__aeabi_MB_CUR_MAX (void)
++{
++  return MB_CUR_MAX;
++}
+Index: glibc/sysdeps/arm/eabi/aeabi_sighandlers.S
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_sighandlers.S	2005-03-22 11:53:10.051703385 -0500
+@@ -0,0 +1,37 @@
++/* Link-time constants for ARM EABI - signal handlers.
++   Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++/* The ARM EABI defines these as "functions".  */
++
++#include <sysdep.h>
++
++	.global __aeabi_SIG_DFL
++	.hidden __aeabi_SIG_DFL
++	.type __aeabi_SIG_DFL, %function
++	.set __aeabi_SIG_DFL, 0
++
++	.global __aeabi_SIG_IGN
++	.hidden __aeabi_SIG_IGN
++	.type __aeabi_SIG_IGN, %function
++	.set __aeabi_SIG_IGN, 1
++
++	.global __aeabi_SIG_ERR
++	.hidden __aeabi_SIG_ERR
++	.type __aeabi_SIG_ERR, %function
++	.set __aeabi_SIG_ERR, -1
+Index: glibc/sysdeps/arm/eabi/aeabi_unwind_cpp_pr1.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/aeabi_unwind_cpp_pr1.c	2005-03-22 11:53:10.051703385 -0500
+@@ -0,0 +1,28 @@
++/* Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++/* Because some objects in ld.so and libc.so are built with
++   -fexceptions, we end up with references to this personality
++   routine.  However, these libraries are not linked against
++   libgcc_eh.a, so we need a dummy definition.   This routine will
++   never actually be called.  */
++
++void
++__aeabi_unwind_cpp_pr1 (void)
++{
++}
+Index: glibc/sysdeps/arm/eabi/bits/huge_val.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/bits/huge_val.h	2005-03-22 11:53:10.051703385 -0500
+@@ -0,0 +1,55 @@
++/* `HUGE_VAL' constant for IEEE 754 machines (where it is infinity).
++   Used by <stdlib.h> and <math.h> functions for overflow.
++   Copyright (C) 1992, 1995, 1996, 1997, 1999, 2000, 2004
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#ifndef _MATH_H
++# error "Never use <bits/huge_val.h> directly; include <math.h> instead."
++#endif
++
++/* IEEE positive infinity (-HUGE_VAL is negative infinity).  */
++
++#if __GNUC_PREREQ(3,3)
++# define HUGE_VAL	(__builtin_huge_val())
++#elif __GNUC_PREREQ(2,96)
++# define HUGE_VAL	(__extension__ 0x1.0p2047)
++#elif defined __GNUC__
++
++# define HUGE_VAL \
++  (__extension__							      \
++   ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; })   \
++    { __l: 0x7ff0000000000000ULL }).__d)
++
++#else /* not GCC */
++
++# include <endian.h>
++
++typedef union { unsigned char __c[8]; double __d; } __huge_val_t;
++
++# if __BYTE_ORDER == __BIG_ENDIAN
++#  define __HUGE_VAL_bytes	{ 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 }
++# endif
++# if __BYTE_ORDER == __LITTLE_ENDIAN
++#  define __HUGE_VAL_bytes	{ 0, 0, 0, 0, 0, 0, 0xf0, 0x7f }
++# endif
++
++static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
++# define HUGE_VAL	(__huge_val.__d)
++
++#endif	/* GCC.  */
+Index: glibc/sysdeps/arm/eabi/bits/setjmp.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/bits/setjmp.h	2005-03-22 11:53:10.052703143 -0500
+@@ -0,0 +1,45 @@
++/* Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++/* Define the machine-dependent type `jmp_buf'.  ARM EABI version.  */
++
++#ifndef _BITS_SETJMP_H
++#define _BITS_SETJMP_H 1
++
++#if !defined _SETJMP_H && !defined _PTHREAD_H
++# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
++#endif
++
++#ifndef _ASM
++/* The exact set of registers saved may depend on the particular core
++   in use, as some coprocessor registers may need to be saved.  The C
++   Library ABI requires that the buffer be 8-byte aligned, and
++   recommends that the buffer contain 64 words.  The first 28 words
++   are occupied by v1-v6, sl, fp, sp, pc, d8-d15, and fpscr.  (Note
++   that d8-15 require 17 words, due to the use of fstmx.)  */
++typedef int __jmp_buf[64] __attribute__((aligned (8)));
++#endif
++
++#define __JMP_BUF_SP		8
++
++/* Test if longjmp to JMPBUF would unwind the frame
++   containing a local variable at ADDRESS.  */
++#define _JMPBUF_UNWINDS(jmpbuf, address) \
++  ((void *) (address) < (void *) (jmpbuf[__JMP_BUF_SP]))
++
++#endif
+Index: glibc/sysdeps/arm/eabi/find_exidx.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/find_exidx.c	2005-03-22 11:53:10.052703143 -0500
+@@ -0,0 +1,80 @@
++/* Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <link.h>
++#include <unwind.h>
++
++struct unw_eh_callback_data
++{
++  _Unwind_Ptr pc;
++  _Unwind_Ptr exidx_start;
++  int exidx_len;
++};
++
++
++/* Callback to determins if the PC lies within an object, and remember the
++   location of the exception index table if it does.  */
++
++static int
++find_exidx_callback (struct dl_phdr_info * info, size_t size, void * ptr)
++{
++  struct unw_eh_callback_data * data;
++  const ElfW(Phdr) *phdr;
++  int i;
++  int match;
++  _Unwind_Ptr load_base;
++
++  data = (struct unw_eh_callback_data *) ptr;
++  load_base = info->dlpi_addr;
++  phdr = info->dlpi_phdr;
++
++  match = 0;
++  for (i = info->dlpi_phnum; i > 0; i--, phdr++)
++    {
++      if (phdr->p_type == PT_LOAD)
++        {
++          _Unwind_Ptr vaddr = phdr->p_vaddr + load_base;
++          if (data->pc >= vaddr && data->pc < vaddr + phdr->p_memsz)
++            match = 1;
++        }
++      else if (phdr->p_type == PT_ARM_EXIDX)
++	{
++	  data->exidx_start = (_Unwind_Ptr) (phdr->p_vaddr + load_base);
++	  data->exidx_len = phdr->p_memsz;
++	}
++    }
++
++  return match;
++}
++
++
++/* Find the exception index table containing PC.  */
++
++_Unwind_Ptr
++__gnu_Unwind_Find_exidx (_Unwind_Ptr pc, int * pcount)
++{
++  struct unw_eh_callback_data data;
++
++  data.pc = pc;
++  data.exidx_start = 0;
++  if (dl_iterate_phdr (find_exidx_callback, &data) <= 0)
++    return 0;
++
++  *pcount = data.exidx_len / 8;
++  return data.exidx_start;
++}
+Index: glibc/sysdeps/arm/eabi/fpu/__longjmp.S
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/__longjmp.S	2005-03-22 11:53:10.052703143 -0500
+@@ -0,0 +1,43 @@
++/* longjmp for ARM.
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <sysdep.h>
++#define _SETJMP_H
++#define _ASM
++#include <bits/setjmp.h>
++
++/* __longjmp(jmpbuf, val) */
++
++ENTRY (__longjmp)
++	mov	ip, r0		/* save jmp_buf pointer */
++
++	movs	r0, r1		/* get the return value in place */
++	moveq	r0, #1		/* can't let setjmp() return zero! */
++
++	/* Restore the integer registers.  */
++	LOADREGS(ia, ip!, {v1-v6, sl, fp, sp, lr})
++
++	/* Restore the VFP registers.  */
++	fldmiax	ip!, {d8-d15}
++	/* Restore the floating-point status register.  */
++	ldr	r1, [ip], #4
++	fmxr	fpscr, r1
++
++	DO_RET(lr)
++END (__longjmp)
+Index: glibc/sysdeps/arm/eabi/fpu/bits/fenv.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/bits/fenv.h	2005-03-22 12:34:55.511467536 -0500
+@@ -0,0 +1,74 @@
++/* Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#ifndef _FENV_H
++# error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
++#endif
++
++/* Define bits representing exceptions in the FPU status word.  */
++enum
++  {
++    FE_INVALID = 1,
++#define FE_INVALID FE_INVALID
++    FE_DIVBYZERO = 2,
++#define FE_DIVBYZERO FE_DIVBYZERO
++    FE_OVERFLOW = 4,
++#define FE_OVERFLOW FE_OVERFLOW
++    FE_UNDERFLOW = 8,
++#define FE_UNDERFLOW FE_UNDERFLOW
++    FE_INEXACT = 16,
++#define FE_INEXACT FE_INEXACT
++  };
++
++/* Amount to shift by to convert an exception to a mask bit.  */
++#define FE_EXCEPT_SHIFT	8
++
++/* All supported exceptions.  */
++#define FE_ALL_EXCEPT	\
++	(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
++
++/* VFP supports all of the four defined rounding modes.  */
++enum
++  {
++    FE_TONEAREST = 0,
++#define FE_TONEAREST FE_TONEAREST
++    FE_UPWARD = 0x400000,
++#define FE_UPWARD FE_UPWARD
++    FE_DOWNWARD = 0x800000,
++#define FE_DOWNWARD FE_DOWNWARD
++    FE_TOWARDZERO = 0xc00000
++#define FE_TOWARDZERO FE_TOWARDZERO
++  };
++
++/* Type representing exception flags. */
++typedef unsigned int fexcept_t;
++
++/* Type representing floating-point environment.  */
++typedef struct
++  {
++    unsigned int __cw;
++  }
++fenv_t;
++
++/* If the default argument is used we use this value.  */
++#define FE_DFL_ENV	((fenv_t *) -1l)
++
++#ifdef __USE_GNU
++/* Floating-point environment where none of the exceptions are masked.  */
++# define FE_NOMASK_ENV  ((__const fenv_t *) -2)
++#endif
+Index: glibc/sysdeps/arm/eabi/fpu/fclrexcpt.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/fclrexcpt.c	2005-03-22 11:53:10.053702900 -0500
+@@ -0,0 +1,50 @@
++/* Clear given exceptions in current floating-point environment.
++   Copyright (C) 1997,98,99,2000,01 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <fenv.h>
++#include <fpu_control.h>
++
++int
++__feclearexcept (int excepts)
++{
++  unsigned long int temp;
++
++  /* Mask out unsupported bits/exceptions.  */
++  excepts &= FE_ALL_EXCEPT;
++
++  /* Get the current floating point status. */
++  _FPU_GETCW (temp);
++
++  /* Clear the relevant bits.  */
++  temp = (temp & ~FE_ALL_EXCEPT) | (temp & FE_ALL_EXCEPT & ~excepts);
++
++  /* Put the new data in effect.  */
++  _FPU_SETCW (temp);
++
++  /* Success.  */
++  return 0;
++}
++
++#include <shlib-compat.h>
++#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
++strong_alias (__feclearexcept, __old_feclearexcept)
++compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
++#endif
++
++versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
+Index: glibc/sysdeps/arm/eabi/fpu/fegetround.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/fegetround.c	2005-03-22 11:53:10.053702900 -0500
+@@ -0,0 +1,32 @@
++/* Return current rounding direction.
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <fenv.h>
++#include <fpu_control.h>
++
++int
++fegetround (void)
++{
++  unsigned int temp;
++
++  /* Get the current environment.  */
++  _FPU_GETCW (temp);
++
++  return temp & FE_TOWARDZERO;
++}
+Index: glibc/sysdeps/arm/eabi/fpu/fesetenv.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/fesetenv.c	2005-03-22 12:34:55.521465156 -0500
+@@ -0,0 +1,46 @@
++/* Install given floating-point environment.
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <fenv.h>
++#include <fpu_control.h>
++
++int
++__fesetenv (const fenv_t *envp)
++{
++  unsigned int temp;
++
++  _FPU_GETCW (temp);
++  temp &= _FPU_RESERVED;
++
++  if (envp == FE_DFL_ENV)
++    temp |= _FPU_DEFAULT;
++  else if (envp == FE_NOMASK_ENV)
++    temp |= _FPU_IEEE;
++  else
++    temp |= envp->__cw & ~_FPU_RESERVED;
++
++  _FPU_SETCW (temp);
++
++  /* Success.  */
++  return 0;
++}
++
++#include <shlib-compat.h>
++libm_hidden_ver (__fesetenv, fesetenv)
++versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
+Index: glibc/sysdeps/arm/eabi/fpu/fesetround.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/fesetround.c	2005-03-22 11:53:10.053702900 -0500
+@@ -0,0 +1,41 @@
++/* Set current rounding direction.
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <fenv.h>
++#include <fpu_control.h>
++
++int
++fesetround (int round)
++{
++  fpu_control_t temp;
++
++  switch (round)
++    {
++    case FE_TONEAREST:
++    case FE_UPWARD:
++    case FE_DOWNWARD:
++    case FE_TOWARDZERO:
++      _FPU_GETCW (temp);
++      temp = (temp & ~FE_TOWARDZERO) | round;
++      _FPU_SETCW (temp);
++      return 0;
++    default:
++      return 1;
++    }
++}
+Index: glibc/sysdeps/arm/eabi/fpu/fpu_control.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/fpu_control.h	2005-03-22 12:34:55.521465156 -0500
+@@ -0,0 +1,47 @@
++/* FPU control word definitions.  ARM VFP version.
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#ifndef _FPU_CONTROL_H
++#define _FPU_CONTROL_H
++
++/* masking of interrupts */
++#define _FPU_MASK_IM	0x00000100	/* invalid operation */
++#define _FPU_MASK_ZM	0x00000200	/* divide by zero */
++#define _FPU_MASK_OM	0x00000400	/* overflow */
++#define _FPU_MASK_UM	0x00000800	/* underflow */
++#define _FPU_MASK_PM	0x00001000	/* inexact */
++
++/* Some bits in the FPSCR are not yet defined.  They must be preserved when
++   modifying the contents.  */
++#define _FPU_RESERVED	0x0e08e0e0
++#define _FPU_DEFAULT    0x00000000
++/* Default + exceptions enabled. */
++#define _FPU_IEEE	(_FPU_DEFAULT | 0x00001f00)
++
++/* Type of the control word.  */
++typedef unsigned int fpu_control_t;
++
++/* Macros for accessing the hardware control word.  */
++#define _FPU_GETCW(cw) __asm__ __volatile__ ("fmrx %0, fpscr" : "=r" (cw))
++#define _FPU_SETCW(cw) __asm__ __volatile__ ("fmxr fpscr, %0" : : "r" (cw))
++
++/* Default control word set at startup.  */
++extern fpu_control_t __fpu_control;
++
++#endif /* _FPU_CONTROL_H */
+Index: glibc/sysdeps/arm/eabi/fpu/setjmp.S
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/setjmp.S	2005-03-22 11:53:10.054702658 -0500
+@@ -0,0 +1,39 @@
++/* setjmp for ARM.
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <sysdep.h>
++#define _SETJMP_H
++#define _ASM
++#include <bits/setjmp.h>
++
++ENTRY (__sigsetjmp)
++	mov	ip, r0
++
++	/* Store the integer registers.  */
++	stmia	ip!, {v1-v6, sl, fp, sp, lr}
++
++	/* Store the VFP registers.  */
++	fstmiax	ip!, {d8-d15}
++	/* Store the floating-point status register.  */
++	fmrx	r2, fpscr
++	str	r2, [ip], #4
++
++	/* Make a tail call to __sigjmp_save; it takes the same args.  */
++	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
++END (__sigsetjmp)
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/configure
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/configure	2005-03-22 11:53:10.054702658 -0500
+@@ -0,0 +1,5 @@
++# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
++ # Local configure fragment for sysdeps/unix/sysv/linux/arm/eabi.
++
++arch_minimum_kernel=2.4.17
++libc_cv_gcc_unwind_find_fde=no
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/configure.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/configure.in	2005-03-22 11:53:10.054702658 -0500
+@@ -0,0 +1,5 @@
++GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
++# Local configure fragment for sysdeps/unix/sysv/linux/arm/eabi.
++
++arch_minimum_kernel=2.4.17
++libc_cv_gcc_unwind_find_fde=no
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/epoll_ctl.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/epoll_ctl.c	2005-03-22 11:53:10.054702658 -0500
+@@ -0,0 +1,37 @@
++/* epoll_ctl wrapper for ARM EABI.
++   Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <sysdep.h>
++#include <errno.h>
++#include <sys/epoll.h>
++
++#include <kernel_epoll.h>
++
++int
++epoll_ctl (int __epfd, int __op, int __fd, struct epoll_event *__event)
++{
++  struct kernel_epoll_event k_event;
++
++  k_event.events = __event->events;
++  memcpy (&k_event.data, &__event->data, sizeof (k_event.data));
++
++  return INLINE_SYSCALL (epoll_ctl, 4, __epfd, __op, __fd, &k_event);
++}
++
++libc_hidden_def (epoll_ctl)
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/epoll_wait.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/epoll_wait.c	2005-03-22 11:53:10.055702416 -0500
+@@ -0,0 +1,54 @@
++/* epoll_ctl wrapper for ARM EABI.
++   Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <sysdep.h>
++#include <errno.h>
++#include <sys/epoll.h>
++#include <stdlib.h>
++
++#include <kernel_epoll.h>
++
++int
++epoll_wait (int __epfd, struct epoll_event *__events,
++	    int __maxevents, int __timeout);
++{
++  struct kernel_epoll_event *k_events;
++  int result;
++
++  k_events = malloc (sizeof (struct kernel_epoll_event) * __maxevents);
++  if (k_events == NULL)
++    {
++      __set_errno (ENOMEM);
++      return -1;
++    }
++
++  result = INLINE_SYSCALL (epoll_wait, 4, __epfd, __events, k_events,
++			   __timeout);
++
++  for (i = 0; i < result; i++)
++    {
++      __events[i].events = k_events[i].events;
++      memcpy (&__events[i].data, &k_events[i].data, sizeof (k_events[i].data));
++    }
++
++  free (k_events);
++  return result;
++}
++
++libc_hidden_def (epoll_wait)
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/fstatfs64.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/fstatfs64.c	2005-03-22 11:53:10.055702416 -0500
+@@ -0,0 +1,76 @@
++/* Return information about the filesystem on which FD resides.
++   Copyright (C) 1996,1997,1998,1999,2000,2003,2005
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <string.h>
++#include <sys/statfs.h>
++#include <stddef.h>
++#include <sysdep.h>
++
++/* Defined in statfs64.c.  */
++extern int __no_statfs64 attribute_hidden;
++
++/* Return information about the filesystem on which FD resides.  */
++int
++__fstatfs64 (int fd, struct statfs64 *buf)
++{
++#ifdef __NR_fstatfs64
++# if __ASSUME_STATFS64 == 0
++  if (! __no_statfs64)
++# endif
++    {
++      /* The EABI structure is the same as the old ABI structure, except
++	 that it has four additional bytes of padding - at the end.  We can
++	 ignore them.  */
++      int result = INLINE_SYSCALL (fstatfs64, 3, fd, sizeof (*buf) - 4, buf);
++
++# if __ASSUME_STATFS64 == 0
++      if (result == 0 || errno != ENOSYS)
++# endif
++	return result;
++
++# if __ASSUME_STATFS64 == 0
++      __no_statfs64 = 1;
++# endif
++    }
++#endif
++
++#if __ASSUME_STATFS64 == 0
++  struct statfs buf32;
++
++  if (__fstatfs (fd, &buf32) < 0)
++    return -1;
++
++  buf->f_type = buf32.f_type;
++  buf->f_bsize = buf32.f_bsize;
++  buf->f_blocks = buf32.f_blocks;
++  buf->f_bfree = buf32.f_bfree;
++  buf->f_bavail = buf32.f_bavail;
++  buf->f_files = buf32.f_files;
++  buf->f_ffree = buf32.f_ffree;
++  buf->f_fsid = buf32.f_fsid;
++  buf->f_namelen = buf32.f_namelen;
++  buf->f_frsize = buf32.f_frsize;
++  memcpy (buf->f_spare, buf32.f_spare, sizeof (buf32.f_spare));
++
++  return 0;
++#endif
++}
++weak_alias (__fstatfs64, fstatfs64)
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/fxstat64.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/fxstat64.c	2005-03-22 11:53:10.055702416 -0500
+@@ -0,0 +1,100 @@
++/* fxstat64 using old-style Unix fstat system call.
++   Copyright (C) 1997-2002, 2003, 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <stddef.h>
++#include <sys/stat.h>
++#include <kernel_stat.h>
++
++#include <sysdep.h>
++#include <sys/syscall.h>
++#include <bp-checks.h>
++
++#include "kernel-features.h"
++
++#if __ASSUME_STAT64_SYSCALL == 0
++# include <xstatconv.h>
++#endif
++
++#ifdef __NR_fstat64
++# if  __ASSUME_STAT64_SYSCALL == 0
++/* The variable is shared between all wrappers around *stat64 calls.  */
++extern int __have_no_stat64;
++# endif
++#endif
++
++/* Get information about the file FD in BUF.  */
++
++int
++___fxstat64 (int vers, int fd, struct stat64 *buf)
++{
++  int result;
++  struct kernel_stat64 kbuf64;
++
++#if __ASSUME_STAT64_SYSCALL > 0
++  result = INLINE_SYSCALL (fstat64, 2, fd, CHECK_1 (&kbuf64));
++  if (result == 0)
++    result = __xstat64_kernel64_conv (vers, &kbuf64, buf);
++# if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
++  if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
++    buf->st_ino = buf->__st_ino;
++# endif
++  return result;
++#else
++  struct kernel_stat kbuf;
++# if defined __NR_fstat64
++  if (! __have_no_stat64)
++    {
++      int saved_errno = errno;
++      result = INLINE_SYSCALL (fstat64, 2, fd, CHECK_1 (&kbuf64));
++
++      if (result != -1 || errno != ENOSYS)
++	{
++	  if (result == 0)
++	    result = __xstat64_kernel64_conv (vers, &kbuf64, buf);
++#  if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
++	  if (!result && buf->__st_ino != (__ino_t)buf->st_ino)
++	    buf->st_ino = buf->__st_ino;
++#  endif
++	  return result;
++	}
++
++      __set_errno (saved_errno);
++      __have_no_stat64 = 1;
++    }
++# endif
++  result = INLINE_SYSCALL (fstat, 2, fd, __ptrvalue (&kbuf));
++  if (result == 0)
++    result = __xstat64_conv (vers, &kbuf, buf);
++
++  return result;
++#endif
++}
++
++#include <shlib-compat.h>
++
++#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
++versioned_symbol (libc, ___fxstat64, __fxstat64, GLIBC_2_2);
++strong_alias (___fxstat64, __old__fxstat64)
++compat_symbol (libc, __old__fxstat64, __fxstat64, GLIBC_2_1);
++hidden_ver (___fxstat64, __fxstat64)
++#else
++strong_alias (___fxstat64, __fxstat64)
++hidden_def (__fxstat64)
++#endif
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/kernel_stat.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/kernel_stat.h	2005-03-22 11:53:10.056702174 -0500
+@@ -0,0 +1,59 @@
++/* Copyright (C) 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <sysdeps/unix/sysv/linux/kernel_stat.h>
++
++/* kernel_stat64 is just like stat64, except packed.  The EABI aligns
++   st_size to an eight byte boundary but the old ABI only aligns it to
++   four.  Similarly st_blocks.  */
++struct kernel_stat64
++  {
++    __dev_t st_dev;			/* Device.  */
++    unsigned int __pad1;
++
++    __ino_t __st_ino;			/* 32bit file serial number.	*/
++    __mode_t st_mode;			/* File mode.  */
++    __nlink_t st_nlink;			/* Link count.  */
++    __uid_t st_uid;			/* User ID of the file's owner.	*/
++    __gid_t st_gid;			/* Group ID of the file's group.*/
++    __dev_t st_rdev;			/* Device number, if device.  */
++    unsigned int __pad2;
++    __off64_t st_size;			/* Size of file, in bytes.  */
++    __blksize_t st_blksize;		/* Optimal block size for I/O.  */
++
++    __blkcnt64_t st_blocks;		/* Number 512-byte blocks allocated. */
++#ifdef __USE_MISC
++    /* Nanosecond resolution timestamps are stored in a format
++       equivalent to 'struct timespec'.  This is the type used
++       whenever possible but the Unix namespace rules do not allow the
++       identifier 'timespec' to appear in the <sys/stat.h> header.
++       Therefore we have to handle the use of this header in strictly
++       standard-compliant sources special.  */
++    struct timespec st_atim;		/* Time of last access.  */
++    struct timespec st_mtim;		/* Time of last modification.  */
++    struct timespec st_ctim;		/* Time of last status change.  */
++#else
++    __time_t st_atime;			/* Time of last access.  */
++    unsigned long int st_atimensec;	/* Nscecs of last access.  */
++    __time_t st_mtime;			/* Time of last modification.  */
++    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
++    __time_t st_ctime;			/* Time of last status change.  */
++    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
++#endif
++    __ino64_t st_ino;			/* File serial number.		*/
++  } __attribute__ ((packed,aligned(4)));
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/lxstat64.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/lxstat64.c	2005-03-22 11:53:10.056702174 -0500
+@@ -0,0 +1,99 @@
++/* lxstat64 using old-style Unix lstat system call.
++   Copyright (C) 1997-2002, 2003, 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <stddef.h>
++#include <sys/stat.h>
++#include <kernel_stat.h>
++
++#include <sysdep.h>
++#include <sys/syscall.h>
++#include <bp-checks.h>
++
++#include "kernel-features.h"
++
++#if __ASSUME_STAT64_SYSCALL == 0
++# include <xstatconv.h>
++#endif
++
++#ifdef __NR_lstat64
++# if  __ASSUME_STAT64_SYSCALL == 0
++/* The variable is shared between all wrappers around *stat64 calls.  */
++extern int __have_no_stat64;
++# endif
++#endif
++
++/* Get information about the file NAME in BUF.  */
++int
++___lxstat64 (int vers, const char *name, struct stat64 *buf)
++{
++  int result;
++  struct kernel_stat64 kbuf64;
++
++#ifdef __ASSUME_STAT64_SYSCALL
++  result = INLINE_SYSCALL (lstat64, 2, CHECK_STRING (name), CHECK_1 (&kbuf64));
++  if (result == 0)
++    result = __xstat64_kernel64_conv (vers, &kbuf64, buf);
++# if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
++  if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
++    buf->st_ino = buf->__st_ino;
++# endif
++  return result;
++#else
++  struct kernel_stat kbuf;
++# ifdef __NR_lstat64
++  if (! __have_no_stat64)
++    {
++      int saved_errno = errno;
++      result = INLINE_SYSCALL (lstat64, 2, CHECK_STRING (name), CHECK_1 (&kbuf64));
++
++      if (result != -1 || errno != ENOSYS)
++	{
++	  if (result == 0)
++	    result = __xstat64_kernel64_conv (vers, &kbuf64, buf);
++#  if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
++	  if (!result && buf->__st_ino != (__ino_t) buf->st_ino)
++	    buf->st_ino = buf->__st_ino;
++#  endif
++	  return result;
++	}
++
++      __set_errno (saved_errno);
++      __have_no_stat64 = 1;
++    }
++# endif
++  result = INLINE_SYSCALL (lstat, 2, CHECK_STRING (name), __ptrvalue (&kbuf));
++  if (result == 0)
++    result = __xstat64_conv (vers, &kbuf, buf);
++
++  return result;
++#endif
++}
++
++#include <shlib-compat.h>
++
++#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
++versioned_symbol (libc, ___lxstat64, __lxstat64, GLIBC_2_2);
++strong_alias (___lxstat64, __old__lxstat64)
++compat_symbol (libc, __old__lxstat64, __lxstat64, GLIBC_2_1);
++hidden_ver (___lxstat64, __lxstat64)
++#else
++strong_alias (___lxstat64, __lxstat64);
++hidden_def (__lxstat64)
++#endif
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/oldgetrlimit.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/oldgetrlimit.c	2005-03-22 11:53:10.056702174 -0500
+@@ -0,0 +1 @@
++/* Empty.  */
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/oldsetrlimit.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/oldsetrlimit.c	2005-03-22 11:53:10.056702174 -0500
+@@ -0,0 +1 @@
++/* Empty.  */
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/semop.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/semop.c	2005-03-22 11:53:10.056702174 -0500
+@@ -0,0 +1,67 @@
++/* Copyright (C) 1995, 1997, 1998, 1999, 2000, 2005
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, August 1995.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <sys/sem.h>
++#include <ipc_priv.h>
++#include <alloca.h>
++#include <sysdep.h>
++#include <sys/syscall.h>
++#include <bp-checks.h>
++
++struct kernel_sembuf
++{
++  unsigned short int sem_num;   /* semaphore number */
++  short int sem_op;             /* semaphore operation */
++  short int sem_flg;            /* operation flag */
++  short int __pad1;
++};
++
++/* Perform user-defined atomical operation of array of semaphores.  */
++
++int
++semop (semid, sops, nsops)
++     int semid;
++     struct sembuf *sops;
++     size_t nsops;
++{
++  struct kernel_sembuf *ksops = alloca (sizeof (sops[0]) * nsops);
++  size_t i;
++  int result;
++
++  for (i = 0; i < nsops; i++)
++    {
++      ksops[i].sem_num = sops[i].sem_num;
++      ksops[i].sem_op = sops[i].sem_op;
++      ksops[i].sem_flg = sops[i].sem_flg;
++    }
++
++  result = INLINE_SYSCALL (ipc, 5, IPCOP_semop,
++			   semid, (int) nsops, 0, CHECK_N (ksops, nsops));
++
++  for (i = 0; i < nsops; i++)
++    {
++      sops[i].sem_num = ksops[i].sem_num;
++      sops[i].sem_op = ksops[i].sem_op;
++      sops[i].sem_flg = ksops[i].sem_flg;
++    }
++
++  return result;
++}
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/semtimedop.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/semtimedop.c	2005-03-22 11:53:10.057701931 -0500
+@@ -0,0 +1,69 @@
++/* Copyright (C) 1995, 1997, 1998, 1999, 2000, 2005
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, August 1995.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <sys/sem.h>
++#include <ipc_priv.h>
++#include <alloca.h>
++#include <sysdep.h>
++#include <sys/syscall.h>
++#include <bp-checks.h>
++
++struct kernel_sembuf
++{
++  unsigned short int sem_num;   /* semaphore number */
++  short int sem_op;             /* semaphore operation */
++  short int sem_flg;            /* operation flag */
++  short int __pad1;
++};
++
++/* Perform user-defined atomical operation of array of semaphores.  */
++
++int
++semtimedop (semid, sops, nsops, timeout)
++     int semid;
++     struct sembuf *sops;
++     size_t nsops;
++     const struct timespec *timeout;
++{
++  struct kernel_sembuf *ksops = alloca (sizeof (sops[0]) * nsops);
++  size_t i;
++  int result;
++
++  for (i = 0; i < nsops; i++)
++    {
++      ksops[i].sem_num = sops[i].sem_num;
++      ksops[i].sem_op = sops[i].sem_op;
++      ksops[i].sem_flg = sops[i].sem_flg;
++    }
++
++  result = INLINE_SYSCALL (ipc, 6, IPCOP_semtimedop,
++			   semid, (int) nsops, 0, CHECK_N (sops, nsops),
++			   timeout);
++
++  for (i = 0; i < nsops; i++)
++    {
++      sops[i].sem_num = ksops[i].sem_num;
++      sops[i].sem_op = ksops[i].sem_op;
++      sops[i].sem_flg = ksops[i].sem_flg;
++    }
++
++  return result;
++}
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/statfs64.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/statfs64.c	2005-03-22 11:53:10.057701931 -0500
+@@ -0,0 +1,77 @@
++/* Return information about the filesystem on which FILE resides.
++   Copyright (C) 1996-2000,2003,2004,2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <string.h>
++#include <sys/statfs.h>
++#include <stddef.h>
++#include <sysdep.h>
++
++
++# if __ASSUME_STATFS64 == 0
++int __no_statfs64 attribute_hidden;
++#endif
++
++/* Return information about the filesystem on which FILE resides.  */
++int
++__statfs64 (const char *file, struct statfs64 *buf)
++{
++#ifdef __NR_statfs64
++# if __ASSUME_STATFS64 == 0
++  if (! __no_statfs64)
++# endif
++    {
++      /* The EABI structure is the same as the old ABI structure, except
++	 that it has four additional bytes of padding - at the end.  We can
++	 ignore them.  */
++      int result = INLINE_SYSCALL (statfs64, 3, file, sizeof (*buf) - 4, buf);
++
++# if __ASSUME_STATFS64 == 0
++      if (result == 0 || errno != ENOSYS)
++# endif
++	return result;
++
++# if __ASSUME_STATFS64 == 0
++      __no_statfs64 = 1;
++# endif
++    }
++#endif
++
++#if __ASSUME_STATFS64 == 0
++  struct statfs buf32;
++
++  if (__statfs (file, &buf32) < 0)
++    return -1;
++
++  buf->f_type = buf32.f_type;
++  buf->f_bsize = buf32.f_bsize;
++  buf->f_blocks = buf32.f_blocks;
++  buf->f_bfree = buf32.f_bfree;
++  buf->f_bavail = buf32.f_bavail;
++  buf->f_files = buf32.f_files;
++  buf->f_ffree = buf32.f_ffree;
++  buf->f_fsid = buf32.f_fsid;
++  buf->f_namelen = buf32.f_namelen;
++  buf->f_frsize = buf32.f_frsize;
++  memcpy (buf->f_spare, buf32.f_spare, sizeof (buf32.f_spare));
++
++  return 0;
++#endif
++}
++weak_alias (__statfs64, statfs64)
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/uname.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/uname.c	2005-03-22 11:53:10.057701931 -0500
+@@ -0,0 +1,43 @@
++/* Copyright (C) 2005
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <sysdep.h>
++#include <sys/syscall.h>
++#include <string.h>
++#include <sys/utsname.h>
++
++/* The kernel's struct utsname is two bytes larger than a userland struct
++   utsname due to the APCS structure size boundary.  */
++
++int
++__uname (struct utsname *__name)
++{
++  char buf[sizeof (struct utsname) + 2];
++  int result = INLINE_SYSCALL (uname, 1, buf);
++
++  if (result == 0)
++    memcpy (__name, buf, sizeof (struct utsname));
++
++  return result;
++}
++
++libc_hidden_def (__uname)
++strong_alias (__uname, uname)
++libc_hidden_weak (uname)
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/xstat64.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/xstat64.c	2005-03-22 11:53:10.058701689 -0500
+@@ -0,0 +1,103 @@
++/* xstat64 using old-style Unix stat system call.
++   Copyright (C) 1991, 1995-2002, 2003, 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <stddef.h>
++#include <sys/stat.h>
++#include <kernel_stat.h>
++
++#include <sysdep.h>
++#include <sys/syscall.h>
++#include <bp-checks.h>
++
++#include "kernel-features.h"
++
++#if __ASSUME_STAT64_SYSCALL == 0
++# include <xstatconv.h>
++#endif
++
++#ifdef __NR_stat64
++# if  __ASSUME_STAT64_SYSCALL == 0
++/* The variable is shared between all wrappers around *stat64 calls.
++   This is the definition.  */
++int __have_no_stat64;
++# endif
++#endif
++
++/* Get information about the file NAME in BUF.  */
++
++int
++___xstat64 (int vers, const char *name, struct stat64 *buf)
++{
++  int result;
++  struct kernel_stat64 kbuf64;
++
++#if __ASSUME_STAT64_SYSCALL > 0
++  result = INLINE_SYSCALL (stat64, 2, CHECK_STRING (name), CHECK_1 (&kbuf64));
++  if (result == 0)
++    result = __xstat64_kernel64_conv (vers, &kbuf64, buf);
++# if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
++  if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
++    buf->st_ino = buf->__st_ino;
++# endif
++  return result;
++#else
++  struct kernel_stat kbuf;
++# if defined __NR_stat64
++  if (! __have_no_stat64)
++    {
++      int saved_errno = errno;
++      result = INLINE_SYSCALL (stat64, 2, CHECK_STRING (name), CHECK_1 (&kbuf64));
++
++      if (result != -1 || errno != ENOSYS)
++	{
++	  if (result == 0)
++	    result = __xstat64_kernel64_conv (vers, &kbuf64, buf);
++#  if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
++	  if (!result && buf->__st_ino != (__ino_t) buf->st_ino)
++	    buf->st_ino = buf->__st_ino;
++#  endif
++	  return result;
++	}
++
++      __set_errno (saved_errno);
++      __have_no_stat64 = 1;
++    }
++# endif
++
++  result = INLINE_SYSCALL (stat, 2, CHECK_STRING (name), __ptrvalue (&kbuf));
++  if (result == 0)
++    result = __xstat64_conv (vers, &kbuf, buf);
++
++  return result;
++#endif
++}
++
++
++#include <shlib-compat.h>
++
++#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
++versioned_symbol (libc, ___xstat64, __xstat64, GLIBC_2_2);
++strong_alias (___xstat64, __old__xstat64)
++compat_symbol (libc, __old__xstat64, __xstat64, GLIBC_2_1);
++hidden_ver (___xstat64, __xstat64)
++#else
++strong_alias (___xstat64, __xstat64)
++hidden_def (__xstat64)
++#endif
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/xstatconv.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/xstatconv.c	2005-03-22 11:53:10.058701689 -0500
+@@ -0,0 +1,341 @@
++/* Convert between the kernel's `struct stat' format, and libc's.
++   Copyright (C) 1991,1995-1997,2000,2002,2003 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <errno.h>
++#include <sys/stat.h>
++#include <kernel_stat.h>
++
++#ifdef STAT_IS_KERNEL_STAT
++
++/* Dummy.  */
++struct kernel_stat;
++
++#else
++
++#include <string.h>
++
++
++#if !defined __ASSUME_STAT64_SYSCALL || defined XSTAT_IS_XSTAT64
++int
++__xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
++{
++  switch (vers)
++    {
++    case _STAT_VER_KERNEL:
++      /* Nothing to do.  The struct is in the form the kernel expects.
++         We should have short-circuted before we got here, but for
++         completeness... */
++      *(struct kernel_stat *) ubuf = *kbuf;
++      break;
++
++    case _STAT_VER_LINUX:
++      {
++	struct stat *buf = ubuf;
++
++	/* Convert to current kernel version of `struct stat'.  */
++	buf->st_dev = kbuf->st_dev;
++#ifdef _HAVE_STAT___PAD1
++	buf->__pad1 = 0;
++#endif
++	buf->st_ino = kbuf->st_ino;
++	buf->st_mode = kbuf->st_mode;
++	buf->st_nlink = kbuf->st_nlink;
++	buf->st_uid = kbuf->st_uid;
++	buf->st_gid = kbuf->st_gid;
++	buf->st_rdev = kbuf->st_rdev;
++#ifdef _HAVE_STAT___PAD2
++	buf->__pad2 = 0;
++#endif
++	buf->st_size = kbuf->st_size;
++	buf->st_blksize = kbuf->st_blksize;
++	buf->st_blocks = kbuf->st_blocks;
++#ifdef _HAVE_STAT_NSEC
++	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
++	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
++	buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
++	buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
++	buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
++	buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
++#else
++	buf->st_atime = kbuf->st_atime;
++	buf->st_mtime = kbuf->st_mtime;
++	buf->st_ctime = kbuf->st_ctime;
++#endif
++#ifdef _HAVE_STAT___UNUSED1
++	buf->__unused1 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED2
++	buf->__unused2 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED3
++	buf->__unused3 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED4
++	buf->__unused4 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED5
++	buf->__unused5 = 0;
++#endif
++      }
++      break;
++
++    default:
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  return 0;
++}
++#endif
++
++int
++__xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
++{
++#ifdef XSTAT_IS_XSTAT64
++  return __xstat_conv (vers, kbuf, ubuf);
++#else
++  switch (vers)
++    {
++    case _STAT_VER_LINUX:
++      {
++	struct stat64 *buf = ubuf;
++
++	/* Convert to current kernel version of `struct stat64'.  */
++	buf->st_dev = kbuf->st_dev;
++#ifdef _HAVE_STAT64___PAD1
++	buf->__pad1 = 0;
++#endif
++	buf->st_ino = kbuf->st_ino;
++#ifdef _HAVE_STAT64___ST_INO
++	buf->__st_ino = kbuf->st_ino;
++#endif
++	buf->st_mode = kbuf->st_mode;
++	buf->st_nlink = kbuf->st_nlink;
++	buf->st_uid = kbuf->st_uid;
++	buf->st_gid = kbuf->st_gid;
++	buf->st_rdev = kbuf->st_rdev;
++#ifdef _HAVE_STAT64___PAD2
++	buf->__pad2 = 0;
++#endif
++	buf->st_size = kbuf->st_size;
++	buf->st_blksize = kbuf->st_blksize;
++	buf->st_blocks = kbuf->st_blocks;
++#ifdef _HAVE_STAT64_NSEC
++	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
++	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
++	buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
++	buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
++	buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
++	buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
++#else
++	buf->st_atime = kbuf->st_atime;
++	buf->st_mtime = kbuf->st_mtime;
++	buf->st_ctime = kbuf->st_ctime;
++#endif
++#ifdef _HAVE_STAT64___UNUSED1
++	buf->__unused1 = 0;
++#endif
++#ifdef _HAVE_STAT64___UNUSED2
++	buf->__unused2 = 0;
++#endif
++#ifdef _HAVE_STAT64___UNUSED3
++	buf->__unused3 = 0;
++#endif
++#ifdef _HAVE_STAT64___UNUSED4
++	buf->__unused4 = 0;
++#endif
++#ifdef _HAVE_STAT64___UNUSED5
++	buf->__unused5 = 0;
++#endif
++      }
++      break;
++
++      /* If struct stat64 is different from struct stat then
++	 _STAT_VER_KERNEL does not make sense.  */
++    case _STAT_VER_KERNEL:
++    default:
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  return 0;
++#endif
++}
++
++int
++__xstat32_conv (int vers, void *kbuf_, struct stat *buf)
++{
++  struct kernel_stat64 *kbuf = kbuf_;
++
++  switch (vers)
++    {
++    case _STAT_VER_LINUX:
++      {
++	/* Convert current kernel version of `struct stat64' to
++           `struct stat'.  */
++	buf->st_dev = kbuf->st_dev;
++#ifdef _HAVE_STAT___PAD1
++	buf->__pad1 = 0;
++#endif
++#ifdef _HAVE_STAT64___ST_INO
++# if __ASSUME_ST_INO_64_BIT == 0
++	if (kbuf->st_ino == 0)
++	  buf->st_ino = kbuf->__st_ino;
++	else
++# endif
++	  {
++	    buf->st_ino = kbuf->st_ino;
++	    if (sizeof (buf->st_ino) != sizeof (kbuf->st_ino)
++		&& buf->st_ino != kbuf->st_ino)
++	      {
++		__set_errno (EOVERFLOW);
++		return -1;
++	      }
++	  }
++#else
++	buf->st_ino = kbuf->st_ino;
++	if (sizeof (buf->st_ino) != sizeof (kbuf->st_ino)
++	    && buf->st_ino != kbuf->st_ino)
++	  {
++	    __set_errno (EOVERFLOW);
++	    return -1;
++	  }
++#endif
++	buf->st_mode = kbuf->st_mode;
++	buf->st_nlink = kbuf->st_nlink;
++	buf->st_uid = kbuf->st_uid;
++	buf->st_gid = kbuf->st_gid;
++	buf->st_rdev = kbuf->st_rdev;
++#ifdef _HAVE_STAT___PAD2
++	buf->__pad2 = 0;
++#endif
++	buf->st_size = kbuf->st_size;
++	/* Check for overflow.  */
++	if (sizeof (buf->st_size) != sizeof (kbuf->st_size)
++	    && buf->st_size != kbuf->st_size)
++	  {
++	    __set_errno (EOVERFLOW);
++	    return -1;
++	  }
++	buf->st_blksize = kbuf->st_blksize;
++	buf->st_blocks = kbuf->st_blocks;
++	/* Check for overflow.  */
++	if (sizeof (buf->st_blocks) != sizeof (kbuf->st_blocks)
++	    && buf->st_blocks != kbuf->st_blocks)
++	  {
++	    __set_errno (EOVERFLOW);
++	    return -1;
++	  }
++#ifdef _HAVE_STAT_NSEC
++	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
++	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
++	buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
++	buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
++	buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
++	buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
++#else
++	buf->st_atime = kbuf->st_atime;
++	buf->st_mtime = kbuf->st_mtime;
++	buf->st_ctime = kbuf->st_ctime;
++#endif
++
++#ifdef _HAVE_STAT___UNUSED1
++	buf->__unused1 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED2
++	buf->__unused2 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED3
++	buf->__unused3 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED4
++	buf->__unused4 = 0;
++#endif
++#ifdef _HAVE_STAT___UNUSED5
++	buf->__unused5 = 0;
++#endif
++      }
++      break;
++
++      /* If struct stat64 is different from struct stat then
++	 _STAT_VER_KERNEL does not make sense.  */
++    case _STAT_VER_KERNEL:
++    default:
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  return 0;
++}
++
++int
++__xstat64_kernel64_conv (int vers, void *kbuf_, struct stat64 *buf)
++{
++  struct kernel_stat64 *kbuf = kbuf_;
++
++  switch (vers)
++    {
++    case _STAT_VER_LINUX:
++      {
++	/* Convert current kernel version of `struct stat64' to
++           user version of `struct stat64'.  */
++	buf->st_dev = kbuf->st_dev;
++#ifdef _HAVE_STAT64___PAD1
++	buf->__pad1 = kbuf->__pad1;
++#endif
++#ifdef _HAVE_STAT64___ST_INO
++	buf->__st_ino = kbuf->__st_ino;
++#endif
++	buf->st_mode = kbuf->st_mode;
++	buf->st_nlink = kbuf->st_nlink;
++	buf->st_uid = kbuf->st_uid;
++	buf->st_gid = kbuf->st_gid;
++	buf->st_rdev = kbuf->st_rdev;
++#ifdef _HAVE_STAT64___PAD2
++	buf->__pad2 = kbuf->__pad2;
++#endif
++	buf->st_size = kbuf->st_size;
++	buf->st_blksize = kbuf->st_blksize;
++	buf->st_blocks = kbuf->st_blocks;
++#ifdef _HAVE_STAT64_NSEC
++	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
++	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
++	buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
++	buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
++	buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
++	buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
++#else
++	buf->st_atime = kbuf->st_atime;
++	buf->st_mtime = kbuf->st_mtime;
++	buf->st_ctime = kbuf->st_ctime;
++#endif
++	buf->st_ino = kbuf->st_ino;
++      }
++      break;
++
++    case _STAT_VER_KERNEL:
++    default:
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  return 0;
++}
++
++#endif
+Index: glibc/sysdeps/unix/sysv/linux/arm/eabi/xstatconv.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/unix/sysv/linux/arm/eabi/xstatconv.h	2005-03-22 11:53:10.058701689 -0500
+@@ -0,0 +1,28 @@
++/* Convert between the kernel's `struct stat' format, and libc's.
++   Copyright (C) 1991,1995-1997,2000,2002,2003 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include "kernel-features.h"
++
++#ifndef STAT_IS_KERNEL_STAT
++extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
++extern int __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
++#endif
++extern int __xstat32_conv (int vers, void *kbuf, struct stat *buf);
++extern int __xstat64_kernel64_conv (int vers, struct kernel_stat64 *kbuf,
++				    struct stat64 *buf);
+Index: glibc/sysdeps/arm/eabi/fpu/fraiseexcpt.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/fraiseexcpt.c	2005-03-22 12:34:55.522464918 -0500
+@@ -0,0 +1,67 @@
++/* Raise given exceptions.
++   Copyright (C) 2004 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <fpu_control.h>
++#include <fenv.h>
++#include <float.h>
++
++int
++feraiseexcept (int excepts)
++{
++  float dummy;
++  int fpscr;
++
++  /* Raise exceptions represented by EXPECTS.  But we must raise only
++     one signal at a time.  It is important that if the overflow/underflow
++     exception and the inexact exception are given at the same time,
++     the overflow/underflow exception follows the inexact exception.  After
++     each exception we read from the fpscr, to force the exception to be
++     raised immediately.  */
++
++  /* First: invalid exception.  */
++  if (FE_INVALID & excepts)
++    __asm__ __volatile__ ("fdivs %0,%2,%3\n\tfmrx %1, fpscr"
++			  : "=w" (dummy), "=r" (fpscr) : "w" (0.0f), "w" (0.0f) );
++
++  /* Next: division by zero.  */
++  if (FE_DIVBYZERO & excepts)
++    __asm__ __volatile__ ("fdivs %0,%2,%3\n\tfmrx %1, fpscr"
++			  : "=w" (dummy), "=r" (fpscr) : "w" (1.0f), "w" (0.0f) );
++
++  /* Next: overflow.  */
++  if (FE_OVERFLOW & excepts)
++    /* There's no way to raise overflow without also raising inexact.  */
++    __asm__ __volatile__ ("fadds %0,%2,%3\n\tfmrx %1, fpscr"
++			  : "=w" (dummy), "=r" (fpscr) : "w" (FLT_MAX), "w" (1.0e32f) );
++
++  /* Next: underflow.  */
++  if (FE_UNDERFLOW & excepts)
++    __asm__ __volatile__ ("fdivs %0,%2,%3\n\tfmrx %1, fpscr"
++			  : "=w" (dummy), "=r" (fpscr) : "w" (FLT_MIN), "w" (3.0f) );
++
++  /* Last: inexact.  */
++  if (FE_INEXACT & excepts)
++    __asm__ __volatile__ ("fdivs %0,%2,%3\n\tfmrx %1, fpscr"
++			  : "=w" (dummy), "=r" (fpscr) : "w" (2.0f), "w" (3.0f) );
++
++  /* Success.  */
++  return 0;
++}
++
++libm_hidden_def (feraiseexcept)
+Index: glibc/sysdeps/arm/eabi/fpu/feholdexcpt.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/eabi/fpu/feholdexcpt.c	2005-03-22 12:34:55.521465156 -0500
+@@ -0,0 +1,41 @@
++/* Store current floating-point environment and clear exceptions.
++   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <fenv.h>
++#include <fpu_control.h>
++
++int
++feholdexcept (fenv_t *envp)
++{
++  unsigned long int temp;
++
++  /* Store the environment.  */
++  _FPU_GETCW(temp);
++  envp->__cw = temp;
++
++  /* Now set all exceptions to non-stop.  */
++  temp &= ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
++
++  /* And clear all exception flags.  */
++  temp &= ~FE_ALL_EXCEPT;
++
++  _FPU_SETCW(temp);
++
++  return 0;
++}
+

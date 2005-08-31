@@ -1,0 +1,25 @@
+diff -ruN module-init-tools-3.1-pre6.orig/modprobe.8 module-init-tools-3.1-pre6/modprobe.8
+--- module-init-tools-3.1-pre6.orig/modprobe.8	2004-10-06 02:44:43.000000000 +0200
++++ module-init-tools-3.1-pre6/modprobe.8	2004-10-09 01:39:01.000000000 +0200
+@@ -30,6 +30,7 @@
+ the modules and other files, except for the optional
+ \fI/etc/modprobe.conf\fR configuration file
+ (see \fBmodprobe.conf\fR(5)).
++All files in the \fI/etc/modprobe.d/arch/\fR directory are ignored.
+ .PP
+ Note that this version of \fBmodprobe\fR does not
+ do anything to the module itself: the work of resolving symbols
+diff -ruN module-init-tools-3.1-pre6.orig/modprobe.c module-init-tools-3.1-pre6/modprobe.c
+--- module-init-tools-3.1-pre6.orig/modprobe.c	2004-10-09 01:40:18.000000000 +0200
++++ module-init-tools-3.1-pre6/modprobe.c	2004-10-09 01:40:11.000000000 +0200
+@@ -1082,6 +1082,10 @@
+ {
+ 	DIR *dir;
+ 
++	/* ignore everything in this directory */
++	if (streq(filename, "/etc/modprobe.d/arch"))
++		return 1;
++
+ 	/* If it's a directory, recurse. */
+ 	dir = opendir(filename);
+ 	if (dir) {

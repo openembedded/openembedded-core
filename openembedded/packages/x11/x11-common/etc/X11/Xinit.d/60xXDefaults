@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xrdb -load -nocpp < /etc/X11/Xdefaults

@@ -1,0 +1,382 @@
+diff -Naupr openswan-2.2.0/Makefile.inc openswan-2.2.0-gentoo/Makefile.inc
+--- openswan-2.2.0/Makefile.inc	2004-07-19 21:06:32.000000000 -0500
++++ openswan-2.2.0-gentoo/Makefile.inc	2004-09-17 21:31:29.810687485 -0500
+@@ -64,7 +64,7 @@ POLICYLIB=${OPENSWANSRCDIR}/lib/libipsec
+ DESTDIR?=
+ 
+ # "local" part of tree, used in building other pathnames
+-INC_USRLOCAL=/usr/local
++INC_USRLOCAL=/usr
+ 
+ # PUBDIR is where the "ipsec" command goes; beware, many things define PATH
+ # settings which are assumed to include it (or at least, to include *some*
+@@ -98,7 +98,7 @@ MANTREE=$(DESTDIR)$(INC_USRLOCAL)/$(INC_
+ MANPLACES=man3 man5 man8
+ 
+ # where configuration files go
+-FINALCONFFILE?=/etc/ipsec.conf
++FINALCONFFILE?=/etc/ipsec/ipsec.conf
+ CONFFILE=$(DESTDIR)$(FINALCONFFILE)
+ 
+ FINALCONFDIR?=/etc
+@@ -109,10 +109,10 @@ CONFDDIR=$(DESTDIR)$(FINALCONFDDIR)
+ 
+ # sample configuration files go into
+ INC_DOCDIR?=share/doc
+-FINALEXAMPLECONFDIR=${INC_USRLOCAL}/${INC_DOCDIR}/openswan
++FINALEXAMPLECONFDIR=${INC_USRLOCAL}/${INC_DOCDIR}/openswan-2.2.0
+ EXAMPLECONFDIR=${DESTDIR}${FINALEXAMPLECONFDIR}
+ 
+-FINALDOCDIR?=${INC_USRLOCAL}/${INC_DOCDIR}/openswan
++FINALDOCDIR?=${INC_USRLOCAL}/${INC_DOCDIR}/openswan-2.2.0
+ DOCDIR=${DESTDIR}${FINALDOCDIR}
+ 
+ # where per-conn pluto logs go
+@@ -243,7 +243,7 @@ RH_KERNELSRC?=/usr/src/linux-2.4
+ # installed one in RH 7.2, won't work - you wind up depending upon
+ # openssl.
+ 
+-BIND9STATICLIBDIR?=/usr/local/lib
++BIND9STATICLIBDIR?=/usr/lib
+ 
+ # if you install elsewere, you may need to point the include files to it.
+ #BIND9STATICLIBDIR?=/sandel/lib
+diff -Naupr openswan-2.2.0/lib/libdes/Makefile openswan-2.2.0-gentoo/lib/libdes/Makefile
+--- openswan-2.2.0/lib/libdes/Makefile	2004-04-03 13:44:41.000000000 -0600
++++ openswan-2.2.0-gentoo/lib/libdes/Makefile	2004-09-17 21:31:29.810687485 -0500
+@@ -60,7 +60,7 @@ MAKE=make -f Makefile
+ # normally overridden by FreeS/WAN Makefiles anyway
+ CFLAG= -O3 -fomit-frame-pointer -I${KLIPSD}/include -I${SRCDIR}
+ 
+-CFLAGS=$(OPTS) $(CFLAG)
++CFLAGS=$(OPTS) $(CFLAG) $(USERCOMPILE)
+ CPP=$(CC) -E
+ 
+ # Assember version of des_encrypt*().
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/crypt586.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/crypt586.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/crypt586.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/crypt586.pl	2004-09-17 21:31:29.811687312 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # The inner loop instruction sequence and the IP/FP modifications are from
+ # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/des-586.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/des-586.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/des-586.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/des-586.pl	2004-09-17 21:31:29.811687312 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # The inner loop instruction sequence and the IP/FP modifications are from
+ # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/des686.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/des686.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/des686.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/des686.pl	2004-09-17 21:31:29.812687139 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $prog="des686.pl";
+ 
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/desboth.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/desboth.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/desboth.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/desboth.pl	2004-09-17 21:31:29.812687139 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $L="edi";
+ $R="esi";
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/cbc.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/cbc.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/cbc.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/cbc.pl	2004-09-17 21:31:29.812687139 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # void des_ncbc_encrypt(input, output, length, schedule, ivec, enc)
+ # des_cblock (*input);
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/x86asm.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/x86asm.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/x86asm.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/x86asm.pl	2004-09-17 21:31:29.813686966 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # require 'x86asm.pl';
+ # &asm_init("cpp","des-586.pl");
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/x86ms.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/x86ms.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/x86ms.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/x86ms.pl	2004-09-17 21:31:29.813686966 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ package x86ms;
+ 
+diff -Naupr openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/x86unix.pl openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/x86unix.pl
+--- openswan-2.2.0/linux/crypto/ciphers/des/asm/perlasm/x86unix.pl	2002-04-24 02:36:37.000000000 -0500
++++ openswan-2.2.0-gentoo/linux/crypto/ciphers/des/asm/perlasm/x86unix.pl	2004-09-17 21:31:29.814686793 -0500
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ package x86unix;
+ 
+diff -Naupr openswan-2.2.0/programs/_include/_include.in openswan-2.2.0-gentoo/programs/_include/_include.in
+--- openswan-2.2.0/programs/_include/_include.in	2003-01-06 15:44:04.000000000 -0600
++++ openswan-2.2.0-gentoo/programs/_include/_include.in	2004-09-17 21:31:29.814686793 -0500
+@@ -47,10 +47,10 @@ for f
+ do
+ 	if test ! -r "$f"
+ 	then
+-		if test ! "$f" = "/etc/ipsec.conf"
++		if test ! "$f" = "/etc/ipsec/ipsec.conf"
+ 		then
+ 			echo "#:cannot open configuration file \'$f\'"
+-			if test "$f" = "/etc/ipsec.secrets"
++			if test "$f" = "/etc/ipsec/ipsec.secrets"
+ 			then
+ 				echo "#:Your secrets file will be created when you start FreeS/WAN for the first time."
+ 			fi
+diff -Naupr openswan-2.2.0/programs/barf/barf.in openswan-2.2.0-gentoo/programs/barf/barf.in
+--- openswan-2.2.0/programs/barf/barf.in	2004-06-07 20:02:11.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/barf/barf.in	2004-09-17 21:31:29.815686620 -0500
+@@ -16,7 +16,7 @@
+ 
+ LOGS=${LOGS-/var/log}
+ CONFS=${IPSEC_CONFS-/etc}
+-CONFDDIR=${IPSEC_CONFDDIR-/etc/ipsec.d}
++CONFDDIR=${IPSEC_CONFDDIR-/etc/ipsec/ipsec.d}
+ me="ipsec barf"
+ 
+ # kludge to produce no barf output mentioning policygroups if none are present.
+@@ -229,13 +229,13 @@ then
+ 	done
+ fi
+ _________________________ ipsec/ls-libdir
+-ls -l ${IPSEC_LIBDIR-/usr/local/lib/ipsec}
++ls -l ${IPSEC_LIBDIR-/usr/lib/ipsec}
+ _________________________ ipsec/ls-execdir
+-ls -l ${IPSEC_EXECDIR-/usr/local/libexec/ipsec}
++ls -l ${IPSEC_EXECDIR-/usr/libexec/ipsec}
+ _________________________ ipsec/updowns
+-for f in `ls ${IPSEC_EXECDIR-/usr/local/libexec/ipsec} | egrep updown`
++for f in `ls ${IPSEC_EXECDIR-/usr/libexec/ipsec} | egrep updown`
+ do
+-	cat ${IPSEC_EXECDIR-/usr/local/libexec/ipsec}/$f
++	cat ${IPSEC_EXECDIR-/usr/libexec/ipsec}/$f
+ done
+ _________________________ proc/net/dev
+ cat /proc/net/dev
+diff -Naupr openswan-2.2.0/programs/eroute/eroute.5 openswan-2.2.0-gentoo/programs/eroute/eroute.5
+--- openswan-2.2.0/programs/eroute/eroute.5	2003-10-30 20:32:27.000000000 -0600
++++ openswan-2.2.0-gentoo/programs/eroute/eroute.5	2004-09-17 21:31:29.815686620 -0500
+@@ -223,7 +223,7 @@ Parameters Index of
+ in hexadecimal using Authentication Header protocol (51,
+ IPPROTO_AH) with no identies defined for either end.
+ .SH FILES
+-/proc/net/ipsec_eroute, /usr/local/bin/ipsec
++/proc/net/ipsec_eroute, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(5), ipsec_spi(5),
+ ipsec_spigrp(5), ipsec_klipsdebug(5), ipsec_eroute(8), ipsec_version(5),
+diff -Naupr openswan-2.2.0/programs/eroute/eroute.8 openswan-2.2.0-gentoo/programs/eroute/eroute.8
+--- openswan-2.2.0/programs/eroute/eroute.8	2003-10-30 20:32:27.000000000 -0600
++++ openswan-2.2.0-gentoo/programs/eroute/eroute.8	2004-09-17 21:31:29.816686447 -0500
+@@ -308,7 +308,7 @@ will be in clear text.
+ .br
+ .LP
+ .SH FILES
+-/proc/net/ipsec_eroute, /usr/local/bin/ipsec
++/proc/net/ipsec_eroute, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(8), ipsec_spi(8),
+ ipsec_spigrp(8), ipsec_klipsdebug(8), ipsec_eroute(5)
+diff -Naupr openswan-2.2.0/programs/ipsec/ipsec.8 openswan-2.2.0-gentoo/programs/ipsec/ipsec.8
+--- openswan-2.2.0/programs/ipsec/ipsec.8	2003-02-27 10:51:54.000000000 -0600
++++ openswan-2.2.0-gentoo/programs/ipsec/ipsec.8	2004-09-17 21:31:29.816686447 -0500
+@@ -81,7 +81,7 @@ reports where
+ .I ipsec
+ thinks the IPsec configuration files are stored.
+ .SH FILES
+-/usr/local/lib/ipsec	usual utilities directory
++/usr/lib/ipsec	usual utilities directory
+ .SH ENVIRONMENT
+ .PP
+ The following environment variables control where FreeS/WAN finds its
+diff -Naupr openswan-2.2.0/programs/klipsdebug/klipsdebug.5 openswan-2.2.0-gentoo/programs/klipsdebug/klipsdebug.5
+--- openswan-2.2.0/programs/klipsdebug/klipsdebug.5	2002-04-24 02:35:38.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/klipsdebug/klipsdebug.5	2004-09-17 21:31:29.817686275 -0500
+@@ -103,7 +103,7 @@ full
+ sockets debugging has been set and everything else is not set.
+ .LP
+ .SH FILES
+-/proc/net/ipsec_klipsdebug, /usr/local/bin/ipsec
++/proc/net/ipsec_klipsdebug, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(8), ipsec_eroute(8),
+ ipsec_spi(8), ipsec_spigrp(8), ipsec_klipsdebug(5), ipsec_version(5),
+diff -Naupr openswan-2.2.0/programs/klipsdebug/klipsdebug.8 openswan-2.2.0-gentoo/programs/klipsdebug/klipsdebug.8
+--- openswan-2.2.0/programs/klipsdebug/klipsdebug.8	2002-04-24 02:35:39.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/klipsdebug/klipsdebug.8	2004-09-17 21:31:29.817686275 -0500
+@@ -117,7 +117,7 @@ turns off only the
+ debugging messages.
+ .LP
+ .SH FILES
+-/proc/net/ipsec_klipsdebug, /usr/local/bin/ipsec
++/proc/net/ipsec_klipsdebug, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(8), ipsec_eroute(8),
+ ipsec_spi(8), ipsec_spigrp(8), ipsec_klipsdebug(5)
+diff -Naupr openswan-2.2.0/programs/lwdnsq/lwdnsq.xml.in openswan-2.2.0-gentoo/programs/lwdnsq/lwdnsq.xml.in
+--- openswan-2.2.0/programs/lwdnsq/lwdnsq.xml.in	2004-04-03 19:50:56.000000000 -0600
++++ openswan-2.2.0-gentoo/programs/lwdnsq/lwdnsq.xml.in	2004-09-17 21:31:29.817686275 -0500
+@@ -430,7 +430,7 @@ information.
+ <refsect1><title>Special IPSECKEY processing</title>
+ 
+ <programlisting>
+-/etc/ipsec.d/lwdnsq.conf
++/etc/ipsec/ipsec.d/lwdnsq.conf
+ </programlisting>
+ 
+ </refsect1>
+diff -Naupr openswan-2.2.0/programs/mailkey/mailkey.in openswan-2.2.0-gentoo/programs/mailkey/mailkey.in
+--- openswan-2.2.0/programs/mailkey/mailkey.in	2003-06-30 00:34:22.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/mailkey/mailkey.in	2004-09-17 21:31:29.818686102 -0500
+@@ -60,7 +60,7 @@ with the following error:
+ 
+ "$test1st"
+ 
+-Common concerns: This account must be able to read /etc/ipsec.secrets. 
++Common concerns: This account must be able to read /etc/ipsec/ipsec.secrets. 
+ If you haven't generated your key yet, please run 'ipsec newhostkey'." 
+ exit 0
+ }
+diff -Naupr openswan-2.2.0/programs/pluto/Makefile openswan-2.2.0-gentoo/programs/pluto/Makefile
+--- openswan-2.2.0/programs/pluto/Makefile	2004-07-19 21:05:23.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/pluto/Makefile	2004-09-17 21:31:29.819685929 -0500
+@@ -224,7 +224,7 @@ CPPFLAGS = $(HDRDIRS) $(DEFINES) \
+ 	-DPOLICYGROUPSDIR=\"${FINALCONFDDIR}/policies\" \
+ 	-DPERPEERLOGDIR=\"${FINALLOGDIR}/pluto/peer\"
+ 
+-ALLFLAGS = $(CPPFLAGS) $(CFLAGS)
++ALLFLAGS = $(CPPFLAGS) $(CFLAGS) $(USERCOMPILE)
+ 
+ # libefence is a free memory allocation debugger
+ # Solaris 2 needs -lsocket -lnsl
+diff -Naupr openswan-2.2.0/programs/setup/Makefile openswan-2.2.0-gentoo/programs/setup/Makefile
+--- openswan-2.2.0/programs/setup/Makefile	2004-04-03 13:44:48.000000000 -0600
++++ openswan-2.2.0-gentoo/programs/setup/Makefile	2004-09-17 21:31:29.819685929 -0500
+@@ -33,25 +33,10 @@ install:: setup
+ 	@rm -f $(BINDIR)/setup
+ 	@$(INSTALL) $(INSTBINFLAGS) setup $(RCDIR)/ipsec
+ 	@ln -s $(FINALRCDIR)/ipsec $(BINDIR)/setup
+-	-@for i in 0 1 2 3 4 5 6; do mkdir -p $(RCDIR)/../rc$$i.d; done
+-	-@cd $(RCDIR)/../rc0.d && ln -f -s ../init.d/ipsec K76ipsec
+-	-@cd $(RCDIR)/../rc1.d && ln -f -s ../init.d/ipsec K76ipsec
+-	-@cd $(RCDIR)/../rc2.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc3.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc4.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc5.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc6.d && ln -f -s ../init.d/ipsec K76ipsec
+ 
+ install_file_list::
+ 	@echo $(RCDIR)/ipsec
+ 	@echo $(BINDIR)/setup
+-	@echo $(RCDIR)/../rc0.d/K76ipsec
+-	@echo $(RCDIR)/../rc1.d/K76ipsec
+-	@echo $(RCDIR)/../rc2.d/S47ipsec
+-	@echo $(RCDIR)/../rc3.d/S47ipsec
+-	@echo $(RCDIR)/../rc4.d/S47ipsec
+-	@echo $(RCDIR)/../rc5.d/S47ipsec
+-	@echo $(RCDIR)/../rc6.d/K76ipsec
+ 
+ clean::
+ 	@rm -f setup
+diff -Naupr openswan-2.2.0/programs/showhostkey/showhostkey.in openswan-2.2.0-gentoo/programs/showhostkey/showhostkey.in
+--- openswan-2.2.0/programs/showhostkey/showhostkey.in	2004-03-24 15:08:22.000000000 -0600
++++ openswan-2.2.0-gentoo/programs/showhostkey/showhostkey.in	2004-09-17 21:31:29.820685756 -0500
+@@ -18,7 +18,7 @@ me="ipsec showhostkey"
+ usage="Usage: $me [--file secrets] [--left] [--right] [--txt gateway] [--id id]
+                   [--dhclient]"
+ 
+-file=/etc/ipsec.secrets
++file=/etc/ipsec/ipsec.secrets
+ fmt=""
+ gw=
+ id=
+diff -Naupr openswan-2.2.0/programs/spi/spi.5 openswan-2.2.0-gentoo/programs/spi/spi.5
+--- openswan-2.2.0/programs/spi/spi.5	2002-04-24 02:35:39.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/spi/spi.5	2004-09-17 21:31:29.820685756 -0500
+@@ -162,7 +162,7 @@ since 1 of 8 bits is a parity bit), has 
+ 3858 seconds ago and has been idle for 23 seconds.
+ .LP
+ .SH FILES
+-/proc/net/ipsec_spi, /usr/local/bin/ipsec
++/proc/net/ipsec_spi, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(5), ipsec_eroute(5),
+ ipsec_spigrp(5), ipsec_klipsdebug(5), ipsec_spi(8), ipsec_version(5),
+diff -Naupr openswan-2.2.0/programs/spi/spi.8 openswan-2.2.0-gentoo/programs/spi/spi.8
+--- openswan-2.2.0/programs/spi/spi.8	2002-04-24 02:35:40.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/spi/spi.8	2004-09-17 21:31:29.820685756 -0500
+@@ -461,7 +461,7 @@ and protocol
+ (4).
+ .LP
+ .SH FILES
+-/proc/net/ipsec_spi, /usr/local/bin/ipsec
++/proc/net/ipsec_spi, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(8), ipsec_eroute(8),
+ ipsec_spigrp(8), ipsec_klipsdebug(8), ipsec_spi(5)
+diff -Naupr openswan-2.2.0/programs/spigrp/spigrp.5 openswan-2.2.0-gentoo/programs/spigrp/spigrp.5
+--- openswan-2.2.0/programs/spigrp/spigrp.5	2002-04-24 02:35:40.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/spigrp/spigrp.5	2004-09-17 21:31:29.821685583 -0500
+@@ -77,7 +77,7 @@ be an incoming or outgoing group, depend
+ machine.
+ .LP
+ .SH FILES
+-/proc/net/ipsec_spigrp, /usr/local/bin/ipsec
++/proc/net/ipsec_spigrp, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(5), ipsec_eroute(5),
+ ipsec_spi(5), ipsec_klipsdebug(5), ipsec_spigrp(8), ipsec_version(5),
+diff -Naupr openswan-2.2.0/programs/spigrp/spigrp.8 openswan-2.2.0-gentoo/programs/spigrp/spigrp.8
+--- openswan-2.2.0/programs/spigrp/spigrp.8	2002-04-24 02:35:41.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/spigrp/spigrp.8	2004-09-17 21:31:29.821685583 -0500
+@@ -128,7 +128,7 @@ and finally an AH header to authenticate
+ .BR 0x236 .
+ .LP
+ .SH FILES
+-/proc/net/ipsec_spigrp, /usr/local/bin/ipsec
++/proc/net/ipsec_spigrp, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(8), ipsec_eroute(8),
+ ipsec_spi(8), ipsec_klipsdebug(8), ipsec_spigrp(5)
+diff -Naupr openswan-2.2.0/programs/tncfg/tncfg.5 openswan-2.2.0-gentoo/programs/tncfg/tncfg.5
+--- openswan-2.2.0/programs/tncfg/tncfg.5	2002-04-24 02:35:41.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/tncfg/tncfg.5	2004-09-17 21:31:29.821685583 -0500
+@@ -75,7 +75,7 @@ shows that virtual device
+ is not connected to any physical device.
+ .LP
+ .SH "FILES"
+-/proc/net/ipsec_tncfg, /usr/local/bin/ipsec
++/proc/net/ipsec_tncfg, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_eroute(5), ipsec_spi(5),
+ ipsec_spigrp(5), ipsec_klipsdebug(5), ipsec_tncfg(8), ipsec_version(5),
+diff -Naupr openswan-2.2.0/programs/tncfg/tncfg.8 openswan-2.2.0-gentoo/programs/tncfg/tncfg.8
+--- openswan-2.2.0/programs/tncfg/tncfg.8	2002-04-24 02:35:41.000000000 -0500
++++ openswan-2.2.0-gentoo/programs/tncfg/tncfg.8	2004-09-17 21:31:29.822685410 -0500
+@@ -76,7 +76,7 @@ virtual device to the
+ physical device.
+ .LP
+ .SH "FILES"
+-/proc/net/ipsec_tncfg, /usr/local/bin/ipsec
++/proc/net/ipsec_tncfg, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_eroute(8), ipsec_spi(8),
+ ipsec_spigrp(8), ipsec_klipsdebug(8), ipsec_tncfg(5)

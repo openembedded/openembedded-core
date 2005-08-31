@@ -1,0 +1,22 @@
+--- sysdeps/unix/sysv/linux/mips/bits/socket.h.orig	2004-09-15 14:27:06.342572280 +0200
++++ sysdeps/unix/sysv/linux/mips/bits/socket.h	2004-09-15 14:27:28.162255184 +0200
+@@ -261,7 +261,7 @@
+ #  define _EXTERN_INLINE extern __inline
+ # endif
+ _EXTERN_INLINE struct cmsghdr *
+-__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
++__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg)
+ {
+   if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
+     /* The kernel header does this so there may be a reason.  */
+--- sysdeps/unix/sysv/linux/mips/sys/tas.h.orig	2004-09-15 14:27:41.809180536 +0200
++++ sysdeps/unix/sysv/linux/mips/sys/tas.h	2004-09-15 14:27:53.245441960 +0200
+@@ -35,7 +35,7 @@
+ # endif
+ 
+ _EXTERN_INLINE int
+-_test_and_set (int *p, int v) __THROW
++_test_and_set (int *p, int v)
+ {
+   int r, t;
+ 

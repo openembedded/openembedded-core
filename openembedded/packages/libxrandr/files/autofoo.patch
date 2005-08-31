@@ -1,0 +1,30 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- Xrandr/configure.ac~autofoo.patch	2004-07-01 15:01:55.000000000 -0400
++++ Xrandr/configure.ac	2005-01-16 11:22:09.169651616 -0500
+@@ -33,11 +33,11 @@
+ dnl protocol, so Xrandr version l.n.m corresponds to protocol version l.n
+ dnl
+ AC_INIT(libXrandr, 1.0.2, [keithp@keithp.com], libXrandr)
++AC_CONFIG_AUX_DIR(.)
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ AM_MAINTAINER_MODE
+ 
+ AM_CONFIG_HEADER(config.h)
+-AC_CONFIG_AUX_DIR(.)
+ 
+ # Check for progs
+ AC_PROG_CC
+--- Xrandr/ChangeLog~autofoo.patch	2004-09-19 04:53:38.000000000 -0400
++++ Xrandr/ChangeLog	2005-01-16 11:52:29.694889712 -0500
+@@ -1,3 +1,7 @@
++2005-01-16  Chris Larson <kergoth@handhelds.org>
++
++	* configure.ac: Fix to work with automake 1.9.x.
++
+ 2004-09-19  Carlos Romero  <kidcrash@freedesktop.org>
+ 
+ 	* Makefile.am:

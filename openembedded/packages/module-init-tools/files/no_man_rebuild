@@ -1,0 +1,12 @@
+diff -ruN module-init-tools-3.1.orig/Makefile.in module-init-tools-3.1/Makefile.in
+--- module-init-tools-3.1.orig/Makefile.in	2004-11-15 01:59:48.000000000 +0100
++++ module-init-tools-3.1/Makefile.in	2004-11-21 02:18:58.000000000 +0100
+@@ -613,7 +613,7 @@
+ check-am: all-am
+ 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
+ check: check-am
+-all-am: Makefile $(PROGRAMS) $(SCRIPTS) $(MANS)
++all-am: Makefile $(PROGRAMS) $(SCRIPTS) #$(MANS)
+ 
+ installdirs:
+ 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(sbindir) $(DESTDIR)$(sbindir) $(DESTDIR)$(man5dir) $(DESTDIR)$(man8dir)

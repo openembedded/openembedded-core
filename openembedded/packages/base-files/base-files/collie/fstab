@@ -1,0 +1,8 @@
+/dev/mtdblock4	/ 	jffs2	defaults	1  1 
+proc            /proc   proc    defaults        0  0
+/dev/hda1	/media/cf	auto	defaults,sync,noauto,noatime,user,exec,suid,gid=100,umask=0002	0  0
+/dev/mmcda1	/media/card	auto	defaults,sync,noauto,noatime,user,exec,suid	0  0
+tmpfs		/var	tmpfs	defaults	0  0
+
+# we use a non-volatile ramdisk, see /etc/init.d/ramdisk
+#tmpfs		/media/ram	tmpfs	defaults	0  0

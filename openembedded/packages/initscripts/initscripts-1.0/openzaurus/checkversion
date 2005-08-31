@@ -1,0 +1,31 @@
+#!/bin/sh
+
+found=`cat /proc/version | cut -d ' ' -f3`
+echo "$found" | grep -q "snapshot" && exit 0
+
+if [ "VERSION" != "$found" ] ; then
+	echo -e >/dev/tty1
+	echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+	echo -e "\033[31;1m *            \033[0mW A R N I N G !              \033[31;1m* \033[0m" >/dev/tty1
+	echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+	echo >/dev/tty1
+	echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+        echo -e "\033[31;1m *    \033[0mYou are running the wrong kernel!    \033[31;1m* \033[0m" >/dev/tty1
+        echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+	echo >/dev/tty1
+	echo -e "You are running '" $found "'"					 >/dev/tty1
+	echo -e "I expect kernel '" VERSION "'"					 >/dev/tty1
+	echo >/dev/tty1
+        echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+        echo -e "\033[31;1m * \033[0mRunning this combination is unsupported \033[31;1m* \033[0m" >/dev/tty1
+        echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+	echo >/dev/tty1
+	echo "I will sleep for 1 minute now. Use this chance to "		 >/dev/tty1
+	echo "reboot the device and flash the proper kernel now! "		 >/dev/tty1
+        echo -e >/dev/tty1
+        echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+        echo -e "\033[31;1m *            \033[0mW A R N I N G !              \033[31;1m* \033[0m" >/dev/tty1
+        echo -e "\033[31;1m ******************************************* \033[0m" >/dev/tty1
+        echo >/dev/tty1
+	sleep 60
+fi

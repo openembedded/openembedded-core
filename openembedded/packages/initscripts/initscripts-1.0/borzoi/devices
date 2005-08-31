@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# Devfs handling script.  Since we arent running devfsd due to various reasons
+# which I will not lay out here, we need to create some links for compatibility.
+
+. /etc/default/rcS
+
+# exit without doing anything if udev is active
+if test -e /dev/.udevdb; then
+    exit 0
+fi
+
+if test -e /dev/.devfsd
+then
+	if test "$VERBOSE" != "no"; then echo -n "Setting up device links for devfs: "; fi
+	ln -s /dev/touchscreen/0 /dev/ts
+	ln -s /dev/touchscreen/0raw /dev/tsraw
+	ln -s /dev/vc/0 /dev/tty0
+	ln -s /dev/vc/1 /dev/tty1
+	ln -s /dev/vc/2 /dev/tty2
+	ln -s /dev/vc/3 /dev/tty3
+	ln -s /dev/vc/4 /dev/tty4
+	ln -s /dev/vc/5 /dev/tty5
+	ln -s /dev/fb/0 /dev/fb0
+#	ln -s /dev/tts/0 /dev/ttySA0
+#	ln -s /dev/tts/1 /dev/ttySA1
+#	ln -s /dev/tts/2 /dev/ttySA2
+
+	ln -s /dev/sound/dsp /dev/dsp
+	ln -s /dev/sound/mixer /dev/mixer
+
+	ln -s /dev/v4l/video0 /dev/video0
+	ln -s /dev/v4l/video0 /dev/video
+	ln -s /dev/misc/rtc /dev/rtc
+
+	## need this so that ppp will autoload the ppp modules
+	mknod /dev/ppp c 108 0
+	if test "$VERBOSE" != "no"; then echo "done"; fi
+else
+	if test "$VERBOSE" != "no"; then echo -n "Mounting /dev ramdisk: "; fi
+	mount -t ramfs ramfs /dev || mount -t tmpfs ramfs /dev
+	if test $? -ne 0; then
+		if test "$VERBOSE" != "no"; then echo "failed"; fi
+	else
+		if test "$VERBOSE" != "no"; then echo "done"; fi
+	fi
+	if test "$VERBOSE" != "no"; then echo -n "Populating /dev: "; fi
+	cd /
+	mkdir -p dev/msys
+	mkdir -p dev/pts
+	mkdir -p dev/input
+	mkdir -p dev/vc
+	for i in 0 1 2 3 4 5 6 7 8 9; do
+		ln -s /dev/tty$i /dev/vc/$i
+	done
+	ln -sf /dev/sharp_ts /dev/ts
+        ln -sf /dev/sharp_fl /dev/fl
+	ln -sf /proc/self/fd /dev/fd
+	ln -sf /proc/kcore /dev/core
+	/sbin/makedevs -r / -D /etc/device_table
+	if test $? -ne 0; then
+		if test "$VERBOSE" != "no"; then echo "failed"; fi
+	else
+		if test "$VERBOSE" != "no"; then echo "done"; fi
+	fi
+fi
+
+exit 0

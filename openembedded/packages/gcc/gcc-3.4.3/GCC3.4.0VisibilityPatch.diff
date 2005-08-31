@@ -1,0 +1,1100 @@
+
+diff -aur gcc-3.4.0orig/gcc/c-common.c gcc-3.4.0/gcc/c-common.c
+--- gcc-3.4.0orig/gcc/c-common.c	2004-03-19 01:32:59.000000000 +0000
++++ gcc-3.4.0/gcc/c-common.c	2004-05-10 21:05:33.000000000 +0100
+@@ -833,7 +833,7 @@
+ 			      handle_deprecated_attribute },
+   { "vector_size",	      1, 1, false, true, false,
+ 			      handle_vector_size_attribute },
+-  { "visibility",	      1, 1, true,  false, false,
++  { "visibility",	      1, 1, false, false, false,
+ 			      handle_visibility_attribute },
+   { "tls_model",	      1, 1, true,  false, false,
+ 			      handle_tls_model_attribute },
+@@ -4886,7 +4886,16 @@
+ 
+   *no_add_attrs = true;
+ 
+-  if (decl_function_context (decl) != 0 || ! TREE_PUBLIC (decl))
++  if (TYPE_P (*node))
++    {
++      if (TREE_CODE (*node) != RECORD_TYPE && TREE_CODE (*node) != UNION_TYPE)
++       {
++         warning ("`%s' attribute ignored on non-class types",
++                  IDENTIFIER_POINTER (name));
++         return NULL_TREE;
++       }
++    }
++  else if (decl_function_context (decl) != 0 || ! TREE_PUBLIC (decl))
+     {
+       warning ("`%s' attribute ignored", IDENTIFIER_POINTER (name));
+       return NULL_TREE;
+@@ -4897,6 +4906,14 @@
+       error ("visibility arg not a string");
+       return NULL_TREE;
+     }
++  
++  /*  If this is a type, set the visibility on the type decl.  */
++  if (TYPE_P (decl))
++    {
++      decl = TYPE_NAME (decl);
++      if (! decl)
++        return NULL_TREE;
++    }
+ 
+   if (strcmp (TREE_STRING_POINTER (id), "default") == 0)
+     DECL_VISIBILITY (decl) = VISIBILITY_DEFAULT;
+@@ -4908,6 +4925,14 @@
+     DECL_VISIBILITY (decl) = VISIBILITY_PROTECTED;
+   else
+     error ("visibility arg must be one of \"default\", \"hidden\", \"protected\" or \"internal\"");
++  DECL_VISIBILITYSPECIFIED (decl) = 1;
++
++  /* For decls only, go ahead and attach the attribute to the node as well.
++     This is needed so we can determine whether we have VISIBILITY_DEFAULT
++     because the visibility was not specified, or because it was explicitly
++     overridden from the class visibility.  */
++  if (DECL_P (*node))
++    *no_add_attrs = false;
+ 
+   return NULL_TREE;
+ }
+
+diff -aur gcc-3.4.0orig/gcc/c-decl.c gcc-3.4.0/gcc/c-decl.c
+--- gcc-3.4.0orig/gcc/c-decl.c	2004-03-22 17:58:18.000000000 +0000
++++ gcc-3.4.0/gcc/c-decl.c	2004-05-10 15:16:27.000000000 +0100
+@@ -1164,9 +1164,8 @@
+     }
+ 
+   /* warnings */
+-  /* All decls must agree on a non-default visibility.  */
+-  if (DECL_VISIBILITY (newdecl) != VISIBILITY_DEFAULT
+-      && DECL_VISIBILITY (olddecl) != VISIBILITY_DEFAULT
++  /* All decls must agree on a visibility.  */
++  if (DECL_VISIBILITYSPECIFIED (newdecl) && DECL_VISIBILITYSPECIFIED (olddecl)
+       && DECL_VISIBILITY (newdecl) != DECL_VISIBILITY (olddecl))
+     {
+       warning ("%Jredeclaration of '%D' with different visibility "
+@@ -1361,9 +1360,12 @@
+      Currently, it can only be defined in the prototype.  */
+   COPY_DECL_ASSEMBLER_NAME (olddecl, newdecl);
+ 
+-  /* If either declaration has a nondefault visibility, use it.  */
+-  if (DECL_VISIBILITY (olddecl) != VISIBILITY_DEFAULT)
+-    DECL_VISIBILITY (newdecl) = DECL_VISIBILITY (olddecl);
++  /* Use visibility of whichever declaration had it specified */
++  if (DECL_VISIBILITYSPECIFIED (olddecl))
++    {
++      DECL_VISIBILITY (newdecl) = DECL_VISIBILITY (olddecl);
++      DECL_VISIBILITYSPECIFIED (newdecl) = 1;
++    }
+ 
+   if (TREE_CODE (newdecl) == FUNCTION_DECL)
+     {
+
+diff -aur gcc-3.4.0orig/gcc/common.opt gcc-3.4.0/gcc/common.opt
+--- gcc-3.4.0orig/gcc/common.opt	2004-02-18 00:09:04.000000000 +0000
++++ gcc-3.4.0/gcc/common.opt	2004-05-09 08:10:50.000000000 +0100
+@@ -718,6 +718,11 @@
+ Common
+ Add extra commentary to assembler output
+ 
++fvisibility=
++Common Joined RejectNegative
++-fvisibility=[default|internal|hidden|protected]	Set the default symbol visibility
++
++
+ fvpt
+ Common
+ Use expression value profiles in optimizations
+
+diff -aur gcc-3.4.0orig/gcc/c.opt gcc-3.4.0/gcc/c.opt
+--- gcc-3.4.0orig/gcc/c.opt	2004-02-18 00:09:03.000000000 +0000
++++ gcc-3.4.0/gcc/c.opt	2004-05-09 08:10:50.000000000 +0100
+@@ -656,6 +656,10 @@
+ C++ ObjC++
+ Use __cxa_atexit to register destructors
+ 
++fvisibility-inlines-hidden
++C++
++Marks all inlined methods as having hidden visibility
++
+ fvtable-gc
+ C++ ObjC++
+ Discard unused virtual functions
+diff -aur gcc-3.4.0orig/gcc/c-opts.c gcc-3.4.0/gcc/c-opts.c
+--- gcc-3.4.0orig/gcc/c-opts.c	2004-02-18 00:09:03.000000000 +0000
++++ gcc-3.4.0/gcc/c-opts.c	2004-05-09 08:10:50.000000000 +0100
+@@ -912,6 +912,10 @@
+     case OPT_fuse_cxa_atexit:
+       flag_use_cxa_atexit = value;
+       break;
++      
++    case OPT_fvisibility_inlines_hidden:
++      visibility_options.inlineshidden = value;
++      break;
+ 
+     case OPT_fweak:
+       flag_weak = value;
+
+diff -aur gcc-3.4.0orig/gcc/cp/class.c gcc-3.4.0/gcc/cp/class.c
+--- gcc-3.4.0orig/gcc/cp/class.c	2004-03-09 07:27:23.000000000 +0000
++++ gcc-3.4.0/gcc/cp/class.c	2004-05-10 21:06:50.000000000 +0100
+@@ -524,6 +524,10 @@
+   DECL_ALIGN (decl) = MAX (TYPE_ALIGN (double_type_node),
+ 			   DECL_ALIGN (decl));
+ 
++  /* The vtable's visibility is the class visibility.  There is no way
++     to override the visibility for just the vtable. */
++  DECL_VISIBILITY (decl) = CLASSTYPE_VISIBILITY (class_type);
++  DECL_VISIBILITYSPECIFIED (decl) = CLASSTYPE_VISIBILITYSPECIFIED (class_type);
+   import_export_vtable (decl, class_type, 0);
+ 
+   return decl;
+@@ -2971,7 +2975,25 @@
+ 	continue;
+ 	  
+       if (TREE_CODE (x) == CONST_DECL || TREE_CODE (x) == VAR_DECL)
+-	continue;
++	{
++	  /* Apply the class's visibility attribute to static members
++	     which do not have a visibility attribute. */
++	  if (! lookup_attribute ("visibility", DECL_ATTRIBUTES (x)))
++            {
++              if (visibility_options.inlineshidden && DECL_INLINE (x))
++                {
++                  DECL_VISIBILITY (x) = VISIBILITY_HIDDEN;
++                  DECL_VISIBILITYSPECIFIED (x) = 1;
++                }
++              else
++                {
++                  DECL_VISIBILITY (x) = CLASSTYPE_VISIBILITY (current_class_type);
++                  DECL_VISIBILITYSPECIFIED (x) = CLASSTYPE_VISIBILITYSPECIFIED (current_class_type);
++                }
++            }
++
++	  continue;
++	}
+ 
+       /* Now it can only be a FIELD_DECL.  */
+ 
+@@ -3708,6 +3730,22 @@
+       check_for_override (x, t);
+       if (DECL_PURE_VIRTUAL_P (x) && ! DECL_VINDEX (x))
+ 	cp_error_at ("initializer specified for non-virtual method `%D'", x);
++ 
++      /* Apply the class's visibility attribute to methods which do
++	 not have a visibility attribute. */
++      if (! lookup_attribute ("visibility", DECL_ATTRIBUTES (x)))
++        {
++          if (visibility_options.inlineshidden && DECL_INLINE (x))
++            {
++              DECL_VISIBILITY (x) = VISIBILITY_HIDDEN;
++              DECL_VISIBILITYSPECIFIED (x) = 1;
++            }
++          else
++            {
++              DECL_VISIBILITY (x) = CLASSTYPE_VISIBILITY (current_class_type);
++              DECL_VISIBILITYSPECIFIED (x) = CLASSTYPE_VISIBILITYSPECIFIED (current_class_type);
++            }
++        }
+ 
+       /* The name of the field is the original field name
+ 	 Save this in auxiliary field for later overloading.  */
+@@ -7830,3 +7868,4 @@
+   *vid->last_init = build_tree_list (NULL_TREE, init);
+   vid->last_init = &TREE_CHAIN (*vid->last_init);
+ }
++
+
+diff -aur gcc-3.4.0orig/gcc/cp/cp-tree.h gcc-3.4.0/gcc/cp/cp-tree.h
+--- gcc-3.4.0orig/gcc/cp/cp-tree.h	2004-03-20 00:13:08.000000000 +0000
++++ gcc-3.4.0/gcc/cp/cp-tree.h	2004-05-10 20:56:56.000000000 +0100
+@@ -1008,7 +1008,12 @@
+ #define PUBLICLY_UNIQUELY_DERIVED_P(PARENT, TYPE) \
+   (lookup_base ((TYPE), (PARENT),  ba_not_special | ba_quiet, NULL) \
+    != NULL_TREE)
+-
++
++/* Gives the visibility specification for a class type.  */
++#define CLASSTYPE_VISIBILITY(TYPE)		DECL_VISIBILITY (TYPE_NAME (TYPE))
++#define CLASSTYPE_VISIBILITYSPECIFIED(TYPE)	DECL_VISIBILITYSPECIFIED (TYPE_NAME (TYPE))
++
++
+ /* This is a few header flags for 'struct lang_type'.  Actually,
+    all but the first are used only for lang_type_class; they
+    are put in this structure to save space.  */
+
+diff -aur gcc-3.4.0orig/gcc/cp/decl.c gcc-3.4.0/gcc/cp/decl.c
+--- gcc-3.4.0orig/gcc/cp/decl.c	2004-04-01 21:47:21.000000000 +0100
++++ gcc-3.4.0/gcc/cp/decl.c	2004-05-28 21:16:11.000000000 +0100
+@@ -1869,17 +1869,34 @@
+   DECL_COMMON (newdecl) = DECL_COMMON (olddecl);
+   COPY_DECL_ASSEMBLER_NAME (olddecl, newdecl);
+ 
+-  /* If either declaration has a nondefault visibility, use it.  */
+-  if (DECL_VISIBILITY (olddecl) != VISIBILITY_DEFAULT)
++  /* Warn about conflicting visibility specifications.  */
++  if (DECL_VISIBILITYSPECIFIED (olddecl) && DECL_VISIBILITYSPECIFIED (newdecl)
++      && DECL_VISIBILITY (newdecl) != DECL_VISIBILITY (olddecl))
++    {
++      warning ("%J'%D': visibility attribute ignored because it",
++        newdecl, newdecl);
++      warning ("%Jconflicts with previous declaration here", olddecl);
++    }
++  /* Choose the declaration which specified visibility.  */
++  if (DECL_VISIBILITYSPECIFIED (olddecl))
+     {
+-      if (DECL_VISIBILITY (newdecl) != VISIBILITY_DEFAULT
+-	  && DECL_VISIBILITY (newdecl) != DECL_VISIBILITY (olddecl))
+-	{
+-	  warning ("%J'%D': visibility attribute ignored because it",
+-		   newdecl, newdecl);
+-	  warning ("%Jconflicts with previous declaration here", olddecl);
+-	}
+       DECL_VISIBILITY (newdecl) = DECL_VISIBILITY (olddecl);
++      DECL_VISIBILITYSPECIFIED (newdecl) = 1;
++    }
++  /* If it's a definition of a global operator new or operator
++     delete, it must be default visibility.  */
++  if (NEW_DELETE_OPNAME_P (DECL_NAME (newdecl)) && DECL_INITIAL (newdecl) != NULL_TREE)
++    {
++      if (!DECL_FUNCTION_MEMBER_P (newdecl) && VISIBILITY_DEFAULT != DECL_VISIBILITY (newdecl))
++        {
++          warning ("%J`%D': ignoring non-default symbol",
++            newdecl, newdecl);
++          warning ("%Jvisibility on global operator new or delete", newdecl);
++          DECL_VISIBILITY (olddecl) = VISIBILITY_DEFAULT;
++          DECL_VISIBILITYSPECIFIED (olddecl) = 1;
++          DECL_VISIBILITY (newdecl) = VISIBILITY_DEFAULT;
++          DECL_VISIBILITYSPECIFIED (newdecl) = 1;
++        }
+     }
+ 
+   if (TREE_CODE (newdecl) == FUNCTION_DECL)
+
+diff -aur gcc-3.4.0orig/gcc/cp/method.c gcc-3.4.0/gcc/cp/method.c
+--- gcc-3.4.0orig/gcc/cp/method.c	2004-04-08 23:15:58.000000000 +0100
++++ gcc-3.4.0/gcc/cp/method.c	2004-05-09 08:10:52.000000000 +0100
+@@ -394,6 +394,7 @@
+      rewrite.  */
+   TREE_PUBLIC (thunk_fndecl) = TREE_PUBLIC (function);
+   DECL_VISIBILITY (thunk_fndecl) = DECL_VISIBILITY (function);
++  DECL_VISIBILITYSPECIFIED (thunk_fndecl) = DECL_VISIBILITYSPECIFIED (function);
+ 
+   if (flag_syntax_only)
+     {
+
+diff -aur gcc-3.4.0orig/gcc/cp/optimize.c gcc-3.4.0/gcc/cp/optimize.c
+--- gcc-3.4.0orig/gcc/cp/optimize.c	2004-02-08 01:52:50.000000000 +0000
++++ gcc-3.4.0/gcc/cp/optimize.c	2004-05-09 08:10:52.000000000 +0100
+@@ -155,6 +155,7 @@
+       DECL_NOT_REALLY_EXTERN (clone) = DECL_NOT_REALLY_EXTERN (fn);
+       TREE_PUBLIC (clone) = TREE_PUBLIC (fn);
+       DECL_VISIBILITY (clone) = DECL_VISIBILITY (fn);
++      DECL_VISIBILITYSPECIFIED (clone) = DECL_VISIBILITYSPECIFIED (fn);
+ 
+       /* Adjust the parameter names and locations.  */
+       parm = DECL_ARGUMENTS (fn);
+
+diff -aur gcc-3.4.0orig/gcc/cp/rtti.c gcc-3.4.0/gcc/cp/rtti.c
+--- gcc-3.4.0orig/gcc/cp/rtti.c	2004-03-08 23:00:26.000000000 +0000
++++ gcc-3.4.0/gcc/cp/rtti.c	2004-05-10 21:09:21.000000000 +0100
+@@ -361,7 +361,11 @@
+       pushdecl_top_level_and_finish (d, NULL_TREE);
+ 
+       if (CLASS_TYPE_P (type))
+-	CLASSTYPE_TYPEINFO_VAR (TYPE_MAIN_VARIANT (type)) = d;
++	{
++	  CLASSTYPE_TYPEINFO_VAR (TYPE_MAIN_VARIANT (type)) = d;
++	  DECL_VISIBILITY (d) = CLASSTYPE_VISIBILITY (type);
++	  DECL_VISIBILITYSPECIFIED (d) = CLASSTYPE_VISIBILITYSPECIFIED (type);
++	}
+ 
+       /* Remember the type it is for.  */
+       TREE_TYPE (name) = type;
+@@ -759,6 +763,11 @@
+     TREE_STATIC (name_decl) = 1;
+     DECL_EXTERNAL (name_decl) = 0;
+     TREE_PUBLIC (name_decl) = 1;
++    if (CLASS_TYPE_P (target))
++      {
++        DECL_VISIBILITY (name_decl) = CLASSTYPE_VISIBILITY (target);
++        DECL_VISIBILITYSPECIFIED (name_decl) = CLASSTYPE_VISIBILITYSPECIFIED (target);
++      }
+     import_export_tinfo (name_decl, target, typeinfo_in_lib_p (target));
+     /* External name of the string containing the type's name has a
+        special name.  */
+
+diff -aur gcc-3.4.0orig/gcc/c-pragma.c gcc-3.4.0/gcc/c-pragma.c
+--- gcc-3.4.0orig/gcc/c-pragma.c	2004-01-23 23:35:53.000000000 +0000
++++ gcc-3.4.0/gcc/c-pragma.c	2004-05-09 08:10:52.000000000 +0100
+@@ -480,6 +480,86 @@
+   return asmname;
+ }
+ 
++
++#ifdef HANDLE_PRAGMA_VISIBILITY
++static void handle_pragma_visibility (cpp_reader *);
++
++/* Sets the default visibility for symbols to something other than that
++   specified on the command line.  */
++static void
++handle_pragma_visibility (cpp_reader *dummy ATTRIBUTE_UNUSED)
++{ /* Form is #pragma GCC visibility push(hidden)|pop */
++  static int visstack [16], visidx;
++  tree x;
++  enum cpp_ttype token;
++  enum { bad, push, pop } action = bad;
++ 
++  token = c_lex (&x);
++  if (token == CPP_NAME)
++    {
++      const char *op = IDENTIFIER_POINTER (x);
++      if (!strcmp (op, "push"))
++        action = push;
++      else if (!strcmp (op, "pop"))
++        action = pop;
++    }
++  if (bad == action)
++    GCC_BAD ("#pragma GCC visibility must be followed by push or pop");
++  else
++    {
++      if (pop == action)
++        {
++          if (!visidx)
++            {
++              GCC_BAD ("No matching push for '#pragma GCC visibility pop'");
++            }
++          else
++            {
++              default_visibility = visstack[--visidx];
++              visibility_options.inpragma = (visidx>0);
++            }
++        }
++      else
++        {
++          if (c_lex (&x) != CPP_OPEN_PAREN)
++            GCC_BAD ("missing '(' after '#pragma GCC visibility push' - ignored");
++          token = c_lex (&x);
++          if (token != CPP_NAME)
++            {
++              GCC_BAD ("malformed #pragma GCC visibility push");
++            }
++          else if (visidx >= 16)
++            {
++              GCC_BAD ("No more than sixteen #pragma GCC visibility pushes allowed at once");
++            }
++          else
++            {
++              const char *str = IDENTIFIER_POINTER (x);
++              visstack[visidx++] = default_visibility;
++              if (!strcmp (str, "default"))
++                default_visibility = VISIBILITY_DEFAULT;
++              else if (!strcmp (str, "internal"))
++                default_visibility = VISIBILITY_INTERNAL;
++              else if (!strcmp (str, "hidden"))
++                default_visibility = VISIBILITY_HIDDEN;  
++              else if (!strcmp (str, "protected"))
++                default_visibility = VISIBILITY_PROTECTED;
++              else
++                {
++                  GCC_BAD ("#pragma GCC visibility push() must specify default, internal, hidden or protected");
++                }
++              visibility_options.inpragma = 1;
++            }
++          if (c_lex (&x) != CPP_CLOSE_PAREN)
++            GCC_BAD ("missing '(' after '#pragma GCC visibility push' - ignored");
++        }
++    }
++  if (c_lex (&x) != CPP_EOF)
++    warning ("junk at end of '#pragma GCC visibility'");
++}
++
++#endif
++
+ /* Front-end wrapper for pragma registration to avoid dragging
+    cpplib.h in almost everywhere.  */
+ void
+@@ -505,6 +585,9 @@
+ #ifdef HANDLE_PRAGMA_EXTERN_PREFIX
+   c_register_pragma (0, "extern_prefix", handle_pragma_extern_prefix);
+ #endif
++#ifdef HANDLE_PRAGMA_VISIBILITY
++  c_register_pragma ("GCC", "visibility", handle_pragma_visibility);
++#endif
+ 
+ #ifdef REGISTER_TARGET_PRAGMAS
+   REGISTER_TARGET_PRAGMAS ();
+diff -aur gcc-3.4.0orig/gcc/c-pragma.h gcc-3.4.0/gcc/c-pragma.h
+--- gcc-3.4.0orig/gcc/c-pragma.h	2004-01-31 06:18:05.000000000 +0000
++++ gcc-3.4.0/gcc/c-pragma.h	2004-05-09 08:10:53.000000000 +0100
+@@ -44,6 +44,11 @@
+ #define HANDLE_PRAGMA_PACK 1
+ #endif /* HANDLE_PRAGMA_PACK_PUSH_POP */
+ 
++/* It's safe to always leave visibility pragma enabled as if
++   visibility is not supported on the host OS platform the
++   statements are ignored.  */
++#define HANDLE_PRAGMA_VISIBILITY 1
++
+ extern void init_pragma (void);
+ 
+ /* Front-end wrapper for pragma registration to avoid dragging
+
+
+diff -aur gcc-3.4.0orig/gcc/doc/invoke.texi gcc-3.4.0/gcc/doc/invoke.texi
+--- gcc-3.4.0orig/gcc/doc/invoke.texi	2004-04-19 00:05:36.000000000 +0100
++++ gcc-3.4.0/gcc/doc/invoke.texi	2004-05-28 21:29:36.000000000 +0100
+@@ -183,7 +183,8 @@
+ -fno-optional-diags  -fpermissive @gol
+ -frepo  -fno-rtti  -fstats  -ftemplate-depth-@var{n} @gol
+ -fuse-cxa-atexit  -fno-weak  -nostdinc++ @gol
+--fno-default-inline  -Wabi  -Wctor-dtor-privacy @gol
++-fno-default-inline  -fvisibility-inlines-hidden @gol
++-Wabi  -Wctor-dtor-privacy @gol
+ -Wnon-virtual-dtor  -Wreorder @gol
+ -Weffc++  -Wno-deprecated @gol
+ -Wno-non-template-friend  -Wold-style-cast @gol
+@@ -674,7 +675,8 @@
+ -fargument-alias  -fargument-noalias @gol
+ -fargument-noalias-global  -fleading-underscore @gol
+ -ftls-model=@var{model} @gol
+--ftrapv  -fwrapv  -fbounds-check}
++-ftrapv  -fwrapv  -fbounds-check @gol
++-fvisibility}
+ @end table
+ 
+ @menu
+@@ -1433,6 +1435,20 @@
+ destructors, but will only work if your C library supports
+ @code{__cxa_atexit}.
+ 
++@item -fvisibility-inlines-hidden
++@opindex fvisibility-inlines-hidden
++Causes all inlined methods to be marked with
++@code{__attribute__ ((visibility ("hidden")))} so that they do not
++appear in the export table of a DSO and do not require a PLT indirection
++when used within the DSO. Enabling this option can have a dramatic effect
++on load and link times of a DSO as it massively reduces the size of the
++dynamic export table when the library makes heavy use of templates. While
++it can cause bloating through duplication of code within each DSO where
++it is used, often the wastage is less than the considerable space occupied
++by a long symbol name in the export table which is typical when using
++templates and namespaces. For even more savings, combine with the
++@code{-fvisibility=hidden} switch.
++
+ @item -fno-weak
+ @opindex fno-weak
+ Do not use weak symbol support, even if it is provided by the linker.
+@@ -11198,6 +11214,54 @@
+ 
+ The default without @option{-fpic} is @code{initial-exec}; with
+ @option{-fpic} the default is @code{global-dynamic}.
++
++@item -fvisibility=@var{default|internal|hidden|protected}
++@opindex fvisibility
++Set the default ELF image symbol visibility to the specified option - all
++symbols will be marked with this unless overrided within the code.
++Using this feature can very substantially improve linking and
++load times of shared object libraries, produce more optimised
++code, provide near-perfect API export and prevent symbol clashes.
++It is @strong{strongly} recommended that you use this in any shared objects
++you distribute.
++     
++Despite the nomenclature, @code{default} always means public ie;
++available to be linked against from outside the shared object.
++@code{protected} and @code{internal} are pretty useless in real-world
++usage so the only other commonly used option will be @code{hidden}.
++The default if -fvisibility isn't specified is @code{default} ie; make every
++symbol public - this causes the same behaviour as previous versions of
++GCC.
++     
++A good explanation of the benefits offered by ensuring ELF
++symbols have the correct visibility is given by ``How To Write
++Shared Libraries'' by Ulrich Drepper (which can be found at
++@w{@uref{http://people.redhat.com/~drepper/}}) - however a superior
++solution made possible by this option to marking things hidden when
++the default is public is to make the default hidden and mark things
++public. This is the norm with DLL's on Windows and with @option{-fvisibility=hidden}
++and @code{__attribute__ ((visibility("default")))} instead of
++@code{__declspec(dllexport)} you get almost identical semantics with
++identical syntax. This is a great boon to those working with
++cross-platform projects.
++
++For those adding visibility support to existing code, you may find
++@samp{#pragma GCC visibility} of use. This works by you enclosing
++the declarations you wish to set visibility for with (for example)
++@samp{#pragma GCC visibility push(hidden)} and
++@samp{#pragma GCC visibility pop}. These can be nested up to sixteen
++times. Bear in mind that symbol visibility should be viewed @strong{as
++part of the API interface contract} and thus all new code should
++always specify visibility when it is not the default ie; declarations
++only for use within the local DSO should @strong{always} be marked explicitly
++as hidden as so to avoid PLT indirection overheads - making this
++abundantly clear also aids readability and self-documentation of the code.
++Note that due to ISO C++ specification requirements, operator new and
++operator delete must always be of default visibility.
++
++An overview of these techniques, their benefits and how to use them
++is at @w{@uref{http://www.nedprod.com/programs/gccvisibility.html}}.
++
+ @end table
+ 
+ @c man end
+
+diff -aur gcc-3.4.0orig/gcc/flags.h gcc-3.4.0/gcc/flags.h
+--- gcc-3.4.0orig/gcc/flags.h	2004-02-18 00:09:04.000000000 +0000
++++ gcc-3.4.0/gcc/flags.h	2004-05-09 08:10:53.000000000 +0100
+@@ -60,6 +60,30 @@
+ /* Nonzero means emit debugging information only for symbols which are used.  */
+ extern int flag_debug_only_used_symbols;
+ 
++/* Enumerate visibility settings.  */
++#ifndef SYMBOL_VISIBILITY_DEFINED
++#define SYMBOL_VISIBILITY_DEFINED
++enum symbol_visibility
++{
++  VISIBILITY_DEFAULT,
++  VISIBILITY_INTERNAL,
++  VISIBILITY_HIDDEN,
++  VISIBILITY_PROTECTED
++};
++#endif
++
++/* The default visibility for all symbols (unless overridden).  */
++extern enum symbol_visibility default_visibility;
++
++struct visibility_flags
++{
++  unsigned inpragma : 1;	/* True when in #pragma GCC visibility.  */
++  unsigned inlineshidden : 1;	/* True when -finlineshidden in effect.  */
++};
++
++/* Global visibility options.  */
++extern struct visibility_flags visibility_options;
++
+ /* Nonzero means do optimizations.  -opt.  */
+ 
+ extern int optimize;
+
+diff -aur gcc-3.4.0orig/gcc/opts.c gcc-3.4.0/gcc/opts.c
+--- gcc-3.4.0orig/gcc/opts.c	2004-02-18 00:09:04.000000000 +0000
++++ gcc-3.4.0/gcc/opts.c	2004-05-09 08:10:53.000000000 +0100
+@@ -142,6 +142,12 @@
+    write_symbols is set to DBX_DEBUG, XCOFF_DEBUG, or DWARF_DEBUG.  */
+ bool use_gnu_debug_info_extensions;
+ 
++/* The default visibility for all symbols (unless overridden) */
++enum symbol_visibility default_visibility = VISIBILITY_DEFAULT;
++
++/* Global visibility options.  */
++struct visibility_flags visibility_options;
++
+ /* Columns of --help display.  */
+ static unsigned int columns = 80;
+ 
+@@ -1440,6 +1446,21 @@
+       flag_verbose_asm = value;
+       break;
+ 
++    case OPT_fvisibility_:
++      {
++        if(!strcmp(arg, "default"))
++          default_visibility=VISIBILITY_DEFAULT;
++        else if(!strcmp(arg, "internal"))
++          default_visibility=VISIBILITY_INTERNAL;
++        else if(!strcmp(arg, "hidden"))
++          default_visibility=VISIBILITY_HIDDEN;
++        else if(!strcmp(arg, "protected"))
++          default_visibility=VISIBILITY_PROTECTED;
++        else
++          error("unrecognised visibility value \"%s\"", arg);
++      }
++      break;
++
+     case OPT_fweb:
+       flag_web = value;
+       break;
+
+diff -aur gcc-3.4.0orig/gcc/tree.c gcc-3.4.0/gcc/tree.c
+--- gcc-3.4.0orig/gcc/tree.c	2004-02-05 22:01:35.000000000 +0000
++++ gcc-3.4.0/gcc/tree.c	2004-05-10 15:22:52.000000000 +0100
+@@ -2563,6 +2563,11 @@
+     layout_decl (t, 0);
+   else if (code == FUNCTION_DECL)
+     DECL_MODE (t) = FUNCTION_MODE;
++    
++  /* Set default visibility to whatever the user supplied with
++     visibility_specified depending on #pragma GCC visibility.  */
++  DECL_VISIBILITY (t) = default_visibility;
++  DECL_VISIBILITYSPECIFIED (t) = visibility_options.inpragma;
+ 
+   return t;
+ }
+
+diff -aur gcc-3.4.0orig/gcc/tree.h gcc-3.4.0/gcc/tree.h
+--- gcc-3.4.0orig/gcc/tree.h	2004-02-08 01:52:43.000000000 +0000
++++ gcc-3.4.0/gcc/tree.h	2004-05-09 08:10:54.000000000 +0100
+@@ -1499,6 +1499,10 @@
+ /* Value of the decls's visibility attribute */
+ #define DECL_VISIBILITY(NODE) (DECL_CHECK (NODE)->decl.visibility)
+ 
++/* Nonzero means that the decl had its visibility specified rather than
++   being inferred.  */
++#define DECL_VISIBILITYSPECIFIED(NODE) (DECL_CHECK (NODE)->decl.visibility_specified)
++
+ /* In a FUNCTION_DECL, nonzero if the function cannot be inlined.  */
+ #define DECL_UNINLINABLE(NODE) (FUNCTION_DECL_CHECK (NODE)->decl.uninlinable)
+ 
+@@ -1633,7 +1637,8 @@
+    || TREE_CODE (DECL_CONTEXT (EXP)) == TRANSLATION_UNIT_DECL)
+ 
+ /* Enumerate visibility settings.  */
+-
++#ifndef SYMBOL_VISIBILITY_DEFINED
++#define SYMBOL_VISIBILITY_DEFINED
+ enum symbol_visibility
+ {
+   VISIBILITY_DEFAULT,
+@@ -1641,6 +1646,7 @@
+   VISIBILITY_HIDDEN,
+   VISIBILITY_PROTECTED
+ };
++#endif
+ 
+ struct function;
+ 
+@@ -1684,8 +1690,7 @@
+   unsigned thread_local_flag : 1;
+   unsigned declared_inline_flag : 1;
+   ENUM_BITFIELD(symbol_visibility) visibility : 2;
+-  unsigned unused : 1;
+-  /* one unused bit.  */
++  unsigned visibility_specified : 1;
+ 
+   unsigned lang_flag_0 : 1;
+   unsigned lang_flag_1 : 1;
+
+diff -aur gcc-3.4.0orig/gcc/varasm.c gcc-3.4.0/gcc/varasm.c
+--- gcc-3.4.0orig/gcc/varasm.c	2004-04-14 22:14:08.000000000 +0100
++++ gcc-3.4.0/gcc/varasm.c	2004-05-09 08:10:54.000000000 +0100
+@@ -5150,8 +5150,8 @@
+   /* Static variables are always local.  */
+   else if (! TREE_PUBLIC (exp))
+     local_p = true;
+-  /* A variable is local if the user tells us so.  */
+-  else if (DECL_VISIBILITY (exp) != VISIBILITY_DEFAULT)
++  /* A variable is local if the user explicitly tells us so.  */
++  else if (DECL_VISIBILITYSPECIFIED (exp) && DECL_VISIBILITY (exp) != VISIBILITY_DEFAULT)
+     local_p = true;
+   /* Otherwise, variables defined outside this object may not be local.  */
+   else if (DECL_EXTERNAL (exp))
+@@ -5159,6 +5159,9 @@
+   /* Linkonce and weak data are never local.  */
+   else if (DECL_ONE_ONLY (exp) || DECL_WEAK (exp))
+     local_p = false;
++  /* If none of the above and visibility is not default, make local.  */
++  else if (DECL_VISIBILITY (exp) != VISIBILITY_DEFAULT)
++    local_p = true;
+   /* If PIC, then assume that any global name can be overridden by
+      symbols resolved from other modules.  */
+   else if (shlib)
+
+diff -Naur gcc-3.4.0orig/gcc/testsuite/gcc.dg/visibility-9.c gcc-3.4.0/gcc/testsuite/gcc.dg/visibility-9.c
+--- gcc-3.4.0orig/gcc/testsuite/gcc.dg/visibility-9.c	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/gcc.dg/visibility-9.c	2004-05-09 12:40:39.000000000 +0100
+@@ -0,0 +1,9 @@
++/* Test that -fvisibility works. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-options "-fvisibility=hidden" } */
++/* { dg-final { scan-assembler "\\.hidden.*foo" } } */
++
++void foo();
++
++void foo() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/gcc.dg/visibility-a.c gcc-3.4.0/gcc/testsuite/gcc.dg/visibility-a.c
+--- gcc-3.4.0orig/gcc/testsuite/gcc.dg/visibility-a.c	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/gcc.dg/visibility-a.c	2004-05-09 12:55:04.000000000 +0100
+@@ -0,0 +1,10 @@
++/* Test that #pragma GCC visibility works. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-final { scan-assembler "\\.hidden.*foo" } } */
++
++#pragma GCC visibility push(hidden)
++void foo();
++#pragma GCC visibility pop
++
++void foo() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility.C	2004-05-09 19:17:13.000000000 +0100
+@@ -0,0 +1,12 @@
++/* Test that -fvisibility affects class members. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-options "-fvisibility=hidden" } */
++/* { dg-final { scan-assembler "\\.hidden.*Foo.methodEv" } } */
++
++class Foo
++{
++  void method();
++};
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility-inlines-hidden.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility-inlines-hidden.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility-inlines-hidden.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility-inlines-hidden.C	2004-05-09 19:17:59.000000000 +0100
+@@ -0,0 +1,18 @@
++/* Test that -fvisibility-inlines-hidden affects class members. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-options "-fvisibility-inlines-hidden" } */
++/* { dg-final { scan-assembler "\\.hidden.*Foo.methodEv" } } */
++
++class Foo
++{
++public:
++  void method() { }
++};
++
++int main(void)
++{
++  Foo f;
++  f.method();
++  return 0;
++}
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override1.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override1.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override1.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override1.C	2004-05-09 19:18:06.000000000 +0100
+@@ -0,0 +1,12 @@
++/* Test that -fvisibility does not override class member specific settings. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-options "-fvisibility=hidden" } */
++/* { dg-final { scan-assembler "\\.internal.*Foo.methodEv" } } */
++
++class __attribute__ ((visibility ("internal"))) Foo
++{
++  void method();
++};
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override2.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override2.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override2.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/fvisibility-override2.C	2004-05-09 19:18:12.000000000 +0100
+@@ -0,0 +1,12 @@
++/* Test that -fvisibility does not override class member specific settings. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-options "-fvisibility=hidden" } */
++/* { dg-final { scan-assembler "\\.internal.*Foo.methodEv" } } */
++
++class Foo
++{
++  __attribute__ ((visibility ("internal"))) void method();
++};
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/memfuncts.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/memfuncts.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/memfuncts.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/memfuncts.C	2004-05-09 19:18:19.000000000 +0100
+@@ -0,0 +1,11 @@
++/* Test that setting visibility for class member functions works. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-final { scan-assembler "\\.hidden.*Foo.methodEv" } } */
++
++class __attribute__ ((visibility ("hidden"))) Foo
++{
++  void method();
++};
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/noPLT.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/noPLT.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/noPLT.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/noPLT.C	2004-05-09 19:21:49.000000000 +0100
+@@ -0,0 +1,20 @@
++/* Test that -fvisibility=hidden prevents PLT. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-options "-fPIC -fvisibility=hidden" } */
++/* { dg-final { scan-assembler-not "methodEv@PLT" } } */
++
++class Foo
++{
++public:
++  void method();
++};
++
++void Foo::method() { }
++
++int main(void)
++{
++  Foo f;
++  f.method();
++  return 0;
++}
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/pragma.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/pragma.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/pragma.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/pragma.C	2004-05-09 19:18:30.000000000 +0100
+@@ -0,0 +1,13 @@
++/* Test that #pragma GCC visibility affects class members. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-final { scan-assembler "\\.hidden.*Foo.methodEv" } } */
++
++#pragma GCC visibility push(hidden)
++class Foo
++{
++  void method();
++};
++#pragma GCC visibility pop
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/pragma-override1.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/pragma-override1.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/pragma-override1.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/pragma-override1.C	2004-05-09 19:18:36.000000000 +0100
+@@ -0,0 +1,13 @@
++/* Test that #pragma GCC visibility does not override class member specific settings. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-final { scan-assembler "\\.internal.*Foo.methodEv" } } */
++
++#pragma GCC visibility push(hidden)
++class __attribute__ ((visibility ("internal"))) Foo
++{
++  void method();
++};
++#pragma GCC visibility pop
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/pragma-override2.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/pragma-override2.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/pragma-override2.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/pragma-override2.C	2004-05-09 19:18:44.000000000 +0100
+@@ -0,0 +1,13 @@
++/* Test that #pragma GCC visibility does not override class member specific settings. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-final { scan-assembler "\\.internal.*Foo.methodEv" } } */
++
++#pragma GCC visibility push(hidden)
++class Foo
++{
++  __attribute__ ((visibility ("internal"))) void method();
++};
++#pragma GCC visibility pop
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/staticmemfuncts.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/staticmemfuncts.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/staticmemfuncts.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/staticmemfuncts.C	2004-05-09 19:18:50.000000000 +0100
+@@ -0,0 +1,11 @@
++/* Test that setting visibility for static class member functions works. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-final { scan-assembler "\\.hidden.*Foo.methodEv" } } */
++
++class __attribute__ ((visibility ("hidden"))) Foo
++{
++  static void method();
++};
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/virtual.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/virtual.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/virtual.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/virtual.C	2004-05-09 13:24:06.000000000 +0100
+@@ -0,0 +1,11 @@
++/* Test that setting visibility for class affects virtual table. */
++/* { dg-do compile } */
++/* { dg-require-visibility "" } */
++/* { dg-final { scan-assembler "\\.hidden.*ZTV3Foo" } } */
++
++class __attribute__ ((visibility ("hidden"))) Foo
++{
++  virtual void method();
++};
++
++void Foo::method() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-1.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-1.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-1.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-1.C	2003-12-10 06:34:44.000000000 +0000
+@@ -0,0 +1,8 @@
++/* Test visibility attribute on function definition. */
++/* { dg-do compile { target *86-*-linux* } } */
++/* { dg-final { scan-assembler "\\.hidden.*_Z3foov" } } */
++
++void
++__attribute__((visibility ("hidden")))
++foo()
++{ }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-2.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-2.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-2.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-2.C	2003-12-10 06:34:44.000000000 +0000
+@@ -0,0 +1,7 @@
++/* Test that visibility attribute on declaration extends to definition. */
++/* { dg-do compile { target *86-*-linux* } } */
++/* { dg-final { scan-assembler "\\.hidden.*_Z3foov" } } */
++
++void __attribute__((visibility ("hidden"))) foo();
++
++void foo() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-3.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-3.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-3.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-3.C	2003-12-10 06:34:45.000000000 +0000
+@@ -0,0 +1,7 @@
++/* Test visibility attribute on forward declaration of global variable */
++/* { dg-do compile { target *86-*-linux* } } */
++/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
++
++int
++__attribute__((visibility ("hidden")))
++xyzzy = 5;
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-4.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-4.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-4.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-4.C	2003-12-10 06:34:45.000000000 +0000
+@@ -0,0 +1,8 @@
++/* Test visibility attribute on forward declaration of global variable */
++/* { dg-do compile { target *86-*-linux* } } */
++/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
++
++extern int __attribute__ ((visibility ("hidden")))
++xyzzy;
++
++int xyzzy = 5;
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-5.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-5.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-5.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-5.C	2003-12-10 06:34:45.000000000 +0000
+@@ -0,0 +1,11 @@
++/* Test visibility attribute on definition of a function that has
++   already had a forward declaration. */
++/* { dg-do compile { target *86-*-linux* } } */
++/* { dg-final { scan-assembler "\\.hidden.*_Z3foov" } } */
++
++void foo();
++
++void 
++ __attribute__((visibility ("hidden")))
++foo() 
++{ }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-6.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-6.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-6.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-6.C	2003-12-10 06:34:45.000000000 +0000
+@@ -0,0 +1,10 @@
++/* Test visibility attribute on definition of global variable that has
++   already had a forward declaration. */
++/* { dg-do compile { target *86-*-linux* } } */
++/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
++
++extern int xyzzy;
++
++int 
++__attribute__((visibility ("hidden")))
++xyzzy = 5;
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-7.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-7.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility/visibility-7.C	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility/visibility-7.C	2003-12-10 06:34:45.000000000 +0000
+@@ -0,0 +1,11 @@
++/* Test warning from conflicting visibility specifications. */
++/* { dg-do compile { target *86-*-linux* } } */
++/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
++
++extern int 
++__attribute__((visibility ("hidden")))
++xyzzy; /* { dg-warning "previous declaration here" "" } */
++
++int 
++__attribute__((visibility ("protected")))
++xyzzy = 5; /* { dg-warning "visibility attribute ignored" "" } */
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-1.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-1.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-1.C	2003-12-10 06:34:44.000000000 +0000
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-1.C	1970-01-01 01:00:00.000000000 +0100
+@@ -1,8 +0,0 @@
+-/* Test visibility attribute on function definition. */
+-/* { dg-do compile { target *86-*-linux* } } */
+-/* { dg-final { scan-assembler "\\.hidden.*_Z3foov" } } */
+-
+-void
+-__attribute__((visibility ("hidden")))
+-foo()
+-{ }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-2.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-2.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-2.C	2003-12-10 06:34:44.000000000 +0000
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-2.C	1970-01-01 01:00:00.000000000 +0100
+@@ -1,7 +0,0 @@
+-/* Test that visibility attribute on declaration extends to definition. */
+-/* { dg-do compile { target *86-*-linux* } } */
+-/* { dg-final { scan-assembler "\\.hidden.*_Z3foov" } } */
+-
+-void __attribute__((visibility ("hidden"))) foo();
+-
+-void foo() { }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-3.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-3.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-3.C	2003-12-10 06:34:45.000000000 +0000
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-3.C	1970-01-01 01:00:00.000000000 +0100
+@@ -1,7 +0,0 @@
+-/* Test visibility attribute on forward declaration of global variable */
+-/* { dg-do compile { target *86-*-linux* } } */
+-/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
+-
+-int
+-__attribute__((visibility ("hidden")))
+-xyzzy = 5;
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-4.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-4.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-4.C	2003-12-10 06:34:45.000000000 +0000
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-4.C	1970-01-01 01:00:00.000000000 +0100
+@@ -1,8 +0,0 @@
+-/* Test visibility attribute on forward declaration of global variable */
+-/* { dg-do compile { target *86-*-linux* } } */
+-/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
+-
+-extern int __attribute__ ((visibility ("hidden")))
+-xyzzy;
+-
+-int xyzzy = 5;
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-5.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-5.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-5.C	2003-12-10 06:34:45.000000000 +0000
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-5.C	1970-01-01 01:00:00.000000000 +0100
+@@ -1,11 +0,0 @@
+-/* Test visibility attribute on definition of a function that has
+-   already had a forward declaration. */
+-/* { dg-do compile { target *86-*-linux* } } */
+-/* { dg-final { scan-assembler "\\.hidden.*_Z3foov" } } */
+-
+-void foo();
+-
+-void 
+- __attribute__((visibility ("hidden")))
+-foo() 
+-{ }
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-6.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-6.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-6.C	2003-12-10 06:34:45.000000000 +0000
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-6.C	1970-01-01 01:00:00.000000000 +0100
+@@ -1,10 +0,0 @@
+-/* Test visibility attribute on definition of global variable that has
+-   already had a forward declaration. */
+-/* { dg-do compile { target *86-*-linux* } } */
+-/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
+-
+-extern int xyzzy;
+-
+-int 
+-__attribute__((visibility ("hidden")))
+-xyzzy = 5;
+diff -Naur gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-7.C gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-7.C
+--- gcc-3.4.0orig/gcc/testsuite/g++.dg/ext/visibility-7.C	2003-12-10 06:34:45.000000000 +0000
++++ gcc-3.4.0/gcc/testsuite/g++.dg/ext/visibility-7.C	1970-01-01 01:00:00.000000000 +0100
+@@ -1,11 +0,0 @@
+-/* Test warning from conflicting visibility specifications. */
+-/* { dg-do compile { target *86-*-linux* } } */
+-/* { dg-final { scan-assembler "\\.hidden.*xyzzy" } } */
+-
+-extern int 
+-__attribute__((visibility ("hidden")))
+-xyzzy; /* { dg-warning "previous declaration here" "" } */
+-
+-int 
+-__attribute__((visibility ("protected")))
+-xyzzy = 5; /* { dg-warning "visibility attribute ignored" "" } */

@@ -1,0 +1,44 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- xserver/hw/kdrive/fbdev/fbdev.c~xserver-kdrive-poodle.patch
++++ xserver/hw/kdrive/fbdev/fbdev.c
+@@ -190,6 +190,7 @@
+     var.nonstd = 0;
+     var.grayscale = 0;
+ 
++    /* commented out for poodle 
+     k = ioctl (priv->fd, FBIOPUT_VSCREENINFO, &var);
+ 
+     if (k < 0)
+@@ -198,10 +199,11 @@
+ 	return FALSE;
+     }
+ 
+-    /* Re-get the "fixed" parameters since they might have changed */
++    // Re-get the "fixed" parameters since they might have changed
+     k = ioctl (priv->fd, FBIOGET_FSCREENINFO, &priv->fix);
+     if (k < 0)
+         perror ("FBIOGET_FSCREENINFO");
++    */
+ 
+     /* Now get the new screeninfo */
+     ioctl (priv->fd, FBIOGET_VSCREENINFO, &priv->var);
+@@ -659,13 +661,14 @@
+     priv->var.activate = FB_ACTIVATE_NOW|FB_CHANGE_CMAP_VBL;
+     
+     /* display it on the LCD */
++    /* commented out for poodle
+     k = ioctl (priv->fd, FBIOPUT_VSCREENINFO, &priv->var);
+     if (k < 0)
+     {
+ 	perror ("FBIOPUT_VSCREENINFO");
+ 	return FALSE;
+     }
+-    
++    */
+     if (priv->fix.visual == FB_VISUAL_DIRECTCOLOR)
+     {
+ 	struct fb_cmap	cmap;

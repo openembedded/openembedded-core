@@ -1,0 +1,110 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- quilt/quilt/push.in~wiggle
++++ quilt/quilt/push.in
+@@ -19,7 +19,7 @@
+ 
+ usage()
+ {
+-	printf $"Usage: quilt push [-afqv] [--leave-rejects] [num|patch]\n"
++	printf $"Usage: quilt push [-afwqv] [--leave-rejects] [num|patch]\n"
+ 	if [ x$1 = x-h ]
+ 	then
+ 		printf $"
+@@ -34,6 +34,8 @@
+ 
+ -f	Force apply, even if the patch has rejects.
+ 
++-w	Use 'wiggle'.
++
+ -q	Quiet operation.
+ 
+ -v	Verbose operation.
+@@ -91,7 +93,7 @@
+ 	fi
+ }
+ 
+-options=`getopt -o fqvah --long leave-rejects,interactive -- "$@"`
++options=`getopt -o fwqvah --long leave-rejects,interactive -- "$@"`
+ 
+ if [ $? -ne 0 ]
+ then
+@@ -106,6 +108,9 @@
+         -f)
+                 opt_force=1
+ 		shift ;;
++	-w)
++		opt_wiggle=1
++		shift ;;
+         -q)
+                 opt_quiet=1
+ 		shift ;;
+@@ -152,6 +157,8 @@
+ 
+ [ -n "$opt_force" ] &&
+ 	apatch_options="$apatch_options -f"
++[ -n "$opt_wiggle" ] &&
++	apatch_options="$apatch_options -w"
+ [ -n "$opt_quiet" ] &&
+ 	apatch_options="$apatch_options -q"
+ [ -n "$opt_verbose" ] &&
+--- quilt/scripts/apatch.in~wiggle
++++ quilt/scripts/apatch.in
+@@ -19,7 +19,7 @@
+ 
+ usage()
+ {
+-	printf $"Usage: $0 [-fqv] patchname\n"
++	printf $"Usage: $0 [-fwqv] patchname\n"
+ 	exit 1
+ }
+ 
+@@ -91,7 +91,7 @@
+ 
+ 	trap "" SIGINT
+ 
+-	if [ $status -ne 0 -a -z "$opt_leave_rejects" ]
++	if [ $status -ne 0 -a -z "$opt_leave_rejects" -o -n "$opt_wiggle" ]
+ 	then
+ 		# The reject files are removed in rollback_patch.
+ 		echo "$output" \
+@@ -109,6 +109,17 @@
+ 		echo "$output"
+ 	fi
+ 
++	if [ -n "$opt_wiggle" ]; then
++		rejects=`echo "$output" \
++			 | sed -n -e \
++			 '/-- saving rejects to file \(.\+\)\.rej/ { s/^.*-- saving rejects to file \(.\+\)\.rej/\1/; p }'`
++		for rej in $rejects; do
++			# Kill old backup.. otherwise wiggle is very unhappy with you
++			rm -f $rej.porig
++			wiggle --replace $rej $rej.rej
++		done
++	fi
++
+ 	if [ $status -eq 0 -o -n "$opt_force" ]
+ 	then
+ 		add_to_db $patch
+@@ -143,7 +154,7 @@
+ 	return $status
+ }
+ 
+-options=`getopt -o fqvh --long leave-rejects,interactive -- "$@"`
++options=`getopt -o fwqvh --long leave-rejects,interactive -- "$@"`
+ 
+ if [ $? -ne 0 ]
+ then
+@@ -158,6 +169,9 @@
+ 	-f)
+ 		opt_force=1
+ 		shift ;;
++	-w)
++		opt_wiggle=1
++		shift ;;
+ 	-q)
+ 		opt_quiet=1
+ 		shift ;;

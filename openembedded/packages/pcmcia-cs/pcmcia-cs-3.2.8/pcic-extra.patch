@@ -1,0 +1,33 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- pcmcia-cs-3.2.8/etc/rc.pcmcia~pcic-extra
++++ pcmcia-cs-3.2.8/etc/rc.pcmcia
+@@ -105,10 +105,16 @@
+ 		   echo "using yenta_socket instead of $PCIC") ||
+ 		  /sbin/modprobe $PCIC $PCIC_OPTS || break
+ 		/sbin/modprobe ds || break
++		if [ "x$PCIC_EXTRA" != "x" ]; then
++		   /sbin/modprobe $PCIC_EXTRA
++		fi
+ 	    elif [ -d $PC ] ; then
+ 		/sbin/insmod $PC/pcmcia_core.o $CORE_OPTS
+ 		/sbin/insmod $PC/$PCIC.o $PCIC_OPTS
+ 		/sbin/insmod $PC/ds.o
++		if [ "x$PCIC_EXTRA" != "x" ]; then
++		  /sbin/insmod $PC/$PCIC_EXTRA
++		fi
+ 	    else
+ 		echo "module directory $PC not found."
+ 		break
+@@ -154,7 +160,7 @@
+ 	;;
+ 
+     status)
+-	pid=`/sbin/pidof cardmgr`
++	pid=`/bin/pidof cardmgr`
+ 	if [ "$pid" != "" ] ; then
+ 	    echo "cardmgr (pid $pid) is running..."
+ 	    EXITCODE=0

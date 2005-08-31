@@ -1,0 +1,32 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- wpa_supplicant/driver_wext.c~use-channel
++++ wpa_supplicant/driver_wext.c
+@@ -655,6 +655,12 @@
+ }
+ 
+ 
++static const long frequency_list[] =
++{
++    2412, 2417, 2422, 2427, 2432, 2437, 2442,
++    2447, 2452, 2457, 2462, 2467, 2472, 2484
++};
++
+ int wpa_driver_wext_get_scan_results(void *priv,
+ 				     struct wpa_scan_result *results,
+ 				     size_t max_size)
+@@ -739,6 +745,11 @@
+ 		case SIOCGIWFREQ:
+ 			if (ap_num < max_size) {
+ 				int div = 1000000, i;
++				/* driver sent a channel, not a frequency */
++				if (iwe->u.freq.e == 0 && iwe->u.freq.m >= 1 && iwe->u.freq.m <= sizeof(frequency_list)) {
++					results[ap_num].freq = frequency_list[iwe->u.freq.m-1];
++					break;
++				} else
+ 				if (iwe->u.freq.e > 6) {
+ 					wpa_printf(
+ 						MSG_DEBUG, "Invalid freq "

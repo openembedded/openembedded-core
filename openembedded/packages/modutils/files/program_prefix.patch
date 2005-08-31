@@ -1,0 +1,69 @@
+--- modutils-2.4.25/Makefile.common.in	Sun Nov 24 21:23:35 2002
++++ modutils-2.4.25/Makefile.common.in	Thu Jan 29 17:16:30 2004
+@@ -7,6 +7,7 @@
+ mandir		= @mandir@
+ prefix		= @prefix@
+ sbindir		= @sbindir@
++transform	= @program_transform_name@
+ 
+ AR		= @AR@
+ ARCH		= @ARCH@
+--- modutils-2.4.25/configure.in	Thu Jan 29 17:24:10 2004
++++ modutils-2.4.25/configure.in	Thu Jan 29 17:13:59 2004
+@@ -17,6 +17,7 @@
+ export CC_FOR_BUILD
+ 
+ AC_CANONICAL_TARGET([])
++AC_ARG_PROGRAM
+ 
+ # Handle target_cpu for compatibility.
+ if test "$host_cpu" != "$target_cpu"; then
+--- modutils-2.4.25/depmod/Makefile.in	Fri Mar 28 17:54:20 2003
++++ modutils-2.4.25/depmod/Makefile.in	Thu Jan 29 17:16:41 2004
+@@ -60,7 +60,7 @@
+ 
+ install install-bin: all
+ 	$(MKDIR) $(DESTDIR)$(sbindir)
+-	$(INSTALL) $(STRIP) depmod $(DESTDIR)$(sbindir)
++	$(INSTALL) $(STRIP) depmod $(DESTDIR)$(sbindir)/`echo depmod | sed -e'$(transform)'`
+ 
+ dep depend .depend: depmod.c
+ 	$(CC) -M $(CFLAGS) $(DEFSNOARCH) $(DEFS) $^ > .depend
+--- modutils-2.4.25/genksyms/Makefile.in	Sun Nov 24 21:23:35 2002
++++ modutils-2.4.25/genksyms/Makefile.in	Thu Jan 29 17:17:07 2004
+@@ -62,7 +62,7 @@
+ 
+ install install-bin: all
+ 	$(MKDIR) $(DESTDIR)$(sbindir)
+-	$(INSTALL) $(STRIP) genksyms $(DESTDIR)$(sbindir)
++	$(INSTALL) $(STRIP) genksyms $(DESTDIR)$(sbindir)/`echo genksyms | sed -e'$(transform)'`
+ 
+ # auto-generated dependancies are almost redundant once we add all the
+ # rules to get the generated files built first.
+--- modutils-2.4.25/insmod/Makefile.in	Fri Mar 28 17:54:20 2003
++++ modutils-2.4.25/insmod/Makefile.in	Thu Jan 29 17:21:10 2004
+@@ -120,16 +120,19 @@
+ 	@set -ex;\
+ 	for i in $(TARGETS_REAL); do \
+ 	$(MKDIR) $(DESTDIR)$(sbindir); \
+-	$(INSTALL) $(STRIP) $$i $(DESTDIR)$(sbindir); done;
++	f=`echo $$i|sed -e'$(transform)'`; \
++	$(INSTALL) $(STRIP) $$i $(DESTDIR)$(sbindir)/$$f; done;
+ 	set -e; \
+-	for i in $(srcdir)/insmod_ksymoops_clean $(srcdir)/kernelversion; do \
++	for i in insmod_ksymoops_clean kernelversion; do \
+ 	$(MKDIR) $(DESTDIR)$(sbindir); \
+-	$(INSTALL) $$i $(DESTDIR)$(sbindir); done;
++	f=`echo $$i|sed -e'$(transform)'`; \
++	$(INSTALL) $$i $(DESTDIR)$(sbindir)/$$f; done;
+ 	set -e; \
+ 	for i in $(COMB); do \
+-	ln -sf insmod $(DESTDIR)$(sbindir)/$$i; \
++	f=`echo $$i|sed -e'$(transform)'`; \
++	ln -sf `echo insmod|sed -e'$(transform)'` $(DESTDIR)$(sbindir)/$$f; \
+ 	(test "$(insmod_static)" = yes && \
+-		ln -sf insmod.static $(DESTDIR)$(sbindir)/$$i.static) || true; \
++		ln -sf `echo insmod.static|sed -e'$(transform)'`  $(DESTDIR)$(sbindir)/$$f.static) || true; \
+ 	done
+ 
+ clean:

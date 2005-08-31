@@ -1,0 +1,11 @@
+--- pcmcia-cs-3.2.8/etc/rc.pcmcia.orig	2005-04-22 23:14:56.308784152 +0100
++++ pcmcia-cs-3.2.8/etc/rc.pcmcia	2005-04-22 23:15:34.637957232 +0100
+@@ -140,7 +140,7 @@
+ 	echo -n "Shutting down PCMCIA services: "
+ 	if [ -s /var/run/cardmgr.pid ] ; then
+ 	    PID=`cat /var/run/cardmgr.pid`
+-	    kill $PID
++	    kill -9 $PID
+ 	    # Give cardmgr a few seconds to handle the signal
+ 	    for N in 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 ; do
+ 		kill -0 $PID 2>/dev/null || break

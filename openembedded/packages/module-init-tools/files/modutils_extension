@@ -1,0 +1,55 @@
+--- module-init-tools-3.0-pre10.orig/depmod.c
++++ module-init-tools-3.0-pre10/depmod.c
+@@ -217,13 +217,13 @@
+ {
+ 	char *sep;
+ 	char pathname[strlen(argv[0])+1];
+-	char oldname[strlen("depmod") + strlen(argv[0]) + sizeof(".old")];
++	char oldname[strlen("depmod") + strlen(argv[0]) + sizeof(".24")];
+ 
+ 	memset(pathname, 0, strlen(argv[0])+1);
+ 	sep = strrchr(argv[0], '/');
+ 	if (sep)
+ 		memcpy(pathname, argv[0], sep - argv[0]+1);
+-	sprintf(oldname, "%s%s.old", pathname, "depmod");
++	sprintf(oldname, "%s%s.24", pathname, "depmod");
+ 
+ 	/* Recursion detection: we need an env var since we can't
+ 	   change argv[0] (as older modutils uses it to determine
+--- module-init-tools-3.0-pre10.orig/backwards_compat.c
++++ module-init-tools-3.0-pre10/backwards_compat.c
+@@ -21,13 +21,13 @@
+ 	pid_t pid;
+ 	char ascii_pid[32];
+ 	char pathname[strlen(argv[0])+1];
+-	char oldname[strlen(progname) + strlen(argv[0]) + sizeof(".old")];
++	char oldname[strlen(progname) + strlen(argv[0]) + sizeof(".24")];
+ 
+ 	memset(pathname, 0, strlen(argv[0])+1);
+ 	sep = strrchr(argv[0], '/');
+ 	if (sep)
+ 		memcpy(pathname, argv[0], sep - argv[0]+1);
+-	sprintf(oldname, "%s%s.old", pathname, progname);
++	sprintf(oldname, "%s%s.24", pathname, progname);
+ 
+ 	/* Recursion detection: we need an env var since we can't
+ 	   change argv[0] (as older modutils uses it to determine
+--- module-init-tools-3.0-pre10.orig/generate-modprobe.conf
++++ module-init-tools-3.0-pre10/generate-modprobe.conf
+@@ -26,12 +26,12 @@
+     cp $TESTING_MODPROBE_CONF $MODPROBECONF
+ elif [ "$STDIN" = "1" ]; then
+     cat > $MODPROBECONF
+-elif [ -x /sbin/modprobe.old ]; then
++elif [ -x /sbin/modprobe.24 ]; then
+     # In sbin.
+-    /sbin/modprobe.old -c > $MODPROBECONF
+-elif modprobe.old -c >/dev/null 2>&1; then
++    /sbin/modprobe.24 -c > $MODPROBECONF
++elif modprobe.24 -c >/dev/null 2>&1; then
+     # Somewhere in path.
+-    modprobe.old -c > $MODPROBECONF
++    modprobe.24 -c > $MODPROBECONF
+ elif /sbin/modprobe -V 2>/dev/null | grep -q 'modprobe version'; then
+     # Running /sbin/modprobe gives old version.
+     /sbin/modprobe -c > $MODPROBECONF

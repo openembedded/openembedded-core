@@ -1,0 +1,7 @@
+DESCRIPTION = "Tool to work with series of patches."
+HOMEPAGE = "http://savannah.nongnu.org/projects/quilt/"
+SECTION = "devel"
+MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
+LICENSE = "GPL"
+# RDEPENDS_${PN} += "patch diffstat bzip2 gawk gettext"
+RDEPENDS_${PN} += "patch diffstat bzip2"

@@ -1,0 +1,13 @@
+--- hotplug/etc/hotplug/usb.rc.old	2005-05-25 15:50:11.000000000 +0100
++++ hotplug/etc/hotplug/usb.rc	2005-05-25 15:50:59.000000000 +0100
+@@ -95,8 +95,8 @@
+ 			PRODUCT="$(cat $devlink/../idVendor)/$(cat $devlink/../idProduct)/$(cat $devlink/../bcdDevice)"
+ 		        if [ -f $devlink/../../devnum ]
+ 			then
+-			    devbus=$( ( echo -n 000 ; cat $devlink/../../devnum ) | grep -o ...\$ )
+-			    devdev=$( ( echo -n 000 ; cat $devlink/../devnum ) | grep -o ...\$ )
++			    devbus=$( ( echo -n 000 ; cat $devlink/../../devnum ) | sed 's/.*\(...\)$/\1/' )
++			    devdev=$( ( echo -n 000 ; cat $devlink/../devnum ) | sed 's/.*\(...\)$/\1/' )
+ 			    DEVICE="/proc/bus/usb/$devbus/$devdev"
+ 			else
+ 			    DEVICE=

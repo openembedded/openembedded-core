@@ -1,0 +1,431 @@
+diff -Naur busybox-1.00-pre3.orig/coreutils/echo.c busybox-1.00-pre3/coreutils/echo.c
+--- busybox-1.00-pre3.orig/coreutils/echo.c	2003-03-19 12:11:33.000000000 +0300
++++ busybox-1.00-pre3/coreutils/echo.c	2003-11-07 17:47:35.000000000 +0300
+@@ -122,7 +122,11 @@
+ #endif
+ 
+ DONE:
+-	bb_fflush_stdout_and_exit(EXIT_SUCCESS);
++#ifdef CONFIG_FEATURE_BUILTIN_ECHO
++        return EXIT_SUCCESS;
++#else
++        bb_fflush_stdout_and_exit(EXIT_SUCCESS);
++#endif
+ }
+ 
+ /*-
+diff -Naur busybox-1.00-pre3.orig/coreutils/test.c busybox-1.00-pre3/coreutils/test.c
+--- busybox-1.00-pre3.orig/coreutils/test.c	2003-07-15 01:20:45.000000000 +0400
++++ busybox-1.00-pre3/coreutils/test.c	2003-11-07 17:47:35.000000000 +0300
+@@ -188,19 +188,19 @@
+ 	/* Implement special cases from POSIX.2, section 4.62.4 */
+ 	switch (argc) {
+ 	case 1:
+-		exit(1);
++		return (1);
+ 	case 2:
+-		exit(*argv[1] == '\0');
++		return (*argv[1] == '\0');
+ 	case 3:
+ 		if (argv[1][0] == '!' && argv[1][1] == '\0') {
+-			exit(!(*argv[2] == '\0'));
++			return (!(*argv[2] == '\0'));
+ 		}
+ 		break;
+ 	case 4:
+ 		if (argv[1][0] != '!' || argv[1][1] != '\0') {
+ 			if (t_lex(argv[2]), t_wp_op && t_wp_op->op_type == BINOP) {
+ 				t_wp = &argv[1];
+-				exit(binop() == 0);
++				return (binop() == 0);
+ 			}
+ 		}
+ 		break;
+@@ -208,7 +208,7 @@
+ 		if (argv[1][0] == '!' && argv[1][1] == '\0') {
+ 			if (t_lex(argv[3]), t_wp_op && t_wp_op->op_type == BINOP) {
+ 				t_wp = &argv[2];
+-				exit(!(binop() == 0));
++				return (!(binop() == 0));
+ 			}
+ 		}
+ 		break;
+diff -Naur busybox-1.00-pre3.orig/include/usage.h busybox-1.00-pre3/include/usage.h
+--- busybox-1.00-pre3.orig/include/usage.h	2003-08-29 18:18:26.000000000 +0400
++++ busybox-1.00-pre3/include/usage.h	2003-11-07 17:47:59.000000000 +0300
+@@ -1760,6 +1760,13 @@
+ 	"quit\n" \
+ 	"221 foobar closing connection\n" 
+ 
++#define nice_trivial_usage \
++	"[OPTION] [COMMAND [ARG]...]"
++#define nice_full_usage \
++	"Run  COMMAND with an adjusted scheduling priority."
++#define nice_example_usage \
++	"$ nice -n 0 /tmp/foo \n"
++
+ #define netstat_trivial_usage \
+ 	"[-laenrtuwx]"
+ #define netstat_full_usage \
+diff -Naur busybox-1.00-pre3.orig/shell/Config.in busybox-1.00-pre3/shell/Config.in
+--- busybox-1.00-pre3.orig/shell/Config.in	2003-09-12 08:51:25.000000000 +0400
++++ busybox-1.00-pre3/shell/Config.in	2003-11-07 17:47:59.000000000 +0300
+@@ -53,6 +53,34 @@
+ 	help
+ 	  Enable job control in the ash shell.
+ 
++config CONFIG_ASH_PIPE_OPTIMIZATION
++        bool "  Enable ash pipe optimization "
++        default y
++        depends on CONFIG_ASH
++        help
++          Eliminate cat at the beginning of the pipe.
++
++config CONFIG_FEATURE_BUILTIN_TEST
++	bool "  Builtin test command"
++	default y
++	depends on CONFIG_ASH
++	help
++	  Builtin test command"
++
++config CONFIG_FEATURE_BUILTIN_ECHO
++        bool "  Builtin echo command"
++        default y
++        depends on CONFIG_ASH
++        help
++          Builtin echo command"
++
++config CONFIG_FEATURE_BUILTIN_PIDOF
++        bool "  Builtin pidof command"
++        default y
++        depends on CONFIG_ASH && CONFIG_PIDOF
++        help
++          Builtin pidof command"
++
+ config CONFIG_ASH_ALIAS
+ 	bool "  Enable alias support"
+ 	default y
+diff -Naur busybox-1.00-pre3.orig/shell/ash.c busybox-1.00-pre3/shell/ash.c
+--- busybox-1.00-pre3.orig/shell/ash.c	2003-09-02 06:36:17.000000000 +0400
++++ busybox-1.00-pre3/shell/ash.c	2003-11-07 17:47:59.000000000 +0300
+@@ -1259,6 +1259,16 @@
+ #ifdef JOBS
+ static int killcmd(int, char **);
+ #endif
++#ifdef CONFIG_FEATURE_BUILTIN_TEST
++static int testcmd(int, char **);
++#endif
++#ifdef CONFIG_FEATURE_BUILTIN_ECHO
++static int echocmd(int, char**);
++#endif
++#ifdef CONFIG_FEATURE_BUILTIN_PIDOF
++static int pidofcmd(int, char **); 
++#endif
++
+ 
+ /*      $NetBSD: mail.h,v 1.9 2002/11/24 22:35:40 christos Exp $        */
+ 
+@@ -1281,39 +1291,6 @@
+ 	/* unsigned flags; */
+ };
+ 
+-#ifdef CONFIG_ASH_CMDCMD
+-# ifdef JOBS
+-#  ifdef CONFIG_ASH_ALIAS
+-#    define COMMANDCMD (builtincmd + 7)
+-#    define EXECCMD (builtincmd + 10)
+-#  else
+-#    define COMMANDCMD (builtincmd + 6)
+-#    define EXECCMD (builtincmd + 9)
+-#  endif
+-# else /* ! JOBS */
+-#  ifdef CONFIG_ASH_ALIAS
+-#    define COMMANDCMD (builtincmd + 6)
+-#    define EXECCMD (builtincmd + 9)
+-#  else
+-#    define COMMANDCMD (builtincmd + 5)
+-#    define EXECCMD (builtincmd + 8)
+-#  endif
+-# endif /* JOBS */
+-#else   /* ! CONFIG_ASH_CMDCMD */
+-# ifdef JOBS
+-#  ifdef CONFIG_ASH_ALIAS
+-#    define EXECCMD (builtincmd + 9)
+-#  else
+-#    define EXECCMD (builtincmd + 8)
+-#  endif
+-# else /* ! JOBS */
+-#  ifdef CONFIG_ASH_ALIAS
+-#    define EXECCMD (builtincmd + 8)
+-#  else
+-#    define EXECCMD (builtincmd + 7)
+-#  endif
+-# endif /* JOBS */
+-#endif /* CONFIG_ASH_CMDCMD */
+ 
+ #define BUILTIN_NOSPEC  "0"
+ #define BUILTIN_SPECIAL "1"
+@@ -1328,65 +1305,21 @@
+ #define IS_BUILTIN_REGULAR(builtincmd) ((builtincmd)->name[0] & 2)
+ 
+ static const struct builtincmd builtincmd[] = {
+-	{ BUILTIN_SPEC_REG      ".", dotcmd },
+-	{ BUILTIN_SPEC_REG      ":", truecmd },
+-#ifdef CONFIG_ASH_ALIAS
+-	{ BUILTIN_REG_ASSG      "alias", aliascmd },
+-#endif
+-#ifdef JOBS
+-	{ BUILTIN_REGULAR       "bg", bgcmd },
+-#endif
+-	{ BUILTIN_SPEC_REG      "break", breakcmd },
+-	{ BUILTIN_REGULAR       "cd", cdcmd },
+-	{ BUILTIN_NOSPEC        "chdir", cdcmd },
+-#ifdef CONFIG_ASH_CMDCMD
+-	{ BUILTIN_REGULAR       "command", commandcmd },
+-#endif
+-	{ BUILTIN_SPEC_REG      "continue", breakcmd },
+-	{ BUILTIN_SPEC_REG      "eval", evalcmd },
+-	{ BUILTIN_SPEC_REG      "exec", execcmd },
+-	{ BUILTIN_SPEC_REG      "exit", exitcmd },
+-	{ BUILTIN_SPEC_REG_ASSG "export", exportcmd },
+-	{ BUILTIN_REGULAR       "false", falsecmd },
+-#ifdef JOBS
+-	{ BUILTIN_REGULAR       "fg", fgcmd },
+-#endif
+-#ifdef CONFIG_ASH_GETOPTS
+-	{ BUILTIN_REGULAR       "getopts", getoptscmd },
+-#endif
+-	{ BUILTIN_NOSPEC        "hash", hashcmd },
+-#ifndef CONFIG_FEATURE_SH_EXTRA_QUIET
+-	{ BUILTIN_NOSPEC        "help", helpcmd },
+-#endif
+-#ifdef JOBS
+-	{ BUILTIN_REGULAR       "jobs", jobscmd },
+-	{ BUILTIN_REGULAR       "kill", killcmd },
+-#endif
+-#ifdef CONFIG_ASH_MATH_SUPPORT
+-	{ BUILTIN_NOSPEC        "let", letcmd },
+-#endif
+-	{ BUILTIN_ASSIGN        "local", localcmd },
+-	{ BUILTIN_NOSPEC        "pwd", pwdcmd },
+-	{ BUILTIN_REGULAR       "read", readcmd },
+-	{ BUILTIN_SPEC_REG_ASSG "readonly", exportcmd },
+-	{ BUILTIN_SPEC_REG      "return", returncmd },
+-	{ BUILTIN_SPEC_REG      "set", setcmd },
+-	{ BUILTIN_SPEC_REG      "shift", shiftcmd },
+-	{ BUILTIN_SPEC_REG      "times", timescmd },
+-	{ BUILTIN_SPEC_REG      "trap", trapcmd },
+-	{ BUILTIN_REGULAR       "true", truecmd },
+-	{ BUILTIN_NOSPEC        "type", typecmd },
+-	{ BUILTIN_NOSPEC        "ulimit", ulimitcmd },
+-	{ BUILTIN_REGULAR       "umask", umaskcmd },
+-#ifdef CONFIG_ASH_ALIAS
+-	{ BUILTIN_REGULAR       "unalias", unaliascmd },
+-#endif
+-	{ BUILTIN_SPEC_REG      "unset", unsetcmd },
+-	{ BUILTIN_REGULAR       "wait", waitcmd },
++#define BUILTIN_COMMAND_SPEC(code, str, func) {str, func},
++#include "ash.d"
++{}
+ };
+ 
+-#define NUMBUILTINS  (sizeof (builtincmd) / sizeof (struct builtincmd) )
++enum {
++#define BUILTIN_COMMAND_SPEC(code, str, func) code,
++#include "ash.d"
++NUMBUILTINS
++};
+ 
++#ifdef CONFIG_ASH_CMDCMD
++#define COMMANDCMD (builtincmd + COMMAND_CMD)
++#endif
++#define EXECCMD (builtincmd + EXEC_CMD)
+ 
+ 
+ struct cmdentry {
+@@ -1678,7 +1611,8 @@
+ 
+       /* from input.c: */
+       {
+-	      basepf.nextc = basepf.buf = basebuf;
++	      struct parsefile* pf = &basepf;
++	      pf->nextc = pf->buf = basebuf;
+       }
+ 
+       /* from trap.c: */
+@@ -2678,6 +2612,14 @@
+  * Called to reset things after an exception.
+  */
+ 
++#ifdef CONFIG_FEATURE_BUILTIN_ECHO
++static int
++echocmd(int argc, char **argv)
++{
++        return echo_main(argc, argv);
++}
++#endif
++
+ /*
+  * The eval commmand.
+  */
+@@ -3028,6 +2970,23 @@
+ }
+ 
+ 
++static int
++cat_file(union node *n)
++{
++#ifdef CONFIG_ASH_PIPE_OPTIMIZATION
++  if (n->type == NCMD
++            && n->ncmd.args != NULL
++      && strcmp(n->ncmd.args->narg.text, "cat") == 0
++            && n->ncmd.args->narg.next != NULL
++            && *n->ncmd.args->narg.next->narg.text != '-'
++      && n->ncmd.args->narg.next->narg.next == NULL)
++    {
++      return open(n->ncmd.args->narg.next->narg.text, O_RDONLY);
++    }
++#endif
++  return -1;
++}
++
+ 
+ /*
+  * Evaluate a pipeline.  All the processes in the pipeline are children
+@@ -3057,7 +3016,11 @@
+ 		prehash(lp->n);
+ 		pip[1] = -1;
+ 		if (lp->next) {
+-			if (pipe(pip) < 0) {
++                        if (prevfd < 0 && (prevfd = cat_file(lp->n)) >= 0) {
++			        // it is cat at the beginning of the pipe                           
++                                continue;
++                        }
++ 			if (pipe(pip) < 0) {
+ 				close(prevfd);
+ 				error("Pipe call failed");
+ 			}
+@@ -3104,11 +3067,11 @@
+ {
+ 	int saveherefd;
+ 
+-	result->fd = -1;
++	result->fd = cat_file(n);
+ 	result->buf = NULL;
+ 	result->nleft = 0;
+ 	result->jp = NULL;
+-	if (n == NULL) {
++	if (n == NULL || result->fd >= 0) {
+ 		goto out;
+ 	}
+ 
+@@ -3562,6 +3525,24 @@
+ 	}
+ }
+ 
++#ifdef CONFIG_FEATURE_BUILTIN_TEST
++static int
++testcmd(int argc, char** argv)
++{
++  bb_applet_name = argv[0];
++  return test_main(argc, argv);
++}
++#endif
++
++#ifdef CONFIG_FEATURE_BUILTIN_PIDOF
++static int
++pidofcmd(int argc, char** argv)
++{
++  bb_applet_name = argv[0];
++  return pidof_main(argc, argv);
++}
++#endif
++
+ 
+ static int
+ falsecmd(int argc, char **argv)
+@@ -4943,7 +4924,9 @@
+ 		ckfree(in.buf);
+ 	if (in.fd >= 0) {
+ 		close(in.fd);
+-		back_exitstatus = waitforjob(in.jp);
++		if (in.jp != NULL) { 
++			back_exitstatus = waitforjob(in.jp);
++		}
+ 	}
+ 	INTON;
+ 
+diff -Naur busybox-1.00-pre3.orig/shell/ash.d busybox-1.00-pre3/shell/ash.d
+--- busybox-1.00-pre3.orig/shell/ash.d	1970-01-01 03:00:00.000000000 +0300
++++ busybox-1.00-pre3/shell/ash.d	2003-11-07 17:47:59.000000000 +0300
+@@ -0,0 +1,70 @@
++BUILTIN_COMMAND_SPEC(DOT_CMD,     BUILTIN_SPEC_REG      ".", dotcmd)
++BUILTIN_COMMAND_SPEC(COMMA_CMD,   BUILTIN_SPEC_REG      ":", truecmd)
++#ifdef CONFIG_FEATURE_BUILTIN_TEST
++BUILTIN_COMMAND_SPEC(RPAR_CMD,    BUILTIN_REGULAR       "[", testcmd)
++#endif
++#ifdef CONFIG_ASH_ALIAS
++BUILTIN_COMMAND_SPEC(ALIAS_CMD,   BUILTIN_REG_ASSG      "alias", aliascmd)
++#endif
++#ifdef JOBS
++BUILTIN_COMMAND_SPEC(BG_CMD,      BUILTIN_REGULAR       "bg", bgcmd)
++#endif
++BUILTIN_COMMAND_SPEC(BREAK_CMD,   BUILTIN_SPEC_REG      "break", breakcmd)
++BUILTIN_COMMAND_SPEC(CD_CMD,      BUILTIN_REGULAR       "cd", cdcmd)
++BUILTIN_COMMAND_SPEC(CHDIR_CMD,   BUILTIN_NOSPEC        "chdir", cdcmd)
++#ifdef CONFIG_ASH__CMD_CMD
++BUILTIN_COMMAND_SPEC(COMMAND_CMD, BUILTIN_REGULAR       "command", commandcmd)
++#endif
++BUILTIN_COMMAND_SPEC(CONTINUE_CMD,BUILTIN_SPEC_REG      "continue", breakcmd)
++#ifdef CONFIG_FEATURE_BUILTIN_ECHO
++BUILTIN_COMMAND_SPEC(ECHO_CMD,    BUILTIN_REGULAR       "echo", echocmd)
++#endif
++BUILTIN_COMMAND_SPEC(EVAL_CMD,    BUILTIN_SPEC_REG      "eval", evalcmd)
++BUILTIN_COMMAND_SPEC(EXEC_CMD,    BUILTIN_SPEC_REG      "exec", execcmd)
++BUILTIN_COMMAND_SPEC(EXIT_CMD,    BUILTIN_SPEC_REG      "exit", exitcmd)
++BUILTIN_COMMAND_SPEC(EXPORT_CMD,  BUILTIN_SPEC_REG_ASSG "export", exportcmd)
++BUILTIN_COMMAND_SPEC(FALSE_CMD,   BUILTIN_REGULAR       "false", falsecmd)
++#ifdef JOBS
++BUILTIN_COMMAND_SPEC(FG_CMD,      BUILTIN_REGULAR       "fg", fgcmd)
++#endif
++#ifdef CONFIG_ASH_GETOPTS
++BUILTIN_COMMAND_SPEC(GETOPTS_CMD, BUILTIN_REGULAR       "getopts", getoptscmd)
++#endif
++BUILTIN_COMMAND_SPEC(HASH_CMD,    BUILTIN_NOSPEC        "hash", hashcmd)
++#ifndef CONFIG_FEATURE_SH_EXTRA_QUIET
++BUILTIN_COMMAND_SPEC(HELP_CMD,    BUILTIN_NOSPEC        "help", helpcmd)
++#endif
++#ifdef JOBS
++BUILTIN_COMMAND_SPEC(JOBS_CMD,    BUILTIN_REGULAR       "jobs", jobscmd)
++BUILTIN_COMMAND_SPEC(KILL_CMD,    BUILTIN_REGULAR       "kill", killcmd)
++#endif
++#ifdef CONFIG_ASH_MATH_SUPPORT
++BUILTIN_COMMAND_SPEC(LET_CMD,     BUILTIN_NOSPEC        "let", letcmd)
++#endif
++BUILTIN_COMMAND_SPEC(LOCAL_CMD,   BUILTIN_ASSIGN        "local", localcmd)
++#ifdef CONFIG_FEATURE_BUILTIN_PIDOF
++BUILTIN_COMMAND_SPEC(PIDOF_CMD,   BUILTIN_REGULAR       "pidof", pidofcmd)
++#endif
++BUILTIN_COMMAND_SPEC(PWD_CMD,     BUILTIN_NOSPEC        "pwd", pwdcmd)
++BUILTIN_COMMAND_SPEC(READ_CMD,    BUILTIN_REGULAR       "read", readcmd)
++BUILTIN_COMMAND_SPEC(READONLY_CMD,BUILTIN_SPEC_REG_ASSG "readonly", exportcmd)
++BUILTIN_COMMAND_SPEC(RETURN_CMD,  BUILTIN_SPEC_REG      "return", returncmd)
++BUILTIN_COMMAND_SPEC(SET_CMD,     BUILTIN_SPEC_REG      "set", setcmd)
++BUILTIN_COMMAND_SPEC(SHIFT_CMD,   BUILTIN_SPEC_REG      "shift", shiftcmd)
++#ifdef CONFIG_FEATURE_BUILTIN_TEST
++BUILTIN_COMMAND_SPEC(TEST_CMD,    BUILTIN_REGULAR       "test", testcmd)
++#endif
++BUILTIN_COMMAND_SPEC(TIMES_CMD,   BUILTIN_SPEC_REG      "times", timescmd)
++BUILTIN_COMMAND_SPEC(TRAP_CMD,    BUILTIN_SPEC_REG      "trap", trapcmd)
++BUILTIN_COMMAND_SPEC(TRUE_CMD,    BUILTIN_REGULAR       "true", truecmd)
++BUILTIN_COMMAND_SPEC(TYPE_CMD,    BUILTIN_NOSPEC        "type", typecmd)
++BUILTIN_COMMAND_SPEC(ULIMIT_CMD,  BUILTIN_NOSPEC        "ulimit", ulimitcmd)
++BUILTIN_COMMAND_SPEC(UMASK_CMD,   BUILTIN_REGULAR       "umask", umaskcmd)
++#ifdef CONFIG_ASH_ALIAS
++BUILTIN_COMMAND_SPEC(UNALIAS_CMD, BUILTIN_REGULAR       "unalias", unaliascmd)
++#endif
++BUILTIN_COMMAND_SPEC(UNSET_CMD,   BUILTIN_SPEC_REG      "unset", unsetcmd)
++BUILTIN_COMMAND_SPEC(WAIT_CMD,    BUILTIN_REGULAR       "wait", waitcmd)
++
++
++#undef BUILTIN_COMMAND_SPEC

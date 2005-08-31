@@ -1,0 +1,58 @@
+2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Mark Mitchell  <mark@codesourcery.com>
+
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add ARM entries.
+	* elf/tst-auditmod1.c: Add ARM definitions.
+
+Index: glibc/sysdeps/generic/ldsodefs.h
+===================================================================
+--- glibc.orig/sysdeps/generic/ldsodefs.h	2005-04-05 17:36:52.000000000 -0400
++++ glibc/sysdeps/generic/ldsodefs.h	2005-05-06 15:54:44.000000000 -0400
+@@ -203,6 +203,8 @@ struct La_sparc32_regs;
+ struct La_sparc32_retval;
+ struct La_sparc64_regs;
+ struct La_sparc64_retval;
++struct La_arm_regs;
++struct La_arm_retval;
+ 
+ struct audit_ifaces
+ {
+@@ -284,6 +286,10 @@ struct audit_ifaces
+ 					const struct La_sparc64_regs *,
+ 					unsigned int *, const char *name,
+ 					long int *framesizep);
++    Elf32_Addr (*arm_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
++				    uintptr_t *, struct La_arm_regs *,
++				    unsigned int *, const char *name,
++				    long int *framesizep);
+   };
+   union
+   {
+@@ -352,6 +358,9 @@ struct audit_ifaces
+ 					 const struct La_sparc32_regs *,
+ 					 struct La_sparc32_retval *,
+ 					 const char *);
++    unsigned int (*arm_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
++				     uintptr_t *, const struct La_arm_regs *,
++				     struct La_arm_retval *, const char *);
+   };
+   unsigned int (*objclose) (uintptr_t *);
+ 
+Index: glibc/elf/tst-auditmod1.c
+===================================================================
+--- glibc.orig/elf/tst-auditmod1.c	2005-04-05 17:36:53.000000000 -0400
++++ glibc/elf/tst-auditmod1.c	2005-05-06 15:53:28.000000000 -0400
+@@ -192,6 +192,12 @@ la_symbind64 (Elf64_Sym *sym, unsigned i
+ # define La_regs La_sparc64_regs
+ # define La_retval La_sparc64_retval
+ # define int_retval lrv_reg[0]
++#elif __arm__
++# define pltenter la_arm_gnu_pltenter
++# define pltext la_arm_gnu_pltexit
++# define La_regs La_arm_regs
++# define La_retval La_arm_retval
++# define int_retval lrv_reg[0]
+ #else
+ # error "architecture specific code needed"
+ #endif
+

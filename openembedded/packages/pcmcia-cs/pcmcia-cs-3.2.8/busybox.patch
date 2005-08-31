@@ -1,0 +1,20 @@
+--- pcmcia-cs-3.2.3/etc/shared~ide	2003-03-11 10:26:14.000000000 -0600
++++ pcmcia-cs-3.2.3/etc/shared	2003-03-11 10:32:39.000000000 -0600
+@@ -57,7 +57,7 @@
+     fi
+     if is_true $DO_MOUNT ; then
+ 	O=${OPTS:+-o $OPTS} ; FS=${FSTYPE:+-t $FSTYPE}
+-	log mount -v $O $FS $1 $MOUNTPT || return 1
++	log mount $O $FS $1 $MOUNTPT || return 1
+     fi
+     return 0
+ }
+@@ -85,7 +85,7 @@
+     test -b $1 || return 1
+     do_fuser -k -m $1 > /dev/null
+     if mount | grep -q "$1 on" ; then
+-	log umount -v $1 || return 1
++	log umount $1 || return 1
+     fi
+     if is_true $DO_FSTAB ; then
+ 	grep -v $1 /etc/fstab > /etc/fstab.N

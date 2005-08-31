@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# Start or stop the Advanced Power Management daemon.
+#
+# Written by Dirk Eddelbuettel <edd@debian.org>
+# Greatly modified by Avery Pennarun <apenwarr@debian.org>
+#
+# I think this script is now free of bashisms.
+# Please correct me if I'm wrong!
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+[ -f /etc/default/rcS ] && . /etc/default/rcS
+[ -f /etc/default/apmd ] && . /etc/default/apmd
+
+case "$1" in
+    start)
+	echo -n "Starting advanced power management daemon: "
+	start-stop-daemon -S -x /usr/sbin/apmd -- \
+		-P /etc/apm/apmd_proxy $APMD
+	if [ $? = 0 ]; then
+	    echo "apmd."
+	else
+	    echo "(failed.)"
+	fi
+	;;
+    stop)
+	echo -n "Stopping advanced power management daemon: "
+	start-stop-daemon -K \
+		-x /usr/sbin/apmd
+	echo "apmd."
+	;;
+    restart|force-reload) 
+	$0 stop
+	$0 start
+	exit
+	;;
+    *)
+	echo "Usage: /etc/init.d/apmd {start|stop|restart|force-reload}"
+	exit 1
+	;;
+esac
+
+exit 0

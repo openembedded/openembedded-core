@@ -1,0 +1,43 @@
+--- hotplug/etc/hotplug/net.agent	2005-01-13 21:12:47.143597392 +1300
++++ hotplug/etc/hotplug/net.agent	2005-01-13 21:17:57.095477544 +1300
+@@ -41,6 +41,9 @@
+ 	    debug_mesg assuming $INTERFACE is already up
+ 	    exit 0
+ 	    ;;
++	# interfaces that don't go up until attached
++	usbf)
++	    ;;
+ 	# interfaces that are registered then brought up
+ 	*)
+ 	    # NOTE:  network configuration relies on administered state,
+@@ -83,6 +86,13 @@
+     mesg $1 $ACTION event not handled
+     ;;
+ 
++attach)
++    # ifupdown is dumb and won't bring up an interface that it thinks
++    # might already be configured.
++    /sbin/ifdown $INTERFACE
++    exec /sbin/ifup $INTERFACE
++    ;;
++
+ remove|unregister)
+     case $INTERFACE in
+ 	# interfaces that are unregistered after being "down" (?)
+@@ -105,6 +115,16 @@
+     mesg $1 $ACTION event not handled
+     ;;
+ 
++detach)
++    if [ -x /sbin/ifdown ]; then
++        debug_mesg invoke ifdown $INTERFACE
++        exec /sbin/ifdown $INTERFACE
++    else
++        mesg "E: /sbin/ifdown not found. You need to install ifupdown package"
++    fi
++    mesg $1 $ACTION event not handled
++    ;;
++
+ *)
+     debug_mesg NET $ACTION event for $INTERFACE not supported
+     exit 1 ;;

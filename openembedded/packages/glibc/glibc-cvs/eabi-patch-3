@@ -1,0 +1,430 @@
+From libc-alpha-return-17228-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com Tue Mar 22 16:08:31 2005
+Return-Path: <libc-alpha-return-17228-listarch-libc-alpha=sources dot redhat dot com at sources dot redhat dot com>
+Delivered-To: listarch-libc-alpha at sources dot redhat dot com
+Received: (qmail 20972 invoked by alias); 22 Mar 2005 16:08:29 -0000
+Mailing-List: contact libc-alpha-help at sources dot redhat dot com; run by ezmlm
+Precedence: bulk
+List-Subscribe: <mailto:libc-alpha-subscribe at sources dot redhat dot com>
+List-Archive: <http://sources.redhat.com/ml/libc-alpha/>
+List-Post: <mailto:libc-alpha at sources dot redhat dot com>
+List-Help: <mailto:libc-alpha-help at sources dot redhat dot com>, <http://sources dot redhat dot com/ml/#faqs>
+Sender: libc-alpha-owner at sources dot redhat dot com
+Delivered-To: mailing list libc-alpha at sources dot redhat dot com
+Received: (qmail 20165 invoked from network); 22 Mar 2005 16:08:06 -0000
+Received: from unknown (HELO nevyn.them.org) (66.93.172.17)
+  by sourceware dot org with SMTP; 22 Mar 2005 16:08:06 -0000
+Received: from drow by nevyn.them.org with local (Exim 4.50 #1 (Debian))
+	id 1DDlvX-0006tE-Bh; Tue, 22 Mar 2005 11:08:19 -0500
+Date: Tue, 22 Mar 2005 11:08:19 -0500
+From: Daniel Jacobowitz <drow at false dot org>
+To: libc-alpha at sources dot redhat dot com
+Cc: Phil Blundell <pb at reciva dot com>
+Subject: ARM EABI support - changes to existing ARM code
+Message-ID: <20050322160819.GA26216@nevyn.them.org>
+Mail-Followup-To: libc-alpha at sources dot redhat dot com,
+	Phil Blundell <pb at reciva dot com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.6+20040907i
+
+This patch updates the common ARM files for EABI support.  The changes are:
+  - Old ARM ABI targets always use FPA (mixed-endian) byte ordering.  EABI
+    targets always use VFP byte ordering for doubles, which is standard
+    ieee754 layout.  Removing the arm-specific ieee754.h doesn't break FPA;
+    it was a specialized version of the common header, which handles FPA
+    but also handles VFP.
+  - The stack needs to be aligned to eight bytes instead of just four,
+    including in mmap2 and when shifting _dl_argv.
+  - We need some markers around _start to indicate end-of-stack for the
+    unwinder - ARM EABI does not use either SJLJ exceptions or DWARF-2
+    exceptions.  It uses a table based format which seems to be not
+    quite completely unlike DWARF-2.
+
+Do these changes look OK?
+
+-- 
+Daniel Jacobowitz
+CodeSourcery, LLC
+
+2005-03-22  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/bits/endian.h (__FLOAT_WORD_ORDER): Handle VFP.
+	* sysdeps/arm/gmp-mparam.h (IEEE_DOUBLE_BIG_ENDIAN,
+	IEEE_DOUBLE_MIXED_ENDIAN): Handle big-endian and VFP.
+	* sysdeps/arm/ieee754.h: Remove.
+
+	* sysdeps/arm/dl-machine.h (_dl_start_user): Align the stack to eight
+	bytes even when shifting arguments.
+	* sysdeps/arm/dl-sysdep.h: New file.
+
+	* sysdeps/arm/elf/start.S (_start): If not using SJLJ exceptions, include
+	EABI unwind markers to terminate unwinding.
+
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Handle big-endian byte ordering
+	and EABI stack layout.
+
+Index: glibc/sysdeps/arm/bits/endian.h
+===================================================================
+--- glibc.orig/sysdeps/arm/bits/endian.h	2005-03-22 10:26:27.092978200 -0500
++++ glibc/sysdeps/arm/bits/endian.h	2005-03-22 10:27:39.457490903 -0500
+@@ -9,4 +9,9 @@
+ #else
+ #define __BYTE_ORDER __LITTLE_ENDIAN
+ #endif
++
++#ifdef __VFP_FP__
++#define __FLOAT_WORD_ORDER __BYTE_ORDER
++#else
+ #define __FLOAT_WORD_ORDER __BIG_ENDIAN
++#endif
+Index: glibc/sysdeps/arm/dl-machine.h
+===================================================================
+--- glibc.orig/sysdeps/arm/dl-machine.h	2005-03-22 10:26:27.092978200 -0500
++++ glibc/sysdeps/arm/dl-machine.h	2005-03-22 10:27:39.457490903 -0500
+@@ -156,22 +156,19 @@ _dl_start_user:\n\
+ 	add	sl, pc, sl\n\
+ .L_GOT_GOT:\n\
+ 	ldr	r4, [sl, r4]\n\
+-	@ get the original arg count\n\
+-	ldr	r1, [sp]\n\
+ 	@ save the entry point in another register\n\
+ 	mov	r6, r0\n\
+-	@ adjust the stack pointer to skip the extra args\n\
+-	add	sp, sp, r4, lsl #2\n\
+-	@ subtract _dl_skip_args from original arg count\n\
+-	sub	r1, r1, r4\n\
++	@ get the original arg count\n\
++	ldr	r1, [sp]\n\
+ 	@ get the argv address\n\
+ 	add	r2, sp, #4\n\
+-	@ store the new argc in the new stack location\n\
+-	str	r1, [sp]\n\
++	@ Fix up the stack if necessary.\n\
++	cmp	r4, #0\n\
++	bne	.L_fixup_stack\n\
++.L_done_fixup:\n\
+ 	@ compute envp\n\
+ 	add	r3, r2, r1, lsl #2\n\
+ 	add	r3, r3, #4\n\
+-\n\
+ 	@ now we call _dl_init\n\
+ 	ldr	r0, .L_LOADED\n\
+ 	ldr	r0, [sl, r0]\n\
+@@ -182,12 +179,45 @@ _dl_start_user:\n\
+ 	add	r0, sl, r0\n\
+ 	@ jump to the user_s entry point\n\
+ 	" BX(r6) "\n\
++\n\
++	@ iWMMXt and EABI targets require the stack to be eight byte\n\
++	@ aligned - shuffle arguments etc.\n\
++.L_fixup_stack:\n\
++	@ subtract _dl_skip_args from original arg count\n\
++	sub	r1, r1, r4\n\
++	@ store the new argc in the new stack location\n\
++	str	r1, [sp]\n\
++	@ find the first unskipped argument\n\
++	mov	r3, r2\n\
++	add	r4, r2, r4, lsl #2\n\
++	@ shuffle argv down\n\
++1:	ldr	r5, [r4], #4\n\
++	str	r5, [r3], #4\n\
++	cmp	r5, #0\n\
++	bne	1b\n\
++	@ shuffle envp down\n\
++1:	ldr	r5, [r4], #4\n\
++	str	r5, [r3], #4\n\
++	cmp	r5, #0\n\
++	bne	1b\n\
++	@ shuffle auxv down\n\
++1:	ldmia	r4!, {r0, r5}\n\
++	stmia	r3!, {r0, r5}\n\
++	cmp	r0, #0\n\
++	bne	1b\n\
++	@ Update _dl_argv\n\
++	ldr	r3, .L_ARGV\n\
++	str	r2, [sl, r3]\n\
++	b	.L_done_fixup\n\
++\n\
+ .L_GET_GOT:\n\
+ 	.word	_GLOBAL_OFFSET_TABLE_ - .L_GOT_GOT - 4\n\
+ .L_SKIP_ARGS:\n\
+ 	.word	_dl_skip_args(GOTOFF)\n\
+ .L_FINI_PROC:\n\
+ 	.word	_dl_fini(GOTOFF)\n\
++.L_ARGV:\n\
++	.word	_dl_argv(GOTOFF)\n\
+ .L_LOADED:\n\
+ 	.word	_rtld_local(GOTOFF)\n\
+ .previous\n\
+Index: glibc/sysdeps/arm/dl-sysdep.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ glibc/sysdeps/arm/dl-sysdep.h	2005-03-22 10:27:39.458490675 -0500
+@@ -0,0 +1,41 @@
++/* System-specific settings for dynamic linker code.  ARM version.
++   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#ifndef _DL_SYSDEP_H
++#define _DL_SYSDEP_H   1
++
++/* This macro must be defined to either 0 or 1.
++
++   If 1, then an errno global variable hidden in ld.so will work right with
++   all the errno-using libc code compiled for ld.so, and there is never a
++   need to share the errno location with libc.  This is appropriate only if
++   all the libc functions that ld.so uses are called without PLT and always
++   get the versions linked into ld.so rather than the libc ones.  */
++
++#ifdef IS_IN_rtld
++# define RTLD_PRIVATE_ERRNO 1
++#else
++# define RTLD_PRIVATE_ERRNO 0
++#endif
++
++/* _dl_argv cannot be attribute_relro, because _dl_start_user
++   might write into it after _dl_start returns.  */
++#define DL_ARGV_NOT_RELRO 1
++
++#endif /* dl-sysdep.h */
+Index: glibc/sysdeps/arm/elf/start.S
+===================================================================
+--- glibc.orig/sysdeps/arm/elf/start.S	2005-03-22 10:26:27.096977288 -0500
++++ glibc/sysdeps/arm/elf/start.S	2005-03-22 11:00:35.178522707 -0500
+@@ -1,5 +1,6 @@
+ /* Startup code for ARM & ELF
+-   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
++   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002, 2005
++   Free Software Foundation, Inc.
+    This file is part of the GNU C Library.
+ 
+    The GNU C Library is free software; you can redistribute it and/or
+@@ -62,6 +63,10 @@
+ 	.globl _start
+ 	.type _start,#function
+ _start:
++#if !defined(__USING_SJLJ_EXCEPTIONS__)
++       /* Protect against unhandled exceptions.  */
++       .fnstart
++#endif
+ 	/* Fetch address of fini */
+ 	ldr ip, =__libc_csu_fini
+ 
+@@ -93,6 +98,11 @@ _start:
+ 	/* should never get here....*/
+ 	bl abort
+ 
++#if !defined(__USING_SJLJ_EXCEPTIONS__)
++       .cantunwind
++       .fnend
++#endif
++
+ /* Define a symbol for the first piece of initialized data.  */
+ 	.data
+ 	.globl __data_start
+Index: glibc/sysdeps/arm/gmp-mparam.h
+===================================================================
+--- glibc.orig/sysdeps/arm/gmp-mparam.h	2005-03-22 10:26:27.092978200 -0500
++++ glibc/sysdeps/arm/gmp-mparam.h	2005-03-22 11:00:42.795683773 -0500
+@@ -1,6 +1,6 @@
+ /* gmp-mparam.h -- Compiler/machine parameter header file.
+ 
+-Copyright (C) 1991, 1993, 1994, 1995 Free Software Foundation, Inc.
++Copyright (C) 1991, 1993, 1994, 1995, 2005 Free Software Foundation, Inc.
+ 
+ This file is part of the GNU MP Library.
+ 
+@@ -26,5 +26,13 @@ MA 02111-1307, USA. */
+ #define BITS_PER_SHORTINT 16
+ #define BITS_PER_CHAR 8
+ 
+-#define IEEE_DOUBLE_BIG_ENDIAN 0
+-#define IEEE_DOUBLE_MIXED_ENDIAN 1
++#if defined(__ARMEB__)
++# define IEEE_DOUBLE_MIXED_ENDIAN 0
++# define IEEE_DOUBLE_BIG_ENDIAN 1
++#elif defined(__VFP_FP__)
++# define IEEE_DOUBLE_MIXED_ENDIAN 0
++# define IEEE_DOUBLE_BIG_ENDIAN 0
++#else
++# define IEEE_DOUBLE_BIG_ENDIAN 0
++# define IEEE_DOUBLE_MIXED_ENDIAN 1
++#endif
+Index: glibc/sysdeps/arm/ieee754.h
+===================================================================
+--- glibc.orig/sysdeps/arm/ieee754.h	2005-03-22 10:26:27.092978200 -0500
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,115 +0,0 @@
+-/* Copyright (C) 1992, 1995, 1996, 1998 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, write to the Free
+-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+-   02111-1307 USA.  */
+-
+-#ifndef _IEEE754_H
+-
+-#define _IEEE754_H 1
+-#include <features.h>
+-
+-#include <endian.h>
+-
+-__BEGIN_DECLS
+-
+-union ieee754_float
+-  {
+-    float f;
+-
+-    /* This is the IEEE 754 single-precision format.  */
+-    struct
+-      {
+-	unsigned int mantissa:23;
+-	unsigned int exponent:8;
+-	unsigned int negative:1;
+-      } ieee;
+-
+-    /* This format makes it easier to see if a NaN is a signalling NaN.  */
+-    struct
+-      {
+-	unsigned int mantissa:22;
+-	unsigned int quiet_nan:1;
+-	unsigned int exponent:8;
+-	unsigned int negative:1;
+-      } ieee_nan;
+-  };
+-
+-#define IEEE754_FLOAT_BIAS	0x7f /* Added to exponent.  */
+-
+-
+-union ieee754_double
+-  {
+-    double d;
+-
+-    /* This is the IEEE 754 double-precision format.  */
+-    struct
+-      {
+-	unsigned int mantissa0:20;
+-	unsigned int exponent:11;
+-	unsigned int negative:1;
+-	unsigned int mantissa1:32;
+-      } ieee;
+-
+-    /* This format makes it easier to see if a NaN is a signalling NaN.  */
+-    struct
+-      {
+-	unsigned int mantissa0:19;
+-	unsigned int quiet_nan:1;
+-	unsigned int exponent:11;
+-	unsigned int negative:1;
+-	unsigned int mantissa1:32;
+-      } ieee_nan;
+-  };
+-
+-#define IEEE754_DOUBLE_BIAS	0x3ff /* Added to exponent.  */
+-
+-
+-/* The following two structures are correct for `new' floating point systems but
+-   wrong for the old FPPC.  The only solution seems to be to avoid their use on
+-   old hardware.  */
+-
+-union ieee854_long_double
+-  {
+-    long double d;
+-
+-    /* This is the IEEE 854 double-extended-precision format.  */
+-    struct
+-      {
+-	unsigned int exponent:15;
+-	unsigned int empty:16;
+-	unsigned int negative:1;
+-	unsigned int mantissa1:32;
+-	unsigned int mantissa0:32;
+-      } ieee;
+-
+-    /* This is for NaNs in the IEEE 854 double-extended-precision format.  */
+-    struct
+-      {
+-	unsigned int exponent:15;
+-	unsigned int empty:16;
+-	unsigned int negative:1;
+-	unsigned int mantissa1:32;
+-	unsigned int mantissa0:30;
+-	unsigned int quiet_nan:1;
+-	unsigned int one:1;
+-      } ieee_nan;
+-  };
+-
+-#define IEEE854_LONG_DOUBLE_BIAS 0x3fff
+-
+-__END_DECLS
+-
+-#endif /* ieee754.h */
+Index: glibc/sysdeps/unix/sysv/linux/arm/mmap64.S
+===================================================================
+--- glibc.orig/sysdeps/unix/sysv/linux/arm/mmap64.S	2005-03-22 10:26:27.097977060 -0500
++++ glibc/sysdeps/unix/sysv/linux/arm/mmap64.S	2005-03-22 11:00:53.051209928 -0500
+@@ -1,4 +1,4 @@
+-/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
++/* Copyright (C) 2000, 2003, 2005 Free Software Foundation, Inc.
+    This file is part of the GNU C Library.
+ 
+    The GNU C Library is free software; you can redistribute it and/or
+@@ -23,13 +23,28 @@
+ 
+ #include "kernel-features.h"
+ 
++#ifdef __ARM_EABI__
++# define INITIAL_OFFSET 8
++#else
++# define INITIAL_OFFSET 4
++#endif
++
++#ifdef __ARMEB__
++# define LOW_OFFSET      INITIAL_OFFSET + 4
++/* The initial + 4 is for the stack postdecrement.  */
++# define HIGH_OFFSET 4 + INITIAL_OFFSET + 0
++#else
++# define LOW_OFFSET      INITIAL_OFFSET + 0
++# define HIGH_OFFSET 4 + INITIAL_OFFSET + 4
++#endif
++
+ 	/* The mmap2 system call takes six arguments, all in registers.  */
+ 	.text
+ ENTRY (__mmap64)
+ #ifdef __NR_mmap2
+-	ldr	ip, [sp, $4]		@ offset low part
++	ldr	ip, [sp, $LOW_OFFSET]	@ offset low part
+ 	str	r5, [sp, #-4]!
+-	ldr	r5, [sp, $12]		@ offset high part
++	ldr	r5, [sp, $HIGH_OFFSET]	@ offset high part
+ 	str	r4, [sp, #-4]!
+ 	movs	r4, ip, lsl $20		@ check that offset is page-aligned
+ 	mov	ip, ip, lsr $12
+

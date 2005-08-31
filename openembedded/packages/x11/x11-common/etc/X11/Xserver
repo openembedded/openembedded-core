@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+
+XSERVER=Xipaq
+if [ -f /usr/bin/Xfbdev ]; then
+  XSERVER=Xfbdev
+fi
+if [ -f /usr/bin/Xepson ]; then
+  XSERVER=Xepson
+fi
+if [ -f /usr/bin/Xorg ]; then
+  XSERVER=Xorg
+fi
+if [ -f /usr/bin/Xomap ]; then
+  XSERVER=Xomap
+fi
+
+. /etc/profile
+
+module_id() {
+    ## used to read from assets, but sometimes assets is corrupted
+    # grep "Module ID" /proc/hal/assets | sed "s/.*://"
+    ## used to read from /proc/hal/model, but that is removed in 2.6
+    # echo ' iPAQ' `cat /proc/hal/model`
+    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
+}
+
+export USER=root
+
+ARGS="-dpi 100 -br -pn"
+
+# use ucb 1x00 touchscreen if present
+if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then
+  ARGS="$ARGS -mouse /dev/touchscreen/ucb1x00"
+fi
+
+# use usb mouse if present
+# Xorg doesn't support "-mouse" option, and uses /dev/input/mice automatically
+if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ] && [ "$XSERVER" != "Xorg" ]; then
+  ARGS="$ARGS -mouse /dev/input/mice"
+fi
+
+# start off server in conventional location.
+case `module_id` in
+	"HP iPAQ H3100" | "HP iPAQ H3800")
+		ARGS="$ARGS -screen 320x240@90 -rgba vrgb" ;;
+	"HP iPAQ H3600" | "HP iPAQ H3700" | "HP iPAQ H3900")
+		ARGS="$ARGS -screen 320x240@270 -rgba vbgr" ;;
+	"HP iPAQ H5400" | "HP iPAQ H2200")
+		ARGS="$ARGS -rgba rgb" ;;
+	"Ramses")
+		# What is this "vt2" in aid of?
+		ARGS="$ARGS -screen 320x240@90 -rgba vrgb vt2" ;;
+	# both 'Sharp-Collie' and just 'Collie' have been reported
+	*Poodle)
+		ARGS="$ARGS -screen 320x240@270 -rgba vrgb" ;;
+	*Collie)
+		ARGS="$ARGS -screen 320x240@270 -rgba vrgb"
+		# Horrible hack required to enable resuming after suspend
+		rm -f /dev/apm_bios
+		killall -9 apmd
+		;;
+	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
+		ARGS="$ARGS -rgba rgb" ;;
+	"SHARP Spitz" | "SHARP Akita" | "SHARP Borzoi")
+		ARGS="$ARGS -rgba rgb -screen 480x640@270" ;;
+	"Simpad")
+		ARGS="$ARGS -rgba rgb" ;;
+	"Generic OMAP1510/1610/1710")
+		ARGS="$ARGS -mouse /dev/input/event0" ;;
+esac
+
+exec $XSERVER $ARGS $*

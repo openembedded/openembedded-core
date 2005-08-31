@@ -1,0 +1,17 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- flex-2.5.31/gen.c~fix-gen
++++ flex-2.5.31/gen.c
+@@ -1812,8 +1812,7 @@
+ 			if (yytext_is_array) {
+ 				if (!reentrant){
+     				indent_puts ("static int yy_more_offset = 0;");
+-                }else{
+-                    indent_puts ("static int yy_prev_more_offset = 0;");
++                                indent_puts ("static int yy_prev_more_offset = 0;");
+                 }
+ 			}
+ 			else if (!reentrant) {

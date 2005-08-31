@@ -1,0 +1,19 @@
+Index: hw/kdrive/src/kmode.c
+===================================================================
+RCS file: /cvs/xserver/xserver/hw/kdrive/src/kmode.c,v
+retrieving revision 1.13
+diff -u -r1.13 kmode.c
+--- xserver/hw/kdrive/src/kmode.c	26 Jul 2004 17:14:26 -0000	1.13
++++ xserver/hw/kdrive/src/kmode.c	28 Aug 2004 14:04:19 -0000
+@@ -41,6 +41,11 @@
+ 	            1,      11,     14,     KdSyncNegative,
+     },
+     
++    {   240,	320,	64,	    0,
++	            0,	    0,	    0,     KdSyncNegative,
++	            0,      0,      0,     KdSyncNegative,
++    },
++
+     /* Other VESA modes */
+     {	640,	350,	85,	31500,			    /* VESA */
+ 		    32,	    96,	    192,    KdSyncPositive, /* 26.413 */

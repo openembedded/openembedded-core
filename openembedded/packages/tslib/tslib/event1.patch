@@ -1,0 +1,80 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- tslib/tests/ts_calibrate.c~event1
++++ tslib/tests/ts_calibrate.c
+@@ -179,11 +179,7 @@
+ 	if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
+ 		ts = ts_open(tsdevice,0);
+ 	} else {
+-#ifdef USE_INPUT_API
+-		ts = ts_open("/dev/input/event0", 0);
+-#else
+-		ts = ts_open("/dev/touchscreen/ucb1x00", 0);
+-#endif /* USE_INPUT_API */
++		ts = ts_open("/dev/input/event1", 0);
+ 	}
+ 
+ 	if (!ts) {
+--- tslib/tests/ts_print.c~event1
++++ tslib/tests/ts_print.c
+@@ -28,11 +28,7 @@
+         if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
+                 ts = ts_open(tsdevice,0);
+         } else {
+-#ifdef USE_INPUT_API
+-                ts = ts_open("/dev/input/event0", 0);
+-#else
+-                ts = ts_open("/dev/touchscreen/ucb1x00", 0);
+-#endif /* USE_INPUT_API */
++                ts = ts_open("/dev/input/event1", 0);
+         }
+ 
+ 	if (!ts) {
+--- tslib/tests/ts_test.c~event1
++++ tslib/tests/ts_test.c
+@@ -120,11 +120,7 @@
+ 	signal(SIGTERM, sig);
+ 
+ 	if ((tsdevice = getenv("TSLIB_TSDEVICE")) == NULL) {
+-#ifdef USE_INPUT_API
+-		tsdevice = strdup ("/dev/input/event0");
+-#else
+-		tsdevice = strdup ("/dev/touchscreen/ucb1x00");
+-#endif /* USE_INPUT_API */
++		tsdevice = strdup ("/dev/input/event1");
+         }
+ 
+ 	ts = ts_open (tsdevice, 0);
+--- tslib/tests/ts_print_raw.c~event1
++++ tslib/tests/ts_print_raw.c
+@@ -28,11 +28,7 @@
+         if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
+                 ts = ts_open(tsdevice,0);
+         } else {
+-#ifdef USE_INPUT_API
+-                ts = ts_open("/dev/input/event0", 0);
+-#else
+-                ts = ts_open("/dev/touchscreen/ucb1x00", 0);
+-#endif /* USE_INPUT_API */
++                ts = ts_open("/dev/input/event1", 0);
+         }
+ 
+ 	if (!ts) {
+--- tslib/tests/ts_harvest.c~event1
++++ tslib/tests/ts_harvest.c
+@@ -75,11 +75,7 @@
+ 	signal(SIGTERM, sig);
+ 
+ 	if ((tsdevice = getenv("TSLIB_TSDEVICE")) == NULL) {
+-#ifdef USE_INPUT_API
+-		tsdevice = strdup ("/dev/input/event0");
+-#else
+-		tsdevice = strdup ("/dev/touchscreen/ucb1x00");
+-#endif /* USE_INPUT_API */
++		tsdevice = strdup ("/dev/input/event1");
+         }
+ 
+ 	ts = ts_open (tsdevice, 0);

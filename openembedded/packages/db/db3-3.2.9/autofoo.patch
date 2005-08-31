@@ -1,0 +1,71 @@
+--- dist/Makefile.in	2000-11-30 17:07:33.000000000 -0600
++++ dist/Makefile.in	2004-09-01 19:47:37.000000000 -0500
+@@ -2,6 +2,7 @@
+ 
+ srcdir=	@srcdir@/..
+ builddir=.
++top_builddir=.
+ 
+ ##################################################
+ # C, C++
+--- dist/configure.in	2001-01-19 11:36:43.000000000 -0600
++++ dist/configure.in	2004-09-01 19:45:35.000000000 -0500
+@@ -38,7 +38,6 @@
+ AC_SUBST(LIBJSO_LIBS)
+ AC_SUBST(LIBS)
+ AC_SUBST(LIBSO_LIBS)
+-AC_SUBST(LIBTOOL)
+ AC_SUBST(LIBTSO_LIBS)
+ AC_SUBST(LIBXSO_LIBS)
+ AC_SUBST(MAKEFILE_CC)
+@@ -48,7 +47,6 @@
+ AC_SUBST(RPC_OBJS)
+ AC_SUBST(SOFLAGS)
+ AC_SUBST(SOLINK)
+-AC_SUBST(SOSUFFIX)
+ 
+ dnl $o is set to ".o" or ".lo", and is the file suffix used in the
+ dnl Makefile instead of .o
+@@ -205,27 +203,15 @@
+ dnl Dynamic library and libtool configuration; optional, but required for
+ dnl Tcl or Java support.
+ LIBDB_ARGS="libdb.a"
+-LIBTOOL="nolibtool"
+ POSTLINK="@true"
+-SOSUFFIX="so"
+ if test "$db_cv_dynamic" = "yes"; then
++	AM_PROG_LIBTOOL
+ 	SAVE_CC="${MAKEFILE_CC}"
+ 	SAVE_CXX="${MAKEFILE_CXX}"
+ 
+-	# Configure libtool.
+-	AC_MSG_CHECKING(libtool configuration)
+-	AC_MSG_RESULT([])
+-	${CONFIG_SHELL-/bin/sh} $srcdir/ltconfig \
+-		--no-verify $srcdir/ltmain.sh \
+-		--output=./libtool $host_os \
+-		--disable-static \
+-	|| AC_MSG_ERROR([libtool configure failed])
+-
+-	SOSUFFIX=`sed -e '/^library_names_spec=/!d' -e 's/.*\.\([[a-zA-Z0-9_]]*\).*/\1/' ./libtool`
+ 	DEFAULT_LIB="\$(libso_target)"
+ 	DEFAULT_INSTALL="install_dynamic"
+ 	LIBDB_ARGS="\$(libso_linkname)"
+-	LIBTOOL="\$(SHELL) ./libtool"
+ 
+ 	MAKEFILE_CC="\$(LIBTOOL) --mode=compile ${SAVE_CC}"
+ 	MAKEFILE_CXX="\$(LIBTOOL) --mode=compile ${SAVE_CXX}"
+@@ -373,13 +359,6 @@
+ AC_REPLACE_FUNCS(getcwd getopt memcmp memcpy memmove)
+ AC_REPLACE_FUNCS(raise snprintf strcasecmp strerror vsnprintf)
+ 
+-dnl XXX
+-dnl Nasty hack.  AC_REPLACE_FUNCS added entries of the form xxx.o to the
+-dnl LIBOBJS variable.  They have to be xxx.lo if we are building shared
+-dnl libraries.  Use sed, configure already requires it.
+-tmp="`echo \"$LIBOBJS\" | sed \"s/\.o/${o}/g\"`"
+-LIBOBJS="$tmp"
+-
+ dnl Check for system functions we optionally use.
+ AC_CHECK_FUNCS(getuid pstat_getdynamic sysconf sched_yield strtoul yield)
+ 

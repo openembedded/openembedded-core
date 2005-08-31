@@ -1,0 +1,20 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- libXrender-0.8.4/configure.ac~autofoo
++++ libXrender-0.8.4/configure.ac
+@@ -33,11 +33,10 @@
+ dnl protocol, so Xrender version l.n.m corresponds to protocol version l.n
+ dnl
+ AC_INIT(libXrender, 0.8.4, [keithp@keithp.com], libXrender)
++AC_CONFIG_AUX_DIR(.)
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ AM_MAINTAINER_MODE
+-
+ AM_CONFIG_HEADER(config.h)
+-AC_CONFIG_AUX_DIR(.)
+ 
+ # Check for progs
+ AC_PROG_CC

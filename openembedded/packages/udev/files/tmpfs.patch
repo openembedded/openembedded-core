@@ -1,0 +1,16 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- udev-031/extras/start_udev~tmpfs	2004-09-10 17:10:03.000000000 -0400
++++ udev-031/extras/start_udev	2004-09-11 15:18:15.560789160 -0400
+@@ -85,7 +85,7 @@
+ fi
+ 
+ echo "mounting... ramfs at $udev_root"
+-mount -n -t ramfs none $udev_root
++mount -n -t ramfs none $udev_root || mount -n -t tmpfs none $udev_root
+ 
+ # propogate /udev from /sys
+ echo "Creating initial udev device nodes:"

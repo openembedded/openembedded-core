@@ -1,0 +1,11 @@
+--- gettext-0.14.1/gettext-runtime/intl/Makefile.in~	2004-04-09 13:23:40.000000000 +0100
++++ gettext-0.14.1/gettext-runtime/intl/Makefile.in	2004-04-09 13:22:05.000000000 +0100
+@@ -24,7 +24,7 @@
+ srcdir = $(top_srcdir)/../gettext-runtime/intl
+ top_srcdir = /var/tmp/oe-tmp.pb/base/gettext-0.14.1-r0/gettext-0.14.1/gettext-tools
+ top_builddir = ..
+-VPATH = $(srcdir)
++#VPATH = $(srcdir)
+ 
+ prefix = /usr
+ exec_prefix = /usr

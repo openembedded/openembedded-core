@@ -1,0 +1,3 @@
+#!/bin/sh
+depmod -ae
+exit 0

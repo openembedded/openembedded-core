@@ -1,0 +1,63 @@
+#!/bin/ash
+
+# DEBUG=yes export DEBUG
+#set -x
+
+. /etc/hotplug/hotplug.functions
+. /etc/default/usbd
+cd $HOTPLUG_DIR
+
+[ -z "$INTERFACE" ] && exit 1
+[ -z "$ACTION" ] && exit 1
+[ -z "$usbdmodule" ] && exit 0
+
+debug_mesg "USBD $ACTION Action Recived"
+
+case $INTERFACE in
+
+monitor)
+	case $ACTION in
+		# called to load all usb device modules
+	load)	
+		modprobe usbdcore
+		modprobe net_fd
+		modprobe $usbdmodule
+		;;
+	
+		# called to handle suspend power management event
+	suspend) 
+		rmmod $usbdmodule
+		;;
+
+		# called to reload after resume power management event
+	restore-loaded)
+		modprobe $usbdmodule
+		sleep 2
+		;;
+
+		# called to unload after resume power management event
+	restore-unloaded)
+		modprobe -r net_fd
+		;;
+
+		# called to unload all usb device modules
+	unload)
+		modprobe -r $usbdmodule
+		;;
+
+	*)
+		debug_mesg USBD $ACTION event not handled
+		exit 1
+		;;
+	esac
+	;;
+*)
+	debug_mesg USBD $INTERFACE-$ACTION event not handled
+	exit 1
+	;;
+esac
+
+[ -e /proc/usb-monitor ] && echo "Done" > /proc/usb-monitor
+
+exit 0
+

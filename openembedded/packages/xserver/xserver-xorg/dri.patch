@@ -1,0 +1,10 @@
+--- xc/extras/drm/shared/drm.h.old	2004-09-14 21:42:45.000000000 +0100
++++ xc/extras/drm/shared/drm.h	2004-09-14 21:42:47.000000000 +0100
+@@ -38,7 +38,6 @@
+ #define _DRM_H_
+ 
+ #if defined(__linux__)
+-#include <linux/config.h>
+ #include <asm/ioctl.h>		/* For _IO* macros */
+ #define DRM_IOCTL_NR(n)		_IOC_NR(n)
+ #define DRM_IOC_VOID		_IOC_NONE

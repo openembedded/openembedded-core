@@ -1,0 +1,5 @@
+keycode 96 = XF86Calendar
+keycode 97 = telephone
+keycode 48 = XF86Start
+keycode 98 = XF86Mail
+keycode 117 = XF86PowerDown

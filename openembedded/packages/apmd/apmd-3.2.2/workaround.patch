@@ -1,0 +1,55 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- apmd-3.2.2.orig/apmd.c~workaround.patch
++++ apmd-3.2.2.orig/apmd.c
+@@ -158,6 +158,7 @@
+ static int quiet_bios_batlow; /* = 0 */
+ static int verbosity = DEFAULT_VERBOSITY;
+ static int warn_level = 10;
++static int sleep_now = 0;	/* ntp */
+ 
+ static uid_t apmd_uid = 0;
+ static int apmd_fd = -1;
+@@ -942,6 +943,12 @@
+ 	exit(0);
+ }
+ 
++/* ntp */
++static void sig_usr1(int sig)
++{
++  sleep_now = 1;
++}
++
+ int main(int argc, char **argv)
+ {
+ 	int c;
+@@ -1151,6 +1158,8 @@
+ 	openlog("apmd", (verbosity>=LOG_DEBUG)?LOG_PERROR:0 | LOG_PID | LOG_CONS, LOG_DAEMON);
+ 
+ 	/* Set up signal handler */
++ 	if (signal(SIGUSR1, SIG_IGN) != SIG_IGN)
++ 		signal(SIGUSR1, sig_usr1);	/* ntp */
+ 	if (signal(SIGINT, SIG_IGN) != SIG_IGN)
+ 		signal(SIGINT, sig_handler);
+ 	if (signal(SIGQUIT, SIG_IGN) != SIG_IGN)
+@@ -1230,9 +1239,16 @@
+ 
+ 	for (;;)
+ 	{
+-		int num_events = apm_get_events(apmd_fd, check_interval, events, MAX_EVENTS);
++		int num_events;
+ 		int e, a;
+ 
++		/* ntp */
++		if (sleep_now) {
++			sleep_now = 0;
++			handle_event(APM_USER_SUSPEND, &apminfo);
++		}
++
++		num_events = apm_get_events(apmd_fd, check_interval, events, MAX_EVENTS);
+ 		apm_read(&apminfo);
+ 
+ 		if (num_events == 0) {

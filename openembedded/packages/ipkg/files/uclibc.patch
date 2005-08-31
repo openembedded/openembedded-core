@@ -1,0 +1,13 @@
+Index: C/libbb/libbb.h
+===================================================================
+--- C.orig/libbb/libbb.h	2003-02-24 10:31:52.000000000 -0500
++++ C/libbb/libbb.h	2005-01-20 03:07:10.031420944 -0500
+@@ -340,7 +340,7 @@
+ #define CONSOLE_DEV "/dev/console"
+ 
+ /* Cope with mmu-less systems somewhat gracefully */
+-#if defined(__UCLIBC__) && !defined(__UCLIBC_HAS_MMU__)
++#if defined(__UCLIBC__) && !defined(__ARCH_HAS_MMU__)
+ #define fork	vfork
+ #endif
+ 
