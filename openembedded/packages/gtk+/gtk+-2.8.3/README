@@ -1,40 +1,62 @@
-no-xwc.patch
- 
-  Removes any ( uneeded ) i18n xlib calls that are just stubs in
-  an xlib built with --disable-locale
+Definitely Keep
+===
 
 disable-tooltips.patch
 
   Makes sense for toucscreens at least. Could be made better by being
-  an XSettings property ?
-
-gtklabel-resize-patch
-
-  Can someone check this, appears to allow labels to resize ???
-
-no-demos.patch
- 
-  Do we want demos to be built ?
+  an XSettings property: http://bugzilla.gnome.org/show_bug.cgi?id=315112
 
 hardcoded_libtool.patch
 
-  Fix libtool - likely needed
+  Fix libtool calls in configure - likely needed although should go upstream in
+  some form if possible.
+
 
 Probably Uneeded
+===
+
+no-xwc.patch
+ 
+  Removes any (uneeded) i18n xlib calls that are just stubs in an xlib built
+  with --disable-locale.  Might not be needed as Xlib should provide stubs.
+
+gtklabel-resize-patch
+
+  Forces a resize when the style is set. Shouldn't be needed as the
+  clear_layout() call should do what is required.  Remove and see?
+
+no-demos.patch
+ 
+  Do we want demos to be built?  RB: does it matter if they are built, can we
+  just not install gtk-demo?
+
+scroll-timings.patch
+
+  Slows down the delays when clicking on scrollbars.
+
+single-click.patch
+
+  Makes the (deprecated) GtkFileSelector use single-click rather than double.
+
+gtk+-handhelds.patch 
+
+  Crack insane patch which changes the size of arrows, fiddles how the calendar
+  works, adds a min-width style property on GtkEntry, and adds support for the
+  RECOGNISE_PROTOCOLS atom.
+
+
+Not Sure
 ===
 
 Not sure what this appears to do or how they affect things too be useful;
 
  menu-deactivate.patch
- gtk+-handhelds.patch 
- scroll-timings.patch
- single-click.patch 
  spinbutton.patch
 
  automake-lossage.patch
 
 
-Can Definetly Go
+Can Definitely Go
 ===
 
 small-gtkfilesel.patch - CRACK! 
