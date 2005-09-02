@@ -1,0 +1,41 @@
+no-xwc.patch
+ 
+  Removes any ( uneeded ) i18n xlib calls that are just stubs in
+  an xlib built with --disable-locale
+
+disable-tooltips.patch
+
+  Makes sense for toucscreens at least. Could be made better by being
+  an XSettings property ?
+
+gtklabel-resize-patch
+
+  Can someone check this, appears to allow labels to resize ???
+
+no-demos.patch
+ 
+  Do we want demos to be built ?
+
+hardcoded_libtool.patch
+
+  Fix libtool - likely needed
+
+Probably Uneeded
+===
+
+Not sure what this appears to do or how they affect things too be useful;
+
+ menu-deactivate.patch
+ gtk+-handhelds.patch 
+ scroll-timings.patch
+ single-click.patch 
+ spinbutton.patch
+
+ automake-lossage.patch
+
+
+Can Definetly Go
+===
+
+small-gtkfilesel.patch - CRACK! 
+xsettings.patch        - EVEEL!
