@@ -1,0 +1,141 @@
+--- gtk+-2.6.4/gtk/gtkprogressbar.c	2005-01-09 19:32:25.000000000 +0200
++++ gtk+-2.6.4/gtk/gtkprogressbar.c	2005-04-06 16:19:37.112896344 +0300
+@@ -40,11 +40,18 @@
+ 
+ 
+ #define MIN_HORIZONTAL_BAR_WIDTH   150
+-#define MIN_HORIZONTAL_BAR_HEIGHT  20
++#define MIN_HORIZONTAL_BAR_HEIGHT  30 /* OSSO mod. was 20 */
+ #define MIN_VERTICAL_BAR_WIDTH     22
+ #define MIN_VERTICAL_BAR_HEIGHT    80
+ #define MAX_TEXT_LENGTH            80
+-#define TEXT_SPACING               2
++#define DEFAULT_TEXT_SPACING       2 /* OSSO mod. Changed from
++				      * TEXT_SPACING. Now controlled
++				      * by "text-spacing" style
++				      * property */
++#define DEFAULT_WIDTH_INCREMENT    3
++#define DEFAULT_HEIGHT_INCREMENT   3
++#define DEFAULT_TEXT_XNUDGE        1
++#define DEFAULT_TEXT_YNUDGE        1
+ 
+ enum {
+   PROP_0,
+@@ -245,6 +252,51 @@
+ 						      PANGO_ELLIPSIZE_NONE,
+                                                       G_PARAM_READWRITE));
+ 
++  /* OSSO addition. */
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("text-spacing",
++							     "Text Spacing",
++							     "The amount of pixels between the trough and text.",
++							     G_MININT,
++							     G_MAXINT,
++							     DEFAULT_TEXT_SPACING,
++							     G_PARAM_READWRITE));
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("width-increment",
++							     "width Increment",
++							     "The amount of pixels to add to the width size request.",
++							     G_MININT,
++							     G_MAXINT,
++							     DEFAULT_WIDTH_INCREMENT,
++							     G_PARAM_READWRITE));
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("height-increment",
++							     "Height Increment",
++							     "The amount of pixels to add to the height size request.",
++							     G_MININT,
++							     G_MAXINT,
++							     DEFAULT_WIDTH_INCREMENT,
++							     G_PARAM_READWRITE));
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("text-xnudge",
++							     "Text XNudge",
++							     "Amount of pixels to move the text x position.",
++							     G_MININT,
++							     G_MAXINT,
++							     DEFAULT_TEXT_XNUDGE,
++							     G_PARAM_READWRITE));
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("text-ynudge",
++							     "Text YNudge",
++							     "Amount of pixels to move the text y position.",
++							     G_MININT,
++							     G_MAXINT,
++							     DEFAULT_TEXT_YNUDGE,
++							     G_PARAM_READWRITE));
+ }
+ 
+ static void
+@@ -364,7 +416,9 @@
+ {
+   GtkWidget *pbar;
+ 
+-  pbar = gtk_widget_new (GTK_TYPE_PROGRESS_BAR, NULL);
++  pbar = gtk_widget_new (GTK_TYPE_PROGRESS_BAR, 
++			 "text-xalign", 0.0, /* OSSO addition. */
++			 NULL);
+ 
+   return pbar;
+ }
+@@ -494,15 +548,23 @@
+   PangoRectangle logical_rect;
+   PangoLayout *layout;
+   gint width, height;
++  gint text_spacing;
++  gint width_increment, height_increment;
+ 
+   g_return_if_fail (GTK_IS_PROGRESS_BAR (widget));
+   g_return_if_fail (requisition != NULL);
++  
++  gtk_widget_style_get (widget,
++			"text-spacing", &text_spacing,
++			"width-increment", &width_increment,
++			"height-increment", &height_increment,
++			NULL);
+ 
+   progress = GTK_PROGRESS (widget);
+   pbar = GTK_PROGRESS_BAR (widget);
+ 
+-  width = 2 * widget->style->xthickness + 3 + 2 * TEXT_SPACING;
+-  height = 2 * widget->style->ythickness + 3 + 2 * TEXT_SPACING;
++  width = 2 * widget->style->xthickness + width_increment + 2 * text_spacing;
++  height = 2 * widget->style->ythickness + height_increment + 2 * text_spacing;
+ 
+   if (progress->show_text && pbar->bar_style != GTK_PROGRESS_DISCRETE)
+     {
+@@ -780,6 +842,13 @@
+   PangoRectangle logical_rect;
+   GdkRectangle prelight_clip, normal_clip;
+   
++  gint text_xnudge, text_ynudge;
++  
++  gtk_widget_style_get (widget,
++			"text-xnudge", &text_xnudge,
++			"text-ynudge", &text_ynudge,
++			NULL);
++  
+   buf = gtk_progress_get_current_text (progress);
+   
+   layout = gtk_widget_create_pango_layout (widget, buf);
+@@ -789,12 +858,12 @@
+ 
+   pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+   
+-  x = widget->style->xthickness + 1 +
++  x = widget->style->xthickness + text_xnudge +
+     (widget->allocation.width - 2 * widget->style->xthickness -
+      2 - logical_rect.width)
+     * progress->x_align; 
+ 
+-  y = widget->style->ythickness + 1 +
++  y = widget->style->ythickness + text_ynudge +
+     (widget->allocation.height - 2 * widget->style->ythickness -
+      2 - logical_rect.height)
+     * progress->y_align;

@@ -1,0 +1,17 @@
+Only in /home/kihamala/svn/dbus/bus: .svn
+diff -ur bus/session.conf.in /home/kihamala/svn/dbus/bus/session.conf.in
+--- bus/session.conf.in	2004-10-25 21:48:58.000000000 +0300
++++ /home/kihamala/svn/dbus/bus/session.conf.in	2005-02-15 11:03:26.000000000 +0200
+@@ -8,9 +8,10 @@
+   <!-- Our well-known bus type, don't change this -->
+   <type>session</type>
+ 
+-  <listen>unix:tmpdir=@DBUS_SESSION_SOCKET_DIR@</listen>
++  <listen>unix:path=/tmp/session_bus_socket</listen>
+ 
+-  <servicedir>@EXPANDED_DATADIR@/dbus-1/services</servicedir>
++  <servicedir>@EXPANDED_LIBDIR@/dbus-1.0/services</servicedir>
++  <!-- <servicedir>/var/lib/install/usr/lib/dbus-1.0/services</servicedir> -->
+ 
+   <policy context="default">
+     <!-- Allow everything to be sent -->

@@ -1,0 +1,17 @@
+--- gtk+-2.6.4/gtk/gtkalias.h	2005-03-01 17:58:16.000000000 +0200
++++ gtk+-2.6.4/gtk/gtkalias.h	2005-04-06 16:19:36.020062480 +0300
+@@ -5782,6 +5782,14 @@
+ extern __typeof (gtk_menu_shell_select_item) gtk_menu_shell_select_item __attribute((alias("IA__gtk_menu_shell_select_item"), visibility("default")));
+ #define gtk_menu_shell_select_item IA__gtk_menu_shell_select_item
+ 
++extern __typeof (gtk_menu_shell_set_take_focus) IA__gtk_menu_shell_set_take_focus __attribute((visibility("hidden")));
++extern __typeof (gtk_menu_shell_set_take_focus) gtk_menu_shell_set_take_focus __attribute((alias("IA__gtk_menu_shell_set_take_focus"), visibility("default")));
++#define gtk_menu_shell_set_take_focus IA__gtk_menu_shell_set_take_focus
++
++extern __typeof (gtk_menu_shell_get_take_focus) IA__gtk_menu_shell_get_take_focus __attribute((visibility("hidden")));
++extern __typeof (gtk_menu_shell_get_take_focus) gtk_menu_shell_get_take_focus __attribute((alias("IA__gtk_menu_shell_get_take_focus"), visibility("default")));
++#define gtk_menu_shell_get_take_focus IA__gtk_menu_shell_get_take_focus
++
+ extern __typeof (gtk_menu_tool_button_get_menu) IA__gtk_menu_tool_button_get_menu __attribute((visibility("hidden")));
+ extern __typeof (gtk_menu_tool_button_get_menu) gtk_menu_tool_button_get_menu __attribute((alias("IA__gtk_menu_tool_button_get_menu"), visibility("default")));
+ #define gtk_menu_tool_button_get_menu IA__gtk_menu_tool_button_get_menu

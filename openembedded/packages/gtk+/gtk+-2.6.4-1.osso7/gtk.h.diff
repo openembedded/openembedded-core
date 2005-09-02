@@ -1,0 +1,10 @@
+--- gtk+-2.6.4/gtk/gtk.h	2004-09-27 21:37:33.000000000 +0300
++++ gtk+-2.6.4/gtk/gtk.h	2005-04-06 16:19:35.812094096 +0300
+@@ -156,6 +156,7 @@
+ #include <gtk/gtktearoffmenuitem.h>
+ #include <gtk/gtktext.h>
+ #include <gtk/gtktextbuffer.h>
++#include <gtk/gtktextbufferserialize.h>
+ #include <gtk/gtktextview.h>
+ #include <gtk/gtktipsquery.h>
+ #include <gtk/gtktoggleaction.h>

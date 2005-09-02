@@ -1,0 +1,399 @@
+Index: dbus-send.1
+===================================================================
+--- tools/dbus-send.1	(revision 691)
++++ tools/dbus-send.1	(working copy)
+@@ -36,8 +36,8 @@
+ specified. Following arguments, if any, are the message contents
+ (message arguments).  These are given as a type name, a colon, and
+ then the value of the argument. The possible type names are: string,
+-int32, uint32, double, byte, boolean.  (D-BUS supports more types than
+-these, but \fIdbus-send\fP currently does not.)
++int32, uint32, double, byte, boolean, array.  (D-BUS supports more types 
++than these, but \fIdbus-send\fP currently does not.)
+ 
+ .PP
+ Here is an example invocation:
+@@ -46,7 +46,8 @@
+   dbus-send \-\-dest='org.freedesktop.ExampleService'        \\
+             /org/freedesktop/sample/object/name              \\
+             org.freedesktop.ExampleInterface.ExampleMethod   \\
+-            int32:47 string:'hello world' double:65.32
++            int32:47 string:'hello world' double:65.32       \\
++            array:byte[0,1,2]
+ 
+ .fi
+ 
+Index: dbus-print-message.c
+===================================================================
+--- tools/dbus-print-message.c	(revision 691)
++++ tools/dbus-print-message.c	(working copy)
+@@ -39,6 +39,78 @@
+     }
+ }
+ 
++static void
++iterate (DBusMessageIter* iter, int entry_type)
++{
++    do
++    {
++      char *str;
++      dbus_uint32_t uint32;
++      dbus_int32_t int32;
++      double d;
++      unsigned char byte;
++      dbus_bool_t boolean;
++      int type = dbus_message_iter_get_arg_type (iter);
++	    
++      DBusMessageIter array_iter;
++      int array_type = DBUS_TYPE_INVALID;
++      
++      if (type == DBUS_TYPE_INVALID)
++       {
++       if (entry_type == DBUS_TYPE_INVALID)
++         break;
++       else 
++         type == entry_type;
++       }
++      
++      switch (type)
++	{
++	case DBUS_TYPE_STRING:
++	  str = dbus_message_iter_get_string (iter);
++	  printf ("string:%s\n", str);
++	  break;
++
++	case DBUS_TYPE_INT32:
++	  int32 = dbus_message_iter_get_int32 (iter);
++	  printf ("int32:%d\n", int32);
++	  break;
++
++	case DBUS_TYPE_UINT32:
++	  uint32 = dbus_message_iter_get_uint32 (iter);
++	  printf ("int32:%u\n", uint32);
++	  break;
++
++	case DBUS_TYPE_DOUBLE:
++	  d = dbus_message_iter_get_double (iter);
++	  printf ("double:%f\n", d);
++	  break;
++
++	case DBUS_TYPE_BYTE:
++	  byte = dbus_message_iter_get_byte (iter);
++	  printf ("byte:%d\n", byte);
++	  break;
++
++	case DBUS_TYPE_BOOLEAN:
++	  boolean = dbus_message_iter_get_boolean (iter);
++	  printf ("boolean:%s\n", boolean ? "true" : "false");
++	  break;
++	
++	case DBUS_TYPE_ARRAY:
++	  dbus_message_iter_init_array_iterator (iter, 
++						 &array_iter,
++						 &array_type);
++	  printf ("array[\n");
++	  iterate (&array_iter, array_type);
++	  printf ("]\n");
++	  break;
++	
++	default:
++	  printf ("(unknown arg type %d)\n", type);
++	  break;
++	}
++    } while (dbus_message_iter_next (iter));
++}
++
+ void
+ print_message (DBusMessage *message)
+ {
+@@ -81,55 +153,6 @@
+       
+   dbus_message_iter_init (message, &iter);
+ 
+-  do
+-    {
+-      int type = dbus_message_iter_get_arg_type (&iter);
+-      char *str;
+-      dbus_uint32_t uint32;
+-      dbus_int32_t int32;
+-      double d;
+-      unsigned char byte;
+-      dbus_bool_t boolean;
+-
+-      if (type == DBUS_TYPE_INVALID)
+-	break;
+-
+-      switch (type)
+-	{
+-	case DBUS_TYPE_STRING:
+-	  str = dbus_message_iter_get_string (&iter);
+-	  printf ("string:%s\n", str);
+-	  break;
+-
+-	case DBUS_TYPE_INT32:
+-	  int32 = dbus_message_iter_get_int32 (&iter);
+-	  printf ("int32:%d\n", int32);
+-	  break;
+-
+-	case DBUS_TYPE_UINT32:
+-	  uint32 = dbus_message_iter_get_uint32 (&iter);
+-	  printf ("int32:%u\n", uint32);
+-	  break;
+-
+-	case DBUS_TYPE_DOUBLE:
+-	  d = dbus_message_iter_get_double (&iter);
+-	  printf ("double:%f\n", d);
+-	  break;
+-
+-	case DBUS_TYPE_BYTE:
+-	  byte = dbus_message_iter_get_byte (&iter);
+-	  printf ("byte:%d\n", byte);
+-	  break;
+-
+-	case DBUS_TYPE_BOOLEAN:
+-	  boolean = dbus_message_iter_get_boolean (&iter);
+-	  printf ("boolean:%s\n", boolean ? "true" : "false");
+-	  break;
+-
+-	default:
+-	  printf ("(unknown arg type %d)\n", type);
+-	  break;
+-	}
+-    } while (dbus_message_iter_next (&iter));
++  iterate (&iter, DBUS_TYPE_INVALID);
+ }
+ 
+Index: dbus-send.c
+===================================================================
+--- tools/dbus-send.c	(revision 691)
++++ tools/dbus-send.c	(working copy)
+@@ -34,6 +34,146 @@
+   exit (ecode);
+ }
+ 
++
++static int 
++get_type (char **argv, char *arg)
++{
++  int type;
++	
++  if (arg[0] == 0 || !strcmp (arg, "string"))
++	type = DBUS_TYPE_STRING;
++      else if (!strcmp (arg, "int32"))
++	type = DBUS_TYPE_INT32;
++      else if (!strcmp (arg, "uint32"))
++	type = DBUS_TYPE_UINT32;
++      else if (!strcmp (arg, "double"))
++	type = DBUS_TYPE_DOUBLE;
++      else if (!strcmp (arg, "byte"))
++	type = DBUS_TYPE_BYTE;
++      else if (!strcmp (arg, "boolean"))
++	type = DBUS_TYPE_BOOLEAN;
++      else if (!strcmp (arg, "array"))
++	type = DBUS_TYPE_ARRAY;
++      else
++	{
++	  fprintf (stderr, "%s: Unknown type \"%s\"\n", argv[0], arg);
++	  exit (1);
++	}
++	
++  return type;
++}
++
++
++static void
++append (char **argv, char *arg, char *c, DBusMessageIter *iter)
++{
++  int type, atype = 0;
++  dbus_uint32_t uint32;
++  dbus_int32_t int32;
++  double d;
++  unsigned char byte;
++  DBusMessageIter array_iter;
++  int end_found = 0;
++  char *next;
++
++  /* FIXME - we are ignoring OOM returns on all these functions */
++	
++  type = get_type(argv, arg);
++  if (type == DBUS_TYPE_ARRAY)
++    {
++      arg = c;
++      c = strchr (c, '[');	      
++      if (c == NULL)
++      {
++        fprintf (stderr, "%s: Data item \"%s\" is badly formed\n", argv[0], arg);
++	exit (1);
++      }
++      
++      if (strchr(c, ']') == NULL)
++      {
++        fprintf (stderr, "%s: Data item \"%s\" is badly formed\n", argv[0], arg);
++        exit (1);
++      }
++	
++      *(c++) = 0;
++	
++      atype = get_type(argv, arg);
++    }
++      
++
++  switch (type)
++    {
++    case DBUS_TYPE_BYTE:
++      byte = strtoul (c, NULL, 0);
++      dbus_message_iter_append_byte (iter, byte);
++      break;
++
++    case DBUS_TYPE_DOUBLE:
++      d = strtod (c, NULL);
++      dbus_message_iter_append_double (iter, d);
++      break;
++
++    case DBUS_TYPE_INT32:
++      int32 = strtol (c, NULL, 0);
++      dbus_message_iter_append_int32 (iter, int32);
++      break;
++
++    case DBUS_TYPE_UINT32:
++      uint32 = strtoul (c, NULL, 0);
++      dbus_message_iter_append_uint32 (iter, uint32);
++      break;
++
++    case DBUS_TYPE_STRING:
++      dbus_message_iter_append_string (iter, c);
++      break;
++
++    case DBUS_TYPE_BOOLEAN:
++      if (strcmp(c, "true") == 0)
++        dbus_message_iter_append_boolean (iter, TRUE);
++      else if (strcmp(c, "false") == 0)
++        dbus_message_iter_append_boolean (iter, FALSE);
++      else
++        {
++          fprintf (stderr, "%s: Expected \"true\" or \"false\" instead of \"%s\"\n", argv[0], c);
++          exit (1);
++        }
++      break;
++	
++      case DBUS_TYPE_ARRAY:
++        /* Decompose parameters and put it as array */
++        dbus_message_iter_append_array(iter, &array_iter, atype);
++	
++        while(!end_found)
++	  {
++            next = strchr(c, ',');
++            if (next == NULL) 
++              {
++                next = strchr(c, ']');
++		
++                if (next != NULL)
++		  next[0] = 0;
++		else 
++		  break;
++		
++		end_found = 1;
++              } 
++	    else 
++	      {
++                next[0] = 0;
++                next++;
++              }
++	      
++              append (argv, arg, c, &array_iter);
++              c = next;
++	  }
++	break;
++	  
++      default:
++	fprintf (stderr, "%s: Unsupported data type\n", argv[0]);
++	exit (1);
++    }
++}
++
+ int
+ main (int argc, char *argv[])
+ {
+@@ -174,12 +314,7 @@
+     {
+       char *arg;
+       char *c;
+-      int type;
+-      dbus_uint32_t uint32;
+-      dbus_int32_t int32;
+-      double d;
+-      unsigned char byte;
+-
++      
+       type = DBUS_TYPE_INVALID;
+       arg = argv[i++];
+       c = strchr (arg, ':');
+@@ -192,67 +327,7 @@
+ 
+       *(c++) = 0;
+ 
+-      if (arg[0] == 0 || !strcmp (arg, "string"))
+-	type = DBUS_TYPE_STRING;
+-      else if (!strcmp (arg, "int32"))
+-	type = DBUS_TYPE_INT32;
+-      else if (!strcmp (arg, "uint32"))
+-	type = DBUS_TYPE_UINT32;
+-      else if (!strcmp (arg, "double"))
+-	type = DBUS_TYPE_DOUBLE;
+-      else if (!strcmp (arg, "byte"))
+-	type = DBUS_TYPE_BYTE;
+-      else if (!strcmp (arg, "boolean"))
+-	type = DBUS_TYPE_BOOLEAN;
+-      else
+-	{
+-	  fprintf (stderr, "%s: Unknown type \"%s\"\n", argv[0], arg);
+-	  exit (1);
+-	}
+-
+-      /* FIXME - we are ignoring OOM returns on all these functions */
+-      switch (type)
+-	{
+-	case DBUS_TYPE_BYTE:
+-	  byte = strtoul (c, NULL, 0);
+-	  dbus_message_iter_append_byte (&iter, byte);
+-	  break;
+-
+-	case DBUS_TYPE_DOUBLE:
+-	  d = strtod (c, NULL);
+-	  dbus_message_iter_append_double (&iter, d);
+-	  break;
+-
+-	case DBUS_TYPE_INT32:
+-	  int32 = strtol (c, NULL, 0);
+-	  dbus_message_iter_append_int32 (&iter, int32);
+-	  break;
+-
+-	case DBUS_TYPE_UINT32:
+-	  uint32 = strtoul (c, NULL, 0);
+-	  dbus_message_iter_append_uint32 (&iter, uint32);
+-	  break;
+-
+-	case DBUS_TYPE_STRING:
+-	  dbus_message_iter_append_string (&iter, c);
+-	  break;
+-
+-	case DBUS_TYPE_BOOLEAN:
+-          if (strcmp(c, "true") == 0)
+-            dbus_message_iter_append_boolean (&iter, TRUE);
+-	  else if (strcmp(c, "false") == 0)
+-            dbus_message_iter_append_boolean (&iter, FALSE);
+-	  else
+-	    {
+-	      fprintf (stderr, "%s: Expected \"true\" or \"false\" instead of \"%s\"\n", argv[0], c);
+-	      exit (1);
+-	    }
+-	  break;
+-
+-	default:
+-	  fprintf (stderr, "%s: Unsupported data type\n", argv[0]);
+-	  exit (1);
+-	}
++      append (argv, arg, c, &iter);
+     }
+ 
+   if (print_reply)

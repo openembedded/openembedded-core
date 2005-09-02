@@ -1,0 +1,48 @@
+--- gtk+-2.6.4/gtk/gtkrbtree.c	2004-10-28 18:00:04.000000000 +0300
++++ gtk+-2.6.4/gtk/gtkrbtree.c	2005-04-06 16:19:37.812789944 +0300
+@@ -1378,18 +1378,18 @@
+   g_return_val_if_fail (node != NULL, NULL);
+ 
+   /* Case 1: the node's below us. */
+-  if (node->right != tree->nil)
++  if (node && node->right != tree->nil)
+     {
+       node = node->right;
+-      while (node->left != tree->nil)
++      while (node && node->left != tree->nil)
+ 	node = node->left;
+       return node;
+     }
+ 
+   /* Case 2: it's an ancestor */
+-  while (node->parent != tree->nil)
++  while (node && node->parent != tree->nil)
+     {
+-      if (node->parent->right == node)
++      if (node->parent && node->parent->right == node)
+ 	node = node->parent;
+       else
+ 	return (node->parent);
+@@ -1407,18 +1407,18 @@
+   g_return_val_if_fail (node != NULL, NULL);
+ 
+   /* Case 1: the node's below us. */
+-  if (node->left != tree->nil)
++  if (node != NULL && node->left != tree->nil)
+     {
+       node = node->left;
+-      while (node->right != tree->nil)
++      while (node != NULL && node->right != tree->nil)
+ 	node = node->right;
+       return node;
+     }
+ 
+   /* Case 2: it's an ancestor */
+-  while (node->parent != tree->nil)
++  while (node != NULL && node->parent != tree->nil)
+     {
+-      if (node->parent->left == node)
++      if (node->parent && node->parent->left == node)
+ 	node = node->parent;
+       else
+ 	return (node->parent);

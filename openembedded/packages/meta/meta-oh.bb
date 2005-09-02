@@ -16,7 +16,8 @@ DEPENDS += " ${oh-base-depends}"
 oh-task-base = "\
     matchbox \
     xcursor-transparent-theme \
-    x11-common \
+    xserver-kdrive-common \
+    avahi \
     rxvt \
     xhost \
     ttf-bitstream-vera \

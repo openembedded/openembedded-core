@@ -1,0 +1,15 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- dbus-0.20/configure.in~cross
++++ dbus-0.20/configure.in
+@@ -466,6 +466,7 @@
+     exit (0);
+ ]])],
+               [have_abstract_sockets=yes],
++              [have_abstract_sockets=no],
+               [have_abstract_sockets=no])
+ AC_LANG_POP(C)
+ AC_MSG_RESULT($have_abstract_sockets)

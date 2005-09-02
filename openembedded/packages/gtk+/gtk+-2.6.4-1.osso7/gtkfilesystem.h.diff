@@ -1,0 +1,12 @@
+--- gtk+-2.6.4/gtk/gtkfilesystem.h	2005-01-03 01:15:21.000000000 +0200
++++ gtk+-2.6.4/gtk/gtkfilesystem.h	2005-04-06 16:19:36.518986632 +0300
+@@ -364,6 +364,9 @@
+ 
+ GtkFileSystem  *_gtk_file_system_create (const char *file_system_name);
+ 
++/* In Hildon we need to publish the previous symbol */
++GtkFileSystem *hildon_gtk_file_system_create(const char *file_system_name);
++
+ G_END_DECLS
+ 
+ #endif /* __GTK_FILE_SYSTEM_H__ */

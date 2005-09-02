@@ -1,0 +1,51 @@
+--- gtk+-2.6.4/gtk/gtktreeviewcolumn.c	2005-01-05 00:10:56.000000000 +0200
++++ gtk+-2.6.4/gtk/gtktreeviewcolumn.c	2005-04-06 16:19:38.346708776 +0300
+@@ -1367,6 +1367,19 @@
+   return FALSE;
+ }
+ 
++gboolean
++_gtk_tree_view_column_has_activatable_cell (GtkTreeViewColumn *column)
++{
++  GList *list;
++
++  for (list = column->cell_list; list; list = list->next)
++    if (((GtkTreeViewColumnCellInfo *)list->data)->cell->mode ==
++       GTK_CELL_RENDERER_MODE_ACTIVATABLE)
++      return TRUE;
++
++  return FALSE;
++}
++
+ /* gets cell being edited */
+ GtkCellRenderer *
+ _gtk_tree_view_column_get_edited_cell (GtkTreeViewColumn *column)
+@@ -2582,6 +2595,7 @@
+   GList *list;
+   gboolean first_cell = TRUE;
+   gint focus_line_width;
++  gint horizontal_separator;
+ 
+   g_return_if_fail (GTK_IS_TREE_VIEW_COLUMN (tree_column));
+ 
+@@ -2590,7 +2604,10 @@
+   if (width)
+     * width = 0;
+ 
+-  gtk_widget_style_get (tree_column->tree_view, "focus-line-width", &focus_line_width, NULL);
++  gtk_widget_style_get (tree_column->tree_view,
++                        "focus-line-width", &focus_line_width,
++                        "horizontal-separator", &horizontal_separator,
++                        NULL);
+   
+   for (list = tree_column->cell_list; list; list = list->next)
+     {
+@@ -2618,7 +2635,7 @@
+ 	* height = MAX (*height, new_height + focus_line_width * 2);
+       info->requested_width = MAX (info->requested_width, new_width + focus_line_width * 2);
+       if (width)
+-	* width += info->requested_width;
++	* width += info->requested_width + horizontal_separator;
+       first_cell = FALSE;
+     }
+ }

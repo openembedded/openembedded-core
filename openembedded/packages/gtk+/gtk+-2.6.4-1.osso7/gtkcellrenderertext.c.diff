@@ -1,0 +1,66 @@
+--- gtk+-2.6.4/gtk/gtkcellrenderertext.c	2005-01-09 19:32:25.000000000 +0200
++++ gtk+-2.6.4/gtk/gtkcellrenderertext.c	2005-04-06 16:19:36.274023872 +0300
+@@ -182,8 +182,8 @@
+ 
+   GTK_CELL_RENDERER (celltext)->xalign = 0.0;
+   GTK_CELL_RENDERER (celltext)->yalign = 0.5;
+-  GTK_CELL_RENDERER (celltext)->xpad = 2;
+-  GTK_CELL_RENDERER (celltext)->ypad = 2;
++  GTK_CELL_RENDERER (celltext)->xpad = 0;
++  GTK_CELL_RENDERER (celltext)->ypad = 0;
+   celltext->fixed_height_rows = -1;
+   celltext->font = pango_font_description_new ();
+ 
+@@ -1429,7 +1429,7 @@
+   /* The minimum size for ellipsized labels is ~ 3 chars */
+   if (width)
+     {
+-      if (priv->ellipsize || priv->width_chars > 0)
++      /*if (priv->ellipsize || priv->width_chars > 0)
+ 	{
+ 	  PangoContext *context;
+ 	  PangoFontMetrics *metrics;
+@@ -1444,9 +1444,9 @@
+ 	  *width += (PANGO_PIXELS (char_width) * MAX (priv->width_chars, 3));
+ 	}
+       else
+-	{
++	{*/
+ 	  *width = GTK_CELL_RENDERER (celltext)->xpad * 2 + rect.width;
+-	}	  
++	/*}	  */
+     }
+ 
+   if (cell_area)
+@@ -1501,6 +1501,7 @@
+   gint x_offset;
+   gint y_offset;
+   GtkCellRendererTextPrivate *priv;
++  PangoRectangle logical_rect;
+ 
+   priv = GTK_CELL_RENDERER_TEXT_GET_PRIVATE (cell);
+ 
+@@ -1521,7 +1522,7 @@
+   else if ((flags & GTK_CELL_RENDERER_PRELIT) == GTK_CELL_RENDERER_PRELIT &&
+ 	   GTK_WIDGET_STATE (widget) == GTK_STATE_PRELIGHT)
+     {
+-      state = GTK_STATE_PRELIGHT;
++      state = GTK_STATE_NORMAL;
+     }
+   else
+     {
+@@ -1559,6 +1560,14 @@
+       g_object_unref (gc);
+     }
+ 
++  /* Dirty Hildon hack to force ellipsation */
++  pango_layout_get_extents (layout, NULL, &logical_rect);
++  if (PANGO_PIXELS (logical_rect.width) > MIN (background_area->width, expose_area->width))
++    {
++      priv->ellipsize = PANGO_ELLIPSIZE_END;
++      priv->ellipsize_set = TRUE;
++    }
++
+   if (priv->ellipsize)
+     pango_layout_set_width (layout, 
+ 			    (cell_area->width - x_offset - 2 * cell->xpad) * PANGO_SCALE);

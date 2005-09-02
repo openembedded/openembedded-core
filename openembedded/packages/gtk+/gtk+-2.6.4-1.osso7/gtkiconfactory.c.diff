@@ -1,0 +1,69 @@
+--- gtk+-2.6.4/gtk/gtkiconfactory.c	2005-01-03 16:44:33.000000000 +0200
++++ gtk+-2.6.4/gtk/gtkiconfactory.c	2005-04-06 16:19:36.804943160 +0300
+@@ -813,7 +813,7 @@
+ {
+   if (icon_sizes == NULL)
+     {
+-#define NUM_BUILTIN_SIZES 7
++#define NUM_BUILTIN_SIZES 11
+       gint i;
+ 
+       icon_aliases = g_hash_table_new (g_str_hash, g_str_equal);
+@@ -863,7 +863,27 @@
+       icon_sizes[GTK_ICON_SIZE_DIALOG].width = 48;
+       icon_sizes[GTK_ICON_SIZE_DIALOG].height = 48;
+ 
+-      g_assert ((GTK_ICON_SIZE_DIALOG + 1) == NUM_BUILTIN_SIZES);
++      icon_sizes[HILDON_ICON_SIZE_26].size = HILDON_ICON_SIZE_26;
++      icon_sizes[HILDON_ICON_SIZE_26].name = "hildon-26";
++      icon_sizes[HILDON_ICON_SIZE_26].width = 26;
++      icon_sizes[HILDON_ICON_SIZE_26].height = 26;
++
++      icon_sizes[HILDON_ICON_SIZE_40].size = HILDON_ICON_SIZE_40;
++      icon_sizes[HILDON_ICON_SIZE_40].name = "hildon-40";
++      icon_sizes[HILDON_ICON_SIZE_40].width = 40;
++      icon_sizes[HILDON_ICON_SIZE_40].height = 40;
++
++      icon_sizes[HILDON_ICON_SIZE_50].size = HILDON_ICON_SIZE_50;
++      icon_sizes[HILDON_ICON_SIZE_50].name = "hildon-50";
++      icon_sizes[HILDON_ICON_SIZE_50].width = 50;
++      icon_sizes[HILDON_ICON_SIZE_50].height = 50;
++
++      icon_sizes[HILDON_ICON_SIZE_64].size = HILDON_ICON_SIZE_64;
++      icon_sizes[HILDON_ICON_SIZE_64].name = "hildon-64";
++      icon_sizes[HILDON_ICON_SIZE_64].width = 54;
++      icon_sizes[HILDON_ICON_SIZE_64].height = 64;
++
++      g_assert ((HILDON_ICON_SIZE_64 + 1) == NUM_BUILTIN_SIZES);
+ 
+       /* Alias everything to itself. */
+       i = 1; /* skip invalid size */
+@@ -1658,7 +1678,7 @@
+   gint width, height, pixel_size;
+   gint *sizes, *s, dist;
+   GError *error = NULL;
+-  
++
+   if (widget && gtk_widget_has_screen (widget))
+     screen = gtk_widget_get_screen (widget);
+   else if (style && style->colormap)
+@@ -1734,8 +1754,10 @@
+   tmp_source.type = GTK_ICON_SOURCE_PIXBUF;
+   tmp_source.source.pixbuf = tmp_pixbuf;
+ 
++  /* Hildon: no scaling allowed for Hildon icons */
+   pixbuf = gtk_style_render_icon (style, &tmp_source,
+-				  direction, state, -1,
++				  direction, state,
++				  (size < HILDON_ICON_SIZE_26) ? -1 : size,
+ 				  widget, detail);
+ 
+   if (!pixbuf)
+@@ -1818,7 +1840,6 @@
+ {
+   /* This icon can be used for any direction/state/size */
+   static GtkIconSource fallback_source = GTK_ICON_SOURCE_INIT (TRUE, TRUE, TRUE);
+-
+   if (fallback_source.type == GTK_ICON_SOURCE_EMPTY)
+     {
+       GdkPixbuf *pixbuf = gdk_pixbuf_new_from_inline (-1, stock_missing_image_24, FALSE, NULL);

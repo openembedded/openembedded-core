@@ -1,0 +1,29 @@
+--- gtk+-2.6.4/gtk/gtkrange.h	2004-08-27 05:54:12.000000000 +0300
++++ gtk+-2.6.4/gtk/gtkrange.h	2005-04-06 16:19:37.798792072 +0300
+@@ -24,6 +24,10 @@
+  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+  */
+ 
++/* Modified for Nokia Oyj during 2002-2005. See CHANGES file for list
++ * of changes.
++ */
++
+ #ifndef __GTK_RANGE_H__
+ #define __GTK_RANGE_H__
+ 
+@@ -155,6 +159,15 @@
+ gdouble	      _gtk_range_get_wheel_delta   (GtkRange           *range,
+ 					    GdkScrollDirection  direction);
+ 
++/* OSSO additions for streaming indicator support. */
++void           osso_gtk_range_set_stream_indicator (GtkRange *range, 
++						    gboolean stream_indicator);
++gboolean       osso_gtk_range_get_stream_indicator (GtkRange *range);
++
++void           osso_gtk_range_set_stream_position (GtkRange *range, 
++						   gdouble position);
++gdouble        osso_gtk_range_get_stream_position (GtkRange *range);
++
+ #ifdef __cplusplus
+ }
+ #endif /* __cplusplus */

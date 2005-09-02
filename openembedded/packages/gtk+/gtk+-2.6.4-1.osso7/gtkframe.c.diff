@@ -1,0 +1,82 @@
+--- gtk+-2.6.4/gtk/gtkframe.c	2004-08-17 22:10:24.000000000 +0300
++++ gtk+-2.6.4/gtk/gtkframe.c	2005-04-06 16:19:36.583976752 +0300
+@@ -24,6 +24,10 @@
+  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+  */
+ 
++/* Modified for Nokia Oyj during 2002-2003. See CHANGES file for list
++ * of changes.
++ */
++
+ #include <config.h>
+ #include <string.h>
+ #include "gtkalias.h"
+@@ -33,6 +37,7 @@
+ 
+ #define LABEL_PAD 1
+ #define LABEL_SIDE_PAD 2
++#define FRAME_BORDER_WIDTH 3
+ 
+ enum {
+   PROP_0,
+@@ -172,6 +177,14 @@
+                                                         P_("A widget to display in place of the usual frame label"),
+                                                         GTK_TYPE_WIDGET,
+                                                         G_PARAM_READABLE | G_PARAM_WRITABLE));
++
++   /* draw hildonlike frame */
++   gtk_widget_class_install_style_property (widget_class,
++ 					   g_param_spec_boolean ("hildonlike",
++								 _("hildonlike looks"),
++								 _("Draw frame, 1/0"),
++								 FALSE,
++								 G_PARAM_READABLE));
+   
+   widget_class->expose_event = gtk_frame_expose;
+   widget_class->size_request = gtk_frame_size_request;
+@@ -276,7 +289,7 @@
+ GtkWidget*
+ gtk_frame_new (const gchar *label)
+ {
+-  return g_object_new (GTK_TYPE_FRAME, "label", label, NULL);
++  return g_object_new (GTK_TYPE_FRAME, "label", label, "border-width", FRAME_BORDER_WIDTH, NULL);
+ }
+ 
+ static void
+@@ -533,6 +546,9 @@
+ {
+   GtkFrame *frame;
+   gint x, y, width, height;
++  gboolean hildonlike;
++
++  gtk_widget_style_get ( widget, "hildonlike", &hildonlike, NULL );
+ 
+   if (GTK_WIDGET_DRAWABLE (widget))
+     {
+@@ -543,7 +559,16 @@
+       width = frame->child_allocation.width + 2 * widget->style->xthickness;
+       height =  frame->child_allocation.height + 2 * widget->style->ythickness;
+ 
+-      if (frame->label_widget)
++      if (hildonlike) {
++          /* draw hildon application borders */
++         gtk_paint_box (widget->style,
++			     widget->window,
++			     GTK_WIDGET_STATE( widget ),
++			     GTK_SHADOW_OUT,
++			     NULL, widget, "frame",
++			     x, y, width, height);
++      }
++      else if (frame->label_widget)
+ 	{
+ 	  GtkRequisition child_requisition;
+ 	  gfloat xalign;
+@@ -586,7 +611,7 @@
+ {
+   if (GTK_WIDGET_DRAWABLE (widget))
+     {
+-      gtk_frame_paint (widget, &event->area);
++      	    gtk_frame_paint (widget, &event->area);
+ 
+       (* GTK_WIDGET_CLASS (parent_class)->expose_event) (widget, event);
+     }

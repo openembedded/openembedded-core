@@ -1,0 +1,10 @@
+--- gtk+-2.6.4/gtk/gtktoolbutton.h	2004-11-23 22:02:15.000000000 +0200
++++ gtk+-2.6.4/gtk/gtktoolbutton.h	2005-04-06 16:19:38.168735832 +0300
+@@ -54,6 +54,7 @@
+ 
+   /* signal */
+   void       (* clicked)             (GtkToolButton    *tool_item);
++  void       (* insensitive_press)             (GtkToolButton    *tool_item);
+ 
+   /* Padding for future expansion */
+   void (* _gtk_reserved1) (void);

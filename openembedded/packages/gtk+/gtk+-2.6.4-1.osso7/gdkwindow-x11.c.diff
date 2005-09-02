@@ -1,0 +1,38 @@
+--- gtk+-2.6.4/gdk/x11/gdkwindow-x11.c	2005-01-25 20:51:36.000000000 +0200
++++ gtk+-2.6.4/gdk/x11/gdkwindow-x11.c	2005-04-06 16:19:35.350164320 +0300
+@@ -1286,6 +1286,7 @@
+   GdkToplevelX11 *toplevel;
+   Atom atoms[7];
+   gint i;
++  gint propmode;
+ 
+   private = (GdkWindowObject*) window;
+   toplevel = _gdk_x11_window_get_toplevel (window);
+@@ -1295,6 +1296,12 @@
+ 
+   update_wm_hints (window, TRUE);
+   
++  /* If the window has _NET_WM_STATE key specified, use it as the property mode */
++  propmode = (gint)g_object_get_data (G_OBJECT (window), "_NET_WM_STATE");
++
++  if (!propmode) 
++    propmode = PropModeReplace;
++
+   /* We set the spec hints regardless of whether the spec is supported,
+    * since it can't hurt and it's kind of expensive to check whether
+    * it's supported.
+@@ -1366,10 +1373,11 @@
+       XChangeProperty (xdisplay,
+                        xwindow,
+ 		       gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_STATE"),
+-                       XA_ATOM, 32, PropModeReplace,
++                       XA_ATOM, 32, propmode,
+                        (guchar*) atoms, i);
+-    }
+-  else 
++    } 
++  /* Don't delete the property, unless we are replacing it */
++  else if (propmode == PropModeReplace )
+     {
+       XDeleteProperty (xdisplay,
+                        xwindow,

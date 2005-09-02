@@ -1,0 +1,443 @@
+--- gtk+-2.6.4/gtk/gtktextbuffer.c	2004-11-01 21:57:13.000000000 +0200
++++ gtk+-2.6.4/gtk/gtktextbuffer.c	2005-04-06 16:19:38.023757872 +0300
+@@ -1,5 +1,6 @@
+ /* GTK - The GIMP Toolkit
+  * gtktextbuffer.c Copyright (C) 2000 Red Hat, Inc.
++ *                 Copyright (C) 2004 Nokia Corporation
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -39,6 +40,17 @@
+ #include "gtktextbtree.h"
+ #include "gtktextiterprivate.h"
+ #include "gtkintl.h"
++#include "gtktextbufferserialize.h"
++
++#define GTK_TEXT_BUFFER_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_TEXT_BUFFER, GtkTextBufferPrivate))
++
++typedef struct _GtkTextBufferPrivate GtkTextBufferPrivate;
++
++struct _GtkTextBufferPrivate
++{
++  gboolean can_paste_rich_text;
++  gchar   *rich_text_format;
++};
+ 
+ typedef struct _ClipboardRequest ClipboardRequest;
+ 
+@@ -71,7 +83,10 @@
+   PROP_0,
+ 
+   /* Construct */
+-  PROP_TAG_TABLE
++  PROP_TAG_TABLE,
++
++  PROP_CAN_PASTE_RICH_TEXT,
++  PROP_RICH_TEXT_FORMAT  
+ };
+ 
+ enum {
+@@ -79,6 +94,8 @@
+   TARGET_TEXT,
+   TARGET_COMPOUND_TEXT,
+   TARGET_UTF8_STRING,
++  TARGET_TEXT_VIEW_MARKUP,
++  TARGET_TEXT_VIEW_RICH_TEXT_FORMAT,
+   TARGET_TEXT_BUFFER_CONTENTS
+ };
+ 
+@@ -185,7 +202,20 @@
+                                                         P_("Text Tag Table"),
+                                                         GTK_TYPE_TEXT_TAG_TABLE,
+                                                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
++  g_object_class_install_property (object_class,
++                                  PROP_CAN_PASTE_RICH_TEXT,
++                                  g_param_spec_boolean ("can_paste_rich_text",
++                                                        P_("Can paste rich text"),
++                                                        P_("Whether it should be possible to paste rich text to the buffer"),
++                                                        FALSE, G_PARAM_READWRITE));
++  g_object_class_install_property (object_class,
++                                  PROP_RICH_TEXT_FORMAT,
++                                  g_param_spec_string ("rich_text_format",
++                                                       P_("Rich Text Format"),
++                                                       P_("Name of a collection of tags that the text view supports"),
++                                                       NULL, G_PARAM_READWRITE));
+ 
++  
+   signals[INSERT_TEXT] =
+     g_signal_new ("insert_text",
+                   G_OBJECT_CLASS_TYPE (object_class),
+@@ -335,7 +365,9 @@
+                   NULL, NULL,
+                   _gtk_marshal_VOID__VOID,
+                   G_TYPE_NONE,
+-                  0);  
++                  0);
++  
++  g_type_class_add_private (object_class, sizeof (GtkTextBufferPrivate));
+ }
+ 
+ static void
+@@ -385,7 +417,12 @@
+     case PROP_TAG_TABLE:
+       set_table (text_buffer, g_value_get_object (value));
+       break;
+-
++    case PROP_CAN_PASTE_RICH_TEXT:
++      gtk_text_buffer_set_can_paste_rich_text (text_buffer, g_value_get_boolean (value));
++      break;
++    case PROP_RICH_TEXT_FORMAT:
++      gtk_text_buffer_set_rich_text_format (text_buffer, g_value_get_string (value));
++      break;
+     default:
+       break;
+     }
+@@ -406,7 +443,14 @@
+     case PROP_TAG_TABLE:
+       g_value_set_object (value, get_table (text_buffer));
+       break;
+-
++    case PROP_CAN_PASTE_RICH_TEXT:
++      g_value_set_boolean (value,
++                          gtk_text_buffer_get_can_paste_rich_text (text_buffer));
++      break;
++    case PROP_RICH_TEXT_FORMAT:
++      g_value_set_string (value,
++                         gtk_text_buffer_get_rich_text_format (text_buffer));
++      break;
+     default:
+       break;
+     }
+@@ -434,11 +478,14 @@
+ gtk_text_buffer_finalize (GObject *object)
+ {
+   GtkTextBuffer *buffer;
++  GtkTextBufferPrivate *priv;
+ 
+   buffer = GTK_TEXT_BUFFER (object);
+ 
+   remove_all_selection_clipboards (buffer);
+ 
++  priv = GTK_TEXT_BUFFER_GET_PRIVATE (buffer);
++
+   if (buffer->tag_table)
+     {
+       _gtk_text_tag_table_remove_buffer (buffer->tag_table, buffer);
+@@ -456,7 +503,9 @@
+     free_log_attr_cache (buffer->log_attr_cache);
+ 
+   buffer->log_attr_cache = NULL;
+-  
++
++  g_free (priv->rich_text_format);
++
+   G_OBJECT_CLASS (parent_class)->finalize (object);
+ }
+ 
+@@ -2738,8 +2787,7 @@
+ 
+   if (gtk_text_buffer_get_selection_bounds (buffer, &start, &end))
+     {
+-      if (selection_data->target ==
+-          gdk_atom_intern ("GTK_TEXT_BUFFER_CONTENTS", FALSE))
++      if (info == TARGET_TEXT_BUFFER_CONTENTS)
+         {
+           /* Provide the address of the buffer; this will only be
+            * used within-process
+@@ -2750,6 +2798,32 @@
+                                   (void*)&buffer,
+                                   sizeof (buffer));
+         }
++      else if (info == TARGET_TEXT_VIEW_MARKUP)
++       {
++         gchar *str;
++         gint len;
++
++         str = gtk_text_buffer_serialize_rich_text (buffer, &start, &end, &len);
++
++         gtk_selection_data_set (selection_data,
++                                 gdk_atom_intern ("application/x-gtk-text-view-markup", FALSE),
++                                 8, /* bytes */
++                                 str, len);
++         g_free (str);
++       }
++      else if (info == TARGET_TEXT_VIEW_RICH_TEXT_FORMAT)
++	{
++	  gint len;
++	  gchar *format;
++	  
++	  format = g_object_get_data (G_OBJECT (buffer), "gtk-text-buffer-clipboard-format");
++	  len = format ? strlen (format) : -1;
++	  
++	  gtk_selection_data_set (selection_data,
++				  gdk_atom_intern ("application/x-gtk-text-view-rich-text-format", FALSE),
++				  8, /* bytes */
++				  format, len);
++	}
+       else
+         {
+           gchar *str;
+@@ -2765,10 +2839,16 @@
+ create_clipboard_contents_buffer (GtkTextBuffer *buffer)
+ {
+   GtkTextBuffer *contents;
++  gchar *format;
+ 
+   contents = gtk_text_buffer_new (gtk_text_buffer_get_tag_table (buffer));
+ 
++  format = GTK_TEXT_BUFFER_GET_PRIVATE (buffer)->rich_text_format;
++
+   g_object_set_data (G_OBJECT (contents), "gtk-text-buffer-clipboard", GINT_TO_POINTER (1));
++
++  g_object_set_data_full (G_OBJECT (contents), "gtk-text-buffer-clipboard-format",
++ 			  format ? g_strdup (format) : NULL, g_free);
+   
+   return contents;
+ }
+@@ -2786,8 +2866,7 @@
+   
+   g_assert (contents); /* This should never be called unless we own the clipboard */
+ 
+-  if (selection_data->target ==
+-      gdk_atom_intern ("GTK_TEXT_BUFFER_CONTENTS", FALSE))
++  if (info == TARGET_TEXT_BUFFER_CONTENTS)
+     {
+       /* Provide the address of the clipboard buffer; this will only
+        * be used within-process. OK to supply a NULL value for contents.
+@@ -2798,6 +2877,35 @@
+                               (void*)&contents,
+                               sizeof (contents));
+     }
++  else if (info == TARGET_TEXT_VIEW_MARKUP)
++    {
++      gchar *str;
++      gint *len;
++      GtkTextIter start, end;
++      
++      gtk_text_buffer_get_bounds (contents, &start, &end);
++      
++      str = gtk_text_buffer_serialize_rich_text (contents, &start, &end, &len);
++      
++      gtk_selection_data_set (selection_data,
++			      gdk_atom_intern ("application/x-gtk-text-view-markup", FALSE),
++			      8, /* bytes */
++			      str, len);
++      g_free (str);
++    }
++  else if (info == TARGET_TEXT_VIEW_RICH_TEXT_FORMAT)
++    {
++      gint len;
++      gchar *format;
++
++      format = g_object_get_data (G_OBJECT (contents), "gtk-text-buffer-clipboard-format");
++      len = format ? strlen (format) : -1;
++
++      gtk_selection_data_set (selection_data,
++                             gdk_atom_intern ("application/x-gtk-text-view-rich-text-format", FALSE),
++                             8, /* bytes */
++                             format, len);
++    }
+   else
+     {
+       gchar *str;
+@@ -2992,6 +3100,54 @@
+ #endif
+ 
+ static void
++clipboard_text_view_markup_received (GtkClipboard     *clipboard,
++                                    GtkSelectionData *selection_data,
++                                    gpointer          data)
++{
++  ClipboardRequest *request_data = data;
++  GtkTextIter insert_point;
++  gboolean retval = TRUE;
++  GError *error = NULL;
++  GtkTextBufferPrivate *priv;
++
++  priv = GTK_TEXT_BUFFER_GET_PRIVATE (request_data->buffer);
++
++  if (selection_data->target ==
++      gdk_atom_intern ("application/x-gtk-text-view-markup", FALSE))
++    {
++      pre_paste_prep (request_data, &insert_point);
++
++      if (request_data->interactive)
++       gtk_text_buffer_begin_user_action (request_data->buffer);
++
++      if (!request_data->interactive ||
++         gtk_text_iter_can_insert (&insert_point, request_data->default_editable))
++       retval = gtk_text_buffer_deserialize_rich_text (request_data->buffer,
++                                                       &insert_point,
++                                                       selection_data->data, selection_data->length,
++                                                       priv->rich_text_format == NULL, &error);
++
++      if (!retval)
++       {
++         g_warning ("error pasting: %s\n", error->message);
++       }
++
++      if (request_data->interactive)
++       gtk_text_buffer_end_user_action (request_data->buffer);
++
++      if (retval) {
++       post_paste_cleanup (request_data);
++       return;
++      }
++    }
++
++  /* Request the text selection instead */
++  gtk_clipboard_request_text (clipboard,
++                             clipboard_text_received,
++                             data);
++}
++
++static void
+ paste_from_buffer (ClipboardRequest    *request_data,
+                    GtkTextBuffer       *src_buffer,
+                    const GtkTextIter   *start,
+@@ -3029,6 +3185,35 @@
+   g_free (request_data);
+ }
+ 
++static gboolean
++formats_match (GtkClipboard *clipboard, const gchar *format)
++{
++  GtkSelectionData *data;
++  gchar *tmp;
++  gboolean retval;
++
++  if (!format)
++    return TRUE;
++
++  data = gtk_clipboard_wait_for_contents (clipboard,
++					  gdk_atom_intern ("application/x-gtk-text-view-rich-text-format", FALSE));
++
++  if (data->length <= 0)
++    retval = FALSE;
++  else
++    {
++      tmp = g_strndup (data->data, data->length);
++
++      retval = (strcmp (tmp, format) == 0);
++
++      g_free (tmp);
++    }
++
++  gtk_selection_data_free (data);
++
++  return retval;
++}
++      
+ static void
+ clipboard_clipboard_buffer_received (GtkClipboard     *clipboard,
+                                      GtkSelectionData *selection_data,
+@@ -3036,6 +3221,7 @@
+ {
+   ClipboardRequest *request_data = data;
+   GtkTextBuffer *src_buffer;
++  GtkTextBufferPrivate *priv;
+   
+   src_buffer = selection_data_get_buffer (selection_data, request_data); 
+ 
+@@ -3059,10 +3245,19 @@
+     }
+   else
+     {
+-      /* Request the text selection instead */
+-      gtk_clipboard_request_text (clipboard,
+-                                  clipboard_text_received,
+-                                  data);
++      priv = GTK_TEXT_BUFFER_GET_PRIVATE (request_data->buffer);
++
++      if (priv->can_paste_rich_text &&
++         formats_match (clipboard, priv->rich_text_format))
++       /* Request markup */
++       gtk_clipboard_request_contents (clipboard,
++                                       gdk_atom_intern ("application/x-gtk-text-view-markup", FALSE),
++                                       clipboard_text_view_markup_received, data);
++      else
++       /* Request the text selection instead */
++       gtk_clipboard_request_text (clipboard,
++                                   clipboard_text_received,
++                                   data);
+     }
+ }
+ 
+@@ -3071,6 +3266,8 @@
+   { "TEXT",   0, TARGET_TEXT },
+   { "COMPOUND_TEXT", 0, TARGET_COMPOUND_TEXT },
+   { "UTF8_STRING", 0, TARGET_UTF8_STRING },
++  { "application/x-gtk-text-view-markup", 0, TARGET_TEXT_VIEW_MARKUP },
++  { "application/x-gtk-text-view-rich-text-format", 0, TARGET_TEXT_VIEW_RICH_TEXT_FORMAT },
+   { "GTK_TEXT_BUFFER_CONTENTS", 0, TARGET_TEXT_BUFFER_CONTENTS }
+ };
+ 
+@@ -3591,6 +3788,68 @@
+     }
+ }
+ 
++void
++gtk_text_buffer_set_can_paste_rich_text (GtkTextBuffer *buffer,
++                                        gboolean       can_paste_rich_text)
++{
++  GtkTextBufferPrivate *priv;
++
++  g_return_if_fail (GTK_IS_TEXT_BUFFER (buffer));
++
++  priv = GTK_TEXT_BUFFER_GET_PRIVATE (buffer);
++
++  can_paste_rich_text = (can_paste_rich_text != FALSE);
++
++  if (priv->can_paste_rich_text != can_paste_rich_text)
++    {
++      priv->can_paste_rich_text = can_paste_rich_text;
++
++      g_object_notify (G_OBJECT (buffer), "can_paste_rich_text");
++    }
++}
++
++gboolean
++gtk_text_buffer_get_can_paste_rich_text (GtkTextBuffer *buffer)
++{
++  GtkTextBufferPrivate *priv;
++
++  g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), FALSE);
++
++  priv = GTK_TEXT_BUFFER_GET_PRIVATE (buffer);
++
++  return priv->can_paste_rich_text;
++}
++
++void
++gtk_text_buffer_set_rich_text_format (GtkTextBuffer *buffer,
++                                     const gchar   *format)
++{
++  gchar *new_format;
++  GtkTextBufferPrivate *priv;
++
++  g_return_if_fail (GTK_IS_TEXT_BUFFER (buffer));
++
++  priv = GTK_TEXT_BUFFER_GET_PRIVATE (buffer);
++
++  new_format = g_strdup (format);
++  g_free (priv->rich_text_format);
++
++  priv->rich_text_format = new_format;
++  g_object_notify (G_OBJECT (buffer), "rich_text_format");
++}
++
++G_CONST_RETURN gchar *
++gtk_text_buffer_get_rich_text_format (GtkTextBuffer *buffer)
++{
++  GtkTextBufferPrivate *priv;
++
++  g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
++
++  priv = GTK_TEXT_BUFFER_GET_PRIVATE (buffer);
++
++  return priv->rich_text_format;
++}
++
+ /*
+  * Logical attribute cache
+  */

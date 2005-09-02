@@ -1,0 +1,11 @@
+--- gtk+-2.6.4/gtk/gtkcellrenderertoggle.c	2004-08-09 19:59:51.000000000 +0300
++++ gtk+-2.6.4/gtk/gtkcellrenderertoggle.c	2005-04-06 16:19:36.274023872 +0300
+@@ -71,7 +71,7 @@
+   PROP_INCONSISTENT
+ };
+ 
+-#define TOGGLE_WIDTH 12
++#define TOGGLE_WIDTH 26
+ 
+ static guint toggle_cell_signals[LAST_SIGNAL] = { 0 };
+ 

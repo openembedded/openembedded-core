@@ -1,0 +1,390 @@
+--- gtk+-2.6.4/gtk/gtklabel.c	2005-02-28 06:32:03.000000000 +0200
++++ gtk+-2.6.4/gtk/gtklabel.c	2005-04-06 16:19:36.878931912 +0300
+@@ -23,6 +23,11 @@
+  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+  */
+ 
++
++/* Modified for Nokia Oyj during 2004. See CHANGES file for list
++ * of changes.
++ */
++
+ #include <config.h>
+ #include <math.h>
+ #include <string.h>
+@@ -52,6 +57,7 @@
+   guint single_line_mode : 1;
+   guint have_transform : 1;
+   gdouble angle;
++  gboolean request_full_width;
+ }
+ GtkLabelPrivate;
+ 
+@@ -75,6 +81,9 @@
+   LAST_SIGNAL
+ };
+ 
++/* Hildon mod.
++   A property PROP_TRANSLATABLE has been added here. If new Gtk+
++   versions add items here, the compability will break. */
+ enum {
+   PROP_0,
+   PROP_LABEL,
+@@ -89,6 +98,7 @@
+   PROP_MNEMONIC_WIDGET,
+   PROP_CURSOR_POSITION,
+   PROP_SELECTION_BOUND,
++  PROP_TRANSLATABLE,
+   PROP_ELLIPSIZE,
+   PROP_WIDTH_CHARS,
+   PROP_SINGLE_LINE_MODE,
+@@ -96,6 +106,12 @@
+   PROP_MAX_WIDTH_CHARS
+ };
+ 
++/* Hildon mod. A few keys. These are used to store data for label
++ * without changing the private structures. */
++#define LABEL_KEY_TRANSLATABLE "label_translatable"
++#define LABEL_KEY_TRANSLATABLETEXT "label_translatabletext"
++#define LABEL_KEY_ORIGINAL_LAYOUT "label_original_layout"
++
+ static guint signals[LAST_SIGNAL] = { 0 };
+ 
+ static void gtk_label_class_init        (GtkLabelClass    *klass);
+@@ -149,7 +165,7 @@
+ static void gtk_label_set_uline_text_internal    (GtkLabel      *label,
+ 						  const gchar   *str);
+ static void gtk_label_set_pattern_internal       (GtkLabel      *label,
+-				                  const gchar   *pattern);
++                                                  const gchar   *pattern);
+ static void set_markup                           (GtkLabel      *label,
+ 						  const gchar   *str,
+ 						  gboolean       with_uline);
+@@ -516,6 +532,24 @@
+                                                      G_MAXINT,
+                                                      -1,
+                                                      G_PARAM_READWRITE));
++ /* Hildon mod. Add property for a widget - whether it supports run-time
++  +    locale change. Please note that this functionality is not yet
++  +    completed and may change. */
++  g_object_class_install_property (gobject_class,
++                                   PROP_TRANSLATABLE,
++                                   g_param_spec_boolean ("translatable",
++                                                         _("Is translatable"),
++	                                                 _("Whether label should be translatable."),
++	                                                 FALSE,
++	                                                 G_PARAM_READWRITE));
++
++ /* Hildonlike class property */
++ gtk_widget_class_install_style_property (widget_class,
++	                                  g_param_spec_boolean ("hildonlike",
++		                                  _("hildonlike looks"),
++		                                  _("Changes wrapping etc behaviour, 1/0"),
++		                                  FALSE,
++		                                  G_PARAM_READABLE));
+   /*
+    * Key bindings
+    */
+@@ -650,6 +684,10 @@
+     case PROP_MAX_WIDTH_CHARS:
+       gtk_label_set_max_width_chars (label, g_value_get_int (value));
+       break;
++/* Hildon add. */
++    case PROP_TRANSLATABLE:
++      gtk_label_set_translatable (label, g_value_get_boolean (value));
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+@@ -730,6 +768,10 @@
+     case PROP_MAX_WIDTH_CHARS:
+       g_value_set_int (value, gtk_label_get_max_width_chars (label));
+       break;
++/* Hildon mod. */
++    case PROP_TRANSLATABLE:
++      g_value_set_boolean (value, gtk_label_get_translatable (label));
++      break;
+ 
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+@@ -748,6 +790,7 @@
+   priv->width_chars = -1;
+   priv->angle = 0.0;
+   priv->max_width_chars = -1;
++  priv->request_full_width = FALSE;
+   label->label = NULL;
+ 
+   label->jtype = GTK_JUSTIFY_LEFT;
+@@ -766,6 +809,15 @@
+   label->mnemonic_window = NULL;
+   
+   gtk_label_set_text (label, "");
++   
++/* Hildon Addition. */
++   
++  g_object_set_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLE, FALSE);
++  g_object_set_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT, NULL);
++  g_object_set_data (G_OBJECT (label), LABEL_KEY_ORIGINAL_LAYOUT, NULL);
++   
++/* /Hildon Addition. */
++   
+ }
+ 
+ /**
+@@ -822,7 +874,7 @@
+ 
+   if (str && *str)
+     gtk_label_set_text_with_mnemonic (label, str);
+-  
++
+   return GTK_WIDGET (label);
+ }
+ 
+@@ -1257,7 +1309,7 @@
+   GError *error = NULL;
+   PangoAttrList *attrs = NULL;
+   gunichar accel_char = 0;
+-
++ 
+   if (!pango_parse_markup (str,
+                            -1,
+                            with_uline ? '_' : 0,
+@@ -1340,12 +1392,14 @@
+   g_return_if_fail (GTK_IS_LABEL (label));
+ 
+   last_keyval = label->mnemonic_keyval;
++
+   gtk_label_set_label_internal (label, g_strdup (str ? str : ""));
+   gtk_label_set_use_markup_internal (label, TRUE);
+   gtk_label_set_use_underline_internal (label, TRUE);
+-  
+   gtk_label_recalculate (label);
++ 
+   gtk_label_setup_mnemonic (label, last_keyval);
++
+ }
+ 
+ /**
+@@ -1409,7 +1463,7 @@
+ 
+ static void
+ gtk_label_set_pattern_internal (GtkLabel    *label,
+-				const gchar *pattern)
++                                const gchar *pattern)
+ {
+   PangoAttrList *attrs;
+   g_return_if_fail (GTK_IS_LABEL (label));
+@@ -1421,7 +1475,16 @@
+ 
+   if (label->effective_attrs)
+     pango_attr_list_unref (label->effective_attrs);
++/* Following will disable undercores from
++   keyboard shortcuts if DISABLE_KEYBOARD_SHORTCUTS
++   is enabled during compile time
++ */
++#ifndef DISABLE_KEYBOARD_SHORTCUTS
+   label->effective_attrs = attrs;
++#else
++  pango_attr_list_unref (attrs);
++#endif /* DISABLE_KEYBOARD_SHORTCUTS */
++
+ }
+ 
+ void
+@@ -1742,8 +1805,13 @@
+ {
+   PangoLayout *layout;
+   GtkStyle *style = GTK_WIDGET (label)->style;
+-
++  
++  gboolean hildonlike;
+   LabelWrapWidth *wrap_width = g_object_get_data (G_OBJECT (style), "gtk-label-wrap-width");
++
++  /* Hildon: get hildonlike property */
++  gtk_widget_style_get (GTK_WIDGET (label), "hildonlike", &hildonlike, NULL);
++
+   if (!wrap_width)
+     {
+       wrap_width = g_new0 (LabelWrapWidth, 1);
+@@ -1763,7 +1831,12 @@
+ 					   "This long string gives a good enough length for any line to have.");
+   pango_layout_get_size (layout, &wrap_width->width, NULL);
+   g_object_unref (layout);
+-
++  /* A hildon mod for "fixing line wrapping". Remember to remove this
++   when GtkLabel will implement width for height size negotiation.*/
++  if (hildonlike)
++    {
++      wrap_width->width = wrap_width->width  * 1.25;
++    }
+   return wrap_width->width;
+ }
+ 
+@@ -1774,8 +1847,12 @@
+   PangoRectangle logical_rect;
+   gint rwidth, rheight;
+   gboolean rtl;
++  gboolean hildonlike;
+ 
+   widget = GTK_WIDGET (label);
++ 
++  /* Hildon: get hildonlike property */
++  gtk_widget_style_get (widget, "hildonlike", &hildonlike, NULL);
+ 
+   rtl = gtk_widget_get_direction(widget) == GTK_TEXT_DIR_RTL;
+   rwidth = label->misc.xpad * 2;
+@@ -1864,8 +1941,18 @@
+ 
+ 	      wrap_width = get_label_wrap_width (label);
+ 	      width = MIN (width, wrap_width);
+-	      width = MIN (width,
++ 
++              if (!hildonlike)
++                {
++	         width = MIN (width,
+ 			   PANGO_SCALE * (gdk_screen_get_width (screen) + 1) / 2);
++	        }
++              else 
++                {
++                 width = MIN (width,
++                           PANGO_SCALE * (gdk_screen_get_width (screen) + 1));
++               }
++            
+ 	      
+ 	      pango_layout_set_width (label->layout, width);
+ 	      pango_layout_get_extents (label->layout, NULL, &logical_rect);
+@@ -1910,6 +1997,7 @@
+       else /* !label->wrap */
+ 	pango_layout_set_width (label->layout, -1);
+     }
++
+ }
+ 
+ /* Gets the bounds of a layout in device coordinates. Note cut-and-paste
+@@ -2017,7 +2105,8 @@
+        priv->width_chars > 0 || priv->max_width_chars > 0) && 
+       aux_info && aux_info->width > 0)
+     width += aux_info->width;
+-  else if (label->ellipsize || priv->width_chars > 0 || priv->max_width_chars > 0)
++  else if ((label->ellipsize || priv->width_chars > 0 || priv->max_width_chars > 0) &&
++             !priv->request_full_width)
+     {
+       PangoContext *context;
+       PangoFontMetrics *metrics;
+@@ -2081,11 +2170,24 @@
+                          GtkAllocation *allocation)
+ {
+   GtkLabel *label;
++  GtkRequisition req;
++  GtkLabelPrivate *priv;
+ 
+   label = GTK_LABEL (widget);
++  priv = GTK_LABEL_GET_PRIVATE (label);
+ 
+   (* GTK_WIDGET_CLASS (parent_class)->size_allocate) (widget, allocation);
+ 
++  gtk_widget_get_child_requisition (widget, &req);
++
++  if (allocation->width < req.width && !label->wrap)
++    {
++      gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
++      priv->request_full_width = TRUE;
++    }
++  else
++    priv->request_full_width = FALSE;
++
+   if (label->ellipsize)
+     {
+       if (label->layout)
+@@ -2479,7 +2581,7 @@
+     }
+   *dest = 0;
+   *pattern_dest = 0;
+-  
++
+   gtk_label_set_text_internal (label, new_str);
+   gtk_label_set_pattern_internal (label, pattern);
+   
+@@ -2541,13 +2643,11 @@
+   last_keyval = label->mnemonic_keyval;
+ 
+   g_object_freeze_notify (G_OBJECT (label));
+-
+   gtk_label_set_label_internal (label, g_strdup (str ? str : ""));
+   gtk_label_set_use_markup_internal (label, FALSE);
+   gtk_label_set_use_underline_internal (label, TRUE);
+-  
+-  gtk_label_recalculate (label);
+ 
++  gtk_label_recalculate (label);
+   gtk_label_setup_mnemonic (label, last_keyval);
+ 
+   g_object_thaw_notify (G_OBJECT (label));
+@@ -3948,3 +4048,67 @@
+                     popup_position_func, label,
+                     0, gtk_get_current_event_time ());
+ }
++
++/* Hildon mod.
++ * Functions for run-time locale changing. Beware though that this
++   functionality is not yet completed. Therefore it's suggested
++   that these functions shouldn't be used yet outside testing.  */
++   
++void     gtk_label_set_translatable       (GtkLabel *label, gboolean newstatus)
++{
++  if (newstatus == gtk_label_get_translatable (label)) return;
++   
++  if (newstatus == TRUE)
++    {
++      if (g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT) != NULL)
++        g_free (g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT));
++      g_object_set_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT, g_strdup (label->label));
++      g_object_set_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLE, (void*) TRUE);
++      if (label->text != NULL)
++        g_free (label->text);
++      if (label->label != NULL)
++        g_free (label->label);
++      label->text = g_strdup(_(g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT)));
++      label->label = g_strdup(_(g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT)));
++    }
++  else
++    {
++      if (label->text != NULL)
++        g_free (label->text);
++      if (label->label != NULL)
++        g_free (label->label);
++      label->text = g_strdup (g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT));
++      label->label = g_strdup (g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT));
++      g_object_set_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLE, FALSE);
++      if (g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT) != NULL)
++        g_free (g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT));
++      g_object_set_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT, NULL);
++    }
++  gtk_label_recalculate (label);
++}
++
++gboolean gtk_label_get_translatable       (GtkLabel *label)
++{
++  return (gboolean) (g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLE));
++}
++
++   
++void     gtk_label_retranslate            (GtkLabel *label)
++{
++  g_object_freeze_notify (G_OBJECT (label));
++  if (gtk_label_get_translatable (label) == TRUE)
++    {
++      if (label->label != NULL)
++        g_free (label->label);
++      label->label = g_strdup(gettext(g_object_get_data (G_OBJECT (label), LABEL_KEY_TRANSLATABLETEXT)));
++    }
++  if (g_object_get_data (G_OBJECT (label), LABEL_KEY_ORIGINAL_LAYOUT)) g_object_unref (g_object_get_data (G_OBJECT (label), LABEL_KEY_ORIGINAL_LAYOUT));
++  g_object_set_data (G_OBJECT (label), LABEL_KEY_ORIGINAL_LAYOUT, NULL);
++  g_object_notify (G_OBJECT (label), "label");
++  gtk_label_recalculate (label);
++  g_object_thaw_notify (G_OBJECT (label));
++  gtk_label_set_text (label, label->label);
++}
++
++/* End of hildon mods for run-time locale change. */
++

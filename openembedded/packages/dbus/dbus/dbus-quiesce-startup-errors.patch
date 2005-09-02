@@ -1,0 +1,23 @@
+--- dbus-0.20-virgin-patches/bus/config-parser.c	2003-10-14 21:30:21.000000000 +0100
++++ dbus-0.20/bus/config-parser.c	2004-02-10 00:40:05.000000000 +0000
+@@ -1710,8 +1710,18 @@
+         {
+           if (!include_file (parser, &full_path, TRUE, error))
+             {
+-              _dbus_string_free (&full_path);
+-              goto failed;
++              /* Debian patch to skip malformed /etc/dbus-1/system.d entries */
++              /*
++               * _dbus_string_free (&full_path);
++               * goto failed;
++               */
++              if (dbus_error_is_set (error))
++                {
++                  _dbus_warn("\nEncountered error '%s' while parsing '%s'\n",
++                             error->message,
++                             _dbus_string_get_const_data(&full_path));
++                  dbus_error_free (error);
++                }
+             }
+         }
+ 

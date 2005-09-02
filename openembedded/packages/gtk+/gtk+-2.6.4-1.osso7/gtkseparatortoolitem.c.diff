@@ -1,0 +1,90 @@
+--- gtk+-2.6.4/gtk/gtkseparatortoolitem.c	2004-08-09 19:59:52.000000000 +0300
++++ gtk+-2.6.4/gtk/gtkseparatortoolitem.c	2005-04-06 16:19:37.937770944 +0300
+@@ -29,6 +29,7 @@
+ #include "gtktoolbar.h"
+ 
+ #define MENU_ID "gtk-separator-tool-item-menu-id"
++#define HILDON_SEPARATOR_HEIGHT 40
+ 
+ enum {
+   PROP_0,
+@@ -137,6 +138,18 @@
+ 							 P_("Whether the separator is drawn, or just blank"),
+ 							 TRUE,
+ 							 G_PARAM_READWRITE));
++  /* Hildon addition : some new style properties we need. */
++  gtk_widget_class_install_style_property(widget_class,
++					   g_param_spec_int ("separator_size",
++							      P_("Separator size"), P_("The thickness of the separator. -1 for default behaviour."),
++							     -1, G_MAXINT, -1, G_PARAM_READWRITE));
++
++  gtk_widget_class_install_style_property (widget_class,
++				   g_param_spec_boolean ("is_image",
++							 P_("Is separator an image or a line"),
++							 P_("Whether the separator is drawn as an image, or just as a line"),
++							 FALSE,
++							 G_PARAM_READWRITE));
+   
+   g_type_class_add_private (object_class, sizeof (GtkSeparatorToolItemPrivate));
+ }
+@@ -213,14 +226,26 @@
+   GtkToolItem *item = GTK_TOOL_ITEM (widget);
+   GtkOrientation orientation = gtk_tool_item_get_orientation (item);
+   
++  /* Hildon modifications from here on:
++   * if the "separator_size" style property
++   * is the default value (it has not been set
++   * in resource files), use default gtk+ behaviour.
++   */
++  gint separator_size = -1;
++  
++  gtk_widget_style_get( widget, "separator_size", &separator_size, NULL );
++  
++  if (separator_size == -1)
++    separator_size = get_space_size (item);
++
+   if (orientation == GTK_ORIENTATION_HORIZONTAL)
+     {
+-      requisition->width = get_space_size (item);
++      requisition->width = separator_size;
+       requisition->height = 1;
+     }
+   else
+     {
+-      requisition->height = get_space_size (item);
++      requisition->height = separator_size;
+       requisition->width = 1;
+     }
+ }
+@@ -235,10 +260,30 @@
+ 
+   if (priv->draw)
+     {
++      gboolean is_image = FALSE;
+       if (widget->parent && GTK_IS_TOOLBAR (widget->parent))
+ 	toolbar = GTK_TOOLBAR (widget->parent);
+ 
+-      _gtk_toolbar_paint_space_line (widget, toolbar,
++      gtk_widget_style_get( widget, "is_image", &is_image, NULL );
++      if (is_image)
++      {
++        gint separator_size = -1;
++        GtkOrientation orientation = gtk_tool_item_get_orientation (GTK_TOOL_ITEM (widget));
++        
++        gtk_widget_style_get( widget, "separator_size", &separator_size, NULL );
++        
++        /* if style property not set, use gtk+
++         * default behaviour. */
++        if (separator_size == -1)
++          separator_size = get_space_size (GTK_TOOL_ITEM (widget));
++        	
++        gtk_paint_box( widget->style, widget->window, GTK_WIDGET_STATE(widget),
++          GTK_SHADOW_NONE, &event->area, widget,
++          orientation == GTK_ORIENTATION_HORIZONTAL ? "vertical" : "horizontal",
++          widget->allocation.x, widget->allocation.y + (widget->allocation.height - HILDON_SEPARATOR_HEIGHT) / 2,
++          separator_size, HILDON_SEPARATOR_HEIGHT );
++      } else
++        _gtk_toolbar_paint_space_line (widget, toolbar,
+ 				     &(event->area), &widget->allocation);
+     }
+   

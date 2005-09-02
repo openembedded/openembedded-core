@@ -1,0 +1,155 @@
+--- gtk+-2.6.4/gtk/gtkimmulticontext.c	2004-08-09 19:59:52.000000000 +0300
++++ gtk+-2.6.4/gtk/gtkimmulticontext.c	2005-04-06 16:19:36.818941032 +0300
+@@ -59,6 +59,8 @@
+ static void     gtk_im_multicontext_focus_in           (GtkIMContext            *context);
+ static void     gtk_im_multicontext_focus_out          (GtkIMContext            *context);
+ static void     gtk_im_multicontext_reset              (GtkIMContext            *context);
++static void     gtk_im_multicontext_show               (GtkIMContext            *context);
++static void     gtk_im_multicontext_hide               (GtkIMContext            *context);
+ static void     gtk_im_multicontext_set_cursor_location (GtkIMContext            *context,
+ 							GdkRectangle		*area);
+ static void     gtk_im_multicontext_set_use_preedit    (GtkIMContext            *context,
+@@ -118,6 +120,67 @@
+   return im_multicontext_type;
+ }
+ 
++static GtkIMContext *
++gtk_im_multicontext_get_slave (GtkIMMulticontext *multicontext);
++
++enum {
++  PROP_INPUT_MODE = 1,
++  PROP_AUTOCAP,
++  PROP_VISIBILITY,
++  PROP_USE_SHOW_HIDE
++};
++
++static void gtk_im_multicontext_set_property(GObject * object,
++                                                  guint property_id,
++                                                  const GValue * value,
++                                                  GParamSpec * pspec)
++{
++  GtkIMContext *slave = gtk_im_multicontext_get_slave (GTK_IM_MULTICONTEXT(object));
++
++  GParamSpec *param_spec = g_object_class_find_property 
++    (G_OBJECT_GET_CLASS(slave),
++     pspec->name);
++
++  if(param_spec != NULL)   
++    g_object_set_property(G_OBJECT(slave), pspec->name, value);
++}
++
++static void gtk_im_multicontext_get_property(GObject * object,
++                                                  guint property_id,
++                                                  GValue * value,
++                                                  GParamSpec * pspec)
++{
++  GtkIMContext *slave = gtk_im_multicontext_get_slave (GTK_IM_MULTICONTEXT(object));
++  GParamSpec *param_spec = g_object_class_find_property 
++    (G_OBJECT_GET_CLASS(slave),
++     pspec->name);
++  
++  if(param_spec != NULL)
++    g_object_get_property(G_OBJECT(slave), pspec->name, value);
++  else
++    {
++      switch (property_id)
++	{
++	case PROP_INPUT_MODE:
++	  /* return 0 */
++	  g_value_set_int(value, 0);
++	  break;
++	case PROP_AUTOCAP:
++	  /* return FALSE */
++	  g_value_set_boolean(value, FALSE);
++	  break;
++	case PROP_VISIBILITY:
++	  /* return TRUE */
++	  g_value_set_boolean(value, TRUE);	  
++	  break;
++	case PROP_USE_SHOW_HIDE:
++	default:
++	  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
++	  break;	  
++	}
++    }
++}
++
+ static void
+ gtk_im_multicontext_class_init (GtkIMMulticontextClass *class)
+ {
+@@ -132,12 +195,38 @@
+   im_context_class->focus_in = gtk_im_multicontext_focus_in;
+   im_context_class->focus_out = gtk_im_multicontext_focus_out;
+   im_context_class->reset = gtk_im_multicontext_reset;
++  im_context_class->show = gtk_im_multicontext_show;
++  im_context_class->hide = gtk_im_multicontext_hide;
+   im_context_class->set_cursor_location = gtk_im_multicontext_set_cursor_location;
+   im_context_class->set_use_preedit = gtk_im_multicontext_set_use_preedit;
+   im_context_class->set_surrounding = gtk_im_multicontext_set_surrounding;
+   im_context_class->get_surrounding = gtk_im_multicontext_get_surrounding;
+ 
+   gobject_class->finalize = gtk_im_multicontext_finalize;
++
++  gobject_class->set_property = gtk_im_multicontext_set_property;
++  gobject_class->get_property = gtk_im_multicontext_get_property;
++
++  g_object_class_install_property(gobject_class, PROP_INPUT_MODE,
++        g_param_spec_int("input-mode", "Input mode",
++          "Specifies the set of allowed characters",
++          0, 9, 0,  /* We don't move symbolic definitions here. See hildon-input-mode.h */
++          G_PARAM_READWRITE));
++
++  g_object_class_install_property(gobject_class, PROP_AUTOCAP,
++        g_param_spec_boolean("autocap", "Autocap",
++          "Whether the client wants the first character in a sentense to be automatic upper case",
++          FALSE, G_PARAM_READWRITE));
++
++  g_object_class_install_property(gobject_class, PROP_VISIBILITY,
++        g_param_spec_boolean("visibility", "Visibility",
++          "FALSE displays the \"invisible char\"instead of the actual text (password mode)",
++          TRUE, G_PARAM_READABLE | G_PARAM_WRITABLE));
++
++  g_object_class_install_property(gobject_class, PROP_VISIBILITY,
++        g_param_spec_boolean("use-show-hide", "Use show/hide functions",
++          "Use show/hide functions to show/hide IM instead of focus_in/focus_out",
++          FALSE, G_PARAM_READABLE | G_PARAM_WRITABLE));
+ }
+ 
+ static void
+@@ -567,3 +656,36 @@
+   g_free (contexts);
+ }
+ 
++static void
++gtk_im_multicontext_show (GtkIMContext   *context)
++{
++  GtkIMMulticontext *multicontext = GTK_IM_MULTICONTEXT (context);
++  GtkIMContext *slave;
++
++  /* If the global context type is different from the context we were
++   * using before, get rid of the old slave and create a new one
++   * for the new global context type.
++   */
++  if (!multicontext->context_id ||
++      strcmp (global_context_id, multicontext->context_id) != 0)
++    gtk_im_multicontext_set_slave (multicontext, NULL, FALSE);
++
++  slave = gtk_im_multicontext_get_slave (multicontext);
++  
++  multicontext->priv->focus_in = TRUE;
++  
++  if (slave)
++    gtk_im_context_show (slave);
++}
++
++static void
++gtk_im_multicontext_hide (GtkIMContext   *context)
++{
++  GtkIMMulticontext *multicontext = GTK_IM_MULTICONTEXT (context);
++  GtkIMContext *slave = gtk_im_multicontext_get_slave (multicontext);
++
++  multicontext->priv->focus_in = FALSE;
++  
++  if (slave)
++    gtk_im_context_hide (slave);
++}

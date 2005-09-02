@@ -1,0 +1,471 @@
+--- gtk+-2.6.4/gtk/gtkbutton.c	2005-01-25 22:54:43.000000000 +0200
++++ gtk+-2.6.4/gtk/gtkbutton.c	2005-04-06 16:19:36.249027672 +0300
+@@ -24,6 +24,10 @@
+  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+  */
+ 
++/* Modified for Nokia Oyj during 2002-2005. See CHANGES file for list
++ * of changes.
++ */
++
+ #include <config.h>
+ #include <string.h>
+ #include "gtkalias.h"
+@@ -38,8 +42,33 @@
+ #include "gtkiconfactory.h"
+ #include "gtkintl.h"
+ 
++/* Osso addition:
++ * Here are the details for each attach 
++ * bitmask combination. */
++const gchar *osso_gtk_button_attach_details [OSSO_GTK_BUTTON_ATTACH_ENUM_END] =
++  { "osso_button",
++    "osso_button_n",
++    "osso_button_e",
++    "osso_button_ne",
++    "osso_button_s",
++    "osso_button_ns",
++    "osso_button_es",
++    "osso_button_nes",
++    "osso_button_w",
++    "osso_button_nw",
++    "osso_button_ew",
++    "osso_button_new",
++    "osso_button_sw",
++    "osso_button_nsw",
++    "osso_button_esw",
++    "osso_button_nesw",
++  };
++
+ #define CHILD_SPACING     1
+ 
++/* Take this away after font drawing is fixed */
++#define OSSO_FONT_HACK TRUE
++
+ static const GtkBorder default_default_border = { 1, 1, 1, 1 };
+ static const GtkBorder default_default_outside_border = { 0, 0, 0, 0 };
+ 
+@@ -68,6 +97,9 @@
+   PROP_FOCUS_ON_CLICK,
+   PROP_XALIGN,
+   PROP_YALIGN,
++  PROP_DETAIL,
++  PROP_AUTOMATIC_DETAIL,
++  PROP_KEYBOARD_BUTTON
+ };
+ 
+ #define GTK_BUTTON_GET_PRIVATE(o)       (G_TYPE_INSTANCE_GET_PRIVATE ((o), GTK_TYPE_BUTTON, GtkButtonPrivate))
+@@ -80,6 +112,10 @@
+   GtkWidget   *image;
+   guint        align_set : 1;
+   guint        image_is_stock : 1;
++  gchar       *detail;
++  gboolean     automatic_detail;
++  gboolean     keyboard_button;
++  GtkLabel    *keyboard_label;
+ };
+ 
+ static void gtk_button_class_init     (GtkButtonClass   *klass);
+@@ -231,6 +267,14 @@
+                                                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+   
+   g_object_class_install_property (gobject_class,
++				   PROP_KEYBOARD_BUTTON,
++                                   g_param_spec_boolean ("keyboard_button",
++							 P_("Keyboard button"),
++							 P_("If set, label foo"),
++                                                        FALSE,
++                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
++  
++  g_object_class_install_property (gobject_class,
+                                    PROP_USE_STOCK,
+                                    g_param_spec_boolean ("use_stock",
+ 							 P_("Use stock"),
+@@ -418,6 +462,77 @@
+ 						       P_("Whether stock icons should be shown in buttons"),
+ 						       TRUE,
+ 						       G_PARAM_READWRITE));
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("child_spacing",
++							     _("Child spacing"),
++							     _("Spacing between button edges and child."),
++							     0,
++							     G_MAXINT,
++							     CHILD_SPACING,
++							     G_PARAM_READABLE));
++  /* Osso additions below */
++  g_object_class_install_property (gobject_class,
++				   PROP_DETAIL,
++				   g_param_spec_string ("detail",
++							P_("Detail"),
++							P_("The detail the button is drawn with."),
++							"buttondefault",
++							G_PARAM_READWRITE));
++
++  g_object_class_install_property (gobject_class,
++				   PROP_AUTOMATIC_DETAIL,
++				   g_param_spec_boolean ("automatic_detail",
++							 P_("Automatic Detail"),
++							 P_("Whether setting detail is automatic based on GtkTable/GtkHButtonBox."),
++							 TRUE,
++							 G_PARAM_READWRITE));
++
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("child_offset_y",
++							     _("Child Y Offset"),
++							     _("Enable hack how many pixels to add/take away from GtkButton's child size allocation."),
++							     G_MININT,
++							     G_MAXINT,
++							     0,
++							     G_PARAM_READABLE));
++
++  /* OSSO: This is used to find out whether
++   * button is a GtkTreeView column Listbox
++   * header or not */
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_boolean ("listboxheader",
++								 P_( "Listbox header" ),
++								 P_( "Listbox header ( FALSE / TRUE )" ),
++								 FALSE,
++								 G_PARAM_READABLE));
++
++  /* OSSO: Column Listbox header separator height */
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("separator-height",
++							     P_( "Separator height" ),
++							     P_( "Listbox header separator height ( FALSE / TRUE )" ),
++							     0,
++							     G_MAXINT,
++							     0,
++							     G_PARAM_READABLE));
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_boxed ("padding",
++							       P_("Padding"),
++							       P_("Paddings around the button child"),
++							       GTK_TYPE_BORDER,
++							       G_PARAM_READABLE));
++
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("minimum_width",
++							     P_("Minimum Width"),
++							     P_("Minimum width of the button"),
++							     0,
++							     G_MAXINT,
++							     0,
++							     G_PARAM_READABLE));
+   
+   g_type_class_add_private (gobject_class, sizeof (GtkButtonPrivate));  
+ }
+@@ -445,7 +560,14 @@
+   priv->xalign = 0.5;
+   priv->yalign = 0.5;
+   priv->align_set = 0;
++  priv->detail = g_strdup("buttondefault");
++  priv->automatic_detail = TRUE;
++  priv->keyboard_button = FALSE;
++  priv->keyboard_label = NULL;
+   priv->image_is_stock = TRUE;
++
++  g_object_set (G_OBJECT (button), "tap_and_hold_state",
++                GTK_STATE_ACTIVE, NULL);
+ }
+ 
+ static void
+@@ -560,6 +682,18 @@
+     case PROP_YALIGN:
+       gtk_button_set_alignment (button, priv->xalign, g_value_get_float (value));
+       break;
++    case PROP_DETAIL:
++      if (priv->detail)
++        g_free (priv->detail);
++      priv->detail = g_strdup (g_value_get_string (value));
++      gtk_widget_queue_draw (GTK_WIDGET (button));
++      break;
++    case PROP_AUTOMATIC_DETAIL:
++      priv->automatic_detail = g_value_get_boolean (value);
++      break;
++    case PROP_KEYBOARD_BUTTON:
++      priv->keyboard_button = g_value_get_boolean (value);
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+@@ -601,6 +735,15 @@
+     case PROP_YALIGN:
+       g_value_set_float (value, priv->yalign);
+       break;
++    case PROP_DETAIL:
++      g_value_set_string (value, priv->detail);
++      break;
++    case PROP_AUTOMATIC_DETAIL:
++      g_value_set_boolean (value, priv->automatic_detail);
++      break;
++    case PROP_KEYBOARD_BUTTON:
++      g_value_set_boolean (value, priv->keyboard_button);
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+@@ -641,6 +784,26 @@
+   if (button->label_text == NULL)
+     return;
+ 
++  if (priv->keyboard_button)
++    {
++      if (priv->keyboard_label)
++	{
++	  gtk_label_set_label (priv->keyboard_label, button->label_text);
++	}
++      else
++	{
++	  GtkWidget *label = gtk_label_new (button->label_text);
++	  priv->keyboard_label = GTK_LABEL (label);
++  	  
++	  if (priv->align_set)
++	    gtk_misc_set_alignment (GTK_MISC (label),
++				    priv->xalign, priv->yalign);
++	  gtk_widget_show (priv->keyboard_label);
++	  gtk_container_add (GTK_CONTAINER (button), label);
++	}
++      return;
++    }
++
+   if (GTK_BIN (button)->child)
+     {
+       if (priv->image && !priv->image_is_stock)
+@@ -944,16 +1107,20 @@
+   GtkBorder default_border;
+   gint focus_width;
+   gint focus_pad;
++  gint child_spacing;
++  gint separator_height;
+ 
+   gtk_button_get_props (button, &default_border, NULL, NULL);
+   gtk_widget_style_get (GTK_WIDGET (widget),
+ 			"focus-line-width", &focus_width,
+ 			"focus-padding", &focus_pad,
++			"child-spacing", &child_spacing,
++			"separator-height", &separator_height,
+ 			NULL);
+  
+-  requisition->width = (GTK_CONTAINER (widget)->border_width + CHILD_SPACING +
++  requisition->width = (GTK_CONTAINER (widget)->border_width + child_spacing +
+ 			GTK_WIDGET (widget)->style->xthickness) * 2;
+-  requisition->height = (GTK_CONTAINER (widget)->border_width + CHILD_SPACING +
++  requisition->height = (GTK_CONTAINER (widget)->border_width + child_spacing +
+ 			 GTK_WIDGET (widget)->style->ythickness) * 2;
+ 
+   if (GTK_WIDGET_CAN_DEFAULT (widget))
+@@ -965,15 +1132,35 @@
+   if (GTK_BIN (button)->child && GTK_WIDGET_VISIBLE (GTK_BIN (button)->child))
+     {
+       GtkRequisition child_requisition;
++      GtkBorder *padding;
++      gint minimum_width;
+ 
+       gtk_widget_size_request (GTK_BIN (button)->child, &child_requisition);
+ 
++      gtk_widget_style_get (widget,
++			    "padding",
++			    &padding,
++			    "minimum_width",
++			    &minimum_width,
++			    NULL);
++		
++      if ( padding )
++	{
++	  requisition->width += padding->left + padding->right;
++	  requisition->height += padding->top + padding->bottom;
++	}
++
+       requisition->width += child_requisition.width;
+       requisition->height += child_requisition.height;
++
++      if (requisition->width < minimum_width)
++        requisition->width = minimum_width;
+     }
+   
+   requisition->width += 2 * (focus_width + focus_pad);
+   requisition->height += 2 * (focus_width + focus_pad);
++
++  requisition->height += separator_height;
+ }
+ 
+ static void
+@@ -989,14 +1176,15 @@
+   GtkBorder default_border;
+   gint focus_width;
+   gint focus_pad;
++  gint child_spacing;
+ 
+   gtk_button_get_props (button, &default_border, NULL, NULL);
+   gtk_widget_style_get (GTK_WIDGET (widget),
+ 			"focus-line-width", &focus_width,
+ 			"focus-padding", &focus_pad,
++			"child-spacing", &child_spacing,
+ 			NULL);
+- 
+-			    
++
+   widget->allocation = *allocation;
+ 
+   if (GTK_WIDGET_REALIZED (widget))
+@@ -1008,14 +1196,27 @@
+ 
+   if (GTK_BIN (button)->child && GTK_WIDGET_VISIBLE (GTK_BIN (button)->child))
+     {
+-      child_allocation.x = widget->allocation.x + border_width + CHILD_SPACING + xthickness;
+-      child_allocation.y = widget->allocation.y + border_width + CHILD_SPACING + ythickness;
++      child_allocation.x = widget->allocation.x + border_width + child_spacing + xthickness;
++      child_allocation.y = widget->allocation.y + border_width + child_spacing + ythickness;
+       
+-      child_allocation.width = MAX (1, widget->allocation.width - (CHILD_SPACING + xthickness) * 2 -
++      child_allocation.width = MAX (1, widget->allocation.width - (child_spacing + xthickness) * 2 -
+ 				    border_width * 2);
+-      child_allocation.height = MAX (1, widget->allocation.height - (CHILD_SPACING + ythickness) * 2 -
++      child_allocation.height = MAX (1, widget->allocation.height - (child_spacing + ythickness) * 2 -
+ 				     border_width * 2);
+ 
++#ifdef OSSO_FONT_HACK
++      {
++	gint child_offset_y;
++	
++	gtk_widget_style_get (widget, "child_offset_y", &child_offset_y, NULL);
++	
++	if( GTK_IS_LABEL(GTK_BIN (button)->child) )
++	  {
++	    child_allocation.y += child_offset_y;
++	  }
++      }
++#endif
++      
+       if (GTK_WIDGET_CAN_DEFAULT (button))
+ 	{
+ 	  child_allocation.x += default_border.left;
+@@ -1066,7 +1267,14 @@
+   gboolean interior_focus;
+   gint focus_width;
+   gint focus_pad;
+-   
++  gint separator_height;
++  gboolean listboxheader;
++  GtkButtonPrivate *priv;
++
++  g_return_if_fail (GTK_IS_BUTTON (button));
++  
++  priv = GTK_BUTTON_GET_PRIVATE (button);
++  
+   if (GTK_WIDGET_DRAWABLE (button))
+     {
+       widget = GTK_WIDGET (button);
+@@ -1076,6 +1284,8 @@
+       gtk_widget_style_get (GTK_WIDGET (widget),
+ 			    "focus-line-width", &focus_width,
+ 			    "focus-padding", &focus_pad,
++                            "listboxheader", &listboxheader,
++                            "separator-height", &separator_height,
+ 			    NULL); 
+ 	
+       x = widget->allocation.x + border_width;
+@@ -1083,13 +1293,55 @@
+       width = widget->allocation.width - border_width * 2;
+       height = widget->allocation.height - border_width * 2;
+ 
++      if (listboxheader)
++        {
++          /* this changes everything! */
++          PangoLayout *layout;
++          int layout_height;
++
++          /* construct layout - see get_layout in gtkcellrenderertext.c */
++          layout = gtk_widget_create_pango_layout (widget, /* use parent treeview instead? */
++                                                   button->label_text);
++          pango_layout_set_width (layout, -1);
++          pango_layout_get_pixel_size (layout, NULL, &layout_height);
++
++          /* render text */
++          gtk_paint_layout (widget->style,
++                            widget->window,
++                            GTK_STATE_NORMAL,
++                            TRUE,
++                            area,
++                            widget,
++                            "listboxheader",
++                            x,
++                            y,
++                            layout);
++
++          g_object_unref (layout);
++
++          /* draw separator */
++          gtk_paint_hline (widget->style,
++                           widget->window,
++                           GTK_STATE_NORMAL,
++                           area,
++                           widget,
++                           "listboxseparator",
++                           area->x - focus_width - focus_pad,
++                           area->x + area->width + focus_width + focus_pad,
++                           layout_height + separator_height * 2);
++          return;
++        }
++
+       if (GTK_WIDGET_HAS_DEFAULT (widget) &&
+ 	  GTK_BUTTON (widget)->relief == GTK_RELIEF_NORMAL)
+ 	{
+-	  gtk_paint_box (widget->style, widget->window,
++          /* This comment is here because it's part of the
++           * normal GtkButton
++           */
++	  /*  gtk_paint_box (widget->style, widget->window,
+ 			 GTK_STATE_NORMAL, GTK_SHADOW_IN,
+ 			 area, widget, "buttondefault",
+-			 x, y, width, height);
++			 x, y, width, height); */
+ 
+ 	  x += default_border.left;
+ 	  y += default_border.top;
+@@ -1116,7 +1368,7 @@
+ 	  GTK_WIDGET_STATE(widget) == GTK_STATE_PRELIGHT)
+ 	gtk_paint_box (widget->style, widget->window,
+ 		       state_type,
+-		       shadow_type, area, widget, "button",
++		       shadow_type, area, widget, priv->detail,
+ 		       x, y, width, height);
+        
+       if (GTK_WIDGET_HAS_FOCUS (widget))
+@@ -1151,10 +1403,14 @@
+ 	      x += child_displacement_x;
+ 	      y += child_displacement_y;
+ 	    }
+-
++          /* Comment exists, because it is part of normal GtkButton
+ 	  gtk_paint_focus (widget->style, widget->window, GTK_WIDGET_STATE (widget),
+ 			   area, widget, "button",
+ 			   x, y, width, height);
++          */
++	  gtk_paint_focus (widget->style, widget->window, GTK_WIDGET_STATE (widget),
++			   area, widget, priv->detail,
++			   x, y, width, height);
+ 	}
+     }
+ }
+@@ -1786,5 +2042,13 @@
+   
+   return priv->image;
+ }
+-  
+-  
++void osso_gtk_button_set_detail_from_attach_flags (GtkButton *button,OssoGtkButtonAttachFlags flags)
++{
++  g_return_if_fail (GTK_IS_BUTTON (button));
++  g_object_set (G_OBJECT (button),
++                "automatic_detail",
++		FALSE,
++		"detail",
++		osso_gtk_button_attach_details[flags],
++		NULL);
++} 

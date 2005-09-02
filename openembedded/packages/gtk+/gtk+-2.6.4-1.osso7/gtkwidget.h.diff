@@ -1,0 +1,59 @@
+--- gtk+-2.6.4/gtk/gtkwidget.h	2004-11-28 09:02:27.000000000 +0200
++++ gtk+-2.6.4/gtk/gtkwidget.h	2005-04-06 16:19:38.400700568 +0300
+@@ -22,6 +22,9 @@
+  * file for a list of people on the GTK+ Team.  See the ChangeLog
+  * files for a list of changes.  These files are distributed with
+  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
++
++ * Changes made to create Hildon focus handling and the tap and hold functionality
++ *
+  */
+ 
+ #ifndef __GTK_WIDGET_H__
+@@ -87,6 +90,15 @@
+   GTK_WIDGET_HELP_WHATS_THIS
+ } GtkWidgetHelpType;
+ 
++/*Tap And Hold type flags*/
++typedef enum
++{
++  GTK_TAP_AND_HOLD_NONE         = 0,
++  GTK_TAP_AND_HOLD_PASS_PRESS   = 1 << 0,
++  GTK_TAP_AND_HOLD_NO_SIGNALS   = 1 << 1,
++  GTK_TAP_AND_HOLD_NO_INTERNALS = 1 << 2
++} GtkWidgetTapAndHoldFlags;
++
+ /* Macro for casting a pointer to a GtkWidget or GtkWidgetClass pointer.
+  * Macros for testing whether `widget' or `klass' are of type GTK_TYPE_WIDGET.
+  */
+@@ -410,9 +422,10 @@
+   void (*_gtk_reserved2) (void);
+   void (*_gtk_reserved3) (void);
+   void (*_gtk_reserved4) (void);
+-  void (*_gtk_reserved5) (void);
+-  void (*_gtk_reserved6) (void);
+-  void (*_gtk_reserved7) (void);
++  void (*tap_and_hold) (GtkWidget *widget);   /* Tap and hold action */
++  void (*tap_and_hold_setup) (GtkWidget *widget, GtkWidget *menu,
++                                GtkCallback func, GtkWidgetTapAndHoldFlags flags);
++  void (*insensitive_press) (GtkWidget *widget);
+ };
+ 
+ struct _GtkWidgetAuxInfo
+@@ -787,6 +800,16 @@
+ 
+ GdkColormap* _gtk_widget_peek_colormap (void);
+ 
++/*Hildon functions for focus handling*/
++void gtk_widget_set_hildon_focus_handling( GtkWidget *widget, gboolean hildon_like );
++gboolean gtk_widget_get_hildon_focus_handling( GtkWidget *widget );
++
++/*Tap And Hold functions*/
++void gtk_widget_tap_and_hold_menu_position_top (GtkWidget *menu,
++                       gint *x, gint *y, gboolean *push_in, GtkWidget *widget);
++void gtk_widget_tap_and_hold_setup (GtkWidget *widget, GtkWidget *menu,
++                        GtkCallback func, GtkWidgetTapAndHoldFlags flags);
++
+ #ifdef __cplusplus
+ }
+ #endif /* __cplusplus */

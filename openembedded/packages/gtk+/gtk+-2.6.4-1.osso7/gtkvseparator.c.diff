@@ -1,0 +1,45 @@
+--- gtk+-2.6.4/gtk/gtkvseparator.c	2004-08-09 19:59:53.000000000 +0300
++++ gtk+-2.6.4/gtk/gtkvseparator.c	2005-04-06 16:19:38.356707256 +0300
+@@ -91,13 +91,34 @@
+ gtk_vseparator_expose (GtkWidget      *widget,
+ 		       GdkEventExpose *event)
+ {
+-  if (GTK_WIDGET_DRAWABLE (widget))
+-    gtk_paint_vline (widget->style, widget->window, GTK_WIDGET_STATE (widget),
+-		     &event->area, widget, "vseparator",
+-		     widget->allocation.y,
+-		     widget->allocation.y + widget->allocation.height - 1,
+-		     widget->allocation.x + (widget->allocation.width -
+-					     widget->style->xthickness) / 2);
++	gboolean hildonlike_drawing = FALSE;
+ 
+-  return FALSE;
++
++	gtk_widget_style_get ( widget, "hildonlike-drawing", &hildonlike_drawing, NULL );
++
++	if (GTK_WIDGET_DRAWABLE (widget))
++	{
++		if(hildonlike_drawing)
++			gtk_paint_box   (widget->style, widget->window, GTK_STATE_NORMAL,
++					GTK_SHADOW_NONE, &event->area, widget, "vseparator",
++					widget->allocation.x + (widget->allocation.width -
++						widget->style->xthickness) / 2,
++					widget->allocation.y,
++
++					widget->style->xthickness,
++					widget->allocation.height - 1);
++		else
++			gtk_paint_vline (widget->style, widget->window, GTK_STATE_NORMAL,
++					&event->area, widget, "vseparator",
++					widget->allocation.y,
++					widget->allocation.y + widget->allocation.height - 1,
++					widget->allocation.x + (widget->allocation.width -
++						widget->style->xthickness) / 2);
++	}
++
++
++
++
++
++	return FALSE;
+ }
