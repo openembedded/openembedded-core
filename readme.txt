@@ -14,6 +14,9 @@ MACHINE = "nokia770"
 
 in build/conf/local.conf
 
+NOTE: The above commands must be run in the build directory. Running 
+them anywhere else will cause confusion.
+
 Notes:
 ===
 

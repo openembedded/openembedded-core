@@ -17,6 +17,7 @@ oh-task-base = "\
     matchbox \
     xcursor-transparent-theme \
     xserver-kdrive-common \
+    gtk+ \
     avahi \
     rxvt \
     xhost \

@@ -1,4 +1,4 @@
-include dbus_${PV}.inc
+include dbus.inc
 
 SRC_URI_EXTRA=""
 
