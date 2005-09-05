@@ -5,7 +5,7 @@ LICENSE = "GPL"
 #KV = "${@bb.data.getVar('PV',d,True).split('-')[0]}"
 KV = "${@bb.data.getVar('PV',d,True)}"
 
-PR = "r17"
+PR = "r3"
 
 DOSRC = "http://www.do13.in-berlin.de/openzaurus/patches"
 RPSRC = "http://www.rpsys.net/openzaurus/patches"
@@ -35,35 +35,34 @@ BASRC = "http://www.orca.cx/zaurus/patches"
 #           ${RPSRC}/mmc_pxa_roswitch-r0.patch;patch=1 \
 #           ${RPSRC}/mmc_corgi_roswitch-r0.patch;patch=1 \
 #           ${RPSRC}/corgi_base_extras1-r4.patch;patch=1 \	   
-
+#           ${RPSRC}/reverse_pagefault-r3.patch;patch=1 \
+#           ${RPSRC}/corgi_tspmufix-r0.patch;patch=1 \
+#           ${RPSRC}/nwfpe_x80-r0.patch;patch=1 \
+#           ${DOSRC}/mmc-bulk-r0.patch;patch=1 \
+#           ${RPSRC}/pxa27x_extraregs-r4.patch;patch=1 \
 
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
-SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.12.tar.gz \
-           ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.13-rc5.bz2;patch=1 \
-           ftp://ftp.kernel.org/pub/linux/kernel/people/akpm/patches/2.6/2.6.13-rc5/2.6.13-rc5-mm1/2.6.13-rc5-mm1.bz2;patch=1 \
-           ${RPSRC}/reverse_pagefault-r3.patch;patch=1 \
-           ${RPSRC}/corgi_tspmufix-r0.patch;patch=1 \
-           ${RPSRC}/nwfpe_x80-r0.patch;patch=1 \
-           ${DOSRC}/mmc-bulk-r0.patch;patch=1 \
+#           ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.13-rc5.bz2;patch=1 \
+SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.13.tar.gz \
+           ftp://ftp.kernel.org/pub/linux/kernel/people/akpm/patches/2.6/2.6.13/2.6.13-mm1/2.6.13-mm1.bz2;patch=1 \
            ${RPSRC}/spitz_usbsuspend-r0.patch;patch=1 \	   
            ${RPSRC}/ohci_portcount-r0.patch;patch=1 \
            ${RPSRC}/pxa_ohci_power-r0.patch;patch=1 \
            ${RPSRC}/pxa_ohci_platform-r0.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
-           ${RPSRC}/pxa_pcmcia_init-r0.patch;patch=1 \
+           ${RPSRC}/pxa_pcmcia_init-r1.patch;patch=1 \
            ${RPSRC}/pxa_remove_static-r0.patch;patch=1 \
            ${RPSRC}/pxafb_hsync-r2.patch;patch=1 \
-           ${RPSRC}/pxa27x_extraregs-r4.patch;patch=1 \
            ${RPSRC}/borzoi_machtype-r0.patch;patch=1 \
            ${RPSRC}/sharp_multi_pcmcia-r3.patch;patch=1 \
-           ${RPSRC}/sharpsl_detection-r0.patch;patch=1 \
+           ${RPSRC}/sharpsl_detection-r1.patch;patch=1 \
            ${RPSRC}/sharpsl_ssp-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_lcd-r2.patch;patch=1 \
            ${RPSRC}/sharpsl_ts-r3.patch;patch=1 \
-           ${RPSRC}/sharpsl_bl-r1.patch;patch=1 \
-           ${RPSRC}/sharpsl_pm-r2.patch;patch=1 \
-           ${RPSRC}/corgi_pm-r0.patch;patch=1 \
+           ${RPSRC}/sharpsl_bl-r3.patch;patch=1 \
+           ${RPSRC}/sharpsl_pm-r6.patch;patch=1 \
+           ${RPSRC}/corgi_pm-r1.patch;patch=1 \
            ${RPSRC}/spitzkbd-r1.patch;patch=1 \
            ${RPSRC}/spitzcf-r2.patch;patch=1 \
            ${RPSRC}/pxa_rtc-r1.patch;patch=1 \
@@ -71,9 +70,9 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.12.tar.gz \
            ${RPSRC}/corgi_irda-r3.patch;patch=1 \
            ${RPSRC}/input_power-r2.patch;patch=1 \
            ${RPSRC}/jffs2_longfilename-r0.patch;patch=1 \
-           ${RPSRC}/sharpsl_bl_kick-r0.patch;patch=1 \
+           ${RPSRC}/sharpsl_bl_kick-r1.patch;patch=1 \
            ${RPSRC}/corgi_snd-r10.patch;patch=1 \
-           ${DOSRC}/rmk-i2c-pxa-r0.patch;patch=1 \
+           ${RPSRC}/rmk-i2c-pxa-r2.patch;patch=1 \
            ${RPSRC}/sharpsl_mtd_extras-r0.patch;patch=1 \
            ${RPSRC}/ipaq/hx2750_base-r20.patch;patch=1 \
            ${RPSRC}/ipaq/hx2750_bl-r1.patch;patch=1 \
@@ -95,9 +94,9 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.12.tar.gz \
            ${DOSRC}/tosa-2.6.13-r1.patch;patch=1 \
            ${RPSRC}/temp/tosa-bl-r5.patch;patch=1 \
            ${RPSRC}/spitz_base-r11.patch;patch=1 \
-           ${RPSRC}/spitz_pm-r0.patch;patch=1 \
+           ${RPSRC}/spitz_pm-r1.patch;patch=1 \
            ${RPSRC}/scoop_susres-r0.patch;patch=1 \
-           ${RPSRC}/pcmcia_dev_ids-r0.patch;patch=1 \
+           ${RPSRC}/pcmcia_dev_ids-r1.patch;patch=1 \
            ${RPSRC}/mmc_timeout-r0.patch;patch=1 \	   
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
@@ -105,6 +104,7 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.12.tar.gz \
            file://pxa-serial-hack.patch;patch=1 \
            ${RPSRC}/jl1/pxa-linking-bug.patch;patch=1 \
            file://dtl1_cs-add-socket-revE.patch;patch=1 \
+           file://connectplus-remove-ide-HACK.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-ipaq-pxa-2.6 \
            file://defconfig-collie \
@@ -127,7 +127,7 @@ SRC_URI_append_tosa = "${DOSRC}/nand-readid-r1.patch;patch=1 \
                        ${DOSRC}/tosa-pxaac97-r1.patch;patch=1 \
         	       ${DOSRC}/tosa-bluetooth-r0.patch;patch=1 "
 
-S = "${WORKDIR}/linux-2.6.12"
+S = "${WORKDIR}/linux-2.6.13"
 
 inherit kernel
 

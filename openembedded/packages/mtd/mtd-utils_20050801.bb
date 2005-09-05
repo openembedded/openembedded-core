@@ -4,8 +4,9 @@ DEPENDS = "zlib"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
 PR = "r0"
+CVSDATE = "${PV}"
 
-SRC_URI = "ftp://ftp.uk.linux.org/pub/people/dwmw2/mtd/cvs/mtd-snapshot-${PV}.tar.bz2 \
+SRC_URI = "cvs://anoncvs:anoncvs@cvs.infradead.org/home/cvs;module=mtd \ 
            file://add-exclusion-to-mkfs-jffs2.patch;patch=1 \
            file://more-verbosity.patch;patch=1"
 S = "${WORKDIR}/mtd/"

@@ -1,7 +1,7 @@
 DESCRIPTION = "Avahi implements the DNS-SD over Multicast DNS"
 HOMEPAGE = "http://www.freedesktop.org/Software/Avahi"
 LICENCE= "GPL"
-DEPENDS = "expat libdaemon dbus-0.34"
+DEPENDS = "expat libdaemon dbus"
 RRECOMMENDS = "libnss-mdns"
 SECTION = "net"
 PRIORITY = "optional"

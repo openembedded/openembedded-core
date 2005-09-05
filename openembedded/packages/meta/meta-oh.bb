@@ -18,7 +18,8 @@ oh-task-base = "\
     xcursor-transparent-theme \
     xserver-kdrive-common \
     gtk+ \
-    avahi \
+    avahi-daemon \
+    avahi-dnsconfd \
     rxvt \
     xhost \
     ttf-bitstream-vera \
