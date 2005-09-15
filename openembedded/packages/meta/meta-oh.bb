@@ -18,13 +18,13 @@ oh-task-base = "\
     xcursor-transparent-theme \
     xserver-kdrive-common \
     gtk+ \
-    avahi-daemon \
-    avahi-dnsconfd \
     rxvt \
     xhost \
     ttf-bitstream-vera \
     xauth"
 
+#    avahi-daemon \
+#    avahi-dnsconfd \
 #    teleport \
 #    xst \
 #    libgtkstylus \

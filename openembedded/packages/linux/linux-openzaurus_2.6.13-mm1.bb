@@ -143,7 +143,7 @@ COMPATIBLE_HOST = "arm.*-linux"
 CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
 CMDLINE_ROOT = "root=/dev/mtdblock2 rootfstype=jffs2 "
 CMDLINE_ROOT_poodle = "root=/dev/mtdblock1 rootfstype=jffs2 "
-CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 "
+CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 rw "
 
 ##############################################################
 # Configure memory/ramdisk split for collie
