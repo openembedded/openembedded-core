@@ -7,7 +7,7 @@ FILES_${PN} = "/etc ${libdir}/gtk-2.0"
 
 inherit autotools
 
-SRC_URI = "http://burtonini.com/temp/${PN}-${PV}.tar.bz2 \
+SRC_URI = "http://burtonini.com/temp/${PN}-${PV}.tar.gz \
 	file://gtkstylus.sh"
 
 do_install_append() {
