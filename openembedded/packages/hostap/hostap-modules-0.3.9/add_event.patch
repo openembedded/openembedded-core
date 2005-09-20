@@ -1,0 +1,28 @@
+Index: hostap-driver-0.3.7/driver/modules/hostap_cs.c
+===================================================================
+--- hostap-driver-0.3.7.orig/driver/modules/hostap_cs.c	2005-08-03 17:05:53.000000000 +0100
++++ hostap-driver-0.3.7/driver/modules/hostap_cs.c	2005-08-03 17:07:59.000000000 +0100
+@@ -526,11 +526,13 @@
+ 	dev_list = link;
+ 	client_reg.dev_info = &dev_info;
+ 	client_reg.Attributes = INFO_IO_CLIENT;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,13))
+ 	client_reg.EventMask = CS_EVENT_CARD_INSERTION |
+ 		CS_EVENT_CARD_REMOVAL |
+ 		CS_EVENT_RESET_PHYSICAL | CS_EVENT_CARD_RESET |
+ 		CS_EVENT_PM_SUSPEND | CS_EVENT_PM_RESUME;
+ 	client_reg.event_handler = &prism2_event;
++#endif
+ 	client_reg.Version = 0x0210;
+ 	client_reg.event_callback_args.client_data = link;
+ 	ret = pcmcia_register_client(&link->handle, &client_reg);
+@@ -913,6 +915,9 @@
+ 		.name	= "hostap_cs",
+ 	},
+ 	.attach		= prism2_attach,
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(2,6,12))
++	.event          = prism2_event,
++#endif
+ 	.detach		= prism2_detach,
+ 	.owner		= THIS_MODULE,
+ };

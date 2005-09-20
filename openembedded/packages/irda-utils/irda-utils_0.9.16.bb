@@ -10,6 +10,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/irda/irda-utils-${PV}.tar.gz \
 	   file://m4.patch;patch=1 \
 	   file://init"
 
+export SYS_INCLUDES="-I${STAGING_INCDIR}"
+
 inherit autotools update-rc.d
 
 INITSCRIPT_NAME = "irattach"

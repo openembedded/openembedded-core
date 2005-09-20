@@ -44,7 +44,6 @@ Cleanup(){
 	rm -f $VTMPNAME > /dev/null 2>&1
 	rm -f $MTMPNAME > /dev/null 2>&1
 	rm $CTRLPATH/* > /dev/null 2>&1
-	rm $DATAPATH/* > /dev/null 2>&1
 	exit $1
 }
 trap 'Cleanup 1' 1 15
@@ -82,10 +81,27 @@ fi
 ### Check model ###
 /sbin/writerominfo
 MODEL=`cat /proc/deviceinfo/product`
-if [ "$MODEL" != "SL-C3000" ]
+if [ "$MODEL" != "SL-C3000" ] && [ "$MODEL" != "SL-C3100" ]
 then
 	echo 'MODEL:'$MODEL
 	echo 'ERROR:Invalid model!'
+	echo 'Please reset'
+	while true
+	do
+	done
+fi
+
+### Check that we have a valid tar
+for TARNAME in gnu-tar GNU-TAR
+do
+	if [ -e $DATAPATH/$TARNAME ]
+	then
+		TARBIN=$DATAPATH/$TARNAME
+	fi
+done
+
+if [ ! -e $TARBIN ]; then
+	echo 'Please place a valid copy of tar as "gnu-tar" on your card'
 	echo 'Please reset'
 	while true
 	do
@@ -243,13 +259,17 @@ do
     
 		cd /hdd1
 		echo 'Now extracting...'
-		gzip -dc $DATAPATH/$TARGETFILE | tar xf -
+		gzip -dc $DATAPATH/$TARGETFILE | $TARBIN xf -
 		if [ "$?" != "0" ]; then
 		    echo "Error!"
 		    exit "$?"
 		fi
 
 		echo 'Success!'
+		
+		#This can be useful for debugging
+		#/bin/sh -i
+		
 		# remount as RO
 		cd /
 		umount /hdd1

@@ -36,11 +36,11 @@ do_configure () {
 	if test !  -e include/asm-$ARCH; then
 		oefatal unable to create asm symlink in kernel headers
 	fi
-	cp -a "include/asm-$ARCH" "include/asm"
+	cp -pPR "include/asm-$ARCH" "include/asm"
 	if test "$ARCH" = "arm"; then
-		cp -a include/asm/arch-ebsa285 include/asm/arch
+		cp -pPR include/asm/arch-ebsa285 include/asm/arch
 	elif test "$ARCH" = "sh"; then
-		cp -a include/asm/cpu-${TARGET_ARCH} include/asm/cpu || die "unable to create include/asm/cpu"
+		cp -pPR include/asm/cpu-${TARGET_ARCH} include/asm/cpu || die "unable to create include/asm/cpu"
 	fi
 }
 

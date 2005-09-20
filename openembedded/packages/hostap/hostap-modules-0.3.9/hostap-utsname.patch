@@ -1,0 +1,77 @@
+diff -r -U 3 hostap-driver-0.3.7.orig/driver/modules/hostap.c hostap-driver-0.3.7/driver/modules/hostap.c
+--- hostap-driver-0.3.7.orig/driver/modules/hostap.c	2005-07-25 09:14:01.995965088 +0000
++++ hostap-driver-0.3.7/driver/modules/hostap.c	2005-07-25 09:13:22.301999488 +0000
+@@ -25,6 +25,7 @@
+ #include <linux/if_arp.h>
+ #include <linux/delay.h>
+ #include <linux/random.h>
++#include <linux/utsname.h>
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,5,44))
+ #include <linux/tqueue.h>
+ #else
+diff -r -U 3 hostap-driver-0.3.7.orig/driver/modules/hostap_crypt_ccmp.c hostap-driver-0.3.7/driver/modules/hostap_crypt_ccmp.c
+--- hostap-driver-0.3.7.orig/driver/modules/hostap_crypt_ccmp.c	2005-07-25 09:14:01.996964936 +0000
++++ hostap-driver-0.3.7/driver/modules/hostap_crypt_ccmp.c	2005-07-25 09:13:22.302999336 +0000
+@@ -19,6 +19,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/if_ether.h>
+ #include <linux/if_arp.h>
++#include <linux/utsname.h>
+ #include <asm/string.h>
+ 
+ #include "hostap_crypt.h"
+diff -r -U 3 hostap-driver-0.3.7.orig/driver/modules/hostap_crypt_tkip.c hostap-driver-0.3.7/driver/modules/hostap_crypt_tkip.c
+--- hostap-driver-0.3.7.orig/driver/modules/hostap_crypt_tkip.c	2005-07-25 09:14:01.996964936 +0000
++++ hostap-driver-0.3.7/driver/modules/hostap_crypt_tkip.c	2005-07-25 09:13:22.302999336 +0000
+@@ -19,6 +19,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/if_ether.h>
+ #include <linux/if_arp.h>
++#include <linux/utsname.h>
+ #include <asm/string.h>
+ 
+ #include "hostap_crypt.h"
+diff -r -U 3 hostap-driver-0.3.7.orig/driver/modules/hostap_crypt_wep.c hostap-driver-0.3.7/driver/modules/hostap_crypt_wep.c
+--- hostap-driver-0.3.7.orig/driver/modules/hostap_crypt_wep.c	2005-07-25 09:14:01.996964936 +0000
++++ hostap-driver-0.3.7/driver/modules/hostap_crypt_wep.c	2005-07-25 09:13:22.302999336 +0000
+@@ -15,6 +15,7 @@
+ #include <linux/init.h>
+ #include <linux/slab.h>
+ #include <linux/random.h>
++#include <linux/utsname.h>
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,5,44))
+ #include <linux/tqueue.h>
+ #else
+diff -r -U 3 hostap-driver-0.3.7.orig/driver/modules/hostap_cs.c hostap-driver-0.3.7/driver/modules/hostap_cs.c
+--- hostap-driver-0.3.7.orig/driver/modules/hostap_cs.c	2005-07-25 09:14:01.997964784 +0000
++++ hostap-driver-0.3.7/driver/modules/hostap_cs.c	2005-07-25 09:13:22.302999336 +0000
+@@ -12,6 +12,7 @@
+ #include <linux/timer.h>
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
++#include <linux/utsname.h>
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,5,44))
+ #include <linux/tqueue.h>
+ #else
+diff -r -U 3 hostap-driver-0.3.7.orig/driver/modules/hostap_pci.c hostap-driver-0.3.7/driver/modules/hostap_pci.c
+--- hostap-driver-0.3.7.orig/driver/modules/hostap_pci.c	2005-07-25 09:14:01.997964784 +0000
++++ hostap-driver-0.3.7/driver/modules/hostap_pci.c	2005-07-25 09:13:22.303999184 +0000
+@@ -11,6 +11,7 @@
+ #include <linux/if.h>
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
++#include <linux/utsname.h>
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,5,44))
+ #include <linux/tqueue.h>
+ #else
+diff -r -U 3 hostap-driver-0.3.7.orig/driver/modules/hostap_plx.c hostap-driver-0.3.7/driver/modules/hostap_plx.c
+--- hostap-driver-0.3.7.orig/driver/modules/hostap_plx.c	2005-07-25 09:14:01.997964784 +0000
++++ hostap-driver-0.3.7/driver/modules/hostap_plx.c	2005-07-25 09:13:22.303999184 +0000
+@@ -14,6 +14,7 @@
+ #include <linux/if.h>
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
++#include <linux/utsname.h>
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,5,44))
+ #include <linux/tqueue.h>
+ #else

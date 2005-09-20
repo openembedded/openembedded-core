@@ -48,14 +48,14 @@ export LD_FOR_TARGET = "${TARGET_PREFIX}ld"
 export NM_FOR_TARGET = "${TARGET_PREFIX}nm"
 export RANLIB_FOR_TARGET = "${TARGET_PREFIX}ranlib"
 
-export CC_FOR_HOST = "${CCACHE} ${HOST_PREFIX}gcc"
-export CXX_FOR_HOST = "${CCACHE} ${HOST_PREFIX}gcc"
+export CC_FOR_HOST = "${CCACHE} ${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
+export CXX_FOR_HOST = "${CCACHE} ${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CPP_FOR_BUILD = "${BUILD_CPP}"
 export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
 
-export CC = "${CCACHE} ${HOST_PREFIX}gcc"
+export CC = "${CCACHE} ${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 
 do_configure () {
 	(cd ${S}; gnu-configize) || die "Failed to run gnu-configize"

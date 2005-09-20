@@ -1,3 +1,4 @@
+DEPENDS += "qt4-x11"
 #
 # override variables set by qmake-base to compile Qt/X11 apps
 #

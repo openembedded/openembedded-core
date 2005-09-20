@@ -7,13 +7,14 @@
 
 #set some preferred providers:
 PREFERRED_PROVIDER_gconf=gconf-dbus
+PREFERRED_PROVIDER_gnome-vfs=gnome-vfs-dbus
 
 #specify versions, as the header says :)
 PREFERRED_VERSION_libmatchbox ?= "1.7"
 PREFERRED_VERSION_matchbox ?= "0.9.1"
 PREFERRED_VERSION_matchbox-common ?= "0.9.1"
 PREFERRED_VERSION_matchbox-desktop ?= "0.9.1"
-PREFERRED_VERSION_matchbox-wm ?= "0.9.5"
+PREFERRED_VERSION_matchbox-wm ?= "0.9.5+cvs-${CVSDATE}"
 PREFERRED_VERSION_matchbox-panel ?= "0.9.2"
 PREFERRED_VERSION_matchbox-applet-inputmanager ?= "0.6"
 PREFERRED_VERSION_atk ?= "1.9.0"
@@ -49,7 +50,7 @@ PREFERRED_VERSION_gpe-today ?= "0.09"
 PREFERRED_VERSION_matchbox-panel-manager ?= "0.1"
 PREFERRED_VERSION_dbus ?= "0.23.4"
 PREFERRED_VERSION_gpe-beam ?= "0.2.8" 
-PREFERRED_VERSION_gpe-bluetooth ?= "0.44"
+PREFERRED_VERSION_gpe-bluetooth ?= "0.45"
 PREFERRED_VERSION_gpe-su ?= "0.18"
 PREFERRED_VERSION_gpe-conf ?= "0.1.25"
 PREFERRED_VERSION_gpe-clock ?= "0.21"
@@ -86,7 +87,7 @@ PREFERRED_VERSION_minimo ?= "0.0cvs${CVSDATE_minimo}"
 PREFERRED_VERSION_linphone-hh ?= "0.12.2.hh1"
 PREFERRED_VERSION_linphone ?= "0.12.2"
 PREFERRED_VERSION_firefox ?= "1.0"
-PREFERRED_VERSION_gaim ?= "2.0.0-cvs-mco1"
+PREFERRED_VERSION_gaim ?= "2.0.0-cvs-mco1-20050904"
 PREFERRED_VERSION_poppler ?= "0.3.3"
 PREFERRED_VERSION_evince ?= "0.3.2"
 PREFERRED_VERSION_gpe_mini_browser ?= "0.15"

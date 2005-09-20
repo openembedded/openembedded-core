@@ -69,7 +69,7 @@ do_configure() {
 
 do_stage() {
 	# The .h files get installed read-only, the autostage
-	# function just uses cp -a, so do this by hand
+	# function just uses cp -pPR, so do this by hand
 	# Install, for the moment, into include/db4 to avoid
 	# interfering with the db3 headers (which have the same
 	# name).  -I${STAGING_INCDIR}/db4 to use db4, as opposed
@@ -78,7 +78,7 @@ do_stage() {
 	mkdir -p ${STAGE_TEMP}
 	oe_runmake DESTDIR="${STAGE_TEMP}" install_include
 	mkdir -p ${STAGING_INCDIR}/db4
-	cp -af ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}/db4
+	cp -pPRf ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}/db4
 	rm -rf ${STAGE_TEMP}
 	oe_libinstall -so -C .libs libdb-4.3 ${STAGING_LIBDIR}
 }

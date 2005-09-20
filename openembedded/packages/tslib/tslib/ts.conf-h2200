@@ -1,5 +1,4 @@
 module_raw input
-module_raw linear_h2200
 module pthres pmin=1
 module variance delta=30
 module dejitter delta=100

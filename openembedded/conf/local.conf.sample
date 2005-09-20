@@ -3,6 +3,7 @@
 # This file is not used, see build/conf/local.conf instead
 #
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 #
 # OpenEmbedded local configuration file (sample)
 #
@@ -25,12 +26,11 @@
 # expansion.  Stuff like starting with ${HOME} or ${TOPDIR} is ok).
 
 # Use this to specify where BitBake should place the downloaded sources into
-DL_DIR = "POKYROOT/sources"
+DL_DIR = "${HOME}/sources"
 
 # Delete the line below. Then specify which .bb files to consider for
 # your build. Typically this will be something like BBFILES = "/path/to/openembedded/packages/*/*.bb"
-#BBFILES := "${@bb.fatal('Edit your conf/local.conf: BBFILES')}"
-BBFILES := "POKYROOT/openembedded/packages/*/*.bb"
+BBFILES := "${@bb.fatal('Edit your conf/local.conf: BBFILES')}"
 
 # Use the BBMASK below to instruct BitBake to _NOT_ consider some .bb files
 # This is a regulary expression, so be sure to get your parenthesis balanced.
@@ -77,7 +77,8 @@ PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}g++:gcc-cross"
 
 # Uncomment this to select a distribution policy. See the conf directory
 # for distributions currently known to OpenEmbedded.
-# DISTRO = "familiar"
+# Stay away from unversioned distros unless you really know what you are doing
+# DISTRO = "familiar-0.8.3"
 
 # Uncomment this to select a particular kernel version if supported by 
 # your MACHINE setting. Currently only supported on Zaurus Clamshells.
@@ -88,7 +89,7 @@ PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}g++:gcc-cross"
 # INHERIT = "package_ipk"
 # INHERIT = "package_tar"
 
-# Add the required image file system types below. Valid are jffs2, tar, cramfs
+# Add the required image file system types below. Valid are jffs2, tar, cramfs and ext2
 IMAGE_FSTYPES = "jffs2 tar"
 
 # Uncomment this to disable the parse cache (not recommended).
@@ -97,7 +98,8 @@ IMAGE_FSTYPES = "jffs2 tar"
 # Uncomment this if you want BitBake to emit debugging output
 # BBDEBUG = "yes"
 
-# Uncomment these two if you want BitBake to build images useful for debugging.
+# Uncomment these two if you want BitBake to build images useful for debugging. 
+# Note that INHIBIT_PACKAGE_STRIP needs a package format to be defined
 # DEBUG_BUILD = "1"
 # INHIBIT_PACKAGE_STRIP = "1"
 
@@ -125,4 +127,4 @@ BBINCLUDELOGS = "yes"
 CVS_TARBALL_STASH = "http://www.oesources.org/source/current/"
 
 # EDIT THIS FILE and then remove the line below before using!
-#REMOVE_THIS_LINE:="${@oe.fatal('Read the comments in your conf/local.conf')}"
+REMOVE_THIS_LINE:="${@oe.fatal('Read the comments in your conf/local.conf')}"

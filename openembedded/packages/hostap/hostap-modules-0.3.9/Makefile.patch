@@ -1,0 +1,11 @@
+--- hostap-driver-0.2.4/Makefile.old	2004-07-31 10:35:50.000000000 +0100
++++ hostap-driver-0.2.4/Makefile	2004-07-31 10:35:56.000000000 +0100
+@@ -51,7 +51,7 @@
+ 
+ VERFILE := $(KERNEL_PATH)/include/linux/version.h
+ KERNELRELEASE := $(shell if [ -r $(VERFILE) ]; \
+-	then (cat $(VERFILE); echo UTS_RELEASE) | $(CC) $(INCLUDES) $(CFLAGS) -E - | tail -1 | xargs echo; \
++	then (cat $(VERFILE); echo UTS_RELEASE) | $(CC) $(INCLUDES) $(CFLAGS) -E - | tail -n 1 | xargs echo; \
+ 	else uname -r; fi)
+ KERNELVER := $(shell echo "$(KERNELRELEASE)" | \
+ 	sed "s/\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/")

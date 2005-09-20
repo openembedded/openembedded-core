@@ -145,6 +145,7 @@ python do_package_ipk () {
 		fields.append(["Maintainer: %s\n", ['MAINTAINER']])
 		fields.append(["Architecture: %s\n", ['PACKAGE_ARCH']])
 		fields.append(["OE: %s\n", ['P']])
+		fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
 		def pullData(l, d):
 			l2 = []

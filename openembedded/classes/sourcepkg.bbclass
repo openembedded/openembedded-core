@@ -43,7 +43,7 @@ sourcepkg_do_create_orig_tgz(){
 	echo $src_tree
 	oenote "Creating .orig.tar.gz in ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz"
 	tar cvzf ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz  $src_tree --exclude-from temp/exclude-from-file
-	cp -a $src_tree $src_tree.orig
+	cp -pPR $src_tree $src_tree.orig
 }
 
 sourcepkg_do_archive_bb() {

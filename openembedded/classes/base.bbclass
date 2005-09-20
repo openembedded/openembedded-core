@@ -371,7 +371,7 @@ def oe_unpack_file(file, data, url = None):
 				destdir = "."
 			elif not os.access("%s/%s" % (os.getcwd(), destdir), os.F_OK):
 				os.makedirs("%s/%s" % (os.getcwd(), destdir))
-		cmd = 'cp -a %s %s/%s/' % (file, os.getcwd(), destdir)
+		cmd = 'cp -pPR %s %s/%s/' % (file, os.getcwd(), destdir)
 	else:
 		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
 		if not 'patch' in parm:
@@ -496,8 +496,16 @@ python base_eventhandler() {
 	note(msg)
 
 	if name.startswith("BuildStarted"):
-		statusvars = ['TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO',
-			      'TARGET_FPU']
+		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
+		path_to_bbfiles = bb.data.getVar( 'BBFILES', e.data, 1 )
+		path_to_packages = path_to_bbfiles[:path_to_bbfiles.index( "packages" )]
+		monotone_revision = "<unknown>"
+		try:
+			monotone_revision = file( "%s/MT/revision" % path_to_packages ).read().strip()
+		except IOError:
+			pass
+		bb.data.setVar( 'OE_REVISION', monotone_revision, e.data )
+		statusvars = ['BB_VERSION', 'OE_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'TARGET_FPU']
 		statuslines = ["%-13s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
 		print statusmsg

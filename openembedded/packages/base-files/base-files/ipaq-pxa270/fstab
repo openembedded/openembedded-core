@@ -4,6 +4,6 @@
 proc            /proc		proc    defaults        0  0
 sys             /sys        sysfs	defaults        0  0
 
-/dev/hda1		/media/cf	auto	defaults,noauto,noatime,user,exec,suid	0  0
+/dev/hda1		/media/cf	auto	defaults,noauto,noatime,exec,suid	0  0
 tmpfs			/var		tmpfs	defaults	0  0
 tmpfs			/media/ram	tmpfs	defaults	0  0

@@ -6,7 +6,7 @@ DEPENDS = "makedevs"
 DEPENDS_openzaurus = "makedevs virtual/kernel"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r57"
+PR = "r58"
 
 SRC_URI = "file://halt \
            file://ramdisk \
@@ -41,6 +41,8 @@ SRC_URI_append_tosa         = " file://keymap-*.map"
 SRC_URI_append_akita        = " file://keymap-*.map"
 SRC_URI_append_spitz        = " file://keymap-*.map"
 SRC_URI_append_borzoi       = " file://keymap-*.map"
+SRC_URI_append_collie       = " file://keymap-*.map"
+SRC_URI_append_poodle       = " file://keymap-*.map"
 
 def read_kernel_version(d):
 	import bb
@@ -103,7 +105,7 @@ do_install () {
 	fi
 
     case ${MACHINE} in
-        c7x0 | tosa | spitz | akita | borzoi )
+        c7x0 | tosa | spitz | akita | borzoi | collie | poodle )
 			install -m 0755 ${WORKDIR}/keymap		${D}${sysconfdir}/init.d
 			ln -sf	../init.d/keymap	${D}${sysconfdir}/rcS.d/S00keymap
 			install -m 0644 ${WORKDIR}/keymap-*.map	${D}${sysconfdir}

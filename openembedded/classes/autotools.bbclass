@@ -145,7 +145,7 @@ autotools_stage_includes() {
 		rm -rf ${STAGE_TEMP}
 		mkdir -p ${STAGE_TEMP}
 		make DESTDIR="${STAGE_TEMP}" install
-		cp -a ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}
+		cp -pPR ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}
 		rm -rf ${STAGE_TEMP}
 	fi
 }
