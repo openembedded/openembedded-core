@@ -1,11 +1,6 @@
-
-#
-# Patch managed by http://www.holgerschurig.de/patcher.html
-#
-
---- udev-065/Makefile~flags
-+++ udev-065/Makefile
-@@ -106,11 +106,11 @@
+--- udev-070/Makefile~flags	2005-09-15 01:19:07 +0200
++++ udev-070/Makefile	2005-09-16 11:44:37 +0200
+@@ -160,36 +160,36 @@
  # check if compiler option is supported
  cc-supports = ${shell if $(CC) ${1} -S -o /dev/null -xc /dev/null > /dev/null 2>&1; then echo "$(1)"; else echo "$(2)"; fi;}
  
@@ -21,10 +16,8 @@
  
  # use '-Os' optimization if available, else use -O2
  OPTFLAGS := $(call cc-supports, -Os, -O2)
-@@ -154,16 +154,16 @@
  
- SYSFS = $(PWD)/libsysfs/sysfs.a
- 
+ # include our local copy of libsysfs
 -CFLAGS +=	-I$(PWD)/libsysfs/sysfs	\
 +override CFLAGS +=	-I$(PWD)/libsysfs/sysfs	\
  		-I$(PWD)/libsysfs
@@ -37,16 +30,29 @@
  # if DEBUG is enabled, then we do not strip or optimize
  ifeq ($(strip $(DEBUG)),true)
 -	CFLAGS  += -O1 -g -DDEBUG
-+	override CFLAGS  += -DDEBUG
++	override CFLAGS  += -O1 -g -DDEBUG
  	LDFLAGS += -Wl
  	STRIPCMD = /bin/true -Since_we_are_debugging
  else
-@@ -180,18 +180,18 @@
+-	CFLAGS  += $(OPTFLAGS) -fomit-frame-pointer
++	override CFLAGS  += $(OPTFLAGS) -fomit-frame-pointer
+ 	LDFLAGS += -s -Wl
+ 	STRIPCMD = $(STRIP) -s --remove-section=.note --remove-section=.comment
+ endif
+ 
+ ifeq ($(strip $(USE_GCOV)),true)
+-	CFLAGS += -fprofile-arcs -ftest-coverage
++	override CFLAGS += -fprofile-arcs -ftest-coverage
+ 	LDFLAGS = -fprofile-arcs
+ endif
+ 
+@@ -200,18 +200,18 @@
  	CC		= $(KLCC)
  	LD		= $(KLCC)
  else
 -	CFLAGS		+= -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
 +	override CFLAGS		+= -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
+ 	LDFLAGS		+= -Wl,-warn-common
  endif
  
  ifeq ($(strip $(USE_SELINUX)),true)
@@ -58,9 +64,7 @@
  
  ifeq ($(strip $(USE_STATIC)),true)
 -	CFLAGS += -DUSE_STATIC
--	LDFLAGS += -static
 +	override CFLAGS += -DUSE_STATIC
-+	override LDFLAGS += -static
+ 	LDFLAGS += -static
  endif
  
- ifeq ($(strip $(V)),false)

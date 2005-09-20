@@ -2,6 +2,14 @@ DESCRIPTION = "udev is a program which dynamically creates and removes device no
 /dev/. It responds to /sbin/hotplug device events and requires a 2.6 kernel."
 LICENSE = "GPL"
 
+SRC_URI += " \
+	   file://udev.rules \
+	   file://links.conf \
+           file://permissions.rules \
+	   file://mount.sh \
+	   file://local.rules \
+           file://init"
+
 UDEV_DEVFS_RULES ?= "0"
 
 PACKAGES =+ "udev-utils"
@@ -34,9 +42,17 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' INSTALL=install install
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/udev
+
+	install -d ${D}${sysconfdir}/udev/rules.d/
+
+	install -m 0644 ${WORKDIR}/local.rules         ${D}${sysconfdir}/udev/rules.d/local.rules
+	install -m 0644 ${WORKDIR}/permissions.rules   ${D}${sysconfdir}/udev/rules.d/permissions.rules
+	install -m 0644 ${WORKDIR}/udev.rules          ${D}${sysconfdir}/udev/rules.d/udev.rules
 	if [ "${UDEV_DEVFS_RULES}" = "1" ]; then
 		install -m 0644 ${S}/etc/udev/udev.rules.devfs ${D}${sysconfdir}/udev/rules.d/50-udev.rules
 	fi
-	install -d ${D}${sysconfdir}/udev/rules.d/
-	install -m 0644 ${S}/etc/udev/debian/permissions.rules ${D}${sysconfdir}/udev/rules.d/
+
+	install -d ${D}${sysconfdir}/udev/scripts/
+
+	install -m 0755 ${WORKDIR}/mount.sh ${D}${sysconfdir}/udev/scripts/mount.sh
 }

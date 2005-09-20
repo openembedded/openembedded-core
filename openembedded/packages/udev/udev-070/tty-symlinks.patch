@@ -1,0 +1,13 @@
+--- udev-068/etc/udev/udev-devfs.rules.orig	2005-08-22 20:22:18.000000000 +0200
++++ udev-068/etc/udev/udev-devfs.rules	2005-08-22 20:22:44.000000000 +0200
+@@ -14,8 +14,8 @@
+ KERNEL="fd[0-9]*", NAME="floppy/%n"
+ 
+ # tty devices
+-KERNEL="tty[0-9]*",    NAME="vc/%n"
+-KERNEL="ttyS[0-9]*",   NAME="tts/%n"
++KERNEL="tty[0-9]*",    NAME="vc/%n", SYMLINK="%k"
++KERNEL="ttyS[0-9]*",   NAME="tts/%n", SYMLINK="%k"
+ KERNEL="ttyUSB[0-9]*", NAME="tts/USB%n"
+ 
+ # vc devices
