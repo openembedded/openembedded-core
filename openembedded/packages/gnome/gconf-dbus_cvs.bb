@@ -4,9 +4,11 @@ DESCRIPTION = "Settings daemon using DBUS for communication."
 LICENSE = "GPL"
 MAINTAINER = "Florian Boor <florian@kernelconcepts.de>"
 PROVIDES = "gconf"
-RPROVIDES = "gconf"
+RPROVIDES_${PN} = "gconf"
+RPROVIDES_${PN}-dev = "gconf-dev"
 
 PV = "0.0cvs${CVSDATE}"
+PR = "r6"
 
 SRC_URI = "cvs://anonymous@anoncvs.gnome.org/cvs/gnome;module=gconf;tag=gconf-dbus-2-6 \
            file://gconf-dbus-update.patch;patch=1;pnum=0 \

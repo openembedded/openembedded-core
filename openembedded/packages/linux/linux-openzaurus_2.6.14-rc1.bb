@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r1"
+PR = "r2"
 
 # Handy URLs
 # http://www.kernel.org/pub/linux/kernel/people/alan/linux-2.6/2.6.10/patch-2.6.10-ac8.gz;patch=1 \
@@ -27,6 +27,7 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.13.tar.gz \
            ${RPSRC}/poodle_cleanup-r0.patch;patch=1 \
            ${RPSRC}/poodle_mmc-r0.patch;patch=1 \
            ${RPSRC}/poodle_irda-r0.patch;patch=1 \
+           ${RPSRC}/ide_not_removable-r0.patch;patch=1 \
            ${RPSRC}/scoop_collie_fix-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_pm-r8.patch;patch=1 \
            ${RPSRC}/corgi_pm-r3.patch;patch=1 \
@@ -62,7 +63,7 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.13.tar.gz \
            ${DOSRC}/tosa-irda-r3.patch;patch=1 \
            ${DOSRC}/tosa-lcd-r3.patch;patch=1 \
            ${RPSRC}/temp/tosa-bl-r5a.patch;patch=1 \
-           ${RPSRC}/pcmcia_dev_ids-r1.patch;patch=1 \
+           ${RPSRC}/pcmcia_dev_ids-r2.patch;patch=1 \
            ${RPSRC}/mmc_timeout-r0.patch;patch=1 \	   
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \

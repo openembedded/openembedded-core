@@ -1,0 +1,12 @@
+--- dbus-0.50/tools/Makefile.am.orig	2005-09-07 10:05:38 +0200
++++ dbus-0.50/tools/Makefile.am	2005-09-07 10:06:30 +0200
+@@ -6,9 +6,6 @@
+ nodist_libdbus_glib_HEADERS = dbus-glib-bindings.h
+ libdbus_glibdir = $(includedir)/dbus-1.0/dbus
+ 
+-dbus-glib-bindings.h: dbus-bus-introspect.xml $(top_builddir)/glib/dbus-binding-tool$(EXEEXT)
+-	$(top_builddir)/glib/dbus-binding-tool --mode=glib-client --output=dbus-glib-bindings.h dbus-bus-introspect.xml
+-
+ BUILT_SOURCES = dbus-glib-bindings.h dbus-bus-introspect.xml
+ 
+ else

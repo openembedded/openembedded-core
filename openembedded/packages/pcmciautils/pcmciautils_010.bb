@@ -1,6 +1,6 @@
 DESCRIPTION = "Linux Kernel 2.6 Userland Utilities for the PCMCIA Subsystem"
-DEPENDS = "sysfsutils udev"
-RDEPENDS = "udev"
+DEPENDS = "sysfsutils udev module-init-tools"
+RDEPENDS = "udev module-init-tools"
 HOMEPAGE = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html"
 SECTION = "kernel/userland"
 PRIORITY = "optional"
@@ -8,15 +8,11 @@ PRIORITY = "optional"
 SRC_URI = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2"
 S = "${WORKDIR}/pcmciautils-${PV}"
 
-PR = "r1"
-
-inherit update-rc.d
-
-INITSCRIPT_NAME = "coldplug"
-INITSCRIPT_PARAMS = "defaults"
+PR = "r3"
 
 export HOSTCC = "${BUILD_CC}"
 export etcdir = "${sysconfdir}"
+export sbindir = "${base_sbindir}"
 export pcmciaconfdir = "${sysconfdir}/pcmcia"
 export udevrulesdir = "${sysconfdir}/udev/rules.d"
 export UDEV = 1

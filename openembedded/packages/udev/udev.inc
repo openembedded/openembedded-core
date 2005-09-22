@@ -4,6 +4,7 @@ LICENSE = "GPL"
 
 SRC_URI += " \
 	   file://udev.rules \
+	   file://devfs-udev.rules \
 	   file://links.conf \
            file://permissions.rules \
 	   file://mount.sh \
@@ -49,7 +50,7 @@ do_install () {
 	install -m 0644 ${WORKDIR}/permissions.rules   ${D}${sysconfdir}/udev/rules.d/permissions.rules
 	install -m 0644 ${WORKDIR}/udev.rules          ${D}${sysconfdir}/udev/rules.d/udev.rules
 	if [ "${UDEV_DEVFS_RULES}" = "1" ]; then
-		install -m 0644 ${S}/etc/udev/udev.rules.devfs ${D}${sysconfdir}/udev/rules.d/50-udev.rules
+		install -m 0644 ${WORKDIR}/devfs-udev.rules ${D}${sysconfdir}/udev/rules.d/devfs-udev.rules
 	fi
 
 	install -d ${D}${sysconfdir}/udev/scripts/

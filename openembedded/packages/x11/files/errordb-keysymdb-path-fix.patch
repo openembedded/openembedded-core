@@ -1,0 +1,22 @@
+--- X11/src/ErrDes.c.orig	2005-09-03 16:15:48 +0200
++++ X11/src/ErrDes.c	2005-09-03 16:16:03 +0200
+@@ -56,7 +56,7 @@
+ #include <stdio.h>
+ 
+ #ifndef ERRORDB
+-#define ERRORDB "/usr/lib/X11/XErrorDB"
++#define ERRORDB "/usr/share/X11/XErrorDB"
+ #endif
+ 
+ /*
+--- X11/src/StrKeysym.c.orig	2005-09-03 16:41:18 +0200
++++ X11/src/StrKeysym.c	2005-09-03 16:41:33 +0200
+@@ -36,7 +36,7 @@
+ #include "Key.h"
+ 
+ #ifndef KEYSYMDB
+-#define KEYSYMDB "/usr/lib/X11/XKeysymDB"
++#define KEYSYMDB "/usr/share/X11/XKeysymDB"
+ #endif
+ 
+ static Bool initialized;
