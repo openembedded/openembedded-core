@@ -9,7 +9,7 @@ CVSDATE_cairo=20050330
 CVSDATE_xext=20050222
 
 #set some preferred providers:
-PREFERRED_PROVIDER_gconf=gconf-dbus
+#PREFERRED_PROVIDER_gconf=gconf-dbus
 
 #specify versions, as the header says :)
 PREFERRED_VERSION_libmatchbox ?= "1.6"

@@ -6,7 +6,7 @@
 #CVSDATE_xext=20050222
 
 #set some preferred providers:
-PREFERRED_PROVIDER_gconf=gconf-dbus
+#PREFERRED_PROVIDER_gconf=gconf-dbus
 PREFERRED_PROVIDER_gnome-vfs=gnome-vfs-dbus
 
 #specify versions, as the header says :)

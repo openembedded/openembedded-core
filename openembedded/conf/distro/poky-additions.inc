@@ -7,7 +7,7 @@ DISTRO_VERSION = "0.0-snapshot-${DATE}"
 DISTRO_TYPE = "debug"
 # DISTRO_TYPE = "release"
 
-PREFERRED_PROVIDER_gconf=gconf-dbus
+#PREFERRED_PROVIDER_gconf=gconf-dbus
 
 PREFERRED_VERSION_libmatchbox = "1.7"
 PREFERRED_VERSION_matchbox = "0.9.1"

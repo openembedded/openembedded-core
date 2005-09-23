@@ -1,3 +1,5 @@
+DEFAULT_PREFERENCE = "-1"
+
 SECTION = "x11/utils"
 DEPENDS = "gtk+ glib-2.0 dbus libxml2 popt"
 DESCRIPTION = "Settings daemon using DBUS for communication."
