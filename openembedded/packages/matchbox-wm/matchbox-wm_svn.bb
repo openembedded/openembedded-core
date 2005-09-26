@@ -1,7 +1,7 @@
 SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
-DEPENDS = "libmatchbox x11 xext xcomposite libxfixes xdamage libxrender startup-notification expat matchbox-common gconf"
+DEPENDS = "libmatchbox x11 xext libxrender startup-notification expat matchbox-common gconf"
 RDEPENDS = "matchbox-common"
 PV = "0.9.5cvs${CVSDATE}"
 PR = "r3"
@@ -26,7 +26,7 @@ FILES_${PN} = "${bindir} \
                ${datadir}/themes/Default/matchbox \
                ${datadir}/themes/MBOpus/matchbox"
 
-EXTRA_OECONF = "--enable-composite --enable-startup-notification --disable-xrm --enable-expat --enable-gconf"
+EXTRA_OECONF = "--enable-startup-notification --disable-xrm --enable-expat"
 
 do_install_prepend() {
 	install ${WORKDIR}/kbdconfig ${S}/data/kbdconfig
