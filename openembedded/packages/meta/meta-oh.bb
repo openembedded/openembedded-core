@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r3"
+PR = "r4"
 
 ALLOW_EMPTY = "1"
 
@@ -21,11 +21,6 @@ oh-task-base = "\
     rxvt \
     xhost \
     ttf-bitstream-vera \
-    gdk-pixbuf-loader-png \
-    gdk-pixbuf-loader-xpm \
-    gdk-pixbuf-loader-jpeg \
-    pango-module-basic-x \
-    pango-module-basic-fc \
     xauth"
 
 #    avahi-daemon \
@@ -40,6 +35,10 @@ RDEPENDS_oh-task-base := "${oh-task-base} \
                           gdk-pixbuf-loader-png \
 			  gdk-pixbuf-loader-xpm \
 			  gdk-pixbuf-loader-jpeg \
+                          gdb \    
+                          strace \
+                          tslib-calibrate \
+                          tslib-tests \
 			  pango-module-basic-x \
 			  pango-module-basic-fc"
 
