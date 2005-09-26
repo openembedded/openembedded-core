@@ -21,6 +21,11 @@ oh-task-base = "\
     rxvt \
     xhost \
     ttf-bitstream-vera \
+    gdk-pixbuf-loader-png \
+    gdk-pixbuf-loader-xpm \
+    gdk-pixbuf-loader-jpeg \
+    pango-module-basic-x \
+    pango-module-basic-fc \
     xauth"
 
 #    avahi-daemon \
@@ -32,12 +37,6 @@ oh-task-base = "\
 #    xrdb \
 
 RDEPENDS_oh-task-base := "${oh-task-base}"
-
-#                          gdk-pixbuf-loader-png \
-#			   gdk-pixbuf-loader-xpm \
-#			   gdk-pixbuf-loader-jpeg \
-#			   pango-module-basic-x \
-#			   pango-module-basic-fc \
 
 DEPENDS += " ${oh-task-base}"
 
