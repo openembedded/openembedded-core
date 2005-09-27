@@ -130,7 +130,16 @@ create_etc_timestamp() {
 	date +%2m%2d%2H%2M%Y >${IMAGE_ROOTFS}/etc/timestamp
 }
 
-# export the zap_root_password and create_etc_timestamp
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp
+# Turn any symbolic /sbin/init link into a file
+remove_init_link () {
+	if [ -h ${IMAGE_ROOTFS}/sbin/init ]; then
+		LINKFILE=${IMAGE_ROOTFS}`readlink ${IMAGE_ROOTFS}/sbin/init`
+		rm ${IMAGE_ROOTFS}/sbin/init
+		cp $LINKFILE ${IMAGE_ROOTFS}/sbin/init
+	fi
+}
+
+# export the zap_root_password, create_etc_timestamp and remote_init_link
+EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link
 
 addtask rootfs before do_build after do_install
