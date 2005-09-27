@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r4"
+PR = "r5"
 
 ALLOW_EMPTY = "1"
 
@@ -15,6 +15,7 @@ DEPENDS += " ${oh-base-depends}"
 
 oh-task-base = "\
     matchbox \
+    matchbox-poky \
     xcursor-transparent-theme \
     xserver-kdrive-common \
     gtk+ \
