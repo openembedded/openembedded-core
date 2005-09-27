@@ -1,0 +1,4 @@
+#!/bin/sh
+matchbox-desktop --icon-size 48 &
+matchbox-panel --default-apps mb-applet-battery,mb-applet-clock &
+exec matchbox-window-manager $@
