@@ -23,3 +23,9 @@ FILES_${PN} = "${bindir} \
 FILES_${PN}-dev = "${libdir}/matchbox-desktop \
 		   ${includedir}/matchbox-desktop \
 		   ${datadir}/matchbox/desktop/modules/*a"
+
+do_stage() {
+	install -d ${STAGING_INCDIR}/matchbox-desktop/
+	install -m 0644 ${S}/src/*.h ${STAGING_INCDIR}/matchbox-desktop/
+}
+

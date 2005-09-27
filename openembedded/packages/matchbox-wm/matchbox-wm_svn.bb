@@ -4,7 +4,7 @@ LICENSE = "GPL"
 DEPENDS = "libmatchbox x11 xext libxrender startup-notification expat matchbox-common gconf"
 RDEPENDS = "matchbox-common"
 PV = "0.9.5cvs${CVSDATE}"
-PR = "r3"
+PR = "r4"
 DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager;proto=http \

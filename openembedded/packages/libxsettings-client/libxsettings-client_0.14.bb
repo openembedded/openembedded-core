@@ -2,12 +2,16 @@ SECTION = "gpe/libs"
 LICENSE = "BSD-X"
 PRIORITY = "optional"
 DEPENDS = "libxsettings x11"
+PR = "r1"
 
 inherit autotools pkgconfig gpe
 
 SRC_URI = "${GPE_MIRROR}/xsettings-client-${PV}.tar.bz2"
 S = ${WORKDIR}/xsettings-client-${PV}
 
+do_configure () {
+	X_LIBS=" -L${STAGING_LIBDIR}" oe_runconf
+}
 
 headers = "xsettings-client.h xsettings-common.h"
 do_stage () {
