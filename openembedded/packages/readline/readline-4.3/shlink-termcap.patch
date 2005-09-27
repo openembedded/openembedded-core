@@ -1,0 +1,45 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- readline-4.3/shlib/Makefile.in~shlink-termcap
++++ readline-4.3/shlib/Makefile.in
+@@ -53,11 +53,13 @@
+ CFLAGS = @CFLAGS@
+ LOCAL_CFLAGS = @LOCAL_CFLAGS@ -DRL_LIBRARY_VERSION='"$(RL_LIBRARY_VERSION)"'
+ CPPFLAGS = @CPPFLAGS@
+-LDFLAGS = @LDFLAGS@ @LOCAL_LDFLAGS@ @CFLAGS@
++LDFLAGS = @LDFLAGS@ $(SHOBJ_LDFLAGS) $(SHLIB_XLDFLAGS) @LOCAL_LDFLAGS@ @CFLAGS@
+ 
+ DEFS = @DEFS@
+ LOCAL_DEFS = @LOCAL_DEFS@
+ 
++TERMCAP_LIB = @TERMCAP_LIB@
++
+ #
+ # These values are generated for configure by ${topdir}/support/shobj-conf.
+ # If your system is not supported by that script, but includes facilities for
+@@ -73,7 +75,7 @@
+ SHOBJ_LIBS = @SHOBJ_LIBS@
+ 
+ SHLIB_XLDFLAGS = @SHLIB_XLDFLAGS@
+-SHLIB_LIBS = @SHLIB_LIBS@
++SHLIB_LIBS = @SHLIB_LIBS@ @TERMCAP_LIB@
+ SHLIB_LIBSUFF = @SHLIB_LIBSUFF@
+ 
+ SHLIB_LIBVERSION = @SHLIB_LIBVERSION@
+@@ -147,11 +149,11 @@
+ 
+ $(SHARED_READLINE):	$(SHARED_OBJ)
+ 	$(RM) $@
+-	$(SHOBJ_LD) ${SHOBJ_LDFLAGS} ${SHLIB_XLDFLAGS} -o $@ $(SHARED_OBJ) $(SHLIB_LIBS)
++	$(SHOBJ_LD) ${LDFLAGS} -o $@ $(SHARED_OBJ) $(SHLIB_LIBS)
+ 
+ $(SHARED_HISTORY):	$(SHARED_HISTOBJ) xmalloc.so
+ 	$(RM) $@
+-	$(SHOBJ_LD) ${SHOBJ_LDFLAGS} ${SHLIB_XLDFLAGS} -o $@ $(SHARED_HISTOBJ) xmalloc.so $(SHLIB_LIBS)
++	$(SHOBJ_LD) ${LDFLAGS} -o $@ $(SHARED_HISTOBJ) xmalloc.so $(SHLIB_LIBS)
+ 
+ # Since tilde.c is shared between readline and bash, make sure we compile 
+ # it with the right flags when it's built as part of readline

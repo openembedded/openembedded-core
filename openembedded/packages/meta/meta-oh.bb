@@ -20,6 +20,8 @@ oh-task-base = "\
     gtk+ \
     rxvt \
     xhost \
+    gdb \    
+    strace \
     ttf-bitstream-vera \
     xauth"
 
@@ -35,13 +37,11 @@ RDEPENDS_oh-task-base := "${oh-task-base} \
                           gdk-pixbuf-loader-png \
 			  gdk-pixbuf-loader-xpm \
 			  gdk-pixbuf-loader-jpeg \
-                          gdb \    
-                          strace \
                           tslib-calibrate \
                           tslib-tests \
 			  pango-module-basic-x \
 			  pango-module-basic-fc"
 
-DEPENDS += " ${oh-task-base}"
+DEPENDS += " ${oh-task-base} tslib"
 
 LICENSE = "MIT"
