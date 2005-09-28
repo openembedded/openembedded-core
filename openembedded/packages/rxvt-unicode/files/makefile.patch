@@ -1,0 +1,20 @@
+--- ../rxvt-unicode-cvs-r0/rxvt-unicode/Makefile.in	2004-08-12 22:32:40 +01:00
++++ rxvt-unicode/Makefile.in	2004-12-24 03:09:00 +00:00
+@@ -9,7 +9,7 @@
+ first_rule: all
+ dummy:
+ 
+-subdirs = src doc src/test
++subdirs = src src/test
+ allsubdirs = W11 $(subdirs)
+ 
+ DIST =	INSTALL README.configure configure Makefile Makefile.in ChangeLog
+@@ -24,7 +24,7 @@
+ 
+ #-------------------------------------------------------------------------
+ 
+-all allbin alldoc tags:
++all allbin tags:
+ 	@if test x@host_os@ = xcygwin; then (cd W11; ${MAKE} $@) || exit 1; fi
+ 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
+ 
