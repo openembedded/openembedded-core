@@ -1,0 +1,94 @@
+Index: trunk/Makefile.am
+===================================================================
+--- trunk.orig/Makefile.am	2005-09-28 17:12:46.000000000 +0000
++++ trunk/Makefile.am	2005-09-28 20:01:01.000000000 +0000
+@@ -8,9 +8,9 @@
+ endif
+ 
+ if ENABLE_DBUS
+-SUBDIRS = libdb libedataserver $(CAMEL_DIR) addressbook calendar docs art po
++SUBDIRS = libedataserver $(CAMEL_DIR) addressbook calendar docs art po
+ else
+-SUBDIRS = libdb libedataserver servers $(CAMEL_DIR) addressbook calendar libedataserverui src docs art po
++SUBDIRS = libedataserver servers $(CAMEL_DIR) addressbook calendar libedataserverui src docs art po
+ endif
+ 
+ DIST_SUBDIRS= libedataserver servers camel ucamel addressbook calendar libedataserverui src docs art po
+@@ -37,12 +37,9 @@
+ 	intltool-merge.in				\
+ 	intltool-update.in				\
+ 	intltool-extract.in				\
+-	$(pkgconfig_DATA:-$(API_VERSION).pc=.pc.in) 	\
+-	$(LIBDB_FILES)
++	$(pkgconfig_DATA:-$(API_VERSION).pc=.pc.in) 
+ 
+ DISTCLEANFILES = intltool-extract intltool-merge intltool-update iconv-detect.h $(pkgconfig_DATA)
+-distclean-local:
+-	(cd libdb && $(MAKE) $(AM_MAKEFLAGS) distclean)
+ 
+ LIBDB_FILES= \
+ libdb/Makefile.am \
+Index: trunk/configure.in
+===================================================================
+--- trunk.orig/configure.in	2005-09-28 17:12:46.000000000 +0000
++++ trunk/configure.in	2005-09-28 21:45:00.000000000 +0000
+@@ -179,6 +179,21 @@
+ AC_SUBST(REGEX_LIBS)
+ 
+ dnl ******************************
++dnl * db-4.3 checking
++dnl ******************************
++
++AC_ARG_WITH(libdb43, [  --with-libdb43         Prefix where libdb 4.3 is installed])
++case $withval in
++/*)
++    DB_CFLAGS="-I$withval/include/db4"
++    DB_LIBS="-L$withval/lib -ldb-4.3"
++    ;;
++esac
++
++AC_SUBST(DB_CFLAGS)
++AC_SUBST(DB_LIBS)
++
++dnl ******************************
+ dnl iconv checking
+ dnl ******************************
+ have_iconv=no
+@@ -1316,7 +1331,6 @@
+ export privincludedir
+ export privdatadir
+ AC_CONFIG_SUBDIRS(calendar/libical)
+-AC_CONFIG_SUBDIRS(libdb/dist)
+ 
+ AC_OUTPUT([
+ Makefile
+@@ -1380,7 +1394,6 @@
+ camel/tests/stream/Makefile
+ camel/camel.pc
+ camel/camel-provider.pc
+-libdb/Makefile
+ libedataserver/Makefile
+ libedataserver/libedataserver.pc
+ libedataserverui/Makefile
+Index: trunk/libedataserver/Makefile.am
+===================================================================
+--- trunk.orig/libedataserver/Makefile.am	2005-09-28 17:07:06.000000000 +0000
++++ trunk/libedataserver/Makefile.am	2005-09-28 21:41:32.000000000 +0000
+@@ -1,7 +1,7 @@
+ INCLUDES =								\
+ 	-I$(top_srcdir)							\
+ 	-DG_LOG_DOMAIN=\"e-data-server\"				\
+-	-I$(top_srcdir)/libdb/dist					\
++	$(DB_CFLAGS)							\
+ 	-DE_DATA_SERVER_EXTENSIONDIR=\"$(extensiondir)\"		\
+ 	-DE_DATA_SERVER_IMAGESDIR=\"$(imagesdir)\"			\
+ 	$(E_DATA_SERVER_CFLAGS)
+@@ -48,7 +48,7 @@
+ libedataserver_1_2_la_LIBADD = 				\
+ 	$(E_DATA_SERVER_LIBS)				\
+ 	$(ICONV_LIBS)					\
+-	$(top_builddir)/libdb/dist/libdb-4.1.la		\
++	$(DB_LIBS)					\
+ 	$(SOCKET_LIBS)
+ 
+ libedataserver_1_2_la_LDFLAGS = \
