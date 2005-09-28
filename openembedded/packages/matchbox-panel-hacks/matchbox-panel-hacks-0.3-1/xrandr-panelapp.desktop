@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Screen Rotator
+Comment=Panel based Rotation tool.
+Exec=mb-applet-launcher -na -l --title "Screen Rotator" /usr/share/pixmaps/xrandr.png xrandr-panelapp.sh
+Type=PanelApp
+Icon=xrandr.png
+Categories=Panel;Utility;MB
