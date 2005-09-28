@@ -2,7 +2,7 @@
 if [ -x $HOME/.Xsession ]; then
     exec $HOME/.Xsession
 else
-    exec /usr/win/x-window-manager
+    exec /usr/bin/x-window-manager
 fi
 
 

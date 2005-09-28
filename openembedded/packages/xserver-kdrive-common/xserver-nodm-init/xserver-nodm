@@ -1,0 +1,38 @@
+#!/bin/sh
+
+killproc() {            # kill the named process(es)
+        pid=`/bin/ps -e x |
+             /bin/grep $1 |
+             /bin/grep -v grep |
+             /bin/sed -e 's/^  *//' -e 's/ .*//'`
+        [ "$pid" != "" ] && kill $pid
+}
+
+case "$1" in
+  start)
+       echo "Starting Xserver"
+       /etc/X11/Xserver &
+       export DISPLAY=:0
+	       
+       while [ ! -f /etc/pointercal ]
+       do
+               /usr/bin/xtscal
+       done
+
+       /etc/X11/Xsession &
+  ;;
+
+  stop)
+        echo "Stopping XServer"
+        killproc /usr/bin/Xfbdev
+	killproc /usr/bin/Xomap
+	killproc /usr/bin/Xorg
+	killproc /usr/bin/Xepson
+  ;;
+
+  *)
+        echo "usage: $0 { start | stop }"
+  ;;
+esac
+
+exit 0

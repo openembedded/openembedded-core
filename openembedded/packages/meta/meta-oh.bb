@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r5"
+PR = "r6"
 
 ALLOW_EMPTY = "1"
 
@@ -18,12 +18,15 @@ oh-task-base = "\
     matchbox-poky \
     xcursor-transparent-theme \
     xserver-kdrive-common \
+    xserver-nodm-init \
     gtk+ \
     rxvt \
     xhost \
     gdb \    
     strace \
     ttf-bitstream-vera \
+    udev \
+    sysfsutils \
     xauth"
 
 #    avahi-daemon \

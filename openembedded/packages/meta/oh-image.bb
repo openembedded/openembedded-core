@@ -1,4 +1,4 @@
-PR = "r2"
+PR = "r3"
 
 export IMAGE_BASENAME = "oh-image"
 

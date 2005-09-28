@@ -3,7 +3,7 @@ LICENSE = "GPL"
 SECTION = "x11"
 DEPENDS = "xmodmap xrandr xdpyinfo xtscal"
 RDEPENDS_${PN} = "xmodmap xrandr xdpyinfo xtscal"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "file://etc"
 S = ${WORKDIR}
