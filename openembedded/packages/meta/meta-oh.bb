@@ -22,9 +22,12 @@ oh-task-base = "\
     matchbox-panel-hacks \
     matchbox-themes-extra \
     matchbox-themes-gtk \		
+    matchbox-applet-inputmanager \
+    matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
     xserver-kdrive-common \
     xserver-nodm-init \
+    usbinit \
     gtk+ \
     rxvt-unicode \
     xhost \
