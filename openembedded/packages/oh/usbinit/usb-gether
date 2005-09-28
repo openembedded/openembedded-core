@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+    /sbin/depmod -a
+    /sbin/modprobe g_ether
+    ifconfig usb0 192.168.1.120
+  ;;
+
+  stop)
+    
+  ;;
+
+  *)
+        echo "usage: $0 { start | stop }"
+  ;;
+esac
+
+exit 0
