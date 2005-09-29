@@ -12,6 +12,10 @@ PACKAGES = "${PN} ${PN}-desktop"
 FILES_${PN} = "${prefix}/games/*"
 FILES_${PN}-desktop = "${datadir}/applications/*"
 
+do_compile () {
+	CFLAGS=" -I./ `${STAGING_BINDIR}/pkg-config gtk+-2.0 --cflags` " oe_runmake
+}
+
 do_install () {
     export prefix=${D}
     export DESTDIR=${D}
