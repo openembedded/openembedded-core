@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r8"
+PR = "r9"
 
 ALLOW_EMPTY = "1"
 
@@ -32,6 +32,7 @@ oh-task-base = "\
     gtk-clearlooks-engine \
     eds \
     puzzles \
+    puzzles-dekstop \
     kf \
     rxvt-unicode \
     xhost \
