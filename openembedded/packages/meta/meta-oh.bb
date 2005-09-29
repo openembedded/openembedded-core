@@ -30,9 +30,8 @@ oh-task-base = "\
     usbinit \
     gtk+ \
     gtk-clearlooks-engine \
-    eds \
+    eds-dbus \
     puzzles \
-    puzzles-dekstop \
     kf \
     rxvt-unicode \
     xhost \
@@ -57,6 +56,7 @@ RDEPENDS_oh-task-base := "${oh-task-base} \
 			  gdk-pixbuf-loader-jpeg \
                           tslib-calibrate \
                           tslib-tests \
+                          puzzles-desktop \
 			  pango-module-basic-x \
 			  pango-module-basic-fc"
 
