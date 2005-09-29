@@ -24,7 +24,7 @@ do_compile() {
 do_stage() {
 	oe_libinstall -so -C gconf libgconf-2 ${STAGING_LIBDIR}
 	install -d ${STAGING_INCDIR}/gconf/2/gconf/
-	( cd gconf; for i in ${HEADERS}; do install -m 0644 $i ${STAGING_INCDIR}/gconf/2/gconf/$i; done )
+	( cd gconf; for i in ${HEADERS}; do install -m 0644 $i ${STAGING_INCDIR}/gconf/$i; done )
 	install -m 0644 gconf.m4 ${STAGING_DATADIR}/aclocal/gconf-2.m4
 }
 
