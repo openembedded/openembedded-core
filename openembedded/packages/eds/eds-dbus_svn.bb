@@ -1,10 +1,10 @@
 LICENSE = "LGPL"
 DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade libiconv"
-RDEPENDS = "glib-2.0 gtk+ gconf dbus db libglade libiconv"
+RDEPENDS = "gtk+ gconf db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0cvs${CVSDATE}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://external_libdb.patch;patch=1 \
