@@ -3,6 +3,7 @@ LICENSE = "GPL"
 DEPENDS = "matchbox-wm gtk-clearlooks-engine"
 RDEPENDS = "matchbox-wm gtk-clearlooks-engine"
 SECTION = "x11/base"
+PR = "r1"
 
 SRC_URI = "file://gtkrc"
 
