@@ -1,0 +1,87 @@
+Index: addressbook/libebook/e-contact.c
+===================================================================
+--- trunk/addressbook/libebook/e-contact.c	(revision 206)
++++ trunk/addressbook/libebook/e-contact.c	(working copy)
+@@ -27,7 +27,9 @@
+ #include <ctype.h>
+ #include <string.h>
+ #include <glib/gi18n-lib.h>
++#if 0
+ #include <libgnomevfs/gnome-vfs-mime-utils.h>
++#endif
+ #include "e-contact.h"
+ #include "e-book.h"
+ #include "e-name-western.h"
+@@ -418,8 +420,11 @@
+ 		e_vcard_attribute_add_param_with_value (attr,
+ 							e_vcard_attribute_param_new (EVC_ENCODING),
+ 							"b");
+-		
++#if 0		
+ 		mime_type = gnome_vfs_get_mime_type_for_data (photo->inlined.data, photo->inlined.length);
++#else
++		mime_type = "image/jpeg";
++#endif
+ 		if (!strcmp (mime_type, "image/gif"))
+ 			image_type = "GIF";
+ 		else if (!strcmp (mime_type, "image/jpeg"))
+Index: configure.in
+===================================================================
+--- trunk/configure.in	(revision 214)
++++ trunk/configure.in	(working copy)
+@@ -1180,7 +1180,7 @@
+ 
+ dnl --- evolution-addressbook flags
+ 
+-EVOLUTION_ADDRESSBOOK_DEPS="libxml-2.0 gobject-2.0 gconf-2.0 $IPC_DEPS gnome-vfs-2.0 "
++EVOLUTION_ADDRESSBOOK_DEPS="libxml-2.0 gobject-2.0 gconf-2.0 $IPC_DEPS"
+ 
+ EVO_SET_COMPILE_FLAGS(EVOLUTION_ADDRESSBOOK, $EVOLUTION_ADDRESSBOOK_DEPS)
+ AC_SUBST(EVOLUTION_ADDRESSBOOK_CFLAGS)
+@@ -1188,7 +1188,7 @@
+ 
+ dnl --- evolution-calendar flags
+ 
+-EVOLUTION_CALENDAR_DEPS="libxml-2.0 gobject-2.0 gconf-2.0 gnome-vfs-2.0 dbus-glib-1"
++EVOLUTION_CALENDAR_DEPS="libxml-2.0 gobject-2.0 gconf-2.0 dbus-glib-1"
+ 
+ EVO_SET_COMPILE_FLAGS(EVOLUTION_CALENDAR, $EVOLUTION_CALENDAR_DEPS)
+ AC_SUBST(EVOLUTION_CALENDAR_CFLAGS)
+Index: calendar/backends/Makefile.am
+===================================================================
+--- trunk/calendar/backends/Makefile.am	(revision 212)
++++ trunk/calendar/backends/Makefile.am	(working copy)
+@@ -4,4 +4,4 @@
+ GROUPWISE_SUBDIR =
+ endif
+ 
+-SUBDIRS = file $(GROUPWISE_SUBDIR) contacts
++SUBDIRS = $(GROUPWISE_SUBDIR) contacts
+Index: calendar/libedata-cal-dbus/e-data-cal-factory.c
+===================================================================
+--- trunk/calendar/libedata-cal-dbus/e-data-cal-factory.c	(revision 206)
++++ trunk/calendar/libedata-cal-dbus/e-data-cal-factory.c	(working copy)
+@@ -28,8 +28,9 @@
+ #include <dbus/dbus-protocol.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-bindings.h>
+-/**/
++#if 0
+ #include <libgnomevfs/gnome-vfs.h>
++#endif
+ #include <libedataserver/e-url.h>
+ #include <libedataserver/e-source.h>
+ #include <libedataserver/e-data-server-module.h>
+@@ -406,10 +407,12 @@
+ 
+   loop = g_main_loop_new (NULL, FALSE);
+ 
++#if 0
+   if (!gnome_vfs_init ()) {
+     g_error ("Failed to initialise gnome-vfs");
+     exit (1);
+   }
++#endif
+ 	
+   g_print ("Launching EDataCalFactory\n");  
+ 

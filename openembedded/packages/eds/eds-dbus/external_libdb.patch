@@ -1,7 +1,7 @@
 Index: trunk/Makefile.am
 ===================================================================
---- trunk.orig/Makefile.am	2005-09-28 17:12:46.000000000 +0000
-+++ trunk/Makefile.am	2005-09-28 20:01:01.000000000 +0000
+--- trunk.orig/Makefile.am	2005-09-29 09:19:48.000000000 +0000
++++ trunk/Makefile.am	2005-09-29 09:19:53.000000000 +0000
 @@ -8,9 +8,9 @@
  endif
  
@@ -30,8 +30,8 @@ Index: trunk/Makefile.am
  libdb/Makefile.am \
 Index: trunk/configure.in
 ===================================================================
---- trunk.orig/configure.in	2005-09-28 17:12:46.000000000 +0000
-+++ trunk/configure.in	2005-09-28 21:45:00.000000000 +0000
+--- trunk.orig/configure.in	2005-09-29 09:19:48.000000000 +0000
++++ trunk/configure.in	2005-09-29 10:11:00.000000000 +0000
 @@ -179,6 +179,21 @@
  AC_SUBST(REGEX_LIBS)
  
@@ -72,8 +72,8 @@ Index: trunk/configure.in
  libedataserverui/Makefile
 Index: trunk/libedataserver/Makefile.am
 ===================================================================
---- trunk.orig/libedataserver/Makefile.am	2005-09-28 17:07:06.000000000 +0000
-+++ trunk/libedataserver/Makefile.am	2005-09-28 21:41:32.000000000 +0000
+--- trunk.orig/libedataserver/Makefile.am	2005-09-29 09:19:48.000000000 +0000
++++ trunk/libedataserver/Makefile.am	2005-09-29 09:19:53.000000000 +0000
 @@ -1,7 +1,7 @@
  INCLUDES =								\
  	-I$(top_srcdir)							\
@@ -92,3 +92,25 @@ Index: trunk/libedataserver/Makefile.am
  	$(SOCKET_LIBS)
  
  libedataserver_1_2_la_LDFLAGS = \
+Index: trunk/addressbook/backends/file/Makefile.am
+===================================================================
+--- trunk.orig/addressbook/backends/file/Makefile.am	2005-09-29 09:05:35.000000000 +0000
++++ trunk/addressbook/backends/file/Makefile.am	2005-09-29 09:27:21.000000000 +0000
+@@ -4,7 +4,7 @@
+ 	-I$(top_builddir)				\
+ 	-I$(top_srcdir)/addressbook			\
+ 	-I$(top_builddir)/addressbook			\
+-	-I$(top_srcdir)/libdb/dist			\
++	$(DB_CFLAGS)					\
+ 	$(EVOLUTION_ADDRESSBOOK_CFLAGS)
+ 
+ extension_LTLIBRARIES = libebookbackendfile.la
+@@ -18,7 +18,7 @@
+ 	$(top_builddir)/addressbook/libebook-dbus/libebook-$(API_VERSION).la		\
+ 	$(top_builddir)/addressbook/libedata-book-dbus/libedata-book-$(API_VERSION).la	\
+ 	$(top_builddir)/libedataserver/libedataserver-$(API_VERSION).la		\
+-	$(top_builddir)/libdb/dist/libdb-4.1.la				\
++	$(DB_LIBS)				\
+ 	$(EVOLUTION_ADDRESSBOOK_LIBS)
+ 
+ libebookbackendfile_la_LDFLAGS =	\
