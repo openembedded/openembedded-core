@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r7"
+PR = "r8"
 
 ALLOW_EMPTY = "1"
 
@@ -29,6 +29,10 @@ oh-task-base = "\
     xserver-nodm-init \
     usbinit \
     gtk+ \
+    gtk-clearlooks-engine \
+    eds \
+    puzzles \
+    kf \
     rxvt-unicode \
     xhost \
     gdb \    
