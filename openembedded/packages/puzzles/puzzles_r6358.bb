@@ -1,4 +1,6 @@
 
+DEPENDS = "gtk+"
+
 SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
 
 CFLAGS_prepend = " -I./ `${STAGING_BINDIR}/pkg-config gtk+-2.0 --cflags` "
