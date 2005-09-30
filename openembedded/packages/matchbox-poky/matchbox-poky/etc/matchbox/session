@@ -1,4 +1,4 @@
 #!/bin/sh
 matchbox-desktop --icon-size 64 &
-matchbox-panel --orientation east --no-menu --no-session --default-apps mb-applet-startup-monitor,mb-applet-clock,mb-applet-battery &
-exec matchbox-window-manager $@
+matchbox-panel --orientation east --no-menu --no-session --default-apps mb-applet-home,mb-applet-startup-monitor,mb-applet-clock,mb-applet-battery &
+exec matchbox-window-manager -theme Clearlooks $@
