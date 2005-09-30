@@ -11,7 +11,7 @@ S = ${WORKDIR}/${PN}
 
 inherit autotools pkgconfig gettext
 
-EXTRA_OECONF = "--enable-startup-notification --enable-dnotify --enable-small-icons"
+EXTRA_OECONF = "--enable-startup-notification --enable-dnotify"
 CFLAGS += " -D_GNU_SOURCE"
 
 FILES_${PN} = "${bindir} \
