@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Home
+Comment=Home
+Exec=mb-applet-home
+Type=PanelApp
+Icon=xrandr.png
+Categories=Panel;Utility;MB

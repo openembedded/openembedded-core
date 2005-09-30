@@ -1,0 +1,2 @@
+#!/bin/sh
+mb-applet-launcher -na -l --title "Home" mbdesktop.png matchbox-remote -d
