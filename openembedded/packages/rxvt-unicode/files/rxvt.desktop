@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Terminal
+Exec=/usr/bin/rxvt
+Icon=rxvt.png
+Terminal=false
+Type=Application
+Categories=Utilities
+StartupNotify=false
+

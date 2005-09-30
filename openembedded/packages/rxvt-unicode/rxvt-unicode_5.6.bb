@@ -8,8 +8,10 @@ same time, including Xft fonts."
 LICENSE = "GPL"
 SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 \
 	   file://xwc.patch;patch=1 \
-	   file://signedchar.patch;patch=1"
-PR = "r2"
+	   file://signedchar.patch;patch=1 \
+	   file://rxvt.desktop \
+	   file://rxvt.png"
+PR = "r3"
 
 inherit autotools update-alternatives
 
@@ -53,3 +55,14 @@ do_compile () {
 	# docs need "yodl" and I have no idea what that is
 	oe_runmake -C src "LIBTOOL=$LIBTOOL"
 }
+
+do_install_append () {
+	install -d ${D}/${datadir}
+	install -d ${D}/${datadir}/applications
+	install -d ${D}/${datadir}/icons/hicolor/48x48/apps
+
+	install -m 0644 ${WORKDIR}/rxvt.png ${D}/${datadir}/icons/hicolor/48x48/apps
+	install -m 0644 ${WORKDIR}/rxvt.desktop ${D}/${datadir}/applications
+}
+
+FILES_${PN} += "${datadir}/applications/rxvt.desktop ${datadir}/icons/hicolor/48x48/apps/rxvt.png"
