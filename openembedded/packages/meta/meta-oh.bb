@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r10"
+PR = "r11"
 
 ALLOW_EMPTY = "1"
 
@@ -28,9 +28,12 @@ oh-task-base = "\
     xserver-kdrive-common \
     xserver-nodm-init \
     usbinit \
+    minimo \
     gtk+ \
     gtk-clearlooks-engine \
     eds-dbus \
+    contacts \
+    dates \
     puzzles \
     kf \
     rxvt-unicode \
@@ -56,7 +59,6 @@ RDEPENDS_oh-task-base := "${oh-task-base} \
 			  gdk-pixbuf-loader-jpeg \
                           tslib-calibrate \
                           tslib-tests \
-                          puzzles-desktop \
 			  pango-module-basic-x \
 			  pango-module-basic-fc"
 

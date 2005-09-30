@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Thunderbird Email Client
+Comment=Thunderbird Email Client
+Exec=thunderbird
+Terminal=false
+MultipleArgs=false
+Type=Application
+Icon=mozilla-thunderbird.png
+Categories=Application;Internet;
+SingleInstance=true
+

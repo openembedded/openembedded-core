@@ -1,0 +1,62 @@
+Index: mozilla/nsprpub/config/rules.mk
+===================================================================
+--- mozilla.orig/nsprpub/config/rules.mk	2005-01-04 21:27:36.000000000 +0000
++++ mozilla/nsprpub/config/rules.mk	2005-09-30 11:27:33.000000000 +0000
+@@ -87,6 +87,9 @@
+ CCC=$(HOST_CXX)
+ CFLAGS=$(HOST_CFLAGS)
+ CXXFLAGS=$(HOST_CXXFLAGS)
++LDFLAGS=$(HOST_LDFLAGS)
++RANLIB=$(HOST_RANLIB)
++AR=$(HOST_AR)
+ endif
+ endif
+ endif
+Index: mozilla/configure.in
+===================================================================
+--- mozilla.orig/configure.in	2005-03-30 17:57:38.000000000 +0000
++++ mozilla/configure.in	2005-09-30 11:36:44.000000000 +0000
+@@ -5612,13 +5612,18 @@
+ fi
+ 
+ if test -n "$CROSS_COMPILE"; then
+-    if test -z "$HOST_LIBIDL_CONFIG"; then
++     if test -z "$HOST_LIBIDL_CONFIG"; then
++        AC_MSG_WARN([HOST_LIBIDL_CONFIG not defined])
+         HOST_LIBIDL_CONFIG="$LIBIDL_CONFIG"
+     fi
+     if test -n "$HOST_LIBIDL_CONFIG"; then
++        AC_MSG_WARN([using $HOST_LIBIDL_CONFIG as config for libIDL on host])
+         HOST_LIBIDL_CFLAGS=`${HOST_LIBIDL_CONFIG} --cflags`
++        AC_MSG_WARN([HOST_LIBIDL_CFLAGS=$HOST_LIBIDL_CFLAGS])
+         HOST_LIBIDL_LIBS=`${HOST_LIBIDL_CONFIG} --libs`
++        AC_MSG_WARN([HOST_LIBIDL_LIBS=$HOST_LIBIDL_LIBS])
+     else
++        AC_MSG_WARN([no config for libIDL found, using LIBIDL_CFLAGS and LIBIDL_LIBS])
+         HOST_LIBIDL_CFLAGS="$LIBIDL_CFLAGS"
+         HOST_LIBIDL_LIBS="$LIBIDL_LIBS"
+     fi
+Index: mozilla/configure
+===================================================================
+--- mozilla.orig/configure	2005-03-30 17:58:47.000000000 +0000
++++ mozilla/configure	2005-09-30 11:38:36.000000000 +0000
+@@ -16572,11 +16572,18 @@
+ 
+ if test -n "$CROSS_COMPILE"; then
+     if test -z "$HOST_LIBIDL_CONFIG"; then
++        echo "HOST_LIBIDL_CONFIG nto defined"
+         HOST_LIBIDL_CONFIG="$LIBIDL_CONFIG"
+     fi
+-    if test -n "$HOST_LIBIDL_CONFIG"; then
++    if test -n "$HOST_LIBIDL_CONFIG" && test -n "$HOST_PKG_CONFIG_PATH"; then
++        echo "using $HOST_LIBIDL_CONFIG as HOST_LIBIDL_CONFIG with HOST_PKG_CONFIG_PATH=$HOST_PKG_CONFIG_PATH"
++        _SAVE_PKG_CONFIG_PATH=$PKG_CONFIG_PATH
++	PKG_CONFIG_PATH=$HOST_PKG_CONFIG_PATH
+         HOST_LIBIDL_CFLAGS=`${HOST_LIBIDL_CONFIG} --cflags`
++        echo "HOST_LIBIDL_CFLAGS = $HOST_LIBIDL_CFLAGS"
+         HOST_LIBIDL_LIBS=`${HOST_LIBIDL_CONFIG} --libs`
++        echo "HOST_LIBIDL_LIBS = $HOST_LIBIDL_LIBS"
++	PKG_CONFIG_PATH=$_SAVE_PKG_CONFIG_PATH
+     else
+         HOST_LIBIDL_CFLAGS="$LIBIDL_CFLAGS"
+         HOST_LIBIDL_LIBS="$LIBIDL_LIBS"

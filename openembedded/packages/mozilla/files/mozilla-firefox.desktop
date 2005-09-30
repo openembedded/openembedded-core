@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Firefox Browser
+Comment=Firefox Web Browser
+Exec=firefox
+Terminal=false
+MultipleArgs=false
+Type=Application
+Icon=mozilla-firefox.png
+Categories=Application;Internet;
+SingleInstance=true
+

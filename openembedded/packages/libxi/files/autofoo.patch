@@ -1,0 +1,12 @@
+Index: libXi-6.0.1/configure.ac
+===================================================================
+--- libXi-6.0.1.orig/configure.ac	2003-11-01 04:11:49.000000000 -0500
++++ libXi-6.0.1/configure.ac	2005-01-20 11:34:06.878357352 -0500
+@@ -8,7 +8,6 @@
+ AM_MAINTAINER_MODE
+ 
+ AM_CONFIG_HEADER([config.h])
+-AC_CONFIG_AUX_DIR(.)
+ 
+ # Checks for programs.
+ AC_PROG_LIBTOOL

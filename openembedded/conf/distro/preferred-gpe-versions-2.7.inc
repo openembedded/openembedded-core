@@ -3,7 +3,7 @@
 #
 
 #work around some breakages
-#CVSDATE_minimo=20050401
+CVSDATE_minimo=20050401
 
 #set some preferred providers:
 #PREFERRED_PROVIDER_gconf=gconf-dbus

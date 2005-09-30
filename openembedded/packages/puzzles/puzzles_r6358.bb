@@ -1,20 +1,15 @@
 
 DEPENDS = "gtk+"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
+SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz \
+           file://game.png"
 
-CFLAGS_prepend = " -I./ `${STAGING_BINDIR}/pkg-config gtk+-2.0 --cflags` "
-do_compile_prepend = " export 'XLDFLAGS=${LDFLAGS} `${STAGING_BINDIR}/pkg-config gtk+-2.0 --libs`'; "
+do_compile_prepend = " \
+        export XLDFLAGS='${LDFLAGS} `${STAGING_BINDIR}/pkg-config gtk+-2.0 --libs`'; \
+	export CFLAGS='${CFLAGS} -I./ `${STAGING_BINDIR}/pkg-config gtk+-2.0 --cflags`'; "
 
-PACKAGES = "${PN} ${PN}-desktop"
-
-FILES_${PN} = "${prefix}/games/*"
-FILES_${PN}-desktop = "${datadir}/applications/*"
-
-do_compile () {
-	CFLAGS=" -I./ `${STAGING_BINDIR}/pkg-config gtk+-2.0 --cflags` " oe_runmake
-}
+FILES_${PN} = "${prefix}/games/* ${datadir}/applications/* ${datadir}/pixmaps"
 
 do_install () {
     export prefix=${D}
@@ -25,8 +20,11 @@ do_install () {
     
     install -d ${D}/${datadir}
     install -d ${D}/${datadir}/applications
-    cd ${D}/${prefix}/games 
+    install -d ${D}/${datadir}/pixmaps
 
+    install ${WORKDIR}/game.png ${D}/${datadir}/pixmaps
+
+    cd ${D}/${prefix}/games 
     for prog in *; do
 	if [ -x $prog ]; then
 	    echo "making ${D}/${datadir}/applications/$prog.desktop"
