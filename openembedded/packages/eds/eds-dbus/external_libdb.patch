@@ -36,14 +36,14 @@ Index: trunk/configure.in
  AC_SUBST(REGEX_LIBS)
  
  dnl ******************************
-+dnl * db-4.3 checking
++dnl * db-4.1 checking
 +dnl ******************************
 +
-+AC_ARG_WITH(libdb43, [  --with-libdb43         Prefix where libdb 4.3 is installed])
++AC_ARG_WITH(libdb41, [  --with-libdb41         Prefix where libdb 4.1 is installed])
 +case $withval in
 +/*)
 +    DB_CFLAGS="-I$withval/include/db4"
-+    DB_LIBS="-L$withval/lib -ldb-4.3"
++    DB_LIBS="-L$withval/lib -ldb-4.1"
 +    ;;
 +esac
 +

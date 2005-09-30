@@ -73,17 +73,20 @@ do_stage() {
 	# Install, for the moment, into include/db4 to avoid
 	# interfering with the db3 headers (which have the same
 	# name).  -I${STAGING_INCDIR}/db4 to use db4, as opposed
-	# to db3.
+	# to db3
+	
 	rm -rf ${STAGE_TEMP}
 	mkdir -p ${STAGE_TEMP}
-	oe_runmake DESTDIR="${STAGE_TEMP}" install_include
+	oe_runmake DESTDIR="${STAGE_TEMP}" includedir="${STAGE_TEMP}${includedir}" install_include
 	mkdir -p ${STAGING_INCDIR}/db4
 	cp -pPRf ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}/db4
 	rm -rf ${STAGE_TEMP}
-	oe_libinstall -so -C .libs libdb-4.3 ${STAGING_LIBDIR}
+	oe_libinstall -so -C .libs libdb-4.1 ${STAGING_LIBDIR}
 }
 
-do_install_append() {
+do_install() {
+	oe_runmake includedir="${D}${includedir}" libdir="${D}${libdir}" bindir="${D}${bindir}" docdir="${D}${docdir}" install
+
 	# The docs end up in /usr/docs - not right.
 	if test -d "${D}/${prefix}/docs"
 	then
