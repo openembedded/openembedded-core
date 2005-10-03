@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Leafpad
+Exec=/usr/bin/leafpad
+Icon=leafpad.png
+Terminal=false
+Type=Application
+Categories=Utility;PIM;
+SingleInstance=true
+StartupNotify=true
+
