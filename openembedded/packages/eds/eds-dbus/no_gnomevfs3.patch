@@ -1,0 +1,392 @@
+--- trunk/calendar/backends/file/e-cal-backend-file.c.old	2005-10-03 13:19:26.000000000 +0100
++++ trunk/calendar/backends/file/e-cal-backend-file.c	2005-10-03 15:46:10.000000000 +0100
+@@ -29,7 +29,6 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <glib/gi18n-lib.h>
+-#include <libgnomevfs/gnome-vfs.h>
+ #include <libedataserver/e-util.h>
+ #include <libedataserver/e-xml-hash-utils.h>
+ #include <libecal-dbus/e-cal-recur.h>
+@@ -106,17 +105,21 @@
+ 	g_free (obj_data);
+ }
+ 
+-/* Saves the calendar data */
++static const char *
++find_path_from_uri (const char *uri)
++{
++	g_assert (strncasecmp (uri, "file:", 5) == 0);
++
++	return uri + 5;
++}
++
++/* Saves the calendar data */
+ static gboolean
+ save_file_when_idle (gpointer user_data)
+ {
+ 	ECalBackendFilePrivate *priv;
+-	GnomeVFSURI *uri, *backup_uri;
+-	GnomeVFSHandle *handle = NULL;
+-	GnomeVFSResult result = GNOME_VFS_ERROR_BAD_FILE;
+-	GnomeVFSFileSize out;
+-	gchar *tmp, *backup_uristr;
+-	char *buf;
++	const char *path, *buf;
++	gboolean result;
+ 	ECalBackendFile *cbfile = user_data;
+ 	
+ 	priv = cbfile->priv;
+@@ -130,52 +133,14 @@
+ 		return FALSE;
+ 	}
+ 
+-	uri = gnome_vfs_uri_new (priv->uri);
+-	if (!uri)
++	path = find_path_from_uri (priv->uri);
++	if (!path)
+ 		goto error_malformed_uri;
+ 
+-	/* save calendar to backup file */
+-	tmp = gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_NONE);
+-	if (!tmp) {
+-		gnome_vfs_uri_unref (uri);
+-		goto error_malformed_uri;
+-	}
+-		
+-	backup_uristr = g_strconcat (tmp, "~", NULL);
+-	backup_uri = gnome_vfs_uri_new (backup_uristr);
+-
+-	g_free (tmp);
+-	g_free (backup_uristr);
+-
+-	if (!backup_uri) {
+-		gnome_vfs_uri_unref (uri);
+-		goto error_malformed_uri;
+-	}
+-	
+-	result = gnome_vfs_create_uri (&handle, backup_uri,
+-                                       GNOME_VFS_OPEN_WRITE,
+-                                       FALSE, 0666);
+-	if (result != GNOME_VFS_OK) {
+-		gnome_vfs_uri_unref (uri);
+-		gnome_vfs_uri_unref (backup_uri);
+-		goto error;
+-	}
+-
++	/* save calendar */
+ 	buf = icalcomponent_as_ical_string (priv->icalcomp);
+-	result = gnome_vfs_write (handle, buf, strlen (buf) * sizeof (char), &out);
+-	gnome_vfs_close (handle);
+-	if (result != GNOME_VFS_OK) {
+-		gnome_vfs_uri_unref (uri);
+-		gnome_vfs_uri_unref (backup_uri);
+-		goto error;
+-	}
+-
+-	/* now copy the temporary file to the real file */
+-	result = gnome_vfs_move_uri (backup_uri, uri, TRUE);
+-
+-	gnome_vfs_uri_unref (uri);
+-	gnome_vfs_uri_unref (backup_uri);
+-	if (result != GNOME_VFS_OK)
++	result = g_file_set_contents (path, buf, -1, NULL);
++	if (!result)
+ 		goto error;
+ 
+ 	priv->is_dirty = FALSE;
+@@ -193,7 +158,8 @@
+ 
+  error:
+ 	g_mutex_unlock (priv->idle_save_mutex);
+-	e_cal_backend_notify_error (E_CAL_BACKEND (cbfile), gnome_vfs_result_to_string (result));
++	e_cal_backend_notify_error (E_CAL_BACKEND (cbfile),
++				  _("Can't save calendar data: Error writing to file."));
+ 	return TRUE;
+ }
+ 
+@@ -310,7 +276,7 @@
+ 	return obj_data ? obj_data->full_object : NULL;
+ }
+ 
+-
++
+ 
+ /* Calendar backend methods */
+ 
+@@ -592,14 +558,12 @@
+ 	}
+ }
+ 
+-static char *
++G_GNUC_DEPRECATED static char *
+ get_uri_string_for_gnome_vfs (ECalBackend *backend)
+ {
+ 	ECalBackendFile *cbfile;
+ 	ECalBackendFilePrivate *priv;
+ 	const char *master_uri;
+-	char *full_uri, *str_uri;
+-	GnomeVFSURI *uri;
+ 
+ 	cbfile = E_CAL_BACKEND_FILE (backend);
+ 	priv = cbfile->priv;
+@@ -609,44 +573,41 @@
+ 	/* FIXME Check the error conditions a little more elegantly here */
+ 	if (g_strrstr ("tasks.ics", master_uri) || g_strrstr ("calendar.ics", master_uri)) {
+ 		g_warning (G_STRLOC ": Existing file name %s", master_uri);
+-
+ 		return NULL;
+ 	}
+ 	
+-	full_uri = g_strdup_printf ("%s%s%s", master_uri, G_DIR_SEPARATOR_S, priv->file_name);
+-	uri = gnome_vfs_uri_new (full_uri);
+-	g_free (full_uri);
+-	
+-	if (!uri)
+-		return NULL;
+-
+-	str_uri = gnome_vfs_uri_to_string (uri,
+-					   (GNOME_VFS_URI_HIDE_USER_NAME
+-					    | GNOME_VFS_URI_HIDE_PASSWORD
+-					    | GNOME_VFS_URI_HIDE_HOST_NAME
+-					    | GNOME_VFS_URI_HIDE_HOST_PORT
+-					    | GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD));
+-	gnome_vfs_uri_unref (uri);
++	return g_strdup_printf ("%s%s%s", master_uri, G_DIR_SEPARATOR_S, priv->file_name);
++}
+ 
+-	if (!str_uri || !strlen (str_uri)) {
+-		g_free (str_uri);
++/**
++ * Get the full path to this calendar file.
++ */
++static char *
++get_path (ECalBackend *backend)
++{
++	ECalBackendFile *cbfile;
++	const char *topuri, *dirname;
++	char *filename;
+ 
+-		return NULL;
+-	}	
++	g_return_val_if_fail (E_IS_CAL_BACKEND_FILE (backend), NULL);
+ 
+-	return str_uri;
++	cbfile = E_CAL_BACKEND_FILE (backend);
++	topuri = e_cal_backend_get_uri (backend);
++	dirname = find_path_from_uri (topuri);
++	filename = g_build_filename (dirname, cbfile->priv->file_name, NULL);
++	return filename;
+ }
+ 
+ /* Parses an open iCalendar file and loads it into the backend */
+ static ECalBackendSyncStatus
+-open_cal (ECalBackendFile *cbfile, const char *uristr)
++open_cal (ECalBackendFile *cbfile, const char *path)
+ {
+ 	ECalBackendFilePrivate *priv;
+ 	icalcomponent *icalcomp;
+ 
+ 	priv = cbfile->priv;
+ 
+-	icalcomp = e_cal_util_parse_ics_file (uristr);
++	icalcomp = e_cal_util_parse_ics_file (path);
+ 	if (!icalcomp)
+ 		return GNOME_Evolution_Calendar_OtherError;
+ 
+@@ -759,7 +720,7 @@
+ }
+ 
+ static ECalBackendSyncStatus
+-reload_cal (ECalBackendFile *cbfile, const char *uristr)
++reload_cal (ECalBackendFile *cbfile, const char *path)
+ {
+ 	ECalBackendFilePrivate *priv;
+ 	icalcomponent *icalcomp, *icalcomp_old;
+@@ -767,7 +728,7 @@
+ 
+ 	priv = cbfile->priv;
+ 
+-	icalcomp = e_cal_util_parse_ics_file (uristr);
++	icalcomp = e_cal_util_parse_ics_file (path);
+ 	if (!icalcomp)
+ 		return GNOME_Evolution_Calendar_OtherError;
+ 
+@@ -811,7 +772,7 @@
+ }
+ 
+ static ECalBackendSyncStatus
+-create_cal (ECalBackendFile *cbfile, const char *uristr)
++create_cal (ECalBackendFile *cbfile, const char *path)
+ {
+ 	char *dirname;
+ 	ECalBackendFilePrivate *priv;
+@@ -819,7 +780,7 @@
+ 	priv = cbfile->priv;
+ 
+ 	/* Create the directory to contain the file */
+-	dirname = g_path_get_dirname (uristr);
++	dirname = g_path_get_dirname (path);
+ 	if (e_util_mkdir_hier (dirname, 0700) != 0) {
+ 		g_free (dirname);
+ 		return GNOME_Evolution_Calendar_NoSuchCal;
+@@ -840,18 +801,6 @@
+ 	return GNOME_Evolution_Calendar_Success;
+ }
+ 
+-static char *
+-get_uri_string (ECalBackend *backend)
+-{
+-	gchar *str_uri, *full_uri;
+-
+-	str_uri = get_uri_string_for_gnome_vfs (backend);
+-	full_uri = gnome_vfs_unescape_string (str_uri, "");
+-	g_free (str_uri);
+-
+-	return full_uri;
+-}
+-
+ /* Open handler for the file backend */
+ static ECalBackendSyncStatus
+ e_cal_backend_file_open (ECalBackendSync *backend, EDataCal *cal, gboolean only_if_exists,
+@@ -859,7 +808,7 @@
+ {
+ 	ECalBackendFile *cbfile;
+ 	ECalBackendFilePrivate *priv;
+-	char *str_uri;
++	char *filename;
+ 	ECalBackendSyncStatus status;
+ 	
+ 	cbfile = E_CAL_BACKEND_FILE (backend);
+@@ -869,22 +818,20 @@
+ 	if (priv->uri && priv->comp_uid_hash)
+ 		return GNOME_Evolution_Calendar_Success;
+ 	
+-	str_uri = get_uri_string (E_CAL_BACKEND (backend));
+-	if (!str_uri)
+-		return GNOME_Evolution_Calendar_OtherError;
+-	
+-	if (access (str_uri, R_OK) == 0) {
+-		status = open_cal (cbfile, str_uri);
+-		if (access (str_uri, W_OK) != 0)
++	filename = get_path (E_CAL_BACKEND (backend));
++
++	if (access (filename, R_OK) == 0) {
++		status = open_cal (cbfile, filename);
++		if (access (filename, W_OK) != 0)
+ 			priv->read_only = TRUE;
+ 	} else {
+ 		if (only_if_exists)
+ 			status = GNOME_Evolution_Calendar_NoSuchCal;
+ 		else
+-			status = create_cal (cbfile, str_uri);
++			status = create_cal (cbfile, filename); // TODO?
+ 	}
+ 
+-	g_free (str_uri);
++	g_free (filename);
+ 
+ 	return status;
+ }
+@@ -894,7 +841,7 @@
+ {
+ 	ECalBackendFile *cbfile;
+ 	ECalBackendFilePrivate *priv;
+-	char *str_uri, *dirname;
++	char *filename, *dirname;
+ 	const char *fname;
+ 	GDir *dir;
+ 	GError *error = NULL;
+@@ -903,21 +850,21 @@
+ 	cbfile = E_CAL_BACKEND_FILE (backend);
+ 	priv = cbfile->priv;
+ 
+-	str_uri = get_uri_string (E_CAL_BACKEND (backend));
+-	if (!str_uri)
++	filename = get_path (E_CAL_BACKEND (backend));
++	if (!filename)
+ 		return GNOME_Evolution_Calendar_OtherError;
+ 
+-	if (access (str_uri, W_OK) != 0) {
+-		g_free (str_uri);
++	if (access (filename, W_OK) != 0) {
++		g_free (filename);
+ 
+ 		return GNOME_Evolution_Calendar_PermissionDenied;
+ 	}
+ 
+ 	/* remove all files in the directory */
+-	dirname = g_path_get_dirname (str_uri);
++	dirname = g_path_get_dirname (filename);
+ 	dir = g_dir_open (dirname, 0, &error);
+ 	if (!dir) {
+-		g_free (str_uri);
++		g_free (filename);
+ 		g_free (dirname);
+ 
+ 		return GNOME_Evolution_Calendar_PermissionDenied;
+@@ -929,7 +876,7 @@
+ 		full_path = g_build_filename (dirname, fname, NULL);
+ 		if (unlink (full_path) != 0) {
+ 			g_free (full_path);
+-			g_free (str_uri);
++			g_free (filename);
+ 			g_free (dirname);
+ 			g_dir_close (dir);
+ 
+@@ -943,7 +890,7 @@
+ 	success = rmdir (dirname) == 0;
+ 		
+ 	g_dir_close (dir);
+-	g_free (str_uri);
++	g_free (filename);
+ 	g_free (dirname);
+ 
+ 	return success ? GNOME_Evolution_Calendar_Success : GNOME_Evolution_Calendar_OtherError;
+@@ -1506,14 +1453,11 @@
+ 	EXmlHash *ehash;
+ 	ECalBackendFileComputeChangesData be_data;
+ 	GList *i;
+-	gchar *unescaped_uri;
+ 
+ 	priv = cbfile->priv;
+ 
+ 	/* FIXME Will this always work? */
+-	unescaped_uri = gnome_vfs_unescape_string (priv->uri, "");
+-	filename = g_strdup_printf ("%s-%s.db", unescaped_uri, change_id);
+-	g_free (unescaped_uri);
++	filename = g_strdup_printf ("%s-%s.db", priv->uri, change_id);
+ 	if (!(ehash = e_xmlhash_new (filename))) {
+ 		g_free (filename);
+ 		return GNOME_Evolution_Calendar_OtherError;
+@@ -2577,23 +2521,23 @@
+ e_cal_backend_file_reload (ECalBackendFile *cbfile)
+ {
+ 	ECalBackendFilePrivate *priv;
+-	char *str_uri;
++	char *filename;
+ 	ECalBackendSyncStatus status;
+ 	
+ 	priv = cbfile->priv;
+ 
+-	str_uri = get_uri_string (E_CAL_BACKEND (cbfile));
+-	if (!str_uri)
++	filename = get_path (E_CAL_BACKEND (cbfile));
++	if (!filename)
+ 		return GNOME_Evolution_Calendar_OtherError;
+ 
+-	if (access (str_uri, R_OK) == 0) {
+-		status = reload_cal (cbfile, str_uri);
+-		if (access (str_uri, W_OK) != 0)
++	if (access (filename, R_OK) == 0) {
++		status = reload_cal (cbfile, filename);
++		if (access (filename, W_OK) != 0)
+ 			priv->read_only = TRUE;
+ 	} else {
+ 		status = GNOME_Evolution_Calendar_NoSuchCal;
+ 	}
+ 
+-	g_free (str_uri);
++	g_free (filename);
+ 	return status;
+ }

@@ -47,16 +47,6 @@ Index: configure.in
  
  EVO_SET_COMPILE_FLAGS(EVOLUTION_CALENDAR, $EVOLUTION_CALENDAR_DEPS)
  AC_SUBST(EVOLUTION_CALENDAR_CFLAGS)
-Index: calendar/backends/Makefile.am
-===================================================================
---- trunk/calendar/backends/Makefile.am	(revision 212)
-+++ trunk/calendar/backends/Makefile.am	(working copy)
-@@ -4,4 +4,4 @@
- GROUPWISE_SUBDIR =
- endif
- 
--SUBDIRS = file $(GROUPWISE_SUBDIR) contacts
-+SUBDIRS = $(GROUPWISE_SUBDIR) contacts
 Index: calendar/libedata-cal-dbus/e-data-cal-factory.c
 ===================================================================
 --- trunk/calendar/libedata-cal-dbus/e-data-cal-factory.c	(revision 206)
