@@ -1,11 +1,10 @@
 #!/bin/sh
 
-
 ## All this should be done by themeing/xsettings.. ## 
 matchbox-desktop --icon-size 48 \
                  --icon-padding 64 \
                  --font sans-8:bold \
-                 --bg /usr/share/themes/Clearlooks/background/default.png
+                 --bg /usr/share/themes/Clearlooks/background/default.png \
                  --titlefont sans-8:bold &
 
 mb-applet-startup-monitor &                 
