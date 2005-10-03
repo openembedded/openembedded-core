@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# Quick handler for chkhinge26 and X. 
+#
+
+export DISPLAY=:0
+
+if [ -z "$1" ]; then
+   echo "Usage: hinge-handler <state> ( 3 = closed, 0 = landscape, 2 = portrait )"
+   exit 1
+fi
+
+STATE=$1
+
+if [ $STATE = "3" ]; then
+   echo "sleeping"
+   apm -s
+   exit 0
+fi
+
+if [ $STATE = "0" ]; then
+   echo "lanscape"
+   killall mbinputmgr
+   xrand -o normal
+   exit 0
+fi
+
+if [ $STATE = "2" ]; then
+   echo "portrait"
+   mbinputmgr &
+   xrandr -o left
+   exit 0
+fi
