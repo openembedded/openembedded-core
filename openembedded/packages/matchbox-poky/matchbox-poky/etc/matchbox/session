@@ -1,5 +1,8 @@
 #!/bin/sh
 
+## start up check hinge, XXX really needs to go in its own session
+chkhinge26 /dev/input/event0 hinge-handler &
+
 ## All this should be done by themeing/xsettings.. ## 
 matchbox-desktop --icon-size 48 \
                  --icon-padding 64 \
