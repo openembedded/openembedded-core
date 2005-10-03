@@ -38,6 +38,7 @@ Terminal=false
 Type=Application
 Categories=Game
 StartupNotify=true
+SingleInstance=true
 STOP
         fi
     done
