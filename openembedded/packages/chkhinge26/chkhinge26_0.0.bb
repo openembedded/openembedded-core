@@ -11,7 +11,7 @@ SRC_URI = "http://butterfeet.org/misc/${PN}-${PV}.tar.gz \
 inherit autotools pkgconfig
 
 do_install_append () {
-	install -m 0755 ${WORKDIR}/hinge-handler ${D}/${BINDIR}/
+	install -m 0755 ${WORKDIR}/hinge-handler ${D}/${bindir}/
 }
 
 FILES_${PN} += "${BINDIR}/hinge-handler"
