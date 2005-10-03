@@ -1,0 +1,11 @@
+--- libopensync-plugin-evolution2-0.17/src/evolution2_ebook.c.old	2005-10-03 19:41:06.000000000 +0100
++++ libopensync-plugin-evolution2-0.17/src/evolution2_ebook.c	2005-10-03 19:41:32.000000000 +0100
+@@ -133,7 +133,7 @@
+ 			EContact *contact = E_CONTACT(l->data);
+ 			vcard = contact->parent;
+ 			char *data = e_vcard_to_string(&vcard, EVC_FORMAT_VCARD_30);
+-			char *uid = e_contact_get_const(contact, E_CONTACT_UID);
++			char *uid = (char *)e_contact_get_const(contact, E_CONTACT_UID);
+ 			int datasize = strlen(data) + 1;
+ 			evo2_report_change(ctx, "contact", "vcard30", data, datasize, uid, CHANGE_ADDED);
+ 		}
