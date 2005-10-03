@@ -15,4 +15,7 @@ matchbox-panel --orientation east \
                --no-session \
                --default-apps mb-applet-home,mb-applet-clock,mb-applet-battery &
 
-exec matchbox-window-manager -theme Clearlooks $@
+## eek ugly no cursor hack - transparent theme should do this
+exec matchbox-window-manager -theme Clearlooks -use_cursor no $@
+
+
