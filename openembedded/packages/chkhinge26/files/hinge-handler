@@ -21,13 +21,18 @@ fi
 if [ $STATE = "0" ]; then
    echo "lanscape"
    killall mbinputmgr
-   xrand -o normal
+# urg mbinputmgr should kill below
+   killall matchbox-keyboard
+   killall matchbox-stroke
+   xrandr -o normal
    exit 0
 fi
 
 if [ $STATE = "2" ]; then
    echo "portrait"
+   xrandr -o left 
+# just to be extra safe
+   sleep 1 
    mbinputmgr &
-   xrandr -o left
    exit 0
 fi

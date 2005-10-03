@@ -14,5 +14,5 @@ do_install_append () {
 	install -m 0755 ${WORKDIR}/hinge-handler ${D}/${bindir}/
 }
 
-FILES_${PN} += "${BINDIR}/hinge-handler"
+FILES_${PN} += "${bindir}/hinge-handler"
 
