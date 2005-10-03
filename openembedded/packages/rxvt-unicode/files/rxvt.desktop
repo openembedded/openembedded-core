@@ -5,6 +5,6 @@ Exec=/usr/bin/rxvt
 Icon=rxvt.png
 Terminal=false
 Type=Application
-Categories=Utilities
+Categories=Utility
 StartupNotify=false
 

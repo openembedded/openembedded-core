@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r14"
+PR = "r15"
 
 ALLOW_EMPTY = "1"
 
@@ -57,6 +57,7 @@ RDEPENDS_oh-task-base := "${oh-task-base} \
                           gdk-pixbuf-loader-png \
 			  gdk-pixbuf-loader-xpm \
 			  gdk-pixbuf-loader-jpeg \
+			  gtk-theme-clearlooks \
                           tslib-calibrate \
                           tslib-tests \
 			  pango-module-basic-x \
