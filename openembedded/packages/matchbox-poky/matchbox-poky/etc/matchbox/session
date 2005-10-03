@@ -14,6 +14,6 @@ matchbox-panel --orientation east \
                --padding 4 \
                --no-menu \
                --no-session \
-               --default-apps mb-applet-home,mb-applet-startup-monitor,mb-applet-clock,mb-applet-battery &
+               --default-apps mb-applet-home,mb-applet-clock,mb-applet-battery &
 
 exec matchbox-window-manager -theme Clearlooks $@
