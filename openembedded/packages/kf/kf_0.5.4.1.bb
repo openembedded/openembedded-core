@@ -6,7 +6,7 @@ PR = "r2"
 
 SRC_URI = "http://jabberstudio.2nw.net/${PN}/${PN}-${PV}.tar.gz \
            file://fix-configure.patch;patch=1 \
-           file://fix-desktop-file.patch=0"
+           file://fix-desktop-file.patch;patch=0"
 
 inherit autotools pkgconfig
 
