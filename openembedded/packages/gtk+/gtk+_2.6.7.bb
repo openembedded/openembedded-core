@@ -6,14 +6,13 @@ SECTION = "libs"
 PRIORITY = "optional"
 MAINTAINER = "Philip Blundell <pb@handhelds.org>"
 DEPENDS = "glib-2.0 pango atk jpeg libpng xext libxcursor gtk-doc libgcrypt"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
            file://no-demos.patch;patch=1 \
            file://no-xwc.patch;patch=1 \
            file://automake-lossage.patch;patch=1 \
            file://gtk+-handhelds.patch;patch=1 \
-	   file://spinbutton.patch;patch=1 \
 	   file://hardcoded_libtool.patch;patch=1 \
 	   file://disable-tooltips.patch;patch=1 \
 	   file://gtklabel-resize-patch;patch=1 \
