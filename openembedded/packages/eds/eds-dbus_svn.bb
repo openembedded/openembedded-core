@@ -4,7 +4,7 @@ RDEPENDS = "gtk+ gconf db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0cvs${CVSDATE}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://external_libdb.patch;patch=1 \
