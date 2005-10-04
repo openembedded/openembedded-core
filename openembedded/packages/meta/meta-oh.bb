@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r16"
+PR = "r17"
 
 ALLOW_EMPTY = "1"
 
@@ -18,6 +18,7 @@ oh-task-base = "\
     matchbox-poky \
     matchbox-keyboard \
     matchbox-stroke \
+    matchbox-config-gtk \
     matchbox-panel-manager \
     matchbox-panel-hacks \
     matchbox-themes-extra \
@@ -29,6 +30,7 @@ oh-task-base = "\
     xserver-nodm-init \
     chkhinge26 \
     usbinit \
+    settings-daemon \
     minimo \
     gtk+ \
     gtk-clearlooks-engine \

@@ -3,6 +3,7 @@ DEPENDS = "gtk+"
 SRC_URI = "http://savannah.nongnu.org/download/${PN}/${PN}-${PV}.tar.gz \
 	   file://leafpad.desktop \
 	   file://leafpad.png"
+PR = "r1"
 
 inherit autotools pkgconfig
 

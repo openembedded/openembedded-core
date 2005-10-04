@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Leafpad
+Name=Notes
 Exec=/usr/bin/leafpad
 Icon=leafpad.png
 Terminal=false
