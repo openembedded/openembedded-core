@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r15"
+PR = "r16"
 
 ALLOW_EMPTY = "1"
 
@@ -27,6 +27,7 @@ oh-task-base = "\
     xcursor-transparent-theme \
     xserver-kdrive-common \
     xserver-nodm-init \
+    chkhinge26 \
     usbinit \
     minimo \
     gtk+ \
@@ -34,6 +35,7 @@ oh-task-base = "\
     eds-dbus \
     contacts \
     dates \
+    leafpad \
     puzzles \
     kf \
     rxvt-unicode \
