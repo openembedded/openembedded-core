@@ -1,12 +1,13 @@
 LICENSE = "LGPL"
 SECTION = "x11"
-#DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
 MAINTAINER = "Matthew Allum <mallum@openedhand.com>"
 DESCRIPTION = "Chkhinge26 fires off cmds on cXXXX Zs."
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "http://butterfeet.org/misc/${PN}-${PV}.tar.gz \
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=chkhinge26;proto=http \
 	   file://hinge-handler"
+
+S = "${WORKDIR}/${PN}"
 
 inherit autotools pkgconfig
 
@@ -15,4 +16,5 @@ do_install_append () {
 }
 
 FILES_${PN} += "${bindir}/hinge-handler"
+
 
