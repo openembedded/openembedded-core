@@ -7,8 +7,10 @@ chkhinge26 /dev/input/event0 hinge-handler &
 matchbox-desktop --icon-size 48 \
                  --icon-padding 64 \
                  --font sans-8:bold \
-                 --bg /usr/share/themes/Clearlooks/background/default.png \
                  --titlefont sans-8:bold &
+
+# let theme set it
+# --bg /usr/share/themes/Clearlooks/background/default.png \
 
 mb-applet-startup-monitor &                 
 
