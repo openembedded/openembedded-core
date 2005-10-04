@@ -1,0 +1,64 @@
+Index: zile-2.0beta6/acinclude.m4
+===================================================================
+--- zile-2.0beta6.orig/acinclude.m4	2004-12-20 19:13:07.000000000 -0500
++++ zile-2.0beta6/acinclude.m4	2005-01-21 20:38:28.982166344 -0500
+@@ -35,3 +35,29 @@
+ t}
+ fi
+ AC_SUBST(EXEEXT_FOR_BUILD)])dnl
++
++dnl Get a default for CFLAGS_FOR_BUILD to put into Makefile.
++AC_DEFUN([BFD_CFLAGS_FOR_BUILD],
++[ac_test_CFLAGS=${CFLAGS+set}
++# Put a plausible default for CFLAGS_FOR_BUILD in Makefile.
++if test -z "$CFLAGS_FOR_BUILD"; then
++  if test "x$cross_compiling" = "xyes"; then
++    CFLAGS_FOR_BUILD="-O2"
++  else
++    CFLAGS_FOR_BUILD='$(CFLAGS)'
++  fi
++fi
++AC_SUBST(CFLAGS_FOR_BUILD)])dnl
++
++dnl Get a default for LDFLAGS_FOR_BUILD to put into Makefile.
++AC_DEFUN([BFD_LDFLAGS_FOR_BUILD],
++[ac_test_LDFLAGS=${LDFLAGS+set}
++# Put a plausible default for LDFLAGS_FOR_BUILD in Makefile.
++if test -z "$LDFLAGS_FOR_BUILD"; then
++  if test "x$cross_compiling" = "xyes"; then
++    LDFLAGS_FOR_BUILD=""
++  else
++    LDFLAGS_FOR_BUILD='$(LDFLAGS)'
++  fi
++fi
++AC_SUBST(LDFLAGS_FOR_BUILD)])dnl
+Index: zile-2.0beta6/configure.ac
+===================================================================
+--- zile-2.0beta6.orig/configure.ac	2005-01-12 07:56:19.000000000 -0500
++++ zile-2.0beta6/configure.ac	2005-01-21 20:26:58.178184512 -0500
+@@ -19,6 +19,8 @@
+ 
+ AC_PROG_CC
+ BFD_CC_FOR_BUILD
++BFD_CFLAGS_FOR_BUILD
++BFD_LDFLAGS_FOR_BUILD
+ AC_C_INLINE
+ AC_PROG_INSTALL
+ AC_PROG_RANLIB
+Index: zile-2.0beta6/doc/Makefile.am
+===================================================================
+--- zile-2.0beta6.orig/doc/Makefile.am	2005-01-03 06:11:32.000000000 -0500
++++ zile-2.0beta6/doc/Makefile.am	2005-01-21 20:27:17.271281920 -0500
+@@ -27,10 +27,10 @@
+ AM_CFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/src
+ 
+ mkdoc$(EXEEXT_FOR_BUILD): mkdoc.o config.h
+-	$(CC_FOR_BUILD) $(CFLAGS) $(LDFLAGS) -o $@ mkdoc.o
++	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ mkdoc.o
+ 
+ mkdoc.o: mkdoc.c
+-	$(CC_FOR_BUILD) -c -I$(top_srcdir)/doc -I$(top_srcdir) -I$(top_srcdir)/src $(CFLAGS) $(srcdir)/mkdoc.c
++	$(CC_FOR_BUILD) -c -I$(top_srcdir)/doc -I$(top_srcdir) -I$(top_srcdir)/src $(CFLAGS_FOR_BUILD) $(srcdir)/mkdoc.c
+ 
+ AUTODOC: $(AUTODOCSRCS) mkdoc
+ 	./mkdoc $(AUTODOCSRCS) >AUTODOC
