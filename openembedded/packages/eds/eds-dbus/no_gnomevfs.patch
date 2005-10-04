@@ -18,7 +18,7 @@ diff -urNd ../eds-dbus-1.4.0cvs20051004-r7/trunk/addressbook/libebook/e-contact.
 +#if 0
  		mime_type = gnome_vfs_get_mime_type_for_data (photo->inlined.data, photo->inlined.length);
 +#else
-+		mine_type = "image/jpeg";
++		mime_type = "image/jpeg";
 +#endif
  		if (!strcmp (mime_type, "image/gif"))
  			image_type = "GIF";
