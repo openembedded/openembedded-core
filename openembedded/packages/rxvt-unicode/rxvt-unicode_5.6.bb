@@ -11,7 +11,7 @@ SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 
 	   file://signedchar.patch;patch=1 \
 	   file://rxvt.desktop \
 	   file://rxvt.png"
-PR = "r4"
+PR = "r5"
 
 inherit autotools update-alternatives
 
@@ -65,4 +65,4 @@ do_install_append () {
 	install -m 0644 ${WORKDIR}/rxvt.desktop ${D}/${datadir}/applications
 }
 
-FILES_${PN} += "${datadir}/applications/rxvt.desktop ${datadir}/icons/hicolor/48x48/apps/rxvt.png"
+FILES_${PN} += "${datadir}/applications/rxvt.desktop ${datadir}/pixmaps/rxvt.png"
