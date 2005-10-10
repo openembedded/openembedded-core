@@ -1,7 +1,18 @@
 #!/bin/sh
 
-## start up check hinge, XXX really needs to go in its own session
-chkhinge26 /dev/input/event0 hinge-handler &
+module_id() {
+    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
+}
+
+## Start up machine specific input devices. Really needs to go in its own session
+case `module_id` in
+	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi" | "SHARP Spitz" | "SHARP Akita" | "SHARP Borzoi")
+		chkhinge26 /dev/input/event0 hinge-handler &
+		;;
+	"Generic OMAP1510/1610/1710")
+		/usr/bin/mbinputmgr &
+		;;
+esac
 
 ## All this should be done by themeing/xsettings.. ## 
 matchbox-desktop --icon-size 48 \
