@@ -10,7 +10,7 @@ diff -u -r1.6 -r1.7
  #
  # update-rc.d	Update the links in /etc/rc[0-9S].d/
  #
--# Phil Blundell <pb@nexus.co.uk> 2003-06-26
+-# Phil Blundell <pb@handhelds.org> 2003-06-26
 +# (c) 2003, 2004 Phil Blundell <pb@handhelds.org>
  #
 +# This program is free software; you can redistribute it and/or modify

@@ -45,7 +45,14 @@ module_autoload_pxaficp_ir = "pxaficp_ir"
 
 do_configure() {
 
-	install -m 0644 ${WORKDIR}/defconfig-${MACHINE} ${S}/.config || die "No default configuration for ${MACHINE} available."
+	case ${MACHINE} in
+		akita | spitz | borzoi )
+			install -m 0644 ${WORKDIR}/defconfig-cxx00 ${S}/.config || die "No default configuration for cxx00 available."
+			;;
+        	*)
+			install -m 0644 ${WORKDIR}/defconfig-${MACHINE} ${S}/.config || die "No default configuration for ${MACHINE} available."
+			;;
+	esac
 
 	if [ "${MACHINE}" == "collie" ]; then
 		mempos=`echo "obase=16; $mem * 1024 * 1024" | bc`
@@ -86,7 +93,7 @@ do_compile_append() {
 			size=`ls arch/${ARCH}/boot/${KERNEL_IMAGETYPE} -s | cut -d ' ' -f 1`
 			if [ $size -ge 1271 ]; then	
 				rm arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
-				die "This kernel is too big for the c7x0 and will destroy your machine if you flash it!!!"
+				die "This kernel is too big for your PXA Zaurus and will destroy data if you flash it. Please reduce the size of the kernel by making more of it modular."
 			fi
 			;;
         	*)

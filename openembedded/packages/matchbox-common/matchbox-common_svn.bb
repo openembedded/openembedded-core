@@ -8,9 +8,9 @@ DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-common;proto=http"
 
-inherit autotools  pkgconfig
+inherit autotools pkgconfig
 
-EXTRA_OECONF = "--enable-pda-folders"
+EXTRA_OECONF = " --enable-pda-folders "
 
 FILES_${PN} = "${bindir} \
 	       ${datadir}/matchbox/vfolders \

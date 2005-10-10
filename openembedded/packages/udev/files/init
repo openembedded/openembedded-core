@@ -52,7 +52,9 @@ mount_tmpfs() {
 
   mkdir -p /dev/.static/dev
   chmod 700 /dev/.static/
-  mount -n -o move /etc/udev /dev/.static/dev
+  # Make sure it's busybox mount we're using. util-linux mount doesn't handle
+  # -o move. 
+  busybox mount -n -o move /etc/udev /dev/.static/dev
 }
 
 # I hate this hack.  -- Md

@@ -1,7 +1,7 @@
 PV = "0.0cvs${CVSDATE}"
 SECTION = "x11/libs"
 LICENSE = "BSD-X"
-MAINTAINER = "Phil Blundell <pb@nexus.co.uk>"
+MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DESCRIPTION = "XCalibrate extension headers"
 
 SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=XCalibrateExt"

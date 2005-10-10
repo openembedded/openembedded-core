@@ -5,7 +5,7 @@ PRIORITY = "optional"
 PROVIDES = "spectrum-modules"
 MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 LICENSE = "GPL"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://ozlabs.org/people/dgibson/dldwd/orinoco-${PV}.tar.gz \
            file://makefile_fix.patch;patch=1 \

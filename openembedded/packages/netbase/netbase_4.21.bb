@@ -2,7 +2,7 @@ SECTION = "base"
 DESCRIPTION = "This package provides the necessary \
 infrastructure for basic TCP/IP based networking."
 LICENSE = "GPL"
-PR = "r6"
+PR = "r7"
 
 inherit update-rc.d
 

@@ -24,8 +24,10 @@ def is_native(d):
 	import bb.data
 	return ["","-native"][bb.data.inherits_class('native', d)]
 
+BINCONFIG_GLOB ?= "*-config"
+
 do_stage_append() {
-	for config in `find ${S} -name '*-config'`; do
+	for config in `find ${S} -name '${BINCONFIG_GLOB}'`; do
 		configname=`basename $config`${@is_native(d)}
 		install -d ${STAGING_BINDIR}
 		cat $config | sed ${@get_binconfig_mangle(d)} > ${STAGING_BINDIR}/$configname

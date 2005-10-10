@@ -1,7 +1,7 @@
 PV = "0.0cvs${CVSDATE}"
 LICENSE = "BSD-X"
 SECTION = "libs"
-MAINTAINER = "Phil Blundell <pb@nexus.co.uk>"
+MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DESCRIPTION = "XRecord extension protocol bits"
 
 SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=RecordExt"

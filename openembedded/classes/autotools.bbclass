@@ -150,4 +150,16 @@ autotools_stage_includes() {
 	fi
 }
 
+autotools_stage_all() {
+	if [ "${INHIBIT_AUTO_STAGE}" != "1" ]
+	then
+		rm -rf ${STAGE_TEMP}
+		mkdir -p ${STAGE_TEMP}
+		oe_runmake DESTDIR="${STAGE_TEMP}" install
+		cp -pPR ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}
+		cp -pPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}
+		rm -rf ${STAGE_TEMP}
+	fi
+}
+
 EXPORT_FUNCTIONS do_configure do_install

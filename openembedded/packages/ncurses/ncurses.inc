@@ -33,14 +33,8 @@ export BUILD_CCFLAGS = "-I${S}/ncurses -I${S}/include ${BUILD_CFLAGS}"
 export BUILD_LDFLAGS = ""
 export EXTRA_OEMAKE = '"BUILD_LDFLAGS=" "BUILD_CCFLAGS=${BUILD_CCFLAGS}"'
 
-do_stage () {
-	for i in libncurses libpanel libform libmenu; do
-		oe_libinstall -so -a -C lib $i ${STAGING_LIBDIR}
-	done
-	for h in ncurses_*.h curses.h eti.h form.h menu.h panel.h \
-		termcap.h term.h unctrl.h; do
-		       install -m 0644 include/$h ${STAGING_INCDIR}/
-	done
+do_stage() {
+	autotools_stage_all
 	ln -sf curses.h ${STAGING_INCDIR}/ncurses.h
 	ln -sf libncurses.so ${STAGING_LIBDIR}/libtermcap.so
 	ln -sf libncurses.a ${STAGING_LIBDIR}/libtermcap.a

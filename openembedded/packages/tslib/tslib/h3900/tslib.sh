@@ -11,15 +11,7 @@ case `uname -r` in
 	;;
 *)
 	TSLIB_TSDEVICE=`detect-stylus --device`
-	case `module_id` in
-	"HP iPAQ H2200")
-		# h2200 needs special linearizing thing
-		TSLIB_CONFFILE=/usr/share/tslib/ts.conf-h2200
-		;;
-	*)
-		TSLIB_CONFFILE=/usr/share/tslib/ts.conf-h3600
-		;;
-	esac
+	TSLIB_CONFFILE=/usr/share/tslib/ts.conf-h3600
 	;;
 esac
 

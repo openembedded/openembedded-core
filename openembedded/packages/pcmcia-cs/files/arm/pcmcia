@@ -1,12 +1,19 @@
+module_id() {
+    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
+}
+
+
 case `awk 'BEGIN { FS=":" } /Processor/ { gsub(/ /, "", $2) ; print $2 } ' </proc/cpuinfo` in
   *XScale-PXA2*)
 
     case "`uname -r`" in
         2.4*)
 		PCIC=pxa_cs
+		DS=ds
 		;;
 	2.6*)
 		PCIC=pxa2xx_core
+		DS=pcmcia
 		;;
     esac
     ;;
@@ -19,12 +26,8 @@ case `awk 'BEGIN { FS=":" } /Processor/ { gsub(/ /, "", $2) ; print $2 } ' </pro
     ;;
 esac
 
-if grep -q iPAQ /proc/cpuinfo; then
-  case `module_id` in
-    "HP iPAQ H2200")
-	;;
-    *)
-	PCIC_EXTRA=h3600_generic_sleeve
-	;;
-  esac
-fi
+case `module_id` in
+  "HP iPAQ H3"* | "HP iPAQ H5"*)
+    PCIC_EXTRA=h3600_generic_sleeve
+    ;;
+esac

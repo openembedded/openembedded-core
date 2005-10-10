@@ -1,5 +1,5 @@
 DEPLOY_DIR_SRC ?= "${DEPLOY_DIR}/source"
-EXCLUDE_FROM ?= ".pc"
+EXCLUDE_FROM ?= ".pc autom4te.cache"
 
 # used as part of a path. make sure it's set
 DISTRO ?= "openembedded"
@@ -42,7 +42,7 @@ sourcepkg_do_create_orig_tgz(){
 	
 	echo $src_tree
 	oenote "Creating .orig.tar.gz in ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz"
-	tar cvzf ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz  $src_tree --exclude-from temp/exclude-from-file
+	tar cvzf ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz --exclude-from temp/exclude-from-file $src_tree
 	cp -pPR $src_tree $src_tree.orig
 }
 

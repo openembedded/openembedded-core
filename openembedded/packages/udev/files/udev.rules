@@ -54,6 +54,8 @@ KERNEL=="issm*",		NAME="infiniband/%k"
 KERNEL=="uverbs*",		NAME="infiniband/%k"
 KERNEL=="ucm",			NAME="infiniband/%k"
 
+KERNEL=="buzzer",		NAME="misc/buzzer"
+
 # ALSA devices
 KERNEL=="controlC[0-9]*",	NAME="snd/%k"
 KERNEL=="hwC[D0-9]*",		NAME="snd/%k"

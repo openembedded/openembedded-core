@@ -32,7 +32,7 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.13.tar.gz \
            ${RPSRC}/sharpsl_pm-r8.patch;patch=1 \
            ${RPSRC}/corgi_pm-r3.patch;patch=1 \
            ${RPSRC}/spitz_base_extras-r2.patch;patch=1 \
-           ${RPSRC}/spitz_pm-r3.patch;patch=1 \
+           ${RPSRC}/spitz_pm-r4.patch;patch=1 \
            ${RPSRC}/spitz_kbd_fix1-r0.patch;patch=1 \
            ${RPSRC}/spitzcf-r3.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
@@ -73,10 +73,10 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.13.tar.gz \
            file://dtl1_cs-add-socket-revE.patch;patch=1 \
            file://connectplus-remove-ide-HACK.patch;patch=1 \
            file://defconfig-c7x0 \
-           file://defconfig-ipaq-pxa-2.6 \
+           file://defconfig-ipaq-pxa270 \
            file://defconfig-collie \
            file://defconfig-poodle \
-           file://defconfig-spitz \
+           file://defconfig-cxx00 \
            file://defconfig-tosa "
 
 # These patches would really help collie/poodle but we 

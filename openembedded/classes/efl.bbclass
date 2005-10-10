@@ -38,6 +38,10 @@ export ESMART_CONFIG		= "${STAGING_BINDIR}/esmart-config${@binconfig_suffix(d)}"
 export FREETYPE_CONFIG		= "${STAGING_BINDIR}/freetype-config${@binconfig_suffix(d)}"
 export IMLIB2_CONFIG		= "${STAGING_BINDIR}/imlib2-config${@binconfig_suffix(d)}"
 
+do_compile_prepend() {
+	find ${S} -name Makefile | xargs sed -i 's:/usr/include:${STAGING_INCDIR}:'
+}
+
 do_stage_append () {
 	for i in ${libraries}
 	do
