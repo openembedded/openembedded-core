@@ -3,7 +3,7 @@ DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox x11 xext libxrender startup-notification expat matchbox-common gconf"
 RDEPENDS = "matchbox-common"
-PV = "0.9.5cvs${CVSDATE}"
+PV = "0.9.5+cvs-${CVSDATE}"
 PR = "r4"
 DEFAULT_PREFERENCE = "-1"
 

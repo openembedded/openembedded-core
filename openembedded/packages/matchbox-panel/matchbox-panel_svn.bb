@@ -2,7 +2,7 @@ DESCRIPTION = "Matchbox Window Manager Panel"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox x11 xext xpm apmd startup-notification virtual/kernel"
 SECTION = "x11/wm"
-PV = "0.9.2cvs${CVSDATE}"
+PV = "0.9.2+cvs-${CVSDATE}"
 DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"

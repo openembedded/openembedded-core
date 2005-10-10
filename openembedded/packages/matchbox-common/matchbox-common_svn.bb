@@ -2,7 +2,7 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager common files"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox"
-PV = "0.9.1cvs${CVSDATE}"
+PV = "0.9.1+cvs-${CVSDATE}"
 S = "${WORKDIR}/matchbox-common"
 DEFAULT_PREFERENCE = "-1"
 
