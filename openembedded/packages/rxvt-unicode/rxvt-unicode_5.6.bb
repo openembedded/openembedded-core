@@ -11,7 +11,7 @@ SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 
 	   file://signedchar.patch;patch=1 \
 	   file://rxvt.desktop \
 	   file://rxvt.png"
-PR = "r5"
+PR = "r3"
 
 inherit autotools update-alternatives
 

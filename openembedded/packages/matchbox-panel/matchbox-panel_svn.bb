@@ -1,20 +1,11 @@
-DESCRIPTION = "Matchbox Window Manager Panel"
-LICENSE = "GPL"
-DEPENDS = "libmatchbox x11 xext xpm apmd startup-notification virtual/kernel"
-SECTION = "x11/wm"
+include matchbox-panel.inc
 PV = "0.9.2+cvs-${CVSDATE}"
 DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
+EXTRA_OECONF = "--enable-startup-notification --enable-dnotify"
+
 S = ${WORKDIR}/${PN}
 
-inherit autotools pkgconfig gettext
-
-EXTRA_OECONF = "--enable-startup-notification --enable-dnotify"
-CFLAGS += " -D_GNU_SOURCE"
-
-FILES_${PN} = "${bindir} \
-	       ${datadir}/applications \
-	       ${datadir}/pixmaps"
 

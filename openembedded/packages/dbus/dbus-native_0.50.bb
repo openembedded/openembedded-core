@@ -8,7 +8,7 @@ S = "${WORKDIR}/dbus-${PV}"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dbus"
 DEPENDS = "glib-2.0-native"
 
-PR = "r2"
+PR = "r1"
 
 do_stage() {
 	oe_runmake install
