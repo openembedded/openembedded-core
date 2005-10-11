@@ -24,7 +24,7 @@ if ! (test -d $BBDIR && test -d $PKGDIR && test -d $BUILDDIR); then
     exit 1
 fi
 
-if !(test -r $BUILDDIR/conf/local.conf); then
+if ! (test -r $BUILDDIR/conf/local.conf); then
    echo "Setting up initial '$PKGDIR/conf/local.conf'."
    cat $BUILDDIR/conf/local.conf.sample | sed -e"s|POKYROOT|${OEROOT}|" > $BUILDDIR/conf/local.conf
 fi	
