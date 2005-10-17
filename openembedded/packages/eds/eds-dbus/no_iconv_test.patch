@@ -17,7 +17,7 @@ Index: trunk/configure.in
 -int main (int argc, char **argv)
 -{
 -	const char *from = "Some Text \xA4";
--	const char *utf8 = "Some Text \xE2\x82\xAC";
+-	const char *utf8 = "Some Text \xC2\xA4";
 -	char *transbuf = malloc (20), *trans = transbuf;
 -	iconv_t cd;
 -	size_t from_len = strlen (from), utf8_len = 20;
@@ -29,7 +29,7 @@ Index: trunk/configure.in
 -		exit (1);
 -#endif
 -
--	cd = iconv_open ("UTF-8", "ISO_8859-15");
+-	cd = iconv_open ("UTF-8", "ISO_8859-1");
 -	if (cd == (iconv_t) -1)
 -		exit (1);
 -	if (iconv (cd, &from, &from_len, &trans, &utf8_len) == -1 || from_len != 0)
