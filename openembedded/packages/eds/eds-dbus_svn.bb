@@ -4,20 +4,21 @@ RDEPENDS = "gtk+ gconf db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0cvs${CVSDATE}"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://external_libdb.patch;patch=1 \
 	   file://no_gnomevfs.patch;patch=1 \
 	   file://no_gnomevfs2.patch;patch=1 \
 	   file://no_iconv_test.patch;patch=1 \
+                 file://no_libedataserverui.patch;patch=1 \
 	   file://iconv-detect.h"
 
 S = "${WORKDIR}/trunk"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--without-openldap --disable-nntp --disable-gtk-doc --with-dbus=yes --with-libgnome=no --enable-soup=no --with-libdb41=${STAGING_DIR}/${HOST_SYS} --enable-smime=no --enable-nss=no --disable-camel"
+EXTRA_OECONF = "--without-openldap --disable-nntp --disable-gtk-doc --with-dbus --without-libgnome --disable-soup --with-libdb41=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --without-camel"
 
 acpaths = " -I ${STAGING_DATADIR}/aclocal/gnome-macros "
 
