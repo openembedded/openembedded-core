@@ -1,0 +1,241 @@
+Index: xserver/miext/shadow/shrotate.c
+===================================================================
+RCS file: /scratch/openbsd/cvs/XF4/xc/programs/Xserver/miext/shadow/shrotate.c,v
+retrieving revision 1.2
+diff -u -r1.2 shrotate.c
+--- xserver/miext/shadow/shrotate.c	3 Nov 2004 00:09:54 -0000	1.2
++++ xserver/miext/shadow/shrotate.c	20 Sep 2005 23:07:58 -0000
+@@ -45,6 +45,106 @@
+ #define TOP_TO_BOTTOM	2
+ #define BOTTOM_TO_TOP	-2
+ 
++
++static void 
++shadowUpdateRotatePackedSubRectangle(shadowBufPtr pBuf,
++				     FbBits *shaLine, int shaFirstShift, 
++				     int shaStepOverX, int shaStepOverY,
++				     int shaStepDownX, int shaStepDownY,
++				     int shaBpp, FbBits shaMask,
++				     ScreenPtr pScreen,
++				     int scr_x1, int scr_y, 
++				     int scr_h, int scr_w,
++				     int pixelsPerBits)
++{
++    FbBits *sha;
++    int shaShift;
++    int scr_x;
++    int w;
++
++    /*
++     * Copy the bits, always write across the physical frame buffer
++     * to take advantage of write combining.
++     */
++    while (scr_h--)
++    {
++	int	    p;
++	FbBits  bits;
++	FbBits  *win;
++	int	    i;
++	CARD32  winSize;
++	
++	sha = shaLine;
++	shaShift = shaFirstShift;
++	w = scr_w;
++	scr_x = scr_x1 * shaBpp >> FB_SHIFT;
++	
++	while (w)
++	{
++	  /*
++	   * Map some of this line
++	   */
++	  win = (FbBits *) (*pBuf->window) (pScreen,
++					    scr_y,
++					    scr_x << 2,
++					    SHADOW_WINDOW_WRITE,
++					    &winSize,
++					    pBuf->closure);
++	    i = (winSize >> 2);
++	    if (i > w)
++		i = w;
++	    w -= i;
++	    scr_x += i;
++	    /*
++	     * Copy the portion of the line mapped
++	     */
++	    while (i--)
++	    {
++		bits = 0;
++		p = pixelsPerBits;
++		/*
++		 * Build one word of output from multiple inputs
++		 */
++		while (p--)
++		{
++		    bits = FbScrLeft(bits, shaBpp);
++		    bits |= FbScrRight (*sha, shaShift) & shaMask;
++		    
++		    shaShift -= shaStepOverX;
++		    if (shaShift >= FB_UNIT)
++		    {
++			shaShift -= FB_UNIT;
++			    sha--;
++		    }
++		    else if (shaShift < 0)
++		    {
++			shaShift += FB_UNIT;
++			sha++;
++		    }
++		    sha += shaStepOverY;
++		}
++		*win++ = bits;
++	    }
++	}
++	scr_y++;
++	shaFirstShift -= shaStepDownX;
++	if (shaFirstShift >= FB_UNIT)
++	{
++	    shaFirstShift -= FB_UNIT;
++	    shaLine--;
++	}
++	else if (shaFirstShift < 0)
++	{
++	    shaFirstShift += FB_UNIT;
++	    shaLine++;
++	}
++	shaLine += shaStepDownY;
++    }
++}
++
++#define BLOCKSIZE_HEIGHT 32
++#define BLOCKSIZE_WIDTH 32
++
+ void
+ shadowUpdateRotatePacked (ScreenPtr	pScreen,
+ 			  shadowBufPtr	pBuf)
+@@ -61,7 +161,6 @@
+     int		sha_x1 = 0, sha_y1 = 0;
+     int		scr_x1 = 0, scr_x2 = 0, scr_y1 = 0, scr_y2 = 0, scr_w, scr_h;
+     int		scr_x, scr_y;
+-    int		w;
+     int		pixelsPerBits;
+     int		pixelsMask;
+     FbStride	shaStepOverY = 0, shaStepDownY = 0;
+@@ -221,86 +320,46 @@
+ 		   ((sha_x1 * shaBpp) >> FB_SHIFT));
+ 
+ 	/*
+-	 * Copy the bits, always write across the physical frame buffer
+-	 * to take advantage of write combining.
++	 * Copy in blocks of size BLOCKSIZE_WIDTH x BLOCKSIZE_HEIGHT
++	 * to reduce the number of cache misses when rotating 90 or
++	 * 270 degrees.
+ 	 */
+-	while (scr_h--)
++	for (scr_y = scr_y1; scr_y < scr_y2; scr_y += BLOCKSIZE_HEIGHT)
+ 	{
+-	    int	    p;
+-	    FbBits  bits;
+-	    FbBits  *win;
+-	    int	    i;
+-	    CARD32  winSize;
+-	    
+ 	    sha = shaLine;
+ 	    shaShift = shaFirstShift;
+-	    w = scr_w;
+-	    scr_x = scr_x1 * shaBpp >> FB_SHIFT;
+ 
+-	    while (w)
++	    for (scr_x = scr_x1; scr_x < scr_x2; scr_x += BLOCKSIZE_WIDTH)
+ 	    {
+-		/*
+-		 * Map some of this line
+-		 */
+-		win = (FbBits *) (*pBuf->window) (pScreen,
+-						  scr_y,
+-						  scr_x << 2,
+-						  SHADOW_WINDOW_WRITE,
+-						  &winSize,
+-						  pBuf->closure);
+-		i = (winSize >> 2);
+-		if (i > w)
+-		    i = w;
+-		w -= i;
+-		scr_x += i;
+-		/*
+-		 * Copy the portion of the line mapped
+-		 */
+-		while (i--)
+-		{
+-		    bits = 0;
+-		    p = pixelsPerBits;
+-		    /*
+-		     * Build one word of output from multiple inputs
+-		     * 
+-		     * Note that for 90/270 rotations, this will walk
+-		     * down the shadow hitting each scanline once.
+-		     * This is probably not very efficient.
+-		     */
+-		    while (p--)
+-		    {
+-			bits = FbScrLeft(bits, shaBpp);
+-			bits |= FbScrRight (*sha, shaShift) & shaMask;
++		int h = BLOCKSIZE_HEIGHT;
++		int w = BLOCKSIZE_WIDTH;
+ 
+-			shaShift -= shaStepOverX;
+-			if (shaShift >= FB_UNIT)
+-			{
+-			    shaShift -= FB_UNIT;
+-			    sha--;
+-			}
+-			else if (shaShift < 0)
+-			{
+-			    shaShift += FB_UNIT;
+-			    sha++;
+-			}
+-			sha += shaStepOverY;
+-		    }
+-		    *win++ = bits;
+-		}
+-	    }
+-	    scr_y++;
+-	    shaFirstShift -= shaStepDownX;
+-	    if (shaFirstShift >= FB_UNIT)
+-	    {
+-		shaFirstShift -= FB_UNIT;
+-		shaLine--;
+-	    }
+-	    else if (shaFirstShift < 0)
+-	    {
+-		shaFirstShift += FB_UNIT;
+-		shaLine++;
++		if (scr_y + h > scr_y2)
++		    h = scr_y2 - scr_y;
++		if (scr_x + w > scr_x2)
++		    w = scr_x2 - scr_x;
++		w = (w * shaBpp) >> FB_SHIFT;
++
++		shadowUpdateRotatePackedSubRectangle
++		  (pBuf,
++		   sha, shaShift,
++		   shaStepOverX, shaStepOverY,
++		   shaStepDownX, shaStepDownY,
++		   shaBpp, shaMask,
++		   pScreen,
++		   scr_x, scr_y,
++		   h, w,
++		   pixelsPerBits);
++		
++		shaShift -= BLOCKSIZE_WIDTH * shaStepOverX;
++		sha += BLOCKSIZE_WIDTH * shaStepOverY;
++		sha -= (shaShift >> FB_SHIFT); 
++		shaShift &= FB_MASK; 
+ 	    }
+-	    shaLine += shaStepDownY;
++	    shaFirstShift -= BLOCKSIZE_HEIGHT * shaStepDownX;
++	    shaLine += BLOCKSIZE_HEIGHT * shaStepDownY;
++	    shaLine -= (shaFirstShift >> FB_SHIFT); 
++	    shaFirstShift &= FB_MASK; 
+ 	}
+     }
+ }
