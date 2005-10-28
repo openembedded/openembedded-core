@@ -1,0 +1,24 @@
+diff -urNd ../gnome-vfs-dbus-2.12.0cvs20051004-r0/trunk/doc/Makefile.am trunk/doc/Makefile.am
+--- ../gnome-vfs-dbus-2.12.0cvs20051004-r0/trunk/doc/Makefile.am	2005-10-28 15:48:43.000000000 +0100
++++ trunk/doc/Makefile.am	2005-10-28 16:17:15.000000000 +0100
+@@ -81,7 +81,7 @@
+ GTKDOC_LIBS = $(LIBGNOMEVFS_LIBS) \
+ 	$(top_builddir)/libgnomevfs/libgnomevfs-2.la
+ 
+-include $(top_srcdir)/gtk-doc.make
++#include $(top_srcdir)/gtk-doc.make
+ 
+ dist-hook-local:
+ #	mkdir $(distdir)/TEXT;          \
+diff -urNd ../gnome-vfs-dbus-2.12.0cvs20051004-r0/trunk/Makefile.am trunk/Makefile.am
+--- ../gnome-vfs-dbus-2.12.0cvs20051004-r0/trunk/Makefile.am	2005-10-28 15:49:03.000000000 +0100
++++ trunk/Makefile.am	2005-10-28 16:17:07.000000000 +0100
+@@ -21,7 +21,7 @@
+ 	gnome-vfs-zip.in			\
+ 	gnome-vfs-2.0.pc.in			\
+ 	gnome-vfs-module-2.0.pc.in		\
+-	gtk-doc.make				\
++#	gtk-doc.make				\
+ 	intltool-extract.in			\
+ 	intltool-merge.in			\
+ 	intltool-update.in
