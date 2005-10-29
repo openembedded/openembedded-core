@@ -1,10 +1,10 @@
 LICENSE = "LGPL"
 DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade libiconv"
-RDEPENDS = "gtk+ gconf db libiconv"
+RDEPENDS = "gconf dbus db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0cvs${CVSDATE}"
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 	   file://no_gnomevfs.patch;patch=1 \

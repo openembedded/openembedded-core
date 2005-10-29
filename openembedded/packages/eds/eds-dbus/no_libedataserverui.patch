@@ -6,8 +6,8 @@ Index: Makefile.am
  endif
  
  if ENABLE_DBUS
--SUBDIRS = libedataserver $(CAMEL_DIR) addressbook calendar libedataserverui docs art po
-+SUBDIRS = libedataserver $(CAMEL_DIR) addressbook calendar docs art po
+-SUBDIRS = $(LIBDB) libedataserver $(CAMEL_DIR) addressbook calendar libedataserverui docs art po
++SUBDIRS = $(LIBDB) libedataserver $(CAMEL_DIR) addressbook calendar docs art po
  else
  SUBDIRS = libdb libedataserver servers $(CAMEL_DIR) addressbook calendar libedataserverui src docs art po
  endif

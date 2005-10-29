@@ -1,28 +1,3 @@
-diff -urNd ../eds-dbus-1.4.0cvs20051004-r7/trunk/addressbook/libebook/e-contact.c trunk/addressbook/libebook/e-contact.c
---- ../eds-dbus-1.4.0cvs20051004-r7/trunk/addressbook/libebook/e-contact.c	2005-10-04 18:08:14.000000000 +0100
-+++ trunk/addressbook/libebook/e-contact.c	2005-10-04 19:11:37.000000000 +0100
-@@ -27,7 +27,9 @@
- #include <ctype.h>
- #include <string.h>
- #include <glib/gi18n-lib.h>
-+#if 0
- #include <libgnomevfs/gnome-vfs-mime-utils.h>
-+#endif
- #include "e-contact.h"
- #include "e-book.h"
- #include "e-name-western.h"
-@@ -419,7 +421,11 @@
- 							e_vcard_attribute_param_new (EVC_ENCODING),
- 							"b");
- 		
-+#if 0
- 		mime_type = gnome_vfs_get_mime_type_for_data (photo->inlined.data, photo->inlined.length);
-+#else
-+		mime_type = "image/jpeg";
-+#endif
- 		if (!strcmp (mime_type, "image/gif"))
- 			image_type = "GIF";
- 		else if (!strcmp (mime_type, "image/jpeg"))
 diff -urNd ../eds-dbus-1.4.0cvs20051004-r7/trunk/calendar/libedata-cal-dbus/e-data-cal-factory.c trunk/calendar/libedata-cal-dbus/e-data-cal-factory.c
 --- ../eds-dbus-1.4.0cvs20051004-r7/trunk/calendar/libedata-cal-dbus/e-data-cal-factory.c	2005-10-04 18:08:34.000000000 +0100
 +++ trunk/calendar/libedata-cal-dbus/e-data-cal-factory.c	2005-10-04 19:12:54.000000000 +0100
@@ -53,15 +28,6 @@ diff -urNd ../eds-dbus-1.4.0cvs20051004-r7/trunk/calendar/libedata-cal-dbus/e-da
 diff -urNd ../eds-dbus-1.4.0cvs20051004-r7/trunk/configure.in trunk/configure.in
 --- ../eds-dbus-1.4.0cvs20051004-r7/trunk/configure.in	2005-10-04 19:14:49.000000000 +0100
 +++ trunk/configure.in	2005-10-04 19:12:07.000000000 +0100
-@@ -1195,7 +1195,7 @@
- 
- dnl --- evolution-addressbook flags
- 
--EVOLUTION_ADDRESSBOOK_DEPS="libxml-2.0 gobject-2.0 gconf-2.0 $IPC_DEPS gnome-vfs-2.0 "
-+EVOLUTION_ADDRESSBOOK_DEPS="libxml-2.0 gobject-2.0 gconf-2.0 $IPC_DEPS"
- 
- EVO_SET_COMPILE_FLAGS(EVOLUTION_ADDRESSBOOK, $EVOLUTION_ADDRESSBOOK_DEPS)
- AC_SUBST(EVOLUTION_ADDRESSBOOK_CFLAGS)
 @@ -1203,7 +1203,7 @@
  
  dnl --- evolution-calendar flags
