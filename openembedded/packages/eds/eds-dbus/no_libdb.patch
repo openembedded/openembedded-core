@@ -1,0 +1,14 @@
+Index: configure.in
+===================================================================
+--- trunk/configure.in	(revision 285)
++++ trunk/configure.in	(working copy)
+@@ -1333,9 +1333,6 @@
+ export privincludedir
+ export privdatadir
+ AC_CONFIG_SUBDIRS(calendar/libical)
+-if test $dynamic_libdb = yes; then
+-        AC_CONFIG_SUBDIRS(libdb/dist)
+-fi
+ 
+ AC_OUTPUT([
+ Makefile

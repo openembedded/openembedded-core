@@ -4,9 +4,10 @@ RDEPENDS = "gconf dbus db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0cvs${CVSDATE}"
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
+	   file://no_libdb.patch;patch=1 \
 	   file://no_gnomevfs.patch;patch=1 \
 	   file://no_gnomevfs2.patch;patch=1 \
 	   file://no_iconv_test.patch;patch=1 \
