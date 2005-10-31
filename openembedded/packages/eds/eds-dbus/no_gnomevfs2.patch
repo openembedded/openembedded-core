@@ -1,13 +1,3 @@
---- trunk/addressbook/libebook-dbus/libebook.pc.in.old	2005-09-29 19:27:28.000000000 +0100
-+++ trunk/addressbook/libebook-dbus/libebook.pc.in	2005-09-29 19:28:06.000000000 +0100
-@@ -11,6 +11,6 @@
- Name: libebook
- Description: Client library for evolution address books
- Version: @VERSION@
--Requires: gnome-vfs-2.0 libedataserver-1.2 dbus-glib-1
-+Requires: libedataserver-1.2 dbus-glib-1
- Libs: -L${libdir} -lebook-1.2
- Cflags: -I${privincludedir}
 --- trunk/calendar/libecal-dbus/libecal.pc.in.old	2005-09-29 19:27:53.000000000 +0100
 +++ trunk/calendar/libecal-dbus/libecal.pc.in	2005-09-29 19:28:25.000000000 +0100
 @@ -11,6 +11,6 @@
