@@ -1,0 +1,24 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- linux-2.6.11-rc1/init/version.c~add-oz-release-string
++++ linux-2.6.11-rc1/init/version.c
+@@ -29,5 +29,5 @@
+ EXPORT_SYMBOL(system_utsname);
+ 
+ const char linux_banner[] =
+-	"Linux version " UTS_RELEASE " (" LINUX_COMPILE_BY "@"
++	"Linux version " UTS_RELEASE OPENZAURUS_RELEASE " (" LINUX_COMPILE_BY "@"
+ 	LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION "\n";
+--- linux-2.6.11-rc1/Makefile~add-oz-release-string
++++ linux-2.6.11-rc1/Makefile
+@@ -827,6 +827,7 @@
+ 	  exit 1; \
+ 	fi; \
+ 	(echo \#define UTS_RELEASE \"$(KERNELRELEASE)\"; \
++	echo \#define OPENZAURUS_RELEASE \"$(OPENZAURUS_RELEASE)\"; \
+ 	  echo \#define LINUX_VERSION_CODE `expr $(VERSION) \\* 65536 + $(PATCHLEVEL) \\* 256 + $(SUBLEVEL)`; \
+ 	 echo '#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))'; \
+ 	)

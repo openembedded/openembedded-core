@@ -31,7 +31,10 @@ export mem = ${@bb.data.getVar("COLLIE_MEMORY_SIZE",d,1) or "32"}
 export rd  = ${@bb.data.getVar("COLLIE_RAMDISK_SIZE",d,1) or "32"}
 
 CMDLINE_MEM_collie = "mem=${mem}M"
-CMDLINE = "${CMDLINE_CON} ${CMDLINE_ROOT} ${CMDLINE_MEM} debug"
+CMDLINE_ROTATE_spitz = "fbcon=rotate:1"
+CMDLINE_ROTATE_akita = "fbcon=rotate:1"
+CMDLINE_ROTATE_borzoi = "fbcon=rotate:1"
+CMDLINE = "${CMDLINE_CON} ${CMDLINE_ROOT} ${CMDLINE_MEM} ${CMDLINE_ROTATE} debug"
 
 ###############################################################
 # Enable or disable ELPP via local.conf - default is "no"
