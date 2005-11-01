@@ -1,0 +1,122 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- e2fsprogs-1.33/./lib/uuid/configure.in~configure
++++ e2fsprogs-1.33/./lib/uuid/configure.in
+@@ -2,9 +2,11 @@
+ dnl  Not used now, for the future when uuid is separated out into its 
+ dnl own package.
+ dnl
+-AC_INIT(gen_uuid.c)
+-AC_PREREQ(2.12)
++AC_INIT
++AC_CONFIG_SRCDIR([gen_uuid.c])
++AC_PREREQ(2.57)
+ 
+ AC_CHECK_HEADERS(stdlib.h unistd.h sys/sockio.h net/if.h netinet/in.h)
+ AC_CHECK_FUNCS(srandom)
+-AC_OUTPUT(Makefile)
++AC_CONFIG_FILES([Makefile])
++AC_OUTPUT
+--- e2fsprogs-1.33/./configure.in~configure
++++ e2fsprogs-1.33/./configure.in
+@@ -1,5 +1,6 @@
+-AC_INIT(version.h)
+-AC_PREREQ(2.12)
++AC_INIT
++AC_CONFIG_SRCDIR([version.h])
++AC_PREREQ(2.57)
+ MCONFIG=./MCONFIG
+ AC_SUBST_FILE(MCONFIG)
+ BINARY_TYPE=bin
+@@ -537,10 +538,7 @@
+ dnl is not decleared.
+ AC_MSG_CHECKING(whether d_reclen declared in dirent)
+ AC_CACHE_VAL(e2fsprogs_cv_have_d_reclen_dirent,
+-	AC_TRY_COMPILE(
+-[#include <dirent.h>], [struct dirent de; de.d_reclen = 0; ],
+-	[e2fsprogs_cv_have_d_reclen_dirent=yes],
+-	[e2fsprogs_cv_have_d_reclen_dirent=no]))
++	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <dirent.h>]], [[struct dirent de; de.d_reclen = 0; ]])],[e2fsprogs_cv_have_d_reclen_dirent=yes],[e2fsprogs_cv_have_d_reclen_dirent=no]))
+ AC_MSG_RESULT($e2fsprogs_cv_have_d_reclen_dirent)
+ if test "$e2fsprogs_cv_have_d_reclen_dirent" = yes; then
+    AC_DEFINE(HAVE_RECLEN_DIRENT)
+@@ -548,10 +546,7 @@
+ dnl Check to see if ssize_t was decleared
+ AC_MSG_CHECKING(whether ssize_t declared)
+ AC_CACHE_VAL(e2fsprogs_cv_have_ssize_t,
+-	AC_TRY_COMPILE(
+-[#include <sys/types.h>], [ssize_t a = 0; ],
+-	[e2fsprogs_cv_have_ssize_t=yes],
+-	[e2fsprogs_cv_have_ssize_t=no]))
++	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>]], [[ssize_t a = 0; ]])],[e2fsprogs_cv_have_ssize_t=yes],[e2fsprogs_cv_have_ssize_t=no]))
+ AC_MSG_RESULT($e2fsprogs_cv_have_ssize_t)
+ if test "$e2fsprogs_cv_have_ssize_t" = yes; then
+    AC_DEFINE(HAVE_TYPE_SSIZE_T)
+@@ -565,10 +560,7 @@
+ dnl
+ AC_MSG_CHECKING(whether llseek declared in unistd.h)
+ AC_CACHE_VAL(e2fsprogs_cv_have_llseek_prototype,
+-	AC_TRY_COMPILE(
+-[#include <unistd.h>], [extern int llseek(int);],
+-	[e2fsprogs_cv_have_llseek_prototype=no],
+-	[e2fsprogs_cv_have_llseek_prototype=yes]))
++	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <unistd.h>]], [[extern int llseek(int);]])],[e2fsprogs_cv_have_llseek_prototype=no],[e2fsprogs_cv_have_llseek_prototype=yes]))
+ AC_MSG_RESULT($e2fsprogs_cv_have_llseek_prototype)
+ if test "$e2fsprogs_cv_have_llseek_prototype" = yes; then
+    AC_DEFINE(HAVE_LLSEEK_PROTOTYPE)
+@@ -584,12 +576,9 @@
+ dnl
+ AC_MSG_CHECKING(whether lseek64 declared in unistd.h)
+ AC_CACHE_VAL(e2fsprogs_cv_have_lseek64_prototype,
+-	AC_TRY_COMPILE(
+-[#define _LARGEFILE_SOURCE
++	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#define _LARGEFILE_SOURCE
+ #define _LARGEFILE64_SOURCE
+-#include <unistd.h>], [extern int lseek64(int);],
+-	[e2fsprogs_cv_have_lseek64_prototype=no],
+-	[e2fsprogs_cv_have_lseek64_prototype=yes]))
++#include <unistd.h>]], [[extern int lseek64(int);]])],[e2fsprogs_cv_have_lseek64_prototype=no],[e2fsprogs_cv_have_lseek64_prototype=yes]))
+ AC_MSG_RESULT($e2fsprogs_cv_have_lseek64_prototype)
+ if test "$e2fsprogs_cv_have_lseek64_prototype" = yes; then
+    AC_DEFINE(HAVE_LSEEK64_PROTOTYPE)
+@@ -624,18 +613,12 @@
+ dnl
+ AC_MSG_CHECKING(whether struct stat has a st_flags field)
+ AC_CACHE_VAL(e2fsprogs_cv_struct_st_flags,
+-	AC_TRY_COMPILE([#include <sys/stat.h>],
+-		[struct stat stat; stat.st_flags = 0;],
+-		[e2fsprogs_cv_struct_st_flags=yes],
+-		[e2fsprogs_cv_struct_st_flags=no]))
++	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/stat.h>]], [[struct stat stat; stat.st_flags = 0;]])],[e2fsprogs_cv_struct_st_flags=yes],[e2fsprogs_cv_struct_st_flags=no]))
+ AC_MSG_RESULT($e2fsprogs_cv_struct_st_flags)
+ if test "$e2fsprogs_cv_struct_st_flags" = yes; then
+   AC_MSG_CHECKING(whether st_flags field is useful)
+   AC_CACHE_VAL(e2fsprogs_cv_struct_st_flags_immut,
+-	AC_TRY_COMPILE([#include <sys/stat.h>],
+-		[struct stat stat; stat.st_flags |= UF_IMMUTABLE;],
+-		[e2fsprogs_cv_struct_st_flags_immut=yes],
+-		[e2fsprogs_cv_struct_st_flags_immut=no]))
++	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/stat.h>]], [[struct stat stat; stat.st_flags |= UF_IMMUTABLE;]])],[e2fsprogs_cv_struct_st_flags_immut=yes],[e2fsprogs_cv_struct_st_flags_immut=no]))
+   AC_MSG_RESULT($e2fsprogs_cv_struct_st_flags_immut)
+   if test "$e2fsprogs_cv_struct_st_flags_immut" = yes; then
+ 	  AC_DEFINE(HAVE_STAT_FLAGS)
+@@ -747,8 +730,7 @@
+ AC_MSG_CHECKING([whether linker accepts -static])
+ AC_CACHE_VAL(ac_cv_e2fsprogs_use_static,
+ [SAVE_LDFLAGS=$LDFLAGS; LDFLAGS="$LDFLAGS -static"
+-AC_TRY_LINK([#include <stdio.h>],[fflush(stdout);],
+- ac_cv_e2fsprogs_use_static=yes, ac_cv_e2fsprogs_use_static=no)
++AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>]], [[fflush(stdout);]])],[ac_cv_e2fsprogs_use_static=yes],[ac_cv_e2fsprogs_use_static=no])
+ LDFLAGS=$SAVE_LDFLAGS])
+ dnl
+ dnl Regardless of how the test turns out, Solaris doesn't handle -static
+@@ -804,4 +786,5 @@
+ 		outlist="$outlist $i"
+ 	fi
+ done
+-AC_OUTPUT($outlist)
++AC_CONFIG_FILES([$outlist])
++AC_OUTPUT

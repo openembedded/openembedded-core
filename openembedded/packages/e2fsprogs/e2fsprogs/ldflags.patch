@@ -1,0 +1,27 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- e2fsprogs-1.34/lib/uuid/Makefile.in~ldflags
++++ e2fsprogs-1.34/lib/uuid/Makefile.in
+@@ -94,7 +94,7 @@
+ 	$(CC) $(ALL_LDFLAGS) -o tst_uuid tst_uuid.o $(STATIC_LIBUUID)
+ 
+ uuid_time: $(srcdir)/uuid_time.c $(DEPLIBUUID)
+-	$(CC) $(ALL_CFLAGS) -DDEBUG -o uuid_time $(srcdir)/uuid_time.c \
++	$(CC) $(ALL_CFLAGS) -DDEBUG $(ALL_LDFLAGS) -o uuid_time $(srcdir)/uuid_time.c \
+ 		$(LIBUUID)
+ 
+ libuuid.3: $(DEP_SUBSTITUTE) $(srcdir)/libuuid.3.in
+--- e2fsprogs-1.34/lib/evms/Makefile.in~ldflags
++++ e2fsprogs-1.34/lib/evms/Makefile.in
+@@ -36,7 +36,7 @@
+ 
+ $(ELF_LIB): $(OBJS)
+ 	$(CC) --shared -o $(ELF_LIB) -Wl,-soname,$(ELF_SONAME) \
+-		$(OBJS) $(ELF_OTHER_LIBS)
++		$(OBJS) $(ELF_OTHER_LIBS) $(ALL_LDFLAGS)
+ 
+ installdirs:: 
+ 	$(top_srcdir)/mkinstalldirs $(DESTDIR)$(ELF_INSTALL_DIR) 
