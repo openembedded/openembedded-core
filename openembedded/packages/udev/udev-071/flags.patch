@@ -1,5 +1,7 @@
---- udev-070/Makefile~flags	2005-09-15 01:19:07 +0200
-+++ udev-070/Makefile	2005-09-16 11:44:37 +0200
+Index: udev-071/Makefile
+===================================================================
+--- udev-071.orig/Makefile	2005-10-19 23:28:34.000000000 +0100
++++ udev-071/Makefile	2005-11-01 22:04:31.000000000 +0000
 @@ -160,36 +160,36 @@
  # check if compiler option is supported
  cc-supports = ${shell if $(CC) ${1} -S -o /dev/null -xc /dev/null > /dev/null 2>&1; then echo "$(1)"; else echo "$(2)"; fi;}
@@ -57,7 +59,7 @@
  
  ifeq ($(strip $(USE_SELINUX)),true)
  	UDEV_OBJS += udev_selinux.o
- 	LIB_OBJS += -lselinux
+ 	LIB_OBJS += -lselinux -lsepol
 -	CFLAGS += -DUSE_SELINUX
 +	override CFLAGS += -DUSE_SELINUX
  endif
