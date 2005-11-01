@@ -20,7 +20,7 @@ DESCRIPTION_xserver-kdrive-epson = "X server from freedesktop.org, supporting Ep
 DESCRIPTION_xserver-kdrive-fake = "Fake X server"
 DESCRIPTION_xserver-kdrive-xephyr = "X server in an X window"
 
-PR = "r5"
+PR = "r6"
 
 FILES_xserver-kdrive-fbdev = "${bindir}/Xfbdev"
 FILES_xserver-kdrive-ati = "${bindir}/Xati"
@@ -35,7 +35,6 @@ FILES_xserver-kdrive-xephyr = "${bindir}/Xephyr"
 
 SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDCVSDATE} \
 	file://kmode.patch;patch=1 \
-	file://faster-rotated.patch;patch=1 \
 	file://fbdev-not-fix.patch;patch=1 "
 
 SRC_URI_append_mnci   = 	" file://onlyfb.patch;patch=1 \
@@ -46,12 +45,21 @@ SRC_URI_append_c7x0 = 		" file://disable-apm.patch;patch=1"
 SRC_URI_append_ipaq-pxa270= " file://disable-apm.patch;patch=1"
 SRC_URI_append_h3900 = 		" file://disable-apm.patch;patch=1"
 SRC_URI_append_h2200 =          " file://disable-apm.patch;patch=1"
+SRC_URI_append_spitz =          " file://disable-apm.patch;patch=1 \
+                                  file://faster-rotated.patch;patch=1"
+SRC_URI_append_akita =          " file://disable-apm.patch;patch=1 \
+                                  file://faster-rotated.patch;patch=1"
+SRC_URI_append_borzoi =         " file://disable-apm.patch;patch=1 \
+                                  file://faster-rotated.patch;patch=1"
 
 PACKAGE_ARCH_poodle = "poodle"
 PACKAGE_ARCH_c7x0 = "c7x0"
 PACKAGE_ARCH_ipaq-pxa270 = "ipaq-pxa270"
 PACKAGE_ARCH_h3900 = "h3900"
 PACKAGE_ARCH_h2200 = "h2200"
+PACKAGE_ARCH_spitz = "spitz"
+PACKAGE_ARCH_akita = "akita"
+PACKAGE_ARCH_borzoi = "borzoi"
 
 S = "${WORKDIR}/xserver"
 
