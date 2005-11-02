@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r4"
+PR = "r2"
 
 DEFAULT_PREFERENCE = "+1"
 
@@ -12,21 +12,15 @@ DEFAULT_PREFERENCE = "+1"
 # ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.14-rc4.bz2;patch=1 \
 # ftp://ftp.kernel.org/pub/linux/kernel/people/akpm/patches/2.6/2.6.14-rc2/2.6.14-rc2-mm1/2.6.14-rc2-mm1.bz2;patch=1 \	   
 
-#           ${RPSRC}/corgi_irda-r4.patch;patch=1 \
-#           ${RPSRC}/poodle_irda-r0.patch;patch=1 \
-#           ${RPSRC}/spitz_irda-r0.patch;patch=1 \
-#           ${RPSRC}/pxa_irda_susres-r0.patch;patch=1 \	   
-
-
-
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
 SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.14.tar.gz \
            http://www.kernel.org/pub/linux/kernel/v2.6/snapshots/patch-2.6.14-git3.bz2;patch=1 \
            ${RPSRC}/pxa_pmops_static-r1.patch;patch=1 \
-           ${RPSRC}/pxa_i2c_fixes-r2.patch;patch=1 \
+           ${RPSRC}/pxa_i2c_fixes-r3.patch;patch=1 \
            ${RPSRC}/pxa_ohci_platform-r2.patch;patch=1 \
            ${RPSRC}/pxa_ohci_suspend-r2.patch;patch=1 \
+           ${RPSRC}/revert_bootmem-r1.patch;patch=1 \
            ${RPSRC}/ide_not_removable-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_pm-r10.patch;patch=1 \
            ${RPSRC}/corgi_pm-r4.patch;patch=1 \
@@ -40,9 +34,11 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.14.tar.gz \
            ${RPSRC}/input_power-r2.patch;patch=1 \
            ${RPSRC}/jffs2_longfilename-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_bl_kick-r1.patch;patch=1 \
-           ${RPSRC}/corgi_snd-r11.patch;patch=1 \
+           ${RPSRC}/corgi_snd-r14.patch;patch=1 \
            ${RPSRC}/export_scoop-r0.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r0.patch;patch=1 \
+           ${RPSRC}/alsa/alsa_soc-r0.patch;patch=1 \
+           ${RPSRC}/alsa/ssp_pxa_regs-r0.patch;patch=1 \
            ${RPSRC}/fbdev/fbdev-r0.patch;patch=1 \
            ${RPSRC}/fbdev/fbdev1-r0.patch;patch=1 \
            ${RPSRC}/fbdev/fbdev2-r0.patch;patch=1 \
@@ -68,13 +64,13 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.14.tar.gz \
            ${RPSRC}/pcmcia_dev_ids-r2.patch;patch=1 \
            ${RPSRC}/mmc_timeout-r0.patch;patch=1 \	   
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
-           ${RPSRC}/alsa/alsa_soc-r3.patch;patch=1 \
-           ${RPSRC}/alsa/alsa_soc-r3_1.patch;patch=1 \
-           ${RPSRC}/wm8731-r6.patch;patch=1 \
+           ${RPSRC}/alsa/alsa_soc_0.5-r0.patch;patch=1 \
+           ${RPSRC}/alsa_snd_corgi-r0.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1 \
            ${RPSRC}/jl1/pxa-linking-bug.patch;patch=1 \
            file://dtl1_cs-add-socket-revE.patch;patch=1 \
+           file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            file://connectplus-remove-ide-HACK.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-ipaq-pxa270 \
