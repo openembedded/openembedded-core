@@ -1,0 +1,20 @@
+--- /tmp/usb.c	2005-07-22 01:45:43.606167000 +0200
++++ libusb-0.1.10a/usb.c	2005-07-22 01:47:22.527128728 +0200
+@@ -156,7 +156,7 @@
+        * Some ports fetch the descriptors on scanning (like Linux) so we don't
+        * need to fetch them again.
+        */
+-      if (!dev->config) {
++/*     if (!dev->config) { */
+         usb_dev_handle *udev;
+ 
+         udev = usb_open(dev);
+@@ -165,7 +165,7 @@
+ 
+           usb_close(udev);
+         }
+-      }
++/*      }*/
+ 
+       changes++;
+ 
