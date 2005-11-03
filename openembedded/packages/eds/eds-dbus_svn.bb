@@ -8,8 +8,6 @@ PR = "r13"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 	   file://no_libdb.patch;patch=1 \
-	   file://no_gnomevfs.patch;patch=1 \
-	   file://no_gnomevfs2.patch;patch=1 \
 	   file://no_iconv_test.patch;patch=1 \
                  file://no_libedataserverui.patch;patch=1 \
 	   file://iconv-detect.h"
