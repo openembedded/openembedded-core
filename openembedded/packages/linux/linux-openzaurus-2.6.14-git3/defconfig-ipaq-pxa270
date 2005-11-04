@@ -377,6 +377,9 @@ CONFIG_IP_TCPDIAG=y
 # CONFIG_HAMRADIO is not set
 # CONFIG_IRDA is not set
 # CONFIG_BT is not set
+#
+# Network device support
+#
 CONFIG_NETDEVICES=y
 # CONFIG_DUMMY is not set
 # CONFIG_BONDING is not set
@@ -384,11 +387,17 @@ CONFIG_NETDEVICES=y
 # CONFIG_TUN is not set
 
 #
+# PHY device support
+#
+# CONFIG_PHYLIB is not set
+
+#
 # Ethernet (10 or 100Mbit)
 #
 CONFIG_NET_ETHERNET=y
-# CONFIG_MII is not set
+CONFIG_MII=m
 # CONFIG_SMC91X is not set
+# CONFIG_DM9000 is not set
 
 #
 # Ethernet (1000 Mbit)
@@ -405,22 +414,68 @@ CONFIG_NET_ETHERNET=y
 #
 # Wireless LAN (non-hamradio)
 #
-# CONFIG_NET_RADIO is not set
-# CONFIG_HOSTAP is not set
+CONFIG_NET_RADIO=y
+
+#
+# Obsolete Wireless cards support (pre-802.11)
+#
+# CONFIG_STRIP is not set
+# CONFIG_PCMCIA_WAVELAN is not set
+# CONFIG_PCMCIA_NETWAVE is not set
+
+#
+# Wireless 802.11 Frequency Hopping cards support
+#
+# CONFIG_PCMCIA_RAYCS is not set
+
+#
+# Wireless 802.11b ISA/PCI cards support
+#
+CONFIG_HERMES=m
+# CONFIG_ATMEL is not set
+
+#
+# Wireless 802.11b Pcmcia/Cardbus cards support
+#
+CONFIG_PCMCIA_HERMES=m
+CONFIG_PCMCIA_SPECTRUM=m
+# CONFIG_AIRO_CS is not set
+# CONFIG_PCMCIA_WL3501 is not set
+CONFIG_HOSTAP=m
+CONFIG_HOSTAP_FIRMWARE=y
+CONFIG_HOSTAP_CS=m
+CONFIG_NET_WIRELESS=y
 
 #
 # PCMCIA network device support
 #
-# CONFIG_NET_PCMCIA is not set
+CONFIG_NET_PCMCIA=y
+# CONFIG_PCMCIA_3C589 is not set
+# CONFIG_PCMCIA_3C574 is not set
+# CONFIG_PCMCIA_FMVJ18X is not set
+CONFIG_PCMCIA_PCNET=m
+# CONFIG_PCMCIA_NMCLAN is not set
+# CONFIG_PCMCIA_SMC91C92 is not set
+# CONFIG_PCMCIA_XIRC2PS is not set
+# CONFIG_PCMCIA_AXNET is not set
 
 #
 # Wan interfaces
 #
 # CONFIG_WAN is not set
-# CONFIG_PPP is not set
+CONFIG_PPP=m
+# CONFIG_PPP_MULTILINK is not set
+# CONFIG_PPP_FILTER is not set
+CONFIG_PPP_ASYNC=m
+# CONFIG_PPP_SYNC_TTY is not set
+# CONFIG_PPP_DEFLATE is not set
+CONFIG_PPP_BSDCOMP=m
+# CONFIG_PPPOE is not set
 # CONFIG_SLIP is not set
 # CONFIG_SHAPER is not set
 # CONFIG_NETCONSOLE is not set
+# CONFIG_NETPOLL is not set
+# CONFIG_NET_POLL_CONTROLLER is not set
 
 #
 # ATA/ATAPI/MFM/RLL support

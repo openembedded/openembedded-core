@@ -710,15 +710,19 @@ CONFIG_NET_RADIO=y
 #
 # Wireless 802.11b ISA/PCI cards support
 #
-# CONFIG_HERMES is not set
+CONFIG_HERMES=m
 # CONFIG_ATMEL is not set
 
 #
 # Wireless 802.11b Pcmcia/Cardbus cards support
 #
+CONFIG_PCMCIA_HERMES=m
+CONFIG_PCMCIA_SPECTRUM=m
 # CONFIG_AIRO_CS is not set
 # CONFIG_PCMCIA_WL3501 is not set
-# CONFIG_HOSTAP is not set
+CONFIG_HOSTAP=m
+CONFIG_HOSTAP_FIRMWARE=y
+CONFIG_HOSTAP_CS=m
 CONFIG_NET_WIRELESS=y
 
 #
