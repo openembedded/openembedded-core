@@ -1,16 +1,18 @@
 # don't mount /dev/mtdblock2 since Spitz uses pivot_root
+# or 2.6 directly boots from the hdd
 # /dev/mtdblock2     /            jffs2   rw,noatime              1  1
 rootfs             /            auto    defaults                1  1
 proc               /proc        proc    defaults                0  0
-tmpfs              /var         tmpfs   defaults                0  0
+# we can use a normal var filesystem with a microdrive
+# tmpfs              /var         tmpfs   defaults                0  0
 tmpfs              /media/ram   tmpfs   defaults                0  0
 
 # Compact Flash memory cards
-/dev/hdb1       /media/cf       auto    defaults,sync,noauto    0  0
+/dev/hdc1       /media/cf       auto    defaults,sync,noauto    0  0
 # SD/MMC in kernel 2.4
 /dev/mmcda1     /media/card     auto    defaults,sync,noauto    0  0
 # SD/MMC in kernel 2.6
-#/dev/mmcblk0p1  /media/card     auto    defaults,sync,noauto    0  0
+/dev/mmcblk0p1  /media/card     auto    defaults,sync,noauto    0  0
 
 #
 # USB
@@ -22,5 +24,5 @@ usbdevfs        /proc/bus/usb   usbdevfs        noauto                0  0
 #
 # Harddisk
 #
-/dev/hda1           /media/hdd      ext3	noauto,defaults,noatime    0  0
+/dev/hda2           /media/hdd      ext3	noauto,defaults,noatime    0  0
 
