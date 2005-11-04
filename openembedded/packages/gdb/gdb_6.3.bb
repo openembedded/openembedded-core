@@ -6,6 +6,7 @@ PRIORITY = "optional"
 MAINTAINER = "Pawel Osiczko <p.osiczko@tetrapyloctomy.org>"
 DEPENDS = "ncurses readline"
 RDEPENDS_openmn = "libthread-db1"
+PR = "r2"
 
 PACKAGES =+ 'gdbserver '
 FILES_gdbserver = '${bindir}/gdbserver'

@@ -10,6 +10,8 @@ SRC_URI = "ftp://ftp.samba.org/pub/ppp/ppp-${PV}.tar.gz \
 	file://cifdefroute.patch;patch=1 \
 	file://pppd-resolv-varrun.patch;patch=1 \
 	file://plugins-fix-CC.patch;patch=1 \
+	file://pppoatm-makefile.patch;patch=1 \
+	file://enable-ipv6.patch;patch=1 \
 	file://pon \
 	file://poff \
 	file://init \
@@ -40,14 +42,16 @@ do_install_append () {
 }
 
 CONFFILES_${PN} = "${sysconfdir}/ppp/pap-secrets ${sysconfdir}/ppp/chap-secrets ${sysconfdir}/ppp/options"
-PACKAGES += "ppp-oe ppp-radius ppp-winbind ppp-minconn ppp-password ppp-tools"
+PACKAGES += "ppp-oa ppp-oe ppp-radius ppp-winbind ppp-minconn ppp-password ppp-tools"
 FILES_${PN}        = "/etc /usr/bin /usr/sbin/chat /usr/sbin/pppd"
+FILES_ppp-oa       = "/usr/lib/pppd/2.4.3/pppoatm.so"
 FILES_ppp-oe       = "/usr/sbin/pppoe-discovery /usr/lib/pppd/2.4.3/rp-pppoe.so"
 FILES_ppp-radius   = "/usr/lib/pppd/2.4.3/radius.so /usr/lib/pppd/2.4.3/radattr.so /usr/lib/pppd/2.4.3/radrealms.so"
 FILES_ppp-winbind  = "/usr/lib/pppd/2.4.3/winbind.so"
 FILES_ppp-minconn  = "/usr/lib/pppd/2.4.3/minconn.so"
 FILES_ppp-password = "/usr/lib/pppd/2.4.3/pass*.so"
 FILES_ppp-tools    = "/usr/sbin/pppstats /usr/sbin/pppdump"
+DESCRIPTION_ppp-oa       = "Plugin for PPP needed for PPP-over-ATM"
 DESCRIPTION_ppp-oe       = "Plugin for PPP needed for PPP-over-Ethernet"
 DESCRIPTION_ppp-radius   = "Plugin for PPP that are related to RADIUS"
 DESCRIPTION_ppp-winbind  = "Plugin for PPP to authenticate against Samba or Windows"

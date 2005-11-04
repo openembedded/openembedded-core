@@ -1,0 +1,7 @@
+--- ppp-2.4.3/pppd/plugins/pppoatm/Makefile.linux.orig	2005-10-26 20:38:50.990298750 +0100
++++ ppp-2.4.3/pppd/plugins/pppoatm/Makefile.linux	2005-10-26 20:39:05.583210750 +0100
+@@ -1,4 +1,3 @@
+-CC	= gcc
+ COPTS	= -O2 -g
+ CFLAGS	= $(COPTS) -I../.. -I../../../include -fPIC
+ LDFLAGS	= -shared
