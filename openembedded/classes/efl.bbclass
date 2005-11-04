@@ -40,6 +40,7 @@ export IMLIB2_CONFIG		= "${STAGING_BINDIR}/imlib2-config${@binconfig_suffix(d)}"
 
 do_compile_prepend() {
 	find ${S} -name Makefile | xargs sed -i 's:/usr/include:${STAGING_INCDIR}:'
+	find ${S} -name Makefile | xargs sed -i 's:/usr/X11R6/include:${STAGING_INCDIR}:'
 }
 
 do_stage_append () {

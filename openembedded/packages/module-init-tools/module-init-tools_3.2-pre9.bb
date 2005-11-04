@@ -3,7 +3,7 @@ removing kernel modules for Linux (versions 2.5.48 and above). It serves \
 the same function that the modutils package serves for Linux 2.4."
 LICENSE = "GPL"
 SECTION = "base"
-PR = "r1"
+PR = "r0"
 
 PACKAGES =+ "module-init-tools-insmod-static module-init-tools-depmod"
 RDEPENDS_${PN} += "module-init-tools-depmod"
@@ -36,7 +36,7 @@ pkg_postinst_module-init-tools() {
 #!/bin/sh
 for f in sbin/insmod sbin/modprobe sbin/rmmod sbin/depmod sbin/modinfo; do
 bn=`basename $f`
-   update-alternatives --install /$f $bn /$f.26 20
+   update-alternatives --install /$f $bn /$f.26 60
 done
 update-alternatives --install /bin/lsmod bin-lsmod /bin/lsmod.26 60
 update-alternatives --install /sbin/lsmod lsmod /bin/lsmod.26 60
@@ -54,7 +54,7 @@ update-alternatives --remove lsmod /bin/lsmod.26
 
 pkg_postinst_module-init-tools-depmod() {
 #!/bin/sh
-update-alternatives --install /sbin/depmod depmod /sbin/depmod.26 20
+update-alternatives --install /sbin/depmod depmod /sbin/depmod.26 60
 }
 
 pkg_prerm_module-init-tools() {

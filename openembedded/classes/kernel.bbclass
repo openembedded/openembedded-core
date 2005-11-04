@@ -60,7 +60,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 kernel_do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
-	if ${KERNEL_MAJOR_VERSION} != "2.6"; then
+	if [ "${KERNEL_MAJOR_VERSION}" != "2.6" ]; then
 		oe_runmake dep CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 	fi
 	oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}"

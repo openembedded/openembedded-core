@@ -3,6 +3,7 @@ MAINTAINER="David Karlstrom <daka@thg.se>"
 include perl.inc
 
 SRC_URI += "file://config.sh-armeb-linux \
+	    file://config.sh-arm-linux \
 	    file://config.sh-i386-linux"
 
 PR = "r14"
@@ -17,6 +18,12 @@ do_configure() {
 	cp ${WORKDIR}/config.sh-i686-linux .
 	cp ${WORKDIR}/config.sh-i386-linux .
 	cp ${WORKDIR}/config.sh-armeb-linux .
+	# nslu2 LE uclibc builds do not work with the default config.sh
+	if test "${MACHINE}" = nslu2
+	then
+		rm -f ./config.sh-arm-linux
+		cp ${WORKDIR}/config.sh-arm-linux .
+	fi
 	for i in config.sh-*-linux; do
 		a="`echo $i|sed -e 's,^config.sh-,,; s,-linux$,,'`"
 		newfile="`echo $i|sed -e 's,-linux$,-linux-uclibc,g'`"
