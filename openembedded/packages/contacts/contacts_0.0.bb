@@ -25,3 +25,7 @@ FILES_${PN} += "${datadir}/icons/hicolor/48x48/apps/oh-contacts.png \
 		${datadir}/icons/hicolor/48x48/stock/*/*.png \
 		${datadir}/icons/hicolor/index.theme"
 
+pkg_postinst_${PN} () {
+	gtk-update-icon-cache /usr/share/icons/hicolor
+}
+
