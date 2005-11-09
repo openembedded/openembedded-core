@@ -6,7 +6,7 @@ Index: configure.in
  export privincludedir
  export privdatadir
  AC_CONFIG_SUBDIRS(calendar/libical)
--if test $dynamic_libdb = yes; then
+-if test $dynamic_libdb = no; then
 -        AC_CONFIG_SUBDIRS(libdb/dist)
 -fi
  
