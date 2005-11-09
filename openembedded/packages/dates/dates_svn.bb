@@ -17,5 +17,7 @@ CFLAGS_prepend = " -DFRAMES=5 "
 FILES_${PN} += "${datadir}/icons/hicolor/48x48/apps/oh-dates.png"
 
 pkg_postinst_${PN} () {
-	gtk-update-icon-cache /usr/share/icons/hicolor
+	if [ "x$D" != "x" ]; then 
+		gtk-update-icon-cache /usr/share/icons/hicolor
+	fi
 }
