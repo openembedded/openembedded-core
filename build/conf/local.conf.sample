@@ -20,9 +20,11 @@ PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}g++:gcc-cross"
 # BBDEBUG = "yes"
 
 MACHINE = "c7x0"
+#MACHINE = "akita"
+#MACHINE = "spitz"
 #MACHINE = "nokia770"
 
-DISTRO = "openzaurus-3.5.4"
+DISTRO = "poky"
 
 DISTRO_TYPE = "debug"
 KERNEL_VERSION = "2.6"
