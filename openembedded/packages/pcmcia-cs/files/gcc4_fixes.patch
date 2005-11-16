@@ -1,0 +1,26 @@
+Index: pcmcia-cs-3.2.8/debug-tools/lspnp.c
+===================================================================
+--- pcmcia-cs-3.2.8.orig/debug-tools/lspnp.c	2002-02-13 05:45:01.000000000 +0000
++++ pcmcia-cs-3.2.8/debug-tools/lspnp.c	2005-11-11 23:43:33.000000000 +0000
+@@ -496,7 +496,7 @@
+ 		dump_io_fixed(r); break;
+ 	    }
+ 	}
+-	(u_char *)p += sz + 1;
++	p = (union pnp_resource *) ((u_char *)p + sz + 1);
+     }
+     return (u_char *)p;
+ }
+Index: pcmcia-cs-3.2.8/debug-tools/setpnp.c
+===================================================================
+--- pcmcia-cs-3.2.8.orig/debug-tools/setpnp.c	2001-10-10 02:58:12.000000000 +0000
++++ pcmcia-cs-3.2.8/debug-tools/setpnp.c	2005-11-11 23:44:32.000000000 +0000
+@@ -163,7 +163,7 @@
+ 		break;
+ 	    }
+ 	}
+-	(u_char *)p += sz + 1;
++	p = (union pnp_resource *) ((u_char *)p + sz + 1);
+     }
+     return (u_char *)p;
+ }

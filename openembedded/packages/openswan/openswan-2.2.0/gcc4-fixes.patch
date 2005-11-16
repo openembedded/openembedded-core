@@ -1,0 +1,329 @@
+Index: openswan-2.2.0/linux/lib/libfreeswan/pfkey_v2_build.c
+===================================================================
+--- openswan-2.2.0.orig/linux/lib/libfreeswan/pfkey_v2_build.c	2004-04-12 02:59:06.000000000 +0000
++++ openswan-2.2.0/linux/lib/libfreeswan/pfkey_v2_build.c	2005-11-14 13:49:01.000000000 +0000
+@@ -173,9 +173,9 @@
+ 		SENDERR(EINVAL);
+ 	}
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_msg = (struct sadb_msg*)
+-	     MALLOC(sizeof(struct sadb_msg)))) {
++	pfkey_msg = (struct sadb_msg*)MALLOC(sizeof(struct sadb_msg));
++	*pfkey_ext = (struct sadb_ext*)pfkey_msg;
++	if(NULL == pfkey_msg) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_msg_hdr_build: "
+ 			"memory allocation failed\n");
+@@ -297,9 +297,9 @@
+ 		SENDERR(EINVAL);
+ 	}
+ 	
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_sa = (struct sadb_sa*)
+-	     MALLOC(sizeof(struct sadb_sa)))) {
++	pfkey_sa = (struct sadb_sa*)MALLOC(sizeof(struct sadb_sa));
++	*pfkey_ext = (struct sadb_ext*)pfkey_sa;
++	if (NULL == pfkey_sa) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_sa_build: "
+ 			"memory allocation failed\n");
+@@ -374,9 +374,9 @@
+ 		SENDERR(EINVAL);
+ 	}
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_lifetime = (struct sadb_lifetime*)
+-	     MALLOC(sizeof(struct sadb_lifetime)))) {
++	pfkey_lifetime = (struct sadb_lifetime*)MALLOC(sizeof(struct sadb_lifetime));
++	*pfkey_ext = (struct sadb_ext*)pfkey_lifetime;
++	if (NULL == pfkey_lifetime) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_lifetime_build: "
+ 			"memory allocation failed\n");
+@@ -563,10 +563,11 @@
+ 		SENDERR(EINVAL);
+ 	}
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_key = (struct sadb_key*)
+-	     MALLOC(sizeof(struct sadb_key) +
+-				    DIVUP(key_bits, 64) * IPSEC_PFKEYv2_ALIGN))) {
++	pfkey_key = (struct sadb_key*)
++		MALLOC(sizeof(struct sadb_key) +
++			DIVUP(key_bits, 64) * IPSEC_PFKEYv2_ALIGN);
++	*pfkey_ext = (struct sadb_ext*)pfkey_key;
++	if (NULL == pfkey_key) {
+ 		ERROR("pfkey_key_build: "
+ 			"memory allocation failed\n");
+ 		SENDERR(ENOMEM);
+@@ -643,10 +644,11 @@
+ 	if((ident_type == SADB_IDENTTYPE_USERFQDN) ) {
+ 	}
+ #endif
+-	    
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_ident = (struct sadb_ident*)
+-	     MALLOC(ident_len * IPSEC_PFKEYv2_ALIGN))) {
++
++	pfkey_ident = (struct sadb_ident*)
++		MALLOC(ident_len * IPSEC_PFKEYv2_ALIGN);
++	*pfkey_ext = (struct sadb_ext*)pfkey_ident;
++	if (NULL == pfkey_ident) {
+ 		ERROR("pfkey_ident_build: "
+ 			"memory allocation failed\n");
+ 		SENDERR(ENOMEM);
+@@ -696,10 +698,11 @@
+ 		(*pfkey_ext)->sadb_ext_type);
+ 	SENDERR(EINVAL); /* don't process these yet */
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_sens = (struct sadb_sens*)
+-	     MALLOC(sizeof(struct sadb_sens) +
+-		    (sens_len + integ_len) * sizeof(uint64_t)))) {
++	pfkey_sens = (struct sadb_sens*)
++		MALLOC(sizeof(struct sadb_sens) +
++		    (sens_len + integ_len) * sizeof(uint64_t));
++	*pfkey_ext = (struct sadb_ext*)pfkey_sens;
++	if (NULL == pfkey_sens) {
+ 		ERROR("pfkey_sens_build: "
+ 			"memory allocation failed\n");
+ 		SENDERR(ENOMEM);
+@@ -753,10 +756,11 @@
+ 		SENDERR(EINVAL);
+ 	}
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_prop = (struct sadb_prop*)
+-	     MALLOC(sizeof(struct sadb_prop) +
+-		    comb_num * sizeof(struct sadb_comb)))) {
++	pfkey_prop = (struct sadb_prop*)
++		MALLOC(sizeof(struct sadb_prop) +
++			comb_num * sizeof(struct sadb_comb));		
++	*pfkey_ext = (struct sadb_ext*)pfkey_prop;
++	if (NULL == pfkey_prop) {
+ 		ERROR("pfkey_prop_build: "
+ 			"memory allocation failed\n");
+ 		SENDERR(ENOMEM);
+@@ -833,11 +837,11 @@
+ 		SENDERR(EINVAL);
+ 	}
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_supported = (struct sadb_supported*)
+-	     MALLOC(sizeof(struct sadb_supported) +
+-					       alg_num *
+-					       sizeof(struct sadb_alg)))) {
++	pfkey_supported = (struct sadb_supported*)
++		MALLOC(sizeof(struct sadb_supported) +
++			alg_num * sizeof(struct sadb_alg));
++	*pfkey_ext = (struct sadb_ext*)pfkey_supported;
++	if (NULL == pfkey_supported) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_supported_build: "
+ 			"memory allocation failed\n");
+@@ -913,10 +917,11 @@
+ 			ntohl(min));
+ 		SENDERR(EEXIST);
+ 	}
+-	
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_spirange = (struct sadb_spirange*)
+-	     MALLOC(sizeof(struct sadb_spirange)))) {
++
++	pfkey_spirange = (struct sadb_spirange*)
++		MALLOC(sizeof(struct sadb_spirange));
++	*pfkey_ext = (struct sadb_ext*)pfkey_spirange;
++	if (NULL == pfkey_spirange) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_spirange_build: "
+ 			"memory allocation failed\n");
+@@ -958,9 +963,10 @@
+ 		(*pfkey_ext)->sadb_ext_type);
+ 	SENDERR(EINVAL); /* don't process these yet */
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)
+-	     pfkey_x_kmprivate = (struct sadb_x_kmprivate*)
+-	     MALLOC(sizeof(struct sadb_x_kmprivate)))) {
++	pfkey_x_kmprivate = (struct sadb_x_kmprivate*)
++		MALLOC(sizeof(struct sadb_x_kmprivate));
++	*pfkey_ext = (struct sadb_ext*)pfkey_x_kmprivate;
++	if (NULL == pfkey_x_kmprivate) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_x_kmprivate_build: "
+ 			"memory allocation failed\n");
+@@ -1009,8 +1015,10 @@
+ 		SENDERR(EINVAL);
+ 	}
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)pfkey_x_satype = (struct sadb_x_satype*)
+-	     MALLOC(sizeof(struct sadb_x_satype)))) {
++	pfkey_x_satype = (struct sadb_x_satype*)
++		MALLOC(sizeof(struct sadb_x_satype));
++	*pfkey_ext = (struct sadb_ext*)pfkey_x_satype;
++	if (NULL == pfkey_x_satype) {
+ 		ERROR("pfkey_x_satype_build: "
+ 			"memory allocation failed\n");
+ 		SENDERR(ENOMEM);
+@@ -1064,8 +1072,10 @@
+ 		"tunnel=%x netlink=%x xform=%x eroute=%x spi=%x radij=%x esp=%x ah=%x rcv=%x pfkey=%x ipcomp=%x verbose=%x?\n",
+ 		tunnel, netlink, xform, eroute, spi, radij, esp, ah, rcv, pfkey, ipcomp, verbose);
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)pfkey_x_debug = (struct sadb_x_debug*)
+-	     MALLOC(sizeof(struct sadb_x_debug)))) {
++	pfkey_x_debug = (struct sadb_x_debug*)
++		MALLOC(sizeof(struct sadb_x_debug));
++	*pfkey_ext = (struct sadb_ext*)pfkey_x_debug;
++	if (NULL == pfkey_x_debug) {
+ 		ERROR("pfkey_x_debug_build: "
+ 			"memory allocation failed\n");
+ 		SENDERR(ENOMEM);
+@@ -1122,8 +1132,10 @@
+ 		"pfkey_x_nat_t_type_build: "
+ 		"type=%d\n", type);
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)pfkey_x_nat_t_type = (struct sadb_x_nat_t_type*)
+-	     MALLOC(sizeof(struct sadb_x_nat_t_type)))) {
++	pfkey_x_nat_t_type = (struct sadb_x_nat_t_type*)
++		MALLOC(sizeof(struct sadb_x_nat_t_type));
++	*pfkey_ext = (struct sadb_ext*)pfkey_x_nat_t_type;
++	if (NULL == pfkey_x_nat_t_type) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_x_nat_t_type_build: "
+ 			"memory allocation failed\n");
+@@ -1174,8 +1186,10 @@
+ 		"pfkey_x_nat_t_port_build: "
+ 		"ext=%d, port=%d\n", exttype, port);
+ 
+-	if(!(*pfkey_ext = (struct sadb_ext*)pfkey_x_nat_t_port = (struct sadb_x_nat_t_port*)
+-	     MALLOC(sizeof(struct sadb_x_nat_t_port)))) {
++	pfkey_x_nat_t_port = (struct sadb_x_nat_t_port*)
++		MALLOC(sizeof(struct sadb_x_nat_t_port));
++	*pfkey_ext = (struct sadb_ext*)pfkey_x_nat_t_port;
++	if (NULL == pfkey_x_nat_t_port) {
+ 		DEBUGGING(PF_KEY_DEBUG_BUILD,
+ 			"pfkey_x_nat_t_port_build: "
+ 			"memory allocation failed\n");
+@@ -1328,7 +1342,12 @@
+ 			memcpy(pfkey_ext,
+ 			       extensions[ext],
+ 			       (extensions[ext])->sadb_ext_len * IPSEC_PFKEYv2_ALIGN);
+-			((char*)pfkey_ext) += (extensions[ext])->sadb_ext_len * IPSEC_PFKEYv2_ALIGN;
++			{
++				char *pfkey_ext_c = (char *)pfkey_ext;
++				
++				pfkey_ext_c += (extensions[ext])->sadb_ext_len * IPSEC_PFKEYv2_ALIGN;
++				pfkey_ext = (struct sadb_ext *)pfkey_ext_c;
++			}
+ 			/* Mark that we have seen this extension and remember the header location */
+ 			extensions_seen |= ( 1 << ext );
+ 		}
+Index: openswan-2.2.0/programs/pluto/connections.c
+===================================================================
+--- openswan-2.2.0.orig/programs/pluto/connections.c	2004-06-27 20:46:15.000000000 +0000
++++ openswan-2.2.0/programs/pluto/connections.c	2005-11-14 14:01:09.000000000 +0000
+@@ -30,6 +30,7 @@
+ 
+ #include <openswan.h>
+ #include <openswan/ipsec_policy.h>
++#include "pfkeyv2.h"
+ #include "kameipsec.h"
+ 
+ #include "constants.h"
+Index: openswan-2.2.0/programs/pluto/ipsec_doi.c
+===================================================================
+--- openswan-2.2.0.orig/programs/pluto/ipsec_doi.c	2004-09-02 01:24:23.000000000 +0000
++++ openswan-2.2.0/programs/pluto/ipsec_doi.c	2005-11-14 14:03:17.000000000 +0000
+@@ -31,6 +31,7 @@
+ 
+ #include <openswan.h>
+ #include <openswan/ipsec_policy.h>
++#include "pfkeyv2.h"
+ 
+ #include "constants.h"
+ #include "defs.h"
+Index: openswan-2.2.0/programs/pluto/rcv_whack.c
+===================================================================
+--- openswan-2.2.0.orig/programs/pluto/rcv_whack.c	2004-06-14 02:01:32.000000000 +0000
++++ openswan-2.2.0/programs/pluto/rcv_whack.c	2005-11-14 14:04:08.000000000 +0000
+@@ -31,6 +31,7 @@
+ #include <sys/queue.h>
+ 
+ #include <openswan.h>
++#include "pfkeyv2.h"
+ 
+ #include "constants.h"
+ #include "defs.h"
+Index: openswan-2.2.0/programs/pluto/log.c
+===================================================================
+--- openswan-2.2.0.orig/programs/pluto/log.c	2004-06-14 01:46:03.000000000 +0000
++++ openswan-2.2.0/programs/pluto/log.c	2005-11-14 14:02:33.000000000 +0000
+@@ -30,6 +30,7 @@
+ #include <sys/types.h>
+ 
+ #include <openswan.h>
++#include "pfkeyv2.h"
+ 
+ #include "constants.h"
+ #include "oswlog.h"
+Index: openswan-2.2.0/programs/pluto/spdb.c
+===================================================================
+--- openswan-2.2.0.orig/programs/pluto/spdb.c	2004-05-25 22:25:02.000000000 +0000
++++ openswan-2.2.0/programs/pluto/spdb.c	2005-11-14 14:02:55.000000000 +0000
+@@ -24,6 +24,7 @@
+ 
+ #include <openswan.h>
+ #include <openswan/ipsec_policy.h>
++#include "pfkeyv2.h"
+ 
+ #include "constants.h"
+ #include "oswlog.h"
+Index: openswan-2.2.0/programs/pluto/db_ops.c
+===================================================================
+--- openswan-2.2.0.orig/programs/pluto/db_ops.c	2004-06-04 01:59:33.000000000 +0000
++++ openswan-2.2.0/programs/pluto/db_ops.c	2005-11-14 13:54:10.000000000 +0000
+@@ -181,7 +181,13 @@
+ 	ctx->trans0 = ctx->prop.trans = new_trans;
+ 	/* update trans_cur (by offset) */
+ 	offset = (char *)(new_trans) - (char *)(old_trans);
+-	(char *)(ctx->trans_cur) += offset;
++
++	{
++	  char *cctx = (char *)(ctx->trans_cur);
++	  
++	  cctx += offset;
++	  ctx->trans_cur = (struct db_trans *)cctx;
++	}
+ 	/* update elem count */
+ 	ctx->max_trans = max_trans;
+ 	PFREE_ST(old_trans, db_trans_st);
+@@ -213,12 +219,25 @@
+ 	
+ 	/* update attrs0 and attrs_cur (obviously) */
+ 	offset = (char *)(new_attrs) - (char *)(old_attrs);
+-	(char *)ctx->attrs0 += offset;
+-	(char *)ctx->attrs_cur += offset;
++	{
++	  char *actx = (char *)(ctx->attrs0);
++	  
++	  actx += offset;
++	  ctx->attrs0 = (struct db_attr *)actx;
++	  
++	  actx = (char *)ctx->attrs_cur;
++	  actx += offset;
++	  ctx->attrs_cur = (struct db_attr *)actx;
++	}
++
+ 	/* for each transform, rewrite attrs pointer by offsetting it */
+-	for (t=ctx->prop.trans, ti=0; ti < ctx->prop.trans_cnt; t++, ti++) {
+-		(char *)(t->attrs) += offset;
++        for (t=ctx->prop.trans, ti=0; ti < ctx->prop.trans_cnt; t++, ti++) {
++			char *actx = (char *)(t->attrs);
++	 
++			actx += offset;
++			t->attrs = (struct db_attr *)actx;
+ 	}
++
+ 	/* update elem count */
+ 	ctx->max_attrs = max_attrs;
+ 	PFREE_ST(old_attrs, db_attrs_st);

@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "GPL"
 DEPENDS = "virtual/kernel"
-PR = "r22"
+PR = "r23"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmcia-cs/pcmcia-cs-${PV}.tar.gz \
 	   file://busybox.patch;patch=1 \
@@ -12,6 +12,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmcia-cs/pcmcia-cs-${PV}.tar.gz \
 	   file://automount.patch;patch=1 \
 	   file://ratoc-cfu1u.patch;patch=1 \
 	   file://no-hostap-cards.patch;patch=1 \
+	   file://gcc4_fixes.patch;patch=1 \
 	   file://pcmcia \
 	   file://ide.opts \
 	   file://wireless.opts \
