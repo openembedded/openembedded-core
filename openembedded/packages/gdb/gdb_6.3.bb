@@ -15,6 +15,7 @@ inherit autotools gettext
 
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
 	   file://uclibc.patch;patch=1 \
+	   file://kill_arm_map_symbols.patch;patch=1 \
 	   file://gdbserver-cflags-last.diff;patch=1;pnum=0"
 
 LDFLAGS_append = " -s"
