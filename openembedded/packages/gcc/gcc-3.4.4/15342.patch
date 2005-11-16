@@ -1,0 +1,22 @@
+--- gcc/gcc/regrename.c~	2004-01-14 17:55:20.000000000 +0000
++++ gcc/gcc/regrename.c	2005-02-28 07:24:25.893015200 +0000
+@@ -671,7 +671,8 @@
+ 
+     case SET:
+       scan_rtx (insn, &SET_SRC (x), class, action, OP_IN, 0);
+-      scan_rtx (insn, &SET_DEST (x), class, action, OP_OUT, 0);
++      scan_rtx (insn, &SET_DEST (x), class, action,
++		GET_CODE (PATTERN (insn)) == COND_EXEC ? OP_INOUT : OP_OUT, 0);
+       return;
+ 
+     case STRICT_LOW_PART:
+@@ -696,7 +697,8 @@
+       abort ();
+ 
+     case CLOBBER:
+-      scan_rtx (insn, &SET_DEST (x), class, action, OP_OUT, 1);
++      scan_rtx (insn, &SET_DEST (x), class, action,
++		GET_CODE (PATTERN (insn)) == COND_EXEC ? OP_INOUT : OP_OUT, 0);
+       return;
+ 
+     case EXPR_LIST:

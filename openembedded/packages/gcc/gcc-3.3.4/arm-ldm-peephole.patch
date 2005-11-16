@@ -1,0 +1,91 @@
+2004-03-19  Philip Blundell  <philb@gnu.org>
+
+	* config/arm/arm.c (adjacent_mem_locations): Reject location pairs
+	where both offsets are nonzero if target is Harvard architecture.
+	(load_multiple_sequence, store_multiple_sequence): Avoid two-word
+	LDM/STM on XScale unless -Os.
+	* config/arm/arm.md (arith_adjacentmem): Inhibit if tuning for
+	XScale and not -Os.
+	* genpeep.c: Have generated code include flags.h.
+
+--- gcc/genpeep.c~	2001-12-02 00:04:19.000000000 +0000
++++ gcc/genpeep.c	2004-03-19 11:17:18.000000000 +0000
+@@ -402,6 +402,7 @@
+   printf ("#include \"recog.h\"\n");
+   printf ("#include \"except.h\"\n\n");
+   printf ("#include \"function.h\"\n\n");
++  printf ("#include \"flags.h\"\n\n");
+ 
+   printf ("#ifdef HAVE_peephole\n");
+   printf ("extern rtx peep_operand[];\n\n");
+
+--- gcc/config/arm/arm.md~	2004-03-11 15:28:01.000000000 +0000
++++ gcc/config/arm/arm.md	2004-03-19 13:00:03.000000000 +0000
+@@ -7958,13 +7958,16 @@
+    (set_attr "length" "4,8,8")]
+ )
+ 
++; Try to convert LDR+LDR+arith into [add+]LDM+arith
++; On XScale, LDM is always slower than two LDRs, so only do this if
++; optimising for size.
+ (define_insn "*arith_adjacentmem"
+   [(set (match_operand:SI 0 "s_register_operand" "=r")
+ 	(match_operator:SI 1 "shiftable_operator"
+ 	 [(match_operand:SI 2 "memory_operand" "m")
+ 	  (match_operand:SI 3 "memory_operand" "m")]))
+    (clobber (match_scratch:SI 4 "=r"))]
+-  "TARGET_ARM && adjacent_mem_locations (operands[2], operands[3])"
++  "TARGET_ARM && (!arm_tune_xscale || optimize_size) && adjacent_mem_locations (operands[2], operands[3])"
+   "*
+   {
+     rtx ldm[3];
+@@ -7999,7 +8002,9 @@
+       }
+    if (val1 && val2)
+       {
++	/* This would be a loss on a Harvard core, but adjacent_mem_locations()
++	   will prevent it from happening.  */
+ 	rtx ops[3];
+ 	ldm[0] = ops[0] = operands[4];
+ 	ops[1] = XEXP (XEXP (operands[2], 0), 0);
+
+--- gcc/config/arm/arm.c~	2004-03-11 15:28:01.000000000 +0000
++++ gcc/config/arm/arm.c	2004-03-19 15:36:03.000000000 +0000
+@@ -3818,8 +3818,11 @@
+ 	 sequence.  */
+       if (!const_ok_for_op (PLUS, val0) || !const_ok_for_op (PLUS, val1))
+ 	return 0;
+-      
+-      return (reg0 == reg1) && ((val1 - val0) == 4 || (val0 - val1) == 4);
++
++      /* For Harvard cores, only accept pairs where one offset is zero.
++         See comment in load_multiple_sequence.  */
++      return (reg0 == reg1) && ((val1 - val0) == 4 || (val0 - val1) == 4)
++	&& (!arm_ld_sched || val0 == 0 || val1 == 0);
+     }
+   return 0;
+ }
+@@ -4075,6 +4078,11 @@
+       *load_offset = unsorted_offsets[order[0]];
+     }
+ 
++  /* For XScale a two-word LDM is a performance loss, so only do this if
++     size is more important.  See comments in arm_gen_load_multiple.  */
++  if (nops == 2 && arm_tune_xscale && !optimize_size)
++    return 0;
++
+   if (unsorted_offsets[order[0]] == 0)
+     return 1; /* ldmia */
+ 
+@@ -4307,6 +4315,11 @@
+       *load_offset = unsorted_offsets[order[0]];
+     }
+ 
++  /* For XScale a two-word LDM is a performance loss, so only do this if
++     size is more important.  See comments in arm_gen_load_multiple.  */
++  if (nops == 2 && arm_tune_xscale && !optimize_size)
++    return 0;
++
+   if (unsorted_offsets[order[0]] == 0)
+     return 1; /* stmia */
+ 

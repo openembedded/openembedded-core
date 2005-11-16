@@ -1,0 +1,32 @@
+Index: gcc-3.4.3/gcc/configure
+===================================================================
+--- gcc-3.4.3.orig/gcc/configure	2004-11-04 23:14:05.000000000 -0500
++++ gcc-3.4.3/gcc/configure	2005-03-11 14:41:06.373910320 -0500
+@@ -9916,11 +9916,6 @@
+     BUILD_PREFIX=build-
+     BUILD_PREFIX_1=build-
+     BUILD_CFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CFLAGS_FOR_BUILD)'
+-
+-    if test "x$TARGET_SYSTEM_ROOT" = x; then
+-	STMP_FIXINC=
+-	STMP_FIXPROTO=
+-    fi
+ fi
+ 
+ # Expand extra_headers to include complete path.
+Index: gcc-3.4.3/gcc/configure.ac
+===================================================================
+--- gcc-3.4.3.orig/gcc/configure.ac	2004-09-23 20:43:53.000000000 -0400
++++ gcc-3.4.3/gcc/configure.ac	2005-03-11 14:40:55.256600408 -0500
+@@ -1524,11 +1524,6 @@
+     BUILD_PREFIX=build-
+     BUILD_PREFIX_1=build-
+     BUILD_CFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CFLAGS_FOR_BUILD)'
+-
+-    if test "x$TARGET_SYSTEM_ROOT" = x; then
+-	STMP_FIXINC=
+-	STMP_FIXPROTO=
+-    fi
+ fi
+ 
+ # Expand extra_headers to include complete path.

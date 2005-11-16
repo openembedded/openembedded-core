@@ -1,0 +1,22 @@
+--- gcc-4.0.0/Makefile.tpl.old	2005-06-10 13:05:09.000000000 +0100
++++ gcc-4.0.0/Makefile.tpl	2005-06-10 13:05:10.000000000 +0100
+@@ -339,7 +339,7 @@
+ NM = @NM@
+ 
+ LD = @LD@
+-LDFLAGS = 
++LDFLAGS = @LDFLAGS@
+ 
+ RANLIB = @RANLIB@
+ 
+--- gcc-4.0.0/Makefile.in.old	2005-06-10 17:13:12.000000000 +0100
++++ gcc-4.0.0/Makefile.in	2005-06-10 17:13:22.000000000 +0100
+@@ -336,7 +336,7 @@
+ NM = @NM@
+ 
+ LD = @LD@
+-LDFLAGS = 
++LDFLAGS = @LDFLAGS@
+ 
+ RANLIB = @RANLIB@
+ 
