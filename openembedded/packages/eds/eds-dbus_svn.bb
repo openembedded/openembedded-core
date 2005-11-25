@@ -16,7 +16,7 @@ S = "${WORKDIR}/trunk"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--without-openldap --disable-nntp --disable-gtk-doc --with-dbus --without-libgnome --disable-soup --with-libdb41=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --without-camel"
+EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb41=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-camel --disable-nntp --disable-gtk-doc"
 
 acpaths = " -I ${STAGING_DATADIR}/aclocal/gnome-macros "
 
