@@ -7,8 +7,7 @@ SECTION = "net"
 PRIORITY = "optional"
 PR = "r0"
 
-SRC_URI = "http://www.freedesktop.org/~lennart/avahi-${PV}.tar.gz \
-	   file://alignment-fix.patch;patch=1"
+SRC_URI = "http://www.freedesktop.org/~lennart/avahi-${PV}.tar.gz"
 
 PACKAGES = "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-dev avahi-doc"
 
@@ -30,7 +29,7 @@ FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
 
 CONFFILES_avahi-daemon = "${sysconfdir}/avahi/avahi-daemon.conf"
 
-EXTRA_OECONF = "--with-distro=debian --disable-mono --disable-mono-docs --disable-gtk  --disable-qt3  --disable-qt4 --disable-python"
+EXTRA_OECONF = "--with-distro=debian --disable-gdbm --disable-gtk --disable-mono --disable-monodoc --disable-qt3 --disable-qt4 --disable-python"
 inherit autotools
 inherit update-rc.d
 
@@ -50,4 +49,3 @@ pkg_postrm_avahi-daemon () {
 	deluser avahi || true
 	delgroup avahi || true
 }
-

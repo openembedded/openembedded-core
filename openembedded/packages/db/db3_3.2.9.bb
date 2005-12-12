@@ -2,7 +2,14 @@ SECTION = "libs"
 DESCRIPTION = "Berkeley DB v3."
 HOMEPAGE = "http://www.sleepycat.com"
 LICENSE = "BSD Sleepycat"
-PR = "r1"
+PR = "r2"
+VIRTUAL_NAME ?= "virtual/db"
+CONFLICTS = "db"
+
+# it doesn't make any sense to have multiple relational
+# databases on an embedded machine, virtual/db allows
+# a build to select the desired one.
+PROVIDES += "${VIRTUAL_NAME}"
 
 SRC_URI = "ftp://sleepycat1.inetu.net/releases/db-${PV}.tar.gz \
 	   file://autofoo.patch;patch=1"

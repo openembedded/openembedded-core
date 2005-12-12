@@ -1,4 +1,6 @@
 SECTION = "libs"
+VIRTUAL_NAME = "virtual/db-native"
+CONFLICTS = "db-native"
 inherit native
 include db3_${PV}.bb
 
