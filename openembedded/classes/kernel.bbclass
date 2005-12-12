@@ -11,6 +11,13 @@ KERNEL_IMAGETYPE = "zImage"
 
 KERNEL_PRIORITY = "${@bb.data.getVar('PV',d,1).split('-')[0].split('.')[-1]}"
 
+# [jbowler 20051109] ${PV}${KERNEL_LOCALVERSION} is used throughout this
+# .bbclass to (apparently) find the full 'uname -r' kernel version, this
+# should be the same as UTS_RELEASE or (in this file) KERNEL_VERSION:
+#  KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(LOCALVERSION)
+# but since this is not certain this overridable setting is used here:
+KERNEL_RELEASE ?= "${PV}${KERNEL_LOCALVERSION}"
+
 KERNEL_CCSUFFIX ?= ""
 KERNEL_LDSUFFIX ?= ""
 
@@ -96,9 +103,9 @@ kernel_do_stage() {
 		cp -fR drivers/sound/*.h ${STAGING_KERNEL_DIR}/include/drivers/sound/
 	fi
 
-	install -m 0644 .config ${STAGING_KERNEL_DIR}/config-${PV}${KERNEL_LOCALVERSION}
-	ln -sf config-${PV}${KERNEL_LOCALVERSION} ${STAGING_KERNEL_DIR}/.config
-	ln -sf config-${PV}${KERNEL_LOCALVERSION} ${STAGING_KERNEL_DIR}/kernel-config
+	install -m 0644 .config ${STAGING_KERNEL_DIR}/config-${KERNEL_RELEASE}
+	ln -sf config-${KERNEL_RELEASE} ${STAGING_KERNEL_DIR}/.config
+	ln -sf config-${KERNEL_RELEASE} ${STAGING_KERNEL_DIR}/kernel-config
 	echo "${KERNEL_VERSION}" >${STAGING_KERNEL_DIR}/kernel-abiversion
 	echo "${S}" >${STAGING_KERNEL_DIR}/kernel-source
 	echo "${KERNEL_CCSUFFIX}" >${STAGING_KERNEL_DIR}/kernel-ccsuffix
@@ -113,7 +120,7 @@ kernel_do_stage() {
 	fi
 	cp -fR include/config* ${STAGING_KERNEL_DIR}/include/	
 	install -m 0644 ${KERNEL_OUTPUT} ${STAGING_KERNEL_DIR}/${KERNEL_IMAGETYPE}
-	install -m 0644 System.map ${STAGING_KERNEL_DIR}/System.map-${PV}${KERNEL_LOCALVERSION}
+	install -m 0644 System.map ${STAGING_KERNEL_DIR}/System.map-${KERNEL_RELEASE}
 	[ -e Module.symvers ] && install -m 0644 Module.symvers ${STAGING_KERNEL_DIR}/
 
 	cp -fR scripts ${STAGING_KERNEL_DIR}/
@@ -129,9 +136,9 @@ kernel_do_install() {
 	
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -d ${D}/boot
-	install -m 0644 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${PV}${KERNEL_LOCALVERSION}
-	install -m 0644 System.map ${D}/boot/System.map-${PV}${KERNEL_LOCALVERSION}
-	install -m 0644 .config ${D}/boot/config-${PV}${KERNEL_LOCALVERSION}
+	install -m 0644 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_RELEASE}
+	install -m 0644 System.map ${D}/boot/System.map-${KERNEL_RELEASE}
+	install -m 0644 .config ${D}/boot/config-${KERNEL_RELEASE}
 	install -d ${D}/etc/modutils
 
         # Check if scripts/genksyms exists and if so, build it
@@ -147,11 +154,11 @@ kernel_do_configure() {
 }
 
 pkg_postinst_kernel () {
-	update-alternatives --install /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${PV}${KERNEL_LOCALVERSION} ${KERNEL_PRIORITY} || true
+	update-alternatives --install /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_RELEASE} ${KERNEL_PRIORITY} || true
 }
 
 pkg_postrm_kernel () {
-	update-alternatives --remove ${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${PV}${KERNEL_LOCALVERSION} || true
+	update-alternatives --remove ${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_RELEASE} || true
 }
 
 inherit cml1
@@ -169,7 +176,7 @@ ALLOW_EMPTY_kernel-image = "1"
 
 pkg_postinst_modules () {
 if [ -n "$D" ]; then
-	${HOST_PREFIX}depmod -A -b $D -F ${STAGING_KERNEL_DIR}/System.map-${PV}${KERNEL_LOCALVERSION} ${KERNEL_VERSION}
+	${HOST_PREFIX}depmod -A -b $D -F ${STAGING_KERNEL_DIR}/System.map-${KERNEL_RELEASE} ${KERNEL_VERSION}
 else
 	depmod -A
 	update-modules || true
@@ -230,7 +237,7 @@ python populate_packages_prepend () {
 			bb.error("D not defined")
 			return
 
-		kernelver = bb.data.getVar('PV', d, 1) + bb.data.getVar('KERNEL_LOCALVERSION', d, 1)
+		kernelver = bb.data.getVar('KERNEL_RELEASE', d, 1)
 		kernelver_stripped = kernelver
 		m = re.match('^(.*-hh.*)[\.\+].*$', kernelver)
 		if m:

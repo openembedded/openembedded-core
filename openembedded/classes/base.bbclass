@@ -124,6 +124,7 @@ oe_libinstall() {
 	silent=""
 	require_static=""
 	require_shared=""
+	staging_install=""
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-C)
@@ -154,6 +155,10 @@ oe_libinstall() {
 	destpath="$1"
 	if [ -z "$destpath" ]; then
 		oefatal "oe_libinstall: no destination path specified"
+	fi
+	if echo "$destpath/" | egrep '^${STAGING_LIBDIR}/' >/dev/null
+	then
+		staging_install=1
 	fi
 
 	__runcmd () {
@@ -188,7 +193,15 @@ oe_libinstall() {
 	fi
 	dotlai=$libname.lai
 	if [ -f "$dotlai" -a -n "$libtool" ]; then
-		__runcmd install -m 0644 $dotlai $destpath/$libname.la
+		if test -n "$staging_install"
+		then
+			# stop libtool using the final directory name for libraries
+			# in staging:
+			__runcmd rm -f $destpath/$libname.la
+			__runcmd sed -e 's/^installed=yes$/installed=no/' $dotlai >$destpath/$libname.la
+		else
+			__runcmd install -m 0644 $dotlai $destpath/$libname.la
+		fi
 	fi
 
 	for name in $library_names; do

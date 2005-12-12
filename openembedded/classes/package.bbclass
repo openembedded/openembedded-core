@@ -259,6 +259,8 @@ python populate_packages () {
 		write_if_exists(f, pkg, 'FILES')
 		write_if_exists(f, pkg, 'pkg_postinst')
 		write_if_exists(f, pkg, 'pkg_postrm')
+		write_if_exists(f, pkg, 'pkg_preinst')
+		write_if_exists(f, pkg, 'pkg_prerm')
 	f.close()
 	bb.build.exec_func("read_subpackage_metadata", d)
 }
