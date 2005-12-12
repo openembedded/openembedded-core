@@ -1,12 +1,13 @@
 SECTION = "base"
 LICENSE = "GPL"
 DESCRIPTION = "Allows you to set-up and manipulate the Linux console."
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lct/console-tools-${PV}.tar.gz \
            file://codepage.patch;patch=1 \
            file://configure.patch;patch=1 \
            file://compile.patch;patch=1 \
+           file://kbdrate.patch;patch=1 \
            file://config/*.m4"
 
 export SUBDIRS = "fontfiletools vttools kbdtools screenfonttools contrib \
@@ -43,4 +44,4 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove deallocvt deallocvt.${PN}
 	update-alternatives --remove openvt openvt.${PN}
 }
-			
+
