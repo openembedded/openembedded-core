@@ -14,7 +14,7 @@ EXTRA_OECONF_append_h2200 = " --enable-small-icons "
 EXTRA_OECONF_append_collie = " --enable-small-icons "
 EXTRA_OECONF_append_poodle = " --enable-small-icons "
 EXTRA_OECONF_append_mnci = " --enable-small-icons "
-EXTRA_OECONF_append_integral = " --enable-small-icons "
+EXTRA_OECONF_append_integral13 = " --enable-small-icons "
 
 FILES_${PN} = "${bindir} \
 	       ${datadir}/applications \
