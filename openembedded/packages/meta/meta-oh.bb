@@ -36,6 +36,7 @@ oh-task-base = "\
     gtk-clearlooks-engine \
     eds-dbus \
     contacts \
+    osso-addressbook \
     dates \
     leafpad \
     puzzles \
