@@ -1,8 +1,8 @@
 PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
-DESCRIPTION = "Meta-package for OpenHand Palmtop Environment"
+DESCRIPTION = "Meta-package for OpenedHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r17"
+PR = "r18"
 
 ALLOW_EMPTY = "1"
 
@@ -59,6 +59,7 @@ oh-task-base = "\
 #    xrdb \
 
 RDEPENDS_oh-task-base := "${oh-task-base} \
+                          avahi-daemon \
                           gdk-pixbuf-loader-png \
 			  gdk-pixbuf-loader-xpm \
 			  gdk-pixbuf-loader-jpeg \
@@ -68,6 +69,6 @@ RDEPENDS_oh-task-base := "${oh-task-base} \
 			  pango-module-basic-x \
 			  pango-module-basic-fc"
 
-DEPENDS += " ${oh-task-base} tslib"
+DEPENDS += " ${oh-task-base} avahi tslib"
 
 LICENSE = "MIT"
