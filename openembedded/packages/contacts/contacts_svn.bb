@@ -1,16 +1,21 @@
 LICENSE = "LGPL"
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
+DEPENDS = "glib-2.0 gtk+ libglade eds-dbus gnome-vfs"
+RDEPENDS = "gnome-vfs-plugin-file"
+RRECOMMENDS = "gnome-vfs-plugin-http"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Contacts is an address-book application."
-PR = "r5"
 
-SRC_URI = "file:///tmp/${PN}-${PV}.tar.gz \
+SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 	   file://stock_contact.png \
 	   file://stock_person.png \
 	   file://index.theme"
 
 inherit autotools pkgconfig
+
+S = "${WORKDIR}/trunk"
+
+EXTRA_OECONF = "--enable-gnome-vfs"
 
 do_install_append () {
 	install -d ${D}/${datadir}/icons/hicolor/48x48/stock/net
