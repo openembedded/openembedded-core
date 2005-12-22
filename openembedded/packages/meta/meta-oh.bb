@@ -2,7 +2,7 @@ PACKAGES = "oh-base-depends oh-task-base"
 # oh-task-base
 DESCRIPTION = "Meta-package for OpenedHand Palmtop Environment"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r18"
+PR = "r19"
 
 ALLOW_EMPTY = "1"
 
@@ -31,7 +31,6 @@ oh-task-base = "\
     chkhinge26 \
     usbinit \
     settings-daemon \
-    minimo \
     gtk+ \
     gtk-clearlooks-engine \
     eds-dbus \
@@ -51,8 +50,7 @@ oh-task-base = "\
     sysfsutils \
     xauth"
 
-#    avahi-daemon \
-#    avahi-dnsconfd \
+#    minimo \
 #    teleport \
 #    xst \
 #    libgtkstylus \

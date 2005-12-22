@@ -5,6 +5,7 @@ inherit base
 EXCLUDE_FROM_WORLD = "1"
 
 PACKAGES = ""
+PACKAGE_ARCH = "native"
 
 TARGET_ARCH = "${BUILD_ARCH}"
 TARGET_OS = "${BUILD_OS}"
