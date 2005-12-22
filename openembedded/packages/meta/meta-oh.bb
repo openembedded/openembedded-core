@@ -37,6 +37,7 @@ oh-task-base = "\
     eds-dbus \
     contacts \
     osso-addressbook \
+    oprofile \
     dates \
     leafpad \
     puzzles \
@@ -64,6 +65,7 @@ RDEPENDS_oh-task-base := "${oh-task-base} \
 			  gdk-pixbuf-loader-xpm \
 			  gdk-pixbuf-loader-jpeg \
 			  gtk-theme-clearlooks \
+                          kernel-module-oprofile \
                           tslib-calibrate \
                           tslib-tests \
 			  pango-module-basic-x \

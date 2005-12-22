@@ -1,6 +1,7 @@
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ libglade eds-dbus libgalago"
-PR = "r0"
+DEPENDS = "glib-2.0 gtk+ libglade eds-dbus libgalago galago-daemon eds-feed"
+RDEPENDS = "galago-daemon eds-feed"
+PR = "r1"
 
 SRC_URI = "file:///tmp/${PN}-${PV}.tar.gz \
 	   file://stock_contact.png \
