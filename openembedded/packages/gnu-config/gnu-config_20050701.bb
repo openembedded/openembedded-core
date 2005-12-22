@@ -9,7 +9,7 @@ FIXEDCVSDATE = "${@bb.data.getVar('FILE', d, 1).split('_')[-1].split('.')[0]}"
 PV = "0.1cvs${FIXEDCVSDATE}"
 PR = "r4"
 
-SRC_URI = "cvs://anoncvs:@savannah.gnu.org/cvsroot/config;module=config;method=ext;rsh=ssh;date=${FIXEDCVSDATE} \
+SRC_URI = "cvs://anonymous@cvs.savannah.gnu.org/cvsroot/config;module=config;method=pserver;date=${FIXEDCVSDATE} \
 	   file://config-guess-uclibc.patch;patch=1 \
            file://gnu-configize.in"
 S = "${WORKDIR}/config"
