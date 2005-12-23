@@ -6,7 +6,7 @@ DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
 #RRECOMMENDS = "gnome-vfs-plugin-http"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Contacts is an address-book application."
-PR = "r1"
+PR = "r2"
 
 PV = "0.1+svn-${CVSDATE}"
 
@@ -19,7 +19,7 @@ inherit autotools pkgconfig
 
 S = "${WORKDIR}/trunk"
 
-#EXTRA_OECONF = "--enable-gnome-vfs"
+EXTRA_OECONF = "--enable-gnome-vfs"
 
 do_install_append () {
 	install -d ${D}/${datadir}/icons/hicolor/48x48/stock/net
