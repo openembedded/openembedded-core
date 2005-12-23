@@ -1,0 +1,62 @@
+Index: eds-feed-0.3.2/configure.ac
+===================================================================
+--- eds-feed-0.3.2.orig/configure.ac	2005-08-28 19:11:39.000000000 +0000
++++ eds-feed-0.3.2/configure.ac	2005-12-16 09:22:10.000000000 +0000
+@@ -65,7 +65,7 @@
+ 	libxml-2.0)
+ 
+ # Check which version of eds we're using
+-PKG_CHECK_MODULES(EDS, libebook-1.2 >= 1.1.4 libedata-book-1.2 >= 1.1.4)
++PKG_CHECK_MODULES(EDS, libebook-1.2 >= 1.1.4)
+ 
+ PACKAGE_CFLAGS="$PACKAGE_CFLAGS $EDS_CFLAGS"
+ PACKAGE_LIBS="$PACKAGE_LIBS $EDS_LIBS"
+Index: eds-feed-0.3.2/src/main.c
+===================================================================
+--- eds-feed-0.3.2.orig/src/main.c	2005-08-21 07:26:02.000000000 +0000
++++ eds-feed-0.3.2/src/main.c	2005-12-16 09:24:38.000000000 +0000
+@@ -20,17 +20,11 @@
+  */
+ #include <glib.h>
+ #include <libgalago/galago.h>
+-#include <libedata-book/Evolution-DataServer-Addressbook.h>
+ 
+ #include <libebook/e-book.h>
+-#include <libedata-book/e-data-book-factory.h>
+-#include <bonobo/bonobo-main.h>
+ 
+ #include <string.h>
+ 
+-#define E_DATA_BOOK_FACTORY_OAF_ID \
+-    "OAFIID:GNOME_Evolution_DataServer_BookFactory"
+-
+ static EBookView *book_view = NULL;
+ static EBook *book = NULL;
+ static gulong book_view_tag = 0;
+@@ -157,8 +151,8 @@
+ 		galago_person_set_photo(person, NULL);
+ 	else
+ 	{
+-		galago_photo_new(person, (unsigned char *)ephoto->data,
+-						 ephoto->length);
++//		galago_photo_new(person, (unsigned char *)ephoto->data,
++//						 ephoto->length);
+ 	}
+ }
+ 
+@@ -294,15 +288,6 @@
+ 
+ 	galago_core_set_exit_with_daemon(TRUE);
+ 
+-	if (!bonobo_init_full(NULL, NULL, bonobo_activation_orb_get(),
+-						  CORBA_OBJECT_NIL, CORBA_OBJECT_NIL))
+-	{
+-		fprintf(stderr, "Unable to initialize bonobo.\n");
+-		exit(1);
+-	}
+-
+-	bonobo_activate();
+-
+ 	setup_book_view();
+ 	setup_services();
+ 
