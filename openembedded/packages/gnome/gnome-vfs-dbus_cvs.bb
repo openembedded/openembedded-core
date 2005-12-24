@@ -1,7 +1,7 @@
 DEFAULT_PREFERENCE = "-1"
 
 SECTION = "x11/utils"
-DEPENDS = "gtk+ glib-2.0 gconf dbus libxml2 zlib bzip2 hal gnome-mime-data"
+DEPENDS = "gtk+ glib-2.0 gconf dbus libxml2 zlib bzip2 gnome-mime-data"
 DESCRIPTION = "Virtual file system library using DBUS for communication."
 LICENSE = "GPLv2"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
@@ -11,7 +11,7 @@ RPROVIDES_${PN}-dev = "gnome-vfs-dev"
 RRECOMMENDS_${PN} = "gnome-vfs-plugin-file shared-mime-info"
 
 PV = "2.12.0cvs${CVSDATE}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "svn://anonymous@developer.imendio.com/svn/gnome-vfs-dbus;module=trunk;proto=http \
 	   file://no-gtk-doc.patch;patch=1 \
@@ -20,7 +20,7 @@ S = "${WORKDIR}/trunk"
 
 inherit pkgconfig autotools
 
-EXTRA_OECONF = "--with-ipc=dbus --enable-hal --disable-gtk-doc --disable-more-warnings --disable-howl"
+EXTRA_OECONF = "--with-ipc=dbus --disable-hal --disable-gtk-doc --disable-more-warnings --disable-howl"
 
 FILES_${PN} += " ${libdir}/vfs ${datadir}/dbus-1/services/dbus-vfs-daemon.service"
 FILES_${PN}-dev += " ${libdir}/gnome-vfs-2.0/modules/*.a ${libdir}/gnome-vfs-2.0/modules/*.la ${libdir}/gnome-vfs-2.0/include"
