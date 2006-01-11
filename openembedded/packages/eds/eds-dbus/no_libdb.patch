@@ -1,11 +1,11 @@
 Index: configure.in
 ===================================================================
---- trunk/configure.in	(revision 285)
+--- trunk/configure.in	(revision 306)
 +++ trunk/configure.in	(working copy)
-@@ -1333,9 +1333,6 @@
- export privincludedir
- export privdatadir
- AC_CONFIG_SUBDIRS(calendar/libical)
+@@ -1353,9 +1353,6 @@
+ if test $enable_calendar = yes; then
+         AC_CONFIG_SUBDIRS(calendar/libical)
+ fi
 -if test $dynamic_libdb = no; then
 -        AC_CONFIG_SUBDIRS(libdb/dist)
 -fi
