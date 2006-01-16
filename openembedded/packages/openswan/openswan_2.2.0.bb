@@ -7,7 +7,7 @@ MAINTAINER = "Bruno Randolf <bruno.randolf@4g-systems.biz>"
 DEPENDS = "gmp flex-native"
 RRECOMMENDS = "kernel-module-ipsec"
 RDEPENDS_nylon = "perl"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://www.openswan.org/download/openswan-${PV}.tar.gz \
 	   file://openswan-2.2.0-gentoo.patch;patch=1 \
