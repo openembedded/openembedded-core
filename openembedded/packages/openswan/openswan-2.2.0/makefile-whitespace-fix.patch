@@ -1,0 +1,11 @@
+--- openswan-2.2.0/programs/Makefile.program.orig	2005-12-17 17:15:13 +0100
++++ openswan-2.2.0/programs/Makefile.program	2005-12-17 17:15:36 +0100
+@@ -114,7 +110,7 @@
+ endif
+ 
+ # cancel the rule that compiles directly
+-%: %.c 
++%: %.c
+ 
+ %: %.o $(OBJS) $(OPENSWANLIB)
+ 	$(CC) $(CFLAGS) -o $@ $@.o ${OBJS} $(LDFLAGS) $(LIBS)

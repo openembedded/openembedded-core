@@ -12,6 +12,7 @@ PR = "r4"
 SRC_URI = "http://www.openswan.org/download/openswan-${PV}.tar.gz \
 	   file://openswan-2.2.0-gentoo.patch;patch=1 \
            file://gcc4-fixes.patch;patch=1 \
+	   file://makefile-whitespace-fix.patch;patch=1 \
 	   file://ld-library-path-breakage.patch;patch=1"
 S = "${WORKDIR}/openswan-${PV}"
 
