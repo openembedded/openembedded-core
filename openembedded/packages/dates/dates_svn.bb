@@ -4,7 +4,7 @@ DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Dates is a calendar application."
 
-PR = "r3"
+PR = "r4"
 
 PV = "0.0cvs${CVSDATE}"
 S = "${WORKDIR}/${PN}"
@@ -18,6 +18,6 @@ FILES_${PN} += "${datadir}/icons/hicolor/48x48/apps/oh-dates.png"
 
 pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ]; then 
-		gtk-update-icon-cache /usr/share/icons/hicolor
+		gtk-update-icon-cache $D/usr/share/icons/hicolor
 	fi
 }

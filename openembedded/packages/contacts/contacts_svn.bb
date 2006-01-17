@@ -5,7 +5,7 @@ RDEPENDS = "gnome-vfs-plugin-file"
 RRECOMMENDS = "gnome-vfs-plugin-http"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Contacts is an address-book application."
-PR = "r3"
+PR = "r4"
 
 PV = "0.1+svn-${CVSDATE}"
 
@@ -34,6 +34,6 @@ FILES_${PN} += "${datadir}/icons/hicolor/48x48/apps/oh-contacts.png \
 		${datadir}/icons/hicolor/index.theme"
 
 pkg_postinst_${PN} () {
-	gtk-update-icon-cache /usr/share/icons/hicolor
+	gtk-update-icon-cache $D/usr/share/icons/hicolor
 }
 
