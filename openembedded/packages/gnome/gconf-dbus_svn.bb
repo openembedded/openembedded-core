@@ -7,15 +7,15 @@ PROVIDES = "gconf"
 RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
-PV = "0.0+cvs${CVSDATE}"
-PR = "r8"
+PV = "0.0+svn${CVSDATE}"
+PR = "r0"
 
-SRC_URI = "cvs://anonymous@anoncvs.gnome.org/cvs/gnome;module=gconf;tag=gconf-dbus-2-6 \
+SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
            file://gconf-dbus-update.patch;patch=1;pnum=0 \
 	   file://69gconfd-dbus"
 
 inherit pkgconfig autotools
-S = "${WORKDIR}/gconf"
+S = "${WORKDIR}/trunk"
 
 FILES_${PN} += " ${libdir}/GConf/2/*.so ${libdir}/dbus-1.0 ${sysconfdir} ${datadir}/dbus*"
 

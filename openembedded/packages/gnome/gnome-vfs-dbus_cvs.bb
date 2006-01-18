@@ -15,6 +15,7 @@ PR = "r4"
 
 SRC_URI = "svn://anonymous@developer.imendio.com/svn/gnome-vfs-dbus;module=trunk;proto=http \
 	   file://no-gtk-doc.patch;patch=1 \
+	   file://gconftool-lossage.patch;patch=1 \
 	   file://gssapi.patch;patch=1"
 S = "${WORKDIR}/trunk"
 
