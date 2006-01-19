@@ -14,10 +14,3 @@ SRC_URI = "svn://svn.o-hand.com/repos/;module=${PN};proto=http"
 inherit autotools pkgconfig
 
 CFLAGS_prepend = " -DFRAMES=5 "
-FILES_${PN} += "${datadir}/icons/hicolor/48x48/apps/oh-dates.png"
-
-pkg_postinst_${PN} () {
-	if [ "x$D" != "x" ]; then 
-		gtk-update-icon-cache $D/usr/share/icons/hicolor
-	fi
-}
