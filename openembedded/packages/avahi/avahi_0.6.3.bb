@@ -1,15 +1,15 @@
 DESCRIPTION = "Avahi implements the DNS-SD over Multicast DNS"
-HOMEPAGE = "http://www.freedesktop.org/Software/Avahi"
+HOMEPAGE = "http://avahi.org"
 LICENSE= "GPL"
-DEPENDS = "expat libdaemon dbus-0.50"
+DEPENDS = "expat libdaemon dbus-0.60"
 RRECOMMENDS = "libnss-mdns"
 SECTION = "net"
 PRIORITY = "optional"
 PR = "r0"
 
-SRC_URI = "http://www.freedesktop.org/~lennart/avahi-${PV}.tar.gz"
+SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz"
 
-PACKAGES = "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-dev avahi-doc"
+PACKAGES = "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-dev avahi-doc avahi-utils"
 
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core= "${libdir}/libavahi-core.so.*"
@@ -26,6 +26,7 @@ FILES_avahi-dnsconfd = "${sbindir}/avahi-dnsconfd \
 			${sysconfdir}/avahi/avahi-dnsconfd.action \
 			${sysconfdir}/init.d/avahi-dnsconfd"
 FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
+FILES_avahi-utils = "${bindir}/avahi-*"
 
 CONFFILES_avahi-daemon = "${sysconfdir}/avahi/avahi-daemon.conf"
 
