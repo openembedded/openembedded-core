@@ -35,14 +35,14 @@ oh-task-base = "\
     gtk-clearlooks-engine \
     eds-dbus \
     contacts \
-    oprofile \
+#    oprofile \
     dates \
     leafpad \
     puzzles \
     kf \
     rxvt-unicode \
     xhost \
-    gdb \    
+#    gdb \    
     strace \
     ttf-bitstream-vera \
     udev \
