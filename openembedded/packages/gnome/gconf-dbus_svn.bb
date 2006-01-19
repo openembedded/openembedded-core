@@ -14,6 +14,8 @@ SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
            file://gconf-dbus-update.patch;patch=1;pnum=0 \
 	   file://69gconfd-dbus"
 
+PARALLEL_MAKE = ""
+
 inherit pkgconfig autotools
 S = "${WORKDIR}/trunk"
 
