@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r4"
+PR = "r0"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -12,27 +12,28 @@ PR = "r4"
 
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
-SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/testing/linux-2.6.15-rc2.tar.bz2 \
-           http://www.kernel.org/pub/linux/kernel/v2.6/testing/incr/patch-2.6.15-rc2-rc3.bz2;patch=1 \
-           http://www.kernel.org/pub/linux/kernel/v2.6/testing/incr/patch-2.6.15-rc3-rc4.bz2;patch=1 \
-           http://www.kernel.org/pub/linux/kernel/v2.6/testing/incr/patch-2.6.15-rc4-rc5.bz2;patch=1 \
+SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.15.tar.bz2 \
            ${RPSRC}/pxa_ohci_platform-r5.patch;patch=1 \
            ${RPSRC}/pxa_ohci_suspend-r5.patch;patch=1 \
            ${RPSRC}/pxa_ohci_fixes-r0.patch;patch=1 \
            ${RPSRC}/spitz_ohci-r0.patch;patch=1 \
-           ${RPSRC}/pxa_i2c_fixes-r4.patch;patch=1 \
+           ${RPSRC}/pxa_i2c_fixes-r5.patch;patch=1 \
+           ${RPSRC}/scoop_cpr_fix-r1.patch;patch=1 \
+           ${RPSRC}/pxa2xx_release-r1.patch;patch=1 \
            ${RPSRC}/ide_not_removable-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_pm_move-r0.patch;patch=1 \
-           ${RPSRC}/led_core-r6.patch;patch=1 \
-           ${RPSRC}/led_triggers-r5.patch;patch=1 \
-           ${RPSRC}/led_trig_timer-r2.patch;patch=1 \
+           ${RPSRC}/sharpsl_pm_gcc4_fix-r0.patch;patch=1 \
+           ${RPSRC}/pcmcia_dev_ids-r3.patch;patch=1 \
+           ${RPSRC}/led_core-r10.patch;patch=1 \
+           ${RPSRC}/led_triggers-r8.patch;patch=1 \
+           ${RPSRC}/led_trig_timer-r3.patch;patch=1 \
            ${RPSRC}/led_trig_sharpsl_pm-r2.patch;patch=1 \
-           ${RPSRC}/led_zaurus-r6.patch;patch=1 \
-           ${RPSRC}/led_locomo-r3.patch;patch=1 \
+           ${RPSRC}/led_zaurus-r7.patch;patch=1 \
+           ${RPSRC}/led_locomo-r4.patch;patch=1 \
            ${RPSRC}/led_ide-r1.patch;patch=1 \
            ${RPSRC}/led_nand-r1.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
-           ${RPSRC}/pxa_rtc-r2.patch;patch=1 \
+           ${RPSRC}/pxa_rtc-r3.patch;patch=1 \
            ${RPSRC}/input_power-r4.patch;patch=1 \
            ${RPSRC}/arm_apm_pm_legacy-r1.patch;patch=1 \
            ${RPSRC}/jffs2_longfilename-r0.patch;patch=1 \
@@ -53,24 +54,19 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/testing/linux-2.6.15-rc2.
            ${DOSRC}/tosa-lcd-r6.patch;patch=1 \
            ${DOSRC}/tosa-bl-r9.patch;patch=1 \
            ${DOSRC}/tosa-bluetooth-r2.patch;patch=1 \
-           ${RPSRC}/pcmcia_dev_ids-r2.patch;patch=1 \
+           ${RPSRC}/led_tosa-r0.patch;patch=1 \
            ${RPSRC}/mmc_timeout-r0.patch;patch=1 \	   
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.8.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.8-0.8.1.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.8.1-0.9rc1.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.9rc1-rc2.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.9rc2-rc4.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.9rc4-rc5.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.9rc5-rc6.patch;patch=1 \
+           ${RPSRC}/usb_pxa27x_udc-r0.patch;patch=1 \
+           ${RPSRC}/usb_add_epalloc-r1.patch;patch=1 \
+           ${RPSRC}/alsa/alsa-soc-0.9.patch;patch=1 \
+           ${RPSRC}/alsa/alsa-soc-0.9-0.10rc1.patch;patch=1 \
            ${RPSRC}/alsa_soc_rpupdate7-r2.patch;patch=1 \
-           ${RPSRC}/alsa_soc_rpupdate8-r0.patch;patch=1 \
-           ${RPSRC}/alsa_soc_rpupdate9-r0.patch;patch=1 \
+           ${RPSRC}/alsa_akita_fix-r0.patch;patch=1 \
            ${RPSRC}/pm_changes-r0.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1 \
            ${RPSRC}/jl1/pxa-linking-bug.patch;patch=1 \
-           file://dtl1_cs-add-socket-revE.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            file://connectplus-remove-ide-HACK.patch;patch=1 \
            file://defconfig-c7x0 \
@@ -80,9 +76,8 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/testing/linux-2.6.15-rc2.
            file://defconfig-cxx00 \
            file://defconfig-tosa "
 
-# Old things we don't care about anymore
-#           ${RPSRC}/corgi_snd-r14.patch;patch=1 \	   
-#           file://add-elpp-stuff.patch;patch=1 
+# Disabled until I find the reason this gives issues with cdc_subset
+#            ${RPSRC}/usb_rndis_tweaks-r0.patch;patch=1 \
 
 # These patches would really help collie/poodle but we 
 # need someone to maintain them
@@ -99,7 +94,7 @@ SRC_URI_append_tosa = "${DOSRC}/nand-readid-r1.patch;patch=1 \
                        ${DOSRC}/wm97xx-touch-lg2-r0.patch;patch=1 \
                        ${DOSRC}/wm9712-pm-r0.patch;patch=1 "
 
-S = "${WORKDIR}/linux-2.6.15-rc2"
+S = "${WORKDIR}/linux-2.6.15"
 
 # to get module dependencies working
-KERNEL_RELEASE = "2.6.15-rc5"
+KERNEL_RELEASE = "2.6.15"
