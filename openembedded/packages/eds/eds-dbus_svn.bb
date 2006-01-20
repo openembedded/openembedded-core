@@ -4,13 +4,14 @@ RDEPENDS = "gconf dbus-1 db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0cvs${CVSDATE}"
-PR = "r13"
+PR = "r14"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
-	   file://no_libdb.patch;patch=1 \
-	   file://no_iconv_test.patch;patch=1 \
-                 file://no_libedataserverui.patch;patch=1 \
-	   file://iconv-detect.h"
+           file://no_libdb.patch;patch=1 \
+           file://no_iconv_test.patch;patch=1 \
+           file://no_libedataserverui.patch;patch=1 \
+           file://disable_orbit.patch;patch=1 \
+           file://iconv-detect.h"
 
 S = "${WORKDIR}/trunk"
 
