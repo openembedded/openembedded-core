@@ -1,0 +1,13 @@
+Index: trunk/configure.in
+===================================================================
+--- trunk.orig/configure.in	2006-01-20 02:08:42.555073776 +0000
++++ trunk/configure.in	2006-01-20 10:19:13.631870024 +0000
+@@ -1114,7 +1114,7 @@
+ AC_MSG_RESULT($with_bug_buddy)
+ 
+ if test "x${with_dbus}" = "xno"; then
+-        AM_PATH_ORBIT2(2.9.8)
++dnl        AM_PATH_ORBIT2(2.9.8)
+ 
+         AC_MSG_CHECKING(for CORBA include paths)
+         IDL_INCLUDES="-I "`pkg-config --variable=idldir libbonobo-2.0`" -I "`pkg-config --variable=idldir bonobo-activation-2.0`
