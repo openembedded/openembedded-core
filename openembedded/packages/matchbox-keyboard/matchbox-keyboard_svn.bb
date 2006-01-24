@@ -12,6 +12,8 @@ S = ${WORKDIR}/${PN}
 
 inherit autotools pkgconfig gettext
 
+EXTRA_OECONF = "--disable-cairo"
+
 FILES_${PN} = "${bindir} \
 	       ${datadir}/applications \
 	       ${datadir}/pixmaps \
