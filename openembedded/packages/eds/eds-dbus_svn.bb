@@ -4,7 +4,7 @@ RDEPENDS = "gconf dbus-1 db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0cvs${CVSDATE}"
-PR = "r14"
+PR = "r15"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://no_libdb.patch;patch=1 \
@@ -17,7 +17,7 @@ S = "${WORKDIR}/trunk"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb41=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-camel --disable-nntp --disable-gtk-doc"
+EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-camel --disable-nntp --disable-gtk-doc"
 
 acpaths = " -I ${STAGING_DATADIR}/aclocal/gnome-macros "
 
