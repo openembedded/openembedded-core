@@ -22,12 +22,13 @@ diff -p -u -r1.13 libs.m4
      ac_x_includes=$ac_dir
      break
    fi
-@@ -284,7 +284,7 @@ if test "$ac_x_libraries" = no; then
+@@ -284,9 +284,9 @@ if test "$ac_x_libraries" = no; then
    # Don't add to $LIBS permanently.
    ac_save_LIBS=$LIBS
-   LIBS="-lXt $LIBS"
+-  LIBS="-lXt $LIBS"
 -  AC_LINK_IFELSE([AC_LANG_PROGRAM([@%:@include <X11/Intrinsic.h>],
 -				  [XtMalloc (0)])],
++  LIBS="-lX11 $LIBS"
 +  AC_LINK_IFELSE([AC_LANG_PROGRAM([@%:@include <X11/Xlib.h>],
 +				  [XrmInitialize ()])],
  		 [LIBS=$ac_save_LIBS
