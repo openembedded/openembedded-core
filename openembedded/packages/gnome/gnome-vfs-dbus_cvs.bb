@@ -1,5 +1,5 @@
 SECTION = "x11/utils"
-DEPENDS = "gtk+ glib-2.0 gconf dbus libxml2 zlib bzip2"
+DEPENDS = "gtk+ glib-2.0 gconf dbus libxml2 zlib bzip2 gnome-mime-data"
 DESCRIPTION = "Virtual file system library using DBUS for communication."
 LICENSE = "GPLv2"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
