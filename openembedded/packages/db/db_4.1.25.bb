@@ -12,7 +12,7 @@ SECTION = "libs"
 DESCRIPTION = "Berkeley DB v4."
 HOMEPAGE = "http://www.sleepycat.com"
 LICENSE = "BSD Sleepycat"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://downloads.sleepycat.com/${P}.tar.gz"
 
@@ -36,7 +36,7 @@ S = "${WORKDIR}/${P}/build_unix"
 PACKAGES += " ${PN}-bin"
 
 # Package contents
-FILES_${PN} = "${libdir}/libdb-4*so*"
+FILES_${PN} = "${libdir}/libdb*so*"
 FILES_${PN}-bin = "${bindir}"
 # The dev package has the .so link (as in db3) and the .a's -
 # it is therefore incompatible (cannot be installed at the
@@ -68,20 +68,10 @@ do_configure() {
 }
 
 do_stage() {
-	# The .h files get installed read-only, the autostage
-	# function just uses cp -pPR, so do this by hand
-	# Install, for the moment, into include/db4 to avoid
-	# interfering with the db3 headers (which have the same
-	# name).  -I${STAGING_INCDIR}/db4 to use db4, as opposed
-	# to db3
-	
-	rm -rf ${STAGE_TEMP}
-	mkdir -p ${STAGE_TEMP}
-	oe_runmake DESTDIR="${STAGE_TEMP}" includedir="${STAGE_TEMP}${includedir}" install_include
-	mkdir -p ${STAGING_INCDIR}/db4
-	cp -pPRf ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}/db4
-	rm -rf ${STAGE_TEMP}
+	oe_runmake DESTDIR="${STAGING_DIR}/${BUILD_SYS}" includedir="${STAGING_INCDIR}" install_include
 	oe_libinstall -so -C .libs libdb-4.1 ${STAGING_LIBDIR}
+	ln -s ${STAGING_LIBDIR}/libdb-4.1.so ${STAGING_LIBDIR}/libdb-4.so
+	ln -s ${STAGING_LIBDIR}/libdb-4.so ${STAGING_LIBDIR}/libdb.so
 }
 
 do_install() {
