@@ -1,0 +1,16 @@
+diff -urNd smjs-1.5-r0/js/src/Makefile.ref smjs-1.5-r0.new/js/src/Makefile.ref
+--- smjs-1.5-r0/js/src/Makefile.ref	2003-11-15 00:10:55.000000000 +0000
++++ smjs-1.5-r0.new/js/src/Makefile.ref	2006-01-31 23:43:16.000000000 +0000
+@@ -317,8 +317,11 @@
+ 	rm -f $@
+ 	$(OBJDIR)/jscpucfg > $@
+ 
++$(OBJDIR)/jscpucfg.o: jscpucfg.c jscpucfg.h
++	$(HOST_CC) -o $@ $(CFLAGS) $(LDFLAGS) jscpucfg.c
++
+ $(OBJDIR)/jscpucfg: $(OBJDIR)/jscpucfg.o
+-	$(CC) -o $@ $(OBJDIR)/jscpucfg.o
++	$(HOST_CC) -o $@ $(OBJDIR)/jscpucfg.o
+ 
+ # Look in OBJDIR to find jsautocfg.h
+ INCLUDES   += -I$(OBJDIR)

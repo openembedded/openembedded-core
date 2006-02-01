@@ -1,0 +1,767 @@
+Index: libgtkhtml/css/cssmatcher.c
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssmatcher.c,v
+retrieving revision 1.53
+diff -u -r1.53 cssmatcher.c
+--- libgtkhtml/css/cssmatcher.c	26 Oct 2005 02:04:24 -0000	1.53
++++ libgtkhtml/css/cssmatcher.c	18 Jan 2006 18:24:09 -0000
+@@ -79,7 +79,7 @@
+ 	element_name = html_atom_list_get_atom (html_atom_list, node->name);
+ 	
+ 	/* Look at the element name */
+-	if (!simple->is_star && simple->element_name != element_name)
++	if ((!simple->is_star) && (simple->element_name != element_name))
+ 		return FALSE;
+ 
+ 	str = xmlGetProp (node, "id");
+@@ -2373,7 +2373,7 @@
+ 	CssStylesheet *ss;
+ 
+ 	if (html_stream_get_written (stream) != 0) {
+-		ss = css_parser_parse_stylesheet (context->str->str, context->str->len);
++		ss = css_parser_parse_stylesheet (context->str->str, context->str->len, NULL);
+ 
+ 		context->stat->s.import_rule.fetched = TRUE;
+ 	
+@@ -2770,7 +2770,7 @@
+ 	css_matcher_html_to_css (doc, style, node);
+ 	
+ 	if (!default_stylesheet) {
+-		default_stylesheet = css_parser_parse_stylesheet (html_css, strlen (html_css));
++		default_stylesheet = css_parser_parse_stylesheet (html_css, strlen (html_css), NULL);
+ 	}
+ 
+ 	css_matcher_apply_stylesheet (doc, default_stylesheet, node, &declaration_list, CSS_STYLESHEET_DEFAULT, pseudo);
+@@ -2789,7 +2789,7 @@
+ 	prop = xmlGetProp (node, "style");
+ 	
+ 	if (prop) {
+-		CssRuleset *rs = css_parser_parse_style_attr (prop, strlen (prop));
++		CssRuleset *rs = css_parser_parse_style_attr (prop, strlen (prop), NULL);
+ 		gint i;
+ 		
+ 		if (rs) {
+Index: libgtkhtml/css/cssparser.c
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssparser.c,v
+retrieving revision 1.23
+diff -u -r1.23 cssparser.c
+--- libgtkhtml/css/cssparser.c	25 Sep 2005 02:07:21 -0000	1.23
++++ libgtkhtml/css/cssparser.c	18 Jan 2006 18:24:09 -0000
+@@ -49,7 +49,7 @@
+ 
+ const gint css_n_dimensions = sizeof (css_dimensions) / sizeof (css_dimensions[0]);
+ 
+-static gint css_parser_parse_value (const gchar *buffer, gint start_pos, gint end_pos, CssValue **ret_val);
++static gint css_parser_parse_value (const gchar *buffer, gint start_pos, gint end_pos, CssValue **ret_val, const gchar *base_url);
+ 
+ /* FIXME: Needs more whitespace types */
+ static gint
+@@ -443,7 +443,7 @@
+ }
+ 
+ static gint
+-css_parser_parse_term (const gchar *buffer, gint start_pos, gint end_pos, CssValue **ret_val)
++css_parser_parse_term (const gchar *buffer, gint start_pos, gint end_pos, CssValue **ret_val, const gchar *base_url)
+ {
+ 	gint pos;
+ 	HtmlAtom atom;
+@@ -481,7 +481,7 @@
+ 				return -1;
+ 			}
+ 			
+-			pos = css_parser_parse_value (buffer, save_pos + 1, func_end, &val);
++			pos = css_parser_parse_value (buffer, save_pos + 1, func_end, &val, base_url);
+ 
+ 			if (pos == -1) {
+ 				/*
+@@ -495,10 +495,48 @@
+ 				pos = func_end;
+ 			}
+ 			if (pos != -1) {
+-				if (ret_val) 
++				if (ret_val) {
+ 					*ret_val = css_value_function_new (atom, val);
+-				else
++					
++					if ((*ret_val)->v.function->name == HTML_ATOM_URL &&
++					    (*ret_val)->v.function->args) {
++						gchar *str = css_value_to_string ((*ret_val)->v.function->args);
++						
++						if (base_url && str) {
++							regex_t reg;
++							
++							regcomp (&reg, "^[a-zA-Z][a-zA-Z0-9.+-]*:", REG_NOSUB);
++							if (((*ret_val)->v.function->args->v.s[0] != '/') && (regexec (&reg, (*ret_val)->v.function->args->v.s, 0, NULL, 0))) {
++								gchar *temp_base, *eptr;
++								
++								temp_base = g_strdup(base_url);
++								eptr = strrchr(temp_base, '?');
++								
++								if (eptr != NULL)
++									*eptr = '\0';
++									
++								eptr = strrchr(temp_base, '/');
++								if (eptr != NULL) {
++									gchar *temp_arg = g_strdup((*ret_val)->v.function->args->v.s);
++								
++									*eptr = '\0';
++									
++									g_free((*ret_val)->v.function->args->v.s);
++									(*ret_val)->v.function->args->v.s = g_strconcat(temp_base, "/",  temp_arg, NULL);
++									g_free(temp_arg);
++								}
++								
++								g_free(temp_base);
++							}
++							regfree (&reg);
++						}
++						
++						g_free (str);
++					}
++				}
++				else {
+ 					css_value_unref (val);
++				}
+ 			}
+ 
+ 			/* This is due to the ) */
+@@ -566,7 +604,7 @@
+ }
+ 
+ static gint
+-css_parser_parse_value (const gchar *buffer, gint start_pos, gint end_pos, CssValue **ret_val)
++css_parser_parse_value (const gchar *buffer, gint start_pos, gint end_pos, CssValue **ret_val, const gchar *base_url)
+ {
+ 	gint pos = start_pos;
+ 	gint n = 0;
+@@ -589,7 +627,7 @@
+ 			css_value_list_append (list, term, list_sep);
+ 		}
+ 
+-		pos = css_parser_parse_term (buffer, pos, end_pos, &term);
++		pos = css_parser_parse_term (buffer, pos, end_pos, &term, base_url);
+ 		
+ 		if (pos == -1) {
+ 			if (list)
+@@ -618,7 +656,7 @@
+ 		}
+ 		else {
+ 			/* Try and parse the term to see if it's valid */
+-			if (css_parser_parse_term (buffer, pos, end_pos, NULL) == -1) {
++			if (css_parser_parse_term (buffer, pos, end_pos, NULL, base_url) == -1) {
+ 				if (term)
+ 					css_value_unref (term);
+ 				if (list)
+@@ -1005,7 +1043,7 @@
+ }
+ 
+ static gint
+-css_parser_parse_declaration (const gchar *buffer, gint start_pos, gint end_pos, CssDeclaration **ret_val)
++css_parser_parse_declaration (const gchar *buffer, gint start_pos, gint end_pos, CssDeclaration **ret_val, const gchar *base_url)
+ {
+ 	CssValue *value;
+ 	CssDeclaration *result;
+@@ -1040,7 +1078,7 @@
+ 
+ 	pos = css_parser_parse_whitespace (buffer, pos, prio_pos);
+ 
+-	pos = css_parser_parse_value (buffer, pos, prio_pos, &value);
++	pos = css_parser_parse_value (buffer, pos, prio_pos, &value, base_url);
+ 	
+ 	if (pos == -1) {
+ 		return end_pos;
+@@ -1063,7 +1101,7 @@
+ }
+ 
+ static CssDeclaration **
+-css_parser_parse_declarations (const gchar *buffer, gint start_pos, gint end_pos, gint *num_decl)
++css_parser_parse_declarations (const gchar *buffer, gint start_pos, gint end_pos, gint *num_decl, const gchar *base_url)
+ {
+ 	gint pos = start_pos;
+ 	gint cur_pos = start_pos;
+@@ -1079,7 +1117,7 @@
+ 		
+ 		pos = css_parser_parse_to_char (buffer, ';', pos, end_pos);
+ 
+-		pos = css_parser_parse_declaration (buffer, cur_pos, pos, &declaration);
++		pos = css_parser_parse_declaration (buffer, cur_pos, pos, &declaration, base_url);
+ 
+ 		if (declaration) {
+ 			if (n_decl == n_decl_max)
+@@ -1100,7 +1138,7 @@
+ }
+ 
+ static gint
+-css_parser_parse_ruleset (const gchar *buffer, gint start_pos, gint end_pos, CssRuleset **ret_val)
++css_parser_parse_ruleset (const gchar *buffer, gint start_pos, gint end_pos, CssRuleset **ret_val, const gchar *base_url)
+ {
+ 	gint cur_pos;
+ 	gint pos;
+@@ -1143,7 +1181,7 @@
+ 	}
+ 	cur_pos = css_parser_parse_whitespace (buffer, cur_pos, end_pos);
+ 
+-	decl = css_parser_parse_declarations (buffer, cur_pos, pos, &n_decl);
++	decl = css_parser_parse_declarations (buffer, cur_pos, pos, &n_decl, base_url);
+ 
+ 	pos++;
+ 	
+@@ -1186,7 +1224,8 @@
+ 		}
+ 		else if (str[pos] == '/' &&
+ 			 pos + 1 <= len &&
+-			 str[pos + 1] == '/') {
++			 str[pos + 1] == '/' &&
++			 (pos == 0 || str[pos-1] != ':')) {
+ 			while (pos < len &&
+ 			       str[pos] != '\n')
+ 				pos++;
+@@ -1204,7 +1243,7 @@
+ }
+ 
+ static gint
+-css_parser_parse_atkeyword (const gchar *buffer, gint start_pos, gint end_pos, CssStatement **ret_val)
++css_parser_parse_atkeyword (const gchar *buffer, gint start_pos, gint end_pos, CssStatement **ret_val, const gchar *base_url)
+ {
+ 	gint pos = start_pos;
+ 	gint tmp_pos, cur_pos;
+@@ -1257,14 +1296,14 @@
+ 		tmp_pos++;
+ 
+ 		
+-		rs = g_new (CssRuleset *, n_rs_max);
++		rs = g_new0 (CssRuleset *, n_rs_max);
+ 
+ /*		g_print ("wheee: \"%s\"\n", g_strndup (buffer + cur_pos, tmp_pos - cur_pos )); */
+ 		pos = cur_pos;
+ 		while (pos < tmp_pos) {
+ 			CssRuleset *ruleset;
+ 			
+-			pos = css_parser_parse_ruleset (buffer, pos, tmp_pos, &ruleset);
++			pos = css_parser_parse_ruleset (buffer, pos, tmp_pos, &ruleset, base_url);
+ 
+ 			if (n_rs == n_rs_max) 
+ 				rs = g_realloc (rs, sizeof (CssRuleset *) *
+@@ -1277,7 +1316,7 @@
+ 		
+ 		pos = css_parser_parse_whitespace (buffer, tmp_pos + 1, end_pos);
+ 		
+-		result = g_new (CssStatement, 1);
++		result = g_new0 (CssStatement, 1);
+ 		result->type = CSS_MEDIA_RULE;
+ 		result->s.media_rule.rs = rs;
+ 		result->s.media_rule.n_rs = n_rs;
+@@ -1318,11 +1357,11 @@
+ 
+ 		pos = css_parser_parse_whitespace (buffer, pos, cur_pos);
+ 		
+-		decl = css_parser_parse_declarations (buffer, pos, cur_pos, &n_decl);
++		decl = css_parser_parse_declarations (buffer, pos, cur_pos, &n_decl, base_url);
+ 
+ 		g_print ("N_decl is: %d\n", n_decl);
+ 		
+-		result = g_new (CssStatement, 1);
++		result = g_new0 (CssStatement, 1);
+ 		result->type = CSS_PAGE_RULE;
+ 		result->s.page_rule.name = name;
+ 		result->s.page_rule.pseudo = pseudo;
+@@ -1337,8 +1376,8 @@
+ 		pos = css_parser_parse_whitespace (buffer, pos + 1, end_pos);
+ 		cur_pos = css_parser_parse_to_char (buffer, '}', pos, end_pos);
+ 
+-		decl = css_parser_parse_declarations (buffer, pos, cur_pos, &n_decl);
+-		result = g_new (CssStatement, 1);
++		decl = css_parser_parse_declarations (buffer, pos, cur_pos, &n_decl, base_url);
++		result = g_new0 (CssStatement, 1);
+ 		result->type = CSS_FONT_FACE_RULE;
+ 
+ 		result->s.font_face_rule.n_decl = n_decl;
+@@ -1349,8 +1388,61 @@
+ 		return cur_pos + 1;
+ 		
+ 		break;
++	case HTML_ATOM_IMPORT: {
++		gchar *import_url;
++		const gchar *s_url, *e_url;
++
++		cur_pos = css_parser_parse_to_char (buffer, ';', pos, end_pos);
++
++		if (strchr (buffer + pos, '(')) {
++			s_url = strchr (buffer + pos, '(');
++			e_url = strchr (s_url, ')');
++		} else if (strchr (buffer + pos, '\"')) {
++			s_url = strchr (buffer + pos, '\"');
++			e_url = strchr (s_url + 1, '\"');
++		} else if (strchr (buffer + pos, '\'')) {
++			s_url = strchr (buffer + pos, '\'');
++			e_url = strchr (s_url + 1, '\'');
++		} 
++
++		if (!s_url || !e_url || ((e_url - s_url) < 1)) {
++			g_warning ("Invalid @import line");
++			*ret_val = NULL;
++			return cur_pos + 1;
++		}
++		
++		s_url++;
++		e_url--;
++		
++		if ((*s_url == '\"') && (*e_url == '\"')) {
++			s_url++;
++			e_url--;
++		} else if ((*s_url == '\'') && (*e_url == '\'')) {
++			s_url++;
++			e_url--;
++		}
++
++		if (s_url > e_url) {
++			g_warning ("Invalid @import line");
++			*ret_val = NULL;
++			return cur_pos + 1;
++		}
++				
++		import_url = g_strndup (s_url, strlen (s_url) - strlen (e_url) + 1);
++		
++		result = g_new0 (CssStatement, 1);
++		result->type = CSS_IMPORT_RULE;
+ 
++		result->s.import_rule.url = css_value_string_new (import_url);
++
++		*ret_val = result;
++
++		return cur_pos + 1;
++
++		break;
++	}
+ 	default:
++		g_warning ("Unhandled keyword %d - %s", keyword, buffer);
+ 		/* Unknown keyword detected, skip to next block */
+ 		while (pos < end_pos) {
+ 			/* Handle a dangling semi-colon */
+@@ -1373,7 +1465,7 @@
+ }
+ 
+ CssRuleset *
+-css_parser_parse_style_attr (const gchar *buffer, gint len)
++css_parser_parse_style_attr (const gchar *buffer, gint len, const gchar *base_url)
+ {
+ 	CssRuleset *result;
+ 	
+@@ -1382,7 +1474,7 @@
+ 	
+ 	/* FIXME: Are comments allowed here? */
+ 
+-	decl = css_parser_parse_declarations (buffer, 0, len, &n_decl);
++	decl = css_parser_parse_declarations (buffer, 0, len, &n_decl, base_url);
+ 
+ 	if (!decl)
+ 		return NULL;
+@@ -1397,9 +1489,8 @@
+ }
+ 
+ CssStylesheet *
+-css_parser_parse_stylesheet (const gchar *str, gint len)
++css_parser_parse_stylesheet (const gchar *str, gint len, const gchar *base_url)
+ {
+-	CssStatement *statement;
+ 	CssStylesheet *result;
+ 	GSList *stat = NULL;
+ 	gchar *buffer;
+@@ -1413,26 +1504,23 @@
+ 	end_pos = len;
+ 	while (pos < len) {
+ 		if (buffer[pos] == '@') {
+-			pos = css_parser_parse_atkeyword (buffer, pos + 1, len, &statement);
+-#if 0
+-			if (statement) {
+-				if (n_stat == n_stat_max) 
+-					stat = g_realloc (stat, sizeof (CssStatement) *
+-							  (n_stat_max <<= 1));
+-				stat[n_stat++] = statement;
++			CssStatement *atstatement = NULL;
++			pos = css_parser_parse_atkeyword (buffer, pos + 1, len, &atstatement, base_url);
++			if (atstatement) {
++				stat = g_slist_append (stat, atstatement);
+ 			}
+-#endif
+ 		}
+ 		else {
+ 			CssRuleset *ruleset;
+-			pos = css_parser_parse_ruleset (buffer, pos, end_pos, &ruleset);
++			pos = css_parser_parse_ruleset (buffer, pos, end_pos, &ruleset, base_url);
+ 
+ 			if (ruleset) {
+-				statement = g_new (CssStatement, 1);
+-				statement->type = CSS_RULESET;
+-				statement->s.ruleset = ruleset;
++				CssStatement *rulestatement;
++				rulestatement = g_new0 (CssStatement, 1);
++				rulestatement->type = CSS_RULESET;
++				rulestatement->s.ruleset = ruleset;
+ 
+-				stat = g_slist_append (stat, statement);
++				stat = g_slist_append (stat, rulestatement);
+ 			}
+ 
+ 			if (pos == -1)
+@@ -1444,7 +1532,7 @@
+ 
+ 	g_free (buffer);
+ 	
+-	result = g_new (CssStylesheet, 1);
++	result = g_new0 (CssStylesheet, 1);
+ 	result->stat = stat;
+ 
+ 	return result;
+Index: libgtkhtml/css/cssparser.h
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssparser.h,v
+retrieving revision 1.7
+diff -u -r1.7 cssparser.h
+--- libgtkhtml/css/cssparser.h	6 Dec 2002 17:16:54 -0000	1.7
++++ libgtkhtml/css/cssparser.h	18 Jan 2006 18:24:09 -0000
+@@ -24,13 +24,14 @@
+ #define __CSSPARSER_H__
+ 
+ #include <glib.h>
++#include <regex.h>
+ 
+ #include "cssstylesheet.h"
+ 
+ G_BEGIN_DECLS
+ 
+-CssStylesheet *css_parser_parse_stylesheet (const gchar *str, gint len);
+-CssRuleset *css_parser_parse_style_attr (const gchar *buffer, gint len);
++CssStylesheet *css_parser_parse_stylesheet (const gchar *str, gint len, const gchar *base_url);
++CssRuleset *css_parser_parse_style_attr (const gchar *buffer, gint len, const gchar *base_url);
+ 
+ G_END_DECLS
+ 
+Index: libgtkhtml/css/cssstylesheet.h
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssstylesheet.h,v
+retrieving revision 1.7
+diff -u -r1.7 cssstylesheet.h
+--- libgtkhtml/css/cssstylesheet.h	21 Apr 2004 14:17:00 -0000	1.7
++++ libgtkhtml/css/cssstylesheet.h	18 Jan 2006 18:24:09 -0000
+@@ -181,6 +181,7 @@
+ };
+ 
+ struct _CssStylesheet {
++	gchar *url;
+ 	gboolean disabled;
+ 	GSList *stat;
+ };
+Index: libgtkhtml/css/cssvalue.c
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssvalue.c,v
+retrieving revision 1.6
+diff -u -r1.6 cssvalue.c
+--- libgtkhtml/css/cssvalue.c	21 Apr 2004 14:17:00 -0000	1.6
++++ libgtkhtml/css/cssvalue.c	18 Jan 2006 18:24:09 -0000
+@@ -64,7 +64,7 @@
+ 	function->name = name;
+ 	function->args = args;
+ 	
+-	result = g_new (CssValue, 1);
++	result = g_new0 (CssValue, 1);
+ 	result->ref_count = 1;
+ 	result->value_type = CSS_FUNCTION;
+ 	result->v.function = function;
+Index: libgtkhtml/document/htmldocument.c
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/document/htmldocument.c,v
+retrieving revision 1.122
+diff -u -r1.122 htmldocument.c
+--- libgtkhtml/document/htmldocument.c	21 Feb 2005 17:31:31 -0000	1.122
++++ libgtkhtml/document/htmldocument.c	18 Jan 2006 18:24:11 -0000
+@@ -139,14 +139,42 @@
+ html_document_stylesheet_stream_close (const gchar *buffer, gint len, gpointer data)
+ {
+ 	CssStylesheet *sheet;
+-	HtmlDocument *document = HTML_DOCUMENT (data);
++	HtmlDocumentStreamData *stream_data = (HtmlDocumentStreamData *) data;
++	HtmlDocument *document = stream_data->document;
+ 	HtmlStyleChange style_change;
+-	
++	GSList *list;
++
+ 	if (!buffer)
+ 		return;
+ 	
+-	sheet = css_parser_parse_stylesheet (buffer, len);
++	sheet = css_parser_parse_stylesheet (buffer, len, (gchar *) stream_data->internal_data);
++	g_free(stream_data->internal_data);
++	stream_data->internal_data = NULL;
++
++	for (list = sheet->stat; list; list = list->next) {
++		CssStatement *statement = list->data;
++		HtmlStream *stream;
++
++		switch (statement->type) {
++		case CSS_IMPORT_RULE: {
++			HtmlDocumentStreamData *stream_data_import;
++			gchar *url;
++
++			url = css_value_to_string (statement->s.import_rule.url);
++			stream_data_import = g_new (HtmlDocumentStreamData, 1);
++			stream_data_import->document = stream_data->document;
++			stream_data_import->internal_data = g_strdup(url);
++			stream = html_stream_buffer_new (html_document_stylesheet_stream_close, stream_data_import);
++			g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, url, stream);
++			g_free (url);
++			break;
++		}
++		default:
++			break;
++		}
++	}
+ 
++	g_free (stream_data);
+ 	document->stylesheets = g_slist_append (document->stylesheets, sheet);
+ 
+ 	/* Restyle the document */
+@@ -184,9 +212,15 @@
+ 			
+ 			if (str && (strcasecmp (str, "stylesheet") == 0)) {
+ 				gchar *url = xmlGetProp (node->xmlnode, "href");
+-				
+ 				if (url) {
+-					HtmlStream *stream = html_stream_buffer_new (html_document_stylesheet_stream_close, document);
++					HtmlDocumentStreamData *stream_data;
++					HtmlStream *stream;
++					
++					stream_data = g_new (HtmlDocumentStreamData, 1);
++					stream_data->document = document;
++					stream_data->internal_data = g_strdup(url);
++					
++					stream = html_stream_buffer_new (html_document_stylesheet_stream_close, stream_data);
+ 
+ 					g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, url, stream);
+ 				}
+@@ -247,12 +281,39 @@
+ 
+ 			CssStylesheet *ss;
+ 			HtmlStyleChange style_change;
+-			
+-			ss = css_parser_parse_stylesheet (node->xmlnode->content, strlen (node->xmlnode->content));
+-			document->stylesheets = g_slist_append (document->stylesheets, ss);
++			GSList *list;
++
++			ss = css_parser_parse_stylesheet (node->xmlnode->content, strlen (node->xmlnode->content), NULL);
++
++			for (list = ss->stat; list; list = list->next) {
++				CssStatement *statement = list->data;
++				HtmlStream *stream;
++				
++				switch (statement->type) {
++				case CSS_IMPORT_RULE: {
++					gchar *cssurl;
++					HtmlDocumentStreamData *stream_data;
++					
++					cssurl = css_value_to_string (statement->s.import_rule.url);
++					
++					stream_data = g_new (HtmlDocumentStreamData, 1);
++					stream_data->document = document;
++                    			stream_data->internal_data = g_strdup(cssurl);
++
++					stream = html_stream_buffer_new (html_document_stylesheet_stream_close, stream_data);
++					g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, cssurl, stream);
++					g_free (cssurl);
++					break;
++				}
++				default:
++					break;
++				}
++			}
++
++			document->stylesheets = g_slist_append ( document->stylesheets, ss);
+ 
+ 			/* Restyle the document */
+-			style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
++			style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement ( document->dom_document)), NULL, TRUE);
+ 			g_signal_emit (G_OBJECT (document), document_signals [STYLE_UPDATED], 0, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), style_change);
+ 		}
+ 		else if ((node->xmlnode->type == XML_TEXT_NODE || node->xmlnode->type == XML_COMMENT_NODE) && node->xmlnode->parent && strcasecmp (node->xmlnode->parent->name, "script") == 0) {
+Index: libgtkhtml/document/htmldocument.h
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/document/htmldocument.h,v
+retrieving revision 1.35
+diff -u -r1.35 htmldocument.h
+--- libgtkhtml/document/htmldocument.h	13 Feb 2005 15:33:19 -0000	1.35
++++ libgtkhtml/document/htmldocument.h	18 Jan 2006 18:24:12 -0000
+@@ -25,6 +25,7 @@
+ 
+ typedef struct _HtmlDocument HtmlDocument;
+ typedef struct _HtmlDocumentClass HtmlDocumentClass;
++typedef struct _HtmlDocumentStreamData HtmlDocumentStreamData;
+ 
+ #include <gtk/gtk.h>
+ 
+@@ -93,6 +94,10 @@
+ 	gboolean (*dom_mouse_out) (HtmlDocument *document, DomEvent *event);
+ };
+ 
++struct _HtmlDocumentStreamData {
++	HtmlDocument *document;
++	gpointer internal_data;
++};
+ 
+ GType html_document_get_type (void);
+ 
+Index: libgtkhtml/layout/htmlboxblock.c
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/layout/htmlboxblock.c,v
+retrieving revision 1.115
+diff -u -r1.115 htmlboxblock.c
+--- libgtkhtml/layout/htmlboxblock.c	6 Jan 2004 10:09:56 -0000	1.115
++++ libgtkhtml/layout/htmlboxblock.c	18 Jan 2006 18:24:14 -0000
+@@ -100,17 +100,21 @@
+ 	HtmlBoxBlock *block = HTML_BOX_BLOCK (self);
+ 	gint full_width;
+ 
++#if 0
+ 	if (relayout->get_min_width || relayout->get_max_width) {
++#endif
+ 
+ 		/* Only expand the width of the block box if the width is of type "auto" */
+ 		if (HTML_BOX_GET_STYLE (self)->box->width.type == HTML_LENGTH_AUTO && line->width > *boxwidth) {
+-			
++
+ 			*boxwidth   = line->width;
+ 			block->containing_width = line->width;
+ 			self->width = *boxwidth + html_box_horizontal_mbp_sum (self);
+ 			block->force_relayout = TRUE;
+ 		}
++#if 0
+ 	}
++#endif
+ 	full_width = MAX (line->width, line->full_width);
+ 
+ 	if (full_width > block->full_width)
+@@ -233,7 +237,7 @@
+ 	HtmlBoxBlock *block = HTML_BOX_BLOCK (self);
+ 	HtmlLineBox *line;
+ 
+-	/* If it is a flotbox, just add it */
++	/* If it is a floatbox, just add it */
+ 	if (HTML_BOX_GET_STYLE (box)->Float != HTML_FLOAT_NONE) {
+ 		html_box_block_handle_float (self, relayout, box, *y, boxwidth);
+ 		return NULL;
+Index: libgtkhtml/layout/htmlstyleinherited.c
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/layout/htmlstyleinherited.c,v
+retrieving revision 1.15
+diff -u -r1.15 htmlstyleinherited.c
+--- libgtkhtml/layout/htmlstyleinherited.c	6 Dec 2002 17:17:15 -0000	1.15
++++ libgtkhtml/layout/htmlstyleinherited.c	18 Jan 2006 18:24:15 -0000
+@@ -300,6 +300,37 @@
+ 		*size = (gint) (val->v.d * old_size);
+ 		return TRUE;
+ 	default:
++		switch (val->v.atom) {
++		/* FIXME: These values are copy/pasted from html.css.h, X_SMALL is guessed */
++		case HTML_ATOM_XX_SMALL:
++			*size = (gint) (0.67 * old_size);
++			return TRUE;
++		case HTML_ATOM_X_SMALL:
++			*size = (gint) (0.75 * old_size);
++			return TRUE;
++		case HTML_ATOM_SMALL:
++			*size = (gint) (0.83 * old_size);
++			return TRUE;
++		case HTML_ATOM_MEDIUM:
++			*size = (gint) (1 * old_size);
++			return TRUE;
++		case HTML_ATOM_LARGE:
++			*size = (gint) (1.17 * old_size);
++			return TRUE;
++		case HTML_ATOM_X_LARGE:
++			*size = (gint) (1.5 * old_size);
++			return TRUE;
++		case HTML_ATOM_XX_LARGE:
++			*size = (gint) (2 * old_size);
++			return TRUE;
++		/* FIXME: These are absolutely guessed. Size should always be one of the above seven. */
++                case HTML_ATOM_LARGER:
++                        *size = (gint) (0.8 * old_size);
++                        return TRUE;
++                case HTML_ATOM_SMALLER:
++                        *size = (gint) (1.2 * old_size);
++                        return TRUE;
++		}
+ 		return FALSE;
+ 	}
+ }
+Index: libgtkhtml/view/htmlevent.c
+===================================================================
+RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/view/htmlevent.c,v
+retrieving revision 1.41
+diff -u -r1.41 htmlevent.c
+--- libgtkhtml/view/htmlevent.c	14 Sep 2004 06:34:27 -0000	1.41
++++ libgtkhtml/view/htmlevent.c	18 Jan 2006 18:24:17 -0000
+@@ -46,14 +46,48 @@
+ static gboolean
+ html_event_xy_in_box (HtmlBox *box, gint tx, gint ty, gint x, gint y)
+ {
++	gint ox, oy;
++	gboolean rv;
++	
++	ox = box->x;
++	oy = box->y;
++	
++	rv = TRUE;
++	
++	if ((HTML_BOX_GET_STYLE (box)->position == HTML_POSITION_RELATIVE ||  
++	     HTML_BOX_GET_STYLE (box)->position == HTML_POSITION_ABSOLUTE)) { 
++		gint width  = html_box_get_containing_block_width (box); 
++		gint height = html_box_get_containing_block_height (box); 
++		
++		if (HTML_BOX_GET_STYLE (box)->surround->position.left.type != HTML_LENGTH_AUTO) 
++			box->x += html_length_get_value (&HTML_BOX_GET_STYLE (box)->surround->position.left, width); 
++		else if (HTML_BOX_GET_STYLE (box)->surround->position.right.type != HTML_LENGTH_AUTO) { 
++			if (HTML_BOX_GET_STYLE (box)->display == HTML_DISPLAY_INLINE) 
++				box->x -= html_length_get_value (&HTML_BOX_GET_STYLE (box)->surround->position.right, width); 
++			else 
++				box->x += width - box->width - html_length_get_value (&HTML_BOX_GET_STYLE (box)->surround->position.right, width); 
++		} 
++		if (HTML_BOX_GET_STYLE (box)->surround->position.top.type != HTML_LENGTH_AUTO) 
++			box->y += html_length_get_value (&HTML_BOX_GET_STYLE (box)->surround->position.top, height); 
++			
++		else if (HTML_BOX_GET_STYLE (box)->surround->position.bottom.type != HTML_LENGTH_AUTO) { 
++			if (HTML_BOX_GET_STYLE (box)->display == HTML_DISPLAY_INLINE) 
++				box->y -= html_length_get_value (&HTML_BOX_GET_STYLE (box)->surround->position.bottom, height); 
++			else 
++				box->y += height - box->height - html_length_get_value (&HTML_BOX_GET_STYLE (box)->surround->position.bottom, height); 
++		} 
++	}
+ 
+ 	if (x < box->x + tx ||
+ 	    x > box->x + tx + box->width ||
+ 	    y < box->y + ty ||
+ 	    y > box->y + ty + box->height)
+-		return FALSE;
++		rv = FALSE;
++	
++	box->x = ox;
++	box->y = oy;
+ 
+-	return TRUE;
++	return rv;
+ }
+ 
+ static void
+@@ -64,12 +98,6 @@
+         box = self->children;
+ 
+         while (box) {
+-
+-		/* Ignore positioned boxes, because their ->x and->y positions is not their correct positions */
+-		if (HTML_BOX_GET_STYLE (box)->position != HTML_POSITION_STATIC) {
+-			box = box->next;
+-			continue;
+-		}
+ 		/* These boxes always has x = 0, y = 0, w = 0 and h = 0 so we have to do
+ 		 * a special case for these */
+ 		if (HTML_IS_BOX_INLINE (box) || HTML_IS_BOX_TABLE_ROW_GROUP (box) || HTML_IS_BOX_FORM (box)) {

@@ -1,0 +1,487 @@
+Index: gtkhtml2/libgtkhtml/css/cssmatcher.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/css/cssmatcher.c	2006-01-25 02:07:44.000000000 +0000
++++ gtkhtml2/libgtkhtml/css/cssmatcher.c	2006-02-01 02:19:13.000000000 +0000
+@@ -2411,7 +2411,8 @@
+ 		CssStatement *stat = list->data;
+ 		gint j;
+ 
+-		if (stat->type == CSS_IMPORT_RULE) {
++		switch (stat->type) {
++		case CSS_IMPORT_RULE: {
+ 			if (stat->s.import_rule.fetched) {
+ 				if (stat->s.import_rule.sheet) {
+ 					css_matcher_apply_stylesheet (doc, stat->s.import_rule.sheet, node, declaration_list, type, pseudo);
+@@ -2440,31 +2441,65 @@
+ 				g_free (str);
+ #endif			
+ 			}
++			break;
+ 		}
+-		
+-		/* FIXME: We need to support more than just rulesets here */
+-		if (stat->type != CSS_RULESET)
+-			continue;
+-		
+-		for (j = 0; j < stat->s.ruleset->n_sel; j++) {
+-			CssSelector *sel = stat->s.ruleset->sel[j];
++
++		case CSS_MEDIA_RULE:
++		case CSS_RULESET: {
++			CssRuleset **rs;
++			gint k, l;
+ 			
+-			if (css_matcher_match_selector (sel, node, pseudo)) {
+-				int i;
++			if (stat->type == CSS_MEDIA_RULE) {
++				CssValueEntry *entry = stat->s.media_rule.media_list->v.entry;
++				const gchar *media = html_document_get_media_type (doc);
++				gboolean has_media = FALSE;
+ 				
+-				for (i = 0; i < stat->s.ruleset->n_decl; i++) {
+-					CssDeclaration *decl = stat->s.ruleset->decl[i];
+-					CssDeclarationListEntry *entry = g_new (CssDeclarationListEntry, 1);
++				if (!media) break;
++				
++				for (; entry; entry = entry->next) {
++					const gchar *value = css_value_to_string (entry->value);
++					if (strcasecmp (media, value) == 0) {
++						has_media = TRUE;
++						break;
++					}
++				}
++				if (!has_media) break;
++				
++				rs = stat->s.media_rule.rs;
++				k = stat->s.media_rule.n_rs;
++			} else {
++				rs = &stat->s.ruleset;
++				k = 1;
++			}
++		
++			for (l = 0; l < k; l++) {
++				for (j = 0; rs[l] && (j < rs[l]->n_sel); j++) {
++					CssSelector *sel = rs[l]->sel[j];
+ 					
+-					entry->spec = sel->a * 1000000 + sel->b * 1000 + sel->c;
+-					entry->type = type;
+-					entry->decl = g_new (CssDeclaration, 1);
+-					entry->decl->property = decl->property;
+-					entry->decl->expr = css_value_ref (decl->expr);
+-					entry->decl->important = decl->important;
+-					*declaration_list = g_list_insert_sorted (*declaration_list, entry, css_declaration_list_sorter);
++					if (css_matcher_match_selector (sel, node, pseudo)) {
++						int i;
++						
++						for (i = 0; i < rs[l]->n_decl; i++) {
++							CssDeclaration *decl = rs[l]->decl[i];
++							CssDeclarationListEntry *entry = g_new (CssDeclarationListEntry, 1);
++							
++							entry->spec = sel->a * 1000000 + sel->b * 1000 + sel->c;
++							entry->type = type;
++							entry->decl = g_new (CssDeclaration, 1);
++							entry->decl->property = decl->property;
++							entry->decl->expr = css_value_ref (decl->expr);
++							entry->decl->important = decl->important;
++							*declaration_list = g_list_insert_sorted (*declaration_list, entry, css_declaration_list_sorter);
++						}
++					}
+ 				}
+ 			}
++			break;
++		}
++		
++		default:
++			g_warning ("Unhandled stylesheet");
++			break;
+ 		}
+ 	}
+ }
+@@ -2781,7 +2816,7 @@
+ 	css_matcher_html_to_css (doc, style, node);
+ 	
+ 	if (!default_stylesheet) {
+-		default_stylesheet = css_parser_parse_stylesheet (html_css, strlen (html_css), NULL);
++		default_stylesheet = css_parser_parse_stylesheet (html_css, strlen (html_css), NULL, NULL);
+ 	}
+ 
+ 	css_matcher_apply_stylesheet (doc, default_stylesheet, node, &declaration_list, CSS_STYLESHEET_DEFAULT, pseudo);
+@@ -2800,25 +2835,31 @@
+ 	prop = xmlGetProp (node, "style");
+ 	
+ 	if (prop) {
+-		CssRuleset *rs = css_parser_parse_style_attr (prop, strlen (prop), NULL);
+-		gint i;
++		xmlChar *media_prop = xmlGetProp (node, "media");
++		const gchar *media = html_document_get_media_type (doc);
+ 		
+-		if (rs) {
+-			for (i = 0; i < rs->n_decl; i++) {
+-				CssDeclarationListEntry *entry = g_new (CssDeclarationListEntry, 1);
+-				CssDeclaration *decl = rs->decl[i];
+-
+-				entry->type = CSS_STYLESHEET_STYLEDECL;
+-				entry->decl = g_new (CssDeclaration, 1);
+-				entry->decl->property = decl->property;
+-				entry->decl->expr = css_value_ref (decl->expr);
+-				entry->decl->important = decl->important;
+-				entry->spec = 0;
++		if (!media_prop || (media && (strcasecmp (media, media_prop) == 0))) {
++			CssRuleset *rs = css_parser_parse_style_attr (prop, strlen (prop), NULL);
++			gint i;
++			
++			if (rs) {
++				for (i = 0; i < rs->n_decl; i++) {
++					CssDeclarationListEntry *entry = g_new (CssDeclarationListEntry, 1);
++					CssDeclaration *decl = rs->decl[i];
+ 
+-				declaration_list = g_list_insert_sorted (declaration_list, entry, css_declaration_list_sorter);
++					entry->type = CSS_STYLESHEET_STYLEDECL;
++					entry->decl = g_new (CssDeclaration, 1);
++					entry->decl->property = decl->property;
++					entry->decl->expr = css_value_ref (decl->expr);
++					entry->decl->important = decl->important;
++					entry->spec = 0;
++
++					declaration_list = g_list_insert_sorted (declaration_list, entry, css_declaration_list_sorter);
++				}
++				css_ruleset_destroy (rs);
+ 			}
+-			css_ruleset_destroy (rs);
+ 		}
++		if (media_prop) xmlFree (media_prop);
+ 		xmlFree (prop);
+ 	}
+ 
+Index: gtkhtml2/libgtkhtml/document/htmldocument.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/document/htmldocument.c	2006-01-25 02:07:49.000000000 +0000
++++ gtkhtml2/libgtkhtml/document/htmldocument.c	2006-02-01 02:19:13.000000000 +0000
+@@ -147,9 +147,7 @@
+ 	if (!buffer)
+ 		return;
+ 	
+-	sheet = css_parser_parse_stylesheet (buffer, len, (gchar *) stream_data->internal_data);
+-	g_free(stream_data->internal_data);
+-	stream_data->internal_data = NULL;
++	sheet = css_parser_parse_stylesheet (buffer, len, (gchar *) stream_data->internal_data, stream_data->media);
+ 
+ 	for (list = sheet->stat; list; list = list->next) {
+ 		CssStatement *statement = list->data;
+@@ -158,15 +156,13 @@
+ 		switch (statement->type) {
+ 		case CSS_IMPORT_RULE: {
+ 			HtmlDocumentStreamData *stream_data_import;
+-			gchar *url;
+ 
+-			url = css_value_to_string (statement->s.import_rule.url);
+ 			stream_data_import = g_new (HtmlDocumentStreamData, 1);
+ 			stream_data_import->document = stream_data->document;
+-			stream_data_import->internal_data = g_strdup(url);
++			stream_data_import->internal_data = css_value_to_string (statement->s.import_rule.url);
++			stream_data_import->media = statement->s.import_rule.media ? statement->s.import_rule.media : g_strdup (stream_data->media);
+ 			stream = html_stream_buffer_new (html_document_stylesheet_stream_close, stream_data_import);
+-			g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, url, stream);
+-			g_free (url);
++			g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, stream_data_import->internal_data, stream);
+ 			break;
+ 		}
+ 		default:
+@@ -174,8 +170,11 @@
+ 		}
+ 	}
+ 
+-	g_free (stream_data);
+ 	document->stylesheets = g_slist_append (document->stylesheets, sheet);
++	
++	g_free (stream_data->media);
++	g_free(stream_data->internal_data);
++	g_free (stream_data);
+ 
+ 	/* Restyle the document */
+ 	style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
+@@ -216,21 +215,22 @@
+ 					HtmlDocumentStreamData *stream_data;
+ 					HtmlStream *stream;
+ 					
+-					stream_data = g_new (HtmlDocumentStreamData, 1);
++					stream_data = g_new0 (HtmlDocumentStreamData, 1);
+ 					stream_data->document = document;
+ 					stream_data->internal_data = g_strdup(url);
++					stream_data->media = xmlGetProp (node->xmlnode, "media");
+ 					
+ 					stream = html_stream_buffer_new (html_document_stylesheet_stream_close, stream_data);
+ 
+ 					g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, url, stream);
++					g_free (url);
+ 				}
+-				g_free (url);
+ 			} else if (str && (strcasecmp (str, "icon") == 0)) {
+ 				gchar *url = xmlGetProp (node->xmlnode, "href");
+ 				if (url) {
+ 					g_signal_emit (G_OBJECT (document), document_signals [REQUEST_ICON], 0, url);
++					g_free (url);
+ 				}
+-				g_free (url);
+ 			}
+ 			g_free (str);
+ 		}
+@@ -282,8 +282,10 @@
+ 			CssStylesheet *ss;
+ 			HtmlStyleChange style_change;
+ 			GSList *list;
++			xmlChar *media = xmlGetProp (node->xmlnode->parent, "media");
+ 
+-			ss = css_parser_parse_stylesheet (node->xmlnode->content, strlen (node->xmlnode->content), NULL);
++			ss = css_parser_parse_stylesheet (node->xmlnode->content, strlen (node->xmlnode->content), NULL, media);
++			if (media) xmlFree (media);
+ 
+ 			for (list = ss->stat; list; list = list->next) {
+ 				CssStatement *statement = list->data;
+@@ -296,9 +298,10 @@
+ 					
+ 					cssurl = css_value_to_string (statement->s.import_rule.url);
+ 					
+-					stream_data = g_new (HtmlDocumentStreamData, 1);
++					stream_data = g_new0 (HtmlDocumentStreamData, 1);
+ 					stream_data->document = document;
+                     			stream_data->internal_data = g_strdup(cssurl);
++                    			stream_data->media = statement->s.import_rule.media;
+ 
+ 					stream = html_stream_buffer_new (html_document_stylesheet_stream_close, stream_data);
+ 					g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, cssurl, stream);
+@@ -546,6 +549,9 @@
+ 
+ 	if (document->parser)
+ 		g_object_unref (G_OBJECT (document->parser));
++	
++	if (document->media_type)
++		g_free (document->media_type);
+ 
+ 	parent_class->finalize (object);
+ }
+@@ -753,6 +759,7 @@
+ {
+ 	document->stylesheets = NULL;
+ 	document->image_factory = html_image_factory_new ();
++	document->media_type = NULL;
+ 
+ 	g_signal_connect (G_OBJECT (document->image_factory), "request_image",
+ 			  G_CALLBACK (html_document_request_image), document);
+@@ -1129,7 +1136,7 @@
+ }
+ 
+ CssStylesheet *
+-html_document_add_stylesheet (HtmlDocument *document, const gchar *buffer, gint len)
++html_document_add_stylesheet (HtmlDocument *document, const gchar *buffer, gint len, const gchar *media)
+ {
+ 	CssStylesheet *sheet;
+ 	HtmlStyleChange style_change;
+@@ -1140,7 +1147,7 @@
+ 	 * complications it would cause with removal.
+ 	 */
+ 	
+-	sheet = css_parser_parse_stylesheet (buffer, len, NULL);
++	sheet = css_parser_parse_stylesheet (buffer, len, NULL, media);
+ 	document->stylesheets = g_slist_append (document->stylesheets, sheet);
+ 	
+ 	style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
+@@ -1159,3 +1166,24 @@
+ 	return TRUE;
+ }
+ 
++void
++html_document_set_media_type (HtmlDocument *document, const gchar *type)
++{
++	HtmlStyleChange style_change;
++	
++	g_return_if_fail (HTML_IS_DOCUMENT (document));
++	
++	if (document->media_type)
++		g_free (document->media_type);
++	
++	document->media_type = g_strdup (type);
++	
++	style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
++	g_signal_emit (G_OBJECT (document), document_signals [STYLE_UPDATED], 0, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), style_change);
++}
++
++const gchar *
++html_document_get_media_type (HtmlDocument *document)
++{
++	return document->media_type;
++}
+Index: gtkhtml2/libgtkhtml/document/htmldocument.h
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/document/htmldocument.h	2006-01-25 02:07:49.000000000 +0000
++++ gtkhtml2/libgtkhtml/document/htmldocument.h	2006-01-25 02:07:50.000000000 +0000
+@@ -64,6 +64,8 @@
+ 	DomNode *hover_node;
+ 	DomNode *active_node;
+ 	DomElement *focus_element;
++	
++	gchar *media_type;
+ };
+ 
+ struct _HtmlDocumentClass {
+@@ -97,6 +99,7 @@
+ struct _HtmlDocumentStreamData {
+ 	HtmlDocument *document;
+ 	gpointer internal_data;
++	gchar *media;
+ };
+ 
+ GType html_document_get_type (void);
+@@ -113,9 +116,12 @@
+ void     html_document_update_focus_element (HtmlDocument *document, DomElement *element);
+ DomNode *html_document_find_anchor          (HtmlDocument *doc, const gchar *anchor);
+ 
+-CssStylesheet	*html_document_add_stylesheet	(HtmlDocument *document, const gchar *buffer, gint len);
++CssStylesheet	*html_document_add_stylesheet	(HtmlDocument *document, const gchar *buffer, gint len, const gchar *media);
+ gboolean	html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
+ 
++void		html_document_set_media_type	(HtmlDocument *document, const gchar *type);
++const gchar	*html_document_get_media_type	(HtmlDocument *document);
++
+ G_END_DECLS
+ 
+ #endif /* __HTMLDOCUMENT_H__ */
+Index: gtkhtml2/libgtkhtml/css/cssparser.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/css/cssparser.c	2006-01-25 02:05:54.000000000 +0000
++++ gtkhtml2/libgtkhtml/css/cssparser.c	2006-01-25 02:07:50.000000000 +0000
+@@ -688,6 +688,32 @@
+ 	return pos;
+ }
+ 
++static void
++css_parser_parse_media_list (const gchar *buffer, gint start_pos, gint end_pos, CssValue **ret_val)
++{
++	CssValue *list = NULL;
++	while (start_pos < end_pos) {
++		CssValue *val;
++		HtmlAtom name;
++		
++		if (buffer[start_pos] == ',')
++			start_pos++;
++		
++		start_pos = css_parser_parse_whitespace (buffer, start_pos, end_pos);
++		
++		if (start_pos >= end_pos)
++			break;
++		
++		start_pos = css_parser_parse_ident (buffer, start_pos, end_pos, &name);
++		val = css_value_ident_new (name);
++		if (!list) list = css_value_list_new ();
++		css_value_list_append (list, val, ',');
++		
++		start_pos = css_parser_parse_whitespace (buffer, start_pos, end_pos);
++	}
++	
++	*ret_val = list;
++}
+ 
+ static gint
+ css_parser_parse_attr_selector (const gchar *buffer, gint start_pos, gint end_pos, CssTail *tail)
+@@ -1329,7 +1355,7 @@
+ 
+ /*		g_print ("Going to return: %d\n", pos); */
+ 		
+-		return pos + 1;
++		return pos;
+ 		
+ 		break;
+ 	case HTML_ATOM_PAGE:
+@@ -1390,7 +1416,8 @@
+ 		break;
+ 	case HTML_ATOM_IMPORT: {
+ 		gchar *import_url;
+-		const gchar *s_url, *e_url;
++		const gchar *s_url, *e_url, *e_import, *e_media;
++		CssValue *value = NULL;
+ 
+ 		cur_pos = css_parser_parse_to_char (buffer, ';', pos, end_pos);
+ 
+@@ -1411,6 +1438,7 @@
+ 			return cur_pos + 1;
+ 		}
+ 		
++		e_import = e_url + 1;
+ 		s_url++;
+ 		e_url--;
+ 		
+@@ -1434,6 +1462,11 @@
+ 		result->type = CSS_IMPORT_RULE;
+ 
+ 		result->s.import_rule.url = css_value_string_new (import_url);
++		
++		/* Check for media types */
++		e_media = buffer + cur_pos;
++		if ((e_media > e_import) && (css_parser_parse_whitespace(e_import, 0, e_media-e_import) < (e_media-e_import)))
++			result->s.import_rule.media = g_strndup (e_import, e_media-e_import);
+ 
+ 		*ret_val = result;
+ 
+@@ -1489,7 +1522,7 @@
+ }
+ 
+ CssStylesheet *
+-css_parser_parse_stylesheet (const gchar *str, gint len, const gchar *base_url)
++css_parser_parse_stylesheet (const gchar *str, gint len, const gchar *base_url, const gchar *media)
+ {
+ 	CssStylesheet *result;
+ 	GSList *stat = NULL;
+@@ -1515,12 +1548,23 @@
+ 			pos = css_parser_parse_ruleset (buffer, pos, end_pos, &ruleset, base_url);
+ 
+ 			if (ruleset) {
+-				CssStatement *rulestatement;
+-				rulestatement = g_new0 (CssStatement, 1);
+-				rulestatement->type = CSS_RULESET;
+-				rulestatement->s.ruleset = ruleset;
++				CssStatement *statement;
++				
++				if (media) {
++					statement = g_new0 (CssStatement, 1);
+ 
+-				stat = g_slist_append (stat, rulestatement);
++					statement->type = CSS_MEDIA_RULE;
++					css_parser_parse_media_list (media, 0, strlen (media), &statement->s.media_rule.media_list);
++					g_assert (statement->s.media_rule.media_list);
++					statement->s.media_rule.rs = g_new (CssRuleset *, 1);
++					statement->s.media_rule.rs[0] = ruleset;
++					statement->s.media_rule.n_rs = 1;
++				} else {
++					statement = g_new0 (CssStatement, 1);
++					statement->type = CSS_RULESET;
++					statement->s.ruleset = ruleset;
++				}
++				stat = g_slist_append (stat, statement);
+ 			}
+ 
+ 			if (pos == -1)
+Index: gtkhtml2/libgtkhtml/css/cssparser.h
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/css/cssparser.h	2006-01-25 02:05:54.000000000 +0000
++++ gtkhtml2/libgtkhtml/css/cssparser.h	2006-01-25 02:07:50.000000000 +0000
+@@ -30,7 +30,7 @@
+ 
+ G_BEGIN_DECLS
+ 
+-CssStylesheet *css_parser_parse_stylesheet (const gchar *str, gint len, const gchar *base_url);
++CssStylesheet *css_parser_parse_stylesheet (const gchar *str, gint len, const gchar *base_url, const gchar *media);
+ CssRuleset *css_parser_parse_style_attr (const gchar *buffer, gint len, const gchar *base_url);
+ 
+ G_END_DECLS
+Index: gtkhtml2/libgtkhtml/css/cssstylesheet.h
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/css/cssstylesheet.h	2006-02-01 02:19:56.000000000 +0000
++++ gtkhtml2/libgtkhtml/css/cssstylesheet.h	2006-02-01 02:20:08.000000000 +0000
+@@ -99,6 +99,7 @@
+ 			CssValue *url;
+ 			gboolean fetched;
+ 			gboolean fetching;
++			gchar *media;
+ 		} import_rule;
+ 
+ 	} s;

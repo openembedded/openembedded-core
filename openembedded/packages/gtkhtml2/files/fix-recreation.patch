@@ -1,0 +1,407 @@
+Index: gtkhtml2/libgtkhtml/document/htmldocument.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/document/htmldocument.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/document/htmldocument.c	2006-01-25 19:21:10.000000000 +0000
+@@ -110,11 +110,6 @@
+ 		
+ 		if (style_change != HTML_STYLE_CHANGE_NONE) {
+ 			
+-			/* FIXME: Workaround bug #199, we don't support recreation
+-			 * of dom nodes and layout boxes / jonas
+-			 */
+-			new_style->display = node->style->display;
+-
+ 			html_style_ref (new_style);
+ 			html_style_unref (node->style);
+ 			node->style = new_style;
+Index: gtkhtml2/libgtkhtml/layout/htmlboxfactory.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/htmlboxfactory.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/htmlboxfactory.c	2006-01-25 19:21:10.000000000 +0000
+@@ -99,7 +99,7 @@
+ 
+ 
+ HtmlBox *
+-html_box_factory_new_box (HtmlView *view, DomNode *node)
++html_box_factory_new_box (HtmlView *view, DomNode *node, gboolean force_new)
+ {
+ 	HtmlBox *box = NULL, *parent_box;
+ 	HtmlStyle *style = node->style, *parent_style = NULL;
+@@ -117,7 +117,7 @@
+ 
+ 		box = parent_box->children;
+ 
+-		while (box) {
++		while (box && !force_new) {
+ 			if (HTML_IS_BOX_TEXT (box) && box->dom_node == node) {
+ 				
+ 				html_box_text_set_text (HTML_BOX_TEXT (box), node->xmlnode->content);
+Index: gtkhtml2/libgtkhtml/layout/htmlboxfactory.h
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/htmlboxfactory.h	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/htmlboxfactory.h	2006-01-25 19:21:10.000000000 +0000
+@@ -33,7 +33,7 @@
+ 
+ HtmlBox *       html_box_factory_get_box     (HtmlView *view, DomNode *node, HtmlBox *parent_box);
+ HtmlStyleChange html_box_factory_restyle_box (HtmlView *view, HtmlBox *box, HtmlAtom pseudo);
+-HtmlBox *       html_box_factory_new_box     (HtmlView *view, DomNode *node);
++HtmlBox *       html_box_factory_new_box     (HtmlView *view, DomNode *node, gboolean force_new);
+ 
+ G_END_DECLS
+ 
+Index: gtkhtml2/libgtkhtml/layout/htmlstyle.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/htmlstyle.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/htmlstyle.c	2006-01-25 19:21:10.000000000 +0000
+@@ -416,7 +416,7 @@
+ html_style_compare (const HtmlStyle *s1, const HtmlStyle *s2)
+ {
+ 	/* RECREATE begin */
+-	if (s1->display != s1->display)
++	if (s1->display != s2->display)
+ 		return HTML_STYLE_CHANGE_RECREATE;
+ 	/* RECREATE end */
+ 
+Index: gtkhtml2/libgtkhtml/view/htmlview.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/view/htmlview.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/view/htmlview.c	2006-01-25 19:21:10.000000000 +0000
+@@ -1908,7 +1908,7 @@
+ 
+ 	g_assert (node->style != NULL);
+ 
+-	new_box = html_box_factory_new_box (view, node);
++	new_box = html_box_factory_new_box (view, node, FALSE);
+ 	
+ 	if (new_box) {
+ 
+@@ -2001,8 +2001,9 @@
+ 		html_view_remove_layout_box (view, box->dom_node);
+ 
+ 		/* Check if we're trying to remove the root box */
+-		if (box == view->root)
++		if (box == view->root) {
+ 			view->root = NULL;
++		}
+ 
+ 		html_box_remove (box);
+ 		g_object_unref (G_OBJECT (box));
+@@ -2131,6 +2132,56 @@
+ 	}	
+ 
+ 	switch (style_change) {
++	case HTML_STYLE_CHANGE_RECREATE: {
++		HtmlBox *new_box = NULL;
++
++		/* Don't replace boxes where display: none has been set */
++		if (style->display == HTML_DISPLAY_NONE) {
++			html_view_removed (document, node, view);
++			break;
++		}
++
++		new_box = html_box_factory_new_box (view, node, TRUE);
++		g_assert (new_box);
++	
++		new_box->dom_node = node;
++		g_object_add_weak_pointer (G_OBJECT (node), (gpointer *)&(new_box->dom_node));
++		new_box->next = box->next;
++		new_box->prev = box->prev;
++		new_box->parent = box->parent;
++		new_box->children = box->children;
++		
++		if (box->next) box->next->prev = new_box;
++		if (box->prev) box->prev->next = new_box;
++		if (box->parent)
++			if (box->parent->children == box)
++				box->parent->children = new_box;
++		if (box->children) {
++			HtmlBox *child = box->children;
++			while (child) {
++				if (child->parent == box)
++					child->parent = new_box;
++				child = child->prev;
++			}
++			child = box->children->next;
++			while (child) {
++				if (child->parent == box)
++					child->parent = new_box;
++				child = child->next;
++			}
++		}
++		
++		if (view->root == box)
++			view->root = new_box;
++		
++		html_view_remove_layout_box (view, node);
++		g_object_unref (box);
++		
++		html_box_handle_html_properties (new_box, node->xmlnode);				
++		html_view_add_layout_box (view, node, new_box);
++		html_view_relayout_callback (document, node, view);
++		break;
++	}
+ 	case HTML_STYLE_CHANGE_REPAINT:
+ 		html_view_repaint_callback (document, node, view);
+ 		break;
+Index: gtkhtml2/libgtkhtml/css/cssmatcher.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/css/cssmatcher.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/css/cssmatcher.c	2006-01-25 19:21:10.000000000 +0000
+@@ -2781,7 +2781,7 @@
+ 		}
+ 	}
+ 	if (strcasecmp ("table", n->name) == 0) {
+-		if ((str = xmlGetProp (n, "align"))) {
++		if ((style->display != HTML_DISPLAY_BLOCK) && (str = xmlGetProp (n, "align"))) {
+ 			if (strcasecmp (str, "left") == 0)
+ 				style->Float = HTML_FLOAT_LEFT;
+ 			else if (strcasecmp (str, "right") == 0)
+Index: gtkhtml2/libgtkhtml/layout/htmlbox.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/htmlbox.c	2006-01-25 19:21:09.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/htmlbox.c	2006-01-25 19:21:10.000000000 +0000
+@@ -308,7 +308,7 @@
+ 	else if (style->surround->margin.left.type != HTML_LENGTH_AUTO &&
+ 		 style->surround->margin.right.type != HTML_LENGTH_AUTO) {
+ 
+-		if (HTML_BOX_GET_STYLE (box->parent)->inherited->direction == HTML_DIRECTION_RTL) {
++		if (HTML_BOX_GET_STYLE (html_box_get_containing_block (box))->inherited->direction == HTML_DIRECTION_RTL) {
+ 
+ 			return width - html_length_get_value (&style->box->width, width) -
+ 				html_box_left_padding (box, width) - html_box_right_padding (box, width) -
+@@ -348,7 +348,7 @@
+ 	else if (style->surround->margin.left.type != HTML_LENGTH_AUTO &&
+ 		 style->surround->margin.right.type != HTML_LENGTH_AUTO) {
+ 
+-		if (HTML_BOX_GET_STYLE (box->parent)->inherited->direction == HTML_DIRECTION_LTR) {
++		if (HTML_BOX_GET_STYLE (html_box_get_containing_block (box))->inherited->direction == HTML_DIRECTION_LTR) {
+ 
+ 			return width - html_length_get_value (&style->box->width, width) -
+ 				html_box_left_padding (box, width) - html_box_right_padding (box, width) -
+@@ -820,35 +820,36 @@
+ 	int tmp;
+ 	gint old_width = *boxwidth;
+ 	gint old_height = *boxheight;
++	HtmlBox *parent = html_box_get_containing_block (self);
+ 
+-	if (self->parent) {
++	if (parent) {
+ 		if (HTML_BOX_GET_STYLE (self)->box->min_width.type != HTML_LENGTH_AUTO) {
+-			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->min_width, self->parent->width -
+-						     html_box_horizontal_mbp_sum (self->parent) - html_box_horizontal_mbp_sum (self));
++			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->min_width, parent->width -
++						     html_box_horizontal_mbp_sum (parent) - html_box_horizontal_mbp_sum (self));
+ 			if (*boxwidth < tmp)
+ 				*boxwidth = tmp;		
+ 
+ 		}
+ 		
+ 		if (HTML_BOX_GET_STYLE (self)->box->max_width.type != HTML_LENGTH_AUTO) {
+-			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->max_width, self->parent->width -
+-						     html_box_horizontal_mbp_sum (self->parent) - html_box_horizontal_mbp_sum (self));
++			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->max_width, parent->width -
++						     html_box_horizontal_mbp_sum (parent) - html_box_horizontal_mbp_sum (self));
+ 			if (*boxwidth > tmp)
+ 				*boxwidth = tmp;		
+ 
+ 		}
+ 		
+ 		if (HTML_BOX_GET_STYLE (self)->box->min_height.type != HTML_LENGTH_AUTO) {
+-			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->min_height, self->parent->height -
+-						     html_box_horizontal_mbp_sum (self->parent) - html_box_horizontal_mbp_sum (self));
++			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->min_height, parent->height -
++						     html_box_horizontal_mbp_sum (parent) - html_box_horizontal_mbp_sum (self));
+ 			if (*boxheight < tmp)
+ 				*boxheight = tmp;		
+ 
+ 		}
+ 		
+ 		if (HTML_BOX_GET_STYLE (self)->box->max_height.type != HTML_LENGTH_AUTO) {
+-			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->max_height, self->parent->height -
+-						     html_box_horizontal_mbp_sum (self->parent) - html_box_horizontal_mbp_sum (self));
++			tmp = html_length_get_value (&HTML_BOX_GET_STYLE (self)->box->max_height, parent->height -
++						     html_box_horizontal_mbp_sum (parent) - html_box_horizontal_mbp_sum (self));
+ 			if (*boxheight > tmp)
+ 				*boxheight = tmp;		
+ 
+Index: gtkhtml2/libgtkhtml/layout/htmlboxblock.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/htmlboxblock.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/htmlboxblock.c	2006-01-25 19:21:10.000000000 +0000
+@@ -358,8 +358,7 @@
+ 
+ 	/* Get the prefered width */
+ 	/* If the width wasn't specified by CSS, use the width of the containing box (parent) */
+-
+-	if (self->parent) {
++	if (html_box_get_containing_block (self)) {
+ 
+ 		if (style->Float != HTML_FLOAT_NONE)
+ 			new_width = html_length_get_value (&style->box->width, html_box_get_containing_block_width (self));
+Index: gtkhtml2/libgtkhtml/graphics/htmlimagefactory.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/graphics/htmlimagefactory.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/graphics/htmlimagefactory.c	2006-01-25 19:21:10.000000000 +0000
+@@ -127,7 +127,7 @@
+ }
+ 
+ static void
+-html_image_shutdown (HtmlImage *image, HtmlImageFactory *image_factory)
++html_image_shutdown (HtmlImageFactory *image_factory, HtmlImage *image)
+ {
+ 	g_hash_table_remove (image_factory->image_hash, image->uri);
+ }
+@@ -146,8 +146,7 @@
+ 		
+ 		image = HTML_IMAGE (g_object_new (HTML_IMAGE_TYPE, NULL));
+ 
+-		g_signal_connect (G_OBJECT (image), "last_unref",
+-				  G_CALLBACK (html_image_shutdown), image_factory);
++		g_object_weak_ref (G_OBJECT (image), (GWeakNotify)html_image_shutdown, image_factory);
+ 		
+ 		image->loading = TRUE;
+ 		
+Index: gtkhtml2/libgtkhtml/layout/html/htmlboxembeddedimage.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/html/htmlboxembeddedimage.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/html/htmlboxembeddedimage.c	2006-01-25 19:21:10.000000000 +0000
+@@ -64,25 +64,36 @@
+ }
+ 
+ static void
+-html_box_embedded_image_class_init (HtmlBoxClass *klass)
++html_box_embedded_image_resize_image (HtmlImage *image, HtmlBoxEmbeddedImage *box)
+ {
+-	
+-	klass->paint    = html_box_embedded_image_paint;
+-	klass->relayout = html_box_embedded_image_relayout;
++	g_signal_emit_by_name (G_OBJECT (box->view->document), "relayout_node", HTML_BOX (box)->dom_node);
++}
+ 
+-	parent_class = g_type_class_peek_parent (klass);
++static void
++html_box_embedded_image_repaint_image (HtmlImage *image, gint x, gint y, gint width, gint height, HtmlBoxEmbeddedImage *box)
++{
++	g_signal_emit_by_name (G_OBJECT (box->view->document), "repaint_node", HTML_BOX (box)->dom_node);
+ }
+ 
+ static void
+-html_box_embedded_image_resize_image (HtmlImage *image, HtmlBoxEmbeddedImage *box)
++html_box_embedded_image_finalize (GObject *object)
+ {
+-	g_signal_emit_by_name (G_OBJECT (box->view->document), "relayout_node", HTML_BOX (box)->dom_node);
++	HtmlBoxEmbeddedImage *image = HTML_BOX_EMBEDDED_IMAGE (object);
++
++	g_signal_handlers_disconnect_by_func (G_OBJECT (image->image), G_CALLBACK (html_box_embedded_image_resize_image), image);
++	g_signal_handlers_disconnect_by_func (G_OBJECT (image->image), G_CALLBACK (html_box_embedded_image_repaint_image), image);
+ }
+ 
+ static void
+-html_box_embedded_image_repaint_image (HtmlImage *image, gint x, gint y, gint width, gint height, HtmlBoxEmbeddedImage *box)
++html_box_embedded_image_class_init (HtmlBoxClass *klass)
+ {
+-	g_signal_emit_by_name (G_OBJECT (box->view->document), "repaint_node", HTML_BOX (box)->dom_node);
++	GObjectClass *object_class = (GObjectClass *)klass;
++	
++	klass->paint    = html_box_embedded_image_paint;
++	klass->relayout = html_box_embedded_image_relayout;
++	object_class->finalize = html_box_embedded_image_finalize;
++
++	parent_class = g_type_class_peek_parent (klass);
+ }
+ 
+ void
+Index: gtkhtml2/libgtkhtml/layout/htmlboxtext.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/htmlboxtext.c	2006-01-25 19:19:23.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/htmlboxtext.c	2006-01-25 19:21:10.000000000 +0000
+@@ -146,6 +146,7 @@
+ 
+ 	master = text->master;
+ 	if (master) {
++		html_box_text_destroy_slaves (text);
+ 		html_box_text_free_master (master);
+ 		g_free (master);
+ 		text->master = NULL;
+Index: gtkhtml2/libgtkhtml/layout/html/htmlboximage.c
+===================================================================
+--- gtkhtml2.orig/libgtkhtml/layout/html/htmlboximage.c	2006-01-25 19:21:09.000000000 +0000
++++ gtkhtml2/libgtkhtml/layout/html/htmlboximage.c	2006-01-25 19:21:33.000000000 +0000
+@@ -195,10 +195,41 @@
+ }
+ 
+ static void
++html_box_image_resize_image (HtmlImage *image, HtmlBoxImage *box)
++{
++	g_signal_emit_by_name (G_OBJECT (box->view->document), "relayout_node", HTML_BOX (box)->dom_node);
++}
++
++static void
++html_box_image_repaint_image (HtmlImage *image, gint x, gint y, gint width, gint height, HtmlBoxImage *box)
++{
++	gdouble real_x, real_y;
++	gdouble real_width, real_height;
++
++	if (box->scaled_pixbuf && image->pixbuf) {
++
++		html_box_image_update_scaled_pixbuf (box, gdk_pixbuf_get_width (box->scaled_pixbuf), gdk_pixbuf_get_height (box->scaled_pixbuf)); 
++		real_y = (y * gdk_pixbuf_get_height (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_height (image->pixbuf);
++		real_x = (x * gdk_pixbuf_get_width (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_width (image->pixbuf);
++		
++		real_height = (height * gdk_pixbuf_get_height (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_height (image->pixbuf);
++		real_width = (width * gdk_pixbuf_get_width (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_width (image->pixbuf);
++		
++		gtk_widget_queue_draw_area (GTK_WIDGET (box->view),
++					    html_box_get_absolute_x (HTML_BOX (box)), /* + floor (real_x + 0.5),*/
++					    html_box_get_absolute_y (HTML_BOX (box)),/* + floor (real_y + 0.5),*/
++					    floor (real_width + real_x + 0.5),
++					    floor (real_height + real_y + 0.5));
++	}
++}
++
++static void
+ html_box_image_finalize (GObject *object)
+ {
+ 	HtmlBoxImage *image = HTML_BOX_IMAGE (object);
+ 
++	g_signal_handlers_disconnect_by_func (G_OBJECT (image->image), G_CALLBACK (html_box_image_resize_image), image);
++	g_signal_handlers_disconnect_by_func (G_OBJECT (image->image), G_CALLBACK (html_box_image_repaint_image), image);
+ 	if (image->scaled_pixbuf)
+ 		g_object_unref (image->scaled_pixbuf);
+ 
+@@ -262,35 +293,6 @@
+ 	return HTML_BOX (box);
+ }
+ 
+-static void
+-html_box_image_resize_image (HtmlImage *image, HtmlBoxImage *box)
+-{
+-	g_signal_emit_by_name (G_OBJECT (box->view->document), "relayout_node", HTML_BOX (box)->dom_node);
+-}
+-
+-static void
+-html_box_image_repaint_image (HtmlImage *image, gint x, gint y, gint width, gint height, HtmlBoxImage *box)
+-{
+-	gdouble real_x, real_y;
+-	gdouble real_width, real_height;
+-
+-	if (box->scaled_pixbuf && image->pixbuf) {
+-
+-		html_box_image_update_scaled_pixbuf (box, gdk_pixbuf_get_width (box->scaled_pixbuf), gdk_pixbuf_get_height (box->scaled_pixbuf)); 
+-		real_y = (y * gdk_pixbuf_get_height (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_height (image->pixbuf);
+-		real_x = (x * gdk_pixbuf_get_width (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_width (image->pixbuf);
+-		
+-		real_height = (height * gdk_pixbuf_get_height (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_height (image->pixbuf);
+-		real_width = (width * gdk_pixbuf_get_width (box->scaled_pixbuf)) / (gdouble)gdk_pixbuf_get_width (image->pixbuf);
+-		
+-		gtk_widget_queue_draw_area (GTK_WIDGET (box->view),
+-					    html_box_get_absolute_x (HTML_BOX (box)), /* + floor (real_x + 0.5),*/
+-					    html_box_get_absolute_y (HTML_BOX (box)),/* + floor (real_y + 0.5),*/
+-					    floor (real_width + real_x + 0.5),
+-					    floor (real_height + real_y + 0.5));
+-	}
+-}
+-
+ void
+ html_box_image_set_image (HtmlBoxImage *box, HtmlImage *image)
+ {
