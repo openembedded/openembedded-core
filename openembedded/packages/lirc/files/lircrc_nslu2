@@ -1,0 +1,113 @@
+# This is the default files read by all lirc clients
+# (see also /etc/lircd.conf)
+
+# I run /sbin/buzzer before every command to get an audible feedback
+
+## Here LIRC could shutdown your system
+#begin
+#  prog = irexec
+#  remote = RC5
+#  repeat = 0
+#  button = vcr2-standby
+#  config = /sbin/buzzer; /sbin/halt
+#end
+
+
+## Here LIRC controls your mpd music deamon
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-pause
+  config = /sbin/buzzer; mpc toggle
+end
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-step+
+  config = /sbin/buzzer; mpc next
+end
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-step-
+  config = /sbin/buzzer; mpc prev
+end
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-scan_forward
+  config = /sbin/buzzer; mpc seek +00:00:30
+end
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-scan_reverse
+  config = /sbin/buzzer; mpc seek -00:00:30
+end
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-brightness+
+  config = /sbin/buzzer; mpc volume +20
+end
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-brightness-
+  config = /sbin/buzzer; mpc volume -20
+end
+
+
+## Here LIRC acts as an repeater
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-volume+
+  config = /sbin/buzzer; irsend SEND_ONCE RC5 amp1-volume+
+end
+begin
+  prog = irexec
+  remote = RC5
+  repeat = 0
+  button = vcr2-volume-
+  config = /sbin/buzzer; irsend SEND_ONCE RC5 amp1-volume-
+end
+
+
+## Here LIRC is the input device for your LC display software
+begin
+  prog = lcdd
+  remote = RC5
+  repeat = 0
+  button = vcr2-1
+  config = A
+end
+begin
+  prog = lcdd
+  remote = RC5
+  repeat = 0
+  button = vcr2-2
+  config = B
+end
+begin
+  prog = lcdd
+  remote = RC5
+  repeat = 0
+  button = vcr2-3
+  config = C
+end
+begin
+  prog = lcdd
+  remote = RC5
+  repeat = 0
+  button = vcr2-4
+  config = D
+end
