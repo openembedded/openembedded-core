@@ -25,7 +25,8 @@ CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
 CMDLINE_ROOT = "root=/dev/mtdblock2 rootfstype=jffs2"
 CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 rw"
 CMDLINE_ROOT_borzoi = "root=/dev/hda1 rootfstype=ext3 rw"
-CMDLINE_OTHER = "dyntick=enable debug"
+CMDLINE_OTHER = "dyntick=enable"
+CMDLINE_DEBUG = '${@base_conditional("DISTRO_TYPE", "release", "quiet", "debug",d)}'
 
 ##############################################################
 # Configure memory/ramdisk split for collie
@@ -37,7 +38,7 @@ CMDLINE_MEM_collie = "mem=${mem}M"
 CMDLINE_ROTATE_spitz = "fbcon=rotate:1"
 CMDLINE_ROTATE_akita = "fbcon=rotate:1"
 CMDLINE_ROTATE_borzoi = "fbcon=rotate:1"
-CMDLINE = "${CMDLINE_CON} ${CMDLINE_ROOT} ${CMDLINE_MEM} ${CMDLINE_ROTATE} ${CMDLINE_OTHER}"
+CMDLINE = "${CMDLINE_CON} ${CMDLINE_ROOT} ${CMDLINE_MEM} ${CMDLINE_ROTATE} ${CMDLINE_OTHER} ${CMDLINE_DEBUG}"
 
 ###############################################################
 # Enable or disable ELPP via local.conf - default is "no"
