@@ -8,6 +8,7 @@ SRC_URI += " \
 	   file://links.conf \
            file://permissions.rules \
 	   file://mount.sh \
+	   file://network.sh \
 	   file://local.rules \
            file://init"
 
@@ -19,7 +20,7 @@ FILES_udev-utils = "${usrbindir}/udevinfo ${usrbindir}/udevtest"
 inherit update-rc.d
 
 INITSCRIPT_NAME = "udev"
-INITSCRIPT_PARAMS = "start 04 S ."
+INITSCRIPT_PARAMS = "start 04 S . start 55 0 6 ."
 
 export CROSS = "${TARGET_PREFIX}"
 export HOSTCC = "${BUILD_CC}"
@@ -56,4 +57,5 @@ do_install () {
 	install -d ${D}${sysconfdir}/udev/scripts/
 
 	install -m 0755 ${WORKDIR}/mount.sh ${D}${sysconfdir}/udev/scripts/mount.sh
+	install -m 0755 ${WORKDIR}/network.sh ${D}${sysconfdir}/udev/scripts
 }
