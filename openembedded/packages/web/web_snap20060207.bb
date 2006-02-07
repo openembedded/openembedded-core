@@ -1,6 +1,7 @@
 LICENSE = "GPL"
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ libglade gtkhtml2 libsoup gconf js"
+DEPENDS = "glib-2.0 gtk+ libglade gtkhtml2 curl gconf js"
+RDEPENDS = "libcurl js"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Web is a multi-platform web browsing application."
 

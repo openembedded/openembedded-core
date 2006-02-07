@@ -1,8 +1,8 @@
-Index: gtkhtml2/libgtkhtml/css/cssmatcher.c
+Index: libgtkhtml/css/cssmatcher.c
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/css/cssmatcher.c	2006-01-25 02:07:44.000000000 +0000
-+++ gtkhtml2/libgtkhtml/css/cssmatcher.c	2006-02-01 02:19:13.000000000 +0000
-@@ -2411,7 +2411,8 @@
+--- libgtkhtml/css/cssmatcher.c.orig	2006-02-05 18:19:15.000000000 +0000
++++ libgtkhtml/css/cssmatcher.c	2006-02-05 18:20:15.000000000 +0000
+@@ -2411,7 +2411,8 @@ css_matcher_apply_stylesheet (HtmlDocume
  		CssStatement *stat = list->data;
  		gint j;
  
@@ -12,7 +12,7 @@ Index: gtkhtml2/libgtkhtml/css/cssmatcher.c
  			if (stat->s.import_rule.fetched) {
  				if (stat->s.import_rule.sheet) {
  					css_matcher_apply_stylesheet (doc, stat->s.import_rule.sheet, node, declaration_list, type, pseudo);
-@@ -2440,31 +2441,65 @@
+@@ -2440,31 +2441,65 @@ css_matcher_apply_stylesheet (HtmlDocume
  				g_free (str);
  #endif			
  			}
@@ -97,7 +97,7 @@ Index: gtkhtml2/libgtkhtml/css/cssmatcher.c
  		}
  	}
  }
-@@ -2781,7 +2816,7 @@
+@@ -2781,7 +2816,7 @@ css_matcher_get_style (HtmlDocument *doc
  	css_matcher_html_to_css (doc, style, node);
  	
  	if (!default_stylesheet) {
@@ -106,7 +106,7 @@ Index: gtkhtml2/libgtkhtml/css/cssmatcher.c
  	}
  
  	css_matcher_apply_stylesheet (doc, default_stylesheet, node, &declaration_list, CSS_STYLESHEET_DEFAULT, pseudo);
-@@ -2800,25 +2835,31 @@
+@@ -2800,25 +2835,31 @@ css_matcher_get_style (HtmlDocument *doc
  	prop = xmlGetProp (node, "style");
  	
  	if (prop) {
@@ -153,11 +153,11 @@ Index: gtkhtml2/libgtkhtml/css/cssmatcher.c
  		xmlFree (prop);
  	}
  
-Index: gtkhtml2/libgtkhtml/document/htmldocument.c
+Index: libgtkhtml/document/htmldocument.c
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/document/htmldocument.c	2006-01-25 02:07:49.000000000 +0000
-+++ gtkhtml2/libgtkhtml/document/htmldocument.c	2006-02-01 02:19:13.000000000 +0000
-@@ -147,9 +147,7 @@
+--- libgtkhtml/document/htmldocument.c.orig	2006-02-05 18:20:06.000000000 +0000
++++ libgtkhtml/document/htmldocument.c	2006-02-05 18:20:15.000000000 +0000
+@@ -142,9 +142,7 @@ html_document_stylesheet_stream_close (c
  	if (!buffer)
  		return;
  	
@@ -168,7 +168,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  
  	for (list = sheet->stat; list; list = list->next) {
  		CssStatement *statement = list->data;
-@@ -158,15 +156,13 @@
+@@ -153,15 +151,13 @@ html_document_stylesheet_stream_close (c
  		switch (statement->type) {
  		case CSS_IMPORT_RULE: {
  			HtmlDocumentStreamData *stream_data_import;
@@ -187,7 +187,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  			break;
  		}
  		default:
-@@ -174,8 +170,11 @@
+@@ -169,8 +165,11 @@ html_document_stylesheet_stream_close (c
  		}
  	}
  
@@ -200,7 +200,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  
  	/* Restyle the document */
  	style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
-@@ -216,21 +215,22 @@
+@@ -211,21 +210,22 @@ html_document_node_inserted_traverser (H
  					HtmlDocumentStreamData *stream_data;
  					HtmlStream *stream;
  					
@@ -226,7 +226,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  			}
  			g_free (str);
  		}
-@@ -282,8 +282,10 @@
+@@ -277,8 +277,10 @@ html_document_node_inserted_traverser (H
  			CssStylesheet *ss;
  			HtmlStyleChange style_change;
  			GSList *list;
@@ -238,7 +238,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  
  			for (list = ss->stat; list; list = list->next) {
  				CssStatement *statement = list->data;
-@@ -296,9 +298,10 @@
+@@ -291,9 +293,10 @@ html_document_node_inserted_traverser (H
  					
  					cssurl = css_value_to_string (statement->s.import_rule.url);
  					
@@ -250,7 +250,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  
  					stream = html_stream_buffer_new (html_document_stylesheet_stream_close, stream_data);
  					g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, cssurl, stream);
-@@ -546,6 +549,9 @@
+@@ -541,6 +544,9 @@ html_document_finalize (GObject *object)
  
  	if (document->parser)
  		g_object_unref (G_OBJECT (document->parser));
@@ -260,7 +260,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  
  	parent_class->finalize (object);
  }
-@@ -753,6 +759,7 @@
+@@ -748,6 +754,7 @@ html_document_init (HtmlDocument *docume
  {
  	document->stylesheets = NULL;
  	document->image_factory = html_image_factory_new ();
@@ -268,25 +268,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
  
  	g_signal_connect (G_OBJECT (document->image_factory), "request_image",
  			  G_CALLBACK (html_document_request_image), document);
-@@ -1129,7 +1136,7 @@
- }
- 
- CssStylesheet *
--html_document_add_stylesheet (HtmlDocument *document, const gchar *buffer, gint len)
-+html_document_add_stylesheet (HtmlDocument *document, const gchar *buffer, gint len, const gchar *media)
- {
- 	CssStylesheet *sheet;
- 	HtmlStyleChange style_change;
-@@ -1140,7 +1147,7 @@
- 	 * complications it would cause with removal.
- 	 */
- 	
--	sheet = css_parser_parse_stylesheet (buffer, len, NULL);
-+	sheet = css_parser_parse_stylesheet (buffer, len, NULL, media);
- 	document->stylesheets = g_slist_append (document->stylesheets, sheet);
- 	
- 	style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
-@@ -1159,3 +1166,24 @@
+@@ -1150,3 +1157,24 @@ html_document_remove_stylesheet	(HtmlDoc
  	return TRUE;
  }
  
@@ -311,11 +293,11 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
 +{
 +	return document->media_type;
 +}
-Index: gtkhtml2/libgtkhtml/document/htmldocument.h
+Index: libgtkhtml/document/htmldocument.h
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/document/htmldocument.h	2006-01-25 02:07:49.000000000 +0000
-+++ gtkhtml2/libgtkhtml/document/htmldocument.h	2006-01-25 02:07:50.000000000 +0000
-@@ -64,6 +64,8 @@
+--- libgtkhtml/document/htmldocument.h.orig	2006-02-05 18:20:06.000000000 +0000
++++ libgtkhtml/document/htmldocument.h	2006-02-05 18:20:15.000000000 +0000
+@@ -64,6 +64,8 @@ struct _HtmlDocument {
  	DomNode *hover_node;
  	DomNode *active_node;
  	DomElement *focus_element;
@@ -324,7 +306,7 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.h
  };
  
  struct _HtmlDocumentClass {
-@@ -97,6 +99,7 @@
+@@ -97,6 +99,7 @@ struct _HtmlDocumentClass {
  struct _HtmlDocumentStreamData {
  	HtmlDocument *document;
  	gpointer internal_data;
@@ -332,25 +314,22 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.h
  };
  
  GType html_document_get_type (void);
-@@ -113,9 +116,12 @@
- void     html_document_update_focus_element (HtmlDocument *document, DomElement *element);
- DomNode *html_document_find_anchor          (HtmlDocument *doc, const gchar *anchor);
- 
--CssStylesheet	*html_document_add_stylesheet	(HtmlDocument *document, const gchar *buffer, gint len);
-+CssStylesheet	*html_document_add_stylesheet	(HtmlDocument *document, const gchar *buffer, gint len, const gchar *media);
+@@ -116,6 +119,10 @@ DomNode *html_document_find_anchor      
+ void	html_document_add_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
  gboolean	html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
  
-+void		html_document_set_media_type	(HtmlDocument *document, const gchar *type);
-+const gchar	*html_document_get_media_type	(HtmlDocument *document);
++void		html_document_set_media_type (HtmlDocument *document, const gchar *type);
++const gchar 	*html_document_get_media_type (HtmlDocument *document);
++
 +
  G_END_DECLS
  
  #endif /* __HTMLDOCUMENT_H__ */
-Index: gtkhtml2/libgtkhtml/css/cssparser.c
+Index: libgtkhtml/css/cssparser.c
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/css/cssparser.c	2006-01-25 02:05:54.000000000 +0000
-+++ gtkhtml2/libgtkhtml/css/cssparser.c	2006-01-25 02:07:50.000000000 +0000
-@@ -688,6 +688,32 @@
+--- libgtkhtml/css/cssparser.c.orig	2006-02-05 18:19:15.000000000 +0000
++++ libgtkhtml/css/cssparser.c	2006-02-05 18:20:15.000000000 +0000
+@@ -688,6 +688,32 @@ css_parser_parse_value (const gchar *buf
  	return pos;
  }
  
@@ -383,7 +362,7 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.c
  
  static gint
  css_parser_parse_attr_selector (const gchar *buffer, gint start_pos, gint end_pos, CssTail *tail)
-@@ -1329,7 +1355,7 @@
+@@ -1329,7 +1355,7 @@ css_parser_parse_atkeyword (const gchar 
  
  /*		g_print ("Going to return: %d\n", pos); */
  		
@@ -392,7 +371,7 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.c
  		
  		break;
  	case HTML_ATOM_PAGE:
-@@ -1390,7 +1416,8 @@
+@@ -1390,7 +1416,8 @@ css_parser_parse_atkeyword (const gchar 
  		break;
  	case HTML_ATOM_IMPORT: {
  		gchar *import_url;
@@ -402,7 +381,7 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.c
  
  		cur_pos = css_parser_parse_to_char (buffer, ';', pos, end_pos);
  
-@@ -1411,6 +1438,7 @@
+@@ -1411,6 +1438,7 @@ css_parser_parse_atkeyword (const gchar 
  			return cur_pos + 1;
  		}
  		
@@ -410,7 +389,7 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.c
  		s_url++;
  		e_url--;
  		
-@@ -1434,6 +1462,11 @@
+@@ -1434,6 +1462,11 @@ css_parser_parse_atkeyword (const gchar 
  		result->type = CSS_IMPORT_RULE;
  
  		result->s.import_rule.url = css_value_string_new (import_url);
@@ -422,7 +401,7 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.c
  
  		*ret_val = result;
  
-@@ -1489,7 +1522,7 @@
+@@ -1489,7 +1522,7 @@ css_parser_parse_style_attr (const gchar
  }
  
  CssStylesheet *
@@ -431,7 +410,7 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.c
  {
  	CssStylesheet *result;
  	GSList *stat = NULL;
-@@ -1515,12 +1548,23 @@
+@@ -1515,12 +1548,23 @@ css_parser_parse_stylesheet (const gchar
  			pos = css_parser_parse_ruleset (buffer, pos, end_pos, &ruleset, base_url);
  
  			if (ruleset) {
@@ -460,10 +439,10 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.c
  			}
  
  			if (pos == -1)
-Index: gtkhtml2/libgtkhtml/css/cssparser.h
+Index: libgtkhtml/css/cssparser.h
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/css/cssparser.h	2006-01-25 02:05:54.000000000 +0000
-+++ gtkhtml2/libgtkhtml/css/cssparser.h	2006-01-25 02:07:50.000000000 +0000
+--- libgtkhtml/css/cssparser.h.orig	2006-02-05 18:19:15.000000000 +0000
++++ libgtkhtml/css/cssparser.h	2006-02-05 18:20:15.000000000 +0000
 @@ -30,7 +30,7 @@
  
  G_BEGIN_DECLS
@@ -473,11 +452,11 @@ Index: gtkhtml2/libgtkhtml/css/cssparser.h
  CssRuleset *css_parser_parse_style_attr (const gchar *buffer, gint len, const gchar *base_url);
  
  G_END_DECLS
-Index: gtkhtml2/libgtkhtml/css/cssstylesheet.h
+Index: libgtkhtml/css/cssstylesheet.h
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/css/cssstylesheet.h	2006-02-01 02:19:56.000000000 +0000
-+++ gtkhtml2/libgtkhtml/css/cssstylesheet.h	2006-02-01 02:20:08.000000000 +0000
-@@ -99,6 +99,7 @@
+--- libgtkhtml/css/cssstylesheet.h.orig	2006-02-05 18:19:15.000000000 +0000
++++ libgtkhtml/css/cssstylesheet.h	2006-02-05 18:20:15.000000000 +0000
+@@ -99,6 +99,7 @@ struct _CssStatement {
  			CssValue *url;
  			gboolean fetched;
  			gboolean fetching;

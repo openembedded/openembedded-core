@@ -1,31 +1,27 @@
-Index: gtkhtml2/libgtkhtml/document/htmldocument.c
+Index: libgtkhtml/document/htmldocument.c
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/document/htmldocument.c	2006-01-21 02:24:09.000000000 +0000
-+++ gtkhtml2/libgtkhtml/document/htmldocument.c	2006-01-21 04:21:37.000000000 +0000
-@@ -1127,3 +1127,35 @@
+--- libgtkhtml/document/htmldocument.c.orig	2006-02-05 18:19:17.000000000 +0000
++++ libgtkhtml/document/htmldocument.c	2006-02-05 18:20:06.000000000 +0000
+@@ -1122,3 +1122,31 @@ html_document_find_anchor (HtmlDocument 
  	else
  		return NULL;
  }
 +
-+CssStylesheet *
-+html_document_add_stylesheet (HtmlDocument *document, const gchar *buffer, gint len)
++void
++html_document_add_stylesheet (HtmlDocument *document, CssStylesheet *sheet)
 +{
-+	CssStylesheet *sheet;
 +	HtmlStyleChange style_change;
 +	
-+	g_return_val_if_fail (buffer && (len > 0) && HTML_IS_DOCUMENT (document), NULL);
++	g_return_val_if_fail (HTML_IS_DOCUMENT (document), NULL);
 +	
 +	/* Note: @import not supported for user stylesheets, due to
 +	 * complications it would cause with removal.
 +	 */
 +	
-+	sheet = css_parser_parse_stylesheet (buffer, len, NULL);
 +	document->stylesheets = g_slist_append (document->stylesheets, sheet);
 +	
 +	style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
 +	g_signal_emit (G_OBJECT (document), document_signals [STYLE_UPDATED], 0, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), style_change);
-+	
-+	return sheet;
 +}
 +
 +gboolean
@@ -38,15 +34,15 @@ Index: gtkhtml2/libgtkhtml/document/htmldocument.c
 +	return TRUE;
 +}
 +
-Index: gtkhtml2/libgtkhtml/document/htmldocument.h
+Index: libgtkhtml/document/htmldocument.h
 ===================================================================
---- gtkhtml2.orig/libgtkhtml/document/htmldocument.h	2006-01-21 02:24:09.000000000 +0000
-+++ gtkhtml2/libgtkhtml/document/htmldocument.h	2006-01-21 03:48:55.000000000 +0000
-@@ -113,6 +113,9 @@
+--- libgtkhtml/document/htmldocument.h.orig	2006-02-05 18:19:17.000000000 +0000
++++ libgtkhtml/document/htmldocument.h	2006-02-05 18:20:06.000000000 +0000
+@@ -113,6 +113,9 @@ void     html_document_update_active_nod
  void     html_document_update_focus_element (HtmlDocument *document, DomElement *element);
  DomNode *html_document_find_anchor          (HtmlDocument *doc, const gchar *anchor);
  
-+CssStylesheet	*html_document_add_stylesheet	(HtmlDocument *document, const gchar *buffer, gint len);
++void	html_document_add_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
 +gboolean	html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
 +
  G_END_DECLS

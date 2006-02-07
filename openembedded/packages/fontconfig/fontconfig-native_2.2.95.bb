@@ -4,6 +4,7 @@ include fontconfig_${PV}.bb
 inherit native
 DEPENDS = "freetype-native expat-native zlib-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/fontconfig-${PV}"
+SRC_URI += " file://stop-fc-cache.patch;patch=1"
 
 EXTRA_OEMAKE = ""
 

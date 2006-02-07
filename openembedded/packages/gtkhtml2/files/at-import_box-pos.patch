@@ -1,11 +1,8 @@
 Index: libgtkhtml/css/cssmatcher.c
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssmatcher.c,v
-retrieving revision 1.53
-diff -u -r1.53 cssmatcher.c
---- libgtkhtml/css/cssmatcher.c	26 Oct 2005 02:04:24 -0000	1.53
-+++ libgtkhtml/css/cssmatcher.c	18 Jan 2006 18:24:09 -0000
-@@ -79,7 +79,7 @@
+--- libgtkhtml/css/cssmatcher.c.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/css/cssmatcher.c	2006-02-05 18:19:15.000000000 +0000
+@@ -79,7 +79,7 @@ css_matcher_match_simple_selector (CssSi
  	element_name = html_atom_list_get_atom (html_atom_list, node->name);
  	
  	/* Look at the element name */
@@ -14,7 +11,7 @@ diff -u -r1.53 cssmatcher.c
  		return FALSE;
  
  	str = xmlGetProp (node, "id");
-@@ -2373,7 +2373,7 @@
+@@ -2384,7 +2384,7 @@ css_matcher_sheet_stream_close (HtmlStre
  	CssStylesheet *ss;
  
  	if (html_stream_get_written (stream) != 0) {
@@ -23,7 +20,7 @@ diff -u -r1.53 cssmatcher.c
  
  		context->stat->s.import_rule.fetched = TRUE;
  	
-@@ -2770,7 +2770,7 @@
+@@ -2781,7 +2781,7 @@ css_matcher_get_style (HtmlDocument *doc
  	css_matcher_html_to_css (doc, style, node);
  	
  	if (!default_stylesheet) {
@@ -32,7 +29,7 @@ diff -u -r1.53 cssmatcher.c
  	}
  
  	css_matcher_apply_stylesheet (doc, default_stylesheet, node, &declaration_list, CSS_STYLESHEET_DEFAULT, pseudo);
-@@ -2789,7 +2789,7 @@
+@@ -2800,7 +2800,7 @@ css_matcher_get_style (HtmlDocument *doc
  	prop = xmlGetProp (node, "style");
  	
  	if (prop) {
@@ -43,12 +40,9 @@ diff -u -r1.53 cssmatcher.c
  		if (rs) {
 Index: libgtkhtml/css/cssparser.c
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssparser.c,v
-retrieving revision 1.23
-diff -u -r1.23 cssparser.c
---- libgtkhtml/css/cssparser.c	25 Sep 2005 02:07:21 -0000	1.23
-+++ libgtkhtml/css/cssparser.c	18 Jan 2006 18:24:09 -0000
-@@ -49,7 +49,7 @@
+--- libgtkhtml/css/cssparser.c.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/css/cssparser.c	2006-02-05 18:19:15.000000000 +0000
+@@ -49,7 +49,7 @@ const gchar *css_dimensions[] = {
  
  const gint css_n_dimensions = sizeof (css_dimensions) / sizeof (css_dimensions[0]);
  
@@ -57,7 +51,7 @@ diff -u -r1.23 cssparser.c
  
  /* FIXME: Needs more whitespace types */
  static gint
-@@ -443,7 +443,7 @@
+@@ -443,7 +443,7 @@ css_parser_parse_number (const gchar *bu
  }
  
  static gint
@@ -66,7 +60,7 @@ diff -u -r1.23 cssparser.c
  {
  	gint pos;
  	HtmlAtom atom;
-@@ -481,7 +481,7 @@
+@@ -481,7 +481,7 @@ css_parser_parse_term (const gchar *buff
  				return -1;
  			}
  			
@@ -75,7 +69,7 @@ diff -u -r1.23 cssparser.c
  
  			if (pos == -1) {
  				/*
-@@ -495,10 +495,48 @@
+@@ -495,10 +495,48 @@ css_parser_parse_term (const gchar *buff
  				pos = func_end;
  			}
  			if (pos != -1) {
@@ -126,7 +120,7 @@ diff -u -r1.23 cssparser.c
  			}
  
  			/* This is due to the ) */
-@@ -566,7 +604,7 @@
+@@ -566,7 +604,7 @@ css_parser_parse_term (const gchar *buff
  }
  
  static gint
@@ -135,7 +129,7 @@ diff -u -r1.23 cssparser.c
  {
  	gint pos = start_pos;
  	gint n = 0;
-@@ -589,7 +627,7 @@
+@@ -589,7 +627,7 @@ css_parser_parse_value (const gchar *buf
  			css_value_list_append (list, term, list_sep);
  		}
  
@@ -144,7 +138,7 @@ diff -u -r1.23 cssparser.c
  		
  		if (pos == -1) {
  			if (list)
-@@ -618,7 +656,7 @@
+@@ -618,7 +656,7 @@ css_parser_parse_value (const gchar *buf
  		}
  		else {
  			/* Try and parse the term to see if it's valid */
@@ -153,7 +147,7 @@ diff -u -r1.23 cssparser.c
  				if (term)
  					css_value_unref (term);
  				if (list)
-@@ -1005,7 +1043,7 @@
+@@ -1005,7 +1043,7 @@ css_parser_parse_selectors (const gchar 
  }
  
  static gint
@@ -162,7 +156,7 @@ diff -u -r1.23 cssparser.c
  {
  	CssValue *value;
  	CssDeclaration *result;
-@@ -1040,7 +1078,7 @@
+@@ -1040,7 +1078,7 @@ css_parser_parse_declaration (const gcha
  
  	pos = css_parser_parse_whitespace (buffer, pos, prio_pos);
  
@@ -171,7 +165,7 @@ diff -u -r1.23 cssparser.c
  	
  	if (pos == -1) {
  		return end_pos;
-@@ -1063,7 +1101,7 @@
+@@ -1063,7 +1101,7 @@ css_parser_parse_declaration (const gcha
  }
  
  static CssDeclaration **
@@ -180,7 +174,7 @@ diff -u -r1.23 cssparser.c
  {
  	gint pos = start_pos;
  	gint cur_pos = start_pos;
-@@ -1079,7 +1117,7 @@
+@@ -1079,7 +1117,7 @@ css_parser_parse_declarations (const gch
  		
  		pos = css_parser_parse_to_char (buffer, ';', pos, end_pos);
  
@@ -189,7 +183,7 @@ diff -u -r1.23 cssparser.c
  
  		if (declaration) {
  			if (n_decl == n_decl_max)
-@@ -1100,7 +1138,7 @@
+@@ -1100,7 +1138,7 @@ css_parser_parse_declarations (const gch
  }
  
  static gint
@@ -198,7 +192,7 @@ diff -u -r1.23 cssparser.c
  {
  	gint cur_pos;
  	gint pos;
-@@ -1143,7 +1181,7 @@
+@@ -1143,7 +1181,7 @@ css_parser_parse_ruleset (const gchar *b
  	}
  	cur_pos = css_parser_parse_whitespace (buffer, cur_pos, end_pos);
  
@@ -207,7 +201,7 @@ diff -u -r1.23 cssparser.c
  
  	pos++;
  	
-@@ -1186,7 +1224,8 @@
+@@ -1186,7 +1224,8 @@ css_parser_prepare_stylesheet (const gch
  		}
  		else if (str[pos] == '/' &&
  			 pos + 1 <= len &&
@@ -217,7 +211,7 @@ diff -u -r1.23 cssparser.c
  			while (pos < len &&
  			       str[pos] != '\n')
  				pos++;
-@@ -1204,7 +1243,7 @@
+@@ -1204,7 +1243,7 @@ css_parser_prepare_stylesheet (const gch
  }
  
  static gint
@@ -226,7 +220,7 @@ diff -u -r1.23 cssparser.c
  {
  	gint pos = start_pos;
  	gint tmp_pos, cur_pos;
-@@ -1257,14 +1296,14 @@
+@@ -1257,14 +1296,14 @@ css_parser_parse_atkeyword (const gchar 
  		tmp_pos++;
  
  		
@@ -243,7 +237,7 @@ diff -u -r1.23 cssparser.c
  
  			if (n_rs == n_rs_max) 
  				rs = g_realloc (rs, sizeof (CssRuleset *) *
-@@ -1277,7 +1316,7 @@
+@@ -1277,7 +1316,7 @@ css_parser_parse_atkeyword (const gchar 
  		
  		pos = css_parser_parse_whitespace (buffer, tmp_pos + 1, end_pos);
  		
@@ -252,7 +246,7 @@ diff -u -r1.23 cssparser.c
  		result->type = CSS_MEDIA_RULE;
  		result->s.media_rule.rs = rs;
  		result->s.media_rule.n_rs = n_rs;
-@@ -1318,11 +1357,11 @@
+@@ -1318,11 +1357,11 @@ css_parser_parse_atkeyword (const gchar 
  
  		pos = css_parser_parse_whitespace (buffer, pos, cur_pos);
  		
@@ -266,7 +260,7 @@ diff -u -r1.23 cssparser.c
  		result->type = CSS_PAGE_RULE;
  		result->s.page_rule.name = name;
  		result->s.page_rule.pseudo = pseudo;
-@@ -1337,8 +1376,8 @@
+@@ -1337,8 +1376,8 @@ css_parser_parse_atkeyword (const gchar 
  		pos = css_parser_parse_whitespace (buffer, pos + 1, end_pos);
  		cur_pos = css_parser_parse_to_char (buffer, '}', pos, end_pos);
  
@@ -277,7 +271,7 @@ diff -u -r1.23 cssparser.c
  		result->type = CSS_FONT_FACE_RULE;
  
  		result->s.font_face_rule.n_decl = n_decl;
-@@ -1349,8 +1388,61 @@
+@@ -1349,8 +1388,61 @@ css_parser_parse_atkeyword (const gchar 
  		return cur_pos + 1;
  		
  		break;
@@ -339,7 +333,7 @@ diff -u -r1.23 cssparser.c
  		/* Unknown keyword detected, skip to next block */
  		while (pos < end_pos) {
  			/* Handle a dangling semi-colon */
-@@ -1373,7 +1465,7 @@
+@@ -1373,7 +1465,7 @@ css_parser_parse_atkeyword (const gchar 
  }
  
  CssRuleset *
@@ -348,7 +342,7 @@ diff -u -r1.23 cssparser.c
  {
  	CssRuleset *result;
  	
-@@ -1382,7 +1474,7 @@
+@@ -1382,7 +1474,7 @@ css_parser_parse_style_attr (const gchar
  	
  	/* FIXME: Are comments allowed here? */
  
@@ -357,7 +351,7 @@ diff -u -r1.23 cssparser.c
  
  	if (!decl)
  		return NULL;
-@@ -1397,9 +1489,8 @@
+@@ -1397,9 +1489,8 @@ css_parser_parse_style_attr (const gchar
  }
  
  CssStylesheet *
@@ -368,7 +362,7 @@ diff -u -r1.23 cssparser.c
  	CssStylesheet *result;
  	GSList *stat = NULL;
  	gchar *buffer;
-@@ -1413,26 +1504,23 @@
+@@ -1413,26 +1504,23 @@ css_parser_parse_stylesheet (const gchar
  	end_pos = len;
  	while (pos < len) {
  		if (buffer[pos] == '@') {
@@ -405,7 +399,7 @@ diff -u -r1.23 cssparser.c
  			}
  
  			if (pos == -1)
-@@ -1444,7 +1532,7 @@
+@@ -1444,7 +1532,7 @@ css_parser_parse_stylesheet (const gchar
  
  	g_free (buffer);
  	
@@ -416,11 +410,8 @@ diff -u -r1.23 cssparser.c
  	return result;
 Index: libgtkhtml/css/cssparser.h
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssparser.h,v
-retrieving revision 1.7
-diff -u -r1.7 cssparser.h
---- libgtkhtml/css/cssparser.h	6 Dec 2002 17:16:54 -0000	1.7
-+++ libgtkhtml/css/cssparser.h	18 Jan 2006 18:24:09 -0000
+--- libgtkhtml/css/cssparser.h.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/css/cssparser.h	2006-02-05 18:19:15.000000000 +0000
 @@ -24,13 +24,14 @@
  #define __CSSPARSER_H__
  
@@ -440,12 +431,9 @@ diff -u -r1.7 cssparser.h
  
 Index: libgtkhtml/css/cssstylesheet.h
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssstylesheet.h,v
-retrieving revision 1.7
-diff -u -r1.7 cssstylesheet.h
---- libgtkhtml/css/cssstylesheet.h	21 Apr 2004 14:17:00 -0000	1.7
-+++ libgtkhtml/css/cssstylesheet.h	18 Jan 2006 18:24:09 -0000
-@@ -181,6 +181,7 @@
+--- libgtkhtml/css/cssstylesheet.h.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/css/cssstylesheet.h	2006-02-05 18:19:15.000000000 +0000
+@@ -181,6 +181,7 @@ struct _CssTail {
  };
  
  struct _CssStylesheet {
@@ -455,12 +443,9 @@ diff -u -r1.7 cssstylesheet.h
  };
 Index: libgtkhtml/css/cssvalue.c
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/css/cssvalue.c,v
-retrieving revision 1.6
-diff -u -r1.6 cssvalue.c
---- libgtkhtml/css/cssvalue.c	21 Apr 2004 14:17:00 -0000	1.6
-+++ libgtkhtml/css/cssvalue.c	18 Jan 2006 18:24:09 -0000
-@@ -64,7 +64,7 @@
+--- libgtkhtml/css/cssvalue.c.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/css/cssvalue.c	2006-02-04 20:13:33.000000000 +0000
+@@ -64,7 +64,7 @@ css_value_function_new (HtmlAtom name, C
  	function->name = name;
  	function->args = args;
  	
@@ -471,12 +456,9 @@ diff -u -r1.6 cssvalue.c
  	result->v.function = function;
 Index: libgtkhtml/document/htmldocument.c
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/document/htmldocument.c,v
-retrieving revision 1.122
-diff -u -r1.122 htmldocument.c
---- libgtkhtml/document/htmldocument.c	21 Feb 2005 17:31:31 -0000	1.122
-+++ libgtkhtml/document/htmldocument.c	18 Jan 2006 18:24:11 -0000
-@@ -139,14 +139,42 @@
+--- libgtkhtml/document/htmldocument.c.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/document/htmldocument.c	2006-02-05 18:19:17.000000000 +0000
+@@ -134,14 +134,42 @@ static void
  html_document_stylesheet_stream_close (const gchar *buffer, gint len, gpointer data)
  {
  	CssStylesheet *sheet;
@@ -522,7 +504,7 @@ diff -u -r1.122 htmldocument.c
  	document->stylesheets = g_slist_append (document->stylesheets, sheet);
  
  	/* Restyle the document */
-@@ -184,9 +212,15 @@
+@@ -179,9 +207,15 @@ html_document_node_inserted_traverser (H
  			
  			if (str && (strcasecmp (str, "stylesheet") == 0)) {
  				gchar *url = xmlGetProp (node->xmlnode, "href");
@@ -540,7 +522,7 @@ diff -u -r1.122 htmldocument.c
  
  					g_signal_emit (G_OBJECT (document), document_signals [REQUEST_URL], 0, url, stream);
  				}
-@@ -247,12 +281,39 @@
+@@ -242,12 +276,39 @@ html_document_node_inserted_traverser (H
  
  			CssStylesheet *ss;
  			HtmlStyleChange style_change;
@@ -586,11 +568,8 @@ diff -u -r1.122 htmldocument.c
  		else if ((node->xmlnode->type == XML_TEXT_NODE || node->xmlnode->type == XML_COMMENT_NODE) && node->xmlnode->parent && strcasecmp (node->xmlnode->parent->name, "script") == 0) {
 Index: libgtkhtml/document/htmldocument.h
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/document/htmldocument.h,v
-retrieving revision 1.35
-diff -u -r1.35 htmldocument.h
---- libgtkhtml/document/htmldocument.h	13 Feb 2005 15:33:19 -0000	1.35
-+++ libgtkhtml/document/htmldocument.h	18 Jan 2006 18:24:12 -0000
+--- libgtkhtml/document/htmldocument.h.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/document/htmldocument.h	2006-02-05 18:19:17.000000000 +0000
 @@ -25,6 +25,7 @@
  
  typedef struct _HtmlDocument HtmlDocument;
@@ -599,7 +578,7 @@ diff -u -r1.35 htmldocument.h
  
  #include <gtk/gtk.h>
  
-@@ -93,6 +94,10 @@
+@@ -93,6 +94,10 @@ struct _HtmlDocumentClass {
  	gboolean (*dom_mouse_out) (HtmlDocument *document, DomEvent *event);
  };
  
@@ -612,12 +591,9 @@ diff -u -r1.35 htmldocument.h
  
 Index: libgtkhtml/layout/htmlboxblock.c
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/layout/htmlboxblock.c,v
-retrieving revision 1.115
-diff -u -r1.115 htmlboxblock.c
---- libgtkhtml/layout/htmlboxblock.c	6 Jan 2004 10:09:56 -0000	1.115
-+++ libgtkhtml/layout/htmlboxblock.c	18 Jan 2006 18:24:14 -0000
-@@ -100,17 +100,21 @@
+--- libgtkhtml/layout/htmlboxblock.c.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/layout/htmlboxblock.c	2006-02-04 20:13:33.000000000 +0000
+@@ -100,17 +100,21 @@ html_real_box_block_update_geometry (Htm
  	HtmlBoxBlock *block = HTML_BOX_BLOCK (self);
  	gint full_width;
  
@@ -640,68 +616,11 @@ diff -u -r1.115 htmlboxblock.c
  	full_width = MAX (line->width, line->full_width);
  
  	if (full_width > block->full_width)
-@@ -233,7 +237,7 @@
- 	HtmlBoxBlock *block = HTML_BOX_BLOCK (self);
- 	HtmlLineBox *line;
- 
--	/* If it is a flotbox, just add it */
-+	/* If it is a floatbox, just add it */
- 	if (HTML_BOX_GET_STYLE (box)->Float != HTML_FLOAT_NONE) {
- 		html_box_block_handle_float (self, relayout, box, *y, boxwidth);
- 		return NULL;
-Index: libgtkhtml/layout/htmlstyleinherited.c
-===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/layout/htmlstyleinherited.c,v
-retrieving revision 1.15
-diff -u -r1.15 htmlstyleinherited.c
---- libgtkhtml/layout/htmlstyleinherited.c	6 Dec 2002 17:17:15 -0000	1.15
-+++ libgtkhtml/layout/htmlstyleinherited.c	18 Jan 2006 18:24:15 -0000
-@@ -300,6 +300,37 @@
- 		*size = (gint) (val->v.d * old_size);
- 		return TRUE;
- 	default:
-+		switch (val->v.atom) {
-+		/* FIXME: These values are copy/pasted from html.css.h, X_SMALL is guessed */
-+		case HTML_ATOM_XX_SMALL:
-+			*size = (gint) (0.67 * old_size);
-+			return TRUE;
-+		case HTML_ATOM_X_SMALL:
-+			*size = (gint) (0.75 * old_size);
-+			return TRUE;
-+		case HTML_ATOM_SMALL:
-+			*size = (gint) (0.83 * old_size);
-+			return TRUE;
-+		case HTML_ATOM_MEDIUM:
-+			*size = (gint) (1 * old_size);
-+			return TRUE;
-+		case HTML_ATOM_LARGE:
-+			*size = (gint) (1.17 * old_size);
-+			return TRUE;
-+		case HTML_ATOM_X_LARGE:
-+			*size = (gint) (1.5 * old_size);
-+			return TRUE;
-+		case HTML_ATOM_XX_LARGE:
-+			*size = (gint) (2 * old_size);
-+			return TRUE;
-+		/* FIXME: These are absolutely guessed. Size should always be one of the above seven. */
-+                case HTML_ATOM_LARGER:
-+                        *size = (gint) (0.8 * old_size);
-+                        return TRUE;
-+                case HTML_ATOM_SMALLER:
-+                        *size = (gint) (1.2 * old_size);
-+                        return TRUE;
-+		}
- 		return FALSE;
- 	}
- }
 Index: libgtkhtml/view/htmlevent.c
 ===================================================================
-RCS file: /cvs/gnome/gtkhtml2/libgtkhtml/view/htmlevent.c,v
-retrieving revision 1.41
-diff -u -r1.41 htmlevent.c
---- libgtkhtml/view/htmlevent.c	14 Sep 2004 06:34:27 -0000	1.41
-+++ libgtkhtml/view/htmlevent.c	18 Jan 2006 18:24:17 -0000
-@@ -46,14 +46,48 @@
+--- libgtkhtml/view/htmlevent.c.orig	2006-02-04 20:10:47.000000000 +0000
++++ libgtkhtml/view/htmlevent.c	2006-02-04 20:13:33.000000000 +0000
+@@ -46,14 +46,48 @@ html_event_find_parent_dom_node (HtmlBox
  static gboolean
  html_event_xy_in_box (HtmlBox *box, gint tx, gint ty, gint x, gint y)
  {
@@ -752,7 +671,7 @@ diff -u -r1.41 htmlevent.c
  }
  
  static void
-@@ -64,12 +98,6 @@
+@@ -64,12 +98,6 @@ html_event_find_box_traverser (HtmlBox *
          box = self->children;
  
          while (box) {
