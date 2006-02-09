@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r2"
+PR = "r3"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -40,20 +40,20 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.15.tar.bz2 \
            ${RPSRC}/input_power-r4.patch;patch=1 \
            ${RPSRC}/jffs2_longfilename-r0.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r0.patch;patch=1 \
-           ${RPSRC}/ipaq/hx2750_base-r24.patch;patch=1 \
-           ${RPSRC}/ipaq/hx2750_bl-r4.patch;patch=1 \
-           ${RPSRC}/ipaq/hx2750_pcmcia-r2.patch;patch=1 \
-           ${RPSRC}/ipaq/pxa_keys-r5.patch;patch=1 \
-           ${RPSRC}/ipaq/tsc2101-r12.patch;patch=1 \
-           ${RPSRC}/ipaq/hx2750_test1-r3.patch;patch=1 \
+           ${RPSRC}/hx2750_base-r24.patch;patch=1 \
+           ${RPSRC}/hx2750_bl-r4.patch;patch=1 \
+           ${RPSRC}/hx2750_pcmcia-r2.patch;patch=1 \
+           ${RPSRC}/pxa_keys-r5.patch;patch=1 \
+           ${RPSRC}/tsc2101-r12.patch;patch=1 \
+           ${RPSRC}/hx2750_test1-r3.patch;patch=1 \
            ${DOSRC}/tc6393-device-r8.patch;patch=1 \
            ${DOSRC}/tc6393_nand-r7.patch;patch=1 \
            ${DOSRC}/tosa-keyboard-r9.patch;patch=1 \
-           ${RPSRC}/temp/tosa-pxaac97-r5-rp.patch;patch=1 \
-           ${RPSRC}/temp/tosa-tc6393-r1-rp.patch;patch=1 \
-           ${RPSRC}/temp/tosa-power-r9-rp.patch;patch=1 \
+           ${RPSRC}/tosa-pxaac97-r5-rp.patch;patch=1 \
+           ${RPSRC}/tosa-tc6393-r1-rp.patch;patch=1 \
+           ${RPSRC}/tosa-power-r9-rp.patch;patch=1 \
            ${DOSRC}/tc6393fb-r9.patch;patch=1 \
-           ${RPSRC}/temp/tosa-lcd-r6-rp.patch;patch=1 \
+           ${RPSRC}/tosa-lcd-r6-rp.patch;patch=1 \
            ${DOSRC}/tosa-bl-r9.patch;patch=1 \
            ${DOSRC}/tosa-bluetooth-r2.patch;patch=1 \
            ${RPSRC}/mmc_timeout-r0.patch;patch=1 \	   
@@ -74,7 +74,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.15.tar.bz2 \
            ${RPSRC}/sharpsl_pm-do-r1.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1 \
-           ${RPSRC}/jl1/pxa-linking-bug.patch;patch=1 \
+           ${RPSRC}/pxa-linking-bug.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            file://connectplus-remove-ide-HACK.patch;patch=1 \
            file://defconfig-c7x0 \
