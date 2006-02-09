@@ -25,4 +25,4 @@ usbdevfs        /proc/bus/usb   usbdevfs        noauto                0  0
 # Harddisk
 #
 /dev/hda2           /home           ext3	defaults    0  0
-/dev/hda3           /media/hdd      ext3	defaults    0  0
+/dev/hda3           /media/hdd      vfat	defaults    0  0
