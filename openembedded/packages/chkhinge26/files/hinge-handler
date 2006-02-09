@@ -3,6 +3,14 @@
 # Quick handler for chkhinge26 and X. 
 #
 
+killproc() {            # kill the named process(es)
+        pid=`/bin/ps -e x |
+             /bin/grep $1 |
+             /bin/grep -v grep |
+             /bin/sed -e 's/^  *//' -e 's/ .*//'`
+        [ "$pid" != "" ] && kill $pid
+}
+
 export DISPLAY=:0
 
 if [ -z "$1" ]; then
@@ -20,10 +28,10 @@ fi
 
 if [ $STATE = "0" ]; then
    echo "lanscape"
-   killall mbinputmgr
+   killproc /usr/bin/mbinputmgr
 # urg mbinputmgr should kill below
-   killall matchbox-keyboard
-   killall matchbox-stroke
+   killproc /usr/bin/matchbox-keyboard
+   killproc /usr/bin/matchbox-stroke
    xrandr -o normal
    exit 0
 fi
@@ -33,6 +41,7 @@ if [ $STATE = "2" ]; then
    xrandr -o left 
 # just to be extra safe
    sleep 1 
-   mbinputmgr &
+   /usr/bin/mbinputmgr &
    exit 0
 fi
+

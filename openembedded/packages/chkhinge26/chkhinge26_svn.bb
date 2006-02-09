@@ -2,7 +2,7 @@ LICENSE = "LGPL"
 SECTION = "x11"
 MAINTAINER = "Matthew Allum <mallum@openedhand.com>"
 DESCRIPTION = "Chkhinge26 fires off cmds on cXXXX Zs."
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=chkhinge26;proto=http \
 	   file://hinge-handler"
