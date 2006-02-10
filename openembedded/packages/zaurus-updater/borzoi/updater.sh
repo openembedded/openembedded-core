@@ -1,5 +1,8 @@
 #!/bin/sh
 
+#
+# Noodles' simpler update script. SL-C3000 only for the moment.
+#
 
 DATAPATH=$1
 TMPPATH=/tmp/update
@@ -8,7 +11,7 @@ TMPHEAD=$TMPPATH/tmphead.bin
 
 WFLG_KERNEL=0
 WFLG_INITRD=0
-WFLG_MVERSION=0
+WFLG_HDD=0
 
 RO_MTD_LINE=`cat /proc/mtd | grep "root" | tail -n 1`
 if [ "$RO_MTD_LINE" = "" ]; then
@@ -41,131 +44,124 @@ Cleanup(){
 	rm -f $VTMPNAME > /dev/null 2>&1
 	rm -f $MTMPNAME > /dev/null 2>&1
 	rm $CTRLPATH/* > /dev/null 2>&1
-	rm $DATAPATH/* > /dev/null 2>&1
 	exit $1
 }
 trap 'Cleanup 1' 1 15
 trap '' 2 3
 
+get_dev_pcmcia()
+{
+while read SOCKET CLASS DRIVER INSTANCE DEVS MAJOR MINOR;
+do
+    echo $DEVS
+done
+}
+get_dev_pcmcia_slot()
+{
+    grep "^$1" /var/lib/pcmcia/stab | get_dev_pcmcia
+}
+sleep 1
+IDE1=`get_dev_pcmcia_slot 1`
+if [ "$IDE1" = "" ]; then
+    echo "Error!! There is no HDD. Now retrying..."
+    while [ "$IDE1" = "" ]; do
+	IDE1=`get_dev_pcmcia_slot 1`
+    done
+    echo "Found HDD!!"
+fi
+
+#LINUXFMT=ext2
+LINUXFMT=ext3
+MKE2FSOPT=
+if [ "$LINUXFMT" = "ext3" ]; then
+	MKE2FSOPT=-j
+fi
+
 
 ### Check model ###
 /sbin/writerominfo
 MODEL=`cat /proc/deviceinfo/product`
-echo 'MODEL:'$MODEL
-case "$MODEL" in
-    SL-C700) ;;
-    SL-C750) ;;
-    SL-C760) ;;
-    SL-C860) ;;
-    SL-C3100) ;;
-    SL-B500) ;;
-    SL-5600) ;;
-    *)
+if [ "$MODEL" != "SL-C3000" ] && [ "$MODEL" != "SL-C3100" ]
+then
+	echo 'MODEL:'$MODEL
 	echo 'ERROR:Invalid model!'
 	echo 'Please reset'
 	while true
 	do
 	done
-	;;
-esac
+fi
+
+### Check that we have a valid tar
+for TARNAME in gnu-tar GNU-TAR
+do
+	if [ -e $DATAPATH/$TARNAME ]
+	then
+		TARBIN=$DATAPATH/$TARNAME
+	fi
+done
+
+if [ ! -e $TARBIN ]; then
+	echo 'Please place a valid copy of tar as "gnu-tar" on your card'
+	echo 'Please reset'
+	while true
+	do
+	done
+fi
 
 mkdir -p $TMPPATH > /dev/null 2>&1
 
 cd $DATAPATH/
 
-for TARGETFILE in zImage.bin zimage.bin ZIMAGE.BIN initrd.bin INITRD.BIN mversion.bin MVERSION.BIN
+#
+# First do the kernel.
+#
+for TARGETFILE in zImage.bin zimage.bin ZIMAGE.BIN
 do
-	if [ -e $TARGETFILE ]
+	if [ -e $TARGETFILE -a $WFLG_KERNEL = 0 ]
+	then
+		# Get the size of the kernel.
+		DATASIZE=`wc -c $TARGETFILE`
+		DATASIZE=`echo $DATASIZE | cut -d' ' -f1`
+
+		echo 'Updating kernel.'
+		echo $TARGETFILE':'$DATASIZE' bytes'
+		/sbin/nandlogical $LOGOCAL_MTD WRITE 0xe0000 $DATASIZE \
+			$TARGETFILE > /dev/null 2>&1
+
+		WFLG_KERNEL=1
+
+	fi
+done
+
+#
+# Now do the initrd.
+#
+for TARGETFILE in initrd.bin INITRD.BIN
+do
+	if [ -e $TARGETFILE -a $WFLG_INITRD = 0 ]
 	then
 		rm -f $TMPPATH/*.bin > /dev/null 2>&1
 		DATASIZE=`wc -c $TARGETFILE`
 		DATASIZE=`echo $DATASIZE | cut -d' ' -f1`
 
-		#echo $TARGETFILE':'$DATASIZE'bytes'
-		TARGETTYPE=Invalid
-		case "$TARGETFILE" in
-		zImage.bin) TARGETTYPE=Kernel;;
-		zimage.bin) TARGETTYPE=Kernel;;
-		ZIMAGE.BIN) TARGETTYPE=Kernel;;
-		initrd.bin) TARGETTYPE=RoFs;;
-		INITRD.BIN) TARGETTYPE=RoFs;;
-		mversion.bin) TARGETTYPE=MasterVer;;
-		MVERSION.BIN) TARGETTYPE=MasterVer;;
-		*)
-			continue
-			;;
-		esac
-
-		case "$TARGETTYPE" in
-		Kernel)
-			if [ $WFLG_KERNEL != 0 ]
-			then
-				continue
-			fi
-			WFLG_KERNEL=1
-			echo 'kernel'
-			ISLOGICAL=1
-			MODULEID=5
-			MODULESIZE=0x13C000
-			ADDR=`dc 0xE0000`
-			ISFORMATTED=1
-			DATAPOS=0
-			ONESIZE=524288
-			HDTOP=`expr $DATASIZE - 16`
-			/sbin/bcut -a $HDTOP -s 16 -o $TMPHEAD $TARGETFILE
-			;;
-		RoFs)
-			if [ $WFLG_INITRD != 0 ]
-			then
-				continue
-			fi
-			WFLG_INITRD=1
-			echo 'RO file system'
-			ISLOGICAL=0
-			MODULEID=6
-			MODULESIZE=0x1900000
-			ADDR=0
-			ISFORMATTED=0
-			TARGET_MTD=$RO_MTD
-			DATAPOS=16
-			ONESIZE=1048576
-			/sbin/bcut -s 16 -o $TMPHEAD $TARGETFILE
-			;;
-		MasterVer)
-			if [ $WFLG_MVERSION != 0 ]
-			then
-				continue
-			fi
-			WFLG_MVERSION=1
-			echo 'Master version'
-			MTMPNAME=$TMPPATH'/mtmp'`date '+%s'`'.tmp'
-			/sbin/nandlogical $LOGOCAL_MTD READ $MVRBLOCK 0x4000 $MTMPNAME > /dev/null 2>&1
-			/sbin/verchg -m $MTMPNAME $TARGETFILE 0 0 > /dev/null 2>&1
-			/sbin/nandlogical $LOGOCAL_MTD WRITE $MVRBLOCK 0x4000 $MTMPNAME > /dev/null 2>&1
-			rm -f $MTMPNAME > /dev/null 2>&1
-			echo 'Success!'
-			continue
-			;;
-		*)
-			continue
-			;;
-		esac
-
-
-		#format?
-		if [ $ISFORMATTED = 0 ]
-		then
-			echo -n 'Flash erasing...'
-			/sbin/eraseall $TARGET_MTD 2> /dev/null > /dev/null
-			#/sbin/eraseall $TARGET_MTD 2
-			echo 'done'
-			ISFORMATTED=1
-		fi
+		WFLG_INITRD=1
+		echo 'RO file system'
+		MODULEID=6
+		MODULESIZE=0x500000
+		ADDR=0
+		TARGET_MTD=$RO_MTD
+		DATAPOS=16
+		ONESIZE=1048576
+		/sbin/bcut -s 16 -o $TMPHEAD $TARGETFILE
+		
+		echo -n 'Flash erasing...'
+		/sbin/eraseall $TARGET_MTD 2> /dev/null > /dev/null
+		echo 'done'
 
 		echo ''
-		echo '0%                   100%'
+		echo '0%                      100%'
 		PROGSTEP=`expr $DATASIZE / $ONESIZE + 1`
-		PROGSTEP=`expr 25 / $PROGSTEP`
+		PROGSTEP=`expr 28 / $PROGSTEP`
 		if [ $PROGSTEP = 0 ]
 		then
 			PROGSTEP=1
@@ -181,14 +177,7 @@ do
 		/sbin/verchg -v $VTMPNAME $TMPHEAD $MODULEID $MODULESIZE > /dev/null 2>&1
 		/sbin/verchg -m $MTMPNAME $TMPHEAD $MODULEID $MODULESIZE > /dev/null 2>&1
 
-                if [ "$MODEL" = "SL-C3100" ] && [ $TARGETTYPE = Kernel ]; then 
-                    echo $TARGETFILE':'$DATASIZE'bytes'
-	            echo '                ' > /tmp/data
-		    /sbin/nandlogical $LOGOCAL_MTD WRITE 0x60100 16 /tmp/data > /dev/null 2>&1
-                    /sbin/nandlogical $LOGOCAL_MTD WRITE 0xe0000 $DATASIZE $TARGETFILE > /dev/null 2>&1
-		    /sbin/nandlogical $LOGOCAL_MTD WRITE 0x21bff0 16 /tmp/data > /dev/null 2>&1
 		#loop
-                else
 		while [ $DATAPOS -lt $DATASIZE ]
 		do
 			#data create
@@ -200,21 +189,14 @@ do
 			#handle data file
 			#echo 'ADDR='$ADDR
 			#echo 'SIZE='$TMPSIZE
-			#echo 'TMPDATA='$TMPDATA
-			if [ $ISLOGICAL = 0 ]
-			then
-				next_addr=`/sbin/nandcp -a $ADDR $TMPDATA $TARGET_MTD  2>/dev/null | fgrep "mtd address" | cut -d- -f2 | cut -d\( -f1`
-				if [ "$next_addr" = "" ]; then
-					echo "ERROR:flash write"
-					rm $TMPDATA > /dev/null 2>&1
-					RESULT=3
-					break;
-				fi
-				ADDR=$next_addr
-			else
-				/sbin/nandlogical $LOGOCAL_MTD WRITE $ADDR $DATASIZE $TMPDATA > /dev/null 2>&1
-				ADDR=`expr $ADDR + $TMPSIZE`
+			next_addr=`/sbin/nandcp -a $ADDR $TMPDATA $TARGET_MTD  2>/dev/null | fgrep "mtd address" | cut -d- -f2 | cut -d\( -f1`
+			if [ "$next_addr" = "" ]; then
+				echo "ERROR:flash write"
+				rm $TMPDATA > /dev/null 2>&1
+				RESULT=3
+				break;
 			fi
+			ADDR=$next_addr
 
 			rm $TMPDATA > /dev/null 2>&1
 
@@ -227,11 +209,9 @@ do
 			done
 		done
 
-                fi
-
 		echo ''
 
-#finish
+		#finish
 		rm -f $TMPPATH/*.bin > /dev/null 2>&1
 
 		if [ $RESULT = 0 ]
@@ -246,6 +226,57 @@ do
 			echo 'Error!'
 			exit $RESULT
 		fi
+	fi
+done
+
+## HDD image
+for TARGETFILE in hdimage1.tgz HDIMAGE1.TGZ
+do
+	if [ -e $TARGETFILE ]; then
+		if [ $WFLG_HDD != 0 ]
+		then
+			continue
+		fi
+		WFLG_HDD=1
+		echo ''
+		echo 'HDD RO file system'
+		if [ ! -f /hdd1/NotAvailable ]; then
+		    umount /hdd1
+		fi
+		echo 'Now formatting...'
+		mke2fs $MKE2FSOPT /dev/${IDE1}1 2> /dev/null > /dev/null
+		e2fsck -p /dev/${IDE1}1 > /dev/null
+		if [ "$?" != "0" ]; then
+		    echo "Error!"
+		    exit "$?"
+		fi
+
+		mount -t $LINUXFMT -o noatime /dev/${IDE1}1 /hdd1
+		if [ "$?" != "0" ]; then
+		    echo "Error!"
+		    exit "$?"
+		fi
+    
+		cd /hdd1
+
+		#This can be useful for debugging
+		#/bin/sh -i
+		
+		
+		echo 'Now extracting...'
+		gzip -dc $DATAPATH/$TARGETFILE | $TARBIN xf -
+		if [ "$?" != "0" ]; then
+		    echo "Error!"
+		    exit "$?"
+		fi
+
+		echo 'Success!'
+		
+		
+		# remount as RO
+		cd /
+		umount /hdd1
+		mount -t $LINUXFMT -o ro,noatime /dev/${IDE1}1 /hdd1
 	fi
 done
 
