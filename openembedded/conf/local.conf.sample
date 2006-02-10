@@ -40,11 +40,11 @@ BBMASK = ""
 # provide packages for toolchain and additional libraries yourself. You also
 # have to set PATH in your environment to make sure BitBake finds additional binaries.
 # Note: You will definitely need to say:
-#     ASSUME_PROVIDED = "virtual/arm-linux-gcc-2.95"
+#     ASSUME_PROVIDED += "virtual/arm-linux-gcc-2.95"
 # to build any of two Linux 2.4 Embedix kernels,
 # i.e. openzaurus-sa-2.4.18 and openzaurus-pxa-2.4.18 - and don't forget
 # to rename the binaries as instructed in the Wiki.
-# ASSUME_PROVIDED = "virtual/${TARGET_PREFIX}gcc virtual/libc"
+# ASSUME_PROVIDED += "virtual/${TARGET_PREFIX}gcc virtual/libc"
 
 # Select between multiple alternative providers, if more than one is eligible.
 PREFERRED_PROVIDERS = "virtual/qte:qte virtual/libqpe:libqpe-opie"
@@ -78,7 +78,7 @@ PREFERRED_PROVIDERS += " virtual/${TARGET_PREFIX}g++:gcc-cross"
 # Uncomment this to select a distribution policy. See the conf directory
 # for distributions currently known to OpenEmbedded.
 # Stay away from unversioned distros unless you really know what you are doing
-# DISTRO = "familiar-0.8.3"
+# DISTRO = "familiar-unstable"
 
 # Uncomment this to select a particular kernel version if supported by 
 # your MACHINE setting. Currently only supported on Zaurus Clamshells.
