@@ -8,7 +8,7 @@ RPROVIDES_${PN} = "gnome-vfs"
 RPROVIDES_${PN}-dev = "gnome-vfs-dev"
 RRECOMMENDS_${PN} = "gnome-vfs-plugin-file shared-mime-info"
 
-PV = "2.12.0cvs${CVSDATE}"
+PV = "2.12.0+cvs${SRCDATE}"
 PR = "r5"
 
 SRC_URI = "svn://anonymous@developer.imendio.com/svn/gnome-vfs-dbus;module=trunk;proto=http \

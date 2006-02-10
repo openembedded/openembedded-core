@@ -6,7 +6,7 @@ DESCRIPTION = "Dates is a calendar application."
 
 PR = "r4"
 
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+svn${SRCDATE}"
 S = "${WORKDIR}/${PN}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/;module=${PN};proto=http"

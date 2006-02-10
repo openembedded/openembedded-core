@@ -1,9 +1,0 @@
-#!/bin/sh
-
-if ( cat /proc/cpuinfo|grep -i hardware|grep -i SHARP ) && \
-   [ ".$@" = ".-s" -o ".$@" = ".--suspend" ]; then
-	killall -USR1 apmd || /usr/bin/apm.orig -s
-else
-	/usr/bin/apm.orig "$@"
-fi
-

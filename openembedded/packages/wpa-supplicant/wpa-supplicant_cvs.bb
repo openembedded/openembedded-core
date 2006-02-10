@@ -4,7 +4,7 @@ LICENSE = "GPL"
 MAINTAINER = "Holger Schurig"
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 DEPENDS = "openssl"
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 PR = "r2"
 
 SRC_URI = "cvs://anonymous@hostap.epitest.fi/cvs;module=hostap \

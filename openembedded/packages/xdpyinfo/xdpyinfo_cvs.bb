@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 LICENSE = "MIT"
 DEPENDS = "x11 xext xtst"
 DESCRIPTION = "X display information utility"

@@ -3,7 +3,7 @@ LICENSE = "Xorg"
 RPROVIDES = "virtual/xserver"
 PROVIDES = "virtual/xserver"
 PR = "r3"
-PV = "6.8.1+cvs${CVSDATE}"
+PV = "6.8.1+cvs${SRCDATE}"
 
 DEPENDS = "fontconfig freetype libxi xmu flex-2.5.4-native"
 

@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 LICENSE = "BSD-X"
 SECTION = "x11/libs"
 PRIORITY = "optional"
@@ -13,9 +13,5 @@ S = "${WORKDIR}/Xfont"
 inherit autotools pkgconfig 
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
-	       bindir=${STAGING_BINDIR} \
-	       includedir=${STAGING_INCDIR} \
-	       libdir=${STAGING_LIBDIR} \
-	       datadir=${STAGING_DATADIR}
+	autotools_stage_all
 }

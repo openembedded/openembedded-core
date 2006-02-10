@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 LICENSE= "MIT"
 PR = "r1"
 SECTION = "x11/libs"

@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 LICENSE= "BSD-X"
 DEPENDS = "libxrandr x11 xext"
 DESCRIPTION = "X Resize and Rotate extension command."

@@ -3,7 +3,7 @@ DEPENDS = "gtk+ glib-2.0 libxml2"
 DESCRIPTION = "A GTK+ HTML rendering library."
 LICENSE = "GPL"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
-PV = "2.11.0+cvs-${CVSDATE}"
+PV = "2.11.0+cvs${SRCDATE}"
 
 SRC_URI = "cvs://anonymous@anoncvs.gnome.org/cvs/gnome;module=gtkhtml2 \
 	file://at-import_box-pos.patch;patch=1;pnum=0 \

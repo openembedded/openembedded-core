@@ -1,5 +1,5 @@
-PV = "0.0cvs${FIXEDCVSDATE}"
-FIXEDCVSDATE = "${@bb.data.getVar('FILE', d, 1).split('_')[-1].split('.')[0]}"
+PV = "0.0+cvs${FIXEDSRCDATE}"
+FIXEDSRCDATE = "${@bb.data.getVar('FILE', d, 1).split('_')[-1].split('.')[0]}"
 DEFAULT_PREFERENCE = "1"
 
 LICENSE = "MIT"
@@ -33,12 +33,12 @@ FILES_xserver-kdrive-i810 = "${bindir}/Xi810"
 FILES_xserver-kdrive-epson = "${bindir}/Xepson"
 FILES_xserver-kdrive-xephyr = "${bindir}/Xephyr"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDCVSDATE} \
+SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDSRCDATE} \
 	file://kmode.patch;patch=1 \
 	file://disable-apm.patch;patch=1 \
 	file://fbdev-not-fix.patch;patch=1 "
 
-SRC_URI_h3600 = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDCVSDATE} \
+SRC_URI_h3600 = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDSRCDATE} \
         file://kmode.patch;patch=1 \
         file://faster-rotated.patch;patch=1 \
         file://fbdev-not-fix.patch;patch=1 "

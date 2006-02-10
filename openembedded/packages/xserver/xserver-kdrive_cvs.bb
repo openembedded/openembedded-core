@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 DEFAULT_PREFERENCE = "-2"
 
 LICENSE = "MIT"

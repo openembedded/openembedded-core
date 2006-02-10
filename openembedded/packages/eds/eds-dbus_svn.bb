@@ -3,7 +3,7 @@ DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade libiconv"
 RDEPENDS = "gconf dbus-1 db libiconv"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
-PV = "1.4.0cvs${CVSDATE}"
+PV = "1.4.0+svn${SRCDATE}"
 PR = "r15"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \

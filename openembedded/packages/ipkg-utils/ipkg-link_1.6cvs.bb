@@ -2,7 +2,7 @@ SECTION = "base"
 DESCRIPTION = "Itsy Package Manager utilities link script"
 LICENSE = "GPL"
 CONFLICTS = "ipkg-utils"
-PV_append = "${CVSDATE}"
+PV_append = "${SRCDATE}"
 PR = "r1"
 
 SRC_URI = "${HANDHELDS_CVS};module=ipkg-utils"

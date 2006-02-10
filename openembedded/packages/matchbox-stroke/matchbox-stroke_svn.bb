@@ -2,7 +2,7 @@ DESCRIPTION = "Matchbox keyboard"
 LICENSE = "GPL"
 DEPENDS = "libfakekey expat libxft"
 SECTION = "x11/wm"
-PV = "0.0+svn-${CVSDATE}"
+PV = "0.0+svn${SRCDATE}"
 PR="r1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"

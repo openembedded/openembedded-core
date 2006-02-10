@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 PR = "r1"
 LICENSE= "MIT"
 DESCRIPTION = "X Server Extension library"
@@ -10,12 +10,6 @@ SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xext"
 S = "${WORKDIR}/Xext"
 
 inherit autotools pkgconfig 
-
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
-	       bindir=${STAGING_BINDIR} \
-	       includedir=${STAGING_INCDIR} \
-	       libdir=${STAGING_LIBDIR} \
-	       datadir=${STAGING_DATADIR} \
-	       mandir=${STAGING_DATADIR}/man
+	autotools_stage_all
 }

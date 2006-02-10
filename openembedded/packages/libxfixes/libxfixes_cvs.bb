@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 LICENSE= "BSD-X"
 SECTION = "x11/libs"
 DEPENDS = "x11 fixesext"

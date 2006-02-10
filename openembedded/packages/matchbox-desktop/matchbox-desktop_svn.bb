@@ -2,7 +2,7 @@ DESCRIPTION = "Matchbox Window Manager Desktop"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox startup-notification"
 SECTION = "x11/wm"
-PV = "0.9.1+cvs-${CVSDATE}"
+PV = "0.9.1+svn${SRCDATE}"
 DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"

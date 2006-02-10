@@ -6,7 +6,7 @@ PRIORITY = "required"
 MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glibc-cvs-2.3.5"
-CVSDATE = "20050627"
+SRCDATE = "20050627"
 PR = "r1"
 
 GLIBC_ADDONS ?= "ports,linuxthreads"

@@ -7,7 +7,7 @@ MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Contacts is an address-book application."
 PR = "r5"
 
-PV = "0.1+svn-${CVSDATE}"
+PV = "0.1+svn${SRCDATE}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 	   file://stock_contact.png \

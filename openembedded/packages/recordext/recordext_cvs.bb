@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 LICENSE = "BSD-X"
 SECTION = "libs"
 MAINTAINER = "Phil Blundell <pb@handhelds.org>"

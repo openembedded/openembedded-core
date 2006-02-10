@@ -1,4 +1,4 @@
-PV = "0.0cvs${CVSDATE}"
+PV = "0.0+cvs${SRCDATE}"
 LICENSE = "MIT"
 DEPENDS = "x11 xau xmu xext"
 DESCRIPTION = "X authority file utility"

@@ -6,7 +6,7 @@ MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 LICENSE = "GPL"
 CONFLICTS = "ipkg-link"
 RDEPENDS = "python"
-PV_append = "${CVSDATE}"
+PV_append = "${SRCDATE}"
 PR = "r9"
 
 SRC_URI = "${HANDHELDS_CVS};module=ipkg-utils"
