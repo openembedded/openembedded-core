@@ -1,19 +1,15 @@
-PACKAGES = "oh-base-depends oh-task-base"
-# oh-task-base
-DESCRIPTION = "Meta-package for OpenedHand Palmtop Environment"
+PACKAGES = "task-oh-base-depends task-oh-base"
+DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r19"
+PR = "r20"
 
 ALLOW_EMPTY = "1"
 
-oh-base-depends = "\
+RDEPENDS_task-oh-base-depends := "\
     diet-x11 \
     virtual/xserver"
 
-RDEPENDS_oh-base-depends := "${oh-base-depends}"
-DEPENDS += " ${oh-base-depends}"
-
-oh-task-base = "\
+RDEPENDS_task-oh-base := "\
     matchbox \
     matchbox-poky \
     matchbox-keyboard \
@@ -35,19 +31,30 @@ oh-task-base = "\
     gtk-clearlooks-engine \
     eds-dbus \
     contacts \
-#    oprofile \
     dates \
     leafpad \
     puzzles \
     kf \
     rxvt-unicode \
     xhost \
+#    oprofile \
 #    gdb \    
     strace \
     ttf-bitstream-vera \
     udev \
     sysfsutils \
-    xauth"
+    xauth \
+    avahi-daemon \
+    gdk-pixbuf-loader-png \
+    gdk-pixbuf-loader-xpm \
+    gdk-pixbuf-loader-jpeg \
+    gtk-theme-clearlooks \
+    kernel-module-oprofile \
+    tslib-calibrate \
+    tslib-tests \
+    pango-module-basic-x \
+    pango-module-basic-fc"
+
 
 #    minimo \
 #    teleport \
@@ -55,19 +62,5 @@ oh-task-base = "\
 #    libgtkstylus \
 #    detect-stylus \
 #    xrdb \
-
-RDEPENDS_oh-task-base := "${oh-task-base} \
-                          avahi-daemon \
-                          gdk-pixbuf-loader-png \
-			  gdk-pixbuf-loader-xpm \
-			  gdk-pixbuf-loader-jpeg \
-			  gtk-theme-clearlooks \
-                          kernel-module-oprofile \
-                          tslib-calibrate \
-                          tslib-tests \
-			  pango-module-basic-x \
-			  pango-module-basic-fc"
-
-DEPENDS += " ${oh-task-base} avahi tslib"
 
 LICENSE = "MIT"
