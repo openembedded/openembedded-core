@@ -3,7 +3,7 @@
 #
 
 #work around some breakages
-#CVSDATE_minimo=20050401
+#SRCDATE_minimo=20050401
 
 #set some preferred providers:
 PREFERRED_PROVIDER_gconf=gconf-dbus
@@ -14,7 +14,7 @@ PREFERRED_VERSION_libmatchbox ?= "1.7"
 PREFERRED_VERSION_matchbox ?= "0.9.1"
 PREFERRED_VERSION_matchbox-common ?= "0.9.1"
 PREFERRED_VERSION_matchbox-desktop ?= "0.9.1"
-PREFERRED_VERSION_matchbox-wm ?= "0.9.5+cvs-${CVSDATE}"
+PREFERRED_VERSION_matchbox-wm ?= "0.9.5+svn${SRCDATE}"
 PREFERRED_VERSION_matchbox-panel ?= "0.9.2"
 PREFERRED_VERSION_matchbox-applet-inputmanager ?= "0.6"
 PREFERRED_VERSION_atk ?= "1.9.0"
@@ -36,10 +36,10 @@ PREFERRED_VERSION_rxvt-unicode ?= "5.6"
 PREFERRED_VERSION_gtk2-theme-angelistic ?= "0.3"
 PREFERRED_VERSION_xst ?= "0.15"
 PREFERRED_VERSION_xextensions ?= "1.0.1"
-PREFERRED_VERSION_xserver-kdrive = "0.0cvs20050207"
-PREFERRED_VERSION_xprop ?= "0.0cvs${CVSDATE}" 
-PREFERRED_VERSION_xhost ?= "0.0cvs20040413"
-PREFERRED_VERSION_xrdb ?= "0.0cvs${CVSDATE}"
+PREFERRED_VERSION_xserver-kdrive = "0.0+cvs20050207"
+PREFERRED_VERSION_xprop ?= "0.0+cvs${SRCDATE}" 
+PREFERRED_VERSION_xhost ?= "0.0+cvs20040413"
+PREFERRED_VERSION_xrdb ?= "0.0+cvs${SRCDATE}"
 PREFERRED_VERSION_gpe-login ?= "0.83"
 PREFERRED_VERSION_gpe-session-scripts ?= "0.66"
 PREFERRED_VERSION_gpe-soundserver ?= "0.4-1"
@@ -82,9 +82,9 @@ PREFERRED_VERSION_gpe-tetris ?= "0.6-4"
 PREFERRED_VERSION_gsoko ?= "0.4.2-gpe6"
 PREFERRED_VERSION_xdemineur ?= "2.1.1"
 PREFERRED_VERSION_matchbox-panel-hacks ?= "0.3-1"
-PREFERRED_VERSION_rosetta ?= "0.0cvs${CVSDATE}"
+PREFERRED_VERSION_rosetta ?= "0.0+cvs${SRCDATE}"
 PREFERRED_VERSION_dillo2 ?= "0.6.6"
-PREFERRED_VERSION_minimo ?= "0.0cvs${CVSDATE_minimo}"
+PREFERRED_VERSION_minimo ?= "0.0+cvs${SRCDATE_minimo}"
 PREFERRED_VERSION_linphone-hh ?= "0.12.2.hh1"
 PREFERRED_VERSION_linphone ?= "0.12.2"
 PREFERRED_VERSION_firefox ?= "1.0"

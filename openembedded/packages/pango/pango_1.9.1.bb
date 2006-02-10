@@ -38,6 +38,8 @@ fi
 
 }
 
+PACKAGES_DYNAMIC = "pango-module-*"
+
 python populate_packages_prepend () {
 	prologue = bb.data.getVar("postinst_prologue", d, 1)
 

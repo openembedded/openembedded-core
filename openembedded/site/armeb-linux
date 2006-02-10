@@ -99,6 +99,11 @@ samba_cv_HAVE_KERNEL_OPLOCKS_LINUX=${samba_cv_HAVE_KERNEL_OPLOCKS_LINUX=yes}
 samba_cv_HAVE_KERNEL_CHANGE_NOTIFY=${samba_cv_HAVE_KERNEL_CHANGE_NOTIFY=yes}
 samba_cv_HAVE_KERNEL_SHARE_MODES=${samba_cv_HAVE_KERNEL_SHARE_MODES=yes}
 samba_cv_LINUX_LFS_SUPPORT=${samba_cv_LINUX_LFS_SUPPORT=yes}
+samba_cv_STAT_STATVFS64=${samba_cv_STAT_STATVFS64=yes}
+samba_cv_SIZEOF_OFF_T=${samba_cv_SIZEOF_OFF_T=yes}
+samba_cv_SIZEOF_INO_T=${samba_cv_SIZEOF_INO_T=yes}
+samba_cv_HAVE_STRUCT_FLOCK64=${samba_cv_HAVE_STRUCT_FLOCK64=yes}
+
 
 # sleepycat db
 db_cv_fcntl_f_setfd=${db_cv_fcntl_f_setfd=yes}

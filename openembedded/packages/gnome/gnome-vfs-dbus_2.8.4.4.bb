@@ -81,7 +81,7 @@ do_install() {
 	oe_runmake ORBIT_IDL="${ORBIT_IDL_SRC}" DESTDIR="${D}" install
 }
 
-PACKAGES_DYNAMIC = "gnome=vfs-plugin-*"
+PACKAGES_DYNAMIC = "gnome-vfs-plugin-*"
 
 python populate_packages_prepend () {
 	print bb.data.getVar('FILES_gnome-vfs', d, 1)

@@ -150,6 +150,8 @@ do_install_append () {
 	install -d ${D}${sysconfdir}/gtk-2.0
 }
 
+PACKAGES_DYNAMIC = "gdk-pixbuf-loader-* gtk-immodule-*"
+
 python populate_packages_prepend () {
 	import os.path
 

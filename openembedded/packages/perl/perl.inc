@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.perl.org/"
 LICENSE = "Artistic|GPL"
 SECTION = "devel"
 PRIORITY = "optional"
-DEPENDS = "db3 perl-native"
+DEPENDS = "virtual/db perl-native"
 
 SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 	file://Makefile.patch;patch=1 \
@@ -53,6 +53,8 @@ do_stage() {
 	install -d ${STAGING_DIR}/${HOST_SYS}/perl/
 	install config.sh ${STAGING_DIR}/${HOST_SYS}/perl/
 }
+
+PACKAGES_DYNAMIC = "perl-module-*"
 
 python populate_packages_prepend () {
 	libdir = bb.data.expand('${libdir}/perl5/${PV}', d)

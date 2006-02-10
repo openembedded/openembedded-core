@@ -67,6 +67,8 @@ fi
 
 }
 
+PACKAGES_DYNAMIC = "gdk-pixbuf-loader-* gtk-immodule-*"
+
 python populate_packages_prepend () {
 	import os.path
 

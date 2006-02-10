@@ -95,6 +95,8 @@ mv ${TMP_LOCALE}/locale-archive ${libdir}/locale/
 rm -rf ${TMP_LOCALE}
 }
 
+PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-*"
+
 python package_do_split_gconvs () {
 	import os, re
 	if (bb.data.getVar('PACKAGE_NO_GCONV', d, 1) == '1'):
