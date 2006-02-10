@@ -1269,6 +1269,29 @@ CONFIG_MMC_PXA=y
 # CONFIG_MMC_WBSD is not set
 
 #
+# Real Time Clock
+#
+CONFIG_RTC_CLASS=y
+CONFIG_RTC_HCTOSYS=y
+CONFIG_RTC_HCTOSYS_DEVICE="rtc0"
+
+#
+# RTC interfaces
+#
+CONFIG_RTC_INTF_SYSFS=y
+CONFIG_RTC_INTF_PROC=y
+CONFIG_RTC_INTF_DEV=y
+
+#
+# RTC drivers
+#
+# CONFIG_RTC_DRV_X1205 is not set
+# CONFIG_RTC_DRV_DS1672 is not set
+# CONFIG_RTC_DRV_PCF8563 is not set
+CONFIG_RTC_DRV_SA1100=y
+# CONFIG_RTC_DRV_TEST is not set
+
+#
 # File systems
 #
 CONFIG_EXT2_FS=y
