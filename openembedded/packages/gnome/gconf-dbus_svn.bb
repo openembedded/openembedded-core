@@ -12,18 +12,25 @@ PR = "r0"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
            file://gconf-dbus-update.patch;patch=1;pnum=0 \
+           file://xml-backend-locks-compile-fix.patch;patch=1 \
+           file://xml-backend-oldxml-Makefile.patch \
 	   file://69gconfd-dbus"
-
-PARALLEL_MAKE = ""
 
 inherit pkgconfig autotools
 S = "${WORKDIR}/trunk"
+
+PARALLEL_MAKE = ""
 
 FILES_${PN} += " ${libdir}/GConf/2/*.so ${libdir}/dbus-1.0 ${sysconfdir} ${datadir}/dbus*"
 
 EXTRA_OECONF = " --with-ipc=dbus --disable-gtk-doc --enable-gtk --host=${HOST_SYS} --enable-shared --disable-static"
 
 HEADERS = "gconf.h gconf-changeset.h gconf-listeners.h gconf-schema.h gconf-value.h gconf-error.h gconf-engine.h gconf-client.h gconf-enum-types.h"
+
+do_compile_prepend() {
+	cd ${S}
+	patch -p1 < ../xml-backend-oldxml-Makefile.patch
+}
 
 do_stage() {
         oe_libinstall -so -C gconf libgconf-2 ${STAGING_LIBDIR}

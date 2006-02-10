@@ -3,14 +3,15 @@ HOMEPAGE = "http://matt.ucc.asn.au/dropbear/dropbear.html"
 SECTION = "console/network"
 LICENSE = "MIT"
 DEPENDS = "zlib"
-PR = "r3"
 PROVIDES = "ssh sshd"
+PR = "r4"
 
 SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
 	   file://urandom-xauth-changes-to-options.h.patch;patch=1 \
 	   file://configure.patch;patch=1 \
 	   file://allow-nopw.patch \
 	   file://fix-2kb-keys.patch;patch=1 \
+	   file://chansession-security-fix.patch;patch=1 \
 	   file://init"
 
 inherit autotools update-rc.d

@@ -95,4 +95,4 @@ KERNEL=="device-mapper",	NAME="mapper/control"
 KERNEL="rfcomm[0-9]*", NAME="%k", GROUP="users", MODE="0660"
 
 # Firmware Helper
-ACTION=="add", SUBSYSTEM=="firmware", RUN+="/usr/lib/udev/firmware_helper"
+ACTION=="add", SUBSYSTEM=="firmware", RUN+="/lib/udev/firmware_helper"

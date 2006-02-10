@@ -1,3 +1,4 @@
+PR = "r2"
 SECTION = "libs"
 PRIORITY = "required"
 MAINTAINER = "Chris Larson <kergoth@handhelds.org>"

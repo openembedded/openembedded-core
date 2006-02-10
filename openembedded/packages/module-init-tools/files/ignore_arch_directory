@@ -1,25 +1,24 @@
 diff -ruN module-init-tools-3.1-pre6.orig/modprobe.8 module-init-tools-3.1-pre6/modprobe.8
---- module-init-tools-3.1-pre6.orig/modprobe.8	2004-10-06 02:44:43.000000000 +0200
-+++ module-init-tools-3.1-pre6/modprobe.8	2004-10-09 01:39:01.000000000 +0200
-@@ -30,6 +30,7 @@
- the modules and other files, except for the optional
- \fI/etc/modprobe.conf\fR configuration file
+--- module-init-tools-3.2-pre7/modprobe.8.orig     2005-07-05 13:52:32.000000000 +0200
++++ module-init-tools-3.2-pre7/modprobe.8  2005-07-05 13:52:42.000000000 +0200
+@@ -31,6 +31,7 @@
+ \fI/etc/modprobe.conf\fR configuration file and
+ \fI/etc/modprobe.d\fR directory
  (see \fBmodprobe.conf\fR(5)).
 +All files in the \fI/etc/modprobe.d/arch/\fR directory are ignored.
  .PP
  Note that this version of \fBmodprobe\fR does not
  do anything to the module itself: the work of resolving symbols
-diff -ruN module-init-tools-3.1-pre6.orig/modprobe.c module-init-tools-3.1-pre6/modprobe.c
---- module-init-tools-3.1-pre6.orig/modprobe.c	2004-10-09 01:40:18.000000000 +0200
-+++ module-init-tools-3.1-pre6/modprobe.c	2004-10-09 01:40:11.000000000 +0200
-@@ -1082,6 +1082,10 @@
- {
+--- module-init-tools-3.2-pre7/modprobe.c.orig	2005-07-05 13:50:00.000000000 +0200
++++ module-init-tools-3.2-pre7/modprobe.c	2005-07-05 13:50:15.000000000 +0200
+@@ -1158,6 +1158,10 @@
  	DIR *dir;
+ 	int ret = 0;
  
 +	/* ignore everything in this directory */
 +	if (streq(filename, "/etc/modprobe.d/arch"))
 +		return 1;
 +
- 	/* If it's a directory, recurse. */
+ 	/* Reiser4 has file/directory duality: treat it as both. */
  	dir = opendir(filename);
  	if (dir) {

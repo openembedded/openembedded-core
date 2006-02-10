@@ -1,6 +1,7 @@
 DESCRIPTION = "Firmware for Spectrum Wireless LAN cards"
 LICENSE = "unknown"
 PR = "r0"
+PACKAGE_ARCH = "all"
 
 SRC_URI = "file://get_symbol_fw \
            file://parse_symbol_fw"

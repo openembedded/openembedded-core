@@ -9,4 +9,4 @@ tmpfs		/media/ram	tmpfs	defaults	0  0
 # SD/MMC in kernel 2.4
 /dev/mmcda1	/media/card	auto	defaults,sync,noauto	0  0
 # SD/MMC in kernel 2.6
-/dev/mmcblk0p1	/media/card	auto	defaults,sync,auto	0  0
+/dev/mmcblk0p1	/media/card	auto	defaults,sync,noauto	0  0

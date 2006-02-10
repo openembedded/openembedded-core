@@ -3,7 +3,7 @@ DESCRIPTION = "Point-to-Point Protocol (PPP) daemon"
 HOMEPAGE = "http://samba.org/ppp/"
 DEPENDS = "libpcap"
 LICENSE = "BSD GPLv2"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.samba.org/pub/ppp/ppp-${PV}.tar.gz \
 	file://makefile.patch;patch=1 \
@@ -12,6 +12,7 @@ SRC_URI = "ftp://ftp.samba.org/pub/ppp/ppp-${PV}.tar.gz \
 	file://plugins-fix-CC.patch;patch=1 \
 	file://pppoatm-makefile.patch;patch=1 \
 	file://enable-ipv6.patch;patch=1 \
+	file://makefile-remove-hard-usr-reference.patch;patch=1 \
 	file://pon \
 	file://poff \
 	file://init \
@@ -24,7 +25,7 @@ SRC_URI = "ftp://ftp.samba.org/pub/ppp/ppp-${PV}.tar.gz \
 inherit autotools
 
 EXTRA_OEMAKE = "STRIPPROG=${STRIP} MANDIR=${D}${datadir}/man/man8 INCDIR=${D}/usr/include LIBDIR=${D}/usr/lib/pppd/${PV} BINDIR=${D}/usr/sbin"
-EXTRA_OECONF = --disable-strip
+EXTRA_OECONF = "--disable-strip"
 
 do_install_append () {
 	make install-etcppp ETCDIR=${D}/${sysconfdir}/ppp
@@ -60,7 +61,7 @@ DESCRIPTION_ppp-password = "Plugin for PPP to get passwords via a pipe"
 DESCRIPTION_ppp-tools    = "The pppdump and pppstats utitilities"
 RDEPENDS_ppp_minconn    += "libpcap0.8"
 
-pkg_postinst() {
+pkg_postinst_${PN}() {
 if test "x$D" != "x"; then
 	exit 1
 else

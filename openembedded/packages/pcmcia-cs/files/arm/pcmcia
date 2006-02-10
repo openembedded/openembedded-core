@@ -9,11 +9,9 @@ case `awk 'BEGIN { FS=":" } /Processor/ { gsub(/ /, "", $2) ; print $2 } ' </pro
     case "`uname -r`" in
         2.4*)
 		PCIC=pxa_cs
-		DS=ds
 		;;
 	2.6*)
 		PCIC=pxa2xx_core
-		DS=pcmcia
 		;;
     esac
     ;;
@@ -24,6 +22,15 @@ case `awk 'BEGIN { FS=":" } /Processor/ { gsub(/ /, "", $2) ; print $2 } ' </pro
     echo "Unable to determine PCIC value for this CPU"
     exit 1
     ;;
+esac
+
+case "`uname -r`" in
+    2.4*)
+	    DS=ds
+	    ;;
+    2.6*)
+	    DS=pcmcia
+	    ;;
 esac
 
 case `module_id` in

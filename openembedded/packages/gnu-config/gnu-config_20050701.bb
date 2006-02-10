@@ -1,15 +1,14 @@
-SECTION = "base"
 DESCRIPTION = "gnu-configize"
+SECTION = "base"
 LICENSE = "GPL"
 DEPENDS = ""
 INHIBIT_DEFAULT_DEPS = "1"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 
 FIXEDSRCDATE = "${@bb.data.getVar('FILE', d, 1).split('_')[-1].split('.')[0]}"
 PV = "0.1+cvs${FIXEDSRCDATE}"
 PR = "r4"
 
-SRC_URI = "cvs://anonymous@cvs.savannah.gnu.org/cvsroot/config;module=config;method=pserver;date=${FIXEDSRCDATE} \
+SRC_URI = "cvs://anonymous@cvs.sv.gnu.org/cvsroot/config;module=config;method=pserver;date=${FIXEDSRCDATE} \
 	   file://config-guess-uclibc.patch;patch=1 \
            file://gnu-configize.in"
 S = "${WORKDIR}/config"

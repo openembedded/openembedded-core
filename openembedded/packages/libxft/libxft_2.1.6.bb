@@ -17,12 +17,7 @@ FILES_${PN}-dev = ${includedir} ${libdir}/lib*.so ${libdir}/*.la \
 inherit autotools pkgconfig 
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
-	       bindir=${STAGING_BINDIR} \
-	       includedir=${STAGING_INCDIR} \
-	       libdir=${STAGING_LIBDIR} \
-	       datadir=${STAGING_DATADIR} \
-	       mandir=${STAGING_DATADIR}/man
+	autotools_stage_all
 }
 
 python do_package() {

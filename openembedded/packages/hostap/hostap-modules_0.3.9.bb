@@ -3,8 +3,8 @@ SECTION = "kernel/modules"
 PRIORITY = "optional"
 MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 LICENSE = "GPL"
-PROVIDES = "virtual/kernel-hostap"
-PR = "r6"
+PROVIDES = "virtual/kernel-hostap hostap-conf"
+PR = "r8"
 
 SRC_URI = "http://hostap.epitest.fi/releases/hostap-driver-${PV}.tar.gz \
            file://hostap_cs.conf \
@@ -45,3 +45,4 @@ FILES_hostap-modules-pci = "/lib/modules/${KERNEL_VERSION}/net/hostap_pci${KERNE
 FILES_hostap-modules = "/lib/modules/"
 RDEPENDS_hostap-modules-cs = "hostap-modules"
 RDEPENDS_hostap-modules-pci = "hostap-modules"
+RPROVIDES_hostap-modules-cs = "hostap-conf"

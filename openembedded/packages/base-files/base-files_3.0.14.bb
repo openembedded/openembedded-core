@@ -1,7 +1,7 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r45"
+PR = "r47"
 LICENSE = "GPL"
 
 SRC_URI = " \
@@ -46,7 +46,7 @@ conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
 	     ${sysconfdir}/default"
 
 hostname = "openembedded"
-hostname_openslug = "openslug"
+hostname_slugos = "nslu2"
 hostname_mnci = "MNCI"
 PACKAGE_ARCH_mnci = "mnci"
 hostname_rt3000 = "MNRT"
@@ -121,7 +121,7 @@ do_install_append_nylon() {
 	ln -sf /var/tmp ${D}/tmp
 }
 
-do_install_append_openslug() {
+do_install_append_slugos() {
 	printf "" "" >${D}${sysconfdir}/resolv.conf
 	rm -r ${D}/mnt/*
 	rmdir ${D}/home/root
@@ -146,5 +146,5 @@ FILES_${PN}-unslung = ""
 
 CONFFILES_${PN} = "${sysconfdir}/fstab ${sysconfdir}/hostname"
 CONFFILES_${PN}_nylon = "${sysconfdir}/resolv.conf ${sysconfdir}/fstab ${sysconfdir}/hostname"
-CONFFILES_${PN}_openslug = "${sysconfdir}/resolv.conf ${sysconfdir}/fstab ${sysconfdir}/hostname"
+CONFFILES_${PN}_slugos = "${sysconfdir}/resolv.conf ${sysconfdir}/fstab ${sysconfdir}/hostname"
 

@@ -7,6 +7,8 @@ PR = "r0"
 SRC_URI = "file://xserver-nodm"
 S = ${WORKDIR}
 
+PACKAGE_ARCH = "all"
+
 do_install() {
     install -d ${D}/etc
     install -d ${D}/etc/init.d

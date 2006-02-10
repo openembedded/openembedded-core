@@ -9,10 +9,5 @@ S = "${WORKDIR}/Xproto"
 inherit autotools pkgconfig
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
-	       bindir=${STAGING_BINDIR} \
-	       includedir=${STAGING_INCDIR} \
-	       libdir=${STAGING_LIBDIR} \
-	       mandir=${STAGING_DATADIR}/man \
-	       datadir=${STAGING_DATADIR}
+	autotools_stage_all
 }

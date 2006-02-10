@@ -5,7 +5,7 @@ PR = "r1"
 PROVIDES = "tslib"
 
 SRC_URI_OVERRIDES_PACKAGE_ARCH = "0"
-PACKAGE_ARCH_tslib-conf = "${MACHINE}"
+PACKAGE_ARCH_tslib-conf = "${MACHINE_ARCH}"
 
 SRC_URI = "http://repository.maemo.org/pool/maemo/ossw/source/t/tslib/tslib_${PV}.tar.gz \
 	   file://ts.conf \

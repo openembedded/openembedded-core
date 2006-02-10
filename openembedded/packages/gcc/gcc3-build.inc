@@ -47,7 +47,10 @@ CPPFLAGS = ""
 # Used by configure to define additional values for FLAGS_FOR_TARGET -
 # passed to all the compilers.
 ARCH_FLAGS_FOR_TARGET = ""
-ARCH_FLAGS_FOR_TARGET_nslu2 = "${TARGET_CC_ARCH}"
+#NOTE: not tested on other platforms, the following is probably correct
+# everywhere!
+ARCH_FLAGS_FOR_TARGET_slugos = "${TARGET_CC_ARCH}"
+ARCH_FLAGS_FOR_TARGET_unslung = "${TARGET_CC_ARCH}"
 EXTRA_OEMAKE += "ARCH_FLAGS_FOR_TARGET='${ARCH_FLAGS_FOR_TARGET}'"
 
 def get_gcc_fpu_setting(bb, d):

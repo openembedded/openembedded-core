@@ -56,7 +56,7 @@ mount_tmpfs() {
 # I hate this hack.  -- Md
 make_extra_nodes() {
   if [ "$(echo /lib/udev/devices/*)" != "/lib/udev/devices/*" ]; then
-    cp --preserve=all --recursive --update /lib/udev/devices/* /dev/
+    cp -a /lib/udev/devices/* /dev/
   fi
 
   [ -e /etc/udev/links.conf ] || return 0

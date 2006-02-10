@@ -10,7 +10,7 @@ HOMEPAGE = "http://www.busybox.net"
 LICENSE = "GPL"
 SECTION = "base"
 PRIORITY = "required"
-PR = "r30"
+PR = "r32"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
            file://add-getkey-applet.patch;patch=1 \
@@ -28,6 +28,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
 	   file://dhcp-hostname.patch;patch=1 \
 	   file://gzip-spurious-const.patch;patch=1 \
 	   file://ifupdown-spurious-environ.patch;patch=1 \
+           file://uclibc_posix.patch;patch=1 \
            file://defconfig \
            file://busybox-cron \
 	   file://busybox-httpd \
@@ -56,8 +57,8 @@ INITSCRIPT_NAME_${PN}-udhcpd = "busybox-udhcpd"
 INITSCRIPT_NAME_${PN} = "syslog"
 CONFFILES_${PN} = "${sysconfdir}/syslog.conf"
 
-# This disables the syslog startup links in openslug (see openslug-init)
-INITSCRIPT_PARAMS_${PN}_openslug = "start 20 ."
+# This disables the syslog startup links in slugos (see slugos-init)
+INITSCRIPT_PARAMS_${PN}_slugos = "start 20 ."
 
 inherit cml1 update-rc.d
 

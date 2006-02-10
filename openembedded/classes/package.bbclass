@@ -81,6 +81,53 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
+# Function to strip a single file, called from RUNSTRIP below
+# A working 'file' (one which works on the target architecture)
+# is necessary for this stuff to work.
+PACKAGE_DEPENDS ?= "file-native"
+DEPENDS_prepend =+ "${PACKAGE_DEPENDS} "
+#FIXME: this should be "" when any errors are gone!
+IGNORE_STRIP_ERRORS ?= "1"
+
+runstrip() {
+	local ro st
+	st=0
+	if {	file "$1" || {
+			oewarn "file $1: failed (forced strip)" >&2
+			echo 'not stripped'
+		}
+	   } | grep -q 'not stripped'
+	then
+		oenote "${STRIP} $1"
+		ro=
+		test -w "$1" || {
+			ro=1
+			chmod +w "$1"
+		}
+		'${STRIP}' "$1"
+		st=$?
+		test -n "$ro" && chmod -w "$1"
+		if test $st -ne 0
+		then
+			oewarn "runstrip: ${STRIP} $1: strip failed" >&2
+			if [ x${IGNORE_STRIP_ERRORS} == x1 ]
+			then
+				#FIXME: remove this, it's for error detection
+				if file "$1" 2>/dev/null >&2
+				then
+					(oefatal "${STRIP} $1: command failed" >/dev/tty)
+				else
+					(oefatal "file $1: command failed" >/dev/tty)
+				fi
+				st=0
+			fi
+		fi
+	else
+		oenote "runstrip: skip $1"
+	fi
+	return $st
+}
+
 python populate_packages () {
 	import glob, stat, errno, re
 
@@ -166,14 +213,14 @@ python populate_packages () {
 			dpath = os.path.dirname(fpath)
 			bb.mkdirhier(dpath)
 			if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, 1) != '1') and not os.path.islink(file) and isexec(file):
-				stripfunc += "${STRIP} %s || : ;\n" % fpath
+				stripfunc += "\trunstrip %s || st=1\n" % fpath
 			ret = bb.movefile(file,fpath)
 			if ret is None or ret == 0:
 				raise bb.build.FuncFailed("File population failed")
 		if not stripfunc == "":
 			from bb import build
 			# strip
-			bb.data.setVar('RUNSTRIP', '%s\nreturn 0' % stripfunc, localdata)
+			bb.data.setVar('RUNSTRIP', '\tlocal st\n\tst=0\n%s\treturn $st' % stripfunc, localdata)
 			bb.data.setVarFlag('RUNSTRIP', 'func', 1, localdata)
 			bb.build.exec_func('RUNSTRIP', localdata)
 		del localdata

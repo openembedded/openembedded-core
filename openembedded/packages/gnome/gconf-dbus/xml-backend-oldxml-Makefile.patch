@@ -1,0 +1,11 @@
+--- trunk/backends/Makefile~	2006-01-19 09:52:22.000000000 -0800
++++ trunk/backends/Makefile	2006-01-19 13:13:23.000000000 -0800
+@@ -84,7 +84,7 @@
+ xml_test_OBJECTS = $(am_xml_test_OBJECTS)
+ xml_test_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+ 	$(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la \
+-	$(top_builddir)/backends/libgconfbackend-oldxml.la
++	libgconfbackend-oldxml.la
+ DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles

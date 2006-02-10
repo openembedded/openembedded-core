@@ -2,6 +2,8 @@
                                                        
 # Special case for prism3 cards needing firmware upload
 # Add more known manfids, if necessary          
+
+test -x /sbin/cardctl || exit 0
                                                        
 if [ `cardctl info|grep "d601,0010\|d601,0101"` ]; then
   iwpriv "$IFACE" reset 1                             

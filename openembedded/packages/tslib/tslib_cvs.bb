@@ -4,8 +4,8 @@ PV = "0.0+cvs${SRCDATE}"
 PR = "r32"
 
 SRC_URI_OVERRIDES_PACKAGE_ARCH = "0"
-PACKAGE_ARCH_tslib-conf = "${MACHINE}"
-PACKAGE_ARCH_mnci = "${MACHINE}"
+PACKAGE_ARCH_tslib-conf = "${MACHINE_ARCH}"
+PACKAGE_ARCH_mnci = "${MACHINE_ARCH}"
 
 SRC_URI = "cvs://cvs:@pubcvs.arm.linux.org.uk/mnt/src/cvsroot;module=tslib \
 	   file://ts.conf \
@@ -27,10 +27,7 @@ EXTRA_OECONF_mnci   = "--enable-shared --disable-h3600 --enable-input --disable-
 EXTRA_OECONF_beagle = "--enable-shared --enable-h3600 --disable-input --disable-corgi --disable-collie --disable-mk712 --disable-arctic2 --disable-ucb1x00 "
 
 do_stage () {
-	oe_libinstall -so -C src libts-0.0 ${STAGING_LIBDIR}
-	ln -sf libts-0.0.so ${STAGING_LIBDIR}/libts.so
-	install -m 0644 src/tslib.h ${STAGING_INCDIR}/
-	install -m 0644 src/tslib-private.h ${STAGING_INCDIR}/
+autotools_stage_all
 }
 
 do_install_prepend () {
@@ -41,7 +38,7 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/profile.d/
 	install -m 0755 ${WORKDIR}/tslib.sh ${D}${sysconfdir}/profile.d/
 	case ${MACHINE} in
-	h3600 | h3900 | h1940 | h6300 | h2200 | ipaq-pxa270)
+	h3600 | h3900 | h1940 | h6300 | h2200 | ipaq-pxa270 | blueangel)
 		install -d ${D}${datadir}/tslib
 		for f in ts.conf-h3600 ts.conf-h3600-2.4 ts.conf-h6300; do
 			install -m 0644 ${WORKDIR}/$f ${D}${datadir}/tslib/

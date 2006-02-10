@@ -1,3 +1,5 @@
+DEFAULT_PREFERENCE = "-1"
+
 DESCRIPTION = "udev is a daemon which dynamically creates and removes device nodes from \
 /dev/, handles hotplug events and loads drivers at boot time. It replaces \
 the hotplug package and requires a kernel not older than 2.6.12."
@@ -15,7 +17,9 @@ INITSCRIPT_PARAMS = "start 03 S . start 55 0 6 ."
 
 PR = "r1"
 
+FILES_${PN} += "${base_libdir}"
 UDEV_EXTRAS = "extras/firmware/ extras/scsi_id/ extras/volume_id/ extras/run_directory/"
+EXTRA_OEMAKE += "libudevdir=/lib/udev"
 
 do_install () {
 	install -d ${D}${usrsbindir} \

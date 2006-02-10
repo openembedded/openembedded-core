@@ -5,8 +5,6 @@ SECTION = "devel"
 LICENSE = "GPL"
 MAINTAINER = "Gerald Britton <gbritton@doomcom.org>"
 
-DEFAULT_PREFERENCE_nslu2 = "-1"
-
 inherit autotools gettext
 
 include gcc-package.inc
