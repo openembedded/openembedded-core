@@ -151,15 +151,32 @@ autotools_stage_includes() {
 }
 
 autotools_stage_all() {
-	if [ "${INHIBIT_AUTO_STAGE}" != "1" ]
+	if [ "${INHIBIT_AUTO_STAGE}" = "1" ]
 	then
-		rm -rf ${STAGE_TEMP}
-		mkdir -p ${STAGE_TEMP}
-		oe_runmake DESTDIR="${STAGE_TEMP}" install
-		cp -pPR ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}
-		cp -pPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}
-		rm -rf ${STAGE_TEMP}
+		return
 	fi
+	rm -rf ${STAGE_TEMP}
+	mkdir -p ${STAGE_TEMP}
+	oe_runmake DESTDIR="${STAGE_TEMP}" install
+	if [ -d ${STAGE_TEMP}/${includedir} ]; then
+		cp -fpPR ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}
+	fi
+	if [ -d ${STAGE_TEMP}/${libdir} ]
+	then
+		for i in ${STAGE_TEMP}/${libdir}/*.la
+		do
+			if [ ! -f "$i" ]; then
+				cp -fpPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}
+				break
+			fi
+			oe_libinstall -so $(basename $i .la) ${STAGING_LIBDIR}
+		done
+	fi
+	if [ -d ${STAGE_TEMP}/${datadir}/aclocal ]; then
+		install -d ${STAGING_DATADIR}/aclocal
+		cp -fpPR ${STAGE_TEMP}/${datadir}/aclocal/* ${STAGING_DATADIR}/aclocal
+	fi
+	rm -rf ${STAGE_TEMP}
 }
 
 EXPORT_FUNCTIONS do_configure do_install

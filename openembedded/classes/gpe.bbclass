@@ -2,6 +2,7 @@ DEPENDS_prepend = "coreutils-native virtual/libintl intltool-native "
 GPE_TARBALL_SUFFIX ?= "gz"
 SRC_URI = "${GPE_MIRROR}/${PN}-${PV}.tar.${GPE_TARBALL_SUFFIX}"
 FILES_${PN} += "${datadir}/gpe ${datadir}/application-registry"
+MAINTAINER ?= "GPE Team <gpe@handhelds.org>"
 
 inherit gettext
 

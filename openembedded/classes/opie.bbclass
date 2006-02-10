@@ -15,6 +15,11 @@
 
 inherit palmtop
 
+# Note that when CVS changes to 1.2.2, the dash
+# should be removed from OPIE_CVS_PV to convert
+# to the standardised version format
+OPIE_CVS_PV = "1.2.1+cvs-${SRCDATE}"
+
 DEPENDS_prepend = "${@["libopie2 ", ""][(bb.data.getVar('PN', d, 1) == 'libopie2')]}"
 
 # to be consistent, put all targets into workdir

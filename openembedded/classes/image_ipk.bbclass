@@ -1,11 +1,15 @@
 inherit rootfs_ipk
 
+# We need to follow RDEPENDS and RRECOMMENDS for images
+BUILD_ALL_DEPS = "1"
+
 # Images are generally built explicitly, do not need to be part of world.
 EXCLUDE_FROM_WORLD = "1"
 
 USE_DEVFS ?= "0"
 
 DEPENDS += "makedevs-native"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 def get_image_deps(d):
 	import bb

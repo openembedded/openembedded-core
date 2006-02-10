@@ -171,9 +171,8 @@ oe_libinstall() {
 	if [ -z "$dir" ]; then
 		dir=`pwd`
 	fi
-	if [ -d "$dir/.libs" ]; then
-		dir=$dir/.libs
-	fi
+	dotlai=$libname.lai
+	dir=$dir`(cd $dir; find -name "$dotlai") | sed "s/^\.//;s/\/$dotlai\$//;q"`
 	olddir=`pwd`
 	__runcmd cd $dir
 
@@ -191,7 +190,6 @@ oe_libinstall() {
 	if [ -f "$dota" -o -n "$require_static" ]; then
 		__runcmd install -m 0644 $dota $destpath/
 	fi
-	dotlai=$libname.lai
 	if [ -f "$dotlai" -a -n "$libtool" ]; then
 		if test -n "$staging_install"
 		then
@@ -724,9 +722,9 @@ python __anonymous () {
 	
 	pn = bb.data.getVar('PN', d, 1)
 
-	cvsdate = bb.data.getVar('CVSDATE_%s' % pn, d, 1)
-	if cvsdate != None:
-		bb.data.setVar('CVSDATE', cvsdate, d)
+	srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
+	if srcdate != None:
+		bb.data.setVar('SRCDATE', srcdate, d)
 
 	use_nls = bb.data.getVar('USE_NLS_%s' % pn, d, 1)
 	if use_nls != None:

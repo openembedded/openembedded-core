@@ -5,6 +5,9 @@ DEPENDS += "virtual/${TARGET_PREFIX}depmod-${@get_kernelmajorversion('${PV}')} v
 
 inherit kernel-arch
 
+PACKAGES_DYNAMIC += "kernel-module-*"
+PACKAGES_DYNAMIC += "kernel-image-*"
+
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 KERNEL_IMAGETYPE = "zImage"
@@ -21,8 +24,16 @@ KERNEL_RELEASE ?= "${PV}${KERNEL_LOCALVERSION}"
 KERNEL_CCSUFFIX ?= ""
 KERNEL_LDSUFFIX ?= ""
 
-KERNEL_CC = "${CCACHE}${HOST_PREFIX}gcc${KERNEL_CCSUFFIX}"
-KERNEL_LD = "${LD}${KERNEL_LDSUFFIX}"
+# Set TARGET_??_KERNEL_ARCH in the machine .conf to set architecture
+# specific options necessary for building the kernel and modules.
+#FIXME: should be this: TARGET_CC_KERNEL_ARCH ?= "${TARGET_CC_ARCH}"
+TARGET_CC_KERNEL_ARCH ?= ""
+HOST_CC_KERNEL_ARCH ?= "${TARGET_CC_KERNEL_ARCH}"
+TARGET_LD_KERNEL_ARCH ?= ""
+HOST_LD_KERNEL_ARCH ?= "${TARGET_LD_KERNEL_ARCH}"
+
+KERNEL_CC = "${CCACHE}${HOST_PREFIX}gcc${KERNEL_CCSUFFIX} ${HOST_CC_KERNEL_ARCH}"
+KERNEL_LD = "${LD}${KERNEL_LDSUFFIX} ${HOST_LD_KERNEL_ARCH}"
 
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_IMAGEDEST = "boot"
@@ -83,6 +94,7 @@ kernel_do_stage() {
 
 	mkdir -p ${STAGING_KERNEL_DIR}/include/$ASMDIR
 	cp -fR include/$ASMDIR/* ${STAGING_KERNEL_DIR}/include/$ASMDIR/
+	rm -f $ASMDIR ${STAGING_KERNEL_DIR}/include/asm
 	ln -sf $ASMDIR ${STAGING_KERNEL_DIR}/include/asm
 
 	mkdir -p ${STAGING_KERNEL_DIR}/include/asm-generic
@@ -96,6 +108,11 @@ kernel_do_stage() {
 
 	mkdir -p ${STAGING_KERNEL_DIR}/include/pcmcia
 	cp -fR include/pcmcia/* ${STAGING_KERNEL_DIR}/include/pcmcia/
+
+	if [ -d include/sound ]; then
+		mkdir -p ${STAGING_KERNEL_DIR}/include/sound
+		cp -fR include/sound/* ${STAGING_KERNEL_DIR}/include/sound/
+	fi
 
 	if [ -d drivers/sound ]; then
 		# 2.4 alsa needs some headers from this directory
@@ -133,7 +150,7 @@ kernel_do_install() {
 	else
 		oenote "no modules to install"
 	fi
-	
+
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -d ${D}/boot
 	install -m 0644 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_RELEASE}
