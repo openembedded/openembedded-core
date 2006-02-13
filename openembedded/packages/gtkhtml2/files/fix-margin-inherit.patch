@@ -1,0 +1,25 @@
+Index: libgtkhtml/layout/htmlbox.c
+===================================================================
+--- libgtkhtml/layout/htmlbox.c.orig	2006-02-06 01:50:52.000000000 +0000
++++ libgtkhtml/layout/htmlbox.c	2006-02-06 01:53:16.000000000 +0000
+@@ -151,17 +151,13 @@ simple_margin (HtmlStyle *style)
+ static gboolean
+ need_containing_width (HtmlBox *box, gint width)
+ {
+-	HtmlStyle *style;
+-
+ 	if (width > 0)
+ 		return FALSE;
+ 
+-	style = HTML_BOX_GET_STYLE (box);
+-
+-	if (simple_margin (style))
+-		return FALSE;
++	if (html_box_get_containing_block (box))
++		return TRUE;
+ 
+-	return TRUE;
++	return FALSE;
+ }
+ 
+ gint

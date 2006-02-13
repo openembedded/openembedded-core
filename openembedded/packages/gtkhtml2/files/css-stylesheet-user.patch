@@ -1,8 +1,8 @@
 Index: libgtkhtml/document/htmldocument.c
 ===================================================================
---- libgtkhtml/document/htmldocument.c.orig	2006-02-05 18:19:17.000000000 +0000
-+++ libgtkhtml/document/htmldocument.c	2006-02-05 18:20:06.000000000 +0000
-@@ -1122,3 +1122,31 @@ html_document_find_anchor (HtmlDocument 
+--- libgtkhtml/document/htmldocument.c.orig	2006-02-11 05:06:30.000000000 +0000
++++ libgtkhtml/document/htmldocument.c	2006-02-11 05:21:18.000000000 +0000
+@@ -1122,3 +1122,40 @@ html_document_find_anchor (HtmlDocument 
  	else
  		return NULL;
  }
@@ -12,7 +12,7 @@ Index: libgtkhtml/document/htmldocument.c
 +{
 +	HtmlStyleChange style_change;
 +	
-+	g_return_val_if_fail (HTML_IS_DOCUMENT (document), NULL);
++	g_return_if_fail (HTML_IS_DOCUMENT (document));
 +	
 +	/* Note: @import not supported for user stylesheets, due to
 +	 * complications it would cause with removal.
@@ -20,30 +20,39 @@ Index: libgtkhtml/document/htmldocument.c
 +	
 +	document->stylesheets = g_slist_append (document->stylesheets, sheet);
 +	
-+	style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
-+	g_signal_emit (G_OBJECT (document), document_signals [STYLE_UPDATED], 0, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), style_change);
++	if (document->dom_document) {
++		style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
++		g_signal_emit (G_OBJECT (document), document_signals [STYLE_UPDATED], 0, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), style_change);
++	}
 +}
 +
-+gboolean
++void
 +html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet)
 +{
-+	g_return_val_if_fail (stylesheet && HTML_IS_DOCUMENT (document), FALSE);
++	HtmlStyleChange style_change;
++
++	g_return_if_fail (stylesheet && HTML_IS_DOCUMENT (document));
 +	
 +	document->stylesheets = g_slist_remove (document->stylesheets, stylesheet);
 +	
++	if (document->dom_document) {
++		style_change = html_document_restyle_node (document, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), NULL, TRUE);
++		g_signal_emit (G_OBJECT (document), document_signals [STYLE_UPDATED], 0, DOM_NODE (dom_Document__get_documentElement (document->dom_document)), style_change);
++	}
++
 +	return TRUE;
 +}
 +
 Index: libgtkhtml/document/htmldocument.h
 ===================================================================
---- libgtkhtml/document/htmldocument.h.orig	2006-02-05 18:19:17.000000000 +0000
-+++ libgtkhtml/document/htmldocument.h	2006-02-05 18:20:06.000000000 +0000
+--- libgtkhtml/document/htmldocument.h.orig	2006-02-11 05:06:30.000000000 +0000
++++ libgtkhtml/document/htmldocument.h	2006-02-11 05:20:51.000000000 +0000
 @@ -113,6 +113,9 @@ void     html_document_update_active_nod
  void     html_document_update_focus_element (HtmlDocument *document, DomElement *element);
  DomNode *html_document_find_anchor          (HtmlDocument *doc, const gchar *anchor);
  
 +void	html_document_add_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
-+gboolean	html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
++void	html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
 +
  G_END_DECLS
  

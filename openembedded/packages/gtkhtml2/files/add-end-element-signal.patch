@@ -1,0 +1,141 @@
+Index: libgtkhtml/document/htmldocument.c
+===================================================================
+--- libgtkhtml/document/htmldocument.c.orig	2006-02-11 05:21:28.000000000 +0000
++++ libgtkhtml/document/htmldocument.c	2006-02-11 15:41:06.000000000 +0000
+@@ -48,6 +48,7 @@ enum {
+ 	
+ 	/* DOM change events */
+ 	NODE_INSERTED,
++	NODE_FINISHED,
+ 	NODE_REMOVED,
+ 	TEXT_UPDATED,
+ 	STYLE_UPDATED,
+@@ -536,6 +537,12 @@ html_document_new_node (HtmlParser *pars
+ }
+ 
+ static void
++html_document_finished_node (HtmlParser *parser, DomNode *node, HtmlDocument *document)
++{
++	g_signal_emit (G_OBJECT (document), document_signals [NODE_FINISHED], 0, node);
++}
++
++static void
+ html_document_finalize (GObject *object)
+ {
+ 	HtmlDocument *document = HTML_DOCUMENT (object);
+@@ -639,6 +646,16 @@ html_document_class_init (HtmlDocumentCl
+ 			      g_cclosure_marshal_VOID__OBJECT,
+ 			      G_TYPE_NONE, 1,
+ 			      DOM_TYPE_NODE);
++
++	document_signals [NODE_FINISHED] =
++		g_signal_new ("node_finished",
++			      G_TYPE_FROM_CLASS (object_class),
++			      G_SIGNAL_RUN_LAST,
++			      G_STRUCT_OFFSET (HtmlDocumentClass, node_finished),
++			      NULL, NULL,
++			      g_cclosure_marshal_VOID__OBJECT,
++			      G_TYPE_NONE, 1,
++			      DOM_TYPE_NODE);
+ 	
+ 	document_signals [NODE_REMOVED] =
+ 		g_signal_new ("node_removed",
+@@ -818,6 +835,9 @@ html_document_open_stream (HtmlDocument 
+ 		g_signal_connect (document->parser, "done_parsing",
+ 				  (GCallback) html_document_done_parsing,
+ 				  document);
++		g_signal_connect (document->parser, "finished_node",
++				  (GCallback) html_document_finished_node,
++				  document);
+ 
+ 		document->state = HTML_DOCUMENT_STATE_PARSING;
+ 		return TRUE;
+Index: libgtkhtml/document/htmldocument.h
+===================================================================
+--- libgtkhtml/document/htmldocument.h.orig	2006-02-11 05:21:28.000000000 +0000
++++ libgtkhtml/document/htmldocument.h	2006-02-11 15:35:38.000000000 +0000
+@@ -80,6 +80,7 @@ struct _HtmlDocumentClass {
+ 
+ 	/* DOM change events */
+ 	void (*node_inserted) (HtmlDocument *document, DomNode *node);
++	void (*node_finished) (HtmlDocument *document, DomNode *node);
+ 	void (*node_removed) (HtmlDocument *document, DomNode *node);
+ 	void (*text_updated) (HtmlDocument *document, DomNode *node);
+ 	void (*style_updated) (HtmlDocument *document, DomNode *node, HtmlStyleChange style_change);
+Index: libgtkhtml/document/htmlparser.c
+===================================================================
+--- libgtkhtml/document/htmlparser.c.orig	2006-01-17 11:50:54.000000000 +0000
++++ libgtkhtml/document/htmlparser.c	2006-02-11 17:21:20.000000000 +0000
+@@ -28,6 +28,7 @@ enum {
+ 	NEW_NODE,
+ 	DONE_PARSING,
+ 	PARSED_DOCUMENT_NODE,
++	FINISHED_NODE,
+ 	LAST_SIGNAL
+ };
+ 
+@@ -84,8 +85,13 @@ static void
+ html_endElement (void *ctx, const xmlChar *name)
+ {
+ 	HtmlParser *parser = HTML_PARSER (ctx);
++	DomNode *node;
+ 
+ 	xmlSAX2EndElement (parser->xmlctxt, name);
++	
++	node = dom_Node_mkref (xmlGetLastChild (parser->xmlctxt->node));
++	if (node)
++		g_signal_emit (G_OBJECT (parser), parser_signals [FINISHED_NODE], 0, node);
+ }
+ 
+ static void
+@@ -241,6 +247,15 @@ html_parser_class_init (HtmlParserClass 
+ 			      g_cclosure_marshal_VOID__VOID,
+ 			      G_TYPE_NONE, 0);
+ 
++	parser_signals [FINISHED_NODE] =
++		g_signal_new ("finished_node",
++			      G_TYPE_FROM_CLASS (object_class),
++			      G_SIGNAL_RUN_LAST,
++			      G_STRUCT_OFFSET (HtmlParserClass, finished_node),
++			      NULL, NULL,
++			      g_cclosure_marshal_VOID__OBJECT,
++			      G_TYPE_NONE, 1,
++			      DOM_TYPE_NODE);
+ }
+ 
+ static void
+@@ -281,11 +296,11 @@ html_parser_set_type (HtmlParser *parser
+ 	/* FIXME: Free parser if existing */
+ 	if (parser_type == HTML_PARSER_TYPE_HTML) {
+ 		parser->xmlctxt = htmlCreatePushParserCtxt (SAXHandler, parser,
+-							    parser->chars, parser->res, NULL, 0);
++							    NULL, 0, NULL, 0);
+ 	}
+ 	else {
+ 		parser->xmlctxt = xmlCreatePushParserCtxt (SAXHandler, parser,
+-							   parser->chars, parser->res, NULL);
++							   NULL, 0, NULL);
+ 	}
+ 
+ 
+Index: libgtkhtml/document/htmlparser.h
+===================================================================
+--- libgtkhtml/document/htmlparser.h.orig	2006-01-17 11:50:54.000000000 +0000
++++ libgtkhtml/document/htmlparser.h	2006-02-11 18:57:51.000000000 +0000
+@@ -57,8 +57,6 @@ struct _HtmlParser {
+ 
+ 	/* Used by libxml */
+ 	xmlParserCtxtPtr xmlctxt;
+-	int res;
+-	char chars[10];
+ 
+ 	gboolean blocking;
+ 	DomNode *blocking_node;
+@@ -71,6 +69,7 @@ struct _HtmlParserClass {
+ 	void (* done_parsing) (HtmlParser *parser);
+ 	void (* new_node) (HtmlParser *parser, DomNode *node);
+ 	void (* parsed_document_node) (HtmlParser *parser, DomDocument *document);
++	void (* finished_node) (HtmlParser *parser, DomNode *node);
+ };
+ typedef struct _HtmlParserClass HtmlParserClass;
+ 

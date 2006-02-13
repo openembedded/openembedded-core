@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base-depends task-oh-base"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r20"
+PR = "r21"
 
 ALLOW_EMPTY = "1"
 
@@ -32,6 +32,9 @@ RDEPENDS_task-oh-base := "\
     eds-dbus \
     contacts \
     dates \
+    web \
+    libcurl \
+    js \
     leafpad \
     puzzles \
     kf \
@@ -46,8 +49,12 @@ RDEPENDS_task-oh-base := "\
     xauth \
     avahi-daemon \
     gdk-pixbuf-loader-png \
+    gdk-pixbuf-loader-gif \
     gdk-pixbuf-loader-xpm \
     gdk-pixbuf-loader-jpeg \
+    gnome-vfs-plugin-dbus \
+    gnome-vfs-plugin-file \
+    gnome-vfs-plugin-http \
     gtk-theme-clearlooks \
     kernel-module-oprofile \
     tslib-calibrate \

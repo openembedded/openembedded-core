@@ -1,7 +1,7 @@
 Index: libgtkhtml/css/cssmatcher.c
 ===================================================================
---- libgtkhtml/css/cssmatcher.c.orig	2006-02-05 18:19:15.000000000 +0000
-+++ libgtkhtml/css/cssmatcher.c	2006-02-05 18:20:15.000000000 +0000
+--- libgtkhtml/css/cssmatcher.c.orig	2006-02-11 05:18:03.000000000 +0000
++++ libgtkhtml/css/cssmatcher.c	2006-02-11 05:21:28.000000000 +0000
 @@ -2411,7 +2411,8 @@ css_matcher_apply_stylesheet (HtmlDocume
  		CssStatement *stat = list->data;
  		gint j;
@@ -155,8 +155,8 @@ Index: libgtkhtml/css/cssmatcher.c
  
 Index: libgtkhtml/document/htmldocument.c
 ===================================================================
---- libgtkhtml/document/htmldocument.c.orig	2006-02-05 18:20:06.000000000 +0000
-+++ libgtkhtml/document/htmldocument.c	2006-02-05 18:20:15.000000000 +0000
+--- libgtkhtml/document/htmldocument.c.orig	2006-02-11 05:21:18.000000000 +0000
++++ libgtkhtml/document/htmldocument.c	2006-02-11 05:21:28.000000000 +0000
 @@ -142,9 +142,7 @@ html_document_stylesheet_stream_close (c
  	if (!buffer)
  		return;
@@ -268,7 +268,7 @@ Index: libgtkhtml/document/htmldocument.c
  
  	g_signal_connect (G_OBJECT (document->image_factory), "request_image",
  			  G_CALLBACK (html_document_request_image), document);
-@@ -1150,3 +1157,24 @@ html_document_remove_stylesheet	(HtmlDoc
+@@ -1159,3 +1166,24 @@ html_document_remove_stylesheet	(HtmlDoc
  	return TRUE;
  }
  
@@ -295,8 +295,8 @@ Index: libgtkhtml/document/htmldocument.c
 +}
 Index: libgtkhtml/document/htmldocument.h
 ===================================================================
---- libgtkhtml/document/htmldocument.h.orig	2006-02-05 18:20:06.000000000 +0000
-+++ libgtkhtml/document/htmldocument.h	2006-02-05 18:20:15.000000000 +0000
+--- libgtkhtml/document/htmldocument.h.orig	2006-02-11 05:20:51.000000000 +0000
++++ libgtkhtml/document/htmldocument.h	2006-02-11 05:21:28.000000000 +0000
 @@ -64,6 +64,8 @@ struct _HtmlDocument {
  	DomNode *hover_node;
  	DomNode *active_node;
@@ -316,7 +316,7 @@ Index: libgtkhtml/document/htmldocument.h
  GType html_document_get_type (void);
 @@ -116,6 +119,10 @@ DomNode *html_document_find_anchor      
  void	html_document_add_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
- gboolean	html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
+ void	html_document_remove_stylesheet	(HtmlDocument *document, CssStylesheet *stylesheet);
  
 +void		html_document_set_media_type (HtmlDocument *document, const gchar *type);
 +const gchar 	*html_document_get_media_type (HtmlDocument *document);
@@ -327,8 +327,8 @@ Index: libgtkhtml/document/htmldocument.h
  #endif /* __HTMLDOCUMENT_H__ */
 Index: libgtkhtml/css/cssparser.c
 ===================================================================
---- libgtkhtml/css/cssparser.c.orig	2006-02-05 18:19:15.000000000 +0000
-+++ libgtkhtml/css/cssparser.c	2006-02-05 18:20:15.000000000 +0000
+--- libgtkhtml/css/cssparser.c.orig	2006-02-11 05:18:03.000000000 +0000
++++ libgtkhtml/css/cssparser.c	2006-02-11 05:21:28.000000000 +0000
 @@ -688,6 +688,32 @@ css_parser_parse_value (const gchar *buf
  	return pos;
  }
@@ -441,8 +441,8 @@ Index: libgtkhtml/css/cssparser.c
  			if (pos == -1)
 Index: libgtkhtml/css/cssparser.h
 ===================================================================
---- libgtkhtml/css/cssparser.h.orig	2006-02-05 18:19:15.000000000 +0000
-+++ libgtkhtml/css/cssparser.h	2006-02-05 18:20:15.000000000 +0000
+--- libgtkhtml/css/cssparser.h.orig	2006-02-11 05:18:03.000000000 +0000
++++ libgtkhtml/css/cssparser.h	2006-02-11 05:21:28.000000000 +0000
 @@ -30,7 +30,7 @@
  
  G_BEGIN_DECLS
@@ -454,8 +454,8 @@ Index: libgtkhtml/css/cssparser.h
  G_END_DECLS
 Index: libgtkhtml/css/cssstylesheet.h
 ===================================================================
---- libgtkhtml/css/cssstylesheet.h.orig	2006-02-05 18:19:15.000000000 +0000
-+++ libgtkhtml/css/cssstylesheet.h	2006-02-05 18:20:15.000000000 +0000
+--- libgtkhtml/css/cssstylesheet.h.orig	2006-02-11 05:18:03.000000000 +0000
++++ libgtkhtml/css/cssstylesheet.h	2006-02-11 05:21:28.000000000 +0000
 @@ -99,6 +99,7 @@ struct _CssStatement {
  			CssValue *url;
  			gboolean fetched;
