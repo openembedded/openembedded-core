@@ -84,8 +84,8 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 # Function to strip a single file, called from RUNSTRIP below
 # A working 'file' (one which works on the target architecture)
 # is necessary for this stuff to work.
-PACKAGE_DEPENDS ?= "file-native"
-DEPENDS_prepend =+ "${PACKAGE_DEPENDS} "
+#PACKAGE_DEPENDS ?= "file-native"
+#DEPENDS_prepend =+ "${PACKAGE_DEPENDS} "
 #FIXME: this should be "" when any errors are gone!
 IGNORE_STRIP_ERRORS ?= "1"
 

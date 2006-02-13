@@ -7,10 +7,12 @@ SRC_URI = "http://pdx.freedesktop.org/fontconfig/release/fontconfig-${PV}.tar.gz
            file://fc-glyphname.patch;patch=1 \
            file://fc-lang.patch;patch=1 \
 	   file://local.conf"
-PR = "r1"
+PR = "r2"
 
 PACKAGES =+ "fontconfig-utils "
 FILES_fontconfig-utils = "${bindir}/*"
+
+PKG_fontconfig-utils=fontconfig-utils
 
 S = "${WORKDIR}/fontconfig-${PV}"
 

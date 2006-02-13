@@ -89,6 +89,8 @@ do_stage() {
 	for i in ${GNOME_VFS_PLATFORM_HEADERS}; do install -m 0644 libgnomevfs/$i ${STAGING_INCDIR}/include/libgnomevfs/; done
 }
 
+PACKAGES_DYNAMIC = "gnome-vfs-plugin-*"
+
 python populate_packages_prepend () {
         print bb.data.getVar('FILES_gnome-vfs', d, 1)
 
