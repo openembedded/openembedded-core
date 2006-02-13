@@ -14,6 +14,9 @@ PATCHCLEANCMD = ""
 PATCHCMD = "num='%s'; name='%s'; file='%s'; patch -p "$num" -i "$file""
 EXTRA_OECONF = "--disable-nls"
 
+#RDEPENDS_${PN} = "patch-native diffstat-native bzip2-native"
+RDEPENDS_${PN} = ""
+
 do_configure () {
 	chmod 755 configure
 	oe_runconf
