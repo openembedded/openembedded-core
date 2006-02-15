@@ -29,7 +29,7 @@ diff -urNd pcmanfm-0.1.9.8.old/configure.in pcmanfm-0.1.9.8/configure.in
  AC_SUBST([FAM_CFLAGS])
 diff -urNd pcmanfm-0.1.9.8.old/src/foldercontent.c pcmanfm-0.1.9.8/src/foldercontent.c
 --- pcmanfm-0.1.9.8.old/src/foldercontent.c	2006-02-08 18:36:52.000000000 +0000
-+++ pcmanfm-0.1.9.8/src/foldercontent.c	2006-02-15 02:15:10.000000000 +0000
++++ pcmanfm-0.1.9.8/src/foldercontent.c	2006-02-15 02:51:03.000000000 +0000
 @@ -31,9 +31,11 @@
  }FolderContentCallback;
  
@@ -206,6 +206,18 @@ diff -urNd pcmanfm-0.1.9.8.old/src/foldercontent.c pcmanfm-0.1.9.8/src/foldercon
 +#endif
      tree_path = gtk_tree_row_reference_get_path(
                                    content->tree_node );
+     gtk_tree_model_get_iter( model, &parent_it, tree_path );
+@@ -776,7 +825,11 @@
+ 
+   /* There is no need to update the dir tree currently. */
+   if( content->tree_node ) {
++#ifdef HAVE_GTK_2_8
+     model = gtk_tree_row_reference_get_model( content->tree_node );
++#else
++    model = content->tree_model;
++#endif
+     tree_path = gtk_tree_row_reference_get_path(
+         content->tree_node );
      gtk_tree_model_get_iter( model, &parent_it, tree_path );
 diff -urNd pcmanfm-0.1.9.8.old/src/foldercontent.h pcmanfm-0.1.9.8/src/foldercontent.h
 --- pcmanfm-0.1.9.8.old/src/foldercontent.h	2006-02-07 10:26:03.000000000 +0000
