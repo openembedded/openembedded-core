@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base-depends task-oh-base"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r21"
+PR = "r22"
 
 ALLOW_EMPTY = "1"
 
@@ -35,6 +35,7 @@ RDEPENDS_task-oh-base := "\
     web \
     libcurl \
     js \
+    pcmanfm \
     leafpad \
     puzzles \
     kf \

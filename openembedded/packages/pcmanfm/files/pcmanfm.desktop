@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=File Manager
+Exec=/usr/bin/pcmanfm
+Icon=pcmanfm.png
+Terminal=false
+Type=Application
+Categories=Utility;
+SingleInstance=true
+StartupNotify=true
+
