@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r5"
+PR = "r6"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -75,6 +75,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.15.tar.bz2 \
            ${RPSRC}/pm_changes-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_pm-do-r2.patch;patch=1 \
            ${DOSRC}/kexec-arm-r0.patch \
+           ${RPSRC}/headphone_switch-r0.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1 \
            ${RPSRC}/pxa-linking-bug.patch;patch=1 \
