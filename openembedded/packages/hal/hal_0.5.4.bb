@@ -7,6 +7,7 @@ RDEPENDS_hal-device-manager = "python hal python-pygnome"
 RRECOMMENDS = "udev-utils"
 HOMEPAGE = "http://freedesktop.org/Software/hal"
 LICENSE = "GPL LGPL AFL"
+PR = "r1"
 
 SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz"
 S = "${WORKDIR}/hal-${PV}"
@@ -16,7 +17,8 @@ inherit autotools pkgconfig
 EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
 		--with-expat=${STAGING_LIBDIR}/.. \
 		--with-dbus-sys=${sysconfdir}/dbus-1/system.d \
-		--with-hotplug=${sysconfdir}/hotplug.d"
+		--with-hotplug=${sysconfdir}/hotplug.d \
+		--disable-docbook-docs"
 
 do_stage() {
 	autotools_stage_includes
