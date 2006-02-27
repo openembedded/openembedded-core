@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.15
-# Mon Feb  6 23:38:08 2006
+# Thu Feb 23 16:29:38 2006
 #
 CONFIG_ARM=y
 CONFIG_MMU=y
@@ -518,6 +518,7 @@ CONFIG_INPUT_MOUSEDEV_SCREEN_Y=768
 # CONFIG_INPUT_TSDEV is not set
 # CONFIG_INPUT_EVDEV is not set
 # CONFIG_INPUT_EVBUG is not set
+# CONFIG_INPUT_POWER is not set
 
 #
 # Input Device Drivers
@@ -618,6 +619,15 @@ CONFIG_HWMON=y
 #
 
 #
+# Multi-Function Devices
+#
+
+#
+# LED devices
+#
+# CONFIG_NEW_LEDS is not set
+
+#
 # Multimedia devices
 #
 # CONFIG_VIDEO_DEV is not set
@@ -639,7 +649,6 @@ CONFIG_FB_MODE_HELPERS=y
 CONFIG_FB_TILEBLITTING=y
 CONFIG_FB_ARMCLCD=y
 # CONFIG_FB_S1D13XXX is not set
-CONFIG_FB_QEMUVIRT=y
 # CONFIG_FB_VIRTUAL is not set
 
 #
@@ -687,6 +696,25 @@ CONFIG_USB_ARCH_HAS_HCD=y
 # MMC/SD Card support
 #
 # CONFIG_MMC is not set
+
+#
+# Real Time Clock
+#
+CONFIG_RTC_CLASS=y
+CONFIG_RTC_HCTOSYS=y
+CONFIG_RTC_HCTOSYS_DEVICE="rtc0"
+
+#
+# RTC interfaces
+#
+CONFIG_RTC_INTF_SYSFS=y
+CONFIG_RTC_INTF_PROC=y
+CONFIG_RTC_INTF_DEV=y
+
+#
+# RTC drivers
+#
+# CONFIG_RTC_DRV_TEST is not set
 
 #
 # File systems
@@ -854,7 +882,8 @@ CONFIG_NLS_DEFAULT="iso8859-1"
 #
 # Profiling support
 #
-# CONFIG_PROFILING is not set
+CONFIG_PROFILING=y
+CONFIG_OPROFILE=m
 
 #
 # Kernel hacking
