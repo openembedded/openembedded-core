@@ -1,6 +1,73 @@
 def legitimize_package_name(s):
 	return s.lower().replace('_', '-').replace('@', '+').replace(',', '+').replace('/', '-')
 
+STAGING_PKGMAPS_DIR ?= "${STAGING_DIR}/pkgmaps"
+
+def add_package_mapping (pkg, new_name, d):
+	import bb, os
+
+	def encode(str):
+		import codecs
+		c = codecs.getencoder("string_escape")
+		return c(str)[0]
+
+	pmap_dir = bb.data.getVar('STAGING_PKGMAPS_DIR', d, 1)
+
+	bb.mkdirhier(pmap_dir)
+
+	data_file = os.path.join(pmap_dir, pkg)
+
+	f = open(data_file, 'w')
+	f.write("%s\n" % encode(new_name))
+	f.close()
+
+def get_package_mapping (pkg, d):
+	import bb, os
+
+	def decode(str):
+		import codecs
+		c = codecs.getdecoder("string_escape")
+		return c(str)[0]
+
+	data_file = bb.data.expand("${STAGING_PKGMAPS_DIR}/%s" % pkg, d)
+
+	if os.access(data_file, os.R_OK):
+		f = file(data_file, 'r')
+		lines = f.readlines()
+		f.close()
+		for l in lines:
+			return decode(l).strip()
+	return pkg
+
+def runtime_mapping_rename (varname, d):
+	import bb, os
+
+	#bb.note("%s before: %s" % (varname, bb.data.getVar(varname, d, 1)))	
+
+	new_depends = []
+	for depend in explode_deps(bb.data.getVar(varname, d, 1) or ""):
+		# Have to be careful with any version component of the depend
+		split_depend = depend.split(' (')
+		new_depend = get_package_mapping(split_depend[0].strip(), d)
+		if len(split_depend) > 1:
+			new_depends.append("%s (%s" % (new_depend, split_depend[1]))
+		else:
+			new_depends.append(new_depend)
+
+	bb.data.setVar(varname, " ".join(new_depends) or None, d)
+
+	#bb.note("%s after: %s" % (varname, bb.data.getVar(varname, d, 1)))
+
+python package_mapping_rename_hook () {
+	runtime_mapping_rename("RDEPENDS", d)
+	runtime_mapping_rename("RRECOMMENDS", d)
+	runtime_mapping_rename("RSUGGESTS", d)
+	runtime_mapping_rename("RPROVIDES", d)
+	runtime_mapping_rename("RREPLACES", d)
+	runtime_mapping_rename("RCONFLICTS", d)
+}
+
+
 def do_split_packages(d, root, file_regex, output_pattern, description, postinst=None, recursive=False, hook=None, extra_depends=None, aux_files_pattern=None, postrm=None, allow_dirs=False, prepend=False, match_path=False):
 	import os, os.path, bb
 
@@ -240,8 +307,11 @@ python populate_packages () {
 	bb.build.exec_func("package_name_hook", d)
 
 	for pkg in packages.split():
-		if bb.data.getVar('PKG_%s' % pkg, d, 1) is None:
+		pkgname = bb.data.getVar('PKG_%s' % pkg, d, 1)
+		if pkgname is None:
 			bb.data.setVar('PKG_%s' % pkg, pkg, d)
+		else:
+			add_package_mapping(pkg, pkgname, d)
 
 	dangling_links = {}
 	pkg_files = {}
@@ -641,5 +711,5 @@ python package_do_package () {
 
 do_package[dirs] = "${D}"
 populate_packages[dirs] = "${D}"
-EXPORT_FUNCTIONS do_package do_shlibs do_split_locales
+EXPORT_FUNCTIONS do_package do_shlibs do_split_locales mapping_rename_hook
 addtask package before do_build after do_populate_staging

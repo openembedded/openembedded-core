@@ -165,6 +165,9 @@ python do_package_ipk () {
 			ctrlfile.close()
 			raise bb.build.FuncFailed("Missing field for ipk generation: %s" % value)
 		# more fields
+
+		bb.build.exec_func("mapping_rename_hook", localdata)
+
 		rdepends = explode_deps(bb.data.getVar("RDEPENDS", localdata, 1) or "")
 		rrecommends = explode_deps(bb.data.getVar("RRECOMMENDS", localdata, 1) or "")
 		rsuggests = (bb.data.getVar("RSUGGESTS", localdata, 1) or "").split()

@@ -73,9 +73,9 @@ do_stage_append () {
 	fi
 }
 
-PACKAGES = "${SRCNAME} ${SRCNAME}-themes ${SRCNAME}-dev ${SRCNAME}-examples"
-FILES_${SRCNAME} = "${libdir}/lib*.so*"
-FILES_${SRCNAME}-themes = "${datadir}/${SRCNAME}/themes ${datadir}/${SRCNAME}/data ${datadir}/${SRCNAME}/fonts ${datadir}/${SRCNAME}/pointers ${datadir}/${SRCNAME}/images ${datadir}/${SRCNAME}/users ${datadir}/${SRCNAME}/images ${datadir}/${SRCNAME}/styles"
-FILES_${SRCNAME}-dev += "${bindir}/${SRCNAME}-config ${libdir}/pkgconfig ${libdir}/lib*.?a ${datadir}/${SRCNAME}/include"
-FILES_${SRCNAME}-examples = "${bindir} ${datadir}"
+PACKAGES = "${PN} ${PN}-themes ${PN}-dev ${PN}-examples "
+FILES_${PN} = "${libdir}/lib*.so*"
+FILES_${PN}-themes = "${datadir}/${PN}/themes ${datadir}/${PN}/data ${datadir}/${PN}/fonts ${datadir}/${PN}/pointers ${datadir}/${PN}/images ${datadir}/${PN}/users ${datadir}/${PN}/images ${datadir}/${PN}/styles"
+FILES_${PN}-dev = "${bindir}/${PN}-config ${libdir}/pkgconfig ${libdir}/lib*.?a ${libdir}/lib*.a"
+FILES_${PN}-examples = "${bindir} ${datadir}"
 

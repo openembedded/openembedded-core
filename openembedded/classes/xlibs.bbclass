@@ -1,7 +1,7 @@
 LICENSE= "BSD-X"
 SECTION = "x11/libs"
 
-XLIBS_CVS = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs"
+XLIBS_CVS = "${FREEDESKTOP_CVS}/xlibs"
 
 inherit autotools pkgconfig
 

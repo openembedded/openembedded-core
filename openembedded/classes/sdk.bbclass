@@ -11,12 +11,16 @@ HOST_OS = "${BUILD_OS}"
 HOST_PREFIX = "${BUILD_PREFIX}"
 HOST_CC_ARCH = "${BUILD_CC_ARCH}"
 
-export CPPFLAGS = "${BUILD_CPPFLAGS}"
-export CFLAGS = "${BUILD_CFLAGS}"
-export CXXFLAGS = "${BUILD_CFLAGS}"
-export LDFLAGS = "${BUILD_LDFLAGS}"
+CPPFLAGS = "${BUILD_CPPFLAGS}"
+CFLAGS = "${BUILD_CFLAGS}"
+CXXFLAGS = "${BUILD_CFLAGS}"
+LDFLAGS = "${BUILD_LDFLAGS}"
 
 prefix = "/usr/local/${SDK_NAME}"
 exec_prefix = "${prefix}"
+base_prefix = "${exec_prefix}"
 
 FILES_${PN} = "${prefix}"
+
+
+
