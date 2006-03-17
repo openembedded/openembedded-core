@@ -1,0 +1,13 @@
+--- libart_lgpl-2.3.16/Makefile.am.old	2004-06-26 18:57:07.000000000 +0100
++++ libart_lgpl-2.3.16/Makefile.am	2004-06-26 18:57:12.000000000 +0100
+@@ -5,8 +5,8 @@
+ 
+ BUILT_SOURCES = art_config.h
+ 
+-art_config.h:	gen_art_config
+-	./gen_art_config > art_config.h
++#art_config.h:	gen_art_config
++#	./gen_art_config > art_config.h
+ 
+ EXTRA_DIST = 			\
+ 	libart-config.in	\
