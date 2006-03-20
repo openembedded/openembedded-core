@@ -1,7 +1,6 @@
 LICENSE = "LGPL"
 DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade libiconv"
 RDEPENDS = "gconf db libiconv"
-#dbus
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0+svn${SRCDATE}"
