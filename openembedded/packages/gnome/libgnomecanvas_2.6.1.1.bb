@@ -4,7 +4,7 @@ PR = "r1"
 DESCRIPTION = "A powerful object-oriented display"
 inherit gnome
 
-DEPENDS = "gnome-vfs libbonobo libglade libart-lgpl"
+DEPENDS = "libglade libart-lgpl"
 
 EXTRA_OECONF = "--disable-gtk-doc"
 
