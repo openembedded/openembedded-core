@@ -98,20 +98,14 @@ class Svn(Fetch):
 
             date = Fetch.getSRCDate(d)
 
-            if "method" in parm:
-                method = parm["method"]
-            else:
-                method = "pserver"
-
             if "proto" in parm:
                 proto = parm["proto"]
             else:
                 proto = "svn"
 
             svn_rsh = None
-            if method == "ext":
-                if "rsh" in parm:
-                    svn_rsh = parm["rsh"]
+            if proto == "svn+ssh" and "rsh" in parm:
+                svn_rsh = parm["rsh"]
 
             tarfn = data.expand('%s_%s_%s_%s_%s.tar.gz' % (module.replace('/', '.'), host, path.replace('/', '.'), revision, date), localdata)
             data.setVar('TARFILES', dlfile, localdata)
@@ -122,24 +116,13 @@ class Svn(Fetch):
                 bb.debug(1, "%s already exists, skipping svn checkout." % tarfn)
                 continue
 
-            svn_tarball_stash = data.getVar('CVS_TARBALL_STASH', d, 1)
-            if svn_tarball_stash:
-                fetchcmd = data.getVar("FETCHCOMMAND_wget", d, 1)
-                uri = svn_tarball_stash + tarfn
-                bb.note("fetch " + uri)
-                fetchcmd = fetchcmd.replace("${URI}", uri)
-                ret = os.system(fetchcmd)
-                if ret == 0:
-                    bb.note("Fetched %s from tarball stash, skipping checkout" % tarfn)
-                    continue
+            # try to use the tarball stash
+            if Fetch.try_mirror(d, tarfn):
+                continue
 
             olddir = os.path.abspath(os.getcwd())
             os.chdir(data.expand(dldir, localdata))
 
-#           setup svnroot
-#            svnroot = ":" + method + ":" + user
-#            if pswd:
-#                svnroot += ":" + pswd
             svnroot = host + path
 
             data.setVar('SVNROOT', svnroot, localdata)

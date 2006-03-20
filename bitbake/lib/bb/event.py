@@ -25,6 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA.
 
 import os, re
 import bb.data
+import bb.utils
 
 class Event:
     """Base class for events"""
@@ -50,8 +51,8 @@ def tmpHandler(event):
     return NotHandled
 
 def defaultTmpHandler():
-    tmp = "def tmpHandler(e):\n\t\"\"\"heh\"\"\"\n\treturn 0"
-    comp = compile(tmp, "tmpHandler(e)", "exec")
+    tmp = "def tmpHandler(e):\n\t\"\"\"heh\"\"\"\n\treturn NotHandled"
+    comp = bb.utils.better_compile(tmp, "tmpHandler(e)", "bb.event.defaultTmpHandler")
     return comp
 
 def fire(event):
@@ -71,12 +72,12 @@ def register(handler):
     if handler is not None:
 #       handle string containing python code
         if type(handler).__name__ == "str":
-            return registerCode(handler)
+            return _registerCode(handler)
 #       prevent duplicate registration
         if not handler in handlers:
             handlers.append(handler)
 
-def registerCode(handlerStr):
+def _registerCode(handlerStr):
     """Register a 'code' Event.
        Deprecated interface; call register instead.
 
@@ -85,7 +86,7 @@ def registerCode(handlerStr):
        the code will be within a function, so should have had
        appropriate tabbing put in place."""
     tmp = "def tmpHandler(e):\n%s" % handlerStr
-    comp = compile(tmp, "tmpHandler(e)", "exec")
+    comp = bb.utils.better_compile(tmp, "tmpHandler(e)", "bb.event._registerCode")
 #   prevent duplicate registration
     if not comp in handlers:
         handlers.append(comp)
@@ -94,16 +95,16 @@ def remove(handler):
     """Remove an Event handler"""
     for h in handlers:
         if type(handler).__name__ == "str":
-            return removeCode(handler)
+            return _removeCode(handler)
 
         if handler is h:
             handlers.remove(handler)
 
-def removeCode(handlerStr):
+def _removeCode(handlerStr):
     """Remove a 'code' Event handler
        Deprecated interface; call remove instead."""
     tmp = "def tmpHandler(e):\n%s" % handlerStr
-    comp = compile(tmp, "tmpHandler(e)", "exec")
+    comp = bb.utils.better_compile(tmp, "tmpHandler(e)", "bb.event._removeCode")
     handlers.remove(comp)
 
 def getName(e):
@@ -117,7 +118,7 @@ def getName(e):
 class PkgBase(Event):
     """Base class for package events"""
 
-    def __init__(self, t, d = {}):
+    def __init__(self, t, d = bb.data.init()):
         self._pkg = t
         Event.__init__(self, d)
 
@@ -133,10 +134,11 @@ class PkgBase(Event):
 class BuildBase(Event):
     """Base class for bbmake run events"""
 
-    def __init__(self, n, p, c):
+    def __init__(self, n, p, c, failures = 0):
         self._name = n
         self._pkgs = p
         Event.__init__(self, c)
+        self._failures = failures
 
     def getPkgs(self):
         return self._pkgs
@@ -155,6 +157,12 @@ class BuildBase(Event):
 
     def setCfg(self, cfg):
         self.data = cfg
+
+    def getFailures(self):
+        """
+        Return the number of failed packages
+        """
+        return self._failures
 
     pkgs = property(getPkgs, setPkgs, None, "pkgs property")
     name = property(getName, setName, None, "name property")
@@ -204,7 +212,43 @@ class UnsatisfiedDep(DepBase):
 class RecursiveDep(DepBase):
     """Recursive Dependency"""
 
+class NoProvider(Event):
+    """No Provider for an Event"""
 
-class MultipleProviders(PkgBase):
+    def __init__(self, item, data,runtime=False):
+        Event.__init__(self, data)
+        self._item = item
+        self._runtime = runtime
+
+    def getItem(self):
+        return self._item
+
+    def isRuntime(self):
+        return self._runtime
+
+class MultipleProviders(Event):
     """Multiple Providers"""
 
+    def  __init__(self, item, candidates, data, runtime = False):
+        Event.__init__(self, data)
+        self._item = item
+        self._candidates = candidates
+        self._is_runtime = runtime
+
+    def isRuntime(self):
+        """
+        Is this a runtime issue?
+        """
+        return self._is_runtime
+
+    def getItem(self):
+        """
+        The name for the to be build item
+        """
+        return self._item
+
+    def getCandidates(self):
+        """
+        Get the possible Candidates for a PROVIDER.
+        """
+        return self._candidates

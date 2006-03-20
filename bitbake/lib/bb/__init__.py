@@ -23,7 +23,7 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA.
 """
 
-__version__ = "1.3.3.0"
+__version__ = "1.3.3.4"
 
 __all__ = [
 
@@ -1228,38 +1228,6 @@ class digraph:
             mygraph.dict[x]=self.dict[x][:]
             mygraph.okeys=self.okeys[:]
         return mygraph
-
-#######################################################################
-#######################################################################
-#
-# SECTION: Config
-#
-# PURPOSE: Reading and handling of system/target-specific/local configuration
-#       reading of package configuration
-#
-#######################################################################
-#######################################################################
-
-def reader(cfgfile, feeder):
-    """Generic configuration file reader that opens a file, reads the lines,
-    handles continuation lines, comments, empty lines and feed all read lines
-    into the function feeder(lineno, line).
-    """
-
-    f = open(cfgfile,'r')
-    lineno = 0
-    while 1:
-        lineno = lineno + 1
-        s = f.readline()
-        if not s: break
-        w = s.strip()
-        if not w: continue        # skip empty lines
-        s = s.rstrip()
-        if s[0] == '#': continue    # skip comments
-        while s[-1] == '\\':
-            s2 = f.readline()[:-1].strip()
-            s = s[:-1] + s2
-        feeder(lineno, s)
 
 if __name__ == "__main__":
     import doctest, bb

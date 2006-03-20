@@ -71,6 +71,7 @@
 
 #include "token.h"
 #include "lexer.h"
+#include "bitbakeparser.h"
 #include <ctype.h>
 
 extern void *bbparseAlloc(void *(*mallocProc)(size_t));
@@ -124,6 +125,7 @@ K_AFTER         "after"
 K_BEFORE        "before"
 K_DEF           "def"
 K_INCLUDE       "include"
+K_REQUIRE       "require"
 K_INHERIT       "inherit"
 K_PYTHON        "python"
 K_FAKEROOT      "fakeroot"
@@ -149,6 +151,7 @@ PROC            \({C_SP}*\)
 %s S_FUNC
 %s S_INCLUDE
 %s S_INHERIT
+%s S_REQUIRE
 %s S_PROC
 %s S_RVALUE
 %s S_TASK
@@ -186,6 +189,8 @@ PROC            \({C_SP}*\)
 
 {K_INCLUDE}                     { BEGIN S_INCLUDE;
                                   yyextra->accept (T_INCLUDE); }
+{K_REQUIRE}                     { BEGIN S_REQUIRE;
+                                  yyextra->accept (T_REQUIRE); }
 {K_INHERIT}                     { BEGIN S_INHERIT;
                                   yyextra->accept (T_INHERIT); }
 {K_ADDTASK}                     { BEGIN S_TASK;
@@ -224,7 +229,8 @@ PROC            \({C_SP}*\)
 <S_INHERIT>{SYMBOL}             { yyextra->accept (T_ISYMBOL, yytext); }
 <S_INCLUDE>{FILENAME}           { BEGIN INITIAL;
                                   yyextra->accept (T_ISYMBOL, yytext); }
-
+<S_REQUIRE>{FILENAME}           { BEGIN INITIAL;
+                                  yyextra->accept (T_ISYMBOL, yytext); }
 <S_TASK>\n                      { BEGIN INITIAL; }
 <S_FUNC>\n                      { BEGIN INITIAL; }
 <S_INHERIT>\n                   { BEGIN INITIAL; }
@@ -253,12 +259,7 @@ int lex_t::line ()const
     return yyget_lineno (scanner);
 }
 
-const char* lex_t::filename ()const
-{
-    return m_fileName;
-}
-
-void parse (MappedFile* mf)
+void parse (FILE* file, PyObject* data)
 {
     void* parser = bbparseAlloc (malloc);
     yyscan_t scanner;
@@ -268,9 +269,8 @@ void parse (MappedFile* mf)
 
     lex.parser = parser;
     lex.scanner = scanner;
-    lex.mf = mf;
-    lex.rgbInput = mf->m_rgb;
-    lex.cbInput = mf->m_cb;
+    lex.file = file;
+    lex.data = data;
     lex.parse = bbparse;
     yyset_extra (&lex, scanner);
 
@@ -281,7 +281,7 @@ void parse (MappedFile* mf)
     bbparseTrace (NULL, NULL);
 
     if (result != T_EOF)
-        WARNING ("premature end of file\n");
+        printf ("premature end of file\n");
 
     yylex_destroy (scanner);
     bbparseFree (parser, free);

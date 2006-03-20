@@ -86,10 +86,77 @@ def explode_deps(s):
             j = []
         if flag:
             j.append(i)
-        if i.endswith(')'):
+        else:
+            r.append(i)
+        if flag and i.endswith(')'):
             flag = False
             # Ignore version
             #r[-1] += ' ' + ' '.join(j)
-        else:
-            r.append(i)
     return r
+
+
+
+def _print_trace(body, line):
+    """
+    Print the Environment of a Text Body
+    """
+    import bb
+
+    # print the environment of the method
+    bb.error("Printing the environment of the function")
+    min_line = max(1,line-4)
+    max_line = min(line+4,len(body)-1)
+    for i in range(min_line,max_line+1):
+        bb.error("\t%.4d:%s" % (i, body[i-1]) )
+
+
+def better_compile(text, file, realfile):
+    """
+    A better compile method. This method
+    will print  the offending lines.
+    """
+    try:
+        return compile(text, file, "exec")
+    except Exception, e:
+        import bb,sys
+
+        # split the text into lines again
+        body = text.split('\n')
+        bb.error("Error in compiling: ", realfile)
+        bb.error("The lines resulting into this error were:")
+        bb.error("\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
+
+        _print_trace(body, e.lineno)
+
+        # exit now
+        sys.exit(1)
+
+def better_exec(code, context, text, realfile):
+    """
+    Similiar to better_compile, better_exec will
+    print the lines that are responsible for the
+    error.
+    """
+    import bb,sys
+    try:
+        exec code in context
+    except:
+        (t,value,tb) = sys.exc_info()
+
+        if t in [bb.parse.SkipPackage, bb.build.FuncFailed]:
+            raise
+
+        # print the Header of the Error Message
+        bb.error("Error in executing: ", realfile)
+        bb.error("Exception:%s Message:%s" % (t,value) )
+
+        # let us find the line number now
+        while tb.tb_next:
+            tb = tb.tb_next
+
+        import traceback
+        line = traceback.tb_lineno(tb)
+
+        _print_trace( text.split('\n'), line )
+        
+        raise

@@ -42,13 +42,14 @@
 
 %include {
 #include "token.h"
+#include "lexer.h"
+#include "python_output.h"
 }
 
 
 %token_destructor { $$.release_this (); }
 
-%syntax_error     { printf ("%s:%d: syntax error\n",
-                    lex->filename (), lex->line ()); }
+%syntax_error     { e_parse_error( lex ); }
 
 program ::= statements.
 
@@ -56,79 +57,82 @@ statements ::= statements statement.
 statements ::= .
 
 variable(r) ::= SYMBOL(s).
-        { r.assignString( s.string() );
+        { r.assignString( (char*)s.string() );
           s.assignString( 0 );
           s.release_this(); }
 variable(r) ::= VARIABLE(v).
         {
-          r.assignString( v.string() );
+          r.assignString( (char*)v.string() );
           v.assignString( 0 );
           v.release_this(); }
 
 statement ::= EXPORT variable(s) OP_ASSIGN STRING(v).
-        { e_assign( s.string(), v.string() );
-          e_export( s.string() );
+        { e_assign( lex, s.string(), v.string() );
+          e_export( lex, s.string() );
           s.release_this(); v.release_this(); }
 statement ::= EXPORT variable(s) OP_IMMEDIATE STRING(v).
-        { e_immediate (s.string(), v.string() );
-          e_export( s.string() );
+        { e_immediate ( lex, s.string(), v.string() );
+          e_export( lex, s.string() );
           s.release_this(); v.release_this(); }
 statement ::= EXPORT variable(s) OP_COND STRING(v).
-        { e_cond( s.string(), v.string() );
+        { e_cond( lex, s.string(), v.string() );
           s.release_this(); v.release_this(); }
 
 statement ::= variable(s) OP_ASSIGN STRING(v).
-        { e_assign( s.string(), v.string() );
+        { e_assign( lex, s.string(), v.string() );
           s.release_this(); v.release_this(); }
 statement ::= variable(s) OP_PREPEND STRING(v).
-        { e_prepend( s.string(), v.string() );
+        { e_prepend( lex, s.string(), v.string() );
           s.release_this(); v.release_this(); }
 statement ::= variable(s) OP_APPEND STRING(v).
-        { e_append( s.string() , v.string() );
+        { e_append( lex, s.string() , v.string() );
           s.release_this(); v.release_this(); }
 statement ::= variable(s) OP_IMMEDIATE STRING(v).
-        { e_immediate( s.string(), v.string() );
+        { e_immediate( lex, s.string(), v.string() );
           s.release_this(); v.release_this(); }
 statement ::= variable(s) OP_COND STRING(v).
-        { e_cond( s.string(), v.string() );
+        { e_cond( lex, s.string(), v.string() );
           s.release_this(); v.release_this(); }
 
 task ::= TSYMBOL(t) BEFORE TSYMBOL(b) AFTER  TSYMBOL(a).
-        { e_addtask( t.string(), b.string(), a.string() );
+        { e_addtask( lex, t.string(), b.string(), a.string() );
           t.release_this(); b.release_this(); a.release_this(); }
 task ::= TSYMBOL(t) AFTER  TSYMBOL(a) BEFORE TSYMBOL(b).
-        { e_addtask( t.string(), b.string(), a.string());
+        { e_addtask( lex, t.string(), b.string(), a.string());
           t.release_this(); a.release_this(); b.release_this(); }
 task ::= TSYMBOL(t).
-        { e_addtask( t.string(), NULL, NULL);
+        { e_addtask( lex, t.string(), NULL, NULL);
           t.release_this();}
 task ::= TSYMBOL(t) BEFORE TSYMBOL(b).
-        { e_addtask( t.string(), b.string(), NULL);
+        { e_addtask( lex, t.string(), b.string(), NULL);
           t.release_this(); b.release_this(); }
 task ::= TSYMBOL(t) AFTER  TSYMBOL(a).
-        { e_addtask( t.string(), NULL, a.string());
+        { e_addtask( lex, t.string(), NULL, a.string());
           t.release_this(); a.release_this(); }
 tasks ::= tasks task.
 tasks ::= task.
 statement ::= ADDTASK tasks.
 
 statement ::= ADDHANDLER SYMBOL(s).
-        { e_addhandler( s.string()); s.release_this (); }
+        { e_addhandler( lex, s.string()); s.release_this (); }
 
-func ::= FSYMBOL(f). { e_export_func(f.string()); f.release_this(); }
+func ::= FSYMBOL(f). { e_export_func( lex, f.string()); f.release_this(); }
 funcs ::= funcs func.
 funcs ::= func.
 statement ::= EXPORT_FUNC funcs.
 
-inherit ::= ISYMBOL(i). { e_inherit(i.string() ); i.release_this (); }
+inherit ::= ISYMBOL(i). { e_inherit( lex, i.string() ); i.release_this (); }
 inherits ::= inherits inherit.
 inherits ::= inherit.
 statement ::= INHERIT inherits.
 
 statement ::= INCLUDE ISYMBOL(i).
-        { e_include(i.string() ); i.release_this(); }
+        { e_include( lex, i.string() ); i.release_this(); }
 
-proc_body(r) ::= proc_body(l) PROC_BODY(b). 
+statement ::= REQUIRE ISYMBOL(i).
+        { e_require( lex, i.string() ); i.release_this(); }
+
+proc_body(r) ::= proc_body(l) PROC_BODY(b).
         { /* concatenate body lines */
           r.assignString( token_t::concatString(l.string(), b.string()) );
           l.release_this ();
@@ -136,26 +140,26 @@ proc_body(r) ::= proc_body(l) PROC_BODY(b).
         }
 proc_body(b) ::= . { b.assignString(0); }
 statement ::= variable(p) PROC_OPEN proc_body(b) PROC_CLOSE.
-        { e_proc( p.string(), b.string() );
+        { e_proc( lex, p.string(), b.string() );
           p.release_this(); b.release_this(); }
 statement ::= PYTHON SYMBOL(p) PROC_OPEN proc_body(b) PROC_CLOSE.
-        { e_proc_python (p.string(), b.string() );
+        { e_proc_python ( lex, p.string(), b.string() );
           p.release_this(); b.release_this(); }
 statement ::= PYTHON PROC_OPEN proc_body(b) PROC_CLOSE.
-        { e_proc_python( NULL, b.string());
+        { e_proc_python( lex, NULL, b.string());
           b.release_this (); }
 
 statement ::= FAKEROOT SYMBOL(p) PROC_OPEN proc_body(b) PROC_CLOSE.
-        { e_proc_fakeroot(p.string(), b.string() );
+        { e_proc_fakeroot( lex, p.string(), b.string() );
           p.release_this (); b.release_this (); }
 
 def_body(r) ::= def_body(l) DEF_BODY(b).
         { /* concatenate body lines */
-          r.assignString( token_t::concatString(l.string(), b.string());
+          r.assignString( token_t::concatString(l.string(), b.string()) );
           l.release_this (); b.release_this ();
         }
-def_body(b) ::= . { b.sz = 0; }
+def_body(b) ::= . { b.assignString( 0 ); }
 statement ::= SYMBOL(p) DEF_ARGS(a) def_body(b).
-        { e_def( p.string(), a.string(), b.string());
+        { e_def( lex, p.string(), a.string(), b.string());
           p.release_this(); a.release_this(); b.release_this(); }
 
