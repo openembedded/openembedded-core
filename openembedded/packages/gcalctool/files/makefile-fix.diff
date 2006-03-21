@@ -1,0 +1,18 @@
+--- gcalctool/Makefile.am~	2005-03-23 16:50:10.000000000 +0000
++++ gcalctool/Makefile.am	2006-03-20 13:59:17.000000000 +0000
+@@ -30,15 +30,8 @@
+ 
+ SCHEMAS_FILE = gcalctool.schemas
+ 
+-### Install the schemas file in /etc if GNOME support is not compiled in,
+-### and do not install the schemas at all
+-if DISABLE_GNOME
+-schemasdir = $(sysconfdir)/gcalctool
+-schemas_DATA = $(SCHEMAS_FILE)
+-else
+ schemadir = $(GCONF_SCHEMA_FILE_DIR)
+ schema_DATA = $(SCHEMAS_FILE)
+-endif
+ 
+ EXTRA_DIST = \
+ 	autogen.sh \
