@@ -21,11 +21,9 @@ PACKAGES = "tslib-maemo-conf libts-maemo libts-maemo-dev tslib-maemo-tests tslib
 EXTRA_OECONF = "--enable-shared"
 
 do_stage () {
-	oe_libinstall -so -C src libts-0.0 ${STAGING_LIBDIR}
-	ln -sf libts-0.0.so ${STAGING_LIBDIR}/libts.so
-	install -m 0644 src/tslib.h ${STAGING_INCDIR}/
-	install -m 0644 src/tslib-private.h ${STAGING_INCDIR}/
+	autotools_stage_all
 }
+
 
 do_install_prepend () {
 	install -m 0644 ${WORKDIR}/ts.conf ${S}/etc/ts.conf
