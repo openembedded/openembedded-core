@@ -68,6 +68,8 @@ case `module_id` in
 		ARGS="$ARGS -rgba rgb" ;;
 	"Generic OMAP1510/1610/1710")
 		ARGS="$ARGS -mouse /dev/input/event0" ;;
+	"ARM-IntegratorCP")
+		ARGS="$ARGS -rgba vrgb"
 esac
 
 exec $XSERVER $ARGS $*

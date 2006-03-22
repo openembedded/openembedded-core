@@ -1,6 +1,6 @@
 LICENSE    = "GPL"
 MAINTAINER = "Florian Boor <florian@kernelconcepts.de"
-PR         = "r4"
+PR         = "r5"
 
 DEPENDS    = "base-passwd"
 #RDEPENDS   = "hotplug"
@@ -37,6 +37,6 @@ fi
         ln -sf /mnt/initfs/usr/lib/hotplug/firmware/brf6150fw.bin /lib/firmware/brf6150fw.bin
         ln -sf /mnt/initfs/usr/lib/hotplug/firmware/mtlm3825.arm /lib/firmware/mtlm3825.arm
 
-	rm -rf /lib/modules
-	ln -s /mnt/initfs/lib/modules /lib/modules
+#	rm -rf /lib/modules
+#	ln -s /mnt/initfs/lib/modules /lib/modules
 }

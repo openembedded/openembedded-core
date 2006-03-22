@@ -14,10 +14,10 @@ case "$1" in
        /etc/X11/Xserver &
        export DISPLAY=:0
 	       
-       while [ ! -f /etc/pointercal ]
-       do
-               /usr/bin/xtscal
-       done
+#       while [ ! -f /etc/pointercal ]
+#       do
+#               /usr/bin/xtscal
+#       done
 
        /etc/X11/Xsession &
   ;;

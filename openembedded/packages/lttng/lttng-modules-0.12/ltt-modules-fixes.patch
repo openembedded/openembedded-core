@@ -1,0 +1,59 @@
+Index: ltt-modules-0.12/ltt-statedump.c
+===================================================================
+--- ltt-modules-0.12.orig/ltt-statedump.c	2006-03-09 19:33:38.000000000 +0000
++++ ltt-modules-0.12/ltt-statedump.c	2006-03-22 12:43:30.000000000 +0000
+@@ -19,8 +19,14 @@
+ #include <linux/proc_fs.h>
+ #include <linux/file.h>
+ #include <linux/interrupt.h>
+-#include <linux/irq.h>
+ #include <linux/ltt/ltt-facility-statedump.h>
++#ifndef CONFIG_ARM
++#include <linux/irq.h>
++#else
++#include <asm/mach/irq.h>
++#endif
++
++
+ 
+ #define NB_PROC_CHUNK 20
+ 
+@@ -160,6 +166,7 @@
+ 	return 0;
+ }
+ 
++#ifndef CONFIG_ARM
+ static inline int ltt_enumerate_interrupts(void)
+ {
+ 	unsigned int i;
+@@ -182,7 +189,9 @@
+ 	
+ 	return 0;
+ }
+-
++#else
++#define ltt_enumerate_interrupts(x)
++#endif
+ 
+ static inline int ltt_enumerate_process_states(void)
+ {
+Index: ltt-modules-0.12/Makefile
+===================================================================
+--- ltt-modules-0.12.orig/Makefile	2006-03-11 18:16:17.000000000 +0000
++++ ltt-modules-0.12/Makefile	2006-03-22 12:39:44.000000000 +0000
+@@ -1,9 +1,7 @@
+-ifneq ($(KERNELRELEASE),)
+ ifneq ($(CONFIG_LTT),)
+ 	obj-m := ltt-control.o ltt-statedump.o
+ endif
+ 
+-else
+ 	KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+ 	PWD := $(shell pwd)
+ 	KERNELRELEASE = $(shell cat $(KERNELDIR)/$(KBUILD_OUTPUT)/include/linux/version.h | sed -n 's/.*UTS_RELEASE.*\"\(.*\)\".*/\1/p')
+@@ -21,4 +19,4 @@
+ 
+ clean:
+ 	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean
+-endif
++
