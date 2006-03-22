@@ -1,13 +1,9 @@
-PACKAGES = "task-oh-base-depends task-oh-base"
+PACKAGES = "task-oh-base task-oh-devel"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r23"
+PR = "r24"
 
 ALLOW_EMPTY = "1"
-
-RDEPENDS_task-oh-base-depends := "\
-    diet-x11 \
-    virtual/xserver"
 
 RDEPENDS_task-oh-base := "\
     matchbox \
@@ -39,9 +35,6 @@ RDEPENDS_task-oh-base := "\
     kf \
     rxvt-unicode \
     xhost \
-#    oprofile \
-#    gdb \    
-    strace \
     ttf-bitstream-vera \
     udev \
     sysfsutils \
@@ -55,12 +48,8 @@ RDEPENDS_task-oh-base := "\
     gnome-vfs-plugin-file \
     gnome-vfs-plugin-http \
     gtk-theme-clearlooks \
-    kernel-module-oprofile \
-    tslib-calibrate \
-    tslib-tests \
     pango-module-basic-x \
     pango-module-basic-fc"
-
 
 #    minimo \
 #    teleport \
@@ -68,5 +57,19 @@ RDEPENDS_task-oh-base := "\
 #    libgtkstylus \
 #    detect-stylus \
 #    xrdb \
+
+
+RDEPENDS_task-oh-devel := "\
+    tslib-calibrate \
+    tslib-tests \
+    oprofile \
+    gdb \    
+    strace \
+    lttng-viewer"
+
+RRECOMMENDS_task-oh-devel := "\
+    kernel-module-oprofile"
+#    lttng-modules
+
 
 LICENSE = "MIT"
