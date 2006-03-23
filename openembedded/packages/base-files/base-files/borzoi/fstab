@@ -19,7 +19,7 @@ tmpfs              /media/ram   tmpfs   defaults                0  0
 #
 /dev/sda1       /media/usbhdd   vfat            noauto,umask=000,noatime,iocharset=utf8,codepage=932    0  0
 devpts          /dev/pts        devpts          mode=0620,gid=5       0  0
-usbdevfs        /proc/bus/usb   usbdevfs        noauto                0  0
+usbfs           /proc/bus/usb   usbfs           noauto                0  0
 
 #
 # Harddisk
