@@ -68,7 +68,7 @@ python package_mapping_rename_hook () {
 }
 
 
-def do_split_packages(d, root, file_regex, output_pattern, description, postinst=None, recursive=False, hook=None, extra_depends=None, aux_files_pattern=None, postrm=None, allow_dirs=False, prepend=False, match_path=False):
+def do_split_packages(d, root, file_regex, output_pattern, description, postinst=None, recursive=False, hook=None, extra_depends=None, aux_files_pattern=None, postrm=None, allow_dirs=False, prepend=False, match_path=False, aux_files_pattern_verbatim=None):
 	import os, os.path, bb
 
 	dvar = bb.data.getVar('D', d, 1)
@@ -125,6 +125,12 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 						the_files.append(fp % on)	
 				else:
 					the_files.append(aux_files_pattern % on)
+			if aux_files_pattern_verbatim:
+				if type(aux_files_pattern_verbatim) is list:
+					for fp in aux_files_pattern_verbatim:
+						the_files.append(fp % m.group(1))	
+				else:
+					the_files.append(aux_files_pattern_verbatim % m.group(1))
 			bb.data.setVar('FILES_' + pkg, " ".join(the_files), d)
 			if extra_depends != '':
 				the_depends = bb.data.getVar('RDEPENDS_' + pkg, d, 1)

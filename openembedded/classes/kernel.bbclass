@@ -150,7 +150,7 @@ kernel_do_install() {
 	else
 		oenote "no modules to install"
 	fi
-
+	
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -d ${D}/boot
 	install -m 0644 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_RELEASE}
@@ -391,9 +391,16 @@ python populate_packages_prepend () {
 	v = bb.data.getVar("PARALLEL_INSTALL_MODULES", d, 1) or "0"
 	if v == "1":
 		kv = bb.data.getVar("KERNEL_MAJOR_VERSION", d, 1)
-		packages = bb.data.getVar("PACKAGES", d, 1)
+		packages = bb.data.getVar("PACKAGES", d, 1).split()
 		module_re = re.compile("^kernel-module-")
-		for p in packages.split():
+
+		newmetapkg = "kernel-modules-%s" % kv
+		bb.data.setVar('ALLOW_EMPTY_' + newmetapkg, "1", d)
+		bb.data.setVar('FILES_' + newmetapkg, "", d)
+
+		newmetapkg_rdepends = []
+
+		for p in packages:
 			if not module_re.match(p):
 				continue
 			pkg = bb.data.getVar("PKG_%s" % p, d, 1) or p
@@ -405,4 +412,11 @@ python populate_packages_prepend () {
 			else:
 				rprovides = pkg
 			bb.data.setVar("RPROVIDES_%s" % p, rprovides, d)
+			newmetapkg_rdepends.append(newpkg)
+
+		bb.data.setVar('RDEPENDS_' + newmetapkg, ' '.join(newmetapkg_rdepends), d)
+		bb.data.setVar('DESCRIPTION_' + newmetapkg, 'Kernel modules meta package', d)
+		packages.append(newmetapkg)
+		bb.data.setVar('PACKAGES', ' '.join(packages), d)
+
 }

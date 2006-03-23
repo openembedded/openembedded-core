@@ -371,7 +371,11 @@ def oe_unpack_file(file, data, url = None):
 	elif file.endswith('.bz2'):
 		cmd = 'bzip2 -dc %s > %s' % (file, efile)
 	elif file.endswith('.zip'):
-		cmd = 'unzip -q %s' % file
+		cmd = 'unzip -q'
+		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
+		if 'dos' in parm:
+			cmd = '%s -a' % cmd
+		cmd = '%s %s' % (cmd, file)
 	elif os.path.isdir(file):
 		filesdir = os.path.realpath(bb.data.getVar("FILESDIR", data, 1))
 		destdir = "."
@@ -449,7 +453,7 @@ python base_do_patch() {
 		if not "patch" in parm:
 			continue
 
-		bb.fetch.init([url], d)
+		bb.fetch.init([url],d)
 		url = bb.encodeurl((type, host, path, user, pswd, []))
 		local = os.path.join('/', bb.fetch.localpath(url, d))
 

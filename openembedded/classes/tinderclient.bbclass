@@ -1,9 +1,6 @@
 def tinder_form_data(bound, dict, log):
-    """
-    Create the boundary for the HTTP Post
-    """
     output = []
-
+  #br
     # for each key in the dictionary
     for name in dict:
         output.append( "--" + bound )
@@ -214,7 +211,7 @@ def tinder_print_env():
 
     return "\n".join(output) % vars()
 
-def tinder_tinder_start(d):
+def tinder_tinder_start(d, event):
     """
     PRINT the configuration of this build
     """
@@ -223,13 +220,18 @@ def tinder_tinder_start(d):
     config = tinder_print_info(d)
     #env    = tinder_print_env()
     time_end   = tinder_time_string()
+    packages = " ".join( event.getPkgs() ) 
 
     output = []
     output.append( "---> TINDERBOX PRINTING CONFIGURATION %(time_start)s" )
     output.append( config )
     #output.append( env    )
     output.append( "<--- TINDERBOX FINISHED PRINTING CONFIGURATION %(time_end)s" )
-    output.append( "" )
+    output.append( "---> TINDERBOX BUILDING '%(packages)s'" )
+    output.append( "<--- TINDERBOX STARTING BUILD NOW" )
+
+    output.append( "" ) 
+ 
     return "\n".join(output) % vars()
 
 def tinder_do_tinder_report(event):
@@ -252,11 +254,11 @@ def tinder_do_tinder_report(event):
     name = getName(event)
     log  = ""
     status = 1
-
+    #print asd 
     # Check what we need to do Build* shows we start or are done
     if name == "BuildStarted":
         tinder_build_start(event.data)
-        log = tinder_tinder_start(event.data)
+        log = tinder_tinder_start(event.data,event)
 
         try:
             # truncate the tinder log file
@@ -290,8 +292,18 @@ def tinder_do_tinder_report(event):
         log += "<--- TINDERBOX Package %s failed (FAILURE)\n" % data.getVar('P', event.data, True)
         status = 200
     elif name == "BuildCompleted":
-	log += "Build Completed\n"
+        log += "Build Completed\n"
         status = 100
+    elif name == "MultipleProviders":
+        log += "---> TINDERBOX Multiple Providers\n"
+        log += "multiple providers are available (%s);\n" % ", ".join(event.getCandidates())
+        log += "consider defining PREFERRED_PROVIDER_%s\n" % event.getItem()
+        log += "is runtime: %d\n" % event.isRuntime()
+        log += "<--- TINDERBOX Multiple Providers\n"
+    elif name == "NoProvider":
+        log += "Error: No Provider for: %s\n" % event.getItem()
+        log += "Error:Was Runtime: %d\n" % event.isRuntime()
+        status = 200
 
     # now post the log
     if len(log) == 0:
@@ -307,7 +319,6 @@ addhandler tinderclient_eventhandler
 python tinderclient_eventhandler() {
     from bb import note, error, data
     from bb.event import NotHandled
-
     do_tinder_report = data.getVar('TINDER_REPORT', e.data, True)
     if do_tinder_report and do_tinder_report == "1":
         tinder_do_tinder_report(e)
