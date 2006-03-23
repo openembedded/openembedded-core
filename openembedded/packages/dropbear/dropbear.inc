@@ -4,14 +4,13 @@ SECTION = "console/network"
 LICENSE = "MIT"
 DEPENDS = "zlib"
 PROVIDES = "ssh sshd"
-PR = "r4"
+RPROVIDES = "ssh sshd"
 
-SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
+SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.gz \
 	   file://urandom-xauth-changes-to-options.h.patch;patch=1 \
 	   file://configure.patch;patch=1 \
-	   file://allow-nopw.patch \
 	   file://fix-2kb-keys.patch;patch=1 \
-	   file://chansession-security-fix.patch;patch=1 \
+	   file://allow-nopw.patch \
 	   file://init"
 
 inherit autotools update-rc.d
@@ -19,7 +18,7 @@ inherit autotools update-rc.d
 INITSCRIPT_NAME = "dropbear"
 INITSCRIPT_PARAMS = "defaults 10"
 
-CFLAGS_prepend = "-I. "
+CFLAGS_prepend = " -I. "
 LD = "${CC}"
 
 SBINCOMMANDS = "dropbear dropbearkey dropbearconvert"
@@ -27,7 +26,8 @@ BINCOMMANDS = "dbclient ssh scp"
 EXTRA_OEMAKE = 'MULTI=1 SCPPROGRESS=1 PROGRAMS="${SBINCOMMANDS} ${BINCOMMANDS}"'
 
 do_configure_prepend() {
-	if [ "${DISTRO_TYPE}" == "debug" ]; then
+	if [ "x${DISTRO}" != "xfamiliar" -a "${DISTRO_TYPE}" == "debug" ]; then
+		oenote "WARNING: applying allow-nopw.patch which allows password-less logins!"
 		patch -p1 < ${WORKDIR}/allow-nopw.patch
 	fi
 }
