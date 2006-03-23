@@ -6,7 +6,7 @@ DEPENDS = "makedevs"
 DEPENDS_openzaurus = "makedevs virtual/kernel"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r67"
+PR = "r69"
 
 SRC_URI = "file://halt \
            file://ramdisk \
@@ -127,14 +127,14 @@ do_install () {
 	ln -sf		../init.d/sendsigs	${D}${sysconfdir}/rc6.d/S20sendsigs
 #	ln -sf		../init.d/urandom	${D}${sysconfdir}/rc6.d/S30urandom
 	ln -sf		../init.d/umountnfs.sh	${D}${sysconfdir}/rc6.d/S31umountnfs.sh
-#	ln -sf		../init.d/umountfs	${D}${sysconfdir}/rc6.d/S40umountfs
+	ln -sf		../init.d/umountfs	${D}${sysconfdir}/rc6.d/S40umountfs
 	# udev will run at S55 if installed
 	ln -sf          ../init.d/ramdisk       ${D}${sysconfdir}/rcS.d/S30ramdisk 
 	ln -sf		../init.d/reboot	${D}${sysconfdir}/rc6.d/S90reboot
 	ln -sf		../init.d/sendsigs	${D}${sysconfdir}/rc0.d/S20sendsigs
 #	ln -sf		../init.d/urandom	${D}${sysconfdir}/rc0.d/S30urandom
 	ln -sf		../init.d/umountnfs.sh	${D}${sysconfdir}/rc0.d/S31umountnfs.sh
-#	ln -sf		../init.d/umountfs	${D}${sysconfdir}/rc0.d/S40umountfs
+	ln -sf		../init.d/umountfs	${D}${sysconfdir}/rc0.d/S40umountfs
 	# udev will run at S55 if installed
 	ln -sf		../init.d/halt		${D}${sysconfdir}/rc0.d/S90halt
 	ln -sf		../init.d/banner	${D}${sysconfdir}/rcS.d/S02banner
