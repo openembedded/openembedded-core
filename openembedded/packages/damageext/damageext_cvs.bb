@@ -6,7 +6,7 @@ DEPENDS = "xextensions fixesext"
 DESCRIPTION = "X Damage extension headers and specification"
 PR = "r1"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=DamageExt"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=DamageExt"
 S = "${WORKDIR}/DamageExt"
 
 inherit autotools pkgconfig

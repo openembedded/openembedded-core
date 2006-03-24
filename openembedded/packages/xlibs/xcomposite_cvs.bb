@@ -4,7 +4,7 @@ SECTION = "x11/libs"
 DEPENDS = "x11 compositeext xextensions libxfixes"
 DESCRIPTION = "X Composite extension library."
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xcomposite"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xcomposite"
 S = "${WORKDIR}/Xcomposite"
 
 inherit autotools pkgconfig 

@@ -4,7 +4,7 @@ SECTION = "x11/libs"
 MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "X protocol and ancillary headers."
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xproto"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xproto"
 S = "${WORKDIR}/Xproto"
 
 inherit autotools pkgconfig

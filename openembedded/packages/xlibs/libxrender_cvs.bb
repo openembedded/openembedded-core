@@ -5,7 +5,7 @@ DEPENDS = "renderext x11"
 DESCRIPTION = "X Render extension library."
 LICENSE = "BSD"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xrender"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xrender"
 S = "${WORKDIR}/Xrender"
 
 inherit autotools pkgconfig 

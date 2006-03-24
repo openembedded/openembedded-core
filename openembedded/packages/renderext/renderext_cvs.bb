@@ -5,7 +5,7 @@ MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "X Render extension headers"
 DEFAULT_PREFERENCE = "1"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Render"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Render"
 S = "${WORKDIR}/Render"
 
 inherit autotools pkgconfig

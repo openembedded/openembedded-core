@@ -5,7 +5,7 @@ PRIORITY = "optional"
 DEPENDS = "xt xext"
 PR = "r2"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xmu"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xmu"
 S = "${WORKDIR}/Xmu"
 
 PACKAGES =+ "xmuu xmuu-dev"

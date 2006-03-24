@@ -5,7 +5,7 @@ DEPENDS = "x11 xproto libxrender freetype fontconfig"
 DESCRIPTION = "X FreeType library. Client-side fonts with FreeType."
 PROVIDES = "xft"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xft"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xft"
 S = "${WORKDIR}/Xft"
 
 FILES_${PN} = ${libdir}/lib*.so.*

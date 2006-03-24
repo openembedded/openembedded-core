@@ -6,7 +6,7 @@ DEPENDS = "x11 recordext xext"
 DESCRIPTION = "X Test Extension: client side library"
 PR = "r3"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xtst"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xtst"
 S = "${WORKDIR}/Xtst"
 
 inherit autotools pkgconfig 

@@ -7,7 +7,7 @@ MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xproto"
 DESCRIPTION = "Authorization Protocol for X."
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xau"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xau"
 S = "${WORKDIR}/Xau"
 
 inherit autotools pkgconfig 

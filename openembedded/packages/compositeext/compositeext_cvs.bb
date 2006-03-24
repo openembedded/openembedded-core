@@ -6,7 +6,7 @@ DEPENDS = "xextensions fixesext"
 DESCRIPTION = "X Composite extension headers and specification"
 DEFAULT_PREFERENCE = "1"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=CompositeExt"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=CompositeExt"
 S = "${WORKDIR}/CompositeExt"
 
 inherit autotools pkgconfig

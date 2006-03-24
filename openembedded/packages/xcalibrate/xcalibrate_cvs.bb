@@ -5,7 +5,7 @@ PRIORITY = "optional"
 DEPENDS = "x11 xcalibrateext xext"
 DESCRIPTION = "XCalibrate client-side library"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=XCalibrate"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=XCalibrate"
 S = "${WORKDIR}/XCalibrate"
 
 inherit autotools pkgconfig 

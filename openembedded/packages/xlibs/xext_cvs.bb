@@ -6,7 +6,7 @@ SECTION = "x11/libs"
 PRIORITY = "optional"
 DEPENDS = "xproto x11 xextensions"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xext"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xext"
 S = "${WORKDIR}/Xext"
 
 inherit autotools pkgconfig 

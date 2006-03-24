@@ -6,7 +6,7 @@ DESCRIPTION = "network API translation layer to \
 insulate X applications and libraries from OS \
 network vageries."
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=xtrans"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=xtrans"
 S = "${WORKDIR}/xtrans"
 
 inherit autotools  pkgconfig

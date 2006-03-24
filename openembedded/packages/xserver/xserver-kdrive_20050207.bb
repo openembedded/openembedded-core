@@ -33,12 +33,12 @@ FILES_xserver-kdrive-i810 = "${bindir}/Xi810"
 FILES_xserver-kdrive-epson = "${bindir}/Xepson"
 FILES_xserver-kdrive-xephyr = "${bindir}/Xephyr"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDSRCDATE} \
+SRC_URI = "${FREEDESKTOP_CVS}/xserver;module=xserver;date=${FIXEDSRCDATE} \
 	file://kmode.patch;patch=1 \
 	file://disable-apm.patch;patch=1 \
 	file://fbdev-not-fix.patch;patch=1 "
 
-SRC_URI_h3600 = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDSRCDATE} \
+SRC_URI_h3600 = "${FREEDESKTOP_CVS}/xserver;module=xserver;date=${FIXEDSRCDATE} \
         file://kmode.patch;patch=1 \
         file://faster-rotated.patch;patch=1 \
         file://fbdev-not-fix.patch;patch=1 "

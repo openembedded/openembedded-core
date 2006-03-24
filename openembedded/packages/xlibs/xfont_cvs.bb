@@ -6,7 +6,7 @@ MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xproto xtrans zlib"
 DESCRIPTION = "X font library (used by the X server)."
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Xfont \
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xfont \
 	file://scalable.patch;patch=1"
 S = "${WORKDIR}/Xfont"
 

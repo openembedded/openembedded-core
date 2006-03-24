@@ -6,7 +6,7 @@ PR = "r0"
 
 DEPENDS = "fontconfig freetype libxi xmu flex-native zlib"
 
-SRC_URI = "cvs://anoncvs@cvs.freedesktop.org/cvs/xorg;module=xc;method=pserver;tag=XORG-6_8_99_11 \
+SRC_URI = "${FREEDESKTOP_CVS}/xorg;module=xc;method=pserver;tag=XORG-6_8_99_11 \
 	file://imake-staging.patch;patch=1 \
 	file://imake-installed.patch;patch=1 \
 	file://fontfile.patch;patch=1 file://freetype.patch;patch=1 \

@@ -32,7 +32,7 @@ FILES_xserver-kdrive-i810 = "${bindir}/Xi810"
 FILES_xserver-kdrive-epson = "${bindir}/Xepson"
 FILES_xserver-kdrive-xephyr = "${bindir}/Xephyr"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xserver;module=xserver;date=${FIXEDSRCDATE} \
+SRC_URI = "${FREEDESKTOP_CVS}/xserver;module=xserver;date=${FIXEDSRCDATE} \
 	file://kmode.patch;patch=1 \
 	file://no-serial-probing.patch;patch=1 \
 	file://fbdev-not-fix.patch;patch=1"

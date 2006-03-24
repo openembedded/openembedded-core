@@ -5,7 +5,7 @@ MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xextensions"
 DESCRIPTION = "X Resource usage extension headers"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=ResourceExt"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=ResourceExt"
 S = "${WORKDIR}/ResourceExt"
 
 inherit autotools pkgconfig

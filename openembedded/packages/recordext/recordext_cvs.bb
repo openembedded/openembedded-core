@@ -4,7 +4,7 @@ SECTION = "libs"
 MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DESCRIPTION = "XRecord extension protocol bits"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=RecordExt"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=RecordExt"
 S = "${WORKDIR}/RecordExt"
 
 inherit autotools pkgconfig

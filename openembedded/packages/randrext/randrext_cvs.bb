@@ -4,7 +4,7 @@ SECTION = "libs"
 MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "X Resize and Rotate extension headers"
 
-SRC_URI = "cvs://anoncvs:anoncvs@pdx.freedesktop.org/cvs/xlibs;module=Randr"
+SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Randr"
 S = "${WORKDIR}/Randr"
 
 inherit autotools pkgconfig
