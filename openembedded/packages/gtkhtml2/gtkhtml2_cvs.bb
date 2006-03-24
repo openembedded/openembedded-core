@@ -4,17 +4,14 @@ DESCRIPTION = "A GTK+ HTML rendering library."
 LICENSE = "GPL"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 PV = "2.11.0+cvs${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "cvs://anonymous@anoncvs.gnome.org/cvs/gnome;module=gtkhtml2 \
-	file://at-import_box-pos.patch;patch=1;pnum=0 \
-	file://css-stylesheet-user.patch;patch=1;pnum=0 \
-	file://css-media.patch;patch=1;pnum=0 \
-	file://fix-infinite-loop.patch;patch=1;pnum=0 \
-	file://fix-margin-inherit.patch;patch=1;pnum=0 \
-	file://fix-recreation2.patch;patch=1;pnum=0 \
-	file://fix-style-change.patch;patch=1;pnum=0 \
-	file://add-end-element-signal.patch;patch=1;pnum=0"
+	http://svn.o-hand.com/repos/web/trunk/patches/at-import_box-pos.patch;patch=1;pnum=0 \
+	http://svn.o-hand.com/repos/web/trunk/patches/css-stylesheet-user.patch;patch=1;pnum=0 \
+	http://svn.o-hand.com/repos/web/trunk/patches/css-media.patch;patch=1;pnum=0 \
+	http://svn.o-hand.com/repos/web/trunk/patches/fix-margin-inherit.patch;patch=1;pnum=0 \
+	http://svn.o-hand.com/repos/web/trunk/patches/add-end-element-signal.patch;patch=1;pnum=0"
 
 S = "${WORKDIR}/${PN}"
 
