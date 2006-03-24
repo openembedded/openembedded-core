@@ -53,6 +53,7 @@ trap '' 2 3
 MODEL=`cat /proc/deviceinfo/product`
 echo 'MODEL:'$MODEL
 case "$MODEL" in
+    SL-7500) ;;
     SL-C700) ;;
     SL-C750) ;;
     SL-C760) ;;
