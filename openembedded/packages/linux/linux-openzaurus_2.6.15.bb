@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r6"
+PR = "r12"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -27,17 +27,17 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.15.tar.bz2 \
            ${RPSRC}/sharpsl_pm_move-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_pm_gcc4_fix-r0.patch;patch=1 \
            ${RPSRC}/pcmcia_dev_ids-r3.patch;patch=1 \
-           ${RPSRC}/led_core-r12.patch;patch=1 \
-           ${RPSRC}/led_triggers-r10.patch;patch=1 \
-           ${RPSRC}/led_trig_timer-r5.patch;patch=1 \
-           ${RPSRC}/led_trig_sharpsl_pm-r4a.patch;patch=1 \
-           ${RPSRC}/led_zaurus-r9.patch;patch=1 \
-           ${RPSRC}/led_locomo-r6.patch;patch=1 \
-           ${RPSRC}/led_ixp4xx-r1.patch;patch=1 \
-           ${RPSRC}/led_tosa-r3.patch;patch=1 \	   
-           ${RPSRC}/led_ide-r3.patch;patch=1 \
-           ${RPSRC}/led_nand-r2.patch;patch=1 \
-           ${RPSRC}/ide_end_request-r0.patch;patch=1 \
+           ${RPSRC}/led_core-r14.patch;patch=1 \
+           ${RPSRC}/led_triggers-r11.patch;patch=1 \
+           ${RPSRC}/led_trig_timer-r6.patch;patch=1 \
+           ${RPSRC}/led_trig_sharpsl_pm-r5a.patch;patch=1 \
+           ${RPSRC}/led_zaurus-r10.patch;patch=1 \
+           ${RPSRC}/led_locomo-r7.patch;patch=1 \
+           ${RPSRC}/led_ixp4xx-r2.patch;patch=1 \
+           ${RPSRC}/led_tosa-r4.patch;patch=1 \	   
+           ${RPSRC}/led_ide-r4a.patch;patch=1 \
+           ${RPSRC}/led_nand-r3.patch;patch=1 \
+           ${RPSRC}/ide_end_request-r1.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
            ${RPSRC}/rtc_class-r0.patch;patch=1 \
            ${RPSRC}/rtc_class_pxa-r0.patch;patch=1 \
@@ -60,23 +60,23 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.15.tar.bz2 \
            ${RPSRC}/tosa-lcd-r6-rp.patch;patch=1 \
            ${DOSRC}/tosa-bl-r9.patch;patch=1 \
            ${DOSRC}/tosa-bluetooth-r2.patch;patch=1 \
-           ${RPSRC}/mmc_timeout-r0.patch;patch=1 \	   
+           ${RPSRC}/rmk_pxa_mmc_timeout-r0.patch;patch=1 \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
            ${RPSRC}/usb_pxa27x_udc-r0.patch;patch=1 \
            ${RPSRC}/usb_add_epalloc-r1.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.9.patch;patch=1 \
-           ${RPSRC}/alsa/alsa-soc-0.9-0.10rc1.patch;patch=1 \
-           ${RPSRC}/alsa_soc_rpupdate7-r2.patch;patch=1 \
-           ${RPSRC}/alsa_akita_fix-r0.patch;patch=1 \
+           ${RPSRC}/alsa/asoc-0.10rc2.diff.bz2;patch=1 \
+           ${RPSRC}/alsa/asoc-v0.10rc2-rc3.patch;patch=1 \
+           ${RPSRC}/misc_fix1-r0.patch;patch=1 \
            ${RPSRC}/zaurus_keyboard_tweak-r0.patch;patch=1 \
            ${RPSRC}/corgi_bl_cleanup-r2.patch;patch=1 \
            ${RPSRC}/corgi_bl_generic-r2.patch;patch=1 \
            ${RPSRC}/pxafb_tweaks-r0.patch;patch=1 \
            ${RPSRC}/pm_changes-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_pm-do-r2.patch;patch=1 \
-           ${DOSRC}/kexec-arm-r0.patch \
-           ${RPSRC}/headphone_switch-r0.patch;patch=1 \
+           ${RPSRC}/headphone_switch-r4.patch;patch=1 \
+           ${RPSRC}/backport_i2c_asoc_fix-r0.patch;patch=1 \
            ${RPSRC}/integrator_rtc-r0.patch;patch=1 \
+           ${DOSRC}/kexec-arm-r0.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1 \
            ${RPSRC}/pxa-linking-bug.patch;patch=1 \

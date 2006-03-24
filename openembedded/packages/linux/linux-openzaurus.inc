@@ -9,6 +9,7 @@ DOSRC = "http://www.do13.de/openzaurus/patches"
 RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
 JLSRC = "http://www.cs.wisc.edu/~lenz/zaurus/files"
 BASRC = "http://www.orca.cx/zaurus/patches"
+CHSRC = "http://oz.drigon.com/patches"
 
 inherit kernel
 

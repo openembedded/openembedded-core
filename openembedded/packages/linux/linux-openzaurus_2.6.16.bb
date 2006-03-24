@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r1"
+PR = "r2"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -52,8 +52,6 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            ${RPSRC}/pxa_keys-r5.patch;patch=1 \
            ${RPSRC}/tsc2101-r12.patch;patch=1 \
            ${RPSRC}/hx2750_test1-r3.patch;patch=1 \
-           ${DOSRC}/tc6393-device-r8.patch;patch=1 \
-           ${DOSRC}/tc6393_nand-r7.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
            ${RPSRC}/input_power-r4.patch;patch=1 \
            ${RPSRC}/jffs2_longfilename-r0.patch;patch=1 \
@@ -65,7 +63,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            ${RPSRC}/sharpsl_pm-do-r2.patch;patch=1 \
            ${RPSRC}/usb_pxa27x_udc-r0.patch;patch=1 \
            ${RPSRC}/usb_add_epalloc-r1.patch;patch=1 \
-           ${RPSRC}/kexec-arm-r1.patch;patch=1 \
+	   ${DOSRC}/kexec-arm-r2.patch;patch=1 \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
            ${RPSRC}/mmcsd_no_scr_check-r0.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
@@ -95,18 +93,20 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
 # ${JLSRC}/zaurus-leds-2.6.11.diff.gz;patch=1 \
 
 SRC_URI_append_tosa = "\
-    ${DOSRC}/tosa-keyboard-r9.patch;patch=1 \
-    ${RPSRC}/tosa-pxaac97-r5-rp.patch;patch=1 \
-    ${RPSRC}/tosa-tc6393-r1-rp.patch;patch=1 \
-    ${RPSRC}/tosa-power-r9-rp.patch;patch=1 \
-    ${DOSRC}/tc6393fb-r9.patch;patch=1 \
-    ${RPSRC}/temp/tosa-lcd-r6-rp.patch;patch=1 \
-    ${DOSRC}/tosa-bl-r9.patch;patch=1 \
-    ${DOSRC}/tosa-bluetooth-r2.patch;patch=1 \
-    ${DOSRC}/nand-readid-r1.patch;patch=1 \
-    ${DOSRC}/ac97codec-rename-revert-r0.patch;patch=1 \
-    ${DOSRC}/wm97xx-touch-lg2-r0.patch;patch=1 \
-    ${DOSRC}/wm9712-pm-r0.patch;patch=1 "
+	   ${CHSRC}/usb-ohci-hooks-r1.patch;patch=1 \
+	   ${CHSRC}/tmio-core-r4.patch;patch=1 \
+	   ${CHSRC}/tmio-tc6393-r5.patch;patch=1 \
+	   ${CHSRC}/tmio-nand-r5.patch;patch=1 \
+	   ${CHSRC}/tmio-ohci-r3.patch;patch=1 \
+	   ${CHSRC}/tmio-fb-r6.patch;patch=1 \
+	   ${DOSRC}/tosa-keyboard-r13.patch;patch=1 \
+	   ${DOSRC}/tosa-pxaac97-r6.patch;patch=1 \
+	   ${DOSRC}/tosa-tmio-r4.patch;patch=1 \
+	   ${DOSRC}/tosa-power-r14.patch;patch=1 \
+	   ${DOSRC}/tosa-tmio-lcd-r5.patch;patch=1 \
+	   ${DOSRC}/tosa-bluetooth-r5.patch;patch=1 \
+	   ${DOSRC}/wm97xx-lg7-r0.patch;patch=1 \
+	   ${DOSRC}/tosa-asoc-r0.patch;patch=1 "
 
 S = "${WORKDIR}/linux-2.6.16"
 
