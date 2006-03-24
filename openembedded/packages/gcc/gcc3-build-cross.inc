@@ -39,5 +39,9 @@ do_stage_append () {
 	rmdir ${CROSS_DIR}/include || :
 
 	# We don't really need to keep this around
-	rm -rf ${CROSS_DIR}/share
+	# rm -rf ${CROSS_DIR}/share but leave java there
+	for d in share/man share/info;
+	do
+		rm -rf ${CROSS_DIR}/$d
+	done
 }

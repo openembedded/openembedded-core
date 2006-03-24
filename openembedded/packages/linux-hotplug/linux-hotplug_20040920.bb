@@ -8,7 +8,7 @@ RCONFLICTS_${PN} = "hotplug"
 RREPLACES_${PN} = "hotplug"
 SECTION = "base"
 RSUGGESTS = "pciutils usbutils"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "ftp://ftp.kernel.org/pub/linux/utils/kernel/hotplug/hotplug-2004_09_20.tar.gz \
 	file://userspecified_hcd.patch;patch=1 \
@@ -27,7 +27,9 @@ SRC_URI = "ftp://ftp.kernel.org/pub/linux/utils/kernel/hotplug/hotplug-2004_09_2
 	file://isapnp-exit.diff;patch=1 \
 	file://usb-storage \
 	file://soc.agent"
-	   
+
+SRC_URI_append_openzaurus = " file://quiet-pci.patch;patch=1"
+
 S = "${WORKDIR}/hotplug-2004_09_20"
 
 INITSCRIPT_NAME = "hotplug"
