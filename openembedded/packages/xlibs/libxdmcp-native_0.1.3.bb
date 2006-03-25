@@ -4,5 +4,3 @@ include libxdmcp_${PV}.bb
 inherit native
 DEPENDS = "xproto-native"
 PROVIDES = ""
-
-

@@ -1,6 +1,7 @@
 SECTION = "x11/libs"
 LICENSE= "BSD-X"
-DEPENDS = "x11 damageext libxfixes xproto"
+DEPENDS = "libx11 damageext libxfixes xproto"
+PROVIDES = "xdamage"
 DESCRIPTION = "X Damage extension library."
 PR = "r1"
 

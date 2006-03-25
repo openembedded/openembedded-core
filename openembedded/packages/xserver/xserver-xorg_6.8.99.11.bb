@@ -4,7 +4,7 @@ PROVIDES = "virtual/xserver"
 LICENSE = "Xorg"
 PR = "r0"
 
-DEPENDS = "fontconfig freetype libxi xmu flex-native zlib"
+DEPENDS = "fontconfig freetype libxi libxmu flex-native zlib"
 
 SRC_URI = "${FREEDESKTOP_CVS}/xorg;module=xc;method=pserver;tag=XORG-6_8_99_11 \
 	file://imake-staging.patch;patch=1 \

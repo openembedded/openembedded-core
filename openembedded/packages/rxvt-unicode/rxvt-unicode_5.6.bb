@@ -1,5 +1,5 @@
 SECTION = "x11/utils"
-DEPENDS = "x11 xt libxft"
+DEPENDS = "libx11 libxt libxft"
 DESCRIPTION = "rxvt-unicode is a clone of the well known \
 terminal emulator rxvt, modified to store text in Unicode \
 (either UCS-2 or UCS-4) and to use locale-correct input and \

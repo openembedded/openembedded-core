@@ -1,7 +1,7 @@
 SECTION = "libs"
 PRIORITY = "optional"
 MAINTAINER = "Phil Blundell <pb@debian.org>"
-DEPENDS = "x11 libpng fontconfig libxrender"
+DEPENDS = "libx11 libpng fontconfig libxrender"
 DESCRIPTION = "Cairo graphics library"
 LICENSE = "MPL LGPL"
 PR = "r1"

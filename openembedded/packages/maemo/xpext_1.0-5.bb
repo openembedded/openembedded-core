@@ -3,7 +3,7 @@ LICENSE= "MIT"
 DESCRIPTION = "X Server Nokia 770 extensions library"
 SECTION = "x11/libs"
 PRIORITY = "optional"
-DEPENDS = "x11 xextensions xext"
+DEPENDS = "libx11 xextensions libxext"
 
 SRC_URI = "http://repository.maemo.org/pool/maemo/ossw/source/x/${PN}/${PN}_${PV}.tar.gz \
            file://auxdir.patch;patch=1;pnum=0"

@@ -3,7 +3,7 @@ SECTION = "console/network"
 PRIORITY = "optional"
 MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 LICENSE = "GPL"
-DEPENDS = "virtual/kernel x11 xau libsm ice"
+DEPENDS = "virtual/kernel libx11 libxau libsm libice"
 PR = "r5"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lirc/lirc-${PV}.tar.gz \

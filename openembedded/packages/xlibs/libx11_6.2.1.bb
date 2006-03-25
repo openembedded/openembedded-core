@@ -2,12 +2,12 @@ SECTION = "x11/libs"
 LICENSE = "XFree86"
 PRIORITY = "optional"
 MAINTAINER = "Greg Gilbert <greg@treke.net>"
-DEPENDS = "xproto xextensions xau xtrans xdmcp"
+DEPENDS = "xproto xextensions libxau xtrans libxdmcp"
+PROVIDES = "x11"
 DESCRIPTION = "Base X libs."
 FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB"
 FILES_${PN}-locale += "${datadir}/X11/locale"
-PROVIDES = "x11"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${XLIBS_MIRROR}/libX11-${PV}.tar.bz2 \
            file://errordb-keysymdb-path-fix.patch;patch=1 \

@@ -1,7 +1,8 @@
 PV = "0.0+cvs${SRCDATE}"
 LICENSE= "BSD-X"
 SECTION = "x11/libs"
-DEPENDS = "x11 damageext libxfixes xproto"
+DEPENDS = "libx11 damageext libxfixes xproto"
+PROVIDES = "xdamage"
 DESCRIPTION = "X Damage extension library."
 
 SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xdamage \

@@ -1,14 +1,15 @@
-PV = "0.0+cvs${SRCDATE}"
-LICENSE= "MIT"
-PR = "r1"
 SECTION = "x11/libs"
+LICENSE= "MIT"
 PRIORITY = "optional"
 MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xproto"
+PROVIDES = "xau"
 DESCRIPTION = "Authorization Protocol for X."
+PR = "r1"
 
-SRC_URI = "${FREEDESKTOP_CVS}/xlibs;module=Xau"
-S = "${WORKDIR}/Xau"
+SRC_URI = "${XLIBS_MIRROR}/libXau-${PV}.tar.bz2 \
+	   file://autofoo.patch;patch=1"
+S = "${WORKDIR}/libXau-${PV}"
 
 inherit autotools pkgconfig 
 

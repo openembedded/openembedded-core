@@ -1,7 +1,7 @@
 PV = "0.0+cvs${SRCDATE}"
 PR = "r1"
 SECTION = "libs"
-DEPENDS = "renderext x11"
+DEPENDS = "renderext libx11"
 DESCRIPTION = "X Render extension library."
 LICENSE = "BSD"
 

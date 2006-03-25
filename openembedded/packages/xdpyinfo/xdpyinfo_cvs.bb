@@ -1,6 +1,6 @@
 PV = "0.0+cvs${SRCDATE}"
 LICENSE = "MIT"
-DEPENDS = "x11 xext xtst"
+DEPENDS = "libx11 libxext libxtst"
 DESCRIPTION = "X display information utility"
 MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 SECTION = "x11/base"

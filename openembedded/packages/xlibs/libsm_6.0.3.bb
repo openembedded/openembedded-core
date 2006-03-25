@@ -2,7 +2,7 @@ SECTION = "libs"
 LICENSE = "MIT-X"
 PRIORITY = "optional"
 MAINTAINER = "Phil Blundell <pb@handhelds.org>"
-DEPENDS = "x11 ice"
+DEPENDS = "libx11 libice"
 DESCRIPTION = "Session management library"
 PR = "r1"
 
@@ -13,5 +13,5 @@ S = "${WORKDIR}/libSM-${PV}"
 inherit autotools pkgconfig 
 
 do_stage () {
-	oe_runmake install DESTDIR="" bindir=${STAGING_BINDIR} includedir=${STAGING_INCDIR} libdir=${STAGING_LIBDIR} prefix=${STAGING_DIR}
+	autotools_stage_all
 }

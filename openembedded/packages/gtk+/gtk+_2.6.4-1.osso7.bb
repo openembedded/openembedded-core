@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.gtk.org"
 SECTION = "libs"
 PRIORITY = "optional"
 MAINTAINER = "Koen Kooi <koen@handhelds.org>"
-DEPENDS = "glib-2.0 pango atk jpeg libpng xext libxcursor gtk-doc libgcrypt"
+DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt"
 PR = "r1"
 
 S = "${WORKDIR}/gtk+2.0-2.6.4/upstream/tarballs/gtk+-2.6.4/"

@@ -3,7 +3,7 @@ LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
 MAINTAINER = "Phil Blundell <pb@nexus.co.uk>"
-DEPENDS = "x11"
+DEPENDS = "libx11"
 PR = "r1"
 
 inherit autotools pkgconfig 

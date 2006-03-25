@@ -1,6 +1,6 @@
 DESCRIPTION = "Matchbox keyboard"
 LICENSE = "GPL"
-DEPENDS = "xtst"
+DEPENDS = "libxtst"
 SECTION = "x11/wm"
 PR="r1"
 PV = "0.0+svn${SRCDATE}"

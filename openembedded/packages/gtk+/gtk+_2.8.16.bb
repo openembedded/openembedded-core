@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.gtk.org"
 SECTION = "libs"
 PRIORITY = "optional"
 MAINTAINER = "Philip Blundell <pb@handhelds.org>"
-DEPENDS = "glib-2.0 pango atk jpeg libpng xext libxcursor gtk-doc libgcrypt cairo"
+DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt cairo"
 PR = "r2"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.8/gtk+-${PV}.tar.bz2 \
