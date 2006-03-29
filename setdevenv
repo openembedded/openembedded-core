@@ -42,7 +42,7 @@ export BBPATH
 # Blank this so we don't link non-arm libraries
 LD_LIBRARY_PATH=
 # Don't export TARGET_ARCH - it *will* cause build failures
-export PATH LD_LIBRARY_PATH OEPATH
+export PATH LD_LIBRARY_PATH OEROOT
 # Stop multi byte characters breaking the patcher stuff - This is for Redhat / Fedora people really
 export LANG=C
 
