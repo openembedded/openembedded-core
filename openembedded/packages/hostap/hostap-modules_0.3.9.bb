@@ -1,5 +1,5 @@
 include hostap-modules.inc
-PR = "r9"
+PR = "r10"
 
 SRC_URI += "file://Makefile.patch;patch=1 \
 	    file://add_event.patch;patch=1 \
