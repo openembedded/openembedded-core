@@ -1,8 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r2"
-
-DEFAULT_PREFERENCE = "-1"
+PR = "r5"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -15,15 +13,15 @@ DEFAULT_PREFERENCE = "-1"
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
-           ${RPSRC}/led_core-r14.patch;patch=1 \
-           ${RPSRC}/led_triggers-r11.patch;patch=1 \
-           ${RPSRC}/led_trig_timer-r6.patch;patch=1 \
+           ${RPSRC}/led_core-r15.patch;patch=1 \
+           ${RPSRC}/led_triggers-r14.patch;patch=1 \
+           ${RPSRC}/led_trig_timer-r8.patch;patch=1 \
            ${RPSRC}/led_trig_sharpsl_pm-r5.patch;patch=1 \
            ${RPSRC}/led_zaurus-r10.patch;patch=1 \
            ${RPSRC}/led_locomo-r7.patch;patch=1 \
            ${RPSRC}/led_ixp4xx-r2.patch;patch=1 \
            ${RPSRC}/led_tosa-r5.patch;patch=1 \
-           ${RPSRC}/led_ide-r4a.patch;patch=1 \
+           ${RPSRC}/led_ide-r6.patch;patch=1 \
            ${RPSRC}/led_nand-r3.patch;patch=1 \
            ${RPSRC}/ide_end_request-r1.patch;patch=1 \
            ${RPSRC}/rtc-subsystem-library-functions.patch;patch=1 \
@@ -57,8 +55,13 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            ${RPSRC}/jffs2_longfilename-r0.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r0.patch;patch=1 \
            ${RPSRC}/misc_fix1-r0.patch;patch=1 \
-           ${RPSRC}/corgi_bl_cleanup-r2.patch;patch=1 \
-           ${RPSRC}/corgi_bl_generic-r2.patch;patch=1 \
+           ${RPSRC}/corgi_bl_cleanup-r3.patch;patch=1 \
+           ${RPSRC}/corgi_bl_generic-r3.patch;patch=1 \
+           ${RPSRC}/w100_accel1-r0.patch;patch=1 \
+           ${RPSRC}/poodle_partsize-r0.patch;patch=1 \
+           ${RPSRC}/poodle_memsize-r0.patch;patch=1 \
+           ${RPSRC}/collie_frontlight-r1.patch;patch=1 \
+           ${RPSRC}/zlib_inflate-r3.patch;patch=1 \
            ${RPSRC}/pm_changes-r1.patch;patch=1 \
            ${RPSRC}/sharpsl_pm-do-r2.patch;patch=1 \
            ${RPSRC}/usb_pxa27x_udc-r0.patch;patch=1 \
@@ -66,6 +69,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
 	   ${DOSRC}/kexec-arm-r2.patch;patch=1 \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
            ${RPSRC}/mmcsd_no_scr_check-r0.patch;patch=1 \
+           ${RPSRC}/poodle_ts_hack-r0.patch;patch=1 \
            file://add-oz-release-string.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1 \
            ${RPSRC}/pxa-linking-bug.patch;patch=1 \
@@ -75,7 +79,8 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            file://defconfig-ipaq-pxa270 \
            file://defconfig-collie \
            file://defconfig-poodle \
-           file://defconfig-cxx00 \
+           file://defconfig-akita \
+           file://defconfig-spitz \
            file://defconfig-qemuarm \
            file://defconfig-tosa "
 

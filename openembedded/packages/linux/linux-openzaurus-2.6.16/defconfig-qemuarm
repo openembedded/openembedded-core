@@ -625,7 +625,7 @@ CONFIG_HWMON=y
 #
 # LED devices
 #
-# CONFIG_NEW_LEDS is not set
+CONFIG_NEW_LEDS=y
 
 #
 # Multimedia devices
