@@ -19,7 +19,7 @@ do_deploy() {
 	install -m 0755 updater.sh ${DEPLOY_DIR_IMAGE}/updater.sh.${MACHINE}
 
 	case ${MACHINE} in
-		spitz | borzoi )
+		spitz )
 			install -m 0755 gnu-tar ${DEPLOY_DIR_IMAGE}/gnu-tar
 			;;
         	*)

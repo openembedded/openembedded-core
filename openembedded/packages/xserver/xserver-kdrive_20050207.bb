@@ -52,7 +52,6 @@ SRC_URI_append_poodle = 	" file://xserver-kdrive-poodle.patch;patch=1 \
 				  file://faster-rotated.patch;patch=1"
 SRC_URI_append_spitz =          " file://faster-rotated.patch;patch=1"
 SRC_URI_append_akita =          " file://faster-rotated.patch;patch=1"
-SRC_URI_append_borzoi =         " file://faster-rotated.patch;patch=1"
 
 PACKAGE_ARCH_mnci = "mnci"
 PACKAGE_ARCH_collie = "collie"
@@ -60,7 +59,6 @@ PACKAGE_ARCH_poodle = "poodle"
 PACKAGE_ARCH_h3600 = "h3600"
 PACKAGE_ARCH_spitz = "spitz"
 PACKAGE_ARCH_akita = "akita"
-PACKAGE_ARCH_borzoi = "borzoi"
 
 S = "${WORKDIR}/xserver"
 

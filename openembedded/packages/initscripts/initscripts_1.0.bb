@@ -40,7 +40,6 @@ SRC_URI_append_c7x0         = " file://keymap-*.map"
 SRC_URI_append_tosa         = " file://keymap-*.map"
 SRC_URI_append_akita        = " file://keymap-*.map"
 SRC_URI_append_spitz        = " file://keymap-*.map"
-SRC_URI_append_borzoi       = " file://keymap-*.map"
 SRC_URI_append_collie       = " file://keymap-*.map"
 SRC_URI_append_poodle       = " file://keymap-*.map"
 
@@ -105,7 +104,7 @@ do_install () {
 	fi
 
     case ${MACHINE} in
-        c7x0 | tosa | spitz | akita | borzoi | collie | poodle )
+        c7x0 | tosa | spitz | akita | collie | poodle )
 			install -m 0755 ${WORKDIR}/keymap		${D}${sysconfdir}/init.d
 			ln -sf	../init.d/keymap	${D}${sysconfdir}/rcS.d/S00keymap
 			install -m 0644 ${WORKDIR}/keymap-*.map	${D}${sysconfdir}
