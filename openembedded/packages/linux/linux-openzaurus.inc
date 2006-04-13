@@ -5,8 +5,7 @@ LICENSE = "GPL"
 
 inherit kernel
 
-PACKAGES += "kernel-module-hostap"
-RPROVIDES_kernel-module-hostap = "hostap-modules"
+RPROVIDES_kernel-image = "hostap-modules"
 
 DOSRC = "http://www.do13.de/openzaurus/patches"
 RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
