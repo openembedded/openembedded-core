@@ -1,12 +1,48 @@
-PACKAGES = "task-oh-base task-oh-devel"
+PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r24"
+PR = "r27"
 
 ALLOW_EMPTY = "1"
 
+RDEPENDS_task-oh-boot := "\
+    base-files \
+    base-passwd \
+    busybox \
+    initscripts \
+    netbase \
+    sysvinit \
+    sysvinit-pidof \
+    tinylogin \
+    modutils-initscripts \
+    fuser \
+    setserial \
+    linux-hotplug \
+    module-init-tools-depmod"
+
+RDEPENDS_task-oh-boot-extras := "\
+    ${BOOTSTRAP_EXTRA_RDEPENDS}"
+
+RDEPENDS_task-oh-boot-min-extras := "\
+    kernel \
+    udev \
+    sysfsutils \
+    ${PCMCIA_MANAGER} \
+    apm \
+    udev-utils"
+
 RDEPENDS_task-oh-base := "\
     matchbox \
+    xserver-kdrive-common \
+    xserver-nodm-init \
+    udev \
+    sysfsutils \
+    leafpad \
+    gtk+ "
+
+RDEPENDS_task-oh-standard := "\
+    dropbear \
+    portmap \
     matchbox-poky \
     matchbox-keyboard \
     matchbox-stroke \
@@ -18,26 +54,20 @@ RDEPENDS_task-oh-base := "\
     matchbox-applet-inputmanager \
     matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
-    xserver-kdrive-common \
-    xserver-nodm-init \
-    chkhinge26 \
+    zaurusd \
     usbinit \
     settings-daemon \
-    gtk+ \
     gtk-clearlooks-engine \
     eds-dbus \
     contacts \
     dates \
     web \
     pcmanfm \
-    leafpad \
     puzzles \
     kf \
     rxvt-unicode \
     xhost \
     ttf-bitstream-vera \
-    udev \
-    sysfsutils \
     xauth \
     avahi-daemon \
     gdk-pixbuf-loader-png \
@@ -72,4 +102,3 @@ RRECOMMENDS_task-oh-devel := "\
 #    lttng-modules
 
 
-LICENSE = "MIT"

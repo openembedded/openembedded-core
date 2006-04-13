@@ -1,6 +1,6 @@
-PR = "r10"
+PR = "r0"
 
-export IMAGE_BASENAME = "oh-image"
+export IMAGE_BASENAME = "oh-image-minimal"
 
 GUI_MACHINE_CLASS ?= "none"
 
@@ -10,9 +10,8 @@ DEPENDS = "task-oh"
     
 RDEPENDS = "\
     task-oh-boot \
-    task-oh-boot-extras \
+    task-oh-boot-min-extras \
     task-oh-base \
-    task-oh-standard \
     ${XSERVER} "
 
 export IPKG_INSTALL = "${RDEPENDS}"

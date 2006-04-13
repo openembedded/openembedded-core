@@ -11,8 +11,10 @@ DEPENDS = "\
     task-oh"
     
 RDEPENDS = "\
-    task-bootstrap \
+    task-oh-boot \
+    task-oh-boot-extras \
     task-oh-base \
+    task-oh-standard \
     task-oh-devel \
     ${XSERVER} "
 
