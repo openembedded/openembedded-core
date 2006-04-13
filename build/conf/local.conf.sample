@@ -18,6 +18,7 @@ MACHINE = "c7x0"
 #MACHINE = "akita"
 #MACHINE = "spitz"
 #MACHINE = "nokia770"
+#MACHINE = "qemuarm"
 
 DISTRO = "poky"
 
@@ -48,3 +49,5 @@ BBINCLUDELOGS = "yes"
 # a cvs:// URI.  Uncomment this, if you not want to pull directly from CVS.
 CVS_TARBALL_STASH = "http://www.oesources.org/source/current/"
 
+include conf/distro/include/multimachine.conf
+ENABLE_BINARY_LOCALE_GENERATION = "1"
