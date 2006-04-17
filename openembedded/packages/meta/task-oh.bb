@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r28"
+PR = "r29"
 
 ALLOW_EMPTY = "1"
 
@@ -33,6 +33,8 @@ RDEPENDS_task-oh-boot-min-extras := "\
 
 RDEPENDS_task-oh-base := "\
     matchbox \
+    matchbox-keyboard \
+    matchbox-panel    \
     xserver-kdrive-common \
     xserver-nodm-init \
     ttf-bitstream-vera \
@@ -41,6 +43,12 @@ RDEPENDS_task-oh-base := "\
     udev \
     sysfsutils \
     leafpad \
+    gdk-pixbuf-loader-png \
+    gdk-pixbuf-loader-gif \
+    gdk-pixbuf-loader-xpm \
+    gdk-pixbuf-loader-jpeg \
+    pango-module-basic-x \
+    pango-module-basic-fc \
     gtk+ "
 
 RDEPENDS_task-oh-standard := "\
@@ -70,16 +78,10 @@ RDEPENDS_task-oh-standard := "\
     kf \
     rxvt-unicode \
     avahi-daemon \
-    gdk-pixbuf-loader-png \
-    gdk-pixbuf-loader-gif \
-    gdk-pixbuf-loader-xpm \
-    gdk-pixbuf-loader-jpeg \
     gnome-vfs-plugin-dbus \
     gnome-vfs-plugin-file \
     gnome-vfs-plugin-http \
-    gtk-theme-clearlooks \
-    pango-module-basic-x \
-    pango-module-basic-fc"
+    gtk-theme-clearlooks"
 
 #    minimo \
 #    teleport \
