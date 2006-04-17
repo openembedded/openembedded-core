@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r27"
+PR = "r28"
 
 ALLOW_EMPTY = "1"
 
@@ -35,6 +35,9 @@ RDEPENDS_task-oh-base := "\
     matchbox \
     xserver-kdrive-common \
     xserver-nodm-init \
+    ttf-bitstream-vera \
+    xauth \
+    xhost \
     udev \
     sysfsutils \
     leafpad \
@@ -66,9 +69,6 @@ RDEPENDS_task-oh-standard := "\
     puzzles \
     kf \
     rxvt-unicode \
-    xhost \
-    ttf-bitstream-vera \
-    xauth \
     avahi-daemon \
     gdk-pixbuf-loader-png \
     gdk-pixbuf-loader-gif \
