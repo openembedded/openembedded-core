@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r29"
+PR = "r30"
 
 ALLOW_EMPTY = "1"
 
@@ -18,6 +18,7 @@ RDEPENDS_task-oh-boot := "\
     fuser \
     setserial \
     linux-hotplug \
+    ipkg \
     module-init-tools-depmod"
 
 RDEPENDS_task-oh-boot-extras := "\
