@@ -1,7 +1,7 @@
 Index: qemu/Makefile
 ===================================================================
---- qemu.orig/Makefile	2006-04-11 21:49:44.000000000 +0100
-+++ qemu/Makefile	2006-04-12 16:02:28.000000000 +0100
+--- qemu.orig/Makefile	2006-04-18 11:11:37.000000000 +0100
++++ qemu/Makefile	2006-04-18 11:14:34.000000000 +0100
 @@ -11,7 +11,7 @@
  ifdef CONFIG_STATIC
  LDFLAGS+=-static
@@ -11,23 +11,23 @@ Index: qemu/Makefile
  
  all: dyngen$(EXESUF) $(TOOLS) $(DOCS)
  	for d in $(TARGET_DIRS); do \
-@@ -52,11 +52,11 @@
-                        pc-bios/ppc_rom.bin pc-bios/video.x \
-                        pc-bios/proll.elf \
-                        pc-bios/linux_boot.bin "$(DESTDIR)$(datadir)"
+@@ -51,11 +51,11 @@
+ 			video.x proll.elf linux_boot.bin; do \
+ 		$(INSTALL) -m 644 $(SRC_PATH)/pc-bios/$$x "$(DESTDIR)$(datadir)"; \
+ 	done
 -	mkdir -p "$(DESTDIR)$(docdir)"
--	install -m 644 qemu-doc.html  qemu-tech.html "$(DESTDIR)$(docdir)"
+-	$(INSTALL) -m 644 qemu-doc.html  qemu-tech.html "$(DESTDIR)$(docdir)"
 +#	mkdir -p "$(DESTDIR)$(docdir)"
-+#	install -m 644 qemu-doc.html  qemu-tech.html "$(DESTDIR)$(docdir)"
++#	$(INSTALL) -m 644 qemu-doc.html  qemu-tech.html "$(DESTDIR)$(docdir)"
  ifndef CONFIG_WIN32
 -	mkdir -p "$(DESTDIR)$(mandir)/man1"
--	install qemu.1 qemu-img.1 "$(DESTDIR)$(mandir)/man1"
+-	$(INSTALL) qemu.1 qemu-img.1 "$(DESTDIR)$(mandir)/man1"
 +#	mkdir -p "$(DESTDIR)$(mandir)/man1"
-+#	install qemu.1 qemu-img.1 "$(DESTDIR)$(mandir)/man1"
++#	$(INSTALL) qemu.1 qemu-img.1 "$(DESTDIR)$(mandir)/man1"
  	mkdir -p "$(DESTDIR)$(datadir)/keymaps"
- 	install -m 644 $(addprefix keymaps/,$(KEYMAPS)) "$(DESTDIR)$(datadir)/keymaps"
- endif
-@@ -121,10 +121,10 @@
+ 	for x in $(KEYMAPS); do \
+ 		$(INSTALL) -m 644 $(SRC_PATH)/keymaps/$$x "$(DESTDIR)$(datadir)/keymaps"; \
+@@ -122,10 +122,10 @@
  	$(datadir)/ppc_rom.bin \
  	$(datadir)/video.x \
  	$(datadir)/proll.elf \
