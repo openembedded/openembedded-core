@@ -1,0 +1,11 @@
+--- trunk/examples/basic-gconf-app.c.old	2006-04-25 20:39:48.000000000 +0100
++++ trunk/examples/basic-gconf-app.c	2006-04-25 20:40:11.000000000 +0100
+@@ -80,7 +80,7 @@
+ 
+  /* Be clean and pure */
+ #define GTK_DISABLE_DEPRECATED
+-#define G_DISABLE_DEPRECATED
++/*#define G_DISABLE_DEPRECATED*/
+ 
+ #include <gconf/gconf-client.h>
+ #include <gtk/gtk.h>
