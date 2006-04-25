@@ -7,9 +7,10 @@ MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 
 inherit autotools pkgconfig gnome
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI += "file://glade-cruft.patch;patch=1 file://no-xml2.patch;patch=1"
+SRC_URI += "file://glade-cruft.patch;patch=1 file://no-xml2.patch;patch=1 \
+	    file://no-deprecation.patch;patch=1"
 
 EXTRA_OECONF += "--without-libxml2"
 
