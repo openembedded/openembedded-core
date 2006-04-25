@@ -1,0 +1,50 @@
+--- gtk+-2.4.4/gtk/gtkmenushell.c.old	Thu Aug 26 23:45:28 2004
++++ gtk+-2.4.4/gtk/gtkmenushell.c	Fri Aug 27 00:13:33 2004
+@@ -37,7 +37,7 @@
+ #include "gtktearoffmenuitem.h"
+ #include "gtkwindow.h"
+ 
+-#define MENU_SHELL_TIMEOUT   500
++#define MENU_SHELL_TIMEOUT   2000
+ 
+ enum {
+   DEACTIVATE,
+@@ -156,6 +156,7 @@
+ static GtkContainerClass *parent_class = NULL;
+ static guint menu_shell_signals[LAST_SIGNAL] = { 0 };
+ 
++static int last_crossing_time;
+ 
+ GType
+ gtk_menu_shell_get_type (void)
+@@ -418,6 +419,7 @@
+       gtk_grab_add (GTK_WIDGET (menu_shell));
+       menu_shell->have_grab = TRUE;
+       menu_shell->active = TRUE;
++      last_crossing_time = 0;
+     }
+ }
+ 
+@@ -545,6 +547,13 @@
+ 	  menu_shell->activate_time = 0;
+ 	  deactivate = FALSE;
+ 	}
++
++      if (last_crossing_time != 0
++	  && ((event->time - last_crossing_time) < 500))
++	{
++	  last_crossing_time = 0;
++	  deactivate = FALSE;
++	}
+       
+       if (deactivate)
+ 	{
+@@ -597,6 +606,8 @@
+   if (menu_shell->active)
+     {
+       menu_item = gtk_get_event_widget ((GdkEvent*) event);
++
++      last_crossing_time = event->time;
+ 
+       if (!menu_item ||
+ 	  (GTK_IS_MENU_ITEM (menu_item) && 
