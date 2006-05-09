@@ -1,0 +1,16 @@
+PCMCIAUTILS_VERSION is specified on the commandline but doesn't compile properly 
+under arm gcc 3.4.x so we work around it.
+
+Index: pcmciautils-013/src/pccardctl.c
+===================================================================
+--- pcmciautils-013.orig/src/pccardctl.c	2006-03-26 11:56:41.000000000 +0100
++++ pcmciautils-013/src/pccardctl.c	2006-05-09 22:11:09.000000000 +0100
+@@ -350,7 +350,7 @@
+ }
+ 
+ static void print_header(void) {
+-	printf("pcmciautils %s\n", PCMCIAUTILS_VERSION);
++	printf("pcmciautils 013\n");
+ 	printf("Copyright (C) 2004-2005 Dominik Brodowski, (C) 1999 David A. Hinds\n");
+ 	printf("Report errors and bugs to <linux-pcmcia@lists.infradead.org>, please.\n");
+ }

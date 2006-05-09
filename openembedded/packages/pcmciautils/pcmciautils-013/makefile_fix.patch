@@ -1,0 +1,20 @@
+Hardcoded paths are bad...
+
+Index: pcmciautils-013/Makefile
+===================================================================
+--- pcmciautils-013.orig/Makefile	2006-03-26 11:56:41.000000000 +0100
++++ pcmciautils-013/Makefile	2006-05-09 22:10:16.000000000 +0100
+@@ -69,11 +69,11 @@
+ mandir =	${prefix}/usr/share/man
+ srcdir = .
+ 
+-INSTALL = /usr/bin/install -c
++INSTALL = install -c
+ INSTALL_PROGRAM = ${INSTALL}
+ INSTALL_DATA  = ${INSTALL} -m 644
+ INSTALL_SCRIPT = ${INSTALL_PROGRAM}
+-SYMLINK = /usr/bin/ln -sf
++SYMLINK = ln -sf
+ 
+ # place to put our hotplug scripts nodes
+ hotplugdir =	${etcdir}/hotplug
