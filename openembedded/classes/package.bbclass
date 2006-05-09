@@ -241,6 +241,14 @@ python populate_packages () {
 			return 0
 		return (s[stat.ST_MODE] & stat.S_IEXEC)
 
+	# Sanity check PACKAGES for duplicates - should be moved to 
+	# sanity.bbclass once we have he infrastucture
+	pkgs = []
+	for pkg in packages.split():
+		if pkg in pkgs:
+			bb.error("%s is listed in PACKAGES mutliple times. Undefined behaviour will result." % pkg)
+		pkgs += pkg
+
 	for pkg in packages.split():
 		localdata = bb.data.createCopy(d)
 		root = os.path.join(workdir, "install", pkg)

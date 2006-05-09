@@ -34,6 +34,7 @@ CPPFLAGS = "${BUILD_CPPFLAGS}"
 CFLAGS = "${BUILD_CFLAGS}"
 CXXFLAGS = "${BUILD_CFLAGS}"
 LDFLAGS = "${BUILD_LDFLAGS}"
+LDFLAGS_build-darwin = "-L${STAGING_DIR}/${BUILD_SYS}/lib "
 
 # Path prefixes
 base_prefix = "${exec_prefix}"

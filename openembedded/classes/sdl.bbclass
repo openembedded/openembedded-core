@@ -1,27 +1,44 @@
-FILES_${PN} += '${libdir}/perl5'
+#
+# (C) Michael 'Mickey' Lauer <mickey@Vanille.de>
+#
 
-sdl_do_configure () {
-        if [ -x ${S}/configure ] ; then
-                cfgcmd="${S}/configure \
-                    -GL -GLU"
-                oenote "Running $cfgcmd..."
-                $cfgcmd || oefatal "oe_runconf failed"
-		if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
-			. ${STAGING_DIR}/${TARGET_SYS}/perl/config.sh
-			sed -e "s:\(SITELIBEXP = \).*:\1${sitelibexp}:; s:\(SITEARCHEXP = \).*:\1${sitearchexp}:; s:\(INSTALLVENDORLIB = \).*:\1${D}${libdir}/perl5:; s:\(INSTALLVENDORARCH = \).*:\1${D}${libdir}/perl5:" < Makefile > Makefile.new
-			mv Makefile.new Makefile
-		fi
-        else
-                oefatal "no configure script found"
-        fi
+DEPENDS += "virtual/libsdl libsdl-mixer libsdl-image"
+
+APPDESKTOP ?= "${PN}.desktop"
+APPNAME ?= "${PN}"
+APPIMAGE ?= "${PN}.png"
+
+sdl_do_sdl_install() {
+	install -d ${D}${palmtopdir}/bin
+	install -d ${D}${palmtopdir}/pics
+	install -d ${D}${palmtopdir}/apps/Games
+	ln -sf ${bindir}/${APPNAME} ${D}${palmtopdir}/bin/${APPNAME}
+	install -m 0644 ${APPIMAGE} ${D}${palmtopdir}/pics/${PN}.png
+
+	if [ -e "${APPDESKTOP}" ]
+	then
+		echo ${APPDESKTOP} present, installing to palmtopdir...
+		install -m 0644 ${APPDESKTOP} ${D}${palmtopdir}/apps/Games/${PN}.desktop
+	else
+		echo ${APPDESKTOP} not present, creating one on-the-fly...
+		cat >${D}${palmtopdir}/apps/Games/${PN}.desktop <<EOF
+[Desktop Entry]
+Note=Auto Generated... this may be not what you want
+Comment=${DESCRIPTION}
+Exec=${APPNAME}
+Icon=${APPIMAGE}
+Type=Application
+Name=${PN}
+EOF
+	fi
 }
 
-sdl_do_compile () {
-        oe_runmake PASTHRU_INC="${CFLAGS}"
-}
+EXPORT_FUNCTIONS do_sdl_install
+addtask sdl_install after do_compile before do_populate_staging
 
-sdl_do_install () {
-	oe_runmake install_vendor
-}
+SECTION = "x11/games"
+SECTION_${PN}-opie = "opie/games"
 
-EXPORT_FUNCTIONS do_configure do_compile do_install
+PACKAGES += "${PN}-opie"
+RDEPENDS_${PN}-opie += "${PN}"
+FILES_${PN}-opie = "${palmtopdir}"

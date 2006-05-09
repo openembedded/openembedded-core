@@ -1,6 +1,11 @@
-DEPENDS_prepend = "sip-native python-sip "
+# Build Class for Sip based Python Bindings
+# (C) Michael 'Mickey' Lauer <mickey@Vanille.de>
+#
 
-#EXTRA_SIPTAGS = "-tWS_QWS -tQtPE_1_6_0 -tQt_2_3_1"
+DEPENDS =+ "sip-native python-sip"
+
+# default stuff, do not uncomment
+# EXTRA_SIPTAGS = "-tWS_QWS -tQtPE_1_6_0 -tQt_2_3_1"
 
 sip_do_generate() {
 	if [ -z "${SIP_MODULES}" ]; then 

@@ -16,6 +16,8 @@ export OE_QMAKE_AR="${AR}"
 export OE_QMAKE_STRIP="${STRIP}"
 export OE_QMAKE_UIC="${STAGING_BINDIR}/uic"
 export OE_QMAKE_MOC="${STAGING_BINDIR}/moc"
+export OE_QMAKE_RCC="non-existant"
+export OE_QMAKE_QMAKE="${STAGING_BINDIR}/qmake"
 export OE_QMAKE_RPATH="-Wl,-rpath-link,"
 
 # default to qte2 via bb.conf, inherit qt3x11 to configure for qt3x11

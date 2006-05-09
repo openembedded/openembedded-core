@@ -10,6 +10,8 @@ SREC_CMD = "${TARGET_PREFIX}objcopy -O srec -I binary --adjust-vma ${SREC_VMAADD
 # Do not build srec files for these types of images:
 SREC_SKIP = "tar"
 
+do_srec[nostamp] = 1
+
 do_srec () {
     if [ ${SREC_VMAADDR} = "" ] ; then
        oefatal Cannot do_srec without SREC_VMAADDR defined.
