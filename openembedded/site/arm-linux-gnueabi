@@ -367,3 +367,11 @@ with_broken_putenv=${with_broken_putenv=no}
 
 # xffm
 jm_cv_func_working_readdir=yes
+
+# dpkg
+dpkg_cv_va_copy=${ac_cv_va_copy=no}
+dpkg_cv___va_copy=${ac_cv___va_copy=yes}
+
+# enca
+yeti_cv_func_scanf_modif_size_t=yes
+

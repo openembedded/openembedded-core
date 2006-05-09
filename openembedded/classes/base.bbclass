@@ -196,7 +196,7 @@ oe_libinstall() {
 			# stop libtool using the final directory name for libraries
 			# in staging:
 			__runcmd rm -f $destpath/$libname.la
-			__runcmd sed -e 's/^installed=yes$/installed=no/' -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,' $dotlai >$destpath/$libname.la
+			__runcmd sed -e 's/^installed=yes$/installed=no/' -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' $dotlai >$destpath/$libname.la
 		else
 			__runcmd install -m 0644 $dotlai $destpath/$libname.la
 		fi
@@ -513,15 +513,15 @@ python base_eventhandler() {
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
 		path_to_bbfiles = bb.data.getVar( 'BBFILES', e.data, 1 )
-		path_to_packages = path_to_bbfiles[:path_to_bbfiles.index( "packages" )]
+		path_to_packages = path_to_bbfiles[:path_to_bbfiles.rindex( "packages" )]
 		monotone_revision = "<unknown>"
 		try:
 			monotone_revision = file( "%s/MT/revision" % path_to_packages ).read().strip()
 		except IOError:
 			pass
 		bb.data.setVar( 'OE_REVISION', monotone_revision, e.data )
-		statusvars = ['BB_VERSION', 'OE_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'TARGET_FPU']
-		statuslines = ["%-13s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
+		statusvars = ['BB_VERSION', 'OE_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
+		statuslines = ["%-14s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
 		print statusmsg
 
