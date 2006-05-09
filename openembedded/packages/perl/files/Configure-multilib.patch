@@ -1,0 +1,11 @@
+--- perl-5.8.7/Configure.orig	2006-01-30 10:50:04.000000000 +0000
++++ perl-5.8.7/Configure	2006-01-30 10:51:18.000000000 +0000
+@@ -1240,7 +1240,7 @@
+ loclibpth="$loclibpth /opt/gnu/lib /usr/GNU/lib /opt/GNU/lib"
+ 
+ : general looking path for locating libraries
+-glibpth="/lib /usr/lib $xlibpth"
++glibpth="/lib /usr/lib /lib64 /usr/lib64 $xlibpth"
+ glibpth="$glibpth /usr/ccs/lib /usr/ucblib /usr/local/lib"
+ test -f /usr/shlib/libc.so && glibpth="/usr/shlib $glibpth"
+ test -f /shlib/libc.so     && glibpth="/shlib $glibpth"
