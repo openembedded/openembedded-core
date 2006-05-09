@@ -1,0 +1,140 @@
+gcc (AC_CHECK_HEADERS) is using $CPP to check if the header pass
+the precompiler, if compiling with $CC failed.
+Sadly $CC is xgcc of gcc, and $CPP is 'gcc -E'. And as you build
+on a glibc machine, precompiling of the headers (execinfo.h and
+iconv.h will succeed). As a dirty hack we will handle this case
+as failure.
+This fixes the libmudflap build for uclibc which lacks execinfo.h
+but has HAVE_EXECINFO_H defined
+
+Index: gcc-4.0.2/libmudflap/configure
+===================================================================
+--- gcc-4.0.2.orig/libmudflap/configure	2006-04-30 16:57:47.000000000 +0200
++++ gcc-4.0.2/libmudflap/configure	2006-04-30 17:00:59.000000000 +0200
+@@ -3719,6 +3719,8 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    # hack, hack, hack
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
+@@ -3731,6 +3733,8 @@
+ echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
+     { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
+ echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
++    { echo "$as_me:$LINENO: WARNING: $ac_header: Zecke says do not trust the wrong cpp! Ignoring." >&5
++echo "$as_me: WARNING: $ac_header: Zecke says do not trust the wrong cpp! Ignoring." >&2;}
+     (
+       cat <<\_ASBOX
+ ## ------------------------------------- ##
+Index: gcc-4.0.2/libstdc++-v3/configure
+===================================================================
+--- gcc-4.0.2.orig/libstdc++-v3/configure	2006-04-30 16:57:53.000000000 +0200
++++ gcc-4.0.2/libstdc++-v3/configure	2006-04-30 22:59:00.000000000 +0200
+@@ -30513,6 +30513,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -30525,6 +30526,8 @@
+ echo "$as_me: WARNING: iconv.h: proceeding with the preprocessor's result" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h: in the future, the compiler will take precedence" >&5
+ echo "$as_me: WARNING: iconv.h: in the future, the compiler will take precedence" >&2;}
++    { echo "$as_me:$LINENO: WARNING: $ac_header: Zecke says do not trust the wrong cpp! Ignoring." >&5
++echo "$as_me: WARNING: $ac_header: Zecke says do not trust the wrong cpp! Ignoring." >&2;}
+     (
+       cat <<\_ASBOX
+ ## ----------------------------------------- ##
+@@ -53622,6 +53625,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -75885,6 +75889,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -78600,6 +78605,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -80969,6 +80975,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -83214,6 +83221,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -86227,6 +86235,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -88425,6 +88434,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -90672,6 +90682,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -93280,6 +93291,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -94996,6 +95008,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5
+@@ -97337,6 +97350,7 @@
+     ac_header_preproc=yes
+     ;;
+   no:yes:* )
++    ac_header_preproc=no
+     { echo "$as_me:$LINENO: WARNING: iconv.h: present but cannot be compiled" >&5
+ echo "$as_me: WARNING: iconv.h: present but cannot be compiled" >&2;}
+     { echo "$as_me:$LINENO: WARNING: iconv.h:     check for missing prerequisite headers?" >&5

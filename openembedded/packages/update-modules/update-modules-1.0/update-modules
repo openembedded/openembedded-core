@@ -173,15 +173,24 @@ for cfg in /etc/modutils/* $CONF ; do
 	fi
 done
 
+first_time=0
+if [ ! -f $MODULESFILE ]; then
+  first_time=1
+fi
+
 mv "$MODCONFTMPFILE" "$MODCONFFILE"
 mv "$MODULESTMPFILE" "$MODULESFILE"
+
+if [ $first_time -eq 1 ]; then
+  /etc/init.d/modutils.sh || true
+fi
 
 # We also call depmod here to stop insmod from complaining that modules.conf
 # is more recent then modules.dep
 #
 if [ -d "`depdir`" -a -f /proc/modules ]
 then
-	depmod -a || true
+	depmod -A || true
 fi
 
 exit 0

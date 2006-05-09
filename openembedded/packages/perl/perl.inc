@@ -5,7 +5,7 @@ SECTION = "devel"
 PRIORITY = "optional"
 DEPENDS = "virtual/db perl-native"
 
-SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
+SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 	file://Makefile.patch;patch=1 \
 	file://config.sh-arm-linux.patch;patch=1 \
 	file://libperl-5.8.3-create-libperl-soname.patch;patch=1;pnum=0 \
@@ -39,6 +39,7 @@ do_configure() {
 }
 
 do_compile() {
+	sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
 	cd Cross
 	oe_runmake perl
 }

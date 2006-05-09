@@ -6,7 +6,7 @@ DEPENDS = "makedevs"
 DEPENDS_openzaurus = "makedevs virtual/kernel"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r69"
+PR = "r73"
 
 SRC_URI = "file://halt \
            file://ramdisk \
@@ -31,17 +31,10 @@ SRC_URI = "file://halt \
            file://sysfs.sh \
            file://device_table.txt \
            file://populate-volatile.sh \
-           file://volatiles \
-           file://keymap"
+           file://volatiles "
 
 SRC_URI_append_arm          = " file://alignment.sh"
 SRC_URI_append_openzaurus   = " file://checkversion"
-SRC_URI_append_c7x0         = " file://keymap-*.map"
-SRC_URI_append_tosa         = " file://keymap-*.map"
-SRC_URI_append_akita        = " file://keymap-*.map"
-SRC_URI_append_spitz        = " file://keymap-*.map"
-SRC_URI_append_collie       = " file://keymap-*.map"
-SRC_URI_append_poodle       = " file://keymap-*.map"
 
 def read_kernel_version(d):
 	import bb
@@ -102,16 +95,6 @@ do_install () {
 		chmod 0755	${D}${sysconfdir}/init.d/checkversion
 		ln -sf		../init.d/checkversion  ${D}${sysconfdir}/rcS.d/S01version
 	fi
-
-    case ${MACHINE} in
-        c7x0 | tosa | spitz | akita | collie | poodle )
-			install -m 0755 ${WORKDIR}/keymap		${D}${sysconfdir}/init.d
-			ln -sf	../init.d/keymap	${D}${sysconfdir}/rcS.d/S00keymap
-			install -m 0644 ${WORKDIR}/keymap-*.map	${D}${sysconfdir}
-			;;
-        *)
-			;;
-    esac
 
 	install -m 0755 ${WORKDIR}/banner	${D}${sysconfdir}/init.d/banner
 	install -m 0755 ${WORKDIR}/devices	${D}${sysconfdir}/init.d/devices

@@ -1,0 +1,262 @@
+# Note:
+# The way in which the modifiers are handled are quite different
+# than how they were handled in the 2.4.6-rmk1-np2-embedix kernel.
+# 
+# Here, we simply pass up Fn as Control, and the german accent key
+# as Altgr, and simply use a proper keymap.  Said keymap is as
+# follows.
+# keymaps 0-2,4-5,8,12,20
+keycode   1 = Escape           Escape          
+keycode  14 = BackSpace
+	shift   keycode  14 = BackSpace
+	control keycode  14 = Delete
+	shiftl  control keycode  14 = bracketleft
+	control shiftr  keycode  14 = bracketleft
+keycode  15 = Tab              Tab             
+	shift   keycode  15 = backslash
+	control keycode  15 = Caps_Lock
+	shiftl  control keycode  15 = Caps_Lock
+	control shiftr  keycode  15 = Caps_Lock
+keycode  16 = q               
+	control	keycode  16 = one             
+	shiftl	control	keycode  16 = Control_q       
+	control	shiftr	keycode  16 = Meta_q       
+keycode  17 = w               
+	control	keycode  17 = two       
+	shiftl	control	keycode  17 = Control_w       
+	control	shiftr	keycode  17 = Meta_w       
+keycode  18 = e               
+	control	keycode  18 = three       
+	shiftl	control	keycode  18 = Control_e       
+	control	shiftr	keycode  18 = Meta_e       
+keycode  19 = r               
+	control	keycode  19 = four       
+	shiftr	control	keycode  19 = Control_r       
+	control	shiftl	keycode  19 = Meta_r       
+keycode  20 = t               
+	control	keycode  20 = five       
+	shiftl	control	keycode  20 = Control_t       
+	control	shiftr	keycode  20 = Meta_t       
+keycode  21 = y               
+	control	keycode  21 = six       
+	shiftl	control	keycode  21 = Control_y       
+	control	shiftr	keycode  21 = Meta_y       
+keycode  22 = u               
+	control	keycode  22 = seven       
+	shiftl	control	keycode  22 = Control_u       
+	control	shiftr	keycode  22 = Meta_u       
+keycode  23 = i               
+	control	keycode  23 = eight             
+	shiftl	control	keycode  23 = Control_i             
+	control	shiftr	keycode  23 = Meta_i             
+keycode  24 = o               
+	control	keycode  24 = nine       
+	shiftl	control	keycode  24 = Control_o       
+	control	shiftr	keycode  24 = Meta_o       
+keycode  25 = p               
+	control	keycode  25 = zero       
+	shiftl	control	keycode  25 = Control_p       
+	control	shiftr	keycode  25 = Meta_p       
+keycode  28 = Return          
+	control keycode  28 = greater
+	shiftl  control keycode  28 = braceright
+	control shiftr  keycode  28 = braceright
+keycode  29 = Control         
+keycode  30 = a               
+	control	keycode  30 = exclam       
+	shiftl	control	keycode  30 = Control_a       
+	control	shiftr	keycode  30 = Meta_a       
+keycode  31 = s               
+	control	keycode  31 = at       
+	shiftl	control	keycode  31 = Control_s       
+	control	shiftr	keycode  31 = Meta_s       
+keycode  32 = d               
+	control	keycode  32 = numbersign
+	shiftl	control	keycode  32 = Control_d       
+	control	shiftr	keycode  32 = Meta_d       
+keycode  33 = f               
+	control	keycode  33 = dollar       
+	shiftl	control	keycode  33 = Control_f       
+	control	shiftr	keycode  33 = Meta_f       
+keycode  34 = g               
+	control	keycode  34 = percent       
+	shiftl	control	keycode  34 = Control_g       
+	control	shiftr	keycode  34 = Meta_g       
+keycode  35 = h               
+	control	keycode  35 = underscore       
+	shiftl	control	keycode  35 = BackSpace       
+	control	shiftr	keycode  35 = BackSpace       
+keycode  36 = j               
+	control	keycode  36 = ampersand        
+	shiftl	control	keycode  36 = Linefeed        
+	control	shiftr	keycode  36 = Linefeed        
+keycode  37 = k               
+	control	keycode  37 = asterisk       
+	shiftl	control	keycode  37 = Control_k       
+	control	shiftr	keycode  37 = Meta_k       
+keycode  38 = l               
+	control	keycode  38 = bracketleft       
+	shiftl  control keycode  51 = parenleft
+	control shiftr  keycode  51 = parenleft
+keycode  40 = apostrophe       quotedbl
+	control	keycode  40 = asciitilde       
+	shiftl	control	keycode  40 = asciicircum
+	control	shiftr	keycode  40 = asciicircum       
+keycode  42 = Shift           
+keycode  44 = z               
+	control	keycode  44 = Control_z       
+	shiftl	control	keycode  44 = Control_z       
+	control	shiftr	keycode  44 = Meta_z       
+keycode  45 = x               
+	control	keycode  45 = Control_x       
+	shiftl	control	keycode  45 = Control_x       
+	control	shiftr	keycode  45 = Meta_x       
+keycode  46 = c               
+	control	keycode  46 = Control_c       
+	shiftl	control	keycode  46 = Control_c       
+	control	shiftr	keycode  46 = Meta_c       
+keycode  47 = v               
+	control	keycode  47 = Control_v       
+	shiftl	control	keycode  47 = Control_v       
+	control	shiftr	keycode  47 = Meta_v       
+## current location ##
+keycode  48 = b               
+	control	keycode  48 = minus       
+	shiftl	control	keycode  48 = Control_b       
+	control	shiftr	keycode  48 = Meta_b       
+keycode  49 = n               
+	control	keycode  49 = plus       
+	shiftl	control	keycode  49 = Control_n       
+	control	shiftr	keycode  49 = Meta_n       
+keycode  50 = m               
+	control	keycode  50 = equal       
+	shiftl	control	keycode  50 = Control_m       
+	control	shiftr	keycode  50 = Meta_m       
+keycode  51 = comma
+	shift   keycode  51 = semicolon
+	control keycode  51 = bracketright
+	shiftl  control keycode  51 = parenright
+	control shiftr  keycode  51 = parenright
+keycode  52 = period
+	shift   keycode  52 = colon
+	control keycode  52 = less
+	shiftl  control keycode  52 = braceleft
+	control shiftr  keycode  52 = braceleft
+keycode  53 = slash
+	shift   keycode  53 = question
+	control	keycode  53 = Num_Lock
+	shiftl  control keycode  53 = Num_Lock
+	control shiftr  keycode  53 = Num_Lock
+keycode  54 = Shift           
+keycode  55 = KP_Multiply     
+keycode  56 = Alt             
+keycode  57 = space
+	shift   keycode  57 = bar
+	control	keycode  57 = nul
+	shiftl  control keycode  57 = grave
+	control shiftr  keycode  57 = grave
+keycode  97 = Control         
+keycode  99 = Control_backslash
+	control keycode  99 = Control_backslash
+keycode 100 = AltGr           
+keycode 103 = Up              
+keycode 105 = Left            
+keycode 106 = Right           
+keycode 107 = Select          
+keycode 108 = Down            
+string F1 = "\033[[A"
+string F2 = "\033[[B"
+string F3 = "\033[[C"
+string F4 = "\033[[D"
+string F5 = "\033[[E"
+string F6 = "\033[17~"
+string F7 = "\033[18~"
+string F8 = "\033[19~"
+string F9 = "\033[20~"
+string F10 = "\033[21~"
+string F11 = "\033[23~"
+string F12 = "\033[24~"
+string F13 = "\033[25~"
+string F14 = "\033[26~"
+string F15 = "\033[28~"
+string F16 = "\033[29~"
+string F17 = "\033[31~"
+string F18 = "\033[32~"
+string F19 = "\033[33~"
+string F20 = "\033[34~"
+string Find = "\033[1~"
+string Insert = "\033[2~"
+string Remove = "\033[3~"
+string Select = "\033[4~"
+string Prior = "\033[5~"
+string Next = "\033[6~"
+string Macro = "\033[M"
+string Pause = "\033[P"
+compose '`' 'A' to 'À'
+compose '`' 'a' to 'à'
+compose '\'' 'A' to 'Á'
+compose '\'' 'a' to 'á'
+compose '^' 'A' to 'Â'
+compose '^' 'a' to 'â'
+compose '~' 'A' to 'Ã'
+compose '~' 'a' to 'ã'
+compose '"' 'A' to 'Ä'
+compose '"' 'a' to 'ä'
+compose 'O' 'A' to 'Å'
+compose 'o' 'a' to 'å'
+compose '0' 'A' to 'Å'
+compose '0' 'a' to 'å'
+compose 'A' 'A' to 'Å'
+compose 'a' 'a' to 'å'
+compose 'A' 'E' to 'Æ'
+compose 'a' 'e' to 'æ'
+compose ',' 'C' to 'Ç'
+compose ',' 'c' to 'ç'
+compose '`' 'E' to 'È'
+compose '`' 'e' to 'è'
+compose '\'' 'E' to 'É'
+compose '\'' 'e' to 'é'
+compose '^' 'E' to 'Ê'
+compose '^' 'e' to 'ê'
+compose '"' 'E' to 'Ë'
+compose '"' 'e' to 'ë'
+compose '`' 'I' to 'Ì'
+compose '`' 'i' to 'ì'
+compose '\'' 'I' to 'Í'
+compose '\'' 'i' to 'í'
+compose '^' 'I' to 'Î'
+compose '^' 'i' to 'î'
+compose '"' 'I' to 'Ï'
+compose '"' 'i' to 'ï'
+compose '-' 'D' to 'Ð'
+compose '-' 'd' to 'ð'
+compose '~' 'N' to 'Ñ'
+compose '~' 'n' to 'ñ'
+compose '`' 'O' to 'Ò'
+compose '`' 'o' to 'ò'
+compose '\'' 'O' to 'Ó'
+compose '\'' 'o' to 'ó'
+compose '^' 'O' to 'Ô'
+compose '^' 'o' to 'ô'
+compose '~' 'O' to 'Õ'
+compose '~' 'o' to 'õ'
+compose '"' 'O' to 'Ö'
+compose '"' 'o' to 'ö'
+compose '/' 'O' to 'Ø'
+compose '/' 'o' to 'ø'
+compose '`' 'U' to 'Ù'
+compose '`' 'u' to 'ù'
+compose '\'' 'U' to 'Ú'
+compose '\'' 'u' to 'ú'
+compose '^' 'U' to 'Û'
+compose '^' 'u' to 'û'
+compose '"' 'U' to 'Ü'
+compose '"' 'u' to 'ü'
+compose '\'' 'Y' to 'Ý'
+compose '\'' 'y' to 'ý'
+compose 'T' 'H' to 'Þ'
+compose 't' 'h' to 'þ'
+compose 's' 's' to 'ß'
+compose '"' 'y' to 'ÿ'
+compose 's' 'z' to 'ß'
+compose 'i' 'j' to 'ÿ'

@@ -16,6 +16,11 @@ S = "${WORKDIR}/ipkg/C"
 
 inherit autotools pkgconfig
 
+# Define a variable to allow distros to run configure earlier.
+# (for example, to enable loading of ethernet kernel modules before networking starts)
+IPKG_INIT_POSITION = "98"
+IPKG_INIT_POSITION_slugos = "41"
+
 pkg_postinst_ipkg () {
 #!/bin/sh
 if [ "x$D" != "x" ]; then
@@ -23,8 +28,8 @@ if [ "x$D" != "x" ]; then
 	# this happens at S98 where our good 'ole packages script used to run
 	echo -e "#!/bin/sh
 ipkg-cl configure
-" > ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S98configure
-	chmod 0755 ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S98configure
+" > ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${IPKG_INIT_POSITION}configure
+	chmod 0755 ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${IPKG_INIT_POSITION}configure
 fi
 
 update-alternatives --install ${bindir}/ipkg ipkg ${bindir}/ipkg-cl 100

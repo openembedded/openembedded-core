@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r5"
+PR = "r21"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -13,6 +13,8 @@ PR = "r5"
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
+           file://rmk-mmc1.patch;patch=1 \
+           file://rmk-mmc2.patch;patch=1 \
            ${RPSRC}/led_core-r15.patch;patch=1 \
            ${RPSRC}/led_triggers-r14.patch;patch=1 \
            ${RPSRC}/led_trig_timer-r8.patch;patch=1 \
@@ -42,7 +44,14 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            ${RPSRC}/rmk_pxa_mmc_timeout-r0.patch;patch=1 \
            ${RPSRC}/integrator_rtc-r0.patch;patch=1 \
            ${RPSRC}/zaurus_keyboard_tweak-r3.patch;patch=1 \
+           ${RPSRC}/arm_eabi_enum_fix-r0.patch;patch=1 \
            ${RPSRC}/pxafb_tweaks-r0.patch;patch=1 \
+           ${RPSRC}/spitz_kbd_fix-r0.patch;patch=1 \
+           ${RPSRC}/mmcsd_large_cards-r0.patch;patch=1 \
+           ${RPSRC}/fbmem_fix-r1.patch;patch=1 \
+           ${RPSRC}/mmc_oops_fix-r0.patch;patch=1 \
+           ${RPSRC}/scoop_linkage-r0.patch;patch=1 \
+           ${RPSRC}/ssp_cleanup-r0.patch;patch=1 \
            ${RPSRC}/alsa/asoc-v0.10rc4.patch;patch=1 \
            ${RPSRC}/hx2750_base-r24.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r5.patch;patch=1 \
@@ -52,7 +61,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            ${RPSRC}/hx2750_test1-r3.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
            ${RPSRC}/input_power-r4.patch;patch=1 \
-           ${RPSRC}/jffs2_longfilename-r0.patch;patch=1 \
+           ${RPSRC}/jffs2_longfilename-r1.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r0.patch;patch=1 \
            ${RPSRC}/misc_fix1-r0.patch;patch=1 \
            ${RPSRC}/corgi_bl_cleanup-r3.patch;patch=1 \
@@ -62,11 +71,18 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            ${RPSRC}/poodle_memsize-r0.patch;patch=1 \
            ${RPSRC}/collie_frontlight-r1.patch;patch=1 \
            ${RPSRC}/zlib_inflate-r3.patch;patch=1 \
+           ${RPSRC}/zaurus_reboot-r0.patch;patch=1 \
+           ${RPSRC}/sharpsl_pm_fixes1-r0.patch;patch=1 \
+           ${RPSRC}/asoc_fixups-r0.patch;patch=1 \
            ${RPSRC}/pm_changes-r1.patch;patch=1 \
+           ${RPSRC}/led_class_kconfig-r0.patch;patch=1 \
+           ${RPSRC}/led_maintainer-r0.patch;patch=1 \
+           ${RPSRC}/led_sysfs_fix-r0.patch;patch=1 \
+           ${RPSRC}/backlight_sysfs_fix-r0.patch;patch=1 \
            ${RPSRC}/sharpsl_pm-do-r2.patch;patch=1 \
            ${RPSRC}/usb_pxa27x_udc-r0.patch;patch=1 \
            ${RPSRC}/usb_add_epalloc-r1.patch;patch=1 \
-	   ${DOSRC}/kexec-arm-r2.patch;patch=1 \
+           ${DOSRC}/kexec-arm-r2.patch;patch=1 \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1 \
            ${RPSRC}/mmcsd_no_scr_check-r0.patch;patch=1 \
            ${RPSRC}/poodle_ts_hack-r0.patch;patch=1 \
@@ -75,6 +91,8 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            ${RPSRC}/pxa-linking-bug.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            file://connectplus-remove-ide-HACK.patch;patch=1 \
+           file://24-hostap_cs_id.diff;patch=1 \
+           file://hrw-pcmcia-ids-r2.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-ipaq-pxa270 \
            file://defconfig-collie \
@@ -104,14 +122,22 @@ SRC_URI_append_tosa = "\
 	   ${CHSRC}/tmio-nand-r5.patch;patch=1 \
 	   ${CHSRC}/tmio-ohci-r3.patch;patch=1 \
 	   ${CHSRC}/tmio-fb-r6.patch;patch=1 \
-	   ${DOSRC}/tosa-keyboard-r13.patch;patch=1 \
+	   ${DOSRC}/tosa-keyboard-r14.patch;patch=1 \
 	   ${DOSRC}/tosa-pxaac97-r6.patch;patch=1 \
-	   ${DOSRC}/tosa-tmio-r4.patch;patch=1 \
-	   ${DOSRC}/tosa-power-r14.patch;patch=1 \
-	   ${DOSRC}/tosa-tmio-lcd-r5.patch;patch=1 \
-	   ${DOSRC}/tosa-bluetooth-r5.patch;patch=1 \
+	   ${DOSRC}/tosa-tmio-r6.patch;patch=1 \
+	   ${DOSRC}/tosa-power-r15.patch;patch=1 \
+	   ${DOSRC}/tosa-tmio-lcd-r7.patch;patch=1 \
+	   ${DOSRC}/tosa-bluetooth-r6.patch;patch=1 \
 	   ${DOSRC}/wm97xx-lg7-r0.patch;patch=1 \
-	   ${DOSRC}/tosa-asoc-r0.patch;patch=1 "
+	   ${DOSRC}/wm9712-suspend-cold-res-r0.patch;patch=1 \
+	   ${DOSRC}/sharpsl-pm-postresume-r0.patch;patch=1 \
+	   ${DOSRC}/wm97xx-dig-restore-r0.patch;patch=1 \
+	   ${DOSRC}/wm97xx-miscdevs-resume-r0.patch;patch=1 \
+	   ${DOSRC}/wm9712-reset-loop-r0.patch;patch=1 \
+	   ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
+
+SRC_URI_append_poodle = "\
+	   ${RPSRC}/rp_poodle_hacks-r0.patch;patch=1"
 
 S = "${WORKDIR}/linux-2.6.16"
 

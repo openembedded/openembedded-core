@@ -8,6 +8,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/lct/console-tools-${PV}.tar.gz \
            file://configure.patch;patch=1 \
            file://compile.patch;patch=1 \
            file://kbdrate.patch;patch=1 \
+           file://uclibc-fileno.patch;patch=1 \
            file://config/*.m4"
 
 export SUBDIRS = "fontfiletools vttools kbdtools screenfonttools contrib \

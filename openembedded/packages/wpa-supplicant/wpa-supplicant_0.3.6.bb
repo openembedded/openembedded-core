@@ -4,10 +4,11 @@ LICENSE = "GPL"
 MAINTAINER = "Holger Schurig"
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 DEPENDS = "openssl"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-0.3.6.tar.gz \
 	file://defconfig \
+        file://driver-hermes.patch;patch=1 \
 	file://wpa_supplicant.conf"
 S = "${WORKDIR}/wpa_supplicant-${PV}"
 

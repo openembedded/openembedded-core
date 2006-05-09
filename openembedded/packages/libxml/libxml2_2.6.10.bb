@@ -9,7 +9,7 @@ PACKAGES = "${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 FILES_${PN}-dev += "${bindir}/xml-config"
 FILES_${PN}-utils += "${bindir}"
 
-SRC_URI = "http://xmlsoft.org/sources/old/libxml2-${PV}.tar.gz"
+SRC_URI = "http://xmlsoft.org/sources/libxml2/old/libxml2-${PV}.tar.gz"
 
 inherit autotools pkgconfig 
 

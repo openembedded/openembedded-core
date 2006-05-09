@@ -12,4 +12,3 @@ python __anonymous() {
         data.setVar('EXTRA_OECONF', " --cc=gcc-3.3", d)
 
 }
-

@@ -15,6 +15,7 @@
 
 # SCSI devices
 BUS=="scsi", KERNEL=="sr[0-9]*",	NAME="scd%n", SYMLINK+="sr%n"
+SUBSYSTEM=="scsi_device", SYSFS{type}=="0|7|14", RUN+="/sbin/modprobe sd_mod"
 
 # USB devices
 BUS=="usb", KERNEL=="auer[0-9]*",	NAME="usb/%k"
@@ -28,7 +29,7 @@ BUS=="usb", KERNEL=="ttyUSB*", SYSFS{product}=="Palm Handheld*", \
 
 # usbfs-like devices
 SUBSYSTEM=="usb_device", \
-	PROGRAM="/bin/sh -c 'X=%k X=$${X#usbdev} B=$${X%%%%.*} D=$${X#*.}; echo bus/usb/$$B/$$D'", SYMLINK+="%c"
+	PROGRAM="/bin/sh -c 'export X=%k; export X=$${X#usbdev}; export B=$${X%%%%.*}; export D=$${X#*.}; echo bus/usb/$$B/$$D'", SYMLINK+="%c"
 
 # serial devices
 KERNEL=="capi",			NAME="capi20", SYMLINK+="isdn/capi20"

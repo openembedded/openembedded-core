@@ -5,7 +5,7 @@ LICENSE = "GPL"
 
 inherit kernel
 
-RPROVIDES_kernel-image = "hostap-modules"
+RPROVIDES_kernel-image += "hostap-modules"
 
 DOSRC = "http://www.do13.de/openzaurus/patches"
 RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
@@ -21,6 +21,7 @@ ALLOW_EMPTY = 1
 
 EXTRA_OEMAKE = "OPENZAURUS_RELEASE=-${DISTRO_VERSION}"
 COMPATIBLE_HOST = "arm.*-linux"
+COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|ipaq-pxa270|qemuarm)'
 
 CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
 CMDLINE_ROOT = "root=/dev/mtdblock2 rootfstype=jffs2"
@@ -57,6 +58,13 @@ module_autoload_snd-soc-spitz_spitz = "snd-soc-spitz"
 
 do_configure() {
 	rm -f ${S}/.config
+
+	if [ "${MACHINE}" == "tosa" ]; then
+		gcc_version=`${KERNEL_CC} -dumpversion`		
+		if [ "${gcc_version}" == "4.0.1" ] || [ "${gcc_version}" == "4.0.2" ]; then
+			die "tosa kernel wont work with gcc 4.0.x"
+		fi
+	fi
 
 	if [ ! -e ${WORKDIR}/defconfig-${MACHINE} ]; then
 		die "No default configuration for ${MACHINE} available."

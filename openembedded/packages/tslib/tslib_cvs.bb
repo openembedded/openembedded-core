@@ -1,17 +1,17 @@
 SECTION = "base"
 DESCRIPTION = "tslib is a touchscreen access library."
 PV = "0.0+cvs${SRCDATE}"
-PR = "r33"
+PR = "r34"
 
 SRC_URI_OVERRIDES_PACKAGE_ARCH = "0"
 PACKAGE_ARCH_tslib-conf = "${MACHINE_ARCH}"
 PACKAGE_ARCH_mnci = "${MACHINE_ARCH}"
 
 SRC_URI = "cvs://cvs:@pubcvs.arm.linux.org.uk/mnt/src/cvsroot;module=tslib \
-	   file://ts.conf \
-	   file://ts.conf-h3600 file://ts.conf-h3600-2.4 file://ts.conf-h6300 \
-	   file://ts.conf-corgi file://ts.conf-corgi-2.4 \
-	   file://ts.conf-simpad file://ts.conf-simpad-2.4 \
+           file://usec_fix.patch;patch=1 \
+           file://ts.conf file://ts-2.6.conf \
+           file://ts.conf-h3600-2.4 file://ts.conf-simpad-2.4 \
+           file://ts.conf-corgi-2.4 file://ts.conf-collie-2.4 \
 	   file://tslib.sh"
 SRC_URI_append_mnci += " file://devfs.patch;patch=1"
 SRC_URI_append_mnci += " file://event1.patch;patch=1"
@@ -40,21 +40,29 @@ do_install_append() {
 	case ${MACHINE} in
 	h3600 | h3900 | h1940 | h6300 | h2200 | ipaq-pxa270 | blueangel)
 		install -d ${D}${datadir}/tslib
-		for f in ts.conf-h3600 ts.conf-h3600-2.4 ts.conf-h6300; do
+		for f in ts-2.6.conf ts.conf-h3600-2.4; do
 			install -m 0644 ${WORKDIR}/$f ${D}${datadir}/tslib/
 		done
 		rm -f ${D}${sysconfdir}/ts.conf
 		;;
 	c7x0 | spitz | akita | tosa )
 		install -d ${D}${datadir}/tslib
-		for f in ts.conf-corgi ts.conf-corgi-2.4; do
+		for f in ts-2.6.conf ts.conf-corgi-2.4; do
 			install -m 0644 ${WORKDIR}/$f ${D}${datadir}/tslib/
 		done
 		rm -f ${D}${sysconfdir}/ts.conf
 		;;
+	collie | poodle )
+		install -d ${D}${datadir}/tslib
+		for f in ts-2.6.conf ts.conf-collie-2.4; do
+			install -m 0644 ${WORKDIR}/$f ${D}${datadir}/tslib/
+		done
+		rm -f ${D}${sysconfdir}/ts.conf
+		;;
+
 	simpad )
 		install -d ${D}${datadir}/tslib
-		for f in ts.conf-simpad ts.conf-simpad-2.4; do
+		for f in ts-2.6.conf ts.conf-simpad-2.4; do
 			install -m 0644 ${WORKDIR}/$f ${D}${datadir}/tslib/
 		done
 		rm -f ${D}${sysconfdir}/ts.conf

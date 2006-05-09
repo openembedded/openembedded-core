@@ -2,7 +2,7 @@ SECTION = "base"
 DESCRIPTION = "Script to manage module configuration files"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "all"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "file://update-modules"
 
@@ -11,7 +11,6 @@ if [ "x$D" != "x" ]; then
 	exit 1
 fi
 update-modules
-/etc/init.d/modutils.sh
 }
 
 do_install() {

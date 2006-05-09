@@ -1,0 +1,39 @@
+Index: Makerules
+===================================================================
+RCS file: /cvs/glibc/libc/Makerules,v
+retrieving revision 1.430
+diff -u -r1.430 Makerules
+--- libc/Makerules	5 Mar 2005 19:24:32 -0000	1.430
++++ libc/Makerules	22 Apr 2005 18:31:27 -0000
+@@ -1390,15 +1390,26 @@
+ 		  $(addprefix $(objpfx),$(extra-objs))
+ $(objpfx)stubs: $(objs-for-stubs)
+ ifneq (,$(strip $(objs-for-stubs)))
+-	$(OBJDUMP) -h $^ | \
+-	$(AWK) '/\.gnu\.glibc-stub\./ { \
+-	          sub(/\.gnu\.glibc-stub\./, "", $$2); \
+-		  stubs[$$2] = 1; } \
+-		END { for (s in stubs) print "#define __stub_" s }' > $@T
++	$(stub-obj-list)
++	cat $@L | xargs \
++		$(OBJDUMP) -h | \
++		$(AWK) '/\.gnu\.glibc-stub\./ { \
++		          sub(/\.gnu\.glibc-stub\./, "", $$2); \
++			  stubs[$$2] = 1; } \
++			END { for (s in stubs) print "#define __stub_" s }' \
++		> $@T
++	-rm -f $@L
+ 	mv -f $@T $@
+ else
+ 	> $@
+ endif
++
++define stub-obj-list
++-@rm -f $@L
++-@echo "Generating stub obj list..."
++$(foreach file,$^,
++@echo >> $@L '$(file)')
++endef
+ 
+ # This information is not used for making distributions any more.
+ # But it's used by MakeTAGS for making TAGS files and the .pot files.

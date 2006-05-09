@@ -1,0 +1,13 @@
+Index: quilt/Makefile.in
+===================================================================
+--- quilt.orig/Makefile.in
++++ quilt/Makefile.in	
+@@ -216,7 +216,7 @@
+ 	     -e 's:@LOCALEDIR''@:$(localedir):g' \
+ 	     -e 's:@DOCSUBDIR''@:$(docdir)/$(PACKAGE)-$(VERSION):g' \
+ 	     $< > $@
+-	@chmod --reference=$< $@
++	@chmod `stat -f "%p" $<`  $@
+ 
+ Makefile : Makefile.in
+ 	@echo "Please run ./configure by hand"

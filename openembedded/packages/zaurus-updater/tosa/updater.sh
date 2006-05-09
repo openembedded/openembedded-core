@@ -67,7 +67,7 @@ then
 	./consolescroll
 fi
 
-for TARGETFILE in zImage zimage.bin ZIMAGE initrd.bin INITRD.BIN mversion.bin MVERSION.BIN
+for TARGETFILE in zImage zImage.bin zimage.bin ZIMAGE ZIMAGE.BIN initrd.bin INITRD.BIN mversion.bin MVERSION.BIN
 do
 	if [ -e $TARGETFILE ]
 	then

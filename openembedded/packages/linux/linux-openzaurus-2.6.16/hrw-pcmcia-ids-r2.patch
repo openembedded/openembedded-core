@@ -1,0 +1,35 @@
+
+The ident for Seagate 8GB microdrive is
+"SEAGATE", "ST1"
+hash 0x76dc4190, 0xcfba9599
+manfid 0x0111, 0x0000
+
+Signed-off-by: Marcin Juszkiewicz <openembedded@hrw.one.pl>
+
+ drivers/ide/legacy/ide-cs.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: linux-2.6.16/drivers/ide/legacy/ide-cs.c
+===================================================================
+--- linux-2.6.16.orig/drivers/ide/legacy/ide-cs.c	2006-04-20 12:41:41.000000000 +0200
++++ linux-2.6.16/drivers/ide/legacy/ide-cs.c	2006-04-20 12:45:19.640621552 +0200
+@@ -444,6 +444,7 @@
+ 	PCMCIA_DEVICE_PROD_ID12("PCMCIA", "CD-ROM", 0x281f1c5d, 0x66536591),
+ 	PCMCIA_DEVICE_PROD_ID12("PCMCIA", "PnPIDE", 0x281f1c5d, 0x0c694728),
+ 	PCMCIA_DEVICE_PROD_ID12("SHUTTLE TECHNOLOGY LTD.", "PCCARD-IDE/ATAPI Adapter", 0x4a3f0ba0, 0x322560e1),
++	PCMCIA_DEVICE_PROD_ID12("SEAGATE", "ST1", 0x87c1b330, 0xe1f30883),	/* Seagate 8GB microdrive */
+ 	PCMCIA_DEVICE_PROD_ID12("TOSHIBA", "MK2001MPL", 0xb4585a1a, 0x3489e003),
+ 	PCMCIA_DEVICE_PROD_ID1("TRANSCEND    512M   ", 0xd0909443),
+ 	PCMCIA_DEVICE_PROD_ID12("WIT", "IDE16", 0x244e5994, 0x3e232852),
+
+
+-------------------------------------------------------------------------
+With pcmcia-cs -> pcmciautils change some cards which was working with
+hostap driver now are bound into orinoco driver.
+
+This patch made them bound into hostap like it was before.
+
+Signed-off-by: Marcin Juszkiewicz <openembedded@hrw.one.pl>
+
+// will add some here
+

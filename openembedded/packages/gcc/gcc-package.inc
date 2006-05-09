@@ -67,7 +67,7 @@ do_install () {
 	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
 
 	# Hack around specs file assumptions
-	sed -i -e '/^*cross_compile:$/ { n; s/1/0/; }' ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs
+	sed -i -e '/^*cross_compile:$/ { n; s/1/0/; }' ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs &>/dev/null || true
 
 	# Move libgcc_s into /lib
 	mkdir -p ${D}${base_libdir}
@@ -79,7 +79,8 @@ do_install () {
 		      ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/libgcc_s.so
 
 	# We don't need libtool libraries
-	rm ${D}${libdir}/libg2c.la
+	rm ${D}${libdir}/libg2c.la &>/dev/null || true
+
 
 	# Cleanup manpages..
 	rm -r ${D}${mandir}/man7

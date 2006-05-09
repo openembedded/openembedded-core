@@ -204,12 +204,12 @@ case "$1" in
 
     stop)
     echo "Stopping the hotplug events dispatcher" "udevd"
-    start-stop-daemon --stop --name udevd --quiet --oknodo --retry 5
+    start-stop-daemon --stop --name udevd --quiet
     ;;
 
     restart|force-reload)
     echo "Stopping the hotplug events dispatcher" "udevd"
-    if start-stop-daemon --stop --name udevd --quiet --oknodo --retry 5; then
+    if start-stop-daemon --stop --name udevd --quiet ; then
 	exit 1
     fi
 

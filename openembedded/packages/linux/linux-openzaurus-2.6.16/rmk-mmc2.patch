@@ -1,0 +1,26 @@
+
+Always send a stop command at the end of a data transfer.  If we avoid
+sending the stop command, some cards remain in data transfer mode, and
+refuse to accept further read/write commands.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+
+diff --git a/drivers/mmc/pxamci.c b/drivers/mmc/pxamci.c
+--- a/drivers/mmc/pxamci.c
++++ b/drivers/mmc/pxamci.c
+@@ -291,7 +291,7 @@ static int pxamci_data_done(struct pxamc
+ 	pxamci_disable_irq(host, DATA_TRAN_DONE);
+ 
+ 	host->data = NULL;
+-	if (host->mrq->stop && data->error == MMC_ERR_NONE) {
++	if (host->mrq->stop) {
+ 		pxamci_stop_clock(host);
+ 		pxamci_start_cmd(host, host->mrq->stop, 0);
+ 	} else {
+
+
+-------------------------------------------------------------------
+List admin: http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel
+FAQ:        http://www.arm.linux.org.uk/mailinglists/faq.php
+Etiquette:  http://www.arm.linux.org.uk/mailinglists/etiquette.php
+

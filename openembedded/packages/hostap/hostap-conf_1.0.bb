@@ -1,9 +1,10 @@
 DESCRIPTION = "PCMCIA-cs configuration files for wireless LAN cards based on Intersil's Prism2/2.5/3 chipset"
+MAINTAINER = "Marcin Juszkiewicz <openembedded@hrw.one.pl>"
 SECTION = "kernel/modules"
 PRIORITY = "optional"
 LICENSE = "GPL"
 PACKAGE_ARCH = "all"
-PR = "r0"
+PR = "r4"
 
 SRC_URI = "file://hostap_cs.conf \
            file://hostap_cs.conf-upstream"

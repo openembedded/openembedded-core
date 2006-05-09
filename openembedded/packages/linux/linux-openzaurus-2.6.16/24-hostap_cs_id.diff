@@ -1,0 +1,107 @@
+Add more IDs for PCMCIA cards
+
+From: Pavel Roskin <proski@gnu.org>
+
+Add string IDs for cards that were covered by 0x0156,0x0002, which is no
+longer used in hostap_cs due to conflict with Orinoco cards.
+
+Also add more IDs for cards that are supported by linux-wlan-ng.  Thanks
+to Arnold Schulz <arnysch@gmx.net> for providing the list.
+
+Signed-off-by: Pavel Roskin <proski@gnu.org>
+---
+
+ drivers/net/wireless/hostap/hostap_cs.c |   46 +++++++++++++++++++++++++++++++
+ 1 files changed, 46 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/net/wireless/hostap/hostap_cs.c b/drivers/net/wireless/hostap/hostap_cs.c
+index 55bed92..9ac1aec 100644
+--- a/drivers/net/wireless/hostap/hostap_cs.c
++++ b/drivers/net/wireless/hostap/hostap_cs.c
+@@ -832,9 +832,11 @@ static int hostap_cs_resume(struct pcmci
+ static struct pcmcia_device_id hostap_cs_ids[] = {
+ 	PCMCIA_DEVICE_MANF_CARD(0x000b, 0x7100),
+ 	PCMCIA_DEVICE_MANF_CARD(0x000b, 0x7300),
++	PCMCIA_DEVICE_MANF_CARD(0x0089, 0x0002),
+ 	PCMCIA_DEVICE_MANF_CARD(0x0101, 0x0777),
+ 	PCMCIA_DEVICE_MANF_CARD(0x0126, 0x8000),
+ 	PCMCIA_DEVICE_MANF_CARD(0x0138, 0x0002),
++	PCMCIA_DEVICE_MANF_CARD(0x01ff, 0x0008),
+ 	PCMCIA_DEVICE_MANF_CARD(0x0250, 0x0002),
+ 	PCMCIA_DEVICE_MANF_CARD(0x026f, 0x030b),
+ 	PCMCIA_DEVICE_MANF_CARD(0x0274, 0x1612),
+@@ -844,7 +846,10 @@ static struct pcmcia_device_id hostap_cs
+ 	PCMCIA_DEVICE_MANF_CARD(0x02d2, 0x0001),
+ 	PCMCIA_DEVICE_MANF_CARD(0x50c2, 0x0001),
+ 	PCMCIA_DEVICE_MANF_CARD(0x50c2, 0x7300),
++	PCMCIA_DEVICE_MANF_CARD(0x9005, 0x0021),
++	PCMCIA_DEVICE_MANF_CARD(0xc001, 0x0008),
+ 	PCMCIA_DEVICE_MANF_CARD(0xc00f, 0x0000),
++	PCMCIA_DEVICE_MANF_CARD(0xc250, 0x0002),
+ 	PCMCIA_DEVICE_MANF_CARD(0xd601, 0x0002),
+ 	PCMCIA_DEVICE_MANF_CARD(0xd601, 0x0005),
+ 	PCMCIA_DEVICE_MANF_CARD(0xd601, 0x0010),
+@@ -862,22 +867,63 @@ static struct pcmcia_device_id hostap_cs
+ 		"Addtron", "AWP-100 Wireless PCMCIA", "Version 01.02",
+ 		0xe6ec52ce, 0x08649af2, 0x4b74baa0),
+ 	PCMCIA_DEVICE_PROD_ID123(
++		"Belkin", "11Mbps Wireless Notebook Network Adapter",
++		"Version 01.02", 0x3805a391, 0xad4c7744, 0x4b74baa0),
++	PCMCIA_DEVICE_PROD_ID123(
+ 		"D", "Link DWL-650 11Mbps WLAN Card", "Version 01.02",
+ 		0x71b18589, 0xb6f1b0ab, 0x4b74baa0),
+ 	PCMCIA_DEVICE_PROD_ID123(
+ 		"Instant Wireless ", " Network PC CARD", "Version 01.02",
+ 		0x11d901af, 0x6e9bd926, 0x4b74baa0),
+ 	PCMCIA_DEVICE_PROD_ID123(
++		"Intersil", "PRISM Freedom PCMCIA Adapter", "ISL37100P",
++		0x4b801a17, 0xf222ec2d, 0x630d52b2),
++	PCMCIA_DEVICE_PROD_ID123(
++		"OEM", "PRISM2 IEEE 802.11 PC-Card", "Version 01.02",
++		0xfea54c90, 0x48f2bdd6, 0x4b74baa0),
++	PCMCIA_DEVICE_PROD_ID123(
++		"Pretec", "CompactWLAN Card 802.11b", "2.5",
++		0x1cadd3e5, 0xe697636c, 0x7a5bfcf1),
++ 	PCMCIA_DEVICE_PROD_ID123(
+ 		"SMC", "SMC2632W", "Version 01.02",
+ 		0xc4f8b18b, 0x474a1f2a, 0x4b74baa0),
++	PCMCIA_DEVICE_PROD_ID123(
++		"The Linksys Group, Inc.", "Instant Wireless Network PC Card",
++		"ISL37300P", 0xa5f472c2, 0x590eb502, 0xc9049a39),
++	PCMCIA_DEVICE_PROD_ID123(
++		"U.S. Robotics", "IEEE 802.11b PC-CARD", "Version 01.02",
++		0xc7b8df9d, 0x1700d087, 0x4b74baa0),
++	PCMCIA_DEVICE_PROD_ID12("ASUS", "802_11b_PC_CARD_25",
++				0x78fc06ee, 0xdb9aa842),
++	PCMCIA_DEVICE_PROD_ID12("ASUS", "802_11B_CF_CARD_25",
++				0x78fc06ee, 0x45a50c1e),
+ 	PCMCIA_DEVICE_PROD_ID12("BUFFALO", "WLI-CF-S11G", 
+ 				0x2decece3, 0x82067c18),
+ 	PCMCIA_DEVICE_PROD_ID12("Compaq", "WL200_11Mbps_Wireless_PCI_Card",
+ 				0x54f7c49c, 0x15a75e5b),
++	PCMCIA_DEVICE_PROD_ID12("corega K.K.", "Wireless LAN PCC-11",
++				0x5261440f, 0xa6405584),
++	PCMCIA_DEVICE_PROD_ID12("corega K.K.", "Wireless LAN PCCA-11",
++				0x5261440f, 0xdf6115f9),
++	PCMCIA_DEVICE_PROD_ID12("D", "Link DRC-650 11Mbps WLAN Card",
++				0x71b18589, 0xf144e3ac),
++	PCMCIA_DEVICE_PROD_ID12("Digital Data Communications", "WPC-0100",
++				0xfdd73470, 0xe0b6f146),
+ 	PCMCIA_DEVICE_PROD_ID12("INTERSIL", "HFA384x/IEEE",
+ 				0x74c5e40d, 0xdb472a18),
++	PCMCIA_DEVICE_PROD_ID12("LeArtery",
++				"SYNCBYAIR 11Mbps Wireless LAN PC Card",
++				0x7e3b326a, 0x49893e92),
+ 	PCMCIA_DEVICE_PROD_ID12("Linksys", "Wireless CompactFlash Card",
+ 				0x0733cc81, 0x0c52f395),
++	PCMCIA_DEVICE_PROD_ID12("NETGEAR MA401 Wireless PC", "Card",
++				0xa37434e9, 0x9762e8f1),
++	PCMCIA_DEVICE_PROD_ID12("OTC", "Wireless AirEZY 2411-PCC WLAN Card",
++				0x4ac44287, 0x235a6bed),
++	PCMCIA_DEVICE_PROD_ID12("PLANEX", "GeoWave/GW-CF110",
++				0x209f40ab, 0xd9715264),
++	PCMCIA_DEVICE_PROD_ID12("PLANEX", "GeoWave/GW-NS110",
++				0x209f40ab, 0x46263178),
+ 	PCMCIA_DEVICE_PROD_ID12(
+ 		"ZoomAir 11Mbps High", "Rate wireless Networking",
+ 		0x273fe3db, 0x32a1eaee),

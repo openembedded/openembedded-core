@@ -1,0 +1,61 @@
+
+The CSD contains a "read2write factor" which determines the multiplier to
+be applied to the read timeout to obtain the write timeout.  We were
+ignoring this parameter, resulting in the possibility for writes being
+timed out too early.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+
+diff --git a/drivers/mmc/mmc.c b/drivers/mmc/mmc.c
+--- a/drivers/mmc/mmc.c
++++ b/drivers/mmc/mmc.c
+@@ -549,6 +549,7 @@ static void mmc_decode_csd(struct mmc_ca
+ 		csd->read_partial = UNSTUFF_BITS(resp, 79, 1);
+ 		csd->write_misalign = UNSTUFF_BITS(resp, 78, 1);
+ 		csd->read_misalign = UNSTUFF_BITS(resp, 77, 1);
++		csd->r2w_factor = UNSTUFF_BITS(resp, 26, 3);
+ 		csd->write_blkbits = UNSTUFF_BITS(resp, 22, 4);
+ 		csd->write_partial = UNSTUFF_BITS(resp, 21, 1);
+ 	} else {
+@@ -583,6 +584,7 @@ static void mmc_decode_csd(struct mmc_ca
+ 		csd->read_partial = UNSTUFF_BITS(resp, 79, 1);
+ 		csd->write_misalign = UNSTUFF_BITS(resp, 78, 1);
+ 		csd->read_misalign = UNSTUFF_BITS(resp, 77, 1);
++		csd->r2w_factor = UNSTUFF_BITS(resp, 26, 3);
+ 		csd->write_blkbits = UNSTUFF_BITS(resp, 22, 4);
+ 		csd->write_partial = UNSTUFF_BITS(resp, 21, 1);
+ 	}
+diff --git a/drivers/mmc/mmc_block.c b/drivers/mmc/mmc_block.c
+--- a/drivers/mmc/mmc_block.c
++++ b/drivers/mmc/mmc_block.c
+@@ -187,6 +187,12 @@ static int mmc_blk_issue_rq(struct mmc_q
+ 			brq.cmd.opcode = MMC_WRITE_BLOCK;
+ 			brq.data.flags |= MMC_DATA_WRITE;
+ 			brq.data.blocks = 1;
++
++			/*
++			 * Scale up the timeout by the r2w factor
++			 */
++			brq.data.timeout_ns <<= card->csd.r2w_factor;
++			brq.data.timeout_clks <<= card->csd.r2w_factor;
+ 		}
+ 
+ 		if (brq.data.blocks > 1) {
+diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+--- a/include/linux/mmc/card.h
++++ b/include/linux/mmc/card.h
+@@ -28,6 +28,7 @@ struct mmc_csd {
+ 	unsigned short		cmdclass;
+ 	unsigned short		tacc_clks;
+ 	unsigned int		tacc_ns;
++	unsigned int		r2w_factor;
+ 	unsigned int		max_dtr;
+ 	unsigned int		read_blkbits;
+ 	unsigned int		write_blkbits;
+
+
+-------------------------------------------------------------------
+List admin: http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel
+FAQ:        http://www.arm.linux.org.uk/mailinglists/faq.php
+Etiquette:  http://www.arm.linux.org.uk/mailinglists/etiquette.php
+

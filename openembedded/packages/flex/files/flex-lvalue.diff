@@ -1,0 +1,36 @@
+Patch from http://bugs.debian.org/cgi-bin/bugreport.cgi/flex-lvalue.diff?bug=194844;msg=10;att=1
+
+according to posix 0,1,2 are already setup and this avoids
+the issues with
+| filter.c: In function 'filter_apply_chain':
+| filter.c:161: error: invalid lvalue in assignment
+| filter.c:163: error: invalid lvalue in assignment
+| filter.c:184: error: invalid lvalue in assignment
+
+
+diff -ur flex-2.5.31.ORIG/filter.c flex-2.5.31/filter.c
+--- flex-2.5.31.ORIG/filter.c	2003-03-25 16:39:08.000000000 +0000
++++ flex-2.5.31/filter.c	2003-05-27 17:00:26.000000000 +0000
+@@ -157,11 +157,8 @@
+ 		if (chain->filter_func) {
+ 			int     r;
+ 
+-			/* setup streams again */
+-			if ((stdin = fdopen (0, "r")) == NULL)
+-				flexfatal (_("fdopen(0) failed"));
+-			if ((stdout = fdopen (1, "w")) == NULL)
+-				flexfatal (_("fdopen(1) failed"));
++			/* POSIX says we inherit fd[0-2], so we don't need
++			   to do anything to them here */
+ 
+ 			if ((r = chain->filter_func (chain)) == -1)
+ 				flexfatal (_("filter_func failed"));
+@@ -181,8 +178,6 @@
+ 	if (dup2 (pipes[1], 1) == -1)
+ 		flexfatal (_("dup2(pipes[1],1)"));
+ 	close (pipes[1]);
+-	if ((stdout = fdopen (1, "w")) == NULL)
+-		flexfatal (_("fdopen(1) failed"));
+ 
+ 	return true;
+ }

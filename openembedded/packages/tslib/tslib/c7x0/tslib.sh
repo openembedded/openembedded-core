@@ -9,7 +9,7 @@ case `uname -r` in
 *)
 	TSLIB_TSDEVICE=/dev/input/event1
 	TSLIB_TSEVENTTYPE=INPUT
-	TSLIB_CONFFILE=/usr/share/tslib/ts.conf-corgi
+	TSLIB_CONFFILE=/usr/share/tslib/ts-2.6.conf
 	;;
 esac
 
