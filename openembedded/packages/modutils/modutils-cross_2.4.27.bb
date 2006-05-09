@@ -1,6 +1,6 @@
 SECTION = "base"
 include modutils_${PV}.bb
-PR = "r6"
+PR = "r8"
 inherit cross
 S = "${WORKDIR}/modutils-${PV}"
 DEPENDS = ""
@@ -19,6 +19,7 @@ CFLAGS_prepend_mipseb = "-D__MIPSEB__"
 
 do_stage () {
         oe_runmake install
+        mv ${bindir}/${TARGET_PREFIX}depmod ${bindir}/${TARGET_PREFIX}depmod-2.4
 }
 
 do_install () {

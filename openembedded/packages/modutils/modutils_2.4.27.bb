@@ -39,10 +39,10 @@ for f in sbin/insmod sbin/modprobe sbin/rmmod bin/lsmod; do
 done
 if test -n "$D"; then
 	D="-r $D"
-	if test -n "`which ${TARGET_PREFIX}depmod`"; then
+	if test -n "`which ${TARGET_PREFIX}depmod-2.4`"; then
 		for kerneldir in `ls -p ${IMAGE_ROOTFS}/lib/modules|grep /`; do
 			kernelver=`basename $kerneldir`
-			${TARGET_PREFIX}depmod -a -b ${IMAGE_ROOTFS} -C ${IMAGE_ROOTFS}/${sysconfdir}/modules.conf -r $kernelver
+			${TARGET_PREFIX}depmod-2.4 -a -b ${IMAGE_ROOTFS} -C ${IMAGE_ROOTFS}/${sysconfdir}/modules.conf -r $kernelver
 		done
 	fi
 fi
