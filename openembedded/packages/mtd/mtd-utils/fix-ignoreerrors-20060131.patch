@@ -1,0 +1,20 @@
+--- mtd/util/nanddump.c.orig	2006-01-30 21:19:22.000000000 +0100
++++ mtd/util/nanddump.c	2006-01-30 21:19:24.000000000 +0100
+@@ -224,7 +224,7 @@
+ 			}
+ 		}
+ 
+-		if (badblock) {
++		if (badblock && !ignoreerrors) {
+ 			if (omitbad)
+ 				continue;
+ 			memset (readbuf, 0xff, bs);
+@@ -259,7 +259,7 @@
+ 		if (omitoob)
+ 			continue;
+ 
+-		if (badblock) {
++		if (badblock && !ignoreerrors) {
+ 			memset (readbuf, 0xff, meminfo.oobsize);
+ 		} else {
+ 			/* Read OOB data and exit on failure */

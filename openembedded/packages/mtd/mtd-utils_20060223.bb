@@ -7,8 +7,8 @@ PR = "r0"
 SRCDATE = "${PV}"
 
 SRC_URI = "cvs://anoncvs:anoncvs@cvs.infradead.org/home/cvs;module=mtd \ 
-           file://add-exclusion-to-mkfs-jffs2.patch;patch=1 \
-           file://more-verbosity.patch;patch=1"
+           file://add-exclusion-to-mkfs-jffs2-20060131.patch;patch=1 \
+	   file://fix-ignoreerrors-20060131.patch;patch=1"
 S = "${WORKDIR}/mtd/"
 
 CFLAGS_prepend = "-I${S}/include "
@@ -26,7 +26,7 @@ do_stage () {
 
 mtd_utils = "ftl_format flash_erase flash_eraseall nanddump doc_loadbios \
              mkfs.jffs ftl_check mkfs.jffs2 flash_lock flash_unlock flash_info mtd_debug \
-             flashcp nandwrite jffs2dump"
+             flashcp nandwrite jffs2dump sumtool"
 
 do_install () {
 	install -d ${D}${bindir}
