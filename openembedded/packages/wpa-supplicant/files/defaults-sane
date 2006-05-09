@@ -1,0 +1,8 @@
+# Useful flags:
+#  -i <ifname>          Interface (required, unless specified in config)
+#  -D <driver>          Wireless Driver
+#  -d                   Debugging (-dd for more)
+#  -q                   Quiet (-qq for more)
+
+CONFIG="/etc/wpa_supplicant.conf"
+OPTIONS="-i eth1 -D wext"

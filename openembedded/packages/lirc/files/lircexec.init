@@ -8,11 +8,12 @@
 
 
 test -f /usr/bin/irexec || exit 0
+test -f /etc/lircrc || exit 0
 
 case "$1" in
   start)
     echo -n "Starting lircexec daemon: irexec"
-    start-stop-daemon --start --quiet --exec /usr/bin/irexec
+    start-stop-daemon --start --quiet --exec /usr/bin/irexec -- --daemon
     echo "."
     ;;
   stop)
@@ -25,7 +26,7 @@ case "$1" in
     start-stop-daemon --stop --quiet --exec /usr/bin/irexec
     sleep 1
     echo -n "Starting lircexec daemon: irexec"
-    start-stop-daemon --start --quiet --exec /usr/bin/irexec
+    start-stop-daemon --start --quiet --exec /usr/bin/irexec -- --daemon
     echo "."
     ;;
   *)

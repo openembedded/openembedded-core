@@ -7,7 +7,7 @@ case `uname -r` in
 	;;
 *)
 	TSLIB_TSDEVICE=/dev/input/event0
-	TSLIB_CONFFILE=/usr/share/tslib/ts.conf-simpad
+	TSLIB_CONFFILE=/usr/share/tslib/ts-2.6.conf
 	;;
 esac
 

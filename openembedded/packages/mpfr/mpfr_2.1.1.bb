@@ -3,7 +3,7 @@ LICENSE = "LGPL"
 MAINTAINER = "Rene Wagner <rw@handhelds.org>"
 SECTION = "libs"
 DEPENDS = "gmp"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.mpfr.org/mpfr-${PV}/mpfr-${PV}.tar.bz2"
 S = "${WORKDIR}/mpfr-${PV}"
@@ -15,5 +15,6 @@ do_stage() {
 	       bindir=${STAGING_BINDIR} \
 	       includedir=${STAGING_INCDIR} \
 	       libdir=${STAGING_LIBDIR} \
-	       datadir=${STAGING_DATADIR}
+	       datadir=${STAGING_DATADIR} \
+	       infodir=${STAGING_DIR}/${HOST_SYS}/info 
 }

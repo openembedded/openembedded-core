@@ -1,0 +1,176 @@
+# This file lists the configuration options that are used when building the
+# hostapd binary. All lines starting with # are ignored. Configuration option
+# lines must be commented out complete, if they are not to be included, i.e.,
+# just setting VARIABLE=n is not disabling that variable.
+#
+# This file is included in Makefile, so variables like CFLAGS and LIBS can also
+# be modified from here. In most cass, these lines should use += in order not
+# to override previous values of the variables.
+
+CFLAGS = $(TARGET_CFLAGS) -I../hostapd -I../utils -I../driver/modules -Wall -MMD
+LIBS = $(TARGET_LDFLAGS)
+
+# Driver interface for Host AP driver
+CONFIG_DRIVER_HOSTAP=y
+
+# Driver interface for Agere driver
+#CONFIG_DRIVER_HERMES=n
+
+# Driver interface for madwifi driver
+#CONFIG_DRIVER_MADWIFI=y
+
+# Driver interface for Prism54 driver
+#CONFIG_DRIVER_PRISM54=y
+
+# Driver interface for ndiswrapper
+#CONFIG_DRIVER_NDISWRAPPER=y
+
+# Driver interface for Atmel driver
+#CONFIG_DRIVER_ATMEL=y
+
+# Driver interface for Broadcom driver
+#CONFIG_DRIVER_BROADCOM=y
+
+# Driver interface for Intel ipw2100 driver
+#CONFIG_DRIVER_IPW2100=y
+
+# Driver interface for generic Linux wireless extensions
+CONFIG_DRIVER_WEXT=y
+
+# Driver interface for FreeBSD net80211 layer (e.g., Atheros driver)
+#CONFIG_DRIVER_BSD=y
+#CFLAGS += -I/usr/local/include
+#LIBS += -L/usr/local/lib
+
+# Driver interface for development testing
+#CONFIG_DRIVER_TEST=y
+
+# Driver interface for wired Ethernet drivers
+CONFIG_DRIVER_WIRED=y
+
+# Enable IEEE 802.1X Supplicant (automatically included if any EAP method is
+# included)
+CONFIG_IEEE8021X_EAPOL=y
+
+# EAP-MD5 (automatically included if EAP-TTLS is enabled)
+CONFIG_EAP_MD5=y
+
+# EAP-MSCHAPv2 (automatically included if EAP-PEAP is enabled)
+CONFIG_EAP_MSCHAPV2=y
+
+# EAP-TLS
+CONFIG_EAP_TLS=y
+
+# EAL-PEAP
+CONFIG_EAP_PEAP=y
+
+# EAP-TTLS
+CONFIG_EAP_TTLS=y
+
+# EAP-GTC
+CONFIG_EAP_GTC=y
+
+# EAP-OTP
+CONFIG_EAP_OTP=y
+
+# EAP-SIM (enable CONFIG_PCSC, if EAP-SIM is used)
+#CONFIG_EAP_SIM=y
+
+# EAP-PSK (experimental; this is _not_ needed for WPA-PSK)
+#CONFIG_EAP_PSK=y
+
+# EAP-PAX
+#CONFIG_EAP_PAX=y
+
+# LEAP
+CONFIG_EAP_LEAP=y
+
+# EAP-AKA (enable CONFIG_PCSC, if EAP-AKA is used)
+#CONFIG_EAP_AKA=y
+
+# PKCS#12 (PFX) support (used to read private key and certificate file from
+# a file that usually has extension .p12 or .pfx)
+CONFIG_PKCS12=y
+
+# Smartcard support (i.e., private key on a smartcard), e.g., with openssl
+# engine.
+CONFIG_SMARTCARD=y
+
+# PC/SC interface for smartcards (USIM, GSM SIM)
+# Enable this if EAP-SIM or EAP-AKA is included
+#CONFIG_PCSC=y
+
+# Development testing
+#CONFIG_EAPOL_TEST=y
+
+# Replace native Linux implementation of packet sockets with libdnet/libpcap.
+# This will be automatically set for non-Linux OS.
+#CONFIG_DNET_PCAP=y
+
+# Include control interface for external programs, e.g, wpa_cli
+CONFIG_CTRL_IFACE=y
+
+# Include support for GNU Readline and History Libraries in wpa_cli.
+# When building a wpa_cli binary for distribution, please note that these
+# libraries are licensed under GPL and as such, BSD license may not apply for
+# the resulting binary.
+#CONFIG_READLINE=y
+
+# Remove debugging code that is printing out debug message to stdout.
+# This can be used to reduce the size of the wpa_supplicant considerably
+# if debugging code is not needed. The size reduction can be around 35%
+# (e.g., 90 kB).
+#CONFIG_NO_STDOUT_DEBUG=y
+
+# Remove WPA support, e.g., for wired-only IEEE 802.1X supplicant, to save
+# 35-50 kB in code size.
+#CONFIG_NO_WPA=y
+
+# Select configuration backend:
+# file = text file (e.g., wpa_supplicant.conf)
+# winreg = Windows registry (see win_example.reg for an example)
+CONFIG_BACKEND=file
+
+# Select program entry point implementation:
+# main = UNIX/POSIX like main() function (default)
+# main_winsvc = Windows service (read parameters from registry)
+# main_none = Very basic example (development use only)
+#CONFIG_MAIN=main
+
+# Select wrapper for operatins system and C library specific functions
+# unix = UNIX/POSIX like systems (default)
+# win32 = Windows systems
+# none = Empty template
+#CONFIG_OS=unix
+
+# Select event loop implementation
+# eloop = select() loop (default)
+# eloop_win = Windows events and WaitForMultipleObject() loop
+# eloop_none = Empty template
+#CONFIG_ELOOP=eloop
+
+# Select layer 2 packet implementation
+# linux = Linux packet socket (default)
+# pcap = libpcap/libdnet/WinPcap
+# freebsd = FreeBSD libpcap
+# winpcap = WinPcap with receive thread
+# none = Empty template
+#CONFIG_L2_PACKET=linux
+
+# IEEE 802.11i/IEEE 802.11e STAKey negotiation for direct link connection
+#CONFIG_STAKEY=y
+
+# Select TLS implementation
+# openssl = OpenSSL (default)
+# gnutls = GnuTLS (needed for TLS/IA, see also CONFIG_GNUTLS_EXTRA)
+# none = Empty template
+CONFIG_TLS=gnutls
+
+# Whether to enable TLS/IA support, which is required for EAP-TTLSv1.
+# You need CONFIG_TLS=gnutls for this to have any effect. Please note that
+# even though the core GnuTLS library is released under LGPL, this extra
+# library uses GPL and as such, the terms of GPL apply to the combination
+# of wpa_supplicant and GnuTLS if this option is enabled. BSD license may not
+# apply for distribution of the resulting binary.
+CONFIG_GNUTLS_EXTRA=y
+

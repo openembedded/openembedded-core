@@ -2,7 +2,7 @@ DESCRIPTION = "Startup notification support"
 LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
-MAINTAINER = "Phil Blundell <pb@nexus.co.uk>"
+MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DEPENDS = "libx11"
 PR = "r1"
 
@@ -15,5 +15,5 @@ do_configure_prepend () {
 }
 
 do_stage () {
-	oe_runmake install DESTDIR="" bindir=${STAGING_BINDIR} includedir=${STAGING_INCDIR} libdir=${STAGING_LIBDIR} prefix=${STAGING_DIR}
+	autotools_stage_all
 }
