@@ -1,0 +1,10 @@
+--- glibc-2.4/elf/Versions.ark	2006-03-11 23:30:09.000000000 +0100
++++ glibc-2.4/elf/Versions	2006-03-11 23:31:44.000000000 +0100
+@@ -63,5 +63,7 @@
+     _dl_debug_state;
+     # Pointer protection.
+     __pointer_chk_guard;
++    # for ldconfig
++    _dl_cache_libcmp;
+   }
+ }

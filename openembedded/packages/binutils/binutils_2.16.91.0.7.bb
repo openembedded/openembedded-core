@@ -2,8 +2,7 @@ DESCRIPTION = "A GNU collection of binary utilities"
 HOMEPAGE = "http://www.gnu.org/software/binutils/"
 SECTION = "devel"
 LICENSE = "GPL"
-MAINTAINER = "Gerald Britton <gbritton@doomcom.org>"
-PR = "r2"
+DEFAULT_PREFERENCE = "-1"
 
 inherit autotools gettext
 
@@ -39,13 +38,13 @@ FILES_${PN}-symlinks = " \
 
 SRC_URI = \
     "http://ftp.kernel.org/pub/linux/devel/binutils/binutils-${PV}.tar.bz2 \
-     file://ld_makefile.patch;patch=1 \
-     file://better_file_error.patch;patch=1 \
-     file://signed_char_fix.patch;patch=1 \
-     file://objdump_fix.patch;patch=1 \
-     file://binutils-100_cflags_for_build.patch;patch=1 \
-     file://binutils-2.15.91.0.1-uclibc-100-conf.patch;patch=1 \
-     file://binutils-2.15.90.0.3-uclibc-200-build_modules.patch;patch=1"
+     file://binutils-2.16.91.0.6-objcopy-rename-errorcode.patch;patch=1 \
+     file://binutils-uclibc-100-uclibc-conf.patch;patch=1 \
+     file://binutils-uclibc-300-001_ld_makefile_patch.patch;patch=1 \
+     file://binutils-uclibc-300-006_better_file_error.patch;patch=1 \
+     file://binutils-uclibc-300-012_check_ldrunpath_length.patch;patch=1 \
+     file://binutils-uclibc-400-mips-ELF_MAXPAGESIZE-4K.patch;patch=1 \
+     file://binutils-uclibc-702-binutils-skip-comments.patch;patch=1"
 
 S = "${WORKDIR}/binutils-${PV}"
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"

@@ -1,0 +1,26 @@
+--- glibc-2.4/nptl/sysdeps/pthread/configure.in.ark	2006-03-12 00:41:40.000000000 +0100
++++ glibc-2.4/nptl/sysdeps/pthread/configure.in	2006-03-12 00:44:08.000000000 +0100
+@@ -45,5 +45,6 @@
+     AC_MSG_ERROR([the compiler must support C cleanup handling])
+   fi
+ else
+-  AC_MSG_ERROR(forced unwind support is required)
++  AC_MSG_WARN([forced unwind support is required, can't be verified while crosscompiling])
++  AC_DEFINE(HAVE_FORCED_UNWIND)
+ fi
+--- glibc-2.4/nptl/sysdeps/pthread/configure.ark	2006-03-12 00:42:47.000000000 +0100
++++ glibc-2.4/nptl/sysdeps/pthread/configure	2006-03-12 00:44:08.000000000 +0100
+@@ -153,7 +153,10 @@
+    { (exit 1); exit 1; }; }
+   fi
+ else
+-  { { echo "$as_me:$LINENO: error: forced unwind support is required" >&5
+-echo "$as_me: error: forced unwind support is required" >&2;}
+-   { (exit 1); exit 1; }; }
++  { echo "$as_me:$LINENO: WARNING: forced unwind support is required, can't be verified while crosscompiling" >&5
++echo "$as_me: WARNING: forced unwind support is required, can't be verified while crosscompiling" >&2;}
++  cat >>confdefs.h <<\_ACEOF
++#define HAVE_FORCED_UNWIND 1
++_ACEOF
++
+ fi

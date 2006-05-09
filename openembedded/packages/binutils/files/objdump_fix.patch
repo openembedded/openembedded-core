@@ -1,0 +1,134 @@
+From binutils-return-38148-listarch-binutils=sources dot redhat dot com at sources dot redhat dot com Tue Feb 22 19:24:15 2005
+Return-Path: <binutils-return-38148-listarch-binutils=sources dot redhat dot com at sources dot redhat dot com>
+Delivered-To: listarch-binutils at sources dot redhat dot com
+Received: (qmail 4446 invoked by alias); 22 Feb 2005 19:24:15 -0000
+Mailing-List: contact binutils-help at sources dot redhat dot com; run by ezmlm
+Precedence: bulk
+List-Subscribe: <mailto:binutils-subscribe at sources dot redhat dot com>
+List-Archive: <http://sources.redhat.com/ml/binutils/>
+List-Post: <mailto:binutils at sources dot redhat dot com>
+List-Help: <mailto:binutils-help at sources dot redhat dot com>, <http://sources dot redhat dot com/ml/#faqs>
+Sender: binutils-owner at sources dot redhat dot com
+Delivered-To: mailing list binutils at sources dot redhat dot com
+Received: (qmail 4401 invoked from network); 22 Feb 2005 19:24:08 -0000
+Received: from unknown (HELO bgo1smout1.broadpark.no) (217.13.4.94)
+  by sourceware dot org with SMTP; 22 Feb 2005 19:24:08 -0000
+Received: from bgo1sminn1.broadpark.no ([217.13.4.93])
+ by bgo1smout1 dot broadpark dot no
+ (Sun Java System Messaging Server 6 dot 1 HotFix 0 dot 05 (built Oct 21 2004))
+ with ESMTP id <0ICB007QZUZCC0C0 at bgo1smout1 dot broadpark dot no> for
+ binutils at sources dot redhat dot com; Tue, 22 Feb 2005 20:18:48 +0100 (CET)
+Received: from [127.0.0.1] ([80.202.165.9]) by bgo1sminn1.broadpark.no
+ (Sun Java System Messaging Server 6 dot 1 HotFix 0 dot 05 (built Oct 21 2004))
+ with ESMTP id <0ICB006NCVBVHE21 at bgo1sminn1 dot broadpark dot no> for
+ binutils at sources dot redhat dot com; Tue, 22 Feb 2005 20:26:20 +0100 (CET)
+Date: Tue, 22 Feb 2005 20:24:08 +0100
+From: =?ISO-8859-1?Q?Stig_Petter_Olsr=F8d?= <stigpo at users dot sourceforge dot net>
+Subject: [PATCH] objdump relocation fixes for ARM disassembly
+To: binutils at sources dot redhat dot com
+Message-id: <421B86D8.8080604@users.sourceforge.net>
+MIME-version: 1.0
+Content-type: text/plain; charset=ISO-8859-1; format=flowed
+Content-transfer-encoding: 7BIT
+User-Agent: Mozilla Thunderbird 1.0 (Windows/20041206)
+
+Hello,
+
+objdump disassembly did not relocate correctly for the ARM processor. It seems 
+that the test for triggering the INSN_HAS_RELOC flag was void (one test killed the other,
+since octets would always be zero) and all relocations would thus fail. I changed the test 
+so the flag is set when we are about to disassemble an insn that the current relocation 
+entry points to. I also changed objdump_print_addr to use the current relocation entry if 
+the insn has such an entry. This causes the symbol printed to be correct for both external 
+symbols (from the undefined section) and local symbols. 
+
+This has only been tested for the ARM processor, but I don't think it should break other
+DISASSEMBLER_NEEDS_RELOCS processors either. 
+
+
+binutils/
+
+2005-02-22  Stig Petter Olsroed  <stigpo@users.sourceforge.net>
+
+	* objdump.c (disassemble_bytes): Fixed relocation check for
+	DISASSEMBLER_NEEDS_RELOCS platforms to properly trigger the
+	INSN_HAS_RELOC flag.  Set the current relocation entry in
+	objdump_disasm_info to allow printing the proper symbol.
+	(objdump_print_addr): Use the relocation entry in
+	objdump_disasm_info to lookup the correct symbol for
+	DISASSEMBLER_NEEDS_RELOCS platforms.
+
+--- 1/binutils/objdump.c	2005-02-22 01:50:06.000000000 +0100
++++ 2/binutils/objdump.c   2005-02-22 14:27:33.066960900 +0100
+@@ -128,6 +128,7 @@
+   arelent **         dynrelbuf;
+   long               dynrelcount;
+   disassembler_ftype disassemble_fn;
++  arelent *          reloc;
+ };
+ 
+ /* Architecture to disassemble for, or default if NULL.  */
+@@ -852,6 +853,8 @@
+ {
+   struct objdump_disasm_info *aux;
+   asymbol *sym;
++  arelent *q;
++  int skip_find = 0;
+ 
+   if (sorted_symcount < 1)
+     {
+@@ -861,6 +864,22 @@
+     }
+ 
+   aux = (struct objdump_disasm_info *) info->application_data;
++
++  q = aux->reloc;
++  if (q != NULL)
++    {
++      if (q->sym_ptr_ptr != NULL && *q->sym_ptr_ptr != NULL)
++        {
++          /* Adjust the vma to the reloc */
++          vma += bfd_asymbol_value (*q->sym_ptr_ptr);
++          if (bfd_is_und_section (bfd_get_section (*q->sym_ptr_ptr)))
++            {
++              skip_find = 1;
++              sym = *q->sym_ptr_ptr;
++            }
++        }
++    }
++  if (!skip_find)
+   sym = find_symbol_for_address (vma, info, NULL);
+   objdump_print_addr_with_sym (aux->abfd, aux->sec, sym, vma, info,
+ 			       skip_zeroes);
+@@ -1350,16 +1369,22 @@
+ 	      info->bytes_per_chunk = 0;
+ 
+ #ifdef DISASSEMBLER_NEEDS_RELOCS
+-	      /* FIXME: This is wrong.  It tests the number of octets
+-		 in the last instruction, not the current one.  */
+-	      if (*relppp < relppend
+-		  && (**relppp)->address >= rel_offset + addr_offset
+-		  && ((**relppp)->address
+-		      < rel_offset + addr_offset + octets / opb))
++	      /* Check if the current relocation entry applies to the 
++		 instruction we are about to disassemble.
++		 This works for ARM at least.
++	      */
++	      if ((*relppp) < relppend
++		  && ((**relppp)->address == rel_offset + addr_offset))
++		{
+ 		info->flags = INSN_HAS_RELOC;
++		  aux->reloc = **relppp;
++		}
+ 	      else
+ #endif
++		{
+ 		info->flags = 0;
++		  aux->reloc = NULL;
++		}
+ 
+ 	      octets = (*disassemble_fn) (section->vma + addr_offset, info);
+ 	      info->fprintf_func = (fprintf_ftype) fprintf;
+
+
+

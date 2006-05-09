@@ -1,0 +1,19 @@
+--- linux-libc-headers-2.6.15.99/include/asm-arm/arch-ebsa285/irqs.h.orig	2006-03-19 17:01:59.000000000 +0100
++++ linux-libc-headers-2.6.15.99/include/asm-arm/arch-ebsa285/irqs.h	2006-03-19 17:02:50.000000000 +0100
+@@ -8,7 +8,6 @@
+  *  20-Jan-1998	RMK	Started merge of EBSA286, CATS and NetWinder
+  *  01-Feb-1999	PJB	ISA IRQs start at 0 not 16
+  */
+-#include <asm/mach-types.h>
+ 
+ #define NR_IRQS			36
+ #define NR_DC21285_IRQS		16
+@@ -92,7 +91,7 @@
+ #undef RTC_IRQ
+ #define RTC_IRQ		IRQ_ISA_RTC_ALARM
+ #define I8042_KBD_IRQ	IRQ_ISA_KEYBOARD
+-#define I8042_AUX_IRQ	(machine_is_netwinder() ? IRQ_NETWINDER_PS2MOUSE : IRQ_ISA_PS2MOUSE)
++#define I8042_AUX_IRQ	IRQ_ISA_PS2MOUSE
+ #define IRQ_FLOPPYDISK	IRQ_ISA_FLOPPY
+ 
+ #define irq_canonicalize(_i)	(((_i) == IRQ_ISA_CASCADE) ? IRQ_ISA_2 : _i)

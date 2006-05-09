@@ -1,0 +1,29 @@
+--- glibc-2.4/csu/libc-start.c.ark	2006-03-13 03:07:15.000000000 +0100
++++ glibc-2.4/csu/libc-start.c	2006-03-13 03:08:51.000000000 +0100
+@@ -59,6 +59,11 @@
+ # define LIBC_START_MAIN BP_SYM (__libc_start_main)
+ #endif
+ 
++#ifdef SHARED
++#include <pthread-functions.h>
++extern struct pthread_functions __libc_pthread_functions;
++#endif
++
+ #ifdef MAIN_AUXVEC_ARG
+ /* main gets passed a pointer to the auxiliary.  */
+ # define MAIN_AUXVEC_DECL	, void *
+--- glibc-2.4/nscd/Makefile.ark	2006-03-13 14:05:47.000000000 +0100
++++ glibc-2.4/nscd/Makefile	2006-03-13 14:06:12.000000000 +0100
+@@ -67,8 +67,10 @@
+ # contains only the basic kernel interface headers, not something like
+ # libselinux.  So the simplest thing is to presume that the standard
+ # system headers will be ok for this file.
+-$(objpfx)nscd_stat.o: sysincludes = # nothing
+-$(objpfx)selinux.o: sysincludes = # nothing
++# Except, of course, this breaks crosscompiling with kernel headers in
++# a nonstandard location...
++#$(objpfx)nscd_stat.o: sysincludes = # nothing
++#$(objpfx)selinux.o: sysincludes = # nothing
+ 
+ distribute := nscd.h nscd-client.h dbg_log.h \
+ 	      $(addsuffix .c, $(filter-out xmalloc,$(all-nscd-modules))) \

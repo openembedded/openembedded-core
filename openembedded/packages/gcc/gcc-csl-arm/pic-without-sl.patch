@@ -1,0 +1,303 @@
+Index: gcc/config/arm/arm-protos.h
+===================================================================
+RCS file: /cvsroot/gcc/gcc/gcc/config/arm/arm-protos.h,v
+retrieving revision 1.60.4.20
+diff -u -r1.60.4.20 arm-protos.h
+--- gcc/config/arm/arm-protos.h	29 Mar 2005 03:00:11 -0000	1.60.4.20
++++ gcc/config/arm/arm-protos.h	23 Apr 2005 04:41:06 -0000
+@@ -64,6 +64,7 @@
+ extern enum reg_class vfp_secondary_reload_class (enum machine_mode, rtx);
+ extern int tls_symbolic_operand (rtx, enum machine_mode);
+ extern bool arm_tls_operand_p (rtx x);
++extern bool arm_pc_pic_operand_p (rtx x);
+ 
+ /* Predicates.  */
+ extern int s_register_operand (rtx, enum machine_mode);
+Index: gcc/config/arm/arm.c
+===================================================================
+RCS file: /cvsroot/gcc/gcc/gcc/config/arm/arm.c,v
+retrieving revision 1.303.2.79
+diff -u -r1.303.2.79 arm.c
+--- gcc/config/arm/arm.c	12 Apr 2005 06:17:07 -0000	1.303.2.79
++++ gcc/config/arm/arm.c	23 Apr 2005 04:41:09 -0000
+@@ -1003,7 +1003,7 @@
+   
+   /* If stack checking is disabled, we can use r10 as the PIC register,
+      which keeps r9 available.  */
+-  if (flag_pic)
++  if (0 && flag_pic)
+     arm_pic_register = TARGET_APCS_STACK ? 9 : 10;
+   
+   if (TARGET_APCS_FLOAT)
+@@ -3120,6 +3120,10 @@
+ rtx
+ legitimize_pic_address (rtx orig, enum machine_mode mode, rtx reg)
+ {
++  if (GET_CODE (orig) == UNSPEC
++      && XINT (orig, 1) == UNSPEC_GOTSLOTPC)
++    abort ();
++
+   if (GET_CODE (orig) == SYMBOL_REF
+       || GET_CODE (orig) == LABEL_REF)
+     {
+@@ -3149,27 +3153,80 @@
+       else
+ 	address = reg;
+ 
+-      if (TARGET_ARM)
+-	emit_insn (gen_pic_load_addr_arm (address, orig));
+-      else
+-	emit_insn (gen_pic_load_addr_thumb (address, orig));
++      if (arm_pic_register != INVALID_REGNUM)
++	{
++	  /* Using GP-based PIC addressing.  */
++	  if (TARGET_ARM)
++	    emit_insn (gen_pic_load_addr_arm (address, orig));
++	  else
++	    emit_insn (gen_pic_load_addr_thumb (address, orig));
++
++	  if ((GET_CODE (orig) == LABEL_REF
++	       || (GET_CODE (orig) == SYMBOL_REF && 
++		   SYMBOL_REF_LOCAL_P (orig)))
++	      && NEED_GOT_RELOC)
++	    pic_ref = gen_rtx_PLUS (Pmode, pic_offset_table_rtx, address);
++	  else
++	    {
++	      pic_ref = gen_rtx_MEM (Pmode,
++				     gen_rtx_PLUS (Pmode, pic_offset_table_rtx,
++						   address));
++	      RTX_UNCHANGING_P (pic_ref) = 1;
++	    }
+ 
+-      if ((GET_CODE (orig) == LABEL_REF
+-	   || (GET_CODE (orig) == SYMBOL_REF && 
+-	       SYMBOL_REF_LOCAL_P (orig)))
+-	  && NEED_GOT_RELOC)
+-	pic_ref = gen_rtx_PLUS (Pmode, pic_offset_table_rtx, address);
++	  current_function_uses_pic_offset_table = 1;
++	}
+       else
+ 	{
+-	  pic_ref = gen_rtx_MEM (Pmode,
+-				 gen_rtx_PLUS (Pmode, pic_offset_table_rtx,
+-					       address));
+-	  RTX_UNCHANGING_P (pic_ref) = 1;
++	  /* Using PC-based PIC addressing.  */
++	  rtx label, tmp;
++	  int offset;
++
++	  label = gen_label_rtx ();
++	  offset = TARGET_ARM ? 8 : 4;
++
++	  if (GET_CODE (orig) == LABEL_REF 
++	      || (GET_CODE (orig) == SYMBOL_REF && SYMBOL_REF_LOCAL_P (orig)))
++	    {
++	      /* This symbol is defined locally.  We don't need a GOT entry.  */
++	      tmp = gen_rtx_MINUS (Pmode, gen_rtx_UNSPEC (Pmode, gen_rtvec (1, orig), UNSPEC_PIC_SYM), gen_rtx_PLUS (Pmode, 
++							      gen_rtx_LABEL_REF (Pmode, label),
++							      GEN_INT (offset)));
++
++	      load_tls_operand (tmp, address);
++
++	      if (TARGET_ARM)
++		emit_insn (gen_pic_add_dot_plus_eight (address, label));
++	      else
++		emit_insn (gen_pic_add_dot_plus_four (address, label));
++	    }
++	  else
++	    {
++	      rtx x = gen_rtx_UNSPEC (Pmode, gen_rtvec (1, orig), UNSPEC_GOTSLOTPC);
++	      rtx dummy_label;
++
++	      dummy_label = gen_label_rtx ();
++	      LABEL_PRESERVE_P (dummy_label) = 1;
++	      LABEL_NUSES (dummy_label) = 1;
++	      
++	      tmp = gen_rtx_MINUS (Pmode, x, gen_rtx_PLUS (Pmode, 
++							   gen_rtx_LABEL_REF (Pmode, label),
++							   GEN_INT (offset)));
++
++	      load_tls_operand (tmp, address);
++
++	      if (TARGET_ARM)
++		emit_insn (gen_tls_load_dot_plus_eight (address, address, label, dummy_label));
++	      else
++		emit_insn (gen_tls_load_dot_plus_four (address, address, label, dummy_label));
++	    }
++
++	  pic_ref = address;
+ 	}
+ 
+       insn = emit_move_insn (reg, pic_ref);
+ #endif
+-      current_function_uses_pic_offset_table = 1;
++
+       /* Put a REG_EQUAL note on this insn, so that it can be optimized
+ 	 by loop.  */
+       REG_NOTES (insn) = gen_rtx_EXPR_LIST (REG_EQUAL, orig,
+@@ -3179,11 +3236,17 @@
+   else if (GET_CODE (orig) == CONST)
+     {
+       rtx base, offset;
++      bool minus = FALSE;
+ 
+       if (GET_CODE (XEXP (orig, 0)) == PLUS
+ 	  && XEXP (XEXP (orig, 0), 0) == pic_offset_table_rtx)
+ 	return orig;
+ 
++      if (GET_CODE (XEXP (orig, 0)) == MINUS
++	  && GET_CODE (XEXP (XEXP (orig, 0), 0)) == UNSPEC
++	  && XINT (XEXP (XEXP (orig, 0), 0), 1) == UNSPEC_GOTSLOTPC)
++	return orig;
++
+       if (GET_CODE (XEXP (orig, 0)) == UNSPEC)
+ 	return orig;
+ 
+@@ -3201,6 +3264,13 @@
+ 	  offset = legitimize_pic_address (XEXP (XEXP (orig, 0), 1), Pmode,
+ 					   base == reg ? 0 : reg);
+ 	}
++      else if (GET_CODE (XEXP (orig, 0)) == MINUS)
++	{
++	  minus = TRUE;
++	  base = legitimize_pic_address (XEXP (XEXP (orig, 0), 0), Pmode, reg);
++	  offset = legitimize_pic_address (XEXP (XEXP (orig, 0), 1), Pmode,
++					   base == reg ? 0 : reg);
++	}
+       else
+ 	abort ();
+ 
+@@ -3228,7 +3298,7 @@
+ 	  return reg;
+ 	}
+ 
+-      return gen_rtx_PLUS (Pmode, base, offset);
++      return minus ? gen_rtx_MINUS (Pmode, base, offset) : gen_rtx_PLUS (Pmode, base, offset);
+     }
+ 
+   return orig;
+@@ -3267,7 +3337,7 @@
+   rtx l1, pic_tmp, pic_tmp2, pic_rtx;
+   rtx global_offset_table;
+ 
+-  if (current_function_uses_pic_offset_table == 0 || TARGET_SINGLE_PIC_BASE)
++  if (current_function_uses_pic_offset_table == 0 || TARGET_SINGLE_PIC_BASE || arm_pic_register == INVALID_REGNUM)
+     return;
+ 
+   if (!flag_pic)
+@@ -3341,8 +3411,11 @@
+ static int
+ pcrel_constant_p (rtx x)
+ {
++  if (GET_CODE (x) == CONST)
++    return pcrel_constant_p (XEXP (x, 0));
++
+   if (GET_CODE (x) == MINUS)
+-    return symbol_mentioned_p (XEXP (x, 0)) && label_mentioned_p (XEXP (x, 1));
++    return (((GET_CODE (XEXP (x, 0)) == UNSPEC && XINT (XEXP (x, 0), 1) == UNSPEC_PIC_SYM)) || symbol_mentioned_p (XEXP (x, 0))) && label_mentioned_p (XEXP (x, 1));
+ 
+   if (GET_CODE (x) == UNSPEC
+       && XINT (x, 1) == UNSPEC_TLS
+@@ -3946,12 +4019,32 @@
+   return SYMBOL_REF_TLS_MODEL (op);
+ }
+ 
++bool
++arm_pc_pic_operand_p (rtx op)
++{
++  if (GET_CODE (op) == CONST
++      && GET_CODE (XEXP (op, 0)) == MINUS
++      && GET_CODE (XEXP (XEXP (op, 0), 0)) == UNSPEC
++      && XINT (XEXP (XEXP (op, 0), 0), 1) == UNSPEC_GOTSLOTPC)
++    return 1;
++
++  if (GET_CODE (op) == CONST
++      && GET_CODE (XEXP (op, 0)) == MINUS
++      && GET_CODE (XEXP (XEXP (op, 0), 0)) == UNSPEC
++      && XINT (XEXP (XEXP (op, 0), 0), 1) == UNSPEC_PIC_SYM)
++    return 1;
++
++  return 0;
++}
++
+ /* Valid input to a move instruction.  */
+ int
+ move_input_operand (rtx op, enum machine_mode mode)
+ {
+   if (tls_symbolic_operand (op, mode))
+     return 0;
++  if (pcrel_constant_p (op))
++    return 1;
+   return general_operand (op, mode);
+ }
+ 
+@@ -15634,11 +15727,34 @@
+   return TRUE;
+ }
+ 
++static bool
++arm_emit_got_decoration (FILE *fp, rtx x)
++{
++  rtx val;
++
++  val = XVECEXP (x, 0, 0);
++
++  fputs ("_gotslotpc_(", fp);
++
++  output_addr_const (fp, val);
++
++  fputc (')', fp);
++
++  return TRUE;
++}
++
+ bool
+ arm_output_addr_const_extra (FILE *fp, rtx x)
+ {
+   if (GET_CODE (x) == UNSPEC && XINT (x, 1) == UNSPEC_TLS)
+     return arm_emit_tls_decoration (fp, x);
++  else if (GET_CODE (x) == UNSPEC && XINT (x, 1) == UNSPEC_GOTSLOTPC)
++    return arm_emit_got_decoration (fp, x);
++  else if (GET_CODE (x) == UNSPEC && XINT (x, 1) == UNSPEC_PIC_SYM)
++    {
++      output_addr_const (fp, XVECEXP (x, 0, 0));
++      return TRUE;
++    }
+   else if (GET_CODE (x) == CONST_VECTOR)
+     return arm_emit_vector_const (fp, x);
+   
+Index: gcc/config/arm/arm.md
+===================================================================
+RCS file: /cvsroot/gcc/gcc/gcc/config/arm/arm.md,v
+retrieving revision 1.145.2.31
+diff -u -r1.145.2.31 arm.md
+--- gcc/config/arm/arm.md	28 Mar 2005 19:04:37 -0000	1.145.2.31
++++ gcc/config/arm/arm.md	23 Apr 2005 04:41:11 -0000
+@@ -88,6 +88,7 @@
+    (UNSPEC_WMADDS   18) ; Used by the intrinsic form of the iWMMXt WMADDS instruction.
+    (UNSPEC_WMADDU   19) ; Used by the intrinsic form of the iWMMXt WMADDU instruction.
+    (UNSPEC_TLS      20) ; A symbol that has been treated properly for TLS usage.
++   (UNSPEC_GOTSLOTPC 21)
+   ]
+ )
+ 
+@@ -4179,7 +4180,8 @@
+         && (CONSTANT_P (operands[1])
+ 	   || symbol_mentioned_p (operands[1])
+ 	   || label_mentioned_p (operands[1]))
+-	&& ! tls_mentioned_p (operands[1]))
++	&& ! tls_mentioned_p (operands[1])
++	&& ! arm_pc_pic_operand_p (operands[1]))
+       operands[1] = legitimize_pic_address (operands[1], SImode,
+ 					    (no_new_pseudos ? operands[0] : 0));
+   } 
+@@ -4412,7 +4414,8 @@
+ 			(mem:SI (unspec:SI [(plus:SI (match_dup 0)
+ 			     			     (const (plus:SI (pc) (const_int 8))))]
+ 		   		 UNSPEC_PIC_BASE)))	
+-   	      (use (label_ref (match_operand 1 "" "")))])]
++   	      (use (label_ref (match_operand 1 "" "")))
++	      (use (label_ref (match_operand 1 "" "")))])]
+   ""
+ )
+ 

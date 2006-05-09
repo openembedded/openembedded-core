@@ -1,0 +1,11 @@
+--- linux-libc-headers-2.6.15.99/include/linux/netdevice.h.orig	2006-04-29 14:10:39.245687500 +0200
++++ linux-libc-headers-2.6.15.99/include/linux/netdevice.h	2006-04-29 14:11:08.819535750 +0200
+@@ -100,8 +100,6 @@
+ 	unsigned long	tx_compressed;
+ };
+ 
+-extern int __init netdev_boot_setup(char *str);
+-
+ /* Media selection options. */
+ enum {
+         IF_PORT_UNKNOWN = 0,
