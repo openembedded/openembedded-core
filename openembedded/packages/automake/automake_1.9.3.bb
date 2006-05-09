@@ -13,7 +13,8 @@ inherit autotools
 
 export AUTOMAKE = "${@bb.which('automake', bb.data.getVar('PATH', d, 1))}"
 FILES_${PN} += "${datadir}/automake* ${datadir}/aclocal*"
-RDEPENDS_${PN} += "autoconf perl"
+
+include automake.inc
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
