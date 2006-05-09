@@ -10,10 +10,13 @@ ac_cv_sizeof_char=${ac_cv_sizeof_char=1}
 ac_cv_sizeof_wchar_t=${ac_cv_sizeof_wchar_t=1}
 ac_cv_sizeof_unsigned_char=${ac_cv_sizeof_unsigned_char=1}
 ac_cv_sizeof_bool=${ac_cv_sizeof_bool=1}
+ac_cv_sizeof_char_p=${ac_cv_sizeof_int_p=4}
 ac_cv_sizeof_int=${ac_cv_sizeof_int=4}
+ac_cv_sizeof_int_p=${ac_cv_sizeof_int_p=4}
 ac_cv_sizeof_long=${ac_cv_sizeof_long=4}
 ac_cv_sizeof_long_int=${ac_cv_sizeof_long_int=4}
 ac_cv_sizeof_long_long=${ac_cv_sizeof_long_long=8}
+ac_cv_sizeof_off_t=${ac_cv_sizeof_off_t=4}
 ac_cv_sizeof_short=${ac_cv_sizeof_short=2}
 ac_cv_sizeof_short_int=${ac_cv_sizeof_short_int=2}
 ac_cv_sizeof_size_t=${ac_cv_sizeof_size_t=4}
@@ -21,7 +24,9 @@ ac_cv_sizeof_void_p=${ac_cv_sizeof_void_p=4}
 ac_cv_sizeof_float=${ac_cv_sizeof_float=4}
 ac_cv_sizeof_double=${ac_cv_sizeof_double=8}
 ac_cv_sizeof_long_double=${ac_cv_sizeof_long_double=8}
+ac_cv_sizeof_ptrdiff_t=${glib_cv_sizeof_ptrdiff_t=4}
 ac_cv_sizeof_unsigned_short=${ac_cv_sizeof_unsigned_short=2}
+ac_cv_sizeof_unsigned=${ac_cv_sizeof_unsigned=4}
 ac_cv_sizeof_unsigned_int=${ac_cv_sizeof_unsigned_int=4}
 ac_cv_sizeof_unsigned_long=${ac_cv_sizeof_unsigned_long=4}
 ac_cv_sizeof_unsigned_long_long=${ac_cv_sizeof_unsigned_long_long=8}
@@ -362,10 +367,3 @@ with_broken_putenv=${with_broken_putenv=no}
 
 # xffm
 jm_cv_func_working_readdir=yes
-
-# dpkg
-dpkg_cv_va_copy=${ac_cv_va_copy=no}
-dpkg_cv___va_copy=${ac_cv___va_copy=yes}
-
-# enca
-yeti_cv_func_scanf_modif_size_t=yes

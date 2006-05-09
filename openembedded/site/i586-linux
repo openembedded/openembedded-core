@@ -108,5 +108,10 @@ cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
 # libxfce4util
 with_broken_putenv=${with_broken_putenv=no}
 
+# php
+ac_cv_pread=${ac_cv_pread=no}
+ac_cv_pwrite=${ac_cv_pwrite=no}
+php_cv_lib_cookie_io_functions_use_off64_t=${php_cv_lib_cookie_io_functions_use_off64_t=yes}
+
 # xffm
 jm_cv_func_working_readdir=yes
