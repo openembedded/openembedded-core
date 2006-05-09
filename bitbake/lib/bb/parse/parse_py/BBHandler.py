@@ -21,9 +21,9 @@
    this program; if not, write to the Free Software Foundation, Inc., 59 Temple
    Place, Suite 330, Boston, MA 02111-1307 USA.""" 
 
-import re, bb, os, sys
+import re, bb, os, sys, time
 import bb.fetch, bb.build, bb.utils
-from bb import debug, data, fetch, fatal
+from bb import debug, data, fetch, fatal, methodpool
 
 from ConfHandler import include, localpath, obtain, init
 from bb.parse import ParseError
@@ -43,6 +43,8 @@ __body__   = []
 __bbpath_found__ = 0
 __classname__ = ""
 classes = [ None, ]
+
+__parsed_methods__ = methodpool.get_parsed_dict()
 
 def supports(fn, d):
     localfn = localpath(fn, d)
@@ -78,6 +80,7 @@ def handle(fn, d, include = 0):
         debug(2, "BB " + fn + ": handle(data, include)")
 
     (root, ext) = os.path.splitext(os.path.basename(fn))
+    base_name = "%s%s" % (root,ext)
     init(d)
 
     if ext == ".bbclass":
@@ -126,10 +129,10 @@ def handle(fn, d, include = 0):
         s = f.readline()
         if not s: break
         s = s.rstrip()
-        feeder(lineno, s, fn, d)
+        feeder(lineno, s, fn, base_name, d)
     if __inpython__:
         # add a blank line to close out any python definition
-        feeder(lineno + 1, "", fn, d)
+        feeder(lineno + 1, "", fn, base_name, d)
     if ext == ".bbclass":
         classes.remove(__classname__)
     else:
@@ -156,9 +159,15 @@ def handle(fn, d, include = 0):
             set_additional_vars(fn, d, include)
             data.update_data(d)
 
+            all_handlers = {} 
             for var in data.keys(d):
+                # try to add the handler
+                # if we added it remember the choiche
                 if data.getVarFlag(var, 'handler', d):
-                    bb.event.register(data.getVar(var, d))
+                    handler = data.getVar(var,d)
+                    if bb.event.register(var,handler) == bb.event.Registered:
+                        all_handlers[var] = handler
+
                     continue
 
                 if not data.getVarFlag(var, 'task', d):
@@ -172,12 +181,22 @@ def handle(fn, d, include = 0):
                     pdeps.append(var)
                     data.setVarFlag(p, 'deps', pdeps, d)
                     bb.build.add_task(p, pdeps, d)
+
+            # now add the handlers
+            if not len(all_handlers) == 0:
+                data.setVar('__all_handlers__', all_handlers, d)
+
         bbpath.pop(0)
     if oldfile:
         bb.data.setVar("FILE", oldfile, d)
+
+    # we have parsed the bb class now
+    if ext == ".bbclass" or ext == ".inc":
+        __parsed_methods__[base_name] = 1
+
     return d
 
-def feeder(lineno, s, fn, d):
+def feeder(lineno, s, fn, root, d):
     global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __def_regexp__, __python_func_regexp__, __inpython__,__infunc__, __body__, __bbpath_found__, classes, bb, __residue__
     if __infunc__:
         if s == '}':
@@ -205,13 +224,22 @@ def feeder(lineno, s, fn, d):
             __body__.append(s)
             return
         else:
-            text = '\n'.join(__body__)
-            comp = bb.utils.better_compile(text, "<bb>", fn )
-            bb.utils.better_exec(comp, __builtins__, text, fn)
+            # Note we will add root to parsedmethods after having parse
+            # 'this' file. This means we will not parse methods from
+            # bb classes twice
+            if not root  in __parsed_methods__:
+                text = '\n'.join(__body__)
+                methodpool.insert_method( root, text, fn )
+                funcs = data.getVar('__functions__', d) or {}
+                if not funcs.has_key( root ):
+                    funcs[root] = text 
+                else:
+                    funcs[root] = "%s\n%s" % (funcs[root], text)
+
+                data.setVar('__functions__', funcs, d)
             __body__ = []
             __inpython__ = False
-            funcs = data.getVar('__functions__', d) or ""
-            data.setVar('__functions__', "%s\n%s" % (funcs, text), d)
+
 #           fall through
 
     if s == '' or s[0] == '#': return          # skip comments and empty lines

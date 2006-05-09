@@ -7,6 +7,18 @@ BitBake 'Data' implementations
 Functions for interacting with the data structure used by the
 BitBake build tools.
 
+The expandData and update_data are the most expensive
+operations. At night the cookie monster came by and
+suggested 'give me cookies on setting the variables and
+things will work out'. Taking this suggestion into account
+applying the skills from the not yet passed 'Entwurf und
+Analyse von Algorithmen' lecture and the cookie 
+monster seems to be right. We will track setVar more carefully
+to have faster update_data and expandKeys operations.
+
+This is a treade-off between speed and memory again but
+the speed is more critical here.
+
 Copyright (C) 2003, 2004  Chris Larson
 Copyright (C) 2005        Holger Hans Peter Freyther
 
@@ -36,88 +48,15 @@ sys.path.insert(0,path)
 from bb import note, debug, data_smart
 
 _dict_type = data_smart.DataSmart
-_dict_p_type = data_smart.DataSmartPackage
-
-class DataDictFull(dict):
-    """
-    This implements our Package Data Storage Interface.
-    setDirty is a no op as all items are held in memory
-    """
-    def setDirty(self, bbfile, data):
-        """
-        No-Op we assume data was manipulated as some sort of
-        reference
-        """
-        if not bbfile in self:
-            raise Exception("File %s was not in dictionary before" % bbfile)
-
-        self[bbfile] = data
-
-class DataDictCache:
-    """
-    Databacked Dictionary implementation
-    """
-    def __init__(self, cache_dir, config):
-        self.cache_dir = cache_dir
-        self.files     = []
-        self.dirty     = {}
-        self.config    = config
-
-    def has_key(self,key):
-        return key in self.files
-
-    def keys(self):
-        return self.files
-
-    def __setitem__(self, key, data):
-        """
-        Add the key to the list of known files and
-        place the data in the cache?
-        """
-        if key in self.files:
-            return
-
-        self.files.append(key)
-
-    def __getitem__(self, key):
-        if not key in self.files:
-            return None
-
-        # if it was dirty we will
-        if key in self.dirty:
-            return self.dirty[key]
-
-        # not cached yet
-        return _dict_p_type(self.cache_dir, key,False,self.config)
-
-    def setDirty(self, bbfile, data):
-        """
-        Only already added items can be declared dirty!!!
-        """
-
-        if not bbfile in self.files:
-            raise Exception("File %s was not in dictionary before" % bbfile)
-
-        self.dirty[bbfile] = data
-
-
 
 def init():
     return _dict_type()
 
-def init_db(cache,name,clean,parent = None):
-    return _dict_p_type(cache,name,clean,parent)
-
-def init_db_mtime(cache,cache_bbfile):
-    return _dict_p_type.mtime(cache,cache_bbfile)
-
-def pkgdata(use_cache, cache, config = None):
-    """
-    Return some sort of dictionary to lookup parsed dictionaires
-    """
-    if use_cache:
-        return DataDictCache(cache, config)
-    return DataDictFull()
+def init_db(parent = None):
+    if parent:
+        return parent.createCopy()
+    else:
+        return _dict_type()
 
 def createCopy(source):
      """Link the source set to the destination
@@ -273,6 +212,27 @@ def setData(newData, d):
     """Sets the data object to the supplied value"""
     d = newData
 
+
+##
+## Cookie Monsters' query functions
+##
+def _get_override_vars(d, override):
+    """
+    Internal!!!
+
+    Get the Names of Variables that have a specific
+    override. This function returns a iterable
+    Set or an empty list
+    """
+    return []
+
+def _get_var_flags_triple(d):
+    """
+    Internal!!!
+
+    """
+    return []
+
 __expand_var_regexp__ = re.compile(r"\${[^{}]+}")
 __expand_python_regexp__ = re.compile(r"\${@.+?}")
 
@@ -303,43 +263,7 @@ def expand(s, d, varname = None):
         >>> print expand('${SRC_URI}', d)
         http://somebug.${TARGET_MOO}
     """
-    def var_sub(match):
-        key = match.group()[2:-1]
-        if varname and key:
-            if varname == key:
-                raise Exception("variable %s references itself!" % varname)
-        var = getVar(key, d, 1)
-        if var is not None:
-            return var
-        else:
-            return match.group()
-
-    def python_sub(match):
-        import bb
-        code = match.group()[3:-1]
-        locals()['d'] = d
-        s = eval(code)
-        if type(s) == types.IntType: s = str(s)
-        return s
-
-    if type(s) is not types.StringType: # sanity check
-        return s
-
-    while s.find('$') != -1:
-        olds = s
-        try:
-            s = __expand_var_regexp__.sub(var_sub, s)
-            s = __expand_python_regexp__.sub(python_sub, s)
-            if s == olds: break
-            if type(s) is not types.StringType: # sanity check
-                import bb
-                bb.error('expansion of %s returned non-string %s' % (olds, s))
-        except KeyboardInterrupt:
-            raise
-        except:
-            note("%s:%s while evaluating:\n%s" % (sys.exc_info()[0], sys.exc_info()[1], s))
-            raise
-    return s
+    return d.expand(s, varname)
 
 def expandKeys(alterdata, readdata = None):
     if readdata == None:
@@ -356,7 +280,7 @@ def expandKeys(alterdata, readdata = None):
 #        setVarFlags(ekey, copy.copy(getVarFlags(key, readdata)), alterdata)
         setVar(ekey, val, alterdata)
 
-        for i in ('_append', '_prepend', '_delete'):
+        for i in ('_append', '_prepend'):
             dest = getVarFlag(ekey, i, alterdata) or []
             src = getVarFlag(key, i, readdata) or []
             dest.extend(src)
@@ -507,67 +431,76 @@ def update_data(d):
         >>> print getVar('TEST', d)
         local
     """
-
     debug(2, "update_data()")
 
-#   can't do delete env[...] while iterating over the dictionary, so remember them
-    dodel = []
+    # now ask the cookie monster for help
+    #print "Cookie Monster"
+    #print "Append/Prepend %s" % d._special_values
+    #print "Overrides      %s" % d._seen_overrides
+
     overrides = (getVar('OVERRIDES', d, 1) or "").split(':') or []
 
-    def applyOverrides(var, d):
-        if not overrides:
-            debug(1, "OVERRIDES not defined, nothing to do")
-            return
-        val = getVar(var, d)
-        for o in overrides:
-            if var.endswith("_" + o):
-                l = len(o)+1
-                name = var[:-l]
+    #
+    # Well let us see what breaks here. We used to iterate
+    # over each variable and apply the override and then
+    # do the line expanding.
+    # If we have bad luck - which we will have - the keys
+    # where in some order that is so important for this
+    # method which we don't have anymore.
+    # Anyway we will fix that and write test cases this
+    # time.
+
+    #
+    # First we apply all overrides
+    # Then  we will handle _append and _prepend
+    #
+
+    for o in overrides:
+        # calculate '_'+override
+        l    = len(o)+1
+
+        # see if one should even try
+        if not o in d._seen_overrides:
+            continue
+
+        vars = d._seen_overrides[o]
+        for var in vars:
+            name = var[:-l]
+            try:
                 d[name] = d[var]
+            except:
+                note ("Untracked delVar")
 
-    for s in keys(d):
-        applyOverrides(s, d)
-        sval = getVar(s, d) or ""
-
-#       Handle line appends:
-        for (a, o) in getVarFlag(s, '_append', d) or []:
-            # maybe the OVERRIDE was not yet added so keep the append
-            if (o and o in overrides) or not o:
-                delVarFlag(s, '_append', d)
-            if o:
-                if not o in overrides:
+    # now on to the appends and prepends
+    if '_append' in d._special_values:
+        appends = d._special_values['_append'] or []
+        for append in appends:
+            for (a, o) in getVarFlag(append, '_append', d) or []:
+                # maybe the OVERRIDE was not yet added so keep the append
+                if (o and o in overrides) or not o:
+                    delVarFlag(append, '_append', d)
+                if o and not o in overrides:
                     continue
-            sval+=a
-            setVar(s, sval, d)
 
-#       Handle line prepends
-        for (a, o) in getVarFlag(s, '_prepend', d) or []:
-            # maybe the OVERRIDE was not yet added so keep the append
-            if (o and o in overrides) or not o:
-                delVarFlag(s, '_prepend', d)
-            if o:
-                if not o in overrides:
+                sval = getVar(append,d) or ""
+                sval+=a
+                setVar(append, sval, d)
+
+
+    if '_prepend' in d._special_values:
+        prepends = d._special_values['_prepend'] or []
+
+        for prepend in prepends:
+            for (a, o) in getVarFlag(prepend, '_prepend', d) or []:
+                # maybe the OVERRIDE was not yet added so keep the prepend
+                if (o and o in overrides) or not o:
+                    delVarFlag(prepend, '_prepend', d)
+                if o and not o in overrides:
                     continue
-            sval=a+sval
-            setVar(s, sval, d)
 
-#       Handle line deletions
-        name = s + "_delete"
-        nameval = getVar(name, d)
-        if nameval:
-            sval = getVar(s, d)
-            if sval:
-                new = ''
-                pattern = nameval.replace('\n','').strip()
-                for line in sval.split('\n'):
-                    if line.find(pattern) == -1:
-                        new = new + '\n' + line
-                setVar(s, new, d)
-                dodel.append(name)
+                sval = a + (getVar(prepend,d) or "")
+                setVar(prepend, sval, d)
 
-#   delete all environment vars no longer needed
-    for s in dodel:
-        delVar(s, d)
 
 def inherits_class(klass, d):
     val = getVar('__inherit_cache', d) or ""

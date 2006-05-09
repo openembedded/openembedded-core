@@ -8,7 +8,7 @@ BitBake build tools.
 
 Copyright (C) 2003, 2004  Chris Larson
 Copyright (C) 2004, 2005  Seb Frankengul
-Copyright (C) 2005        Holger Hans Peter Freyther
+Copyright (C) 2005, 2006  Holger Hans Peter Freyther
 Copyright (C) 2005        Uli Luckas
 Copyright (C) 2005        ROAD GmbH
 
@@ -29,7 +29,8 @@ Based on functions from the base bb module, Copyright 2003 Holger Schurig
 """
 
 import copy, os, re, sys, time, types
-from   bb import note, debug, fatal, utils
+from bb   import note, debug, error, fatal, utils, methodpool
+from sets import Set
 
 try:
     import cPickle as pickle
@@ -37,9 +38,8 @@ except ImportError:
     import pickle
     print "NOTE: Importing cPickle failed. Falling back to a very slow implementation."
 
-
-__setvar_keyword__ = ["_append","_prepend","_delete"]
-__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend|_delete)(_(?P<add>.*))?')
+__setvar_keyword__ = ["_append","_prepend"]
+__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?')
 __expand_var_regexp__ = re.compile(r"\${[^{}]+}")
 __expand_python_regexp__ = re.compile(r"\${@.+?}")
 
@@ -47,6 +47,10 @@ __expand_python_regexp__ = re.compile(r"\${@.+?}")
 class DataSmart:
     def __init__(self):
         self.dict = {}
+
+        # cookie monster tribute
+        self._special_values = {}
+        self._seen_overrides = {}
 
     def expand(self,s, varname):
         def var_sub(match):
@@ -78,8 +82,7 @@ class DataSmart:
                 s = __expand_python_regexp__.sub(python_sub, s)
                 if s == olds: break
                 if type(s) is not types.StringType: # sanity check
-                    import bb
-                    bb.error('expansion of %s returned non-string %s' % (olds, s))
+                    error('expansion of %s returned non-string %s' % (olds, s))
             except KeyboardInterrupt:
                 raise
             except:
@@ -90,18 +93,6 @@ class DataSmart:
     def initVar(self, var):
         if not var in self.dict:
             self.dict[var] = {}
-
-    def pickle_prep(self, cfg):
-        if "_data" in self.dict:
-            if self.dict["_data"] == cfg:
-                self.dict["_data"] = "cfg";
-            else: # this is an unknown array for the moment
-                pass
-
-    def unpickle_prep(self, cfg):
-        if "_data" in self.dict:
-            if self.dict["_data"] == "cfg":
-                self.dict["_data"] = cfg;
 
     def _findVar(self,var):
         _dest = self.dict
@@ -115,14 +106,6 @@ class DataSmart:
         if _dest and var in _dest:
             return _dest[var]
         return None
-
-    def _copyVar(self,var,name):
-        local_var = self._findVar(var)
-        if local_var:
-            self.dict[name] = copy.copy(local_var)
-        else:
-            debug(1,"Warning, _copyVar %s to %s, %s does not exists" % (var,name,var))
-
 
     def _makeShadowCopy(self, var):
         if var in self.dict:
@@ -142,11 +125,20 @@ class DataSmart:
             keyword = match.group("keyword")
             override = match.group('add')
             l = self.getVarFlag(base, keyword) or []
-            if override == 'delete':
-                if l.count([value, None]):
-                    del l[l.index([value, None])]
             l.append([value, override])
-            self.setVarFlag(base, match.group("keyword"), l)
+            self.setVarFlag(base, keyword, l)
+
+            # pay the cookie monster
+            try:
+                self._special_values[keyword].add( base )
+            except:
+                self._special_values[keyword] = Set()
+                self._special_values[keyword].add( base )
+
+            # SRC_URI_append_simpad is both a flag and a override
+            #if not override in self._seen_overrides:
+            #    self._seen_overrides[override] = Set()
+            #self._seen_overrides[override].add( base )
             return
 
         if not var in self.dict:
@@ -154,6 +146,13 @@ class DataSmart:
         if self.getVarFlag(var, 'matchesenv'):
             self.delVarFlag(var, 'matchesenv')
             self.setVarFlag(var, 'export', 1)
+
+        # more cookies for the cookie monster
+        if '_' in var:
+            override = var[var.rfind('_')+1:]
+            if not override in self._seen_overrides:
+                self._seen_overrides[override] = Set()
+            self._seen_overrides[override].add( var )
 
         # setting var
         self.dict[var]["content"] = value
@@ -237,6 +236,8 @@ class DataSmart:
         # we really want this to be a DataSmart...
         data = DataSmart()
         data.dict["_data"] = self.dict
+        data._seen_overrides = copy.deepcopy(self._seen_overrides)
+        data._special_values = copy.deepcopy(self._special_values)
 
         return data
 
@@ -254,98 +255,11 @@ class DataSmart:
         return keytab.keys()
 
     def __getitem__(self,item):
-        start = self.dict
-        while start:
-            if item in start:
-                return start[item]
-            elif "_data" in start:
-                start = start["_data"]
-            else:
-                start = None
-        return None
+        #print "Warning deprecated"
+        return self.getVar(item, False)
 
     def __setitem__(self,var,data):
-        self._makeShadowCopy(var)
-        self.dict[var] = data
+        #print "Warning deprecated"
+        self.setVar(var,data)
 
 
-class DataSmartPackage(DataSmart):
-    """
-    Persistent Data Storage
-    """
-    def sanitize_filename(bbfile):
-        return bbfile.replace( '/', '_' )
-    sanitize_filename = staticmethod(sanitize_filename)
-
-    def unpickle(self):
-        """
-        Restore the dict from memory
-        """
-        cache_bbfile = self.sanitize_filename(self.bbfile)
-        p = pickle.Unpickler( file("%s/%s"%(self.cache,cache_bbfile),"rb"))
-        self.dict = p.load()
-        self.unpickle_prep()
-        funcstr = self.getVar('__functions__', 0)
-        if funcstr:
-            comp = utils.better_compile(funcstr, "<pickled>", self.bbfile)
-            utils.better_exec(comp, __builtins__, funcstr, self.bbfile)
-
-    def linkDataSet(self):
-        if not self.parent == None:
-            # assume parent is a DataSmartInstance
-            self.dict["_data"] = self.parent.dict
-
-
-    def __init__(self,cache,name,clean,parent):
-        """
-        Construct a persistent data instance
-        """
-        #Initialize the dictionary
-        DataSmart.__init__(self)
-
-        self.cache  = cache
-        self.bbfile = os.path.abspath( name )
-        self.parent = parent
-
-        # Either unpickle the data or do copy on write
-        if clean:
-            self.linkDataSet()
-        else:
-            self.unpickle()
-
-    def commit(self, mtime):
-        """
-        Save the package to a permanent storage
-        """
-        self.pickle_prep()
-
-        cache_bbfile = self.sanitize_filename(self.bbfile)
-        p = pickle.Pickler(file("%s/%s" %(self.cache,cache_bbfile), "wb" ), -1 )
-        p.dump( self.dict )
-
-        self.unpickle_prep()
-
-    def mtime(cache,bbfile):
-        cache_bbfile = DataSmartPackage.sanitize_filename(bbfile)
-        try:
-            return os.stat( "%s/%s" % (cache,cache_bbfile) )[8]
-        except OSError:
-            return 0
-    mtime = staticmethod(mtime)
-
-    def pickle_prep(self):
-        """
-        If self.dict contains a _data key and it is a configuration
-        we will remember we had a configuration instance attached
-        """
-        if "_data" in self.dict:
-            if self.dict["_data"] == self.parent:
-                dest["_data"] = "cfg"
-
-    def unpickle_prep(self):
-        """
-        If we had a configuration instance attached, we will reattach it
-        """
-        if "_data" in self.dict:
-            if self.dict["_data"] == "cfg":
-                self.dict["_data"] = self.parent
