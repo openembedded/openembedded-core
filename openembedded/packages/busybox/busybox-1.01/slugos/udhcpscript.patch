@@ -1,0 +1,162 @@
+diff -rup busybox-1.01/.pc/udhcpscript.patch/examples/udhcp/simple.script busybox-1.01/examples/udhcp/simple.script
+--- busybox-1.01/examples/udhcp/simple.script	1970-01-01 00:00:00.000000000 +0000
++++ busybox-1.01/examples/udhcp/simple.script	1970-01-01 00:00:00.000000000 +0000
+@@ -1,40 +1,129 @@
+ #!/bin/sh
++# slugos UDHCP client script
++#
++. /etc/default/functions
++
++echodns(){
++	local dns
++	if test $# -gt 0
++	then
++		for dns in "$@"
++		do
++			echo "nameserver $dns #dhcp:$interface"
++		done
++	fi
++}
+ 
+-# udhcpc script edited by Tim Riker <Tim@Rikers.org>
++# Output the correct contents for resolv.conf based on
++# the current one and any new information
++mkresolv() {
++	local rmdomain
++	rmdomain=
++	# last search takes precedence, so a user
++	# specified search in resolv.conf is retained
++	test -n "$domain" && {
++		echo "search $domain #dhcp"
++		rmdomain='|search [^ ]* #dhcp'
++	}
++	# first nameserver takes precedence, use a user
++	# specified nameserver in preference then the
++	# new ones
++	egrep -v '^(nameserver [^ ]* #dhcp:.*'"$rmdomain"')$' "$1"
++	echodns $dns
++	egrep '^nameserver [^ ]* #dhcp:.*$' "$1" | egrep -v :"$interface"'$'
++}
++
++# checksum of a file (or stdin if -)
++md5strm() {
++	md5sum $1 2>/dev/null | sed -n 's/^\([0-9A-Za-z]*\).*$/\1/p'
++}
++
++# update resolv.conf for $interface using $domain and $dns
++updresolv() {
++	local md5old md5new resolv
++	md5old="$(md5strm /etc/resolv.conf)"
++	resolv="$(mkresolv /etc/resolv.conf)"
++	md5new="$(echo "$resolv" | md5strm -)"
++	test "$md5old" != "$md5new" && echo "$resolv" >/etc/resolv.conf
++}
++
++unroute() {
++	# called to deconfig the interface
++	while route del default gw 0.0.0.0 dev $interface 2>/dev/null
++	do
++		:
++	done
++}
++
++bind() {
++	local B N metric i olddomain resolv
++	B=
++	test -n "$broadcast" && B="broadcast $broadcast"
++	N=
++	test -n "$subnet" && N="netmask $subnet"
++	ifconfig "$interface" "$ip" $B $N up
++
++	# If given router information delete the old information and
++	# enter new stuff, routers get metrics incremented by 1
++	# between each (this is somewhat arbitrary)
++	if test -n "$router"
++	then
++		unroute
++		metric=0
++		for i in $router
++		do
++			route add default gw "$i" dev "$interface" metric $((metric++))
++		done
++	fi
+ 
+-[ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
++	olddomain=
++	test -r /etc/defaultdomain && olddomain="$(cat /etc/defaultdomain)"
++	if test -n "$domain" -a "$domain" != "$olddomain"
++	then
++		echo "$domain" >/etc/defaultdomain
++		# and update the kernel view too
++		echo "$domain" >/proc/sys/kernel/domainname
++	fi
+ 
+-RESOLV_CONF="/etc/resolv.conf"
+-[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
+-[ -n "$subnet" ] && NETMASK="netmask $subnet"
++	updresolv
++}
+ 
+ case "$1" in
+-	deconfig)
+-		/sbin/ifconfig $interface 0.0.0.0
+-		;;
+-
+-	renew|bound)
+-		/sbin/ifconfig $interface $ip $BROADCAST $NETMASK
+-
+-		if [ -n "$router" ] ; then
+-			echo "deleting routers"
+-			while route del default gw 0.0.0.0 dev $interface ; do
+-				:
+-			done
+-
+-			metric=0
+-			for i in $router ; do
+-				route add default gw $i dev $interface metric $((metric++))
+-			done
++deconfig)
++	# Bring the interface up (without inet at this point)
++	# Remove the resolver information because deconfig is called
++	# on leasefail and we need to remove this interface at that
++	# point to ensure the machine remains visible on another
++	# interface!
++	domain=
++	dns=
++	unroute
++	updresolv
++	ifconfig "$interface" up;;
++
++renew|bound)
++	bind;;
++
++leasefail)
++	# Pull the values from the config data if (only only if) this
++	# is the config interface
++	if test "$interface" = "$(config iface)"
++	then
++		ip="$(config ip)"
++		if test -n "$ip"
++		then
++			router="$(config gateway)"
++			subnet="$(config netmask)"
++			broadcast="$(config broadcast)"
++			domain="$(config domain)"
++			dns="$(config dns)"
++
++			bind
+ 		fi
++	fi;;
+ 
+-		echo -n > $RESOLV_CONF
+-		[ -n "$domain" ] && echo search $domain >> $RESOLV_CONF
+-		for i in $dns ; do
+-			echo adding dns $i
+-			echo nameserver $i >> $RESOLV_CONF
+-		done
+-		;;
++*)	echo "udhcpc: $*: unknown command" >&2
++	exit 1;;
+ esac
+ 
+ exit 0

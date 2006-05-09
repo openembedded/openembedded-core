@@ -1,0 +1,11 @@
+--- busybox-1.01/util-linux/fdisk.c	1970-01-01 00:00:00.000000000 +0000
++++ busybox-1.01/util-linux/fdisk.c	1970-01-01 00:00:00.000000000 +0000
+@@ -507,7 +507,7 @@ check_aix_label( void )
+ 
+ #define BSD_LINUX_BOOTDIR "/usr/ucb/mdec"
+ 
+-#if defined (i386) || defined (__sparc__) || defined (__arm__) || defined (__mips__) || defined (__s390__) || defined (__sh__) || defined(__x86_64__)
++#if defined (i386) || defined (__sparc__) || defined (__arm__) || defined (__thumb__) || defined (__mips__) || defined (__s390__) || defined (__sh__) || defined(__x86_64__)
+ #define BSD_LABELSECTOR   1
+ #define BSD_LABELOFFSET   0
+ #elif defined (__alpha__) || defined (__powerpc__) || defined (__ia64__) || defined (__hppa__)

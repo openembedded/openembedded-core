@@ -1,10 +1,15 @@
---- busybox/networking/udhcp/dhcpc.c	2005-05-25 11:49:24.000000000 +0100
-+++ busybox/networking/udhcp/dhcpc.c	2005-05-25 12:54:30.000000000 +0100
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- busybox-1.01/networking/udhcp/dhcpc.c~dhcp-hostname
++++ busybox-1.01/networking/udhcp/dhcpc.c
 @@ -193,6 +193,7 @@
- 	long now;
  	int max_fd;
  	int sig;
-+	char hostbuf[256];	/* SUSv2: hostnames are <= 255 bytes */
+ 	int no_clientid = 0;
++ 	char hostbuf[256];	/* SUSv2: hostnames are <= 255 bytes */
  
  	static const struct option arg_options[] = {
  		{"clientid",	required_argument,	0, 'c'},

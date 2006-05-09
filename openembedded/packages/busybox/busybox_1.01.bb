@@ -10,25 +10,26 @@ HOMEPAGE = "http://www.busybox.net"
 LICENSE = "GPL"
 SECTION = "base"
 PRIORITY = "required"
-PR = "r32"
+PR = "r11"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
-           file://add-getkey-applet.patch;patch=1 \
-	   file://udhcpscript.patch;patch=1 \
-	   file://dhcpretrytime.patch;patch=1 \
-	   file://hdparm_M.patch;patch=1 \
 	   file://udhcppidfile.patch;patch=1 \
 	   file://udhcppidfile-breakage.patch;patch=1 \
-	   file://readlink.patch;patch=1 \
-	   file://iproute-flush-cache.patch;patch=1;pnum=0 \
-	   file://rmmod.patch;patch=1 \
+           file://add-getkey-applet.patch;patch=1 \
 	   file://below.patch;patch=1 \
-	   file://fbset.patch;patch=1 \
-	   file://mount-all-type.patch;patch=1 \
 	   file://dhcp-hostname.patch;patch=1 \
-	   file://gzip-spurious-const.patch;patch=1 \
+	   file://dhcpretrytime.patch;patch=1 \
+	   file://fbset.patch;patch=1 \
+	   file://hdparm_M.patch;patch=1 \
 	   file://ifupdown-spurious-environ.patch;patch=1 \
+	   file://iproute-flush-cache.patch;patch=1;pnum=0 \
+	   file://mount-all-type.patch;patch=1 \
+	   file://readlink.patch;patch=1 \
+	   file://rmmod.patch;patch=1 \
+	   file://udhcpscript.patch;patch=1 \
+	   file://thumb-bsdlabel.patch;patch=1 \
            file://uclibc_posix.patch;patch=1 \
+           file://glibc2.4-icmp6.patch;patch=1 \
            file://defconfig \
            file://busybox-cron \
 	   file://busybox-httpd \
@@ -39,6 +40,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
 	   file://syslog.conf \
 	   file://mount.busybox \
 	   file://umount.busybox"
+SRC_URI_append_slugos += " file://sysctl.conf "
 
 S = "${WORKDIR}/busybox-${PV}"
 
@@ -128,6 +130,10 @@ do_install () {
 	fi
 
 	install -m 0644 ${S}/busybox.links ${D}${sysconfdir}
+}
+
+do_install_append_slugos() {
+	install -m 0644 ${WORKDIR}/sysctl.conf ${D}${sysconfdir}
 }
 
 pkg_postinst_${PN} () {
