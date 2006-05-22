@@ -76,6 +76,7 @@ RDEPENDS_task-oh-standard := "\
     pcmanfm \
     puzzles \
     kf \
+    xset \
     rxvt-unicode \
     avahi-daemon \
     gnome-vfs-plugin-dbus \
