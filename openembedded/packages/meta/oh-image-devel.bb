@@ -8,7 +8,8 @@ XSERVER ?= "xserver-kdrive-fbdev"
 
 DEPENDS = "\
     task-bootstrap \
-    task-oh"
+    task-oh \
+    task-oh-sdk"
     
 RDEPENDS = "\
     task-oh-boot \
@@ -16,6 +17,7 @@ RDEPENDS = "\
     task-oh-base \
     task-oh-standard \
     task-oh-devel \
+    task-oh-sdk \
     ${XSERVER} "
 
 export IPKG_INSTALL = "${RDEPENDS}"
