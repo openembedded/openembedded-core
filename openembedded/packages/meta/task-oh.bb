@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r30"
+PR = "r31"
 
 ALLOW_EMPTY = "1"
 
@@ -66,7 +66,6 @@ RDEPENDS_task-oh-standard := "\
     matchbox-applet-inputmanager \
     matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
-    zaurusd \
     usbinit \
     settings-daemon \
     gtk-clearlooks-engine \
@@ -83,6 +82,10 @@ RDEPENDS_task-oh-standard := "\
     gnome-vfs-plugin-file \
     gnome-vfs-plugin-http \
     gtk-theme-clearlooks"
+
+RDEPENDS_task-oh-standard_c7x0 += "zaurusd"
+RDEPENDS_task-oh-standard_spitz += "zaurusd"
+RDEPENDS_task-oh-standard_akita += "zaurusd"
 
 #    minimo \
 #    teleport \
