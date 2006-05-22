@@ -64,4 +64,5 @@ S = "${WORKDIR}/xserver"
 
 inherit autotools pkgconfig 
 
-EXTRA_OECONF = "--enable-composite --disable-xinerama"
+LDFLAGS += " -lXfont -lXdmcp -lXau "
+EXTRA_OECONF = "--enable-static=no --disable-static  --enable-composite --disable-xinerama"
