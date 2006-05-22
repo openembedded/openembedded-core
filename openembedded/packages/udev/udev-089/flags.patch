@@ -1,0 +1,51 @@
+--- udev-089/Makefile.orig	2006-04-08 13:32:53.000000000 +0200
++++ udev-089/Makefile	2006-04-08 13:34:27.000000000 +0200
+@@ -117,28 +117,28 @@
+ AR = $(CROSS_COMPILE)ar
+ RANLIB = $(CROSS_COMPILE)ranlib
+ 
+-CFLAGS		= -g -Wall -pipe -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
++override CFLAGS		= -g -Wall -pipe -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
+ WARNINGS	= -Wstrict-prototypes -Wsign-compare -Wshadow \
+ 		  -Wchar-subscripts -Wmissing-declarations -Wnested-externs \
+ 		  -Wpointer-arith -Wcast-align -Wsign-compare -Wmissing-prototypes
+-CFLAGS		+= $(WARNINGS)
++override CFLAGS		+= $(WARNINGS)
+ 
+ LDFLAGS = -Wl,-warn-common
+ 
+ OPTFLAGS = -Os
+-CFLAGS += $(OPTFLAGS)
++override CFLAGS += $(OPTFLAGS)
+ 
+ ifeq ($(strip $(USE_LOG)),true)
+-	CFLAGS += -DUSE_LOG
++	override CFLAGS += -DUSE_LOG
+ endif
+ 
+ # if DEBUG is enabled, then we do not strip
+ ifeq ($(strip $(DEBUG)),true)
+-	CFLAGS  += -DDEBUG
++	override CFLAGS  += -DDEBUG
+ endif
+ 
+ ifeq ($(strip $(USE_GCOV)),true)
+-	CFLAGS += -fprofile-arcs -ftest-coverage
++	override CFLAGS += -fprofile-arcs -ftest-coverage
+ 	LDFLAGS += -fprofile-arcs
+ endif
+ 
+@@ -151,11 +151,11 @@
+ ifeq ($(strip $(USE_SELINUX)),true)
+ 	UDEV_OBJS += udev_selinux.o
+ 	LIB_OBJS += -lselinux -lsepol
+-	CFLAGS += -DUSE_SELINUX
++	override CFLAGS += -DUSE_SELINUX
+ endif
+ 
+ ifeq ($(strip $(USE_STATIC)),true)
+-	CFLAGS += -DUSE_STATIC
++	override CFLAGS += -DUSE_STATIC
+ 	LDFLAGS += -static
+ endif
+ 
