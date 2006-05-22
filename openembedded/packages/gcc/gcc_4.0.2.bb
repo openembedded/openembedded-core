@@ -4,6 +4,7 @@ HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
 LICENSE = "GPL"
 MAINTAINER = "Gerald Britton <gbritton@doomcom.org>"
+DEPENDS = "mpfr gmp"
 
 inherit autotools gettext
 
