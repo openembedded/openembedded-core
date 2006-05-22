@@ -4,6 +4,8 @@ module_id() {
     awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
 }
 
+SHOWCURSOR="no"
+
 ## Start up machine specific input devices. Really needs to go in its own session
 case `module_id` in
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi" | "SHARP Spitz" | "SHARP Akita" | "SHARP Borzoi")
@@ -11,6 +13,10 @@ case `module_id` in
 		;;
 	"Generic OMAP1510/1610/1710")
 		/usr/bin/mbinputmgr &
+		;;
+	"ARM-IntegratorCP")
+		/usr/bin/mbinputmgr &
+		SHOWCURSOR="yes"
 		;;
 esac
 
@@ -32,6 +38,6 @@ matchbox-panel --orientation east \
                --default-apps mb-applet-home,mb-applet-clock,mb-applet-battery &
 
 ## eek ugly no cursor hack - transparent theme should do this
-exec matchbox-window-manager -theme Clearlooks -use_cursor no $@
+exec matchbox-window-manager -theme Clearlooks -use_cursor $SHOWCURSOR $@
 
 
