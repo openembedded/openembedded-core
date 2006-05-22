@@ -7,6 +7,9 @@ SRC_URI_OVERRIDES_PACKAGE_ARCH = "0"
 PACKAGE_ARCH_tslib-conf = "${MACHINE_ARCH}"
 PACKAGE_ARCH_mnci = "${MACHINE_ARCH}"
 
+#Workaround multimachine issues for now
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 SRC_URI = "cvs://cvs:@pubcvs.arm.linux.org.uk/mnt/src/cvsroot;module=tslib \
            file://usec_fix.patch;patch=1 \
            file://ts.conf file://ts-2.6.conf \
