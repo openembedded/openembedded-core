@@ -14,7 +14,7 @@ case "$1" in
        /etc/X11/Xserver &
        export DISPLAY=:0
 	       
-       while [ ! -f /etc/pointercal ]
+       while [ ! -z $TSLIB_TSDEVICE ] && [ ! -f /etc/pointercal ]
        do
                /usr/bin/xtscal
        done
@@ -24,10 +24,10 @@ case "$1" in
 
   stop)
         echo "Stopping XServer"
-        killproc /usr/bin/Xfbdev
-	killproc /usr/bin/Xomap
-	killproc /usr/bin/Xorg
-	killproc /usr/bin/Xepson
+        killproc Xfbdev
+	killproc Xomap
+	killproc Xorg
+	killproc Xepson
   ;;
 
   *)
