@@ -1,0 +1,18 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- Python-2.4c1/Makefile.pre.in~bindir-libdir.patch
++++ Python-2.4c1/Makefile.pre.in
+@@ -78,8 +78,8 @@
+ exec_prefix=	@exec_prefix@
+ 
+ # Expanded directories
+-BINDIR=		$(exec_prefix)/bin
+-LIBDIR=		$(exec_prefix)/lib
++BINDIR=		@bindir@
++LIBDIR=		@libdir@
+ MANDIR=		@mandir@
+ INCLUDEDIR=	@includedir@
+ CONFINCLUDEDIR=	$(exec_prefix)/include

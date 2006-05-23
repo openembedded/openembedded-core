@@ -1,0 +1,38 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- Python-2.3.3/Lib/distutils/sysconfig.py~cross-distutils	2003-02-10 15:02:33.000000000 +0100
++++ Python-2.3.3/Lib/distutils/sysconfig.py	2004-03-02 20:15:05.000000000 +0100
+@@ -19,8 +19,8 @@
+ from errors import DistutilsPlatformError
+ 
+ # These are needed in a couple of spots, so just compute them once.
+-PREFIX = os.path.normpath(sys.prefix)
+-EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
++PREFIX = os.path.normpath(sys.prefix).replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
++EXEC_PREFIX = os.path.normpath(sys.exec_prefix).replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
+ 
+ # python_build: (Boolean) if true, we're either building Python or
+ # building an extension with an un-installed Python, so we use
+@@ -192,7 +192,8 @@
+     else:
+         # The name of the config.h file changed in 2.2
+         config_h = 'pyconfig.h'
+-    return os.path.join(inc_dir, config_h)
++    print "NOTE: sysconfig.get_config_h_filename() altered for OpenEmbedded"
++    return os.path.join(inc_dir, config_h).replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
+ 
+ 
+ def get_makefile_filename():
+@@ -200,7 +201,8 @@
+     if python_build:
+         return os.path.join(os.path.dirname(sys.executable), "Makefile")
+     lib_dir = get_python_lib(plat_specific=1, standard_lib=1)
+-    return os.path.join(lib_dir, "config", "Makefile")
++    print "NOTE: sysconfig.get_config_h_filename() altered for OpenEmbedded"
++    return os.path.join(lib_dir, "config", "Makefile").replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
+ 
+ 
+ def parse_config_h(fp, g=None):
