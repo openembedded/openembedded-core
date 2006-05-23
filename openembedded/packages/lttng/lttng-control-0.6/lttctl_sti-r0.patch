@@ -1,0 +1,134 @@
+Index: ltt-control-0.6-28042006/liblttctl/liblttctl.c
+===================================================================
+--- ltt-control-0.6-28042006.orig/liblttctl/liblttctl.c	2006-03-11 17:30:32.000000000 +0000
++++ ltt-control-0.6-28042006/liblttctl/liblttctl.c	2006-05-12 11:21:13.000000000 +0100
+@@ -298,7 +298,7 @@
+ 
+ 
+ int lttctl_create_trace(const struct lttctl_handle *h,
+-		char *name, enum trace_mode mode, unsigned subbuf_size, unsigned n_subbufs)
++		char *name, enum trace_mode mode, enum ltt_trace_type type, unsigned subbuf_size, unsigned n_subbufs)
+ {
+ 	int err;
+ 	
+@@ -324,6 +324,7 @@
+ 	req.msg.args.new_trace.mode = mode;
+ 	req.msg.args.new_trace.subbuf_size = subbuf_size;
+ 	req.msg.args.new_trace.n_subbufs = n_subbufs;
++	req.msg.args.new_trace.type = type;
+ 
+ 	err = lttctl_netlink_sendto(h, (void *)&req, req.nlh.nlmsg_len);
+ 	if(err < 0) goto senderr;
+Index: ltt-control-0.6-28042006/liblttctl/lttctl.h
+===================================================================
+--- ltt-control-0.6-28042006.orig/liblttctl/lttctl.h	2006-03-11 17:30:32.000000000 +0000
++++ ltt-control-0.6-28042006/liblttctl/lttctl.h	2006-05-12 11:20:46.000000000 +0100
+@@ -45,6 +45,12 @@
+ 	LTT_TRACE_FLIGHT
+ };
+ 
++enum ltt_trace_type {
++	LTT_TYPE_RELAYFS,
++	LTT_TYPE_STI,
++	LTT_TYPE_STIRELAYFS
++};
++
+ typedef struct lttctl_peer_msg {
+ 	char trace_name[NAME_MAX];
+ 	enum trace_op op;
+@@ -53,6 +59,7 @@
+       enum trace_mode mode;
+       unsigned subbuf_size;
+       unsigned n_subbufs;
++      enum ltt_trace_type type;
+     } new_trace;
+ 	} args;
+ } lttctl_peer_msg_t;
+@@ -76,7 +83,7 @@
+ 
+ 
+ int lttctl_create_trace(const struct lttctl_handle *h,
+-		char *name, enum trace_mode mode, unsigned subbuf_size, unsigned n_subbufs);
++		char *name, enum trace_mode mode, enum ltt_trace_type type, unsigned subbuf_size, unsigned n_subbufs);
+ 
+ int lttctl_destroy_trace(const struct lttctl_handle *handle, char *name);
+ 
+Index: ltt-control-0.6-28042006/lttctl/lttctl.c
+===================================================================
+--- ltt-control-0.6-28042006.orig/lttctl/lttctl.c	2006-03-11 17:30:27.000000000 +0000
++++ ltt-control-0.6-28042006/lttctl/lttctl.c	2006-05-12 11:19:53.000000000 +0100
+@@ -40,11 +40,13 @@
+ };
+ 
+ static char *trace_name = NULL;
++static char *trace_type = NULL;
+ static char *mode_name = NULL;
+ static unsigned subbuf_size = 0;
+ static unsigned n_subbufs = 0;
+ static unsigned append_trace = 0;
+ static enum trace_mode mode = LTT_TRACE_NORMAL;
++static enum ltt_trace_type type = LTT_TYPE_RELAYFS;
+ static enum trace_ctl_op op = CTL_OP_NONE;
+ static char *channel_root = NULL;
+ static char *trace_root = NULL;
+@@ -81,6 +83,7 @@
+ 	printf("              (optionnaly, you can set LTT_DAEMON\n");
+ 	printf("              and the LTT_FACILITIES env. vars.)\n");
+ 	printf("-t            Trace root path. (ex. /root/traces/example_trace)\n");
++	printf("-T            Type of trace (ex. relayfs, sti, stirelayfs)\n");
+ 	printf("-l            LTT channels root path. (ex. /mnt/relayfs/ltt)\n");
+ 	printf("-z            Size of the subbuffers (will be rounded to next page size)\n");
+ 	printf("-x            Number of subbuffers\n");
+@@ -217,6 +220,27 @@
+ 							argn++;
+ 						}
+ 						break;
++					case 'T':
++						if(argn+1 < argc) {
++							trace_type = argv[argn+1];
++							argn++;
++							if(strcmp(trace_type, "relayfs") == 0)
++								type = LTT_TYPE_RELAYFS;
++							else if(strcmp(trace_type, "sti") == 0)
++								type = LTT_TYPE_STI;
++							else if(strcmp(trace_type, "stirelayfs") == 0)
++								type = LTT_TYPE_STIRELAYFS;
++							else {
++								printf("Invalid trace type '%s'.\n", argv[argn]);
++								printf("\n");
++								ret = EINVAL;
++							}
++						} else {
++								printf("Specify a trace type after -T.\n");
++								printf("\n");
++								ret = EINVAL;
++						}
++						break;
+ 					default:
+ 						printf("Invalid argument '%s'.\n", argv[argn]);
+ 						printf("\n");
+@@ -390,7 +414,7 @@
+ 	strcat(channel_path, trace_name);
+ 
+ 	
+-	ret = lttctl_create_trace(handle, trace_name, mode, subbuf_size, n_subbufs);
++	ret = lttctl_create_trace(handle, trace_name, mode, type, subbuf_size, n_subbufs);
+ 	if(ret != 0) goto create_error;
+ 
+ 	act.sa_handler = sigchld_handler;
+@@ -466,13 +490,13 @@
+ 	
+ 	switch(op) {
+     case CTL_OP_CREATE_START:
+-			ret = lttctl_create_trace(handle, trace_name, mode, subbuf_size,
++			ret = lttctl_create_trace(handle, trace_name, mode, type, subbuf_size,
+ 																n_subbufs);
+       if(!ret)
+         ret = lttctl_start(handle, trace_name);
+       break;
+   	case CTL_OP_CREATE:
+-			ret = lttctl_create_trace(handle, trace_name, mode, subbuf_size,
++			ret = lttctl_create_trace(handle, trace_name, mode, type, subbuf_size,
+ 																n_subbufs);
+       break;
+ 		case CTL_OP_DESTROY:

@@ -7,7 +7,7 @@ MAINTAINER = "Richrd Purdie <richard@openedhand.com>"
 PR = "r1"
 DEPENDS = "gtk+ pango popt"
 
-ALTNAME = "LinuxTraceToolkitViewer-0.8.34-17032006"
+ALTNAME = "LinuxTraceToolkitViewer-0.8.41-12052006"
 
 SRC_URI = "http://ltt.polymtl.ca/packages/${ALTNAME}.tar.gz "
 S = "${WORKDIR}/${ALTNAME}"
