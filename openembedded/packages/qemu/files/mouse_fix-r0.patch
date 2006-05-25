@@ -1,0 +1,25 @@
+If the cursor is hidden (SDL_ShowCursor(0)) and the input is grabbed
+(SDL_WM_GrabInput(SDL_GRAB_ON)), then the mouse will give relative motion
+events even when the cursor reaches the edge fo the screen. This is currently
+only implemented on Windows and Linux/Unix-a-likes.
+
+Index: qemu/sdl.c
+===================================================================
+--- qemu.orig/sdl.c	2006-04-13 12:22:22.000000000 +0100
++++ qemu/sdl.c	2006-05-25 00:28:25.000000000 +0100
+@@ -280,13 +280,13 @@
+ 
+ static void sdl_hide_cursor(void)
+ {
+-    SDL_SetCursor(sdl_cursor_hidden);
++    SDL_ShowCursor(0);
+ }
+ 
+ static void sdl_show_cursor(void)
+ {
+     if (!kbd_mouse_is_absolute()) {
+-	SDL_SetCursor(sdl_cursor_normal);
++        SDL_ShowCursor(1);
+     }
+ }
+ 
