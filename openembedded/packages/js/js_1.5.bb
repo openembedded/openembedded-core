@@ -11,7 +11,7 @@ S = "${WORKDIR}/js/src"
 FILES_${PN} = "${libdir}/lib*.so"
 FILES_${PN}-dev = "${includedir} ${libdir}/lib*.a"
 
-EXTRA_OEMAKE = "'CC=${CC}' 'LD=${LD}' 'XCFLAGS=${CFLAGS}' 'XLDFLAGS=-L${STAGING_LIBDIR}'"
+EXTRA_OEMAKE = "'CC=${CC}' 'LD=${LD}' 'XCFLAGS=${CFLAGS}' 'XLDFLAGS=-L${STAGING_LIBDIR} -soname=libjs'"
 
 do_compile_prepend() {
 	cp ${WORKDIR}/jsautocfg.h ${S}/
@@ -25,8 +25,7 @@ do_install() {
 	install -d ${D}${libdir}
 	install -d ${D}${includedir}
 	install -d ${D}${includedir}/js
-	install -m 0644 ${S}/Linux_All_DBG.OBJ/lib*.so ${D}${libdir}
-	install -m 0644 ${S}/Linux_All_DBG.OBJ/lib*.a ${D}${libdir}
+	oe_libinstall -so -C Linux_All_DBG.OBJ libjs ${D}${libdir}
 	install -m 0644 ${S}/*.h ${D}${includedir}/js
 }
 
