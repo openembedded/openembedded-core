@@ -1,0 +1,13 @@
+Index: libtool-1.5.10/libltdl/ltmain.sh
+===================================================================
+--- libtool-1.5.10.orig/libltdl/ltmain.sh	2004-09-19 13:34:44.000000000 +0100
++++ libtool-1.5.10/libltdl/ltmain.sh	2006-05-25 15:28:39.000000000 +0100
+@@ -232,7 +232,7 @@
+ 	if test -z "$tagname"; then
+ 	  $echo "$modename: unable to infer tagged configuration"
+ 	  $echo "$modename: specify a tag with \`--tag'" 1>&2
+-	  exit $EXIT_FAILURE
++#	  exit $EXIT_FAILURE
+ #        else
+ #          $echo "$modename: using $tagname tagged configuration"
+ 	fi
