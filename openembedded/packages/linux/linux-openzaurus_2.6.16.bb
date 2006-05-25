@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r21"
+PR = "r22"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -15,6 +15,7 @@ PR = "r21"
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
            file://rmk-mmc1.patch;patch=1 \
            file://rmk-mmc2.patch;patch=1 \
+           file://integrator_rgb-r0.patch;patch=1 \
            ${RPSRC}/led_core-r15.patch;patch=1 \
            ${RPSRC}/led_triggers-r14.patch;patch=1 \
            ${RPSRC}/led_trig_timer-r8.patch;patch=1 \
