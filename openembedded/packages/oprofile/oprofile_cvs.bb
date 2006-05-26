@@ -6,7 +6,7 @@ LICENSE = "GPL"
 MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 DEPENDS = "popt binutils"
 
-SRC_URI = "cvs://anonymous@cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
+SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
 	   file://no_arm_mapping_syms.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
