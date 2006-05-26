@@ -1,3 +1,4 @@
+# Has issues with eds
 DEFAULT_PREFERENCE = "-1"
 
 # Version 4 of the Berkeley DB from Sleepycat
