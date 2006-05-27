@@ -4,7 +4,7 @@ SECTION = "console/utils"
 PRIORITY = "optional"
 LICENSE = "BSD"
 
-SRC_URI = "http://www.ibiblio.org/pub/Linux/system/hardware/hdparm-${PV}.tar.gz \
+SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/hdparm-${PV}.tar.gz \
 	   file://bswap.patch;patch=1 \
 	   file://uclibc.patch;patch=1"
 
