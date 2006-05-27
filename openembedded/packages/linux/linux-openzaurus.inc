@@ -130,6 +130,14 @@ do_compile_append() {
 				die "This kernel is too big for your PXA Zaurus and will destroy data if you flash it. Please reduce the size of the kernel by making more of it modular."
 			fi
 			;;
+		collie )
+			size=`ls -l arch/${ARCH}/boot/${KERNEL_IMAGETYPE} | awk '{ print $5}'`
+			if [ $size -ge 1048576 ]; then	
+				rm arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
+				echo "Size is $size"
+				die "This kernel is too big for your Collie and will not be flashed. Please reduce the size of the kernel by making more of it modular."
+			fi
+			;;
         	*)
 			;;
 	esac
