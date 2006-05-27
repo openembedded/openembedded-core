@@ -1,0 +1,464 @@
+--- xserver.orig/configure.ac	2006-03-11 16:27:42.000000000 +0100
++++ xserver/configure.ac	2006-03-11 16:46:51.000000000 +0100
+@@ -79,7 +79,7 @@
+ # tslib touchscreen driver
+ AC_CHECK_HEADERS([tslib.h])
+ 
+-REQUIRED_MODULES="randr render fixesext damageext xextensions xfont xproto xtrans xau"
++REQUIRED_MODULES="randrproto renderproto fixesproto damageproto xextproto xfont xproto xtrans xau"
+ 
+ DEFAULT_FONT_PATH="/usr/lib/X11/fonts/misc,/usr/lib/X11/fonts/100dpi,/usr/lib/X11/fonts/75dpi"
+ DEFAULT_VENDOR_STRING="freedesktop.org"
+--- xserver.orig/dix/dispatch.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/dix/dispatch.c	2006-03-11 16:30:59.000000000 +0100
+@@ -79,7 +79,6 @@
+ #endif
+ 
+ #include "windowstr.h"
+-#include "fontstruct.h"
+ #include "dixfontstr.h"
+ #include "gcstruct.h"
+ #include "selection.h"
+--- xserver.orig/dix/glyphcurs.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/dix/glyphcurs.c	2006-03-11 16:31:57.000000000 +0100
+@@ -51,7 +51,6 @@
+ #include <config.h>
+ #endif
+ #include "misc.h"
+-#include "fontstruct.h"
+ #include "dixfontstr.h"
+ #include "scrnintstr.h"
+ #include "gcstruct.h"
+--- xserver.orig/dix/main.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/dix/main.c	2006-03-11 16:32:05.000000000 +0100
+@@ -89,7 +89,6 @@
+ #include "colormap.h"
+ #include "colormapst.h"
+ #include "cursorstr.h"
+-#include "font.h"
+ #include "opaque.h"
+ #include "servermd.h"
+ #include "site.h"
+--- xserver.orig/dix/swaprep.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/dix/swaprep.c	2006-03-11 16:32:24.000000000 +0100
+@@ -57,7 +57,7 @@
+ #include <X11/Xproto.h>
+ #include "misc.h"
+ #include "dixstruct.h"
+-#include "fontstruct.h"
++#include "dixfont.h"
+ #include "scrnintstr.h"
+ #include "swaprep.h"
+ #include "globals.h"
+--- xserver.orig/dix/xpstubs.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/dix/xpstubs.c	2006-03-11 16:32:34.000000000 +0100
+@@ -31,7 +31,7 @@
+ #include <config.h>
+ #endif
+ #include "misc.h"
+-#include "font.h"
++#include "dixfont.h"
+ 
+ Bool
+ XpClientIsBitmapClient(ClientPtr client)
+--- xserver.orig/fb/fbglyph.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/fb/fbglyph.c	2006-03-11 16:52:01.000000000 +0100
+@@ -26,7 +26,6 @@
+ #include <config.h>
+ #endif
+ #include "fb.h"
+-#include	"fontstruct.h"
+ #include	"dixfontstr.h"
+       
+ Bool
+--- xserver.orig/hw/kdrive/epson/epson13806draw.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/hw/kdrive/epson/epson13806draw.c	2006-03-11 16:34:56.000000000 +0100
+@@ -38,7 +38,6 @@
+ #include    "pixmapstr.h"
+ #include    "regionstr.h"
+ #include    "mistruct.h"
+-#include    "fontstruct.h"
+ #include    "dixfontstr.h"
+ #include    "fb.h"
+ #include    "migc.h"
+--- xserver.orig/hw/kdrive/i810/i810draw.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/hw/kdrive/i810/i810draw.c	2006-03-11 16:34:41.000000000 +0100
+@@ -51,7 +51,6 @@
+ #include	"pixmapstr.h"
+ #include	"regionstr.h"
+ #include	"mistruct.h"
+-#include	"fontstruct.h"
+ #include	"dixfontstr.h"
+ #include	"fb.h"
+ #include	"migc.h"
+--- xserver.orig/hw/kdrive/src/kaa.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/hw/kdrive/src/kaa.c	2006-03-11 16:35:39.000000000 +0100
+@@ -29,7 +29,6 @@
+ #endif
+ #include "kdrive.h"
+ #include "kaa.h"
+-#include "fontstruct.h"
+ #include "dixfontstr.h"
+ 
+ #define DEBUG_MIGRATE 0
+--- xserver.orig/include/dixfont.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/include/dixfont.h	2006-03-11 16:43:25.000000000 +0100
+@@ -27,10 +27,10 @@
+ #define DIXFONT_H 1
+ 
+ #include "dix.h"
+-#include "font.h"
+-#include "fontconf.h"
++#include <X11/fonts/font.h>
++#include <X11/fonts/fontconf.h>
+ #include "closure.h"
+-#include "fontstruct.h"
++#include <X11/fonts/fontstruct.h>
+ 
+ #define NullDIXFontProp ((DIXFontPropPtr)0)
+ 
+--- xserver.orig/include/dixfontstr.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/include/dixfontstr.h	2006-03-11 16:43:31.000000000 +0100
+@@ -27,7 +27,6 @@
+ 
+ #include "servermd.h"
+ #include "dixfont.h"
+-#include "fontstruct.h"
+ #include "closure.h"
+ #define NEED_REPLIES
+ #include "X11/Xproto.h" /* for xQueryFontReply */
+--- xserver.orig/mi/mibstore.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/mi/mibstore.c	2006-03-11 16:36:26.000000000 +0100
+@@ -57,7 +57,6 @@
+ #include "gcstruct.h"
+ #include "windowstr.h"
+ #include "pixmapstr.h"
+-#include "fontstruct.h"
+ #include "dixfontstr.h"
+ #include "dixstruct.h"		/* For requestingClient */
+ #include "mi.h"
+--- xserver.orig/mi/miglblt.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/mi/miglblt.c	2006-03-11 16:53:52.000000000 +0100
+@@ -55,7 +55,6 @@
+ #include	<X11/Xmd.h>
+ #include	<X11/Xproto.h>
+ #include	"misc.h"
+-#include	"fontstruct.h"
+ #include	"dixfontstr.h"
+ #include	"gcstruct.h"
+ #include	"windowstr.h"
+--- xserver.orig/mi/mi.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/mi/mi.h	2006-03-11 16:36:16.000000000 +0100
+@@ -54,7 +54,7 @@
+ #include "validate.h"
+ #include "window.h"
+ #include "gc.h"
+-#include "font.h"
++#include "dixfont.h"
+ #include "input.h"
+ #include "cursor.h"
+ 
+--- xserver.orig/mi/miinitext.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/mi/miinitext.c	2006-03-11 16:36:41.000000000 +0100
+@@ -54,6 +54,8 @@
+ #include "extension.h"
+ #include "micmap.h"
+ #include "xext.h"
++#include "pixmap.h"
++#include "gc.h"
+ 
+ #ifdef NOPEXEXT /* sleaze for Solaris cpp building XsunMono */
+ #undef PEXEXT
+--- xserver.orig/mi/mipolytext.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/mi/mipolytext.c	2006-03-11 16:36:48.000000000 +0100
+@@ -63,7 +63,6 @@
+ #include	<X11/Xproto.h>
+ #include	"misc.h"
+ #include	"gcstruct.h"
+-#include	"fontstruct.h"
+ #include	"dixfontstr.h"
+ #include	"mi.h"
+ 
+--- xserver.orig/mi/misprite.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/mi/misprite.c	2006-03-11 16:37:00.000000000 +0100
+@@ -42,7 +42,6 @@
+ # include   "input.h"
+ # include   "mi.h"
+ # include   "cursorstr.h"
+-# include   "font.h"
+ # include   "scrnintstr.h"
+ # include   "colormapst.h"
+ # include   "windowstr.h"
+@@ -50,7 +49,6 @@
+ # include   "mipointer.h"
+ # include   "mispritest.h"
+ # include   "dixfontstr.h"
+-# include   "fontstruct.h"
+ #ifdef RENDER
+ # include   "mipict.h"
+ #endif
+--- xserver.orig/miext/damage/damage.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/damage/damage.c	2006-03-11 16:37:17.000000000 +0100
+@@ -28,9 +28,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shadow.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shadow.c	2006-03-11 16:38:13.000000000 +0100
+@@ -29,9 +29,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shalloc.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shalloc.c	2006-03-11 16:38:25.000000000 +0100
+@@ -29,9 +29,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shpacked.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shpacked.c	2006-03-11 16:38:33.000000000 +0100
+@@ -28,9 +28,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shplanar8.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shplanar8.c	2006-03-11 16:38:44.000000000 +0100
+@@ -28,9 +28,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shplanar.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shplanar.c	2006-03-11 16:38:39.000000000 +0100
+@@ -28,9 +28,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shrotate.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shrotate.c	2006-03-11 16:38:56.000000000 +0100
+@@ -28,9 +28,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shrotpack.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shrotpack.h	2006-03-11 16:39:02.000000000 +0100
+@@ -30,9 +30,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/miext/shadow/shrotpackYX.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/miext/shadow/shrotpackYX.h	2006-03-11 16:39:08.000000000 +0100
+@@ -25,9 +25,7 @@
+ #include    <X11/X.h>
+ #include    "scrnintstr.h"
+ #include    "windowstr.h"
+-#include    "font.h"
+ #include    "dixfontstr.h"
+-#include    "fontstruct.h"
+ #include    "mi.h"
+ #include    "regionstr.h"
+ #include    "globals.h"
+--- xserver.orig/os/xstrans.c	2006-03-11 16:27:42.000000000 +0100
++++ xserver/os/xstrans.c	2006-03-11 16:39:31.000000000 +0100
+@@ -27,4 +27,4 @@
+ 
+ #include "config.h"
+ 
+-#include <transport.c>
++#include <X11/Xtrans/transport.c>
+--- xserver.orig/os/xstrans.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/os/xstrans.h	2006-03-11 16:39:37.000000000 +0100
+@@ -25,4 +25,4 @@
+ #define XSERV_t
+ #define TRANS_SERVER
+ 
+-#include <Xtrans.h>
++#include <X11/Xtrans/Xtrans.h>
+--- xserver.orig/Xext/shmint.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/Xext/shmint.h	2006-03-11 16:29:24.000000000 +0100
+@@ -32,27 +32,6 @@
+ #include "pixmap.h"
+ #include "gc.h"
+ 
+-typedef struct _ShmFuncs {
+-    PixmapPtr	(* CreatePixmap)(ScreenPtr	pScreen,
+-				 int		width,
+-				 int		height,
+-				 int		depth,
+-				 char		*addr);
+-    void	(* PutImage)(DrawablePtr	dst,
+-			     GCPtr		pGC,
+-			     int		depth,
+-			     unsigned int	format,
+-			     int		w,
+-			     int		h,
+-			     int	    	sx,
+-			     int	    	sy,
+-			     int	    	sw,
+-			     int	    	sh,
+-			     int	    	dx,
+-			     int	    	dy,
+-			     char		*data);
+-} ShmFuncs, *ShmFuncsPtr;
+-
+ void
+ ShmRegisterFuncs(ScreenPtr pScreen, ShmFuncsPtr funcs);
+ 
+--- xserver.orig/Xext/syncint.h	2006-03-11 16:27:42.000000000 +0100
++++ xserver/Xext/syncint.h	2006-03-11 16:30:16.000000000 +0100
+@@ -48,7 +48,7 @@
+ PERFORMANCE OF THIS SOFTWARE.
+ 
+ ******************************************************************/
+-/* $Id: syncint.h,v 3.1 2003-11-02 19:56:10 keithp Exp $ */
++/* $Id: syncint.h,v 3.2 2005-04-20 18:42:31 clee Exp $ */
+ 
+ #ifndef _SYNCINT_H_
+ #define _SYNCINT_H_
+@@ -57,26 +57,10 @@
+ 
+ #define CARD64 XSyncValue /* XXX temporary! need real 64 bit values for Alpha */
+ 
+-typedef struct _SyncCounter {
+-    ClientPtr		client;	/* Owning client. 0 for system counters */
+-    XSyncCounter	id;		/* resource ID */
+-    CARD64		value;		/* counter value */
+-    struct _SyncTriggerList *pTriglist;	/* list of triggers */
+-    Bool		beingDestroyed; /* in process of going away */
+-    struct _SysCounterInfo *pSysCounterInfo; /* NULL if not a system counter */
+-} SyncCounter;
+-
+ /*
+  * The System Counter interface
+  */
+ 
+-typedef enum {
+-    XSyncCounterNeverChanges,
+-    XSyncCounterNeverIncreases,
+-    XSyncCounterNeverDecreases,
+-    XSyncCounterUnrestricted
+-} SyncCounterType;
+-
+ typedef void
+ (*SyncQueryValueProcPtr) (pointer pCounter,
+ 			  CARD64 *freshvalue);
+@@ -86,16 +70,6 @@
+ 			     CARD64 *lessthan,
+ 			     CARD64 *greaterthan);
+ 
+-typedef struct _SysCounterInfo {
+-    char			*name;
+-    CARD64			resolution;
+-    CARD64			bracket_greater;
+-    CARD64			bracket_less;
+-    SyncCounterType		counterType;  /* how can this counter change */
+-    SyncQueryValueProcPtr	QueryValue;
+-    SyncBracketValuesProcPtr	BracketValues;
+-} SysCounterInfo;
+-
+ struct _SyncTrigger;
+ 
+ typedef Bool
+@@ -108,55 +82,6 @@
+ typedef void
+ (*SyncCounterDestroyedProcPtr) (struct _SyncTrigger *pTrigger);
+ 
+-typedef struct _SyncTrigger {
+-    SyncCounter			*pCounter;
+-    CARD64			wait_value;	/* wait value */
+-    unsigned int		value_type;     /* Absolute or Relative */
+-    unsigned int		test_type;	/* transition or Comparision type */
+-    CARD64			test_value;	/* trigger event threshold value */
+-    SyncCheckTriggerProcPtr	CheckTrigger;
+-    SyncTriggerFiredProcPtr	TriggerFired;
+-    SyncCounterDestroyedProcPtr	CounterDestroyed;
+-} SyncTrigger;
+-
+-typedef struct _SyncTriggerList {
+-    SyncTrigger			*pTrigger;
+-    struct _SyncTriggerList	*next;
+-} SyncTriggerList;
+-
+-typedef struct _SyncAlarmClientList {
+-    ClientPtr			client;
+-    XID				delete_id;
+-    struct _SyncAlarmClientList *next;
+-} SyncAlarmClientList;
+-
+-typedef struct _SyncAlarm {
+-    SyncTrigger			trigger;
+-    ClientPtr			client;
+-    XSyncAlarm			alarm_id;
+-    CARD64			delta;
+-    int				events;
+-    int				state;
+-    SyncAlarmClientList		*pEventClients;
+-} SyncAlarm;
+-
+-typedef struct {
+-    ClientPtr	client;
+-    CARD32 	delete_id;
+-    int		num_waitconditions;
+-} SyncAwaitHeader;
+-
+-typedef struct {
+-    SyncTrigger trigger;
+-    CARD64	event_threshold;
+-    SyncAwaitHeader *pHeader;
+-} SyncAwait;
+-
+-typedef union {
+-    SyncAwaitHeader header;
+-    SyncAwait	    await;
+-} SyncAwaitUnion;
+-
+ pointer
+ SyncCreateSystemCounter(char			    *name,
+ 			CARD64			    inital_value,
