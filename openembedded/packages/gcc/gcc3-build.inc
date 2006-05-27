@@ -10,11 +10,12 @@ S = "${WORKDIR}/gcc-${PV}"
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 BINV ?= "${PV}"
 
-# gcj doesn't work on arm
+# gcj doesn't work on some architectures
 JAVA = ",java"
 JAVA_arm = ""
 JAVA_armeb = ""
 JAVA_mipsel = ""
+JAVA_sh3 = ""
 # gcc4-build sets this to f95
 FORTRAN ?= "f77"
 LANGUAGES ?= "c,c++,${FORTRAN}${JAVA}"
