@@ -1,7 +1,7 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r48"
+PR = "r51"
 LICENSE = "GPL"
 
 SRC_URI = " \
@@ -45,12 +45,13 @@ conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
 	     ${sysconfdir}/nsswitch.conf ${sysconfdir}/profile \
 	     ${sysconfdir}/default"
 
+#
+# set standard hostname, might be a candidate for a DISTRO variable? :M:
+#
 hostname = "openembedded"
 hostname_slugos = "nslu2"
 hostname_mnci = "MNCI"
-PACKAGE_ARCH_mnci = "mnci"
 hostname_rt3000 = "MNRT"
-PACKAGE_ARCH_rt3000 = "rt3000"
 
 do_install () {
 	for d in ${dirs755}; do
@@ -133,8 +134,11 @@ PACKAGES = "${PN}-doc ${PN}"
 FILES_${PN} = "/"
 FILES_${PN}-doc = "${docdir} ${datadir}/common-licenses"
 
+# M&N specific packaging
+PACKAGE_ARCH_mnci = "mnci"
+PACKAGE_ARCH_rt3000 = "rt3000"
 
-# Unslung distribution specific packages follow ...
+# Unslung distribution specific packaging
 
 PACKAGES_unslung = "${PN}-unslung"
 PACKAGE_ARCH_${PN}-unslung = "nslu2"
