@@ -9,7 +9,7 @@ HOMEPAGE = "http://ep09.pld-linux.org/~mmazur/linux-libc-headers/"
 LICENSE = "GPL"
 MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 INHIBIT_DEFAULT_DEPS = "1"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-${PV}.tar.bz2 \
 	file://keyboard.patch;patch=1"
@@ -41,6 +41,7 @@ do_configure () {
 		cp -pPR include/asm/arch-ebsa285 include/asm/arch
 	elif test "$ARCH" = "sh"; then
 		cp -pPR include/asm/cpu-${TARGET_ARCH} include/asm/cpu || die "unable to create include/asm/cpu"
+		cp -pPR include/asm/cpu/*  include/asm
 	fi
 }
 
