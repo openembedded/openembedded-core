@@ -475,6 +475,34 @@ python base_do_patch() {
 		else:
 			pname = os.path.basename(unpacked)
 
+		if "mindate" in parm:
+			mindate = parm["mindate"]
+		else:
+			mindate = 0
+
+		if "maxdate" in parm:
+			maxdate = parm["maxdate"]
+		else:
+			maxdate = "20711226"
+
+		pn = bb.data.getVar('PN', d, 1)
+		srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
+
+		if not srcdate:
+			srcdate = bb.data.getVar('SRCDATE', d, 1)
+
+		if srcdate == "now": 
+			srcdate = bb.data.getVar('DATE', d, 1)
+
+		if (maxdate < srcdate) or (mindate > srcdate):
+			if (maxdate < srcdate):
+				bb.note("Patch '%s' is outdated" % pname)
+
+			if (mindate > srcdate):
+				bb.note("Patch '%s' is predated" % pname)
+
+			continue
+
 		bb.note("Applying patch '%s'" % pname)
 		bb.data.setVar("do_patchcmd", bb.data.getVar("PATCHCMD", d, 1) % (pnum, pname, unpacked), d)
 		bb.data.setVarFlag("do_patchcmd", "func", 1, d)
@@ -743,6 +771,10 @@ ftp://ftp.kernel.org/pub	ftp://ftp.uk.kernel.org/pub
 ftp://ftp.kernel.org/pub	ftp://ftp.hk.kernel.org/pub
 ftp://ftp.kernel.org/pub	ftp://ftp.au.kernel.org/pub
 ftp://ftp.kernel.org/pub	ftp://ftp.jp.kernel.org/pub
+ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.franken.de/pub/crypt/mirror/ftp.gnupg.org/gcrypt/
+ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.surfnet.nl/pub/security/gnupg/
+ftp://ftp.gnupg.org/gcrypt/     http://gulus.USherbrooke.ca/pub/appl/GnuPG/
+
 ftp://.*/.*/	http://www.oesources.org/source/current/
 http://.*/.*/	http://www.oesources.org/source/current/
 }

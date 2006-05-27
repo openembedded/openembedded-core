@@ -1,3 +1,21 @@
+def tinder_http_post(server, selector, content_type, body):
+    import httplib
+    # now post it
+    for i in range(0,5):
+       try:
+           h = httplib.HTTP(server)
+           h.putrequest('POST', selector)
+           h.putheader('content-type', content_type)
+           h.putheader('content-length', str(len(body)))
+           h.endheaders()
+           h.send(body)
+           errcode, errmsg, headers = h.getreply()
+           #print errcode, errmsg, headers
+           return (errcode,errmsg, headers, h.file)
+       except:
+           # try again
+           pass
+
 def tinder_form_data(bound, dict, log):
     output = []
   #br
@@ -29,7 +47,7 @@ def tinder_format_http_post(d,status,log):
     for the tinderbox to be happy.
     """
 
-    from bb import data
+    from bb import data, build
     import os,random
 
     # the variables we will need to send on this form post
@@ -72,7 +90,6 @@ def tinder_build_start(d):
     on the server.
     """
     from bb import data
-    import httplib
 
     # get the body and type
     content_type, body = tinder_format_http_post(d,None,None)
@@ -84,15 +101,9 @@ def tinder_build_start(d):
     #print "selector %s and url %s" % (selector, url)
 
     # now post it
-    h = httplib.HTTP(server)
-    h.putrequest('POST', selector)
-    h.putheader('content-type', content_type)
-    h.putheader('content-length', str(len(body)))
-    h.endheaders()
-    h.send(body)
-    errcode, errmsg, headers = h.getreply()
+    errcode, errmsg, headers, h_file = tinder_http_post(server,selector,content_type, body)
     #print errcode, errmsg, headers
-    report = h.file.read()
+    report = h_file.read()
 
     # now let us find the machine id that was assigned to us
     search = "<machine id='"
@@ -113,7 +124,6 @@ def tinder_send_http(d, status, log):
     Send this log as build status
     """
     from bb import data
-    import httplib
 
 
     # get the body and type
@@ -124,13 +134,7 @@ def tinder_send_http(d, status, log):
     selector = url + "/xml/build_status.pl"
 
     # now post it
-    h = httplib.HTTP(server)
-    h.putrequest('POST', selector)
-    h.putheader('content-type', content_type)
-    h.putheader('content-length', str(len(body)))
-    h.endheaders()
-    h.send(body)
-    errcode, errmsg, headers = h.getreply()
+    errcode, errmsg, headers, h_file = tinder_http_post(server,selector,content_type, body)
     #print errcode, errmsg, headers
     #print h.file.read()
 
@@ -247,7 +251,7 @@ def tinder_do_tinder_report(event):
     implemented yet.
     """
     from bb.event import getName
-    from bb import data, mkdirhier
+    from bb import data, mkdirhier, build
     import os, glob
 
     # variables
@@ -289,6 +293,7 @@ def tinder_do_tinder_report(event):
     elif name == "PkgSucceeded":
         log += "<--- TINDERBOX Package %s done (SUCCESS)\n" % data.getVar('P', event.data, True)
     elif name == "PkgFailed":
+        build.exec_task('do_clean', event.data)
         log += "<--- TINDERBOX Package %s failed (FAILURE)\n" % data.getVar('P', event.data, True)
         status = 200
     elif name == "BuildCompleted":

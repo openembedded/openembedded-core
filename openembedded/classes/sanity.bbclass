@@ -4,7 +4,11 @@
 
 def raise_sanity_error(msg):
 	import bb
-	bb.fatal("Openembedded's config sanity checker detected a potential misconfiguration.\nEither fix the cause of this error or at your own risk disable the checker (see sanity.conf).\n%s" % msg)
+	bb.fatal(""" Openembedded's config sanity checker detected a potential misconfiguration.
+	Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
+	Following is the list of potential problems / advisories:
+	
+	%s""" % msg)
 
 def check_conf_exists(fn, data):
 	import bb, os
@@ -31,7 +35,10 @@ def check_app_exists(app, d):
 def check_sanity(e):
 	from bb import note, error, data, __version__
 	from bb.event import Handled, NotHandled, getName
-	from distutils.version import LooseVersion
+	try:
+		from distutils.version import LooseVersion
+	except ImportError:
+		def LooseVersion(v): print "WARNING: sanity.bbclass can't compare versions without python-distutils"; return 1
 	import os
 
 	# Check the bitbake version meets minimum requirements
@@ -82,6 +89,12 @@ def check_sanity(e):
 
 	if not check_app_exists('texi2html', e.data):
 		raise_sanity_error('Please install the texi2html binary')
+
+	if not check_app_exists('cvs', e.data):
+		raise_sanity_error('Please install the cvs utility')
+
+	if not check_app_exists('svn', e.data):
+		raise_sanity_error('Please install the svn utility')
 
 	oes_bb_conf = data.getVar( 'OES_BITBAKE_CONF', e.data, True )
 	if not oes_bb_conf:

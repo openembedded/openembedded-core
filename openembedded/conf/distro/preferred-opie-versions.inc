@@ -1,4 +1,11 @@
 #
+# Default versions
+QTE_VERSION ?= "2.3.10"
+OPIE_VERSION ?= "1.2.2"
+PALMTOP_USE_MULTITHREADED_QT ?= "yes"
+
+#
+#
 # Opie libraries
 #
 PREFERRED_PROVIDER_virtual/libqte2 = '${@base_conditional("PALMTOP_USE_MULTITHREADED_QT", "yes", "qte-mt", "qte", d)}'
