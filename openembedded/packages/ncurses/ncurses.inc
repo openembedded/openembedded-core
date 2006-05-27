@@ -7,6 +7,7 @@ PACKAGES_prepend = "ncurses-tools "
 PACKAGES_append = " ncurses-terminfo"
 FILES_ncurses_append = " ${datadir}/tabset"
 RSUGGESTS_${PN} = "ncurses-terminfo"
+RPROVIDES = "libncurses5"
 
 inherit autotools
 
