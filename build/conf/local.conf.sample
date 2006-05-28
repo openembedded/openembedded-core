@@ -57,5 +57,4 @@ BBINCLUDELOGS = "yes"
 # a cvs:// URI.  Uncomment this, if you not want to pull directly from CVS.
 CVS_TARBALL_STASH = "http://www.oesources.org/source/current/"
 
-include conf/distro/include/multimachine.conf
 ENABLE_BINARY_LOCALE_GENERATION = "1"
