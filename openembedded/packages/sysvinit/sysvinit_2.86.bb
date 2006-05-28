@@ -9,9 +9,6 @@ PR = "r24"
 # Set PACKAGE_ARCH appropriately.
 PACKAGE_ARCH_${PN}-inittab = "${MACHINE_ARCH}"
 
-#Work around multimachine issues for now
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 RDEPENDS_${PN} = "${PN}-inittab"
 
 PACKAGES =+ "bootlogd ${PN}-inittab"
