@@ -1,0 +1,13 @@
+--- gtk+-2.6.7/gtk/gtklabel.c~	2006-05-25 15:35:15.000000000 +0100
++++ gtk+-2.6.7/gtk/gtklabel.c	2006-05-30 11:40:37.000000000 +0100
+@@ -2185,8 +2185,8 @@
+ 	     req_width - misc->xpad);
+ 
+   y = floor (widget->allocation.y + (gint)misc->ypad 
+-             + MAX (((widget->allocation.height - widget->requisition.height) * misc->yalign)
+-		    + 0.5, 0));
++             + ((widget->allocation.height - widget->requisition.height) * misc->yalign)
++		    + 0.5);
+ 
+   if (xp)
+     *xp = x;
