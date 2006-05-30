@@ -192,6 +192,17 @@ PKG_kernel-image = "kernel-image-${KERNEL_VERSION}"
 ALLOW_EMPTY_kernel = "1"
 ALLOW_EMPTY_kernel-image = "1"
 
+pkg_postinst_kernel-image () {
+if [ ! -e "$D/lib/modules/${KERNEL_RELEASE}" ]; then
+	mkdir -p $D/lib/modules/${KERNEL_RELEASE}
+fi
+if [ -n "$D" ]; then
+	${HOST_PREFIX}depmod-${KERNEL_MAJOR_VERSION} -A -b $D -F ${STAGING_KERNEL_DIR}/System.map-${KERNEL_RELEASE} ${KERNEL_VERSION}
+else
+	depmod -A
+fi
+}
+
 pkg_postinst_modules () {
 if [ -n "$D" ]; then
 	${HOST_PREFIX}depmod-${KERNEL_MAJOR_VERSION} -A -b $D -F ${STAGING_KERNEL_DIR}/System.map-${KERNEL_RELEASE} ${KERNEL_VERSION}
