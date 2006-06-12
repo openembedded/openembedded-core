@@ -21,4 +21,6 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "--enable-composite --disable-xinerama --enable-xomapserver \
                 --enable-xsp --disable-xlocale --disable-rpath --prefix=/usr \
-		--disable-xdmcp"
+		--enable-static=no --disable-static "
+LDFLAGS += " -lXfont -lXdmcp -lXau "
+
