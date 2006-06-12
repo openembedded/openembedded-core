@@ -1,0 +1,15 @@
+diff -urNd ../detect-stylus-0.13-r1/detect-stylus-0.13/detect-stylus.c detect-stylus-0.13/detect-stylus.c
+--- ../detect-stylus-0.13-r1/detect-stylus-0.13/detect-stylus.c	2004-09-08 16:56:58.000000000 +0100
++++ detect-stylus-0.13/detect-stylus.c	2004-09-13 21:36:03.000000000 +0100
+@@ -132,9 +132,9 @@
+ 
+       XCloseDisplay (dpy);
+       if (access("/usr/bin/xrdb", X_OK))
+-        system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
++        system ("echo \"Matchbox.cursor: no\nXcursor.theme: xcursor-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
+       else
+-        system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/bin/xrdb -nocpp -merge");
++        system ("echo \"Matchbox.cursor: no\nXcursor.theme: xcursor-transparent\" | /usr/bin/xrdb -nocpp -merge");
+     }
+       
+   exit (0);
