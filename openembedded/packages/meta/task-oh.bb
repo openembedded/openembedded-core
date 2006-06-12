@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r31"
+PR = "r32"
 
 ALLOW_EMPTY = "1"
 
@@ -84,9 +84,9 @@ RDEPENDS_task-oh-standard := "\
     gnome-vfs-plugin-http \
     gtk-theme-clearlooks"
 
-RDEPENDS_task-oh-standard_c7x0 += "zaurusd"
-RDEPENDS_task-oh-standard_spitz += "zaurusd"
-RDEPENDS_task-oh-standard_akita += "zaurusd"
+RDEPENDS_task-oh-standard_append_c7x0 = " zaurusd "
+RDEPENDS_task-oh-standard_append_spitz = " zaurusd "
+RDEPENDS_task-oh-standard_append_akita = " zaurusd "
 
 #    minimo \
 #    teleport \
