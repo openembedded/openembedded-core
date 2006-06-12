@@ -88,6 +88,8 @@ RDEPENDS_task-oh-standard_append_c7x0 = " zaurusd "
 RDEPENDS_task-oh-standard_append_spitz = " zaurusd "
 RDEPENDS_task-oh-standard_append_akita = " zaurusd "
 
+PACKAGE_ARCH_task-oh-standard = "${MACHINE_ARCH}"
+
 #    minimo \
 #    teleport \
 #    xst \
