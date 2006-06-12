@@ -1,12 +1,12 @@
 SECTION = "x11/libs"
 DESCRIPTION = "Matchbox window manager core library"
 LICENSE = "GPL"
-DEPENDS = "libx11 libxext expat libxft jpeg libpng zlib libxsettings-client"
-PR="r2"
+DEPENDS = "libx11 libxext expat libxft jpeg libpng zlib libxsettings-client startup-notification"
+PR="r3"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--enable-jpeg --enable-expat --enable-xsettings"
+EXTRA_OECONF = "--enable-jpeg --enable-expat --enable-xsettings --enable-startup-notification"
 
 S = "${WORKDIR}/libmatchbox-${PV}"
 
