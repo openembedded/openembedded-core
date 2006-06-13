@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r33"
+PR = "r34"
 
 ALLOW_EMPTY = "1"
 
