@@ -7,7 +7,7 @@ case `uname -r` in
 	TSLIB_CONFFILE=/usr/share/tslib/ts.conf-corgi-2.4
 	;;
 *)
-	TSLIB_TSDEVICE=/dev/input/event1
+	TSLIB_TSDEVICE=/dev/input/touchscreen0
 	TSLIB_TSEVENTTYPE=INPUT
 	TSLIB_CONFFILE=/usr/share/tslib/ts-2.6.conf
 	;;
