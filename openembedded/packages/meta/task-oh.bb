@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r32"
+PR = "r33"
 
 ALLOW_EMPTY = "1"
 
@@ -43,7 +43,6 @@ RDEPENDS_task-oh-base := "\
     xhost \
     udev \
     sysfsutils \
-    leafpad \
     gdk-pixbuf-loader-png \
     gdk-pixbuf-loader-gif \
     gdk-pixbuf-loader-xpm \
@@ -53,6 +52,7 @@ RDEPENDS_task-oh-base := "\
     gtk+ "
 
 RDEPENDS_task-oh-standard := "\
+    leafpad \
     dropbear \
     portmap \
     matchbox-poky \
