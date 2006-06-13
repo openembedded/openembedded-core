@@ -8,6 +8,8 @@ killproc() {            # kill the named process(es)
         [ "$pid" != "" ] && kill $pid
 }
 
+. /etc/profile
+
 case "$1" in
   start)
        echo "Starting Xserver"

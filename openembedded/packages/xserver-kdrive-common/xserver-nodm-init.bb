@@ -2,7 +2,7 @@ DESCRIPTION = "Simple Xserver Init Script (no dm)"
 LICENSE = "GPL"
 SECTION = "x11"
 PRIORITY = "optional"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "file://xserver-nodm"
 S = ${WORKDIR}
