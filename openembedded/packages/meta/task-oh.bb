@@ -1,7 +1,7 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r34"
+PR = "r35"
 
 ALLOW_EMPTY = "1"
 
@@ -33,7 +33,8 @@ RDEPENDS_task-oh-boot-min-extras := "\
     udev-utils"
 
 RDEPENDS_task-oh-base := "\
-    matchbox \
+    matchbox-common \
+    matchbox-wm \
     matchbox-keyboard \
     matchbox-panel    \
     xserver-kdrive-common \
@@ -55,6 +56,7 @@ RDEPENDS_task-oh-standard := "\
     leafpad \
     dropbear \
     portmap \
+    matchbox-desktop \
     matchbox-poky \
     matchbox-keyboard \
     matchbox-stroke \
