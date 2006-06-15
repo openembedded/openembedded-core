@@ -1,0 +1,11 @@
+--- linux-2.6.16/drivers/video/backlight/locomolcd.c.orig	2006-05-14 13:24:01.354435088 +0200
++++ linux-2.6.16/drivers/video/backlight/locomolcd.c	2006-05-14 13:24:11.920828752 +0200
+@@ -201,7 +201,7 @@
+ 		return PTR_ERR (locomolcd_bl_device);
+ 
+ 	/* Set up frontlight so that screen is readable */
+-	locomobl_data.brightness = 2;
++	locomobl_data.brightness = 3;
+ 	locomolcd_set_intensity(locomolcd_bl_device);
+ 
+ 	return 0;
