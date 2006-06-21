@@ -8,12 +8,13 @@ RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
 PV = "2.10.0+svn${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
            file://gconf-dbus-update.patch;patch=1;pnum=0 \
            file://xml-backend-locks-compile-fix.patch;patch=1 \
 	   file://no-deprecation.patch;patch=1 \
+	   file://remove-old-translations.patch;patch=1 \
            file://xml-backend-oldxml-Makefile.patch \
 	   file://69gconfd-dbus"
 

@@ -9,12 +9,13 @@ RPROVIDES_${PN}-dev = "gnome-vfs-dev"
 RRECOMMENDS_${PN} = "gnome-vfs-plugin-file shared-mime-info"
 
 PV = "2.12.0+cvs${SRCDATE}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "svn://anonymous@developer.imendio.com/svn/gnome-vfs-dbus;module=trunk;proto=http \
 	   file://no-gtk-doc.patch;patch=1 \
 	   file://gconftool-lossage.patch;patch=1 \
-	   file://gssapi.patch;patch=1"
+	   file://gssapi.patch;patch=1 \
+	   file://remove-old-translations.patch;patch=1"
 S = "${WORKDIR}/trunk"
 
 inherit pkgconfig autotools

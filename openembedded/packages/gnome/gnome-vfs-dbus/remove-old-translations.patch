@@ -1,0 +1,11 @@
+--- trunk/configure.in.old	2006-06-21 14:15:24.000000000 +0100
++++ trunk/configure.in	2006-06-21 14:19:35.000000000 +0100
+@@ -127,7 +127,7 @@
+ AC_SUBST(GETTEXT_PACKAGE)
+ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Name of the gettext package])
+ 
+-ALL_LINGUAS="af am ar az be bg bn bs ca cs cy da de el en_CA en_GB eo es et eu fa fi fr ga gl gu he hi hr hu id is it ja ko li lt lv mk ml mn mr ms nb ne nl nn no nso pa pl pt pt_BR ro ru rw sk sl sq sr sr@ije sr@Latn sv ta th tr uk vi wa xh yi zh_CN zh_TW zu"
++ALL_LINGUAS="af am az bg bn bs ca cs cy da de el en_CA en_GB eo es et eu fa fi fr ga gl gu he hi hr hu id is it ja ko li lt lv mk ml mn mr ms nb ne nl nn no nso pa pl pt pt_BR ro ru rw sk sl sq sr sr@ije sr@Latn sv ta th tr uk vi wa xh yi zh_CN zh_TW zu"
+ AM_GLIB_GNU_GETTEXT
+ 
+ 
