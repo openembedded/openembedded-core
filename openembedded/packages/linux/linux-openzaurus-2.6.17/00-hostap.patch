@@ -1,0 +1,45 @@
+Platform: Sharp Zaurus C760 running 2.6.16 and pcmciautils 013.
+
+root@c7x0:~# pccardctl ident
+Socket 0:
+  product info: "Pretec", "CompactWLAN Card 802.11b", "2.5"
+  manfid: 0x0156, 0x0002
+  function: 6 (network)
+
+==========================================================================
+From: Jochen Friedrich 
+
+Yet another card known to work OK with hostap_cs:
+
+# pccardctl ident
+Socket 0:
+  no product info available
+Socket 1:
+  product info: "U.S. Robotics", "IEEE 802.11b PC-CARD", "Version 01.02", ""
+  manfid: 0x0156, 0x0002
+  function: 6 (network)
+
+==========================================================================
+
+Signed-off-by: Marcin Juszkiewicz <openembedded@hrw.one.pl>
+
+ drivers/net/wireless/hostap/hostap_cs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+Index: linux/drivers/net/wireless/hostap/hostap_cs.c
+===================================================================
+--- linux.orig/drivers/net/wireless/hostap/hostap_cs.c	2006-05-17 10:23:00.000000000 +0200
++++ linux/drivers/net/wireless/hostap/hostap_cs.c	2006-05-17 10:25:45.000000000 +0200
+@@ -923,6 +923,12 @@
+ 	PCMCIA_DEVICE_PROD_ID12(
+ 		"ZoomAir 11Mbps High", "Rate wireless Networking",
+ 		0x273fe3db, 0x32a1eaee),
++	PCMCIA_DEVICE_PROD_ID123(
++			"Pretec", "CompactWLAN Card 802.11b", "2.5",
++			0x1cadd3e5, 0xe697636c, 0x7a5bfcf1),
++	PCMCIA_DEVICE_PROD_ID123(
++		"U.S. Robotics", "IEEE 802.11b PC-CARD", "Version 01.02",
++		0xc7b8df9d, 0x1700d087, 0x4b74baa0),
+ 	PCMCIA_DEVICE_NULL
+ };
+ MODULE_DEVICE_TABLE(pcmcia, hostap_cs_ids);
