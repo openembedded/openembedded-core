@@ -1,0 +1,147 @@
+Index: ltt-control-0.6-28042006/liblttctl/liblttctl.c
+===================================================================
+--- ltt-control-0.6-28042006.orig/liblttctl/liblttctl.c	2006-03-11 17:30:32.000000000 +0000
++++ ltt-control-0.6-28042006/liblttctl/liblttctl.c	2006-06-01 14:39:05.000000000 +0100
+@@ -298,7 +298,7 @@
+ 
+ 
+ int lttctl_create_trace(const struct lttctl_handle *h,
+-		char *name, enum trace_mode mode, unsigned subbuf_size, unsigned n_subbufs)
++		char *name, enum trace_mode mode, char *trace_type, unsigned subbuf_size, unsigned n_subbufs)
+ {
+ 	int err;
+ 	
+@@ -320,6 +320,7 @@
+ 	req.nlh.nlmsg_seq = 0;
+ 
+ 	strncpy(req.msg.trace_name, name, NAME_MAX);
++	strncpy(req.msg.trace_type, trace_type, NAME_MAX);
+ 	req.msg.op = OP_CREATE;
+ 	req.msg.args.new_trace.mode = mode;
+ 	req.msg.args.new_trace.subbuf_size = subbuf_size;
+Index: ltt-control-0.6-28042006/liblttctl/lttctl.h
+===================================================================
+--- ltt-control-0.6-28042006.orig/liblttctl/lttctl.h	2006-03-11 17:30:32.000000000 +0000
++++ ltt-control-0.6-28042006/liblttctl/lttctl.h	2006-06-01 14:40:16.000000000 +0100
+@@ -47,6 +47,7 @@
+ 
+ typedef struct lttctl_peer_msg {
+ 	char trace_name[NAME_MAX];
++	char trace_type[NAME_MAX];
+ 	enum trace_op op;
+ 	union {
+     struct {
+@@ -76,7 +77,7 @@
+ 
+ 
+ int lttctl_create_trace(const struct lttctl_handle *h,
+-		char *name, enum trace_mode mode, unsigned subbuf_size, unsigned n_subbufs);
++		char *name, enum trace_mode mode, char *trace_type, unsigned subbuf_size, unsigned n_subbufs);
+ 
+ int lttctl_destroy_trace(const struct lttctl_handle *handle, char *name);
+ 
+Index: ltt-control-0.6-28042006/lttctl/lttctl.c
+===================================================================
+--- ltt-control-0.6-28042006.orig/lttctl/lttctl.c	2006-03-11 17:30:27.000000000 +0000
++++ ltt-control-0.6-28042006/lttctl/lttctl.c	2006-06-01 14:40:47.000000000 +0100
+@@ -40,6 +40,7 @@
+ };
+ 
+ static char *trace_name = NULL;
++static char *trace_type = "relayfs";
+ static char *mode_name = NULL;
+ static unsigned subbuf_size = 0;
+ static unsigned n_subbufs = 0;
+@@ -81,6 +82,7 @@
+ 	printf("              (optionnaly, you can set LTT_DAEMON\n");
+ 	printf("              and the LTT_FACILITIES env. vars.)\n");
+ 	printf("-t            Trace root path. (ex. /root/traces/example_trace)\n");
++	printf("-T            Type of trace (ex. relayfs, sti, stirelayfs)\n");
+ 	printf("-l            LTT channels root path. (ex. /mnt/relayfs/ltt)\n");
+ 	printf("-z            Size of the subbuffers (will be rounded to next page size)\n");
+ 	printf("-x            Number of subbuffers\n");
+@@ -217,6 +219,16 @@
+ 							argn++;
+ 						}
+ 						break;
++					case 'T':
++						if(argn+1 < argc) {
++							trace_type = argv[argn+1];
++							argn++;
++						} else {
++							printf("Specify a trace type after -T.\n");
++							printf("\n");
++							ret = EINVAL;
++						}
++						break;
+ 					default:
+ 						printf("Invalid argument '%s'.\n", argv[argn]);
+ 						printf("\n");
+@@ -390,7 +402,7 @@
+ 	strcat(channel_path, trace_name);
+ 
+ 	
+-	ret = lttctl_create_trace(handle, trace_name, mode, subbuf_size, n_subbufs);
++	ret = lttctl_create_trace(handle, trace_name, mode, trace_type, subbuf_size, n_subbufs);
+ 	if(ret != 0) goto create_error;
+ 
+ 	act.sa_handler = sigchld_handler;
+@@ -466,13 +478,13 @@
+ 	
+ 	switch(op) {
+     case CTL_OP_CREATE_START:
+-			ret = lttctl_create_trace(handle, trace_name, mode, subbuf_size,
++			ret = lttctl_create_trace(handle, trace_name, mode, trace_type, subbuf_size,
+ 																n_subbufs);
+       if(!ret)
+         ret = lttctl_start(handle, trace_name);
+       break;
+   	case CTL_OP_CREATE:
+-			ret = lttctl_create_trace(handle, trace_name, mode, subbuf_size,
++			ret = lttctl_create_trace(handle, trace_name, mode, trace_type, subbuf_size,
+ 																n_subbufs);
+       break;
+ 		case CTL_OP_DESTROY:
+Index: ltt-control-0.6-28042006/facilities/dynticks.xml
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ ltt-control-0.6-28042006/facilities/dynticks.xml	2006-06-05 18:03:41.000000000 +0100
+@@ -0,0 +1,18 @@
++<?xml version="1.0"?>
++<facility name="dynticks">
++    <description>Dynamic Timer Events</description>
++    
++  <event name="handler_entry">
++    <description>Dynticks Handler Entered</description>
++  </event>  
++  
++  <event name="handler_exit">
++    <description>Dynticks Handler Exitted</description>
++  </event> 
++
++  <event name="reprogram">
++    <description>Dynticks Reprogram</description>
++    <field name="ticks"><description>Number of ticks to sleep for</description><uint size="4"></field>
++  </event> 
++
++</facility>
+Index: ltt-control-0.6-28042006/facilities/Makefile.am
+===================================================================
+--- ltt-control-0.6-28042006.orig/facilities/Makefile.am	2006-04-28 21:26:26.000000000 +0100
++++ ltt-control-0.6-28042006/facilities/Makefile.am	2006-06-05 18:04:30.000000000 +0100
+@@ -1,6 +1,7 @@
+ 
+ EXTRA_DIST =  \
+ core.xml \
++dynticks.xml \
+ fs.xml \
+ ipc.xml \
+ kernel.xml \
+@@ -21,6 +22,7 @@
+ 
+ facilities_DATA = \
+ core.xml \
++dynticks.xml \
+ fs.xml \
+ ipc.xml \
+ kernel.xml \
