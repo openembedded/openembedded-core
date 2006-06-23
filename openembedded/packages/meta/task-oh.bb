@@ -1,11 +1,11 @@
 PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r35"
+PR = "r36"
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-oh-boot := "\
+RDEPENDS_task-oh-boot = "\
     base-files \
     base-passwd \
     busybox \
@@ -21,10 +21,10 @@ RDEPENDS_task-oh-boot := "\
     ipkg \
     module-init-tools-depmod"
 
-RDEPENDS_task-oh-boot-extras := "\
+RDEPENDS_task-oh-boot-extras = "\
     ${BOOTSTRAP_EXTRA_RDEPENDS}"
 
-RDEPENDS_task-oh-boot-min-extras := "\
+RDEPENDS_task-oh-boot-min-extras = "\
     kernel \
     udev \
     sysfsutils \
@@ -32,7 +32,7 @@ RDEPENDS_task-oh-boot-min-extras := "\
     apm \
     udev-utils"
 
-RDEPENDS_task-oh-base := "\
+RDEPENDS_task-oh-base = "\
     matchbox-common \
     matchbox-wm \
     matchbox-keyboard \
@@ -52,7 +52,7 @@ RDEPENDS_task-oh-base := "\
     pango-module-basic-fc \
     gtk+ "
 
-RDEPENDS_task-oh-standard := "\
+RDEPENDS_task-oh-standard = "\
     leafpad \
     dropbear \
     portmap \
@@ -100,7 +100,7 @@ PACKAGE_ARCH_task-oh-standard = "${MACHINE_ARCH}"
 #    xrdb \
 
 
-RDEPENDS_task-oh-devel := "\
+RDEPENDS_task-oh-devel = "\
     tslib-calibrate \
     tslib-tests \
     oprofile \
@@ -108,7 +108,7 @@ RDEPENDS_task-oh-devel := "\
     strace \
     lttng-viewer"
 
-RRECOMMENDS_task-oh-devel := "\
+RRECOMMENDS_task-oh-devel = "\
     kernel-module-oprofile"
 #    lttng-modules
 
