@@ -1,7 +1,15 @@
-PACKAGES = "task-oh-base task-oh-devel task-oh-boot task-oh-standard task-oh-boot-extras task-oh-boot-min-extras"
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r36"
+PR = "r37"
+
+PACKAGES = "\
+    task-oh-base \
+    task-oh-boot \
+    task-oh-standard \
+    task-oh-boot-extras \
+    task-oh-boot-min-extras \
+    task-oh-devtools \
+    task-oh-testapps"
 
 ALLOW_EMPTY = "1"
 
@@ -92,24 +100,24 @@ RDEPENDS_task-oh-standard_append_akita = " zaurusd "
 
 PACKAGE_ARCH_task-oh-standard = "${MACHINE_ARCH}"
 
-#    minimo \
-#    teleport \
-#    xst \
-#    libgtkstylus \
-#    detect-stylus \
-#    xrdb \
-
-
-RDEPENDS_task-oh-devel = "\
-    tslib-calibrate \
-    tslib-tests \
+RDEPENDS_task-oh-devtools = "\
     oprofile \
     gdb \    
     strace \
     lttng-viewer"
-
-RRECOMMENDS_task-oh-devel = "\
+RRECOMMENDS_task-oh-devtools = "\
     kernel-module-oprofile"
-#    lttng-modules
+
+RDEPENDS_task-oh-testapps = "\
+    tslib-calibrate \
+    tslib-tests \
+    lrzsz \
+    alsa-utils-amixer \
+    alsa-utils-aplay"
 
 
+#    minimo \
+#    teleport \
+#    xst \
+#    libgtkstylus \
+#    xrdb \

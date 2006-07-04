@@ -1,13 +1,15 @@
 PR = "r9"
 
-export IMAGE_BASENAME = "oh-devel"
+export IMAGE_BASENAME = "oh-sdk"
 
 GUI_MACHINE_CLASS ?= "none"
 
 XSERVER ?= "xserver-kdrive-fbdev"
 
-DEPENDS = "task-oh"
-
+DEPENDS = "\
+    task-oh \
+    task-oh-sdk"
+    
 RDEPENDS = "\
     task-oh-boot \
     task-oh-boot-extras \
@@ -15,6 +17,7 @@ RDEPENDS = "\
     task-oh-standard \
     task-oh-devtools \
     task-oh-testapps \
+    task-oh-sdk \
     ${XSERVER} "
 
 export IPKG_INSTALL = "${RDEPENDS}"
