@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r2"
+PR = "r4"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -28,9 +28,8 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            ${RPSRC}/sharpsl_pm-do-r2.patch;patch=1 \
            ${RPSRC}/mmcsd_large_cards-r0.patch;patch=1 \
            ${RPSRC}/mmcsd_no_scr_check-r0.patch;patch=1 \
-#           ${RPSRC}/alsa/asoc-v0.10rc8.patch;patch=1 \
-           ${RPSRC}/alsa/asoc-v0.10rc4.patch;patch=1 \
-           ${RPSRC}/asoc_fixups-r1.patch;patch=1 \
+           ${RPSRC}/asoc-v0.11pre2-oz.patch;patch=1 \
+           ${RPSRC}/asoc_updates-r1.patch;patch=1 \
            ${RPSRC}/hx2750_base-r25.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r7.patch;patch=1 \
            ${RPSRC}/hx2750_pcmcia-r2.patch;patch=1 \
