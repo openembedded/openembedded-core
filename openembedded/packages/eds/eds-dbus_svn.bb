@@ -4,13 +4,14 @@ RDEPENDS = "gconf"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0+svn${SRCDATE}"
-PR = "r16"
+PR = "r17"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://no_libdb.patch;patch=1 \
            file://no_iconv_test.patch;patch=1 \
            file://no_libedataserverui.patch;patch=1 \
            file://disable_orbit.patch;patch=1;maxdate=20060126 \
+	   file://fix_calendar.patch;patch=1;maxdate=20060619 \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/trunk"

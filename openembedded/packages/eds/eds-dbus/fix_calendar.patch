@@ -1,0 +1,11 @@
+--- trunk/calendar/libecal-dbus/e-cal.c.old	2006-07-05 12:23:17.000000000 +0100
++++ trunk/calendar/libecal-dbus/e-cal.c	2006-07-05 12:24:17.000000000 +0100
+@@ -2930,7 +2930,7 @@
+ 		E_CALENDAR_CHECK_STATUS (E_CALENDAR_STATUS_CORBA_EXCEPTION, error);
+ 	}
+ 
+-	if (uid)
++	if (!uid)
+ 		E_CALENDAR_CHECK_STATUS (E_CALENDAR_STATUS_OTHER_ERROR, error);
+ 	else
+ 		E_CALENDAR_CHECK_STATUS (E_CALENDAR_STATUS_OK, error);
