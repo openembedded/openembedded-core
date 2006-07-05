@@ -1,6 +1,8 @@
 DESCRIPTION = "2.6 Linux Development Kernel for Zaurus devices and iPAQ hx2750."
 SECTION = "kernel"
-MAINTAINER = "Richard Purdie <rpurdie@rpsys.net>, Michael 'Mickey' Lauer <mickey@vanille.de>"
+MAINTAINER = "Richard Purdie <rpurdie@rpsys.net>, \
+              Michael 'Mickey' Lauer <mickey@vanille.de>, \
+              Marcin 'Hrw' Juszkiewicz <openembedded@hrw.one.pl>"
 LICENSE = "GPL"
 
 inherit kernel
