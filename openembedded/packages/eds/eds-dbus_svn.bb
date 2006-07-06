@@ -1,10 +1,9 @@
 LICENSE = "LGPL"
 DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade virtual/libiconv"
-RDEPENDS = "gconf"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
 PV = "1.4.0+svn${SRCDATE}"
-PR = "r17"
+PR = "r19"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://no_libdb.patch;patch=1 \
@@ -18,7 +17,7 @@ S = "${WORKDIR}/trunk"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-camel --disable-nntp --disable-gtk-doc"
+EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
 
 acpaths = " -I ${STAGING_DATADIR}/aclocal/gnome-macros "
 
@@ -36,19 +35,6 @@ FILES_${PN}-dev += "${libdir}/evolution-data-server-1.2/extensions/*.la \
 do_configure_append = " cp ${WORKDIR}/iconv-detect.h ${S} "
 
 do_stage () {
-	oe_libinstall -so -C addressbook/libebook-dbus libebook-1.2 ${STAGING_LIBDIR}
-	oe_libinstall -so -C addressbook/libedata-book-dbus libedata-book-1.2 ${STAGING_LIBDIR}
-	oe_libinstall -so -C calendar/libecal-dbus libecal-1.2 ${STAGING_LIBDIR}
-	oe_libinstall -so -C calendar/libedata-cal-dbus libedata-cal-1.2 ${STAGING_LIBDIR}
-	oe_libinstall -so -C libedataserver libedataserver-1.2 ${STAGING_LIBDIR}
-
-	install -d ${STAGING_INCDIR}/camel ${STAGING_INCDIR}/libebook \
-		${STAGING_INCDIR}/libecal ${STAGING_INCDIR}/libedataserver \
-		${STAGING_INCDIR}/libical
-	install -m 0644 ${S}/camel/*.h ${STAGING_INCDIR}/camel
-	install -m 0644 ${S}/addressbook/libebook-dbus/*.h ${STAGING_INCDIR}/libebook
-	install -m 0644 ${S}/calendar/libecal-dbus/*.h ${STAGING_INCDIR}/libecal
-	install -m 0644 ${S}/libedataserver/*.h ${STAGING_INCDIR}/libedataserver
-	install -m 0644 ${S}/calendar/libical/src/libical/*.h ${STAGING_INCDIR}/libical
+        autotools_stage_all
 }
 
