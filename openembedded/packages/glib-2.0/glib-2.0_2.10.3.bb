@@ -9,7 +9,7 @@ PRIORITY = "optional"
 DEPENDS += "glib-2.0-native gtk-doc"
 DEPENDS += "virtual/libiconv virtual/libintl"
 PACKAGES =+ "glib-2.0-utils "
-PR = "r1"
+PR = "r3"
 
 LEAD_SONAME = "libglib-2.0.*"
 FILES_glib-2.0-utils = "${bindir}/*"
@@ -17,6 +17,7 @@ FILES_glib-2.0-utils = "${bindir}/*"
 EXTRA_OECONF = "--disable-debug"
 
 SRC_URI = "http://download.gnome.org/sources/glib/2.10//glib-${PV}.tar.bz2 \
+           file://atomic_fix.patch;patch=1 \
            file://glibconfig-sysdefs.h"
 
 S = "${WORKDIR}/glib-${PV}"

@@ -7,11 +7,13 @@ LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS += "gtk-doc-native"
+PR="r1"
 
 EXTRA_OECONF = "--disable-debug"
 
 SRC_URI = "http://download.gnome.org/sources/glib/2.10//glib-${PV}.tar.bz2 \
-	   file://glib-gettextize-dir.patch;patch=1 \
+           file://glib-gettextize-dir.patch;patch=1 \
+           file://atomic_fix.patch;patch=1 \
            file://glibconfig-sysdefs.h"
 
 S = "${WORKDIR}/glib-${PV}"
