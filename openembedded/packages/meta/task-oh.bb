@@ -104,6 +104,7 @@ RDEPENDS_task-oh-devtools = "\
     oprofile \
     gdb \    
     strace \
+    less \
     lttng-viewer"
 RRECOMMENDS_task-oh-devtools = "\
     kernel-module-oprofile"
