@@ -2,8 +2,6 @@ include linux-openzaurus.inc
 
 PR = "r5"
 
-DEFAULT_PREFERENCE = "-1"
-
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
 # http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.14.tar.gz \
