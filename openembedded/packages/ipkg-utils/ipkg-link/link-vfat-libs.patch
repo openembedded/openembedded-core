@@ -1,0 +1,34 @@
+--- ipkg-utils/ipkg-link.orig	2006-04-05 00:08:28.518992136 +0200
++++ ipkg-utils/ipkg-link	2006-04-05 00:08:40.399186072 +0200
+@@ -58,6 +58,31 @@
+ 				`ln -s "$PREFIX$line" "$line"`
+ 			fi
+ 		fi
++		
++		# The next function checks whether the _source_ file (ie: /media/card/something)
++		# does actually exist. If it doesn't, it could by a library symlink (ie: libsomething.0.1 -> libsomething.0)
++		# Since VFAT & friends do not support symlinks, these library links would not exist after installation
++		# and trying to symlink them into the rootfs with ipkg-link results in unconnected symlinks in the rootfs.
++		# So we use the real lib file in /media/card/whatever and create all needed symlinks in the rootfs
++		# using the real file as source.
++                               
++		if [ ! -e "$PREFIX$line" ]; then
++			if ( echo "$line" | grep -q "lib" ) ; then
++				libsearchfile=$(echo $line | sed -e "s#[a-z0-9/.]*/##g")
++				libfoundfiles=$(find $PREFIX -name "$libsearchfile*")
++                      
++				for liblinkfile in $libfoundfiles; do
++					echo "Linking $line to $liblinkfile"
++					# link will be pointing to nowhere
++					if test -L $line; then
++						rm -f $line
++					fi
++				ln -s $liblinkfile $line 
++	                      done
++			else
++				echo "WARNING: Source file [$PREFIX$line] is missing!"
++			fi
++                fi
+ 	done
+ }
+ 
