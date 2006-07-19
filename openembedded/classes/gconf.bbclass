@@ -1,3 +1,5 @@
+DEPENDS += "gconf"
+
 gconf_postinst() {
 if [ "$1" = configure ]; then
 	if [ "x$D" != "x" ]; then
