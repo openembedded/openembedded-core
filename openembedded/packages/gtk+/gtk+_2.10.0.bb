@@ -9,9 +9,11 @@ DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt c
 PR = "r1"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
+           file://gtkbuiltincache.h \
            file://cellrenderer-cairo.patch;patch=1 \
            file://entry-cairo.patch;patch=1 \
            file://style-cairo.patch;patch=1 \
+           file://no-generate-builtincache.patch;patch=1 \
            file://no-xwc.patch;patch=1 \
            file://automake-lossage.patch;patch=1 \
 #	   file://spinbutton.patch;patch=1 \
@@ -44,6 +46,12 @@ EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-disp
 # --disable-cruft
 
 LIBV = "2.4.0"
+
+do_rig () {
+        cp ${S}/gtkbuiltincache.h ${WORKDIR}/gtk
+}
+
+addtask rig before patch
 
 do_stage () {
 	oe_libinstall -so -C gtk libgtk-x11-2.0 ${STAGING_LIBDIR}

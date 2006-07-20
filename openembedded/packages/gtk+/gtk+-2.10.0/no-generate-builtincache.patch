@@ -1,0 +1,33 @@
+--- gtk+-2.10.0/gtk/Makefile.am.bak	2006-07-20 15:50:21.000000000 +0200
++++ gtk+-2.10.0/gtk/Makefile.am	2006-07-20 15:51:07.000000000 +0200
+@@ -380,6 +380,7 @@
+ 	gtkbin.c		\
+ 	gtkbindings.c		\
+ 	gtkbox.c		\
++	gtkbuiltincache.h       \
+ 	gtkbutton.c		\
+ 	gtkcalendar.c		\
+ 	gtkcelleditable.c	\
+@@ -656,8 +657,7 @@
+ # built sources that don't get installed
+ gtk_built_private_headers =			\
+ 	gtkalias.h				\
+-	gtkmarshalers.h				\
+-	gtkbuiltincache.h
++	gtkmarshalers.h
+ 
+ gtk_built_sources =				\
+ 	gtkaliasdef.c				\
+@@ -1084,12 +1084,6 @@
+ 	done									\
+ 	&& touch stamp-icons
+ 
+-gtkbuiltincache.h: @REBUILD@ stamp-icons
+-	$(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache
+-	GDK_PIXBUF_MODULE_FILE=$(top_builddir)/gdk-pixbuf/gdk-pixbuf.loaders	\
+-	   ./gtk-update-icon-cache --force --ignore-theme-index 		\
+-	   --source builtin_icons stock-icons > gtkbuiltincache.h
+-
+ EXTRA_DIST +=                   \
+ 	$(STOCK_ICONS)		\
+ 	$(GENERATED_ICONS)	\
