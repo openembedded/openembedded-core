@@ -45,7 +45,7 @@ RRECOMMENDS_${PN} = "glibc-gconv-iso8859-1"
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-display-migration"
 # --disable-cruft
 
-LIBV = "2.4.0"
+LIBV = "2.10.0"
 
 do_rig () {
         cp ${S}/gtkbuiltincache.h ${WORKDIR}/gtk
