@@ -1,0 +1,36 @@
+--- gtk+-2.8.6/gtk/gtkfilesel.c.orig	2005-12-07 21:13:33 +0100
++++ gtk+-2.8.6/gtk/gtkfilesel.c	2005-12-07 21:14:56 +0100
+@@ -2461,6 +2461,33 @@
+       if (fs->last_selected != NULL)
+ 	g_free (fs->last_selected);
+ 
++      // Single-click directory entry	
++  	  if (new_names->len == 1)
++  	    {
++  	      GtkTreeView *tree_view;
++  	      GtkTreeModel *model;
++  	      GtkTreePath *path;
++          GtkTreeIter iter;  
++          gboolean is_file;
++
++          tree_view = gtk_tree_selection_get_tree_view (selection);
++          
++          if (gtk_tree_selection_get_selected (selection, &model, &iter))
++            {
++              path = gtk_tree_model_get_path (model, &iter);              
++              gtk_tree_model_get (model, &iter, ISFILE_COLUMN, &is_file, -1);
++
++              if (!is_file)
++                {
++                  gtk_file_selection_dir_activate (tree_view, path, 
++                          gtk_tree_view_get_column (tree_view, DIR_COLUMN),
++                          user_data);
++                }
++                
++              gtk_tree_path_free (path);
++            }
++        }
++        
+       fs->last_selected = g_strdup (g_ptr_array_index (new_names, index));
+       filename = get_real_filename (fs->last_selected, FALSE);
+ 

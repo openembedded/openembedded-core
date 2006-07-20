@@ -1,0 +1,2193 @@
+Index: gtkstyle.c
+===================================================================
+RCS file: /cvs/gnome/gtk+/gtk/gtkstyle.c,v
+retrieving revision 1.193
+diff -u -r1.193 gtk+-2.10.0/gtk/gtkstyle.c
+--- gtk+-2.10.0/gtk/gtkstyle.c	28 May 2006 12:56:26 -0000	1.193
++++ gtk+-2.10.0/gtk/gtkstyle.c	2 Jul 2006 14:15:15 -0000
+@@ -37,7 +37,6 @@
+ #include "gtkthemes.h"
+ #include "gtkiconfactory.h"
+ #include "gtksettings.h"	/* _gtk_settings_parse_convert() */
+-#include "gtkintl.h"
+ #include "gtkalias.h"
+ 
+ #define LIGHTNESS_MULT  1.3
+@@ -59,6 +58,8 @@
+ };
+ 
+ /* --- prototypes --- */
++static void	 gtk_style_init			(GtkStyle	*style);
++static void	 gtk_style_class_init		(GtkStyleClass	*klass);
+ static void	 gtk_style_finalize		(GObject	*object);
+ static void	 gtk_style_realize		(GtkStyle	*style,
+ 						 GdkColormap	*colormap);
+@@ -311,6 +312,9 @@
+                                           gint            width,
+                                           gint            height);
+ 
++void _gtk_style_shade			(GdkColor	 *a,
++					 GdkColor	 *b,
++					 gdouble	  k);
+ static void rgb_to_hls			(gdouble	 *r,
+ 					 gdouble	 *g,
+ 					 gdouble	 *b);
+@@ -329,6 +333,128 @@
+ static const GtkRequisition default_option_indicator_size = { 7, 13 };
+ static const GtkBorder default_option_indicator_spacing = { 7, 5, 2, 2 };
+ 
++#define INDICATOR_PART_SIZE 13
++
++typedef enum {
++  CHECK_AA,
++  CHECK_BASE,
++  CHECK_BLACK,
++  CHECK_DARK,
++  CHECK_LIGHT,
++  CHECK_MID,
++  CHECK_TEXT,
++  CHECK_INCONSISTENT_TEXT,
++  RADIO_BASE,
++  RADIO_BLACK,
++  RADIO_DARK,
++  RADIO_LIGHT,
++  RADIO_MID,
++  RADIO_TEXT,
++  RADIO_INCONSISTENT_AA,
++  RADIO_INCONSISTENT_TEXT
++} IndicatorPart;
++
++/*
++ * Extracted from check-13.png, width=13, height=13
++ */
++static const guchar check_black_bits[] = {
++  0x00,0x00,0xfe,0x0f,0x02,0x00,0x02,0x00,0x02,0x00,0x02,0x00,0x02,0x00,0x02,
++  0x00,0x02,0x00,0x02,0x00,0x02,0x00,0x02,0x00,0x00,0x00,0x00,0x00};
++static const guchar check_dark_bits[] = {
++  0xff,0x1f,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,
++  0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x00,0x00};
++static const guchar check_mid_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x08,0x00,0x08,0x00,0x08,0x00,0x08,0x00,0x08,0x00,
++  0x08,0x00,0x08,0x00,0x08,0x00,0x08,0xfc,0x0f,0x00,0x00,0x00,0x00};
++static const guchar check_light_bits[] = {
++  0x00,0x00,0x00,0x10,0x00,0x10,0x00,0x10,0x00,0x10,0x00,0x10,0x00,0x10,0x00,
++  0x10,0x00,0x10,0x00,0x10,0x00,0x10,0x00,0x10,0xfe,0x1f,0x00,0x00};
++static const guchar check_text_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02,0x00,0x03,0x80,0x01,0x80,0x00,0x58,
++  0x00,0x60,0x00,0x40,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++static const guchar check_aa_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00,0x58,0x00,0xa0,
++  0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++static const guchar check_base_bits[] = {
++  0x00,0x00,0x00,0x00,0xfc,0x07,0xfc,0x07,0xfc,0x07,0xfc,0x07,0xfc,0x07,0xfc,
++  0x07,0xfc,0x07,0xfc,0x07,0xfc,0x07,0x00,0x00,0x00,0x00,0x00,0x00};
++
++/*
++ * Extracted from check-13-inconsistent.png, width=13, height=13
++ */
++static const guchar check_inconsistent_text_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xf8,0x03,0xf8,
++  0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++#if 0
++/*
++ * check_inconsistent_aa_bits is currently not used, since it is all zeros.
++ */
++static const guchar check_inconsistent_aa_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++#endif
++
++/*
++ * Extracted from radio-13.png, width=13, height=13
++ */
++static const guchar radio_black_bits[] = {
++  0x00,0x00,0xf0,0x01,0x0c,0x02,0x04,0x00,0x02,0x00,0x02,0x00,0x02,0x00,0x02,
++  0x00,0x02,0x00,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0d,0x08};
++static const guchar radio_dark_bits[] = {
++  0xf0,0x00,0x0c,0x02,0x02,0x04,0x02,0x04,0x01,0x08,0x01,0x08,0x01,0x08,0x01,
++  0x08,0x00,0x08,0x02,0x04,0x0c,0x06,0xf0,0x01,0x00,0x00,0x00,0x00};
++static const guchar radio_mid_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++static const guchar radio_light_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x10,0x00,0x10,0x00,
++  0x10,0x00,0x10,0x00,0x08,0x00,0x08,0x00,0x06,0xe0,0x01,0x00,0x00};
++static const guchar radio_text_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xe0,0x00,0xf0,0x01,0xf0,0x01,0xf0,
++  0x01,0xe0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++#if 0
++/*
++ * radio_aa_bits is currently not used, since it is all zeros.
++ */
++static const guchar radio_aa_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++#endif
++static const guchar radio_base_bits[] = {
++  0x00,0x00,0x00,0x00,0xf0,0x01,0xf8,0x03,0xfc,0x07,0xfc,0x07,0xfc,0x07,0xfc,
++  0x07,0xfc,0x07,0xf8,0x03,0xf0,0x01,0x00,0x00,0x00,0x00,0x00,0x00};
++
++/*
++ * Extracted from radio-13.png, width=13, height=13
++ */
++static const guchar radio_inconsistent_text_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xf8,0x03,0x00,
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++static const guchar radio_inconsistent_aa_bits[] = {
++  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xf8,0x03,0x00,0x00,0xf8,
++  0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
++
++static struct {
++  const guchar      *bits;
++  GList	    *bmap_list; /* list of GdkBitmap */
++} indicator_parts[] = {
++  { check_aa_bits, NULL },
++  { check_base_bits, NULL },
++  { check_black_bits, NULL },
++  { check_dark_bits, NULL },
++  { check_light_bits, NULL },
++  { check_mid_bits, NULL },
++  { check_text_bits, NULL },
++  { check_inconsistent_text_bits, NULL },
++  { radio_base_bits, NULL },
++  { radio_black_bits, NULL },
++  { radio_dark_bits, NULL },
++  { radio_light_bits, NULL },
++  { radio_mid_bits, NULL },
++  { radio_text_bits, NULL },
++  { radio_inconsistent_aa_bits, NULL },
++  { radio_inconsistent_text_bits, NULL },
++};
+ #define GTK_GRAY		0xdcdc, 0xdada, 0xd5d5
+ #define GTK_DARK_GRAY		0xc4c4, 0xc2c2, 0xbdbd
+ #define GTK_LIGHT_GRAY		0xeeee, 0xebeb, 0xe7e7
+@@ -353,13 +479,39 @@
+ static const GdkColor gtk_default_selected_base =  { 0, GTK_BLUE };
+ static const GdkColor gtk_default_active_base =    { 0, GTK_VERY_DARK_GRAY };
+ 
++static gpointer parent_class = NULL;
++
+ /* --- signals --- */
+ static guint realize_signal = 0;
+ static guint unrealize_signal = 0;
+ 
+-G_DEFINE_TYPE (GtkStyle, gtk_style, G_TYPE_OBJECT)
+-
+ /* --- functions --- */
++GType
++gtk_style_get_type (void)
++{
++  static GType style_type = 0;
++  
++  if (!style_type)
++    {
++      static const GTypeInfo style_info =
++      {
++        sizeof (GtkStyleClass),
++        (GBaseInitFunc) NULL,
++        (GBaseFinalizeFunc) NULL,
++        (GClassInitFunc) gtk_style_class_init,
++        NULL,           /* class_finalize */
++        NULL,           /* class_data */
++        sizeof (GtkStyle),
++        0,              /* n_preallocs */
++        (GInstanceInitFunc) gtk_style_init,
++      };
++      
++      style_type = g_type_register_static (G_TYPE_OBJECT, "GtkStyle",
++					   &style_info, 0);
++    }
++  
++  return style_type;
++}
+ 
+ /**
+  * _gtk_style_init_for_settings:
+@@ -477,6 +629,8 @@
+ {
+   GObjectClass *object_class = G_OBJECT_CLASS (klass);
+   
++  parent_class = g_type_class_peek_parent (klass);
++
+   object_class->finalize = gtk_style_finalize;
+ 
+   klass->clone = gtk_style_real_clone;
+@@ -511,6 +665,7 @@
+ 
+   g_type_class_add_private (object_class, sizeof (GtkStylePrivate));
+ 
++  
+   /**
+    * GtkStyle::realize:
+    * @style: the object which received the signal
+@@ -522,7 +677,7 @@
+    *
+    * Since: 2.4
+    */
+-  realize_signal = g_signal_new (I_("realize"),
++  realize_signal = g_signal_new ("realize",
+ 				 G_TYPE_FROM_CLASS (object_class),
+ 				 G_SIGNAL_RUN_FIRST,
+ 				 G_STRUCT_OFFSET (GtkStyleClass, realize),
+@@ -540,7 +695,7 @@
+    *
+    * Since: 2.4
+    */
+-  unrealize_signal = g_signal_new (I_("unrealize"),
++  unrealize_signal = g_signal_new ("unrealize",
+ 				   G_TYPE_FROM_CLASS (object_class),
+ 				   G_SIGNAL_RUN_FIRST,
+ 				   G_STRUCT_OFFSET (GtkStyleClass, unrealize),
+@@ -602,8 +757,18 @@
+         }
+     }
+ 
+-  g_slist_foreach (style->icon_factories, (GFunc) g_object_unref, NULL);
+-  g_slist_free (style->icon_factories);
++  if (style->icon_factories)
++    {
++      GSList *tmp_list = style->icon_factories;
++
++      while (tmp_list)
++	{
++	  g_object_unref (tmp_list->data);
++	  tmp_list = tmp_list->next;
++	}
++
++      g_slist_free (style->icon_factories);
++    }
+ 
+   g_slist_foreach (priv->color_hashes, (GFunc) g_hash_table_unref, NULL);
+   g_slist_free (priv->color_hashes);
+@@ -619,7 +784,7 @@
+   if (style->rc_style)
+     gtk_rc_style_unref (style->rc_style);
+   
+-  G_OBJECT_CLASS (gtk_style_parent_class)->finalize (object);
++  G_OBJECT_CLASS (parent_class)->finalize (object);
+ }
+ 
+ 
+@@ -686,10 +851,6 @@
+  * it to a particular visual and colormap. The process may 
+  * involve the creation of a new style if the style has already 
+  * been attached to a window with a different style and colormap.
+- *
+- * Since this function may return a new object, you have to use it 
+- * in the following way: 
+- * <literal>style = gtk_style_attach (style, window)</literal>
+  **/
+ GtkStyle*
+ gtk_style_attach (GtkStyle  *style,
+@@ -766,19 +927,10 @@
+   return new_style;
+ }
+ 
+-/**
+- * gtk_style_detach:
+- * @style: a #GtkStyle
+- *
+- * Detaches a style from a window. If the style is not attached
+- * to any windows anymore, it is unrealized. See gtk_style_attach().
+- * 
+- */
+ void
+ gtk_style_detach (GtkStyle *style)
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+-  g_return_if_fail (style->attach_count > 0);
+   
+   style->attach_count -= 1;
+   if (style->attach_count == 0)
+@@ -833,6 +985,9 @@
+ gtk_style_realize (GtkStyle    *style,
+                    GdkColormap *colormap)
+ {
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (GDK_IS_COLORMAP (colormap));
++  
+   style->colormap = g_object_ref (colormap);
+   style->depth = gdk_colormap_get_visual (colormap)->depth;
+ 
+@@ -862,22 +1017,6 @@
+   return gtk_icon_factory_lookup_default (stock_id);
+ }
+ 
+-/**
+- * gtk_style_lookup_color:
+- * @style: a #GtkStyle
+- * @color_name: the name of the logical color to look up
+- * @color: the #GdkColor to fill in
+- *
+- * Looks up @color_name in the style's logical color mappings,
+- * filling in @color and returning %TRUE if found, otherwise
+- * returning %FALSE. Do not cache the found mapping, because
+- * it depends on the #GtkStyle and might change when a theme
+- * switch occurs.
+- *
+- * Return value: %TRUE if the mapping was found.
+- *
+- * Since: 2.10
+- **/
+ gboolean
+ gtk_style_lookup_color (GtkStyle   *style,
+                         const char *color_name,
+@@ -909,6 +1048,7 @@
+   return FALSE;
+ }
+ 
++
+ /**
+  * gtk_draw_hline:
+  * @style: a #GtkStyle
+@@ -1653,8 +1793,19 @@
+   if (rc_style->ythickness >= 0)
+     style->ythickness = rc_style->ythickness;
+ 
+-  style->icon_factories = g_slist_copy (rc_style->icon_factories);
+-  g_slist_foreach (style->icon_factories, (GFunc) g_object_ref, NULL);
++  if (rc_style->icon_factories)
++    {
++      GSList *iter;
++
++      style->icon_factories = g_slist_copy (rc_style->icon_factories);
++      
++      iter = style->icon_factories;
++      while (iter != NULL)
++        {
++          g_object_ref (iter->data);
++          iter = g_slist_next (iter);
++        }
++    }
+ 
+   priv->color_hashes = g_slist_copy (_gtk_rc_style_get_color_hashes (rc_style));
+   g_slist_foreach (priv->color_hashes, (GFunc) g_hash_table_ref, NULL);
+@@ -1782,7 +1933,7 @@
+     {
+       _gtk_style_shade (&style->bg[i], &style->light[i], LIGHTNESS_MULT);
+       _gtk_style_shade (&style->bg[i], &style->dark[i], DARKNESS_MULT);
+-
++      
+       style->mid[i].red = (style->light[i].red + style->dark[i].red) / 2;
+       style->mid[i].green = (style->light[i].green + style->dark[i].green) / 2;
+       style->mid[i].blue = (style->light[i].blue + style->dark[i].blue) / 2;
+@@ -2162,6 +2313,57 @@
+     gdk_drawable_get_size (window, NULL, height);
+ }
+ 
++static GdkBitmap * 
++get_indicator_for_screen (GdkDrawable   *drawable,
++			  IndicatorPart  part)
++			  
++{
++  GdkScreen *screen = gdk_drawable_get_screen (drawable);
++  GdkBitmap *bitmap;
++  GList *tmp_list;
++  
++  tmp_list = indicator_parts[part].bmap_list;
++  while (tmp_list)
++    {
++      bitmap = tmp_list->data;
++      
++      if (gdk_drawable_get_screen (bitmap) == screen)
++	return bitmap;
++      
++      tmp_list = tmp_list->next;
++    }
++  
++  bitmap = gdk_bitmap_create_from_data (drawable,
++					(gchar *)indicator_parts[part].bits,
++					INDICATOR_PART_SIZE, INDICATOR_PART_SIZE);
++  indicator_parts[part].bmap_list = g_list_prepend (indicator_parts[part].bmap_list, bitmap);
++
++  return bitmap;
++}
++
++static void
++draw_part (GdkDrawable  *drawable,
++	   GdkGC        *gc,
++	   GdkRectangle *area,
++	   gint          x,
++	   gint          y,
++	   IndicatorPart part)
++{
++  if (area)
++    gdk_gc_set_clip_rectangle (gc, area);
++  
++  gdk_gc_set_ts_origin (gc, x, y);
++  gdk_gc_set_stipple (gc, get_indicator_for_screen (drawable, part));
++  gdk_gc_set_fill (gc, GDK_STIPPLED);
++
++  gdk_draw_rectangle (drawable, gc, TRUE, x, y, INDICATOR_PART_SIZE, INDICATOR_PART_SIZE);
++
++  gdk_gc_set_fill (gc, GDK_SOLID);
++
++  if (area)
++    gdk_gc_set_clip_rectangle (gc, NULL);
++}
++
+ static void
+ gtk_default_draw_hline (GtkStyle     *style,
+                         GdkWindow    *window,
+@@ -2177,6 +2379,9 @@
+   gint thickness_dark;
+   gint i;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   thickness_light = style->ythickness / 2;
+   thickness_dark = style->ythickness - thickness_light;
+   
+@@ -2231,6 +2436,9 @@
+   gint thickness_dark;
+   gint i;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   thickness_light = style->xthickness / 2;
+   thickness_dark = style->xthickness - thickness_light;
+   
+@@ -2456,6 +2664,9 @@
+   gint thickness_dark;
+   gint i;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++
+   if (shadow_type == GTK_SHADOW_IN)
+     {
+       if (detail && (strcmp (detail, "buttondefault") == 0))
+@@ -2791,6 +3002,10 @@
+   gint yadjust;
+   gint i;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  g_return_if_fail (points != NULL);
++  
+   switch (shadow_type)
+     {
+     case GTK_SHADOW_IN:
+@@ -2900,7 +3115,7 @@
+ 
+ static void
+ draw_arrow (GdkWindow     *window,
+-	    GdkColor      *color,
++	    GdkGC         *gc,
+ 	    GdkRectangle  *area,
+ 	    GtkArrowType   arrow_type,
+ 	    gint           x,
+@@ -2908,44 +3123,34 @@
+ 	    gint           width,
+ 	    gint           height)
+ {
+-  cairo_t *cr = gdk_cairo_create (window);
+-  gdk_cairo_set_source_color (cr, color);
+-  
++  gint i, j;
++
+   if (area)
+-    {
+-      gdk_cairo_rectangle (cr, area);
+-      cairo_clip (cr);
+-    }
+-    
++    gdk_gc_set_clip_rectangle (gc, area);
++
+   if (arrow_type == GTK_ARROW_DOWN)
+     {
+-      cairo_move_to (cr, x,              y);
+-      cairo_line_to (cr, x + width,      y);
+-      cairo_line_to (cr, x + width / 2., y + height);
++      for (i = 0, j = 0; i < height; i++, j++)
++	gdk_draw_line (window, gc, x + j, y + i, x + width - j - 1, y + i);
+     }
+   else if (arrow_type == GTK_ARROW_UP)
+     {
+-      cairo_move_to (cr, x,              y + height);
+-      cairo_line_to (cr, x + width / 2., y);
+-      cairo_line_to (cr, x + width,      y + height);
++      for (i = height - 1, j = 0; i >= 0; i--, j++)
++	gdk_draw_line (window, gc, x + j, y + i, x + width - j - 1, y + i);
+     }
+   else if (arrow_type == GTK_ARROW_LEFT)
+     {
+-      cairo_move_to (cr, x + width,      y);
+-      cairo_line_to (cr, x + width,      y + height);
+-      cairo_line_to (cr, x,              y + height / 2.);
++      for (i = width - 1, j = 0; i >= 0; i--, j++)
++	gdk_draw_line (window, gc, x + i, y + j, x + i, y + height - j - 1);
+     }
+   else if (arrow_type == GTK_ARROW_RIGHT)
+     {
+-      cairo_move_to (cr, x,              y);
+-      cairo_line_to (cr, x + width,      y + height / 2.);
+-      cairo_line_to (cr, x,              y + height);
++      for (i = 0, j = 0; i < width; i++, j++)
++	gdk_draw_line (window, gc, x + i, y + j, x + i, y + height - j - 1);
+     }
+ 
+-  cairo_close_path (cr);
+-  cairo_fill (cr);
+-
+-  cairo_destroy (cr);
++  if (area)
++    gdk_gc_set_clip_rectangle (gc, NULL);
+ }
+ 
+ static void
+@@ -3032,17 +3237,22 @@
+ 			gint           width,
+ 			gint           height)
+ {
++  gint original_width, original_x;
++  
+   sanitize_size (window, &width, &height);
+ 
++  original_width = width;
++  original_x = x;
++
+   calculate_arrow_geometry (arrow_type, &x, &y, &width, &height);
+ 
+   if (detail && strcmp (detail, "menu_scroll_arrow_up") == 0)
+     y++;
+ 
+   if (state == GTK_STATE_INSENSITIVE)
+-    draw_arrow (window, &style->white, area, arrow_type,
++    draw_arrow (window, style->white_gc, area, arrow_type,
+ 		x + 1, y + 1, width, height);
+-  draw_arrow (window, &style->fg[state], area, arrow_type,
++  draw_arrow (window, style->fg_gc[state], area, arrow_type,
+ 	      x, y, width, height);
+ }
+ 
+@@ -3074,6 +3284,9 @@
+   GdkGC *inner_sw = NULL;
+   GdkGC *inner_se = NULL;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   sanitize_size (window, &width, &height);
+   
+   half_width = width / 2;
+@@ -3191,6 +3404,13 @@
+                          gint           y,
+                          const gchar   *string)
+ {
++  GdkDisplay *display;
++  
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
++  display = gdk_drawable_get_display (window);
++  
+   if (area)
+     {
+       gdk_gc_set_clip_rectangle (style->white_gc, area);
+@@ -3223,8 +3443,8 @@
+   
+   if (widget)
+     gtk_widget_style_get (widget, 
+-			  "indicator-size", &tmp_size,
+-			  "indicator-spacing", &tmp_spacing,
++			  "indicator_size", &tmp_size,
++			  "indicator_spacing", &tmp_spacing,
+ 			  NULL);
+ 
+   if (tmp_size)
+@@ -3259,6 +3479,9 @@
+ {
+   gboolean is_spinbutton_box = FALSE;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   sanitize_size (window, &width, &height);
+ 
+   if (widget && GTK_IS_SPIN_BUTTON (widget) && detail)
+@@ -3407,6 +3630,9 @@
+   GdkGC *gc1;
+   GdkGC *freeme = NULL;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   sanitize_size (window, &width, &height);
+   
+   if (detail)
+@@ -3415,26 +3641,15 @@
+         {
+           if (!strcmp ("text", detail))
+             gc1 = style->bg_gc[GTK_STATE_SELECTED];
+-          else if (!strcmp ("cell_even", detail) ||
+-                   !strcmp ("cell_odd", detail) ||
+-                   !strcmp ("cell_even_ruled", detail) ||
+-		   !strcmp ("cell_even_ruled_sorted", detail))
++          else if (!strncmp ("cell_even", detail, strlen ("cell_even")) ||
++		   !strncmp ("cell_odd", detail, strlen ("cell_odd")))
+             {
+ 	      /* This has to be really broken; alex made me do it. -jrb */
+ 	      if (GTK_WIDGET_HAS_FOCUS (widget))
+ 		gc1 = style->base_gc[state_type];
+-	      else
+-	        gc1 = style->base_gc[GTK_STATE_ACTIVE];
++	      else 
++		gc1 = style->base_gc[GTK_STATE_ACTIVE];
+             }
+-	  else if (!strcmp ("cell_odd_ruled", detail) ||
+-		   !strcmp ("cell_odd_ruled_sorted", detail))
+-	    {
+-	      if (GTK_WIDGET_HAS_FOCUS (widget))
+-	        freeme = get_darkened_gc (window, &style->base[state_type], 1);
+-	      else
+-	        freeme = get_darkened_gc (window, &style->base[GTK_STATE_ACTIVE], 1);
+-	      gc1 = freeme;
+-	    }
+           else
+             {
+               gc1 = style->bg_gc[state_type];
+@@ -3459,7 +3674,7 @@
+ 	      GdkColor *color = NULL;
+ 
+ 	      gtk_widget_style_get (widget,
+-		                    "even-row-color", &color,
++		                    "even_row_color", &color,
+ 				    NULL);
+ 
+ 	      if (color)
+@@ -3477,7 +3692,7 @@
+ 	      GdkColor *color;
+ 
+ 	      gtk_widget_style_get (widget,
+-		                    "odd-row-color", &color,
++		                    "odd_row_color", &color,
+ 				    NULL);
+ 
+ 	      if (color)
+@@ -3490,7 +3705,7 @@
+ 	      else
+ 	        {
+ 		  gtk_widget_style_get (widget,
+-		                        "even-row-color", &color,
++		                        "even_row_color", &color,
+ 					NULL);
+ 
+ 		  if (color)
+@@ -3511,11 +3726,11 @@
+ 
+ 	      if (!strcmp ("cell_odd_sorted", detail))
+ 	        gtk_widget_style_get (widget,
+-		                      "odd-row-color", &color,
++		                      "odd_row_color", &color,
+ 				      NULL);
+ 	      else
+ 	        gtk_widget_style_get (widget,
+-		                      "even-row-color", &color,
++		                      "even_row_color", &color,
+ 				      NULL);
+ 
+ 	      if (color)
+@@ -3536,7 +3751,7 @@
+ 	      GdkColor *color = NULL;
+ 
+ 	      gtk_widget_style_get (widget,
+-		                    "odd-row-color", &color,
++		                    "odd_row_color", &color,
+ 				    NULL);
+ 
+ 	      if (color)
+@@ -3549,7 +3764,7 @@
+ 	      else
+ 	        {
+ 		  gtk_widget_style_get (widget,
+-		                        "even-row-color", &color,
++		                        "even_row_color", &color,
+ 					NULL);
+ 
+ 		  if (color)
+@@ -3595,6 +3810,21 @@
+     g_object_unref (freeme);
+ }
+ 
++static GdkGC *
++create_aa_gc (GdkWindow *window, GtkStyle *style, GtkStateType state_type)
++{
++  GdkColor aa_color;
++  GdkGC *gc = gdk_gc_new (window);
++   
++  aa_color.red = (style->fg[state_type].red + style->bg[state_type].red) / 2;
++  aa_color.green = (style->fg[state_type].green + style->bg[state_type].green) / 2;
++  aa_color.blue = (style->fg[state_type].blue + style->bg[state_type].blue) / 2;
++  
++  gdk_gc_set_rgb_fg_color (gc, &aa_color);
++
++  return gc;
++}
++
+ static void 
+ gtk_default_draw_check (GtkStyle      *style,
+ 			GdkWindow     *window,
+@@ -3608,116 +3838,92 @@
+ 			gint           width,
+ 			gint           height)
+ {
+-  cairo_t *cr = gdk_cairo_create (window);
+-  enum { BUTTON, MENU, CELL } type = BUTTON;
+-  int exterior_size;
+-  int interior_size;
+-  int pad;
+-  
+-  if (detail)
+-    {
+-      if (strcmp (detail, "cellcheck") == 0)
+-	type = CELL;
+-      else if (strcmp (detail, "check") == 0)
+-	type = MENU;
+-    }
+-      
+-  if (area)
++  if (detail && strcmp (detail, "cellcheck") == 0)
+     {
+-      gdk_cairo_rectangle (cr, area);
+-      cairo_clip (cr);
++      if (area)               
++      	gdk_gc_set_clip_rectangle (widget->style->base_gc[state_type], area);
++      gdk_draw_rectangle (window,
++			  widget->style->base_gc[state_type],
++			  TRUE,
++                          x, y,
++			  width, height);
++      if (area)
++	{
++	  gdk_gc_set_clip_rectangle (widget->style->base_gc[state_type], NULL);
++	  gdk_gc_set_clip_rectangle (widget->style->text_gc[state_type], area);
++	}
++      gdk_draw_rectangle (window,
++			  widget->style->text_gc[state_type],
++			  FALSE,
++                          x, y,
++			  width, height);
++      if (area)               
++      	gdk_gc_set_clip_rectangle (widget->style->text_gc[state_type], NULL);
++
++      x -= (1 + INDICATOR_PART_SIZE - width) / 2;
++      y -= (((1 + INDICATOR_PART_SIZE - height) / 2) - 1);
++      if (shadow_type == GTK_SHADOW_IN)
++	{
++	  draw_part (window, style->text_gc[state_type], area, x, y, CHECK_TEXT);
++	  draw_part (window, style->text_aa_gc[state_type], area, x, y, CHECK_AA);
++	}
++      else if (shadow_type == GTK_SHADOW_ETCHED_IN) /* inconsistent */
++	{
++	  draw_part (window, style->text_gc[state_type], area, x, y, CHECK_INCONSISTENT_TEXT);
++	}
+     }
+-  
+-  exterior_size = MIN (width, height);
+-  if (exterior_size % 2 == 0) /* Ensure odd */
+-    exterior_size -= -1;
+-
+-  pad = style->xthickness + MAX (1, (exterior_size - 2 * style->xthickness) / 9);
+-  interior_size = MAX (1, exterior_size - 2 * pad);
+-
+-  if (interior_size < 7)
++  else
+     {
+-      interior_size = 7;
+-      pad = MAX (0, (exterior_size - interior_size) / 2);
+-    }
++      GdkGC *free_me = NULL;
++      
++      GdkGC *base_gc;
++      GdkGC *text_gc;
++      GdkGC *aa_gc;
+ 
+-  x -= (1 + exterior_size - width) / 2;
+-  y -= (1 + exterior_size - height) / 2;
++      x -= (1 + INDICATOR_PART_SIZE - width) / 2;
++      y -= (1 + INDICATOR_PART_SIZE - height) / 2;
+ 
+-  switch (type)
+-    {
+-    case BUTTON:
+-    case CELL:
+-      if (type == BUTTON)
+-	gdk_cairo_set_source_color (cr, &style->fg[state_type]);
++      if (detail && strcmp (detail, "check") == 0)	/* Menu item */
++	{
++	  text_gc = style->fg_gc[state_type];
++	  base_gc = style->bg_gc[state_type];
++	  aa_gc = free_me = create_aa_gc (window, style, state_type);
++	}
+       else
+-	gdk_cairo_set_source_color (cr, &style->text[state_type]);
+-	
+-      cairo_set_line_width (cr, 1.0);
+-      cairo_rectangle (cr, x + 0.5, y + 0.5, exterior_size - 1, exterior_size - 1);
+-      cairo_stroke (cr);
++	{
++	  if (state_type == GTK_STATE_ACTIVE)
++	    {
++	      text_gc = style->fg_gc[state_type];
++	      base_gc = style->bg_gc[state_type];
++	      aa_gc = free_me = create_aa_gc (window, style, state_type);
++	    }
++	  else
++	    {
++	      text_gc = style->text_gc[state_type];
++	      base_gc = style->base_gc[state_type];
++	      aa_gc = style->text_aa_gc[state_type];
++	    }
+ 
+-      gdk_cairo_set_source_color (cr, &style->base[state_type]);
+-      cairo_rectangle (cr, x + 1, y + 1, exterior_size - 2, exterior_size - 2);
+-      cairo_fill (cr);
+-      break;
++	  draw_part (window, base_gc, area, x, y, CHECK_BASE);
++	  draw_part (window, style->black_gc, area, x, y, CHECK_BLACK);
++	  draw_part (window, style->dark_gc[state_type], area, x, y, CHECK_DARK);
++	  draw_part (window, style->mid_gc[state_type], area, x, y, CHECK_MID);
++	  draw_part (window, style->light_gc[state_type], area, x, y, CHECK_LIGHT);
++	}
+ 
+-    case MENU:
+-      break;
+-    }
+-      
+-  switch (type)
+-    {
+-    case BUTTON:
+-    case CELL:
+-      gdk_cairo_set_source_color (cr, &style->text[state_type]);
+-      break;
+-    case MENU:
+-      gdk_cairo_set_source_color (cr, &style->fg[state_type]);
+-      break;
+-    }
++      if (shadow_type == GTK_SHADOW_IN)
++	{
++	  draw_part (window, text_gc, area, x, y, CHECK_TEXT);
++	  draw_part (window, aa_gc, area, x, y, CHECK_AA);
++	}
++      else if (shadow_type == GTK_SHADOW_ETCHED_IN) /* inconsistent */
++	{
++	  draw_part (window, text_gc, area, x, y, CHECK_INCONSISTENT_TEXT);
++	}
+ 
+-  if (shadow_type == GTK_SHADOW_IN)
+-    {
+-      cairo_translate (cr,
+-		       x + pad, y + pad);
+-      
+-      cairo_scale (cr, interior_size / 7., interior_size / 7.);
+-      
+-      cairo_move_to  (cr, 7.0, 0.0);
+-      cairo_line_to  (cr, 7.5, 1.0);
+-      cairo_curve_to (cr, 5.3, 2.0,
+-		      4.3, 4.0,
+-		      3.5, 7.0);
+-      cairo_curve_to (cr, 3.0, 5.7,
+-		      1.3, 4.7,
+-		      0.0, 4.7);
+-      cairo_line_to  (cr, 0.2, 3.5);
+-      cairo_curve_to (cr, 1.1, 3.5,
+-		      2.3, 4.3,
+-		      3.0, 5.0);
+-      cairo_curve_to (cr, 1.0, 3.9,
+-		      2.4, 4.1,
+-		      3.2, 4.9);
+-      cairo_curve_to (cr, 3.5, 3.1,
+-		      5.2, 2.0,
+-		      7.0, 0.0);
+-      
+-      cairo_fill (cr);
+-    }
+-  else if (shadow_type == GTK_SHADOW_ETCHED_IN) /* inconsistent */
+-    {
+-      int line_thickness = MAX (1, (3 + interior_size * 2) / 7);
+-
+-      cairo_rectangle (cr,
+-		       x + pad,
+-		       y + pad + (1 + interior_size - line_thickness) / 2,
+-		       interior_size,
+-		       line_thickness);
+-      cairo_fill (cr);
++      if (free_me)
++	g_object_unref (free_me);
+     }
+-  
+-  cairo_destroy (cr);
+ }
+ 
+ static void 
+@@ -3733,111 +3939,96 @@
+ 			 gint           width,
+ 			 gint           height)
+ {
+-  cairo_t *cr = gdk_cairo_create (window);
+-  enum { BUTTON, MENU, CELL } type = BUTTON;
+-  int exterior_size;
+-  
+-  if (detail)
++  if (detail && strcmp (detail, "cellradio") == 0)
+     {
+-      if (strcmp (detail, "radio") == 0)
+-	type = CELL;
+-      else if (strcmp (detail, "option") == 0)
+-	type = MENU;
+-    }
+-      
+-  if (area)
+-    {
+-      gdk_cairo_rectangle (cr, area);
+-      cairo_clip (cr);
++      if (area)               
++	gdk_gc_set_clip_rectangle (widget->style->fg_gc[state_type], area);
++      gdk_draw_arc (window,
++		    widget->style->fg_gc[state_type],
++		    FALSE,
++                    x, y,
++		    width,
++		    height,
++		    0, 360*64);
++
++      if (shadow_type == GTK_SHADOW_IN)
++	{
++	  gdk_draw_arc (window,
++			widget->style->fg_gc[state_type],
++			TRUE,
++                        x + 2,
++                        y + 2,
++			width - 4,
++			height - 4,
++			0, 360*64);
++	}
++      else if (shadow_type == GTK_SHADOW_ETCHED_IN) /* inconsistent */
++        {
++          draw_part (window, widget->style->fg_gc[state_type],
++	             area, x, y, CHECK_INCONSISTENT_TEXT);
++	}
++      if (area)               
++	gdk_gc_set_clip_rectangle (widget->style->fg_gc[state_type], NULL);
+     }
+-  
+-  exterior_size = MIN (width, height);
+-  if (exterior_size % 2 == 0) /* Ensure odd */
+-    exterior_size -= -1;
+-  
+-  x -= (1 + exterior_size - width) / 2;
+-  y -= (1 + exterior_size - height) / 2;
+-
+-  switch (type)
++  else
+     {
+-    case BUTTON:
+-    case CELL:
+-      gdk_cairo_set_source_color (cr, &style->base[state_type]);
++      GdkGC *free_me = NULL;
+       
+-      cairo_arc (cr,
+-		 x + exterior_size / 2.,
+-		 y + exterior_size / 2.,
+-		 (exterior_size - 1) / 2.,
+-		 0, 2 * G_PI);
++      GdkGC *base_gc;
++      GdkGC *text_gc;
++      GdkGC *aa_gc;
+ 
+-      cairo_fill_preserve (cr);
++      x -= (1 + INDICATOR_PART_SIZE - width) / 2;
++      y -= (1 + INDICATOR_PART_SIZE - height) / 2;
+ 
+-      if (type == BUTTON)
+-	gdk_cairo_set_source_color (cr, &style->fg[state_type]);
++      if (detail && strcmp (detail, "option") == 0)	/* Menu item */
++	{
++	  text_gc = style->fg_gc[state_type];
++	  base_gc = style->bg_gc[state_type];
++	  aa_gc = free_me = create_aa_gc (window, style, state_type);
++	}
+       else
+-	gdk_cairo_set_source_color (cr, &style->text[state_type]);
+-	
+-      cairo_set_line_width (cr, 1.);
+-      cairo_stroke (cr);
+-      break;
+-
+-    case MENU:
+-      break;
+-    }
+-      
+-  switch (type)
+-    {
+-    case BUTTON:
+-      gdk_cairo_set_source_color (cr, &style->text[state_type]);
+-      break;
+-    case CELL:
+-      break;
+-    case MENU:
+-      gdk_cairo_set_source_color (cr, &style->fg[state_type]);
+-      break;
+-    }
++	{
++	  if (state_type == GTK_STATE_ACTIVE)
++	    {
++	      text_gc = style->fg_gc[state_type];
++	      base_gc = style->bg_gc[state_type];
++	      aa_gc = free_me = create_aa_gc (window, style, state_type);
++	    }
++	  else
++	    {
++	      text_gc = style->text_gc[state_type];
++	      base_gc = style->base_gc[state_type];
++	      aa_gc = style->text_aa_gc[state_type];
++	    }
+ 
+-  if (shadow_type == GTK_SHADOW_IN)
+-    {
+-      int pad = style->xthickness + MAX (1, 2 * (exterior_size - 2 * style->xthickness) / 9);
+-      int interior_size = MAX (1, exterior_size - 2 * pad);
++	  draw_part (window, base_gc, area, x, y, RADIO_BASE);
++	  draw_part (window, style->black_gc, area, x, y, RADIO_BLACK);
++	  draw_part (window, style->dark_gc[state_type], area, x, y, RADIO_DARK);
++	  draw_part (window, style->mid_gc[state_type], area, x, y, RADIO_MID);
++	  draw_part (window, style->light_gc[state_type], area, x, y, RADIO_LIGHT);
++	}
+ 
+-      if (interior_size < 5)
++      if (shadow_type == GTK_SHADOW_IN)
+ 	{
+-	  interior_size = 7;
+-	  pad = MAX (0, (exterior_size - interior_size) / 2);
++	  draw_part (window, text_gc, area, x, y, RADIO_TEXT);
+ 	}
+-
+-      cairo_arc (cr,
+-		 x + pad + interior_size / 2.,
+-		 y + pad + interior_size / 2.,
+-		 interior_size / 2.,
+-		 0, 2 * G_PI);
+-      cairo_fill (cr);
+-    }
+-  else if (shadow_type == GTK_SHADOW_ETCHED_IN) /* inconsistent */
+-    {
+-      int pad = style->xthickness + MAX (1, (exterior_size - 2 * style->xthickness) / 9);
+-      int interior_size = MAX (1, exterior_size - 2 * pad);
+-      int line_thickness;
+-
+-      if (interior_size < 7)
++      else if (shadow_type == GTK_SHADOW_ETCHED_IN) /* inconsistent */
+ 	{
+-	  interior_size = 7;
+-	  pad = MAX (0, (exterior_size - interior_size) / 2);
++	  if (detail && strcmp (detail, "option") == 0)  /* Menu item */
++	    {
++	      draw_part (window, text_gc, area, x, y, CHECK_INCONSISTENT_TEXT);
++	    }
++	  else
++	    {
++	      draw_part (window, text_gc, area, x, y, RADIO_INCONSISTENT_TEXT);
++	      draw_part (window, aa_gc, area, x, y, RADIO_INCONSISTENT_AA);
++	    }
+ 	}
+ 
+-      line_thickness = MAX (1, (3 + interior_size * 2) / 7);
+-
+-      cairo_rectangle (cr,
+-		       x + pad,
+-		       y + pad + (interior_size - line_thickness) / 2.,
+-		       interior_size,
+-		       line_thickness);
+-      cairo_fill (cr);
++      if (free_me)
++	g_object_unref (free_me);
+     }
+-  
+-  cairo_destroy (cr);
+ }
+ 
+ static void
+@@ -3869,21 +4060,21 @@
+ 
+   if (state_type == GTK_STATE_INSENSITIVE)
+     {
+-      draw_arrow (window, &style->white, area,
++      draw_arrow (window, style->white_gc, area,
+ 		  GTK_ARROW_UP, x + 1, y + 1,
+ 		  indicator_size.width, arrow_height);
+       
+-      draw_arrow (window, &style->white, area,
++      draw_arrow (window, style->white_gc, area,
+ 		  GTK_ARROW_DOWN, x + 1, y + arrow_height + ARROW_SPACE + 1,
+ 		  indicator_size.width, arrow_height);
+     }
+   
+-  draw_arrow (window, &style->fg[state_type], area,
++  draw_arrow (window, style->fg_gc[state_type], area,
+ 	      GTK_ARROW_UP, x, y,
+ 	      indicator_size.width, arrow_height);
+   
+   
+-  draw_arrow (window, &style->fg[state_type], area,
++  draw_arrow (window, style->fg_gc[state_type], area,
+ 	      GTK_ARROW_DOWN, x, y + arrow_height + ARROW_SPACE,
+ 	      indicator_size.width, arrow_height);
+ }
+@@ -3909,6 +4100,9 @@
+   GdkGC *gc3 = NULL;
+   GdkGC *gc4 = NULL;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   sanitize_size (window, &width, &height);
+   
+   switch (shadow_type)
+@@ -4122,6 +4316,9 @@
+   GdkGC *gc3 = NULL;
+   GdkGC *gc4 = NULL;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   gtk_style_apply_default_background (style, window,
+                                       widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                       state_type, area, x, y, width, height);
+@@ -4338,6 +4535,9 @@
+   GdkGC *gc3 = NULL;
+   GdkGC *gc4 = NULL;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   gtk_style_apply_default_background (style, window,
+                                       widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                       GTK_STATE_NORMAL, area, x, y, width, height);
+@@ -4503,10 +4703,12 @@
+ 			gint           width,
+ 			gint           height)
+ {
+-  cairo_t *cr;
++  GdkPoint points[5];
++  GdkGC    *gc;
+   gboolean free_dash_list = FALSE;
+   gint line_width = 1;
+   gint8 *dash_list = "\1\1";
++  gint dash_len;
+ 
+   if (widget)
+     {
+@@ -4518,6 +4720,22 @@
+       free_dash_list = TRUE;
+   }
+ 
++  sanitize_size (window, &width, &height);
++  
++  if (detail && !strcmp (detail, "colorwheel_light"))
++    gc = style->black_gc;
++  else if (detail && !strcmp (detail, "colorwheel_dark"))
++    gc = style->white_gc;
++  else 
++    gc = style->fg_gc[state_type];
++
++  gdk_gc_set_line_attributes (gc, line_width,
++			      dash_list[0] ? GDK_LINE_ON_OFF_DASH : GDK_LINE_SOLID,
++			      GDK_CAP_BUTT, GDK_JOIN_MITER);
++  
++  if (area)
++    gdk_gc_set_clip_rectangle (gc, area);
++
+   if (detail && !strcmp (detail, "add-mode"))
+     {
+       if (free_dash_list)
+@@ -4527,59 +4745,88 @@
+       free_dash_list = FALSE;
+     }
+ 
+-  sanitize_size (window, &width, &height);
++  points[0].x = x + line_width / 2;
++  points[0].y = y + line_width / 2;
++  points[1].x = x + width - line_width + line_width / 2;
++  points[1].y = y + line_width / 2;
++  points[2].x = x + width - line_width + line_width / 2;
++  points[2].y = y + height - line_width + line_width / 2;
++  points[3].x = x + line_width / 2;
++  points[3].y = y + height - line_width + line_width / 2;
++  points[4] = points[0];
+ 
+-  cr = gdk_cairo_create (window);
+-  
+-  if (detail && !strcmp (detail, "colorwheel_light"))
+-    cairo_set_source_rgb (cr, 0., 0., 0.);
+-  else if (detail && !strcmp (detail, "colorwheel_dark"))
+-    cairo_set_source_rgb (cr, 1., 1., 1.);
++  if (!dash_list[0])
++    {
++      gdk_draw_lines (window, gc, points, 5);
++    }
+   else
+-    gdk_cairo_set_source_color (cr, &style->fg[state_type]);
+-
+-  cairo_set_line_width (cr, line_width);
+-
+-  if (dash_list[0])
+     {
+-      gint n_dashes = strlen (dash_list);
+-      gdouble *dashes = g_new (gdouble, n_dashes);
+-      gdouble total_length = 0;
+-      gdouble dash_offset;
+-      gint i;
+-
+-      for (i = 0; i < n_dashes; i++)
++      /* We go through all the pain below because the X rasterization
++       * rules don't really work right for dashed lines if you
++       * want continuity in segments that go between top/right
++       * and left/bottom. For instance, a top left corner
++       * with a 1-1 dash is drawn as:
++       *
++       *  X X X 
++       *  X
++       *
++       *  X
++       *
++       * This is because pixels on the top and left boundaries
++       * of polygons are drawn, but not on the bottom and right.
++       * So, if you have a line going up that turns the corner
++       * and goes right, there is a one pixel shift in the pattern.
++       *
++       * So, to fix this, we drawn the top and right in one call,
++       * then the left and bottom in another call, fixing up
++       * the dash offset for the second call ourselves to get
++       * continuity at the upper left.
++       *
++       * It's not perfect since we really should have a join at
++       * the upper left and lower right instead of two intersecting
++       * lines but that's only really apparent for no-dashes,
++       * which (for this reason) are done as one polygon and
++       * don't to through this code path.
++       */
++      
++      dash_len = strlen (dash_list);
++      
++      if (dash_list[0])
++	gdk_gc_set_dashes (gc, 0, dash_list, dash_len);
++      
++      gdk_draw_lines (window, gc, points, 3);
++      
++      /* We draw this line one farther over than it is "supposed" to
++       * because of another rasterization problem ... if two 1 pixel
++       * unjoined lines meet at the lower right, there will be a missing
++       * pixel.
++       */
++      points[2].x += 1;
++      
++      if (dash_list[0])
+ 	{
+-	  dashes[i] = dash_list[i];
+-	  total_length += dash_list[i];
++	  gint dash_pixels = 0;
++	  gint i;
++	  
++	  /* Adjust the dash offset for the bottom and left so we
++	   * match up at the upper left.
++	   */
++	  for (i = 0; i < dash_len; i++)
++	    dash_pixels += dash_list[i];
++      
++	  if (dash_len % 2 == 1)
++	    dash_pixels *= 2;
++	  
++	  gdk_gc_set_dashes (gc, dash_pixels - (width + height - 2 * line_width) % dash_pixels, dash_list, dash_len);
+ 	}
+-
+-      /* The dash offset here aligns the pattern to integer pixels
+-       * by starting the dash at the right side of the left border
+-       * Negative dash offsets in cairo don't work
+-       * (https://bugs.freedesktop.org/show_bug.cgi?id=2729)
+-       */
+-      dash_offset = - line_width / 2.;
+-      while (dash_offset < 0)
+-	dash_offset += total_length;
+       
+-      cairo_set_dash (cr, dashes, n_dashes, dash_offset);
+-      g_free (dashes);
++      gdk_draw_lines (window, gc, points + 2, 3);
+     }
+ 
+-  if (area)
+-    {
+-      gdk_cairo_rectangle (cr, area);
+-      cairo_clip (cr);
+-    }
++  gdk_gc_set_line_attributes (gc, 0, GDK_LINE_SOLID, GDK_CAP_BUTT, GDK_JOIN_MITER);
+ 
+-  cairo_rectangle (cr,
+-		   x + line_width / 2.,
+-		   y + line_width / 2.,
+-		   width - line_width,
+-		   height - line_width);
+-  cairo_stroke (cr);
+-  cairo_destroy (cr);
++  if (area)
++    gdk_gc_set_clip_rectangle (gc, NULL);
+ 
+   if (free_dash_list)
+     g_free (dash_list);
+@@ -4599,6 +4846,9 @@
+                          gint           height,
+                          GtkOrientation orientation)
+ {
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   sanitize_size (window, &width, &height);
+   
+   gtk_paint_box (style, window, state_type, shadow_type,
+@@ -4627,6 +4877,7 @@
+ 	  gint          y,
+ 	  gushort       size)
+ {
++  
+   size = CLAMP (size, 2, 3);
+ 
+   if (size == 2)
+@@ -4667,6 +4918,9 @@
+   GdkRectangle dest;
+   gint intersect;
+   
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   sanitize_size (window, &width, &height);
+   
+   gtk_paint_box (style, window, state_type, shadow_type, area, widget, 
+@@ -4682,9 +4936,9 @@
+       if (state_type == GTK_STATE_SELECTED && widget && !GTK_WIDGET_HAS_FOCUS (widget))
+ 	{
+ 	  GdkColor unfocused_light;
+-
++      
+ 	  _gtk_style_shade (&style->base[GTK_STATE_ACTIVE], &unfocused_light,
+-                            LIGHTNESS_MULT);
++			   LIGHTNESS_MULT);
+ 
+ 	  light_gc = free_me = gdk_gc_new (window);
+ 	  gdk_gc_set_rgb_fg_color (light_gc, &unfocused_light);
+@@ -4750,6 +5004,72 @@
+ }
+ 
+ static void
++create_expander_affine (gdouble affine[6],
++			gint    degrees,
++			gint    expander_size,
++			gint    x,
++			gint    y)
++{
++  gdouble s, c;
++  gdouble width;
++  gdouble height;
++
++  width = expander_size / 4.0;
++  height = expander_size / 2.0;
++
++  switch (degrees)
++    {
++    case 0:
++      s = 0.0;
++      c = 1.0;
++      break;
++    case 90:
++      s = 1.0;
++      c = 0.0;
++      break;
++    case 180:
++      s = 0.0;
++      c = -1.0;
++      break;
++    default:
++      s = sin (degrees * G_PI / 180.0);
++      c = cos (degrees * G_PI / 180.0);
++      break;
++    }
++  
++  affine[0] = c;
++  affine[1] = s;
++  affine[2] = -s;
++  affine[3] = c;
++  affine[4] = -width * c - height * -s + x;
++  affine[5] = -width * s - height * c + y;
++}
++
++static void
++apply_affine_on_point (double affine[6], GdkPoint *point)
++{
++  gdouble x, y;
++
++  x = point->x * affine[0] + point->y * affine[2] + affine[4];
++  y = point->x * affine[1] + point->y * affine[3] + affine[5];
++
++  point->x = floor (x);
++  point->y = floor (y);
++}
++
++static void
++gtk_style_draw_polygon_with_gc (GdkWindow *window, GdkGC *gc, gint line_width,
++				gboolean do_fill, GdkPoint *points, gint n_points)
++{
++  gdk_gc_set_line_attributes (gc, line_width,
++			      GDK_LINE_SOLID,
++			      GDK_CAP_BUTT, GDK_JOIN_MITER);
++
++  gdk_draw_polygon (window, gc, do_fill, points, n_points);
++  gdk_gc_set_line_attributes (gc, 0, GDK_LINE_SOLID, GDK_CAP_BUTT, GDK_JOIN_MITER);
++}
++
++static void
+ gtk_default_draw_expander (GtkStyle        *style,
+                            GdkWindow       *window,
+                            GtkStateType     state_type,
+@@ -4760,127 +5080,82 @@
+                            gint             y,
+ 			   GtkExpanderStyle expander_style)
+ {
+-#define DEFAULT_EXPANDER_SIZE 12
+-
+   gint expander_size;
+-  gint line_width;
+-  double vertical_overshoot;
+-  int diameter;
+-  double radius;
+-  double interp;		/* interpolation factor for center position */
+-  double x_double_horz, y_double_horz;
+-  double x_double_vert, y_double_vert;
+-  double x_double, y_double;
++  GdkPoint points[3];
++  gint i;
++  gint line_width, o;
++  gdouble affine[6];
+   gint degrees = 0;
+ 
+-  cairo_t *cr = gdk_cairo_create (window);
+-  
++  gtk_widget_style_get (widget,
++			"expander-size", &expander_size,
++			NULL);
++  line_width = MAX (1, expander_size/9);
++
+   if (area)
+     {
+-      gdk_cairo_rectangle (cr, area);
+-      cairo_clip (cr);
++      gdk_gc_set_clip_rectangle (style->fg_gc[GTK_STATE_NORMAL], area);
++      gdk_gc_set_clip_rectangle (style->base_gc[GTK_STATE_NORMAL], area);
+     }
+ 
+-  if (widget &&
+-      gtk_widget_class_find_style_property (GTK_WIDGET_GET_CLASS (widget),
+-					    "expander-size"))
+-    {
+-      gtk_widget_style_get (widget,
+-			    "expander-size", &expander_size,
+-			    NULL);
+-    }
+-  else
+-    expander_size = DEFAULT_EXPANDER_SIZE;
+-    
+-  line_width = MAX (1, expander_size/9);
++  /* a rough estimate of how much the joins of the triangle will overshoot. 
++   * 2.4 ~ 1 / tan (45 / 2)
++   */
++  o = ceil (2.4 * line_width / 2.0);
++  points[0].x = line_width / 2;
++  points[0].y = o;
++  points[1].x = expander_size / 2 + line_width / 2 - o;
++  points[1].y = expander_size / 2;
++  points[2].x = line_width / 2;
++  points[2].y = expander_size - o;
+ 
+   switch (expander_style)
+     {
+     case GTK_EXPANDER_COLLAPSED:
+       degrees = (get_direction (widget) == GTK_TEXT_DIR_RTL) ? 180 : 0;
+-      interp = 0.0;
+       break;
+     case GTK_EXPANDER_SEMI_COLLAPSED:
+       degrees = (get_direction (widget) == GTK_TEXT_DIR_RTL) ? 150 : 30;
+-      interp = 0.25;
+       break;
+     case GTK_EXPANDER_SEMI_EXPANDED:
+       degrees = (get_direction (widget) == GTK_TEXT_DIR_RTL) ? 120 : 60;
+-      interp = 0.75;
+       break;
+     case GTK_EXPANDER_EXPANDED:
+       degrees = 90;
+-      interp = 1.0;
+       break;
+     default:
+       g_assert_not_reached ();
+     }
+ 
+-  /* Compute distance that the stroke extends beyonds the end
+-   * of the triangle we draw.
+-   */
+-  vertical_overshoot = line_width / 2.0 * (1. / tan (G_PI / 8));
+-
+-  /* For odd line widths, we end the vertical line of the triangle
+-   * at a half pixel, so we round differently.
+-   */
+-  if (line_width % 2 == 1)
+-    vertical_overshoot = ceil (0.5 + vertical_overshoot) - 0.5;
+-  else
+-    vertical_overshoot = ceil (vertical_overshoot);
+-
+-  /* Adjust the size of the triangle we draw so that the entire stroke fits
+-   */
+-  diameter = MAX (3, expander_size - 2 * vertical_overshoot);
+-
+-  /* If the line width is odd, we want the diameter to be even,
+-   * and vice versa, so force the sum to be odd. This relationship
+-   * makes the point of the triangle look right.
+-   */
+-  diameter -= (1 - (diameter + line_width) % 2);
+-  
+-  radius = diameter / 2.;
+-
+-  /* Adjust the center so that the stroke is properly aligned with
+-   * the pixel grid. The center adjustment is different for the
+-   * horizontal and vertical orientations. For intermediate positions
+-   * we interpolate between the two.
+-   */
+-  x_double_vert = floor (x - (radius + line_width) / 2.) + (radius + line_width) / 2.;
+-  y_double_vert = y - 0.5;
+-
+-  x_double_horz = x - 0.5;
+-  y_double_horz = floor (y - (radius + line_width) / 2.) + (radius + line_width) / 2.;
+-
+-  x_double = x_double_vert * (1 - interp) + x_double_horz * interp;
+-  y_double = y_double_vert * (1 - interp) + y_double_horz * interp;
+-  
+-  cairo_translate (cr, x_double, y_double);
+-  cairo_rotate (cr, degrees * G_PI / 180);
++  create_expander_affine (affine, degrees, expander_size, x, y);
+ 
+-  cairo_move_to (cr, - radius / 2., - radius);
+-  cairo_line_to (cr,   radius / 2.,   0);
+-  cairo_line_to (cr, - radius / 2.,   radius);
+-  cairo_close_path (cr);
+-  
+-  cairo_set_line_width (cr, line_width);
++  for (i = 0; i < 3; i++)
++    apply_affine_on_point (affine, &points[i]);
+ 
+   if (state_type == GTK_STATE_PRELIGHT)
+-    gdk_cairo_set_source_color (cr,
+-				&style->fg[GTK_STATE_PRELIGHT]);
++    {
++      gtk_style_draw_polygon_with_gc (window, style->fg_gc[GTK_STATE_PRELIGHT],
++				      1, TRUE, points, 3);
++    }
+   else if (state_type == GTK_STATE_ACTIVE)
+-    gdk_cairo_set_source_color (cr,
+-				&style->light[GTK_STATE_ACTIVE]);
++    {
++      gtk_style_draw_polygon_with_gc (window, style->light_gc[GTK_STATE_ACTIVE],
++				      1, TRUE, points, 3);
++      gtk_style_draw_polygon_with_gc (window, style->fg_gc[GTK_STATE_NORMAL],
++				      line_width, FALSE, points, 3);
++    }
+   else
+-    gdk_cairo_set_source_color (cr,
+-				&style->base[GTK_STATE_NORMAL]);
+-  
+-  cairo_fill_preserve (cr);
+-  
+-  gdk_cairo_set_source_color (cr, &style->fg[state_type]);
+-  cairo_stroke (cr);
+-  
+-  cairo_destroy (cr);
++    {
++      gtk_style_draw_polygon_with_gc (window, style->base_gc[GTK_STATE_NORMAL],
++				      1, TRUE, points, 3);
++      gtk_style_draw_polygon_with_gc (window, style->fg_gc[GTK_STATE_NORMAL],
++				      line_width, FALSE, points, 3);
++    }
++  if (area)
++    {
++      gdk_gc_set_clip_rectangle (style->fg_gc[GTK_STATE_NORMAL], NULL);
++      gdk_gc_set_clip_rectangle (style->base_gc[GTK_STATE_NORMAL], NULL);
++    }
+ }
+ 
+ typedef struct _ByteRange ByteRange;
+@@ -5046,6 +5321,9 @@
+                          PangoLayout     *layout)
+ {
+   GdkGC *gc;
++  
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
+ 
+   gc = use_text ? style->text_gc[state_type] : style->fg_gc[state_type];
+   
+@@ -5087,6 +5365,9 @@
+   GdkPoint points[4];
+   gint i, j, skip;
+ 
++  g_return_if_fail (GTK_IS_STYLE (style));
++  g_return_if_fail (window != NULL);
++  
+   if (area)
+     {
+       gdk_gc_set_clip_rectangle (style->light_gc[state_type], area);
+@@ -5390,8 +5671,8 @@
+ 
+ void
+ _gtk_style_shade (GdkColor *a,
+-                  GdkColor *b,
+-                  gdouble   k)
++                 GdkColor *b,
++                 gdouble   k)
+ {
+   gdouble red;
+   gdouble green;
+@@ -5578,10 +5859,9 @@
+  * @style: a #GtkStyle
+  * @window: a #GdkWindow
+  * @state_type: a state
+- * @area: rectangle to which the output is clipped, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: rectangle to which the output is clipped
++ * @widget: the widget
++ * @detail: a style detail
+  * @x1: the starting x coordinate
+  * @x2: the ending x coordinate
+  * @y: the y coordinate
+@@ -5602,7 +5882,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_hline != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_hline (style, window, state_type, area, widget, detail, x1, x2, y);
+ }
+@@ -5612,10 +5891,9 @@
+  * @style: a #GtkStyle
+  * @window: a #GdkWindow
+  * @state_type: a state
+- * @area: rectangle to which the output is clipped, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: rectangle to which the output is clipped
++ * @widget: the widget
++ * @detail: a style detail
+  * @y1_: the starting y coordinate
+  * @y2_: the ending y coordinate
+  * @x: the x coordinate
+@@ -5636,7 +5914,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_vline != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_vline (style, window, state_type, area, widget, detail, y1_, y2_, x);
+ }
+@@ -5647,10 +5924,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: type of shadow to draw
+- * @area: clip rectangle or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the rectangle
+  * @y: y origin of the rectangle
+  * @width: width of the rectangle 
+@@ -5674,7 +5950,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_shadow != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_shadow (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height);
+ }
+@@ -5685,10 +5960,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @points: an array of #GdkPoint<!-- -->s
+  * @npoints: length of @points
+  * @fill: %TRUE if the polygon should be filled
+@@ -5709,7 +5983,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_polygon != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_polygon (style, window, state_type, shadow_type, area, widget, detail, points, npoints, fill);
+ }
+@@ -5720,10 +5993,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: the type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @arrow_type: the type of arrow to draw
+  * @fill: %TRUE if the arrow tip should be filled
+  * @x: x origin of the rectangle to draw the arrow in
+@@ -5751,7 +6023,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_arrow != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_arrow (style, window, state_type, shadow_type, area, widget, detail, arrow_type, fill, x, y, width, height);
+ }
+@@ -5762,10 +6033,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: the type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the rectangle to draw the diamond in
+  * @y: y origin of the rectangle to draw the diamond in
+  * @width: width of the rectangle to draw the diamond in
+@@ -5789,7 +6059,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_diamond != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_diamond (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height);
+ }
+@@ -5799,10 +6068,9 @@
+  * @style: a #GtkStyle
+  * @window: a #GdkWindow
+  * @state_type: a state
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin
+  * @y: y origin
+  * @string: the string to draw
+@@ -5824,7 +6092,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_string != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_string (style, window, state_type, area, widget, detail, x, y, string);
+ }
+@@ -5835,10 +6102,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: the type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the box
+  * @y: y origin of the box
+  * @width: the width of the box
+@@ -5861,7 +6127,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_box != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_box (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height);
+ }
+@@ -5872,10 +6137,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: the type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the box
+  * @y: y origin of the box
+  * @width: the width of the box
+@@ -5898,7 +6162,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_flat_box != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_flat_box (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height);
+ }
+@@ -5909,10 +6172,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: the type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the rectangle to draw the check in
+  * @y: y origin of the rectangle to draw the check in
+  * @width: the width of the rectangle to draw the check in
+@@ -5936,7 +6198,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_check != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_check (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height);
+ }
+@@ -5947,10 +6208,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: the type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the rectangle to draw the option in
+  * @y: y origin of the rectangle to draw the option in
+  * @width: the width of the rectangle to draw the option in
+@@ -5974,7 +6234,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_option != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_option (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height);
+ }
+@@ -5985,10 +6244,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: the type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the rectangle to draw the tab in
+  * @y: y origin of the rectangle to draw the tab in
+  * @width: the width of the rectangle to draw the tab in
+@@ -6012,7 +6270,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_tab != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_tab (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height);
+ }
+@@ -6023,10 +6280,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the rectangle
+  * @y: y origin of the rectangle
+  * @width: width of the rectangle 
+@@ -6057,7 +6313,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_shadow_gap != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_shadow_gap (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height, gap_side, gap_x, gap_width);
+ }
+@@ -6069,10 +6324,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the rectangle
+  * @y: y origin of the rectangle
+  * @width: width of the rectangle 
+@@ -6102,7 +6356,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_box_gap != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_box_gap (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height, gap_side, gap_x, gap_width);
+ }
+@@ -6113,10 +6366,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the extension
+  * @y: y origin of the extension
+  * @width: width of the extension 
+@@ -6141,7 +6393,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_extension != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_extension (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height, gap_side);
+ }
+@@ -6151,10 +6402,9 @@
+  * @style: a #GtkStyle
+  * @window: a #GdkWindow
+  * @state_type: a state
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: the x origin of the rectangle around which to draw a focus indicator
+  * @y: the y origin of the rectangle around which to draw a focus indicator
+  * @width: the width of the rectangle around which to draw a focus indicator
+@@ -6177,30 +6427,10 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_focus != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_focus (style, window, state_type, area, widget, detail, x, y, width, height);
+ }
+ 
+-/**
+- * gtk_paint_slider:
+- * @style: a #GtkStyle
+- * @window: a #GdkWindow
+- * @state_type: a state
+- * @shadow_type: a shadow
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
+- * @x: the x origin of the rectangle in which to draw a slider
+- * @y: the y origin of the rectangle in which to draw a slider
+- * @width: the width of the rectangle in which to draw a slider
+- * @height: the height of the rectangle in which to draw a slider
+- * @orientation: the orientation to be used
+- *
+- * Draws a slider in the given rectangle on @window using the
+- * given style and orientation.
+- **/
+ void
+ gtk_paint_slider (GtkStyle      *style,
+                   GdkWindow     *window,
+@@ -6217,7 +6447,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_slider != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_slider (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height, orientation);
+ }
+@@ -6228,10 +6457,9 @@
+  * @window: a #GdkWindow
+  * @state_type: a state
+  * @shadow_type: type of shadow to draw
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: x origin of the handle
+  * @y: y origin of the handle
+  * @width: with of the handle
+@@ -6256,7 +6484,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_handle != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_handle (style, window, state_type, shadow_type, area, widget, detail, x, y, width, height, orientation);
+ }
+@@ -6266,25 +6493,14 @@
+  * @style: a #GtkStyle
+  * @window: a #GdkWindow
+  * @state_type: a state
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @x: the x position to draw the expander at
+  * @y: the y position to draw the expander at
+- * @expander_style: the style to draw the expander in; determines
+- *   whether the expander is collapsed, expanded, or in an
+- *   intermediate state.
++ * @expander_style: the style to draw the expander in
+  * 
+- * Draws an expander as used in #GtkTreeView. @x and @y specify the
+- * center the expander. The size of the expander is determined by the
+- * "expander-size" style property of @widget.  (If widget is not
+- * specified or doesn't have an "expander-size" property, an
+- * unspecified default size will be used, since the caller doesn't
+- * have sufficient information to position the expander, this is
+- * likely not useful.) The expander is expander_size pixels tall
+- * in the collapsed position and expander_size pixels wide in the
+- * expanded position.
++ * Draws an expander as used in #GtkTreeView.
+  **/
+ void
+ gtk_paint_expander (GtkStyle        *style,
+@@ -6299,34 +6515,16 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_expander != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_expander (style, window, state_type, area,
+                                               widget, detail, x, y, expander_style);
+ }
+ 
+-/**
+- * gtk_paint_layout:
+- * @style: a #GtkStyle
+- * @window: a #GdkWindow
+- * @state_type: a state
+- * @use_text: whether to use the text or foreground
+- *            graphics context of @style
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
+- * @x: x origin
+- * @y: y origin
+- * @layout: the layout to draw
+- * 
+- * Draws a layout on @window using the given parameters.
+- **/
+ void
+ gtk_paint_layout (GtkStyle        *style,
+                   GdkWindow       *window,
+                   GtkStateType     state_type,
+-                  gboolean         use_text,
++		  gboolean         use_text,
+                   GdkRectangle    *area,
+                   GtkWidget       *widget,
+                   const gchar     *detail,
+@@ -6336,7 +6534,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_layout != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+   
+   GTK_STYLE_GET_CLASS (style)->draw_layout (style, window, state_type, use_text, area,
+                                             widget, detail, x, y, layout);
+@@ -6347,10 +6544,9 @@
+  * @style: a #GtkStyle
+  * @window: a #GdkWindow
+  * @state_type: a state
+- * @area: clip rectangle, or %NULL if the
+- *        output should not be clipped
+- * @widget: the widget (may be %NULL)
+- * @detail: a style detail (may be %NULL)
++ * @area: clip rectangle
++ * @widget: the widget
++ * @detail: a style detail
+  * @edge: the edge in which to draw the resize grip
+  * @x: the x origin of the rectangle in which to draw the resize grip
+  * @y: the y origin of the rectangle in which to draw the resize grip
+@@ -6376,7 +6572,6 @@
+ {
+   g_return_if_fail (GTK_IS_STYLE (style));
+   g_return_if_fail (GTK_STYLE_GET_CLASS (style)->draw_resize_grip != NULL);
+-  g_return_if_fail (style->depth == gdk_drawable_get_depth (window));
+ 
+   GTK_STYLE_GET_CLASS (style)->draw_resize_grip (style, window, state_type,
+                                                  area, widget, detail,
+@@ -6414,7 +6609,7 @@
+   static GType our_type = 0;
+   
+   if (our_type == 0)
+-    our_type = g_boxed_type_register_static (I_("GtkBorder"),
++    our_type = g_boxed_type_register_static ("GtkBorder",
+ 					     (GBoxedCopyFunc) gtk_border_copy,
+ 					     (GBoxedFreeFunc) gtk_border_free);
+ 
+@@ -6553,7 +6748,7 @@
+ 	gtk_gc_release (cursor_info->secondary_gc);
+       
+       g_free (cursor_info);
+-      g_object_set_data (G_OBJECT (style), I_("gtk-style-cursor-info"), NULL);
++      g_object_set_data (G_OBJECT (style), "gtk-style-cursor-info", NULL);
+     }
+ }
+ 
+@@ -6591,7 +6786,7 @@
+   if (!cursor_info)
+     {
+       cursor_info = g_new (CursorInfo, 1);
+-      g_object_set_data (G_OBJECT (widget->style), I_("gtk-style-cursor-info"), cursor_info);
++      g_object_set_data (G_OBJECT (widget->style), "gtk-style-cursor-info", cursor_info);
+       cursor_info->primary_gc = NULL;
+       cursor_info->secondary_gc = NULL;
+       cursor_info->for_type = G_TYPE_INVALID;
+@@ -6655,6 +6850,8 @@
+   gfloat cursor_aspect_ratio;
+   gint offset;
+   
++  g_return_if_fail (direction != GTK_TEXT_DIR_NONE);
++
+   /* When changing the shape or size of the cursor here,
+    * propagate the changes to gtktextview.c:text_window_invalidate_cursors().
+    */
