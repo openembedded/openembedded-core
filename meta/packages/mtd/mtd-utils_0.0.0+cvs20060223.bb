@@ -4,7 +4,7 @@ DEPENDS = "zlib"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
 PR = "r0"
-SRCDATE = "${PV}"
+SRCDATE = "20060223"
 
 SRC_URI = "cvs://anoncvs:anoncvs@cvs.infradead.org/home/cvs;module=mtd \ 
            file://add-exclusion-to-mkfs-jffs2-20060131.patch;patch=1 \
