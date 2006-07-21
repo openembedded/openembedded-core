@@ -12,16 +12,7 @@ BBFILES := "POKYROOT/meta/packages/*/*.bb"
 
 BBMASK = ""
 
-# Uncomment this to specify where BitBake should create its temporary files.
-# Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
-# disk space, so make sure to free enough space. The default TMPDIR is
-# <build directory>/tmp
-# TMPDIR = /usr/local/projects/oetmp
-# Uncomment this to disable the parse cache (not recommended).
-# CACHE = ""
-# Uncomment this if you want BitBake to emit debugging output
-# BBDEBUG = "yes"
-
+# The machine to target
 MACHINE = "c7x0"
 #MACHINE = "akita"
 #MACHINE = "spitz"
@@ -30,11 +21,19 @@ MACHINE = "c7x0"
 
 DISTRO = "poky"
 
+# DISTRO_TYPE determines the type of images that will be built
+# "release" - create a streamlined and secure image
+# "debug"   - enable easier ssh access 
+#           - include the devtools and testapps packages
+
 DISTRO_TYPE = "debug"
-KERNEL_VERSION = "2.6"
 
-IMAGE_FSTYPES = "jffs2 tar"
 
+# Uncomment this to specify where BitBake should create its temporary files.
+# Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
+# disk space, so make sure to free enough space. The default TMPDIR is
+# <build directory>/tmp
+# TMPDIR = /usr/local/projects/oetmp
 
 # Uncomment these two if you want BitBake to build images useful for debugging.
 # DEBUG_BUILD = "1"
@@ -50,6 +49,8 @@ IMAGE_FSTYPES = "jffs2 tar"
 # SELECTED_OPTIMIZATION = "${PROFILE_OPTIMIZATION}"
 # LDFLAGS =+ "-pg"
 
+# Uncomment this if you want BitBake to emit debugging output
+# BBDEBUG = "yes"
 # Uncomment this if you want BitBake to emit the log if a build fails.
 BBINCLUDELOGS = "yes"
 
