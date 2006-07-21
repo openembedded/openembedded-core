@@ -1,12 +1,12 @@
 # Where to cache the files OE downloads
 DL_DIR = "POKYROOT/sources"
-BBFILES := "POKYROOT/openembedded/packages/*/*.bb"
+BBFILES := "POKYROOT/meta/packages/*/*.bb"
 
 # To enable extra packages, uncomment the following lines:
-# BBFILES := "POKYROOT/openembedded/packages/*/*.bb POKYROOT/openembedded-extras/packages/*/*.bb"
+# BBFILES := "POKYROOT/meta/packages/*/*.bb POKYROOT/meta-extras/packages/*/*.bb"
 # BBFILE_COLLECTIONS = "normal extras"
-# BBFILE_PATTERN_normal = "^POKYROOT/openembedded/"
-# BBFILE_PATTERN_extras = "^POKYROOT/openembedded/"
+# BBFILE_PATTERN_normal = "^POKYROOT/meta/"
+# BBFILE_PATTERN_extras = "^POKYROOT/meta/"
 # BBFILE_PRIORITY_normal = "5"
 # BBFILE_PRIORITY_extras = "5"
 

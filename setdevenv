@@ -7,7 +7,7 @@
 OEROOT=`pwd`
 
 BBDIR=$OEROOT/bitbake/
-PKGDIR=$OEROOT/openembedded/
+PKGDIR=$OEROOT/meta/
 BUILDDIR=$OEROOT/build/
 
 PATH=$BBDIR/bin/:$PATH
@@ -46,4 +46,4 @@ export PATH LD_LIBRARY_PATH OEROOT
 # Stop multi byte characters breaking the patcher stuff - This is for Redhat / Fedora people really
 export LANG=C
 
-echo Environment set up for OpenEmbedded development.
+echo Environment set up for Poky development.
