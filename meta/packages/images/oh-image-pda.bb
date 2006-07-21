@@ -1,8 +1,6 @@
 PR = "r10"
 
-export IMAGE_BASENAME = "oh-image"
-
-GUI_MACHINE_CLASS ?= "none"
+export IMAGE_BASENAME = "oh-image-pda"
 
 XSERVER ?= "xserver-kdrive-fbdev"
 
@@ -18,7 +16,6 @@ RDEPENDS = "\
     ${XSERVER} "
 
 export IPKG_INSTALL = "${RDEPENDS}"
-#ROOTFS_POSTPROCESS_COMMAND += "zap_root_password; "
 
 inherit image_ipk
 LICENSE = MIT

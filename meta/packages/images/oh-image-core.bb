@@ -1,24 +1,18 @@
-PR = "r9"
+PR = "r0"
 
-export IMAGE_BASENAME = "oh-devel"
-
-GUI_MACHINE_CLASS ?= "none"
+export IMAGE_BASENAME = "oh-image-core"
 
 XSERVER ?= "xserver-kdrive-fbdev"
 
 DEPENDS = "task-oh"
-
+    
 RDEPENDS = "\
     task-oh-boot \
     task-oh-boot-extras \
     task-oh-base \
-    task-oh-standard \
-    task-oh-devtools \
-    task-oh-testapps \
     ${XSERVER} "
 
 export IPKG_INSTALL = "${RDEPENDS}"
-#ROOTFS_POSTPROCESS_COMMAND += "zap_root_password; "
 
 inherit image_ipk
 LICENSE = MIT
