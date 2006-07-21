@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if test x"$0" = x"./poky-init-build-env"; then
+   echo "Error: Run via '. ./poky-init-build-env'"
+   exit 1
+fi
+
 #
 # Change this to the location of this file.
 # Also update the locations at the top of conf/local.conf
@@ -9,6 +14,7 @@ OEROOT=`pwd`
 BBDIR=$OEROOT/bitbake/
 PKGDIR=$OEROOT/meta/
 BUILDDIR=$OEROOT/build/
+MSG=''
 
 PATH=$BBDIR/bin/:$PATH
 
@@ -25,8 +31,9 @@ if ! (test -d $BBDIR && test -d $PKGDIR && test -d $BUILDDIR); then
 fi
 
 if ! (test -r $BUILDDIR/conf/local.conf); then
-   echo "Setting up initial '$PKGDIR/conf/local.conf'."
    cat $BUILDDIR/conf/local.conf.sample | sed -e"s|POKYROOT|${OEROOT}|g" > $BUILDDIR/conf/local.conf
+   echo
+   echo "..Created initial 'build/conf/local.conf'"
 fi	
 
 BBPATH=$BBDIR
@@ -46,4 +53,6 @@ export PATH LD_LIBRARY_PATH OEROOT
 # Stop multi byte characters breaking the patcher stuff - This is for Redhat / Fedora people really
 export LANG=C
 
-echo Environment set up for Poky development.
+echo
+echo "### Shell environment set up for Poky builds. ###"
+echo 
