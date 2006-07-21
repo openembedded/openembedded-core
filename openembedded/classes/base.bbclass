@@ -400,6 +400,13 @@ def oe_unpack_file(file, data, url = None):
 			cmd = 'cp %s %s/%s/' % (file, os.getcwd(), destdir)
 	if not cmd:
 		return True
+
+
+	dest = os.path.join(os.getcwd(), os.path.basename(file))
+	if os.path.exists(dest):
+		if os.path.samefile(file, dest):
+			return True
+
 	cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', data, 1), cmd)
 	bb.note("Unpacking %s to %s/" % (file, os.getcwd()))
 	ret = os.system(cmd)
