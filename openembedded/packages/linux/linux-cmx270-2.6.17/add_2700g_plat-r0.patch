@@ -1,0 +1,126 @@
+Index: linux-2.6.17/arch/arm/mach-pxa/cm-x270.c
+===================================================================
+--- linux-2.6.17.orig/arch/arm/mach-pxa/cm-x270.c	2006-07-18 15:40:10.000000000 +0100
++++ linux-2.6.17/arch/arm/mach-pxa/cm-x270.c	2006-07-20 20:25:22.000000000 +0100
+@@ -11,6 +11,7 @@
+ #include <linux/pm.h>
+ #include <linux/fb.h>
+ #include <linux/rtc-v3020.h>
++#include <linux/mbxfb.h>
+ 
+ #include <asm/types.h>
+ #include <asm/setup.h>
+@@ -396,10 +397,113 @@
+ 	.resource = dm9000_resources,
+ };
+ 
++/* 2700G graphics */
++static u64 fb_dma_mask = ~(u64)0;
++
++static struct resource cmx270_2700G_resource[] = {
++       /* frame buffer memory including ODFB and External SDRAM */
++       [0] = {
++               .start = MARATHON_PHYS,
++               .end   = MARATHON_PHYS + 0x02000000,
++               .flags = IORESOURCE_MEM,
++       },
++       /* Marathon registers */
++       [1] = {
++               .start = MARATHON_PHYS + 0x03fe0000,
++               .end   = MARATHON_PHYS + 0x03ffffff,
++               .flags = IORESOURCE_MEM,
++       },
++};
++
++static unsigned long save_lcd_regs[10];
++
++/* if 2700G is used, disable PCI throttle */
++#define LB_TROTTLE_OFF (PXA_CS1_PHYS | (1 << 25))
++#define LB_TROTTLE_MAX (PXA_CS1_PHYS | (1 << 25) | (1 << 22))
++static int cmx270_marathon_probe(struct fb_info *fb)
++{
++       volatile unsigned long *cpld;
++       
++       cpld = (volatile unsigned long*)ioremap(LB_TROTTLE_OFF, 4);
++       if ( !cpld ) {
++               return -ENODEV;
++       }
++       *cpld = 0;
++       iounmap((void*)cpld);
++
++       /* save PXA-270 pin settings before enabling 2700G */
++       save_lcd_regs[0] = GPDR1;
++       save_lcd_regs[1] = GPDR2;
++       save_lcd_regs[2] = GAFR1_U;
++       save_lcd_regs[3] = GAFR2_L;
++       save_lcd_regs[4] = GAFR2_U;
++
++       /* Disable PXA-270 on-chip controller driving pins */
++       GPDR1 &= ~(0xfc000000);
++       GPDR2 &= ~(0x00c03fff);
++       GAFR1_U &= ~(0xfff00000);
++       GAFR2_L &= ~(0x0fffffff);
++       GAFR2_U &= ~(0x0000f000);
++       return 0;
++}
++
++static int cmx270_marathon_remove(struct fb_info *fb)
++{
++       volatile unsigned long *cpld;
++       cpld = (volatile unsigned long*)ioremap(LB_TROTTLE_MAX, 4);
++       
++       if ( !cpld ) {
++               return -ENODEV;
++       }
++       *cpld = 0;
++       iounmap((void*)cpld);
++
++       GPDR1 =   save_lcd_regs[0];
++       GPDR2 =   save_lcd_regs[1];
++       GAFR1_U = save_lcd_regs[2];
++       GAFR2_L = save_lcd_regs[3];
++       GAFR2_U = save_lcd_regs[4];
++       return 0;
++}
++
++static struct mbxfb_platform_data cmx270_2700G_data = {
++       .xres = {
++               .min = 240,
++               .max = 1200,
++               .defval = 640,
++       },
++       .yres = { 
++               .min = 240,
++               .max = 1200,
++               .defval = 480,
++       },
++       .bpp = {
++               .min = 16,
++               .max = 32,
++               .defval = 16,
++       },
++       .memsize = 8*1024*1024,
++       .probe = cmx270_marathon_probe,
++       .remove = cmx270_marathon_remove,
++};
++
++static struct platform_device cmx270_2700G = {
++       .name           = "mbx-fb",
++       .dev            = {
++               .platform_data  = &cmx270_2700G_data,
++               .dma_mask       = &fb_dma_mask,
++               .coherent_dma_mask = 0xffffffff,
++       },
++       .num_resources  = ARRAY_SIZE(cmx270_2700G_resource),
++       .resource       = cmx270_2700G_resource,
++       .id             = -1,
++};
++
+ static struct platform_device *platform_devices[] __initdata = {\
+ 	&cmx270_audio_device,
+ 	&v3020_rtc_device,
+ 	&dm9000_device,
++	&cmx270_2700G,
+ };
+ 
+ static int cmx270_ohci_init(struct device *dev)

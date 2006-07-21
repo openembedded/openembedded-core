@@ -1,0 +1,15 @@
+Index: linux-2.6.17/drivers/mtd/nand/cm-x270.c
+===================================================================
+--- linux-2.6.17.orig/drivers/mtd/nand/cm-x270.c	2006-07-19 16:47:08.000000000 +0100
++++ linux-2.6.17/drivers/mtd/nand/cm-x270.c	2006-07-19 16:55:23.000000000 +0100
+@@ -184,6 +184,10 @@
+ 	int mtd_parts_nb = 0;
+ 	int ret;
+ 
++	pxa_gpio_mode(GPIO_NAND_RB);
++	GPSR(GPIO_NAND_CS) = GPIO_bit(GPIO_NAND_CS);
++	pxa_gpio_mode(GPIO_NAND_CS | GPIO_OUT);
++
+ 	/* Allocate memory for MTD device structure and private data */
+ 	cmx270_nand_mtd = kzalloc(sizeof(struct mtd_info) +
+ 				  sizeof(struct nand_chip),
