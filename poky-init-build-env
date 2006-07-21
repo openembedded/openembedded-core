@@ -1,0 +1,49 @@
+#!/bin/sh
+
+#
+# Change this to the location of this file.
+# Also update the locations at the top of conf/local.conf
+#
+OEROOT=`pwd`
+
+BBDIR=$OEROOT/bitbake/
+PKGDIR=$OEROOT/meta/
+BUILDDIR=$OEROOT/build/
+
+PATH=$BBDIR/bin/:$PATH
+
+cd $BUILDDIR
+
+# Remove any symlinks from paths
+BBDIR=`readlink -f $BBDIR`
+PKGDIR=`readlink -f $PKGDIR`
+BUILDDIR=`readlink -f $BUILDDIR`
+
+if ! (test -d $BBDIR && test -d $PKGDIR && test -d $BUILDDIR); then
+    echo >&2 "Error: Not all directories exist! Did you run this script in poky directory?"
+    exit 1
+fi
+
+if ! (test -r $BUILDDIR/conf/local.conf); then
+   echo "Setting up initial '$PKGDIR/conf/local.conf'."
+   cat $BUILDDIR/conf/local.conf.sample | sed -e"s|POKYROOT|${OEROOT}|g" > $BUILDDIR/conf/local.conf
+fi	
+
+BBPATH=$BBDIR
+if test x"$BBDIR" != x"$PKGDIR"; then
+	BBPATH=$PKGDIR:$BBPATH
+fi
+if test x"$PKGDIR" != x"$BUILDDIR"; then
+	BBPATH=$BUILDDIR:$BBPATH
+fi
+export BBPATH
+
+
+# Blank this so we don't link non-arm libraries
+LD_LIBRARY_PATH=
+# Don't export TARGET_ARCH - it *will* cause build failures
+export PATH LD_LIBRARY_PATH OEROOT
+# Stop multi byte characters breaking the patcher stuff - This is for Redhat / Fedora people really
+export LANG=C
+
+echo Environment set up for Poky development.
