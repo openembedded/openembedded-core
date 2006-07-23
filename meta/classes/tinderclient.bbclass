@@ -13,12 +13,15 @@ def tinder_http_post(server, selector, content_type, body):
            #print errcode, errmsg, headers
            return (errcode,errmsg, headers, h.file)
        except:
+           print "Error sending the report!"
            # try again
            pass
 
+    # return some garbage
+    return (-1, "unknown", "unknown", None)
+
 def tinder_form_data(bound, dict, log):
     output = []
-  #br
     # for each key in the dictionary
     for name in dict:
         output.append( "--" + bound )
@@ -119,7 +122,7 @@ def tinder_build_start(d):
     f.write(report)
 
 
-def tinder_send_http(d, status, log):
+def tinder_send_http(d, status, _log):
     """
     Send this log as build status
     """
@@ -127,16 +130,19 @@ def tinder_send_http(d, status, log):
 
 
     # get the body and type
-    content_type, body = tinder_format_http_post(d,status,log)
     server = data.getVar('TINDER_HOST', d, True )
     url    = data.getVar('TINDER_URL',  d, True )
 
     selector = url + "/xml/build_status.pl"
 
-    # now post it
-    errcode, errmsg, headers, h_file = tinder_http_post(server,selector,content_type, body)
-    #print errcode, errmsg, headers
-    #print h.file.read()
+    # now post it - in chunks of 10.000 charachters
+    new_log = _log
+    while len(new_log) > 0:
+        content_type, body = tinder_format_http_post(d,status,new_log[0:18000])
+        errcode, errmsg, headers, h_file = tinder_http_post(server,selector,content_type, body)
+        #print errcode, errmsg, headers
+        #print h.file.read()
+        new_log = new_log[18000:]
 
 
 def tinder_print_info(d):
