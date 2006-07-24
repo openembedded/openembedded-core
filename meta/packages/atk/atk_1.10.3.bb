@@ -2,7 +2,6 @@ DEPENDS = "glib-2.0 gtk-doc"
 DESCRIPTION = "An accessibility toolkit for GNOME."
 SECTION = "x11/libs"
 PRIORITY = "optional"
-MAINTAINER = "Philip Blundell <pb@handhelds.org>"
 LICENSE = "LGPL"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.8/atk-${PV}.tar.bz2"
