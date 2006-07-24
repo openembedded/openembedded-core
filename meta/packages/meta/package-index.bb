@@ -27,8 +27,6 @@ do_build[nostamp] = 1
 do_build[dirs] = "${DEPLOY_DIR_IPK}"
 do_build() {
 	set -ex
-	rm -f Packages
-	touch Packages
 	ipkg-make-index -r Packages -p Packages -l Packages.filelist -m .
 	set +ex
 }
