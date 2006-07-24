@@ -1,0 +1,53 @@
+Index: ipkg-utils/ipkg-make-index
+===================================================================
+--- ipkg-utils.orig/ipkg-make-index	2005-03-20 18:10:54.000000000 +0000
++++ ipkg-utils/ipkg-make-index	2006-07-24 09:18:16.000000000 +0100
+@@ -37,6 +37,21 @@
+      if os.path.exists(pkg_dir + "/" + filename + ".asc"):
+           os.rename(pkg_dir + "/" + filename + ".asc", locale_dir + "/" + filename + ".asc")
+ 
++def md5sum(file):
++     import md5
++     sum = md5.new()
++     f = open(file, "r")
++     while 1:
++          data = f.read(1024)
++          if not data: break
++          sum.update(data)
++     f.close()
++     if sys.version[:1] > '2':
++          # when using Python 2.0 or newer
++          return sum.hexdigest()
++     else:
++          return string.join(map((lambda x:"%02x" % ord(x)),sum.digest()),'')
++
+ old_filename = None
+ packages_filename = None
+ filelist_filename = "Packages.filelist"
+@@ -87,7 +102,7 @@
+ files.sort()
+ for filename in files:
+      basename = os.path.basename(filename)
+-     if old_pkg_hash.has_key(basename):
++     if old_pkg_hash.has_key(basename) and old_pkg_hash[basename].md5 == md5sum(filename) and old_pkg_hash[basename].size == os.stat(filename)[6]:
+           if (verbose):
+                sys.stderr.write("Found %s in Packages\n" % (filename,))
+           pkg = old_pkg_hash[basename]
+Index: ipkg-utils/ipkg.py
+===================================================================
+--- ipkg-utils.orig/ipkg.py	2005-01-20 23:09:10.000000000 +0000
++++ ipkg-utils/ipkg.py	2006-07-24 09:16:44.000000000 +0100
+@@ -210,8 +210,13 @@
+                     value = value + '\n' + line
+                 if name == 'size':
+                     self.size = int(value)
++	        elif name == 'md5sum':
++                    self.md5 = value
+                 elif self.__dict__.has_key(name):
+                     self.__dict__[name] = value
++		else:
++		    print "Lost field %s, %s" % (name,value)
++
+                 if line[0] == '\n':
+                     return # consumes one blank line at end of package descriptoin
+             else:
