@@ -177,8 +177,10 @@ runstrip() {
 			ro=1
 			chmod +w "$1"
 		}
+		'${OBJCOPY}' --only-keep-debug "$1" "$1.dbg"
 		'${STRIP}' "$1"
 		st=$?
+		'${OBJCOPY}' --add-gnu-debuglink="$1.dbg" "$1"
 		test -n "$ro" && chmod -w "$1"
 		if test $st -ne 0
 		then
@@ -249,6 +251,21 @@ python populate_packages () {
 			bb.error("%s is listed in PACKAGES mutliple times. Undefined behaviour will result." % pkg)
 		pkgs += pkg
 
+	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, 1) != '1'):
+		stripfunc = ""
+		for root, dirs, files in os.walk(dvar):
+			for f in files:
+				file = os.path.join(root, f)
+				if not os.path.islink(file) and isexec(file):
+					stripfunc += "\trunstrip %s || st=1\n" % (file)
+		if not stripfunc == "":
+			from bb import build
+			localdata = bb.data.createCopy(d)
+			# strip
+			bb.data.setVar('RUNSTRIP', '\tlocal st\n\tst=0\n%s\treturn $st' % stripfunc, localdata)
+			bb.data.setVarFlag('RUNSTRIP', 'func', 1, localdata)
+			bb.build.exec_func('RUNSTRIP', localdata)
+
 	for pkg in packages.split():
 		localdata = bb.data.createCopy(d)
 		root = os.path.join(workdir, "install", pkg)
@@ -273,7 +290,6 @@ python populate_packages () {
 		bb.mkdirhier(root)
 		filesvar = bb.data.getVar('FILES', localdata, 1) or ""
 		files = filesvar.split()
-		stripfunc = ""
 		for file in files:
 			if os.path.isabs(file):
 				file = '.' + file
@@ -293,17 +309,9 @@ python populate_packages () {
 			fpath = os.path.join(root,file)
 			dpath = os.path.dirname(fpath)
 			bb.mkdirhier(dpath)
-			if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, 1) != '1') and not os.path.islink(file) and isexec(file):
-				stripfunc += "\trunstrip %s || st=1\n" % fpath
 			ret = bb.movefile(file,fpath)
 			if ret is None or ret == 0:
 				raise bb.build.FuncFailed("File population failed")
-		if not stripfunc == "":
-			from bb import build
-			# strip
-			bb.data.setVar('RUNSTRIP', '\tlocal st\n\tst=0\n%s\treturn $st' % stripfunc, localdata)
-			bb.data.setVarFlag('RUNSTRIP', 'func', 1, localdata)
-			bb.build.exec_func('RUNSTRIP', localdata)
 		del localdata
 	os.chdir(workdir)
 
