@@ -57,6 +57,7 @@ module_autoload_snd-pcm-oss = "snd-pcm-oss"
 module_autoload_snd-soc-corgi_c7x0 = "snd-soc-corgi"
 module_autoload_snd-soc-spitz_akita = "snd-soc-spitz"
 module_autoload_snd-soc-spitz_spitz = "snd-soc-spitz"
+module_autoload_snd-soc-poodle_poodle = "snd-soc-poodle"
 
 do_configure() {
 	rm -f ${S}/.config
