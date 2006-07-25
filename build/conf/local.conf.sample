@@ -13,11 +13,12 @@ BBFILES := "POKYROOT/meta/packages/*/*.bb"
 BBMASK = ""
 
 # The machine to target
-MACHINE = "c7x0"
+#MACHINE = "c7x0"
 #MACHINE = "akita"
 #MACHINE = "spitz"
 #MACHINE = "nokia770"
-#MACHINE = "qemuarm"
+MACHINE = "qemuarm"
+#MACHINE = "cmx270"
 
 DISTRO = "poky"
 
