@@ -1,6 +1,6 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r37"
+PR = "r40"
 
 PACKAGES = "\
     task-oh-base \
@@ -25,20 +25,15 @@ RDEPENDS_task-oh-boot = "\
     modutils-initscripts \
     fuser \
     setserial \
-    linux-hotplug \
     ipkg \
     module-init-tools-depmod"
+#    linux-hotplug \
 
 RDEPENDS_task-oh-boot-extras = "\
-    ${BOOTSTRAP_EXTRA_RDEPENDS}"
+    task-base"
 
 RDEPENDS_task-oh-boot-min-extras = "\
-    kernel \
-    udev \
-    sysfsutils \
-    ${PCMCIA_MANAGER} \
-    apm \
-    udev-utils"
+    task-base-oh-minimal"
 
 RDEPENDS_task-oh-base = "\
     matchbox-common \
@@ -93,12 +88,6 @@ RDEPENDS_task-oh-standard = "\
     gnome-vfs-plugin-file \
     gnome-vfs-plugin-http \
     gtk-theme-clearlooks"
-
-RDEPENDS_task-oh-standard_append_c7x0 = " zaurusd "
-RDEPENDS_task-oh-standard_append_spitz = " zaurusd "
-RDEPENDS_task-oh-standard_append_akita = " zaurusd "
-
-PACKAGE_ARCH_task-oh-standard = "${MACHINE_ARCH}"
 
 RDEPENDS_task-oh-devtools = "\
     oprofile \
