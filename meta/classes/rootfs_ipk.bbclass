@@ -31,6 +31,7 @@ real_do_rootfs () {
 	mkdir -p ${IMAGE_ROOTFS}/dev
 
 	if [ -z "${DEPLOY_KEEP_PACKAGES}" ]; then
+		touch ${DEPLOY_DIR_IPK}/Packages
 		ipkg-make-index -r ${DEPLOY_DIR_IPK}/Packages -p ${DEPLOY_DIR_IPK}/Packages -l ${DEPLOY_DIR_IPK}/Packages.filelist -m ${DEPLOY_DIR_IPK}
 	fi
 	mkdir -p ${T}
@@ -95,7 +96,7 @@ log_check() {
 				then
 					echo "log_check: There were error messages in the logfile"
 					echo -e "log_check: Matched keyword: [$keyword_die]\n"
-					echo "$lf_txt" | grep -v log_check | grep -i "$keyword_die"
+					echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
 					echo ""
 					do_exit=1				
 				fi
