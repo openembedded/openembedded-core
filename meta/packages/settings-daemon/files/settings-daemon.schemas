@@ -1,0 +1,17 @@
+<gconfschemafile>
+<schemalist>
+
+<schema>
+	<key>/schemas/desktop/poky/interface/theme</key>
+	<applyto>/desktop/poky/interface/theme</applyto>
+	<type>string</type>
+	<owner>settings-daemon</owner>
+	<default>Clearlooks</default>
+	<locale name="C">
+		<short>Palmtop theme</short>
+		<long>The theme name for Matchbox and GTK+ to use.</long>
+	</locale>
+</schema>
+</schemalist>
+</gconfschemafile>
+
