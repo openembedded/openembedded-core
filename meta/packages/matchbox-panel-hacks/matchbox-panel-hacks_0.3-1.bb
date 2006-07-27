@@ -7,7 +7,7 @@ SRC_URI = "file://xrandr-panelapp.sh \
 	   file://xrandr.png"
 SECTION = "x11/wm"
 PRIORITY = "optional"
-PR = "r6"
+PR = "r7"
 LICENSE = "MIT"
 
 do_install() {
