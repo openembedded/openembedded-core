@@ -26,9 +26,6 @@ matchbox-desktop --icon-size 48 \
                  --font sans-8:bold \
                  --titlefont sans-8:bold &
 
-# let theme set it
-# --bg /usr/share/themes/Clearlooks/background/default.png \
-
 mb-applet-startup-monitor &                 
 
 matchbox-panel --orientation east \
@@ -38,6 +35,6 @@ matchbox-panel --orientation east \
                --default-apps mb-applet-home,mb-applet-clock,mb-applet-battery &
 
 ## eek ugly no cursor hack - transparent theme should do this
-exec matchbox-window-manager -theme Clearlooks -use_cursor $SHOWCURSOR $@
+exec matchbox-window-manager -use_cursor $SHOWCURSOR $@
 
 
