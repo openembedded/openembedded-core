@@ -9,7 +9,10 @@ SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
 
 S = "${WORKDIR}/${PN}"
 
-inherit autotools pkgconfig gettext
+PV = "0.0+svn${SRCDATE}"
+PR = "r1"
+
+inherit autotools pkgconfig gettext gconf
 # gconf
 
 FILES_${PN} = 	"${bindir} ${sysconfdir}"
