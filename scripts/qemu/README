@@ -1,0 +1,44 @@
+
+qemu-arm quick setup notes
+==========================
+
+As root;
+
+% apt-get install nfs-kernel-server
+
+% mkdir /srv/qemuarm
+
+Edit via /etc/exports :
+
+# /etc/exports: the access control list for filesystems which may be exported
+#               to NFS clients.  See exports(5).
+/srv/qemuarm 192.168.7.2(rw,no_root_squash)
+
+% /etc/init.d/nfs-kernel-server restart
+
+% modprobe tun
+
+untar build/tmp/deploy/images/<built image>.rootfs.tar.bz2 into /srv/qemuarm
+
+Move poky built qemu-system-arm into your path, i.e;
+
+% cp ./build/tmp/staging/i686-linux/bin/qemu-system-arm /usr/local/bin
+
+Finally, launch:
+
+% ./qemu-nfs ../../build/tmp/deploy/images/<zimage-qemuarm>.bin
+
+( change perms on /dev/net/tun to run as non root )
+
+
+Notes
+=====
+
+ - There is a bug in qemu in that means occasionally it will use 100% cpu.
+   You will need to restart it in this situation.
+
+
+More Info
+=========
+
+ - See http://o-hand.com/~richard/qemu.html

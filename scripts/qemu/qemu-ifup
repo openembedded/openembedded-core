@@ -1,0 +1,2 @@
+#!/bin/sh
+ifconfig tap0 192.168.7.1
