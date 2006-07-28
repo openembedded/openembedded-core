@@ -8,9 +8,7 @@ SHOWCURSOR="no"
 
 ## Start up machine specific input devices. Really needs to go in its own session
 case `module_id` in
-	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi" | "SHARP Spitz" | "SHARP Akita" | "SHARP Borzoi")
-		chkhinge26 /dev/input/event0 hinge-handler &
-		;;
+	# On Zaurus models, zaurusd takes care of mbinputmgr for us in its hinge scripts
 	"Generic OMAP1510/1610/1710")
 		/usr/bin/mbinputmgr &
 		;;
