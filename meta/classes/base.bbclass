@@ -800,6 +800,7 @@ ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.gnupg.org/gcrypt/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls http://www.mirrors.wiretapped.net/security/network-security/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.mirrors.wiretapped.net/pub/security/network-security/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls http://josefsson.org/gnutls/releases/
+http://www.rpsys.net/openzaurus/patches/archive http://projects.o-hand.com/sources/kernel
 
 ftp://.*/.*/	http://www.oesources.org/source/current/
 http://.*/.*/	http://www.oesources.org/source/current/
