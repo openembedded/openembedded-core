@@ -3,8 +3,9 @@ SECTION = "base"
 MAINTAINER = "Richard Purdie <rpurdie@openedhand.com>"
 LICENSE = "GPL"
 DEPENDS = "tslib"
+RDEPENDS = "xrandr"
 PV = "0.0+svn${SRCDATE}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=zaurusd;proto=http"
 
