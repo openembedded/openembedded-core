@@ -177,10 +177,12 @@ runstrip() {
 			ro=1
 			chmod +w "$1"
 		}
-		'${OBJCOPY}' --only-keep-debug "$1" "$1.dbg"
+		mkdir $(dirname "$1")/.debug
+		debugfile="$(dirname "$1")/.debug/$(basename "$1")"
+		'${OBJCOPY}' --only-keep-debug "$1" "$debugfile"
 		'${STRIP}' "$1"
 		st=$?
-		'${OBJCOPY}' --add-gnu-debuglink="$1.dbg" "$1"
+		'${OBJCOPY}' --add-gnu-debuglink="$debugfile" "$1"
 		test -n "$ro" && chmod -w "$1"
 		if test $st -ne 0
 		then
