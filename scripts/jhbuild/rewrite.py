@@ -153,8 +153,10 @@ class Handlers(object):
 
     def metamodule(self, element, parent):
         # grab the deps
-        dependlist = [child for child in element if child.tag == "dependencies"]
-        deps = [self.packagename(dep.attrib.get('package')) for dep in dependlist[0] if child.tag == "dep"]
+        deps = None
+        for child in element:
+            if child.tag == 'dependencies':
+                deps = [self.packagename(dep.attrib.get('package')) for dep in child if dep.tag == "dep"]
 
         # create the package
         d = bb.data.init()
@@ -193,19 +195,54 @@ class Handlers(object):
                 bb.data.setVar('S', os.path.join('${WORKDIR}', checkoutdir), d)
 
         # build class
-        bb.data.setVar('INCLUDES', 'autotools', d)
-        bb.data.setVarFlag('INCLUDES', 'operator', '+=', d)
+        bb.data.setVar('INHERITS', 'autotools', d)
+        bb.data.setVarFlag('INHERITS', 'operator', '+=', d)
         bb.data.setVar('_handler', 'autotools', d)
         self.packages.append(d)
 
 class Emitter(object):
     """
-    Class to take a Handlers object after processing and emit the
-    bitbake files from the metadata.  It supports either emitting
-    the data as is, using templates based on package name, and using
-    templates based on the name of handler / xml element associated
-    with the package itself.
+    Class which contains a single method for the emission of a bitbake
+    package from the bitbake data produced by a Handlers object.
     """
+
+    def __init__(self, filefunc = None, basedir = None):
+        def _defaultfilefunc(package):
+            # return a relative path to the bitbake .bb which will be written
+            return bb.data.getVar('PN', package, 1) + '.bb'
+
+        self.filefunc = filefunc or _defaultfilefunc
+        self.basedir = basedir or os.path.abspath(os.curdir)
+
+    def write(self, package, template = None):
+        # 1) Assemble new file contents in ram, either new from bitbake
+        #    metadata, or a combination of the template and that metadata.
+        # 2) Open the path returned by the filefunc + the basedir for writing.
+        # 3) Write the new bitbake data file.
+        fdata = ''
+        if template:
+            f = file(template, 'r')
+            fdata = f.read()
+            f.close()
+
+            for key in bb.data.keys(package):
+                fdata.replace('@@'+key+'@@', bb.data.getVar(key, package))
+        else:
+            for key in bb.data.keys(package):
+                if key == '_handler':
+                    continue
+                elif key == 'INHERITS':
+                    fdata += 'inherit %s\n' % bb.data.getVar('INHERITS', package)
+                else:
+                    oper = bb.data.getVarFlag(key, 'operator', package) or '='
+                    fdata += '%s %s "%s"\n' % (key, oper, bb.data.getVar(key, package))
+
+        if not os.path.exists(os.path.join(self.basedir, os.path.dirname(self.filefunc(package)))):
+            os.makedirs(os.path.join(self.basedir, os.path.dirname(self.filefunc(package))))
+
+        out = file(os.path.join(self.basedir, self.filefunc(package)), 'w')
+        out.write(fdata)
+        out.close()
 
 def _test():
     msfile = os.path.join(os.path.abspath(os.curdir), 'modulesets', moduleset)
@@ -215,8 +252,25 @@ def _test():
     handlers = Handlers(msfile)
     handlers.handle(elem, None)
 
+    def filefunc(package):
+        # return a relative path to the bitbake .bb which will be written
+        src_uri = bb.data.getVar('SRC_URI', package, 1)
+        filename = bb.data.getVar('PN', package, 1) + '.bb'
+        if not src_uri:
+            return filename
+        else:
+            substr = src_uri[src_uri.find('xorg/'):]
+            subdirlist = substr.split('/')[:2]
+            subdir = '-'.join(subdirlist)
+            return os.path.join(subdir, filename)
+
+    emitter = Emitter(filefunc)
     for package in handlers.packages:
-        print(bb.data.getVar('PN', package))
+        template = os.path.join(emitter.filefunc(package), '.in')
+        if os.path.exists(template):
+            emitter.write(package, template)
+        else:
+            emitter.write(package)
 
 if __name__ == "__main__":
     _test()
