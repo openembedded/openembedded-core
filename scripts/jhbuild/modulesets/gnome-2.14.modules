@@ -1,0 +1,2013 @@
+<?xml version="1.0"?><!--*- mode: nxml -*-->
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+  <repository type="cvs" name="gnome.org" default="yes"
+      cvsroot=":pserver:anonymous@anoncvs.gnome.org:/cvs/gnome"
+      password=""/>
+  <repository type="cvs" name="cairo.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/cairo"
+      password=""/>
+  <repository type="cvs" name="mozilla.org"
+      cvsroot=":pserver:anonymous@cvs-mirror.mozilla.org:/cvsroot"
+      password="anonymous"/>
+  <repository type="cvs" name="liboil.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/liboil"
+      password=""/>
+  <repository type="cvs" name="gstreamer.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/gstreamer"
+      password=""/>
+  <repository type="cvs" name="menu.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/menus"
+      password=""/>
+  <repository type="cvs" name="mime.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/mime"
+      password=""/>
+  <repository type="cvs" name="xklavier.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/xklavier"
+      password=""/>
+
+  <repository type="cvs" name="elysium-project.sf.net"
+      cvsroot=":pserver:anonymous@elysium-project.cvs.sourceforge.net:/cvsroot/elysium-project"
+      password=""/>
+  <repository type="cvs" name="gaim.sf.net"
+      cvsroot=":pserver:anonymous@gaim.cvs.sourceforge.net:/cvsroot/gaim"
+      password=""/>
+  <repository type="cvs" name="inkscape.sf.net"
+      cvsroot=":pserver:anonymous@inkscape.cvs.sourceforge.net:/cvsroot/inkscape"
+      password=""/>
+  <repository type="svn" name="svn.galago-project.org"
+      href="http://svn.galago-project.org/"/>
+  <repository type="svn" name="osiris.chipx86.com"
+      href="http://osiris.chipx86.com/svn/osiris-misc/"/>
+  <repository type="svn" name="svn.debian.org"
+      href="svn://svn.debian.org/"/>
+  <repository type="cvs" name="openh323.sf.net"
+     cvsroot=":pserver:anonymous@openh323.cvs.sourceforge.net:/cvsroot/openh323"
+     password="" />
+
+  <tarball id="scrollkeeper" version="0.3.14" supports-non-srcdir-builds="no">
+    <source href="http://easynews.dl.sourceforge.net/sourceforge/scrollkeeper/scrollkeeper-0.3.14.tar.gz"
+            size="679513" md5sum="161eb3f29e30e7b24f84eb93ac696155"/>
+    <dependencies>
+      <dep package="libxml2"/>
+      <dep package="libxslt"/>
+      <dep package="intltool"/>
+    </dependencies>
+    <patches>
+      <patch file="scrollkeeper_clean_xml_validation_context.patch" strip="1"/>
+      <patch file="scrollkeeper_language_fix.patch" strip="1"/>
+      <patch file="scrollkeeper_rw_offset_fix.patch" strip="1"/>
+    </patches>
+  </tarball>
+
+  <autotools id="iso-codes">
+    <branch repo="svn.debian.org" module="pkg-isocodes/trunk/iso-codes" checkoutdir="iso-codes"/>
+  </autotools>
+
+  <include href="freedesktop.modules"/>
+  <include href="gnutls.modules"/>
+
+  <autotools id="cairo-gtk-engine">
+    <branch repo="cairo.freedesktop.org"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="cairo-1-0"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="shared-mime-info" supports-non-srcdir-builds="no">
+    <branch repo="mime.freedesktop.org"/>
+    <dependencies>
+      <dep package="intltool"/>
+      <dep package="libxml2"/>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="desktop-file-utils">
+    <branch repo="menu.freedesktop.org"/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="intltool"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libxklavier" supports-non-srcdir-builds="no">
+    <branch repo="xklavier.freedesktop.org" revision="v_2_x"/>
+    <dependencies>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libbtctl">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-bluetooth">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="glib"/>
+      <dep package="libbtctl"/>
+      <dep package="libglade"/>
+      <dep package="libgnomeui"/>
+      <dep package="gconf"/>
+    </dependencies>
+  </autotools>
+  <autotools id="phonemgr">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="glib"/>
+      <dep package="libbtctl"/>
+      <dep package="gnome-bluetooth"/>
+      <dep package="libglade"/>
+      <dep package="libgnomeui"/>
+      <dep package="libgnome"/>
+      <dep package="gconf"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="intltool">
+    <branch/>
+    <dependencies>
+      <dep package="gnome-common"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-common">
+    <branch/>
+  </autotools>
+  <autotools id="libxml2">
+    <branch module="gnome-xml" checkoutdir="libxml2"/>
+  </autotools>
+  <autotools id="libxslt">
+    <branch/>
+    <dependencies>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtk-doc">
+    <branch/>
+    <dependencies>
+      <dep package="libxslt"/>
+      <dep package="scrollkeeper"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gamin">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="glib">
+    <branch revision="glib-2-10"/>
+    <dependencies>
+      <dep package="gtk-doc"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pango">
+    <branch revision="pango-1-12"/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="cairo-1-0"/>
+      <dep package="libXft"/>
+    </dependencies>
+  </autotools>
+  <autotools id="atk">
+		<branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtk+">
+    <branch revision="gtk-2-8"/>
+    <dependencies>
+      <dep package="cairo-1-0"/>
+      <dep package="pango"/>
+      <dep package="atk"/>
+      <dep package="shared-mime-info"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gail">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="atk"/>
+      <dep package="libgnomecanvas"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtkhtml2">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libxml2"/>
+      <dep package="gail"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libIDL">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="ORBit2">
+    <branch/>
+    <dependencies>
+      <dep package="libIDL"/>
+      <dep package="gnome-common"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gconf">
+    <branch/>
+    <dependencies>
+      <dep package="ORBit2"/>
+      <dep package="libxml2"/>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libbonobo">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="ORBit2"/>
+      <dep package="intltool"/>
+      <dep package="gnome-common"/>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+   <autotools id="gnome-mime-data">
+    <branch/>
+     <dependencies>
+       <dep package="gnome-common"/>
+       <dep package="glib"/>
+     </dependencies>
+   </autotools>
+  <autotools id="gnome-icon-theme">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="hicolor-icon-theme"/>
+    </dependencies>
+  </autotools>
+  <tarball id="howl" version="1.0.0">
+    <source href="http://www.porchdogsoft.com/download/howl-1.0.0.tar.gz"
+            size="542782" md5sum="c389d3ffba0e69a179de2ec650f1fdcc"/>
+    <patches>
+      <patch file="howl-1.0.0-buildfix.patch" strip="1"/>
+    </patches>
+  </tarball>
+  <autotools id="gnome-vfs">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libbonobo"/>
+      <dep package="gconf"/>
+      <dep package="desktop-file-utils"/>
+      <dep package="shared-mime-info"/>
+      <dep package="gnome-mime-data"/>
+      <dep package="howl"/>
+      <dep package="hal"/>
+      <dep package="gamin"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-keyring">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libart_lgpl">
+    <branch/>
+  </autotools>
+  <autotools id="libgnome">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libxml2"/>
+      <dep package="libxslt"/>
+      <dep package="libbonobo"/>
+      <dep package="gnome-vfs"/>
+      <dep package="gconf"/>
+      <dep package="esound"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgnomecanvas">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libart_lgpl"/>
+      <dep package="libglade"/>
+      <dep package="gnome-common"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libbonoboui">
+    <branch/>
+    <dependencies>
+      <dep package="libgnome"/>
+      <dep package="libbonobo"/>
+      <dep package="libgnomecanvas"/>
+      <dep package="libglade"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgnomeui">
+    <branch revision="libgnomeui-2-14"/>
+    <dependencies>
+      <dep package="libbonoboui"/>
+      <dep package="libglade"/>
+      <dep package="gnome-icon-theme"/>
+      <dep package="gnome-keyring"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libglade">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pygobject">
+    <branch revision="pygobject-2-10"/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pygtk">
+    <branch revision="pygtk-2-8"/>
+    <dependencies>
+      <dep package="pygobject"/>
+      <dep package="gtk+"/>
+      <dep package="pycairo-1-0"/>
+      <dep package="libglade"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pyorbit">
+    <branch/>
+    <dependencies>
+      <dep package="ORBit2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-python">
+    <branch revision="gnome-python-2-12"/>
+    <dependencies>
+      <dep package="pygtk"/>
+      <dep package="pyorbit"/>
+      <dep package="libgnomecanvas"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-python-desktop">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gnome-python"/>
+      <dep package="gnome-panel"/>
+      <dep package="libgnomeprint"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="gtksourceview"/>
+      <dep package="libwnck"/>
+      <dep package="totem"/>
+      <dep package="libgtop"/>
+      <dep package="nautilus-cd-burner"/>
+      <dep package="gnome-media"/>
+      <dep package="metacity"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-python-extras">
+    <branch/>
+    <dependencies>
+      <dep package="pygtk"/>
+      <dep package="gnome-python"/>
+      <dep package="gtkhtml2"/>
+      <dep package="gdl"/>
+    </dependencies>
+  </autotools>
+  <autotools id="bug-buddy">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-menus"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libwnck">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="startup-notification"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-desktop" autogenargs="--with-gnome-distributor=JHBuild">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="startup-notification"/>
+      <dep package="gnome-themes"/>
+      <dep package="scrollkeeper"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-menus">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="intltool"/>
+      <dep package="gnome-common"/>
+      <dep package="glib"/>
+      <dep package="pygtk"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-panel">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-desktop"/>
+      <dep package="libwnck"/>
+      <dep package="evolution-data-server"/>
+      <dep package="gnome-menus"/>
+      <dep package="gnome-vfs"/>
+      <dep package="libglade"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-session">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="libwnck"/>
+      <dep package="esound"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-applets" autogenargs="--enable-gstreamer=0.10">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gnome-panel"/>
+      <dep package="libgtop"/>
+      <dep package="gail"/>
+      <dep package="libxklavier"/>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gucharmap"/>
+      <dep package="system-tools-backends-1.4"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-games">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="librsvg"/>
+      <dep package="scrollkeeper"/>
+      <dep package="libgnomeui"/>
+      <dep package="gob"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libcroco" supports-non-srcdir-builds="no">
+    <branch/>
+    <dependencies>
+      <dep package="libxml2"/>
+      <dep package="pango"/>
+    </dependencies>
+  </autotools>
+  <autotools id="librsvg" supports-non-srcdir-builds="no">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libxml2"/>
+      <dep package="gtk+"/>
+      <dep package="libart_lgpl"/>
+      <dep package="gnome-common"/>
+      <dep package="libgsf"/>
+      <dep package="libcroco"/>
+      <dep package="libgnomeprintui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="eel">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="librsvg"/>
+      <dep package="libgnomeui"/>
+      <dep package="gail"/>
+      <dep package="gnome-desktop"/>
+      <dep package="gnome-menus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="nautilus">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="esound"/>
+      <dep package="eel"/>
+      <dep package="librsvg"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-desktop"/>
+    </dependencies>
+  </autotools>
+  <autotools id="nautilus-actions">
+    <branch/>
+    <dependencies>
+      <dep package="nautilus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="nautilus-cd-burner">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="nautilus"/>
+    </dependencies>
+  </autotools>      
+  <autotools id="nautilus-open-terminal">
+    <branch/>
+    <dependencies>
+      <dep package="nautilus"/>
+    </dependencies>
+  </autotools>      
+  <autotools id="nautilus-media" supports-non-srcdir-builds="no">
+    <branch/>
+    <dependencies>
+      <dep package="nautilus"/>
+      <dep package="gstreamer-0-8"/>
+      <dep package="gst-plugins-0-8"/>
+    </dependencies>
+  </autotools>
+  <autotools id="nautilus-vcs">
+    <branch/>
+    <dependencies>
+      <dep package="nautilus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="metacity">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="gconf"/>
+      <dep package="intltool"/>
+      <dep package="libglade"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgtop">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-system-monitor">
+		<branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="libwnck"/>
+      <dep package="libgtop"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-control-center" autogenargs="--enable-gstreamer=0.10"
+             supports-non-srcdir-builds="no">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="esound"/>
+      <dep package="gnome-desktop"/>
+      <dep package="metacity"/>
+      <dep package="nautilus"/>
+      <dep package="libxklavier"/>
+      <dep package="gnome-menus"/>
+      <dep package="gnome-doc-utils"/>
+      <dep package="gstreamer"/>
+    </dependencies>
+  </autotools>
+  <autotools id="yelp">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-vfs"/>
+      <dep package="gnome-doc-utils"/>
+      <dep package="startup-notification"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="mozilla"/>
+    </dependencies>
+  </autotools>
+  <autotools id="devhelp">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-vfs"/>
+      <dep package="mozilla"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-utils">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-panel"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gconf-editor" supports-non-srcdir-builds="no">
+    <branch revision="gnome-2-14" />
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gconf"/>
+    </dependencies>
+  </autotools>
+  <tarball id="audiofile" version="0.2.6" supports-non-srcdir-builds="no">
+    <source href="http://www.68k.org/~michael/audiofile/audiofile-0.2.6.tar.gz"
+            size="374688" md5sum="9c1049876cd51c0f1b12c2886cce4d42"/>
+  </tarball>
+  <autotools id="esound">
+    <branch/>
+    <dependencies>
+      <dep package="audiofile"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-media">
+    <branch/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="libgnomeui"/>
+      <dep package="esound"/>
+      <dep package="gail"/>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gst-plugins-good"/>
+      <dep package="nautilus-cd-burner"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gdm2">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="librsvg"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="vte">
+    <branch revision="vte-0-12"/>
+    <dependencies>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-terminal">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libglade"/>
+      <dep package="libgnomeui"/>
+      <dep package="vte"/>
+      <dep package="startup-notification"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtk-engines">
+    <branch revision="gtk-engines-2-6"/>
+    <dependencies>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgnomeprint">
+    <branch/>
+    <dependencies>
+      <dep package="intltool"/>
+      <dep package="libart_lgpl"/>
+      <dep package="glib"/>
+      <dep package="gnome-common"/>
+      <dep package="pango"/>
+      <dep package="libgnomecups"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgnomeprintui">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeprint"/>
+      <dep package="gtk+"/>
+      <dep package="libgnomecanvas"/>
+      <dep package="gnome-icon-theme"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gedit">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-doc-utils"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="gtksourceview"/>
+      <dep package="gnome-python-desktop"/>
+    </dependencies>
+  </autotools>
+  <autotools id="memprof">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="eog">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="libgnomeprint"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgsf">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="gnome-vfs"/>
+      <dep package="libbonobo"/>
+    </dependencies>
+  </autotools>
+  <autotools id="goffice">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="libgsf"/>
+      <dep package="libxml2"/>
+      <dep package="pango"/>
+      <dep package="libglade"/>
+      <dep package="libgnomeprint"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="libart_lgpl"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnumeric">
+    <branch/>
+    <dependencies>
+      <dep package="goffice"/>
+      <dep package="libgsf"/>
+      <dep package="pygtk"/>
+      <dep package="libgnomeprintui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gimp" autogenargs="--disable-print">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libart_lgpl"/>
+    </dependencies>
+  </autotools>
+  <autotools id="glade">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libxml2"/>
+      <dep package="libgnomeui"/>
+      <dep package="libgnomeprintui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="glade2c">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libxml2"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="sawfish">
+    <branch revision="gnome-2"/>
+    <dependencies>
+      <dep package="rep-gtk"/>
+    </dependencies>
+  </autotools>
+  <autotools id="rep-gtk">
+    <branch/>
+    <dependencies>
+      <dep package="librep"/>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+  <autotools id="librep">
+    <branch/>
+  </autotools>
+  <autotools id="rhythmbox">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="nautilus-cd-burner"/>
+      <dep package="totem"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gstreamer-0-8" autogenargs="-- --disable-plugin-builddir --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gstreamer"
+            revision="BRANCH-GSTREAMER-0_8" checkoutdir="gstreamer-0-8"/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-plugins-0-8" autogenargs="-- --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-plugins"
+            revision="BRANCH-GSTREAMER-0_8" checkoutdir="gst-plugins-0-8"/>
+    <dependencies>
+      <dep package="gstreamer-0-8"/>
+      <dep package="gnome-vfs"/>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-python-0-8" autogenargs="--" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-python"
+            revision="BRANCH-GSTREAMER-0_8" checkoutdir="gst-python-0-8"/>
+    <dependencies>
+      <dep package="gstreamer-0-8"/>
+      <dep package="gst-plugins-0-8"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gstreamer" autogenargs="-- --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gstreamer"/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="liboil">
+    <branch repo="liboil.freedesktop.org" revision="liboil_0_3_6"/>
+  </autotools>
+
+  <autotools id="gst-plugins-base" autogenargs="-- --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-plugins-base"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gnome-vfs"/>
+      <dep package="gtk+"/>
+      <dep package="liboil"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-plugins-good" autogenargs="-- --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-plugins-good"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-plugins-ugly" autogenargs="-- --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-plugins-ugly"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-plugins-bad" autogenargs="-- --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-plugins-bad"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-ffmpeg" autogenargs="-- --disable-tests" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-ffmpeg"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-python" autogenargs="--" supports-non-srcdir-builds="no">
+    <branch repo="gstreamer.freedesktop.org" module="gst-python"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="planner">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="libxml2"/>
+      <dep package="libgnomeui"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="libgsf"/>
+    </dependencies>
+  </autotools>
+  <autotools id="file-roller">
+		<branch revision="gnome-2-14" />
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="gnome-doc-utils"/>
+      <dep package="nautilus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="balsa">
+    <branch revision="BALSA_2"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pan">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnet"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pyspi">
+    <branch/>
+    <dependencies>
+      <dep package="at-spi"/>
+    </dependencies>
+  </autotools>
+  <autotools id="dogtail">
+    <branch/>
+    <dependencies>
+      <dep package="pyspi"/>
+    </dependencies>
+    <after>
+      <dep package="gnome-python-desktop"/>
+    </after>
+  </autotools>
+  <autotools id="gcalctool" supports-non-srcdir-builds="no">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="ggv" supports-non-srcdir-builds="no">
+    <branch/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="ekiga" autogenargs="--with-pwlib-dir=`ptlib-config --prefix` --with-opal-dir=`ptlib-config --prefix`">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="evolution-data-server"/>
+      <dep package="opal" />
+      <dep package="avahi" />
+    </dependencies>
+  </autotools>
+  <autotools id="pwlib" autogen-sh="configure">
+      <branch repo="openh323.sf.net" module="ptlib_unix" checkoutdir="pwlib"
+              override-checkoutdir="no" update-new-dirs="no" />
+  </autotools>
+  <autotools id="opal" autogen-sh="configure">
+      <branch repo="openh323.sf.net"/>
+       <dependencies>
+            <dep package="pwlib"/>
+       </dependencies>
+  </autotools>
+  <autotools id="gucharmap" supports-non-srcdir-builds="no">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtksourceview" autogenargs="--enable-compile-warnings=maximum">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libxml2"/>
+      <dep package="libgnomeprint"/>
+      <dep package="gnome-vfs"/>
+    </dependencies>
+  </autotools>
+  <autotools id="glimmer">
+    <branch/>
+    <dependencies>
+      <dep package="gtksourceview"/>
+      <dep package="libgnomeprint"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gdl">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="librsvg"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-build">
+    <branch/>
+    <dependencies>
+      <dep package="gdl"/>
+      <dep package="gnome-vfs"/>
+      <dep package="gtkhtml2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="scaffold">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="vte"/>
+      <dep package="gdl"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libsigc++2">
+    <branch revision="libsigc-2-0"/>
+  </autotools>
+  <autotools id="glibmm">
+    <branch revision="glibmm-2-8"/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="libsigc++2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtkmm">
+    <branch revision="gtkmm-2-8"/>
+    <dependencies>
+      <dep package="glibmm"/>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+  <autotools id="orbitcpp">
+    <branch/>
+    <dependencies>
+      <dep package="ORBit2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libgnomemm">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnome"/>
+      <dep package="gtkmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libglademm">
+    <branch/>
+    <dependencies>
+      <dep package="libglade"/>
+      <dep package="gtkmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libbonobomm">
+    <branch/>
+    <dependencies>
+      <dep package="libbonobo"/>
+      <dep package="gtkmm"/>
+      <dep package="orbitcpp"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libbonobouimm">
+    <branch/>
+    <dependencies>
+      <dep package="libbonoboui"/>
+      <dep package="gnomemm/libbonobomm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libgnomecanvasmm">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomecanvas"/>
+      <dep package="gtkmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/gconfmm">
+    <branch/>
+    <dependencies>
+      <dep package="gconf"/>
+      <dep package="gtkmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libgnomeuimm">
+    <branch/>
+    <dependencies>
+      <dep package="gtkmm"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnomemm/libgnomemm"/>
+      <dep package="gnomemm/gconfmm"/>
+      <dep package="gnomemm/libgnomecanvasmm"/>
+      <dep package="gnomemm/libglademm"/>
+      <dep package="gnomemm/gnome-vfsmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/gnome-vfsmm">
+    <branch/>
+    <dependencies>
+      <dep package="glibmm"/>
+      <dep package="gnome-vfs"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libpanelappletmm">
+    <branch/>
+    <dependencies>
+      <dep package="gtkmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libgnomeprintmm">
+    <branch/>
+    <dependencies>
+      <dep package="gtkmm"/>
+      <dep package="libgnomeprint"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libgnomeprintuimm">
+    <branch/>
+    <dependencies>
+      <dep package="gtkmm"/>
+      <dep package="gnomemm/libgnomeprintmm"/>
+      <dep package="libgnomeprintui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/libgdamm">
+    <branch revision="libgda-1-2"/>
+    <dependencies>
+      <dep package="gtkmm"/>
+      <dep package="libgda-1-2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomemm/gtkmm_hello">
+    <branch/>
+    <dependencies>
+      <dep package="gtkmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="regexxer">
+    <branch/>
+    <dependencies>
+      <dep package="intltool"/>
+      <dep package="gtkmm"/>
+      <dep package="gnomemm/gconfmm"/>
+      <dep package="gnomemm/libglademm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnet" autogenargs="--enable-glib2">
+    <branch revision="GNET_1_1"/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomeicu">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="at-spi">
+		<branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libbonobo"/>
+      <dep package="gail"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgail-gnome">
+    <branch/>
+    <dependencies>
+      <dep package="at-spi"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-panel"/>
+    </dependencies>
+  </autotools>
+  <autotools id="at-poke">
+    <branch/>
+    <dependencies>
+      <dep package="libgail-gnome"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-mag">
+    <branch/>
+    <dependencies>
+      <dep package="at-spi"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gok">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="at-spi"/>
+      <dep package="libgnomeui"/>
+      <dep package="libwnck"/>
+      <dep package="esound"/>
+      <dep package="scrollkeeper"/>
+      <dep package="gnome-speech"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-speech">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libbonobo"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnopernicus">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gconf"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-speech"/>
+      <dep package="gnome-mag"/>
+    </dependencies>
+  </autotools>
+    <autotools id="dasher" autogenargs="--with-a11y --with-gnome">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="at-spi"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-speech"/>
+      <dep package="gnome-vfs"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-screensaver">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gconf"/>
+      <dep package="gtk+"/>
+      <dep package="dbus"/>
+      <dep package="gnome-menus"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-power-manager">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="hal"/>
+      <dep package="libwnck"/>
+      <dep package="gtk+"/>
+      <dep package="gconf"/>
+      <dep package="intltool"/>
+      <dep package="libglade"/>
+      <dep package="libnotify"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gthumb">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-vfs"/>
+      <dep package="libglade"/>
+      <dep package="libbonoboui"/>
+      <dep package="libgnomeprintui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="fast-user-switch-applet">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="gconf"/>
+      <dep package="libglade"/>
+      <dep package="gnome-panel"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-mount" autogenargs="--enable-nautilus-extension">
+    <branch/>
+    <dependencies>
+      <dep package="gnome-keyring"/>
+      <dep package="libgnomeui"/>
+      <dep package="dbus"/>
+      <dep package="hal"/>
+      <dep package="gtk+"/>
+      <dep package="intltool"/>
+      <dep package="libglade"/>
+      <dep package="eel"/>
+      <dep package="nautilus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libnotify">
+    <branch repo="svn.galago-project.org" module="trunk/libnotify"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="dbus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libsexy">
+    <branch repo="osiris.chipx86.com" module="trunk/libsexy"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libxml2"/>
+      <dep package="iso-codes"/>
+    </dependencies>
+  </autotools>
+  <autotools id="notification-daemon">
+    <branch repo="svn.galago-project.org" module="trunk/notification-daemon"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="dbus"/>
+      <dep package="libsexy"/>
+    </dependencies>
+  </autotools>
+
+  <metamodule id="meta-gnome-devel-platform">
+    <dependencies>
+      <dep package="libgnome"/>
+      <dep package="libbonobo"/>
+      <dep package="libbonoboui"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-gnome-core">
+    <dependencies>
+      <dep package="gnome-desktop"/>
+      <dep package="gnome-panel"/>
+      <dep package="gnome-session"/>
+      <dep package="gnome-terminal"/>
+      <dep package="gnome-applets"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-nautilus">
+    <dependencies>
+      <dep package="nautilus"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-gnome-desktop">
+    <dependencies>
+      <dep package="meta-gnome-core"/>
+      <dep package="gnome-control-center"/>
+      <dep package="meta-nautilus"/>
+      <dep package="yelp"/>
+      <dep package="bug-buddy"/>
+      <dep package="gedit"/>
+      <dep package="gtk-engines"/>
+      <dep package="eog"/>
+      <dep package="metacity"/>
+      <dep package="gconf-editor"/>
+      <dep package="gnome-utils"/>
+      <dep package="gnome-system-monitor"/>
+      <dep package="gstreamer"/>
+      <dep package="gnome-media"/>
+      <dep package="gnome-netstatus"/>
+      <dep package="gcalctool"/>
+      <dep package="gucharmap"/>
+      <dep package="nautilus-cd-burner"/>
+      <dep package="zenity"/>
+      <dep package="libgail-gnome"/>
+      <dep package="gnopernicus"/>
+      <dep package="gok"/>
+      <dep package="epiphany"/>
+      <dep package="gnome-games"/>
+      <dep package="gnome-user-docs"/>
+      <dep package="file-roller"/>
+      <dep package="gnome-system-tools"/>
+      <dep package="gnome-nettool"/>
+      <dep package="vino"/>
+      <dep package="gnome-volume-manager"/>
+      <dep package="totem"/>
+      <dep package="gnome-menus"/>
+      <dep package="gnome-backgrounds"/>
+      <dep package="sound-juicer"/>
+      <dep package="evolution"/>
+      <dep package="evolution-webcal"/>
+      <dep package="evolution-exchange"/>
+      <dep package="ekiga"/>
+      <dep package="evince"/>
+      <dep package="dasher"/>
+      <dep package="gnome-keyring-manager"/>
+      <dep package="deskbar-applet"/>
+      <dep package="fast-user-switch-applet"/>
+      <dep package="gnome-screensaver"/>
+      <dep package="meta-gnome-admin"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-gnome-admin">
+    <dependencies>
+      <dep package="pessulus"/>
+      <dep package="sabayon"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-gnome-devel-tools">
+    <dependencies>
+      <dep package="glade"/>
+      <dep package="memprof"/>
+      <dep package="gconf-editor"/>
+      <dep package="devhelp"/>
+      <dep package="nautilus-vcs"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-gnome-python">
+    <dependencies>
+      <dep package="pygtk"/>
+      <dep package="gnome-python"/>
+      <dep package="gnome-python-desktop"/>
+    </dependencies>
+    <after>
+      <dep package="gnome-python-extras"/>
+    </after>
+  </metamodule>
+  <metamodule id="meta-gnome-c++">
+    <dependencies>
+      <dep package="gtkmm"/>
+      <dep package="gnomemm/libgnomeuimm"/>
+      <dep package="gnomemm/gnome-vfsmm"/>
+      <dep package="gnomemm/libpanelappletmm"/>
+      <dep package="gnomemm/libbonobouimm"/>
+      <dep package="gnomemm/libgnomeprintuimm"/>
+      <dep package="libxml++"/>
+      <dep package="gnomemm/libgdamm"/>
+      <dep package="bakery"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-gnome-accessibility">
+    <dependencies>
+      <dep package="libgail-gnome"/>
+      <dep package="at-poke"/>
+      <dep package="dasher"/>
+      <dep package="gnome-mag"/>
+      <dep package="gok"/>
+      <dep package="gnome-speech"/>
+      <dep package="gnopernicus"/>
+    </dependencies>
+  </metamodule>
+  <metamodule id="meta-gnome-proposed">
+    <dependencies>
+      <dep package="libnotify"/>
+      <dep package="notification-daemon"/>
+      <dep package="gnome-power-manager"/>
+    </dependencies>
+  </metamodule>
+  <autotools id="sodipodi">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="libart_lgpl"/>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-themes">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gtk-engines"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gob">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgnetwork">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="gconf"/>
+      <dep package="intltool"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgircclient">
+    <branch/>
+    <dependencies>
+      <dep package="libgnetwork"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnomechat">
+    <branch/>
+    <dependencies>
+      <dep package="libgnetwork"/>
+      <dep package="libgircclient"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <mozillamodule id="mozilla" autogenargs="--enable-default-toolkit=gtk2 --disable-mailnews --disable-ldap --disable-debug --enable-optimize --disable-tests --enable-crypto --enable-xft --with-system-zlib --disable-freetype2 --enable-application=browser" cvsroot="mozilla.org" revision="MOZILLA_1_7_BRANCH">
+    <dependencies>
+      <dep package="gtk+"/>
+    </dependencies>
+  </mozillamodule>
+  <autotools id="epiphany">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="iso-codes"/>
+      <dep package="libgnomeui"/>
+      <dep package="pygtk"/>
+      <dep package="gnome-python"/>
+      <dep package="gnome-doc-utils"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="mozilla"/>
+    </dependencies>
+  </autotools>
+  <autotools id="epiphany-extensions">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="epiphany"/>
+    </dependencies>
+  </autotools>
+  <autotools id="galeon">
+    <branch/>
+    <dependencies>
+      <dep package="mozilla"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libsoup">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="gnutls"/>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtkhtml">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libgnomeui"/>
+      <dep package="libbonoboui"/>
+      <dep package="libglade"/>
+      <dep package="gail"/>
+      <dep package="libgnomeprint"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="libsoup"/>
+    </dependencies>
+  </autotools>
+  <autotools id="evolution-data-server" supports-non-srcdir-builds="no">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libbonobo"/>
+      <dep package="libgnome"/>
+      <dep package="libgnomeui"/>
+      <dep package="libsoup"/>
+      <dep package="libxml2"/>
+      <dep package="gconf"/>
+      <dep package="gnome-vfs"/>
+      <dep package="mozilla"/>
+    </dependencies>
+  </autotools>
+  <autotools id="evolution">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="evolution-data-server"/>
+      <dep package="gtkhtml"/>
+      <dep package="libgnomeui"/>
+      <dep package="libbonoboui"/>
+    </dependencies>
+    <after>
+      <dep package="libnotify"/>
+    </after>
+  </autotools>
+  <autotools id="evolution-webcal">
+    <branch/>
+    <dependencies>
+       <dep package="evolution-data-server"/>
+       <dep package="libsoup"/>
+       <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="evolution-exchange">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+       <dep package="evolution-data-server"/>
+       <dep package="evolution"/>
+       <dep package="libsoup"/>
+    </dependencies>
+  </autotools>
+  <tarball id="xchat" version="2.4.5">
+    <source href="http://xchat.org/files/source/2.4/xchat-2.4.5.tar.bz2"
+            size="1324626" md5sum="9107a92693e6c62ff2008030e698b92b"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libxml2"/>
+    </dependencies>
+  </tarball>
+  <tarball id="camorama" version="0.17">
+    <source href="http://camorama.fixedgear.org/downloads/camorama-0.17.tar.bz2"
+            size="312233" md5sum="2b2784af53a1ba8fa4419aa806967b35"/>
+    <dependencies>
+      <dep package="gtk+"/>
+    </dependencies>
+  </tarball>
+  <autotools id="gtk-engines-cleanice">
+    <branch repo="elysium-project.sf.net"/>
+    <dependencies>
+      <dep package="gtk+"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gaim">
+    <branch repo="gaim.sf.net"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="zenity">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="gconf"/>
+      <dep package="libgnomecanvas"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gpdf">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="libbonoboui"/>
+      <dep package="libgnomeprintui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-netstatus">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-panel"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-doc-utils">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libxslt"/>
+      <dep package="intltool"/>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <tarball id="libmusicbrainz" version="2.1.2">
+    <source href="ftp://ftp.musicbrainz.org/pub/musicbrainz/libmusicbrainz-2.1.2.tar.gz"
+            size="504432" md5sum="88d35af903665fecbdee77eb6d5e6cdd"/>
+  </tarball>
+  <autotools id="totem" autogenargs="--enable-gstreamer=0.10">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gnome-desktop"/>
+      <dep package="nautilus-cd-burner"/>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gst-plugins-good"/>
+      <dep package="libmusicbrainz"/>
+      <dep package="iso-codes"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-themes-extras">
+    <branch/>
+    <dependencies>
+      <dep package="gnome-themes"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libgda">
+    <branch module="libgda"/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgda-1-2">
+    <branch module="libgda" revision="release-1-2-branch"
+            checkoutdir="libgda-1-2"/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libgnomedb" autogenargs="--enable-gnome=yes">
+    <branch/>
+    <dependencies>
+      <dep package="libgda"/>
+      <dep package="libgnomeui"/>
+      <dep package="libbonoboui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="mergeant">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomedb"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtranslator">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-spell">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libgnomecups">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-cups-manager">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomecups"/>
+      <dep package="libgnomeui"/>
+      <dep package="libglade"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libxml++">
+    <branch/>
+    <dependencies>
+      <dep package="libxml2"/>
+      <dep package="glibmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="bakery">
+    <branch/>
+    <dependencies>
+      <dep package="libxml++"/>
+      <dep package="gtkmm"/>
+      <dep package="gnomemm/libglademm"/>
+      <dep package="gnomemm/gconfmm"/>
+      <dep package="gnomemm/gnome-vfsmm"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-hello">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="libgnome"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-system-tools">
+		<branch revision="gnome-2-14" />
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="libxml2"/>
+      <dep package="gconf"/>
+      <dep package="libgnomeui"/>
+      <dep package="libbonoboui"/>
+      <dep package="libglade"/>
+      <dep package="nautilus"/>
+      <dep package="system-tools-backends-1.4"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-user-docs">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="scrollkeeper"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="loudmouth">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gossip">
+    <branch/>
+    <dependencies>
+      <dep package="loudmouth"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="conglomerate">
+    <branch/>
+    <dependencies>
+      <dep package="libxslt"/>
+      <dep package="gconf"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="sound-juicer">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gnome-doc-utils"/>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-media"/>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gst-plugins-good"/>
+      <dep package="nautilus-cd-burner"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-network">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <tarball id="guile" version="1.6.7">
+    <source href="ftp://ftp.gnu.org/gnu/guile/guile-1.6.7.tar.gz"
+            size="3039294" md5sum="c2ff2a2231f0cbb2e838dd8701a587c5"/>
+  </tarball>
+  <tarball id="autogen" version="5.6.5">
+    <source href="http://internap.dl.sourceforge.net/sourceforge/autogen/autogen-5.6.5.tar.gz"
+            size="1144260" md5sum="54a6cb0be7e6b526af9aba4a73013885"/>
+    <dependencies>
+      <dep package="guile"/>
+    </dependencies>
+  </tarball>
+  <autotools id="anjuta">
+    <branch/>
+    <dependencies>
+      <dep package="libbonoboui"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="vte"/>
+      <dep package="gnome-build"/>
+      <dep package="autogen"/>
+    </dependencies>
+  </autotools>  
+  <autotools id="OpenApplet">
+    <branch/>
+    <dependencies>
+      <dep package="gnome-panel"/>
+    </dependencies>
+  </autotools> 
+  <autotools id="gtetrinet">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="glom">
+    <branch/>
+    <dependencies>
+      <dep package="gnomemm/libgdamm"/>
+      <dep package="bakery"/>
+      <dep package="gnomemm/libgnomecanvasmm"/>
+      <dep package="libgnome"/>
+      <dep package="iso-codes"/>
+      <dep package="pygtk"/>
+      <dep package="gnome-python-extras"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>    
+  <autotools id="vino">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="libglade"/>
+      <dep package="gconf"/>
+      <dep package="gnutls"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-keyring-manager" autogenargs="--disable-more-warnings">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="gnome-keyring"/>
+      <dep package="gconf"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-volume-manager">
+    <branch/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="libglade"/>
+      <dep package="hal"/>
+    </dependencies>
+  </autotools>
+  <metamodule id="meta-storage">
+    <dependencies>
+      <dep package="storage/storage-store"/>
+      <dep package="storage/vfs"/>
+      <dep package="storage/applet"/>
+    </dependencies>
+  </metamodule>
+  <autotools id="storage/storage-store">
+    <branch/>
+    <dependencies>
+      <dep package="dbus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="storage/libstorage">
+    <branch/>
+    <dependencies>
+      <dep package="gnome-vfs"/>
+      <dep package="pygtk"/>
+    </dependencies>
+  </autotools>
+  <autotools id="storage/libstorage-translators">
+    <branch/>
+    <dependencies>
+      <dep package="storage/libstorage"/>
+    </dependencies>
+  </autotools>
+  <autotools id="storage/vfs">
+    <branch/>
+    <dependencies>
+      <dep package="storage/libstorage"/>
+      <dep package="storage/libstorage-translators"/>
+    </dependencies>
+  </autotools>
+  <autotools id="storage/pet">
+    <branch/>
+  </autotools>
+  <autotools id="storage/libmrs">
+    <branch/>
+    <dependencies>
+      <dep package="storage/pet"/>
+    </dependencies>
+  </autotools>
+  <autotools id="storage/libmrs-converter">
+    <branch/>
+    <dependencies>
+      <dep package="storage/libmrs"/>
+    </dependencies>
+  </autotools>
+  <autotools id="storage/libstorage-nl">
+    <branch/>
+    <dependencies>
+      <dep package="storage/libstorage"/>
+      <dep package="storage/libmrs"/>
+      <dep package="storage/libmrs-converter"/>
+    </dependencies>
+  </autotools>
+  <autotools id="storage/applet">
+    <branch/>
+    <dependencies>
+      <dep package="gnome-python"/>
+      <dep package="storage/libstorage-nl"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-nettool">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="monkey-bubble">
+    <branch/>
+    <dependencies>
+      <dep package="gstreamer-0-8"/>
+      <dep package="gst-plugins-0-8"/>
+      <dep package="libxml2"/>
+      <dep package="gconf"/>
+      <dep package="librsvg"/>
+      <dep package="libgnomeui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-schedule">
+    <branch/>
+    <dependencies>
+      <dep package="pygtk"/>
+      <dep package="yelp"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnome-backgrounds">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="evince">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="libgnomeui"/>
+      <dep package="libgnomeprintui"/>
+      <dep package="poppler"/>
+      <dep package="gnome-doc-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="nautilus-python" supports-non-srcdir-builds="no">
+    <branch/>
+    <dependencies>
+      <dep package="nautilus"/>
+      <dep package="pygtk"/>
+      <dep package="gnome-python"/>
+    </dependencies>
+  </autotools>
+  <autotools id="inkscape">
+    <branch repo="inkscape.sf.net"/>
+    <dependencies>
+      <dep package="gtkmm"/>
+      <dep package="libxslt"/>
+    </dependencies>
+  </autotools>
+  <autotools id="NetworkManager">
+    <branch repo="gnome.org"/>
+    <dependencies>
+      <dep package="dbus"/>
+    </dependencies>
+  </autotools>
+  <autotools id="atomix">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="libgnome"/>
+      <dep package="libgnomeui"/>
+      <dep package="libxml2"/>
+      <dep package="libgnomecanvas"/>
+      <dep package="libbonoboui"/>
+    </dependencies>
+  </autotools>
+  <autotools id="deskbar-applet">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="gnome-desktop"/>
+      <dep package="pygtk"/>
+      <dep package="gnome-python"/>
+      <dep package="gnome-python-desktop"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pessulus">
+    <branch revision="gnome-2-14"/>
+    <dependencies>
+      <dep package="pygtk"/>
+      <dep package="gnome-python"/>
+    </dependencies>
+  </autotools>
+  <autotools id="sabayon">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="pygtk"/>
+    </dependencies>
+  </autotools>
+  <autotools id="muine">
+    <branch/>
+    <dependencies>
+      <dep package="gtk+"/>
+      <dep package="gstreamer"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gnonlin">
+    <branch repo="gstreamer.freedesktop.org" module="gnonlin"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pitivi">
+    <branch/>
+    <dependencies>
+      <dep package="pygtk"/>
+      <dep package="gnome-python"/>
+      <dep package="gstreamer"/>
+      <dep package="gst-python"/>
+      <dep package="gnonlin"/>
+    </dependencies>
+  </autotools>
+</moduleset>

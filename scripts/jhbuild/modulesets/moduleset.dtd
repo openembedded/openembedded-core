@@ -1,0 +1,115 @@
+<!ELEMENT moduleset ((cvsroot|svnroot|arch-archive|darcs-archive)*,
+                     (include|cvsmodule|svnmodule|archmodule|darcsmodule|
+                      metamodule|tarball|mozillamodule)*) >
+
+<!ELEMENT cvsroot EMPTY >
+<!ATTLIST cvsroot
+  name CDATA #REQUIRED
+  root CDATA #REQUIRED
+  password CDATA #IMPLIED
+  default (yes|no) 'no' >
+
+<!ELEMENT svnroot EMPTY >
+<!ATTLIST svnroot
+  name CDATA #REQUIRED
+  href CDATA #REQUIRED
+  default (yes|no) 'no' >
+
+<!ELEMENT arch-archive EMPTY >
+<!ATTLIST arch-archive
+  name CDATA #REQUIRED
+  href CDATA #REQUIRED
+  default (yes|no) 'no' >
+
+<!ELEMENT darcs-archive EMPTY >
+<!ATTLIST darcs-archive
+  name CDATA #REQUIRED
+  href CDATA #REQUIRED
+  default (yes|no) 'no' >
+  
+<!ELEMENT include EMPTY >
+<!ATTLIST include
+  href CDATA #REQUIRED >
+
+<!ELEMENT cvsmodule (dependencies?,suggests?) >
+<!ATTLIST cvsmodule
+  id CDATA #REQUIRED
+  module CDATA #IMPLIED
+  revision CDATA #IMPLIED
+  checkoutdir CDATA #IMPLIED
+  autogenargs CDATA #IMPLIED
+  makeargs CDATA #IMPLIED
+  cvsroot CDATA #IMPLIED
+  supports-non-srcdir-builds (yes|no) 'yes' >
+
+<!ELEMENT svnmodule (dependencies?,suggests?) >
+<!ATTLIST svnmodule
+  id CDATA #REQUIRED
+  module CDATA #IMPLIED
+  checkoutdir CDATA #IMPLIED
+  autogenargs CDATA #IMPLIED
+  makeargs CDATA #IMPLIED
+  root CDATA #IMPLIED
+  supports-non-srcdir-builds (yes|no) 'yes' >
+
+<!ELEMENT archmodule (dependencies?,suggests?) >
+<!ATTLIST archmodule
+  id CDATA #REQUIRED
+  version CDATA #IMPLIED
+  checkoutdir CDATA #IMPLIED
+  autogenargs CDATA #IMPLIED
+  makeargs CDATA #IMPLIED
+  root CDATA #IMPLIED
+  supports-non-srcdir-builds (yes|no) 'yes' >
+
+<!ELEMENT darcsmodule (dependencies?,suggests?) >
+<!ATTLIST darcsmodule
+  id CDATA #REQUIRED
+  checkoutdir CDATA #IMPLIED
+  autogenargs CDATA #IMPLIED
+  makeargs CDATA #IMPLIED
+  root CDATA #IMPLIED
+  supports-non-srcdir-builds (yes|no) 'yes' >
+  
+<!ELEMENT metamodule (dependencies) >
+<!ATTLIST metamodule
+  id CDATA #REQUIRED >
+
+<!ELEMENT tarball
+  (source,patches?,dependencies?,suggests?) >
+<!ATTLIST tarball
+  id CDATA #REQUIRED
+  version CDATA #REQUIRED
+  checkoutdir CDATA #IMPLIED
+  autogenargs CDATA #IMPLIED
+  makeargs CDATA #IMPLIED
+  supports-non-srcdir-builds (yes|no) 'yes' >
+
+<!ELEMENT mozillamodule (dependencies?,suggests?) >
+<!ATTLIST mozillamodule
+  id CDATA #REQUIRED
+  module CDATA #IMPLIED
+  revision CDATA #IMPLIED
+  checkoutdir CDATA #IMPLIED
+  autogenargs CDATA #IMPLIED
+  makeargs CDATA #IMPLIED
+  cvsroot CDATA #IMPLIED >
+
+<!-- Tarball sub-elements -->
+<!ELEMENT source EMPTY >
+<!ATTLIST source
+  href CDATA #REQUIRED
+  size CDATA #IMPLIED
+  md5sum CDATA #IMPLIED >
+<!ELEMENT patches (patch)* >
+<!ELEMENT patch EMPTY >
+<!ATTLIST patch
+  file CDATA #REQUIRED
+  strip CDATA '0' >
+
+<!-- common sub-elements -->
+<!ELEMENT dependencies (dep*) >
+<!ELEMENT suggests (dep*) >
+<!ELEMENT dep EMPTY >
+<!ATTLIST dep
+  package CDATA #REQUIRED >

@@ -1,0 +1,87 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: nxml -*-->
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+  <repository type="tarball" name="ftp.gnu.org"
+      href="http://ftp.gnu.org/gnu/"/>
+  <repository type="tarball" name="pkgconfig"
+      href="http://pkgconfig.freedesktop.org/releases/"/>
+  <repository type="tarball" name="python"
+      href="http://www.python.org/ftp/python/"/>
+
+  <autotools id="gettext" autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+	    module="gettext/gettext-0.14.5.tar.gz" version="0.14.5"
+	    size="7105715" md5sum="e2f6581626a22a0de66dce1d81d00de3" />
+  </autotools>
+
+  <autotools id="autoconf" autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+	    module="autoconf/autoconf-2.59.tar.bz2" version="2.59"
+	    size="925073" md5sum="1ee40f7a676b3cfdc0e3f7cd81551b5f" />
+  </autotools>
+
+  <autotools id="libtool" autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+	    module="libtool/libtool-1.5.22.tar.gz" version="1.5.22"
+	    size="2921483" md5sum="8e0ac9797b62ba4dcc8a2fb7936412b0">
+      <patch file="libtool-1.5.18-multilib.patch" strip="1" />
+    </branch>
+  </autotools>
+
+  <autotools id="automake-1.4" autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+	    module="automake/automake-1.4-p6.tar.gz" version="1.4-p6"
+	    size="375060" md5sum="24872b81b95d78d05834c39af2cfcf05" />
+  </autotools>
+  <autotools id="automake-1.7" autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+	    module="automake/automake-1.7.9.tar.bz2" version="1.7.9"
+	    size="577705" md5sum="571fd0b0598eb2a27dcf68adcfddfacb" />
+  </autotools>
+  <autotools id="automake-1.8" autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+	    module="automake/automake-1.8.5.tar.bz2" version="1.8.5"
+	    size="663182" md5sum="0114aa6d7dc32112834b68105fb8d7e2" />
+  </autotools>
+  <autotools id="automake-1.9" autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+	    module="automake/automake-1.9.6.tar.bz2" version="1.9.6"
+	    size="765505" md5sum="c11b8100bb311492d8220378fd8bf9e0" />
+  </autotools>
+
+  <autotools id="pkg-config" autogen-sh="configure">
+    <branch repo="pkgconfig"
+	    module="pkg-config-0.20.tar.gz" version="0.20"
+	    size="969993" md5sum="fb42402593e4198bc252ab248dd4158b" />
+  </autotools>
+
+  <autotools id="python" autogenargs="--enable-shared" autogen-sh="configure">
+    <branch repo="python"
+	    module="2.4.3/Python-2.4.3.tar.bz2" version="2.4.3"
+	    size="8005915" md5sum="141c683447d5e76be1d2bd4829574f02" />
+  </autotools>
+
+  <repository type="tarball" name="pyrex"
+      href="http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/"/>
+  <distutils id="pyrex">
+    <branch repo="pyrex"
+	    module="Pyrex-0.9.4.1.tar.gz" version="0.9.4.1"
+	    size="181507" md5sum="425f0543c634bc7a86fe4fce02e0e882" />
+  </distutils>
+
+  <metamodule id="meta-bootstrap">
+    <dependencies>
+      <dep package="gettext" />
+      <dep package="autoconf" />
+      <dep package="libtool" />
+      <dep package="automake-1.4" />
+      <dep package="automake-1.7" />
+      <dep package="automake-1.8" />
+      <dep package="automake-1.9" />
+      <dep package="pkg-config" />
+      <dep package="python" />
+      <dep package="pyrex" />
+    </dependencies>
+  </metamodule>
+
+</moduleset>

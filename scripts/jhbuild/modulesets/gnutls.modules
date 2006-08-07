@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: nxml -*-->
+<!DOCTYPE moduleset SYSTEM "moduleset.dtd">
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+  <tarball id="libgpg-error" version="1.3">
+    <source href="http://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.3.tar.bz2"
+            size="452266" md5sum="d978065d62cde48e79497b63f80ba8fc" />
+  </tarball>
+  <tarball id="libgcrypt" version="1.2.2">
+    <source href="http://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.2.2.tar.bz2"
+            size="780315" md5sum="4a8a9a7572892ae3803a5aa558e52e02" />
+    <dependencies>
+      <dep package="libgpg-error" />
+    </dependencies>
+  </tarball>
+  <tarball id="libtasn1" version="0.3.4" supports-non-srcdir-builds="no">
+    <source href="http://ftp.gnupg.org/gcrypt/alpha/gnutls/libtasn1/libtasn1-0.3.4.tar.gz"
+            size="1246545" md5sum="1dbfce0e1fbd6aebc1a4506814c23d35" />
+  </tarball>
+  <tarball id="opencdk" version="0.5.8" supports-non-srcdir-builds="no">
+    <source href="http://ftp.gnupg.org/gcrypt/alpha/gnutls/opencdk/opencdk-0.5.8.tar.gz"
+            size="497122" md5sum="900c4dee7712845c19d7b2d2a93ea546" />
+    <dependencies>
+      <dep package="libgcrypt" />
+    </dependencies>
+  </tarball>
+  <tarball id="gnutls" version="1.4.0">
+    <source href="http://ftp.gnupg.org/gcrypt/alpha/gnutls/gnutls-1.4.0.tar.bz2"
+            size="3281324" md5sum="9e1e1b07e971c604923ec394f6922301" />
+    <dependencies>
+      <dep package="libgcrypt" />
+      <dep package="libtasn1" />
+      <dep package="opencdk" />
+    </dependencies>
+  </tarball>
+</moduleset>

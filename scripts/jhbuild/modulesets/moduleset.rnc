@@ -1,0 +1,131 @@
+default namespace = ""
+
+start = moduleset
+
+boolean = "yes" | "no"
+
+moduleset = element moduleset { repository*,
+                                (\include|package)* }
+
+repository_cvs     = attribute type { "cvs" },
+                     attribute cvsroot { text },
+                     attribute password { text }?
+repository_svn     = attribute type { "svn" },
+                     attribute href { xsd:anyURI }
+repository_arch    = attribute type { "arch" },
+                     attribute archive { text },
+                     attribute href { xsd:anyURI }?
+repository_darcs   = attribute type { "darcs" },
+                     attribute href { xsd:anyURI }
+repository_git     = attribute type { "git" },
+                     attribute href { xsd:anyURI }
+repository_tarball = attribute type { "tarball" },
+                     attribute href { xsd:anyURI }
+
+repository = element repository {
+  attribute name { text },
+  attribute default { boolean }?,
+  (repository_cvs|repository_svn|repository_arch|
+   repository_darcs|repository_git|repository_tarball)
+}
+
+\include = element include {
+  attribute href { xsd:anyURI }
+}
+
+package = autotools |
+          metamodule |
+          distutils |
+          perl |
+          tarball |
+          mozillamodule
+
+dep = element dep {
+  attribute package { text }
+}
+dependencies = element dependencies { dep* }
+after = element after { dep* } | element suggests { dep* }
+
+common = attribute id { text } & dependencies* & after*
+
+branch_cvs   = attribute module { text }?,
+               attribute checkoutdir { text }?,
+               attribute revision { text}?,
+               attribute override-checkoutdir { boolean }?,
+               attribute update-new-dirs { boolean }?
+branch_svn   = attribute module { xsd:anyURI }?,
+               attribute checkoutdir { text }?
+branch_arch  = attribute module { xsd:anyURI }?,
+               attribute checkoutdir { text }?
+branch_darcs = attribute module { xsd:anyURI }?,
+               attribute checkoutdir { text }?
+branch_git   = attribute module { xsd:anyURI }?,
+               attribute checkoutdir { text }?
+branch_tarball = attribute module { xsd:anyURI },
+                 attribute version { text },
+                 attribute size { text }?,
+                 attribute md5sum { text }?,
+                 element patch {
+                   attribute file { text },
+                   attribute strip { text }?
+                 }*
+
+
+branch = element branch {
+  attribute repo { text }?,
+  (branch_cvs|branch_svn|branch_arch|branch_darcs|branch_git|branch_tarball)
+}
+
+autotools = element autotools {
+  branch &
+  attribute autogen-sh { text }? &
+  attribute autogenargs { text }? &
+  attribute makeargs { text }? &
+  attribute supports-non-srcdir-builds { boolean }? &
+  common
+}
+
+metamodule = element metamodule { common }
+
+distutils = element distutils {
+  branch &
+  attribute supports-non-srcdir-builds { boolean }? &
+  common
+}
+
+perl = element perl {
+  branch &
+  attribute makeargs { text }? &
+  common
+}
+
+tarball = element tarball {
+  attribute version { text },
+  attribute checkoutdir { text }?,
+  attribute autogenargs { text }?,
+  attribute makeargs { text }?,
+  attribute supports-non-srcdir-builds { boolean }?,
+
+  (element source {
+     attribute href { text },
+     attribute size { text }?,
+     attribute md5sum { text }? } &
+   element patches {
+     element patch {
+       attribute file { text },
+       attribute strip { text }?
+     }+ }? &
+   common)
+}
+
+mozillamodule = element mozillamodule {
+  attribute module { text }?,
+  attribute revision { text }?,
+  attribute checkoutdir { text }?,
+  attribute autogenargs { text }?,
+  attribute makeargs { text }?,
+  attribute cvsroot { text }?,
+  attribute root { text }?,
+  common
+}
+

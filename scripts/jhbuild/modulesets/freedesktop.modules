@@ -1,0 +1,281 @@
+<?xml version="1.0"?><!--*- mode: nxml -*-->
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+  <repository type="cvs" name="cairo.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/cairo"
+      password=""/>
+  <repository type="cvs" name="dbus.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/dbus"
+      password=""/>
+  <repository type="cvs" name="fontconfig.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/fontconfig"
+      password=""/>
+  <repository type="cvs" name="hal.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/hal"
+      password=""/>
+  <repository type="cvs" name="icon-theme.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/icon-theme"
+      password=""/>
+  <repository type="cvs" name="startup-notification.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/startup-notification"
+      password=""/>
+  <repository type="cvs" name="tango.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/tango"
+      password=""/>
+  <repository type="cvs" name="xorg.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/xorg"
+      password=""/>
+  <repository type="cvs" name="poppler.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/poppler"
+      password=""/>
+  <repository type="cvs" name="system-tools-backends.freedesktop.org"
+      cvsroot=":pserver:anoncvs@anoncvs.freedesktop.org:/cvs/system-tools-backends"
+      password=""/>
+  <repository type="cvs" name="gnome.org"
+      cvsroot=":pserver:anonymous@anoncvs.gnome.org:/cvs/gnome"
+      password=""/>
+
+  <repository type="svn" name="avahi.0pointer.de"
+      href="svn://svn.0pointer.de/avahi/"/>
+  <repository type="svn" name="libdaemon.0pointer.de"
+      href="svn://svn.0pointer.de/libdaemon/"/>
+
+  <repository type="git" name="git.freedesktop.org"
+      href="git://anongit.freedesktop.org/git/"/>
+
+  <repository type="tarball" name="cpan" href="http://search.cpan.org/CPAN/" />
+
+
+  <autotools id="cairo">
+    <branch repo="git.freedesktop.org" module="cairo"/>
+    <dependencies>
+      <dep package="fontconfig"/>
+      <dep package="libXrender"/>
+      <dep package="gtk-doc"/>
+    </dependencies>
+    <after>
+      <dep package="glitz"/>
+    </after>
+  </autotools>
+
+  <tarball id="cairo-1-0" version="1.0.4">
+    <source href="http://cairographics.org/releases/cairo-1.0.4.tar.gz"
+            size="1475777" md5sum="9002b0e69b3f94831a22d3f2a7735ce2"/>
+    <dependencies>
+      <dep package="fontconfig"/>
+      <dep package="libXrender"/>
+    </dependencies>
+    <after>
+      <dep package="glitz"/>
+    </after>
+  </tarball>
+
+  <autotools id="glitz">
+    <branch repo="cairo.freedesktop.org"/>
+  </autotools>
+
+  <autotools id="pycairo-1-0">
+    <branch repo="cairo.freedesktop.org" module="pycairo"
+            revision="RELEASE_1_0_2" checkoutdir="pycairo-1-0"/>
+    <dependencies>
+      <dep package="cairo-1-0"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="pycairo">
+    <branch repo="cairo.freedesktop.org"/>
+    <dependencies>
+      <dep package="cairo"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="cairomm">
+    <branch repo="cairo.freedesktop.org"/>
+    <dependencies>
+      <dep package="cairo"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="dbus" supports-non-srcdir-builds="no">
+    <branch repo="dbus.freedesktop.org"/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+    <after>
+      <dep package="gtk+"/>
+    </after>
+  </autotools>
+
+  <autotools id="dbus-0.23" supports-non-srcdir-builds="no">
+    <branch repo="dbus.freedesktop.org" module="dbus"
+            revision="dbus-0-23" checkoutdir="dbus-0.23"/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+    <after>
+      <dep package="gtk+"/>
+    </after>
+  </autotools>
+
+  <!-- Not maintained - try dbusmm instead -->
+  <autotools id="dbus-cpp">
+    <branch repo="dbus.freedesktop.org"/>
+    <dependencies>
+      <dep package="dbus"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="dbusmm">
+    <branch repo="dbus.freedesktop.org"/>
+    <dependencies>
+      <dep package="dbus"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="dbus-glib">
+    <branch repo="git.freedesktop.org" module="dbus/dbus-glib"/>
+    <dependencies>
+      <dep package="libxml2"/>
+      <dep package="dbus"/>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+
+  <distutils id="dbus-python">
+    <branch repo="git.freedesktop.org" module="dbus/dbus-python"/>
+    <dependencies>
+      <dep package="dbus"/>
+      <dep package="dbus-glib"/>
+    </dependencies>
+  </distutils>
+
+  <autotools id="PolicyKit">
+    <branch repo="hal.freedesktop.org"/>
+    <dependencies>
+      <dep package="dbus-glib"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="hal">
+    <branch repo="hal.freedesktop.org"/>
+    <dependencies>
+      <dep package="dbus"/>
+      <dep package="PolicyKit"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="hal-0-4">
+    <branch repo="hal.freedesktop.org" module="hal"
+            revision="hal-0_4-stable-branch" checkoutdir="hal-0.4"/>
+    <dependencies>
+      <dep package="dbus-0.23"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="fontconfig">
+    <branch repo="fontconfig.freedesktop.org" revision="fc-2_4_branch"/>
+  </autotools>
+
+  <autotools id="icon-slicer">
+    <branch repo="icon-theme.freedesktop.org"/>
+  </autotools>
+  <autotools id="icon-naming-utils">
+    <branch repo="icon-theme.freedesktop.org"/>
+  </autotools>
+  <tarball id="hicolor-icon-theme" version="0.9"
+           supports-non-srcdir-builds="no">
+    <source href="http://icon-theme.freedesktop.org/releases/hicolor-icon-theme-0.9.tar.gz"
+            size="32574" md5sum="1d0821cb80d394eac30bd8cec5b0b60c"/>
+  </tarball>
+
+  <autotools id="tango-icon-theme">
+    <branch repo="tango.freedesktop.org"/>
+    <dependencies>
+      <dep package="icon-naming-utils"/>
+    </dependencies>
+  </autotools>
+  <autotools id="tango-icon-theme-extras">
+    <branch repo="tango.freedesktop.org"/>
+    <dependencies>
+      <dep package="tango-icon-theme"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="startup-notification">
+    <branch repo="startup-notification.freedesktop.org"/>
+  </autotools>
+
+  <autotools id="RenderProto">
+    <branch repo="git.freedesktop.org"
+	    module="xorg/proto/renderproto" checkoutdir="RenderProto" />
+  </autotools>
+  <autotools id="libXrender" supports-non-srcdir-builds="no">
+    <branch repo="git.freedesktop.org"
+	    module="xorg/lib/libXrender" checkoutdir="libXrender" />
+    <dependencies>
+      <dep package="RenderProto"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libXft" supports-non-srcdir-builds="no">
+    <branch repo="git.freedesktop.org"
+	    module="xorg/lib/libXft" checkoutdir="libXft" />
+    <dependencies>
+      <dep package="fontconfig"/>
+      <dep package="libXrender"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="poppler">
+    <branch repo="poppler.freedesktop.org"/>
+    <dependencies>
+      <dep package="cairo"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="poppler-0-4">
+    <branch repo="poppler.freedesktop.org" module="poppler"
+            revision="POPPLER_0_4_X" checkoutdir="poppler-0-4"/>
+    <dependencies>
+      <dep package="cairo-1-0"/>
+    </dependencies>
+  </autotools>
+
+  <perl id="perl-net-dbus">
+    <branch repo="cpan"
+        module="authors/id/D/DA/DANBERR/Net-DBus-0.33.2.tar.gz" version="0.33.2"
+        size="83279" md5sum="7e722c48c4bca7740cf28512287571b7"/>
+    <dependencies>
+      <dep package="dbus"/>
+    </dependencies>
+  </perl>
+
+  <autotools id="system-tools-backends">
+    <branch repo="system-tools-backends.freedesktop.org" 
+            revision="BEFORE_DBUS_MERGE"/>
+    <suggests>
+      <dep package="perl-net-dbus"/>
+    </suggests>
+  </autotools>
+
+  <autotools id="system-tools-backends-1.4">
+    <branch repo="system-tools-backends.freedesktop.org"
+	    module="system-tools-backends" revision="stb-1-4"
+	    checkoutdir="system-tools-backends-1.4"/>
+  </autotools>
+
+  <autotools id="libdaemon">
+    <branch repo="libdaemon.0pointer.de" module="trunk" checkoutdir="libdaemon"/>
+  </autotools>
+
+  <!-- explicit disabling of qt3 and qt4 can be removed once avahi
+       correctly detects what is available. -->
+  <autotools id="avahi" autogenargs="--disable-qt3 --disable-qt4 --disable-mono --disable-monodoc --disable-manpages --enable-compat-howl --enable-compat-libdns_sd">
+    <branch repo="avahi.0pointer.de" module="trunk" checkoutdir="avahi"/>
+    <dependencies>
+      <dep package="libdaemon"/>
+      <dep package="dbus-python"/>
+      <dep package="pygtk"/>
+    </dependencies>
+  </autotools>
+
+</moduleset>

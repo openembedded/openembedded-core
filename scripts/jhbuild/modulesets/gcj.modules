@@ -1,0 +1,135 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: nxml -*-->
+<!DOCTYPE moduleset SYSTEM "moduleset.dtd">
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+
+  <cvsroot name="gcc.gnu.org"
+     root=":pserver:anoncvs@gcc.gnu.org:/cvs/gcc"
+     password="" />
+  <cvsroot name="rhug.sources.redhat.com"
+     root=":pserver:anoncvs@sources.redhat.com:/cvs/rhug"
+     password="" />
+  <cvsroot name="gdb.sources.redhat.com"
+     root=":pserver:anoncvs@sources.redhat.com:/cvs/src"
+     password="anoncvs" />
+  <cvsroot name="gnome.org"
+     root=":pserver:anonymous@anoncvs.gnome.org:/cvs/gnome"
+     password="" />
+  <cvsroot name="classpath.savannah.gnu.org"
+     root=":ext:anoncvs@savannah.gnu.org:/cvsroot/classpath"
+     password="" />
+  <cvsroot name="cairo.freedesktop.org"
+     root=":pserver:anoncvs@cvs.freedesktop.org:/cvs/cairo"
+     password="" />
+
+  <include href="gnome-2.12.modules" />
+
+  <gdbmodule id="gdb" cvsroot="gdb.sources.redhat.com" />
+
+  <gcjmodule id="gcj" cvsroot="gcc.gnu.org">
+    <dependencies>
+      <dep package="cairo" />
+      <dep package="gtk+" />
+    </dependencies>
+  </gcjmodule>
+
+  <cvsmodule id="java-gcj-compat" cvsroot="rhug.sources.redhat.com">
+    <dependencies>
+      <dep package="ecj-for-jhbuild" />
+      <dep package="gjdoc" />
+    </dependencies>
+  </cvsmodule>
+
+  <cvsmodule id="ecj-for-jhbuild" cvsroot="rhug.sources.redhat.com"
+	     supports-non-srcdir-builds="no">
+    <dependencies>
+      <dep package="gcj" />
+    </dependencies>
+  </cvsmodule>
+
+  <cvsmodule id="gjdoc" cvsroot="classpath.savannah.gnu.org" >
+    <dependencies>
+      <dep package="gcj" />
+    </dependencies>
+  </cvsmodule>
+
+  <cvsmodule id="jg-common" cvsroot="gnome.org">
+    <suggests>
+      <dep package="gcj" />
+    </suggests>
+    <dependencies>
+      <dep package="glib" />
+    </dependencies>
+  </cvsmodule>
+
+  <cvsmodule id="cairo-java" cvsroot="cairo.freedesktop.org">
+    <suggests>
+      <dep package="gcj" />
+    </suggests>
+    <dependencies>
+      <dep package="jg-common" />
+      <dep package="cairo" />
+    </dependencies>
+  </cvsmodule>
+
+  <cvsmodule id="libgtk-java" cvsroot="gnome.org">
+    <suggests>
+      <dep package="gcj" />
+    </suggests>
+    <dependencies>
+      <dep package="jg-common" />
+      <dep package="cairo-java" />
+    </dependencies>
+  </cvsmodule>
+
+  <cvsmodule id="libgnomevfs-java" cvsroot="gnome.org">
+    <suggests>
+      <dep package="gcj" />
+    </suggests>
+    <dependencies>
+      <dep package="libgtk-java" />
+    </dependencies>
+  </cvsmodule>
+  
+  <cvsmodule id="libgnome-java" cvsroot="gnome.org">
+    <suggests>
+      <dep package="gcj" />
+    </suggests>
+    <dependencies>
+     <dep package="libgnome" />
+     <dep package="libgnomeui" />
+     <dep package="libgnomecanvas" />
+     <dep package="libgtk-java" />
+    </dependencies>
+  </cvsmodule>
+  
+  <cvsmodule id="libglade-java" cvsroot="gnome.org">
+    <suggests>
+      <dep package="gcj" />
+    </suggests>
+    <dependencies>
+      <dep package="libgtk-java" />
+      <dep package="libgnome-java" />
+    </dependencies>
+  </cvsmodule>
+
+  <cvsmodule id="libgconf-java" cvsroot="gnome.org">
+    <suggests>
+      <dep package="gcj" />
+    </suggests>
+    <dependencies>
+      <dep package="libgtk-java" />
+      <dep package="libgnome-java" />
+    </dependencies>
+  </cvsmodule>
+
+  <metamodule id="java-gnome">
+    <dependencies>
+      <dep package="libgtk-java" />
+      <dep package="libgnome-java" />
+      <dep package="libglade-java" />
+      <dep package="libgconf-java" />
+    </dependencies>
+  </metamodule>
+
+</moduleset>

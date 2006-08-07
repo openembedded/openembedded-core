@@ -1,0 +1,72 @@
+<?xml version="1.0"?><!--*- mode: nxml -*-->
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+  <repository type="cvs" name="gnome.org" default="yes"
+      cvsroot=":pserver:anonymous@anoncvs.gnome.org:/cvs/gnome"
+      password=""/>
+  <repository type="cvs" name="mime.freedesktop.org"
+      cvsroot=":pserver:anoncvs@cvs.freedesktop.org:/cvs/mime"
+      password=""/>
+
+  <include href="freedesktop.modules"/>
+
+  <autotools id="gnome-common">
+    <branch/>
+  </autotools>
+  <autotools id="intltool">
+    <branch/>
+    <dependencies>
+      <dep package="gnome-common"/>
+    </dependencies>
+  </autotools>
+  <autotools id="shared-mime-info" supports-non-srcdir-builds="no">
+    <branch repo="mime.freedesktop.org"/>
+    <dependencies>
+      <dep package="intltool"/>
+    </dependencies>
+  </autotools>
+  <autotools id="libxml2">
+    <branch module="gnome-xml" checkoutdir="libxml2"/>
+  </autotools>
+  <autotools id="libxslt">
+    <branch/>
+    <dependencies>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtk-doc">
+    <branch/>
+    <dependencies>
+      <dep package="libxslt"/>
+    </dependencies>
+  </autotools>
+  <autotools id="glib">
+    <branch revision="glib-2-8"/>
+    <dependencies>
+      <dep package="gtk-doc"/>
+    </dependencies>
+  </autotools>
+  <autotools id="pango">
+    <branch revision="pango-1-10"/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="cairo"/>
+      <dep package="libXft"/>
+    </dependencies>
+  </autotools>
+  <autotools id="atk">
+    <branch/>
+    <dependencies>
+      <dep package="glib"/>
+    </dependencies>
+  </autotools>
+  <autotools id="gtk+">
+    <branch revision="gtk-2-8"/>
+    <dependencies>
+      <dep package="cairo"/>
+      <dep package="atk"/>
+      <dep package="pango"/>
+      <dep package="shared-mime-info"/>
+    </dependencies>
+  </autotools>
+</moduleset>
