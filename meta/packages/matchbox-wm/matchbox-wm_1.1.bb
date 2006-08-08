@@ -3,11 +3,12 @@ DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox libx11 libxext libxcomposite libxfixes xdamage libxrender startup-notification expat matchbox-common"
 RDEPENDS = "matchbox-common"
-PR="r0"
+PR="r1"
 
 
 SRC_URI = "http://projects.o-hand.com/matchbox/sources/matchbox-window-manager/1.1/matchbox-window-manager-${PV}.tar.gz \
-	   file://kbdconfig"
+	   file://kbdconfig \
+           file://gconf-2.m4"
 
 S = "${WORKDIR}/matchbox-window-manager-${PV}"
 
