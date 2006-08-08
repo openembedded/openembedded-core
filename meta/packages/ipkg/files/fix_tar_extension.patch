@@ -1,0 +1,37 @@
+Index: C/libbb/unarchive.c
+===================================================================
+--- C.orig/libbb/unarchive.c	2005-02-05 16:58:19.000000000 -0500
++++ C/libbb/unarchive.c	2006-08-08 08:10:14.268431408 -0400
+@@ -28,7 +28,7 @@
+ #include "libbb.h"
+ 
+ #define CONFIG_FEATURE_TAR_OLDGNU_COMPATABILITY 1
+-// #define CONFIG_FEATURE_TAR_GNU_EXTENSIONS
++#define CONFIG_FEATURE_TAR_GNU_EXTENSIONS 1
+ 
+ #ifdef CONFIG_FEATURE_TAR_GNU_EXTENSIONS
+ static char *longname = NULL;
+@@ -657,7 +657,10 @@
+ # ifdef CONFIG_FEATURE_TAR_GNU_EXTENSIONS
+ 	case 'L': {
+ 			longname = xmalloc(tar_entry->size + 1);
+-			archive_xread_all((int) tar_stream, longname, tar_entry->size);
++			if(fread(longname, tar_entry->size, 1, tar_stream) != 1) {
++				error_msg("Short read in gnu extension");
++				return(NULL);
++			} 
+ 			longname[tar_entry->size] = '\0';
+ 			archive_offset += tar_entry->size;
+ 
+@@ -665,7 +668,10 @@
+ 		}
+ 	case 'K': {
+ 			linkname = xmalloc(tar_entry->size + 1);
+-			archive_xread_all((int) tar_stream, longname, tar_entry->size);
++			if(fread(linkname, tar_entry->size, 1, tar_stream) != 1) {
++				error_msg("Short read in gnu extension");
++				return(NULL);
++			} 
+ 			linkname[tar_entry->size] = '\0';
+ 			archive_offset += tar_entry->size;
+ 
