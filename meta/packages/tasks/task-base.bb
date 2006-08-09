@@ -189,7 +189,18 @@ task-base-usbgadget-rrecommends = "\
     kernel-module-g-ether"
 
 task-base-usbhost-rrecommends = "\
-    "
+    kernel-module-ohci-hcd \
+    kernel-module-usbcore \
+    kernel-module-usbhid \
+    kernel-module-usbnet \
+    kernel-module-sd-mod \
+    kernel-module-scsi-mod \
+    kernel-module-usbmouse \
+    kernel-module-mousedev \
+    kernel-module-hci-usb \
+    kernel-module-usbserial \
+    kernel-module-usb-storage \
+    kernel-module-ir-usb"
 
 task-distro-ppp-rdepends = "\
     ppp \
