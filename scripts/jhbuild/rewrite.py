@@ -226,7 +226,7 @@ class Emitter(object):
             f.close()
 
             for key in bb.data.keys(package):
-                fdata.replace('@@'+key+'@@', bb.data.getVar(key, package))
+                fdata = fdata.replace('@@'+key+'@@', bb.data.getVar(key, package))
         else:
             for key in bb.data.keys(package):
                 if key == '_handler':
@@ -266,10 +266,12 @@ def _test():
 
     emitter = Emitter(filefunc)
     for package in handlers.packages:
-        template = os.path.join(emitter.filefunc(package), '.in')
+        template = emitter.filefunc(package) + '.in'
         if os.path.exists(template):
+            print("%s exists, emitting based on template" % template)
             emitter.write(package, template)
         else:
+            print("%s does not exist, emitting non-templated" % template)
             emitter.write(package)
 
 if __name__ == "__main__":
