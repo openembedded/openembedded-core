@@ -1,6 +1,6 @@
-STAMP = "${TMPDIR}/stamps/${MULTIMACH_ARCH}-${HOST_OS}/${PF}"
-WORKDIR = "${TMPDIR}/work/${MULTIMACH_ARCH}-${HOST_OS}/${PF}"
-STAGING_KERNEL_DIR = "${STAGING_DIR}/${MULTIMACH_ARCH}-${HOST_OS}/kernel"
+STAMP = "${TMPDIR}/stamps/${MULTIMACH_ARCH}-${TARGET_OS}/${PF}"
+WORKDIR = "${TMPDIR}/work/${MULTIMACH_ARCH}-${TARGET_OS}/${PF}"
+STAGING_KERNEL_DIR = "${STAGING_DIR}/${MULTIMACH_ARCH}-${TARGET_OS}/kernel"
 
 # Find any machine specific sub packages and if present, mark the 
 # whole package as machine specific for multimachine purposes.
