@@ -6,6 +6,10 @@ STAGING_PKGMAPS_DIR = "${STAGING_DIR}/pkgmaps/debian"
 # depends are correct
 BUILD_ALL_DEPS = "1"
 
+# Better expressed as ensure all RDEPENDS package before we package
+# This means we can't have circular RDEPENDS/RRECOMMENDS
+do_package[rdeptask] = "do_package"
+
 python debian_package_name_hook () {
 	import glob, copy, stat, errno, re
 

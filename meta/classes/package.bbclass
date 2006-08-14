@@ -734,6 +734,8 @@ python package_do_package () {
 }
 
 do_package[dirs] = "${D}"
+# shlibs requires any DEPENDS to have already packaged for the *.list files
+do_package[deptask] = "do_package"
 populate_packages[dirs] = "${D}"
 EXPORT_FUNCTIONS do_package do_shlibs do_split_locales mapping_rename_hook
 addtask package before do_build after do_populate_staging

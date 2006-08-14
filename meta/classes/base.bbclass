@@ -337,7 +337,7 @@ python base_do_mrproper() {
 
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
-do_fetch[nostamp] = "1"
+#do_fetch[nostamp] = "1"
 python base_do_fetch() {
 	import sys
 
@@ -557,7 +557,8 @@ python base_eventhandler() {
 		msg += messages.get(name[5:]) or name[5:]
 	elif name == "UnsatisfiedDep":
 		msg += "package %s: dependency %s %s" % (e.pkg, e.dep, name[:-3].lower())
-	note(msg)
+	if msg:
+		note(msg)
 
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
@@ -598,6 +599,7 @@ python base_eventhandler() {
 addtask configure after do_unpack do_patch
 do_configure[dirs] = "${S} ${B}"
 do_configure[bbdepcmd] = "do_populate_staging"
+do_configure[deptask] = "do_populate_staging"
 base_do_configure() {
 	:
 }
