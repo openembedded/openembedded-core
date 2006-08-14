@@ -5,7 +5,6 @@ HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
 DEPENDS += "m4-native"
 RDEPENDS_${PN} = "m4 gnu-config"
-RRECOMMENDS_${PN} = "automake"
 PR = "r4"
 
 SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.bz2 \
