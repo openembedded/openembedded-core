@@ -1,0 +1,10 @@
+--- /tmp/configure.ac	2005-06-17 21:26:17.519157272 +0200
++++ libXaw-7.0.2/configure.ac	2005-06-17 21:26:34.832525240 +0200
+@@ -10,7 +10,6 @@
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ 
+ AM_CONFIG_HEADER(config.h)
+-AC_CONFIG_AUX_DIR(.)
+ 
+ # Check for progs
+ AC_PROG_CC

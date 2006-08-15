@@ -1,4 +1,5 @@
-PV = "0.0+cvs${SRCDATE}"
+PV = "0.0+cvs${FIXEDSRCDATE}"
+FIXEDSRCDATE = "${@bb.data.getVar('FILE', d, 1).split('_')[-1].split('.')[0]}"
 LICENSE = "BSD-X"
 SECTION = "x11/libs"
 PRIORITY = "optional"

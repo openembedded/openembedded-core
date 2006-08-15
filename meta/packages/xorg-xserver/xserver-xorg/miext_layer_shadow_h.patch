@@ -1,0 +1,11 @@
+--- temp/xorg-server-X11R7.0-1.0.1/miext/layer/Makefile.am	2005-12-01 23:02:44.000000000 -0700
++++ xorg-server-X11R7.0-1.0.1/miext/layer/Makefile.am	2006-04-18 23:16:04.315823560 -0600
+@@ -2,7 +2,7 @@
+ 
+ AM_CFLAGS = $(DIX_CFLAGS) @SERVER_DEFINES@ @MODULE_DEFINES@ @LOADER_DEFINES@
+ 
+-INCLUDES = -I$(top_srcdir)/hw/xfree86/os-support
++INCLUDES = -I$(top_srcdir)/miext/shadow -I$(top_srcdir)/hw/xfree86/os-support
+ 
+ liblayer_la_SOURCES =	\
+ 	layer.h		\

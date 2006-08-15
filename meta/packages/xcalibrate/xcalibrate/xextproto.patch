@@ -1,0 +1,11 @@
+--- XCalibrate/configure.ac.orig	2006-03-08 14:57:07.000000000 +0100
++++ XCalibrate/configure.ac	2006-03-08 14:57:14.000000000 +0100
+@@ -7,7 +7,7 @@
+ AC_PROG_LIBTOOL
+ 
+ # Check for X
+-PKG_CHECK_MODULES(XCALIBRATE, x11 xextensions xcalibrateext)
++PKG_CHECK_MODULES(XCALIBRATE, x11 xextproto xcalibrateext)
+ 		  
+ AC_OUTPUT([Makefile
+            xcalibrate.pc])

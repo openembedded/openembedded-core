@@ -1,0 +1,23 @@
+--- XvMC/configure.ac.old	2004-09-18 13:16:31.000000000 +0100
++++ XvMC/configure.ac	2004-09-18 13:16:32.000000000 +0100
+@@ -14,4 +14,5 @@
+ AC_OUTPUT([Makefile
+            hw/Makefile
+ 	   hw/i810/Makefile
++	   hw/via/Makefile
+            xvmc.pc])
+--- /dev/null	2004-06-13 02:32:19.000000000 +0100
++++ XvMC/hw/via/Makefile.am	2004-09-18 13:16:01.000000000 +0100
+@@ -0,0 +1,7 @@
++AM_CFLAGS = $(XVMC_CFLAGS)
++libviaXvMC_la_LIBADD = $(XVMC_LIBS) -lxf86drm
++
++lib_LTLIBRARIES = libviaXvMC.la
++
++libviaXvMC_la_SOURCES = viaXvMC.c viaXvMC.h viaLowLevel.c viaLowLevel.h \
++		viaXvMCPriv.h
+--- XvMC/hw/Makefile.am.old	2004-10-17 22:34:27.000000000 +0100
++++ XvMC/hw/Makefile.am	2004-10-17 22:34:31.000000000 +0100
+@@ -1 +1 @@
+-SUBDIRS = i810
++SUBDIRS = i810 via

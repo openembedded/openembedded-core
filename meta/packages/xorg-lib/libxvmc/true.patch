@@ -1,0 +1,11 @@
+--- XvMC/hw/via/viaXvMC.c.old	2004-10-18 20:54:49.000000000 +0100
++++ XvMC/hw/via/viaXvMC.c	2004-10-18 20:55:03.000000000 +0100
+@@ -43,6 +43,8 @@
+ #include <xf86drm.h>
+ #include <pthread.h>
+ #include "vldXvMC.h"
++
++#define TRUE 1
+     
+ #define SAREAPTR(ctx) ((ViaXvMCSAreaPriv *) \
+ 		       (((CARD8 *)(ctx)->sAreaAddress) +	\

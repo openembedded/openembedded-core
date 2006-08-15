@@ -1,0 +1,30 @@
+--- xorg-server-X11R7.0-1.0.1/XpConfig/C/print/models/HPLJ4050-PS/fonts/Makefile.am.orig	2006-06-23 10:20:42.126095128 -0600
++++ xorg-server-X11R7.0-1.0.1/XpConfig/C/print/models/HPLJ4050-PS/fonts/Makefile.am	2006-06-23 10:20:50.923757680 -0600
+@@ -1,6 +1,6 @@
+ xpcdir = @xpconfigdir@/C/print/models/HPLJ4050-PS/fonts
+ 
+-parentdir = $(DESTDIR)/@xpconfigdir@/C/print/models/PSdefault/fonts
++parentdir = @xpconfigdir@/C/print/models/PSdefault/fonts
+ 
+ XPFONTS = \
+         AvantGarde-Book.pmf \
+--- xorg-server-X11R7.0-1.0.1/XpConfig/C/print/models/CANONC3200-PS/fonts/Makefile.am.orig	2006-06-23 10:21:02.877940368 -0600
++++ xorg-server-X11R7.0-1.0.1/XpConfig/C/print/models/CANONC3200-PS/fonts/Makefile.am	2006-06-23 10:21:11.903568264 -0600
+@@ -1,6 +1,6 @@
+ xpcdir = @xpconfigdir@/C/print/models/CANONC3200-PS/fonts
+ 
+-parentdir = $(DESTDIR)/@xpconfigdir@/C/print/models/PSdefault/fonts
++parentdir = @xpconfigdir@/C/print/models/PSdefault/fonts
+ 
+ XPFONTS = \
+         AvantGarde-Book.pmf \
+--- xorg-server-X11R7.0-1.0.1/XpConfig/C/print/models/SPSPARC2/fonts/Makefile.am.orig	2006-06-23 10:21:22.893897480 -0600
++++ xorg-server-X11R7.0-1.0.1/XpConfig/C/print/models/SPSPARC2/fonts/Makefile.am	2006-06-23 10:21:28.412058592 -0600
+@@ -1,6 +1,6 @@
+ xpcdir = @xpconfigdir@/C/print/models/SPSPARC2/fonts
+ 
+-parentdir = $(DESTDIR)/@xpconfigdir@/C/print/models/PSdefault/fonts
++parentdir = @xpconfigdir@/C/print/models/PSdefault/fonts
+ 
+ XPFONTS = \
+         Courier-Bold.pmf \

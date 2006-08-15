@@ -1,0 +1,51 @@
+--- liblbxutil-1.0.0/configure.ac.old	2006-03-31 02:38:44.000000000 -0500
++++ liblbxutil-1.0.0/configure.ac	2006-03-31 02:39:06.000000000 -0500
+@@ -60,4 +60,5 @@ XORG_RELEASE_VERSION
+ 
+ AC_OUTPUT([Makefile
+ 	   src/Makefile
++	   src/image/Makefile
+ 	   lbxutil.pc])
+--- liblbxutil-1.0.0/src/Makefile.am.old	2006-03-31 02:38:51.000000000 -0500
++++ liblbxutil-1.0.0/src/Makefile.am	2006-03-31 02:39:49.000000000 -0500
+@@ -1,9 +1,6 @@
+ lib_LTLIBRARIES = liblbxutil.la
+ 
+-noinst_PROGRAMS = mkg3states
+-
+-mkg3states_SOURCES =				\
+-	$(srcdir)/image/mkg3states.c
++SUBDIRS = image
+ 
+ liblbxutil_la_SOURCES =				\
+ 	$(srcdir)/lbx_zlib/reqstats.h		\
+@@ -28,9 +25,8 @@ INCLUDES = @LBXUTIL_CFLAGS@ 
+ 
+ $(srcdir)/image/dfaxg42d.c: g3states.h
+ 
+-g3states.h: mkg3states
+-	-rm -f g3states.h
+-	./mkg3states -c > g3states.h_ && mv g3states.h_ g3states.h
++g3states.h: image/mkg3states
++	./image/mkg3states -c > g3states.h_ && mv g3states.h_ g3states.h
+ 
+ liblbxutil_la_LDFLAGS = -version-number 1:0:0
+ 
+--- liblbxutil-1.0.0/src/image/Makefile.am.old	2006-03-31 02:41:19.000000000 -0500
++++ liblbxutil-1.0.0/src/image/Makefile.am	2006-03-31 02:40:40.000000000 -0500
+@@ -0,0 +1,15 @@
++# evil hack
++CFLAGS=$(CFLAGS_FOR_BUILD)
++CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
++LDFLAGS=$(LDFLAGS_FOR_BUILD)
++
++CC=$(CC_FOR_BUILD)
++LIBTOOL = @LIBTOOL@ --tag=CC
++
++noinst_PROGRAMS = mkg3states
++
++mkg3states_SOURCES =				\
++	mkg3states.c
++
++mkg3states_CFLAGS=$(CFLAGS_FOR_BUILD)
++mkg3states_LDFLAGS=$(LDFLAGS_FOR_BUILD)
