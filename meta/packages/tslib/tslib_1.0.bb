@@ -14,7 +14,7 @@ SRC_URI = "svn://svn.berlios.de/svnroot/repos/tslib/tags/tslib;module=${PV};prot
 	   file://tslib.sh"
 SRC_URI_append_mnci += " file://devfs.patch;patch=1"
 SRC_URI_append_mnci += " file://event1.patch;patch=1"
-S = "${WORKDIR}/1.0-rc1"
+S = "${WORKDIR}/${PV}"
 LICENSE = "LGPL"
 CONFFILES_${PN} = "${sysconfdir}/ts.conf"
 
