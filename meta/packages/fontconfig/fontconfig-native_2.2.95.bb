@@ -1,12 +1,13 @@
 SECTION = "base"
 LICENSE = "BSD"
-include fontconfig_${PV}.bb
+require fontconfig_${PV}.bb
 inherit native
 DEPENDS = "freetype-native expat-native zlib-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/fontconfig-${PV}"
 SRC_URI += " file://stop-fc-cache.patch;patch=1"
 
 EXTRA_OEMAKE = ""
+EXTRA_OECONF += "--with-freetype-config=${STAGING_BINDIR}/freetype-config-native"
 
 do_stage () {
 	oe_runmake install
