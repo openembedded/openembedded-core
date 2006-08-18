@@ -8,4 +8,4 @@ S = "${WORKDIR}/xextproto-${PV}"
 
 inherit native autotools pkgconfig
 
-PROVIDES = "xextensions-native"
+#PROVIDES = "xextensions-native"

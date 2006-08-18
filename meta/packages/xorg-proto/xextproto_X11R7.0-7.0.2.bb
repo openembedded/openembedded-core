@@ -1,6 +1,6 @@
 require xorg-proto-common.inc
 
-PROVIDES = "xextensions"
+#PROVIDES = "xextensions"
 
 #DESCRIPTION = ""
 
