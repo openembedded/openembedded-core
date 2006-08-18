@@ -2,7 +2,7 @@ DESCRIPTION = "Perl is a popular scripting language."
 MAINTAINER="David Karlstrom <daka@thg.se>"
 HOMEPAGE = "http://www.perl.org/"
 LICENSE = "Artistic|GPL"
-PR = "r1"
+PR = "r3"
 
 SECTION = "libs"
 inherit native
@@ -18,9 +18,9 @@ PARALLEL_MAKE = ""
 
 do_configure () {
     ./Configure					\
-    -Dcc="${BUILD_CC}"				\
-    -Dcflags="${BUILD_CFLAGS}"			\
-    -Dldflags="${BUILD_LDFLAGS} -Wl,-rpath,${STAGING_LIBDIR}"		\
+    -Dcc="${CC}"				\
+    -Dcflags="${CFLAGS}"			\
+    -Dldflags="$LDFLAGS}"		\
     -Dusethreads				\
     -Duselargefiles				\
     -Dprefix=${prefix}				\

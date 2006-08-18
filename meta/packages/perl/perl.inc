@@ -46,7 +46,9 @@ do_compile() {
 
 do_install() {
 	oe_runmake install
-	mv ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
+	# Make sure the shared library is configured before trying to move it
+	grep -q "useshrplib='false'" ${S}/config.sh ||
+		mv ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
 	( cd ${D}/usr/bin/; rm perl; ln -s perl${PV} perl )
 }
 
@@ -65,9 +67,9 @@ python populate_packages_prepend () {
 	do_split_packages(d, libdir, '(.*)\.(pm|pl)', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True)
 }
 
-PACKAGES = "perl perl-misc perl-lib perl-dev perl-pod"
+PACKAGES = "perl-dbg perl perl-misc perl-lib perl-dev perl-pod"
 FILES_${PN} = "/usr/bin/perl /usr/bin/perl${PV}"
 FILES_${PN}-lib = "/usr/lib/libperl.so*"
 FILES_${PN}-dev = "/usr/lib/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/CORE/"
 FILES_${PN}-pod = "/usr/lib/perl5/${PV}/pod"
-FILES_perl-misc = "/usr/bin/"
+FILES_perl-misc = "/usr/bin/*"
