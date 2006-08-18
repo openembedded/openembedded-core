@@ -25,20 +25,21 @@ ENABLE_BINARY_LOCALE_GENERATION ?= "0"
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
 BINARY_LOCALE_ARCHES ?= "arm.*"
 
-PACKAGES = "glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
-PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-*"
+PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
+PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* libc6*"
 
 libc_baselibs = "/lib/libc* /lib/libm* /lib/ld* /lib/libpthread* /lib/libresolv* /lib/librt* /lib/libutil* /lib/libnsl* /lib/libnss_files* /lib/libnss_compat* /lib/libnss_dns* /lib/libdl* /lib/libanl* /lib/libBrokenLocale*"
 
-FILES_${PN} = "${sysconfdir} ${libc_baselibs} /sbin/ldconfig ${libexecdir} ${datadir}/zoneinfo"
+FILES_${PN} = "${sysconfdir} ${libc_baselibs} /sbin/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
 FILES_ldd = "${bindir}/ldd"
 FILES_libsegfault = "/lib/libSegFault*"
 FILES_glibc-extra-nss = "/lib/libnss*"
 FILES_sln = "/sbin/sln"
 FILES_glibc-dev_append = " ${libdir}/*.o ${bindir}/rpcgen"
 FILES_nscd = "${sbindir}/nscd*"
-FILES_glibc-utils = "${bindir} ${sbindir}"
-FILES_glibc-gconv = "${libdir}/gconv"
+FILES_glibc-utils = "${bindir}/* ${sbindir}/*"
+FILES_glibc-gconv = "${libdir}/gconv/*"
+FILES_${PN}-dbg += " ${libdir}/gconv/.debug"
 FILES_catchsegv = "${bindir}/catchsegv"
 RDEPENDS_catchsegv = "libsegfault"
 FILES_glibc-pcprofile = "/lib/libpcprofile.so"
@@ -77,17 +78,10 @@ do_install() {
 		grep -v $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
 		mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
 	done
-	# If indicated, only build a limited selection of locales
-	if [ "${LIMIT_BUILT_LOCALES}" != "${LIMIT_BUILT_LOCALES}" ]; then
-		for i in ${LIMIT_BUILT_LOCALES}; do
-			grep $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
-			mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
-		done
-	fi
 	rm -f ${D}/etc/rpc
 }
 
-TMP_LOCALE="/tmp/locale/${libdir}/locale"
+TMP_LOCALE="/tmp/locale${libdir}/locale"
 
 locale_base_postinst() {
 #!/bin/sh
@@ -102,6 +96,7 @@ if [ -f ${libdir}/locale/locale-archive ]; then
         cp ${libdir}/locale/locale-archive ${TMP_LOCALE}/
 fi
 localedef --inputfile=${datadir}/i18n/locales/%s --charmap=%s --prefix=/tmp/locale %s
+mkdir -p ${libdir}/locale/
 mv ${TMP_LOCALE}/locale-archive ${libdir}/locale/
 rm -rf ${TMP_LOCALE}
 }
@@ -204,12 +199,7 @@ python package_do_split_gconvs () {
 		if deps != []:
 			bb.data.setVar('RDEPENDS_%s' % pkg, " ".join(deps), d)
 
-	use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
-	if use_bin:
-		do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern='glibc-localedata-%s', description='locale definition for %s', hook=calc_locale_deps, extra_depends='', aux_files_pattern_verbatim=binary_locales_dir + '/%s')
-	else:
-		do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern='glibc-localedata-%s', description='locale definition for %s', hook=calc_locale_deps, extra_depends='')
-		bb.note("generation of binary locales disabled. this may break i18n!")
+	do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern='glibc-localedata-%s', description='locale definition for %s', hook=calc_locale_deps, extra_depends='')
 	bb.data.setVar('PACKAGES', bb.data.getVar('PACKAGES', d) + ' glibc-gconv', d)
 
 	f = open(os.path.join(bb.data.getVar('WORKDIR', d, 1), "SUPPORTED"), "r")
@@ -248,8 +238,12 @@ python package_do_split_gconvs () {
 		target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
 		qemu = "qemu-%s" % target_arch
 		pkgname = 'locale-base-' + legitimize_package_name(name)
-
-		bb.data.setVar('RDEPENDS_%s' % pkgname, 'glibc-localedata-%s glibc-charmap-%s' % (legitimize_package_name(locale), legitimize_package_name(encoding)), d)
+		m = re.match("(.*)\.(.*)", name)
+		if m:
+			glibc_name = "%s.%s" % (m.group(1), m.group(2).lower().replace("-",""))
+		else:
+			glibc_name = name
+		bb.data.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('glibc-binary-localedata-%s' % glibc_name), d)
 		rprovides = 'virtual-locale-%s' % legitimize_package_name(name)
 		m = re.match("(.*)_(.*)", name)
 		if m:
@@ -262,7 +256,7 @@ python package_do_split_gconvs () {
 		path = bb.data.getVar("PATH", d, 1)
 		i18npath = os.path.join(treedir, datadir, "i18n")
 
-		localedef_opts = "--force --old-style --no-archive --prefix=%s --inputfile=%s/i18n/locales/%s --charmap=%s %s" % (treedir, datadir, locale, encoding, locale)
+		localedef_opts = "--force --old-style --no-archive --prefix=%s --inputfile=%s/i18n/locales/%s --charmap=%s %s" % (treedir, datadir, locale, encoding, name)
 		cmd = "PATH=\"%s\" I18NPATH=\"%s\" %s -L %s %s/bin/localedef %s" % (path, i18npath, qemu, treedir, treedir, localedef_opts)
 		bb.note("generating locale %s (%s)" % (locale, encoding))
 		if os.system(cmd):
@@ -281,20 +275,33 @@ python package_do_split_gconvs () {
 		bb.build.exec_func("do_prep_locale_tree", d)
 
 	# Reshuffle names so that UTF-8 is preferred over other encodings
+	non_utf8 = []
 	for l in encodings.keys():
 		if len(encodings[l]) == 1:
 			output_locale(l, l, encodings[l][0])
+			if encodings[l][0] != "UTF-8":
+				non_utf8.append(l)
 		else:
 			if "UTF-8" in encodings[l]:
 				output_locale(l, l, "UTF-8")
 				encodings[l].remove("UTF-8")
+			else:
+				non_utf8.append(l)
 			for e in encodings[l]:
-				output_locale('%s-%s' % (l, e), l, e)			
+				output_locale('%s.%s' % (l, e), l, e)
+
+	if non_utf8 != []:
+		bb.note("the following locales are supported only in legacy encodings:")
+		bb.note("  " + " ".join(non_utf8))
 
 	use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
 	if use_bin:
 		bb.note("collecting binary locales from locale tree")
 		bb.build.exec_func("do_collect_bins_from_locale_tree", d)
+		do_split_packages(d, binary_locales_dir, file_regex='(.*)', output_pattern='glibc-binary-localedata-%s', description='binary locale definition for %s', extra_depends='', allow_dirs=True)
+	else:
+		bb.note("generation of binary locales disabled. this may break i18n!")
+
 }
 
 # We want to do this indirection so that we can safely 'return'

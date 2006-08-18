@@ -1,0 +1,9 @@
+Create a configparms file which disabled no-z-defs.
+This is required to build a working glibs for sh4,
+without there will be a lot linker errors during the build.
+
+diff -duNr libc.orig/configparms libc/configparms
+--- libc.orig/configparms	1970-01-01 10:00:00.000000000 +1000
++++ libc/configparms	2006-02-23 14:08:18.000000000 +1100
+@@ -0,0 +1 @@
++no-z-defs=yes

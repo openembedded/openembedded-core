@@ -1,5 +1,5 @@
 SECTION = "libs"
-include glibc_${PV}.bb
+require glibc_${PV}.bb
 
 DEFAULT_PREFERENCE = "-1"
 

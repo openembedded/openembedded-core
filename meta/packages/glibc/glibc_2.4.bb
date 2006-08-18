@@ -3,8 +3,13 @@ HOMEPAGE = "http://www.gnu.org/software/libc/libc.html"
 LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "required"
-DEFAULT_PREFERENCE = "-1"
-PR = "r4"
+# DEFAULT_PREFERENCE = "-1"
+PR = "r10"
+
+# the -isystem in bitbake.conf screws up glibc do_stage
+BUILD_CPPFLAGS = "-I${STAGING_DIR}/${BUILD_SYS}/include"
+TARGET_CPPFLAGS = "-I${STAGING_DIR}/${TARGET_SYS}/include"
+
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glibc-2.4"
 
@@ -53,12 +58,17 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-2.4.tar.bz2 \
            file://nptl-crosscompile.patch;patch=1 \
 	   file://glibc-2.4-compile.patch;patch=1 \
 	   file://fixup-aeabi-syscalls.patch;patch=1 \
+	   file://zecke-sane-readelf.patch;patch=1 \
 	   file://generic-bits_select.h \
 	   file://generic-bits_types.h \
 	   file://generic-bits_typesizes.h \
 	   file://generic-bits_time.h \
            file://etc/ld.so.conf \
            file://generate-supported.mk"
+
+# Build fails on sh3 and sh4 without additional patches
+SRC_URI_append_sh3 = " file://no-z-defs.patch;patch=1"
+SRC_URI_append_sh4 = " file://no-z-defs.patch;patch=1"
 
 S = "${WORKDIR}/glibc-2.4"
 B = "${WORKDIR}/build-${TARGET_SYS}"
@@ -109,14 +119,6 @@ do_munge() {
 	rm -f ${S}/ports/sysdeps/unix/sysv/linux/arm/bits/fenv.h
 	# Obsoleted by sysdeps/gnu/bits/utmp.h
 	rm -f ${S}/ports/sysdeps/unix/sysv/linux/arm/bits/utmp.h
-
-	# http://www.handhelds.org/hypermail/oe/51/5135.html
-	# Some files were moved around between directories on
-	# 2005-12-21, which means that any attempt to check out
-	# from CVS using a datestamp older than that will be doomed.
-	#
-	# This is a workaround for that problem.
-	rm -rf ${S}/bits
 }
 
 addtask munge before do_patch after do_unpack
@@ -198,4 +200,4 @@ do_stage() {
 	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${CROSS_DIR}/${TARGET_SYS}/lib/libc.so
 }
 
-include glibc-package.bbclass
+require glibc-package.bbclass

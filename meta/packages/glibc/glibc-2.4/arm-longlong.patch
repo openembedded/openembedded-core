@@ -54,5 +54,5 @@
 +#if defined(__ARM_ARCH_5__) || defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__)
 +/* Nothing required.  */
 +#else
-+#include <sysdeps/generic/mp_clz_tab.c>
++#include <stdlib/mp_clz_tab.c>
 +#endif

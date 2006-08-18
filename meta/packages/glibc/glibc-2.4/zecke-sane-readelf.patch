@@ -1,0 +1,149 @@
+Index: glibc-2.4/configure
+===================================================================
+--- glibc-2.4.orig/configure	2006-03-06 12:18:56.000000000 +0100
++++ glibc-2.4/configure	2006-08-06 14:10:51.000000000 +0200
+@@ -5488,6 +5488,95 @@
+     fi
+   fi
+ 
++### XXXX copy and pasted
++# Check for readelf
++# Extract the first word of "$target_alias-readelf", so it can be a program name with args.
++set dummy $target_alias-readelf; ac_word=$2
++{ echo "$as_me:$LINENO: checking for $ac_word" >&5
++echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
++if test "${ac_cv_prog_READELF+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++  if test -n "$READELF"; then
++  ac_cv_prog_READELF="$READELF" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++  for ac_exec_ext in '' $ac_executable_extensions; do
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; }; then
++    ac_cv_prog_READELF="$target_alias-readelf"
++    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++done
++IFS=$as_save_IFS
++
++fi
++fi
++READELF=$ac_cv_prog_READELF
++if test -n "$READELF"; then
++  { echo "$as_me:$LINENO: result: $READELF" >&5
++echo "${ECHO_T}$READELF" >&6; }
++else
++  { echo "$as_me:$LINENO: result: no" >&5
++echo "${ECHO_T}no" >&6; }
++fi
++
++
++if test -z "$ac_cv_prog_READELF"; then
++  if test "$build" = "$target"; then
++    ac_ct_READELF=$READELF
++    # Extract the first word of "readelf", so it can be a program name with args.
++set dummy readelf; ac_word=$2
++{ echo "$as_me:$LINENO: checking for $ac_word" >&5
++echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
++if test "${ac_cv_prog_ac_ct_READELF+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++  if test -n "$ac_ct_READELF"; then
++  ac_cv_prog_ac_ct_READELF="$ac_ct_READELF" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++  for ac_exec_ext in '' $ac_executable_extensions; do
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; }; then
++    ac_cv_prog_ac_ct_READELF="readelf"
++    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++done
++IFS=$as_save_IFS
++
++  test -z "$ac_cv_prog_ac_ct_READELF" && ac_cv_prog_ac_ct_READELF="readelf"
++fi
++fi
++ac_ct_READELF=$ac_cv_prog_ac_ct_READELF
++if test -n "$ac_ct_READELF"; then
++  { echo "$as_me:$LINENO: result: $ac_ct_READELF" >&5
++echo "${ECHO_T}$ac_ct_READELF" >&6; }
++else
++  { echo "$as_me:$LINENO: result: no" >&5
++echo "${ECHO_T}no" >&6; }
++fi
++
++    READELF=ac_ct_READELF
++  else
++    READELF="readelf"
++  fi
++else
++  READELF="$ac_cv_prog_READELF"
++fi
++
++### XXXX copy and pasted
++
+   echo "$as_me:$LINENO: checking for .preinit_array/.init_array/.fini_array support" >&5
+ echo $ECHO_N "checking for .preinit_array/.init_array/.fini_array support... $ECHO_C" >&6
+ if test "${libc_cv_initfini_array+set}" = set; then
+@@ -5507,7 +5596,7 @@
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; }
+   then
+-    if readelf -S conftest | fgrep INIT_ARRAY > /dev/null; then
++    if $READELF -S conftest | fgrep INIT_ARRAY > /dev/null; then
+       libc_cv_initfini_array=yes
+     else
+       libc_cv_initfini_array=no
+@@ -5801,7 +5890,7 @@
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; }
+   then
+-    if readelf -S conftest.so | grep '\.rel\(a\|\)\.dyn' > /dev/null; then
++    if $READELF -S conftest.so | grep '\.rel\(a\|\)\.dyn' > /dev/null; then
+       libc_cv_z_combreloc=yes
+     else
+       libc_cv_z_combreloc=no
+Index: glibc-2.4/configure.in
+===================================================================
+--- glibc-2.4.orig/configure.in	2006-03-01 10:17:40.000000000 +0100
++++ glibc-2.4/configure.in	2006-08-06 14:09:31.000000000 +0200
+@@ -1350,6 +1350,8 @@
+     fi
+   fi
+ 
++  AC_CHECK_TARGET_TOOL([READELF],[readelf],[readelf],[$PATH])
++
+   AC_CACHE_CHECK(for .preinit_array/.init_array/.fini_array support,
+ 		 libc_cv_initfini_array, [dnl
+   cat > conftest.c <<EOF
+@@ -1361,7 +1363,7 @@
+   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest conftest.c
+ 		     -static -nostartfiles -nostdlib 1>&AS_MESSAGE_LOG_FD])
+   then
+-    if readelf -S conftest | fgrep INIT_ARRAY > /dev/null; then
++    if $READELF -S conftest | fgrep INIT_ARRAY > /dev/null; then
+       libc_cv_initfini_array=yes
+     else
+       libc_cv_initfini_array=no
+@@ -1543,7 +1545,7 @@
+ dnl introducing new options this is not easily doable.  Instead use a tool
+ dnl which always is cross-platform: readelf.  To detect whether -z combreloc
+ dnl look for a section named .rel.dyn.
+-    if readelf -S conftest.so | grep '\.rel\(a\|\)\.dyn' > /dev/null; then
++    if $READELF -S conftest.so | grep '\.rel\(a\|\)\.dyn' > /dev/null; then
+       libc_cv_z_combreloc=yes
+     else
+       libc_cv_z_combreloc=no
