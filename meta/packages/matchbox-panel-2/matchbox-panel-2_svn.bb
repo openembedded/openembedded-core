@@ -1,3 +1,6 @@
+LICENSE = "GPLv2"
+PRIORITY = "optional"
+MAINTAINER = "Chris Lord <chris@openedhand.com>"
 PV = "0.0+svn${SRCDATE}"
 DEPENDS = "gtk+ startup-notification"
 
@@ -7,5 +10,9 @@ EXTRA_OECONF = "--enable-startup-notification"
 
 S = ${WORKDIR}/${PN}
 
-inherit autotools
+FILES_${PN} += "${libdir}/matchbox-panel/*.so.*"
+FILES_${PN}-dev += "${libdir}/matchbox-panel/*.so ${libdir}/matchbox-panel/*.la \
+		   ${libdir}/matchbox-panel/*.a"
+
+inherit autotools pkgconfig
 
