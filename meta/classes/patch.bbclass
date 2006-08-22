@@ -21,12 +21,20 @@ def patch_init():
 	
 		def __str__(self):
 			return "Command Error: exit status: %d  Output:\n%s" % (self.status, self.output)
+
+	class NotFoundError(Exception):
+		def __init__(self, path):
+			self.path = path
+		def __str__(self):
+			return "Error: %s not found." % self.path
 	
 	def runcmd(args, dir = None):
 		import commands
 	
 		if dir:
 			olddir = os.path.abspath(os.curdir)
+			if not os.path.exists(dir):
+				raise NotFoundError(dir)
 			os.chdir(dir)
 			# print("cwd: %s -> %s" % (olddir, self.dir))
 	
@@ -120,9 +128,8 @@ def patch_init():
 					pass
 				else:
 					raise PatchError("Unable to clean patches from tree:\n"+str(sys.exc_value))
-			except OSError:
-				if str(sys.exc_value).startswith('OSError: [Errno 2]'):
-					pass
+			except NotFoundError:
+				pass
 			runcmd(["rm", "-rf", os.path.join(self.dir, "patches"), os.path.join(self.dir, ".pc")])
 			self.initialized = True
 	
@@ -311,6 +318,8 @@ def patch_init():
 	g["QuiltTree"] = QuiltTree
 	g["Resolver"] = Resolver
 	g["UserResolver"] = UserResolver
+	g["NotFoundError"] = NotFoundError
+	g["CmdError"] = CmdError
 
 addtask patch after do_unpack
 do_patch[dirs] = "${WORKDIR}"
@@ -400,6 +409,10 @@ python base_do_patch() {
 			continue
 	
 		bb.note("Applying patch '%s'" % pname)
-		patchset.Import({"file":unpacked, "remote":url, "strippath": pnum}, True)
+		try:
+			patchset.Import({"file":unpacked, "remote":url, "strippath": pnum}, True)
+		except NotFoundError:
+			import sys
+			raise bb.build.FuncFailed(str(sys.exc_value))
 		resolver.Resolve()
 }
