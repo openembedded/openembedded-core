@@ -9,8 +9,6 @@ EXCLUDE_FROM_WORLD = "1"
 
 USE_DEVFS ?= "0"
 
-PR = "${DATE}-${TIME}"
-
 DEPENDS += "makedevs-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

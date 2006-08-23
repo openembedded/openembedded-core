@@ -10,6 +10,7 @@ DEPENDS_append=" ${EXTRA_IMAGEDEPENDS}"
 
 PACKAGES = ""
 
+do_rootfs[nostamp] = 1
 do_rootfs[dirs] = ${TOPDIR}
 do_build[nostamp] = 1
 
