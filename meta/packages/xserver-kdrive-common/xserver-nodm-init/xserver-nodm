@@ -8,8 +8,6 @@ killproc() {            # kill the named process(es)
         [ "$pid" != "" ] && kill $pid
 }
 
-
-
 case "$1" in
   start)
     # We don't want this script to block the rest of the boot process
@@ -20,28 +18,22 @@ case "$1" in
 
        echo "Starting Xserver"
        /etc/X11/Xserver &
-       
-       export DISPLAY=:0
-	       
-       while [ ! -z $TSLIB_TSDEVICE ] && [ ! -f /etc/pointercal ]
-       do
-               /usr/bin/xtscal
-       done
-
-       /etc/X11/Xsession &
     fi 
   ;;
 
   stop)
         echo "Stopping XServer"
-        killproc Xfbdev
-	killproc Xomap
-	killproc Xorg
-	killproc Xepson
+        killproc xinit
+  ;;
+
+  restart)
+	$0 stop
+        sleep 1
+        $0 start
   ;;
 
   *)
-        echo "usage: $0 { start | stop }"
+        echo "usage: $0 { start | stop | restart }"
   ;;
 esac
 

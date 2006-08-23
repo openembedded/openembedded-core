@@ -1,18 +1,19 @@
 #!/bin/sh
 #
 
-XSERVER=Xipaq
+# note xinit needs full server path
+XSERVER=/usr/bin/Xipaq
 if [ -f /usr/bin/Xfbdev ]; then
-  XSERVER=Xfbdev
+  XSERVER=/usr/bin/Xfbdev
 fi
 if [ -f /usr/bin/Xepson ]; then
-  XSERVER=Xepson
+  XSERVER=/usr/bin/Xepson
 fi
 if [ -f /usr/bin/Xorg ]; then
-  XSERVER=Xorg
+  XSERVER=/usr/bin/Xorg
 fi
 if [ -f /usr/bin/Xomap ]; then
-  XSERVER=Xomap
+  XSERVER=/usr/bin/Xomap
 fi
 
 . /etc/profile
@@ -72,4 +73,6 @@ case `module_id` in
 		ARGS="$ARGS -rgba vrgb"
 esac
 
-exec $XSERVER $ARGS $*
+DISPLAY=':0'
+
+exec xinit /etc/X11/Xsession -- $XSERVER $DISPLAY $ARGS $*

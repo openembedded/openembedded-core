@@ -19,29 +19,9 @@ if [ -f $HOME/.profile ]; then
  . $HOME/.profile
 fi
 
-SYSSESSIONDIR=/etc/X11/Xsession-gpe.d
+SYSSESSIONDIR=/etc/X11/Xsession.d
 
-if [ ! -d $SYSSESSIONDIR ]; then
-  SYSSESSIONDIR=/etc/X11/Xsession.d
-fi
-
-# Use run-parts to source every file in the session directory; we source
-# instead of executing so that the variables and functions defined above
-# are available to the scripts, and so that they can pass variables to each
-# other.
-
-# Can't use run-parts like this, busybox doesn't support it. Use ls instead
-#SESSIONFILES=$(run-parts --list $SYSSESSIONDIR)
-
-SESSIONFILES=`ls -X $SYSSESSIONDIR`
-if [ -n "$SESSIONFILES" ]; then
-  for SESSIONFILE in $SESSIONFILES; do
-  # Test if script is executable first before sourcing it
-    if [ -x "$SYSSESSIONDIR/$SESSIONFILE" ]; then
-      . $SYSSESSIONDIR/$SESSIONFILE
-    fi
-  done
-fi
+run-parts $SYSSESSIONDIR
 
 exit 0
 
