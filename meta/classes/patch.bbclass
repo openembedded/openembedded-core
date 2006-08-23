@@ -52,12 +52,11 @@ def patch_init():
 				os.chdir(olddir)
 	
 	class PatchError(Exception):
-		def __init__(self, patch, msg):
+		def __init__(self, msg):
 			self.msg = msg
-			self.patch = patch
 	
 		def __str__(self):
-			return "Patch Error: patch %s: %s" % (os.path.basename(self.patch.file), self.msg)
+			return "Patch Error: %s" % self.msg
 	
 	import bb, bb.data, bb.fetch
 	
@@ -231,7 +230,7 @@ def patch_init():
 	
 					shutil.copyfile(patch["quiltfile"], patch["file"])
 				else:
-					raise PatchError(patch, "Unable to do a remote refresh of %s, unsupported remote url scheme %s." % (os.path.basename(patch["quiltfile"]), type))
+					raise PatchError("Unable to do a remote refresh of %s, unsupported remote url scheme %s." % (os.path.basename(patch["quiltfile"]), type))
 			else:
 				# quilt refresh
 				args = ["refresh"]
