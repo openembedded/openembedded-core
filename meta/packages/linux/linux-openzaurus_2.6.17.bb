@@ -67,6 +67,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            file://defconfig-akita \
            file://defconfig-spitz \
            file://defconfig-qemuarm \
+           file://defconfig-qemux86 \
            file://defconfig-tosa "
 
 # Add this to enable pm debug code (useful with a serial lead)
