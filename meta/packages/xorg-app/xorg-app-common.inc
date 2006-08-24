@@ -4,7 +4,7 @@ SECTION = "x11/apps"
 #MAINTAINER = ""
 LICENSE = "MIT-X"
 
-#DEPENDS = ""
+DEPENDS = "util-macros"
 XORG_PN = "${PN}"
 SRC_URI = "${XORG_MIRROR}/${@bb.data.getVar('PV', d, 1)[0:7]}/src/app/${XORG_PN}-${PV}.tar.gz"
 S = "${WORKDIR}/${XORG_PN}-${PV}"
