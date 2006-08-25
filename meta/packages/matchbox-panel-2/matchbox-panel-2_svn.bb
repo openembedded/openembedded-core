@@ -11,7 +11,7 @@ EXTRA_OECONF = "--enable-startup-notification --disable-libnotify"
 S = ${WORKDIR}/${PN}
 
 FILES_${PN} += "${libdir}/matchbox-panel/*.so.* \
-                $(datadir}/matchbox-panel"
+                ${datadir}/matchbox-panel/battery/*.png"
 FILES_${PN}-dev += "${libdir}/matchbox-panel/*.so ${libdir}/matchbox-panel/*.la \
 		   ${libdir}/matchbox-panel/*.a"
 
