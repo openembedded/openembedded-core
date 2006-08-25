@@ -2,7 +2,7 @@ LICENSE = "GPLv2"
 PRIORITY = "optional"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 PV = "0.0+svn${SRCDATE}"
-DEPENDS = "gtk+ startup-notification libapm"
+DEPENDS = "gtk+ startup-notification apmd"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
