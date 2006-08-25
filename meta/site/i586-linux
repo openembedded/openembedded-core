@@ -16,7 +16,9 @@ ac_cv_header_netinet_sctp_uio_h=${ac_cv_header_netinet_sctp_uio_h=no}
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
 ac_cv_sctp=${ac_cv_sctp=no}
 ac_cv_sizeof_char=${ac_cv_sizeof_char=1}
+ac_cv_sizeof_unsigned_char=${ac_cv_sizeof_unsigned_int=1}
 ac_cv_sizeof_char_p=${ac_cv_sizeof_char_p=4}
+ac_cv_sizeof_unsigned_char_p=${ac_cv_sizeof_unsigned_char_p=4}
 ac_cv_sizeof_int=${ac_cv_sizeof_int=4}
 ac_cv_sizeof_unsigned_int=${ac_cv_sizeof_unsigned_int=4}
 ac_cv_sizeof_long=${ac_cv_sizeof_long=4}
@@ -121,3 +123,5 @@ php_cv_lib_cookie_io_functions_use_off64_t=${php_cv_lib_cookie_io_functions_use_
 
 # xffm
 jm_cv_func_working_readdir=yes
+
+ac_cv_sizeof_int_p=${ac_cv_sizeof_int_p=4}
