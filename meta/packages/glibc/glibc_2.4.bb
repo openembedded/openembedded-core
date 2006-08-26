@@ -16,7 +16,7 @@ FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glibc-2.4"
 GLIBC_ADDONS ?= "ports,nptl,libidn"
 GLIBC_EXTRA_OECONF ?= ""
 
-GLIBC_BROKEN_LOCALES = "sid_ET tr_TR mn_MN"
+GLIBC_BROKEN_LOCALES = "sid_ET tr_TR mn_MN gez_ET bn_BD gez_ER te_IN"
 
 #
 # For now, we will skip building of a gcc package if it is a uclibc one
