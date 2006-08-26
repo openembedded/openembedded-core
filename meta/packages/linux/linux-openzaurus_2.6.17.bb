@@ -1,6 +1,6 @@
 include linux-openzaurus.inc
 
-PR = "r14"
+PR = "r15"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -55,7 +55,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            file://add-oz-release-string.patch;patch=1;status=unmergable \
            ${RPSRC}/mmcsd_large_cards-r0.patch;patch=1;status=hack \
            ${RPSRC}/mmcsd_no_scr_check-r0.patch;patch=1;status=hack \
-           ${RPSRC}/integrator_rgb-r0.patch;patch=1;status=hack \
+           ${RPSRC}/integrator_rgb-r1.patch;patch=1;status=hack \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1;status=hack \
            file://pxa-serial-hack.patch;patch=1;status=hack \
            file://connectplus-remove-ide-HACK.patch;patch=1;status=hack \
