@@ -12,7 +12,7 @@ RRECOMMENDS = "libnss-mdns"
 
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz"
 
-PACKAGES = "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-dev avahi-doc avahi-utils"
+PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-dev avahi-doc avahi-utils"
 
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core= "${libdir}/libavahi-core.so.*"
@@ -37,17 +37,24 @@ CONFFILES_avahi-daemon = "${sysconfdir}/avahi/avahi-daemon.conf"
 EXTRA_OECONF = "--with-distro=debian --disable-gdbm --disable-gtk --disable-mono --disable-monodoc --disable-qt3 --disable-qt4 --disable-python"
 inherit autotools pkgconfig update-rc.d
 
+
+do_stage() {
+	autotools_stage_all
+}
+
 INITSCRIPT_PACKAGES = "avahi-daemon avahi-dnsconfd"
 INITSCRIPT_NAME_avahi-daemon = "avahi-daemon"
 INITSCRIPT_PARAMS_avahi-daemon = "defaults 21 19"
 INITSCRIPT_NAME_avahi-dnsconfd = "avahi-dnsconfd"
 INITSCRIPT_PARAMS_avahi-dnsconfd = "defaults 22 19"
 
+# At the time the postinst runs, dbus might not be setup so only restart if running
+
 pkg_postinst_avahi-daemon () {
+	# can't do this offline
 	if [ "x$D" != "x" ]; then
 		exit 1
 	fi
-
 	grep avahi /etc/group || addgroup avahi
 	grep avahi /etc/passwd || adduser --disabled-password --system --home /var/run/avahi-daemon --no-create-home avahi --ingroup avahi -g Avahi
 
@@ -57,8 +64,6 @@ pkg_postinst_avahi-daemon () {
 		/etc/init.d/dbus-1 force-reload
 	fi
 }
-
-# dbus errors to /dev/null as at the time the postinst runs, dbus might not be setup.
 
 pkg_postrm_avahi-daemon () {
 	deluser avahi || true
