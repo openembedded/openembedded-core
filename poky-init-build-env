@@ -49,12 +49,6 @@ if ! (test -d $BBDIR && test -d $PKGDIR && test -d $BUILDDIR); then
     exit 1
 fi
 
-if ! (test -r $BUILDDIR/conf/local.conf); then
-   cat $BUILDDIR/conf/local.conf.sample | sed -e"s|POKYROOT|${OEROOT}|g" > $BUILDDIR/conf/local.conf
-   echo
-   echo "..Created initial 'build/conf/local.conf'"
-fi	
-
 BBPATH=$BBDIR
 if test x"$BBDIR" != x"$PKGDIR"; then
 	BBPATH=$PKGDIR:$BBPATH
