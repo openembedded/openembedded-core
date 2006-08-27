@@ -1,2 +1,2 @@
-include ipkg.inc
+require ipkg.inc
 PR = "r4"

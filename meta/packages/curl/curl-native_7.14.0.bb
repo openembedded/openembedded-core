@@ -1,4 +1,4 @@
-include curl_${PV}.bb
+require curl_${PV}.bb
 inherit native
 
 do_stage () {

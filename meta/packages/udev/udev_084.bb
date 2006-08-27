@@ -11,7 +11,7 @@ SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
 	   file://mount.blacklist \
 	   file://udev_network_queue.sh"
 	   
-include udev.inc
+require udev.inc
 
 INITSCRIPT_PARAMS = "start 03 S ."
 

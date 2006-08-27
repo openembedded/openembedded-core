@@ -1,4 +1,4 @@
-include mpfr_${PV}.bb
+require mpfr_${PV}.bb
 inherit native
 DEPENDS = "gmp-native"
 

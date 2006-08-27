@@ -1,4 +1,4 @@
-include file_${PV}.bb
+require file_${PV}.bb
 inherit native
 
 # avoid dependency loop

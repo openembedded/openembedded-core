@@ -4,4 +4,4 @@ with the AP and to generate dynamic encryption keys (TKIP or CCMP)."
 
 PR = "r3"
 
-include wpa-supplicant_${PV}.inc
+require wpa-supplicant_${PV}.inc

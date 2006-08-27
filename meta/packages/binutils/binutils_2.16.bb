@@ -23,4 +23,4 @@ SRC_URI += "file://binutils-2.16-thumb-glue.patch;patch=1"
 S = "${WORKDIR}/binutils-${PV}"
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
-include binutils.inc
+require binutils.inc

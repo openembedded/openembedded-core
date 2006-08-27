@@ -1,4 +1,4 @@
-include linux-openzaurus.inc
+require linux-openzaurus.inc
 
 PR = "r15"
 

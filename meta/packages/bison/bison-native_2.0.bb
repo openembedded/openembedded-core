@@ -1,4 +1,4 @@
-include bison_${PV}.bb
+require bison_${PV}.bb
 SECTION = "devel"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/bison-${PV}"
 S = "${WORKDIR}/bison-${PV}"

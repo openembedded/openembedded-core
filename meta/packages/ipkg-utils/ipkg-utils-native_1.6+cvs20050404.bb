@@ -1,4 +1,4 @@
-include ipkg-utils_${PV}.bb
+require ipkg-utils_${PV}.bb
 SRC_URI += "file://ipkg-utils-fix.patch;patch=1"
 
 RDEPENDS = ""

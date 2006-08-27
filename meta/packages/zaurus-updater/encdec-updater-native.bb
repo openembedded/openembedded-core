@@ -1,4 +1,4 @@
-include encdec-updater.bb
+require encdec-updater.bb
 inherit native
 
 do_stage() {

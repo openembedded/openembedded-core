@@ -1,5 +1,5 @@
 SECTION = "devel"
-include gcc-cross_${PV}.bb
+require gcc-cross_${PV}.bb
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils"
 DEPENDS += "${@['virtual/${TARGET_PREFIX}libc-initial',''][bb.data.getVar('TARGET_ARCH', d, 1) in ['arm', 'armeb', 'mips', 'mipsel']]}"

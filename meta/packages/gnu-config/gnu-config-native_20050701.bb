@@ -1,5 +1,5 @@
 SECTION = "base"
-include gnu-config_${PV}.bb
+require gnu-config_${PV}.bb
 
 inherit native
 

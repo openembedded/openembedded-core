@@ -1,6 +1,6 @@
 SECTION = "base"
 PR = "r0"
-include fakeroot_${PV}.bb
+require fakeroot_${PV}.bb
 inherit native
 
 SRC_URI += "file://fix-prefix.patch;patch=1"

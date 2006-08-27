@@ -1,4 +1,4 @@
-include dbus_${PV}.inc
+require dbus_${PV}.inc
 
 
 DEPENDS = "expat glib-2.0 virtual/libintl dbus-native"

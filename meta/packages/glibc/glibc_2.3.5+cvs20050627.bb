@@ -174,5 +174,5 @@ do_stage() {
 	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${CROSS_DIR}/${TARGET_SYS}/lib/libc.so
 }
 
-include glibc-package.bbclass
+require glibc-package.bbclass
 include glibc.inc

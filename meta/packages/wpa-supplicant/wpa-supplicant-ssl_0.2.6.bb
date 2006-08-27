@@ -6,4 +6,4 @@ PR = "r3"
 
 EXTRA_OEMAKE="LIBS='-L${STAGING_LIBDIR} -lssl -lcrypto' LIBS_p='-L${STAGING_LIBDIR} -lssl -lcrypto'"
 
-include wpa-supplicant_${PV}.inc
+require wpa-supplicant_${PV}.inc

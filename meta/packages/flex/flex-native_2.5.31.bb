@@ -1,4 +1,4 @@
-include flex.inc
+require flex.inc
 inherit native
 PR = "r2"
 

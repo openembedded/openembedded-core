@@ -1,4 +1,4 @@
-include m4_${PV}.bb
+require m4_${PV}.bb
 
 inherit native
 

@@ -10,7 +10,7 @@ FILESDIR = "${FILE_DIRNAME}/gcc-csl-arm"
 
 inherit autotools gettext
 
-include gcc-package.inc
+require gcc-package.inc
 
 SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm/2005q3-2/arm-2005q3-2-arm-none-linux-gnueabi.src.tar.bz2 \
            file://gcc_optab_arm.patch;patch=1"
@@ -22,6 +22,6 @@ do_unpack2() {
 
 addtask unpack2 after do_unpack before do_patch
 
-include gcc3-build.inc
+require gcc3-build.inc
 
 S = "${WORKDIR}/gcc-2005q3"

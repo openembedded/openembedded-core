@@ -1,5 +1,5 @@
 SECTION = "devel"
-include libtool_${PV}.bb
+require libtool_${PV}.bb
 
 PR = "r4"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"

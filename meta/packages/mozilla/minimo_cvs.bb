@@ -22,7 +22,7 @@ export MOZ_CO_PROJECT="suite"
 export MINIMO=1
 export MOZ_OBJDIR="${WORKDIR}/build-${TARGET_SYS}"
 
-include mozilla-cvs.inc
+require mozilla-cvs.inc
 
 do_compile () {
 	mozilla_do_compile

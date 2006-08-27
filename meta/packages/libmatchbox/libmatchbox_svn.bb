@@ -1,4 +1,4 @@
-include libmatchbox.inc
+require libmatchbox.inc
 
 PV = "1.7+svn${SRCDATE}"
 DEFAULT_PREFERENCE = "-1"

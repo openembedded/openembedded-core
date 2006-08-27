@@ -1,4 +1,4 @@
-include freetype_${PV}.bb
+require freetype_${PV}.bb
 inherit native
 DEPENDS = ""
 FILESPATH = "${FILE_DIRNAME}/freetype-${PV}:${FILE_DIRNAME}/freetype:${FILE_DIRNAME}/files"

@@ -1,3 +1,3 @@
-include dropbear.inc
+require dropbear.inc
 
 PR = "r2"

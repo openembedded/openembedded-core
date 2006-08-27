@@ -12,7 +12,7 @@ SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
 	   file://udevsynthesize.sh \
 	   file://mount.blacklist"
 
-include udev.inc
+require udev.inc
 
 INITSCRIPT_PARAMS = "start 03 S ."
 

@@ -1,4 +1,4 @@
 SECTION = "libs"
-include zlib_${PV}.bb
+require zlib_${PV}.bb
 inherit native
 DEPENDS = ""

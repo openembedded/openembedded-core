@@ -1,5 +1,5 @@
 SECTION = "base"
-include modutils_${PV}.bb
+require modutils_${PV}.bb
 PR = "r8"
 inherit cross
 S = "${WORKDIR}/modutils-${PV}"

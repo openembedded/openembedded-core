@@ -1,4 +1,4 @@
-include matchbox-panel.inc
+require matchbox-panel.inc
 PV = "0.9.2+svn${SRCDATE}"
 DEFAULT_PREFERENCE = "-1"
 

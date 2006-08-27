@@ -1,5 +1,5 @@
 SECTION = "unknown"
-include popt_${PV}.bb
+require popt_${PV}.bb
 inherit native
 
 S = "${WORKDIR}/popt-${PV}"

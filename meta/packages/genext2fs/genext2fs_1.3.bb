@@ -1,4 +1,4 @@
-include genext2fs.inc
+require genext2fs.inc
 
 PR = "r3"
 

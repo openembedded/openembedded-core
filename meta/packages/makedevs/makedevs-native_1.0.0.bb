@@ -1,5 +1,5 @@
 SECTION = "base"
-include makedevs_${PV}.bb
+require makedevs_${PV}.bb
 inherit native 
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/makedevs-${PV}"

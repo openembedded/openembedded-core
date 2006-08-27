@@ -7,7 +7,7 @@ MAINTAINER = "Gerald Britton <gbritton@doomcom.org>"
 
 inherit autotools gettext
 
-include gcc-package.inc
+require gcc-package.inc
 
 SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://gcc34-reverse-compare.patch;patch=1 \
@@ -24,4 +24,4 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://15342.patch;patch=1 \
 	   file://always-fixincperm.patch;patch=1"
 
-include gcc3-build.inc
+require gcc3-build.inc
