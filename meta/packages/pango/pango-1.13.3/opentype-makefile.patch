@@ -1,0 +1,20 @@
+--- pango/opentype/Makefile.am~	2006-07-05 14:49:28.000000000 +0200
++++ pango/opentype/Makefile.am	2006-07-05 14:49:28.000000000 +0200
+@@ -5,7 +5,7 @@
+ 
+ noinst_LTLIBRARIES = libharfbuzz-1.la
+ 
+-SOURCES =  \
++MAIN_SOURCES =  \
+ 	ftglue.c \
+ 	harfbuzz-buffer.c \
+ 	harfbuzz-dump.c \
+@@ -34,7 +34,7 @@
+ 	harfbuzz-open-private.h
+ 
+ libharfbuzz_1_la_SOURCES = \
+-	$(SOURCES) \
++	$(MAIN_SOURCES) \
+ 	$(PUBLICHEADERS) \
+ 	$(PRIVATEHEADERS)
+ 
