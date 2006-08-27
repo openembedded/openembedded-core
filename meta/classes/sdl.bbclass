@@ -26,7 +26,7 @@ sdl_do_sdl_install() {
 Note=Auto Generated... this may be not what you want
 Comment=${DESCRIPTION}
 Exec=${APPNAME}
-Icon=${APPIMAGE}
+Icon=${PN}.png
 Type=Application
 Name=${PN}
 EOF

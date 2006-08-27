@@ -64,7 +64,7 @@ def base_set_filespath(path, d):
 		overrides = overrides + ":"
 		for o in overrides.split(":"):
 			filespath.append(os.path.join(p, o))
-	bb.data.setVar("FILESPATH", ":".join(filespath), d)
+	return ":".join(filespath)
 
 FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
 
@@ -187,7 +187,7 @@ oe_libinstall() {
 		dir=`pwd`
 	fi
 	dotlai=$libname.lai
-	dir=$dir`(cd $dir; find -name "$dotlai") | sed "s/^\.//;s/\/$dotlai\$//;q"`
+	dir=$dir`(cd $dir;find . -name "$dotlai") | sed "s/^\.//;s/\/$dotlai\$//;q"`
 	olddir=`pwd`
 	__runcmd cd $dir
 
@@ -413,9 +413,9 @@ def oe_unpack_file(file, data, url = None):
 				destdir = "."
 			bb.mkdirhier("%s/%s" % (os.getcwd(), destdir))
 			cmd = 'cp %s %s/%s/' % (file, os.getcwd(), destdir)
+
 	if not cmd:
 		return True
-
 
 	dest = os.path.join(os.getcwd(), os.path.basename(file))
 	if os.path.exists(dest):
@@ -478,7 +478,8 @@ python base_eventhandler() {
 		msg += messages.get(name[5:]) or name[5:]
 	elif name == "UnsatisfiedDep":
 		msg += "package %s: dependency %s %s" % (e.pkg, e.dep, name[:-3].lower())
-	note(msg)
+	if msg:
+		note(msg)
 
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
@@ -486,7 +487,7 @@ python base_eventhandler() {
 		path_to_packages = path_to_bbfiles[:path_to_bbfiles.rindex( "packages" )]
 		monotone_revision = "<unknown>"
 		try:
-			monotone_revision = file( "%s/MT/revision" % path_to_packages ).read().strip()
+			monotone_revision = file( "%s/_MTN/revision" % path_to_packages ).read().strip()
 		except IOError:
 			pass
 		bb.data.setVar( 'OE_REVISION', monotone_revision, e.data )
@@ -519,6 +520,7 @@ python base_eventhandler() {
 addtask configure after do_unpack do_patch
 do_configure[dirs] = "${S} ${B}"
 do_configure[bbdepcmd] = "do_populate_staging"
+do_configure[deptask] = "do_populate_staging"
 base_do_configure() {
 	:
 }
@@ -645,7 +647,7 @@ python __anonymous () {
 	if need_machine:
 		import re
 		this_machine = bb.data.getVar('MACHINE', d, 1)
-		if not re.match(need_machine, this_machine):
+		if this_machine and not re.match(need_machine, this_machine):
 			raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
 
 	pn = bb.data.getVar('PN', d, 1)
@@ -719,12 +721,18 @@ ftp://ftp.kernel.org/pub	ftp://ftp.jp.kernel.org/pub
 ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.franken.de/pub/crypt/mirror/ftp.gnupg.org/gcrypt/
 ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.surfnet.nl/pub/security/gnupg/
 ftp://ftp.gnupg.org/gcrypt/     http://gulus.USherbrooke.ca/pub/appl/GnuPG/
+ftp://dante.ctan.org/tex-archive ftp://ftp.fu-berlin.de/tex/CTAN
+ftp://dante.ctan.org/tex-archive http://sunsite.sut.ac.jp/pub/archives/ctan/
+ftp://dante.ctan.org/tex-archive http://ctan.unsw.edu.au/
 ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.gnutls.org/pub/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.gnupg.org/gcrypt/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls http://www.mirrors.wiretapped.net/security/network-security/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.mirrors.wiretapped.net/pub/security/network-security/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls http://josefsson.org/gnutls/releases/
 
+
+
 ftp://.*/.*/	http://www.oesources.org/source/current/
 http://.*/.*/	http://www.oesources.org/source/current/
 }
+

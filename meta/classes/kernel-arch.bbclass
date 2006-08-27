@@ -19,6 +19,7 @@ def map_kernel_arch(a, d):
 	elif re.match('armeb$', a):		return 'arm'
 	elif re.match('powerpc$', a):		return 'ppc'
 	elif re.match('mipsel$', a):		return 'mips'
+	elif re.match('sh(3|4)$', a):		return 'sh'
 	elif a in valid_archs:			return a
 	else:
 		bb.error("cannot map '%s' to a linux kernel architecture" % a)

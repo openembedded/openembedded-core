@@ -1,8 +1,16 @@
 # IceCream distributed compiling support
-# 
+#
 # We need to create a tar.bz2 of our toolchain and set
 # ICECC_VERSION, ICECC_CXX and ICEC_CC
 #
+
+def icc_determine_gcc_version(gcc):
+    """
+    Hack to determine the version of GCC
+
+    'i686-apple-darwin8-gcc-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)'
+    """
+    return os.popen("%s --version" % gcc ).readline()[2]
 
 def create_env(bb,d):
     """
@@ -13,7 +21,7 @@ def create_env(bb,d):
     # host prefix is empty (let us duplicate the query for ease)
     prefix = bb.data.expand('${HOST_PREFIX}', d)
     if len(prefix) == 0:
-    	return ""
+        return ""
 
     import tarfile
     import socket
@@ -23,51 +31,66 @@ def create_env(bb,d):
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
     distro  = bb.data.expand('${DISTRO}', d)
     target_sys = bb.data.expand('${TARGET_SYS}',  d)
-    #float   = bb.data.getVar('${TARGET_FPU}', d)
-    float   = "anyfloat"
+    float   = bb.data.getVar('${TARGET_FPU}', d) or "hard"
     name    = socket.gethostname()
 
+    # Stupid check to determine if we have built a libc and a cross
+    # compiler.
     try:
-	os.stat(ice_dir + '/' + target_sys + '/lib/ld-linux.so.2')
-	os.stat(ice_dir + '/' + target_sys + '/bin/g++')
+        os.stat(os.path.join(ice_dir, target_sys, 'lib', 'ld-linux.so.2'))
+        os.stat(os.path.join(ice_dir, target_sys, 'bin', 'g++'))
     except:
-	return ""
+        return ""
 
-    VERSION = '3.4.3'    
+    VERSION = icc_determine_gcc_version( os.path.join(ice_dir,target_sys,"bin","g++") )
     cross_name = prefix + distro + target_sys + float +VERSION+ name
-    tar_file = ice_dir + '/ice/' + cross_name + '.tar.bz2'
+    tar_file = os.path.join(ice_dir, 'ice', cross_name + '.tar.bz2')
 
     try:
         os.stat(tar_file)
         return tar_file
     except:
-	try:
-	    os.makedirs(ice_dir+'/ice')
-	except:
-	    pass
+        try:
+            os.makedirs(os.path.join(ice_dir,'ice'))
+        except:
+            pass
 
     # FIXME find out the version of the compiler
+    # Consider using -print-prog-name={cc1,cc1plus}
+    # and            -print-file-name=specs
+
+    # We will use the GCC to tell us which tools to use
+    #  What we need is:
+    #        -gcc
+    #        -g++
+    #        -as
+    #        -cc1
+    #        -cc1plus
+    #  and we add them to /usr/bin
+
     tar = tarfile.open(tar_file, 'w:bz2')
-    tar.add(ice_dir + '/' + target_sys + '/lib/ld-linux.so.2', 
-            target_sys + 'cross/lib/ld-linux.so.2')
-    tar.add(ice_dir + '/' + target_sys + '/lib/ld-linux.so.2',
-            target_sys + 'cross/lib/ld-2.3.3.so')
-    tar.add(ice_dir + '/' + target_sys + '/lib/libc-2.3.3.so',
-            target_sys + 'cross/lib/libc-2.3.3.so')
-    tar.add(ice_dir + '/' + target_sys + '/lib/libc.so.6',
-           target_sys + 'cross/lib/libc.so.6')
-    tar.add(ice_dir + '/' + target_sys + '/bin/gcc',
-            target_sys + 'cross/usr/bin/gcc')
-    tar.add(ice_dir + '/' + target_sys + '/bin/g++',
-            target_sys + 'cross/usr/bin/g++')
-    tar.add(ice_dir + '/' + target_sys + '/bin/as',
-            target_sys + 'cross/usr/bin/as')
-    tar.add(ice_dir + '/lib/gcc/' + target_sys +'/'+ VERSION + '/specs',
-            target_sys+'cross/usr/lib/gcc/'+target_sys+'/'+VERSION+'/lib/specs')
-    tar.add(ice_dir + '/libexec/gcc/'+target_sys+'/' + VERSION + '/cc1',
-            target_sys + 'cross/usr/lib/gcc/'+target_sys+'/'+VERSION+'/lib/cc1')
-    tar.add(ice_dir + '/libexec/gcc/arm-linux/' + VERSION + '/cc1plus',
-            target_sys+'cross/usr/lib/gcc/'+target_sys+'/'+VERSION+'/lib/cc1plus')
+
+    # Now add the required files
+    tar.add(os.path.join(ice_dir,target_sys,'bin','gcc'),
+            os.path.join("usr","bin","gcc") )
+    tar.add(os.path.join(ice_dir,target_sys,'bin','g++'),
+            os.path.join("usr","bin","g++") )
+    tar.add(os.path.join(ice_dir,target_sys,'bin','as'),
+            os.path.join("usr","bin","as") )
+
+    # Now let us find cc1 and cc1plus
+    cc1 = os.popen("%s -print-prog-name=cc1" % data.getVar('CC', d, True)).read()[:-1]
+    cc1plus = os.popen("%s -print-prog-name=cc1plus" % data.getVar('CC', d, True)).read()[:-1]
+    spec = os.popen("%s -print-file-name=specs" % data.getVar('CC', d, True)).read()[:-1]
+
+    # CC1 and CC1PLUS should be there...
+    tar.add(cc1, os.path.join('usr', 'bin', 'cc1'))
+    tar.add(cc1plus, os.path.join('usr', 'bin', 'cc1plus'))
+
+    # spec - if it exists
+    if os.path.exists(spec):
+        tar.add(spec)
+
     tar.close()
     return tar_file
 
@@ -78,7 +101,7 @@ def create_path(compilers, type, bb, d):
     """
     import os
 
-    staging = bb.data.expand('${STAGING_DIR}', d) + "/ice/" + type
+    staging = os.path.join(bb.data.expand('${STAGING_DIR}', d), "ice", type)
     icecc   = bb.data.getVar('ICECC_PATH', d)
 
     # Create the dir if necessary
@@ -89,7 +112,7 @@ def create_path(compilers, type, bb, d):
 
 
     for compiler in compilers:
-        gcc_path = staging + "/" + compiler
+        gcc_path = os.path.join(staging, compiler)
         try:
             os.stat(gcc_path)
         except:
@@ -102,15 +125,14 @@ def use_icc_version(bb,d):
     # Constin native native
     prefix = bb.data.expand('${HOST_PREFIX}', d)
     if len(prefix) == 0:
-	return "no"
-	
-	
-    native = bb.data.expand('${PN}', d)	
-    blacklist = [ "-cross", "-native" ]
+        return "no"
+
+
+    blacklist = [ "cross", "native" ]
 
     for black in blacklist:
-        if black in native:
-	    return "no"
+        if bb.data.inherits_class(black, d):
+            return "no"
 
     return "yes"
 
@@ -118,13 +140,13 @@ def icc_path(bb,d,compile):
     native = bb.data.expand('${PN}', d)
     blacklist = [ "ulibc", "glibc", "ncurses" ]
     for black in blacklist:
-    	if black in native:
-    	    return ""
+        if black in native:
+            return ""
 
-    if "-native" in native:
-	compile = False
-    if "-cross"  in native:
-    	compile = False
+    blacklist = [ "cross", "native" ]
+    for black in blacklist:
+        if bb.data.inherits_class(black, d):
+            compile = False
 
     prefix = bb.data.expand('${HOST_PREFIX}', d)
     if compile and len(prefix) != 0:
@@ -151,6 +173,6 @@ do_compile_prepend() {
     export ICECC_CXX="${HOST_PREFIX}g++"
 
     if [ "${@use_icc_version(bb,d)}" = "yes" ]; then
-    	export ICECC_VERSION="${@icc_version(bb,d)}"
+        export ICECC_VERSION="${@icc_version(bb,d)}"
     fi
 }

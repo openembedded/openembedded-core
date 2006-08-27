@@ -44,6 +44,6 @@ do_stage_append () {
 }
 
 PACKAGES = "${PN} ${PN}-themes ${PN}-dev ${PN}-examples"
-FILES_${PN}-dev = "${bindir}/${PN}-config ${libdir}/pkgconfig ${libdir}/lib*.?a ${libdir}/lib*.a"
+FILES_${PN}-dev = "${bindir}/${PN}-config ${libdir}/pkgconfig ${libdir}/lib*.?a ${libdir}/lib*.a ${includedir}"
 FILES_${PN}-examples = "${bindir} ${datadir}"
 

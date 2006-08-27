@@ -64,13 +64,14 @@ def check_sanity(e):
 	if "diffstat-native" not in data.getVar('ASSUME_PROVIDED', e.data, True).split():
 		raise_sanity_error('Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf')
 	
-	# Check the MACHINE is valid
+	# Check that the MACHINE is valid
 	if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
 		raise_sanity_error('Please set a valid MACHINE in your local.conf')
 	
-	# Check the distro is valid
-	if not check_conf_exists("conf/distro/${DISTRO}.conf", e.data):
-		raise_sanity_error('Please set a valid DISTRO in your local.conf')
+	# Check that the DISTRO is valid
+	# need to take into account DISTRO renaming DISTRO
+	if not ( check_conf_exists("conf/distro/${DISTRO}.conf", e.data) or check_conf_exists("conf/distro/include/${DISTRO}.inc", e.data) ):
+		raise_sanity_error("DISTRO '%s' not found. Please set a valid DISTRO in your local.conf" % data.getVar("DISTRO", e.data, True ))
 
 	if not check_app_exists("${MAKE}", e.data):
 		raise_sanity_error('GNU make missing. Please install GNU make')

@@ -38,7 +38,7 @@ pkg_postinst_append () {
 	if [ -n "$D" ]; then
 		exit 1
 	fi
-	depmod -A
+	depmod -a
 	update-modules || true
 }
 

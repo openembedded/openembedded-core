@@ -1,7 +1,8 @@
 FILES_${PN} += '${libdir}/perl5'
+EXTRA_CPANFLAGS = ""
 
 cpan_do_configure () {
-	perl Makefile.PL
+	perl Makefile.PL ${EXTRA_CPANFLAGS}
 	if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
 		. ${STAGING_DIR}/${TARGET_SYS}/perl/config.sh
 		sed -e "s:\(SITELIBEXP = \).*:\1${sitelibexp}:; s:\(SITEARCHEXP = \).*:\1${sitearchexp}:; s:\(INSTALLVENDORLIB = \).*:\1${D}${libdir}/perl5:; s:\(INSTALLVENDORARCH = \).*:\1${D}${libdir}/perl5:" < Makefile > Makefile.new
