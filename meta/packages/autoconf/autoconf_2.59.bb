@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
 DEPENDS += "m4-native"
 RDEPENDS_${PN} = "m4 gnu-config"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.bz2 \
 	   file://program_prefix.patch;patch=1 \
