@@ -1,3 +1,3 @@
 PV := "${PV}"
 
-include automake-native.inc
+require automake-native.inc
