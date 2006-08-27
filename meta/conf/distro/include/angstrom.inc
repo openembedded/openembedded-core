@@ -6,35 +6,38 @@ DISTRO = "angstrom"
 DISTRO_NAME = "Angstrom"
 
 #Use this variable in feeds and other parts that need a URI
-ANGSTROM_URI = "http://www.angstrom-distribution.org/"
+ANGSTROM_URI = "http://www.angstrom-distribution.org"
 
 #Set the default maintainer to angstrom-dev
-MAINTAINER = "Angstrom Developers <angstrom-dev@handhelds.org>"
+MAINTAINER = "Angstrom Developers <angstrom-dev@linuxtogo.org>"
 
 #use ipkg package format with debian style naming
 #use multimachine buildrules 
 INHERIT += "package_ipk debian multimachine"
 
 #Generate locales on the buildsystem instead of on the target. Speeds up first boot, set to "1" to enable
-PREFERRED_PROVIDER_qemu-native = "qemu-qop-nogfx-native"
-ENABLE_BINARY_LOCALE_GENERATION ?= ""
+PREFERRED_PROVIDER_qemu-native = "qemu-native"
+ENABLE_BINARY_LOCALE_GENERATION ?= "1"
 
 
 #Use the ARM EABI when building for an ARM cpu. We can't use overrides
 #here because this breaks all places where ":=" is used.
-TARGET_VENDOR = "${@['','-angstrom'][bb.data.getVar('TARGET_ARCH',d,1)=='arm']}"
+#if you want to build using uclibc, specify "-uclibcgnueabi"
+TARGET_VENDOR = "-angstrom"
 TARGET_OS = "linux${@['','-gnueabi'][bb.data.getVar('TARGET_ARCH',d,1)=='arm']}"
+#uclibc (needs gcc 4.1.1 or newer)
+#TARGET_OS = "linux${@['','-uclibcgnueabi'][bb.data.getVar('TARGET_ARCH',d,1)=='arm']}"
 
 #mess with compiler flags to use -Os instead of -O2
 #Please see http://free-electrons.com/doc/embedded_linux_optimizations/img47.html for some more info
 FULL_OPTIMIZATION = "-fexpensive-optimizations -fomit-frame-pointer -frename-registers -Os"
 BUILD_OPTIMIZATION = "-Os"
+CXXFLAGS += "-fvisibility-inlines-hidden"
 
 #ARM EABI is softfloat by default, but let's make sure :)
 TARGET_FPU_arm = "soft"
 
 #Always ship these packages
-BOOTSTRAP_EXTRA_DEPENDS += "angstrom-version coreutils dropbear sysvinit"
 BOOTSTRAP_EXTRA_RDEPENDS += "angstrom-version coreutils dropbear sysvinit"
 
 #Name the generated images in a sane way
