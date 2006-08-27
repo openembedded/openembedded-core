@@ -1,4 +1,4 @@
-DESCRIPTION = "Machine Tasks for OpenedHand Poky"
+DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
 PR = "r0"
 
@@ -15,6 +15,14 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 # kernel26
 # apm
 
+# Valid only in DISTO_FEATURES:
+#
+# nfs
+# smbfs
+# ipsec
+# wifi
+# ppp
+
 # Valid COMBINED_FEATURES:
 # (These features need to be supported by both the machine and the distro)
 #
@@ -26,13 +34,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 # usbgadget
 # usbhost
 
-# Valid only in DISTO_FEATURES:
-#
-# nfs
-# smbfs
-# ipsec
-# wifi
-# ppp
 
 MACHINE_FEATURES ?= "kernel26"
 DISTRO_FEATURES ?= ""
@@ -61,7 +62,6 @@ COMBINED_FEATURES = "\
 RDEPENDS_task-base = "\
     kernel \
     ${@base_contains("MACHINE_FEATURES", "kernel26", "${task-base-kernel26-rdepends}", "",d)} \
-#    ${@base_contains("MACHINE_FEATURES", "kernel26", "${task-base-kernel26-extras-rdepends}", "",d)} \
     ${@base_contains("MACHINE_FEATURES", "apm", "${task-base-apm-rdepends}", "",d)} \
     ${@base_contains("COMBINED_FEATURES", "alsa", "${task-base-alsa-rdepends}", "",d)} \
     ${@base_contains("COMBINED_FEATURES", "ext2", "${task-base-ext2-rdepends}", "",d)} \
@@ -93,6 +93,7 @@ RRECOMMENDS_task-base = "\
 
 #
 # task-base-oh-minimal
+# An example of a small cut down machine configuration
 #
 RDEPENDS_task-base-oh-minimal = "\
     kernel \
@@ -109,9 +110,6 @@ task-base-kernel26-rdepends = "\
     keymaps \
     sysfsutils \
     module-init-tools"
-
-#task-base-kernel26-extras-rdepends = "\
-#    udev-utils"
 
 task-base-kernel26-extras-rrecommends = "\
     kernel-module-input \
