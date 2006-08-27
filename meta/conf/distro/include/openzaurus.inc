@@ -20,3 +20,6 @@ DISTRO_CHECK := "${@bb.data.getVar("DISTRO_VERSION",d,1) or bb.fatal('Remove thi
 # Set minimal version of BitBake needed
 BB_MIN_VERSION = "1.4.4"
 INHERIT += "sanity"
+
+# We want images supporting the following features (for task-base)
+DISTO_FEATURES = "nfs smbfs ipsec wifi ppp alsa bluetooth ext2 irda pcmcia usbgadget usbhost"
