@@ -93,7 +93,7 @@ def patch_init():
 					patch[param] = PatchSet.defaults[param]
 	
 			if patch.get("remote"):
-				patch["file"] = bb.fetch.localpath(patch["remote"], self.d)
+				patch["file"] = bb.data.expand(bb.fetch.localpath(patch["remote"], self.d), self.d)
 	
 			patch["filemd5"] = md5sum(patch["file"])
 	
