@@ -30,7 +30,6 @@ fi
 #
 OEROOT=`pwd`
 
-SITEDIR=$HOME/.oe/
 BBDIR=$OEROOT/bitbake/
 PKGDIR=$OEROOT/meta/
 BUILDDIR=$OEROOT/build/
@@ -41,7 +40,6 @@ PATH=$BBDIR/bin/:$PATH
 cd $BUILDDIR
 
 # Remove any symlinks from paths
-SITEDIR=`readlink -f $SITEDIR`
 BBDIR=`readlink -f $BBDIR`
 PKGDIR=`readlink -f $PKGDIR`
 BUILDDIR=`readlink -f $BUILDDIR`
@@ -55,9 +53,7 @@ BBPATH=$BBDIR
 if test x"$BBDIR" != x"$PKGDIR"; then
 	BBPATH=$PKGDIR:$BBPATH
 fi
-if test x"$SITEDIR" != x"$SITEDIR" && test -d $SITEDIR; then
-	BBPATH=$SITEDIR:$BBPATH
-fi
+BBPATH="`readlink -f $HOME/.oe`:`readlink -f $HOME/.poky`:$BBPATH"
 if test x"$PKGDIR" != x"$BUILDDIR"; then
 	BBPATH=$BUILDDIR:$BBPATH
 fi
