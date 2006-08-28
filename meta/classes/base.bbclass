@@ -13,9 +13,11 @@ def base_dep_prepend(d):
 	# INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
 	# we need that built is the responsibility of the patch function / class, not
 	# the application.
-	patchdeps = bb.data.getVar("PATCH_DEPENDS", d, 1)
-	if patchdeps and not patchdeps in bb.data.getVar("PROVIDES", d, 1):
-		deps = patchdeps
+	patchdeps = bb.data.getVar("PATCHTOOL", d, 1)
+        if patchdeps:
+		patchdeps = "%s-native" % patchdeps
+		if not patchdeps in bb.data.getVar("PROVIDES", d, 1):
+			deps = patchdeps
 
 	if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d):
 		if (bb.data.getVar('HOST_SYS', d, 1) !=
@@ -685,7 +687,7 @@ python () {
 # Patch handling
 inherit patch
 
-EXPORT_FUNCTIONS do_clean do_mrproper do_fetch do_unpack do_configure do_compile do_install do_package do_patch do_populate_pkgs do_stage
+EXPORT_FUNCTIONS do_clean do_mrproper do_fetch do_unpack do_configure do_compile do_install do_package do_populate_pkgs do_stage
 
 MIRRORS[func] = "0"
 MIRRORS () {
