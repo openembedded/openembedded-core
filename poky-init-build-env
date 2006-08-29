@@ -49,6 +49,10 @@ if ! (test -d $BBDIR && test -d $PKGDIR && test -d $BUILDDIR); then
     exit 1
 fi
 
+if ! (test -r $BUILDDIR/conf/local.conf); then
+    cp -f $BUILDDIR/conf/local.conf.sample $BUILDDIR/conf/local.conf
+fi
+
 BBPATH=$BBDIR
 if test x"$BBDIR" != x"$PKGDIR"; then
 	BBPATH=$PKGDIR:$BBPATH
