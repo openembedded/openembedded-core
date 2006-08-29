@@ -12,7 +12,8 @@ case `module_id` in
 	"Generic OMAP1510/1610/1710")
 		/usr/bin/mbinputmgr &
 		;;
-	"ARM-IntegratorCP")
+        # qemu machines.. likely need better detection 
+	"ARM-IntegratorCP" | "ARM-Versatile PB")
 		/usr/bin/mbinputmgr &
 		SHOWCURSOR="yes"
 		;;
@@ -32,7 +33,6 @@ matchbox-panel --orientation east \
                --no-session \
                --default-apps mb-applet-home,mb-applet-clock,mb-applet-battery &
 
-## eek ugly no cursor hack - transparent theme should do this
 exec matchbox-window-manager -use_cursor $SHOWCURSOR $@
 
 
