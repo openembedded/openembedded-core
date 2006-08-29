@@ -1,6 +1,19 @@
+qemu-arm poky image notes
+=========================
 
-qemu-arm quick setup notes
+Poky can generate qemu-system-arm bootable kernels and images with can
+then be used on an x86 desktop. There are two ways to run such images;
+
+Via ext2 filesystem image
 ==========================
+
+Run;
+
+qemu-ext2 <zimage-qemuarm>.bin <filesystem-qemuarm>.ext2
+
+
+Via NFS
+========
 
 As root;
 
@@ -30,10 +43,11 @@ Finally, launch:
 
 ( change perms on /dev/net/tun to run as non root )
 
-
 Notes
 =====
 
+ - You can set QEMU_MEMORY env var to control amount of available memory
+   ( defaults to 64M )
  - There is a bug in qemu in that means occasionally it will use 100% cpu.
    You will need to restart it in this situation.
 
