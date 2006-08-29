@@ -10,6 +10,6 @@ DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}libc-for-gcc
 PROVIDES = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 
 # cross build
-require gcc3-cross-build.inc
+require gcc3-build-cross.inc
 # cross packaging
 require gcc-package-cross.inc
