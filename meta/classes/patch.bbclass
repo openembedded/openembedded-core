@@ -174,6 +174,9 @@ def patch_init(d):
 		def __init__(self, dir, d):
 			PatchSet.__init__(self, dir, d)
 			self.initialized = False
+			p = os.path.join(self.dir, 'patches')
+			if not os.path.exists(p):
+				os.mkdir(p)
 
 		def Clean(self):
 			try:
@@ -306,6 +309,19 @@ def patch_init(d):
 		def Finalize(self):
 			raise NotImplementedError()
 
+	class NOOPResolver(Resolver):
+		def __init__(self, patchset):
+			self.patchset = patchset
+
+		def Resolve(self):
+			olddir = os.path.abspath(os.curdir)
+			os.chdir(self.patchset.dir)
+			try:
+				self.patchset.Push()
+			except Exception:
+				os.chdir(olddir)
+				raise sys.exc_value
+
 	# Patch resolver which relies on the user doing all the work involved in the
 	# resolution, with the exception of refreshing the remote copy of the patch
 	# files (the urls).
@@ -357,20 +373,13 @@ def patch_init(d):
 				raise
 			os.chdir(olddir)
 
-		# Throw away the changes to the patches in the patchset made by resolve()
-		def Revert(self):
-			raise NotImplementedError()
-
-		# Apply the changes to the patches in the patchset made by resolve()
-		def Finalize(self):
-			raise NotImplementedError()
-
 	g = globals()
 	g["PatchSet"] = PatchSet
 	g["PatchTree"] = PatchTree
 	g["QuiltTree"] = QuiltTree
 	g["Resolver"] = Resolver
 	g["UserResolver"] = UserResolver
+	g["NOOPResolver"] = NOOPResolver
 	g["NotFoundError"] = NotFoundError
 	g["CmdError"] = CmdError
 
@@ -394,6 +403,7 @@ python patch_do_patch() {
 	cls = patchsetmap[bb.data.getVar('PATCHTOOL', d, 1) or 'quilt']
 
 	resolvermap = {
+		"noop": NOOPResolver,
 		"user": UserResolver,
 	}
 
