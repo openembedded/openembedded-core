@@ -148,6 +148,7 @@ def exec_func_shell(func, d):
 
     deps = data.getVarFlag(func, 'deps', d)
     check = data.getVarFlag(func, 'check', d)
+    interact = data.getVarFlag(func, 'interactive', d)
     if check in globals():
         if globals()[check](func, deps):
             return
@@ -186,15 +187,16 @@ def exec_func_shell(func, d):
 
     se = so
 
-    # dup the existing fds so we dont lose them
-    osi = [os.dup(sys.stdin.fileno()), sys.stdin.fileno()]
-    oso = [os.dup(sys.stdout.fileno()), sys.stdout.fileno()]
-    ose = [os.dup(sys.stderr.fileno()), sys.stderr.fileno()]
+    if not interact:
+        # dup the existing fds so we dont lose them
+        osi = [os.dup(sys.stdin.fileno()), sys.stdin.fileno()]
+        oso = [os.dup(sys.stdout.fileno()), sys.stdout.fileno()]
+        ose = [os.dup(sys.stderr.fileno()), sys.stderr.fileno()]
 
-    # replace those fds with our own
-    os.dup2(si.fileno(), osi[1])
-    os.dup2(so.fileno(), oso[1])
-    os.dup2(se.fileno(), ose[1])
+        # replace those fds with our own
+        os.dup2(si.fileno(), osi[1])
+        os.dup2(so.fileno(), oso[1])
+        os.dup2(se.fileno(), ose[1])
 
     # execute function
     prevdir = os.getcwd()
@@ -205,20 +207,21 @@ def exec_func_shell(func, d):
     ret = os.system('%ssh -e %s' % (maybe_fakeroot, runfile))
     os.chdir(prevdir)
 
-    # restore the backups
-    os.dup2(osi[0], osi[1])
-    os.dup2(oso[0], oso[1])
-    os.dup2(ose[0], ose[1])
+    if not interact:
+        # restore the backups
+        os.dup2(osi[0], osi[1])
+        os.dup2(oso[0], oso[1])
+        os.dup2(ose[0], ose[1])
 
-    # close our logs
-    si.close()
-    so.close()
-    se.close()
+        # close our logs
+        si.close()
+        so.close()
+        se.close()
 
-    # close the backup fds
-    os.close(osi[0])
-    os.close(oso[0])
-    os.close(ose[0])
+        # close the backup fds
+        os.close(osi[0])
+        os.close(oso[0])
+        os.close(ose[0])
 
     if ret==0:
         if bb.debug_level > 0:
@@ -350,7 +353,12 @@ def mkstamp(task, d):
         return
     stamp = "%s.%s" % (data.expand(stamp, d), task)
     mkdirhier(os.path.dirname(stamp))
-    open(stamp, "w+")
+    # Remove the file and recreate to force timestamp
+    # change on broken NFS filesystems
+    if os.access(stamp, os.F_OK):
+        os.remove(stamp)
+    f = open(stamp, "w")
+    f.close()
 
 
 def add_task(task, deps, d):
