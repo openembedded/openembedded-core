@@ -572,14 +572,6 @@ addtask build after do_populate_staging
 do_build = ""
 do_build[func] = "1"
 
-do_devshell[dirs] = "${S}"
-do_devshell[nostamp] = 1
-do_devshell[interactive] = 1
-base_do_devshell() {
-	bash -i
-}
-addtask devshell
-
 # Functions that update metadata based on files outputted
 # during the build process.
 
@@ -695,7 +687,7 @@ python () {
 # Patch handling
 inherit patch
 
-EXPORT_FUNCTIONS do_clean do_mrproper do_fetch do_unpack do_configure do_compile do_install do_package do_populate_pkgs do_stage do_devshell
+EXPORT_FUNCTIONS do_clean do_mrproper do_fetch do_unpack do_configure do_compile do_install do_package do_populate_pkgs do_stage
 
 MIRRORS[func] = "0"
 MIRRORS () {
