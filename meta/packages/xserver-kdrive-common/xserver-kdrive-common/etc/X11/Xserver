@@ -69,8 +69,12 @@ case `module_id` in
 		ARGS="$ARGS -rgba rgb" ;;
 	"Generic OMAP1510/1610/1710")
 		ARGS="$ARGS -mouse /dev/input/event0" ;;
-	"ARM-IntegratorCP")
-		ARGS="$ARGS -rgba vrgb"
+	"ARM-IntegratorCP" | "ARM-Versatile PB")
+		ARGS="$ARGS -rgba vrgb" ;;
+	"Compulab CM-x270")
+                modprobe mbxfb
+	        ARGS="$ARGS -fb /dev/fb1"
+                ;;
 esac
 
 DISPLAY=':0'
