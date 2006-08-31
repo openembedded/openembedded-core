@@ -1,8 +1,8 @@
 diff --git a/hw/kdrive/fbdev/fbdev.c b/hw/kdrive/fbdev/fbdev.c
-index 86384f0..e27240f 100644
+index 86384f0..904d5f3 100644
 --- a/hw/kdrive/fbdev/fbdev.c
 +++ b/hw/kdrive/fbdev/fbdev.c
-@@ -38,11 +38,14 @@ fbdevInitialize (KdCardInfo *card, Fbdev
+@@ -38,11 +38,17 @@ fbdevInitialize (KdCardInfo *card, Fbdev
  {
      int		    k;
      unsigned long   off;
@@ -11,6 +11,9 @@ index 86384f0..e27240f 100644
 -	perror("Error opening /dev/fb0");
 -	return FALSE;
 -    }
++
++    if (fbdevDevicePath == NULL) 
++      fbdevDevicePath = "/dev/fb0";
 +
 +    if ((priv->fd = open(fbdevDevicePath, O_RDWR)) < 0)
 +      {
@@ -35,10 +38,10 @@ index d37b995..b7951db 100644
  Bool
  fbdevInitialize (KdCardInfo *card, FbdevPriv *priv);
 diff --git a/hw/kdrive/fbdev/fbinit.c b/hw/kdrive/fbdev/fbinit.c
-index ba9d1c6..b7852a8 100644
+index ba9d1c6..1a7e4bf 100644
 --- a/hw/kdrive/fbdev/fbinit.c
 +++ b/hw/kdrive/fbdev/fbinit.c
-@@ -54,16 +54,29 @@ InitInput (int argc, char **argv)
+@@ -54,17 +54,30 @@ InitInput (int argc, char **argv)
  void
  ddxUseMsg (void)
  {
@@ -53,6 +56,8 @@ index ba9d1c6..b7852a8 100644
  ddxProcessArgument (int argc, char **argv, int i)
  {
 -    return KdProcessArgument (argc, argv, i);
+-}
+-
 +  if (!strcmp (argv[i], "-fb"))
 +    {
 +      if (i+1 < argc) 
@@ -63,11 +68,11 @@ index ba9d1c6..b7852a8 100644
 +      UseMsg();
 +      exit(1);
 +    }
+ 
 +  return KdProcessArgument (argc, argv, i);
- }
++}
  
--
 +char           *fbdevDevicePath = NULL;
- 
  KdCardFuncs	fbdevFuncs = {
      fbdevCardInit,	    /* cardinit */
+     fbdevScreenInit,	    /* scrinit */
