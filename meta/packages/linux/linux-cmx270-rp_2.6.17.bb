@@ -3,6 +3,8 @@ DESCRIPTION = "Linux kernel for Compulab cmx270"
 LICENSE = "GPL"
 PR = "r1"
 
+DEFAULT_PREFERENCE = "-1"
+
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            http://www.rpsys.net/openzaurus/patches/archive/cmx270/cm_x2xx_ide-r1.patch;patch=1 \
            http://www.rpsys.net/openzaurus/patches/archive/cmx270/cm_x2xx_mtd-r2.patch;patch=1 \
