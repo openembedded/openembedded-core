@@ -6,7 +6,7 @@ do_devshell[interactive] = 1
 devshell_do_devshell() {
 	bash -i
 }
-addtask devshell
+addtask devshell after do_patch
 
 
 EXPORT_FUNCTIONS do_devshell
