@@ -10,6 +10,8 @@ DESCRIPTION_xserver-kdrive-fbdev = "X server from freedesktop.org, supporting ge
 DESCRIPTION_xserver-kdrive-fake = "Fake X server"
 DESCRIPTION_xserver-kdrive-xephyr = "X server in an X window"
 
+PR="r1"
+
 FILES_xserver-kdrive-fbdev = "${bindir}/Xfbdev"
 FILES_xserver-kdrive-fake = "${bindir}/Xfake"
 FILES_xserver-kdrive-xephyr = "${bindir}/Xephyr"
@@ -25,7 +27,8 @@ SRC_URI = "http://ftp.x.org/pub/X11R7.1/src/xserver/xorg-server-X11R7.1-1.1.0.ta
 	file://optional-xkb.patch;patch=1 \
 	file://disable-xf86-dga-xorgcfg.patch;patch=1 \
 	file://enable-tslib.patch;patch=1 \
-	file://xcalibrate.patch;patch=1"
+	file://xcalibrate.patch;patch=1 \
+	file://xfbdev-fb-opt.patch;patch=1"
 
 SRC_URI_append_mnci   = " file://onlyfb.patch;patch=1"
 SRC_URI_append_poodle = " file://xserver-kdrive-poodle.patch;patch=1"
