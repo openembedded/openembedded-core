@@ -1,0 +1,65 @@
+diff -urNd ../gstreamer-0.10.9-r0/gstreamer-0.10.9/gst/gst.c gstreamer-0.10.9/gst/gst.c
+--- ../gstreamer-0.10.9-r0/gstreamer-0.10.9/gst/gst.c	2006-07-11 21:16:04.000000000 +0100
++++ gstreamer-0.10.9/gst/gst.c	2006-09-01 12:30:36.000000000 +0100
+@@ -553,7 +553,7 @@
+   GList *l;
+ 
+   GST_DEBUG ("reading registry cache: %s", registry_file);
+-  gst_registry_xml_read_cache (default_registry, registry_file);
++  gst_registry_binary_read_cache (default_registry, registry_file);
+ 
+   /* scan paths specified via --gst-plugin-path */
+   GST_DEBUG ("scanning paths added via --gst-plugin-path");
+@@ -624,7 +624,7 @@
+   }
+ 
+   GST_DEBUG ("writing registry cache");
+-  if (!gst_registry_xml_write_cache (default_registry, registry_file)) {
++  if (!gst_registry_binary_write_cache (default_registry, registry_file)) {
+     g_warning ("Problem writing registry cache to %s: %s", registry_file,
+         g_strerror (errno));
+     return FALSE;
+@@ -700,7 +700,7 @@
+ 
+     if (WEXITSTATUS (status) == EXIT_SUCCESS) {
+       GST_DEBUG ("parent reading registry cache");
+-      gst_registry_xml_read_cache (default_registry, registry_file);
++      gst_registry_binary_read_cache (default_registry, registry_file);
+     } else {
+       GST_DEBUG ("parent re-scanning registry");
+       scan_and_update_registry (default_registry, registry_file, FALSE);
+@@ -722,7 +722,7 @@
+   registry_file = g_strdup (g_getenv ("GST_REGISTRY"));
+   if (registry_file == NULL) {
+     registry_file = g_build_filename (g_get_home_dir (),
+-        ".gstreamer-" GST_MAJORMINOR, "registry." HOST_CPU ".xml", NULL);
++        ".gstreamer-" GST_MAJORMINOR, "registry." HOST_CPU ".bin", NULL);
+   }
+ #ifdef HAVE_FORK
+   if (g_getenv ("GST_REGISTRY_FORK") == NULL
+diff -urNd ../gstreamer-0.10.9-r0/gstreamer-0.10.9/gst/gstregistry.h gstreamer-0.10.9/gst/gstregistry.h
+--- ../gstreamer-0.10.9-r0/gstreamer-0.10.9/gst/gstregistry.h	2006-07-11 21:16:04.000000000 +0100
++++ gstreamer-0.10.9/gst/gstregistry.h	2006-09-01 12:30:36.000000000 +0100
+@@ -105,8 +105,8 @@
+ GstPlugin * 		gst_registry_lookup 		(GstRegistry *registry, const char *filename);
+ GstPluginFeature * 	gst_registry_lookup_feature 	(GstRegistry *registry, const char *name);
+ 
+-gboolean 		gst_registry_xml_read_cache 	(GstRegistry * registry, const char *location);
+-gboolean 		gst_registry_xml_write_cache 	(GstRegistry * registry, const char *location);
++gboolean 		gst_registry_binary_read_cache 	(GstRegistry * registry, const char *location);
++gboolean 		gst_registry_binary_write_cache	(GstRegistry * registry, const char *location);
+ 
+ void 			_gst_registry_remove_cache_plugins (GstRegistry *registry);
+ 
+diff -urNd ../gstreamer-0.10.9-r0/gstreamer-0.10.9/gst/Makefile.am gstreamer-0.10.9/gst/Makefile.am
+--- ../gstreamer-0.10.9-r0/gstreamer-0.10.9/gst/Makefile.am	2006-07-13 16:31:47.000000000 +0100
++++ gstreamer-0.10.9/gst/Makefile.am	2006-09-01 12:30:36.000000000 +0100
+@@ -9,7 +9,7 @@
+ if GST_DISABLE_REGISTRY
+ GST_REGISTRY_SRC = 
+ else
+-GST_REGISTRY_SRC = gstregistryxml.c
++GST_REGISTRY_SRC = gstregistrybinary.c
+ endif
+ 
+ if GST_DISABLE_PARSE

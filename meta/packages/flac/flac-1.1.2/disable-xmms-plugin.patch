@@ -1,0 +1,21 @@
+--- flac-1.1.0/src/Makefile.am.orig	2004-12-25 01:11:45.000000000 +0100
++++ flac-1.1.0/src/Makefile.am	2004-12-25 01:12:10.000000000 +0100
+@@ -15,10 +15,6 @@
+ #  along with this program; if not, write to the Free Software
+ #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ 
+-if FLaC__HAS_XMMS
+-XMMS_DIRS = plugin_xmms
+-endif
+-
+ if FLaC__HAS_OGG
+ OGGFLAC_DIRS = libOggFLAC libOggFLAC++
+ OGGFLAC_TEST_DIRS = test_libOggFLAC test_libOggFLAC++
+@@ -33,7 +29,6 @@
+ 	metaflac \
+ 	monkeys_audio_utilities \
+ 	plugin_common \
+-	$(XMMS_DIRS) \
+ 	plugin_winamp2 \
+ 	plugin_winamp3 \
+ 	test_grabbag \

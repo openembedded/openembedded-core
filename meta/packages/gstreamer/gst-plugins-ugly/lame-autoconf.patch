@@ -1,0 +1,11 @@
+--- gst-plugins-ugly-0.10.4/configure.ac.old	2006-09-01 18:55:40.000000000 +0100
++++ gst-plugins-ugly-0.10.4/configure.ac	2006-09-01 18:56:36.000000000 +0100
+@@ -282,7 +282,7 @@
+     LAME_LIBS="-lmp3lame -lm"
+     dnl is lame presets available
+     LAME_CFLAGS=""
+-    AC_TRY_RUN([
++    AC_TRY_COMPILE([
+ #include <lame/lame.h>
+ int main (int argc, char *argv[])
+ {
