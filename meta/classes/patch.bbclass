@@ -176,16 +176,13 @@ def patch_init(d):
 			self.initialized = False
 			p = os.path.join(self.dir, 'patches')
 			if not os.path.exists(p):
-				os.mkdir(p)
+				os.makedirs(p)
 
 		def Clean(self):
 			try:
 				self._runcmd(["pop", "-a", "-f"])
-			except CmdError:
+			except Exception:
 				pass
-			except NotFoundError:
-				pass
-			# runcmd(["rm", "-rf", os.path.join(self.dir, "patches"), os.path.join(self.dir, ".pc")])
 			self.initialized = True
 
 		def InitFromDir(self):
