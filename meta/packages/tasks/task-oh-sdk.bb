@@ -1,6 +1,6 @@
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r7"
+PR = "r8"
 
 PACKAGES = "\
     task-oh-sdk \
@@ -82,7 +82,6 @@ RDEPENDS_task-oh-sdk-x11-xext := "\
     randrext-dev \
     recordext-dev \
     renderext-dev \
-    resourceext-dev \
     xcalibrate-dev \
     xcalibrateext-dev \
     xextensions-dev \

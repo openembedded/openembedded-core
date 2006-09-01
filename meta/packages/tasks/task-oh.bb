@@ -1,6 +1,6 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r40"
+PR = "r41"
 
 PACKAGES = "\
     task-oh-base \
@@ -45,6 +45,8 @@ RDEPENDS_task-oh-base = "\
     ttf-bitstream-vera \
     xauth \
     xhost \
+    xset \
+    xrandr \
     udev \
     sysfsutils \
     gdk-pixbuf-loader-png \
@@ -81,7 +83,6 @@ RDEPENDS_task-oh-standard = "\
     pcmanfm \
     puzzles \
     kf \
-    xset \
     rxvt-unicode \
     avahi-daemon \
     gnome-vfs-plugin-dbus \
