@@ -1,0 +1,48 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- dpkg-1.10.23/configure.in~autofoo
++++ dpkg-1.10.23/configure.in
+@@ -227,21 +227,36 @@
+ # OpenBSD passes AC_TRY_COMPILE for va_copy even though 
+ # it doesn't seem to exist, which is odd. We need to use
+ # AC_TRY_RUN.
++#
++# If crosscompiling, use AC_TRY_COMPILE. -CL
+ AC_TRY_RUN([
+ #include <stdarg.h>
+ main(){
+ va_list v1,v2;
+ va_copy(v1, v2);
+ exit(0);}
+-], [AC_MSG_RESULT(yes)
+-AC_DEFINE(HAVE_VA_COPY,,[Whether the va_copy macro exists])],[AC_MSG_RESULT(no)
+-AC_MSG_CHECKING([for va_list assignment copy])
++], [dpkg_cv_va_copy=yes], [dpkg_cv_va_copy=no],
+ AC_TRY_COMPILE([
+ #include <stdarg.h>
++main(){
++va_list v1,v2;
++va_copy(v1, v2);
++exit(0);}
++], [dpkg_cv_va_copy=yes], [dpkg_vc_va_copy=no]))
++
++if test "$dpkg_cv_va_copy" = "yes"; then
++	AC_MSG_RESULT(yes)
++	AC_DEFINE(HAVE_VA_COPY,,[Whether the va_copy macro exists])
++else
++	AC_MSG_RESULT(no)
++	AC_MSG_CHECKING([for va_list assignment copy])
++	AC_TRY_COMPILE([
++#include <stdarg.h>
+ ],[
+ va_list v1,v2;
+ v1 = v2;
+-], AC_MSG_RESULT(yes),AC_MSG_ERROR(no))])
++], AC_MSG_RESULT(yes), AC_MSG_ERROR(no))
++fi
+ 
+ DPKG_C_GCC_ATTRIBUTE([,,],supported,[int x],[,,],ATTRIB,[Define if function attributes a la GCC 2.5 and higher are available.],
+   DPKG_C_GCC_ATTRIBUTE(noreturn,noreturn,[int x],noreturn,NORETURN,[Define if nonreturning functions a la GCC 2.5 and higher are available.])

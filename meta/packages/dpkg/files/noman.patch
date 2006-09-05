@@ -1,0 +1,16 @@
+---
+ Makefile.am |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- dpkg-1.13.22.orig/Makefile.am
++++ dpkg-1.13.22/Makefile.am
+@@ -15,8 +15,7 @@ SUBDIRS = \
+ 	utils \
+ 	scripts \
+ 	po \
+-	origins \
+-	man
++	origins
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ 
