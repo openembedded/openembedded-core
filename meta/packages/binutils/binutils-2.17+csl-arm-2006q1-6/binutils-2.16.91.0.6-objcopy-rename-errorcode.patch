@@ -1,0 +1,31 @@
+# strip (and objcopy) fail to set the error code if there is no
+# output file name and the rename of the stripped (or copied) file
+# fails, yet the command fails to do anything.  This fixes both
+# objcopy and strip.
+#
+# modification by bero: Ported to 2.16.91.0.6
+#
+#Signed-off-by: John Bowler <jbowler@acm.org>
+#Signed-off-by: Bernhard Rosenkraenzer <bero@arklinux.org>
+--- binutils-2.16.91.0.6/binutils/objcopy.c.ark	2006-03-11 15:59:07.000000000 +0100
++++ binutils-2.16.91.0.6/binutils/objcopy.c	2006-03-11 15:59:45.000000000 +0100
+@@ -2593,7 +2593,8 @@
+ 	  if (preserve_dates)
+ 	    set_times (tmpname, &statbuf);
+ 	  if (output_file == NULL)
+-	    smart_rename (tmpname, argv[i], preserve_dates);
++	    if(smart_rename (tmpname, argv[i], preserve_dates))
++              hold_status = 1;
+ 	  status = hold_status;
+ 	}
+       else
+@@ -3184,7 +3185,8 @@
+ 	{
+ 	  if (preserve_dates)
+ 	    set_times (tmpname, &statbuf);
+-	  smart_rename (tmpname, input_filename, preserve_dates);
++	  if (smart_rename (tmpname, input_filename, preserve_dates))
++            status = 1;
+ 	}
+       else
+ 	unlink (tmpname);

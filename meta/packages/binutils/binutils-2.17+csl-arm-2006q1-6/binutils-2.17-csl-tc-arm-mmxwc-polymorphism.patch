@@ -1,0 +1,25 @@
+--- binutils-2.17/gas/config/tc-arm.c.orig	2006-09-05 14:59:25.000000000 +0100
++++ binutils-2.17/gas/config/tc-arm.c	2006-09-05 14:59:25.000000000 +0100
+@@ -1252,13 +1252,15 @@
+     }
+ 
+   /* Undo polymorphism when a set of register types may be accepted.  */
+-  if ((type == REG_TYPE_NDQ
+-       && (reg->type == REG_TYPE_NQ || reg->type == REG_TYPE_VFD))
+-      || (type == REG_TYPE_VFSD
+-          && (reg->type == REG_TYPE_VFS || reg->type == REG_TYPE_VFD))
+-      || (type == REG_TYPE_NSDQ
+-          && (reg->type == REG_TYPE_VFS || reg->type == REG_TYPE_VFD
+-              || reg->type == REG_TYPE_NQ)))
++  if (((type == REG_TYPE_NDQ
++	&& (reg->type == REG_TYPE_NQ || reg->type == REG_TYPE_VFD))
++       || (type == REG_TYPE_VFSD
++	   && (reg->type == REG_TYPE_VFS || reg->type == REG_TYPE_VFD))
++       || (type == REG_TYPE_NSDQ
++	   && (reg->type == REG_TYPE_VFS || reg->type == REG_TYPE_VFD
++	       || reg->type == REG_TYPE_NQ)))
++      ||(type == REG_TYPE_MMXWC
++	 && (reg->type == REG_TYPE_MMXWCG)))
+     type = reg->type;
+ 
+   if (type != reg->type)
