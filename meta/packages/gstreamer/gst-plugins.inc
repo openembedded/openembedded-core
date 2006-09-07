@@ -13,6 +13,7 @@ EXTRA_OECONF = "--disable-valgrind --disable-debug --disable-examples "
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
 LIBV = "0.10"
+PACKAGES_DYNAMIC = "gst-plugin-*"
 
 python populate_packages_prepend () {
 	gst_libdir = bb.data.expand('${libdir}/gstreamer-${LIBV}', d)

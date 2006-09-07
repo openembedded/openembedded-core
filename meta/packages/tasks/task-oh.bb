@@ -104,7 +104,10 @@ RDEPENDS_task-oh-testapps = "\
     tslib-tests \
     lrzsz \
     alsa-utils-amixer \
-    alsa-utils-aplay"
+    alsa-utils-aplay \
+    owl-video-widget \
+    gst-meta-video \
+    gst-meta-audio"
 
 
 #    minimo \
