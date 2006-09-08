@@ -5,4 +5,10 @@ then
 QEMU_MEMORY="64M"
 fi
 
-qemu-system-arm -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/qemuarm rw ip=192.168.7.2::192.168.7.1:255.255.255.0 mem=$QEMU_MEMORY" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=./qemu-ifup
+# New command-line for versatile/PB
+dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
+qemu-system-arm -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/qemuarm rw ip=192.168.7.2::192.168.7.1:255.255.255.0" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=./qemu-ifup -M versatilepb -hda /tmp/blank
+rm /tmp/blank
+
+# Old command-line for versatile/CP
+#qemu-system-arm -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/qemuarm rw ip=192.168.7.2::192.168.7.1:255.255.255.0 mem=$QEMU_MEMORY" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=./qemu-ifup
