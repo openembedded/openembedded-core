@@ -5,12 +5,15 @@ LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DEPENDS = "gstreamer zlib"
+PR = "r1"
 
 inherit autotools pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2"
 
-FILES_${PN} += "${libdir}/gstreamer-0.10"
+FILES_${PN} += "${libdir}/gstreamer-0.10/*.so"
+FILES_${PN}-dbg += "${libdir}/gstreamer-0.10/.debug"
+FILES_${PN}-dev += "${libdir}/gstreamer-0.10/*.la ${libdir}/gstreamer-0.10/*.a"
 
 EXTRA_OECONF = "--disable-sdltest --disable-ffplay --disable-freetypetest \
 		--disable-vorbis --disable-vorbistest --disable-encoders \

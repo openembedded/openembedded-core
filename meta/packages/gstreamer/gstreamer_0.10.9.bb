@@ -5,19 +5,20 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 MAINTAINER = "Felix Domke <tmbinc@elitedvb.net>"
-DEPENDS = "glib-2.0 gettext-native popt"
+DEPENDS = "glib-2.0 gettext-native popt libxml2"
+PR = "r1"
 
 inherit autotools pkgconfig
 
-SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz2 \
-	   file://gstregistrybinary.c \
-	   file://gstregistrybinary.h \
-	   file://gstreamer-0.9-binary-registry.patch;patch=1"
+SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz2"
+#	   file://gstregistrybinary.c \
+#	   file://gstregistrybinary.h \
+#	   file://gstreamer-0.9-binary-registry.patch;patch=1"
 EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no"
 
-do_compile_prepend () {
-	mv ${WORKDIR}/gstregistrybinary.[ch] ${S}/gst/
-}
+#do_compile_prepend () {
+#	mv ${WORKDIR}/gstregistrybinary.[ch] ${S}/gst/
+#}
 
 do_stage() {
 	oe_runmake install prefix=${STAGING_DIR} \
