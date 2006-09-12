@@ -1,7 +1,7 @@
 DESCRIPTION = "Plugins for GStreamer"
 SECTION = "multimedia"
 PRIORITY = "optional"
-MAINTAINER = "Felix Domke <tmbinc@elitedvb.net>"
+MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DEPENDS = "gstreamer"
 
 inherit autotools pkgconfig
