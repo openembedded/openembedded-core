@@ -4,7 +4,7 @@ Building An Image
 Simply run;
 
 source poky-init-build-env
-bitbake oh-image
+bitbake oh-image-pda
 
 will result in a jffs2 image for the c7x0 series.
 
