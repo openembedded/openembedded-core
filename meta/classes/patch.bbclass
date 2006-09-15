@@ -117,24 +117,27 @@ def patch_init(d):
 			""""""
 			PatchSet.Import(self, patch, force)
 
-			self.patches.insert(self._current or 0, patch)
+			if self._current is not None:
+				i = self._current + 1
+			else:
+				i = 0
+			self.patches.insert(i, patch)
 
 		def _applypatch(self, patch, force = None, reverse = None):
-			shellcmd = ["patch", "<", patch['file'], "-p", patch['strippath']]
+			shellcmd = ["cat", patch['file'], "|", "patch", "-p", patch['strippath']]
 			if reverse:
 				shellcmd.append('-R')
-			shellcmd.append('--dry-run')
 
-			try:
-				output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
-			except CmdError:
-				if force:
-					shellcmd.pop(len(shellcmd) - 1)
-					output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
-				else:
-					import sys
-					raise sys.exc_value
+			if not force:
+				shellcmd.append('--dry-run')
 
+			output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+
+			if force:
+				return
+
+			shellcmd.pop(len(shellcmd) - 1)
+			output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
 			return output
 
 		def Push(self, force = None, all = None):
@@ -144,12 +147,14 @@ def patch_init(d):
 						self._current = self._current + 1
 					else:
 						self._current = 0
+					bb.note("applying patch %s" % i)
 					self._applypatch(i, force)
 			else:
 				if self._current is not None:
 					self._current = self._current + 1
 				else:
 					self._current = 0
+				bb.note("applying patch %s" % self.patches[self._current])
 				self._applypatch(self.patches[self._current], force)
 
 
