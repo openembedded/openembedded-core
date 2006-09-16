@@ -2,15 +2,12 @@ PR = "r0"
 
 export IMAGE_BASENAME = "oh-image-core"
 
-XSERVER ?= "xserver-kdrive-fbdev"
-
 DEPENDS = "task-oh"
     
 RDEPENDS = "\
     task-oh-boot \
     task-oh-boot-extras \
-    task-oh-base \
-    ${XSERVER} "
+    task-oh-base "
 
 export IPKG_INSTALL = "${RDEPENDS}"
 
