@@ -11,6 +11,8 @@ PACKAGES = "\
     task-oh-devtools \
     task-oh-testapps"
 
+XSERVER ?= "xserver-kdrive-fbdev"
+
 ALLOW_EMPTY = "1"
 
 RDEPENDS_task-oh-boot = "\
@@ -39,7 +41,8 @@ RDEPENDS_task-oh-base = "\
     matchbox-common \
     matchbox-wm \
     matchbox-keyboard \
-    matchbox-panel    \
+    matchbox-panel \
+    ${XSERVER} \
     xserver-kdrive-common \
     xserver-nodm-init \
     ttf-bitstream-vera \
