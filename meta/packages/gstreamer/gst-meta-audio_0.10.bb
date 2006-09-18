@@ -1,6 +1,5 @@
-DEPENDS = "gst-meta-base gst-fluendo-mp3 gst-fluendo-mpegdemux"
-RDEPENDS = "gst-meta-base gst-plugin-vorbis gst-plugin-ogg gst-fluendo-mp3 \
-            gst-fluendo-mpegdemux"
-PR = "r1"
+DEPENDS = "gst-meta-base gst-plugins-bad"
+RDEPENDS = "gst-meta-base gst-plugin-ivorbis gst-plugin-ogg"
+PR = "r3"
 
 ALLOW_EMPTY = "1"

@@ -2,8 +2,10 @@ DESCRIPTION = "Liboil is a library of simple functions that are optimized for va
 HOMEPAGE = "http://liboil.freedesktop.org/"
 LICENSE = "various"
 MAINTAINER = "Koen Kooi <koen@on.kabel.utwente.nl>"
+PR = "r1"
 
-SRC_URI = "http://liboil.freedesktop.org/download/${P}.tar.gz"
+SRC_URI = "http://liboil.freedesktop.org/download/${P}.tar.gz \
+           file://no-tests.patch;patch=1"
 
 inherit autotools pkgconfig
 

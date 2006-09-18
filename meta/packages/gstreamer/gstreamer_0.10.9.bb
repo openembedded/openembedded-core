@@ -6,7 +6,7 @@ LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DEPENDS = "glib-2.0 gettext-native libxml2"
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig
 
@@ -15,7 +15,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz
 #           file://gstregistrybinary.c \
 #           file://gstregistrybinary.h \
 #           file://gstreamer-0.9-binary-registry.patch;patch=1"
-EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no"
+EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind --disable-debug"
 
 #do_compile_prepend () {
 #	mv ${WORKDIR}/gstregistrybinary.[ch] ${S}/gst/
