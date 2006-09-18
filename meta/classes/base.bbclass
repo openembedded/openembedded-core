@@ -548,7 +548,6 @@ base_do_compile() {
 }
 
 
-addtask stage after do_compile
 base_do_stage () {
 	:
 }
@@ -560,14 +559,14 @@ do_populate_staging[dirs] = "${STAGING_DIR}/${TARGET_SYS}/bin ${STAGING_DIR}/${T
 			     ${STAGING_DATADIR} \
 			     ${S} ${B}"
 
-addtask populate_staging after do_compile
+addtask populate_staging after do_package
 
 python do_populate_staging () {
 	bb.build.exec_func('do_stage', d)
 }
 
 addtask install after do_compile
-do_install[dirs] = "${S} ${B}"
+do_install[dirs] = "${D} ${S} ${B}"
 
 base_do_install() {
 	:
