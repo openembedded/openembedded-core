@@ -194,6 +194,10 @@ python package_do_split_gconvs () {
 			if m:
 				dp = legitimize_package_name('glibc-localedata-%s' % m.group(1))
 				if not dp in deps:
+					if '<' in dp:
+						bb.note('warning, dp is %s' % dp)
+						bb.note('  fn is %s' % fn)
+						bb.note('  line was %s' % l)
 					deps.append(dp)
 		f.close()
 		if deps != []:

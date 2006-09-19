@@ -5,13 +5,15 @@ LICENSE = "GPL"
 PROVIDES = "virtual/ipkg libipkg"
 
 PACKAGES =+ "libipkg-dev libipkg"
+RDEPENDS_${PN} += "update-alternatives"
 FILES_libipkg-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so"
 FILES_libipkg = "${libdir}"
 AUTO_LIBNAME_PKGS = "libipkg"
 
 SRC_URI = "${HANDHELDS_CVS};module=familiar/dist/ipkg;tag=${@'V' + bb.data.getVar('PV',d,1).replace('.', '-')} \
         file://fix_tar_extension.patch;patch=1 \
-	file://terse.patch;patch=1"
+	file://terse.patch;patch=1 \
+        file://noupdalt.patch;patch=1"
 
 S = "${WORKDIR}/ipkg/C"
 

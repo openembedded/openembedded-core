@@ -1,7 +1,6 @@
 require dpkg.inc
-DEPENDS += "bzip2"
-
-inherit autotools gettext
+PR = "r2"
+DEPENDS += "ncurses zlib bzip2"
 
 EXTRA_OECONF = "--without-static-progs \
 		--without-dselect \

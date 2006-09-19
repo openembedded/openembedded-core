@@ -15,7 +15,7 @@ RDEPENDS = "\
     task-oh-testapps \
     task-oh-sdk "
 
-export IPKG_INSTALL = "${RDEPENDS}"
+export PACKAGE_INSTALL = "${RDEPENDS}"
 
-inherit image_ipk
+inherit image
 LICENSE = MIT

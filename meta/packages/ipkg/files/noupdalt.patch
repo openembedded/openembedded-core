@@ -1,0 +1,15 @@
+---
+ Makefile.am |    2 --
+ 1 file changed, 2 deletions(-)
+
+--- C.orig/Makefile.am
++++ C/Makefile.am
+@@ -10,8 +10,6 @@ bin_PROGRAMS = ipkg-cl
+ 
+ lib_LTLIBRARIES = libipkg.la
+ 
+-bin_SCRIPTS = update-alternatives
+-
+ # ipkg_LDADD = libbb/libbb.a replace/libreplace.a
+ 
+ #ipkg_cl_LDADD = libipkg.la libbb/libbb.la replace/libreplace.a 

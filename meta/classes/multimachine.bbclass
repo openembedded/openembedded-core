@@ -14,7 +14,7 @@ python __anonymous () {
 
 		# We could look for != PACKAGE_ARCH here but how to choose 
 		# if multiple differences are present?
-		# Look through IPKG_ARCHS for the priority order?
+		# Look through PACKAGE_ARCHS for the priority order?
 		if pkgarch and pkgarch == macharch:
 			multiarch = macharch
 

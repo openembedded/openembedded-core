@@ -1,7 +1,9 @@
 inherit package
 DEPENDS_prepend="${@["ipkg-utils-native ", ""][(bb.data.getVar('PACKAGES', d, 1) == '')]}"
 BOOTSTRAP_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
+DISTRO_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
 PACKAGEFUNCS += "do_package_ipk"
+IMAGE_PKGTYPE ?= "ipk"
 
 python package_ipk_fn () {
 	from bb import data
@@ -30,9 +32,9 @@ python package_ipk_install () {
 	# Generate ipk.conf if it or the stamp doesnt exist
 	conffile = os.path.join(stagingdir,"ipkg.conf")
 	if not  os.access(conffile, os.R_OK):
-		ipkg_archs = bb.data.getVar('IPKG_ARCHS',d)
+		ipkg_archs = bb.data.getVar('PACKAGE_ARCHS',d)
 		if ipkg_archs is None:
-			bb.error("IPKG_ARCHS missing")
+			bb.error("PACKAGE_ARCHS missing")
 			raise FuncFailed
 		ipkg_archs = ipkg_archs.split()
 		arch_priority = 1

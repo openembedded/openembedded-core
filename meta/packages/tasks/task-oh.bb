@@ -1,6 +1,6 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r41"
+PR = "r42"
 
 PACKAGES = "\
     task-oh-base \
@@ -27,7 +27,7 @@ RDEPENDS_task-oh-boot = "\
     modutils-initscripts \
     fuser \
     setserial \
-    ipkg \
+    update-alternatives \
     module-init-tools-depmod"
 #    linux-hotplug \
 

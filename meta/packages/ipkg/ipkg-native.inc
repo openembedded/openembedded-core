@@ -7,6 +7,6 @@ inherit native
 
 EXTRA_OECONF += "--with-ipkgdir=${target_libdir}/ipkg"
 
-DEPENDS = "libtool-native automake-native"
+DEPENDS = "libtool-native automake-native virtual/update-alternatives"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/ipkg-${PV}"
 PROVIDES = ""

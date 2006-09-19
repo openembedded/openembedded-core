@@ -1,4 +1,4 @@
-inherit rootfs_ipk
+inherit rootfs_${IMAGE_PKGTYPE}
 
 # We need to recursively follow RDEPENDS and RRECOMMENDS for images
 BUILD_ALL_DEPS = "1"
@@ -37,12 +37,8 @@ fakeroot do_rootfs () {
 		makedevs -r ${IMAGE_ROOTFS} -D ${IMAGE_DEVICE_TABLE}
 	fi
 
-	real_do_rootfs
+	rootfs_${IMAGE_PKGTYPE}_do_rootfs
 
-	insert_feed_uris	
-
-	rm -f ${IMAGE_ROOTFS}${libdir}/ipkg/lists/oe
-	
 	${IMAGE_PREPROCESS_COMMAND}
 		
 	export TOPDIR=${TOPDIR}
@@ -59,22 +55,4 @@ fakeroot do_rootfs () {
 	done
 
 	${IMAGE_POSTPROCESS_COMMAND}
-}
-
-insert_feed_uris () {
-	
-	echo "Building feeds for [${DISTRO}].."
-		
-	for line in ${FEED_URIS}
-	do
-		# strip leading and trailing spaces/tabs, then split into name and uri
-		line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
-		feed_name="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\1/p'`"
-		feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"					
-		
-		echo "Added $feed_name feed with URL $feed_uri"
-		
-		# insert new feed-sources
-		echo "src/gz $feed_name $feed_uri" >> ${IMAGE_ROOTFS}/etc/ipkg/${feed_name}-feed.conf
-	done			
 }

@@ -36,7 +36,7 @@ real_do_rootfs () {
 	fi
 	mkdir -p ${T}
 	echo "src oe file:${DEPLOY_DIR_IPK}" > ${T}/ipkg.conf
-	ipkgarchs="${IPKG_ARCHS}"
+	ipkgarchs="${PACKAGE_ARCHS}"
 	priority=1
 	for arch in $ipkgarchs; do
 		echo "arch $arch $priority" >> ${T}/ipkg.conf
@@ -49,11 +49,12 @@ real_do_rootfs () {
 			ipkg-cl ${IPKG_ARGS} install $i
 		done
 	fi
-	if [ ! -z "${IPKG_INSTALL}" ]; then
-		ipkg-cl ${IPKG_ARGS} install ${IPKG_INSTALL}
+	if [ ! -z "${PACKAGE_INSTALL}" ]; then
+		ipkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL}
 	fi
 
 	export D=${IMAGE_ROOTFS}
+	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 	mkdir -p ${IMAGE_ROOTFS}/etc/ipkg/
 	grep "^arch" ${T}/ipkg.conf >${IMAGE_ROOTFS}/etc/ipkg/arch.conf

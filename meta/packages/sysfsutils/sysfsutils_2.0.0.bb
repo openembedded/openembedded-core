@@ -12,8 +12,8 @@ inherit autotools
 
 includedir += "/sysfs"
 
-PACKAGES_prepend = "libsysfs "
-FILES_libsysfs = "${libdir}/*.so.2.0.0"
+# PACKAGES_prepend = "libsysfs "
+# FILES_libsysfs = "${libdir}/*.so.2.0.0"
 
 do_stage () {
 	oe_libinstall -a -so -C lib libsysfs ${STAGING_LIBDIR}

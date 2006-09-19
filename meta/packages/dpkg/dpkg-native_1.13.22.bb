@@ -1,8 +1,9 @@
 require dpkg.inc
+PR = "r1"
+DEPENDS += "ncurses-native zlib-native virtual/update-alternatives"
 SRC_URI += "file://noman.patch;patch=1"
 
 inherit native
-inherit autotools gettext
 
 EXTRA_OECONF = "--without-static-progs \
 		--without-dselect \

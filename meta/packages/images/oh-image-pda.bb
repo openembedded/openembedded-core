@@ -12,7 +12,7 @@ RDEPENDS = "\
     ${@base_conditional("DISTRO_TYPE", "debug", "task-oh-devtools", "",d)} \
     ${@base_conditional("DISTRO_TYPE", "debug", "task-oh-testapps", "",d)} "
 
-export IPKG_INSTALL = "${RDEPENDS}"
+export PACKAGE_INSTALL = "${RDEPENDS}"
 
-inherit image_ipk
+inherit image
 LICENSE = MIT
