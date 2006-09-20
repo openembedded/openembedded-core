@@ -28,7 +28,7 @@ KERNEL_IMAGETYPE_qemux86 = "bzImage"
 
 CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
 CMDLINE_ROOT = "root=/dev/mtdblock2 rootfstype=jffs2"
-CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 rw"
+CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw"
 CMDLINE_OTHER = "dyntick=enable"
 CMDLINE_DEBUG = '${@base_conditional("DISTRO_TYPE", "release", "quiet", "debug",d)}'
 
@@ -53,6 +53,7 @@ ENABLE_ELPP = ${@bb.data.getVar("OZ_KERNEL_ENABLE_ELPP",d,1) or "no"}
 ###############################################################
 # module configs specific to this kernel
 #
+module_autoload_ohci-hcd_tosa = "ohci-hcd"
 module_autoload_pxaficp_ir = "pxaficp_ir"
 module_autoload_snd-pcm-oss = "snd-pcm-oss"
 module_autoload_snd-soc-corgi_c7x0 = "snd-soc-corgi"
@@ -201,3 +202,7 @@ do_deploy() {
 do_deploy[dirs] = "${S}"
 
 addtask deploy before do_package after do_install
+
+# wlan-ng stuff need compiled kernel sources
+do_rm_work() {
+}
