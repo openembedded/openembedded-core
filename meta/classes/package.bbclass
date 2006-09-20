@@ -1,4 +1,15 @@
 def legitimize_package_name(s):
+	import re
+
+	def fixutf(m):
+		cp = m.group(1)
+		if cp:
+			return ('\u%s' % cp).decode('unicode_escape').encode('utf-8')
+
+	# Handle unicode codepoints encoded as <U0123>, as in glibc locale files.
+	s = re.sub('<U([0-9A-Fa-f]{1,4})>', fixutf, s)
+
+	# Remaining package name validity fixes
 	return s.lower().replace('_', '-').replace('@', '+').replace(',', '+').replace('/', '-')
 
 STAGING_PKGMAPS_DIR ?= "${STAGING_DIR}/pkgmaps"
