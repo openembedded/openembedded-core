@@ -19,9 +19,15 @@
 <ctrl><alt>x=!xterm
 <ctrl><alt>r=!rxvt
 
-### App launching with startup notify
+### poky additions
 
-<ctrl><alt>e=!!gpe-calender
+XF86Calendar=!$contacts
+telephone=!$dates
+XF86Start=!matchbox-remote -desktop
+F2=!matchbox-remote -mbmenu
+
+#XF86Mail=!$tasks
+#Escape=close
 
 ### windows style key shortcuts
 
@@ -33,15 +39,4 @@
 <alt>f4=close
 
 f11=fullscreen
-
-### super should be a 'window' key, uncomment '#' if you have one.
-
-#<super>d=desktop
-#<super>r=!xterm
-#<super>e=!!nautilus
-
-### Special keys, likely probably only available on extended keyboards. 
-
-#App=!matchbox-remote -mbmenu
-#Menu=!matchbox-remote -mbmenu
 
