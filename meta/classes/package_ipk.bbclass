@@ -222,6 +222,8 @@ python do_package_ipk () {
 		if ret != 0:
 			raise bb.build.FuncFailed("ipkg-build execution failed")
 
+		file(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), 'w').close()
+
 		for script in ["preinst", "postinst", "prerm", "postrm", "control" ]:
 			scriptfile = os.path.join(controldir, script)
 			try:

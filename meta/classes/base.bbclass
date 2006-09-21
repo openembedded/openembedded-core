@@ -624,24 +624,60 @@ python read_shlibdeps () {
 		bb.data.setVar('RDEPENDS_' + pkg, " " + " ".join(rdepends), d)
 }
 
-python read_subpackage_metadata () {
-	import re
+def read_pkgdatafile(fn):
+	pkgdata = {}
 
 	def decode(str):
 		import codecs
 		c = codecs.getdecoder("string_escape")
 		return c(str)[0]
 
-	data_file = bb.data.expand("${WORKDIR}/install/${PN}.package", d)
-	if os.access(data_file, os.R_OK):
-		f = file(data_file, 'r')
+	import os
+	if os.access(fn, os.R_OK):
+		import re
+		f = file(fn, 'r')
 		lines = f.readlines()
 		f.close()
 		r = re.compile("([^:]+):\s*(.*)")
 		for l in lines:
 			m = r.match(l)
 			if m:
-				bb.data.setVar(m.group(1), decode(m.group(2)), d)
+				pkgdata[m.group(1)] = decode(m.group(2))
+
+	return pkgdata
+
+def has_subpkgdata(pkg, d):
+	import bb, os
+	fn = bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s' % pkg, d)
+	return os.access(fn, os.R_OK)
+
+def read_subpkgdata(pkg, d):
+	import bb, os
+	fn = bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s' % pkg, d)
+	return read_pkgdatafile(fn)
+
+
+def has_pkgdata(pn, d):
+	import bb, os
+	fn = bb.data.expand('${STAGING_DIR}/pkgdata/%s' % pn, d)
+	return os.access(fn, os.R_OK)
+
+def read_pkgdata(pn, d):
+	import bb, os
+	fn = bb.data.expand('${STAGING_DIR}/pkgdata/%s' % pn, d)
+	return read_pkgdatafile(fn)
+
+python read_subpackage_metadata () {
+	import bb
+	data = read_pkgdata(bb.data.getVar('PN', d, 1), d)
+
+	for key in data.keys():
+		bb.data.setVar(key, data[key], d)
+
+	for pkg in bb.data.getVar('PACKAGES', d, 1).split():
+		sdata = read_subpkgdata(pkg, d)
+		for key in sdata.keys():
+			bb.data.setVar(key, sdata[key], d)
 }
 
 python __anonymous () {
