@@ -1,7 +1,7 @@
-DESCRIPTION = "Settings-daemon is a bridge between xst/gpe-confd and gconf"
+DESCRIPTION = "Settings-daemon provides a bridge between gconf and xsettings"
 LICENSE = "GPL"
 DEPENDS = "gconf glib-2.0"
-SECTION = "gpe"
+SECTION = "x11"
 PV = "0.0+svn${SRCDATE}"
 PR = "r1"
 
