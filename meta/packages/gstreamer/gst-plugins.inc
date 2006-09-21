@@ -28,8 +28,8 @@ python populate_packages_prepend () {
 	do_split_packages(d, gst_libdir, 'libgst(.*)\.l?a$', 'gst-plugin-%s-dev', 'GStreamer plugin for %s (development files)', extra_depends=bb.data.expand('${PN}-dev',d))
 }
 
-#do_stage() {
-#	autotools_stage_all
-#}
+do_stage() {
+	autotools_stage_all
+}
 
 ALLOW_EMPTY = "1"

@@ -7,7 +7,3 @@ PR = "r3"
 
 EXTRA_OECONF += "--disable-freetypetest --disable-pango --disable-theora"
 
-do_stage() {
-       autotools_stage_all
-}
-
