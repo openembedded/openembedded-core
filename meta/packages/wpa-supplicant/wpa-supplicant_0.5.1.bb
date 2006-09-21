@@ -1,8 +1,6 @@
 DESCRIPTION = "A Client for Wi-Fi Protected Access (WPA)."
 SECTION = "network"
 LICENSE = "GPL"
-MAINTAINER = "Holger Schurig"
-MAINTAINER = "Eric Shattow <lucent@gmail.com>"
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 DEPENDS = "gnutls madwifi-ng"
 

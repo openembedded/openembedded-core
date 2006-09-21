@@ -1,6 +1,5 @@
 SECTION = "x11/libs"
 LICENSE = "MIT"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "network API translation layer to \
 insulate X applications and libraries from OS \
 network vageries."

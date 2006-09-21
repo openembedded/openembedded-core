@@ -1,7 +1,6 @@
 SECTION = "x11/libs"
 LICENSE = "MIT"
 PRIORITY = "optional"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DEPENDS = "xproto virtual/libx11 libxt libxmu libxpm"
 PROVIDES = "xaw"
 DESCRIPTION = "X Athena Widgets library"

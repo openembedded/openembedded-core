@@ -1,7 +1,6 @@
 SECTION = "x11/libs"
 LICENSE = "XFree86"
 PRIORITY = "optional"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xproto xextensions libxau xtrans libxdmcp"
 PROVIDES = "virtual/libx11"
 RPROVIDES = "virtual/libx11"

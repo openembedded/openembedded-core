@@ -1,7 +1,6 @@
 SECTION = "x11/libs"
 LICENSE= "MIT"
 PRIORITY = "optional"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xproto"
 PROVIDES = "xau"
 DESCRIPTION = "Authorization Protocol for X."

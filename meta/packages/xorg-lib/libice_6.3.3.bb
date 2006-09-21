@@ -1,7 +1,6 @@
 SECTION = "libs"
 LICENSE= "MIT"
 PRIORITY = "optional"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DEPENDS = "virtual/libx11"
 PROVIDES = "ice"
 DESCRIPTION = "X11 ICE library"

@@ -1,5 +1,4 @@
 DESCRIPTION = "SysV init scripts"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 SECTION = "base"
 PRIORITY = "required"
 DEPENDS = "makedevs"

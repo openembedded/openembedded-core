@@ -1,7 +1,6 @@
 DESCRIPTION = "LIRC is a package that allows you to decode and send infra-red signals of many commonly used remote controls."
 SECTION = "base"
 PRIORITY = "optional"
-MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 LICENSE = "GPL"
 DEPENDS = "virtual/kernel fakeroot-native"
 PR = "r2"

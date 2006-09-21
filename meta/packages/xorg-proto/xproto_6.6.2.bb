@@ -1,6 +1,5 @@
 SECTION = "x11/libs"
 LICENSE= "MIT"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "X protocol and ancillary headers."
 
 SRC_URI = "${XLIBS_MIRROR}/xproto-${PV}.tar.gz"

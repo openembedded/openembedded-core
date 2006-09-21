@@ -1,6 +1,5 @@
 SECTION = "x11/base"
 DESCRIPTION = "Clearlooks theme engine for GTK"
-MAINTAINER = "Koen Kooi <koenhandhelds.org>"
 LICENSE = "GPL2"
 DEPENDS = "gtk+"
 

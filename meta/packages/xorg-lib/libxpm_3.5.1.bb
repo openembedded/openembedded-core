@@ -1,7 +1,6 @@
 SECTION = "x11/libs"
 LICENSE = "X-BSD"
 PRIORITY = "optional"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xproto virtual/libx11"
 PROVIDES = "xpm"
 DESCRIPTION = "X Pixmap library."

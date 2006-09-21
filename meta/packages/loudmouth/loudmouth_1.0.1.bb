@@ -1,6 +1,5 @@
 LICENSE = "LGPL"
 DEPENDS = "glib-2.0 gnutls"
-MAINTAINER = "Koen Kooi <koen@handhelds.org>"
 DESCRIPTION = "Loudmouth is a lightweight and easy-to-use C library for programming with the Jabber protocol."
 PR = "r1"
 

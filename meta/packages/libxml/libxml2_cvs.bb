@@ -3,7 +3,6 @@ PR = "r0"
 DESCRIPTION = "GNOME XML library"
 SECTION = "libs"
 PRIORITY = "optional"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 LICENSE = "MIT"
 PACKAGES = "${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 

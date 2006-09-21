@@ -1,6 +1,5 @@
 SECTION = "unknown"
 DESCRIPTION = "Hardware Abstraction Layer"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 DEPENDS = "dbus expat libusb"
 RDEPENDS += "hotplug"
 RDEPENDS_hal-device-manager = "python hal python-pygnome"

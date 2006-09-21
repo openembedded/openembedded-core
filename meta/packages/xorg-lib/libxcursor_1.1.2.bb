@@ -1,7 +1,6 @@
 SECTION = "x11/libs"
 LICENSE= "BSD-X"
 PRIORITY = "optional"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DESCRIPTION = "X Cursor library"
 DEPENDS = "libxfixes"
 PR = "r2"

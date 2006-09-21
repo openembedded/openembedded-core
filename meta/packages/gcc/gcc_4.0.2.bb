@@ -2,7 +2,6 @@ DESCRIPTION = "The GNU cc and gcc C compilers."
 HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
 LICENSE = "GPL"
-MAINTAINER = "Gerald Britton <gbritton@doomcom.org>"
 DEPENDS = "mpfr gmp"
 PR = "r1"
 

@@ -1,6 +1,5 @@
 SECTION = "libs"
 LICENSE = "Xorg"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xextensions"
 DESCRIPTION = "X Resource usage extension headers"
 

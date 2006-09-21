@@ -1,7 +1,6 @@
 LICENSE = "GPL"
 SECTION = "x11"
 DEPENDS = "gtk+"
-MAINTAINER = "Ross Burton <ross@openedhand.com>"
 DESCRIPTION = "gcalctool is a powerful calculator
 PR = "r1"
 

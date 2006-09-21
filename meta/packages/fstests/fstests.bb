@@ -2,7 +2,6 @@ DESCRIPTION = "various benchmarning tests for X"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-MAINTAINER = "Matthew Allum <mallum@o-hand.com>"
 PR = "r0"
 
 inherit autotools

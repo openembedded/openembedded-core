@@ -1,6 +1,5 @@
 SECTION = "devel"
 DESCRIPTION = "Utility scripts for internationalizing XML"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 LICENSE = "GPL"
 
 SRC_URI = "${GNOME_MIRROR}/intltool/${PV}/intltool-${PV}.tar.bz2"

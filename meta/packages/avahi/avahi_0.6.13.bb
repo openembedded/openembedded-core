@@ -3,7 +3,6 @@ SECTION = "network"
 PRIORITY = "optional"
 AUTHOR = "Lennart Poettering <lennart@poettering.net>"
 HOMEPAGE = "http://avahi.org"
-MAINTAINER = "Philipp Zabel <philipp.zabel@gmail.com>"
 LICENSE= "GPL"
 PR = "r1"
 

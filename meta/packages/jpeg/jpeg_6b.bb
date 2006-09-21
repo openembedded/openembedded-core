@@ -1,7 +1,6 @@
 PR = "r2"
 SECTION = "libs"
 PRIORITY = "required"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 DEPENDS = "libtool-cross"
 DESCRIPTION = "libjpeg is a library for handling the JPEG (JFIF) image format."
 PACKAGES =+ "jpeg-tools "

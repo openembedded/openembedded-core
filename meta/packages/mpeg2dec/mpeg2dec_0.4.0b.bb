@@ -2,7 +2,6 @@ DESCRIPTION = "Library and test program for decoding mpeg-2 and mpeg-1 video str
 HOMEPAGE = "http://libmpeg2.sourceforge.net/"
 LICENSE = "GPL"
 PRIORITY = "optional"
-MAINTAINER = "Rene Wagner <rw@handhelds.org>"
 SECTION = "libs"
 PR = "r1"
 

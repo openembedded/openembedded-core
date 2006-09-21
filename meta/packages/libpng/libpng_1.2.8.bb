@@ -3,7 +3,6 @@ HOMEPAGE = "http://www.libpng.org/"
 LICENSE = "libpng"
 SECTION = "libs"
 PRIORITY = "required"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 
 DEPENDS = "zlib"
 

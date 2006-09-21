@@ -1,7 +1,6 @@
 SECTION = "base"
 PRIORITY = "standard"
 DESCRIPTION = "Manage symlinks in /etc/rcN.d"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 LICENSE = "GPL"
 S = "${WORKDIR}/update-rc.d"
 PR = "r1"

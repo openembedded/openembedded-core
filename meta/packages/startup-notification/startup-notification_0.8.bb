@@ -2,7 +2,6 @@ DESCRIPTION = "Startup notification support"
 LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DEPENDS = "libx11"
 PR = "r1"
 

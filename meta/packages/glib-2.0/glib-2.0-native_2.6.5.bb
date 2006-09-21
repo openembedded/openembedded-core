@@ -6,7 +6,6 @@ UNIX-like platforms, Windows, OS/2 and BeOS."
 LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
-MAINTAINER = "Philip Blundell <pb@handhelds.org>"
 DEPENDS = "gtk-doc-native"
 PR = "r3"
 

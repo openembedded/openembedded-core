@@ -1,7 +1,6 @@
 DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPL"
 SECTION = "base"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz \
            file://noupdalt.patch;patch=1"

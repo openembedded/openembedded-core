@@ -1,5 +1,4 @@
 DESCRIPTION = "ALSA Utilities"
-MAINTAINER = "Lorn Potter <lpotter@trolltech.com>"
 SECTION = "console/utils"
 LICENSE = "GPL"
 DEPENDS = "alsa-lib ncurses"

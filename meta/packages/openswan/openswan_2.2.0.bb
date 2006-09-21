@@ -3,7 +3,6 @@ DESCRIPTION = "Openswan is an Open Source implementation of IPsec for the \
 Linux operating system."
 HOMEPAGE = "http://www.openswan.org"
 LICENSE = "GPLv2"
-MAINTAINER = "Bruno Randolf <bruno.randolf@4g-systems.biz>"
 DEPENDS = "gmp flex-native"
 RRECOMMENDS = "kernel-module-ipsec"
 RDEPENDS_nylon = "perl"

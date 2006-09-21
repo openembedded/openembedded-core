@@ -3,7 +3,6 @@ LICENSE = "MIT"
 PV = "0.0+cvs${FIXEDSRCDATE}"
 DEPENDS = "virtual/libx11 libxext libxmu"
 DESCRIPTION = "server access control program for X"
-MAINTAINER = "Rene Wagner <rw@handhelds.org>"
 SECTION = "x11/base"
 PR = "r2"
 

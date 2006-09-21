@@ -1,6 +1,5 @@
 DESCRIPTION = "Keyboard map"
 SECTION = "base"
-MAINTAINER = "Marcin Juszkiewicz <openembedded@hrw.one.pl>"
 RDEPENDS = "initscripts console-tools"
 LICENSE = "GPL"
 PACKAGE_ARCH = "${MACHINE}"

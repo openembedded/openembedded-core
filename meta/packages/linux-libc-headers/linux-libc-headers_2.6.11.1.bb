@@ -7,7 +7,6 @@ HOMEPAGE = "http://ep09.pld-linux.org/~mmazur/linux-libc-headers/"
 #   standard linux kernel license applies. 
 # since we assume GPL for linux i think we can also assume it here
 LICENSE = "GPL"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 INHIBIT_DEFAULT_DEPS = "1"
 PR = "r2"
 

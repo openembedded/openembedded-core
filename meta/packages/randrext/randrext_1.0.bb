@@ -1,6 +1,5 @@
 SECTION = "libs"
 LICENSE= "BSD-X"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "X Resize and Rotate extension headers"
 
 SRC_URI = "${XLIBS_MIRROR}/randrext-${PV}.tar.bz2"

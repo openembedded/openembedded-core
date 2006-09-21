@@ -5,7 +5,6 @@ PRIORITY = "optional"
 PROVIDES = "spectrum-modules"
 DEPENDS = "orinoco-conf spectrum-fw"
 RDEPENDS = "orinoco-conf"
-MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 LICENSE = "GPL"
 PR = "r9"
 

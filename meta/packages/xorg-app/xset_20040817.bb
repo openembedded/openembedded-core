@@ -1,6 +1,5 @@
 DESCRIPTION = "user preference utility for X"
 LICENSE = "MIT"
-MAINTAINER = "Florian Boor <florian.boor@kernelconcepts.de>"
 FIXEDSRCDATE = "${@bb.data.getVar('FILE', d, 1).split('_')[-1].split('.')[0]}"
 PV = "0.0+cvs${FIXEDSRCDATE}"
 PR = "r1"

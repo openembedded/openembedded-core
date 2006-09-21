@@ -2,7 +2,6 @@ DESCRIPTION = "Xinerama library"
 LICENSE = "MIT"
 SECTION = "x11/libs"
 PRIORITY = "optional"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 DEPENDS = "panoramixext xproto virtual/libx11 libxext"
 PROVIDES = "xinerama"
 

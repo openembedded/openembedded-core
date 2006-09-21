@@ -142,7 +142,6 @@ PACKAGE_ARCH_rt3000 = "rt3000"
 
 PACKAGES_unslung = "${PN}-unslung"
 PACKAGE_ARCH_${PN}-unslung = "nslu2"
-MAINTAINER_${PN}-unslung = "NSLU2 Linux <www.nslu2-linux.org>"
 RDEPENDS_${PN}-unslung = "nslu2-linksys-ramdisk"
 RPROVIDES_${PN}-unslung = "${PN}"
 

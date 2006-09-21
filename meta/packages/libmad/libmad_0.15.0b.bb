@@ -1,7 +1,6 @@
 DESCRIPTION = "MPEG Audio Decoder Library"
 SECTION = "libs"
 PRIORITY = "optional"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "libid3tag"
 LICENSE = "GPL"
 PR = "r2"

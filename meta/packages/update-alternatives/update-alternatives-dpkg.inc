@@ -1,6 +1,5 @@
 LICENSE = "GPL"
 SECTION = "base"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz"
 S = "${WORKDIR}/dpkg-${PV}"
 PACKAGE_ARCH = "all"

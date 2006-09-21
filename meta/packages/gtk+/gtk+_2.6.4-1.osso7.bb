@@ -4,7 +4,6 @@ set of widgets, GTK+ is suitable for projects ranging from small one-off project
 HOMEPAGE = "http://www.gtk.org"
 SECTION = "libs"
 PRIORITY = "optional"
-MAINTAINER = "Koen Kooi <koen@handhelds.org>"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt"
 PR = "r1"
 

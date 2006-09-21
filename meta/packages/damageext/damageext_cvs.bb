@@ -1,7 +1,6 @@
 PV = "0.0+cvs${SRCDATE}"
 LICENSE = "MIT-X"
 SECTION = "libs"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xextensions fixesext"
 DESCRIPTION = "X Damage extension headers and specification"
 PR = "r1"

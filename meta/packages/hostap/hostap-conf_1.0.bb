@@ -1,5 +1,4 @@
 DESCRIPTION = "PCMCIA-cs configuration files for wireless LAN cards based on Intersil's Prism2/2.5/3 chipset"
-MAINTAINER = "Marcin Juszkiewicz <openembedded@hrw.one.pl>"
 SECTION = "kernel/modules"
 PRIORITY = "optional"
 LICENSE = "GPL"

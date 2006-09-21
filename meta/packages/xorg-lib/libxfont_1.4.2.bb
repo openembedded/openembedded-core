@@ -1,7 +1,6 @@
 SECTION = "x11/libs"
 LICENSE = "BSD-X"
 PRIORITY = "optional"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xproto xtrans zlib"
 PROVIDES = "xfont"
 DESCRIPTION = "X font library (used by the X server)."

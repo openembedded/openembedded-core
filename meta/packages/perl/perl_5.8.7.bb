@@ -1,4 +1,3 @@
-MAINTAINER="David Karlstrom <daka@thg.se>"
 
 require perl.inc
 

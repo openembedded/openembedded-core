@@ -1,7 +1,6 @@
 SECTION = "kernel/userland"
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 PRIORITY = "optional"
-MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 LICENSE = "GPL"
 
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \

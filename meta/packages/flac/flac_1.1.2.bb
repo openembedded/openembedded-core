@@ -1,5 +1,4 @@
 DESCRIPTION = "FLAC is a Free Lossless Audio Codec."
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 LICENSE = "BSD GPL"
 SECTION = "libs"
 DEPENDS = "libogg"

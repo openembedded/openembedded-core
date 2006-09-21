@@ -1,6 +1,5 @@
 SECTION = "libs"
 LICENSE = "MIT-X"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "X Render extension headers"
 
 SRC_URI = "${XLIBS_MIRROR}/renderext-${PV}.tar.bz2"

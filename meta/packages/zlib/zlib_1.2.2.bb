@@ -1,7 +1,6 @@
 DESCRIPTION = "Zlib Compression Library"
 SECTION = "libs"
 PRIORITY = "required"
-MAINTAINER = "Chris Larson <kergoth@handhelds.org>"
 HOMEPAGE = "http://www.gzip.org/zlib/"
 LICENSE = "zlib"
 PR = "r6"

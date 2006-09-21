@@ -1,6 +1,5 @@
 DESCRIPTION = "A C library for multiple-precision floating-point computations with exact rounding"
 LICENSE = "LGPL"
-MAINTAINER = "Rene Wagner <rw@handhelds.org>"
 SECTION = "libs"
 DEPENDS = "gmp"
 PR = "r2"

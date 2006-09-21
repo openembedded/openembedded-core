@@ -1,5 +1,4 @@
 LICENSE    = "GPL"
-MAINTAINER = "Florian Boor <florian@kernelconcepts.de"
 PR         = "r5"
 
 DEPENDS    = "base-passwd"

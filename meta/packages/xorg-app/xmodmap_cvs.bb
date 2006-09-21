@@ -1,7 +1,6 @@
 PV = "0.0+cvs${SRCDATE}"
 LICENSE = "MIT"
 DESCRIPTION = "utility for modifying keymaps and pointer button mappings in X"
-MAINTAINER = "Rene Wagner <rw@handhelds.org>"
 SECTION = "x11/base"
 PR = "r1"
 

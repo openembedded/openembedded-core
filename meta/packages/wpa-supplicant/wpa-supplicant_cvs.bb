@@ -1,7 +1,6 @@
 DESCRIPTION = "Client for Wi-Fi Protected Access (WPA)."
 SECTION = "network"
 LICENSE = "GPL"
-MAINTAINER = "Holger Schurig"
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 DEPENDS = "openssl"
 PV = "0.0+cvs${SRCDATE}"

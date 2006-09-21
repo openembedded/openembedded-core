@@ -6,7 +6,6 @@ SRC_URI = "cvs://anonymous@cvs-mirror.mozilla.org/cvsroot;module=mozilla \
 	   file://host_ldflags_fix.patch;patch=1 \
 	   file://minimo.png file://minimo.desktop"
 S = "${WORKDIR}/mozilla"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 SECTION = "x11"
 PRIORITY = "optional"
 PV = "0.0+cvs${SRCDATE}"

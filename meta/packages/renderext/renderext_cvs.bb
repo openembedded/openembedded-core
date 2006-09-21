@@ -1,7 +1,6 @@
 PV = "0.0+cvs${SRCDATE}"
 LICENSE = "MIT-X"
 SECTION = "libs"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DESCRIPTION = "X Render extension headers"
 DEFAULT_PREFERENCE = "1"
 

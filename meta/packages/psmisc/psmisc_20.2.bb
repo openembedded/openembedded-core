@@ -2,7 +2,6 @@ LICENSE = "GPL"
 DESCRIPTION = "procfs tools"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "ncurses"
 PR = "r3"
 

@@ -1,5 +1,4 @@
 DESCRIPTION = "Perl is a popular scripting language."
-MAINTAINER="David Karlstrom <daka@thg.se>"
 HOMEPAGE = "http://www.perl.org/"
 LICENSE = "Artistic|GPL"
 PR = "r3"

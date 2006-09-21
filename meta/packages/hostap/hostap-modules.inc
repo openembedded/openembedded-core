@@ -1,7 +1,6 @@
 DESCRIPTION = "A driver for wireless LAN cards based on Intersil's Prism2/2.5/3 chipset"
 SECTION = "kernel/modules"
 PRIORITY = "optional"
-MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 LICENSE = "GPL"
 
 SRC_URI = "http://hostap.epitest.fi/releases/hostap-driver-${PV}.tar.gz"

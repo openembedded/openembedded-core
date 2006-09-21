@@ -1,6 +1,5 @@
 SECTION = "console/network"
 DESCRIPTION = "Enables PPP dial-in through a serial connection"
-MAINTAINER = "Rene Wagner <rw@handhelds.org>"
 DEPENDS = "ppp"
 RDEPENDS = "ppp"
 PR = "r4"

@@ -3,7 +3,6 @@ SECTION = "base"
 LICENSE = "GPL"
 DEPENDS = "prism3-firmware hostap-utils"
 RDEPENDS = "prism3-firmware hostap-utils"
-MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
 PACKAGE_ARCH = "all"
 PR = "r2"
 

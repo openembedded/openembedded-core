@@ -1,4 +1,3 @@
-MAINTAINER = "Justin Patrin <papercrane@reversefold.com>"
 HOMEPAGE = "http://www.enlightenment.org"
 SECTION = "e/apps"
 

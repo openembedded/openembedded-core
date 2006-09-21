@@ -1,7 +1,6 @@
 PV = "0.0+cvs${SRCDATE}"
 LICENSE= "BSD-X"
 SECTION = "libs"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "xextensions fixesext"
 DESCRIPTION = "X Composite extension headers and specification"
 DEFAULT_PREFERENCE = "1"

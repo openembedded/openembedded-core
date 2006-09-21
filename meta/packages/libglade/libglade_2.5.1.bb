@@ -3,7 +3,6 @@ DESCRIPTION = "Runtime support for GTK interface builder"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "gtk+ gtk-doc"
-MAINTAINER = "Phil Blundell <pb@handhelds.org>"
 
 inherit autotools pkgconfig gnome
 
