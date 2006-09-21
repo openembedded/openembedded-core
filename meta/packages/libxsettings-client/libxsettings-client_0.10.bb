@@ -16,7 +16,6 @@ inherit autotools gettext
 do_stage () {
         oe_libinstall -so libXsettings-client ${STAGING_LIBDIR}
 
-	mkdir -p ${STAGING_INCDIR}/gpe
 	for h in ${headers}; do
 		install -m 0644 ${S}/$h ${STAGING_INCDIR}/$h
 	done
