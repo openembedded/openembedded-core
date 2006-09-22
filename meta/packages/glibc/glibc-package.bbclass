@@ -8,11 +8,12 @@
 
 python __anonymous () {
     import bb, re
-    uc_os = (re.match('.*uclibc$', bb.data.getVar('TARGET_OS', d, 1)) != None)
+    uc_os = (re.match('.*uclibc*', bb.data.getVar('TARGET_OS', d, 1)) != None)
     if uc_os:
         raise bb.parse.SkipPackage("incompatible with target %s" %
                                    bb.data.getVar('TARGET_OS', d, 1))
 }
+
 
 # Binary locales are generated at build time if ENABLE_BINARY_LOCALE_GENERATION
 # is set. The idea is to avoid running localedef on the target (at first boot)
@@ -78,6 +79,13 @@ do_install() {
 		grep -v $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
 		mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
 	done
+	# If indicated, only build a limited selection of locales
+	if [ "${LIMIT_BUILT_LOCALES}" != "${LIMIT_BUILT_LOCALES}" ]; then
+		for i in ${LIMIT_BUILT_LOCALES}; do
+			grep $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
+			mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
+		done
+	fi
 	rm -f ${D}/etc/rpc
 }
 
@@ -143,7 +151,7 @@ do_prep_locale_tree() {
 	for i in $treedir/${datadir}/i18n/charmaps/*gz; do 
 		gunzip $i
 	done
-	cp -a ${STAGING_LIBDIR}/* $treedir/lib
+	cp -a ${D}/lib/* $treedir/lib
 	if [ -f ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* ]; then
 		cp -a ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* $treedir/lib
 	fi
@@ -194,10 +202,6 @@ python package_do_split_gconvs () {
 			if m:
 				dp = legitimize_package_name('glibc-localedata-%s' % m.group(1))
 				if not dp in deps:
-					if '<' in dp:
-						bb.note('warning, dp is %s' % dp)
-						bb.note('  fn is %s' % fn)
-						bb.note('  line was %s' % l)
 					deps.append(dp)
 		f.close()
 		if deps != []:
