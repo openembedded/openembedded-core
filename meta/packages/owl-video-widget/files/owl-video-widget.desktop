@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Video
+Exec=video
+Icon=owl-video-widget.png
+Terminal=false
+Type=Application
+Categories=AudioVideo;Player;PIM;MB;
+SingleInstance=true
+StartupNotify=true
