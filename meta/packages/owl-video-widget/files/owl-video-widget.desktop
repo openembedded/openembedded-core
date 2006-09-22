@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Video
-Exec=/usr/bin/video
+Exec=video
 Icon=owl-video-widget.png
 Terminal=false
 Type=Application
