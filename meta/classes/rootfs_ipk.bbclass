@@ -113,7 +113,7 @@ log_check() {
 	
 }
 
-fakeroot do_rootfs () {
+fakeroot rootfs_ipk_do_rootfs () {
 	rm -rf ${IMAGE_ROOTFS}
 	real_do_rootfs
 }
@@ -140,6 +140,6 @@ remove_init_link () {
 }
 
 # export the zap_root_password, create_etc_timestamp and remote_init_link
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link
+EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs
 
 addtask rootfs before do_build after do_install
