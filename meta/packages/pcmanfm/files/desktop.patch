@@ -1,0 +1,11 @@
+--- pcmanfm-0.3.2-beta/pcmanfm.desktop.in.old	2006-09-25 11:43:07.000000000 +0100
++++ pcmanfm-0.3.2-beta/pcmanfm.desktop.in	2006-09-25 11:44:59.000000000 +0100
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Categories=Application;System;Utility;Core;GTK;
+ Encoding=UTF-8
+-Name=PCMan File Manager
++Name=File Manager
+ Name[zh_TW]=PCMan 檔案管理程式
+ Name[pl]=Przeglądarka plików z zakładkami
+ Exec=pcmanfm %f

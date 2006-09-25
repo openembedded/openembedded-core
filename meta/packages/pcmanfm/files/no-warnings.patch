@@ -1,0 +1,47 @@
+--- pcmanfm-0.3.2-beta/src/main.c.old	2006-09-25 11:51:51.000000000 +0100
++++ pcmanfm-0.3.2-beta/src/main.c	2006-09-25 11:51:55.000000000 +0100
+@@ -173,7 +173,7 @@
+     gtk_widget_show ( GTK_WIDGET( main_window ) );
+     return main_window;
+ }
+-
++#if 0
+ static void check_icon_theme()
+ {
+     GtkSettings * settings;
+@@ -212,7 +212,7 @@
+     }
+     g_free( theme );
+ }
+-
++#endif
+ int
+ main ( int argc, char *argv[] )
+ {
+@@ -274,7 +274,7 @@
+     vfs_file_info_set_thumbnail_size( appSettings.bigIconSize,
+                                       appSettings.smallIconSize );
+ 
+-    check_icon_theme();
++/*    check_icon_theme();*/
+ 
+     if( appSettings.showDesktop )
+         fm_desktop_init();
+--- pcmanfm-0.3.2-beta/src/main-window.c.old	2006-09-25 11:47:45.000000000 +0100
++++ pcmanfm-0.3.2-beta/src/main-window.c	2006-09-25 11:50:32.000000000 +0100
+@@ -496,6 +496,7 @@
+     gtk_window_add_accel_group ( GTK_WINDOW ( main_window ), main_window->accel_group );
+     gtk_widget_grab_focus ( GTK_WIDGET( main_window->address_bar ) );
+ 
++#if 0
+     /* Create warning bar for super user */
+     if ( geteuid() == 0 )                 /* Run as super user! */
+     {
+@@ -510,6 +511,7 @@
+         gtk_box_pack_start ( GTK_BOX ( main_window->main_vbox ),
+                              main_window->status_bar, FALSE, FALSE, 2 );
+     }
++#endif
+ 
+     /* Create client area */
+     main_window->notebook = GTK_NOTEBOOK( gtk_notebook_new () );
