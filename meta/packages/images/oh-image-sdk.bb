@@ -13,7 +13,8 @@ RDEPENDS = "\
     task-oh-standard \
     task-oh-devtools \
     task-oh-testapps \
-    task-oh-sdk "
+    task-oh-sdk \
+    task-oh-sdk-base"
 
 export PACKAGE_INSTALL = "${RDEPENDS}"
 
