@@ -1,6 +1,6 @@
 SECTION = "base"
 DESCRIPTION = "tslib is a touchscreen access library."
-PR = "r0"
+PR = "r1"
 SRCDATE_tslib = "now"
 
 SRC_URI_OVERRIDES_PACKAGE_ARCH = "0"
