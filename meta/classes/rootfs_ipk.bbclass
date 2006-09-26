@@ -25,7 +25,7 @@ IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
 
 LINGUAS_INSTALL = "${@" ".join(map(lambda s: "locale-base-%s" % s, bb.data.getVar('IMAGE_LINGUAS', d, 1).split()))}"
 
-real_do_rootfs () {
+fakeroot rootfs_ipk_do_rootfs () {
 	set -x
 		
 	mkdir -p ${IMAGE_ROOTFS}/dev
@@ -113,10 +113,6 @@ log_check() {
 	
 }
 
-fakeroot rootfs_ipk_do_rootfs () {
-	rm -rf ${IMAGE_ROOTFS}
-	real_do_rootfs
-}
 
 # set '*' as the rootpassword so the images
 # can decide if they want it or not
