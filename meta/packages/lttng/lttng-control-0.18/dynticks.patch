@@ -1,0 +1,43 @@
+Index: ltt-control-0.6-28042006/facilities/dynticks.xml
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ ltt-control-0.6-28042006/facilities/dynticks.xml	2006-06-05 18:03:41.000000000 +0100
+@@ -0,0 +1,18 @@
++<?xml version="1.0"?>
++<facility name="dynticks">
++    <description>Dynamic Timer Events</description>
++    
++  <event name="handler_entry">
++    <description>Dynticks Handler Entered</description>
++  </event>  
++  
++  <event name="handler_exit">
++    <description>Dynticks Handler Exitted</description>
++  </event> 
++
++  <event name="reprogram">
++    <description>Dynticks Reprogram</description>
++    <field name="ticks"><description>Number of ticks to sleep for</description><uint size="4"></field>
++  </event> 
++
++</facility>
+Index: ltt-control-0.6-28042006/facilities/Makefile.am
+===================================================================
+--- ltt-control-0.6-28042006.orig/facilities/Makefile.am	2006-04-28 21:26:26.000000000 +0100
++++ ltt-control-0.6-28042006/facilities/Makefile.am	2006-06-05 18:04:30.000000000 +0100
+@@ -1,6 +1,7 @@
+ 
+ EXTRA_DIST =  \
+ core.xml \
++dynticks.xml \
+ fs.xml \
+ ipc.xml \
+ kernel.xml \
+@@ -21,6 +22,7 @@
+ 
+ facilities_DATA = \
+ core.xml \
++dynticks.xml \
+ fs.xml \
+ ipc.xml \
+ kernel.xml \
