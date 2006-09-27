@@ -1,3 +1,28 @@
+Introduction
+==
+
+'Poky' is a combined cross build system and linux distribution based
+upon OpenEmbedded. It features support for building X11/Matchbox/GTK
+based filesystem images for various embedded devices and boards.
+
+
+Required Packages
+===
+
+Running Poky on Ubuntu Breezy requires the following extra packages to
+be installed;
+
+build-essential
+diffstat
+texi2html
+cvs
+subversion
+gcc-3.4
+libsdl1.2-dev
+zlib1g-dev
+
+For Debian/Fedora - *Todo*
+
 Building An Image
 ===
 
@@ -17,13 +42,18 @@ in build/conf/local.conf
 NOTE: The above commands must be run in the build directory. Running 
 them anywhere else will cause confusion.
 
+
 Notes:
 ===
 
-o Useful Links;
+Useful Links;
 
-  OE Homepage and wiki
-  http://openembedded.org
+OpenedHand
+http://openedhand.com
+
+Poky Homepage
+http://projects.o-hand.com/poky
+
+OE Homepage and wiki
+http://openembedded.org
  
-  Koens PDA page has some nice tips;
-  http://dominion.kabel.utwente.nl/koen/pda/?page=software&sub=bb
