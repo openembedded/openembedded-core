@@ -4,7 +4,7 @@
 
 def raise_sanity_error(msg):
 	import bb
-	bb.fatal(""" Openembedded's config sanity checker detected a potential misconfiguration.
+	bb.fatal(""" Poky's config sanity checker detected a potential misconfiguration.
 	Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
 	Following is the list of potential problems / advisories:
 	
@@ -39,7 +39,7 @@ def check_sanity(e):
 		from distutils.version import LooseVersion
 	except ImportError:
 		def LooseVersion(v): print "WARNING: sanity.bbclass can't compare versions without python-distutils"; return 1
-	import os
+	import os, commands
 
 	# Check the bitbake version meets minimum requirements
 	minversion = data.getVar('BB_MIN_VERSION', e.data , True)
@@ -73,29 +73,45 @@ def check_sanity(e):
 	if not ( check_conf_exists("conf/distro/${DISTRO}.conf", e.data) or check_conf_exists("conf/distro/include/${DISTRO}.inc", e.data) ):
 		raise_sanity_error("DISTRO '%s' not found. Please set a valid DISTRO in your local.conf" % data.getVar("DISTRO", e.data, True ))
 
+	missing = ""
+
 	if not check_app_exists("${MAKE}", e.data):
-		raise_sanity_error('GNU make missing. Please install GNU make')
+		missing = missing + "GNU make,"
 
 	if not check_app_exists('${BUILD_PREFIX}gcc', e.data):
-		raise_sanity_error('C Host-Compiler is missing, please install one' )
+		missing = missing + "C Compiler,"
 
 	if not check_app_exists('${BUILD_PREFIX}g++', e.data):
-		raise_sanity_error('C++ Host-Compiler is missing, please install one' )
+		missing = missing + "C++ Compiler,"
 
 	if not check_app_exists('patch', e.data):
-		raise_sanity_error('Please install the patch utility, preferable GNU patch.')
+		missing = missing + "GNU patch,"
 
 	if not check_app_exists('diffstat', e.data):
-		raise_sanity_error('Please install the diffstat utility')
+		missing = missing + "diffstat,"
 
 	if not check_app_exists('texi2html', e.data):
-		raise_sanity_error('Please install the texi2html binary')
+		missing = missing + "texi2html,"
 
 	if not check_app_exists('cvs', e.data):
-		raise_sanity_error('Please install the cvs utility')
+		missing = missing + "cvs,"
 
 	if not check_app_exists('svn', e.data):
-		raise_sanity_error('Please install the svn utility')
+		missing = missing + "svn,"
+
+	# qemu-native needs gcc 3.x
+
+ 	gcc_version = commands.getoutput("${BUILD_PREFIX}gcc --version | head -n 1 | cut -f 3 -d ' '")
+
+	if not check_app_exists('gcc-3.4', e.data) and not check_app_exists('gcc-3.3', e.data) and gcc_version[0] != '3':
+		missing = missing + "gcc-3.x (needed for qemu-native),"
+
+        # FIXME: We also need to check for libsdl-dev and zlib-dev 
+        # for qemu-native...
+
+	if not missing == "":
+		missing = missing.rstrip(',')
+		raise_sanity_error("Missing Dependencies: %s" % missing)
 
 	oes_bb_conf = data.getVar( 'OES_BITBAKE_CONF', e.data, True )
 	if not oes_bb_conf:
