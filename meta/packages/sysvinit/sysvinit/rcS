@@ -36,63 +36,9 @@ fi
 trap ":" INT QUIT TSTP
 
 #
-#       Do we have /proc/progress and set VERBOSE to "no" ?
-#       If so, calculate the number of scripts and the incremental step
-#
-if [ "$VERBOSE" = no ]; then
-    if [ -e /proc/progress ]; then
-        set `ls -1 /etc/rc$runlevel.d/S* | wc`
-        numscripts=$1
-        PROGRESS_incstep=`expr 90 / $1`
-        PROGRESS_value=10
-        PROGRESS=yes
-        export PROGRESS_value PROGRESS_incstep
-    fi
-fi
-export VERBOSE PROGRESS
-
-#
 #	Call all parts in order.
 #
-for i in /etc/rcS.d/S??*
-do
-	# Ignore dangling symlinks for now.
-	[ ! -f "$i" ] && continue
-
-	# Handle verbosity
-	[ "$VERBOSE" = very ] && echo "INIT: Running $i..."
-	if [ "$PROGRESS" = yes ]; then
-		export PROGRESS_value=`expr $PROGRESS_value + $PROGRESS_incstep`
-		echo "$PROGRESS_value Starting $i..." >/proc/progress
-	fi
-
-	case "$i" in
-		*.sh)
-			# Source shell script for speed.
-			(
-				trap - INT QUIT TSTP
-				set start
-				. $i
-			)
-			;;
-		*)
-			# No sh extension, so fork subprocess.
-			$i start
-			;;
-	esac
-
-        #
-        # Report status based on result code
-        #
-        result=$?
-        if [ "$PROGRESS" = yes ]; then
-                if [ "$result" = 0 ]; then
-                    echo "=s" >/proc/progress
-                else
-                    echo "=f" >/proc/progress
-                fi
-        fi
-done
+exec /etc/init.d/rc S
 
 #
 #	For compatibility, run the files in /etc/rc.boot too.

@@ -18,18 +18,37 @@
 . /etc/default/rcS
 export VERBOSE
 
+startup_progress() {
+    step=$(($step + $step_change))
+    progress=$(($step * $progress_size / $num_steps + $first_step))
+    if type psplash-write >/dev/null 2>&1; then
+        TMPDIR=/mnt/.psplash psplash-write "PROGRESS $progress" || true
+    fi
+}
+
+
 #
 # Start script or program.
 #
 startup() {
+  # Handle verbosity
+  [ "$VERBOSE" = very ] && echo "INIT: Running $@..."
+
   case "$1" in
 	*.sh)
-		sh "$@"
+		# Source shell script for speed.
+		(
+			trap - INT QUIT TSTP
+			scriptname=$1
+			shift
+			. $scriptname
+		)
 		;;
 	*)
 		"$@"
 		;;
   esac
+  startup_progress
 }
 
   # Ignore CTRL-C only in this shell, so we can interrupt subprocesses.
@@ -56,6 +75,37 @@ startup() {
   # Is there an rc directory for this new runlevel?
   if [ -d /etc/rc$runlevel.d ]
   then
+	# Find out where in the progress bar the initramfs got to.
+	PROGRESS_STATE=0
+	#if [ -f /dev/.initramfs/progress_state ]; then
+	#    . /dev/.initramfs/progress_state
+	#fi
+
+	# Split the remaining portion of the progress bar into thirds
+	progress_size=$(((100 - $PROGRESS_STATE) / 3))
+
+	case "$runlevel" in
+		0|6)
+			# Count down from 0 to -100 and use the entire bar
+			first_step=0
+			progress_size=100
+			step_change=-1
+			;;
+	        S)
+			# Begin where the initramfs left off and use 2/3
+			# of the remaining space
+			first_step=$PROGRESS_STATE
+			progress_size=$(($progress_size * 2))
+			step_change=1
+			;;
+		*)
+			# Begin where rcS left off and use the final 1/3 of
+			# the space (by leaving progress_size unchanged)
+			first_step=$(($progress_size * 2 + $PROGRESS_STATE))
+			step_change=1
+			;;
+	esac
+
 	# First, run the KILL scripts.
 	if [ $previous != N ]
 	then
@@ -68,6 +118,19 @@ startup() {
 			startup $i stop
 		done
 	fi
+
+	num_steps=0
+	for s in /etc/rc$runlevel.d/[SK]*; do
+            case "${s##/etc/rc$runlevel.d/S??}" in
+                gdm|xdm|kdm|reboot|halt)
+                    break
+                    ;;
+            esac
+            num_steps=$(($num_steps + 1))
+        done
+
+        step=0
+
 	# Now run the START scripts for this runlevel.
 	for i in /etc/rc$runlevel.d/S*
 	do
@@ -99,4 +162,10 @@ startup() {
 		esac
 	done
   fi
-# eof /etc/init.d/rc
+
+if [ "x$runlevel" != "xS" ]; then
+    if type psplash-write >/dev/null 2>&1; then
+        TMPDIR=/mnt/.psplash psplash-write "QUIT" || true
+    	umount /mnt/.psplash
+    fi
+fi
