@@ -3,7 +3,7 @@ SECTION = "base"
 RDEPENDS = "initscripts console-tools"
 LICENSE = "GPL"
 PACKAGE_ARCH = "${MACHINE}"
-PR = "r5"
+PR = "r6"
 
 inherit update-rc.d
 
@@ -17,7 +17,7 @@ SRC_URI_append_collie       = " file://keymap-*.map"
 SRC_URI_append_poodle       = " file://keymap-*.map"
 
 INITSCRIPT_NAME = "keymap"
-INITSCRIPT_PARAMS = "start 00 S ."
+INITSCRIPT_PARAMS = "start 01 S ."
 
 do_install () {
     install -d ${D}${sysconfdir}/init.d/
