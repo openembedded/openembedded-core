@@ -48,11 +48,11 @@ python package_ipk_install () {
 
 
 	if (not os.access(os.path.join(ipkdir,"Packages"), os.R_OK) or
-		not os.access(os.path.join(os.path.join(tmpdir, "stamps"),"do_packages"),os.R_OK)):
+		not os.access(os.path.join(tmpdir, "stamps", "do_packages"),os.R_OK):
 		ret = os.system('ipkg-make-index -p %s %s ' % (os.path.join(ipkdir, "Packages"), ipkdir))
 		if (ret != 0 ):
 			raise bb.build.FuncFailed
-		f=open(os.path.join(os.path.join(tmpdir, "stamps"),"do_packages"),"w")
+		f=open(os.path.join(tmpdir, "stamps", "do_packages"),"w")
 		f.close()
 
 	ret = os.system('ipkg-cl  -o %s -f %s update' % (rootfs, conffile))
@@ -91,8 +91,8 @@ python do_package_ipk () {
 
 	tmpdir = bb.data.getVar('TMPDIR', d, 1)
 	# Invalidate the packages file
-	if os.access(os.path.join(os.path.join(tmpdir, "stamps"),"do_packages"),os.R_OK):
-		os.unlink(os.path.join(os.path.join(tmpdir, "stamps"),"do_packages"))
+	if os.access(os.path.join(tmpdir, "stamps", "do_packages"),os.R_OK):
+		os.unlink(os.path.join(tmpdir, "stamps", "do_packages"))
 
 	if packages == []:
 		bb.debug(1, "No packages; nothing to do")
