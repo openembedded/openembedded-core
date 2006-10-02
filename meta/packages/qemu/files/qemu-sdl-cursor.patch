@@ -1,0 +1,11 @@
+--- qemu-0.8.2/sdl.c	2006-10-02 15:46:42.000000000 +0100
++++ qemu-0.8.2-x/sdl.c	2006-10-02 15:47:02.000000000 +0100
+@@ -287,7 +287,7 @@
+ {
+     if (kbd_mouse_is_absolute()) {
+         SDL_ShowCursor(1);
+-        SDL_SetCursor(sdl_cursor_hidden); 
++        /* SDL_SetCursor(sdl_cursor_hidden); */
+     } else {
+         SDL_ShowCursor(0);
+     }
