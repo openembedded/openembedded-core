@@ -18,6 +18,14 @@ fi
 
 . /etc/profile
 
+fallback_screen_arg() {
+    geom=`fbset | grep geometry`
+    w=`echo $geom | awk '{ print $2 }'`
+    h=`echo $geom | awk '{ print $3 }'`
+    b=`echo $geom | awk '{ print $6 }'`
+    echo -n "${w}x${h}x${b}"
+} 
+
 module_id() {
     ## used to read from assets, but sometimes assets is corrupted
     # grep "Module ID" /proc/hal/assets | sed "s/.*://"
@@ -75,6 +83,13 @@ case `module_id` in
                 modprobe mbxfb
 	        ARGS="$ARGS -fb /dev/fb1"
                 ;;
+        *)
+		# Its a device we dont know about - in which case force
+                # kdrive to use the current framebuffer geometry otherwise
+		# it will defualt to trying to achieve 1024x768 
+		S=`fallback_screen_arg`
+		ARGS="$ARGS -screen $S"
+		;;
 esac
 
 DISPLAY=':0'

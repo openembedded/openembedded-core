@@ -2,7 +2,7 @@ DESCRIPTION = "Common X11 scripts"
 LICENSE = "GPL"
 SECTION = "x11"
 RDEPENDS_${PN} = "xmodmap libxrandr xdpyinfo xtscal xinit"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "file://etc"
 S = ${WORKDIR}
