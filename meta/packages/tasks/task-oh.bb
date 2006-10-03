@@ -38,6 +38,7 @@ RDEPENDS_task-oh-boot-min-extras = "\
     task-base-oh-minimal"
 
 RDEPENDS_task-oh-base = "\
+    psplash \
     matchbox-common \
     matchbox-wm \
     matchbox-keyboard \
