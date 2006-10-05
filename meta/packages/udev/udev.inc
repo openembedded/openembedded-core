@@ -1,4 +1,4 @@
-DESCRIPTION = "udev is a program which dynamically creates and removes device nodes from \
+DESCRIPTION ?= "udev is a program which dynamically creates and removes device nodes from \
 /dev/. It responds to /sbin/hotplug device events and requires a 2.6 kernel."
 LICENSE = "GPL"
 
@@ -33,7 +33,8 @@ bindir = "/bin"
 sbindir = "/sbin"
 
 UDEV_EXTRAS = "<override me>"
-FILES_${PN} += "${usrbindir} ${usrsbindir}"
+FILES_${PN} += "${usrbindir}/* ${usrsbindir}/*"
+FILES_${PN}-dbg += "${usrbindir}/.debug ${usrsbindir}/.debug"
 EXTRA_OEMAKE = "-e \
 		'EXTRAS=${UDEV_EXTRAS}' \
 		'STRIP=echo'"
