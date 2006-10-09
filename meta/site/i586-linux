@@ -1,3 +1,8 @@
+dpkg_cv_va_copy=${ac_cv_va_copy=no}
+dpkg_cv___va_copy=${ac_cv___va_copy=yes}
+ac_cv_va_copy=${ac_cv_va_copy=no}
+ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
+ac_cv___va_copy=${ac_cv___va_copy=yes}
 ac_cv_c_bigendian=${ac_cv_c_bigendian=no}
 ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
 ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
