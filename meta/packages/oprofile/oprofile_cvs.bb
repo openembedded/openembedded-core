@@ -1,4 +1,5 @@
 PV = "0.9.1+cvs${SRCDATE}"
+PR = "r1"
 SECTION = "devel"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
@@ -7,6 +8,7 @@ DEPENDS = "popt binutils"
 
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
 	   file://no_arm_mapping_syms.patch;patch=1 \
+           file://opcontrol_bashisms.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 

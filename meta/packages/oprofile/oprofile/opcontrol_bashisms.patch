@@ -1,0 +1,24 @@
+ utils/opcontrol |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+Index: oprofile/utils/opcontrol
+===================================================================
+--- oprofile.orig/utils/opcontrol	2006-02-10 14:18:13.000000000 +0000
++++ oprofile/utils/opcontrol	2006-10-11 15:52:16.000000000 +0100
+@@ -476,7 +476,7 @@ validate_separate_args()
+ 	SEPARATE_KERNEL=0
+ 	SEPARATE_THREAD=0
+ 	SEPARATE_CPU=0
+-	while (($i < $#)); do
++	while [ "$i" -lt "$#" ]; do
+ 		shift
+ 		case "$1" in
+ 			lib|library)
+@@ -1513,7 +1513,6 @@ check_version()
+ BINDIR="/usr/bin"
+ OPCONTROL=`$BINDIR/which $0`
+ OPDIR=`$BINDIR/dirname $OPCONTROL`
+-n
+ PATH=/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin
+ 
+ check_version_help $@
