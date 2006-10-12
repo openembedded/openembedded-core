@@ -13,12 +13,15 @@ BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 BBMASK = ""
 
 # The machine to target
+MACHINE = "qemuarm"
+
+# Other supported machines
+#MACHINE = "cmx270"
+#MACHINE = "qemux86"
 #MACHINE = "c7x0"
 #MACHINE = "akita"
 #MACHINE = "spitz"
 #MACHINE = "nokia770"
-MACHINE = "qemuarm"
-#MACHINE = "cmx270"
 
 DISTRO = "poky"
 
@@ -29,6 +32,9 @@ DISTRO = "poky"
 
 DISTRO_TYPE = "debug"
 
+# Packaging system used in generated images, 
+# change below to 'package_deb' for debs + dpkg.
+PACKAGE_CLASSES = "package_ipk"
 
 # Uncomment this to specify where BitBake should create its temporary files.
 # Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
