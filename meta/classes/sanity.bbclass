@@ -84,6 +84,9 @@ def check_sanity(e):
 	if not check_app_exists('${BUILD_PREFIX}g++', e.data):
 		missing = missing + "C++ Compiler,"
 
+	if not check_app_exists('gawk', e.data):
+		missing = missing + "GNU awk (gawk),"
+
 	if not check_app_exists('patch', e.data):
 		missing = missing + "GNU patch,"
 
