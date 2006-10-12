@@ -1,10 +1,12 @@
-PV = "0.9.1+cvs${SRCDATE}"
+PV = "0.9.2+cvs${SRCDATE}"
 PR = "r1"
 SECTION = "devel"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
 LICENSE = "GPL"
 DEPENDS = "popt binutils"
+
+DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
 	   file://no_arm_mapping_syms.patch;patch=1 \
