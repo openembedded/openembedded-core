@@ -14,7 +14,7 @@ RDEPENDS_gtk-theme-thinice = "gtk-engine-thinice"
 RDEPENDS_gtk-theme-industrial = "gtk-engine-industrial"
 RDEPENDS_gtk-theme-clearlooks = "gtk-engine-clearlooks"
 
-SRC_URI = "${GNOME_MIRROR}/${PN}/2.7/${PN}-${PV}.tar.bz2"
+SRC_URI = "${GNOME_MIRROR}/${PN}/2.6/${PN}-${PV}.tar.bz2"
 
 CFLAGS_prepend = "-DHAVE_ANIMATION "
 
