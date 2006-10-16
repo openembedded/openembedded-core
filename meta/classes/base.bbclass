@@ -376,6 +376,12 @@ python base_do_fetch() {
 		raise bb.build.FuncFailed("Fetch failed: %s" % value)
 }
 
+addtask fetchall
+do_fetchall[recrdeptask] = "do_fetch"
+python base_do_fetchall() {
+	bb.build.exec_task('do_fetch', d)
+}
+
 def oe_unpack_file(file, data, url = None):
 	import bb, os
 	if not url:
@@ -731,7 +737,7 @@ python () {
 # Patch handling
 inherit patch
 
-EXPORT_FUNCTIONS do_clean do_mrproper do_fetch do_unpack do_configure do_compile do_install do_package do_populate_pkgs do_stage do_rebuild
+EXPORT_FUNCTIONS do_clean do_mrproper do_fetch do_unpack do_configure do_compile do_install do_package do_populate_pkgs do_stage do_rebuild do_fetchall
 
 MIRRORS[func] = "0"
 MIRRORS () {
