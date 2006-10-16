@@ -268,7 +268,7 @@ python package_do_split_gconvs () {
 		cmd = "PATH=\"%s\" I18NPATH=\"%s\" %s -L %s %s/bin/localedef %s" % (path, i18npath, qemu, treedir, treedir, localedef_opts)
 		bb.note("generating locale %s (%s)" % (locale, encoding))
 		if os.system(cmd):
-			raise bb.build.FuncFailed("localedef returned an error.")
+			raise bb.build.FuncFailed("localedef returned an error (command was %s)." % cmd)
 
 	def output_locale(name, locale, encoding):
 		use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
