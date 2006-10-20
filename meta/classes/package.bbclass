@@ -111,6 +111,8 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 
 #PACKAGE_DEPENDS ?= "file-native"
 #DEPENDS_prepend =+ "${PACKAGE_DEPENDS} "
+# file(1) output to match to consider a file an unstripped executable
+FILE_UNSTRIPPED_MATCH ?= "not stripped"
 #FIXME: this should be "" when any errors are gone!
 IGNORE_STRIP_ERRORS ?= "1"
 
@@ -120,12 +122,13 @@ runstrip() {
 	# is necessary for this stuff to work, hence the addition to PACKAGES_DEPENDS
 
 	local ro st
+
 	st=0
 	if {	file "$1" || {
 			oewarn "file $1: failed (forced strip)" >&2
-			echo 'not stripped'
+			echo '${FILE_UNSTRIPPED_MATCH}'
 		}
-	   } | grep -q 'not stripped'
+	   } | grep -q '${FILE_UNSTRIPPED_MATCH}'
 	then
 		oenote "${STRIP} $1"
 		ro=
@@ -133,7 +136,7 @@ runstrip() {
 			ro=1
 			chmod +w "$1"
 		}
-		mkdir $(dirname "$1")/.debug
+		mkdir -p $(dirname "$1")/.debug
 		debugfile="$(dirname "$1")/.debug/$(basename "$1")"
 		'${OBJCOPY}' --only-keep-debug "$1" "$debugfile"
 		'${STRIP}' "$1"
@@ -324,19 +327,23 @@ python populate_packages () {
 		return (s[stat.ST_MODE] & stat.S_IEXEC)
 
 	# Sanity check PACKAGES for duplicates - should be moved to 
-	# sanity.bbclass once we have he infrastucture
-	pkgs = []
+	# sanity.bbclass once we have the infrastucture
+	package_list = []
 	for pkg in packages.split():
-		if pkg in pkgs:
-			bb.error("%s is listed in PACKAGES mutliple times. Undefined behaviour will result." % pkg)
-		pkgs += pkg
+		if pkg in package_list:
+			bb.error("-------------------")
+			bb.error("%s is listed in PACKAGES mutliple times, this leads to packaging errors." % pkg)
+			bb.error("Please fix the metadata/report this as bug to OE bugtracker.")
+			bb.error("-------------------")
+		else:
+			package_list.append(pkg)
 
 	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, 1) != '1'):
 		stripfunc = ""
 		for root, dirs, files in os.walk(dvar):
 			for f in files:
 				file = os.path.join(root, f)
-				if not os.path.islink(file) and isexec(file):
+				if not os.path.islink(file) and not os.path.isdir(file) and isexec(file):
 					stripfunc += "\trunstrip %s || st=1\n" % (file)
 		if not stripfunc == "":
 			from bb import build
@@ -346,7 +353,7 @@ python populate_packages () {
 			bb.data.setVarFlag('RUNSTRIP', 'func', 1, localdata)
 			bb.build.exec_func('RUNSTRIP', localdata)
 
-	for pkg in packages.split():
+	for pkg in package_list:
 		localdata = bb.data.createCopy(d)
 		root = os.path.join(workdir, "install", pkg)
 
@@ -405,7 +412,7 @@ python populate_packages () {
 
 	bb.build.exec_func("package_name_hook", d)
 
-	for pkg in packages.split():
+	for pkg in package_list:
 		pkgname = bb.data.getVar('PKG_%s' % pkg, d, 1)
 		if pkgname is None:
 			bb.data.setVar('PKG_%s' % pkg, pkg, d)
@@ -414,7 +421,7 @@ python populate_packages () {
 
 	dangling_links = {}
 	pkg_files = {}
-	for pkg in packages.split():
+	for pkg in package_list:
 		dangling_links[pkg] = []
 		pkg_files[pkg] = []
 		inst_root = os.path.join(workdir, "install", pkg)
@@ -433,12 +440,12 @@ python populate_packages () {
 						target = os.path.join(root[len(inst_root):], target)
 					dangling_links[pkg].append(os.path.normpath(target))
 
-	for pkg in packages.split():
+	for pkg in package_list:
 		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "")
 		for l in dangling_links[pkg]:
 			found = False
 			bb.debug(1, "%s contains dangling link %s" % (pkg, l))
-			for p in packages.split():
+			for p in package_list:
 				for f in pkg_files[p]:
 					if f == l:
 						found = True
@@ -773,56 +780,55 @@ python read_shlibdeps () {
 }
 
 python package_depchains() {
-    """
-    For a given set of prefix and postfix modifiers, make those packages
-    RRECOMMENDS on the corresponding packages for its DEPENDS.
+	"""
+	For a given set of prefix and postfix modifiers, make those packages
+	RRECOMMENDS on the corresponding packages for its DEPENDS.
 
-    Example:  If package A depends upon package B, and A's .bb emits an
-    A-dev package, this would make A-dev Recommends: B-dev.
-    """
+	Example:  If package A depends upon package B, and A's .bb emits an
+	A-dev package, this would make A-dev Recommends: B-dev.
+	"""
 
-    packages  = bb.data.getVar('PACKAGES', d, 1)
-    postfixes = (bb.data.getVar('DEPCHAIN_POST', d, 1) or '').split()
-    prefixes  = (bb.data.getVar('DEPCHAIN_PRE', d, 1) or '').split()
+	packages  = bb.data.getVar('PACKAGES', d, 1)
+	postfixes = (bb.data.getVar('DEPCHAIN_POST', d, 1) or '').split()
+	prefixes  = (bb.data.getVar('DEPCHAIN_PRE', d, 1) or '').split()
 
-    def pkg_addrrecs(pkg, base, func, d):
-        rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + base, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "")
-        # bb.note('rdepends for %s is %s' % (base, rdepends))
-        rreclist = []
+	def pkg_addrrecs(pkg, base, func, d):
+		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + base, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "")
+		# bb.note('rdepends for %s is %s' % (base, rdepends))
+		rreclist = []
 
-        for depend in rdepends:
-            split_depend = depend.split(' (')
-            name = split_depend[0].strip()
-            func(rreclist, name)
+		for depend in rdepends:
+			split_depend = depend.split(' (')
+			name = split_depend[0].strip()
+			func(rreclist, name)
 
-        bb.data.setVar('RRECOMMENDS_%s' % pkg, ' '.join(rreclist), d)
+		bb.data.setVar('RRECOMMENDS_%s' % pkg, ' '.join(rreclist), d)
 
-    def packaged(pkg, d):
-        return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
+	def packaged(pkg, d):
+		return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
 
-    for pkg in packages.split():
-        for postfix in postfixes:
-            def func(list, name):
-                pkg = '%s%s' % (name, postfix)
-                if packaged(pkg, d):
-                    list.append(pkg)
+	for pkg in packages.split():
+		for postfix in postfixes:
+			def func(list, name):
+				pkg = '%s%s' % (name, postfix)
+				if packaged(pkg, d):
+					list.append(pkg)
 
-            base = pkg[:-len(postfix)]
-            if pkg.endswith(postfix):
-                pkg_addrrecs(pkg, base, func, d)
-                continue
+			base = pkg[:-len(postfix)]
+			if pkg.endswith(postfix):
+				pkg_addrrecs(pkg, base, func, d)
+				continue
 
-        for prefix in prefixes:
-            def func(list, name):
-                pkg = '%s%s' % (prefix, name)
-                if packaged(pkg, d):
-                    list.append(pkg)
+		for prefix in prefixes:
+			def func(list, name):
+				pkg = '%s%s' % (prefix, name)
+				if packaged(pkg, d):
+					list.append(pkg)
 
-            base = pkg[len(prefix):]
-            if pkg.startswith(prefix):
-                pkg_addrrecs(pkg, base, func, d)
+			base = pkg[len(prefix):]
+			if pkg.startswith(prefix):
+				pkg_addrrecs(pkg, base, func, d)
 }
-
 
 
 PACKAGEFUNCS ?= "package_do_split_locales \
