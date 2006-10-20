@@ -2,7 +2,7 @@ inherit package
 DEPENDS_prepend="${@["dpkg-native ", ""][(bb.data.getVar('PACKAGES', d, 1) == '')]}"
 BOOTSTRAP_EXTRA_RDEPENDS += "dpkg"
 DISTRO_EXTRA_RDEPENDS += "dpkg"
-PACKAGEFUNCS += "do_package_deb"
+PACKAGE_WRITE_FUNCS += "do_package_deb"
 IMAGE_PKGTYPE ?= "deb"
 
 python package_deb_fn () {

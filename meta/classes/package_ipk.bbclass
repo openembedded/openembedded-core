@@ -2,7 +2,7 @@ inherit package
 DEPENDS_prepend="${@["ipkg-utils-native ", ""][(bb.data.getVar('PACKAGES', d, 1) == '')]}"
 BOOTSTRAP_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
 DISTRO_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
-PACKAGEFUNCS += "do_package_ipk"
+PACKAGE_WRITE_FUNCS += "do_package_ipk"
 IMAGE_PKGTYPE ?= "ipk"
 
 python package_ipk_fn () {

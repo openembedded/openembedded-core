@@ -2,7 +2,7 @@ inherit package
 inherit rpm_core
 
 RPMBUILD="rpmbuild --short-circuit ${RPMOPTS}"
-PACKAGEFUNCS += "do_package_rpm"
+PACKAGE_WRITE_FUNCS += "do_package_rpm"
 IMAGE_PKGTYPE ?= "rpm"
 
 python write_specfile() {

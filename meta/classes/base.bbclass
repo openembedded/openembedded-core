@@ -565,7 +565,7 @@ do_populate_staging[dirs] = "${STAGING_DIR}/${TARGET_SYS}/bin ${STAGING_DIR}/${T
 			     ${STAGING_DATADIR} \
 			     ${S} ${B}"
 
-addtask populate_staging after do_package
+addtask populate_staging after do_package_write
 
 python do_populate_staging () {
 	bb.build.exec_func('do_stage', d)

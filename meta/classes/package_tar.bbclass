@@ -1,6 +1,6 @@
 inherit package
 
-PACKAGEFUNCS += "do_package_tar"
+PACKAGE_WRITE_FUNCS += "do_package_tar"
 IMAGE_PKGTYPE ?= "tar"
 
 python package_tar_fn () {

@@ -451,8 +451,6 @@ python populate_packages () {
 			if found == False:
 				bb.note("%s contains dangling symlink to %s" % (pkg, l))
 		bb.data.setVar('RDEPENDS_' + pkg, " " + " ".join(rdepends), d)
-
-	bb.build.exec_func('emit_pkgdata', d)
 }
 populate_packages[dirs] = "${D}"
 
@@ -482,6 +480,11 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'DESCRIPTION')
 		write_if_exists(sf, pkg, 'RDEPENDS')
 		write_if_exists(sf, pkg, 'RPROVIDES')
+		write_if_exists(sf, pkg, 'RRECOMMENDS')
+		write_if_exists(sf, pkg, 'RSUGGESTS')
+		write_if_exists(sf, pkg, 'RPROVIDES')
+		write_if_exists(sf, pkg, 'RREPLACES')
+		write_if_exists(sf, pkg, 'RCONFLICTS')
 		write_if_exists(sf, pkg, 'PKG')
 		write_if_exists(sf, pkg, 'ALLOW_EMPTY')
 		write_if_exists(sf, pkg, 'FILES')
@@ -490,7 +493,6 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'pkg_preinst')
 		write_if_exists(sf, pkg, 'pkg_prerm')
 		sf.close()
-	bb.build.exec_func("read_subpackage_metadata", d)
 }
 emit_pkgdata[dirs] = "${STAGING_DIR}/pkgdata/runtime"
 
@@ -822,29 +824,48 @@ python package_depchains() {
 }
 
 
-PACKAGEFUNCS = "package_do_split_locales \
+
+PACKAGEFUNCS ?= "package_do_split_locales \
 		populate_packages \
 		package_do_shlibs \
 		package_do_pkgconfig \
 		read_shlibdeps \
-		package_depchains"
+		package_depchains \
+		emit_pkgdata"
 
 python package_do_package () {
 	for f in (bb.data.getVar('PACKAGEFUNCS', d, 1) or '').split():
 		bb.build.exec_func(f, d)
 }
-
-do_package[dirs] = "${D}"
 # shlibs requires any DEPENDS to have already packaged for the *.list files
 do_package[deptask] = "do_package"
-EXPORT_FUNCTIONS do_package
+do_package[dirs] = "${D}"
 addtask package before do_build after do_install
+
+
+
+PACKAGE_WRITE_FUNCS ?= "read_subpackage_metadata"
+
+python package_do_package_write () {
+	for f in (bb.data.getVar('PACKAGE_WRITE_FUNCS', d, 1) or '').split():
+		bb.build.exec_func(f, d)
+}
+do_package_write[dirs] = "${D}"
+addtask package_write before do_build after do_package
+
+
+EXPORT_FUNCTIONS do_package do_package_write
+
 
 #
 # Helper functions for the package writing classes
 #
 
 python package_mapping_rename_hook () {
+	"""
+	Rewrite variables to account for package renaming in things
+	like debian.bbclass or manual PKG variable name changes
+	"""
 	runtime_mapping_rename("RDEPENDS", d)
 	runtime_mapping_rename("RRECOMMENDS", d)
 	runtime_mapping_rename("RSUGGESTS", d)
