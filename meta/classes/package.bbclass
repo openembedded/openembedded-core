@@ -268,7 +268,13 @@ python package_do_split_locales() {
 
 	locales = os.listdir(localedir)
 
+	# This is *really* broken
 	mainpkg = packages[0]
+	# At least try and patch it up I guess...
+	if mainpkg.find('-dbg'):
+		mainpkg = mainpkg.replace('-dbg', '')
+	if mainpkg.find('-dev'):
+		mainpkg = mainpkg.replace('-dev', '')
 
 	for l in locales:
 		ln = legitimize_package_name(l)
