@@ -62,7 +62,7 @@ PACKAGES_DYNAMIC = "perl-module-*"
 python populate_packages_prepend () {
 	libdir = bb.data.expand('${libdir}/perl5/${PV}', d)
 	archlibdir =  bb.data.expand('${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}', d)
-	do_split_packages(d, archlibdir, 'auto/(.*)/', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True)
+	do_split_packages(d, archlibdir, 'auto/(.*)(?!\.debug)/', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True)
 	do_split_packages(d, archlibdir, '(.*)\.(pm|pl)', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True)
 	do_split_packages(d, libdir, '(.*)\.(pm|pl)', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True)
 }
@@ -73,3 +73,7 @@ FILES_${PN}-lib = "/usr/lib/libperl.so*"
 FILES_${PN}-dev = "/usr/lib/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/CORE/"
 FILES_${PN}-pod = "/usr/lib/perl5/${PV}/pod"
 FILES_perl-misc = "/usr/bin/*"
+FILES_${PN}-dbg += " \
+        ${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/auto/*/.debug \
+        ${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/auto/*/*/.debug \
+        ${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/auto/*/*/*/.debug"
