@@ -51,7 +51,14 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 					objs.append(relpath)
 
 	if extra_depends == None:
-		extra_depends = packages[0]
+		# This is *really* broken
+		mainpkg = packages[0]
+		# At least try and patch it up I guess...
+		if mainpkg.find('-dbg'):
+			mainpkg = mainpkg.replace('-dbg', '')
+		if mainpkg.find('-dev'):
+			mainpkg = mainpkg.replace('-dev', '')
+		extra_depends = mainpkg
 
 	for o in objs:
 		import re, stat
