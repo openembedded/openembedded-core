@@ -7,7 +7,7 @@ RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
 PV = "2.10.0+svn${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
            file://gconf-dbus-update.patch;patch=1;pnum=0 \
@@ -22,7 +22,8 @@ S = "${WORKDIR}/trunk"
 
 PARALLEL_MAKE = ""
 
-FILES_${PN} += " ${libdir}/GConf/2/*.so ${libdir}/dbus-1.0 ${sysconfdir} ${datadir}/dbus*"
+FILES_${PN} = "${libdir}/gconf-dbus/2/*.so ${libdir}/dbus-1.0 ${sysconfdir} ${datadir}/dbus* ${libdir}/*.so.* ${bindir}/* ${libexecdir}/*"
+FILES_${PN}-dbg += " ${libdir}/gconf-dbus/2/.debug"
 
 EXTRA_OECONF = " --with-ipc=dbus --disable-gtk-doc --enable-gtk --host=${HOST_SYS} --enable-shared --disable-static"
 
