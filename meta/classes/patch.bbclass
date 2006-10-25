@@ -345,6 +345,7 @@ def patch_init(d):
 					return
 				print(sys.exc_value)
 				print('NOTE: dropping user into a shell, so that patch rejects can be fixed manually.')
+				print('Press CTRL+D to exit.')
 
 				os.system('/bin/sh')
 
@@ -353,6 +354,7 @@ def patch_init(d):
 				# refresh on each.
 				oldpatchset = self.patchset
 				self.patchset = oldpatchset.__class__(self.patchset.dir, self.patchset.d)
+				self.patchset.InitFromDir()
 
 				for patch in self.patchset.patches:
 					oldpatch = None
@@ -384,6 +386,7 @@ def patch_init(d):
 	g["NOOPResolver"] = NOOPResolver
 	g["NotFoundError"] = NotFoundError
 	g["CmdError"] = CmdError
+	g["PatchError"] = PatchError
 
 addtask patch after do_unpack
 do_patch[dirs] = "${WORKDIR}"
@@ -482,7 +485,11 @@ python patch_do_patch() {
 		except NotFoundError:
 			import sys
 			raise bb.build.FuncFailed(str(sys.exc_value))
-		resolver.Resolve()
+		try:
+			resolver.Resolve()
+		except PatchError:
+			import sys
+			raise bb.build.FuncFailed(str(sys.exc_value))
 }
 
 EXPORT_FUNCTIONS do_patch
