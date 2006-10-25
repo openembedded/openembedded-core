@@ -2,7 +2,9 @@ DESCRIPTION = "console-based exmap"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r2"
+PR = "r3"
+PV = "0.9"
+
 SRCDATE="20061026"
 
 SRC_URI = \
@@ -37,5 +39,4 @@ do_install() {
 	install -m 644 ${S}/kernel/exmap${KERNEL_OBJECT_SUFFIX} ${D}${base_libdir}/modules/${KERNEL_VERSION}/misc/
 }
 
-PACKAGES = "exmap-console"
-FILES_exmap-console = "${sbindir}/ /lib/modules/${KERNEL_VERSION}/misc/"
+FILES_${PN}="${sbindir} ${base_libdir}"
