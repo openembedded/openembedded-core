@@ -808,7 +808,7 @@ python package_depchains() {
 	def pkg_addrrecs(pkg, base, func, d):
 		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + base, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "")
 		# bb.note('rdepends for %s is %s' % (base, rdepends))
-		rreclist = []
+		rreclist = explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
 
 		for depend in rdepends:
 			split_depend = depend.split(' (')
@@ -824,8 +824,9 @@ python package_depchains() {
 		for postfix in postfixes:
 			def func(list, name):
 				pkg = '%s%s' % (name, postfix)
-				if packaged(pkg, d):
-					list.append(pkg)
+				if not pkg in list:
+					if packaged(pkg, d):
+						list.append(pkg)
 
 			base = pkg[:-len(postfix)]
 			if pkg.endswith(postfix):
@@ -835,8 +836,9 @@ python package_depchains() {
 		for prefix in prefixes:
 			def func(list, name):
 				pkg = '%s%s' % (prefix, name)
-				if packaged(pkg, d):
-					list.append(pkg)
+				if not pkg in list:
+					if packaged(pkg, d):
+						list.append(pkg)
 
 			base = pkg[len(prefix):]
 			if pkg.startswith(prefix):
