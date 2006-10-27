@@ -606,6 +606,9 @@ def explode_deps(s):
 			r.append(i)
 	return r
 
+def packaged(pkg, d):
+	import os, bb
+	return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
 
 def read_pkgdatafile(fn):
 	pkgdata = {}
