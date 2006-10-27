@@ -1,6 +1,6 @@
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 MAINTAINER = "Richard Purdie <richard@openedhand.com>"
-PR = "r10"
+PR = "r11"
 DEPENDS = "task-oh"
 ALLOW_EMPTY = "1"
 PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -17,12 +17,10 @@ RDEPENDS_task-oh-sdk = "\
     make \
     perl-module-re \
     perl-module-text-wrap \
-    pkgconfig"
+    pkgconfig \
+    distcc"
 
 python generate_sdk_pkgs () {
-    def packaged(pkg, d):
-        return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
-
     ohpkgs = read_pkgdata('task-oh', d)['PACKAGES']
     pkgs = bb.data.getVar('PACKAGES', d, 1).split()
     for pkg in ohpkgs.split():
