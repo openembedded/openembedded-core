@@ -9,16 +9,19 @@ EXTRA_OECONF = "--enable-startup-notification --enable-dnotify"
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${bindir} \
+FILES_${PN} = "${bindir}/* \
 	       ${datadir}/applications \
 	       ${libdir}/matchbox/desktop/*.so \
 	       ${datadir}/matchbox-desktop \
 	       ${datadir}/pixmaps \
 	       ${sysconfdir}/matchbox"
 
-FILES_${PN}-dev = "${libdir}/matchbox-desktop \
-		   ${includedir}/matchbox-desktop \
-		   ${datadir}/matchbox/desktop/modules/*a"
+FILES_${PN}-dev += "${libdir}/matchbox-desktop \
+		    ${includedir}/matchbox-desktop \
+                    ${libdir}/matchbox/desktop/*.*a \
+		    ${datadir}/matchbox/desktop/modules/*a"
+
+FILES_${PN}-dbg += "${libdir}/matchbox/desktop/.debug/"
 
 do_stage() {
 		install -d ${STAGING_INCDIR}/matchbox-desktop/

@@ -19,7 +19,7 @@ ALTERNATIVE_LINK = "${bindir}/x-window-manager"
 ALTERNATIVE_PATH = "${bindir}/matchbox-session"
 ALTERNATIVE_PRIORITY = "10"
 
-FILES_${PN} = "${bindir} \
+FILES_${PN} = "${bindir}/* \
                ${datadir}/matchbox \
                ${sysconfdir}/matchbox \
                ${datadir}/themes/blondie/matchbox \

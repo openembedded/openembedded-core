@@ -12,7 +12,7 @@ S = ${WORKDIR}/${PN}
 
 inherit autotools pkgconfig gettext
 
-FILES_${PN} = "${bindir} \
+FILES_${PN} = "${bindir}/* \
 	       ${datadir}/applications \
 	       ${datadir}/pixmaps \
 		${datadir}/matchbox-stroke"

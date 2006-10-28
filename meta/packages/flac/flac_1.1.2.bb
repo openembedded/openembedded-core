@@ -21,7 +21,7 @@ EXTRA_OECONF = "--disable-oggtest --disable-id3libtest \
 		--without-id3lib"
 
 PACKAGES += "libflac libflac++ liboggflac liboggflac++"
-FILES_${PN} = "${bindir}"
+FILES_${PN} = "${bindir}/*"
 FILES_libflac = "${libdir}/libFLAC.so.*"
 FILES_libflac++ = "${libdir}/libFLAC++.so.*"
 FILES_liboggflac = "${libdir}/libOggFLAC.so.*"

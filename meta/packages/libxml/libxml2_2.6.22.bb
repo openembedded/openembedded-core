@@ -6,7 +6,7 @@ LICENSE = "MIT"
 PACKAGES = "${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 
 FILES_${PN}-dev += "${bindir}/xml-config"
-FILES_${PN}-utils += "${bindir}"
+FILES_${PN}-utils += "${bindir}/*"
 
 SRC_URI = "http://xmlsoft.org/sources/libxml2/libxml2-${PV}.tar.gz \
 		   file://no-testapi.patch;patch=1"

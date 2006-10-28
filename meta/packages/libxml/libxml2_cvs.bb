@@ -7,7 +7,7 @@ LICENSE = "MIT"
 PACKAGES = "${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 
 FILES_${PN}-dev += "${bindir}/xml-config"
-FILES_${PN}-utils += "${bindir}"
+FILES_${PN}-utils += "${bindir}/*"
 
 PV = "2.6.23+cvs${SRCDATE}"
 S = "${WORKDIR}/${PN}"

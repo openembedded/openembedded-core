@@ -8,5 +8,5 @@ S = "${WORKDIR}/mb-applet-startup-monitor-${PV}"
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${bindir} ${datadir}/applications ${datadir}/pixmaps"
+FILES_${PN} = "${bindir}/* ${datadir}/applications ${datadir}/pixmaps"
  

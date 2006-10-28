@@ -13,7 +13,7 @@ S = "${WORKDIR}/matchbox-window-manager-${PV}"
 
 inherit autotools pkgconfig update-alternatives
 
-FILES_${PN} = "${bindir} \
+FILES_${PN} = "${bindir}/* \
 	       ${datadir}/matchbox \
 	       ${sysconfdir}/matchbox \
 	       ${datadir}/themes/blondie/matchbox \

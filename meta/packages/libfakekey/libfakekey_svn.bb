@@ -11,13 +11,8 @@ S = "${WORKDIR}/${PN}"
 
 inherit autotools pkgconfig gettext
 
-FILES_${PN} = "${libdir} \
-	       ${datadir}/applications \
-	       ${datadir}/pixmaps"
-
 do_stage () {
 	   install -d ${STAGING_INCDIR}/fakekey	
            install -m 0644 ${S}/fakekey/fakekey.h ${STAGING_INCDIR}/fakekey
 	    oe_libinstall -so -C src libfakekey ${STAGING_LIBDIR}		
 }
-

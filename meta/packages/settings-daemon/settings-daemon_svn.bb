@@ -12,7 +12,7 @@ S = "${WORKDIR}/${PN}"
 
 inherit autotools pkgconfig gettext gconf
 
-FILES_${PN} = 	"${bindir} ${sysconfdir}"
+FILES_${PN} = 	"${bindir}/* ${sysconfdir}"
 
 do_install_append () {
 	install -d ${D}/${sysconfdir}/X11/Xsession.d

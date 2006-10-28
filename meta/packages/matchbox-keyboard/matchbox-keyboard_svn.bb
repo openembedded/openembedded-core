@@ -15,7 +15,7 @@ inherit autotools pkgconfig gettext
 
 EXTRA_OECONF = "--disable-cairo"
 
-FILES_${PN} = "${bindir} \
+FILES_${PN} = "${bindir}/* \
 	       ${datadir}/applications \
 	       ${datadir}/pixmaps \
 		${datadir}/matchbox-keyboard"

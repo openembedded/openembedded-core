@@ -9,7 +9,7 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.gz \
 
 # move libgpg-error-config into -dev package
 FILES_${PN} = "${libdir}/lib*.so.*"
-FILES_${PN}-dev += "${bindir}"
+FILES_${PN}-dev += "${bindir}/*"
 
 inherit autotools binconfig pkgconfig
 

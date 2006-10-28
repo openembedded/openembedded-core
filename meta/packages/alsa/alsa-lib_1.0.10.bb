@@ -25,6 +25,6 @@ do_stage () {
 
 PACKAGES = "libasound alsa-server alsa-conf alsa-doc alsa-dev"
 FILES_libasound = "${libdir}/libasound.so*"
-FILES_alsa-server = "${bindir}"
+FILES_alsa-server = "${bindir}/*"
 FILES_alsa-conf = "${datadir}"
 FILES_alsa-dev = "${libdir}/pkgconfig/ /usr/include/"

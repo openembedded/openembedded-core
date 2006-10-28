@@ -21,7 +21,7 @@ EXTRA_OECONF = "--disable-glibtest \
 		--enable-explicit-deps=no \
 	        --disable-debug"
 
-FILES_${PN} = "/etc ${bindir} ${libdir}/libpango*.so.*"
+FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*.so.*"
 
 LIBV = "1.4.0"
 

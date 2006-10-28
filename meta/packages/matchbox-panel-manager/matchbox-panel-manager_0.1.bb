@@ -8,5 +8,5 @@ S = "${WORKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${bindir} ${datadir}/applications ${datadir}/pixmaps"
+FILES_${PN} = "${bindir}/* ${datadir}/applications ${datadir}/pixmaps"
 

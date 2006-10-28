@@ -16,7 +16,7 @@ EXTRA_OECONF_append_poodle = " --enable-small-icons "
 EXTRA_OECONF_append_mnci = " --enable-small-icons "
 EXTRA_OECONF_append_integral13 = " --enable-small-icons "
 
-FILES_${PN} = "${bindir} \
+FILES_${PN} = "${bindir}/* \
 	       ${datadir}/applications \
 	       ${datadir}/pixmaps"
 

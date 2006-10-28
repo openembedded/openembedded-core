@@ -11,7 +11,7 @@ inherit autotools
 PACKAGES += "libmp3lame libmp3lame-dev"
 FILES_${PN} = "${bindir}/lame"
 FILES_libmp3lame = "${libdir}/libmp3lame.so.*"
-FILES_libmp3lame-dev = "${includedir} ${libdir}"
+FILES_libmp3lame-dev = "${includedir} ${libdir}/*"
 FILES_${PN}-dev = ""
 
 do_configure() {

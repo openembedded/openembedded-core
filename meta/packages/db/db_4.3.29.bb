@@ -48,11 +48,11 @@ PACKAGES += " ${PN}-bin"
 
 # Package contents
 FILES_${PN} = "${libdir}/libdb-4*so*"
-FILES_${PN}-bin = "${bindir}"
+FILES_${PN}-bin = "${bindir}/*"
 # The dev package has the .so link (as in db3) and the .a's -
 # it is therefore incompatible (cannot be installed at the
 # same time) as the db3 package
-FILES_${PN}-dev = "${includedir} ${libdir}"
+FILES_${PN}-dev = "${includedir} ${libdir}/*"
 
 #configuration - set in local.conf to override
 DB4_CONFIG ?= "--enable-o_direct --enable-smallbuild --enable-compat185"
