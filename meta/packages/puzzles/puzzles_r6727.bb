@@ -10,19 +10,21 @@ do_compile_prepend = " \
 	export CFLAGS='${CFLAGS} -I./ `${STAGING_BINDIR}/pkg-config gtk+-2.0 --cflags`'; "
 
 FILES_${PN} = "${prefix}/games/* ${datadir}/applications/* ${datadir}/pixmaps"
+FILES_${PN}-dbg += "${prefix}/games/.debug"
 
 do_install () {
+    rm -rf ${D}/*
     export prefix=${D}
     export DESTDIR=${D}
-    install -d ${D}/${prefix}
-    install -d ${D}/${prefix}/games
+    install -d ${D}/${prefix}/
+    install -d ${D}/${prefix}/games/
     oe_runmake install
     
-    install -d ${D}/${datadir}
-    install -d ${D}/${datadir}/applications
-    install -d ${D}/${datadir}/pixmaps
+    install -d ${D}/${datadir}/
+    install -d ${D}/${datadir}/applications/
+    install -d ${D}/${datadir}/pixmaps/
 
-    install ${WORKDIR}/game.png ${D}/${datadir}/pixmaps
+    install ${WORKDIR}/game.png ${D}/${datadir}/pixmaps/
 
     cd ${D}/${prefix}/games 
     for prog in *; do
