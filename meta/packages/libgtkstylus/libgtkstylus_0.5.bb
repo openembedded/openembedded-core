@@ -1,6 +1,5 @@
 DESCRIPTION = "GTK plugin for stylus based systems"
 SECTION = "libs"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DEPENDS = "gtk+"
 LICENSE = "LGPL"
 FILES_${PN} = "/etc ${libdir}/gtk-2.0"

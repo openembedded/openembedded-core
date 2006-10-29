@@ -1,7 +1,6 @@
 DESCRIPTION = "X font library (used by the X server)."
 SECTION = "x11/libs"
 PRIORITY = "optional"
-#MAINTAINER = ""
 LICENSE = "BSD-X"
 
 DEPENDS = "xproto-native zlib-native fontcacheproto-native fontsproto-native libfontenc-native xtrans-native freetype-native util-macros-native"

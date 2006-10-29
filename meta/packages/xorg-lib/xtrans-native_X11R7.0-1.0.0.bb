@@ -1,6 +1,5 @@
 SECTION = "x11/libs"
 PRIORITY = "optional"
-#MAINTAINER = ""
 LICENSE = "BSD-X"
 
 DEPENDS = "util-macros-native"

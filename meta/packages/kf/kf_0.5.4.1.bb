@@ -1,6 +1,5 @@
 LICENSE = "GPL"
 DEPENDS = "libxml2 glib-2.0 gtk+ loudmouth libglade"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Kf is a GTK+ instant messaging client."
 PR = "r2"
 

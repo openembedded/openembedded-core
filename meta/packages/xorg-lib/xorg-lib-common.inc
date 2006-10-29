@@ -1,6 +1,5 @@
 HOMEPAGE = "http://www.x.org"
 SECTION = "x11/libs"
-#MAINTAINER = ""
 LICENSE = "MIT-X"
 
 DEPENDS = "util-macros"

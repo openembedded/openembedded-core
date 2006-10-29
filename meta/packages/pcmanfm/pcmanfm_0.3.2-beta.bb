@@ -2,7 +2,6 @@ LICENSE = "GPL"
 DESCRIPTION = "procfs tools"
 SECTION = "x11"
 PRIORITY = "optional"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DEPENDS = "gtk+"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \

@@ -4,7 +4,6 @@ SECTION = "libs"
 DEPENDS = "readline"
 SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/js-1.5.tar.gz \
 	   file://jsautocfg.h"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 
 S = "${WORKDIR}/js/src"
 

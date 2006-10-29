@@ -1,6 +1,5 @@
 DESCRIPTION = "Userspace framebuffer boot logo based on usplash."
 SECTION = "base"
-MAINTAINER = "Matthew Allum <mallum@openedhand.com>"
 LICENSE = "GPL"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=psplash;proto=http \

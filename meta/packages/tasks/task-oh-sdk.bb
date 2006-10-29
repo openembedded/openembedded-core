@@ -1,5 +1,4 @@
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
-MAINTAINER = "Richard Purdie <richard@openedhand.com>"
 PR = "r11"
 DEPENDS = "task-oh"
 ALLOW_EMPTY = "1"

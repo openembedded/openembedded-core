@@ -4,7 +4,6 @@ SECTION = "multimedia"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DEPENDS = "glib-2.0 gettext-native libxml2"
 PR = "r3"
 

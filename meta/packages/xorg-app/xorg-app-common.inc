@@ -1,7 +1,6 @@
 DESCRIPTION = "X application"
 HOMEPAGE = "http://www.x.org"
 SECTION = "x11/apps"
-#MAINTAINER = ""
 LICENSE = "MIT-X"
 
 DEPENDS = "util-macros"

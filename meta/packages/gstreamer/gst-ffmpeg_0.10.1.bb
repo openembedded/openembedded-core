@@ -3,7 +3,6 @@ SECTION = "multimedia"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DEPENDS = "gstreamer zlib"
 PR = "r1"
 

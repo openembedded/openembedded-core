@@ -1,7 +1,6 @@
 LICENSE = "LGPL"
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Dates is a calendar application."
 
 PV = "0.1+svn${SRCDATE}"

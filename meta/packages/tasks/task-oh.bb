@@ -1,5 +1,4 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-MAINTAINER = "Richard Purdie <richard@openedhand.com>"
 PR = "r42"
 
 PACKAGES = "\

@@ -2,7 +2,6 @@ SECTION = "libs"
 DEPENDS = "gtk+ glib-2.0 libxml2"
 DESCRIPTION = "A GTK+ HTML rendering library."
 LICENSE = "GPL"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 PV = "2.11.0+cvs${SRCDATE}"
 PR = "r3"
 

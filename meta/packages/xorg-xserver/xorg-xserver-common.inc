@@ -1,6 +1,5 @@
 HOMEPAGE = "http://www.x.org"
 SECTION = "x11/base"
-#MAINTAINER = ""
 LICENSE = "MIT-X"
 
 RPROVIDES = "virtual/xserver"
