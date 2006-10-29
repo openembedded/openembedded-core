@@ -19,9 +19,11 @@ EXTRA_OECONF = "--disable-glibtest \
 		--enable-explicit-deps=no \
 	        --disable-debug"
 
-FILES_${PN} = "/etc ${bindir} ${libdir}/libpango*.so.*"
-
 LIBV = "1.4.0"
+
+FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*.so.*"
+FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
+FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
 do_stage () {
 	for lib in pango pangox pangoft2 pangoxft; do

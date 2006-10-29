@@ -21,9 +21,12 @@ EXTRA_OECONF = "--disable-glibtest \
 		--enable-explicit-deps=no \
 	        --disable-debug"
 
-FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*.so.*"
-
+LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.4.0"
+
+FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*.so.*"
+FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
+FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
 do_stage () {
 autotools_stage_all
