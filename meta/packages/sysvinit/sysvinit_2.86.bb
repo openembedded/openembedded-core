@@ -39,7 +39,7 @@ ALTERNATIVE_PATH = "${base_sbindir}/init.sysvinit"
 ALTERNATIVE_PRIORITY = "50"
 
 PACKAGES =+ "sysvinit-pidof sysvinit-sulogin"
-FILES_${PN} += "${base_sbindir} ${base_bindir}"
+FILES_${PN} += "${base_sbindir}/* ${base_bindir}/*"
 FILES_sysvinit-pidof = "${base_bindir}/pidof.sysvinit"
 FILES_sysvinit-sulogin = "${base_sbindir}/sulogin"
 
