@@ -17,7 +17,8 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
 	   file://gtklabel-resize-patch;patch=1 \
 	   file://menu-deactivate.patch;patch=1 \
 	   file://scroll-timings.patch;patch=1 \
-	   file://no-deprecation.patch;patch=1"
+	   file://no-deprecation.patch;patch=1 \
+ 	   file://smaller-filechooser.patch;patch=1"
 
 inherit autotools pkgconfig
 
