@@ -3,7 +3,7 @@ DEPENDS = "tslib xproto libxdmcp xextproto xtrans libxau virtual/libx11 libxext 
 
 PROVIDES = "virtual/xserver"
 # RPROVIDES = "virtual/xserver"
-PACKAGES = "xserver-kdrive-fbdev xserver-kdrive-fake xserver-kdrive-xephyr ${PN}-doc ${PN}-dev ${PN}-locale"
+PACKAGES =+ "xserver-kdrive-fbdev xserver-kdrive-fake xserver-kdrive-xephyr"
 SECTION = "x11/base"
 DESCRIPTION = "X server from freedesktop.org"
 DESCRIPTION_xserver-kdrive-fbdev = "X server from freedesktop.org, supporting generic framebuffer devices"
@@ -12,9 +12,14 @@ DESCRIPTION_xserver-kdrive-xephyr = "X server in an X window"
 
 PR="r1"
 
+FILES_${PN} = "${libdir}/xserver"
 FILES_xserver-kdrive-fbdev = "${bindir}/Xfbdev"
 FILES_xserver-kdrive-fake = "${bindir}/Xfake"
 FILES_xserver-kdrive-xephyr = "${bindir}/Xephyr"
+
+RDEPENDS_xserver-kdrive-fbdev = "${PN}"
+RDEPENDS_xserver-kdrive-fake = "${PN}"
+RDEPENDS_xserver-kdrive-xephyr = "${PN}"
 
 SRC_URI = "http://ftp.x.org/pub/X11R7.1/src/xserver/xorg-server-X11R7.1-1.1.0.tar.bz2 \
 	file://kmode.patch;patch=1 \
