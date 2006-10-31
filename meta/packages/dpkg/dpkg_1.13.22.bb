@@ -1,5 +1,5 @@
 require dpkg.inc
-PR = "r2"
+PR = "r3"
 DEPENDS += "ncurses zlib bzip2"
 
 EXTRA_OECONF = "--without-static-progs \
