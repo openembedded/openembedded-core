@@ -1,0 +1,21 @@
+Index: gtk+-2.10.6/gtk/Makefile.am
+===================================================================
+--- gtk+-2.10.6.orig/gtk/Makefile.am	2006-10-30 12:56:34.000000000 +0000
++++ gtk+-2.10.6/gtk/Makefile.am	2006-10-30 12:57:08.000000000 +0000
+@@ -1119,11 +1119,11 @@
+ 	done									\
+ 	&& touch stamp-icons
+ 
+-gtkbuiltincache.h: @REBUILD@ stamp-icons
+-	$(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache$(EXEEXT)
+-	GDK_PIXBUF_MODULE_FILE=$(top_builddir)/gdk-pixbuf/gdk-pixbuf.loaders	\
+-	   ./gtk-update-icon-cache --force --ignore-theme-index 		\
+-	   --source builtin_icons stock-icons > gtkbuiltincache.h
++#gtkbuiltincache.h: @REBUILD@ stamp-icons
++#	$(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache$(EXEEXT)
++#	GDK_PIXBUF_MODULE_FILE=$(top_builddir)/gdk-pixbuf/gdk-pixbuf.loaders	\
++#	   ./gtk-update-icon-cache --force --ignore-theme-index 		\
++#	   --source builtin_icons stock-icons > gtkbuiltincache.h
+ 
+ EXTRA_DIST +=                   \
+ 	$(STOCK_ICONS)		\

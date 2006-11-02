@@ -1,0 +1,236 @@
+--- gtk+-2.4.1/gtk/gtkarrow.c	2004-03-13 09:51:13.000000000 +1100
++++ gtk+-2.4.1/gtk/gtkarrow.c	2004-05-26 14:52:17.000000000 +1000
+@@ -29,7 +29,7 @@
+ #include "gtkarrow.h"
+ #include "gtkintl.h"
+ 
+-#define MIN_ARROW_SIZE  15
++#define MIN_ARROW_SIZE  7
+ 
+ enum {
+   PROP_0,
+@@ -53,6 +53,8 @@
+ 				    guint            prop_id,
+ 				    GValue          *value,
+ 				    GParamSpec      *pspec);
++static void gtk_arrow_size_request (GtkWidget *arrow, 
++				    GtkRequisition *requisition);
+ 
+ GType
+ gtk_arrow_get_type (void)
+@@ -111,6 +113,7 @@
+                                                       G_PARAM_READABLE | G_PARAM_WRITABLE));
+   
+   widget_class->expose_event = gtk_arrow_expose;
++  widget_class->size_request = gtk_arrow_size_request;
+ }
+ 
+ static void
+@@ -166,13 +169,18 @@
+ }
+ 
+ static void
++gtk_arrow_size_request (GtkWidget *arrow, 
++			GtkRequisition *requisition)
++{
++  requisition->width = MIN_ARROW_SIZE + GTK_MISC (arrow)->xpad * 2;
++  requisition->height = MIN_ARROW_SIZE + GTK_MISC (arrow)->ypad * 2;
++}
++
++static void
+ gtk_arrow_init (GtkArrow *arrow)
+ {
+   GTK_WIDGET_SET_FLAGS (arrow, GTK_NO_WINDOW);
+ 
+-  GTK_WIDGET (arrow)->requisition.width = MIN_ARROW_SIZE + GTK_MISC (arrow)->xpad * 2;
+-  GTK_WIDGET (arrow)->requisition.height = MIN_ARROW_SIZE + GTK_MISC (arrow)->ypad * 2;
+-
+   arrow->arrow_type = GTK_ARROW_RIGHT;
+   arrow->shadow_type = GTK_SHADOW_OUT;
+ }
+--- gtk+-2.4.1/gtk/gtkcalendar.c	2004-03-06 14:37:26.000000000 +1100
++++ gtk+-2.4.1/gtk/gtkcalendar.c	2004-05-26 14:58:57.000000000 +1000
+@@ -340,6 +340,9 @@
+ static void gtk_calendar_select_and_focus_day (GtkCalendar *calendar,
+ 					       guint        day);
+ 
++static void gtk_calendar_do_select_day (GtkCalendar *calendar,
++					guint	      day);
++
+ static void gtk_calendar_paint_arrow	(GtkWidget    *widget,
+ 					 guint	       arrow);
+ static void gtk_calendar_paint_day_num	(GtkWidget    *widget,
+@@ -861,13 +864,13 @@
+   if (month_len < calendar->selected_day)
+     {
+       calendar->selected_day = 0;
+-      gtk_calendar_select_day (calendar, month_len);
++      gtk_calendar_do_select_day (calendar, month_len);
+     }
+   else
+     {
+       if (calendar->selected_day < 0)
+ 	calendar->selected_day = calendar->selected_day + 1 + month_length[leap (calendar->year)][calendar->month + 1];
+-      gtk_calendar_select_day (calendar, calendar->selected_day);
++      gtk_calendar_do_select_day (calendar, calendar->selected_day);
+     }
+ 
+   gtk_widget_queue_draw (GTK_WIDGET (calendar));
+@@ -908,10 +911,10 @@
+   if (month_len < calendar->selected_day)
+     {
+       calendar->selected_day = 0;
+-      gtk_calendar_select_day (calendar, month_len);
++      gtk_calendar_do_select_day (calendar, month_len);
+     }
+   else
+-    gtk_calendar_select_day (calendar, calendar->selected_day);
++    gtk_calendar_do_select_day (calendar, calendar->selected_day);
+ 
+   gtk_widget_queue_draw (GTK_WIDGET (calendar));
+   gtk_calendar_thaw (calendar);
+@@ -939,10 +942,10 @@
+   if (month_len < calendar->selected_day)
+     {
+       calendar->selected_day = 0;
+-      gtk_calendar_select_day (calendar, month_len);
++      gtk_calendar_do_select_day (calendar, month_len);
+     }
+   else
+-    gtk_calendar_select_day (calendar, calendar->selected_day);
++    gtk_calendar_do_select_day (calendar, calendar->selected_day);
+   
+   gtk_widget_queue_draw (GTK_WIDGET (calendar));
+   gtk_calendar_thaw (calendar);
+@@ -974,10 +977,10 @@
+   if (month_len < calendar->selected_day)
+     {
+       calendar->selected_day = 0;
+-      gtk_calendar_select_day (calendar, month_len);
++      gtk_calendar_do_select_day (calendar, month_len);
+     }
+   else
+-    gtk_calendar_select_day (calendar, calendar->selected_day);
++    gtk_calendar_do_select_day (calendar, calendar->selected_day);
+   
+   gtk_widget_queue_draw (GTK_WIDGET (calendar));
+   gtk_calendar_thaw (calendar);
+@@ -2480,9 +2483,9 @@
+   return TRUE;
+ }
+ 
+-void
+-gtk_calendar_select_day (GtkCalendar *calendar,
+-			 guint	      day)
++static void
++gtk_calendar_do_select_day (GtkCalendar *calendar,
++			    guint	      day)
+ {
+   g_return_if_fail (GTK_IS_CALENDAR (calendar));
+   g_return_if_fail (day <= 31);
+@@ -2499,6 +2502,13 @@
+       if (GTK_WIDGET_DRAWABLE (GTK_WIDGET (calendar)))
+ 	gtk_calendar_paint_day_num (GTK_WIDGET (calendar), selected_day);
+     }
++}
++
++void
++gtk_calendar_select_day (GtkCalendar *calendar,
++			 guint	      day)
++{
++  gtk_calendar_do_select_day (calendar, day);
+   
+   calendar->selected_day = day;
+   
+--- gtk+-2.4.1/gtk/gtkentry.c	2004-04-22 08:08:08.000000000 +1000
++++ gtk+-2.4.1/gtk/gtkentry.c	2004-05-26 14:52:17.000000000 +1000
+@@ -557,6 +557,15 @@
+ 						       0.0,
+ 						       G_PARAM_READABLE | G_PARAM_WRITABLE));
+   
++  gtk_widget_class_install_style_property (widget_class,
++					   g_param_spec_int ("min_width",
++                                                             _("Minimum width"),
++                                                             _("Minimum width of the entry field"),
++                                                             0,
++                                                             G_MAXINT,
++                                                             MIN_ENTRY_WIDTH,
++                                                             G_PARAM_READABLE));
++
+   signals[POPULATE_POPUP] =
+     g_signal_new ("populate_popup",
+ 		  G_OBJECT_CLASS_TYPE (gobject_class),
+@@ -1124,7 +1133,7 @@
+ {
+   GtkEntry *entry = GTK_ENTRY (widget);
+   PangoFontMetrics *metrics;
+-  gint xborder, yborder;
++  gint xborder, yborder, min_width;
+   PangoContext *context;
+   
+   gtk_widget_ensure_style (widget);
+@@ -1140,9 +1149,11 @@
+   
+   xborder += INNER_BORDER;
+   yborder += INNER_BORDER;
+-  
++
++  gtk_widget_style_get (widget, "min_width", &min_width, NULL);
++
+   if (entry->width_chars < 0)
+-    requisition->width = MIN_ENTRY_WIDTH + xborder * 2;
++    requisition->width = min_width + xborder * 2;
+   else
+     {
+       gint char_width = pango_font_metrics_get_approximate_char_width (metrics);
+--- gtk+-2.4.1/gtk/gtkrange.c	2004-03-06 14:38:08.000000000 +1100
++++ gtk+-2.4.1/gtk/gtkrange.c	2004-05-26 14:52:17.000000000 +1000
+@@ -180,6 +180,7 @@
+ static GtkWidgetClass *parent_class = NULL;
+ static guint signals[LAST_SIGNAL];
+ 
++static GdkAtom recognize_protocols_atom, atom_atom;
+ 
+ GType
+ gtk_range_get_type (void)
+@@ -220,6 +221,9 @@
+   object_class = (GtkObjectClass*) class;
+   widget_class = (GtkWidgetClass*) class;
+ 
++  recognize_protocols_atom = gdk_atom_intern ("RECOGNIZE_PROTOCOLS", FALSE);
++  atom_atom = gdk_atom_intern ("ATOM", FALSE);
++
+   parent_class = g_type_class_peek_parent (class);
+ 
+   gobject_class->set_property = gtk_range_set_property;
+@@ -815,6 +819,12 @@
+ 					&attributes, attributes_mask);
+   gdk_window_set_user_data (range->event_window, range);
+ 
++  gdk_property_change (range->event_window,
++		       recognize_protocols_atom,
++		       atom_atom,
++		       32, GDK_PROP_MODE_REPLACE,
++		       NULL, 0);
++
+   widget->style = gtk_style_attach (widget->style, widget->window);
+ }
+ 
+@@ -1186,7 +1196,7 @@
+ 
+   /* ignore presses when we're already doing something else. */
+   if (range->layout->grab_location != MOUSE_OUTSIDE)
+-    return FALSE;
++    return TRUE;
+ 
+   range->layout->mouse_x = event->x;
+   range->layout->mouse_y = event->y;
+@@ -1364,7 +1374,7 @@
+       return TRUE;
+     }
+ 
+-  return FALSE;
++  return TRUE;
+ }
+ 
+ /**
