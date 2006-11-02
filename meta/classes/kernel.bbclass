@@ -1,4 +1,4 @@
-inherit module_strip
+inherit linux-kernel-base module_strip
 
 PROVIDES += "virtual/kernel"
 DEPENDS += "virtual/${TARGET_PREFIX}depmod-${@get_kernelmajorversion('${PV}')} virtual/${TARGET_PREFIX}gcc${KERNEL_CCSUFFIX} update-modules"
@@ -10,7 +10,7 @@ PACKAGES_DYNAMIC += "kernel-image-*"
 
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
-KERNEL_IMAGETYPE = "zImage"
+KERNEL_IMAGETYPE ?= "zImage"
 
 KERNEL_PRIORITY = "${@bb.data.getVar('PV',d,1).split('-')[0].split('.')[-1]}"
 
@@ -43,31 +43,7 @@ KERNEL_IMAGEDEST = "boot"
 #
 export CMDLINE_CONSOLE = "console=${@bb.data.getVar("KERNEL_CONSOLE",d,1) or "ttyS0"}"
 
-# parse kernel ABI version out of <linux/version.h>
-def get_kernelversion(p):
-	import re
-	try:
-		f = open(p, 'r')
-	except IOError:
-		return None
-	l = f.readlines()
-	f.close()
-	r = re.compile("#define UTS_RELEASE \"(.*)\"")
-	for s in l:
-		m = r.match(s)
-		if m:
-			return m.group(1)
-	return None
-
-def get_kernelmajorversion(p):
-	import re
-	r = re.compile("([0-9]+\.[0-9]+).*")
-	m = r.match(p);
-	if m:
-		return m.group(1)
-	return None
-
-KERNEL_VERSION = "${@get_kernelversion('${S}/include/linux/version.h')}"
+KERNEL_VERSION = "${@get_kernelversion('${S}')}"
 KERNEL_MAJOR_VERSION = "${@get_kernelmajorversion('${KERNEL_VERSION}')}"
 
 KERNEL_LOCALVERSION ?= ""
