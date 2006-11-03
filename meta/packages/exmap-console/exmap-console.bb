@@ -2,19 +2,20 @@ DESCRIPTION = "console-based exmap"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r3"
+PR = "r5"
 PV = "0.9"
 
-SRCDATE="20061026"
+SRCDATE="20061104"
 
 SRC_URI = \
     "svn://svn.o-hand.com/repos/misc/trunk;module=exmap-console;proto=http"
 
 inherit module-base
+inherit autotools
 
 S = "${WORKDIR}/exmap-console"
 
-export KERNEL_PATH=${STAGING_KERNEL_DIR}
+export MODULE_PATH="${D}${base_libdir}/modules/${KERNEL_VERSION}"
 
 do_compile() {
 	cd ${S}/src
@@ -27,16 +28,6 @@ do_compile() {
 		   KERNEL_VERSION=${KERNEL_VERSION}    \
 		   CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
 		   ${MAKE_TARGETS}
-}
-
-sbindir="/usr/sbin"
-
-do_install() {
-	install -d ${D}${sbindir}
-	install -m 710 ${S}/src/exmap ${D}${sbindir}/exmap
-
-	install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/misc
-	install -m 644 ${S}/kernel/exmap${KERNEL_OBJECT_SUFFIX} ${D}${base_libdir}/modules/${KERNEL_VERSION}/misc/
 }
 
 FILES_${PN}="${sbindir} ${base_libdir}"
