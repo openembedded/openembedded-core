@@ -2,10 +2,10 @@ DESCRIPTION = "console-based exmap"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r5"
-PV = "0.9"
+PR = "r6"
+PV = "0.1"
 
-SRCDATE="20061104"
+SRCDATE="20061111"
 
 SRC_URI = \
     "svn://svn.o-hand.com/repos/misc/trunk;module=exmap-console;proto=http"
