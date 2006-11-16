@@ -69,12 +69,6 @@ EXTRA_OECONF = "--without-cvs --disable-profile --disable-debug --without-gd \
 
 EXTRA_OECONF += "${@get_glibc_fpu_setting(bb, d)}"
 
-def get_glibc_fpu_setting(bb, d):
-	if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
-		return "--without-fp"
-	return ""
-
-
 do_configure () {
 # override this function to avoid the autoconf/automake/aclocal/autoheader
 # calls for now

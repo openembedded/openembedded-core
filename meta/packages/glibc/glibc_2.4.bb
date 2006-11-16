@@ -85,11 +85,6 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
 
 EXTRA_OECONF += "${@get_glibc_fpu_setting(bb, d)}"
 
-def get_glibc_fpu_setting(bb, d):
-	if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
-		return "--without-fp"
-	return ""
-
 do_munge() {
 	# Integrate ports and libidn into tree
 	mv ${WORKDIR}/glibc-ports-${PV} ${S}/ports
