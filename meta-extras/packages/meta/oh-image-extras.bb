@@ -23,5 +23,5 @@ RDEPENDS = "\
 export IPKG_INSTALL = "${RDEPENDS}"
 #ROOTFS_POSTPROCESS_COMMAND += "zap_root_password; "
 
-inherit image_ipk
+inherit image
 LICENSE = MIT
