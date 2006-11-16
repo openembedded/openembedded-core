@@ -25,17 +25,8 @@ You should have received a copy of the GNU General Public License along with
 Based on functions from the base bb module, Copyright 2003 Holger Schurig
 """
 
-from bb import debug, data, fetch, fatal, error, note, event, mkdirhier, utils
+from bb import data, fetch, event, mkdirhier, utils
 import bb, os
-
-# data holds flags and function name for a given task
-_task_data = data.init()
-
-# graph represents task interdependencies
-_task_graph = bb.digraph()
-
-# stack represents execution order, excepting dependencies
-_task_stack = []
 
 # events
 class FuncFailed(Exception):
@@ -75,13 +66,6 @@ class InvalidTask(TaskBase):
     """Invalid Task"""
 
 # functions
-
-def init(data):
-    global _task_data, _task_graph, _task_stack
-    _task_data = data.init()
-    _task_graph = bb.digraph()
-    _task_stack = []
-
 
 def exec_func(func, d, dirs = None):
     """Execute an BB 'function'"""
@@ -163,7 +147,7 @@ def exec_func_shell(func, d):
 
     f = open(runfile, "w")
     f.write("#!/bin/sh -e\n")
-    if bb.debug_level > 0: f.write("set -x\n")
+    if bb.msg.debug_level['default'] > 0: f.write("set -x\n")
     data.emit_env(f, d)
 
     f.write("cd %s\n" % os.getcwd())
@@ -171,18 +155,18 @@ def exec_func_shell(func, d):
     f.close()
     os.chmod(runfile, 0775)
     if not func:
-        error("Function not specified")
+        bb.msg.error(bb.msg.domain.Build, "Function not specified")
         raise FuncFailed()
 
     # open logs
     si = file('/dev/null', 'r')
     try:
-        if bb.debug_level > 0:
+        if bb.msg.debug_level['default'] > 0:
             so = os.popen("tee \"%s\"" % logfile, "w")
         else:
             so = file(logfile, 'w')
     except OSError, e:
-        bb.error("opening log file: %s" % e)
+        bb.msg.error(bb.msg.domain.Build, "opening log file: %s" % e)
         pass
 
     se = so
@@ -205,7 +189,10 @@ def exec_func_shell(func, d):
     else:
         maybe_fakeroot = ''
     ret = os.system('%ssh -e %s' % (maybe_fakeroot, runfile))
-    os.chdir(prevdir)
+    try:
+        os.chdir(prevdir)
+    except:
+        pass
 
     if not interact:
         # restore the backups
@@ -224,14 +211,14 @@ def exec_func_shell(func, d):
         os.close(ose[0])
 
     if ret==0:
-        if bb.debug_level > 0:
+        if bb.msg.debug_level['default'] > 0:
             os.remove(runfile)
 #            os.remove(logfile)
         return
     else:
-        error("function %s failed" % func)
+        bb.msg.error(bb.msg.domain.Build, "function %s failed" % func)
         if data.getVar("BBINCLUDELOGS", d):
-            error("log data follows (%s)" % logfile)
+            bb.msg.error(bb.msg.domain.Build, "log data follows (%s)" % logfile)
             f = open(logfile, "r")
             while True:
                 l = f.readline()
@@ -241,7 +228,7 @@ def exec_func_shell(func, d):
                 print '| %s' % l
             f.close()
         else:
-            error("see log in %s" % logfile)
+            bb.msg.error(bb.msg.domain.Build, "see log in %s" % logfile)
         raise FuncFailed( logfile )
 
 
@@ -281,7 +268,7 @@ def exec_task(task, d):
                 return 1
 
             try:
-                debug(1, "Executing task %s" % item)
+                bb.msg.debug(1, bb.msg.domain.Build, "Executing task %s" % item)
                 old_overrides = data.getVar('OVERRIDES', d, 0)
                 localdata = data.createCopy(d)
                 data.setVar('OVERRIDES', 'task_%s:%s' % (item, old_overrides), localdata)
@@ -292,21 +279,63 @@ def exec_task(task, d):
                 task_cache.append(item)
                 data.setVar('_task_cache', task_cache, d)
             except FuncFailed, reason:
-                note( "Task failed: %s" % reason )
+                bb.msg.note(1, bb.msg.domain.Build, "Task failed: %s" % reason )
                 failedevent = TaskFailed(item, d)
                 event.fire(failedevent)
                 raise EventException("Function failed in task: %s" % reason, failedevent)
 
-    # execute
-    task_graph.walkdown(task, execute)
+    if data.getVarFlag(task, 'dontrundeps', d):
+        execute(None, task)
+    else:
+        task_graph.walkdown(task, execute)
 
     # make stamp, or cause event and raise exception
     if not data.getVarFlag(task, 'nostamp', d):
         mkstamp(task, d)
 
+def stamp_is_current_cache(dataCache, file_name, task, checkdeps = 1):
+    """
+    Check status of a given task's stamp. 
+    Returns 0 if it is not current and needs updating.
+    Same as stamp_is_current but works against the dataCache instead of d
+    """
+    task_graph = dataCache.task_queues[file_name]
+
+    if not dataCache.stamp[file_name]:
+        return 0
+
+    stampfile = "%s.%s" % (dataCache.stamp[file_name], task)
+    if not os.access(stampfile, os.F_OK):
+        return 0
+
+    if checkdeps == 0:
+        return 1
+
+    import stat
+    tasktime = os.stat(stampfile)[stat.ST_MTIME]
+
+    _deps = []
+    def checkStamp(graph, task):
+        # check for existance
+        if 'nostamp' in dataCache.task_deps[file_name] and task in dataCache.task_deps[file_name]['nostamp']:
+            return 1
+
+        if not stamp_is_current_cache(dataCache, file_name, task, 0):
+            return 0
+
+        depfile = "%s.%s" % (dataCache.stamp[file_name], task)
+        deptime = os.stat(depfile)[stat.ST_MTIME]
+        if deptime > tasktime:
+            return 0
+        return 1
+
+    return task_graph.walkdown(task, checkStamp)
 
 def stamp_is_current(task, d, checkdeps = 1):
-    """Check status of a given task's stamp. returns 0 if it is not current and needs updating."""
+    """
+    Check status of a given task's stamp. 
+    Returns 0 if it is not current and needs updating.
+    """
     task_graph = data.getVar('_task_graph', d)
     if not task_graph:
         task_graph = bb.digraph()
@@ -360,7 +389,6 @@ def mkstamp(task, d):
     f = open(stamp, "w")
     f.close()
 
-
 def add_task(task, deps, d):
     task_graph = data.getVar('_task_graph', d)
     if not task_graph:
@@ -374,6 +402,21 @@ def add_task(task, deps, d):
     # don't assume holding a reference
     data.setVar('_task_graph', task_graph, d)
 
+    task_deps = data.getVar('_task_deps', d)
+    if not task_deps:
+        task_deps = {}
+    def getTask(name):
+        deptask = data.getVarFlag(task, name, d)
+        if deptask:
+            if not name in task_deps:
+                task_deps[name] = {}
+            task_deps[name][task] = deptask
+    getTask('deptask')
+    getTask('rdeptask')
+    getTask('recrdeptask')
+    getTask('nostamp')
+
+    data.setVar('_task_deps', task_deps, d)
 
 def remove_task(task, kill, d):
     """Remove an BB 'task'.
@@ -399,6 +442,3 @@ def task_exists(task, d):
         task_graph = bb.digraph()
         data.setVar('_task_graph', task_graph, d)
     return task_graph.hasnode(task)
-
-def get_task_data():
-    return _task_data

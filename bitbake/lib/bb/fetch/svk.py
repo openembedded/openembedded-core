@@ -42,112 +42,76 @@ from   bb.fetch import MissingParameterError
 
 class Svk(Fetch):
     """Class to fetch a module or modules from svk repositories"""
-    def supports(url, d):
-        """Check to see if a given url can be fetched with svk.
-           Expects supplied url in list form, as outputted by bb.decodeurl().
+    def supports(self, url, ud, d):
         """
-        (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(url, d))
-        return type in ['svk']
-    supports = staticmethod(supports)
+        Check to see if a given url can be fetched with cvs.
+        """
+        return ud.type in ['svk']
 
-    def localpath(url, d):
-        (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(url, d))
-        if "localpath" in parm:
-#           if user overrides local path, use it.
-            return parm["localpath"]
-
-        if not "module" in parm:
+    def localpath(self, url, ud, d):
+        if not "module" in ud.parm:
             raise MissingParameterError("svk method needs a 'module' parameter")
         else:
-            module = parm["module"]
-        if 'rev' in parm:
-            revision = parm['rev']
-        else:
-            revision = ""
+            ud.module = ud.parm["module"]
 
-        date = Fetch.getSRCDate(d)
+        ud.revision = ""
+        if 'rev' in ud.parm:
+            ud.revision = ud.parm['rev']
 
-        return os.path.join(data.getVar("DL_DIR", d, 1),data.expand('%s_%s_%s_%s_%s.tar.gz' % ( module.replace('/', '.'), host, path.replace('/', '.'), revision, date), d))
-    localpath = staticmethod(localpath)
+        ud.localfile = data.expand('%s_%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision, ud.date), d)
 
-    def go(self, d, urls = []):
+        return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
+
+    def forcefetch(self, url, ud, d):
+        if (ud.date == "now"):
+            return True
+        return False
+
+    def go(self, loc, ud, d):
         """Fetch urls"""
-        if not urls:
-            urls = self.urls
 
+        if not self.forcefetch(loc, ud, d) and Fetch.try_mirror(d, ud.localfile):
+            return
+
+        svkroot = ud.host + ud.path
+
+        svkcmd = "svk co -r {%s} %s/%s" % (date, svkroot, ud.module)
+
+        if ud.revision:
+            svkcmd = "svk co -r %s/%s" % (ud.revision, svkroot, ud.module)
+
+        # create temp directory
         localdata = data.createCopy(d)
-        data.setVar('OVERRIDES', "svk:%s" % data.getVar('OVERRIDES', localdata), localdata)
         data.update_data(localdata)
+        bb.msg.debug(2, bb.msg.domain.Fetcher, "Fetch: creating temporary directory")
+        bb.mkdirhier(data.expand('${WORKDIR}', localdata))
+        data.setVar('TMPBASE', data.expand('${WORKDIR}/oesvk.XXXXXX', localdata), localdata)
+        tmppipe = os.popen(data.getVar('MKTEMPDIRCMD', localdata, 1) or "false")
+        tmpfile = tmppipe.readline().strip()
+        if not tmpfile:
+            bb.msg.error(bb.msg.domain.Fetcher, "Fetch: unable to create temporary directory.. make sure 'mktemp' is in the PATH.")
+            raise FetchError(ud.module)
 
-        for loc in urls:
-            (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(loc, localdata))
-            if not "module" in parm:
-                raise MissingParameterError("svk method needs a 'module' parameter")
-            else:
-                module = parm["module"]
+        # check out sources there
+        os.chdir(tmpfile)
+        bb.msg.note(1, bb.msg.domain.Fetcher, "Fetch " + loc)
+        bb.msg.debug(1, bb.msg.domain.Fetcher, "Running %s" % svkcmd)
+        myret = os.system(svkcmd)
+        if myret != 0:
+            try:
+                os.rmdir(tmpfile)
+            except OSError:
+                pass
+            raise FetchError(ud.module)
 
-            dlfile = self.localpath(loc, localdata)
-            dldir = data.getVar('DL_DIR', localdata, 1)
-
-#           setup svk options
-            options = []
-            if 'rev' in parm:
-                revision = parm['rev']
-            else:
-                revision = ""
-
-            date = Fetch.getSRCDate(d)
-            tarfn = data.expand('%s_%s_%s_%s_%s.tar.gz' % (module.replace('/', '.'), host, path.replace('/', '.'), revision, date), localdata)
-            data.setVar('TARFILES', dlfile, localdata)
-            data.setVar('TARFN', tarfn, localdata)
-
-            if Fetch.check_for_tarball(d, tarfn, dldir, date):
-                continue
-
-            olddir = os.path.abspath(os.getcwd())
-            os.chdir(data.expand(dldir, localdata))
-
-            svkroot = host + path
-
-            data.setVar('SVKROOT', svkroot, localdata)
-            data.setVar('SVKCOOPTS', " ".join(options), localdata)
-            data.setVar('SVKMODULE', module, localdata)
-            svkcmd = "svk co -r {%s} %s/%s" % (date, svkroot, module)
-
-            if revision:
-                svkcmd = "svk co -r %s/%s" % (revision, svkroot, module)
-
-#           create temp directory
-            bb.debug(2, "Fetch: creating temporary directory")
-            bb.mkdirhier(data.expand('${WORKDIR}', localdata))
-            data.setVar('TMPBASE', data.expand('${WORKDIR}/oesvk.XXXXXX', localdata), localdata)
-            tmppipe = os.popen(data.getVar('MKTEMPDIRCMD', localdata, 1) or "false")
-            tmpfile = tmppipe.readline().strip()
-            if not tmpfile:
-                bb.error("Fetch: unable to create temporary directory.. make sure 'mktemp' is in the PATH.")
-                raise FetchError(module)
-
-#           check out sources there
-            os.chdir(tmpfile)
-            bb.note("Fetch " + loc)
-            bb.debug(1, "Running %s" % svkcmd)
-            myret = os.system(svkcmd)
-            if myret != 0:
-                try:
-                    os.rmdir(tmpfile)
-                except OSError:
-                    pass
-                raise FetchError(module)
-
-            os.chdir(os.path.join(tmpfile, os.path.dirname(module)))
-#           tar them up to a defined filename
-            myret = os.system("tar -czf %s %s" % (os.path.join(dldir,tarfn), os.path.basename(module)))
-            if myret != 0:
-                try:
-                    os.unlink(tarfn)
-                except OSError:
-                    pass
-#           cleanup
-            os.system('rm -rf %s' % tmpfile)
-            os.chdir(olddir)
-        del localdata
+        os.chdir(os.path.join(tmpfile, os.path.dirname(ud.module)))
+        # tar them up to a defined filename
+        myret = os.system("tar -czf %s %s" % (ud.localpath, os.path.basename(ud.module)))
+        if myret != 0:
+            try:
+                os.unlink(ud.localpath)
+            except OSError:
+                pass
+            raise FetchError(ud.module)
+        # cleanup
+        os.system('rm -rf %s' % tmpfile)

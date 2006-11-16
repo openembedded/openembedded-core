@@ -38,13 +38,16 @@ class NoMethodError(Exception):
 class MissingParameterError(Exception):
     """Exception raised when a fetch method is missing a critical parameter in the url"""
 
+class ParameterError(Exception):
+    """Exception raised when a url cannot be proccessed due to invalid parameters."""
+
 class MD5SumError(Exception):
     """Exception raised when a MD5SUM of a file does not match the expected one"""
 
 def uri_replace(uri, uri_find, uri_replace, d):
-#   bb.note("uri_replace: operating on %s" % uri)
+#   bb.msg.note(1, bb.msg.domain.Fetcher, "uri_replace: operating on %s" % uri)
     if not uri or not uri_find or not uri_replace:
-        bb.debug(1, "uri_replace: passed an undefined value, not replacing")
+        bb.msg.debug(1, bb.msg.domain.Fetcher, "uri_replace: passed an undefined value, not replacing")
     uri_decoded = list(bb.decodeurl(uri))
     uri_find_decoded = list(bb.decodeurl(uri_find))
     uri_replace_decoded = list(bb.decodeurl(uri_replace))
@@ -62,9 +65,9 @@ def uri_replace(uri, uri_find, uri_replace, d):
                         localfn = bb.fetch.localpath(uri, d)
                         if localfn:
                             result_decoded[loc] = os.path.dirname(result_decoded[loc]) + "/" + os.path.basename(bb.fetch.localpath(uri, d))
-#                       bb.note("uri_replace: matching %s against %s and replacing with %s" % (i, uri_decoded[loc], uri_replace_decoded[loc]))
+#                       bb.msg.note(1, bb.msg.domain.Fetcher, "uri_replace: matching %s against %s and replacing with %s" % (i, uri_decoded[loc], uri_replace_decoded[loc]))
             else:
-#               bb.note("uri_replace: no match")
+#               bb.msg.note(1, bb.msg.domain.Fetcher, "uri_replace: no match")
                 return uri
 #           else:
 #               for j in i.keys():
@@ -72,62 +75,94 @@ def uri_replace(uri, uri_find, uri_replace, d):
     return bb.encodeurl(result_decoded)
 
 methods = []
+urldata = {}
 
 def init(urls = [], d = None):
     if d == None:
-        bb.debug(2,"BUG init called with None as data object!!!")
+        bb.msg.debug(2, bb.msg.domain.Fetcher, "BUG init called with None as data object!!!")
         return
 
     for m in methods:
         m.urls = []
 
     for u in urls:
+        ud = initdata(u, d)
+        if ud.method:
+            ud.method.urls.append(u)
+
+def initdata(url, d):
+    if url not in urldata:
+        ud = FetchData()
+        (ud.type, ud.host, ud.path, ud.user, ud.pswd, ud.parm) = bb.decodeurl(data.expand(url, d))
+        ud.date = Fetch.getSRCDate(d)
         for m in methods:
-            m.data = d
-            if m.supports(u, d):
-                m.urls.append(u)
+            if m.supports(url, ud, d):
+                ud.localpath = m.localpath(url, ud, d)
+                ud.md5 = ud.localpath + '.md5'
+                # if user sets localpath for file, use it instead.
+                if "localpath" in ud.parm:
+                    ud.localpath = ud.parm["localpath"]
+                ud.method = m
+                break
+        urldata[url] = ud
+    return urldata[url]
 
 def go(d):
     """Fetch all urls"""
     for m in methods:
-        if m.urls:
-            m.go(d)
+        for u in m.urls:
+            ud = urldata[u]
+            if ud.localfile and not m.forcefetch(u, ud, d) and os.path.exists(urldata[u].md5):
+                # File already present along with md5 stamp file
+                # Touch md5 file to show activity
+                os.utime(ud.md5, None)
+                continue
+            # RP - is olddir needed?
+            # olddir = os.path.abspath(os.getcwd())
+            m.go(u, ud	, d)
+            # os.chdir(olddir)
+            if ud.localfile and not m.forcefetch(u, ud, d):
+                Fetch.write_md5sum(u, ud, d)
 
 def localpaths(d):
     """Return a list of the local filenames, assuming successful fetch"""
     local = []
     for m in methods:
         for u in m.urls:
-            local.append(m.localpath(u, d))
+            local.append(urldata[u].localpath)
     return local
 
 def localpath(url, d):
-    for m in methods:
-        if m.supports(url, d):
-            return m.localpath(url, d)
+    ud = initdata(url, d)
+    if ud.method:
+        return ud.localpath
     return url
+
+class FetchData(object):
+    """Class for fetcher variable store"""
+    def __init__(self):
+        self.localfile = ""
+
 
 class Fetch(object):
     """Base class for 'fetch'ing data"""
 
     def __init__(self, urls = []):
         self.urls = []
-        for url in urls:
-            if self.supports(bb.decodeurl(url), d) is 1:
-                self.urls.append(url)
 
-    def supports(url, d):
-        """Check to see if this fetch class supports a given url.
-           Expects supplied url in list form, as outputted by bb.decodeurl().
+    def supports(self, url, urldata, d):
+        """
+        Check to see if this fetch class supports a given url.
         """
         return 0
-    supports = staticmethod(supports)
 
-    def localpath(url, d):
-        """Return the local filename of a given url assuming a successful fetch.
+    def localpath(self, url, urldata, d):
+        """
+        Return the local filename of a given url assuming a successful fetch.
+        Can also setup variables in urldata for use in go (saving code duplication 
+        and duplicate code execution)
         """
         return url
-    localpath = staticmethod(localpath)
 
     def setUrls(self, urls):
         self.__urls = urls
@@ -137,16 +172,17 @@ class Fetch(object):
 
     urls = property(getUrls, setUrls, None, "Urls property")
 
-    def setData(self, data):
-        self.__data = data
+    def forcefetch(self, url, urldata, d):
+        """
+        Force a fetch, even if localpath exists?
+        """
+        return False
 
-    def getData(self):
-        return self.__data
-
-    data = property(getData, setData, None, "Data property")
-
-    def go(self, urls = []):
-        """Fetch urls"""
+    def go(self, url, urldata, d):
+        """
+        Fetch urls
+        Assumes localpath was called first
+        """
         raise NoMethodError("Missing implementation for url")
 
     def getSRCDate(d):
@@ -155,7 +191,12 @@ class Fetch(object):
 
         d the bb.data module
         """
-        return data.getVar("SRCDATE", d, 1) or data.getVar("CVSDATE", d, 1) or data.getVar("DATE", d, 1 )
+        pn = data.getVar("PN", d, 1)
+
+        if pn:
+            return data.getVar("SRCDATE_%s" % pn, d, 1) or data.getVar("CVSDATE_%s" % pn, d, 1) or data.getVar("DATE", d, 1)
+
+        return data.getVar("SRCDATE", d, 1) or data.getVar("CVSDATE", d, 1) or data.getVar("DATE", d, 1)
     getSRCDate = staticmethod(getSRCDate)
 
     def try_mirror(d, tarfn):
@@ -168,6 +209,11 @@ class Fetch(object):
         d Is a bb.data instance
         tarfn is the name of the tarball
         """
+        tarpath = os.path.join(data.getVar("DL_DIR", d, 1), tarfn)
+        if os.access(tarpath, os.R_OK):
+            bb.msg.debug(1, bb.msg.domain.Fetcher, "%s already exists, skipping checkout." % tarfn)
+            return True
+
         pn = data.getVar('PN', d, True)
         src_tarball_stash = None
         if pn:
@@ -176,36 +222,45 @@ class Fetch(object):
         for stash in src_tarball_stash:
             fetchcmd = data.getVar("FETCHCOMMAND_mirror", d, True) or data.getVar("FETCHCOMMAND_wget", d, True)
             uri = stash + tarfn
-            bb.note("fetch " + uri)
+            bb.msg.note(1, bb.msg.domain.Fetcher, "fetch " + uri)
             fetchcmd = fetchcmd.replace("${URI}", uri)
             ret = os.system(fetchcmd)
             if ret == 0:
-                bb.note("Fetched %s from tarball stash, skipping checkout" % tarfn)
+                bb.msg.note(1, bb.msg.domain.Fetcher, "Fetched %s from tarball stash, skipping checkout" % tarfn)
                 return True
         return False
     try_mirror = staticmethod(try_mirror)
 
-    def check_for_tarball(d, tarfn, dldir, date):
+    def verify_md5sum(ud, got_sum):
         """
-        Check for a local copy then check the tarball stash.
-        Both checks are skipped if date == 'now'.
-
-        d Is a bb.data instance
-        tarfn is the name of the tarball
-        date is the SRCDATE
+        Verify the md5sum we wanted with the one we got
         """
-        if "now" != date:
-            dl = os.path.join(dldir, tarfn)
-            if os.access(dl, os.R_OK):
-                bb.debug(1, "%s already exists, skipping checkout." % tarfn)
-                return True
+        wanted_sum = None
+        if 'md5sum' in ud.parm:
+            wanted_sum = ud.parm['md5sum']
+        if not wanted_sum:
+            return True
 
-            # try to use the tarball stash
-            if Fetch.try_mirror(d, tarfn):
-                return True
-        return False
-    check_for_tarball = staticmethod(check_for_tarball)
+        return wanted_sum == got_sum
+    verify_md5sum = staticmethod(verify_md5sum)
 
+    def write_md5sum(url, ud, d):
+        if bb.which(data.getVar('PATH', d), 'md5sum'):
+            try:
+                md5pipe = os.popen('md5sum ' + ud.localpath)
+                md5data = (md5pipe.readline().split() or [ "" ])[0]
+                md5pipe.close()
+            except OSError:
+                md5data = ""
+
+        # verify the md5sum
+        if not Fetch.verify_md5sum(ud, md5data):
+            raise MD5SumError(url)
+
+        md5out = file(ud.md5, 'w')
+        md5out.write(md5data)
+        md5out.close()
+    write_md5sum = staticmethod(write_md5sum)
 
 import cvs
 import git
@@ -214,6 +269,7 @@ import svn
 import wget
 import svk
 import ssh
+import perforce
 
 methods.append(cvs.Cvs())
 methods.append(git.Git())
@@ -222,3 +278,4 @@ methods.append(svn.Svn())
 methods.append(wget.Wget())
 methods.append(svk.Svk())
 methods.append(ssh.SSH())
+methods.append(perforce.Perforce())

@@ -30,138 +30,70 @@ import bb
 from   bb import data
 from   bb.fetch import Fetch
 from   bb.fetch import FetchError
-from   bb.fetch import MD5SumError
 from   bb.fetch import uri_replace
 
 class Wget(Fetch):
     """Class to fetch urls via 'wget'"""
-    def supports(url, d):
-        """Check to see if a given url can be fetched using wget.
-           Expects supplied url in list form, as outputted by bb.decodeurl().
+    def supports(self, url, ud, d):
         """
-        (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(url, d))
-        return type in ['http','https','ftp']
-    supports = staticmethod(supports)
+        Check to see if a given url can be fetched with cvs.
+        """
+        return ud.type in ['http','https','ftp']
 
-    def localpath(url, d):
-#       strip off parameters
-        (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(url, d))
-        if "localpath" in parm:
-#           if user overrides local path, use it.
-            return parm["localpath"]
-        url = bb.encodeurl([type, host, path, user, pswd, {}])
+    def localpath(self, url, ud, d):
 
-        return os.path.join(data.getVar("DL_DIR", d), os.path.basename(url))
-    localpath = staticmethod(localpath)
+        url = bb.encodeurl([ud.type, ud.host, ud.path, ud.user, ud.pswd, {}])
+        ud.basename = os.path.basename(ud.path)
+        ud.localfile = data.expand(os.path.basename(url), d)
 
-    def go(self, d, urls = []):
+        return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
+
+    def go(self, uri, ud, d):
         """Fetch urls"""
 
-        def md5_sum(parm, d):
-            """
-            Return the MD5SUM associated with the to be downloaded
-            file.
-            It can return None if no md5sum is associated
-            """
-            try:
-                return parm['md5sum']
-            except:
-                return None
-
-        def verify_md5sum(wanted_sum, got_sum):
-            """
-            Verify the md5sum we wanted with the one we got
-            """
-            if not wanted_sum:
-                return True
-
-            return wanted_sum == got_sum
-
-        def fetch_uri(uri, basename, dl, md5, parm, d):
-            # the MD5 sum we want to verify
-            wanted_md5sum = md5_sum(parm, d)
-            if os.path.exists(dl):
-#               file exists, but we didnt complete it.. trying again..
+        def fetch_uri(uri, ud, d):
+            if os.path.exists(ud.localpath):
+                # file exists, but we didnt complete it.. trying again..
                 fetchcmd = data.getVar("RESUMECOMMAND", d, 1)
             else:
                 fetchcmd = data.getVar("FETCHCOMMAND", d, 1)
 
-            bb.note("fetch " + uri)
+            bb.msg.note(1, bb.msg.domain.Fetcher, "fetch " + uri)
             fetchcmd = fetchcmd.replace("${URI}", uri)
-            fetchcmd = fetchcmd.replace("${FILE}", basename)
-            bb.debug(2, "executing " + fetchcmd)
+            fetchcmd = fetchcmd.replace("${FILE}", ud.basename)
+            bb.msg.debug(2, bb.msg.domain.Fetcher, "executing " + fetchcmd)
             ret = os.system(fetchcmd)
             if ret != 0:
                 return False
 
             # check if sourceforge did send us to the mirror page
-            dl_dir = data.getVar("DL_DIR", d, True)
-            if not os.path.exists(dl):
-                os.system("rm %s*" % dl) # FIXME shell quote it
-                bb.debug(2,"sourceforge.net send us to the mirror on %s" % basename)
+            if not os.path.exists(ud.localpath):
+                os.system("rm %s*" % ud.localpath) # FIXME shell quote it
+                bb.msg.debug(2, bb.msg.domain.Fetcher, "sourceforge.net send us to the mirror on %s" % ud.basename)
                 return False
 
-#           supposedly complete.. write out md5sum
-            if bb.which(data.getVar('PATH', d), 'md5sum'):
-                try:
-                    md5pipe = os.popen('md5sum ' + dl)
-                    md5data = (md5pipe.readline().split() or [ "" ])[0]
-                    md5pipe.close()
-                except OSError:
-                    md5data = ""
-
-            # verify the md5sum
-            if not verify_md5sum(wanted_md5sum, md5data):
-                raise MD5SumError(uri)
-
-            md5out = file(md5, 'w')
-            md5out.write(md5data)
-            md5out.close()
             return True
-
-        if not urls:
-            urls = self.urls
 
         localdata = data.createCopy(d)
         data.setVar('OVERRIDES', "wget:" + data.getVar('OVERRIDES', localdata), localdata)
         data.update_data(localdata)
 
-        for uri in urls:
-            completed = 0
-            (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(uri, localdata))
-            basename = os.path.basename(path)
-            dl = self.localpath(uri, d)
-            dl = data.expand(dl, localdata)
-            md5 = dl + '.md5'
+        premirrors = [ i.split() for i in (data.getVar('PREMIRRORS', localdata, 1) or "").split('\n') if i ]
+        for (find, replace) in premirrors:
+            newuri = uri_replace(uri, find, replace, d)
+            if newuri != uri:
+                if fetch_uri(newuri, ud, localdata):
+                    return
 
-            if os.path.exists(md5):
-#               complete, nothing to see here..
-                continue
+        if fetch_uri(uri, ud, localdata):
+            return
 
-            premirrors = [ i.split() for i in (data.getVar('PREMIRRORS', localdata, 1) or "").split('\n') if i ]
-            for (find, replace) in premirrors:
-                newuri = uri_replace(uri, find, replace, d)
-                if newuri != uri:
-                    if fetch_uri(newuri, basename, dl, md5, parm, localdata):
-                        completed = 1
-                        break
+        # try mirrors
+        mirrors = [ i.split() for i in (data.getVar('MIRRORS', localdata, 1) or "").split('\n') if i ]
+        for (find, replace) in mirrors:
+            newuri = uri_replace(uri, find, replace, d)
+            if newuri != uri:
+                if fetch_uri(newuri, ud, localdata):
+                    return
 
-            if completed:
-                continue
-
-            if fetch_uri(uri, basename, dl, md5, parm, localdata):
-                continue
-
-#           try mirrors
-            mirrors = [ i.split() for i in (data.getVar('MIRRORS', localdata, 1) or "").split('\n') if i ]
-            for (find, replace) in mirrors:
-                newuri = uri_replace(uri, find, replace, d)
-                if newuri != uri:
-                    if fetch_uri(newuri, basename, dl, md5, parm, localdata):
-                        completed = 1
-                        break
-
-            if not completed:
-                raise FetchError(uri)
-
-        del localdata
+        raise FetchError(uri)

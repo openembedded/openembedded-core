@@ -37,7 +37,7 @@ def prunedir(topdir):
 
 def rungitcmd(cmd,d):
 
-    bb.debug(1, "Running %s" % cmd)
+    bb.msg.debug(1, bb.msg.domain.Fetcher, "Running %s" % cmd)
 
     # Need to export PATH as git is likely to be in metadata paths 
     # rather than host provided
@@ -48,108 +48,80 @@ def rungitcmd(cmd,d):
     if myret != 0:
         raise FetchError("Git: %s failed" % pathcmd)
 
-def gettag(parm):
-    if 'tag' in parm:
-        tag = parm['tag']
-    else:
-        tag = ""
-    if not tag:
-        tag = "master"
-
-    return tag
-
-def getprotocol(parm):
-    if 'protocol' in parm:
-        proto = parm['protocol']
-    else:
-        proto = ""
-    if not proto:
-        proto = "rsync"
-
-    return proto
-
-def localfile(url, d):
-    """Return the filename to cache the checkout in"""
-    (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(url, d))
-
-    #if user sets localpath for file, use it instead.
-    if "localpath" in parm:
-        return parm["localpath"]
-
-    tag = gettag(parm)
-
-    return data.expand('git_%s%s_%s.tar.gz' % (host, path.replace('/', '.'), tag), d)
-
 class Git(Fetch):
     """Class to fetch a module or modules from git repositories"""
-    def supports(url, d):
-        """Check to see if a given url can be fetched with cvs.
-           Expects supplied url in list form, as outputted by bb.decodeurl().
+    def supports(self, url, ud, d):
         """
-        (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(url, d))
-        return type in ['git']
-    supports = staticmethod(supports)
+        Check to see if a given url can be fetched with cvs.
+        """
+        return ud.type in ['git']
 
-    def localpath(url, d):
+    def localpath(self, url, ud, d):
 
-        return os.path.join(data.getVar("DL_DIR", d, 1), localfile(url, d))
+        ud.proto = "rsync"
+        if 'protocol' in ud.parm:
+            ud.proto = ud.parm['protocol']
 
-    localpath = staticmethod(localpath)
+        ud.tag = "master"
+        if 'tag' in ud.parm:
+            ud.tag = ud.parm['tag']
 
-    def go(self, d, urls = []):
-        """Fetch urls"""
-        if not urls:
-            urls = self.urls
+        ud.localfile = data.expand('git_%s%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.tag), d)
 
-        for loc in urls:
-            (type, host, path, user, pswd, parm) = bb.decodeurl(data.expand(loc, d))
+        return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
 
-            tag = gettag(parm)
-            proto = getprotocol(parm)
+    def forcefetch(self, url, ud, d):
+        # tag=="master" must always update
+        if (ud.tag == "master"):
+            return True
+        return False
 
-            gitsrcname = '%s%s' % (host, path.replace('/', '.'))
+    def go(self, loc, ud, d):
+        """Fetch url"""
 
-            repofilename = 'git_%s.tar.gz' % (gitsrcname)
-            repofile = os.path.join(data.getVar("DL_DIR", d, 1), repofilename)
-            repodir = os.path.join(data.expand('${GITDIR}', d), gitsrcname)
+        if not self.forcefetch(loc, ud, d) and Fetch.try_mirror(d, ud.localfile):
+            bb.msg.debug(1, bb.msg.domain.Fetcher, "%s already exists (or was stashed). Skipping git checkout." % ud.localpath)
+            return
 
-            coname = '%s' % (tag)
-            codir = os.path.join(repodir, coname)
+        gitsrcname = '%s%s' % (ud.host, ud.path.replace('/', '.'))
 
-            cofile = self.localpath(loc, d)
+        repofilename = 'git_%s.tar.gz' % (gitsrcname)
+        repofile = os.path.join(data.getVar("DL_DIR", d, 1), repofilename)
+        repodir = os.path.join(data.expand('${GITDIR}', d), gitsrcname)
 
-            # tag=="master" must always update
-            if (tag != "master") and Fetch.try_mirror(d, localfile(loc, d)):
-                bb.debug(1, "%s already exists (or was stashed). Skipping git checkout." % cofile)
-                continue
+        coname = '%s' % (ud.tag)
+        codir = os.path.join(repodir, coname)
 
-            if not os.path.exists(repodir):
-                if Fetch.try_mirror(d, repofilename):    
-                    bb.mkdirhier(repodir)
-                    os.chdir(repodir)
-                    rungitcmd("tar -xzf %s" % (repofile),d)
-                else:
-                    rungitcmd("git clone -n %s://%s%s %s" % (proto, host, path, repodir),d)
+        if not os.path.exists(repodir):
+            if Fetch.try_mirror(d, repofilename):    
+                bb.mkdirhier(repodir)
+                os.chdir(repodir)
+                rungitcmd("tar -xzf %s" % (repofile),d)
+            else:
+                rungitcmd("git clone -n %s://%s%s %s" % (ud.proto, ud.host, ud.path, repodir),d)
 
-            os.chdir(repodir)
-            rungitcmd("git pull %s://%s%s" % (proto, host, path),d)
-            rungitcmd("git pull --tags %s://%s%s" % (proto, host, path),d)
-            rungitcmd("git prune-packed", d)
-            # old method of downloading tags
-            #rungitcmd("rsync -a --verbose --stats --progress rsync://%s%s/ %s" % (host, path, os.path.join(repodir, ".git", "")),d)
+        os.chdir(repodir)
+        rungitcmd("git pull %s://%s%s" % (ud.proto, ud.host, ud.path),d)
+        rungitcmd("git pull --tags %s://%s%s" % (ud.proto, ud.host, ud.path),d)
+        rungitcmd("git prune-packed", d)
+        rungitcmd("git pack-redundant --all | xargs -r rm", d)
+        # Remove all but the .git directory
+        rungitcmd("rm * -Rf", d)
+        # old method of downloading tags
+        #rungitcmd("rsync -a --verbose --stats --progress rsync://%s%s/ %s" % (ud.host, ud.path, os.path.join(repodir, ".git", "")),d)
 
-            os.chdir(repodir)
-            bb.note("Creating tarball of git repository")
-            rungitcmd("tar -czf %s %s" % (repofile, os.path.join(".", ".git", "*") ),d)
+        os.chdir(repodir)
+        bb.msg.note(1, bb.msg.domain.Fetcher, "Creating tarball of git repository")
+        rungitcmd("tar -czf %s %s" % (repofile, os.path.join(".", ".git", "*") ),d)
 
-            if os.path.exists(codir):
-                prunedir(codir)
+        if os.path.exists(codir):
+            prunedir(codir)
 
-            bb.mkdirhier(codir)
-            os.chdir(repodir)
-            rungitcmd("git read-tree %s" % (tag),d)
-            rungitcmd("git checkout-index -q -f --prefix=%s -a" % (os.path.join(codir, "git", "")),d)
+        bb.mkdirhier(codir)
+        os.chdir(repodir)
+        rungitcmd("git read-tree %s" % (ud.tag),d)
+        rungitcmd("git checkout-index -q -f --prefix=%s -a" % (os.path.join(codir, "git", "")),d)
 
-            os.chdir(codir)
-            bb.note("Creating tarball of git checkout")
-            rungitcmd("tar -czf %s %s" % (cofile, os.path.join(".", "*") ),d)
+        os.chdir(codir)
+        bb.msg.note(1, bb.msg.domain.Fetcher, "Creating tarball of git checkout")
+        rungitcmd("tar -czf %s %s" % (ud.localpath, os.path.join(".", "*") ),d)

@@ -56,9 +56,8 @@ try:
     set
 except NameError:
     from sets import Set as set
-import sys, os, imp, readline, socket, httplib, urllib, commands, popen2, copy, shlex, Queue, fnmatch
-imp.load_source( "bitbake", os.path.dirname( sys.argv[0] )+"/bitbake" )
-from bb import data, parse, build, fatal
+import sys, os, readline, socket, httplib, urllib, commands, popen2, copy, shlex, Queue, fnmatch
+from bb import data, parse, build, fatal, cache, taskdata, runqueue, providers as Providers
 
 __version__ = "0.5.3.1"
 __credits__ = """BitBake Shell Version %s (C) 2005 Michael 'Mickey' Lauer <mickey@Vanille.de>
@@ -108,7 +107,7 @@ class BitBakeShellCommands:
         preferred = data.getVar( "PREFERRED_PROVIDER_%s" % item, cooker.configuration.data, 1 )
         if not preferred: preferred = item
         try:
-            lv, lf, pv, pf = cooker.findBestProvider( preferred )
+            lv, lf, pv, pf = Providers.findBestProvider(preferred, cooker.configuration.data, cooker.status, cooker.build_cache_fail)
         except KeyError:
             if item in cooker.status.providers:
                 pf = cooker.status.providers[item][0]
@@ -156,14 +155,39 @@ class BitBakeShellCommands:
         cooker.build_cache = []
         cooker.build_cache_fail = []
 
-        for name in names:
-            try:
-                cooker.buildProvider( name, data.getVar("BUILD_ALL_DEPS", cooker.configuration.data, True) )
-            except build.EventException, e:
-                print "ERROR: Couldn't build '%s'" % name
-                global last_exception
-                last_exception = e
-                break
+        td = taskdata.TaskData(cooker.configuration.abort)
+
+        try:
+            tasks = []
+            for name in names:
+                td.add_provider(cooker.configuration.data, cooker.status, name)
+                providers = td.get_provider(name)
+
+                if len(providers) == 0:
+                    raise Providers.NoProvider
+
+                tasks.append([name, "do_%s" % cooker.configuration.cmd])
+
+            td.add_unresolved(cooker.configuration.data, cooker.status)
+            
+            rq = runqueue.RunQueue()
+            rq.prepare_runqueue(cooker.configuration.data, cooker.status, td, tasks)
+            rq.execute_runqueue(cooker, cooker.configuration.data, cooker.status, td, tasks)
+
+        except Providers.NoProvider:
+            print "ERROR: No Provider"
+            global last_exception
+            last_exception = Providers.NoProvider
+
+        except runqueue.TaskFailure, (fnid, fn, taskname):
+            print "ERROR: '%s, %s' failed" % (fn, taskname)
+            global last_exception
+            last_exception = runqueue.TaskFailure
+
+        except build.EventException, e:
+            print "ERROR: Couldn't build '%s'" % names
+            global last_exception
+            last_exception = e
 
         cooker.configuration.cmd = oldcmd
 
@@ -233,7 +257,7 @@ class BitBakeShellCommands:
             item = data.getVar('PN', bbfile_data, 1)
             data.setVar( "_task_cache", [], bbfile_data ) # force
             try:
-                cooker.tryBuildPackage( os.path.abspath( bf ), item, bbfile_data )
+                cooker.tryBuildPackage( os.path.abspath( bf ), item, cmd, bbfile_data, True )
             except build.EventException, e:
                 print "ERROR: Couldn't build '%s'" % name
                 global last_exception
@@ -255,8 +279,7 @@ class BitBakeShellCommands:
 
     def fileRebuild( self, params ):
         """Rebuild (clean & build) a .bb file"""
-        self.fileClean( params )
-        self.fileBuild( params )
+        self.fileBuild( params, "rebuild" )
     fileRebuild.usage = "<bbfile>"
 
     def fileReparse( self, params ):
@@ -265,13 +288,18 @@ class BitBakeShellCommands:
         print "SHELL: Parsing '%s'" % bbfile
         parse.update_mtime( bbfile )
         cooker.bb_cache.cacheValidUpdate(bbfile)
-        fromCache = cooker.bb_cache.loadData(bbfile, cooker)
+        fromCache = cooker.bb_cache.loadData(bbfile, cooker.configuration.data)
         cooker.bb_cache.sync()
-        if False: #from Cache
+        if False: #fromCache:
             print "SHELL: File has not been updated, not reparsing"
         else:
             print "SHELL: Parsed"
     fileReparse.usage = "<bbfile>"
+
+    def abort( self, params ):
+        """Toggle abort task execution flag (see bitbake -k)"""
+        cooker.configuration.abort = not cooker.configuration.abort
+        print "SHELL: Abort Flag is now '%s'" % repr( cooker.configuration.abort )
 
     def force( self, params ):
         """Toggle force task execution flag (see bitbake -f)"""
@@ -365,18 +393,14 @@ SRC_URI = ""
     new.usage = "<directory> <filename>"
 
     def pasteBin( self, params ):
-        """Send a command + output buffer to http://pastebin.com"""
+        """Send a command + output buffer to the pastebin at http://rafb.net/paste"""
         index = params[0]
         contents = self._shell.myout.buffer( int( index ) )
-        status, error, location = sendToPastebin( contents )
-        if status == 302:
-            print "SHELL: Pasted to %s" % location
-        else:
-            print "ERROR: %s %s" % ( status, error )
+        sendToPastebin( "output of " + params[0], contents )
     pasteBin.usage = "<index>"
 
     def pasteLog( self, params ):
-        """Send the last event exception error log (if there is one) to http://oe.pastebin.com"""
+        """Send the last event exception error log (if there is one) to http://rafb.net/paste"""
         if last_exception is None:
             print "SHELL: No Errors yet (Phew)..."
         else:
@@ -387,12 +411,8 @@ SRC_URI = ""
                 filename = filename.strip()
                 print "SHELL: Pasting log file to pastebin..."
 
-                status, error, location = sendToPastebin( open( filename ).read() )
-
-                if status == 302:
-                    print "SHELL: Pasted to %s" % location
-                else:
-                    print "ERROR: %s %s" % ( status, error )
+                file = open( filename ).read()
+                sendToPastebin( "contents of " + filename, file )
 
     def patch( self, params ):
         """Execute 'patch' command on a providee"""
@@ -401,12 +421,13 @@ SRC_URI = ""
 
     def parse( self, params ):
         """(Re-)parse .bb files and calculate the dependency graph"""
-        cooker.status = cooker.ParsingStatus()
+        cooker.status = cache.CacheData()
         ignore = data.getVar("ASSUME_PROVIDED", cooker.configuration.data, 1) or ""
         cooker.status.ignored_dependencies = set( ignore.split() )
         cooker.handleCollections( data.getVar("BBFILE_COLLECTIONS", cooker.configuration.data, 1) )
 
-        cooker.collect_bbfiles( cooker.myProgressCallback )
+        (filelist, masked) = cooker.collect_bbfiles()
+        cooker.parse_bbfiles(filelist, masked, cooker.myProgressCallback)
         cooker.buildDepgraph()
         global parsed
         parsed = True
@@ -434,7 +455,7 @@ SRC_URI = ""
         name, var = params
         bbfile = self._findProvider( name )
         if bbfile is not None:
-            the_data = cooker.bb_cache.loadDataFull(bbfile, cooker)
+            the_data = cooker.bb_cache.loadDataFull(bbfile, cooker.configuration.data)
             value = the_data.getVar( var, 1 )
             print value
         else:
@@ -538,7 +559,8 @@ SRC_URI = ""
         if not preferred: preferred = item
 
         try:
-            lv, lf, pv, pf = cooker.findBestProvider( preferred )
+            lv, lf, pv, pf = Providers.findBestProvider(preferred, cooker.configuration.data, cooker.status, 
+cooker.build_cache_fail)
         except KeyError:
             lv, lf, pv, pf = (None,)*4
 
@@ -565,24 +587,29 @@ def completeFilePath( bbfile ):
             return key
     return bbfile
 
-def sendToPastebin( content ):
+def sendToPastebin( desc, content ):
     """Send content to http://oe.pastebin.com"""
     mydata = {}
-    mydata["parent_pid"] = ""
-    mydata["format"] = "bash"
-    mydata["code2"] = content
-    mydata["paste"] = "Send"
-    mydata["poster"] = "%s@%s" % ( os.environ.get( "USER", "unknown" ), socket.gethostname() or "unknown" )
+    mydata["lang"] = "Plain Text"
+    mydata["desc"] = desc
+    mydata["cvt_tabs"] = "No"
+    mydata["nick"] = "%s@%s" % ( os.environ.get( "USER", "unknown" ), socket.gethostname() or "unknown" )
+    mydata["text"] = content
     params = urllib.urlencode( mydata )
     headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
 
-    conn = httplib.HTTPConnection( "oe.pastebin.com:80" )
-    conn.request("POST", "/", params, headers )
+    host = "rafb.net"
+    conn = httplib.HTTPConnection( "%s:80" % host )
+    conn.request("POST", "/paste/paste.php", params, headers )
 
     response = conn.getresponse()
     conn.close()
 
-    return response.status, response.reason, response.getheader( "location" ) or "unknown"
+    if response.status == 302:
+        location = response.getheader( "location" ) or "unknown"
+        print "SHELL: Pasted to http://%s%s" % ( host, location )
+    else:
+        print "ERROR: %s %s" % ( response.status, response.reason )
 
 def completer( text, state ):
     """Return a possible readline completion"""

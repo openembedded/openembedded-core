@@ -103,11 +103,11 @@ def _print_trace(body, line):
     import bb
 
     # print the environment of the method
-    bb.error("Printing the environment of the function")
+    bb.msg.error(bb.msg.domain.Util, "Printing the environment of the function")
     min_line = max(1,line-4)
     max_line = min(line+4,len(body)-1)
     for i in range(min_line,max_line+1):
-        bb.error("\t%.4d:%s" % (i, body[i-1]) )
+        bb.msg.error(bb.msg.domain.Util, "\t%.4d:%s" % (i, body[i-1]) )
 
 
 def better_compile(text, file, realfile):
@@ -122,9 +122,9 @@ def better_compile(text, file, realfile):
 
         # split the text into lines again
         body = text.split('\n')
-        bb.error("Error in compiling: ", realfile)
-        bb.error("The lines resulting into this error were:")
-        bb.error("\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
+        bb.msg.error(bb.msg.domain.Util, "Error in compiling: ", realfile)
+        bb.msg.error(bb.msg.domain.Util, "The lines resulting into this error were:")
+        bb.msg.error(bb.msg.domain.Util, "\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
 
         _print_trace(body, e.lineno)
 
@@ -147,8 +147,8 @@ def better_exec(code, context, text, realfile):
             raise
 
         # print the Header of the Error Message
-        bb.error("Error in executing: ", realfile)
-        bb.error("Exception:%s Message:%s" % (t,value) )
+        bb.msg.error(bb.msg.domain.Util, "Error in executing: ", realfile)
+        bb.msg.error(bb.msg.domain.Util, "Exception:%s Message:%s" % (t,value) )
 
         # let us find the line number now
         while tb.tb_next:
@@ -160,3 +160,43 @@ def better_exec(code, context, text, realfile):
         _print_trace( text.split('\n'), line )
         
         raise
+
+def Enum(*names):
+   """
+   A simple class to give Enum support
+   """
+
+   assert names, "Empty enums are not supported"
+
+   class EnumClass(object):
+      __slots__ = names
+      def __iter__(self):        return iter(constants)
+      def __len__(self):         return len(constants)
+      def __getitem__(self, i):  return constants[i]
+      def __repr__(self):        return 'Enum' + str(names)
+      def __str__(self):         return 'enum ' + str(constants)
+
+   class EnumValue(object):
+      __slots__ = ('__value')
+      def __init__(self, value): self.__value = value
+      Value = property(lambda self: self.__value)
+      EnumType = property(lambda self: EnumType)
+      def __hash__(self):        return hash(self.__value)
+      def __cmp__(self, other):
+         # C fans might want to remove the following assertion
+         # to make all enums comparable by ordinal value {;))
+         assert self.EnumType is other.EnumType, "Only values from the same enum are comparable"
+         return cmp(self.__value, other.__value)
+      def __invert__(self):      return constants[maximum - self.__value]
+      def __nonzero__(self):     return bool(self.__value)
+      def __repr__(self):        return str(names[self.__value])
+
+   maximum = len(names) - 1
+   constants = [None] * len(names)
+   for i, each in enumerate(names):
+      val = EnumValue(i)
+      setattr(EnumClass, each, val)
+      constants[i] = val
+   constants = tuple(constants)
+   EnumType = EnumClass()
+   return EnumType

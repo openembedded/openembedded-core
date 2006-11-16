@@ -23,7 +23,7 @@
 
 import re, bb, os, sys, time
 import bb.fetch, bb.build, bb.utils
-from bb import debug, data, fetch, fatal, methodpool
+from bb import data, fetch, methodpool
 
 from ConfHandler import include, localpath, obtain, init
 from bb.parse import ParseError
@@ -44,6 +44,13 @@ __bbpath_found__ = 0
 __classname__ = ""
 classes = [ None, ]
 
+# We need to indicate EOF to the feeder. This code is so messy that
+# factoring it out to a close_parse_file method is out of question.
+# We will use the IN_PYTHON_EOF as an indicator to just close the method
+#
+# The two parts using it are tightly integrated anyway
+IN_PYTHON_EOF = -9999999999999
+
 __parsed_methods__ = methodpool.get_parsed_dict()
 
 def supports(fn, d):
@@ -60,9 +67,9 @@ def inherit(files, d):
             file = os.path.join('classes', '%s.bbclass' % file)
 
         if not file in __inherit_cache.split():
-            debug(2, "BB %s:%d: inheriting %s" % (fn, lineno, file))
+            bb.msg.debug(2, bb.msg.domain.Parsing, "BB %s:%d: inheriting %s" % (fn, lineno, file))
             __inherit_cache += " %s" % file
-            include(fn, file, d)
+            include(fn, file, d, "inherit")
     data.setVar('__inherit_cache', __inherit_cache, d)
 
 
@@ -75,9 +82,9 @@ def handle(fn, d, include = 0):
     __residue__ = []
 
     if include == 0:
-        debug(2, "BB " + fn + ": handle(data)")
+        bb.msg.debug(2, bb.msg.domain.Parsing, "BB " + fn + ": handle(data)")
     else:
-        debug(2, "BB " + fn + ": handle(data, include)")
+        bb.msg.debug(2, bb.msg.domain.Parsing, "BB " + fn + ": handle(data, include)")
 
     (root, ext) = os.path.splitext(os.path.basename(fn))
     base_name = "%s%s" % (root,ext)
@@ -132,7 +139,7 @@ def handle(fn, d, include = 0):
         feeder(lineno, s, fn, base_name, d)
     if __inpython__:
         # add a blank line to close out any python definition
-        feeder(lineno + 1, "", fn, base_name, d)
+        feeder(IN_PYTHON_EOF, "", fn, base_name, d)
     if ext == ".bbclass":
         classes.remove(__classname__)
     else:
@@ -152,7 +159,7 @@ def handle(fn, d, include = 0):
                     if t:
                         data.setVar('T', t, d)
                 except Exception, e:
-                    bb.debug(1, "executing anonymous function: %s" % e)
+                    bb.msg.debug(1, bb.msg.domain.Parsing, "executing anonymous function: %s" % e)
                     raise
             data.delVar("__anonqueue", d)
             data.delVar("__anonfunc", d)
@@ -220,7 +227,7 @@ def feeder(lineno, s, fn, root, d):
 
     if __inpython__:
         m = __python_func_regexp__.match(s)
-        if m:
+        if m and lineno != IN_PYTHON_EOF:
             __body__.append(s)
             return
         else:
@@ -239,6 +246,9 @@ def feeder(lineno, s, fn, root, d):
                 data.setVar('__functions__', funcs, d)
             __body__ = []
             __inpython__ = False
+
+            if lineno == IN_PYTHON_EOF:
+                return
 
 #           fall through
 
@@ -374,7 +384,7 @@ def vars_from_file(mypkg, d):
 def set_additional_vars(file, d, include):
     """Deduce rest of variables, e.g. ${A} out of ${SRC_URI}"""
 
-    debug(2,"BB %s: set_additional_vars" % file)
+    bb.msg.debug(2, bb.msg.domain.Parsing, "BB %s: set_additional_vars" % file)
 
     src_uri = data.getVar('SRC_URI', d)
     if not src_uri:

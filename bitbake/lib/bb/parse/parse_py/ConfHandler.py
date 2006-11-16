@@ -22,7 +22,6 @@
    Place, Suite 330, Boston, MA 02111-1307 USA.""" 
 
 import re, bb.data, os, sys
-from bb import debug, fatal
 from bb.parse import ParseError
 
 #__config_regexp__  = re.compile( r"(?P<exp>export\s*)?(?P<var>[a-zA-Z0-9\-_+.${}]+)\s*(?P<colon>:)?(?P<ques>\?)?=\s*(?P<apo>['\"]?)(?P<value>.*)(?P=apo)$")
@@ -53,7 +52,7 @@ def localpath(fn, d):
         localfn = fn
     return localfn
 
-def obtain(fn, data = bb.data.init()):
+def obtain(fn, data):
     import sys, bb
     fn = bb.data.expand(fn, data)
     localfn = bb.data.expand(localpath(fn, data), data)
@@ -61,30 +60,30 @@ def obtain(fn, data = bb.data.init()):
     if localfn != fn:
         dldir = bb.data.getVar('DL_DIR', data, 1)
         if not dldir:
-            debug(1, "obtain: DL_DIR not defined")
+            bb.msg.debug(1, bb.msg.domain.Parsing, "obtain: DL_DIR not defined")
             return localfn
         bb.mkdirhier(dldir)
         try:
             bb.fetch.init([fn])
         except bb.fetch.NoMethodError:
             (type, value, traceback) = sys.exc_info()
-            debug(1, "obtain: no method: %s" % value)
+            bb.msg.debug(1, bb.msg.domain.Parsing, "obtain: no method: %s" % value)
             return localfn
 
         try:
             bb.fetch.go(data)
         except bb.fetch.MissingParameterError:
             (type, value, traceback) = sys.exc_info()
-            debug(1, "obtain: missing parameters: %s" % value)
+            bb.msg.debug(1, bb.msg.domain.Parsing, "obtain: missing parameters: %s" % value)
             return localfn
         except bb.fetch.FetchError:
             (type, value, traceback) = sys.exc_info()
-            debug(1, "obtain: failed: %s" % value)
+            bb.msg.debug(1, bb.msg.domain.Parsing, "obtain: failed: %s" % value)
             return localfn
     return localfn
 
 
-def include(oldfn, fn, data = bb.data.init(), error_out = False):
+def include(oldfn, fn, data, error_out):
     """
 
     error_out If True a ParseError will be reaised if the to be included
@@ -101,10 +100,10 @@ def include(oldfn, fn, data = bb.data.init(), error_out = False):
         ret = handle(fn, data, True)
     except IOError:
         if error_out:
-            raise ParseError("Could not include required file %(fn)s" % vars() )
-        debug(2, "CONF file '%s' not found" % fn)
+            raise ParseError("Could not %(error_out)s file %(fn)s" % vars() )
+        bb.msg.debug(2, bb.msg.domain.Parsing, "CONF file '%s' not found" % fn)
 
-def handle(fn, data = bb.data.init(), include = 0):
+def handle(fn, data, include = 0):
     if include:
         inc_string = "including"
     else:
@@ -129,13 +128,13 @@ def handle(fn, data = bb.data.init(), include = 0):
             if os.access(currname, os.R_OK):
                 f = open(currname, 'r')
                 abs_fn = currname
-                debug(1, "CONF %s %s" % (inc_string, currname))
+                bb.msg.debug(2, bb.msg.domain.Parsing, "CONF %s %s" % (inc_string, currname))
                 break
         if f is None:
             raise IOError("file '%s' not found" % fn)
     else:
         f = open(fn,'r')
-        debug(1, "CONF %s %s" % (inc_string,fn))
+        bb.msg.debug(1, bb.msg.domain.Parsing, "CONF %s %s" % (inc_string,fn))
         abs_fn = fn
 
     if include:
@@ -161,7 +160,7 @@ def handle(fn, data = bb.data.init(), include = 0):
         bb.data.setVar('FILE', oldfile, data)
     return data
 
-def feeder(lineno, s, fn, data = bb.data.init()):
+def feeder(lineno, s, fn, data):
     m = __config_regexp__.match(s)
     if m:
         groupd = m.groupdict()
@@ -185,7 +184,7 @@ def feeder(lineno, s, fn, data = bb.data.init()):
         else:
             val = groupd["value"]
         if 'flag' in groupd and groupd['flag'] != None:
-#           bb.note("setVarFlag(%s, %s, %s, data)" % (key, groupd['flag'], val))
+            bb.msg.debug(3, bb.msg.domain.Parsing, "setVarFlag(%s, %s, %s, data)" % (key, groupd['flag'], val))
             bb.data.setVarFlag(key, groupd['flag'], val, data)
         else:
             bb.data.setVar(key, val, data)
@@ -194,14 +193,14 @@ def feeder(lineno, s, fn, data = bb.data.init()):
     m = __include_regexp__.match(s)
     if m:
         s = bb.data.expand(m.group(1), data)
-#       debug(2, "CONF %s:%d: including %s" % (fn, lineno, s))
-        include(fn, s, data)
+        bb.msg.debug(3, bb.msg.domain.Parsing, "CONF %s:%d: including %s" % (fn, lineno, s))
+        include(fn, s, data, False)
         return
 
     m = __require_regexp__.match(s)
     if m:
         s = bb.data.expand(m.group(1), data)
-        include(fn, s, data, True)
+        include(fn, s, data, "include required")
         return
 
     raise ParseError("%s:%d: unparsed line: '%s'" % (fn, lineno, s));

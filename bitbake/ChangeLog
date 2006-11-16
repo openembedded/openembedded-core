@@ -1,3 +1,21 @@
+Changes in BitBake 1.7.3:
+
+Changes in BitBake 1.7.1:
+    - Major updates of the dependency handling and execution
+      of tasks
+    - Change of the SVN Fetcher to keep the checkout around
+      courtsey to Paul Sokolovsky (#1367)
+
+Changes in Bitbake 1.6.0:
+	- Better msg handling
+	- COW dict implementation from Tim Ansell (mithro) leading
+	  to better performance
+	- Speed up of -s
+
+Changes in Bitbake 1.4.4:
+	- SRCDATE now handling courtsey Justin Patrin
+	- #1017 fix to work with rm_work
+
 Changes in BitBake 1.4.2:
 	- Send logs to oe.pastebin.com instead of pastebin.com
 	  fixes #856

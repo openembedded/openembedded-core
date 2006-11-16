@@ -29,14 +29,12 @@ Based on functions from the base bb module, Copyright 2003 Holger Schurig
 """
 
 import copy, os, re, sys, time, types
-from bb   import note, debug, error, fatal, utils, methodpool
+import bb
+from bb   import utils, methodpool
+from COW  import COWDictBase
 from sets import Set
+from new  import classobj
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-    print "NOTE: Importing cPickle failed. Falling back to a very slow implementation."
 
 __setvar_keyword__ = ["_append","_prepend"]
 __setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?')
@@ -45,12 +43,14 @@ __expand_python_regexp__ = re.compile(r"\${@.+?}")
 
 
 class DataSmart:
-    def __init__(self):
+    def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
         self.dict = {}
 
         # cookie monster tribute
-        self._special_values = {}
-        self._seen_overrides = {}
+        self._special_values = special
+        self._seen_overrides = seen
+
+        self.expand_cache = {}
 
     def expand(self,s, varname):
         def var_sub(match):
@@ -75,6 +75,9 @@ class DataSmart:
         if type(s) is not types.StringType: # sanity check
             return s
 
+        if varname and varname in self.expand_cache:
+            return self.expand_cache[varname]
+
         while s.find('$') != -1:
             olds = s
             try:
@@ -82,15 +85,20 @@ class DataSmart:
                 s = __expand_python_regexp__.sub(python_sub, s)
                 if s == olds: break
                 if type(s) is not types.StringType: # sanity check
-                    error('expansion of %s returned non-string %s' % (olds, s))
+                    bb.msg.error(bb.msg.domain.Data, 'expansion of %s returned non-string %s' % (olds, s))
             except KeyboardInterrupt:
                 raise
             except:
-                note("%s:%s while evaluating:\n%s" % (sys.exc_info()[0], sys.exc_info()[1], s))
+                bb.msg.note(1, bb.msg.domain.Data, "%s:%s while evaluating:\n%s" % (sys.exc_info()[0], sys.exc_info()[1], s))
                 raise
+
+        if varname:
+            self.expand_cache[varname] = s
+
         return s
 
     def initVar(self, var):
+        self.expand_cache = {}
         if not var in self.dict:
             self.dict[var] = {}
 
@@ -119,6 +127,7 @@ class DataSmart:
             self.initVar(var)
 
     def setVar(self,var,value):
+        self.expand_cache = {}
         match  = __setvar_regexp__.match(var)
         if match and match.group("keyword") in __setvar_keyword__:
             base = match.group('base')
@@ -128,6 +137,7 @@ class DataSmart:
             l.append([value, override])
             self.setVarFlag(base, keyword, l)
 
+            # todo make sure keyword is not __doc__ or __module__
             # pay the cookie monster
             try:
                 self._special_values[keyword].add( base )
@@ -135,10 +145,6 @@ class DataSmart:
                 self._special_values[keyword] = Set()
                 self._special_values[keyword].add( base )
 
-            # SRC_URI_append_simpad is both a flag and a override
-            #if not override in self._seen_overrides:
-            #    self._seen_overrides[override] = Set()
-            #self._seen_overrides[override].add( base )
             return
 
         if not var in self.dict:
@@ -150,7 +156,7 @@ class DataSmart:
         # more cookies for the cookie monster
         if '_' in var:
             override = var[var.rfind('_')+1:]
-            if not override in self._seen_overrides:
+            if not self._seen_overrides.has_key(override):
                 self._seen_overrides[override] = Set()
             self._seen_overrides[override].add( var )
 
@@ -165,6 +171,7 @@ class DataSmart:
         return value
 
     def delVar(self,var):
+        self.expand_cache = {}
         self.dict[var] = {}
 
     def setVarFlag(self,var,flag,flagvalue):
@@ -234,10 +241,8 @@ class DataSmart:
         Create a copy of self by setting _data to self
         """
         # we really want this to be a DataSmart...
-        data = DataSmart()
+        data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
         data.dict["_data"] = self.dict
-        data._seen_overrides = copy.deepcopy(self._seen_overrides)
-        data._special_values = copy.deepcopy(self._special_values)
 
         return data
 

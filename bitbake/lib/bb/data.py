@@ -45,7 +45,8 @@ else:
     path = os.path.dirname(os.path.dirname(sys.argv[0]))
 sys.path.insert(0,path)
 
-from bb import note, debug, data_smart
+from bb import data_smart
+import bb
 
 _dict_type = data_smart.DataSmart
 
@@ -362,10 +363,12 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
     val.rstrip()
     if not val:
         return 0
+	
+    varExpanded = expand(var, d)
 
     if getVarFlag(var, "func", d):
 #       NOTE: should probably check for unbalanced {} within the var
-        o.write("%s() {\n%s\n}\n" % (var, val))
+        o.write("%s() {\n%s\n}\n" % (varExpanded, val))
     else:
         if getVarFlag(var, "export", d):
             o.write('export ')
@@ -375,7 +378,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
 #       if we're going to output this within doublequotes,
 #       to a shell, we need to escape the quotes in the var
         alter = re.sub('"', '\\"', val.strip())
-        o.write('%s="%s"\n' % (var, alter))
+        o.write('%s="%s"\n' % (varExpanded, alter))
     return 1
 
 
@@ -430,8 +433,38 @@ def update_data(d):
         >>> update_data(d)
         >>> print getVar('TEST', d)
         local
+
+        CopyMonster:
+        >>> e = d.createCopy()
+        >>> setVar('TEST_foo', 'foo', e)
+        >>> update_data(e)
+        >>> print getVar('TEST', e)
+        local
+
+        >>> setVar('OVERRIDES', 'arm:ramses:local:foo', e)
+        >>> update_data(e)
+        >>> print getVar('TEST', e)
+        foo
+
+        >>> f = d.createCopy()
+        >>> setVar('TEST_moo', 'something', f)
+        >>> setVar('OVERRIDES', 'moo:arm:ramses:local:foo', e)
+        >>> update_data(e)
+        >>> print getVar('TEST', e)
+        foo
+
+
+        >>> h = init()
+        >>> setVar('SRC_URI', 'file://append.foo;patch=1 ', h)
+        >>> g = h.createCopy()
+        >>> setVar('SRC_URI_append_arm', 'file://other.foo;patch=1', g)
+        >>> setVar('OVERRIDES', 'arm:moo', g)
+        >>> update_data(g)
+        >>> print getVar('SRC_URI', g)
+        file://append.foo;patch=1 file://other.foo;patch=1
+
     """
-    debug(2, "update_data()")
+    bb.msg.debug(2, bb.msg.domain.Data, "update_data()")
 
     # now ask the cookie monster for help
     #print "Cookie Monster"
@@ -460,7 +493,7 @@ def update_data(d):
         l    = len(o)+1
 
         # see if one should even try
-        if not o in d._seen_overrides:
+        if not d._seen_overrides.has_key(o):
             continue
 
         vars = d._seen_overrides[o]
@@ -469,10 +502,10 @@ def update_data(d):
             try:
                 d[name] = d[var]
             except:
-                note ("Untracked delVar")
+                bb.msg.note(1, bb.msg.domain.Data, "Untracked delVar")
 
     # now on to the appends and prepends
-    if '_append' in d._special_values:
+    if d._special_values.has_key('_append'):
         appends = d._special_values['_append'] or []
         for append in appends:
             for (a, o) in getVarFlag(append, '_append', d) or []:
@@ -487,7 +520,7 @@ def update_data(d):
                 setVar(append, sval, d)
 
 
-    if '_prepend' in d._special_values:
+    if d._special_values.has_key('_prepend'):
         prepends = d._special_values['_prepend'] or []
 
         for prepend in prepends:
