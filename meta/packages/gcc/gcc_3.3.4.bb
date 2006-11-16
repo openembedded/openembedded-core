@@ -101,10 +101,7 @@ EXTRA_OECONF_uclibc = "--disable-__cxa_atexit"
 EXTRA_OECONF_glibc = "--enable-__cxa_atexit"
 EXTRA_OECONF += "${@get_gcc_fpu_setting(bb, d)}"
 
-def get_gcc_fpu_setting(bb, d):
-	if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
-		return "--with-float=soft"
-	return ""
+require gcc-fpu.inc
 
 python __anonymous () {
     import bb, re

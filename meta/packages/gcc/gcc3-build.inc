@@ -54,10 +54,7 @@ ARCH_FLAGS_FOR_TARGET_slugos = "${TARGET_CC_ARCH}"
 ARCH_FLAGS_FOR_TARGET_unslung = "${TARGET_CC_ARCH}"
 EXTRA_OEMAKE += "ARCH_FLAGS_FOR_TARGET='${ARCH_FLAGS_FOR_TARGET}'"
 
-def get_gcc_fpu_setting(bb, d):
-	if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
-		return "--with-float=soft"
-	return ""
+require gcc-fpu.inc
 
 python __anonymous () {
     import bb, re
