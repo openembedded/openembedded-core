@@ -49,29 +49,31 @@ def check_sanity(e):
 		print "Foo %s" % minversion
 		return
 
+	messages = ""
+
 	if (LooseVersion(__version__) < LooseVersion(minversion)):
-		raise_sanity_error('Bitbake version %s is required and version %s was found' % (minversion, __version__))
+		messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, __version__)
 
 	# Check TARGET_ARCH is set
 	if data.getVar('TARGET_ARCH', e.data, True) == 'INVALID':
-		raise_sanity_error('Please set TARGET_ARCH directly, or choose a MACHINE or DISTRO that does so.')
+		messages = messages + 'Please set TARGET_ARCH directly, or choose a MACHINE or DISTRO that does so.\n'
 	
 	# Check TARGET_OS is set
 	if data.getVar('TARGET_OS', e.data, True) == 'INVALID':
-		raise_sanity_error('Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.')
+		messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
 
 	# Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
 	if "diffstat-native" not in data.getVar('ASSUME_PROVIDED', e.data, True).split():
-		raise_sanity_error('Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf')
+		messages = messages + 'Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf\n'
 	
 	# Check that the MACHINE is valid
 	if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
-		raise_sanity_error('Please set a valid MACHINE in your local.conf')
+		messages = messages + 'Please set a valid MACHINE in your local.conf\n'
 	
 	# Check that the DISTRO is valid
 	# need to take into account DISTRO renaming DISTRO
 	if not ( check_conf_exists("conf/distro/${DISTRO}.conf", e.data) or check_conf_exists("conf/distro/include/${DISTRO}.inc", e.data) ):
-		raise_sanity_error("DISTRO '%s' not found. Please set a valid DISTRO in your local.conf" % data.getVar("DISTRO", e.data, True ))
+		messages = messages + "DISTRO '%s' not found. Please set a valid DISTRO in your local.conf\n" % data.getVar("DISTRO", e.data, True )
 
 	missing = ""
 
@@ -84,23 +86,11 @@ def check_sanity(e):
 	if not check_app_exists('${BUILD_PREFIX}g++', e.data):
 		missing = missing + "C++ Compiler,"
 
-	if not check_app_exists('gawk', e.data):
-		missing = missing + "GNU awk (gawk),"
+	required_utilities = "patch diffstat texi2html cvs svn bzip2 tar gzip gawk"
 
-	if not check_app_exists('patch', e.data):
-		missing = missing + "GNU patch,"
-
-	if not check_app_exists('diffstat', e.data):
-		missing = missing + "diffstat,"
-
-	if not check_app_exists('texi2html', e.data):
-		missing = missing + "texi2html,"
-
-	if not check_app_exists('cvs', e.data):
-		missing = missing + "cvs,"
-
-	if not check_app_exists('svn', e.data):
-		missing = missing + "svn,"
+	for util in required_utilities.split():
+		if not check_app_exists( util, e.data ):
+			missing = missing + "%s," % util
 
 	# qemu-native needs gcc 3.x
 
@@ -112,9 +102,12 @@ def check_sanity(e):
         # FIXME: We also need to check for libsdl-dev and zlib-dev 
         # for qemu-native...
 
-	if not missing == "":
+	if missing != "":
 		missing = missing.rstrip(',')
-		raise_sanity_error("Missing Dependencies: %s" % missing)
+		messages = messages + "Please install following missing utilities: %s\n" % missing
+
+	if messages != "":
+		raise_sanity_error(messages)
 
 	oes_bb_conf = data.getVar( 'OES_BITBAKE_CONF', e.data, True )
 	if not oes_bb_conf:
