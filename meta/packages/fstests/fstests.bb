@@ -3,6 +3,7 @@ HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
 PR = "r0"
+PV = "0.0+svn${SRCDATE}"
 
 inherit autotools
 
