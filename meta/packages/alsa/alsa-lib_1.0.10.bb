@@ -28,3 +28,5 @@ FILES_libasound = "${libdir}/libasound.so*"
 FILES_alsa-server = "${bindir}/*"
 FILES_alsa-conf = "${datadir}"
 FILES_alsa-dev = "${libdir}/pkgconfig/ /usr/include/"
+
+RDEPENDS_libasound = "alsa-conf"
