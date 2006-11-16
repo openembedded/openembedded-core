@@ -8,7 +8,6 @@ SRC_URI = "http://repository.maemo.org/pool/mistral/non-free/source/k/kernel-sou
 
 S = "${WORKDIR}/kernel-source-2.6.16-2.6.16.rel"
 
-#KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/compressed/${KERNEL_IMAGETYPE}"
 
 inherit kernel

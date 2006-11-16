@@ -8,7 +8,6 @@ SRC_URI = "http://ewi546.ewi.utwente.nl/OE/source/kernel-source-2.6.12.3_2.6.12.
 
 S = "${WORKDIR}/linux-2.6"
 
-KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/compressed/${KERNEL_IMAGETYPE}"
 
 inherit kernel
