@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.16-omap1
-# Fri May 26 14:02:32 2006
+# Thu Nov 16 18:24:13 2006
 #
 CONFIG_ARM=y
 CONFIG_MMU=y
@@ -200,8 +200,6 @@ CONFIG_ARM_THUMB=y
 CONFIG_PREEMPT=y
 CONFIG_NO_IDLE_HZ=y
 # CONFIG_AEABI is not set
-CONFIG_OABI_COMPAT=y
-# CONFIG_ARTHUR is not set
 # CONFIG_ARCH_DISCONTIGMEM_ENABLE is not set
 CONFIG_SELECT_MEMORY_MODEL=y
 CONFIG_FLATMEM_MANUAL=y
@@ -245,6 +243,7 @@ CONFIG_FPE_NWFPE=y
 CONFIG_BINFMT_ELF=y
 # CONFIG_BINFMT_AOUT is not set
 # CONFIG_BINFMT_MISC is not set
+# CONFIG_ARTHUR is not set
 
 #
 # Power management options
