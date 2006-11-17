@@ -1,0 +1,48 @@
+#!/bin/sh
+
+PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/bin:$PATH
+
+if [ -z "$QEMU_MEMORY" ]; then
+    QEMU_MEMORY="64M"
+fi
+
+if [ "x$1" != "x" ]; then
+    MACHINE=$1
+else
+    MACHINE="qemuarm"
+fi
+
+if [ "x$2" != "x" ]; then
+    TYPE=$1
+else
+    TYPE="ext2"
+fi
+
+if [ "x$3" != "x" ]; then
+    ZIMAGE=$3
+fi
+
+if [ "x$4" != "x" ]; then
+    HDIMAGE=$4
+fi
+
+if [ "$MACHINE" == "qemuarm" ]; then
+    if [ "x$ZIMAGE" == "x" ]; then
+        ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-qemuarm.bin
+    fi
+
+    QEMU=`which qemu-system-arm`
+
+    if [ "$TYPE" == "ext2" ]; then
+        if [ "x$HDIMAGE" == "x" ]; then
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemuarm.ext2
+        fi
+        sudo $QEMU -kernel $ZIMAGE -append "root=/dev/sda mem=$QEMU_MEMORY" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet
+    fi
+    if [ "$TYPE" == "nfs" -a  ]; then
+        dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
+        sudo $QEMU -kernel $1 -append "root=/dev/sda nfsroot=192.168.7.1:/srv/qemuarm rw ip=192.168.7.2::192.168.7.1:255.255.255.0" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup -M versatilepb -hda /tmp/blank
+        rm /tmp/blank
+    fi
+fi
+
