@@ -35,7 +35,11 @@ PKGDIR=$OEROOT/meta/
 BUILDDIR=$OEROOT/build/
 MSG=''
 
-PATH=$BBDIR/bin/:$PATH
+BUILD_ARCH=`uname -m`
+BUILD_OS=`uname | tr [A-Z] [a-z]`
+BUILD_SYS=$BUILD_ARCH-$BUILD_OS
+
+PATH=$BBDIR/bin/:$OEROOT/scripts:$PATH
 
 cd $BUILDDIR
 
@@ -61,7 +65,7 @@ BBPATH="`readlink -f $HOME/.oe`:`readlink -f $HOME/.poky`:$BBPATH"
 if test x"$PKGDIR" != x"$BUILDDIR"; then
 	BBPATH=$BUILDDIR:$BBPATH
 fi
-export BBPATH
+export BBPATH OEROOT BUILD_SYS BUILDDIR
 
 # Kill off the TERMINFO variable, as glibc will grab its contents in its 'make
 # install' if set
