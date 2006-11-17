@@ -1,5 +1,5 @@
 require dpkg.inc
-PR = "r3"
+PR = "r4"
 DEPENDS += "ncurses zlib bzip2"
 SRC_URI += "file://noman.patch;patch=1"
 

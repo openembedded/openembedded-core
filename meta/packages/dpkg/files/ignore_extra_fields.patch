@@ -1,0 +1,21 @@
+ dpkg-deb/build.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: dpkg-1.13.22/dpkg-deb/build.c
+===================================================================
+--- dpkg-1.13.22.orig/dpkg-deb/build.c	2006-05-19 23:11:08.000000000 +0100
++++ dpkg-1.13.22/dpkg-deb/build.c	2006-11-17 14:43:20.000000000 +0000
+@@ -220,11 +220,11 @@ void do_build(const char *const *argv) {
+               controlfile, checkedinfo->otherpriority);
+       warns++;
+     }
+-    for (field= checkedinfo->available.arbs; field; field= field->next) {
++    /*for (field= checkedinfo->available.arbs; field; field= field->next) {
+       fprintf(stderr, _("warning, `%s' contains user-defined field `%s'\n"),
+               controlfile, field->name);
+       warns++;
+-    }
++    }*/
+     checkversion(checkedinfo->available.version.version,"(upstream) version",&errs);
+     checkversion(checkedinfo->available.version.revision,"Debian revision",&errs);
+     if (errs) ohshit(_("%d errors in control file"),errs);

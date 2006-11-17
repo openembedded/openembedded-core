@@ -1,5 +1,5 @@
 require dpkg.inc
-PR = "r1"
+PR = "r2"
 DEPENDS += "ncurses-native zlib-native virtual/update-alternatives-native"
 SRC_URI += "file://noman.patch;patch=1"
 
