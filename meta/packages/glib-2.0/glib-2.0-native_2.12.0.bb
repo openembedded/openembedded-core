@@ -19,11 +19,6 @@ S = "${WORKDIR}/glib-${PV}"
 
 inherit autotools pkgconfig native gettext
 
-python () {
-	if bb.data.getVar("USE_NLS", d, 1) == "no":
-		raise bb.parse.SkipPackage("${PN} requires native language support.")
-}
-
 acpaths = ""
 do_configure_prepend () {
 	install -m 0644 ${WORKDIR}/glibconfig-sysdefs.h .

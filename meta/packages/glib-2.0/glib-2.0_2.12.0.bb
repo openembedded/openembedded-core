@@ -23,10 +23,7 @@ S = "${WORKDIR}/glib-${PV}"
 
 inherit autotools pkgconfig gettext
 
-python () {
-	if bb.data.getVar("USE_NLS", d, 1) == "no":
-		raise bb.parse.SkipPackage("${PN} requires native language support.")
-}
+require glib-2.0.inc
 
 acpaths = ""
 do_configure_prepend () {
