@@ -22,4 +22,4 @@ BB_MIN_VERSION = "1.4.4"
 INHERIT += "sanity"
 
 # We want images supporting the following features (for task-base)
-DISTO_FEATURES = "nfs smbfs ipsec wifi ppp alsa bluetooth ext2 irda pcmcia usbgadget usbhost"
+DISTRO_FEATURES = "nfs smbfs ipsec wifi ppp alsa bluetooth ext2 irda pcmcia usbgadget usbhost"
