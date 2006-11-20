@@ -41,7 +41,7 @@ if [ "$MACHINE" == "qemuarm" ]; then
     fi
     if [ "$TYPE" == "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
-        sudo $QEMU -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/qemuarm rw ip=192.168.7.2::192.168.7.1:255.255.255.0" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup -M versatilepb -hda /tmp/blank
+        sudo $QEMU -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemuarm rw ip=192.168.7.2::192.168.7.1:255.255.255.0" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup -M versatilepb -hda /tmp/blank
         rm /tmp/blank
     fi
 fi
@@ -62,7 +62,7 @@ if [ "$MACHINE" == "qemux86" ]; then
     fi
     if [ "$TYPE" == "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
-        sudo $QEMU -std-vga -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/qemuarm rw ip=192.168.7.2::192.168.7.1:255.255.255.0" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup -hda /tmp/blank
+        sudo $QEMU -std-vga -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemux86 rw ip=192.168.7.2::192.168.7.1:255.255.255.0" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup -hda /tmp/blank
         rm /tmp/blank	
     fi
 fi
