@@ -1,5 +1,4 @@
 BB_DEFAULT_TASK = "build"
-PATCHES_DIR = "${S}"
 
 def base_dep_prepend(d):
 	import bb;

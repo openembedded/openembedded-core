@@ -26,6 +26,7 @@ updatercd_postrm() {
 update-rc.d $D ${INITSCRIPT_NAME} remove
 }
 
+
 def update_rc_after_parse(d):
     import bb
     if bb.data.getVar('INITSCRIPT_PACKAGES', d) == None:
@@ -56,10 +57,10 @@ python populate_packages_prepend () {
 			prerm = '#!/bin/sh\n'
 		prerm += bb.data.getVar('updatercd_prerm', localdata, 1)
 		bb.data.setVar('pkg_prerm_%s' % pkg, prerm, d)
-		postrm = bb.data.getVar('pkg_postrm', localdata, 1)
-		if not postrm:
-			postrm = '#!/bin/sh\n'
-		postrm += bb.data.getVar('updatercd_postrm', localdata, 1)
+	        postrm = bb.data.getVar('pkg_postrm', localdata, 1)
+	        if not postrm:
+	                postrm = '#!/bin/sh\n'
+                postrm += bb.data.getVar('updatercd_postrm', localdata, 1)
 		bb.data.setVar('pkg_postrm_%s' % pkg, postrm, d)
 
 	pkgs = bb.data.getVar('INITSCRIPT_PACKAGES', d, 1)

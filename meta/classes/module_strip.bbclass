@@ -5,7 +5,11 @@ do_strip_modules () {
 		if test -e ${WORKDIR}/install/$p/lib/modules; then
 			modules="`find ${WORKDIR}/install/$p/lib/modules -name \*${KERNEL_OBJECT_SUFFIX}`"
 			if [ -n "$modules" ]; then
-				${STRIP} -v -g $modules
+				for module in $modules ; do
+					if ! [ -d "$module"  ] ; then
+						${STRIP} -v -g $module
+					fi
+				done	
 #				NM="${CROSS_DIR}/bin/${HOST_PREFIX}nm" OBJCOPY="${CROSS_DIR}/bin/${HOST_PREFIX}objcopy" strip_module $modules
 			fi
 		fi

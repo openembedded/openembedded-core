@@ -4,7 +4,7 @@ DEPENDS += "gnu-config-native virtual/libintl xt libxi \
 LICENSE = "MPL NPL"
 SRC_URI += "file://mozconfig"
 
-inherit gettext
+inherit gettext pkgconfig
 
 EXTRA_OECONF = "--target=${TARGET_SYS} --host=${BUILD_SYS} \
 		--build=${BUILD_SYS} --prefix=${prefix}"

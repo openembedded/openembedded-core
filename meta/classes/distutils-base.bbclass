@@ -10,5 +10,5 @@ def python_dir(d):
 	raise "No Python in STAGING_INCDIR. Forgot to build python-native ?"
 
 PYTHON_DIR = "${@python_dir(d)}"
-FILES_${PN} = "${bindir} ${libdir} ${libdir}/${PYTHON_DIR}"
+FILES_${PN} = "${bindir}/* ${libdir}/* ${libdir}/${PYTHON_DIR}"
 

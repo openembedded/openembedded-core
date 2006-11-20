@@ -101,5 +101,5 @@ python debian_package_name_hook () {
 
 EXPORT_FUNCTIONS package_name_hook
 
-DEBIAN_NAMES = 1
+DEBIAN_NAMES = "1"
 

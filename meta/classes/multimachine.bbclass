@@ -1,9 +1,10 @@
-STAMP = "${TMPDIR}/stamps/${MULTIMACH_ARCH}-${TARGET_OS}/${PF}"
-WORKDIR = "${TMPDIR}/work/${MULTIMACH_ARCH}-${TARGET_OS}/${PF}"
-STAGING_KERNEL_DIR = "${STAGING_DIR}/${MULTIMACH_ARCH}-${TARGET_OS}/kernel"
+STAMP = "${TMPDIR}/stamps/${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}/${PF}"
+WORKDIR = "${TMPDIR}/work/${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}/${PF}"
+STAGING_KERNEL_DIR = "${STAGING_DIR}/${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}/kernel"
 
 # Find any machine specific sub packages and if present, mark the 
 # whole package as machine specific for multimachine purposes.
+
 
 def multi_machine_after_parse(d):
     import bb
@@ -21,6 +22,7 @@ def multi_machine_after_parse(d):
             multiarch = macharch
 
     bb.data.setVar('MULTIMACH_ARCH', multiarch, d)
+
 
 python __anonymous () {
     multi_machine_after_parse(d)

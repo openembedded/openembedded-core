@@ -60,7 +60,18 @@ def tinder_format_http_post(d,status,log):
         "os"           : os.uname()[0],
         "os_version"   : os.uname()[2],
         "compiler"     : "gcc",
-        "clobber"      : data.getVar('TINDER_CLOBBER', d, True)
+        "clobber"      : data.getVar('TINDER_CLOBBER', d, True),
+        "srcdate"      : data.getVar('SRCDATE', d, True),
+        "PN"           : data.getVar('PN', d, True),
+        "PV"           : data.getVar('PV', d, True),
+        "PR"           : data.getVar('PR', d, True),
+        "FILE"         : data.getVar('FILE', d, True) or "N/A",
+        "TARGETARCH"   : data.getVar('TARGET_ARCH', d, True),
+        "TARGETFPU"    : data.getVar('TARGET_FPU', d, True) or "Unknown",
+        "TARGETOS"     : data.getVar('TARGET_OS', d, True) or "Unknown",
+        "MACHINE"      : data.getVar('MACHINE', d, True) or "Unknown",
+        "DISTRO"       : data.getVar('DISTRO', d, True) or "Unknown",
+        "zecke-rocks"  : "sure",
     }
 
     # optionally add the status

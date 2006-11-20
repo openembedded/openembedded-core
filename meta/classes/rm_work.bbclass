@@ -19,4 +19,4 @@ do_rm_work () {
 }
 
 addtask rm_work before do_build
-addtask rm_work after do_package
+addtask rm_work after do_populate_staging

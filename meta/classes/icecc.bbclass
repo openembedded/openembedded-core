@@ -10,7 +10,7 @@ def icc_determine_gcc_version(gcc):
 
     'i686-apple-darwin8-gcc-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)'
     """
-    return os.popen("%s --version" % gcc ).readline()[2]
+    return os.popen("%s --version" % gcc ).readline().split()[2]
 
 def create_env(bb,d):
     """
