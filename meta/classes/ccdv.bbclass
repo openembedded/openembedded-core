@@ -1,10 +1,10 @@
 python () {
-	if bb.data.getVar('PN', d, 1) in ['ccdv-native']:
-		if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d, 1):
-			bb.data.setVar("DEPENDS", '%s %s' % ("ccdv-native", bb.data.getVar("DEPENDS", d, 1) or ""), d)
-			bb.data.setVar("CC", '%s %s' % ("ccdv", bb.data.getVar("CC", d, 1) or ""), d)
-			bb.data.setVar("BUILD_CC", '%s %s' % ("ccdv", bb.data.getVar("BUILD_CC", d, 1) or ""), d)
-			bb.data.setVar("CCLD", '%s %s' % ("ccdv", bb.data.getVar("CCLD", d, 1) or ""), d)
+    if bb.data.getVar('PN', d, 1) in ['ccdv-native']:
+        if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d, 1):
+            bb.data.setVar("DEPENDS", '%s %s' % ("ccdv-native", bb.data.getVar("DEPENDS", d, 1) or ""), d)
+            bb.data.setVar("CC", '%s %s' % ("ccdv", bb.data.getVar("CC", d, 1) or ""), d)
+            bb.data.setVar("BUILD_CC", '%s %s' % ("ccdv", bb.data.getVar("BUILD_CC", d, 1) or ""), d)
+            bb.data.setVar("CCLD", '%s %s' % ("ccdv", bb.data.getVar("CCLD", d, 1) or ""), d)
 }
 
 def quiet_libtool(bb,d):

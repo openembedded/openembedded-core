@@ -666,52 +666,56 @@ python read_subpackage_metadata () {
 			bb.data.setVar(key, sdata[key], d)
 }
 
-python __anonymous () {
-	import exceptions
-	need_host = bb.data.getVar('COMPATIBLE_HOST', d, 1)
-	if need_host:
-		import re
-		this_host = bb.data.getVar('HOST_SYS', d, 1)
-		if not re.match(need_host, this_host):
-			raise bb.parse.SkipPackage("incompatible with host %s" % this_host)
+def base_after_parse_two(d):
+    import bb
+    import exceptions
+    need_host = bb.data.getVar('COMPATIBLE_HOST', d, 1)
+    if need_host:
+        import re
+        this_host = bb.data.getVar('HOST_SYS', d, 1)
+        if not re.match(need_host, this_host):
+            raise bb.parse.SkipPackage("incompatible with host %s" % this_host)
 
-	need_machine = bb.data.getVar('COMPATIBLE_MACHINE', d, 1)
-	if need_machine:
-		import re
-		this_machine = bb.data.getVar('MACHINE', d, 1)
-		if this_machine and not re.match(need_machine, this_machine):
-			raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
+    need_machine = bb.data.getVar('COMPATIBLE_MACHINE', d, 1)
+    if need_machine:
+        import re
+        this_machine = bb.data.getVar('MACHINE', d, 1)
+        if this_machine and not re.match(need_machine, this_machine):
+            raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
 
-	pn = bb.data.getVar('PN', d, 1)
+    pn = bb.data.getVar('PN', d, 1)
 
-	srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
-	if srcdate != None:
-		bb.data.setVar('SRCDATE', srcdate, d)
+    srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
+    if srcdate != None:
+        bb.data.setVar('SRCDATE', srcdate, d)
 
-	use_nls = bb.data.getVar('USE_NLS_%s' % pn, d, 1)
-	if use_nls != None:
-		bb.data.setVar('USE_NLS', use_nls, d)
-}
+    use_nls = bb.data.getVar('USE_NLS_%s' % pn, d, 1)
+    if use_nls != None:
+        bb.data.setVar('USE_NLS', use_nls, d)
+
+def base_after_parse(d):
+    import bb, os
+    mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
+    old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
+    if (old_arch == mach_arch):
+        # Nothing to do
+        return
+    if (bb.data.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', d, 1) == '0'):
+        return
+    paths = []
+    for p in [ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ]:
+        paths.append(bb.data.expand(os.path.join(p, mach_arch), d))
+    for s in bb.data.getVar('SRC_URI', d, 1).split():
+        local = bb.data.expand(bb.fetch.localpath(s, d), d)
+        for mp in paths:
+            if local.startswith(mp):
+                #bb.note("overriding PACKAGE_ARCH from %s to %s" % (old_arch, mach_arch))
+                bb.data.setVar('PACKAGE_ARCH', mach_arch, d)
+                return
 
 python () {
-	import bb, os
-	mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
-	old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
-	if (old_arch == mach_arch):
-		# Nothing to do
-		return
-	if (bb.data.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', d, 1) == '0'):
-		return
-	paths = []
-	for p in [ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ]:
-		paths.append(bb.data.expand(os.path.join(p, mach_arch), d))
-	for s in bb.data.getVar('SRC_URI', d, 1).split():
-		local = bb.data.expand(bb.fetch.localpath(s, d), d)
-		for mp in paths:
-			if local.startswith(mp):
-#				bb.note("overriding PACKAGE_ARCH from %s to %s" % (old_arch, mach_arch))
-				bb.data.setVar('PACKAGE_ARCH', mach_arch, d)
-				return
+    base_after_parse_two(d)
+    base_after_parse(d)
 }
 
 # Patch handling

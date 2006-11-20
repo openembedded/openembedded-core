@@ -5,7 +5,7 @@
 CCACHE_DIR_TARGET = "${TMPDIR}/ccache"
 
 python () {
-	if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
-		bb.data.setVar('CCACHE_DIR', '${CCACHE_DIR_TARGET}', d)
-		bb.data.setVarFlag('CCACHE_DIR', 'export', '1', d)
+    if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
+        bb.data.setVar('CCACHE_DIR', '${CCACHE_DIR_TARGET}', d)
+        bb.data.setVarFlag('CCACHE_DIR', 'export', '1', d)
 }
