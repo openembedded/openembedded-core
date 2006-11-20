@@ -14,10 +14,11 @@ SRC_URI += " \
 
 UDEV_DEVFS_RULES ?= "0"
 
-PACKAGES =+ "udev-utils"
+PACKAGES =+ "udev-utils libvolume-id"
 FILES_udev-utils = "${usrbindir}/udevinfo ${usrbindir}/udevtest"
+FILES_libvolume-id = "${base_libdir}/libvolume_id.so.*"
 
-inherit update-rc.d
+inherit update-rc.d autotools pkgconfig
 
 INITSCRIPT_NAME = "udev"
 INITSCRIPT_PARAMS = "start 04 S ."
@@ -59,4 +60,8 @@ do_install () {
 
 	install -m 0755 ${WORKDIR}/mount.sh ${D}${sysconfdir}/udev/scripts/mount.sh
 	install -m 0755 ${WORKDIR}/network.sh ${D}${sysconfdir}/udev/scripts
+}
+
+do_stage () {
+	autotools_stage_all
 }
