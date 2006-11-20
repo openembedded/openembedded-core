@@ -194,6 +194,13 @@ oe_libinstall() {
 	__runcmd cd $dir
 
 	lafile=$libname.la
+
+	# If such file doesn't exist, try to cut version suffix
+	if [ ! -f "$lafile" ]; then
+		libname=`echo "$libname" | sed 's/-[0-9.]*$//'`
+		lafile=$libname.la
+	fi
+
 	if [ -f "$lafile" ]; then
 		# libtool archive
 		eval `cat $lafile|grep "^library_names="`
@@ -376,10 +383,10 @@ python base_do_fetch() {
 		raise bb.build.FuncFailed("Fetch failed: %s" % value)
 }
 
-addtask fetchall
+addtask fetchall after do_fetch
 do_fetchall[recrdeptask] = "do_fetch"
-python base_do_fetchall() {
-	bb.build.exec_task('do_fetch', d)
+base_do_fetchall() {
+	:
 }
 
 def oe_unpack_file(file, data, url = None):
@@ -394,7 +401,7 @@ def oe_unpack_file(file, data, url = None):
 	cmd = None
 	if file.endswith('.tar'):
 		cmd = 'tar x --no-same-owner -f %s' % file
-	elif file.endswith('.tgz') or file.endswith('.tar.gz'):
+	elif file.endswith('.tgz') or file.endswith('.tar.gz') or file.endswith('.tar.Z'):
 		cmd = 'tar xz --no-same-owner -f %s' % file
 	elif file.endswith('.tbz') or file.endswith('.tar.bz2'):
 		cmd = 'bzip2 -dc %s | tar x --no-same-owner -f -' % file
@@ -505,6 +512,9 @@ python base_eventhandler() {
 		monotone_revision = "<unknown>"
 		try:
 			monotone_revision = file( "%s/_MTN/revision" % path_to_packages ).read().strip()
+			if monotone_revision.startswith( "format_version" ):
+				monotone_revision_words = monotone_revision.split()
+				monotone_revision = monotone_revision_words[ monotone_revision_words.index( "old_revision" )+1][1:-1]
 		except IOError:
 			pass
 		bb.data.setVar( 'OE_REVISION', monotone_revision, e.data )
@@ -552,7 +562,6 @@ base_do_compile() {
 		oenote "nothing to compile"
 	fi
 }
-
 
 base_do_stage () {
 	:
@@ -685,6 +694,7 @@ def base_after_parse_two(d):
 
     pn = bb.data.getVar('PN', d, 1)
 
+    # OBSOLETE in bitbake 1.7.4
     srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
     if srcdate != None:
         bb.data.setVar('SRCDATE', srcdate, d)
@@ -713,10 +723,12 @@ def base_after_parse(d):
                 bb.data.setVar('PACKAGE_ARCH', mach_arch, d)
                 return
 
+
 python () {
     base_after_parse_two(d)
     base_after_parse(d)
 }
+
 
 # Patch handling
 inherit patch
@@ -765,10 +777,7 @@ ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.gnupg.org/gcrypt/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls http://www.mirrors.wiretapped.net/security/network-security/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.mirrors.wiretapped.net/pub/security/network-security/gnutls/
 ftp://ftp.gnutls.org/pub/gnutls http://josefsson.org/gnutls/releases/
-
-
-
-ftp://.*/.*/	http://www.oesources.org/source/current/
-http://.*/.*/	http://www.oesources.org/source/current/
+http://ftp.info-zip.org/pub/infozip/src/ http://mirror.switch.ch/ftp/mirror/infozip/src/
+http://ftp.info-zip.org/pub/infozip/src/ ftp://sunsite.icm.edu.pl/pub/unix/archiving/info-zip/src/
 }
 
