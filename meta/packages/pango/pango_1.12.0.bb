@@ -1,7 +1,6 @@
 LICENSE = "LGPL"
 SECTION = "x11/libs"
-# Xt needed to keep autoconf's check for X11 happy
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libx11 libxft libxt gtk-doc cairo"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libx11 libxft gtk-doc cairo"
 DESCRIPTION = "The goal of the Pango project is to provide an \
 Open Source framework for the layout and rendering of \
 internationalized text."
