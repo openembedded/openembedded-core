@@ -52,7 +52,7 @@ KERNEL_LOCALVERSION ?= ""
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 kernel_do_compile() {
-	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 	if [ "${KERNEL_MAJOR_VERSION}" != "2.6" ]; then
 		oe_runmake dep CC="${KERNEL_CC}" LD="${KERNEL_LD}"
@@ -135,7 +135,7 @@ kernel_do_stage() {
 }
 
 kernel_do_install() {
-	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		oe_runmake DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
 	else
