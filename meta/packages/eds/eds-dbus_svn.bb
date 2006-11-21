@@ -1,9 +1,10 @@
-LICENSE = "LGPL"
-DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade virtual/libiconv"
-MAINTAINER = "Chris Lord <chris@openedhand.com>"
 DESCRIPTION = "Evolution database backend server"
+HOMEPAGE = "http://projects.o-hand.com/eds"
+LICENSE = "LGPL"
+DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade virtual/libiconv zlib"
+
 PV = "1.4.0+svn${SRCDATE}"
-PR = "r19"
+PR = "r20"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://no_libdb.patch;patch=1 \
@@ -16,6 +17,9 @@ SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 S = "${WORKDIR}/trunk"
 
 inherit autotools pkgconfig
+
+# -ldb needs this on some platforms
+LDFLAGS += "-lpthread"
 
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
 
