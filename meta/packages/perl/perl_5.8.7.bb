@@ -1,4 +1,7 @@
 
+# We need gnugrep (for -I)
+DEPENDS_append += " grep-native"
+
 require perl.inc
 
 SRC_URI += "file://config.sh-armeb-linux \
@@ -6,12 +9,21 @@ SRC_URI += "file://config.sh-armeb-linux \
 	    file://config.sh-i386-linux \
 	    file://config.sh-i486-linux \
 	    file://config.sh-i586-linux \
+	    file://config.sh-i686-linux \
+	    file://config.sh-x86_64-linux \
 	    file://config.sh-sh3-linux \
 	    file://config.sh-sh4-linux"
 
+# Patches for sh3/sh4, use gcc to link and override generaet.sh to
+# use PIC mode for compiling shared library objects.
+SRC_URI_append_sh4 += "file://override-generate-sh.patch;patch=1"
+SRC_URI_append_sh4 += "file://makefile-usegcc-to-link.patch;patch=1"
+SRC_URI_append_sh3 += "file://override-generate-sh.patch;patch=1"
+SRC_URI_append_sh3 += "file://makefile-usegcc-to-link.patch;patch=1"
+
 PARALLEL_MAKE = ""
 
-PR = "r17"
+PR = "r21"
 
 do_configure() {
 	ln -sf ${HOSTPERL} ${STAGING_BINDIR}/hostperl
@@ -24,6 +36,7 @@ do_configure() {
 	cp ${WORKDIR}/config.sh-i486-linux .
 	cp ${WORKDIR}/config.sh-i586-linux .
 	cp ${WORKDIR}/config.sh-i686-linux .
+	cp ${WORKDIR}/config.sh-x86_64-linux .
 	cp ${WORKDIR}/config.sh-armeb-linux .
 	cp ${WORKDIR}/config.sh-sh3-linux .
 	cp ${WORKDIR}/config.sh-sh4-linux .
@@ -45,7 +58,7 @@ do_configure() {
 	sed -i -e "s%/usr/include/%${STAGING_INCDIR}/%g" config.sh-${TARGET_ARCH}-${TARGET_OS}
 
 	#These are strewn all over the source tree
-	for foo in `grep -m1 \/usr\/include\/.*\\.h ${WORKDIR}/* -r | cut -f 1 -d ":"` ; do
+	for foo in `grep -I -m1 \/usr\/include\/.*\\.h ${WORKDIR}/* -r | cut -f 1 -d ":"` ; do
 		echo Fixing: $foo
 		sed -e "s%/usr/include/%${STAGING_INCDIR}/%g" -i $foo
 	done
@@ -56,15 +69,13 @@ do_configure() {
 }
 
 do_install_append() {
-	# Make sure the shared library is configured before trying to symlink it
-	grep -q "useshrplib='false'" ${S}/config.sh ||
-		ln -s libperl.so.${PV} ${D}/${libdir}/libperl.so.5
+	ln -s libperl.so.${PV} ${D}/${libdir}/libperl.so.5
 	sed -i -e "s,${D},,g" ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/Config_heavy.pl
 }
 
 # Create a perl-modules package recommending all the other perl
 # packages (actually the non modules packages and not created too)
-ALLOW_EMPTY_perl-modules = 1
+ALLOW_EMPTY_perl-modules = "1"
 PACKAGES_append = " perl-modules"
 RRECOMMENDS_perl-modules = "${PACKAGES}"
 RPROVIDES_perl-lib = "perl-lib"
@@ -74,6 +85,10 @@ require perl-rdepends_${PV}.inc
 
 # To create/update the perl-rdepends_${PV}.inc use this piece of ugly script (modified for your arch/paths etc):
 # daka@DaKa2:/home/slug/slugos/tmp/work/perl-5.8.7-r14/install$ egrep -r "use|require" * | grep ";$" | egrep ".pm:use |.pm:require " | grep -v v5.6.0 | grep -v 5.00 | grep -v \$module | sed -e "s, \+, ,g" | cut -f1,2 -d" " | sed -e "s,;, ,g" | sed -e "s,(), ,g" | sed -e "s,::,-,g" | sort | uniq | tr [:upper:] [:lower:] | sed -e "s,/[^ ]\+ , += \"perl-module-,g" | sed -e "s, \?$, \",g" | sed -e "s,_,-,g" | sed -e "s,^,RDEPENDS_,g" | sed -e "s,armeb-linux,\$\{TARGET_ARCH\}-\$\{TARGET_OS\},g" | egrep -v "perl-module-5|perl-module-tk|perl-module-mac-internetconfig|perl-module-ndbm-file|perl-module-html-treebuilder|perl-module-lwp-simple|perl-module-vms-filespec|perl-module-fcgi|perl-module-vms-stdio|perl-module-mac-buildtools" > /home/slug/openembedded/packages/perl/perl-rdepends_5.8.7.inc
+
+# Some additional dependencies that the above doesn't manage to figure out
+DEPENDS_perl-module-math-bigint += "perl-module-math-bigint-calc "
+DEPENDS_perl-module-math-bigint-calc += "perl-module-integer "
 
 # Some packages changed names in 5.8.7-r14, RPROVIDE them
 RPROVIDES_perl-module-b-asmdata = "perl-module-${TARGET_SYS}-b-asmdata"

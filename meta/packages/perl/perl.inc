@@ -14,7 +14,7 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 	file://config.sh-mipsel-linux \
 	file://config.sh-i686-linux"
 
-HOSTPERL=${STAGING_BINDIR}/perl${PV}
+HOSTPERL="${STAGING_BINDIR}/perl${PV}"
 
 do_configure() {
 	ln -sf ${HOSTPERL} ${STAGING_BINDIR}/hostperl 
@@ -41,14 +41,17 @@ do_configure() {
 do_compile() {
 	sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
 	cd Cross
-	oe_runmake perl
+	# You must use gcc to link on sh
+	OPTIONS=""
+	if test ${TARGET_ARCH} = "sh3" -o ${TARGET_ARCH} = "sh4"; then
+		OPTIONS="LD=${TARGET_ARCH}-${TARGET_OS}-gcc"
+	fi
+	oe_runmake perl $OPTIONS
 }
 
 do_install() {
 	oe_runmake install
-	# Make sure the shared library is configured before trying to move it
-	grep -q "useshrplib='false'" ${S}/config.sh ||
-		mv ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
+	mv ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
 	( cd ${D}/usr/bin/; rm perl; ln -s perl${PV} perl )
 }
 
@@ -77,3 +80,4 @@ FILES_${PN}-dbg += " \
         ${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/auto/*/.debug \
         ${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/auto/*/*/.debug \
         ${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/auto/*/*/*/.debug"
+
