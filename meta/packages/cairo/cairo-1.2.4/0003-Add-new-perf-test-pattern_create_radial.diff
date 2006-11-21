@@ -1,0 +1,164 @@
+From nobody Mon Sep 17 00:00:00 2001
+From: Dan Amelang <dan@amelang.net>
+Date: Tue Oct 31 23:47:35 2006 -0800
+Subject: [PATCH] Add new perf test "pattern_create_radial"
+
+This test is really just for hammering the double to fixed-point conversion
+(in _cairo_fixed_from_double) that happens as doubles from API calls gets
+translated into internal cairo fixed-point numbers.
+
+Because it's not generally useful, I don't recommend that it become part of
+the main cairo performance test. But hey, it might come in handy for someone
+else.
+
+---
+
+ perf/Makefile.am             |    1 
+ perf/cairo-perf.c            |    1 
+ perf/cairo-perf.h            |    1 
+ perf/pattern_create_radial.c |   98 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 101 insertions(+), 0 deletions(-)
+ create mode 100644 perf/pattern_create_radial.c
+
+977383b86c68d0523c899efcba3cf8d36e94d2a7
+diff --git a/perf/Makefile.am b/perf/Makefile.am
+index 419a998..e1cfdc7 100644
+--- a/perf/Makefile.am
++++ b/perf/Makefile.am
+@@ -21,6 +21,7 @@ cairo_perf_SOURCES =		\
+ 	stroke.c		\
+ 	subimage_copy.c		\
+ 	tessellate.c		\
++	pattern_create_radial.c \
+ 	text.c
+ 
+ if CAIRO_HAS_WIN32_SURFACE
+diff --git a/perf/cairo-perf.c b/perf/cairo-perf.c
+index d9734c4..0707433 100644
+--- a/perf/cairo-perf.c
++++ b/perf/cairo-perf.c
+@@ -256,5 +256,6 @@ cairo_perf_case_t perf_cases[] = {
+     { text,   64, 256},
+     { tessellate, 100, 100},
+     { subimage_copy, 16, 512},
++    { pattern_create_radial, 16, 16},
+     { NULL }
+ };
+diff --git a/perf/cairo-perf.h b/perf/cairo-perf.h
+index 560ba64..faacff9 100644
+--- a/perf/cairo-perf.h
++++ b/perf/cairo-perf.h
+@@ -88,5 +88,6 @@ CAIRO_PERF_DECL (stroke);
+ CAIRO_PERF_DECL (subimage_copy);
+ CAIRO_PERF_DECL (tessellate);
+ CAIRO_PERF_DECL (text);
++CAIRO_PERF_DECL (pattern_create_radial);
+ 
+ #endif
+diff --git a/perf/pattern_create_radial.c b/perf/pattern_create_radial.c
+new file mode 100644
+index 0000000..d793b7d
+--- /dev/null
++++ b/perf/pattern_create_radial.c
+@@ -0,0 +1,98 @@
++/*
++ * Copyright © 2006 Dan Amelang
++ *
++ * Permission to use, copy, modify, distribute, and sell this software
++ * and its documentation for any purpose is hereby granted without
++ * fee, provided that the above copyright notice appear in all copies
++ * and that both that copyright notice and this permission notice
++ * appear in supporting documentation, and that the name of
++ * the authors not be used in advertising or publicity pertaining to
++ * distribution of the software without specific, written prior
++ * permission. The authors make no representations about the
++ * suitability of this software for any purpose.  It is provided "as
++ * is" without express or implied warranty.
++ *
++ * THE AUTHORS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY SPECIAL,
++ * INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
++ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
++ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
++ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ *
++ * Authors: Dan Amelang <dan@amelang.net>
++ *
++ * This test was originally created to test _cairo_fixed_from_double.
++ * cairo_pattern_create_radial was selected as the entry point into
++ * cairo as it makes several calls to _cairo_fixed_from_double and
++ * presents a somewhat realistic use-case (although the RADIALS_COUNT
++ * isn't very realistic).
++ */
++#include <time.h>
++#include "cairo-perf.h"
++
++#define RADIALS_COUNT (100000)
++
++static struct
++{
++    double cx0;
++    double cy0;
++    double radius0;
++    double cx1;
++    double cy1;
++    double radius1;
++} radials[RADIALS_COUNT];
++
++static double
++generate_double_in_range (double min, double max)
++{
++    double d;
++
++    d = rand () / (double) RAND_MAX;
++    d *= max - min;
++    d += min;
++
++    return d;
++}
++
++static cairo_perf_ticks_t
++do_pattern_create_radial (cairo_t *cr, int width, int height)
++{
++    int i;
++    cairo_pattern_t *pattern;
++
++    cairo_perf_timer_start ();
++
++    for (i = 0; i < RADIALS_COUNT; i++)
++    {
++        pattern = cairo_pattern_create_radial (radials[i].cx0, radials[i].cy0,
++                                               radials[i].radius0,
++                                               radials[i].cx1, radials[i].cy1,
++                                               radials[i].radius1);
++        cairo_pattern_destroy (pattern);
++    }
++
++    cairo_perf_timer_stop ();
++
++    return cairo_perf_timer_elapsed ();
++}
++
++void
++pattern_create_radial (cairo_perf_t *perf, cairo_t *cr, int width, int height)
++{
++    int i;
++
++    srand (time (0));
++    for (i = 0; i < RADIALS_COUNT; i++)
++    {
++        radials[i].cx0 = generate_double_in_range (-50000.0, 50000.0);
++        radials[i].cy0 = generate_double_in_range (-50000.0, 50000.0);
++        radials[i].radius0 = generate_double_in_range (0.0, 1000.0);
++        radials[i].cx1 = generate_double_in_range (-50000.0, 50000.0);
++        radials[i].cy1 = generate_double_in_range (-50000.0, 50000.0);
++        radials[i].radius1 = generate_double_in_range (0.0, 1000.0);
++    }
++
++    cairo_perf_run (perf, "pattern_create_radial",
++                          do_pattern_create_radial);
++}
+-- 
+1.2.6
+
