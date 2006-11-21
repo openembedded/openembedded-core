@@ -2,6 +2,7 @@ SECTION = "base"
 PR = "r0"
 require fakeroot_${PV}.bb
 inherit native
+RDEPENDS="util-linux-native"
 
 SRC_URI += "file://fix-prefix.patch;patch=1"
 S = "${WORKDIR}/fakeroot-${PV}"
