@@ -21,6 +21,9 @@ ac_cv_sizeof_unsigned_long=${ac_cv_sizeof_unsigned_long=4}
 ac_cv_sizeof_unsigned_long_long=${ac_cv_sizeof_unsigned_long_long=8}
 ac_cv_sizeof_signed_char=${ac_cv_sizeof_signed_char=1}
 
+# lzo
+ac_cv_sizeof_char_p=${ac_cv_sizeof_char_p=4}
+
 ac_cv_sys_restartable_syscalls=yes
 ac_cv_uchar=${ac_cv_uchar=no}
 ac_cv_uint=${ac_cv_uint=yes}
@@ -29,8 +32,6 @@ ac_cv_ushort=${ac_cv_ushort=yes}
 
 mr_cv_target_elf=${mr_cv_target_elf=yes}
 
-ac_cv_c_littleendian=${ac_cv_c_littleendian=yes}
-ac_cv_c_bigendian=${ac_cv_c_bigendian=no}
 ac_cv_time_r_type=${ac_cv_time_r_type=POSIX}
 
 # apache
@@ -58,9 +59,6 @@ ac_cv_linux_vers=${ac_cv_linux_vers=2}
 # nano
 ac_cv_regexec_segfault_emptystr=${ac_cv_regexec_segfault_emptystr=no}
 nano_cv_func_regexec_segv_emptystr=${nano_cv_func_regexec_segv_emptystr=no}
-
-# libnet 
-ac_cv_libnet_endianess=${ac_cv_libnet_endianess=lil}
 
 # screen
 screen_cv_sys_bcopy_overlap=${screen_cv_sys_bcopy_overlap=no}
@@ -254,10 +252,8 @@ mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
 ac_cv_conv_longlong_to_float=${ac_cv_conv_longlong_to_float=yes}
 
-# minicom
-ac_cv_header_getopt_h=${ac_cv_header_getopt_h=xno}
-ac_cv_func_getopt_long=${ac_cv_func_getopt_long=xno}
-am_cv_sys_posix_termios=${ac_cv_sys_posix_termios=yes}
+# rp-pppoe
+rpppoe_cv_pack_bitfields=${rpppoe_cv_pack_bitfields=rev}
 
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
@@ -287,3 +283,17 @@ ac_cv_va_copy=${ac_cv_va_copy=no}
 ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
 ac_cv___va_copy=${ac_cv___va_copy=yes}
 racoon_cv_bug_getaddrinfo=${racoon_cv_bug_getaddrinfo=no}
+
+# libxfce4util
+with_broken_putenv=${with_broken_putenv=no}
+
+# clamav
+clamav_av_func_working_snprintf_long=${clamav_av_func_working_snprintf_long=yes}
+clamav_av_have_in_port_t=${clamav_av_have_in_port_t=yes}
+clamav_av_have_in_addr_t=${clamav_av_have_in_addr_t=yes}
+ac_cv_func_mmap_fixed_mapped=${ac_cv_func_mmap_fixed_mapped=yes}
+
+# libnet 
+ac_cv_lbl_unaligned_fail=${ac_cv_lbl_unaligned_fail=no}
+ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
+ac_cv_libnet_endianess=${ac_cv_libnet_endianess=lil}

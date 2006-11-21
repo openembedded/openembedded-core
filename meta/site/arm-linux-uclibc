@@ -25,8 +25,6 @@ ac_cv_ushort=${ac_cv_ushort=yes}
 
 mr_cv_target_elf=${mr_cv_target_elf=yes}
 
-ac_cv_c_littleendian=${ac_cv_c_littleendian=yes}
-ac_cv_c_bigendian=${ac_cv_c_bigendian=no}
 ac_cv_time_r_type=${ac_cv_time_r_type=POSIX}
 
 # apache
@@ -57,6 +55,7 @@ nano_cv_func_regexec_segv_emptystr=${nano_cv_func_regexec_segv_emptystr=no}
 
 # libnet 
 ac_cv_libnet_endianess=${ac_cv_libnet_endianess=lil}
+ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
 
 # screen
 screen_cv_sys_bcopy_overlap=${screen_cv_sys_bcopy_overlap=no}

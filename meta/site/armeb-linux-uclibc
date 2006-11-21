@@ -16,6 +16,9 @@ ac_cv_sizeof_short_int=${ac_cv_sizeof_short_int=2}
 ac_cv_sizeof_size_t=${ac_cv_sizeof_size_t=4}
 ac_cv_sizeof_void_p=${ac_cv_sizeof_void_p=4}
 ac_cv_sizeof_long_double=${ac_cv_sizeof_long_double=8}
+ac_cv_sizeof_char_p=${ac_cv_sizeof_char_p=4}
+ac_cv_sizeof_unsigned=${ac_cv_sizeof_unsigned=4}
+ac_cv_sizeof_ptrdiff_t=${glib_cv_sizeof_ptrdiff_t=4}
 
 ac_cv_sys_restartable_syscalls=yes
 ac_cv_uchar=${ac_cv_uchar=no}
@@ -25,8 +28,6 @@ ac_cv_ushort=${ac_cv_ushort=yes}
 
 mr_cv_target_elf=${mr_cv_target_elf=yes}
 
-ac_cv_c_littleendian=${ac_cv_c_littleendian=no}
-ac_cv_c_bigendian=${ac_cv_c_bigendian=yes}
 ac_cv_time_r_type=${ac_cv_time_r_type=POSIX}
 
 # apache
@@ -57,6 +58,7 @@ nano_cv_func_regexec_segv_emptystr=${nano_cv_func_regexec_segv_emptystr=no}
 
 # libnet 
 ac_cv_libnet_endianess=${ac_cv_libnet_endianess=big}
+ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
 
 # screen
 screen_cv_sys_bcopy_overlap=${screen_cv_sys_bcopy_overlap=no}

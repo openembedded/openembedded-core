@@ -1,0 +1,2 @@
+ac_cv_c_littleendian=${ac_cv_c_littleendian=yes}
+ac_cv_c_bigendian=${ac_cv_c_bigendian=no}

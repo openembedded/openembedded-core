@@ -1,5 +1,3 @@
-ac_cv_c_littleendian=${ac_cv_c_littleendian=yes}
-ac_cv_c_bigendian=${ac_cv_c_bigendian=no}
 
 ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
 ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
@@ -114,3 +112,6 @@ sudo_cv_uid_t_len=${sudo_cv_uid_t_len=10}
 
 #intercom
 ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
+
+#lmbench
+ac_cv_uint=${ac_cv_unit=yes}

@@ -10,11 +10,13 @@ ac_cv_sizeof_char=${ac_cv_sizeof_char=1}
 ac_cv_sizeof_wchar_t=${ac_cv_sizeof_wchar_t=1}
 ac_cv_sizeof_unsigned_char=${ac_cv_sizeof_unsigned_char=1}
 ac_cv_sizeof_bool=${ac_cv_sizeof_bool=1}
+ac_cv_sizeof_char_p=${ac_cv_sizeof_int_p=4}
 ac_cv_sizeof_int=${ac_cv_sizeof_int=4}
 ac_cv_sizeof_int_p=${ac_cv_sizeof_int_p=4}
 ac_cv_sizeof_long=${ac_cv_sizeof_long=4}
 ac_cv_sizeof_long_int=${ac_cv_sizeof_long_int=4}
 ac_cv_sizeof_long_long=${ac_cv_sizeof_long_long=8}
+ac_cv_sizeof_off_t=${ac_cv_sizeof_off_t=4}
 ac_cv_sizeof_short=${ac_cv_sizeof_short=2}
 ac_cv_sizeof_short_int=${ac_cv_sizeof_short_int=2}
 ac_cv_sizeof_size_t=${ac_cv_sizeof_size_t=4}
@@ -22,7 +24,9 @@ ac_cv_sizeof_void_p=${ac_cv_sizeof_void_p=4}
 ac_cv_sizeof_float=${ac_cv_sizeof_float=4}
 ac_cv_sizeof_double=${ac_cv_sizeof_double=8}
 ac_cv_sizeof_long_double=${ac_cv_sizeof_long_double=8}
+ac_cv_sizeof_ptrdiff_t=${glib_cv_sizeof_ptrdiff_t=4}
 ac_cv_sizeof_unsigned_short=${ac_cv_sizeof_unsigned_short=2}
+ac_cv_sizeof_unsigned=${ac_cv_sizeof_unsigned=4}
 ac_cv_sizeof_unsigned_int=${ac_cv_sizeof_unsigned_int=4}
 ac_cv_sizeof_unsigned_long=${ac_cv_sizeof_unsigned_long=4}
 ac_cv_sizeof_unsigned_long_long=${ac_cv_sizeof_unsigned_long_long=8}
@@ -36,8 +40,6 @@ ac_cv_ushort=${ac_cv_ushort=yes}
 
 mr_cv_target_elf=${mr_cv_target_elf=yes}
 
-ac_cv_c_littleendian=${ac_cv_c_littleendian=yes}
-ac_cv_c_bigendian=${ac_cv_c_bigendian=no}
 ac_cv_time_r_type=${ac_cv_time_r_type=POSIX}
 
 # apache
@@ -68,6 +70,7 @@ nano_cv_func_regexec_segv_emptystr=${nano_cv_func_regexec_segv_emptystr=no}
 
 # libnet 
 ac_cv_libnet_endianess=${ac_cv_libnet_endianess=lil}
+ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
 
 # screen
 screen_cv_sys_bcopy_overlap=${screen_cv_sys_bcopy_overlap=no}
@@ -300,3 +303,12 @@ dpkg_cv___va_copy=${ac_cv___va_copy=yes}
 
 # enca
 yeti_cv_func_scanf_modif_size_t=yes
+
+# clamav
+clamav_av_func_working_snprintf_long=${clamav_av_func_working_snprintf_long=yes}
+clamav_av_have_in_port_t=${clamav_av_have_in_port_t=yes}
+clamav_av_have_in_addr_t=${clamav_av_have_in_addr_t=yes}
+ac_cv_func_mmap_fixed_mapped=${ac_cv_func_mmap_fixed_mapped=yes}
+
+#dbus
+ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=no}

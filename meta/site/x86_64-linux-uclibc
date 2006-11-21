@@ -1,4 +1,3 @@
-ac_cv_c_bigendian=${ac_cv_c_bigendian=no}
 ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
 ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
 ac_cv_func_lstat_dereferences_slashed_symlink=${ac_cv_func_lstat_dereferences_slashed_symlink=yes}
@@ -11,6 +10,7 @@ ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
 ac_cv_func_stat_empty_string_bug=${ac_cv_func_stat_empty_string_bug=no}
 ac_cv_func_stat_ignores_trailing_slash=${ac_cv_func_stat_ignores_trailing_slash=no}
 ac_cv_libnet_endianess=${ac_cv_libnet_endianess=lil}
+ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
 ac_cv_need_trio=${ac_cv_need_trio=no}
 ac_cv_sizeof_char=${ac_cv_sizeof_char=1}

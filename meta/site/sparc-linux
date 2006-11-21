@@ -30,8 +30,6 @@ ac_cv_ushort=${ac_cv_ushort=yes}
 
 mr_cv_target_elf=${mr_cv_target_elf=yes}
 
-ac_cv_c_littleendian=${ac_cv_c_littleendian=no}
-ac_cv_c_bigendian=${ac_cv_c_bigendian=yes}
 ac_cv_time_r_type=${ac_cv_time_r_type=POSIX}
 cookie_io_functions_use_off64_t=${cookie_io_functions_use_off64_t=yes}
 
