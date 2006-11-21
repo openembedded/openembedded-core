@@ -9,8 +9,8 @@ iface wlan0 inet dhcp
   wireless_type wlan-ng
   wireless_mode Managed
   pre-up modprobe prism2_usb
-  pre-up /sbin/usbctl on 1
-  post-down /sbin/usbctl off 1
+#  pre-up /sbin/usbctl on 1
+#  post-down /sbin/usbctl off 1
   post-down rmmod prism2_usb
 
 # Wired or wireless interfaces
