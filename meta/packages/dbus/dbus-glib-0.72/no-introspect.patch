@@ -1,0 +1,19 @@
+Index: dbus-glib-0.72/tools/Makefile.am
+===================================================================
+--- dbus-glib-0.72.orig/tools/Makefile.am	2006-10-25 21:10:36.000000000 +0200
++++ dbus-glib-0.72/tools/Makefile.am	2006-10-27 10:07:35.000000000 +0200
+@@ -3,14 +3,8 @@
+ nodist_libdbus_glib_HEADERS = dbus-glib-bindings.h
+ libdbus_glibdir = $(includedir)/dbus-1.0/dbus
+ 
+-dbus-glib-bindings.h: dbus-bus-introspect.xml $(top_builddir)/dbus/dbus-binding-tool$(EXEEXT)
+-	$(top_builddir)/dbus/dbus-binding-tool --mode=glib-client --prefix=dbus_bus --output=dbus-glib-bindings.h dbus-bus-introspect.xml
+-
+ BUILT_SOURCES = dbus-glib-bindings.h dbus-bus-introspect.xml
+ 
+-dbus-bus-introspect.xml:
+-	DBUS_TOP_BUILDDIR=$(top_builddir) dbus-daemon --introspect > dbus-bus-introspect.xml.tmp && mv dbus-bus-introspect.xml.tmp dbus-bus-introspect.xml
+-
+ EXTRA_DIST = run-with-tmp-session-bus.sh session.conf
+ 
+ CLEANFILES = 				\

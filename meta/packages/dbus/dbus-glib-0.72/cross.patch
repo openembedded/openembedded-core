@@ -1,0 +1,12 @@
+Index: dbus-glib-0.72/configure.ac
+===================================================================
+--- dbus-glib-0.72.orig/configure.ac	2006-10-27 10:05:05.000000000 +0200
++++ dbus-glib-0.72/configure.ac	2006-10-27 10:05:48.000000000 +0200
+@@ -571,6 +571,7 @@
+     exit (0);
+ ]])],
+               [have_abstract_sockets=yes],
++              [have_abstract_sockets=no],
+               [have_abstract_sockets=no])
+ AC_LANG_POP(C)
+ AC_MSG_RESULT($have_abstract_sockets)
