@@ -2,7 +2,7 @@ LICENSE = "GPL"
 DESCRIPTION = "Touchscreen calibration utility"
 SECTION = "x11/base"
 
-DEPENDS = "libx11 libxft libxrandr xcalibrate"
+DEPENDS = "virtual/libx11 libxft libxrandr xcalibrate"
 
 PR = "r1"
 

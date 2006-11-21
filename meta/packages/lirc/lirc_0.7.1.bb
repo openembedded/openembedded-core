@@ -2,7 +2,7 @@ DESCRIPTION = "LIRC is a package that allows you to decode and send infra-red si
 SECTION = "console/network"
 PRIORITY = "optional"
 LICENSE = "GPL"
-DEPENDS = "virtual/kernel libx11 libxau libsm libice"
+DEPENDS = "virtual/kernel virtual/libx11 libxau libsm libice"
 PR = "r5"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lirc/lirc-${PV}.tar.gz \
