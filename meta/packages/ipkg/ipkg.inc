@@ -29,7 +29,7 @@ pkg_postinst_ipkg () {
 if [ "x$D" != "x" ]; then
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d
 	# this happens at S98 where our good 'ole packages script used to run
-	echo -e "#!/bin/sh
+	echo "#!/bin/sh
 ipkg-cl configure
 " > ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${IPKG_INIT_POSITION}configure
 	chmod 0755 ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${IPKG_INIT_POSITION}configure
