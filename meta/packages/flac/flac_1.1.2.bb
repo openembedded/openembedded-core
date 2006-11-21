@@ -2,7 +2,7 @@ DESCRIPTION = "FLAC is a Free Lossless Audio Codec."
 LICENSE = "BSD GPL"
 SECTION = "libs"
 DEPENDS = "libogg"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/flac/flac-${PV}.tar.gz \
 	   file://disable-xmms-plugin.patch;patch=1 \

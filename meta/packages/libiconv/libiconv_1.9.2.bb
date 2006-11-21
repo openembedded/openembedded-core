@@ -1,11 +1,11 @@
 DESCRIPTION = "GNU libiconv - libiconv is for you if your application needs to support \
 multiple character encodings, but that support lacks from your system."
 HOMEPAGE = "http://www.gnu.org/software/libiconv"
-SECTION = "e/libs"
+SECTION = "libs"
 PRIORITY = "optional"
 NOTES = "Needs to be stripped down to: ascii iso8859-1 eucjp iso-2022jp gb utf8"
 PROVIDES = "virtual/libiconv"
-PR = "r3"
+PR = "r4"
 LICENSE = "LGPL"
 SRC_URI = "ftp://ftp.gnu.org/pub/gnu/libiconv/libiconv-${PV}.tar.gz"
 
