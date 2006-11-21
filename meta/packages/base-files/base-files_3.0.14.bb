@@ -1,7 +1,7 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r51"
+PR = "r54"
 LICENSE = "GPL"
 
 SRC_URI = " \
@@ -52,6 +52,7 @@ hostname = "openembedded"
 hostname_slugos = "nslu2"
 hostname_mnci = "MNCI"
 hostname_rt3000 = "MNRT"
+hostname_jlime = "JLime"
 
 do_install () {
 	for d in ${dirs755}; do
@@ -128,6 +129,10 @@ do_install_append_slugos() {
 	rmdir ${D}/home/root
 	install -m 0755 -d ${D}/root
 	ln -s ../root ${D}/home/root
+}
+
+do_install_append_netbook-pro () {
+	mkdir -p ${D}/initrd
 }
 
 PACKAGES = "${PN}-doc ${PN}"
