@@ -1,8 +1,9 @@
-SECTION = "libs"
 DESCRIPTION = "The popt library exists essentially \
 for parsing command line options."
 LICENSE = "MIT"
-PR = "r3"
+SECTION = "libs"
+DEPENDS = "gettext-native"
+PR = "r4"
 
 SRC_URI = "ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.1.x/popt-${PV}.tar.gz \
 	   file://m4.patch;patch=1 \
