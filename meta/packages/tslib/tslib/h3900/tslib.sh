@@ -1,17 +1,12 @@
 #!/bin/sh
 
-module_id() {
-    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
-}
+TSLIB_TSDEVICE=`detect-stylus --device`
+TSLIB_CONFFILE=/etc/ts.conf
 
 case `uname -r` in
 2.4*)
 	TSLIB_TSDEVICE=/dev/touchscreen/0raw
 	TSLIB_CONFFILE=/usr/share/tslib/ts.conf-h3600-2.4
-	;;
-*)
-	TSLIB_TSDEVICE=`detect-stylus --device`
-	TSLIB_CONFFILE=/usr/share/tslib/ts-2.6.conf
 	;;
 esac
 
