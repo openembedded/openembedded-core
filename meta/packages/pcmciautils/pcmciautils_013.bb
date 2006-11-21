@@ -17,7 +17,7 @@ export etcdir = "${sysconfdir}"
 export sbindir = "${base_sbindir}"
 export pcmciaconfdir = "${sysconfdir}/pcmcia"
 export udevrulesdir = "${sysconfdir}/udev/rules.d"
-export UDEV = 1
+export UDEV = "1"
 LD = "${CC}"
 CFLAGS =+ "-I${S}/src"
 CFLAGS =+ '-DPCMCIAUTILS_VERSION=013'
