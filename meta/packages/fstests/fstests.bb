@@ -1,9 +1,9 @@
-DESCRIPTION = "various benchmarning tests for X"
+DESCRIPTION = "Various benchmarning tests for X"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r0"
 PV = "0.0+svn${SRCDATE}"
+PR = "r0"
 
 inherit autotools
 
@@ -12,3 +12,7 @@ SRC_URI = \
 
 S = "${WORKDIR}/fstests/tests"
 
+do_install() {
+    install -d ${D}${bindir}
+    find . -name "test-*" -type f -perm -755 -exec install -m 0755 {} ${D}${bindir} \;   
+}
