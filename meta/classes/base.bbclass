@@ -196,8 +196,12 @@ oe_libinstall() {
 
 	# If such file doesn't exist, try to cut version suffix
 	if [ ! -f "$lafile" ]; then
-		libname=`echo "$libname" | sed 's/-[0-9.]*$//'`
-		lafile=$libname.la
+		libname1=`echo "$libname" | sed 's/-[0-9.]*$//'`
+		lafile1=$libname.la
+		if [ -f "$lafile1" ]; then
+			libname=$libname1
+			lafile=$lafile1
+		fi
 	fi
 
 	if [ -f "$lafile" ]; then
