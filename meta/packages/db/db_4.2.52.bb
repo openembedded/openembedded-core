@@ -14,7 +14,7 @@ HOMEPAGE = "http://www.sleepycat.com"
 LICENSE = "BSD Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r3"
+PR = "r6"
 
 SRC_URI = "http://downloads.sleepycat.com/db-${PV}.tar.gz"
 #SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"

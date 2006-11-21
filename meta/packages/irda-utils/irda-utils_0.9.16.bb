@@ -3,7 +3,7 @@ IrDA allows communication over Infrared with other devices \
 such as phones and laptops."
 SECTION = "base"
 LICENSE = "GPL"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/irda/irda-utils-${PV}.tar.gz \
 	   file://configure.patch;patch=1 \

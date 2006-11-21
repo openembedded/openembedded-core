@@ -17,7 +17,7 @@ HOMEPAGE = "http://www.sleepycat.com"
 LICENSE = "BSD Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r3"
+PR = "r7"
 
 SRC_URI = "http://downloads.sleepycat.com/db-${PV}.tar.gz"
 #SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"
@@ -55,7 +55,9 @@ FILES_${PN}-bin = "${bindir}/*"
 FILES_${PN}-dev = "${includedir} ${libdir}/*"
 
 #configuration - set in local.conf to override
-DB4_CONFIG ?= "--enable-o_direct --enable-smallbuild --enable-compat185"
+# All the --disable-* options replace --enable-smallbuild, which breaks a bunch of stuff (eg. postfix)
+DB4_CONFIG ?= "--enable-o_direct --disable-cryptography --disable-queue --disable-replication --disable-statistics --disable-verify --enable-compat185"
+
 EXTRA_OECONF = "${DB4_CONFIG}"
 
 # Override the MUTEX setting here, the POSIX library is

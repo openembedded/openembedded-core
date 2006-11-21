@@ -7,7 +7,7 @@ module_id() {
 if [ ! -f /etc/sysconfig/irda ]; then
 
     case `module_id` in
-	"HP iPAQ H2200" | "HP iPAQ HX4700")
+	"HP iPAQ H2200" | "HP iPAQ HX4700" | "HTC Universal")
 	    IRDA=yes
 	    DEVICE=/dev/ttyS2
 	    DONGLE=

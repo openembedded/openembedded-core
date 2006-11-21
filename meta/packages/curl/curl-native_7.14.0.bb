@@ -1,5 +1,6 @@
 require curl_${PV}.bb
 inherit native
+DEPENDS = "zlib-native"
 
 do_stage () {
         install -d ${STAGING_INCDIR}/curl

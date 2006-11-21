@@ -5,7 +5,7 @@ PR = "r0"
 DEPENDS = "ipkg-native"
 
 INHIBIT_DEFAULT_DEPS = "1"
-ALLOW_EMPTY = 1
+ALLOW_EMPTY = "1"
 PACKAGES = ""
 
 do_fetch() {
@@ -23,7 +23,7 @@ do_install() {
 do_stage() {
 }
 
-do_build[nostamp] = 1
+do_build[nostamp] = "1"
 do_build[dirs] = "${DEPLOY_DIR_IPK}"
 do_build() {
 	set -ex

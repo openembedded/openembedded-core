@@ -138,7 +138,7 @@ if [ ! -d /sys/class/ ]; then
   exit 1
 fi
 
-if [ ! -e /proc/sys/kernel/hotplug ]; then
+if [ ! -e /proc/sys/kernel/hotplug ] && [ ! -e /sys/kernel/uevent_helper ]; then
   echo "udev requires hotplug support, not started."
   exit 1
 fi
@@ -161,7 +161,11 @@ case "$1" in
     warn_if_interactive
 
     #echo /sbin/udevsend > /proc/sys/kernel/hotplug
-    echo "" > /proc/sys/kernel/hotplug
+    if [ -e /sys/kernel/uevent_helper ] ; then
+      echo "" > /sys/kernel/uevent_helper
+    else
+      echo "" > /proc/sys/kernel/hotplug
+    fi
     udevsend
     if [ "$UDEV_DISABLED" = "yes" ]; then
       echo "udev disabled on the kernel command line, not started."

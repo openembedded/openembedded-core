@@ -98,5 +98,5 @@ KERNEL=="rfcomm[0-9]*", NAME="%k", GROUP="users", MODE="0660"
 ACTION=="add", SUBSYSTEM=="firmware", RUN+="/lib/udev/firmware_helper"
 
 # Samsung UARTS
-KERNEL=="s3c2410_serial[0-9]"   NAME="ttySAC%n"
+KERNEL=="s3c2410_serial[0-9]",   NAME="ttySAC%n"
 

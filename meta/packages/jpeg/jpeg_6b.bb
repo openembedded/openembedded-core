@@ -1,11 +1,12 @@
-PR = "r2"
+DESCRIPTION = "libjpeg is a library for handling the JPEG (JFIF) image format."
+LICENSE ="jpeg"
 SECTION = "libs"
 PRIORITY = "required"
+
 DEPENDS = "libtool-cross"
-DESCRIPTION = "libjpeg is a library for handling the JPEG (JFIF) image format."
-PACKAGES =+ "jpeg-tools "
-FILES_jpeg-tools = "${bindir}/*"
-LICENSE ="jpeg"
+
+PR = "r5"
+
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
 	   file://debian.patch;patch=1 \
 	   file://ldflags.patch;patch=1 \
@@ -33,3 +34,8 @@ do_install() {
 		   ${D}${mandir}/man1 ${D}${libdir}
 	oe_runmake 'DESTDIR=${D}' install
 }
+
+PACKAGES =+ 		"jpeg-tools "
+FILES_jpeg-tools = 	"${bindir}/*"
+
+

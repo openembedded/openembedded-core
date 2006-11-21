@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 SECTION = "x11"
 DEPENDS = "gtk+"
-DESCRIPTION = "gcalctool is a powerful calculator
+DESCRIPTION = "gcalctool is a powerful calculator"
 PR = "r1"
 
 SRC_URI = "http://download.gnome.org/sources/${PN}/5.7/${PN}-${PV}.tar.gz \

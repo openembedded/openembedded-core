@@ -8,6 +8,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/e2fsprogs/e2fsprogs-${PV}.tar.gz \
 	file://no-hardlinks.patch;patch=1"
 S = "${WORKDIR}/e2fsprogs-${PV}"
 
+PARALLEL_MAKE = ""
+
 inherit autotools
 
 EXTRA_OECONF = "--enable-dynamic-e2fsck --sbindir=${base_sbindir}"
