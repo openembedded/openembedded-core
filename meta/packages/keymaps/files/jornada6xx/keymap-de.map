@@ -1,0 +1,597 @@
+keymaps 0-6,8-10,12
+keycode   1 = Escape           Escape          
+keycode   2 = one              exclam		bar          
+keycode   3 = two              quotedbl         twosuperior     
+keycode   4 = three            section          threesuperior   
+	control	keycode   4 = Escape          
+	alt	keycode   4 = Meta_three      
+	control	alt	keycode   4 = Meta_Escape     
+keycode   5 = four             dollar          
+	alt	keycode   5 = Meta_four       
+	shift	alt	keycode   5 = Meta_dollar     
+keycode   6 = five             percent         
+	alt	keycode   6 = Meta_five       
+	shift	alt	keycode   6 = Meta_percent    
+keycode   7 = six              ampersand       
+	control	keycode   7 = Control_asciicircum
+	alt	keycode   7 = Meta_six        
+	shift	alt	keycode   7 = Meta_ampersand  
+keycode   8 = seven            slash            braceleft       
+	alt	keycode   8 = Meta_seven      
+	shift	alt	keycode   8 = Meta_slash      
+	altgr	alt	keycode   8 = Meta_braceleft  
+keycode   9 = eight            parenleft        bracketleft     
+	alt	keycode   9 = Meta_eight      
+	shift	alt	keycode   9 = Meta_parenleft  
+	altgr	alt	keycode   9 = Meta_bracketleft
+keycode  10 = nine             parenright       bracketright    
+	altgr	control	keycode  10 = Control_bracketright
+	alt	keycode  10 = Meta_nine       
+	shift	alt	keycode  10 = Meta_parenright 
+	altgr	alt	keycode  10 = Meta_bracketright
+keycode  11 = zero             equal            braceright      
+	alt	keycode  11 = Meta_zero       
+	shift	alt	keycode  11 = Meta_equal      
+	altgr	alt	keycode  11 = Meta_braceright 
+keycode  12 = ssharp           question         backslash       
+	altgr	control	keycode  12 = Control_backslash
+	shift	alt	keycode  12 = Meta_question   
+	altgr	alt	keycode  12 = Meta_backslash  
+keycode  13 = apostrophe       grave           
+	alt	keycode  13 = 0x08b4          
+	shift	alt	keycode  13 = Meta_grave      
+keycode  14 = Delete           Delete          
+	alt	keycode  14 = Meta_Delete     
+	shift	alt	keycode  14 = Meta_Delete     
+keycode  15 = Tab              Meta_Tab        
+	alt	keycode  15 = Meta_Tab        
+keycode  16 = +q               +Q               at              
+	control	keycode  16 = Control_q       
+	shift	control	keycode  16 = Control_q       
+	altgr	control	keycode  16 = nul             
+	alt	keycode  16 = Meta_q          
+	shift	alt	keycode  16 = Meta_Q          
+	altgr	alt	keycode  16 = Meta_at         
+	control	alt	keycode  16 = Meta_Control_q  
+keycode  17 = +w              
+	shift	keycode  17 = +W              
+	shift	altgr	keycode  17 = VoidSymbol      
+	control	keycode  17 = Control_w       
+	shift	control	keycode  17 = Control_w       
+	altgr	control	keycode  17 = Control_w       
+	alt	keycode  17 = Meta_w          
+	shift	alt	keycode  17 = Meta_W          
+	altgr	alt	keycode  17 = Meta_w          
+	control	alt	keycode  17 = Meta_Control_w  
+keycode  18 = +e               +E               currency        
+	control	keycode  18 = Control_e       
+	shift	control	keycode  18 = Control_e       
+	altgr	control	keycode  18 = Control_e       
+	alt	keycode  18 = Meta_e          
+	shift	alt	keycode  18 = Meta_E          
+	altgr	alt	keycode  18 = Meta_e          
+	control	alt	keycode  18 = Meta_Control_e  
+keycode  19 = +r              
+	shift	keycode  19 = +R              
+	shift	altgr	keycode  19 = VoidSymbol      
+	control	keycode  19 = Control_r       
+	shift	control	keycode  19 = Control_r       
+	altgr	control	keycode  19 = Control_r       
+	alt	keycode  19 = Meta_r          
+	shift	alt	keycode  19 = Meta_R          
+	altgr	alt	keycode  19 = Meta_r          
+	control	alt	keycode  19 = Meta_Control_r  
+keycode  20 = +t              
+	shift	keycode  20 = +T              
+	shift	altgr	keycode  20 = VoidSymbol      
+	control	keycode  20 = Control_t       
+	shift	control	keycode  20 = Control_t       
+	altgr	control	keycode  20 = Control_t       
+	alt	keycode  20 = Meta_t          
+	shift	alt	keycode  20 = Meta_T          
+	altgr	alt	keycode  20 = Meta_t          
+	control	alt	keycode  20 = Meta_Control_t  
+keycode  21 = +z              
+	shift	keycode  21 = +Z              
+	shift	altgr	keycode  21 = VoidSymbol      
+	control	keycode  21 = Control_z       
+	shift	control	keycode  21 = Control_z       
+	altgr	control	keycode  21 = Control_z       
+	alt	keycode  21 = Meta_z          
+	shift	alt	keycode  21 = Meta_Z          
+	altgr	alt	keycode  21 = Meta_z          
+	control	alt	keycode  21 = Meta_Control_z  
+keycode  22 = +u              
+	shift	keycode  22 = +U              
+	shift	altgr	keycode  22 = VoidSymbol      
+	control	keycode  22 = Control_u       
+	shift	control	keycode  22 = Control_u       
+	altgr	control	keycode  22 = Control_u       
+	alt	keycode  22 = Meta_u          
+	shift	alt	keycode  22 = Meta_U          
+	altgr	alt	keycode  22 = Meta_u          
+	control	alt	keycode  22 = Meta_Control_u  
+keycode  23 = +i              
+	shift	keycode  23 = +I              
+	shift	altgr	keycode  23 = VoidSymbol      
+	control	keycode  23 = Tab             
+	shift	control	keycode  23 = Tab             
+	altgr	control	keycode  23 = Tab             
+	alt	keycode  23 = Meta_i          
+	shift	alt	keycode  23 = Meta_I          
+	altgr	alt	keycode  23 = Meta_i          
+	control	alt	keycode  23 = Meta_Tab        
+keycode  24 = +o              
+	shift	keycode  24 = +O              
+	shift	altgr	keycode  24 = VoidSymbol      
+	control	keycode  24 = Control_o       
+	shift	control	keycode  24 = Control_o       
+	altgr	control	keycode  24 = Control_o       
+	alt	keycode  24 = Meta_o          
+	shift	alt	keycode  24 = Meta_O          
+	altgr	alt	keycode  24 = Meta_o          
+	control	alt	keycode  24 = Meta_Control_o  
+keycode  25 = +p              
+	shift	keycode  25 = +P              
+	shift	altgr	keycode  25 = VoidSymbol      
+	control	keycode  25 = Control_p       
+	shift	control	keycode  25 = Control_p       
+	altgr	control	keycode  25 = Control_p       
+	alt	keycode  25 = Meta_p          
+	shift	alt	keycode  25 = Meta_P          
+	altgr	alt	keycode  25 = Meta_p          
+	control	alt	keycode  25 = Meta_Control_p  
+keycode  26 = +udiaeresis      +Udiaeresis     
+keycode  27 = plus             asterisk         asciitilde      
+	alt	keycode  27 = Meta_plus       
+	shift	alt	keycode  27 = Meta_asterisk   
+keycode  28 = Return          
+	shift	altgr	keycode  28 = VoidSymbol      
+	alt	keycode  28 = Meta_Control_m  
+keycode  29 = Control        
+	shift	keycode  29 = Compose         
+	shift	altgr	keycode  29 = VoidSymbol      
+keycode  30 = +a              
+	shift	keycode  30 = +A              
+	shift	altgr	keycode  30 = VoidSymbol      
+	control	keycode  30 = Control_a       
+	shift	control	keycode  30 = Control_a       
+	altgr	control	keycode  30 = Control_a       
+	alt	keycode  30 = Meta_a          
+	shift	alt	keycode  30 = Meta_A          
+	altgr	alt	keycode  30 = Meta_a          
+	control	alt	keycode  30 = Meta_Control_a  
+keycode  31 = +s              
+	shift	keycode  31 = +S              
+	shift	altgr	keycode  31 = VoidSymbol      
+	control	keycode  31 = Control_s       
+	shift	control	keycode  31 = Control_s       
+	altgr	control	keycode  31 = Control_s       
+	alt	keycode  31 = Meta_s          
+	shift	alt	keycode  31 = Meta_S          
+	altgr	alt	keycode  31 = Meta_s          
+	control	alt	keycode  31 = Meta_Control_s  
+keycode  32 = +d              
+	shift	keycode  32 = +D              
+	shift	altgr	keycode  32 = VoidSymbol      
+	control	keycode  32 = Control_d       
+	shift	control	keycode  32 = Control_d       
+	altgr	control	keycode  32 = Control_d       
+	alt	keycode  32 = Meta_d          
+	shift	alt	keycode  32 = Meta_D          
+	altgr	alt	keycode  32 = Meta_d          
+	control	alt	keycode  32 = Meta_Control_d  
+keycode  33 = +f              
+	shift	keycode  33 = +F              
+	shift	altgr	keycode  33 = VoidSymbol      
+	control	keycode  33 = Control_f       
+	shift	control	keycode  33 = Control_f       
+	altgr	control	keycode  33 = Control_f       
+	alt	keycode  33 = Meta_f          
+	shift	alt	keycode  33 = Meta_F          
+	altgr	alt	keycode  33 = Meta_f          
+	control	alt	keycode  33 = Meta_Control_f  
+keycode  34 = +g              
+	shift	keycode  34 = +G              
+	shift	altgr	keycode  34 = VoidSymbol      
+	control	keycode  34 = Control_g       
+	shift	control	keycode  34 = Control_g       
+	altgr	control	keycode  34 = Control_g       
+	alt	keycode  34 = Meta_g          
+	shift	alt	keycode  34 = Meta_G          
+	altgr	alt	keycode  34 = Meta_g          
+	control	alt	keycode  34 = Meta_Control_g  
+keycode  35 = +h              
+	shift	keycode  35 = +H              
+	shift	altgr	keycode  35 = VoidSymbol      
+	control	keycode  35 = BackSpace       
+	shift	control	keycode  35 = BackSpace       
+	altgr	control	keycode  35 = BackSpace       
+	alt	keycode  35 = Meta_h          
+	shift	alt	keycode  35 = Meta_H          
+	altgr	alt	keycode  35 = Meta_h          
+	control	alt	keycode  35 = Meta_BackSpace  
+keycode  36 = +j              
+	shift	keycode  36 = +J              
+	shift	altgr	keycode  36 = VoidSymbol      
+	control	keycode  36 = Linefeed        
+	shift	control	keycode  36 = Linefeed        
+	altgr	control	keycode  36 = Linefeed        
+	alt	keycode  36 = Meta_j          
+	shift	alt	keycode  36 = Meta_J          
+	altgr	alt	keycode  36 = Meta_j          
+	control	alt	keycode  36 = Meta_Linefeed   
+keycode  37 = +k              
+	shift	keycode  37 = +K              
+	shift	altgr	keycode  37 = VoidSymbol      
+	control	keycode  37 = Control_k       
+	shift	control	keycode  37 = Control_k       
+	altgr	control	keycode  37 = Control_k       
+	alt	keycode  37 = Meta_k          
+	shift	alt	keycode  37 = Meta_K          
+	altgr	alt	keycode  37 = Meta_k          
+	control	alt	keycode  37 = Meta_Control_k  
+keycode  38 = +l              
+	shift	keycode  38 = +L              
+	shift	altgr	keycode  38 = VoidSymbol      
+	control	keycode  38 = Control_l       
+	shift	control	keycode  38 = Control_l       
+	altgr	control	keycode  38 = Control_l       
+	alt	keycode  38 = Meta_l          
+	shift	alt	keycode  38 = Meta_L          
+	altgr	alt	keycode  38 = Meta_l          
+	control	alt	keycode  38 = Meta_Control_l  
+keycode  39 = +odiaeresis      +Odiaeresis     
+keycode  40 = +adiaeresis      +Adiaeresis     
+keycode  41 = F11		F23      
+	control	keycode  41 = Control_asciicircum
+	control	alt	keycode  41 = Meta_Control_asciicircum
+keycode  42 = Shift		Shift		Caps_Lock           
+	shift	altgr	keycode  42 = VoidSymbol      
+	control	keycode  42 = Compose         
+keycode  43 = numbersign       apostrophe      
+	alt	keycode  43 = Meta_numbersign 
+	shift	alt	keycode  43 = Meta_apostrophe 
+keycode  44 = +y		+Y		less              
+	shift	altgr	keycode  44 = VoidSymbol      
+	control	keycode  44 = Control_y       
+	shift	control	keycode  44 = Control_y       
+	altgr	control	keycode  44 = Control_y       
+	alt	keycode  44 = Meta_y          
+	shift	alt	keycode  44 = Meta_Y          
+	altgr	alt	keycode  44 = Meta_y          
+	control	alt	keycode  44 = Meta_Control_y  
+keycode  45 = +x		+X		greater              
+	shift	altgr	keycode  45 = VoidSymbol      
+	control	keycode  45 = Control_x       
+	shift	control	keycode  45 = Control_x       
+	altgr	control	keycode  45 = Control_x       
+	alt	keycode  45 = Meta_x          
+	shift	alt	keycode  45 = Meta_X          
+	altgr	alt	keycode  45 = Meta_x          
+	control	alt	keycode  45 = Meta_Control_x  
+keycode  46 = +c               +C               cent            
+	control	keycode  46 = Control_c       
+	shift	control	keycode  46 = Control_c       
+	altgr	control	keycode  46 = Control_c       
+	alt	keycode  46 = Meta_c          
+	shift	alt	keycode  46 = Meta_C          
+	altgr	alt	keycode  46 = Meta_c          
+	control	alt	keycode  46 = Meta_Control_c  
+keycode  47 = +v              
+	shift	keycode  47 = +V              
+	shift	altgr	keycode  47 = VoidSymbol      
+	control	keycode  47 = Control_v       
+	shift	control	keycode  47 = Control_v       
+	altgr	control	keycode  47 = Control_v       
+	alt	keycode  47 = Meta_v          
+	shift	alt	keycode  47 = Meta_V          
+	altgr	alt	keycode  47 = Meta_v          
+	control	alt	keycode  47 = Meta_Control_v  
+keycode  48 = +b              
+	shift	keycode  48 = +B              
+	shift	altgr	keycode  48 = VoidSymbol      
+	control	keycode  48 = Control_b       
+	shift	control	keycode  48 = Control_b       
+	altgr	control	keycode  48 = Control_b       
+	alt	keycode  48 = Meta_b          
+	shift	alt	keycode  48 = Meta_B          
+	altgr	alt	keycode  48 = Meta_b          
+	control	alt	keycode  48 = Meta_Control_b  
+keycode  49 = +n              
+	shift	keycode  49 = +N              
+	shift	altgr	keycode  49 = VoidSymbol      
+	control	keycode  49 = Control_n       
+	shift	control	keycode  49 = Control_n       
+	altgr	control	keycode  49 = Control_n       
+	alt	keycode  49 = Meta_n          
+	shift	alt	keycode  49 = Meta_N          
+	altgr	alt	keycode  49 = Meta_n          
+	control	alt	keycode  49 = Meta_Control_n  
+keycode  50 = +m               +M               mu              
+	control	keycode  50 = Control_m       
+	shift	control	keycode  50 = Control_m       
+	altgr	control	keycode  50 = Control_m       
+	alt	keycode  50 = Meta_m          
+	shift	alt	keycode  50 = Meta_M          
+	altgr	alt	keycode  50 = Meta_m          
+	control	alt	keycode  50 = Meta_Control_m  
+keycode  51 = comma            semicolon       
+	alt	keycode  51 = Meta_comma      
+	shift	alt	keycode  51 = Meta_semicolon  
+keycode  52 = period           colon           
+	alt	keycode  52 = Meta_period     
+	shift	alt	keycode  52 = Meta_colon      
+keycode  53 = minus            underscore       Meta_minus      
+	shift	control	keycode  53 = Control_underscore
+	alt	keycode  53 = Meta_minus      
+	shift	alt	keycode  53 = Meta_underscore 
+keycode  54 = Shift           
+	shift	altgr	keycode  54 = VoidSymbol      
+	control	keycode  54 = Compose         
+keycode  56 = Alt             
+	shift	altgr	keycode  56 = VoidSymbol      
+keycode  57 = space            space            Meta_space      
+	control	keycode  57 = nul             
+	alt	keycode  57 = Meta_space      
+	shift	alt	keycode  57 = Meta_space      
+	control	alt	keycode  57 = Meta_nul        
+keycode  58 = F9       
+	shift	altgr	keycode  58 = VoidSymbol      
+keycode  59 = F1               F13              Console_13      
+	control	keycode  59 = F25             
+	alt	keycode  59 = Console_1       
+	control	alt	keycode  59 = Console_1       
+keycode  60 = F2               F14              Console_14      
+	control	keycode  60 = F26             
+	alt	keycode  60 = Console_2       
+	control	alt	keycode  60 = Console_2       
+keycode  61 = F3               F15              Console_15      
+	control	keycode  61 = F27             
+	alt	keycode  61 = Console_3       
+	control	alt	keycode  61 = Console_3       
+keycode  62 = F4               F16              Console_16      
+	control	keycode  62 = F28             
+	alt	keycode  62 = Console_4       
+	control	alt	keycode  62 = Console_4       
+keycode  63 = F5               F17              Console_17      
+	control	keycode  63 = F29             
+	alt	keycode  63 = Console_5       
+	control	alt	keycode  63 = Console_5       
+keycode  64 = F6               F18              Console_18      
+	control	keycode  64 = F30             
+	alt	keycode  64 = Console_6       
+	control	alt	keycode  64 = Console_6       
+keycode  65 = F7               F19              Console_19      
+	control	keycode  65 = F31             
+	alt	keycode  65 = Console_7       
+	control	alt	keycode  65 = Console_7       
+keycode  66 = F8               F20              Console_20      
+	control	keycode  66 = F32             
+	alt	keycode  66 = Console_8       
+	control	alt	keycode  66 = Console_8       
+keycode  72 = Up
+	alt	keycode  72 = Prior           
+	shift	alt	keycode  72 = Scroll_Backward      
+keycode  75 = KP_4            
+	altgr	keycode  75 = Hex_4           
+	shift	altgr	keycode  75 = VoidSymbol      
+	alt	keycode  75 = Find         
+keycode  77 = KP_6            
+	altgr	keycode  77 = Hex_6           
+	shift	altgr	keycode  77 = VoidSymbol      
+	alt	keycode  77 = Select         
+keycode  80 = KP_2            
+	altgr	keycode  80 = Hex_2           
+	shift	altgr	keycode  80 = VoidSymbol      
+	alt	keycode  80 = Next         
+keycode  83 = Remove        
+	alt	keycode 83 = Insert
+	shift	altgr	keycode  83 = VoidSymbol      
+	altgr	control	keycode  83 = Boot            
+	control	alt	keycode  83 = Boot            
+keycode  91 = Insert
+keycode 112 = F10		F22           
+	shift	altgr	keycode 112 = VoidSymbol      
+	altgr	control	keycode 112 = VoidSymbol      
+	shift	alt	keycode 112 = VoidSymbol      
+	altgr	alt	keycode 112 = VoidSymbol      
+keycode 115 = AltGr            
+	shift	altgr	keycode 115 = VoidSymbol      
+	altgr	control	keycode 115 = VoidSymbol      
+	shift	alt	keycode 115 = VoidSymbol      
+	altgr	alt	keycode 115 = VoidSymbol      
+keycode 123 = asciicircum      degree
+string F1 = "\033[[A"
+string F2 = "\033[[B"
+string F3 = "\033[[C"
+string F4 = "\033[[D"
+string F5 = "\033[[E"
+string F6 = "\033[17~"
+string F7 = "\033[18~"
+string F8 = "\033[19~"
+string F9 = "\033[20~"
+string F10 = "\033[21~"
+string F11 = "\033[23~"
+string F12 = "\033[24~"
+string F13 = "\033[25~"
+string F14 = "\033[26~"
+string F15 = "\033[28~"
+string F16 = "\033[29~"
+string F17 = "\033[31~"
+string F18 = "\033[32~"
+string F19 = "\033[33~"
+string F20 = "\033[34~"
+string Find = "\033[1~"
+string Insert = "\033[2~"
+string Remove = "\033[3~"
+string Select = "\033[4~"
+string Prior = "\033[5~"
+string Next = "\033[6~"
+string Macro = "\033[M"
+string Pause = "\033[P"
+compose '`' 'A' to 'À'
+compose '`' 'a' to 'à'
+compose '\'' 'A' to 'Á'
+compose '\'' 'a' to 'á'
+compose '^' 'A' to 'Â'
+compose '^' 'a' to 'â'
+compose '~' 'A' to 'Ã'
+compose '~' 'a' to 'ã'
+compose '"' 'A' to 'Ä'
+compose '"' 'a' to 'ä'
+compose '-' 'a' to 'ª'
+compose '-' 'A' to 'ª'
+compose 'O' 'A' to 'Å'
+compose 'o' 'a' to 'å'
+compose '0' 'A' to 'Å'
+compose '0' 'a' to 'å'
+compose 'A' 'A' to 'Å'
+compose 'a' 'a' to 'å'
+compose '°' 'A' to 'Å'
+compose '°' 'a' to 'å'
+compose 'A' 'E' to 'Æ'
+compose 'a' 'e' to 'æ'
+compose ',' 'C' to 'Ç'
+compose ',' 'c' to 'ç'
+compose '^' 'C' to 'Ç'
+compose '^' 'c' to 'ç'
+compose '`' 'E' to 'È'
+compose '`' 'e' to 'è'
+compose '\'' 'E' to 'É'
+compose '\'' 'e' to 'é'
+compose '^' 'E' to 'Ê'
+compose '^' 'e' to 'ê'
+compose '"' 'E' to 'Ë'
+compose '"' 'e' to 'ë'
+compose '`' 'I' to 'Ì'
+compose '`' 'i' to 'ì'
+compose '\'' 'I' to 'Í'
+compose '\'' 'i' to 'í'
+compose '^' 'I' to 'Î'
+compose '^' 'i' to 'î'
+compose '"' 'I' to 'Ï'
+compose '"' 'i' to 'ï'
+compose '-' 'D' to 'Ð'
+compose '-' 'd' to 'ð'
+compose '^' 'D' to 'Ð'
+compose '^' 'd' to 'ð'
+compose '~' 'N' to 'Ñ'
+compose '~' 'n' to 'ñ'
+compose '^' 'N' to 'Ñ'
+compose '^' 'n' to 'ñ'
+compose '`' 'O' to 'Ò'
+compose '`' 'o' to 'ò'
+compose '\'' 'O' to 'Ó'
+compose '\'' 'o' to 'ó'
+compose '^' 'O' to 'Ô'
+compose '^' 'o' to 'ô'
+compose '~' 'O' to 'Õ'
+compose '~' 'o' to 'õ'
+compose '"' 'O' to 'Ö'
+compose '"' 'o' to 'ö'
+compose '/' 'O' to 'Ø'
+compose '/' 'o' to 'ø'
+compose '-' 'o' to 'º'
+compose '-' 'O' to 'º'
+compose '`' 'U' to 'Ù'
+compose '`' 'u' to 'ù'
+compose '\'' 'U' to 'Ú'
+compose '\'' 'u' to 'ú'
+compose '^' 'U' to 'Û'
+compose '^' 'u' to 'û'
+compose '"' 'U' to 'Ü'
+compose '"' 'u' to 'ü'
+compose '\'' 'Y' to 'Ý'
+compose '\'' 'y' to 'ý'
+compose 'T' 'H' to 'Þ'
+compose 't' 'h' to 'þ'
+compose 's' 's' to 'ß'
+compose '"' 'y' to 'ÿ'
+compose 's' 'z' to 'ß'
+compose 'n' 'n' to 'ñ'
+compose 'n' 'h' to 'ñ'
+compose 'N' 'Y' to 'Ñ'
+compose 'N' 'N' to 'Ñ'
+compose 'N' 'H' to 'Ñ'
+compose 'N' 'y' to 'Ñ'
+compose 'N' 'n' to 'Ñ'
+compose 'N' 'h' to 'Ñ'
+compose '-' 'L' to '£'
+compose '<' '<' to '«'
+compose '>' '>' to '»'
+compose '?' '?' to '¿'
+compose '^' '?' to '¿'
+compose '!' '!' to '¡'
+compose '^' '!' to '¡'
+compose '^' '1' to '¹'
+compose '^' '2' to '²'
+compose '^' '3' to '³'
+compose '+' '-' to '±'
+compose 'c' '=' to '¢'
+compose 'c' '/' to '¢'
+compose '/' 'c' to '¢'
+compose '-' 'c' to '¢'
+compose '-' 'C' to '¢'
+compose '|' 'c' to '¢'
+compose '|' 'C' to '¢'
+compose 'L' '=' to '£'
+compose '-' 'L' to '£'
+compose '-' 'l' to '£'
+compose '^' '*' to '×'
+compose '^' 'x' to '×'
+compose 'x' 'x' to '×'
+compose '^' '.' to '·'
+compose '.' '.' to '·'
+compose '^' '/' to '÷'
+compose '^' ':' to '÷'
+compose '-' ':' to '÷'
+compose ':' '-' to '÷'
+compose 'Y' '=' to '¥'
+compose '=' 'Y' to '¥'
+compose '-' 'Y' to '¥'
+compose '-' 'l' to '¥'
+compose '(' 'c' to '©'
+compose '"' 'c' to '©'
+compose 'O' 'C' to '©'
+compose '(' 'C' to '©'
+compose 'C' ')' to '©'
+compose '-' 'a' to 'ª'
+compose '-' 'A' to 'ª'
+compose '-' 'o' to 'º'
+compose '-' 'O' to 'º'
+compose '(' 'r' to '®'
+compose '"' 'r' to '®'
+compose 'O' 'R' to '®'
+compose '(' 'R' to '®'
+compose 'R' ')' to '®'
+compose 'm' 'u' to 'µ'
+compose 'P' 'P' to '¶'
+compose '1' '4' to '¼'
+compose '1' '2' to '½'
+compose '3' '4' to '¾'
+compose 'e' '=' to '¤'
+compose '-' 'e' to '¤'
+compose '-' 'E' to '¤'
+compose '=' 'E' to '¤'
+compose 'v' 'S' to '¦'
+compose '^' 'S' to '¦'
+compose 'v' 's' to '¨'
+compose '^' 's' to '¨'
+compose 'v' 'Z' to '´'
+compose '^' 'Z' to '´'
+compose 'v' 'z' to '¸'
+compose '^' 'z' to '¸'
+compose 'O' 'E' to '¼'
+compose 'O' 'e' to '¼'
+compose 'o' 'e' to '½'
+compose '"' 'Y' to '¾'
+compose 'i' 'j' to 'ÿ'
+compose 'I' 'J' to '¾'
+compose '|' 's' to '$'
+compose '|' 'S' to '$'
+compose 'S' 'S' to '§'
+compose '=' 'C' to '¤'
+compose 'C' '=' to '¤'
+compose 'o' 'x' to '¤'
+compose 'x' 'o' to '¤'

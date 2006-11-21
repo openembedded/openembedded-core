@@ -3,9 +3,9 @@ keymaps 0-2,4,8,12
 # 	      Default 		Shift 		AltGr 		Control 	Alt 		Ctrl+Alt 	
 keycode  29 = SControl	# Calendar	
 keycode  60 = SAlt	# Address
-keycode  63 = Return		
+keycode  63 = space	#Select
 keycode  68 = F13 	# Mail
-keycode  87 = Return		
+keycode  87 = F33	#OK	
 keycode  88 = F11 	# Menu
 keycode 102 = F12	# Home
 keycode 103 = Up		Up		Prior
@@ -73,6 +73,7 @@ string F17 = "\033[31~"
 string F18 = "\033[32~"
 string F19 = "\033[33~"
 string F20 = "\033[34~"
+string F33 = "\033[49~"
 string Find = "\033[1~"
 string Insert = "\033[2~"
 string Remove = "\033[3~"

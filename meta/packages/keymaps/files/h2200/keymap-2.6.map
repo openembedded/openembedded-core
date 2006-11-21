@@ -1,0 +1,17 @@
+# Kernel keymap for h2200 keys
+
+# Apps keys
+keycode  67 = F9
+keycode  68 = F10
+keycode  87 = F11
+keycode  88 = F12
+
+# Joypad
+keycode 103 = Up
+keycode 105 = Left
+keycode 106 = Right
+keycode 108 = Down
+keycode  28 = Return
+
+# Power key
+keycode 116 = F34

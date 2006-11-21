@@ -1,0 +1,278 @@
+# English keymap for Jornada 6xx devices.
+#
+# Created by Tibor Zenis ( zenis <at> fmph.uniba.sk )
+# (Lightly) Modified by Alex Palestras ( B_Linuz <at> yahoo.com )
+# plain, shift, altgr,  ctrl, shift + ctrl,  alt,  ctrl + alt
+
+keymaps 0-2,4-5,8,12
+keycode   1 = Escape           Escape          
+	alt	keycode   1 = Meta_Escape     
+keycode   2 = one              exclam		asciitilde
+	alt	keycode   2 = Meta_one
+keycode   3 = two              at		grave
+	alt	keycode   3 = Meta_two
+keycode   4 = three            numbersign      
+	alt	keycode   4 = Meta_three      
+	altgr	keycode   4 = pound
+keycode   5 = four             dollar
+	control	keycode   5 = Control_backslash
+	alt	keycode   5 = Meta_four       
+	altgr	keycode   5 = currency
+keycode   6 = five             percent         
+	control	keycode   6 = Control_bracketright
+	alt	keycode   6 = Meta_five       
+keycode   7 = six              asciicircum     
+	control	keycode   7 = Control_asciicircum
+	alt	keycode   7 = Meta_six        
+keycode   8 = seven            ampersand        braceleft
+	control	keycode   8 = Control_underscore
+	alt	keycode   8 = KP_7      
+keycode   9 = eight            asterisk         bracketleft
+	control	keycode   9 = Delete
+	alt	keycode   9 = KP_8      
+keycode  10 = nine             parenleft        bracketright    
+	alt	keycode  10 = KP_9       
+keycode  11 = zero             parenright       braceright      
+	alt	keycode  11 = KP_Divide       
+keycode  12 = minus            underscore       backslash
+	control	keycode  11 = Control_underscore
+	shift control	keycode  11 = Control_underscore
+	alt	keycode  11 = Meta_minus
+keycode  13 = equal            plus            
+	alt	keycode  13 = Meta_equal      
+keycode  14 = Delete           Delete          
+	control	keycode  14 = BackSpace       
+	alt	keycode  14 = Meta_Delete     
+keycode  15 = Tab              Tab             
+	alt	keycode  15 = Meta_Tab        
+keycode  16 = q               
+keycode  17 = w               
+keycode  18 = e
+	Shift	keycode  18 = E
+keycode  19 = r               
+keycode  20 = t               
+keycode  21 = y               
+	alt	keycode  21 = KP_4
+keycode  22 = u               
+	alt	keycode  22 = KP_5
+keycode  23 = i               
+	alt	keycode  23 = KP_6
+keycode  24 = o
+	alt	keycode  24 = KP_Multiply
+keycode  25 = p             
+		AltGr keycode 25 = braceleft  
+keycode  26 = backslash	bar
+		AltGr keycode 26 = braceright 
+keycode  28 = Return          
+	alt	keycode  28 = Meta_Control_m  
+keycode  29 = Control         
+	altgr	keycode  29 = Num_Lock
+keycode  30 = a
+keycode  31 = s               
+keycode  32 = d
+keycode  33 = f
+keycode  34 = g               
+keycode  35 = h               
+	alt	keycode  35 = KP_1
+keycode  36 = j               
+	alt	keycode  36 = KP_2
+keycode  37 = k               
+	alt	keycode  37 = KP_3
+keycode  38 = l               
+	alt	keycode  38 = KP_Subtract
+keycode  39 = semicolon        colon           bracketleft
+	alt	keycode  39 = Meta_semicolon
+keycode  40 = apostrophe       quotedbl        bracketright
+	control	keycode  40 = Control_g       
+	alt	keycode  40 = Meta_apostrophe
+keycode  41 = F11             
+	shift	keycode  41 = F21
+	altgr	keycode  41 = Console_23      
+	alt	keycode  41 = Console_11      
+	control	alt	keycode  41 = Console_11      
+keycode  42 = Shift           
+	altgr	keycode  42 = Caps_Lock
+keycode  44 = z               
+keycode  45 = x               
+keycode  46 = c
+keycode  47 = v               
+keycode  48 = b
+keycode  49 = n               
+	alt	keycode  49 = KP_0
+keycode  50 = m               
+	alt	keycode  50 = KP_Comma
+keycode  51 = comma            less            
+	alt	keycode  51 = KP_Period      
+keycode  52 = period           greater         
+	control	keycode  52 = Compose         
+	alt	keycode  52 = KP_Add     
+keycode  54 = Shift 
+keycode  56 = Alt             
+keycode  57 = space            space           
+	alt	keycode  57 = Meta_space      
+keycode  58 = F9              
+	shift	keycode  58 = F19             
+	altgr	keycode  58 = Console_21      
+	alt	keycode  58 = Console_9       
+	control	alt	keycode  58 = Console_9       
+keycode  59 = F1              
+	altgr	keycode  59 = Console_13      
+	alt	keycode  59 = Console_1       
+	control	alt	keycode  59 = Console_1 
+keycode  60 = F2              
+	shift	keycode  60 = F12             
+	altgr	keycode  60 = Console_14      
+	alt	keycode  60 = Console_2       
+	control	alt	keycode  60 = Console_2       
+keycode  61 = F3              
+	shift	keycode  61 = F13             
+	altgr	keycode  61 = Console_15      
+	alt	keycode  61 = Console_3       
+	control	alt	keycode  61 = Console_3       
+keycode  62 = F4              
+	shift	keycode  62 = F14             
+	altgr	keycode  62 = Console_16      
+	alt	keycode  62 = Console_4       
+	control	alt	keycode  62 = Console_4       
+keycode  63 = F5              
+	shift	keycode  63 = F15             
+	altgr	keycode  63 = Console_17      
+	alt	keycode  63 = Console_5       
+	control	alt	keycode  63 = Console_5       
+keycode  64 = F6              
+	shift	keycode  64 = F16             
+	altgr	keycode  64 = Console_18      
+	alt	keycode  64 = Console_6       
+	control	alt	keycode  64 = Console_6       
+keycode  65 = F7              
+	shift	keycode  65 = F17             
+	altgr	keycode  65 = Console_19      
+	alt	keycode  65 = Console_7       
+	control	alt	keycode  65 = Console_7       
+keycode  66 = F8              
+	shift	keycode  66 = F18             
+	altgr	keycode  66 = Console_20      
+	alt	keycode  66 = Console_8       
+	control	alt	keycode  66 = Console_8       
+keycode  72 = Up
+	shift	keycode  72 = Scroll_Backward           
+	altgr	keycode  72 = Scroll_Backward           
+	alt	keycode  72 = Prior 
+keycode  75 = Left
+	altgr	keycode  75 = Decr_Console
+	alt	keycode  75 = Find      
+keycode  77 = Right
+	altgr	keycode  77 = Incr_Console
+	alt	keycode  77 = Select         
+keycode  80 = Down
+	shift	keycode  80 = Scroll_Forward
+	altgr	keycode  80 = Scroll_Forward
+	alt	keycode  80 = Next         
+keycode  83 = Remove	Remove		Meta_Delete
+	alt	keycode  83 = Meta_Delete            
+keycode 112 = F10             
+	shift	keycode 112 = F20             
+	altgr	keycode 112 = Console_22      
+	alt	keycode 112 = Console_10      
+	control	alt	keycode 112 = Console_10      
+keycode 115 = slash	question        
+	control	keycode  115 = Delete          
+	alt	keycode  115 = Meta_slash      
+keycode 123 = AltGr
+keycode 219 = Insert
+string F1 = "\033[[A"
+string F2 = "\033[[B"
+string F3 = "\033[[C"
+string F4 = "\033[[D"
+string F5 = "\033[[E"
+string F6 = "\033[17~"
+string F7 = "\033[18~"
+string F8 = "\033[19~"
+string F9 = "\033[20~"
+string F10 = "\033[21~"
+string F11 = "\033[23~"
+string F12 = "\033[24~"
+string F13 = "\033[25~"
+string F14 = "\033[26~"
+string F15 = "\033[28~"
+string F16 = "\033[29~"
+string F17 = "\033[31~"
+string F18 = "\033[32~"
+string F19 = "\033[33~"
+string F20 = "\033[34~"
+string Find = "\033[1~"
+string Insert = "\033[2~"
+string Remove = "\033[3~"
+string Select = "\033[4~"
+string Prior = "\033[5~"
+string Next = "\033[6~"
+string Macro = "\033[M"
+string Pause = "\033[P"
+compose '`' 'A' to 'À'
+compose '`' 'a' to 'à'
+compose '\'' 'A' to 'Á'
+compose '\'' 'a' to 'á'
+compose '^' 'A' to 'Â'
+compose '^' 'a' to 'â'
+compose '~' 'A' to 'Ã'
+compose '~' 'a' to 'ã'
+compose '"' 'A' to 'Ä'
+compose '"' 'a' to 'ä'
+compose 'O' 'A' to 'Å'
+compose 'o' 'a' to 'å'
+compose '0' 'A' to 'Å'
+compose '0' 'a' to 'å'
+compose 'A' 'A' to 'Å'
+compose 'a' 'a' to 'å'
+compose 'A' 'E' to 'Æ'
+compose 'a' 'e' to 'æ'
+compose ',' 'C' to 'Ç'
+compose ',' 'c' to 'ç'
+compose '`' 'E' to 'È'
+compose '`' 'e' to 'è'
+compose '\'' 'E' to 'É'
+compose '\'' 'e' to 'é'
+compose '^' 'E' to 'Ê'
+compose '^' 'e' to 'ê'
+compose '"' 'E' to 'Ë'
+compose '"' 'e' to 'ë'
+compose '`' 'I' to 'Ì'
+compose '`' 'i' to 'ì'
+compose '\'' 'I' to 'Í'
+compose '\'' 'i' to 'í'
+compose '^' 'I' to 'Î'
+compose '^' 'i' to 'î'
+compose '"' 'I' to 'Ï'
+compose '"' 'i' to 'ï'
+compose '-' 'D' to 'Ð'
+compose '-' 'd' to 'ð'
+compose '~' 'N' to 'Ñ'
+compose '~' 'n' to 'ñ'
+compose '`' 'O' to 'Ò'
+compose '`' 'o' to 'ò'
+compose '\'' 'O' to 'Ó'
+compose '\'' 'o' to 'ó'
+compose '^' 'O' to 'Ô'
+compose '^' 'o' to 'ô'
+compose '~' 'O' to 'Õ'
+compose '~' 'o' to 'õ'
+compose '"' 'O' to 'Ö'
+compose '"' 'o' to 'ö'
+compose '/' 'O' to 'Ø'
+compose '/' 'o' to 'ø'
+compose '`' 'U' to 'Ù'
+compose '`' 'u' to 'ù'
+compose '\'' 'U' to 'Ú'
+compose '\'' 'u' to 'ú'
+compose '^' 'U' to 'Û'
+compose '^' 'u' to 'û'
+compose '"' 'U' to 'Ü'
+compose '"' 'u' to 'ü'
+compose '\'' 'Y' to 'Ý'
+compose '\'' 'y' to 'ý'
+compose 'T' 'H' to 'Þ'
+compose 't' 'h' to 'þ'
+compose 's' 's' to 'ß'
+compose '"' 'y' to 'ÿ'
+compose 's' 'z' to 'ß'
+compose 'i' 'j' to 'ÿ'

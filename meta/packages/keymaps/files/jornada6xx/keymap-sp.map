@@ -1,0 +1,222 @@
+# <ES.Keymap> for JLime
+# 
+# By Pau Rodriguez-Estivill
+# <20060708>
+
+strings as usual
+
+keycode   1 = Escape
+keycode   2 = one              
+          shift keycode 2 = exclam
+          AltGr keycode 2 = 0246
+keycode   3 = two             
+          Shift keycode 3 = quotedbl
+          AltGr keycode 3 = 0247
+keycode   4 = three            
+          shift keycode 4 = numbersign
+keycode   5 = four             
+          shift keycode 5 = dollar
+          AltGr keycode 5 = asciitilde
+keycode   6 = five             
+          shift keycode 6 = percent
+keycode   7 = six              
+          shift keycode 7 = ampersand
+keycode   8 = seven            
+          shift keycode 8 = slash
+keycode   9 = eight            
+          shift keycode 9 = parenleft
+keycode  10 = nine             
+         shift keycode 10 = parenright
+keycode  11 = zero             
+         shift keycode 11 = equal
+keycode  12 = apostrophe
+         shift keycode 12 = question
+         AltGr keycode 12 = backslash
+keycode  13 = 0250           
+         shift keycode 13 = 0255
+keycode  14 = Delete
+keycode  15 = Tab              
+keycode  16 = +q               +Q               
+         AltGr keycode 16 = at
+keycode  17 = +w              
+	shift	keycode  17 = +W              
+keycode  18 = +e               +E              
+         AltGr keycode 18 = currency
+keycode  19 = +r              
+	shift	keycode  19 = +R              
+keycode  20 = +t              
+	shift	keycode  20 = +T              
+keycode  21 = +y              
+	shift	keycode  21 = +Y
+keycode  22 = +u              
+	shift	keycode  22 = +U              
+keycode  23 = +i              
+	shift	keycode  23 = +I              
+keycode  24 = +o              
+	shift	keycode  24 = +O              
+keycode  25 = +p              
+	shift	keycode  25 = +P              
+keycode  26 = dead_acute
+        shift   keycode  26 = dead_diaeresis
+keycode  27 = plus             asterisk         asciitilde      
+keycode  28 = Return          
+keycode  29 = Control
+         AltGr keycode 29 = Num_Lock
+keycode  30 = +a              
+	shift	keycode  30 = +A              
+keycode  31 = +s              
+	shift	keycode  31 = +S              
+keycode  32 = +d              
+	shift	keycode  32 = +D              
+keycode  33 = +f              
+	shift	keycode  33 = +F              
+keycode  34 = +g              
+	shift	keycode  34 = +G              
+keycode  35 = +h              
+	shift	keycode  35 = +H              
+keycode  36 = +j              
+	shift	keycode  36 = +J              
+keycode  37 = +k              
+	shift	keycode  37 = +K              
+keycode  38 = +l              
+	shift	keycode  38 = +L              
+keycode  39 = +0244
+         shift keycode 39 = +0245
+keycode  40 = braceleft          
+         shift keycode 40 = bracketleft
+         AltGr keycode 40 = dead_circumflex         
+keycode  41 = F11
+         alt    keycode 41 = Console_11      
+         shift  keycode 41 = F12      
+         shift alt    keycode 41 = Console_12      
+keycode  42 = Shift         
+         AltGr keycode 42 = Caps_Lock         
+keycode  43 = braceright      
+         shift keycode 43 = bracketright
+         AltGr keycode 43 = dead_grave         
+keycode  44 = +z		+Z		              
+         AltGr keycode 44 = less         
+keycode  45 = +x		+X		              
+         AltGr keycode 45 = greater         
+keycode  46 = +c                +C                          
+         AltGr keycode 46 = 0247         
+         shift AltGr keycode 46 = 0246         
+keycode  47 = +v              
+	shift	keycode  47 = +V              
+keycode  48 = +b              
+	shift	keycode  48 = +B              
+keycode  49 = +n              
+	shift	keycode  49 = +N              
+keycode  50 = +m               +M               mu              
+keycode  51 = comma            
+	 shift   keycode  51 = semicolon
+keycode  52 = period          
+         shift keycode 52 = colon           
+keycode  53 = minus            underscore       Meta_minus      
+keycode  54 = Shift
+keycode  56 = Alt             
+keycode  57 = space            space            Meta_space      
+keycode  58 = F9       
+ 	 alt	keycode 58 = Console_9       
+keycode  59 = F1      
+keycode  60 = F2      
+keycode  61 = F3     
+ 	 alt	keycode 61 = Console_3       
+keycode  62 = F4      
+ 	 alt	keycode 62 = Console_4       
+keycode  63 = F5
+ 	 alt	keycode 63 = Console_5       
+keycode  64 = F6  
+ 	 alt	keycode 64 = Console_6       
+keycode  65 = F7               
+         alt    keycode 65 = Console_7      
+keycode  66 = F8  
+         alt    keycode 66 = Console_8      
+keycode  72 = Up
+         alt    keycode 72 = PageUp
+         shift alt    keycode 72 = Scroll_Backward
+keycode  75 = Left            
+         alt    keycode  75 = Home           
+keycode  77 = Right            
+         alt    keycode  77 = End            
+keycode  80 = Down    
+        alt     keycode 80 = PageDown    
+	shift alt keycode 80 = Scroll_Forward
+keycode  83 = Remove        
+	alt	keycode 83 = Insert
+keycode  91 = Insert
+keycode 112 = F10
+         alt    keycode 112 = Console_10      
+keycode 115 = AltGr
+keycode 123 = bar 
+        shift           keycode 123 = 0372        
+        AltGr           keycode 123 = +0252
+! compose for cp 850
+compose '`' 'A' to '∑'
+compose '`' 'a' to 'Ö'
+compose '\'' 'A' to 'µ'
+compose '\'' 'a' to '†'
+compose '^' 'A' to '∂'
+compose '^' 'a' to 'É'
+compose '~' 'A' to '«'
+compose '~' 'a' to '∆'
+compose '"' 'A' to 'é'
+compose '"' 'a' to 'Ñ'
+compose 'O' 'A' to 'è'
+compose 'o' 'a' to 'Ü'
+compose '0' 'A' to 'è'
+compose '0' 'a' to 'Ü'
+compose 'A' 'A' to 'è'
+compose 'a' 'a' to 'Ü'
+compose 'A' 'E' to 'í'
+compose 'a' 'e' to 'ë'
+compose ',' 'C' to 'Ä'
+compose ',' 'c' to 'á'
+compose '`' 'E' to '‘'
+compose '`' 'e' to 'ä'
+compose '\'' 'E' to 'ê'
+compose '\'' 'e' to 'Ç'
+compose '^' 'E' to '“'
+compose '^' 'e' to 'à'
+compose '"' 'E' to '”'
+compose '"' 'e' to 'â'
+compose '`' 'I' to 'ﬁ'
+compose '`' 'i' to 'ç'
+compose '\'' 'I' to '÷'
+compose '\'' 'i' to '°'
+compose '^' 'I' to '◊'
+compose '^' 'i' to 'å'
+compose '"' 'I' to 'ÿ'
+compose '"' 'i' to 'ã'
+compose '-' 'D' to '—'
+compose '-' 'd' to '–'
+compose '~' 'N' to '•'
+compose '~' 'n' to '§'
+compose '`' 'O' to '„'
+compose '`' 'o' to 'ï'
+compose '\'' 'O' to '‡'
+compose '\'' 'o' to '¢'
+compose '^' 'O' to '‚'
+compose '^' 'o' to 'ì'
+compose '~' 'O' to 'Â'
+compose '~' 'o' to '‰'
+compose '"' 'O' to 'ô'
+compose '"' 'o' to 'î'
+compose '/' 'O' to 'ù'
+compose '/' 'o' to 'õ'
+compose '`' 'U' to 'Î'
+compose '`' 'u' to 'ó'
+compose '\'' 'U' to 'È'
+compose '\'' 'u' to '£'
+compose '^' 'U' to 'Í'
+compose '^' 'u' to 'ñ'
+compose '"' 'U' to 'ö'
+compose '"' 'u' to 'Å'
+compose '\'' 'Y' to 'Ì'
+compose '\'' 'y' to 'Ï'
+compose 'T' 'H' to 'Ë'
+compose 't' 'h' to 'Á'
+compose 's' 's' to '·'
+compose '"' 'y' to 'ò'
+compose 's' 'z' to '·'
+compose 'i' 'j' to 'ò'
