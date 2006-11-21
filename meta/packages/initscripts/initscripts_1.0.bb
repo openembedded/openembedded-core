@@ -5,7 +5,7 @@ DEPENDS = "makedevs"
 DEPENDS_openzaurus = "makedevs virtual/kernel"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r73"
+PR = "r74"
 
 SRC_URI = "file://halt \
            file://ramdisk \
@@ -30,7 +30,8 @@ SRC_URI = "file://halt \
            file://sysfs.sh \
            file://device_table.txt \
            file://populate-volatile.sh \
-           file://volatiles "
+           file://volatiles \
+	   file://save-rtc.sh"
 
 SRC_URI_append_arm          = " file://alignment.sh"
 SRC_URI_append_openzaurus   = " file://checkversion"
@@ -81,6 +82,7 @@ do_install () {
 	install -m 0755    ${WORKDIR}/devpts		${D}${sysconfdir}/default
 	install -m 0755    ${WORKDIR}/sysfs.sh		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/populate-volatile.sh ${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/save-rtc.sh	${D}${sysconfdir}/init.d	
 	install -m 0644    ${WORKDIR}/volatiles		${D}${sysconfdir}/default/volatiles/00_core
 	if [ "${TARGET_ARCH}" = "arm" ]; then
 		install -m 0755 ${WORKDIR}/alignment.sh	${D}${sysconfdir}/init.d
@@ -89,7 +91,7 @@ do_install () {
 # Install device dependent scripts
 #
 
-	if [ "${DISTRO}" == "openzaurus" ]; then
+	if [ "${DISTRO}" = "openzaurus" ]; then
 		cat ${WORKDIR}/checkversion | sed -e "s,VERSION,${KERNEL_VERSION}-${DISTRO_VERSION}," > ${D}${sysconfdir}/init.d/checkversion
 		chmod 0755	${D}${sysconfdir}/init.d/checkversion
 		ln -sf		../init.d/checkversion  ${D}${sysconfdir}/rcS.d/S01version
@@ -118,6 +120,8 @@ do_install () {
 	ln -sf		../init.d/umountfs	${D}${sysconfdir}/rc0.d/S40umountfs
 	# udev will run at S55 if installed
 	ln -sf		../init.d/halt		${D}${sysconfdir}/rc0.d/S90halt
+	ln -sf		../init.d/save-rtc.sh	${D}${sysconfdir}/rc0.d/S25save-rtc.sh
+	ln -sf		../init.d/save-rtc.sh	${D}${sysconfdir}/rc6.d/S25save-rtc.sh		
 	ln -sf		../init.d/banner	${D}${sysconfdir}/rcS.d/S02banner
 	ln -sf		../init.d/checkroot.sh	${D}${sysconfdir}/rcS.d/S10checkroot.sh
 #	ln -sf		../init.d/checkfs.sh	${D}${sysconfdir}/rcS.d/S30checkfs.sh
