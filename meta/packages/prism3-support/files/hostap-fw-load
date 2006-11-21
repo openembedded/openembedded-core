@@ -1,4 +1,9 @@
 #!/bin/sh
+
+# dont handle non-wireless interfaces 
+if [ -n `cat /proc/net/wireless|grep $IFACE` ]; then 
+    exit 0 
+fi 
                                                        
 if test -e /sbin/cardctl; then
 	CARDCTL=/sbin/cardctl
@@ -18,3 +23,4 @@ fi
   
 # lets hope that run-parts obeys the order :D
 
+exit 0
