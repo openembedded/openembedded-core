@@ -7,11 +7,10 @@ DEPENDS = "glib-2.0 gnutls libxml2"
 inherit autotools pkgconfig
 
 FILES_${PN} = "${libdir}/lib*.so.*"
-FILES_${PN}-dev = "${includedir} ${libdir}"
-FILES_${PN}-doc = "${datadir}"
+FILES_${PN}-dev = "${includedir}/ ${libdir}/"
+FILES_${PN}-doc = "${datadir}/"
 
 do_stage() {
 	autotools_stage_all
-	install -d ${STAGING_DATADIR}/pkgconfig
-	install -m 0644 ${S}/libsoup.pc ${STAGING_DATADIR}/pkgconfig/
+	ln -s ${STAGING_DATADIR}/pkgconfig/libsoup.pc ${STAGING_DATADIR}/pkgconfig/libsoup-2.2.pc
 }
