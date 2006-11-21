@@ -9,7 +9,7 @@ SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dnotify"
 
-S = ${WORKDIR}/${PN}
+S = "${WORKDIR}/${PN}"
 
 inherit autotools pkgconfig
 
@@ -22,7 +22,7 @@ FILES_${PN} = "${bindir}/* \
 
 FILES_${PN}-dev += "${libdir}/matchbox-desktop \
 		   ${includedir}/matchbox-desktop \
-                   ${libdir}/matchbox/desktop/*.*a \
+		   ${libdir}/matchbox/desktop/*.*a \
 		   ${datadir}/matchbox/desktop/modules/*a"
 
 FILES_${PN}-dbg += "${libdir}/matchbox/desktop/.debug/"

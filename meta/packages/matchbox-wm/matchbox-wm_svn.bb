@@ -1,7 +1,7 @@
 SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
-DEPENDS = "libmatchbox libx11 libxext libxrender startup-notification expat matchbox-common gconf"
+DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat matchbox-common gconf"
 RDEPENDS = "matchbox-common"
 PV = "0.9.5+svn${SRCDATE}"
 PR = "r4"

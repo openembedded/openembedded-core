@@ -11,7 +11,7 @@ inherit autotools  pkgconfig
 # split into several packages plus one meta package
 PACKAGES = "${PN} ${PN}-industrial ${PN}-expose ${PN}-mbcrystal"
 
-ALLOW_EMPTY_${PN} = 1
+ALLOW_EMPTY_${PN} = "1"
 FILES_${PN} = ""
 RDEPENDS_${PN} = "${PN}-industrial ${PN}-expose ${PN}-mbcrystal"
 
