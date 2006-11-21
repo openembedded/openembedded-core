@@ -1,0 +1,11 @@
+--- /tmp/dbus-marshal-recursive.c	2006-07-28 14:58:08.000000000 +0200
++++ dbus-0.90/dbus/dbus-marshal-recursive.c	2006-07-28 14:58:18.724411000 +0200
+@@ -1294,7 +1294,7 @@
+                                                _dbus_string_get_length (&block->replacement) - block->padding,
+                                                &fixups))
+     goto oom;
+-
++printf("%s(%d)""got here", __FILE__, __LINE__);
+ #if RECURSIVE_MARSHAL_WRITE_TRACE
+   _dbus_verbose ("REPLACEMENT at padding %d len %d\n", block->padding,
+                  _dbus_string_get_length (&block->replacement) - block->padding);

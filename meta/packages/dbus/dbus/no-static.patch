@@ -1,0 +1,22 @@
+--- dbus-0.23.4/bus/Makefile.am.old	2006-02-04 11:51:26.000000000 +0000
++++ dbus-0.23.4/bus/Makefile.am	2006-02-04 11:51:27.000000000 +0000
+@@ -63,7 +63,7 @@
+ dbus_daemon_1_LDADD=					\
+ 	$(EFENCE)					\
+ 	$(DBUS_BUS_LIBS)				\
+-	$(top_builddir)/dbus/libdbus-convenience.la
++	$(top_builddir)/dbus/libdbus-1.la $(top_builddir)/dbus/libdbus-convenience.la
+ 
+ ## note that TESTS has special meaning (stuff to use in make check)
+ ## so if adding tests not to be run in make check, don't add them to 
+--- dbus-0.23.4/dbus/Makefile.am.old	2006-02-04 13:27:03.000000000 +0000
++++ dbus-0.23.4/dbus/Makefile.am	2006-02-04 13:27:04.000000000 +0000
+@@ -144,7 +144,7 @@
+ libdbus_1_la_LIBADD= $(DBUS_CLIENT_LIBS)
+ ## don't export symbols that start with "_" (we use this 
+ ## convention for internal symbols)
+-libdbus_1_la_LDFLAGS= -export-symbols-regex "^[^_].*"
++#libdbus_1_la_LDFLAGS= -export-symbols-regex "^[^_].*"
+ 
+ ## note that TESTS has special meaning (stuff to use in make check)
+ ## so if adding tests not to be run in make check, don't add them to 
