@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.gtk.org"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt cairo cups"
-PR = "r2"
+PR = "r3"
 
 # disable per default - untested and not all patches included.
 DEFAULT_PREFERENCE = "-1" 
@@ -13,13 +13,13 @@ DEFAULT_PREFERENCE = "-1"
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
            file://no-xwc.patch;patch=1 \
            file://automake-lossage.patch;patch=1 \
-	   file://disable-tooltips.patch;patch=1 \
-	   file://gtklabel-resize-patch;patch=1 \
-	   file://menu-deactivate.patch;patch=1 \
-	   file://xsettings.patch;patch=1 \
-	   file://scroll-timings.patch;patch=1 \
-	   file://small-gtkfilesel.patch;patch=1 \
-	   file://migration.patch;patch=1;pnum=0 \
+           file://disable-tooltips.patch;patch=1 \
+           file://gtklabel-resize-patch;patch=1 \
+           file://menu-deactivate.patch;patch=1 \
+           file://xsettings.patch;patch=1 \
+           file://scroll-timings.patch;patch=1 \
+           file://small-gtkfilesel.patch;patch=1 \
+           file://migration.patch;patch=1;pnum=0 \
            file://run-iconcache.patch;patch=1 \
            file://disable-print.patch;patch=1 \
            file://hardcoded_libtool.patch;patch=1 \
@@ -96,7 +96,7 @@ python populate_packages_prepend () {
 	printmodules_root = os.path.join(gtk_libdir, 'printbackends');
 
 	do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s', prologue + 'gdk-pixbuf-query-loaders > /etc/gtk-2.0/gdk-pixbuf.loaders')
-	do_split_packages(d, immodules_root, '^im-(.*)\.so$', 'gtk-immodule-%s', 'GTK input module for %s', prologue + 'gtk-query-immodules > /etc/gtk-2.0/gtk.immodules')
+	do_split_packages(d, immodules_root, '^im-(.*)\.so$', 'gtk-immodule-%s', 'GTK input module for %s', prologue + 'gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules')
 	do_split_packages(d, printmodules_root, '^libprintbackend-(.*)\.so$', 'gtk-printbackend-%s', 'GTK printbackend module for %s')
 
         if (bb.data.getVar('DEBIAN_NAMES', d, 1)):

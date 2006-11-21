@@ -1,24 +1,26 @@
-diff -urNd ../gtk+-2.6.3-r0.old/gtk+-2.6.3/gtk/gtkcalendar.c gtk+-2.6.3/gtk/gtkcalendar.c
---- ../gtk+-2.6.3-r0.old/gtk+-2.6.3/gtk/gtkcalendar.c	2005-04-06 16:57:04 +01:00
-+++ gtk+-2.6.3/gtk/gtkcalendar.c	2005-04-06 20:05:18 +01:00
-@@ -1023,9 +1023,11 @@
+Index: gtk+-2.10.6/gtk/gtkcalendar.c
+===================================================================
+--- gtk+-2.10.6.orig/gtk/gtkcalendar.c
++++ gtk+-2.10.6/gtk/gtkcalendar.c
+@@ -2482,9 +2482,11 @@ calendar_main_button_press (GtkCalendar	
  	}
  
-       gtk_calendar_select_and_focus_day (calendar, day);
+       calendar_select_and_focus_day (calendar, day);
 -    }
-+      
-+      // This change causes the calendar to disappear after choosing a day
++
++    // This change causes the calendar to disappear after choosing a day
 +/*    }
    else if (event->type == GDK_2BUTTON_PRESS)
 -    {
 +    {*/
-       private_data->in_drag = 0;
+       priv->in_drag = 0;
        if (day_month == MONTH_CURRENT)
  	g_signal_emit (calendar,
-diff -urNd ../gtk+-2.6.3-r0.old/gtk+-2.6.3/gtk/gtkfilesel.c gtk+-2.6.3/gtk/gtkfilesel.c
---- ../gtk+-2.6.3-r0.old/gtk+-2.6.3/gtk/gtkfilesel.c	2005-04-06 16:57:07 +01:00
-+++ gtk+-2.6.3/gtk/gtkfilesel.c	2005-04-07 13:40:32 +01:00
-@@ -2468,6 +2468,33 @@
+Index: gtk+-2.10.6/gtk/gtkfilesel.c
+===================================================================
+--- gtk+-2.10.6.orig/gtk/gtkfilesel.c
++++ gtk+-2.10.6/gtk/gtkfilesel.c
+@@ -2426,6 +2426,33 @@ gtk_file_selection_file_changed (GtkTree
        if (fs->last_selected != NULL)
  	g_free (fs->last_selected);
  

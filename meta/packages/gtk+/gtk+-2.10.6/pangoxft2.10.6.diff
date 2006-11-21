@@ -2441,3 +2441,16 @@ Index: gtk+-2.10.6/gdk/x11/gdkpixmap-x11.c
        _gdk_x11_drawable_finish (GDK_DRAWABLE (draw_impl));
      }
  
+--- gtk+-2.10.6.orig/gtk/gtkcalendar.c.orig	2006-11-14 14:39:34.000000000 -0800
++++ gtk+-2.10.6/gtk/gtkcalendar.c	2006-11-14 14:37:34.000000000 -0800
+@@ -1495,6 +1495,10 @@ gtk_calendar_realize (GtkWidget *widget)
+ 			     BACKGROUND_COLOR ( GTK_WIDGET ( calendar)));
+   gdk_window_show (priv->main_win);
+   gdk_window_set_user_data (priv->main_win, widget);
++
++  /* Set widgets gc */
++  calendar->gc = gdk_gc_new (widget->window);
++
+   gdk_window_set_background (widget->window, BACKGROUND_COLOR (widget));
+   gdk_window_show (widget->window);
+   gdk_window_set_user_data (widget->window, widget);

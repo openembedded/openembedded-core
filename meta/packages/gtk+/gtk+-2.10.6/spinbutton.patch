@@ -1,6 +1,8 @@
---- gtk+-2.4.3/gtk/gtkspinbutton.c.old	2004-04-22 14:49:27.000000000 +0100
-+++ gtk+-2.4.3/gtk/gtkspinbutton.c	2004-06-30 21:48:18.000000000 +0100
-@@ -733,7 +733,7 @@
+Index: gtk+-2.10.6/gtk/gtkspinbutton.c
+===================================================================
+--- gtk+-2.10.6.orig/gtk/gtkspinbutton.c
++++ gtk+-2.10.6/gtk/gtkspinbutton.c
+@@ -682,7 +682,7 @@ gtk_spin_button_size_allocate (GtkWidget
  
    spin = GTK_SPIN_BUTTON (widget);
    arrow_size = spin_button_get_arrow_size (spin);
@@ -9,7 +11,7 @@
    
    widget->allocation = *allocation;
    
-@@ -866,19 +866,16 @@
+@@ -815,19 +815,16 @@ gtk_spin_button_draw_arrow (GtkSpinButto
      {
        width = spin_button_get_arrow_size (spin_button) + 2 * widget->style->xthickness;
  
@@ -33,7 +35,7 @@
  	}
  
        if (spin_button_at_limit (spin_button, arrow_type))
-@@ -908,32 +905,17 @@
+@@ -857,32 +854,17 @@ gtk_spin_button_draw_arrow (GtkSpinButto
  	      shadow_type = GTK_SHADOW_OUT;
  	    }
  	}
@@ -69,7 +71,7 @@
  
        w = width / 2;
        w -= w % 2 - 1; /* force odd */
-@@ -1108,7 +1090,7 @@
+@@ -1062,7 +1044,7 @@ gtk_spin_button_button_press (GtkWidget 
  	  if (GTK_ENTRY (widget)->editable)
  	    gtk_spin_button_update (spin);
  	  
@@ -78,7 +80,7 @@
  	    {
  	      if (event->button == 1)
  		start_spinning (spin, GTK_ARROW_UP, spin->adjustment->step_increment);
-@@ -1143,44 +1125,11 @@
+@@ -1097,44 +1079,11 @@ gtk_spin_button_button_release (GtkWidge
  
    arrow_size = spin_button_get_arrow_size (spin);
  
@@ -121,7 +123,7 @@
 -      return TRUE;
 -    }
 -  else
--    return GTK_WIDGET_CLASS (parent_class)->button_release_event (widget, event);
+-    return GTK_WIDGET_CLASS (gtk_spin_button_parent_class)->button_release_event (widget, event);
 +  return TRUE;
  }
  
