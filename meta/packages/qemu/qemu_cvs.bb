@@ -1,4 +1,5 @@
 LICENSE = "GPL"
+DEPENDS = "zlib"
 PV = "0.8.2+cvs${SRCDATE}"
 PR = "r1"
 
