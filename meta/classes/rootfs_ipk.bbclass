@@ -8,22 +8,7 @@
 DEPENDS_prepend="ipkg-native ipkg-utils-native fakeroot-native "
 DEPENDS_append=" ${EXTRA_IMAGEDEPENDS}"
 
-PACKAGES = ""
-
-do_rootfs[nostamp] = "1"
-do_rootfs[dirs] = "${TOPDIR}"
-do_build[nostamp] = "1"
-
 IPKG_ARGS = "-f ${T}/ipkg.conf -o ${IMAGE_ROOTFS}"
-
-ROOTFS_POSTPROCESS_COMMAND ?= ""
-
-PID = "${@os.getpid()}"
-
-# some default locales
-IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
-
-LINGUAS_INSTALL = "${@" ".join(map(lambda s: "locale-base-%s" % s, bb.data.getVar('IMAGE_LINGUAS', d, 1).split()))}"
 
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
@@ -78,64 +63,23 @@ fakeroot rootfs_ipk_do_rootfs () {
 	log_check rootfs 	
 }
 
-log_check() {
-	set +x
-	for target in $*
-	do
-		lf_path="${WORKDIR}/temp/log.do_$target.${PID}"
-		
-		echo "log_check: Using $lf_path as logfile"
-		
-		if test -e "$lf_path"
-		then
-			lf_txt="`cat $lf_path`"
-			
-			for keyword_die in "Cannot find package" "exit 1" ERR Fail
-			do				
+rootfs_ipk_log_check() {
+	target="$1"
+        lf_path="$2"
+
+	lf_txt="`cat $lf_path`"
+	for keyword_die in "Cannot find package" "exit 1" ERR Fail
+	do				
 				
-				if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") &>/dev/null
-				then
-					echo "log_check: There were error messages in the logfile"
-					echo -e "log_check: Matched keyword: [$keyword_die]\n"
-					echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
-					echo ""
-					do_exit=1				
-				fi
-			done
-			test "$do_exit" = 1 && exit 1						
-		else
-			echo "Cannot find logfile [$lf_path]"
+		if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") &>/dev/null
+		then
+			echo "log_check: There were error messages in the logfile"
+			echo -e "log_check: Matched keyword: [$keyword_die]\n"
+			echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
+			echo ""
+			do_exit=1				
 		fi
-		echo "Logfile is clean"		
 	done
-
-	set -x
-	
+	test "$do_exit" = 1 && exit 1
+        true					
 }
-
-
-# set '*' as the rootpassword so the images
-# can decide if they want it or not
-
-zap_root_password () {
-	sed 's%^root:[^:]*:%root:*:%' < ${IMAGE_ROOTFS}/etc/passwd >${IMAGE_ROOTFS}/etc/passwd.new
-	mv ${IMAGE_ROOTFS}/etc/passwd.new ${IMAGE_ROOTFS}/etc/passwd	
-} 
-
-create_etc_timestamp() {
-	date +%2m%2d%2H%2M%Y >${IMAGE_ROOTFS}/etc/timestamp
-}
-
-# Turn any symbolic /sbin/init link into a file
-remove_init_link () {
-	if [ -h ${IMAGE_ROOTFS}/sbin/init ]; then
-		LINKFILE=${IMAGE_ROOTFS}`readlink ${IMAGE_ROOTFS}/sbin/init`
-		rm ${IMAGE_ROOTFS}/sbin/init
-		cp $LINKFILE ${IMAGE_ROOTFS}/sbin/init
-	fi
-}
-
-# export the zap_root_password, create_etc_timestamp and remote_init_link
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs
-
-addtask rootfs before do_build after do_install
