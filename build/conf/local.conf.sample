@@ -42,6 +42,9 @@ PACKAGE_CLASSES = "package_ipk"
 # <build directory>/tmp
 TMPDIR = "${OEROOT}/build/tmp"
 
+# Uncomment and set to allow bitbake to execute multiple tasks at once.
+# BB_NUMBER_THREADS = "1"
+
 # Uncomment these two if you want BitBake to build images useful for debugging.
 # DEBUG_BUILD = "1"
 # INHIBIT_PACKAGE_STRIP = "1"
