@@ -86,7 +86,7 @@ def check_sanity(e):
 	if not check_app_exists('${BUILD_PREFIX}g++', e.data):
 		missing = missing + "C++ Compiler,"
 
-	required_utilities = "patch diffstat texi2html cvs svn bzip2 tar gzip gawk"
+	required_utilities = "patch diffstat texi2html cvs svn bzip2 tar gzip gawk sdl-config"
 
 	for util in required_utilities.split():
 		if not check_app_exists( util, e.data ):
@@ -98,9 +98,6 @@ def check_sanity(e):
 
 	if not check_app_exists('gcc-3.4', e.data) and not check_app_exists('gcc-3.3', e.data) and gcc_version[0] != '3':
 		missing = missing + "gcc-3.x (needed for qemu-native),"
-
-        # FIXME: We also need to check for libsdl-dev and zlib-dev 
-        # for qemu-native...
 
 	if missing != "":
 		missing = missing.rstrip(',')
