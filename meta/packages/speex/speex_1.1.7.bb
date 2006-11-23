@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.speex.org"
 DEPENDS = "libogg"
 PR = "r0"
 
-SRC_URI = "http://www.speex.org/download/speex-${PV}.tar.gz"
+SRC_URI = "http://downloads.us.xiph.org/releases/speex/${PN}-${PV}.tar.gz"
 
 inherit autotools
 
