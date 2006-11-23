@@ -708,6 +708,10 @@ def base_after_parse_two(d):
 
 def base_after_parse(d):
     import bb, os
+
+    # Make sure MACHINE *isn't* exported
+    bb.data.delVarFlag('MACHINE', 'export', d)
+
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
     old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
     if (old_arch == mach_arch):
