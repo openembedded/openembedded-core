@@ -19,9 +19,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-if test x"$0" = x"./poky-init-build-env"; then
-   echo "Error: Run via '. ./poky-init-build-env'"
-   exit 1
-fi
+#if test x"$0" = x"./poky-init-build-env"; then
+#   echo "Error: Run via '. ./poky-init-build-env'"
+#   exit 1
+#fi
 
 . ./scripts/poky-env-internal
+
+bitbake $1
