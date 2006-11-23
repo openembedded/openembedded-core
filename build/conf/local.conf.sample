@@ -1,5 +1,5 @@
 # Where to cache the files OE downloads
-DL_DIR = "${OEROOT}/sources"
+DL_DIR ?= "${OEROOT}/sources"
 BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 
 # To enable extra packages, uncomment the following lines:
@@ -13,15 +13,15 @@ BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 BBMASK = ""
 
 # The machine to target
-MACHINE = "qemuarm"
+MACHINE ?= "qemuarm"
 
 # Other supported machines
-#MACHINE = "cmx270"
-#MACHINE = "qemux86"
-#MACHINE = "c7x0"
-#MACHINE = "akita"
-#MACHINE = "spitz"
-#MACHINE = "nokia770"
+#MACHINE ?= "cmx270"
+#MACHINE ?= "qemux86"
+#MACHINE ?= "c7x0"
+#MACHINE ?= "akita"
+#MACHINE ?= "spitz"
+#MACHINE ?= "nokia770"
 
 DISTRO = "poky"
 
