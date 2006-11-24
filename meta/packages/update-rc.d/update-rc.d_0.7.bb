@@ -7,6 +7,8 @@ PR = "r0"
 
 SRC_URI = "${HANDHELDS_CVS};module=apps/update-rc.d;tag=r0_7"
 
+PACKAGE_ARCH = "all"
+
 do_compile() {
 }
 
