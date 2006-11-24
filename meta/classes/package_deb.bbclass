@@ -154,16 +154,18 @@ python do_package_deb () {
         def pullData(l, d):
             l2 = []
             for i in l:
-                l2.append(bb.data.getVar(i, d, 1))
+                data = bb.data.getVar(i, d, 1)
+                if data is None:
+                    raise KeyError(f)
+		if i == 'TARGET_ARCH' and bb.data.getVar('PACKAGE_ARCH', d, 1) == 'all':
+                    data = 'all'
+                l2.append(data)
             return l2
 
         ctrlfile.write("Package: %s\n" % pkgname)
         # check for required fields
         try:
             for (c, fs) in fields:
-                for f in fs:
-                    if bb.data.getVar(f, localdata) is None:
-                        raise KeyError(f)
                 ctrlfile.write(unicode(c % tuple(pullData(fs, localdata))))
         except KeyError:
             (type, value, traceback) = sys.exc_info()
