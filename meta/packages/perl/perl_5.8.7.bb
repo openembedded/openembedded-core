@@ -29,7 +29,7 @@ do_configure() {
 	ln -sf ${HOSTPERL} ${STAGING_BINDIR_NATIVE}/hostperl
 	cp ${HOSTPERL} hostperl
 	cd Cross
-	rm Makefile.SH.patch
+	rm -f Makefile.SH.patch
 	cp ${WORKDIR}/Makefile.SH.patch .
 	cp ${WORKDIR}/config.sh-mipsel-linux .
 	cp ${WORKDIR}/config.sh-i386-linux .

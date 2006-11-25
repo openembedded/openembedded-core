@@ -20,7 +20,7 @@ do_configure() {
 	ln -sf ${HOSTPERL} ${STAGING_BINDIR_NATIVE}/hostperl 
 	cp ${HOSTPERL} hostperl
 	cd Cross
-	rm Makefile.SH.patch
+	rm -f Makefile.SH.patch
 	cp ${WORKDIR}/Makefile.SH.patch .
 	cp ${WORKDIR}/config.sh-mipsel-linux .
 	cp ${WORKDIR}/config.sh-i686-linux .
@@ -52,7 +52,7 @@ do_compile() {
 do_install() {
 	oe_runmake install
 	mv ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-${TARGET_OS}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
-	( cd ${D}/usr/bin/; rm perl; ln -s perl${PV} perl )
+	( cd ${D}/usr/bin/; rm -f perl; ln -s perl${PV} perl )
 }
 
 do_stage() {
