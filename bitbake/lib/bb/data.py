@@ -271,6 +271,9 @@ def expandKeys(alterdata, readdata = None):
         readdata = alterdata
 
     for key in keys(alterdata):
+        if not '${' in key:
+            continue
+
         ekey = expand(key, readdata)
         if key == ekey:
             continue
@@ -370,6 +373,9 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
 #       NOTE: should probably check for unbalanced {} within the var
         o.write("%s() {\n%s\n}\n" % (varExpanded, val))
     else:
+        if getVarFlag(var, "unexport", d):
+            o.write('unset %s\n' % varExpanded)
+            return 1
         if getVarFlag(var, "export", d):
             o.write('export ')
         else:
