@@ -13,7 +13,7 @@ do_compile() {
 }
 
 do_stage() {
-	install -m 0755 ${S}/update-rc.d ${STAGING_BINDIR}/
+	install -m 0755 ${S}/update-rc.d ${STAGING_BINDIR_NATIVE}/
 }
 
 do_install() {

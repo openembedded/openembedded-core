@@ -6,8 +6,8 @@ SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar
            file://game.png"
 
 do_compile_prepend = " \
-        export XLDFLAGS='${LDFLAGS} `${STAGING_BINDIR}/pkg-config gtk+-2.0 --libs`'; \
-	export CFLAGS='${CFLAGS} -I./ `${STAGING_BINDIR}/pkg-config gtk+-2.0 --cflags`'; "
+        export XLDFLAGS='${LDFLAGS} `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --libs`'; \
+	export CFLAGS='${CFLAGS} -I./ `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --cflags`'; "
 
 FILES_${PN} = "${prefix}/games/* ${datadir}/applications/* ${datadir}/pixmaps"
 FILES_${PN}-dbg += "${prefix}/games/.debug"

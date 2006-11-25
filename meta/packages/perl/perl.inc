@@ -14,10 +14,10 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 	file://config.sh-mipsel-linux \
 	file://config.sh-i686-linux"
 
-HOSTPERL="${STAGING_BINDIR}/perl${PV}"
+HOSTPERL="${STAGING_BINDIR_NATIVE}/perl${PV}"
 
 do_configure() {
-	ln -sf ${HOSTPERL} ${STAGING_BINDIR}/hostperl 
+	ln -sf ${HOSTPERL} ${STAGING_BINDIR_NATIVE}/hostperl 
 	cp ${HOSTPERL} hostperl
 	cd Cross
 	rm Makefile.SH.patch

@@ -10,7 +10,7 @@ python () {
 def quiet_libtool(bb,d):
 	deps = (bb.data.getVar('DEPENDS', d, 1) or "").split()
 	if 'libtool-cross' in deps:
-		return "'LIBTOOL=${STAGING_BINDIR}/${HOST_SYS}-libtool --silent'"
+		return "'LIBTOOL=${STAGING_BINDIR_NATIVE}/${HOST_SYS}-libtool --silent'"
 	elif 'libtool-native' in deps:
 		return "'LIBTOOL=${B}/${HOST_SYS}-libtool --silent'"
 	else:

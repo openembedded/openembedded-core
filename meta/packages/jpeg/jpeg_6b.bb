@@ -16,7 +16,7 @@ S = "${WORKDIR}/jpeg-${PV}"
 inherit autotools 
 
 EXTRA_OECONF="--enable-static --enable-shared"
-EXTRA_OEMAKE='"LIBTOOL=${STAGING_BINDIR}/${HOST_SYS}-libtool"'
+EXTRA_OEMAKE='"LIBTOOL=${STAGING_BINDIR_NATIVE}/${HOST_SYS}-libtool"'
 
 CFLAGS_append = " -D_REENTRANT"
 

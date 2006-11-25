@@ -26,7 +26,7 @@ PARALLEL_MAKE = ""
 PR = "r21"
 
 do_configure() {
-	ln -sf ${HOSTPERL} ${STAGING_BINDIR}/hostperl
+	ln -sf ${HOSTPERL} ${STAGING_BINDIR_NATIVE}/hostperl
 	cp ${HOSTPERL} hostperl
 	cd Cross
 	rm Makefile.SH.patch

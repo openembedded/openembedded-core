@@ -22,7 +22,7 @@ INITSCRIPT_NAME = "apmd"
 INITSCRIPT_PARAMS = "defaults"
 
 do_compile() {
-	oe_runmake "LIBTOOL=${STAGING_BINDIR}/${TARGET_PREFIX}libtool" apm apmd
+	oe_runmake "LIBTOOL=${STAGING_BINDIR_NATIVE}/${TARGET_PREFIX}libtool" apm apmd
 }
 
 do_stage() {

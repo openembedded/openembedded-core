@@ -9,7 +9,7 @@ SRC_URI = "http://jabberstudio.2nw.net/${PN}/${PN}-${PV}.tar.gz \
 
 inherit autotools pkgconfig
 
-export PKG_CONFIG="${STAGING_BINDIR}/pkg-config"
+export PKG_CONFIG="${STAGING_BINDIR_NATIVE}/pkg-config"
 
 EXTRA_OECONF = "--disable-binreloc"
 

@@ -19,7 +19,7 @@ export MOZ_OBJDIR = "${S}"
 export CONFIGURE_ARGS = "${EXTRA_OECONF}"
 export HOST_LIBIDL_CFLAGS = "`${HOST_LIBIDL_CONFIG} --cflags`"
 export HOST_LIBIDL_LIBS = "`${HOST_LIBIDL_CONFIG} --libs`"
-export HOST_LIBIDL_CONFIG = "PKG_CONFIG_PATH=${STAGING_BINDIR}/../share/pkgconfig pkg-config libIDL-2.0"
+export HOST_LIBIDL_CONFIG = "PKG_CONFIG_PATH=${STAGING_DIR}/${BUILD_SYS}/share/pkgconfig pkg-config libIDL-2.0"
 export HOST_CC = "${BUILD_CC}"
 export HOST_CXX = "${BUILD_CXX}"
 export HOST_CFLAGS = "${BUILD_CFLAGS}"
@@ -33,8 +33,8 @@ mozilla_do_configure() {
 		set -e
 		for cg in `find ${S} -name config.guess`; do
 			install -m 0755 \
-			${STAGING_BINDIR}/../share/gnu-config/config.guess \
-			${STAGING_BINDIR}/../share/gnu-config/config.sub \
+			${STAGING_DIR}/${BUILD_SYS}/share/gnu-config/config.guess \
+			${STAGING_DIR}/${BUILD_SYS}/share/gnu-config/config.sub \
 			`dirname $cg`/
 		done
 	)

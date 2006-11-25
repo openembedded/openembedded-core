@@ -18,7 +18,7 @@ python do_package_deb_install () {
     rootfs = bb.data.getVar('IMAGE_ROOTFS', d, 1)
     debdir = bb.data.getVar('DEPLOY_DIR_DEB', d, 1)
     stagingdir = bb.data.getVar('STAGING_DIR', d, 1)
-    stagingbindir = bb.data.getVar('STAGING_BINDIR', d, 1)
+    stagingbindir = bb.data.getVar('STAGING_BINDIR_NATIVE', d, 1)
     tmpdir = bb.data.getVar('TMPDIR', d, 1)
 
     if None in (pkg,pkgfn,rootfs):
