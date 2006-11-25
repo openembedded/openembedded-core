@@ -711,6 +711,7 @@ def base_after_parse(d):
 
     # Make sure MACHINE *isn't* exported
     bb.data.delVarFlag('MACHINE', 'export', d)
+    bb.data.setVarFlag('MACHINE', 'unexport', 1, d)
 
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
     old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
