@@ -29,7 +29,9 @@ fakeroot rootfs_deb_do_rootfs () {
 		priority=$(expr $priority + 5)
 	done
 
-	cat "${STAGING_DIR}/etc/apt/apt.conf.sample" | sed -e 's#Architecture ".*";#Architecture "${TARGET_ARCH}";#' > "${STAGING_DIR}/etc/apt/apt-rootfs.conf"
+	cat "${STAGING_DIR}/etc/apt/apt.conf.sample" \
+		| sed -e 's#Architecture ".*";#Architecture "${TARGET_ARCH}";#' \
+		> "${STAGING_DIR}/etc/apt/apt-rootfs.conf"
 
 	export APT_CONFIG="${STAGING_DIR}/etc/apt/apt-rootfs.conf"
 	export D=${IMAGE_ROOTFS}
@@ -73,12 +75,19 @@ fakeroot rootfs_deb_do_rootfs () {
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
 
+	# Mark all packages installed
+	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" ${IMAGE_ROOTFS}/var/dpkg/status
+
+	# Attempt to run preinsts
+	# Mark packages with preinst failures as unpacked
 	for i in ${IMAGE_ROOTFS}/var/dpkg/info/*.preinst; do
 		if [ -f $i ] && ! sh $i; then
 			_flag unpacked `basename $i .preinst`
 		fi
 	done
 
+	# Attempt to run postinsts
+	# Mark packages with postinst failures as unpacked
 	for i in ${IMAGE_ROOTFS}/var/dpkg/info/*.postinst; do
 		if [ -f $i ] && ! sh $i configure; then
 			_flag unpacked `basename $i .postinst`
@@ -86,6 +95,13 @@ fakeroot rootfs_deb_do_rootfs () {
 	done
 
 	set -e
+
+	# Hacks to make dpkg/ipkg coexist for now
+	mv ${IMAGE_ROOTFS}/var/dpkg ${IMAGE_ROOTFS}/usr/
+	rmdir ${IMAGE_ROOTFS}/usr/dpkg/alternatives
+	ln -s /usr/lib/ipkg/alternatives ${IMAGE_ROOTFS}/usr/dpkg/alternatives
+	ln -s /usr/dpkg/info ${IMAGE_ROOTFS}/usr/lib/ipkg/info
+	ln -s /usr/dpkg/status ${IMAGE_ROOTFS}/usr/lib/ipkg/status
 
 	${ROOTFS_POSTPROCESS_COMMAND}
 
