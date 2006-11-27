@@ -22,7 +22,7 @@ python do_stage_config () {
 	outdir = os.path.join(bb.data.getVar('sysconfdir', d, 1), 'apt')
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
-	outpath = os.path.join(outdir, 'apt.conf')
+	outpath = os.path.join(outdir, 'apt.conf.sample')
 
 	outfile = file(outpath, 'w')
 	outfile.write(data)
