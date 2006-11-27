@@ -29,7 +29,9 @@ fakeroot rootfs_deb_do_rootfs () {
 		priority=$(expr $priority + 5)
 	done
 
-	export APT_CONFIG="${STAGING_DIR}/etc/apt/apt.conf"
+	cat "${STAGING_DIR}/etc/apt/apt.conf.sample" | sed -e 's#Architecture ".*";#Architecture "${TARGET_ARCH}";#' > "${STAGING_DIR}/etc/apt/apt-rootfs.conf"
+
+	export APT_CONFIG="${STAGING_DIR}/etc/apt/apt-rootfs.conf"
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
