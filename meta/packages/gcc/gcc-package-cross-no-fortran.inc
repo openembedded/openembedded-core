@@ -7,20 +7,14 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 PACKAGES = "libgcc libstdc++ libg2c libg2c-dev"
 
-PACKAGE_ARCH_libg2c = "${TARGET_ARCH}"
-PACKAGE_ARCH_libg2c-dev = "${TARGET_ARCH}"
-
 # Called from within gcc-cross, so libdir is set wrong
 FILES_libg2c = "${target_libdir}/libg2c.so.*"
 FILES_libg2c-dev = "${target_libdir}/libg2c.so \
 		    ${target_libdir}/libg2c.a \
 		    ${target_libdir}/libfrtbegin.a"
 
-PACKAGE_ARCH_libgcc = "${TARGET_ARCH}"
 FILES_libgcc = "${target_base_libdir}/libgcc_s.so.1"
 
-PACKAGE_ARCH_libstdc++ = "${TARGET_ARCH}"
-PACKAGE_ARCH_libstdc++-dev = "${TARGET_ARCH}"
 FILES_libstdc++ = "${target_libdir}/libstdc++.so.*"
 FILES_libstdc++-dev = "${target_includedir}/c++/${PV} \
 		       ${target_libdir}/libstdc++.so \

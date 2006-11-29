@@ -35,7 +35,6 @@ FILES_cpp-symlinks = "${bindir}/cpp"
 FILES_gcov = "${bindir}/${TARGET_PREFIX}gcov"
 FILES_gcov-symlinks = "${bindir}/gcov"
 
-PACKAGE_ARCH_libg2c-dev = "${TARGET_ARCH}"
 # Called from within gcc-cross, so libdir is set wrong
 FILES_libg2c-dev = "${libdir}/libg2c.so \
 		    ${libdir}/libg2c.a \
@@ -46,7 +45,6 @@ FILES_g++ = "${bindir}/${TARGET_PREFIX}g++ \
 FILES_g++-symlinks = "${bindir}/c++ \
 			    ${bindir}/g++"
 
-PACKAGE_ARCH_libstdc++-dev = "${TARGET_ARCH}"
 FILES_libstdc++-dev = "${includedir}/c++/${BINV} \
 		       ${libdir}/libstdc++.so \
 		       ${libdir}/libstdc++.la \

@@ -37,11 +37,8 @@ FILES_${PN}-c++ = "${bindir}/${TARGET_PREFIX}g++ \
 FILES_${PN}-c++-symlinks = "${bindir}/c++ \
 			    ${bindir}/g++"
 
-PACKAGE_ARCH_libgcc = "${TARGET_ARCH}"
 FILES_libgcc = "/lib/libgcc_s.so.*"
 
-PACKAGE_ARCH_libstdc++ = "${TARGET_ARCH}"
-PACKAGE_ARCH_libstdc++-dev = "${TARGET_ARCH}"
 # Called from within gcc-cross, so libdir is set wrong
 #FILES_libstdc++ = "${libdir}/libstdc++.so.*"
 FILES_libstdc++ = "${libdir}/libstdc++.so.*"
