@@ -36,8 +36,8 @@ DISTRO_TYPE = "debug"
 # The first package type listed will be used for rootfs generation
 # include 'package_deb' for debs
 # include 'package_ipk' for ipks
-#PACKAGE_CLASSES = "package_deb package_ipk"
-PACKAGE_CLASSES = "package_ipk"
+#PACKAGE_CLASSES ?= "package_deb package_ipk"
+PACKAGE_CLASSES ?= "package_ipk"
 
 
 # Uncomment this to specify where BitBake should create its temporary files.
