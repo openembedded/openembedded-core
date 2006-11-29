@@ -11,6 +11,7 @@ DEPENDS = "\
     task-oh-extras"
     
 RDEPENDS = "\
+    task-base \
     task-oh-boot \
     task-oh-boot-extras \
     task-oh-base \
@@ -20,7 +21,7 @@ RDEPENDS = "\
     task-oh-extraapps \
     ${XSERVER} "
 
-export IPKG_INSTALL = "${RDEPENDS}"
+export PACKAGE_INSTALL = "${RDEPENDS}"
 #ROOTFS_POSTPROCESS_COMMAND += "zap_root_password; "
 
 inherit image

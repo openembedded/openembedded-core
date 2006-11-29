@@ -7,4 +7,5 @@ ALLOW_EMPTY = "1"
 
 RDEPENDS_task-oh-extraapps = "\
     madplay \
+    maemo-mapper-nohildon \
     mc"
