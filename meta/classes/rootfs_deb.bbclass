@@ -5,7 +5,7 @@ fakeroot rootfs_deb_do_rootfs () {
 	set +e
 	mkdir -p ${IMAGE_ROOTFS}/var/dpkg/{info,updates}
 
-	rm -f ${STAGING_DIR}/etc/apt/sources.list
+	rm -f ${STAGING_DIR}/etc/apt/sources.list.rev
 	rm -f ${STAGING_DIR}/etc/apt/preferences
 	> ${IMAGE_ROOTFS}/var/dpkg/status
 	> ${IMAGE_ROOTFS}/var/dpkg/available
@@ -21,13 +21,17 @@ fakeroot rootfs_deb_do_rootfs () {
 			rm -f Packages.gz Packages Packages.bz2
 		# fi
 		apt-ftparchive packages . | bzip2 > Packages.bz2
+		echo "Label: $arch" > Release
 
-		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_DIR}/etc/apt/sources.list
+		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_DIR}/etc/apt/sources.list.rev
 		(echo "Package: *"
-		echo "Pin origin ${DEPLOY_DIR_DEB}/$arch"
-		echo "Pin-Priority: $((800 + $priority))") >> ${STAGING_DIR}/etc/apt/preferences
+		echo "Pin: release l=$arch"
+		echo "Pin-Priority: $((800 + $priority))"
+		echo) >> ${STAGING_DIR}/etc/apt/preferences
 		priority=$(expr $priority + 5)
 	done
+
+	tac ${STAGING_DIR}/etc/apt/sources.list.rev > ${STAGING_DIR}/etc/apt/sources.list
 
 	cat "${STAGING_DIR}/etc/apt/apt.conf.sample" \
 		| sed -e 's#Architecture ".*";#Architecture "${TARGET_ARCH}";#' \
