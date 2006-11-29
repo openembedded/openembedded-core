@@ -40,7 +40,6 @@ __word__ = re.compile(r"\S+")
 __infunc__ = ""
 __inpython__ = False
 __body__   = []
-__bbpath_found__ = 0
 __classname__ = ""
 classes = [ None, ]
 
@@ -58,25 +57,24 @@ def supports(fn, d):
     return localfn[-3:] == ".bb" or localfn[-8:] == ".bbclass" or localfn[-4:] == ".inc"
 
 def inherit(files, d):
-    __inherit_cache = data.getVar('__inherit_cache', d) or ""
+    __inherit_cache = data.getVar('__inherit_cache', d) or []
     fn = ""
     lineno = 0
-    for f in files:
-        file = data.expand(f, d)
+    files = data.expand(files, d)
+    for file in files:
         if file[0] != "/" and file[-8:] != ".bbclass":
             file = os.path.join('classes', '%s.bbclass' % file)
 
-        if not file in __inherit_cache.split():
+        if not file in __inherit_cache:
             bb.msg.debug(2, bb.msg.domain.Parsing, "BB %s:%d: inheriting %s" % (fn, lineno, file))
-            __inherit_cache += " %s" % file
+            __inherit_cache.append( file )
             include(fn, file, d, "inherit")
     data.setVar('__inherit_cache', __inherit_cache, d)
 
 
 def handle(fn, d, include = 0):
-    global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __infunc__, __body__, __bbpath_found__, __residue__
+    global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __infunc__, __body__, __residue__
     __body__ = []
-    __bbpath_found__ = 0
     __infunc__ = ""
     __classname__ = ""
     __residue__ = []
@@ -104,7 +102,6 @@ def handle(fn, d, include = 0):
     if not os.path.isabs(fn):
         f = None
         for p in bbpath:
-            p = data.expand(p, d)
             j = os.path.join(p, fn)
             if os.access(j, os.R_OK):
                 abs_fn = j
@@ -147,39 +144,35 @@ def handle(fn, d, include = 0):
             data.expandKeys(d)
             data.update_data(d)
             anonqueue = data.getVar("__anonqueue", d, 1) or []
-            for anon in anonqueue:
-                data.setVar("__anonfunc", anon["content"], d)
-                data.setVarFlags("__anonfunc", anon["flags"], d)
-                from bb import build
-                try:
-                    t = data.getVar('T', d)
-                    data.setVar('T', '${TMPDIR}/', d)
-                    build.exec_func("__anonfunc", d)
-                    data.delVar('T', d)
-                    if t:
-                        data.setVar('T', t, d)
-                except Exception, e:
-                    bb.msg.debug(1, bb.msg.domain.Parsing, "executing anonymous function: %s" % e)
-                    raise
+            body = [x['content'] for x in anonqueue]
+            flag = { 'python' : 1, 'func' : 1 }
+            data.setVar("__anonfunc", "\n".join(body), d)
+            data.setVarFlags("__anonfunc", flag, d)
+            from bb import build
+            try:
+                t = data.getVar('T', d)
+                data.setVar('T', '${TMPDIR}/', d)
+                build.exec_func("__anonfunc", d)
+                data.delVar('T', d)
+                if t:
+                    data.setVar('T', t, d)
+            except Exception, e:
+                bb.msg.debug(1, bb.msg.domain.Parsing, "executing anonymous function: %s" % e)
+                raise
             data.delVar("__anonqueue", d)
             data.delVar("__anonfunc", d)
             set_additional_vars(fn, d, include)
             data.update_data(d)
 
             all_handlers = {} 
-            for var in data.keys(d):
+            for var in data.getVar('__BBHANDLERS', d) or []:
                 # try to add the handler
                 # if we added it remember the choiche
-                if data.getVarFlag(var, 'handler', d):
-                    handler = data.getVar(var,d)
-                    if bb.event.register(var,handler) == bb.event.Registered:
-                        all_handlers[var] = handler
+                handler = data.getVar(var,d)
+                if bb.event.register(var,handler) == bb.event.Registered:
+                    all_handlers[var] = handler
 
-                    continue
-
-                if not data.getVarFlag(var, 'task', d):
-                    continue
-
+            for var in data.getVar('__BBTASKS', d) or []:
                 deps = data.getVarFlag(var, 'deps', d) or []
                 postdeps = data.getVarFlag(var, 'postdeps', d) or []
                 bb.build.add_task(var, deps, d)
@@ -204,7 +197,7 @@ def handle(fn, d, include = 0):
     return d
 
 def feeder(lineno, s, fn, root, d):
-    global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __def_regexp__, __python_func_regexp__, __inpython__,__infunc__, __body__, __bbpath_found__, classes, bb, __residue__
+    global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __def_regexp__, __python_func_regexp__, __inpython__,__infunc__, __body__, classes, bb, __residue__
     if __infunc__:
         if s == '}':
             __body__.append('')
@@ -336,6 +329,10 @@ def feeder(lineno, s, fn, root, d):
 
         data.setVarFlag(var, "task", 1, d)
 
+        bbtasks = data.getVar('__BBTASKS', d) or []
+        bbtasks.append(var)
+        data.setVar('__BBTASKS', bbtasks, d)
+
         if after is not None:
 #           set up deps for function
             data.setVarFlag(var, "deps", after.split(), d)
@@ -348,8 +345,11 @@ def feeder(lineno, s, fn, root, d):
     if m:
         fns = m.group(1)
         hs = __word__.findall(fns)
+        bbhands = data.getVar('__BBHANDLERS', d) or []
         for h in hs:
+            bbhands.append(h)
             data.setVarFlag(h, "handler", 1, d)
+        data.setVar('__BBHANDLERS', bbhands, d)
         return
 
     m = __inherit_regexp__.match(s)
@@ -386,16 +386,11 @@ def set_additional_vars(file, d, include):
 
     bb.msg.debug(2, bb.msg.domain.Parsing, "BB %s: set_additional_vars" % file)
 
-    src_uri = data.getVar('SRC_URI', d)
+    src_uri = data.getVar('SRC_URI', d, 1)
     if not src_uri:
         return
-    src_uri = data.expand(src_uri, d)
 
-    a = data.getVar('A', d)
-    if a:
-        a = data.expand(a, d).split()
-    else:
-        a = []
+    a = (data.getVar('A', d, 1) or '').split()
 
     from bb import fetch
     try:
