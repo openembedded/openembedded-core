@@ -1,0 +1,20 @@
+ VEX/Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: valgrind-3.2.1/VEX/Makefile
+===================================================================
+--- valgrind-3.2.1.orig/VEX/Makefile	2006-08-28 14:39:42.000000000 +0100
++++ valgrind-3.2.1/VEX/Makefile	2006-11-29 13:52:36.000000000 +0000
+@@ -64,10 +64,10 @@ PUB_INCLUDES = -Ipub
+ PRIV_INCLUDES = -Ipriv
+ 
+ 
+-ifndef $(CC)
++ifndef CC
+    CC = gcc 
+ endif 
+-ifndef $(AR)
++ifndef AR
+    AR = ar 
+ endif
+ 
