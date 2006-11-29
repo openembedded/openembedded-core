@@ -1,4 +1,4 @@
-require linux-openzaurus.inc
+require linux-rp.inc
 
 PR = "r29"
 
