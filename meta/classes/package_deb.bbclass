@@ -220,7 +220,7 @@ python do_package_deb () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = os.system("PATH=\"%s\" dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, 1), root, pkgoutdir))
+        ret = os.system("PATH=\"%s\" fakeroot dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, 1), root, pkgoutdir))
         if ret != 0:
             raise bb.build.FuncFailed("dpkg-deb execution failed")
 
