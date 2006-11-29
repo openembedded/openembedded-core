@@ -1,0 +1,11 @@
+--- bluez-utils-2.11/hcid/dbus.c.old	2004-12-31 16:35:12.000000000 +0000
++++ bluez-utils-2.11/hcid/dbus.c	2004-12-31 16:39:58.000000000 +0000
+@@ -89,6 +89,8 @@
+ 
+ 	memset(&pr, 0, sizeof(pr));
+ 	bacpy(&pr.bdaddr, &req->bda);
++	if (len > sizeof (pr.pin_code))
++		goto error;
+ 	memcpy(pr.pin_code, pin, len);
+ 	pr.pin_len = len;
+ 	hci_send_cmd(req->dev, OGF_LINK_CTL, OCF_PIN_CODE_REPLY,

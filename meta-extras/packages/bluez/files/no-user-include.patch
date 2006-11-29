@@ -1,0 +1,18 @@
+Do not add -I/usr/include to the compile line just because we will
+install bluez-utils there says zecke...
+
+Index: bluez-utils-2.25/acinclude.m4
+===================================================================
+--- bluez-utils-2.25.orig/acinclude.m4	2006-05-18 12:39:57.473577920 +0200
++++ bluez-utils-2.25/acinclude.m4	2006-05-19 00:58:52.694599848 +0200
+@@ -69,7 +69,9 @@
+ 	ac_save_LDFLAGS=$LDFLAGS
+ 
+ 	BLUEZ_CFLAGS=""
+-	test -d "${bluez_prefix}/include" && BLUEZ_CFLAGS="$BLUEZ_CFLAGS -I${bluez_prefix}/include"
++	if test "$cross_compiling" = no; then
++		test -d "${bluez_prefix}/include" && BLUEZ_CFLAGS="$BLUEZ_CFLAGS -I${bluez_prefix}/include"
++	fi
+ 
+ 	CPPFLAGS="$CPPFLAGS $BLUEZ_CFLAGS"
+ 	AC_CHECK_HEADER(bluetooth/bluetooth.h, dummy=yes, AC_MSG_ERROR(Bluetooth header files not found))

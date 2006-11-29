@@ -1,0 +1,33 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- bluez-utils-2.17/pcmcia/bluetooth~base.patch
++++ bluez-utils-2.17/pcmcia/bluetooth
+@@ -15,9 +15,16 @@
+ 
+ if [ -r ./shared ]; then . ./shared ; else . /etc/pcmcia/shared ; fi
+ 
++# Give the port some time to complete initialization
++sleep 5
++
+ # Get device attributes
+ get_info $DEVICE
+ 
++test "$DEVICE" = "ttyS7" && DEVICE="/dev/tts/7"
++test -z "$MANFID" && MANFID="bcsp"
++test "$MANFID" = "0000,0000" && MANFID="bcsp"
++
+ #
+ # Serial devices
+ #
+@@ -25,7 +32,7 @@
+     IRQ=`setserial /dev/$DEVICE | sed -e 's/.*IRQ: //'`
+     setserial /dev/$DEVICE irq 0 ; setserial /dev/$DEVICE irq $IRQ
+  
+-    /usr/sbin/hciattach $DEVICE $MANFID
++    /sbin/hciattach $DEVICE $MANFID
+ }
+ stop_serial() {
+     do_fuser -k -HUP /dev/$DEVICE > /dev/null

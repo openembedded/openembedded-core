@@ -1,0 +1,22 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- bluez-utils-2.16/tools/hciattach.c~default-manfid-0x0-to-bcps
++++ bluez-utils-2.16/tools/hciattach.c
+@@ -796,13 +796,12 @@
+ }
+ 
+ struct uart_t uart[] = {
++        { "bcsp",       0x0000, 0x0000, HCI_UART_BCSP, 115200, 115200, 0,        bcsp     },
+ 	{ "any",        0x0000, 0x0000, HCI_UART_H4,   115200, 115200, FLOW_CTL, NULL     },
+ 	{ "ericsson",   0x0000, 0x0000, HCI_UART_H4,   57600,  115200, FLOW_CTL, ericsson },
+ 	{ "digi",       0x0000, 0x0000, HCI_UART_H4,   9600,   115200, FLOW_CTL, digi     },
+ 	{ "texas",      0x0000, 0x0000, HCI_UART_H4,   115200, 115200, FLOW_CTL, texas    },
+ 
+-	{ "bcsp",       0x0000, 0x0000, HCI_UART_BCSP, 115200, 115200, 0,        bcsp     },
+-
+ 	/* Xircom PCMCIA cards: Credit Card Adapter and Real Port Adapter */
+ 	{ "xircom",     0x0105, 0x080a, HCI_UART_H4,   115200, 115200, FLOW_CTL, NULL     },
+ 
