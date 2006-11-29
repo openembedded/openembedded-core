@@ -140,6 +140,7 @@ FILES_${PN} = "/"
 FILES_${PN}-doc = "${docdir} ${datadir}/common-licenses"
 
 # M&N specific packaging
+PACKAGE_ARCH_${PN} = "${MACHINE_ARCH}"
 PACKAGE_ARCH_mnci = "mnci"
 PACKAGE_ARCH_rt3000 = "rt3000"
 
