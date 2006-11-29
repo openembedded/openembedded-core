@@ -103,6 +103,11 @@ def check_sanity(e):
 		missing = missing.rstrip(',')
 		messages = messages + "Please install following missing utilities: %s\n" % missing
 
+	omask = os.umask(022)
+	if omask & 0755:
+		messages = messages + "Please use a umask which allows a+rx and u+rwx\n"
+	os.umask(omask)
+
 	if messages != "":
 		raise_sanity_error(messages)
 
