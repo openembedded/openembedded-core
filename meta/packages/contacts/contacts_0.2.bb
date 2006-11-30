@@ -2,15 +2,14 @@ LICENSE = "LGPL"
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
 DESCRIPTION = "Contacts is an address-book application."
-PR = "r1"
 
-SRC_URI = "svn://svn.o-hand.com/repos/${PN}/tags;module=release-0.1;proto=http \
+SRC_URI = "http://projects.o-hand.com/sources/${PN}/${PN}-${PV}.tar.gz \
 	   file://stock_contact.png \
 	   file://stock_person.png"
 
 inherit autotools pkgconfig
 
-S = "${WORKDIR}/release-0.1"
+S = "${WORKDIR}/${PN}-${PV}"
 
 do_install_append () {
 	install -d ${D}/${datadir}/pixmaps
