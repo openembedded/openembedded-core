@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "x$BUILDDIR" == "x" ]; then
+    echo "You need to source poky-init-build-env before running this script"
+    exit 1
+fi
+
 PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/bin:$PATH
 
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
@@ -40,10 +45,12 @@ if [ "$MACHINE" == "qemuarm" ]; then
         if [ "x$HDIMAGE" == "x" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemuarm.ext2
         fi
+	echo "Running $QEMU using sudo..."
         sudo $QEMU -kernel $ZIMAGE -append "root=/dev/sda mem=$QEMU_MEMORY" $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet
     fi
     if [ "$TYPE" == "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
+	echo "Running $QEMU using sudo..."
         sudo $QEMU -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemuarm rw $KERNEL_NETWORK_CMD" $QEMU_NETWORK_CMD -M versatilepb -hda /tmp/blank
         rm /tmp/blank
     fi
@@ -61,10 +68,12 @@ if [ "$MACHINE" == "qemux86" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemux86.ext2
         fi
         # video=vesafb:1024x768-32@86
+	echo "Running $QEMU using sudo..."
         sudo $QEMU -std-vga -kernel $ZIMAGE -append "root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD" $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet
     fi
     if [ "$TYPE" == "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
+	echo "Running $QEMU using sudo..."
         sudo $QEMU -std-vga -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemux86 rw $KERNEL_NETWORK_CMD" $QEMU_NETWORK_CMD -hda /tmp/blank
         rm /tmp/blank	
     fi

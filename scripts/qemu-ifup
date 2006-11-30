@@ -1,2 +1,9 @@
 #!/bin/sh
-ifconfig tap0 192.168.7.1
+
+IFCONFIG=`which ifconfig`
+if [ "x$IFCONFIG" == "x" ]; then
+    # better than nothing...
+    IFCONFIG=/sbin/ifconfig
+fi
+
+$IFCONFIG tap0 192.168.7.1
