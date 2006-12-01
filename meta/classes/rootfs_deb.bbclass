@@ -102,7 +102,9 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	# Hacks to make dpkg/ipkg coexist for now
 	mv ${IMAGE_ROOTFS}/var/dpkg ${IMAGE_ROOTFS}/usr/
-	rmdir ${IMAGE_ROOTFS}/usr/dpkg/alternatives
+	if [ -e ${IMAGE_ROOTFS}/usr/dpkg/alternatives ]; then
+		rmdir ${IMAGE_ROOTFS}/usr/dpkg/alternatives
+	fi
 	ln -s /usr/lib/ipkg/alternatives ${IMAGE_ROOTFS}/usr/dpkg/alternatives
 	ln -s /usr/dpkg/info ${IMAGE_ROOTFS}/usr/lib/ipkg/info
 	ln -s /usr/dpkg/status ${IMAGE_ROOTFS}/usr/lib/ipkg/status
