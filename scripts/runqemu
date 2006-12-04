@@ -70,14 +70,11 @@ if [ "$MACHINE" == "qemuarm" ]; then
         if [ "x$HDIMAGE" == "x" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
         fi
-	echo "Running $QEMU using sudo..."
-        sudo $QEMU -kernel $ZIMAGE -append "root=/dev/sda mem=$QEMU_MEMORY" $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet
+        QEMUOPTIONS="-append \"root=/dev/sda mem=$QEMU_MEMORY\" $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
     fi
     if [ "$TYPE" == "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
-	echo "Running $QEMU using sudo..."
-        sudo $QEMU -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemuarm rw $KERNEL_NETWORK_CMD" $QEMU_NETWORK_CMD -M versatilepb -hda /tmp/blank
-        rm /tmp/blank
+        QEMUOPTIONS="-append \"root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemuarm rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -M versatilepb -hda /tmp/blank"
     fi
 fi
 
@@ -87,17 +84,28 @@ if [ "$MACHINE" == "qemux86" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemux86.ext2
         fi
         # video=vesafb:1024x768-32@86
-	echo "Running $QEMU using sudo..."
-        sudo $QEMU -std-vga -kernel $ZIMAGE -append "root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD" $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet
+        QEMUOPTIONS="-std-vga -append \"root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet"
     fi
     if [ "$TYPE" == "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
-	echo "Running $QEMU using sudo..."
-        sudo $QEMU -std-vga -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemux86 rw $KERNEL_NETWORK_CMD" $QEMU_NETWORK_CMD -hda /tmp/blank
-        rm /tmp/blank	
+        QEMUOPTIONS="-std-vga -append \"root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemux86 rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -hda /tmp/blank"
     fi
 fi
 
+if [ "x$QEMUOPTIONS" == "x" ]; then
+    echo "Sorry, unable to support this configuration"
+    exit 1
+fi
+
+echo "Running $QEMU using sudo..."
+echo "$QEMU -kernel $ZIMAGE $QEMUOPTIONS"
+sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS
+# -serial file:serial.log
+
 if [ -x "$DISTCCD" ]; then
     killall distccd
+fi
+
+if [ -e /tmp/blank ]; then
+    rm /tmp/blank
 fi
