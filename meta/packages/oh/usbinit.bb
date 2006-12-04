@@ -5,7 +5,7 @@ PRIORITY = "optional"
 PR = "r0"
 
 SRC_URI = "file://usb-gether"
-S = ${WORKDIR}
+S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/etc
