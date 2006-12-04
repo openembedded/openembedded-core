@@ -1,5 +1,5 @@
 DESCRIPTION = "GNU Transport Layer Security Library"
-DEPENDS = "zlib libgcrypt lzo"
+DEPENDS = "zlib libgcrypt lzo readline"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 LICENSE = "LGPL"
 
@@ -27,7 +27,7 @@ FILES_${PN}-bin = "${bindir}/gnutls-serv \
 
 FILES_${PN}-dev += "${bindir}/*-config ${bindir}/gnutls-cli-debug"
 
-EXTRA_OECONF="--with-included-opencdk --with-included-libtasn1"
+EXTRA_OECONF="--with-included-opencdk --with-included-libtasn1 --with-libz-prefix=${STAGING_LIBDIR}/.. --with-libreadline-prefix=${STAGING_LIBDIR}/.."
 
 do_stage() {
 	oe_libinstall -C lib/.libs -so -a libgnutls ${STAGING_LIBDIR}
