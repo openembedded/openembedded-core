@@ -423,6 +423,8 @@ class RunQueue:
                         active_builds = 0 
                         # Stop Ctrl+C being sent to children
                         signal.signal(signal.SIGINT, signal.SIG_IGN)
+                        # Make the child the process group leader
+                        os.setpgid(0, 0)
                         sys.stdin = open('/dev/null', 'r')
                         cooker.configuration.cmd = taskname[3:]
                         try: 
@@ -472,7 +474,7 @@ class RunQueue:
             except:
                 bb.msg.note(1, bb.msg.domain.RunQueue, "Sending SIGTERM to remaining %s tasks" % active_builds)
                 for k, v in build_pids.iteritems():
-                     os.kill(k, signal.SIGTERM)
+                     os.kill(-k, signal.SIGTERM)
                 raise
 
         # Sanity Checks
