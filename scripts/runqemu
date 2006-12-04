@@ -5,7 +5,7 @@ if [ "x$BUILDDIR" == "x" ]; then
     exit 1
 fi
 
-PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/bin:$PATH
+PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/bin:$BUILDDIR/tmp/cross/bin:$PATH
 
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
 QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup"
@@ -34,16 +34,41 @@ if [ "x$4" != "x" ]; then
     HDIMAGE=$4
 fi
 
-if [ "$MACHINE" == "qemuarm" ]; then
-    if [ "x$ZIMAGE" == "x" ]; then
-        ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-qemuarm.bin
-    fi
-
+if [ "$MACHINE" == "qemuarm" -o "$MACHINE" == "spitz" -o "$MACHINE" == "borzoi" -o "$MACHINE" == "akita" ]; then
     QEMU=`which qemu-system-arm`
+    if [ "x$ZIMAGE" == "x" ]; then
+        ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-$MACHINE.bin
+    fi
+    CROSSPATH=$BUILDDIR/tmp/cross/arm-poky-linux/bin
+fi
 
+if [ "$MACHINE" == "qemux86" ]; then
+    QEMU=`which qemu`
+    if [ "x$ZIMAGE" == "x" ]; then
+        ZIMAGE=$BUILDDIR/tmp/deploy/images/bzImage-$MACHINE.bin
+    fi
+    CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
+fi
+
+export PATH=$CROSSPATH:$PATH
+
+if [ ! -e $CROSSPATH/cc ]; then
+   ln -s $CROSSPATH/gcc $CROSSPATH/cc
+fi
+
+DISTCCD=`which distccd`
+
+
+if [ -x "$DISTCCD" ]; then
+    $DISTCCD --allow 192.168.7.2 --daemon
+else
+    echo "Warning: distccd not present, no distcc support loaded"
+fi
+
+if [ "$MACHINE" == "qemuarm" ]; then
     if [ "$TYPE" == "ext2" ]; then
         if [ "x$HDIMAGE" == "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemuarm.ext2
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
         fi
 	echo "Running $QEMU using sudo..."
         sudo $QEMU -kernel $ZIMAGE -append "root=/dev/sda mem=$QEMU_MEMORY" $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet
@@ -57,12 +82,6 @@ if [ "$MACHINE" == "qemuarm" ]; then
 fi
 
 if [ "$MACHINE" == "qemux86" ]; then
-    if [ "x$ZIMAGE" == "x" ]; then
-        ZIMAGE=$BUILDDIR/tmp/deploy/images/bzImage-qemux86.bin
-    fi
-
-    QEMU=`which qemu`
-
     if [ "$TYPE" == "ext2" ]; then
         if [ "x$HDIMAGE" == "x" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemux86.ext2
@@ -77,4 +96,8 @@ if [ "$MACHINE" == "qemux86" ]; then
         sudo $QEMU -std-vga -kernel $1 -append "root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemux86 rw $KERNEL_NETWORK_CMD" $QEMU_NETWORK_CMD -hda /tmp/blank
         rm /tmp/blank	
     fi
+fi
+
+if [ -x "$DISTCCD" ]; then
+    killall distccd
 fi
