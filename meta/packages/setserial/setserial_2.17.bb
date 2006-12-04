@@ -1,5 +1,5 @@
 SECTION = "console/utils"
-SRC_URI = "ftp://tsx-11.mit.edu/pub/linux/sources/sbin/setserial-2.17.tar.gz"
+SRC_URI = "http://fresh.t-systems-sfr.com/linux/src/setserial-2.17.tar.gz"
 LICENSE = "GPL"
 PR = "r1"
 inherit autotools
