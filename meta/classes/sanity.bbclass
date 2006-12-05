@@ -92,13 +92,6 @@ def check_sanity(e):
 		if not check_app_exists( util, e.data ):
 			missing = missing + "%s," % util
 
-	# qemu-native needs gcc 3.x
-
- 	gcc_version = commands.getoutput("${BUILD_PREFIX}gcc --version | head -n 1 | cut -f 3 -d ' '")
-
-	if not check_app_exists('gcc-3.4', e.data) and not check_app_exists('gcc-3.3', e.data) and gcc_version[0] != '3':
-		missing = missing + "gcc-3.x (needed for qemu-native),"
-
 	if missing != "":
 		missing = missing.rstrip(',')
 		messages = messages + "Please install following missing utilities: %s\n" % missing
