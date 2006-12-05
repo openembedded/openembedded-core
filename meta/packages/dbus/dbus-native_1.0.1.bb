@@ -18,9 +18,8 @@ inherit autotools pkgconfig gettext native
 
 S = "${WORKDIR}/dbus-${PV}"
 
-EXTRA_OECONF = "--disable-qt  --disable-qt3 --disable-gtk --disable-tests \
-		--disable-checks --disable-xml-docs --disable-doxygen-docs \
-		--with-xml=expat --without-x"
+EXTRA_OECONF = " --disable-tests --disable-checks --disable-xml-docs \
+                 --disable-doxygen-docs --with-xml=expat --without-x"
 
 do_stage () {
 	oe_runmake install

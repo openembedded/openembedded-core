@@ -8,13 +8,11 @@ DEPENDS = "expat glib-2.0 virtual/libintl"
 
 PR = "r1"
 
-DEFAULT_PREFERENCE = "-1"
-
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://tmpdir.patch;patch=1 \
 	   file://dbus-1.init \
 	   file://fix-segfault.patch;patch=1 \
-           file://cross.patch;patch=1 \
+	   file://cross.patch;patch=1 \
 	   file://fix-install-daemon.patch;patch=1"
 
 inherit autotools pkgconfig update-rc.d gettext
@@ -43,9 +41,8 @@ chgrp "$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || addgroup "$MESSAGEUSER"
 chown "$MESSAGEUSER"."$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || adduser --system --home "$MESSAGEHOME" --no-create-home --disabled-password --ingroup "$MESSAGEUSER" "$MESSAGEUSER"
 }
 
-EXTRA_OECONF = "--disable-qt  --disable-qt3 --disable-gtk --disable-tests \
-		--disable-checks --disable-xml-docs --disable-doxygen-docs \
-		--with-xml=expat --without-x"
+EXTRA_OECONF = " --disable-tests --disable-checks --disable-xml-docs \
+                 --disable-doxygen-docs --with-xml=expat --without-x"
 
 do_stage () {
 	oe_libinstall -so -C dbus libdbus-1 ${STAGING_LIBDIR}
