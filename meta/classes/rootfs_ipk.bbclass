@@ -70,8 +70,7 @@ rootfs_ipk_log_check() {
 	lf_txt="`cat $lf_path`"
 	for keyword_die in "Cannot find package" "exit 1" ERR Fail
 	do				
-				
-		if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") &>/dev/null
+		if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") >/dev/null 2>&1
 		then
 			echo "log_check: There were error messages in the logfile"
 			echo -e "log_check: Matched keyword: [$keyword_die]\n"
