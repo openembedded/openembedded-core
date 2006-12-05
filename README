@@ -1,0 +1,61 @@
+Introduction
+==
+
+'Poky' is a combined cross build system and linux distribution based
+upon OpenEmbedded. It features support for building X11/Matchbox/GTK
+based filesystem images for various embedded devices and boards.
+
+
+Required Packages
+===
+
+Running Poky on Debian based distributions requires the following
+extra packages be installed;
+
+build-essential
+diffstat
+texi2html
+cvs
+subversion
+gawk
+
+You also need to install the qemu from http://debian.o-hand.com/.
+Alternatively poky can build qemu itself, but for this you need the
+following packages installed;
+
+gcc-3.4
+libsdl1.2-dev
+zlib1g-dev
+
+You will also need to comment out ASSUME_PROVIDED += "qemu-native"' in  
+build/conf/local.conf.
+
+Building under other distro's such as Fedora is known to work. Use the above
+package names as a guide for dependencies.
+
+Building An Image
+===
+
+Simply run;
+
+% source poky-init-build-env
+% bitbake oh-image-pda
+
+This will result in an ext2 image and kernel for qemu arm (see scripts dir).
+
+To build for other machine types see MACHINE in build/conf/local.conf
+
+Notes:
+===
+
+Useful Links;
+
+OpenedHand
+http://openedhand.com
+
+Poky Homepage
+http://projects.o-hand.com/poky
+
+OE Homepage and wiki
+http://openembedded.org
+ 
