@@ -1,7 +1,7 @@
 #!/bin/sh
 
 IFCONFIG=`which ifconfig`
-if [ "x$IFCONFIG" == "x" ]; then
+if [ "x$IFCONFIG" = "x" ]; then
     # better than nothing...
     IFCONFIG=/sbin/ifconfig
 fi

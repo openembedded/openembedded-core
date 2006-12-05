@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "x$BUILDDIR" == "x" ]; then
+if [ "x$BUILDDIR" = "x" ]; then
     echo "You need to source poky-init-build-env before running this script"
     exit 1
 fi
@@ -34,17 +34,17 @@ if [ "x$4" != "x" ]; then
     HDIMAGE=$4
 fi
 
-if [ "$MACHINE" == "qemuarm" -o "$MACHINE" == "spitz" -o "$MACHINE" == "borzoi" -o "$MACHINE" == "akita" ]; then
+if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" ]; then
     QEMU=`which qemu-system-arm`
-    if [ "x$ZIMAGE" == "x" ]; then
+    if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-$MACHINE.bin
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/arm-poky-linux/bin
 fi
 
-if [ "$MACHINE" == "qemux86" ]; then
+if [ "$MACHINE" = "qemux86" ]; then
     QEMU=`which qemu`
-    if [ "x$ZIMAGE" == "x" ]; then
+    if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/bzImage-$MACHINE.bin
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
@@ -65,34 +65,34 @@ else
     echo "Warning: distccd not present, no distcc support loaded"
 fi
 
-if [ "$MACHINE" == "qemuarm" ]; then
-    if [ "$TYPE" == "ext2" ]; then
-        if [ "x$HDIMAGE" == "x" ]; then
+if [ "$MACHINE" = "qemuarm" ]; then
+    if [ "$TYPE" = "ext2" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
         fi
         QEMUOPTIONS="-append \"root=/dev/sda mem=$QEMU_MEMORY\" $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
     fi
-    if [ "$TYPE" == "nfs" ]; then
+    if [ "$TYPE" = "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
         QEMUOPTIONS="-append \"root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemuarm rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -M versatilepb -hda /tmp/blank"
     fi
 fi
 
-if [ "$MACHINE" == "qemux86" ]; then
-    if [ "$TYPE" == "ext2" ]; then
-        if [ "x$HDIMAGE" == "x" ]; then
+if [ "$MACHINE" = "qemux86" ]; then
+    if [ "$TYPE" = "ext2" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemux86.ext2
         fi
         # video=vesafb:1024x768-32@86
         QEMUOPTIONS="-std-vga -append \"root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet"
     fi
-    if [ "$TYPE" == "nfs" ]; then
+    if [ "$TYPE" = "nfs" ]; then
         dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
         QEMUOPTIONS="-std-vga -append \"root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemux86 rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -hda /tmp/blank"
     fi
 fi
 
-if [ "x$QEMUOPTIONS" == "x" ]; then
+if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Sorry, unable to support this configuration"
     exit 1
 fi
