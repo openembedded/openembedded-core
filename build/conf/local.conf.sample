@@ -1,4 +1,4 @@
-# Where to cache the files OE downloads
+# Where to cache the files Poky downloads
 DL_DIR ?= "${OEROOT}/sources"
 BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 
@@ -39,7 +39,6 @@ DISTRO_TYPE = "debug"
 #PACKAGE_CLASSES ?= "package_deb package_ipk"
 PACKAGE_CLASSES ?= "package_ipk"
 
-
 # Uncomment this to specify where BitBake should create its temporary files.
 # Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
 # disk space, so make sure to free enough space. The default TMPDIR is
@@ -47,7 +46,12 @@ PACKAGE_CLASSES ?= "package_ipk"
 TMPDIR = "${OEROOT}/build/tmp"
 
 # Uncomment and set to allow bitbake to execute multiple tasks at once.
+# Note, This option is currently experimental - YMMV.
+# 'quilt' is also required on the host system 
 # BB_NUMBER_THREADS = "1"
+
+# Comment this out if you are *not* using provided qemu deb - see README
+ASSUME_PROVIDED += "qemu-native"
 
 # Uncomment these two if you want BitBake to build images useful for debugging.
 # DEBUG_BUILD = "1"
