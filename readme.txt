@@ -9,39 +9,41 @@ based filesystem images for various embedded devices and boards.
 Required Packages
 ===
 
-Running Poky on Ubuntu Breezy requires the following extra packages to
-be installed;
+Running Poky on Debian based distributions requires the following
+extra packages be installed;
 
 build-essential
 diffstat
 texi2html
 cvs
 subversion
+gawk
+
+You also need to install the qemu from http://debian.o-hand.com/.
+Alternatively poky can build qemu itself, but for this you need the
+following packages installed;
+
 gcc-3.4
 libsdl1.2-dev
 zlib1g-dev
 
-For Debian/Fedora - *Todo*
+You will also need to comment out ASSUME_PROVIDED += "qemu-native"' in  
+build/conf/local.conf.
+
+Building under other distro's such as Fedora is known to work. Use the above
+package names as a guide for dependencies.
 
 Building An Image
 ===
 
 Simply run;
 
-source poky-init-build-env
-bitbake oh-image-pda
+% source poky-init-build-env
+% bitbake oh-image-pda
 
-will result in a jffs2 image for the c7x0 series.
+This will result in an ext2 image and kernel for qemu arm (see scripts dir).
 
-To build for the 770 change to 
-
-MACHINE = "nokia770"
-
-in build/conf/local.conf
-
-NOTE: The above commands must be run in the build directory. Running 
-them anywhere else will cause confusion.
-
+To build for other machine types see MACHINE in build/conf/local.conf
 
 Notes:
 ===
