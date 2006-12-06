@@ -15,7 +15,7 @@ case `module_id` in
         # qemu machines.. likely need better detection 
 	"ARM-IntegratorCP" | "ARM-Versatile PB")
 		/usr/bin/mbinputmgr &
-		SHOWCURSOR="yes"
+		#SHOWCURSOR="yes"
 		;;
 esac
 
