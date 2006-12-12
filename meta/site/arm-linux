@@ -158,6 +158,7 @@ ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
 glib_cv_sys_pthread_mutex_trylock_posix=${glib_cv_sys_pthread_mutex_trylock_posix=yes}
 glib_cv_sys_pthread_getspecific_posix=${glib_cv_sys_pthread_getspecific_posix=yes}
 glib_cv_sys_pthread_cond_timedwait_posix=${glib_cv_sys_pthread_cond_timedwait_posix=yes}
+glib_cv_monotonic_clock=${glib_cv_monotonic_clock=yes}
 
 # ettercap
 ettercap_cv_type_socklen_t=${ettercap_cv_type_socklen_t=yes}
