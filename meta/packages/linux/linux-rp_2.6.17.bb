@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r30"
+PR = "r32"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
