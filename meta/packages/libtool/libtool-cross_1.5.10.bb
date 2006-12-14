@@ -13,6 +13,7 @@ S = "${WORKDIR}/libtool-${PV}"
 
 prefix = "${STAGING_DIR}"
 exec_prefix = "${prefix}/${BUILD_SYS}"
+bindir = "${STAGING_BINDIR_NATIVE}"
 
 do_compile () {
 	:

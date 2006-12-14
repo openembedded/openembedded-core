@@ -17,7 +17,7 @@ EXTRA_OECONF = "--without-pth --disable-asm --with-capabilities"
 do_stage() {
 	oe_libinstall -so -C src libgcrypt ${STAGING_LIBDIR}
 	oe_libinstall -so -C src libgcrypt-pthread ${STAGING_LIBDIR}
-	install -m 0755 src/libgcrypt-config ${STAGING_BINDIR}/
+	install -m 0755 src/libgcrypt-config ${STAGING_BINDIR_CROSS}/
 
 	install -d ${STAGING_INCDIR}/
 	for X in gcrypt.h gcrypt-module.h

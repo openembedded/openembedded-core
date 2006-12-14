@@ -27,8 +27,8 @@ do_stage () {
 	cat xml2-config | sed -e "s,^prefix=.*,prefix=${STAGING_BINDIR}/..," \
 		       	     -e "s,^exec_prefix=.*,exec_prefix=${STAGING_BINDIR}/..," \
 			     -e "s,^includedir=.*,includedir=${STAGING_INCDIR}," \
-			     -e "s,^libdir=.*,libdir=${STAGING_LIBDIR}," > ${STAGING_BINDIR}/xml2-config
-	chmod a+rx ${STAGING_BINDIR}/xml2-config
+			     -e "s,^libdir=.*,libdir=${STAGING_LIBDIR}," > ${STAGING_BINDIR_CROSS}/xml2-config
+	chmod a+rx ${STAGING_BINDIR_CROSS}/xml2-config
 	install -m 0644 libxml.m4 ${STAGING_DATADIR}/aclocal/
 }
 
