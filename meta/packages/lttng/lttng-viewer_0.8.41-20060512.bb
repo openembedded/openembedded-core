@@ -13,7 +13,10 @@ S = "${WORKDIR}/${ALTNAME}"
 
 inherit autotools
 
+LEAD_SONAME = "liblttvtraceread*"
+
 FILES_${PN} += "\
     ${libdir}/lttv/plugins/* \
     ${datadir}/LinuxTraceToolkitViewer/facilities/* \
     ${datadir}/LinuxTraceToolkitViewer/pixmaps/* "
+FILES_${PN}-dbg += "${libdir}/lttv/plugins/.debug/"
