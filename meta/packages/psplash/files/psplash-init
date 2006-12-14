@@ -1,5 +1,14 @@
 #!/bin/sh 
 
+for x in $(cat /proc/cmdline); do
+        case $x in
+        psplash=false)
+		echo "Boot splashscreen disabled" 
+		exit 0;
+                ;;
+        esac
+done
+
 export TMPDIR=/mnt/.psplash
 mount tmpfs -t tmpfs $TMPDIR -o,size=40k
 
