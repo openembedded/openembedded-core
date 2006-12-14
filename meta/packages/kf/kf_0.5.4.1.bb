@@ -1,15 +1,16 @@
-LICENSE = "GPL"
-DEPENDS = "libxml2 glib-2.0 gtk+ loudmouth libglade"
 DESCRIPTION = "Kf is a GTK+ instant messaging client."
-PR = "r2"
+LICENSE = "GPL"
+DEPENDS = "libxml2 glib-2.0 gtk+ loudmouth"
+PR = "r3"
 
 SRC_URI = "http://jabberstudio.2nw.net/${PN}/${PN}-${PV}.tar.gz \
            file://fix-configure.patch;patch=1 \
-           file://fix-desktop-file.patch;patch=0"
+           file://fix-desktop-file.patch;patch=0 \
+           file://gcc4.patch;patch=1"
 
 inherit autotools pkgconfig
 
-export PKG_CONFIG="${STAGING_BINDIR_NATIVE}/pkg-config"
-
 EXTRA_OECONF = "--disable-binreloc"
+
+export PKG_CONFIG="${STAGING_BINDIR_NATIVE}/pkg-config"
 
