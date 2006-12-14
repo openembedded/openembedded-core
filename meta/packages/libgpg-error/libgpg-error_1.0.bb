@@ -15,7 +15,8 @@ inherit autotools binconfig pkgconfig
 
 do_stage() {
 	oe_libinstall -a -so -C src libgpg-error ${STAGING_LIBDIR}
-	install -m 0755 src/gpg-error-config ${STAGING_BINDIR}/
+	install -d ${STAGING_BINDIR_CROSS}/
+	install -m 0755 src/gpg-error-config ${STAGING_BINDIR_CROSS}/
 
 	install -d ${STAGING_INCDIR}/
 	for X in gpg-error.h
