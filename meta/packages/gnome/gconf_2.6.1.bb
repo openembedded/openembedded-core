@@ -4,7 +4,7 @@ DESCRIPTION = "GNOME configuration database system"
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/GConf/2.6/GConf-${PV}.tar.bz2 \
 	   file://backends.patch;patch=1"
 DEPENDS = "orbit2 glib-2.0  libxml2 gtk+"
-ORBIT_IDL_SRC = "${STAGING_BINDIR}/orbit-idl-2"
+ORBIT_IDL_SRC = "${STAGING_BINDIR_NATIVE}/orbit-idl-2"
 
 FILES_${PN} += " ${libdir}/GConf/*"
 PR = "r1"

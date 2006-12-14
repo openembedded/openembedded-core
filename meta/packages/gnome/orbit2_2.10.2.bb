@@ -15,7 +15,7 @@ S = "${WORKDIR}/ORBit2-${PV}"
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-gtk-doc"
-EXTRA_OEMAKE = "IDL_COMPILER='${STAGING_BINDIR}/orbit-idl-2'"
+EXTRA_OEMAKE = "IDL_COMPILER='${STAGING_BINDIR_NATIVE}/orbit-idl-2'"
 
 do_configure_prepend() {
 	mkdir -p m4
@@ -24,7 +24,7 @@ do_configure_prepend() {
 }
 
 do_compile_append () {
-	sed 's:^orbit_idl=.*/:orbit_idl=${STAGING_BINDIR}/:' < ORBit-2.0.pc > ORBit-2.0.pc.new
+	sed 's:^orbit_idl=.*/:orbit_idl=${STAGING_BINDIR_NATIVE}/:' < ORBit-2.0.pc > ORBit-2.0.pc.new
 	mv ORBit-2.0.pc.new ORBit-2.0.pc
 }
 
