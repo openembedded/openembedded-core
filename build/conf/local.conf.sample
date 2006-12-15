@@ -23,7 +23,10 @@ MACHINE ?= "qemuarm"
 #MACHINE ?= "spitz"
 #MACHINE ?= "nokia770"
 
+
 DISTRO = "poky"
+# For bleeding edge / experimental / unstable package versions
+# DISTRO = "poky-bleeding"
 
 # DISTRO_TYPE determines the type of images that will be built
 # "release" - create a streamlined and secure image
