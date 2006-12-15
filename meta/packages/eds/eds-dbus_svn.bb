@@ -4,14 +4,11 @@ LICENSE = "LGPL"
 DEPENDS = "glib-2.0 gtk+ gconf dbus db gnome-common libglade virtual/libiconv zlib"
 
 PV = "1.4.0+svn${SRCDATE}"
-PR = "r20"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://no_libdb.patch;patch=1 \
            file://no_iconv_test.patch;patch=1 \
            file://no_libedataserverui.patch;patch=1 \
-           file://disable_orbit.patch;patch=1;maxdate=20060126 \
-	   file://fix_calendar.patch;patch=1;maxdate=20060619 \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/trunk"
