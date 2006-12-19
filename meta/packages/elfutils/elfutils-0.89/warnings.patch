@@ -1,0 +1,98 @@
+--- elfutils-0.89/configure.ac~warnings.patch	2003-09-26 02:04:04.000000000 -0400
++++ elfutils-0.89/configure.ac	2004-05-01 00:16:33.000000000 -0400
+@@ -28,6 +28,10 @@
+ 
+ ALL_LINGUAS=
+ 
++if test X"$CFLAGS" = X; then
++  CFLAGS="-Wall -Werror -g -O2"
++fi
++
+ AC_PROG_CC
+ AC_PROG_CPP
+ AC_PROG_GCC_TRADITIONAL
+--- elfutils-0.89/./lib/Makefile.am~warnings.patch	2003-09-22 18:57:58.000000000 -0400
++++ elfutils-0.89/./lib/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -14,7 +14,7 @@
+ ## 3001 King Ranch Road, Ukiah, CA 95482.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H
+-AM_CFLAGS = -Wall -Werror -fpic
++AM_CFLAGS = -fpic
+ INCLUDES = -I$(srcdir)/../libelf -I..
+ 
+ noinst_LIBRARIES = libeu.a
+--- elfutils-0.89/./libelf/Makefile.am~warnings.patch	2003-08-12 02:45:24.000000000 -0400
++++ elfutils-0.89/./libelf/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -14,7 +14,6 @@
+ ## 3001 King Ranch Road, Ukiah, CA 95482.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H
+-AM_CFLAGS = -Wall -Werror
+ INCLUDES = -I$(srcdir) -I$(top_srcdir)/lib -I..
+ GCC_INCLUDE = -I$(shell $(CC) -print-file-name=include)
+ VERSION = 1
+--- elfutils-0.89/./libebl/Makefile.am~warnings.patch	2003-09-22 18:53:17.000000000 -0400
++++ elfutils-0.89/./libebl/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -14,7 +14,7 @@
+ ## 3001 King Ranch Road, Ukiah, CA 95482.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H -Wall
+-AM_CFLAGS = -Wall -Werror -DOBJDIR=\"$(shell pwd)\" -fpic
++AM_CFLAGS = -DOBJDIR=\"$(shell pwd)\" -fpic
+ INCLUDES = -I$(srcdir) -I$(top_srcdir)/libelf -I$(top_srcdir)/lib -I..
+ VERSION = 1
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+--- elfutils-0.89/./libdwarf/Makefile.am~warnings.patch	2003-08-12 02:46:05.000000000 -0400
++++ elfutils-0.89/./libdwarf/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -14,7 +14,6 @@
+ ## 3001 King Ranch Road, Ukiah, CA 95482.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H -DDWARF_DEBUG
+-AM_CFLAGS = -Wall -Werror
+ INCLUDES = -I. -I$(srcdir) -I$(srcdir)/../libelf -I.. -I$(srcdir)/../lib
+ VERSION = 1
+ 
+--- elfutils-0.89/./libdw/Makefile.am~warnings.patch	2003-08-12 02:46:18.000000000 -0400
++++ elfutils-0.89/./libdw/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -17,7 +17,6 @@
+ ## Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H
+-AM_CFLAGS = -Wall -Werror -Wshadow
+ INCLUDES = -I. -I$(srcdir) -I$(srcdir)/../libelf -I.. -I$(srcdir)/../lib
+ VERSION = 1
+ 
+--- elfutils-0.89/./libasm/Makefile.am~warnings.patch	2003-08-13 05:21:25.000000000 -0400
++++ elfutils-0.89/./libasm/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -14,7 +14,6 @@
+ ## 3001 King Ranch Road, Ukiah, CA 95482.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H
+-AM_CFLAGS = -Wall -Werror
+ INCLUDES = -I. -I$(srcdir) -I.. -I$(top_srcdir)/libelf -I$(top_srcdir)/libebl \
+ 	   -I$(top_srcdir)/lib
+ GCC_INCLUDE = -I$(shell $(CC) -print-file-name=include)
+--- elfutils-0.89/./src/Makefile.am~warnings.patch	2003-09-22 18:57:09.000000000 -0400
++++ elfutils-0.89/./src/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -14,8 +14,8 @@
+ ## 3001 King Ranch Road, Ukiah, CA 95482.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H -Wall -Wshadow $(YYDEBUG) \
+-       $(if $($(*F)_no_Werror),,-Werror) $(native_ld_cflags)
+-AM_CFLAGS = -Wall -DSRCDIR=\"$(shell cd $(srcdir);pwd)\" -DOBJDIR=\"$(shell pwd)\"
++       $(if $(filter -Werror,$(CFLAGS)),$(if $($(*F)_no_Werror),,-Werror)) $(native_ld_cflags)
++AM_CFLAGS = -DSRCDIR=\"$(shell cd $(srcdir);pwd)\" -DOBJDIR=\"$(shell pwd)\"
+ INCLUDES = -I$(srcdir) -I$(srcdir)/../libelf -I$(srcdir)/../libebl -I$(srcdir)/../lib -I$(srcdir)/../libdwarf -I..
+ 
+ YACC = @YACC@ -d
+--- elfutils-0.89/./tests/Makefile.am~warnings.patch	2003-08-13 05:19:04.000000000 -0400
++++ elfutils-0.89/./tests/Makefile.am	2004-05-01 00:12:43.000000000 -0400
+@@ -14,7 +14,6 @@
+ ## 3001 King Ranch Road, Ukiah, CA 95482.
+ ##
+ DEFS = -DHAVE_CONFIG_H -D_GNU_SOURCE
+-AM_CFLAGS = -Wall -Werror
+ AM_LDFLAGS = -Wl,-rpath,\$$ORIGIN/../libasm:\$$ORIGIN/../libdwarf:\$$ORIGIN/../libdw:\$$ORIGIN/../libebl:\$$ORIGIN/../libelf
+ INCLUDES = -I$(top_srcdir)/libasm -I$(top_srcdir)/libdwarf \
+ 	   -I$(top_srcdir)/libdw \
