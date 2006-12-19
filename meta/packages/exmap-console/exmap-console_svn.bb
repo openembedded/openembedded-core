@@ -3,9 +3,7 @@ HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
 PR = "r7"
-PV = "0.0+svn${SRCDATE}"
-
-SRCDATE="20061220"
+PV = "0.3.1+svn${SRCDATE}"
 
 SRC_URI = \
     "svn://svn.o-hand.com/repos/misc/trunk;module=exmap-console;proto=http"
