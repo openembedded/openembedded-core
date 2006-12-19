@@ -12,6 +12,7 @@ PREFERRED_VERSION_binutils ?= "2.16+csl-arm-2005q3-2"
 PREFERRED_VERSION_binutils-cross ?= "2.16+csl-arm-2005q3-2"
 PREFERRED_VERSION_glibc ?= "2.3.6+csl-arm-2005q3-2"
 PREFERRED_VERSION_glibc-intermediate ?= "2.3.6+csl-arm-2005q3-2"
+PREFERRED_VERSION_elfutils ?= "0.108"
 
 PREFERRED_VERSION_linux-libc-headers ?= "2.6.12rc3+csl-arm-2005q3-2"
 

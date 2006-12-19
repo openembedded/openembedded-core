@@ -13,6 +13,7 @@ PREFERRED_VERSION_binutils-cross ?= "2.17+csl-arm-2006q1-6"
 PREFERRED_VERSION_linux-libc-headers ?= "2.6.15.99"
 PREFERRED_VERSION_glibc ?= "2.4"
 PREFERRED_VERSION_glibc-intermediate ?= "2.4"
+PREFERRED_VERSION_elfutils ?= "0.108"
 
 #Use the ARM EABI when building for an ARM cpu. We can't use overrides
 #here because this breaks all places where ":=" is used.
