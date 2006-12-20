@@ -36,7 +36,7 @@ FILES_${PN}-symlinks = " \
 	${bindir}/strip"
 
 SRC_URI = \
-    "${KERNELORG_MIRROR}/pub/linux/devel/binutils/binutils-${PV}.tar.bz2 \
+    "http://www.kernel.org/pub/linux/devel/binutils/binutils-${PV}.tar.bz2 \
      file://binutils-2.16.91.0.6-objcopy-rename-errorcode.patch;patch=1 \
      file://binutils-uclibc-100-uclibc-conf.patch;patch=1 \
      file://110-arm-eabi-conf.patch;patch=1 \
