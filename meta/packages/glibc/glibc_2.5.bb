@@ -1,9 +1,6 @@
-DESCRIPTION = "GNU C Library"
-HOMEPAGE = "http://www.gnu.org/software/libc/libc.html"
-LICENSE = "LGPL"
-SECTION = "libs"
-PRIORITY = "required"
-PR = "r2"
+require glibc.inc
+
+PR = "r4"
 
 # the -isystem in bitbake.conf screws up glibc do_stage
 BUILD_CPPFLAGS = "-I${STAGING_DIR}/${BUILD_SYS}/include"
@@ -55,6 +52,7 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
            file://dl-cache-libcmp.patch;patch=1 \
            file://ldsocache-varrun.patch;patch=1 \
            file://nptl-crosscompile.patch;patch=1 \
+	   file://glibc-check_pf.patch;patch=1;pnum=0 \
 #	   file://glibc-2.4-compile.patch;patch=1 \
 #	   file://glibc-2.4-openat-3.patch;patch=1 \
 #	   file://fixup-aeabi-syscalls.patch;patch=1 \
@@ -71,6 +69,8 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
 SRC_URI_append_sh3 = " file://no-z-defs.patch;patch=1"
 SRC_URI_append_sh4 = " file://no-z-defs.patch;patch=1"
 
+SRC_URI_append_powerpc = " file://powerpc-sqrt-hack.diff;patch=1"
+
 S = "${WORKDIR}/glibc-${PV}"
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
@@ -85,11 +85,6 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
 		${GLIBC_EXTRA_OECONF}"
 
 EXTRA_OECONF += "${@get_glibc_fpu_setting(bb, d)}"
-
-def get_glibc_fpu_setting(bb, d):
-	if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
-		return "--without-fp"
-	return ""
 
 do_munge() {
 	# Integrate ports and libidn into tree
