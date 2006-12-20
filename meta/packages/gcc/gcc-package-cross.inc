@@ -6,7 +6,8 @@ HAS_GFORTRAN ?= "no"
 OLD_INHIBIT_PACKAGE_STRIP := "${INHIBIT_PACKAGE_STRIP}"
 INHIBIT_PACKAGE_STRIP = "1"
 
-PACKAGES = "libgcc libstdc++ libg2c libg2c-dev libgfortran libgfortran-dev"
+PACKAGES = "libgcc libgcc-dev libstdc++ libg2c libg2c-dev libgfortran libgfortran-dev"
+PACKAGES_DYNAMIC = "libgcc* libstdc* libg2c* libgfortran*"
 
 # Called from within gcc-cross, so libdir is set wrong
 FILES_libg2c = "${target_libdir}/libg2c.so.*"
@@ -20,6 +21,7 @@ FILES_libgfortran-dev = "${target_libdir}/libgfortran.a \
 			 ${target_libdir}/libgfortranbegin.a"
 
 FILES_libgcc = "${target_base_libdir}/libgcc_s.so.1"
+FILES_libgcc-dev = "${target_base_libdir}/libgcc_s.so"
 
 FILES_libstdc++ = "${target_libdir}/libstdc++.so.*"
 FILES_libstdc++-dev = "${target_includedir}/c++/${PV} \
@@ -44,26 +46,26 @@ do_install () {
 		# Already in the right location
 		:
 	elif [ -f ${D}${prefix}/lib/libgcc_s.so.? ]; then
-		mv -f ${D}${prefix}/lib/libgcc_s.so.* ${D}${target_base_libdir}
+		mv -f ${D}${prefix}/lib/libgcc_s.so* ${D}${target_base_libdir}
 	else
-		mv -f ${D}${prefix}/*/lib/libgcc_s.so.* ${D}${target_base_libdir}
+		mv -f ${D}${prefix}/*/lib/libgcc_s.so* ${D}${target_base_libdir}
 	fi
 
 	# Move libstdc++ and libg2c into libdir (resetting our prefix to /usr
 	mkdir -p ${D}${target_libdir}
-	mv -f ${D}${prefix}/*/lib/libstdc++.so.* ${D}${target_libdir}
+	mv -f ${D}${prefix}/*/lib/libstdc++.so* ${D}${target_libdir}
 	if [ "${HAS_G2C}" = "yes" ]; then
-	  mv -f ${D}${prefix}/*/lib/libg2c.so.* ${D}${target_libdir}
+	  mv -f ${D}${prefix}/*/lib/libg2c.so* ${D}${target_libdir} || true
 	fi
 	if [ "${HAS_GFORTRAN}" = "yes" ]; then
-	  mv -f ${D}${prefix}/*/lib/libgfortran*.so.* ${D}${target_libdir}
+	  mv -f ${D}${prefix}/*/lib/libgfortran*.so* ${D}${target_libdir}
 	fi
 
        # Manually run the target stripper since we won't get it run by
        # the packaging.
        if [ "x${OLD_INHIBIT_PACKAGE_STRIP}" != "x1" ]; then
                ${TARGET_PREFIX}strip ${D}${target_libdir}/libstdc++.so.*
-               ${TARGET_PREFIX}strip ${D}${target_libdir}/libg2c.so.*
+               ${TARGET_PREFIX}strip ${D}${target_libdir}/libg2c.so.* || true
                ${TARGET_PREFIX}strip ${D}${target_base_libdir}/libgcc_s.so.*
        fi
 }
