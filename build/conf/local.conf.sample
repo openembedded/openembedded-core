@@ -28,12 +28,21 @@ DISTRO = "poky"
 # For bleeding edge / experimental / unstable package versions
 # DISTRO = "poky-bleeding"
 
-# DISTRO_TYPE determines the type of images that will be built
-# "release" - create a streamlined and secure image
-# "debug"   - enable easier ssh access 
-#           - include the devtools and testapps packages
+# IMAGE_FEATURES configuration of the generated images 
+# (Some of these are automatically added to certain image types)
+# "dev-pkgs"   - add -dev packages for all installed packages
+#                (useful if you want to develop against libs in the image)
+# "dbg-pkgs"   - add -dbg packages for all installed packages
+#                (adds symbol information for debugging/profiling)
+# "apps-core"  - core applications
+# "apps-pda"   - add PDA application suite (contacts, dates, etc.)
+# "dev-tools"  - add development tools (gcc, make, pkgconfig etc.)
+# "dbg-tools"  - add debugging tools (gdb, strace, oprofile, etc.)
+# "test-tools" - add useful testing tools (ts_print, aplay, arecord etc.)
+# "debug-tweaks" - make an image for suitable of development
+#                  e.g. ssh root access has a blank password
 
-DISTRO_TYPE = "debug"
+IMAGE_FEATURES = "dbg-tools test-tools debug-tweaks"
 
 # A list of packaging systems used in generated images
 # The first package type listed will be used for rootfs generation

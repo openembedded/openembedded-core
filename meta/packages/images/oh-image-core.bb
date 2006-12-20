@@ -2,12 +2,11 @@ PR = "r0"
 
 export IMAGE_BASENAME = "oh-image-core"
 
+IMAGE_FEATURES += "apps-core"
+
 DEPENDS = "task-oh"
     
-RDEPENDS = "\
-    task-oh-boot \
-    task-oh-boot-extras \
-    task-oh-base "
+RDEPENDS = "${DISTRO_TASKS}" 
 
 export PACKAGE_INSTALL = "${RDEPENDS}"
 

@@ -41,12 +41,17 @@ def base_conditional(variable, checkvalue, truevalue, falsevalue, d):
 	else:
 		return falsevalue
 
-def base_contains(variable, checkvalue, truevalue, falsevalue, d):
-       import bb
-       if bb.data.getVar(variable,d,1).find(checkvalue) != -1:
-               return truevalue
-       else:
-               return falsevalue
+def base_contains(variable, checkvalues, truevalue, falsevalue, d):
+	import bb
+	matches = 0
+	if type(checkvalues).__name__ == "str":
+		checkvalues = [checkvalues]
+	for value in checkvalues:
+		if bb.data.getVar(variable,d,1).find(value) != -1:	
+			matches = matches + 1
+	if matches == len(checkvalues):
+		return truevalue		
+	return falsevalue
 
 def base_both_contain(variable1, variable2, checkvalue, d):
        import bb

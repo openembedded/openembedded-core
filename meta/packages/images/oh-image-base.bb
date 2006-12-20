@@ -4,7 +4,7 @@ export IMAGE_BASENAME = "oh-image-base"
 
 DEPENDS = "task-oh"
     
-RDEPENDS = "task-oh-boot task-oh-boot-extras"
+RDEPENDS = "${DISTRO_TASKS}"
 
 export PACKAGE_INSTALL = "${RDEPENDS}"
 

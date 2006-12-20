@@ -1,14 +1,28 @@
-DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r43"
+pDESCRIPTION = "Tasks for OpenedHand Poky"
+PR = "r44"
 
 PACKAGES = "\
     task-oh-base \
+    task-oh-base-dbg \
+    task-oh-base-dev \
     task-oh-boot \
+    task-oh-boot-dbg \
+    task-oh-boot-dev \
     task-oh-standard \
+    task-oh-standard-dbg \
+    task-oh-standard-dev \
     task-oh-boot-extras \
+    task-oh-boot-extras-dbg \
+    task-oh-boot-extras-dev \
     task-oh-boot-min-extras \
+    task-oh-boot-min-extras-dbg \
+    task-oh-boot-min-extras-dev \
     task-oh-devtools \
-    task-oh-testapps"
+    task-oh-devtools-dbg \
+    task-oh-devtools-dev \
+    task-oh-testapps \
+    task-oh-testapps-dbg \
+    task-oh-testapps-dev"
 
 XSERVER ?= "xserver-kdrive-fbdev"
 
@@ -29,7 +43,6 @@ RDEPENDS_task-oh-boot = "\
     ipkg \
     update-alternatives \
     module-init-tools-depmod"
-#    linux-hotplug \
 
 RDEPENDS_task-oh-boot-extras = "\
     task-base"

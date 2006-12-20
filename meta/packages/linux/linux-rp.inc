@@ -27,7 +27,7 @@ CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
 CMDLINE_ROOT = "root=/dev/mtdblock2 rootfstype=jffs2"
 CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw"
 CMDLINE_OTHER = "dyntick=enable"
-CMDLINE_DEBUG = '${@base_conditional("DISTRO_TYPE", "release", "quiet", "debug",d)}'
+CMDLINE_DEBUG = '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "debug", "quiet", d)}'
 
 ##############################################################
 # Configure memory/ramdisk split for collie
