@@ -1,0 +1,26 @@
+Submitted By: Alexander E. Patrakov
+Date: 2006-12-11
+Initial Package Version: 4.1.1
+Upstream Status: backport
+Origin: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=28621
+Description: Fix crash of programs compiled with -Os -ffast-math
+(affects procps on the LiveCD)
+--- gcc-4.1.1/gcc/config/i386/i386.c
++++ gcc-4.1.1/gcc/config/i386/i386.c
+@@ -1502,12 +1502,10 @@
+     }
+ 
+   /* Validate -mpreferred-stack-boundary= value, or provide default.
+-     The default of 128 bits is for Pentium III's SSE __m128, but we
+-     don't want additional code to keep the stack aligned when
+-     optimizing for code size.  */
+-  ix86_preferred_stack_boundary = (optimize_size
+-				   ? TARGET_64BIT ? 128 : 32
+-				   : 128);
++     The default of 128 bits is for Pentium III's SSE __m128, We can't
++     change it because of optimize_size.  Otherwise, we can't mix object
++     files compiled with -Os and -On.  */
++  ix86_preferred_stack_boundary = 128;
+   if (ix86_preferred_stack_boundary_string)
+     {
+       i = atoi (ix86_preferred_stack_boundary_string);
