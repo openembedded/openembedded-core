@@ -2,7 +2,7 @@ DESCRIPTION = "Startup notification support"
 LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
-DEPENDS = "virtual/libx11"
+DEPENDS = "virtual/libx11 libsm"
 PR = "r1"
 
 inherit autotools pkgconfig 
