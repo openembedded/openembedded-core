@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.gtk.org"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt cairo"
-PR = "r3"
+PR = "r4"
 
 # disable per default - untested and not all patches included.
 DEFAULT_PREFERENCE = "-1" 
@@ -24,7 +24,9 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
            file://disable-print.patch;patch=1 \
            file://hardcoded_libtool.patch;patch=1 \
            file://no-demos.patch;patch=1 \
-           file://pangoxft2.10.6.diff;patch=1"
+        file://cellrenderer-cairo.patch;patch=1;pnum=0 \
+        file://entry-cairo.patch;patch=1;pnum=0"
+#           file://pangoxft2.10.6.diff;patch=1"
 #           file://gtk+-handhelds.patch;patch=1
 #	   file://single-click.patch;patch=1
 #	   file://spinbutton.patch;patch=1 \
