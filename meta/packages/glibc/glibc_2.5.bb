@@ -14,6 +14,8 @@ GLIBC_EXTRA_OECONF ?= ""
 
 GLIBC_BROKEN_LOCALES = "sid_ET tr_TR mn_MN gez_ET gez_ER bn_BD te_IN"
 
+LIMIT_BUILT_LOCALES = "en_GB"
+
 #
 # For now, we will skip building of a gcc package if it is a uclibc one
 # and our build is not a uclibc one, and we skip a glibc one if our build

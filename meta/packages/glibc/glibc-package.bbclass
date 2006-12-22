@@ -123,23 +123,23 @@ rm -rf ${TMP_LOCALE}
 }
 
 python __anonymous () {
-	enabled = bb.data.getVar("ENABLE_BINARY_LOCALE_GENERATION", d, 1)
+    enabled = bb.data.getVar("ENABLE_BINARY_LOCALE_GENERATION", d, 1)
 
-	if enabled and int(enabled):
-		import re
+    if enabled and int(enabled):
+        import re
 
-		target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
-		binary_arches = bb.data.getVar("BINARY_LOCALE_ARCHES", d, 1) or ""
+        target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
+        binary_arches = bb.data.getVar("BINARY_LOCALE_ARCHES", d, 1) or ""
 
-		for regexp in binary_arches.split(" "):
-			r = re.compile(regexp)
+        for regexp in binary_arches.split(" "):
+            r = re.compile(regexp)
 
-			if r.match(target_arch):
-				depends = bb.data.getVar("DEPENDS", d, 1)
-				depends = "%s qemu-native" % depends
-				bb.data.setVar("DEPENDS", depends, d)
-				bb.data.setVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", "1", d)
-				break
+            if r.match(target_arch):
+                depends = bb.data.getVar("DEPENDS", d, 1)
+                depends = "%s qemu-native" % depends
+                bb.data.setVar("DEPENDS", depends, d)
+                bb.data.setVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", "1", d)
+                break
 }
 
 do_prep_locale_tree() {
