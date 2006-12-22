@@ -9,4 +9,5 @@ S = "${WORKDIR}/matchbox-sato"
 
 inherit autotools pkgconfig
 
+FILES_${PN} += "${datadir}/themes"
 
