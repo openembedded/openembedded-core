@@ -14,7 +14,7 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "--enable-shared --disable-sdl --with-x"
 
-PACKAGES = "mpeg2dec mpeg2dec-doc libmpeg2 libmpeg2-dev libmpeg2convert libmpeg2convert-dev"
+PACKAGES = "mpeg2dec-dbg mpeg2dec mpeg2dec-doc libmpeg2 libmpeg2-dev libmpeg2convert libmpeg2convert-dev"
 
 FILES_${PN} = "${bindir}/*"
 FILES_libmpeg2 = "${libdir}/libmpeg2.so.*"
