@@ -14,6 +14,7 @@ extra packages be installed;
 
 build-essential
 diffstat
+texinfo
 texi2html
 cvs
 subversion
