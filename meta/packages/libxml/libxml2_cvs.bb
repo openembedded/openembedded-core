@@ -4,7 +4,7 @@ DESCRIPTION = "GNOME XML library"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "MIT"
-PACKAGES = "${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
+PACKAGES = "${PN}-dbg ${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 
 FILES_${PN}-dev += "${bindir}/xml-config"
 FILES_${PN}-utils += "${bindir}/*"
