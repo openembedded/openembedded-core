@@ -1,0 +1,21 @@
+Strace doesn't know that sh3 and sh4 should be treated as sh and sh5 as
+sh64. Originally this was solved by ac_cv_host in the site files, however
+doing it in the site file breaks the glibc build, so teach strace about them
+instead.
+
+--- strace-4.5.14/configure.ac	2006/05/11 07:12:05	1.1
++++ strace-4.5.14/configure.ac	2006/05/11 07:15:42
+@@ -91,11 +91,11 @@
+ 	arch=hppa
+ 	AC_DEFINE([HPPA], 1, [Define for the HPPA architecture.])
+ 	;;
+-sh)
++sh|sh3*|sh4*)
+ 	arch=sh
+ 	AC_DEFINE([SH], 1, [Define for the SH architecture.])
+ 	;;
+-sh64)
++sh64|sh5*)
+ 	arch=sh64
+ 	AC_DEFINE([SH64], 1, [Define for the SH64 architecture.])
+ 	;;

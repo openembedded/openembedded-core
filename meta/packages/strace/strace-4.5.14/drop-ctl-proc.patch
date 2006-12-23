@@ -1,0 +1,12 @@
+Index: strace-4.5.14/system.c
+===================================================================
+--- strace-4.5.14.orig/system.c	2006-10-01 13:02:08.000000000 +0200
++++ strace-4.5.14/system.c	2006-10-01 13:02:27.000000000 +0200
+@@ -1578,7 +1578,6 @@
+ 	{ CTL_KERN, "CTL_KERN" },
+ 	{ CTL_VM, "CTL_VM" },
+ 	{ CTL_NET, "CTL_NET" },
+-	{ CTL_PROC, "CTL_PROC" },
+ 	{ CTL_FS, "CTL_FS" },
+ 	{ CTL_DEBUG, "CTL_DEBUG" },
+ 	{ CTL_DEV, "CTL_DEV" },

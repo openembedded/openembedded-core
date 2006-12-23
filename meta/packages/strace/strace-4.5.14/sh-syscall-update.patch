@@ -1,0 +1,268 @@
+--- strace/linux/sh/syscallent.h	2006/07/03 04:32:27	1.1
++++ strace/linux/sh/syscallent.h	2006/07/03 05:29:55
+@@ -46,7 +46,7 @@
+ 	{ 1,	0,	sys_time,		"time"		}, /* 13 */
+ 	{ 3,	TF,	sys_mknod,		"mknod"		}, /* 14 */
+ 	{ 2,	TF,	sys_chmod,		"chmod"		}, /* 15 */
+-	{ 3,	TF,	sys_chown,		"lchown"		}, /* 16 */
++	{ 3,	TF,	sys_chown,		"lchown"	}, /* 16 */
+ 	{ 0,	0,	sys_break,		"break"		}, /* 17 */
+ 	{ 2,	TF,	sys_oldstat,		"oldstat"	}, /* 18 */
+ 	{ 3,	TD,	sys_lseek,		"lseek"		}, /* 19 */
+@@ -229,109 +229,157 @@
+ 	{ 2,	TF,	sys_stat64,		"stat64"	}, /* 195 */
+ 	{ 2,	TF,	sys_lstat64,		"lstat64"	}, /* 196 */
+ 	{ 2,	TD,	sys_fstat64,		"fstat64"	}, /* 197 */
+-/*TODO*/{ 3,	TF,	printargs,		"lchown32"	}, /* 198 */
+-/*TODO*/{ 0,	0,	printargs,		"getuid32"	}, /* 199 */
++	{ 3,	TF,	sys_chown,		"lchown32"	}, /* 198 */
++	{ 0,	0,	sys_getuid,		"getuid32"	}, /* 199 */
+ 
+-	{ 0,	0,	printargs,		"getgid32"	}, /* 200 */
+-	{ 0,	0,	printargs,		"geteuid32"	}, /* 201 */
+-	{ 0,	0,	printargs,		"getegid32"	}, /* 202 */
+-	{ 2,	0,	printargs,		"setreuid32"	}, /* 203 */
+-	{ 2,	0,	printargs,		"setregid32"	}, /* 204 */
+-	{ 2,	0,	sys_getgroups32,	"getgroups32"	}, /* 205 */
+-	{ 2,	0,	sys_setgroups32,	"setgroups32"	}, /* 206 */
+-	{ 3,	0,	printargs,		"fchown32"	}, /* 207 */
+-	{ 3,	0,	printargs,		"setresuid32"	}, /* 208 */
+-	{ 3,	0,	printargs,		"getresuid32"	}, /* 209 */
+-	{ 3,	0,	printargs,		"setresgid32"	}, /* 210 */
+-	{ 3,	0,	printargs,		"getsetgid32"	}, /* 211 */
+-	{ 3,	TF,	printargs,		"chown32"	}, /* 212 */
+-	{ 1,	0,	printargs,		"setuid32"	}, /* 213 */
+-	{ 1,	0,	printargs,		"setgid32"	}, /* 214 */
+-	{ 1,	0,	printargs,		"setfsuid32"	}, /* 215 */
+-	{ 1,	0,	printargs,		"setfsgid32"	}, /* 216 */
++	{ 0,	0,	sys_getgid,		"getgid32"	}, /* 200 */
++	{ 0,	0,	sys_geteuid,		"geteuid32"	}, /* 201 */
++	{ 0,	0,	sys_getegid,		"getegid32"	}, /* 202 */
++	{ 2,	0,	sys_setreuid,		"setreuid32"	}, /* 203 */
++	{ 2,	0,	sys_setregid,		"setregid32"	}, /* 204 */
++	{ 2,	0,	sys_getgroups,		"getgroups32"	}, /* 205 */
++	{ 2,	0,	sys_setgroups,		"setgroups32"	}, /* 206 */
++	{ 3,	0,	sys_fchown,		"fchown32"	}, /* 207 */
++	{ 3,	0,	sys_setresuid,		"setresuid32"	}, /* 208 */
++	{ 3,	0,	sys_getresuid,		"getresuid32"	}, /* 209 */
++	{ 3,	0,	sys_setresgid,		"setresgid32"	}, /* 210 */
++	{ 3,	0,	sys_getresgid,		"getsetgid32"	}, /* 211 */
++	{ 3,	TF,	sys_chown,		"chown32"	}, /* 212 */
++	{ 1,	0,	sys_setuid,		"setuid32"	}, /* 213 */
++	{ 1,	0,	sys_setgid,		"setgid32"	}, /* 214 */
++	{ 1,	0,	sys_setfsuid,		"setfsuid32"	}, /* 215 */
++	{ 1,	0,	sys_setfsgid,		"setfsgid32"	}, /* 216 */
+ 	{ 2,	TF,	sys_pivotroot,		"pivot_root"	}, /* 217 */
+-	{ 3,	0,	printargs,		"mincore"	}, /* 218 */
++	{ 3,	0,	sys_mincore,		"mincore"	}, /* 218 */
+ 	{ 3,	0,	sys_madvise,		"madvise"	}, /* 219 */
+-	{ 4,	0,	printargs,		"getdents64"	}, /* 220 */
++	{ 4,	0,	sys_getdents64,		"getdents64"	}, /* 220 */
+ 	{ 3,	TD,	sys_fcntl,		"fcntl64"	}, /* 221 */
+ 	{ 4,	0,	printargs,		"SYS_222"	}, /* 222 */
+-	{ 4,	0,	printargs,		"SYS_223"	}, /* 223 */
+-	{ 4,	0,	printargs,		"SYS_224"	}, /* 224 */
+-	{ 5,	0,	printargs,		"SYS_225"	}, /* 225 */
+-	{ 5,	0,	printargs,		"SYS_226"	}, /* 226 */
+-	{ 5,	0,	printargs,		"SYS_227"	}, /* 227 */
+-	{ 5,	0,	printargs,		"SYS_228"	}, /* 228 */
+-	{ 5,	0,	printargs,		"SYS_229"	}, /* 229 */
+-
+-	{ 8,	0,	printargs,		"socket_subcall"}, /* 230 */
+-	{ 3,	TN,	sys_socket,		"socket"	}, /* 231 */
+-	{ 3,	TN,	sys_bind,		"bind"		}, /* 232 */
+-	{ 3,	TN,	sys_connect,		"connect"	}, /* 233 */
+-	{ 2,	TN,	sys_listen,		"listen"	}, /* 234 */
+-	{ 3,	TN,	sys_accept,		"accept"	}, /* 235 */
+-	{ 3,	TN,	sys_getsockname,	"getsockname"	}, /* 236 */
+-	{ 3,	TN,	sys_getpeername,	"getpeername"	}, /* 237 */
+-	{ 4,	TN,	sys_socketpair,		"socketpair"	}, /* 238 */
+-	{ 4,	TN,	sys_send,		"send"		}, /* 239 */
+-	{ 4,	TN,	sys_recv,		"recv"		}, /* 240 */
+-	{ 6,	TN,	sys_sendto,		"sendto"	}, /* 241 */
+-	{ 6,	TN,	sys_recvfrom,		"recvfrom"	}, /* 242 */
+-	{ 2,	TN,	sys_shutdown,		"shutdown"	}, /* 243 */
+-	{ 5,	TN,	sys_setsockopt,		"setsockopt"	}, /* 244 */
+-	{ 5,	TN,	sys_getsockopt,		"getsockopt"	}, /* 245 */
+-	{ 5,	TN,	sys_sendmsg,		"sendmsg"	}, /* 246 */
+-	{ 5,	TN,	sys_recvmsg,		"recvmsg"	}, /* 247 */
+-	{ 5,	0,	printargs,		"SYS_248"	}, /* 248 */
+-	{ 5,	0,	printargs,		"SYS_249"	}, /* 249 */
+-
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 250 */
+-	{ 4,	TI,	sys_semop,		"semop"		}, /* 251 */
+-	{ 4,	TI,	sys_semget,		"semget"	}, /* 252 */
+-	{ 4,	TI,	sys_semctl,		"semctl"	}, /* 253 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 254 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 255 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 256 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 257 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 258 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 259 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 260 */
+-	{ 4,	TI,	sys_msgsnd,		"msgsnd"	}, /* 261 */
+-	{ 4,	TI,	sys_msgrcv,		"msgrcv"	}, /* 262 */
+-	{ 4,	TI,	sys_msgget,		"msgget"	}, /* 263 */
+-	{ 4,	TI,	sys_msgctl,		"msgctl"	}, /* 264 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 265 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 266 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 267 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 268 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 269 */
+-	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 270 */
+-	{ 4,	TI,	sys_shmat,		"shmat"		}, /* 271 */
+-	{ 4,	TI,	sys_shmdt,		"shmdt"		}, /* 272 */
+-	{ 4,	TI,	sys_shmget,		"shmget"	}, /* 273 */
+-	{ 4,	TI,	sys_shmctl,		"shmctl"	}, /* 274 */
+-	{ 5,	0,	printargs,		"SYS_275"	}, /* 275 */
+-	{ 5,	0,	printargs,		"SYS_276"	}, /* 276 */
+-	{ 5,	0,	printargs,		"SYS_277"	}, /* 277 */
+-	{ 5,	0,	printargs,		"SYS_278"	}, /* 278 */
+-	{ 5,	0,	printargs,		"SYS_279"	}, /* 279 */
+-
+-	{ 8,	0,	printargs,		"socket_subcall"}, /* 280 */
+-	{ 3,	TN,	sys_socket,		"socket"	}, /* 281 */
+-	{ 3,	TN,	sys_bind,		"bind"		}, /* 282 */
+-	{ 3,	TN,	sys_connect,		"connect"	}, /* 283 */
+-	{ 2,	TN,	sys_listen,		"listen"	}, /* 284 */
+-	{ 3,	TN,	sys_accept,		"accept"	}, /* 285 */
+-	{ 3,	TN,	sys_getsockname,	"getsockname"	}, /* 286 */
+-	{ 3,	TN,	sys_getpeername,	"getpeername"	}, /* 287 */
+-	{ 4,	TN,	sys_socketpair,		"socketpair"	}, /* 288 */
+-	{ 4,	TN,	sys_send,		"send"		}, /* 289 */
+-	{ 4,	TN,	sys_recv,		"recv"		}, /* 290 */
+-	{ 6,	TN,	sys_sendto,		"sendto"	}, /* 291 */
+-	{ 6,	TN,	sys_recvfrom,		"recvfrom"	}, /* 292 */
+-	{ 2,	TN,	sys_shutdown,		"shutdown"	}, /* 293 */
+-	{ 5,	TN,	sys_setsockopt,		"setsockopt"	}, /* 294 */
+-	{ 5,	TN,	sys_getsockopt,		"getsockopt"	}, /* 295 */
+-	{ 5,	TN,	sys_sendmsg,		"sendmsg"	}, /* 296 */
+-	{ 5,	TN,	sys_recvmsg,		"recvmsg"	}, /* 297 */
++	{ 5,	0,	printargs,		"SYS_223"	}, /* 223 */
++	{ 0,	0,	printargs,		"gettid"	}, /* 224 */
++	{ 4,	TD,	sys_readahead,		"readahead"	}, /* 225 */
++	{ 5,	TF,	sys_setxattr,		"setxattr"	}, /* 226 */
++	{ 5,	TF,	sys_setxattr,		"lsetxattr"	}, /* 227 */
++	{ 5,	TD,	sys_fsetxattr,		"fsetxattr"	}, /* 228 */
++	{ 4,	TF,	sys_getxattr,		"getxattr"	}, /* 229 */
++	{ 4,	TF,	sys_getxattr,		"lgetxattr"	}, /* 230 */
++	{ 4,	0,	sys_fgetxattr,		"fgetxattr"	}, /* 231 */
++	{ 3,	TF,	sys_listxattr,		"listxattr"	}, /* 232 */
++	{ 3,	TF,	sys_listxattr,		"llistxattr"	}, /* 233 */
++	{ 3,	0,	sys_flistxattr,		"flistxattr"	}, /* 234 */
++	{ 2,	TF,	sys_removexattr,	"removexattr"	}, /* 235 */
++	{ 2,	TF,	sys_removexattr,	"lremovexattr"	}, /* 236 */
++	{ 2,	0,	sys_fremovexattr,	"fremovexattr"	}, /* 237 */
++	{ 2,	TS,	sys_kill,		"tkill"		}, /* 238 */
++	{ 4,	TF,	sys_sendfile64,		"sendfile64"	}, /* 239 */
++	{ 5,	0,	sys_futex,		"futex"		}, /* 240 */
++	{ 3,	0,	sys_sched_setaffinity,	"sched_setaffinity" },/* 241 */
++	{ 3,	0,	sys_sched_getaffinity,	"sched_getaffinity" },/* 242 */
++	{ 1,	0,	printargs,		"set_thread_area" }, /* 243 */
++	{ 1,	0,	printargs,		"get_thread_area" }, /* 244 */
++	{ 2,	0,	sys_io_setup,		"io_setup"	}, /* 245 */
++	{ 1,	0,	sys_io_destroy,		"io_destroy"	}, /* 246 */
++	{ 5,	0,	sys_io_getevents,	"io_getevents"	}, /* 247 */
++	{ 3,	0,	sys_io_submit,		"io_submit"	}, /* 248 */
++	{ 3,	0,	sys_io_cancel,		"io_cancel"	}, /* 249 */
++	{ 5,	0,	sys_fadvise64,		"fadvise64"	}, /* 250 */
++	{ 5,	0,	printargs,		"SYS_251"	}, /* 251 */
++	{ 1,	TP,	sys_exit,		"exit_group"	}, /* 252 */
++	{ 4,	0,	printargs,		"lookup_dcookie"}, /* 253 */
++	{ 1,	0,	sys_epoll_create,	"epoll_create"	}, /* 254 */
++	{ 4,	0,	sys_epoll_ctl,		"epoll_ctl"	}, /* 255 */
++	{ 4,	0,	sys_epoll_wait,		"epoll_wait"	}, /* 256 */
++	{ 5,	0,	sys_remap_file_pages,	"remap_file_pages"}, /* 257 */
++	{ 1,	0,	printargs,		"set_tid_address"}, /* 258 */
++	{ 3,	0,	sys_timer_create,	"timer_create"	}, /* 259 */
++	{ 4,	0,	sys_timer_settime,	"timer_settime"	}, /* 260 */
++	{ 2,	0,	sys_timer_gettime,	"timer_gettime"	}, /* 261 */
++	{ 1,	0,	sys_timer_getoverrun,	"timer_getoverrun"}, /* 262 */
++	{ 1,	0,	sys_timer_delete,	"timer_delete"	}, /* 263 */
++	{ 2,	0,	sys_clock_settime,	"clock_settime"	}, /* 264 */
++	{ 2,	0,	sys_clock_gettime,	"clock_gettime"	}, /* 265 */
++	{ 2,	0,	sys_clock_getres,	"clock_getres"	}, /* 266 */
++	{ 4,	0,	sys_clock_nanosleep,	"clock_nanosleep"}, /* 267 */
++	{ 3,	TF,	sys_statfs64,		"statfs64"	}, /* 268 */
++	{ 3,	0,	sys_fstatfs64,		"fstatfs64"	}, /* 269 */
++	{ 3,	TS,	sys_tgkill,		"tgkill"	}, /* 270 */
++	{ 2,	TF,	sys_utimes,		"utimes"	}, /* 271 */
++	{ 6,	0,	sys_fadvise64_64, 	"fadvise64_64"	}, /* 272 */
++	{ 5,	0,	printargs,		"vserver"	}, /* 273 */
++	{ 5,	0,	printargs,		"mbind"		}, /* 274 */
++	{ 5,	0,	printargs,		"get_mempolicy"	}, /* 275 */
++	{ 5,	0,	printargs,		"set_mempolicy"	}, /* 276 */
++	{ 4,	0,	sys_mq_open,		"mq_open"	}, /* 277 */
++	{ 1,	0,	sys_mq_unlink,		"mq_unlink"	}, /* 278 */
++	{ 5,	0,	sys_mq_timedsend,	"mq_timedsend"	}, /* 279 */
++	{ 5,	0,	sys_mq_timedreceive,	"mq_timedreceive" }, /* 280 */
++	{ 2,	0,	sys_mq_notify,		"mq_notify"	}, /* 281 */
++	{ 3,	0,	sys_mq_getsetattr,	"mq_getsetattr"	}, /* 282 */
++	{ 5,	0,	printargs,		"sys_kexec_load"}, /* 283 */
++	{ 5,	TP,	sys_waitid,		"waitid"	}, /* 284 */
++	{ 5,	0,	printargs,		"add_key"	}, /* 285 */
++	{ 5,	0,	printargs,		"request_key"	}, /* 286 */
++	{ 5,	0,	printargs,		"keyctl"	}, /* 287 */
++	{ 5,	0,	printargs,		"ioprio_set"	}, /* 288 */
++	{ 5,	0,	printargs,		"ioprio_get"	}, /* 289 */
++	{ 5,	0,	printargs,		"inotify_init"	}, /* 290 */
++	{ 5,	0,	printargs,		"inotify_add_watch"	}, /* 291 */
++	{ 5,	0,	printargs,		"inotify_rm_watch"	}, /* 292 */
++	{ 5,	0,	printargs,		"SYS_293"	}, /* 293 */
++	{ 5,	0,	printargs,		"SYS_294"	}, /* 294 */
++	{ 5,	0,	printargs,		"SYS_295"	}, /* 295 */
++	{ 5,	0,	printargs,		"SYS_296"	}, /* 296 */
++	{ 5,	0,	printargs,		"SYS_297"	}, /* 297 */
+ 	{ 5,	0,	printargs,		"SYS_298"	}, /* 298 */
+ 	{ 5,	0,	printargs,		"SYS_299"	}, /* 299 */
++
++#if SYS_socket_subcall != 300
++ #error fix me
++#endif
++	{ 8,	0,	printargs,		"socket_subcall"}, /* 300 */
++	{ 3,	TN,	sys_socket,		"socket"	}, /* 301 */
++	{ 3,	TN,	sys_bind,		"bind"		}, /* 302 */
++	{ 3,	TN,	sys_connect,		"connect"	}, /* 303 */
++	{ 2,	TN,	sys_listen,		"listen"	}, /* 304 */
++	{ 3,	TN,	sys_accept,		"accept"	}, /* 305 */
++	{ 3,	TN,	sys_getsockname,	"getsockname"	}, /* 306 */
++	{ 3,	TN,	sys_getpeername,	"getpeername"	}, /* 307 */
++	{ 4,	TN,	sys_socketpair,		"socketpair"	}, /* 308 */
++	{ 4,	TN,	sys_send,		"send"		}, /* 309 */
++	{ 4,	TN,	sys_recv,		"recv"		}, /* 310 */
++	{ 6,	TN,	sys_sendto,		"sendto"	}, /* 311 */
++	{ 6,	TN,	sys_recvfrom,		"recvfrom"	}, /* 312 */
++	{ 2,	TN,	sys_shutdown,		"shutdown"	}, /* 313 */
++	{ 5,	TN,	sys_setsockopt,		"setsockopt"	}, /* 314 */
++	{ 5,	TN,	sys_getsockopt,		"getsockopt"	}, /* 315 */
++	{ 5,	TN,	sys_sendmsg,		"sendmsg"	}, /* 316 */
++	{ 5,	TN,	sys_recvmsg,		"recvmsg"	}, /* 317 */
++
++#if SYS_ipc_subcall != 318
++ #error fix me
++#endif
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 318 */
++	{ 4,	TI,	sys_semop,		"semop"		}, /* 319 */
++	{ 4,	TI,	sys_semget,		"semget"	}, /* 320 */
++	{ 4,	TI,	sys_semctl,		"semctl"	}, /* 321 */
++	{ 5,	TI,	sys_semtimedop,		"semtimedop"	}, /* 322 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 323 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 324 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 325 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 326 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 327 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 328 */
++	{ 4,	TI,	sys_msgsnd,		"msgsnd"	}, /* 329 */
++	{ 4,	TI,	sys_msgrcv,		"msgrcv"	}, /* 330 */
++	{ 4,	TI,	sys_msgget,		"msgget"	}, /* 331 */
++	{ 4,	TI,	sys_msgctl,		"msgctl"	}, /* 332 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 333 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 334 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 335 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 336 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 337 */
++	{ 4,	0,	printargs,		"ipc_subcall"	}, /* 338 */
++	{ 4,	TI,	sys_shmat,		"shmat"		}, /* 339 */
++	{ 4,	TI,	sys_shmdt,		"shmdt"		}, /* 340 */
++	{ 4,	TI,	sys_shmget,		"shmget"	}, /* 341 */
++	{ 4,	TI,	sys_shmctl,		"shmctl"	}, /* 342 */

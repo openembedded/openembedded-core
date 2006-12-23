@@ -1,0 +1,10 @@
+--- strace-4.4.98/syscall.c~arm-compilation	2003-06-04 01:29:04.000000000 +0200
++++ strace-4.4.98/syscall.c	2003-09-01 00:13:02.000000000 +0200
+@@ -696,6 +696,7 @@
+ 	static int d0;
+ #elif defined (ARM)
+ 	static struct pt_regs regs;
++	static long r0;
+ #elif defined (ALPHA)
+ 	static long r0;
+ 	static long a3;
