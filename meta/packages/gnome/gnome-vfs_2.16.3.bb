@@ -3,7 +3,7 @@ PR = "r1"
 
 inherit gnome
 
-DEPENDS = "libxml2 gconf bzip2 gnome-mime-data zlib"
+DEPENDS = "libxml2 gconf dbus bzip2 gnome-mime-data zlib"
 RRECOMMENDS = "gnome-vfs-plugin-file gnome-mime-data shared-mime-info"
 
 SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1"
