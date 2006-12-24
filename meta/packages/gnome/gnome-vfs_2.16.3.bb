@@ -6,6 +6,9 @@ inherit gnome
 DEPENDS = "libxml2 gconf dbus bzip2 gnome-mime-data zlib"
 RRECOMMENDS = "gnome-vfs-plugin-file gnome-mime-data shared-mime-info"
 
+# This is to provide compatibility with the gnome-vfs DBus fork
+PROVIDES = "gnome-vfs-plugin-dbus"
+
 SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1"
 
 EXTRA_OECONF = "--disable-openssl"
