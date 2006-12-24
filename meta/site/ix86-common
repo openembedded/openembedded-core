@@ -252,3 +252,6 @@ jm_cv_func_working_readdir=yes
 # xorg X11R7
 ac_cv_sys_linker_h=${ac_cv_sys_linker_h=no}
 ac_cv_file__usr_share_X11_sgml_defs_ent=${ac_cv_file__usr_share_X11_sgml_defs_ent=no}
+
+# Nasty hack for gnome-vfs
+ac_cv_path_KRB5_CONFIG=${ac_cv_path_KRB5_CONFIG=none}
