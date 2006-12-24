@@ -1,45 +1,41 @@
 DESCRIPTION = "Avahi implements the DNS-SD over Multicast DNS"
-SECTION = "network"
-PRIORITY = "optional"
 AUTHOR = "Lennart Poettering <lennart@poettering.net>"
 HOMEPAGE = "http://avahi.org"
-LICENSE= "GPL"
-PR = "r1"
+SECTION = "network"
+PRIORITY = "optional"
+LICENSE = "GPL"
 
 DEPENDS = "expat libdaemon dbus"
 RRECOMMENDS = "libnss-mdns"
+RRECOMMENDS_avahi-daemon = "libnss-mdns"
 
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz"
 
-PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-dev avahi-doc avahi-utils"
+inherit autotools pkgconfig update-rc.d
+
+EXTRA_OECONF = "--with-distro=debian --disable-gdbm --disable-gtk --disable-mono --disable-monodoc --disable-qt3 --disable-qt4 --disable-python"
+
+PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-autoipd avahi-utils"
 
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
-FILES_libavahi-core= "${libdir}/libavahi-core.so.*"
+FILES_libavahi-core = "${libdir}/libavahi-core.so.*"
 FILES_avahi-daemon = "${sbindir}/avahi-daemon \
-		      ${sysconfdir}/avahi/avahi-daemon.conf \
-		      ${sysconfdir}/avahi/hosts \
-		      ${sysconfdir}/avahi/services \
-		      ${sysconfdir}/dbus-1 \
-		      ${sysconfdir}/init.d/avahi-daemon \
-		      ${datadir}/avahi/introspection/*.introspect \
-		      ${datadir}/avahi/avahi-service.dtd \
-		      ${datadir}/avahi/service-types"
+                      ${sysconfdir}/avahi/avahi-daemon.conf \
+                      ${sysconfdir}/avahi/hosts \
+                      ${sysconfdir}/avahi/services \
+                      ${sysconfdir}/dbus-1 \
+                      ${sysconfdir}/init.d/avahi-daemon \
+                      ${datadir}/avahi/introspection/*.introspect \
+                      ${datadir}/avahi/avahi-service.dtd \
+                      ${datadir}/avahi/service-types"
 FILES_libavahi-client = "${libdir}/libavahi-client.so.*"
 FILES_avahi-dnsconfd = "${sbindir}/avahi-dnsconfd \
-			${sysconfdir}/avahi/avahi-dnsconfd.action \
-			${sysconfdir}/init.d/avahi-dnsconfd"
+                        ${sysconfdir}/avahi/avahi-dnsconfd.action \
+                        ${sysconfdir}/init.d/avahi-dnsconfd"
 FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
 FILES_avahi-utils = "${bindir}/avahi-*"
 
 CONFFILES_avahi-daemon = "${sysconfdir}/avahi/avahi-daemon.conf"
-
-EXTRA_OECONF = "--with-distro=debian --disable-gdbm --disable-gtk --disable-mono --disable-monodoc --disable-qt3 --disable-qt4 --disable-python"
-inherit autotools pkgconfig update-rc.d
-
-
-do_stage() {
-	autotools_stage_all
-}
 
 INITSCRIPT_PACKAGES = "avahi-daemon avahi-dnsconfd"
 INITSCRIPT_NAME_avahi-daemon = "avahi-daemon"
