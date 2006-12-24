@@ -1,5 +1,5 @@
 SECTION = "x11/utils"
-DEPENDS = "gtk+ glib-2.0 dbus libxml2 popt"
+DEPENDS = "gtk+ glib-2.0 dbus dbus-glib libxml2 popt"
 DESCRIPTION = "Settings daemon using DBUS for communication."
 LICENSE = "GPL"
 PROVIDES = "gconf"
@@ -7,7 +7,7 @@ RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
 PV = "2.10.0+svn${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
            file://gconf-dbus-update.patch;patch=1;pnum=0 \
