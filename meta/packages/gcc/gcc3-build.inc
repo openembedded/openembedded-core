@@ -11,14 +11,14 @@ B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 BINV ?= "${PV}"
 
 # gcj doesn't work on some architectures
-JAVA = ",java"
-JAVA_arm = ""
-JAVA_armeb = ""
-JAVA_mipsel = ""
-JAVA_sh3 = ""
+JAVA ?= ",java"
+JAVA_arm ?= ""
+JAVA_armeb ?= ""
+JAVA_mipsel ?= ""
+JAVA_sh3 ?= ""
 # gcc4-build sets this to f95
-FORTRAN ?= "f77"
-LANGUAGES ?= "c,c++,${FORTRAN}${JAVA}"
+FORTRAN ?= ",f77"
+LANGUAGES ?= "c,c++${FORTRAN}${JAVA}"
 
 EXTRA_OECONF = "${@['--enable-clocale=generic', ''][bb.data.getVar('USE_NLS', d, 1) != 'no']} \
                 --with-gnu-ld \
@@ -60,8 +60,13 @@ python __anonymous () {
     import bb, re
     if (re.match('linux-uclibc$', bb.data.getVar('TARGET_OS', d, 1)) != None):
         bb.data.setVar('EXTRA_OECONF_DEP', '${EXTRA_OECONF_uclibc}', d)
+    elif (re.match('linux-uclibcgnueabi$', bb.data.getVar('TARGET_OS', d, 1)) != None):
+        bb.data.setVar('EXTRA_OECONF_DEP', '${EXTRA_OECONF_uclibc}', d)
+    elif (re.match('linux-gnueabi$', bb.data.getVar('TARGET_OS', d, 1)) != None):
+           bb.data.setVar('EXTRA_OECONF_DEP', '${EXTRA_OECONF_glibc}', d)
     elif (re.match('linux$', bb.data.getVar('TARGET_OS', d, 1)) != None):
         bb.data.setVar('EXTRA_OECONF_DEP', '${EXTRA_OECONF_glibc}', d)
+
 }
 
 do_configure () {
@@ -78,6 +83,7 @@ do_configure () {
 		export LD_FOR_TARGET="${HOST_PREFIX}ld"
 		export NM_FOR_TARGET="${HOST_PREFIX}nm"
 		export AR_FOR_TARGET="${HOST_PREFIX}ar"
+		export GFORTRAN_FOR_TARGET="gfortran"
 		export RANLIB_FOR_TARGET="${HOST_PREFIX}ranlib"
 	fi
 	export CC_FOR_BUILD="${BUILD_CC}"
