@@ -17,5 +17,4 @@ PREFERRED_VERSION_elfutils ?= "0.108"
 
 #Use the ARM EABI when building for an ARM cpu. We can't use overrides
 #here because this breaks all places where ":=" is used.
-TARGET_VENDOR = "${@['','-poky'][bb.data.getVar('TARGET_ARCH',d,1)=='arm']}"
 TARGET_OS = "linux${@['','-gnueabi'][bb.data.getVar('TARGET_ARCH',d,1)=='arm']}"

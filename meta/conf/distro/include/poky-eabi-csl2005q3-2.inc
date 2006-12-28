@@ -18,5 +18,4 @@ PREFERRED_VERSION_linux-libc-headers ?= "2.6.12rc3+csl-arm-2005q3-2"
 
 #Use the ARM EABI when building for an ARM cpu. We can't use overrides
 #here because this breaks all places where ":=" is used.
-TARGET_VENDOR = "${@['','-poky'][bb.data.getVar('TARGET_ARCH',d,1)=='arm']}"
 TARGET_OS = "linux${@['','-gnueabi'][bb.data.getVar('TARGET_ARCH',d,1)=='arm']}"
