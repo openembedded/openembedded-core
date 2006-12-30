@@ -1,4 +1,4 @@
-pDESCRIPTION = "Tasks for OpenedHand Poky"
+DESCRIPTION = "Tasks for OpenedHand Poky"
 PR = "r44"
 
 PACKAGES = "\
