@@ -1,5 +1,5 @@
 LICENSE = "GPL"
-PR = "r1"
+PR = "r2"
 
 inherit gnome
 
@@ -8,6 +8,7 @@ RRECOMMENDS = "gnome-vfs-plugin-file gnome-mime-data shared-mime-info"
 
 # This is to provide compatibility with the gnome-vfs DBus fork
 PROVIDES = "gnome-vfs-plugin-dbus"
+RPROVIDES = "gnome-vfs-plugin-dbus"
 
 SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1"
 
