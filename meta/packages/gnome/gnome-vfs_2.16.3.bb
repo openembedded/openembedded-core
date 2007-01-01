@@ -1,5 +1,5 @@
 LICENSE = "GPL"
-PR = "r2"
+PR = "r3"
 
 inherit gnome
 
@@ -12,7 +12,7 @@ RPROVIDES = "gnome-vfs-plugin-dbus"
 
 SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1"
 
-EXTRA_OECONF = "--disable-openssl"
+EXTRA_OECONF = "--disable-openssl --disable-samba"
 #export KRB5_CONFIG="none"
 
 FILES_${PN} += " ${libdir}/vfs"
