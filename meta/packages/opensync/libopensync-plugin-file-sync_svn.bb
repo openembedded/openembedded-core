@@ -1,0 +1,3 @@
+
+require libopensync-plugin.inc
+

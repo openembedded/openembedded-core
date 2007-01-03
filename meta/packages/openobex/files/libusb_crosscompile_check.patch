@@ -1,0 +1,12 @@
+diff -Naur openobex-1.2_old/acinclude.m4 openobex-1.2/acinclude.m4
+--- openobex-1.2_old/acinclude.m4	2006-03-07 19:57:49.000000000 +0200
++++ openobex-1.2/acinclude.m4	2006-04-18 23:07:25.000000000 +0300
+@@ -195,7 +195,7 @@
+ 
+ 	if (test "${usb_enable}" = "yes" && test "${usb_found}" = "yes"); then
+ 		AC_DEFINE(HAVE_USB, 1, [Define if system supports USB and it's enabled])
+-		AC_CHECK_FILE(${usb_prefix}/lib/pkgconfig/libusb.pc, REQUIRES="$REQUIRES libusb")
++		REQUIRES="libusb"
+ 	fi
+ 
+ 	AM_CONDITIONAL(APPS, test "${apps_enable}" = "yes")
