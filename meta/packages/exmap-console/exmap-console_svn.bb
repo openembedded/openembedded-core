@@ -2,7 +2,7 @@ DESCRIPTION = "console-based exmap"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r8"
+PR = "r9"
 SRCDATE=20070105
 
 # HACK -- I want the kernel module version label to include both the 
@@ -21,11 +21,11 @@ inherit autotools
 
 PACKAGES += "exmap-server kernel-module-exmap"
 
-FILES_${PN}= "${sbindir}"
+FILES_${PN}= "${bindir}/exmap ${bindir}/exmapd"
 PACKAGE_ARCH_exmap-console = "${TARGET_ARCH}"
 RDEPENDS_exmap-console = "kernel-module-exmap"
 
-FILES_exmap-server = "${bindir}"
+FILES_exmap-server = "${bindir}/exmapserver"
 PACKAGE_ARCH_exmap-server = "${TARGET_ARCH}"
 RDEPENDS_exmap-server = "kernel-module-exmap"
 
