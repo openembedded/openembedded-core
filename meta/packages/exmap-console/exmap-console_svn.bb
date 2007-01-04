@@ -2,14 +2,36 @@ DESCRIPTION = "console-based exmap"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r7"
-PV = "0.3.1+svn${SRCDATE}"
+PR = "r8"
+SRCDATE=20070105
+
+# HACK -- I want the kernel module version label to include both the 
+# exmap pacakge version and the kernel version, but it is not possible
+# to use ${PV} in the definition of PV_kernel-module-exmap (complains
+# about recursion, hence $MYPV 
+
+PV = "0.4+svn${SRCDATE}"
+MYPV = "0.4+svn${SRCDATE}"
 
 SRC_URI = \
     "svn://svn.o-hand.com/repos/misc/trunk;module=exmap-console;proto=http"
 
 inherit module-base
 inherit autotools
+
+PACKAGES += "exmap-server kernel-module-exmap"
+
+FILES_${PN}= "${sbindir}"
+PACKAGE_ARCH_exmap-console = "${TARGET_ARCH}"
+RDEPENDS_exmap-console = "kernel-module-exmap"
+
+FILES_exmap-server = "${bindir}"
+PACKAGE_ARCH_exmap-server = "${TARGET_ARCH}"
+RDEPENDS_exmap-server = "kernel-module-exmap"
+
+FILES_kernel-module-exmap = "${base_libdir}"
+PACKAGE_ARCH_kernel-module-exmap = "${MACHINE_ARCH}"
+PV_kernel-module-exmap = "${MYPV}-${KERNEL_VERSION}"
 
 S = "${WORKDIR}/exmap-console"
 
@@ -28,4 +50,3 @@ do_compile() {
 		   ${MAKE_TARGETS}
 }
 
-FILES_${PN}="${sbindir} ${base_libdir}"
