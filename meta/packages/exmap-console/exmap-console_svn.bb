@@ -2,16 +2,10 @@ DESCRIPTION = "console-based exmap"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r9"
-SRCDATE=20070105
-
-# HACK -- I want the kernel module version label to include both the 
-# exmap pacakge version and the kernel version, but it is not possible
-# to use ${PV} in the definition of PV_kernel-module-exmap (complains
-# about recursion, hence $MYPV 
+PR = "r10"
 
 PV = "0.4+svn${SRCDATE}"
-MYPV = "0.4+svn${SRCDATE}"
+MYPV := "${PV}"
 
 SRC_URI = \
     "svn://svn.o-hand.com/repos/misc/trunk;module=exmap-console;proto=http"
@@ -23,15 +17,17 @@ PACKAGES += "exmap-server kernel-module-exmap"
 
 FILES_${PN}= "${bindir}/exmap ${bindir}/exmapd"
 PACKAGE_ARCH_exmap-console = "${TARGET_ARCH}"
-RDEPENDS_exmap-console = "kernel-module-exmap"
+RDEPENDS_exmap-console += "kernel-module-exmap"
 
 FILES_exmap-server = "${bindir}/exmapserver"
 PACKAGE_ARCH_exmap-server = "${TARGET_ARCH}"
-RDEPENDS_exmap-server = "kernel-module-exmap"
+RDEPENDS_exmap-server += "kernel-module-exmap"
 
 FILES_kernel-module-exmap = "${base_libdir}"
 PACKAGE_ARCH_kernel-module-exmap = "${MACHINE_ARCH}"
 PV_kernel-module-exmap = "${MYPV}-${KERNEL_VERSION}"
+RDEPENDS_kernel-module-exmap += "kernel (${KERNEL_VERSION})"
+DEPENDS_kernel-module-exmap += "virtual/kernel"
 
 S = "${WORKDIR}/exmap-console"
 
@@ -50,3 +46,14 @@ do_compile() {
 		   ${MAKE_TARGETS}
 }
 
+pkg_postinst_append_kernel-module-exmap () {
+	if [ -n "$D" ]; then
+		exit 1
+	fi
+	depmod -a
+	update-modules || true
+}
+
+pkg_postrm_append_kernel-module-exmap () {
+	update-modules || true
+}
