@@ -229,6 +229,7 @@ def patch_init(d):
 			args = ["import", "-p", patch["strippath"]]
 			if force:
 				args.append("-f")
+				args.append("-dn")
 			args.append(patch["file"])
 
 			self._runcmd(args)
