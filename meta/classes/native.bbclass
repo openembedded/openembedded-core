@@ -37,6 +37,7 @@ LDFLAGS = "${BUILD_LDFLAGS}"
 LDFLAGS_build-darwin = "-L${STAGING_DIR}/${BUILD_SYS}/lib "
 
 STAGING_BINDIR = "${STAGING_BINDIR_NATIVE}"
+STAGING_BINDIR_CROSS = "${STAGING_BINDIR_NATIVE}"
 
 # set the compiler as well. It could have been set to something else
 export CC = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
