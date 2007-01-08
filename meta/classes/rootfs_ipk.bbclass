@@ -2,7 +2,7 @@
 # Creates a root filesystem out of IPKs
 #
 # This rootfs can be mounted via root-nfs or it can be put into an cramfs/jffs etc.
-# See image_ipk.oeclass for a usage of this.
+# See image.bbclass for a usage of this.
 #
 
 DEPENDS_prepend="ipkg-native ipkg-utils-native fakeroot-native "
@@ -80,5 +80,5 @@ rootfs_ipk_log_check() {
 		fi
 	done
 	test "$do_exit" = 1 && exit 1
-        true					
+	true
 }
