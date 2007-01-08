@@ -3,6 +3,7 @@ require dbus_${PV}.inc
 
 DEPENDS = "expat glib-2.0 virtual/libintl dbus-native"
 SRC_URI_EXTRA = "file://no-introspect.patch;patch=1 file://no-bindings.patch;patch=1"
+PROVIDES = "dbus-glib"
 
 FILES_${PN} += "${bindir}/dbus-daemon"
 FILES_${PN}-dev += "${bindir}/dbus-binding-tool"

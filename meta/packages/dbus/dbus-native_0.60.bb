@@ -7,6 +7,7 @@ inherit native
 S = "${WORKDIR}/dbus-${PV}"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dbus"
 DEPENDS = "glib-2.0-native"
+PROVIDES = "dbus-glib-native"
 
 PR = "r1"
 

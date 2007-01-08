@@ -4,7 +4,6 @@ HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
 DESCRIPTION = "message bus system for applications to talk to one another"
 LICENSE = "GPL"
 DEPENDS = "expat glib-2.0 virtual/libintl"
-PROVIDES = "dbus-glib"
 
 SRC_URI = "http://freedesktop.org/software/dbus/releases/dbus-${PV}.tar.gz \
 	   file://cross.patch;patch=1 \
