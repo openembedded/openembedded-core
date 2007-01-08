@@ -51,6 +51,13 @@ IMAGE_FEATURES = "dbg-tools test-tools debug-tweaks"
 #PACKAGE_CLASSES ?= "package_deb package_ipk"
 PACKAGE_CLASSES ?= "package_ipk"
 
+# POKYMODE controls the characteristics of the generated packages/images.
+# Options include several different EABI combinations and a
+# compatibility mode for the OABI mode poky use to use. Use "oabi" for machines 
+# with kernels < 2.6.18 for example. The default is "eabi". These changes only 
+# really apply for ARM machines.
+# POKYMODE = "oabi"
+
 # Uncomment this to specify where BitBake should create its temporary files.
 # Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
 # disk space, so make sure to free enough space. The default TMPDIR is
