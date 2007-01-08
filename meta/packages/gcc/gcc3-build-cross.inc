@@ -44,4 +44,8 @@ do_stage_append () {
 	do
 		rm -rf ${CROSS_DIR}/$d
 	done
+
+	#fix up libsupc++ and libstdc++ la files
+	sed -i "s|dependency_libs\s*=\s*.*|dependency_libs = '-L${CROSS_DIR}/${TARGET_SYS}/lib -lgcc_s -lc -lm '|" ${CROSS_DIR}/${TARGET_SYS}/lib/libsupc++.la
+	sed -i "s|dependency_libs\s*=\s*.*|dependency_libs = '-L${CROSS_DIR}/${TARGET_SYS}/lib -lgcc_s -lc -lm '|" ${CROSS_DIR}/${TARGET_SYS}/lib/libstdc++.la
 }
