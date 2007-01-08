@@ -1,29 +1,29 @@
-#!/usr/bin/env python
 # ex:ts=4:sw=4:sts=4:et
 # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-"""
-BitBake 'Build' implementation
-
-Core code for function execution and task handling in the
-BitBake build tools.
-
-Copyright (C) 2003, 2004  Chris Larson
-
-Based on Gentoo's portage.py.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-
-Based on functions from the base bb module, Copyright 2003 Holger Schurig
-"""
+#
+# BitBake 'Build' implementation
+#
+# Core code for function execution and task handling in the
+# BitBake build tools.
+#
+# Copyright (C) 2003, 2004  Chris Larson
+#
+# Based on Gentoo's portage.py.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+#Based on functions from the base bb module, Copyright 2003 Holger Schurig
 
 from bb import data, fetch, event, mkdirhier, utils
 import bb, os
@@ -219,14 +219,18 @@ def exec_func_shell(func, d):
         bb.msg.error(bb.msg.domain.Build, "function %s failed" % func)
         if data.getVar("BBINCLUDELOGS", d):
             bb.msg.error(bb.msg.domain.Build, "log data follows (%s)" % logfile)
-            f = open(logfile, "r")
-            while True:
-                l = f.readline()
-                if l == '':
-                    break
-                l = l.rstrip()
-                print '| %s' % l
-            f.close()
+            number_of_lines = data.getVar("BBINCLUDELOGS_LINES", d)
+            if number_of_lines:
+                os.system('tail -n%s %s' % (number_of_lines, logfile))
+            else:
+                f = open(logfile, "r")
+                while True:
+                    l = f.readline()
+                    if l == '':
+                        break
+                    l = l.rstrip()
+                    print '| %s' % l
+                f.close()
         else:
             bb.msg.error(bb.msg.domain.Build, "see log in %s" % logfile)
         raise FuncFailed( logfile )
@@ -252,9 +256,8 @@ def exec_task(task, d):
         raise EventException("Missing node in task graph", InvalidTask(task, d))
 
     # check whether this task needs executing..
-    if not data.getVarFlag(task, 'force', d):
-        if stamp_is_current(task, d):
-            return 1
+    if stamp_is_current(task, d):
+        return 1
 
     # follow digraph path up, then execute our way back down
     def execute(graph, item):
@@ -291,59 +294,43 @@ def exec_task(task, d):
 
     # make stamp, or cause event and raise exception
     if not data.getVarFlag(task, 'nostamp', d):
-        mkstamp(task, d)
+        make_stamp(task, d)
 
-def stamp_is_current_cache(dataCache, file_name, task, checkdeps = 1):
+def extract_stamp_data(d, fn):
     """
-    Check status of a given task's stamp. 
-    Returns 0 if it is not current and needs updating.
-    Same as stamp_is_current but works against the dataCache instead of d
+    Extracts stamp data from d which is either a data dictonary (fn unset) 
+    or a dataCache entry (fn set). 
     """
-    task_graph = dataCache.task_queues[file_name]
-
-    if not dataCache.stamp[file_name]:
-        return 0
-
-    stampfile = "%s.%s" % (dataCache.stamp[file_name], task)
-    if not os.access(stampfile, os.F_OK):
-        return 0
-
-    if checkdeps == 0:
-        return 1
-
-    import stat
-    tasktime = os.stat(stampfile)[stat.ST_MTIME]
-
-    _deps = []
-    def checkStamp(graph, task):
-        # check for existance
-        if 'nostamp' in dataCache.task_deps[file_name] and task in dataCache.task_deps[file_name]['nostamp']:
-            return 1
-
-        if not stamp_is_current_cache(dataCache, file_name, task, 0):
-            return 0
-
-        depfile = "%s.%s" % (dataCache.stamp[file_name], task)
-        deptime = os.stat(depfile)[stat.ST_MTIME]
-        if deptime > tasktime:
-            return 0
-        return 1
-
-    return task_graph.walkdown(task, checkStamp)
-
-def stamp_is_current(task, d, checkdeps = 1):
-    """
-    Check status of a given task's stamp. 
-    Returns 0 if it is not current and needs updating.
-    """
+    if fn:
+        return (d.task_queues[fn], d.stamp[fn], d.task_deps[fn])
     task_graph = data.getVar('_task_graph', d)
     if not task_graph:
         task_graph = bb.digraph()
         data.setVar('_task_graph', task_graph, d)
-    stamp = data.getVar('STAMP', d)
-    if not stamp:
+    return (task_graph, data.getVar('STAMP', d, 1), None)
+
+def extract_stamp(d, fn):
+    """
+    Extracts stamp format which is either a data dictonary (fn unset) 
+    or a dataCache entry (fn set). 
+    """
+    if fn:
+        return d.stamp[fn]
+    return data.getVar('STAMP', d, 1)
+
+def stamp_is_current(task, d, file_name = None, checkdeps = 1):
+    """
+    Check status of a given task's stamp. 
+    Returns 0 if it is not current and needs updating.
+    (d can be a data dict or dataCache)
+    """
+
+    (task_graph, stampfn, taskdep) = extract_stamp_data(d, file_name)
+
+    if not stampfn:
         return 0
-    stampfile = "%s.%s" % (data.expand(stamp, d), task)
+
+    stampfile = "%s.%s" % (stampfn, task)
     if not os.access(stampfile, os.F_OK):
         return 0
 
@@ -356,13 +343,17 @@ def stamp_is_current(task, d, checkdeps = 1):
     _deps = []
     def checkStamp(graph, task):
         # check for existance
-        if data.getVarFlag(task, 'nostamp', d):
-            return 1
+        if file_name:
+            if 'nostamp' in taskdep and task in taskdep['nostamp']:
+                return 1
+        else:
+            if data.getVarFlag(task, 'nostamp', d):
+                return 1
 
-        if not stamp_is_current(task, d, 0):
+        if not stamp_is_current(task, d, file_name, 0						):
             return 0
 
-        depfile = "%s.%s" % (data.expand(stamp, d), task)
+        depfile = "%s.%s" % (stampfn, task)
         deptime = os.stat(depfile)[stat.ST_MTIME]
         if deptime > tasktime:
             return 0
@@ -370,24 +361,40 @@ def stamp_is_current(task, d, checkdeps = 1):
 
     return task_graph.walkdown(task, checkStamp)
 
-
-def md5_is_current(task):
-    """Check if a md5 file for a given task is current"""
-
-
-def mkstamp(task, d):
-    """Creates/updates a stamp for a given task"""
-    stamp = data.getVar('STAMP', d)
+def stamp_internal(task, d, file_name):
+    """
+    Internal stamp helper function
+    Removes any stamp for the given task
+    Makes sure the stamp directory exists
+    Returns the stamp path+filename
+    """
+    stamp = extract_stamp(d, file_name)
     if not stamp:
         return
-    stamp = "%s.%s" % (data.expand(stamp, d), task)
+    stamp = "%s.%s" % (stamp, task)
     mkdirhier(os.path.dirname(stamp))
     # Remove the file and recreate to force timestamp
     # change on broken NFS filesystems
     if os.access(stamp, os.F_OK):
         os.remove(stamp)
-    f = open(stamp, "w")
-    f.close()
+    return stamp
+
+def make_stamp(task, d, file_name = None):
+    """
+    Creates/updates a stamp for a given task
+    (d can be a data dict or dataCache)
+    """
+    stamp = stamp_internal(task, d, file_name)
+    if stamp:
+        f = open(stamp, "w")
+        f.close()
+
+def del_stamp(task, d, file_name = None):
+    """
+    Removes a stamp for a given task
+    (d can be a data dict or dataCache)
+    """
+    stamp_internal(task, d, file_name)
 
 def add_task(task, deps, d):
     task_graph = data.getVar('_task_graph', d)

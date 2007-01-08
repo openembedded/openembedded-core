@@ -5,19 +5,22 @@
 BitBake 'RunQueue' implementation
 
 Handles preparation and execution of a queue of tasks
-
-Copyright (C) 2006  Richard Purdie
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License version 2 as published by the Free 
-Software Foundation
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
 """
+
+# Copyright (C) 2006  Richard Purdie
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 from bb import msg, data, fetch, event, mkdirhier, utils
 from sets import Set 
@@ -48,7 +51,7 @@ class RunQueue:
         taskname = self.runq_task[task]
         return "%s, %s" % (fn, taskname)
 
-    def prepare_runqueue(self, cfgData, dataCache, taskData, targets):
+    def prepare_runqueue(self, cooker, cfgData, dataCache, taskData, targets):
         """
         Turn a set of taskData into a RunQueue and compute data needed 
         to optimise the execution order.
@@ -104,9 +107,13 @@ class RunQueue:
                         depdata = taskData.build_targets[depid][0]
                         if depdata:
                             dep = taskData.fn_index[depdata]
-                            taskid = taskData.gettask_id(dep, taskname)
-                            depends.append(taskid)
-                            fnid = taskData.tasks_fnid[taskid]
+                            # Need to avoid creating new tasks here
+                            taskid = taskData.gettask_id(dep, taskname, False)
+                            if taskid:
+                                depends.append(taskid)
+                                fnid = taskData.tasks_fnid[taskid]
+                            else:
+                                fnid = taskData.getfn_id(dep)
                             for nextdepid in taskData.depids[fnid]:
                                 if nextdepid not in dep_seen:
                                     add_recursive_build(nextdepid)
@@ -127,9 +134,13 @@ class RunQueue:
                         depdata = taskData.run_targets[rdepid][0]
                         if depdata:
                             dep = taskData.fn_index[depdata]
-                            taskid = taskData.gettask_id(dep, taskname)
-                            depends.append(taskid)
-                            fnid = taskData.tasks_fnid[taskid]
+                            # Need to avoid creating new tasks here
+                            taskid = taskData.gettask_id(dep, taskname, False)
+                            if taskid:
+                                depends.append(taskid)
+                                fnid = taskData.tasks_fnid[taskid]
+                            else:
+                                fnid = taskData.getfn_id(dep)
                             for nextdepid in taskData.depids[fnid]:
                                 if nextdepid not in dep_seen:
                                     add_recursive_build(nextdepid)
@@ -143,11 +154,11 @@ class RunQueue:
                 if 'recrdeptask' in task_deps and taskData.tasks_name[task] in task_deps['recrdeptask']:
                     dep_seen = []
                     rdep_seen = []
-                    taskname = task_deps['recrdeptask'][taskData.tasks_name[task]]
-                    for depid in taskData.depids[fnid]:
-                        add_recursive_build(depid)
-                    for rdepid in taskData.rdepids[fnid]:
-                        add_recursive_run(rdepid)
+                    for taskname in task_deps['recrdeptask'][taskData.tasks_name[task]].split():
+                        for depid in taskData.depids[fnid]:
+                            add_recursive_build(depid)
+                        for rdepid in taskData.rdepids[fnid]:
+                            add_recursive_run(rdepid)
 
                 #Prune self references
                 if task in depends:
@@ -188,13 +199,21 @@ class RunQueue:
 
         for target in targets:
             targetid = taskData.getbuild_id(target[0])
-            if targetid in taskData.failed_deps:
-                continue
 
             if targetid not in taskData.build_targets:
                 continue
 
             fnid = taskData.build_targets[targetid][0]
+
+            # Remove stamps for targets if force mode active
+            if cooker.configuration.force:
+                fn = taskData.fn_index[fnid]
+                bb.msg.note(2, bb.msg.domain.RunQueue, "Remove stamp %s, %s" % (target[1], fn))
+                bb.build.del_stamp(target[1], dataCache, fn)
+
+            if targetid in taskData.failed_deps:
+                continue
+
             if fnid in taskData.failed_fnids:
                 continue
 
@@ -338,10 +357,13 @@ class RunQueue:
 
         bb.msg.note(1, bb.msg.domain.RunQueue, "Executing runqueue")
 
+        active_builds = 0
+        tasks_completed = 0
+        tasks_skipped = 0
+
         runq_buildable = []
         runq_running = []
         runq_complete = []
-        active_builds = 0
         build_pids = {}
         failed_fnids = []
 
@@ -405,15 +427,15 @@ class RunQueue:
                     fn = taskData.fn_index[self.runq_fnid[task]]
                     taskname = self.runq_task[task]
 
-                    if bb.build.stamp_is_current_cache(dataCache, fn, taskname):
-                        targetid = taskData.gettask_id(fn, taskname)
-                        if not (targetid in taskData.external_targets and cooker.configuration.force):
-                            bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.get_user_idstring(task, taskData)))
-                            runq_running[task] = 1
-                            task_complete(self, task)
-                            continue
+                    if bb.build.stamp_is_current(taskname, dataCache, fn):
+                        bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.get_user_idstring(task, taskData)))
+                        runq_running[task] = 1
+                        task_complete(self, task)
+                        tasks_completed = tasks_completed + 1
+                        tasks_skipped = tasks_skipped + 1
+                        continue
 
-                    bb.msg.debug(1, bb.msg.domain.RunQueue, "Running task %s (%s)" % (task, self.get_user_idstring(task, taskData)))
+                    bb.msg.note(1, bb.msg.domain.RunQueue, "Running task %d of %d (ID: %s, %s)" % (tasks_completed + active_builds + 1, len(self.runq_fnid), task, self.get_user_idstring(task, taskData)))
                     try: 
                         pid = os.fork() 
                     except OSError, e: 
@@ -451,6 +473,7 @@ class RunQueue:
                         failed_fnids.append(self.runq_fnid[task])
                         break
                     task_complete(self, task)
+                    tasks_completed = tasks_completed + 1
                     del build_pids[result[0]]
                     continue
                 break
@@ -485,6 +508,8 @@ class RunQueue:
                 bb.msg.error(bb.msg.domain.RunQueue, "Task %s never ran!" % task)
             if runq_complete[task] == 0:
                 bb.msg.error(bb.msg.domain.RunQueue, "Task %s never completed!" % task)
+
+        bb.msg.note(1, bb.msg.domain.RunQueue, "Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed." % (tasks_completed, tasks_skipped, len(failed_fnids)))
 
         return failed_fnids
 

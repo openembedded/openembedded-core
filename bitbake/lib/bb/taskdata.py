@@ -6,18 +6,22 @@ BitBake 'TaskData' implementation
 
 Task data collection and handling
 
-Copyright (C) 2006  Richard Purdie
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License version 2 as published by the Free 
-Software Foundation
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
 """
+
+# Copyright (C) 2006  Richard Purdie
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 from bb import data, fetch, event, mkdirhier, utils
 import bb, os
@@ -86,16 +90,20 @@ class TaskData:
 
         return self.fn_index.index(name)
 
-    def gettask_id(self, fn, task):
+    def gettask_id(self, fn, task, create = True):
         """
         Return an ID number for the task matching fn and task.
-        If it doesn't exist, create one.
+        If it doesn't exist, create one by default.
+        Optionally return None instead.
         """
         fnid = self.getfn_id(fn)
 
         if fnid in self.tasks_lookup:
             if task in self.tasks_lookup[fnid]:
                 return self.tasks_lookup[fnid][task]
+
+        if not create:
+            return None
 
         self.tasks_name.append(task)
         self.tasks_fnid.append(fnid)
@@ -529,6 +537,7 @@ class TaskData:
             bb.msg.debug(1, bb.msg.domain.TaskData, "Resolved " + str(added) + " extra dependecies")
             if added == 0:
                 break
+        # self.dump_data()
 
     def dump_data(self):
         """

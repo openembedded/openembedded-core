@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # ex:ts=4:sw=4:sts=4:et
 # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
 ##########################################################################
@@ -6,17 +5,18 @@
 # Copyright (C) 2005-2006 Michael 'Mickey' Lauer <mickey@Vanille.de>
 # Copyright (C) 2005-2006 Vanille Media
 #
-# This program is free software; you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation; version 2 of the License.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License along with
-# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-# Place, Suite 330, Boston, MA 02111-1307 USA.
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 ##########################################################################
 #
@@ -171,7 +171,7 @@ class BitBakeShellCommands:
             td.add_unresolved(cooker.configuration.data, cooker.status)
             
             rq = runqueue.RunQueue()
-            rq.prepare_runqueue(cooker.configuration.data, cooker.status, td, tasks)
+            rq.prepare_runqueue(cooker, cooker.configuration.data, cooker.status, td, tasks)
             rq.execute_runqueue(cooker, cooker.configuration.data, cooker.status, td, tasks)
 
         except Providers.NoProvider:
@@ -255,6 +255,11 @@ class BitBakeShellCommands:
         except parse.ParseError:
             print "ERROR: Unable to open or parse '%s'" % bf
         else:
+            # Remove stamp for target if force mode active
+            if cooker.configuration.force:
+                bb.msg.note(2, bb.msg.domain.RunQueue, "Remove stamp %s, %s" % (cmd, bf))
+                bb.build.del_stamp('do_%s' % cmd, bbfile_data)
+
             item = data.getVar('PN', bbfile_data, 1)
             data.setVar( "_task_cache", [], bbfile_data ) # force
             try:
