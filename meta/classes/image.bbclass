@@ -4,7 +4,7 @@ PACKAGES = ""
 
 # We need to recursively follow RDEPENDS and RRECOMMENDS for images
 BUILD_ALL_DEPS = "1"
-do_rootfs[recrdeptask] = "do_package_write"
+do_rootfs[recrdeptask] = "do_package_write do_deploy"
 
 # Images are generally built explicitly, do not need to be part of world.
 EXCLUDE_FROM_WORLD = "1"
@@ -37,9 +37,9 @@ LINGUAS_INSTALL = "${@" ".join(map(lambda s: "locale-base-%s" % s, bb.data.getVa
 
 ROOTFS_POSTPROCESS_COMMAND ?= ""
 
-do_rootfs[nostamp] = 1
-do_rootfs[dirs] = ${TOPDIR}
-do_build[nostamp] = 1
+do_rootfs[nostamp] = "1"
+do_rootfs[dirs] = "${TOPDIR}"
+do_build[nostamp] = "1"
 
 # Must call real_do_rootfs() from inside here, rather than as a separate
 # task, so that we have a single fakeroot context for the whole process.
@@ -114,8 +114,13 @@ remove_init_link () {
 	fi
 }
 
+make_zimage_symlink_relative () {
+	if [ -L ${IMAGE_ROOTFS}/boot/zImage ]; then
+		(cd ${IMAGE_ROOTFS}/boot/ && for i in `ls zImage-* | sort`; do ln -sf $i zImage; done)
+	fi
+}
+
 # export the zap_root_password, create_etc_timestamp and remote_init_link
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs
+EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative
 
 addtask rootfs before do_build after do_install
-
