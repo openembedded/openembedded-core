@@ -6,11 +6,8 @@ of profiling all running code at low overhead."
 LICENSE = "GPL"
 DEPENDS = "popt binutils"
 
-DEFAULT_PREFERENCE = "-1"
-
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
-	   file://no_arm_mapping_syms.patch;patch=1 \
-           file://opcontrol_bashisms.patch;patch=1 \
+	   file://oprofile_eabi.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 

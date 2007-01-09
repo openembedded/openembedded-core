@@ -1,0 +1,18 @@
+---
+ daemon/opd_cookie.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+Index: oprofile/daemon/opd_cookie.c
+===================================================================
+--- oprofile.orig/daemon/opd_cookie.c	2005-10-19 00:28:26.000000000 +0100
++++ oprofile/daemon/opd_cookie.c	2007-01-09 15:12:49.000000000 +0000
+@@ -68,7 +68,8 @@ static inline int lookup_dcookie(cookie_
+ 	return syscall(__NR_lookup_dcookie, (unsigned long)(cookie >> 32),
+ 		       (unsigned long)(cookie & 0xffffffff), buf, size);
+ }
+-#elif (defined(__mips__) && (_MIPS_SIM == _MIPS_SIM_ABI32)) /*_MIPSEL */
++#elif (defined(__mips__) && (_MIPS_SIM == _MIPS_SIM_ABI32)) \
++	|| (defined(__arm__) && defined(__ARM_EABI__))
+ static inline int lookup_dcookie(cookie_t cookie, char * buf, size_t size)
+ {
+ 	return syscall(__NR_lookup_dcookie,
