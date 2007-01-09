@@ -1,0 +1,10 @@
+--- tmp/syncml-client.pc.in.orig	2007-01-09 09:43:18.000000000 +0000
++++ tmp/syncml-client.pc.in	2007-01-09 09:43:18.000000000 +0000
+@@ -8,6 +8,6 @@
+ Version: @VERSION@
+ Requires: libcurl, gconf-2.0
+ Libs: @SYNCML_LIBS@ -lsyncmlclient
+-Cflags: @SYNCML_CFLAGS@ -I@includedir@/syncml-client
++Cflags: @SYNCML_CFLAGS@ -I${includedir}/syncml-client
+ ~
+ 

@@ -1,9 +1,13 @@
+PR = "r1"
 
-SRC_URI = "svn://svn.opensync.org/plugins/syncml-client/plugin/tags;module=release-0.1;proto=http"
-S = "${WORKDIR}/release-0.1"
-PV = "0.1"
+SRC_URI = "svn://svn.opensync.org/plugins/syncml-client/plugin/tags;module=release-${PV};proto=http \
+	file://missing-syncml-config.patch;patch=1 \
+	file://syncml-client-plugin-cpp.patch;patch=1"
+
+
+S = "${WORKDIR}/release-${PV}"
 
 require libopensync-plugin.inc
 
-DEPENDS += " syncml-client"
+DEPENDS += "syncml-client"
 
