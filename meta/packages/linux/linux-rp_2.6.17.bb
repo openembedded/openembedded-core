@@ -48,7 +48,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            ${RPSRC}/pxafb_changeres-r0.patch;patch=1 \
            ${RPSRC}/poodle_audio-r6.patch;patch=1 \
            ${RPSRC}/pxa27x_overlay-r2.patch;patch=1 \
-           ${RPSRC}/xscale_cache_workaround-r0.patch;patch=1 \
+           ${RPSRC}/xscale_cache_workaround-r1.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            file://hrw-pcmcia-ids-r5.patch;patch=1 \
            ${RPSRC}/logo_oh-r0.patch.bz2;patch=1;status=unmergable \
@@ -123,6 +123,3 @@ SRC_URI_append_tosa = "\
 #	   ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
 
 S = "${WORKDIR}/linux-2.6.17"
-
-# to get module dependencies working
-KERNEL_RELEASE = "2.6.17"
