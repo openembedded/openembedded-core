@@ -61,9 +61,9 @@ module_autoload_snd-soc-poodle_poodle = "snd-soc-poodle"
 do_configure() {
 	rm -f ${S}/.config
 
-	if [ "${MACHINE}" == "tosa" ]; then
+	if [ "${MACHINE}" = "tosa" ]; then
 		gcc_version=`${KERNEL_CC} -dumpversion`		
-		if [ "${gcc_version}" == "4.0.1" ] || [ "${gcc_version}" == "4.0.2" ]; then
+		if [ "${gcc_version}" = "4.0.1" ] || [ "${gcc_version}" = "4.0.2" ]; then
 			die "tosa kernel wont work with gcc 4.0.x"
 		fi
 	fi
@@ -72,12 +72,12 @@ do_configure() {
 		die "No default configuration for ${MACHINE} available."
 	fi
 
-	if [ "${MACHINE}" == "collie" ]; then
+	if [ "${MACHINE}" = "collie" ]; then
 		mempos=`echo "obase=16; $mem * 1024 * 1024" | bc`
 		rdsize=`echo "$rd * 1024" | bc`
 		total=`expr $mem + $rd`
 		addr=`echo "obase=16; ibase=16; C0000000 + $mempos" | bc`
-	 	if [ "$rd" == "0" ]
+	 	if [ "$rd" = "0" ]
 	 	then
 		    echo "No RAMDISK"
 			echo "# CONFIG_MTD_MTDRAM_SA1100 is not set" >> ${S}/.config
@@ -92,7 +92,7 @@ do_configure() {
 
 	echo "CONFIG_CMDLINE=\"${CMDLINE}\"" >> ${S}/.config
 
-	#if [ "${ENABLE_ELPP}" == "yes" ]; then
+	#if [ "${ENABLE_ELPP}" = "yes" ]; then
         #        echo "# Enhanced Linux Progress Patch"  >> ${S}/.config
         #        echo "CONFIG_FB_ELPP=y"                 >> ${S}/.config
         #        echo "CONFIG_LOGO=y"                    >> ${S}/.config
@@ -101,7 +101,7 @@ do_configure() {
 	#	echo "# CONFIG_FB_ELPP is not set"	>> ${S}/.config
 	#fi
 
-	if [ "${TARGET_OS}" == "linux-gnueabi" ]; then
+	if [ "${TARGET_OS}" = "linux-gnueabi" ]; then
 		echo "CONFIG_AEABI=y"                   >> ${S}/.config
 		echo "CONFIG_OABI_COMPAT=y"             >> ${S}/.config
 	else 
@@ -109,7 +109,7 @@ do_configure() {
 		echo "# CONFIG_OABI_COMPAT is not set"  >> ${S}/.config
 	fi
 
-	if [ "${DISTRO}" == "openzaurus" ]; then
+	if [ "${DISTRO}" = "openzaurus" ]; then
 		case ${MACHINE} in
 			c7x0 | akita | spitz )
 				echo "CONFIG_LOGO_OZ640_CLUT224=y"            >> ${S}/.config
@@ -130,7 +130,7 @@ do_configure() {
 		echo "CONFIG_LOGO=y"                          >> ${S}/.config
 		echo "# CONFIG_LOGO_LINUX_CLUT224 is not set" >> ${S}/.config
 		echo "# CONFIG_LOGO_OHAND_CLUT224 is not set" >> ${S}/.config
-	elif [ "${DISTRO}" == "poky" ]; then
+	elif [ "${DISTRO}" = "poky" ]; then
 		echo "CONFIG_LOGO=y"                          >> ${S}/.config
 		echo "CONFIG_LOGO_OHAND_CLUT224=y"            >> ${S}/.config
 		echo "# CONFIG_LOGO_OZ240_CLUT224 is not set" >> ${S}/.config
