@@ -93,6 +93,6 @@ BBINCLUDELOGS = "yes"
 
 # Specifies a location to search for pre-generated tarballs when fetching
 # a cvs:// URI.  Uncomment this, if you not want to pull directly from CVS.
-CVS_TARBALL_STASH = "http://www.oesources.org/source/current/"
+CVS_TARBALL_STASH = "http://folks.o-hand.com/~richard/poky/sources/"
 
 ENABLE_BINARY_LOCALE_GENERATION = "1"
