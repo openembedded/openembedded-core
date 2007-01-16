@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# Handle running Poky images standalone
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+if [ "x$1" = "x" ]; then
+    MYNAME=`basename $0`
+    echo -e "\nRun as MACHINE=xyz $MYNAME ZIMAGE IMAGEFILE"
+    echo "where:"
+    echo "  ZIMAGE - the kernel image file to use"
+    echo "  IMAGEFILE - the image file/location to use"
+    echo "  (NFS booting assumed if IMAGEFILE not specified)"
+    echo "  MACHINE=xyz - the machine name (optional, autodetected from ZIMAGE if unspecified)"
+    exit 1
+else
+    ZIMAGE=$1
+fi
+
+if [ "x$2" = "x" ]; then
+    TYPE="nfs"
+else
+    TYPE="ext2"
+    HDIMAGE=$2
+fi
+
+if [ "x$MACHINE" = "x" ]; then
+    MACHINE=`basename $ZIMAGE | sed -e 's#.*-\([a-z]*\)-*[0-9]*..*#\1#'`
+fi
+
+source $OEROOT/scripts/runqemu-internal
+

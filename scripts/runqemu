@@ -1,4 +1,20 @@
 #!/bin/sh
+#
+# Handle Poky <-> QEmu interface voodoo
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
 
 if [ "x$BUILDDIR" = "x" ]; then
     echo "You need to source poky-init-build-env before running this script"
@@ -7,17 +23,21 @@ fi
 
 PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/bin:$BUILDDIR/tmp/cross/bin:$PATH
 
-KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
-QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$OEROOT/scripts/qemu-ifup"
-
 if [ -z "$QEMU_MEMORY" ]; then
     QEMU_MEMORY="64M"
 fi
 
-if [ "x$1" != "x" ]; then
-    MACHINE=$1
+if [ "x$1" = "x" ]; then
+    echo
+    echo "Run as $0 MACHINE IMAGETYPE ZIMAGE IMAGEFILE"
+    echo "where:"
+    echo "  MACHINE - the machine to emulate (qemuarm, qemux86)"
+    echo "  IMAGETYPE - the type of image to run (ext2, nfs) (default: ext2)"
+    echo "  ZIMAGE - the kernel to use (optional)"
+    echo "  IMAGEFILE - the image file/location to use (optional)"
+    exit 1
 else
-    MACHINE="qemuarm"
+    MACHINE=$1
 fi
 
 if [ "x$2" != "x" ]; then
@@ -35,17 +55,29 @@ if [ "x$4" != "x" ]; then
 fi
 
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" ]; then
-    QEMU=`which qemu-system-arm`
     if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-$MACHINE.bin
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/arm-poky-linux/bin
 fi
 
+
+if [ "$MACHINE" = "qemuarm" ]; then
+    if [ "$TYPE" = "ext2" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
+        fi
+    fi
+fi
+
 if [ "$MACHINE" = "qemux86" ]; then
-    QEMU=`which qemu`
     if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/bzImage-$MACHINE.bin
+    fi
+    if [ "$TYPE" = "ext2" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemux86.ext2
+        fi
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
 fi
@@ -58,54 +90,15 @@ fi
 
 DISTCCD=`which distccd`
 
-
 if [ -x "$DISTCCD" ]; then
     $DISTCCD --allow 192.168.7.2 --daemon
 else
     echo "Warning: distccd not present, no distcc support loaded"
 fi
 
-if [ "$MACHINE" = "qemuarm" ]; then
-    if [ "$TYPE" = "ext2" ]; then
-        if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
-        fi
-        QEMUOPTIONS="-append \"root=/dev/sda mem=$QEMU_MEMORY\" $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
-    fi
-    if [ "$TYPE" = "nfs" ]; then
-        dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
-        QEMUOPTIONS="-append \"root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemuarm rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -M versatilepb -hda /tmp/blank"
-    fi
-fi
-
-if [ "$MACHINE" = "qemux86" ]; then
-    if [ "$TYPE" = "ext2" ]; then
-        if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemux86.ext2
-        fi
-        # video=vesafb:1024x768-32@86
-        QEMUOPTIONS="-std-vga -append \"root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet"
-    fi
-    if [ "$TYPE" = "nfs" ]; then
-        dd if=/dev/zero of=/tmp/blank bs=1024 count=8192
-        QEMUOPTIONS="-std-vga -append \"root=/dev/nfs nfsroot=192.168.7.1:/srv/nfs/qemux86 rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -hda /tmp/blank"
-    fi
-fi
-
-if [ "x$QEMUOPTIONS" = "x" ]; then
-    echo "Sorry, unable to support this configuration"
-    exit 1
-fi
-
-echo "Running $QEMU using sudo..."
-echo "$QEMU -kernel $ZIMAGE $QEMUOPTIONS"
-sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS
-# -serial file:serial.log
+source $OEROOT/scripts/runqemu-internal
 
 if [ -x "$DISTCCD" ]; then
     killall distccd
 fi
 
-if [ -e /tmp/blank ]; then
-    rm /tmp/blank
-fi

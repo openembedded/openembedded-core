@@ -1,0 +1,129 @@
+#!/bin/sh
+#
+# Handle running Poky images under qemu
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+#
+# Call setting:
+#   QEMU_MEMORY (optional) set the amount of memory in the emualted system.
+#   SERIAL_LOGFILE (optional) log the serial port output to a file
+#
+# Image options:
+#   MACHINE - the machine to run
+#   TYPE - the image type to run
+#   ZIMAGE - the kernel image file to use
+#   HDIMAGE - the disk image file to use
+#
+
+QEMUIFUP=`which qemu-ifup`
+KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
+QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$QEMUIFUP"
+
+if [ -z "$QEMU_MEMORY" ]; then
+    QEMU_MEMORY="64M"
+fi
+
+SERIALOPTS=""
+if [ "x$SERIAL_LOGFILE" != "x" ]; then
+    SERIALOPTS="-serial file:$SERIAL_LOGFILE"
+fi
+
+if [ "$TYPE" != "nfs" -a ! -f "$HDIMAGE" ]; then
+    echo -e "\nError, image file $HDIMAGE doesn't exist"
+    exit 1
+fi
+
+if [ ! -f "$ZIMAGE" ]; then
+    echo -e "\nError, kernel image file $ZIMAGE doesn't exist"
+    exit 1
+fi
+
+if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" ]; then
+    echo -e "\nError, unsupported machine type $MACHINE"
+    exit 1
+fi
+
+if [ "$MACHINE" = "qemuarm" ]; then
+    QEMU=`which qemu-system-arm`
+    if [ "$TYPE" = "ext2" ]; then
+        QEMUOPTIONS="-append \"root=/dev/sda console=ttyAMA0 console=tty0 mem=$QEMU_MEMORY\" $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
+    fi
+    if [ "$TYPE" = "nfs" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+            HDIMAGE=/srv/nfs/qemuarm
+        fi
+        if [ ! -d "$HDIMAGE" ]; then
+            echo -e "\nError, NFS mount point $HDIMAGE doesn't exist"
+            exit 1
+        fi
+        QEMUOPTIONS="-append \"root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -M versatilepb"
+    fi
+fi
+
+if [ "$MACHINE" = "qemux86" ]; then
+    QEMU=`which qemu`
+    if [ "$TYPE" = "ext2" ]; then
+        QEMUOPTIONS="-std-vga -append \"root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet"
+    fi
+    if [ "$TYPE" = "nfs" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+            HDIMAGE=/srv/nfs/qemux86
+        fi
+        if [ ! -d "$HDIMAGE" ]; then
+            echo -e "\nError, NFS mount point $HDIMAGE doesn't exist."
+            exit 1
+        fi
+        QEMUOPTIONS="-std-vga -append \"root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD"
+    fi
+fi
+
+if [ "$MACHINE" = "spitz" ]; then
+    QEMU=`which qemu-system-arm`
+#    QEMU=/usr/local/bin/qemu-system-arm
+#    if [ "$TYPE" = "ext2" ]; then
+#        if [ "x$HDIMAGE" = "x" ]; then
+#           HDIMAGE=`readlink -f $BUILDDIR/tmp/deploy/images/oh-image-sdk-spitz.ext2`
+#           if [ ! -e $HDIMAGE.mbr ]; then
+#               cp $OEROOT/mbr.bin $HDIMAGE.mbr
+#               cat $HDIMAGE >> $HDIMAGE.mbr
+#           fi
+#           HDIMAGE=$BUILDDIR/tmp/deploy/images/hdaimage.bin
+#        fi
+#        QEMUOPTIONS="-append \"root=/dev/sda mem=$QEMU_MEMORY\" $QEMU_NETWORK_CMD -M spitz -hda $HDIMAGE"
+#    fi
+fi
+
+if [ "$MACHINE" = "akita" ]; then
+    QEMU=`which qemu-system-arm`
+#    QEMU=/usr/local/bin/qemu-system-arm
+#    if [ "$TYPE" = "ext2" ]; then
+#        if [ "x$HDIMAGE" = "x" ]; then
+#           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-akita.jffs2
+#           HDIMAGE=$BUILDDIR/tmp/deploy/images/akita.test
+#        fi
+#        QEMUOPTIONS="$QEMU_NETWORK_CMD -M akita -hdd $HDIMAGE"
+#    fi
+fi
+
+if [ "x$QEMUOPTIONS" = "x" ]; then
+    echo -e "\nError, unable to support this combination of options"
+    exit 1
+fi
+
+echo -e "\nRunning $QEMU using sudo..."
+echo "$QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS"
+sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS
+
+
