@@ -23,10 +23,6 @@ fi
 
 PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/bin:$BUILDDIR/tmp/cross/bin:$PATH
 
-if [ -z "$QEMU_MEMORY" ]; then
-    QEMU_MEMORY="64M"
-fi
-
 if [ "x$1" = "x" ]; then
     echo
     echo "Run as $0 MACHINE IMAGETYPE ZIMAGE IMAGEFILE"
@@ -96,7 +92,8 @@ else
     echo "Warning: distccd not present, no distcc support loaded"
 fi
 
-source $OEROOT/scripts/runqemu-internal
+INTERNAL_SCRIPT=`which runqemu-internal`
+source $INTERNAL_SCRIPT
 
 if [ -x "$DISTCCD" ]; then
     killall distccd

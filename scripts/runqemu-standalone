@@ -40,5 +40,6 @@ if [ "x$MACHINE" = "x" ]; then
     MACHINE=`basename $ZIMAGE | sed -e 's#.*-\([a-z]*\)-*[0-9]*..*#\1#'`
 fi
 
-source $OEROOT/scripts/runqemu-internal
+INTERNAL_SCRIPT=`which runqemu-internal`
+source $INTERNAL_SCRIPT
 
