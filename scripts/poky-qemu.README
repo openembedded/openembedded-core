@@ -1,0 +1,96 @@
+Poky images with QEMU
+=====================
+
+Poky can generate qemu bootable kernels and images with can be used 
+on a desktop system. Both arm and x86 images can currently be booted.
+There are two scripts, runqemu and poky-qemu, one for use within poky, 
+the other externally.
+
+QEMU outside Poky (poky-qemu)
+=============================
+
+The poky-qemu script is run as: 
+
+   MACHINE=<machine> poky-qemu <zimage> <filesystem>
+
+where:
+
+   <zimage> is the path to a kernel (e.g. zimage-qemuarm.bin)
+   <filesystem> is the path to an ext2 image (e.g. filesystem-qemuarm.ext2)
+   <machine> is "qemuarm" or "qemux86"
+   
+The MACHINE=<machine> prefix is optional and without it the script will try 
+to detect the machine name from the name of the <zimage> file.
+
+If <filesystem> isn't specified, nfs booting will be assumed.
+
+
+QEMU within Poky (runqemu)
+==========================
+
+The runqemu script is run as: 
+
+   runqemu <target> <type> <zimage> <filesystem>
+
+where:
+
+   <target> is "qemuarm" or "qemux86"
+   <type> is "ext2" or "nfs"
+   <zimage> is the path to a kernel (zimage-qemuarm.bin)
+   <filesystem> is the path to an ext2 image (filesystem-qemuarm.ext2)
+
+It will default to the qemuarm, ext2 and the last kernel and oh-image-sdk 
+image built by poky.
+
+
+Notes
+=====
+
+ - The scripts run qemu using sudo. Change perms on /dev/net/tun to 
+   run as non root
+ - You can access the host computer at 192.168.7.1 within the image.
+ - Your qemu system will be accessible as 192.16.7.2.
+ - The default NFS mount points are /srv/nfs/qemux86 or /srv/nfs/qemuarm 
+   depending on the target type.
+ - You can set QEMU_MEMORY to control amount of available memory (default 64M).
+ - You can set SERIAL_LOGFILE to have the serial output from the image logged 
+   to a file.
+
+
+NFS Image Notes
+===============
+
+As root;
+
+% apt-get install nfs-kernel-server
+
+% mkdir /srv/nfs/qemuarm
+
+Edit via /etc/exports :
+
+# /etc/exports: the access control list for filesystems which may be exported
+#               to NFS clients.  See exports(5).
+/srv/nfs/qemuarm 192.168.7.2(rw,no_root_squash)
+
+% /etc/init.d/nfs-kernel-server restart
+
+% modprobe tun
+
+untar build/tmp/deploy/images/<built image>.rootfs.tar.bz2 into /srv/nfs/qemuarm
+
+Finally, launch:
+
+% runqemu <target> nfs
+
+(Substitute qemux86 for qemuarm when using qemux86)
+
+   
+Known Issues
+============
+
+ - There is a bug in the ARM qemu in that means occasionally it will use 100% 
+   cpu. You will need to restart it in this situation.
+ - There is a problem with the ARM image not auto assigning an IP when using an 
+   ext2 image. To have working TCP/IP connectivity run:
+   'ifconfig eth0 192.168.7.2 up'
+

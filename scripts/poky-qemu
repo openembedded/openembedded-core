@@ -40,6 +40,6 @@ if [ "x$MACHINE" = "x" ]; then
     MACHINE=`basename $ZIMAGE | sed -e 's#.*-\([a-z]*\)-*[0-9]*..*#\1#'`
 fi
 
-INTERNAL_SCRIPT=`which runqemu-internal`
+INTERNAL_SCRIPT=`which poky-qemu-internal`
 source $INTERNAL_SCRIPT
 

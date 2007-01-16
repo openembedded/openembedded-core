@@ -27,7 +27,7 @@
 #   HDIMAGE - the disk image file to use
 #
 
-QEMUIFUP=`which qemu-ifup`
+QEMUIFUP=`which poky-qemu-ifup`
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
 QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$QEMUIFUP"
 

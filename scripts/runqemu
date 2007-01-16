@@ -72,7 +72,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     fi
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-qemux86.ext2
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemux86.ext2
         fi
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
@@ -92,7 +92,7 @@ else
     echo "Warning: distccd not present, no distcc support loaded"
 fi
 
-INTERNAL_SCRIPT=`which runqemu-internal`
+INTERNAL_SCRIPT=`which poky-qemu-internal`
 source $INTERNAL_SCRIPT
 
 if [ -x "$DISTCCD" ]; then
