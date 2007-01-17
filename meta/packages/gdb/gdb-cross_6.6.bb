@@ -8,7 +8,7 @@ inherit autotools sdk
 
 S = "${WORKDIR}/gdb-${PV}"
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
-	file://sim-install.patch;patch=1"
+	file://sim-install-6.6.patch;patch=1"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gdb-${PV}"
 
