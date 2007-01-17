@@ -19,6 +19,7 @@ texi2html
 cvs
 subversion
 gawk
+bochsbios (to run qemux86 images)
 
 You also need to install the qemu from http://debian.o-hand.com/. A
 poky-depends deb is also available from this source which will install 
