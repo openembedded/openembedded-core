@@ -44,6 +44,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/testing/linux-2.6.20-rc4.
            file://pxa-serial-hack.patch;patch=1;status=hack \
            file://connectplus-remove-ide-HACK.patch;patch=1;status=hack \
            file://squashfs3.0-2.6.15.patch;patch=1;status=external \
+           file://vesafb-tng-1.0-rc2-2.6.20-rc2.patch;patch=1;status=external \
            file://defconfig-c7x0 \
            file://defconfig-hx2000 \
            file://defconfig-collie \

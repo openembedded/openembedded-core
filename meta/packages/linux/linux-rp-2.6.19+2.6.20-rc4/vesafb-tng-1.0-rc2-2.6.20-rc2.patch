@@ -1,22 +1,7 @@
-# Patch generated against a6047eef1c465c38aacfbdab193161b3f0cd144
----
-# Documentation/fb/vesafb.txt   |  250 ++++--
-# arch/i386/boot/video.S        |   12 
-# drivers/video/Kconfig         |   56 +
-# drivers/video/Makefile        |    6 
-# drivers/video/fbmem.c         |    1 
-# drivers/video/modedb.c        |    1 
-# drivers/video/vesafb-thread.c |  727 +++++++++++++++++++
-# drivers/video/vesafb-tng.c    | 1598 ++++++++++++++++++++++++++++++++++++++++++
-# include/linux/sched.h         |    2 
-# include/video/vesa.h          |  150 +++
-# kernel/fork.c                 |   35 
-# mm/memory.c                   |    1 
-# mm/mmap.c                     |    1 
-# 13 files changed, 2748 insertions(+), 92 deletions(-)
-#
---- linux-2.6.17.orig/Documentation/fb/vesafb.txt
-+++ linux-2.6.17/Documentation/fb/vesafb.txt
+diff --git a/Documentation/fb/vesafb.txt b/Documentation/fb/vesafb.txt
+index ee277dd..93d6e6e 100644
+--- a/Documentation/fb/vesafb.txt
++++ b/Documentation/fb/vesafb.txt
 @@ -2,16 +2,18 @@
  What is vesafb?
  ===============
@@ -94,7 +79,7 @@
   
   Linux_kernel_mode_number = VESA_mode_number + 0x200
  
-@@ -56,15 +67,15 @@ So the table for the Kernel mode numbers
+@@ -56,15 +67,15 @@ So the table for the Kernel mode numbers are:
  
      | 640x480  800x600  1024x768 1280x1024
  ----+-------------------------------------
@@ -118,7 +103,7 @@
  
  If this does not work, this might be because your BIOS does not support
  linear framebuffers or because it does not support this mode at all.
-@@ -72,11 +83,12 @@ Even if your board does, it might be the
+@@ -72,11 +83,12 @@ Even if your board does, it might be the BIOS which does not.  VESA BIOS
  Extensions v2.0 are required, 1.2 is NOT sufficient.  You will get a
  "bad mode number" message if something goes wrong.
  
@@ -132,7 +117,7 @@
  X11
  ===
  
-@@ -84,98 +96,164 @@ XF68_FBDev should work just fine, but it
+@@ -84,98 +96,164 @@ XF68_FBDev should work just fine, but it is non-accelerated.  Running
  another (accelerated) X-Server like XF86_SVGA might or might not work.
  It depends on X-Server and graphics board.
  
@@ -152,13 +137,13 @@
 +With VBE 3.0 compatible BIOSes and vesafb-tng it is possible to change
 +the refresh rate either at boot time (by specifying the @<rr> part of
 +the mode name) or later, using the fbset utility.
++
++If you want to use the default BIOS refresh rate while switching modes
++on a running system, set pixclock to 0.
  
 - * configure and load the DOS-Tools for your the graphics board (if
 -   available) and boot linux with loadlin.
 - * use a native driver (matroxfb/atyfb) instead if vesafb.  If none
-+If you want to use the default BIOS refresh rate while switching modes
-+on a running system, set pixclock to 0.
-+
 +With VBE 2.0 there is no way to change the mode timings after booting
 +Linux. If you are not happy with the 60 Hz refresh rate, you have
 +the following options:
@@ -189,25 +174,15 @@
 -to pan the display.  It is turned off by default because it
 -seems not to work with some BIOS versions, but there are options
 -to turn it on.
-+The VESA BIOS provides protected mode interface for changing some parameters.
-+vesafb can use it for palette changes and to pan the display. It is turned
-+off by default because it seems not to work with some BIOS versions, but
-+there are options to turn it on.
- 
+-
 -You can pass options to vesafb using "video=vesafb:option" on
 -the kernel command line.  Multiple options should be separated
 -by comma, like this: "video=vesafb:ypan,invers"
-+You can pass options to vesafb using "video=vesafb:option" on the kernel
-+command line. Multiple options should be separated by a comma, like this:
-+"video=vesafb:ypan,1024x768-32@85"
- 
+-
 -Accepted options:
-+Note that vesafb-tng still uses the "video=vesafb:option" format of the
-+kernel command line video parameter. "video=vesafb-tng:xxx" is incorrect.
- 
+-
 -invers	no comment...
-+Accepted options (both vesafb and vesafb-tng):
- 
+-
 -ypan	enable display panning using the VESA protected mode 
 -	interface.  The visible screen is just a window of the
 -	video memory, console scrolling is done by changing the
@@ -219,6 +194,43 @@
 -	kontra: * scrolling only parts of the screen causes some
 -		  ugly flicker effects (boot logo flickers for
 -		  example).
+-
+-ywrap	Same as ypan, but assumes your gfx board can wrap-around 
+-	the video memory (i.e. starts reading from top if it
+-	reaches the end of video memory).  Faster than ypan.
+-
+-redraw	scroll by redrawing the affected part of the screen, this
+-	is the safe (and slow) default.
+-
+-
+-vgapal	Use the standard vga registers for palette changes.
+-	This is the default.
+-pmipal	Use the protected mode interface for palette changes.
+-
+-mtrr:n	setup memory type range registers for the vesafb framebuffer
+-	where n:
+-	      0 - disabled (equivalent to nomtrr) (default)
+-	      1 - uncachable
+-	      2 - write-back
+-	      3 - write-combining
+-	      4 - write-through
+-
+-	If you see the following in dmesg, choose the type that matches the
+-	old one. In this example, use "mtrr:2".
++The VESA BIOS provides protected mode interface for changing some parameters.
++vesafb can use it for palette changes and to pan the display. It is turned
++off by default because it seems not to work with some BIOS versions, but
++there are options to turn it on.
++
++You can pass options to vesafb using "video=vesafb:option" on the kernel
++command line. Multiple options should be separated by a comma, like this:
++"video=vesafb:ypan,1024x768-32@85"
++
++Note that vesafb-tng still uses the "video=vesafb:option" format of the
++kernel command line video parameter. "video=vesafb-tng:xxx" is incorrect.
++
++Accepted options (both vesafb and vesafb-tng):
++
 +ypan    Enable display panning using the VESA protected mode interface
 +        The visible screen is just a window of the video memory,
 +        console scrolling is done by changing the start of the window.
@@ -229,34 +241,19 @@
 +        con:    * scrolling only parts of the screen causes some
 +                  ugly flicker effects (boot logo flickers for
 +                  example).
- 
--ywrap	Same as ypan, but assumes your gfx board can wrap-around 
--	the video memory (i.e. starts reading from top if it
--	reaches the end of video memory).  Faster than ypan.
++
 +ywrap   Same as ypan, but assumes your gfx board can wrap-around the video
 +        memory (i.e. starts reading from top if it reaches the end of
 +        video memory). Faster than ypan.
- 
--redraw	scroll by redrawing the affected part of the screen, this
--	is the safe (and slow) default.
++
 +redraw  Scroll by redrawing the affected part of the screen, this is the
 +        safe (and slow) default.
- 
++
 +vgapal  Use the standard VGA registers for palette changes.
- 
--vgapal	Use the standard vga registers for palette changes.
--	This is the default.
--pmipal	Use the protected mode interface for palette changes.
++
 +pmipal  Use the protected mode interface for palette changes.
 +        This is the default is the protected mode interface is available.
- 
--mtrr:n	setup memory type range registers for the vesafb framebuffer
--	where n:
--	      0 - disabled (equivalent to nomtrr) (default)
--	      1 - uncachable
--	      2 - write-back
--	      3 - write-combining
--	      4 - write-through
++
 +mtrr:n  Setup memory type range registers for the vesafb framebuffer
 +        where n:
 +              0 - disabled (equivalent to nomtrr) (default)
@@ -264,9 +261,7 @@
 +              2 - write-back
 +              3 - write-combining
 +              4 - write-through
- 
--	If you see the following in dmesg, choose the type that matches the
--	old one. In this example, use "mtrr:2".
++
 +        If you see the following in dmesg, choose the type that matches
 +        the old one. In this example, use "mtrr:2".
  ...
@@ -291,8 +286,7 @@
  
 -Have fun!
 +Options accepted only by vesafb-tng:
- 
--  Gerd
++
 +<mode>  The mode you want to set, in the standard modedb format. Refer to
 +        modedb.txt for a detailed description. If you specify a mode that is
 +        not supported by your board's BIOS, vesafb-tng will attempt to set a
@@ -337,7 +331,8 @@
 +maxhf:n     Maximum horizontal frequency (in kHz).
 +maxvf:n     Maximum vertical frequency (in Hz).
 +maxclk:n    Maximum pixel clock (in MHz).
-+
+ 
+-  Gerd
 +Have fun!
  
  --
@@ -352,9 +347,11 @@
 +Extended documentation for vm86, VBE 3.0 and vesafb-tng by
 +Michal Januszewski <spock@gentoo.org>
 +
---- linux-2.6.17.orig/arch/i386/boot/video.S
-+++ linux-2.6.17/arch/i386/boot/video.S
-@@ -165,10 +165,12 @@ basret:	ret
+diff --git a/arch/i386/boot/video.S b/arch/i386/boot/video.S
+index 2c5b5cc..2c2d4b5 100644
+--- a/arch/i386/boot/video.S
++++ b/arch/i386/boot/video.S
+@@ -163,10 +163,12 @@ basret:	ret
  # parameters in the default 80x25 mode -- these are set directly,
  # because some very obscure BIOSes supply insane values.
  mode_params:
@@ -367,7 +364,7 @@
  	movb	$0x03, %ah			# Read cursor position
  	xorb	%bh, %bh
  	int	$0x10
-@@ -201,6 +203,7 @@ mopar2: movb	%al, %fs:(PARAM_VIDEO_LINES
+@@ -199,6 +201,7 @@ mopar2: movb	%al, %fs:(PARAM_VIDEO_LINES)
  	ret
  
  #ifdef CONFIG_VIDEO_SELECT
@@ -375,7 +372,7 @@
  # Fetching of VESA frame buffer parameters
  mopar_gr:
  	leaw	modelist+1024, %di
-@@ -283,6 +286,7 @@ dac_done:
+@@ -281,6 +284,7 @@ dac_done:
  	movw	%es, %fs:(PARAM_VESAPM_SEG)
  	movw	%di, %fs:(PARAM_VESAPM_OFF)
  no_pm:	ret
@@ -383,7 +380,7 @@
  
  # The video mode menu
  mode_menu:
-@@ -497,10 +501,12 @@ mode_set:
+@@ -495,10 +499,12 @@ mode_set:
  	
  	cmpb	$VIDEO_FIRST_V7>>8, %ah
  	jz	setv7
@@ -398,7 +395,7 @@
  	orb	%ah, %ah
  	jz	setmenu
  	
-@@ -572,6 +578,7 @@ setr1:	lodsw
+@@ -570,6 +576,7 @@ setr1:	lodsw
  	movw	-4(%si), %ax			# Fetch mode ID
  	jmp	_m_s
  
@@ -406,7 +403,7 @@
  check_vesa:
  	leaw	modelist+1024, %di
  	subb	$VIDEO_FIRST_VESA>>8, %bh
-@@ -605,6 +612,7 @@ check_vesa:
+@@ -603,6 +610,7 @@ check_vesa:
  	ret
  
  _setbad:	jmp	setbad          	# Ugly...
@@ -414,9 +411,24 @@
  
  # Recalculate vertical display end registers -- this fixes various
  # inconsistencies of extended modes on many adapters. Called when
---- linux-2.6.17.orig/drivers/video/Kconfig
-+++ linux-2.6.17/drivers/video/Kconfig
-@@ -472,8 +472,22 @@ config FB_TGA
+diff --git a/drivers/char/sysrq.c b/drivers/char/sysrq.c
+index 1393523..8a05f95 100644
+--- a/drivers/char/sysrq.c
++++ b/drivers/char/sysrq.c
+@@ -240,7 +240,7 @@ static void send_sig_all(int sig)
+ 	struct task_struct *p;
+ 
+ 	for_each_process(p) {
+-		if (p->mm && !is_init(p))
++		if (p->mm && !is_init(p) && !(p->flags & PF_BORROWED_MM))
+ 			/* Not swapper, init nor kernel thread */
+ 			force_sig(sig, p);
+ 	}
+diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+index 4e83f01..ae122fd 100644
+--- a/drivers/video/Kconfig
++++ b/drivers/video/Kconfig
+@@ -547,8 +547,22 @@ config FB_TGA
  	  cards. Say Y if you have one of those.
  
  config FB_VESA
@@ -441,7 +453,7 @@
  	select FB_CFB_FILLRECT
  	select FB_CFB_COPYAREA
  	select FB_CFB_IMAGEBLIT
-@@ -481,7 +495,43 @@ config FB_VESA
+@@ -557,7 +571,43 @@ config FB_VESA
  	  This is the frame buffer device driver for generic VESA 2.0
  	  compliant graphic cards. The older VESA 1.2 cards are not supported.
  	  You will get a boot time penguin logo at no additional cost. Please
@@ -459,14 +471,14 @@
 +	select FB_CFB_COPYAREA
 +	select FB_CFB_IMAGEBLIT
 +	help
-+	  This is the frame buffer device driver for generic VESA 2.0 
-+	  compliant graphic cards. It is capable of taking advantage of 
-+	  VBE 3.0 features. With this driver you will be able to adjust
-+	  the refresh rate (VBE 3.0 compliant boards only) and change
-+	  the graphic mode on-the-fly.
-+	  
-+	  You will also get a boot time penguin logo at no additional cost. Please
-+	  read <file:Documentation/fb/vesafb.txt>.
++	  This is an enhanced generic frame buffer device driver for
++	  VBE 2.0 compliant graphic cards. It can take advantage of VBE 3.0
++	  features (refresh rate adjustment) when these are available.
++	  The driver also makes it possible to change the video mode
++	  on the fly and to switch back to text mode when it's unloaded.
++
++	  If the driver is compiled as a module, the module will be called
++	  vesafb-tng.
 +
 +endchoice
 +
@@ -484,12 +496,14 @@
 +	depends on FB_VESA
 +	default y
  
- config VIDEO_SELECT
- 	bool
---- linux-2.6.17.orig/drivers/video/Makefile
-+++ linux-2.6.17/drivers/video/Makefile
-@@ -97,7 +97,11 @@ obj-$(CONFIG_FB_IMX)              += imx
- obj-$(CONFIG_FB_S3C2410)	  += s3c2410fb.o
+ config FB_IMAC
+ 	bool "Intel-based Macintosh Framebuffer Support"
+diff --git a/drivers/video/Makefile b/drivers/video/Makefile
+index 309a26d..e57b0e7 100644
+--- a/drivers/video/Makefile
++++ b/drivers/video/Makefile
+@@ -102,7 +102,11 @@ obj-$(CONFIG_FB_PNX4008_DUM_RGB)  += pnx4008/
+ obj-$(CONFIG_FB_IBM_GXT4500)	  += gxt4500.o
  
  # Platform or fallback drivers go here
 -obj-$(CONFIG_FB_VESA)             += vesafb.o
@@ -498,12 +512,14 @@
 +else
 +  obj-$(CONFIG_FB_VESA)		  += vesafb-thread.o vesafb-tng.o
 +endif
+ obj-$(CONFIG_FB_IMAC)             += imacfb.o
  obj-$(CONFIG_FB_VGA16)            += vga16fb.o vgastate.o
  obj-$(CONFIG_FB_OF)               += offb.o
- 
---- linux-2.6.17.orig/drivers/video/fbmem.c
-+++ linux-2.6.17/drivers/video/fbmem.c
-@@ -1438,6 +1438,7 @@ fbmem_init(void)
+diff --git a/drivers/video/fbmem.c b/drivers/video/fbmem.c
+index 3cfea31..bfb39cc 100644
+--- a/drivers/video/fbmem.c
++++ b/drivers/video/fbmem.c
+@@ -1408,6 +1408,7 @@ fbmem_init(void)
  		printk(KERN_WARNING "Unable to create fb class; errno = %ld\n", PTR_ERR(fb_class));
  		fb_class = NULL;
  	}
@@ -511,9 +527,11 @@
  	return 0;
  }
  
---- linux-2.6.17.orig/drivers/video/modedb.c
-+++ linux-2.6.17/drivers/video/modedb.c
-@@ -671,6 +671,7 @@ void fb_var_to_videomode(struct fb_video
+diff --git a/drivers/video/modedb.c b/drivers/video/modedb.c
+index 5df41f6..f838a53 100644
+--- a/drivers/video/modedb.c
++++ b/drivers/video/modedb.c
+@@ -674,6 +674,7 @@ void fb_var_to_videomode(struct fb_videomode *mode,
  {
  	u32 pixclock, hfreq, htotal, vtotal;
  
@@ -521,9 +539,17 @@
  	mode->name = NULL;
  	mode->xres = var->xres;
  	mode->yres = var->yres;
+@@ -1025,3 +1026,4 @@ EXPORT_SYMBOL(fb_find_best_mode);
+ EXPORT_SYMBOL(fb_find_nearest_mode);
+ EXPORT_SYMBOL(fb_videomode_to_modelist);
+ EXPORT_SYMBOL(fb_find_mode);
++EXPORT_SYMBOL(fb_destroy_modelist);
+diff --git a/drivers/video/vesafb-thread.c b/drivers/video/vesafb-thread.c
+new file mode 100644
+index 0000000..543e202
 --- /dev/null
-+++ linux-2.6.17/drivers/video/vesafb-thread.c
-@@ -0,0 +1,727 @@
++++ b/drivers/video/vesafb-thread.c
+@@ -0,0 +1,751 @@
 +/*
 + * Framebuffer driver for VBE 2.0+ compliant graphic boards.
 + * Kernel thread and vm86 routines.
@@ -532,8 +558,6 @@
 + *
 + */
 +
-+#include <linux/config.h>
-+#include <linux/slab.h>
 +#include <linux/workqueue.h>
 +#include <linux/completion.h>
 +#include <linux/module.h>
@@ -542,6 +566,7 @@
 +#include <linux/mm.h>
 +#include <linux/delay.h>
 +#include <linux/signal.h>
++#include <linux/freezer.h>
 +#include <linux/suspend.h>
 +#include <linux/unistd.h>
 +#include <video/vesa.h>
@@ -554,9 +579,7 @@
 +#include <asm/mmu_context.h>
 +#include "edid.h"
 +
-+#ifdef MODULE
-+int errno;
-+#endif
++static int errno;
 +
 +static DECLARE_COMPLETION(vesafb_th_completion);
 +static DECLARE_MUTEX(vesafb_task_list_sem);
@@ -565,9 +588,6 @@
 +
 +static struct vm86_struct vm86;
 +static int vesafb_pid = 0;
-+
-+_syscall3(int,ioperm,unsigned long, a, unsigned long, b, unsigned long, c);
-+_syscall1(int,vm86old,struct vm86_struct __user*, v86);
 +
 +#define DEFAULT_VM86_FLAGS (IF_MASK | IOPL_MASK)
 +#define VM86_PUSHW(x)					\
@@ -600,6 +620,36 @@
 +#define BUF_ADDR	(RET_CODE_ADDR + RET_CODE_SIZE)
 +
 +#define FLAG_D 		(1 << 10)
++
++/* Syscalls used by the vesafb thread */
++static int vm86old(struct vm86_struct __user* v86)
++{
++	long res;
++	__asm__ volatile ("push %%ebx; movl %2, %%ebx ; int $0x80 ; pop %%ebx"
++			: "=a" (res)
++			: "0" (__NR_vm86old), "ri" ((long)(v86)) : "memory");
++
++	if ((unsigned long)(res) >= (unsigned long)(-MAX_ERRNO)) {
++		errno = -res;
++		res = -1;
++	}
++	return (int)res;
++}
++
++static int ioperm(unsigned long a, unsigned long b, unsigned long c)
++{
++	long res;
++	__asm__ volatile ("push %%ebx; movl %2, %%ebx ; int $0x80 ; pop %%ebx"
++			: "=a" (res)
++			: "0" (__NR_ioperm), "ri" ((long)(a)), "c" ((long)(b)),
++			  "d" ((long)(c)) : "memory");
++
++	if ((unsigned long)(res) >= (unsigned long)(-MAX_ERRNO)) {
++		errno = -res;
++		res = -1;
++	}
++	return (int)res;
++}
 +
 +/* Segment prefix opcodes */
 +enum {
@@ -962,7 +1012,7 @@
 +	struct mm_struct *mm = current->mm;
 +	int ret = 0;
 +
-+	vma = kmem_cache_alloc(vm_area_cachep, SLAB_KERNEL);
++	vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
 +	if (!vma)
 +		return -ENOMEM;
 +	memset(vma, 0, sizeof(*vma));
@@ -1251,9 +1301,12 @@
 +MODULE_LICENSE("GPL");
 +MODULE_AUTHOR("Michal Januszewski");
 +
+diff --git a/drivers/video/vesafb-tng.c b/drivers/video/vesafb-tng.c
+new file mode 100644
+index 0000000..b4d4394
 --- /dev/null
-+++ linux-2.6.17/drivers/video/vesafb-tng.c
-@@ -0,0 +1,1598 @@
++++ b/drivers/video/vesafb-tng.c
+@@ -0,0 +1,1586 @@
 +/*
 + * Framebuffer driver for VBE 2.0+ compliant graphic boards
 + *
@@ -2027,16 +2080,10 @@
 +	int clen = 0, i;
 +
 +	for (i = 0; i < vbe_modes_cnt; i++) {
-+		clen += sprintf(buf + clen, "%dx%d-%d\n", vbe_modes[i].x_res,
-+				vbe_modes[i].y_res, vbe_modes[i].depth);
++		clen += min(snprintf(buf + clen, len - clen, "%dx%d-%d\n", vbe_modes[i].x_res,
++				vbe_modes[i].y_res, vbe_modes[i].depth), len - clen);
 +	}
-+	*start = buf + offset;
-+
-+	if (clen > offset) {
-+		clen -= offset;
-+	} else {
-+		clen = 0;
-+	}
++	*eof = 1;
 +	return clen;
 +}
 +
@@ -2045,25 +2092,19 @@
 +{
 +	int clen = 0;
 +
-+	clen += sprintf(buf + clen, "Version:    %d.%d\n",
++	clen += min(snprintf(buf + clen, len, "Version:    %d.%d\n",
 +			((vbe_ib.vbe_version & 0xff00) >> 8),
-+			vbe_ib.vbe_version & 0xff);
-+	clen += sprintf(buf + clen, "Vendor:     %s\n",
-+			(char*)vbe_ib.oem_vendor_name_ptr);
-+	clen += sprintf(buf + clen, "Product:    %s\n",
-+			(char*)vbe_ib.oem_product_name_ptr);
-+	clen += sprintf(buf + clen, "OEM rev:    %s\n",
-+			(char*)vbe_ib.oem_product_rev_ptr);
-+	clen += sprintf(buf + clen, "OEM string: %s\n",
-+			(char*)vbe_ib.oem_string_ptr);
++			vbe_ib.vbe_version & 0xff), len);
++	clen += min(snprintf(buf + clen, len - clen, "Vendor:     %s\n",
++			(char*)vbe_ib.oem_vendor_name_ptr), len - clen);
++	clen += min(snprintf(buf + clen, len - clen, "Product:    %s\n",
++			(char*)vbe_ib.oem_product_name_ptr), len - clen);
++	clen += min(snprintf(buf + clen, len - clen, "OEM rev:    %s\n",
++			(char*)vbe_ib.oem_product_rev_ptr), len - clen);
++	clen += min(snprintf(buf + clen, len - clen, "OEM string: %s\n",
++			(char*)vbe_ib.oem_string_ptr), len - clen);
 +
-+	*start = buf + offset;
-+
-+	if (clen > offset) {
-+		clen -= offset;
-+	} else {
-+		clen = 0;
-+	}
++	*eof = 1;
 +	return clen;
 +}
 +
@@ -2817,8 +2858,8 @@
 +MODULE_PARM_DESC(vgapal,"bool: set palette using VGA registers");
 +module_param_named(pmipal, pmi_setpal, bool, 0);
 +MODULE_PARM_DESC(pmipal,"bool: set palette using PMI calls");
-+module_param_named(nomtrr, mtrr, invbool, 0);
-+MODULE_PARM_DESC(nomtrr,"bool: disable use of MTRR registers");
++module_param(mtrr, uint, 0);
++MODULE_PARM_DESC(mtrr,"Memory Type Range Registers setting. Use 0 to disable.");
 +module_param(blank, bool, 1);
 +MODULE_PARM_DESC(blank,"bool: enable hardware blanking");
 +module_param(nocrtc, bool, 0);
@@ -2852,9 +2893,11 @@
 +MODULE_AUTHOR("Michal Januszewski");
 +MODULE_DESCRIPTION("Framebuffer driver for VBE2.0+ compliant graphics boards");
 +
---- linux-2.6.17.orig/include/linux/sched.h
-+++ linux-2.6.17/include/linux/sched.h
-@@ -1159,6 +1159,8 @@ extern void mmput(struct mm_struct *);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4463735..7283e48 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1390,6 +1390,8 @@ extern void mmput(struct mm_struct *);
  extern struct mm_struct *get_task_mm(struct task_struct *task);
  /* Remove the current tasks stale references to the old mm_struct */
  extern void mm_release(struct task_struct *, struct mm_struct *);
@@ -2863,8 +2906,11 @@
  
  extern int  copy_thread(int, unsigned long, unsigned long, unsigned long, struct task_struct *, struct pt_regs *);
  extern void flush_thread(void);
+diff --git a/include/video/vesa.h b/include/video/vesa.h
+new file mode 100644
+index 0000000..bb5abcf
 --- /dev/null
-+++ linux-2.6.17/include/video/vesa.h
++++ b/include/video/vesa.h
 @@ -0,0 +1,150 @@
 +#if 0
 +#define DPRINTK(fmt, args...)	printk(KERN_DEBUG "%s: " fmt, __FUNCTION__ , \
@@ -3016,17 +3062,19 @@
 +	struct vesafb_crtc_ib crtc;
 +};
 +
---- linux-2.6.17.orig/kernel/fork.c
-+++ linux-2.6.17/kernel/fork.c
-@@ -97,6 +97,7 @@ kmem_cache_t *fs_cachep;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index fc723e5..dc8f93b 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -100,6 +100,7 @@ struct kmem_cache *fs_cachep;
  
  /* SLAB cache for vm_area_struct structures */
- kmem_cache_t *vm_area_cachep;
+ struct kmem_cache *vm_area_cachep;
 +EXPORT_SYMBOL_GPL(vm_area_cachep);
  
  /* SLAB cache for mm_struct structures (tsk->mm) */
- static kmem_cache_t *mm_cachep;
-@@ -383,6 +384,40 @@ void mmput(struct mm_struct *mm)
+ static struct kmem_cache *mm_cachep;
+@@ -399,6 +400,40 @@ void mmput(struct mm_struct *mm)
  EXPORT_SYMBOL_GPL(mmput);
  
  /**
@@ -3067,9 +3115,11 @@
   * get_task_mm - acquire a reference to the task's mm
   *
   * Returns %NULL if the task has no mm.  Checks PF_BORROWED_MM (meaning
---- linux-2.6.17.orig/mm/memory.c
-+++ linux-2.6.17/mm/memory.c
-@@ -1162,6 +1162,7 @@ int zeromap_page_range(struct vm_area_st
+diff --git a/mm/memory.c b/mm/memory.c
+index 563792f..a9519ea 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1193,6 +1193,7 @@ int zeromap_page_range(struct vm_area_struct *vma,
  	} while (pgd++, addr = next, addr != end);
  	return err;
  }
@@ -3077,9 +3127,11 @@
  
  pte_t * fastcall get_locked_pte(struct mm_struct *mm, unsigned long addr, spinlock_t **ptl)
  {
---- linux-2.6.17.orig/mm/mmap.c
-+++ linux-2.6.17/mm/mmap.c
-@@ -1996,6 +1996,7 @@ int insert_vm_struct(struct mm_struct * 
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 9717337..6fa5b1c 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2024,6 +2024,7 @@ int insert_vm_struct(struct mm_struct * mm, struct vm_area_struct * vma)
  	vma_link(mm, vma, prev, rb_link, rb_parent);
  	return 0;
  }
