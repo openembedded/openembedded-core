@@ -20,7 +20,10 @@ cvs
 subversion
 gawk
 
-You also need to install the qemu from http://debian.o-hand.com/.
+You also need to install the qemu from http://debian.o-hand.com/. A
+poky-depends deb is also available from this source which will install 
+all the dependencies mentioned above for you.
+
 Alternatively poky can build qemu itself, but for this you need the
 following packages installed;
 
