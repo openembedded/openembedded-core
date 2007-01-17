@@ -93,9 +93,8 @@ else
 fi
 
 INTERNAL_SCRIPT=`which poky-qemu-internal`
-source $INTERNAL_SCRIPT
+. $INTERNAL_SCRIPT
 
 if [ -x "$DISTCCD" ]; then
     killall distccd
 fi
-

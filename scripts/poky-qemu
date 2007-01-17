@@ -41,5 +41,4 @@ if [ "x$MACHINE" = "x" ]; then
 fi
 
 INTERNAL_SCRIPT=`which poky-qemu-internal`
-source $INTERNAL_SCRIPT
-
+. $INTERNAL_SCRIPT
