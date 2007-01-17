@@ -41,17 +41,17 @@ if [ "x$SERIAL_LOGFILE" != "x" ]; then
 fi
 
 if [ "$TYPE" != "nfs" -a ! -f "$HDIMAGE" ]; then
-    echo -e "\nError, image file $HDIMAGE doesn't exist"
+    echo "Error, image file $HDIMAGE doesn't exist"
     exit 1
 fi
 
 if [ ! -f "$ZIMAGE" ]; then
-    echo -e "\nError, kernel image file $ZIMAGE doesn't exist"
+    echo "Error, kernel image file $ZIMAGE doesn't exist"
     exit 1
 fi
 
 if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" ]; then
-    echo -e "\nError, unsupported machine type $MACHINE"
+    echo "Error, unsupported machine type $MACHINE"
     exit 1
 fi
 
@@ -65,7 +65,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
             HDIMAGE=/srv/nfs/qemuarm
         fi
         if [ ! -d "$HDIMAGE" ]; then
-            echo -e "\nError, NFS mount point $HDIMAGE doesn't exist"
+            echo "Error, NFS mount point $HDIMAGE doesn't exist"
             exit 1
         fi
         QEMUOPTIONS="-append \"root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -M versatilepb"
@@ -82,7 +82,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             HDIMAGE=/srv/nfs/qemux86
         fi
         if [ ! -d "$HDIMAGE" ]; then
-            echo -e "\nError, NFS mount point $HDIMAGE doesn't exist."
+            echo "Error, NFS mount point $HDIMAGE doesn't exist."
             exit 1
         fi
         QEMUOPTIONS="-std-vga -append \"root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD"
@@ -118,11 +118,11 @@ if [ "$MACHINE" = "akita" ]; then
 fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
-    echo -e "\nError, unable to support this combination of options"
+    echo "Error, unable to support this combination of options"
     exit 1
 fi
 
-echo -e "\nRunning $QEMU using sudo..."
+echo "Running $QEMU using sudo..."
 echo "$QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS"
 sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS
 

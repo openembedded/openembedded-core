@@ -18,7 +18,7 @@
 
 if [ "x$1" = "x" ]; then
     MYNAME=`basename $0`
-    echo -e "\nRun as MACHINE=xyz $MYNAME ZIMAGE IMAGEFILE"
+    echo "Run as MACHINE=xyz $MYNAME ZIMAGE IMAGEFILE"
     echo "where:"
     echo "  ZIMAGE - the kernel image file to use"
     echo "  IMAGEFILE - the image file/location to use"
