@@ -1,0 +1,24 @@
+Index: oprofile/pp/oparchive.cpp
+===================================================================
+--- oprofile.orig/pp/oparchive.cpp	2007-01-17 15:55:12.000000000 +0000
++++ oprofile/pp/oparchive.cpp	2007-01-17 15:55:39.000000000 +0000
+@@ -97,8 +97,17 @@
+ 			if (find_separate_debug_file(ibfd, dirname, global,
+ 				debug_filename)) {
+ 				/* found something copy it over */
+-				string dest_debug = options::outdirectory +
+-					dirname + "/" +
++				string dest_debug_dir = options::outdirectory +
++					dirname + "/.debug/";
++				if (mkdir(dest_debug_dir.c_str(),0755) < 0) {
++					if (errno!=EEXIST) {
++						cerr << "Unable to create directory: " 
++						<< dest_debug_dir << "." << endl;
++						exit (EXIT_FAILURE);
++					}
++				}
++
++				string dest_debug = dest_debug_dir +
+ 					op_basename(debug_filename);
+ 				copy_one_file(image_ok, debug_filename, dest_debug);
+ 			}
