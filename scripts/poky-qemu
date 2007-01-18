@@ -37,7 +37,7 @@ else
 fi
 
 if [ "x$MACHINE" = "x" ]; then
-    MACHINE=`basename $ZIMAGE | sed -r -e 's#.*-([a-z]+)-?[0-9]*..*#\1#'`
+    MACHINE=`basename $ZIMAGE | sed -r -e 's#.*-([a-z]+[0-9]*)-?[0-9]*..*#\1#'`
 fi
 
 INTERNAL_SCRIPT=`which poky-qemu-internal`
