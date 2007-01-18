@@ -1,8 +1,12 @@
-Index: prelink-0.0.20050901/src/arch-arm.c
+---
+ src/arch-arm.c |  170 +++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 165 insertions(+), 5 deletions(-)
+
+Index: prelink-0.0.20061027/src/arch-arm.c
 ===================================================================
---- prelink-0.0.20050901.orig/src/arch-arm.c	2004-09-30 17:07:57.000000000 +0100
-+++ prelink-0.0.20050901/src/arch-arm.c	2006-04-07 14:41:25.000000000 +0100
-@@ -145,6 +145,24 @@
+--- prelink-0.0.20061027.orig/src/arch-arm.c	2006-08-13 16:18:17.000000000 +0100
++++ prelink-0.0.20061027/src/arch-arm.c	2007-01-14 00:05:33.000000000 +0000
+@@ -145,6 +145,24 @@ arm_prelink_rel (struct prelink_info *in
        error (0, 0, "%s: R_ARM_PC24 relocs with non-zero addend should not be present in prelinked REL sections",
  	     dso->filename);
        return 1;
@@ -27,7 +31,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
      case R_ARM_COPY:
        if (dso->ehdr.e_type == ET_EXEC)
  	/* COPY relocs are handled specially in generic code.  */
-@@ -195,6 +213,24 @@
+@@ -195,6 +213,24 @@ arm_prelink_rela (struct prelink_info *i
        write_le32 (dso, rela->r_offset,
  		  (read_ule32 (dso, rela->r_offset) & 0xff000000) | val);
        break;
@@ -47,12 +51,12 @@ Index: prelink-0.0.20050901/src/arch-arm.c
 +    case R_ARM_TLS_TPOFF32:
 +      if (dso->ehdr.e_type == ET_EXEC && info->resolvetls)
 +	write_le32 (dso, rela->r_offset,
-+		    -(value + rela->r_addend - info->resolvetls->offset));
++		    value + rela->r_addend + info->resolvetls->offset);
 +      break;
      case R_ARM_COPY:
        if (dso->ehdr.e_type == ET_EXEC)
  	/* COPY relocs are handled specially in generic code.  */
-@@ -315,6 +351,7 @@
+@@ -315,6 +351,7 @@ arm_prelink_conflict_rel (DSO *dso, stru
  {
    GElf_Addr value;
    struct prelink_conflict *conflict;
@@ -60,7 +64,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
    GElf_Rela *ret;
  
    if (GELF_R_TYPE (rel->r_info) == R_ARM_RELATIVE
-@@ -324,8 +361,31 @@
+@@ -324,8 +361,31 @@ arm_prelink_conflict_rel (DSO *dso, stru
    conflict = prelink_conflict (info, GELF_R_SYM (rel->r_info),
  			       GELF_R_TYPE (rel->r_info));
    if (conflict == NULL)
@@ -94,7 +98,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
    ret = prelink_conflict_add_rela (info);
    if (ret == NULL)
      return 1;
-@@ -342,6 +402,33 @@
+@@ -342,6 +402,33 @@ arm_prelink_conflict_rel (DSO *dso, stru
        error (0, 0, "%s: R_ARM_%s relocs should not be present in prelinked REL sections",
  	     dso->filename, GELF_R_TYPE (rel->r_info) == R_ARM_ABS32 ? "ABS32" : "PC24");
        return 1;
@@ -120,15 +124,15 @@ Index: prelink-0.0.20050901/src/arch-arm.c
 +	  ret->r_addend = value;
 +	  break;
 +	case R_ARM_TLS_TPOFF32:
-+	  ret->r_addend = -(value + read_ule32 (dso, rel->r_offset)
-+			    - tls->offset);
++	  ret->r_addend = value + read_ule32 (dso, rel->r_offset)
++			    + tls->offset;
 +	  break;
 +	}
 +      break;
      case R_ARM_COPY:
        error (0, 0, "R_ARM_COPY should not be present in shared libraries");
        return 1;
-@@ -359,6 +446,7 @@
+@@ -359,6 +446,7 @@ arm_prelink_conflict_rela (DSO *dso, str
  {
    GElf_Addr value;
    struct prelink_conflict *conflict;
@@ -136,7 +140,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
    GElf_Rela *ret;
    Elf32_Sword val;
  
-@@ -369,8 +457,31 @@
+@@ -369,8 +457,31 @@ arm_prelink_conflict_rela (DSO *dso, str
    conflict = prelink_conflict (info, GELF_R_SYM (rela->r_info),
  			       GELF_R_TYPE (rela->r_info));
    if (conflict == NULL)
@@ -170,7 +174,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
    ret = prelink_conflict_add_rela (info);
    if (ret == NULL)
      return 1;
-@@ -398,6 +509,32 @@
+@@ -398,6 +509,32 @@ arm_prelink_conflict_rela (DSO *dso, str
      case R_ARM_COPY:
        error (0, 0, "R_ARM_COPY should not be present in shared libraries");
        return 1;
@@ -196,14 +200,14 @@ Index: prelink-0.0.20050901/src/arch-arm.c
 +	  ret->r_addend += value;
 +	  break;
 +	case R_ARM_TLS_TPOFF32:
-+	  ret->r_addend = -(value + rela->r_addend - tls->offset);
++	  ret->r_addend = value + rela->r_addend + tls->offset;
 +	  break;
 +	}
 +      break;
      default:
        error (0, 0, "%s: Unknown arm relocation type %d", dso->filename,
  	     (int) GELF_R_TYPE (rela->r_info));
-@@ -418,6 +555,7 @@
+@@ -418,6 +555,7 @@ arm_rel_to_rela (DSO *dso, GElf_Rel *rel
        abort ();
      case R_ARM_RELATIVE:
      case R_ARM_ABS32:
@@ -211,7 +215,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
        rela->r_addend = (Elf32_Sword) read_ule32 (dso, rel->r_offset);
        break;
      case R_ARM_PC24:
-@@ -426,6 +564,8 @@
+@@ -426,6 +564,8 @@ arm_rel_to_rela (DSO *dso, GElf_Rel *rel
        break;
      case R_ARM_COPY:
      case R_ARM_GLOB_DAT:
@@ -220,7 +224,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
        rela->r_addend = 0;
        break;
      }
-@@ -445,6 +585,7 @@
+@@ -445,6 +585,7 @@ arm_rela_to_rel (DSO *dso, GElf_Rela *re
        abort ();
      case R_ARM_RELATIVE:
      case R_ARM_ABS32:
@@ -228,7 +232,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
        write_le32 (dso, rela->r_offset, rela->r_addend);
        break;
      case R_ARM_PC24:
-@@ -453,6 +594,8 @@
+@@ -453,6 +594,8 @@ arm_rela_to_rel (DSO *dso, GElf_Rela *re
  		  | ((rela->r_addend >> 2) & 0xffffff));
        break;
      case R_ARM_GLOB_DAT:
@@ -237,7 +241,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
        write_le32 (dso, rela->r_offset, 0);
        break;
      }
-@@ -488,6 +631,13 @@
+@@ -488,6 +631,13 @@ arm_need_rel_to_rela (DSO *dso, int firs
  		/* FALLTHROUGH */
  	      case R_ARM_PC24:
  		return 1;
@@ -251,7 +255,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
  	      }
  	}
      }
-@@ -612,6 +762,12 @@
+@@ -612,6 +762,12 @@ arm_undo_prelink_rel (DSO *dso, GElf_Rel
  	return 0;
        error (0, 0, "%s: R_ARM_COPY reloc in shared library?", dso->filename);
        return 1;
@@ -264,7 +268,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
      default:
        error (0, 0, "%s: Unknown arm relocation type %d", dso->filename,
  	     (int) GELF_R_TYPE (rel->r_info));
-@@ -634,6 +790,10 @@
+@@ -634,6 +790,10 @@ arm_reloc_class (int reloc_type)
      {
      case R_ARM_COPY: return RTYPE_CLASS_COPY;
      case R_ARM_JUMP_SLOT: return RTYPE_CLASS_PLT;
@@ -275,7 +279,7 @@ Index: prelink-0.0.20050901/src/arch-arm.c
      default: return RTYPE_CLASS_VALID;
      }
  }
-@@ -646,7 +806,7 @@
+@@ -646,7 +806,7 @@ PL_ARCH = {
    .R_JMP_SLOT = R_ARM_JUMP_SLOT,
    .R_COPY = R_ARM_COPY,
    .R_RELATIVE = R_ARM_RELATIVE,
