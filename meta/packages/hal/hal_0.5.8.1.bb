@@ -8,9 +8,10 @@ RDEPENDS += "udev"
 #RDEPENDS_hal-device-manager = "python hal python-pygnome"
 RRECOMMENDS = "udev-utils"
 
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz"
+SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz \
+        file://99_hal"
 
 S = "${WORKDIR}/hal-${PV}"
 
@@ -23,6 +24,11 @@ EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
                 --disable-docbook-docs \
                 --disable-policy-kit \
                 "
+
+do_install_append() {
+	install -d ${D}/etc/default/volatiles
+	install -m 0644 ${WORKDIR}/99_hal ${D}/etc/default/volatiles
+}
 
 do_stage() {
         autotools_stage_all
@@ -37,6 +43,9 @@ pkg_postinst_hal () {
 	if [ "x$D" != "x" ]; then
 		exit 1
 	fi
+
+	/etc/init.d/populate-volatile.sh update
+
 	grep haldaemon /etc/group || addgroup haldaemon
 	grep haldaemon /etc/passwd || adduser --disabled-password --system --home /var/run/hald --no-create-home haldaemon --ingroup haldaemon -g HAL
 
