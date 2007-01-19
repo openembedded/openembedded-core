@@ -1,0 +1,25 @@
+--- ip/Makefile	2006/02/23 21:22:18	1.1
++++ ip/Makefile	2006/02/23 21:22:27
+@@ -16,7 +16,7 @@
+ rtmon: $(RTMONOBJ) $(LIBNETLINK)
+ 
+ install: all
+-	install -m 0755 -s $(TARGETS) $(DESTDIR)$(SBINDIR)
++	install -m 0755 $(TARGETS) $(DESTDIR)$(SBINDIR)
+ 	install -m 0755 $(SCRIPTS) $(DESTDIR)$(SBINDIR)
+ 
+ clean:
+--- tc/Makefile	2006/02/23 21:23:52	1.1
++++ tc/Makefile	2006/02/23 21:23:57
+@@ -70,9 +70,9 @@
+ 
+ install: all
+ 	mkdir -p $(DESTDIR)/usr/lib/tc
+-	install -m 0755 -s tc $(DESTDIR)$(SBINDIR)
++	install -m 0755 tc $(DESTDIR)$(SBINDIR)
+ 	for i in $(TCSO); \
+-	do install -m 755 -s $$i $(DESTDIR)/usr/lib/tc; \
++	do install -m 755 $$i $(DESTDIR)/usr/lib/tc; \
+ 	done
+ 
+ clean:
