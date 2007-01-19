@@ -31,6 +31,27 @@ do_stage() {
         install -m 755 libhal-storage/.libs/libhal-storage.so.1.0.0 ${STAGING_LIBDIR}/libhal-storage.so
 }
 
+# At the time the postinst runs, dbus might not be setup so only restart if running
+pkg_postinst_hal () {
+	# can't do this offline
+	if [ "x$D" != "x" ]; then
+		exit 1
+	fi
+	grep haldaemon /etc/group || addgroup haldaemon
+	grep haldaemon /etc/passwd || adduser --disabled-password --system --home /var/run/hald --no-create-home haldaemon --ingroup haldaemon -g HAL
+
+	DBUSPID=`pidof dbus-daemon`
+
+	if [ "x$DBUSPID" != "x" ]; then
+		/etc/init.d/dbus-1 force-reload
+	fi
+}
+
+pkg_postrm_hal () {
+	deluser haldaemon || true
+	delgroup haldaemon || true
+}
+
 #PACKAGES += "hal-device-manager"
 
 #FILES_hal-device-manager = " \
