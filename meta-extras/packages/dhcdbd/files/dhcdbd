@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# DHCDBD startup script
+
+. /etc/profile
+
+case $1 in
+  'start')
+    echo -n "Starting dhcdbd daemon: dhcdbd"
+    /sbin/dhcdbd --system
+    echo "."
+  ;;
+
+  'stop')
+    echo -n "Stopping dhcdbd: dhcdbd"
+    killall `ps |grep  /sbin/dhcdbd | grep -v grep | cut "-d " -f2`
+    echo "."
+  ;;
+
+  'restart')
+    $0 stop
+    $0 start
+  ;;
+
+  *)
+    echo "Usage: $0 { start | stop | restart }"
+  ;;
+esac
