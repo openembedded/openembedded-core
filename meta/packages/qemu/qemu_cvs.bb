@@ -1,13 +1,13 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.8.2+cvs${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = "\
     cvs://anonymous@cvs.savannah.nongnu.org/sources/qemu;method=pserver;rsh=ssh;module=qemu \
-    svn://svn.o-hand.com/repos/misc/trunk/qemu-packaging/qemu;module=debian;proto=http;srcdate=20070116 \
+    svn://svn.o-hand.com/repos/misc/trunk/qemu-packaging/qemu;module=debian;proto=http;srcdate=20070119 \
     file://debian/patches/01_doc_typos.patch;patch=1;pnum=1 \
     file://debian/patches/02_snapshot_use_tmpdir.patch;patch=1;pnum=0 \
     file://debian/patches/03_machines_list_no_error.patch;patch=1;pnum=0 \
