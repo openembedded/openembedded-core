@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# NetworkManager startup script
+
+. /etc/profile
+
+case $1 in
+  'start')
+    echo -n "Starting NetworkManager daemon: NetworkManager"
+    /usr/sbin/NetworkManager 
+    echo "."
+  ;;
+
+  'stop')
+    echo -n "Stopping NetworkManager daemon: NetworkManager"
+    kill `ps |grep  /usr/sbin/NetworkManager | grep -v grep | cut "-d " -f2`
+    echo "."
+  ;;
+
+  'restart')
+    $0 stop
+    $0 start
+  ;;
+
+  *)
+    echo "Usage: $0 { start | stop | restart }"
+  ;;
+esac
