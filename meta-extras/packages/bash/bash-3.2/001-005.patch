@@ -1,0 +1,312 @@
+
+Collected upstream patches: 001 -> 005
+
+Index: bash-3.2/parse.y
+===================================================================
+--- bash-3.2.orig/parse.y	2006-11-27 20:09:18.000000000 +0100
++++ bash-3.2/parse.y	2006-11-27 20:10:10.000000000 +0100
+@@ -1029,6 +1029,7 @@
+ #define PST_CMDTOKEN	0x1000		/* command token OK - unused */
+ #define PST_COMPASSIGN	0x2000		/* parsing x=(...) compound assignment */
+ #define PST_ASSIGNOK	0x4000		/* assignment statement ok in this context */
++#define PST_REGEXP	0x8000		/* parsing an ERE/BRE as a single word */
+ 
+ /* Initial size to allocate for tokens, and the
+    amount to grow them by. */
+@@ -2591,6 +2592,9 @@
+       return (character);
+     }
+ 
++  if (parser_state & PST_REGEXP)
++    goto tokword;
++
+   /* Shell meta-characters. */
+   if MBTEST(shellmeta (character) && ((parser_state & PST_DBLPAREN) == 0))
+     {
+@@ -2698,6 +2702,7 @@
+   if MBTEST(character == '-' && (last_read_token == LESS_AND || last_read_token == GREATER_AND))
+     return (character);
+ 
++tokword:
+   /* Okay, if we got this far, we have to read a word.  Read one,
+      and then check it against the known ones. */
+   result = read_token_word (character);
+@@ -2735,7 +2740,7 @@
+ /* itrace("parse_matched_pair: open = %c close = %c", open, close); */
+   count = 1;
+   pass_next_character = backq_backslash = was_dollar = in_comment = 0;
+-  check_comment = (flags & P_COMMAND) && qc != '\'' && qc != '"' && (flags & P_DQUOTE) == 0;
++  check_comment = (flags & P_COMMAND) && qc != '`' && qc != '\'' && qc != '"' && (flags & P_DQUOTE) == 0;
+ 
+   /* RFLAGS is the set of flags we want to pass to recursive calls. */
+   rflags = (qc == '"') ? P_DQUOTE : (flags & P_DQUOTE);
+@@ -3202,8 +3207,11 @@
+       if (tok == WORD && test_binop (yylval.word->word))
+ 	op = yylval.word;
+ #if defined (COND_REGEXP)
+-      else if (tok == WORD && STREQ (yylval.word->word,"=~"))
+-	op = yylval.word;
++      else if (tok == WORD && STREQ (yylval.word->word, "=~"))
++	{
++	  op = yylval.word;
++	  parser_state |= PST_REGEXP;
++	}
+ #endif
+       else if (tok == '<' || tok == '>')
+ 	op = make_word_from_token (tok);  /* ( */
+@@ -3234,6 +3242,7 @@
+ 
+       /* rhs */
+       tok = read_token (READ);
++      parser_state &= ~PST_REGEXP;
+       if (tok == WORD)
+ 	{
+ 	  tright = make_cond_node (COND_TERM, yylval.word, (COND_COM *)NULL, (COND_COM *)NULL);
+@@ -3419,9 +3428,34 @@
+ 	  goto next_character;
+ 	}
+ 
++#ifdef COND_REGEXP
++      /* When parsing a regexp as a single word inside a conditional command,
++	 we need to special-case characters special to both the shell and
++	 regular expressions.  Right now, that is only '(' and '|'. */ /*)*/
++      if MBTEST((parser_state & PST_REGEXP) && (character == '(' || character == '|'))		/*)*/
++        {
++          if (character == '|')
++            goto got_character;
++
++	  push_delimiter (dstack, character);
++	  ttok = parse_matched_pair (cd, '(', ')', &ttoklen, 0);
++	  pop_delimiter (dstack);
++	  if (ttok == &matched_pair_error)
++	    return -1;		/* Bail immediately. */
++	  RESIZE_MALLOCED_BUFFER (token, token_index, ttoklen + 2,
++				  token_buffer_size, TOKEN_DEFAULT_GROW_SIZE);
++	  token[token_index++] = character;
++	  strcpy (token + token_index, ttok);
++	  token_index += ttoklen;
++	  FREE (ttok);
++	  dollar_present = all_digit_token = 0;
++	  goto next_character;
++        }
++#endif /* COND_REGEXP */
++
+ #ifdef EXTENDED_GLOB
+       /* Parse a ksh-style extended pattern matching specification. */
+-      if (extended_glob && PATTERN_CHAR (character))
++      if MBTEST(extended_glob && PATTERN_CHAR (character))
+ 	{
+ 	  peek_char = shell_getc (1);
+ 	  if MBTEST(peek_char == '(')		/* ) */
+Index: bash-3.2/patchlevel.h
+===================================================================
+--- bash-3.2.orig/patchlevel.h	2006-11-27 20:09:18.000000000 +0100
++++ bash-3.2/patchlevel.h	2006-11-27 20:11:06.000000000 +0100
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 0
++#define PATCHLEVEL 5
+ 
+ #endif /* _PATCHLEVEL_H_ */
+Index: bash-3.2/po/ru.po
+===================================================================
+--- bash-3.2.orig/po/ru.po	2006-11-27 20:09:18.000000000 +0100
++++ bash-3.2/po/ru.po	2006-11-27 20:10:00.000000000 +0100
+@@ -12,7 +12,7 @@
+ "Last-Translator: Evgeniy Dushistov <dushistov@mail.ru>\n"
+ "Language-Team: Russian <ru@li.org>\n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Type: text/plain; charset=KOI8-R\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+ 
+Index: bash-3.2/subst.c
+===================================================================
+--- bash-3.2.orig/subst.c	2006-11-27 20:09:18.000000000 +0100
++++ bash-3.2/subst.c	2006-11-27 20:10:26.000000000 +0100
+@@ -5707,6 +5707,11 @@
+   vtype &= ~VT_STARSUB;
+ 
+   mflags = 0;
++  if (patsub && *patsub == '/')
++    {
++      mflags |= MATCH_GLOBREP;
++      patsub++;
++    }
+ 
+   /* Malloc this because expand_string_if_necessary or one of the expansion
+      functions in its call chain may free it on a substitution error. */
+@@ -5741,13 +5746,12 @@
+     }
+ 
+   /* ksh93 doesn't allow the match specifier to be a part of the expanded
+-     pattern.  This is an extension. */
++     pattern.  This is an extension.  Make sure we don't anchor the pattern
++     at the beginning or end of the string if we're doing global replacement,
++     though. */
+   p = pat;
+-  if (pat && pat[0] == '/')
+-    {
+-      mflags |= MATCH_GLOBREP|MATCH_ANY;
+-      p++;
+-    }
++  if (mflags & MATCH_GLOBREP)
++    mflags |= MATCH_ANY;
+   else if (pat && pat[0] == '#')
+     {
+       mflags |= MATCH_BEG;
+Index: bash-3.2/tests/new-exp.right
+===================================================================
+--- bash-3.2.orig/tests/new-exp.right	2006-11-27 20:09:18.000000000 +0100
++++ bash-3.2/tests/new-exp.right	2006-11-27 20:10:29.000000000 +0100
+@@ -430,7 +430,7 @@
+ Case06---1---A B C::---
+ Case07---3---A:B:C---
+ Case08---3---A:B:C---
+-./new-exp.tests: line 506: /${$(($#-1))}: bad substitution
++./new-exp.tests: line 506: ${$(($#-1))}: bad substitution
+ argv[1] = <a>
+ argv[2] = <b>
+ argv[3] = <c>
+Index: bash-3.2/builtins/printf.def
+===================================================================
+--- bash-3.2.orig/builtins/printf.def	2006-11-27 20:09:18.000000000 +0100
++++ bash-3.2/builtins/printf.def	2006-11-27 20:11:05.000000000 +0100
+@@ -49,6 +49,12 @@
+ #  define INT_MIN		(-2147483647-1)
+ #endif
+ 
++#if defined (PREFER_STDARG)
++#  include <stdarg.h>
++#else
++#  include <varargs.h>
++#endif
++
+ #include <stdio.h>
+ #include <chartypes.h>
+ 
+@@ -151,6 +157,10 @@
+ #define SKIP1 "#'-+ 0"
+ #define LENMODS "hjlLtz"
+ 
++#ifndef HAVE_ASPRINTF
++extern int asprintf __P((char **, const char *, ...)) __attribute__((__format__ (printf, 2, 3)));
++#endif
++
+ static void printf_erange __P((char *));
+ static int printstr __P((char *, char *, int, int, int));
+ static int tescape __P((char *, char *, int *));
+Index: bash-3.2/lib/sh/snprintf.c
+===================================================================
+--- bash-3.2.orig/lib/sh/snprintf.c	2006-11-27 20:09:18.000000000 +0100
++++ bash-3.2/lib/sh/snprintf.c	2006-11-27 20:11:06.000000000 +0100
+@@ -471,6 +471,8 @@
+ 	  10^x ~= r
+  * log_10(200) = 2;
+  * log_10(250) = 2;
++ *
++ * NOTE: do not call this with r == 0 -- an infinite loop results.
+  */
+ static int
+ log_10(r)
+@@ -576,8 +578,11 @@
+     { 
+       integral_part[0] = '0';
+       integral_part[1] = '\0';
+-      fraction_part[0] = '0';
+-      fraction_part[1] = '\0';
++      /* The fractional part has to take the precision into account */
++      for (ch = 0; ch < precision-1; ch++)
++ 	fraction_part[ch] = '0';
++      fraction_part[ch] = '0';
++      fraction_part[ch+1] = '\0';
+       if (fract)
+ 	*fract = fraction_part;
+       return integral_part;
+@@ -805,6 +810,7 @@
+       PUT_CHAR(*tmp, p);
+       tmp++;
+     }
++
+   PAD_LEFT(p);
+ }
+ 
+@@ -972,11 +978,21 @@
+   if ((p->flags & PF_THOUSANDS) && grouping && (t = groupnum (tmp)))
+     tmp = t;
+ 
++  if ((*p->pf == 'g' || *p->pf == 'G') && (p->flags & PF_ALTFORM) == 0)
++    {
++      /* smash the trailing zeros unless altform */
++      for (i = strlen(tmp2) - 1; i >= 0 && tmp2[i] == '0'; i--)
++        tmp2[i] = '\0'; 
++      if (tmp2[0] == '\0')
++	p->precision = 0;
++    }
++
+   /* calculate the padding. 1 for the dot */
+   p->width = p->width -
+ 	    ((d > 0. && p->justify == RIGHT) ? 1:0) -
+ 	    ((p->flags & PF_SPACE) ? 1:0) -
+-	    strlen(tmp) - p->precision - 1;
++	    strlen(tmp) - p->precision -
++	    ((p->precision != 0 || (p->flags & PF_ALTFORM)) ? 1 : 0);	/* radix char */
+   PAD_RIGHT(p);  
+   PUT_PLUS(d, p, 0.);
+   PUT_SPACE(d, p, 0.);
+@@ -991,11 +1007,6 @@
+   if (p->precision != 0 || (p->flags & PF_ALTFORM))
+     PUT_CHAR(decpoint, p);  /* put the '.' */
+ 
+-  if ((*p->pf == 'g' || *p->pf == 'G') && (p->flags & PF_ALTFORM) == 0)
+-    /* smash the trailing zeros unless altform */
+-    for (i = strlen(tmp2) - 1; i >= 0 && tmp2[i] == '0'; i--)
+-      tmp2[i] = '\0'; 
+-
+   for (; *tmp2; tmp2++)
+     PUT_CHAR(*tmp2, p); /* the fraction */
+   
+@@ -1011,14 +1022,19 @@
+   char *tmp, *tmp2;
+   int j, i;
+ 
+-  if (chkinfnan(p, d, 1) || chkinfnan(p, d, 2))
++  if (d != 0 && (chkinfnan(p, d, 1) || chkinfnan(p, d, 2)))
+     return;	/* already printed nan or inf */
+ 
+   GETLOCALEDATA(decpoint, thoussep, grouping);
+   DEF_PREC(p);
+-  j = log_10(d);
+-  d = d / pow_10(j);  /* get the Mantissa */
+-  d = ROUND(d, p);		  
++  if (d == 0.)
++    j = 0;
++  else
++    {
++      j = log_10(d);
++      d = d / pow_10(j);  /* get the Mantissa */
++      d = ROUND(d, p);		  
++    }
+   tmp = dtoa(d, p->precision, &tmp2);
+ 
+   /* 1 for unit, 1 for the '.', 1 for 'e|E',
+@@ -1076,6 +1092,7 @@
+        PUT_CHAR(*tmp, p);
+        tmp++;
+      }
++
+    PAD_LEFT(p);
+ }
+ #endif
+@@ -1358,7 +1375,7 @@
+ 		STAR_ARGS(data);
+ 		DEF_PREC(data);
+ 		d = GETDOUBLE(data);
+-		i = log_10(d);
++		i = (d != 0.) ? log_10(d) : -1;
+ 		/*
+ 		 * for '%g|%G' ANSI: use f if exponent
+ 		 * is in the range or [-4,p] exclusively
