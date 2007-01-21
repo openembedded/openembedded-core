@@ -36,11 +36,12 @@ do_install() {
 	install -m 0644 ${WORKDIR}/dhcpd.conf ${D}${sysconfdir}/dhcp/dhcpd.conf
 }
 
-PACKAGES =+ "dhcp-server dhcp-client dhcp-relay dhcp-omshell"
-FILES_dhcp-server = "${sbindir}/dhcpd /etc/init.d/dhcp-server /etc/default/dhcp-server /etc/dhcp/dhcpd.conf"
-FILES_dhcp-relay = "${sbindir}/dhcrelay /etc/init.d/dhcp-relay /etc/default/dhcp-relay"
+PACKAGES += "dhcp-server dhcp-client dhcp-relay dhcp-omshell"
+FILES_${PN} = ""
+FILES_dhcp-server = "${sbindir}/dhcpd ${sysconfdir}/init.d/dhcp-server ${sysconfdir}/default/dhcp-server ${sysconfdir}/dhcp/dhcpd.conf"
+FILES_dhcp-relay = "${sbindir}/dhcrelay ${sysconfdir}/init.d/dhcp-relay ${sysconfdir}/default/dhcp-relay"
 
-FILES_dhcp-client = "/sbin/ /etc/dhcp/dhclient.conf"
+FILES_dhcp-client = "${base_sbindir}/dhclient ${base_sbindir}/dhclient-script ${sysconfdir}/dhcp/dhclient.conf"
 #RDEPENDS_dhcp-client = "bash"
 
 FILES_dhcp-omshell = "${bindir}/omshell"
