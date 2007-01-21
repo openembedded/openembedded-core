@@ -3,7 +3,7 @@ HOMEPAGE = "http://freedesktop.org/Software/hal"
 SECTION = "unknown"
 LICENSE = "GPL LGPL AFL"
 
-DEPENDS = "dbus-glib intltool expat libusb"
+DEPENDS = "dbus-glib udev intltool expat libusb"
 RDEPENDS += "udev"
 #RDEPENDS_hal-device-manager = "python hal python-pygnome"
 RRECOMMENDS = "udev-utils"
