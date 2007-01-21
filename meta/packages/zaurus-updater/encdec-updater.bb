@@ -1,6 +1,6 @@
 SECTION = "console/utils"
 LICENSE = "GPL"
-DESCRIPTION = "A tool to encode and decode the Sharp Zaurus updater.sh skript"
+DESCRIPTION = "A tool to encode and decode the Sharp Zaurus updater.sh script"
 
 SRC_URI = "file://encdec-updater.c"
 
