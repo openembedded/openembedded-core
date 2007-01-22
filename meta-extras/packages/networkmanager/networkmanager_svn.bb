@@ -56,3 +56,7 @@ FILES_${PN} += "${datadir} \
 FILES_${PN}-dev = "${incdir} \
 		   ${libdir}/*.a \
 		   ${libdir}/pkgconfig"
+
+# The networkmanager package needs to be split into app/lib/dev packages. For
+# now, silence insane.
+INSANE_SKIP_${PN} = "1"

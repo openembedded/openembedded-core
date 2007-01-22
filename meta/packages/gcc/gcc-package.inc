@@ -107,3 +107,6 @@ do_install () {
 	ln -sf ${bindir}/${TARGET_SYS}-cpp ${D}${base_libdir}/cpp
 	ln -sf ${bindir}/${TARGET_SYS}-cpp ${D}${bindir}/cpp
 }
+
+# The gcc package contains symlinks that trip up insane
+INSANE_SKIP_${PN} = "1"

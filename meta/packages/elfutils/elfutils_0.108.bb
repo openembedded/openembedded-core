@@ -34,3 +34,6 @@ do_stage () {
 	install -m 0644 ${S}/libdw/libdw.h ${STAGING_INCDIR}/elfutils/
 	install -m 0644 ${S}/libasm/libasm.h ${STAGING_INCDIR}/elfutils/
 }
+
+# The elfutils package contains symlinks that trip up insane
+INSANE_SKIP_elfutils = "1"

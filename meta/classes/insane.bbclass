@@ -101,7 +101,7 @@ def package_qa_check_rdepends(pkg, workdir, d):
 
         bb.data.setVar('ROOT', '', localdata) 
         bb.data.setVar('ROOT_%s' % pkg, root, localdata)
-        pkgname = bb.data.getVar('PKG_%s' % pkg, localdata, 1)
+        pkgname = bb.data.getVar('PKG_%s' % pkg, localdata, True)
         if not pkgname:
             pkgname = pkg
         bb.data.setVar('PKG', pkgname, localdata)
@@ -134,12 +134,7 @@ python do_package_qa () {
         return
 
     for package in packages.split():
-        # Nasty hack for now until we can mark exclusions in the packages.
-        # db has a unusual versioning scheme. Cannot fix this.
-        # gcc contains symlinks to other packages. Cannot fix.
-        # elfutils has symlinks to point to correct .so files. Cannot fix.
-        # networkmanager needs to be split into app/lib packages. Can fix.
-        if package in [ 'db', 'gcc', 'elfutils', 'networkmanager' ]:
+        if bb.data.getVar('INSANE_SKIP_' + package, d, True):
             bb.note("Package: %s (skipped)" % package)
             continue
         

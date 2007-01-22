@@ -95,3 +95,6 @@ do_install_append() {
 		mv "${D}/${prefix}/docs" "${D}/${docdir}"
 	fi
 }
+
+# The db package contains symlinks that trip up insane
+INSANE_SKIP_db = "1"
