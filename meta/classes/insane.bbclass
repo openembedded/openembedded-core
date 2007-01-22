@@ -48,10 +48,10 @@ def package_qa_check_devdbg(path, name,d):
     non dev packages containing
     """
 
-    import bb
+    import bb, os
     if not "-dev" in name:
-        if path[-3:] == ".so":
-            bb.fatal("QA Issue: non dev package contains .so: %s" % name)
+        if path[-3:] == ".so" and os.path.islink(path):
+            bb.fatal("QA Issue: non dev package contains symlink .so: %s" % name)
 
     if not "-dbg" in name:
         if '.debug' in path:
