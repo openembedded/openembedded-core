@@ -74,8 +74,8 @@ FILES_${PN} = "${sysconfdir} \
                 ${bindir}/hal-get-property \
                 ${bindir}/hal-set-property  \
                 ${sbindir} \
-                ${libdir}/libhal.so* \
-                ${libdir}/libhal-storage.so* \
+                ${libdir}/libhal.so.* \
+                ${libdir}/libhal-storage.so.* \
                 ${libdir}/hal \
                 ${libexecdir} \
                 ${datadir}/hal/fdi \
