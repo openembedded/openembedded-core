@@ -1,0 +1,135 @@
+Index: lttv/modules/gui/interrupts/Makefile.am
+===================================================================
+--- lttv/modules/gui/interrupts/Makefile.am	(revision 2340)
++++ lttv/modules/gui/interrupts/Makefile.am	(working copy)
+@@ -31,7 +31,7 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libinterrupts.la
+-libinterrupts_la_LDFLAGS = -module
++libinterrupts_la_LDFLAGS = -module -avoid-version
+ libinterrupts_la_SOURCES = interrupts.c
+ 
+ EXTRA_DIST = \
+Index: lttv/modules/gui/tracecontrol/Makefile.am
+===================================================================
+--- lttv/modules/gui/tracecontrol/Makefile.am	(revision 2340)
++++ lttv/modules/gui/tracecontrol/Makefile.am	(working copy)
+@@ -14,11 +14,9 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libguitracecontrol.la
+-libguitracecontrol_la_LDFLAGS = -module
++libguitracecontrol_la_LDFLAGS = -module -avoid-version
+ libguitracecontrol_la_SOURCES = tracecontrol.c
+ 
+ EXTRA_DIST = \
+     hTraceControlInsert.xpm TraceControlStart.xpm TraceControlPause.xpm \
+ 		TraceControlStop.xpm
+-    
+-
+Index: lttv/modules/gui/detailedevents/Makefile.am
+===================================================================
+--- lttv/modules/gui/detailedevents/Makefile.am	(revision 2340)
++++ lttv/modules/gui/detailedevents/Makefile.am	(working copy)
+@@ -31,7 +31,7 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libguievents.la
+-libguievents_la_LDFLAGS = -module
++libguievents_la_LDFLAGS = -module -avoid-version
+ libguievents_la_SOURCES = events.c
+ 
+ noinst_HEADERS =	lttv_plugin_evd.h events.h
+Index: lttv/modules/gui/filter/Makefile.am
+===================================================================
+--- lttv/modules/gui/filter/Makefile.am	(revision 2340)
++++ lttv/modules/gui/filter/Makefile.am	(working copy)
+@@ -12,10 +12,8 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libguifilter.la
+-libguifilter_la_LDFLAGS = -module
++libguifilter_la_LDFLAGS = -module -avoid-version
+ libguifilter_la_SOURCES = filter.c
+ 
+ EXTRA_DIST = \
+     hGuiFilterInsert.xpm
+-    
+-
+Index: lttv/modules/gui/controlflow/Makefile.am
+===================================================================
+--- lttv/modules/gui/controlflow/Makefile.am	(revision 2340)
++++ lttv/modules/gui/controlflow/Makefile.am	(working copy)
+@@ -30,7 +30,7 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libguicontrolflow.la
+-libguicontrolflow_la_LDFLAGS = -module
++libguicontrolflow_la_LDFLAGS = -module -avoid-version
+ libguicontrolflow_la_SOURCES = 	module.c eventhooks.c cfv.c processlist.c\
+ 				drawing.c drawitem.c lttv_plugin_cfv.c
+ 
+Index: lttv/modules/gui/statistics/Makefile.am
+===================================================================
+--- lttv/modules/gui/statistics/Makefile.am	(revision 2340)
++++ lttv/modules/gui/statistics/Makefile.am	(working copy)
+@@ -12,7 +12,7 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libguistatistics.la
+-libguistatistics_la_LDFLAGS = -module
++libguistatistics_la_LDFLAGS = -module -avoid-version
+ libguistatistics_la_SOURCES = statistics.c
+ 
+ EXTRA_DIST = \
+Index: lttv/modules/gui/diskperformance/Makefile.am
+===================================================================
+--- lttv/modules/gui/diskperformance/Makefile.am	(revision 2340)
++++ lttv/modules/gui/diskperformance/Makefile.am	(working copy)
+@@ -31,7 +31,7 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libdiskperformance.la
+-libdiskperformance_la_LDFLAGS = -module
++libdiskperformance_la_LDFLAGS = -module -avoid-version
+ libdiskperformance_la_SOURCES = diskperformance.c
+ 
+ EXTRA_DIST = \
+Index: lttv/modules/gui/histogram/Makefile.am
+===================================================================
+--- lttv/modules/gui/histogram/Makefile.am	(revision 2340)
++++ lttv/modules/gui/histogram/Makefile.am	(working copy)
+@@ -31,7 +31,7 @@
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libguihistogram.la
+-libguihistogram_la_LDFLAGS = -module
++libguihistogram_la_LDFLAGS = -module -avoid-version
+ libguihistogram_la_SOURCES = histomodule.c histoeventhooks.c histocfv.c \
+ 			histobuttonwidget.c histodrawing.c histodrawitem.c
+ 
+Index: lttv/modules/text/Makefile.am
+===================================================================
+--- lttv/modules/text/Makefile.am	(revision 2340)
++++ lttv/modules/text/Makefile.am	(working copy)
+@@ -1,16 +1,14 @@
+-
+-
+ AM_CFLAGS = $(GLIB_CFLAGS) 
+ LIBS += $(GLIB_LIBS) -lgobject-2.0 -L${top_srcdir}/ltt -llttvtraceread
+ 
+ libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = libtextDump.la libbatchAnalysis.la libtextFilter.la
+-libtextDump_la_LDFLAGS = -module
++libtextDump_la_LDFLAGS = -module -avoid-version
+ libtextDump_la_SOURCES = textDump.c
+-libbatchAnalysis_la_LDFLAGS = -module
++libbatchAnalysis_la_LDFLAGS = -module -avoid-version
+ libbatchAnalysis_la_SOURCES = batchAnalysis.c
+-libtextFilter_la_LDFLAGS = -module
++libtextFilter_la_LDFLAGS = -module -avoid-version
+ libtextFilter_la_SOURCES = textFilter.c
+ 
+ noinst_HEADERS = \
