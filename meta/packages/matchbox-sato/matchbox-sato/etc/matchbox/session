@@ -20,19 +20,15 @@ case `module_id` in
 esac
 
 ## All this should be done by themeing/xsettings.. ## 
-matchbox-desktop --icon-size 48 \
-                 --icon-padding 64 \
+matchbox-desktop --icon-size 64 \
+                 --icon-padding 128 \
                  --font sans-16:bold \
                  --titlefont sans-16:bold &
 
-mb-applet-startup-monitor &                 
+# mb-applet-startup-monitor &                 
 
-#matchbox-panel --orientation east \
-#               --padding 4 \
-#               --no-menu \
-#               --no-session \
-#               --default-apps mb-applet-home,mb-applet-clock,mb-applet-battery &
+matchbox-panel --titlebar --start-applets showdesktop --end-applets clock &
 
-exec matchbox-window-manager -use_cursor $SHOWCURSOR $@
+exec matchbox-window-manager -theme Sato -use_desktop_mode decorated -use_cursor $SHOWCURSOR $@
 
 
