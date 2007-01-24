@@ -163,9 +163,9 @@ startup() {
 	done
   fi
 
-if [ "x$runlevel" != "xS" ]; then
-    if type psplash-write >/dev/null 2>&1; then
-        TMPDIR=/mnt/.psplash psplash-write "QUIT" || true
-    	umount /mnt/.psplash
-    fi
-fi
+#if [ "x$runlevel" != "xS" ]; then
+#    if type psplash-write >/dev/null 2>&1; then
+#        TMPDIR=/mnt/.psplash psplash-write "QUIT" || true
+#    	umount /mnt/.psplash
+#    fi
+#fi
