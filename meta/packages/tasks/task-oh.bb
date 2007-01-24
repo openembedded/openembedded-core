@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r44"
+PR = "r47"
 
 PACKAGES = "\
     task-oh-base \
@@ -55,7 +55,7 @@ RDEPENDS_task-oh-base = "\
     matchbox-common \
     matchbox-wm \
     matchbox-keyboard \
-    matchbox-panel \
+    matchbox-panel-2 \
     ${XSERVER} \
     xserver-kdrive-common \
     xserver-nodm-init \
@@ -79,20 +79,17 @@ RDEPENDS_task-oh-standard = "\
     dropbear \
     portmap \
     matchbox-desktop \
-    matchbox-poky \
+    matchbox-sato \
     matchbox-keyboard \
     matchbox-stroke \
     matchbox-config-gtk \
-    matchbox-panel-manager \
-    matchbox-panel-hacks \
-    matchbox-themes-extra \
     matchbox-themes-gtk \		
     matchbox-applet-inputmanager \
     matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
     usbinit \
     settings-daemon \
-    gtk-clearlooks-engine \
+    gtk-sato-engine \
     eds-dbus \
     contacts \
     dates \
@@ -104,8 +101,7 @@ RDEPENDS_task-oh-standard = "\
     avahi-daemon \
     gnome-vfs-plugin-dbus \
     gnome-vfs-plugin-file \
-    gnome-vfs-plugin-http \
-    gtk-theme-clearlooks"
+    gnome-vfs-plugin-http"
 
 RDEPENDS_task-oh-devtools = "\
     oprofile \
