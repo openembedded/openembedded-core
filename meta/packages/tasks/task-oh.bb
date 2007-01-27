@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r47"
+PR = "r48"
 
 PACKAGES = "\
     task-oh-base \
@@ -99,7 +99,7 @@ RDEPENDS_task-oh-standard = "\
     kf \
     rxvt-unicode \
     avahi-daemon \
-    gnome-vfs-plugin-dbus \
+    gnome-vfs \
     gnome-vfs-plugin-file \
     gnome-vfs-plugin-http"
 
