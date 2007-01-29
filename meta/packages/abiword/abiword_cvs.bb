@@ -1,8 +1,8 @@
 require abiword.inc
 
-SRCDATE="20070113"
+SRCDATE="20070130"
 PV="2.5.0+cvs${SRCDATE}"
-PR = "r1"
+PR = "r3"
 
 SRC_URI = "${CVSURI}"
 

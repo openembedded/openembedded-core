@@ -38,7 +38,7 @@ PARALLEL_MAKE = ""
 # if you are planning to build plugins, make sure to comment out the
 # --disable-exports options
 
-EXTRA_OECONF = " --enable-embedded    \
+EXTRA_OECONF = " --enable-embedded=poky    \
 		 --disable-printing   \
 		 --with-sys-wv 	     \
 		 --disable-exports    \
