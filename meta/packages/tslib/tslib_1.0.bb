@@ -1,16 +1,14 @@
 DESCRIPTION = "tslib is a plugin-based flexible touchscreen access library."
-HOMEPAGE = "http://cvs.arm.linux.org.uk/"
+HOMEPAGE = "http://tslib.berlios.de/"
 AUTHOR = "Russell King w/ plugins by Chris Larson et. al."
 SECTION = "base"
 LICENSE = "LGPL"
 
-PR = "r5"
+PR = "r7"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-1.0.tar.bz2 \
            file://ts.conf \
-           file://ts.conf-h3600-2.4 \
            file://ts.conf-simpad-2.4 \
-           file://ts.conf-corgi-2.4 \
            file://ts.conf-collie-2.4 \
            file://tslib.sh"
 SRC_URI_append_mnci += " file://devfs.patch;patch=1"
@@ -33,19 +31,10 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/profile.d/
 	install -m 0755 ${WORKDIR}/tslib.sh ${D}${sysconfdir}/profile.d/
 	case ${MACHINE} in
-	a780 | e680 | h3600 | h3900 | h5xxx | h1940 | h6300 | h2200 | ipaq-pxa270 | hx4700 | hx2000 | blueangel | h4000)
-		install -d ${D}${datadir}/tslib
-		install -m 0644 ${WORKDIR}/ts.conf-h3600-2.4 ${D}${datadir}/tslib/
-		;;
-	c7x0 | spitz | akita | tosa )
-		install -d ${D}${datadir}/tslib
-		install -m 0644 ${WORKDIR}/ts.conf-corgi-2.4 ${D}${datadir}/tslib/
-		;;
-	collie | poodle )
+	collie )
 		install -d ${D}${datadir}/tslib
 		install -m 0644 ${WORKDIR}/ts.conf-collie-2.4 ${D}${datadir}/tslib/
 		;;
-
 	simpad )
 		install -d ${D}${datadir}/tslib
 		install -m 0644 ${WORKDIR}/ts.conf-simpad-2.4 ${D}${datadir}/tslib/
@@ -57,19 +46,24 @@ do_install_append() {
 
 SRC_URI_OVERRIDES_PACKAGE_ARCH = "0"
 
-# People should consider using udev's /dev/input/touchscreen0 symlink 
+# People should consider using udev's /dev/input/touchscreen0 symlink
 # instead of detect-stylus
-RDEPENDS_tslib-conf_h1940 = "detect-stylus"
-RDEPENDS_tslib-conf_h3600 = "detect-stylus"
-RDEPENDS_tslib-conf_h3900 = "detect-stylus"
-RDEPENDS_tslib-conf_h6300 = "detect-stylus"
-RDEPENDS_tslib-conf_blueangel = "detect-stylus"
-RDEPENDS_tslib-conf_htcuniversal = "detect-stylus"
-RDEPENDS_tslib-conf_h4000 = "detect-stylus"
+#RDEPENDS_tslib-conf_weird-machine = "detect-stylus"
 RPROVIDES_tslib-conf = "libts-0.0-conf"
 
-PACKAGE_ARCH_tslib-conf = "${MACHINE_ARCH}"
+# Machines with machine specific patches
 PACKAGE_ARCH_mnci = "${MACHINE_ARCH}"
+# Machines with machine specific config files (tslib.sh)
+PACKAGE_ARCH_tslib-conf_a780 = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_collie = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_e680 = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_jornada56x = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_jornada6xx = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_jornada7xx = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_netbook-pro = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_omap1610h2 = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_omap5912osk = "${MACHINE_ARCH}"
+PACKAGE_ARCH_tslib-conf_simpad = "${MACHINE_ARCH}"
 
 PACKAGES =+ "tslib-conf libts-dev tslib-tests tslib-calibrate"
 DEBIAN_NOAUTONAME_tslib-conf = "1"
