@@ -40,6 +40,9 @@ if [ "x$2" != "x" ]; then
     TYPE=$2
 else
     TYPE="ext2"
+    if [ "$MACHINE" = "akita" ]; then
+        TYPE="jffs2"
+    fi
 fi
 
 if [ "x$3" != "x" ]; then
@@ -57,11 +60,18 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o 
     CROSSPATH=$BUILDDIR/tmp/cross/arm-poky-linux/bin
 fi
 
-
 if [ "$MACHINE" = "qemuarm" ]; then
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
+        fi
+    fi
+fi
+
+if [ "$MACHINE" = "akita" ]; then
+    if [ "$TYPE" = "jffs2" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-akita.jffs2
         fi
     fi
 fi

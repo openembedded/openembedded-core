@@ -29,15 +29,18 @@ else
     ZIMAGE=$1
 fi
 
+if [ "x$MACHINE" = "x" ]; then
+    MACHINE=`basename $ZIMAGE | sed -r -e 's#.*-([a-z]+[0-9]*)-?[0-9]*..*#\1#'`
+fi
+
 if [ "x$2" = "x" ]; then
     TYPE="nfs"
 else
     TYPE="ext2"
+    if [ "$MACHINE" = "akita" ]; then
+        TYPE="jffs2"
+    fi
     HDIMAGE=$2
-fi
-
-if [ "x$MACHINE" = "x" ]; then
-    MACHINE=`basename $ZIMAGE | sed -r -e 's#.*-([a-z]+[0-9]*)-?[0-9]*..*#\1#'`
 fi
 
 INTERNAL_SCRIPT=`which poky-qemu-internal`

@@ -50,7 +50,7 @@ if [ ! -f "$ZIMAGE" ]; then
     exit 1
 fi
 
-if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" ]; then
+if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" -a "$MACHINE" != "akita" ]; then
     echo "Error, unsupported machine type $MACHINE"
     exit 1
 fi
@@ -107,14 +107,13 @@ fi
 
 if [ "$MACHINE" = "akita" ]; then
     QEMU=`which qemu-system-arm`
-#    QEMU=/usr/local/bin/qemu-system-arm
-#    if [ "$TYPE" = "ext2" ]; then
-#        if [ "x$HDIMAGE" = "x" ]; then
-#           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-akita.jffs2
-#           HDIMAGE=$BUILDDIR/tmp/deploy/images/akita.test
-#        fi
-#        QEMUOPTIONS="$QEMU_NETWORK_CMD -M akita -hdd $HDIMAGE"
-#    fi
+    if [ "$TYPE" = "jffs2" ]; then
+        if [ ! -e "$HDIMAGE.qemuflash" ]; then
+            echo "Converting raw image into flash image format for use by QEMU, please wait..."
+	    raw2flash.akita < $HDIMAGE > $HDIMAGE.qemuflash
+        fi
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M akita -mtdblock $HDIMAGE.qemuflash -vertical"
+    fi
 fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
