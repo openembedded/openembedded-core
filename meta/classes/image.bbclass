@@ -66,8 +66,9 @@ fakeroot do_rootfs () {
 			bbimage -n "${IMAGE_NAME}" -t "$type" -e "${FILE}"
 		fi
 
+		cd ${DEPLOY_DIR_IMAGE}/
 		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*
-		ln -s ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
+		ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
 	done
 
 	${IMAGE_POSTPROCESS_COMMAND}
