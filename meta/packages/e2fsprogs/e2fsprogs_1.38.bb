@@ -1,18 +1,13 @@
-DESCRIPTION = "EXT2 Filesystem Utilities"
-HOMEPAGE = "http://e2fsprogs.sourceforge.net"
-LICENSE = "GPL"
-SECTION = "base"
+require e2fsprogs.inc
+
 PR = "r6"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/e2fsprogs/e2fsprogs-${PV}.tar.gz \
-	file://no-hardlinks.patch;patch=1"
+SRC_URI += "file://no-hardlinks.patch;patch=1"
 S = "${WORKDIR}/e2fsprogs-${PV}"
 
 PARALLEL_MAKE = ""
 
-inherit autotools
-
-EXTRA_OECONF = "--enable-dynamic-e2fsck --sbindir=${base_sbindir}"
+EXTRA_OECONF += " --sbindir=${base_sbindir}"
 
 do_compile_prepend () {
 	find ./ -print|xargs chmod u=rwX
