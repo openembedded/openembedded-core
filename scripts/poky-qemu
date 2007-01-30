@@ -40,6 +40,9 @@ else
     if [ "$MACHINE" = "akita" ]; then
         TYPE="jffs2"
     fi
+    if [ "$MACHINE" = "spitz" ]; then
+        TYPE="ext3"
+    fi
     HDIMAGE=$2
 fi
 

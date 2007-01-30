@@ -43,6 +43,9 @@ else
     if [ "$MACHINE" = "akita" ]; then
         TYPE="jffs2"
     fi
+    if [ "$MACHINE" = "spitz" ]; then
+        TYPE="ext3"
+    fi
 fi
 
 if [ "x$3" != "x" ]; then
@@ -64,6 +67,14 @@ if [ "$MACHINE" = "qemuarm" ]; then
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
            HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
+        fi
+    fi
+fi
+
+if [ "$MACHINE" = "spitz" ]; then
+    if [ "$TYPE" = "ext3" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-spitz.ext3
         fi
     fi
 fi

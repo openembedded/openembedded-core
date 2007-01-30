@@ -50,7 +50,7 @@ if [ ! -f "$ZIMAGE" ]; then
     exit 1
 fi
 
-if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" -a "$MACHINE" != "akita" ]; then
+if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" -a "$MACHINE" != "akita" -a "$MACHINE" != "spitz" ]; then
     echo "Error, unsupported machine type $MACHINE"
     exit 1
 fi
@@ -91,23 +91,22 @@ fi
 
 if [ "$MACHINE" = "spitz" ]; then
     QEMU=`which qemu-system-arm`
-#    QEMU=/usr/local/bin/qemu-system-arm
-#    if [ "$TYPE" = "ext2" ]; then
-#        if [ "x$HDIMAGE" = "x" ]; then
-#           HDIMAGE=`readlink -f $BUILDDIR/tmp/deploy/images/oh-image-sdk-spitz.ext2`
-#           if [ ! -e $HDIMAGE.mbr ]; then
-#               cp $OEROOT/mbr.bin $HDIMAGE.mbr
-#               cat $HDIMAGE >> $HDIMAGE.mbr
-#           fi
-#           HDIMAGE=$BUILDDIR/tmp/deploy/images/hdaimage.bin
-#        fi
-#        QEMUOPTIONS="-append \"root=/dev/sda mem=$QEMU_MEMORY\" $QEMU_NETWORK_CMD -M spitz -hda $HDIMAGE"
-#    fi
+    if [ "$TYPE" = "ext3" ]; then
+        echo $HDIMAGE
+        HDIMAGE=`readlink -f $HDIMAGE`
+        echo $HDIMAGE
+        if [ ! -e "$HDIMAGE.qemudisk" ]; then
+            echo "Adding a partition table to the ext3 image for use by QEMU, please wait..."
+            poky-addptable2image $HDIMAGE $HDIMAGE.qemudisk
+        fi
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M spitz -hda $HDIMAGE.qemudisk -vertical"
+    fi
 fi
 
 if [ "$MACHINE" = "akita" ]; then
     QEMU=`which qemu-system-arm`
     if [ "$TYPE" = "jffs2" ]; then
+        HDIMAGE=`readlink -f $HDIMAGE`
         if [ ! -e "$HDIMAGE.qemuflash" ]; then
             echo "Converting raw image into flash image format for use by QEMU, please wait..."
 	    raw2flash.akita < $HDIMAGE > $HDIMAGE.qemuflash
