@@ -1,0 +1,17 @@
+---
+ Rules.mak |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: busybox-1.01/Rules.mak
+===================================================================
+--- busybox-1.01.orig/Rules.mak	2005-08-17 02:29:17.000000000 +0100
++++ busybox-1.01/Rules.mak	2007-01-12 01:03:01.000000000 +0000
+@@ -167,7 +167,7 @@ ifeq ($(strip $(CONFIG_DEBUG)),y)
+ else
+     CFLAGS+=$(WARNINGS) $(OPTIMIZATIONS) -D_GNU_SOURCE -DNDEBUG
+     LDFLAGS += -Wl,-warn-common
+-    STRIPCMD:=$(STRIP) -s --remove-section=.note --remove-section=.comment
++    STRIPCMD:=/bin/true -OE_WILL_DO_THIS
+ endif
+ ifeq ($(strip $(CONFIG_STATIC)),y)
+     LDFLAGS += --static

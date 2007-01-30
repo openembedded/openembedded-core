@@ -10,9 +10,10 @@ HOMEPAGE = "http://www.busybox.net"
 LICENSE = "GPL"
 SECTION = "base"
 PRIORITY = "required"
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
+           file://no_strip.patch;patch=1 \
 	   file://udhcppidfile.patch;patch=1 \
 	   file://udhcppidfile-breakage.patch;patch=1 \
            file://add-getkey-applet.patch;patch=1 \
