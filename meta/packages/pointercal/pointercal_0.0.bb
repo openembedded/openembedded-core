@@ -1,9 +1,10 @@
 DESCRIPTION = "Touchscreen calibration data"
 SECTION = "base"
 
-PACKAGE_ARCH = ${MACHINE_ARCH}
 SRC_URI = "file://pointercal"
-S=${WORKDIR}
+S = "${WORKDIR}"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install() {
         install -d ${D}${sysconfdir}/
