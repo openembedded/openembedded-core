@@ -83,6 +83,8 @@ case `module_id` in
                 modprobe mbxfb
 	        ARGS="$ARGS -fb /dev/fb1"
                 ;;
+	"Nokia N800")
+		ARGS="$ARGS -screen 800x480x16 -mouse tslib" ;;
         *)
 		# Its a device we dont know about - in which case force
                 # kdrive to use the current framebuffer geometry otherwise
