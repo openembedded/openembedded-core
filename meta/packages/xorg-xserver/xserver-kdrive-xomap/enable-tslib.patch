@@ -1,0 +1,23 @@
+--- git/configure.ac.orig	2006-05-22 22:40:00.000000000 +0200
++++ git/configure.ac	2006-06-10 15:10:14.000000000 +0200
+@@ -1438,6 +1446,10 @@
+     fi
+     
+-    # tslib...
++    AC_CHECK_HEADERS([tslib.h])
++    if test "$ac_cv_header_tslib_h" = yes; then
++        AC_DEFINE(TSLIB, 1, [Build kdrive with tslib support])
++        AC_DEFINE(TOUCHSCREEN, 1, [Build kdrive with touchscreen support])
++    fi
+ 
+     # damage shadow extension glx (NOTYET) fb mi
+     KDRIVE_INC='-I$(top_srcdir)/hw/kdrive/src'
+@@ -1467,7 +1479,7 @@
+ AC_SUBST(KDRIVE_CFLAGS)
+ AC_SUBST(KDRIVE_PURE_LIBS)
+ AC_SUBST(KDRIVE_LIBS)
+-AM_CONDITIONAL(TSLIB, false)
++AM_CONDITIONAL(TSLIB, [test x"$ac_cv_header_tslib_h" = xyes])
+ AM_CONDITIONAL(H3600_TS, false)
+ AM_CONDITIONAL(KDRIVEVESA, [test x"$ac_cv_header_sys_vm86_h" = xyes])
+ AM_CONDITIONAL(KDRIVEFBDEV, [test x"$ac_cv_header_linux_fb_h" = xyes])

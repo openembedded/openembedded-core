@@ -1,0 +1,82 @@
+---
+ hw/kdrive/fbdev/fbdev.c  |   17 ++++++++++++-----
+ hw/kdrive/fbdev/fbdev.h  |    1 +
+ hw/kdrive/fbdev/fbinit.c |   20 ++++++++++++++++----
+ 3 files changed, 29 insertions(+), 9 deletions(-)
+
+--- xorg-server-X11R7.1-1.1.0.orig/hw/kdrive/fbdev/fbdev.c
++++ xorg-server-X11R7.1-1.1.0/hw/kdrive/fbdev/fbdev.c
+@@ -33,16 +33,23 @@
+ 
+ extern int KdTsPhyScreen;
+ 
++char     *fbdevDevicePath = NULL;
+ Bool
+ fbdevInitialize (KdCardInfo *card, FbdevPriv *priv)
+ {
+     int		    k;
+     unsigned long   off;
+-    if ((priv->fd = open("/dev/fb0", O_RDWR)) < 0 && \
+-        (priv->fd = open("/dev/fb/0", O_RDWR)) < 0) {
+-	perror("Error opening /dev/fb0");
+-	return FALSE;
+-    }
++
++    if (fbdevDevicePath == NULL) 
++      fbdevDevicePath = "/dev/fb0";
++
++    if ((priv->fd = open(fbdevDevicePath, O_RDWR)) < 0)
++      {
++	ErrorF("Error opening framebuffer %s: %s\n", 
++	       fbdevDevicePath, strerror(errno));
++        return FALSE;
++      }
++
+     /* quiet valgrind */
+     memset (&priv->fix, '\0', sizeof (priv->fix));
+     if ((k=ioctl(priv->fd, FBIOGET_FSCREENINFO, &priv->fix)) < 0) {
+--- xorg-server-X11R7.1-1.1.0.orig/hw/kdrive/fbdev/fbdev.h
++++ xorg-server-X11R7.1-1.1.0/hw/kdrive/fbdev/fbdev.h
+@@ -53,6 +53,7 @@ typedef struct _fbdevScrPriv {
+ } FbdevScrPriv;
+ 
+ extern KdCardFuncs  fbdevFuncs;
++extern char*        fbdevDevicePath;
+ 
+ Bool
+ fbdevInitialize (KdCardInfo *card, FbdevPriv *priv);
+--- xorg-server-X11R7.1-1.1.0.orig/hw/kdrive/fbdev/fbinit.c
++++ xorg-server-X11R7.1-1.1.0/hw/kdrive/fbdev/fbinit.c
+@@ -59,16 +59,28 @@ InitInput (int argc, char **argv)
+ void
+ ddxUseMsg (void)
+ {
+-    KdUseMsg();
++  KdUseMsg();
++  ErrorF("\nXfbdev Device Usage:\n");
++  ErrorF("-fb path         Framebuffer device to use. Defaults to /dev/fb0\n");
++  ErrorF("\n");
+ }
+ 
+ int
+ ddxProcessArgument (int argc, char **argv, int i)
+ {
+-    return KdProcessArgument (argc, argv, i);
+-}
+-
++  if (!strcmp (argv[i], "-fb"))
++    {
++      if (i+1 < argc) 
++	{
++	  fbdevDevicePath = argv[i+1];
++	  return 2;
++	} 
++      UseMsg();
++      exit(1);
++    }
+ 
++  return KdProcessArgument (argc, argv, i);
++}
+ 
+ KdCardFuncs	fbdevFuncs = {
+     fbdevCardInit,	    /* cardinit */
