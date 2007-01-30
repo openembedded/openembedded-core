@@ -24,6 +24,8 @@ PACKAGES = "\
     task-oh-testapps-dbg \
     task-oh-testapps-dev"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 XSERVER ?= "xserver-kdrive-fbdev"
 
 ALLOW_EMPTY = "1"
