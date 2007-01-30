@@ -3,13 +3,13 @@ HOMEPAGE = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.28.pre13.tar.gz \
+SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.pre10.tar.gz \
            file://man.patch;patch=1 \
 	   file://wireless-tools.if-pre-up \
 	   file://zzz-wireless.if-pre-up"
-S = "${WORKDIR}/wireless_tools.28"
+S = "${WORKDIR}/wireless_tools.29"
 
 CFLAGS =+ "-I${S}"
 EXTRA_OEMAKE = "-e 'BUILD_SHARED=y' \
