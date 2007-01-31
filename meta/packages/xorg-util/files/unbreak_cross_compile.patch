@@ -1,0 +1,26 @@
+---
+ xorg-macros.m4.in |    4 ----
+ 1 file changed, 4 deletions(-)
+
+Index: util-macros-1.1.5/xorg-macros.m4.in
+===================================================================
+--- util-macros-1.1.5.orig/xorg-macros.m4.in	2006-11-08 14:23:10.000000000 +0000
++++ util-macros-1.1.5/xorg-macros.m4.in	2007-01-31 15:28:55.000000000 +0000
+@@ -194,8 +194,6 @@ AC_DEFUN([XORG_CHECK_LINUXDOC],[
+ XORG_SGML_PATH=$prefix/share/sgml
+ HAVE_DEFS_ENT=
+ 
+-AC_CHECK_FILE([$XORG_SGML_PATH/X11/defs.ent], [HAVE_DEFS_ENT=yes])
+-
+ AC_PATH_PROG(LINUXDOC, linuxdoc)
+ AC_PATH_PROG(PS2PDF, ps2pdf)
+ 
+@@ -250,8 +248,6 @@ BUILDPDFDOC=no
+ BUILDPSDOC=no
+ BUILDHTMLDOC=no
+ 
+-AC_CHECK_FILE([$XORG_SGML_PATH/X11/defs.ent], [HAVE_DEFS_ENT=yes])
+-
+ AC_PATH_PROG(DOCBOOKPS, docbook2ps)
+ AC_PATH_PROG(DOCBOOKPDF, docbook2pdf)
+ AC_PATH_PROG(DOCBOOKHTML, docbook2html)
