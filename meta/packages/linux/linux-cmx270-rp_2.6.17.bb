@@ -27,7 +27,7 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/compressed/${KERNEL_IMAGETYPE}"
 inherit kernel
 
 COMPATIBLE_HOST = "arm.*-linux"
-#COMPATIBLE_MACHINE = "cmx270"
+COMPATIBLE_MACHINE = "cmx270"
 
 do_configure_prepend() {
 	install -m 0644 ${WORKDIR}/defconfig ${S}/.config
