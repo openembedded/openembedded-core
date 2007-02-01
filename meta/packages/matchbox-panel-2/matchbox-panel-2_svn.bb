@@ -5,6 +5,10 @@ PV = "0.0+svn${SRCDATE}"
 DEPENDS = "gtk+ startup-notification apmd"
 PR = "r1"
 
+RPROVIDES = matchbox-panel
+RREPLACES = matchbox-panel
+RCONFLICTS = matchbox-panel
+
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
 EXTRA_OECONF = "--enable-startup-notification --disable-libnotify"
@@ -18,5 +22,5 @@ FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 inherit autotools pkgconfig
 
 do_stage() {
-        autotools_stage_all
+        autotools_stage_includes
 }
