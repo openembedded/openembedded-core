@@ -9,6 +9,7 @@ DEPENDS = "popt binutils"
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
 	   file://oprofile_eabi.patch;patch=1 \
 	   file://oparchive-debug-dir.patch;patch=1 \
+	   file://oparchive-list-files.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 

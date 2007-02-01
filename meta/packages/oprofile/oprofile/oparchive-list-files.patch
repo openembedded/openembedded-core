@@ -1,0 +1,60 @@
+Index: oprofile/pp/oparchive.cpp
+===================================================================
+--- oprofile.orig/pp/oparchive.cpp	2007-01-22 12:23:51.000000000 +0000
++++ oprofile/pp/oparchive.cpp	2007-01-22 12:23:56.000000000 +0000
+@@ -35,6 +35,11 @@
+ 
+ void copy_one_file(image_error err, string const & source, string const & dest)
+ {
++	if (options::list_files) {
++		cout << source << endl;
++		return;
++	}
++
+ 	if (!copy_file(source, dest) && err == image_ok) {
+ 		cerr << "can't copy from " << source << " to " << dest
+ 		     << " cause: " << strerror(errno) << endl;
+Index: oprofile/pp/oparchive_options.cpp
+===================================================================
+--- oprofile.orig/pp/oparchive_options.cpp	2007-01-22 12:22:44.000000000 +0000
++++ oprofile/pp/oparchive_options.cpp	2007-01-22 12:23:03.000000000 +0000
+@@ -36,6 +36,7 @@
+ 	bool exclude_dependent;
+ 	merge_option merge_by;
+ 	string outdirectory;
++	bool list_files;
+ }
+ 
+ 
+@@ -47,7 +48,9 @@
+ 	popt::option(options::outdirectory, "output-directory", 'o',
+ 	             "output to the given directory", "directory"),
+ 	popt::option(options::exclude_dependent, "exclude-dependent", 'x',
+-		     "exclude libs, kernel, and module samples for applications")
++		     "exclude libs, kernel, and module samples for applications"),
++	popt::option(options::list_files, "list-files", 'l',
++		     "just list the files necessary, don't produce the archive")
+ };
+ 
+ 
+@@ -60,7 +63,7 @@
+ 	using namespace options;
+ 
+ 	/* output directory is required */
+-	if (outdirectory.size() == 0) {
++	if (outdirectory.size() == 0 && !list_files) {
+ 		cerr << "Requires --output-directory option." << endl;
+ 		exit(EXIT_FAILURE);
+ 	}
+Index: oprofile/pp/oparchive_options.h
+===================================================================
+--- oprofile.orig/pp/oparchive_options.h	2007-01-22 12:23:14.000000000 +0000
++++ oprofile/pp/oparchive_options.h	2007-01-22 12:23:30.000000000 +0000
+@@ -22,6 +22,7 @@
+ 	extern bool exclude_dependent;
+ 	extern merge_option merge_by;
+ 	extern std::string outdirectory;
++	extern bool list_files;
+ }
+ 
+ /// All the chosen sample files.
