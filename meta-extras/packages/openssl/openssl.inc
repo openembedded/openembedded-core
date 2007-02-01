@@ -18,8 +18,8 @@ export EX_LIBS = "-lgcc -ldl -L${STAGING_LIBDIR}"
 export AS = "${CC} -c"
 
 PACKAGES =+ "libcrypto libssl"
-FILES_libcrypto = "${libdir}/libcrypto.so*"
-FILES_libssl = "${libdir}/libssl.so*"
+FILES_libcrypto = "${libdir}/libcrypto.so.*"
+FILES_libssl = "${libdir}/libssl.so.*"
 
 do_compile () {
 	cd util
