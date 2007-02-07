@@ -1,11 +1,12 @@
 require coreutils.inc
 
-PR = "r8"
+PR = "r1"
 
 SRC_URI = "ftp://alpha.gnu.org/gnu/coreutils/coreutils-${PV}.tar.bz2 \
            file://install-cross.patch;patch=1;pnum=0 \
            file://man.patch;patch=1 \
-	   file://rename-eaccess.patch;patch=1"
+           file://rename-tee-for-glibc2.5.patch;patch=1 \
+           file://uptime-pow-lib.patch;patch=1"
 
 # [ gets a special treatment and is not included in this
 bindir_progs = "basename cksum comm csplit cut dir dircolors dirname du \
