@@ -1,5 +1,5 @@
---- gtk+-2.6.8/gtk/gtkfilesystemunix.c.orig	2007-02-08 10:05:19.000000000 +0000
-+++ gtk+-2.6.8/gtk/gtkfilesystemunix.c	2007-02-08 10:05:19.000000000 +0000
+--- gtk+-2.6.8/gtk/gtkfilesystemunix.c.orig	2007-02-08 12:01:19.000000000 +0000
++++ gtk+-2.6.8/gtk/gtkfilesystemunix.c	2007-02-08 12:01:19.000000000 +0000
 @@ -33,6 +33,7 @@
  #include <errno.h>
  #include <string.h>
@@ -59,7 +59,27 @@
  }
  
  static GtkFileSystemVolume *
-@@ -590,7 +633,7 @@
+@@ -375,10 +418,15 @@
+ 
+   len = strlen (filename);
+ 
+-  if (len > 1 && filename[len - 1] == '/')
+-    return g_strndup (filename, len - 1);
+-  else
+-    return g_memdup (filename, len + 1);
++  if (len > 1)
++  {
++    gchar *c = g_utf8_prev_char (filename + len);
++
++    if (c && *c == '/')
++       return g_strndup (filename, len - 1);
++  }
++  
++  return g_memdup (filename, len + 1);
+ }
+ 
+ static GtkFileFolder *
+@@ -590,7 +638,7 @@
  gtk_file_system_unix_volume_get_base_path (GtkFileSystem        *file_system,
  					   GtkFileSystemVolume  *volume)
  {
@@ -68,14 +88,15 @@
  }
  
  static gboolean
-@@ -616,7 +659,29 @@
+@@ -616,7 +664,32 @@
  gtk_file_system_unix_volume_get_display_name (GtkFileSystem       *file_system,
  					      GtkFileSystemVolume *volume)
  {
 -  return g_strdup (_("Filesystem")); /* Same as Nautilus */
 +  gchar * slash;
 +  gchar * path;
-+
++  gchar * c;
++  
 +  g_return_val_if_fail (file_system && volume, NULL);
 +  
 +  path = gtk_file_system_path_to_filename (file_system, (GtkFilePath*) volume);
@@ -87,10 +108,12 @@
 +
 +  /* Now the media volumes */
 +  /* strip trailing / if any */
-+  if (path[strlen(path)-1] == '/')
-+    path[strlen(path)-1] = 0;
++  c = g_utf8_prev_char (path + strlen(path));
++  
++  if (*c == '/')
++    *c = 0;
 +
-+  slash = strrchr (path, '/');
++  slash = g_utf8_strrchr (path, -1, '/');
 +
 +  if (!slash)
 +      return g_strdup (path);
@@ -99,12 +122,13 @@
  }
  
  static IconType
-@@ -787,11 +852,51 @@
+@@ -787,11 +860,54 @@
  					 GError              **error)
  {
    GdkPixbuf *pixbuf;
 +  gchar * slash;
 +  gchar * path;
++  gchar * c;
 +  const gchar * id = NULL;
 +  
 +  g_return_val_if_fail (file_system && volume, NULL);
@@ -122,11 +146,13 @@
 +  {
 +    /* Now the media volumes */
 +    /* strip trailing / if any */
-+    if (path[strlen(path)-1] == '/')
-+      path[strlen(path)-1] = 0;
++    c = g_utf8_prev_char (path + strlen(path));
++  
++    if (*c == '/')
++      *c = 0;
 +
-+    slash = strrchr (path, '/');
-+
++    slash = g_utf8_strrchr (path, -1, '/');
+ 
 +    if (slash)
 +    {
 +	slash++;
@@ -143,7 +169,7 @@
 +	  id = "gnome-dev-removable";
 +    }
 +  }
- 
++
 +  if (id)
 +  {
 +    pixbuf = get_cached_icon (widget, id, pixel_size);
