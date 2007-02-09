@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.pre10.tar.gz \
            file://man.patch;patch=1 \
@@ -29,15 +29,18 @@ do_stage() {
 }
 
 do_install() {
-	oe_runmake PREFIX=${D} install-iwmulticall install-dynamic
+	oe_runmake PREFIX=${D} install-iwmulticall install-dynamic install-man install-hdr
+	install -d ${D}${sbindir}
+	install -m 0755 ifrename ${D}${sbindir}/ifrename
 	install -d ${D}${sysconfdir}/network/if-pre-up.d
 	install ${WORKDIR}/wireless-tools.if-pre-up ${D}${sysconfdir}/network/if-pre-up.d/wireless-tools
 	install ${WORKDIR}/zzz-wireless.if-pre-up ${D}${sysconfdir}/network/if-pre-up.d/zzz-wireless
 }
 
-PACKAGES = "libiw libiw-dev libiw-doc ${PN} ${PN}-doc"
+PACKAGES = "libiw libiw-dev libiw-doc ifrename ${PN} ${PN}-doc ${PN}-dbg "
 FILES_libiw = "${libdir}/*.so.*"
 FILES_libiw-dev = "${libdir}/*.a ${libdir}/*.so ${includedir}"
 FILES_libiw-doc = "${mandir}/man7"
-FILES_${PN} = "${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${sysconfdir}/network"
+FILES_ifrename = "${sbindir}/ifrename"
+FILES_${PN} = "${bindir} ${sbindir}/iw* ${base_sbindir} ${base_bindir} ${sysconfdir}/network"
 FILES_${PN}-doc = "${mandir}/man8"
