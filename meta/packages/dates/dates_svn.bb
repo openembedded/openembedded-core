@@ -1,9 +1,12 @@
 LICENSE = "LGPL"
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
+DEPENDS = "glib-2.0 gtk+ intltool eds-dbus"
+RDEPENDS = "libedata-cal"
 DESCRIPTION = "Dates is a calendar application."
 
-PV = "0.1+svn${SRCDATE}"
+DEFAULT_PREFERENCE = "-1"
+
+PV = "0.0+svn${SRCDATE}"
 S = "${WORKDIR}/trunk"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http"
