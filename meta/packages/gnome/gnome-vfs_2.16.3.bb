@@ -7,15 +7,18 @@ PR = "r4"
 inherit gnome
 
 # This is to provide compatibility with the gnome-vfs DBus fork
-PROVIDES = "gnome-vfs-plugin-dbus"
-RREPLACES = "gnome-vfs-dbus"
+RPROVIDES = "gnome-vfs-plugin-dbus"
 
 SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1 \
 	    file://gnome-vfs-no-kerberos.patch;patch=1;pnum=0"
 
-EXTRA_OECONF = "--disable-openssl --disable-samba"
+EXTRA_OECONF = " \
+		 --disable-openssl \
+		 --disable-samba \
+		 "
 
 FILES_${PN} += " ${libdir}/vfs"
+FILES_${PN}-dbg += " ${libdir}/gnome-vfs-2.0/modules/.debug"
 FILES_${PN}-dev += " ${libdir}/gnome-vfs-2.0/include"
 FILES_${PN}-doc += " ${datadir}/gtk-doc"
 
