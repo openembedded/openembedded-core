@@ -11,3 +11,16 @@ Index: Makefile.am
  else
  SUBDIRS = $(LIBDB) libedataserver servers $(CAMEL_DIR) addressbook $(CALENDAR_DIR) libedataserverui src docs art po
  endif
+Index: configure.in
+===================================================================
+--- trunk/configure.in	(revision 524)
++++ trunk/configure.in	(working copy)
+@@ -1215,7 +1215,7 @@
+ AC_SUBST(E_DATA_SERVER_CFLAGS)
+ AC_SUBST(E_DATA_SERVER_LIBS)
+ 
+-E_DATA_SERVER_UI_DEPS="libxml-2.0 gtk+-2.0 libglade-2.0 gconf-2.0"
++E_DATA_SERVER_UI_DEPS="libxml-2.0 gtk+-2.0 gconf-2.0"
+ 
+ EVO_SET_COMPILE_FLAGS(E_DATA_SERVER_UI, $E_DATA_SERVER_UI_DEPS, $THREADS_CFLAGS, $THREADS_LIBS)
+ AC_SUBST(E_DATA_SERVER_UI_CFLAGS)
