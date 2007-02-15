@@ -1,0 +1,199 @@
+Index: oprofile/libpp/xml_utils.cpp
+===================================================================
+--- oprofile.orig/libpp/xml_utils.cpp	2007-02-13 17:34:31.000000000 +0000
++++ oprofile/libpp/xml_utils.cpp	2007-02-13 17:35:06.000000000 +0000
+@@ -60,7 +60,7 @@
+ }
+ 
+ 
+-void dump_it(string const & prefix, sym_iterator it, bool want_nl = true)
++void dump_symbol(string const & prefix, sym_iterator it, bool want_nl = true)
+ {
+ 	if (it == symbols_end)
+ 		cverb << vxml << prefix << "END";
+@@ -71,6 +71,17 @@
+ }
+ 
+ 
++void dump_symbols(string const & prefix, sym_iterator b, sym_iterator e)
++{
++	if (b == (sym_iterator)0)
++		return;
++
++	for (sym_iterator it = b; it != e; ++it)
++		dump_symbol(prefix, it, true);
++}
++
++
++
+ void dump_classes()
+ {
+ 	cverb << vxml << "<!-- classes dump" << endl;
+@@ -425,6 +436,7 @@
+ 	void set_lo(size_t l) { lo = l; }
+ 	void set_hi(size_t h) { hi = h; }
+ 	count_array_t const & get_summary() { return summary; }
++	void set_begin(sym_iterator b);
+ 	void set_end(sym_iterator e);
+ 	void add_to_summary(count_array_t const & counts);
+ 	void output(ostream & out);
+@@ -502,7 +514,7 @@
+ public:
+ 	binary_info() { nr_modules = 0; }
+ 	void output(ostream & out);
+-	binary_info * build_binary(string const & n, sym_iterator it);
++	binary_info * build_binary(string const & n);
+ 	void add_module_symbol(string const & module, string const & app,
+ 		sym_iterator it);
+ 	void close_binary(sym_iterator it);
+@@ -547,6 +559,14 @@
+ 		summary[pclass] += counts[pclass];
+ }
+ 
++
++void module_info::set_begin(sym_iterator b)
++{
++	if (begin == (sym_iterator)0)
++		begin = b;
++}
++
++
+ void module_info::set_end(sym_iterator e)
+ {
+ 	if (end == (sym_iterator)0)
+@@ -562,10 +582,9 @@
+ 
+ void module_info::dump()
+ {
+-	cverb << vxml << "module:class(" << lo << "," << hi << ")=";
++	cverb << vxml << "	module:class(" << lo << "," << hi << ")=";
+ 	cverb << vxml << name << endl;
+-	dump_it("   ", begin, false);
+-	dump_it(" .. ", end-1);
++	dump_symbols("		", begin, end);
+ }
+ 
+ 
+@@ -588,6 +607,9 @@
+ 
+ void module_info::output_symbols(ostream & out)
+ {
++	if (begin == (sym_iterator)0)
++		return;
++
+ 	for (sym_iterator it = begin; it != end; ++it)
+ 		xml_out->output_symbol(out, it, lo, hi);
+ }
+@@ -595,15 +617,13 @@
+ 
+ void binary_info::close_binary(sym_iterator it)
+ {
++	set_end(it);
+ 	if (nr_modules > 0) {
+ 		module_info & m = my_modules[nr_modules-1];
+ 		m.set_end(it);
+ 
+ 		// propagate module summary to binary
+ 		add_to_summary(m.get_summary());
+-	} else {
+-		// close binary with no modules
+-		set_end(it);
+ 	}
+ }
+ 
+@@ -611,6 +631,10 @@
+ void binary_info::dump()
+ {
+ 	cverb << vxml << "app_name=" << name << endl;
++	if (begin != (sym_iterator)0) {
++		dump_symbols("	", begin, end);
++	}
++
+ 	for (size_t i = 0; i < nr_modules; ++i)
+ 		my_modules[i].dump();
+ }
+@@ -620,27 +644,41 @@
+ add_module_symbol(string const & module, string const & app,
+ 	sym_iterator it)
+ {
++	size_t m = nr_modules;
++
+ 	if (module == app) {
++		// set begin symbol for binary if not set
++		set_begin(it);
++
++		if (m > 0) {
++			// close out current module
++			module_info & mod = my_modules[m-1];
++			mod.set_end(it);
++			add_to_summary(mod.get_summary());
++		}
++
+ 		// no module, so add symbol count to binary count
+ 		add_to_summary((*it)->sample.counts);
+ 		return;
+ 	}
+ 
+-	size_t m = nr_modules;
+ 	string current_module_name = (m == 0 ? "" : my_modules[m-1].get_name());
+ 	if (module != current_module_name) {
+ 		// we have a module distinct from it's binary: --separate=lib
+ 		// and this is the first symbol for this module
+-		if (m == 0) {
+-			// mark end of enclosing binary
+-			end = it;
+-		} else {
++		if (m != 0) {
+ 			// close out current module
+ 			module_info & mod = my_modules[m-1];
+ 			mod.set_end(it);
+ 			add_to_summary(mod.get_summary());
+ 		}
+ 
++		// mark end of enclosing binary symbols if there have been any
++		// NOTE: it is possible for the binary's symbols to follow its
++		// module symbols
++		if (begin != (sym_iterator)0 && end == (sym_iterator)0)
++			set_end(it);
++
+ 		// build the new module
+ 		nr_modules++;
+ 		my_modules[m].build_module(module, it, 0, nr_classes-1);
+@@ -738,10 +776,9 @@
+ }
+ 
+ binary_info *
+-binary_info::build_binary(string const & n, sym_iterator it)
++binary_info::build_binary(string const & n)
+ {
+ 	name = n;
+-	begin = it;
+ 	lo = 0;
+ 	hi = nr_classes-1;
+ 	return this;
+@@ -755,7 +792,6 @@
+ 
+ 	output_summary(out);
+ 	output_symbols(out);
+-
+ 	for (size_t a = 0; a < nr_modules; ++a)
+ 		my_modules[a].output(out);
+ 
+@@ -770,7 +806,7 @@
+ 
+ 	// close out previous binary and module
+ 	if (a > 0) binaries[a-1].close_binary(it);
+-	return binaries[a].build_binary(n, it);
++	return binaries[a].build_binary(n);
+ }
+ 
+ 
+@@ -783,7 +819,7 @@
+ 
+ void binary_root_info::dump_binaries()
+ {
+-	cverb << vxml << "<!-- processes_dump:" << endl;
++	cverb << vxml << "<!-- binaries_dump:" << endl;
+ 	for (size_t p = 0; p < nr_binaries; ++p)
+ 		binaries[p].dump();
+ 	cverb << vxml << "end processes_dump -->" << endl;
