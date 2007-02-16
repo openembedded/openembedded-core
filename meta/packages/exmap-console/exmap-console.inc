@@ -44,6 +44,10 @@ do_compile() {
 		   ${MAKE_TARGETS}
 }
 
+do_install() {
+	oe_runmake 'DESTDIR=${D}' 'DEPMOD=/bin/true' install
+}
+
 pkg_postinst_append_kernel-module-exmap () {
 	if [ -n "$D" ]; then
 		exit 1
