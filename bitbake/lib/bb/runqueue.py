@@ -152,9 +152,9 @@ class RunQueue:
                 # Resolve Recursive Runtime Depends
                 # Also includes all Build Depends (and their runtime depends)
                 if 'recrdeptask' in task_deps and taskData.tasks_name[task] in task_deps['recrdeptask']:
-                    dep_seen = []
-                    rdep_seen = []
                     for taskname in task_deps['recrdeptask'][taskData.tasks_name[task]].split():
+                        dep_seen = []
+                        rdep_seen = []
                         for depid in taskData.depids[fnid]:
                             add_recursive_build(depid)
                         for rdepid in taskData.rdepids[fnid]:
@@ -203,6 +203,9 @@ class RunQueue:
             if targetid not in taskData.build_targets:
                 continue
 
+            if targetid in taskData.failed_deps:
+                continue
+
             fnid = taskData.build_targets[targetid][0]
 
             # Remove stamps for targets if force mode active
@@ -210,9 +213,6 @@ class RunQueue:
                 fn = taskData.fn_index[fnid]
                 bb.msg.note(2, bb.msg.domain.RunQueue, "Remove stamp %s, %s" % (target[1], fn))
                 bb.build.del_stamp(target[1], dataCache, fn)
-
-            if targetid in taskData.failed_deps:
-                continue
 
             if fnid in taskData.failed_fnids:
                 continue
@@ -347,7 +347,7 @@ class RunQueue:
                 taskData.fail_fnid(fnid)
                 failures = failures + 1
             self.reset_runqueue()
-            self.prepare_runqueue(cfgData, dataCache, taskData, runlist)
+            self.prepare_runqueue(cooker, cfgData, dataCache, taskData, runlist)
 
     def execute_runqueue_internal(self, cooker, cfgData, dataCache, taskData):
         """
@@ -369,7 +369,7 @@ class RunQueue:
 
         if len(self.runq_fnid) == 0:
             # nothing to do
-            return
+            return []
 
         def sigint_handler(signum, frame):
             raise KeyboardInterrupt
