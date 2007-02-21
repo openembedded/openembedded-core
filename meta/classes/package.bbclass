@@ -153,7 +153,7 @@ runstrip() {
 		if test $st -ne 0
 		then
 			oewarn "runstrip: ${STRIP} $1: strip failed" >&2
-			if [ x${IGNORE_STRIP_ERRORS} == x1 ]
+			if [ x${IGNORE_STRIP_ERRORS} = x1 ]
 			then
 				#FIXME: remove this, it's for error detection
 				if file "$1" 2>/dev/null >&2

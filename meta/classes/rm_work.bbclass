@@ -10,7 +10,7 @@ do_rm_work () {
     cd ${WORKDIR}
     for dir in *
     do
-        if [ `basename ${S}` == $dir ]; then
+        if [ `basename ${S}` = $dir ]; then
             rm -rf $dir/*
         elif [ $dir != 'temp' ]; then
             rm -rf $dir
