@@ -1,10 +1,10 @@
-DESCRIPTION = "console-based exmap"
-HOMEPAGE = "http://www.o-hand.com"
+DESCRIPTION = "Console based version of exmap, a memory usage analysis tool"
+HOMEPAGE = "http://projects.o-hand.com/exmap-console"
 SECTION = "devel"
 LICENSE = "GPL"
+DEPENDS = "virtual/kernel"
 
-SRC_URI = \
-    "http://projects.o-hand.com/sources/exmap-console/exmap-console-${PV}.tgz"
+SRC_URI = "http://projects.o-hand.com/sources/exmap-console/exmap-console-${PV}.tgz"
 
 inherit module-base
 inherit autotools
@@ -13,7 +13,7 @@ MYPV := "${PV}"
 
 PACKAGES += "exmap-server kernel-module-exmap"
 
-FILES_${PN}= "${bindir}/exmap ${bindir}/exmapd"
+FILES_exmap-console = "${bindir}/exmap ${bindir}/exmapd"
 PACKAGE_ARCH_exmap-console = "${TARGET_ARCH}"
 RDEPENDS_exmap-console += "kernel-module-exmap"
 
@@ -25,7 +25,6 @@ FILES_kernel-module-exmap = "${base_libdir}"
 PACKAGE_ARCH_kernel-module-exmap = "${MACHINE_ARCH}"
 PV_kernel-module-exmap = "${MYPV}-${KERNEL_VERSION}"
 RDEPENDS_kernel-module-exmap += "kernel (${KERNEL_VERSION})"
-DEPENDS_kernel-module-exmap += "virtual/kernel"
 
 S = "${WORKDIR}/exmap-console-${PV}"
 
