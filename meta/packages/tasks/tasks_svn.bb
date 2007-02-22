@@ -11,4 +11,4 @@ inherit autotools pkgconfig
 
 S = "${WORKDIR}/trunk"
 
-
+FILES_${PN} += "${datadir}/icons"
