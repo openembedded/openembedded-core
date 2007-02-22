@@ -1,0 +1,759 @@
+Index: oprofile/libpp/callgraph_container.cpp
+===================================================================
+--- oprofile.orig/libpp/callgraph_container.cpp
++++ oprofile/libpp/callgraph_container.cpp
+@@ -379,17 +379,19 @@ process(count_array_t total, double thre
+ 
+ 		process_children(sym, threshold);
+ 
+-		cg_syms.push_back(sym);
++		cg_syms_objs.push_back(sym);
+ 	}
++
++	for (unsigned int i = 0; i < cg_syms_objs.size(); i++)
++		cg_syms.push_back(&cg_syms_objs[i]);
+ }
+ 
+ 
+-cg_collection arc_recorder::get_symbols() const
++symbol_collection arc_recorder::get_symbols() const
+ {
+ 	return cg_syms;
+ }
+ 
+-
+ void callgraph_container::populate(string const & archive_path, 
+    list<inverted_profile> const & iprofiles,
+    extra_images const & extra, bool debug_info, double threshold,
+@@ -580,12 +582,14 @@ column_flags callgraph_container::output
+ 	column_flags output_hints = cf_none;
+ 
+ 	// FIXME: costly: must we access directly recorder map ?
+-	cg_collection syms = recorder.get_symbols();
++	symbol_collection syms = recorder.get_symbols();
+ 
+-	cg_collection::const_iterator it;
+-	cg_collection::const_iterator const end = syms.end();
+-	for (it = syms.begin(); it != end; ++it)
+-		output_hints = it->output_hint(output_hints);
++	symbol_collection::iterator it;
++	symbol_collection::iterator const end = syms.end();
++	for (it = syms.begin(); it != end; ++it) {
++		cg_symbol const *cg_symb = dynamic_cast<const cg_symbol *>(*it);
++		output_hints = cg_symb->output_hint(output_hints);
++	}
+ 
+ 	return output_hints;
+ }
+@@ -597,7 +601,7 @@ count_array_t callgraph_container::sampl
+ }
+ 
+ 
+-cg_collection callgraph_container::get_symbols() const
++symbol_collection callgraph_container::get_symbols() const
+ {
+ 	return recorder.get_symbols();
+ }
+Index: oprofile/libpp/callgraph_container.h
+===================================================================
+--- oprofile.orig/libpp/callgraph_container.h
++++ oprofile/libpp/callgraph_container.h
+@@ -53,7 +53,7 @@ public:
+ 	         count_array_t const & arc_count);
+ 
+ 	/// return all the cg symbols
+-	cg_collection get_symbols() const;
++	symbol_collection get_symbols() const;
+ 
+ 	/**
+ 	 * After population, build the final output, and do
+@@ -91,7 +91,8 @@ private:
+ 	map_t sym_map;
+ 
+ 	/// final output data
+-	cg_collection cg_syms;
++	symbol_collection cg_syms;
++	cg_collection_objs cg_syms_objs;
+ };
+ 
+ 
+@@ -126,7 +127,7 @@ public:
+ 	count_array_t samples_count() const;
+ 
+ 	// return all the cg symbols
+-	cg_collection get_symbols() const;
++	symbol_collection get_symbols() const;
+ 
+ private:
+ 	/**
+Index: oprofile/libpp/format_output.cpp
+===================================================================
+--- oprofile.orig/libpp/format_output.cpp
++++ oprofile/libpp/format_output.cpp
+@@ -489,7 +489,7 @@ cg_formatter::cg_formatter(callgraph_con
+ }
+ 
+ 
+-void cg_formatter::output(ostream & out, cg_collection const & syms)
++void cg_formatter::output(ostream & out, symbol_collection const & syms)
+ {
+ 	// amount of spacing prefixing child and parent lines
+ 	string const child_parent_prefix("  ");
+@@ -498,37 +498,37 @@ void cg_formatter::output(ostream & out,
+ 
+ 	out << string(79, '-') << endl;
+ 
+-	cg_collection::const_iterator it;
+-	cg_collection::const_iterator end = syms.end();
++	symbol_collection::const_iterator it;
++	symbol_collection::const_iterator end = syms.end();
+ 
+ 	for (it = syms.begin(); it < end; ++it) {
+-		cg_symbol const & sym = *it;
++		cg_symbol const *sym = dynamic_cast<const cg_symbol *>(*it);
+ 
+ 		cg_symbol::children::const_iterator cit;
+-		cg_symbol::children::const_iterator cend = sym.callers.end();
++		cg_symbol::children::const_iterator cend = sym->callers.end();
+ 
+ 		counts_t c;
+ 		if (global_percent)
+ 			c.total = counts.total;
+ 		else
+-			c.total = sym.total_caller_count;
++			c.total = sym->total_caller_count;
+ 
+-		for (cit = sym.callers.begin(); cit != cend; ++cit) {
++		for (cit = sym->callers.begin(); cit != cend; ++cit) {
+ 			out << child_parent_prefix;
+ 			do_output(out, *cit, cit->sample, c);
+ 		}
+ 
+-		do_output(out, sym, sym.sample, counts);
++		do_output(out, *sym, sym->sample, counts);
+ 
+ 		c = counts_t();
+ 		if (global_percent)
+ 			c.total = counts.total;
+ 		else
+-			c.total = sym.total_callee_count;
++			c.total = sym->total_callee_count;
+ 
+-		cend = sym.callees.end();
++		cend = sym->callees.end();
+ 
+-		for (cit = sym.callees.begin(); cit != cend; ++cit) {
++		for (cit = sym->callees.begin(); cit != cend; ++cit) {
+ 			out << child_parent_prefix;
+ 			do_output(out, *cit, cit->sample, c);
+ 		}
+@@ -562,6 +562,20 @@ ostringstream bytes_out;
+ map<string, size_t> symbol_data_table;
+ size_t symbol_data_index = 0;
+ 
++/* Return any existing index or add to the table */
++size_t xml_get_symbol_index(string const name)
++{
++	size_t index = symbol_data_index;
++	map<string, size_t>::iterator it = symbol_data_table.find(name);
++
++	if (it == symbol_data_table.end()) {
++		symbol_data_table[name] = symbol_data_index++;
++		return index;
++	}
++
++	return it->second;
++}
++
+ 
+ class symbol_details_t {
+ public:
+@@ -577,14 +591,15 @@ symbol_details_array_t symbol_details;
+ size_t detail_table_index = 0;
+ 
+ xml_formatter::
+-xml_formatter(profile_container const & p,
++xml_formatter(profile_container const *p,
+ 		symbol_collection & s)
+ 	:
+ 	profile(p),
+ 	symbols(s),
+ 	need_details(false)
+ {
+-	counts.total = profile.samples_count();
++	if (profile)
++		counts.total = profile->samples_count();
+ }
+ 
+ 
+@@ -640,12 +655,11 @@ void xml_formatter::output_symbol_data(o
+ 		string const image = get_image_name(symb->image_name, true);
+ 		string const qname = image + ":" + name;
+ 		map<string, size_t>::iterator sd_it = symbol_data_table.find(qname);
+-		size_t si = xml_support->get_symbol_index(it);
+ 
+-		if (sd_it->second == si) {
++		if (sd_it != symbol_data_table.end()) {
+ 			// first time we've seen this symbol
+ 			out << open_element(SYMBOL_DATA, true);
+-			out << init_attr(TABLE_ID, si);
++			out << init_attr(TABLE_ID, sd_it->second);
+ 
+ 			field_datum datum(*symb, symb->sample, 0, counts);
+ 
+@@ -660,9 +674,12 @@ void xml_formatter::output_symbol_data(o
+ 				output_attribute(out, datum, ff_vma, STARTING_ADDR);
+ 
+ 				if (need_details)
+-					xml_support->output_symbol_bytes(bytes_out, symb, si);
++					xml_support->output_symbol_bytes(bytes_out, symb, sd_it->second);
+ 			}
+ 			out << close_element();
++
++			// seen so remove (otherwise get several "no symbols")
++			symbol_data_table.erase(qname);
+ 		}
+ 	}
+ 	out << close_element(SYMBOL_TABLE);
+@@ -675,8 +692,8 @@ output_symbol_details(symbol_entry const
+ 	if (!has_sample_counts(symb->sample.counts, lo, hi))
+ 		return "";
+ 
+-	sample_container::samples_iterator it = profile.begin(symb);
+-	sample_container::samples_iterator end = profile.end(symb);
++	sample_container::samples_iterator it = profile->begin(symb);
++	sample_container::samples_iterator end = profile->end(symb);
+ 
+ 	ostringstream str;
+ 	for (; it != end; ++it) {
+@@ -725,10 +742,10 @@ output_symbol_details(symbol_entry const
+ 
+ void xml_formatter::
+ output_symbol(ostream & out,
+-	symbol_collection::const_iterator const it, size_t lo, size_t hi)
++	symbol_entry const * symb, size_t lo, size_t hi)
+ {
+-	symbol_entry const * symb = *it;
+ 	ostringstream str;
++	size_t indx;
+ 
+ 	// output symbol's summary data for each profile class
+ 	bool got_samples = false;
+@@ -750,27 +767,21 @@ output_symbol(ostream & out,
+ 	
+ 	string const image = get_image_name(symb->image_name, true);
+ 	string const qname = image + ":" + name;
+-	map<string, size_t>::iterator sd_it = symbol_data_table.find(qname);
+-	size_t si = xml_support->get_symbol_index(it);
+ 
+-	// if this is the first time we've seen this symbol, save it's index
+-	if (sd_it == symbol_data_table.end())
+-		symbol_data_table[qname] = si;
+-	else
+-		si = sd_it->second;
++	indx = xml_get_symbol_index(qname);
+ 
+-	out << init_attr(ID_REF, si);
++	out << init_attr(ID_REF, indx);
+ 
+ 	if (need_details) {
+ 		ostringstream details;
+-		symbol_details_t & sd = symbol_details[si];
++		symbol_details_t & sd = symbol_details[indx];
+ 		size_t const detail_lo = sd.index;
+ 
+ 		string detail_str = output_symbol_details(symb, sd.index, lo, hi);
+ 
+ 		if (detail_str.size() > 0) {
+ 			if (sd.id < 0)
+-				sd.id = si;
++				sd.id = indx;
+ 			details << detail_str;
+ 		}
+ 
+@@ -826,5 +837,170 @@ output_attribute(ostream & out, field_da
+ 	}
+ }
+ 
++xml_cg_formatter::
++xml_cg_formatter(callgraph_container const * cg, symbol_collection & s)
++	:
++	xml_formatter(NULL, s),
++	callgraph(cg)
++{
++	counts.total = callgraph->samples_count();
++}
++
++void xml_cg_formatter::output(ostream & out)
++{
++	xml_support->build_subclasses(out);
++
++	xml_support->output_program_structure(out);
++	output_symbol_data(out);
++
++	out << close_element(PROFILE);
++}
++
++void xml_cg_formatter::
++output_symbol_core(ostream & out,
++	symbol_entry const * symb, size_t lo, size_t hi)
++{
++	cg_symbol const * cg_symb = dynamic_cast<const cg_symbol *>(symb);
++	ostringstream str;
++
++	// output symbol's summary data for each profile class
++	bool got_samples = false;
++
++	for (size_t p = lo; p <= hi; ++p) {
++		got_samples |= xml_support->output_summary_data(str,
++		    symb->sample.counts, p);
++	}
++
++	if (!got_samples)
++		return;
++
++	cverb << vxml << " <!-- symbol_ref=" << symbol_names.name(symb->name) << " -->" << endl;
++
++	out << open_element(SYMBOL, true);
++
++	string const name = symbol_names.name(symb->name);
++	assert(name.size() > 0);
++	
++	string const image = get_image_name(symb->image_name, true);
++	string const qname = image + ":" + name;
++
++	string const selfname = symbol_names.demangle(symb->name) + " [self]";
++
++	out << init_attr(ID_REF, xml_get_symbol_index(qname));
++
++	out << close_element(NONE, true);
++
++	out << open_element(CALLERS);
++	if (cg_symb) {
++		cg_symbol::children::const_iterator cit;
++		cg_symbol::children::const_iterator cend = cg_symb->callers.end();
++
++		for (cit = cg_symb->callers.begin(); cit != cend; ++cit) {
++			ostringstream str1;
++			string binary = get_image_name((cit)->app_name, true);
++			string module = get_image_name((cit)->image_name, true);
++
++
++			got_samples = false;
++
++			for (size_t p = lo; p <= hi; ++p) {
++				got_samples |= xml_support->output_summary_data(str1, cit->sample.counts, p);
++			}
++
++			if (!got_samples)
++				continue;
++
++			out << open_element(MODULE, true);
++			out << init_attr(NAME, module) << close_element(NONE, true);
++
++			cverb << vxml << " <!-- symbol_ref=" << symbol_names.name(cit->name) << " -->" << endl;
++
++			out << open_element(SYMBOL, true);
++
++			string const name1 = symbol_names.name(cit->name);
++			assert(name1.size() > 0);
++	
++			string const qname1 = module + ":" + name1;
++
++			out << init_attr(ID_REF, xml_get_symbol_index(qname1));
++
++			out << close_element(NONE, true);
++
++			out << str1.str();
++
++			out << close_element(SYMBOL);
++
++			out << close_element(MODULE);
++		}
++	}
++	out << close_element(CALLERS);
++
++	out << open_element(CALLEES);
++	if (cg_symb) {
++		cg_symbol::children::const_iterator cit;
++		cg_symbol::children::const_iterator cend = cg_symb->callees.end();
++
++		for (cit = cg_symb->callees.begin(); cit != cend; ++cit) {
++			size_t indx;
++			ostringstream str1;
++			string binary = get_image_name((cit)->app_name, true);
++			string module = get_image_name((cit)->image_name, true);
++			bool self = false;
++
++			got_samples = false;
++
++			for (size_t p = lo; p <= hi; ++p) {
++				got_samples |= xml_support->output_summary_data(str1, cit->sample.counts, p);
++			}
++
++			if (!got_samples)
++				continue;
++
++			out << open_element(MODULE, true);
++			out << init_attr(NAME, module) << close_element(NONE, true);
++
++			cverb << vxml << " <!-- symbol_ref=" << symbol_names.name(cit->name) << " -->" << endl;
++
++			out << open_element(SYMBOL, true);
++
++			string name1 = symbol_names.name(cit->name);
++			assert(name1.size() > 0);
++			string const qname1 = module + ":" + name1;
++
++			/* Find any self references and handle */
++		        if (name1 == selfname) {
++				self = true;
++				indx = xml_get_symbol_index(qname);
++			} else
++				indx = xml_get_symbol_index(qname1);
++
++			out << init_attr(ID_REF, indx);
++
++			if (self)
++				out << init_attr(SELFREF, "true");
++
++			out << close_element(NONE, true);
++
++			out << str1.str();
++
++			out << close_element(SYMBOL);
++
++			out << close_element(MODULE);
++		}
++	}
++	out << close_element(CALLEES);
++
++	// output summary
++	out << str.str();
++	out << close_element(SYMBOL);
++}
++
++
++void xml_cg_formatter::
++output_symbol(ostream & out,
++	symbol_entry const * symb, size_t lo, size_t hi)
++{
++	output_symbol_core(out, symb, lo, hi);
++}
+ 
+ } // namespace format_output
+Index: oprofile/libpp/format_output.h
+===================================================================
+--- oprofile.orig/libpp/format_output.h
++++ oprofile/libpp/format_output.h
+@@ -201,7 +201,7 @@ public:
+ 
+ 	/** output callgraph information according to the previously format
+ 	 * specifier set by call(s) to add_format() */
+-	void output(std::ostream & out, cg_collection const & syms);
++	void output(std::ostream & out, symbol_collection const & syms);
+ };
+ 
+ /// class to output a columned format symbols plus diff values
+@@ -227,7 +227,7 @@ private:
+ class xml_formatter : public formatter {
+ public:
+ 	/// build a ready to use formatter
+-	xml_formatter(profile_container const & profile,
++	xml_formatter(profile_container const * profile,
+ 		symbol_collection & symbols);
+ 
+ 	// output body of XML output
+@@ -235,9 +235,8 @@ public:
+ 
+ 	/** output one symbol symb to out according to the output format
+ 	 * specifier previously set by call(s) to add_format() */
+-	void output_symbol(std::ostream & out,
+-		symbol_collection::const_iterator const it,
+-		size_t lo, size_t hi);
++	virtual void output_symbol(std::ostream & out,
++		symbol_entry const * symb, size_t lo, size_t hi);
+ 
+ 	/// output details for the symbol
+ 	std::string output_symbol_details(symbol_entry const * symb,
+@@ -246,9 +245,12 @@ public:
+ 	/// set the output_details boolean
+ 	void show_details(bool);
+ 
++	// output SymbolData XML elements
++	void output_symbol_data(std::ostream & out);
++
+ private:
+ 	/// container we work from
+-	profile_container const & profile;
++	profile_container const * profile;
+  
+ 	// ordered collection of symbols associated with this profile
+ 	symbol_collection & symbols;
+@@ -256,9 +258,6 @@ private:
+ 	/// true if we need to show details for each symbols
+ 	bool need_details;
+ 
+-	// output SymbolData XML elements
+-	void output_symbol_data(std::ostream & out);
+-
+ 	// count of DetailData items output so far
+ 	size_t detail_count;
+ 
+@@ -270,6 +269,28 @@ private:
+ 			      format_flags fl, tag_t tag);
+ };
+ 
++// callgraph XML output version
++class xml_cg_formatter : public xml_formatter {
++public:
++	/// build a ready to use formatter
++	xml_cg_formatter(callgraph_container const * callgraph,
++		symbol_collection & symbols);
++
++	// output body of XML output
++	void output(std::ostream & out);
++
++	/** output one symbol symb to out according to the output format
++	 * specifier previously set by call(s) to add_format() */
++	virtual void output_symbol(std::ostream & out,
++		symbol_entry const * symb, size_t lo, size_t hi);
++
++private:
++	/// container we work from
++	callgraph_container const * callgraph;
++
++	void output_symbol_core(std::ostream & out,
++		symbol_entry const * symb, size_t lo, size_t hi);
++};
+ 
+ } // namespace format_output 
+ 
+Index: oprofile/libpp/symbol.h
+===================================================================
+--- oprofile.orig/libpp/symbol.h
++++ oprofile/libpp/symbol.h
+@@ -55,8 +55,11 @@ struct sample_entry {
+ 
+ 
+ /// associate a symbol with a file location, samples count and vma address
+-struct symbol_entry {
++class symbol_entry {
++public:
+ 	symbol_entry() : size(0) {}
++	virtual ~symbol_entry() {}
++
+ 	/// which image this symbol belongs to
+ 	image_name_id image_name;
+ 	/// owning application name: identical to image name if profiling
+@@ -92,7 +95,8 @@ typedef std::vector<symbol_entry const *
+  * the sample counts replaced with the relevant arc counts, whilst
+  * the cg_symbol retains its self count.
+  */
+-struct cg_symbol : public symbol_entry {
++class cg_symbol : public symbol_entry {
++public:
+ 	cg_symbol(symbol_entry const & sym) : symbol_entry(sym) {}
+ 
+ 	typedef std::vector<symbol_entry> children;
+@@ -108,9 +112,12 @@ struct cg_symbol : public symbol_entry {
+ 	count_array_t total_callee_count;
+ };
+ 
++/// a collection of sorted callgraph symbols (the objects themselves)
++typedef std::vector<cg_symbol> cg_collection_objs;
++
+ 
+-/// a collection of sorted callgraph symbols
+-typedef std::vector<cg_symbol> cg_collection;
++/// a collection of sorted callgraph symbols (pointers too, compatible with symbol_collection)
++//typedef std::vector<cg_symbol const *> cg_collection;
+ 
+ 
+ /// for storing diff %ages
+Index: oprofile/libpp/symbol_sort.cpp
+===================================================================
+--- oprofile.orig/libpp/symbol_sort.cpp
++++ oprofile/libpp/symbol_sort.cpp
+@@ -146,23 +146,6 @@ sort(symbol_collection & syms, bool reve
+ 
+ 
+ void sort_options::
+-sort(cg_collection & syms, bool reverse_sort, bool lf) const
+-{
+-	long_filenames = lf;
+-
+-	vector<sort_order> sort_option(options);
+-	for (sort_order cur = first; cur != last; cur = sort_order(cur + 1)) {
+-		if (find(sort_option.begin(), sort_option.end(), cur) ==
+-		    sort_option.end())
+-			sort_option.push_back(cur);
+-	}
+-
+-	stable_sort(syms.begin(), syms.end(),
+-	            symbol_compare(sort_option, reverse_sort));
+-}
+-
+-
+-void sort_options::
+ sort(diff_collection & syms, bool reverse_sort, bool lf) const
+ {
+ 	long_filenames = lf;
+Index: oprofile/libpp/symbol_sort.h
+===================================================================
+--- oprofile.orig/libpp/symbol_sort.h
++++ oprofile/libpp/symbol_sort.h
+@@ -44,12 +44,6 @@ struct sort_options {
+ 	/**
+ 	 * Sort the given container by the given criteria.
+ 	 */
+-	void sort(cg_collection & syms, bool reverse_sort,
+-	          bool long_filenames) const;
+-
+-	/**
+-	 * Sort the given container by the given criteria.
+-	 */
+ 	void sort(diff_collection & syms, bool reverse_sort,
+ 	          bool long_filenames) const;
+ 
+Index: oprofile/libpp/xml_utils.cpp
+===================================================================
+--- oprofile.orig/libpp/xml_utils.cpp
++++ oprofile/libpp/xml_utils.cpp
+@@ -257,13 +257,6 @@ void xml_utils::output_xml_header(string
+ 	cout << close_element(SETUP) << endl;
+ }
+ 
+-size_t xml_utils::get_symbol_index(sym_iterator const it)
+-{
+-	return it - symbols_begin;
+-}
+-
+-
+-
+ class subclass_info_t {
+ public:
+ 	string unitmask;
+@@ -589,7 +582,7 @@ void module_info::output_summary(ostream
+ void module_info::output_symbols(ostream & out)
+ {
+ 	for (sym_iterator it = begin; it != end; ++it)
+-		xml_out->output_symbol(out, it, lo, hi);
++		xml_out->output_symbol(out, *it, lo, hi);
+ }
+ 
+ 
+Index: oprofile/libutil++/xml_output.cpp
+===================================================================
+--- oprofile.orig/libutil++/xml_output.cpp
++++ oprofile/libutil++/xml_output.cpp
+@@ -47,8 +47,11 @@ string const xml_tag_map[] = {
+ 	"binary",
+ 	"module",
+ 		"name",
++	"callers",
++	"callees",
+ 	"symbol",
+ 		"idref",
++		"self",
+ 		"detaillo",
+ 		"detailhi",
+ 	"symboltable",
+Index: oprofile/libutil++/xml_output.h
+===================================================================
+--- oprofile.orig/libutil++/xml_output.h
++++ oprofile/libutil++/xml_output.h
+@@ -28,7 +28,8 @@ typedef enum {
+ 	THREAD, THREAD_ID,
+ 	BINARY,
+ 	MODULE, NAME,
+-	SYMBOL, ID_REF, DETAIL_LO, DETAIL_HI,
++	CALLERS, CALLEES,
++	SYMBOL, ID_REF, SELFREF, DETAIL_LO, DETAIL_HI,
+ 	SYMBOL_TABLE,
+ 	SYMBOL_DATA, STARTING_ADDR,
+ 		SOURCE_FILE, SOURCE_LINE, CODE_LENGTH,
+Index: oprofile/pp/opreport.cpp
+===================================================================
+--- oprofile.orig/pp/opreport.cpp
++++ oprofile/pp/opreport.cpp
+@@ -378,7 +378,7 @@ void output_symbols(profile_container co
+ 	format_output::opreport_formatter * text_out = 0;
+ 
+ 	if (options::xml) {
+-		xml_out = new format_output::xml_formatter(pc, symbols);
++		xml_out = new format_output::xml_formatter(&pc, symbols);
+ 		xml_out->show_details(options::details);
+ 		out = xml_out;
+ 		// for XML always output long filenames
+@@ -445,25 +445,45 @@ void output_cg_symbols(callgraph_contain
+ {
+ 	column_flags output_hints = cg.output_hint();
+ 
+-	cg_collection symbols = cg.get_symbols();
++	symbol_collection symbols = cg.get_symbols();
++
+ 	options::sort_by.sort(symbols, options::reverse_sort,
+ 	                      options::long_filenames);
+ 
+-	format_output::cg_formatter out(cg);
++	format_output::formatter * out;
++	format_output::xml_cg_formatter * xml_out = 0;
++	format_output::cg_formatter * text_out = 0;
+ 
+-	out.set_nr_classes(nr_classes);
+-	out.show_long_filenames(options::long_filenames);
+-	out.show_header(options::show_header);
+-	out.vma_format_64bit(output_hints & cf_64bit_vma);
+-	out.show_global_percent(options::global_percent);
++	if (options::xml) {
++		xml_out = new format_output::xml_cg_formatter(&cg, symbols);
++		out = xml_out;
++		// for XML always output long filenames
++		out->show_long_filenames(true);
++	} else {
++		text_out = new format_output::cg_formatter(cg);
++		out = text_out;
++		out->show_long_filenames(options::long_filenames);
++	}
++
++	out->set_nr_classes(nr_classes);
++	out->show_header(options::show_header);
++	out->vma_format_64bit(output_hints & cf_64bit_vma);
++	out->show_global_percent(options::global_percent);
+ 
+ 	format_flags flags = get_format_flags(output_hints);
+ 	if (multiple_apps)
+ 		flags = format_flags(flags | ff_app_name);
+ 
+-	out.add_format(flags);
++	out->add_format(flags);
++
++	if (options::xml) {
++		xml_support = new xml_utils(xml_out, symbols, nr_classes,
++			&options::symbol_filter, options::archive_path);
++		xml_out->output(cout);
++	} else {
++		text_out->output(cout, symbols);
++	}
+ 
+-	out.output(cout, symbols);
+ }
+ 
+ 
+Index: oprofile/pp/opreport_options.cpp
+===================================================================
+--- oprofile.orig/pp/opreport_options.cpp
++++ oprofile/pp/opreport_options.cpp
+@@ -177,11 +177,6 @@ void check_options(bool diff)
+ 	}
+ 
+ 	if (xml) {
+-		if (callgraph) {
+-			cerr << "--callgraph is incompatible with --xml" << endl;
+-			do_exit = true;
+-		}
+-
+ 		if (accumulated) {
+ 			cerr << "--accumulated is incompatible with --xml" << endl;
+ 			do_exit = true;
