@@ -27,8 +27,6 @@ matchbox-desktop --icon-size 64 \
 
 # mb-applet-startup-monitor &                 
 
-matchbox-panel --titlebar --start-applets showdesktop --end-applets clock &
+matchbox-panel --titlebar --start-applets windowselector,showdesktop --end-applets clock &
 
 exec matchbox-window-manager -theme Sato -use_desktop_mode decorated -use_cursor $SHOWCURSOR $@
-
-
