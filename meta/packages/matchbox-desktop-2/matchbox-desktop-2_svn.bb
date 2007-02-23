@@ -3,8 +3,8 @@ LICENSE = "GPL"
 DEPENDS = "gtk+ startup-notification"
 SECTION = "x11/wm"
 PV = "0.0+svn${SRCDATE}"
-DEFAULT_PREFERENCE = "-1"
 
+PROVIDES = matchbox-desktop
 RPROVIDES = matchbox-desktop
 RREPLACES = matchbox-desktop
 RCONFLICTS = matchbox-desktop
