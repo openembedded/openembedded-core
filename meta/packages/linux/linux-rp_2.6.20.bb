@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r1"
+PR = "r2"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -15,6 +15,7 @@ PR = "r1"
 # Hacks should clearly named and at the bottom
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.20.tar.bz2 \
            http://opensource.wolfsonmicro.com/~lg/asoc/asoc-v0.13.patch;patch=1;status=merged \
+           ${RPSRC}/oprofile_always_bt_arm-r0.patch;patch=1 \
            ${RPSRC}/hx2750_base-r28.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r8.patch;patch=1 \
            ${RPSRC}/hx2750_pcmcia-r2.patch;patch=1 \
