@@ -10,4 +10,5 @@ EXTRA_OECONF = "--without-static-progs \
 		--with-start-stop-daemon \
 		--with-zlib \
 		--with-bz2lib \
+                --without-selinux \
 		--without-sgml-doc"
