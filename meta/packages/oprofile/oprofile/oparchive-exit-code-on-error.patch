@@ -1,0 +1,11 @@
+Index: oprofile/pp/oparchive.cpp
+===================================================================
+--- oprofile.orig/pp/oparchive.cpp	2007-02-27 18:15:52.000000000 +0000
++++ oprofile/pp/oparchive.cpp	2007-02-27 18:16:08.000000000 +0000
+@@ -164,5 +164,5 @@
+ 
+ int main(int argc, char const * argv[])
+ {
+-	run_pp_tool(argc, argv, oparchive);
++	return run_pp_tool(argc, argv, oparchive);
+ }

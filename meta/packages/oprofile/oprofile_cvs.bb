@@ -12,6 +12,7 @@ SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=
 	   file://oparchive-list-files.patch;patch=1 \
 	   file://opreport-xml-output-fixes.patch;patch=1 \
            file://xml_callgraph.patch;patch=1 \
+           file://oparchive-exit-code-on-error.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 
