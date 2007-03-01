@@ -3,10 +3,9 @@ HOMEPAGE = "http://www.python.org"
 LICENSE = "PSF"
 SECTION = "devel/python"
 PRIORITY = "optional"
-MAINTAINER = "Michael 'Mickey' Lauer <mickey@Vanille.de>"
-DEPENDS = "python-native readline zlib gdbm openssl tcl tk"
+DEPENDS = "python-native readline zlib gdbm openssl"
 DEPENDS_sharprom = "python-native readline zlib gdbm openssl"
-PR = "ml3"
+PR = "ml0"
 
 PYTHON_MAJMIN = "2.4"
 
@@ -40,11 +39,12 @@ do_compile_prepend() {
 }
 
 do_compile() {
-	oe_runmake HOSTPGEN=${STAGING_BINDIR}/pgen \
-		   HOSTPYTHON=${STAGING_BINDIR}/python \
+	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
+		   HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
 		   STAGING_LIBDIR=${STAGING_LIBDIR} \
 		   STAGING_INCDIR=${STAGING_INCDIR} \
-		   BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS}
+		   BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
+		   OPT="${CFLAGS}"
 }
 
 do_stage() {
@@ -54,15 +54,15 @@ do_stage() {
 
 do_install() {
 	install -m 0644 Makefile.orig Makefile
-        oe_runmake HOSTPGEN=${STAGING_BINDIR}/pgen \
-                   HOSTPYTHON=${STAGING_BINDIR}/python \
+        oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
+                   HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
                    STAGING_LIBDIR=${STAGING_LIBDIR} \
                    STAGING_INCDIR=${STAGING_INCDIR} \
 		   BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
 		   DESTDIR=${D} install
 }
 
-include python-${PV}-manifest.inc
+require python-${PV}-manifest.inc
 
 RPROVIDES_python-core = "python"
 RPROVIDES_python-curses = "python"
