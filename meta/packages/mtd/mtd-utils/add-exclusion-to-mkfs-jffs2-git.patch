@@ -1,0 +1,106 @@
+---
+ mkfs.jffs2.c |   45 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 3 deletions(-)
+
+Index: git/mkfs.jffs2.c
+===================================================================
+--- git.orig/mkfs.jffs2.c	2007-01-23 15:42:34.000000000 +0000
++++ git/mkfs.jffs2.c	2007-01-23 15:46:08.000000000 +0000
+@@ -97,7 +97,12 @@ struct filesystem_entry {
+ 	struct filesystem_entry *files;	/* Only relevant to directories */
+ };
+ 
+-
++struct ignorepath_entry {
++	struct ignorepath_entry* next;	/* Points to the next ignorepath element */
++	char name[PATH_MAX];		/* Name of the entry */
++};
++ 
++static struct ignorepath_entry* ignorepath = 0;
+ static int out_fd = -1;
+ static int in_fd = -1;
+ static char default_rootdir[] = ".";
+@@ -372,7 +377,7 @@ static struct filesystem_entry *recursiv
+ 	char *hpath, *tpath;
+ 	struct dirent *dp, **namelist;
+ 	struct filesystem_entry *entry;
+-
++	struct ignorepath_entry* element = ignorepath;
+ 
+ 	if (lstat(hostpath, &sb)) {
+ 		perror_msg_and_die("%s", hostpath);
+@@ -381,6 +386,15 @@ static struct filesystem_entry *recursiv
+ 	entry = add_host_filesystem_entry(targetpath, hostpath,
+ 			sb.st_uid, sb.st_gid, sb.st_mode, 0, parent);
+ 
++	while ( element ) {
++		if ( strcmp( element->name, targetpath ) == 0 ) {
++			printf( "Note: ignoring directories below '%s'\n", targetpath );
++			return entry;
++			break;
++		}
++		element = element->next;
++	}
++
+ 	n = scandir(hostpath, &namelist, 0, alphasort);
+ 	if (n < 0) {
+ 		perror_msg_and_die("opening directory %s", hostpath);
+@@ -1405,6 +1419,7 @@ static struct option long_options[] = {
+ 	{"root", 1, NULL, 'r'},
+ 	{"pagesize", 1, NULL, 's'},
+ 	{"eraseblock", 1, NULL, 'e'},
++	{"ignore", 1, NULL, 'I'},
+ 	{"output", 1, NULL, 'o'},
+ 	{"help", 0, NULL, 'h'},
+ 	{"verbose", 0, NULL, 'v'},
+@@ -1452,6 +1467,7 @@ static char *helptext =
+ "  -L, --list-compressors  Show the list of the avaiable compressors\n"
+ "  -t, --test-compression  Call decompress and compare with the original (for test)\n"
+ "  -n, --no-cleanmarkers   Don't add a cleanmarker to every eraseblock\n"
++"  -I, --ignore=PATH       Ignore sub directory and file tree below PATH when recursing over the file system\n"
+ "  -o, --output=FILE       Output to FILE (default: stdout)\n"
+ "  -l, --little-endian     Create a little-endian filesystem\n"
+ "  -b, --big-endian        Create a big-endian filesystem\n"
+@@ -1617,11 +1633,12 @@ int main(int argc, char **argv)
+ 	struct filesystem_entry *root;
+ 	char *compr_name = NULL;
+ 	int compr_prior  = -1;
++	struct ignorepath_entry* element = ignorepath;
+ 
+ 	jffs2_compressors_init();
+ 
+ 	while ((opt = getopt_long(argc, argv,
+-					"D:d:r:s:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
++					"D:d:r:s:I:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
+ 	{
+ 		switch (opt) {
+ 			case 'D':
+@@ -1644,6 +1661,28 @@ int main(int argc, char **argv)
+ 				page_size = strtol(optarg, NULL, 0);
+ 				break;
+ 
++			case 'I':
++				printf( "Note: Adding '%s' to ignore Path\n", optarg );
++				element = ignorepath;
++				if ( !ignorepath ) {
++					ignorepath = xmalloc( sizeof( struct ignorepath_entry ) );
++					ignorepath->next = 0;
++					strcpy( &ignorepath->name[0], optarg );
++				} else {
++					while ( element->next ) element = element->next;
++					element->next = xmalloc( sizeof( struct ignorepath_entry ) );
++ 					element->next->next = 0;
++					strcpy( &element->next->name[0], optarg );
++				}
++				printf( "--------- Dumping ignore path list ----------------\n" );
++				element = ignorepath;
++				while ( element ) {
++					printf( "  * '%s'\n", &element->name[0] );
++					element = element->next;
++				}
++				printf( "---------------------------------------------------\n" );
++				break;
++
+ 			case 'o':
+ 				if (out_fd != -1) {
+ 					error_msg_and_die("output filename specified more than once");

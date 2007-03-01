@@ -1,0 +1,26 @@
+---
+ nanddump.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: git/nanddump.c
+===================================================================
+--- git.orig/nanddump.c	2007-01-23 15:42:34.000000000 +0000
++++ git/nanddump.c	2007-01-23 15:47:57.000000000 +0000
+@@ -281,7 +281,7 @@ int main(int argc, char **argv)
+ 			}
+ 		}
+ 
+-		if (badblock) {
++		if (badblock && !ignoreerrors) {
+ 			if (omitbad)
+ 				continue;
+ 			memset (readbuf, 0xff, bs);
+@@ -335,7 +335,7 @@ int main(int argc, char **argv)
+ 		if (omitoob)
+ 			continue;
+ 
+-		if (badblock) {
++		if (badblock && !ignoreerrors) {
+ 			memset (readbuf, 0xff, meminfo.oobsize);
+ 		} else {
+ 			/* Read OOB data and exit on failure */

@@ -3,19 +3,19 @@ SECTION = "base"
 DEPENDS = "zlib"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
-PR = "r0"
-SRCDATE = "20060223"
+PR = "r1"
 
-SRC_URI = "cvs://anoncvs:anoncvs@cvs.infradead.org/home/cvs;module=mtd \ 
-           file://add-exclusion-to-mkfs-jffs2-20060131.patch;patch=1 \
-	   file://fix-ignoreerrors-20060131.patch;patch=1"
-S = "${WORKDIR}/mtd/"
+SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=master \
+	   file://add_lzo.patch;patch=1 \
+	   file://favour_lzo.patch;patch=1 \
+           file://add-exclusion-to-mkfs-jffs2-git.patch;patch=1 \
+	   file://fix-ignoreerrors-git.patch;patch=1"
 
-CFLAGS_prepend = "-I${S}/include "
+S = "${WORKDIR}/git/"
 
-do_compile () {
-	oe_runmake -C util ${mtd_utils}
-}
+EXTRA_OEMAKE = "WITHOUT_XATTR=1"
+
+#CFLAGS_prepend = "-I${S}/include "
 
 do_stage () {
 	install -d ${STAGING_INCDIR}/mtd
@@ -23,7 +23,7 @@ do_stage () {
 		install -m 0644 $f ${STAGING_INCDIR}/mtd/
 	done
 	for binary in ${mtd_utils}; do
-		install -m 0755 util/$binary ${STAGING_BINDIR}
+		install -m 0755 $binary ${STAGING_BINDIR}
 	done
 }
 
@@ -34,6 +34,6 @@ mtd_utils = "ftl_format flash_erase flash_eraseall nanddump doc_loadbios \
 do_install () {
 	install -d ${D}${bindir}
 	for binary in ${mtd_utils}; do
-		install -m 0755 util/$binary ${D}${bindir}
+		install -m 0755 $binary ${D}${bindir}
 	done
 }
