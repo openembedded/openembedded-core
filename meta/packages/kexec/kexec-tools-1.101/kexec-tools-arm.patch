@@ -285,7 +285,7 @@ Index: kexec-tools-1.101/kexec/kexec-syscall.h
  #define __NR_kexec_load		246
  #endif
 +#ifdef __arm__
-+#define __NR_kexec_load		__NR_SYSCALL_BASE + 189  
++#define __NR_kexec_load		__NR_SYSCALL_BASE + 347  
 +#endif
  #ifndef __NR_kexec_load
  #error Unknown processor architecture.  Needs a kexec_load syscall number.

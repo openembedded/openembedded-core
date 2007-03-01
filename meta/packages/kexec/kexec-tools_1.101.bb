@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.xmission.com/~ebiederm/files/kexec/"
 SECTION = "kernel/userland"
 DEPENDS = "virtual/kernel zlib"
 LICENSE = "GPL"
-PR = "r0"
+PR = "r1"
 
 inherit autotools
 
