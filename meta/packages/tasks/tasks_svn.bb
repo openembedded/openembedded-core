@@ -11,5 +11,3 @@ SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http"
 inherit autotools pkgconfig gtk-icon-cache
 
 S = "${WORKDIR}/trunk"
-
-FILES_${PN} += "${datadir}/icons"
