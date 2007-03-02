@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r48"
+PR = "r49"
 
 PACKAGES = "\
     task-oh-base \
@@ -89,6 +89,7 @@ RDEPENDS_task-oh-standard = "\
     matchbox-applet-inputmanager \
     matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
+    sato-icon-theme \
     usbinit \
     settings-daemon \
     gtk-sato-engine \
