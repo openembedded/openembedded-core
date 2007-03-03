@@ -3,7 +3,7 @@ SECTION = "base"
 DEPENDS = "zlib lzo"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=master \
 	   file://add_lzo.patch;patch=1 \
@@ -13,9 +13,7 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=master \
 
 S = "${WORKDIR}/git/"
 
-EXTRA_OEMAKE = "WITHOUT_XATTR=1"
-
-#CFLAGS_prepend = "-I${S}/include "
+EXTRA_OEMAKE = "'CC=${CC}' 'CFLAGS=${CFLAGS} -I${S}/include -DWITHOUT_XATTR'"
 
 do_stage () {
 	install -d ${STAGING_INCDIR}/mtd
