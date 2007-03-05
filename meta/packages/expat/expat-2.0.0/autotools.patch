@@ -1,0 +1,13 @@
+diff -bur expat-2.0.0~orig/configure.in expat-2.0.0/configure.in
+--- expat-2.0.0~orig/configure.in	2006-01-10 19:10:46.000000000 -0600
++++ expat-2.0.0/configure.in	2006-02-10 19:12:24.000000000 -0600
+@@ -50,9 +50,6 @@
+ 
+ AC_CONFIG_HEADER(expat_config.h)
+ 
+-sinclude(conftools/libtool.m4)
+-sinclude(conftools/ac_c_bigendian_cross.m4)
+-
+ AC_LIBTOOL_WIN32_DLL
+ AC_PROG_LIBTOOL
+ 
