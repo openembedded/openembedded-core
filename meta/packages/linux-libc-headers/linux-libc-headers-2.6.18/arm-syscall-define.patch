@@ -1,0 +1,22 @@
+# define the _syscall macros, needed to build util-linux
+
+Index: linux-2.6.18/include/asm-arm/unistd.h
+===================================================================
+--- linux-2.6.18.orig/include/asm-arm/unistd.h	2006-10-02 18:05:31.000000000 +0200
++++ linux-2.6.18/include/asm-arm/unistd.h	2006-10-02 18:05:47.000000000 +0200
+@@ -376,9 +376,6 @@
+ #undef __NR_ipc
+ #endif
+ 
+-#ifdef __KERNEL__
+-#include <linux/linkage.h>
+-
+ #define __sys2(x) #x
+ #define __sys1(x) __sys2(x)
+ 
+@@ -580,5 +577,4 @@
+  */
+ #define cond_syscall(x) asm(".weak\t" #x "\n\t.set\t" #x ",sys_ni_syscall")
+ 
+-#endif /* __KERNEL__ */
+ #endif /* __ASM_ARM_UNISTD_H */
