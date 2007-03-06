@@ -4,12 +4,14 @@ SECTION = "unknown"
 LICENSE = "GPL LGPL AFL"
 
 DEPENDS = "virtual/kernel dbus-glib udev intltool expat libusb"
-RDEPENDS += "udev"
+RDEPENDS += "udev hal-info"
 #RDEPENDS_hal-device-manager = "python hal python-pygnome"
 RRECOMMENDS = "udev-utils"
 
 SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
         file://99_hal"
+
+PR="r1"
 
 S = "${WORKDIR}/git"
 
@@ -21,7 +23,8 @@ EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
                 --with-hotplug=${sysconfdir}/hotplug.d \
                 --disable-docbook-docs \
                 --disable-policy-kit \
-                --disable-acpi --disable-pmu \
+                --disable-acpi --disable-pmu --disable-pci \
+                --disable-pic-ids --disable-pnp-ids \
                 "
 
 do_install_append() {
