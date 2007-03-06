@@ -115,7 +115,7 @@ autotools_do_configure() {
 			    echo "no" | glib-gettextize --force --copy
 			  fi
 			fi
-			if grep "^AC_PROG_INTLTOOL" $CONFIGURE_AC >/dev/null; then
+			if grep "^[AI][CT]_PROG_INTLTOOL" $CONFIGURE_AC >/dev/null; then
 			  oenote Executing intltoolize --copy --force --automake
 			  intltoolize --copy --force --automake
 			fi
