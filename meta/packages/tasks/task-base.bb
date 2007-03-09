@@ -101,7 +101,7 @@ RDEPENDS_task-base-oh-minimal = "\
     ${@base_contains("COMBINED_FEATURES", "pcmcia", "${PCMCIA_MANAGER}", "",d)} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
-RRECOMMENDS_task-base-minimal = "\
+RRECOMMENDS_task-base-oh-minimal = "\
     ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"
 
 task-base-kernel26-rdepends = "\
