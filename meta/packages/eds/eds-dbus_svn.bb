@@ -4,7 +4,7 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib intltool"
 
 PV = "1.4.0+svn${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://no_libdb.patch;patch=1 \
@@ -33,9 +33,11 @@ FILES_libcamel-dev = "${libdir}/libcamel-*.so ${libdir}/libcamel-provider-*.so $
 
 FILES_libebook = "${libdir}/libebook-*.so.*"
 FILES_libebook-dev = "${libdir}/libebook-1.2.so ${libdir}/pkgconfig/libebook-*.pc ${includedir}/evolution-data-server*/libebook/*.h"
+RRECOMMENDS_libebook = libedata-book
 
 FILES_libecal = "${libdir}/libecal-*.so.* ${datadir}/evolution-data-server-1.4/zoneinfo"
 FILES_libecal-dev = "${libdir}/libecal-*.so ${libdir}/pkgconfig/libecal-*.pc ${includedir}/evolution-data-server*/libecal/*.h ${includedir}/evolution-data-server*/libical/*.h"
+RRECOMMENDS_libecal = libedata-cal
 
 FILES_libedata-book = "${libexecdir}/e-addressbook-factory ${datadir}/dbus-1/services/*.AddressBook.service ${libdir}/libedata-book-*.so.* ${libdir}/evolution-data-server-*/extensions/libebook*.so"
 FILES_libedata-book-dev = "${libdir}/libedata-book-*.so ${libdir}/pkgconfig/libedata-book-*.pc ${includedir}/evolution-data-server-*/libedata-book"
