@@ -6,7 +6,7 @@ LICENSE = "MIT"
 PR="r1"
 
 # Remove libraries that are not hard depends
-DEPENDS += " libxext virtual/libx11 libxxf86misc libxfontcache libxmuu"
+DEPENDS += " libxext virtual/libx11 libxxf86misc libxfontcache libxmu"
 
 SRC_URI += "file://disable-xkb.patch;patch=1"
 
