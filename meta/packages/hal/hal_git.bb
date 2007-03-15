@@ -24,7 +24,7 @@ EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
                 --disable-docbook-docs \
                 --disable-policy-kit \
                 --disable-acpi --disable-pmu --disable-pci \
-                --disable-pic-ids --disable-pnp-ids \
+                --disable-pci-ids --disable-pnp-ids \
                 "
 
 do_install_append() {
