@@ -2,46 +2,6 @@ Index: trunk/configure.in
 ===================================================================
 --- trunk.orig/configure.in	2005-09-28 17:34:08.000000000 +0000
 +++ trunk/configure.in	2005-09-28 19:13:22.000000000 +0000
-@@ -213,39 +213,6 @@
- 	if test $ac_cv_libiconv = no; then
- 		AC_CHECK_FUNCS(gnu_get_libc_version)
- 	fi
--	AC_CACHE_CHECK([if iconv() handles UTF-8], ac_cv_libiconv_utf8, AC_TRY_RUN([
--#include <iconv.h>
--#include <stdlib.h>
--#include <string.h>
--#ifdef HAVE_GNU_GET_LIBC_VERSION
--#include <gnu/libc-version.h>
--#endif
--
--int main (int argc, char **argv)
--{
--	const char *from = "Some Text \xA4";
--	const char *utf8 = "Some Text \xC2\xA4";
--	char *transbuf = malloc (20), *trans = transbuf;
--	iconv_t cd;
--	size_t from_len = strlen (from), utf8_len = 20;
--	size_t utf8_real_len = strlen (utf8);
--
--#ifdef HAVE_GNU_GET_LIBC_VERSION
--	/* glibc 2.1.2's iconv is broken in hard to test ways. */
--	if (!strcmp (gnu_get_libc_version (), "2.1.2"))
--		exit (1);
--#endif
--
--	cd = iconv_open ("UTF-8", "ISO_8859-1");
--	if (cd == (iconv_t) -1)
--		exit (1);
--	if (iconv (cd, &from, &from_len, &trans, &utf8_len) == -1 || from_len != 0)
--		exit (1);
--	if (memcmp (utf8, transbuf, utf8_real_len) != 0)
--		exit (1);
--
--	exit (0);
--}], ac_cv_libiconv_utf8=yes, [ac_cv_libiconv_utf8=no; have_iconv=no], [ac_cv_libiconv_utf8=no; have_iconv=no]))
- fi
- 
- if test "$have_iconv" = no; then
 @@ -254,25 +221,6 @@
  AC_SUBST(ICONV_CFLAGS)
  AC_SUBST(ICONV_LIBS)
