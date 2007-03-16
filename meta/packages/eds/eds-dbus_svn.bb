@@ -28,7 +28,7 @@ PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev lib
 FILES_${PN}-dev =+ "${libdir}/pkgconfig/evolution-data-server-*.pc"
 FILES_${PN}-dbg =+ "${libdir}/evolution-data-server-*/camel-providers/.debug ${libdir}/evolution-data-server*/extensions/.debug/"
 # This is a nasty hack until bitbake is fixed to correctly generate them automatically
-RRECOMMENDS_${PN}-dbg += "db-dbg dbus-dbg glibc-dbg libdbus-glib-1-dbg libglib-2.0-dbg libxml2-dbg"
+#RRECOMMENDS_${PN}-dbg += "db-dbg dbus-dbg glibc-dbg libdbus-glib-1-dbg libglib-2.0-dbg libxml2-dbg"
 
 FILES_libcamel = "${libexecdir}/camel-* ${libdir}/libcamel-*.so.* ${libdir}/libcamel-provider-*.so.* ${libdir}/evolution-data-server-*/camel-providers/*.so ${libdir}/evolution-data-server-*/camel-providers/*.urls"
 FILES_libcamel-dev = "${libdir}/libcamel-*.so ${libdir}/libcamel-provider-*.so ${libdir}/pkgconfig/camel*pc ${includedir}/evolution-data-server*/camel"
