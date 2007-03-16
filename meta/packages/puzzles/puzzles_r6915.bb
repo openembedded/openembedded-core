@@ -38,7 +38,7 @@ Exec=${prefix}/games/$prog
 Icon=game.png
 Terminal=false
 Type=Application
-Categories=Game
+Categories=Game;
 StartupNotify=true
 SingleInstance=true
 STOP
