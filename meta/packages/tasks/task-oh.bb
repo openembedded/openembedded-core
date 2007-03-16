@@ -95,6 +95,7 @@ RDEPENDS_task-oh-standard = "\
     eds-dbus \
     contacts \
     dates \
+    tasks \
     web \
     pcmanfm \
     puzzles \
