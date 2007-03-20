@@ -2,11 +2,13 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "unifdef-native"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${PV}.tar.bz2"
 
 S = "${WORKDIR}/linux-${PV}"
+
+export TARGET_ARCH
 
 set_arch() {
 	case ${TARGET_ARCH} in
