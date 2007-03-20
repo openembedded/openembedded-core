@@ -24,9 +24,9 @@ MACHINE ?= "qemuarm"
 #MACHINE ?= "nokia770"
 
 
-DISTRO = "poky"
+DISTRO ?= "poky"
 # For bleeding edge / experimental / unstable package versions
-# DISTRO = "poky-bleeding"
+# DISTRO ?= "poky-bleeding"
 
 # IMAGE_FEATURES configuration of the generated images 
 # (Some of these are automatically added to certain image types)
