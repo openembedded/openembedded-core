@@ -2,7 +2,7 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "unifdef-native"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.18.tar.bz2 \
            file://arm-syscall-define.patch;patch=1"
@@ -30,7 +30,7 @@ set_arch() {
 
 do_configure() {
 	set_arch
-	oe_runmake allnoconfig ARCH=${ARCH}
+	oe_runmake allnoconfig ARCH=$ARCH
 }
 
 do_compile () {
@@ -51,7 +51,7 @@ do_stage () {
 	set_arch
 	rm -rf ${STAGE_TEMP}
 	mkdir -p ${STAGE_TEMP}
-	oe_runmake headers_install INSTALL_HDR_PATH=${STAGE_TEMP}/usr ARCH=${ARCH}
+	oe_runmake headers_install INSTALL_HDR_PATH=${STAGE_TEMP}/usr ARCH=$ARCH
 	if [ "$ARCH" == "arm" ]; then
 		cp include/asm-arm/procinfo.h ${STAGE_TEMP}${includedir}/asm
 	fi

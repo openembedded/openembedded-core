@@ -2,7 +2,7 @@ require linux-libc-headers.inc
 
 DEFAULT_PREFERENCE = "-1"
 INHIBIT_DEFAULT_DEPS = "1"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = " \
 	${KERNELORG_MIRROR}/pub/linux/kernel/people/dwmw2/kernel-headers/snapshot/linux-kernel-headers-2.6.19-rc1.tar.bz2 \
@@ -52,6 +52,6 @@ do_stage () {
 	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/asm-generic
 	install -d ${CROSS_DIR}/${TARGET_SYS}/include
 	cp -pfLR ${S}${includedir}/linux ${CROSS_DIR}/${TARGET_SYS}/include/
-	cp -pfLR ${S}${includedir}/asm-${ARCH} ${CROSS_DIR}/${TARGET_SYS}/include/asm
+	cp -pfLR ${S}${includedir}/asm-$ARCH ${CROSS_DIR}/${TARGET_SYS}/include/asm
 	cp -pfLR ${S}${includedir}/asm-generic ${CROSS_DIR}/${TARGET_SYS}/include/
 }

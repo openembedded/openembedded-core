@@ -2,7 +2,7 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "unifdef-native"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${PV}.tar.bz2"
 
@@ -29,7 +29,7 @@ set_arch() {
 
 do_configure() {
 	set_arch
-	oe_runmake allnoconfig ARCH=${ARCH}
+	oe_runmake allnoconfig ARCH=$ARCH
 }
 
 do_compile () {
@@ -48,9 +48,10 @@ STAGE_TEMP="${WORKDIR}/temp-staging"
 
 do_stage () {
 	set_arch
+	echo $ARCH
 	rm -rf ${STAGE_TEMP}
 	mkdir -p ${STAGE_TEMP}
-	oe_runmake headers_install INSTALL_HDR_PATH=${STAGE_TEMP}/usr ARCH=${ARCH}
+	oe_runmake headers_install INSTALL_HDR_PATH=${STAGE_TEMP}/usr ARCH=$ARCH
 	if [ "$ARCH" == "arm" ]; then
 		cp include/asm-arm/procinfo.h ${STAGE_TEMP}${includedir}/asm
 	fi
