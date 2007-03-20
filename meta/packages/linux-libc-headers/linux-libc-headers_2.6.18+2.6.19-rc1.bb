@@ -2,6 +2,7 @@ require linux-libc-headers.inc
 
 DEFAULT_PREFERENCE = "-1"
 INHIBIT_DEFAULT_DEPS = "1"
+PR = "r1"
 
 SRC_URI = " \
 	${KERNELORG_MIRROR}/pub/linux/kernel/people/dwmw2/kernel-headers/snapshot/linux-kernel-headers-2.6.19-rc1.tar.bz2 \
@@ -35,7 +36,7 @@ do_install() {
 	set_arch
 	install -d ${D}${includedir}
 	cp -pfLR ${S}${includedir}/linux ${D}${includedir}/
-	cp -pfLR ${S}${includedir}/asm-${ARCH} ${D}${includedir}/asm
+	cp -pfLR ${S}${includedir}/asm-$ARCH ${D}${includedir}/asm
 	cp -pfLR ${S}${includedir}/asm-generic ${D}${includedir}/
 }
 
@@ -44,7 +45,7 @@ do_stage () {
 	install -d ${STAGING_INCDIR}
 	rm -rf ${STAGING_INCDIR}/linux ${STAGING_INCDIR}/asm ${STAGING_INCDIR}/asm-generic
 	cp -pfLR ${S}${includedir}/linux ${STAGING_INCDIR}/
-	cp -pfLR ${S}${includedir}/asm-${ARCH} ${STAGING_INCDIR}/asm
+	cp -pfLR ${S}${includedir}/asm-$ARCH ${STAGING_INCDIR}/asm
 	cp -pfLR ${S}${includedir}/asm-generic ${STAGING_INCDIR}/
 	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/linux
 	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/asm
