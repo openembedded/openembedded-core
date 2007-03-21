@@ -1,8 +1,5 @@
-LICENSE = "LGPL"
-SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ intltool eds-dbus"
-RDEPENDS = "libedata-cal"
+require dates.inc
 
-DESCRIPTION = "Dates is a calendar application."
+PR = "r1"
 
-include dates.inc
+SRC_URI = "http://projects.o-hand.com/sources/dates/dates-${PV}.tar.gz"
