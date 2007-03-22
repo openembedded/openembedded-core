@@ -1,0 +1,13 @@
+--- nfs-utils-1.0.6/tools/getkversion/getkversion.c.orig	2007-02-22 12:33:54.000000000 +0000
++++ nfs-utils-1.0.6/tools/getkversion/getkversion.c	2007-02-22 12:33:56.000000000 +0000
+@@ -12,6 +12,10 @@
+ int
+ main(void)	/* This is for Dan Popp ;) */
+ {
++
++#ifdef UTS_RELEASE
+ 	printf("%s\n", UTS_RELEASE);
++#endif
++
+ 	return 0;
+ }

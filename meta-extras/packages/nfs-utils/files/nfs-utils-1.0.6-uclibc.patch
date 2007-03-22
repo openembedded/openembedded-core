@@ -1,0 +1,18 @@
+--- ./support/nfs/svc_socket.c.orig	2004-12-12 06:43:52.000000000 +0000
++++ ./support/nfs/svc_socket.c	2004-12-12 06:50:04.000000000 +0000
+@@ -66,6 +66,7 @@
+   __bzero ((char *) &addr, sizeof (addr));
+   addr.sin_family = AF_INET;
+ 
++#ifndef __UCLIBC__	/* neither getrpcbynumber() nor getrpcbynumber_r() is SuSv3 */
+   ret = getrpcbynumber_r (number, &rpcbuf, rpcdata, sizeof rpcdata,
+ 			  &rpcp);
+   if (ret == 0 && rpcp != NULL)
+@@ -99,6 +100,7 @@
+ 	}
+     }
+   else
++#endif
+     {
+       if (bindresvport (sock, &addr))
+ 	{
