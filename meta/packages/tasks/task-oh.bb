@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r50"
+PR = "r51"
 
 PACKAGES = "\
     task-oh-base \
@@ -22,7 +22,8 @@ PACKAGES = "\
     task-oh-devtools-dev \
     task-oh-testapps \
     task-oh-testapps-dbg \
-    task-oh-testapps-dev"
+    task-oh-testapps-dev \
+    task-oh-nfs-server"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -125,6 +126,12 @@ RDEPENDS_task-oh-testapps = "\
     gst-meta-video \
     gst-meta-audio"
 
+RDEPENDS_task-oh-nfs-server = "\
+    nfs-utils"
+
+# rpcinfo can be useful
+RRECOMMENDS_task-oh-nfs-server = "\
+    glibc-utils"
 
 #    minimo \
 #    teleport \
