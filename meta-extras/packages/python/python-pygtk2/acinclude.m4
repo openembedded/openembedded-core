@@ -43,11 +43,17 @@ AC_DEFUN([AM_CHECK_PYTHON_HEADERS],
 [AC_REQUIRE([AM_PATH_PYTHON])
 AC_MSG_CHECKING(for headers required to compile python extensions)
 dnl deduce PYTHON_INCLUDES
+AC_ARG_WITH(python-includes,
+	[  --with-python-includes=DIR  path to Python includes], py_exec_prefix=$withval)
+if test x$py_exec_prefix != x; then
+PYTHON_INCLUDES="-I${py_exec_prefix}/include/python${PYTHON_VERSION}"
+else
 py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
 py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
 PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
 if test "$py_prefix" != "$py_exec_prefix"; then
   PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
+fi
 fi
 AC_SUBST(PYTHON_INCLUDES)
 dnl check if the headers exist:
