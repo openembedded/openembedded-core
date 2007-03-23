@@ -24,6 +24,18 @@
 #   exit 1
 #fi
 
+if [ "xpreamble" = "x$1" ]; then
+    mkdir -p ./build/tmp/deploy/images 
+    svn info >> ./build/tmp/deploy/images/svninfo
+    exit 0
+fi
+
+if [ "xcomplete" = "x$1" ]; then
+    touch ./build/tmp/deploy/images/images-complete
+    chmod a+w ./build/tmp/deploy/images/images-complete
+    exit 0
+fi
+
 . ./scripts/poky-env-internal
 
 bitbake $1
