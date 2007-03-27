@@ -1,5 +1,5 @@
 SECTION = "base"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "libxml2 intltool-native"
 
@@ -13,6 +13,6 @@ FILES_${PN} += "${datadir}/mime"
 EXTRA_OECONF = "--disable-update-mimedb"
 
 pkg_postinst () {
-  echo "Updating MIME database... this may take a while."
-  ${bindir}/update-mime-database ${datadir}/mime
+  echo "Updating MIME database in $D${datadir}/mime ... (This may take a while.)"
+  ${bindir}/update-mime-database $D${datadir}/mime
 }
