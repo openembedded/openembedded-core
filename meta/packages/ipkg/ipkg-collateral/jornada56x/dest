@@ -1,4 +1,0 @@
-dest root /
-dest cf /mnt/cf/packages/
-dest sd /mnt/card/packages/
-dest ram /mnt/ram/packages/

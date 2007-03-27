@@ -1,4 +1,0 @@
-dest root /
-dest home /home/packages/
-dest cf /media/cf/packages/
-dest sd /media/card/packages/
