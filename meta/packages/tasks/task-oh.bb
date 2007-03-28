@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r51"
+PR = "r52"
 
 PACKAGES = "\
     task-oh-base \
@@ -81,7 +81,7 @@ RDEPENDS_task-oh-standard = "\
     leafpad \
     dropbear \
     portmap \
-    matchbox-desktop \
+    matchbox-desktop-2 \
     matchbox-sato \
     matchbox-keyboard \
     matchbox-stroke \
