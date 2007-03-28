@@ -1,10 +1,11 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r54"
+PR = "r55"
 LICENSE = "GPL"
 
 SRC_URI = " \
+           file://rotation \
            file://nsswitch.conf \
            file://motd \
            file://inputrc \
@@ -89,6 +90,11 @@ do_install () {
  	       install -m 0644 ${WORKDIR}/issue ${D}${sysconfdir}/issue
  	       install -m 0644 ${WORKDIR}/issue.net ${D}${sysconfdir}/issue.net
  	fi
+
+	rotation=`cat ${WORKDIR}/rotation`
+	if [ "$rotation" != "0" ]; then
+ 		install -m 0644 ${WORKDIR}/rotation ${D}${sysconfdir}/rotation
+	fi
 
 	install -m 0644 ${WORKDIR}/fstab ${D}${sysconfdir}/fstab
 	install -m 0644 ${WORKDIR}/filesystems ${D}${sysconfdir}/filesystems
