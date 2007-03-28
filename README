@@ -50,6 +50,9 @@ This will result in an ext2 image and kernel for qemu arm (see scripts dir).
 
 To build for other machine types see MACHINE in build/conf/local.conf
 
+Other image targets such as oh-image-sdk or oh-image-core are available, 
+see meta/packages/images/*.
+
 Notes:
 ===
 
