@@ -20,7 +20,12 @@ export VERBOSE
 
 startup_progress() {
     step=$(($step + $step_change))
-    progress=$(($step * $progress_size / $num_steps + $first_step))
+    denominator=$(($num_steps + $first_step))
+    if [ "$denominator" != "0" ]; then
+        progress=$(($step * $progress_size / $denominator))
+    else
+        progress=$progress_size
+    fi
     if type psplash-write >/dev/null 2>&1; then
         TMPDIR=/mnt/.psplash psplash-write "PROGRESS $progress" || true
     fi

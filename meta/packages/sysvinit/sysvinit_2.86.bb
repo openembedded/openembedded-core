@@ -2,7 +2,7 @@ DESCRIPTION = "System-V like init."
 SECTION = "base"
 LICENSE = "GPL"
 HOMEPAGE = "http://freshmeat.net/projects/sysvinit/"
-PR = "r26"
+PR = "r27"
 
 # USE_VT and SERIAL_CONSOLE are generally defined by the MACHINE .conf.
 # Set PACKAGE_ARCH appropriately.
