@@ -12,5 +12,10 @@ done
 export TMPDIR=/mnt/.psplash
 mount tmpfs -t tmpfs $TMPDIR -o,size=40k
 
-/usr/bin/psplash &
+rotation=0
+if [ -e /etc/rotation ]; then
+	rotation=`cat /etc/rotation`
+fi
+
+/usr/bin/psplash --angle=$rotation &
 
