@@ -2,8 +2,6 @@
 #
 # Startup script for nfs-utils
 #
-# The nfsd kernel module must exist along with its dependencies
-modprobe -n nfsd || exit 0
 #
 # The environment variable NFS_SERVERS may be set in /etc/default/nfsd
 # Other control variables may be overridden here too
