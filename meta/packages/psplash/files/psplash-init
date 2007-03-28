@@ -17,5 +17,5 @@ if [ -e /etc/rotation ]; then
 	rotation=`cat /etc/rotation`
 fi
 
-/usr/bin/psplash --angle=$rotation &
+/usr/bin/psplash --angle $rotation &
 

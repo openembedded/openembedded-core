@@ -2,7 +2,7 @@ DESCRIPTION = "Userspace framebuffer boot logo based on usplash."
 SECTION = "base"
 LICENSE = "GPL"
 PV = "0.0+svn${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=psplash;proto=http \
            file://psplash-init"
