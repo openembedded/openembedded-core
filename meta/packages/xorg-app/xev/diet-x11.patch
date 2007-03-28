@@ -1,0 +1,74 @@
+--- xev/xev.c	2004-02-06 11:00:37.000000000 -0800
++++ xev/xev.new.c	2005-08-04 15:40:36.000000000 -0700
+@@ -149,7 +149,7 @@
+     nbytes = XLookupString (e, str, 256, &ks, NULL);
+ 
+     /* not supposed to call XmbLookupString on a key release event */
+-    if (e->type == KeyPress && xic) {
++    /*if (e->type == KeyPress && xic) {
+         do {
+             nmbbytes = XmbLookupString (xic, e, buf, bsize - 1, &ks, &status);
+             buf[nmbbytes] = '\0';
+@@ -159,7 +159,7 @@
+                 buf = realloc (buf, bsize);
+             }
+         } while (status == XBufferOverflow);
+-    }
++    }*/
+ 
+     if (ks == NoSymbol)
+ 	ksname = "NoSymbol";
+@@ -189,7 +189,7 @@
+     }
+ 
+     /* not supposed to call XmbLookupString on a key release event */
+-    if (e->type == KeyPress && xic) {
++    /*if (e->type == KeyPress && xic) {
+         printf ("    XmbLookupString gives %d bytes: ", nmbbytes);
+         if (nmbbytes > 0) {
+            dump (buf, nmbbytes);
+@@ -200,7 +200,7 @@
+ 
+         printf ("    XFilterEvent returns: %s\n", 
+                 XFilterEvent (eventp, e->window) ? "True" : "False");
+-    }
++    }*/
+ }
+ 
+ static void
+@@ -857,7 +857,7 @@
+         fprintf (stderr, "%s:  XSetLocaleModifiers failed\n", ProgramName);
+     }
+ 
+-    xim = XOpenIM (dpy, NULL, NULL, NULL);
++    /*xim = XOpenIM (dpy, NULL, NULL, NULL);
+     if (xim == NULL) {
+         fprintf (stderr, "%s:  XOpenIM failed\n", ProgramName);
+     }
+@@ -884,7 +884,7 @@
+             }
+             XFree (xim_styles);
+         }
+-    } 
++    }*/
+ 
+     screen = DefaultScreen (dpy);
+ 
+@@ -948,7 +948,7 @@
+ 	printf ("Outer window is 0x%lx, inner window is 0x%lx\n", w, subw);
+     }
+ 
+-    if (xim && xim_style) {
++    /*if (xim && xim_style) {
+         xic = XCreateIC (xim, 
+                          XNInputStyle, xim_style, 
+                          XNClientWindow, w, 
+@@ -958,7 +958,7 @@
+         if (xic == NULL) {
+             fprintf (stderr, "XCreateIC failed\n");
+         }
+-    }
++    }*/
+ 
+     for (done = 0; !done; ) {
+ 	XEvent event;
