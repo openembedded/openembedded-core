@@ -805,44 +805,51 @@ python package_depchains() {
 	postfixes = (bb.data.getVar('DEPCHAIN_POST', d, 1) or '').split()
 	prefixes  = (bb.data.getVar('DEPCHAIN_PRE', d, 1) or '').split()
 
-	def pkg_addrrecs(pkg, base, func, d):
-		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + base, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "")
-		# bb.note('rdepends for %s is %s' % (base, rdepends))
+	def pkg_addrrecs(pkg, base, getname, rdepends, d):
+		def packaged(pkg, d):
+			return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
+
 		rreclist = explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
 
 		for depend in rdepends:
-			split_depend = depend.split(' (')
-			name = split_depend[0].strip()
-			func(rreclist, name)
+			pkgname = getname(depend)
+			if not pkgname in rreclist and packaged(pkgname, d):
+				rreclist.append(pkgname)
 
+		#bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
 		bb.data.setVar('RRECOMMENDS_%s' % pkg, ' '.join(rreclist), d)
 
-	def packaged(pkg, d):
-		return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
+	def add_dep(list, dep):
+		dep = dep.split(' (')[0].strip()
+		if dep not in list:
+			list.append(dep)
+
+	rdepends = []
+	for dep in explode_deps(bb.data.getVar('RDEPENDS', d, 1) or ""):
+		add_dep(rdepends, dep)
+
+	for pkg in packages.split():
+		for dep in explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 1) or ""):
+			add_dep(rdepends, dep)
+
+	#bb.note('rdepends is %s' % rdepends)
 
 	for pkg in packages.split():
 		for postfix in postfixes:
-			def func(list, name):
-				pkg = '%s%s' % (name, postfix)
-				if not pkg in list:
-					if packaged(pkg, d):
-						list.append(pkg)
+			def getname(name):
+				return '%s%s' % (name, postfix)
 
 			base = pkg[:-len(postfix)]
 			if pkg.endswith(postfix):
-				pkg_addrrecs(pkg, base, func, d)
-				continue
+				pkg_addrrecs(pkg, base, getname, rdepends, d)
 
 		for prefix in prefixes:
-			def func(list, name):
-				pkg = '%s%s' % (prefix, name)
-				if not pkg in list:
-					if packaged(pkg, d):
-						list.append(pkg)
+			def getname(name):
+				return '%s%s' % (prefix, name)
 
 			base = pkg[len(prefix):]
 			if pkg.startswith(prefix):
-				pkg_addrrecs(pkg, base, func, d)
+				pkg_addrrecs(pkg, base, getname, rdepends, d)
 }
 
 
