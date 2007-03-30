@@ -53,13 +53,13 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	if [ ! -z "${LINGUAS_INSTALL}" ]; then
 		apt-get install glibc-localedata-i18n
-		if [ $? -eq 1 ]; then
-			exit 1
+		if [ $? -ne 0 ]; then
+			exit $?
 		fi
 		for i in ${LINGUAS_INSTALL}; do
 			apt-get install $i
-			if [ $? -eq 1 ]; then
-				exit 1
+			if [ $? -ne 0 ]; then
+				exit $?
 			fi
 		done
 	fi
