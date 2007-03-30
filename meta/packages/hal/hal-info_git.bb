@@ -1,3 +1,5 @@
+PV = "${SRCDATE}+git"
+
 DESCRIPTION = "Hardware Abstraction Layer device information"
 HOMEPAGE = "http://freedesktop.org/Software/hal"
 SECTION = "unknown"

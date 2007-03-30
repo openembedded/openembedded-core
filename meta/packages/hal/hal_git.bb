@@ -11,6 +11,7 @@ RRECOMMENDS = "udev-utils"
 SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
         file://99_hal"
 
+PV="0.5.9+git${SRCDATE}"
 PR="r1"
 
 S = "${WORKDIR}/git"
@@ -75,7 +76,8 @@ FILES_${PN} = "${sysconfdir} \
                 ${bindir}/hal-find-by-property \
                 ${bindir}/hal-device  \
                 ${bindir}/hal-get-property \
-                ${bindir}/hal-set-property  \
+                ${bindir}/hal-lock  \
+                ${bindir}/hal-is-caller-locked-out  \
                 ${sbindir} \
                 ${libdir}/libhal.so.* \
                 ${libdir}/libhal-storage.so.* \
