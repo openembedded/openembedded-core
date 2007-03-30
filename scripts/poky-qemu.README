@@ -52,6 +52,8 @@ Notes
  - Your qemu system will be accessible as 192.16.7.2.
  - The default NFS mount points are /srv/nfs/qemux86 or /srv/nfs/qemuarm 
    depending on the target type.
+ - Images built for qemux86/qemuarm contain NFS server which export whole
+   rootfs (/) in read/write mode.
  - You can set QEMU_MEMORY to control amount of available memory (default 64M).
  - You can set SERIAL_LOGFILE to have the serial output from the image logged 
    to a file.
@@ -90,7 +92,3 @@ Known Issues
 
  - There is a bug in the ARM qemu in that means occasionally it will use 100% 
    cpu. You will need to restart it in this situation.
- - There is a problem with the ARM image not auto assigning an IP when using an 
-   ext2 image. To have working TCP/IP connectivity run:
-   'ifconfig eth0 192.168.7.2 up'
-
