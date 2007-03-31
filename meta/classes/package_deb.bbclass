@@ -130,6 +130,7 @@ python do_package_deb () {
             continue
         controldir = os.path.join(root, 'DEBIAN')
         bb.mkdirhier(controldir)
+        os.chmod(controldir, 0755)
         try:
             ctrlfile = file(os.path.join(controldir, 'control'), 'wb')
             # import codecs
