@@ -3,8 +3,14 @@
 # Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
 #
 
---- less-381/./configure.ac~configure
-+++ less-381/./configure.ac
+---
+ configure.ac |  100 +++++++++++++++++++++--------------------------------------
+ 1 file changed, 37 insertions(+), 63 deletions(-)
+
+Index: less-382/configure.ac
+===================================================================
+--- less-382.orig/configure.ac	2004-02-04 04:52:26.000000000 +0000
++++ less-382/configure.ac	2007-03-26 23:35:29.000000000 +0100
 @@ -9,7 +9,7 @@
  # contact the author, see the README file.
  
@@ -14,7 +20,7 @@
  AC_CONFIG_SRCDIR([forwback.c])
  AC_CONFIG_HEADER([defines.h])
  
-@@ -56,8 +56,7 @@
+@@ -56,8 +56,7 @@ if test "x$TERMLIBS" = x; then
      TERMLIBS="-lxcurses"
      SAVE_LIBS=$LIBS
      LIBS="$LIBS $TERMLIBS"
@@ -24,7 +30,7 @@
      LIBS=$SAVE_LIBS
      if test $termok = no; then TERMLIBS=""; fi
    fi
-@@ -69,8 +68,7 @@
+@@ -69,8 +68,7 @@ if test "x$TERMLIBS" = x; then
      TERMLIBS="-lncurses"
      SAVE_LIBS=$LIBS
      LIBS="$LIBS $TERMLIBS"
@@ -34,7 +40,7 @@
      LIBS=$SAVE_LIBS
      if test $termok = no; then TERMLIBS=""; fi
    fi
-@@ -82,8 +80,7 @@
+@@ -82,8 +80,7 @@ if test "x$TERMLIBS" = x; then
      TERMLIBS="-lcurses"
      SAVE_LIBS=$LIBS
      LIBS="$LIBS $TERMLIBS"
@@ -44,7 +50,7 @@
      LIBS=$SAVE_LIBS
      if test $termok = no; then TERMLIBS=""; fi
    fi
-@@ -96,8 +93,7 @@
+@@ -96,8 +93,7 @@ if test "x$TERMLIBS" = x; then
      TERMLIBS="-lcurses -ltermcap"
      SAVE_LIBS=$LIBS
      LIBS="$LIBS $TERMLIBS"
@@ -54,7 +60,7 @@
      LIBS=$SAVE_LIBS
      if test $termok = no; then TERMLIBS=""; fi
    fi
-@@ -111,8 +107,7 @@
+@@ -111,8 +107,7 @@ if test "x$TERMLIBS" = x; then
      TERMLIBS="-ltermcap"
      SAVE_LIBS=$LIBS
      LIBS="$LIBS $TERMLIBS"
@@ -64,7 +70,7 @@
      LIBS=$SAVE_LIBS
      if test $termok = no; then TERMLIBS=""; fi
    fi
-@@ -124,8 +119,7 @@
+@@ -124,8 +119,7 @@ if test "x$TERMLIBS" = x; then
      TERMLIBS="-lcurses -ltermlib"
      SAVE_LIBS=$LIBS
      LIBS="$LIBS $TERMLIBS"
@@ -74,7 +80,7 @@
      LIBS=$SAVE_LIBS
      if test $termok = no; then TERMLIBS=""; fi
    fi
-@@ -200,14 +194,11 @@
+@@ -200,14 +194,11 @@ AH_TEMPLATE([EDIT_PGM],
  # Checks for identifiers.
  AC_TYPE_OFF_T
  AC_MSG_CHECKING(for void)
@@ -92,7 +98,7 @@
  
  # Checks for library functions.
  AC_TYPE_SIGNAL
-@@ -217,14 +208,13 @@
+@@ -217,14 +208,13 @@ AC_CHECK_FUNCS([fsync memcpy popen _setj
  AC_CHECK_FUNC(tcgetattr, AC_DEFINE(HAVE_TERMIOS_FUNCS))
  
  AC_MSG_CHECKING(for fileno)
@@ -110,7 +116,7 @@
  #if HAVE_STDIO_H
  #include <stdio.h>
  #endif
-@@ -233,68 +223,56 @@
+@@ -233,68 +223,56 @@ AC_TRY_LINK([
  #endif
  #if HAVE_ERRNO_H
  #include <errno.h>
@@ -196,7 +202,7 @@
  fi
  
  # Checks for regular expression functions.
-@@ -311,7 +289,7 @@
+@@ -311,7 +289,7 @@ if test $have_regex = no; then
  if test $WANT_REGEX = auto -o $WANT_REGEX = posix; then
  # Some versions of Solaris have a regcomp() function, but it doesn't work!
  # So we run a test program.  If we're cross-compiling, do it the old way.
@@ -205,7 +211,7 @@
  #include <sys/types.h>
  #include <regex.h>
  main() { regex_t r; regmatch_t rm; char *text = "xabcy";
-@@ -322,19 +300,16 @@
+@@ -322,19 +300,16 @@ if (rm.rm_so != 1) exit(1); /* check for
  #else
  if (rm.rm_sp != text + 1) exit(1); /* check for correct offset */
  #endif
@@ -229,7 +235,7 @@
  else
    AC_MSG_RESULT(no)
  fi
-@@ -357,9 +332,8 @@
+@@ -357,9 +332,8 @@ fi
  
  if test $have_regex = no; then
  if test $WANT_REGEX = auto -o $WANT_REGEX = regcomp; then
