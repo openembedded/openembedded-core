@@ -27,7 +27,7 @@ sys.path.insert(0,os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'l
 import bb
 from bb import cooker
 
-__version__ = "1.7.4"
+__version__ = "1.8.1"
 
 #============================================================================#
 # BBOptions
@@ -109,15 +109,9 @@ Default BBFILES are the .bb files in the current directory.""" )
     configuration.pkgs_to_build = []
     configuration.pkgs_to_build.extend(args[1:])
 
-    bb.cooker.BBCooker().cook(configuration)
+    cooker = bb.cooker.BBCooker(configuration)
+    cooker.cook()
+
 
 if __name__ == "__main__":
     main()
-    sys.exit(0)
-    import profile
-    profile.run('main()', "profile.log")
-    import pstats
-    p = pstats.Stats('profile.log')
-    p.sort_stats('time')
-    p.print_stats()
-    p.print_callers()
