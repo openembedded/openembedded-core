@@ -11,6 +11,7 @@ RRECOMMENDS = "udev-utils"
 PR = "r1"
 
 SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz \
+        file://autoconf.diff;patch=1 \
         file://99_hal"
 
 S = "${WORKDIR}/hal-${PV}"
