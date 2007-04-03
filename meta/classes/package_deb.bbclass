@@ -1,5 +1,7 @@
 inherit package
-DEPENDS_prepend="${@["dpkg-native ", ""][(bb.data.getVar('PACKAGES', d, 1) == '')]}"
+
+PACKAGE_EXTRA_DEPENDS += "dpkg-native fakeroot-native"
+
 BOOTSTRAP_EXTRA_RDEPENDS += "dpkg"
 DISTRO_EXTRA_RDEPENDS += "dpkg"
 PACKAGE_WRITE_FUNCS += "do_package_deb"

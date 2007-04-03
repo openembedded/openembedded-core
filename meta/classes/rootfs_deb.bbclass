@@ -1,5 +1,5 @@
-DEPENDS_prepend = "dpkg-native apt-native fakeroot-native "
-DEPENDS_append = " ${EXTRA_IMAGEDEPENDS}"
+
+do_rootfs[depends] += "dpkg-native:do_populate_staging apt-native:do_populate_staging"
 
 fakeroot rootfs_deb_do_rootfs () {
 	set +e

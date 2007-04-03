@@ -116,8 +116,18 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
-PACKAGE_DEPENDS ?= "file-native fakeroot-native"
-DEPENDS_prepend =+ "${PACKAGE_DEPENDS} "
+do_package[depends] = "file-native:do_populate_staging"
+
+python () {
+    import bb
+
+    if bb.data.getVar('PACKAGES', d, 1) != '':
+        deps = bb.data.getVarFlag('do_package_write', 'depends', d) or ""
+        for dep in (bb.data.getVar('PACKAGE_EXTRA_DEPENDS', d, 1) or "").split():
+            deps += " %s:do_populate_staging" % dep
+        bb.data.setVarFlag('do_package_write', 'depends', deps, d)
+}
+
 # file(1) output to match to consider a file an unstripped executable
 FILE_UNSTRIPPED_MATCH ?= "not stripped"
 #FIXME: this should be "" when any errors are gone!
@@ -126,7 +136,7 @@ IGNORE_STRIP_ERRORS ?= "1"
 runstrip() {
 	# Function to strip a single file, called from RUNSTRIP in populate_packages below
 	# A working 'file' (one which works on the target architecture)
-	# is necessary for this stuff to work, hence the addition to PACKAGES_DEPENDS
+	# is necessary for this stuff to work, hence the addition to do_package[depends]
 
 	local ro st
 

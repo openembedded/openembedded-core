@@ -5,8 +5,7 @@
 # See image.bbclass for a usage of this.
 #
 
-DEPENDS_prepend="ipkg-native ipkg-utils-native fakeroot-native "
-DEPENDS_append=" ${EXTRA_IMAGEDEPENDS}"
+do_rootfs[depends] += "ipkg-native:do_populate_staging ipkg-utils-native:do_populate_staging"
 
 IPKG_ARGS = "-f ${T}/ipkg.conf -o ${IMAGE_ROOTFS}"
 

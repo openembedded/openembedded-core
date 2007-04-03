@@ -1,5 +1,7 @@
 inherit package
 
+PACKAGE_EXTRA_DEPENDS += "tar-native"
+
 PACKAGE_WRITE_FUNCS += "do_package_tar"
 IMAGE_PKGTYPE ?= "tar"
 

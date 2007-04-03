@@ -13,19 +13,21 @@ USE_DEVFS ?= "0"
 
 PID = "${@os.getpid()}"
 
-DEPENDS += "makedevs-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-def get_image_deps(d):
-	import bb
-	str = ""
-	for type in (bb.data.getVar('IMAGE_FSTYPES', d, 1) or "").split():
-		deps = bb.data.getVar('IMAGE_DEPENDS_%s' % type, d) or ""
-		if deps:
-			str += " %s" % deps
-	return str
+do_rootfs[depends] += "makedevs-native:do_populate_staging fakeroot-native:do_populate_staging"
 
-DEPENDS += "${@get_image_deps(d)}"
+python () {
+    import bb
+
+    deps = bb.data.getVarFlag('do_rootfs', 'depends', d) or ""
+    for type in (bb.data.getVar('IMAGE_FSTYPES', d, 1) or "").split():
+        for dep in ((bb.data.getVar('IMAGE_DEPENDS_%s' % type, d) or "").split() or []):
+            deps += " %s:do_populate_staging" % dep
+    for dep in (bb.data.getVar('EXTRA_IMAGEDEPENDS', d, 1) or "").split():
+        deps += " %s:do_populate_staging" % dep
+    bb.data.setVarFlag('do_rootfs', 'depends', deps, d)
+}
 
 IMAGE_DEVICE_TABLE ?= "${@bb.which(bb.data.getVar('BBPATH', d, 1), 'files/device_table-minimal.txt')}"
 IMAGE_POSTPROCESS_COMMAND ?= ""
