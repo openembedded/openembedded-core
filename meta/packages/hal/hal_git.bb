@@ -76,6 +76,7 @@ FILES_${PN} = "${sysconfdir} \
                 ${bindir}/hal-find-by-property \
                 ${bindir}/hal-device  \
                 ${bindir}/hal-get-property \
+                ${bindir}/hal-set-property  \
                 ${bindir}/hal-lock  \
                 ${bindir}/hal-is-caller-locked-out  \
                 ${sbindir} \
