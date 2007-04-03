@@ -416,9 +416,11 @@ def add_task(task, deps, d):
     def getTask(name):
         deptask = data.getVarFlag(task, name, d)
         if deptask:
+            deptask = data.expand(deptask, d)
             if not name in task_deps:
                 task_deps[name] = {}
             task_deps[name][task] = deptask
+    getTask('depends')
     getTask('deptask')
     getTask('rdeptask')
     getTask('recrdeptask')
