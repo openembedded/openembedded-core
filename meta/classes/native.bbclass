@@ -95,3 +95,5 @@ do_stage () {
 do_install () {
 	true
 }
+
+PKG_CONFIG_PATH .= "${EXTRA_NATIVE_PKGCONFIG_PATH}"
