@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r53"
+PR = "r54"
 
 PACKAGES = "\
     task-oh-base \
@@ -23,7 +23,10 @@ PACKAGES = "\
     task-oh-testapps \
     task-oh-testapps-dbg \
     task-oh-testapps-dev \
-    task-oh-nfs-server"
+    task-oh-nfs-server \
+    task-oh-nfs-server-dbg \
+    task-oh-nfs-server-dev \
+    "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
