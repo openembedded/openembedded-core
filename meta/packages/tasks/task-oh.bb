@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r52"
+PR = "r53"
 
 PACKAGES = "\
     task-oh-base \
@@ -109,6 +109,7 @@ RDEPENDS_task-oh-standard = "\
 
 RDEPENDS_task-oh-devtools = "\
     oprofile \
+    oprofileui-server \
     gdb \    
     strace \
     less \
