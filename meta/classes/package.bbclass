@@ -804,24 +804,31 @@ python read_shlibdeps () {
 python package_depchains() {
 	"""
 	For a given set of prefix and postfix modifiers, make those packages
-	RRECOMMENDS on the corresponding packages for its DEPENDS.
+	RRECOMMENDS on the corresponding packages for its RDEPENDS.
 
 	Example:  If package A depends upon package B, and A's .bb emits an
 	A-dev package, this would make A-dev Recommends: B-dev.
+
+	If only one of a given suffix is specified, it will take the RRECOMMENDS
+	based on the RDEPENDS of *all* other packages. If more than one of a given 
+	suffix is specified, its will only use the RDEPENDS of the single parent 
+	package.
 	"""
 
 	packages  = bb.data.getVar('PACKAGES', d, 1)
 	postfixes = (bb.data.getVar('DEPCHAIN_POST', d, 1) or '').split()
 	prefixes  = (bb.data.getVar('DEPCHAIN_PRE', d, 1) or '').split()
 
-	def pkg_addrrecs(pkg, base, getname, rdepends, d):
+	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
 		def packaged(pkg, d):
 			return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
+
+                #bb.note('rdepends for %s is %s' % (base, rdepends))
 
 		rreclist = explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
 
 		for depend in rdepends:
-			pkgname = getname(depend)
+			pkgname = getname(depend, suffix)
 			if not pkgname in rreclist and packaged(pkgname, d):
 				rreclist.append(pkgname)
 
@@ -843,22 +850,35 @@ python package_depchains() {
 
 	#bb.note('rdepends is %s' % rdepends)
 
+	def post_getname(name, suffix):
+		return '%s%s' % (name, suffix)
+	def pre_getname(name, suffix):
+		return '%s%s' % (suffix, name)
+
+	pkgs = {}
 	for pkg in packages.split():
 		for postfix in postfixes:
-			def getname(name):
-				return '%s%s' % (name, postfix)
-
-			base = pkg[:-len(postfix)]
 			if pkg.endswith(postfix):
-				pkg_addrrecs(pkg, base, getname, rdepends, d)
+				if not postfix in pkgs:
+					pkgs[postfix] = {}
+				pkgs[postfix][pkg] = (pkg[:-len(postfix)], post_getname)
 
 		for prefix in prefixes:
-			def getname(name):
-				return '%s%s' % (prefix, name)
-
-			base = pkg[len(prefix):]
 			if pkg.startswith(prefix):
-				pkg_addrrecs(pkg, base, getname, rdepends, d)
+				if not prefix in pkgs:
+					pkgs[prefix] = {}
+				pkgs[prefix][pkg] = (pkg[:-len(prefix)], pre_getname)
+
+	for suffix in pkgs:
+		for pkg in pkgs[suffix]:
+			(base, func) = pkgs[suffix][pkg]
+			if len(pkgs[suffix]) == 1:
+				pkg_addrrecs(pkg, base, suffix, func, rdepends, d)
+			else:
+				rdeps = []
+				for dep in explode_deps(bb.data.getVar('RDEPENDS_' + base, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or ""):
+					add_dep(rdeps, dep)
+				pkg_addrrecs(pkg, base, suffix, func, rdeps, d)
 }
 
 
