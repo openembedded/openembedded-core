@@ -1,6 +1,7 @@
-SECTION = "console/utils"
-inherit native
 require zip_${PV}.bb
+
+inherit native
+
 S = "${WORKDIR}/zip-${PV}"
 
 do_stage() {
