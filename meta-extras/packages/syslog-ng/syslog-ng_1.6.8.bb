@@ -9,7 +9,7 @@ SRC_URI = "http://www.balabit.com/downloads/syslog-ng/1.6/src/${PN}-${PV}.tar.gz
 S = "${WORKDIR}/${PN}-${PV}"
 inherit autotools update-rc.d
 
-EXTRA_OECONF = "--with-libol=${STAGING_BINDIR}/"
+EXTRA_OECONF = "--with-libol=${STAGING_BINDIR_CROSS}/"
 CONFFILES_${PN} = "${sysconfdir}/${PN}/syslog-ng.conf"
 INITSCRIPT_NAME = "syslog-ng"
 INITSCRIPT_PARAMS = "defaults 05"
