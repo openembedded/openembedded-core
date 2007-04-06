@@ -1,6 +1,7 @@
 DESCRIPTION = "Matchbox Window Manager Desktop"
 LICENSE = "GPL"
 DEPENDS = "gtk+ startup-notification"
+RDEPENDS = "matchbox-common"
 SECTION = "x11/wm"
 PV = "0.0+svn${SRCDATE}"
 
