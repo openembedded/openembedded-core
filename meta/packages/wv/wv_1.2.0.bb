@@ -1,6 +1,6 @@
 LICENSE = "GPLv2"
 
-DEPENDS = ""
+DEPENDS = "libgsf"
 
 SRC_URI = "http://switch.dl.sourceforge.net/sourceforge/wvware/wv-${PV}.tar.gz"
 
