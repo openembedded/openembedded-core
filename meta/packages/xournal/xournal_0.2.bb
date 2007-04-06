@@ -5,7 +5,7 @@ SECTION = "x11"
 LICENSE = "GPL"
 PR = "r1"
 
-SRC_URI = "http://math.mit.edu/~auroux/software/xournal/xournal.tar.gz \
+SRC_URI = "http://math.mit.edu/~auroux/software/xournal/xournal-0.2.tar.gz \
         file://no-printing.diff;patch=1"
 
 inherit autotools pkgconfig
