@@ -5,8 +5,9 @@ HOMEPAGE = "http://www.gnome.org"
 PRIORITY = "optional"
 DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools"
 RDEPENDS = "wpa-supplicant iproute2 dhcdbd"
+PV = "0.6.4+svn${SRCDATE}"
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/branches;module=NETWORKMANAGER_0_6_0_RELEASE;proto=http \
 	file://NetworkManager \
@@ -17,7 +18,8 @@ EXTRA_OECONF = " \
 		--with-distro=debian \
 		--without-gcrypt \
  		--with-wpa_supplicant=/usr/sbin/wpa_supplicant \
-		--with-dhcdbd=/sbin/dhcdbd"
+		--with-dhcdbd=/sbin/dhcdbd \
+		--with-ip=/sbin/ip"
 
 S = "${WORKDIR}/NETWORKMANAGER_0_6_0_RELEASE"
 
