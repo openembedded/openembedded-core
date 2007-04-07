@@ -1,0 +1,12 @@
+Index: gcalctool-5.7.32/gcalctool/Makefile.am
+===================================================================
+--- gcalctool-5.7.32.orig/gcalctool/Makefile.am	2007-04-07 19:44:00.000000000 +0200
++++ gcalctool-5.7.32/gcalctool/Makefile.am	2007-04-07 19:44:15.000000000 +0200
+@@ -1,7 +1,6 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+ INCLUDES = \
+-	-I$(includedir) \
+ 	-DG_DISABLE_DEPRECATED \
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED \
+ 	-DGDK_DISABLE_DEPRECATED \
