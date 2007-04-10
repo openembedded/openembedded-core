@@ -3,12 +3,11 @@ LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+"
 PV = "0.1+svn${SRCDATE}"
+PR = "r1"
 
 inherit autotools pkgconfig
 
-SRC_URI = "svn://svn.o-hand.com/repos/;module=oh-puzzles;proto=http \
-           file://game.png"
-
+SRC_URI = "svn://svn.o-hand.com/repos/;module=oh-puzzles;proto=http"
 S = "${WORKDIR}/${PN}"
 
 do_install_append () {
@@ -28,7 +27,7 @@ do_install_append () {
 Encoding=UTF-8
 Name=$prog
 Exec=${prefix}/games/$prog
-Icon=game.png
+Icon=applications-game
 Terminal=false
 Type=Application
 Categories=Game

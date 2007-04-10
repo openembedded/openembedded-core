@@ -1,9 +1,8 @@
 
 DEPENDS = "gtk+"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz \
-           file://game.png"
+SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
 
 do_compile_prepend = " \
         export XLDFLAGS='${LDFLAGS} `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --libs`'; \
@@ -35,7 +34,7 @@ do_install () {
 Encoding=UTF-8
 Name=$prog
 Exec=${prefix}/games/$prog
-Icon=game.png
+Icon=applications-game
 Terminal=false
 Type=Application
 Categories=Game;
