@@ -1,6 +1,6 @@
 
 DEPENDS = "gtk+"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
 
@@ -8,7 +8,7 @@ do_compile_prepend = " \
         export XLDFLAGS='${LDFLAGS} `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --libs`'; \
 	export CFLAGS='${CFLAGS} -I./ `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --cflags`'; "
 
-FILES_${PN} = "${prefix}/games/* ${datadir}/applications/* ${datadir}/pixmaps"
+FILES_${PN} = "${prefix}/games/* ${datadir}/applications/*"
 FILES_${PN}-dbg += "${prefix}/games/.debug"
 
 do_install () {
@@ -21,9 +21,6 @@ do_install () {
     
     install -d ${D}/${datadir}/
     install -d ${D}/${datadir}/applications/
-    install -d ${D}/${datadir}/pixmaps/
-
-    install ${WORKDIR}/game.png ${D}/${datadir}/pixmaps/
 
     cd ${D}/${prefix}/games 
     for prog in *; do

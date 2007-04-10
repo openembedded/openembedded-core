@@ -3,7 +3,7 @@ LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+"
 PV = "0.1+svn${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 inherit autotools pkgconfig
 
@@ -14,9 +14,6 @@ do_install_append () {
     mv ${D}${bindir} ${D}/usr/games
 
     install -d ${D}/${datadir}/applications/
-    install -d ${D}/${datadir}/pixmaps/
-
-    install ${WORKDIR}/game.png ${D}/${datadir}/pixmaps/
 
     cd ${D}/${prefix}/games
     for prog in *; do
