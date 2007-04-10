@@ -1,0 +1,213 @@
+                 A walk through the poky directory tree
+                 ======================================
+
+Poky consists of several components and understanding what these are and where 
+they each live is one of the keys to using it.
+
+Top level core components
+=========================
+
+
+bitbake/
+
+A copy of bitbake is included within poky for ease of use and resides here. 
+This should usually be the same as a standard bitbake release from the bitbake 
+project. Bitbake is a metadata interpreter and is responsible for reading the 
+poky metadata and running the tasks it defines. Failures are usually from the
+metadata and not bitbake itself and most users don't need to worry about 
+bitbake. bitbake/bin is placed into the PATH environmental variable so bitbake 
+can be found.
+
+build/
+
+This directory contains user configuration files and the output from Poky is 
+also placed here.
+
+meta/
+
+The core metadata - this is the key part of poky. Within this directory there 
+are definitions of the machines, the poky distribution and the packages that 
+make up a given system.
+
+meta-extras/
+
+Similar to meta containing some extra package files not included in standard 
+poky, disabled by default and hence not supported as part of poky.
+
+scripts/
+
+Various integration scripts which implement extra functionality in the poky 
+environment for example the qemu scripts. This directory is appended to the 
+PATH environmental variable.
+
+sources/
+
+Whilst not part of a checkout, poky will create this directory as part of any 
+build. Any downloads are placed in this directory (as specified by the
+DL_DIR variable). This directory can be shared between poky builds to save 
+downloading files multiple times. SCM checkouts are also stored here as e.g.
+sources/svn/, sources/cvs/ or sources/git/ and the sources directory may contain 
+archives of checkouts for various revisions or dates.
+
+Its worth noting that bitbake creates .md5 stamp files for downloads. It uses 
+these to mark downloads as complete as well as for checksum and access 
+accounting purposes. If you add a file manually to the directory, you need to
+touch the corresponding .md5 file too.
+
+poky-init-build-env
+
+This script is used to setup the poky build environment. Sourcing this file in
+a shell makes changes to PATH and sets other core bitbake variables based on the
+current working directory. You need to use this before running poky commands.
+Internally it uses scripts within the scripts/ directory to do the bulk of the 
+work.
+
+
+The Build Directory
+===================
+
+conf/local.conf
+
+This file contains all the local user configuration of poky. If it isn't 
+present, its created from local.conf.sample. That file contains documentation
+on the various standard options which can be configured there although any 
+standard conf file variable can be also be set here and usually overrides any
+variable set elsewhere within poky.
+
+Edit this file to set the MACHINE you want to build for, which package types you
+which to use (PACKAGE_CLASSES) or where downloaded files should go (DL_DIR) for 
+exmaple.
+
+tmp/
+
+This is created by bitbake if it doesn't exist and is where all the poky output
+is placed. To clean poky and start a build from scratch (other than downloads), 
+you can wipe this directory. tmp has some important subcomponents detailed 
+below.
+
+tmp/cache/
+
+When bitbake parses the metadata it creates a cache file of the result which can
+be used when subsequently running the command. These are stored here, usually on 
+a per machine basis.
+
+tmp/cross/
+
+The cross compiler when generated is placed into this directory and those
+beneath it.
+
+tmp/deploy/
+
+Any 'end result' output from poky is placed under here.
+
+tmp/deploy/deb/
+
+Any .deb packages emitted by poky are placed here, sorted into feeds for 
+different architecture types.
+
+tmp/deploy/images/
+
+Complete filesystem images are placed here. If you want to flash the resulting 
+image from a build onto a device, look here for them.
+
+tmp/deploy/ipk/
+
+Any resulting .ipk packages emitted by poky are placed here.
+
+tmp/rootfs/
+
+This is a temporary scratch area used when creating filesystem images. It is run
+under fakeroot and is not useful once that fakeroot session has ended as 
+information is lost. It is left around since it is still useful in debugging 
+image creation problems.
+
+tmp/staging/
+
+Any package needing to share output with other packages does so within staging.
+This means it contains any shared header files and any shared libraries amongst
+other data. It is subdivided by architecture so multiple builds can run within
+the one build directory.
+
+tmp/stamps/
+
+This is used by bitbake for accounting purposes to keep track of which tasks 
+have been run and when. It is also subdivided by architecture. The files are 
+empty and the important information is the filenames and timestamps.
+
+tmp/work/
+
+Each package build by bitbake is worked on its own work directory. Here, the 
+source is unpacked, patched, configured, compiled etc. It is subdivided by 
+architecture.
+
+It is worth considering the structure of a typical work directory. An example is
+the linux-rp kernel, version 2.6.20 r7 on the machine spitz built within poky
+which would result in a work directory of 
+"tmp/work/spitz-poky-linux-gnueabi/linux-rp-2.6.20-r7", referred to as WORKDIR.
+
+Within this, the source is unpacked to linux-2.6.20 and then patched by quilt
+hence the existence of the standard quilt directories linux-2.6.20/patches and 
+linux-2.6.20/.pc. Within the linux-2.6.20 directory, standard quilt commands 
+can be used.
+
+There are other directories generated within WORKDIR. The most important/useful 
+is WORKDIR/temp which has log files for each task (log.do_*.pid) and the scripts
+bitbake runs for each task (run.do_*.pid). WORKDIR/image is where "make install"
+places its output which is then split into subpackages within WORKDIR/install.
+
+
+The Metadata
+============
+
+As mentioned previously, this is the core of poky. It has several important 
+subdivisions:
+
+meta/classes/
+
+Contains the *.bbclass files. Class files are used to abstract common code 
+allowing it to be reused by multiple packages. The base.bbclass file is 
+inherited by every package. Examples of other important classes are 
+autotools.bbclass which in theory allows any "autotooled" package to work with 
+poky with minimal effort or kernel.bbclass which contains common code and 
+functions for working with the linux kernel. Functions like image generation or 
+packaging also have their specific class files (image.bbclass, rootfs_*.bbclass 
+and package*.bbclass).
+
+meta/conf/
+
+This is the core set of configuration files which start from bitbake.conf and 
+from which all other configuration files are included (see the includes at the 
+end of the file, even local.conf is loaded from there!). Whilst bitbake.conf 
+sets up the defaults, often these can be overridden by user (local.conf),
+machine or distribution configuration files.
+
+meta/conf/machine/
+
+Contains all the machine configuration files. If you set MACHINE="spitz", the 
+end result is poky looking for a spitz.conf file in this directory. The includes
+directory contains various data common to multiple machines. If you want to add
+support for a new machine to poky, this is the directory to look in.
+
+meta/conf/distro/
+
+Any distribution specific configuration is controlled from here. OpenEmbedded 
+supports multiple distributions of which poky is one. Poky only contains the 
+poky distribution so poky.conf is the main file here.  This includes the 
+versions and SRCDATES for applications which are configured here. An example of 
+an alternative configuration is poky-bleeding.conf although this mainly inherits
+its configuration from poky itself.
+
+packages/
+
+Each application (package) poky can build has an associated .bb file which are 
+all stored under this directory. Poky finds them through the BBFILES variable 
+which defaults to packages/*/*.bb. Adding a new piece of software to poky 
+consists of adding the appropriate .bb file. The .bb files from OpenEmbedded
+upstream are usually compatible although they are not supported.
+
+site/
+
+Certain autoconf test results cannot be determined when cross compiling since it 
+can't run tests on a live system. This directory therefore contains a list of 
+cached results for various architectures which is passed to autoconf. 
+
