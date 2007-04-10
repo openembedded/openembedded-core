@@ -1,0 +1,9 @@
+Index: tasks/data/tasks.desktop.in
+===================================================================
+--- tasks/data/tasks.desktop.in	(revision 115)
++++ tasks/data/tasks.desktop.in	(working copy)
+@@ -9,3 +9,4 @@
+ Categories=GTK;Application;Office;ProjectManagement;
+ Terminal=false
+ StartupNotify=true
++SingleInstance=true
