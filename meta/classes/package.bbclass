@@ -116,13 +116,18 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
+PACKAGE_DEPENDS += "file-native"
+
 python () {
     import bb
+    if bb.data.getVar('PACKAGES', d, True) != '':
+        deps = bb.data.getVarFlag('do_package', 'depends', d) or ""
+        for dep in (bb.data.getVar('PACKAGE_DEPENDS', d, True) or "").split():
+            deps += " %s:do_populate_staging" % dep
+        bb.data.setVarFlag('do_package', 'depends', deps, d)
 
-    if bb.data.getVar('PACKAGES', d, 1) != '':
-        bb.data.setVarFlag('do_package', 'depends', 'file-native:do_populate_staging', d)
         deps = bb.data.getVarFlag('do_package_write', 'depends', d) or ""
-        for dep in (bb.data.getVar('PACKAGE_EXTRA_DEPENDS', d, 1) or "").split():
+        for dep in (bb.data.getVar('PACKAGE_EXTRA_DEPENDS', d, True) or "").split():
             deps += " %s:do_populate_staging" % dep
         bb.data.setVarFlag('do_package_write', 'depends', deps, d)
 }

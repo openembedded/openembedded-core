@@ -20,7 +20,7 @@
 
 # We play a special package function
 inherit package
-do_package[depends] += "pax-utils-native:do_populate_staging"
+PACKAGE_DEPENDS += "pax-utils-native"
 PACKAGEFUNCS += " do_package_qa "
 
 def package_qa_check_rpath(file,name,d):
