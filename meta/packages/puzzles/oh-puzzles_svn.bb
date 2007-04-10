@@ -27,7 +27,7 @@ do_install_append () {
 Encoding=UTF-8
 Name=$prog
 Exec=${prefix}/games/$prog
-Icon=applications-game
+Icon=applications-games
 Terminal=false
 Type=Application
 Categories=Game
