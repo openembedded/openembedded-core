@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Video
 Exec=video
-Icon=owl-video-widget.png
+Icon=video-player
 Terminal=false
 Type=Application
 Categories=AudioVideo;Player;PIM;MB;
