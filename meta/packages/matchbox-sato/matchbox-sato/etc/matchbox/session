@@ -24,6 +24,6 @@ matchbox-desktop &
 
 # mb-applet-startup-monitor &                 
 
-matchbox-panel --titlebar --start-applets windowselector,showdesktop --end-applets screenshot,battery,clock &
+matchbox-panel --titlebar --start-applets showdesktop,windowselector --end-applets screenshot,battery,clock &
 
 exec matchbox-window-manager -theme Sato -use_desktop_mode decorated -use_cursor $SHOWCURSOR $@
