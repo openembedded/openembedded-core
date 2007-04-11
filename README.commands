@@ -1,0 +1,100 @@
+                         Using Poky - Poky Commands
+                         ==========================
+
+Bitbake
+=======
+
+Bitbake is the tool at the heart of poky and is responsible for parsing the 
+metadata, generating a list of tasks from it and then executing them. To see a 
+list of the options it supports look at "bitbake --help".
+
+The most common usage is "bitbake <packagename>" where <packagename> is the name
+of the package you wish to build. This often equates to the first part of a .bb 
+filename so to run the matchbox-desktop_1.2.3.bb file, you might type "bitbake
+matchbox-desktop. Several different versions of matchbox-desktop might exist
+and bitbake will choose the one selected by the distribution configuration.
+Bitbake will also try to execute any dependent tasks first so before building
+matchbox-desktop it would build a cross compiler and glibc if not already built.
+
+
+Bitbake - Package Tasks
+=======================
+
+Any given package consists of a set of tasks, in most cases the series is fetch, 
+unpack, patch, configure, compile, install, package, package_write and build. 
+The default task is "build" and any tasks this depends on are built first hence 
+the standard bitbake behaviour. There are some tasks such as devshell which are 
+not part of the default build chain. If you wish to run such a task you can use 
+the "-c" option to bitbake e.g. "bitbake matchbox-desktop -c devshell".
+
+If you wish to rerun a task you can use the force option "-f". A typical usage 
+case might look like:
+
+% bitbake matchbox-desktop
+[change some source in the WORKDIR for example]
+% bitbake matchbox-desktop -c compile -f
+% bitbake matchbox-desktop
+
+which would build matchbox-desktop, then recompile it. The final command reruns 
+all tasks after the compile (basically the packaging tasks) since bitbake will 
+notice the the compile has been rerun and hence the other tasks also need to run 
+again.
+
+You can view a list of tasks in a given package by running the listtasks task
+e.g. "bitbake matchbox-desktop -c listtasks".
+
+
+Bitbake - Dependency Graphs
+===========================
+
+Sometimes it can be hard to see why bitbake wants to build some other packages
+before a given package you've specified. "bitbake matchbox-desktop -g" will 
+create a task-depends.dot file in the current directory. This shows which 
+packages and tasks depend on which other packages and tasks and it useful for 
+debugging purposes.
+
+
+Bitbake - Advanced Usage
+========================
+
+Debug output from bitbake can be seen with the "-D" option and can sometimes 
+give more information about what bitbake is doing and/or why. Each -D options 
+increases the logging level, the most common usage being "-DDD".
+
+If you really want to build a specific .bb file, you can use the form "bitbake
+-b somepath/somefile.bb". Note that this will not check the dependencies so this
+option should only be used when you know the dependencies already exist. You can
+specify fragments of the filename and bitbake will see if it can find a unique 
+match.
+
+The -e option will dump the resulting environment for either the configuration 
+(no package specified) or for a specific package when specified with the -b 
+option.
+
+The -k option will cause bitbake to try and continue even if a task fails. It 
+can be useful for world or unattended builds.
+
+The -s option lists all the versions of packages that bitbake will use.
+
+
+QEMU
+====
+
+Running images built by poky under qemu is possible within the poky environment
+through the "runqemu" command. It has the form:
+
+runqemu MACHINE IMAGETYPE ZIMAGE IMAGEFILE
+
+where:
+
+MACHINE - the machine to emulate (qemux86, qemuarm, spitz, akita)
+IMAGETYPE - the type of image to use (nfs or ext2)
+ZIMAGE - location of the kernel binary to use
+IMAGEFILE - location of the image file to use
+(common options are in brackets)
+
+MACHINE is mandatory, the others are optional.
+
+This assumes a suitable qemu binary is available with support for a given 
+machine. For further information see scripts/poky-qemu.README.
+
