@@ -3,6 +3,8 @@ SECTION = "kernel/modules"
 LICENSE = "GPL"
 PR = "r0"
 
+COMPATIBLE_MACHINE = "(nokia770|nokia800)"
+
 export KERNEL_SRC_DIR = ${STAGING_KERNEL_DIR}
 export LDFLAGS = ""
 
