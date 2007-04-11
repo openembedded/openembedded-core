@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r54"
+PR = "r55"
 
 PACKAGES = "\
     task-oh-base \
@@ -90,7 +90,6 @@ RDEPENDS_task-oh-standard = "\
     matchbox-stroke \
     matchbox-config-gtk \
     matchbox-themes-gtk \		
-    matchbox-applet-inputmanager \
     matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
     sato-icon-theme \
@@ -109,6 +108,7 @@ RDEPENDS_task-oh-standard = "\
     gnome-vfs \
     gnome-vfs-plugin-file \
     gnome-vfs-plugin-http"
+#    matchbox-applet-inputmanager 
 
 RDEPENDS_task-oh-devtools = "\
     oprofile \
