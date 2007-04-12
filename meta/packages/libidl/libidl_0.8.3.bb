@@ -22,7 +22,7 @@ do_stage() {
 		infodir=${STAGING_INFODIR}
 	
 	cp ${STAGING_BINDIR}/libIDL-config-2 ${STAGING_BINDIR}/libIDL-config-2.orig
-	cat ${STAGING_BINDIR}/libIDL-config-2.orig | sed -e 's:${includedir}:${STAGING_INCDIR}:' > ${STAGING_BINDIR}/libIDL-config-2
+	cat ${STAGING_BINDIR}/libIDL-config-2.orig | sed -e 's:${includedir}:${STAGING_INCDIR}:' > ${STAGING_BINDIR_CROSS}/libIDL-config-2
 
 	if [ "${STAGING_BINDIR}" != "${STAGING_BINDIR_CROSS}" ]; then
 		mv ${STAGING_BINDIR}/libIDL-config-2 ${STAGING_BINDIR_CROSS}/libIDL-config-2
