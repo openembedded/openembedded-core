@@ -1,0 +1,15 @@
+--- /gcc/orig-configure	2007-03-11 21:50:28.000000000 +0200
++++ /gcc/configure	2007-03-11 21:53:27.000000000 +0200
+@@ -12272,9 +12272,11 @@
+ 	esac
+ 	saved_CFLAGS="${CFLAGS}"
+ 	CC="${CC_FOR_BUILD}" CFLAGS="${CFLAGS_FOR_BUILD}" \
++        CONFIG_SITE=""
+ 	${realsrcdir}/configure \
+ 		--enable-languages=${enable_languages-all} \
+-		--target=$target_alias --host=$build_alias --build=$build_alias
++		--target=$target_alias --host=$build_alias --build=$build_alias \
++                --cache-file=./tmp-cache
+ 	CFLAGS="${saved_CFLAGS}"
+ 
+ 	# We just finished tests for the build machine, so rename
