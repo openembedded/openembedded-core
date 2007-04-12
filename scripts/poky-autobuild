@@ -26,6 +26,7 @@
 
 if [ "xpreamble" = "x$1" ]; then
     mkdir -p ./build/tmp/deploy/images 
+    rm -f ./build/tmp/deploy/images/images-complete
     svn info >> ./build/tmp/deploy/images/svninfo
     exit 0
 fi
