@@ -1,5 +1,5 @@
 
-PV ?= "0.20+svn${SRCDATE}"
+PV = "0.22+svn${SRCDATE}"
 PLUGIN_NAME ?= "${@bb.data.getVar('PN', d, 1).replace('libopensync-plugin-','')}"
 PLUGIN_SONAME ?= "${@bb.data.getVar('PLUGIN_NAME', d, 1).replace('-','_')}.so"
 SRC_URI ?= "svn://svn.opensync.org/plugins;module=${PLUGIN_NAME};proto=http"

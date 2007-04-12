@@ -1,4 +1,4 @@
-PV = "0.20+svn${SRCDATE}"
+PV = "0.22+svn${SRCDATE}"
 SRC_URI = "svn://svn.opensync.org/multisync;module=trunk;proto=http"
 S = "${WORKDIR}/trunk"
 
