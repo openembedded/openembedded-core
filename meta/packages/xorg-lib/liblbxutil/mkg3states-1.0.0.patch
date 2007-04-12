@@ -1,0 +1,54 @@
+diff -ruN liblbxutil-X11R7.0-1.0.0_orig/configure.ac liblbxutil-X11R7.0-1.0.0/configure.ac
+--- liblbxutil-X11R7.0-1.0.0_orig/configure.ac	2005-12-15 00:24:36.000000000 +0000
++++ liblbxutil-X11R7.0-1.0.0/configure.ac	2006-08-21 18:32:04.000000000 +0000
+@@ -60,4 +60,5 @@
+ 
+ AC_OUTPUT([Makefile
+ 	   src/Makefile
++	   src/image/Makefile
+ 	   lbxutil.pc])
+diff -ruN liblbxutil-X11R7.0-1.0.0_orig/src/Makefile.am liblbxutil-X11R7.0-1.0.0/src/Makefile.am
+--- liblbxutil-X11R7.0-1.0.0_orig/src/Makefile.am	2005-10-16 02:07:10.000000000 +0000
++++ liblbxutil-X11R7.0-1.0.0/src/Makefile.am	2006-08-21 18:32:04.000000000 +0000
+@@ -1,9 +1,6 @@
+ lib_LTLIBRARIES = liblbxutil.la
+ 
+-noinst_PROGRAMS = mkg3states
+-
+-mkg3states_SOURCES =				\
+-	$(srcdir)/image/mkg3states.c
++SUBDIRS = image
+ 
+ liblbxutil_la_SOURCES =				\
+ 	$(srcdir)/lbx_zlib/reqstats.h		\
+@@ -28,9 +25,8 @@
+ 
+ $(srcdir)/image/dfaxg42d.c: g3states.h
+ 
+-g3states.h: mkg3states
+-	-rm -f g3states.h
+-	./mkg3states -c > g3states.h_ && mv g3states.h_ g3states.h
++g3states.h: image/mkg3states
++	./image/mkg3states -c > g3states.h_ && mv g3states.h_ g3states.h
+ 
+ liblbxutil_la_LDFLAGS = -version-number 1:0:0
+ 
+diff -ruN liblbxutil-X11R7.0-1.0.0_orig/src/image/Makefile.am liblbxutil-X11R7.0-1.0.0/src/image/Makefile.am
+--- liblbxutil-X11R7.0-1.0.0_orig/src/image/Makefile.am	1970-01-01 00:00:00.000000000 +0000
++++ liblbxutil-X11R7.0-1.0.0/src/image/Makefile.am	2006-08-21 18:32:04.000000000 +0000
+@@ -0,0 +1,15 @@
++# evil hack
++CFLAGS=$(CFLAGS_FOR_BUILD)
++CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
++LDFLAGS=$(LDFLAGS_FOR_BUILD)
++
++CC=$(CC_FOR_BUILD)
++LIBTOOL = @LIBTOOL@ --tag=CC
++
++noinst_PROGRAMS = mkg3states
++
++mkg3states_SOURCES =				\
++	mkg3states.c
++
++mkg3states_CFLAGS=$(CFLAGS_FOR_BUILD)
++mkg3states_LDFLAGS=$(LDFLAGS_FOR_BUILD)
