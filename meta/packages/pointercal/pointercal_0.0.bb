@@ -1,6 +1,8 @@
 DESCRIPTION = "Touchscreen calibration data"
 SECTION = "base"
 
+COMPATIBLE_MACHINE = "(spitz|c7x0|nokia800|akita)"
+
 SRC_URI = "file://pointercal"
 S = "${WORKDIR}"
 
