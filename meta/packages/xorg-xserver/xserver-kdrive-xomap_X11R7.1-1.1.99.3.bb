@@ -2,20 +2,16 @@ LICENSE = "MIT"
 DEPENDS = "tslib xproto libxdmcp xextproto xtrans libxau virtual/libx11 libxext libxrandr fixesproto damageproto libxfont resourceproto compositeproto xcalibrateext recordproto videoproto scrnsaverproto xpext xsp libxkbfile dbus"
 
 PROVIDES = "virtual/xserver"
-PACKAGES =+ "xserver-kdrive-fbdev xserver-kdrive-fake xserver-kdrive-xephyr xserver-kdrive-xomap"
+PACKAGES =+ "xserver-kdrive-xomap"
 SECTION = "x11/base"
 DESCRIPTION = "X server from freedesktop.org"
 DESCRIPTION_xserver-kdrive-xomap = "X server for the OMAP in the Nokia 800"
-DESCRIPTION_xserver-kdrive-fbdev = "X server from freedesktop.org, supporting generic framebuffer devices"
-DESCRIPTION_xserver-kdrive-xephyr = "X server in an X window"
 
-PR = "r1"
+PR = "r2"
 
 COMPATIBLE_MACHINE = "nokia800"
 
 FILES_${PN} = "${libdir}/xserver /etc/dbus-1/* ${bindir}/Xomap"
-FILES_xserver-kdrive-fbdev = "${bindir}/Xfbdev"
-FILES_xserver-kdrive-xephyr = "${bindir}/Xephyr"
 
 SRC_URI = "http://repository.maemo.org/pool/maemo3.0/free/source/xorg-server_1.1.99.3-0osso21.tar.gz \
 	file://kmode.patch;patch=1 \
