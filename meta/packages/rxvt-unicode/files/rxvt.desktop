@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Terminal
 Exec=/usr/bin/rxvt
-Icon=rxvt.png
+Icon=utilities-terminal.png
 Terminal=false
 Type=Application
 Categories=Utility
