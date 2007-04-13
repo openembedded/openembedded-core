@@ -1,7 +1,7 @@
 DESCRIPTION = "Adds scripts to use distcc on the host system under qemu"
 LICENSE = "GPL"
-RDEPENDS = "distcc"
-PR = "r1"
+RDEPENDS = "distcc task-oh-nfs-server"
+PR = "r2"
 
 SRC_URI = "file://distcc.sh \
            file://exports"
