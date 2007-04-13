@@ -6,7 +6,7 @@ require contacts.inc
 
 PV = "0.4+svn${SRCDATE}"
 
-DEFAULT_PREFERENCE = "-1"
+#DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 	   file://stock_contact.png \
