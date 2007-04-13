@@ -1,0 +1,377 @@
+diff -Nru openswan-2.4.7.orig/doc/Makefile openswan-2.4.7/doc/Makefile
+--- openswan-2.4.7.orig/doc/Makefile	2005-11-08 23:32:45.000000000 +0200
++++ openswan-2.4.7/doc/Makefile	2006-12-06 22:46:54.732830840 +0200
+@@ -1,6 +1,6 @@
+ # Makefile to generate various formats from HTML source
+ #
+-# Assumes the htmldoc utility is available.
++# No longer cares if the htmldoc utility is available.
+ # This can be downloaded from www.easysw.com
+ #
+ # Also needs lynx(1) for HTML-to-text conversion
+diff -Nru openswan-2.4.7.orig/lib/libcrypto/libdes/asm/crypt586.pl openswan-2.4.7/lib/libcrypto/libdes/asm/crypt586.pl
+--- openswan-2.4.7.orig/lib/libcrypto/libdes/asm/crypt586.pl	2004-07-16 03:24:45.000000000 +0300
++++ openswan-2.4.7/lib/libcrypto/libdes/asm/crypt586.pl	2006-12-06 22:46:54.732830840 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # The inner loop instruction sequence and the IP/FP modifications are from
+ # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
+diff -Nru openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/cbc.pl openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/cbc.pl
+--- openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/cbc.pl	2004-07-10 11:07:06.000000000 +0300
++++ openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/cbc.pl	2006-12-06 22:46:54.736831090 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # void des_ncbc_encrypt(input, output, length, schedule, ivec, enc)
+ # des_cblock (*input);
+diff -Nru openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/x86asm.pl openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/x86asm.pl
+--- openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/x86asm.pl	2004-07-10 11:07:06.000000000 +0300
++++ openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/x86asm.pl	2006-12-06 22:46:54.736831090 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # require 'x86asm.pl';
+ # &asm_init("cpp","des-586.pl");
+diff -Nru openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/x86ms.pl openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/x86ms.pl
+--- openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/x86ms.pl	2004-07-10 11:07:07.000000000 +0300
++++ openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/x86ms.pl	2006-12-06 22:46:54.736831090 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ package x86ms;
+ 
+diff -Nru openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/x86unix.pl openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/x86unix.pl
+--- openswan-2.4.7.orig/lib/libcrypto/libdes/asm/perlasm/x86unix.pl	2004-07-10 11:07:07.000000000 +0300
++++ openswan-2.4.7/lib/libcrypto/libdes/asm/perlasm/x86unix.pl	2006-12-06 22:46:54.736831090 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ package x86unix;
+ 
+diff -Nru openswan-2.4.7.orig/lib/liblwres/Makefile openswan-2.4.7/lib/liblwres/Makefile
+--- openswan-2.4.7.orig/lib/liblwres/Makefile	2004-12-18 20:13:34.000000000 +0200
++++ openswan-2.4.7/lib/liblwres/Makefile	2006-12-06 22:46:54.736831090 +0200
+@@ -20,7 +20,7 @@
+ CDEFINES = -g
+ CWARNINGS = -Werror
+ 
+-CFLAGS=${CINCLUDES} ${CDEFINES} ${CWARNINGS}
++CFLAGS=${CINCLUDES} ${CDEFINES} ${CWARNINGS} $(USERCOMPILE)
+ 
+ VERSION="@(\#) openswan-hacking-9.3-for-osw2"
+ LIBINTERFACE=2
+diff -Nru openswan-2.4.7.orig/linux/net/ipsec/des/asm/des-586.pl openswan-2.4.7/linux/net/ipsec/des/asm/des-586.pl
+--- openswan-2.4.7.orig/linux/net/ipsec/des/asm/des-586.pl	2004-07-10 11:06:50.000000000 +0300
++++ openswan-2.4.7/linux/net/ipsec/des/asm/des-586.pl	2006-12-06 22:46:54.736831090 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # The inner loop instruction sequence and the IP/FP modifications are from
+ # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
+diff -Nru openswan-2.4.7.orig/linux/net/ipsec/des/asm/des686.pl openswan-2.4.7/linux/net/ipsec/des/asm/des686.pl
+--- openswan-2.4.7.orig/linux/net/ipsec/des/asm/des686.pl	2004-07-10 11:06:50.000000000 +0300
++++ openswan-2.4.7/linux/net/ipsec/des/asm/des686.pl	2006-12-06 22:46:54.740831340 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $prog="des686.pl";
+ 
+diff -Nru openswan-2.4.7.orig/linux/net/ipsec/des/asm/desboth.pl openswan-2.4.7/linux/net/ipsec/des/asm/desboth.pl
+--- openswan-2.4.7.orig/linux/net/ipsec/des/asm/desboth.pl	2004-07-10 11:06:50.000000000 +0300
++++ openswan-2.4.7/linux/net/ipsec/des/asm/desboth.pl	2006-12-06 22:46:54.740831340 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $L="edi";
+ $R="esi";
+diff -Nru openswan-2.4.7.orig/Makefile.inc openswan-2.4.7/Makefile.inc
+--- openswan-2.4.7.orig/Makefile.inc	2006-11-14 19:56:09.000000000 +0200
++++ openswan-2.4.7/Makefile.inc	2006-12-06 22:48:32.534943089 +0200
+@@ -46,7 +46,7 @@
+ DESTDIR?=
+ 
+ # "local" part of tree, used in building other pathnames
+-INC_USRLOCAL=/usr/local
++INC_USRLOCAL?=/usr
+ 
+ # PUBDIR is where the "ipsec" command goes; beware, many things define PATH
+ # settings which are assumed to include it (or at least, to include *some*
+@@ -80,7 +80,7 @@
+ MANPLACES=man3 man5 man8
+ 
+ # where configuration files go
+-FINALCONFFILE?=/etc/ipsec.conf
++FINALCONFFILE?=/etc/ipsec/ipsec.conf
+ CONFFILE=$(DESTDIR)$(FINALCONFFILE)
+ 
+ FINALCONFDIR?=/etc
+@@ -91,7 +91,7 @@
+ 
+ # sample configuration files go into
+ INC_DOCDIR?=share/doc
+-FINALEXAMPLECONFDIR=${INC_USRLOCAL}/${INC_DOCDIR}/openswan
++FINALEXAMPLECONFDIR?=${INC_USRLOCAL}/${INC_DOCDIR}/openswan
+ EXAMPLECONFDIR=${DESTDIR}${FINALEXAMPLECONFDIR}
+ 
+ FINALDOCDIR?=${INC_USRLOCAL}/${INC_DOCDIR}/openswan
+@@ -239,7 +239,7 @@
+ # installed one in RH 7.2, won't work - you wind up depending upon
+ # openssl.
+ 
+-BIND9STATICLIBDIR?=/usr/local/lib
++BIND9STATICLIBDIR?=/usr/lib
+ 
+ # if you install elsewere, you may need to point the include files to it.
+ #BIND9STATICLIBDIR?=/sandel/lib
+diff -Nru openswan-2.4.7.orig/programs/barf/barf.in openswan-2.4.7/programs/barf/barf.in
+--- openswan-2.4.7.orig/programs/barf/barf.in	2006-11-07 05:49:18.000000000 +0200
++++ openswan-2.4.7/programs/barf/barf.in	2006-12-06 22:46:54.740831340 +0200
+@@ -16,7 +16,7 @@
+ 
+ LOGS=${LOGS-/var/log}
+ CONFS=${IPSEC_CONFS-/etc}
+-CONFDDIR=${IPSEC_CONFDDIR-/etc/ipsec.d}
++CONFDDIR=${IPSEC_CONFDDIR-/etc/ipsec/ipsec.d}
+ me="ipsec barf"
+ # Max lines to use for things like 'route -n'
+ maxlines=100
+@@ -238,13 +238,13 @@
+ 	done
+ fi
+ _________________________ ipsec/ls-libdir
+-ls -l ${IPSEC_LIBDIR-/usr/local/lib/ipsec}
++ls -l ${IPSEC_LIBDIR-/usr/lib/ipsec}
+ _________________________ ipsec/ls-execdir
+-ls -l ${IPSEC_EXECDIR-/usr/local/libexec/ipsec}
++ls -l ${IPSEC_EXECDIR-/usr/libexec/ipsec}
+ _________________________ ipsec/updowns
+-for f in `ls ${IPSEC_EXECDIR-/usr/local/libexec/ipsec} | egrep updown`
++for f in `ls ${IPSEC_EXECDIR-/usr/libexec/ipsec} | egrep updown`
+ do
+-	cat ${IPSEC_EXECDIR-/usr/local/libexec/ipsec}/$f
++	cat ${IPSEC_EXECDIR-/usr/libexec/ipsec}/$f
+ done
+ _________________________ /proc/net/dev
+ cat /proc/net/dev
+diff -Nru openswan-2.4.7.orig/programs/eroute/eroute.5 openswan-2.4.7/programs/eroute/eroute.5
+--- openswan-2.4.7.orig/programs/eroute/eroute.5	2006-10-26 23:40:43.000000000 +0300
++++ openswan-2.4.7/programs/eroute/eroute.5	2006-12-06 22:57:19.307864340 +0200
+@@ -168,7 +168,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_eroute, /usr/local/bin/ipsec
++/proc/net/ipsec_eroute, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/eroute/eroute.8 openswan-2.4.7/programs/eroute/eroute.8
+--- openswan-2.4.7.orig/programs/eroute/eroute.8	2003-10-31 04:32:27.000000000 +0200
++++ openswan-2.4.7/programs/eroute/eroute.8	2006-12-06 22:46:54.740831340 +0200
+@@ -308,7 +308,7 @@
+ .br
+ .LP
+ .SH FILES
+-/proc/net/ipsec_eroute, /usr/local/bin/ipsec
++/proc/net/ipsec_eroute, /usr/bin/ipsec
+ .SH "SEE ALSO"
+ ipsec(8), ipsec_manual(8), ipsec_tncfg(8), ipsec_spi(8),
+ ipsec_spigrp(8), ipsec_klipsdebug(8), ipsec_eroute(5)
+diff -Nru openswan-2.4.7.orig/programs/_include/_include.in openswan-2.4.7/programs/_include/_include.in
+--- openswan-2.4.7.orig/programs/_include/_include.in	2003-01-06 23:44:04.000000000 +0200
++++ openswan-2.4.7/programs/_include/_include.in	2006-12-06 22:46:54.740831340 +0200
+@@ -47,10 +47,10 @@
+ do
+ 	if test ! -r "$f"
+ 	then
+-		if test ! "$f" = "/etc/ipsec.conf"
++		if test ! "$f" = "/etc/ipsec/ipsec.conf"
+ 		then
+ 			echo "#:cannot open configuration file \'$f\'"
+-			if test "$f" = "/etc/ipsec.secrets"
++			if test "$f" = "/etc/ipsec/ipsec.secrets"
+ 			then
+ 				echo "#:Your secrets file will be created when you start FreeS/WAN for the first time."
+ 			fi
+diff -Nru openswan-2.4.7.orig/programs/ipsec/ipsec.8 openswan-2.4.7/programs/ipsec/ipsec.8
+--- openswan-2.4.7.orig/programs/ipsec/ipsec.8	2003-02-27 18:51:54.000000000 +0200
++++ openswan-2.4.7/programs/ipsec/ipsec.8	2006-12-06 22:46:54.744831590 +0200
+@@ -81,7 +81,7 @@
+ .I ipsec
+ thinks the IPsec configuration files are stored.
+ .SH FILES
+-/usr/local/lib/ipsec	usual utilities directory
++/usr/lib/ipsec	usual utilities directory
+ .SH ENVIRONMENT
+ .PP
+ The following environment variables control where FreeS/WAN finds its
+diff -Nru openswan-2.4.7.orig/programs/klipsdebug/klipsdebug.5 openswan-2.4.7/programs/klipsdebug/klipsdebug.5
+--- openswan-2.4.7.orig/programs/klipsdebug/klipsdebug.5	2006-10-27 01:21:25.000000000 +0300
++++ openswan-2.4.7/programs/klipsdebug/klipsdebug.5	2006-12-06 22:58:04.150666840 +0200
+@@ -114,7 +114,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_klipsdebug, /usr/local/bin/ipsec
++/proc/net/ipsec_klipsdebug, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/klipsdebug/klipsdebug.8 openswan-2.4.7/programs/klipsdebug/klipsdebug.8
+--- openswan-2.4.7.orig/programs/klipsdebug/klipsdebug.8	2006-10-27 01:21:25.000000000 +0300
++++ openswan-2.4.7/programs/klipsdebug/klipsdebug.8	2006-12-06 22:58:22.295800840 +0200
+@@ -111,7 +111,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_klipsdebug, /usr/local/bin/ipsec
++/proc/net/ipsec_klipsdebug, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/mailkey/mailkey.in openswan-2.4.7/programs/mailkey/mailkey.in
+--- openswan-2.4.7.orig/programs/mailkey/mailkey.in	2006-10-29 02:49:23.000000000 +0300
++++ openswan-2.4.7/programs/mailkey/mailkey.in	2006-12-06 22:46:54.828836839 +0200
+@@ -60,7 +60,7 @@
+ 
+ "$test1st"
+ 
+-Common concerns: This account must be able to read /etc/ipsec.secrets. 
++Common concerns: This account must be able to read /etc/ipsec/ipsec.secrets. 
+ If you haven't generated your key yet, please run 'ipsec newhostkey'." 
+ exit 0
+ }
+diff -Nru openswan-2.4.7.orig/programs/pluto/Makefile openswan-2.4.7/programs/pluto/Makefile
+--- openswan-2.4.7.orig/programs/pluto/Makefile	2006-11-07 17:55:52.000000000 +0200
++++ openswan-2.4.7/programs/pluto/Makefile	2006-12-06 22:46:54.832837088 +0200
+@@ -256,7 +256,7 @@
+ 	-DPOLICYGROUPSDIR=\"${FINALCONFDDIR}/policies\" \
+ 	-DPERPEERLOGDIR=\"${FINALLOGDIR}/pluto/peer\"
+ 
+-ALLFLAGS = $(CPPFLAGS) $(CFLAGS)
++ALLFLAGS = $(CPPFLAGS) $(CFLAGS) $(USERCOMPILE)
+ 
+ # libefence is a free memory allocation debugger
+ # Solaris 2 needs -lsocket -lnsl
+diff -Nru openswan-2.4.7.orig/programs/setup/Makefile openswan-2.4.7/programs/setup/Makefile
+--- openswan-2.4.7.orig/programs/setup/Makefile	2004-12-18 20:13:43.000000000 +0200
++++ openswan-2.4.7/programs/setup/Makefile	2006-12-06 22:46:54.832837088 +0200
+@@ -33,25 +33,10 @@
+ 	@rm -f $(BINDIR)/setup
+ 	@$(INSTALL) $(INSTBINFLAGS) setup $(RCDIR)/ipsec
+ 	@ln -s $(FINALRCDIR)/ipsec $(BINDIR)/setup
+-	-@for i in 0 1 2 3 4 5 6; do mkdir -p $(RCDIR)/../rc$$i.d; done
+-	-@cd $(RCDIR)/../rc0.d && ln -f -s ../init.d/ipsec K76ipsec
+-	-@cd $(RCDIR)/../rc1.d && ln -f -s ../init.d/ipsec K76ipsec
+-	-@cd $(RCDIR)/../rc2.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc3.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc4.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc5.d && ln -f -s ../init.d/ipsec S47ipsec
+-	-@cd $(RCDIR)/../rc6.d && ln -f -s ../init.d/ipsec K76ipsec
+ 
+ install_file_list::
+ 	@echo $(RCDIR)/ipsec
+ 	@echo $(BINDIR)/setup
+-	@echo $(RCDIR)/../rc0.d/K76ipsec
+-	@echo $(RCDIR)/../rc1.d/K76ipsec
+-	@echo $(RCDIR)/../rc2.d/S47ipsec
+-	@echo $(RCDIR)/../rc3.d/S47ipsec
+-	@echo $(RCDIR)/../rc4.d/S47ipsec
+-	@echo $(RCDIR)/../rc5.d/S47ipsec
+-	@echo $(RCDIR)/../rc6.d/K76ipsec
+ 
+ clean::
+ 	@rm -f setup
+diff -Nru openswan-2.4.7.orig/programs/showhostkey/showhostkey.in openswan-2.4.7/programs/showhostkey/showhostkey.in
+--- openswan-2.4.7.orig/programs/showhostkey/showhostkey.in	2004-11-14 15:40:41.000000000 +0200
++++ openswan-2.4.7/programs/showhostkey/showhostkey.in	2006-12-06 22:46:54.844837840 +0200
+@@ -18,7 +18,7 @@
+ usage="Usage: $me [--file secrets] [--left] [--right] [--txt gateway] [--id id]
+                   [--dhclient] [--ipseckey]"
+ 
+-file=/etc/ipsec.secrets
++file=/etc/ipsec/ipsec.secrets
+ fmt=""
+ gw=
+ id=
+diff -Nru openswan-2.4.7.orig/programs/spi/spi.5 openswan-2.4.7/programs/spi/spi.5
+--- openswan-2.4.7.orig/programs/spi/spi.5	2006-10-26 23:53:59.000000000 +0300
++++ openswan-2.4.7/programs/spi/spi.5	2006-12-06 23:00:11.910340779 +0200
+@@ -157,7 +157,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_spi, /usr/local/bin/ipsec
++/proc/net/ipsec_spi, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/spi/spi.8 openswan-2.4.7/programs/spi/spi.8
+--- openswan-2.4.7.orig/programs/spi/spi.8	2006-10-30 22:00:04.000000000 +0200
++++ openswan-2.4.7/programs/spi/spi.8	2006-12-06 23:00:27.043286530 +0200
+@@ -215,7 +215,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_spi, /usr/local/bin/ipsec
++/proc/net/ipsec_spi, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/spigrp/spigrp.5 openswan-2.4.7/programs/spigrp/spigrp.5
+--- openswan-2.4.7.orig/programs/spigrp/spigrp.5	2006-10-26 23:50:29.000000000 +0300
++++ openswan-2.4.7/programs/spigrp/spigrp.5	2006-12-06 23:01:25.650949280 +0200
+@@ -67,7 +67,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_spigrp, /usr/local/bin/ipsec
++/proc/net/ipsec_spigrp, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/spigrp/spigrp.8 openswan-2.4.7/programs/spigrp/spigrp.8
+--- openswan-2.4.7.orig/programs/spigrp/spigrp.8	2006-10-26 23:50:29.000000000 +0300
++++ openswan-2.4.7/programs/spigrp/spigrp.8	2006-12-06 23:01:39.079788532 +0200
+@@ -87,7 +87,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_spigrp, /usr/local/bin/ipsec
++/proc/net/ipsec_spigrp, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/tncfg/tncfg.5 openswan-2.4.7/programs/tncfg/tncfg.5
+--- openswan-2.4.7.orig/programs/tncfg/tncfg.5	2006-10-26 23:58:11.000000000 +0300
++++ openswan-2.4.7/programs/tncfg/tncfg.5	2006-12-06 23:01:59.385057530 +0200
+@@ -101,7 +101,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_tncfg, /usr/local/bin/ipsec
++/proc/net/ipsec_tncfg, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
+diff -Nru openswan-2.4.7.orig/programs/tncfg/tncfg.8 openswan-2.4.7/programs/tncfg/tncfg.8
+--- openswan-2.4.7.orig/programs/tncfg/tncfg.8	2006-10-26 23:58:11.000000000 +0300
++++ openswan-2.4.7/programs/tncfg/tncfg.8	2006-12-06 23:02:09.245673780 +0200
+@@ -63,7 +63,7 @@
+ .SH "FILES"
+ 
+ .PP
+-/proc/net/ipsec_tncfg, /usr/local/bin/ipsec
++/proc/net/ipsec_tncfg, /usr/bin/ipsec
+ 
+ .SH "SEE ALSO"
+ 
