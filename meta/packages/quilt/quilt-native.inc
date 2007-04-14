@@ -14,3 +14,8 @@ EXTRA_OECONF = "--disable-nls"
 do_configure () {
 	oe_runconf
 }
+
+# Dummy quiltrc file for patch.bbclass
+do_install_append () {
+	touch ${STAGING_BINDIR_NATIVE}/quiltrc
+}
