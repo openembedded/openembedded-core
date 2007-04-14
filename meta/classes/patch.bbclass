@@ -1,5 +1,8 @@
 # Copyright (C) 2006  OpenedHand LTD
 
+# Point to an empty file so any user's custom settings don't break things
+QUILTRCFILE ?= "${STAGING_BINDIR_NATIVE}/quiltrc"
+
 def patch_init(d):
 	import os, sys
 
@@ -170,7 +173,8 @@ def patch_init(d):
 
 	class QuiltTree(PatchSet):
 		def _runcmd(self, args):
-			runcmd(["quilt"] + args, self.dir)
+			quiltrc = bb.data.getVar('QUILTRCFILE', self.d, 1)
+			runcmd(["quilt"] + ["--quiltrc"] + [quiltrc] + args, self.dir)
 
 		def _quiltpatchpath(self, file):
 			return os.path.join(self.dir, "patches", os.path.basename(file))
