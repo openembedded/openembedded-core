@@ -17,5 +17,6 @@ do_configure () {
 
 # Dummy quiltrc file for patch.bbclass
 do_install_append () {
+	install -d ${STAGING_BINDIR_NATIVE}/
 	touch ${STAGING_BINDIR_NATIVE}/quiltrc
 }
