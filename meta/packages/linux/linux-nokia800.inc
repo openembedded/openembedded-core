@@ -10,6 +10,8 @@ RPROVIDES_kernel-image = "hostap-modules"
 
 COMPATIBLE_MACHINE = "nokia770|nokia800"
 
+RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
+
 do_configure_prepend() {
 
 	rm -f ${S}/.config || true
