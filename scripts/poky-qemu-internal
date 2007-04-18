@@ -99,7 +99,7 @@ if [ "$MACHINE" = "spitz" ]; then
             echo "Adding a partition table to the ext3 image for use by QEMU, please wait..."
             poky-addptable2image $HDIMAGE $HDIMAGE.qemudisk
         fi
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M spitz -hda $HDIMAGE.qemudisk -vertical"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M spitz -hda $HDIMAGE.qemudisk -portrait"
     fi
 fi
 
@@ -111,7 +111,7 @@ if [ "$MACHINE" = "akita" ]; then
             echo "Converting raw image into flash image format for use by QEMU, please wait..."
 	    raw2flash.akita < $HDIMAGE > $HDIMAGE.qemuflash
         fi
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M akita -mtdblock $HDIMAGE.qemuflash -vertical"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M akita -mtdblock $HDIMAGE.qemuflash -portrait"
     fi
 fi
 
