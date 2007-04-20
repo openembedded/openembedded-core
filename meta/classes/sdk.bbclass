@@ -2,7 +2,7 @@
 # or indirectly via dependency.  No need to be in 'world'.
 EXCLUDE_FROM_WORLD = "1"
 
-SDK_NAME = "${TARGET_ARCH}/oe"
+SDK_NAME = "poky/${TARGET_ARCH}"
 PACKAGE_ARCH = "${BUILD_ARCH}"
 
 HOST_ARCH = "${BUILD_ARCH}"
