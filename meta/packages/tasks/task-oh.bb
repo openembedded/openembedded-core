@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r55"
+PR = "r56"
 
 PACKAGES = "\
     task-oh-base \
@@ -104,6 +104,7 @@ RDEPENDS_task-oh-standard = "\
     puzzles \
     kf \
     rxvt-unicode \
+    screenshot \
     avahi-daemon \
     gnome-vfs \
     gnome-vfs-plugin-file \
