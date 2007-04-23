@@ -1,8 +1,9 @@
 LICENSE = "GPLv2"
-DEPENDS = "gtk+ intltool-native"
+DEPENDS = "gtk+ intltool-native libowl"
 SRC_URI = "http://savannah.nongnu.org/download/${PN}/${PN}-${PV}.tar.gz \
+	   file://owl-menu.patch;patch=1				\
 	   file://leafpad.desktop"
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig
 
