@@ -11,9 +11,10 @@ DESCRIPTION = "OpenedHand Widget Library"
 HOMEPAGE = "http://www.o-hand.com"
 LICENSE = "LGPL"
 SECTION = "libs"
-PR = "r1"
+PR = "r2"
+PV = "0.0+svn${SRCDATE}"
 
-DEPENDS = "gtk+ glib"
+DEPENDS = "gtk+ glib-2.0"
 PACKAGES = ""
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http"
@@ -39,4 +40,10 @@ do_stage() {
 }
 
 do_install() {
+}
+
+do_package() {
+}
+
+do_package_write() {
 }
