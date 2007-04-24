@@ -1,7 +1,6 @@
 LICENSE = "LGPL"
-DEPENDS = "glib-2.0 gnutls"
+DEPENDS = "glib-2.0 gnutls check"
 DESCRIPTION = "Loudmouth is a lightweight and easy-to-use C library for programming with the Jabber protocol."
-PR = "r1"
 
 SRC_URI = "http://ftp.imendio.com/pub/imendio/${PN}/src/${PN}-${PV}.tar.gz"
 
