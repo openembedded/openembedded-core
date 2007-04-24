@@ -1,0 +1,33 @@
+
+[ConnectionManager]
+BusName=org.freedesktop.Telepathy.ConnectionManager.gabble
+ObjectPath=/org/freedesktop/Telepathy/ConnectionManager/gabble
+
+[Protocol jabber]
+param-account=s required register
+param-password=s required register
+param-server=s
+param-resource=s
+param-priority=n
+param-port=q
+param-old-ssl=b
+param-register=b
+param-low-bandwidth=b
+param-https-proxy-server=s
+param-https-proxy-port=q
+param-fallback-conference-server=s
+param-stun-server=s
+param-stun-port=q
+param-ignore-ssl-errors=b
+param-alias=s
+param-mac=s
+param-btid=s
+default-resource=Telepathy
+default-priority=0
+default-port=5222
+default-old-ssl=false
+default-register=false
+default-low-bandwidth=false
+default-https-proxy-port=443
+default-stun-port=3478
+default-ignore-ssl-errors=false
