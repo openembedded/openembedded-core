@@ -1,0 +1,1 @@
+require claws-mail.inc
