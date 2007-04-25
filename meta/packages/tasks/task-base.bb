@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "task-base \
             task-base-oh-minimal"
@@ -217,7 +217,7 @@ task-distro-ipsec-rrecommends = "\
 task-distro-wifi-rdepends = "\
     wireless-tools \
     hostap-utils \
-    wpa-supplicant-nossl"
+    wpa-supplicant"
 
 task-distro-wifi-rrecommends = "\
     kernel-module-ieee80211-crypt \
