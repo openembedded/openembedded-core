@@ -1,0 +1,13 @@
+Index: trunk/opensync/merger/opensync_xmlfield.c
+===================================================================
+--- trunk.orig/opensync/merger/opensync_xmlfield.c	2007-04-12 16:40:07.000000000 +0200
++++ trunk/opensync/merger/opensync_xmlfield.c	2007-04-12 16:40:11.000000000 +0200
+@@ -298,7 +298,7 @@
+ 	int count;
+ 	xmlAttrPtr attr = xmlfield->node->properties;
+ 	
+-	for(count=0; attribute != NULL; count++) {
++	for(count=0; attr != NULL; count++) {
+ 		if(count == nth)
+ 			return (const char *)attr->name;
+ 		attr = attr->next;

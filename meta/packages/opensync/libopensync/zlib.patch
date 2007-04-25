@@ -1,0 +1,13 @@
+Index: trunk/opensync/SConscript
+===================================================================
+--- trunk.orig/opensync/SConscript	2007-04-25 14:08:21.000000000 +0200
++++ trunk/opensync/SConscript	2007-04-25 14:08:40.000000000 +0200
+@@ -149,6 +149,8 @@
+ gmodule-2.0
+ libxml2
+ sqlite3
++z
++m
+ """
+ 
+ libopensync = env.SharedLibrary('opensync', Split(sources), LIBS = Split(Libraries))

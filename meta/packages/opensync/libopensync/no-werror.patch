@@ -1,0 +1,13 @@
+Index: trunk/build/linux/osync_build.py
+===================================================================
+--- trunk.orig/build/linux/osync_build.py	2007-04-25 13:28:44.000000000 +0200
++++ trunk/build/linux/osync_build.py	2007-04-25 13:28:54.000000000 +0200
+@@ -48,7 +48,7 @@
+ 	env.ParseConfig('pkg-config --cflags --libs libxml-2.0')
+ 	env.ParseConfig('pkg-config --cflags --libs sqlite3')
+ 	env.Append(CCFLAGS = r'-I.')
+-	env.Append(CCFLAGS = [r'-Wall', r'-Werror'])
++	env.Append(CCFLAGS = [r'-Wall'])
+ 	
+ 	testenv = env.Copy()
+ 	testenv.Append(CCFLAGS = r'-I' + testenv.GetLaunchDir() + '/tests')

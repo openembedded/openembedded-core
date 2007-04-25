@@ -1,0 +1,29 @@
+Index: trunk/SConstruct
+===================================================================
+--- trunk.orig/SConstruct	2007-04-25 13:20:13.000000000 +0200
++++ trunk/SConstruct	2007-04-25 14:00:02.000000000 +0200
+@@ -36,7 +36,11 @@
+ opts.Add(BoolOption('enable_python', 'Build python wrapper? (swig required)', 0))
+ opts.Add(BoolOption('debug_modules', 'Should unloading of shared modules be avoided (DEBUGGING ONLY!)', 0))
+ opts.Add(BoolOption('enable_doxygen', 'Generating OpenSync API with doxygen?', 0))
+-
++opts.AddOptions(
++('CC', 'Path to Custom c compiler', 'gcc'),
++('CXX', 'Path to Custom c++ compiler flags', 'g++'),
++('LDFLAGS', 'Linker flags', ''),
++)
+ 
+ target_dir = SelectBuildDir('build')
+ sys.path.append(target_dir)
+@@ -63,6 +67,11 @@
+ env.Append(CCFLAGS = r'-DENABLE_TOOLS=$enable_tools')
+ env.Append(CCFLAGS = r'-DENABLE_PROFILING=$enable_profiling')
+ 
++env.Replace(
++       CC = env['CC'],
++       CXX = env['CXX'],
++       LDFLAGS = env['LDFLAGS']
++)
+ 
+ # pkg config files
+ subst_dict={'@prefix@': '$prefix',
