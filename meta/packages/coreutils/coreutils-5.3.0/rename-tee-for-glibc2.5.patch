@@ -1,0 +1,33 @@
+Glibc 2.5 has a function called tee which conflicts with the same function
+in coreutils. This patch renames the function to tee_files (as is done in
+the newer coreutils versions.)
+
+--- coreutils-5.3.0/src/tee.c	2006/10/23 07:35:00	1.1
++++ coreutils-5.3.0/src/tee.c	2006/10/23 07:35:16
+@@ -31,7 +31,7 @@
+ 
+ #define AUTHORS "Mike Parker", "Richard M. Stallman", "David MacKenzie"
+ 
+-static bool tee (int nfiles, const char **files);
++static bool tee_files (int nfiles, const char **files);
+ 
+ /* If true, append to output files rather than truncating them. */
+ static bool append;
+@@ -121,7 +121,7 @@
+   /* Do *not* warn if tee is given no file arguments.
+      POSIX requires that it work when given no arguments.  */
+ 
+-  ok = tee (argc - optind, (const char **) &argv[optind]);
++  ok = tee_files (argc - optind, (const char **) &argv[optind]);
+   if (close (STDIN_FILENO) != 0)
+     error (EXIT_FAILURE, errno, _("standard input"));
+ 
+@@ -133,7 +133,7 @@
+    Return true if successful.  */
+ 
+ static bool
+-tee (int nfiles, const char **files)
++tee_files (int nfiles, const char **files)
+ {
+   FILE **descriptors;
+   char buffer[BUFSIZ];
