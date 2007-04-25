@@ -1,9 +1,10 @@
 SECTION = "kernel"
 DESCRIPTION = "Linux kernel for Nokia 770"
 LICENSE = "GPL"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://repository.maemo.org/pool/maemo2.1/free/source/k/kernel-source-2.6.16/kernel-source-2.6.16_2.6.16.rel-osso26.tar.gz \
+	   file://gcc4.patch;patch=1 \
 	   file://defconfig"
 
 S = "${WORKDIR}/kernel-source-2.6.16-2.6.16.rel"
