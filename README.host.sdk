@@ -1,0 +1,49 @@
+Using Poky generated host SDK
+=============================
+
+How to build host SDK
+====
+
+You need to setup Poky and then run one command:
+
+$ bitbake meta-toolchain
+
+Result would be tarball in tmp/deploy/sdk/ with everything needed to build for
+your target device. Unpack this in / directory - toolchain will reside in
+/usr/local/poky/arm/ dir.
+
+Usage of SDK
+=====
+
+First add toolchain into PATH:
+
+$ export PATH=/usr/local/poky/arm/bin/:$PATH
+
+Compiler is 'arm-poky-linux-gnueabi-gcc'. Building 'helloworld' example is
+simple:
+
+$ arm-poky-linux-gnueabi-gcc hello.c -o hello
+$ file hello
+hello: ELF 32-bit LSB executable, ARM, version 1 (SYSV), for GNU/Linux 2.6.14, dynamically linked (uses shared libs), not stripped
+
+Autotools and SDK
+======
+
+'Configure' scripts allow to specify Host, Target, Build architecture. To build
+with Poky SDK you need to specify:
+
+./configure --target=arm-poky-linux-gnueabi --host=arm-poky-linux-gnueabi
+
+
+Using packages from Poky
+========
+
+During development it is often situation that we want to use some libraries
+which are available in Poky build. Their packages need to be unpacked to
+/usr/local/poky/arm/arm-poky-linux-gnueabi/ directory.
+
+For example to add libiw (from wireless-tools package) you need to unpack two
+packages:
+
+libiw29_29-pre20-r0_armv5te.ipk
+libiw-dev_29-pre20-r0_armv5te.ipk
