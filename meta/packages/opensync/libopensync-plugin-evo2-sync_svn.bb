@@ -6,3 +6,4 @@ require libopensync-plugin.inc
 
 DEPENDS += " eds-dbus"
 
+DEFAULT_PREFERENCE = "-1"
