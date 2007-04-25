@@ -3,6 +3,9 @@
 HOME_VOLATILE=/home/$USER/ramdisk
 export HOME_VOLATILE
 
+HOME=/home/$USER
+export HOME
+
 if [ -f /usr/bin/dbus-launch ]; then
   ## test for an existing bus daemon, just to be safe
   if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
