@@ -1,0 +1,56 @@
+Index: pcmanfm-0.3.2-beta/configure.in
+===================================================================
+--- pcmanfm-0.3.2-beta.orig/configure.in	2007-04-26 09:09:33.000000000 +0100
++++ pcmanfm-0.3.2-beta/configure.in	2007-04-26 09:12:41.000000000 +0100
+@@ -15,6 +15,12 @@
+              libstartup-notification-1.0"
+ 
+ PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
++
++OWL_CFLAGS=""
++OWL_LIBS="-lowl"
++PACKAGE_CFLAGS="$PACKAGE_CFLAGS $OWL_CFLAGS"
++PACKAGE_LIBS="$PACKAGE_LIBS $OWL_LIBS"
++
+ AC_SUBST(PACKAGE_CFLAGS)
+ AC_SUBST(PACKAGE_LIBS)
+ 
+Index: pcmanfm-0.3.2-beta/src/main-window.c
+===================================================================
+--- pcmanfm-0.3.2-beta.orig/src/main-window.c	2007-04-26 09:09:15.000000000 +0100
++++ pcmanfm-0.3.2-beta/src/main-window.c	2007-04-26 09:10:51.000000000 +0100
+@@ -414,9 +414,7 @@
+     main_window->splitter_pos = appSettings.splitterPos;
+ 
+     /* Create menu bar */
+-    main_window->menu_bar = gtk_menu_bar_new ();
+-    gtk_box_pack_start ( GTK_BOX ( main_window->main_vbox ),
+-                         main_window->menu_bar, FALSE, FALSE, 0 );
++    main_window->menu_bar = gtk_menu_new ();
+ 
+     main_window->accel_group = gtk_accel_group_new ();
+     fm_side_pane_menu[ 0 ].ret = ( GtkWidget** ) & main_window->open_side_pane_menu;
+Index: pcmanfm-0.3.2-beta/src/main.c
+===================================================================
+--- pcmanfm-0.3.2-beta.orig/src/main.c	2007-04-26 09:09:15.000000000 +0100
++++ pcmanfm-0.3.2-beta/src/main.c	2007-04-26 09:21:40.000000000 +0100
+@@ -32,6 +32,8 @@
+ #include "glade-support.h"
+ #include "settings.h"
+ 
++#include "owlwindowmenu.h"
++
+ static char* init_path = NULL;
+ 
+ static int sock;
+@@ -171,6 +173,10 @@
+     gtk_window_set_default_size( GTK_WINDOW( main_window ),
+                                  appSettings.width, appSettings.height );
+     gtk_widget_show ( GTK_WIDGET( main_window ) );
++    gtk_widget_show_all (main_window->menu_bar);
++    owl_set_window_menu (GTK_WINDOW(main_window),
++			 GTK_MENU(main_window->menu_bar));
++
+     return main_window;
+ }
+ #if 0
