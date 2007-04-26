@@ -1,0 +1,100 @@
+Index: trunk/src/web_main.c
+===================================================================
+--- trunk.orig/src/web_main.c	2007-04-19 15:41:44.000000000 +0100
++++ trunk/src/web_main.c	2007-04-26 07:43:23.000000000 +0100
+@@ -20,6 +20,8 @@
+ #include "web_bookmarks.h"
+ #include "web_request.h"
+ 
++#include "owlwindowmenu.h"
++
+ static void
+ copy_cb (GtkWindow *main_window)
+ {
+@@ -833,10 +835,8 @@
+ main (int argc, char **argv)
+ {
+ 	GtkWidget *widget;
+-#ifdef WITH_HILDON
+ 	GList *children, *c;
+ 	GtkMenu *menu;
+-#endif
+ 	WebPages pages;
+ 	GConfClient *client;
+ 	GModule *module;
+@@ -889,33 +889,12 @@
+ 			WEB_API_VERSION, pages.backend->api_version);
+ 	pages.backend->init (&(pages.backend_data), &pages);
+ 
+-#ifdef WITH_HILDON
+-	osso_initialize ("web", "0.0", FALSE, NULL);
+-	pages.appview = hildon_appview_new ("");
+-	pages.window = hildon_app_new_with_appview (pages.appview);
+-	hildon_app_set_title (pages.window, "Web");
+-	gtk_widget_show (pages.appview);
+-	
+-	/* Reparent widgets to hildon appview */
+-	widget = glade_xml_get_widget (pages.xml, "main_vbox");
+-	gtk_container_remove (
+-		GTK_CONTAINER (gtk_widget_get_parent (widget)),
+-		g_object_ref (widget));
+-	gtk_container_add (GTK_CONTAINER (pages.appview), widget);
+-	
+-	widget = glade_xml_get_widget (pages.xml, "main_toolbar");
+-	gtk_container_remove (
+-		GTK_CONTAINER (gtk_widget_get_parent (widget)),
+-		g_object_ref (widget));
+-	gtk_box_pack_end (GTK_BOX (pages.appview->vbox),
+-		widget, TRUE, TRUE, 0);
+-	gtk_widget_show_all (GTK_WIDGET (pages.appview->vbox));
+-	
+-	gtk_widget_destroy (glade_xml_get_widget (pages.xml, "main_window"));
++	pages.window = glade_xml_get_widget (pages.xml, "main_window");
+ 	
+ 	/* Reparent menu items */
+ 	widget = glade_xml_get_widget (pages.xml, "main_menubar");
+-	menu = hildon_appview_get_menu (pages.appview);
++	menu = gtk_menu_new ();
++
+ 	children = gtk_container_get_children (GTK_CONTAINER (widget));
+ 	for (c = children; c; c = c->next) {
+ 		GtkWidget *menuitem = GTK_WIDGET (c->data);
+@@ -926,12 +905,6 @@
+ 	gtk_widget_destroy (widget);
+ 	g_list_free (children);	
+ 	
+-	g_signal_connect (G_OBJECT (pages.window),
+-		"key_press_event", G_CALLBACK (web_key_press_cb), &pages);
+-#else
+-	pages.window = glade_xml_get_widget (pages.xml, "main_window");
+-#endif
+-
+ 	web_bookmarks_init (&pages);
+ 	
+ 	/* Set history menus */
+@@ -1064,6 +1037,8 @@
+ 	
+ 	gtk_widget_show (pages.window);
+ 
++	owl_set_window_menu (GTK_WINDOW(pages.window), GTK_MENU(menu));
++
+ 	gtk_main ();
+ 	
+ 	g_module_close (module);
+Index: trunk/configure.ac
+===================================================================
+--- trunk.orig/configure.ac	2007-04-19 15:41:44.000000000 +0100
++++ trunk/configure.ac	2007-04-25 20:36:34.000000000 +0100
+@@ -14,6 +14,12 @@
+ 
+ PKG_CHECK_MODULES(WEB, libxml-2.0 glib-2.0 gthread-2.0 gtk+-2.0 libglade-2.0 gconf-2.0 gobject-2.0)
+ 
++OWL_CFLAGS=""
++OWL_LIBS="-lowl"
++
++WEB_CFLAGS="$WEB_CFLAGS $OWL_CFLAGS"
++WEB_LIBS="$WEB_LIBS $OWL_LIBS"
++
+ # -- Hildon stuff for Maemo 
+ hildon=false
+ AC_ARG_ENABLE(hildon,AS_HELP_STRING([--enable-hildon],[Turn on hildon support]),[
