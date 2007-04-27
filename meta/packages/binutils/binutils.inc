@@ -1,6 +1,11 @@
+DESCRIPTION = "A GNU collection of binary utilities"
+HOMEPAGE = "http://www.gnu.org/software/binutils/"
+SECTION = "devel"
+LICENSE = "GPL"
+
 inherit autotools gettext
 
-PACKAGES = "${PN} ${PN}-dev ${PN}-doc ${PN}-symlinks"
+PACKAGES += "${PN}-symlinks"
 
 FILES_${PN} = " \
 	${bindir}/${TARGET_PREFIX}* \
@@ -27,6 +32,9 @@ FILES_${PN}-symlinks = " \
 	${bindir}/readelf \
 	${bindir}/size \
 	${bindir}/strip"
+
+S = "${WORKDIR}/binutils-${PV}"
+B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
 EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
 		--enable-shared"
@@ -60,6 +68,13 @@ export CC = "${CCACHE} ${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 do_configure () {
 	(cd ${S}; gnu-configize) || die "Failed to run gnu-configize"
 	oe_runconf
+#
+# must prime config.cache to ensure the build of libiberty
+#
+	mkdir -p ${B}/build-${BUILD_SYS}
+	for i in ${CONFIG_SITE}; do
+		cat $i >> ${B}/build-${BUILD_SYS}/config.cache
+	done
 }
 
 do_stage () {

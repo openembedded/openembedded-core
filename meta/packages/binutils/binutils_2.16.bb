@@ -1,11 +1,9 @@
-DESCRIPTION = "A GNU collection of binary utilities"
-HOMEPAGE = "http://www.gnu.org/software/binutils/"
-SECTION = "devel"
-LICENSE = "GPL"
-PR = "r7"
+require binutils.inc
 
-SRC_URI = \
-    "http://ftp.gnu.org/gnu/binutils/binutils-${PV}.tar.bz2 \
+PR = "r8"
+
+SRC_URI = "\
+     http://ftp.gnu.org/gnu/binutils/binutils-${PV}.tar.bz2 \
      file://ld_makefile.patch;patch=1 \
      file://better_file_error.patch;patch=1 \
      file://signed_char_fix.patch;patch=1 \
@@ -18,8 +16,3 @@ SRC_URI += "file://binutils-2.16-linux-uclibc.patch;patch=1"
 # thumb support patches
 SRC_URI += "file://binutils-2.16-thumb-trampoline.patch;patch=1"
 SRC_URI += "file://binutils-2.16-thumb-glue.patch;patch=1"
-
-S = "${WORKDIR}/binutils-${PV}"
-B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
-
-require binutils.inc
