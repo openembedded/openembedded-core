@@ -1,6 +1,8 @@
 DESCRIPTION = "The GNU cc and gcc C compilers."
 require gcc_${PV}.bb
-PR = "r1"
+PR = "r2"
+
+EXCLUDE_FROM_SHLIBS = "1"
 
 inherit sdk
 
