@@ -1,5 +1,5 @@
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
-PR = "r12"
+PR = "r13"
 DEPENDS = "task-oh"
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -14,8 +14,12 @@ RDEPENDS_task-oh-sdk = "\
     automake \
     binutils \
     binutils-symlinks \
+    coreutils \
+    diffutils \
     gcc \
     gcc-symlinks \
+    g++ \
+    g++-symlinks \
     make \
     perl-module-re \
     perl-module-text-wrap \
