@@ -1,6 +1,6 @@
 DESCRIPTION = "The GNU cc and gcc C compilers."
 require gcc_${PV}.bb
-PR = "r0"
+PR = "r1"
 
 inherit sdk
 
@@ -35,4 +35,4 @@ SRC_URI = "http://ftp.gnu.org/pub/gnu/gcc/gcc-4.1.1/gcc-4.1.1.tar.bz2 \
         file://fix-ICE-in-arm_unwind_emit_set.diff;patch=1 \
         file://gcc-4.1.1-pr13685-1.patch;patch=1 \
         file://gcc-ignore-cache.patch;patch=1 \
-	"
+        file://zecke-no-host-includes.patch;patch=1"
