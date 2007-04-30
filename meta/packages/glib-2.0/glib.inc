@@ -13,7 +13,7 @@ PACKAGES =+ "glib-2.0-utils "
 LEAD_SONAME = "libglib-2.0.*"
 FILES_glib-2.0-utils = "${bindir}/*"
 
-EXTRA_OECONF = "--disable-debug"
+EXTRA_OECONF = "--disable-debug  --enable-included-printf=no"
 
 S = "${WORKDIR}/glib-${PV}"
 
