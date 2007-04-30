@@ -56,6 +56,8 @@ fakeroot do_rootfs () {
 
 	rootfs_${IMAGE_PKGTYPE}_do_rootfs
 
+	rm -f ${IMAGE_ROOTFS}${libdir}/ipkg/lists/oe
+	
 	${IMAGE_PREPROCESS_COMMAND}
 		
 	export TOPDIR=${TOPDIR}
