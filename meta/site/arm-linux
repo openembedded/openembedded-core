@@ -177,8 +177,10 @@ glib_cv_sizeof_ptrdiff_t=${glib_cv_sizeof_ptrdiff_t=4}
 glib_cv_sizeof_size_t=${glib_cv_sizeof_size_t=4}
 glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
 glib_cv_sys_use_pid_niceness_surrogate=${glib_cv_sys_use_pid_niceness_surrogate=yes}
-
 glib_cv_strlcpy=${glib_cv_strlcpy=no}
+ac_cv_func_printf_unix98=${ac_cv_func_printf_unix98=yes}
+ac_cv_func_snprintf_c99=${ac_cv_func_snprintf_c99=yes}
+ac_cv_func_vsnprintf_c99=${ac_cv_func_vsnprintf_c99=yes}
 
 # httppc
 ac_cv_strerror_r_SUSv3=${ac_cv_strerror_r_SUSv3=no}
