@@ -21,10 +21,10 @@ python () {
     import bb
 
     deps = bb.data.getVarFlag('do_rootfs', 'depends', d) or ""
-    for type in (bb.data.getVar('IMAGE_FSTYPES', d, 1) or "").split():
+    for type in (bb.data.getVar('IMAGE_FSTYPES', d, True) or "").split():
         for dep in ((bb.data.getVar('IMAGE_DEPENDS_%s' % type, d) or "").split() or []):
             deps += " %s:do_populate_staging" % dep
-    for dep in (bb.data.getVar('EXTRA_IMAGEDEPENDS', d, 1) or "").split():
+    for dep in (bb.data.getVar('EXTRA_IMAGEDEPENDS', d, True) or "").split():
         deps += " %s:do_populate_staging" % dep
     bb.data.setVarFlag('do_rootfs', 'depends', deps, d)
 }
@@ -71,7 +71,7 @@ fakeroot do_rootfs () {
 		fi
 
 		cd ${DEPLOY_DIR_IMAGE}/
-		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*
+		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
 		ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
 	done
 
