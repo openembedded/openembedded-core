@@ -4,7 +4,7 @@ RRECOMMENDS = "gnome-vfs-plugin-file shared-mime-info"
 # Some legacy packages will require gnome-mime-data to be installed, but use of
 # it is deprecated.
 
-PR = "r4"
+PR = "r5"
 
 inherit gnome
 
