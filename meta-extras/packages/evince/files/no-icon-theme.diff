@@ -1,0 +1,13 @@
+Index: configure.ac
+===================================================================
+--- configure.ac	(revision 2436)
++++ configure.ac	(working copy)
+@@ -57,7 +57,7 @@
+ PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED)
+ PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
+ PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libglade-2.0 gnome-vfs-2.0)
+-PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0 gnome-keyring-1 >= $KEYRING_REQUIRED)
++PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0 gnome-keyring-1 >= $KEYRING_REQUIRED)
+ 
+ AC_ARG_WITH(libgnome,
+         AC_HELP_STRING([--without-libgnome],[disable the use of libgnome]),
