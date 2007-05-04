@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "task-base \
             task-base-oh-minimal"
@@ -176,8 +176,7 @@ task-base-irda-rrecommends = "\
     kernel-module-irlan \
     kernel-module-irnet \
     kernel-module-irport \
-    kernel-module-irtty \
-    kernel-module-ir-usb"
+    kernel-module-irtty "
 
 task-base-usbgadget-rrecommends = "\
     kernel-module-gadgetfs \
