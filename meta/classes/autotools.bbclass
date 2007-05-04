@@ -119,6 +119,14 @@ autotools_do_configure() {
 			  oenote Executing intltoolize --copy --force --automake
 			  intltoolize --copy --force --automake
 			fi
+			if grep "^GTK_DOC_CHECK" $CONFIGURE_AC >/dev/null; then
+			  oenote Executing gtkdocize --copy
+			  gtkdocize --copy
+			fi
+			if grep "^GNOME_DOC_INIT" $CONFIGURE_AC >/dev/null; then
+			  oenote Executing gnome-doc-prepare --copy --force
+			  gnome-doc-prepare --copy --force
+			fi
 			oenote Executing autoreconf --verbose --install --force ${EXTRA_AUTORECONF} $acpaths
 			mkdir -p m4
 			autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || oefatal "autoreconf execution failed."
