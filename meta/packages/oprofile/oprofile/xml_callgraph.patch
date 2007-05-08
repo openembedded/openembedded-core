@@ -15,9 +15,9 @@
 
 Index: oprofile/libpp/callgraph_container.cpp
 ===================================================================
---- oprofile.orig/libpp/callgraph_container.cpp	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libpp/callgraph_container.cpp	2007-02-22 18:19:12.000000000 +0000
-@@ -379,17 +379,19 @@ process(count_array_t total, double thre
+--- oprofile.orig/libpp/callgraph_container.cpp
++++ oprofile/libpp/callgraph_container.cpp
+@@ -379,12 +379,15 @@ process(count_array_t total, double thre
  
  		process_children(sym, threshold);
  
@@ -35,12 +35,7 @@ Index: oprofile/libpp/callgraph_container.cpp
  {
  	return cg_syms;
  }
- 
--
- void callgraph_container::populate(string const & archive_path, 
-    list<inverted_profile> const & iprofiles,
-    extra_images const & extra, bool debug_info, double threshold,
-@@ -580,12 +582,14 @@ column_flags callgraph_container::output
+@@ -580,12 +583,14 @@ column_flags callgraph_container::output
  	column_flags output_hints = cf_none;
  
  	// FIXME: costly: must we access directly recorder map ?
@@ -60,7 +55,7 @@ Index: oprofile/libpp/callgraph_container.cpp
  
  	return output_hints;
  }
-@@ -597,7 +601,7 @@ count_array_t callgraph_container::sampl
+@@ -597,7 +602,7 @@ count_array_t callgraph_container::sampl
  }
  
  
@@ -71,8 +66,8 @@ Index: oprofile/libpp/callgraph_container.cpp
  }
 Index: oprofile/libpp/callgraph_container.h
 ===================================================================
---- oprofile.orig/libpp/callgraph_container.h	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libpp/callgraph_container.h	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/libpp/callgraph_container.h
++++ oprofile/libpp/callgraph_container.h
 @@ -53,7 +53,7 @@ public:
  	         count_array_t const & arc_count);
  
@@ -103,8 +98,8 @@ Index: oprofile/libpp/callgraph_container.h
  	/**
 Index: oprofile/libpp/format_output.cpp
 ===================================================================
---- oprofile.orig/libpp/format_output.cpp	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libpp/format_output.cpp	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/libpp/format_output.cpp
++++ oprofile/libpp/format_output.cpp
 @@ -489,7 +489,7 @@ cg_formatter::cg_formatter(callgraph_con
  }
  
@@ -255,7 +250,7 @@ Index: oprofile/libpp/format_output.cpp
  
  	// output symbol's summary data for each profile class
  	bool got_samples = false;
-@@ -750,27 +768,21 @@ output_symbol(ostream & out,
+@@ -752,27 +770,21 @@ output_symbol(ostream & out,
  	
  	string const image = get_image_name(symb->image_name, true);
  	string const qname = image + ":" + name;
@@ -287,7 +282,7 @@ Index: oprofile/libpp/format_output.cpp
  			details << detail_str;
  		}
  
-@@ -826,5 +838,176 @@ output_attribute(ostream & out, field_da
+@@ -828,5 +840,131 @@ output_attribute(ostream & out, field_da
  	}
  }
  
@@ -311,7 +306,65 @@ Index: oprofile/libpp/format_output.cpp
 +}
 +
 +void xml_cg_formatter::
-+output_symbol_core(ostream & out,
++output_symbol_core(ostream & out, cg_symbol::children const cg_symb, 
++	string const selfname, string const qname,
++	size_t lo, size_t hi, bool is_module, tag_t tag)
++{
++
++	cg_symbol::children::const_iterator cit;
++	cg_symbol::children::const_iterator cend = cg_symb.end();
++
++	for (cit = cg_symb.begin(); cit != cend; ++cit) {
++		string binary = get_image_name((cit)->app_name, true);
++		string module = get_image_name((cit)->image_name, true);
++		bool got_samples = false, self = false;
++		ostringstream str;
++		size_t indx;
++
++		for (size_t p = lo; p <= hi; ++p)
++			got_samples |= xml_support->output_summary_data(str, cit->sample.counts, p);
++
++		if (!got_samples)
++			continue;
++
++		cverb << vxml << " <!-- symbol_ref=" << symbol_names.name(cit->name) << " -->" << endl;
++
++		if (is_module) {
++			out << open_element(MODULE, true);
++			out << init_attr(NAME, module) << close_element(NONE, true);
++		}
++
++		out << open_element(SYMBOL, true);
++
++		string const symname = symbol_names.name(cit->name);
++		assert(symname.size() > 0);
++	
++		string const symqname = module + ":" + symname;
++
++		// Find any self references and handle
++	        if ((symname == selfname) && (tag == CALLEES)) {
++			self = true;
++			indx = xml_get_symbol_index(qname);
++		} else
++			indx = xml_get_symbol_index(symqname);
++
++		out << init_attr(ID_REF, indx);
++
++		if (self)
++			out << init_attr(SELFREF, "true");
++
++		out << close_element(NONE, true);
++		out << str.str();
++		out << close_element(SYMBOL);
++
++		if (is_module)
++			out << close_element(MODULE);
++	}
++}
++
++
++void xml_cg_formatter::
++output_symbol(ostream & out,
 +	symbol_entry const * symb, size_t lo, size_t hi, bool is_module)
 +{
 +	cg_symbol const * cg_symb = dynamic_cast<const cg_symbol *>(symb);
@@ -345,129 +398,26 @@ Index: oprofile/libpp/format_output.cpp
 +	out << close_element(NONE, true);
 +
 +	out << open_element(CALLERS);
-+	if (cg_symb) {
-+		cg_symbol::children::const_iterator cit;
-+		cg_symbol::children::const_iterator cend = cg_symb->callers.end();
-+
-+		for (cit = cg_symb->callers.begin(); cit != cend; ++cit) {
-+			ostringstream str1;
-+			string binary = get_image_name((cit)->app_name, true);
-+			string module = get_image_name((cit)->image_name, true);
-+
-+
-+			got_samples = false;
-+
-+			for (size_t p = lo; p <= hi; ++p) {
-+				got_samples |= xml_support->output_summary_data(str1, cit->sample.counts, p);
-+			}
-+
-+			if (!got_samples)
-+				continue;
-+
-+			cverb << vxml << " <!-- symbol_ref=" << symbol_names.name(cit->name) << " -->" << endl;
-+
-+			if (is_module) {
-+				out << open_element(MODULE, true);
-+				out << init_attr(NAME, module) << close_element(NONE, true);
-+			}
-+
-+			out << open_element(SYMBOL, true);
-+
-+			string const name1 = symbol_names.name(cit->name);
-+			assert(name1.size() > 0);
-+	
-+			string const qname1 = module + ":" + name1;
-+
-+			out << init_attr(ID_REF, xml_get_symbol_index(qname1));
-+
-+			out << close_element(NONE, true);
-+
-+			out << str1.str();
-+
-+			out << close_element(SYMBOL);
-+
-+			if (is_module)
-+				out << close_element(MODULE);
-+		}
-+	}
++	if (cg_symb)
++		output_symbol_core(out, cg_symb->callers, selfname, qname, lo, hi, is_module, CALLERS);
 +	out << close_element(CALLERS);
 +
 +	out << open_element(CALLEES);
-+	if (cg_symb) {
-+		cg_symbol::children::const_iterator cit;
-+		cg_symbol::children::const_iterator cend = cg_symb->callees.end();
++	if (cg_symb)
++		output_symbol_core(out, cg_symb->callees, selfname, qname, lo, hi, is_module, CALLEES);
 +
-+		for (cit = cg_symb->callees.begin(); cit != cend; ++cit) {
-+			size_t indx;
-+			ostringstream str1;
-+			string binary = get_image_name((cit)->app_name, true);
-+			string module = get_image_name((cit)->image_name, true);
-+			bool self = false;
-+
-+			got_samples = false;
-+
-+			for (size_t p = lo; p <= hi; ++p) {
-+				got_samples |= xml_support->output_summary_data(str1, cit->sample.counts, p);
-+			}
-+
-+			if (!got_samples)
-+				continue;
-+
-+			cverb << vxml << " <!-- symbol_ref=" << symbol_names.name(cit->name) << " -->" << endl;
-+
-+			if (is_module) {
-+				out << open_element(MODULE, true);
-+				out << init_attr(NAME, module) << close_element(NONE, true);
-+			}
-+
-+			out << open_element(SYMBOL, true);
-+
-+			string name1 = symbol_names.name(cit->name);
-+			assert(name1.size() > 0);
-+			string const qname1 = module + ":" + name1;
-+
-+			/* Find any self references and handle */
-+		        if (name1 == selfname) {
-+				self = true;
-+				indx = xml_get_symbol_index(qname);
-+			} else
-+				indx = xml_get_symbol_index(qname1);
-+
-+			out << init_attr(ID_REF, indx);
-+
-+			if (self)
-+				out << init_attr(SELFREF, "true");
-+
-+			out << close_element(NONE, true);
-+
-+			out << str1.str();
-+
-+			out << close_element(SYMBOL);
-+
-+			if (is_module)
-+				out << close_element(MODULE);
-+		}
-+	}
 +	out << close_element(CALLEES);
 +
 +	// output summary
 +	out << str.str();
 +	out << close_element(SYMBOL);
 +}
-+
-+
-+void xml_cg_formatter::
-+output_symbol(ostream & out,
-+	symbol_entry const * symb, size_t lo, size_t hi, bool is_module)
-+{
-+	output_symbol_core(out, symb, lo, hi, is_module);
-+}
  
  } // namespace format_output
 Index: oprofile/libpp/format_output.h
 ===================================================================
---- oprofile.orig/libpp/format_output.h	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libpp/format_output.h	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/libpp/format_output.h
++++ oprofile/libpp/format_output.h
 @@ -201,7 +201,7 @@ public:
  
  	/** output callgraph information according to the previously format
@@ -523,7 +473,7 @@ Index: oprofile/libpp/format_output.h
  	// count of DetailData items output so far
  	size_t detail_count;
  
-@@ -270,6 +270,29 @@ private:
+@@ -270,6 +270,30 @@ private:
  			      format_flags fl, tag_t tag);
  };
  
@@ -546,18 +496,19 @@ Index: oprofile/libpp/format_output.h
 +	/// container we work from
 +	callgraph_container const * callgraph;
 +
-+	void output_symbol_core(std::ostream & out,
-+		symbol_entry const * symb, size_t lo, size_t hi,
-+		bool is_module);
++	void output_symbol_core(std::ostream & out, 
++		cg_symbol::children const cg_symb, 
++		std::string const selfname, std::string const qname,
++		size_t lo, size_t hi, bool is_module, tag_t tag);
 +};
  
  } // namespace format_output 
  
 Index: oprofile/libpp/symbol.h
 ===================================================================
---- oprofile.orig/libpp/symbol.h	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libpp/symbol.h	2007-02-22 18:19:12.000000000 +0000
-@@ -55,8 +55,11 @@ struct sample_entry {
+--- oprofile.orig/libpp/symbol.h
++++ oprofile/libpp/symbol.h
+@@ -56,8 +56,11 @@ struct sample_entry {
  
  
  /// associate a symbol with a file location, samples count and vma address
@@ -570,7 +521,7 @@ Index: oprofile/libpp/symbol.h
  	/// which image this symbol belongs to
  	image_name_id image_name;
  	/// owning application name: identical to image name if profiling
-@@ -92,7 +95,8 @@ typedef std::vector<symbol_entry const *
+@@ -93,7 +96,8 @@ typedef std::vector<symbol_entry const *
   * the sample counts replaced with the relevant arc counts, whilst
   * the cg_symbol retains its self count.
   */
@@ -580,25 +531,23 @@ Index: oprofile/libpp/symbol.h
  	cg_symbol(symbol_entry const & sym) : symbol_entry(sym) {}
  
  	typedef std::vector<symbol_entry> children;
-@@ -108,9 +112,12 @@ struct cg_symbol : public symbol_entry {
+@@ -109,10 +113,8 @@ struct cg_symbol : public symbol_entry {
  	count_array_t total_callee_count;
  };
  
-+/// a collection of sorted callgraph symbols (the objects themselves)
-+typedef std::vector<cg_symbol> cg_collection_objs;
- 
+-
 -/// a collection of sorted callgraph symbols
 -typedef std::vector<cg_symbol> cg_collection;
-+
-+/// a collection of sorted callgraph symbols (pointers too, compatible with symbol_collection)
-+//typedef std::vector<cg_symbol const *> cg_collection;
- 
+-
++/// a collection of sorted callgraph symbol objects
++typedef std::vector<cg_symbol> cg_collection_objs;
  
  /// for storing diff %ages
+ typedef growable_vector<double> diff_array_t;
 Index: oprofile/libpp/symbol_sort.cpp
 ===================================================================
---- oprofile.orig/libpp/symbol_sort.cpp	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libpp/symbol_sort.cpp	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/libpp/symbol_sort.cpp
++++ oprofile/libpp/symbol_sort.cpp
 @@ -146,23 +146,6 @@ sort(symbol_collection & syms, bool reve
  
  
@@ -625,8 +574,8 @@ Index: oprofile/libpp/symbol_sort.cpp
  	long_filenames = lf;
 Index: oprofile/libpp/symbol_sort.h
 ===================================================================
---- oprofile.orig/libpp/symbol_sort.h	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libpp/symbol_sort.h	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/libpp/symbol_sort.h
++++ oprofile/libpp/symbol_sort.h
 @@ -44,12 +44,6 @@ struct sort_options {
  	/**
  	 * Sort the given container by the given criteria.
@@ -642,8 +591,8 @@ Index: oprofile/libpp/symbol_sort.h
  
 Index: oprofile/libpp/xml_utils.cpp
 ===================================================================
---- oprofile.orig/libpp/xml_utils.cpp	2007-02-22 18:19:12.000000000 +0000
-+++ oprofile/libpp/xml_utils.cpp	2007-02-22 18:24:58.000000000 +0000
+--- oprofile.orig/libpp/xml_utils.cpp
++++ oprofile/libpp/xml_utils.cpp
 @@ -268,13 +268,6 @@ void xml_utils::output_xml_header(string
  	cout << close_element(SETUP) << endl;
  }
@@ -703,8 +652,8 @@ Index: oprofile/libpp/xml_utils.cpp
  
 Index: oprofile/libutil++/xml_output.cpp
 ===================================================================
---- oprofile.orig/libutil++/xml_output.cpp	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libutil++/xml_output.cpp	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/libutil++/xml_output.cpp
++++ oprofile/libutil++/xml_output.cpp
 @@ -47,8 +47,11 @@ string const xml_tag_map[] = {
  	"binary",
  	"module",
@@ -719,8 +668,8 @@ Index: oprofile/libutil++/xml_output.cpp
  	"symboltable",
 Index: oprofile/libutil++/xml_output.h
 ===================================================================
---- oprofile.orig/libutil++/xml_output.h	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/libutil++/xml_output.h	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/libutil++/xml_output.h
++++ oprofile/libutil++/xml_output.h
 @@ -28,7 +28,8 @@ typedef enum {
  	THREAD, THREAD_ID,
  	BINARY,
@@ -733,8 +682,8 @@ Index: oprofile/libutil++/xml_output.h
  		SOURCE_FILE, SOURCE_LINE, CODE_LENGTH,
 Index: oprofile/pp/opreport.cpp
 ===================================================================
---- oprofile.orig/pp/opreport.cpp	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/pp/opreport.cpp	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/pp/opreport.cpp
++++ oprofile/pp/opreport.cpp
 @@ -378,7 +378,7 @@ void output_symbols(profile_container co
  	format_output::opreport_formatter * text_out = 0;
  
@@ -801,8 +750,8 @@ Index: oprofile/pp/opreport.cpp
  
 Index: oprofile/pp/opreport_options.cpp
 ===================================================================
---- oprofile.orig/pp/opreport_options.cpp	2007-02-22 18:19:11.000000000 +0000
-+++ oprofile/pp/opreport_options.cpp	2007-02-22 18:19:12.000000000 +0000
+--- oprofile.orig/pp/opreport_options.cpp
++++ oprofile/pp/opreport_options.cpp
 @@ -177,11 +177,6 @@ void check_options(bool diff)
  	}
  

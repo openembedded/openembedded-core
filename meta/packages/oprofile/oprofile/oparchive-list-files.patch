@@ -1,8 +1,8 @@
 Index: oprofile/pp/oparchive.cpp
 ===================================================================
---- oprofile.orig/pp/oparchive.cpp	2007-01-22 12:23:51.000000000 +0000
-+++ oprofile/pp/oparchive.cpp	2007-01-22 12:23:56.000000000 +0000
-@@ -35,6 +35,11 @@
+--- oprofile.orig/pp/oparchive.cpp
++++ oprofile/pp/oparchive.cpp
+@@ -35,6 +35,11 @@ namespace {
  
  void copy_one_file(image_error err, string const & source, string const & dest)
  {
@@ -16,9 +16,9 @@ Index: oprofile/pp/oparchive.cpp
  		     << " cause: " << strerror(errno) << endl;
 Index: oprofile/pp/oparchive_options.cpp
 ===================================================================
---- oprofile.orig/pp/oparchive_options.cpp	2007-01-22 12:22:44.000000000 +0000
-+++ oprofile/pp/oparchive_options.cpp	2007-01-22 12:23:03.000000000 +0000
-@@ -36,6 +36,7 @@
+--- oprofile.orig/pp/oparchive_options.cpp
++++ oprofile/pp/oparchive_options.cpp
+@@ -36,6 +36,7 @@ namespace options {
  	bool exclude_dependent;
  	merge_option merge_by;
  	string outdirectory;
@@ -26,7 +26,7 @@ Index: oprofile/pp/oparchive_options.cpp
  }
  
  
-@@ -47,7 +48,9 @@
+@@ -47,7 +48,9 @@ popt::option options_array[] = {
  	popt::option(options::outdirectory, "output-directory", 'o',
  	             "output to the given directory", "directory"),
  	popt::option(options::exclude_dependent, "exclude-dependent", 'x',
@@ -37,7 +37,7 @@ Index: oprofile/pp/oparchive_options.cpp
  };
  
  
-@@ -60,7 +63,7 @@
+@@ -60,7 +63,7 @@ void check_options()
  	using namespace options;
  
  	/* output directory is required */
@@ -48,9 +48,9 @@ Index: oprofile/pp/oparchive_options.cpp
  	}
 Index: oprofile/pp/oparchive_options.h
 ===================================================================
---- oprofile.orig/pp/oparchive_options.h	2007-01-22 12:23:14.000000000 +0000
-+++ oprofile/pp/oparchive_options.h	2007-01-22 12:23:30.000000000 +0000
-@@ -22,6 +22,7 @@
+--- oprofile.orig/pp/oparchive_options.h
++++ oprofile/pp/oparchive_options.h
+@@ -22,6 +22,7 @@ namespace options {
  	extern bool exclude_dependent;
  	extern merge_option merge_by;
  	extern std::string outdirectory;
