@@ -4,14 +4,14 @@ LICENSE = "MPL/GPL/LGPL"
 HOMEPAGE = "http://www.mozilla.org/projects/minimo/"
 PRIORITY = "optional"
 
-DEPENDS = "libxrender xt xft fontconfig freetype libidl dbus-glib pango atk gtk+"
+DEPENDS = "libxrender xt xft fontconfig freetype libidl dbus-glib pango atk gtk+ libidl-native"
 
 CVSSVR="cvs-mirror.mozilla.org"
 BRTAG = "MOZILLA_1_8_BRANCH"
 MOZDATE = "20060720"
 
 PV = "0.016+cvs${MOZDATE}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "cvs://anonymous@${CVSSVR}/cvsroot;module=mozilla;tag=${BRTAG};date=${MOZDATE} \
 	   file://minimo.patch;patch=1 \
@@ -33,6 +33,7 @@ export ac_cv_prog_HOST_CC="${BUILD_CC}"
 export ac_cv_prog_HOST_CFLAGS="${BUILD_CFLAGS}"
 export ac_cv_prog_HOST_CXX="${BUILD_CXX}"
 export ac_cv_prog_HOST_CXXFLAGS="${BUILD_CXXFLAGS}"
+export HOST_LIBIDL_CONFIG = "libIDL-config-2"
 
 mozdir="${libdir}/mozilla-minimo"
 
