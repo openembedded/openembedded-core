@@ -1,5 +1,5 @@
 PV = "0.9.2+cvs${SRCDATE}"
-PR = "r3"
+PR = "r4"
 SECTION = "devel"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
@@ -10,6 +10,7 @@ SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=
 	   file://oprofile_eabi.patch;patch=1 \
 	   file://oparchive-debug-dir.patch;patch=1 \
 	   file://oparchive-list-files.patch;patch=1 \
+           file://cg_collection.patch;patch=1 \
            file://xml_callgraph.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"

@@ -14,6 +14,45 @@ Index: oprofile/pp/oparchive.cpp
  	if (!copy_file(source, dest) && err == image_ok) {
  		cerr << "can't copy from " << source << " to " << dest
  		     << " cause: " << strerror(errno) << endl;
+@@ -46,7 +51,7 @@ int oparchive(options::spec const & spec
+ 	handle_options(spec);
+ 
+ 	/* Check to see if directory can be created */
+-	if (create_path(options::outdirectory.c_str())) {
++	if (!options::list_files && create_path(options::outdirectory.c_str())) {
+ 		cerr << "Unable to create directory for " 
+ 		     <<	options::outdirectory << "." << endl;
+ 		exit (EXIT_FAILURE);
+@@ -73,7 +78,8 @@ int oparchive(options::spec const & spec
+ 
+ 		cverb << vdebug << exe_name << endl;
+ 		/* Create directory for executable file. */
+-		if (create_path(exe_archive_file.c_str())) {
++		if (!options::list_files
++				&& create_path(exe_archive_file.c_str())) {
+ 			cerr << "Unable to create directory for "
+ 			     << exe_archive_file << "." << endl;
+ 			exit (EXIT_FAILURE);
+@@ -100,7 +106,8 @@ int oparchive(options::spec const & spec
+ 				/* found something copy it over */
+ 				string dest_debug_dir = options::outdirectory +
+ 					dirname + "/.debug/";
+-				if (create_dir(dest_debug_dir.c_str())) {
++				if (!options::list_files
++						&& create_dir(dest_debug_dir.c_str())) {
+ 					cerr << "Unable to create directory: "
+ 					<< dest_debug_dir << "." << endl;
+ 					exit (EXIT_FAILURE);
+@@ -130,7 +137,8 @@ int oparchive(options::spec const & spec
+ 		
+ 		cverb << vdebug << (sample_name) << endl;
+ 		cverb << vdebug << " destp " << sample_archive_file << endl;
+-		if (create_path(sample_archive_file.c_str())) {
++		if (!options::list_files
++				&& create_path(sample_archive_file.c_str())) {
+ 			cerr << "Unable to create directory for "
+ 			     <<	sample_archive_file << "." << endl;
+ 			exit (EXIT_FAILURE);
 Index: oprofile/pp/oparchive_options.cpp
 ===================================================================
 --- oprofile.orig/pp/oparchive_options.cpp
@@ -58,3 +97,35 @@ Index: oprofile/pp/oparchive_options.h
  }
  
  /// All the chosen sample files.
+Index: oprofile/ChangeLog
+===================================================================
+--- oprofile.orig/ChangeLog
++++ oprofile/ChangeLog
+@@ -1,5 +1,12 @@
+ 2007-05-09  Richard Purdie  <rpurdie@openedhand.com>
+ 
++	* oparchive.cpp:
++	* oparchive_options.cpp:
++	* oparchive_options.h: Add --list-files option to list all files that
++	would be handled by oparchive.
++
++2007-05-09  Richard Purdie  <rpurdie@openedhand.com>
++
+ 	* oprofile/pp/oparchive.cpp: If the debug files have the same name
+ 	as the original binary, the binary gets overwritten. Add in a .debug
+ 	directory to avoid this.
+Index: oprofile/doc/oparchive.1.in
+===================================================================
+--- oprofile.orig/doc/oparchive.1.in
++++ oprofile/doc/oparchive.1.in
+@@ -50,6 +50,10 @@ Output to the given directory. There is 
+ Do not include application-specific images for libraries, kernel modules
+ and the kernel. This option only makes sense if the profile session
+ used --separate.
++.br
++.TP
++.BI "--list-files / -l"
++Only list the files that would be archived, don't copy them.
+ 
+ .SH ENVIRONMENT
+ No special environment variables are recognised by oparchive.

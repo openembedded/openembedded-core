@@ -2,7 +2,21 @@ Index: oprofile/pp/oparchive.cpp
 ===================================================================
 --- oprofile.orig/pp/oparchive.cpp
 +++ oprofile/pp/oparchive.cpp
-@@ -97,8 +97,17 @@ int oparchive(options::spec const & spec
+@@ -84,9 +84,10 @@ int oparchive(options::spec const & spec
+ 		              exe_archive_file);
+ 
+ 		/* If there are any debuginfo files, copy them over.
+-		 * Need to copy the debug info file in the same
+-		 * directory as the executable. The /usr/lib/debug
+-		 *  search path is not going to work.
++		 * Need to copy the debug info file to somewhere we'll
++		 * find it - executable location + "/.debug"
++		 * to avoid overwriting files with the same name. The
++		 * /usr/lib/debug search path is not going to work.
+ 		 */
+ 		bfd * ibfd = open_bfd(exe_name);
+ 		if (ibfd) {
+@@ -97,8 +98,15 @@ int oparchive(options::spec const & spec
  			if (find_separate_debug_file(ibfd, dirname, global,
  				debug_filename)) {
  				/* found something copy it over */
@@ -10,15 +24,29 @@ Index: oprofile/pp/oparchive.cpp
 -					dirname + "/" +
 +				string dest_debug_dir = options::outdirectory +
 +					dirname + "/.debug/";
-+				if (mkdir(dest_debug_dir.c_str(),0755) < 0) {
-+					if (errno!=EEXIST) {
-+						cerr << "Unable to create directory: " 
-+						<< dest_debug_dir << "." << endl;
-+						exit (EXIT_FAILURE);
-+					}
++				if (create_dir(dest_debug_dir.c_str())) {
++					cerr << "Unable to create directory: "
++					<< dest_debug_dir << "." << endl;
++					exit (EXIT_FAILURE);
 +				}
 +
 +				string dest_debug = dest_debug_dir +
  					op_basename(debug_filename);
  				copy_one_file(image_ok, debug_filename, dest_debug);
  			}
+Index: oprofile/ChangeLog
+===================================================================
+--- oprofile.orig/ChangeLog
++++ oprofile/ChangeLog
+@@ -1,5 +1,11 @@
+ 2007-05-09  Richard Purdie  <rpurdie@openedhand.com>
+ 
++	* oprofile/pp/oparchive.cpp: If the debug files have the same name
++	as the original binary, the binary gets overwritten. Add in a .debug
++	directory to avoid this.
++
++2007-05-09  Richard Purdie  <rpurdie@openedhand.com>
++
+ 	* oprofile/daemon/opd_cookie.c: Fix syscall for ARM EABI
+ 
+ 2007-04-25  Manoj Ekbote  <manoj.ekbote@broadcom.com>
