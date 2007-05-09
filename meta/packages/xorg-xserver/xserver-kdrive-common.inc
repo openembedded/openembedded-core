@@ -3,7 +3,6 @@ DEPENDS = "compositeproto damageproto fixesproto recordproto resourceproto scrns
 	libxau libxext libxdmcp libxfont libxrandr tslib virtual/libx11 xtrans"
 
 PROVIDES = "virtual/xserver"
-RPROVIDES = "virtual/xserver"
 PACKAGES =+ "xserver-kdrive-fbdev \
              xserver-kdrive-sdl \
              xserver-kdrive-fake \

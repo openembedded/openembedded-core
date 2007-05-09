@@ -2,7 +2,6 @@ HOMEPAGE = "http://www.x.org"
 SECTION = "x11/base"
 LICENSE = "MIT-X"
 
-RPROVIDES = "virtual/xserver"
 PROVIDES = "virtual/xserver"
 
 DEPENDS = "fontconfig freetype flex-native lbxutil kbproto \ 
