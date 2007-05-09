@@ -1,0 +1,51 @@
+Index: xorg-server-1.2.0/mi/miinitext.c
+===================================================================
+--- xorg-server-1.2.0.orig/mi/miinitext.c	2007-01-23 06:39:17.000000000 +0100
++++ xorg-server-1.2.0/mi/miinitext.c	2007-03-30 11:28:44.000000000 +0200
+@@ -372,6 +372,9 @@
+ #ifdef DMXEXT
+ extern void DMXExtensionInit(INITARGS);
+ #endif
++#ifdef XCALIBRATE
++extern void XCalibrateExtensionInit(INITARGS);
++#endif
+ #ifdef XEVIE
+ extern void XevieExtensionInit(INITARGS);
+ #endif
+@@ -663,6 +666,9 @@
+ #ifdef DAMAGE
+     if (!noDamageExtension) DamageExtensionInit();
+ #endif
++#ifdef  XCALIBRATE
++    XCalibrateExtensionInit ();
++#endif
+ }
+ 
+ void
+Index: xorg-server-1.2.0/include/kdrive-config.h.in
+===================================================================
+--- xorg-server-1.2.0.orig/include/kdrive-config.h.in	2007-03-30 11:31:07.000000000 +0200
++++ xorg-server-1.2.0/include/kdrive-config.h.in	2007-03-30 11:34:09.000000000 +0200
+@@ -22,6 +22,9 @@
+ /* Support tslib touchscreen abstraction library */
+ #undef TSLIB
+ 
++/* Build XCalibrate extension */
++#undef XCALIBRATE
++
+ /* Verbose debugging output hilarity */
+ #undef DEBUG
+ 
+Index: xorg-server-1.2.0/configure.ac
+===================================================================
+--- xorg-server-1.2.0.orig/configure.ac	2007-03-30 12:47:25.000000000 +0200
++++ xorg-server-1.2.0/configure.ac	2007-03-30 12:39:01.000000000 +0200
+@@ -1540,7 +1540,7 @@
+ 	    ;;
+     esac
+     KDRIVE_STUB_LIB='$(top_builddir)/hw/kdrive/src/libkdrivestubs.a'
+-    KDRIVE_LIBS="$DIX_LIB $KDRIVE_LIB $KDRIVE_OS_LIB $KDRIVE_PURE_LIBS $KDRIVE_STUB_LIB $TSLIB_LIBS"
++    KDRIVE_LIBS="$DIX_LIB $KDRIVE_LIB $KDRIVE_PURE_LIBS $KDRIVE_OS_LIB $KDRIVE_STUB_LIB $TSLIB_LIBS"
+ 
+     # check if we can build Xephyr
+     PKG_CHECK_MODULES(XEPHYR, x11 xext xfont xau xdmcp, [xephyr="yes"], [xephyr="no"])

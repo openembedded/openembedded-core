@@ -40,13 +40,14 @@
      ErrorF("-switchCmd       Command to execute on vt switch\n");
      ErrorF("-nozap           Don't terminate server on Ctrl+Alt+Backspace\n");
      ErrorF("vtxx             Use virtual terminal xx instead of the next available\n");
-@@ -796,6 +799,10 @@
+@@ -796,6 +799,11 @@
  	    UseMsg ();
  	return 2;
      }
 +    if (!strcmp (argv[i], "-use-evdev"))
 +    {
 +	use_evdev = 1;
++	return 1;
 +    }
      if (!strcmp (argv[i], "-keyboard"))
      {
