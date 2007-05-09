@@ -4,7 +4,7 @@
 FILES_${PN} += '${libdir}/perl5'
 EXTRA_CPANFLAGS = ""
 
-DEPENDS  += "perl-native"
+DEPENDS  += "perl-native perl"
 RDEPENDS += "perl"
 
 cpan_do_configure () {
