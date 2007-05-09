@@ -1,0 +1,13 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- xtrans-X11R7.0-1.0.0/xtrans.pc.in~fix-missing-includepath	2005-07-02 20:00:50.000000000 +0200
++++ xtrans-X11R7.0-1.0.0/xtrans.pc.in	2006-08-11 19:27:58.000000000 +0200
+@@ -6,4 +6,4 @@
+ Name: XTrans
+ Description: Abstract network code for X
+ Version: @PACKAGE_VERSION@
+-Cflags: -I${includedir} -D_BSD_SOURCE @fchown_define@ @sticky_bit_define@
++Cflags: -I${includedir} -I${includedir}/X11/Xtrans -D_BSD_SOURCE @fchown_define@ @sticky_bit_define@
