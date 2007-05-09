@@ -14,7 +14,7 @@ def autotools_dep_prepend(d):
 	deps += 'autoconf-native automake-native '
 
 	if not pn in ['libtool', 'libtool-native', 'libtool-cross']:
-		deps += 'libtool-native '
+		deps += 'libtool-native libtool-cross '
 
 	return deps + 'gnu-config-native '
 
