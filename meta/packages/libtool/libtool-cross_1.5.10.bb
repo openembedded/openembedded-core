@@ -1,7 +1,7 @@
 SECTION = "devel"
 require libtool_${PV}.bb
 
-PR = "r4"
+PR = "r5"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://libdir-la.patch;patch=1 \
@@ -21,6 +21,13 @@ do_compile () {
 
 do_stage () {
         install -m 0755 ${HOST_SYS}-libtool ${bindir}/${HOST_SYS}-libtool
+        install -m 0644 libltdl/ltdl.h ${STAGING_INCDIR}/
+        install -d ${STAGING_DATADIR}/libtool ${STAGING_DATADIR}/aclocal
+        install -c config.guess ${STAGING_DATADIR}/libtool/
+        install -c config.sub ${STAGING_DATADIR}/libtool/
+        install -c -m 0644 ltmain.sh ${STAGING_DATADIR}/libtool/
+        install -c -m 0644 libtool.m4 ${STAGING_DATADIR}/aclocal/
+        install -c -m 0644 ltdl.m4 ${STAGING_DATADIR}/aclocal/
 }
 
 do_install () {
