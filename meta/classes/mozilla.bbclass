@@ -1,6 +1,6 @@
 SECTION = "x11/utils"
 DEPENDS += "gnu-config-native virtual/libintl xt libxi \
-	    zip-native gtk+ orbit2 libidl-native"
+	    zip-native gtk+"
 LICENSE = "MPL NPL"
 SRC_URI += "file://mozconfig"
 
