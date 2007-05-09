@@ -1,6 +1,6 @@
 LICENSE = "MIT"
 DEPENDS = "compositeproto damageproto fixesproto recordproto resourceproto scrnsaverproto videoproto xextproto xproto \
-	libxau libxext libxdmcp libxfont libxrandr tslib virtual/libsdl virtual/libx11 xtrans"
+	libxau libxext libxdmcp libxfont libxrandr tslib virtual/libx11 xtrans"
 
 PROVIDES = "virtual/xserver"
 RPROVIDES = "virtual/xserver"
