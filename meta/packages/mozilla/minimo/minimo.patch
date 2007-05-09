@@ -1,0 +1,567 @@
+Index: mozilla/content/html/content/src/nsFormSubmission.cpp
+===================================================================
+RCS file: /cvsroot/mozilla/content/html/content/src/nsFormSubmission.cpp,v
+retrieving revision 1.46
+diff --context=3 -r1.46 nsFormSubmission.cpp
+*** mozilla/content/html/content/src/nsFormSubmission.cpp	13 Jul 2005 16:55:59 -0000	1.46
+--- mozilla/content/html/content/src/nsFormSubmission.cpp	21 Jul 2006 00:27:14 -0000
+***************
+*** 1315,1325 ****
+    nsresult rv = NS_OK;
+  
+    nsCAutoString charset(aCharset);
+-   // canonical name is passed so that we just have to check against
+-   // *our* canonical names listed in charsetaliases.properties
+-   if (charset.EqualsLiteral("ISO-8859-1")) {
+-     charset.AssignLiteral("windows-1252");
+-   }
+  
+    // use UTF-8 for UTF-16* and UTF-32* (per WHATWG and existing practice of
+    // MS IE/Opera). 
+--- 1315,1320 ----
+Index: mozilla/embedding/base/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/embedding/base/Makefile.in,v
+retrieving revision 1.34.8.2
+diff --context=3 -r1.34.8.2 Makefile.in
+*** mozilla/embedding/base/Makefile.in	14 Feb 2006 05:28:31 -0000	1.34.8.2
+--- mozilla/embedding/base/Makefile.in	21 Jul 2006 00:27:14 -0000
+***************
+*** 43,48 ****
+--- 43,49 ----
+  
+  MODULE          = embed_base
+  LIBRARY_NAME    = embed_base_s
++ EXPORT_LIBRARY	= 1
+  XPIDL_MODULE	= embed_base
+  
+  include $(DEPTH)/config/autoconf.mk
+Index: mozilla/js/src/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/js/src/Makefile.in,v
+retrieving revision 3.95.4.4
+diff --context=3 -r3.95.4.4 Makefile.in
+*** mozilla/js/src/Makefile.in	7 Jul 2006 02:12:02 -0000	3.95.4.4
+--- mozilla/js/src/Makefile.in	21 Jul 2006 00:27:14 -0000
+***************
+*** 46,51 ****
+--- 46,52 ----
+  
+  MODULE		= js
+  LIBRARY_NAME	= mozjs
++ EXPORT_LIBRARY	= 1
+  LIB_IS_C_ONLY	= 1
+  GRE_MODULE	= 1
+  
+Index: mozilla/minimo/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/minimo/Makefile.in,v
+retrieving revision 1.1.2.2
+diff --context=3 -r1.1.2.2 Makefile.in
+*** mozilla/minimo/Makefile.in	29 Jun 2006 06:11:30 -0000	1.1.2.2
+--- mozilla/minimo/Makefile.in	21 Jul 2006 00:27:14 -0000
+***************
+*** 41,46 ****
+  
+  include $(DEPTH)/config/autoconf.mk
+  
+! DIRS = config components chrome locales customization base 
+  
+  include $(topsrcdir)/config/rules.mk
+--- 41,46 ----
+  
+  include $(DEPTH)/config/autoconf.mk
+  
+! DIRS = config chrome locales customization base 
+  
+  include $(topsrcdir)/config/rules.mk
+Index: mozilla/minimo/base/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/minimo/base/Makefile.in,v
+retrieving revision 1.3.2.7
+diff --context=3 -r1.3.2.7 Makefile.in
+*** mozilla/minimo/base/Makefile.in	18 Apr 2006 21:04:38 -0000	1.3.2.7
+--- mozilla/minimo/base/Makefile.in	21 Jul 2006 00:27:14 -0000
+***************
+*** 95,101 ****
+  
+  # this should move into the toolkit!
+  LOCAL_INCLUDES	= -I$(srcdir) -I$(topsrcdir)/xpfe/browser/src/
+- CPPSRCS    += nsBrowserStatusFilter.cpp nsBrowserInstance.cpp
+  
+  ifdef WINCE
+  RCINCLUDE  = wince/SplashScreen.rc
+--- 95,100 ----
+***************
+*** 139,148 ****
+  endif
+  
+  
+- FINAL_LINK_COMPS=$(topsrcdir)/minimo/base/$(FINAL_PLATFORM)/minimo-link-comps
+- FINAL_LINK_COMP_NAMES=$(topsrcdir)/minimo/base/$(FINAL_PLATFORM)/minimo-link-names
+- FINAL_LINK_LIBS=$(topsrcdir)/minimo/base/$(FINAL_PLATFORM)/minimo-link-libs
+- 
+  include $(topsrcdir)/config/static-config.mk
+  
+  EXTRA_DEPS     += $(STATIC_EXTRA_DEPS)
+--- 138,143 ----
+***************
+*** 176,189 ****
+  # (same as in mozilla/js/src/Makefile.in)
+  ifdef WINCE
+  LDFLAGS         += -OPT:NOICF
+  endif
+  
+- export::
+- 	$(NSINSTALL) $(topsrcdir)/xpfe/browser/src/nsBrowserStatusFilter.cpp .
+- 	$(NSINSTALL) $(topsrcdir)/xpfe/browser/src/nsBrowserInstance.cpp .
+- 
+- 
+- GARBAGE += nsBrowserStatusFilter.cpp nsBrowserInstance.cpp
+  
+  ifdef WINCE
+  package::
+--- 171,181 ----
+  # (same as in mozilla/js/src/Makefile.in)
+  ifdef WINCE
+  LDFLAGS         += -OPT:NOICF
++ else
++ # Hack to work around libxpcom_core.a / libunicharutil_s.a link order problem.
++ LDFLAGS		+= -u NS_StringGetData_P -u NS_StringGetMutableData_P
+  endif
+  
+  
+  ifdef WINCE
+  package::
+Index: mozilla/minimo/base/Minimo.cpp
+===================================================================
+RCS file: /cvsroot/mozilla/minimo/base/Minimo.cpp,v
+retrieving revision 1.1.2.11
+diff --context=3 -r1.1.2.11 Minimo.cpp
+*** mozilla/minimo/base/Minimo.cpp	11 Jul 2006 19:37:05 -0000	1.1.2.11
+--- mozilla/minimo/base/Minimo.cpp	21 Jul 2006 00:27:15 -0000
+***************
+*** 781,789 ****
+    CreateListenerWindow();
+  #endif
+    
+! #ifdef MOZ_WIDGET_GTK2
+    gtk_set_locale();
+    gtk_init(&argc, &argv);
+  #endif
+    
+  #ifdef HACKY_PRE_LOAD_LIBRARY
+--- 781,794 ----
+    CreateListenerWindow();
+  #endif
+    
+! #if defined(MOZ_WIDGET_GTK) || defined(MOZ_WIDGET_GTK2)
+! #if defined(MOZ_WIDGET_GTK)
+    gtk_set_locale();
++ #endif
+    gtk_init(&argc, &argv);
++ 
++   gtk_widget_set_default_visual(gdk_rgb_get_visual());
++   gtk_widget_set_default_colormap(gdk_rgb_get_cmap());
+  #endif
+    
+  #ifdef HACKY_PRE_LOAD_LIBRARY
+Index: mozilla/minimo/base/SplashScreen.cpp
+===================================================================
+RCS file: /cvsroot/mozilla/minimo/base/SplashScreen.cpp,v
+retrieving revision 1.1.2.3
+diff --context=3 -r1.1.2.3 SplashScreen.cpp
+*** mozilla/minimo/base/SplashScreen.cpp	11 Jul 2006 18:44:17 -0000	1.1.2.3
+--- mozilla/minimo/base/SplashScreen.cpp	21 Jul 2006 00:27:15 -0000
+***************
+*** 180,188 ****
+--- 180,203 ----
+  void KillSplashScreen() {}
+  void GetScreenSize(unsigned long* x, unsigned long* y)
+  {
++ #ifdef MOZ_WIDGET_GTK2
++   GdkDisplay* display = gdk_display_get_default();
++   if (display != NULL)
++   {
++     GdkScreen *screen;
++     screen = gdk_display_get_default_screen(display);
++     *x = gdk_screen_get_width(screen);
++     *y = gdk_screen_get_height(screen);
++   }
++   else
++   {
++ #endif
+    // we need to figure this out.
+    *x = 240;
+    *y = 320;
++ #ifdef MOZ_WIDGET_GTK2
++   }
++ #endif
+  }
+  
+  
+Index: mozilla/minimo/chrome/content/minimo.js
+===================================================================
+RCS file: /cvsroot/mozilla/minimo/chrome/content/minimo.js,v
+retrieving revision 1.9.2.90
+diff --context=3 -r1.9.2.90 minimo.js
+*** mozilla/minimo/chrome/content/minimo.js	11 Jul 2006 19:37:04 -0000	1.9.2.90
+--- mozilla/minimo/chrome/content/minimo.js	21 Jul 2006 00:27:16 -0000
+***************
+*** 1313,1319 ****
+           43 const FIND_LINKS = 2;
+           http://lxr.mozilla.org/mozilla/source/toolkit/components/typeaheadfind/content/findBar.js
+        */
+!       gBrowser.fastFind.find(vQuery,0);
+      }
+    } catch (e) {
+      onErrorHandler(e);
+--- 1313,1319 ----
+           43 const FIND_LINKS = 2;
+           http://lxr.mozilla.org/mozilla/source/toolkit/components/typeaheadfind/content/findBar.js
+        */
+!       gBrowser.fastFind.find(vQuery,0,this.mHasFocus);
+      }
+    } catch (e) {
+      onErrorHandler(e);
+***************
+*** 1324,1330 ****
+  
+  function DoBrowserFindNext() {
+    try { 
+! 	gBrowser.fastFind.findNext();
+    } catch (e) {
+      onErrorHandler(e);
+    }  
+--- 1324,1330 ----
+  
+  function DoBrowserFindNext() {
+    try { 
+! 	gBrowser.fastFind.findNext(this.mHasFocus);
+    } catch (e) {
+      onErrorHandler(e);
+    }  
+Index: mozilla/minimo/config/linux_package.sh
+===================================================================
+RCS file: /cvsroot/mozilla/minimo/config/linux_package.sh,v
+retrieving revision 1.8.2.3
+diff --context=3 -r1.8.2.3 linux_package.sh
+*** mozilla/minimo/config/linux_package.sh	30 Jun 2006 16:35:19 -0000	1.8.2.3
+--- mozilla/minimo/config/linux_package.sh	21 Jul 2006 00:27:16 -0000
+***************
+*** 29,37 ****
+  cp -pRL bin/libnssckbi.so                                  minimo
+  cp -pRL bin/libsmime3.so                                   minimo
+  cp -pRL bin/libsoftokn3.so                                 minimo
+- cp -pRL bin/libsoftokn3.chk                                minimo
+  cp -pRL bin/libfreebl3.so                                  minimo
+- cp -pRL bin/libfreebl3.chk                                 minimo
+  cp -pRL bin/libssl3.so                                     minimo
+  
+  mkdir -p minimo/chrome
+--- 29,35 ----
+***************
+*** 62,69 ****
+  cp -pRL bin/components/nsHelperAppDlg.js                   minimo/components
+  cp -pRL bin/components/nsProgressDialog.js                 minimo/components
+  
+- cp -pRL bin/extensions/spatial-navigation@extensions.mozilla.org/components/* minimo/components
+- 
+  mkdir -p minimo/greprefs
+  cp -pRL bin/greprefs/*                                     minimo/greprefs
+  
+--- 60,65 ----
+***************
+*** 80,86 ****
+  
+  echo Linking XPT files.
+  
+! bin/xpt_link minimo/components/all.xpt          bin/components/*.xpt
+  
+  echo Chewing on chrome
+  
+--- 76,82 ----
+  
+  echo Linking XPT files.
+  
+! host/bin/host_xpt_link minimo/components/all.xpt          bin/components/*.xpt
+  
+  echo Chewing on chrome
+  
+Index: mozilla/profile/dirserviceprovider/src/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/profile/dirserviceprovider/src/Makefile.in,v
+retrieving revision 1.7
+diff --context=3 -r1.7 Makefile.in
+*** mozilla/profile/dirserviceprovider/src/Makefile.in	6 Apr 2005 03:35:21 -0000	1.7
+--- mozilla/profile/dirserviceprovider/src/Makefile.in	21 Jul 2006 00:27:16 -0000
+***************
+*** 44,49 ****
+--- 44,50 ----
+  
+  MODULE		= profdirserviceprovider
+  LIBRARY_NAME	= profdirserviceprovider_s
++ EXPORT_LIBRARY	= 1
+  MOZILLA_INTERNAL_API = 1
+  
+  REQUIRES	= xpcom \
+Index: mozilla/security/coreconf/Linux.mk
+===================================================================
+RCS file: /cvsroot/mozilla/security/coreconf/Linux.mk,v
+retrieving revision 1.18.18.1
+diff --context=3 -r1.18.18.1 Linux.mk
+*** mozilla/security/coreconf/Linux.mk	3 Feb 2006 22:26:36 -0000	1.18.18.1
+--- mozilla/security/coreconf/Linux.mk	21 Jul 2006 00:27:16 -0000
+***************
+*** 117,122 ****
+--- 117,126 ----
+  	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+  	CPU_ARCH        = mips
+  else
++ ifeq ($(OS_TEST),arm)
++ 	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
++ 	CPU_ARCH        = arm
++ else
+  	OS_REL_CFLAGS	= -DLINUX1_2 -Di386 -D_XOPEN_SOURCE
+  	CPU_ARCH	= x86
+  endif
+***************
+*** 133,138 ****
+--- 137,143 ----
+  endif
+  endif
+  endif
++ endif
+  
+  
+  LIBC_TAG		= _glibc
+Index: mozilla/security/coreconf/arch.mk
+===================================================================
+RCS file: /cvsroot/mozilla/security/coreconf/arch.mk,v
+retrieving revision 1.17.14.2
+diff --context=3 -r1.17.14.2 arch.mk
+*** mozilla/security/coreconf/arch.mk	3 Feb 2006 22:26:36 -0000	1.17.14.2
+--- mozilla/security/coreconf/arch.mk	21 Jul 2006 00:27:16 -0000
+***************
+*** 60,77 ****
+  	64BIT_TAG=
+  endif
+  
+! OS_ARCH := $(subst /,_,$(shell uname -s))
+  
+  #
+  # Attempt to differentiate between sparc and x86 Solaris
+  #
+  
+! OS_TEST := $(shell uname -m)
+! ifeq ($(OS_TEST),i86pc)
+!     OS_RELEASE := $(shell uname -r)_$(OS_TEST)
+! else
+!     OS_RELEASE := $(shell uname -r)
+! endif
+  
+  #
+  # Force the IRIX64 machines to use IRIX.
+--- 60,73 ----
+  	64BIT_TAG=
+  endif
+  
+! OS_ARCH := Linux
+  
+  #
+  # Attempt to differentiate between sparc and x86 Solaris
+  #
+  
+! OS_TEST := arm
+! OS_RELEASE := 2.6
+  
+  #
+  # Force the IRIX64 machines to use IRIX.
+Index: mozilla/toolkit/components/build/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/toolkit/components/build/Makefile.in,v
+retrieving revision 1.24.2.10
+diff --context=3 -r1.24.2.10 Makefile.in
+*** mozilla/toolkit/components/build/Makefile.in	13 Jul 2006 20:08:29 -0000	1.24.2.10
+--- mozilla/toolkit/components/build/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 112,118 ****
+  	$(NULL)
+  
+  SHARED_LIBRARY_LIBS = \
+- 	../startup/src/$(LIB_PREFIX)appstartup_s.$(LIB_SUFFIX) \
+  	$(NULL)
+  
+  ifdef MOZ_XPINSTALL
+--- 112,117 ----
+Index: mozilla/toolkit/components/startup/src/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/toolkit/components/startup/src/Makefile.in,v
+retrieving revision 1.7
+diff --context=3 -r1.7 Makefile.in
+*** mozilla/toolkit/components/startup/src/Makefile.in	27 Jul 2005 20:42:44 -0000	1.7
+--- mozilla/toolkit/components/startup/src/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 43,48 ****
+--- 43,49 ----
+  
+  MODULE     = toolkitcomps
+  LIBRARY_NAME = appstartup_s
++ EXPORT_LIBRARY = 1
+  FORCE_STATIC_LIB = 1
+  LIBXUL_LIBRARY = 1
+  
+Index: mozilla/toolkit/xre/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/toolkit/xre/Makefile.in,v
+retrieving revision 1.48.2.3
+diff --context=3 -r1.48.2.3 Makefile.in
+*** mozilla/toolkit/xre/Makefile.in	30 Sep 2005 19:52:44 -0000	1.48.2.3
+--- mozilla/toolkit/xre/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 45,51 ****
+  
+  MODULE = xulapp
+  LIBRARY_NAME = xulapp_s
+- EXPORT_LIBRARY = 1
+  LIBXUL_LIBRARY = 1
+  
+  REQUIRES = \
+--- 45,50 ----
+***************
+*** 176,189 ****
+  
+  include $(topsrcdir)/config/rules.mk
+  
+- ifdef BUILD_STATIC_LIBS
+- export::
+- 	@$(PERL) -I$(MOZILLA_DIR)/config $(MOZILLA_DIR)/config/build-list.pl $(FINAL_LINK_COMP_NAMES) Apprunner
+- #	embedding/browser/gtk/src/Makefile.in sucks! we need to add an empty line to 
+- # FINAL_LINK_COMPS to keep the two lists in sync :-(
+- 	@$(PERL) -I$(MOZILLA_DIR)/config $(MOZILLA_DIR)/config/build-list.pl $(FINAL_LINK_COMPS) ""
+- endif
+- 
+  LOCAL_INCLUDES += \
+  	-I$(srcdir) \
+  	-I$(topsrcdir)/xpfe/bootstrap \
+--- 175,180 ----
+Index: mozilla/xpcom/build/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/xpcom/build/Makefile.in,v
+retrieving revision 1.90.2.2
+diff --context=3 -r1.90.2.2 Makefile.in
+*** mozilla/xpcom/build/Makefile.in	29 Jan 2006 16:51:02 -0000	1.90.2.2
+--- mozilla/xpcom/build/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 61,67 ****
+  endif
+  
+  # Do not set EXPORT_LIBRARY as we do not want xpcom in the static libs list
+! #EXPORT_LIBRARY = 1
+  GRE_MODULE	= 1
+  MOZILLA_INTERNAL_API = 1
+  
+--- 61,67 ----
+  endif
+  
+  # Do not set EXPORT_LIBRARY as we do not want xpcom in the static libs list
+! EXPORT_LIBRARY = 1
+  GRE_MODULE	= 1
+  MOZILLA_INTERNAL_API = 1
+  
+Index: mozilla/xpcom/reflect/xptcall/src/md/unix/xptcstubs_arm.cpp
+===================================================================
+RCS file: /cvsroot/mozilla/xpcom/reflect/xptcall/src/md/unix/xptcstubs_arm.cpp,v
+retrieving revision 1.7
+diff --context=3 -r1.7 xptcstubs_arm.cpp
+*** mozilla/xpcom/reflect/xptcall/src/md/unix/xptcstubs_arm.cpp	18 Apr 2004 14:18:18 -0000	1.7
+--- mozilla/xpcom/reflect/xptcall/src/md/unix/xptcstubs_arm.cpp	21 Jul 2006 00:27:17 -0000
+***************
+*** 45,53 ****
+  #endif
+  
+  /* Specify explicitly a symbol for this function, don't try to guess the c++ mangled symbol.  */
+! static nsresult PrepareAndDispatch(nsXPTCStubBase* self, uint32 methodIndex, PRUint32* args) asm("_PrepareAndDispatch");
+  
+! static nsresult
+  PrepareAndDispatch(nsXPTCStubBase* self, uint32 methodIndex, PRUint32* args)
+  {
+  #define PARAM_BUFFER_COUNT     16
+--- 45,53 ----
+  #endif
+  
+  /* Specify explicitly a symbol for this function, don't try to guess the c++ mangled symbol.  */
+! nsresult PrepareAndDispatch(nsXPTCStubBase* self, uint32 methodIndex, PRUint32* args) asm("_PrepareAndDispatch");
+  
+! nsresult
+  PrepareAndDispatch(nsXPTCStubBase* self, uint32 methodIndex, PRUint32* args)
+  {
+  #define PARAM_BUFFER_COUNT     16
+Index: mozilla/xpfe/browser/src/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/xpfe/browser/src/Makefile.in,v
+retrieving revision 1.70
+diff --context=3 -r1.70 Makefile.in
+*** mozilla/xpfe/browser/src/Makefile.in	18 Mar 2005 21:23:45 -0000	1.70
+--- mozilla/xpfe/browser/src/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 44,49 ****
+--- 44,50 ----
+  
+  MODULE		= browser
+  LIBRARY_NAME	= mozbrwsr_s
++ EXPORT_LIBRARY	= 1
+  FORCE_STATIC_LIB = 1
+  LIBXUL_LIBRARY = 1
+  MODULE_NAME	= nsBrowserModule
+Index: mozilla/xpfe/components/build/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/xpfe/components/build/Makefile.in,v
+retrieving revision 1.69.8.1
+diff --context=3 -r1.69.8.1 Makefile.in
+*** mozilla/xpfe/components/build/Makefile.in	27 Sep 2005 00:15:25 -0000	1.69.8.1
+--- mozilla/xpfe/components/build/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 44,50 ****
+  
+  MODULE		= appcomps
+  LIBRARY_NAME	= appcomps
+- EXPORT_LIBRARY = 1
+  IS_COMPONENT	= 1
+  MODULE_NAME	= application
+  LIBXUL_LIBRARY	= 1
+--- 44,49 ----
+Index: mozilla/xpfe/components/filepicker/src/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/xpfe/components/filepicker/src/Makefile.in,v
+retrieving revision 1.9.8.1
+diff --context=3 -r1.9.8.1 Makefile.in
+*** mozilla/xpfe/components/filepicker/src/Makefile.in	22 May 2006 16:29:32 -0000	1.9.8.1
+--- mozilla/xpfe/components/filepicker/src/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 47,53 ****
+  MODULE		= filepicker
+  LIBRARY_NAME	= fileview
+  SHORT_LIBNAME	= fileview
+- EXPORT_LIBRARY	= 1
+  IS_COMPONENT	= 1
+  MODULE_NAME	= nsFileViewModule
+  MOZILLA_INTERNAL_API = 1
+--- 47,52 ----
+Index: mozilla/xpfe/components/find/src/Makefile.in
+===================================================================
+RCS file: /cvsroot/mozilla/xpfe/components/find/src/Makefile.in,v
+retrieving revision 1.37
+diff --context=3 -r1.37 Makefile.in
+*** mozilla/xpfe/components/find/src/Makefile.in	18 Mar 2005 21:23:46 -0000	1.37
+--- mozilla/xpfe/components/find/src/Makefile.in	21 Jul 2006 00:27:17 -0000
+***************
+*** 45,51 ****
+  MODULE		= appcomps
+  XPIDL_MODULE	= mozfind
+  LIBRARY_NAME	= mozfind
+- EXPORT_LIBRARY = 1
+  IS_COMPONENT	= 1
+  MODULE_NAME	= nsFindComponent
+  LIBXUL_LIBRARY	= 1
+--- 45,50 ----

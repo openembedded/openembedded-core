@@ -1,0 +1,13 @@
+See https://bugzilla.mozilla.org/show_bug.cgi?id=322806 and http://bugs.openembedded.org/show_bug.cgi?id=1600
+
+--- /tmp/xptcinvoke_arm.cpp	2006-12-10 20:02:57.000000000 +0100
++++ mozilla/xpcom/reflect/xptcall/src/md/unix/xptcinvoke_arm.cpp	2006-12-10 20:03:54.592227000 +0100
+@@ -212,7 +212,7 @@
+     "add	sp, sp, r4	\n\t"	/* restore stack pointer		*/
+     "mov	%0, r0		\n\t"	/* the result...			*/
+     : "=r" (result)
+-    : "r" (&my_params)
++    : "r" (&my_params), "m" (my_params)
+     : "r0", "r1", "r2", "r3", "r4", "ip", "lr", "sp"
+     );
+     

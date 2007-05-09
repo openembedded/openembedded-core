@@ -1,0 +1,4 @@
+#!/bin/sh
+export MOZILLA_FIVE_HOME=/usr/lib/mozilla-minimo
+export LD_LIBRARY_PATH=${MOZILLA_FIVE_HOME}
+exec ${MOZILLA_FIVE_HOME}/minimo "$@"
