@@ -130,6 +130,9 @@ python () {
         for dep in (bb.data.getVar('PACKAGE_EXTRA_DEPENDS', d, True) or "").split():
             deps += " %s:do_populate_staging" % dep
         bb.data.setVarFlag('do_package_write', 'depends', deps, d)
+	
+        # shlibs requires any DEPENDS to have already packaged for the *.list files
+        bb.data.setVarFlag('do_package', 'deptask', 'do_package', d)
 }
 
 # file(1) output to match to consider a file an unstripped executable
@@ -899,8 +902,6 @@ python package_do_package () {
 	for f in (bb.data.getVar('PACKAGEFUNCS', d, 1) or '').split():
 		bb.build.exec_func(f, d)
 }
-# shlibs requires any DEPENDS to have already packaged for the *.list files
-do_package[deptask] = "do_package"
 do_package[dirs] = "${D}"
 addtask package before do_build after do_install
 
