@@ -6,21 +6,23 @@ PRIORITY = "optional"
 
 DEPENDS = "libxrender xt xft fontconfig freetype libidl dbus-glib pango atk gtk+ libidl-native"
 
-CVSSVR="cvs-mirror.mozilla.org"
+CVSSVR = "cvs-mirror.mozilla.org"
 BRTAG = "MOZILLA_1_8_BRANCH"
 MOZDATE = "20070510"
 
 PV = "0.02+cvs${MOZDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "cvs://anonymous@${CVSSVR}/cvsroot;module=mozilla;tag=${BRTAG};date=${MOZDATE} \
-	   file://minimo.patch;patch=1 \
+           file://minimo.patch;patch=1 \
            file://bug-322806.diff;patch=1 \
-	   file://mozconfig file://minimo \
-	   file://eabi-fix.patch;patch=1 \
-	   file://eabi-fix2.patch;patch=1 \
-	   file://eabi-fix3.patch;patch=1 \
-           file://minimo.desktop file://minimo.png"
+           file://mozconfig 
+           file://minimo \
+           file://eabi-fix.patch;patch=1 \
+           file://eabi-fix2.patch;patch=1 \
+           file://eabi-fix3.patch;patch=1 \
+           file://minimo.desktop 
+           file://minimo.png"
 
 inherit autotools
 
@@ -33,7 +35,7 @@ export ac_cv_prog_HOST_CC="${BUILD_CC}"
 export ac_cv_prog_HOST_CFLAGS="${BUILD_CFLAGS}"
 export ac_cv_prog_HOST_CXX="${BUILD_CXX}"
 export ac_cv_prog_HOST_CXXFLAGS="${BUILD_CXXFLAGS}"
-export HOST_LIBIDL_CONFIG = "libIDL-config-2"
+export HOST_LIBIDL_CONFIG = "${STAGING_BINDIR_NATIVE}/libIDL-config-2"
 
 mozdir="${libdir}/mozilla-minimo"
 
