@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r58"
+PR = "r59"
 
 PACKAGES = "\
     task-oh-base \
@@ -39,10 +39,12 @@ RDEPENDS_task-oh-boot = "\
     base-passwd \
     busybox \
     initscripts \
+    modutils-initscripts \
     netbase \
     sysvinit \
     tinylogin \
-    udev"
+    udev \
+    update-alternatives"
 
 RDEPENDS_task-oh-boot-extras = "\
     task-base"
