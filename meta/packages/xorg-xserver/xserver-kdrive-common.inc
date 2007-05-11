@@ -1,5 +1,5 @@
 LICENSE = "MIT"
-DEPENDS = "compositeproto damageproto fixesproto recordproto resourceproto scrnsaverproto videoproto xextproto xproto \
+DEPENDS = "compositeproto damageproto fixesproto recordproto resourceproto scrnsaverproto xineramaproto videoproto xextproto xproto \
 	libxau libxext libxdmcp libxfont libxrandr tslib virtual/libx11 xtrans"
 
 PROVIDES = "virtual/xserver"
