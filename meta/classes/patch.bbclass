@@ -419,7 +419,7 @@ python patch_do_patch() {
 		"user": UserResolver,
 	}
 
-	rcls = resolvermap[bb.data.getVar('PATCHRESOLVE', d, 1) or 'user']
+	rcls = resolvermap[bb.data.getVar('PATCHRESOLVE', d, 1) or 'noop']
 
 	s = bb.data.getVar('S', d, 1)
 
