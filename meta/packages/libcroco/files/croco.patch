@@ -1,0 +1,13 @@
+--- opie/configure.in.old	2006-05-19 20:57:30.000000000 +0100
++++ opie/configure.in	2006-05-19 20:57:56.000000000 +0100
+@@ -131,8 +131,8 @@
+ dnl Define the CROCO_LIBS and CROCO_CFLAGS variables. These will be used
+ dnl by client application to know where to find croco include files and libs.
+ dnl
+-CROCO_LIBS="-L${libdir} -lcroco-$LIBCROCO_MAJOR_VERSION.$LIBCROCO_MINOR_VERSION"
+-CROCO_CFLAGS="-I${includedir}/libcroco-$LIBCROCO_MAJOR_VERSION.$LIBCROCO_MINOR_VERSION"
++CROCO_LIBS='-L${libdir}'" -lcroco-$LIBCROCO_MAJOR_VERSION.$LIBCROCO_MINOR_VERSION"
++CROCO_CFLAGS='-I${includedir}'"/libcroco-$LIBCROCO_MAJOR_VERSION.$LIBCROCO_MINOR_VERSION"
+ 
+ AC_SUBST(LIBXML2_LIBS)
+ AC_SUBST(LIBXML2_CFLAGS)
