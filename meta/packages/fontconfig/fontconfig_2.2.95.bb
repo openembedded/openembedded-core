@@ -3,7 +3,7 @@ LICENSE = "BSD"
 DESCRIPTION = "A library for configuring and customizing font access."
 DEPENDS = "expat freetype freetype-native zlib fontconfig-native"
 
-SRC_URI = "http://pdx.freedesktop.org/fontconfig/release/fontconfig-${PV}.tar.gz \
+SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://fc-glyphname.patch;patch=1 \
            file://fc-lang.patch;patch=1 \
 	   file://local.conf"
