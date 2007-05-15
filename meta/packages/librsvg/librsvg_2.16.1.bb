@@ -1,18 +1,20 @@
 DESCRIPTION = "Library for rendering SVG files"
 SECTION = "x11/utils"
-DEPENDS = "gtk+ libcroco libart-lgpl libxml2 popt"
+DEPENDS = "gtk+ libcroco cairo libart-lgpl libxml2"
 LICENSE = "LGPL"
-PR = "r1"
 
 EXTRA_OECONF = "--disable-mozilla-plugin"
 
 inherit autotools pkgconfig gnome
 
-PACKAGES =+ "librsvg-gtk librsvg-gtk-dev rsvg"
+PACKAGES =+ "librsvg-gtk librsvg-gtk-dbg rsvg"
 FILES_${PN} = "${libdir}/*.so.*"
-FILES_rsvg = "${bindir}/rsvg ${bindir}/rsvg-view ${datadir}/pixmaps/svg-viewer.svg"
+FILES_rsvg = "${bindir}/rsvg \
+	      ${bindir}/rsvg-view \
+	      ${bindir}/rsvg-convert \
+	      ${datadir}/pixmaps/svg-viewer.svg"
 FILES_librsvg-gtk = "${libdir}/gtk-2.0/*/*/*.so"
-FILES_librsvg-gtk-dev = "${libdir}/gtk-2.0"
+FILES_librsvg-gtk-dbg += "${libdir}/gtk-2.0/*/*/.debug"
 
 EXTRA_OECONF = "--disable-mozilla-plugin"
 
