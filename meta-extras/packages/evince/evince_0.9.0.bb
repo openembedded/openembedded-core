@@ -3,13 +3,9 @@ LICENSE = "GPL"
 SECTION = "x11/office"
 DEPENDS = "gnome-doc-utils poppler libxml2 gtk+ gnome-vfs gconf libglade gnome-keyring"
 
-PV = "0.9.0+svn${SRCDATE}"
-
 inherit gnome pkgconfig gtk-icon-cache
 
-SRC_URI = "svn://svn.gnome.org/svn/evince;module=trunk \
+SRC_URI = "${GNOME_MIRROR}/${PN}/0.9/${PN}-${PV}.tar.bz2 \
         file://no-icon-theme.diff;patch=1;pnum=0"
-
-S = "${WORKDIR}/trunk"
 
 EXTRA_OECONF = "--without-libgnome --disable-thumbnailer"
