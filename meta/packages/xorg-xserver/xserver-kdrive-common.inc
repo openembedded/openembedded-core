@@ -117,7 +117,7 @@ EXTRA_OECONF = "--enable-composite --enable-kdrive \
                 --disable-xorg --disable-xorgcfg \
                 --disable-xkb --disable-xnest --disable-xvfb \
                 --disable-xevie --disable-xprint --disable-xtrap \
-                --disable-dmx ${W100_OECONF} ${IMAGEON_OECONF} \
+                --disable-dmx \
                 --with-default-font-path=built-ins \
                 --enable-tslib --enable-xcalibrate \
                 ac_cv_file__usr_share_X11_sgml_defs_ent=no"
