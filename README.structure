@@ -211,3 +211,4 @@ Certain autoconf test results cannot be determined when cross compiling since it
 can't run tests on a live system. This directory therefore contains a list of 
 cached results for various architectures which is passed to autoconf. 
 
+                                         Copyright (C) 2006-2007 OpenedHand Ltd.

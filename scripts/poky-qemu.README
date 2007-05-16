@@ -92,3 +92,6 @@ Known Issues
 
  - There is a bug in the ARM qemu in that means occasionally it will use 100% 
    cpu. You will need to restart it in this situation.
+
+
+                                         Copyright (C) 2006-2007 OpenedHand Ltd.

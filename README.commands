@@ -98,3 +98,4 @@ MACHINE is mandatory, the others are optional.
 This assumes a suitable qemu binary is available with support for a given 
 machine. For further information see scripts/poky-qemu.README.
 
+                                         Copyright (C) 2006-2007 OpenedHand Ltd.
