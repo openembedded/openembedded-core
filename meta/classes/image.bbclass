@@ -1,6 +1,11 @@
 inherit rootfs_${IMAGE_PKGTYPE}
 
+LICENSE = "MIT"
 PACKAGES = ""
+RDEPENDS = "${IMAGE_INSTALL}"
+
+export IMAGE_BASENAME = "${PN}"
+export PACKAGE_INSTALL = "${IMAGE_INSTALL}"
 
 # We need to recursively follow RDEPENDS and RRECOMMENDS for images
 BUILD_ALL_DEPS = "1"

@@ -1,9 +1,8 @@
-LICENSE = "MIT"
-DEPENDS = "task-oh"
+#
+# Copyright (C) 2007 OpenedHand Ltd.
+#
 
-export IMAGE_BASENAME = "${PN}"
-export PACKAGE_INSTALL = "task-oh-boot"
-
+IMAGE_INSTALL = "task-oh-boot"
 inherit image
 
 # remove not needed stuff (locale support and ipkg support)

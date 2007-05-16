@@ -1,15 +1,7 @@
-PR = "r9"
-
-export IMAGE_BASENAME = "oh-image-sdk"
+#
+# Copyright (C) 2007 OpenedHand Ltd.
+#
 
 IMAGE_FEATURES += "apps-core apps-pda dev-tools dev-pkgs dbg-pkgs"
-
-DEPENDS = "\
-    task-oh \
-    task-oh-sdk"
-    
-RDEPENDS = "${DISTRO_TASKS}"
-export PACKAGE_INSTALL = "${RDEPENDS}"
-
+IMAGE_INSTALL = "${DISTRO_TASKS}"
 inherit image
-LICENSE = MIT
