@@ -1,5 +1,5 @@
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r59"
+PR = "r60"
 
 PACKAGES = "\
     task-oh-base \
@@ -58,6 +58,7 @@ RDEPENDS_task-oh-base = "\
     matchbox-wm \
     matchbox-keyboard \
     matchbox-panel-2 \
+    matchbox-desktop-2 \
     ${XSERVER} \
     xserver-kdrive-common \
     xserver-nodm-init \
