@@ -1,0 +1,80 @@
+---
+ drivers/serial/8250.c        |    5 +++++
+ drivers/serial/serial_core.c |    1 +
+ drivers/serial/serial_cs.c   |   12 +++++++++---
+ include/linux/serial_core.h  |    1 +
+ 4 files changed, 16 insertions(+), 3 deletions(-)
+
+Index: git/drivers/serial/8250.c
+===================================================================
+--- git.orig/drivers/serial/8250.c	2006-10-31 16:29:50.000000000 +0000
++++ git/drivers/serial/8250.c	2006-10-31 16:29:53.000000000 +0000
+@@ -2429,7 +2429,12 @@ static struct uart_driver serial8250_reg
+ 	.driver_name		= "serial",
+ 	.dev_name		= "ttyS",
+ 	.major			= TTY_MAJOR,
++#ifdef CONFIG_SERIAL_PXA
++	.minor			= 64 + 3,
++	.name_base		= 3,
++#else
+ 	.minor			= 64,
++#endif
+ 	.nr			= UART_NR,
+ 	.cons			= SERIAL8250_CONSOLE,
+ };
+Index: git/drivers/serial/serial_core.c
+===================================================================
+--- git.orig/drivers/serial/serial_core.c	2006-10-31 16:09:17.000000000 +0000
++++ git/drivers/serial/serial_core.c	2006-10-31 16:29:53.000000000 +0000
+@@ -2183,6 +2183,7 @@ int uart_register_driver(struct uart_dri
+ 	normal->owner		= drv->owner;
+ 	normal->driver_name	= drv->driver_name;
+ 	normal->name		= drv->dev_name;
++	normal->name_base	= drv->name_base;
+ 	normal->major		= drv->major;
+ 	normal->minor_start	= drv->minor;
+ 	normal->type		= TTY_DRIVER_TYPE_SERIAL;
+Index: git/include/linux/serial_core.h
+===================================================================
+--- git.orig/include/linux/serial_core.h	2006-10-31 16:09:45.000000000 +0000
++++ git/include/linux/serial_core.h	2006-10-31 16:30:36.000000000 +0000
+@@ -339,6 +339,7 @@ struct uart_driver {
+ 	struct module		*owner;
+ 	const char		*driver_name;
+ 	const char		*dev_name;
++	int			 name_base;
+ 	int			 major;
+ 	int			 minor;
+ 	int			 nr;
+Index: git/drivers/serial/serial_cs.c
+===================================================================
+--- git.orig/drivers/serial/serial_cs.c	2006-10-31 16:09:17.000000000 +0000
++++ git/drivers/serial/serial_cs.c	2006-10-31 16:29:53.000000000 +0000
+@@ -390,7 +390,7 @@ static int setup_serial(struct pcmcia_de
+ 			kio_addr_t iobase, int irq)
+ {
+ 	struct uart_port port;
+-	int line;
++	int line, linestart;
+ 
+ 	memset(&port, 0, sizeof (struct uart_port));
+ 	port.iobase = iobase;
+@@ -411,10 +411,16 @@ static int setup_serial(struct pcmcia_de
+ 		return -EINVAL;
+ 	}
+ 
++#if CONFIG_SERIAL_PXA
++	linestart = 3;
++#else
++	linestart = 0;
++#endif
++
+ 	info->line[info->ndev] = line;
+-	sprintf(info->node[info->ndev].dev_name, "ttyS%d", line);
++	sprintf(info->node[info->ndev].dev_name, "ttyS%d", line+linestart);
+ 	info->node[info->ndev].major = TTY_MAJOR;
+-	info->node[info->ndev].minor = 0x40 + line;
++	info->node[info->ndev].minor = 0x40 + line + linestart;
+ 	if (info->ndev > 0)
+ 		info->node[info->ndev - 1].next = &info->node[info->ndev];
+ 	info->ndev++;
