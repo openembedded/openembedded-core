@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2007 OpenedHand Ltd.
+#
+
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 PR = "r13"
 DEPENDS = "task-oh"

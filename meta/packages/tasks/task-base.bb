@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2007 OpenedHand Ltd.
+#
+
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
 PR = "r3"
 
