@@ -4,7 +4,7 @@ AUTHOR = "Russell King w/ plugins by Chris Larson et. al."
 SECTION = "base"
 LICENSE = "LGPL"
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-1.0.tar.bz2 \
            file://ts.conf \
@@ -71,7 +71,7 @@ DEBIAN_NOAUTONAME_tslib-tests = "1"
 DEBIAN_NOAUTONAME_tslib-calibrate = "1"
 
 RDEPENDS_${PN} = "tslib-conf"
-
+RRECOMMENDS_${PN} = "pointercal"
 
 FILES_${PN}-dbg += "${libdir}/ts/.debug*"
 FILES_tslib-conf = "${sysconfdir}/ts.conf ${sysconfdir}/profile.d/tslib.sh ${datadir}/tslib"
