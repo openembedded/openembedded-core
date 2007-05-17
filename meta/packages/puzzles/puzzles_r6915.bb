@@ -1,8 +1,17 @@
 
 DEPENDS = "gtk+"
 PR = "r4"
+MOD_PV = "${@bb.data.getVar('PV',d,1)[1:]}"
 
-SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
+#SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
+SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV} \
+           file://makedist_hack.patch;patch=1"
+
+S = "${WORKDIR}/${PN}"
+
+do_configure () {
+	./makedist.sh ${MOD_PV}
+}
 
 do_compile_prepend = " \
         export XLDFLAGS='${LDFLAGS} `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --libs`'; \
@@ -25,11 +34,15 @@ do_install () {
     cd ${D}/${prefix}/games 
     for prog in *; do
 	if [ -x $prog ]; then
+            # Convert prog to Title Case
+            firstchar=${prog:0:1}
+            title=`echo "$firstchar" | tr a-z A-Z`
+            title="$title${prog:1}"
 	    echo "making ${D}/${datadir}/applications/$prog.desktop"
 	    cat <<STOP > ${D}/${datadir}/applications/$prog.desktop
 [Desktop Entry]
 Encoding=UTF-8
-Name=$prog
+Name=$title
 Exec=${prefix}/games/$prog
 Icon=applications-games
 Terminal=false
