@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r3"
+PR = "r4"
 
 PACKAGES = "task-base \
             task-base-oh-minimal"
@@ -89,6 +89,7 @@ RRECOMMENDS_task-base = "\
     ${@base_contains("DISTRO_FEATURES", "nfs", "${task-distro-nfs-rrecommends}", "",d)} \
     ${@base_contains("DISTRO_FEATURES", "ipsec", "${task-distro-ipsec-rrecommends}", "",d)} \
     ${@base_contains("DISTRO_FEATURES", "cramfs", "${task-distro-cramfs-rrecommends}", "",d)} \
+    ${@base_contains("DISTRO_FEATURES", "wifi", "${task-distro-wifi-rrecommends}", "",d)} \
     ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS} \
     ${MACHINE_EXTRA_RRECOMMENDS} \
     ${DISTRO_EXTRA_RRECOMMENDS}"
