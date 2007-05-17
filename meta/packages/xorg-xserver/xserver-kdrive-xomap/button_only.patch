@@ -1,0 +1,20 @@
+---
+ hw/kdrive/linux/tslib.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+Index: xorg-server-1.1.99.3/hw/kdrive/linux/tslib.c
+===================================================================
+--- xorg-server-1.1.99.3.orig/hw/kdrive/linux/tslib.c	2007-05-17 10:28:12.000000000 +0100
++++ xorg-server-1.1.99.3/hw/kdrive/linux/tslib.c	2007-05-17 10:28:42.000000000 +0100
+@@ -111,10 +111,7 @@ TsRead (int fd, void *closure)
+                event.pressure);
+         discard = 0;
+         if (event.pressure) {
+-            if (event.pressure > pi->dixdev->absolute->button_threshold) 
+-                flags = KD_BUTTON_8;
+-            else
+-                flags = KD_BUTTON_1;
++            flags = KD_BUTTON_1;
+ 
+             /* 
+              * Here we test for the touch screen driver actually being on the
