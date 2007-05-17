@@ -10,11 +10,14 @@ SHOWCURSOR="no"
 case `module_id` in
 	# On Zaurus models, zaurusd takes care of mbinputmgr for us in its hinge scripts
 	"Generic OMAP1510/1610/1710")
-		/usr/bin/mbinputmgr &
+		matchbox-keyboard --daemon &
+		;;
+	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi" | \
+	"SHARP Spitz" | "SHARP Akita" | "SHARP Borzoi")
+		matchbox-keyboard --daemon --orientation portrait &
 		;;
         # qemu machines.. likely need better detection 
 	"ARM-IntegratorCP" | "ARM-Versatile PB")
-		/usr/bin/mbinputmgr &
 		#SHOWCURSOR="yes"
 		;;
 esac
