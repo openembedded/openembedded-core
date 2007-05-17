@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r60"
+PR = "r61"
 
 PACKAGES = "\
     task-oh-base \
@@ -61,6 +61,7 @@ RDEPENDS_task-oh-base = "\
     matchbox-common \
     matchbox-wm \
     matchbox-keyboard \
+    matchbox-keyboard-im \
     matchbox-panel-2 \
     matchbox-desktop-2 \
     ${XSERVER} \
