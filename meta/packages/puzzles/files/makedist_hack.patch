@@ -1,0 +1,17 @@
+---
+ makedist.sh |    2 ++
+ 1 file changed, 2 insertions(+)
+
+Index: puzzles/makedist.sh
+===================================================================
+--- puzzles.orig/makedist.sh	2007-05-17 11:49:59.000000000 +0100
++++ puzzles/makedist.sh	2007-05-17 12:07:39.000000000 +0100
+@@ -30,6 +30,8 @@ fi
+ 
+ perl mkfiles.pl
+ 
++exit 0
++
+ mkdir tmp.$$
+ mkdir tmp.$$/puzzles$arcsuffix
+ 
