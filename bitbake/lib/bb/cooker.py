@@ -26,7 +26,7 @@ import sys, os, getopt, glob, copy, os.path, re, time
 import bb
 from bb import utils, data, parse, event, cache, providers, taskdata, runqueue
 from sets import Set
-import itertools
+import itertools, sre_constants
 
 parsespin = itertools.cycle( r'|/-\\' )
 
@@ -201,7 +201,7 @@ class BBCooker:
             fnid = rq.runq_fnid[task]
             fn = taskdata.fn_index[fnid]
             pn = self.status.pkg_fn[fn]
-            version  = self.bb_cache.getVar('PV', fn, True ) + '-' + self.bb_cache.getVar('PR', fn, True)
+            version  = "%s:%s-%s" % self.status.pkg_pepvpr[fn]
             print >> tdepends_file, '"%s.%s" [label="%s %s\\n%s\\n%s"]' % (pn, taskname, pn, taskname, version, fn)
             for dep in rq.runq_depends[task]:
                 depfn = taskdata.fn_index[rq.runq_fnid[dep]]
