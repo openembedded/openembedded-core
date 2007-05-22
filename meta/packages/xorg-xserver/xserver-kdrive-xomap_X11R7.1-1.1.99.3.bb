@@ -9,7 +9,7 @@ DESCRIPTION_xserver-kdrive-xomap = "X server for the OMAP in the Nokia 800"
 
 PR = "r3"
 
-COMPATIBLE_MACHINE = "nokia800"
+COMPATIBLE_MACHINE = "nokia(800|770)"
 
 FILES_${PN} = "${libdir}/xserver /etc/dbus-1/* ${bindir}/Xomap"
 
