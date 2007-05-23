@@ -1,6 +1,8 @@
 #!/bin/sh
 #
 
+. /etc/formfactor/config
+
 # note xinit needs full server path
 XSERVER=/usr/bin/Xipaq
 if [ -f /usr/bin/Xfbdev ]; then
@@ -17,14 +19,6 @@ if [ -f /usr/bin/Xomap ]; then
 fi
 
 . /etc/profile
-
-fallback_screen_arg() {
-    geom=`fbset | grep geometry`
-    w=`echo $geom | awk '{ print $2 }'`
-    h=`echo $geom | awk '{ print $3 }'`
-    b=`echo $geom | awk '{ print $6 }'`
-    echo -n "${w}x${h}x${b}"
-} 
 
 module_id() {
     ## used to read from assets, but sometimes assets is corrupted
@@ -51,48 +45,27 @@ fi
 
 # start off server in conventional location.
 case `module_id` in
-	"HP iPAQ H3100" | "HP iPAQ H3800")
-		ARGS="$ARGS -dpi 100 -screen 320x240@90 -rgba vrgb" ;;
-	"HP iPAQ H3600" | "HP iPAQ H3700" | "HP iPAQ H3900")
-		ARGS="$ARGS -dpi 100 -screen 320x240@270 -rgba vbgr" ;;
-	"HP iPAQ H5400" | "HP iPAQ H2200")
-		ARGS="$ARGS -dpi 100 -rgba rgb" ;;
-	"Ramses")
-		# What is this "vt2" in aid of?
-		ARGS="$ARGS -dpi 100 -screen 320x240@90 -rgba vrgb vt2" ;;
-	# both 'Sharp-Collie' and just 'Collie' have been reported
-	*Poodle)
-		ARGS="$ARGS -screen 320x240@270 -rgba vrgb" ;;
-	*Collie)
-		ARGS="$ARGS -dpi 100 -screen 320x240@270 -rgba vrgb"
-		# Horrible hack required to enable resuming after suspend
-		rm -f /dev/apm_bios
-		killall -9 apmd
-		;;
-	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
-		ARGS="$ARGS -dpi 150 -rgba rgb" ;;
-	"SHARP Spitz" | "SHARP Akita" | "SHARP Borzoi")
-		ARGS="$ARGS -dpi 150 -rgba rgb -screen 480x640@270" ;;
-	"Simpad")
-		ARGS="$ARGS -rgba rgb" ;;
 	"Generic OMAP1510/1610/1710")
 		ARGS="$ARGS -mouse /dev/input/event0" ;;
-	"ARM-IntegratorCP" | "ARM-Versatile PB")
-		ARGS="$ARGS -rgba vrgb" ;;
 	"Compulab CM-x270")
                 modprobe mbxfb
 	        ARGS="$ARGS -fb /dev/fb1"
                 ;;
 	"Nokia N800")
-		ARGS="$ARGS -dpi 150 -screen 800x480x16 -mouse tslib" ;;
+		ARGS="$ARGS -mouse tslib" ;;
         *)
-		# Its a device we dont know about - in which case force
-                # kdrive to use the current framebuffer geometry otherwise
-		# it will defualt to trying to achieve 1024x768 
-		S=`fallback_screen_arg`
-		ARGS="$ARGS -screen $S"
 		;;
 esac
+
+ARGS="$ARGS -screen ${DISPLAY_WIDTH_PIXELS}x${DISPLAY_HEIGHT_PIXELS}x${DISPLAY_BPP}@${DISPLAY_ORIENTATION}"
+
+if [ ! -z "$DISPLAY_DPI" ]; then
+	ARGS="$ARGS -dpi $DISPLAY_DPI"
+fi
+
+if [ ! -z "$DISPLAY_SUBPIXEL_ORDER" ]; then
+	ARGS="$ARGS -rgba $DISPLAY_SUBPIXEL_ORDER"
+fi
 
 DISPLAY=':0'
 
