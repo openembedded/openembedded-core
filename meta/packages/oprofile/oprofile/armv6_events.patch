@@ -48,7 +48,7 @@ Index: oprofile/events/arm/armv6/events
 +event:0x20 counters:1,2 um:zero minimum:500 name:ETMEXTOUT0 : nuber of cycles ETMEXTOUT[0] signal was asserted
 +event:0x21 counters:1,2 um:zero minimum:500 name:ETMEXTOUT1 : nuber of cycles ETMEXTOUT[1] signal was asserted
 +event:0x22 counters:1,2 um:zero minimum:500 name:ETMEXTOUT_BOTH : nuber of cycles both ETMEXTOUT [0] and [1] were asserted * 2
-+event:0xff counters:1,2 um:zero minimum:500 name:CPU_CYCLES : clock cycles counter
++event:0xff counters:1,2 um:zero minimum:500 name:CPU_CYCLES2 : clock cycles counter
 +event:0xfe counters:0 um:zero minimum:500 name:CPU_CYCLES : clock cycles counter
 Index: oprofile/events/arm/armv6/unit_masks
 ===================================================================
