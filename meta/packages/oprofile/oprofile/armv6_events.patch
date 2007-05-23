@@ -1,0 +1,118 @@
+---
+ events/Makefile.am          |    1 +
+ events/arm/armv6/events     |   25 +++++++++++++++++++++++++
+ events/arm/armv6/unit_masks |    4 ++++
+ libop/op_cpu_type.c         |    1 +
+ libop/op_cpu_type.h         |    1 +
+ libop/op_events.c           |    1 +
+ utils/ophelp.c              |    5 ++++-
+ 7 files changed, 37 insertions(+), 1 deletion(-)
+
+Index: oprofile/events/Makefile.am
+===================================================================
+--- oprofile.orig/events/Makefile.am	2007-05-23 11:32:24.000000000 +0100
++++ oprofile/events/Makefile.am	2007-05-23 14:13:12.000000000 +0100
+@@ -29,6 +29,7 @@ event_files = \
+ 	x86-64/family10/events x86-64/family10/unit_masks \
+ 	arm/xscale1/events arm/xscale1/unit_masks \
+ 	arm/xscale2/events arm/xscale2/unit_masks \
++	arm/armv6/events arm/armv6/unit_masks \
+ 	mips/20K/events mips/20K/unit_masks \
+ 	mips/24K/events mips/24K/unit_masks \
+ 	mips/25K/events mips/25K/unit_masks \
+Index: oprofile/events/arm/armv6/events
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ oprofile/events/arm/armv6/events	2007-05-23 14:13:12.000000000 +0100
+@@ -0,0 +1,25 @@
++# ARM V6 events
++#
++event:0x00 counters:1,2 um:zero minimum:500 name:IFU_IFETCH_MISS : number of instruction fetch misses
++event:0x01 counters:1,2 um:zero minimum:500 name:CYCLES_IFU_MEM_STALL : cycles instruction fetch pipe is stalled
++event:0x02 counters:1,2 um:zero minimum:500 name:CYCLES_DATA_STALL : cycles stall occurs for due to data dependency
++event:0x03 counters:1,2 um:zero minimum:500 name:ITLB_MISS : number of ITLB misses
++event:0x04 counters:1,2 um:zero minimum:500 name:DTLB_MISS : number of DTLB misses
++event:0x05 counters:1,2 um:zero minimum:500 name:BR_INST_EXECUTED : branch instruction executed w/ or w/o program flow change
++event:0x06 counters:1,2 um:zero minimum:500 name:BR_INST_MISS_PRED : branch mispredicted
++event:0x07 counters:1,2 um:zero minimum:500 name:INSN_EXECUTED : instruction executed
++event:0x08 counters:1,2 um:zero minimum:500 name:CYCLES_DCACHE_FULL_STALL : cycles in stall due to full dcache
++event:0x09 counters:1,1 um:zero minimum:500 name:DCACHE_FULL_STALL_CNT : number of stalls due to dcache full condition
++event:0x0a counters:1,2 um:zero minimum:500 name:DCACHE_ACCESS : data cache access
++event:0x0b counters:1,2 um:zero minimum:500 name:DCACHE_MISS : data cache miss
++event:0x0c counters:1,2 um:zero minimum:500 name:DCACHE_WB : data cache writeback, 1 event for every half cacheline
++event:0x0d counters:1,2 um:zero minimum:500 name:PC_CHANGE : number of times the program counter was changed without a mode switch
++event:0x0f counters:1,2 um:zero minimum:500 name:TLB_MISS : Main TLB miss
++event:0x10 counters:1,2 um:zero minimum:500 name:EXP_EXTERNAL : Explict external data access
++event:0x11 counters:1,2 um:zero minimum:500 name:LSU_STALL : cycles stalled because Load Store request queque is full
++event:0x12 counters:1,2 um:zero minimum:500 name:WRITE_DRAIN : Time swrite buffer was drained
++event:0x20 counters:1,2 um:zero minimum:500 name:ETMEXTOUT0 : nuber of cycles ETMEXTOUT[0] signal was asserted
++event:0x21 counters:1,2 um:zero minimum:500 name:ETMEXTOUT1 : nuber of cycles ETMEXTOUT[1] signal was asserted
++event:0x22 counters:1,2 um:zero minimum:500 name:ETMEXTOUT_BOTH : nuber of cycles both ETMEXTOUT [0] and [1] were asserted * 2
++event:0xff counters:1,2 um:zero minimum:500 name:CPU_CYCLES : clock cycles counter
++event:0xfe counters:0 um:zero minimum:500 name:CPU_CYCLES : clock cycles counter
+Index: oprofile/events/arm/armv6/unit_masks
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ oprofile/events/arm/armv6/unit_masks	2007-05-23 14:13:12.000000000 +0100
+@@ -0,0 +1,4 @@
++# ARM V6 PMU possible unit masks
++#
++name:zero type:mandatory default:0x00
++	0x00 No unit mask
+Index: oprofile/libop/op_cpu_type.c
+===================================================================
+--- oprofile.orig/libop/op_cpu_type.c	2007-05-23 11:32:35.000000000 +0100
++++ oprofile/libop/op_cpu_type.c	2007-05-23 14:13:12.000000000 +0100
+@@ -69,6 +69,7 @@ static struct cpu_descr const cpu_descrs
+ 	{ "ppc64 Cell Broadband Engine", "ppc64/cell-be", CPU_PPC64_CELL, 8 },
+ 	{ "AMD64 family10", "x86-64/family10", CPU_FAMILY10, 4 },
+  	{ "ppc64 PA6T", "ppc64/pa6t", CPU_PPC64_PA6T, 6 },
++ 	{ "ARM/V6 PMU", "arm/armv6", CPU_ARM_V6, 3 },
+ };
+  
+ static size_t const nr_cpu_descrs = sizeof(cpu_descrs) / sizeof(struct cpu_descr);
+Index: oprofile/libop/op_cpu_type.h
+===================================================================
+--- oprofile.orig/libop/op_cpu_type.h	2007-05-23 11:32:35.000000000 +0100
++++ oprofile/libop/op_cpu_type.h	2007-05-23 14:13:12.000000000 +0100
+@@ -67,6 +67,7 @@ typedef enum {
+ 	CPU_PPC64_CELL, /**< ppc64 Cell Broadband Engine*/
+ 	CPU_FAMILY10, /**< AMD family 10 */
+  	CPU_PPC64_PA6T, /**< ppc64 PA6T */
++ 	CPU_ARM_V6, /**< ARM V6 PMU */
+ 	MAX_CPU_TYPE
+ } op_cpu;
+ 
+Index: oprofile/libop/op_events.c
+===================================================================
+--- oprofile.orig/libop/op_events.c	2007-05-23 11:32:35.000000000 +0100
++++ oprofile/libop/op_events.c	2007-05-23 14:13:12.000000000 +0100
+@@ -785,6 +785,7 @@ void op_default_event(op_cpu cpu_type, s
+ 		// we could possibly use the CCNT
+ 		case CPU_ARM_XSCALE1:
+ 		case CPU_ARM_XSCALE2:
++		case CPU_ARM_V6:
+ 			descr->name = "CPU_CYCLES";
+ 			break;
+ 
+Index: oprofile/utils/ophelp.c
+===================================================================
+--- oprofile.orig/utils/ophelp.c	2007-05-23 11:32:45.000000000 +0100
++++ oprofile/utils/ophelp.c	2007-05-23 14:16:33.000000000 +0100
+@@ -424,12 +424,15 @@ int main(int argc, char const * argv[])
+ 		printf("See Intel XScale Core Developer's Manual\n"
+ 		       "Chapter 8 Performance Monitoring\n");
+ 		break;
++
++	case CPU_ARM_V6:
++		printf("See ARM11 Technical Reference Manual\n");
+ 		break;
+ 
+ 	case CPU_PPC64_PA6T:
+ 		printf("See PA6T Power Implementation Features Book IV\n"
+ 			   "Chapter 7 Performance Counters\n");
+-        break;
++	        break;
+ 
+ 	case CPU_PPC64_POWER4:
+ 	case CPU_PPC64_POWER5:

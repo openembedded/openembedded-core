@@ -1,0 +1,39 @@
+---
+ events/arm/xscale1/events |    8 ++++++--
+ events/arm/xscale2/events |    8 ++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+Index: oprofile/events/arm/xscale1/events
+===================================================================
+--- oprofile.orig/events/arm/xscale1/events	2004-04-06 05:32:22.000000000 +0100
++++ oprofile/events/arm/xscale1/events	2007-05-23 13:37:04.000000000 +0100
+@@ -14,6 +14,10 @@ event:0x0a counters:1,2 um:zero minimum:
+ event:0x0b counters:1,2 um:zero minimum:500 name:DCACHE_MISS : data cache miss
+ event:0x0c counters:1,2 um:zero minimum:500 name:DCACHE_WB : data cache writeback, 1 event for every half cacheline
+ event:0x0d counters:1,2 um:zero minimum:500 name:PC_CHANGE : number of times the program counter was changed without a mode switch
++event:0x10 counters:1,2 um:zero minimum:500 name:BCU_REQUEST : number of time the BCU received a new memory request from the core
++event:0x11 counters:1,2 um:zero minimum:500 name:BCU_FULL : number of cycles the BCUs request queue is full
++event:0x12 counters:1,2 um:zero minimum:500 name:BCU_DRAIN : number of times the BCU queues were drained due to a Drain Write Buffer command or an I/O transaction on a non-cacheable and non-bufferable page
++event:0x14 counters:1,2 um:zero minimum:500 name:BCU_ECC_NO_ELOG : number of times the BCU detected an ECC error, but no ELOG register was available in which to log the error
++event:0x15 counters:1,2 um:zero minimum:500 name:BCU_1_BIT_ERR : number of times the BCU detected a 1-bit error while reading data from the bus
++event:0x16 counters:1,2 um:zero minimum:500 name:RMW : number of times an RMW cycle occurred due to narrow write on ECC-protected memory
+ event:0xfe counters:0 um:zero minimum:500 name:CPU_CYCLES : clock cycles counter
+-#0x10 through 0x17 Defined by ASSP. See the Intel® XScale" core implementation option section of the ASSP
+-#architecture specification for more details.
+Index: oprofile/events/arm/xscale2/events
+===================================================================
+--- oprofile.orig/events/arm/xscale2/events	2004-04-06 05:32:23.000000000 +0100
++++ oprofile/events/arm/xscale2/events	2007-05-23 13:37:34.000000000 +0100
+@@ -14,6 +14,10 @@ event:0x0a counters:1,2,3,4 um:zero mini
+ event:0x0b counters:1,2,3,4 um:zero minimum:500 name:DCACHE_MISS : data cache miss
+ event:0x0c counters:1,2,3,4 um:zero minimum:500 name:DCACHE_WB : data cache writeback, 1 event for every half cacheline
+ event:0x0d counters:1,2,3,4 um:zero minimum:500 name:PC_CHANGE : number of times the program counter was changed without a mode switch
++event:0x10 counters:1,2,3,4 um:zero minimum:500 name:BCU_REQUEST : number of time the BCU received a new memory request from the core
++event:0x11 counters:1,2,3,4 um:zero minimum:500 name:BCU_FULL : number of cycles the BCUs request queue is full
++event:0x12 counters:1,2,3,4 um:zero minimum:500 name:BCU_DRAIN : number of times the BCU queues were drained due to a Drain Write Buffer command or an I/O transaction on a non-cacheable and non-bufferable page
++event:0x14 counters:1,2,3,4 um:zero minimum:500 name:BCU_ECC_NO_ELOG : number of times the BCU detected an ECC error, but no ELOG register was available in which to log the error
++event:0x15 counters:1,2,3,4 um:zero minimum:500 name:BCU_1_BIT_ERR : number of times the BCU detected a 1-bit error while reading data from the bus
++event:0x16 counters:1,2,3,4 um:zero minimum:500 name:RMW : number of times an RMW cycle occurred due to narrow write on ECC-protected memory
+ event:0xfe counters:0 um:zero minimum:500 name:CPU_CYCLES : clock cycles counter
+-#0x10 through 0x17 Defined by ASSP. See the Intel® XScale" core implementation option section of the ASSP
+-#architecture specification for more details.
