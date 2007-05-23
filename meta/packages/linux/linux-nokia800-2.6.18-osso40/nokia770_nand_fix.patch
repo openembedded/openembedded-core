@@ -1,0 +1,160 @@
+---
+ arch/arm/mach-omap1/mmu.c        |    1 +
+ drivers/cbus/tahvo-usb.c         |    4 ++--
+ drivers/i2c/chips/isp1301_omap.c |    1 +
+ drivers/mtd/nand/omap-hw.c       |   37 +++++++++++++++----------------------
+ 4 files changed, 19 insertions(+), 24 deletions(-)
+
+Index: linux-g/arch/arm/mach-omap1/mmu.c
+===================================================================
+--- linux-g.orig/arch/arm/mach-omap1/mmu.c	2007-05-23 16:39:20.000000000 +0100
++++ linux-g/arch/arm/mach-omap1/mmu.c	2007-05-23 17:42:06.000000000 +0100
+@@ -29,6 +29,7 @@
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
+ #include <linux/err.h>
++#include <linux/delay.h>
+ #include "mmu.h"
+ #include <asm/tlbflush.h>
+ 
+Index: linux-g/drivers/cbus/tahvo-usb.c
+===================================================================
+--- linux-g.orig/drivers/cbus/tahvo-usb.c	2006-11-08 12:18:51.000000000 +0000
++++ linux-g/drivers/cbus/tahvo-usb.c	2007-05-23 17:58:06.000000000 +0100
+@@ -135,8 +135,8 @@ static irqreturn_t omap_otg_irq(int irq,
+ 		if ((!(OTG_CTRL_REG & OTG_DRIVER_SEL)) &&
+ 		   tu->otg.host && tu->otg.state == OTG_STATE_A_HOST) {
+ 			/* role is host */
+-			usb_bus_start_enum(tu->otg.host,
+-					   tu->otg.host->otg_port);
++			//usb_bus_start_enum(tu->otg.host,
++			//		   tu->otg.host->otg_port);
+ 		}
+ 		OTG_IRQ_SRC_REG = DRIVER_SWITCH;
+ 	} else
+Index: linux-g/drivers/i2c/chips/isp1301_omap.c
+===================================================================
+--- linux-g.orig/drivers/i2c/chips/isp1301_omap.c	2006-11-08 12:18:51.000000000 +0000
++++ linux-g/drivers/i2c/chips/isp1301_omap.c	2007-05-23 17:55:01.000000000 +0100
+@@ -32,6 +32,7 @@
+ #include <linux/usb_gadget.h>
+ #include <linux/usb.h>
+ #include <linux/usb_otg.h>
++#include <linux/usb/otg.h>
+ #include <linux/i2c.h>
+ #include <linux/workqueue.h>
+ 
+Index: linux-g/drivers/mtd/nand/omap-hw.c
+===================================================================
+--- linux-g.orig/drivers/mtd/nand/omap-hw.c	2006-11-08 12:18:55.000000000 +0000
++++ linux-g/drivers/mtd/nand/omap-hw.c	2007-05-23 17:27:43.000000000 +0100
+@@ -386,11 +386,6 @@ static u_char omap_nand_read_byte(struct
+ 	return nand_read_reg8(NND_ACCESS);
+ }
+ 
+-static void omap_nand_write_byte(struct mtd_info *mtd, u_char byte)
+-{
+-	nand_write_reg8(NND_ACCESS, byte);
+-}
+-
+ static int omap_nand_dev_ready(struct mtd_info *mtd)
+ {
+ 	u32 l;
+@@ -425,9 +420,9 @@ static void omap_nand_command(struct mtd
+ 	if (command == NAND_CMD_SEQIN) {
+ 		int readcmd;
+ 
+-		if (column >= mtd->oobblock) {
++		if (column >= mtd->writesize) {
+ 			/* OOB area */
+-			column -= mtd->oobblock;
++			column -= mtd->writesize;
+ 			readcmd = NAND_CMD_READOOB;
+ 		} else if (column < 256) {
+ 			/* First 256 bytes --> READ0 */
+@@ -458,7 +453,7 @@ static void omap_nand_command_lp(struct 
+ 	struct nand_chip *this = mtd->priv;
+ 
+ 	if (command == NAND_CMD_READOOB) {
+-		column += mtd->oobblock;
++		column += mtd->writesize;
+ 		command = NAND_CMD_READ0;
+ 	}
+ 	switch (command) {
+@@ -495,7 +490,7 @@ static int omap_nand_calculate_ecc(struc
+ 	int n;
+ 	struct nand_chip *this = mtd->priv;
+ 
+-	if (this->eccmode == NAND_ECC_HW12_2048)
++	if (this->ecc.size == 2048)
+ 		n = 4;
+ 	else
+ 		n = 1;
+@@ -642,7 +637,7 @@ static int omap_nand_correct_data(struct
+ 	int block_count = 0, i, r;
+ 
+ 	this = mtd->priv;
+-	if (this->eccmode == NAND_ECC_HW12_2048)
++	if (this->ecc.size == 2048)
+ 		block_count = 4;
+ 	else
+ 		block_count = 1;
+@@ -672,17 +667,17 @@ static int __init add_dynamic_parts(stru
+ {
+ 	static const char *part_parsers[] = { "cmdlinepart", NULL };
+ 	struct mtd_partition *parts;
+-	const struct omap_flash_part_config *cfg;
++	void *cfg;
+ 	char *part_str = NULL;
+ 	size_t part_str_len;
+ 	int c;
+ 
+-	cfg = omap_get_var_config(OMAP_TAG_FLASH_PART, &part_str_len);
++	cfg = omap_get_var_config(OMAP_TAG_FLASH_PART_STR, &part_str_len);
+ 	if (cfg != NULL) {
+ 		part_str = kmalloc(part_str_len + 1, GFP_KERNEL);
+ 		if (part_str == NULL)
+ 			return -ENOMEM;
+-		memcpy(part_str, cfg->part_table, part_str_len);
++		memcpy(part_str, cfg, part_str_len);
+ 		part_str[part_str_len] = '\0';
+ 		mtdpart_setup(part_str);
+ 	}
+@@ -794,19 +789,19 @@ static int __init omap_nand_init(void)
+ 
+ 	/* Used from chip select and nand_command() */
+ 	this->read_byte = omap_nand_read_byte;
+-	this->write_byte = omap_nand_write_byte;
+ 
+ 	this->select_chip = omap_nand_select_chip;
+ 	this->dev_ready = omap_nand_dev_ready;
+ 	this->chip_delay = 0;
+-	this->eccmode = NAND_ECC_HW3_512; 
++	this->ecc.size = 512;
++	this->ecc.bytes = 3;
+ 	this->cmdfunc = omap_nand_command;
+ 	this->write_buf = omap_nand_write_buf;
+ 	this->read_buf = omap_nand_read_buf;
+ 	this->verify_buf = omap_nand_verify_buf;
+-	this->calculate_ecc = omap_nand_calculate_ecc;
+-	this->correct_data = omap_nand_correct_data;
+-	this->enable_hwecc = omap_nand_enable_hwecc;
++	this->ecc.calculate = omap_nand_calculate_ecc;
++	this->ecc.correct = omap_nand_correct_data;
++	this->ecc.hwctl = omap_nand_enable_hwecc;
+ 
+ 	nand_write_reg(NND_SYSCFG, 0x1); /* Enable auto idle */
+ 	nand_write_reg(NND_PSC_CLK, 10);
+@@ -822,10 +817,8 @@ static int __init omap_nand_init(void)
+ 		l = nand_read_reg(NND_CTRL);
+ 		l |= 1 << 4; /* Set the A8 bit in CTRL reg */
+ 		nand_write_reg(NND_CTRL, l);
+-		this->eccmode = NAND_ECC_HW12_2048;
+-		this->eccsteps = 1;
+-		this->eccsize = 2048;
+-		this->eccbytes = 12;
++		this->ecc.size = 2048;
++		this->ecc.bytes = 12;
+ 		omap_mtd->eccsize = 2048;
+ 		nand_write_reg(NND_ECC_SELECT, 6);
+ 	}
