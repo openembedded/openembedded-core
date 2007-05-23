@@ -7,13 +7,13 @@ SECTION = "x11/base"
 DESCRIPTION = "X server from freedesktop.org"
 DESCRIPTION_xserver-kdrive-xomap = "X server for the OMAP in the Nokia 800"
 
-PR = "r3"
+PR = "r4"
 
 COMPATIBLE_MACHINE = "nokia(800|770)"
 
 FILES_${PN} = "${libdir}/xserver /etc/dbus-1/* ${bindir}/Xomap"
 
-SRC_URI = "http://repository.maemo.org/pool/maemo3.0/free/source/xorg-server_1.1.99.3-0osso21.tar.gz \
+SRC_URI = "http://repository.maemo.org/pool/maemo3.1/free/source/xorg-server_1.1.99.3-0osso31.tar.gz \
 	file://kmode.patch;patch=1 \
 	file://disable-apm.patch;patch=1 \
 	file://no-serial-probing.patch;patch=1 \
