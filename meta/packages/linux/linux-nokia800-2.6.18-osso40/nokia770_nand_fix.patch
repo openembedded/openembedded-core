@@ -3,12 +3,13 @@
  drivers/cbus/tahvo-usb.c         |    4 ++--
  drivers/i2c/chips/isp1301_omap.c |    1 +
  drivers/mtd/nand/omap-hw.c       |   37 +++++++++++++++----------------------
- 4 files changed, 19 insertions(+), 24 deletions(-)
+ drivers/video/omap/omapfb_main.c |    4 ++--
+ 5 files changed, 21 insertions(+), 26 deletions(-)
 
 Index: linux-g/arch/arm/mach-omap1/mmu.c
 ===================================================================
---- linux-g.orig/arch/arm/mach-omap1/mmu.c	2007-05-23 16:39:20.000000000 +0100
-+++ linux-g/arch/arm/mach-omap1/mmu.c	2007-05-23 17:42:06.000000000 +0100
+--- linux-g.orig/arch/arm/mach-omap1/mmu.c	2007-05-23 18:05:21.000000000 +0100
++++ linux-g/arch/arm/mach-omap1/mmu.c	2007-05-23 18:05:23.000000000 +0100
 @@ -29,6 +29,7 @@
  #include <linux/kernel.h>
  #include <linux/mm.h>
@@ -20,7 +21,7 @@ Index: linux-g/arch/arm/mach-omap1/mmu.c
 Index: linux-g/drivers/cbus/tahvo-usb.c
 ===================================================================
 --- linux-g.orig/drivers/cbus/tahvo-usb.c	2006-11-08 12:18:51.000000000 +0000
-+++ linux-g/drivers/cbus/tahvo-usb.c	2007-05-23 17:58:06.000000000 +0100
++++ linux-g/drivers/cbus/tahvo-usb.c	2007-05-23 18:05:23.000000000 +0100
 @@ -135,8 +135,8 @@ static irqreturn_t omap_otg_irq(int irq,
  		if ((!(OTG_CTRL_REG & OTG_DRIVER_SEL)) &&
  		   tu->otg.host && tu->otg.state == OTG_STATE_A_HOST) {
@@ -35,7 +36,7 @@ Index: linux-g/drivers/cbus/tahvo-usb.c
 Index: linux-g/drivers/i2c/chips/isp1301_omap.c
 ===================================================================
 --- linux-g.orig/drivers/i2c/chips/isp1301_omap.c	2006-11-08 12:18:51.000000000 +0000
-+++ linux-g/drivers/i2c/chips/isp1301_omap.c	2007-05-23 17:55:01.000000000 +0100
++++ linux-g/drivers/i2c/chips/isp1301_omap.c	2007-05-23 18:05:23.000000000 +0100
 @@ -32,6 +32,7 @@
  #include <linux/usb_gadget.h>
  #include <linux/usb.h>
@@ -47,7 +48,7 @@ Index: linux-g/drivers/i2c/chips/isp1301_omap.c
 Index: linux-g/drivers/mtd/nand/omap-hw.c
 ===================================================================
 --- linux-g.orig/drivers/mtd/nand/omap-hw.c	2006-11-08 12:18:55.000000000 +0000
-+++ linux-g/drivers/mtd/nand/omap-hw.c	2007-05-23 17:27:43.000000000 +0100
++++ linux-g/drivers/mtd/nand/omap-hw.c	2007-05-23 18:05:23.000000000 +0100
 @@ -386,11 +386,6 @@ static u_char omap_nand_read_byte(struct
  	return nand_read_reg8(NND_ACCESS);
  }
@@ -158,3 +159,25 @@ Index: linux-g/drivers/mtd/nand/omap-hw.c
  		omap_mtd->eccsize = 2048;
  		nand_write_reg(NND_ECC_SELECT, 6);
  	}
+Index: linux-g/drivers/video/omap/omapfb_main.c
+===================================================================
+--- linux-g.orig/drivers/video/omap/omapfb_main.c	2007-05-23 18:05:21.000000000 +0100
++++ linux-g/drivers/video/omap/omapfb_main.c	2007-05-23 22:27:39.000000000 +0100
+@@ -110,7 +110,7 @@ static struct lcd_ctrl *ctrls[] = {
+ 
+ #ifdef CONFIG_FB_OMAP_LCDC_EXTERNAL
+ #ifdef CONFIG_ARCH_OMAP1
+-extern struct lcd_ctrl_extif omap1_ext_if;
++extern struct lcd_ctrl_extif sossi_extif;
+ #else
+ extern struct lcd_ctrl_extif omap2_ext_if;
+ #endif
+@@ -1658,7 +1658,7 @@ static int omapfb_do_probe(struct platfo
+ #ifdef CONFIG_ARCH_OMAP1
+ 	fbdev->int_ctrl = &omap1_int_ctrl;
+ #ifdef CONFIG_FB_OMAP_LCDC_EXTERNAL
+-	fbdev->ext_if = &omap1_ext_if;
++	fbdev->ext_if = &sossi_extif;
+ #endif
+ #else	/* OMAP2 */
+ 	fbdev->int_ctrl = &omap2_int_ctrl;
