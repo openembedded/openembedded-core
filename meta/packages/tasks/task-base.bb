@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r4"
+PR = "r5"
 
 PACKAGES = "task-base \
             task-base-oh-minimal"
