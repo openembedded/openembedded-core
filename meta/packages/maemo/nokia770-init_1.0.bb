@@ -1,5 +1,5 @@
 LICENSE    = "GPL"
-PR         = "r5"
+PR         = "r6"
 
 DEPENDS    = "base-passwd"
 #RDEPENDS   = "hotplug"
@@ -33,8 +33,11 @@ fi
 # set up some links to firmware and modules in initrd
 	mkdir -p /lib/firmware
         ln -sf /mnt/initfs/usr/lib/hotplug/firmware/3825.arm /lib/firmware/3825.arm
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/3826.arm /lib/firmware/3826.arm
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/bc4fw.bin /lib/firmware/bc4fw.bin
         ln -sf /mnt/initfs/usr/lib/hotplug/firmware/brf6150fw.bin /lib/firmware/brf6150fw.bin
         ln -sf /mnt/initfs/usr/lib/hotplug/firmware/mtlm3825.arm /lib/firmware/mtlm3825.arm
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/mtlm3826.arm /lib/firmware/mtlm3826.arm
 
 #	rm -rf /lib/modules
 #	ln -s /mnt/initfs/lib/modules /lib/modules
