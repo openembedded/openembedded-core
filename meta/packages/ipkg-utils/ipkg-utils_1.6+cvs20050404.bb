@@ -5,10 +5,13 @@ LICENSE = "GPL"
 CONFLICTS = "ipkg-link"
 RDEPENDS = "python"
 SRCDATE = "20050404"
-PR = "r12"
+PR = "r14"
 
 SRC_URI = "${HANDHELDS_CVS};module=ipkg-utils \
-           file://index_speedup.patch;patch=1"
+           file://ipkg-utils-fix.patch;patch=1 \
+           file://ipkg-py-sane-vercompare.patch;patch=1 \
+           file://ipkg-py-tarfile.patch;patch=1 \
+           file://ipkg-make-index-track-stamps.patch;patch=1"
 
 S = "${WORKDIR}/ipkg-utils"
 
@@ -25,10 +28,4 @@ do_install() {
 		install -m 0755 $i ${D}${bindir}
 	done
 }
-
-#FIXME: ipkg-utils is not allowed to have packages or else a ipkg-native -> ipkg-utils -> ipkg-utils
-#       recursive dependency is triggered. This has been fixed by installing the ipkg-link script in
-#       a dedicated package.
-#PACKAGES_prepend = "ipkg-link "
-#FILES_ipkg-link = "${bindir}/ipkg-link"
 

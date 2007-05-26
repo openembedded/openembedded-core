@@ -1,14 +1,14 @@
 require ipkg-utils_${PV}.bb
-SRC_URI += "file://ipkg-utils-fix.patch;patch=1"
 
 RDEPENDS = ""
-PR = "r8"
+PR = "r11"
 
 inherit native
 
 # Avoid circular dependencies from package_ipk.bbclass
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/ipkg-utils"
+INSTALL += "arfile.py"
 
 do_stage() {
         for i in ${INSTALL}; do

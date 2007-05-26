@@ -1,0 +1,306 @@
+---
+ arfile.py |  124 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ipkg.py   |  106 ++++++++++++++++++++++++++---------------------------
+ setup.py  |    2 -
+ 3 files changed, 177 insertions(+), 55 deletions(-)
+
+Index: ipkg-utils/arfile.py
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ ipkg-utils/arfile.py	2007-05-26 23:46:59.000000000 +0100
+@@ -0,0 +1,124 @@
++"""
++arfile - A module to parse GNU ar archives.
++
++Copyright (c) 2006-7 Paul Sokolovsky
++This file is released under the terms 
++of GNU General Public License v2 or later.
++"""
++import sys
++import os
++import tarfile 
++
++
++class FileSection:
++    "A class which allows to treat portion of file as separate file object."
++
++    def __init__(self, f, offset, size):
++        self.f = f
++        self.offset = offset
++        self.size = size
++        self.seek(0, 0)
++
++    def seek(self, offset, whence = 0):
++#        print "seek(%x, %d)" % (offset, whence)
++        if whence == 0:
++            return self.f.seek(offset + self.offset, whence)
++        elif whence == 1:
++            return self.f.seek(offset, whence)
++        elif whence == 2:
++            return self.f.seek(self.offset + self.size + offset, 0)
++        else:
++            assert False
++
++    def tell(self):
++#        print "tell()"
++        return self.f.tell() - self.offset
++
++    def read(self, size = -1):
++#        print "read(%d)" % size
++        return self.f.read(size)
++
++class ArFile:
++
++    def __init__(self, f):
++        self.f = f
++        self.directory = {}
++        self.directoryRead = False
++
++        signature = self.f.readline()
++        assert signature == "!<arch>\n"
++        self.directoryOffset = self.f.tell()
++
++    def open(self, fname):
++        if self.directory.has_key(fname):
++            return FileSection(self.f, self.directory[fname][-1], int(self.directory[fname][5]))
++
++        if self.directoryRead:
++            raise IOError, (2, "AR member not found: " + fname)
++
++        f = self._scan(fname)
++        if f == None:
++            raise IOError, (2, "AR member not found: " + fname)
++        return f
++
++
++    def _scan(self, fname):
++        self.f.seek(self.directoryOffset, 0)
++
++        while True:
++            l = self.f.readline()
++            if not l: 
++                self.directoryRead = True
++                return None
++
++            if l == "\n":
++                l = self.f.readline()
++                if not l: break
++            descriptor = l.split()
++#            print descriptor
++            size = int(descriptor[5])
++            memberName = descriptor[0][:-1]
++            self.directory[memberName] = descriptor + [self.f.tell()]
++#            print "read:", memberName
++            if memberName == fname:
++                # Record directory offset to start from next time
++                self.directoryOffset = self.f.tell() + size
++                return FileSection(self.f, self.f.tell(), size)
++
++            # Skip data and loop
++            data = self.f.seek(size, 1)
++#            print hex(f.tell())
++
++
++if __name__ == "__main__":
++    if None:
++        f = open(sys.argv[1], "rb")
++
++        ar = ArFile(f)
++        tarStream = ar.open("data.tar.gz")
++        print "--------"
++        tarStream = ar.open("data.tar.gz")
++        print "--------"
++        tarStream = ar.open("control.tar.gz")
++        print "--------"
++        tarStream = ar.open("control.tar.gz2")
++
++        sys.exit(0)
++
++
++    dir = "."
++    if len(sys.argv) > 1:
++        dir = sys.argv[1]
++    for f in os.listdir(dir):
++        if not f.endswith(".ipk"): continue
++
++        print "=== %s ===" % f
++        f = open(dir + "/" + f, "rb")
++
++        ar = ArFile(f)
++        tarStream = ar.open("control.tar.gz")
++        tarf = tarfile.open("control.tar.gz", "r", tarStream)
++        #tarf.list()
++
++        f2 = tarf.extractfile("control")
++        print f2.read()
+Index: ipkg-utils/setup.py
+===================================================================
+--- ipkg-utils.orig/setup.py	2007-05-26 23:45:55.000000000 +0100
++++ ipkg-utils/setup.py	2007-05-26 23:46:59.000000000 +0100
+@@ -16,6 +16,6 @@ distutils.core.setup( name = 'ipkg-utils
+ 		      platforms = 'POSIX',
+ 		      keywords = 'ipkg familiar',
+                       url = 'http://www.handhelds.org/sources.html/',
+-                      py_modules = [ 'ipkg' ],
++                      py_modules = [ 'ipkg', 'arfile' ],
+ 		      scripts = ['ipkg-compare-indexes', 'ipkg-make-index', 'ipkg-update-index', 'ipkg-build', 'ipkg-unbuild', 'ipkg-upload']
+                       )
+Index: ipkg-utils/ipkg.py
+===================================================================
+--- ipkg-utils.orig/ipkg.py	2007-05-26 23:46:55.000000000 +0100
++++ ipkg-utils/ipkg.py	2007-05-26 23:45:20.000000000 +0100
+@@ -41,6 +41,8 @@ import re
+ import string
+ import commands
+ from stat import ST_SIZE
++import arfile
++import tarfile
+ 
+ class Version:
+     """A class for holding parsed package version information."""
+@@ -131,78 +133,58 @@ class Package:
+ 	self.section = None
+         self.filename_header = None
+ 	self.file_list = []
+-        self.md5 = None
++        # md5 is lazy attribute, computed on demand
++        #self.md5 = None
+         self.size = None
+         self.installed_size = None
+         self.filename = None
+         self.isdeb = 0
++        self.fn = fn
+ 
+ 	if fn:
+             # see if it is deb format
+-            f = open(fn, "r")
++            f = open(fn, "rb")
+             magic = f.read(4)
+-            f.close()
++            f.seek(0, 0)
+             if (magic == "!<ar"):
+                 self.isdeb = 1
+ 
+-            # compute the MD5.
+-            f = open(fn, "r")
+-            sum = md5.new()
+-            while 1:
+-                data = f.read(1024)
+-                if not data: break
+-                sum.update(data)
+-            f.close()
+-            if sys.version[:1] > '2':
+-                # when using Python 2.0 or newer
+-                self.md5 = sum.hexdigest() 
+-            else:
+-                self.md5 = string.join(map((lambda x:"%02x" % ord(x)),sum.digest()),'')
+-            stat = os.stat(fn)
+-            self.size = stat[ST_SIZE]
++
+             self.filename = os.path.basename(fn)
++            assert self.isdeb == 1, "Old ipk format (non-deb) is unsupported"
++
+ 	    ## sys.stderr.write("  extracting control.tar.gz from %s\n"% (fn,)) 
+-            if self.isdeb:
+-                control = os.popen("ar p "+fn+" control.tar.gz | tar xfzO - './control'","r")
+-            else:
+-                control = os.popen("tar xfzO "+fn+" 'control.tar.gz' | tar xfzO - './control'","r")
+-            line = control.readline()
+-            while 1:
+-                if not line: break
+-                line = string.rstrip(line)
+-                lineparts = re.match(r'([\w-]*?):\s*(.*)', line)
+-		if lineparts:
+-                    name = string.lower(lineparts.group(1))
+-		    value = lineparts.group(2)
+-		    while 1:
+-			line = control.readline()
+-			if not line: break
+-			if line[0] != ' ': break
+-                        line = string.rstrip(line)
+-			value = value + '\n' + line
+-                    # don't allow package to override its own filename
+-                    if name == "filename":
+-                        self.filename_header = value
+-                    else:
+-                        if self.__dict__.has_key(name):
+-                            self.__dict__[name] = value
+-                else:
+-                    line = control.readline()
++
++            ar = arfile.ArFile(f)
++            tarStream = ar.open("control.tar.gz")
++            tarf = tarfile.open("control.tar.gz", "r", tarStream)
++
++            control = tarf.extractfile("control")
++            self.read_control(control)
+             control.close()
+-            if self.isdeb:
+-                data = os.popen("ar p "+fn+" data.tar.gz | tar tfz -","r")
+-            else:
+-                data = os.popen("tar xfzO "+fn+" '*data.tar.gz' | tar tfz -","r")
+-            while 1:
+-                line = data.readline()
+-                if not line: break
+-                self.file_list.append(string.rstrip(line))
+-            data.close()
+ 
+ 	self.scratch_dir = None
+ 	self.file_dir = None
+ 	self.meta_dir = None
+ 
++    def __getattr__(self, name):
++        if name == "md5":
++            self._computeFileMD5()
++            return self.md5
++        else:
++            raise AttributeError, name
++
++    def _computeFileMD5(self):
++        # compute the MD5.
++        f = open(self.fn, "rb")
++        sum = md5.new()
++        while 1:
++            data = f.read(1024)
++            if not data: break
++            sum.update(data)
++        f.close()
++        self.md5 = sum.hexdigest()
++
+     def read_control(self, control):
+         import os
+ 
+@@ -221,9 +203,15 @@ class Package:
+                     value = value + '\n' + line
+                 if name == 'size':
+                     self.size = int(value)
++	        elif name == 'md5sum':
++                    self.md5 = value
+                 elif self.__dict__.has_key(name):
+                     self.__dict__[name] = value
+-                if line[0] == '\n':
++		else:
++		    #print "Lost field %s, %s" % (name,value)
++                    pass
++
++                if line and line[0] == '\n':
+                     return # consumes one blank line at end of package descriptoin
+             else:
+                 line = control.readline()
+@@ -314,6 +302,16 @@ class Package:
+ 	return self.section
+ 
+     def get_file_list(self):
++        if not self.fn:
++            return []
++        f = open(self.fn, "rb")
++        ar = arfile.ArFile(f)
++        tarStream = ar.open("data.tar.gz")
++        tarf = tarfile.open("data.tar.gz", "r", tarStream)
++        self.file_list = tarf.getnames()
++        self.file_list = map(lambda a: ["./", ""][a.startswith("./")] + a, self.file_list)
++
++        f.close()
+ 	return self.file_list
+ 
+     def write_package(self, dirname):

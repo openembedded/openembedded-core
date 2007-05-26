@@ -1,0 +1,51 @@
+Only in ipkg-utils: ipkg-py-sane-vercompare.patch
+diff -ur ipkg-utils.org/ipkg.py ipkg-utils/ipkg.py
+--- ipkg-utils.org/ipkg.py	2005-01-08 18:08:52.000000000 +0000
++++ ipkg-utils/ipkg.py	2007-04-04 11:52:46.000000000 +0000
+@@ -48,9 +48,9 @@
+         self.epoch = epoch
+         self.version = version
+ 
+-    def _versioncompare(self, ref):
+-        selfversion = self.version
+-        refversion = ref.version
++    def _versioncompare(self, selfversion, refversion):
++        if not selfversion: selfversion = ""
++        if not refversion: refversion = ""
+         while 1:
+             ## first look for non-numeric version component
+             selfm = re.match('([^0-9]*)(.*)', selfversion)
+@@ -89,7 +89,18 @@
+         elif (self.epoch < ref.epoch):
+             return -1
+         else:
+-            return self._versioncompare(ref)
++	    self_ver_comps = re.match(r"(.+?)(-r.+)?$", self.version)
++	    ref_ver_comps = re.match(r"(.+?)(-r.+)?$", ref.version)
++	    #print (self_ver_comps.group(1), self_ver_comps.group(2))
++	    #print (ref_ver_comps.group(1), ref_ver_comps.group(2))
++	    r = self._versioncompare(self_ver_comps.group(1), ref_ver_comps.group(1))
++	    if r == 0:
++		r = self._versioncompare(self_ver_comps.group(2), ref_ver_comps.group(2))
++	    #print "compare: %s vs %s = %d" % (self, ref, r)
++	    return r
++
++    def __str__(self):
++        return str(self.epoch) + ":" + self.version
+ 
+ def parse_version(versionstr):
+     epoch = 0
+@@ -445,6 +456,13 @@
+         return self.packages[key]
+ 
+ if __name__ == "__main__":
++
++    assert Version(0, "1.2.2-r1").compare(Version(0, "1.2.3-r0")) == -1
++    assert Version(0, "1.2.2-r0").compare(Version(0, "1.2.2+cvs20070308-r0")) == -1
++    assert Version(0, "1.2.2+cvs20070308").compare(Version(0, "1.2.2-r0")) == 1
++    assert Version(0, "1.2.2-r0").compare(Version(0, "1.2.2-r0")) == 0
++    assert Version(0, "1.2.2-r5").compare(Version(0, "1.2.2-r0")) == 1
++
+     package = Package()
+ 
+     package.set_package("FooBar")

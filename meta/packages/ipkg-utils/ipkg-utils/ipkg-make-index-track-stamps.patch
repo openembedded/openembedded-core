@@ -1,0 +1,97 @@
+---
+ ipkg-make-index |   31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+
+Index: ipkg-utils/ipkg-make-index
+===================================================================
+--- ipkg-utils.orig/ipkg-make-index	2007-05-26 23:45:56.000000000 +0100
++++ ipkg-utils/ipkg-make-index	2007-05-26 23:47:25.000000000 +0100
+@@ -40,6 +40,7 @@ def to_locale(filename, locale):
+ old_filename = None
+ packages_filename = None
+ filelist_filename = "Packages.filelist"
++stamplist_filename = "Packages.stamps"
+ opt_s = 0
+ opt_m = 0
+ (opts, remaining_args) = getopt.getopt(sys.argv[1:], "hl:p:vsmr:L:")
+@@ -50,6 +51,7 @@ for (optkey, optval) in opts:
+           opt_s = 1
+      if optkey == '-p': 
+           packages_filename = optval
++          stamplist_filename = optval + ".stamps"
+      if optkey == '-l':
+           filelist_filename = optval
+      if optkey == '-v':
+@@ -72,6 +74,7 @@ old_pkg_hash = {}
+ if packages_filename and not old_filename and os.path.exists(packages_filename):
+      old_filename = packages_filename
+ 
++pkgsStamps = {}
+ if old_filename:
+      if (verbose):
+           sys.stderr.write("Reading package list from " + old_filename + "\n")
+@@ -80,6 +83,14 @@ if old_filename:
+      for k in old_packages.packages.keys():
+           p = old_packages.packages[k]
+           old_pkg_hash[p.filename] = p
++     try:
++        f = open(stamplist_filename, "r")
++        for l in f:
++            l = l.strip()
++            s, f = l.split(" ", 1)
++            pkgsStamps[f] = int(s)
++     except IOError:
++        pass
+ 
+ if (verbose):
+      sys.stderr.write("Reading in all the package info from %s\n" % (pkg_dir, ))
+@@ -87,11 +98,17 @@ files=glob(pkg_dir + '/*.ipk') + glob(pk
+ files.sort()
+ for filename in files:
+      basename = os.path.basename(filename)
++     pkg = None
++     fnameStat = os.stat(filename)
+      if old_pkg_hash.has_key(basename):
+-          if (verbose):
++          if pkgsStamps.has_key(basename) and fnameStat.st_mtime == pkgsStamps[basename]:
++            if (verbose):
+                sys.stderr.write("Found %s in Packages\n" % (filename,))
+-          pkg = old_pkg_hash[basename]
+-     else:
++            pkg = old_pkg_hash[basename]
++          else:
++               sys.stderr.write("Found %s in Packages, but mtime differs - re-reading\n" % (filename,))
++
++     if not pkg:
+           if (verbose):
+                sys.stderr.write("Reading info for package %s\n" % (filename,))
+           pkg = ipkg.Package(filename)
+@@ -101,6 +118,7 @@ for filename in files:
+      else:
+           old_filename = ""
+      s = packages.add_package(pkg)
++     pkgsStamps[basename] = fnameStat.st_mtime
+      if s == 0:
+           if old_filename:
+                # old package was displaced by newer
+@@ -114,6 +132,11 @@ for filename in files:
+           if opt_s:
+                print filename
+ 
++pkgsStampsFile = open(stamplist_filename, "w")
++for f in pkgsStamps.keys():
++    pkgsStampsFile.write("%d %s\n" % (pkgsStamps[f], f))
++pkgsStampsFile.close()
++
+ if opt_s:
+      sys.exit(0)
+ 
+@@ -154,7 +177,7 @@ if packages_filename:
+      os.rename(tmp_packages_filename, packages_filename)
+      os.rename(tmp_gzip_filename, gzip_filename)
+ 
+-if verbose:	
++if verbose:
+      sys.stderr.write("Generate Packages.filelist file\n")
+ files = {}
+ names = packages.packages.keys()

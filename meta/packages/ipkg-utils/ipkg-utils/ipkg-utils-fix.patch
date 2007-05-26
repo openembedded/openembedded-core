@@ -1,11 +1,14 @@
---- ../../../work/i686-linux/ipkg-utils-native-1.6+cvs20050404-r6/ipkg-utils/ipkg.py	2005-01-08 19:08:52.000000000 +0100
-+++ ipkg-utils/ipkg.py	2006-06-29 12:52:58.466446000 +0200
-@@ -150,11 +150,11 @@
-             stat = os.stat(fn)
-             self.size = stat[ST_SIZE]
+---
+ ipkg.py |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: ipkg-utils/ipkg.py
+===================================================================
+--- ipkg-utils.orig/ipkg.py	2007-05-26 23:49:05.000000000 +0100
++++ ipkg-utils/ipkg.py	2007-05-26 23:49:23.000000000 +0100
+@@ -152,9 +152,9 @@ class Package:
              self.filename = os.path.basename(fn)
--	    ## sys.stderr.write("  extracting control.tar.gz from %s\n"% (fn,)) 
-+	    sys.stderr.write("  extracting control.tar.gz from %s\n"% (fn,)) 
+ 	    ## sys.stderr.write("  extracting control.tar.gz from %s\n"% (fn,)) 
              if self.isdeb:
 -                control = os.popen("ar p "+fn+" control.tar.gz | tar xfzO - '*control'","r")
 +                control = os.popen("ar p "+fn+" control.tar.gz | tar xfzO - './control'","r")
