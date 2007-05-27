@@ -70,6 +70,8 @@ EXTRA_OECONF += "${MUTEX}"
 # configure.
 CONFIG_SITE = ""
 do_configure() {
+	rm ${S}/config.sub
+	cp ${STAGING_DIR}/${BUILD_SYS}/share/gnu-config/config.sub ${S}/config.sub 
 	oe_runconf
 }
 
