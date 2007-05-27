@@ -22,13 +22,18 @@ ac_cv_sizeof_unsigned_long=${ac_cv_sizeof_unsigned_long=4}
 ac_cv_sizeof_unsigned_long_long=${ac_cv_sizeof_unsigned_long_long=8}
 ac_cv_sizeof_signed_char=${ac_cv_sizeof_signed_char=1}
 
+ac_cv_sizeof_long_double=${ac_cv_sizeof_long_double=8}
+libc_cv_mlong_double_128ibm=${libc_cv_mlong_double_128ibm=yes}
+libc_cv_mlong_double_128=${libc_cv_mlong_double_128=yes}
+ac_cv_alignof_CORBA_long_double=4
+ac_cv_c_long_double=${ac_cv_c_long_double=yes}
+
+
 ac_cv_sys_restartable_syscalls=yes
 ac_cv_uchar=${ac_cv_uchar=no}
 ac_cv_uint=${ac_cv_uint=yes}
 ac_cv_ulong=${ac_cv_ulong=yes}
 ac_cv_ushort=${ac_cv_ushort=yes}
-
-mr_cv_target_elf=${mr_cv_target_elf=yes}
 
 ac_cv_time_r_type=${ac_cv_time_r_type=POSIX}
 cookie_io_functions_use_off64_t=${cookie_io_functions_use_off64_t=yes}
@@ -39,3 +44,15 @@ am_cv_sys_posix_termios=${am_cv_sys_posix_termios=yes}
 
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
+
+#glib
+glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
+glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24} 
+glib_cv_uscore=${glib_cv_uscore=no}
+glib_cv_stack_grows=${glib_cv_stack_grows=no}
+
+#linux
+ac_cv_linux_vers=${ac_cv_linux_vers=2}
+
+#bash
+bash_cv_have_mbstate_t=${bash_cv_have_mbstate_t=yes}
