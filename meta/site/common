@@ -1,0 +1,2 @@
+# libelf
+mr_cv_target_elf=${mr_cv_target_elf=yes}
