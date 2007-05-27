@@ -1,0 +1,4 @@
+The numbered patches come from
+http://www.uclibc.org/cgi-bin/viewcvs.cgi/trunk/buildroot/toolchain/gcc/4.1.1/
+Other patches are locally added to fix things (mostly inherited and reapplied
+from gcc 3.4.4 where applicable)

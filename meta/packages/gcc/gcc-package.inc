@@ -1,14 +1,14 @@
 gcclibdir ?= "${libdir}/gcc"
 BINV ?= "${PV}"
 
-# libgcc libstdc++ libg2c are listed in our FILES_*, but are actually
-# packaged in the respective cross packages.
-PACKAGES = "${PN} ${PN}-symlinks \
+PACKAGES = "libgcc ${PN} ${PN}-symlinks \
             g++ g++-symlinks \
 	    cpp cpp-symlinks \
             g77 g77-symlinks \
 	    gcov gcov-symlinks \
-            libstdc++-dev libg2c-dev \
+            libmudflap libmudflap-dev \
+	    libstdc++ libg2c \
+	    libstdc++-dev libg2c-dev \
             ${PN}-doc"
 
 FILES_${PN} = "${bindir}/${TARGET_PREFIX}gcc \
@@ -35,7 +35,11 @@ FILES_cpp-symlinks = "${bindir}/cpp"
 FILES_gcov = "${bindir}/${TARGET_PREFIX}gcov"
 FILES_gcov-symlinks = "${bindir}/gcov"
 
+FILES_libgcc = "${base_libdir}/libgcc*.so.*"
+FILES_libgcc-dev = "${base_libdir}/libgcc*.so"
+
 # Called from within gcc-cross, so libdir is set wrong
+FILES_libg2c = "${target_libdir}/libg2c.so.*"
 FILES_libg2c-dev = "${libdir}/libg2c.so \
 		    ${libdir}/libg2c.a \
 		    ${libdir}/libfrtbegin.a"
@@ -45,6 +49,7 @@ FILES_g++ = "${bindir}/${TARGET_PREFIX}g++ \
 FILES_g++-symlinks = "${bindir}/c++ \
 			    ${bindir}/g++"
 
+FILES_libstdc++ = "${libdir}/libstdc++.so.*"
 FILES_libstdc++-dev = "${includedir}/c++/${BINV} \
 		       ${libdir}/libstdc++.so \
 		       ${libdir}/libstdc++.la \
@@ -52,9 +57,21 @@ FILES_libstdc++-dev = "${includedir}/c++/${BINV} \
 		       ${libdir}/libsupc++.la \
 		       ${libdir}/libsupc++.a"
 
+FILES_libmudflap = "${libdir}/libmudflap*.so.*"
+FILES_libmudflap-dev = "${libdir}/libmudflap*.so \
+                        ${libdir}/libmudflap*.a \
+                        ${libdir}/libmudflap*.a"
+
+
 FILES_${PN}-doc = "${infodir} \
 		   ${mandir} \
 		   ${gcclibdir}/${TARGET_SYS}/${BINV}/include/README"
+
+python do_package() {
+        if bb.data.getVar('DEBIAN_NAMES', d, 1):
+                bb.data.setVar('PKG_libgcc', 'libgcc1', d)
+        bb.build.exec_func('package_do_package', d)
+}
 
 
 do_install () {
@@ -65,34 +82,33 @@ do_install () {
 	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
 
 	# Hack around specs file assumptions
-	sed -i -e '/^*cross_compile:$/ { n; s/1/0/; }' ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs &>/dev/null || true
+	test -f ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs && sed -i -e '/^*cross_compile:$/ { n; s/1/0/; }' ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs
 
 	# Move libgcc_s into /lib
 	mkdir -p ${D}${base_libdir}
 	mv ${D}${libdir}/libgcc_s.so.* ${D}${base_libdir}
-	rm ${D}${libdir}/libgcc_s.so
+	rm -f ${D}${libdir}/libgcc_s.so
 	ln -sf `echo ${libdir}/gcc/${TARGET_SYS}/${BINV} \
 		| tr -s / \
 		| sed -e 's,^/,,' -e 's,[^/]*,..,g'`/lib/libgcc_s.so.1 \
 		      ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/libgcc_s.so
 
 	# We don't need libtool libraries
-	rm ${D}${libdir}/libg2c.la &>/dev/null || true
-
+	rm -f ${D}${libdir}/libg2c.la &>/dev/null || true
 
 	# Cleanup manpages..
-	rm -r ${D}${mandir}/man7
+	rm -rf ${D}${mandir}/man7
 
 	# We use libiberty from binutils
-	rm ${D}${libdir}/libiberty.a
+	rm -f ${D}${libdir}/libiberty.a
 
 	cd ${D}${bindir}
 
 	# We care about g++ not c++
-	rm *c++
+	rm -f *c++
 
 	# We don't care about the gcc-<version> ones for this
-	rm *gcc-?.?*
+	rm -f *gcc-?.?*
 
 	# These sometimes show up, they are strange, we remove them
 	rm -f ${TARGET_ARCH}-*${TARGET_ARCH}-*

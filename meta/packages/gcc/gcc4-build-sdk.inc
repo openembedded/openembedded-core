@@ -1,4 +1,6 @@
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
+USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibcgnueabi", "no", "", d )}'
+
 
 STAGING_TARGET_INCDIR = "${STAGING_DIR}/${TARGET_SYS}/include"
 STAGING_TARGET_LIBDIR = "${STAGING_DIR}/${TARGET_SYS}/lib"
