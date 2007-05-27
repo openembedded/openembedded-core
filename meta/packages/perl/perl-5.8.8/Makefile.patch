@@ -1,5 +1,14 @@
---- perl-5.8.7/Cross/Makefile.orig	2005-07-25 19:45:16.000000000 +0000
-+++ perl-5.8.7/Cross/Makefile	2005-07-25 19:46:09.000000000 +0000
+--- perl-5.8.8/Cross/Makefile	2007/04/06 00:47:46	1.1
++++ perl-5.8.8/Cross/Makefile	2007/04/06 00:48:04
+@@ -12,7 +12,7 @@
+ 
+ export CC = $(CROSS)gcc
+ export CXX = $(CROSS)g++
+-export LD = $(CROSS)ld
++export LD = $(CC)
+ export STRIP = $(CROSS)strip
+ export AR = $(CROSS)ar
+ export RANLIB = $(CROSS)ranlib
 @@ -58,11 +58,11 @@
  	$(TOPDIR)/generate_config_sh config.sh-$(SYS) > $(TOPDIR)/../config.sh
  	cd $(TOPDIR)/.. ; ./Configure -S ; make depend ; make ; make more

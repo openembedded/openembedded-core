@@ -1,0 +1,32 @@
+Correctly identify arch-specific modules in ext/ where the .pm files
+are under lib.
+
+Ensure that POSIX/SigAction is kept with the rest of the POSIX module
+under archlib.
+
+diff --exclude=debian -Naur perl-5.8.8.orig/installperl perl-5.8.8/installperl
+--- perl-5.8.8.orig/installperl	2006-01-29 02:35:28.000000000 +1100
++++ perl-5.8.8/installperl	2006-05-31 22:54:41.000000000 +1000
+@@ -156,11 +156,8 @@
+     if ("$File::Find::dir/$_" =~ m{^ext\b(.*)/([^/]+)\.pm$}) {
+ 	my($path, $modname) = ($1,$2);
+ 
+-	# strip trailing component first
+-	$path =~ s{/[^/]*$}{};
+-
+-	# strip optional "/lib";
+-	$path =~ s{/lib\b}{};
++	# strip to optional "/lib", or remove trailing component
++	$path =~ s{.*/lib\b}{} or $path =~ s{/[^/]*$}{};
+ 
+ 	# strip any leading /
+ 	$path =~ s{^/}{};
+@@ -851,7 +848,7 @@
+     }
+ 
+     if (-f $_) {
+-	if (/\.(?:al|ix)$/ && !($dir =~ m[^auto/(.*)$] && $archpms{$1})) {
++	if (/\.(?:al|ix)$/ && !($dir =~ m[^auto/(.*)$])) {
+ 	    $installlib = $installprivlib;
+ 	    #We're installing *.al and *.ix files into $installprivlib,
+ 	    #but we have to delete old *.al and *.ix files from the 5.000

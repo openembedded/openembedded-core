@@ -1,0 +1,13 @@
+See http://bugs.openembedded.org/show_bug.cgi?id=2168
+Fix for gcc 4.2
+
+--- perl-5.8.8/makedepend.SH.ark	2006-11-01 16:32:05.000000000 +0100
++++ perl-5.8.8/makedepend.SH	2006-11-01 16:32:15.000000000 +0100
+@@ -167,6 +167,7 @@
+             -e '/^#.*<builtin>/d' \
+             -e '/^#.*<built-in>/d' \
+             -e '/^#.*<command line>/d' \
++            -e '/^#.*<command-line>/d' \
+ 	    -e '/^#.*"-"/d' \
+ 	    -e '/: file path prefix .* never used$/d' \
+ 	    -e 's#\.[0-9][0-9]*\.c#'"$file.c#" \

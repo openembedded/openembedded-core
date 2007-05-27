@@ -9,34 +9,9 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 	file://Makefile.patch;patch=1 \
 	file://config.sh-arm-linux.patch;patch=1 \
 	file://libperl-5.8.3-create-libperl-soname.patch;patch=1;pnum=0 \
-	file://uclibc.patch;patch=1 \
-	file://Makefile.SH.patch \
-	file://config.sh-mipsel-linux \
-	file://config.sh-i686-linux"
+	file://Makefile.SH.patch"
 
 HOSTPERL="${STAGING_BINDIR_NATIVE}/perl${PV}"
-
-do_configure() {
-	ln -sf ${HOSTPERL} ${STAGING_BINDIR_NATIVE}/hostperl 
-	cp ${HOSTPERL} hostperl
-	cd Cross
-	rm -f Makefile.SH.patch
-	cp ${WORKDIR}/Makefile.SH.patch .
-	cp ${WORKDIR}/config.sh-mipsel-linux .
-	cp ${WORKDIR}/config.sh-i686-linux .
-	cat config.sh-arm-linux | sed -e "s,arm-linux,armeb-linux,g" > config.sh-armeb-linux
-	for i in config.sh-*-linux; do
-		a="`echo $i|sed -e 's,^config.sh-,,; s,-linux$,,'`"
-		newfile="`echo $i|sed -e 's,-linux$,-linux-uclibc,g'`"
-		cat $i | sed -e "s,${a}-linux,${a}-linux-uclibc,g; \
-				 s,d_sockatmark='define',d_sockatmark='undef',g;" > $newfile
-	done
-	sed -i -e 's,./install_me_here,${D},g' config.sh-${TARGET_ARCH}-${TARGET_OS}
-	rm -f config
-	echo "ARCH = ${TARGET_ARCH}" > config
-	echo "OS = ${TARGET_OS}" >> config
-	oe_runmake patch 
-}
 
 do_compile() {
 	sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
@@ -44,8 +19,13 @@ do_compile() {
 	# You must use gcc to link on sh
 	OPTIONS=""
 	if test ${TARGET_ARCH} = "sh3" -o ${TARGET_ARCH} = "sh4"; then
-		OPTIONS="LD=${TARGET_ARCH}-${TARGET_OS}-gcc"
+		OPTIONS="LD=${TARGET_SYS}-gcc"
 	fi
+	# You must use gcc to link on powerpc also 
+	if test ${TARGET_ARCH} = "powerpc" ; then 
+		OPTIONS="LD=${TARGET_SYS}-gcc" 
+	fi 
+
 	oe_runmake perl $OPTIONS
 }
 

@@ -1,0 +1,18 @@
+If you have a /usr/include/gdbm/ndbm.h host on the header then the configure
+script adds -I/usr/include/gdbm to the ccflags even though gdbm support is
+disabled. Prevent perl from doing this so we don't get cross compile badness
+errors while building perl.
+
+--- perl-5.8.8/Configure	2007/05/06 23:42:18	1.1
++++ perl-5.8.8/Configure	2007/05/06 23:42:48
+@@ -20033,8 +20033,8 @@
+     # ndbm.h header in /usr/include/gdbm/ndbm.h.
+     if $test -f /usr/include/gdbm/ndbm.h; then
+ 	echo '<gdbm/ndbm.h> found.'
+-        ccflags="$ccflags -I/usr/include/gdbm"
+-        cppflags="$cppflags -I/usr/include/gdbm"
++#        ccflags="$ccflags -I/usr/include/gdbm"
++#        cppflags="$cppflags -I/usr/include/gdbm"
+         t_ndbm=$define
+     fi
+     ;;

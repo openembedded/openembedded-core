@@ -1,0 +1,16 @@
+Use the ld flags from the supplied configuration file. For sh we need the
+flags that specify to build PIC code so that the shared libraries work.
+
+--- perl-5.8.7/Cross/generate_config_sh~	2006-09-25 16:34:09.000000000 +1000
++++ perl-5.8.7/Cross/generate_config_sh	2006-09-25 16:34:09.000000000 +1000
+@@ -19,8 +19,8 @@
+ $callbacks->{'ar'} = [\&simple_process, ["AR", "arm-linux-ar"]];
+ $callbacks->{'archname'} = [\&simple_process, ["SYS", "armv4l-linux"]];
+ $callbacks->{'cc'} = [\&simple_process, ["CC", "arm-linux-gcc"]];
+-$callbacks->{'cccdlflags'} = [\&simple_process, ["CFLAGS", ""]];
+-$callbacks->{'ccdlflags'} = [\&simple_process, ["CFLAGS", ""]];
++#$callbacks->{'cccdlflags'} = [\&simple_process, ["CFLAGS", ""]];
++#$callbacks->{'ccdlflags'} = [\&simple_process, ["CFLAGS", ""]];
+ $callbacks->{'ccflags'} = [\&simple_process, ["CFLAGS", "-fno-strict-aliasing -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"]];
+ $callbacks->{'ccflags_uselargefiles'} = [\&simple_process, ["CFLAGS", "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"]];
+ $callbacks->{'ccname'} = [\&simple_process, ["CC", "arm-linux-gcc"]];

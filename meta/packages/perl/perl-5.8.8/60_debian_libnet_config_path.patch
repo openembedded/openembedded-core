@@ -1,0 +1,16 @@
+Set location of libnet.cfg to /etc/perl/Net as /usr may not be writable.
+
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/Net/Config.pm perl-5.8.8/lib/Net/Config.pm
+--- perl-5.8.8.orig/lib/Net/Config.pm	2002-03-01 01:04:31.000000000 +1100
++++ perl-5.8.8/lib/Net/Config.pm	2006-02-03 00:00:55.000000000 +1100
+@@ -57,9 +57,8 @@
+ }
+ TRY_INTERNET_CONFIG
+ 
+-my $file = __FILE__;
++my $file = '/etc/perl/Net/libnet.cfg';
+ my $ref;
+-$file =~ s/Config.pm/libnet.cfg/;
+ if ( -f $file ) {
+     $ref = eval { local $SIG{__DIE__}; do $file };
+     if (ref($ref) eq 'HASH') {
