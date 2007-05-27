@@ -4,10 +4,9 @@ require fontconfig_${PV}.bb
 inherit native
 DEPENDS = "freetype-native expat-native zlib-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/fontconfig-${PV}"
-SRC_URI += " file://stop-fc-cache.patch;patch=1"
 
 EXTRA_OEMAKE = ""
-EXTRA_OECONF += "--with-freetype-config=${STAGING_BINDIR}/freetype-config"
+EXTRA_OECONF = "${@[' --disable-docs',' --disable-docs --with-freetype-config=%s/freetype-config' % bb.data.getVar('STAGING_BINDIR', d, 1)][os.path.isfile('%s/freetype-config' % bb.data.getVar('STAGING_BINDIR', d, 1))]}"
 
 do_stage () {
 	oe_runmake install

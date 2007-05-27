@@ -1,8 +1,0 @@
---- fontconfig-2.2.95/Makefile.am.old	2006-02-07 01:01:01.000000000 +0000
-+++ fontconfig-2.2.95/Makefile.am	2006-02-07 01:01:15.000000000 +0000
-@@ -50,4 +50,4 @@
- 	  echo " $(INSTALL_DATA) local.conf $(DESTDIR)$(configdir)/local.conf"; \
- 	  $(INSTALL_DATA) local.conf $(DESTDIR)$(configdir)/local.conf; \
- 	fi; fi; fi
--	if [ x$(DESTDIR) = x ]; then fc-cache/fc-cache -f -v; fi
-+#	if [ x$(DESTDIR) = x ]; then fc-cache/fc-cache -f -v; fi
