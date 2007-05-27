@@ -1,7 +1,7 @@
 SECTION = "base"
 PR = "r2"
 
-DEPENDS = "libxml2 intltool-native"
+DEPENDS = "libxml2 intltool-native glib-2.0"
 
 SRC_URI = "http://freedesktop.org/~jrb/shared-mime-info-${PV}.tar.gz"
 LICENSE = "GPL"
