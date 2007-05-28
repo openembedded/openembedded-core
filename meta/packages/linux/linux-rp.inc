@@ -11,12 +11,13 @@ RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
 JLSRC = "http://www.cs.wisc.edu/~lenz/zaurus/files"
 BASRC = "http://www.orca.cx/zaurus/patches"
 CHSRC = "http://oz.drigon.com/patches"
+TKSRC = "http://www.informatik.hu-berlin.de/~tkunze/zaurus/patches"
 
 ##############################################################
 # Compensate for sucky bootloader on all Sharp Zaurus models
 #
 FILES_kernel-image = ""
-ALLOW_EMPTY = 1
+ALLOW_EMPTY = "1"
 
 EXTRA_OEMAKE = "OPENZAURUS_RELEASE=-${DISTRO_VERSION}"
 COMPATIBLE_HOST = "(arm|i.86).*-linux"
@@ -32,8 +33,8 @@ CMDLINE_DEBUG = '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "debug", "qu
 ##############################################################
 # Configure memory/ramdisk split for collie
 #
-export mem = ${@bb.data.getVar("COLLIE_MEMORY_SIZE",d,1) or "32"}
-export rd  = ${@bb.data.getVar("COLLIE_RAMDISK_SIZE",d,1) or "32"}
+export mem = '${@bb.data.getVar("COLLIE_MEMORY_SIZE",d,1) or "32"}'
+export rd  = '${@bb.data.getVar("COLLIE_RAMDISK_SIZE",d,1) or "32"}'
 
 CMDLINE_MEM_collie = "mem=${mem}M"
 CMDLINE_ROTATE_spitz = "fbcon=rotate:1"
@@ -45,7 +46,7 @@ CMDLINE = "${CMDLINE_CON} ${CMDLINE_ROOT} ${CMDLINE_MEM} ${CMDLINE_ROTATE} ${CMD
 ###############################################################
 # Enable or disable ELPP via local.conf - default is "no"
 #
-ENABLE_ELPP = ${@bb.data.getVar("OZ_KERNEL_ENABLE_ELPP",d,1) or "no"}
+ENABLE_ELPP = '${@bb.data.getVar("OZ_KERNEL_ENABLE_ELPP",d,1) or "no"}'
 
 ###############################################################
 # module configs specific to this kernel
@@ -101,7 +102,7 @@ do_configure() {
 	#	echo "# CONFIG_FB_ELPP is not set"	>> ${S}/.config
 	#fi
 
-	if [ "${TARGET_OS}" = "linux-gnueabi" ]; then
+	if [ "${TARGET_OS}" = "linux-gnueabi" -o "${TARGET_OS}" = "linux-uclibcgnueabi" ]; then
 		echo "CONFIG_AEABI=y"                   >> ${S}/.config
 		echo "CONFIG_OABI_COMPAT=y"             >> ${S}/.config
 	else 
@@ -189,12 +190,12 @@ do_compile_append() {
 }
 
 do_deploy() {
-        install -d ${DEPLOY_DIR_IMAGE}
-        install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin
 	rm -f ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${MACHINE}.bin
 	cd ${DEPLOY_DIR_IMAGE}
 	ln -s ${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin ${KERNEL_IMAGETYPE}-${MACHINE}.bin
-        tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_RELEASE}-${MACHINE}.tgz -C ${D} lib	
+	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_RELEASE}-${MACHINE}.tgz -C ${D} lib	
 }
 
 do_deploy[dirs] = "${S}"
