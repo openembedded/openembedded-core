@@ -9,3 +9,6 @@ PREFERRED_VERSION_gcc-cross-initial ?= "3.4.4"
 PREFERRED_VERSION_linux-libc-headers ?= "2.6.11.1"
 PREFERRED_VERSION_glibc ?= "2.3.5+cvs20050627"
 PREFERRED_PROVIDER_virtual/arm-linux-libc-for-gcc = "glibc"
+
+GLIBCTARGETOS = "linux"
+UCLIBCTARGETOS = "linux-uclibc"
