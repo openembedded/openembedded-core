@@ -115,3 +115,5 @@ samba_cv_socklen_t=${samba_cv_socklen_t=yes}
 samba_cv_unixsocket=${samba_cv_unixsocket=yes}
 samba_cv_volatile=${samba_cv_volatile=yes}
 
+# eds-dbus
+ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}

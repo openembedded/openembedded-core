@@ -61,10 +61,6 @@ samba_cv_HAVE_KERNEL_CHANGE_NOTIFY=${samba_cv_HAVE_KERNEL_CHANGE_NOTIFY=yes}
 samba_cv_HAVE_KERNEL_SHARE_MODES=${samba_cv_HAVE_KERNEL_SHARE_MODES=yes}
 samba_cv_LINUX_LFS_SUPPORT=${samba_cv_LINUX_LFS_SUPPORT=yes}
 
-# dpkg
-dpkg_cv_va_copy=${ac_cv_va_copy=yes}
-dpkg_cv___va_copy=${ac_cv___va_copy=yes}
-
 # enca
 yeti_cv_func_scanf_modif_size_t=yes
 
@@ -76,6 +72,3 @@ ac_cv_func_mmap_fixed_mapped=${ac_cv_func_mmap_fixed_mapped=yes}
 
 #dbus
 ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
-
-# eds-dbus
-ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}

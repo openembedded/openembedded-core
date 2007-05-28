@@ -231,3 +231,11 @@ sudo_cv_uid_t_len=${sudo_cv_uid_t_len=10}
 # xffm
 jm_cv_func_working_readdir=yes
 
+
+# dpkg
+dpkg_cv_va_copy=${ac_cv_va_copy=yes}
+dpkg_cv___va_copy=${ac_cv___va_copy=yes}
+
+# eds-dbus
+ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}
+
