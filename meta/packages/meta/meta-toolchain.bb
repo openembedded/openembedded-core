@@ -1,7 +1,7 @@
 DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
 DEPENDS = "ipkg-native ipkg-utils-native fakeroot-native sed-native"
-PR = "r0"
+PR = "r1"
 
 inherit sdk
 
@@ -81,7 +81,7 @@ EOF
 	rm -rf ${SDK_OUTPUT}/${prefix}/sbin ${SDK_OUTPUT}/${prefix}/etc
 
 	# remove broken .la files
-	rm ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/*.la
+	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/*.la
 
         mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}
