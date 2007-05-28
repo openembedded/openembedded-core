@@ -2,7 +2,7 @@ DESCRIPTION = "userspace utilities for kernel nfs"
 PRIORITY = "optional"
 SECTION = "console/network"
 LICENSE = "GPL"
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.gz \
 	file://acinclude-lossage.patch;patch=1 \
@@ -10,6 +10,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.gz \
 	file://stat-include.patch;patch=1 \
 	file://nfs-utils-1.0.6-uclibc.patch;patch=1 \
 	file://kernel-2.6.18+.patch;patch=1 \
+	file://uclibc_bzero_fix.patch;patch=1 \
 	file://nfsserver \
 	file://forgotten-defines"
 
