@@ -2,8 +2,10 @@ DESCRIPTION = "ALSA Utilities"
 SECTION = "console/utils"
 LICENSE = "GPL"
 DEPENDS = "alsa-lib ncurses"
+PR = "r1"
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2"
+SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
+           file://intl_linking_fix.patch;patch=1" 
 
 inherit autotools
 

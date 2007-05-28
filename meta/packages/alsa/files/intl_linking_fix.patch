@@ -1,0 +1,14 @@
+---
+ seq/aseqnet/Makefile.am |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: alsa-utils-1.0.10/seq/aseqnet/Makefile.am
+===================================================================
+--- alsa-utils-1.0.10.orig/seq/aseqnet/Makefile.am	2001-11-06 07:51:49.000000000 +0000
++++ alsa-utils-1.0.10/seq/aseqnet/Makefile.am	2007-05-28 22:29:23.000000000 +0100
+@@ -3,4 +3,5 @@ EXTRA_DIST = README.aseqnet aseqnet.1
+ 
+ bin_PROGRAMS = aseqnet
+ aseqnet_SOURCES = aseqnet.c
++aseqnet_LDADD = @LTLIBINTL@
+ man_MANS = aseqnet.1
