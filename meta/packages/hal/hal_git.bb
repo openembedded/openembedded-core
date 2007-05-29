@@ -3,7 +3,7 @@ HOMEPAGE = "http://freedesktop.org/Software/hal"
 SECTION = "unknown"
 LICENSE = "GPL LGPL AFL"
 
-DEPENDS = "virtual/kernel dbus-glib udev intltool expat libusb"
+DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
 RDEPENDS += "udev hal-info"
 #RDEPENDS_hal-device-manager = "python hal python-pygnome"
 RRECOMMENDS = "udev-utils"
@@ -11,8 +11,8 @@ RRECOMMENDS = "udev-utils"
 SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
         file://99_hal"
 
-PV="0.5.9+git${SRCDATE}"
-PR="r1"
+PV = "0.5.9+git${SRCDATE}"
+PR = "r2"
 
 S = "${WORKDIR}/git"
 
