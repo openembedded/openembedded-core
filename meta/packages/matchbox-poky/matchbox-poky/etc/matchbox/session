@@ -1,23 +1,6 @@
 #!/bin/sh
 
-module_id() {
-    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
-}
-
 SHOWCURSOR="no"
-
-## Start up machine specific input devices. Really needs to go in its own session
-case `module_id` in
-	# On Zaurus models, zaurusd takes care of mbinputmgr for us in its hinge scripts
-	"Generic OMAP1510/1610/1710")
-		/usr/bin/mbinputmgr &
-		;;
-        # qemu machines.. likely need better detection 
-	"ARM-IntegratorCP" | "ARM-Versatile PB")
-		/usr/bin/mbinputmgr &
-		#SHOWCURSOR="yes"
-		;;
-esac
 
 ## All this should be done by themeing/xsettings.. ## 
 matchbox-desktop --icon-size 48 \
