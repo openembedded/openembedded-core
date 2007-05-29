@@ -5,28 +5,38 @@
  include/linux/serial_core.h  |    1 +
  4 files changed, 16 insertions(+), 3 deletions(-)
 
-Index: git/drivers/serial/8250.c
+Index: linux-2.6.20/drivers/serial/8250.c
 ===================================================================
---- git.orig/drivers/serial/8250.c	2006-10-31 16:29:50.000000000 +0000
-+++ git/drivers/serial/8250.c	2006-10-31 16:29:53.000000000 +0000
-@@ -2429,7 +2429,12 @@ static struct uart_driver serial8250_reg
+--- linux-2.6.20.orig/drivers/serial/8250.c	2007-04-27 13:37:26.000000000 +0100
++++ linux-2.6.20/drivers/serial/8250.c	2007-04-27 13:38:16.000000000 +0100
+@@ -2429,7 +2429,12 @@
  	.driver_name		= "serial",
  	.dev_name		= "ttyS",
  	.major			= TTY_MAJOR,
 +#ifdef CONFIG_SERIAL_PXA
-+	.minor			= 64 + 3,
-+	.name_base		= 3,
++	.minor			= 64 + 4,
++	.name_base		= 4,
 +#else
  	.minor			= 64,
 +#endif
  	.nr			= UART_NR,
  	.cons			= SERIAL8250_CONSOLE,
  };
-Index: git/drivers/serial/serial_core.c
+Index: linux-2.6.20/drivers/serial/serial_core.c
 ===================================================================
---- git.orig/drivers/serial/serial_core.c	2006-10-31 16:09:17.000000000 +0000
-+++ git/drivers/serial/serial_core.c	2006-10-31 16:29:53.000000000 +0000
-@@ -2183,6 +2183,7 @@ int uart_register_driver(struct uart_dri
+--- linux-2.6.20.orig/drivers/serial/serial_core.c	2007-02-04 18:44:54.000000000 +0000
++++ linux-2.6.20/drivers/serial/serial_core.c	2007-04-27 13:39:39.000000000 +0100
+@@ -2068,7 +2068,8 @@
+ 	printk(KERN_INFO "%s%s%s%d at %s (irq = %d) is a %s\n",
+ 	       port->dev ? port->dev->bus_id : "",
+ 	       port->dev ? ": " : "",
+-	       drv->dev_name, port->line, address, port->irq, uart_type(port));
++	       drv->dev_name, port->line + drv->name_base, address, port->irq,
++	       uart_type(port));
+ }
+ 
+ static void
+@@ -2183,6 +2184,7 @@
  	normal->owner		= drv->owner;
  	normal->driver_name	= drv->driver_name;
  	normal->name		= drv->dev_name;
@@ -34,11 +44,11 @@ Index: git/drivers/serial/serial_core.c
  	normal->major		= drv->major;
  	normal->minor_start	= drv->minor;
  	normal->type		= TTY_DRIVER_TYPE_SERIAL;
-Index: git/include/linux/serial_core.h
+Index: linux-2.6.20/include/linux/serial_core.h
 ===================================================================
---- git.orig/include/linux/serial_core.h	2006-10-31 16:09:45.000000000 +0000
-+++ git/include/linux/serial_core.h	2006-10-31 16:30:36.000000000 +0000
-@@ -339,6 +339,7 @@ struct uart_driver {
+--- linux-2.6.20.orig/include/linux/serial_core.h	2007-02-04 18:44:54.000000000 +0000
++++ linux-2.6.20/include/linux/serial_core.h	2007-04-27 13:37:27.000000000 +0100
+@@ -341,6 +341,7 @@
  	struct module		*owner;
  	const char		*driver_name;
  	const char		*dev_name;
@@ -46,11 +56,11 @@ Index: git/include/linux/serial_core.h
  	int			 major;
  	int			 minor;
  	int			 nr;
-Index: git/drivers/serial/serial_cs.c
+Index: linux-2.6.20/drivers/serial/serial_cs.c
 ===================================================================
---- git.orig/drivers/serial/serial_cs.c	2006-10-31 16:09:17.000000000 +0000
-+++ git/drivers/serial/serial_cs.c	2006-10-31 16:29:53.000000000 +0000
-@@ -390,7 +390,7 @@ static int setup_serial(struct pcmcia_de
+--- linux-2.6.20.orig/drivers/serial/serial_cs.c	2007-02-04 18:44:54.000000000 +0000
++++ linux-2.6.20/drivers/serial/serial_cs.c	2007-04-27 13:40:34.000000000 +0100
+@@ -390,7 +390,7 @@
  			kio_addr_t iobase, int irq)
  {
  	struct uart_port port;
@@ -59,12 +69,12 @@ Index: git/drivers/serial/serial_cs.c
  
  	memset(&port, 0, sizeof (struct uart_port));
  	port.iobase = iobase;
-@@ -411,10 +411,16 @@ static int setup_serial(struct pcmcia_de
+@@ -411,10 +411,16 @@
  		return -EINVAL;
  	}
  
 +#if CONFIG_SERIAL_PXA
-+	linestart = 3;
++	linestart = 4;
 +#else
 +	linestart = 0;
 +#endif

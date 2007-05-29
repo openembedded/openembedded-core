@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r0"
+PR = "r1"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -26,7 +26,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.21.tar.bz2 \
            ${RPSRC}/tsc2101-r16.patch;patch=1 \
            ${RPSRC}/hx2750_test1-r6.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
-           ${RPSRC}/input_power-r6.patch;patch=1 \
+           ${RPSRC}/input_power-r7.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r2.patch;patch=1 \
            ${RPSRC}/sharpsl_pm_fixes1-r0.patch;patch=1 \
            ${RPSRC}/pm_changes-r1.patch;patch=1 \
@@ -36,6 +36,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.21.tar.bz2 \
            ${RPSRC}/poodle_pm-r3.patch;patch=1 \
            ${RPSRC}/pxa27x_overlay-r5.patch;patch=1 \
            ${RPSRC}/w100_extaccel-r0.patch;patch=1 \
+           file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            ${RPSRC}/logo_oh-r0.patch.bz2;patch=1;status=unmergable \
            ${RPSRC}/logo_oz-r2.patch.bz2;patch=1;status=unmergable \
