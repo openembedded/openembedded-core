@@ -2,16 +2,12 @@ DESCRIPTION = "Telepathy Mission Control"
 HOMEPAGE = "http://mission-control.sourceforge.net/"
 LICENSE = "LGPL"
 SECTION = "libs"
-DEPENDS = "libtelepathy dbus-glib"
-PR = "r2"
+DEPENDS = "libtelepathy dbus-glib gconf"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/mission-control/telepathy-mission-control-${PV}.tar.gz"
 
 inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
 
 PACKAGES =+ " \
 	libmissioncontrol \
@@ -25,18 +21,22 @@ PACKAGES =+ " \
 	libmissioncontrol-server-dbg \
 "
 
-FILES_${PN} =+ "${datadir}/dbus-1/services"
+FILES_${PN} += "${datadir}/dbus*"
 
 FILES_libmissioncontrol = "${libdir}/libmissioncontrol.so.*"
 FILES_libmissioncontrol-config = "${libdir}/libmissioncontrol-config.so.*"
 FILES_libmissioncontrol-server = "${libdir}/libmissioncontrol-server.so.*"
 
 FILES_libmissioncontrol-dev = "${libdir}/libmissioncontrol.* \
-                               ${includedir}/libmissioncontrol/\
-							   ${libdir}/pkgconfig/libmissioncontrol.pc"
+                               ${includedir}/libmissioncontrol/ \
+                	       ${libdir}/pkgconfig/libmissioncontrol.pc"
 FILES_libmissioncontrol-config-dev = "${libdir}/libmissioncontrol-config.*"
 FILES_libmissioncontrol-server-dev = "${libdir}/libmissioncontrol-server.*"
 
 FILES_libmissioncontrol-dbg = "${libdir}/.debug/libmissioncontrol.so.*"
 FILES_libmissioncontrol-config-dbg = "${libdir}/.debug/libmissioncontrol-config.so.*"
 FILES_libmissioncontrol-server-dbg = "${libdir}/.debug/libmissioncontrol-server.so.*"
+
+do_stage() {
+        autotools_stage_all
+}
