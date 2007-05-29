@@ -2,23 +2,35 @@ Index: libempathy-gtk/gossip-ui-utils.c
 ===================================================================
 --- libempathy-gtk/gossip-ui-utils.c	(revision 99)
 +++ libempathy-gtk/gossip-ui-utils.c	(working copy)
-@@ -33,7 +33,6 @@
+@@ -33,7 +33,7 @@
  #include <glib/gi18n.h>
  #include <gtk/gtk.h>
  #include <glade/glade.h>
 -#include <libgnome/libgnome.h>
++#include <libgnomevfs/gnome-vfs-utils.h>
  
  #include <libmissioncontrol/mc-profile.h>
  
-@@ -1283,7 +1282,7 @@
- 	GError *error = NULL;
+@@ -1280,13 +1280,14 @@
+ gossip_url_show (const char *url)
+ {
+ 	gchar  *real_url;
+-	GError *error = NULL;
++	GnomeVFSResult res;
  
  	real_url = fixup_url (url);
 -	gnome_url_show (real_url, &error);
-+	g_warning ("TODO: gnome_url_show (real_url, &error);");
- 	if (error) {
- 		g_warning ("Couldn't show URL:'%s'", real_url);
- 		g_error_free (error);
+-	if (error) {
+-		g_warning ("Couldn't show URL:'%s'", real_url);
+-		g_error_free (error);
++	res = gnome_vfs_url_show (real_url);
++	if (res != GNOME_VFS_OK) {
++		g_warning ("Couldn't show URL %s: %s",
++			   real_url,
++			   gnome_vfs_result_to_string (res));
+ 	}
+ 
+ 	g_free (real_url);
 Index: src/empathy-chat-main.c
 ===================================================================
 --- src/empathy-chat-main.c	(revision 99)
@@ -117,7 +129,7 @@ Index: configure.ac
 ===================================================================
 --- configure.ac	(revision 99)
 +++ configure.ac	(working copy)
-@@ -62,12 +62,12 @@
+@@ -62,12 +62,13 @@
  
  PKG_CHECK_MODULES(EMPATHY,
  [
@@ -128,6 +140,7 @@ Index: configure.ac
     gconf-2.0 >= $GCONF_REQUIRED
     libglade-2.0 >= $LIBGLADE_REQUIRED
 -   libgnomeui-2.0
++   gnome-vfs-2.0
     libtelepathy >= $TELEPATHY_REQUIRED
     libmissioncontrol >= $MISSION_CONTROL_REQUIRED
  ])
