@@ -5,7 +5,7 @@ LICENSE = "Artistic|GPL"
 PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db perl-native grep-native"
-PR = "r16"
+PR = "r18"
 
 # Major part of version
 PVM = "5.8"
@@ -37,7 +37,7 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 HOSTPERL = "${STAGING_BINDIR_NATIVE}/perl${PV}"
 
 # Where to find .so files - use the -native versions not those from the target build
-export PERLHOSTLIB = "${STAGING_DIR}/${BUILD_SYS}/lib/perl5/${PV}/${BUILD_ARCH}-${BUILD_OS}-thread-multi/"
+export PERLHOSTLIB = "${STAGING_DIR}/${BUILD_SYS}/lib/perl/${PV}/"
 
 do_configure() {
         # Make hostperl in build directory be the native perl
@@ -123,7 +123,7 @@ do_install() {
 do_stage() {
         install -d ${STAGING_DIR}/${HOST_SYS}/perl/
         install config.sh ${STAGING_DIR}/${HOST_SYS}/perl/
-        install lib/Config_heavy.pl ${STAGING_DIR}/${BUILD_SYS}/lib/perl5/${PV}/Config_heavy-target.pl
+        install lib/Config_heavy.pl ${STAGING_DIR}/${BUILD_SYS}/lib/perl/${PV}/Config_heavy-target.pl
 }
 
 PACKAGES = "perl-dbg perl perl-misc perl-lib perl-dev perl-pod perl-doc"

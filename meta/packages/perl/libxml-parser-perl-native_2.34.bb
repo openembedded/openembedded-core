@@ -1,5 +1,8 @@
 SECTION = "libs"
-require libxml-parser-perl_${PV}.bb
+
 inherit native
+
+require libxml-parser-perl_${PV}.bb
+
 DEPENDS = "perl-native expat-native"
-RDEPENDS = "perl-native"
+EXTRA_CPANFLAGS += " EXPATINCPATH='${STAGING_INCDIR}' EXPATLIBPATH='${STAGING_LIBDIR}'"

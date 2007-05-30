@@ -1,0 +1,13 @@
+Index: perl-5.8.8/makedepend.SH
+===================================================================
+--- perl-5.8.8.orig/makedepend.SH	2007-05-24 12:06:52.000000000 +1000
++++ perl-5.8.8/makedepend.SH	2007-05-24 12:27:33.000000000 +1000
+@@ -128,7 +128,7 @@
+     *.y) filebase=`basename $file .y` ;;
+     esac
+     case "$file" in
+-    */*) finc="-I`echo $file | sed 's#/[^/]*$##`" ;;
++    */*) finc="-I`echo $file | sed 's#/[^/]*$##'`" ;;
+     *)   finc= ;;
+     esac
+     $echo "Finding dependencies for $filebase$_o."
