@@ -1,6 +1,6 @@
 DESCRIPTION = "Telepathy framework - GLib library"
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
-DEPENDS = "glib-2.0 dbus python-native dbus-native"
+DEPENDS = "glib-2.0 dbus python-native-runtime dbus-native"
 LICENSE = "LGPL"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-glib/${P}.tar.gz "
