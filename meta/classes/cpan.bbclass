@@ -9,7 +9,7 @@ EXTRA_CPANFLAGS ?= ""
 export PERLCONFIGTARGET = "${@is_target(d)}"
 
 # Env var which tells perl where the perl include files are
-export PERL_INC = "${STAGING_DIR}/${BUILD_SYS}/lib/perl/${@get_perl_version(d)}/CORE"
+export PERL_INC = "${STAGING_LIBDIR}/perl/${@get_perl_version(d)}/CORE"
 
 cpan_do_configure () {
 	yes '' | perl Makefile.PL ${EXTRA_CPANFLAGS}
