@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r62"
+PR = "r63"
 
 PACKAGES = "\
     task-oh-base \
@@ -102,6 +102,7 @@ RDEPENDS_task-oh-standard = "\
     dates \
     tasks \
     web \
+    empathy \
     pcmanfm \
     puzzles \
     rxvt-unicode \
@@ -111,7 +112,6 @@ RDEPENDS_task-oh-standard = "\
     gnome-vfs-plugin-file \
     gnome-vfs-plugin-http"
 #    matchbox-applet-inputmanager 
-#    kf
 
 RDEPENDS_task-oh-devtools = "\
     oprofile \
