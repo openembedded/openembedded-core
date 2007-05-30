@@ -1,7 +1,7 @@
 SECTION = "libs"
 LICENSE = "Artistic"
 DEPENDS += "expat-native"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Parser-${PV}.tar.gz"
 

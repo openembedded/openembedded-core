@@ -5,7 +5,7 @@ LICENSE = "Artistic|GPL"
 PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db perl-native grep-native"
-PR = "r18"
+PR = "r19"
 
 # Major part of version
 PVM = "5.8"
@@ -58,10 +58,15 @@ do_configure() {
         # Fixups for uclibc
         if [ "${TARGET_OS}" = "linux-uclibc" -o "${TARGET_OS}" = "linux-uclibcgnueabi" ]; then
                 sed -i -e "s,\(d_crypt_r=\)'define',\1'undef',g" \
+                       -e "s,\(crypt_r_proto=\)'\w+',\1'0',g" \
                        -e "s,\(d_getnetbyname_r=\)'define',\1'undef',g" \
+                       -e "s,\(getnetbyname_r_proto=\)'\w+',\1'0',g" \
                        -e "s,\(d_getnetbyaddr_r=\)'define',\1'undef',g" \
+                       -e "s,\(getnetbyaddr_r_proto=\)'\w+',\1'0',g" \
                        -e "s,\(d_getnetent_r=\)'define',\1'undef',g" \
+                       -e "s,\(getnetent_r_proto=\)'\w+',\1'0',g" \
                        -e "s,\(d_sockatmark=\)'define',\1'undef',g" \
+                       -e "s,\(d_sockatmarkproto=\)'\w+',\1'0',g" \
                     config.sh-${TARGET_ARCH}-${TARGET_OS}
         fi
 
@@ -121,9 +126,25 @@ do_install() {
         fi
 }
 do_stage() {
-        install -d ${STAGING_DIR}/${HOST_SYS}/perl/
+        install -d ${STAGING_DIR}/${HOST_SYS}/perl \
+                   ${STAGING_DIR}/${BUILD_SYS}/lib/perl/${PV} \
+                   ${STAGING_LIBDIR}/perl/${PV}/CORE
+        # target config, used by cpan.bbclass to extract version information
         install config.sh ${STAGING_DIR}/${HOST_SYS}/perl/
+        # target configuration, used by native perl when cross-compiling
         install lib/Config_heavy.pl ${STAGING_DIR}/${BUILD_SYS}/lib/perl/${PV}/Config_heavy-target.pl
+        # perl shared library headers
+        for i in av.h embed.h gv.h keywords.h op.h perlio.h pp.h regexp.h \
+                 uconfig.h XSUB.h cc_runtime.h embedvar.h handy.h opnames.h \
+                 perliol.h pp_proto.h regnodes.h unixish.h config.h EXTERN.h \
+                 hv.h malloc_ctl.h pad.h perlsdio.h proto.h scope.h utf8.h \
+                 cop.h fakesdio.h INTERN.h mg.h patchlevel.h perlsfio.h \
+                 reentr.h sv.h utfebcdic.h cv.h fakethr.h intrpvar.h \
+                 nostdio.h perlapi.h perlvars.h reentr.inc thrdvar.h util.h \
+                 dosish.h form.h iperlsys.h opcode.h perl.h perly.h regcomp.h \
+                 thread.h warnings.h; do
+            install $i ${STAGING_LIBDIR}/perl/${PV}/CORE
+        done
 }
 
 PACKAGES = "perl-dbg perl perl-misc perl-lib perl-dev perl-pod perl-doc"
