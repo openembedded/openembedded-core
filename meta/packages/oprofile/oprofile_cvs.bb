@@ -1,5 +1,5 @@
 PV = "0.9.2+cvs${SRCDATE}"
-PR = "r6"
+PR = "r0"
 SECTION = "devel"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
@@ -7,9 +7,6 @@ LICENSE = "GPL"
 DEPENDS = "popt binutils"
 
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
-	   file://oparchive-debug-dir.patch;patch=1 \
-	   file://armv6_events.patch;patch=1 \
-	   file://xscale_events.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 
