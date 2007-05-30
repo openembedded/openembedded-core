@@ -1,28 +1,9 @@
-PR = "r9"
+#
+# Copyright (C) 2007 OpenedHand Ltd.
+#
 
-export IMAGE_BASENAME = "oh-extras"
+IMAGE_FEATURES += "apps-core apps-pda"
 
-GUI_MACHINE_CLASS ?= "none"
+require poky-image.inc
 
-XSERVER ?= "xserver-kdrive-fbdev"
-
-DEPENDS = "\
-    task-oh \
-    task-oh-extras"
-    
-RDEPENDS = "\
-    task-base \
-    task-oh-boot \
-    task-oh-boot-extras \
-    task-oh-base \
-    task-oh-standard \
-    task-oh-testapps \
-    task-oh-devtools \
-    task-oh-extraapps \
-    ${XSERVER} "
-
-export PACKAGE_INSTALL = "${RDEPENDS}"
-#ROOTFS_POSTPROCESS_COMMAND += "zap_root_password; "
-
-inherit image
-LICENSE = MIT
+IMAGE_INSTALL += "task-oh-extraapps"

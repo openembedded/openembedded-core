@@ -1,6 +1,5 @@
 SECTION = "libs"
 PRIORITY = "optional"
-MAINTAINER = "Greg Gilbert <greg@treke.net>"
 DEPENDS = "zlib"
 DESCRIPTION = "Library for interacting with ID3 tags."
 LICENSE = "GPL"

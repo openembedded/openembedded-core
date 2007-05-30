@@ -1,5 +1,4 @@
 DESCRIPTION = "Madplay is a command-line MPEG audio decoder and player"
-MAINTAINER = "Maciej Swiniarski <luzik@gda.pl>"
 SECTION = "console/multimedia"
 DEPENDS = "libmad"
 LICENSE = "GPL"

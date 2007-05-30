@@ -1,6 +1,6 @@
 DESCRIPTION = "GPS navigation/map display software"
 LICENSE = "GPL"
-DEPENDS = "sqlite3 gtk+ gnome-vfs-dbus dbus bluez-libs"
+DEPENDS = "sqlite3 gtk+ gnome-vfs dbus bluez-libs"
 RDEPENDS = "bluez-utils"
 PV = "1.2.4+svn${SRCDATE}"
 PR = "r1"
