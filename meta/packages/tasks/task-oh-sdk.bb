@@ -3,7 +3,7 @@
 #
 
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
-PR = "r13"
+PR = "r14"
 DEPENDS = "task-oh"
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -25,6 +25,7 @@ RDEPENDS_task-oh-sdk = "\
     g++ \
     g++-symlinks \
     make \
+    intltool \
     perl-module-re \
     perl-module-text-wrap \
     pkgconfig \
