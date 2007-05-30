@@ -102,7 +102,6 @@ RDEPENDS_task-oh-standard = "\
     dates \
     tasks \
     web \
-    empathy \
     pcmanfm \
     puzzles \
     rxvt-unicode \
