@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r63"
+PR = "r64"
 
 PACKAGES = "\
     task-oh-base \
