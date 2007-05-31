@@ -63,7 +63,7 @@ RDEPENDS_task-oh-base = "\
     matchbox-keyboard \
     matchbox-keyboard-im \
     matchbox-panel-2 \
-    matchbox-desktop-2 \
+    matchbox-desktop \
     ${XSERVER} \
     xserver-kdrive-common \
     xserver-nodm-init \
@@ -86,7 +86,7 @@ RDEPENDS_task-oh-standard = "\
     leafpad \
     dropbear \
     portmap \
-    matchbox-desktop-2 \
+    matchbox-desktop \
     matchbox-sato \
     matchbox-keyboard \
     matchbox-stroke \
