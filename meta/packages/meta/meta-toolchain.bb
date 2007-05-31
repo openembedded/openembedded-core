@@ -76,6 +76,8 @@ EOF
 	# remove unwanted housekeeping files
 	mv ${SDK_OUTPUT}${libdir}/../${TARGET_SYS}/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
 	rm -rf ${SDK_OUTPUT}${libdir}/ipkg
+	mv ${SDK_OUTPUT}/usr/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status-host
+	rm -rf ${SDK_OUTPUT}/usr/lib/ipkg
 
 	# remove unwanted executables
 	rm -rf ${SDK_OUTPUT}/${prefix}/sbin ${SDK_OUTPUT}/${prefix}/etc
