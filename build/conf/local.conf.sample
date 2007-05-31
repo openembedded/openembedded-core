@@ -66,7 +66,6 @@ TMPDIR = "${OEROOT}/build/tmp"
 
 # Uncomment and set to allow bitbake to execute multiple tasks at once.
 # Note, This option is currently experimental - YMMV.
-# 'quilt' is also required on the host system 
 # BB_NUMBER_THREADS = "1"
 
 # Comment this out if you are *not* using provided qemu deb - see README
@@ -96,3 +95,7 @@ BBINCLUDELOGS = "yes"
 CVS_TARBALL_STASH = "http://folks.o-hand.com/~richard/poky/sources/"
 
 ENABLE_BINARY_LOCALE_GENERATION = "1"
+
+# A precompiled poky toolchain is available. If installed, uncomment the 
+# line below to enable (Note this support is still experimental)
+#require conf/external_toolchain.conf
