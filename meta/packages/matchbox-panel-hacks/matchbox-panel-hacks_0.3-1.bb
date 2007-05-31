@@ -1,5 +1,5 @@
 DESCRIPTION = "Simple dockapps created with monolaunch and shell script"
-DEPENDS = "matchbox xmodmap"
+DEPENDS = "matchbox-common xmodmap"
 SRC_URI = "file://xrandr-panelapp.sh \
 	   file://xrandr-panelapp.desktop \
 	   file://mb-applet-home \
@@ -7,7 +7,7 @@ SRC_URI = "file://xrandr-panelapp.sh \
 	   file://xrandr.png"
 SECTION = "x11/wm"
 PRIORITY = "optional"
-PR = "r7"
+PR = "r8"
 LICENSE = "MIT"
 
 do_install() {

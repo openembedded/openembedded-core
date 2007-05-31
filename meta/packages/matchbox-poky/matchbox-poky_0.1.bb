@@ -1,8 +1,8 @@
 DESCRIPTION = "Custom MB session files for poky"
 LICENSE = "GPL"
 SECTION = "x11"
-RDEPENDS = "matchbox matchbox-applet-startup-monitor gtk-theme-clearlooks"
-PR = "r23"
+RDEPENDS = "matchbox-common matchbox-applet-startup-monitor gtk-theme-clearlooks"
+PR = "r24"
 
 SRC_URI = "file://etc"
 S = ${WORKDIR}
