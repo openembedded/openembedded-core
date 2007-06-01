@@ -1,8 +1,7 @@
-DESCRIPTION = "Quick hack to start gadget Ethernet on the 770"
+DESCRIPTION = "Initscript to manage gadget Ethernet"
 LICENSE = "GPL"
-SECTION = "x11"
 PRIORITY = "optional"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://usb-gether"
 S = "${WORKDIR}"
