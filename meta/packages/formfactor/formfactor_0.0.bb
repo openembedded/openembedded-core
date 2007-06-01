@@ -1,10 +1,10 @@
 DESCRIPTION = "Device formfactor information"
 SECTION = "base"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://config file://machconfig"
 S = "${WORKDIR}"
-    
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install() {
