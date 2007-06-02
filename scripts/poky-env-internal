@@ -70,6 +70,9 @@ unset LD_LIBRARY_PATH
 export PATH LD_LIBRARY_PATH OEROOT
 # Stop multi byte characters breaking the patcher stuff - This is for Redhat / Fedora people really
 export LANG=C
+# Kill PYTHONPATH as otherwise the Python specified there will conflict with
+# python-native.
+unset PYTHONPATH
 
 echo
 echo "### Shell environment set up for Poky builds. ###"
