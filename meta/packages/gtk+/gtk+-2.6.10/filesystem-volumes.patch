@@ -1,0 +1,182 @@
+--- gtk+-2.6.8/gtk/gtkfilesystemunix.c.orig	2007-02-08 12:01:19.000000000 +0000
++++ gtk+-2.6.8/gtk/gtkfilesystemunix.c	2007-02-08 12:01:19.000000000 +0000
+@@ -33,6 +33,7 @@
+ #include <errno.h>
+ #include <string.h>
+ #include <sys/stat.h>
++#include <sys/statvfs.h>
+ #include <sys/types.h>
+ #include <pwd.h>
+ #ifdef HAVE_UNISTD_H
+@@ -358,7 +359,49 @@
+ static GSList *
+ gtk_file_system_unix_list_volumes (GtkFileSystem *file_system)
+ {
+-  return g_slist_append (NULL, get_root_volume ());
++  struct statvfs stv;
++  struct stat    st;
++  GSList * l = g_slist_append (NULL, get_root_volume ());
++
++  if (!statvfs ("/.", &stv))
++  {
++      fsblkcnt_t root_blocks = stv.f_blocks;
++      fsfilcnt_t root_files  = stv.f_files;
++	  
++      GDir * dir;
++      if ((dir = g_dir_open ("/media", 0, NULL)) != NULL)
++      {
++	  const gchar * name;
++	  while ((name = g_dir_read_name (dir)) != NULL)
++	  {
++	      gchar * abs_name = g_strconcat ("/media/", name, NULL);
++		  
++	      if (!stat (abs_name, &st) && S_ISDIR (st.st_mode))
++	      {
++		  gchar * dot = g_strconcat (abs_name, "/.", NULL);
++		  if (!statvfs (dot, &stv) &&
++		      (stv.f_blocks != root_blocks ||
++		       stv.f_files  != root_files))
++		  {
++		      GtkFilePath * path = 
++			  gtk_file_system_filename_to_path (file_system,
++							    abs_name);
++
++		      if (path)
++			  l = g_slist_append (l, path);
++		  }
++
++		  g_free (dot);
++	      }
++
++	      g_free (abs_name);
++	  }
++
++	  g_dir_close (dir);
++      }
++  }
++
++  return l;
+ }
+ 
+ static GtkFileSystemVolume *
+@@ -375,10 +418,15 @@
+ 
+   len = strlen (filename);
+ 
+-  if (len > 1 && filename[len - 1] == '/')
+-    return g_strndup (filename, len - 1);
+-  else
+-    return g_memdup (filename, len + 1);
++  if (len > 1)
++  {
++    gchar *c = g_utf8_prev_char (filename + len);
++
++    if (c && *c == '/')
++       return g_strndup (filename, len - 1);
++  }
++  
++  return g_memdup (filename, len + 1);
+ }
+ 
+ static GtkFileFolder *
+@@ -590,7 +638,7 @@
+ gtk_file_system_unix_volume_get_base_path (GtkFileSystem        *file_system,
+ 					   GtkFileSystemVolume  *volume)
+ {
+-  return gtk_file_path_new_dup ("/");
++  return gtk_file_path_copy ((GtkFilePath*)volume);
+ }
+ 
+ static gboolean
+@@ -616,7 +664,32 @@
+ gtk_file_system_unix_volume_get_display_name (GtkFileSystem       *file_system,
+ 					      GtkFileSystemVolume *volume)
+ {
+-  return g_strdup (_("Filesystem")); /* Same as Nautilus */
++  gchar * slash;
++  gchar * path;
++  gchar * c;
++  
++  g_return_val_if_fail (file_system && volume, NULL);
++  
++  path = gtk_file_system_path_to_filename (file_system, (GtkFilePath*) volume);
++
++  g_return_val_if_fail (path && *path, NULL);
++  
++  if (path[0] == '/' && !path[1])
++    return g_strdup (_("Filesystem")); /* Same as Nautilus */
++
++  /* Now the media volumes */
++  /* strip trailing / if any */
++  c = g_utf8_prev_char (path + strlen(path));
++  
++  if (*c == '/')
++    *c = 0;
++
++  slash = g_utf8_strrchr (path, -1, '/');
++
++  if (!slash)
++      return g_strdup (path);
++
++  return g_strdup (slash + 1);
+ }
+ 
+ static IconType
+@@ -787,11 +860,54 @@
+ 					 GError              **error)
+ {
+   GdkPixbuf *pixbuf;
++  gchar * slash;
++  gchar * path;
++  gchar * c;
++  const gchar * id = NULL;
++  
++  g_return_val_if_fail (file_system && volume, NULL);
++  
++  path = gtk_file_system_path_to_filename (file_system, (GtkFilePath*) volume);
+ 
+-  pixbuf = get_cached_icon (widget, "gnome-fs-blockdev", pixel_size);
+-  if (pixbuf)
+-    return pixbuf;
++  g_return_val_if_fail (path && *path, NULL);
++  
++  if (path[0] == '/' && !path[1])
++      id = "gnome-fs-blockdev";
++  else
++  {
++    /* Now the media volumes */
++    /* strip trailing / if any */
++    c = g_utf8_prev_char (path + strlen(path));
++  
++    if (*c == '/')
++      *c = 0;
++
++    slash = g_utf8_strrchr (path, -1, '/');
+ 
++    if (slash)
++    {
++	slash++;
++
++	if (!strcmp (slash, "card"))
++          id = "gnome-dev-media-sdmmc";
++	else if (!strcmp (slash, "cf"))
++	  id = "gnome-dev-media-cf";
++	else if (!strncmp (slash, "mmc", 3))
++	  id = "gnome-dev-media-sdmmc";
++	else if (!strcmp (slash, "usbhdd"))
++	  id = "gnome-dev-removable-usb";
++	else
++	  id = "gnome-dev-removable";
++    }
++  }
++
++  if (id)
++  {
++    pixbuf = get_cached_icon (widget, id, pixel_size);
++    if (pixbuf)
++	return pixbuf;
++  }
++  
+   pixbuf = get_fallback_icon (widget, ICON_BLOCK_DEVICE, error);
+   g_assert (pixbuf != NULL);
+ 
