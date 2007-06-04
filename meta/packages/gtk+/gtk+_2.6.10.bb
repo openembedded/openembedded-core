@@ -28,22 +28,22 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
 inherit autotools pkgconfig
 
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
-	${bindir}/gtk-update-icon-cache \
 	${bindir}/gtk-query-immodules-2.0 \
+	${bindir}/gtk-update-icon-cache \
 	${libdir}/lib*.so.* \
 	${datadir}/themes ${sysconfdir} \
 	${libdir}/gtk-2.0/${LIBV}/engines/libpixmap.so"
 FILES_${PN}-dev += " \
         ${datadir}/gtk-2.0/include \
-        ${libdir}/gtk-2.0/include \
-        ${libdir}/gtk-2.0/${LIBV}/loaders/*.la \
-        ${libdir}/gtk-2.0/${LIBV}/immodules/*.la \
-        ${libdir}/gtk-2.0/${LIBV}/engines/*.la \
-        ${bindir}/gdk-pixbuf-csource"
+	${libdir}/gtk-2.0/include \
+	${libdir}/gtk-2.0/${LIBV}/loaders/*.la \
+	${libdir}/gtk-2.0/${LIBV}/immodules/*.la \
+	${libdir}/gtk-2.0/${LIBV}/engines/*.la \
+	${bindir}/gdk-pixbuf-csource"
 FILES_${PN}-dbg += " \
         ${libdir}/gtk-2.0/${LIBV}/loaders/.debug/* \
-        ${libdir}/gtk-2.0/${LIBV}/immodules/.debug/* \
-        ${libdir}/gtk-2.0/${LIBV}/engines/.debug/*"
+	${libdir}/gtk-2.0/${LIBV}/immodules/.debug/* \
+	${libdir}/gtk-2.0/${LIBV}/engines/.debug/*"
 
 
 RRECOMMENDS_${PN} = "glibc-gconv-iso8859-1 ttf-dejavu-sans"
@@ -52,6 +52,8 @@ EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-disp
 # --disable-cruft
 
 LIBV = "2.4.0"
+LEAD_SONAME = "libgtk-x11*"
+
 
 do_configure_prepend() {
         for i in `find . -name "Makefile.am"`   
