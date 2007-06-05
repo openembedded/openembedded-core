@@ -19,3 +19,9 @@ python do_distribute_sources () {
 }
 
 addtask distribute_sources before do_build after do_fetch
+
+addtask distsrcall after do_distribute_sources
+do_distall[recrdeptask] = "do_distribute_sources"
+base_do_distsrcall() {
+	:
+}
