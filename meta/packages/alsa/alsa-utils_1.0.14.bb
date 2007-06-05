@@ -1,35 +1,39 @@
 DESCRIPTION = "ALSA Utilities"
+HOMEPAGE = "http://www.alsa-project.org"
 SECTION = "console/utils"
 LICENSE = "GPL"
 DEPENDS = "alsa-lib ncurses"
-PR = "r1"
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
-           file://intl_linking_fix.patch;patch=1" 
+SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2"
+
+# lazy hack. needs proper fixing in gettext.m4, see
+# http://bugs.openembedded.org/show_bug.cgi?id=2348
+# please close bug and remove this comment when properly fixed
+#
+EXTRA_OECONF_linux-uclibc = "--disable-nls"
+EXTRA_OECONF_linux-uclibcgnueabi = "--disable-nls"
 
 inherit autotools
 
 # This are all packages that we need to make. Also, the now empty alsa-utils
 # ipk depend on them.
 
-PACKAGES += "alsa-utils-alsamixer"
-PACKAGES += "alsa-utils-midi"
-PACKAGES += "alsa-utils-aplay"
-PACKAGES += "alsa-utils-amixer"
-PACKAGES += "alsa-utils-aconnect"
-PACKAGES += "alsa-utils-iecset"
-PACKAGES += "alsa-utils-speakertest"
-PACKAGES += "alsa-utils-aseqnet"
-PACKAGES += "alsa-utils-alsactl"
-PACKAGES += "alsa-utils-aseqdump"
-PACKAGES += "alsa-utils-alsaconf"
-
+PACKAGES += "\
+             alsa-utils-alsamixer \
+             alsa-utils-midi \
+             alsa-utils-aplay \
+             alsa-utils-amixer \
+             alsa-utils-aconnect \
+             alsa-utils-iecset \
+             alsa-utils-speakertest \
+             alsa-utils-aseqnet \
+             alsa-utils-aseqdump \
+             alsa-utils-alsaconf \
+             alsa-utils-alsactl "
 
 # We omit alsaconf, because
 # a) this is a bash script
-# b) it creates config files for RedHat, Debian, Mandrake etc, but not
-#    for Familiar, OpenZaurus etc
-
+# b) it creates config files not suitable for OE-based distros
 
 FILES_${PN} = ""
 FILES_alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord"
@@ -47,14 +51,11 @@ FILES_alsa-utils-alsaconf    = "${sbindir}/alsaconf"
 DESCRIPTION_alsa-utils-aplay        = "play (and record) sound files via ALSA"
 DESCRIPTION_alsa-utils-amixer       = "command-line based control for ALSA mixer and settings"
 DESCRIPTION_alsa-utils-alsamixer    = "ncurses based control for ALSA mixer and settings"
-DESCRIPTION_alsa-utils-speaker-test = "ALSA surround speaker test utility"
+DESCRIPTION_alsa-utils-speakertest  = "ALSA surround speaker test utility"
 DESCRIPTION_alsa-utils-midi         = "miscalleanous MIDI utilities for ALSA"
 DESCRIPTION_alsa-utils-aconnect     = "ALSA sequencer connection manager"
 DESCRIPTION_alsa-utils-aseqnet      = "network client/server on ALSA sequencer"
 DESCRIPTION_alsa-utils-alsactl      = "saves/restores ALSA-settings in /etc/asound.state"
 DESCRIPTION_alsa-utils-alsaconf     = "a bash script that creates ALSA configuration files"
-
-RDEPENDS_alsa-utils-aplay  += "alsa-conf"
-RDEPENDS_alsa-utils-amixer += "alsa-conf"
 
 ALLOW_EMPTY_alsa-utils = "1"

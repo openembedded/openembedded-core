@@ -1,4 +1,5 @@
 DESCRIPTION = "Alsa sound library"
+HOMEPAGE = "http://www.alsa-project.org"
 SECTION = "libs/multimedia"
 LICENSE = "GPL"
 
@@ -8,7 +9,8 @@ LICENSE = "GPL"
 #FIXME: remove the following
 ARM_INSTRUCTION_SET = "arm"
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2"
+SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
+           file://fix-tstamp-declaration.patch;patch=1"
 
 inherit autotools pkgconfig
 
@@ -23,11 +25,17 @@ do_stage () {
 	install -m 0644 utils/alsa.m4 ${STAGING_DATADIR}/aclocal/
 }
 
-PACKAGES = "alsa-dbg libasound alsa-server alsa-conf alsa-doc alsa-dev"
-FILES_alsa-dbg = "${FILES_${PN}-dbg}"
-FILES_libasound = "${libdir}/*.so.* ${libdir}/alsa-lib/smixer/*.so"
+PACKAGES =+ "alsa-server libasound alsa-conf-base alsa-conf alsa-doc alsa-dev"
+FILES_${PN}-dbg += "${libdir}/alsa-lib/*/.debu*"
+FILES_libasound = "${libdir}/libasound.so.*"
 FILES_alsa-server = "${bindir}/*"
-FILES_alsa-conf = "${datadir}"
-FILES_alsa-dev = "${libdir}/*.so ${libdir}/pkgconfig/ ${includedir}/"
+FILES_alsa-conf = "${datadir}/alsa/"
+FILES_alsa-dev += "${libdir}/pkgconfig/ /usr/include/ ${datadir}/aclocal/*"
+FILES_alsa-conf-base = "\
+${datadir}/alsa/alsa.conf \
+${datadir}/alsa/cards/aliases.conf \
+${datadir}/alsa/pcm/default.conf \
+${datadir}/alsa/pcm/dmix.conf \
+${datadir}/alsa/pcm/dsnoop.conf"
 
-RDEPENDS_libasound = "alsa-conf"
+RDEPENDS_libasound = "alsa-conf-base"

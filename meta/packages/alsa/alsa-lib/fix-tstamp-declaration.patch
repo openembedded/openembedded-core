@@ -1,0 +1,13 @@
+Index: alsa-lib-1.0.13/include/global.h
+===================================================================
+--- alsa-lib-1.0.13.orig/include/global.h
++++ alsa-lib-1.0.13/include/global.h
+@@ -29,6 +29,8 @@
+ #define __ALSA_GLOBAL_H_
+ 
+ /* for timeval and timespec */
++#define __need_timeval
++#define __need_timespec
+ #include <time.h>
+ 
+ #ifdef __cplusplus
