@@ -6,15 +6,15 @@ python do_distribute_sources () {
 
 	sources_dir = bb.data.getVar('SRC_DISTRIBUTEDIR', d, 1)
 	import re
-	for l in licenses:
-		for i in l.split("|"):
+	for license in licenses:
+		for entry in license.split("|"):
 			for s in (bb.data.getVar('A', d, 1) or "").split():
 				s = re.sub(';.*$', '', s)
 				cmd = bb.data.getVar('SRC_DISTRIBUTECOMMAND', d, 1)
 				if not cmd:
 					raise bb.build.FuncFailed("Unable to distribute sources, SRC_DISTRIBUTECOMMAND not defined")
 				bb.data.setVar('SRC', s, d)
-				bb.data.setVar('SRC_DISTRIBUTEDIR', "%s/%s" % (sources_dir, l), d)
+				bb.data.setVar('SRC_DISTRIBUTEDIR', "%s/%s" % (sources_dir, entry), d)
 				bb.build.exec_func('SRC_DISTRIBUTECOMMAND', d)
 }
 
