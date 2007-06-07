@@ -14,7 +14,7 @@ EXTRA_OECONF = " --enable-http \
   		 --enable-obex \
   		 --enable-bluetooth \
     		 --enable-tools \
-		 --with-wbxml"
+		 --with-wbxml=${STAGING_LIBDIR}"
 
 CFLAGS += "-I${STAGING_INCDIR}/libsoup-2.2"
 
