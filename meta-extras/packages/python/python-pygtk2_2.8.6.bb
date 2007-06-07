@@ -21,5 +21,5 @@ do_configure_prepend() {
 
 do_stage() {
 	autotools_stage_includes
-	install -m 0755 codegen/pygtk-codegen-2.0 ${STAGING_BINDIR}/
+	install -m 0755 codegen/pygtk-codegen-2.0 ${STAGING_BINDIR_NATIVE}/
 }
