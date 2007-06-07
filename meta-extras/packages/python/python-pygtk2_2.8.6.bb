@@ -5,7 +5,7 @@ DEPENDS = "gtk+ libglade"
 RDEPENDS = "python-shell"
 SRCNAME = "pygtk"
 LICENSE = "LGPL"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.8/${SRCNAME}-${PV}.tar.bz2 \
            file://acinclude.m4"
@@ -23,3 +23,6 @@ do_stage() {
 	autotools_stage_includes
 	install -m 0755 codegen/pygtk-codegen-2.0 ${STAGING_BINDIR_NATIVE}/
 }
+
+FILES_${PN}-dbg = "${libdir}/python2.4/site-packages/gtk-2.0/.debug/ \
+                   ${libdir}/python2.4/site-packages/gtk-2.0/gtk/.debug/"
