@@ -2,7 +2,7 @@ SECTION = "x11/network"
 DESCRIPTION = "Mail user agent plugins"
 DEPENDS = "claws-mail"
 LICENSE = "GPL"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.claws-mail.org/downloads/plugins/mailmbox-${PV}.tar.gz"
 
@@ -17,4 +17,4 @@ do_configure() {
 }
 
 FILES_${PN} = "${libdir}/claws-mail/plugins/*.so"
-
+FILES_${PN}-dbg = "${libdir}/claws-mail/plugins/.debug"
