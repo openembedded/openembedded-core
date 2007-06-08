@@ -17,16 +17,17 @@ do_rootfs[depends] += "dosfstools-native:do_populate_staging \
 		       mtools-native:do_populate_staging \
 		       cdrtools-native:do_populate_staging"
 
-BDIR="${WORKDIR}/boot"
-ISODIR="${IMAGE_ROOTFS}/isolinux/"
+BDIR   = "${WORKDIR}/boot"
+ISODIR = "${IMAGE_ROOTFS}/isolinux/"
 
-BOOTIMG_VOLUME_ID ?= "oe"
+BOOTIMG_VOLUME_ID   ?= "oe"
 BOOTIMG_EXTRA_SPACE ?= "64"
 
 # Get the build_syslinux_cfg() function from the syslinux class
 
-SYSLINUXCFG="${BDIR}/syslinux.cfg"
-SYSLINUXMENU="${BDIR}/menu"
+SYSLINUXCFG  = "${BDIR}/syslinux.cfg"
+SYSLINUXMENU = "${BDIR}/menu"
+
 inherit syslinux
 		
 build_boot_bin() {
