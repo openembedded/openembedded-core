@@ -1,0 +1,10 @@
+--- syslinux-2.11/ldlinux.asm.orig	2005-11-01 14:25:10.767581544 -0700
++++ syslinux-2.11/ldlinux.asm	2005-11-01 14:25:42.175806768 -0700
+@@ -724,7 +724,6 @@
+ 		
+ 		mov eax,[bsHidden]		; Hidden sectors
+ 		add edx,[bxResSectors]
+-		add eax,edx
+ 		mov ecx,[bxFATsecs]		; Sectors/FAT
+ fat_load_loop:	
+ 		mov ebp,ecx			; Make sure high EBP = 0
