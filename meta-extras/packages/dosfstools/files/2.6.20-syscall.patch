@@ -1,0 +1,65 @@
+Index: dosfstools-2.10/dosfsck/io.c
+===================================================================
+--- dosfstools-2.10.orig/dosfsck/io.c	2007-06-07 16:15:52.000000000 +0200
++++ dosfstools-2.10/dosfsck/io.c	2007-06-07 16:16:06.000000000 +0200
+@@ -42,28 +42,11 @@
+ /* Use the _llseek system call directly, because there (once?) was a bug in
+  * the glibc implementation of it. */
+ #include <linux/unistd.h>
+-#if defined __alpha || defined __ia64__ || defined __s390x__ || defined __x86_64__ || defined __ppc64__
+ /* On alpha, the syscall is simply lseek, because it's a 64 bit system. */
+ static loff_t llseek( int fd, loff_t offset, int whence )
+ {
+     return lseek(fd, offset, whence);
+ }
+-#else
+-# ifndef __NR__llseek
+-# error _llseek system call not present
+-# endif
+-static _syscall5( int, _llseek, uint, fd, ulong, hi, ulong, lo,
+-		  loff_t *, res, uint, wh );
+-
+-static loff_t llseek( int fd, loff_t offset, int whence )
+-{
+-    loff_t actual;
+-
+-    if (_llseek(fd, offset>>32, offset&0xffffffff, &actual, whence) != 0)
+-	return (loff_t)-1;
+-    return actual;
+-}
+-#endif
+ 
+ 
+ void fs_open(char *path,int rw)
+Index: dosfstools-2.10/mkdosfs/mkdosfs.c
+===================================================================
+--- dosfstools-2.10.orig/mkdosfs/mkdosfs.c	2007-06-07 16:15:11.000000000 +0200
++++ dosfstools-2.10/mkdosfs/mkdosfs.c	2007-06-07 16:15:30.000000000 +0200
+@@ -116,27 +116,11 @@
+ /* Use the _llseek system call directly, because there (once?) was a bug in
+  * the glibc implementation of it. */
+ #include <linux/unistd.h>
+-#if defined __alpha || defined __ia64__ || defined __s390x__ || defined __x86_64__ || defined __ppc64__
+ /* On alpha, the syscall is simply lseek, because it's a 64 bit system. */
+ static loff_t llseek( int fd, loff_t offset, int whence )
+ {
+     return lseek(fd, offset, whence);
+ }
+-#else
+-# ifndef __NR__llseek
+-# error _llseek system call not present
+-# endif
+-static _syscall5( int, _llseek, uint, fd, ulong, hi, ulong, lo,
+-		  loff_t *, res, uint, wh );
+-static loff_t llseek( int fd, loff_t offset, int whence )
+-{
+-    loff_t actual;
+-
+-    if (_llseek(fd, offset>>32, offset&0xffffffff, &actual, whence) != 0)
+-	return (loff_t)-1;
+-    return actual;
+-}
+-#endif
+ 
+ #define ROUND_UP(value, divisor) (value + (divisor - (value % divisor))) / divisor
+ 

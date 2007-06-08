@@ -1,0 +1,74 @@
+Submitted By: Jim Gifford (jim at linuxfromscratch dot org)
+Date: 2004-02-09
+Initial Package Version: 2.6
+Origin: Jim Gifford
+Upstream Status: Accepted
+Description: Fixes Compile Issues with the 2.6 Kernel
+ 
+--- dosfstools-2.10/dosfsck/common.h.orig	2004-02-09 18:37:59.056737458 +0000
++++ dosfstools-2.10/dosfsck/common.h	2004-02-09 18:38:18.333392952 +0000
+@@ -2,6 +2,13 @@
+ 
+ /* Written 1993 by Werner Almesberger */
+ 
++#include <linux/version.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0)
++       #define __KERNEL__
++       #include <asm/types.h>
++       #undef __KERNEL__
++       #define MSDOS_FAT12 4084 /* maximum number of clusters in a 12 bit FAT */
++#endif
+ 
+ #ifndef _COMMON_H
+ #define _COMMON_H
+--- dosfstools-2.10/dosfsck/file.c.orig	2004-02-09 18:40:52.016728845 +0000
++++ dosfstools-2.10/dosfsck/file.c	2004-02-09 18:40:03.665117865 +0000
+@@ -15,6 +15,14 @@
+ #define _LINUX_STAT_H		/* hack to avoid inclusion of <linux/stat.h> */
+ #define _LINUX_STRING_H_	/* hack to avoid inclusion of <linux/string.h>*/
+ #define _LINUX_FS_H             /* hack to avoid inclusion of <linux/fs.h> */
++
++#include <linux/version.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0)
++       #define __KERNEL__
++       #include <asm/types.h>
++       #undef __KERNEL__
++#endif
++
+ #include <linux/msdos_fs.h>
+ 
+ #include "common.h"
+--- dosfstools-2.10/dosfsck/dosfsck.h.orig	2004-02-09 18:57:11.022870974 +0000
++++ dosfstools-2.10/dosfsck/dosfsck.h	2004-02-09 18:56:20.628614393 +0000
+@@ -13,6 +13,15 @@
+ #define _LINUX_STAT_H		/* hack to avoid inclusion of <linux/stat.h> */
+ #define _LINUX_STRING_H_	/* hack to avoid inclusion of <linux/string.h>*/
+ #define _LINUX_FS_H             /* hack to avoid inclusion of <linux/fs.h> */
++
++#include <linux/version.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0)
++       #define __KERNEL__
++       #include <asm/types.h>
++       #include <asm/byteorder.h>
++       #undef __KERNEL__
++#endif
++
+ #include <linux/msdos_fs.h>
+ 
+ /* 2.1 kernels use le16_to_cpu() type functions for CF_LE_W & Co., but don't
+--- dosfstools-2.10/mkdosfs/mkdosfs.c.orig	2004-02-09 18:31:41.997157413 +0000
++++ dosfstools-2.10/mkdosfs/mkdosfs.c	2004-02-09 18:34:07.311945252 +0000
+@@ -66,6 +66,13 @@
+ #include <time.h>
+ #include <errno.h>
+ 
++#include <linux/version.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0)
++       #define __KERNEL__
++       #include <asm/types.h>
++       #undef __KERNEL__
++#endif
++
+ #if __BYTE_ORDER == __BIG_ENDIAN
+ 
+ #include <asm/byteorder.h>
