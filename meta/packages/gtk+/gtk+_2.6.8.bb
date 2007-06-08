@@ -43,7 +43,7 @@ FILES_${PN}-dbg += " \
 	${libdir}/gtk-2.0/${LIBV}/immodules/.debug/* \
 	${libdir}/gtk-2.0/${LIBV}/engines/.debug/*"
 
-RRECOMMENDS_${PN} = "glibc-gconv-iso8859-1"
+RRECOMMENDS_linux_${PN} = "glibc-gconv-iso8859-1"
 
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-display-migration"
 # --disable-cruft

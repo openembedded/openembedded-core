@@ -43,7 +43,7 @@ FILES_${PN}-dbg += " \
 	${libdir}/gtk-2.0/${LIBV}/engines/.debug/*"
 
 
-RRECOMMENDS_${PN} = "glibc-gconv-iso8859-1 ttf-dejavu-sans"
+RRECOMMENDS_linux_${PN} = "glibc-gconv-iso8859-1"
 
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-display-migration"
 # --disable-cruft
@@ -55,7 +55,7 @@ LEAD_SONAME = "libgtk-x11*"
 do_configure_prepend() {
         for i in `find . -name "Makefile.am"`   
         do
-                sed -e -i s,-DG_DISABLE_DEPRECATED,-DSED_ROCKS_DUDES, $i
+                sed -i -e s,-DG_DISABLE_DEPRECATED,-DSED_ROCKS_DUDES, $i
         done
 }
 
