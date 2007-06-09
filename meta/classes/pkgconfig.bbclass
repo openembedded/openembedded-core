@@ -22,7 +22,7 @@ def get_pkgconfig_mangle(d):
 do_stage_append () {
 	for pc in `find ${S} -name '*.pc' -type f | grep -v -- '-uninstalled.pc$'`; do
 		pcname=`basename $pc`
-		install -d ${PKG_CONFIG_PATH}
+		install -d ${PKG_CONFIG_DIR}
 		cat $pc | sed ${@get_pkgconfig_mangle(d)} > ${PKG_CONFIG_DIR}/$pcname
 	done
 }
