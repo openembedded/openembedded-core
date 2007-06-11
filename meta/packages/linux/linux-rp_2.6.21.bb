@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r2"
+PR = "r3"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -58,6 +58,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.21.tar.bz2 \
            file://defconfig-spitz \
            file://defconfig-qemuarm \
            file://defconfig-qemux86 \
+           file://defconfig-bootcdx86 \
            file://defconfig-tosa "
 
 # Add this to enable pm debug code (useful with a serial lead)
