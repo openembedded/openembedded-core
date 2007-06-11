@@ -4,7 +4,7 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
 
-SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.pre20.tar.gz \
+SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.pre21.tar.gz \
            file://man.patch;patch=1 \
 	   file://wireless-tools.if-pre-up \
 	   file://zzz-wireless.if-pre-up"
@@ -36,10 +36,15 @@ do_install() {
 	install ${WORKDIR}/zzz-wireless.if-pre-up ${D}${sysconfdir}/network/if-pre-up.d/zzz-wireless
 }
 
-PACKAGES = "libiw libiw-dev libiw-doc ifrename ${PN} ${PN}-doc ${PN}-dbg "
+PACKAGES = "libiw-dbg ifrename-dbg ${PN}-dbg \
+libiw libiw-dev libiw-doc ifrename-doc ifrename ${PN} ${PN}-doc"
+
+FILES_libiw-dbg = "${libdir}/.debug/*.so.*"
+FILES_ifrename-dbg = "${sbindir}/.debug/ifrename"
 FILES_libiw = "${libdir}/*.so.*"
 FILES_libiw-dev = "${libdir}/*.a ${libdir}/*.so ${includedir}"
 FILES_libiw-doc = "${mandir}/man7"
 FILES_ifrename = "${sbindir}/ifrename"
+FILES_ifrename-doc = "${mandir}/man8/ifrename.8 ${mandir}/man5/iftab.5"
 FILES_${PN} = "${bindir} ${sbindir}/iw* ${base_sbindir} ${base_bindir} ${sysconfdir}/network"
-FILES_${PN}-doc = "${mandir}/man8"
+FILES_${PN}-doc = "${mandir}"
