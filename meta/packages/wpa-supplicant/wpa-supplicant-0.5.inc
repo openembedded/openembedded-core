@@ -7,7 +7,6 @@ DEPENDS = "gnutls"
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
 	file://defconfig-gnutls \
 	file://init.sh \
-	file://gnutlsfix.patch;patch=1 \
 	file://defaults-sane \
 	file://wpa-supplicant.sh \
 	file://wpa_supplicant.conf \
