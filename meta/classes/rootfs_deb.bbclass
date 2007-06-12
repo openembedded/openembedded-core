@@ -52,12 +52,12 @@ fakeroot rootfs_deb_do_rootfs () {
 	}
 
 	if [ ! -z "${LINGUAS_INSTALL}" ]; then
-		apt-get install glibc-localedata-i18n --force-yes --allow-unauthenticated </dev/null
+		apt-get install glibc-localedata-i18n --force-yes --allow-unauthenticated
 		if [ $? -ne 0 ]; then
 			exit $?
 		fi
 		for i in ${LINGUAS_INSTALL}; do
-			apt-get install $i --force-yes --allow-unauthenticated </dev/null
+			apt-get install $i --force-yes --allow-unauthenticated
 			if [ $? -ne 0 ]; then
 				exit $?
 			fi
@@ -66,7 +66,7 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	if [ ! -z "${PACKAGE_INSTALL}" ]; then
 		for i in ${PACKAGE_INSTALL}; do
-			apt-get install $i --force-yes --allow-unauthenticated </dev/null
+			apt-get install $i --force-yes --allow-unauthenticated
 			if [ $? -eq 1 ]; then
 				exit 1
 			fi
