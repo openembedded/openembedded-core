@@ -1,4 +1,4 @@
-RDEPENDS += "kernel (${KERNEL_VERSION})"
+RDEPENDS += "kernel (${KERNEL_VERSION}) update-modules"
 DEPENDS += "virtual/kernel"
 
 inherit module-base
