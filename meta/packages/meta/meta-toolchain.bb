@@ -73,11 +73,46 @@ EOF
 
         echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libpthread.so
         echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libc.so
+
 	# remove unwanted housekeeping files
 	mv ${SDK_OUTPUT}${libdir}/../${TARGET_SYS}/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
-	rm -rf ${SDK_OUTPUT}${libdir}/ipkg
+	rm -Rf ${SDK_OUTPUT}${libdir}/ipkg
 	mv ${SDK_OUTPUT}/usr/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status-host
-	rm -rf ${SDK_OUTPUT}/usr/lib/ipkg
+	rm -Rf ${SDK_OUTPUT}/usr/lib/ipkg
+
+	# extract and store ipks, pkgdata, pkgmaps and shlibs data
+	target_pkgs=`cat ${SDK_OUTPUT}/${prefix}/package-status | grep Package: | cut -f 2 -d ' '`
+	mkdir -p ${SDK_OUTPUT}/${prefix}/ipk/
+	mkdir -p ${SDK_OUTPUT}/${prefix}/pkgdata/runtime/
+	mkdir -p ${SDK_OUTPUT}/${prefix}/pkgmaps/debian/
+	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/shlibs/
+	for pkg in $target_pkgs ; do
+    		for arch in $ipkgarchs; do
+			echo "Looking for ${DEPLOY_DIR_IPK}/${pkg}_$arch.ipk"
+            		if [ -e ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ]; then
+				cp ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ${SDK_OUTPUT}/${prefix}/ipk/
+				orig_pkg=`ipkg-list-fields ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk | grep OE: | cut -d ' ' -f2`
+				echo $orig_pkg
+				cp ${STAGING_DIR}/pkgdata/$orig_pkg ${SDK_OUTPUT}/${prefix}/pkgdata/
+				subpkgs=`cat ${STAGING_DIR}/pkgdata/$orig_pkg | grep PACKAGES: | cut -b 10-`
+				echo $subpkgs
+				for subpkg in $subpkgs; do
+					cp ${STAGING_DIR}/pkgdata/runtime/$subpkg ${SDK_OUTPUT}/${prefix}/pkgdata/runtime/
+					if [ -e ${STAGING_DIR}/pkgdata/runtime/$subpkg.packaged ];then
+						cp ${STAGING_DIR}/pkgdata/runtime/$subpkg.packaged ${SDK_OUTPUT}/${prefix}/pkgdata/runtime/
+					fi
+					if [ -e ${STAGING_DIR}/pkgmaps/debian/$subpkg ]; then
+						cp ${STAGING_DIR}/pkgmaps/debian/$subpkg ${SDK_OUTPUT}/${prefix}/pkgmaps/debian/
+					fi
+					if [ -e ${STAGING_DIR}/${TARGET_SYS}/shlibs/$subpkg.list ]; then
+						cp ${STAGING_DIR}/${TARGET_SYS}/shlibs/$subpkg.* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/shlibs/
+					fi
+				done
+				break
+			fi
+		done
+	done
+
 
 	# remove unwanted executables
 	rm -rf ${SDK_OUTPUT}/${prefix}/sbin ${SDK_OUTPUT}/${prefix}/etc
