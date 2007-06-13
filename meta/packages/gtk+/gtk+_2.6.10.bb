@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "LGPL"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
            file://no-demos.patch;patch=1 \
@@ -43,10 +43,9 @@ FILES_${PN}-dbg += " \
 	${libdir}/gtk-2.0/${LIBV}/engines/.debug/*"
 
 
-RRECOMMENDS_linux_${PN} = "glibc-gconv-iso8859-1"
+RDEPENDS_linux_${PN} = "glibc-gconv-iso8859-1"
 
-EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-display-migration"
-# --disable-cruft
+EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest"
 
 LIBV = "2.4.0"
 LEAD_SONAME = "libgtk-x11*"
