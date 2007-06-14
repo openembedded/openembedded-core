@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "LGPL"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
            file://no-demos.patch;patch=1 \
@@ -43,7 +43,10 @@ FILES_${PN}-dbg += " \
 	${libdir}/gtk-2.0/${LIBV}/engines/.debug/*"
 
 
-RDEPENDS_linux_${PN} = "glibc-gconv-iso8859-1"
+RRECOMMENDS_${PN} = "glibc-gconv-iso8859-1 ttf-dejavu-sans"
+RRECOMMENDS_${PN}_angstrom = "glibc-gconv-iso8859-1 ttf-dejavu-sans gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm"
+RRECOMMENDS_${PN}_openzaurus = "glibc-gconv-iso8859-1 ttf-dejavu-sans gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm"
+RRECOMMENDS_${PN}_poky = "glibc-gconv-iso8859-1"
 
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest"
 
