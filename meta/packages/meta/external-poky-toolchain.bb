@@ -8,13 +8,10 @@ PROVIDES = "\
     virtual/libintl \
     virtual/libiconv \
     glibc-thread-db \
-
     virtual/linux-libc-headers "
 
-RPROVIDES = "glibc-gconv-iso8859-1"
+PACKAGES_DYNAMIC = "glibc-gconv-*"
 PR = "r1"
-
-DEFAULT_PREFERENCE = "-1"
 
 inherit sdk
 
