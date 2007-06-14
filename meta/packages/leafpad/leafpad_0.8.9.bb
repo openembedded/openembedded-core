@@ -3,7 +3,7 @@ DEPENDS = "gtk+ intltool-native libowl"
 SRC_URI = "http://savannah.nongnu.org/download/${PN}/${PN}-${PV}.tar.gz \
 	   file://owl-menu.patch;patch=1				\
 	   file://leafpad.desktop"
-PR = "r3"
+PR = "r4"
 
 inherit autotools pkgconfig
 

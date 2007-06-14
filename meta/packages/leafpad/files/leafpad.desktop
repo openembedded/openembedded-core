@@ -5,7 +5,7 @@ Exec=/usr/bin/leafpad
 Icon=accessories-text-editor
 Terminal=false
 Type=Application
-Categories=Utility;PIM;
+Categories=Utility;Office;
 SingleInstance=true
 StartupNotify=true
 
