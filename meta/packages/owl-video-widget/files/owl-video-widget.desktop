@@ -5,6 +5,6 @@ Exec=video
 Icon=video-player
 Terminal=false
 Type=Application
-Categories=AudioVideo;Player;PIM;MB;
+Categories=AudioVideo;Video;Player;
 SingleInstance=true
 StartupNotify=true
