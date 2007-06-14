@@ -14,6 +14,8 @@ PROVIDES = "\
 RPROVIDES = "glibc-gconv-iso8859-1"
 PR = "r1"
 
+DEFAULT_PREFERENCE = "-1"
+
 inherit sdk
 
 do_stage() {
