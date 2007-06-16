@@ -79,7 +79,6 @@ EOF
 				rm ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/$fn
 				ln -s $bname ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/$fn
 			fi
-
 		fi
 	done
 
@@ -97,7 +96,7 @@ EOF
 	mv ${SDK_OUTPUT}${libdir}/../${TARGET_SYS}/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
 	rm -Rf ${SDK_OUTPUT}${libdir}/ipkg
 	mv ${SDK_OUTPUT}/usr/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status-host
-	rm -Rf ${SDK_OUTPUT}/usr/lib/ipkg
+	rm -Rf ${SDK_OUTPUT}/usr/lib
 
 	# extract and store ipks, pkgdata, pkgmaps and shlibs data
 	target_pkgs=`cat ${SDK_OUTPUT}/${prefix}/package-status | grep Package: | cut -f 2 -d ' '`
@@ -107,14 +106,12 @@ EOF
 	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/shlibs/
 	for pkg in $target_pkgs ; do
     		for arch in $ipkgarchs; do
-			echo "Looking for ${DEPLOY_DIR_IPK}/${pkg}_$arch.ipk"
             		if [ -e ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ]; then
+				echo "Found ${DEPLOY_DIR_IPK}/${pkg}_$arch.ipk"
 				cp ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ${SDK_OUTPUT}/${prefix}/ipk/
 				orig_pkg=`ipkg-list-fields ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk | grep OE: | cut -d ' ' -f2`
-				echo $orig_pkg
 				cp ${STAGING_DIR}/pkgdata/$orig_pkg ${SDK_OUTPUT}/${prefix}/pkgdata/
 				subpkgs=`cat ${STAGING_DIR}/pkgdata/$orig_pkg | grep PACKAGES: | cut -b 10-`
-				echo $subpkgs
 				for subpkg in $subpkgs; do
 					cp ${STAGING_DIR}/pkgdata/runtime/$subpkg ${SDK_OUTPUT}/${prefix}/pkgdata/runtime/
 					if [ -e ${STAGING_DIR}/pkgdata/runtime/$subpkg.packaged ];then
