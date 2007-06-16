@@ -2,8 +2,10 @@
 # or indirectly via dependency.  No need to be in 'world'.
 EXCLUDE_FROM_WORLD = "1"
 
-SDK_NAME = "poky/${TARGET_ARCH}"
-PACKAGE_ARCH = "${BUILD_ARCH}"
+SDK_NAME = "${DISTRO}/${TARGET_ARCH}"
+
+OLD_PACKAGE_ARCH := ${PACKAGE_ARCH}
+PACKAGE_ARCH = "${BUILD_ARCH}-${OLD_PACKAGE_ARCH}-sdk"
 
 HOST_ARCH = "${BUILD_ARCH}"
 HOST_VENDOR = "${BUILD_VENDOR}"

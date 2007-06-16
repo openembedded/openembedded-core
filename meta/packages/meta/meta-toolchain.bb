@@ -1,7 +1,7 @@
 DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
 DEPENDS = "ipkg-native ipkg-utils-native fakeroot-native sed-native"
-PR = "r1"
+PR = "r2"
 
 inherit sdk
 
@@ -20,7 +20,14 @@ IPKG_TARGET = "ipkg-cl -f ${SDK_DIR}/ipkg-target.conf -o ${SDK_OUTPUT}/${prefix}
 HOST_INSTALL = "\
     binutils-cross-sdk \
     gcc-cross-sdk \
-    gdb-cross"
+    g++ \
+    cpp \
+    libgcc \
+    libstdc++ \
+    libstdc++-dev \
+    gdb-cross \
+    "
+
 TARGET_INSTALL = "\
     task-sdk-bare \
     "
@@ -36,7 +43,6 @@ do_populate_sdk() {
 
 	cat <<EOF >${SDK_DIR}/ipkg-host.conf
 src oe file:${DEPLOY_DIR_IPK}
-arch ${BUILD_ARCH} 1
 EOF
         cat <<EOF >${SDK_DIR}/ipkg-target.conf
 src oe file:${DEPLOY_DIR_IPK}
@@ -45,6 +51,7 @@ EOF
         priority=1
         for arch in $ipkgarchs; do
                 echo "arch $arch $priority" >> ${SDK_DIR}/ipkg-target.conf
+		echo "arch ${BUILD_ARCH}-$arch-sdk $priority" >> ${SDK_DIR}/ipkg-host.conf
 	        priority=$(expr $priority + 5)
         done
 
