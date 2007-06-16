@@ -16,6 +16,6 @@ RDEPENDS_task-sdk-bare = "\
     glibc-gconv-iso8859-1 \
     glibc-localedata-i18n \
     locale-base-en-gb \
-    libgcc1 \
+    libgcc \
     libstdc++ \
     "
