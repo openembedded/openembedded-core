@@ -21,7 +21,8 @@ ALLOW_EMPTY = "1"
 
 EXTRA_OEMAKE = "OPENZAURUS_RELEASE=-${DISTRO_VERSION}"
 COMPATIBLE_HOST = "(arm|i.86).*-linux"
-COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|ipaq-pxa270|qemuarm|qemux86|bootcdx86)'
+COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|hx2000|qemuarm|qemux86|bootcdx86)'
+
 KERNEL_IMAGETYPE_qemux86 = "bzImage"
 KERNEL_IMAGETYPE_bootcdx86 = "bzImage"
 

@@ -4,15 +4,15 @@ PR = "r34"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
-# http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.14.tar.gz \
+# http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.14.tar.bz2 \
 # http://www.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.15-rc1.bz2;patch=1 \
 # http://www.kernel.org/pub/linux/kernel/v2.6/snapshots/patch-2.6.15-rc2-git1.bz2;patch=1 \
 # http://www.kernel.org/pub/linux/kernel/people/alan/linux-2.6/2.6.10/patch-2.6.10-ac8.gz;patch=1 \
-# http://www.kernel.org/pub/linux/kernel/people/akpm/patches/2.6/2.6.14-rc2/2.6.14-rc2-mm1/2.6.14-rc2-mm1.bz2;patch=1 \	   
+# http://www.kernel.org/pub/linux/kernel/people/akpm/patches/2.6/2.6.14-rc2/2.6.14-rc2-mm1/2.6.14-rc2-mm1.bz2;patch=1 \
 
-# Patches submitted upstream are towards top of this list 
+# Patches submitted upstream are towards top of this list
 # Hacks should clearly named and at the bottom
-SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            ${RPSRC}/poodle_partsize-r0.patch;patch=1;status=merged \
            ${RPSRC}/jffs2_longfilename-r1.patch;patch=1;status=merged \
            ${RPSRC}/locomo_led_default_trigger-r0.patch;patch=1;status=merged \
@@ -65,7 +65,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            file://squashfs3.0-2.6.15.patch;patch=1;status=external \
            file://vesafb-tng-1.0-rc2-git-20060629.patch;patch=1;status=external \
            file://defconfig-c7x0 \
-           file://defconfig-ipaq-pxa270 \
+           file://defconfig-hx2000 \
            file://defconfig-collie \
            file://defconfig-poodle \
            file://defconfig-akita \
