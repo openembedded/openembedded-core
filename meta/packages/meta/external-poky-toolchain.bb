@@ -4,6 +4,10 @@ PROVIDES = "\
     virtual/arm-poky-linux-gnueabi-gcc-initial \
     virtual/arm-poky-linux-binutils \
     virtual/arm-poky-linux-libc-for-gcc \
+    virtual/i586-poky-linux-gcc \
+    virtual/i586-poky-linux-gcc-initial \
+    virtual/i586-poky-linux-binutils \
+    virtual/i586-poky-linux-libc-for-gcc \
     virtual/libc \
     virtual/libintl \
     virtual/libiconv \
