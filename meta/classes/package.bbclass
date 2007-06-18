@@ -311,9 +311,15 @@ python package_do_split_locales() {
 
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
-	rdep = (bb.data.getVar('RDEPENDS_%s' % mainpkg, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "").split()
-	rdep.append('%s-locale*' % pn)
-	bb.data.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep), d)
+	# Disabled by RP 18/06/07
+	# Wildcards aren't supported in debian
+	# They break with ipkg since glibc-locale* will mean that 
+	# glibc-localedata-translit* won't install as a dependency
+	# for some other package which breaks meta-toolchain
+	# Probably breaks since virtual-locale- isn't provided anywhere
+	#rdep = (bb.data.getVar('RDEPENDS_%s' % mainpkg, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "").split()
+	#rdep.append('%s-locale*' % pn)
+	#bb.data.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep), d)
 }
 
 python populate_packages () {
