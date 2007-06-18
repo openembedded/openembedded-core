@@ -3,6 +3,7 @@ DESCRIPTION = "A JavaScript engine"
 SECTION = "libs"
 DEPENDS = "readline"
 SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/js-1.5.tar.gz \
+           file://link_with_gcc.patch;patch=1 \
 	   file://jsautocfg.h"
 
 S = "${WORKDIR}/js/src"
@@ -10,7 +11,7 @@ S = "${WORKDIR}/js/src"
 FILES_${PN} = "${libdir}/lib*.so"
 FILES_${PN}-dev = "${includedir} ${libdir}/lib*.a"
 
-EXTRA_OEMAKE = "'CC=${CC}' 'LD=${LD}' 'XCFLAGS=${CFLAGS}' 'XLDFLAGS=-L${STAGING_LIBDIR} -soname=libjs'"
+EXTRA_OEMAKE = "'CC=${CC}' 'LD=${LD}' 'XCFLAGS=${CFLAGS}' 'XLDFLAGS=${LDFLAGS} -Wl,-soname=libjs'"
 
 do_compile_prepend() {
 	cp ${WORKDIR}/jsautocfg.h ${S}/
