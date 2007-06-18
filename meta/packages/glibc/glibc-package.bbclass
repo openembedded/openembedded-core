@@ -27,7 +27,7 @@ ENABLE_BINARY_LOCALE_GENERATION ?= "0"
 BINARY_LOCALE_ARCHES ?= "arm.*"
 
 PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
-PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* libc6* locale-base-*"
+PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* libc6* locale-base-* glibc-binary-localedata-*"
 
 libc_baselibs = "/lib/libc* /lib/libm* /lib/ld* /lib/libpthread* /lib/libresolv* /lib/librt* /lib/libutil* /lib/libnsl* /lib/libnss_files* /lib/libnss_compat* /lib/libnss_dns* /lib/libdl* /lib/libanl* /lib/libBrokenLocale*"
 
