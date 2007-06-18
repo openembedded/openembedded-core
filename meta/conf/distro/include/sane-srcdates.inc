@@ -85,4 +85,5 @@ SRCDATE_xirssi ?= "20060814"
 SRCDATE_xsvg ?= "20060814"
 SRCDATE_yamonenv ?= "20060814"
 SRCDATE_zroadmap ?= "20060814"
+SRCDATE_test-xvideo ?= "now"
 
