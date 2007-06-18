@@ -2,8 +2,8 @@
 # Poky configuration to use EABI
 #
 
-PREFERRED_PROVIDER_virtual/arm-poky-linux-gnueabi-libc-for-gcc = "glibc-intermediate"
-PREFERRED_PROVIDER_virtual/arm-linux-libc-for-gcc = "glibc-intermediate"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}libc-for-gcc = "glibc-intermediate"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}-binutils = "binutils-cross"
 
 PREFERRED_VERSION_gcc ?= "4.1.2"
 PREFERRED_VERSION_gcc-cross ?= "4.1.2"
