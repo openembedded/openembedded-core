@@ -1,7 +1,8 @@
 gcclibdir ?= "${libdir}/gcc"
 BINV ?= "${PV}"
 
-PACKAGES = "libgcc ${PN} ${PN}-symlinks \
+PACKAGES = "libgcc libgcc-dev \
+            ${PN} ${PN}-symlinks \
             g++ g++-symlinks \
 	    cpp cpp-symlinks \
             g77 g77-symlinks \
@@ -59,7 +60,6 @@ FILES_libstdc++-dev = "${includedir}/c++/${BINV} \
 
 FILES_libmudflap = "${libdir}/libmudflap*.so.*"
 FILES_libmudflap-dev = "${libdir}/libmudflap*.so \
-                        ${libdir}/libmudflap*.a \
                         ${libdir}/libmudflap*.a"
 
 

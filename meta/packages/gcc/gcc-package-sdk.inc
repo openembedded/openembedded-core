@@ -6,7 +6,6 @@ HAS_GFORTRAN ?= "no"
 OLD_INHIBIT_PACKAGE_STRIP := "${INHIBIT_PACKAGE_STRIP}"
 INHIBIT_PACKAGE_STRIP = "1"
 
-
 python do_package() {
 	if bb.data.getVar('DEBIAN_NAMES', d, 1):
 		bb.data.setVar('PKG_libgcc', 'libgcc1', d)
@@ -16,32 +15,24 @@ python do_package() {
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 
-	# Move libgcc_s into /lib
-	mkdir -p ${D}${base_libdir}
-	if [ -f ${D}${base_libdir}/libgcc_s.so.? ]; then
-		# Already in the right location
-		:
-	elif [ -f ${D}${prefix}/lib/libgcc_s.so.? ]; then
-		mv -f ${D}${prefix}/lib/libgcc_s.so.* ${D}${base_libdir}
-	else
-		mv -f ${D}${prefix}/*/lib/libgcc_s.so.* ${D}${base_libdir}
+	# Manually run the target stripper since we won't get it run by
+	# the packaging.
+	if [ "x${OLD_INHIBIT_PACKAGE_STRIP}" != "x1" ]; then
+		${TARGET_PREFIX}strip ${D}${prefix}/${TARGET_SYS}/lib/libstdc++.so.*
+		${TARGET_PREFIX}strip ${D}${prefix}/${TARGET_SYS}/lib/libg2c.so.* || true
+		${TARGET_PREFIX}strip ${D}${prefix}/${TARGET_SYS}/lib/libgcc_s.so.*
 	fi
-
-	# Move libstdc++ and libg2c into libdir (resetting our prefix to /usr
-	mkdir -p ${D}${libdir}
-	mv -f ${D}${prefix}/*/lib/libstdc++.so.* ${D}${libdir}
-	if [ "${HAS_G2C}" = "yes" ]; then
-	  mv -f ${D}${prefix}/*/lib/libg2c.so.* ${D}${libdir}
-	fi
-	if [ "${HAS_GFORTRAN}" = "yes" ]; then
-	  mv -f ${D}${prefix}/*/lib/libgfortran*.so.* ${D}${libdir}
-	fi
-
-       # Manually run the target stripper since we won't get it run by
-       # the packaging.
-       if [ "x${OLD_INHIBIT_PACKAGE_STRIP}" != "x1" ]; then
-               ${TARGET_PREFIX}strip ${D}${libdir}/libstdc++.so.*
-               ${TARGET_PREFIX}strip ${D}${libdir}/libg2c.so.* || true
-               ${TARGET_PREFIX}strip ${D}${base_libdir}/libgcc_s.so.*
-       fi
 }
+
+FILES_libgcc = "${prefix}/${TARGET_SYS}/lib/libgcc*.so.*"
+FILES_libgcc-dev = "${prefix}/${TARGET_SYS}/lib/libgcc*.so"
+
+FILES_libstdc++ = "${prefix}/${TARGET_SYS}/lib/libstdc++.so.*"
+FILES_libstdc++-dev = "${includedir}/c++/${BINV} \
+                       ${prefix}/${TARGET_SYS}/lib/libstdc++.so \
+                       ${prefix}/${TARGET_SYS}/lib/libstdc++.a \
+                       ${prefix}/${TARGET_SYS}/lib/libsupc++.a"
+
+FILES_libmudflap = "${prefix}/${TARGET_SYS}/lib/libmudflap*.so.*"
+FILES_libmudflap-dev = "${prefix}/${TARGET_SYS}/lib/libmudflap*.so \
+                        ${prefix}/${TARGET_SYS}/lib/libmudflap*.a"
