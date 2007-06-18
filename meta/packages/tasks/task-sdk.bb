@@ -1,5 +1,5 @@
 DESCRIPTION = "SDK packages"
-PR = "r12"
+PR = "r15"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -18,4 +18,8 @@ RDEPENDS_task-sdk-bare = "\
     locale-base-en-gb \
     libgcc \
     libstdc++ \
+    "
+
+RRECOMMENDS_task-sdk-bare = "\
+    glibc-binary-localedata-en-gb \
     "
