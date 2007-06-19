@@ -1,7 +1,7 @@
 DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
 DEPENDS = "ipkg-native ipkg-utils-native fakeroot-native sed-native"
-PR = "r2"
+PR = "r3"
 
 inherit sdk
 
@@ -23,6 +23,7 @@ HOST_INSTALL = "\
     g++ \
     cpp \
     libgcc \
+    libgcc-dev \
     libstdc++ \
     libstdc++-dev \
     gdb-cross \
