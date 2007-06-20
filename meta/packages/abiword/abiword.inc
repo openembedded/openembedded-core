@@ -4,8 +4,8 @@ HOMEPAGE = "http://www.abiword.org""
 LICENSE = "GPLv2"
 
 DEPENDS     = "libgsf libglade libfribidi libxml2 wv"
-#RDEPENDS    = "glibc-gconv-ibm850 glibc-gconv-cp1252 \
-#               glibc-gconv-iso8859-15 glibc-gconv-iso8859-1"
+RRECOMMENDS    = "glibc-gconv-ibm850 glibc-gconv-cp1252 \
+               glibc-gconv-iso8859-15 glibc-gconv-iso8859-1"
 
 # Share this file between recipes that use cvs and that pull tarballs
 # (one day change this to differentiate automatically based on PV and set the
