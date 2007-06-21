@@ -2,12 +2,14 @@ DESCRIPTION = "Simple XVideo test application"
 LICENSE = "GPL"
 DEPENDS = "libx11 libxv"
 
-PR = "r1"
+PR = "r2"
 PV = "0.0+svn${SRCDATE}"
 
-SRC_URI="svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http"
+SRC_URI="svn://svn.o-hand.com/repos/misc/trunk;module=test-xvideo;proto=http"
+#SRC_URI="file://xvideo-tests-0.0.1.tar.gz"
 
 S = "${WORKDIR}/test-xvideo"
+#S = "${WORKDIR}/xvideo-tests-0.0.1"
 
 inherit module-base autotools
 
