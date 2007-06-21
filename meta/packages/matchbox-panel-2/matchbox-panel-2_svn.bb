@@ -3,7 +3,7 @@ PRIORITY = "optional"
 MAINTAINER = "Chris Lord <chris@openedhand.com>"
 PV = "0.0+svn${SRCDATE}"
 DEPENDS = "gtk+ startup-notification apmd"
-PR = "r1"
+PR = "r2"
 
 RPROVIDES = matchbox-panel
 RREPLACES = matchbox-panel
@@ -16,7 +16,8 @@ EXTRA_OECONF = "--enable-startup-notification --disable-libnotify"
 S = ${WORKDIR}/${PN}
 
 FILES_${PN} += "${libdir}/matchbox-panel/*.so \
-                ${datadir}/matchbox-panel/battery/*.png"
+                ${datadir}/matchbox-panel/battery/*.png \
+                ${datadir}/matchbox-panel/startup/*.png "
 FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 
 inherit autotools pkgconfig
