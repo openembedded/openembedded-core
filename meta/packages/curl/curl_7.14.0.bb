@@ -3,6 +3,7 @@ LICENSE = "MIT"
 DEPENDS = "zlib"
 SECTION = "console/network"
 RPROVIDES_lib${PN} += "libcurl"
+PR = "r1"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2"
 S = "${WORKDIR}/curl-${PV}"
@@ -22,10 +23,13 @@ do_stage () {
 	oe_libinstall -so -a -C lib libcurl ${STAGING_LIBDIR}
 }
 
-PACKAGES = "curl curl-doc libcurl libcurl-dev libcurl-doc"
+PACKAGES += "libcurl libcurl-dev libcurl-doc libcurl-dbg"
 FILES_${PN} = "${bindir}/curl"
+FILES_${PN}-dbg = "${bindir}/.debug/"
+FILES_${PN}-dev = " "
 FILES_${PN}-doc = "${mandir}/man1/curl.1"
 FILES_lib${PN} = "${libdir}/lib*.so.*"
+FILES_lib${PN}-dbg = "${libdir}/.debug/lib*.so.*"
 FILES_lib${PN}-dev = "${includedir} \
                       ${libdir}/lib*.so \
                       ${libdir}/lib*.a \
