@@ -2,7 +2,7 @@ DESCRIPTION = "Simple XVideo test application"
 LICENSE = "GPL"
 DEPENDS = "libx11 libxv"
 
-PR = "r3"
+PR = "r4"
 PV = "0.0+svn${SRCDATE}"
 
 SRC_URI="svn://svn.o-hand.com/repos/misc/trunk;module=test-xvideo;proto=http"
