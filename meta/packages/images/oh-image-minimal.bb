@@ -1,8 +1,11 @@
 #
 # Copyright (C) 2007 OpenedHand Ltd.
 #
+PR = "r1"
 
 IMAGE_INSTALL = "task-oh-boot"
+
+IMAGE_LINGUAS = " "
 
 require poky-image.inc
 
