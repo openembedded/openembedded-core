@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.21
-# Wed May 30 00:16:07 2007
+# Wed Jun 13 15:37:54 2007
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -226,7 +226,7 @@ CONFIG_ALIGNMENT_TRAP=y
 #
 CONFIG_ZBOOT_ROM_TEXT=0x0
 CONFIG_ZBOOT_ROM_BSS=0x0
-CONFIG_CMDLINE="console=ttyS0,115200n8 console=tty1 noinitrd root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw  fbcon=rotate:1 dyntick=enable debug"
+CONFIG_CMDLINE="console=ttyS0,115200n8 console=tty1 noinitrd root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw  fbcon=rotate:1 dyntick=enable quiet"
 # CONFIG_XIP_KERNEL is not set
 CONFIG_KEXEC=y
 
@@ -1009,7 +1009,10 @@ CONFIG_LEDS_TRIGGER_IDE_DISK=y
 #
 # Multimedia devices
 #
-# CONFIG_VIDEO_DEV is not set
+CONFIG_VIDEO_DEV=m
+CONFIG_VIDEO_V4L1=y
+CONFIG_VIDEO_V4L1_COMPAT=y
+CONFIG_VIDEO_V4L2=y
 
 #
 # Digital Video Broadcasting Devices
@@ -1152,7 +1155,9 @@ CONFIG_SND_SOC=m
 # SoC Audio for the Intel PXA2xx
 #
 CONFIG_SND_PXA2XX_SOC=m
+CONFIG_SND_PXA2XX_SOC_I2S=m
 CONFIG_SND_PXA2XX_SOC_SPITZ=m
+CONFIG_SND_SOC_WM8750=m
 
 #
 # Open Sound System
@@ -1733,3 +1738,4 @@ CONFIG_ZLIB_DEFLATE=m
 CONFIG_PLIST=y
 CONFIG_HAS_IOMEM=y
 CONFIG_HAS_IOPORT=y
+CONFIG_SHARPSL_RC=m

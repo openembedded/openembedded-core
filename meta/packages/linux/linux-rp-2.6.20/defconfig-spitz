@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.20
-# Thu Mar 29 12:56:02 2007
+# Tue Jun 26 23:12:35 2007
 #
 CONFIG_ARM=y
 # CONFIG_GENERIC_TIME is not set
@@ -992,7 +992,10 @@ CONFIG_LEDS_TRIGGER_IDE_DISK=y
 #
 # Multimedia devices
 #
-# CONFIG_VIDEO_DEV is not set
+CONFIG_VIDEO_DEV=m
+CONFIG_VIDEO_V4L1=y
+CONFIG_VIDEO_V4L1_COMPAT=y
+CONFIG_VIDEO_V4L2=y
 
 #
 # Digital Video Broadcasting Devices
@@ -1733,3 +1736,4 @@ CONFIG_ZLIB_INFLATE=m
 CONFIG_ZLIB_DEFLATE=m
 CONFIG_PLIST=y
 CONFIG_IOMAP_COPY=y
+CONFIG_SHARPSL_RC=m
