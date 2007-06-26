@@ -27,6 +27,7 @@ KERNEL_IMAGETYPE_qemux86 = "bzImage"
 KERNEL_IMAGETYPE_bootcdx86 = "bzImage"
 
 CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
+CMDLINE_CON_qemuarm = "console=ttyAMA0,115200n8 console=tty1 noinitrd"
 CMDLINE_ROOT = "root=/dev/mtdblock2 rootfstype=jffs2"
 CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw"
 CMDLINE_OTHER = "dyntick=enable"

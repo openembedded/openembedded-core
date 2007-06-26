@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r3"
+PR = "r4"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -37,6 +37,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.21.tar.bz2 \
            ${RPSRC}/pxa27x_overlay-r5.patch;patch=1 \
            ${RPSRC}/w100_extaccel-r0.patch;patch=1 \
            ${RPSRC}/asoc_fix_typo-r0.patch;patch=1 \
+           ${RPSRC}/qemuarm_scsi_fix-r0.patch;patch=1 \
            file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            ${RPSRC}/logo_oh-r0.patch.bz2;patch=1;status=unmergable \
