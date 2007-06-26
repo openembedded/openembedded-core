@@ -1,15 +1,11 @@
 DESCRIPTION = "Linux Kernel 2.6 Userland Utilities for the PCMCIA Subsystem"
-DEPENDS = "sysfsutils udev module-init-tools"
+DEPENDS = "sysfsutils"
 RDEPENDS = "udev module-init-tools"
 HOMEPAGE = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html"
 SECTION = "kernel/userland"
 PRIORITY = "optional"
-PR = "r1"
 
-SRC_URI = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2 \
-           file://makefile_fix.patch;patch=1 \
-	   file://version_workaround.patch;patch=1 \
-	   file://modalias_update.patch;patch=1"
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2"
 
 S = "${WORKDIR}/pcmciautils-${PV}"
 
@@ -21,7 +17,6 @@ export udevrulesdir = "${sysconfdir}/udev/rules.d"
 export UDEV = "1"
 LD = "${CC}"
 CFLAGS =+ "-I${S}/src"
-CFLAGS =+ '-DPCMCIAUTILS_VERSION=013'
 
 PARALLEL_MAKE = ""
 EXTRA_OEMAKE = "-e 'STRIP=echo' 'LIB_OBJS=-lc -lsysfs'"
