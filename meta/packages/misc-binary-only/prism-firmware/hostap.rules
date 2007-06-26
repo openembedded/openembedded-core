@@ -1,0 +1,4 @@
+#
+# update firmware on Prism cards (load it to RAM, not to Flash)
+#
+SUBSYSTEM=="net", KERNEL=="wlan*" RUN="/lib/udev/prism-fw.sh"
