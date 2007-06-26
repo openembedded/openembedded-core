@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r65"
+PR = "r66"
 
 PACKAGES = "\
     task-oh-base \
@@ -68,7 +68,7 @@ RDEPENDS_task-oh-base = "\
     ${XSERVER} \
     xserver-kdrive-common \
     xserver-nodm-init \
-    ttf-bitstream-vera \
+    liberation-fonts \
     xauth \
     xhost \
     xset \
