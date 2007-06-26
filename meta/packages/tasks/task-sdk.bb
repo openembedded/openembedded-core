@@ -1,5 +1,5 @@
 DESCRIPTION = "SDK packages"
-PR = "r15"
+PR = "r16"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -13,8 +13,11 @@ RDEPENDS_task-sdk-bare = "\
     glibc-utils \
     libsegfault \
     glibc-thread-db \
-    glibc-gconv-iso8859-1 \
     glibc-localedata-i18n \
+    glibc-gconv-ibm850 \
+    glibc-gconv-cp1252 \
+    glibc-gconv-iso8859-1 \
+    glibc-gconv-iso8859-15 \
     locale-base-en-gb \
     libgcc \
     libstdc++ \
