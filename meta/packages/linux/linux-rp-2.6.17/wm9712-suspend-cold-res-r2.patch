@@ -1,0 +1,16 @@
+ sound/soc/codecs/wm9712.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: linux-2.6.18/sound/soc/codecs/wm9712.c
+===================================================================
+--- linux-2.6.18.orig/sound/soc/codecs/wm9712.c	2006-12-05 23:19:53.000000000 +0000
++++ linux-2.6.18/sound/soc/codecs/wm9712.c	2006-12-05 23:22:04.000000000 +0000
+@@ -651,7 +651,7 @@ static int wm9712_soc_resume(struct plat
+ 	int i, ret;
+ 	u16 *cache = codec->reg_cache;
+ 
+-	ret = wm9712_reset(codec, 1);
++	ret = wm9712_reset(codec, 0);
+ 	if (ret < 0){
+ 		printk(KERN_ERR "could not reset AC97 codec\n");
+ 		return ret;

@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r34"
+PR = "r35"
 
 # Handy URLs
 # git://rsync.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git \
@@ -27,8 +27,7 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            ${RPSRC}/spectrumcs_fix-r0.patch;patch=1 \
            file://00-hostap.patch;patch=1;status=merged \
            file://10-pcnet.patch;patch=1;status=merged \
-           ${RPSRC}/alsa/asoc-v0.12.patch;patch=1 \
-           ${RPSRC}/asoc_makefile-r0.patch;patch=1 \
+           file://asoc-v0.12.4_2.6.17.patch;patch=1 \
            ${RPSRC}/hx2750_base-r27.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r7.patch;patch=1 \
            ${RPSRC}/hx2750_pcmcia-r2.patch;patch=1 \
@@ -42,12 +41,13 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
            ${RPSRC}/pm_changes-r1.patch;patch=1 \
            ${RPSRC}/usb_pxa27x_udc-r0.patch;patch=1 \
            ${RPSRC}/usb_add_epalloc-r1.patch;patch=1 \
-           ${DOSRC}/kexec-arm-r3.patch;patch=1 \
+           ${RPSRC}/kexec-arm-r3a.patch;patch=1 \
            ${RPSRC}/locomo_kbd_tweak-r1.patch;patch=1 \
            ${RPSRC}/poodle_pm-r3.patch;patch=1 \
            ${RPSRC}/pxafb_changeres-r0.patch;patch=1 \
-           ${RPSRC}/poodle_audio-r6.patch;patch=1 \
+           ${RPSRC}/poodle_audio-r7.patch;patch=1 \
            ${RPSRC}/pxa27x_overlay-r2.patch;patch=1 \
+           ${RPSRC}/w100_extaccel-r0.patch;patch=1 \
            ${RPSRC}/xscale_cache_workaround-r1.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            file://hrw-pcmcia-ids-r5.patch;patch=1 \
@@ -85,7 +85,7 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
 
 # Is anything out of this still needed? Parts were commited to mainline by rmk (drivers/mfd/)
 # (Pavel Machek's git tree has updated versions of this?)
-#  ${JLSRC}/zaurus-lcd-2.6.11.diff.gz;patch=1 
+#  ${JLSRC}/zaurus-lcd-2.6.11.diff.gz;patch=1
 
 # These patches are extracted from Pavel Machek's git tree
 # (diff against vanilla kernel)
@@ -113,11 +113,11 @@ SRC_URI_append_tosa = "\
 	   ${DOSRC}/tosa-tmio-lcd-r8.patch;patch=1 \
 	   ${DOSRC}/tosa-bluetooth-r8.patch;patch=1 \
 	   ${DOSRC}/wm97xx-lg7-r0.patch;patch=1 \
-	   ${DOSRC}/wm9712-suspend-cold-res-r1.patch;patch=1 \
+	   file://wm9712-suspend-cold-res-r2.patch;patch=1 \
 	   ${DOSRC}/sharpsl-pm-postresume-r0.patch;patch=1 \
 	   ${DOSRC}/wm97xx-dig-restore-r0.patch;patch=1 \
 	   ${DOSRC}/wm97xx-miscdevs-resume-r0.patch;patch=1 \
-	   ${DOSRC}/wm9712-reset-loop-r1.patch;patch=1 \
+	   file://wm9712-reset-loop-r2.patch;patch=1 \
 	   file://tosa-lcdnoise-r0.patch;patch=1 \
 	   file://wm97xx-lcdnoise-r0.patch;patch=1 "
 #	   ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
