@@ -4,13 +4,14 @@ RDEPENDS = "udev module-init-tools"
 HOMEPAGE = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html"
 SECTION = "kernel/userland"
 PRIORITY = "optional"
+PR = "r1"
 
 SRC_URI = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2 \
            file://makefile_fix.patch;patch=1 \
-	   file://version_workaround.patch;patch=1"
-S = "${WORKDIR}/pcmciautils-${PV}"
+	   file://version_workaround.patch;patch=1 \
+	   file://modalias_update.patch;patch=1"
 
-PR = "r0"
+S = "${WORKDIR}/pcmciautils-${PV}"
 
 export HOSTCC = "${BUILD_CC}"
 export etcdir = "${sysconfdir}"
