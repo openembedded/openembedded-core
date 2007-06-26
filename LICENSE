@@ -1,0 +1,11 @@
+Different components of Poky are under different licenses (a mix of 
+MIT and GPLv2). Please see:
+
+bitbake/COPYING (GPLv2)
+meta/COPYING.MIT (MIT)
+meta-extras/COPYING.MIT (MIT)
+
+which cover the components in those subdirectories.
+
+License information for any other files is either explicitly stated 
+or defaults to GPL version 2.
