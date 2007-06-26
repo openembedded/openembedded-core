@@ -81,3 +81,7 @@ rootfs_ipk_log_check() {
 	test "$do_exit" = 1 && exit 1
 	true
 }
+
+remove_packaging_data_files() {
+	rm -rf ${IMAGE_ROOTFS}/usr/lib/ipkg/
+}

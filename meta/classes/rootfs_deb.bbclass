@@ -134,3 +134,7 @@ rootfs_deb_log_check() {
 	true
 }
 
+remove_packaging_data_files() {
+	rm -rf ${IMAGE_ROOTFS}/usr/lib/ipkg/
+	rm -rf ${IMAGE_ROOTFS}/usr/dpkg/
+}
