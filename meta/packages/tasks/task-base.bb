@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r5"
+PR = "r6"
 
 PACKAGES = "task-base \
             task-base-oh-minimal"
@@ -141,8 +141,7 @@ task-base-alsa-rrecommends = "\
 
 task-base-pcmcia-rdepends = "\
     ${PCMCIA_MANAGER} \
-    ${@base_contains("DISTRO_FEATURES", "wifi", "prism3-firmware", "",d)} \
-    ${@base_contains("DISTRO_FEATURES", "wifi", "prism3-support", "",d)} \
+    ${@base_contains("DISTRO_FEATURES", "wifi", "prism-firmware", "",d)} \
     ${@base_contains("DISTRO_FEATURES", "wifi", "spectrum-fw", "",d)} \
     ${@base_contains("DISTRO_FEATURES", "wifi", "hostap-conf", "",d)} \
     ${@base_contains("DISTRO_FEATURES", "wifi", "orinoco-conf", "",d)}"
