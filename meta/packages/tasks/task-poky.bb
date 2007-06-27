@@ -3,15 +3,12 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "\
     task-poky-base \
     task-poky-base-dbg \
     task-poky-base-dev \
-    task-poky-boot \
-    task-poky-boot-dbg \
-    task-poky-boot-dev \
     task-poky-standard \
     task-poky-standard-dbg \
     task-poky-standard-dev \
