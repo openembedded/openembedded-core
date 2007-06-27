@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "\
     task-poky-base \
@@ -18,9 +18,6 @@ PACKAGES = "\
     task-poky-boot-extras \
     task-poky-boot-extras-dbg \
     task-poky-boot-extras-dev \
-    task-poky-boot-min-extras \
-    task-poky-boot-min-extras-dbg \
-    task-poky-boot-min-extras-dev \
     task-poky-devtools \
     task-poky-devtools-dbg \
     task-poky-devtools-dev \
@@ -40,9 +37,6 @@ ALLOW_EMPTY = "1"
 
 RDEPENDS_task-poky-boot-extras = "\
     task-base"
-
-RDEPENDS_task-poky-boot-min-extras = "\
-    task-base-poky-minimal"
 
 RDEPENDS_task-poky-base = "\
     psplash \
