@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
+PR = "r1"
 
 PACKAGES = "\
     task-poky-base \
@@ -36,18 +37,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 XSERVER ?= "xserver-kdrive-fbdev"
 
 ALLOW_EMPTY = "1"
-
-RDEPENDS_task-poky-boot = "\
-    base-files \
-    base-passwd \
-    busybox \
-    initscripts \
-    modutils-initscripts \
-    netbase \
-    sysvinit \
-    tinylogin \
-    udev \
-    update-alternatives"
 
 RDEPENDS_task-poky-boot-extras = "\
     task-base"
