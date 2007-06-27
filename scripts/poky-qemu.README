@@ -39,7 +39,7 @@ where:
    <zimage> is the path to a kernel (zimage-qemuarm.bin)
    <filesystem> is the path to an ext2 image (filesystem-qemuarm.ext2)
 
-It will default to the qemuarm, ext2 and the last kernel and oh-image-sdk 
+It will default to the qemuarm, ext2 and the last kernel and poky-image-sdk 
 image built by poky.
 
 

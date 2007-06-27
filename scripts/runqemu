@@ -68,7 +68,7 @@ fi
 if [ "$MACHINE" = "qemuarm" ]; then
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemuarm.ext2
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-sdk-qemuarm.ext2
         fi
     fi
 fi
@@ -76,7 +76,7 @@ fi
 if [ "$MACHINE" = "spitz" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-spitz.ext3
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-pda-spitz.ext3
         fi
     fi
 fi
@@ -84,7 +84,7 @@ fi
 if [ "$MACHINE" = "akita" ]; then
     if [ "$TYPE" = "jffs2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-pda-akita.jffs2
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-pda-akita.jffs2
         fi
     fi
 fi
@@ -95,7 +95,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     fi
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/oh-image-sdk-qemux86.ext2
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-sdk-qemux86.ext2
         fi
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin

@@ -77,6 +77,11 @@ can be useful for world or unattended builds.
 The -s option lists all the versions of packages that bitbake will use.
 
 
+Bitbake - More Information
+==========================
+
+See the bitbake user manual at: http://bitbake.berlios.de/manual/
+
 QEMU
 ====
 
