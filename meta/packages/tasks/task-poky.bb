@@ -3,33 +3,32 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r66"
 
 PACKAGES = "\
-    task-oh-base \
-    task-oh-base-dbg \
-    task-oh-base-dev \
-    task-oh-boot \
-    task-oh-boot-dbg \
-    task-oh-boot-dev \
-    task-oh-standard \
-    task-oh-standard-dbg \
-    task-oh-standard-dev \
-    task-oh-boot-extras \
-    task-oh-boot-extras-dbg \
-    task-oh-boot-extras-dev \
-    task-oh-boot-min-extras \
-    task-oh-boot-min-extras-dbg \
-    task-oh-boot-min-extras-dev \
-    task-oh-devtools \
-    task-oh-devtools-dbg \
-    task-oh-devtools-dev \
-    task-oh-testapps \
-    task-oh-testapps-dbg \
-    task-oh-testapps-dev \
-    task-oh-nfs-server \
-    task-oh-nfs-server-dbg \
-    task-oh-nfs-server-dev \
+    task-poky-base \
+    task-poky-base-dbg \
+    task-poky-base-dev \
+    task-poky-boot \
+    task-poky-boot-dbg \
+    task-poky-boot-dev \
+    task-poky-standard \
+    task-poky-standard-dbg \
+    task-poky-standard-dev \
+    task-poky-boot-extras \
+    task-poky-boot-extras-dbg \
+    task-poky-boot-extras-dev \
+    task-poky-boot-min-extras \
+    task-poky-boot-min-extras-dbg \
+    task-poky-boot-min-extras-dev \
+    task-poky-devtools \
+    task-poky-devtools-dbg \
+    task-poky-devtools-dev \
+    task-poky-testapps \
+    task-poky-testapps-dbg \
+    task-poky-testapps-dev \
+    task-poky-nfs-server \
+    task-poky-nfs-server-dbg \
+    task-poky-nfs-server-dev \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -38,7 +37,7 @@ XSERVER ?= "xserver-kdrive-fbdev"
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-oh-boot = "\
+RDEPENDS_task-poky-boot = "\
     base-files \
     base-passwd \
     busybox \
@@ -50,13 +49,13 @@ RDEPENDS_task-oh-boot = "\
     udev \
     update-alternatives"
 
-RDEPENDS_task-oh-boot-extras = "\
+RDEPENDS_task-poky-boot-extras = "\
     task-base"
 
-RDEPENDS_task-oh-boot-min-extras = "\
-    task-base-oh-minimal"
+RDEPENDS_task-poky-boot-min-extras = "\
+    task-base-poky-minimal"
 
-RDEPENDS_task-oh-base = "\
+RDEPENDS_task-poky-base = "\
     psplash \
     matchbox-common \
     matchbox-wm \
@@ -83,7 +82,7 @@ RDEPENDS_task-oh-base = "\
     pango-module-basic-fc \
     gtk+ "
 
-RDEPENDS_task-oh-standard = "\
+RDEPENDS_task-poky-standard = "\
     leafpad \
     dropbear \
     portmap \
@@ -113,17 +112,17 @@ RDEPENDS_task-oh-standard = "\
     gnome-vfs-plugin-http"
 #    matchbox-applet-inputmanager 
 
-RDEPENDS_task-oh-devtools = "\
+RDEPENDS_task-poky-devtools = "\
     oprofile \
     oprofileui-server \
     gdb \    
     strace \
     less \
     lttng-viewer"
-RRECOMMENDS_task-oh-devtools = "\
+RRECOMMENDS_task-poky-devtools = "\
     kernel-module-oprofile"
 
-RDEPENDS_task-oh-testapps = "\
+RDEPENDS_task-poky-testapps = "\
     tslib-calibrate \
     tslib-tests \
     lrzsz \
@@ -133,11 +132,11 @@ RDEPENDS_task-oh-testapps = "\
     gst-meta-video \
     gst-meta-audio"
 
-RDEPENDS_task-oh-nfs-server = "\
+RDEPENDS_task-poky-nfs-server = "\
     nfs-utils"
 
 # rpcinfo can be useful
-RRECOMMENDS_task-oh-nfs-server = "\
+RRECOMMENDS_task-poky-nfs-server = "\
     glibc-utils"
 
 #    minimo \

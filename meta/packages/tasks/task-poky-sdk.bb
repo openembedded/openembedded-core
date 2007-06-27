@@ -3,17 +3,17 @@
 #
 
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
-PR = "r14"
-DEPENDS = "task-oh"
+DEPENDS = "task-poky"
+
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
 
 PACKAGES = "\
-    task-oh-sdk \
-    task-oh-sdk-dbg \
-    task-oh-sdk-dev"
+    task-poky-sdk \
+    task-poky-sdk-dbg \
+    task-poky-sdk-dev"
 
-RDEPENDS_task-oh-sdk = "\
+RDEPENDS_task-poky-sdk = "\
     autoconf \
     automake \
     binutils \
@@ -32,10 +32,10 @@ RDEPENDS_task-oh-sdk = "\
     distcc"
 
 #python generate_sdk_pkgs () {
-#    ohpkgs = read_pkgdata('task-oh', d)['PACKAGES']
+#    poky_pkgs = read_pkgdata('task-poky', d)['PACKAGES']
 #    pkgs = bb.data.getVar('PACKAGES', d, 1).split()
-#    for pkg in ohpkgs.split():
-#        newpkg = pkg.replace('task-oh', 'task-oh-sdk')
+#    for pkg in poky_pkgs.split():
+#        newpkg = pkg.replace('task-poky', 'task-poky-sdk')
 #
 #        # for each of the task packages, add a corresponding sdk task
 #        pkgs.append(newpkg)
@@ -70,4 +70,4 @@ RDEPENDS_task-oh-sdk = "\
 #    bb.data.setVar('PACKAGES', ' '.join(pkgs), d)
 #}
 #
-#PACKAGES_DYNAMIC = "task-oh-sdk-*"
+#PACKAGES_DYNAMIC = "task-poky-sdk-*"
