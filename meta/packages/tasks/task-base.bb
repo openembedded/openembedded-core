@@ -3,10 +3,9 @@
 #
 
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r7"
+PR = "r8"
 
-PACKAGES = "task-base \
-            task-base-poky-minimal"
+PACKAGES = "task-base"
 
 ALLOW_EMPTY = "1"
 
@@ -93,21 +92,6 @@ RRECOMMENDS_task-base = "\
     ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS} \
     ${MACHINE_EXTRA_RRECOMMENDS} \
     ${DISTRO_EXTRA_RRECOMMENDS}"
-
-
-#
-# task-base-poky-minimal
-# An example of a small cut down machine configuration
-#
-RDEPENDS_task-base-poky-minimal = "\
-    kernel \
-    ${@base_contains("MACHINE_FEATURES", "kernel26", "${task-base-kernel26-rdepends}", "",d)} \
-    ${@base_contains("MACHINE_FEATURES", "apm", "${task-base-apm-rdepends}", "",d)} \
-    ${@base_contains("COMBINED_FEATURES", "pcmcia", "${PCMCIA_MANAGER}", "",d)} \
-    ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
-
-RRECOMMENDS_task-base-poky-minimal = "\
-    ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"
 
 task-base-kernel26-rdepends = "\
     udev \
