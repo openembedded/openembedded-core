@@ -2,8 +2,6 @@
 # or indirectly via dependency.  No need to be in 'world'.
 EXCLUDE_FROM_WORLD = "1"
 
-SDK_NAME = "${DISTRO}/${TARGET_ARCH}"
-
 OLD_PACKAGE_ARCH := ${PACKAGE_ARCH}
 PACKAGE_ARCH = "${BUILD_ARCH}-${OLD_PACKAGE_ARCH}-sdk"
 
@@ -18,7 +16,7 @@ CFLAGS = "${BUILD_CFLAGS}"
 CXXFLAGS = "${BUILD_CFLAGS}"
 LDFLAGS = "${BUILD_LDFLAGS}"
 
-prefix = "/usr/local/${SDK_NAME}"
+prefix = "${SDK_PREFIX}"
 exec_prefix = "${prefix}"
 base_prefix = "${exec_prefix}"
 
