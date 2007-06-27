@@ -5,6 +5,7 @@
 DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY = "1"
+PR = "r1"
 
 RDEPENDS_task-poky-boot = "\
     base-files \
@@ -16,4 +17,5 @@ RDEPENDS_task-poky-boot = "\
     sysvinit \
     tinylogin \
     udev \
-    update-alternatives"
+    update-alternatives \
+    ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
