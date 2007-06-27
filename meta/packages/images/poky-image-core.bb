@@ -4,4 +4,4 @@
 
 IMAGE_FEATURES += "apps-core"
 
-require poky-image.inc
+inherit poky-image

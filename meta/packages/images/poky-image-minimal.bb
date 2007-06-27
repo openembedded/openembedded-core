@@ -7,7 +7,7 @@ IMAGE_INSTALL = "task-poky-boot"
 
 IMAGE_LINGUAS = " "
 
-require poky-image.inc
+inherit poky-image
 
 # remove not needed ipkg informations
 ROOTFS_POSTPROCESS_COMMAND += "rm -rf ${IMAGE_ROOTFS}/usr/lib/ipkg/"

@@ -4,4 +4,4 @@
 
 IMAGE_FEATURES += "apps-core apps-pda"
 
-require poky-image.inc
+inherit poky-image
