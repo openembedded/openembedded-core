@@ -1,9 +1,9 @@
 #
 # Copyright (C) 2007 OpenedHand Ltd.
 #
-PR = "r2"
+PR = "r3"
 
-IMAGE_INSTALL = "task-oh-boot"
+IMAGE_INSTALL = "task-poky-boot"
 
 IMAGE_LINGUAS = " "
 
