@@ -4,6 +4,6 @@
 
 IMAGE_FEATURES += "apps-core apps-pda"
 
-require poky-image.inc
+inherit poky-image
 
-IMAGE_INSTALL += "task-oh-extraapps"
+IMAGE_INSTALL += "task-poky-extraapps"
