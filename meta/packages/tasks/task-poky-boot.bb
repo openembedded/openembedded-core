@@ -7,6 +7,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY = "1"
 PR = "r1"
 
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
+
 RDEPENDS_task-poky-boot = "\
     base-files \
     base-passwd \
