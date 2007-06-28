@@ -48,8 +48,8 @@ DISTRO_TASKS += '\
     ${@base_contains("IMAGE_FEATURES", ["apps-x11-games", "dev-pkgs"], "task-poky-apps-x11-games-dev", "",d)} \
     \
     ${@base_contains("IMAGE_FEATURES", "apps-x11-pimlico", "task-poky-apps-x11-pimlico", "",d)} \
-    ${@base_contains("IMAGE_FEATURES", ["apps-x11-pimlico", "dbg-pkgs"], "task-poky-apps-x11-dbg", "",d)} \
-    ${@base_contains("IMAGE_FEATURES", ["apps-x11-pimlico", "dev-pkgs"], "task-poky-apps-x11-dev", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["apps-x11-pimlico", "dbg-pkgs"], "task-poky-apps-x11-pimlico-dbg", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["apps-x11-pimlico", "dev-pkgs"], "task-poky-apps-x11-pimlico-dev", "",d)} \
     \
     ${@base_contains("IMAGE_FEATURES", "dev-tools", "task-poky-sdk", "",d)} \    
     ${@base_contains("IMAGE_FEATURES", ["dev-tools", "dbg-pkgs"], "task-poky-sdk-dbg", "",d)} \
