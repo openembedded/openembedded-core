@@ -17,21 +17,9 @@ SDK_DEPLOY = "${TMPDIR}/deploy/sdk"
 IPKG_HOST = "ipkg-cl -f ${SDK_DIR}/ipkg-host.conf -o ${SDK_OUTPUT}"
 IPKG_TARGET = "ipkg-cl -f ${SDK_DIR}/ipkg-target.conf -o ${SDK_OUTPUT}/${prefix}"
 
-HOST_INSTALL = "\
-    binutils-cross-sdk \
-    gcc-cross-sdk \
-    g++ \
-    cpp \
-    libgcc \
-    libgcc-dev \
-    libstdc++ \
-    libstdc++-dev \
-    gdb-cross \
-    "
+HOST_INSTALL = "task-poky-standalone-sdk-host"
 
-TARGET_INSTALL = "\
-    task-sdk-bare \
-    "
+TARGET_INSTALL = "task-poky-standalone-sdk-target"
 
 RDEPENDS = "${TARGET_INSTALL} ${HOST_INSTALL}"
 
@@ -60,7 +48,7 @@ EOF
 	mkdir -p ${SDK_OUTPUT}
 
 	${IPKG_HOST} update
-	${IPKG_HOST} -nodeps install ${HOST_INSTALL}
+	${IPKG_HOST} -force-depends install ${HOST_INSTALL}
 
 	${IPKG_TARGET} update
 	${IPKG_TARGET} install ${TARGET_INSTALL}

@@ -1,13 +1,11 @@
-DESCRIPTION = "SDK packages"
-PR = "r16"
+DESCRIPTION = "Target packages for the standalone SDK (external toolchain)"
+PR = "r0"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
-PACKAGES = "\
-    task-sdk-bare \
-    "
+PACKAGES = "${PN}"
 
-RDEPENDS_task-sdk-bare = "\
+RDEPENDS_${PN} = "\
     glibc \
     glibc-dev \
     glibc-utils \
@@ -21,8 +19,4 @@ RDEPENDS_task-sdk-bare = "\
     locale-base-en-gb \
     libgcc \
     libstdc++ \
-    "
-
-RRECOMMENDS_task-sdk-bare = "\
-    glibc-binary-localedata-en-gb \
     "
