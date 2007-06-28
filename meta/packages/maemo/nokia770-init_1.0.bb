@@ -2,18 +2,17 @@ LICENSE    = "GPL"
 PR         = "r6"
 
 DEPENDS    = "base-passwd"
-#RDEPENDS   = "hotplug"
 
 SRC_URI    = "file://fixup-770.sh"
 
-FILES_${PN} = "${sysconfdir} ${libdir}"
+COMPATIBLE_MACHINE = "(nokia700|nokia800)"
 
 inherit update-rc.d
-
 
 INITSCRIPT_NAME = "fixup-770.sh"
 INITSCRIPT_PARAMS = "defaults 01"
 
+FILES_${PN} = "${sysconfdir} ${libdir}"
 
 do_install () {
         install -d ${D}${sysconfdir}/init.d
