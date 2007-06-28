@@ -3,9 +3,9 @@
 #
 
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r8"
+PR = "r9"
 
-PACKAGES = "task-base"
+PACKAGES = "task-base task-base-dbg"
 
 ALLOW_EMPTY = "1"
 
