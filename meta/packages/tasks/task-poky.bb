@@ -3,18 +3,27 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r3"
+PR = "r4"
 
 PACKAGES = "\
-    task-poky-base \
-    task-poky-base-dbg \
-    task-poky-base-dev \
-    task-poky-standard \
-    task-poky-standard-dbg \
-    task-poky-standard-dev \
-    task-poky-boot-extras \
-    task-poky-boot-extras-dbg \
-    task-poky-boot-extras-dev \
+    task-poky-apps-console \
+    task-poky-apps-console-dbg \
+    task-poky-apps-console-dev \
+    task-poky-apps-x11-core \
+    task-poky-apps-x11-core-dbg \
+    task-poky-apps-x11-core-dev \
+    task-poky-apps-x11-games \
+    task-poky-apps-x11-games-dbg \
+    task-poky-apps-x11-games-dev \
+    task-poky-apps-x11-pimlico \
+    task-poky-apps-x11-pimlico-dbg \
+    task-poky-apps-x11-pimlico-dev \
+    task-poky-x11-base \
+    task-poky-x11-base-dbg \
+    task-poky-x11-base-dev \
+    task-poky-x11-sato \
+    task-poky-x11-sato-dbg \
+    task-poky-x11-sato-dev \
     task-poky-devtools \
     task-poky-devtools-dbg \
     task-poky-devtools-dev \
@@ -32,11 +41,13 @@ XSERVER ?= "xserver-kdrive-fbdev"
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-poky-boot-extras = "\
-    task-base"
+RDEPENDS_task-poky-apps-console = "\
+    avahi-daemon \
+    dropbear \
+    portmap \
+    psplash"
 
-RDEPENDS_task-poky-base = "\
-    psplash \
+RDEPENDS_task-poky-x11-base = "\
     matchbox-common \
     matchbox-wm \
     matchbox-keyboard \
@@ -51,46 +62,38 @@ RDEPENDS_task-poky-base = "\
     xauth \
     xhost \
     xset \
-    xrandr \
-    udev \
-    sysfsutils \
-    gdk-pixbuf-loader-png \
-    gdk-pixbuf-loader-gif \
-    gdk-pixbuf-loader-xpm \
-    gdk-pixbuf-loader-jpeg \
-    pango-module-basic-x \
-    pango-module-basic-fc \
-    gtk+ "
+    xrandr"
 
-RDEPENDS_task-poky-standard = "\
+RDEPENDS_task-poky-apps-x11-core = "\
     leafpad \
-    dropbear \
-    portmap \
-    matchbox-desktop \
-    matchbox-sato \
-    matchbox-keyboard \
-    matchbox-stroke \
-    matchbox-config-gtk \
-    matchbox-themes-gtk \		
-    matchbox-applet-startup-monitor \
-    xcursor-transparent-theme \
-    sato-icon-theme \
-    settings-daemon \
-    gtk-sato-engine \
+    pcmanfm \
+    rxvt-unicode \
+    screenshot \
+    "
+
+RDEPENDS_task-poky-apps-x11-games = "\
+    puzzles"
+
+RDEPENDS_task-poky-apps-x11-pimlico = "\
     eds-dbus \
     contacts \
     dates \
     tasks \
     web \
-    pcmanfm \
-    puzzles \
-    rxvt-unicode \
-    screenshot \
-    avahi-daemon \
-    gnome-vfs \
-    gnome-vfs-plugin-file \
-    gnome-vfs-plugin-http"
-#    matchbox-applet-inputmanager 
+    "
+
+RDEPENDS_task-poky-x11-sato = "\
+    matchbox-desktop \
+    matchbox-sato \
+    matchbox-keyboard \
+    matchbox-stroke \
+    matchbox-config-gtk \
+    matchbox-themes-gtk \
+    matchbox-applet-startup-monitor \
+    xcursor-transparent-theme \
+    sato-icon-theme \
+    settings-daemon \
+    gtk-sato-engine"
 
 RDEPENDS_task-poky-devtools = "\
     oprofile \
@@ -99,6 +102,7 @@ RDEPENDS_task-poky-devtools = "\
     strace \
     less \
     lttng-viewer"
+
 RRECOMMENDS_task-poky-devtools = "\
     kernel-module-oprofile"
 
@@ -118,9 +122,3 @@ RDEPENDS_task-poky-nfs-server = "\
 # rpcinfo can be useful
 RRECOMMENDS_task-poky-nfs-server = "\
     glibc-utils"
-
-#    minimo \
-#    teleport \
-#    xst \
-#    libgtkstylus \
-#    xrdb \
