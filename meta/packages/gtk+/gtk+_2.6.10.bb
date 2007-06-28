@@ -1,11 +1,6 @@
-DESCRIPTION = "GTK+ is a multi-platform toolkit for creating graphical user interfaces. Offering a complete \
-set of widgets, GTK+ is suitable for projects ranging from small one-off projects to complete application suites."
-HOMEPAGE = "http://www.gtk.org"
-SECTION = "libs"
-LICENSE = "LGPL"
-PRIORITY = "optional"
-DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc libgcrypt"
-PR = "r7"
+require gtk+.inc
+
+PR = "r8"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
            file://no-demos.patch;patch=1 \
@@ -22,32 +17,6 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
 	   file://filechooser-default.patch;patch=1 \
 	   "
 
-inherit autotools pkgconfig
-
-FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
-	${bindir}/gtk-query-immodules-2.0 \
-	${bindir}/gtk-update-icon-cache \
-	${libdir}/lib*.so.* \
-	${datadir}/themes ${sysconfdir} \
-	${libdir}/gtk-2.0/${LIBV}/engines/libpixmap.so"
-FILES_${PN}-dev += " \
-        ${datadir}/gtk-2.0/include \
-	${libdir}/gtk-2.0/include \
-	${libdir}/gtk-2.0/${LIBV}/loaders/*.la \
-	${libdir}/gtk-2.0/${LIBV}/immodules/*.la \
-	${libdir}/gtk-2.0/${LIBV}/engines/*.la \
-	${bindir}/gdk-pixbuf-csource"
-FILES_${PN}-dbg += " \
-        ${libdir}/gtk-2.0/${LIBV}/loaders/.debug/* \
-	${libdir}/gtk-2.0/${LIBV}/immodules/.debug/* \
-	${libdir}/gtk-2.0/${LIBV}/engines/.debug/*"
-
-
-RRECOMMENDS_${PN} = "glibc-gconv-iso8859-1 ttf-dejavu-sans"
-RRECOMMENDS_${PN}_angstrom = "glibc-gconv-iso8859-1 ttf-dejavu-sans gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm"
-RRECOMMENDS_${PN}_openzaurus = "glibc-gconv-iso8859-1 ttf-dejavu-sans gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm"
-RRECOMMENDS_${PN}_poky = "glibc-gconv-iso8859-1"
-
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest"
 
 LIBV = "2.4.0"
@@ -61,30 +30,6 @@ do_configure_prepend() {
         done
 }
 
-do_stage () {
-	oe_libinstall -so -C gtk libgtk-x11-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gdk libgdk-x11-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C contrib/gdk-pixbuf-xlib libgdk_pixbuf_xlib-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gdk-pixbuf libgdk_pixbuf-2.0 ${STAGING_LIBDIR}
-
-	autotools_stage_includes
-
-	mkdir -p ${STAGING_LIBDIR}/gtk-2.0/include
-	install -m 0644 gdk/gdkconfig.h ${STAGING_LIBDIR}/gtk-2.0/include/gdkconfig.h
-
-	install -m 0644 m4macros/gtk-2.0.m4 ${STAGING_DATADIR}/aclocal/
-}
-
-do_install_append () {
-	install -d ${D}${sysconfdir}/gtk-2.0
-}
-
-postinst_prologue() {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
-}
 
 PACKAGES_DYNAMIC = "gdk-pixbuf-loader-* gtk-immodule-*"
 
