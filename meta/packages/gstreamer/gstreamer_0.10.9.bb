@@ -4,8 +4,8 @@ SECTION = "multimedia"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
-DEPENDS = "glib-2.0 gettext-native libxml2 bison-native"
-PR = "r3"
+DEPENDS = "glib-2.0 gettext-native libxml2 bison-native flex-native"
+PR = "r4"
 
 inherit autotools pkgconfig
 
