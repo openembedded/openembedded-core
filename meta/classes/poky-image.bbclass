@@ -51,17 +51,21 @@ DISTRO_TASKS += '\
     ${@base_contains("IMAGE_FEATURES", ["apps-x11-pimlico", "dbg-pkgs"], "task-poky-apps-x11-pimlico-dbg", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["apps-x11-pimlico", "dev-pkgs"], "task-poky-apps-x11-pimlico-dev", "",d)} \
     \
-    ${@base_contains("IMAGE_FEATURES", "dev-tools", "task-poky-sdk", "",d)} \    
-    ${@base_contains("IMAGE_FEATURES", ["dev-tools", "dbg-pkgs"], "task-poky-sdk-dbg", "",d)} \
-    ${@base_contains("IMAGE_FEATURES", ["dev-tools", "dev-pkgs"], "task-poky-sdk-dev", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", "tools-debug", "task-poky-tools-debug", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["tools-debug", "dbg-pkgs"], "task-poky-tools-debug-dbg", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["tools-debug", "dev-pkgs"], "task-poky-tools-debug-dev", "",d)} \
     \
-    ${@base_contains("IMAGE_FEATURES", "dbg-tools", "task-poky-devtools", "",d)} \
-    ${@base_contains("IMAGE_FEATURES", ["dbg-tools", "dbg-pkgs"], "task-poky-devtools-dbg", "",d)} \
-    ${@base_contains("IMAGE_FEATURES", ["dbg-tools", "dev-pkgs"], "task-poky-devtools-dev", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", "tools-profile", "task-poky-tools-profile", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["tools-profile", "dbg-pkgs"], "task-poky-tools-profile-dbg", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["tools-profile", "dev-pkgs"], "task-poky-tools-profile-dev", "",d)} \
     \
-    ${@base_contains("IMAGE_FEATURES", "test-tools", "task-poky-testapps", "",d)} \
-    ${@base_contains("IMAGE_FEATURES", ["test-tools", "dbg-pkgs"], "task-poky-testapps-dbg", "",d)} \
-    ${@base_contains("IMAGE_FEATURES", ["test-tools", "dev-pkgs"], "task-poky-testapps-dev", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", "tools-testapps", "task-poky-tools-testapps", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["tools-testapps", "dbg-pkgs"], "task-poky-testapps-dbg", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["tools-testapps", "dev-pkgs"], "task-poky-testapps-dev", "",d)} \
+    \
+    ${@base_contains("IMAGE_FEATURES", "tools-sdk", "task-poky-sdk", "",d)} \    
+    ${@base_contains("IMAGE_FEATURES", ["tools-sdk", "dbg-pkgs"], "task-poky-sdk-dbg", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["tools-sdk", "dev-pkgs"], "task-poky-sdk-dev", "",d)} \
     \
     ${@base_contains("IMAGE_FEATURES", "nfs-server", "task-poky-nfs-server", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dbg-pkgs"], "task-poky-nfs-server-dbg", "",d)} \

@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r4"
+PR = "r5"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -24,12 +24,15 @@ PACKAGES = "\
     task-poky-x11-sato \
     task-poky-x11-sato-dbg \
     task-poky-x11-sato-dev \
-    task-poky-devtools \
-    task-poky-devtools-dbg \
-    task-poky-devtools-dev \
-    task-poky-testapps \
-    task-poky-testapps-dbg \
-    task-poky-testapps-dev \
+    task-poky-tools-debug \
+    task-poky-tools-debug-dbg \
+    task-poky-tools-debug-dev \
+    task-poky-tools-profile \
+    task-poky-tools-profile-dbg \
+    task-poky-tools-profile-dev \
+    task-poky-tools-testapps \
+    task-poky-tools-testapps-dbg \
+    task-poky-tools-testapps-dev \
     task-poky-nfs-server \
     task-poky-nfs-server-dbg \
     task-poky-nfs-server-dev \
@@ -41,11 +44,13 @@ XSERVER ?= "xserver-kdrive-fbdev"
 
 ALLOW_EMPTY = "1"
 
+
 RDEPENDS_task-poky-apps-console = "\
     avahi-daemon \
     dropbear \
     portmap \
     psplash"
+
 
 RDEPENDS_task-poky-x11-base = "\
     matchbox-common \
@@ -64,23 +69,25 @@ RDEPENDS_task-poky-x11-base = "\
     xset \
     xrandr"
 
+
 RDEPENDS_task-poky-apps-x11-core = "\
     leafpad \
     pcmanfm \
     rxvt-unicode \
-    screenshot \
-    "
+    screenshot"
+
 
 RDEPENDS_task-poky-apps-x11-games = "\
     puzzles"
+
 
 RDEPENDS_task-poky-apps-x11-pimlico = "\
     eds-dbus \
     contacts \
     dates \
     tasks \
-    web \
-    "
+    web"
+
 
 RDEPENDS_task-poky-x11-sato = "\
     matchbox-desktop \
@@ -95,18 +102,27 @@ RDEPENDS_task-poky-x11-sato = "\
     settings-daemon \
     gtk-sato-engine"
 
-RDEPENDS_task-poky-devtools = "\
+
+RDEPENDS_task-poky-tools-debug = "\
+    gdb \    
+    strace"
+
+
+RDEPENDS_task-poky-tools-profile = "\
+    exmap-console \
+    exmap-server \
     oprofile \
     oprofileui-server \
-    gdb \    
-    strace \
-    less \
+    lttng-control \
     lttng-viewer"
 
-RRECOMMENDS_task-poky-devtools = "\
+RDEPENDS_task-poky-tools-profile_qemux86 += "valgrind"
+
+RRECOMMENDS_task-poky-tools-profile = "\
     kernel-module-oprofile"
 
-RDEPENDS_task-poky-testapps = "\
+
+RDEPENDS_task-poky-tools-testapps = "\
     tslib-calibrate \
     tslib-tests \
     lrzsz \
@@ -114,7 +130,9 @@ RDEPENDS_task-poky-testapps = "\
     alsa-utils-aplay \
     owl-video-widget \
     gst-meta-video \
-    gst-meta-audio"
+    gst-meta-audio \
+    xvideo-tests"
+
 
 RDEPENDS_task-poky-nfs-server = "\
     nfs-utils"
