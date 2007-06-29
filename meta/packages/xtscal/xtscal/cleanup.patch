@@ -1,0 +1,95 @@
+---
+ main.c |   45 +++++----------------------------------------
+ 1 file changed, 5 insertions(+), 40 deletions(-)
+
+Index: xtscal-0.6.3/main.c
+===================================================================
+--- xtscal-0.6.3.orig/main.c	2007-06-29 16:49:14.000000000 +0100
++++ xtscal-0.6.3/main.c	2007-06-29 16:53:11.000000000 +0100
+@@ -52,8 +52,6 @@ int flag_debug;
+ int rotation = 0;
+ int error_base, event_base;
+ 
+-int using_xcalibrate;
+-
+ int moving;
+ 
+ #define CROSSHAIR_SIZE	25
+@@ -63,7 +61,6 @@ int moving;
+ #define ENOUGH 5
+ #define MAX_SAMPLES 40
+ 
+-#define RAW_DEVICE "/dev/h3600_tsraw"
+ #define FONTNAME "sans-10"
+ 
+ struct point 
+@@ -291,8 +288,6 @@ set_calibration (calibration *cal)
+   int xtrans, ytrans, xscale, yscale, xyscale, yxscale;
+   calibration ocal = *cal;
+ 
+-  if (using_xcalibrate)
+-    {
+       FILE *fp;
+       if (flag_debug)
+ 	printf ("constants are: %d %d %d %d %d %d %d\n", cal->a[1], cal->a[2], cal->a[0], cal->a[4], cal->a[5], cal->a[3], cal->a[6]);
+@@ -304,29 +299,6 @@ set_calibration (calibration *cal)
+ 	}
+       fprintf (fp, "%d %d %d %d %d %d %d\n", cal->a[1], cal->a[2], cal->a[0], cal->a[4], cal->a[5], cal->a[3], cal->a[6]);
+       fclose (fp); 
+-      return;
+-    }
+-
+-  xtrans = cal->a[0] / cal->a[6];
+-  ytrans = cal->a[3] / cal->a[6];
+-  xscale = cal->a[1] * 256 / cal->a[6];
+-  yscale = cal->a[5] * 256 / cal->a[6];
+-  xyscale = cal->a[2] * 256 / cal->a[6];
+-  yxscale = cal->a[4] * 256 / cal->a[6];
+-  
+-  tc.xtrans = xtrans;
+-  tc.ytrans = ytrans;
+-  tc.xscale = xscale;
+-  tc.yscale = yscale;
+-  tc.xyswap = 0;
+-
+-  printf ("%d %d %d %d %d\n", tc.xscale, tc.xtrans, tc.yscale, tc.ytrans, tc.xyswap);
+-
+-  if (ioctl (ts_fd, TS_SET_CAL, (void *)&tc) != 0)
+-    {
+-      perror ("TS_SET_CAL");
+-      exit (1);
+-    }
+ }
+ 
+ void
+@@ -531,8 +503,11 @@ main (int argc, char *argv[])
+ 	  fprintf (stderr, "failed to set raw mode: error %d\n", r);
+ 	  exit (1);
+ 	}
+-
+-      using_xcalibrate = 1;
++    }
++  else
++    {
++      perror ("XCALIBRATE extension missing");
++      exit (1);
+     }
+ 
+   have_xrandr = xrr_supported ();
+@@ -693,16 +668,6 @@ main (int argc, char *argv[])
+ 
+   next_event ();
+ 
+-  if (!using_xcalibrate)
+-    {
+-      ts_fd = open (RAW_DEVICE, O_RDONLY);
+-      if (ts_fd < 0)
+-	{
+-	  perror (RAW_DEVICE);
+-	  exit (1);
+-	}
+-    }
+-
+   max_fd = (xfd > ts_fd) ? xfd : ts_fd;
+ 
+   for (;;)

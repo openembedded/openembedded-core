@@ -1,0 +1,30 @@
+---
+ xtscal.in |   17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
+
+Index: xtscal-0.6.3/xtscal.in
+===================================================================
+--- xtscal-0.6.3.orig/xtscal.in	2007-06-29 16:46:18.000000000 +0100
++++ xtscal-0.6.3/xtscal.in	2007-06-29 16:48:18.000000000 +0100
+@@ -1,19 +1,6 @@
+ #!/bin/sh
+ 
+-module_id() {
+-    # Get model name
+-    echo `grep "^Hardware" /proc/cpuinfo | sed -e "s/.*: *//" | tr a-z A-Z`
+-}
+-
+-case `module_id` in
+-	"HP IPAQ H3100" | "HP IPAQ H3800" )
+-		ARGS="-rotate 90" ;;
+-	"HP IPAQ H3600" | "HP IPAQ H3700" | "HP IPAQ H3900" | *COLLIE | *POODLE)
+-		ARGS="-rotate 270" ;;
+-	# H2200: works without rotation
+-esac
++. /etc/formfactor/config
+ 
+ # the things we do for autoconf
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-exec @libexecdir@/xtscal.bin $ARGS $*
++exec @libexecdir@/xtscal.bin -rotate ${DISPLAY_ORIENTATION} $*
