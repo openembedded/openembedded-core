@@ -3,7 +3,7 @@ LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 PV = "0.1+svn${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 inherit autotools pkgconfig
 
@@ -19,9 +19,7 @@ do_install_append () {
     for prog in *; do
 	if [ -x $prog ]; then
             # Convert prog to Title Case
-            firstchar=${prog:0:1}
-            title=`echo "$firstchar" | tr a-z A-Z`
-            title="$title${prog:1}"
+            title=$(echo $prog | sed 's/\(^\| \)./\U&/g')
 	    echo "making ${D}/${datadir}/applications/$prog.desktop"
 	    cat <<STOP > ${D}/${datadir}/applications/$prog.desktop
 [Desktop Entry]
