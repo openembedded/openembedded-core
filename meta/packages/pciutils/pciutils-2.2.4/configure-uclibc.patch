@@ -1,0 +1,21 @@
+Index: pciutils-2.2.4/lib/configure
+===================================================================
+--- pciutils-2.2.4.orig/lib/configure	2007-05-16 23:37:38.000000000 +0200
++++ pciutils-2.2.4/lib/configure	2007-05-17 16:35:24.000000000 +0200
+@@ -39,6 +39,16 @@
+ 	sys=linux
+ fi
+ 
++if [ "$host" = "linux--uclibc" ]
++then
++	sys=linux
++fi
++
++if [ "$host" = "linux--uclibcgnueabi" ]
++then
++	sys=linux
++fi
++
+ c=config.h
+ m=config.mk
+ echo >$c "#define PCI_ARCH_`echo $cpu | tr 'a-z' 'A-Z'`"
