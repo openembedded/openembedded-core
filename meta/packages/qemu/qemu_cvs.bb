@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.9.0+cvs${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 FILESDIR = "${WORKDIR}"
 
@@ -29,7 +29,9 @@ SRC_URI = "\
     file://66_tls_ld.patch;patch=1;pnum=0 \
     file://91-oh-sdl-cursor.patch;patch=1;pnum=0 \
     file://93-oh-pl110-rgb.patch;patch=1;pnum=0 \
-    file://94-oh-arm-nptl.patch;patch=1;pnum=1"
+    file://qemu-0.9.0-nptl.patch;patch=1 \
+    file://qemu-0.9.0-nptl-update.patch;patch=1 \
+    file://fix_segfault.patch;patch=1"
 
 #    svn://svn.o-hand.com/repos/misc/trunk/qemu-packaging/qemu;module=debian;proto=http;srcdate=20070119 \
 #    file://debian/patches/21_net_soopts.patch;patch=1;pnum=0 \
@@ -43,6 +45,7 @@ SRC_URI = "\
 S = "${WORKDIR}/qemu"
 
 #EXTRA_OECONF = "--disable-sdl"
+#EXTRA_OECONF = "--disable-gfx-check --target-list=arm-linux-user"
 EXTRA_OECONF = "--disable-gfx-check"
 
 inherit autotools

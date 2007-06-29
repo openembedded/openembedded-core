@@ -47,16 +47,3 @@ Index: linux-user/syscall.c
  #endif
  #ifdef TARGET_NR_setxattr
      case TARGET_NR_setxattr:
-Index: Makefile.target
-===================================================================
---- Makefile.target.orig	2007-06-13 11:51:52.000000000 +0100
-+++ Makefile.target	2007-06-13 11:51:54.000000000 +0100
-@@ -215,7 +215,7 @@ OP_LDFLAGS+=$(OS_LDFLAGS) $(ARCH_LDFLAGS
- #########################################################
- 
- CPPFLAGS+=-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
--LIBS+=-lm
-+LIBS+=-lm -lrt
- ifndef CONFIG_USER_ONLY
- LIBS+=-lz
- endif
