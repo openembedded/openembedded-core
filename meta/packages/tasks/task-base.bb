@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r37"
+PR = "r38"
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
@@ -11,7 +11,6 @@ PACKAGES = ' \
             ${@base_contains("MACHINE_FEATURES", "acpi", "task-base-acpi task-base-acpi-dev task-base-acpi-dbg", "",d)} \
             ${@base_contains("MACHINE_FEATURES", "irda", "task-base-irda task-base-irda-dev task-base-irda-dbg", "",d)} \
             ${@base_contains("MACHINE_FEATURES", "pci", "task-base-pci task-base-pci-dev task-base-pci-dbg", "",d)} \
-            ${@base_contains("MACHINE_FEATURES", "phone", "task-base-phone task-base-phone-dev task-base-phone-dbg", "",d)} \
             ${@base_contains("MACHINE_FEATURES", "alsa", "task-base-alsa task-base-alsa-dev task-base-alsa-dbg", "", d)} \
             ${@base_contains("MACHINE_FEATURES", "apm", "task-base-apm task-base-apm-dev task-base-apm-dbg", "", d)} \
             ${@base_contains("MACHINE_FEATURES", "ext2", "task-base-ext2 task-base-ext2-dev task-base-ext2-dbg", "", d)} \
@@ -48,16 +47,6 @@ PACKAGE_ARCH_task-base-apm = "${MACHINE_ARCH}"
 PACKAGE_ARCH_task-base-pcmcia = "${MACHINE_ARCH}"
 
 #
-# linux-hotplug or none
-#
-HOTPLUG ?= " "
-
-#
-# dropbear, openssh or none
-#
-DISTRO_SSH_DAEMON ?= "dropbear"
-
-#
 # pcmciautils for >= 2.6.13-rc1, pcmcia-cs for others
 #
 PCMCIA_MANAGER ?= "${@base_contains('MACHINE_FEATURES', 'kernel26','pcmciautils','pcmcia-cs',d)} "
@@ -72,11 +61,8 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 # task-base contain stuff needed for base system (machine related)
 #
 RDEPENDS_task-base = "\
-    task-poky-boot \
     task-distro-base \
     task-machine-base \
-    ${DISTRO_SSH_DAEMON} \
-    ${HOTPLUG} \
     \
     task-base-kernel26 \
     ${@base_contains('MACHINE_FEATURES', 'apm', 'task-base-apm', '',d)} \
@@ -97,7 +83,6 @@ RDEPENDS_task-base = "\
     ${@base_contains('DISTRO_FEATURES', 'ipv6', 'task-base-ipv6', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'ipsec', 'task-base-ipsec', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'ppp', 'task-base-ppp', '',d)} \
-    ${@base_contains('DISTRO_FEATURES', 'raid', 'task-base-raid', '',d)} \
     "
 
 RDEPENDS_task-base-extended = "\
