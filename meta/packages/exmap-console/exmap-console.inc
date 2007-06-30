@@ -11,7 +11,7 @@ inherit autotools
 
 MYPV := "${PV}"
 
-PACKAGES += "exmap-server kernel-module-exmap"
+PACKAGES =+ "exmap-server kernel-module-exmap"
 
 FILES_exmap-console = "${bindir}/exmap ${bindir}/exmapd"
 PACKAGE_ARCH_exmap-console = "${TARGET_ARCH}"
