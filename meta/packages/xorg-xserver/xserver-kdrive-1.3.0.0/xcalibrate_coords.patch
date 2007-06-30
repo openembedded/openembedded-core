@@ -1,0 +1,122 @@
+---
+ Xext/xcalibrate.c      |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
+ hw/kdrive/src/kdrive.h |    3 +++
+ hw/kdrive/src/kinput.c |   12 ++++++++++++
+ 3 files changed, 61 insertions(+), 1 deletion(-)
+
+Index: xorg-server-1.3.0.0/Xext/xcalibrate.c
+===================================================================
+--- xorg-server-1.3.0.0.orig/Xext/xcalibrate.c	2007-06-29 17:30:03.000000000 +0100
++++ xorg-server-1.3.0.0/Xext/xcalibrate.c	2007-06-30 14:04:40.000000000 +0100
+@@ -166,7 +166,6 @@ ProcXCalibrateSetRawMode (ClientPtr clie
+   return (client->noClientException);
+ }
+ 
+-
+ static int
+ SProcXCalibrateSetRawMode (ClientPtr client)
+ {
+@@ -180,6 +179,47 @@ SProcXCalibrateSetRawMode (ClientPtr cli
+   return ProcXCalibrateSetRawMode(client);
+ }
+ 
++static int
++ProcXCalibrateScreenToCoord (ClientPtr client)
++{
++  REQUEST(xXCalibrateScreenToCoordReq);
++  xXCalibrateScreenToCoordReply rep;
++
++  REQUEST_SIZE_MATCH (xXCalibrateScreenToCoordReq);
++
++  memset (&rep, 0, sizeof (rep));
++  rep.type = X_Reply;
++  rep.sequenceNumber = client->sequence;
++  rep.x = stuff->x;
++  rep.y = stuff->y;
++
++  KdScreenToMouseCoords(&rep.x, &rep.y);
++
++  if (client->swapped)
++    {
++      int n;
++
++      swaps (&rep.x, n);
++      swaps (&rep.y, n);
++    }
++  WriteToClient(client, sizeof (rep), (char *) &rep);
++  return (client->noClientException);
++}
++
++static int
++SProcXCalibrateScreenToCoord (ClientPtr client)
++{
++  REQUEST(xXCalibrateScreenToCoordReq);
++  int n;
++
++  REQUEST_SIZE_MATCH (xXCalibrateScreenToCoordReq);
++
++  swaps(&stuff->x, n);
++  swaps(&stuff->y, n);
++
++  return ProcXCalibrateScreenToCoord(client);
++}
++
+ static void
+ XCalibrateResetProc (ExtensionEntry *extEntry) 
+ { 
+@@ -194,6 +234,9 @@ ProcXCalibrateDispatch (ClientPtr client
+         return ProcXCalibrateQueryVersion(client);
+     case X_XCalibrateRawMode:
+         return ProcXCalibrateSetRawMode(client);
++    case X_XCalibrateScreenToCoord:
++        return ProcXCalibrateScreenToCoord(client);
++
+     default: break;
+     }
+ 
+@@ -213,6 +256,8 @@ SProcXCalibrateDispatch (ClientPtr clien
+         return SProcXCalibrateQueryVersion(client);
+     case X_XCalibrateRawMode:
+         return SProcXCalibrateSetRawMode(client);
++    case X_XCalibrateScreenToCoord:
++        return SProcXCalibrateScreenToCoord(client);
+ 
+     default: break;
+     }
+Index: xorg-server-1.3.0.0/hw/kdrive/src/kdrive.h
+===================================================================
+--- xorg-server-1.3.0.0.orig/hw/kdrive/src/kdrive.h	2007-06-30 13:43:45.000000000 +0100
++++ xorg-server-1.3.0.0/hw/kdrive/src/kdrive.h	2007-06-30 13:45:03.000000000 +0100
+@@ -746,6 +746,9 @@ void
+ KdSetMouseMatrix (KdMouseMatrix *matrix);
+ 
+ void
++KdScreenToMouseCoords (int *x, int *y);
++
++void
+ KdComputeMouseMatrix (KdMouseMatrix *matrix, Rotation randr, int width, int height);
+     
+ void
+Index: xorg-server-1.3.0.0/hw/kdrive/src/kinput.c
+===================================================================
+--- xorg-server-1.3.0.0.orig/hw/kdrive/src/kinput.c	2007-06-29 17:30:16.000000000 +0100
++++ xorg-server-1.3.0.0/hw/kdrive/src/kinput.c	2007-06-30 15:52:16.000000000 +0100
+@@ -381,6 +381,18 @@ KdSetMouseMatrix (KdMouseMatrix *matrix)
+ }
+ 
+ void
++KdScreenToMouseCoords (int *x, int *y)
++{
++    int	(*m)[3] = kdMouseMatrix.matrix;
++    int div = m[0][1] * m[1][0] - m[1][1] * m[0][0];
++    int sx = *x;
++    int sy = *y;
++
++    *x = (m[0][1] * sy - m[0][1] * m[1][2] + m[1][1] * m[0][2] - m[1][1] * sx) / div;
++    *y = (m[1][0] * sx + m[0][0] * m[1][2] - m[1][0] * m[0][2] - m[0][0] * sy) / div;
++}
++
++void
+ KdComputeMouseMatrix (KdMouseMatrix *m, Rotation randr, int width, int height)
+ {
+     int		    x_dir = 1, y_dir = 1;

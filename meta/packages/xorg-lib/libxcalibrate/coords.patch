@@ -1,0 +1,50 @@
+---
+ xcalibrate.c |   26 ++++++++++++++++++++++++++
+ xcalibrate.h |    2 ++
+ 2 files changed, 28 insertions(+)
+
+Index: XCalibrate/xcalibrate.c
+===================================================================
+--- XCalibrate.orig/xcalibrate.c	2007-06-30 14:12:22.000000000 +0100
++++ XCalibrate/xcalibrate.c	2007-06-30 14:18:10.000000000 +0100
+@@ -227,3 +227,29 @@ XCalibrateSetRawMode (Display *dpy, Bool
+   SyncHandle ();
+   return 0;
+ }
++
++Status 
++XCalibrateScreenToCoord (Display *dpy, int *x, int *y)
++{
++  XExtDisplayInfo		*info = XCalibrateFindDisplay (dpy);
++  xXCalibrateScreenToCoordReq *req;
++  xXCalibrateScreenToCoordReply	rep;
++  LockDisplay (dpy);
++  GetReq (XCalibrateScreenToCoord, req);
++  req->reqType = info->codes->major_opcode;
++  req->xCalibrateReqType = X_XCalibrateScreenToCoord;
++  req->x = *x;
++  req->y = *y;
++  if (!_XReply (dpy, (xReply *) &rep, 0, xFalse)) 
++    {
++      UnlockDisplay (dpy);
++      SyncHandle ();
++      return 1;
++    }
++  *x = rep.x;
++  *y = rep.y;
++  UnlockDisplay (dpy);
++  SyncHandle ();
++  return 0;
++}
++
+Index: XCalibrate/xcalibrate.h
+===================================================================
+--- XCalibrate.orig/xcalibrate.h	2007-06-30 14:16:16.000000000 +0100
++++ XCalibrate/xcalibrate.h	2007-06-30 14:16:38.000000000 +0100
+@@ -43,4 +43,6 @@ Status XCalibrateQueryVersion (Display *
+ 
+ Status XCalibrateSetRawMode (Display *dpy, Bool enable);
+ 
++Status XCalibrateScreenToCoord (Display *dpy, int *x, int *y);
++
+ #endif

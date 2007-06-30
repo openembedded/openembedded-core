@@ -4,12 +4,14 @@ PRIORITY = "optional"
 LICENSE = "BSD-X"
 
 PV = "0.0+git${SRCDATE}"
+PR = "r1"
 
 DEPENDS = "virtual/libx11 calibrateproto libxext"
 
 FILES_${PN}-locale += "${datadir}/X11/locale"
 
-SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libXCalibrate;protocol=git;tag=4be232e30cd33a44a1ce6d3ec429ee6101540c62"
+SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libXCalibrate;protocol=git;tag=4be232e30cd33a44a1ce6d3ec429ee6101540c62 \
+           file://coords.patch;patch=1"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig

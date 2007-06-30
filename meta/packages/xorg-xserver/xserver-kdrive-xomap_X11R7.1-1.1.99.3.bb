@@ -1,5 +1,5 @@
 LICENSE = "MIT"
-DEPENDS = "tslib xproto libxdmcp xextproto xtrans libxau virtual/libx11 libxext libxrandr fixesproto damageproto libxfont resourceproto compositeproto xcalibrateext recordproto videoproto scrnsaverproto xpext xsp libxkbfile dbus"
+DEPENDS = "tslib xproto libxdmcp xextproto xtrans libxau virtual/libx11 libxext libxrandr fixesproto damageproto libxfont resourceproto compositeproto calibrateproto recordproto videoproto scrnsaverproto xpext xsp libxkbfile dbus"
 
 PROVIDES = "virtual/xserver"
 PACKAGES =+ "xserver-kdrive-xomap"
@@ -7,7 +7,7 @@ SECTION = "x11/base"
 DESCRIPTION = "X server from freedesktop.org"
 DESCRIPTION_xserver-kdrive-xomap = "X server for the OMAP in the Nokia 800"
 
-PR = "r4"
+PR = "r5"
 
 COMPATIBLE_MACHINE = "nokia(800|770)"
 
@@ -22,7 +22,8 @@ SRC_URI = "http://repository.maemo.org/pool/maemo3.1/free/source/xorg-server_1.1
 	file://xcalibrate.patch;patch=1 \
 	file://fixups.patch;patch=1 \
 	file://button_only.patch;patch=1 \
-	file://calibrateext.patch;patch=1"
+	file://calibrateext.patch;patch=1 \
+	file://xcalibrate_coords.patch;patch=1"
 #	file://kdrive-evdev.patch;patch=1  \
 #	file://kdrive-use-evdev.patch;patch=1  \
 #	file://optional-xkb.patch;patch=1 \

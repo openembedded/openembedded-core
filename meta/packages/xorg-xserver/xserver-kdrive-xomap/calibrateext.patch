@@ -5,19 +5,6 @@
  2 files changed, 39 insertions(+), 31 deletions(-)
 
 
-Index: xorg-server-1.1.99.3/configure.ac
-===================================================================
---- xorg-server-1.1.99.3.orig/configure.ac	2007-01-30 00:22:41.000000000 +0000
-+++ xorg-server-1.1.99.3/configure.ac	2007-01-30 00:22:41.000000000 +0000
-@@ -717,7 +717,7 @@ fi
- 
- if test "x$XCALIBRATE" = xyes && test "$KDRIVE" = yes; then
-    AC_DEFINE(XCALIBRATE, 1, [Build XCalibrate extension])
--   REQUIRED_MODULES="$REQUIRED_MODULES xcalibrateproto"
-+   REQUIRED_MODULES="$REQUIRED_MODULES xcalibrateext"
- else
-    XCALIBRATE=no
- fi
 Index: xorg-server-1.1.99.3/hw/kdrive/linux/tslib.c
 ===================================================================
 --- xorg-server-1.1.99.3.orig/hw/kdrive/linux/tslib.c	2007-01-30 00:44:13.000000000 +0000
