@@ -1,7 +1,7 @@
 require apt.inc
 inherit native
 
-DEPENDS += "dpkg-native"
+DEPENDS += "dpkg-native curl-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/apt-${PV}"
 PACKAGES = ""
 USE_NLS = "no"
