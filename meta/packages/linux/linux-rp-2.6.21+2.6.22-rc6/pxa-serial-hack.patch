@@ -1,0 +1,90 @@
+---
+ drivers/serial/8250.c        |    5 +++++
+ drivers/serial/serial_core.c |    1 +
+ drivers/serial/serial_cs.c   |   12 +++++++++---
+ include/linux/serial_core.h  |    1 +
+ 4 files changed, 16 insertions(+), 3 deletions(-)
+
+Index: linux-2.6.20/drivers/serial/8250.c
+===================================================================
+--- linux-2.6.20.orig/drivers/serial/8250.c	2007-04-27 13:37:26.000000000 +0100
++++ linux-2.6.20/drivers/serial/8250.c	2007-04-27 13:38:16.000000000 +0100
+@@ -2429,7 +2429,12 @@
+ 	.driver_name		= "serial",
+ 	.dev_name		= "ttyS",
+ 	.major			= TTY_MAJOR,
++#ifdef CONFIG_SERIAL_PXA
++	.minor			= 64 + 4,
++	.name_base		= 4,
++#else
+ 	.minor			= 64,
++#endif
+ 	.nr			= UART_NR,
+ 	.cons			= SERIAL8250_CONSOLE,
+ };
+Index: linux-2.6.20/drivers/serial/serial_core.c
+===================================================================
+--- linux-2.6.20.orig/drivers/serial/serial_core.c	2007-02-04 18:44:54.000000000 +0000
++++ linux-2.6.20/drivers/serial/serial_core.c	2007-04-27 13:39:39.000000000 +0100
+@@ -2068,7 +2068,8 @@
+ 	printk(KERN_INFO "%s%s%s%d at %s (irq = %d) is a %s\n",
+ 	       port->dev ? port->dev->bus_id : "",
+ 	       port->dev ? ": " : "",
+-	       drv->dev_name, port->line, address, port->irq, uart_type(port));
++	       drv->dev_name, port->line + drv->name_base, address, port->irq,
++	       uart_type(port));
+ }
+ 
+ static void
+@@ -2183,6 +2184,7 @@
+ 	normal->owner		= drv->owner;
+ 	normal->driver_name	= drv->driver_name;
+ 	normal->name		= drv->dev_name;
++	normal->name_base	= drv->name_base;
+ 	normal->major		= drv->major;
+ 	normal->minor_start	= drv->minor;
+ 	normal->type		= TTY_DRIVER_TYPE_SERIAL;
+Index: linux-2.6.20/include/linux/serial_core.h
+===================================================================
+--- linux-2.6.20.orig/include/linux/serial_core.h	2007-02-04 18:44:54.000000000 +0000
++++ linux-2.6.20/include/linux/serial_core.h	2007-04-27 13:37:27.000000000 +0100
+@@ -341,6 +341,7 @@
+ 	struct module		*owner;
+ 	const char		*driver_name;
+ 	const char		*dev_name;
++	int			 name_base;
+ 	int			 major;
+ 	int			 minor;
+ 	int			 nr;
+Index: linux-2.6.20/drivers/serial/serial_cs.c
+===================================================================
+--- linux-2.6.20.orig/drivers/serial/serial_cs.c	2007-02-04 18:44:54.000000000 +0000
++++ linux-2.6.20/drivers/serial/serial_cs.c	2007-04-27 13:40:34.000000000 +0100
+@@ -390,7 +390,7 @@
+ 			kio_addr_t iobase, int irq)
+ {
+ 	struct uart_port port;
+-	int line;
++	int line, linestart;
+ 
+ 	memset(&port, 0, sizeof (struct uart_port));
+ 	port.iobase = iobase;
+@@ -411,10 +411,16 @@
+ 		return -EINVAL;
+ 	}
+ 
++#if CONFIG_SERIAL_PXA
++	linestart = 4;
++#else
++	linestart = 0;
++#endif
++
+ 	info->line[info->ndev] = line;
+-	sprintf(info->node[info->ndev].dev_name, "ttyS%d", line);
++	sprintf(info->node[info->ndev].dev_name, "ttyS%d", line+linestart);
+ 	info->node[info->ndev].major = TTY_MAJOR;
+-	info->node[info->ndev].minor = 0x40 + line;
++	info->node[info->ndev].minor = 0x40 + line + linestart;
+ 	if (info->ndev > 0)
+ 		info->node[info->ndev - 1].next = &info->node[info->ndev];
+ 	info->ndev++;
