@@ -4,7 +4,7 @@ SECTION = "x11/base"
 
 DEPENDS = "virtual/libx11 libxft libxcalibrate"
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${GPE_MIRROR}/xtscal-${PV}.tar.bz2 \
            file://change-cross.patch;patch=1 \
