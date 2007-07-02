@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.22-rc6
-# Sun Jul  1 18:49:40 2007
+# Sun Jul  1 22:44:06 2007
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -707,8 +707,24 @@ CONFIG_NETDEV_10000=y
 #
 # Wireless LAN
 #
-# CONFIG_WLAN_PRE80211 is not set
-# CONFIG_WLAN_80211 is not set
+CONFIG_WLAN_PRE80211=y
+# CONFIG_STRIP is not set
+# CONFIG_PCMCIA_WAVELAN is not set
+# CONFIG_PCMCIA_NETWAVE is not set
+CONFIG_WLAN_80211=y
+# CONFIG_PCMCIA_RAYCS is not set
+# CONFIG_LIBERTAS is not set
+CONFIG_HERMES=m
+# CONFIG_ATMEL is not set
+CONFIG_PCMCIA_HERMES=m
+CONFIG_PCMCIA_SPECTRUM=m
+CONFIG_AIRO_CS=m
+# CONFIG_PCMCIA_WL3501 is not set
+# CONFIG_USB_ZD1201 is not set
+CONFIG_HOSTAP=m
+CONFIG_HOSTAP_FIRMWARE=y
+# CONFIG_HOSTAP_FIRMWARE_NVRAM is not set
+CONFIG_HOSTAP_CS=m
 
 #
 # USB Network Adapters

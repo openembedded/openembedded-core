@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r0"
+PR = "r2"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -16,7 +16,7 @@ DEFAULT_PREFERENCE = "-1"
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.21.tar.bz2 \
-           http://www.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.22-rc6.bz2;patch=1 \
+           http://www.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.22-rc7.bz2;patch=1 \
            ${RPSRC}/lzo_kernel-r3.patch;patch=1 \
            ${RPSRC}/lzo_jffs2-r2.patch;patch=1 \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1 \
@@ -29,7 +29,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.21.tar.bz2 \
            ${RPSRC}/tsc2101-r16.patch;patch=1 \
            ${RPSRC}/hx2750_test1-r6.patch;patch=1 \
            ${RPSRC}/pxa_timerfix-r0.patch;patch=1 \
-           ${RPSRC}/input_power-r8.patch;patch=1 \
+           ${RPSRC}/input_power-r9.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r2.patch;patch=1 \
            ${RPSRC}/sharpsl_pm_fixes1-r0.patch;patch=1 \
            ${RPSRC}/pm_changes-r1.patch;patch=1 \
@@ -40,6 +40,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.21.tar.bz2 \
            ${RPSRC}/pxa27x_overlay-r5.patch;patch=1 \
            ${RPSRC}/w100_extaccel-r1.patch;patch=1 \
            ${RPSRC}/qemuarm_scsi_fix-r0.patch;patch=1 \
+           ${RPSRC}/pxa_cken_fixes-r0.patch;patch=1 \
            file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            ${RPSRC}/logo_oh-r0.patch.bz2;patch=1;status=unmergable \
