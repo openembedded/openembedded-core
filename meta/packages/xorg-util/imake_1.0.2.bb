@@ -4,3 +4,4 @@ DESCRIPTION = "imake utility"
 
 DEPENDS += " perl xproto"
 
+PE = "1"

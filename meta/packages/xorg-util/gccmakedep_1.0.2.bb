@@ -4,3 +4,4 @@ require xorg-util-common.inc
 
 #DEPENDS += " "
 
+PE = "1"

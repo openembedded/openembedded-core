@@ -4,3 +4,4 @@ require xorg-util-common.inc
 
 DEPENDS += " xproto"
 
+PE = "1"

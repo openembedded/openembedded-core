@@ -3,8 +3,9 @@ inherit native
 
 #DESCRIPTION = ""
 
-SRC_URI = "${XORG_MIRROR}/X11R7.0/src/util/makedepend-${PV}.tar.bz2"
-S="${WORKDIR}/makedepend-${PV}"
+XORG_PN = "makedepend"
+S = "${WORKDIR}/makedepend-${PV}"
 
 DEPENDS += " util-macros-native xproto-native"
 
+PE = "1"
