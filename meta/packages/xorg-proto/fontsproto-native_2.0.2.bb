@@ -1,9 +1,10 @@
+require xorg-proto-common.inc
 DESCRIPTION = "X protocol headers"
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
 PE = "1"
 
-SRC_URI = "${XORG_MIRROR}/X11R7.0/src/proto/fontsproto-${PV}.tar.bz2"
+XORG_PN = "fontsproto"
 S = "${WORKDIR}/fontsproto-${PV}"
 
 inherit native autotools pkgconfig
