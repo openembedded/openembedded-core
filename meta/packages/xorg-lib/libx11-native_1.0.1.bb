@@ -9,7 +9,9 @@ FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libx11"
 DEPENDS = "xproto-native xextproto-native libxau-native xtrans-native libxdmcp-native xcmiscproto-native xf86bigfontproto-native kbproto-native inputproto-native bigreqsproto-native util-macros-native"
 PROVIDES = "x11-native"
 
-SRC_URI = "${XORG_MIRROR}/X11R7.1/src/lib/libX11-${PV}.tar.bz2"
+XORG_PN = "libX11"
+
+SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-1.1.1.tar.bz2"
 S = "${WORKDIR}/libX11-${PV}"
 
 inherit native autotools pkgconfig

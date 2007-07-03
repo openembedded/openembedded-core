@@ -1,10 +1,11 @@
+require xorg-lib-common.inc
 SECTION = "x11/libs"
 PRIORITY = "optional"
 LICENSE = "BSD-X"
 
 DEPENDS = "xproto-native util-macros-native"
 
-SRC_URI = "${XORG_MIRROR}/X11R7.1/src/lib/libXau-${PV}.tar.bz2"
+XORG_PN = "libXau"
 S = "${WORKDIR}/libXau-${PV}"
 
 inherit native autotools pkgconfig
