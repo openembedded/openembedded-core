@@ -4,3 +4,4 @@ require xorg-app-common.inc
 
 DEPENDS += " libxv virtual/libx11"
 
+PE = "1"
