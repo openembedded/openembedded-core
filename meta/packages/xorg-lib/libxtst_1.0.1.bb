@@ -8,3 +8,4 @@ PROVIDES = "xtst"
 
 XORG_PN = "libXtst"
 
+PE = "1"

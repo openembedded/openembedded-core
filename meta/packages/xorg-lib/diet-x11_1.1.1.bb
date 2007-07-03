@@ -1,6 +1,8 @@
 SECTION = "x11/base"
 require libx11_${PV}.bb
 
+PE = "1"
+
 EXTRA_OECONF += "--disable-udc --disable-xcms --disable-xlocale --disable-xkb"
 CFLAGS += "-D_GNU_SOURCE"
 

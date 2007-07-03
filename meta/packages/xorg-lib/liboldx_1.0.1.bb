@@ -6,3 +6,4 @@ DEPENDS += " virtual/libx11"
 
 XORG_PN = "liboldX"
 
+PE = "1"

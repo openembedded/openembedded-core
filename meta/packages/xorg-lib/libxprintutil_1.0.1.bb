@@ -6,3 +6,4 @@ DEPENDS += " virtual/libx11 libxp libxt printproto libxau"
 
 XORG_PN = "libXprintUtil"
 
+PE = "1"

@@ -8,3 +8,4 @@ PROVIDES = "ice"
 
 XORG_PN = "libICE"
 
+PE = "1"

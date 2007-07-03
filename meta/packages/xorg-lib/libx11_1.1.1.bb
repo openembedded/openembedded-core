@@ -6,6 +6,7 @@ DEPENDS += " bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
 	libxdmcp xf86bigfontproto kbproto inputproto"
 PROVIDES = "virtual/libx11"
 # RPROVIDES = "virtual/libx11"
+PE = "1"
 
 SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-1.1.1.tar.bz2"
 S = "${WORKDIR}/${XORG_PN}-1.1.1"

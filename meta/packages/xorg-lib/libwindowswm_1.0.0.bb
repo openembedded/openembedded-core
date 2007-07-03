@@ -6,3 +6,4 @@ DEPENDS += " virtual/libx11 libxext xextproto windowswmproto"
 
 XORG_PN = "libWindowsWM"
 
+PE = "1"

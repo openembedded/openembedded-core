@@ -8,6 +8,7 @@ DESCRIPTION = "X FreeType library. Client-side fonts with FreeType."
 
 DEPENDS += " libxrender freetype fontconfig"
 PROVIDES = "xft"
+PE = "1"
 
 XORG_PN = "libXft"
 

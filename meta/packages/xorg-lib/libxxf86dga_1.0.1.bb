@@ -6,3 +6,4 @@ DEPENDS += " xproto virtual/libx11 xextproto libxext xf86dgaproto"
 
 XORG_PN = "libXxf86dga"
 
+PE = "1"

@@ -6,3 +6,4 @@ DEPENDS += " xproto virtual/libx11 xextproto libxext xf86vidmodeproto"
 
 XORG_PN = "libXxf86vm"
 
+PE = "1"

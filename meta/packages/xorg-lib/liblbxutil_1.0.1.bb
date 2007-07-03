@@ -8,3 +8,4 @@ DESCRIPTION = "XFIXES Extension"
 
 DEPENDS += " xextproto xproto zlib"
 PROVIDES = "lbxutil"
+PE = "1"

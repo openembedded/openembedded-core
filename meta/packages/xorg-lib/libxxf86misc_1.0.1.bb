@@ -7,3 +7,4 @@ PROVIDES = "xxf86misc"
 
 XORG_PN = "libXxf86misc"
 
+PE = "1"

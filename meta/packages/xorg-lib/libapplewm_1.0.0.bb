@@ -6,3 +6,4 @@ DEPENDS += " virtual/libx11 libxext xextproto applewmproto"
 
 XORG_PN = "libAppleWM"
 
+PE = "1"

@@ -2,6 +2,7 @@ DESCRIPTION = "Base X libs."
 SECTION = "x11/libs"
 PRIORITY = "optional"
 LICENSE = "XFree86"
+PE = "1"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libx11"
 

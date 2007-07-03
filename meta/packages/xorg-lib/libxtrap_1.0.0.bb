@@ -6,3 +6,4 @@ DEPENDS += " virtual/libx11 libxt trapproto libxext xextproto"
 
 XORG_PN = "libXTrap"
 
+PE = "1"
