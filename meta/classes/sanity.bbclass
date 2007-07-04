@@ -49,6 +49,9 @@ def check_sanity(e):
 		print "Foo %s" % minversion
 		return
 
+	if 0 == os.getuid():
+		raise_sanity_error("Do not use Bitbake as root.")
+
 	messages = ""
 
 	if (LooseVersion(__version__) < LooseVersion(minversion)):
