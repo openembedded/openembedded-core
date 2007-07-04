@@ -1,8 +1,5 @@
 require xorg-proto-common.inc
 
-#DESCRIPTION = ""
-
-#DEPENDS += " "
-
 CONFLICTS = "fixesext"
+PR = "r1"
 PE = "1"

@@ -1,10 +1,7 @@
-require xorg-proto-common.inc
-DESCRIPTION = "X protocol headers"
-SECTION = "x11/libs"
-LICENSE = "MIT-X"
-PE = "1"
+require xcmiscproto_${PV}.bb
+
+PR = "r1"
 
 XORG_PN = "xcmiscproto"
-S = "${WORKDIR}/xcmiscproto-${PV}"
 
-inherit native autotools pkgconfig
+inherit native

@@ -1,9 +1,4 @@
 require xorg-proto-common.inc
 
-#PROVIDES = "xextensions"
-
-#DESCRIPTION = ""
-
-#DEPENDS += " "
-
+PR = "r1"
 PE = "1"

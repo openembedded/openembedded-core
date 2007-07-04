@@ -1,8 +1,5 @@
 require xorg-proto-common.inc
 
 PROVIDES="xproxymngproto"
-#DESCRIPTION = ""
-
-#DEPENDS += " "
-
+PR = "r1"
 PE = "1"

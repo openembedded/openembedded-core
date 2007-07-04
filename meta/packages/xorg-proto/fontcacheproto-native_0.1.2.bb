@@ -1,10 +1,7 @@
-require xorg-proto-common.inc
-DESCRIPTION = "X protocol headers"
-SECTION = "x11/libs"
-LICENSE = "MIT-X"
-PE = "1"
+require fontcacheproto_${PV}.bb
+
+PR = "r1"
 
 XORG_PN = "fontcacheproto"
-S = "${WORKDIR}/fontcacheproto-${PV}"
 
-inherit native autotools pkgconfig
+inherit native

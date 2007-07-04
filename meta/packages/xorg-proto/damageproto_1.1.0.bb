@@ -1,8 +1,5 @@
 require xorg-proto-common.inc
-PE = "1"
-
-#DESCRIPTION = ""
-
-#DEPENDS += " "
 
 CONFLICTS = "damageext"
+PR = "r1"
+PE = "1"

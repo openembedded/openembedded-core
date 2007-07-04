@@ -1,7 +1,4 @@
 require xorg-proto-common.inc
 
-#DESCRIPTION = ""
-
-#DEPENDS += " "
-
+PR = "r1"
 PE = "1"
