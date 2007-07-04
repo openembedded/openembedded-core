@@ -1,18 +1,19 @@
 DESCRIPTION = "X application"
-HOMEPAGE = "http://www.x.org"
-SECTION = "x11/applications"
+HOMEPAGE = "http://www.x.org/"
+SECTION = "x11/apps"
 LICENSE = "MIT-X"
+DEPENDS = "util-macros-native virtual/libx11"
 
-DEPENDS = "util-macros"
 XORG_PN = "${PN}"
-XORG_RELEASE = "${@["individual",bb.data.getVar('PV', d, 1)[0:7]+"/src"][bb.data.getVar('PV', d, 1)[0:4] == "X11R"]}"
-SRC_URI = "${XORG_MIRROR}/${XORG_RELEASE}/app/${XORG_PN}-${PV}.tar.bz2"
-S = "${WORKDIR}/${XORG_PN}-${PV}"
 
-FILES_${PN} += "  /usr/lib/X11/${XORG_PN}"
+SRC_URI = "${XORG_MIRROR}/individual/app/${XORG_PN}-${PV}.tar.bz2"
+
+S = "${WORKDIR}/${XORG_PN}-${PV}"
 
 inherit autotools pkgconfig
 
 do_stage() {
-	autotools_stage_all
+        autotools_stage_all
 }
+
+FILES_${PN} += "  /usr/lib/X11/${XORG_PN}"

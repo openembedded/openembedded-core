@@ -1,7 +1,5 @@
 require xorg-app-common.inc
 
-#DESCRIPTION = ""
-
-DEPENDS += " libxv virtual/libx11"
-
+DESCRIPTION = "Print out X-Video extension adaptor information"
+DEPENDS += " libxv"
 PE = "1"

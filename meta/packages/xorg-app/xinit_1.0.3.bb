@@ -1,8 +1,7 @@
 require xorg-app-common.inc
+
+DESCRIPTION = "X Window System initializer"
+PR = "r1"
 PE = "1"
 
-#DESCRIPTION = ""
-
-DEPENDS += " virtual/libx11"
-FILES_${PN} += "  /usr/lib/X11/xinit"
-
+FILES_${PN} += "${libdir}X11/xinit"
