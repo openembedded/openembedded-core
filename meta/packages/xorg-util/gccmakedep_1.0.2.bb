@@ -1,7 +1,7 @@
 require xorg-util-common.inc
 
-#DESCRIPTION = ""
+DESCRIPTION = "create dependencies in makefiles using ’gcc -M’"
+RDEPENDS = "gcc"
 
-#DEPENDS += " "
-
+PR = "r1"
 PE = "1"

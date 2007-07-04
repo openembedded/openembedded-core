@@ -1,12 +1,9 @@
-DESCRIPTION = "X autotools macros"
-SECTION = "x11/libs"
-LICENSE= "Xorg"
-PE = "1"
+require util-macros_${PV}.bb
 
-SRC_URI = "${XORG_MIRROR}/individual/util/util-macros-1.1.5.tar.bz2 \
-           file://unbreak_cross_compile.patch;patch=1 "
+inherit native
+
+PR = "r1"
+
+XORG_PN = "util-macros"
 
 S = "${WORKDIR}/util-macros-1.1.5"
-
-inherit native autotools pkgconfig
-

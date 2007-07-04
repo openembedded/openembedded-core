@@ -1,7 +1,7 @@
 require xorg-util-common.inc
 
-DESCRIPTION = "imake utility"
+DESCRIPTION = "C preprocessor interface to the make utility"
+RDEPENDS = "perl xproto"
 
-DEPENDS += " perl xproto"
-
+PR = "r1"
 PE = "1"
