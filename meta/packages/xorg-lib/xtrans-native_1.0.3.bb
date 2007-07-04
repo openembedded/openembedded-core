@@ -5,6 +5,6 @@ PE = "1"
 
 XORG_PN = "xtrans"
 
-SRC_URI = "${XORG_MIRROR}/${XORG_RELEASE}/lib/${XORG_PN}-${PV}.tar.bz2"
+SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-${PV}.tar.bz2"
 
 inherit native

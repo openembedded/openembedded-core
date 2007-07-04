@@ -5,6 +5,6 @@ DEPENDS = "xproto-native zlib-native fontcacheproto-native fontsproto-native \
 PE = "1"
 
 # no need for patch used in libxfont
-SRC_URI = "${XORG_MIRROR}/${XORG_RELEASE}/lib/${XORG_PN}-${PV}.tar.bz2"
+SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-${PV}.tar.bz2"
 
 inherit native
