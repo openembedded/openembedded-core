@@ -1,15 +1,14 @@
 require xorg-lib-common.inc
-PE = "1"
 
-DESCRIPTION = "X Toolkit Intrinsics"
-PRIORITY = "optional"
-
-DEPENDS += " libsm virtual/libx11 xproto kbproto"
+DESCRIPTION = "X11 toolkit intrinsics library"
+DEPENDS += "libsm virtual/libx11 kbproto"
 PROVIDES = "xt"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libXt"
 
-EXTRA_OECONF="--enable-malloc0returnsnull --disable-install-makestrs --disable-xkb"
+EXTRA_OECONF += "--disable-install-makestrs --disable-xkb"
 
 do_compile() {
 	(

@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
+
+DESCRIPTION = "X11 Resource extension library"
+DEPENDS += "libxext resourceproto"
+PR = "r1"
 PE = "1"
 
-DESCRIPTION = "X Resource usage library."
-
-DEPENDS += " virtual/libx11 libxext xextproto resourceproto"
-
 XORG_PN = "libXres"
-

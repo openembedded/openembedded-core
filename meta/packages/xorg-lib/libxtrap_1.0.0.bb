@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
 
-#DESCRIPTION = ""
-
-DEPENDS += " virtual/libx11 libxt trapproto libxext xextproto"
+DESCRIPTION = "X11 event trapping extension library"
+DEPENDS += "libxt trapproto libxext"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libXTrap"
-
-PE = "1"

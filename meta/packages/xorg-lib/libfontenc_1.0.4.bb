@@ -1,9 +1,7 @@
 require xorg-lib-common.inc
-PE = "1"
 
-DESCRIPTION = "X fontenc library (used by libxfont)."
+DESCRIPTION = "X11 font encoding library"
 LICENSE = "BSD-X"
-PRIORITY = "optional"
-
-DEPENDS += " zlib xproto"
-
+DEPENDS += "zlib xproto"
+PR = "r1"
+PE = "1"

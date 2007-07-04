@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
 
-#DESCRIPTION = " "
-
-DEPENDS += " xproto fontsproto xtrans"
+DESCRIPTION = "X11 Font Services library"
+DEPENDS += "xproto fontsproto xtrans"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libFS"
-
-PE = "1"

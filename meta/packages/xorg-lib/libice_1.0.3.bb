@@ -1,12 +1,9 @@
 require xorg-lib-common.inc
 
+DESCRIPTION = "X11 Inter-Client Exchange library"
+DEPENDS += "xproto xtrans"
+PROVIDES = "ice"
+PR = "r1"
 PE = "1"
 
-DESCRIPTION = "X11 ICE library"
-PRIORITY = "optional"
-
-DEPENDS += " xproto xtrans"
-PROVIDES = "ice"
-
 XORG_PN = "libICE"
-

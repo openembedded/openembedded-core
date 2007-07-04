@@ -1,11 +1,9 @@
 require xorg-lib-common.inc
+
+DESCRIPTION = "X Display Manager Control Protocol library"
+DEPENDS += "xproto"
+PROVIDES = "xdmcp"
+PR = "r1"
 PE = "1"
 
-DESCRIPTION = "X Display Manager Control Protocol library."
-PRIORITY = "optional"
-
-DEPENDS += " xproto"
-PROVIDES = "xdmcp"
-
 XORG_PN = "libXdmcp"
-

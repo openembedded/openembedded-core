@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 lbxkbui library"
+DESCRIPTION = "X11 keyboard UI presentation library"
 LICENSE= "GPL"
-PRIORITY = "optional"
-PE = "1"
-
-DEPENDS += " virtual/libx11 libxt libxkbfile"
+DEPENDS += "virtual/libx11 libxt libxkbfile"
 PROVIDES = "xkbui"
+PR = "r1"
+PE = "1"

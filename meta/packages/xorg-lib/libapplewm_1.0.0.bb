@@ -1,9 +1,7 @@
 require xorg-lib-common.inc
 
-#DESCRIPTION = ""
-
-DEPENDS += " virtual/libx11 libxext xextproto applewmproto"
+DEPENDS += "libxext applewmproto"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libAppleWM"
-
-PE = "1"

@@ -1,10 +1,9 @@
 require xorg-lib-common.inc
+
+DESCRIPTION = "X11 Rendering Extension client library"
+LICENSE = "BSD-X"
+DEPENDS += "virtual/libx11 renderproto xproto"
+PR = "r1"
 PE = "1"
 
-DESCRIPTION = "X Render extension library."
-LICENSE = "BSD-X"
-
-DEPENDS += " virtual/libx11 renderproto"
-
 XORG_PN = "libXrender"
-

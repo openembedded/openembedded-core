@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "Xxf86dga extension library."
-
-DEPENDS += " xproto virtual/libx11 xextproto libxext xf86dgaproto"
+DESCRIPTION = "X11 Direct Graphics Access extension library"
+DEPENDS += "libxext xf86dgaproto"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libXxf86dga"
-
-PE = "1"

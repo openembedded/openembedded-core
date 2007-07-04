@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
+
+DESCRIPTION = "X11 EvIE extension library"
+DEPENDS += "libxext evieext"
+PR = "r1"
 PE = "1"
 
-#DESCRIPTION = ""
-
-DEPENDS += " xproto virtual/libx11 xextproto libxext evieext"
-
 XORG_PN = "libXevie"
-

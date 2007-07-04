@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
+
+DESCRIPTION = "X-TrueType font cache extension client library"
+DEPENDS += "libxext fontcacheproto"
+PR = "r1"
 PE = "1"
 
-#DESCRIPTION = ""
-
-DEPENDS += " virtual/libx11 libxext xextproto fontcacheproto"
-
 XORG_PN = "libXfontcache"
-

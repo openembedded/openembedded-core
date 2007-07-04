@@ -1,12 +1,9 @@
 require xorg-lib-common.inc
-PE = "1"
-PR = "r1"
 
-DESCRIPTION = "X Cursor library"
+DESCRIPTION = "X cursor management library"
 LICENSE= "BSD-X"
-
-DEPENDS += " libxrender libxfixes virtual/libx11 fixesproto"
+DEPENDS += "libxrender libxfixes"
+PR = "r2"
+PE = "1"
 
 XORG_PN = "libXcursor"
-
-FILES_libxcursor = "${libdir}/*.so.*"

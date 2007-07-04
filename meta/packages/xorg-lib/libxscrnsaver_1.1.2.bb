@@ -1,14 +1,11 @@
 require xorg-lib-common.inc
-PE = "1"
 
-DESCRIPTION = "X screen saver extension library."
+DESCRIPTION = "X Screen Saver extension library"
 LICENSE = "GPL"
-
-DEPENDS += " virtual/libx11 libxext xextproto scrnsaverproto"
-
-XORG_PN = "libXScrnSaver"
-
+DEPENDS += "libxext scrnsaverproto"
 PROVIDES = "libxss"
 RREPLACES = "libxss"
+PR = "r1"
+PE = "1"
 
-#CFLAGS_append += " -I ${S}/include/X11/XprintUtil -I ${S}/include/X11/extensions"
+XORG_PN = "libXScrnSaver"

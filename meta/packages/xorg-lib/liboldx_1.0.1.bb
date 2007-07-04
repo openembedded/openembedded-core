@@ -1,9 +1,6 @@
 require xorg-lib-common.inc
 
-#DESCRIPTION = ""
-
 DEPENDS += " virtual/libx11"
+PE = "1"
 
 XORG_PN = "liboldX"
-
-PE = "1"

@@ -1,11 +1,10 @@
 require xorg-lib-common.inc
+
+DESCRIPTION = "X11 damaged region extension library"
+LICENSE= "BSD-X"
+DEPENDS += "damageproto libxfixes"
+PROVIDES = "xdamage"
+PR = "r1"
 PE = "1"
 
-DESCRIPTION = "X Damage extension library."
-LICENSE= "BSD-X"
-
-DEPENDS += " virtual/libx11 damageproto libxfixes fixesproto xextproto"
-PROVIDES = "xdamage"
-
 XORG_PN = "libXdamage"
-

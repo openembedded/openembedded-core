@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
 
-#DESCRIPTION = ""
-
-DEPENDS += " virtual/libx11 libxp libxt printproto libxau"
+DESCRIPTION = "Xprint printer utility client library"
+DEPENDS += "libxp libxt"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libXprintUtil"
-
-PE = "1"

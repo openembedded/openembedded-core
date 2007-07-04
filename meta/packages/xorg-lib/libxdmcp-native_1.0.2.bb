@@ -1,11 +1,9 @@
-SECTION = "x11/libs"
-PRIORITY = "optional"
-LICENSE = "BSD-X"
-PE = "1"
+require libxdmcp_${PV}.bb
 
 DEPENDS = "xproto-native util-macros-native"
+PR = "r1"
+PE = "1"
 
-SRC_URI = "${XORG_MIRROR}/individual/lib/libXdmcp-${PV}.tar.bz2"
-S = "${WORKDIR}/libXdmcp-${PV}"
+XORG_PN = "libXdmcp"
 
-inherit native autotools pkgconfig
+inherit native

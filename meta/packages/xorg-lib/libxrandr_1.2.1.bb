@@ -1,10 +1,9 @@
 require xorg-lib-common.inc
+
+DESCRIPTION = "X11 Resize and Rotate extension library"
+LICENSE = "BSD-X"
+DEPENDS += "randrproto libxrender"
+PR = "r1"
 PE = "1"
 
-DESCRIPTION = "X Resize and Rotate extension library."
-LICENSE = "BSD-X"
-
-DEPENDS += " virtual/libx11 randrproto libxext xextproto libxrender renderproto"
-
 XORG_PN = "libXrandr"
-

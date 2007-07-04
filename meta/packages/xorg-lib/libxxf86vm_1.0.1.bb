@@ -1,9 +1,8 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "Xxf86vm extension library."
-
-DEPENDS += " xproto virtual/libx11 xextproto libxext xf86vidmodeproto"
+DESCRIPTION = "X11 XFree86 video mode extension library"
+DEPENDS += "libxext xf86vidmodeproto"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libXxf86vm"
-
-PE = "1"

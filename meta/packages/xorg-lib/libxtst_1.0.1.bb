@@ -1,11 +1,9 @@
 require xorg-lib-common.inc
 
 DESCRIPTION = "X Test Extension: client side library"
-PRIORITY = "optional"
-
-DEPENDS += " virtual/libx11 libxext recordproto xextproto inputproto"
+DEPENDS += "libxext recordproto inputproto"
 PROVIDES = "xtst"
+PR = "r1"
+PE = "1"
 
 XORG_PN = "libXtst"
-
-PE = "1"

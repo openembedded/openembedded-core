@@ -1,14 +1,12 @@
 require xorg-lib-common.inc
-PE = "1"
 
-DESCRIPTION = "X font library (used by the X server)."
+DESCRIPTION = "X11 font rasterisation library"
 LICENSE= "BSD-X"
-PRIORITY = "optional"
+DEPENDS += "freetype fontcacheproto xtrans fontsproto libfontenc"
+PROVIDES = "xfont"
+PR = "r1"
+PE = "1"
 
 SRC_URI += "file://no-scalable-crash.patch;patch=1"
 
-DEPENDS += " freetype fontcacheproto zlib xproto xtrans fontsproto libfontenc"
-PROVIDES = "xfont"
-
 XORG_PN = "libXfont"
-
