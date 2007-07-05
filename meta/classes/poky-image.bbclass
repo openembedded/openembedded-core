@@ -15,9 +15,10 @@
 # - apps-x11-core       - X Terminal, file manager, file editor
 # - apps-x11-games
 # - apps-x11-pimlico    - OpenedHand Pimlico apps
-# - dev-tools           - SDK
-# - dbg-tools
-# - test-tools          - tools usable to make some device tests
+# - tools-sdk           - SDK
+# - tools-debug         - debugging tools
+# - tools-profile       - profiling tools
+# - tools-testapps      - tools usable to make some device tests
 # - nfs-server          - NFS server (exports / over NFS to everybody)
 # - dev-pkgs            - development packages
 # - dbg-pkgs            - debug packages
