@@ -41,7 +41,7 @@ SRC_URI_append_poodle = " file://xserver-kdrive-poodle.patch;patch=1"
 SRC_URI_append_qemux86 = " file://xserver-kdrive-poodle.patch;patch=1"
 PACKAGE_ARCH_poodle = "poodle"
 
-S = "${WORKDIR}/xorg-server-X11R7.1-1.1.0"
+S = "${WORKDIR}/xorg-server-1.1.0"
 
 inherit autotools pkgconfig 
 
