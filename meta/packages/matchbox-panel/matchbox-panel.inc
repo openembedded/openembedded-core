@@ -1,9 +1,10 @@
 DESCRIPTION = "Matchbox Window Manager Panel"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxpm apmd startup-notification virtual/kernel wireless-tools"
+RDEPENDS = "matchbox-common"
 SECTION = "x11/wm"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools pkgconfig gettext
 
