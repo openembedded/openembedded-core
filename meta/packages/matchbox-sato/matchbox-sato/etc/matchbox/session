@@ -7,6 +7,6 @@ matchbox-desktop &
 
 # mb-applet-startup-monitor &                 
 
-matchbox-panel --titlebar --start-applets showdesktop,windowselector --end-applets clock,battery,systray &
+matchbox-panel --titlebar --start-applets showdesktop,windowselector --end-applets startup,clock,battery,systray &
 
 exec matchbox-window-manager -theme Sato -use_desktop_mode decorated -use_cursor $SHOWCURSOR $@
