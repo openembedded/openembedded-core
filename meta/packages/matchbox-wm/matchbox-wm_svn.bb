@@ -2,9 +2,8 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat matchbox-common gconf"
-RDEPENDS = "matchbox-common"
 PV = "1.2+svn${SRCDATE}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager;proto=http \
 	   file://kbdconfig"
@@ -30,4 +29,3 @@ EXTRA_OECONF = "--enable-startup-notification --disable-xrm --enable-expat"
 do_install_prepend() {
 	install ${WORKDIR}/kbdconfig ${S}/data/kbdconfig
 }
-

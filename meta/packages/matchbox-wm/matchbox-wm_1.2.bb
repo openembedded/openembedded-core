@@ -2,7 +2,7 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxcomposite libxfixes xdamage libxrender startup-notification expat matchbox-common"
-RDEPENDS = "matchbox-common"
+PR="r1"
 
 SRC_URI = "http://matchbox-project.org/sources/matchbox-window-manager/1.2/matchbox-window-manager-${PV}.tar.bz2 \
 	   file://kbdconfig \
@@ -33,4 +33,3 @@ do_configure_prepend () {
 do_install_prepend() {
 	install ${WORKDIR}/kbdconfig ${S}/data/kbdconfig
 }
-
