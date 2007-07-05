@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r5"
+PR = "r6"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -53,7 +53,6 @@ RDEPENDS_task-poky-apps-console = "\
 
 
 RDEPENDS_task-poky-x11-base = "\
-    matchbox-common \
     matchbox-wm \
     matchbox-keyboard \
     matchbox-keyboard-applet \
