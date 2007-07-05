@@ -3,7 +3,7 @@ DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat gconf"
 PV = "1.2+svn${SRCDATE}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager;proto=http \
 	   file://kbdconfig"
