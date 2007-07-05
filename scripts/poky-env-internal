@@ -26,7 +26,7 @@ OEROOT=`pwd`
 
 BBDIR=$OEROOT/bitbake/
 PKGDIR=$OEROOT/meta/
-BUILDDIR=$OEROOT/$1/
+BUILDDIR=$OEROOT/build/
 MSG=''
 
 BUILD_ARCH=`uname -m`
@@ -55,7 +55,7 @@ BBPATH=$BBDIR
 if test x"$BBDIR" != x"$PKGDIR"; then
 	BBPATH=$PKGDIR:$BBPATH
 fi
-BBPATH="`readlink -f $HOME/.oe`:`readlink -f $HOME/.poky`:$BBPATH:$OEROOT/poky-prvt/trunk"
+BBPATH="`readlink -f $HOME/.oe`:`readlink -f $HOME/.poky`:$BBPATH"
 if test x"$PKGDIR" != x"$BUILDDIR"; then
 	BBPATH=$BUILDDIR:$BBPATH
 fi
