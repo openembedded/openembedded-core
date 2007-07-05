@@ -69,11 +69,11 @@ if [ "$MACHINE" = "qemuarm" ]; then
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$BUILDDIR/tmp/deploy/images/poky-image-
-	    if [ -x "$T-sdk-qemuarm.ext2" ]; then
+            if [ -e "$T-sdk-qemuarm.ext2" ]; then
                 HDIMAGE=$T-sdk-qemuarm.ext2
-	    elif [ -x "$T-pda-qemuarm.ext2" ]; then
+            elif [ -e "$T-pda-qemuarm.ext2" ]; then
                 HDIMAGE=$T-pda-qemuarm.ext2
-	    fi
+            fi
         fi
     fi
 fi
@@ -101,9 +101,9 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$BUILDDIR/tmp/deploy/images/poky-image-
-	    if [ -x "$T-sdk-qemux86.ext2" ]; then
+            if [ -e "$T-sdk-qemux86.ext2" ]; then
                 HDIMAGE=$T-sdk-qemux86.ext2
-	    elif [ -x "$T-pda-qemux86.ext2" ]; then
+            elif [ -e "$T-pda-qemux86.ext2" ]; then
                 HDIMAGE=$T-pda-qemux86.ext2
             fi
         fi
