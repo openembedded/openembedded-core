@@ -4,9 +4,10 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib"
 
 PV = "1.4.0+svn${SRCDATE}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
+           file://oh-contact.patch;patch=1;pnum=0 \
            file://no_libdb.patch;patch=1 \
            file://no_iconv_test.patch;patch=1 \
            file://no_libedataserverui.patch;patch=1 \
@@ -16,12 +17,14 @@ S = "${WORKDIR}/trunk"
 
 inherit autotools pkgconfig
 
+acpaths = " -I ${STAGING_DATADIR}/aclocal/gnome-macros "
+
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"
 
+do_configure_append = " cp ${WORKDIR}/iconv-detect.h ${S} "
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
 
-acpaths = " -I ${STAGING_DATADIR}/aclocal/gnome-macros "
 
 PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev libedata-book libedata-book-dev libedata-cal libedata-cal-dev libedataserver libedataserver-dev"
 
@@ -47,8 +50,6 @@ FILES_libedata-cal-dev = "${libdir}/libedata-cal-*.so ${libdir}/pkgconfig/libeda
 
 FILES_libedataserver = "${libdir}/libedataserver-*.so.*"
 FILES_libedataserver-dev = "${libdir}/libedataserver-*.so ${libdir}/pkgconfig/libedataserver-*.pc ${includedir}/evolution-data-server-*/libedataserver/*.h"
-
-do_configure_append = " cp ${WORKDIR}/iconv-detect.h ${S} "
 
 do_stage () {
         autotools_stage_all

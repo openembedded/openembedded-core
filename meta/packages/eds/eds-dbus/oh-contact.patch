@@ -1,0 +1,156 @@
+Index: addressbook/libedata-book-orbit/ximian-vcard.h
+===================================================================
+--- addressbook/libedata-book-orbit/ximian-vcard.h	(revision 578)
++++ addressbook/libedata-book-orbit/ximian-vcard.h	(working copy)
+@@ -1,80 +1,40 @@
+ #define XIMIAN_VCARD \
+ "BEGIN:VCARD\n" \
+-"X-EVOLUTION-FILE-AS:Novell Ximian Group\n" \
+-"ADR;TYPE=WORK:;Suite 500;8 Cambridge Center;Cambridge;MA;02142;USA\n" \
+-"LABEL;TYPE=WORK:8 Cambridge Center, Suite 500\\nCambridge\\, MA\\n02142\\nUSA\n" \
+-"TEL;WORK;VOICE:(617) 613-2000\n" \
+-"TEL;WORK;FAX:(617) 613-2001\n" \
+-"EMAIL;INTERNET:hello@ximian.com\n" \
+-"URL:http://www.ximian.com/\n" \
+-"ORG:Novell;Ximian Group\n" \
+-"PHOTO;ENCODING=b;TYPE=JPEG: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\n" \
++"VERSION:3.0\n" \
++"FN:OpenedHand Ltd\n" \
++"URL:http://www.o-hand.com/\n" \
++"EMAIL;info@openedhand.com\n" \
++"TEL;TYPE=VOICE:+44 208 819 6559\n" \
++"ADR:216 - 218 Homesdale Road;Unit R\, Homesdale Business Center;\n" \
++" Bromley;;BR1 2QZ;United Kingdom\n" \
++"LABEL:Unit R, Homesdale Business Center\\n216 - 218 Homesdale Road\\nBromley\\nBR1 2QZ\\nUnited Kingdom\n" \
++"PHOTO;ENCODING=b:iVBORw0KGgoAAAANSUhEUgAAAC0AAAA\n" \
++" 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\n" \
++" ArmsGAAAAAElFTkSuQmCC\n" \
+ "END:VCARD"
+Index: addressbook/backends/file/e-book-backend-file.c
+===================================================================
+--- addressbook/backends/file/e-book-backend-file.c	(revision 578)
++++ addressbook/backends/file/e-book-backend-file.c	(working copy)
+@@ -1286,13 +1286,14 @@
+ 			else {
+ #ifdef CREATE_DEFAULT_VCARD
+ 				EContact *contact = NULL;
+-
+-				do_create(bf, XIMIAN_VCARD, &contact);
+-				/* XXX check errors here */
+-				if (contact)
++				EBookBackendSyncStatus status;
++				
++				status = do_create (bf, XIMIAN_VCARD, &contact);
++				if (status == GNOME_Evolution_Addressbook_Success)
+ 					g_object_unref (contact);
++				else
++					g_warning ("Cannot create default contact: %d", status);
+ #endif
+-
+ 				writable = TRUE;
+ 			}
+ 		}
+Index: addressbook/backends/file/Makefile.am
+===================================================================
+--- addressbook/backends/file/Makefile.am	(revision 578)
++++ addressbook/backends/file/Makefile.am	(working copy)
+@@ -1,4 +1,5 @@
+ INCLUDES =						\
++	-DCREATE_DEFAULT_VCARD \
+ 	-DG_LOG_DOMAIN=\"libebookbackend\"		\
+ 	-I$(top_srcdir)					\
+ 	-I$(top_builddir)				\
