@@ -1,13 +1,16 @@
 DESCRIPTION = "Custom MB session files for poky"
 LICENSE = "GPL"
 SECTION = "x11"
-RDEPENDS = "matchbox-common matchbox-applet-startup-monitor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2"
-PR = "r13"
+RDEPENDS = "matchbox-applet-startup-monitor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2 matchbox-desktop-sato"
+RCONFLICTS = "matchbox-common"
+PR = "r14"
 
-SRC_URI = "file://etc"
+SRC_URI = "file://etc file://matchbox-session"
 S = ${WORKDIR}
 
 do_install() {
+	install -d ${D}/${bindir}
+	install -m 0755 ${S}/matchbox-session ${D}/${bindir}
 	cp -R ${S}/etc ${D}/etc
 	rm -fR ${D}/etc/.svn
 	rm -fR ${D}/etc/matchbox/.svn
