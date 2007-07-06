@@ -150,7 +150,7 @@ def exec_func_shell(func, d):
     if bb.msg.debug_level['default'] > 0: f.write("set -x\n")
     data.emit_env(f, d)
 
-    f.write("cd %s\n" % os.getcwd())
+    f.write("cd '%s'\n" % os.getcwd())
     if func: f.write("%s\n" % func)
     f.close()
     os.chmod(runfile, 0775)
@@ -189,7 +189,7 @@ def exec_func_shell(func, d):
     else:
         maybe_fakeroot = ''
     lang_environment = "LC_ALL=C "
-    ret = os.system('%s%ssh -e %s' % (lang_environment, maybe_fakeroot, runfile))
+    ret = os.system('%s%ssh -e "%s"' % (lang_environment, maybe_fakeroot, runfile))
     try:
         os.chdir(prevdir)
     except:
