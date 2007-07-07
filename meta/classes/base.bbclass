@@ -427,7 +427,7 @@ def oe_unpack_file(file, data, url = None):
 				destdir = "."
 			elif not os.access("%s/%s" % (os.getcwd(), destdir), os.F_OK):
 				os.makedirs("%s/%s" % (os.getcwd(), destdir))
-		cmd = 'cp -pPR "%s" "%s/%s/"' % (file, os.getcwd(), destdir)
+		cmd = 'cp -pPR %s %s/%s/' % (file, os.getcwd(), destdir)
 	else:
 		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
 		if not 'patch' in parm:
@@ -438,7 +438,7 @@ def oe_unpack_file(file, data, url = None):
 			else:
 				destdir = "."
 			bb.mkdirhier("%s/%s" % (os.getcwd(), destdir))
-			cmd = 'cp "%s" "%s/%s/"' % (file, os.getcwd(), destdir)
+			cmd = 'cp %s %s/%s/' % (file, os.getcwd(), destdir)
 
 	if not cmd:
 		return True
