@@ -1,0 +1,27 @@
+Index: gsm/src/gsmd/vendor_tihtc.c
+===================================================================
+--- gsm.orig/src/gsmd/vendor_tihtc.c	2007-06-03 16:26:39.000000000 +0200
++++ gsm/src/gsmd/vendor_tihtc.c	2007-06-03 16:26:41.000000000 +0200
+@@ -90,6 +90,8 @@
+ 	struct gsmd_evt_auxdata *aux;
+ 	struct gsmd_ucmd *ucmd = usock_build_event(GSMD_MSG_EVENT, GSMD_EVT_SIGNAL,
+ 					     sizeof(*aux));
++	static int rssi_table[] = { 0,5,10,15,20,25,99 };
++	unsigned int i;
+ 
+ 	DEBUGP("entering htccsq_parse param=`%s'\n", param);
+ 	if (!ucmd)
+@@ -98,9 +100,10 @@
+ 
+ 	aux = (struct gsmd_evt_auxdata *) ucmd->buf;
+ 
+-	/* FIXME: contains values 1-5, should be mapped to 0-31 somehow? */
+-	/* 2 --> 11 */
+-	aux->u.signal.sigq.rssi = atoi(buf);
++	i = atoi(buf);
++	if (i > 6)
++		i = 6;
++	aux->u.signal.sigq.rssi = rssi_table[atoi(buf)];
+ 	aux->u.signal.sigq.ber = 99;
+ 
+ 	DEBUGP("sending EVT_SIGNAL\n");

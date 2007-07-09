@@ -1,0 +1,38 @@
+Index: gsm/src/gsmd/vendor_qc.c
+===================================================================
+--- gsm.orig/src/gsmd/vendor_qc.c	2007-06-13 20:13:47.000000000 +0200
++++ gsm/src/gsmd/vendor_qc.c	2007-06-13 20:45:19.000000000 +0200
+@@ -81,6 +88,9 @@
+ {
+ 	/* FIXME: do actual detection of vendor if we have multiple vendors */
+ 	/* open /proc/cpuinfo and check for HTC Universal? */
++
++	/* The Qualcomm chip starts in V0 mode */
++	g->flags |= GSMD_FLAG_V0;
+ 	return 1;
+ }
+ 
+Index: gsm/src/gsmd/gsmd.c
+===================================================================
+--- gsm.orig/src/gsmd/gsmd.c	2007-06-13 20:13:47.000000000 +0200
++++ gsm/src/gsmd/gsmd.c	2007-06-13 20:49:54.000000000 +0200
+@@ -62,7 +62,8 @@
+ {
+ 	struct gsmd_alive_priv *alp = ctx;
+ 
+-	if (!strcmp(resp, "OK"))
++	if (!strcmp(resp, "OK") ||
++	    ((alp->gsmd->flags & GSMD_FLAG_V0) && resp[0] == '0'))
+ 		alp->alive_responded = 1;
+ 	return 0;
+ }
+@@ -201,7 +202,8 @@
+ {
+ 	struct gsmd *gsmd = ctx;
+ 
+-	if (strcmp(resp, "OK")) {
++	if (strcmp(resp, "OK") &&
++	    (!(gsmd->flags & GSMD_FLAG_V0) || resp[0] != '0')) {
+ 		gsmd_log(GSMD_FATAL, "response '%s' to initial command invalid", resp);
+ 		exit(5);
+ 	}

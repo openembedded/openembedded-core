@@ -1,0 +1,70 @@
+Index: gsm/src/gsmd/atcmd.c
+===================================================================
+--- gsm.orig/src/gsmd/atcmd.c	2007-06-03 10:46:19.000000000 +0200
++++ gsm/src/gsmd/atcmd.c	2007-06-03 15:54:53.000000000 +0200
+@@ -208,7 +208,7 @@
+ 	 *    TBD
+ 	 */
+ 
+-	if (buf[0] == '+' || buf[0] == '%') {
++	if (buf[0] == '+' || strchr(g->vendorpl->ext_chars, buf[0])) {
+ 		/* an extended response */
+ 		const char *colon = strchr(buf, ':');
+ 		if (!colon) {
+@@ -255,7 +255,7 @@
+ 		}
+ 
+ 		if (cmd) {
+-			if (cmd->buf[2] != '+' && cmd->buf[2] != '%') {
++			if (cmd->buf[2] != '+' && strchr(g->vendorpl->ext_chars, cmd->buf[2]) == NULL) {
+ 				gsmd_log(GSMD_ERROR, "extd reply to non-extd command?\n");
+ 				return -EINVAL;
+ 			}
+Index: gsm/src/gsmd/vendor_qc.c
+===================================================================
+--- gsm.orig/src/gsmd/vendor_qc.c	2007-06-03 10:46:19.000000000 +0200
++++ gsm/src/gsmd/vendor_qc.c	2007-06-03 11:45:58.000000000 +0200
+@@ -97,6 +97,7 @@
+ 
+ struct gsmd_vendor_plugin gsmd_vendor_plugin = {
+ 	.name = "Qualcomm msm6250",
++	.ext_chars = "@",
+ 	.num_unsolicit = ARRAY_SIZE(qc_unsolicit),
+ 	.unsolicit = qc_unsolicit,
+ 	.detect = &qc_detect,
+Index: gsm/src/gsmd/vendor_ti.c
+===================================================================
+--- gsm.orig/src/gsmd/vendor_ti.c	2007-06-03 10:46:19.000000000 +0200
++++ gsm/src/gsmd/vendor_ti.c	2007-06-03 11:45:58.000000000 +0200
+@@ -303,6 +303,7 @@
+ 
+ struct gsmd_vendor_plugin gsmd_vendor_plugin = {
+ 	.name = "TI Calypso",
++	.ext_chars = "%@",
+ 	.num_unsolicit = ARRAY_SIZE(ticalypso_unsolicit),
+ 	.unsolicit = ticalypso_unsolicit,
+ 	.detect = &ticalypso_detect,
+Index: gsm/include/gsmd/vendorplugin.h
+===================================================================
+--- gsm.orig/include/gsmd/vendorplugin.h	2007-02-16 15:12:40.000000000 +0100
++++ gsm/include/gsmd/vendorplugin.h	2007-06-03 11:45:58.000000000 +0200
+@@ -12,6 +12,7 @@
+ struct gsmd_vendor_plugin {
+ 	struct llist_head list;
+ 	unsigned char *name;
++	unsigned char *ext_chars;
+ 	unsigned int num_unsolicit;
+ 	const struct gsmd_unsolicit *unsolicit;
+ 	int (*detect)(struct gsmd *g);
+Index: gsm/src/gsmd/vendor_tihtc.c
+===================================================================
+--- gsm.orig/src/gsmd/vendor_tihtc.c	2007-06-03 15:55:31.000000000 +0200
++++ gsm/src/gsmd/vendor_tihtc.c	2007-06-03 15:55:43.000000000 +0200
+@@ -298,6 +298,7 @@
+ 
+ struct gsmd_vendor_plugin gsmd_vendor_plugin = {
+ 	.name = "TI Calypso / HTC firmware",
++	.ext_chars = "%",
+ 	.num_unsolicit = ARRAY_SIZE(tihtc_unsolicit),
+ 	.unsolicit = tihtc_unsolicit,
+ 	.detect = &tihtc_detect,

@@ -1,0 +1,57 @@
+Index: gsm/src/gsmd/gsmd.c
+===================================================================
+--- gsm.orig/src/gsmd/gsmd.c	2007-06-03 11:57:43.000000000 +0200
++++ gsm/src/gsmd/gsmd.c	2007-06-03 11:57:45.000000000 +0200
+@@ -311,6 +311,7 @@
+ 	{ "leak-report", 0, NULL, 'L' },
+ 	{ "vendor", 1, NULL, 'v' },
+ 	{ "machine", 1, NULL, 'm' },
++	{ "wait", 1, NULL, 'w' },
+ 	{ 0, 0, 0, 0 }
+ };
+ 
+@@ -333,6 +334,7 @@
+ 	       "\t-l file\t--logfile file\tSpecify a logfile to log to\n"
+ 	       "\t-v\t--vendor v\tSpecify GSM modem vendor plugin\n"
+ 	       "\t-m\t--machine m\tSpecify GSM modem machine plugin\n"
++	       "\t-w\t--wait m\tWait for the AT Interpreter Ready message\n"
+ 	       );
+ }
+ 
+@@ -362,6 +364,7 @@
+ 	char *logfile = "syslog";
+ 	char *vendor_name = NULL;
+ 	char *machine_name = NULL;
++	int wait = -1;
+ 
+ 	signal(SIGTERM, sig_handler);
+ 	signal(SIGINT, sig_handler);
+@@ -374,7 +377,7 @@
+ 	print_header();
+ 
+ 	/*FIXME: parse commandline, set daemonize, device, ... */
+-	while ((argch = getopt_long(argc, argv, "FVLdhp:s:l:v:m:", opts, NULL)) != -1) {
++	while ((argch = getopt_long(argc, argv, "FVLdhp:s:l:v:m:w:", opts, NULL)) != -1) {
+ 		switch (argch) {
+ 		case 'V':
+ 			/* FIXME */
+@@ -411,6 +414,9 @@
+ 		case 'm':
+ 			machine_name = optarg;
+ 			break;
++		case 'w':
++			wait = atoi(optarg);
++			break;
+ 		}
+ 	}
+ 
+@@ -455,6 +461,9 @@
+ 		exit(1);
+ 	}
+ 
++	if (wait >= 0)
++		g.interpreter_ready = !wait;
++
+ 	if (atcmd_init(&g, fd) < 0) {
+ 		fprintf(stderr, "can't initialize UART device\n");
+ 		exit(1);

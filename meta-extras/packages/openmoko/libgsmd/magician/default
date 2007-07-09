@@ -1,0 +1,10 @@
+# gsmd	This shell script configures for the gsmd init script.
+
+GSMD_OPTS="-s 115200 -F"
+
+# If your GSM device needs to be powered up, uncomment and modify the next line
+#GSM_POW="/sys/bus/platform/devices/gta01-pm-gsm.0/power_on"
+
+# this should be in a common /etc/default/serial, together
+# with BT_DEV, and IR_DEV
+GSM_DEV="/dev/ttyS1"

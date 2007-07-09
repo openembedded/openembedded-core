@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+# gsmd	This shell script starts and stops gsmd.
+#
+# chkconfig: 345 90 40
+# description: Gsmd manages access to a serial- or USB-connected GSM
+# processname: gsmd
+
+# Source configuration
+. /etc/default/gsmd
+
+# Source function library.
+#. /etc/rc.d/init.d/functions
+
+RETVAL=0
+prog="gsmd"
+
+start() {
+	# Hack for broken uboot and/or kernel on the neo1973
+	dmesg -n1
+
+	if [ -n "${GSM_POW}" ]
+	then
+		if [ -e "${GSM_POW}" ]
+		then
+			echo -n "Powering up GSM device..."
+			echo "1" > ${GSM_POW}
+			sleep 1
+			echo "done"
+		else
+			echo "GSM device not found. Aborting startup"
+			return false
+		fi
+	fi
+	# Start daemons.
+	echo -n "Starting $prog: "
+	# We don't use the daemon function here because of a known bug
+	# in initlog -- it spuriously returns a nonzero status when 
+	# starting daemons that fork themselves.  See
+	# http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=130629
+	# for discussion.  Fortunately:
+	#
+	# 1. gsmd startup can't fail, or at least not in the absence of
+	# much larger resource-exhaustion problems that would be very obvious.
+	#
+	# 2. We don't need all the logging crud that daemon/initlog sets
+	# up -- gsmd does its own syslog calls.
+	#
+	if [ -e "${GSM_DEV}" ]
+	then
+		gsmd -p ${GSM_DEV} ${GSMD_OPTS} >/tmp/gsm.log 2>&1 &
+		echo "success"
+	else
+	    # User needs to symlink ${GPS_DEV} to the right thing
+	    echo "No ${GSM_DEV} device, aborting gsmd startup."
+	fi
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/gsmd
+	return $RETVAL
+}
+
+stop() {
+	# Stop daemons.
+	echo -n "Shutting down $prog: "
+        killall gsmd
+#        killproc gsmd
+	RETVAL=$?
+	echo
+	if [ $RETVAL -eq 0 ]
+	then
+	    rm -f /var/lock/subsys/gsmd;
+	fi
+	return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	stop
+	start
+	RETVAL=$?
+	;;
+  condrestart)
+	if [ -f /var/lock/subsys/gsmd ]; then
+	    stop
+	    start
+	    RETVAL=$?
+	fi
+	;;
+  status)
+#	status gsmd
+#	RETVAL=$?
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|condrestart|status}"
+	exit 1
+esac
+
+exit $RETVAL
