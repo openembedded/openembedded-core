@@ -5,9 +5,13 @@
 DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY = "1"
-PR = "r1"
+PR = "r2"
 
+#
+# Set by the machine configuration with packages essential for device bootup
+#
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 
 RDEPENDS_task-poky-boot = "\
     base-files \
@@ -21,3 +25,6 @@ RDEPENDS_task-poky-boot = "\
     udev \
     update-alternatives \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
+
+RRECOMMENDS_task-poky-boot = "\
+    ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"

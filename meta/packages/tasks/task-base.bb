@@ -52,12 +52,6 @@ PACKAGE_ARCH_task-base-pcmcia = "${MACHINE_ARCH}"
 PCMCIA_MANAGER ?= "${@base_contains('MACHINE_FEATURES', 'kernel26','pcmciautils','pcmcia-cs',d)} "
 
 #
-# those ones can be set in machine config to supply packages needed to get machine booting
-#
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
-
-#
 # task-base contain stuff needed for base system (machine related)
 #
 RDEPENDS_task-base = "\
