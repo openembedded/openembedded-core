@@ -5,7 +5,7 @@ DEPENDS    = "base-passwd"
 
 SRC_URI    = "file://fixup-770.sh"
 
-COMPATIBLE_MACHINE = "(nokia700|nokia800)"
+COMPATIBLE_MACHINE = "(nokia770|nokia800)"
 
 inherit update-rc.d
 
