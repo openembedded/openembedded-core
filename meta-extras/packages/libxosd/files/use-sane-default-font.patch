@@ -1,0 +1,13 @@
+Index: current/src/libxosd/xosd.c
+===================================================================
+--- current.orig/src/libxosd/xosd.c	2007-06-16 19:37:48.000000000 +0000
++++ current/src/libxosd/xosd.c	2007-06-17 05:00:47.000000000 +0000
+@@ -26,7 +26,7 @@
+ #define XOFFSET 10
+ 
+ const char * const osd_default_font =
+-  "-misc-fixed-medium-r-semicondensed--*-*-*-*-c-*-*-*";
++  "fixed";
+ #if 0
+ "-adobe-helvetica-bold-r-*-*-10-*";
+ #endif
