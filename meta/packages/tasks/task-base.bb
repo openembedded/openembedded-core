@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r39"
+PR = "r40"
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
@@ -37,15 +37,7 @@ PACKAGES = ' \
 
 ALLOW_EMPTY = "1"
 
-PACKAGE_ARCH = "all"
-
-#
-# packages which content depend on MACHINE_FEATURES need to be MACHINE_ARCH
-#
-PACKAGE_ARCH_task-base = "${MACHINE_ARCH}"
-PACKAGE_ARCH_task-machine-base = "${MACHINE_ARCH}"
-PACKAGE_ARCH_task-base-apm = "${MACHINE_ARCH}"
-PACKAGE_ARCH_task-base-pcmcia = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 #
 # pcmciautils for >= 2.6.13-rc1, pcmcia-cs for others
