@@ -1,0 +1,27 @@
+DESCRIPTION = "Clutter graphics library"
+HOMEPAGE = "http://www.clutter-project.org/"
+LICENSE = "LGPL"
+
+STDDEPENDS = "virtual/libx11 gtk-doc pango glib-2.0 libxfixes"
+BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
+
+DEPENDS = "${STDDEPENDS}"
+EXTRA_OECONF = "${BASE_CONF}"
+
+inherit autotools pkgconfig
+
+#check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points
+require clutter-fpu.inc
+
+#Fix up some weirdness in the docs
+do_configure_prepend() {
+	touch ${S}/gtk-doc.make
+        sed -i s:doc/reference/Makefile::g ${S}/configure.ac
+        sed -i s:doc::g ${S}/Makefile.am
+}
+
+do_stage () {
+	cp ${S}/clutter.pc ${S}/clutter-0.3.pc
+        autotools_stage_all
+}
+

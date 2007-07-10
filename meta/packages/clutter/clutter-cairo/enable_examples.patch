@@ -1,0 +1,28 @@
+---
+ examples/Makefile.am |    2 +-
+ examples/flowers.c   |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: clutter-cairo/examples/Makefile.am
+===================================================================
+--- clutter-cairo.orig/examples/Makefile.am	2007-07-10 00:25:03.000000000 +0100
++++ clutter-cairo/examples/Makefile.am	2007-07-10 12:06:49.000000000 +0100
+@@ -1,4 +1,4 @@
+-noinst_PROGRAMS = clock flowers
++bin_PROGRAMS = clock flowers
+ 
+ INCLUDES = -I$(top_srcdir)/ @GCC_FLAGS@ @DEPS_CFLAGS@
+ LDFLAGS = @DEPS_LIBS@ $(top_builddir)/libclutter-cairo-@CLUTTER_CAIRO_MAJORMINOR@.la 
+Index: clutter-cairo/examples/flowers.c
+===================================================================
+--- clutter-cairo.orig/examples/flowers.c	2007-07-10 12:30:44.000000000 +0100
++++ clutter-cairo/examples/flowers.c	2007-07-10 12:30:51.000000000 +0100
+@@ -11,7 +11,7 @@
+ 
+ #define PETAL_MIN 20
+ #define PETAL_VAR 40
+-#define N_FLOWERS 40 /* reduce if you have a small card */
++#define N_FLOWERS 8 /* reduce if you have a small card */
+ 
+ typedef struct Flower
+ {
