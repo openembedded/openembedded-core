@@ -1,3 +1,5 @@
+Subject: [mtd-utils patch 1/2] Add lzo support to mtd-utils
+
 Add LZO support to mtd-utils to generate LZO compressed jffs2 images
 
 Unlike the kernel version, the standard lzo userspace library is used
@@ -39,7 +41,7 @@ Index: git/compr.c
  	jffs2_rtime_init();
  #endif
 +#ifdef CONFIG_JFFS2_LZO
-+        jffs2_lzo_init();
++	jffs2_lzo_init();
 +#endif
  	return 0;
  }
@@ -49,7 +51,7 @@ Index: git/compr.c
  	jffs2_zlib_exit();
  #endif
 +#ifdef CONFIG_JFFS2_LZO
-+        jffs2_lzo_exit();
++	jffs2_lzo_exit();
 +#endif
  	return 0;
  }

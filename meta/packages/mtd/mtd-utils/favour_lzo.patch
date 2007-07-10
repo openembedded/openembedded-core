@@ -1,3 +1,5 @@
+Subject: [mtd-utils patch 2/2] Add favourlzo compression mode
+
 Add a favourlzo compression mode to mtd-utils
 
 This allows lzo compression to be used in the cases where the
@@ -35,21 +37,21 @@ Index: git/compr.c
 +		struct jffs2_compressor *best, uint32_t size, uint32_t bestsize)
 +{
 +	switch (jffs2_compression_mode) {
-+		case JFFS2_COMPR_MODE_SIZE:
-+			if (bestsize > size)
-+				return 1;
-+			return 0;
-+		case JFFS2_COMPR_MODE_FAVOURLZO:
-+			if ((this->compr == JFFS2_COMPR_LZO) && (bestsize > size))
-+				return 1;
-+			if ((best->compr != JFFS2_COMPR_LZO) && (bestsize > size))
-+				return 1;
-+			if ((this->compr == JFFS2_COMPR_LZO) && (bestsize > (size * FAVOUR_LZO_PERCENT / 100)))
-+				return 1;
-+			if ((bestsize * FAVOUR_LZO_PERCENT / 100) > size)
-+				return 1;
++	case JFFS2_COMPR_MODE_SIZE:
++		if (bestsize > size)
++			return 1;
++		return 0;
++	case JFFS2_COMPR_MODE_FAVOURLZO:
++		if ((this->compr == JFFS2_COMPR_LZO) && (bestsize > size))
++			return 1;
++		if ((best->compr != JFFS2_COMPR_LZO) && (bestsize > size))
++			return 1;
++		if ((this->compr == JFFS2_COMPR_LZO) && (bestsize > (size * FAVOUR_LZO_PERCENT / 100)))
++			return 1;
++		if ((bestsize * FAVOUR_LZO_PERCENT / 100) > size)
++			return 1;
 +
-+			return 0;
++		return 0;
 +	}
 +	/* Shouldn't happen */
 +	return 0;
@@ -70,9 +72,9 @@ Index: git/compr.c
 +				uint32_t needed_buf_size;
 +
 +				if (jffs2_compression_mode == JFFS2_COMPR_MODE_FAVOURLZO)
-+					needed_buf_size = orig_slen+jffs2_compression_check;
++					needed_buf_size = orig_slen + jffs2_compression_check;
 +				else
-+					needed_buf_size = orig_dlen+jffs2_compression_check;
++					needed_buf_size = orig_dlen + jffs2_compression_check;
 +
  				/* Skip decompress-only backwards-compatibility and disabled modules */
  				if ((!this->compress)||(this->disabled))
@@ -105,7 +107,7 @@ Index: git/compr.c
  			act_buf += sprintf(act_buf,"size");
  			break;
 +		case JFFS2_COMPR_MODE_FAVOURLZO:
-+			act_buf += sprintf(act_buf,"favourlzo");
++			act_buf += sprintf(act_buf, "favourlzo");
 +			break;
  		default:
  			act_buf += sprintf(act_buf,"unkown");
@@ -134,3 +136,5 @@ Index: git/compr.h
  
  #define kmalloc(a,b)                malloc(a)
  #define kfree(a)                    free(a)
+
+
