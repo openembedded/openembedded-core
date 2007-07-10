@@ -9,7 +9,7 @@ PR = "r3"
 PROVIDES = "virtual/bootloader"
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://www.denx.de/git/u-boot.git/;protocol=git \
+SRC_URI = "git://www.denx.de/git/u-boot.git/;protocol=git;tag=c0c292b2852a12e9d93e99b3aaf5b0dac5f36fdc \
            svn://svn.openmoko.org/trunk/src/target/u-boot;module=patches;proto=http \
 	   file://fix-arm920t-eabi.patch;patch=1"
 
