@@ -10,6 +10,9 @@ EXTRA_OECONF = "${BASE_CONF}"
 
 inherit autotools pkgconfig
 
+PACKAGES =+ "clutter-examples"
+FILES_clutter-examples = "${bindir}/test-*"
+
 #check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points
 require clutter-fpu.inc
 
