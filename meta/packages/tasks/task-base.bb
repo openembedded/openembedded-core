@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r38"
+PR = "r39"
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
@@ -16,6 +16,7 @@ PACKAGES = ' \
             ${@base_contains("MACHINE_FEATURES", "ext2", "task-base-ext2 task-base-ext2-dev task-base-ext2-dbg", "", d)} \
             ${@base_contains("MACHINE_FEATURES", "keyboard", "task-base-keyboard task-base-keyboard-dev task-base-keyboard-dbg", "", d)} \
             ${@base_contains("MACHINE_FEATURES", "pcmcia", "task-base-pcmcia task-base-pcmcia-dev task-base-pcmcia-dbg", "", d)} \
+            ${@base_contains("MACHINE_FEATURES", "phone", "task-base-phone task-base-phone-dev task-base-phone-dbg", "", d)} \
             ${@base_contains("MACHINE_FEATURES", "screen", "task-base-screen task-base-screen-dev task-base-screen-dbg", "", d)} \
             ${@base_contains("MACHINE_FEATURES", "serial", "task-base-serial task-base-serial-dev task-base-serial-dbg", "", d)} \
             ${@base_contains("MACHINE_FEATURES", "touchscreen", "task-base-touchscreen task-base-touchscreen-dev task-base-touchscreen-dbg", "", d)} \
@@ -68,6 +69,7 @@ RDEPENDS_task-base = "\
     ${@base_contains('COMBINED_FEATURES', 'irda', 'task-base-irda', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pci', 'task-base-pci', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'task-base-pcmcia', '',d)} \
+    ${@base_contains('COMBINED_FEATURES', 'phone', 'task-base-phone', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbgadget', 'task-base-usbgadget', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbhost', 'task-base-usbhost', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'bluetooth', 'task-base-bluetooth', '',d)} \
@@ -318,3 +320,7 @@ RRECOMMENDS_task-base-ipv6 = "\
 RDEPENDS_task-base-serial = "\
     setserial \
     lrzsz "
+
+RDEPENDS_task-base-phone = "\
+    gsmd \
+    libgsmd-tools"
