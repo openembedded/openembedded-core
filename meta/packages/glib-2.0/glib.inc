@@ -38,3 +38,6 @@ do_stage () {
 	install -m 0644 ${S}/m4macros/glib-2.0.m4 ${STAGING_DATADIR}/aclocal/glib-2.0.m4
 	install -m 0644 ${S}/m4macros/glib-gettext.m4 ${STAGING_DATADIR}/aclocal/glib-gettext.m4
 }
+
+FILES_${PN} = "${libdir}/lib*so.*"
+FILES_${PN}-dev += "${libdir}/glib-2.0/include"
