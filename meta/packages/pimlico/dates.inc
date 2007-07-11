@@ -7,7 +7,7 @@ RDEPENDS = "libedata-cal"
 inherit autotools pkgconfig gtk-icon-cache
 
 # EXTRA_OECONF = "--disable-debug"
-EXTRA_OECONF = "--enable-owl=true"
+EXTRA_OECONF = "--enable-owl=true --disable-dnd"
 
 FILES_${PN} += "${datadir}/pixmaps/dates.png"
 
