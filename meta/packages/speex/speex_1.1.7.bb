@@ -3,7 +3,7 @@ SECTION = "libs"
 LICENSE = "BSD"
 HOMEPAGE = "http://www.speex.org"
 DEPENDS = "libogg"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://downloads.us.xiph.org/releases/speex/${PN}-${PV}.tar.gz"
 
@@ -15,16 +15,10 @@ inherit autotools
 #	--enable-arm5e-asm
 #	--enable-fixed-point
 #
+# NB: the arm assembly is currently broken :(
+#
 
-EXTRA_OECONF_append_openmn = " --enable-arm5e-asm --enable-fixed-point"
-
-do_configure_append() {
-	sed -i s/"^OGG_CFLAGS.*$"/"OGG_CFLAGS = "/g Makefile */Makefile */*/Makefile
-	sed -i s/"^OGG_LIBS.*$"/"OGG_LIBS = -logg"/g Makefile */Makefile */*/Makefile
-	perl -pi -e 's:^includedir.*$:includedir = ${STAGING_INCDIR}:g' Makefile */Makefile */*/Makefile
-	perl -pi -e 's:^oldincludedir.*$:includedir = ${STAGING_INCDIR}:g' Makefile */Makefile */*/Makefile
-	perl -pi -e 's:\s*-I/usr/include$::g' Makefile */Makefile */*/Makefile
-}
+EXTRA_OECONF = " --enable-fixed-point --with-ogg-libraries=${STAGING_LIBDIR} --with-ogg-includes=${STAGING_INCDIR}"
 
 do_stage() {
 	oe_libinstall -C libspeex/.libs -so libspeex ${STAGING_LIBDIR}
