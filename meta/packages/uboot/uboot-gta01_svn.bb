@@ -4,7 +4,7 @@ LICENSE = "GPL"
 SECTION = "bootloader"
 PRIORITY = "optional"
 PV = "1.2.0+svn${SRCDATE}"
-PR = "r3"
+PR = "r4"
 SRCDATE = "20070711"
 
 PROVIDES = "virtual/bootloader"
