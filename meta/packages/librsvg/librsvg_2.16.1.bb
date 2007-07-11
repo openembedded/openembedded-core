@@ -1,8 +1,8 @@
 DESCRIPTION = "Library for rendering SVG files"
 SECTION = "x11/utils"
-DEPENDS = "gtk+ libcroco cairo libart-lgpl libxml2 popt"
+DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 LICENSE = "LGPL"
-PR = "r1"
+PR = "r2"
 
 EXTRA_OECONF = "--disable-mozilla-plugin"
 
