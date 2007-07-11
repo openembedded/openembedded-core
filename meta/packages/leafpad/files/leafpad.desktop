@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Notes
 Exec=/usr/bin/leafpad
+Comment=Text Editor
 Icon=accessories-text-editor
 Terminal=false
 Type=Application
