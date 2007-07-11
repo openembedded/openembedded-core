@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r6"
+PR = "r7"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -77,7 +77,7 @@ RDEPENDS_task-poky-apps-x11-core = "\
 
 
 RDEPENDS_task-poky-apps-x11-games = "\
-    puzzles"
+    oh-puzzles"
 
 
 RDEPENDS_task-poky-apps-x11-pimlico = "\
