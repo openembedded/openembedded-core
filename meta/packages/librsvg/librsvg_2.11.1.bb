@@ -2,9 +2,7 @@ DESCRIPTION = "Library for rendering SVG files"
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco libart-lgpl libxml2 popt"
 LICENSE = "LGPL"
-PR = "r2"
-
-EXTRA_OECONF = "--disable-mozilla-plugin"
+PR = "r3"
 
 inherit autotools pkgconfig gnome
 
@@ -18,7 +16,7 @@ FILES_librsvg-gtk-dev += "${libdir}/gtk-2.0/*.*a \
 FILES_librsvg-gtk-dbg += "${libdir}/gtk-2.0/.debug \
                           ${libdir}/gtk-2.0/*/*/.debug"
 
-EXTRA_OECONF = "--disable-mozilla-plugin"
+EXTRA_OECONF = "--disable-mozilla-plugin --disable-gnome-vfs"
 
 do_stage() {
        autotools_stage_all
