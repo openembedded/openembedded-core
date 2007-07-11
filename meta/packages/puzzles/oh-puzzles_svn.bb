@@ -32,6 +32,7 @@ Type=Application
 Categories=Game
 StartupNotify=true
 SingleInstance=true
+Comment=Play $title.
 STOP
         fi
     done
