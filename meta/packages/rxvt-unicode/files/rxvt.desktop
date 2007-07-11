@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Terminal
+Comment=When all else fails.
 Exec=/usr/bin/rxvt
 Icon=utilities-terminal.png
 Terminal=false
