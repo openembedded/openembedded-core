@@ -45,3 +45,7 @@ EXTRA_OECONF = "--enable-composite --enable-kdrive --enable-builtin-fonts \
 		--with-default-font-path=built-ins \
 		ac_cv_file__usr_share_X11_sgml_defs_ent=no \
 		--enable-xomap"
+
+do_configure_prepend() {
+    sed -i -e 's/tslib-0.0/tslib-1.0/' ${S}/configure.ac
+}

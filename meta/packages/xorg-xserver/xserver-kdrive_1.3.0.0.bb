@@ -3,7 +3,7 @@ require xserver-kdrive-common.inc
 DEPENDS += "libxkbfile libxcalibrate"
 
 PE = "1"
-PR = "r14"
+PR = "r15"
 
 SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	${KDRIVE_COMMON_PATCHES} \
