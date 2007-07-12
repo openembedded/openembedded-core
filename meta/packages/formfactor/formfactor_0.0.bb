@@ -1,6 +1,6 @@
 DESCRIPTION = "Device formfactor information"
 SECTION = "base"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "file://config file://machconfig"
 S = "${WORKDIR}"
