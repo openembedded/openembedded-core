@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r41"
+PR = "r42"
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
@@ -55,13 +55,13 @@ RDEPENDS_task-base = "\
     ${@base_contains('MACHINE_FEATURES', 'apm', 'task-base-apm', '',d)} \
     ${@base_contains('MACHINE_FEATURES', 'acpi', 'task-base-acpi', '',d)} \
     ${@base_contains('MACHINE_FEATURES', 'keyboard', 'task-base-keyboard', '',d)} \
+    ${@base_contains('MACHINE_FEATURES', 'phone', 'task-base-phone', '',d)} \
     \
     ${@base_contains('COMBINED_FEATURES', 'alsa', 'task-base-alsa', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'ext2', 'task-base-ext2', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'irda', 'task-base-irda', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pci', 'task-base-pci', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'task-base-pcmcia', '',d)} \
-    ${@base_contains('COMBINED_FEATURES', 'phone', 'task-base-phone', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbgadget', 'task-base-usbgadget', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbhost', 'task-base-usbhost', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'bluetooth', 'task-base-bluetooth', '',d)} \
