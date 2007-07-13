@@ -55,8 +55,8 @@ Index: trunk/src/dates_main.c
  #include <libical/icaltime.h>
  #include <gconf/gconf-client.h>
  
++#include <gtk/gtkmenuitem.h>
 +#include "owlwindowmenu.h"
-+
  #include "dates_types.h"
  #include "dates_platform.h"
  #include "dates_callbacks.h"
