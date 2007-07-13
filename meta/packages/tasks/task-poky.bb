@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r7"
+PR = "r8"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -72,7 +72,7 @@ RDEPENDS_task-poky-x11-base = "\
 RDEPENDS_task-poky-apps-x11-core = "\
     leafpad \
     pcmanfm \
-    rxvt-unicode \
+    gtkterm2 \
     screenshot"
 
 
