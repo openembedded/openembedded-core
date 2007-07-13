@@ -1,0 +1,52 @@
+Index: trunk/src/contacts-gtk.c
+===================================================================
+--- trunk.orig/src/contacts-gtk.c	2007-07-11 22:16:08.000000000 +0100
++++ trunk/src/contacts-gtk.c	2007-07-13 09:02:03.000000000 +0100
+@@ -179,8 +179,8 @@
+ 	vbox7 = gtk_vbox_new (FALSE, 0);
+ 	gtk_container_add (GTK_CONTAINER (main_window), vbox7);
+ 
+-	main_menubar = gtk_menu_bar_new ();
+-	gtk_box_pack_start (GTK_BOX (vbox7), main_menubar, FALSE, FALSE, 0);
++	main_menubar = gtk_menu_new ();
++	gtk_widget_show (main_menubar);
+ 
+ 	contacts_menu = gtk_menu_item_new_with_mnemonic (_("_Contacts"));
+ 	gtk_container_add (GTK_CONTAINER (main_menubar), contacts_menu);
+Index: trunk/src/Makefile.am
+===================================================================
+--- trunk.orig/src/Makefile.am	2007-04-19 15:41:14.000000000 +0100
++++ trunk/src/Makefile.am	2007-07-13 08:50:58.000000000 +0100
+@@ -28,7 +28,7 @@
+                     contacts-@FRONTEND@.c \
+                     contacts-@FRONTEND@.h
+ 
+-contacts_LDADD   = $(CONTACTS_LIBS)
++contacts_LDADD   = $(CONTACTS_LIBS) -lowl
+ contacts_LDFLAGS = @CONTACTS_LIBS@
+ 
+ MAINTAINERCLEANFILES = config.h.in Makefile.in
+Index: trunk/src/contacts-main.c
+===================================================================
+--- trunk.orig/src/contacts-main.c	2007-07-11 22:16:08.000000000 +0100
++++ trunk/src/contacts-main.c	2007-07-13 09:02:30.000000000 +0100
+@@ -27,6 +27,8 @@
+ #include <libgnomevfs/gnome-vfs.h>
+ #endif
+ 
++#include "owlwindowmenu.h"
++
+ #include "bacon-message-connection.h"
+ #include "contacts-defs.h"
+ #include "contacts-utils.h"
+@@ -222,6 +224,10 @@
+ 		gtk_widget_show_all (widget);
+ 	}
+ 
++	gtk_widget_show_all (data->ui->main_menubar);
++	owl_set_window_menu (GTK_WINDOW (data->ui->main_window),
++			     GTK_MENU (data->ui->main_menubar));
++
+ 	gtk_main ();
+ 
+ 	/* if we have modified the current contact, but not saved it, do so now */
