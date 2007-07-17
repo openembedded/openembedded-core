@@ -24,9 +24,13 @@
 
 OEROOT=`pwd`
 
+if [ "x$1" = "x" ]; then
+	BDIR="build"
+fi
+
 BBDIR="$OEROOT/bitbake/"
 PKGDIR="$OEROOT/meta/"
-BUILDDIR="$OEROOT/build/"
+BUILDDIR="$OEROOT/$BDIR/"
 MSG=''
 
 BUILD_ARCH=`uname -m`
