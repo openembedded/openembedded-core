@@ -49,6 +49,9 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'DL_DIR = "/srv/poky/sources"' >> "$CONFFILE"
 fi
 
+BBTARGET="$1"
+shift
+
 . ./scripts/poky-env-internal
 
-bitbake $1
+bitbake $BBTARGET
