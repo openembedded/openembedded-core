@@ -68,11 +68,11 @@ fi
 if [ "$MACHINE" = "qemuarm" ]; then
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-            T=$BUILDDIR/tmp/deploy/images/poky-image-
+            T=$BUILDDIR/tmp/deploy/images/poky-image
             if [ -e "$T-sdk-qemuarm.ext2" ]; then
-                HDIMAGE=$T-sdk-qemuarm.ext2
-            elif [ -e "$T-pda-qemuarm.ext2" ]; then
-                HDIMAGE=$T-pda-qemuarm.ext2
+                HDIMAGE="$T-sdk-qemuarm.ext2"
+            elif [ -e "$T-sato-qemuarm.ext2" ]; then
+                HDIMAGE="$T-sato-qemuarm.ext2"
             fi
         fi
     fi
@@ -81,7 +81,7 @@ fi
 if [ "$MACHINE" = "spitz" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-pda-spitz.ext3
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-sato-spitz.ext3
         fi
     fi
 fi
@@ -89,7 +89,7 @@ fi
 if [ "$MACHINE" = "akita" ]; then
     if [ "$TYPE" = "jffs2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-pda-akita.jffs2
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-sato-akita.jffs2
         fi
     fi
 fi
@@ -100,11 +100,11 @@ if [ "$MACHINE" = "qemux86" ]; then
     fi
     if [ "$TYPE" = "ext2" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
-            T=$BUILDDIR/tmp/deploy/images/poky-image-
+            T=$BUILDDIR/tmp/deploy/images/poky-image
             if [ -e "$T-sdk-qemux86.ext2" ]; then
                 HDIMAGE=$T-sdk-qemux86.ext2
-            elif [ -e "$T-pda-qemux86.ext2" ]; then
-                HDIMAGE=$T-pda-qemux86.ext2
+            elif [ -e "$T-sato-qemux86.ext2" ]; then
+                HDIMAGE=$T-sato-qemux86.ext2
             fi
         fi
     fi
