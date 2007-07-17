@@ -24,30 +24,30 @@
 
 OEROOT=`pwd`
 
-BBDIR=$OEROOT/bitbake/
-PKGDIR=$OEROOT/meta/
-BUILDDIR=$OEROOT/build/
+BBDIR="$OEROOT/bitbake/"
+PKGDIR="$OEROOT/meta/"
+BUILDDIR="$OEROOT/build/"
 MSG=''
 
 BUILD_ARCH=`uname -m`
 BUILD_OS=`uname | tr [A-Z] [a-z]`
-BUILD_SYS=$BUILD_ARCH-$BUILD_OS
+BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
 
-PATH=$BBDIR/bin/:$OEROOT/scripts:$PATH
+PATH="$BBDIR/bin/:$OEROOT/scripts:$PATH"
 
-cd $BUILDDIR
+cd "$BUILDDIR"
 
 # Remove any symlinks from paths
-BBDIR=`readlink -f $BBDIR`
-PKGDIR=`readlink -f $PKGDIR`
-BUILDDIR=`readlink -f $BUILDDIR`
+BBDIR=`readlink -f "$BBDIR"`
+PKGDIR=`readlink -f "$PKGDIR"`
+BUILDDIR=`readlink -f "$BUILDDIR"`
 
-if ! (test -d $BBDIR && test -d $PKGDIR && test -d $BUILDDIR); then
+if ! (test -d "$BBDIR" && test -d "$PKGDIR" && test -d "$BUILDDIR"); then
     echo >&2 "Error: Not all directories exist! Did you run this script in poky directory?"
     exit 1
 fi
 
-if ! (test -r $BUILDDIR/conf/local.conf); then
+if ! (test -r "$BUILDDIR/conf/local.conf"); then
     cp -f $BUILDDIR/conf/local.conf.sample $BUILDDIR/conf/local.conf
 fi
 
