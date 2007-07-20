@@ -4,7 +4,7 @@ SECTION = "base"
 PRIORITY = "optional"
 DEPENDS = "ncurses-native"
 
-inherit autotools sdk
+inherit autotools cross
 
 S = "${WORKDIR}/gdb-${PV}"
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
@@ -31,5 +31,5 @@ do_configure () {
 }
 
 do_stage() {
-	:	
+	oe_runmake install
 }
