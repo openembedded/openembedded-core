@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r1"
+PR = "r4"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -48,6 +48,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            ${RPSRC}/mmcsd_no_scr_check-r1.patch;patch=1;status=hack \
            ${RPSRC}/integrator_rgb-r1.patch;patch=1;status=hack \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1;status=hack \
+           file://htcuni.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1;status=hack \
            file://connectplus-remove-ide-HACK.patch;patch=1;status=hack \
            file://squashfs3.0-2.6.15.patch;patch=1;status=external \
@@ -61,6 +62,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            file://defconfig-qemuarm \
            file://defconfig-qemux86 \
            file://defconfig-bootcdx86 \
+           file://defconfig-htcuniversal \
            file://defconfig-tosa "
 
 # Add this to enable pm debug code (useful with a serial lead)
