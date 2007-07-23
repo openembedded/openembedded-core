@@ -1,0 +1,188 @@
+commit 7670d4a2720c61fbc7b989fed14c676f04ac3ad1
+Author: Dodji Seketeli <dodji@openedhand.com>
+Date:   Mon Jul 16 12:24:34 2007 +0200
+
+    Remove side effects from BuiltinReadDirectory()
+    
+    The first time BuiltinReadDirectory() is called,
+    save the content of builtin_dir and builtin_alias,
+    before calling FontFileAddFontFile(), because that fonction
+    will modify those.
+    
+    Then, in subsequent calls to BuiltinReadDirectory(), restore
+    builtin_dir and builtin_alias so that the side effect incurred
+    by the first call disappears.
+
+diff --git a/src/builtins/dir.c b/src/builtins/dir.c
+index c272449..97f1e1e 100644
+--- a/src/builtins/dir.c
++++ b/src/builtins/dir.c
+@@ -29,6 +29,133 @@
+ #endif
+ #include "builtin.h"
+ 
++BuiltinDirPtr
++BuiltinDirsDup (const BuiltinDirPtr a_dirs,
++                int a_dirs_len)
++{
++    BuiltinDirPtr dirs=NULL ;
++    int i=0 ;
++
++    if (!a_dirs)
++        return NULL ;
++
++    dirs = xcalloc (a_dirs_len, sizeof (BuiltinDirRec)) ;
++    if (!dirs)
++        return NULL ;
++
++    for (i=0; i < a_dirs_len; i++) {
++        int len = strlen (a_dirs[i].file_name) ;
++        dirs[i].file_name = xcalloc (1, len) ;
++        memmove (dirs[i].file_name, a_dirs[i].file_name, len);
++        len = strlen (a_dirs[i].font_name) ;
++        dirs[i].font_name = xcalloc (1, len) ;
++        memmove (dirs[i].font_name, a_dirs[i].font_name, len);
++    }
++    return dirs ;
++}
++
++/**
++ * Copy a_save back into a_cur
++ * @param a_cur the instance of BuiltinDir to restore
++ * @param a_saved the saved instance of BuiltinDir to copy into a_cur
++ * @return 0 if went okay, 1 otherwise.
++ */
++int
++BuiltinDirRestore (BuiltinDirPtr a_cur,
++                   const BuiltinDirPtr a_saved)
++{
++    if (!a_cur)
++        return 1 ;
++    if (!a_saved)
++        return 0 ;
++
++    if (a_saved->font_name)
++        memmove (a_cur->font_name, a_saved->font_name, strlen (a_saved->font_name)) ;
++    return 0 ;
++}
++
++
++int
++BuiltinDirsRestore (BuiltinDirPtr a_cur_tab,
++                    const BuiltinDirPtr a_saved_tab,
++                    int a_tab_len)
++{
++    int i=0 ;
++
++    if (!a_cur_tab)
++        return 1 ;
++    if (!a_saved_tab)
++        return 0 ;
++
++    for (i=0 ; i < a_tab_len; i++) {
++        if (BuiltinDirRestore (&a_cur_tab[i], &a_saved_tab[i]))
++            return 1 ;
++    }
++    return 0 ;
++}
++
++BuiltinAliasPtr
++BuiltinAliasesDup (const BuiltinAliasPtr a_aliases,
++                   int a_aliases_len)
++{
++    BuiltinAliasPtr aliases=NULL ;
++    int i=0 ;
++
++    if (!a_aliases)
++        return NULL ;
++
++    aliases = xcalloc (a_aliases_len, sizeof (BuiltinAliasRec)) ;
++    if (!aliases)
++        return NULL ;
++
++    for (i=0; i < a_aliases_len; i++) {
++        int len = strlen (a_aliases[i].font_name) ;
++        aliases[i].font_name = xcalloc (1, len) ;
++        memmove (aliases[i].font_name, a_aliases[i].font_name, len);
++    }
++    return aliases ;
++}
++
++/**
++ * Copy a_save back into a_cur
++ * @param a_cur the instance of BuiltinAlias to restore
++ * @param a_saved the saved instance of BuiltinAlias to copy into a_cur
++ * @return 0 if went okay, 1 otherwise.
++ */
++int
++BuiltinAliasRestore (BuiltinAliasPtr a_cur,
++                     const BuiltinAliasPtr a_save)
++{
++    if (!a_cur)
++        return 1 ;
++    if (!a_save)
++        return 0 ;
++    if (a_save->alias_name)
++        memmove (a_cur->alias_name, a_save->alias_name, strlen (a_save->alias_name)) ;
++    if (a_save->font_name)
++        memmove (a_cur->font_name, a_save->font_name, strlen (a_save->font_name)) ;
++    return 0 ;
++}
++
++int
++BuiltinAliasesRestore (BuiltinAliasPtr a_cur_tab,
++                       const BuiltinAliasPtr a_saved_tab,
++                       int a_tab_len)
++{
++    int i=0 ;
++
++    if (!a_cur_tab)
++        return 1 ;
++    if (!a_saved_tab)
++        return 0 ;
++
++    for (i=0 ; i < a_tab_len; i++) {
++        if (BuiltinAliasRestore (&a_cur_tab[i], &a_saved_tab[i]))
++            return 1 ;
++    }
++    return 0 ;
++}
++
+ int
+ BuiltinReadDirectory (char *directory, FontDirectoryPtr *pdir)
+ {
+@@ -36,6 +163,34 @@ BuiltinReadDirectory (char *directory, FontDirectoryPtr *pdir)
+     int			i;
+ 
+     dir = FontFileMakeDir ("", builtin_dir_count);
++    static BuiltinDirPtr saved_builtin_dir ;
++    static BuiltinAliasPtr saved_builtin_alias ;
++
++
++    if (saved_builtin_dir)
++    {
++        BuiltinDirsRestore ((BuiltinDirPtr) builtin_dir,
++                            saved_builtin_dir,
++                            builtin_dir_count) ;
++    }
++    else
++    {
++        saved_builtin_dir = BuiltinDirsDup ((const BuiltinDirPtr) builtin_dir,
++                                            builtin_dir_count) ;
++    }
++
++    if (saved_builtin_alias)
++    {
++        BuiltinAliasesRestore ((BuiltinAliasPtr) builtin_alias,
++                               saved_builtin_alias,
++                               builtin_alias_count) ;
++    }
++    else
++    {
++        saved_builtin_alias = BuiltinAliasesDup ((const BuiltinAliasPtr) builtin_alias,
++                                                 builtin_alias_count) ;
++    }
++
+     for (i = 0; i < builtin_dir_count; i++)
+     {
+ 	if (!FontFileAddFontFile (dir,
