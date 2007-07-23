@@ -1,0 +1,26 @@
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile
++++ git/Makefile
+@@ -60,7 +60,7 @@ $(BUILDDIR)/mkfs.jffs2: $(BUILDDIR)/crc3
+ 			$(BUILDDIR)/compr_zlib.o \
+ 			$(BUILDDIR)/compr_lzo.o \
+ 			$(BUILDDIR)/compr.o
+-	$(CC) $(LDFLAGS) -o $@ $^ -lz -llzo2
++	$(CC) $(LDFLAGS) -o $@ $^ -lz -llzo
+ 
+ $(BUILDDIR)/flash_eraseall: $(BUILDDIR)/crc32.o $(BUILDDIR)/flash_eraseall.o
+ 	$(CC) $(LDFLAGS) -o $@ $^
+Index: git/compr_lzo.c
+===================================================================
+--- git.orig/compr_lzo.c
++++ git/compr_lzo.c
+@@ -26,7 +26,7 @@
+ #include <string.h>
+ #include <asm/types.h>
+ #include <linux/jffs2.h>
+-#include <lzo/lzo1x.h>
++#include <lzo1x.h>
+ #include "compr.h"
+ 
+ extern int page_size;
