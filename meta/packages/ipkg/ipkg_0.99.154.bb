@@ -1,4 +1,4 @@
 require ipkg.inc
-PR = "r6"
+PR = "r7"
 
 RDEPENDS_${PN} += "update-alternatives"
