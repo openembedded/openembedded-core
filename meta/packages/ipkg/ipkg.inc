@@ -5,7 +5,6 @@ LICENSE = "GPL"
 PROVIDES = "virtual/ipkg libipkg"
 
 PACKAGES =+ "libipkg-dev libipkg"
-RDEPENDS_${PN} += "update-alternatives"
 FILES_libipkg-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so ${includedir}"
 FILES_libipkg = "${libdir}/*.so.*"
 AUTO_LIBNAME_PKGS = "libipkg"
