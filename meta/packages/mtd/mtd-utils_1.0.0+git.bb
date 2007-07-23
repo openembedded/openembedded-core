@@ -3,11 +3,9 @@ SECTION = "base"
 DEPENDS = "zlib lzo"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=master \
-	   file://add_lzo.patch;patch=1 \
-	   file://favour_lzo.patch;patch=1 \
            file://add-exclusion-to-mkfs-jffs2-git.patch;patch=1 \
 	   file://fix-ignoreerrors-git.patch;patch=1"
 
