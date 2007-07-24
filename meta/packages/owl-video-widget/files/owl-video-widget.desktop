@@ -8,3 +8,4 @@ Type=Application
 Categories=AudioVideo;Video;Player;
 SingleInstance=true
 StartupNotify=true
+Comment=Video Player
