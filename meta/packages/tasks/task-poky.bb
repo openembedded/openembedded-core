@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r8"
+PR = "r9"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -103,7 +103,8 @@ RDEPENDS_task-poky-x11-sato = "\
 
 
 RDEPENDS_task-poky-tools-debug = "\
-    gdb \    
+    gdb \
+    gdbserver \
     strace"
 
 
