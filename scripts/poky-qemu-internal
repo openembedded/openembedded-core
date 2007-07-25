@@ -44,17 +44,17 @@ fi
 
 if [ "$TYPE" != "nfs" -a ! -f "$HDIMAGE" ]; then
     echo "Error, image file $HDIMAGE doesn't exist"
-    exit 1
+    return
 fi
 
 if [ ! -f "$ZIMAGE" ]; then
     echo "Error, kernel image file $ZIMAGE doesn't exist"
-    exit 1
+    return
 fi
 
 if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" -a "$MACHINE" != "akita" -a "$MACHINE" != "spitz" ]; then
     echo "Error, unsupported machine type $MACHINE"
-    exit 1
+    return
 fi
 
 if [ "$MACHINE" = "qemuarm" ]; then
@@ -68,7 +68,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
         fi
         if [ ! -d "$HDIMAGE" ]; then
             echo "Error, NFS mount point $HDIMAGE doesn't exist"
-            exit 1
+            return
         fi
         QEMUOPTIONS="-append \"root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD -M versatilepb"
     fi
@@ -85,7 +85,7 @@ if [ "$MACHINE" = "qemux86" ]; then
         fi
         if [ ! -d "$HDIMAGE" ]; then
             echo "Error, NFS mount point $HDIMAGE doesn't exist."
-            exit 1
+            return
         fi
         QEMUOPTIONS="-std-vga -append \"root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD\" $QEMU_NETWORK_CMD"
     fi
@@ -119,7 +119,7 @@ fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Error, unable to support this combination of options"
-    exit 1
+    return
 fi
 
 echo "Running $QEMU using sudo..."
