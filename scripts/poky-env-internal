@@ -50,6 +50,7 @@ BUILDDIR=`readlink -f "$BUILDDIR"`
 
 if ! (test -d "$BBDIR" && test -d "$PKGDIR" && test -d "$BUILDDIR"); then
     echo >&2 "Error: Not all directories exist! Did you run this script in poky directory?"
+    return
 fi
 
 if ! (test -r "$BUILDDIR/conf/local.conf"); then
