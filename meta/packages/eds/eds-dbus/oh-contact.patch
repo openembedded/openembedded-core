@@ -85,9 +85,9 @@ Index: addressbook/libedata-book-orbit/ximian-vcard.h
 +"VERSION:3.0\n" \
 +"FN:OpenedHand Ltd\n" \
 +"URL:http://www.o-hand.com/\n" \
-+"EMAIL;info@openedhand.com\n" \
-+"TEL;TYPE=VOICE:+44 208 819 6559\n" \
-+"ADR:216 - 218 Homesdale Road;Unit R\, Homesdale Business Center;\n" \
++"EMAIL:info@openedhand.com\n" \
++"TEL:TYPE=VOICE:+44 208 819 6559\n" \
++"ADR:;216 - 218 Homesdale Road;Unit R\, Homesdale Business Center;\n" \
 +" Bromley;;BR1 2QZ;United Kingdom\n" \
 +"LABEL:Unit R, Homesdale Business Center\\n216 - 218 Homesdale Road\\nBromley\\nBR1 2QZ\\nUnited Kingdom\n" \
 +"PHOTO;ENCODING=b:iVBORw0KGgoAAAANSUhEUgAAAC0AAAA\n" \
