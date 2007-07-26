@@ -1,0 +1,69 @@
+Index: gtk/gtkcellrenderertoggle.c
+===================================================================
+--- gtk/gtkcellrenderertoggle.c	(revision 18542)
++++ gtk/gtkcellrenderertoggle.c	(working copy)
+@@ -80,6 +80,8 @@
+ typedef struct _GtkCellRendererTogglePrivate GtkCellRendererTogglePrivate;
+ struct _GtkCellRendererTogglePrivate
+ {
++  gint indicator_size;
++  GtkWidget *cached_widget;
+   guint inconsistent : 1;
+ };
+ 
+@@ -281,6 +283,27 @@
+ }
+ 
+ static void
++on_widget_style_set (GtkWidget *widget, GtkStyle *previous, gpointer user_data)
++{
++  GtkCellRendererTogglePrivate *priv = user_data;
++  PangoContext *context;
++  PangoFontMetrics *metrics;
++  int height;
++  
++  context = gtk_widget_get_pango_context (widget);
++  metrics = pango_context_get_metrics (context,
++                                       widget->style->font_desc,
++                                       pango_context_get_language (context));
++
++  height = pango_font_metrics_get_ascent (metrics) +
++    pango_font_metrics_get_descent (metrics);
++  
++  pango_font_metrics_unref (metrics);
++  
++  priv->indicator_size = PANGO_PIXELS (height * 0.85);
++}
++
++static void
+ gtk_cell_renderer_toggle_get_size (GtkCellRenderer *cell,
+ 				   GtkWidget       *widget,
+ 				   GdkRectangle    *cell_area,
+@@ -291,10 +314,25 @@
+ {
+   gint calc_width;
+   gint calc_height;
++  GtkCellRendererTogglePrivate *priv;
+ 
+-  calc_width = (gint) cell->xpad * 2 + TOGGLE_WIDTH;
+-  calc_height = (gint) cell->ypad * 2 + TOGGLE_WIDTH;
++  priv = GTK_CELL_RENDERER_TOGGLE_GET_PRIVATE (cell);
+ 
++  if (priv->cached_widget != widget) {
++    if (priv->cached_widget) {
++      g_object_remove_weak_pointer (widget, &priv->cached_widget);
++      g_signal_handlers_disconnect_by_func (priv->cached_widget, on_widget_style_set, priv);
++    }
++    priv->cached_widget = widget;
++    g_object_add_weak_pointer (widget, &priv->cached_widget);
++    g_signal_connect (widget, "style-set", on_widget_style_set, priv);
++    
++    on_widget_style_set (widget, NULL, priv);
++  }
++
++  calc_width = (gint) cell->xpad * 2 + priv->indicator_size;
++  calc_height = (gint) cell->ypad * 2 + priv->indicator_size;
++
+   if (width)
+     *width = calc_width;
+ 
