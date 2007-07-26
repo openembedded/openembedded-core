@@ -1,7 +1,7 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r11"
+PR = "r12"
 
 # disable per default - untested and not all patches included.
 DEFAULT_PREFERENCE = "-1" 
@@ -23,6 +23,7 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
         file://entry-cairo.patch;patch=1;pnum=0 \
         file://toggle-font.diff;patch=1;pnum=0 \
         file://combo-arrow-size.patch;patch=1;pnum=0 \
+        file://range-no-redraw.patch;patch=1;pnum=0 \
         file://scrolled-placement.patch;patch=1;pnum=0"
 #           file://scroll-timings.patch;patch=1 \
 #           file://pangoxft2.10.6.diff;patch=1"

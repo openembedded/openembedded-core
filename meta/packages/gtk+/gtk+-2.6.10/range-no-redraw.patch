@@ -1,0 +1,18 @@
+Index: gtk/gtkrange.c
+===================================================================
+--- gtk/gtkrange.c	(revision 18542)
++++ gtk/gtkrange.c	(working copy)
+@@ -1569,9 +1569,12 @@
+ 
+   gtk_widget_queue_draw (GTK_WIDGET (range));
+   /* This is so we don't lag the widget being scrolled. */
++#if 0
++  /* Disable this, the scroll bar lags a bit but the end result is that
++     scrolling treeviews is *a lot* smoother. See GNOME #460534. */
+   if (GTK_WIDGET_REALIZED (range))
+     gdk_window_process_updates (GTK_WIDGET (range)->window, FALSE);
+-  
++#endif
+   /* Note that we don't round off to range->round_digits here.
+    * that's because it's really broken to change a value
+    * in response to a change signal on that value; round_digits
