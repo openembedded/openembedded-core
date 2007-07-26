@@ -1,6 +1,6 @@
 require gtk+.inc
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
            file://no-demos.patch;patch=1 \
@@ -16,6 +16,7 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
 	   file://filechooser-respect-style.patch;patch=1 \
 	   file://filechooser-default.patch;patch=1 \
 	   file://toggle-font.diff;patch=1;pnum=0 \
+	   file://combo-arrow-size.patch;patch=1;pnum=0 \
 	   "
 
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest"
