@@ -4,7 +4,7 @@ DEPENDS = "gconf gtk+"
 RDEPENDS = "settings-daemon"
 
 PV = "0.0+svn${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/${PN}"
 

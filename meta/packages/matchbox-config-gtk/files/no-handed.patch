@@ -1,7 +1,7 @@
-Index: matchbox-config-gtk/appearance/mb-appearance.c
+Index: appearance/mb-appearance.c
 ===================================================================
---- matchbox-config-gtk/appearance/mb-appearance.c	(revision 1614)
-+++ matchbox-config-gtk/appearance/mb-appearance.c	(working copy)
+--- appearance/mb-appearance.c	(revision 1614)
++++ appearance/mb-appearance.c	(working copy)
 @@ -300,11 +300,13 @@
      gtk_font_button_set_font_name (GTK_FONT_BUTTON (font_button),
                                     gconf_value_get_string (value));
