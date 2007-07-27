@@ -1,6 +1,6 @@
 require gtk+.inc
 
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
            file://no-demos.patch;patch=1 \
