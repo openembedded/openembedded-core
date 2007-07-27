@@ -4,7 +4,7 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib"
 
 PV = "1.4.0+svn${SRCDATE}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://oh-contact.patch;patch=1;pnum=0 \
