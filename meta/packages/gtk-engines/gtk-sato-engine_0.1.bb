@@ -2,11 +2,10 @@ SECTION = "x11/base"
 DESCRIPTION = "Sato theme engine for GTK"
 LICENSE = "LGPL"
 DEPENDS = "gtk+"
-PV = "0.1+svn${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/sato/trunk;module=gtk-engine;proto=http"
-S = "${WORKDIR}/gtk-engine"
+SRC_URI = "http://pokylinux.org/releases/sato/sato-engine-0.1.tar.gz"
+S = "${WORKDIR}/sato-engine-0.1"
 
 PACKAGES += "gtk-theme-sato"
 FILES_${PN} = "${libdir}/gtk-2.0/*/engines/*.so "
