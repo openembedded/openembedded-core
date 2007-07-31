@@ -2,10 +2,8 @@ SECTION = "x11"
 DESCRIPTION = "Sato Icon Theme"
 LICENSE = "CC-BY-SA3"
 DEPENDS = ""
-PV = "0.1+svn${SRCDATE}"
 
-SRC_URI = "svn://svn.o-hand.com/repos/sato/trunk;module=sato-icon-theme;proto=http"
-S = "${WORKDIR}/sato-icon-theme"
+SRC_URI = "http://pokylinux.org/releases/sato/sato-icon-theme-0.1.tar.gz"
 
 inherit autotools pkgconfig
 
