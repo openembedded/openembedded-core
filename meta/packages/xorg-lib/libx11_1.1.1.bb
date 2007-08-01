@@ -4,7 +4,7 @@ DESCRIPTION = "Base X libs."
 DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto"
 PROVIDES = "virtual/libx11"
-PR = "r1"
+PR = "r2"
 PE = "1"
 
 XORG_PN = "libX11"
@@ -16,7 +16,6 @@ do_compile() {
 		unset CC LD CXX CCLD
 		oe_runmake -C src/util 'CC=${BUILD_CC}' 'LD=${BUILD_LD}' 'CXX=${BUILD_CXX}' 'CCLD=${BUILD_CCLD}' 'CFLAGS=-D_GNU_SOURCE ${BUILD_CFLAGS}' 'LDFLAGS=${BUILD_LDFLAGS}' 'CXXFLAGS=${BUILD_CXXFLAGS}' 'CPPFLAGS=${BUILD_CPPFLAGS}' makekeys
 	)
-	rm -f ${STAGING_INCDIR}/X11/Xlib.h
 	oe_runmake
 }
 
