@@ -1,0 +1,11 @@
+--- libmusicbrainz-2.1.2.orig/lib/comsocket.cpp
++++ libmusicbrainz-2.1.2/lib/comsocket.cpp
+@@ -356,7 +356,7 @@
+ &wset))
+ 		{
+ 			int error = 0;
+-                        mb_socklen_t len = sizeof(error);
++                        int len = sizeof(error);
+ 
+ 		if (getsockopt(m_nSocket, SOL_SOCKET, SO_ERROR, &error,
+ &len) < 0)
