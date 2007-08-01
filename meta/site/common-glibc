@@ -11,3 +11,9 @@ clamav_av_have_in_port_t=${clamav_av_have_in_port_t=yes}
 clamav_av_have_in_addr_t=${clamav_av_have_in_addr_t=yes}
 ac_cv_func_mmap_fixed_mapped=${ac_cv_func_mmap_fixed_mapped=yes}
 
+# glib
+glib_cv_strlcpy=${glib_cv_strlcpy=no}
+ac_cv_func_printf_unix98=${ac_cv_func_printf_unix98=yes}
+ac_cv_func_snprintf_c99=${ac_cv_func_snprintf_c99=yes}
+ac_cv_func_vsnprintf_c99=${ac_cv_func_vsnprintf_c99=yes}
+glib_cv_compliant_posix_memalign=${glib_cv_compliant_posix_memalign=1}
