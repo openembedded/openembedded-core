@@ -1,0 +1,180 @@
+---
+ ac_func_accept_argtypes.m4 |   94 +++++++++++++++++++++++++++++++++++++++++++++
+ configure.in               |   64 ------------------------------
+ 2 files changed, 96 insertions(+), 62 deletions(-)
+
+Index: libmusicbrainz-2.1.3/ac_func_accept_argtypes.m4
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ libmusicbrainz-2.1.3/ac_func_accept_argtypes.m4	2007-08-01 22:08:44.000000000 +0100
+@@ -0,0 +1,94 @@
++##### http://autoconf-archive.cryp.to/ac_func_accept_argtypes.html
++#
++# SYNOPSIS
++#
++#   AC_FUNC_ACCEPT_ARGTYPES
++#
++# DESCRIPTION
++#
++#   Checks the data types of the three arguments to accept(). Results
++#   are placed into the symbols ACCEPT_TYPE_ARG[123], consistent with
++#   the following example:
++#
++#         #define ACCEPT_ARG1 int
++#         #define ACCEPT_ARG2 struct sockaddr *
++#         #define ACCEPT_ARG3 socklen_t *
++#
++#   This macro requires AC_CHECK_HEADERS to have already verified the
++#   presence or absence of sys/types.h and sys/socket.h.
++#
++#   NOTE: This is just a modified version of the
++#   AC_FUNC_SELECT_ARGTYPES macro. Credit for that one goes to David
++#   MacKenzie et. al.
++#
++# LAST MODIFICATION
++#
++#   2006-10-22
++#
++# COPYLEFT
++#
++#   Copyright (c) 2006 Daniel Richard G. <skunk@iskunk.org>
++#
++#   This program is free software; you can redistribute it and/or
++#   modify it under the terms of the GNU General Public License as
++#   published by the Free Software Foundation; either version 2 of the
++#   License, or (at your option) any later version.
++#
++#   This program is distributed in the hope that it will be useful, but
++#   WITHOUT ANY WARRANTY; without even the implied warranty of
++#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++#   General Public License for more details.
++#
++#   You should have received a copy of the GNU General Public License
++#   along with this program; if not, write to the Free Software
++#   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++#   02111-1307, USA.
++#
++#   As a special exception, the respective Autoconf Macro's copyright
++#   owner gives unlimited permission to copy, distribute and modify the
++#   configure scripts that are the output of Autoconf when processing
++#   the Macro. You need not follow the terms of the GNU General Public
++#   License when using or distributing such scripts, even though
++#   portions of the text of the Macro appear in them. The GNU General
++#   Public License (GPL) does govern all other use of the material that
++#   constitutes the Autoconf Macro.
++#
++#   This special exception to the GPL applies to versions of the
++#   Autoconf Macro released by the Autoconf Macro Archive. When you
++#   make and distribute a modified version of the Autoconf Macro, you
++#   may extend this special exception to the GPL to apply to your
++#   modified version as well.
++
++AC_DEFUN([AC_FUNC_ACCEPT_ARGTYPES],
++[AC_MSG_CHECKING([types of arguments for accept()])
++ AC_CACHE_VAL(ac_cv_func_accept_arg1,dnl
++ [AC_CACHE_VAL(ac_cv_func_accept_arg2,dnl
++  [AC_CACHE_VAL(ac_cv_func_accept_arg3,dnl
++   [for ac_cv_func_accept_arg1 in 'int' 'unsigned int'; do
++     for ac_cv_func_accept_arg2 in 'struct sockaddr' 'void'; do
++      for ac_cv_func_accept_arg3 in 'socklen_t' 'size_t' 'unsigned int' 'int'; do
++       AC_TRY_COMPILE(dnl
++[#ifdef HAVE_SYS_TYPES_H
++#include <sys/types.h>
++#endif
++#ifdef HAVE_SYS_SOCKET_H
++#include <sys/socket.h>
++#endif
++extern accept ($ac_cv_func_accept_arg1, $ac_cv_func_accept_arg2 *, $ac_cv_func_accept_arg3 *);],,dnl
++        [ac_not_found=no ; break 3], ac_not_found=yes)
++      done
++     done
++    done
++   ])dnl AC_CACHE_VAL
++  ])dnl AC_CACHE_VAL
++ ])dnl AC_CACHE_VAL
++ if test "$ac_not_found" = yes; then
++  ac_cv_func_accept_arg1=int
++  ac_cv_func_accept_arg2='struct sockaddr'
++  ac_cv_func_accept_arg3='socklen_t'
++ fi
++ AC_MSG_RESULT([$ac_cv_func_accept_arg1, $ac_cv_func_accept_arg2, $ac_cv_func_accept_arg3])
++ AC_DEFINE_UNQUOTED(ACCEPT_ARG1,$ac_cv_func_accept_arg1, "Argument 1 to accept()")
++ AC_DEFINE_UNQUOTED(ACCEPT_ARG2,$ac_cv_func_accept_arg2, "Argument 2 to accept()")
++ AC_DEFINE_UNQUOTED(ACCEPT_ARG3,$ac_cv_func_accept_arg3, "Argument 3 to accept()")
++])
+Index: libmusicbrainz-2.1.3/configure.in
+===================================================================
+--- libmusicbrainz-2.1.3.orig/configure.in	2007-08-01 21:14:59.000000000 +0100
++++ libmusicbrainz-2.1.3/configure.in	2007-08-01 21:46:03.000000000 +0100
+@@ -76,69 +76,9 @@ AC_DEFUN([AC_PROTOTYPE],[
+  popdef([function])
+ ])
+ 
+-AC_DEFUN([AC_PROTOTYPE_REVERSE],[ifelse($#,0,,$#,1,[[$1]],[AC_PROTOTYPE_REVERSE(builtin([shift],$@)),[$1]])])
+-
+-AC_DEFUN([AC_PROTOTYPE_SUBST],[ifelse($2,,[$1],[AC_PROTOTYPE_SUBST(patsubst([$1],[$2],[$2[]_VAL]),builtin([shift],builtin([shift],$@)))])])
+-
+-AC_DEFUN([AC_PROTOTYPE_TAGS],[ifelse($1,,[],[$1, AC_PROTOTYPE_TAGS(builtin([shift],builtin([shift],$@)))])])
+-AC_DEFUN([AC_PROTOTYPE_DEFINES],[ifelse($1,,[],[AC_DEFINE(function[]_$1, $1_VAL) AC_PROTOTYPE_DEFINES(builtin([shift],$@))])])
+-
+-AC_DEFUN([AC_PROTOTYPE_STATUS],[ifelse($1,,[],[$1 => $1_VAL AC_PROTOTYPE_STATUS(builtin([shift],$@))])])
+-
+-AC_DEFUN([AC_PROTOTYPE_EACH],[
+-  ifelse($2,, [
+-  ], [
+-    pushdef([$1_VAL], $2)
+-    AC_PROTOTYPE_LOOP(rest)
+-    popdef([$1_VAL])
+-    AC_PROTOTYPE_EACH($1, builtin([shift], builtin([shift], $@)))
+-  ])
+-])
+-
+-AC_DEFUN([AC_PROTOTYPE_LOOP],[
+-  ifelse(builtin([eval], $# > 3), 1,
+-  [
+-    pushdef([rest],[builtin([shift],builtin([shift],$@))])
+-    AC_PROTOTYPE_EACH($2,$1)
+-    popdef([rest])
+-  ], [
+-    AC_MSG_CHECKING($3 AC_PROTOTYPE_STATUS(tags))
+-    ac_save_CPPFLAGS="$CPPFLAGS"
+-    ifelse(AC_LANG(C++),,if test "$GXX" = "yes" ; then CPPFLAGS="$CPPFLAGS -Werror" ; fi)
+-    ifelse(AC_LANG(C),,if test "$GCC" = "yes" ; then CPPFLAGS="$CPPFLAGS -Werror" ; fi)
+-    AC_TRY_COMPILE($2, $1, [
+-      CPPFLAGS="$ac_save_CPPFLAGS"
+-      AC_MSG_RESULT(ok)
+-      AC_PROTOTYPE_DEFINES(tags)
+-      break;
+-    ], [
+-      CPPFLAGS="$ac_save_CPPFLAGS"
+-      AC_MSG_RESULT(not ok)
+-    ])
+-  ]
+- )
+-])
+-
+-AC_DEFUN([AC_PROTOTYPE_ACCEPT],[
+-AC_PROTOTYPE(accept,
+- [
+-  #include <sys/types.h>
+-  #include <sys/socket.h>
+- ],
+- [
+-  int a = 0;
+-  ARG2 * b = 0;
+-  ARG3 * c = 0;
+-  accept(a, b, c);
+- ],
+- ARG2, [struct sockaddr, void],
+- ARG3, [socklen_t, size_t, int, unsigned int, long unsigned int])
+-])
+-
+-AC_PROTOTYPE_ACCEPT
++m4_include(ac_func_accept_argtypes.m4)
++AC_FUNC_ACCEPT_ARGTYPES()
+ 
+-AC_DEFINE_UNQUOTED([ACCEPT_ARG2],,"Argument 2 to accept()")
+-AC_DEFINE_UNQUOTED([ACCEPT_ARG3],,"Argument 3 to accept()")
+ AC_DEFINE_UNQUOTED(PREFIX, "${prefix}", [Application install prefix])
+ 
+ AC_OUTPUT([

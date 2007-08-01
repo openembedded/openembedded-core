@@ -4,8 +4,8 @@ LICENSE = "LGPL"
 DEPENDS = "expat"
 PR = "r1"
 
-SRC_URI = "http://ftp.musicbrainz.org/pub/musicbrainz/libmusicbrainz-2.1.2.tar.gz \
-           file://change-len-type.patch;patch=1"
+SRC_URI = "http://ftp.musicbrainz.org/pub/musicbrainz/libmusicbrainz-2.1.3.tar.gz \
+           file://autofoo.patch;patch=1"
 
 inherit autotools pkgconfig
 
