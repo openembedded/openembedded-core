@@ -4,7 +4,6 @@ DESCRIPTION = "Base X libs."
 DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto"
 PROVIDES = "virtual/libx11"
-PR = "r2"
 PE = "1"
 
 XORG_PN = "libX11"

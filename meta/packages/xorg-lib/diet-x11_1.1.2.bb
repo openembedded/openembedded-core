@@ -1,7 +1,5 @@
 require libx11_${PV}.bb
 
-PR = "r1"
-
 SRC_URI += "file://X18NCMSstubs.diff;patch=1 \
 	    file://fix-disable-xlocale.diff;patch=1 \
             file://fix-utf8-wrong-define.patch;patch=1"
