@@ -4,8 +4,7 @@ LICENSE = "LGPL"
 
 DEPENDS = "dbus-glib intltool-native hal"
 RDEPENDS += "udev hal-info"
-SRC_URI = "git://anongit.freedesktop.org/git/ohm/;protocol=git \
-           file://libtool_fix.patch;patch=1"
+SRC_URI = "git://anongit.freedesktop.org/git/ohm/;protocol=git"
 
 PV = "0.0+git${SRCDATE}"
 PR = "r1"
