@@ -2,7 +2,7 @@ require dates.inc
 
 DEFAULT_PREFERENCE = "-1"
 
-PV = "0.4.3+svn${SRCDATE}"
+PV = "0.4.4+svn${SRCDATE}"
 S = "${WORKDIR}/trunk"
 PR = "r1"
 
