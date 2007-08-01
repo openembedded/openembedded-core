@@ -2,8 +2,13 @@
 # Poky configuration to use EABI
 #
 
+TARGET_VENDOR = "-poky"
+
 PREFERRED_PROVIDER_virtual/arm-poky-linux-gnueabi-libc-for-gcc = "glibc-intermediate"
 PREFERRED_PROVIDER_virtual/arm-linux-libc-for-gcc = "glibc-intermediate"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-initial = "gcc-cross-initial"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "gcc-cross"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
 
 PREFERRED_VERSION_gcc ?= "4.1.0+csl-arm-2006q1-6"
 PREFERRED_VERSION_gcc-cross ?= "4.1.0+csl-arm-2006q1-6"
