@@ -6,10 +6,9 @@ LICENSE = "GPL"
 PR = "r2"
 DEPENDS = "gtk+ pango popt"
 
-ALTNAME = "LinuxTraceToolkitViewer-0.8.41-12052006"
+ALTNAME = "LinuxTraceToolkitViewer-${PV}-13062007"
 
-SRC_URI = "http://ltt.polymtl.ca/packages/${ALTNAME}.tar.gz \
-        file://lttv-no-versions.patch;patch=1;pnum=0"
+SRC_URI = "http://ltt.polymtl.ca/packages/${ALTNAME}.tar.gz"
 S = "${WORKDIR}/${ALTNAME}"
 
 inherit autotools
