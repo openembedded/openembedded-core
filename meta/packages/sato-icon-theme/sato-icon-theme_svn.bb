@@ -11,6 +11,8 @@ inherit autotools pkgconfig
 
 FILES_${PN} += "${datadir}"
 
+PACKAGE_ARCH = "all"
+
 pkg_postinst_${PN} () {
         if [ "x$D" != "x" ]; then
                 exit 1
