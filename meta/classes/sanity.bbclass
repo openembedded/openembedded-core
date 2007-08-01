@@ -89,7 +89,7 @@ def check_sanity(e):
 	if not check_app_exists('${BUILD_PREFIX}g++', e.data):
 		missing = missing + "C++ Compiler,"
 
-	required_utilities = "patch diffstat texi2html cvs svn bzip2 tar gzip gawk makeinfo qemu-arm"
+	required_utilities = "patch diffstat help2man texi2html cvs svn bzip2 tar gzip gawk makeinfo qemu-arm"
 
 	for util in required_utilities.split():
 		if not check_app_exists( util, e.data ):
