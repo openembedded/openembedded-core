@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r9"
+PR = "r10"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -126,6 +126,7 @@ RDEPENDS_task-poky-tools-testapps = "\
     tslib-calibrate \
     tslib-tests \
     lrzsz \
+    kexec-tools \
     alsa-utils-amixer \
     alsa-utils-aplay \
     owl-video-widget \
