@@ -4,8 +4,6 @@ RRECOMMENDS = "gnome-vfs-plugin-file shared-mime-info"
 # Some legacy packages will require gnome-mime-data to be installed, but use of
 # it is deprecated.
 
-PR = "r5"
-
 inherit gnome
 
 # This is to provide compatibility with the gnome-vfs DBus fork
@@ -19,7 +17,7 @@ EXTRA_OECONF = " \
 		 --disable-samba \
 		 "
 
-FILES_${PN} += " ${libdir}/vfs"
+FILES_${PN} += " ${libdir}/vfs ${datadir}/dbus-1/services"
 FILES_${PN}-dbg += " ${libdir}/gnome-vfs-2.0/modules/.debug"
 FILES_${PN}-dev += " ${libdir}/gnome-vfs-2.0/include"
 FILES_${PN}-doc += " ${datadir}/gtk-doc"
