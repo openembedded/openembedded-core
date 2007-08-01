@@ -2,8 +2,6 @@ require linux-rp.inc
 
 PR = "r4"
 
-DEFAULT_PREFERENCE = "-1"
-
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
 # http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.18.tar.bz2
