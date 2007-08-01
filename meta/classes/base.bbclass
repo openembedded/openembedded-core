@@ -748,7 +748,7 @@ python () {
 def base_get_srcrev(d):
     import bb
     
-    if bb.fetch.get_srcrev:
+    if hasattr(bb.fetch, "get_srcrev"):
         return bb.fetch.get_srcrev(d)
     return "NOT IMPLEMENTED"
 
