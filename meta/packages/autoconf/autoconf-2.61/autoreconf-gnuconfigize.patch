@@ -1,0 +1,49 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+Index: autoconf-2.61/bin/autoreconf.in
+===================================================================
+--- autoconf-2.61.orig/bin/autoreconf.in	2006-12-14 20:33:52.000000000 +0100
++++ autoconf-2.61/bin/autoreconf.in	2006-12-14 20:34:28.000000000 +0100
+@@ -58,7 +58,7 @@
+ $help = "Usage: $0 [OPTION] ... [DIRECTORY] ...
+ 
+ Run `autoconf' (and `autoheader', `aclocal', `automake', `autopoint'
+-(formerly `gettextize'), and `libtoolize' where appropriate)
++(formerly `gettextize'), `libtoolize', and `gnu-configize' where appropriate)
+ repeatedly to remake the GNU Build System files in specified
+ DIRECTORIES and their subdirectories (defaulting to `.').
+ 
+@@ -107,12 +107,13 @@
+ ";
+ 
+ # Lib files.
+-my $autoconf   = $ENV{'AUTOCONF'}   || '@bindir@/@autoconf-name@';
+-my $autoheader = $ENV{'AUTOHEADER'} || '@bindir@/@autoheader-name@';
+-my $automake   = $ENV{'AUTOMAKE'}   || 'automake';
+-my $aclocal    = $ENV{'ACLOCAL'}    || 'aclocal';
+-my $libtoolize = $ENV{'LIBTOOLIZE'} || 'libtoolize';
+-my $autopoint  = $ENV{'AUTOPOINT'}  || 'autopoint';
++my $autoconf      = $ENV{'AUTOCONF'}     || '@bindir@/@autoconf-name@';
++my $autoheader    = $ENV{'AUTOHEADER'}   || '@bindir@/@autoheader-name@';
++my $automake      = $ENV{'AUTOMAKE'}     || 'automake';
++my $aclocal       = $ENV{'ACLOCAL'}      || 'aclocal';
++my $libtoolize    = $ENV{'LIBTOOLIZE'}   || 'libtoolize';
++my $autopoint     = $ENV{'AUTOPOINT'}    || 'autopoint';
++my $gnuconfigize  = $ENV{'GNUCONFIGIZE'} || 'gnu-configize';
+ 
+ # --install -- as --add-missing in other tools.
+ my $install = 0;
+@@ -644,6 +645,10 @@
+       }
+     }
+ 
++  @ex = grep (/^gnu-configize$/, @exclude);
++  if ($#ex == -1) {
++    xsystem ("$gnuconfigize");
++  }
+ 
+   # -------------- #
+   # Running make.  #
