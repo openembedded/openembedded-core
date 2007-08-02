@@ -1,0 +1,40 @@
+--- intltool-0.35.0/intltool-extract.in.in.orig	2006-06-16 15:49:14.000000000 -0600
++++ intltool-0.35.0/intltool-extract.in.in	2006-06-16 15:49:18.000000000 -0600
+@@ -1,4 +1,4 @@
+-#!@INTLTOOL_PERL@ -w 
++#!@INTLTOOL_PERL@ 
+ # -*- Mode: perl; indent-tabs-mode: nil; c-basic-offset: 4  -*-
+ 
+ #
+--- intltool-0.35.0/intltool-merge.in.in.orig	2006-06-16 15:49:18.000000000 -0600
++++ intltool-0.35.0/intltool-merge.in.in	2006-06-16 15:49:23.000000000 -0600
+@@ -1,4 +1,4 @@
+-#!@INTLTOOL_PERL@ -w
++#!@INTLTOOL_PERL@
+ # -*- Mode: perl; indent-tabs-mode: nil; c-basic-offset: 4  -*-
+ 
+ #
+--- intltool-0.35.0/intltool-prepare.in.orig	2006-06-16 15:49:23.000000000 -0600
++++ intltool-0.35.0/intltool-prepare.in	2006-06-16 15:49:26.000000000 -0600
+@@ -1,4 +1,4 @@
+-#!@INTLTOOL_PERL@ -w
++#!@INTLTOOL_PERL@
+ # -*- Mode: perl; indent-tabs-mode: nil; c-basic-offset: 4  -*-
+ 
+ #  Intltool .desktop, .directory Prepare Tool
+--- intltool-0.35.0/intltool-unicodify.in.orig	2006-06-16 15:49:26.000000000 -0600
++++ intltool-0.35.0/intltool-unicodify.in	2006-06-16 15:49:30.000000000 -0600
+@@ -1,4 +1,4 @@
+-#!@INTLTOOL_PERL@ -w
++#!@INTLTOOL_PERL@
+         
+ #
+ #  The i18n Unicode Encoding Utility
+--- intltool-0.35.0/intltool-update.in.in.orig	2006-06-16 15:49:30.000000000 -0600
++++ intltool-0.35.0/intltool-update.in.in	2006-06-16 15:49:35.000000000 -0600
+@@ -1,4 +1,4 @@
+-#!@INTLTOOL_PERL@ -w
++#!@INTLTOOL_PERL@
+ # -*- Mode: perl; indent-tabs-mode: nil; c-basic-offset: 4  -*-
+ 
+ #
