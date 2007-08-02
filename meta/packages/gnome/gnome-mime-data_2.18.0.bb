@@ -4,4 +4,4 @@ inherit gnome
 DEPENDS += "shared-mime-info intltool-native"
 RDEPENDS = "shared-mime-info"
 
-PR = "r2"
+FILES_${PN}-dev += "${datadir}/pkgconfig/*.pc"
