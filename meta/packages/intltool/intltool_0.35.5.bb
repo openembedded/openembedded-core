@@ -6,5 +6,3 @@ DEPENDS = "libxml-parser-perl-native"
 PR = "r0"
 
 RRECOMMENDS = "perl-modules"
-
-DEFAULT_PREFERENCE = "-1"
