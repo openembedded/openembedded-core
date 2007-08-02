@@ -4,12 +4,11 @@ PRIORITY = "optional"
 LICENSE = "MIT"
 PR = "r4"
 
-SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
-        	file://no-testapi.patch;patch=1"
+SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz"
 
 inherit autotools pkgconfig binconfig
 
-EXTRA_OECONF = "--without-python --without-debug --without-legacy --without-catalog --without-docbook --with-c14n --without-schemas --without-schematron --with-reader"
+EXTRA_OECONF = "--without-python --without-debug --without-legacy --without-catalog --without-docbook --with-c14n"
 
 export LDFLAGS += "-ldl"
 
