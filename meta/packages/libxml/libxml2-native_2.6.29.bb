@@ -1,9 +1,9 @@
 DESCRIPTION = "GNOME XML library"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz"
 
-DEPENDS = "python-native"
+DEPENDS = "python-native-runtime"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libxml2-${PV}"
 S = "${WORKDIR}/libxml2-${PV}"
