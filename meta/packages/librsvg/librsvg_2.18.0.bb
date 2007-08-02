@@ -2,7 +2,6 @@ DESCRIPTION = "Library for rendering SVG files"
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 LICENSE = "LGPL"
-PR = "r2"
 
 EXTRA_OECONF = "--disable-mozilla-plugin"
 
@@ -14,7 +13,7 @@ FILES_rsvg = "${bindir}/rsvg \
 	      ${bindir}/rsvg-view \
 	      ${bindir}/rsvg-convert \
 	      ${datadir}/pixmaps/svg-viewer.svg"
-FILES_librsvg-gtk = "${libdir}/gtk-2.0/*/*/*.so.*"
+FILES_librsvg-gtk = "${libdir}/gtk-2.0/*/*/*.so"
 FILES_librsvg-gtk-dev += "${libdir}/gtk-2.0/*.*a \
 			  ${libdir}/gtk-2.0/*/loaders/*.*a \
 			  ${libdir}/gtk-2.0/*/engines/*.*a"
