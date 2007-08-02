@@ -6,7 +6,7 @@ DEPENDS = "gtk+ gtk-doc"
 
 inherit autotools pkgconfig gnome
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "file://glade-cruft.patch;patch=1 file://no-xml2.patch;patch=1 \
 	    file://no-deprecation.patch;patch=1"
