@@ -7,7 +7,7 @@ RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
 PV = "2.16.0+svn${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
 	   file://69gconfd-dbus"
@@ -25,7 +25,7 @@ EXTRA_OECONF = " --with-ipc=dbus --disable-gtk-doc --disable-gtk --enable-shared
 HEADERS = "gconf.h gconf-changeset.h gconf-listeners.h gconf-schema.h gconf-value.h gconf-error.h gconf-engine.h gconf-client.h gconf-enum-types.h"
 
 do_configure_prepend() {
-        gtkdocize --copy  
+        touch gtk-doc.make
 }
 
 do_stage() {
