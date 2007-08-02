@@ -1,5 +1,4 @@
 LICENSE = "LGPL"
-PR = "r2"
 
 inherit gnome
 
