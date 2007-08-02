@@ -5,7 +5,7 @@ DEPENDS = "telepathy-mission-control libtelepathy gtk+ gconf libglade gnome-vfs"
 RDEPENDS = "telepathy-mission-control"
 RRECOMMENDS = "telepathy-gabble"
 
-PR="r1"
+PR="r2"
 
 inherit gnome gtk-icon-cache
 

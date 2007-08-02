@@ -45,3 +45,13 @@ Index: src/empathy.c
  
  	return EXIT_SUCCESS;
  }
+--- configure.ac.old    2007-08-02 12:31:28.000000000 +0100
++++ configure.ac        2007-08-02 12:31:36.000000000 +0100
+@@ -73,7 +73,6 @@
+    libmissioncontrol >= $MISSION_CONTROL_REQUIRED
+    gtk+-2.0 >= $GTK_REQUIRED
+    libglade-2.0 >= $LIBGLADE_REQUIRED
+-   libgnomeui-2.0
+ ])
+ 
+ dnl -----------------------------------------------------------
