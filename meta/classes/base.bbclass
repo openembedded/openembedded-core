@@ -721,9 +721,9 @@ def base_after_parse(d):
     # Git packages should DEPEND on git-native
     srcuri = bb.data.getVar('SRC_URI', d, 1)
     if "git://" in srcuri:
-        depends = bb.data.getVar('DEPENDS', d, 1)
-	depends = depends + " git-native"
-	bb.data.setVar('DEPENDS', depends, d)
+        depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
+        depends = depends + " git-native:do_populate_staging"
+        bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
     old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
