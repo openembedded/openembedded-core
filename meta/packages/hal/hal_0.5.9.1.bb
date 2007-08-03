@@ -3,15 +3,12 @@ HOMEPAGE = "http://freedesktop.org/Software/hal"
 SECTION = "unknown"
 LICENSE = "GPL LGPL AFL"
 
-DEPENDS = "virtual/kernel dbus-glib udev intltool expat libusb"
+DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
 RDEPENDS += "udev hal-info"
-#RDEPENDS_hal-device-manager = "python hal python-pygnome"
 RRECOMMENDS = "udev-utils"
 
-PR = "r1"
-
 SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz \
-        file://autoconf.diff;patch=1 \
+        file://sg-inhibit.patch;patch=1 \
         file://99_hal"
 
 S = "${WORKDIR}/hal-${PV}"
@@ -24,7 +21,9 @@ EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
                 --with-hotplug=${sysconfdir}/hotplug.d \
                 --disable-docbook-docs \
                 --disable-policy-kit \
-                --disable-acpi --disable-pmu --disable-pci \
+                --disable-acpi --disable-acpi-acpid --disable-acpi-proc \
+                --disable-sonypic \
+                --disable-pmu --disable-pci \
                 --disable-pci-ids --disable-pnp-ids \
                 "
 
@@ -64,12 +63,6 @@ pkg_postrm_hal () {
 	delgroup haldaemon || true
 }
 
-#PACKAGES += "hal-device-manager"
-
-#FILES_hal-device-manager = " \
-#               ${datadir}/hal/device-manager/ \
-#               ${bindir}/hal-device-manager"
-
 FILES_${PN} = "${sysconfdir} \
                 ${bindir}/lshal \
                 ${bindir}/hal-find-by-capability \
@@ -79,6 +72,7 @@ FILES_${PN} = "${sysconfdir} \
                 ${bindir}/hal-set-property  \
                 ${bindir}/hal-lock  \
                 ${bindir}/hal-is-caller-locked-out  \
+                ${bindir}/hal-disable-polling  \
                 ${sbindir} \
                 ${libdir}/libhal.so.* \
                 ${libdir}/libhal-storage.so.* \
