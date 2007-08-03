@@ -458,33 +458,35 @@ python patch_do_patch() {
 		else:
 			pname = os.path.basename(unpacked)
 
-		if "mindate" in parm:
-			mindate = parm["mindate"]
-		else:
-			mindate = 0
+                if "mindate" in parm or "maxdate" in parm:
+			pn = bb.data.getVar('PN', d, 1)
+			srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
+			if not srcdate:
+				srcdate = bb.data.getVar('SRCDATE', d, 1)
 
-		if "maxdate" in parm:
-			maxdate = parm["maxdate"]
-		else:
-			maxdate = "20711226"
+			if srcdate == "now":
+				srcdate = bb.data.getVar('DATE', d, 1)
 
-		pn = bb.data.getVar('PN', d, 1)
-		srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
-
-		if not srcdate:
-			srcdate = bb.data.getVar('SRCDATE', d, 1)
-
-		if srcdate == "now":
-			srcdate = bb.data.getVar('DATE', d, 1)
-
-		if (maxdate < srcdate) or (mindate > srcdate):
-			if (maxdate < srcdate):
+			if "maxdate" in parm and parm["maxdate"] < srcdate:
 				bb.note("Patch '%s' is outdated" % pname)
+				continue
 
-			if (mindate > srcdate):
+			if "mindate" in parm and parm["mindate"] > srcdate:
 				bb.note("Patch '%s' is predated" % pname)
+				continue
 
-			continue
+
+		if "minrev" in parm:
+			srcrev = bb.data.getVar('SRCREV', d, 1)
+			if srcrev and srcrev < parm["minrev"]:
+				bb.note("Patch '%s' applies to later revisions" % pname)
+				continue
+
+		if "maxrev" in parm:
+			srcrev = bb.data.getVar('SRCREV', d, 1)		
+			if srcrev and srcrev > parm["maxrev"]:
+				bb.note("Patch '%s' applies to earlier revisions" % pname)
+				continue
 
 		bb.note("Applying patch '%s'" % pname)
 		try:
