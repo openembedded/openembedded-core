@@ -7,8 +7,11 @@ DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
 RDEPENDS += "udev hal-info"
 RRECOMMENDS = "udev-utils"
 
+PR = "r1"
+
 SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz \
         file://sg-inhibit.patch;patch=1 \
+        file://20hal \
         file://99_hal"
 
 S = "${WORKDIR}/hal-${PV}"
@@ -30,6 +33,8 @@ EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
 do_install_append() {
 	install -d ${D}/etc/default/volatiles
 	install -m 0644 ${WORKDIR}/99_hal ${D}/etc/default/volatiles
+	install -d ${D}/etc/dbus-1/event.d
+	install -m 0755 ${WORKDIR}/20hal ${D}/etc/dbus-1/event.d
 }
 
 do_stage() {
