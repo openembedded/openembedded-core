@@ -718,6 +718,13 @@ def base_after_parse(d):
     bb.data.delVarFlag('DISTRO', 'export', d)
     bb.data.setVarFlag('DISTRO', 'unexport', 1, d)
 
+    # Git packages should DEPEND on git-native
+    srcuri = bb.data.getVar('SRC_URI', d, 1)
+    if "git://" in srcuri:
+        depends = bb.data.getVar('DEPENDS', d, 1)
+	depends = depends + " git-native"
+	bb.data.setVar('DEPENDS', depends, d)
+
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
     old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
     if (old_arch == mach_arch):
