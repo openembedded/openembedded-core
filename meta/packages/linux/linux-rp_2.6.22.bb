@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r5"
+PR = "r6"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -19,6 +19,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_lzomode-r1.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
+           ${RPSRC}/lzo_fix-r0.patch;patch=1 \
            ${RPSRC}/hx2750_base-r28.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r9.patch;patch=1 \
            ${RPSRC}/hx2750_pcmcia-r2.patch;patch=1 \
