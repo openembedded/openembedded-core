@@ -25,6 +25,7 @@ import bb
 from   bb    import data
 from   bb.fetch import Fetch
 from   bb.fetch import FetchError
+from   bb.fetch import runfetchcmd
 
 def prunedir(topdir):
     # Delete everything reachable from the directory named in 'topdir'.
@@ -34,19 +35,6 @@ def prunedir(topdir):
             os.remove(os.path.join(root, name))
         for name in dirs:
             os.rmdir(os.path.join(root, name))
-
-def rungitcmd(cmd,d):
-
-    bb.msg.debug(1, bb.msg.domain.Fetcher, "Running %s" % cmd)
-
-    # Need to export PATH as git is likely to be in metadata paths 
-    # rather than host provided
-    pathcmd = 'export PATH=%s; %s' % (data.expand('${PATH}', d), cmd)
-
-    myret = os.system(pathcmd)
-
-    if myret != 0:
-        raise FetchError("Git: %s failed" % pathcmd)
 
 class Git(Fetch):
     """Class to fetch a module or modules from git repositories"""
@@ -62,24 +50,22 @@ class Git(Fetch):
         if 'protocol' in ud.parm:
             ud.proto = ud.parm['protocol']
 
-        ud.tag = "master"
+        tag = data.getVar("SRCREV", d, 0)
         if 'tag' in ud.parm:
             ud.tag = ud.parm['tag']
+        elif tag and "get_srcrev" not in tag and len(tag) == 40:
+            ud.tag = tag
+        else:
+            ud.tag = self.latest_revision(url, ud, d)
 
         ud.localfile = data.expand('git_%s%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.tag), d)
 
         return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
 
-    def forcefetch(self, url, ud, d):
-        # tag=="master" must always update
-        if (ud.tag == "master"):
-            return True
-        return False
-
     def go(self, loc, ud, d):
         """Fetch url"""
 
-        if not self.forcefetch(loc, ud, d) and Fetch.try_mirror(d, ud.localfile):
+        if Fetch.try_mirror(d, ud.localfile):
             bb.msg.debug(1, bb.msg.domain.Fetcher, "%s already exists (or was stashed). Skipping git checkout." % ud.localpath)
             return
 
@@ -96,32 +82,50 @@ class Git(Fetch):
             if Fetch.try_mirror(d, repofilename):    
                 bb.mkdirhier(repodir)
                 os.chdir(repodir)
-                rungitcmd("tar -xzf %s" % (repofile),d)
+                runfetchcmd("tar -xzf %s" % (repofile), d)
             else:
-                rungitcmd("git clone -n %s://%s%s %s" % (ud.proto, ud.host, ud.path, repodir),d)
+                runfetchcmd("git clone -n %s://%s%s %s" % (ud.proto, ud.host, ud.path, repodir), d)
 
         os.chdir(repodir)
-        rungitcmd("git pull %s://%s%s" % (ud.proto, ud.host, ud.path),d)
-        rungitcmd("git pull --tags %s://%s%s" % (ud.proto, ud.host, ud.path),d)
-        rungitcmd("git prune-packed", d)
-        rungitcmd("git pack-redundant --all | xargs -r rm", d)
         # Remove all but the .git directory
-        rungitcmd("rm * -Rf", d)
+        runfetchcmd("rm * -Rf", d)
+        runfetchcmd("git pull %s://%s%s" % (ud.proto, ud.host, ud.path), d)
+        runfetchcmd("git pull --tags %s://%s%s" % (ud.proto, ud.host, ud.path), d)
+        runfetchcmd("git prune-packed", d)
+        runfetchcmd("git pack-redundant --all | xargs -r rm", d)
         # old method of downloading tags
-        #rungitcmd("rsync -a --verbose --stats --progress rsync://%s%s/ %s" % (ud.host, ud.path, os.path.join(repodir, ".git", "")),d)
+        #runfetchcmd("rsync -a --verbose --stats --progress rsync://%s%s/ %s" % (ud.host, ud.path, os.path.join(repodir, ".git", "")), d)
 
         os.chdir(repodir)
         bb.msg.note(1, bb.msg.domain.Fetcher, "Creating tarball of git repository")
-        rungitcmd("tar -czf %s %s" % (repofile, os.path.join(".", ".git", "*") ),d)
+        runfetchcmd("tar -czf %s %s" % (repofile, os.path.join(".", ".git", "*") ), d)
 
         if os.path.exists(codir):
             prunedir(codir)
 
         bb.mkdirhier(codir)
         os.chdir(repodir)
-        rungitcmd("git read-tree %s" % (ud.tag),d)
-        rungitcmd("git checkout-index -q -f --prefix=%s -a" % (os.path.join(codir, "git", "")),d)
+        runfetchcmd("git read-tree %s" % (ud.tag), d)
+        runfetchcmd("git checkout-index -q -f --prefix=%s -a" % (os.path.join(codir, "git", "")), d)
 
         os.chdir(codir)
         bb.msg.note(1, bb.msg.domain.Fetcher, "Creating tarball of git checkout")
-        rungitcmd("tar -czf %s %s" % (ud.localpath, os.path.join(".", "*") ),d)
+        runfetchcmd("tar -czf %s %s" % (ud.localpath, os.path.join(".", "*") ), d)
+
+        os.chdir(repodir)
+        prunedir(codir)
+
+    def suppports_srcrev(self):
+        return True
+
+    def _revision_key(self, url, ud, d):
+        """
+        Return a unique key for the url
+        """
+        return "git:" + ud.host + ud.path.replace('/', '.')
+
+    def _latest_revision(self, url, ud, d):
+
+        output = runfetchcmd("git ls-remote %s://%s%s" % (ud.proto, ud.host, ud.path), d, True)
+        return output.split()[0]
+

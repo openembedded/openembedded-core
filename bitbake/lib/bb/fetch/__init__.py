@@ -27,6 +27,12 @@ BitBake build tools.
 import os, re
 import bb
 from   bb import data
+from   bb import persist_data
+
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 class FetchError(Exception):
     """Exception raised when a download fails"""
@@ -74,78 +80,193 @@ def uri_replace(uri, uri_find, uri_replace, d):
     return bb.encodeurl(result_decoded)
 
 methods = []
-urldata = {}
 
-def init(urls = [], d = None):
-    if d == None:
-        bb.msg.debug(2, bb.msg.domain.Fetcher, "BUG init called with None as data object!!!")
-        return
+def fetcher_init(d):
+    """
+    Called to initilize the fetchers once the configuration data is known
+    Calls before this must not hit the cache.
+    """
+    pd = persist_data.PersistData(d)
+    # Clear any cached url data
+    pd.delDomain("BB_URLDATA")
+    # When to drop SCM head revisions should be controled by user policy
+    pd.delDomain("BB_URI_HEADREVS")
+    # Make sure our domains exist
+    pd.addDomain("BB_URLDATA")
+    pd.addDomain("BB_URI_HEADREVS")
+    pd.addDomain("BB_URI_LOCALCOUNT")
 
-    for m in methods:
-        m.urls = []
+# Function call order is usually:
+#   1. init
+#   2. go
+#   3. localpaths
+# localpath can be called at any time
 
-    for u in urls:
-        ud = initdata(u, d)
-        if ud.method:
-            ud.method.urls.append(u)
+def init(urls, d, cache = True):
+    urldata = {}
 
-def initdata(url, d):
+    if cache:
+        urldata, pd, fn = getdata(d)
+
+    for url in urls:
+        if url not in urldata:
+            ud = FetchData(url, d)
+            for m in methods:
+                if m.supports(url, ud, d):
+                    ud.init(m, d)
+                    ud.setup_localpath(d) 
+                    break
+            urldata[url] = ud
+
+    if cache:
+        pd.setValue("BB_URLDATA", fn, pickle.dumps(urldata, 0))
+
+    return urldata
+
+def getdata(d):
+    urldata = {}
     fn = bb.data.getVar('FILE', d, 1)
-    if fn not in urldata:
-        urldata[fn] = {}
-    if url not in urldata[fn]:
-        ud = FetchData()
-        (ud.type, ud.host, ud.path, ud.user, ud.pswd, ud.parm) = bb.decodeurl(data.expand(url, d))
-        ud.date = Fetch.getSRCDate(ud, d)
-        for m in methods:
-            if m.supports(url, ud, d):
-                ud.localpath = m.localpath(url, ud, d)
-                ud.md5 = ud.localpath + '.md5'
-                # if user sets localpath for file, use it instead.
-                if "localpath" in ud.parm:
-                    ud.localpath = ud.parm["localpath"]
-                ud.method = m
-                break
-        urldata[fn][url] = ud
-    return urldata[fn][url]
+    pd = persist_data.PersistData(d)
+    encdata = pd.getValue("BB_URLDATA", fn)
+    if encdata:
+        urldata = pickle.loads(str(encdata))
 
-def go(d):
-    """Fetch all urls"""
-    fn = bb.data.getVar('FILE', d, 1)
-    for m in methods:
-        for u in m.urls:
-            ud = urldata[fn][u]
-            if ud.localfile and not m.forcefetch(u, ud, d) and os.path.exists(urldata[fn][u].md5):
-                # File already present along with md5 stamp file
-                # Touch md5 file to show activity
-                os.utime(ud.md5, None)
-                continue
-            # RP - is olddir needed?
-            # olddir = os.path.abspath(os.getcwd())
-            m.go(u, ud	, d)
-            # os.chdir(olddir)
-            if ud.localfile and not m.forcefetch(u, ud, d):
-                Fetch.write_md5sum(u, ud, d)
+    return urldata, pd, fn
 
-def localpaths(d):
-    """Return a list of the local filenames, assuming successful fetch"""
+def go(d, urldata = None):
+    """
+    Fetch all urls
+    """
+    if not urldata:
+        urldata, pd, fn = getdata(d)
+
+    for u in urldata:
+        ud = urldata[u]
+        m = ud.method
+        if ud.localfile and not m.forcefetch(u, ud, d) and os.path.exists(ud.md5):
+            # File already present along with md5 stamp file
+            # Touch md5 file to show activity
+            os.utime(ud.md5, None)
+            continue
+        m.go(u, ud, d)
+        if ud.localfile and not m.forcefetch(u, ud, d):
+            Fetch.write_md5sum(u, ud, d)
+
+def localpaths(d, urldata = None):
+    """
+    Return a list of the local filenames, assuming successful fetch
+    """
     local = []
-    fn = bb.data.getVar('FILE', d, 1)
-    for m in methods:
-        for u in m.urls:
-            local.append(urldata[fn][u].localpath)
+    if not urldata:
+        urldata, pd, fn = getdata(d)
+
+    for u in urldata:
+        ud = urldata[u]      
+        local.append(ud.localpath)
+
     return local
 
-def localpath(url, d):
-    ud = initdata(url, d)
-    if ud.method:
-        return ud.localpath
+def get_srcrev(d):
+    """
+    Return the version string for the current package
+    (usually to be used as PV)
+    Most packages usually only have one SCM so we just pass on the call.
+    In the multi SCM case, we build a value based on SRCREV_FORMAT which must 
+    have been set.
+    """
+    scms = []
+    urldata, pd, fn = getdata(d)
+    if len(urldata) == 0:
+        src_uri = bb.data.getVar('SRC_URI', d, 1).split()
+        for url in src_uri:
+            if url not in urldata:
+                ud = FetchData(url, d)
+                for m in methods:
+                    if m.supports(url, ud, d):
+                        ud.init(m, d)
+                        break
+                urldata[url] = ud
+                if ud.method.suppports_srcrev():
+                    scms.append(url)
+                    ud.setup_localpath(d) 
+    else:
+        for u in urldata:
+            ud = urldata[u]
+            if ud.method.suppports_srcrev():
+                scms.append(u)
+
+    if len(scms) == 0:
+        bb.msg.error(bb.msg.domain.Fetcher, "SRCREV was used yet no valid SCM was found in SRC_URI")
+        raise ParameterError
+
+    if len(scms) == 1:
+        return urldata[scms[0]].method.sortable_revision(scms[0], urldata[scms[0]], d)
+
+    bb.msg.error(bb.msg.domain.Fetcher, "Sorry, support for SRCREV_FORMAT still needs to be written")
+    raise ParameterError
+
+def localpath(url, d, cache = True):
+    """
+    Called from the parser with cache=False since the cache isn't ready 
+    at this point. Also called from classed in OE e.g. patch.bbclass
+    """
+    ud = init([url], d, cache)
+    if ud[url].method:
+        return ud[url].localpath
     return url
+
+def runfetchcmd(cmd, d, quiet = False):
+    """
+    Run cmd returning the command output
+    Raise an error if interrupted or cmd fails
+    Optionally echo command output to stdout
+    """
+    bb.msg.debug(1, bb.msg.domain.Fetcher, "Running %s" % cmd)
+
+    # Need to export PATH as binary could be in metadata paths
+    # rather than host provided
+    pathcmd = 'export PATH=%s; %s' % (data.expand('${PATH}', d), cmd)
+
+    stdout_handle = os.popen(pathcmd, "r")
+    output = ""
+
+    while 1:
+        line = stdout_handle.readline()
+        if not line:
+            break
+        if not quiet:
+            print line
+        output += line
+
+    status =  stdout_handle.close() or 0
+    signal = status >> 8
+    exitstatus = status & 0xff
+
+    if signal:
+        raise FetchError("Fetch command %s failed with signal %s, output:\n%s" % (pathcmd, signal, output))
+    elif status != 0:
+        raise FetchError("Fetch command %s failed with exit code %s, output:\n%s" % (pathcmd, status, output))
+
+    return output
 
 class FetchData(object):
     """Class for fetcher variable store"""
-    def __init__(self):
+    def __init__(self, url, d):
         self.localfile = ""
+        (self.type, self.host, self.path, self.user, self.pswd, self.parm) = bb.decodeurl(data.expand(url, d))
+        self.date = Fetch.getSRCDate(self, d)
+        self.url = url
+
+    def init(self, method, d):
+        self.method = method
+
+    def setup_localpath(self, d):
+        if "localpath" in self.parm:
+            self.localpath = self.parm["localpath"]
+        else:
+            self.localpath = self.method.localpath(self.url, self, d)
+        self.md5 = self.localpath + '.md5'
+        # if user sets localpath for file, use it instead.
 
 
 class Fetch(object):
@@ -179,6 +300,12 @@ class Fetch(object):
     def forcefetch(self, url, urldata, d):
         """
         Force a fetch, even if localpath exists?
+        """
+        return False
+
+    def suppports_srcrev(self):
+        """
+        The fetcher supports auto source revisions (SRCREV)
         """
         return False
 
@@ -269,6 +396,50 @@ class Fetch(object):
         md5out.close()
     write_md5sum = staticmethod(write_md5sum)
 
+    def latest_revision(self, url, ud, d):
+        """
+        Look in the cache for the latest revision, if not present ask the SCM.
+        """
+        if not hasattr(self, "_latest_revision"):
+            raise ParameterError
+
+        pd = persist_data.PersistData(d)
+        key = self._revision_key(url, ud, d)
+        rev = pd.getValue("BB_URI_HEADREVS", key)
+        if rev != None:
+            return str(rev)
+
+        rev = self._latest_revision(url, ud, d)
+        pd.setValue("BB_URI_HEADREVS", key, rev)
+        return rev
+
+    def sortable_revision(self, url, ud, d):
+        """
+        
+        """
+        if hasattr(self, "_sortable_revision"):
+            return self._sortable_revision(url, ud, d)
+
+        pd = persist_data.PersistData(d)
+        key = self._revision_key(url, ud, d)
+        latest_rev = self.latest_revision(url, ud, d)
+        last_rev = pd.getValue("BB_URI_LOCALCOUNT", key + "_rev")
+        count = pd.getValue("BB_URI_LOCALCOUNT", key + "_count")
+
+        if last_rev == latest_rev:
+            return str(count + "+" + latest_rev)
+
+        if count is None:
+            count = "0"
+        else:
+            count = str(int(count) + 1)
+
+        pd.setValue("BB_URI_LOCALCOUNT", key + "_rev", latest_rev)
+        pd.setValue("BB_URI_LOCALCOUNT", key + "_count", count)
+
+        return str(count + "+" + latest_rev)
+
+
 import cvs
 import git
 import local
@@ -278,11 +449,11 @@ import svk
 import ssh
 import perforce
 
-methods.append(cvs.Cvs())
-methods.append(git.Git())
 methods.append(local.Local())
-methods.append(svn.Svn())
 methods.append(wget.Wget())
+methods.append(svn.Svn())
+methods.append(git.Git())
+methods.append(cvs.Cvs())
 methods.append(svk.Svk())
 methods.append(ssh.SSH())
 methods.append(perforce.Perforce())

@@ -336,6 +336,10 @@ class BBCooker:
                 if bb.data.getVarFlag(var, 'handler', data):
                     bb.event.register(var,bb.data.getVar(var, data))
 
+            bb.fetch.fetcher_init(self.configuration.data)
+
+            bb.event.fire(bb.event.ConfigParsed(self.configuration.data))
+
         except IOError:
             bb.msg.fatal(bb.msg.domain.Parsing, "Unable to open %s" % afile )
         except bb.parse.ParseError, details:
