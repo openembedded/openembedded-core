@@ -50,7 +50,7 @@ class PersistData:
         self.cachefile = os.path.join(self.cachedir,"bb_persist_data.sqlite3")
         bb.msg.debug(1, bb.msg.domain.PersistData, "Using '%s' as the persistent data cache" % self.cachefile)
 
-        self.connection = sqlite3.connect(self.cachefile, timeout=5, isolation_level=None)
+        self.connection = sqlite3.connect(self.cachefile, timeout=5, isolation_level="IMMEDIATE")
 
     def addDomain(self, domain):
         """
@@ -85,6 +85,7 @@ class PersistData:
             self.connection.execute("UPDATE %s SET value=? WHERE key=?;" % domain, [value, key])
         else:
             self.connection.execute("INSERT into %s(key, value) values (?, ?);" % domain, [key, value])
+        self.connection.commit()
 
     def delValue(self, domain, key):
         """
