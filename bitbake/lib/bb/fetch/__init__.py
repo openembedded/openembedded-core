@@ -106,7 +106,7 @@ def init(urls, d, cache = True):
     urldata = {}
 
     if cache:
-        urldata, pd, fn = getdata(d)
+        urldata = getdata(d)
 
     for url in urls:
         if url not in urldata:
@@ -119,6 +119,8 @@ def init(urls, d, cache = True):
             urldata[url] = ud
 
     if cache:
+        fn = bb.data.getVar('FILE', d, 1)
+        pd = persist_data.PersistData(d)
         pd.setValue("BB_URLDATA", fn, pickle.dumps(urldata, 0))
 
     return urldata
@@ -131,14 +133,14 @@ def getdata(d):
     if encdata:
         urldata = pickle.loads(str(encdata))
 
-    return urldata, pd, fn
+    return urldata
 
 def go(d, urldata = None):
     """
     Fetch all urls
     """
     if not urldata:
-        urldata, pd, fn = getdata(d)
+        urldata = getdata(d)
 
     for u in urldata:
         ud = urldata[u]
@@ -158,7 +160,7 @@ def localpaths(d, urldata = None):
     """
     local = []
     if not urldata:
-        urldata, pd, fn = getdata(d)
+        urldata = getdata(d)
 
     for u in urldata:
         ud = urldata[u]      
@@ -175,7 +177,7 @@ def get_srcrev(d):
     have been set.
     """
     scms = []
-    urldata, pd, fn = getdata(d)
+    urldata = getdata(d)
     if len(urldata) == 0:
         src_uri = bb.data.getVar('SRC_URI', d, 1).split()
         for url in src_uri:
