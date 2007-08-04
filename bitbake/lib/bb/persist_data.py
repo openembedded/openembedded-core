@@ -97,7 +97,7 @@ class PersistData:
             try:
                 self.connection.execute(query)
                 return
-            except pysqlite2.dbapi2.OperationalError, e:
+            except sqlite3.OperationalError, e:
                 if 'database is locked' in str(e):
                     continue
                 raise
