@@ -50,7 +50,7 @@ class PersistData:
         self.cachefile = os.path.join(self.cachedir,"bb_persist_data.sqlite3")
         bb.msg.debug(1, bb.msg.domain.PersistData, "Using '%s' as the persistent data cache" % self.cachefile)
 
-        self.connection = sqlite3.connect(self.cachefile, timeout=5, isolation_level="IMMEDIATE")
+        self.connection = sqlite3.connect(self.cachefile, timeout=5, isolation_level=None)
 
     def addDomain(self, domain):
         """
@@ -82,14 +82,25 @@ class PersistData:
         for row in data:
             rows = rows + 1
         if rows:
-            self.connection.execute("UPDATE %s SET value=? WHERE key=?;" % domain, [value, key])
+            self._execute("UPDATE %s SET value=? WHERE key=?;" % domain, [value, key])
         else:
-            self.connection.execute("INSERT into %s(key, value) values (?, ?);" % domain, [key, value])
-        self.connection.commit()
+            self._execute("INSERT into %s(key, value) values (?, ?);" % domain, [key, value])
 
     def delValue(self, domain, key):
         """
         Deletes a key/value pair
         """
-        self.connection.execute("DELETE from %s where key=?;" % domain, [key])
+        self._execute("DELETE from %s where key=?;" % domain, [key])
+
+    def _execute(self, *query):
+        while True:	
+            try:
+                self.connection.execute(query)
+                return
+            except pysqlite2.dbapi2.OperationalError, e:
+                if 'database is locked' in str(e):
+                    continue
+                raise
+        
+        
 
