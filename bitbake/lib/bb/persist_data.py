@@ -92,10 +92,10 @@ class PersistData:
         """
         self._execute("DELETE from %s where key=?;" % domain, [key])
 
-    def _execute(self, **query):
+    def _execute(self, *query):
         while True:	
             try:
-                self.connection.execute(query)
+                self.connection.execute(*query)
                 return
             except sqlite3.OperationalError, e:
                 if 'database is locked' in str(e):
