@@ -3,6 +3,7 @@ DEPENDS = "libxml2 gconf dbus bzip2 gnome-mime-data zlib"
 RRECOMMENDS = "gnome-vfs-plugin-file shared-mime-info"
 # Some legacy packages will require gnome-mime-data to be installed, but use of
 # it is deprecated.
+PR = "r1"
 
 inherit gnome
 
@@ -13,6 +14,7 @@ SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1 \
 	    file://gnome-vfs-no-kerberos.patch;patch=1;pnum=0"
 
 EXTRA_OECONF = " \
+                 --disable-hal \
 		 --disable-openssl \
 		 --disable-samba \
 		 "
