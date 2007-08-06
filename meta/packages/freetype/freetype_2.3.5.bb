@@ -12,8 +12,6 @@ S = "${WORKDIR}/freetype-${PV}"
 
 inherit autotools pkgconfig binconfig
 
-DEFAULT_PREFERENCE = "-1"
-
 LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
 EXTRA_OECONF = "--without-zlib"
