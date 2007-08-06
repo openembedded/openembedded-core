@@ -7,17 +7,15 @@ INIT_D_DIR = "${sysconfdir}/init.d"
 
 updatercd_postinst() {
 if test "x$D" != "x"; then
-	D="-r $D"
+	OPT="-r $D"
 else
-	D="-s"
+	OPT="-s"
 fi
-update-rc.d $D ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
+update-rc.d $OPT ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
 }
 
 updatercd_prerm() {
-if test "x$D" != "x"; then
-	D="-r $D"
-else
+if test "x$D" == "x"; then
 	${INIT_D_DIR}/${INITSCRIPT_NAME} stop
 fi
 }
