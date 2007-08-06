@@ -157,27 +157,33 @@ def runstrip(file, d):
     strip = bb.data.getVar("STRIP", d, 1)
     objcopy = bb.data.getVar("OBJCOPY", d, 1)
 
-    bb.debug(1, "runstrip: %s %s" % (strip, file))
-
     newmode = None
     if not os.access(file, os.W_OK):
         origmode = os.stat(file)[os.stat.ST_MODE]
         newmode = origmode | os.stat.S_IWRITE
         os.chmod(file, newmode)
 
-    bb.mkdirhier(os.path.join(os.path.dirname(file), ".debug"))
+    extraflags = ""
+    if ".so" in file and "shared" in result:
+        extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
+    elif "shared" in result or "executable" in result:
+        extraflags = "--remove-section=.comment --remove-section=.note"
 
+    bb.mkdirhier(os.path.join(os.path.dirname(file), ".debug"))
     debugfile=os.path.join(os.path.dirname(file), ".debug", os.path.basename(file))
 
+    stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
+    bb.debug(1, "runstrip: %s" % stripcmd)
+
     os.system("%s'%s' --only-keep-debug '%s' '%s'" % (pathprefix, objcopy, file, debugfile))
-    ret = os.system("%s'%s' '%s'" % (pathprefix, strip, file))
+    ret = os.system("%s%s" % (pathprefix, stripcmd))
     os.system("%s'%s' --add-gnu-debuglink='%s' '%s'" % (pathprefix, objcopy, debugfile, file))
 
     if newmode:
         os.chmod(file, origmode)
 
     if ret:
-        bb.error("runstrip: %s %s: strip failed" % (strip, file))
+        bb.error("runstrip: '%s' strip command failed" % stripcmd)
 
     return 1
 
