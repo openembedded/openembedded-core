@@ -141,7 +141,7 @@ def runstrip(file, d):
     # A working 'file' (one which works on the target architecture)
     # is necessary for this stuff to work, hence the addition to do_package[depends]
 
-    import bb, os, commands
+    import bb, os, commands, stat
 
     pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, 1)
 
@@ -159,8 +159,8 @@ def runstrip(file, d):
 
     newmode = None
     if not os.access(file, os.W_OK):
-        origmode = os.stat(file)[os.stat.ST_MODE]
-        newmode = origmode | os.stat.S_IWRITE
+        origmode = os.stat(file)[stat.ST_MODE]
+        newmode = origmode | stat.S_IWRITE
         os.chmod(file, newmode)
 
     extraflags = ""
