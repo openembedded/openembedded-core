@@ -135,59 +135,51 @@ python () {
         bb.data.setVarFlag('do_package', 'deptask', 'do_package', d)
 }
 
-# file(1) output to match to consider a file an unstripped executable
-FILE_UNSTRIPPED_MATCH ?= "not stripped"
-#FIXME: this should be "" when any errors are gone!
-IGNORE_STRIP_ERRORS ?= "1"
 
-runstrip() {
-	# Function to strip a single file, called from RUNSTRIP in populate_packages below
-	# A working 'file' (one which works on the target architecture)
-	# is necessary for this stuff to work, hence the addition to do_package[depends]
+def runstrip(file, d):
+    # Function to strip a single file, called from populate_packages below
+    # A working 'file' (one which works on the target architecture)
+    # is necessary for this stuff to work, hence the addition to do_package[depends]
 
-	local ro st
+    import bb, os, commands
 
-	st=0
-	if {	file "$1" || {
-			oewarn "file $1: failed (forced strip)" >&2
-			echo '${FILE_UNSTRIPPED_MATCH}'
-		}
-	   } | grep -q '${FILE_UNSTRIPPED_MATCH}'
-	then
-		oenote "${STRIP} $1"
-		ro=
-		test -w "$1" || {
-			ro=1
-			chmod +w "$1"
-		}
-		mkdir -p $(dirname "$1")/.debug
-		debugfile="$(dirname "$1")/.debug/$(basename "$1")"
-		'${OBJCOPY}' --only-keep-debug "$1" "$debugfile"
-		'${STRIP}' "$1"
-		st=$?
-		'${OBJCOPY}' --add-gnu-debuglink="$debugfile" "$1"
-		test -n "$ro" && chmod -w "$1"
-		if test $st -ne 0
-		then
-			oewarn "runstrip: ${STRIP} $1: strip failed" >&2
-			if [ x${IGNORE_STRIP_ERRORS} = x1 ]
-			then
-				#FIXME: remove this, it's for error detection
-				if file "$1" 2>/dev/null >&2
-				then
-					(oefatal "${STRIP} $1: command failed" >/dev/tty)
-				else
-					(oefatal "file $1: command failed" >/dev/tty)
-				fi
-				st=0
-			fi
-		fi
-	else
-		oenote "runstrip: skip $1"
-	fi
-	return $st
-}
+    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, 1)
 
+    ret, result = commands.getstatusoutput("%sfile '%s'" % (pathprefix, file))
+
+    if ret:
+        bb.error("runstrip: 'file %s' failed (forced strip)" % file)
+
+    if "not stripped" not in result:
+        bb.debug(1, "runstrip: skip %s" % file)
+        return 0
+
+    strip = bb.data.getVar("STRIP", d, 1)
+    objcopy = bb.data.getVar("OBJCOPY", d, 1)
+
+    bb.debug(1, "runstrip: %s %s" % (strip, file))
+
+    newmode = None
+    if not os.access(file, os.W_OK):
+        origmode = os.stat(file)[os.stat.ST_MODE]
+        newmode = origmode | os.stat.S_IWRITE
+        os.chmod(file, newmode)
+
+    bb.mkdirhier(os.path.join(os.path.dirname(file), ".debug"))
+
+    debugfile=os.path.join(os.path.dirname(file), ".debug", os.path.basename(file))
+
+    os.system("%s'%s' --only-keep-debug '%s' '%s'" % (pathprefix, objcopy, file, debugfile))
+    ret = os.system("%s'%s' '%s'" % (pathprefix, strip, file))
+    os.system("%s'%s' --add-gnu-debuglink='%s' '%s'" % (pathprefix, objcopy, debugfile, file))
+
+    if newmode:
+        os.chmod(file, origmode)
+
+    if ret:
+        bb.error("runstrip: %s %s: strip failed" % (strip, file))
+
+    return 1
 
 #
 # Package data handling routines
@@ -375,19 +367,11 @@ python populate_packages () {
 			package_list.append(pkg)
 
 	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, 1) != '1'):
-		stripfunc = ""
 		for root, dirs, files in os.walk(dvar):
 			for f in files:
 				file = os.path.join(root, f)
 				if not os.path.islink(file) and not os.path.isdir(file) and isexec(file):
-					stripfunc += "\trunstrip %s || st=1\n" % (file)
-		if not stripfunc == "":
-			from bb import build
-			localdata = bb.data.createCopy(d)
-			# strip
-			bb.data.setVar('RUNSTRIP', '\tlocal st\n\tst=0\n%s\treturn $st' % stripfunc, localdata)
-			bb.data.setVarFlag('RUNSTRIP', 'func', 1, localdata)
-			bb.build.exec_func('RUNSTRIP', localdata)
+					runstrip(file, d)
 
 	for pkg in package_list:
 		localdata = bb.data.createCopy(d)
