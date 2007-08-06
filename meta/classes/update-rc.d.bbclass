@@ -15,7 +15,7 @@ update-rc.d $OPT ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
 }
 
 updatercd_prerm() {
-if test "x$D" == "x"; then
+if test "x$D" = "x"; then
 	${INIT_D_DIR}/${INITSCRIPT_NAME} stop
 fi
 }
