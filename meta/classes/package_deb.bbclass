@@ -1,3 +1,7 @@
+#
+# Copyright 2006-2007 OpenedHand Ltd.
+#
+
 inherit package
 
 PACKAGE_EXTRA_DEPENDS += "dpkg-native fakeroot-native"
@@ -212,6 +216,7 @@ python do_package_deb () {
                 scriptfile = file(os.path.join(controldir, script), 'w')
             except OSError:
                 raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
+            scriptfile.write("#!/bin/sh\n")
             scriptfile.write(scriptvar)
             scriptfile.close()
             os.chmod(os.path.join(controldir, script), 0755)

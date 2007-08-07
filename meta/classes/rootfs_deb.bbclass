@@ -1,3 +1,6 @@
+#
+# Copyright 2006-2007 Openedhand Ltd.
+#
 
 do_rootfs[depends] += "dpkg-native:do_populate_staging apt-native:do_populate_staging"
 
