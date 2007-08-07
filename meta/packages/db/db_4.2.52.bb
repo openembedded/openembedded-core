@@ -14,7 +14,7 @@ HOMEPAGE = "http://www.sleepycat.com"
 LICENSE = "BSD Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://downloads.sleepycat.com/db-${PV}.tar.gz"
 #SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"
@@ -93,7 +93,7 @@ do_install_append() {
 	if test -d "${D}/${prefix}/docs"
 	then
 		mkdir -p "${D}/${datadir}"
-		test ! -d "${D}/${docdir}" || rmdir "${D}/${docdir}"
+		test ! -d "${D}/${docdir}" || rm -rf "${D}/${docdir}"
 		mv "${D}/${prefix}/docs" "${D}/${docdir}"
 	fi
 }
