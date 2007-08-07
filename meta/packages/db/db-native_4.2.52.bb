@@ -6,8 +6,8 @@ VIRTUAL_NAME = "virtual/db-native"
 CONFLICTS = "db3-native"
 #PR tracks the non-native package
 
-inherit native
-
 require db_${PV}.bb
+
+inherit native
 
 PACKAGES = ""
