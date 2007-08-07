@@ -1,5 +1,5 @@
-PV = "0.9.2+cvs${SRCDATE}"
-PR = "r1"
+PV = "0.9.3+cvs${SRCDATE}"
+PR = "r0"
 SECTION = "devel"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
