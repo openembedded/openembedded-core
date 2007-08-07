@@ -6,7 +6,7 @@ BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 # BBFILES := "${OEROOT}/meta/packages/*/*.bb ${OEROOT}/meta-extras/packages/*/*.bb"
 # BBFILE_COLLECTIONS = "normal extras"
 # BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
-# BBFILE_PATTERN_extras = "^${OEROOT}/meta/"
+# BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
 # BBFILE_PRIORITY_normal = "5"
 # BBFILE_PRIORITY_extras = "5"
 
