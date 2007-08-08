@@ -1,8 +1,8 @@
 FILES_${PN} += "${datadir}/icons/hicolor"
+RDEPENDS += "hicolor-icon-theme"
 
 # This could run on the host as icon cache files are architecture independent,
 # but there is no gtk-update-icon-cache built natively.
-
 gtk-icon-cache_postinst() {
 if [ "x$D" != "x" ]; then
         exit 1
