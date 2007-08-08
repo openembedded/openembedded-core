@@ -2,7 +2,7 @@ SECTION = "x11/base"
 DESCRIPTION = "Sato theme engine for GTK"
 LICENSE = "LGPL"
 DEPENDS = "gtk+"
-PV = "0.1+svn${SRCDATE}"
+PV = "0.1+svnr${SRCREV}"
 PR = "r0"
 
 SRC_URI = "svn://svn.o-hand.com/repos/sato/trunk;module=gtk-engine;proto=http"
