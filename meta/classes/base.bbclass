@@ -1,5 +1,76 @@
 BB_DEFAULT_TASK = "build"
 
+# like os.path.join but doesn't treat absolute RHS specially
+def base_path_join(a, *p):
+    path = a
+    for b in p:
+        if path == '' or path.endswith('/'):
+            path +=  b
+        else:
+            path += '/' + b
+    return path
+
+# for MD5/SHA handling
+def base_chk_load_parser(config_path):
+    import ConfigParser, os, bb
+    parser = ConfigParser.ConfigParser()
+    if not len(parser.read(config_path)) == 1:
+        bb.note("Can not open the '%s' ini file" % config_path)
+        raise Exception("Can not open the '%s'" % config_path)
+
+    return parser
+
+def base_chk_file(parser, pn, pv, src_uri, localpath, data):
+    import os, bb
+    # Try PN-PV-SRC_URI first and then try PN-SRC_URI
+    # we rely on the get method to create errors
+    pn_pv_src = "%s-%s-%s" % (pn,pv,src_uri)
+    pn_src    = "%s-%s" % (pn,src_uri)
+    if parser.has_section(pn_pv_src):
+        md5    = parser.get(pn_pv_src, "md5")
+        sha256 = parser.get(pn_pv_src, "sha256")
+    elif parser.has_section(pn_src):
+        md5    = parser.get(pn_src, "md5")
+        sha256 = parser.get(pn_src, "sha256")
+    elif parser.has_section(src_uri):
+        md5    = parser.get(src_uri, "md5")
+        sha256 = parser.get(src_uri, "sha256")
+    else:
+        return False
+        #raise Exception("Can not find a section for '%s' '%s' and '%s'" % (pn,pv,src_uri))
+
+    # md5 and sha256 should be valid now
+    if not os.path.exists(localpath):
+        bb.note("The localpath does not exist '%s'" % localpath)
+        raise Exception("The path does not exist '%s'" % localpath)
+
+
+    # call md5(sum) and shasum
+    try:
+        md5pipe = os.popen('md5sum ' + localpath)
+        md5data = (md5pipe.readline().split() or [ "" ])[0]
+        md5pipe.close()
+    except OSError:
+        raise Exception("Executing md5sum failed")
+
+    try:
+        shapipe = os.popen('PATH=%s oe_sha256sum %s' % (bb.data.getVar('PATH', data, True), localpath))
+        shadata = (shapipe.readline().split() or [ "" ])[0]
+        shapipe.close()
+    except OSError:
+        raise Exception("Executing shasum failed")
+
+    if not md5 == md5data:
+        bb.note("The MD5Sums did not match. Wanted: '%s' and Got: '%s'" % (md5,md5data))
+        raise Exception("MD5 Sums do not match. Wanted: '%s' Got: '%s'" % (md5, md5data))
+
+    if not sha256 == shadata:
+        bb.note("The SHA256 Sums do not match. Wanted: '%s' Got: '%s'" % (sha256,shadata))
+        raise Exception("SHA256 Sums do not match. Wanted: '%s' Got: '%s'" % (sha256, shadata))
+
+    return True
+
+
 def base_dep_prepend(d):
 	import bb;
 	#
@@ -7,7 +78,9 @@ def base_dep_prepend(d):
 	# the case where host == build == target, for now we don't work in
 	# that case though.
 	#
-	deps = ""
+	deps = "shasum-native "
+	if bb.data.getVar('PN', d, True) == "shasum-native":
+		deps = ""
 
 	# INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
 	# we need that built is the responsibility of the patch function / class, not
@@ -31,6 +104,13 @@ def base_read_file(filename):
 def base_conditional(variable, checkvalue, truevalue, falsevalue, d):
 	import bb
 	if bb.data.getVar(variable,d,1) == checkvalue:
+		return truevalue
+	else:
+		return falsevalue
+
+def base_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
+	import bb
+	if float(bb.data.getVar(variable,d,1)) <= float(checkvalue):
 		return truevalue
 	else:
 		return falsevalue
@@ -359,6 +439,7 @@ python base_do_mrproper() {
 
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
+do_fetch[depends] = "shasum-native:do_populate_staging"
 python base_do_fetch() {
 	import sys
 
@@ -383,6 +464,40 @@ python base_do_fetch() {
 	except bb.fetch.FetchError:
 		(type, value, traceback) = sys.exc_info()
 		raise bb.build.FuncFailed("Fetch failed: %s" % value)
+	except bb.fetch.MD5SumError:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("MD5  failed: %s" % value)
+	except:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("Unknown fetch Error: %s" % value)
+
+
+	# Verify the SHA and MD5 sums we have in OE and check what do
+	# in
+	check_sum = bb.which(bb.data.getVar('BBPATH', d, True), "conf/checksums.ini")
+	if not check_sum:
+		bb.note("No conf/checksums.ini found, not checking checksums")
+		return
+
+	try:
+		parser = base_chk_load_parser(check_sum)
+	except:
+		bb.note("Creating the CheckSum parser failed")
+		return
+
+	pv = bb.data.getVar('PV', d, True)
+	pn = bb.data.getVar('PN', d, True)
+
+	# Check each URI
+	for url in src_uri.split():
+		localpath = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
+		(type,host,path,_,_,_) = bb.decodeurl(url)
+		uri = "%s://%s%s" % (type,host,path)
+		try:
+		    if not base_chk_file(parser, pn, pv,uri, localpath, d):
+			    bb.note("%s-%s-%s has no section, not checking URI" % (pn,pv,uri))
+		except Exception:
+			raise bb.build.FuncFailed("Checksum of '%s' failed" % uri)
 }
 
 addtask fetchall after do_fetch
@@ -752,13 +867,6 @@ python () {
     base_after_parse(d)
 }
 
-def base_get_srcrev(d):
-    import bb
-    
-    if hasattr(bb.fetch, "get_srcrev"):
-        return bb.fetch.get_srcrev(d)
-    return "NOT IMPLEMENTED"
-
 # Patch handling
 inherit patch
 
@@ -793,12 +901,12 @@ ${GNU_MIRROR}	ftp://ftp.matrix.com.br/pub/gnu
 ${GNU_MIRROR}	ftp://ftp.cs.ubc.ca/mirror2/gnu
 ${GNU_MIRROR}	ftp://sunsite.ust.hk/pub/gnu
 ${GNU_MIRROR}	ftp://ftp.ayamura.org/pub/gnu
-ftp://ftp.kernel.org/pub	http://www.kernel.org/pub
-ftp://ftp.kernel.org/pub	ftp://ftp.us.kernel.org/pub
-ftp://ftp.kernel.org/pub	ftp://ftp.uk.kernel.org/pub
-ftp://ftp.kernel.org/pub	ftp://ftp.hk.kernel.org/pub
-ftp://ftp.kernel.org/pub	ftp://ftp.au.kernel.org/pub
-ftp://ftp.kernel.org/pub	ftp://ftp.jp.kernel.org/pub
+${KERNELORG_MIRROR}	http://www.kernel.org/pub
+${KERNELORG_MIRROR}	ftp://ftp.us.kernel.org/pub
+${KERNELORG_MIRROR}	ftp://ftp.uk.kernel.org/pub
+${KERNELORG_MIRROR}	ftp://ftp.hk.kernel.org/pub
+${KERNELORG_MIRROR}	ftp://ftp.au.kernel.org/pub
+${KERNELORG_MIRROR}	ftp://ftp.jp.kernel.org/pub
 ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.franken.de/pub/crypt/mirror/ftp.gnupg.org/gcrypt/
 ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.surfnet.nl/pub/security/gnupg/
 ftp://ftp.gnupg.org/gcrypt/     http://gulus.USherbrooke.ca/pub/appl/GnuPG/
@@ -812,5 +920,17 @@ ftp://ftp.gnutls.org/pub/gnutls ftp://ftp.mirrors.wiretapped.net/pub/security/ne
 ftp://ftp.gnutls.org/pub/gnutls http://josefsson.org/gnutls/releases/
 http://ftp.info-zip.org/pub/infozip/src/ http://mirror.switch.ch/ftp/mirror/infozip/src/
 http://ftp.info-zip.org/pub/infozip/src/ ftp://sunsite.icm.edu.pl/pub/unix/archiving/info-zip/src/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://ftp.cerias.purdue.edu/pub/tools/unix/sysutils/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://ftp.tau.ac.il/pub/unix/admin/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://ftp.cert.dfn.de/pub/tools/admin/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://ftp.fu-berlin.de/pub/unix/tools/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://ftp.kaizo.org/pub/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://ftp.tu-darmstadt.de/pub/sysadmin/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://ftp.tux.org/pub/sites/vic.cc.purdue.edu/tools/unix/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://gd.tuwien.ac.at/utils/admin-tools/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://sunsite.ualberta.ca/pub/Mirror/lsof/
+ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/  ftp://the.wiretapped.net/pub/security/host-security/lsof/
+http://www.apache.org/dist  http://archive.apache.org/dist
+
 }
 
