@@ -25,7 +25,7 @@ RDEPENDS_exmap-server += "kernel-module-exmap"
 FILES_kernel-module-exmap = "${base_libdir}"
 PACKAGE_ARCH_kernel-module-exmap = "${MACHINE_ARCH}"
 PV_kernel-module-exmap = "${MYPV}-${KERNEL_VERSION}"
-RDEPENDS_kernel-module-exmap += "kernel (${KERNEL_VERSION})"
+RDEPENDS_kernel-module-exmap += "update-modules kernel-image-${KERNEL_VERSION}"
 
 S = "${WORKDIR}/exmap-console-${PV}"
 
