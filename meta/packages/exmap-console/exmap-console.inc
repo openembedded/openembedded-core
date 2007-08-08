@@ -14,11 +14,9 @@ MYPV := "${PV}"
 PACKAGES =+ "exmap-server kernel-module-exmap"
 
 FILES_exmap-console = "${bindir}/exmap ${bindir}/exmapd"
-PACKAGE_ARCH_exmap-console = "${TARGET_ARCH}"
 RDEPENDS_exmap-console += "kernel-module-exmap"
 
 FILES_exmap-server = "${bindir}/exmapserver"
-PACKAGE_ARCH_exmap-server = "${TARGET_ARCH}"
 RDEPENDS_exmap-server += "kernel-module-exmap"
 
 FILES_kernel-module-exmap = "${base_libdir}"
