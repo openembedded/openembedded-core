@@ -36,6 +36,7 @@ python () {
 
 IMAGE_DEVICE_TABLE ?= "${@bb.which(bb.data.getVar('BBPATH', d, 1), 'files/device_table-minimal.txt')}"
 IMAGE_POSTPROCESS_COMMAND ?= ""
+MACHINE_POSTPROCESS_COMMAND ?= ""
 
 # some default locales
 IMAGE_LINGUAS ?= "en-gb"
@@ -81,6 +82,8 @@ fakeroot do_rootfs () {
 	done
 
 	${IMAGE_POSTPROCESS_COMMAND}
+	
+	${MACHINE_POSTPROCESS_COMMAND}
 }
 
 log_check() {
