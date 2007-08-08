@@ -1,4 +1,4 @@
-include conf/machine/include/zaurus-2.6.conf
+include conf/machine/include/zaurus-2.6.inc
 # wlan-ng Modules
 MACHINE_EXTRA_RDEPENDS += "wlan-ng-modules-usb"
 

@@ -1,5 +1,5 @@
 # Zaurus Clamshell specific configuration for kernel 2.6
-# Don't forget to include zaurus-clamshell.conf as well
+# Don't forget to include zaurus-clamshell.inc as well
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-rp"
 PREFERRED_VERSION_wpa_supplicant = "0.4.7"
