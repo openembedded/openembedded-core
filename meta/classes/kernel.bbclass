@@ -307,10 +307,6 @@ python populate_packages_prepend () {
 					continue
 				on = legitimize_package_name(m.group(1))
 				dependency_pkg = format % on
-        			v = bb.data.getVar("PARALLEL_INSTALL_MODULES", d, 1) or "0"
-	        		if v == "1":
-		                	kv = bb.data.getVar("KERNEL_MAJOR_VERSION", d, 1)
-					dependency_pkg = "%s-%s" % (dependency_pkg, kv)
 				dependencies.append(dependency_pkg)
 			return dependencies
 		return []
@@ -386,36 +382,5 @@ python populate_packages_prepend () {
 	bb.data.setVar('DESCRIPTION_' + metapkg, 'Kernel modules meta package', d)
 	packages.append(metapkg)
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
-
-	v = bb.data.getVar("PARALLEL_INSTALL_MODULES", d, 1) or "0"
-	if v == "1":
-		kv = bb.data.getVar("KERNEL_MAJOR_VERSION", d, 1)
-		packages = bb.data.getVar("PACKAGES", d, 1).split()
-		module_re = re.compile("^kernel-module-")
-
-		newmetapkg = "kernel-modules-%s" % kv
-		bb.data.setVar('ALLOW_EMPTY_' + newmetapkg, "1", d)
-		bb.data.setVar('FILES_' + newmetapkg, "", d)
-
-		newmetapkg_rdepends = []
-
-		for p in packages:
-			if not module_re.match(p):
-				continue
-			pkg = bb.data.getVar("PKG_%s" % p, d, 1) or p
-			newpkg = "%s-%s" % (pkg, kv)
-			bb.data.setVar("PKG_%s" % p, newpkg, d)
-			rprovides = bb.data.getVar("RPROVIDES_%s" % p, d, 1)
-			if rprovides:
-				rprovides = "%s %s" % (rprovides, pkg)
-			else:
-				rprovides = pkg
-			bb.data.setVar("RPROVIDES_%s" % p, rprovides, d)
-			newmetapkg_rdepends.append(newpkg)
-
-		bb.data.setVar('RDEPENDS_' + newmetapkg, ' '.join(newmetapkg_rdepends), d)
-		bb.data.setVar('DESCRIPTION_' + newmetapkg, 'Kernel modules meta package', d)
-		packages.append(newmetapkg)
-		bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
 }
