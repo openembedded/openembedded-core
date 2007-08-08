@@ -6,10 +6,13 @@ DEPENDS = "virtual/kernel readline"
 
 SRC_URI = "http://projects.o-hand.com/sources/exmap-console/exmap-console-${PV}.tgz"
 
+TEMPPACKAGE_ARCH := "${PACKAGE_ARCH}"
+
 inherit module-base
 inherit autotools
 
 MYPV := "${PV}"
+PACKAGE_ARCH = "${TEMPPACKAGE_ARCH}"
 
 PACKAGES =+ "exmap-server kernel-module-exmap"
 
