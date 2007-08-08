@@ -2,8 +2,8 @@ DESCRIPTION = "Portable Puzzle Collection"
 LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
-PV = "0.1+svn${SRCDATE}"
-PR = "r4"
+PV = "0.1+svnr${SRCREV}"
+PR = "r0"
 
 inherit autotools pkgconfig
 
