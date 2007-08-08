@@ -72,6 +72,8 @@ TMPDIR = "${OEROOT}/build/tmp"
 # Uncomment and set to allow bitbake to execute multiple tasks at once.
 # Note, This option is currently experimental - YMMV.
 # BB_NUMBER_THREADS = "1"
+# Also, make can be passed flags so it run parallel threads e.g.:
+# PARALLEL_MAKE = "-j 4"
 
 # Comment this out if you are *not* using provided qemu deb - see README
 ASSUME_PROVIDED += "qemu-native"
