@@ -6,8 +6,9 @@
 
 HOMEPAGE = "http://www.xfce.org"
 LICENSE = "LGPL-2"
+DEPENDS += "startup-notification"
 
-SRC_URI = "http://www.us.xfce.org/archive/xfce-${PV}/src/${PN}-${PV}.tar.gz"
+SRC_URI = "http://www.us.xfce.org/archive/xfce-${PV}/src/${PN}-${PV}.tar.bz2"
 
 inherit autotools
 

@@ -18,5 +18,12 @@ do_rm_work () {
     done
 }
 
+addtask rmall after do_rm_work
+do_rmall[recrdeptask] = "do_rm_work"
+do_rmall() {
+        :
+}
+
+
 addtask rm_work before do_build
 addtask rm_work after do_populate_staging

@@ -1,7 +1,7 @@
 DEPENDS += "python-scons-native"
 
 scons_do_compile() {
-        ${STAGING_BINDIR_NATIVE}/scons PREFIX=${prefix} prefix=${prefix}  || \
+        ${STAGING_BINDIR_NATIVE}/scons PREFIX=${prefix} prefix=${prefix} || \
         oefatal "scons build execution failed."
 }
 

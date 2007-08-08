@@ -4,10 +4,15 @@
 # in the kernel source "arch" directory
 #
 
-valid_archs = "alpha cris ia64 m68knommu ppc sh \
-	       sparc64 x86_64 arm h8300 m32r mips \
-	       ppc64 sh64 um arm26 i386 m68k \
-	       parisc s390 sparc v850"
+valid_archs = "alpha cris ia64 \
+               x86_64,i386 \
+               m68knommu m68k ppc powerpc ppc64  \
+	       sparc sparc64 \
+               arm  arm26 \
+               m32r mips \
+	       sh sh64 um h8300   \
+	       parisc s390  v850 \
+	       avr32 blackfin"
 
 def map_kernel_arch(a, d):
 	import bb, re
@@ -17,10 +22,10 @@ def map_kernel_arch(a, d):
 	if   re.match('(i.86|athlon)$', a):	return 'i386'
 	elif re.match('arm26$', a):		return 'arm26'
 	elif re.match('armeb$', a):		return 'arm'
-	elif re.match('powerpc$', a):		return 'ppc'
 	elif re.match('mipsel$', a):		return 'mips'
 	elif re.match('sh(3|4)$', a):		return 'sh'
-	elif a in valid_archs:			return a
+	elif re.match('bfin', a):               return 'blackfin'
+        elif a in valid_archs:			return a
 	else:
 		bb.error("cannot map '%s' to a linux kernel architecture" % a)
 

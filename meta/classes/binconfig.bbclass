@@ -18,6 +18,8 @@ def get_binconfig_mangle(d):
 		s += " -e 's:OEDATADIR:${STAGING_DATADIR}:'"
 		s += " -e 's:OEPREFIX:${STAGING_LIBDIR}/..:'"
 		s += " -e 's:OEEXECPREFIX:${STAGING_LIBDIR}/..:'"
+		s += " -e 's:-I${WORKDIR}:-I${STAGING_INCDIR}:'"
+		s += " -e 's:-L${WORKDIR}:-L${STAGING_LIBDIR}:'"
 	return s
 
 BINCONFIG_GLOB ?= "*-config"

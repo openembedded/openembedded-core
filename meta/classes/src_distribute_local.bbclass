@@ -1,5 +1,3 @@
-SRC_DISTRIBUTEDIR ?= "${DEPLOY_DIR}/sources"
-
 inherit src_distribute
 
 # SRC_DIST_LOCAL possible values:
@@ -7,7 +5,7 @@ inherit src_distribute
 # symlink	symlinks the files from ${A} to the distributedir
 # move+symlink	moves the files into distributedir, and symlinks them back
 SRC_DIST_LOCAL ?= "move+symlink"
-
+SRC_DISTRIBUTEDIR ?= "${DEPLOY_DIR}/sources"
 SRC_DISTRIBUTECOMMAND () {
 	s="${SRC}"
 	if [ ! -L "$s" ] && (echo "$s"|grep "^${DL_DIR}"); then

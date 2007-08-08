@@ -22,11 +22,16 @@ def get_siteinfo_list(d):
 
        targetinfo = {\
                "armeb-linux":             "endian-big bit-32 common-glibc arm-common",\
+               "armeb-linux-gnueabi":     "endian-big bit-32 common-glibc arm-common armeb-linux",\
                "armeb-linux-uclibc":      "endian-big bit-32 common-uclibc arm-common",\
+               "armeb-linux-uclibcgnueabi": "endian-big bit-32 common-uclibc arm-common armeb-linux-uclibc",\
                "arm-linux":               "endian-little bit-32 common-glibc arm-common",\
                "arm-linux-gnueabi":       "endian-little bit-32 common-glibc arm-common arm-linux",\
                "arm-linux-uclibc":        "endian-little bit-32 common-uclibc arm-common",\
                "arm-linux-uclibcgnueabi": "endian-little bit-32 common-uclibc arm-common arm-linux-uclibc",\
+               "avr32-linux":             "endian-big bit-32 common-glibc avr32-common",\ 
+               "avr32-linux-uclibc":      "endian-big bit-32 common-uclibc avr32-common",\
+               "bfin-uclinux-uclibc":       "endian-little bit-32 common-uclibc bfin-common",\
                "i386-linux":              "endian-little bit-32 common-glibc ix86-common",\
                "i486-linux":              "endian-little bit-32 common-glibc ix86-common",\
                "i586-linux":              "endian-little bit-32 common-glibc ix86-common",\
@@ -38,8 +43,9 @@ def get_siteinfo_list(d):
                "mipsel-linux":            "endian-little bit-32 common-glibc",\
                "mipsel-linux-uclibc":     "endian-little bit-32 common-uclibc",\
                "powerpc-darwin":          "endian-big bit-32 common-darwin",\
-               "powerpc-linux":           "endian-big bit-32 common-glibc",\
-               "powerpc-linux-uclibc":    "endian-big bit-32 common-uclibc",\
+               "ppc-linux":               "endian-big bit-32 common-glibc powerpc-common",\ 
+	       "powerpc-linux":           "endian-big bit-32 common-glibc powerpc-common",\
+               "powerpc-linux-uclibc":    "endian-big bit-32 common-uclibc powerpc-common",\
                "sh3-linux":               "endian-little bit-32 common-glibc sh-common",\
                "sh4-linux":               "endian-little bit-32 common-glibc sh-common",\
                "sh4-linux-uclibc":        "endian-little bit-32 common-uclibc sh-common",\
@@ -49,6 +55,7 @@ def get_siteinfo_list(d):
        if target in targetinfo:
                info = targetinfo[target].split()
                info.append(target)
+               info.append("common")
                return info
        else:
                bb.error("Information not available for target '%s'" % target)
