@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.9.0+cvs${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 FILESDIR = "${WORKDIR}"
 
@@ -31,6 +31,7 @@ SRC_URI = "\
     file://93-oh-pl110-rgb.patch;patch=1;pnum=0 \
     file://qemu-0.9.0-nptl.patch;patch=1 \
     file://qemu-0.9.0-nptl-update.patch;patch=1 \
+    file://qemu-amd64-32b-mapping-0.9.0.patch;patch=1 \
     file://fix_segfault.patch;patch=1"
 
 #    svn://svn.o-hand.com/repos/misc/trunk/qemu-packaging/qemu;module=debian;proto=http;srcdate=20070119 \
