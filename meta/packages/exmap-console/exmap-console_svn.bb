@@ -1,7 +1,6 @@
 require exmap-console.inc
 
-PV = "0.4+svn${SRCDATE}"
-PR = "r14"
+PV = "0.4+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=exmap-console;proto=http"
 
