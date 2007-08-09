@@ -92,9 +92,6 @@ def check_sanity(e):
 
 	required_utilities = "patch diffstat help2man texi2html cvs svn bzip2 tar gzip gawk makeinfo"
 
-	for util in required_utilities.split():
-		if not check_app_exists( util, e.data ):
-			missing = missing + "%s," % util
 
 	# qemu-native needs gcc 3.x
 	if "qemu-native" not in assume_provided:
@@ -102,6 +99,12 @@ def check_sanity(e):
 
 		if not check_app_exists('gcc-3.4', e.data) and not check_app_exists('gcc-3.3', e.data) and gcc_version[0] != '3':
 			missing = missing + "gcc-3.x (needed for qemu-native),"
+	else:
+		required_utilities = required_utilities + " qemu-arm"
+
+	for util in required_utilities.split():
+		if not check_app_exists( util, e.data ):
+			missing = missing + "%s," % util
 
 	if missing != "":
 		missing = missing.rstrip(',')
