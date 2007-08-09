@@ -2,7 +2,6 @@ LICENSE ?= "LGPL"
 DEPENDS += " libopensync"
 RRECOMMENDS += " msynctool"
 HOMEPAGE ?= "http://www.opensync.org/"
-PV = "0.22+svnr${SRCREV}"
 
 PLUGIN_NAME ?= "${@bb.data.getVar('PN', d, 1).replace('libopensync-plugin-','')}"
 PLUGIN_SONAME ?= "${@bb.data.getVar('PLUGIN_NAME', d, 1).replace('-','_')}.so"
