@@ -2,8 +2,7 @@ DESCRIPTION = "Matchbox keyboard"
 LICENSE = "GPL"
 DEPENDS = "libxtst"
 SECTION = "x11/wm"
-PR="r2"
-PV = "0.0+svn${SRCDATE}"
+PV = "0.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
