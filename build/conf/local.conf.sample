@@ -75,8 +75,8 @@ TMPDIR = "${OEROOT}/build/tmp"
 # Also, make can be passed flags so it run parallel threads e.g.:
 # PARALLEL_MAKE = "-j 4"
 
-# Comment this out if you are *not* using provided qemu deb - see README
-ASSUME_PROVIDED += "qemu-native"
+# Uncomment this if you are using the Openedhand provided qemu deb - see README
+# ASSUME_PROVIDED += "qemu-native"
 
 # Uncomment these two if you want BitBake to build images useful for debugging.
 # DEBUG_BUILD = "1"
