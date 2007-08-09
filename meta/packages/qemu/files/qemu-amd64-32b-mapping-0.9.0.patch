@@ -1,7 +1,17 @@
-diff -Naru qemu-snapshot-2007-07-01_05.orig/linux-user/mmap.c qemu-snapshot-2007-07-01_05/linux-user/mmap.c
---- qemu-snapshot-2007-07-01_05.orig/linux-user/mmap.c	2007-06-03 17:31:32.000000000 +0200
-+++ qemu-snapshot-2007-07-01_05/linux-user/mmap.c	2007-07-02 14:00:30.000000000 +0200
-@@ -234,7 +234,7 @@
+--- qemu.orig/linux-user/mmap.c
++++ qemu/linux-user/mmap.c
+@@ -29,6 +29,10 @@
+ 
+ //#define DEBUG_MMAP
+ 
++#ifndef MAP_32BIT
++#define MAP_32BIT 0
++#endif
++
+ /* NOTE: all the constants are the HOST ones, but addresses are target. */
+ int target_mprotect(target_ulong start, target_ulong len, int prot)
+ {
+@@ -234,7 +238,7 @@
              host_offset = offset & qemu_host_page_mask;
              host_len = len + offset - host_offset;
              host_start = (long)mmap(real_start ? g2h(real_start) : NULL,
@@ -10,7 +20,7 @@ diff -Naru qemu-snapshot-2007-07-01_05.orig/linux-user/mmap.c qemu-snapshot-2007
              if (host_start == -1)
                  return host_start;
              /* update start so that it points to the file position at 'offset' */
-@@ -388,7 +388,7 @@
+@@ -388,7 +392,7 @@
      int prot;
  
      /* XXX: use 5 args syscall */
