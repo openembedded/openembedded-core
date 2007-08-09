@@ -1,8 +1,7 @@
 LICENSE = "GPLv2"
 PRIORITY = "optional"
-MAINTAINER = "Ross Burton <ross@openedhand.com>
-PV = "0.0+svn${SRCDATE}"
-DEPENDS = "gtk+ matchbox-panel-2"
+DEPENDS = "matchbox-panel-2"
+PV = "0.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http"
 
