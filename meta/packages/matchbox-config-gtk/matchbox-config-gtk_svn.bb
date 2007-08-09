@@ -3,8 +3,7 @@ LICENSE = "GPL"
 DEPENDS = "gconf gtk+"
 RDEPENDS = "settings-daemon"
 
-PV = "0.0+svn${SRCDATE}"
-PR = "r2"
+PV = "0.0+svnr${SRCREV}"
 
 S = "${WORKDIR}/${PN}"
 
