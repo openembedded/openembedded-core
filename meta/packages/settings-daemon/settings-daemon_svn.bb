@@ -3,8 +3,7 @@ LICENSE = "GPL"
 DEPENDS = "gconf glib-2.0"
 RDEPENDS = "xrdb"
 SECTION = "x11"
-PV = "0.0+svn${SRCDATE}"
-PR = "r2"
+PV = "0.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
 	   file://70settings-daemon"
