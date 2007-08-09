@@ -65,8 +65,9 @@ def check_sanity(e):
 	if data.getVar('TARGET_OS', e.data, True) == 'INVALID':
 		messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
 
+	assume_provided = data.getVar('ASSUME_PROVIDED', e.data , True).split()
 	# Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
-	if "diffstat-native" not in data.getVar('ASSUME_PROVIDED', e.data, True).split():
+	if "diffstat-native" not in assume_provided:
 		messages = messages + 'Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf\n'
 	
 	# Check that the MACHINE is valid
@@ -96,10 +97,11 @@ def check_sanity(e):
 			missing = missing + "%s," % util
 
 	# qemu-native needs gcc 3.x
-	gcc_version = commands.getoutput("${BUILD_PREFIX}gcc --version | head -n 1 | cut -f 3 -d ' '")
+	if "qemu-native" not in assume_provided:
+		gcc_version = commands.getoutput("${BUILD_PREFIX}gcc --version | head -n 1 | cut -f 3 -d ' '")
 
-	if not check_app_exists('gcc-3.4', e.data) and not check_app_exists('gcc-3.3', e.data) and gcc_version[0] != '3':
-		missing = missing + "gcc-3.x (needed for qemu-native),"
+		if not check_app_exists('gcc-3.4', e.data) and not check_app_exists('gcc-3.3', e.data) and gcc_version[0] != '3':
+			missing = missing + "gcc-3.x (needed for qemu-native),"
 
 	if missing != "":
 		missing = missing.rstrip(',')
