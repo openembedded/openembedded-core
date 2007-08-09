@@ -10,7 +10,7 @@ RRECOMMENDS = "\
 	"
 PV = "0.0+svnr${SRCREV}"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=sync;proto=http"
+SRC_URI = "svn://svn.o-hand.com/repos/sync/trunk;module=sync;proto=http"
 
 inherit autotools pkgconfig
 
