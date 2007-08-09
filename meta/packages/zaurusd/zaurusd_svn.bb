@@ -4,8 +4,7 @@ MAINTAINER = "Richard Purdie <rpurdie@openedhand.com>"
 LICENSE = "GPL"
 DEPENDS = "tslib"
 RDEPENDS = "xrandr"
-PV = "0.0+svn${SRCDATE}"
-PR = "r5"
+PV = "0.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=zaurusd;proto=http"
 
