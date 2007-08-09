@@ -2,7 +2,7 @@ SECTION = "x11"
 DESCRIPTION = "Sato Icon Theme"
 LICENSE = "CC-BY-SA3"
 DEPENDS = ""
-PV = "0.1+svn${SRCDATE}"
+PV = "0.1+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/sato/trunk;module=sato-icon-theme;proto=http"
 S = "${WORKDIR}/sato-icon-theme"
