@@ -2,13 +2,11 @@ DESCRIPTION = "Various benchmarning tests for X"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PV = "0.0+svn${SRCDATE}"
-PR = "r0"
+PV = "0.0+svnr${SRCREV}"
 
 inherit autotools
 
-SRC_URI = \
-    "svn://svn.o-hand.com/repos/misc/trunk;module=fstests;proto=http"
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=fstests;proto=http"
 
 S = "${WORKDIR}/fstests/tests"
 
