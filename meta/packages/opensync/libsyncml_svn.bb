@@ -1,10 +1,9 @@
 DESCRIPTION = "Libsyncml is a implementation of the SyncML protocol."
 HOMEPAGE = "http://libsyncml.opensync.org/"
 LICENSE = "LGPL"
-
 DEPENDS = "sed-native wbxml2 libsoup libxml2 bluez-libs openobex"
+PV = "0.4.2+svnr${SRCREV}"
 
-PV = "0.4.2+svn${SRCDATE}"
 SRC_URI = "svn://svn.opensync.org/libsyncml;module=trunk;proto=http"
 S = "${WORKDIR}/trunk"
 
