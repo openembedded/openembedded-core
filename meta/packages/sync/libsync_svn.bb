@@ -1,3 +1,5 @@
+DESCRIPTION = "LibSync is a GObject-based framework for more convenient use of \
+OpenSync in GLib applications."
 LICENSE = "LGPL"
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ libglade libopensync"
@@ -6,9 +8,7 @@ RRECOMMENDS = "\
 	libopensync-plugin-syncml-client-plugin \
 	libopensync-plugin-syncml-plugin \
 	"
-DESCRIPTION = "LibSync is a GObject-based framework for more convenient use of \
-	OpenSync in GLib applications."
-PV = "0.0+svn${SRCDATE}"
+PV = "0.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=sync;proto=http"
 
@@ -19,4 +19,3 @@ S = "${WORKDIR}/sync"
 PACKAGES += "synctool"
 FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_synctool = "${bindir} ${datadir}"
-
