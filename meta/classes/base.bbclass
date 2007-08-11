@@ -845,22 +845,27 @@ def base_after_parse(d):
     if (old_arch == mach_arch):
         # Nothing to do
         return
-    override = bb.data.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', d, 1)
-	
-    if not override or override == '0':
-        return
 
+    #
+    # We always try to scan SRC_URI for urls with machine overrides
+    # unless the package sets SRC_URI_OVERRIDES_PACKAGE_ARCH=0
+    #
+    override = bb.data.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', d, 1)
+    if override == '0':
+        return
+				
     paths = []
-    for p in [ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ]:
-        paths.append(bb.data.expand(os.path.join(p, mach_arch), d))
+    for p in [ "${PF}", "${P}", "${PN}", "files", "" ]:
+        paths.append(bb.data.expand(os.path.join("${FILE_DIRNAME}", p, "${MACHINE}"), d))
     for s in bb.data.getVar('SRC_URI', d, 1).split():
+        if not s.startswith("file://"):
+            continue
         local = bb.data.expand(bb.fetch.localpath(s, d), d)
         for mp in paths:
             if local.startswith(mp):
                 #bb.note("overriding PACKAGE_ARCH from %s to %s" % (old_arch, mach_arch))
-                bb.data.setVar('PACKAGE_ARCH', mach_arch, d)
+                bb.data.setVar('PACKAGE_ARCH', "${MACHINE_ARCH}", d)
                 return
-
 
 python () {
     base_after_parse_two(d)
