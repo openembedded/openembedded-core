@@ -70,14 +70,14 @@ def obtain(fn, data):
             return localfn
         bb.mkdirhier(dldir)
         try:
-            ud = bb.fetch.init([fn], data, False)
+            bb.fetch.init([fn], data)
         except bb.fetch.NoMethodError:
             (type, value, traceback) = sys.exc_info()
             bb.msg.debug(1, bb.msg.domain.Parsing, "obtain: no method: %s" % value)
             return localfn
 
         try:
-            bb.fetch.go(data, ud)
+            bb.fetch.go(data)
         except bb.fetch.MissingParameterError:
             (type, value, traceback) = sys.exc_info()
             bb.msg.debug(1, bb.msg.domain.Parsing, "obtain: missing parameters: %s" % value)
@@ -181,7 +181,9 @@ def feeder(lineno, s, fn, data):
             if val == None:
                 val = groupd["value"]
         elif "colon" in groupd and groupd["colon"] != None:
-            val = bb.data.expand(groupd["value"], data)
+            e = data.createCopy()
+            bb.data.update_data(e)
+            val = bb.data.expand(groupd["value"], e)
         elif "append" in groupd and groupd["append"] != None:
             val = "%s %s" % ((getFunc(groupd, key, data) or ""), groupd["value"])
         elif "prepend" in groupd and groupd["prepend"] != None:

@@ -391,26 +391,26 @@ def set_additional_vars(file, d, include):
     """Deduce rest of variables, e.g. ${A} out of ${SRC_URI}"""
 
     return
+    # Nothing seems to use this variable
+    #bb.msg.debug(2, bb.msg.domain.Parsing, "BB %s: set_additional_vars" % file)
 
-#    bb.msg.debug(2, bb.msg.domain.Parsing, "BB %s: set_additional_vars" % file)
+    #src_uri = data.getVar('SRC_URI', d, 1)
+    #if not src_uri:
+    #    return
 
-#    src_uri = data.getVar('SRC_URI', d, 1)
-#    if not src_uri:
-#        return
+    #a = (data.getVar('A', d, 1) or '').split()
 
-#    a = (data.getVar('A', d, 1) or '').split()
+    #from bb import fetch
+    #try:
+    #    ud = fetch.init(src_uri.split(), d)
+    #    a += fetch.localpaths(d, ud)
+    #except fetch.NoMethodError:
+    #    pass
+    #except bb.MalformedUrl,e:
+    #    raise ParseError("Unable to generate local paths for SRC_URI due to malformed uri: %s" % e)
+    #del fetch
 
-#    from bb import fetch
-#    try:
-#        ud = fetch.init(src_uri.split(), d)
-#        a += fetch.localpaths(d, ud)
-#    except fetch.NoMethodError:
-#        pass
-#    except bb.MalformedUrl,e:
-#        raise ParseError("Unable to generate local paths for SRC_URI due to malformed uri: %s" % e)
-#    del fetch
-
-#    data.setVar('A', " ".join(a), d)
+    #data.setVar('A', " ".join(a), d)
 
 
 # Add us to the handlers list
