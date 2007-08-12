@@ -85,13 +85,12 @@ def check_sanity(e):
 		missing = missing + "GNU make,"
 
 	if not check_app_exists('${BUILD_PREFIX}gcc', e.data):
-		missing = missing + "C Compiler,"
+		missing = missing + "C Compiler (${BUILD_PREFIX}gcc),"
 
 	if not check_app_exists('${BUILD_PREFIX}g++', e.data):
-		missing = missing + "C++ Compiler,"
+		missing = missing + "C++ Compiler (${BUILD_PREFIX}g++),"
 
-	required_utilities = "patch diffstat help2man texi2html cvs svn bzip2 tar gzip gawk makeinfo"
-
+	required_utilities = "patch help2man diffstat texi2html makeinfo cvs svn bzip2 tar gzip gawk md5sum"
 
 	# qemu-native needs gcc 3.x
 	if "qemu-native" not in assume_provided:
@@ -115,17 +114,27 @@ def check_sanity(e):
 		messages = messages + "Please use a umask which allows a+rx and u+rwx\n"
 	os.umask(omask)
 
-	if messages != "":
-		raise_sanity_error(messages)
-
 	oes_bb_conf = data.getVar( 'OES_BITBAKE_CONF', e.data, True )
 	if not oes_bb_conf:
-		raise_sanity_error('You do not include OpenEmbeddeds version of conf/bitbake.conf')
+		messages = messages + 'You do not include OpenEmbeddeds version of conf/bitbake.conf\n'
+
+	if messages != "":
+		raise_sanity_error(messages)
 
 addhandler check_sanity_eventhandler
 python check_sanity_eventhandler() {
     from bb import note, error, data, __version__
     from bb.event import getName
+
+    try:
+        from distutils.version import LooseVersion
+    except ImportError:
+        def LooseVersion(v): print "WARNING: sanity.bbclass can't compare versions without python-distutils"; return 1
+
+    if (LooseVersion(bb.__version__) > LooseVersion("1.8.6")):
+        if getName(e) == "ConfigParsed":
+            check_sanity(e)
+        return NotHandled
 
     if getName(e) == "BuildStarted":
         check_sanity(e)
