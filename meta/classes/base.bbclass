@@ -792,9 +792,9 @@ python read_subpackage_metadata () {
 			bb.data.setVar(key, sdata[key], d)
 }
 
-def base_after_parse_two(d):
-    import bb
-    import exceptions
+def base_after_parse(d):
+    import bb, os, exceptions
+    
     need_host = bb.data.getVar('COMPATIBLE_HOST', d, 1)
     if need_host:
         import re
@@ -819,9 +819,6 @@ def base_after_parse_two(d):
     use_nls = bb.data.getVar('USE_NLS_%s' % pn, d, 1)
     if use_nls != None:
         bb.data.setVar('USE_NLS', use_nls, d)
-
-def base_after_parse(d):
-    import bb, os
 
     # Make sure MACHINE isn't exported
     # (breaks binutils at least)
@@ -856,7 +853,12 @@ def base_after_parse(d):
 				
     paths = []
     for p in [ "${PF}", "${P}", "${PN}", "files", "" ]:
-        paths.append(bb.data.expand(os.path.join("${FILE_DIRNAME}", p, "${MACHINE}"), d))
+        path = bb.data.expand(os.path.join("${FILE_DIRNAME}", p, "${MACHINE}"), d)
+	if os.path.isdir(path):
+            paths.append(path)
+    if len(paths) == 0:
+        return
+
     for s in bb.data.getVar('SRC_URI', d, 1).split():
         if not s.startswith("file://"):
             continue
@@ -868,7 +870,6 @@ def base_after_parse(d):
                 return
 
 python () {
-    base_after_parse_two(d)
     base_after_parse(d)
 }
 
