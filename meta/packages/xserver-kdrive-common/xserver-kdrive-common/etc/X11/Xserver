@@ -53,6 +53,8 @@ case `module_id` in
                 ;;
 	"Nokia N800")
 		ARGS="$ARGS -mouse tslib" ;;
+	"Nokia 770")
+		ARGS="$ARGS -mouse tslib" ;;
         *)
 		;;
 esac
