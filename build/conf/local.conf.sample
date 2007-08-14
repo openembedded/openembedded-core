@@ -2,13 +2,20 @@
 DL_DIR ?= "${OEROOT}/sources"
 BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 
-# To enable extra packages, uncomment the following lines:
-# BBFILES := "${OEROOT}/meta/packages/*/*.bb ${OEROOT}/meta-extras/packages/*/*.bb"
-# BBFILE_COLLECTIONS = "normal extras"
+# Poky has various extra metadata collections (openmoko, extras).
+# To enable these, uncomment all (or some of) the following lines:
+# BBFILES = "\
+#    ${OEROOT}/meta/packages/*/*.bb 
+#    ${OEROOT}/meta-extras/packages/*/*.bb
+#    ${OEROOT}/meta-openmoko/packages/*/*.bb
+#    "
+# BBFILE_COLLECTIONS = "normal extras openmoko"
 # BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
 # BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
+# BBFILE_PATTERN_openmoko = "^${OEROOT}/meta-openmoko/"
 # BBFILE_PRIORITY_normal = "5"
 # BBFILE_PRIORITY_extras = "5"
+# BBFILE_PRIORITY_openmoko = "5"
 
 BBMASK = ""
 
