@@ -1,0 +1,11 @@
+#!/bin/sh
+
+SHOWCURSOR="no"
+
+openmoko-today &
+openmoko-dialer &
+
+matchbox-window-manager -use_titlebar yes -use_desktop_mode decorated -theme openmoko-standard-2 -use_cursor $SHOWCURSOR $@ &
+
+exec matchbox-panel --start-applets showdesktop --end-applets clock,battery,systray,startup --titlebar
+
