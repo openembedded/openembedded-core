@@ -108,4 +108,10 @@ BBINCLUDELOGS = "yes"
 # a cvs:// URI.  Uncomment this, if you not want to pull directly from CVS.
 CVS_TARBALL_STASH = "http://folks.o-hand.com/~richard/poky/sources/"
 
+# Set this if you wish to make pkgconfig libraries from your system available 
+# for native builds. Combined with extra ASSUME_PROVIDEDs this can allow 
+# native builds of applications like oprofileui-native (unsupported feature).
+#EXTRA_NATIVE_PKGCONFIG_PATH = ":/usr/lib/pkgconfig"
+#ASSUME_PROVIDED += "gtk+-native libglade-native"
+
 ENABLE_BINARY_LOCALE_GENERATION = "1"
