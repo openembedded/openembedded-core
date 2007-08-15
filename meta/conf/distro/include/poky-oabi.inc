@@ -7,6 +7,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-initial = "gcc-cross-initial"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "gcc-cross"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}libc-for-gcc = "glibc"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils = "binutils-cross"
 
 PREFERRED_VERSION_binutils ?= "2.16"
 PREFERRED_VERSION_binutils-cross ?= "2.15.94.0.1"
