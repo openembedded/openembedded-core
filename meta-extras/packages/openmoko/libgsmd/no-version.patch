@@ -1,0 +1,22 @@
+--- gsm.orig/src/gsmd/Makefil.am	2007-08-01 23:35:03.000000000 +0200
++++ gsm/src/gsmd/Makefile.am	2007-08-01 23:35:15.000000000 +0200
+20c20
+< libgsmd_machine_generic_la_LDFLAGS = -module
+---
+> libgsmd_machine_generic_la_LDFLAGS = -module -avoid-version
+22c22
+< libgsmd_machine_tihtc_la_LDFLAGS = -module
+---
+> libgsmd_machine_tihtc_la_LDFLAGS = -module -avoid-version
+25c25
+< libgsmd_vendor_ti_la_LDFLAGS = -module
+---
+> libgsmd_vendor_ti_la_LDFLAGS = -module -avoid-version
+27c27
+< libgsmd_vendor_tihtc_la_LDFLAGS = -module
+---
+> libgsmd_vendor_tihtc_la_LDFLAGS = -module -avoid-version
+29c29
+< libgsmd_vendor_qc_la_LDFLAGS = -module
+---
+> libgsmd_vendor_qc_la_LDFLAGS = -module -avoid-version

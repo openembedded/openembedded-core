@@ -11,7 +11,8 @@ SRC_URI = "svn://svn.openmoko.org/trunk/src/target;module=gsm;proto=http \
            file://default \
            file://getopt-wait-interpreter-ready.patch;patch=1 \
            file://tihtc-csq-fix.patch;patch=1 \
-           file://universal-wcdma.patch;patch=1"
+           file://universal-wcdma.patch;patch=1 \
+           file://no-version.patch;patch=1"
 
 S = "${WORKDIR}/gsm"
 
@@ -37,6 +38,6 @@ RRECOMMENDS_gsmd = "gsmd-plugins"
 FILES_${PN}-tools = "${bindir}/*"
 FILES_gsmd = "${sbindir}/gsmd ${sysconfdir}"
 FILES_gsmd-plugins = "${libdir}/gsmd/*.so*"
+FILES_${PN}-dbg += "${libdir}/gsmd/.debug/*.so"
 
 PACKAGES_DYNAMIC = "libgsmd* gsmd"
-
