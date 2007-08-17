@@ -1,5 +1,6 @@
 require xorg-util-common.inc
 
 DESCRIPTION = "create dependencies in makefiles"
-PR = "r1"
+DEPENDS = "xproto util-macros"
+PR = "r2"
 PE = "1"
