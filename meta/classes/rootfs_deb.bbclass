@@ -110,7 +110,6 @@ fakeroot rootfs_deb_do_rootfs () {
 		rmdir ${IMAGE_ROOTFS}/usr/dpkg/alternatives
 	fi
 	ln -s /usr/lib/ipkg/alternatives ${IMAGE_ROOTFS}/usr/dpkg/alternatives
-	mkdir ${IMAGE_ROOTFS}/usr/lib/ipkg
 	ln -s /usr/dpkg/info ${IMAGE_ROOTFS}/usr/lib/ipkg/info
 	ln -s /usr/dpkg/status ${IMAGE_ROOTFS}/usr/lib/ipkg/status
 
