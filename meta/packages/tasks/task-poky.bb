@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r12"
+PR = "r13"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -86,6 +86,7 @@ RDEPENDS_task-poky-apps-x11-pimlico = "\
     contacts \
     dates \
     tasks \
+    gaku \
     web"
 
 
