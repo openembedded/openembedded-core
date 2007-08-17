@@ -3,7 +3,9 @@ LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 PV = "0.1+svnr${SRCREV}"
-PR = "r0"
+PR = "r1"
+
+bindir = "/usr/games"
 
 inherit autotools pkgconfig
 
@@ -12,8 +14,6 @@ SRC_URI = "svn://svn.o-hand.com/repos/;module=oh-puzzles;proto=http \
 S = "${WORKDIR}/${PN}"
 
 do_install_append () {
-    mv ${D}${bindir} ${D}/usr/games
-
     install -d ${D}/${datadir}/applications/
 
     cd ${D}/${prefix}/games
@@ -30,7 +30,7 @@ Exec=${prefix}/games/$prog
 Icon=applications-games
 Terminal=false
 Type=Application
-Categories=Game
+Categories=Game;
 StartupNotify=true
 SingleInstance=true
 Comment=Play $title.
