@@ -58,12 +58,12 @@ fakeroot rootfs_deb_do_rootfs () {
 	if [ ! -z "${LINGUAS_INSTALL}" ]; then
 		apt-get install glibc-localedata-i18n --force-yes --allow-unauthenticated
 		if [ $? -ne 0 ]; then
-			exit $?
+			exit 1
 		fi
 		for i in ${LINGUAS_INSTALL}; do
 			apt-get install $i --force-yes --allow-unauthenticated
 			if [ $? -ne 0 ]; then
-				exit $?
+				exit 1
 			fi
 		done
 	fi
@@ -71,7 +71,7 @@ fakeroot rootfs_deb_do_rootfs () {
 	if [ ! -z "${PACKAGE_INSTALL}" ]; then
 		for i in ${PACKAGE_INSTALL}; do
 			apt-get install $i --force-yes --allow-unauthenticated
-			if [ $? -eq 1 ]; then
+			if [ $? -ne 0 ]; then
 				exit 1
 			fi
 			find ${IMAGE_ROOTFS} -name \*.dpkg-new | for i in `cat`; do
@@ -131,7 +131,7 @@ rootfs_deb_log_check() {
 			echo -e "log_check: Matched keyword: [$keyword_die]\n"
 			echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
 			echo ""
-			do_exit=1				
+			do_exit=1
 		fi
 	done
 	test "$do_exit" = 1 && exit 1						
