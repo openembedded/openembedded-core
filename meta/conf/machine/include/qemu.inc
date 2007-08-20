@@ -7,5 +7,5 @@ MACHINE_FEATURES = "kernel26 apm alsa pcmcia bluetooth irda usbgadget screen"
 
 IMAGE_FSTYPES ?= "tar.bz2 ext2"
 
-ROOT_FLASH_SIZE = "220"
-IMAGE_ROOTFS_SIZE_ext2 ?= "220000"
+ROOT_FLASH_SIZE = "230"
+IMAGE_ROOTFS_SIZE_ext2 ?= "230000"
