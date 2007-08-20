@@ -6,16 +6,11 @@ LICENSE = "LGPL"
 
 SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2 \
            file://gnutls-openssl.patch;patch=1 \
-           file://onceonly.m4 \
            file://gnutls-texinfo-euro.patch;patch=1"
 
 inherit autotools binconfig pkgconfig
 
 EXTRA_OECONF="--with-included-opencdk --with-included-libtasn1"
-
-do_configure_prepend() {
-        cp ${WORKDIR}/onceonly.m4 ${S}/m4/
-}
 
 do_stage() {
     oe_libinstall -C lib/.libs -so -a libgnutls ${STAGING_LIBDIR}
