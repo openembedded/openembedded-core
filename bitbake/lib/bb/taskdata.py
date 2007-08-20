@@ -450,10 +450,12 @@ class TaskData:
             self.add_runtime_target(fn, item)
             self.add_tasks(fn, dataCache)
 
-    def fail_fnid(self, fnid):
+    def fail_fnid(self, fnid, missing_list = []):
         """
         Mark a file as failed (unbuildable)
         Remove any references from build and runtime provider lists
+
+        missing_list, A list of missing requirements for this target
         """
         if fnid in self.failed_fnids:
             return
@@ -463,14 +465,14 @@ class TaskData:
             if fnid in self.build_targets[target]:
                 self.build_targets[target].remove(fnid)
                 if len(self.build_targets[target]) == 0:
-                    self.remove_buildtarget(target)
+                    self.remove_buildtarget(target, missing_list)
         for target in self.run_targets:
             if fnid in self.run_targets[target]:
                 self.run_targets[target].remove(fnid)
                 if len(self.run_targets[target]) == 0:
-                    self.remove_runtarget(target)
+                    self.remove_runtarget(target, missing_list)
 
-    def remove_buildtarget(self, targetid):
+    def remove_buildtarget(self, targetid, missing_list = []):
         """
         Mark a build target as failed (unbuildable)
         Trigger removal of any files that have this as a dependency
@@ -479,21 +481,21 @@ class TaskData:
         self.failed_deps.append(targetid)
         dependees = self.get_dependees(targetid)
         for fnid in dependees:
-            self.fail_fnid(fnid)
+            self.fail_fnid(fnid, [self.build_names_index[targetid]]+missing_list)
         if self.abort and targetid in self.external_targets:
-            bb.msg.error(bb.msg.domain.Provider, "No buildable providers available for required build target %s" % self.build_names_index[targetid])
+            bb.msg.error(bb.msg.domain.Provider, "No buildable providers available for required build target %s ('%s')" % (self.build_names_index[targetid], missing_list))
             raise bb.providers.NoProvider
 
-    def remove_runtarget(self, targetid):
+    def remove_runtarget(self, targetid, missing_list = []):
         """
         Mark a run target as failed (unbuildable)
         Trigger removal of any files that have this as a dependency
         """
-        bb.msg.note(1, bb.msg.domain.Provider, "Removing failed runtime build target %s" % self.run_names_index[targetid])
+        bb.msg.note(1, bb.msg.domain.Provider, "Removing failed runtime build target %s  ('%s')" % (self.run_names_index[targetid], missing_list))
         self.failed_rdeps.append(targetid)
         dependees = self.get_rdependees(targetid)
         for fnid in dependees:
-            self.fail_fnid(fnid)
+            self.fail_fnid(fnid, [self.run_names_index[targetid]]+missing_list)
 
     def add_unresolved(self, cfgData, dataCache):
         """
@@ -529,14 +531,26 @@ class TaskData:
         """
         bb.msg.debug(3, bb.msg.domain.TaskData, "build_names:")
         bb.msg.debug(3, bb.msg.domain.TaskData, ", ".join(self.build_names_index))
+
         bb.msg.debug(3, bb.msg.domain.TaskData, "run_names:")
         bb.msg.debug(3, bb.msg.domain.TaskData, ", ".join(self.run_names_index))
+
         bb.msg.debug(3, bb.msg.domain.TaskData, "build_targets:")
-        for target in self.build_targets.keys():
-            bb.msg.debug(3, bb.msg.domain.TaskData, " %s: %s" % (self.build_names_index[target], self.build_targets[target]))
+        for buildid in range(len(self.build_names_index)):
+            target = self.build_names_index[buildid]
+            targets = "None"
+            if buildid in self.build_targets:
+                targets = self.build_targets[buildid]
+            bb.msg.debug(3, bb.msg.domain.TaskData, " (%s)%s: %s" % (buildid, target, targets))
+
         bb.msg.debug(3, bb.msg.domain.TaskData, "run_targets:")
-        for target in self.run_targets.keys():
-            bb.msg.debug(3, bb.msg.domain.TaskData, " %s: %s" % (self.run_names_index[target], self.run_targets[target]))
+        for runid in range(len(self.run_names_index)):
+            target = self.run_names_index[runid]
+            targets = "None"
+            if runid in self.run_targets:
+                targets = self.run_targets[runid]
+            bb.msg.debug(3, bb.msg.domain.TaskData, " (%s)%s: %s" % (runid, target, targets))
+
         bb.msg.debug(3, bb.msg.domain.TaskData, "tasks:")
         for task in range(len(self.tasks_name)):
             bb.msg.debug(3, bb.msg.domain.TaskData, " (%s)%s - %s: %s" % (
@@ -544,6 +558,7 @@ class TaskData:
                 self.fn_index[self.tasks_fnid[task]], 
                 self.tasks_name[task], 
                 self.tasks_tdepends[task]))
+
         bb.msg.debug(3, bb.msg.domain.TaskData, "runtime ids (per fn):")
         for fnid in self.rdepids:
             bb.msg.debug(3, bb.msg.domain.TaskData, " %s %s: %s" % (fnid, self.fn_index[fnid], self.rdepids[fnid]))
