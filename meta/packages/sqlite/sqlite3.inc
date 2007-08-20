@@ -5,9 +5,8 @@ DEPENDS = "readline ncurses"
 LICENSE = "PD"
 
 SRC_URI = "http://www.sqlite.org/sqlite-${PV}.tar.gz \
-	   file://cross-compile.patch;patch=1 \
-	   file://libtool.patch;patch=1       \
-	   file://ldflags.patch;patch=1"
+	   file://libtool.patch;patch=1"
+
 S = "${WORKDIR}/sqlite-${PV}"
 
 inherit autotools pkgconfig
