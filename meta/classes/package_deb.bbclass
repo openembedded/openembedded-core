@@ -4,11 +4,8 @@
 
 inherit package
 
-PACKAGE_EXTRA_DEPENDS += "dpkg-native fakeroot-native"
-
 BOOTSTRAP_EXTRA_RDEPENDS += "dpkg"
 DISTRO_EXTRA_RDEPENDS += "dpkg"
-PACKAGE_WRITE_FUNCS += "do_package_deb"
 IMAGE_PKGTYPE ?= "deb"
 
 python package_deb_fn () {
@@ -248,3 +245,17 @@ python do_package_deb () {
             pass
         del localdata
 }
+
+python () {
+    import bb
+    if bb.data.getVar('PACKAGES', d, True) != '':
+        bb.data.setVarFlag('do_package_write_deb', 'depends', 'dpkg-native:do_populate_staging fakeroot-native:do_populate_staging', d)
+}
+
+python do_package_write_deb () {
+	bb.build.exec_func("read_subpackage_metadata", d)
+	bb.build.exec_func("do_package_deb", d)
+}
+do_package_write_deb[dirs] = "${D}"
+addtask package_write_deb before do_build after do_package
+

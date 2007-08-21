@@ -8,8 +8,7 @@ export IMAGE_BASENAME = "${PN}"
 export PACKAGE_INSTALL = "${IMAGE_INSTALL}"
 
 # We need to recursively follow RDEPENDS and RRECOMMENDS for images
-BUILD_ALL_DEPS = "1"
-do_rootfs[recrdeptask] = "do_package_write do_deploy do_populate_staging"
+do_rootfs[recrdeptask] += "do_deploy do_populate_staging"
 
 # Images are generally built explicitly, do not need to be part of world.
 EXCLUDE_FROM_WORLD = "1"

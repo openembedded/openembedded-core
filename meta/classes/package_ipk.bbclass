@@ -1,10 +1,7 @@
 inherit package
 
-PACKAGE_EXTRA_DEPENDS += "ipkg-utils-native fakeroot-native"
-
 BOOTSTRAP_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
 DISTRO_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
-PACKAGE_WRITE_FUNCS += "do_package_ipk"
 IMAGE_PKGTYPE ?= "ipk"
 
 python package_ipk_fn () {
@@ -242,3 +239,16 @@ python do_package_ipk () {
 			pass
 		del localdata
 }
+
+python () {
+    import bb
+    if bb.data.getVar('PACKAGES', d, True) != '':
+        bb.data.setVarFlag('do_package_write_ipk', 'depends', 'ipkg-utils-native:do_populate_staging fakeroot-native:do_populate_staging', d)
+}
+
+python do_package_write_ipk () {
+	bb.build.exec_func("read_subpackage_metadata", d)
+	bb.build.exec_func("do_package_ipk", d)
+}
+do_package_write_ipk[dirs] = "${D}"
+addtask package_write_ipk before do_build after do_package

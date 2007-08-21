@@ -2,7 +2,6 @@ inherit package
 inherit rpm_core
 
 RPMBUILD="rpmbuild --short-circuit ${RPMOPTS}"
-PACKAGE_WRITE_FUNCS += "do_package_rpm"
 IMAGE_PKGTYPE ?= "rpm"
 
 python write_specfile() {
@@ -54,7 +53,6 @@ python write_specfile() {
 	except OSError:
 		raise bb.build.FuncFailed("unable to open spec file for writing.")
 
-#	fd = sys.__stdout__
 	fd = specfile
 	for var in out_vartranslate.keys():
 		if out_vartranslate[var][0] == "%":
@@ -123,7 +121,7 @@ python do_package_rpm () {
 		bb.data.setVar('OVERRIDES', '%s:%s' % (overrides, pkg), localdata)
 
 		bb.data.update_data(localdata)
-# stuff
+
 		root = bb.data.getVar('ROOT', localdata)
 		basedir = os.path.dirname(root)
 		pkgoutdir = outdir
@@ -132,3 +130,17 @@ python do_package_rpm () {
 		bb.build.exec_func('write_specfile', localdata)
 		del localdata
 }
+
+python () {
+    import bb
+    if bb.data.getVar('PACKAGES', d, True) != '':
+        bb.data.setVarFlag('do_package_write_rpm', 'depends', 'rpm-native:do_populate_staging', d)
+}
+
+
+python do_package_write_rpm () {
+	bb.build.exec_func("read_subpackage_metadata", d)
+	bb.build.exec_func("do_package_rpm", d)
+}
+do_package_write_rpm[dirs] = "${D}"
+addtask package_write_rpm before do_build after do_package

@@ -126,11 +126,6 @@ python () {
             deps += " %s:do_populate_staging" % dep
         bb.data.setVarFlag('do_package', 'depends', deps, d)
 
-        deps = bb.data.getVarFlag('do_package_write', 'depends', d) or ""
-        for dep in (bb.data.getVar('PACKAGE_EXTRA_DEPENDS', d, True) or "").split():
-            deps += " %s:do_populate_staging" % dep
-        bb.data.setVarFlag('do_package_write', 'depends', deps, d)
-	
         # shlibs requires any DEPENDS to have already packaged for the *.list files
         bb.data.setVarFlag('do_package', 'deptask', 'do_package', d)
 }
@@ -902,19 +897,7 @@ do_package[dirs] = "${D}"
 addtask package before do_build after do_install
 
 
-
-PACKAGE_WRITE_FUNCS ?= "read_subpackage_metadata"
-
-python package_do_package_write () {
-	for f in (bb.data.getVar('PACKAGE_WRITE_FUNCS', d, 1) or '').split():
-		bb.build.exec_func(f, d)
-}
-do_package_write[dirs] = "${D}"
-addtask package_write before do_build after do_package
-
-
-EXPORT_FUNCTIONS do_package do_package_write
-
+EXPORT_FUNCTIONS do_package
 
 #
 # Helper functions for the package writing classes

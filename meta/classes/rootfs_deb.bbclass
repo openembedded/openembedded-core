@@ -3,6 +3,7 @@
 #
 
 do_rootfs[depends] += "dpkg-native:do_populate_staging apt-native:do_populate_staging"
+do_rootfs[recrdeptask] += "do_package_write_deb"
 
 fakeroot rootfs_deb_do_rootfs () {
 	set +e

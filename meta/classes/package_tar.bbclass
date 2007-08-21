@@ -1,8 +1,5 @@
 inherit package
 
-PACKAGE_EXTRA_DEPENDS += "tar-native"
-
-PACKAGE_WRITE_FUNCS += "do_package_tar"
 IMAGE_PKGTYPE ?= "tar"
 
 python package_tar_fn () {
@@ -78,7 +75,7 @@ python do_package_tar () {
 		bb.data.setVar('OVERRIDES', '%s:%s' % (overrides, pkg), localdata)
 
 		bb.data.update_data(localdata)
-# stuff
+
 		root = bb.data.getVar('ROOT', localdata)
 		bb.mkdirhier(root)
 		basedir = os.path.dirname(root)
@@ -97,6 +94,18 @@ python do_package_tar () {
 		ret = os.system("tar -czvf %s %s" % (tarfn, '.'))
 		if ret != 0:
 			bb.error("Creation of tar %s failed." % tarfn)
-# end stuff
-		del localdata
 }
+
+python () {
+    import bb
+    if bb.data.getVar('PACKAGES', d, True) != '':
+        bb.data.setVarFlag('do_package_write_tar', 'depends', 'tar-native:do_populate_staging', d)
+}
+
+
+python do_package_write_tar () {
+	bb.build.exec_func("read_subpackage_metadata", d)
+	bb.build.exec_func("do_package_tar", d)
+}
+do_package_write_tar[dirs] = "${D}"
+addtask package_write_tar before do_build after do_package
