@@ -249,4 +249,4 @@ python do_package_write_ipk () {
 	bb.build.exec_func("do_package_ipk", d)
 }
 do_package_write_ipk[dirs] = "${D}"
-addtask package_write_ipk before do_build after do_package
+addtask package_write_ipk before do_package_write after do_package

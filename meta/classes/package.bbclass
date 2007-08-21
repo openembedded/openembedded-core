@@ -896,8 +896,13 @@ python package_do_package () {
 do_package[dirs] = "${D}"
 addtask package before do_build after do_install
 
+# Dummy task to mark when all packaging is complete
+do_package_write () {
+	:
+}
+addtask do_package_write before do_build after do_package
 
-EXPORT_FUNCTIONS do_package
+EXPORT_FUNCTIONS do_package do_package_write
 
 #
 # Helper functions for the package writing classes

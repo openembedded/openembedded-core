@@ -257,5 +257,5 @@ python do_package_write_deb () {
 	bb.build.exec_func("do_package_deb", d)
 }
 do_package_write_deb[dirs] = "${D}"
-addtask package_write_deb before do_build after do_package
+addtask package_write_deb before do_package_write after do_package
 
