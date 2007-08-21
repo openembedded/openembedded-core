@@ -1,7 +1,7 @@
 DESCRIPTION = "Advanced front-end for dpkg."
 LICENSE = "GPL"
 SECTION = "base"
-DEPENDS = "curl"
+DEPENDS = "curl db"
 RDEPENDS = "dpkg"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/apt_${PV}.tar.gz \
