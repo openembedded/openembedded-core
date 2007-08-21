@@ -691,7 +691,8 @@ do_populate_staging[dirs] = "${STAGING_DIR}/${TARGET_SYS}/bin ${STAGING_DIR}/${T
 			     ${STAGING_DATADIR} \
 			     ${S} ${B}"
 
-addtask populate_staging after do_compile
+# Could be compile but populate_staging and do_install shouldn't run at the same time
+addtask populate_staging after do_install
 
 python do_populate_staging () {
 	bb.build.exec_func('do_stage', d)
