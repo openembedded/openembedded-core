@@ -1,0 +1,13 @@
+Index: fakeroot-1.7.1/configure.ac
+===================================================================
+--- fakeroot-1.7.1.orig/configure.ac	2007-04-13 16:57:48.000000000 +0000
++++ fakeroot-1.7.1/configure.ac	2007-08-21 14:19:59.000000000 +0000
+@@ -7,8 +7,6 @@
+ AC_CONFIG_HEADERS([config.h])
+ AC_PROG_MAKE_SET
+ AM_PROG_LIBTOOL
+-LT_INIT
+-LT_LANG(C)
+ 
+ AC_ARG_WITH([ipc],
+ 	    AS_HELP_STRING([--with-ipc@<:@=IPCTYPE@:>@],
