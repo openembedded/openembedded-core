@@ -497,13 +497,13 @@ python emit_pkgdata() {
 	if not packages:
 		return
 
-	data_file = bb.data.expand("${STAGING_DIR}/pkgdata/${PN}", d)
+	data_file = bb.data.expand("${PKGDATA_DIR}/${PN}", d)
 	f = open(data_file, 'w')
 	f.write("PACKAGES: %s\n" % packages)
 	f.close()
 
 	for pkg in packages.split():
-		subdata_file = bb.data.expand("${STAGING_DIR}/pkgdata/runtime/%s" % pkg, d)
+		subdata_file = bb.data.expand("${PKGDATA_DIR}/runtime/%s" % pkg, d)
 		sf = open(subdata_file, 'w')
 		write_if_exists(sf, pkg, 'DESCRIPTION')
 		write_if_exists(sf, pkg, 'RDEPENDS')
@@ -522,7 +522,7 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'pkg_prerm')
 		sf.close()
 }
-emit_pkgdata[dirs] = "${STAGING_DIR}/pkgdata/runtime"
+emit_pkgdata[dirs] = "${PKGDATA_DIR}/runtime"
 
 ldconfig_postinst_fragment() {
 if [ x"$D" = "x" ]; then
@@ -820,7 +820,7 @@ python package_depchains() {
 
 	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
 		def packaged(pkg, d):
-			return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
+			return os.access(bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d), os.R_OK)
 
                 #bb.note('rdepends for %s is %s' % (base, rdepends))
 
