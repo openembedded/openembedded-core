@@ -1,5 +1,4 @@
 SECTION = "base"
-PR = "r0"
 require fakeroot_${PV}.bb
 inherit native
 RDEPENDS="util-linux-native"

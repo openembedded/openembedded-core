@@ -4,9 +4,9 @@ SECTION = "base"
 LICENSE = "GPL"
 # fakeroot needs getopt which is provided by the util-linux package
 RDEPENDS = "util-linux"
-PR = "r1"
 
-SRC_URI = "http://openzaurus.org/mirror/fakeroot_${PV}.tar.gz"
+SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.tar.gz \
+           file://autofoo.patch;patch=1"
 
 inherit autotools
 
