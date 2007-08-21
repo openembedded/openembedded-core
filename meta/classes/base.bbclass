@@ -734,7 +734,7 @@ def explode_deps(s):
 
 def packaged(pkg, d):
 	import os, bb
-	return os.access(bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s.packaged' % pkg, d), os.R_OK)
+	return os.access(bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d), os.R_OK)
 
 def read_pkgdatafile(fn):
 	pkgdata = {}
@@ -760,23 +760,23 @@ def read_pkgdatafile(fn):
 
 def has_subpkgdata(pkg, d):
 	import bb, os
-	fn = bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s' % pkg, d)
+	fn = bb.data.expand('${PKGDATA_DIR}/runtime/%s' % pkg, d)
 	return os.access(fn, os.R_OK)
 
 def read_subpkgdata(pkg, d):
 	import bb, os
-	fn = bb.data.expand('${STAGING_DIR}/pkgdata/runtime/%s' % pkg, d)
+	fn = bb.data.expand('${PKGDATA_DIR}/runtime/%s' % pkg, d)
 	return read_pkgdatafile(fn)
 
 
 def has_pkgdata(pn, d):
 	import bb, os
-	fn = bb.data.expand('${STAGING_DIR}/pkgdata/%s' % pn, d)
+	fn = bb.data.expand('${PKGDATA_DIR}/%s' % pn, d)
 	return os.access(fn, os.R_OK)
 
 def read_pkgdata(pn, d):
 	import bb, os
-	fn = bb.data.expand('${STAGING_DIR}/pkgdata/%s' % pn, d)
+	fn = bb.data.expand('${PKGDATA_DIR}/%s' % pn, d)
 	return read_pkgdatafile(fn)
 
 python read_subpackage_metadata () {

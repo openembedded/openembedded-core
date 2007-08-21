@@ -1,6 +1,7 @@
 STAMP = "${TMPDIR}/stamps/${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}/${PF}"
 WORKDIR = "${TMPDIR}/work/${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}/${PF}"
 STAGING_KERNEL_DIR = "${STAGING_DIR}/${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}/kernel"
+PKGDATA_DIR = "${STAGING_DIR}/${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}/pkgdata"
 
 # Find any machine specific sub packages and if present, mark the 
 # whole package as machine specific for multimachine purposes.
