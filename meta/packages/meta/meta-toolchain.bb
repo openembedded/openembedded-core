@@ -37,11 +37,12 @@ EOF
 src oe file:${DEPLOY_DIR_IPK}
 EOF
 	ipkgarchs="${PACKAGE_ARCHS}"
-        priority=1
-        for arch in $ipkgarchs; do
-                echo "arch $arch $priority" >> ${SDK_DIR}/ipkg-target.conf
+	priority=1
+	for arch in $ipkgarchs; do
+		echo "arch $arch $priority" >> ${SDK_DIR}/ipkg-target.conf
 		echo "arch ${BUILD_ARCH}-$arch-sdk $priority" >> ${SDK_DIR}/ipkg-host.conf
-	        priority=$(expr $priority + 5)
+		priority=$(expr $priority + 5)
+		revipkgarchs="$arch $revipkgarchs"
         done
 
 	rm -r ${SDK_OUTPUT}
@@ -57,8 +58,8 @@ EOF
 	cp -pPR ${SDK_OUTPUT}/${prefix}/usr/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}
 	rm -rf ${SDK_OUTPUT}/${prefix}/usr/
 
-        cp -pPR ${SDK_OUTPUT}/${prefix}/lib/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib
-        rm -rf ${SDK_OUTPUT}/${prefix}/lib/*
+	cp -pPR ${SDK_OUTPUT}/${prefix}/lib/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib
+	rm -rf ${SDK_OUTPUT}/${prefix}/lib/*
 
 	for fn in `ls ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/`; do
 		if [ -h ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/$fn ]; then
@@ -78,8 +79,8 @@ EOF
 	chmod -R a+r ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/
 	find ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/ -type d | xargs chmod +x
 
-        echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libpthread.so
-        echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libc.so
+	echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libpthread.so
+	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libc.so
 
 	# remove unwanted housekeeping files
 	mv ${SDK_OUTPUT}${libdir}/../${TARGET_SYS}/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
@@ -94,17 +95,19 @@ EOF
 	mkdir -p ${SDK_OUTPUT}/${prefix}/pkgmaps/debian/
 	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/shlibs/
 	for pkg in $target_pkgs ; do
-    		for arch in $ipkgarchs; do
-            		if [ -e ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ]; then
+		for arch in $revipkgarchs; do
+			if [ -e ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ]; then
 				echo "Found ${DEPLOY_DIR_IPK}/${pkg}_$arch.ipk"
 				cp ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ${SDK_OUTPUT}/${prefix}/ipk/
 				orig_pkg=`ipkg-list-fields ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk | grep OE: | cut -d ' ' -f2`
-				cp ${STAGING_DIR}/pkgdata/$orig_pkg ${SDK_OUTPUT}/${prefix}/pkgdata/
-				subpkgs=`cat ${STAGING_DIR}/pkgdata/$orig_pkg | grep PACKAGES: | cut -b 10-`
+				pkg_subdir=$arch${TARGET_VENDOR}${@['-' + bb.data.getVar('TARGET_OS', d, 1), ''][bb.data.getVar('TARGET_OS', d, 1) == ('' or 'custom')]}
+				mkdir -p ${SDK_OUTPUT}/${prefix}/pkgdata/$pkg_subdir/runtime
+				cp ${STAGING_DIR}/pkgdata/$pkg_subdir/$orig_pkg ${SDK_OUTPUT}/${prefix}/pkgdata/$pkg_subdir/
+				subpkgs=`cat ${STAGING_DIR}/pkgdata/$pkg_subdir/$orig_pkg | grep PACKAGES: | cut -b 10-`
 				for subpkg in $subpkgs; do
-					cp ${STAGING_DIR}/pkgdata/runtime/$subpkg ${SDK_OUTPUT}/${prefix}/pkgdata/runtime/
-					if [ -e ${STAGING_DIR}/pkgdata/runtime/$subpkg.packaged ];then
-						cp ${STAGING_DIR}/pkgdata/runtime/$subpkg.packaged ${SDK_OUTPUT}/${prefix}/pkgdata/runtime/
+					cp ${STAGING_DIR}/pkgdata/$pkg_subdir/runtime/$subpkg ${SDK_OUTPUT}/${prefix}/pkgdata/$pkg_subdir/runtime/
+					if [ -e ${STAGING_DIR}/pkgdata/$pkg_subdir/runtime/$subpkg.packaged ];then
+						cp ${STAGING_DIR}/pkgdata/$pkg_subdir/runtime/$subpkg.packaged ${SDK_OUTPUT}/${prefix}/pkgdata/$pkg_subdir/runtime/
 					fi
 					if [ -e ${STAGING_DIR}/pkgmaps/debian/$subpkg ]; then
 						cp ${STAGING_DIR}/pkgmaps/debian/$subpkg ${SDK_OUTPUT}/${prefix}/pkgmaps/debian/
