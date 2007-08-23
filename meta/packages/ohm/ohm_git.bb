@@ -17,4 +17,4 @@ do_configure_prepend() {
         touch gtk-doc.make
 }
 
-EXTRA_OECONF = "--with-distro=debian --disable-gtk-doc"
+EXTRA_OECONF = "--with-distro=debian --disable-gtk-doc --with-xauth-dir=/home/root"
