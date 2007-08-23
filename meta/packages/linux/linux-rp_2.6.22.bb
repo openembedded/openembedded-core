@@ -109,4 +109,6 @@ SRC_URI_append_tosa = "\
            file://wm97xx-lcdnoise-r0.patch;patch=1 "
 #          ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
 
+SRC_URI_append_htcuniversal ="file://htcuni-acx.patch;patch=1;status=external"
+
 S = "${WORKDIR}/linux-2.6.22"
