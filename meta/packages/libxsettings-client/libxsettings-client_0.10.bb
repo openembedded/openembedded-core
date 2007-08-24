@@ -2,9 +2,9 @@ DESCRIPTION = "Common code for XSETTINGS"
 SECTION = "x/libs"
 LICENSE = "BSD-X"
 PRIORITY = "optional"
-DEPENDS = "virtual/libx11 libxt"
-# libxt is required to stop configure breaking builds by
-# including system paths to find it if it isn't present.
+DEPENDS = "virtual/libx11"
+
+PR = "r1"
 
 headers = "xsettings-common.h xsettings-client.h"
 
