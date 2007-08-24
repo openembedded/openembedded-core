@@ -900,7 +900,7 @@ addtask package before do_build after do_install
 do_package_write () {
 	:
 }
-addtask do_package_write before do_build after do_package
+addtask package_write before do_build after do_package
 
 EXPORT_FUNCTIONS do_package do_package_write
 
