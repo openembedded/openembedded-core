@@ -1,4 +1,5 @@
-RDEPENDS_${PN} += "patch diffstat bzip2"
+# ash isn't good enough for quilt at least...
+RDEPENDS_${PN} += "patch diffstat bzip2 bash"
 
 require quilt_${PV}.inc
 
