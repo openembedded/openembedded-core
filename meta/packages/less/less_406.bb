@@ -5,10 +5,8 @@ HOMEPAGE = "http://www.greenwoodsoftware.com/"
 SECTION = "console/utils"
 LICENSE = "BSD"
 DEPENDS = "ncurses"
-PR = "r1"
 
-SRC_URI = "${GNU_MIRROR}/less/less-${PV}.tar.gz \
-           file://configure.patch;patch=1"
+SRC_URI = "http://www.greenwoodsoftware.com/less/less-406.tar.gz "
 
 inherit autotools update-alternatives
 
