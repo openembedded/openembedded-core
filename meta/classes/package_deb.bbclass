@@ -61,9 +61,7 @@ python do_package_deb_install () {
 }
 
 python do_package_deb () {
-    import copy # to back up env data
-    import sys
-    import re
+    import sys, re, fcntl, copy
 
     workdir = bb.data.getVar('WORKDIR', d, 1)
     if not workdir:
@@ -96,9 +94,20 @@ python do_package_deb () {
         bb.debug(1, "No packages; nothing to do")
         return
 
+    def lockfile(name):
+        lf = open(name, "a+")
+        fcntl.flock(lf.fileno(), fcntl.LOCK_EX)
+        return lf
+
+    def unlockfile(lf):
+        fcntl.flock(lf.fileno(), fcntl.LOCK_UN)
+        lf.close
+
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
         root = "%s/install/%s" % (workdir, pkg)
+
+        lf = lockfile(root + ".lock")
 
         bb.data.setVar('ROOT', '', localdata)
         bb.data.setVar('ROOT_%s' % pkg, root, localdata)
@@ -130,6 +139,7 @@ python do_package_deb () {
         if not g and not bb.data.getVar('ALLOW_EMPTY', localdata):
             from bb import note
             note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, 1), bb.data.getVar('PR', localdata, 1)))
+            unlockfile(lf)
             continue
         controldir = os.path.join(root, 'DEBIAN')
         bb.mkdirhier(controldir)
@@ -244,6 +254,8 @@ python do_package_deb () {
         except OSError:
             pass
         del localdata
+
+        unlockfile(lf)
 }
 
 python () {
