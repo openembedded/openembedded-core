@@ -64,7 +64,7 @@ DISTRO_TASKS += '\
     ${@base_contains("IMAGE_FEATURES", ["tools-testapps", "dbg-pkgs"], "task-poky-tools-testapps-dbg", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["tools-testapps", "dev-pkgs"], "task-poky-tools-testapps-dev", "",d)} \
     \
-    ${@base_contains("IMAGE_FEATURES", "tools-sdk", "task-poky-sdk", "",d)} \    
+    ${@base_contains("IMAGE_FEATURES", "tools-sdk", "task-poky-sdk task-poky-standalone-sdk-target", "",d)} \    
     ${@base_contains("IMAGE_FEATURES", ["tools-sdk", "dbg-pkgs"], "task-poky-sdk-dbg", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["tools-sdk", "dev-pkgs"], "task-poky-sdk-dev", "",d)} \
     \
