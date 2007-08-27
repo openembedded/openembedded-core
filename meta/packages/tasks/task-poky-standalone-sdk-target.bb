@@ -1,5 +1,5 @@
-DESCRIPTION = "Target packages for the standalone SDK (external toolchain)"
-PR = "r1"
+DESCRIPTION = "Target packages for the standalone SDK"
+PR = "r2"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
