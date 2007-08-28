@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r13"
+PR = "r14"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -125,6 +125,7 @@ RRECOMMENDS_task-poky-tools-profile = "\
 
 
 RDEPENDS_task-poky-tools-testapps = "\
+    blktool \
     tslib-calibrate \
     tslib-tests \
     lrzsz \
