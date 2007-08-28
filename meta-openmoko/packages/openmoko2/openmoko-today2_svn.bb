@@ -1,8 +1,8 @@
-require openmoko.inc
-
-DESCRIPTION = "OpenMoko Today application"
+DESCRIPTION = "The OpenMoko Application Launcher"
 SECTION = "openmoko/pim"
-DEPENDS += "startup-notification dbus-glib libice libsm libmokoui2"
-REAL_PN = "openmoko-today2"
+DEPENDS = "libmokoui2 libmokojournal2 startup-notification dbus-glib libice libsm"
+RDEPENDS = "libedata-cal openmoko-today2-folders"
+PV = "0.1.0+svn${SVNREV}"
+PR = "r1"
 
-inherit gtk-icon-cache 
+inherit openmoko2 gtk-icon-cache 

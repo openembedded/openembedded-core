@@ -1,5 +1,14 @@
-require openmoko-libs.inc
-
+SECTION = "openmoko/libs"
 DEPENDS = "gtk+"
-PV = "0.0.5+svn${SRCDATE}"
-REAL_PN = "libmokoui2"
+PV = "0.1.0+svn${SVNREV}"
+PR = "r1"
+
+inherit openmoko2
+
+do_stage() {
+        autotools_stage_all
+}
+
+
+
+

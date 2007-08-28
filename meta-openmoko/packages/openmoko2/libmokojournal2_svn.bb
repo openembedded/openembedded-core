@@ -1,5 +1,11 @@
-require openmoko-libs.inc
-
+SECTION = "openmoko/libs"
 DEPENDS = "eds-dbus"
-PR = "r1"
-REAL_PN = "libmokojournal2"
+PV = "0.1.0+svn${SVNREV}"
+PR = "r2"
+
+inherit openmoko2 lib_package
+
+do_stage() {
+        autotools_stage_all
+}
+

@@ -1,10 +1,10 @@
-require openmoko.inc
-
 DESCRIPTION = "The OpenMoko Dialer"
-DEPENDS += "libmokogsmd2 libmokoui2 libmokojournal2 gstreamer"
-RDEPENDS = "gst-meta-audio"
-REAL_PN = "openmoko-dialer2"
-PR = "r2"
+SECTION = "openmoko/pim"
+DEPENDS = "libmokogsmd2 libmokoui2 libmokojournal2 pulseaudio"
+PV = "0.1.0+svn${SVNREV}"
+PR = "r4"
+
+inherit openmoko2
 
 EXTRA_OECONF = "--with-dbusbindir=${STAGING_BINDIR_NATIVE}"
 
