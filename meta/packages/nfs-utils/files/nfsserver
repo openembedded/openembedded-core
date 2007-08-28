@@ -7,9 +7,10 @@
 # Other control variables may be overridden here too
 test -r /etc/default/nfsd && . /etc/default/nfsd
 #
-# Location of exectuables:
+# Location of executables:
 test -x "$NFS_MOUNTD" || NFS_MOUNTD=/usr/sbin/mountd
 test -x "$NFS_NFSD" || NFS_NFSD=/usr/sbin/nfsd
+test -x "$NFS_STATD" || NFS_STATD=/usr/sbin/statd
 #
 # The user mode program must also exist (it just starts the kernel
 # threads using the kernel module code).
@@ -104,6 +105,20 @@ stop_nfsd(){
 		echo failed
 	fi
 }
+
+#statd
+start_statd(){
+	echo -n "starting statd: "
+	start-stop-daemon --start --exec "$NFS_STATD"
+	echo done
+}
+stop_statd(){
+	# WARNING: this kills any process with the executable
+	# name 'statd'.
+	echo -n 'stopping statd: '
+	start-stop-daemon --stop --quiet --signal 1 --name statd
+	echo done
+}
 #----------------------------------------------------------------------
 #
 # supported options:
@@ -116,15 +131,19 @@ case "$1" in
 start)	create_directories
 	start_nfsd "$NFS_SERVERS"
 	start_mountd
+	start_statd
 	test -r /etc/exports && exportfs -a;;
 stop)	exportfs -ua
+	stop_statd
 	stop_mountd
 	stop_nfsd;;
 reload)	test -r /etc/exports && exportfs -r;;
 restart)exportfs -ua
 	stop_mountd
+	stop_statd
 	# restart does not restart the kernel threads,
 	# only the user mode processes
 	start_mountd
+	start_statd
 	test -r /etc/exports && exportfs -a;;
 esac
