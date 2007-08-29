@@ -4,7 +4,7 @@ LICENSE = "GPL"
 
 inherit kernel
 
-RPROVIDES_kernel-image += "hostap-modules"
+RPROVIDES_kernel-base += "hostap-modules"
 
 DOSRC = "http://www.do13.de/openzaurus/patches"
 RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
@@ -12,12 +12,6 @@ JLSRC = "http://www.cs.wisc.edu/~lenz/zaurus/files"
 BASRC = "http://www.orca.cx/zaurus/patches"
 CHSRC = "http://oz.drigon.com/patches"
 TKSRC = "http://www.informatik.hu-berlin.de/~tkunze/zaurus/patches"
-
-##############################################################
-# Compensate for sucky bootloader on all Sharp Zaurus models
-#
-FILES_kernel-image = ""
-ALLOW_EMPTY = "1"
 
 EXTRA_OEMAKE = "OPENZAURUS_RELEASE=-${DISTRO_VERSION}"
 COMPATIBLE_HOST = "(arm|i.86).*-linux"
