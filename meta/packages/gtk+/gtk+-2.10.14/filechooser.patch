@@ -1,0 +1,25 @@
+Index: gtk+-2.10.14/gtk/gtkfilechooser.c
+===================================================================
+--- gtk+-2.10.14.orig/gtk/gtkfilechooser.c	2007-08-24 08:52:32.000000000 +0100
++++ gtk+-2.10.14/gtk/gtkfilechooser.c	2007-08-24 08:57:21.000000000 +0100
+@@ -272,6 +272,20 @@
+ 								"if necessary."),
+ 							     FALSE,
+ 							     GTK_PARAM_READWRITE));
++
++  g_object_interface_install_property (g_iface,
++				       g_param_spec_string ("root-folder",
++							    P_("File System Root"),
++							    P_("Root folder for the file system below which the user should not be able to switch"),
++							    NULL,
++							    G_PARAM_WRITABLE));
++
++  g_object_interface_install_property (g_iface,
++				       g_param_spec_boolean ("show-create-folder",
++							     P_("Show Create Folder button"),
++							     P_("Whether the Create Folder button should be visible on the bar"),
++							     TRUE,
++							     G_PARAM_READWRITE));
+ }
+ 
+ /**

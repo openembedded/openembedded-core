@@ -1,0 +1,32 @@
+Index: gtk+-2.10.14/gtk/gtkfilechooserutils.h
+===================================================================
+--- gtk+-2.10.14.orig/gtk/gtkfilechooserutils.h	2007-08-24 08:37:40.000000000 +0100
++++ gtk+-2.10.14/gtk/gtkfilechooserutils.h	2007-08-24 08:51:59.000000000 +0100
+@@ -41,7 +41,9 @@
+   GTK_FILE_CHOOSER_PROP_SELECT_MULTIPLE,
+   GTK_FILE_CHOOSER_PROP_SHOW_HIDDEN,
+   GTK_FILE_CHOOSER_PROP_DO_OVERWRITE_CONFIRMATION,
+-  GTK_FILE_CHOOSER_PROP_LAST                   = GTK_FILE_CHOOSER_PROP_DO_OVERWRITE_CONFIRMATION
++  GTK_FILE_CHOOSER_PROP_ROOT_FOLDER,
++  GTK_FILE_CHOOSER_PROP_SHOW_CREATE_FOLDER,
++  GTK_FILE_CHOOSER_PROP_LAST = GTK_FILE_CHOOSER_PROP_SHOW_CREATE_FOLDER
+ } GtkFileChooserProp;
+ 
+ void _gtk_file_chooser_install_properties (GObjectClass *klass);
+Index: gtk+-2.10.14/gtk/gtkfilechooserutils.c
+===================================================================
+--- gtk+-2.10.14.orig/gtk/gtkfilechooserutils.c	2007-08-24 08:37:28.000000000 +0100
++++ gtk+-2.10.14/gtk/gtkfilechooserutils.c	2007-08-24 08:51:47.000000000 +0100
+@@ -117,6 +117,12 @@
+   g_object_class_override_property (klass,
+ 				    GTK_FILE_CHOOSER_PROP_DO_OVERWRITE_CONFIRMATION,
+ 				    "do-overwrite-confirmation");
++  g_object_class_override_property (klass,
++				    GTK_FILE_CHOOSER_PROP_ROOT_FOLDER,
++				    "root-folder");
++  g_object_class_override_property (klass,
++				    GTK_FILE_CHOOSER_PROP_SHOW_CREATE_FOLDER,
++				    "show-create-folder");
+ }
+ 
+ /**
