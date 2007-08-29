@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r42"
+PR = "r43"
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
@@ -62,6 +62,7 @@ RDEPENDS_task-base = "\
     ${@base_contains('COMBINED_FEATURES', 'irda', 'task-base-irda', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pci', 'task-base-pci', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'task-base-pcmcia', '',d)} \
+    ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'bluez-dtl1-workaround', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbgadget', 'task-base-usbgadget', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbhost', 'task-base-usbhost', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'bluetooth', 'task-base-bluetooth', '',d)} \
@@ -72,6 +73,7 @@ RDEPENDS_task-base = "\
     ${@base_contains('DISTRO_FEATURES', 'ipsec', 'task-base-ipsec', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'ppp', 'task-base-ppp', '',d)} \
     "
+# bluez-dtl1-workaround above is workaround for bitbake not handling DEPENDS on it in
 
 RDEPENDS_task-base-extended = "\
     task-base \
