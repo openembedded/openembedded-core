@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
 PR = "r5"
 
-SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=master \
+SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=2a032bca585e27ceb0f293905718b416bc297ce2 \
            file://add-exclusion-to-mkfs-jffs2-git.patch;patch=1 \
 	   file://fix-ignoreerrors-git.patch;patch=1"
 
