@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r0"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -17,7 +17,7 @@ DEFAULT_PREFERENCE = "-1"
 # Hacks should clearly named and at the bottom
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            http://www.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.23-rc4.bz2;patch=1 \
-           ${RPSRC}/lzo_jffs2-r2.patch;patch=1 \
+           ${RPSRC}/lzo_jffs2-r3.patch;patch=1 \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_lzomode-r1.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
