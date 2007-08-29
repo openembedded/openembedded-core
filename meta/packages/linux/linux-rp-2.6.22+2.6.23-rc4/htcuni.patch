@@ -1,8 +1,9 @@
 ---
+ arch/arm/Kconfig                                         |    2 
  arch/arm/mach-pxa/Kconfig                                |   89 +
  arch/arm/mach-pxa/Makefile                               |    1 
  arch/arm/mach-pxa/corgi.c                                |    3 
- arch/arm/mach-pxa/generic.c                              |   12 
+ arch/arm/mach-pxa/generic.c                              |   13 
  arch/arm/mach-pxa/htcuniversal/Makefile                  |   19 
  arch/arm/mach-pxa/htcuniversal/htcuniversal.c            |  468 +++++
  arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.c     |  917 +++++++++++
@@ -21,11 +22,9 @@
  arch/arm/mach-pxa/htcuniversal/htcuniversal_ts2.c        |  490 ++++++
  arch/arm/mach-pxa/htcuniversal/htcuniversal_udc.c        |   71 
  arch/arm/mach-pxa/htcuniversal/tsc2046_ts.h              |   20 
- arch/arm/mach-pxa/pm.c                                   |   36 
  arch/arm/mach-pxa/spitz.c                                |    2 
  drivers/input/keyboard/Makefile                          |    2 
  drivers/input/keyboard/asic3_keys.c                      |  131 +
- drivers/input/keyboard/pxa27x_keyboard.c                 |    2 
  drivers/leds/Kconfig                                     |    7 
  drivers/leds/Makefile                                    |    1 
  drivers/leds/leds-asic3.c                                |  189 ++
@@ -41,11 +40,6 @@
  drivers/serial/pxa.c                                     |   22 
  drivers/video/backlight/Kconfig                          |    2 
  drivers/video/backlight/corgi_bl.c                       |    4 
- drivers/w1/slaves/Kconfig                                |   11 
- drivers/w1/slaves/Makefile                               |    2 
- drivers/w1/slaves/w1_ds2760.c                            |  213 ++
- drivers/w1/slaves/w1_ds2760.h                            |   50 
- drivers/w1/w1_family.h                                   |    1 
  include/asm-arm/arch-pxa/clock.h                         |   27 
  include/asm-arm/arch-pxa/htcuniversal-asic.h             |  213 ++
  include/asm-arm/arch-pxa/htcuniversal-gpio.h             |  220 ++
@@ -63,15 +57,14 @@
  include/linux/gpiodev.h                                  |   44 
  include/linux/input_pda.h                                |   47 
  include/linux/ioport.h                                   |    1 
- include/linux/pda_power.h                                |   31 
  include/linux/soc/asic3_base.h                           |  104 +
  include/linux/soc/tmio_mmc.h                             |   17 
- 67 files changed, 7808 insertions(+), 17 deletions(-)
+ 60 files changed, 7468 insertions(+), 14 deletions(-)
 
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/Makefile	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/Makefile	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,19 @@
 +#
 +# Makefile for HTC Universal
@@ -79,7 +72,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/Makefile
 +
 +snd-htcuniversal-ak4641-objs := htcuniversal_ak4641.o
 +
-+obj-$(CONFIG_MACH_HTCUNIVERSAL)		+= htcuniversal.o htcuniversal_pm.o
++obj-$(CONFIG_MACH_HTCUNIVERSAL)		+= htcuniversal.o
 +obj-$(CONFIG_HTCUNIVERSAL_CORE)		+= htcuniversal_core.o
 +obj-$(CONFIG_HTCUNIVERSAL_POWER)	+= htcuniversal_power2.o
 +obj-$(CONFIG_HTCUNIVERSAL_LCD)		+= htcuniversal_lcd.o
@@ -95,7 +88,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/Makefile
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,468 @@
 +/*
 + * Hardware definitions for HTC Universal
@@ -510,7 +503,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal.c
 +
 +static void __init htcuniversal_init_irq(void)
 +{
-+	pxa_init_irq();
++	pxa27x_init_irq();
 +}
 +
 +static struct platform_pxa_serial_funcs htcuniversal_pxa_bt_funcs = {
@@ -568,7 +561,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,917 @@
 +/*
 + * Audio support for codec Asahi Kasei AK4641
@@ -1490,7 +1483,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,65 @@
 +/*
 + * Audio support for codec Asahi Kasei AK4641
@@ -1560,7 +1553,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ak4641.h
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_asic3_leds.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_asic3_leds.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_asic3_leds.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,143 @@
 +/*
 + * LEDs support for the HP iPaq hx4700
@@ -1708,7 +1701,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_asic3_leds.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bl.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bl.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bl.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,61 @@
 +/*
 + * Use consistent with the GNU GPL is permitted,
@@ -1774,7 +1767,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bl.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,135 @@
 +/* Bluetooth interface driver for TI BRF6150 on HX4700
 + *
@@ -1914,7 +1907,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,17 @@
 +/*
 + * Bluetooth support file for calling bluetooth configuration functions
@@ -1936,7 +1929,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_bt.h
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_buttons.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_buttons.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_buttons.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,87 @@
 +/*
 + * Buttons driver for HTC Universal
@@ -2028,7 +2021,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_buttons.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_core.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_core.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_core.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,226 @@
 +/* Core Hardware driver for Hx4700 (Serial, ASIC3, EGPIOs)
 + *
@@ -2098,7 +2091,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_core.c
 +
 +#ifdef CONFIG_PM
 +
-+void htcuniversal_ll_pm_init(void);
++//void htcuniversal_ll_pm_init(void);
 +
 +static int htcuniversal_suspend(struct platform_device *dev, pm_message_t state)
 +{
@@ -2210,7 +2203,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_core.c
 +	printk("Using stock HTC first stage bootloader\n");
 +	htc_bootloader = 1;
 +
-+	htcuniversal_ll_pm_init();
++//	htcuniversal_ll_pm_init();
 +
 +	return 0;
 +}
@@ -2259,7 +2252,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_core.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_lcd.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_lcd.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_lcd.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,212 @@
 +/*
 + * Use consistent with the GNU GPL is permitted,
@@ -2404,7 +2397,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_lcd.c
 +
 +static int htcuniversal_lcd_probe(struct platform_device * dev)
 +{
-+	htcuniversal_lcd_dev = lcd_device_register("pxa2xx-fb", NULL,
++	htcuniversal_lcd_dev = lcd_device_register("pxa2xx-fb", &dev->dev, NULL,
 +			&htcuniversal_lcd_properties);
 +	if (IS_ERR(htcuniversal_lcd_dev)) {
 +		printk("htcuniversal_lcd_probe: error registering devices\n");
@@ -2476,7 +2469,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_lcd.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,167 @@
 +
 +/* Phone interface driver for Qualcomm MSM6250 on HTC Universal
@@ -2648,7 +2641,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,16 @@
 +/*
 + * Bluetooth support file for calling bluetooth configuration functions
@@ -2669,7 +2662,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_phone.h
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_pm.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_pm.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_pm.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,69 @@
 +/*
 + * MyPal 716 power management support for the original HTC IPL in DoC G3
@@ -2743,7 +2736,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_pm.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_power2.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_power2.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_power2.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,97 @@
 +/*
 + * pda_power driver for HTC Universal
@@ -2845,7 +2838,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_power2.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ts2.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ts2.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ts2.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,490 @@
 +/* Touch screen driver for the TI something-or-other
 + *
@@ -3257,7 +3250,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ts2.c
 +     ts->pen_down=pen_down;
 +    }
 +
-+    retval = request_irq(ts->irq, pen_isr, SA_INTERRUPT, "tsc2046_ts", ts);
++    retval = request_irq(ts->irq, pen_isr, IRQF_DISABLED, "tsc2046_ts", ts);
 +    if(retval) {
 +        printk("Unable to get interrupt\n");
 +        input_unregister_device (ts->input);
@@ -3340,7 +3333,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_ts2.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_udc.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_udc.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_udc.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,71 @@
 +
 +/*
@@ -3416,7 +3409,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/htcuniversal_udc.c
 Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/tsc2046_ts.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/tsc2046_ts.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/htcuniversal/tsc2046_ts.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,20 @@
 +/*
 + * temporary TSC2046 touchscreen hack
@@ -3440,9 +3433,9 @@ Index: linux-2.6.22/arch/arm/mach-pxa/htcuniversal/tsc2046_ts.h
 +#endif
 Index: linux-2.6.22/arch/arm/mach-pxa/Kconfig
 ===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/Kconfig	2007-08-23 13:09:21.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/Kconfig	2007-08-23 13:09:22.000000000 +0200
-@@ -46,6 +46,14 @@
+--- linux-2.6.22.orig/arch/arm/mach-pxa/Kconfig	2007-08-29 12:44:46.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/Kconfig	2007-08-29 12:44:49.000000000 +0200
+@@ -50,6 +50,14 @@
  	help
  	  This enables support for the HP iPAQ HX2750 handheld.
  
@@ -3457,7 +3450,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/Kconfig
  endchoice
  
  if PXA_SHARPSL
-@@ -80,6 +88,86 @@
+@@ -84,6 +92,86 @@
  
  endif
  
@@ -3544,146 +3537,30 @@ Index: linux-2.6.22/arch/arm/mach-pxa/Kconfig
  endmenu
  
  config MACH_POODLE
-@@ -160,4 +248,3 @@
+@@ -164,4 +252,3 @@
  	depends on (PXA25x || PXA27x) && INPUT
  
  endif
 -
 Index: linux-2.6.22/arch/arm/mach-pxa/Makefile
 ===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/Makefile	2007-08-23 13:09:21.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/Makefile	2007-08-23 13:09:22.000000000 +0200
-@@ -19,6 +19,7 @@
- obj-$(CONFIG_MACH_POODLE)	+= poodle.o corgi_ssp.o sharpsl_pm.o poodle_pm.o
+--- linux-2.6.22.orig/arch/arm/mach-pxa/Makefile	2007-08-29 12:44:46.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/Makefile	2007-08-29 12:44:49.000000000 +0200
+@@ -20,6 +20,7 @@
  obj-$(CONFIG_MACH_TOSA)         += tosa.o
+ obj-$(CONFIG_MACH_EM_X270) += em-x270.o
  obj-$(CONFIG_MACH_HX2750)	+= hx2750.o hx2750_test.o
 +obj-$(CONFIG_MACH_HTCUNIVERSAL) += htcuniversal/
  
  # Support for blinky lights
  led-y := leds.o
-Index: linux-2.6.22/arch/arm/mach-pxa/pm.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/pm.c	2007-08-23 13:09:20.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/pm.c	2007-08-23 13:09:22.000000000 +0200
-@@ -22,6 +22,7 @@
- #include <asm/system.h>
- #include <asm/arch/pm.h>
- #include <asm/arch/pxa-regs.h>
-+#include <asm/arch/pxa-pm_ll.h>
- #include <asm/arch/lubbock.h>
- #include <asm/mach/time.h>
- 
-@@ -75,12 +76,16 @@
- };
- 
- 
-+static struct pxa_ll_pm_ops *ll_ops;
-+
- int pxa_pm_enter(suspend_state_t state)
- {
- 	unsigned long sleep_save[SLEEP_SAVE_SIZE];
- 	unsigned long checksum = 0;
-+	struct timespec delta, rtc;
- 	int i;
- 	extern void pxa_cpu_pm_enter(suspend_state_t state);
-+	extern void pxa_cpu_resume(void);
- 
- #ifdef CONFIG_IWMMXT
- 	/* force any iWMMXt context to ram **/
-@@ -88,6 +93,11 @@
- 		iwmmxt_task_disable(NULL);
- #endif
- 
-+	/* preserve current time */
-+	rtc.tv_sec = RCNR;
-+	rtc.tv_nsec = 0;
-+	save_time_delta(&delta, &rtc);
-+
- 	SAVE(GPLR0); SAVE(GPLR1); SAVE(GPLR2);
- 	SAVE(GPDR0); SAVE(GPDR1); SAVE(GPDR2);
- 	SAVE(GRER0); SAVE(GRER1); SAVE(GRER2);
-@@ -123,6 +133,15 @@
- 	/* Clear sleep reset status */
- 	RCSR = RCSR_SMR;
- 
-+	/* Set resume return address */
-+	PSPR = virt_to_phys(pxa_cpu_resume);
-+
-+	/* If we have special sus/res logic, use it */
-+	if(ll_ops && ll_ops->suspend) {
-+		extern void pxa_cpu_resume(void);
-+		ll_ops->suspend(virt_to_phys(pxa_cpu_resume));
-+	}
-+
- 	/* before sleeping, calculate and save a checksum */
- 	for (i = 0; i < SLEEP_SAVE_SIZE - 1; i++)
- 		checksum += sleep_save[i];
-@@ -138,6 +157,9 @@
- 	for (i = 0; i < SLEEP_SAVE_SIZE - 1; i++)
- 		checksum += sleep_save[i];
- 
-+	if(ll_ops && ll_ops->resume)
-+		ll_ops->resume();
-+
- 	/* if invalid, display message and wait for a hardware reset */
- 	if (checksum != sleep_save[SLEEP_SAVE_CKSUM]) {
- #ifdef CONFIG_ARCH_LUBBOCK
-@@ -179,6 +201,10 @@
- 
- 	RESTORE(PSTR);
- 
-+	/* restore current time */
-+	rtc.tv_sec = RCNR;
-+	restore_time_delta(&delta, &rtc);
-+
- #ifdef DEBUG
- 	printk(KERN_DEBUG "*** made it back from resume\n");
- #endif
-@@ -188,6 +214,13 @@
- 
- EXPORT_SYMBOL_GPL(pxa_pm_enter);
- 
-+struct pxa_ll_pm_ops *pxa_pm_set_ll_ops(struct pxa_ll_pm_ops *new_ops) {
-+	struct pxa_ll_pm_ops *old_ops = ll_ops;
-+	ll_ops = new_ops;
-+	return old_ops;
-+}
-+EXPORT_SYMBOL(pxa_pm_set_ll_ops);
-+
- unsigned long sleep_phys_sp(void *sp)
- {
- 	return virt_to_phys(sp);
-@@ -219,8 +252,9 @@
- 	.prepare	= pxa_pm_prepare,
- 	.enter		= pxa_pm_enter,
- 	.finish		= pxa_pm_finish,
--	.valid		= pm_valid_only_mem,
-+	.valid          = pm_valid_only_mem,
- };
-+//EXPORT_SYMBOL(pxa_pm_ops);
- 
- extern void pxa_cpu_resume(void);
- 
-Index: linux-2.6.22/drivers/input/keyboard/pxa27x_keyboard.c
-===================================================================
---- linux-2.6.22.orig/drivers/input/keyboard/pxa27x_keyboard.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/input/keyboard/pxa27x_keyboard.c	2007-08-23 13:09:22.000000000 +0200
-@@ -140,7 +140,7 @@
- 		KPREC = pdata->reg_kprec;
- 
- 		/* Enable unit clock */
--		pxa_set_cken(CKEN19_KEYPAD, 1);
-+		pxa_set_cken(CKEN_KEYPAD, 1);
- 	}
- 
- 	mutex_unlock(&input_dev->mutex);
 Index: linux-2.6.22/drivers/leds/Kconfig
 ===================================================================
---- linux-2.6.22.orig/drivers/leds/Kconfig	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/leds/Kconfig	2007-08-23 13:09:22.000000000 +0200
-@@ -95,6 +95,13 @@
- 	help
- 	  This option enables support for the front LED on Cobalt Server
+--- linux-2.6.22.orig/drivers/leds/Kconfig	2007-08-29 12:44:30.000000000 +0200
++++ linux-2.6.22/drivers/leds/Kconfig	2007-08-29 12:44:49.000000000 +0200
+@@ -101,6 +101,13 @@
+ 	  outputs. To be useful the particular board must have LEDs
+ 	  and they must be connected to the GPIO lines.
  
 +config LEDS_ASIC3
 +	tristate "LED Support for the HTC ASIC3 chip"
@@ -3695,22 +3572,10 @@ Index: linux-2.6.22/drivers/leds/Kconfig
  comment "LED Triggers"
  
  config LEDS_TRIGGERS
-Index: linux-2.6.22/drivers/leds/Makefile
-===================================================================
---- linux-2.6.22.orig/drivers/leds/Makefile	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/leds/Makefile	2007-08-23 13:09:22.000000000 +0200
-@@ -16,6 +16,7 @@
- obj-$(CONFIG_LEDS_WRAP)			+= leds-wrap.o
- obj-$(CONFIG_LEDS_H1940)		+= leds-h1940.o
- obj-$(CONFIG_LEDS_COBALT)		+= leds-cobalt.o
-+obj-$(CONFIG_LEDS_ASIC3)                += leds-asic3.o
- 
- # LED Triggers
- obj-$(CONFIG_LEDS_TRIGGER_TIMER)	+= ledtrig-timer.o
 Index: linux-2.6.22/drivers/leds/leds-asic3.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/leds/leds-asic3.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/leds/leds-asic3.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,189 @@
 +/*
 + * LEDs support for HTC ASIC3 devices.
@@ -3903,8 +3768,8 @@ Index: linux-2.6.22/drivers/leds/leds-asic3.c
 +MODULE_LICENSE("GPL");
 Index: linux-2.6.22/drivers/mfd/Kconfig
 ===================================================================
---- linux-2.6.22.orig/drivers/mfd/Kconfig	2007-08-23 13:09:19.000000000 +0200
-+++ linux-2.6.22/drivers/mfd/Kconfig	2007-08-23 13:09:22.000000000 +0200
+--- linux-2.6.22.orig/drivers/mfd/Kconfig	2007-08-29 12:44:44.000000000 +0200
++++ linux-2.6.22/drivers/mfd/Kconfig	2007-08-29 12:44:49.000000000 +0200
 @@ -15,6 +15,16 @@
  	  interface. The device may be connected by PCI or local bus with
  	  varying functions enabled.
@@ -3924,8 +3789,8 @@ Index: linux-2.6.22/drivers/mfd/Kconfig
  menu "Multimedia Capabilities Port drivers"
 Index: linux-2.6.22/drivers/mfd/Makefile
 ===================================================================
---- linux-2.6.22.orig/drivers/mfd/Makefile	2007-08-23 13:09:19.000000000 +0200
-+++ linux-2.6.22/drivers/mfd/Makefile	2007-08-23 13:09:22.000000000 +0200
+--- linux-2.6.22.orig/drivers/mfd/Makefile	2007-08-29 12:44:44.000000000 +0200
++++ linux-2.6.22/drivers/mfd/Makefile	2007-08-29 12:44:49.000000000 +0200
 @@ -2,6 +2,8 @@
  # Makefile for multifunction miscellaneous devices
  #
@@ -3938,7 +3803,7 @@ Index: linux-2.6.22/drivers/mfd/Makefile
 Index: linux-2.6.22/drivers/mfd/asic3_base.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/mfd/asic3_base.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/mfd/asic3_base.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,1208 @@
 +/*
 + * Driver interface to HTC "ASIC3"
@@ -5151,7 +5016,7 @@ Index: linux-2.6.22/drivers/mfd/asic3_base.c
 Index: linux-2.6.22/drivers/mfd/soc-core.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/mfd/soc-core.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/mfd/soc-core.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,106 @@
 +/*
 + * drivers/soc/soc-core.c
@@ -5262,7 +5127,7 @@ Index: linux-2.6.22/drivers/mfd/soc-core.c
 Index: linux-2.6.22/drivers/mfd/soc-core.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/mfd/soc-core.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/mfd/soc-core.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,30 @@
 +/*
 + * drivers/soc/soc-core.h
@@ -5297,7 +5162,7 @@ Index: linux-2.6.22/drivers/mfd/soc-core.h
 Index: linux-2.6.22/include/asm-arm/arch-pxa/clock.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/clock.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/clock.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,27 @@
 +/*
 + *  linux/include/asm-arm/arch-pxa/clock.h
@@ -5329,7 +5194,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/clock.h
 Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-asic.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-asic.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-asic.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,213 @@
 +/*
 + * include/asm/arm/arch-pxa/htcuniversal-asic.h
@@ -5547,7 +5412,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-asic.h
 Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-gpio.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-gpio.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-gpio.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,220 @@
 +/*
 + * include/asm-arm/arch-pxa/htcuniversal-gpio.h
@@ -5772,7 +5637,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-gpio.h
 Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-init.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-init.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-init.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,14 @@
 +/*
 + * include/asm/arm/arch-pxa/htcuniversal-init.h
@@ -5791,7 +5656,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal-init.h
 Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,3 @@
 +#include <asm/arch/irqs.h>
 +
@@ -5799,7 +5664,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/htcuniversal.h
 Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa-pm_ll.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/pxa-pm_ll.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/pxa-pm_ll.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,6 @@
 +struct pxa_ll_pm_ops {
 +	void (*suspend)(unsigned long);
@@ -5810,7 +5675,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa-pm_ll.h
 Index: linux-2.6.22/include/asm-arm/arch-pxa/sharpsl.h
 ===================================================================
 --- linux-2.6.22.orig/include/asm-arm/arch-pxa/sharpsl.h	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/include/asm-arm/arch-pxa/sharpsl.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/sharpsl.h	2007-08-29 12:44:49.000000000 +0200
 @@ -25,12 +25,6 @@
  /*
   * SharpSL Backlight
@@ -5827,7 +5692,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/sharpsl.h
 Index: linux-2.6.22/include/asm-arm/hardware/asic3_keys.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/hardware/asic3_keys.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/hardware/asic3_keys.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,18 @@
 +#include <linux/input.h>
 +
@@ -5850,7 +5715,7 @@ Index: linux-2.6.22/include/asm-arm/hardware/asic3_keys.h
 Index: linux-2.6.22/include/asm-arm/hardware/asic3_leds.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/hardware/asic3_leds.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/hardware/asic3_leds.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,34 @@
 +/*
 + * LEDs support for HTC ASIC3 devices.
@@ -5889,7 +5754,7 @@ Index: linux-2.6.22/include/asm-arm/hardware/asic3_leds.h
 Index: linux-2.6.22/include/asm-arm/hardware/ipaq-asic3.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/hardware/ipaq-asic3.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/hardware/ipaq-asic3.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,602 @@
 +/*
 + *
@@ -6495,11 +6360,11 @@ Index: linux-2.6.22/include/asm-arm/hardware/ipaq-asic3.h
 +#endif
 Index: linux-2.6.22/include/linux/backlight.h
 ===================================================================
---- linux-2.6.22.orig/include/linux/backlight.h	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/include/linux/backlight.h	2007-08-23 13:09:22.000000000 +0200
-@@ -87,4 +87,11 @@
- 
- #define to_backlight_device(obj) container_of(obj, struct backlight_device, class_dev)
+--- linux-2.6.22.orig/include/linux/backlight.h	2007-08-29 12:44:39.000000000 +0200
++++ linux-2.6.22/include/linux/backlight.h	2007-08-29 12:44:49.000000000 +0200
+@@ -92,4 +92,11 @@
+ 	return dev_get_drvdata(&bl_dev->dev);
+ }
  
 +struct generic_bl_info {
 +	int max_intensity;
@@ -6512,7 +6377,7 @@ Index: linux-2.6.22/include/linux/backlight.h
 Index: linux-2.6.22/include/linux/gpiodev.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/linux/gpiodev.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/linux/gpiodev.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,44 @@
 +#ifndef __GPIODEV_H
 +#define __GPIODEV_H
@@ -6561,7 +6426,7 @@ Index: linux-2.6.22/include/linux/gpiodev.h
 Index: linux-2.6.22/include/linux/input_pda.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/linux/input_pda.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/linux/input_pda.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,47 @@
 +#ifndef _INPUT_PDA_H
 +#define _INPUT_PDA_H
@@ -6610,46 +6475,10 @@ Index: linux-2.6.22/include/linux/input_pda.h
 +#define _KEY_HOMEPAGE	_KEY_APP4
 +
 +#endif
-Index: linux-2.6.22/include/linux/pda_power.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/linux/pda_power.h	2007-08-23 13:09:22.000000000 +0200
-@@ -0,0 +1,31 @@
-+/*
-+ * Common power driver for PDAs and phones with one or two external
-+ * power supplies (AC/USB) connected to main and backup batteries,
-+ * and optional builtin charger.
-+ *
-+ * Copyright 2007 Anton Vorontsov <cbou@mail.ru>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __PDA_POWER_H__
-+#define __PDA_POWER_H__
-+
-+#define PDA_POWER_CHARGE_AC  (1 << 0)
-+#define PDA_POWER_CHARGE_USB (1 << 1)
-+
-+struct pda_power_pdata {
-+	int (*is_ac_online)(void);
-+	int (*is_usb_online)(void);
-+	void (*set_charge)(int flags);
-+
-+	char **supplied_to;
-+	size_t num_supplicants;
-+
-+	unsigned int wait_for_status; /* msecs, default is 500 */
-+	unsigned int wait_for_charger; /* msecs, default is 500 */
-+};
-+
-+#endif /* __PDA_POWER_H__ */
 Index: linux-2.6.22/include/linux/soc/asic3_base.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/linux/soc/asic3_base.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/linux/soc/asic3_base.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,104 @@
 +#include <asm/types.h>
 +#include <linux/gpiodev.h>
@@ -6758,7 +6587,7 @@ Index: linux-2.6.22/include/linux/soc/asic3_base.h
 Index: linux-2.6.22/include/linux/soc/tmio_mmc.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/linux/soc/tmio_mmc.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/linux/soc/tmio_mmc.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,17 @@
 +#include <linux/platform_device.h>
 +
@@ -6779,9 +6608,9 @@ Index: linux-2.6.22/include/linux/soc/tmio_mmc.h
 +};
 Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa-regs.h
 ===================================================================
---- linux-2.6.22.orig/include/asm-arm/arch-pxa/pxa-regs.h	2007-08-23 13:09:21.000000000 +0200
-+++ linux-2.6.22/include/asm-arm/arch-pxa/pxa-regs.h	2007-08-23 13:09:22.000000000 +0200
-@@ -2063,6 +2063,8 @@
+--- linux-2.6.22.orig/include/asm-arm/arch-pxa/pxa-regs.h	2007-08-29 12:44:47.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/pxa-regs.h	2007-08-29 12:44:49.000000000 +0200
+@@ -2043,6 +2043,8 @@
  #define LDCMD_SOFINT	(1 << 22)
  #define LDCMD_EOFINT	(1 << 21)
  
@@ -6793,7 +6622,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa-regs.h
 Index: linux-2.6.22/drivers/mmc/host/Kconfig
 ===================================================================
 --- linux-2.6.22.orig/drivers/mmc/host/Kconfig	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/mmc/host/Kconfig	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/mmc/host/Kconfig	2007-08-29 12:44:49.000000000 +0200
 @@ -100,3 +100,9 @@
            To compile this driver as a module, choose M here: the
  	  module will be called tifm_sd.
@@ -6807,7 +6636,7 @@ Index: linux-2.6.22/drivers/mmc/host/Kconfig
 Index: linux-2.6.22/drivers/mmc/host/Makefile
 ===================================================================
 --- linux-2.6.22.orig/drivers/mmc/host/Makefile	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/mmc/host/Makefile	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/mmc/host/Makefile	2007-08-29 12:44:49.000000000 +0200
 @@ -15,4 +15,4 @@
  obj-$(CONFIG_MMC_OMAP)		+= omap.o
  obj-$(CONFIG_MMC_AT91)		+= at91_mci.o
@@ -6817,7 +6646,7 @@ Index: linux-2.6.22/drivers/mmc/host/Makefile
 Index: linux-2.6.22/drivers/mmc/host/asic3_mmc.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/mmc/host/asic3_mmc.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/mmc/host/asic3_mmc.c	2007-08-29 14:36:15.000000000 +0200
 @@ -0,0 +1,900 @@
 +/* Note that this driver can likely be merged into the tmio driver, so
 + * consider this code temporary.  It works, though.
@@ -7054,7 +6883,7 @@ Index: linux-2.6.22/drivers/mmc/host/asic3_mmc.c
 +            buf++;
 +            count -= 2;
 +        }
-+	flush_dcache_page(host->sg_ptr->page);
++	//flush_dcache_page(host->sg_ptr->page);
 +    } else {
 +        while(count > 0) {
 +            /* Write two bytes to SD/MMC controller. */
@@ -7722,7 +7551,7 @@ Index: linux-2.6.22/drivers/mmc/host/asic3_mmc.c
 Index: linux-2.6.22/drivers/mmc/host/asic3_mmc.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/mmc/host/asic3_mmc.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/mmc/host/asic3_mmc.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,25 @@
 +#ifndef __ASIC3_MMC_H
 +#define __ASIC3_MMC_H
@@ -7752,7 +7581,7 @@ Index: linux-2.6.22/drivers/mmc/host/asic3_mmc.h
 Index: linux-2.6.22/drivers/input/keyboard/Makefile
 ===================================================================
 --- linux-2.6.22.orig/drivers/input/keyboard/Makefile	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/input/keyboard/Makefile	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/input/keyboard/Makefile	2007-08-29 12:44:49.000000000 +0200
 @@ -21,4 +21,4 @@
  obj-$(CONFIG_KEYBOARD_PXA27x)		+= pxa27x_keyboard.o
  obj-$(CONFIG_KEYBOARD_AAED2000)		+= aaed2000_kbd.o
@@ -7762,7 +7591,7 @@ Index: linux-2.6.22/drivers/input/keyboard/Makefile
 Index: linux-2.6.22/drivers/input/keyboard/asic3_keys.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/input/keyboard/asic3_keys.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/input/keyboard/asic3_keys.c	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,131 @@
 +/*
 + * Generic buttons driver for ASIC3 SoC.
@@ -7897,9 +7726,9 @@ Index: linux-2.6.22/drivers/input/keyboard/asic3_keys.c
 +MODULE_LICENSE("GPL");
 Index: linux-2.6.22/include/asm-arm/arch-pxa/irqs.h
 ===================================================================
---- linux-2.6.22.orig/include/asm-arm/arch-pxa/irqs.h	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/include/asm-arm/arch-pxa/irqs.h	2007-08-23 13:09:22.000000000 +0200
-@@ -178,6 +178,8 @@
+--- linux-2.6.22.orig/include/asm-arm/arch-pxa/irqs.h	2007-08-29 12:44:38.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/irqs.h	2007-08-29 12:44:49.000000000 +0200
+@@ -172,6 +172,8 @@
        defined(CONFIG_MACH_LOGICPD_PXA270) || \
        defined(CONFIG_MACH_MAINSTONE)
  #define NR_IRQS			(IRQ_BOARD_END)
@@ -7911,7 +7740,7 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/irqs.h
 Index: linux-2.6.22/include/linux/ioport.h
 ===================================================================
 --- linux-2.6.22.orig/include/linux/ioport.h	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/include/linux/ioport.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/linux/ioport.h	2007-08-29 12:44:49.000000000 +0200
 @@ -56,6 +56,7 @@
  #define IORESOURCE_IRQ_HIGHLEVEL	(1<<2)
  #define IORESOURCE_IRQ_LOWLEVEL		(1<<3)
@@ -7922,9 +7751,9 @@ Index: linux-2.6.22/include/linux/ioport.h
  #define IORESOURCE_DMA_TYPE_MASK	(3<<0)
 Index: linux-2.6.22/drivers/video/backlight/Kconfig
 ===================================================================
---- linux-2.6.22.orig/drivers/video/backlight/Kconfig	2007-08-23 13:09:19.000000000 +0200
-+++ linux-2.6.22/drivers/video/backlight/Kconfig	2007-08-23 13:09:22.000000000 +0200
-@@ -34,7 +34,7 @@
+--- linux-2.6.22.orig/drivers/video/backlight/Kconfig	2007-08-29 12:44:43.000000000 +0200
++++ linux-2.6.22/drivers/video/backlight/Kconfig	2007-08-29 12:44:49.000000000 +0200
+@@ -40,7 +40,7 @@
  
  config BACKLIGHT_CORGI
  	tristate "Sharp Corgi Backlight Driver (SL Series)"
@@ -7936,7 +7765,7 @@ Index: linux-2.6.22/drivers/video/backlight/Kconfig
 Index: linux-2.6.22/drivers/video/backlight/corgi_bl.c
 ===================================================================
 --- linux-2.6.22.orig/drivers/video/backlight/corgi_bl.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/video/backlight/corgi_bl.c	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/drivers/video/backlight/corgi_bl.c	2007-08-29 12:44:49.000000000 +0200
 @@ -24,7 +24,7 @@
  static int corgibl_intensity;
  static struct backlight_properties corgibl_data;
@@ -7957,8 +7786,8 @@ Index: linux-2.6.22/drivers/video/backlight/corgi_bl.c
  	if (!machinfo->limit_mask)
 Index: linux-2.6.22/arch/arm/mach-pxa/corgi.c
 ===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/corgi.c	2007-08-23 13:09:20.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/corgi.c	2007-08-23 13:09:22.000000000 +0200
+--- linux-2.6.22.orig/arch/arm/mach-pxa/corgi.c	2007-08-29 12:44:45.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/corgi.c	2007-08-29 12:44:49.000000000 +0200
 @@ -20,6 +20,7 @@
  #include <linux/interrupt.h>
  #include <linux/mmc/host.h>
@@ -7967,7 +7796,7 @@ Index: linux-2.6.22/arch/arm/mach-pxa/corgi.c
  
  #include <asm/setup.h>
  #include <asm/memory.h>
-@@ -142,7 +143,7 @@
+@@ -143,7 +144,7 @@
  /*
   * Corgi Backlight Device
   */
@@ -7978,9 +7807,9 @@ Index: linux-2.6.22/arch/arm/mach-pxa/corgi.c
  	.limit_mask = 0x0b,
 Index: linux-2.6.22/arch/arm/mach-pxa/spitz.c
 ===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/spitz.c	2007-08-23 13:09:20.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/spitz.c	2007-08-23 13:09:22.000000000 +0200
-@@ -221,7 +221,7 @@
+--- linux-2.6.22.orig/arch/arm/mach-pxa/spitz.c	2007-08-29 12:44:46.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/spitz.c	2007-08-29 12:44:49.000000000 +0200
+@@ -222,7 +222,7 @@
  /*
   * Spitz Backlight Device
   */
@@ -7989,75 +7818,10 @@ Index: linux-2.6.22/arch/arm/mach-pxa/spitz.c
  	.default_intensity = 0x1f,
  	.limit_mask = 0x0b,
  	.max_intensity = 0x2f,
-Index: linux-2.6.22/arch/arm/mach-pxa/generic.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/generic.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/generic.c	2007-08-23 13:09:22.000000000 +0200
-@@ -345,6 +345,18 @@
- 	.id		= 3,
- };
- 
-+void __init pxa_set_ffuart_info(struct platform_pxa_serial_funcs *info)
-+{
-+	ffuart_device.dev.platform_data = info;
-+}
-+EXPORT_SYMBOL(pxa_set_ffuart_info);
-+
-+void __init pxa_set_btuart_info(struct platform_pxa_serial_funcs *info)
-+{
-+	btuart_device.dev.platform_data = info;
-+}
-+EXPORT_SYMBOL(pxa_set_btuart_info);
-+
- static struct resource i2c_resources[] = {
- 	{
- 		.start	= 0x40301680,
-Index: linux-2.6.22/drivers/w1/slaves/Kconfig
-===================================================================
---- linux-2.6.22.orig/drivers/w1/slaves/Kconfig	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/w1/slaves/Kconfig	2007-08-23 13:09:22.000000000 +0200
-@@ -35,4 +35,15 @@
- 	  Each block has 30 bytes of data and a two byte CRC16.
- 	  Full block writes are only allowed if the CRC is valid.
- 
-+config W1_SLAVE_DS2760
-+       tristate "Dallas 2760 battery monitor chip (HP iPAQ & others)"
-+       depends on W1
-+       help
-+         If you enable this you will have the DS2760 battery monitor
-+         chip support.
-+         The battery monitor chip is used in many batteries/devices
-+         as the one who is responsible for charging/discharging/monitoring
-+         Li+ batteries.
-+         If you are unsure, say N.
-+
- endmenu
-Index: linux-2.6.22/drivers/w1/slaves/Makefile
-===================================================================
---- linux-2.6.22.orig/drivers/w1/slaves/Makefile	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/w1/slaves/Makefile	2007-08-23 13:09:22.000000000 +0200
-@@ -5,4 +5,4 @@
- obj-$(CONFIG_W1_SLAVE_THERM)	+= w1_therm.o
- obj-$(CONFIG_W1_SLAVE_SMEM)	+= w1_smem.o
- obj-$(CONFIG_W1_SLAVE_DS2433)	+= w1_ds2433.o
--
-+obj-$(CONFIG_W1_SLAVE_DS2760)  	+= w1_ds2760.o
-Index: linux-2.6.22/drivers/w1/w1_family.h
-===================================================================
---- linux-2.6.22.orig/drivers/w1/w1_family.h	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/w1/w1_family.h	2007-08-23 13:09:22.000000000 +0200
-@@ -33,6 +33,7 @@
- #define W1_THERM_DS1822  	0x22
- #define W1_EEPROM_DS2433  	0x23
- #define W1_THERM_DS18B20 	0x28
-+#define W1_FAMILY_DS2760        0x30
- 
- #define MAXNAMELEN		32
- 
 Index: linux-2.6.22/include/asm-arm/arch-pxa/serial.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/serial.h	2007-08-23 13:09:22.000000000 +0200
++++ linux-2.6.22/include/asm-arm/arch-pxa/serial.h	2007-08-29 12:44:49.000000000 +0200
 @@ -0,0 +1,78 @@
 +/*
 + *  linux/include/asm-arm/arch-pxa/serial.h
@@ -8137,283 +7901,10 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/serial.h
 +void pxa_set_btuart_info(struct platform_pxa_serial_funcs *btuart_funcs);
 +void pxa_set_stuart_info(struct platform_pxa_serial_funcs *stuart_funcs);
 +void pxa_set_hwuart_info(struct platform_pxa_serial_funcs *hwuart_funcs);
-Index: linux-2.6.22/drivers/w1/slaves/w1_ds2760.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/w1/slaves/w1_ds2760.c	2007-08-23 13:09:22.000000000 +0200
-@@ -0,0 +1,213 @@
-+/*
-+ * 1-Wire implementation for the ds2760 chip
-+ *
-+ * Copyright (c) 2004-2005, Szabolcs Gyurko <szabolcs.gyurko@tlt.hu>
-+ *
-+ * Use consistent with the GNU GPL is permitted,
-+ * provided that this copyright notice is
-+ * preserved in its entirety in all copies and derived works.
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/types.h>
-+#include <linux/platform_device.h>
-+#include <linux/mutex.h>
-+#include <linux/idr.h>
-+
-+#include "../w1.h"
-+#include "../w1_int.h"
-+#include "../w1_family.h"
-+#include "w1_ds2760.h"
-+
-+static int w1_ds2760_io(struct device *dev, char *buf, int addr, size_t count,
-+                        int io)
-+{
-+	struct w1_slave *sl = container_of(dev, struct w1_slave, dev);
-+
-+	if (!dev)
-+		return 0;
-+
-+	mutex_lock(&sl->master->mutex);
-+
-+	if (addr > DS2760_DATA_SIZE || addr < 0) {
-+		count = 0;
-+		goto out;
-+	}
-+	if (addr + count > DS2760_DATA_SIZE)
-+		count = DS2760_DATA_SIZE - addr;
-+
-+	if (!w1_reset_select_slave(sl)) {
-+		if (!io) {
-+			w1_write_8(sl->master, W1_DS2760_READ_DATA);
-+			w1_write_8(sl->master, addr);
-+			count = w1_read_block(sl->master, buf, count);
-+		} else {
-+			w1_write_8(sl->master, W1_DS2760_WRITE_DATA);
-+			w1_write_8(sl->master, addr);
-+			w1_write_block(sl->master, buf, count);
-+			/* XXX w1_write_block returns void, not n_written */
-+		}
-+	}
-+
-+out:
-+	mutex_unlock(&sl->master->mutex);
-+
-+	return count;
-+}
-+
-+int w1_ds2760_read(struct device *dev, char *buf, int addr, size_t count)
-+{
-+	return w1_ds2760_io(dev, buf, addr, count, 0);
-+}
-+
-+int w1_ds2760_write(struct device *dev, char *buf, int addr, size_t count)
-+{
-+	return w1_ds2760_io(dev, buf, addr, count, 1);
-+}
-+
-+static ssize_t w1_ds2760_read_bin(struct kobject *kobj, char *buf, loff_t off,
-+                                  size_t count)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	return w1_ds2760_read(dev, buf, off, count);
-+}
-+
-+static struct bin_attribute w1_ds2760_bin_attr = {
-+	.attr = {
-+		.name = "w1_slave",
-+		.mode = S_IRUGO,
-+		.owner = THIS_MODULE,
-+	},
-+	.size = DS2760_DATA_SIZE,
-+	.read = w1_ds2760_read_bin,
-+};
-+
-+static DEFINE_IDR(bat_idr);
-+static DEFINE_MUTEX(bat_idr_lock);
-+
-+static int new_bat_id(void)
-+{
-+	int ret;
-+
-+	while (1) {
-+		int id;
-+
-+		ret = idr_pre_get(&bat_idr, GFP_KERNEL);
-+		if (ret == 0)
-+			return -ENOMEM;
-+
-+		mutex_lock(&bat_idr_lock);
-+		ret = idr_get_new(&bat_idr, NULL, &id);
-+		mutex_unlock(&bat_idr_lock);
-+
-+		if (ret == 0) {
-+			ret = id & MAX_ID_MASK;
-+			break;
-+		}
-+		else if (ret == -EAGAIN)
-+			continue;
-+		else
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+static void release_bat_id(int id)
-+{
-+	mutex_lock(&bat_idr_lock);
-+	idr_remove(&bat_idr, id);
-+	mutex_unlock(&bat_idr_lock);
-+
-+	return;
-+}
-+
-+static int w1_ds2760_add_slave(struct w1_slave *sl)
-+{
-+	int ret;
-+	int id;
-+	struct platform_device *pdev;
-+
-+	id = new_bat_id();
-+	if (id < 0) {
-+		ret = id;
-+		goto noid;
-+	}
-+
-+	pdev = platform_device_alloc("ds2760-battery", id);
-+	if (!pdev) {
-+		ret = -ENOMEM;
-+		goto pdev_alloc_failed;
-+	}
-+	pdev->dev.parent = &sl->dev;
-+
-+	ret = platform_device_add(pdev);
-+	if (ret)
-+		goto pdev_add_failed;
-+
-+	ret = sysfs_create_bin_file(&sl->dev.kobj, &w1_ds2760_bin_attr);
-+	if (ret)
-+		goto bin_attr_failed;
-+
-+	dev_set_drvdata(&sl->dev, pdev);
-+
-+	goto success;
-+
-+bin_attr_failed:
-+pdev_add_failed:
-+	platform_device_unregister(pdev);
-+pdev_alloc_failed:
-+	release_bat_id(id);
-+noid:
-+success:
-+	return ret;
-+}
-+
-+static void w1_ds2760_remove_slave(struct w1_slave *sl)
-+{
-+	struct platform_device *pdev = dev_get_drvdata(&sl->dev);
-+	int id = pdev->id;
-+
-+	platform_device_unregister(pdev);
-+	release_bat_id(id);
-+	sysfs_remove_bin_file(&sl->dev.kobj, &w1_ds2760_bin_attr);
-+
-+	return;
-+}
-+
-+static struct w1_family_ops w1_ds2760_fops = {
-+	.add_slave    = w1_ds2760_add_slave,
-+	.remove_slave = w1_ds2760_remove_slave,
-+};
-+
-+static struct w1_family w1_ds2760_family = {
-+	.fid = W1_FAMILY_DS2760,
-+	.fops = &w1_ds2760_fops,
-+};
-+
-+static int __init w1_ds2760_init(void)
-+{
-+	printk(KERN_INFO "1-Wire driver for the DS2760 battery monitor "
-+	       " chip  - (c) 2004-2005, Szabolcs Gyurko\n");
-+	idr_init(&bat_idr);
-+	return w1_register_family(&w1_ds2760_family);
-+}
-+
-+static void __exit w1_ds2760_exit(void)
-+{
-+	w1_unregister_family(&w1_ds2760_family);
-+	idr_destroy(&bat_idr);
-+}
-+
-+EXPORT_SYMBOL(w1_ds2760_read);
-+EXPORT_SYMBOL(w1_ds2760_write);
-+
-+module_init(w1_ds2760_init);
-+module_exit(w1_ds2760_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Szabolcs Gyurko <szabolcs.gyurko@tlt.hu>");
-+MODULE_DESCRIPTION("1-wire Driver Dallas 2760 battery monitor chip");
-Index: linux-2.6.22/drivers/w1/slaves/w1_ds2760.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/w1/slaves/w1_ds2760.h	2007-08-23 13:09:22.000000000 +0200
-@@ -0,0 +1,50 @@
-+/*
-+ * 1-Wire implementation for the ds2760 chip
-+ *
-+ * Copyright (c) 2004-2005, Szabolcs Gyurko <szabolcs.gyurko@tlt.hu>
-+ *
-+ * Use consistent with the GNU GPL is permitted,
-+ * provided that this copyright notice is
-+ * preserved in its entirety in all copies and derived works.
-+ *
-+ */
-+
-+#ifndef __w1_ds2760_h__
-+#define __w1_ds2760_h__
-+
-+/* Known commands to the DS2760 chip */
-+#define W1_DS2760_SWAP                      0xAA
-+#define W1_DS2760_READ_DATA                 0x69
-+#define W1_DS2760_WRITE_DATA                0x6C
-+#define W1_DS2760_COPY_DATA                 0x48
-+#define W1_DS2760_RECALL_DATA               0xB8
-+#define W1_DS2760_LOCK                      0x6A
-+
-+/* Number of valid register addresses */
-+#define DS2760_DATA_SIZE	    0x40
-+
-+#define DS2760_PROTECTION_REG	    0x00
-+#define DS2760_STATUS_REG	    0x01
-+#define DS2760_EEPROM_REG	    0x07
-+#define DS2760_SPECIAL_FEATURE_REG  0x08
-+#define DS2760_VOLTAGE_MSB	    0x0c
-+#define DS2760_VOLTAGE_LSB	    0x0d
-+#define DS2760_CURRENT_MSB	    0x0e
-+#define DS2760_CURRENT_LSB	    0x0f
-+#define DS2760_CURRENT_ACCUM_MSB    0x10
-+#define DS2760_CURRENT_ACCUM_LSB    0x11
-+#define DS2760_TEMP_MSB		    0x18
-+#define DS2760_TEMP_LSB		    0x19
-+#define DS2760_EEPROM_BLOCK0	    0x20
-+#define DS2760_ACTIVE_FULL	    0x20
-+#define DS2760_EEPROM_BLOCK1	    0x30
-+#define DS2760_RATED_CAPACITY	    0x32
-+#define DS2760_CURRENT_OFFSET_BIAS  0x33
-+#define DS2760_ACTIVE_EMPTY	    0x3b
-+
-+extern int w1_ds2760_read(struct device *dev, char *buf, int addr,
-+                          size_t count);
-+extern int w1_ds2760_write(struct device *dev, char *buf, int addr,
-+                           size_t count);
-+
-+#endif /* !__w1_ds2760_h__ */
 Index: linux-2.6.22/drivers/serial/pxa.c
 ===================================================================
---- linux-2.6.22.orig/drivers/serial/pxa.c	2007-08-23 13:21:54.000000000 +0200
-+++ linux-2.6.22/drivers/serial/pxa.c	2007-08-23 13:22:54.000000000 +0200
+--- linux-2.6.22.orig/drivers/serial/pxa.c	2007-07-09 01:32:17.000000000 +0200
++++ linux-2.6.22/drivers/serial/pxa.c	2007-08-29 12:44:49.000000000 +0200
 @@ -46,6 +46,7 @@
  #include <asm/io.h>
  #include <asm/hardware.h>
@@ -8478,3 +7969,59 @@ Index: linux-2.6.22/drivers/serial/pxa.c
  }
  
  static void
+Index: linux-2.6.22/arch/arm/mach-pxa/generic.c
+===================================================================
+--- linux-2.6.22.orig/arch/arm/mach-pxa/generic.c	2007-08-29 12:44:25.000000000 +0200
++++ linux-2.6.22/arch/arm/mach-pxa/generic.c	2007-08-29 12:44:49.000000000 +0200
+@@ -42,6 +42,7 @@
+ #include <asm/arch/mmc.h>
+ #include <asm/arch/irda.h>
+ #include <asm/arch/i2c.h>
++#include <asm/arch/serial.h>
+ 
+ #include "devices.h"
+ #include "generic.h"
+@@ -346,6 +347,18 @@
+ 	.id		= 3,
+ };
+ 
++void __init pxa_set_ffuart_info(struct platform_pxa_serial_funcs *info)
++{
++ 	pxa_device_ffuart.dev.platform_data = info;
++}
++EXPORT_SYMBOL(pxa_set_ffuart_info);
++
++void __init pxa_set_btuart_info(struct platform_pxa_serial_funcs *info)
++{
++ 	pxa_device_btuart.dev.platform_data = info;
++}
++EXPORT_SYMBOL(pxa_set_btuart_info);
++
+ static struct resource pxai2c_resources[] = {
+ 	{
+ 		.start	= 0x40301680,
+Index: linux-2.6.22/drivers/leds/Makefile
+===================================================================
+--- linux-2.6.22.orig/drivers/leds/Makefile	2007-08-29 12:44:30.000000000 +0200
++++ linux-2.6.22/drivers/leds/Makefile	2007-08-29 12:44:49.000000000 +0200
+@@ -16,6 +16,7 @@
+ obj-$(CONFIG_LEDS_WRAP)			+= leds-wrap.o
+ obj-$(CONFIG_LEDS_H1940)		+= leds-h1940.o
+ obj-$(CONFIG_LEDS_COBALT)		+= leds-cobalt.o
++obj-$(CONFIG_LEDS_ASIC3)                += leds-asic3.o
+ obj-$(CONFIG_LEDS_GPIO)			+= leds-gpio.o
+ 
+ # LED Triggers
+Index: linux-2.6.22/arch/arm/Kconfig
+===================================================================
+--- linux-2.6.22.orig/arch/arm/Kconfig	2007-08-29 17:18:19.000000000 +0200
++++ linux-2.6.22/arch/arm/Kconfig	2007-08-29 17:18:58.000000000 +0200
+@@ -1032,6 +1032,8 @@
+ 
+ source "drivers/w1/Kconfig"
+ 
++source "drivers/power/Kconfig"
++
+ source "drivers/hwmon/Kconfig"
+ 
+ #source "drivers/l3/Kconfig"
