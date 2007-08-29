@@ -13,8 +13,6 @@ FILES_${PN} += "${datadir}/application-registry ${datadir}/mime-info \
 
 inherit autotools pkgconfig gconf
 
-EXTRA_AUTORECONF += "-I ${STAGING_DIR}/${HOST_SYS}/share/aclocal/gnome2-macros"
-
 gnome_stage_includes() {
 	autotools_stage_includes
 }
