@@ -2,7 +2,8 @@ SECTION = "base"
 DESCRIPTION = "Script to manage module configuration files"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "all"
-PR = "r4"
+RDEPENDS = "${@base_contains("MACHINE_FEATURES", "kernel26",  "module-init-tools-depmod","modutils-depmod",d)} "
+PR = "r5"
 
 SRC_URI = "file://update-modules"
 
