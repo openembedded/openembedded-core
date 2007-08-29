@@ -13,7 +13,8 @@ FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/linux-gta01"
 # source and patches
 #
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${VANILLA_VERSION}.tar.bz2 \
-           file://defconfig-${VANILLA_VERSION}-${MACHINE}"
+           file://defconfig-${VANILLA_VERSION}-${MACHINE} \
+           file://logo_linux_clut224.ppm"
 S = "${WORKDIR}/linux-${VANILLA_VERSION}"
 
 ##############################################################
@@ -37,24 +38,32 @@ CMDLINE = "${CMDLINE_CON} ${CMDLINE_ROOT} ${CMDLINE_IP} ${CMDLINE_ROTATE} ${CMDL
 ###############################################################
 # module configs specific to this kernel
 #
+
+# usb
 module_autoload_ohci-hcd = "ohci-hcd"
+module_autoload_hci_usb = "hci_usb"
 module_autoload_g_ether = "g_ether"
-#module_autoload_snd-pcm-oss = "snd-pcm-oss"
-#module_autoload_snd-soc-corgi_c7x0 = "snd-soc-s3c24xx"
+# audio
+module_autoload_snd-soc-neo1973-wm8753 = "snd-soc-neo1973-wm8753"
+# sd/mmc
+module_autoload_s3cmci = "s3cmci"
 
 do_prepatch() {
-        mv ${WORKDIR}/patches ${S}/patches && cd ${S} && quilt push -av
-        rm -Rf patches .pc
+	mv ${WORKDIR}/patches ${S}/patches && cd ${S} && quilt push -av
+	mv patches patches.openmoko
+	mv .pc .pc.old
 }
 
 do_configure() {
+	install -m 0644 ${WORKDIR}/logo_linux_clut224.ppm drivers/video/logo/logo_linux_clut224.ppm
+
 	if [ ! -e ${WORKDIR}/defconfig-${VANILLA_VERSION}-${MACHINE} ]; then
 		die "No default configuration for ${MACHINE} available."
 	fi
 
 	echo "CONFIG_CMDLINE=\"${CMDLINE}\"" >> ${S}/.config
 
-	if [ "${TARGET_OS}" == "linux-gnueabi" ]; then
+	if [ "${TARGET_OS}" = "linux-gnueabi" ]; then
 		echo "CONFIG_AEABI=y"                   >> ${S}/.config
 		echo "CONFIG_OABI_COMPAT=y"             >> ${S}/.config
 	else 
@@ -84,7 +93,8 @@ do_deploy() {
 	${OBJCOPY} -O binary -R .note -R .comment -S vmlinux linux.bin
 	rm -f linux.bin.gz
 	gzip -9 linux.bin
-	uboot-mkimage -A arm -O linux -T kernel -C gzip -a 30008000 -e 30008000 -n "OpenMoko Kernel Image Neo1973(GTA01)" -d linux.bin.gz ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
+	${STAGING_BINDIR_NATIVE}/uboot-mkimage -A arm -O linux -T kernel -C gzip -a 30008000 -e 30008000 -n "OpenMoko Kernel Image Neo1973(GTA01)" -d linux.bin.gz ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}.bin
+	ln -sf ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}.bin ${DEPLOY_DIR_IMAGE}/uImage-${MACHINE}-latest.bin
 	rm -f linux.bin.gz
 }
 
