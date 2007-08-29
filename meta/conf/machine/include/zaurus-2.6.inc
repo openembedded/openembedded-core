@@ -44,4 +44,6 @@ zaurus_make_installkit () {
     rm -rf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}-installkit/     
 }
 
+# Don't include kernels in standard images for Zaurus machines
 RDEPENDS_kernel-base = ""
+KERNEL_IMAGETYPE = "zImage"
