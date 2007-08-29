@@ -143,7 +143,10 @@ kernel_do_install() {
 	install -m 0644 System.map ${D}/boot/System.map-${KERNEL_VERSION}
 	install -m 0644 .config ${D}/boot/config-${KERNEL_VERSION}
 	install -d ${D}/etc/modutils
-
+	if [ "${KERNEL_MAJOR_VERSION}" = "2.6" ]; then
+		install -d ${D}/etc/modprobe.d
+	fi
+	
         # Check if scripts/genksyms exists and if so, build it
         if [ -e scripts/genksyms/ ]; then
                 oe_runmake SUBDIRS="scripts/genksyms"
@@ -158,25 +161,37 @@ kernel_do_configure() {
 }
 
 pkg_postinst_kernel () {
-	update-alternatives --install /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${KERNEL_PRIORITY} || true
+	cd /${KERNEL_IMAGEDEST}; update-alternatives --install /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${KERNEL_PRIORITY} || true
 }
 
 pkg_postrm_kernel () {
-	update-alternatives --remove ${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} || true
+	cd /${KERNEL_IMAGEDEST}; update-alternatives --remove ${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE}-${KERNEL_VERSION} || true
 }
 
 inherit cml1
 
 EXPORT_FUNCTIONS do_compile do_install do_stage do_configure
 
-PACKAGES = "kernel kernel-image kernel-dev"
+# kernel-base becomes kernel-${KERNEL_VERSION}
+# kernel-image becomes kernel-image-${KERNEL_VERISON}
+PACKAGES = "kernel kernel-base kernel-image kernel-dev"
 FILES = ""
 FILES_kernel-image = "/boot/${KERNEL_IMAGETYPE}*"
 FILES_kernel-dev = "/boot/System.map* /boot/config*"
-RDEPENDS_kernel = "kernel-image-${KERNEL_VERSION}"
+RDEPENDS_kernel = "kernel-base"
+# Allow machines to override this dependency if kernel image files are 
+# not wanted in images as standard
+RDEPENDS_kernel-base ?= "kernel-image"
 PKG_kernel-image = "kernel-image-${KERNEL_VERSION}"
+PKG_kernel-base = "kernel-${KERNEL_VERSION}"
 ALLOW_EMPTY_kernel = "1"
+ALLOW_EMPTY_kernel-base = "1"
 ALLOW_EMPTY_kernel-image = "1"
+
+# Userspace workarounds for kernel modules issues
+# This is shame, fix the kernel instead!
+DEPENDS_kernel-module-dtl1-cs = "bluez-dtl1-workaround"
+RDEPENDS_kernel-module-dtl1-cs = "bluez-dtl1-workaround"
 
 pkg_postinst_kernel-image () {
 if [ ! -e "$D/lib/modules/${KERNEL_VERSION}" ]; then
@@ -335,13 +350,16 @@ python populate_packages_prepend () {
 		# Write out any modconf fragment
 		modconf = bb.data.getVar('module_conf_%s' % basename, d, 1)
 		if modconf:
-			name = '%s/etc/modutils/%s.conf' % (dvar, basename)
+			if bb.data.getVar("KERNEL_MAJOR_VERSION", d, 1) == "2.6":
+				name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
+			else:
+				name = '%s/etc/modutils/%s.conf' % (dvar, basename)
 			f = open(name, 'w')
 			f.write("%s\n" % modconf)
 			f.close()
 
 		files = bb.data.getVar('FILES_%s' % pkg, d, 1)
-		files = "%s /etc/modutils/%s /etc/modutils/%s.conf" % (files, basename, basename)
+		files = "%s /etc/modutils/%s /etc/modutils/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename, basename)
 		bb.data.setVar('FILES_%s' % pkg, files, d)
 
 		if vals.has_key("description"):
@@ -362,13 +380,13 @@ python populate_packages_prepend () {
 
 	postinst = bb.data.getVar('pkg_postinst_modules', d, 1)
 	postrm = bb.data.getVar('pkg_postrm_modules', d, 1)
-	do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='update-modules kernel-image-%s' % bb.data.getVar("KERNEL_VERSION", d, 1))
+	do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='update-modules kernel-%s' % bb.data.getVar("KERNEL_VERSION", d, 1))
 
 	import re, os
 	metapkg = "kernel-modules"
 	bb.data.setVar('ALLOW_EMPTY_' + metapkg, "1", d)
 	bb.data.setVar('FILES_' + metapkg, "", d)
-	blacklist = [ 'kernel-dev', 'kernel-image' ]
+	blacklist = [ 'kernel-dev', 'kernel-image', 'kernel-base' ]
 	for l in module_deps.values():
 		for i in l:
 			pkg = module_pattern % legitimize_package_name(re.match(module_regex, os.path.basename(i)).group(1))
@@ -382,5 +400,4 @@ python populate_packages_prepend () {
 	bb.data.setVar('DESCRIPTION_' + metapkg, 'Kernel modules meta package', d)
 	packages.append(metapkg)
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
-
 }
