@@ -120,30 +120,6 @@ Index: addressbook/libedata-book-orbit/ximian-vcard.h
 +" TZzoIf8udibfF972OppJwBXg4s+kgpBZD8KrBoXgFfG+8ZnpZm0UGNAE7gVmuMtv+A/CTlwt\n" \
 +" ArmsGAAAAAElFTkSuQmCC\n" \
  "END:VCARD"
-Index: addressbook/backends/file/e-book-backend-file.c
-===================================================================
---- addressbook/backends/file/e-book-backend-file.c	(revision 578)
-+++ addressbook/backends/file/e-book-backend-file.c	(working copy)
-@@ -1286,13 +1286,14 @@
- 			else {
- #ifdef CREATE_DEFAULT_VCARD
- 				EContact *contact = NULL;
--
--				do_create(bf, XIMIAN_VCARD, &contact);
--				/* XXX check errors here */
--				if (contact)
-+				EBookBackendSyncStatus status;
-+				
-+				status = do_create (bf, XIMIAN_VCARD, &contact);
-+				if (status == GNOME_Evolution_Addressbook_Success)
- 					g_object_unref (contact);
-+				else
-+					g_warning ("Cannot create default contact: %d", status);
- #endif
--
- 				writable = TRUE;
- 			}
- 		}
 Index: addressbook/backends/file/Makefile.am
 ===================================================================
 --- addressbook/backends/file/Makefile.am	(revision 578)
