@@ -43,9 +43,9 @@ Index: contacts-0.5/src/contacts-main.c
  	/* fix icon sizes to 16x16 for the moment... */
  	gtk_rc_parse_string ("gtk_icon_sizes=\"gtk-button=16,16:gtk-menu=16,16\"");
  
-+	gtk_widget_show_all (contacts_data->ui->main_menubar);
-+	owl_set_window_menu (GTK_WINDOW (contacts_data->ui->main_window),
-+			     GTK_MENU (contacts_data->ui->main_menubar));
++	gtk_widget_show_all (data->ui->main_menubar);
++	owl_set_window_menu (GTK_WINDOW (data->ui->main_window),
++			     GTK_MENU (data->ui->main_menubar));
 +
  	gtk_main ();
  
