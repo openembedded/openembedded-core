@@ -5,7 +5,6 @@ DEPENDS = "gnome-doc-utils poppler libxml2 gtk+ gnome-vfs gconf libglade gnome-k
 
 inherit gnome pkgconfig gtk-icon-cache
 
-SRC_URI = "${GNOME_MIRROR}/${PN}/0.9/${PN}-${PV}.tar.bz2 \
-        file://no-icon-theme.diff;patch=1;pnum=0"
+SRC_URI += "file://no-icon-theme.diff;patch=1;pnum=0"
 
 EXTRA_OECONF = "--without-libgnome --disable-thumbnailer"
