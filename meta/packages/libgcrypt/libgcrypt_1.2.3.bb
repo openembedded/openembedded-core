@@ -4,6 +4,8 @@ PRIORITY = "optional"
 LICENSE = "GPL LGPL FDL"
 DEPENDS = "libgpg-error"
 
+PR = "r1"
+
 # move libgcrypt-config into -dev package
 FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_${PN}-dev += "${bindir}"
@@ -25,4 +27,6 @@ do_stage() {
 		install -m 0644 src/${X} ${STAGING_INCDIR}/${X}
 	done
 
+	install -d ${STAGING_DATADIR}/aclocal
+	install -m 0644 src/libgcrypt.m4 ${STAGING_DATADIR}/aclocal
 }
