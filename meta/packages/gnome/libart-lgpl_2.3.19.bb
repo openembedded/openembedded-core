@@ -1,7 +1,7 @@
 DESCRIPTION = "Library of functions for 2D graphics"
 SECTION = "x11/gnome"
 LICENSE = "LGPL"
-PR = "r2"
+
 ART_CONFIG = "${HOST_ARCH}/art_config.h"
 
 # can't use gnome.oeclass due to _ in filename
