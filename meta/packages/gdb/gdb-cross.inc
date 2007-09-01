@@ -1,4 +1,4 @@
-require gdb.inc
+require gdb-common.inc
 
 DEPENDS = "ncurses-native"
 
@@ -15,6 +15,6 @@ do_configure () {
 	oe_runconf
 }
 
-do_stage() {
+do_stage () {
 	oe_runmake install
 }

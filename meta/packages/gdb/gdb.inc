@@ -1,22 +1,40 @@
-DESCRIPTION = "gdb - GNU debugger"
-HOMEPAGE = "http://www.gnu.org/software/gdb/"
-LICENSE="GPL"
-SECTION = "devel"
-PRIORITY = "optional"
+require gdb-common.inc
 
-inherit autotools
+DEPENDS = "ncurses readline"
 
-SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz"
+PACKAGES =+ "gdbserver"
+FILES_gdbserver = "${bindir}/gdbserver"
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gdb-${PV}"
+RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
+RRECOMMENDS_gdb_append_linux-gnueabi = " glibc-thread-db "
 
-export CC_FOR_BUILD = "${BUILD_CC}"
-export CXX_FOR_BUILD = "${BUILD_CXX}"
-export CPP_FOR_BUILD = "${BUILD_CPP}"
-export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
-export CXXFLAGS_FOR_BUILD = "${BUILD_CXXFLAGS}"
-export CPPFLAGS_FOR_BUILD = "${BUILD_CPPFLAGS}"
+inherit gettext
 
-S = "${WORKDIR}/gdb-${PV}"
-B = "${WORKDIR}/build-${TARGET_SYS}"
+SRC_URI += "file://kill_arm_map_symbols.patch;patch=1 \
+            file://gdbserver-cflags-last.diff;patch=1;pnum=0"
+#FIXME	   file://uclibc.patch;patch=1 \
+
+EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
+
+EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
+                --with-curses --disable-multilib --with-readline --disable-sim \
+                --program-prefix=''"
+
+LDFLAGS_append = " -s"
+export CFLAGS_append=" -L${STAGING_LIBDIR}"
+
+do_configure () {
+	# override this function to avoid the autoconf/automake/aclocal/autoheader
+	# calls for now
+	(cd ${S} && gnu-configize) || die "failure in running gnu-configize"
+        CPPFLAGS="" oe_runconf
+}
+
+do_install () {
+	make -C bfd/doc chew LDFLAGS= CFLAGS=-O2
+	oe_runmake DESTDIR='${D}' install
+	install -d ${D}${bindir}
+	install -m 0755 gdb/gdbserver/gdbserver ${D}${bindir}
+}
+
 
