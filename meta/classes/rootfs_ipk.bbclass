@@ -10,15 +10,31 @@ do_rootfs[recrdeptask] += "do_package_write_ipk"
 
 IPKG_ARGS = "-f ${T}/ipkg.conf -o ${IMAGE_ROOTFS}"
 
-fakeroot rootfs_ipk_do_rootfs () {
+rootfs_ipk_do_indexes () {
 	set -x
-		
-	mkdir -p ${IMAGE_ROOTFS}/dev
+
+	ipkgarchs="${PACKAGE_ARCHS}"
 
 	if [ -z "${DEPLOY_KEEP_PACKAGES}" ]; then
 		touch ${DEPLOY_DIR_IPK}/Packages
 		ipkg-make-index -r ${DEPLOY_DIR_IPK}/Packages -p ${DEPLOY_DIR_IPK}/Packages -l ${DEPLOY_DIR_IPK}/Packages.filelist -m ${DEPLOY_DIR_IPK}
 	fi
+
+	for arch in $ipkgarchs; do
+		if [ -z "${DEPLOY_KEEP_PACKAGES}" ]; then
+			if [ -e ${DEPLOY_DIR_IPK}/$arch/ ] ; then 
+				touch ${DEPLOY_DIR_IPK}/$arch/Packages
+				ipkg-make-index -r ${DEPLOY_DIR_IPK}/$arch/Packages -p ${DEPLOY_DIR_IPK}/$arch/Packages -l ${DEPLOY_DIR_IPK}/$arch/Packages.filelist -m ${DEPLOY_DIR_IPK}/$arch/
+			fi
+		fi
+	done
+}
+
+fakeroot rootfs_ipk_do_rootfs () {
+	set -x
+
+	rootfs_ipk_do_indexes
+
 	mkdir -p ${T}
 	echo "src oe file:${DEPLOY_DIR_IPK}" > ${T}/ipkg.conf
 	ipkgarchs="${PACKAGE_ARCHS}"

@@ -33,16 +33,35 @@ python () {
     bb.data.setVarFlag('do_rootfs', 'depends', deps, d)
 }
 
-IMAGE_DEVICE_TABLE ?= "${@bb.which(bb.data.getVar('BBPATH', d, 1), 'files/device_table-minimal.txt')}"
+#
+# Get a list of files containing device tables to create.
+# * IMAGE_DEVICE_TABLE is the old name to an absolute path to a device table file
+# * IMAGE_DEVICE_TABLES is a new name for a file, or list of files, seached
+#   for in the BBPATH
+# If neither are specified then the default name of files/device_table-minimal.txt
+# is searched for in the BBPATH (same as the old version.)
+#
+def get_devtable_list(d):
+	import bb
+	devtable = bb.data.getVar('IMAGE_DEVICE_TABLE', d, 1)
+	if devtable != None:
+		return devtable
+	str = ""
+	devtables = bb.data.getVar('IMAGE_DEVICE_TABLES', d, 1)
+	if devtables == None:
+		devtables = 'files/device_table-minimal.txt'
+	for devtable in devtables.split():
+		str += " %s" % bb.which(bb.data.getVar('BBPATH', d, 1), devtable)
+	return str
+
 IMAGE_POSTPROCESS_COMMAND ?= ""
 MACHINE_POSTPROCESS_COMMAND ?= ""
+ROOTFS_POSTPROCESS_COMMAND ?= ""
 
 # some default locales
-IMAGE_LINGUAS ?= "en-gb"
+IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
 
 LINGUAS_INSTALL = "${@" ".join(map(lambda s: "locale-base-%s" % s, bb.data.getVar('IMAGE_LINGUAS', d, 1).split()))}"
-
-ROOTFS_POSTPROCESS_COMMAND ?= ""
 
 do_rootfs[nostamp] = "1"
 do_rootfs[dirs] = "${TOPDIR}"
@@ -53,15 +72,20 @@ do_build[nostamp] = "1"
 fakeroot do_rootfs () {
 	set -x
 	rm -rf ${IMAGE_ROOTFS}
+	mkdir -p ${IMAGE_ROOTFS}
 
 	if [ "${USE_DEVFS}" != "1" ]; then
 		mkdir -p ${IMAGE_ROOTFS}/dev
-		makedevs -r ${IMAGE_ROOTFS} -D ${IMAGE_DEVICE_TABLE}
+		for devtable in ${@get_devtable_list(d)}; do
+			makedevs -r ${IMAGE_ROOTFS} -D $devtable
+		done
 	fi
 
 	rootfs_${IMAGE_PKGTYPE}_do_rootfs
 
-	rm -f ${IMAGE_ROOTFS}${libdir}/ipkg/lists/oe
+	insert_feed_uris	
+
+	rm -f ${IMAGE_ROOTFS}${libdir}/ipkg/lists/*
 	
 	${IMAGE_PREPROCESS_COMMAND}
 		
@@ -83,6 +107,24 @@ fakeroot do_rootfs () {
 	${IMAGE_POSTPROCESS_COMMAND}
 	
 	${MACHINE_POSTPROCESS_COMMAND}
+}
+
+insert_feed_uris () {
+	
+	echo "Building feeds for [${DISTRO}].."
+		
+	for line in ${FEED_URIS}
+	do
+		# strip leading and trailing spaces/tabs, then split into name and uri
+		line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
+		feed_name="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\1/p'`"
+		feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"					
+		
+		echo "Added $feed_name feed with URL $feed_uri"
+		
+		# insert new feed-sources
+		echo "src/gz $feed_name $feed_uri" >> ${IMAGE_ROOTFS}/etc/ipkg/${feed_name}-feed.conf
+	done			
 }
 
 log_check() {
@@ -132,7 +174,14 @@ make_zimage_symlink_relative () {
 	fi
 }
 
+# Make login manager(s) enable automatic login.
+# Useful for devices where we do not want to log in at all (e.g. phones)
+set_image_autologin () {
+        sed -i 's%^AUTOLOGIN=\"false"%AUTOLOGIN="true"%g' ${IMAGE_ROOTFS}/etc/sysconfig/gpelogin
+}
+
+
 # export the zap_root_password, create_etc_timestamp and remote_init_link
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative
+EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin
 
 addtask rootfs before do_build after do_install

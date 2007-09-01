@@ -2,11 +2,11 @@
 # no need for them to be a direct target of 'world'
 EXCLUDE_FROM_WORLD = "1"
 
-PACKAGES = ""
-
 # Save PACKAGE_ARCH before changing HOST_ARCH
 OLD_PACKAGE_ARCH := ${PACKAGE_ARCH}
 PACKAGE_ARCH = ${OLD_PACKAGE_ARCH}
+
+PACKAGES = ""
 
 HOST_ARCH = "${BUILD_ARCH}"
 HOST_VENDOR = "${BUILD_VENDOR}"
