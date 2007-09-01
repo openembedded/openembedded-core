@@ -4,8 +4,7 @@ STAGING_PKGMAPS_DIR = "${STAGING_DIR}/pkgmaps/debian"
 # We therefore have to make sure we build all runtime packages
 # before building the current package to make the packages runtime
 # depends are correct
-BUILD_ALL_DEPS = "1"
-
+#
 # Better expressed as ensure all RDEPENDS package before we package
 # This means we can't have circular RDEPENDS/RRECOMMENDS
 do_package_write_ipk[rdeptask] = "do_package"
