@@ -784,20 +784,24 @@ python read_subpackage_metadata () {
 
 def base_after_parse(d):
     import bb, os, exceptions
-    
-    need_host = bb.data.getVar('COMPATIBLE_HOST', d, 1)
-    if need_host:
-        import re
-        this_host = bb.data.getVar('HOST_SYS', d, 1)
-        if not re.match(need_host, this_host):
-            raise bb.parse.SkipPackage("incompatible with host %s" % this_host)
 
-    need_machine = bb.data.getVar('COMPATIBLE_MACHINE', d, 1)
-    if need_machine:
-        import re
-        this_machine = bb.data.getVar('MACHINE', d, 1)
-        if this_machine and not re.match(need_machine, this_machine):
-            raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
+    source_mirror_fetch = bb.data.getVar('SOURCE_MIRROR_FETCH', d, 0)
+    if not source_mirror_fetch:
+        need_host = bb.data.getVar('COMPATIBLE_HOST', d, 1)
+        if need_host:
+            import re
+            this_host = bb.data.getVar('HOST_SYS', d, 1)
+            if not re.match(need_host, this_host):
+                raise bb.parse.SkipPackage("incompatible with host %s" % this_host)
+
+        need_machine = bb.data.getVar('COMPATIBLE_MACHINE', d, 1)
+        if need_machine:
+            import re
+            this_machine = bb.data.getVar('MACHINE', d, 1)
+            if this_machine and not re.match(need_machine, this_machine):
+                raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
+
+
 
     pn = bb.data.getVar('PN', d, 1)
 
@@ -840,11 +844,11 @@ def base_after_parse(d):
     override = bb.data.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', d, 1)
     if override == '0':
         return
-				
+
     paths = []
     for p in [ "${PF}", "${P}", "${PN}", "files", "" ]:
         path = bb.data.expand(os.path.join("${FILE_DIRNAME}", p, "${MACHINE}"), d)
-	if os.path.isdir(path):
+        if os.path.isdir(path):
             paths.append(path)
     if len(paths) == 0:
         return
