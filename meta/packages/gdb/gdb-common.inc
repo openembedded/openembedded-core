@@ -1,7 +1,7 @@
 DESCRIPTION = "gdb - GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 LICENSE="GPL"
-SECTION = "devel"z
+SECTION = "devel"
 PRIORITY = "optional"
 
 inherit autotools
