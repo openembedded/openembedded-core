@@ -11,33 +11,27 @@ SDK_DEPLOY = "${TMPDIR}/deploy/sdk"
 IPKG_HOST = "ipkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
 IPKG_TARGET = "ipkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/${prefix}"
 
-HOST_INSTALL = "task-poky-standalone-sdk-host"
+TOOLCHAIN_HOST_TASK ?= "task-sdk-host"
+TOOLCHAIN_TARGET_TASK ?= "task-poky-standalone-sdk-target"
 
-TARGET_INSTALL = "task-poky-standalone-sdk-target"
-
-RDEPENDS = "${TARGET_INSTALL} ${HOST_INSTALL}"
+RDEPENDS = "${TOOLCHAIN_TARGET_TASK} ${TOOLCHAIN_HOST_TASK}"
 
 do_populate_sdk() {
-	touch ${DEPLOY_DIR_IPK}/Packages
-	ipkg-make-index -r ${DEPLOY_DIR_IPK}/Packages -p ${DEPLOY_DIR_IPK}/Packages -l ${DEPLOY_DIR_IPK}/Packages.filelist -m ${DEPLOY_DIR_IPK}
-
 	rm -rf ${SDK_OUTPUT}
 	mkdir -p ${SDK_OUTPUT}
 
+	package_update_index_ipk
 	package_generate_ipkg_conf
 
 	for arch in ${PACKAGE_ARCHS}; do
 		revipkgarchs="$arch $revipkgarchs"
 	done
 
-	rm -r ${SDK_OUTPUT}
-	mkdir -p ${SDK_OUTPUT}
-
 	${IPKG_HOST} update
-	${IPKG_HOST} -force-depends install ${HOST_INSTALL}
+	${IPKG_HOST} -force-depends install ${TOOLCHAIN_HOST_TASK}
 
 	${IPKG_TARGET} update
-	${IPKG_TARGET} install ${TARGET_INSTALL}
+	${IPKG_TARGET} install ${TOOLCHAIN_TARGET_TASK}
 
 	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}
 	cp -pPR ${SDK_OUTPUT}/${prefix}/usr/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}

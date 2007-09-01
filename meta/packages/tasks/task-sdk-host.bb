@@ -1,4 +1,8 @@
-DESCRIPTION = "Host packages for the standalone SDK (external toolchain)"
+#
+# Copyright (C) 2007 OpenedHand Ltd
+#
+
+DESCRIPTION = "Host packages for the standalone SDK or external toolchain"
 PR = "r1"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
