@@ -6,24 +6,24 @@
 # INHERIT += "rm_work"
 #
 
+RMWORK_ORIG_TASK := "${BB_DEFAULT_TASK}"
+BB_DEFAULT_TASK = "rm_work_all"
+
 do_rm_work () {
     cd ${WORKDIR}
     for dir in *
     do
         if [ `basename ${S}` = $dir ]; then
-            rm -rf $dir/*
+            rm -rf $dir
         elif [ $dir != 'temp' ]; then
             rm -rf $dir
         fi
     done
 }
+addtask rm_work after do_${RMWORK_ORIG_TASK}
 
-addtask rmall after do_rm_work
-do_rmall[recrdeptask] = "do_rm_work"
-do_rmall() {
-        :
+do_rm_work_all () {
+	:
 }
-
-
-addtask rm_work before do_build
-addtask rm_work after do_populate_staging
+do_rm_work_all[recrdeptask] = "do_rm_work"
+addtask rm_work_all after do_rm_work
