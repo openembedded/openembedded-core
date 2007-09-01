@@ -32,6 +32,9 @@ LDFLAGS_build-darwin = "-L${STAGING_DIR}/${BUILD_SYS}/lib "
 STAGING_BINDIR = "${STAGING_BINDIR_NATIVE}"
 STAGING_BINDIR_CROSS = "${STAGING_BINDIR_NATIVE}"
 
+# Don't use site files for native builds
+export CONFIG_SITE = ""
+
 # set the compiler as well. It could have been set to something else
 export CC = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 export CXX = "${CCACHE}${HOST_PREFIX}g++ ${HOST_CC_ARCH}"
