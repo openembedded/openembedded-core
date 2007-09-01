@@ -4,6 +4,9 @@ BOOTSTRAP_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
 DISTRO_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
 IMAGE_PKGTYPE ?= "ipk"
 
+IPKGCONF_TARGET = "${STAGING_ETCDIR_NATIVE}/ipkg.conf"
+IPKGCONF_SDK =  "${STAGING_ETCDIR_NATIVE}/ipkg-sdk.conf"
+
 python package_ipk_fn () {
 	from bb import data
 	bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
@@ -58,6 +61,47 @@ python package_ipk_install () {
 	ret = os.system('ipkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn))
 	if (ret != 0 ):
 		raise bb.build.FuncFailed
+}
+
+#
+# Update the Packages index files in ${DEPLOY_DIR_IPK}
+#
+package_update_index_ipk () {
+	set -x
+
+	ipkgarchs="${PACKAGE_ARCHS}"
+
+	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
+		return
+	fi
+
+	touch ${DEPLOY_DIR_IPK}/Packages
+	ipkg-make-index -r ${DEPLOY_DIR_IPK}/Packages -p ${DEPLOY_DIR_IPK}/Packages -l ${DEPLOY_DIR_IPK}/Packages.filelist -m ${DEPLOY_DIR_IPK}
+
+	for arch in $ipkgarchs; do
+		if [ -e ${DEPLOY_DIR_IPK}/$arch/ ] ; then 
+			touch ${DEPLOY_DIR_IPK}/$arch/Packages
+			ipkg-make-index -r ${DEPLOY_DIR_IPK}/$arch/Packages -p ${DEPLOY_DIR_IPK}/$arch/Packages -l ${DEPLOY_DIR_IPK}/$arch/Packages.filelist -m ${DEPLOY_DIR_IPK}/$arch/
+		fi
+	done
+}
+
+#
+# Generate an ipkg conf file ${IPKGCONF_TARGET} suitable for use against 
+# the target system and an ipkg conf file ${IPKGCONF_SDK} suitable for 
+# use against the host system in sdk builds
+#
+package_generate_ipkg_conf () {
+	mkdir -p ${STAGING_ETCDIR_NATIVE}/
+	echo "src oe file:${DEPLOY_DIR_IPK}" > ${IPKGCONF_TARGET}
+	echo "src oe file:${DEPLOY_DIR_IPK}" > ${IPKGCONF_SDK}
+	ipkgarchs="${PACKAGE_ARCHS}"
+	priority=1
+	for arch in $ipkgarchs; do
+		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
+		echo "arch ${BUILD_ARCH}-$arch-sdk $priority" >> ${IPKGCONF_SDK}
+		priority=$(expr $priority + 5)
+	done
 }
 
 python do_package_ipk () {

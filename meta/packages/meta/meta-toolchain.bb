@@ -1,21 +1,15 @@
 DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
 DEPENDS = "ipkg-native ipkg-utils-native fakeroot-native sed-native"
-PR = "r3"
 
-inherit sdk
-
-PACKAGES = ""
-
-BUILD_ALL_DEPS = "1"
-do_build[recrdeptask] = "do_build"
+inherit sdk meta
 
 SDK_DIR = "${WORKDIR}/sdk"
 SDK_OUTPUT = "${SDK_DIR}/image"
 SDK_DEPLOY = "${TMPDIR}/deploy/sdk"
 
-IPKG_HOST = "ipkg-cl -f ${SDK_DIR}/ipkg-host.conf -o ${SDK_OUTPUT}"
-IPKG_TARGET = "ipkg-cl -f ${SDK_DIR}/ipkg-target.conf -o ${SDK_OUTPUT}/${prefix}"
+IPKG_HOST = "ipkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
+IPKG_TARGET = "ipkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/${prefix}"
 
 HOST_INSTALL = "task-poky-standalone-sdk-host"
 
@@ -30,20 +24,11 @@ do_populate_sdk() {
 	rm -rf ${SDK_OUTPUT}
 	mkdir -p ${SDK_OUTPUT}
 
-	cat <<EOF >${SDK_DIR}/ipkg-host.conf
-src oe file:${DEPLOY_DIR_IPK}
-EOF
-        cat <<EOF >${SDK_DIR}/ipkg-target.conf
-src oe file:${DEPLOY_DIR_IPK}
-EOF
-	ipkgarchs="${PACKAGE_ARCHS}"
-	priority=1
-	for arch in $ipkgarchs; do
-		echo "arch $arch $priority" >> ${SDK_DIR}/ipkg-target.conf
-		echo "arch ${BUILD_ARCH}-$arch-sdk $priority" >> ${SDK_DIR}/ipkg-host.conf
-		priority=$(expr $priority + 5)
+	package_generate_ipkg_conf
+
+	for arch in ${PACKAGE_ARCHS}; do
 		revipkgarchs="$arch $revipkgarchs"
-        done
+	done
 
 	rm -r ${SDK_OUTPUT}
 	mkdir -p ${SDK_OUTPUT}
