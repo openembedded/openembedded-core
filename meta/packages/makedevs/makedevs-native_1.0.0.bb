@@ -1,6 +1,6 @@
 SECTION = "base"
 require makedevs_${PV}.bb
-inherit native 
+inherit native
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/makedevs-${PV}"
 

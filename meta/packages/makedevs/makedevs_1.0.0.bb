@@ -4,7 +4,7 @@ SECTION = "base"
 PRIORITY = "required"
 SRC_URI = "file://makedevs.c"
 S = "${WORKDIR}/makedevs-${PV}"
-PR = "r2"
+PR = "r3"
 
 do_configure() {
 	install -m 0644 ${WORKDIR}/makedevs.c ${S}/

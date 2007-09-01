@@ -106,6 +106,7 @@ static char *xstrdup(const char *s)
 static void add_new_directory(char *name, char *path, 
 		unsigned long uid, unsigned long gid, unsigned long mode)
 {
+	mkdir(path,mode);
 //	printf("Directory: %s %s  UID: %ld  GID %ld  MODE: %ld\n", path, name, uid, gid, mode);
 }
 
@@ -136,6 +137,13 @@ static void add_new_device(char *name, char *path, unsigned long uid,
 static void add_new_file(char *name, char *path, unsigned long uid,
 				  unsigned long gid, unsigned long mode)
 {
+	int fd = open(path,O_CREAT | O_WRONLY, mode);
+	if(fd<0)
+	{ 
+		error_msg_and_die("%s: file can not be created!", path);
+	} else {
+		close(fd);
+	} 
 //	printf("File: %s %s  UID: %ld  GID: %ld  MODE: %ld\n",
 //			path, name, gid, uid, mode);
 }
