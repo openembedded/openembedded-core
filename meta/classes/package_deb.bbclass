@@ -136,7 +136,7 @@ python do_package_deb () {
             del g[g.index('./DEBIAN')]
         except ValueError:
             pass
-        if not g and not bb.data.getVar('ALLOW_EMPTY', localdata):
+        if not g and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
             from bb import note
             note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, 1), bb.data.getVar('PR', localdata, 1)))
             unlockfile(lf)
@@ -253,7 +253,6 @@ python do_package_deb () {
             os.rmdir(controldir)
         except OSError:
             pass
-        del localdata
 
         unlockfile(lf)
 }

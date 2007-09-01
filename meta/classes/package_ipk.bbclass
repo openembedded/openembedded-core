@@ -152,7 +152,7 @@ python do_package_ipk () {
 		localdata = bb.data.createCopy(d)
 		root = "%s/install/%s" % (workdir, pkg)
 
-	        lf = lockfile(root + ".lock")
+		lf = lockfile(root + ".lock")
 
 		bb.data.setVar('ROOT', '', localdata)
 		bb.data.setVar('ROOT_%s' % pkg, root, localdata)
@@ -179,11 +179,12 @@ python do_package_ipk () {
 			del g[g.index('./CONTROL')]
 		except ValueError:
 			pass
-		if not g and not bb.data.getVar('ALLOW_EMPTY', localdata):
+		if not g and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
 			from bb import note
 			note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, 1), bb.data.getVar('PR', localdata, 1)))
 			unlockfile(lf)
 			continue
+
 		controldir = os.path.join(root, 'CONTROL')
 		bb.mkdirhier(controldir)
 		try:
@@ -289,7 +290,6 @@ python do_package_ipk () {
 			os.rmdir(controldir)
 		except OSError:
 			pass
-		del localdata
 		unlockfile(lf)
 }
 

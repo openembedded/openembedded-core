@@ -19,11 +19,15 @@ fakeroot rootfs_ipk_do_rootfs () {
 	mkdir -p ${T}
 
 	ipkg-cl ${IPKG_ARGS} update
-	if [ ! -z "${LINGUAS_INSTALL}" ]; then
-		ipkg-cl ${IPKG_ARGS} install glibc-localedata-i18n
-		for i in ${LINGUAS_INSTALL}; do
-			ipkg-cl ${IPKG_ARGS} install $i
-		done
+
+	# Uclibc builds don't provide this stuff...
+	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then 
+		if [ ! -z "${LINGUAS_INSTALL}" ]; then
+			ipkg-cl ${IPKG_ARGS} install glibc-localedata-i18n
+			for i in ${LINGUAS_INSTALL}; do
+				ipkg-cl ${IPKG_ARGS} install $i 
+			done
+		fi
 	fi
 	if [ ! -z "${PACKAGE_INSTALL}" ]; then
 		ipkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL}
