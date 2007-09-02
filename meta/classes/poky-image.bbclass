@@ -79,3 +79,6 @@ X11_IMAGE_FEATURES  = "x11-base apps-x11-core"
 SATO_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-sato apps-x11-games apps-x11-pimlico"
 
 inherit image
+
+# Create /etc/timestamp during image construction to give a reasonably sane default time setting
+ROOTFS_POSTPROCESS_COMMAND += "rootfs_update_timestamp"

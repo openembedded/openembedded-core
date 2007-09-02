@@ -179,8 +179,13 @@ set_image_autologin () {
         sed -i 's%^AUTOLOGIN=\"false"%AUTOLOGIN="true"%g' ${IMAGE_ROOTFS}/etc/sysconfig/gpelogin
 }
 
+# Can be use to create /etc/timestamp during image construction to give a reasonably 
+# sane default time setting
+rootfs_update_timestamp () {
+	date "+%m%d%H%M%Y" >${IMAGE_ROOTFS}/etc/timestamp
+}
 
 # export the zap_root_password, create_etc_timestamp and remote_init_link
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin
+EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp
 
 addtask rootfs before do_build after do_install
