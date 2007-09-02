@@ -85,6 +85,13 @@ class BBCooker:
                 tcattr[3] = tcattr[3] & ~termios.TOSTOP
                 termios.tcsetattr(fd, termios.TCSANOW, tcattr)
 
+        # Change nice level if we're asked to
+        nice = bb.data.getVar("BB_NICE_LEVEL", self.configuration.data, True)
+        if nice:
+            curnice = os.nice(0)
+            nice = int(nice) - curnice
+            bb.msg.note(2, bb.msg.domain.Build, "Renice to %s " % os.nice(nice))
+ 
 
     def tryBuildPackage(self, fn, item, task, the_data, build_depends):
         """
@@ -270,7 +277,11 @@ class BBCooker:
 
         # Handle PREFERRED_PROVIDERS
         for p in (bb.data.getVar('PREFERRED_PROVIDERS', localdata, 1) or "").split():
-            (providee, provider) = p.split(':')
+            try:
+                (providee, provider) = p.split(':')
+            except:
+                bb.msg.error(bb.msg.domain.Provider, "Malformed option in PREFERRED_PROVIDERS variable: %s" % p)
+                continue
             if providee in self.status.preferred and self.status.preferred[providee] != provider:
                 bb.msg.error(bb.msg.domain.Provider, "conflicting preferences for %s: both %s and %s specified" % (providee, provider, self.status.preferred[providee]))
             self.status.preferred[providee] = provider

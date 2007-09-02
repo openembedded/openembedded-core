@@ -1,4 +1,13 @@
 Changes in BitBake 1.8.x:
+	- Psyco is available only for x86 - do not use it on other architectures.
+	- Fix a bug in bb.decodeurl where http://some.where.com/somefile.tgz decoded to host="" (#1530)
+	- Warn about malformed PREFERRED_PROVIDERS (#1072)
+	- Add support for BB_NICE_LEVEL option (#1627)
+	- Sort initial providers list by default preference (#1145, #2024)
+	- Improve provider sorting so prefered versions have preference over latest versions (#768)
+	- Detect builds of tasks with overlapping providers and warn (will become a fatal error) (#1359)
+	- Add MULTI_PROVIDER_WHITELIST variable to allow known safe multiple providers to be listed
+	- Handle paths in svn fetcher module parameter
 
 Changes in Bitbake 1.8.8:
 	- Rewrite svn fetcher to make adding extra operations easier 
