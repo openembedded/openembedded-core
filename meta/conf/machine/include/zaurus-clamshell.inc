@@ -1,30 +1,13 @@
-TARGET_ARCH = "arm"
-PACKAGE_EXTRA_ARCHS = "armv4 armv4t armv5e armv5te"
-
-PREFERRED_PROVIDER_xserver = "xserver-kdrive"
-
-EXTRA_IMAGEDEPENDS += "sharp-flash-header-c700 zaurus-updater"
-
-ERASEBLOCKSIZE = "0x4000"
-ERASEBLOCKSIZE_akita = "0x20000"
+EXTRA_IMAGEDEPENDS += "sharp-flash-header-c700"
 
 IMAGE_CMD_jffs2 = "mkfs.jffs2 --root=${IMAGE_ROOTFS} --faketime -m favourlzo \
-		   --output=${T}/${IMAGE_NAME}.rootfs.jffs2 --pad --little-endian --eraseblock=${ERASEBLOCKSIZE} -n \
-		   && sumtool -i ${T}/${IMAGE_NAME}.rootfs.jffs2 \
+                   --output=${T}/${IMAGE_NAME}.rootfs.jffs2 --pad --little-endian --eraseblock=${ERASEBLOCKSIZE} -n \
+                   && sumtool -i ${T}/${IMAGE_NAME}.rootfs.jffs2 \
                    -o ${T}/${IMAGE_NAME}.rootfs.jffs2.summary \
                    --eraseblock=${ERASEBLOCKSIZE} -l -p; \
-		   cat ${STAGING_LIBDIR}/sharp-flash-header/header-c700.bin \
-		   ${T}/${IMAGE_NAME}.rootfs.jffs2 > ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2; \
-		   rm ${T}/${IMAGE_NAME}.rootfs.jffs2; \
-		   cat ${STAGING_LIBDIR}/sharp-flash-header/header-c700.bin \
+                   cat ${STAGING_LIBDIR}/sharp-flash-header/header-c700.bin \
+                   ${T}/${IMAGE_NAME}.rootfs.jffs2 > ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2; \
+                   rm ${T}/${IMAGE_NAME}.rootfs.jffs2; \
+                   cat ${STAGING_LIBDIR}/sharp-flash-header/header-c700.bin \
                    ${T}/${IMAGE_NAME}.rootfs.jffs2.summary > ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.summary.jffs2; \
-                   rm ${T}/${IMAGE_NAME}.rootfs.jffs2.summary"
-
-GUI_MACHINE_CLASS = "bigscreen"
-GPE_EXTRA_INSTALL += "gaim sylpheed"
-
-# Use tune-xscale per default. Machine independent feeds should be built with tune-strongarm.
-include conf/machine/include/tune-xscale.inc
-
-SERIAL_CONSOLE = "115200 ttyS0"
-
+                   rm ${T}/${IMAGE_NAME}.rootfs.jffs2.summary;"

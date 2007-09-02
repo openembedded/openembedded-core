@@ -1,21 +1,44 @@
 # Zaurus Clamshell specific configuration for kernel 2.6
 # Don't forget to include zaurus-clamshell.inc as well
 
+TARGET_ARCH = "arm"
+PACKAGE_EXTRA_ARCHS = "armv4 armv4t armv5e armv5te"
+
+MACHINE_KERNEL_VERSION = "2.6"
+
+ERASEBLOCKSIZE = "0x4000"
+ERASEBLOCKSIZE_akita = "0x20000"
+
+EXTRA_IMAGECMD_jffs2 = "--little-endian --eraseblock=${ERASEBLOCKSIZE} --pad --faketime -n" 
+
+IMAGE_CMD_jffs2 = "mkfs.jffs2 -x lzo --root=${IMAGE_ROOTFS} --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 ${EXTRA_IMAGECMD}"
+
+EXTRA_IMAGEDEPENDS += "zaurus-updater"
+
+# Use tune-xscale per default. Machine independent feeds should be built with tune-strongarm.
+include conf/machine/include/tune-xscale.inc
+
+SERIAL_CONSOLE = "115200 ttyS0"
+
 PREFERRED_PROVIDER_virtual/kernel = "linux-rp"
-PREFERRED_VERSION_wpa_supplicant = "0.4.7"
+PREFERRED_PROVIDER_xserver = "xserver-kdrive"
 
 PCMCIA_MANAGER ?= "pcmciautils"
 
-MACHINE_FEATURES = "kernel26 apm alsa pcmcia irda usbgadget keyboard touchscreen bluetooth"
-MACHINE_FEATURES_append_tosa  = " usbhost usbwlanng "
+MACHINE_FEATURES = "kernel26 apm alsa pcmcia irda usbgadget keyboard touchscreen screen"
+MACHINE_FEATURES_append_tosa  = " usbhost wifi "
 MACHINE_FEATURES_append_akita = " usbhost "
 MACHINE_FEATURES_append_spitz = " usbhost ext2 "
 
 MACHINE_EXTRA_RDEPENDS = "zaurusd"
-MACHINE_EXTRA_RRECOMMENDS_c7x0 = "kernel-module-snd-soc-corgi"
-MACHINE_EXTRA_RRECOMMENDS_akita = "kernel-module-snd-soc-spitz"
-MACHINE_EXTRA_RRECOMMENDS_spitz = "kernel-module-snd-soc-spitz"
+MACHINE_EXTRA_RRECOMMENDS_c7x0   = "kernel-module-snd-soc-corgi"
+MACHINE_EXTRA_RRECOMMENDS_akita  = "kernel-module-snd-soc-spitz"
+MACHINE_EXTRA_RRECOMMENDS_spitz  = "kernel-module-snd-soc-spitz"
 MACHINE_EXTRA_RRECOMMENDS_poodle = "kernel-module-snd-soc-poodle"
+
+GUI_MACHINE_CLASS = "bigscreen"
+GUI_MACHINE_CLASS_collie = "smallscreen"
+GUI_MACHINE_CLASS_poodle = "smallscreen"
 
 MACHINE_POSTPROCESS_COMMAND = "zaurus_make_installkit"
 
