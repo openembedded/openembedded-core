@@ -1,6 +1,0 @@
-/dev/mtdblock1	/ 	jffs2	rw,noatime	1  1 
-proc		/proc	proc	defaults	0  0
-/dev/hda1	/mnt/cf	auto	defaults,sync,noauto	0  0
-tmpfs		/var	tmpfs	defaults	0  0
-tmpfs		/mnt/ram	tmpfs	defaults	0  0
-devpts		/dev/pts	devpts	defaults	0  0

@@ -1,7 +1,0 @@
-# /etc/fstab: static file system information. wrt
-#
-# <file system> <mount pt>     <type>     <options>         <dump> <pass>
-rootfs          /              auto       defaults          1      1
-tmpfs           /var           tmpfs      size=50%          0      0
-proc            /proc          proc       defaults          0      0
-devpts          /dev/pts       devpts     mode=0620,gid=5   0      0
