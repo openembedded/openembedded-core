@@ -81,7 +81,7 @@ fi
 ### Check model ###
 /sbin/writerominfo
 MODEL=`cat /proc/deviceinfo/product`
-if [ "$MODEL" != "SL-C3000" ] && [ "$MODEL" != "SL-C3100" ]
+if [ "$MODEL" != "SL-C3000" ] && [ "$MODEL" != "SL-C3100" ] && [ "$MODEL" != "SL-C3200" ]
 then
 	echo 'MODEL:'$MODEL
 	echo 'ERROR:Invalid model!'
