@@ -4,8 +4,11 @@ LICENSE = "MIT"
 PACKAGES = ""
 RDEPENDS += "${IMAGE_INSTALL}"
 
-export IMAGE_BASENAME ?= "${PN}"
-export PACKAGE_INSTALL ?= "${IMAGE_INSTALL}"
+#bitbake doesn't seem to cope with this :-(
+#export IMAGE_BASENAME ?= "${PN}"
+#export PACKAGE_INSTALL ?= "${IMAGE_INSTALL}"
+export IMAGE_BASENAME = "${PN}"
+export PACKAGE_INSTALL = "${IMAGE_INSTALL}"
 
 # We need to recursively follow RDEPENDS and RRECOMMENDS for images
 do_rootfs[recrdeptask] += "do_deploy do_populate_staging"
