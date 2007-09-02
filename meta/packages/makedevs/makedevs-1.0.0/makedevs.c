@@ -106,7 +106,8 @@ static char *xstrdup(const char *s)
 static void add_new_directory(char *name, char *path, 
 		unsigned long uid, unsigned long gid, unsigned long mode)
 {
-	mkdir(path,mode);
+	mkdir(path, mode);
+	chown(path, uid, gid);
 //	printf("Directory: %s %s  UID: %ld  GID %ld  MODE: %ld\n", path, name, uid, gid, mode);
 }
 
@@ -130,6 +131,7 @@ static void add_new_device(char *name, char *path, unsigned long uid,
 	}
 
 	mknod(name, mode, rdev);
+	chown(path, uid, gid);
 //	printf("Device: %s %s  UID: %ld  GID: %ld  MODE: %ld  MAJOR: %d  MINOR: %d\n",
 //			path, name, uid, gid, mode, (short)(rdev >> 8), (short)(rdev & 0xff));
 }
@@ -138,12 +140,24 @@ static void add_new_file(char *name, char *path, unsigned long uid,
 				  unsigned long gid, unsigned long mode)
 {
 	int fd = open(path,O_CREAT | O_WRONLY, mode);
-	if(fd<0)
-	{ 
+	if (fd < 0) { 
 		error_msg_and_die("%s: file can not be created!", path);
 	} else {
 		close(fd);
 	} 
+	chmod(path, mode);
+	chown(path, uid, gid);
+//	printf("File: %s %s  UID: %ld  GID: %ld  MODE: %ld\n",
+//			path, name, gid, uid, mode);
+}
+
+
+static void add_new_fifo(char *name, char *path, unsigned long uid,
+				  unsigned long gid, unsigned long mode)
+{
+	if (mknod(path, mode, 0))
+		error_msg_and_die("%s: file can not be created with mknod!", path);
+	chown(path, uid, gid);
 //	printf("File: %s %s  UID: %ld  GID: %ld  MODE: %ld\n",
 //			path, name, gid, uid, mode);
 }
@@ -197,7 +211,7 @@ static int interpret_table_entry(char *line)
 		break;
 	case 'p':
 		mode |= S_IFIFO;
-		add_new_file(name, path, uid, gid, mode);
+		add_new_fifo(name, path, uid, gid, mode);
 		break;
 	case 'c':
 	case 'b':
