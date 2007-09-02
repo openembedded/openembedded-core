@@ -22,6 +22,9 @@ else
 	RAM_MTDBLK=/dev/mtdblock$RAM_MTD_NO
 fi
 
+if grep -q $RAM_MTDBLK /etc/mtab; then echo "Device $RAM_MTDBLK already mounted"; exit 0; fi
+if test ! -e $RAM_MTD; then echo >&2 "Mtdram device $RAM_MTD does not exist!"; exit 1; fi
+
 RAM_MNTPT=/mnt/ram
 RAM_MTD_SIZE_HEX=`cat /proc/mtd | grep mtdram | tail -n 1 | cut -d" " -f 2`
 RAM_MTD_SIZE=`dc 0x$RAM_MTD_SIZE_HEX 1024 / p`

@@ -22,9 +22,6 @@ then
 	ln -s /dev/vc/4 /dev/tty4
 	ln -s /dev/vc/5 /dev/tty5
 	ln -s /dev/fb/0 /dev/fb0
-#	ln -s /dev/tts/0 /dev/ttySA0
-#	ln -s /dev/tts/1 /dev/ttySA1
-#	ln -s /dev/tts/2 /dev/ttySA2
 
 	ln -s /dev/sound/dsp /dev/dsp
 	ln -s /dev/sound/mixer /dev/mixer
@@ -49,8 +46,12 @@ else
 	cd /
 	mkdir -p dev/input
         mknod /dev/input/ts0 c 13 128
+        mknod /dev/ttySC0 c 8 204
 	mknod /dev/ttySC1 c 9 204
+        mknod /dev/ttySC2 c 10 204
+	
 	mknod /dev/irda0  c 10 204
+        
 	mkdir -p dev/msys
 	mkdir -p dev/pts
 	mkdir -p dev/vc
