@@ -17,10 +17,16 @@ EXTRA_OEMAKE = "OPENZAURUS_RELEASE=-${DISTRO_VERSION}"
 COMPATIBLE_HOST = "(arm|i.86).*-linux"
 COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|hx2000|qemuarm|qemux86|bootcdx86|htcuniversal)'
 
+KERNEL_CUSTOM_NAME ?= ""
+KERNEL_DEPLOY_NAME ?= "${KERNEL_IMAGETYPE}-${PV}-${KERNEL_CUSTOM_NAME}${MACHINE}-${DATETIME}.bin"
+KERNEL_SYMLINK_NAME ?=  "${KERNEL_IMAGETYPE}-${KERNEL_CUSTOM_NAME}${MACHINE}.bin"
+KERNEL_DEFCONFIG ?= "defconfig-${MACHINE}"
+
 CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
+CMDLINE_CON_collie = "console=ttySA0,115200n8 console=tty1 noinitrd"
 CMDLINE_CON_qemuarm = "console=ttyAMA0,115200n8 console=tty1 noinitrd"
-CMDLINE_ROOT = "root=/dev/mtdblock2 rootfstype=jffs2"
-CMDLINE_ROOT_spitz = "root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw"
+CMDLINE_ROOT ?= "root=/dev/mtdblock2 rootfstype=jffs2"
+CMDLINE_ROOT_spitz ?= "root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw"
 #CMDLINE_ROOT_spitz = "root=/dev/mmcblk0p2 rootfstype=ext2 rootdelay=3 rw"
 CMDLINE_OTHER = "dyntick=enable"
 CMDLINE_DEBUG = '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "debug", "quiet", d)}'
@@ -53,6 +59,8 @@ module_autoload_snd-soc-corgi_c7x0 = "snd-soc-corgi"
 module_autoload_snd-soc-spitz_akita = "snd-soc-spitz"
 module_autoload_snd-soc-spitz_spitz = "snd-soc-spitz"
 module_autoload_snd-soc-poodle_poodle = "snd-soc-poodle"
+module_autoload_locomo-spi_collie = "locomo-spi"
+module_autoload_mmc_block_collie = "mmc_block"
 
 do_configure() {
 	rm -f ${S}/.config
@@ -64,7 +72,7 @@ do_configure() {
 		fi
 	fi
 
-	if [ ! -e ${WORKDIR}/defconfig-${MACHINE} ]; then
+	if [ ! -e ${WORKDIR}/${KERNEL_DEFCONFIG} ]; then
 		die "No default configuration for ${MACHINE} available."
 	fi
 
@@ -105,7 +113,7 @@ do_configure() {
 		echo "# CONFIG_OABI_COMPAT is not set"  >> ${S}/.config
 	fi
 
-	if [ "${DISTRO}" = "openzaurus" ]; then
+	if [ "${DISTRO}" = "openzaurus" -a "${MACHINE}" != "collie" ]; then
 		case ${MACHINE} in
 			c7x0 | akita | spitz )
 				echo "CONFIG_LOGO_OZ640_CLUT224=y"            >> ${S}/.config
@@ -126,7 +134,7 @@ do_configure() {
 		echo "CONFIG_LOGO=y"                          >> ${S}/.config
 		echo "# CONFIG_LOGO_LINUX_CLUT224 is not set" >> ${S}/.config
 		echo "# CONFIG_LOGO_OHAND_CLUT224 is not set" >> ${S}/.config
-	elif [ "${DISTRO}" = "poky" ]; then
+	elif [ "${DISTRO}" = "poky" -a "${MACHINE}" != "collie" ]; then
 		echo "CONFIG_LOGO=y"                          >> ${S}/.config
 		echo "CONFIG_LOGO_OHAND_CLUT224=y"            >> ${S}/.config
 		echo "# CONFIG_LOGO_OZ240_CLUT224 is not set" >> ${S}/.config
@@ -155,7 +163,7 @@ do_configure() {
 	    -e '/CONFIG_LOGO_OZ240_CLUT224=/d' \
 	    -e '/CONFIG_LOGO_OZ480_CLUT224=/d' \
 	    -e '/CONFIG_LOGO_OZ640_CLUT224=/d' \
-	    '${WORKDIR}/defconfig-${MACHINE}' >>'${S}/.config'
+	    '${WORKDIR}/${KERNEL_DEFCONFIG}' >>'${S}/.config'
 
 	yes '' | oe_runmake oldconfig
 }
@@ -186,11 +194,11 @@ do_compile_append() {
 
 do_deploy() {
 	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin
-	rm -f ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${MACHINE}.bin
+	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_DEPLOY_NAME}
 	cd ${DEPLOY_DIR_IMAGE}
-	ln -s ${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin ${KERNEL_IMAGETYPE}-${MACHINE}.bin
-	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_RELEASE}-${MACHINE}.tgz -C ${D} lib	
+	rm -f ${KERNEL_SYMLINK_NAME}
+	ln -s ${KERNEL_DEPLOY_NAME} ${KERNEL_SYMLINK_NAME}
+	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${MACHINE}.tgz -C ${D} lib	
 }
 
 do_deploy[dirs] = "${S}"
