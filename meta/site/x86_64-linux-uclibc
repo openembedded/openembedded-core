@@ -9,7 +9,6 @@ ac_cv_func_setpgrp_void=${ac_cv_func_setpgrp_void=yes}
 ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
 ac_cv_func_stat_empty_string_bug=${ac_cv_func_stat_empty_string_bug=no}
 ac_cv_func_stat_ignores_trailing_slash=${ac_cv_func_stat_ignores_trailing_slash=no}
-ac_cv_libnet_endianess=${ac_cv_libnet_endianess=lil}
 ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
 ac_cv_need_trio=${ac_cv_need_trio=no}
@@ -62,7 +61,6 @@ glib_cv___va_copy=${glib_cv___va_copy=yes}
 glib_cv_va_copy=${glib_cv_va_copy=yes}
 glib_cv_va_val_copy=${glib_cv_va_val_copy=no}
 lftp_cv_va_copy=${lftp_cv_va_copy=yes}
-mr_cv_target_elf=${mr_cv_target_elf=yes}
 nano_cv_func_regexec_segv_emptystr=${nano_cv_func_regexec_segv_emptystr=no}
 samba_cv_HAVE_VA_COPY=${samba_cv_HAVE_VA_COPY=yes}
 screen_cv_sys_bcopy_overlap=${screen_cv_sys_bcopy_overlap=no}

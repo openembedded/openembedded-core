@@ -1,5 +1,7 @@
 # general
 ac_cv_have_decl_sys_siglist=${ac_cv_have_decl_sys_siglist=yes}
+ac_cv_func_malloc_0_nonnull=${ac_cv_func_malloc_0_nonnull=yes}
+ac_cv_func_memcmp_working=${ac_cv_func_memcmp_working=yes}
 
 # bash
 bash_cv_under_sys_siglist=${bash_cv_under_sys_siglist=yes}
@@ -18,3 +20,6 @@ ac_cv_func_snprintf_c99=${ac_cv_func_snprintf_c99=yes}
 ac_cv_func_vsnprintf_c99=${ac_cv_func_vsnprintf_c99=yes}
 glib_cv_compliant_posix_memalign=${glib_cv_compliant_posix_memalign=1}
 glib_cv_long_long_format=${glib_cv_long_long_format=ll}
+
+# gnucash
+am_cv_scanf_lld=${am_cv_scanf_lld=yes}

@@ -1,5 +1,5 @@
 # libelf
 mr_cv_target_elf=${mr_cv_target_elf=yes}
 
-# Normally poky kernels have /dev/random enabled
+# Normally kernels have /dev/random enabled
 ac_cv_file__dev_random=${ac_cv_file__dev_random=yes}
