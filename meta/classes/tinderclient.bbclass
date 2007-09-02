@@ -24,6 +24,7 @@ def tinder_form_data(bound, dict, log):
     output = []
     # for each key in the dictionary
     for name in dict:
+        assert dict[name]
         output.append( "--" + bound )
         output.append( 'Content-Disposition: form-data; name="%s"' % name )
         output.append( "" )
@@ -60,7 +61,7 @@ def tinder_format_http_post(d,status,log):
         "os"           : os.uname()[0],
         "os_version"   : os.uname()[2],
         "compiler"     : "gcc",
-        "clobber"      : data.getVar('TINDER_CLOBBER', d, True),
+        "clobber"      : data.getVar('TINDER_CLOBBER', d, True) or "0",
         "srcdate"      : data.getVar('SRCDATE', d, True),
         "PN"           : data.getVar('PN', d, True),
         "PV"           : data.getVar('PV', d, True),
@@ -370,9 +371,9 @@ def tinder_do_tinder_report(event):
 addhandler tinderclient_eventhandler
 python tinderclient_eventhandler() {
     from bb import note, error, data
-    from bb.event import NotHandled
+    from bb.event import NotHandled, getName
 
-    if e.data is None:
+    if e.data is None or getName(e) == "MsgNote":
         return NotHandled
 
     do_tinder_report = data.getVar('TINDER_REPORT', e.data, True)
