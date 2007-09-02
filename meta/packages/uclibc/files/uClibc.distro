@@ -1,0 +1,3 @@
+# Default per-distro config
+# DO NOT CHANGE THIS
+# Create a new file ${DISTRO}/uClibc.distro

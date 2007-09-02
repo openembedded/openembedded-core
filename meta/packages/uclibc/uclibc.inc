@@ -23,11 +23,16 @@ PROVIDES += "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "${@['virtual/libiconv', ''][bb.data.getVar('USE_NLS', d, 1) != 'yes']}"
 DEPENDS = "virtual/${TARGET_PREFIX}binutils \
 	   virtual/${TARGET_PREFIX}gcc-initial linux-libc-headers"
+
+# Blackfin needs a wrapper around ld
+DEPENDS_append_bfin = " elf2flt "
+
 INHIBIT_DEFAULT_DEPS = "1"
 PARALLEL_MAKE = ""
 
 PACKAGES =+ "ldd uclibc-utils-dbg uclibc-utils uclibc-gconv uclibc-thread-db"
 
+# The last line (gdb and lib1) is for uclinux-uclibc builds 
 uclibc_baselibs = "/lib/libcrypt*.so* /lib/libdl*.so \
 		   /lib/libintl*.so* /lib/libm*.so \
 		   /lib/libnsl*.so* /lib/libpthread*.so \
@@ -35,7 +40,9 @@ uclibc_baselibs = "/lib/libcrypt*.so* /lib/libdl*.so \
 		   /lib/libuClibc*.so* /lib/ld*.so* \
 		   /lib/libc*.so* /lib/libdl*.so* \
 		   /lib/libm*.so* /lib/libutil*.so* \
-		   /lib/libpthread*.so* /lib/librt*.so*"
+		   /lib/libpthread*.so* /lib/librt*.so* \
+                   /usr/lib/libc.gdb /usr/lib/libc /lib/lib1.so \
+                   "
 FILES_${PN} = "${sysconfdir} ${uclibc_baselibs} /sbin/ldconfig \
 	       ${libexecdir} ${datadir}/zoneinfo ${libdir}/locale"
 FILES_ldd = "${bindir}/ldd"
@@ -128,7 +135,7 @@ do_configure() {
 
    	sed -i -e '/CONFIG_ARM_EABI/d' ${S}/.config
 
-        if [ "${TARGET_OS}" == "linux-gnueabi" -o  "${TARGET_OS}" == "linux-uclibcgnueabi" ]; then
+        if [ "${TARGET_OS}" = "linux-gnueabi" -o  "${TARGET_OS}" = "linux-uclibcgnueabi" ]; then
        		echo "CONFIG_ARM_EABI=y"                >> ${S}/.config
 	else
 		echo "# CONFIG_ARM_EABI is not set"     >> ${S}/.config

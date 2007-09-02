@@ -1,0 +1,8 @@
+# Default per-machine config
+# DO NOT CHANGE THIS
+# Create a new file ${MACHINE}/uClibc.distro
+# Use this file for information which is specific to the machine,
+# as opposed to the architecture (e.g. nslu2 as opposed to armeb or arm)
+# KISS: this file gets includes last, nothing in here can be
+# overridden.  Restrict things in here to things which are absolutely
+# and certainly true for this machine.
