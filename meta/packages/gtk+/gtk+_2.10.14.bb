@@ -15,17 +15,17 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
            file://disable-print.patch;patch=1 \
            file://hardcoded_libtool.patch;patch=1 \
            file://no-demos.patch;patch=1 \
-        file://cellrenderer-cairo.patch;patch=1;pnum=0 \
-        file://entry-cairo.patch;patch=1;pnum=0 \
-        file://toggle-font.diff;patch=1;pnum=0 \
-        file://combo-arrow-size.patch;patch=1;pnum=0 \
-        file://range-no-redraw.patch;patch=1;pnum=0 \
-        file://scrolled-placement.patch;patch=1;pnum=0 \
-	   file://filesystem-volumes.patch;patch=1\
-	   file://filechooser-utils.patch;patch=1\
-	   file://filechooser.patch;patch=1\
-	   file://filechooser-default.patch;patch=1\
-	   file://filechooser-respect-style.patch;patch=1"
+           file://cellrenderer-cairo.patch;patch=1;pnum=0 \
+           file://entry-cairo.patch;patch=1;pnum=0 \
+           file://toggle-font.diff;patch=1;pnum=0 \
+           file://combo-arrow-size.patch;patch=1;pnum=0 \
+           file://range-no-redraw.patch;patch=1;pnum=0 \
+           file://scrolled-placement.patch;patch=1;pnum=0 \
+           file://filesystem-volumes.patch;patch=1 \
+           file://filechooser-utils.patch;patch=1 \
+           file://filechooser.patch;patch=1 \
+           file://filechooser-default.patch;patch=1 \
+           file://filechooser-respect-style.patch;patch=1"
 #file://pangoxft2.10.6.diff;patch=1"
 
 
