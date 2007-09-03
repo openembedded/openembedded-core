@@ -3,7 +3,7 @@ SECTION = "x11"
 LICENSE = "GPLv2"
 DEPENDS = "glib-2.0 gtk+ libglade gnome-vfs libxml2 avahi"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig gtk-icon-cache
 
 PACKAGES =+ "oprofileui-server oprofileui-viewer"
 
