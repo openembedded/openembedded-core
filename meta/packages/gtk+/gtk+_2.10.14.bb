@@ -1,7 +1,7 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r15"
+PR = "r16"
 
 # disable per default - untested and not all patches included.
 DEFAULT_PREFERENCE = "-1" 
@@ -9,7 +9,6 @@ DEFAULT_PREFERENCE = "-1"
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
            file://gtklabel-resize-patch;patch=1 \
            file://menu-deactivate.patch;patch=1 \
-           file://xsettings.patch;patch=1 \
            file://small-gtkfilesel.patch;patch=1 \
            file://run-iconcache.patch;patch=1 \
            file://disable-print.patch;patch=1 \
@@ -26,6 +25,7 @@ SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
            file://filechooser.patch;patch=1 \
            file://filechooser-default.patch;patch=1 \
            file://filechooser-respect-style.patch;patch=1"
+#file://xsettings.patch;patch=1 \
 #file://pangoxft2.10.6.diff;patch=1"
 
 
