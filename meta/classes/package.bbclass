@@ -2,6 +2,8 @@
 # General packaging help functions
 #
 
+PKGDEST = "${WORKDIR}/install"
+
 def legitimize_package_name(s):
 	"""
 	Make sure package names are legitimate strings
@@ -374,25 +376,21 @@ python populate_packages () {
 				if not os.path.islink(file) and not os.path.isdir(file) and isexec(file):
 					runstrip(file, d)
 
+	pkgdest = bb.data.getVar('PKGDEST', d, 1)
+	os.system('rm -rf %s' % pkgdest)
+
 	for pkg in package_list:
 		localdata = bb.data.createCopy(d)
-		root = os.path.join(workdir, "install", pkg)
+		root = os.path.join(pkgdest, pkg)
+		bb.mkdirhier(root)
 
-		os.system('rm -rf %s' % root)
-
-		bb.data.setVar('ROOT', '', localdata)
-		bb.data.setVar('ROOT_%s' % pkg, root, localdata)
 		bb.data.setVar('PKG', pkg, localdata)
-
 		overrides = bb.data.getVar('OVERRIDES', localdata, 1)
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
-		bb.data.setVar('OVERRIDES', overrides+':'+pkg, localdata)
-
+		bb.data.setVar('OVERRIDES', overrides + ':' + pkg, localdata)
 		bb.data.update_data(localdata)
 
-		root = bb.data.getVar('ROOT', localdata, 1)
-		bb.mkdirhier(root)
 		filesvar = bb.data.getVar('FILES', localdata, 1) or ""
 		files = filesvar.split()
 		for file in files:
@@ -445,7 +443,7 @@ python populate_packages () {
 	for pkg in package_list:
 		dangling_links[pkg] = []
 		pkg_files[pkg] = []
-		inst_root = os.path.join(workdir, "install", pkg)
+		inst_root = os.path.join(pkgdest, pkg)
 		for root, dirs, files in os.walk(inst_root):
 			for f in files:
 				path = os.path.join(root, f)
@@ -566,6 +564,8 @@ python package_do_shlibs() {
 		bb.error("TARGET_SYS not defined")
 		return
 
+	pkgdest = bb.data.getVar('PKGDEST', d, 1)
+
 	shlibs_dir = os.path.join(staging, target_sys, "shlibs")
 	old_shlibs_dir = os.path.join(staging, "shlibs")
 	bb.mkdirhier(shlibs_dir)
@@ -577,7 +577,7 @@ python package_do_shlibs() {
 
 		needed[pkg] = []
 		sonames = list()
-		top = os.path.join(workdir, "install", pkg)
+		top = os.path.join(pkgdest, pkg)
 		for root, dirs, files in os.walk(top):
 			for file in files:
 				soname = None
@@ -660,7 +660,7 @@ python package_do_shlibs() {
 			else:
 				bb.note("Couldn't find shared library provider for %s" % n)
 
-		deps_file = os.path.join(workdir, "install", pkg + ".shlibdeps")
+		deps_file = os.path.join(pkgdest, pkg + ".shlibdeps")
 		if os.path.exists(deps_file):
 			os.remove(deps_file)
 		if len(deps):
@@ -693,6 +693,8 @@ python package_do_pkgconfig () {
 		bb.error("TARGET_SYS not defined")
 		return
 
+	pkgdest = bb.data.getVar('PKGDEST', d, 1)
+
 	shlibs_dir = os.path.join(staging, target_sys, "shlibs")
 	old_shlibs_dir = os.path.join(staging, "shlibs")
 	bb.mkdirhier(shlibs_dir)
@@ -706,7 +708,7 @@ python package_do_pkgconfig () {
 	for pkg in packages.split():
 		pkgconfig_provided[pkg] = []
 		pkgconfig_needed[pkg] = []
-		top = os.path.join(workdir, "install", pkg)
+		top = os.path.join(pkgdest, pkg)
 		for root, dirs, files in os.walk(top):
 			for file in files:
 				m = pc_re.match(file)
@@ -769,7 +771,7 @@ python package_do_pkgconfig () {
 					found = True
 			if found == False:
 				bb.note("couldn't find pkgconfig module '%s' in any package" % n)
-		deps_file = os.path.join(workdir, "install", pkg + ".pcdeps")
+		deps_file = os.path.join(pkgdest, pkg + ".pcdeps")
 		if os.path.exists(deps_file):
 			os.remove(deps_file)
 		if len(deps):
@@ -783,14 +785,14 @@ python read_shlibdeps () {
 	packages = (bb.data.getVar('PACKAGES', d, 1) or "").split()
 	for pkg in packages:
 		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
-		shlibsfile = bb.data.expand("${WORKDIR}/install/" + pkg + ".shlibdeps", d)
+		shlibsfile = bb.data.expand("${PKGDEST}/" + pkg + ".shlibdeps", d)
 		if os.access(shlibsfile, os.R_OK):
 			fd = file(shlibsfile)
 			lines = fd.readlines()
 			fd.close()
 			for l in lines:
 				rdepends.append(l.rstrip())
-		pcfile = bb.data.expand("${WORKDIR}/install/" + pkg + ".pcdeps", d)
+		pcfile = bb.data.expand("${PKGDEST}/" + pkg + ".pcdeps", d)
 		if os.access(pcfile, os.R_OK):
 			fd = file(pcfile)
 			lines = fd.readlines()
