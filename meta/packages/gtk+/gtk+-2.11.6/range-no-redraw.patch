@@ -2,10 +2,12 @@ Index: gtk/gtkrange.c
 ===================================================================
 --- gtk/gtkrange.c	(revision 18523)
 +++ gtk/gtkrange.c	(working copy)
-@@ -99,6 +99,8 @@
+@@ -99,8 +99,10 @@
  
    GtkSensitivityType lower_sensitivity;
    GtkSensitivityType upper_sensitivity;
+ 
+   gdouble fill_level;
 +
 +  guint motion_idle;
  };
