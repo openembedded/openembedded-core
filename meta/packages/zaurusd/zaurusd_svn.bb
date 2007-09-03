@@ -1,6 +1,5 @@
 DESCRIPTION = "Daemon to handle device specifc features."
 SECTION = "base"
-MAINTAINER = "Richard Purdie <rpurdie@openedhand.com>"
 LICENSE = "GPL"
 DEPENDS = "tslib"
 RDEPENDS = "xrandr"
