@@ -1,14 +1,13 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r1"
+PR = "r2"
 
 # disable per default - untested and not all patches included.
 DEFAULT_PREFERENCE = "-1" 
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.11/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \
-           file://small-gtkfilesel.patch;patch=1 \
            file://run-iconcache.patch;patch=1 \
            file://disable-print.patch;patch=1 \
            file://hardcoded_libtool.patch;patch=1 \
