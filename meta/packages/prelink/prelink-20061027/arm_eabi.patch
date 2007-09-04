@@ -1,20 +1,22 @@
 ---
- src/arch-arm.c |  170 +++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 165 insertions(+), 5 deletions(-)
+ src/arch-arm.c |  177 +++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 172 insertions(+), 5 deletions(-)
 
 Index: prelink-0.0.20061027/src/arch-arm.c
 ===================================================================
 --- prelink-0.0.20061027.orig/src/arch-arm.c	2006-08-13 16:18:17.000000000 +0100
-+++ prelink-0.0.20061027/src/arch-arm.c	2007-01-14 00:05:33.000000000 +0000
-@@ -145,6 +145,24 @@ arm_prelink_rel (struct prelink_info *in
++++ prelink-0.0.20061027/src/arch-arm.c	2007-09-04 12:29:06.000000000 +0100
+@@ -145,6 +145,26 @@ arm_prelink_rel (struct prelink_info *in
        error (0, 0, "%s: R_ARM_PC24 relocs with non-zero addend should not be present in prelinked REL sections",
  	     dso->filename);
        return 1;
-+   case R_ARM_TLS_DTPOFF32:
-+      write_le32 (dso, rel->r_offset, value);
++    /* DTPOFF32, DTPMOD32 and TPOFF32 is impossible to predict unless prelink
++       sets the rules.  Also for DTPOFF32/TPOFF32 there is REL->RELA problem.  */
++    case R_ARM_TLS_DTPOFF32:
++      if (dso->ehdr.e_type == ET_EXEC)
++	error (0, 0, "%s: R_ARM_TLS_DTPOFF32 relocs should not be present in prelinked ET_EXEC REL sections",
++	       dso->filename);
 +      break;
-+    /* DTPMOD32 and TPOFF32 is impossible to predict unless prelink
-+       sets the rules.  Also for TPOFF{32,} there is REL->RELA problem.  */
 +    case R_ARM_TLS_DTPMOD32:
 +      if (dso->ehdr.e_type == ET_EXEC)
 +	{
@@ -31,14 +33,15 @@ Index: prelink-0.0.20061027/src/arch-arm.c
      case R_ARM_COPY:
        if (dso->ehdr.e_type == ET_EXEC)
  	/* COPY relocs are handled specially in generic code.  */
-@@ -195,6 +213,24 @@ arm_prelink_rela (struct prelink_info *i
+@@ -195,6 +215,25 @@ arm_prelink_rela (struct prelink_info *i
        write_le32 (dso, rela->r_offset,
  		  (read_ule32 (dso, rela->r_offset) & 0xff000000) | val);
        break;
 +    case R_ARM_TLS_DTPOFF32:
-+      write_le32 (dso, rela->r_offset, value + rela->r_addend);
++      if (dso->ehdr.e_type == ET_EXEC)
++	write_le32 (dso, rela->r_offset, value + rela->r_addend);
 +      break;
-+    /* DTPMOD32 and TPOFF32 is impossible to predict unless prelink
++    /* DTPMOD32 and TPOFF32 are impossible to predict unless prelink
 +       sets the rules.  */
 +    case R_ARM_TLS_DTPMOD32:
 +      if (dso->ehdr.e_type == ET_EXEC)
@@ -56,7 +59,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
      case R_ARM_COPY:
        if (dso->ehdr.e_type == ET_EXEC)
  	/* COPY relocs are handled specially in generic code.  */
-@@ -315,6 +351,7 @@ arm_prelink_conflict_rel (DSO *dso, stru
+@@ -315,6 +354,7 @@ arm_prelink_conflict_rel (DSO *dso, stru
  {
    GElf_Addr value;
    struct prelink_conflict *conflict;
@@ -64,7 +67,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
    GElf_Rela *ret;
  
    if (GELF_R_TYPE (rel->r_info) == R_ARM_RELATIVE
-@@ -324,8 +361,31 @@ arm_prelink_conflict_rel (DSO *dso, stru
+@@ -324,8 +364,32 @@ arm_prelink_conflict_rel (DSO *dso, stru
    conflict = prelink_conflict (info, GELF_R_SYM (rel->r_info),
  			       GELF_R_TYPE (rel->r_info));
    if (conflict == NULL)
@@ -75,8 +78,9 @@ Index: prelink-0.0.20061027/src/arch-arm.c
 +	return 0;
 +      switch (GELF_R_TYPE (rel->r_info))
 +	{
-+	/* Even local DTPMOD and TPOFF relocs need conflicts.  */
++	/* Even local DTPMOD and {D,}TPOFF relocs need conflicts.  */
 +	case R_ARM_TLS_DTPMOD32:
++	case R_ARM_TLS_DTPOFF32:
 +	case R_ARM_TLS_TPOFF32:
 +	  break;
 +	default:
@@ -98,7 +102,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
    ret = prelink_conflict_add_rela (info);
    if (ret == NULL)
      return 1;
-@@ -342,6 +402,33 @@ arm_prelink_conflict_rel (DSO *dso, stru
+@@ -342,6 +406,33 @@ arm_prelink_conflict_rel (DSO *dso, stru
        error (0, 0, "%s: R_ARM_%s relocs should not be present in prelinked REL sections",
  	     dso->filename, GELF_R_TYPE (rel->r_info) == R_ARM_ABS32 ? "ABS32" : "PC24");
        return 1;
@@ -121,7 +125,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
 +	  ret->r_addend = tls->modid;
 +	  break;
 +	case R_ARM_TLS_DTPOFF32:
-+	  ret->r_addend = value;
++	  ret->r_addend = value + read_ule32 (dso, rel->r_offset);
 +	  break;
 +	case R_ARM_TLS_TPOFF32:
 +	  ret->r_addend = value + read_ule32 (dso, rel->r_offset)
@@ -132,7 +136,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
      case R_ARM_COPY:
        error (0, 0, "R_ARM_COPY should not be present in shared libraries");
        return 1;
-@@ -359,6 +446,7 @@ arm_prelink_conflict_rela (DSO *dso, str
+@@ -359,6 +450,7 @@ arm_prelink_conflict_rela (DSO *dso, str
  {
    GElf_Addr value;
    struct prelink_conflict *conflict;
@@ -140,7 +144,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
    GElf_Rela *ret;
    Elf32_Sword val;
  
-@@ -369,8 +457,31 @@ arm_prelink_conflict_rela (DSO *dso, str
+@@ -369,8 +461,32 @@ arm_prelink_conflict_rela (DSO *dso, str
    conflict = prelink_conflict (info, GELF_R_SYM (rela->r_info),
  			       GELF_R_TYPE (rela->r_info));
    if (conflict == NULL)
@@ -151,8 +155,9 @@ Index: prelink-0.0.20061027/src/arch-arm.c
 +	return 0;
 +      switch (GELF_R_TYPE (rela->r_info))
 +	{
-+	/* Even local DTPMOD and TPOFF relocs need conflicts.  */
++	/* Even local DTPMOD and {D,}TPOFF relocs need conflicts.  */
 +	case R_ARM_TLS_DTPMOD32:
++	case R_ARM_TLS_DTPOFF32:
 +	case R_ARM_TLS_TPOFF32:
 +	  break;
 +	default:
@@ -174,7 +179,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
    ret = prelink_conflict_add_rela (info);
    if (ret == NULL)
      return 1;
-@@ -398,6 +509,32 @@ arm_prelink_conflict_rela (DSO *dso, str
+@@ -398,6 +514,32 @@ arm_prelink_conflict_rela (DSO *dso, str
      case R_ARM_COPY:
        error (0, 0, "R_ARM_COPY should not be present in shared libraries");
        return 1;
@@ -197,7 +202,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
 +	  ret->r_addend = tls->modid;
 +	  break;
 +	case R_ARM_TLS_DTPOFF32:
-+	  ret->r_addend += value;
++	  ret->r_addend = value + rela->r_addend;
 +	  break;
 +	case R_ARM_TLS_TPOFF32:
 +	  ret->r_addend = value + rela->r_addend + tls->offset;
@@ -207,68 +212,70 @@ Index: prelink-0.0.20061027/src/arch-arm.c
      default:
        error (0, 0, "%s: Unknown arm relocation type %d", dso->filename,
  	     (int) GELF_R_TYPE (rela->r_info));
-@@ -418,6 +555,7 @@ arm_rel_to_rela (DSO *dso, GElf_Rel *rel
+@@ -418,6 +560,8 @@ arm_rel_to_rela (DSO *dso, GElf_Rel *rel
        abort ();
      case R_ARM_RELATIVE:
      case R_ARM_ABS32:
 +    case R_ARM_TLS_TPOFF32:
++    case R_ARM_TLS_DTPOFF32:
        rela->r_addend = (Elf32_Sword) read_ule32 (dso, rel->r_offset);
        break;
      case R_ARM_PC24:
-@@ -426,6 +564,8 @@ arm_rel_to_rela (DSO *dso, GElf_Rel *rel
+@@ -426,6 +570,7 @@ arm_rel_to_rela (DSO *dso, GElf_Rel *rel
        break;
      case R_ARM_COPY:
      case R_ARM_GLOB_DAT:
-+    case R_ARM_TLS_DTPOFF32:
 +    case R_ARM_TLS_DTPMOD32:
        rela->r_addend = 0;
        break;
      }
-@@ -445,6 +585,7 @@ arm_rela_to_rel (DSO *dso, GElf_Rela *re
+@@ -445,6 +590,8 @@ arm_rela_to_rel (DSO *dso, GElf_Rela *re
        abort ();
      case R_ARM_RELATIVE:
      case R_ARM_ABS32:
 +    case R_ARM_TLS_TPOFF32:
++    case R_ARM_TLS_DTPOFF32:
        write_le32 (dso, rela->r_offset, rela->r_addend);
        break;
      case R_ARM_PC24:
-@@ -453,6 +594,8 @@ arm_rela_to_rel (DSO *dso, GElf_Rela *re
+@@ -453,6 +600,7 @@ arm_rela_to_rel (DSO *dso, GElf_Rela *re
  		  | ((rela->r_addend >> 2) & 0xffffff));
        break;
      case R_ARM_GLOB_DAT:
 +    case R_ARM_TLS_DTPMOD32:
-+    case R_ARM_TLS_DTPOFF32:
        write_le32 (dso, rela->r_offset, 0);
        break;
      }
-@@ -488,6 +631,13 @@ arm_need_rel_to_rela (DSO *dso, int firs
+@@ -488,6 +636,15 @@ arm_need_rel_to_rela (DSO *dso, int firs
  		/* FALLTHROUGH */
  	      case R_ARM_PC24:
  		return 1;
++	      case R_ARM_TLS_DTPOFF32:
 +	      case R_ARM_TLS_TPOFF32:
-+		/* In shared libraries TPOFF is changed always into
++		/* In shared libraries {D,}TPOFF32 is changed always into
 +		   conflicts, for executables we need to preserve
 +		   original addend.  */
-+		if (dso->ehdr.e_type == ET_EXEC)
++		if (dso->ehdr.e_type == ET_EXEC) {
 +		  return 1;
++		}
 +		break;
  	      }
  	}
      }
-@@ -612,6 +762,12 @@ arm_undo_prelink_rel (DSO *dso, GElf_Rel
+@@ -612,6 +769,12 @@ arm_undo_prelink_rel (DSO *dso, GElf_Rel
  	return 0;
        error (0, 0, "%s: R_ARM_COPY reloc in shared library?", dso->filename);
        return 1;
 +    case R_ARM_TLS_DTPMOD32:
-+    case R_ARM_TLS_DTPOFF32:
 +      write_le32 (dso, rel->r_offset, 0);
 +      break;
++    case R_ARM_TLS_DTPOFF32:
 +    case R_ARM_TLS_TPOFF32:
 +      break;
      default:
        error (0, 0, "%s: Unknown arm relocation type %d", dso->filename,
  	     (int) GELF_R_TYPE (rel->r_info));
-@@ -634,6 +790,10 @@ arm_reloc_class (int reloc_type)
+@@ -634,6 +797,10 @@ arm_reloc_class (int reloc_type)
      {
      case R_ARM_COPY: return RTYPE_CLASS_COPY;
      case R_ARM_JUMP_SLOT: return RTYPE_CLASS_PLT;
@@ -279,7 +286,7 @@ Index: prelink-0.0.20061027/src/arch-arm.c
      default: return RTYPE_CLASS_VALID;
      }
  }
-@@ -646,7 +806,7 @@ PL_ARCH = {
+@@ -646,7 +813,7 @@ PL_ARCH = {
    .R_JMP_SLOT = R_ARM_JUMP_SLOT,
    .R_COPY = R_ARM_COPY,
    .R_RELATIVE = R_ARM_RELATIVE,
