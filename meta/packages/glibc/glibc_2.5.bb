@@ -1,6 +1,6 @@
 require glibc.inc
 
-PR = "r4"
+PR = "r5"
 
 # the -isystem in bitbake.conf screws up glibc do_stage
 BUILD_CPPFLAGS = "-I${STAGING_DIR}/${BUILD_SYS}/include"

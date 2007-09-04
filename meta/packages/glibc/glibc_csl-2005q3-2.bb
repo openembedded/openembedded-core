@@ -5,7 +5,7 @@ SECTION = "libs"
 PRIORITY = "required"
 # DEFAULT_PREFERENCE = "-1"
 PV = "2.3.6+csl-arm-2005q3-2"
-PR = "r10"
+PR = "r11"
 
 # the -isystem in bitbake.conf screws up glibc do_stage
 BUILD_CPPFLAGS = "-I${STAGING_DIR}/${BUILD_SYS}/include"
