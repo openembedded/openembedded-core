@@ -1,7 +1,7 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r2"
+PR = "r3"
 
 # disable per default - untested and not all patches included.
 DEFAULT_PREFERENCE = "-1" 
