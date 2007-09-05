@@ -101,6 +101,10 @@ package_generate_ipkg_conf () {
 		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
 		echo "arch ${BUILD_ARCH}-$arch-sdk $priority" >> ${IPKGCONF_SDK}
 		priority=$(expr $priority + 5)
+		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
+		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
+		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_SDK}
+		fi
 	done
 }
 
@@ -117,6 +121,9 @@ python do_package_ipk () {
 	if not outdir:
 		bb.error("DEPLOY_DIR_IPK not defined, unable to package")
 		return
+
+	arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
+	outdir = "%s/%s" % (outdir, arch)
 	bb.mkdirhier(outdir)
 
 	dvar = bb.data.getVar('D', d, 1)
