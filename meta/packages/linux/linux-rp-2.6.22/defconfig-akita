@@ -743,6 +743,7 @@ CONFIG_NET_RADIO=y
 #
 # Wireless 802.11b ISA/PCI cards support
 #
+CONFIG_WLAN_80211=y
 CONFIG_HERMES=m
 # CONFIG_ATMEL is not set
 
