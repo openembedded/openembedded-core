@@ -1,5 +1,5 @@
 SECTION = "x11/utils"
-DEPENDS = "intltool-native gtk+ glib-2.0 dbus dbus-glib libxml2 popt gtk-doc-native"
+DEPENDS = "intltool-native glib-2.0 dbus dbus-glib libxml2 popt gtk-doc-native"
 DESCRIPTION = "Settings daemon using DBUS for communication."
 LICENSE = "GPL"
 PROVIDES = "gconf"
@@ -7,7 +7,7 @@ RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
 PV = "2.16.0+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
 	   file://69gconfd-dbus"
