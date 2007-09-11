@@ -1,3 +1,7 @@
+#
+# Configuration to use a toolchain built by meta-toolchain.bb
+#
+
 TARGET_VENDOR = "-poky"
 
 EXTERNAL_TOOLCHAIN = "${SDK_PREFIX}"
@@ -21,6 +25,3 @@ PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-poky-toolchain"
 
 TARGET_CPPFLAGS_prepend = " -isystem${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/include "
 TARGET_LDFLAGS_prepend = " -L${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib "
-
-GLIBCTARGETOS = "linux${@['','-gnueabi'][bb.data.getVar('TARGET_ARCH',d,1) in ['arm', 'armeb']]}"
-UCLIBCTARGETOS = "linux${@['-uclibc','-uclibcgnueabi'][bb.data.getVar('TARGET_ARCH',d,1) in ['arm', 'armeb']]}"

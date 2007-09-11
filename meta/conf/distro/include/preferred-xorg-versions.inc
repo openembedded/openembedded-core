@@ -1,3 +1,7 @@
+#
+# The latest Xorg package versions
+#
+
 PREFERRED_VERSION_applewmproto = "1.0.3"
 PREFERRED_VERSION_bigreqsproto = "1.0.2"
 PREFERRED_VERSION_bigreqsproto-native = "1.0.2"

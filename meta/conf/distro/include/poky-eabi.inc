@@ -1,5 +1,6 @@
 #
-# Poky configuration to use EABI
+# Poky's default configuration (ARM EABI)
+# gcc 4.1.2, binutils 2.18, glibc 2.5
 #
 
 TARGET_VENDOR = "-poky"
@@ -20,6 +21,3 @@ PREFERRED_VERSION_glibc ?= "2.5"
 PREFERRED_VERSION_glibc-intermediate ?= "2.5"
 PREFERRED_VERSION_glibc-initial ?= "2.5"
 PREFERRED_VERSION_elfutils ?= "0.108"
-
-GLIBCTARGETOS = "linux${@['','-gnueabi'][bb.data.getVar('TARGET_ARCH',d,1) in ['arm', 'armeb']]}"
-UCLIBCTARGETOS = "linux${@['-uclibc','-uclibcgnueabi'][bb.data.getVar('TARGET_ARCH',d,1) in ['arm', 'armeb']]}"
