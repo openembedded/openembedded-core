@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r2"
+PR = "r3"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_htcuniversal = "1"
@@ -51,6 +51,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            file://squashfs3.0-2.6.15.patch;patch=1;status=external \
            file://uvesafb-0.1-rc3-2.6.22.patch;patch=1;status=external \
            file://htcuni.patch;patch=1 \
+           file://binutils-buildid-arm.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-hx2000 \
            file://defconfig-collie \
