@@ -4,7 +4,7 @@ DEPENDS = "dbus-glib eds-dbus"
 RDEPENDS = "libedata-book"
 DESCRIPTION = "Test applications for EDS"
 
-SRC_URI = "bzr://burtonini.com/bzr/eds-tests;proto=http"
+SRC_URI = "bzr://burtonini.com/bzr/${PN};proto=http"
 
 inherit autotools pkgconfig
 
