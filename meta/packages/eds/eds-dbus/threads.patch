@@ -1,0 +1,319 @@
+Index: addressbook/libedata-book-dbus/e-data-book.c
+===================================================================
+--- addressbook/libedata-book-dbus/e-data-book.c	(revision 622)
++++ addressbook/libedata-book-dbus/e-data-book.c	(working copy)
+@@ -55,8 +55,7 @@
+ 
+ static void return_status_and_list (guint32 opid, EDataBookStatus status, GList *list, gboolean free_data);
+ 
+-enum
+-{
++enum {
+   WRITABLE,
+   CONNECTION,
+   AUTH_REQUIRED,
+@@ -65,6 +64,121 @@
+ 
+ static guint signals[LAST_SIGNAL] = { 0 };
+ 
++static GThreadPool *op_pool = NULL;
++
++typedef enum {
++  OP_OPEN,
++  OP_AUTHENTICATE,
++  OP_ADD_CONTACT,
++  OP_GET_CONTACT,
++  OP_GET_CONTACTS,
++  OP_MODIFY_CONTACT,
++  OP_MODIFY_CONTACTS,
++  OP_REMOVE_CONTACTS,
++  OP_GET_CHANGES,
++} OperationID;
++
++typedef struct {
++  OperationID op;
++  guint32 id; /* operation id */
++  EDataBook *book; /* book */
++  union {
++    /* OP_OPEN */
++    gboolean only_if_exists;
++    /* OP_AUTHENTICATE */
++    struct {
++      char *username;
++      char *password;
++      char *method;
++    } auth;
++    /* OP_ADD_CONTACT */
++    /* OP_MODIFY_CONTACT */
++    char *vcard;
++    /* OP_GET_CONTACT */
++    char *uid;
++    /* OP_GET_CONTACTS */
++    char *query;
++    /* OP_MODIFY_CONTACT */
++    char **vcards;
++    /* OP_REMOVE_CONTACTS */
++    GList *ids;
++    /* OP_GET_CHANGES */
++    char *change_id;
++  };
++} OperationData;
++
++
++static void
++operation_thread (gpointer data, gpointer user_data)
++{
++  OperationData *op = data;
++  EBookBackend *backend;
++
++  backend = e_data_book_get_backend (op->book);
++  
++  switch (op->op) {
++  case OP_OPEN:
++    e_book_backend_open (backend, op->book, op->id, op->only_if_exists);
++    break;
++  case OP_AUTHENTICATE:
++    e_book_backend_authenticate_user (backend, op->book, op->id,
++                                      op->auth.username,
++                                      op->auth.password,
++                                      op->auth.method);
++    g_free (op->auth.username);
++    g_free (op->auth.password);
++    g_free (op->auth.method);
++    break;
++  case OP_ADD_CONTACT:
++    e_book_backend_create_contact (backend, op->book, op->id, op->vcard);
++    g_free (op->vcard);
++    break;
++  case OP_GET_CONTACT:
++    e_book_backend_get_contact (backend, op->book, op->id, op->uid);
++    g_free (op->uid);
++    break;
++  case OP_GET_CONTACTS:
++    e_book_backend_get_contact_list (backend, op->book, op->id, op->query);
++    g_free (op->query);
++    break;
++  case OP_MODIFY_CONTACT:
++    e_book_backend_modify_contact (backend, op->book, op->id, op->vcard);
++    g_free (op->vcard);
++    break;
++  case OP_MODIFY_CONTACTS:
++    /* C is weird at times, need to cast to const char** */
++    e_book_backend_modify_contacts (backend, op->book, op->id, (const char**)op->vcards);
++    g_strfreev (op->vcards);
++    break;
++  case OP_REMOVE_CONTACTS:
++    e_book_backend_remove_contacts (backend, op->book, op->id, op->ids);
++    g_list_foreach (op->ids, (GFunc)g_free, NULL);
++    g_list_free (op->ids);
++    break;
++  case OP_GET_CHANGES:
++    e_book_backend_get_changes (backend, op->book, op->id, op->change_id);
++    g_free (op->change_id);
++    break;
++  }
++  
++  g_object_unref (op->book);
++  g_slice_free (OperationData, op);
++}
++
++static OperationData *
++op_new (OperationID op, EDataBook *book, DBusGMethodInvocation *context)
++{
++  OperationData *data;
++
++  data = g_slice_new0 (OperationData);
++  data->op = op;
++  data->book = g_object_ref (book);
++  data->id = opid_store (context);
++
++  return data;
++}
++
++
+ /* Create the EDataBook error quark */
+ GQuark
+ e_data_book_error_quark (void)
+@@ -134,6 +248,10 @@
+   dbus_g_object_type_install_info (G_TYPE_FROM_CLASS (e_data_book_class), &dbus_glib_e_data_book_object_info);
+   
+   dbus_g_error_domain_register (E_DATA_BOOK_ERROR, NULL, E_TYPE_DATA_BOOK_STATUS);
++
++  op_pool = g_thread_pool_new (operation_thread, NULL, 10, FALSE, NULL);
++  /* Kill threads which don't do anything for 10 seconds */
++  g_thread_pool_set_max_idle_time (10 * 1000);
+ }
+ 
+ /* Instance init */
+@@ -172,7 +290,11 @@
+ static void
+ impl_AddressBook_Book_open(EDataBook *book, gboolean only_if_exists, DBusGMethodInvocation *context)
+ {
+-  e_book_backend_open (book->backend, book, opid_store (context), only_if_exists);
++  OperationData *op;
++  
++  op = op_new (OP_OPEN, book, context);
++  op->only_if_exists = only_if_exists;
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -208,12 +330,16 @@
+ static void
+ impl_AddressBook_Book_getContact (EDataBook *book, const char *IN_uid, DBusGMethodInvocation *context)
+ {
++  OperationData *op;
++
+   if (IN_uid == NULL) {
+     dbus_g_method_return_error (context, g_error_new (E_DATA_BOOK_ERROR, ContactNotFound, _("Cannot get contact")));
+     return;
+   }
+   
+-  e_book_backend_get_contact (book->backend, book, opid_store (context), IN_uid);
++  op = op_new (OP_GET_CONTACT, book, context);
++  op->uid = g_strdup (IN_uid);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -229,14 +355,18 @@
+ }
+ 
+ static void
+-impl_AddressBook_Book_getContactList(EDataBook *book, const char *query, DBusGMethodInvocation *context)
++impl_AddressBook_Book_getContactList (EDataBook *book, const char *query, DBusGMethodInvocation *context)
+ {
+-  if (query == NULL) {
++  OperationData *op;
++
++  if (query == NULL || query[0] == '\0') {
+     dbus_g_method_return_error (context, g_error_new (E_DATA_BOOK_ERROR, InvalidQuery, _("Empty query")));
+     return;
+   }
+ 
+-  e_book_backend_get_contact_list (book->backend, book, opid_store (context), query);
++  op = op_new (OP_GET_CONTACTS, book, context);
++  op->query = g_strdup (query);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -248,8 +378,13 @@
+ static void
+ impl_AddressBook_Book_authenticateUser(EDataBook *book, const char *IN_user, const char *IN_passwd, const char *IN_auth_method, DBusGMethodInvocation *context)
+ {
+-  e_book_backend_authenticate_user (e_data_book_get_backend (book), book,
+-                                    opid_store (context), IN_user, IN_passwd, IN_auth_method);
++  OperationData *op;
++
++  op = op_new (OP_AUTHENTICATE, book, context);
++  op->auth.username = g_strdup (IN_user);
++  op->auth.password = g_strdup (IN_passwd);
++  op->auth.method = g_strdup (IN_auth_method);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -267,13 +402,16 @@
+ static void
+ impl_AddressBook_Book_addContact (EDataBook *book, const char *IN_vcard, DBusGMethodInvocation *context)
+ {
+-  if (IN_vcard == NULL) {
++  OperationData *op;
++  
++  if (IN_vcard == NULL || IN_vcard[0] == '\0') {
+     dbus_g_method_return_error (context, g_error_new (E_DATA_BOOK_ERROR, InvalidQuery, _("Cannot add contact")));
+     return;
+   }
+ 
+-  e_book_backend_create_contact (e_data_book_get_backend (book), book,
+-                                 opid_store (context), IN_vcard);
++  op = op_new (OP_ADD_CONTACT, book, context);
++  op->vcard = g_strdup (IN_vcard);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -294,13 +432,16 @@
+ static void
+ impl_AddressBook_Book_modifyContact (EDataBook *book, const char *IN_vcard, DBusGMethodInvocation *context)
+ {
++  OperationData *op;
++
+   if (IN_vcard == NULL) {
+     dbus_g_method_return_error (context, g_error_new (E_DATA_BOOK_ERROR, InvalidQuery, _("Cannot modify contact")));
+     return;
+   }
+ 
+-  e_book_backend_modify_contact (e_data_book_get_backend (book), book,
+-                                 opid_store (context), IN_vcard);
++  op = op_new (OP_MODIFY_CONTACT, book, context);
++  op->vcard = g_strdup (IN_vcard);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -321,13 +462,16 @@
+ static void
+ impl_AddressBook_Book_modifyContacts(EDataBook *book, const char **IN_vcards, DBusGMethodInvocation *context)
+ {
+-  if (IN_vcards == NULL) {
+-    dbus_g_method_return_error (context, g_error_new (E_DATA_BOOK_ERROR, InvalidQuery, _("Cannot modify contact")));
++  OperationData *op;
++
++  if (IN_vcards == NULL || IN_vcards[0] == NULL) {
++    dbus_g_method_return_error (context, g_error_new (E_DATA_BOOK_ERROR, InvalidQuery, _("Cannot modify contacts")));
+     return;
+   }
+ 
+-  e_book_backend_modify_contacts (e_data_book_get_backend (book), book,
+-                                 opid_store (context), IN_vcards);
++  op = op_new (OP_MODIFY_CONTACTS, book, context);
++  op->vcards = g_strdupv ((char**)IN_vcards);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -350,8 +494,7 @@
+ static void
+ impl_AddressBook_Book_removeContacts(EDataBook *book, const char **IN_uids, DBusGMethodInvocation *context)
+ {
+-  GList *id_list = NULL;
+-  int i = 0;
++  OperationData *op;
+ 
+   /* Allow an empty array to be removed */
+   if (IN_uids == NULL) {
+@@ -359,14 +502,13 @@
+     return;
+   }
+ 
+-  while (IN_uids[i] != NULL) {
+-    id_list = g_list_prepend (id_list, (gpointer) IN_uids[i]);
+-    i++;
++  op = op_new (OP_REMOVE_CONTACTS, book, context);
++  
++  for (; *IN_uids; IN_uids++) {
++    op->ids = g_list_prepend (op->ids, g_strdup (*IN_uids));
+   }
+   
+-  e_book_backend_remove_contacts (e_data_book_get_backend (book), book, 
+-                                  opid_store (context), id_list);
+-  g_list_free (id_list);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
+@@ -466,7 +608,11 @@
+ static void
+ impl_AddressBook_Book_getChanges(EDataBook *book, const char *IN_change_id, DBusGMethodInvocation *context)
+ {
+-  e_book_backend_get_changes (e_data_book_get_backend (book), book, opid_store (context), IN_change_id);
++  OperationData *op;
++  
++  op = op_new (OP_GET_CHANGES, book, context);
++  op->change_id = g_strdup (IN_change_id);
++  g_thread_pool_push (op_pool, op, NULL);
+ }
+ 
+ void
