@@ -7,14 +7,14 @@ RDEPENDS_${PN} += "udev hal-info"
 SRC_URI = "git://anongit.freedesktop.org/git/ohm/;protocol=git"
 
 PV = "0.0+git${SRCDATE}"
-PR = "r4"
+PR = "r5"
 
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--with-distro=debian \
-        --with-xauth-dir=/home/root \
+        --without-xauth \
         --disable-gtk-doc \
         --disable-docbook-docs"
 
