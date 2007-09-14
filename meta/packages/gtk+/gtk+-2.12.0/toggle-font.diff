@@ -8,7 +8,7 @@ Index: gtk/gtkcellrenderertoggle.c
  
 +/* This is a hard-coded default which promptly gets overridden by a size
 +   calculated from the font size. */
- #define TOGGLE_WIDTH 12
+ #define TOGGLE_WIDTH 13
  
  static guint toggle_cell_signals[LAST_SIGNAL] = { 0 };
 @@ -80,8 +82,9 @@

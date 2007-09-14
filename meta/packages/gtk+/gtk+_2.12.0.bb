@@ -1,12 +1,11 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r3"
 
 # disable per default - untested and not all patches included.
 DEFAULT_PREFERENCE = "-1" 
 
-SRC_URI = "http://download.gnome.org/sources/gtk+/2.11/gtk+-${PV}.tar.bz2 \
+SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \
            file://run-iconcache.patch;patch=1 \
            file://disable-print.patch;patch=1 \
@@ -15,7 +14,6 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.11/gtk+-${PV}.tar.bz2 \
         file://cellrenderer-cairo.patch;patch=1;pnum=0 \
         file://entry-cairo.patch;patch=1;pnum=0 \
         file://toggle-font.diff;patch=1;pnum=0 \
-        file://range-no-redraw.patch;patch=1;pnum=0 \
         file://scrolled-placement.patch;patch=1;pnum=0"
 # temporary
 #           file://gtklabel-resize-patch;patch=1 \

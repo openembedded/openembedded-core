@@ -21,7 +21,8 @@ FILES_${PN}-dev += " \
 	${libdir}/gtk-2.0/${LIBV}/loaders/*.la \
 	${libdir}/gtk-2.0/${LIBV}/immodules/*.la \
 	${libdir}/gtk-2.0/${LIBV}/engines/*.la \
-	${bindir}/gdk-pixbuf-csource"
+	${bindir}/gdk-pixbuf-csource \
+	${bindir}/gtk-builder-convert"
 
 FILES_${PN}-dbg += " \
         ${libdir}/gtk-2.0/${LIBV}/loaders/.debug/* \
