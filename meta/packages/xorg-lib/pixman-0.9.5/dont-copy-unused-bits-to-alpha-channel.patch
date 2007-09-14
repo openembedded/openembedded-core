@@ -1,0 +1,29 @@
+From: Carl Worth <cworth@cworth.org>
+
+Don't copy unused bits to an alpha channel
+
+This bug was identified by cairo's rgb24-ignore-alpha test which
+blends RGB24 over ARGB32 and notices that "alpha" values are
+making it from the source to the destination.
+
+Index: a/pixman/pixman-pict.c
+===================================================================
+--- a/pixman/pixman-pict.c b8b7b767b3ed1fc57ba177c38187e1eb3daf4de8
++++ b/pixman/pixman-pict.c c7d73fc532c2da313041906ac0f48dba1b10d3bc
+@@ -1778,7 +1778,6 @@ pixman_image_composite (pixman_op_t     
+ 		    break;
+ 		case PIXMAN_x8r8g8b8:
+ 		    switch (pDst->bits.format) {
+-		    case PIXMAN_a8r8g8b8:
+ 		    case PIXMAN_x8r8g8b8:
+ #ifdef USE_MMX
+ 			if (pixman_have_mmx())
+@@ -1790,7 +1789,6 @@ pixman_image_composite (pixman_op_t     
+ 		    }
+ 		case PIXMAN_x8b8g8r8:
+ 		    switch (pDst->bits.format) {
+-		    case PIXMAN_a8b8g8r8:
+ 		    case PIXMAN_x8b8g8r8:
+ #ifdef USE_MMX
+ 			if (pixman_have_mmx())
+
