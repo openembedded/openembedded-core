@@ -5,7 +5,7 @@ LICENSE = "LGPL"
 
 DEPENDS = "glib-2.0 gtk-doc"
 
-SRC_URI = "http://download.gnome.org/sources/atk/1.19/${PN}-${PV}.tar.bz2"
+SRC_URI = "http://download.gnome.org/sources/atk/1.20/${PN}-${PV}.tar.bz2"
 
 inherit autotools pkgconfig
 
