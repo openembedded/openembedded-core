@@ -1,6 +1,6 @@
 def gnome_verdir(v):
 	import re
-	m = re.match("([0-9]+)\.([0-9]+)\..*", v)
+	m = re.match("^([0-9]+)\.([0-9]+)", v)
 	return "%s.%s" % (m.group(1), m.group(2))
 
 SECTION ?= "x11/gnome"
