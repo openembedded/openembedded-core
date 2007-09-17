@@ -1,0 +1,102 @@
+Add support for PKG_CONFIG_SYSROOT_DIR to pkgconfig
+
+---
+ main.c       |    5 ++++-
+ pkg-config.1 |    9 +++++++++
+ pkg.c        |   14 +++++++++++++-
+ pkg.h        |    3 +++
+ 4 files changed, 29 insertions(+), 2 deletions(-)
+
+Index: pkg-config-0.22/main.c
+===================================================================
+--- pkg-config-0.22.orig/main.c	2007-09-14 10:20:15.000000000 +0100
++++ pkg-config-0.22/main.c	2007-09-14 10:22:41.000000000 +0100
+@@ -46,6 +46,8 @@
+ static int want_debug_spew = 0;
+ static int want_verbose_errors = 0;
+ static int want_stdout_errors = 0;
++char *pcsysrootdir = NULL;
++
+ 
+ void
+ debug_spew (const char *format, ...)
+@@ -196,7 +198,7 @@ main (int argc, char **argv)
+   GString *str;
+   GSList *packages = NULL;
+   char *search_path;
+-  char *pcbuilddir;
++	char *pcbuilddir;
+   const char *pkglibdir;
+   char **search_dirs;
+   char **iter;
+@@ -345,6 +347,7 @@ main (int argc, char **argv)
+       }
+   }
+ #endif
++  pcsysrootdir = getenv ("PKG_CONFIG_SYSROOT_DIR");
+ 
+   pcbuilddir = getenv ("PKG_CONFIG_TOP_BUILD_DIR");
+   if (pcbuilddir)
+Index: pkg-config-0.22/pkg.c
+===================================================================
+--- pkg-config-0.22.orig/pkg.c	2007-09-14 10:20:15.000000000 +0100
++++ pkg-config-0.22/pkg.c	2007-09-14 10:22:41.000000000 +0100
+@@ -479,11 +479,23 @@ string_list_to_string (GSList *list)
+   GSList *tmp;
+   GString *str = g_string_new ("");
+   char *retval;
++	int offset=0;
+   
+   tmp = list;
+   while (tmp != NULL)
+     {
+-      g_string_append (str, tmp->data);
++			if (pcsysrootdir != NULL)
++				{
++					if (!strncmp(tmp->data,"-I",2) ||
++							!strncmp(tmp->data,"-L",2))
++						{
++							offset=2;
++							g_string_append_c (str,((char*)tmp->data)[0]);
++							g_string_append_c (str,((char*)tmp->data)[1]);
++							g_string_append (str,pcsysrootdir);
++						}
++				}
++      g_string_append (str, tmp->data+offset);
+       g_string_append_c (str, ' ');
+       
+       tmp = g_slist_next (tmp);
+Index: pkg-config-0.22/pkg-config.1
+===================================================================
+--- pkg-config-0.22.orig/pkg-config.1	2007-09-14 10:20:15.000000000 +0100
++++ pkg-config-0.22/pkg-config.1	2007-09-14 10:23:08.000000000 +0100
+@@ -260,6 +260,15 @@ Don't strip -I/usr/include out of cflags
+ Don't strip -L/usr/lib out of libs
+ 
+ .TP
++.I "PKG_CONFIG_SYSROOT_DIR"
++Modify -I and -L to use the directories located in target sysroot.
++this option is usefull when crosscompiling package that use pkg-config
++to determine CFLAGS anf LDFLAGS. -I and -L are modified to point to
++the new system root. this means that a -I/usr/include/libfoo will
++become -I/var/target/usr/include/libfoo with a PKG_CONFIG_SYSROOT_DIR
++equal to /var/target (same rule apply to -L)
++
++.TP
+ .I "PKG_CONFIG_LIBDIR"
+ Replaces the default \fIpkg-config\fP search directory.
+ 
+Index: pkg-config-0.22/pkg.h
+===================================================================
+--- pkg-config-0.22.orig/pkg.h	2007-09-14 10:20:15.000000000 +0100
++++ pkg-config-0.22/pkg.h	2007-09-14 10:22:41.000000000 +0100
+@@ -123,6 +123,9 @@ void disable_private_libs(void);
+ /* If TRUE, do not automatically prefer uninstalled versions */
+ extern gboolean disable_uninstalled;
+ 
++/* string that contain environment */
++extern char* pcsysrootdir;
++
+ #ifdef G_OS_WIN32
+ /* If TRUE, do not automatically define "prefix"  while
+  * parsing each .pc file */
