@@ -42,4 +42,4 @@ do_deploy() {
 
 do_deploy[dirs] = "${S}"
 
-addtask deploy before do_build after do_install
+addtask deploy before do_populate_staging after do_install
