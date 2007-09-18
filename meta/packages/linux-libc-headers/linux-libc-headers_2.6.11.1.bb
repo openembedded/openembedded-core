@@ -49,11 +49,6 @@ do_stage () {
 	rm -rf ${STAGING_INCDIR}/linux ${STAGING_INCDIR}/asm
 	cp -pfLR include/linux ${STAGING_INCDIR}/
 	cp -pfLR include/asm ${STAGING_INCDIR}/
-	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/linux
-	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/asm
-	install -d ${CROSS_DIR}/${TARGET_SYS}/include
-	cp -pfLR include/linux ${CROSS_DIR}/${TARGET_SYS}/include/
-	cp -pfLR include/asm ${CROSS_DIR}/${TARGET_SYS}/include/
 }
 
 do_install() {

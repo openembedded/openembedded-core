@@ -47,11 +47,4 @@ do_stage () {
 	cp -pfLR ${S}${includedir}/linux ${STAGING_INCDIR}/
 	cp -pfLR ${S}${includedir}/asm-$ARCH ${STAGING_INCDIR}/asm
 	cp -pfLR ${S}${includedir}/asm-generic ${STAGING_INCDIR}/
-	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/linux
-	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/asm
-	rm -rf ${CROSS_DIR}/${TARGET_SYS}/include/asm-generic
-	install -d ${CROSS_DIR}/${TARGET_SYS}/include
-	cp -pfLR ${S}${includedir}/linux ${CROSS_DIR}/${TARGET_SYS}/include/
-	cp -pfLR ${S}${includedir}/asm-$ARCH ${CROSS_DIR}/${TARGET_SYS}/include/asm
-	cp -pfLR ${S}${includedir}/asm-generic ${CROSS_DIR}/${TARGET_SYS}/include/
 }
