@@ -1,4 +1,3 @@
-SECTION = "devel"
 require gcc-cross_${PV}.bb
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils"
@@ -23,7 +22,6 @@ do_stage_prepend () {
 	ln -sf libgcc.a ${CROSS_DIR}/lib/gcc-lib/${TARGET_SYS}/${PV}/libgcc_eh.a
 }
 
-# Override the method from gcc-cross so we don't try to install libgcc
 do_install () {
-	oe_runmake 'DESTDIR=${D}' install
+	:
 }
