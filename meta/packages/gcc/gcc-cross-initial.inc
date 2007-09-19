@@ -4,7 +4,7 @@ PROVIDES = "virtual/${TARGET_PREFIX}gcc-initial"
 PACKAGES = ""
 
 # This is intended to be a -very- basic config
-EXTRA_OECONF = "--with-local-prefix=${CROSS_DIR}/${TARGET_SYS} \
+EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR}/${TARGET_SYS} \
 		--with-newlib \
 		--disable-shared \
 		--disable-threads \
