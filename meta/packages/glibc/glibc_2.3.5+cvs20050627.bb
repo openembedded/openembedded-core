@@ -143,29 +143,6 @@ do_stage() {
 	done
 	echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${STAGING_LIBDIR}/libpthread.so
 	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${STAGING_LIBDIR}/libc.so
-
-	rm -f ${CROSS_DIR}/${TARGET_SYS}/lib/libc.so.6
-	oe_runmake 'install_root=${CROSS_DIR}/${TARGET_SYS}' \
-		   'includedir=/include' 'libdir=/lib' 'slibdir=/lib' \
-		   '${CROSS_DIR}/${TARGET_SYS}/lib/libc.so.6' \
-		   install-headers install-lib
-
-	install -d ${CROSS_DIR}/${TARGET_SYS}/include/gnu \
-		   ${CROSS_DIR}/${TARGET_SYS}/include/bits \
-		   ${CROSS_DIR}/${TARGET_SYS}/include/rpcsvc
-	install -m 0644 ${S}/include/gnu/stubs.h ${CROSS_DIR}/${TARGET_SYS}/include/gnu/
-	install -m 0644 ${B}/bits/stdio_lim.h ${CROSS_DIR}/${TARGET_SYS}/include/bits/
-	install -m 0644 misc/syscall-list.h ${CROSS_DIR}/${TARGET_SYS}/include/bits/syscall.h
-	for r in ${rpcsvc}; do
-		h=`echo $r|sed -e's,\.x$,.h,'`
-		install -m 0644 ${S}/sunrpc/rpcsvc/$h ${CROSS_DIR}/${TARGET_SYS}/include/rpcsvc/
-	done
-
-	for i in libc.a libc_pic.a libc_nonshared.a; do
-		install -m 0644 ${B}/$i ${CROSS_DIR}/${TARGET_SYS}/lib/ || die "failed to install $i"
-	done
-	echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${CROSS_DIR}/${TARGET_SYS}/lib/libpthread.so
-	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${CROSS_DIR}/${TARGET_SYS}/lib/libc.so
 }
 
 require glibc-package.bbclass
