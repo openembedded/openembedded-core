@@ -1,8 +1,0 @@
---- dbus-0.36.2/glib/Makefile.am.orig	2005-09-06 17:30:26 +0200
-+++ dbus-0.36.2/glib/Makefile.am	2005-09-06 17:30:34 +0200
-@@ -1,4 +1,4 @@
--SUBDIRS = . examples
-+SUBDIRS = .
- 
- INCLUDES=-I$(top_srcdir) $(DBUS_CLIENT_CFLAGS) $(DBUS_GLIB_CFLAGS) $(DBUS_GLIB_TOOL_CFLAGS) -DDBUS_COMPILATION=1 -DDBUS_LOCALEDIR=\"$(prefix)/@DATADIRNAME@/locale\"
- 
