@@ -1,0 +1,36 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+---
+ udevd.c     |    2 +-
+ udevstart.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: udev-115/udevd.c
+===================================================================
+--- udev-115.orig/udevd.c	2007-08-24 01:29:54.000000000 +0200
++++ udev-115/udevd.c	2007-09-20 17:04:51.000000000 +0200
+@@ -767,7 +767,7 @@
+ 	return msg;
+ }
+ 
+-static void asmlinkage sig_handler(int signum)
++static void sig_handler(int signum)
+ {
+ 	switch (signum) {
+ 		case SIGINT:
+Index: udev-115/udevstart.c
+===================================================================
+--- udev-115.orig/udevstart.c	2007-08-24 01:29:54.000000000 +0200
++++ udev-115/udevstart.c	2007-09-20 17:04:51.000000000 +0200
+@@ -304,7 +304,7 @@
+ 	}
+ }
+ 
+-static void asmlinkage sig_handler(int signum)
++static void sig_handler(int signum)
+ {
+ 	switch (signum) {
+ 		case SIGALRM:
