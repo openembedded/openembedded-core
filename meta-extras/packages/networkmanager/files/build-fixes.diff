@@ -1,0 +1,78 @@
+Index: test/nm-tool.c
+===================================================================
+--- test/nm-tool.c	(revision 2853)
++++ test/nm-tool.c	(working copy)
+@@ -148,7 +148,7 @@
+ 	GString *str;
+ 	gboolean active = FALSE;
+ 	guint32 flags, wpa_flags, rsn_flags;
+-	GByteArray * ssid;
++	const GByteArray * ssid;
+ 	char *tmp;
+ 
+ 	flags = nm_access_point_get_flags (ap);
+@@ -193,7 +193,6 @@
+ 	ssid = nm_access_point_get_ssid (ap);
+ 	tmp = g_strdup_printf ("  %s%s", active ? "*" : "",
+ 	                       ssid ? nm_utils_escape_ssid (ssid->data, ssid->len) : "(none)");
+-	g_byte_array_free (ssid, TRUE);
+ 
+ 	print_string (tmp, str->str);
+ 
+Index: callouts/nm-dhcp-client-action.c
+===================================================================
+--- callouts/nm-dhcp-client-action.c	(revision 2853)
++++ callouts/nm-dhcp-client-action.c	(working copy)
+@@ -176,7 +176,7 @@
+ }
+ 
+ 
+-const char ** ignore[] = {"PATH", "SHLVL", "_", "PWD", "dhc_dbus", NULL};
++static const char * ignore[] = {"PATH", "SHLVL", "_", "PWD", "dhc_dbus", NULL};
+ 
+ dbus_bool_t
+ build_message (DBusMessage * message)
+Index: src/nm-netlink.c
+===================================================================
+--- src/nm-netlink.c	(revision 2853)
++++ src/nm-netlink.c	(working copy)
+@@ -19,6 +19,7 @@
+  * (C) Copyright 2007 Red Hat, Inc.
+  */
+ 
++#include <asm/types.h>
+ #include "nm-netlink.h"
+ #include "nm-utils.h"
+ 
+Index: src/vpn-manager/nm-vpn-connection.c
+===================================================================
+--- src/vpn-manager/nm-vpn-connection.c	(revision 2853)
++++ src/vpn-manager/nm-vpn-connection.c	(working copy)
+@@ -406,7 +406,7 @@
+ 	routes = nm_vpn_connection_get_routes (connection);
+ 	org_freedesktop_NetworkManager_VPN_Plugin_connect_async (priv->proxy,
+ 												  nm_vpn_connection_get_vpn_data (connection),
+-												  routes,
++												  (const char**)routes,
+ 												  nm_vpn_connection_connect_cb,
+ 												  connection);
+ 
+Index: libnm-glib/libnm-glib-test.c
+===================================================================
+--- libnm-glib/libnm-glib-test.c	(revision 2853)
++++ libnm-glib/libnm-glib-test.c	(working copy)
+@@ -165,13 +165,12 @@
+ static void
+ dump_access_point (NMAccessPoint *ap)
+ {
+-	GByteArray * ssid;
++	const GByteArray * ssid;
+ 	char * str;
+ 
+ 	ssid = nm_access_point_get_ssid (ap);
+ 	g_print ("\tSsid: %s\n",
+ 	         ssid ? nm_utils_escape_ssid (ssid->data, ssid->len) : "(none)");
+-	g_byte_array_free (ssid, TRUE);
+ 
+ 	str = nm_access_point_get_hw_address (ap);
+ 	g_print ("\tMAC Address: %s\n", str);
