@@ -6,7 +6,7 @@ DESCRIPTION = "message bus system for applications to talk to one another"
 LICENSE = "GPL"
 DEPENDS = "expat glib-2.0 virtual/libintl"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://tmpdir.patch;patch=1 \
