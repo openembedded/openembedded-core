@@ -5,7 +5,9 @@ HOMEPAGE = "http://www.gnome.org"
 PRIORITY = "optional"
 DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp"
 RDEPENDS = "hal wpa-supplicant iproute2"
+
 PV = "0.7+svn${SRCDATE}"
+PR = "r1"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
 	file://build-fixes.diff;patch=1;pnum=0 \
@@ -21,8 +23,6 @@ S = "${WORKDIR}/trunk"
 
 inherit autotools pkgconfig
 
-# TODO: stage
-
 do_install_append () {
 	install -d ${D}/etc/default/volatiles
 	install -m 0644 ${WORKDIR}/99_networkmanager ${D}/etc/default/volatiles
@@ -30,11 +30,22 @@ do_install_append () {
 	install -m 0755 ${WORKDIR}/25NetworkManager ${D}/etc/dbus-1/event.d
 }
 
-pkg_postinst () {
-	/etc/init.d/populate-volatile.sh update
+do_stage () {
+	autotools_stage_all
 }
 
-FILES_${PN} += "${libdir}/*.so."
+pkg_postinst () {
+        if [ "x$D" != "x" ]; then
+                exit 1
+        fi
+        /etc/init.d/populate-volatile.sh update
+}
+
+PACKAGES =+ "libnmutil libnmglib"
+
+FILES_libnmutil += "${libdir}/libnm-util.so.*"
+
+FILES_libnmglib += "${libdir}/libnm_glib.so.*"
 
 FILES_${PN}-dev = "${includedir}/* \
         ${libdir}/*.so \
