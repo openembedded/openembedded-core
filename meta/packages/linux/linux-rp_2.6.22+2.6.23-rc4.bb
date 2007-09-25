@@ -4,6 +4,7 @@ PR = "r3"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_htcuniversal = "1"
+DEFAULT_PREFERENCE_zylonite = "1"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -62,6 +63,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            file://defconfig-qemux86 \
            file://defconfig-bootcdx86 \
            file://defconfig-htcuniversal \
+           file://defconfig-zylonite \
            file://defconfig-tosa "
 
 # FIXMEs before made default	   
@@ -114,5 +116,11 @@ SRC_URI_append_tosa = "\
 #          ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
 
 SRC_URI_append_htcuniversal ="file://htcuni-acx.patch;patch=1;status=external"
+
+SRC_URI_append_zylonite ="\
+	file://arm_pxa_20070923.patch;patch=1 \
+	file://irq-gpio-offby1.patch;patch=1 \
+	file://zylonite-boot.patch;patch=1 \
+	"
 
 S = "${WORKDIR}/linux-2.6.22"

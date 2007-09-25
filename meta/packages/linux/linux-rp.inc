@@ -15,7 +15,7 @@ TKSRC = "http://www.informatik.hu-berlin.de/~tkunze/zaurus/patches"
 
 EXTRA_OEMAKE = "OPENZAURUS_RELEASE=-${DISTRO_VERSION}"
 COMPATIBLE_HOST = "(arm|i.86).*-linux"
-COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|hx2000|qemuarm|qemux86|bootcdx86|htcuniversal)'
+COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|hx2000|qemuarm|qemux86|bootcdx86|htcuniversal|zylonite)'
 
 KERNEL_CUSTOM_NAME ?= ""
 KERNEL_DEPLOY_NAME ?= "${KERNEL_IMAGETYPE}-${PV}-${KERNEL_CUSTOM_NAME}${MACHINE}-${DATETIME}.bin"
@@ -25,6 +25,7 @@ KERNEL_DEFCONFIG ?= "defconfig-${MACHINE}"
 CMDLINE_CON = "console=ttyS0,115200n8 console=tty1 noinitrd"
 CMDLINE_CON_collie = "console=ttySA0,115200n8 console=tty1 noinitrd"
 CMDLINE_CON_qemuarm = "console=ttyAMA0,115200n8 console=tty1 noinitrd"
+CMDLINE_CON_zylonite = "console=ttyS0,38400"
 CMDLINE_ROOT ?= "root=/dev/mtdblock2 rootfstype=jffs2"
 CMDLINE_ROOT_spitz ?= "root=/dev/hda1 rootfstype=ext3 rootdelay=1 rw"
 #CMDLINE_ROOT_spitz = "root=/dev/mmcblk0p2 rootfstype=ext2 rootdelay=3 rw"
@@ -38,6 +39,7 @@ export mem = '${@bb.data.getVar("COLLIE_MEMORY_SIZE",d,1) or "32"}'
 export rd  = '${@bb.data.getVar("COLLIE_RAMDISK_SIZE",d,1) or "32"}'
 
 CMDLINE_MEM_collie = "mem=${mem}M"
+CMDLINE_MEM_zylonite = "mem=64M"
 CMDLINE_ROTATE_spitz = "fbcon=rotate:1"
 CMDLINE_ROTATE_akita = "fbcon=rotate:1"
 CMDLINE_ROTATE_collie = "fbcon=rotate:1"
