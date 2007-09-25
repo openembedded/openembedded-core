@@ -1,7 +1,7 @@
 
 do_rig_locales() {
 	# If indicated, only build a limited selection of locales
-	if [ "x${LIMIT_BUILT_LOCALES}" != "${LIMIT_BUILT_LOCALES}" ]; then
+	if [ "x${LIMIT_BUILT_LOCALES}" != "x" ]; then
 		INFILE="${S}/localedata/SUPPORTED"
 		OUTFILE="${S}/localedata/SUPPORTED.tmp"
 		head -n 3 $INFILE > $OUTFILE
