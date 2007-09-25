@@ -174,3 +174,5 @@ CONFIG_TLS=gnutls
 # apply for distribution of the resulting binary.
 CONFIG_GNUTLS_EXTRA=y
 
+# Add support for DBus control interface
+CONFIG_CTRL_IFACE_DBUS=y
