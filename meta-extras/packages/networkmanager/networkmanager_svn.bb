@@ -4,20 +4,20 @@ LICENSE = "GPL"
 HOMEPAGE = "http://www.gnome.org"
 PRIORITY = "optional"
 DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp"
-RDEPENDS = "hal wpa-supplicant iproute2"
+RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
 PV = "0.7+svn${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
-	file://build-fixes.diff;patch=1;pnum=0 \
-	file://install-tools.patch;patch=1;pnum=0 \
+	file://no-restarts.diff;patch=1;pnum=0 \
 	file://25NetworkManager \
 	file://99_networkmanager"
 
 EXTRA_OECONF = " \
 		--with-distro=debian \
 		--with-ip=/sbin/ip"
+# TODO: will /bin/ip from busybox do?
 
 S = "${WORKDIR}/trunk"
 

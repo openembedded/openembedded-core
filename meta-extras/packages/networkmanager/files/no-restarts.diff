@@ -1,0 +1,21 @@
+Index: src/backends/NetworkManagerDebian.c
+===================================================================
+--- src/backends/NetworkManagerDebian.c	(revision 2881)
++++ src/backends/NetworkManagerDebian.c	(working copy)
+@@ -204,8 +204,6 @@
+  */
+ void nm_system_update_dns (void)
+ {
+-	nm_spawn_process ("/usr/sbin/invoke-rc.d nscd restart");
+-
+ }
+ 
+ 
+@@ -218,7 +216,6 @@
+  */
+ void nm_system_restart_mdns_responder (void)
+ {
+-	nm_spawn_process ("/usr/bin/killall -q -USR1 mDNSResponder");
+ }
+ 
+ 
