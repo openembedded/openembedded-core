@@ -79,13 +79,6 @@ do_install() {
 		grep -v $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
 		mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
 	done
-	# If indicated, only build a limited selection of locales
-	if [ "${LIMIT_BUILT_LOCALES}" != "${LIMIT_BUILT_LOCALES}" ]; then
-		for i in ${LIMIT_BUILT_LOCALES}; do
-			grep $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
-			mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
-		done
-	fi
 	rm -f ${D}/etc/rpc
 	rm -f ${D}${includedir}/scsi/sg.h
 	rm -f ${D}${includedir}/scsi/scsi_ioctl.h
