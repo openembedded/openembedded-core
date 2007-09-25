@@ -1,7 +1,7 @@
 DESCRIPTION = "User interface for the OProfile tool"
 SECTION = "x11"
 LICENSE = "GPLv2"
-DEPENDS = "glib-2.0 gtk+ libglade gnome-vfs libxml2 avahi"
+DEPENDS = "glib-2.0 gtk+ libglade gnome-vfs libxml2 avahi gconf"
 
 inherit autotools pkgconfig gtk-icon-cache
 
