@@ -1,5 +1,5 @@
 SECTION = "kernel"
-DESCRIPTION = "Dummy Zylonite Linux kernel"
+DESCRIPTION = "Dummy Linux kernel"
 LICENSE = "GPL"
 
 PROVIDES += "virtual/kernel"
@@ -7,7 +7,7 @@ PROVIDES += "virtual/kernel"
 PACKAGES_DYNAMIC += "kernel-module-*"
 PACKAGES_DYNAMIC += "kernel-image-*"
 
-COMPATIBLE_MACHINE = "zylonite"
+#COMPATIBLE_MACHINE = "your_machine"
 
 PR = "r0"
 
