@@ -8,7 +8,6 @@ RDEPENDS += "udev hal-info"
 RRECOMMENDS = "udev-utils"
 
 SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
-        file://sg-inhibit.patch;patch=1 \
         file://20hal \
         file://99_hal"
 
