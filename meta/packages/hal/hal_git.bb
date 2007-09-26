@@ -13,7 +13,7 @@ SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
         file://99_hal"
 
 PV = "0.5.9.1+git${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/git"
 
@@ -60,7 +60,7 @@ pkg_postinst_hal () {
 	DBUSPID=`pidof dbus-daemon`
 
 	if [ "x$DBUSPID" != "x" ]; then
-		/etc/init.d/dbus-1 force-reload
+		/etc/init.d/dbus-1 reload
 	fi
 }
 

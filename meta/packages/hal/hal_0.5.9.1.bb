@@ -7,7 +7,7 @@ DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
 RDEPENDS += "udev hal-info"
 RRECOMMENDS = "udev-utils"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz \
         file://sg-inhibit.patch;patch=1 \
@@ -59,7 +59,7 @@ pkg_postinst_hal () {
 	DBUSPID=`pidof dbus-daemon`
 
 	if [ "x$DBUSPID" != "x" ]; then
-		/etc/init.d/dbus-1 force-reload
+		/etc/init.d/dbus-1 reload
 	fi
 }
 
