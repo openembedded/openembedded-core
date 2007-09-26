@@ -6,7 +6,7 @@ PRIORITY = "optional"
 DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp"
 RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
-PV = "0.7+svn${SRCDATE}"
+PV = "0.7+svnr${SRCREV}"
 PR = "r2"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
