@@ -1,6 +1,4 @@
 ---
- configure.ac              |    2 +-
- doc/reference/Makefile.am |    2 +-
  examples/Makefile.am      |   14 +++++++-------
  3 files changed, 9 insertions(+), 9 deletions(-)
 
@@ -14,32 +12,3 @@ Index: clutter-gst/examples/Makefile.am
  
  INCLUDES = -I$(top_srcdir)/
  
-@@ -9,12 +9,12 @@ video_player_LDFLAGS = \
-     $(GST_LIBS)   \
-     $(top_builddir)/clutter-gst/libclutter-gst-@CLUTTER_GST_MAJORMINOR@.la 
- 
--video_cube_SOURCES = video-cube.c
--video_cube_CFLAGS = $(CLUTTER_GST_CFLAGS) $(GST_CFLAGS)
--video_cube_LDFLAGS = \
--    $(CLUTTER_LIBS) \
--    $(GST_LIBS)   \
--    $(top_builddir)/clutter-gst/libclutter-gst-@CLUTTER_GST_MAJORMINOR@.la 
-+#video_cube_SOURCES = video-cube.c
-+#video_cube_CFLAGS = $(CLUTTER_GST_CFLAGS) $(GST_CFLAGS)
-+#video_cube_LDFLAGS = \
-+#    $(CLUTTER_LIBS) \
-+#    $(GST_LIBS)   \
-+#    $(top_builddir)/clutter-gst/libclutter-gst-@CLUTTER_GST_MAJORMINOR@.la 
- 
- video_sink_SOURCES = video-sink.c
- video_sink_CFLAGS = $(CLUTTER_GST_CFLAGS) $(GST_CFLAGS)
-Index: clutter-gst/doc/reference/Makefile.am
-===================================================================
---- clutter-gst.orig/doc/reference/Makefile.am	2007-07-10 13:01:17.000000000 +0100
-+++ clutter-gst/doc/reference/Makefile.am	2007-07-10 13:02:50.000000000 +0100
-@@ -77,4 +77,4 @@ include $(top_srcdir)/gtk-doc.make
- 
- # Other files to distribute
- # e.g. EXTRA_DIST += version.xml.in
--EXTRA_DIST += version.xml.in
-+EXTRA_DIST = version.xml.in

@@ -8,6 +8,11 @@ BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
 DEPENDS = "${STDDEPENDS}"
 EXTRA_OECONF = "${BASE_CONF}"
 
+DEPENDS_zylonite = "${STDDEPENDS} libgles-zylonite tslib"
+EXTRA_OECONF_zylonite = "${BASE_CONF} --with-flavour=eglnative"
+PACKAGE_ARCH_zylonite = "${MACHINE_ARCH}"
+LDFLAGS_append_zylonite = " -lnws -lstdc++ "
+
 inherit autotools pkgconfig
 
 PACKAGES =+ "clutter-examples"
@@ -24,7 +29,7 @@ do_configure_prepend() {
 }
 
 do_stage () {
-	cp ${S}/clutter.pc ${S}/clutter-0.3.pc
+	cp ${S}/clutter.pc ${S}/clutter-0.4.pc
         autotools_stage_all
 }
 
