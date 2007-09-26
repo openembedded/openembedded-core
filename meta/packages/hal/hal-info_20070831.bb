@@ -2,6 +2,7 @@ DESCRIPTION = "Hardware Abstraction Layer device information"
 HOMEPAGE = "http://freedesktop.org/Software/hal"
 SECTION = "unknown"
 LICENSE = "GPL AFL"
+DEPENDS = "hal"
 
 SRC_URI = "git://anongit.freedesktop.org/hal-info/;protocol=git;tag=HAL_INFO_${PV}"
 
