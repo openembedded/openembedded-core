@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.23-rc4
-# Tue Sep 11 13:04:28 2007
+# Wed Sep 26 17:55:32 2007
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -561,8 +561,14 @@ CONFIG_NETDEVICES=y
 #
 # Wireless LAN
 #
+CONFIG_NET_RADIO=y
+# CONFIG_NET_WIRELESS_RTNETLINK is not set
 # CONFIG_WLAN_PRE80211 is not set
 # CONFIG_WLAN_80211 is not set
+CONFIG_ACX=m
+CONFIG_ACX_MEM=y
+# CONFIG_ACX_CS is not set
+CONFIG_ACX_HTCUNIVERSAL=m
 # CONFIG_WAN is not set
 CONFIG_PPP=m
 # CONFIG_PPP_MULTILINK is not set
