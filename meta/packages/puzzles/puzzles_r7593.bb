@@ -1,6 +1,6 @@
 
 DEPENDS = "gtk+"
-PR = "r5"
+PR = "r6"
 MOD_PV = "${@bb.data.getVar('PV',d,1)[1:]}"
 
 #SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
@@ -47,7 +47,7 @@ Terminal=false
 Type=Application
 Categories=Game;
 StartupNotify=true
-SingleInstance=true
+X-MB-SingleInstance=true
 STOP
         fi
     done

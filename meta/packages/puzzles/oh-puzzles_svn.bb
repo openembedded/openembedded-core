@@ -3,7 +3,7 @@ LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 PV = "0.1+svnr${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 bindir = "/usr/games"
 
@@ -32,7 +32,7 @@ Terminal=false
 Type=Application
 Categories=Game;
 StartupNotify=true
-SingleInstance=true
+X-MB-SingleInstance=true
 Comment=Play $title.
 STOP
         fi
