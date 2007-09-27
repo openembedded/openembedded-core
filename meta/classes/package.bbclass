@@ -128,10 +128,11 @@ python () {
             deps += " %s:do_populate_staging" % dep
         bb.data.setVarFlag('do_package', 'depends', deps, d)
 
+        deps = (bb.data.getVarFlag('do_package', 'deptask', d) or "").split()
         # shlibs requires any DEPENDS to have already packaged for the *.list files
-        bb.data.setVarFlag('do_package', 'deptask', 'do_package', d)
+        deps.append("do_package")
+        bb.data.setVarFlag('do_package', 'deptask', " ".join(deps), d)
 }
-
 
 def runstrip(file, d):
     # Function to strip a single file, called from populate_packages below
@@ -481,6 +482,8 @@ python populate_packages () {
 populate_packages[dirs] = "${D}"
 
 python emit_pkgdata() {
+	from glob import glob
+
 	def write_if_exists(f, pkg, var):
 		def encode(str):
 			import codecs
@@ -492,13 +495,13 @@ python emit_pkgdata() {
 			f.write('%s_%s: %s\n' % (var, pkg, encode(val)))
 
 	packages = bb.data.getVar('PACKAGES', d, 1)
-	if not packages:
-		return
 
 	data_file = bb.data.expand("${PKGDATA_DIR}/${PN}", d)
 	f = open(data_file, 'w')
 	f.write("PACKAGES: %s\n" % packages)
 	f.close()
+
+	workdir = bb.data.getVar('WORKDIR', d, 1)
 
 	for pkg in packages.split():
 		subdata_file = bb.data.expand("${PKGDATA_DIR}/runtime/%s" % pkg, d)
@@ -519,6 +522,13 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'pkg_preinst')
 		write_if_exists(sf, pkg, 'pkg_prerm')
 		sf.close()
+
+		allow_empty = bb.data.getVar('ALLOW_EMPTY_%s' % pkg, d, 1)
+		root = "%s/install/%s" % (workdir, pkg)
+		os.chdir(root)
+		g = glob('*')
+		if g or allow_empty == "1":
+			file(bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d), 'w').close()
 }
 emit_pkgdata[dirs] = "${PKGDATA_DIR}/runtime"
 
@@ -540,9 +550,6 @@ python package_do_shlibs() {
 	libdir_re = re.compile(".*/lib$")
 
 	packages = bb.data.getVar('PACKAGES', d, 1)
-	if not packages:
-		bb.debug(1, "no packages to build; not calculating shlibs")
-		return
 
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	if not workdir:
@@ -674,9 +681,6 @@ python package_do_pkgconfig () {
 	import re, os
 
 	packages = bb.data.getVar('PACKAGES', d, 1)
-	if not packages:
-		bb.debug(1, "no packages to build; not calculating pkgconfig dependencies")
-		return
 
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	if not workdir:
@@ -782,7 +786,7 @@ python package_do_pkgconfig () {
 }
 
 python read_shlibdeps () {
-	packages = (bb.data.getVar('PACKAGES', d, 1) or "").split()
+	packages = bb.data.getVar('PACKAGES', d, 1).split()
 	for pkg in packages:
 		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
 		shlibsfile = bb.data.expand("${PKGDEST}/" + pkg + ".shlibdeps", d)
@@ -892,6 +896,11 @@ PACKAGEFUNCS ?= "package_do_split_locales \
 		emit_pkgdata"
 
 python package_do_package () {
+	packages = (bb.data.getVar('PACKAGES', d, 1) or "").split()
+	if len(packages) < 1:
+		bb.debug(1, "No packages to build, skipping do_package")
+		return
+
 	for f in (bb.data.getVar('PACKAGEFUNCS', d, 1) or '').split():
 		bb.build.exec_func(f, d)
 }
