@@ -4,15 +4,15 @@ SECTION = "unknown"
 LICENSE = "GPL LGPL AFL"
 
 DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
-RDEPENDS += "udev hal-info"
-RRECOMMENDS = "udev-utils"
+RDEPENDS_${PN} += "udev hal-info"
+RRECOMMENDS_${PN} += "udev-utils"
 
 SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
         file://20hal \
         file://99_hal"
 
 PV = "0.5.9.1+git${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}/git"
 
