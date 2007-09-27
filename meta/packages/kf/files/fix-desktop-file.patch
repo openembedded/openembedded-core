@@ -17,6 +17,4 @@ diff -u kf-0.5.4.1.orig/kf.desktop kf-0.5.4.1/kf.desktop
 -Categories=GTK;Application;Network;
 +Categories=GTK;PIM;Application;Network;
  StartupNotify=true
-+SingleInstance=true
-Common subdirectories: kf-0.5.4.1.orig/po and kf-0.5.4.1/po
-Common subdirectories: kf-0.5.4.1.orig/src and kf-0.5.4.1/src
++X-MB-SingleInstance=true
