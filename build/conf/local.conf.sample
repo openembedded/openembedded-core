@@ -50,7 +50,7 @@ DISTRO ?= "poky"
 # There are other application targets too, see meta/classes/poky-image.bbclass 
 # and meta/packages/tasks/task-poky.bb for more details.
 
-IMAGE_FEATURES = "tools-dbg tools-profile tools-testapps debug-tweaks"
+IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"
 
 # A list of packaging systems used in generated images
 # The first package type listed will be used for rootfs generation
