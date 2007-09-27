@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r4"
+PR = "r5"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_htcuniversal = "1"
@@ -53,6 +53,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            file://uvesafb-0.1-rc3-2.6.22.patch;patch=1;status=external \
            file://htcuni.patch;patch=1 \
            file://binutils-buildid-arm.patch;patch=1 \
+           file://vt_ioctl_race.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-hx2000 \
            file://defconfig-collie \
@@ -115,7 +116,9 @@ SRC_URI_append_tosa = "\
            file://wm97xx-lcdnoise-r0.patch;patch=1 "
 #          ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
 
-SRC_URI_append_htcuniversal ="file://htcuni-acx.patch;patch=1;status=external"
+SRC_URI_append_htcuniversal ="\
+	file://htcuni-acx.patch;patch=1;status=external \
+	"
 
 SRC_URI_append_zylonite ="\
 	file://arm_pxa_20070923.patch;patch=1 \
