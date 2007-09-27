@@ -1,11 +1,11 @@
 ---
- drivers/char/vt_ioctl.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/vt_ioctl.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 Index: linux-2.6.22/drivers/char/vt_ioctl.c
 ===================================================================
 --- linux-2.6.22.orig/drivers/char/vt_ioctl.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/char/vt_ioctl.c	2007-09-27 11:05:29.000000000 +0200
++++ linux-2.6.22/drivers/char/vt_ioctl.c	2007-09-27 11:58:42.000000000 +0200
 @@ -770,6 +770,7 @@
  		/*
  		 * Switching-from response
@@ -30,9 +30,15 @@ Index: linux-2.6.22/drivers/char/vt_ioctl.c
  			}
  		}
  
-@@ -813,6 +812,7 @@
- 			if (arg != VT_ACKACQ)
+@@ -810,9 +809,12 @@
+ 			/*
+ 			 * If it's just an ACK, ignore it
+ 			 */
+-			if (arg != VT_ACKACQ)
++			if (arg != VT_ACKACQ) {
++				release_console_sem();
  				return -EINVAL;
++			}
  		}
 +		release_console_sem();
  

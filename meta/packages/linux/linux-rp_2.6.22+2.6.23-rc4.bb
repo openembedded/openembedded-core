@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r5"
+PR = "r6"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_htcuniversal = "1"
