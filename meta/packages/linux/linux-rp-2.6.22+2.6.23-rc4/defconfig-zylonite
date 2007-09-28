@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.23-rc4
-# Tue Sep 25 12:39:31 2007
+# Tue Sep 25 15:57:10 2007
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -230,7 +230,7 @@ CONFIG_ALIGNMENT_TRAP=y
 #
 CONFIG_ZBOOT_ROM_TEXT=0x0
 CONFIG_ZBOOT_ROM_BSS=0x0
-CONFIG_CMDLINE="console=ttyS0,38400 root=/dev/mtdblock2 rootfstype=jffs2 mem=64M"
+CONFIG_CMDLINE="console=ttyS0,38400 root=/dev/mtdblock2 rootfstype=jffs2 mem=64M  dyntick=enable debug"
 # CONFIG_XIP_KERNEL is not set
 # CONFIG_KEXEC is not set
 
@@ -874,7 +874,7 @@ CONFIG_FB_MODE_HELPERS=y
 CONFIG_FB_PXA=y
 # CONFIG_FB_PXA_LCD_QVGA is not set
 CONFIG_FB_PXA_LCD_VGA=y
-# CONFIG_FB_PXA_OVERLAY is not set
+CONFIG_FB_PXA_OVERLAY=y
 # CONFIG_FB_PXA_PARAMETERS is not set
 # CONFIG_FB_MBX is not set
 # CONFIG_FB_VIRTUAL is not set
@@ -902,7 +902,7 @@ CONFIG_LOGO=y
 CONFIG_LOGO_LINUX_MONO=y
 CONFIG_LOGO_LINUX_VGA16=y
 CONFIG_LOGO_LINUX_CLUT224=y
-CONFIG_LOGO_OHAND_CLUT224=y
+# CONFIG_LOGO_OHAND_CLUT224 is not set
 # CONFIG_LOGO_OZ240_CLUT224 is not set
 # CONFIG_LOGO_OZ480_CLUT224 is not set
 # CONFIG_LOGO_OZ640_CLUT224 is not set

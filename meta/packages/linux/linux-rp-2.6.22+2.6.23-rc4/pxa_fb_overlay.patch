@@ -1,0 +1,26 @@
+---
+ drivers/video/pxafb.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: linux-2.6.22/drivers/video/pxafb.h
+===================================================================
+--- linux-2.6.22.orig/drivers/video/pxafb.h	2007-09-25 15:44:42.000000000 +0200
++++ linux-2.6.22/drivers/video/pxafb.h	2007-09-25 15:45:07.000000000 +0200
+@@ -36,7 +36,7 @@
+ 	struct fb_bitfield	transp;
+ };
+ 
+-#ifdef CONFIG_PXA27x
++#if defined(CONFIG_PXA27x) || defined(CONFIG_PXA3xx)
+ /* PXA Overlay Framebuffer Support */
+ struct overlayfb_info
+ {
+@@ -142,7 +142,7 @@
+ 	wait_queue_head_t	ctrlr_wait;
+ 	struct work_struct	task;
+ 
+-#ifdef CONFIG_PXA27x
++#if defined(CONFIG_PXA27x) || defined(CONFIG_PXA3xx)
+ 	/* PXA Overlay Framebuffer Support */
+ 	struct overlayfb_info  *overlay1fb;
+ 	struct overlayfb_info  *overlay2fb;
