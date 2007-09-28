@@ -5,6 +5,8 @@ HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 DEPENDS = "gnutls dbus"
 
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
+	file://wpa_supplicant-0.5.7-always-scan.patch;patch=1 \
+	file://wpa_supplicant-fix-deprecated-dbus-function.patch;patch=1;pnum=0 \
 	file://defconfig-gnutls \
 	file://init.sh \
 	file://defaults-sane \
