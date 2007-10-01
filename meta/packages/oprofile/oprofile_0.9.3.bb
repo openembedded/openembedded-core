@@ -4,8 +4,11 @@ of profiling all running code at low overhead."
 LICENSE = "GPL"
 DEPENDS = "popt binutils"
 RDEPENDS = "binutils-symlinks"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
+           file://opstart.patch;patch=1 \
+	   file://armv6_fix.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile-${PV}"
 

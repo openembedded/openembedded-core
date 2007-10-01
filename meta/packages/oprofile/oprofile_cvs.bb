@@ -8,6 +8,8 @@ DEPENDS = "popt binutils"
 RDEPENDS = "binutils-symlinks"
 
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
+           file://opstart.patch;patch=1 \
+           file://armv6_fix.patch;patch=1 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 
