@@ -14,5 +14,3 @@ RDEPENDS_oprofile-viewer = "oprofile"
 
 FILES_oprofileui-server = "${bindir}/oprofile-server"
 RDEPENDS_oprofile-server = "oprofile"
-
-FILES_oprofileui-doc = "/usr/doc/oprofileui"
