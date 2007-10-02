@@ -825,8 +825,8 @@ python package_depchains() {
 	prefixes  = (bb.data.getVar('DEPCHAIN_PRE', d, 1) or '').split()
 
 	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
-		def packaged(pkg, d):
-			return os.access(bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d), os.R_OK)
+		#def packaged(pkg, d):
+		#	return os.access(bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d), os.R_OK)
 
                 #bb.note('rdepends for %s is %s' % (base, rdepends))
 
@@ -834,7 +834,7 @@ python package_depchains() {
 
 		for depend in rdepends:
 			pkgname = getname(depend, suffix)
-			if not pkgname in rreclist and packaged(pkgname, d):
+			if not pkgname in rreclist:
 				rreclist.append(pkgname)
 
 		#bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
