@@ -100,3 +100,6 @@ ACTION=="add", SUBSYSTEM=="firmware", RUN+="/lib/udev/firmware_helper"
 # Samsung UARTS
 KERNEL=="s3c2410_serial[0-9]",   NAME="ttySAC%n"
 
+# MXC UARTs
+KERNEL=="ttymxc[0-4]",   NAME="ttymxc%n"
+
