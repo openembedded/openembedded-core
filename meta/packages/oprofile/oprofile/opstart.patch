@@ -1,13 +1,7 @@
----
- configure.in      |    1 
- utils/Makefile.am |   11 +++++
- utils/opstart.c   |  105 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 116 insertions(+), 1 deletion(-)
-
-Index: oprofile-0.9.3/utils/Makefile.am
+Index: oprofile/utils/Makefile.am
 ===================================================================
---- oprofile-0.9.3.orig/utils/Makefile.am	2007-09-05 12:55:48.000000000 +0100
-+++ oprofile-0.9.3/utils/Makefile.am	2007-09-05 15:20:34.000000000 +0100
+--- oprofile.orig/utils/Makefile.am
++++ oprofile/utils/Makefile.am
 @@ -3,8 +3,15 @@ AM_CFLAGS = @OP_CFLAGS@
  
  LIBS=@POPT_LIBS@ @LIBERTY_LIBS@
@@ -25,11 +19,11 @@ Index: oprofile-0.9.3/utils/Makefile.am
 +	cd $(DESTDIR)/$(bindir) && \
 +		rm -f opstop && \
 +		$(LN_S) opstart opstop
-Index: oprofile-0.9.3/utils/opstart.c
+Index: oprofile/utils/opstart.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ oprofile-0.9.3/utils/opstart.c	2007-09-05 15:27:38.000000000 +0100
-@@ -0,0 +1,105 @@
+--- /dev/null
++++ oprofile/utils/opstart.c
+@@ -0,0 +1,110 @@
 +/**
 + * @file opstart.c
 + * Start/Stop oprofile
@@ -56,6 +50,11 @@ Index: oprofile-0.9.3/utils/opstart.c
 +	struct stat sbuf;
 +	FILE *lfile, *efile;
 +	int sig, enb, err;
++
++	if (argc >= 2) {
++		printf("Error: Invalid options.\n");
++		return 1;
++	}
 +
 +	lockfile = getenv("LOCK_FILE");
 +	if (!lockfile)
@@ -89,7 +88,7 @@ Index: oprofile-0.9.3/utils/opstart.c
 +		return 1;
 +	}
 +
-+	err = fscanf(lfile, "%ud", &dpid);
++	err = fscanf(lfile, "%lud", (unsigned long *) &dpid);
 +	if (err != 1) {
 +		printf("Error reading pid from lockfile %s.\n", lockfile);
 +		return 1;
@@ -135,11 +134,11 @@ Index: oprofile-0.9.3/utils/opstart.c
 +	return 0;
 +}
 +
-Index: oprofile-0.9.3/configure.in
+Index: oprofile/configure.in
 ===================================================================
---- oprofile-0.9.3.orig/configure.in	2007-09-05 15:23:24.000000000 +0100
-+++ oprofile-0.9.3/configure.in	2007-09-05 15:23:36.000000000 +0100
-@@ -16,6 +16,7 @@ AM_INIT_AUTOMAKE(oprofile, 0.9.3)
+--- oprofile.orig/configure.in
++++ oprofile/configure.in
+@@ -16,6 +16,7 @@ AM_INIT_AUTOMAKE(oprofile, 0.9.4cvs)
  AM_CONFIG_HEADER(config.h)
  
  AC_PROG_RANLIB
@@ -147,3 +146,90 @@ Index: oprofile-0.9.3/configure.in
  
  dnl for the man page
  DATE="`date '+%a %d %B %Y'`"
+@@ -227,6 +228,8 @@ AC_OUTPUT(Makefile \
+ 	doc/xsl/catalog-1.xml \
+ 	doc/oprofile.1 \
+ 	doc/opcontrol.1 \
++	doc/opstart.1 \
++	doc/opstop.1 \
+ 	doc/ophelp.1 \
+ 	doc/opreport.1 \
+ 	doc/opannotate.1 \
+Index: oprofile/doc/Makefile.am
+===================================================================
+--- oprofile.orig/doc/Makefile.am
++++ oprofile/doc/Makefile.am
+@@ -11,6 +11,8 @@ STYLESHEETS=$(CHUNK_XHTML_STYLESHEET) $(
+ man_MANS = \
+ 	oprofile.1 \
+ 	opcontrol.1 \
++	opstart.1 \
++	opstop.1 \
+ 	opreport.1 \
+ 	opannotate.1 \
+ 	opgprof.1 \
+Index: oprofile/doc/opstart.1.in
+===================================================================
+--- /dev/null
++++ oprofile/doc/opstart.1.in
+@@ -0,0 +1,27 @@
++.TH OPSTART 1 "@DATE@" "oprofile @VERSION@"
++.UC 4
++.SH NAME
++opstart \- start OProfile profiling
++.SH SYNOPSIS
++.br
++.B opstart
++.SH DESCRIPTION
++.B opstart
++is a simple optimised command to start profiling with 2.6 Linux kernels.
++OProfile should have already been initialised by calling "opcontrol --start-daemon".
++
++.SH ENVIRONMENT
++No special environment variables are recognised by opstart.
++
++.SH FILES
++.TP
++.I /var/lib/oprofile/samples/
++The location of the generated sample files.
++
++.SH VERSION
++.TP
++This man page is current for @PACKAGE@-@VERSION@.
++
++.SH SEE ALSO
++.BR @OP_DOCDIR@,
++.BR oprofile(1)
+Index: oprofile/doc/opstop.1.in
+===================================================================
+--- /dev/null
++++ oprofile/doc/opstop.1.in
+@@ -0,0 +1,28 @@
++.TH OPSTOP 1 "@DATE@" "oprofile @VERSION@"
++.UC 4
++.SH NAME
++opstop \- stop OProfile profiling
++.SH SYNOPSIS
++.br
++.B opstop
++.SH DESCRIPTION
++.B opstop
++is a simple optimsed command to stop profiling with 2.6 Linux kernels.
++You need to run "opcontrol --dump" before being able to view a profile
++with opreport.
++
++.SH ENVIRONMENT
++No special environment variables are recognised by opstop.
++
++.SH FILES
++.TP
++.I /var/lib/oprofile/samples/
++The location of the generated sample files.
++
++.SH VERSION
++.TP
++This man page is current for @PACKAGE@-@VERSION@.
++
++.SH SEE ALSO
++.BR @OP_DOCDIR@,
++.BR oprofile(1)

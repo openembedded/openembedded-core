@@ -1,0 +1,1051 @@
+Index: oprofile/libpp/arrange_profiles.cpp
+===================================================================
+--- oprofile.orig/libpp/arrange_profiles.cpp
++++ oprofile/libpp/arrange_profiles.cpp
+@@ -798,7 +798,7 @@ get_iprofile(app_map_t & app_map, string
+ 
+ /// Pull out all the images, removing any we can't access.
+ void
+-verify_and_fill(string archive_path, app_map_t & app_map,
++verify_and_fill(std::vector<std::string> const & archive_paths, app_map_t & app_map,
+ 		list<inverted_profile> & plist, extra_images const & extra)
+ {
+ 	app_map_t::iterator it = app_map.begin();
+@@ -807,7 +807,7 @@ verify_and_fill(string archive_path, app
+ 	for (; it != end; ++it) {
+ 		plist.push_back(it->second);
+ 		inverted_profile & ip = plist.back();
+-		ip.image = find_image_path(archive_path, ip.image, extra,
++		ip.image = find_image_path(archive_paths, ip.image, extra,
+ 					   ip.error);
+ 	}
+ }
+@@ -816,7 +816,7 @@ verify_and_fill(string archive_path, app
+ 
+ 
+ list<inverted_profile> const
+-invert_profiles(string archive_path, profile_classes const & classes,
++invert_profiles(std::vector<std::string> const & archive_paths, profile_classes const & classes,
+ 		extra_images const & extra)
+ {
+ 	app_map_t app_map;
+@@ -855,7 +855,7 @@ invert_profiles(string archive_path, pro
+ 
+ 	list<inverted_profile> inverted_list;
+ 
+-	verify_and_fill(archive_path, app_map, inverted_list, extra);
++	verify_and_fill(archive_paths, app_map, inverted_list, extra);
+ 
+ 	return inverted_list;
+ }
+Index: oprofile/libpp/arrange_profiles.h
+===================================================================
+--- oprofile.orig/libpp/arrange_profiles.h
++++ oprofile/libpp/arrange_profiles.h
+@@ -239,7 +239,7 @@ class extra_images;
+  * applicable (hence image_set).
+  */
+ std::list<inverted_profile> const
+-invert_profiles(std::string archive_path, profile_classes const & classes,
++invert_profiles(std::vector<std::string> const & archive_paths, profile_classes const & classes,
+ 		extra_images const & extra);
+ 
+ #endif /* !ARRANGE_PROFILES_H */
+Index: oprofile/libpp/callgraph_container.cpp
+===================================================================
+--- oprofile.orig/libpp/callgraph_container.cpp
++++ oprofile/libpp/callgraph_container.cpp
+@@ -392,7 +392,7 @@ const symbol_collection & arc_recorder::
+ }
+ 
+ 
+-void callgraph_container::populate(string const & archive_path, 
++void callgraph_container::populate(std::vector<std::string> const & archive_paths,
+    list<inverted_profile> const & iprofiles,
+    extra_images const & extra, bool debug_info, double threshold,
+    bool merge_lib, string_filter const & sym_filter)
+@@ -405,7 +405,7 @@ void callgraph_container::populate(strin
+ 	list<inverted_profile>::const_iterator const end = iprofiles.end();
+ 	for (it = iprofiles.begin(); it != end; ++it) {
+ 		// populate_caller_image take care about empty sample filename
+-		populate_for_image(archive_path, pc, *it, sym_filter, 0);
++		populate_for_image(archive_paths, pc, *it, sym_filter, 0);
+ 	}
+ 
+ 	add_symbols(pc);
+@@ -414,7 +414,7 @@ void callgraph_container::populate(strin
+ 
+ 	for (it = iprofiles.begin(); it != end; ++it) {
+ 		for (size_t i = 0; i < it->groups.size(); ++i) {
+-			populate(archive_path, it->groups[i], it->image, extra,
++			populate(archive_paths, it->groups[i], it->image, extra,
+ 				i, pc, debug_info, merge_lib);
+ 		}
+ 	}
+@@ -423,7 +423,7 @@ void callgraph_container::populate(strin
+ }
+ 
+ 
+-void callgraph_container::populate(string const & archive_path,
++void callgraph_container::populate(std::vector<std::string> const & archive_paths,
+ 	list<image_set> const & lset,
+ 	string const & app_image, extra_images const & extra, size_t pclass,
+ 	profile_container const & pc, bool debug_info, bool merge_lib)
+@@ -435,14 +435,14 @@ void callgraph_container::populate(strin
+ 		list<profile_sample_files>::const_iterator pend
+ 			= lit->files.end();
+ 		for (pit = lit->files.begin(); pit != pend; ++pit) {
+-			populate(archive_path, pit->cg_files, app_image,
++			populate(archive_paths, pit->cg_files, app_image,
+ 				 extra, pclass, pc, debug_info, merge_lib);
+ 		}
+ 	}
+ }
+ 
+ 
+-void callgraph_container::populate(string const & archive_path,
++void callgraph_container::populate(std::vector<std::string> const & archive_paths,
+ 	list<string> const & cg_files,
+ 	string const & app_image, extra_images const & extra, size_t pclass,
+ 	profile_container const & pc, bool debug_info, bool merge_lib)
+@@ -457,15 +457,15 @@ void callgraph_container::populate(strin
+ 
+ 		image_error error;
+ 		string caller_binary =
+-			find_image_path(archive_path, caller_file.lib_image,
++			find_image_path(archive_paths, caller_file.lib_image,
+ 					extra, error);
+ 
+ 		if (error != image_ok)
+-			report_image_error(archive_path + caller_file.lib_image,
++			report_image_error(caller_file.lib_image,
+ 					   error, false);
+ 
+ 		bool caller_bfd_ok = true;
+-		op_bfd caller_bfd(archive_path, caller_binary,
++		op_bfd caller_bfd(archive_paths, caller_binary,
+ 				  string_filter(), caller_bfd_ok);
+ 		if (!caller_bfd_ok)
+ 			report_image_error(caller_binary,
+@@ -474,13 +474,13 @@ void callgraph_container::populate(strin
+ 		parsed_filename callee_file = parse_filename(*it);
+ 
+ 		string callee_binary =
+-			find_image_path(archive_path, callee_file.cg_image,
++			find_image_path(archive_paths, callee_file.cg_image,
+ 			                extra, error);
+ 		if (error != image_ok)
+ 			report_image_error(callee_file.cg_image, error, false);
+ 
+ 		bool callee_bfd_ok = true;
+-		op_bfd callee_bfd(archive_path, callee_binary,
++		op_bfd callee_bfd(archive_paths, callee_binary,
+ 				  string_filter(), callee_bfd_ok);
+ 		if (!callee_bfd_ok)
+ 			report_image_error(callee_binary,
+Index: oprofile/libpp/callgraph_container.h
+===================================================================
+--- oprofile.orig/libpp/callgraph_container.h
++++ oprofile/libpp/callgraph_container.h
+@@ -105,7 +105,7 @@ class callgraph_container {
+ public:
+ 	/**
+ 	 * Populate the container, must be called once only.
+-	 * @param archive_path  oparchive prefix path
++	 * @param archive_paths  oparchive prefix paths
+ 	 * @param iprofiles  sample file list including callgraph files.
+ 	 * @param extra  extra image list to fixup binary name.
+ 	 * @param debug_info  true if we must record linenr information
+@@ -116,7 +116,7 @@ public:
+ 	 * Currently all errors core dump.
+ 	 * FIXME: consider if this should be a ctor
+ 	 */
+-	void populate(std::string const & archive_path,
++	void populate(std::vector<std::string> const & archive_paths,
+ 		      std::list<inverted_profile> const & iprofiles,
+ 		      extra_images const & extra, bool debug_info,
+ 		      double threshold, bool merge_lib,
+@@ -149,13 +149,13 @@ private:
+ 		 profile_container const & pc, bool debug_info,
+ 		 size_t pclass);
+ 
+-	void populate(std::string const & archive_path,
++	void populate(std::vector<std::string> const & archive_paths,
+ 		      std::list<image_set> const & lset,
+ 		      std::string const & app_image,
+ 		      extra_images const & extra, size_t pclass,
+ 		      profile_container const & pc, bool debug_info,
+ 		      bool merge_lib);
+-	void populate(std::string const & archive_path,
++	void populate(std::vector<std::string> const & archive_paths,
+ 		      std::list<std::string> const & cg_files,
+ 		      std::string const & app_image,
+ 		      extra_images const & extra, size_t pclass,
+Index: oprofile/libpp/locate_images.cpp
+===================================================================
+--- oprofile.orig/libpp/locate_images.cpp
++++ oprofile/libpp/locate_images.cpp
+@@ -93,14 +93,14 @@ public:
+ } // anon namespace
+ 
+ 
+-string const find_image_path(string const & archive_path,
++string const find_image_path(std::vector<std::string> const & archive_paths,
+ 			     string const & image_name,
+                              extra_images const & extra_images,
+                              image_error & error)
+ {
+ 	error = image_ok;
+ 
+-	string const image = op_realpath(archive_path + image_name);
++	string const image = op_realpath(op_findfile(archive_paths, image_name));
+ 
+ 	// simplest case
+ 	if (op_file_readable(image)) {
+Index: oprofile/libpp/locate_images.h
+===================================================================
+--- oprofile.orig/libpp/locate_images.h
++++ oprofile/libpp/locate_images.h
+@@ -70,7 +70,7 @@ private:
+  * If we fail to find the file we fill in error and return the original string.
+  */
+ std::string const
+-find_image_path(std::string const & archive_path,
++find_image_path(std::vector<std::string> const & archive_paths,
+ 		std::string const & image_name,
+                 extra_images const & extra_images,
+                 image_error & error);
+Index: oprofile/libpp/populate.cpp
+===================================================================
+--- oprofile.orig/libpp/populate.cpp
++++ oprofile/libpp/populate.cpp
+@@ -21,6 +21,7 @@
+ #include "populate_for_spu.h"
+ 
+ #include "image_errors.h"
++#include "file_manip.h"
+ 
+ #include <iostream>
+ 
+@@ -56,16 +57,16 @@ populate_from_files(profile_t & profile,
+ 
+ 
+ void
+-populate_for_image(string const & archive_path, profile_container & samples,
++populate_for_image(std::vector<std::string> const & archive_paths, profile_container & samples,
+    inverted_profile const & ip, string_filter const & symbol_filter,
+    bool * has_debug_info)
+ {
+ 	if (is_spu_profile(ip))
+-		return populate_for_spu_image(archive_path, samples, ip,
++		return populate_for_spu_image(archive_paths, samples, ip,
+ 					      symbol_filter, has_debug_info);
+ 
+ 	bool ok = ip.error == image_ok;
+-	op_bfd abfd(archive_path, ip.image, symbol_filter, ok);
++	op_bfd abfd(archive_paths, ip.image, symbol_filter, ok);
+ 	if (!ok && ip.error == image_ok)
+ 		ip.error = image_format_failure;
+ 
+@@ -96,7 +97,7 @@ populate_for_image(string const & archiv
+ 	}
+ 
+ 	if (found == true && ip.error == image_ok)
+-		check_mtime(archive_path + abfd.get_filename(), header);
++		check_mtime(op_findfile(archive_paths, abfd.get_filename()), header);
+ 
+ 	if (has_debug_info)
+ 		*has_debug_info = abfd.has_debug_info();
+Index: oprofile/libpp/populate.h
+===================================================================
+--- oprofile.orig/libpp/populate.h
++++ oprofile/libpp/populate.h
+@@ -19,7 +19,7 @@ class string_filter;
+ 
+ /// Load all sample file information for exactly one binary image.
+ void
+-populate_for_image(std::string const & archive_path,
++populate_for_image(std::vector<std::string> const & archive_paths,
+    profile_container & samples, inverted_profile const & ip,
+    string_filter const & symbol_filter, bool * has_debug_info);
+ 
+Index: oprofile/libpp/populate_for_spu.cpp
+===================================================================
+--- oprofile.orig/libpp/populate_for_spu.cpp
++++ oprofile/libpp/populate_for_spu.cpp
+@@ -19,6 +19,7 @@
+ #include "populate_for_spu.h"
+ 
+ #include "image_errors.h"
++#include "file_manip.h"
+ 
+ #include <iostream>
+ 
+@@ -46,7 +47,7 @@ static int spu_profile = unknown_profile
+ void
+ populate_spu_profile_from_files(list<profile_sample_files> const & files,
+ 				string const app_image,
+-				string const & archive_path,
++				std::vector<std::string> const & archive_paths,
+ 				profile_container & samples,
+ 				inverted_profile const & ip,
+ 				string_filter const & symbol_filter,
+@@ -65,14 +66,14 @@ populate_spu_profile_from_files(list<pro
+ 		profile.add_sample_file(it->sample_filename);
+ 		opd_header header = profile.get_header();
+ 		if (header.embedded_offset) {
+-			abfd = new op_bfd(archive_path,
++			abfd = new op_bfd(archive_paths,
+ 					  header.embedded_offset,
+ 					  ip.image,
+ 					  symbol_filter,
+ 					  ok);
+ 			fname_to_check = ip.image;
+ 		} else {
+-			abfd = new op_bfd(archive_path,
++			abfd = new op_bfd(archive_paths,
+ 					  ip.image,
+ 					  symbol_filter,
+ 					  ok);
+@@ -87,7 +88,7 @@ populate_spu_profile_from_files(list<pro
+ 
+ 		samples.add(profile, *abfd, app_image, ip_grp_num);
+ 		if (ip.error == image_ok)
+-			check_mtime(archive_path + fname_to_check,
++			check_mtime(op_findfile(archive_paths, fname_to_check),
+ 				    profile.get_header());
+ 
+ 		if (has_debug_info && !*has_debug_info)
+@@ -98,7 +99,7 @@ populate_spu_profile_from_files(list<pro
+ }  // anon namespace
+ 
+ void
+-populate_for_spu_image(string const & archive_path,
++populate_for_spu_image(std::vector<std::string> const & archive_paths,
+ 		       profile_container & samples,
+ 		       inverted_profile const & ip,
+ 		       string_filter const & symbol_filter,
+@@ -113,7 +114,7 @@ populate_for_spu_image(string const & ar
+ 
+ 		for (; it != end; ++it)
+ 			populate_spu_profile_from_files(it->files,
+-				it->app_image, archive_path, samples, ip,
++				it->app_image, archive_paths, samples, ip,
+ 				symbol_filter, i, has_debug_info);
+ 	}
+ }
+Index: oprofile/libpp/populate_for_spu.h
+===================================================================
+--- oprofile.orig/libpp/populate_for_spu.h
++++ oprofile/libpp/populate_for_spu.h
+@@ -13,6 +13,8 @@
+ #ifndef POPULATE_FOR_SPU_H
+ #define POPULATE_FOR_SPU_H
+ 
++#include <vector>
++
+ class profile_container;
+ class inverted_profile;
+ class string_filter;
+@@ -28,7 +30,7 @@ bool is_spu_profile(inverted_profile con
+  * This is a special-purpose function for CELL BE SPU profiling.
+  * See populate_spu_profile_from_files prologue for more details.
+  */
+-void populate_for_spu_image(std::string const & archive_path,
++void populate_for_spu_image(std::vector<std::string> const & archive_paths,
+ 			    profile_container & samples,
+ 			    inverted_profile const & ip,
+ 			    string_filter const & symbol_filter,
+Index: oprofile/libpp/profile_spec.cpp
+===================================================================
+--- oprofile.orig/libpp/profile_spec.cpp
++++ oprofile/libpp/profile_spec.cpp
+@@ -30,7 +30,7 @@ namespace {
+ // we should maintain the original to maintain the wordexp etc.
+ string const fixup_image_spec(string const & str, extra_images const & extra)
+ {
+-	string dummy_archive_path;
++	std::vector<std::string> const dummy_archive_path;
+ 	// FIXME: what todo if an error in find_image_path() ?
+ 	image_error error;
+ 	return find_image_path(dummy_archive_path, str, extra, error);
+Index: oprofile/libpp/xml_utils.cpp
+===================================================================
+--- oprofile.orig/libpp/xml_utils.cpp
++++ oprofile/libpp/xml_utils.cpp
+@@ -111,10 +111,10 @@ string get_cpu_num(size_t pclass)
+ 
+ xml_utils::xml_utils(format_output::xml_formatter * xo,
+                     symbol_collection const & s, size_t nc,
+-                    string_filter * sf, string const & ap)
++                    string_filter * sf, std::vector<std::string> const & ap)
+ 	:
+ 	symbol_filter(sf),
+-	archive_path(ap),
++	archive_paths(ap),
+ 	has_subclasses(false),
+ 	bytes_index(0)
+ {
+@@ -379,11 +379,11 @@ xml_utils::output_symbol_bytes(ostream &
+ 	string const & image_name = get_image_name(symb->image_name, true);
+ 	op_bfd * abfd = NULL;
+ 	if (symb->spu_offset)
+-		abfd = new op_bfd(archive_path, symb->spu_offset,
++		abfd = new op_bfd(archive_paths, symb->spu_offset,
+ 				  get_image_name(symb->embedding_filename, true),
+ 				  *symbol_filter, ok);
+ 	else
+-		abfd = new op_bfd(archive_path, image_name, *symbol_filter, ok);
++		abfd = new op_bfd(archive_paths, image_name, *symbol_filter, ok);
+ 	if (!ok) {
+ 		report_image_error(image_name, image_format_failure, false);
+ 		delete abfd;
+Index: oprofile/libpp/xml_utils.h
+===================================================================
+--- oprofile.orig/libpp/xml_utils.h
++++ oprofile/libpp/xml_utils.h
+@@ -22,7 +22,7 @@ class xml_utils {
+ public:
+ 	xml_utils(format_output::xml_formatter * xo,
+ 		symbol_collection const & s, size_t nc,
+-		string_filter * sf, std::string const & ap);
++		string_filter * sf, std::vector<std::string> const & ap);
+ 	// these members are static because they are invoked before
+ 	// the xml_utils object has been created
+ 	static std::string get_timer_setup(size_t count);
+@@ -51,7 +51,7 @@ public:
+ private:
+ 	string_filter * symbol_filter;
+ 	bool multiple_events;
+-	std::string archive_path;
++	std::vector<std::string> const & archive_paths;
+ 	bool has_subclasses;
+ 	size_t bytes_index;
+ 	static bool has_nonzero_masks;
+Index: oprofile/libutil++/op_bfd.cpp
+===================================================================
+--- oprofile.orig/libutil++/op_bfd.cpp
++++ oprofile/libutil++/op_bfd.cpp
+@@ -27,6 +27,7 @@
+ #include "string_filter.h"
+ #include "stream_util.h"
+ #include "cverb.h"
++#include "file_manip.h"
+ 
+ using namespace std;
+ 
+@@ -87,11 +88,11 @@ bool op_bfd_symbol::operator<(op_bfd_sym
+ }
+ 
+ 
+-op_bfd::op_bfd(string const & archive, string const & fname,
++op_bfd::op_bfd(std::vector<std::string> const & archive, string const & fname,
+ 	       string_filter const & symbol_filter, bool & ok)
+ 	:
+ 	filename(fname),
+-	archive_path(archive),
++	archive_paths(archive),
+ 	file_size(-1)
+ {
+ 	int fd;
+@@ -102,7 +103,7 @@ op_bfd::op_bfd(string const & archive, s
+ 	symbols_found_t symbols;
+ 	asection const * sect;
+ 
+-	string const image_path = archive_path + filename;
++	string const image_path = op_findfile(archive_paths, filename);
+ 
+ 	cverb << vbfd << "op_bfd ctor for " << image_path << endl;
+ 
+@@ -321,8 +322,8 @@ bool op_bfd::has_debug_info() const
+ 		return debug_info.reset(true);
+ 
+ 	// check to see if there is an .debug file
+-	string const global(archive_path + DEBUGDIR);
+-	string const image_path = archive_path + filename;
++	string const global(op_findfile(archive_paths, DEBUGDIR));
++	string const image_path = op_findfile(archive_paths, filename);
+ 	string const dirname(image_path.substr(0, image_path.rfind('/')));
+ 
+ 	if (find_separate_debug_file(ibfd.abfd, dirname, global, debug_filename)) {
+Index: oprofile/libutil++/op_bfd.h
+===================================================================
+--- oprofile.orig/libutil++/op_bfd.h
++++ oprofile/libutil++/op_bfd.h
+@@ -89,14 +89,14 @@ private:
+ class op_bfd {
+ public:
+ 	/**
+-	 * @param archive_path oparchive prefix path
++	 * @param archive_paths oparchive prefix paths
+ 	 * @param filename  the name of the image file
+ 	 * @param symbol_filter  filter to apply to symbols
+ 	 * @param ok in-out parameter: on in, if not set, don't
+ 	 * open the bfd (because it's not there or whatever). On out,
+ 	 * it's set to false if the bfd couldn't be loaded.
+ 	 */
+-	op_bfd(std::string const & archive_path,
++	op_bfd(std::vector<std::string> const & archive_paths,
+ 	       std::string const & filename,
+ 	       string_filter const & symbol_filter,
+ 	       bool & ok);
+@@ -105,7 +105,7 @@ public:
+ 	 * This constructor is used when processing an SPU profile
+ 	 * where the SPU ELF is embedded within the PPE binary.
+ 	 */
+-	op_bfd(std::string const & archive_path,
++	op_bfd(std::vector<std::string> const & archive_paths,
+ 	       uint64_t spu_offset,
+ 	       std::string const & filename,
+ 	       string_filter const & symbol_filter,
+@@ -243,8 +243,8 @@ private:
+ 	/// filename we open (not including archive path)
+ 	std::string filename;
+ 
+-	/// path to archive
+-	std::string archive_path;
++	/// paths to archive
++	std::vector<std::string> archive_paths;
+ 
+ 	/// file size in bytes
+ 	off_t file_size;
+Index: oprofile/libutil++/op_spu_bfd.cpp
+===================================================================
+--- oprofile.orig/libutil++/op_spu_bfd.cpp
++++ oprofile/libutil++/op_spu_bfd.cpp
+@@ -19,6 +19,7 @@
+ #include "op_libiberty.h"
+ #include "string_filter.h"
+ #include "cverb.h"
++#include "file_manip.h"
+ 
+ using namespace std;
+ 
+@@ -29,11 +30,11 @@ extern verbose vbfd;
+  * constructor in libutil++/op_bfd.cpp, with the additional processing
+  * needed to handle an embedded spu offset.
+  */
+-op_bfd::op_bfd(string const & archive, uint64_t spu_offset,
++op_bfd::op_bfd(std::vector<std::string> const & archive, uint64_t spu_offset,
+ 	       string const & fname,
+ 	       string_filter const & symbol_filter, bool & ok)
+ 	:
+-	archive_path(archive),
++	archive_paths(archive),
+ 	file_size(-1),
+ 	embedding_filename(fname)
+ {
+@@ -48,7 +49,7 @@ op_bfd::op_bfd(string const & archive, u
+ 	symbols_found_t symbols;
+ 	asection const * sect;
+ 
+-	string const image_path = archive_path + fname;
++	string const image_path = op_findfile(archive_paths, fname);
+ 
+ 	cverb << vbfd << "op_bfd ctor for " << image_path << endl;
+ 	if (!ok)
+Index: oprofile/pp/opannotate_options.cpp
+===================================================================
+--- oprofile.orig/pp/opannotate_options.cpp
++++ oprofile/pp/opannotate_options.cpp
+@@ -26,7 +26,7 @@ using namespace std;
+ profile_classes classes;
+ 
+ namespace options {
+-	string archive_path;
++	vector<string> archive_paths;
+ 	demangle_type demangle = dmt_normal;
+ 	string output_dir;
+ 	vector<string> search_dirs;
+@@ -87,6 +87,7 @@ popt::option options_array[] = {
+ void handle_options(options::spec const & spec)
+ {
+ 	using namespace options;
++	string archive_path;
+ 
+ 	if (spec.first.size()) {
+ 		cerr << "differential profiles not allowed" << endl;
+@@ -125,7 +126,9 @@ void handle_options(options::spec const 
+ 	list<string> sample_files = pspec.generate_file_list(exclude_dependent, true);
+ 
+ 	archive_path = pspec.get_archive_path();
++	archive_paths.push_back(archive_path);
+ 	cverb << vsfile << "Archive: " << archive_path << endl;
++	archive_paths.push_back(options::root_path);
+ 
+ 	cverb << vsfile << "Matched sample files: " << sample_files.size()
+ 	      << endl;
+Index: oprofile/pp/opannotate_options.h
+===================================================================
+--- oprofile.orig/pp/opannotate_options.h
++++ oprofile/pp/opannotate_options.h
+@@ -21,7 +21,7 @@
+ class profile_classes;
+ 
+ namespace options {
+-	extern std::string archive_path;
++	extern std::vector<std::string> archive_paths;
+ 	extern demangle_type demangle;
+ 	extern bool source;
+ 	extern bool assembly;
+Index: oprofile/pp/oparchive.cpp
+===================================================================
+--- oprofile.orig/pp/oparchive.cpp
++++ oprofile/pp/oparchive.cpp
+@@ -59,7 +59,7 @@ int oparchive(options::spec const & spec
+ 
+ 	/* copy over each of the executables and the debuginfo files */
+ 	list<inverted_profile> iprofiles
+-		= invert_profiles(options::archive_path, classes,
++		= invert_profiles(options::archive_paths, classes,
+ 				  options::extra_found_images);
+ 
+ 	report_image_errors(iprofiles);
+@@ -86,7 +86,7 @@ int oparchive(options::spec const & spec
+ 		}
+ 
+ 		/* Copy actual executable files */
+-		copy_one_file(it->error, options::archive_path + exe_name,
++		copy_one_file(it->error, op_findfile(options::archive_paths, exe_name),
+ 		              exe_archive_file);
+ 
+ 		/* If there are any debuginfo files, copy them over.
+@@ -95,11 +95,10 @@ int oparchive(options::spec const & spec
+ 		 * to avoid overwriting files with the same name. The
+ 		 * /usr/lib/debug search path is not going to work.
+ 		 */
+-		bfd * ibfd = open_bfd(options::archive_path + exe_name);
++		bfd * ibfd = open_bfd(op_findfile(options::archive_paths, exe_name));
+ 		if (ibfd) {
+-			string global(options::archive_path + DEBUGDIR);
+-			string dirname = op_dirname(options::archive_path + 
+-						    exe_name);
++			string global(op_findfile(options::archive_paths, DEBUGDIR));
++			string dirname = op_dirname(op_findfile(options::archive_paths, 						    exe_name));
+ 			string debug_filename;
+ 			if (find_separate_debug_file(ibfd, dirname, global,
+ 				debug_filename)) {
+@@ -130,8 +129,8 @@ int oparchive(options::spec const & spec
+ 		string sample_name = *sit;
+ 		string sample_base = sample_name;
+ 		/* Get rid of the the archive_path from the name */
+-		sample_base.replace(sample_base.find(options::archive_path),
+-				    options::archive_path.size(), "");
++		sample_base.replace(sample_base.find(options::archive_paths[0]),
++				    options::archive_paths[0].size(), "");
+ 		string sample_archive_file = options::outdirectory + sample_base;
+ 		
+ 		cverb << vdebug << (sample_name) << endl;
+@@ -149,12 +148,12 @@ int oparchive(options::spec const & spec
+ 
+ 	/* copy over the /var/lib/oprofile/abi file if it exists */
+ 	string abi_name = "/var/lib/oprofile/abi";
+-	copy_one_file(image_ok, options::archive_path + abi_name,
++	copy_one_file(image_ok, op_findfile(options::archive_paths, abi_name),
+ 	              options::outdirectory + abi_name);
+ 
+ 	/* copy over the /var/lib/oprofile/oprofiled.log file */
+ 	string log_name = "/var/lib/oprofile/oprofiled.log";
+-	copy_one_file(image_ok, options::archive_path + log_name,
++	copy_one_file(image_ok, op_findfile(options::archive_paths, log_name),
+ 	              options::outdirectory + log_name);
+ 
+ 	return 0;
+Index: oprofile/pp/oparchive_options.cpp
+===================================================================
+--- oprofile.orig/pp/oparchive_options.cpp
++++ oprofile/pp/oparchive_options.cpp
+@@ -31,7 +31,7 @@ profile_classes classes;
+ list<string> sample_files;
+ 
+ namespace options {
+-	string archive_path;
++	std::vector<std::string> archive_paths;
+ 	demangle_type demangle = dmt_normal;
+ 	bool exclude_dependent;
+ 	merge_option merge_by;
+@@ -75,6 +75,7 @@ void check_options()
+ void handle_options(options::spec const & spec)
+ {
+ 	using namespace options;
++	std::string archive_path;
+ 
+ 	if (spec.first.size()) {
+ 		cerr << "differential profiles not allowed" << endl;
+@@ -96,7 +97,9 @@ void handle_options(options::spec const 
+ 	sample_files = pspec.generate_file_list(exclude_dependent, false);
+ 
+ 	archive_path = pspec.get_archive_path();
++	archive_paths.push_back(archive_path);
+ 	cverb << vsfile << "Archive: " << archive_path << endl;
++	archive_paths.push_back(options::root_path);
+ 
+ 	cverb << vsfile << "Matched sample files: " << sample_files.size()
+ 	      << endl;
+Index: oprofile/pp/oparchive_options.h
+===================================================================
+--- oprofile.orig/pp/oparchive_options.h
++++ oprofile/pp/oparchive_options.h
+@@ -18,7 +18,7 @@ class profile_classes;
+ class merge_option;
+ 
+ namespace options {
+-	extern std::string archive_path;
++	extern std::vector<std::string> archive_paths;
+ 	extern bool exclude_dependent;
+ 	extern merge_option merge_by;
+ 	extern std::string outdirectory;
+Index: oprofile/pp/opgprof_options.cpp
+===================================================================
+--- oprofile.orig/pp/opgprof_options.cpp
++++ oprofile/pp/opgprof_options.cpp
+@@ -26,7 +26,7 @@ profile_classes classes;
+ inverted_profile image_profile;
+ 
+ namespace options {
+-	string archive_path;
++	std::vector<std::string> archive_paths;
+ 	string gmon_filename = "gmon.out";
+ 
+ 	// Ugly, for build only
+@@ -71,7 +71,7 @@ bool try_merge_profiles(profile_spec con
+ 	size_t nr_classes = classes.v.size();
+ 
+ 	list<inverted_profile> iprofiles
+-		= invert_profiles(options::archive_path, classes,
++		= invert_profiles(options::archive_paths, classes,
+ 				  options::extra_found_images);
+ 
+ 	if (nr_classes == 1 && iprofiles.size() == 1) {
+@@ -104,6 +104,8 @@ bool try_merge_profiles(profile_spec con
+ 
+ void handle_options(options::spec const & spec)
+ {
++	string archive_path;
++
+ 	if (spec.first.size()) {
+ 		cerr << "differential profiles not allowed" << endl;
+ 		exit(EXIT_FAILURE);
+@@ -112,8 +114,10 @@ void handle_options(options::spec const 
+ 	profile_spec const pspec =
+ 		profile_spec::create(spec.common, options::extra_found_images);
+ 
+-	options::archive_path = pspec.get_archive_path();
+-	cverb << vsfile << "Archive: " << options::archive_path << endl;
++	archive_path = pspec.get_archive_path();
++	options::archive_paths.push_back(archive_path);
++	cverb << vsfile << "Archive: " << archive_path << endl;
++	options::archive_paths.push_back(options::root_path);
+ 
+ 	cverb << vsfile << "output filename: " << options::gmon_filename
+ 	      << endl;
+Index: oprofile/pp/opgprof_options.h
+===================================================================
+--- oprofile.orig/pp/opgprof_options.h
++++ oprofile/pp/opgprof_options.h
+@@ -17,7 +17,7 @@
+ #include "common_option.h"
+ 
+ namespace options {
+-	extern std::string archive_path;
++	extern std::vector<std::string> archive_paths;
+ 	extern std::string gmon_filename;
+ }
+ 
+Index: oprofile/pp/opreport_options.cpp
+===================================================================
+--- oprofile.orig/pp/opreport_options.cpp
++++ oprofile/pp/opreport_options.cpp
+@@ -32,8 +32,8 @@ profile_classes classes;
+ profile_classes classes2;
+ 
+ namespace options {
+-	string archive_path;
+-	string archive_path2;
++	std::vector<std::string> archive_paths;
++	std::vector<std::string> archive_paths2;
+ 	demangle_type demangle = dmt_normal;
+ 	bool symbols;
+ 	bool callgraph;
+@@ -314,16 +314,19 @@ void handle_options(options::spec const 
+ 	symbol_filter = string_filter(include_symbols, exclude_symbols);
+ 
+ 	if (!spec.first.size()) {
+-		archive_path = process_spec(classes, spec.common);
++		archive_paths.push_back(process_spec(classes, spec.common));
++		archive_paths.push_back(options::root_path);
+ 	} else {
+ 		if (options::xml) {
+ 			cerr << "differential profiles are incompatible with --xml" << endl;
+ 			exit(EXIT_FAILURE);
+ 		}
+ 		cverb << vsfile << "profile spec 1:" << endl;
+-		archive_path = process_spec(classes, spec.first);
++		archive_paths.push_back(process_spec(classes, spec.first));
++		archive_paths.push_back(options::root_path);
+ 		cverb << vsfile << "profile spec 2:" << endl;
+-		archive_path2 = process_spec(classes2, spec.second);
++		archive_paths2.push_back(process_spec(classes2, spec.second));
++		archive_paths2.push_back(options::root_path);
+ 
+ 		if (!classes.matches(classes2)) {
+ 			cerr << "profile classes are incompatible" << endl;
+Index: oprofile/pp/opreport_options.h
+===================================================================
+--- oprofile.orig/pp/opreport_options.h
++++ oprofile/pp/opreport_options.h
+@@ -24,8 +24,8 @@ class profile_classes;
+ class merge_option;
+ 
+ namespace options {
+-	extern std::string archive_path;
+-	extern std::string archive_path2;
++	extern std::vector<std::string> archive_paths;
++	extern std::vector<std::string> archive_paths2;
+ 	extern demangle_type demangle;
+ 	extern bool symbols;
+ 	extern bool callgraph;
+Index: oprofile/libutil++/file_manip.cpp
+===================================================================
+--- oprofile.orig/libutil++/file_manip.cpp
++++ oprofile/libutil++/file_manip.cpp
+@@ -205,3 +205,14 @@ string op_basename(string const & path_n
+ 
+ 	return erase_to_last_of(result, '/');
+ }
++
++string op_findfile(const vector<string> & paths, string const & file)
++{
++	for (vector<string>::const_iterator it = paths.begin(); it!=paths.end(); ++it)
++	{
++		if (op_file_readable(*it + file))
++			return *it + file;
++	}
++	return "";
++}
++
+Index: oprofile/libutil++/file_manip.h
+===================================================================
+--- oprofile.orig/libutil++/file_manip.h
++++ oprofile/libutil++/file_manip.h
+@@ -12,6 +12,7 @@
+ #ifndef FILE_MANIP_H
+ #define FILE_MANIP_H
+ 
++#include <vector>
+ #include <string>
+ #include <list>
+ 
+@@ -86,4 +87,14 @@ std::string op_dirname(std::string const
+  */
+ std::string op_basename(std::string const & path_name);
+ 
++/**
++ *
++ * op_findfile - search a set of paths for file
++ * @param paths  paths to search
++ * @param file  filename to search for
++ *
++ * Returns the path to the first matching file or an empty string if not found.
++ */
++std::string op_findfile(const std::vector<std::string> & paths, std::string const & file);
++
+ #endif /* !FILE_MANIP_H */
+Index: oprofile/pp/common_option.cpp
+===================================================================
+--- oprofile.orig/pp/common_option.cpp
++++ oprofile/pp/common_option.cpp
+@@ -30,6 +30,7 @@ namespace options {
+ 	string session_dir = OP_SESSION_DIR_DEFAULT;
+ 	string command_options;
+ 	vector<string> image_path;
++	string root_path;
+ }
+ 
+ namespace {
+@@ -44,6 +45,8 @@ popt::option common_options_array[] = {
+ 		     "specify session path to hold samples database and session data (" OP_SESSION_DIR_DEFAULT ")", "path"),
+ 	popt::option(options::image_path, "image-path", 'p',
+ 		     "comma-separated path to search missing binaries", "path"),
++	popt::option(options::root_path, "root", 'R',
++		     "path to filesystem to search for missing binaries", "path"),
+ };
+ 
+ 
+Index: oprofile/pp/common_option.h
+===================================================================
+--- oprofile.orig/pp/common_option.h
++++ oprofile/pp/common_option.h
+@@ -26,6 +26,7 @@ namespace options {
+ 	extern std::string threshold_opt;
+ 	extern std::string command_options;
+ 	extern std::vector<std::string> image_path;
++	extern std::string root_path;
+ 
+ 	struct spec {
+ 		std::list<std::string> common;
+Index: oprofile/pp/opreport.cpp
+===================================================================
+--- oprofile.orig/pp/opreport.cpp
++++ oprofile/pp/opreport.cpp
+@@ -403,7 +403,7 @@ void output_symbols(profile_container co
+ 
+ 	if (options::xml) {
+ 		xml_support = new xml_utils(xml_out, symbols, nr_classes,
+-			&options::symbol_filter, options::archive_path);
++			&options::symbol_filter, options::archive_paths);
+ 		xml_out->output(cout);
+ 	} else {
+ 		text_out->output(cout, symbols);
+@@ -479,7 +479,7 @@ void output_cg_symbols(callgraph_contain
+ 
+ 	if (options::xml) {
+ 		xml_support = new xml_utils(xml_out, symbols, nr_classes,
+-			&options::symbol_filter, options::archive_path);
++			&options::symbol_filter, options::archive_paths);
+ 		xml_out->output(cout);
+ 	} else {
+ 		text_out->output(cout, symbols);
+@@ -511,7 +511,7 @@ int opreport(options::spec const & spec)
+ 	}
+ 
+ 	list<inverted_profile> iprofiles
+-		= invert_profiles(options::archive_path, classes,
++		= invert_profiles(options::archive_paths, classes,
+ 				  options::extra_found_images);
+ 
+ 	report_image_errors(iprofiles);
+@@ -535,11 +535,11 @@ int opreport(options::spec const & spec)
+ 		list<inverted_profile>::iterator const end = iprofiles.end();
+ 
+ 		for (; it != end; ++it)
+-			populate_for_image(options::archive_path, pc1,
++			populate_for_image(options::archive_paths, pc1,
+ 				*it, options::symbol_filter, 0);
+ 
+ 		list<inverted_profile> iprofiles2
+-			= invert_profiles(options::archive_path2, classes2,
++			= invert_profiles(options::archive_paths2, classes2,
+ 				  options::extra_found_images);
+ 
+ 		report_image_errors(iprofiles2);
+@@ -550,13 +550,13 @@ int opreport(options::spec const & spec)
+ 		list<inverted_profile>::iterator const end2 = iprofiles2.end();
+ 
+ 		for (; it2 != end2; ++it2)
+-			populate_for_image(options::archive_path2, pc2,
++			populate_for_image(options::archive_paths2, pc2,
+ 				*it2, options::symbol_filter, 0);
+ 
+ 		output_diff_symbols(pc1, pc2, multiple_apps);
+ 	} else if (options::callgraph) {
+ 		callgraph_container cg_container;
+-		cg_container.populate(options::archive_path, iprofiles,
++		cg_container.populate(options::archive_paths, iprofiles,
+ 			options::extra_found_images,
+ 			options::debug_info, options::threshold,
+ 			options::merge_by.lib, options::symbol_filter);
+@@ -569,7 +569,7 @@ int opreport(options::spec const & spec)
+ 		list<inverted_profile>::iterator const end = iprofiles.end();
+ 
+ 		for (; it != end; ++it)
+-			populate_for_image(options::archive_path, samples,
++			populate_for_image(options::archive_paths, samples,
+ 				*it, options::symbol_filter, 0);
+ 
+ 		output_symbols(samples, multiple_apps);
+Index: oprofile/pp/opannotate.cpp
+===================================================================
+--- oprofile.orig/pp/opannotate.cpp
++++ oprofile/pp/opannotate.cpp
+@@ -690,7 +690,7 @@ int opannotate(options::spec const & spe
+ 	list<string> images;
+ 
+ 	list<inverted_profile> iprofiles
+-		= invert_profiles(options::archive_path, classes,
++		= invert_profiles(options::archive_paths, classes,
+ 				  options::extra_found_images);
+ 
+ 	report_image_errors(iprofiles);
+@@ -701,7 +701,7 @@ int opannotate(options::spec const & spe
+ 	bool debug_info = false;
+ 	for (; it != end; ++it) {
+ 		bool tmp = false;
+-		populate_for_image(options::archive_path, *samples, *it,
++		populate_for_image(options::archive_paths, *samples, *it,
+ 		                   options::symbol_filter, &tmp);
+ 		images.push_back(it->image);
+ 		if (tmp)
+Index: oprofile/pp/opgprof.cpp
+===================================================================
+--- oprofile.orig/pp/opgprof.cpp
++++ oprofile/pp/opgprof.cpp
+@@ -282,7 +282,7 @@ int opgprof(options::spec const & spec)
+ 
+ 	bool ok = image_profile.error == image_ok;
+ 	// FIXME: symbol_filter would be allowed through option
+-	op_bfd abfd(options::archive_path, image_profile.image,
++	op_bfd abfd(options::archive_paths, image_profile.image,
+ 		    string_filter(), ok);
+ 	if (!ok && image_profile.error == image_ok)
+ 		image_profile.error = image_format_failure;
+Index: oprofile/doc/opannotate.1.in
+===================================================================
+--- oprofile.orig/doc/opannotate.1.in
++++ oprofile/doc/opannotate.1.in
+@@ -50,6 +50,10 @@ Comma-separated list of additional paths
+ This is needed to find modules in kernels 2.6 and upwards.
+ .br
+ .TP
++.BI "--root / -R [path]"
++A path to a filesystem to search for additional binaries.
++.br
++.TP
+ .BI "--include-file [files]"
+ Only include files in the given comma-separated list of glob patterns.
+ .br
+Index: oprofile/doc/oparchive.1.in
+===================================================================
+--- oprofile.orig/doc/oparchive.1.in
++++ oprofile/doc/oparchive.1.in
+@@ -42,6 +42,10 @@ Comma-separated list of additional paths
+ This is needed to find modules in kernels 2.6 and upwards.
+ .br
+ .TP
++.BI "--root / -R [path]"
++A path to a filesystem to search for additional binaries.
++.br
++.TP
+ .BI "--output-directory / -o [directory]"
+ Output to the given directory. There is no default. This must be specified.
+ .br
+Index: oprofile/doc/opgprof.1.in
+===================================================================
+--- oprofile.orig/doc/opgprof.1.in
++++ oprofile/doc/opgprof.1.in
+@@ -38,6 +38,10 @@ Comma-separated list of additional paths
+ This is needed to find modules in kernels 2.6 and upwards.
+ .br
+ .TP
++.BI "--root / -R [path]"
++A path to a filesystem to search for additional binaries.
++.br
++.TP
+ .BI "--threshold / -t [percentage]"
+ Only output data for symbols that have more than the given percentage
+ of total samples.
+Index: oprofile/doc/opreport.1.in
+===================================================================
+--- oprofile.orig/doc/opreport.1.in
++++ oprofile/doc/opreport.1.in
+@@ -61,6 +61,10 @@ Comma-separated list of additional paths
+ This is needed to find modules in kernels 2.6 and upwards.
+ .br
+ .TP
++.BI "--root / -R [path]"
++A path to a filesystem to search for additional binaries.
++.br
++.TP
+ .BI "--include-symbols / -i [symbols]"
+ Only include symbols in the given comma-separated list.
+ .br

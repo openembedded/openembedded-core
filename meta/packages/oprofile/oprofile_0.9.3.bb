@@ -4,12 +4,14 @@ of profiling all running code at low overhead."
 LICENSE = "GPL"
 DEPENDS = "popt binutils"
 RDEPENDS = "binutils-symlinks"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
+           file://armv6_fix.patch;patch=1 \
+           file://oparchive_fix.patch;patch=1 \
+           file://root_option.patch;patch=1 \
            file://opstart.patch;patch=1 \
-	   file://armv6_fix.patch;patch=1 \
-	   file://acinclude.m4"
+           file://acinclude.m4"
 S = "${WORKDIR}/oprofile-${PV}"
 
 inherit autotools

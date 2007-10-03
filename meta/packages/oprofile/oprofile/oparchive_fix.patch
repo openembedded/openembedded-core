@@ -1,0 +1,22 @@
+Index: oprofile/pp/oparchive.cpp
+===================================================================
+--- oprofile.orig/pp/oparchive.cpp
++++ oprofile/pp/oparchive.cpp
+@@ -95,7 +95,7 @@ int oparchive(options::spec const & spec
+ 		 * to avoid overwriting files with the same name. The
+ 		 * /usr/lib/debug search path is not going to work.
+ 		 */
+-		bfd * ibfd = open_bfd(exe_name);
++		bfd * ibfd = open_bfd(options::archive_path + exe_name);
+ 		if (ibfd) {
+ 			string global(options::archive_path + DEBUGDIR);
+ 			string dirname = op_dirname(options::archive_path + 
+@@ -106,7 +106,7 @@ int oparchive(options::spec const & spec
+ 				/* found something copy it over */
+ 				string dest_debug_dir = options::outdirectory +
+ 					dirname + "/.debug/";
+-				if (create_dir(dest_debug_dir.c_str())) {
++				if (!options::list_files && create_dir(dest_debug_dir.c_str())) {
+ 					cerr << "Unable to create directory: "
+ 					<< dest_debug_dir << "." << endl;
+ 					exit (EXIT_FAILURE);
