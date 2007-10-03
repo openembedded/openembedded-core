@@ -13,7 +13,7 @@ FILES_${PN}-dev = "${includedir} ${libdir}/lib*.a"
 
 EXTRA_OEMAKE = "'CC=${CC}' 'LD=${LD}' 'XCFLAGS=${CFLAGS}' 'XLDFLAGS=${LDFLAGS} -Wl,-soname=libjs'"
 
-PARALLEL_MALE = ""
+PARALLEL_MAKE = ""
 
 do_compile_prepend() {
 	cp ${WORKDIR}/jsautocfg.h ${S}/
