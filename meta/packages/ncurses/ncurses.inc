@@ -41,6 +41,10 @@ do_stage() {
 	ln -sf libncurses.a ${STAGING_LIBDIR}/libtermcap.a
 }
 
+# This is necessary so that the "tic" command executed during the install can
+# link with the correct libary in staging.
+export LD_LIBRARY_PATH = "${STAGING_LIBDIR_NATIVE}"
+
 do_install() {
 	autotools_do_install
 
