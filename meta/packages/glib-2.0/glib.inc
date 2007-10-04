@@ -6,7 +6,7 @@ UNIX-like platforms, Windows, OS/2 and BeOS."
 LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
-DEPENDS += "glib-2.0-native gtk-doc"
+DEPENDS += "glib-2.0-native gtk-doc-native"
 DEPENDS += "virtual/libiconv virtual/libintl"
 PACKAGES =+ "glib-2.0-utils "
 
