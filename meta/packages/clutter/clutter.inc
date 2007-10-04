@@ -2,7 +2,7 @@ DESCRIPTION = "Clutter graphics library"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPL"
 
-STDDEPENDS = "virtual/libx11 gtk-doc pango glib-2.0 libxfixes"
+STDDEPENDS = "virtual/libx11 gtk-doc-native pango glib-2.0 libxfixes"
 BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
 
 DEPENDS = "${STDDEPENDS}"

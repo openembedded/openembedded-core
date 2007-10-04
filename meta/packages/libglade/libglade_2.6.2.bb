@@ -2,7 +2,7 @@ LICENSE = "LGPL"
 DESCRIPTION = "Runtime support for GTK interface builder"
 SECTION = "libs"
 PRIORITY = "optional"
-DEPENDS = "gtk+ gtk-doc"
+DEPENDS = "gtk+ gtk-doc-native"
 
 inherit autotools pkgconfig gnome
 

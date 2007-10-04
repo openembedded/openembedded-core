@@ -3,7 +3,7 @@ SECTION = "x11/libs"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 
-DEPENDS = "glib-2.0 gtk-doc"
+DEPENDS = "glib-2.0 gtk-doc-native"
 
 SRC_URI = "http://download.gnome.org/sources/atk/1.18/${PN}-${PV}.tar.bz2"
 

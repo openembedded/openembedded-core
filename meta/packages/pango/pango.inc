@@ -8,7 +8,7 @@ EXTRA_AUTORECONF = ""
 
 SECTION = "x11/libs"
 
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libx11 libxft gtk-doc cairo"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libx11 libxft gtk-doc-native cairo"
 
 PACKAGES_DYNAMIC = "pango-module-*"
 
