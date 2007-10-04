@@ -4,7 +4,7 @@
 
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 DEPENDS = "task-poky"
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -20,13 +20,19 @@ RDEPENDS_task-poky-sdk = "\
     binutils \
     binutils-symlinks \
     coreutils \
+    cpp \
+    cpp-symlinks \
     diffutils \
     gcc \
     gcc-symlinks \
     g++ \
     g++-symlinks \
+    gettext \
     make \
     intltool \
+    libgcc-dev \
+    libstdc++ \
+    libstdc++-dev \
     perl-module-re \
     perl-module-text-wrap \
     pkgconfig \
