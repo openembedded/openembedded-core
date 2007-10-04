@@ -4,7 +4,7 @@
 
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 DEPENDS = "task-poky"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -33,6 +33,7 @@ RDEPENDS_task-poky-sdk = "\
     libgcc-dev \
     libstdc++ \
     libstdc++-dev \
+    libtool \
     perl-module-re \
     perl-module-text-wrap \
     pkgconfig \
