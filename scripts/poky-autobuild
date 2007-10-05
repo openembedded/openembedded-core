@@ -34,6 +34,10 @@ fi
 if [ "xcomplete" = "x$1" ]; then
     touch ./build/tmp/deploy/images/images-complete
     chmod a+w ./build/tmp/deploy/images/images-complete
+    POSTPROCESS=`which poky-autobuild-postprocess`
+    if [ "x$POSTPROCESS" != "x" ]; then
+        $POSTPROCESS `pwd` 
+    fi
     exit 0
 fi
 
