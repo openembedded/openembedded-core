@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r7"
+PR = "r8"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_htcuniversal = "1"
@@ -39,6 +39,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
            ${RPSRC}/poodle_pm-r4.patch;patch=1 \
            ${RPSRC}/pxa27x_overlay-r6.patch;patch=1 \
            ${RPSRC}/w100_extaccel-r1.patch;patch=1 \
+           ${RPSRC}/w100_extmem-r1.patch;patch=1 \
            file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            ${RPSRC}/logo_oh-r1.patch.bz2;patch=1;status=unmergable \
