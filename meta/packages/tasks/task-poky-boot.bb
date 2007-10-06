@@ -6,7 +6,7 @@ DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS = "virtual/kernel"
 ALLOW_EMPTY = "1"
-PR = "r3"
+PR = "r4"
 
 #
 # Set by the machine configuration with packages essential for device bootup
@@ -19,6 +19,7 @@ RDEPENDS_task-poky-boot = "\
     base-passwd \
     busybox \
     initscripts \
+    keymaps \
     modutils-initscripts \
     netbase \
     sysvinit \
