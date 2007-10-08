@@ -1,0 +1,80 @@
+From ca4508b1266109208f62e986b51397ce2788e255 Mon Sep 17 00:00:00 2001
+From: Cliff Brake <cbrake@happy.dev.bec-systems.com>
+Date: Fri, 20 Jul 2007 19:01:50 -0400
+Subject: [PATCH] ramdisk_load
+
+---
+ arch/arm/mach-pxa/cm-x270.c        |    6 ++++++
+ include/asm-arm/arch-pxa/cm-x270.h |    2 ++
+ init/initramfs.c                   |   16 ++++++++++++++++
+ 3 files changed, 24 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-pxa/cm-x270.c b/arch/arm/mach-pxa/cm-x270.c
+index 88b080d..c6ec489 100644
+--- a/arch/arm/mach-pxa/cm-x270.c
++++ b/arch/arm/mach-pxa/cm-x270.c
+@@ -308,6 +308,12 @@ static struct map_desc cmx270_io_desc[] __initdata = {
+ 		.length		= PXA_CS_SIZE,
+ 		.type		= MT_DEVICE
+ 	},
++	[2] = { /* NOR flash */
++		.virtual	= CMX270_FLASH_VIRT,
++		.pfn		= __phys_to_pfn(PXA_CS0_PHYS),
++		.length		= (8<<20), /* up to 8 MByte flash */
++		.type		= MT_DEVICE
++	},
+ };
+ 
+ /*
+diff --git a/include/asm-arm/arch-pxa/cm-x270.h b/include/asm-arm/arch-pxa/cm-x270.h
+index 24613a5..aad152e 100644
+--- a/include/asm-arm/arch-pxa/cm-x270.h
++++ b/include/asm-arm/arch-pxa/cm-x270.h
+@@ -20,7 +20,9 @@
+ 
+ #define CMX270_IT8152_VIRT		(CMX270_VIRT_BASE)
+ #define CMX270_IDE104_VIRT		(CMX270_IT8152_VIRT + PXA_CS_SIZE)
++#define CMX270_FLASH_VIRT		(CMX270_IDE104_VIRT + PXA_CS_SIZE)
+ 
++#define CMX270_FLASH_RAMDISK_VIRT	(CMX270_FLASH_VIRT + 0x1c0000)
+ 
+ /* GPIO related definitions */
+ #define GPIO_IT8152_IRQ			(22)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 00eff7a..0ecd40b 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -7,6 +7,9 @@
+ #include <linux/string.h>
+ #include <linux/syscalls.h>
+ 
++// HACK for compulab cm-x270
++#include <asm/arch/cm-x270.h>
++
+ static __initdata char *message;
+ static void __init error(char *x)
+ {
+@@ -550,7 +553,20 @@ static int __init populate_rootfs(void)
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	if (initrd_start) {
+ #ifdef CONFIG_BLK_DEV_RAM
++ 
++		/* hack to make initramfs work because the 
++		 * compulab BL does not zero out the 
++		 * initrd memory.  This only seems to affect loading
++		 * initramfs (cpio.gz) archives.  Does not seem to 
++		 * affect ramdisks.
++		 */
++ 		int initrd_size = *(int *)(CMX270_FLASH_RAMDISK_VIRT);
+ 		int fd;
++
++ 		initrd_end = initrd_start + initrd_size;
++ 		//printk("CLIFF: initrd_start = 0x%x\n", initrd_start);
++ 		//printk("CLIFF: initrd_end = 0x%x\n", initrd_end);
++
+ 		printk(KERN_INFO "checking if image is initramfs...");
+ 		err = unpack_to_rootfs((char *)initrd_start,
+ 			initrd_end - initrd_start, 1);
+-- 
+1.5.1.6
+

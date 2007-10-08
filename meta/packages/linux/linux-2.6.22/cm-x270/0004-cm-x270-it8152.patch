@@ -1,0 +1,496 @@
+From 1306abec905df1ff5cf2b1d91ac0d94d18d96c5b Mon Sep 17 00:00:00 2001
+From: Cliff Brake <cbrake@happy.dev.bec-systems.com>
+Date: Fri, 20 Jul 2007 19:00:07 -0400
+Subject: [PATCH] cm-x270-it8152
+
+---
+ arch/arm/common/Makefile          |    1 +
+ arch/arm/common/it8152.c          |  272 +++++++++++++++++++++++++++++++++++++
+ arch/arm/kernel/bios32.c          |   28 ++++-
+ include/asm-arm/hardware/it8152.h |  104 ++++++++++++++
+ include/asm-arm/pci.h             |    7 +
+ include/linux/pci_ids.h           |    1 +
+ 6 files changed, 410 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/common/it8152.c
+ create mode 100644 include/asm-arm/hardware/it8152.h
+
+diff --git a/arch/arm/common/Makefile b/arch/arm/common/Makefile
+index e1289a2..3d0b9fa 100644
+--- a/arch/arm/common/Makefile
++++ b/arch/arm/common/Makefile
+@@ -17,3 +17,4 @@ obj-$(CONFIG_SHARPSL_PM)	+= sharpsl_pm.o
+ obj-$(CONFIG_SHARP_SCOOP)	+= scoop.o
+ obj-$(CONFIG_ARCH_IXP2000)	+= uengine.o
+ obj-$(CONFIG_ARCH_IXP23XX)	+= uengine.o
++obj-$(CONFIG_PCI_HOST_ITE8152)  += it8152.o
+diff --git a/arch/arm/common/it8152.c b/arch/arm/common/it8152.c
+new file mode 100644
+index 0000000..8563610
+--- /dev/null
++++ b/arch/arm/common/it8152.c
+@@ -0,0 +1,272 @@
++/*
++ * arch/arm/common/it8152.c: PCI functions for IT8152
++ *
++ * Compulab Ltd, 2002-2006
++ *
++ * The DMA bouncing is taken from arch/arm/mach-ixp4xx/common-pci.c
++ * (see this file for respective copyrights)
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/sched.h>
++#include <linux/kernel.h>
++#include <linux/pci.h>
++#include <linux/ptrace.h>
++#include <linux/interrupt.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++#include <linux/init.h>
++#include <linux/ioport.h>
++#include <asm/mach/map.h>
++
++
++#include <asm/io.h>
++#include <asm/irq.h>
++#include <asm/system.h>
++#include <asm/mach/pci.h>
++#include <asm/hardware/it8152.h>
++
++#define MAX_SLOTS		21
++
++static unsigned long
++it8152_pci_dev_base_address(struct pci_bus *bus, unsigned int devfn)
++{
++	unsigned long addr = 0;
++
++	if (bus->number == 0) {
++			if (devfn < PCI_DEVFN(MAX_SLOTS, 0))
++				addr = (devfn << 8);
++	} else
++		addr = (bus->number << 16) | (devfn << 8);
++
++	return addr;
++}
++
++static int
++it8152_pci_read_config(struct pci_bus *bus, unsigned int devfn, int where,
++		    int size, u32 *value)
++{
++	unsigned long addr = it8152_pci_dev_base_address(bus, devfn);
++	u32 v;
++	int shift;
++
++#ifdef CONFIG_MACH_ARMCORE
++	if(devfn!=0) IT8152_GPIO_GPLR=0x00;
++#endif	
++	shift = (where & 3);
++
++	IT8152_PCI_CFG_ADDR = (addr + where);
++	v = (IT8152_PCI_CFG_DATA  >> (8 * (shift)));	
++
++	*value = v;
++
++#ifdef CONFIG_MACH_ARMCORE
++	if(devfn!=0) IT8152_GPIO_GPLR=0x20;
++#endif	
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++
++static int
++it8152_pci_write_config(struct pci_bus *bus, unsigned int devfn, int where,
++		     int size, u32 value)
++{
++	unsigned long addr = it8152_pci_dev_base_address(bus, devfn);
++	u32 v, vtemp, mask=0;
++	int shift;
++
++#ifdef CONFIG_MACH_ARMCORE
++	if(devfn!=0) IT8152_GPIO_GPLR=0x00;
++#endif
++
++	if(size==1) mask=0xff;
++	if(size==2) mask=0xffff;
++
++	shift = (where & 3);
++
++	IT8152_PCI_CFG_ADDR = addr + where;
++	vtemp = IT8152_PCI_CFG_DATA;
++
++	if(mask) vtemp &= ~(mask << (8 * shift));
++	else vtemp = 0;
++
++	v = (value << (8 * shift));
++	IT8152_PCI_CFG_ADDR = addr + where;
++	IT8152_PCI_CFG_DATA  = (v | vtemp);
++
++#ifdef CONFIG_MACH_ARMCORE
++	if(devfn!=0) IT8152_GPIO_GPLR=0x20;
++#endif
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static struct pci_ops it8152_ops = {
++	.read = it8152_pci_read_config,
++	.write = it8152_pci_write_config,
++};
++
++static struct resource it8152_io = {
++	.name	= "IT8152 PCI I/O region",
++	.flags	= IORESOURCE_IO,
++};
++
++static struct resource it8152_mem1 = {
++	.name	= "First IT8152 PCI memory region",
++	.start	= 0x10000000,
++	.end	= 0x13e00000,
++	.flags	= IORESOURCE_MEM,
++};
++
++/*
++ * The following functions are needed for DMA bouncing.
++ * ITE8152 chip can addrees up to 64MByte, so all the devices
++ * connected to ITE8152 (PCI and USB) should have limited DMA window
++ */
++
++/*
++ * Setup DMA mask to 64MB on devices connected to ITE8152. Ignore all
++ * other devices.
++ */
++static int it8152_pci_platform_notify(struct device *dev)
++{
++	if ( dev->bus == &pci_bus_type ) {
++		if ( dev->dma_mask )
++			*dev->dma_mask = (SZ_64M - 1) | PHYS_OFFSET;
++		dev->coherent_dma_mask = (SZ_64M - 1) | PHYS_OFFSET;
++		dmabounce_register_dev(dev, 2048, 4096);
++	}
++	return 0;
++}
++
++static int it8152_pci_platform_notify_remove(struct device *dev)
++{
++	if ( dev->bus == &pci_bus_type ) {
++		dmabounce_unregister_dev(dev);
++	}
++	return 0;
++}
++
++int dma_needs_bounce(struct device *dev, dma_addr_t dma_addr, size_t size)
++{
++	dev_dbg(dev, "%s: dma_addr %08x, size %08x\n",
++		__FUNCTION__, dma_addr, size);
++	return (dev->bus == &pci_bus_type ) && 
++		((dma_addr + size - PHYS_OFFSET) >= SZ_64M);
++}
++
++/*
++ * Only first 64MB of memory can be accessed via PCI.
++ * We use GFP_DMA to allocate safe buffers to do map/unmap.
++ * This is really ugly and we need a better way of specifying
++ * DMA-capable regions of memory.
++ */
++void __init it8152_adjust_zones(int node, unsigned long *zone_size,
++	unsigned long *zhole_size)
++{
++	unsigned int sz = SZ_64M >> PAGE_SHIFT;
++
++	/*
++	 * Only adjust if > 64M on current system
++	 */
++	if (node || (zone_size[0] <= sz))
++		return;
++
++	zone_size[1] = zone_size[0] - sz;
++	zone_size[0] = sz;
++	zhole_size[1] = zhole_size[0];
++	zhole_size[0] = 0;
++}
++
++/*
++ * We override these so we properly do dmabounce otherwise drivers
++ * are able to set the dma_mask to 0xffffffff and we can no longer
++ * trap bounces. :(
++ *
++ * We just return true on everyhing except for < 64MB in which case 
++ * we will fail miseralby and die since we can't handle that case.
++ */
++int
++pci_set_dma_mask(struct pci_dev *dev, u64 mask)
++{
++	printk(KERN_INFO "===> %s: %s %x\n", __FUNCTION__, dev->dev.bus_id, mask);
++	if (mask >= PHYS_OFFSET + SZ_64M - 1 )
++		return 0;
++
++	return -EIO;
++}
++    
++int
++pci_set_consistent_dma_mask(struct pci_dev *dev, u64 mask)
++{
++	printk(KERN_INFO "===> %s: %s %x\n", __FUNCTION__, dev->dev.bus_id, mask);
++	if (mask >= PHYS_OFFSET + SZ_64M - 1 )
++		return 0;
++
++	return -EIO;
++}
++
++EXPORT_SYMBOL(pci_set_dma_mask);
++EXPORT_SYMBOL(pci_set_consistent_dma_mask);
++
++
++int __init it8152_pci_setup(int nr, struct pci_sys_data *sys)
++{
++	it8152_io.start = IT8152_IO_BASE + 0x12000;
++ 	it8152_io.end	= IT8152_IO_BASE + 0x100000;
++
++	if (request_resource(&ioport_resource, &it8152_io)) {
++		printk(KERN_ERR "PCI: unable to allocate IO region\n");
++		return -EBUSY;
++	}
++	if (request_resource(&iomem_resource, &it8152_mem1)) {
++		printk(KERN_ERR "PCI: unable to allocate memory region\n");
++		return -EBUSY;
++	}
++
++	sys->resource[0] = &it8152_io;
++	sys->resource[1] = &it8152_mem1;
++
++	if (platform_notify || platform_notify_remove) {
++		printk(KERN_ERR "PCI: Can't use platform_notify\n");
++		return -EBUSY;
++	}
++
++	platform_notify = it8152_pci_platform_notify;
++	platform_notify_remove = it8152_pci_platform_notify_remove;
++
++	return 1;  
++}
++			  
++/*
++ * If we set up a device for bus mastering, we need to check the latency
++ * timer as we don't have even crappy BIOSes to set it properly.
++ * The implementation is from arch/i386/pci/i386.c
++ */
++unsigned int pcibios_max_latency = 255;
++
++void pcibios_set_master(struct pci_dev *dev)
++{
++	u8 lat;
++
++	pci_read_config_byte(dev, PCI_LATENCY_TIMER, &lat);
++	if (lat < 16)
++		lat = (64 <= pcibios_max_latency) ? 64 : pcibios_max_latency;
++	else if (lat > pcibios_max_latency)
++		lat = pcibios_max_latency;
++	else
++		return;
++	printk(KERN_DEBUG "PCI: Setting latency timer of device %s to %d\n", pci_name(dev), lat);
++	pci_write_config_byte(dev, PCI_LATENCY_TIMER, lat);
++}
++
++
++struct pci_bus * __init it8152_pci_scan_bus(int nr, struct pci_sys_data *sys)
++{
++	return pci_scan_bus(nr, &it8152_ops, sys);
++}
++
+diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+index 240c448..d8d2352 100644
+--- a/arch/arm/kernel/bios32.c
++++ b/arch/arm/kernel/bios32.c
+@@ -279,6 +279,25 @@ static void __devinit pci_fixup_cy82c693(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CONTAQ, PCI_DEVICE_ID_CONTAQ_82C693, pci_fixup_cy82c693);
+ 
++static void __init pci_fixup_it8152(struct pci_dev *dev) 
++{
++	int i;
++	/* fixup for ITE 8152 devices */
++	/* FIXME: add defines for class 0x68000 and 0x80103 */
++	if ((dev->class >> 8) == PCI_CLASS_BRIDGE_HOST ||
++	    dev->class == 0x68000 ||
++	    dev->class == 0x80103) {
++		for (i = 0; i < PCI_NUM_RESOURCES; i++) {
++			dev->resource[i].start = 0;
++			dev->resource[i].end   = 0;
++			dev->resource[i].flags = 0;
++		}
++	}
++}	
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ITE, PCI_DEVICE_ID_ITE_8152, pci_fixup_it8152);
++
++
++
+ void __devinit pcibios_update_irq(struct pci_dev *dev, int irq)
+ {
+ 	if (debug_pci)
+@@ -292,9 +311,12 @@ void __devinit pcibios_update_irq(struct pci_dev *dev, int irq)
+  */
+ static inline int pdev_bad_for_parity(struct pci_dev *dev)
+ {
+-	return (dev->vendor == PCI_VENDOR_ID_INTERG &&
+-		(dev->device == PCI_DEVICE_ID_INTERG_2000 ||
+-		 dev->device == PCI_DEVICE_ID_INTERG_2010));
++	return ((dev->vendor == PCI_VENDOR_ID_INTERG &&
++		 (dev->device == PCI_DEVICE_ID_INTERG_2000 ||
++		  dev->device == PCI_DEVICE_ID_INTERG_2010)) ||
++		(dev->vendor == PCI_VENDOR_ID_ITE &&
++		 dev->device == PCI_DEVICE_ID_ITE_8152));
++
+ }
+ 
+ /*
+diff --git a/include/asm-arm/hardware/it8152.h b/include/asm-arm/hardware/it8152.h
+new file mode 100644
+index 0000000..d28210d
+--- /dev/null
++++ b/include/asm-arm/hardware/it8152.h
+@@ -0,0 +1,104 @@
++/*
++ *  arch/arm/mach-pxa/it8152.h
++ *
++ *  Compulab Ltd., 2006
++ *
++ *  ITE 8152 companion chip definitions
++ */
++
++
++/* #define CMX270_IT8152_VIRT		(CMX270_VIRT_BASE) */
++
++
++extern unsigned long it8152_base_address;
++
++#define IT8152_IO_BASE			(it8152_base_address + 0x03e00000)
++#define IT8152_CFGREG_BASE		(it8152_base_address + 0x03f00000)
++
++/* #define IRQ_GPIO_IT8152_IRQ		IRQ_GPIO(GPIO_IT8152_IRQ) */
++
++#define IT8152_SHORT_IO(x)		(*((volatile unsigned short *)(IT8152_CFGREG_BASE+(x))))
++#define IT8152_LONG_IO(x)		(*((volatile unsigned long *)(IT8152_CFGREG_BASE+(x))))
++
++
++#define IT8152_PCI_MEMBASE		(*((volatile unsigned long *)(it8152_base_address)))
++/* #define IT8152_PCI_IOBASE		(*((volatile unsigned long *)(it8152_base_address + 0x3e00000))) */
++
++#define IT8152_PCI_IACK			(*((volatile unsigned long *)(it8152_base_address + 0x3f00808)))
++#define IT8152_PCI_CFG_ADDR		(*((volatile unsigned long *)(it8152_base_address + 0x3f00800)))
++#define IT8152_PCI_CFG_DATA		(*((volatile unsigned long *)(it8152_base_address + 0x3f00804)))
++
++#define IT_BUSNUM_SHF                   16
++#define IT_DEVNUM_SHF                   11
++#define IT_FUNCNUM_SHF                  8
++#define IT_REGNUM_SHF                   2
++
++/* Power management & PLL registers */
++#define IT8152_PMPLL_DSR		IT8152_LONG_IO(0x00)
++#define IT8152_PMPLL_DSSR		IT8152_LONG_IO(0x04)
++#define IT8152_PMPLL_PLLCR		IT8152_LONG_IO(0x20)
++#define IT8152_PMPLL_MFSR		IT8152_LONG_IO(0x24)
++
++/* Memory controller */
++#define IT8152_MC_REG_OFFSET		0x100
++
++#define IT8152_MC_SDCR			IT8152_LONG_IO(IT8152_MC_REG_OFFSET + 0x00)
++#define IT8152_MC_PCICR			IT8152_LONG_IO(IT8152_MC_REG_OFFSET + 0x04)
++
++/* Interrupt related definitions */
++#define IT8152_INTC_REG_OFFSET		0x300
++
++#define IT8152_INTC_LDCNIRR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x00)
++#define IT8152_INTC_LDPNIRR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x04)
++#define IT8152_INTC_LDCNIMR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x08)
++#define IT8152_INTC_LDPNIMR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x0C)
++#define IT8152_INTC_LDNITR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x10)
++#define IT8152_INTC_LDNIAR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x14)
++#define IT8152_INTC_LPCNIRR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x20)
++#define IT8152_INTC_LPPNIRR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x24)
++#define IT8152_INTC_LPCNIMR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x28)
++#define IT8152_INTC_LPPNIMR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x2C)
++#define IT8152_INTC_LPNITR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x30)
++#define IT8152_INTC_LPNIAR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x34)
++#define IT8152_INTC_PDCNIRR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x40)
++#define IT8152_INTC_PDPNIRR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x44)
++#define IT8152_INTC_PDCNIMR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x48)
++#define IT8152_INTC_PDPNIMR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x4C)
++#define IT8152_INTC_PDNITR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x50)
++#define IT8152_INTC_PDNIAR		IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0x54)
++#define IT8152_INTC_INTC_TYPER	IT8152_LONG_IO(IT8152_INTC_REG_OFFSET + 0xFC)
++
++#define IT8152_UART_BASE		IT8152_LONG_IO(0x200)
++
++#define IT8152_GPIO_REG_OFFSET		0x500
++
++#define IT8152_GPIO_GPLR		IT8152_LONG_IO(IT8152_GPIO_REG_OFFSET)
++#define IT8152_GPIO_GPCR12		IT8152_LONG_IO(IT8152_GPIO_REG_OFFSET + 0x04)
++#define IT8152_GPIO_GPCR34		IT8152_LONG_IO(IT8152_GPIO_REG_OFFSET + 0x08)
++
++
++/* Interrupt bit definitions */
++#define PCISERR_BIT		(1<<14)
++#define H2PTADR_BIT		(1<<13)
++#define H2PMAR_BIT		(1<<12)
++#define PCI_INTD_BIT	(1<<11)
++#define PCI_INTC_BIT	(1<<10)
++#define PCI_INTB_BIT	(1<<9)
++#define PCI_INTA_BIT	(1<<8)
++#define CDMA_INT_BIT	(1<<2)
++#define USB_INT_BIT		(1<<1)
++#define AUDIO_INT_BIT	(1<<0)
++
++/* IT8152 UART */
++#define ITESER_BIT		(1<<5)
++
++
++
++
++
++
++
++
++
++ 
++
+diff --git a/include/asm-arm/pci.h b/include/asm-arm/pci.h
+index f21abd4..2cf30bf 100644
+--- a/include/asm-arm/pci.h
++++ b/include/asm-arm/pci.h
+@@ -8,10 +8,17 @@
+ 
+ #define pcibios_scan_all_fns(a, b)	0
+ 
++#ifdef CONFIG_PCI_HOST_ITE8152
++/* ITE bridge requires setting latency timer to avoid early bus access
++   termination by PIC bus mater devices
++*/
++extern void pcibios_set_master(struct pci_dev *dev);
++#else
+ static inline void pcibios_set_master(struct pci_dev *dev)
+ {
+ 	/* No special bus mastering setup handling */
+ }
++#endif
+ 
+ static inline void pcibios_penalize_isa_irq(int irq, int active)
+ {
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 5b1c999..b4c81d5 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1650,6 +1650,7 @@
+ #define PCI_DEVICE_ID_ITE_8211		0x8211
+ #define PCI_DEVICE_ID_ITE_8212		0x8212
+ #define PCI_DEVICE_ID_ITE_8213		0x8213
++#define PCI_DEVICE_ID_ITE_8152		0x8152
+ #define PCI_DEVICE_ID_ITE_8872		0x8872
+ #define PCI_DEVICE_ID_ITE_IT8330G_0	0xe886
+ 
+-- 
+1.5.1.6
+

@@ -1,0 +1,186 @@
+From f260d5fa4c99cd7df949e6408af59807f8ccf224 Mon Sep 17 00:00:00 2001
+From: Cliff Brake <cbrake@happy.dev.bec-systems.com>
+Date: Fri, 20 Jul 2007 18:59:39 -0400
+Subject: [PATCH] cm-x270-ide
+
+---
+ drivers/ide/Kconfig           |    8 +++
+ drivers/ide/arm/Makefile      |    1 +
+ drivers/ide/arm/cm-x270-ide.c |  135 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 144 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/ide/arm/cm-x270-ide.c
+
+diff --git a/drivers/ide/Kconfig b/drivers/ide/Kconfig
+index b1a9b81..7de4155 100644
+--- a/drivers/ide/Kconfig
++++ b/drivers/ide/Kconfig
+@@ -864,6 +864,14 @@ config BLK_DEV_IDE_BAST
+ 	  Say Y here if you want to support the onboard IDE channels on the
+ 	  Simtec BAST or the Thorcom VR1000
+ 
++config BLK_DEV_IDE_CM_X270
++	tristate "CompuLab CM-X270 IDE support"
++	depends on ARM && (MACH_ARMCORE)
++	help
++	  Say Y here if you want to support the onboard IDE channels on the
++	  CompuLab CM-X270 module
++
++
+ config BLK_DEV_GAYLE
+ 	bool "Amiga Gayle IDE interface support"
+ 	depends on AMIGA
+diff --git a/drivers/ide/arm/Makefile b/drivers/ide/arm/Makefile
+index 6a78f07..e5cadb7 100644
+--- a/drivers/ide/arm/Makefile
++++ b/drivers/ide/arm/Makefile
+@@ -2,5 +2,6 @@
+ obj-$(CONFIG_BLK_DEV_IDE_ICSIDE)	+= icside.o
+ obj-$(CONFIG_BLK_DEV_IDE_RAPIDE)	+= rapide.o
+ obj-$(CONFIG_BLK_DEV_IDE_BAST)		+= bast-ide.o
++obj-$(CONFIG_BLK_DEV_IDE_CM_X270)	+= cm-x270-ide.o
+ 
+ EXTRA_CFLAGS	:= -Idrivers/ide
+diff --git a/drivers/ide/arm/cm-x270-ide.c b/drivers/ide/arm/cm-x270-ide.c
+new file mode 100644
+index 0000000..a8b15aa
+--- /dev/null
++++ b/drivers/ide/arm/cm-x270-ide.c
+@@ -0,0 +1,135 @@
++/* linux/drivers/ide/arm/cm-x270-ide.c
++ *
++ * Copyright (c) 2006 CompuLab, Ltd
++ *  Mike Rapoport <mike@compulab.co.il>
++ *
++ * Based on linux/drivers/ide/arm/bast-ide.c
++ * Copyright (c) 2003-2004 Simtec Electronics
++ *  Ben Dooks <ben@simtec.co.uk>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/errno.h>
++#include <linux/ide.h>
++#include <linux/init.h>
++#include <linux/irq.h>
++
++#include <asm/mach-types.h>
++
++#include <asm/io.h>
++#include <asm/arch/pxa-regs.h>
++#include <asm/arch/cm-x270.h>
++
++#define CMX270_SB270_IDECS0_VIRT (CMX270_IDE104_VIRT + (1<<24) + (1<<25))
++#define CMX270_SB270_IDECS1_VIRT (CMX270_IDE104_VIRT + (1<<25))
++#define CMX270_ATX_IDECS0_VIRT (CMX270_IDE104_VIRT + (1<<25))
++#define CMX270_ATX_IDECS1_VIRT (CMX270_IDE104_VIRT + (1<<25) + (1<<22))
++
++/* list of registered interfaces */
++static ide_hwif_t *ifs[1];
++
++static int __init
++cmx270_ide_register(unsigned int base, unsigned int aux, int irq,
++		 ide_hwif_t **hwif)
++{
++	hw_regs_t hw;
++
++	memset(&hw, 0, sizeof(hw));
++
++	if(!base || !aux) return -EINVAL;
++
++	printk(KERN_DEBUG "%s: base = %08x, aux = %08x\n", __FUNCTION__,
++	       base, aux);
++
++        /* Different mappings for local bus IDE and PCMCIA IDE */
++	if(base == CMX270_SB270_IDECS0_VIRT) {
++		hw.io_ports[IDE_DATA_OFFSET] = base + 0;
++		hw.io_ports[IDE_ERROR_OFFSET] = base + (0x1<<3);
++		hw.io_ports[IDE_NSECTOR_OFFSET]= base + (0x2<<3);
++		hw.io_ports[IDE_SECTOR_OFFSET]= base + (0x3<<3);
++		hw.io_ports[IDE_LCYL_OFFSET]= base + (0x4<<3);
++		hw.io_ports[IDE_HCYL_OFFSET]= base + (0x5<<3);
++		hw.io_ports[IDE_SELECT_OFFSET]=	base + (0x6<<3);
++		hw.io_ports[IDE_STATUS_OFFSET]=	base + (0x7<<3);
++		hw.io_ports[IDE_CONTROL_OFFSET] = aux+(0x6<<3);
++	}
++	else if (base == CMX270_ATX_IDECS0_VIRT) { /* atx base */
++		hw.io_ports[IDE_DATA_OFFSET] = base + 0;
++		hw.io_ports[IDE_ERROR_OFFSET] =	base + 8;
++		hw.io_ports[IDE_NSECTOR_OFFSET]= base + 2;
++		hw.io_ports[IDE_SECTOR_OFFSET]= base + 10;
++		hw.io_ports[IDE_LCYL_OFFSET]= base + 4;
++		hw.io_ports[IDE_HCYL_OFFSET]= base + 12;
++		hw.io_ports[IDE_SELECT_OFFSET]= base + 6; //6;
++		hw.io_ports[IDE_STATUS_OFFSET]= base + 14;
++		hw.io_ports[IDE_CONTROL_OFFSET] = (aux+0x6);
++	} else {
++		printk(KERN_DEBUG "%s: registering wrong IDE i/f\n", __FUNCTION__);
++		hw.io_ports[IDE_DATA_OFFSET] = base + 8;
++		hw.io_ports[IDE_ERROR_OFFSET] = base + 13;
++		hw.io_ports[IDE_NSECTOR_OFFSET] = base + 2;
++		hw.io_ports[IDE_SECTOR_OFFSET] = base + 3;
++		hw.io_ports[IDE_LCYL_OFFSET] = base + 4;
++		hw.io_ports[IDE_HCYL_OFFSET] = base + 5;
++		hw.io_ports[IDE_SELECT_OFFSET] = base + 6;
++		hw.io_ports[IDE_STATUS_OFFSET] = base + 7;
++		hw.io_ports[IDE_CONTROL_OFFSET] = aux;
++	}
++	
++	hw.irq = irq;
++
++	return ide_register_hw(&hw, hwif);
++}
++
++static int __init cmx270_ide_init(void)
++{
++	int retval = 0;
++
++	if (!(machine_is_armcore()))
++		goto out;
++
++	printk("CM-X270: initializing IDE interface\n");
++
++	MSC1 = 0x7ffc7ff4;
++
++	/* Interrupts on rising edge: lines are inverted before they get to
++           the PXA */
++	pxa_gpio_mode(IRQ_TO_GPIO(CMX270_IDE_IRQ));
++
++	/* try SB-X270 */
++	set_irq_type(CMX270_IDE_IRQ, IRQ_TYPE_EDGE_RISING);
++	retval = cmx270_ide_register(CMX270_SB270_IDECS0_VIRT,
++				 CMX270_SB270_IDECS1_VIRT,
++				 CMX270_IDE_IRQ, &ifs[0]);
++	if (retval >= 0) {
++		printk(KERN_DEBUG "%s: found IDE interface on SB-X270\n",
++		       __FUNCTION__);
++		goto out;
++	}
++
++	/* SB-X270 detection failed, try ATX */
++	set_irq_type(CMX270_IDE_IRQ, IRQ_TYPE_EDGE_FALLING);
++	retval = cmx270_ide_register(CMX270_ATX_IDECS0_VIRT,
++				 CMX270_ATX_IDECS1_VIRT,
++				 CMX270_IDE_IRQ, &ifs[0]);
++
++	if ( retval >= 0 ) {
++		printk(KERN_DEBUG "%s: found IDE interface on ATX\n",
++		       __FUNCTION__);
++		goto out;
++	}
++
++  out:
++	return retval;
++}
++
++module_init(cmx270_ide_init);
++
++MODULE_AUTHOR("CompuLab");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("CompuLab CM-X270 IDE driver");
+-- 
+1.5.1.6
+

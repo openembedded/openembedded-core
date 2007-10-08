@@ -1,0 +1,43 @@
+From 94a59c25e4e0aec3c4d12e0c63e144e6af447368 Mon Sep 17 00:00:00 2001
+From: Cliff Brake <cbrake@happy.dev.bec-systems.com>
+Date: Fri, 20 Jul 2007 19:04:42 -0400
+Subject: [PATCH] cursor-fix
+
+---
+ drivers/char/vt.c       |    4 ++--
+ drivers/char/vt_ioctl.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/char/vt.c b/drivers/char/vt.c
+index 6650ae1..649474e 100644
+--- a/drivers/char/vt.c
++++ b/drivers/char/vt.c
+@@ -3491,8 +3491,8 @@ void do_blank_screen(int entering_gfx)
+ 		}
+ 		return;
+ 	}
+-	if (blank_state != blank_normal_wait)
+-		return;
++	//if (blank_state != blank_normal_wait)
++	//	return;
+ 	blank_state = blank_off;
+ 
+ 	/* entering graphics mode? */
+diff --git a/drivers/char/vt_ioctl.c b/drivers/char/vt_ioctl.c
+index c6f6f42..94121ff 100644
+--- a/drivers/char/vt_ioctl.c
++++ b/drivers/char/vt_ioctl.c
+@@ -489,8 +489,8 @@ int vt_ioctl(struct tty_struct *tty, struct file * file,
+ 		if (vc->vc_mode == (unsigned char) arg)
+ 			return 0;
+ 		vc->vc_mode = (unsigned char) arg;
+-		if (console != fg_console)
+-			return 0;
++		//if (console != fg_console)
++		//	return 0;
+ 		/*
+ 		 * explicitly blank/unblank the screen if switching modes
+ 		 */
+-- 
+1.5.1.6
+
