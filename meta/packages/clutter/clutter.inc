@@ -13,6 +13,11 @@ EXTRA_OECONF_zylonite = "${BASE_CONF} --with-flavour=eglnative"
 PACKAGE_ARCH_zylonite = "${MACHINE_ARCH}"
 LDFLAGS_append_zylonite = " -lnws -lstdc++ "
 
+DEPENDS_mx31litekit = "${STDDEPENDS} libgles-mx31 tslib"
+EXTRA_OECONF_mx31litekit = "${BASE_CONF} --with-flavour=eglnative"
+PACKAGE_ARCH_mx31litekit = "${MACHINE_ARCH}"
+LDFLAGS_append_mx31litekit = " -lpvrNULLWSEGL -lstdc++ "
+
 inherit autotools pkgconfig
 
 PACKAGES =+ "clutter-examples"
