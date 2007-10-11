@@ -336,10 +336,8 @@
 #   Signed-off-by: Russell King
 #
 #
-Index: linux-2.6.22/arch/arm/Kconfig
-===================================================================
---- linux-2.6.22.orig/arch/arm/Kconfig	2007-09-24 20:57:20.000000000 +0200
-+++ linux-2.6.22/arch/arm/Kconfig	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/Kconfig
++++ linux-2.6.23/arch/arm/Kconfig
 @@ -336,14 +336,14 @@
  	  This enables support for Philips PNX4008 mobile platform.
  
@@ -366,10 +364,8 @@ Index: linux-2.6.22/arch/arm/Kconfig
  	help
  	  Enable support for iWMMXt context switching at run time if
  	  running on a CPU that supports it.
-Index: linux-2.6.22/arch/arm/boot/compressed/head-xscale.S
-===================================================================
---- linux-2.6.22.orig/arch/arm/boot/compressed/head-xscale.S	2007-09-24 20:56:50.000000000 +0200
-+++ linux-2.6.22/arch/arm/boot/compressed/head-xscale.S	2007-09-24 21:03:05.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/boot/compressed/head-xscale.S
++++ linux-2.6.23/arch/arm/boot/compressed/head-xscale.S
 @@ -33,10 +33,6 @@
  		bic	r0, r0, #0x1000		@ clear Icache
  		mcr	p15, 0, r0, c1, c0, 0
@@ -381,10 +377,8 @@ Index: linux-2.6.22/arch/arm/boot/compressed/head-xscale.S
  #ifdef CONFIG_ARCH_COTULLA_IDP
  		mov	r7, #MACH_TYPE_COTULLA_IDP
  #endif
-Index: linux-2.6.22/arch/arm/mach-pxa/Kconfig
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/Kconfig	2007-09-24 20:57:20.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/Kconfig	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/Kconfig
++++ linux-2.6.23/arch/arm/mach-pxa/Kconfig
 @@ -1,6 +1,24 @@
  if ARCH_PXA
  
@@ -435,10 +429,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/Kconfig
  config PXA_SHARP_C7xx
  	bool
  	select PXA_SSP
-Index: linux-2.6.22/arch/arm/mach-pxa/Makefile
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/Makefile	2007-09-24 20:57:20.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/Makefile	2007-09-24 21:03:57.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/Makefile
++++ linux-2.6.23/arch/arm/mach-pxa/Makefile
 @@ -6,6 +6,9 @@
  obj-y += clock.o generic.o irq.o dma.o time.o
  obj-$(CONFIG_PXA25x) += pxa25x.o
@@ -462,10 +454,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/Makefile
  obj-$(CONFIG_MACH_HX2750)	+= hx2750.o hx2750_test.o
  obj-$(CONFIG_MACH_HTCUNIVERSAL) += htcuniversal/
  
-Index: linux-2.6.22/arch/arm/mach-pxa/clock.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/clock.c	2007-09-24 20:56:51.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/clock.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/clock.c
++++ linux-2.6.23/arch/arm/mach-pxa/clock.c
 @@ -9,19 +9,15 @@
  #include <linux/string.h>
  #include <linux/clk.h>
@@ -616,10 +606,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/clock.c
  	return 0;
  }
  arch_initcall(clk_init);
-Index: linux-2.6.22/arch/arm/mach-pxa/clock.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/clock.h	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/clock.h
 @@ -0,0 +1,43 @@
 +struct clk;
 +
@@ -664,10 +652,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/clock.h
 +void clk_cken_disable(struct clk *clk);
 +
 +void clks_register(struct clk *clks, size_t num);
-Index: linux-2.6.22/arch/arm/mach-pxa/devices.h
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/devices.h	2007-09-24 20:56:51.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/devices.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/devices.h
++++ linux-2.6.23/arch/arm/mach-pxa/devices.h
 @@ -9,3 +9,6 @@
  extern struct platform_device pxa_device_i2s;
  extern struct platform_device pxa_device_ficp;
@@ -675,10 +661,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/devices.h
 +
 +extern struct platform_device pxa27x_device_i2c_power;
 +extern struct platform_device pxa27x_device_ohci;
-Index: linux-2.6.22/arch/arm/mach-pxa/generic.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/generic.c	2007-09-24 20:57:20.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/generic.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/generic.c
++++ linux-2.6.23/arch/arm/mach-pxa/generic.c
 @@ -25,10 +25,6 @@
  #include <linux/pm.h>
  #include <linux/string.h>
@@ -890,10 +874,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/generic.c
  };
  
  void __init pxa_set_ffuart_info(struct platform_pxa_serial_funcs *info)
-Index: linux-2.6.22/arch/arm/mach-pxa/generic.h
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/generic.h	2007-09-24 20:56:51.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/generic.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/generic.h
++++ linux-2.6.23/arch/arm/mach-pxa/generic.h
 @@ -15,14 +15,40 @@
  extern void __init pxa_init_irq_low(void);
  extern void __init pxa_init_irq_high(void);
@@ -935,10 +917,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/generic.h
 +#define pxa3xx_get_clk_frequency_khz(x)		(0)
 +#define pxa3xx_get_memclk_frequency_10khz()	(0)
 +#endif
-Index: linux-2.6.22/arch/arm/mach-pxa/irq.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/irq.c	2007-09-24 20:56:51.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/irq.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/irq.c
++++ linux-2.6.23/arch/arm/mach-pxa/irq.c
 @@ -38,33 +38,11 @@
  	ICMR |= (1 << irq);
  }
@@ -1101,10 +1081,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/irq.c
 +	pxa_low_gpio_chip.set_wake = set_wake;
 +	pxa_muxed_gpio_chip.set_wake = set_wake;
 +}
-Index: linux-2.6.22/arch/arm/mach-pxa/mfp.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/mfp.c	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/mfp.c
 @@ -0,0 +1,235 @@
 +/*
 + * linux/arch/arm/mach-pxa/mfp.c
@@ -1341,10 +1319,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/mfp.c
 +{
 +	memset(mfp_table, 0, sizeof(mfp_table));
 +}
-Index: linux-2.6.22/arch/arm/mach-pxa/pxa25x.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/pxa25x.c	2007-09-24 20:57:15.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/pxa25x.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/pxa25x.c
++++ linux-2.6.23/arch/arm/mach-pxa/pxa25x.c
 @@ -30,6 +30,7 @@
  
  #include "generic.h"
@@ -1484,10 +1460,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/pxa25x.c
  		if ((ret = pxa_init_dma(16)))
  			return ret;
  #ifdef CONFIG_PM
-Index: linux-2.6.22/arch/arm/mach-pxa/pxa27x.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/pxa27x.c	2007-09-24 20:57:15.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/pxa27x.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/pxa27x.c
++++ linux-2.6.23/arch/arm/mach-pxa/pxa27x.c
 @@ -27,6 +27,7 @@
  
  #include "generic.h"
@@ -1682,10 +1656,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/pxa27x.c
  		if ((ret = pxa_init_dma(32)))
  			return ret;
  #ifdef CONFIG_PM
-Index: linux-2.6.22/arch/arm/mach-pxa/pxa300.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/pxa300.c	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/pxa300.c
 @@ -0,0 +1,93 @@
 +/*
 + * linux/arch/arm/mach-pxa/pxa300.c
@@ -1780,10 +1752,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/pxa300.c
 +}
 +
 +core_initcall(pxa300_init);
-Index: linux-2.6.22/arch/arm/mach-pxa/pxa320.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/pxa320.c	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/pxa320.c
 @@ -0,0 +1,88 @@
 +/*
 + * linux/arch/arm/mach-pxa/pxa320.c
@@ -1873,10 +1843,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/pxa320.c
 +}
 +
 +core_initcall(pxa320_init);
-Index: linux-2.6.22/arch/arm/mach-pxa/pxa3xx.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/pxa3xx.c	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/pxa3xx.c
 @@ -0,0 +1,216 @@
 +/*
 + * linux/arch/arm/mach-pxa/pxa3xx.c
@@ -2094,10 +2062,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/pxa3xx.c
 +}
 +
 +subsys_initcall(pxa3xx_init);
-Index: linux-2.6.22/arch/arm/mach-pxa/time.c
-===================================================================
---- linux-2.6.22.orig/arch/arm/mach-pxa/time.c	2007-09-24 20:56:51.000000000 +0200
-+++ linux-2.6.22/arch/arm/mach-pxa/time.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mach-pxa/time.c
++++ linux-2.6.23/arch/arm/mach-pxa/time.c
 @@ -16,10 +16,48 @@
  #include <linux/init.h>
  #include <linux/interrupt.h>
@@ -2179,10 +2145,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/time.c
  
  	setup_irq(IRQ_OST0, &pxa_ost0_irq);
  
-Index: linux-2.6.22/arch/arm/mach-pxa/zylonite.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/zylonite.c	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite.c
 @@ -0,0 +1,184 @@
 +/*
 + * linux/arch/arm/mach-pxa/zylonite.c
@@ -2368,10 +2332,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/zylonite.c
 +	.timer		= &pxa_timer,
 +	.init_machine	= zylonite_init,
 +MACHINE_END
-Index: linux-2.6.22/arch/arm/mach-pxa/zylonite_pxa300.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/zylonite_pxa300.c	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c
 @@ -0,0 +1,188 @@
 +/*
 + * linux/arch/arm/mach-pxa/zylonite_pxa300.c
@@ -2561,10 +2523,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/zylonite_pxa300.c
 +		gpio_eth_irq = mfp_to_gpio(MFP_PIN_GPIO102);
 +	}
 +}
-Index: linux-2.6.22/arch/arm/mach-pxa/zylonite_pxa320.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/arch/arm/mach-pxa/zylonite_pxa320.c	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa320.c
 @@ -0,0 +1,173 @@
 +/*
 + * linux/arch/arm/mach-pxa/zylonite_pxa320.c
@@ -2739,10 +2699,8 @@ Index: linux-2.6.22/arch/arm/mach-pxa/zylonite_pxa320.c
 +		gpio_eth_irq	= mfp_to_gpio(MFP_PIN_GPIO9);
 +	}
 +}
-Index: linux-2.6.22/arch/arm/mm/Kconfig
-===================================================================
---- linux-2.6.22.orig/arch/arm/mm/Kconfig	2007-09-24 20:56:51.000000000 +0200
-+++ linux-2.6.22/arch/arm/mm/Kconfig	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/arch/arm/mm/Kconfig
++++ linux-2.6.23/arch/arm/mm/Kconfig
 @@ -322,7 +322,7 @@
  # XScale
  config CPU_XSCALE
@@ -2761,10 +2719,8 @@ Index: linux-2.6.22/arch/arm/mm/Kconfig
  	default y
  	select CPU_32v5
  	select CPU_ABRT_EV5T
-Index: linux-2.6.22/drivers/i2c/busses/i2c-pxa.c
-===================================================================
---- linux-2.6.22.orig/drivers/i2c/busses/i2c-pxa.c	2007-09-24 20:56:56.000000000 +0200
-+++ linux-2.6.22/drivers/i2c/busses/i2c-pxa.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/i2c/busses/i2c-pxa.c
++++ linux-2.6.23/drivers/i2c/busses/i2c-pxa.c
 @@ -31,6 +31,8 @@
  #include <linux/interrupt.h>
  #include <linux/i2c-pxa.h>
@@ -2873,10 +2829,8 @@ Index: linux-2.6.22/drivers/i2c/busses/i2c-pxa.c
  	release_mem_region(i2c->iobase, i2c->iosize);
  	kfree(i2c);
  
-Index: linux-2.6.22/drivers/input/keyboard/pxa27x_keyboard.c
-===================================================================
---- linux-2.6.22.orig/drivers/input/keyboard/pxa27x_keyboard.c	2007-09-24 20:56:56.000000000 +0200
-+++ linux-2.6.22/drivers/input/keyboard/pxa27x_keyboard.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/input/keyboard/pxa27x_keyboard.c
++++ linux-2.6.23/drivers/input/keyboard/pxa27x_keyboard.c
 @@ -23,6 +23,8 @@
  #include <linux/input.h>
  #include <linux/device.h>
@@ -2969,10 +2923,8 @@ Index: linux-2.6.22/drivers/input/keyboard/pxa27x_keyboard.c
  	platform_set_drvdata(pdev, NULL);
  
  	return 0;
-Index: linux-2.6.22/drivers/mmc/host/pxamci.c
-===================================================================
---- linux-2.6.22.orig/drivers/mmc/host/pxamci.c	2007-09-24 20:56:58.000000000 +0200
-+++ linux-2.6.22/drivers/mmc/host/pxamci.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/mmc/host/pxamci.c
++++ linux-2.6.23/drivers/mmc/host/pxamci.c
 @@ -23,6 +23,8 @@
  #include <linux/delay.h>
  #include <linux/interrupt.h>
@@ -3080,10 +3032,8 @@ Index: linux-2.6.22/drivers/mmc/host/pxamci.c
  		release_resource(host->res);
  
  		mmc_free_host(mmc);
-Index: linux-2.6.22/drivers/mmc/host/pxamci.h
-===================================================================
---- linux-2.6.22.orig/drivers/mmc/host/pxamci.h	2007-09-24 20:56:58.000000000 +0200
-+++ linux-2.6.22/drivers/mmc/host/pxamci.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/mmc/host/pxamci.h
++++ linux-2.6.23/drivers/mmc/host/pxamci.h
 @@ -86,17 +86,3 @@
  #define MMC_RXFIFO	0x0040	/* 8 bit */
  
@@ -3102,23 +3052,17 @@ Index: linux-2.6.22/drivers/mmc/host/pxamci.h
 -
 -#define CLOCKRATE	CLOCKRATE_MAX
 -
-Index: linux-2.6.22/drivers/mtd/maps/lubbock-flash.c
-===================================================================
---- linux-2.6.22.orig/drivers/mtd/maps/lubbock-flash.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/mtd/maps/lubbock-flash.c	2007-09-24 20:57:20.000000000 +0200
-@@ -24,10 +24,10 @@
+--- linux-2.6.23.orig/drivers/mtd/maps/lubbock-flash.c
++++ linux-2.6.23/drivers/mtd/maps/lubbock-flash.c
+@@ -22,6 +22,7 @@
  
  #include <asm/io.h>
  #include <asm/hardware.h>
 +#include <asm/mach-types.h>
  #include <asm/arch/pxa-regs.h>
  #include <asm/arch/lubbock.h>
- 
--
- #define ROM_ADDR	0x00000000
- #define FLASH_ADDR	0x04000000
- 
-@@ -73,9 +73,14 @@
+ #include <asm/cacheflush.h>
+@@ -71,9 +72,14 @@
  
  static int __init init_lubbock(void)
  {
@@ -3134,23 +3078,17 @@ Index: linux-2.6.22/drivers/mtd/maps/lubbock-flash.c
  	lubbock_maps[0].bankwidth = lubbock_maps[1].bankwidth =
  		(BOOT_DEF & 1) ? 2 : 4;
  
-Index: linux-2.6.22/drivers/mtd/maps/mainstone-flash.c
-===================================================================
---- linux-2.6.22.orig/drivers/mtd/maps/mainstone-flash.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/mtd/maps/mainstone-flash.c	2007-09-24 20:57:20.000000000 +0200
-@@ -24,10 +24,10 @@
+--- linux-2.6.23.orig/drivers/mtd/maps/mainstone-flash.c
++++ linux-2.6.23/drivers/mtd/maps/mainstone-flash.c
+@@ -22,6 +22,7 @@
  
  #include <asm/io.h>
  #include <asm/hardware.h>
 +#include <asm/mach-types.h>
  #include <asm/arch/pxa-regs.h>
  #include <asm/arch/mainstone.h>
- 
--
- #define ROM_ADDR	0x00000000
- #define FLASH_ADDR	0x04000000
- 
-@@ -77,6 +77,9 @@
+ #include <asm/cacheflush.h>
+@@ -76,6 +77,9 @@
  	int SW7 = 0;  /* FIXME: get from SCR (Mst doc section 3.2.1.1) */
  	int ret = 0, i;
  
@@ -3160,10 +3098,8 @@ Index: linux-2.6.22/drivers/mtd/maps/mainstone-flash.c
  	mainstone_maps[0].bankwidth = (BOOT_DEF & 1) ? 2 : 4;
  	mainstone_maps[1].bankwidth = 4;
  
-Index: linux-2.6.22/drivers/net/irda/pxaficp_ir.c
-===================================================================
---- linux-2.6.22.orig/drivers/net/irda/pxaficp_ir.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/net/irda/pxaficp_ir.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/net/irda/pxaficp_ir.c
++++ linux-2.6.23/drivers/net/irda/pxaficp_ir.c
 @@ -23,6 +23,7 @@
  #include <linux/dma-mapping.h>
  #include <linux/platform_device.h>
@@ -3293,10 +3229,8 @@ Index: linux-2.6.22/drivers/net/irda/pxaficp_ir.c
  		free_netdev(dev);
  	}
  
-Index: linux-2.6.22/drivers/net/smc91x.c
-===================================================================
---- linux-2.6.22.orig/drivers/net/smc91x.c	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/net/smc91x.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/net/smc91x.c
++++ linux-2.6.23/drivers/net/smc91x.c
 @@ -173,56 +173,6 @@
   */
  #define MII_DELAY		1
@@ -3379,10 +3313,8 @@ Index: linux-2.6.22/drivers/net/smc91x.c
  	smc_request_datacs(pdev, ndev);
  
  	return 0;
-Index: linux-2.6.22/drivers/net/smc91x.h
-===================================================================
---- linux-2.6.22.orig/drivers/net/smc91x.h	2007-09-24 20:57:01.000000000 +0200
-+++ linux-2.6.22/drivers/net/smc91x.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/net/smc91x.h
++++ linux-2.6.23/drivers/net/smc91x.h
 @@ -461,6 +461,59 @@
  
  #endif
@@ -3508,10 +3440,8 @@ Index: linux-2.6.22/drivers/net/smc91x.h
  }
  #endif
  
-Index: linux-2.6.22/drivers/serial/pxa.c
-===================================================================
---- linux-2.6.22.orig/drivers/serial/pxa.c	2007-09-24 20:57:20.000000000 +0200
-+++ linux-2.6.22/drivers/serial/pxa.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/serial/pxa.c
++++ linux-2.6.23/drivers/serial/pxa.c
 @@ -42,6 +42,7 @@
  #include <linux/tty.h>
  #include <linux/tty_flip.h>
@@ -3769,10 +3699,8 @@ Index: linux-2.6.22/drivers/serial/pxa.c
  
  	return 0;
  }
-Index: linux-2.6.22/drivers/serial/serial_core.c
-===================================================================
---- linux-2.6.22.orig/drivers/serial/serial_core.c	2007-09-24 20:57:19.000000000 +0200
-+++ linux-2.6.22/drivers/serial/serial_core.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/serial/serial_core.c
++++ linux-2.6.23/drivers/serial/serial_core.c
 @@ -2128,6 +2128,14 @@
  		spin_unlock_irqrestore(&port->lock, flags);
  
@@ -3812,10 +3740,8 @@ Index: linux-2.6.22/drivers/serial/serial_core.c
  	 * Ensure UPF_DEAD is not set.
  	 */
  	port->flags &= ~UPF_DEAD;
-Index: linux-2.6.22/drivers/usb/gadget/pxa2xx_udc.c
-===================================================================
---- linux-2.6.22.orig/drivers/usb/gadget/pxa2xx_udc.c	2007-09-24 20:57:04.000000000 +0200
-+++ linux-2.6.22/drivers/usb/gadget/pxa2xx_udc.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/usb/gadget/pxa2xx_udc.c
++++ linux-2.6.23/drivers/usb/gadget/pxa2xx_udc.c
 @@ -43,6 +43,8 @@
  #include <linux/platform_device.h>
  #include <linux/dma-mapping.h>
@@ -3966,10 +3892,8 @@ Index: linux-2.6.22/drivers/usb/gadget/pxa2xx_udc.c
  	platform_set_drvdata(pdev, NULL);
  	the_controller = NULL;
  	return 0;
-Index: linux-2.6.22/drivers/usb/gadget/pxa2xx_udc.h
-===================================================================
---- linux-2.6.22.orig/drivers/usb/gadget/pxa2xx_udc.h	2007-09-24 20:57:17.000000000 +0200
-+++ linux-2.6.22/drivers/usb/gadget/pxa2xx_udc.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/usb/gadget/pxa2xx_udc.h
++++ linux-2.6.23/drivers/usb/gadget/pxa2xx_udc.h
 @@ -125,6 +125,7 @@
  	struct timer_list			timer;
  
@@ -3978,10 +3902,8 @@ Index: linux-2.6.22/drivers/usb/gadget/pxa2xx_udc.h
  	struct pxa2xx_udc_mach_info		*mach;
  	u64					dma_mask;
  	struct pxa2xx_ep			ep [PXA_UDC_NUM_ENDPOINTS];
-Index: linux-2.6.22/drivers/video/pxafb.c
-===================================================================
---- linux-2.6.22.orig/drivers/video/pxafb.c	2007-09-24 20:57:18.000000000 +0200
-+++ linux-2.6.22/drivers/video/pxafb.c	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/video/pxafb.c
++++ linux-2.6.23/drivers/video/pxafb.c
 @@ -37,6 +37,8 @@
  #include <linux/cpufreq.h>
  #include <linux/platform_device.h>
@@ -4087,10 +4009,8 @@ Index: linux-2.6.22/drivers/video/pxafb.c
  	strcpy(fbi->fb.fix.id, PXA_NAME);
  
  	fbi->fb.fix.type	= FB_TYPE_PACKED_PIXELS;
-Index: linux-2.6.22/drivers/video/pxafb.h
-===================================================================
---- linux-2.6.22.orig/drivers/video/pxafb.h	2007-09-24 20:57:18.000000000 +0200
-+++ linux-2.6.22/drivers/video/pxafb.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/drivers/video/pxafb.h
++++ linux-2.6.23/drivers/video/pxafb.h
 @@ -94,6 +94,7 @@
  struct pxafb_info {
  	struct fb_info		fb;
@@ -4099,10 +4019,8 @@ Index: linux-2.6.22/drivers/video/pxafb.h
  
  	/*
  	 * These are the addresses we mapped
-Index: linux-2.6.22/include/asm-arm/arch-pxa/hardware.h
-===================================================================
---- linux-2.6.22.orig/include/asm-arm/arch-pxa/hardware.h	2007-09-24 20:57:09.000000000 +0200
-+++ linux-2.6.22/include/asm-arm/arch-pxa/hardware.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/hardware.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/hardware.h
 @@ -80,6 +80,24 @@
  		_id == 0x411;				\
  	})
@@ -4201,10 +4119,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/hardware.h
  
  #endif
  
-Index: linux-2.6.22/include/asm-arm/arch-pxa/irqs.h
-===================================================================
---- linux-2.6.22.orig/include/asm-arm/arch-pxa/irqs.h	2007-09-24 20:57:20.000000000 +0200
-+++ linux-2.6.22/include/asm-arm/arch-pxa/irqs.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/irqs.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/irqs.h
 @@ -66,12 +66,6 @@
  #define IRQ_TO_GPIO_2_x(i)	((i) - PXA_GPIO_IRQ_BASE)
  #define IRQ_TO_GPIO(i)	(((i) < IRQ_GPIO(2)) ? ((i) - IRQ_GPIO0) : IRQ_TO_GPIO_2_x(i))
@@ -4218,10 +4134,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/irqs.h
  /*
   * The next 16 interrupts are for board specific purposes.  Since
   * the kernel can only run on one machine at a time, we can re-use
-Index: linux-2.6.22/include/asm-arm/arch-pxa/mfp-pxa300.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/mfp-pxa300.h	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/mfp-pxa300.h
 @@ -0,0 +1,574 @@
 +/*
 + * linux/include/asm-arm/arch-pxa/mfp-pxa300.h
@@ -4797,10 +4711,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/mfp-pxa300.h
 +#endif /* CONFIG_CPU_PXA310 */
 +
 +#endif /* __ASM_ARCH_MFP_PXA300_H */
-Index: linux-2.6.22/include/asm-arm/arch-pxa/mfp-pxa320.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/mfp-pxa320.h	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/mfp-pxa320.h
 @@ -0,0 +1,446 @@
 +/*
 + * linux/include/asm-arm/arch-pxa/mfp-pxa320.h
@@ -5248,10 +5160,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/mfp-pxa320.h
 +#define GPIO14_PWM3_OUT		MFP_CFG(GPIO14, AF1)
 +
 +#endif /* __ASM_ARCH_MFP_PXA320_H */
-Index: linux-2.6.22/include/asm-arm/arch-pxa/mfp.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/mfp.h	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/mfp.h
 @@ -0,0 +1,576 @@
 +/*
 + * linux/include/asm-arm/arch-pxa/mfp.h
@@ -5829,10 +5739,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/mfp.h
 +void __init pxa3xx_init_mfp(void);
 +
 +#endif /* __ASM_ARCH_MFP_H */
-Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa-regs.h
-===================================================================
---- linux-2.6.22.orig/include/asm-arm/arch-pxa/pxa-regs.h	2007-09-24 20:57:20.000000000 +0200
-+++ linux-2.6.22/include/asm-arm/arch-pxa/pxa-regs.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/pxa-regs.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/pxa-regs.h
 @@ -1184,7 +1184,7 @@
  
  #define GPIO_bit(x)	(1 << ((x) & 0x1f))
@@ -5842,10 +5750,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa-regs.h
  
  /* Interrupt Controller */
  
-Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa3xx-regs.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/pxa3xx-regs.h	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/pxa3xx-regs.h
 @@ -0,0 +1,75 @@
 +/*
 + * linux/include/asm-arm/arch-pxa/pxa3xx-regs.h
@@ -5922,10 +5828,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/pxa3xx-regs.h
 +#define PXA320_CKEN_GRAPHICS	7	/* Graphics controller clock enable */
 +
 +#endif /* __ASM_ARCH_PXA3XX_REGS_H */
-Index: linux-2.6.22/include/asm-arm/arch-pxa/timex.h
-===================================================================
---- linux-2.6.22.orig/include/asm-arm/arch-pxa/timex.h	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/include/asm-arm/arch-pxa/timex.h	2007-09-24 20:57:20.000000000 +0200
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/timex.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/timex.h
 @@ -21,4 +21,6 @@
  #else
  #define CLOCK_TICK_RATE 3250000
@@ -5933,10 +5837,8 @@ Index: linux-2.6.22/include/asm-arm/arch-pxa/timex.h
 +#else
 +#define CLOCK_TICK_RATE 3250000
  #endif
-Index: linux-2.6.22/include/asm-arm/arch-pxa/zylonite.h
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/include/asm-arm/arch-pxa/zylonite.h	2007-09-24 20:57:20.000000000 +0200
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/zylonite.h
 @@ -0,0 +1,35 @@
 +#ifndef __ASM_ARCH_ZYLONITE_H
 +#define __ASM_ARCH_ZYLONITE_H
