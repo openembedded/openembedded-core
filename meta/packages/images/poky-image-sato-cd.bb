@@ -1,5 +1,4 @@
 DESCRIPTION = "Bootable CD"
-DEPENDS = "poky-image-sato"
 
 COMPATIBLE_MACHINE = "bootcdx86"
 
@@ -8,5 +7,7 @@ AUTO_SYSLINUXCFG = "1"
 INITRD = "${DEPLOY_DIR_IMAGE}/poky-image-sato-${MACHINE}.ext2"
 LABELS = "poky"
 APPEND = "root=/dev/ram0"
+
+do_bootimg[depends] += "poky-image-sato:do_rootfs"
 
 inherit bootimg
