@@ -12,7 +12,7 @@
 # ${APPEND} - an override list of append strings for each label
 # ${SYSLINUX_OPTS} - additional options to add to the syslinux file ';' delimited 
 
-do_rootfs[depends] += "dosfstools-native:do_populate_staging \
+do_bootimg[depends] += "dosfstools-native:do_populate_staging \
                        syslinux-native:do_populate_staging \
 		       mtools-native:do_populate_staging \
 		       cdrtools-native:do_populate_staging"
