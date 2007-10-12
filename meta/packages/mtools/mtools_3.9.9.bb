@@ -5,9 +5,11 @@
 DESCRIPTION="Mtools is a collection of utilities for accessing MS-DOS disks from Unix without mounting them."
 HOMEPAGE="http://mtools.linux.lu"
 LICENSE="GPL"
+PR = "r1"
 
 SRC_URI="http://mtools.linux.lu/mtools-${PV}.tar.gz \
-	file://mtools-makeinfo.patch;patch=1"
+	file://mtools-makeinfo.patch;patch=1 \
+	file://mtools.patch;patch=1"
 
 #DEPENDS = "tetex-native"
 
