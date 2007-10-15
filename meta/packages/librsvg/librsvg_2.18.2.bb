@@ -2,7 +2,7 @@ DESCRIPTION = "Library for rendering SVG files"
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 LICENSE = "LGPL"
-PR = "r1"
+PR = "r2"
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
@@ -20,8 +20,6 @@ FILES_librsvg-gtk-dev += "${libdir}/gtk-2.0/*.*a \
 			  ${libdir}/gtk-2.0/*/engines/*.*a"
 FILES_librsvg-gtk-dbg += "${libdir}/gtk-2.0/.debug \
                           ${libdir}/gtk-2.0/*/*/.debug"
-
-EXTRA_OECONF = "--disable-mozilla-plugin"
 
 do_stage() {
 	autotools_stage_all
