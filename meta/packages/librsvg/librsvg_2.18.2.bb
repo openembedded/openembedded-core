@@ -3,7 +3,7 @@ SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 LICENSE = "LGPL"
 
-EXTRA_OECONF = "--disable-mozilla-plugin"
+EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
 inherit autotools pkgconfig gnome
 
