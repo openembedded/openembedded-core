@@ -1,0 +1,26 @@
+---
+ configure.in |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+Index: bluez-utils-3.18/configure.in
+===================================================================
+--- bluez-utils-3.18.orig/configure.in	2007-09-02 17:40:57.000000000 +0100
++++ bluez-utils-3.18/configure.in	2007-10-15 11:45:01.000000000 +0100
+@@ -31,7 +31,16 @@ AC_PATH_ALSA
+ AC_PATH_GSTREAMER
+ AC_PATH_OPENOBEX
+ AC_PATH_OPENSYNC
+-AC_PATH_HAL
++
++AC_DEFUN([AC_PATH_HAL], [
++	PKG_CHECK_MODULES(HAL, hal >= 0.5.8, hal_found=yes, hal_found=no)
++])
++
++AC_SUBST(HAL_CFLAGS)
++AC_SUBST(HAL_LIBS)
++
++AM_CONDITIONAL(HAL, test "${hal_enable}" = "yes" && test "${hal_found}" = "yes")
++
+ AC_PATH_USB
+ AC_PATH_EXPAT
+ AC_PATH_INOTIFY

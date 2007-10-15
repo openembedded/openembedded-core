@@ -1,10 +1,12 @@
 require bluez-utils.inc
 
 DEPENDS += "glib-2.0"
-PR = "r2"
+PR = "r3"
 
 # ti patch doesn't apply, people using it should rediff it and send it upstream
 #SRC_URI += "file://hciattach-ti-bts.patch;patch=1 "
+
+SRC_URI += "file://allow-no-hal.patch;patch=1 "
 
 EXTRA_OECONF = " \
                  --enable-bccmd \
