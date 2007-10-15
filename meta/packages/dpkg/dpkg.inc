@@ -1,14 +1,13 @@
 DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPL"
 SECTION = "base"
+PR = "r5"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz \
            file://ignore_extra_fields.patch;patch=1 \
            file://noupdalt.patch;patch=1"
 
 S = "${WORKDIR}/dpkg-${PV}"
-
-DEPENDS_${PN} += "update-alternatives"
 
 PARALLEL_MAKE = ""
 
