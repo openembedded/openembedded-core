@@ -1,4 +1,4 @@
 require ipkg.inc
-PR = "r7"
+PR = "r8"
 
-RDEPENDS_${PN} += "update-alternatives"
+RDEPENDS_${PN} += "${VIRTUAL-RUNTIME_update-alternatives}"
