@@ -1,6 +1,7 @@
 require update-alternatives-cworth.inc
 
-RPROVIDES_${PN} = "update-alternatives"
+PROVIDES += "virtual/update-alternatives"
+RPROVIDES_${PN} += "update-alternatives"
 
 do_install () {
     install -d ${D}${sbindir} \

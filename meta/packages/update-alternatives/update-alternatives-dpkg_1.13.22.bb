@@ -1,7 +1,8 @@
 require update-alternatives-dpkg.inc
 
-RPROVIDES_${PN} = "update-alternatives"
-RDEPENDS_${PN} = "perl dpkg"
+PROVIDES += "virtual/update-alternatives"
+RPROVIDES_${PN} += "update-alternatives"
+RDEPENDS_${PN} += "perl dpkg"
 
 do_install () {
     install -d ${D}${sbindir} \

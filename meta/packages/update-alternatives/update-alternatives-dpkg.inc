@@ -3,6 +3,7 @@ SECTION = "base"
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz"
 S = "${WORKDIR}/dpkg-${PV}"
 PACKAGE_ARCH = "all"
+PR = "r1"
 
 do_patch () {
     cat ${S}/scripts/update-alternatives.pl | \

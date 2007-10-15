@@ -2,6 +2,7 @@ require update-alternatives-cworth.inc
 inherit native
 
 PROVIDES += "virtual/update-alternatives-native"
+RPROVIDES += "update-alternatives-native"
 
 do_stage () {
     install -d ${sbindir} \
