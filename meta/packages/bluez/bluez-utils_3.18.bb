@@ -1,7 +1,7 @@
 require bluez-utils.inc
 
 DEPENDS += "glib-2.0"
-PR = "r1"
+PR = "r2"
 
 # ti patch doesn't apply, people using it should rediff it and send it upstream
 #SRC_URI += "file://hciattach-ti-bts.patch;patch=1 "
@@ -21,6 +21,7 @@ EXTRA_OECONF = " \
                  --enable-configfile \
 	         --enable-initscripts \
 		 --enable-test \
+		 --disable-hal \
 		"
 
 # The config options are explained below:
