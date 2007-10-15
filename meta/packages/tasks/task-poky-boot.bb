@@ -6,7 +6,7 @@ DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS = "virtual/kernel"
 ALLOW_EMPTY = "1"
-PR = "r5"
+PR = "r6"
 
 #
 # Set by the machine configuration with packages essential for device bootup
@@ -25,7 +25,7 @@ RDEPENDS_task-poky-boot = "\
     sysvinit \
     tinylogin \
     udev \
-    update-alternatives \
+    ${VIRTUAL-RUNTIME_update-alternatives} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
 RRECOMMENDS_task-poky-boot = "\
