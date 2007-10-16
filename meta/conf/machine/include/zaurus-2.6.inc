@@ -31,8 +31,8 @@ MACHINE_FEATURES_append_akita = " usbhost "
 MACHINE_FEATURES_append_spitz = " usbhost ext2 "
 
 MACHINE_EXTRA_RDEPENDS = "zaurusd"
-MACHINE_EXTRA_RRECOMMENDS_c7x0   = "kernel-module-snd-soc-corgi"
-MACHINE_EXTRA_RRECOMMENDS_akita  = "kernel-module-snd-soc-spitz"
+MACHINE_EXTRA_RRECOMMENDS_c7x0   = "kernel-module-snd-soc-corgi kernel-module-pxa2xx-cs kernel-module-pcmcia"
+MACHINE_EXTRA_RRECOMMENDS_akita  = "kernel-module-snd-soc-spitz kernel-module-pxa2xx-cs kernel-module-pcmcia"
 MACHINE_EXTRA_RRECOMMENDS_spitz  = "kernel-module-snd-soc-spitz"
 MACHINE_EXTRA_RRECOMMENDS_poodle = "kernel-module-snd-soc-poodle"
 
