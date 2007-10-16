@@ -3,6 +3,7 @@ require linux-rp.inc
 PR = "r2"
 
 DEFAULT_PREFERENCE = "-1"
+DEFAULT_PREFERENCE_c7x0 = "1"
 DEFAULT_PREFERENCE_htcuniversal = "1"
 DEFAULT_PREFERENCE_zylonite = "1"
 
