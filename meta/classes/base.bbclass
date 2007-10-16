@@ -484,9 +484,9 @@ python base_do_fetch() {
 		try:
 			if not base_chk_file(parser, pn, pv,uri, localpath, d):
 				if type != "file":
-					bb.note("%s-%s-%s has no section, not checking URI" % (pn,pv,uri))
+					bb.note("%s-%s: %s has no entry in conf/checksums.ini, not checking URI" % (pn,pv,uri))
 				else:
-					bb.debug("%s-%s-%s has no section, not checking URI" % (pn,pv,uri))
+					bb.debug("%s-%s: %s has no entry in conf/checksums.ini, not checking URI" % (pn,pv,uri))
 		except Exception:
 			raise bb.build.FuncFailed("Checksum of '%s' failed" % uri)
 }
