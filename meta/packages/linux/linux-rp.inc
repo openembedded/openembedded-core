@@ -48,9 +48,11 @@ CMDLINE = "${CMDLINE_CON} ${CMDLINE_ROOT} ${CMDLINE_MEM} ${CMDLINE_ROTATE} ${CMD
 ###############################################################
 # module configs specific to this kernel
 #
-module_autoload_ohci-hcd_tosa = "ohci-hcd"
 module_autoload_pxaficp_ir = "pxaficp_ir"
 module_autoload_snd-pcm-oss = "snd-pcm-oss"
+module_autoload_pcmcia_core = "pcmcia_core"
+module_autoload_pxa2xx_cs = "pxa2xx_cs"
+module_autoload_ohci-hcd_tosa = "ohci-hcd"
 module_autoload_snd-soc-corgi_c7x0 = "snd-soc-corgi"
 module_autoload_snd-soc-spitz_akita = "snd-soc-spitz"
 module_autoload_snd-soc-spitz_spitz = "snd-soc-spitz"
