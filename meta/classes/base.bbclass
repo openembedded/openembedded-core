@@ -22,6 +22,7 @@ def base_chk_load_parser(config_path):
 
 def base_chk_file(parser, pn, pv, src_uri, localpath, data):
     import os, bb
+    no_checksum = False
     # Try PN-PV-SRC_URI first and then try PN-SRC_URI
     # we rely on the get method to create errors
     pn_pv_src = "%s-%s-%s" % (pn,pv,src_uri)
@@ -36,8 +37,7 @@ def base_chk_file(parser, pn, pv, src_uri, localpath, data):
         md5    = parser.get(src_uri, "md5")
         sha256 = parser.get(src_uri, "sha256")
     else:
-        return False
-        #raise Exception("Can not find a section for '%s' '%s' and '%s'" % (pn,pv,src_uri))
+        no_checksum = True
 
     # md5 and sha256 should be valid now
     if not os.path.exists(localpath):
@@ -59,6 +59,19 @@ def base_chk_file(parser, pn, pv, src_uri, localpath, data):
         shapipe.close()
     except OSError:
         raise Exception("Executing shasum failed")
+
+    if no_checksum == True:	# we do not have conf/checksums.ini entry
+        try:
+            file = open("%s/checksums.ini" % bb.data.getVar("TMPDIR", data, 1), "a")
+        except:
+            return False
+
+        if not file:
+            raise Exception("Creating checksums.ini failed")
+        
+        file.write("[%s]\nmd5=%s\nsha256=%s\n\n" % (src_uri, md5data, shadata))
+        file.close()
+        return False
 
     if not md5 == md5data:
         bb.note("The MD5Sums did not match. Wanted: '%s' and Got: '%s'" % (md5,md5data))
@@ -482,11 +495,9 @@ python base_do_fetch() {
 		(type,host,path,_,_,_) = bb.decodeurl(url)
 		uri = "%s://%s%s" % (type,host,path)
 		try:
-			if not base_chk_file(parser, pn, pv,uri, localpath, d):
-				if type != "file":
+			if type == "http" or type == "https" or type == "ftp" or type == "ftps":
+				if not base_chk_file(parser, pn, pv,uri, localpath, d):
 					bb.note("%s-%s: %s has no entry in conf/checksums.ini, not checking URI" % (pn,pv,uri))
-				else:
-					bb.debug("%s-%s: %s has no entry in conf/checksums.ini, not checking URI" % (pn,pv,uri))
 		except Exception:
 			raise bb.build.FuncFailed("Checksum of '%s' failed" % uri)
 }
