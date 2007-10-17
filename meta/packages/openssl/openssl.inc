@@ -66,6 +66,8 @@ do_compile () {
 }
 
 do_stage () {
+	install -d ${STAGING_INCDIR}
+	install -d ${STAGING_LIBDIR}/pkgconfig/
 	cp --dereference -R include/openssl ${STAGING_INCDIR}/
 	cp --dereference openssl.pc ${STAGING_LIBDIR}/pkgconfig/
 	oe_libinstall -a -so libcrypto ${STAGING_LIBDIR}
