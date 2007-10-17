@@ -2,11 +2,8 @@ require linux-rp.inc
 
 PR = "r2"
 
-DEFAULT_PREFERENCE = "-1"
-DEFAULT_PREFERENCE_c7x0 = "1"
-DEFAULT_PREFERENCE_spitz = "1"
-DEFAULT_PREFERENCE_htcuniversal = "1"
-DEFAULT_PREFERENCE_zylonite = "1"
+DEFAULT_PREFERENCE_qemuarm = "-1"
+DEFAULT_PREFERENCE_qemux86 = "-1"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
