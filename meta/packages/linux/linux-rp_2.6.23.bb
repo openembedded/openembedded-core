@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r2"
+PR = "r3"
 
 DEFAULT_PREFERENCE_qemuarm = "-1"
 DEFAULT_PREFERENCE_qemux86 = "-1"
@@ -45,6 +45,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${RPSRC}/logo_oz-r2.patch.bz2;patch=1;status=unmergable \
            ${RPSRC}/pxa-linking-bug.patch;patch=1;status=unmergable \
            ${RPSRC}/mmcsd_large_cards-r1.patch;patch=1;status=hack \
+           file://mmcsd_no_scr_check-r2.patch;patch=1 \
            ${RPSRC}/integrator_rgb-r1.patch;patch=1;status=hack \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1;status=hack \
            file://pxa-serial-hack.patch;patch=1;status=hack \
