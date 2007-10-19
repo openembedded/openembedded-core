@@ -42,7 +42,7 @@ def package_qa_get_machine_dict():
                         "i486":       ( 3,     0,    0,          True,          True),
                         "i586":       ( 3,     0,    0,          True,          True),
                         "i686":       ( 3,     0,    0,          True,          True),
-                        "x64_64":     (62,     0,    0,          True,          False),
+                        "x86_64":     (62,     0,    0,          True,          False),
                         "ia64":       (50,     0,    0,          True,          False),
                         "alpha":      (36902,  0,    0,          True,          False),
                         "hppa":       (15,     3,    0,          False,         True),
