@@ -25,7 +25,7 @@ do_compile () {
 	oe_runmake 'SUBDIRS=${SUBDIRS}'
 }
 
-inherit autotools 
+inherit autotools
 
 do_install () {
 	autotools_do_install
