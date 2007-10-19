@@ -12,7 +12,7 @@ SRC_URI = "file://hostap_cs.conf \
 do_compile() {
 }
 
-do_install() {   
+do_install() {
         install -d ${D}${sysconfdir}/pcmcia
         install -d ${D}${sysconfdir}/modutils
 
