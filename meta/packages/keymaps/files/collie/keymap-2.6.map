@@ -6,7 +6,6 @@
 # as Altgr, and simply use a proper keymap.  Said keymap is as
 # follows.
 # keymaps 0-2,4-5,8,12,20
-keycode   1 = Escape           Escape          
 keycode  14 = BackSpace
 	shift   keycode  14 = BackSpace
 	control keycode  14 = Delete
@@ -147,7 +146,7 @@ keycode  53 = slash
 	control	keycode  53 = Num_Lock
 	shiftl  control keycode  53 = Num_Lock
 	control shiftr  keycode  53 = Num_Lock
-keycode  54 = Shift           
+keycode  54 = AltGr
 keycode  55 = KP_Multiply     
 keycode  56 = Alt             
 keycode  57 = space
@@ -155,7 +154,7 @@ keycode  57 = space
 	control	keycode  57 = nul
 	shiftl  control keycode  57 = grave
 	control shiftr  keycode  57 = grave
-keycode  97 = Control         
+keycode  67 = Control         
 keycode  99 = Control_backslash
 	control keycode  99 = Control_backslash
 keycode 100 = AltGr           
@@ -164,6 +163,7 @@ keycode 105 = Left
 keycode 106 = Right           
 keycode 107 = Select          
 keycode 108 = Down            
+keycode 116  = Escape          
 string F1 = "\033[[A"
 string F2 = "\033[[B"
 string F3 = "\033[[C"
