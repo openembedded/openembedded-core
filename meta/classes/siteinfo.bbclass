@@ -42,6 +42,8 @@ def get_siteinfo_list(d):
                "i686-linux-uclibc":       "endian-little bit-32 common-uclibc ix86-common",\
                "mipsel-linux":            "endian-little bit-32 common-glibc",\
                "mipsel-linux-uclibc":     "endian-little bit-32 common-uclibc",\
+               "mips-linux":              "endian-big bit-32 common-glibc",\
+               "mips-linux-uclibc":       "endian-big bit-32 common-uclibc",\
                "powerpc-darwin":          "endian-big bit-32 common-darwin",\
                "ppc-linux":               "endian-big bit-32 common-glibc powerpc-common",\ 
 	       "powerpc-linux":           "endian-big bit-32 common-glibc powerpc-common",\
