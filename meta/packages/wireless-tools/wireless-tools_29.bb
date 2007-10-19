@@ -3,8 +3,9 @@ HOMEPAGE = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
+PE = "1"
 
-SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.pre21.tar.gz \
+SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.tar.gz \
            file://man.patch;patch=1 \
 	   file://wireless-tools.if-pre-up \
 	   file://zzz-wireless.if-pre-up"
