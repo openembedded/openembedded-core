@@ -9,7 +9,7 @@ SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://filesystems"
 S = "${WORKDIR}/file-${PV}"
 
-inherit autotools 
+inherit autotools
 
 do_configure_prepend() {
 	sed -i -e 's,$(top_builddir)/src/file,file,' ${S}/magic/Makefile.am
