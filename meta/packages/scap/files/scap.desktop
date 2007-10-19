@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Upload Screenshot
-Comment=Upload a screenshot to http://handhelds.org/scap
-Exec=scap
-Terminal=0
-Type=Application
-Icon=scap.png
-Categories=Action
-StartupNotify=False
