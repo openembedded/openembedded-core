@@ -1,6 +1,11 @@
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/adler32.c	2003-11-17 15:24:27.000000000 -0600
-+++ zlib-1.2.2/adler32.c	2005-02-28 19:04:09.000000000 -0600
-@@ -44,7 +44,7 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- zlib-1.2.3-orig/adler32.c~visibility
++++ zlib-1.2.3-orig/adler32.c
+@@ -54,7 +54,7 @@
  #endif
  
  /* ========================================================================= */
@@ -9,8 +14,8 @@
      uLong adler;
      const Bytef *buf;
      uInt len;
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/compress.c	2003-07-07 00:37:56.000000000 -0500
-+++ zlib-1.2.2/compress.c	2005-02-28 19:04:09.000000000 -0600
+--- zlib-1.2.3-orig/compress.c~visibility
++++ zlib-1.2.3-orig/compress.c
 @@ -19,7 +19,7 @@
     memory, Z_BUF_ERROR if there was not enough room in the output buffer,
     Z_STREAM_ERROR if the level parameter is invalid.
@@ -38,9 +43,9 @@
      uLong sourceLen;
  {
      return sourceLen + (sourceLen >> 12) + (sourceLen >> 14) + 11;
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/crc32.c	2004-10-03 21:29:30.000000000 -0500
-+++ zlib-1.2.2/crc32.c	2005-02-28 19:04:09.000000000 -0600
-@@ -198,7 +198,7 @@
+--- zlib-1.2.3-orig/crc32.c~visibility
++++ zlib-1.2.3-orig/crc32.c
+@@ -202,7 +202,7 @@
  /* =========================================================================
   * This function can be used by asm versions of crc32()
   */
@@ -49,7 +54,7 @@
  {
  #ifdef DYNAMIC_CRC_TABLE
      if (crc_table_empty)
-@@ -212,7 +212,7 @@
+@@ -216,7 +216,7 @@
  #define DO8 DO1; DO1; DO1; DO1; DO1; DO1; DO1; DO1
  
  /* ========================================================================= */
@@ -58,8 +63,8 @@
      unsigned long crc;
      const unsigned char FAR *buf;
      unsigned len;
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/deflate.c	2004-09-15 09:28:14.000000000 -0500
-+++ zlib-1.2.2/deflate.c	2005-02-28 19:04:09.000000000 -0600
+--- zlib-1.2.3-orig/deflate.c~visibility
++++ zlib-1.2.3-orig/deflate.c
 @@ -201,7 +201,7 @@
      zmemzero((Bytef *)s->head, (unsigned)(s->hash_size-1)*sizeof(*s->head));
  
@@ -78,7 +83,7 @@
                    version, stream_size)
      z_streamp strm;
      int  level;
-@@ -311,7 +311,7 @@
+@@ -312,7 +312,7 @@
  }
  
  /* ========================================================================= */
@@ -87,7 +92,7 @@
      z_streamp strm;
      const Bytef *dictionary;
      uInt  dictLength;
-@@ -355,7 +355,7 @@
+@@ -354,7 +354,7 @@
  }
  
  /* ========================================================================= */
@@ -96,7 +101,7 @@
      z_streamp strm;
  {
      deflate_state *s;
-@@ -391,7 +391,7 @@
+@@ -401,7 +401,7 @@
  }
  
  /* ========================================================================= */
@@ -105,7 +110,7 @@
      z_streamp strm;
      int bits;
      int value;
-@@ -403,7 +403,7 @@
+@@ -413,7 +413,7 @@
  }
  
  /* ========================================================================= */
@@ -114,7 +119,7 @@
      z_streamp strm;
      int level;
      int strategy;
-@@ -457,7 +457,7 @@
+@@ -486,7 +486,7 @@
   * But even the conservative upper bound of about 14% expansion does not
   * seem onerous for output buffer allocation.
   */
@@ -123,7 +128,7 @@
      z_streamp strm;
      uLong sourceLen;
  {
-@@ -520,7 +520,7 @@
+@@ -549,7 +549,7 @@
  }
  
  /* ========================================================================= */
@@ -132,7 +137,7 @@
      z_streamp strm;
      int flush;
  {
-@@ -696,7 +696,7 @@
+@@ -856,7 +856,7 @@
  }
  
  /* ========================================================================= */
@@ -141,7 +146,7 @@
      z_streamp strm;
  {
      int status;
-@@ -726,7 +726,7 @@
+@@ -891,7 +891,7 @@
   * To simplify the source, this is not supported for 16-bit MSDOS (which
   * doesn't have enough memory anyway to duplicate compression states).
   */
@@ -150,8 +155,8 @@
      z_streamp dest;
      z_streamp source;
  {
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/gzio.c	2004-10-03 21:30:37.000000000 -0500
-+++ zlib-1.2.2/gzio.c	2005-02-28 19:06:11.000000000 -0600
+--- zlib-1.2.3-orig/gzio.c~visibility
++++ zlib-1.2.3-orig/gzio.c
 @@ -205,7 +205,7 @@
  /* ===========================================================================
       Opens a gzip (.gz) file for reading or writing.
@@ -305,7 +310,7 @@
      gzFile file;
  {
      gz_stream *s = (gz_stream*)file;
-@@ -938,7 +938,7 @@
+@@ -950,7 +950,7 @@
       Flushes all pending output if necessary, closes the compressed file
     and deallocates all the (de)compression state.
  */
@@ -313,8 +318,8 @@
 +ZEXPORT int gzclose (file)
      gzFile file;
  {
-     int err;
-@@ -967,7 +967,7 @@
+     gz_stream *s = (gz_stream*)file;
+@@ -984,7 +984,7 @@
     errnum is set to Z_ERRNO and the application may consult errno
     to get the exact error code.
  */
@@ -323,7 +328,7 @@
      gzFile file;
      int *errnum;
  {
-@@ -997,7 +997,7 @@
+@@ -1014,7 +1014,7 @@
  /* ===========================================================================
       Clear the error and end-of-file flags, and do the same for the real file.
  */
@@ -332,37 +337,37 @@
      gzFile file;
  {
      gz_stream *s = (gz_stream*)file;
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/infback.c	2004-10-03 21:31:20.000000000 -0500
-+++ zlib-1.2.2/infback.c	2005-02-28 19:04:09.000000000 -0600
+--- zlib-1.2.3-orig/infback.c~visibility
++++ zlib-1.2.3-orig/infback.c
 @@ -25,7 +25,7 @@
     windowBits is in the range 8..15, and window is a user-supplied
     window and output buffer that is 2**windowBits bytes.
   */
 -int ZEXPORT inflateBackInit_(strm, windowBits, window, version, stream_size)
 +ZEXPORT int inflateBackInit_(strm, windowBits, window, version, stream_size)
- z_stream FAR *strm;
+ z_streamp strm;
  int windowBits;
  unsigned char FAR *window;
-@@ -237,7 +237,7 @@
+@@ -238,7 +238,7 @@
     inflateBack() can also return Z_STREAM_ERROR if the input parameters
     are not correct, i.e. strm is Z_NULL or the state was not initialized.
   */
 -int ZEXPORT inflateBack(strm, in, in_desc, out, out_desc)
 +ZEXPORT int inflateBack(strm, in, in_desc, out, out_desc)
- z_stream FAR *strm;
+ z_streamp strm;
  in_func in;
  void FAR *in_desc;
-@@ -610,7 +610,7 @@
+@@ -611,7 +611,7 @@
      return ret;
  }
  
 -int ZEXPORT inflateBackEnd(strm)
 +ZEXPORT int inflateBackEnd(strm)
- z_stream FAR *strm;
+ z_streamp strm;
  {
      if (strm == Z_NULL || strm->state == Z_NULL || strm->zfree == (free_func)0)
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/inflate.c	2004-10-03 21:33:51.000000000 -0500
-+++ zlib-1.2.2/inflate.c	2005-02-28 19:04:09.000000000 -0600
+--- zlib-1.2.3-orig/inflate.c~visibility
++++ zlib-1.2.3-orig/inflate.c
 @@ -100,7 +100,7 @@
  local unsigned syncsearch OF((unsigned FAR *have, unsigned char FAR *buf,
                                unsigned len));
@@ -372,7 +377,7 @@
  z_streamp strm;
  {
      struct inflate_state FAR *state;
-@@ -122,7 +122,7 @@
+@@ -141,7 +141,7 @@
      return Z_OK;
  }
  
@@ -381,7 +386,7 @@
  z_streamp strm;
  int windowBits;
  const char *version;
-@@ -165,7 +165,7 @@
+@@ -184,7 +184,7 @@
      return inflateReset(strm);
  }
  
@@ -390,7 +395,7 @@
  z_streamp strm;
  const char *version;
  int stream_size;
-@@ -532,7 +532,7 @@
+@@ -551,7 +551,7 @@
     will return Z_BUF_ERROR if it has not reached the end of the stream.
   */
  
@@ -399,7 +404,7 @@
  z_streamp strm;
  int flush;
  {
-@@ -1085,7 +1085,7 @@
+@@ -1152,7 +1152,7 @@
      return ret;
  }
  
@@ -408,7 +413,7 @@
  z_streamp strm;
  {
      struct inflate_state FAR *state;
-@@ -1099,7 +1099,7 @@
+@@ -1166,7 +1166,7 @@
      return Z_OK;
  }
  
@@ -417,7 +422,7 @@
  z_streamp strm;
  const Bytef *dictionary;
  uInt dictLength;
-@@ -1171,7 +1171,7 @@
+@@ -1259,7 +1259,7 @@
      return next;
  }
  
@@ -426,7 +431,7 @@
  z_streamp strm;
  {
      unsigned len;               /* number of bytes to look at or looked at */
-@@ -1222,7 +1222,7 @@
+@@ -1310,7 +1310,7 @@
     block. When decompressing, PPP checks that at the end of input packet,
     inflate is waiting for these length bytes.
   */
@@ -435,7 +440,7 @@
  z_streamp strm;
  {
      struct inflate_state FAR *state;
-@@ -1232,7 +1232,7 @@
+@@ -1320,7 +1320,7 @@
      return state->mode == STORED && state->bits == 0;
  }
  
@@ -444,8 +449,8 @@
  z_streamp dest;
  z_streamp source;
  {
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/uncompr.c	2003-07-07 00:36:56.000000000 -0500
-+++ zlib-1.2.2/uncompr.c	2005-02-28 19:04:09.000000000 -0600
+--- zlib-1.2.3-orig/uncompr.c~visibility
++++ zlib-1.2.3-orig/uncompr.c
 @@ -23,7 +23,7 @@
     enough memory, Z_BUF_ERROR if there was not enough room in the output
     buffer, or Z_DATA_ERROR if the input data was corrupted.
@@ -455,9 +460,9 @@
      Bytef *dest;
      uLongf *destLen;
      const Bytef *source;
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/zconf.in.h	2004-05-30 15:38:00.000000000 -0500
-+++ zlib-1.2.2/zconf.in.h	2005-02-28 19:04:09.000000000 -0600
-@@ -198,11 +198,9 @@
+--- zlib-1.2.3-orig/zconf.in.h~visibility
++++ zlib-1.2.3-orig/zconf.in.h
+@@ -204,11 +204,9 @@
      */
  #  ifdef ZLIB_DLL
  #    if defined(WIN32) && (!defined(__BORLANDC__) || (__BORLANDC__ >= 0x500))
@@ -472,7 +477,7 @@
  #    endif
  #  endif  /* ZLIB_DLL */
     /* If building or using zlib with the WINAPI/WINAPIV calling convention,
-@@ -223,30 +221,45 @@
+@@ -229,30 +227,45 @@
  #      define ZEXPORTVA FAR CDECL
  #    endif
  #  endif
@@ -534,9 +539,9 @@
  #ifndef FAR
  #  define FAR
  #endif
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/zlib.h	2004-10-03 21:57:26.000000000 -0500
-+++ zlib-1.2.2/zlib.h	2005-02-28 19:04:09.000000000 -0600
-@@ -184,7 +184,7 @@
+--- zlib-1.2.3-orig/zlib.h~visibility
++++ zlib-1.2.3-orig/zlib.h
+@@ -209,7 +209,7 @@
  
                          /* basic functions */
  
@@ -545,7 +550,7 @@
  /* The application can compare zlibVersion and ZLIB_VERSION for consistency.
     If the first character differs, the library code actually used is
     not compatible with the zlib.h header file used by the application.
-@@ -192,7 +192,7 @@
+@@ -217,7 +217,7 @@
   */
  
  /*
@@ -554,7 +559,7 @@
  
       Initializes the internal stream state for compression. The fields
     zalloc, zfree and opaque must be initialized before by the caller.
-@@ -214,7 +214,7 @@
+@@ -239,7 +239,7 @@
  */
  
  
@@ -563,7 +568,7 @@
  /*
      deflate compresses as much data as possible, and stops when the input
    buffer becomes empty or the output buffer becomes full. It may introduce some
-@@ -296,7 +296,7 @@
+@@ -325,7 +325,7 @@
  */
  
  
@@ -572,7 +577,7 @@
  /*
       All dynamically allocated data structures for this stream are freed.
     This function discards any unprocessed input and does not flush any
-@@ -311,7 +311,7 @@
+@@ -340,7 +340,7 @@
  
  
  /*
@@ -581,7 +586,7 @@
  
       Initializes the internal stream state for decompression. The fields
     next_in, avail_in, zalloc, zfree and opaque must be initialized before by
-@@ -331,7 +331,7 @@
+@@ -360,7 +360,7 @@
  */
  
  
@@ -590,7 +595,7 @@
  /*
      inflate decompresses as much data as possible, and stops when the input
    buffer becomes empty or the output buffer becomes full. It may introduce
-@@ -430,7 +430,7 @@
+@@ -459,7 +459,7 @@
  */
  
  
@@ -599,7 +604,7 @@
  /*
       All dynamically allocated data structures for this stream are freed.
     This function discards any unprocessed input and does not flush any
-@@ -448,7 +448,7 @@
+@@ -477,7 +477,7 @@
  */
  
  /*
@@ -608,7 +613,7 @@
                                       int  level,
                                       int  method,
                                       int  windowBits,
-@@ -504,7 +504,7 @@
+@@ -535,7 +535,7 @@
     not perform any compression: this will be done by deflate().
  */
  
@@ -617,7 +622,7 @@
                                               const Bytef *dictionary,
                                               uInt  dictLength));
  /*
-@@ -541,7 +541,7 @@
+@@ -574,7 +574,7 @@
     perform any compression: this will be done by deflate().
  */
  
@@ -626,7 +631,7 @@
                                      z_streamp source));
  /*
       Sets the destination stream as a complete copy of the source stream.
-@@ -559,7 +559,7 @@
+@@ -592,7 +592,7 @@
     destination.
  */
  
@@ -635,7 +640,7 @@
  /*
       This function is equivalent to deflateEnd followed by deflateInit,
     but does not free and reallocate all the internal compression state.
-@@ -570,7 +570,7 @@
+@@ -603,7 +603,7 @@
     stream state was inconsistent (such as zalloc or state being NULL).
  */
  
@@ -644,16 +649,16 @@
                                        int level,
                                        int strategy));
  /*
-@@ -591,7 +591,7 @@
-    if strm->avail_out was zero.
- */
+@@ -641,7 +641,7 @@
+    returns Z_OK on success, or Z_STREAM_ERROR for an invalid deflate stream.
+  */
  
 -ZEXTERN uLong ZEXPORT deflateBound OF((z_streamp strm,
 +ZEXTERN ZEXPORT uLong deflateBound OF((z_streamp strm,
                                         uLong sourceLen));
  /*
       deflateBound() returns an upper bound on the compressed size after
-@@ -600,7 +600,7 @@
+@@ -650,7 +650,7 @@
     for deflation in a single pass, and so would be called before deflate().
  */
  
@@ -662,7 +667,7 @@
                                       int bits,
                                       int value));
  /*
-@@ -617,7 +617,7 @@
+@@ -691,7 +691,7 @@
  */
  
  /*
@@ -671,8 +676,8 @@
                                       int  windowBits));
  
       This is another version of inflateInit with an extra parameter. The
-@@ -659,7 +659,7 @@
-    modified, but next_out and avail_out are unchanged.)
+@@ -733,7 +733,7 @@
+    and avail_out are unchanged.)
  */
  
 -ZEXTERN int ZEXPORT inflateSetDictionary OF((z_streamp strm,
@@ -680,7 +685,7 @@
                                               const Bytef *dictionary,
                                               uInt  dictLength));
  /*
-@@ -678,7 +678,7 @@
+@@ -755,7 +755,7 @@
     inflate().
  */
  
@@ -689,7 +694,7 @@
  /*
      Skips invalid compressed data until a full flush point (see above the
    description of deflate with Z_FULL_FLUSH) can be found, or until all
-@@ -693,7 +693,7 @@
+@@ -770,7 +770,7 @@
    until success or end of the input data.
  */
  
@@ -698,7 +703,7 @@
                                      z_streamp source));
  /*
       Sets the destination stream as a complete copy of the source stream.
-@@ -709,7 +709,7 @@
+@@ -786,7 +786,7 @@
     destination.
  */
  
@@ -707,34 +712,34 @@
  /*
       This function is equivalent to inflateEnd followed by inflateInit,
     but does not free and reallocate all the internal decompression state.
-@@ -720,7 +720,7 @@
+@@ -853,7 +853,7 @@
  */
  
  /*
--ZEXTERN int ZEXPORT inflateBackInit OF((z_stream FAR *strm, int windowBits,
-+ZEXTERN ZEXPORT int inflateBackInit OF((z_stream FAR *strm, int windowBits,
+-ZEXTERN int ZEXPORT inflateBackInit OF((z_streamp strm, int windowBits,
++ZEXTERN ZEXPORT int inflateBackInit OF((z_streamp strm, int windowBits,
                                          unsigned char FAR *window));
  
       Initialize the internal stream state for decompression using inflateBack()
-@@ -744,7 +744,7 @@
+@@ -877,7 +877,7 @@
  typedef unsigned (*in_func) OF((void FAR *, unsigned char FAR * FAR *));
  typedef int (*out_func) OF((void FAR *, unsigned char FAR *, unsigned));
  
--ZEXTERN int ZEXPORT inflateBack OF((z_stream FAR *strm,
-+ZEXTERN ZEXPORT int inflateBack OF((z_stream FAR *strm,
+-ZEXTERN int ZEXPORT inflateBack OF((z_streamp strm,
++ZEXTERN ZEXPORT int inflateBack OF((z_streamp strm,
                                      in_func in, void FAR *in_desc,
                                      out_func out, void FAR *out_desc));
  /*
-@@ -813,7 +813,7 @@
+@@ -946,7 +946,7 @@
     that inflateBack() cannot return Z_OK.
  */
  
--ZEXTERN int ZEXPORT inflateBackEnd OF((z_stream FAR *strm));
-+ZEXTERN ZEXPORT int inflateBackEnd OF((z_stream FAR *strm));
+-ZEXTERN int ZEXPORT inflateBackEnd OF((z_streamp strm));
++ZEXTERN ZEXPORT int inflateBackEnd OF((z_streamp strm));
  /*
       All memory allocated by inflateBackInit() is freed.
  
-@@ -821,7 +821,7 @@
+@@ -954,7 +954,7 @@
     state was inconsistent.
  */
  
@@ -743,7 +748,7 @@
  /* Return flags indicating compile-time options.
  
      Type sizes, two bits each, 00 = 16 bits, 01 = 32, 10 = 64, 11 = other:
-@@ -873,7 +873,7 @@
+@@ -1006,7 +1006,7 @@
     utility functions can easily be modified if you need special options.
  */
  
@@ -752,7 +757,7 @@
                                   const Bytef *source, uLong sourceLen));
  /*
       Compresses the source buffer into the destination buffer.  sourceLen is
-@@ -888,7 +888,7 @@
+@@ -1021,7 +1021,7 @@
     buffer.
  */
  
@@ -761,7 +766,7 @@
                                    const Bytef *source, uLong sourceLen,
                                    int level));
  /*
-@@ -904,14 +904,14 @@
+@@ -1037,14 +1037,14 @@
     Z_STREAM_ERROR if the level parameter is invalid.
  */
  
@@ -778,7 +783,7 @@
                                     const Bytef *source, uLong sourceLen));
  /*
       Decompresses the source buffer into the destination buffer.  sourceLen is
-@@ -932,7 +932,7 @@
+@@ -1065,7 +1065,7 @@
  
  typedef voidp gzFile;
  
@@ -787,7 +792,7 @@
  /*
       Opens a gzip (.gz) file for reading or writing. The mode parameter
     is as in fopen ("rb" or "wb") but can also include a compression level
-@@ -949,7 +949,7 @@
+@@ -1082,7 +1082,7 @@
     can be checked to distinguish the two cases (if errno is zero, the
     zlib error is Z_MEM_ERROR).  */
  
@@ -796,7 +801,7 @@
  /*
       gzdopen() associates a gzFile with the file descriptor fd.  File
     descriptors are obtained from calls like open, dup, creat, pipe or
-@@ -962,7 +962,7 @@
+@@ -1095,7 +1095,7 @@
     the (de)compression state.
  */
  
@@ -805,7 +810,7 @@
  /*
       Dynamically update the compression level or strategy. See the description
     of deflateInit2 for the meaning of these parameters.
-@@ -970,7 +970,7 @@
+@@ -1103,7 +1103,7 @@
     opened for writing.
  */
  
@@ -814,7 +819,7 @@
  /*
       Reads the given number of uncompressed bytes from the compressed file.
     If the input file was not in gzip format, gzread copies the given number
-@@ -978,7 +978,7 @@
+@@ -1111,7 +1111,7 @@
       gzread returns the number of uncompressed bytes actually read (0 for
     end of file, -1 for error). */
  
@@ -823,7 +828,7 @@
                                     voidpc buf, unsigned len));
  /*
       Writes the given number of uncompressed bytes into the compressed file.
-@@ -986,7 +986,7 @@
+@@ -1119,7 +1119,7 @@
     (0 in case of error).
  */
  
@@ -832,7 +837,7 @@
  /*
       Converts, formats, and writes the args to the compressed file under
     control of the format string, as in fprintf. gzprintf returns the number of
-@@ -999,14 +999,14 @@
+@@ -1132,14 +1132,14 @@
     because the secure snprintf() or vsnprintf() functions were not available.
  */
  
@@ -849,7 +854,7 @@
  /*
        Reads bytes from the compressed file until len-1 characters are read, or
     a newline character is read and transferred to buf, or an end-of-file
-@@ -1015,19 +1015,19 @@
+@@ -1148,19 +1148,19 @@
        gzgets returns buf, or Z_NULL in case of error.
  */
  
@@ -872,7 +877,7 @@
  /*
        Push one character back onto the stream to be read again later.
     Only one character of push-back is allowed.  gzungetc() returns the
-@@ -1037,7 +1037,7 @@
+@@ -1170,7 +1170,7 @@
     or gzrewind().
  */
  
@@ -881,7 +886,7 @@
  /*
       Flushes all pending output into the compressed file. The parameter
     flush is as in the deflate() function. The return value is the zlib
-@@ -1047,7 +1047,7 @@
+@@ -1180,7 +1180,7 @@
     degrade compression.
  */
  
@@ -890,7 +895,7 @@
                                        z_off_t offset, int whence));
  /*
        Sets the starting position for the next gzread or gzwrite on the
-@@ -1065,14 +1065,14 @@
+@@ -1198,14 +1198,14 @@
     would be before the current position.
  */
  
@@ -907,7 +912,7 @@
  /*
       Returns the starting position for the next gzread or gzwrite on the
     given compressed file. This position represents a number of bytes in the
-@@ -1081,20 +1081,20 @@
+@@ -1214,26 +1214,26 @@
     gztell(file) is equivalent to gzseek(file, 0L, SEEK_CUR)
  */
  
@@ -916,6 +921,13 @@
  /*
       Returns 1 when EOF has previously been detected reading the given
     input stream, otherwise zero.
+ */
+ 
+-ZEXTERN int ZEXPORT gzdirect OF((gzFile file));
++ZEXTERN ZEXPORT int gzdirect OF((gzFile file));
+ /*
+      Returns 1 if file is being read directly without decompression, otherwise
+    zero.
  */
  
 -ZEXTERN int ZEXPORT    gzclose OF((gzFile file));
@@ -931,7 +943,7 @@
  /*
       Returns the error message for the last error which occurred on the
     given compressed file. errnum is set to zlib error number. If an
-@@ -1103,7 +1103,7 @@
+@@ -1242,7 +1242,7 @@
     to get the exact error code.
  */
  
@@ -940,25 +952,25 @@
  /*
       Clears the error and end-of-file flags for file. This is analogous to the
     clearerr() function in stdio. This is useful for continuing to read a gzip
-@@ -1118,7 +1118,7 @@
+@@ -1257,7 +1257,7 @@
     compression library.
  */
  
 -ZEXTERN uLong ZEXPORT adler32 OF((uLong adler, const Bytef *buf, uInt len));
 +ZEXTERN ZEXPORT uLong adler32 OF((uLong adler, const Bytef *buf, uInt len));
- 
  /*
       Update a running Adler-32 checksum with the bytes buf[0..len-1] and
-@@ -1135,7 +1135,7 @@
-      if (adler != original_adler) error();
+    return the updated checksum. If buf is NULL, this function returns
+@@ -1282,7 +1282,7 @@
+    seq1 and seq2 concatenated, requiring only adler1, adler2, and len2.
  */
  
 -ZEXTERN uLong ZEXPORT crc32   OF((uLong crc, const Bytef *buf, uInt len));
 +ZEXTERN ZEXPORT uLong crc32   OF((uLong crc, const Bytef *buf, uInt len));
  /*
-      Update a running crc with the bytes buf[0..len-1] and return the updated
-    crc. If buf is NULL, this function returns the required initial value
-@@ -1157,17 +1157,17 @@
+      Update a running CRC-32 with the bytes buf[0..len-1] and return the
+    updated CRC-32. If buf is NULL, this function returns the required initial
+@@ -1314,17 +1314,17 @@
  /* deflateInit and inflateInit are macros to allow checking the zlib version
   * and the compiler's view of z_stream:
   */
@@ -976,12 +988,12 @@
 -ZEXTERN int ZEXPORT inflateInit2_ OF((z_streamp strm, int  windowBits,
 +ZEXTERN ZEXPORT int inflateInit2_ OF((z_streamp strm, int  windowBits,
                                        const char *version, int stream_size));
--ZEXTERN int ZEXPORT inflateBackInit_ OF((z_stream FAR *strm, int windowBits,
-+ZEXTERN ZEXPORT int inflateBackInit_ OF((z_stream FAR *strm, int windowBits,
+-ZEXTERN int ZEXPORT inflateBackInit_ OF((z_streamp strm, int windowBits,
++ZEXTERN ZEXPORT int inflateBackInit_ OF((z_streamp strm, int windowBits,
                                           unsigned char FAR *window,
                                           const char *version,
                                           int stream_size));
-@@ -1189,9 +1189,9 @@
+@@ -1346,9 +1346,9 @@
      struct internal_state {int dummy;}; /* hack for buggy compilers */
  #endif
  
@@ -994,9 +1006,9 @@
  
  #ifdef __cplusplus
  }
---- tmp/work/arm-linux-uclibc/zlib-1.2.2-r5/zlib-1.2.2/zutil.c	2003-08-27 21:34:34.000000000 -0500
-+++ zlib-1.2.2/zutil.c	2005-02-28 19:04:09.000000000 -0600
-@@ -28,12 +28,12 @@
+--- zlib-1.2.3-orig/zutil.c~visibility
++++ zlib-1.2.3-orig/zutil.c
+@@ -24,12 +24,12 @@
  ""};
  
  
@@ -1011,7 +1023,7 @@
  {
      uLong flags;
  
-@@ -134,7 +134,7 @@
+@@ -130,7 +130,7 @@
  /* exported to allow conversion of error code to string for compress() and
   * uncompress()
   */
