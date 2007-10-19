@@ -164,8 +164,7 @@ do_deploy() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_DEPLOY_NAME}
 	cd ${DEPLOY_DIR_IMAGE}
-	rm -f ${KERNEL_SYMLINK_NAME}
-	ln -s ${KERNEL_DEPLOY_NAME} ${KERNEL_SYMLINK_NAME}
+	ln -sf ${KERNEL_DEPLOY_NAME} ${KERNEL_SYMLINK_NAME}
 	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${MACHINE}.tgz -C ${D} lib	
 }
 
