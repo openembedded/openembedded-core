@@ -51,7 +51,7 @@ pkg_postinst () {
 	if [ ! -e $D${sysconfdir}/passwd ] ; then
 		cp $D${datadir}/base-passwd/passwd.master $D${sysconfdir}/passwd
 	fi
-	
+
 	if [ ! -e $D${sysconfdir}/group ] ; then
 		cp $D${datadir}/base-passwd/group.master $D${sysconfdir}/group
 	fi
