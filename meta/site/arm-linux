@@ -168,6 +168,9 @@ ac_cv_file___dev_ptc_=yes
 #mono
 mono_cv_uscore=${mono_cv_uscore=no}
 
+# guile
+ac_cv_func_pthread_attr_getstack=${ac_cv_func_pthread_attr_getstack=yes}
+
 # gnet
 ac_cv_member_struct_sockaddr_sa_len=${ac_cv_member_struct_sockaddr_sa_len=no}
 ac_cv_gnet_have_abstract_sockets=${ac_cv_gnet_have_abstract_sockets=no}
