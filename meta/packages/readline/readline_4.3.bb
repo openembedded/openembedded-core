@@ -15,7 +15,7 @@ SRC_URI = "ftp://ftp.cwru.edu/pub/bash/readline-${PV}.tar.gz \
 	   file://acinclude.m4"
 S = "${WORKDIR}/readline-${PV}"
 
-inherit autotools 
+inherit autotools
 
 do_configure () {
 	install -m 0644 ${WORKDIR}/acinclude.m4 ${S}/
