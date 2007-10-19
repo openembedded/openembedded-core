@@ -1,7 +1,8 @@
-# ash isn't good enough for quilt at least...
-RDEPENDS_${PN} += "patch diffstat bzip2 bash"
+RDEPENDS_${PN} += "patch diffstat bzip2 util-linux"
 
 require quilt_${PV}.inc
+
+PR = "r1"
 
 SRC_URI += "file://aclocal.patch;patch=1"
 
