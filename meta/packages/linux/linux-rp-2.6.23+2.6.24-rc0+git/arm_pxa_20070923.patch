@@ -1,0 +1,5877 @@
+# Base git commit: da8f153e51290e7438ba7da66234a864e5d3e1c1
+#	(Revert "x86_64: Quicklist support for x86_64")
+#
+# Author:    eric miao (Wed Sep 12 03:13:17 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:18:19 BST 2007)
+#   
+#   [ARM] pxa: PXA3xx base support
+#   
+#   Signed-off-by: eric miao
+#   Signed-off-by: Russell King
+#
+# arch/arm/Kconfig                         |    6 
+# arch/arm/boot/compressed/head-xscale.S   |    4 
+# arch/arm/mach-pxa/Kconfig                |   30 +
+# arch/arm/mach-pxa/Makefile               |    9 
+# arch/arm/mach-pxa/clock.c                |   79 ++--
+# arch/arm/mach-pxa/clock.h                |   43 ++
+# arch/arm/mach-pxa/devices.h              |    3 
+# arch/arm/mach-pxa/generic.c              |  146 ++++---
+# arch/arm/mach-pxa/generic.h              |   26 +
+# arch/arm/mach-pxa/irq.c                  |   80 ----
+# arch/arm/mach-pxa/mfp.c                  |  235 ++++++++++++
+# arch/arm/mach-pxa/pxa25x.c               |   90 ++++
+# arch/arm/mach-pxa/pxa27x.c               |  127 ++++++
+# arch/arm/mach-pxa/pxa300.c               |   93 +++++
+# arch/arm/mach-pxa/pxa320.c               |   88 ++++
+# arch/arm/mach-pxa/pxa3xx.c               |  216 +++++++++++
+# arch/arm/mach-pxa/time.c                 |   53 ++
+# arch/arm/mach-pxa/zylonite.c             |  184 +++++++++
+# arch/arm/mach-pxa/zylonite_pxa300.c      |  188 ++++++++++
+# arch/arm/mach-pxa/zylonite_pxa320.c      |  173 +++++++++
+# arch/arm/mm/Kconfig                      |    4 
+# drivers/i2c/busses/i2c-pxa.c             |   45 +-
+# drivers/input/keyboard/pxa27x_keyboard.c |   25 +
+# drivers/mmc/host/pxamci.c                |   43 +-
+# drivers/mmc/host/pxamci.h                |   14 
+# drivers/mtd/maps/lubbock-flash.c         |    9 
+# drivers/mtd/maps/mainstone-flash.c       |    5 
+# drivers/net/irda/pxaficp_ir.c            |   51 ++
+# drivers/net/smc91x.c                     |   62 ---
+# drivers/net/smc91x.h                     |   71 +++
+# drivers/serial/pxa.c                     |  163 ++++----
+# drivers/serial/serial_core.c             |   18 
+# drivers/usb/gadget/pxa2xx_udc.c          |   68 ++-
+# drivers/usb/gadget/pxa2xx_udc.h          |    1 
+# drivers/video/pxafb.c                    |   36 +
+# drivers/video/pxafb.h                    |    1 
+# include/asm-arm/arch-pxa/hardware.h      |   72 +++
+# include/asm-arm/arch-pxa/irqs.h          |    6 
+# include/asm-arm/arch-pxa/mfp-pxa300.h    |  574 ++++++++++++++++++++++++++++++
+# include/asm-arm/arch-pxa/mfp-pxa320.h    |  446 ++++++++++++++++++++++++
+# include/asm-arm/arch-pxa/mfp.h           |  576 +++++++++++++++++++++++++++++++
+# include/asm-arm/arch-pxa/pxa-regs.h      |    2 
+# include/asm-arm/arch-pxa/pxa3xx-regs.h   |   75 ++++
+# include/asm-arm/arch-pxa/timex.h         |    2 
+# include/asm-arm/arch-pxa/zylonite.h      |   35 +
+# 45 files changed, 3825 insertions(+), 452 deletions(-)
+#    create mode 100644 arch/arm/mach-pxa/mfp.c
+#    create mode 100644 arch/arm/mach-pxa/pxa300.c
+#    create mode 100644 arch/arm/mach-pxa/pxa320.c
+#    create mode 100644 arch/arm/mach-pxa/pxa3xx.c
+#    create mode 100644 arch/arm/mach-pxa/zylonite.c
+#    create mode 100644 arch/arm/mach-pxa/zylonite_pxa300.c
+#    create mode 100644 arch/arm/mach-pxa/zylonite_pxa320.c
+#    create mode 100644 include/asm-arm/arch-pxa/mfp-pxa300.h
+#    create mode 100644 include/asm-arm/arch-pxa/mfp-pxa320.h
+#    create mode 100644 include/asm-arm/arch-pxa/mfp.h
+#    create mode 100644 include/asm-arm/arch-pxa/pxa3xx-regs.h
+#    create mode 100644 include/asm-arm/arch-pxa/zylonite.h
+#
+# Author:    Russell King (Sat Sep  1 21:27:18 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:18:17 BST 2007)
+#   
+#   [NET] smc91x: fix PXA DMA support code
+#   
+#   The PXA DMA support code for smc91x doesn't pass a struct device to
+#   the dma_*map_single() functions, which leads to an oops in the dma
+#   bounce code.  We have a struct device which was used to probe the
+#   SMC chip.  Use it.
+#   
+#   (This patch is slightly larger because it requires struct smc_local
+#   to move into the header file.)
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Sat Sep  1 21:25:09 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:18:12 BST 2007)
+#   
+#   [SERIAL] Fix console initialisation ordering
+#   
+#   Ensure pm callback is called upon initialisation to place port in
+#   correct power saving state.  Ensure console is initialised prior
+#   to deciding whether to power down the port.
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Wed Sep 19 09:21:51 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:18:07 BST 2007)
+#   
+#   [ARM] pxa: tidy up arch/arm/mach-pxa/Makefile
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Sat Sep  1 21:28:55 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:18:03 BST 2007)
+#   
+#   [ARM] lubbock, mainstone: only initialise if running on that platform
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    eric miao (Wed Aug 29 10:22:17 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:18:01 BST 2007)
+#   
+#   [ARM] 4560/1: pxa: move processor specific set_wake logic out of irq.c
+#   
+#   a function pxa_init_irq_set_wake() was introduced, so that
+#   processor specific code could install their own version
+#   
+#   code setting PFER and PRER registers within pxa_gpio_irq_type
+#   are removed, and the edge configuration is postponed to the
+#   (*set_wake) and copies the GRER and GFER register, which will
+#   always be set up correctly by pxa_gpio_irq_type()
+#   
+#   Signed-off-by: eric miao
+#   Signed-off-by: Russell King
+#
+#
+# Author:    eric miao (Wed Aug 29 10:18:47 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:59 BST 2007)
+#   
+#   [ARM] 4559/1: pxa: make PXA_LAST_GPIO a run-time variable
+#   
+#   This definition produces processor specific code in generic function
+#   pxa_gpio_mode(), thus creating inconsistencies for support of pxa25x
+#   and pxa27x in a single zImage.
+#   
+#   As David Brownell suggests, make it a run-time variable and initialize
+#   at run-time according to the number of GPIOs on the processor. For now
+#   the initialization happens in pxa_init_irq_gpio(),  since there is
+#   already a parameter for that, besides, this is and MUST be earlier
+#   than any subsequent calls to pxa_gpio_mode().
+#   
+#   Signed-off-by: eric miao
+#   Signed-off-by: Russell King
+#
+#
+# Author:    eric miao (Wed Aug 29 10:15:41 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:57 BST 2007)
+#   
+#   [ARM] 4558/1: pxa: remove MACH_TYPE_LUBBOCK assignment and leave it to boot loader
+#   
+#   since both u-boot and blob support passing MACH_TYPE_LUBBOCK to the
+#   kernel, it should be quite safe to remove this
+#   
+#   Signed-off-by: eric miao
+#   Acked-by: Nicolas Pitre
+#   Signed-off-by: Russell King
+#
+#
+# Author:    eric miao (Wed Sep 12 03:13:17 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:55 BST 2007)
+#   
+#   [ARM] pxa: add PXA3 cpu_is_xxx() macros
+#   
+#   Extracted from patch by Eric Miao, this adds the cpu_is_xxx() macros
+#   for identifying PXA3 SoCs.
+#   
+#   Signed-off-by: eric miao
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Wed Sep 19 09:38:32 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:51 BST 2007)
+#   
+#   [ARM] pxa: Make CPU_XSCALE depend on PXA25x or PXA27x
+#   
+#   PXA3 SoCs are supported by the Xscale3 CPU code rather than the
+#   Xscale CPU code.
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Wed Sep 19 09:33:55 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:48 BST 2007)
+#   
+#   [ARM] pxa: mark pxa_set_cken deprecated
+#   
+#   Allow the generic clock support code to fiddle with the CKEN register
+#   and mark pxa_set_cken() deprecated.
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:34:37 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:43 BST 2007)
+#   
+#   [ARM] pxa: remove get_lcdclk_frequency_10khz()
+#   
+#   get_lcdclk_frequency_10khz() is now redundant, remove it.  Hide
+#   pxa27x_get_lcdclk_frequency_10khz() from public view.
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Sun Sep  2 17:09:23 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:39 BST 2007)
+#   
+#   [ARM] pxa: update pxa irda driver to use clk support
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Sun Sep  2 17:08:42 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:36 BST 2007)
+#   
+#   [ARM] pxa: Make STUART and FICP clocks available
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:33:35 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:34 BST 2007)
+#   
+#   [ARM] pxa: update PXA UDC driver to use clk support
+#   
+#   Note: this produces a WARN() dump.
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:28:15 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:31 BST 2007)
+#   
+#   [ARM] pxa: update pxa serial driver to use clk support
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:20:03 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:27 BST 2007)
+#   
+#   [ARM] pxa: update PXA MMC interface driver to use clk support
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:19:39 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:23 BST 2007)
+#   
+#   [ARM] pxa: update pxa27x keypad driver to use clk support
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:19:10 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:17:19 BST 2007)
+#   
+#   [ARM] pxa: update pxa i2c driver to use clk support
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:18:42 BST 2007)
+# Committer: Russell King (Sun Sep 23 14:16:50 BST 2007)
+#   
+#   [ARM] pxa: update pxafb to use clk support
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:18:02 BST 2007)
+# Committer: Russell King (Sat Sep 22 20:48:09 BST 2007)
+#   
+#   [ARM] pxa: introduce clk support for PXA SoC clocks
+#   
+#   Signed-off-by: Russell King
+#
+#    create mode 100644 arch/arm/mach-pxa/clock.h
+#
+# Author:    Russell King (Mon Aug 20 10:09:18 BST 2007)
+# Committer: Russell King (Sat Sep 22 20:48:09 BST 2007)
+#   
+#   [ARM] pxa: make pxa27x devices globally visible
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 10:07:44 BST 2007)
+# Committer: Russell King (Sat Sep 22 20:48:08 BST 2007)
+#   
+#   [ARM] pxa: fix naming of memory/lcd/core clock functions
+#   
+#   Rename pxa25x and pxa27x memory/lcd/core clock functions, and
+#   select the correct version at run time.
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Mon Aug 20 09:47:41 BST 2007)
+# Committer: Russell King (Sat Sep 22 20:48:08 BST 2007)
+#   
+#   [ARM] pxa: convert PXA serial drivers to use platform resources
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Russell King (Sat Sep  1 21:12:50 BST 2007)
+# Committer: Russell King (Sat Sep 22 20:48:07 BST 2007)
+#   
+#   [ARM] pxa: make pxa timer initialisation select clock rate at runtime
+#   
+#   Rather than using the compile-time constant CLOCK_TICK_RATE, select
+#   the clock tick rate at run time.  We organise the selection so that
+#   PXA3 automatically falls out with the right tick rate.
+#   
+#   Signed-off-by: Russell King
+#
+#
+# Author:    Nicolas Pitre (Fri Aug 17 16:55:22 BST 2007)
+# Committer: Russell King (Sat Sep 22 20:48:05 BST 2007)
+#   
+#   [ARM] 4550/1: sched_clock on PXA should cope with run time clock rate selection
+#   
+#   The previous implementation was relying on compile time optimizations
+#   based on a constant clock rate.  However, support for different PXA
+#   flavors in the same kernel binary requires that the clock be selected at
+#   run time, so here it is.
+#   
+#   Let's move this code to a more appropriate location while at it.
+#   
+#   Signed-off-by: Nicolas Pitre
+#   Signed-off-by: Russell King
+#
+#
+--- linux-2.6.23.orig/arch/arm/Kconfig
++++ linux-2.6.23/arch/arm/Kconfig
+@@ -336,14 +336,14 @@
+ 	  This enables support for Philips PNX4008 mobile platform.
+ 
+ config ARCH_PXA
+-	bool "PXA2xx-based"
++	bool "PXA2xx/PXA3xx-based"
+ 	depends on MMU
+ 	select ARCH_MTD_XIP
+ 	select GENERIC_GPIO
+ 	select GENERIC_TIME
+ 	select GENERIC_CLOCKEVENTS
+ 	help
+-	  Support for Intel's PXA2XX processor line.
++	  Support for Intel/Marvell's PXA2xx/PXA3xx processor line.
+ 
+ config ARCH_RPC
+ 	bool "RiscPC"
+@@ -486,7 +486,7 @@
+ config IWMMXT
+ 	bool "Enable iWMMXt support"
+ 	depends on CPU_XSCALE || CPU_XSC3
+-	default y if PXA27x
++	default y if PXA27x || PXA3xx
+ 	help
+ 	  Enable support for iWMMXt context switching at run time if
+ 	  running on a CPU that supports it.
+--- linux-2.6.23.orig/arch/arm/boot/compressed/head-xscale.S
++++ linux-2.6.23/arch/arm/boot/compressed/head-xscale.S
+@@ -33,10 +33,6 @@
+ 		bic	r0, r0, #0x1000		@ clear Icache
+ 		mcr	p15, 0, r0, c1, c0, 0
+ 
+-#ifdef CONFIG_ARCH_LUBBOCK
+-		mov	r7, #MACH_TYPE_LUBBOCK
+-#endif
+-
+ #ifdef CONFIG_ARCH_COTULLA_IDP
+ 		mov	r7, #MACH_TYPE_COTULLA_IDP
+ #endif
+--- linux-2.6.23.orig/arch/arm/mach-pxa/Kconfig
++++ linux-2.6.23/arch/arm/mach-pxa/Kconfig
+@@ -1,6 +1,24 @@
+ if ARCH_PXA
+ 
+-menu "Intel PXA2xx Implementations"
++menu "Intel PXA2xx/PXA3xx Implementations"
++
++if PXA3xx
++
++menu "Supported PXA3xx Processor Variants"
++
++config CPU_PXA300
++	bool "PXA300 (codename Monahans-L)"
++
++config CPU_PXA310
++	bool "PXA310 (codename Monahans-LV)"
++	select CPU_PXA300
++
++config CPU_PXA320
++	bool "PXA320 (codename Monahans-P)"
++
++endmenu
++
++endif
+ 
+ choice
+ 	prompt "Select target board"
+@@ -41,6 +59,11 @@
+ 	bool "CompuLab EM-x270 platform"
+ 	select PXA27x
+ 
++
++config MACH_ZYLONITE
++	bool "PXA3xx Development Platform"
++	select PXA3xx
++
+ config MACH_HX2750
+ 	bool "HP iPAQ hx2750"
+ 	select PXA27x
+@@ -228,6 +251,11 @@
+ 	help
+ 	  Select code specific to PXA27x variants
+ 
++config PXA3xx
++	bool
++	help
++	  Select code specific to PXA3xx variants
++
+ config PXA_SHARP_C7xx
+ 	bool
+ 	select PXA_SSP
+--- linux-2.6.23.orig/arch/arm/mach-pxa/Makefile
++++ linux-2.6.23/arch/arm/mach-pxa/Makefile
+@@ -6,6 +6,9 @@
+ obj-y += clock.o generic.o irq.o dma.o time.o
+ obj-$(CONFIG_PXA25x) += pxa25x.o
+ obj-$(CONFIG_PXA27x) += pxa27x.o
++obj-$(CONFIG_PXA3xx) += pxa3xx.o mfp.o
++obj-$(CONFIG_CPU_PXA300)       += pxa300.o
++obj-$(CONFIG_CPU_PXA320)       += pxa320.o
+ 
+ # Specific board support
+ obj-$(CONFIG_ARCH_LUBBOCK) += lubbock.o
+@@ -19,6 +22,12 @@
+ obj-$(CONFIG_MACH_POODLE)	+= poodle.o corgi_ssp.o sharpsl_pm.o poodle_pm.o
+ obj-$(CONFIG_MACH_TOSA)         += tosa.o
+ obj-$(CONFIG_MACH_EM_X270) += em-x270.o
++ifeq ($(CONFIG_MACH_ZYLONITE),y)
++   obj-y			+= zylonite.o
++   obj-$(CONFIG_CPU_PXA300)	+= zylonite_pxa300.o
++   obj-$(CONFIG_CPU_PXA320)	+= zylonite_pxa320.o
++endif
++
+ obj-$(CONFIG_MACH_HX2750)	+= hx2750.o hx2750_test.o
+ obj-$(CONFIG_MACH_HTCUNIVERSAL) += htcuniversal/
+ 
+--- linux-2.6.23.orig/arch/arm/mach-pxa/clock.c
++++ linux-2.6.23/arch/arm/mach-pxa/clock.c
+@@ -9,19 +9,15 @@
+ #include <linux/string.h>
+ #include <linux/clk.h>
+ #include <linux/spinlock.h>
++#include <linux/platform_device.h>
++#include <linux/delay.h>
+ 
+ #include <asm/arch/pxa-regs.h>
+ #include <asm/hardware.h>
+ 
+-struct clk {
+-	struct list_head	node;
+-	unsigned long		rate;
+-	struct module		*owner;
+-	const char		*name;
+-	unsigned int		enabled;
+-	void			(*enable)(void);
+-	void			(*disable)(void);
+-};
++#include "devices.h"
++#include "generic.h"
++#include "clock.h"
+ 
+ static LIST_HEAD(clocks);
+ static DEFINE_MUTEX(clocks_mutex);
+@@ -33,7 +29,8 @@
+ 
+ 	mutex_lock(&clocks_mutex);
+ 	list_for_each_entry(p, &clocks, node) {
+-		if (strcmp(id, p->name) == 0 && try_module_get(p->owner)) {
++		if (strcmp(id, p->name) == 0 &&
++		    (p->dev == NULL || p->dev == dev)) {
+ 			clk = p;
+ 			break;
+ 		}
+@@ -46,7 +43,6 @@
+ 
+ void clk_put(struct clk *clk)
+ {
+-	module_put(clk->owner);
+ }
+ EXPORT_SYMBOL(clk_put);
+ 
+@@ -56,8 +52,12 @@
+ 
+ 	spin_lock_irqsave(&clocks_lock, flags);
+ 	if (clk->enabled++ == 0)
+-		clk->enable();
++		clk->ops->enable(clk);
+ 	spin_unlock_irqrestore(&clocks_lock, flags);
++
++	if (clk->delay)
++		udelay(clk->delay);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(clk_enable);
+@@ -70,54 +70,75 @@
+ 
+ 	spin_lock_irqsave(&clocks_lock, flags);
+ 	if (--clk->enabled == 0)
+-		clk->disable();
++		clk->ops->disable(clk);
+ 	spin_unlock_irqrestore(&clocks_lock, flags);
+ }
+ EXPORT_SYMBOL(clk_disable);
+ 
+ unsigned long clk_get_rate(struct clk *clk)
+ {
+-	return clk->rate;
++	unsigned long rate;
++
++	rate = clk->rate;
++	if (clk->ops->getrate)
++		rate = clk->ops->getrate(clk);
++
++	return rate;
+ }
+ EXPORT_SYMBOL(clk_get_rate);
+ 
+ 
+-static void clk_gpio27_enable(void)
++static void clk_gpio27_enable(struct clk *clk)
+ {
+ 	pxa_gpio_mode(GPIO11_3_6MHz_MD);
+ }
+ 
+-static void clk_gpio27_disable(void)
++static void clk_gpio27_disable(struct clk *clk)
+ {
+ }
+ 
+-static struct clk clk_gpio27 = {
+-	.name		= "GPIO27_CLK",
+-	.rate		= 3686400,
++static const struct clkops clk_gpio27_ops = {
+ 	.enable		= clk_gpio27_enable,
+ 	.disable	= clk_gpio27_disable,
+ };
+ 
+-int clk_register(struct clk *clk)
++
++void clk_cken_enable(struct clk *clk)
+ {
+-	mutex_lock(&clocks_mutex);
+-	list_add(&clk->node, &clocks);
+-	mutex_unlock(&clocks_mutex);
+-	return 0;
++	CKEN |= 1 << clk->cken;
+ }
+-EXPORT_SYMBOL(clk_register);
+ 
+-void clk_unregister(struct clk *clk)
++void clk_cken_disable(struct clk *clk)
+ {
++	CKEN &= ~(1 << clk->cken);
++}
++
++const struct clkops clk_cken_ops = {
++	.enable		= clk_cken_enable,
++	.disable	= clk_cken_disable,
++};
++
++static struct clk common_clks[] = {
++	{
++		.name		= "GPIO27_CLK",
++		.ops		= &clk_gpio27_ops,
++		.rate		= 3686400,
++	},
++};
++
++void clks_register(struct clk *clks, size_t num)
++{
++	int i;
++
+ 	mutex_lock(&clocks_mutex);
+-	list_del(&clk->node);
++	for (i = 0; i < num; i++)
++		list_add(&clks[i].node, &clocks);
+ 	mutex_unlock(&clocks_mutex);
+ }
+-EXPORT_SYMBOL(clk_unregister);
+ 
+ static int __init clk_init(void)
+ {
+-	clk_register(&clk_gpio27);
++	clks_register(common_clks, ARRAY_SIZE(common_clks));
+ 	return 0;
+ }
+ arch_initcall(clk_init);
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/clock.h
+@@ -0,0 +1,43 @@
++struct clk;
++
++struct clkops {
++	void			(*enable)(struct clk *);
++	void			(*disable)(struct clk *);
++	unsigned long		(*getrate)(struct clk *);
++};
++
++struct clk {
++	struct list_head	node;
++	const char		*name;
++	struct device		*dev;
++	const struct clkops	*ops;
++	unsigned long		rate;
++	unsigned int		cken;
++	unsigned int		delay;
++	unsigned int		enabled;
++};
++
++#define INIT_CKEN(_name, _cken, _rate, _delay, _dev)	\
++	{						\
++		.name	= _name,			\
++		.dev	= _dev,				\
++		.ops	= &clk_cken_ops,		\
++		.rate	= _rate,			\
++		.cken	= CKEN_##_cken,			\
++		.delay	= _delay,			\
++	}
++
++#define INIT_CK(_name, _cken, _ops, _dev)		\
++	{						\
++		.name	= _name,			\
++		.dev	= _dev,				\
++		.ops	= _ops,				\
++		.cken	= CKEN_##_cken,			\
++	}
++
++extern const struct clkops clk_cken_ops;
++
++void clk_cken_enable(struct clk *clk);
++void clk_cken_disable(struct clk *clk);
++
++void clks_register(struct clk *clks, size_t num);
+--- linux-2.6.23.orig/arch/arm/mach-pxa/devices.h
++++ linux-2.6.23/arch/arm/mach-pxa/devices.h
+@@ -9,3 +9,6 @@
+ extern struct platform_device pxa_device_i2s;
+ extern struct platform_device pxa_device_ficp;
+ extern struct platform_device pxa_device_rtc;
++
++extern struct platform_device pxa27x_device_i2c_power;
++extern struct platform_device pxa27x_device_ohci;
+--- linux-2.6.23.orig/arch/arm/mach-pxa/generic.c
++++ linux-2.6.23/arch/arm/mach-pxa/generic.c
+@@ -25,10 +25,6 @@
+ #include <linux/pm.h>
+ #include <linux/string.h>
+ 
+-#include <linux/sched.h>
+-#include <asm/cnt32_to_63.h>
+-#include <asm/div64.h>
+-
+ #include <asm/hardware.h>
+ #include <asm/irq.h>
+ #include <asm/system.h>
+@@ -48,66 +44,39 @@
+ #include "generic.h"
+ 
+ /*
+- * This is the PXA2xx sched_clock implementation. This has a resolution
+- * of at least 308ns and a maximum value that depends on the value of
+- * CLOCK_TICK_RATE.
+- *
+- * The return value is guaranteed to be monotonic in that range as
+- * long as there is always less than 582 seconds between successive
+- * calls to this function.
++ * Get the clock frequency as reflected by CCCR and the turbo flag.
++ * We assume these values have been applied via a fcs.
++ * If info is not 0 we also display the current settings.
+  */
+-unsigned long long sched_clock(void)
++unsigned int get_clk_frequency_khz(int info)
+ {
+-	unsigned long long v = cnt32_to_63(OSCR);
+-	/* Note: top bit ov v needs cleared unless multiplier is even. */
+-
+-#if	CLOCK_TICK_RATE == 3686400
+-	/* 1E9 / 3686400 => 78125 / 288, max value = 32025597s (370 days). */
+-	/* The <<1 is used to get rid of tick.hi top bit */
+-	v *= 78125<<1;
+-	do_div(v, 288<<1);
+-#elif	CLOCK_TICK_RATE == 3250000
+-	/* 1E9 / 3250000 => 4000 / 13, max value = 709490156s (8211 days) */
+-	v *= 4000;
+-	do_div(v, 13);
+-#elif	CLOCK_TICK_RATE == 3249600
+-	/* 1E9 / 3249600 => 625000 / 2031, max value = 4541295s (52 days) */
+-	v *= 625000;
+-	do_div(v, 2031);
+-#else
+-#warning "consider fixing sched_clock for your value of CLOCK_TICK_RATE"
+-	/*
+-	 * 96-bit math to perform tick * NSEC_PER_SEC / CLOCK_TICK_RATE for
+-	 * any value of CLOCK_TICK_RATE. Max value is in the 80 thousand
+-	 * years range and truncation to unsigned long long limits it to
+-	 * sched_clock's max range of ~584 years.  This is nice but with
+-	 * higher computation cost.
+-	 */
+-	{
+-		union {
+-			unsigned long long val;
+-			struct { unsigned long lo, hi; };
+-		} x;
+-		unsigned long long y;
+-
+-		x.val = v;
+-		x.hi &= 0x7fffffff;
+-		y = (unsigned long long)x.lo * NSEC_PER_SEC;
+-		x.lo = y;
+-		y = (y >> 32) + (unsigned long long)x.hi * NSEC_PER_SEC;
+-		x.hi = do_div(y, CLOCK_TICK_RATE);
+-		do_div(x.val, CLOCK_TICK_RATE);
+-		x.hi += y;
+-		v = x.val;
+-	}
+-#endif
++	if (cpu_is_pxa21x() || cpu_is_pxa25x())
++		return pxa25x_get_clk_frequency_khz(info);
++	else if (cpu_is_pxa27x())
++		return pxa27x_get_clk_frequency_khz(info);
++	else
++		return pxa3xx_get_clk_frequency_khz(info);
++}
++EXPORT_SYMBOL(get_clk_frequency_khz);
+ 
+-	return v;
++/*
++ * Return the current memory clock frequency in units of 10kHz
++ */
++unsigned int get_memclk_frequency_10khz(void)
++{
++	if (cpu_is_pxa21x() || cpu_is_pxa25x())
++		return pxa25x_get_memclk_frequency_10khz();
++	else if (cpu_is_pxa27x())
++		return pxa27x_get_memclk_frequency_10khz();
++	else
++		return pxa3xx_get_memclk_frequency_10khz();
+ }
++EXPORT_SYMBOL(get_memclk_frequency_10khz);
+ 
+ /*
+  * Handy function to set GPIO alternate functions
+  */
++int pxa_last_gpio;
+ 
+ int pxa_gpio_mode(int gpio_mode)
+ {
+@@ -116,7 +85,7 @@
+ 	int fn = (gpio_mode & GPIO_MD_MASK_FN) >> 8;
+ 	int gafr;
+ 
+-	if (gpio > PXA_LAST_GPIO)
++	if (gpio > pxa_last_gpio)
+ 		return -EINVAL;
+ 
+ 	local_irq_save(flags);
+@@ -160,7 +129,7 @@
+ /*
+  * Routine to safely enable or disable a clock in the CKEN
+  */
+-void pxa_set_cken(int clock, int enable)
++void __pxa_set_cken(int clock, int enable)
+ {
+ 	unsigned long flags;
+ 	local_irq_save(flags);
+@@ -173,7 +142,7 @@
+ 	local_irq_restore(flags);
+ }
+ 
+-EXPORT_SYMBOL(pxa_set_cken);
++EXPORT_SYMBOL(__pxa_set_cken);
+ 
+ /*
+  * Intel PXA2xx internal register mapping.
+@@ -330,21 +299,80 @@
+ 	pxa_device_fb.dev.parent = parent_dev;
+ }
+ 
++static struct resource pxa_resource_ffuart[] = {
++	{
++		.start	= __PREG(FFUART),
++		.end	= __PREG(FFUART) + 35,
++		.flags	= IORESOURCE_MEM,
++	}, {
++		.start	= IRQ_FFUART,
++		.end	= IRQ_FFUART,
++		.flags	= IORESOURCE_IRQ,
++	}
++};
++
+ struct platform_device pxa_device_ffuart= {
+ 	.name		= "pxa2xx-uart",
+ 	.id		= 0,
++	.resource	= pxa_resource_ffuart,
++	.num_resources	= ARRAY_SIZE(pxa_resource_ffuart),
++};
++
++static struct resource pxa_resource_btuart[] = {
++	{
++		.start	= __PREG(BTUART),
++		.end	= __PREG(BTUART) + 35,
++		.flags	= IORESOURCE_MEM,
++	}, {
++		.start	= IRQ_BTUART,
++		.end	= IRQ_BTUART,
++		.flags	= IORESOURCE_IRQ,
++	}
+ };
++
+ struct platform_device pxa_device_btuart = {
+ 	.name		= "pxa2xx-uart",
+ 	.id		= 1,
++	.resource	= pxa_resource_btuart,
++	.num_resources	= ARRAY_SIZE(pxa_resource_btuart),
+ };
++
++static struct resource pxa_resource_stuart[] = {
++	{
++		.start	= __PREG(STUART),
++		.end	= __PREG(STUART) + 35,
++		.flags	= IORESOURCE_MEM,
++	}, {
++		.start	= IRQ_STUART,
++		.end	= IRQ_STUART,
++		.flags	= IORESOURCE_IRQ,
++	}
++};
++
+ struct platform_device pxa_device_stuart = {
+ 	.name		= "pxa2xx-uart",
+ 	.id		= 2,
++	.resource	= pxa_resource_stuart,
++	.num_resources	= ARRAY_SIZE(pxa_resource_stuart),
++};
++
++static struct resource pxa_resource_hwuart[] = {
++	{
++		.start	= __PREG(HWUART),
++		.end	= __PREG(HWUART) + 47,
++		.flags	= IORESOURCE_MEM,
++	}, {
++		.start	= IRQ_HWUART,
++		.end	= IRQ_HWUART,
++		.flags	= IORESOURCE_IRQ,
++	}
+ };
++
+ struct platform_device pxa_device_hwuart = {
+ 	.name		= "pxa2xx-uart",
+ 	.id		= 3,
++	.resource	= pxa_resource_hwuart,
++	.num_resources	= ARRAY_SIZE(pxa_resource_hwuart),
+ };
+ 
+ void __init pxa_set_ffuart_info(struct platform_pxa_serial_funcs *info)
+--- linux-2.6.23.orig/arch/arm/mach-pxa/generic.h
++++ linux-2.6.23/arch/arm/mach-pxa/generic.h
+@@ -15,14 +15,40 @@
+ extern void __init pxa_init_irq_low(void);
+ extern void __init pxa_init_irq_high(void);
+ extern void __init pxa_init_irq_gpio(int gpio_nr);
++extern void __init pxa_init_irq_set_wake(int (*set_wake)(unsigned int, unsigned int));
+ extern void __init pxa25x_init_irq(void);
+ extern void __init pxa27x_init_irq(void);
++extern void __init pxa3xx_init_irq(void);
+ extern void __init pxa_map_io(void);
+ 
+ extern unsigned int get_clk_frequency_khz(int info);
++extern int pxa_last_gpio;
+ 
+ #define SET_BANK(__nr,__start,__size) \
+ 	mi->bank[__nr].start = (__start), \
+ 	mi->bank[__nr].size = (__size), \
+ 	mi->bank[__nr].node = (((unsigned)(__start) - PHYS_OFFSET) >> 27)
+ 
++#ifdef CONFIG_PXA25x
++extern unsigned pxa25x_get_clk_frequency_khz(int);
++extern unsigned pxa25x_get_memclk_frequency_10khz(void);
++#else
++#define pxa25x_get_clk_frequency_khz(x)		(0)
++#define pxa25x_get_memclk_frequency_10khz()	(0)
++#endif
++
++#ifdef CONFIG_PXA27x
++extern unsigned pxa27x_get_clk_frequency_khz(int);
++extern unsigned pxa27x_get_memclk_frequency_10khz(void);
++#else
++#define pxa27x_get_clk_frequency_khz(x)		(0)
++#define pxa27x_get_memclk_frequency_10khz()	(0)
++#endif
++
++#ifdef CONFIG_PXA3xx
++extern unsigned pxa3xx_get_clk_frequency_khz(int);
++extern unsigned pxa3xx_get_memclk_frequency_10khz(void);
++#else
++#define pxa3xx_get_clk_frequency_khz(x)		(0)
++#define pxa3xx_get_memclk_frequency_10khz()	(0)
++#endif
+--- linux-2.6.23.orig/arch/arm/mach-pxa/irq.c
++++ linux-2.6.23/arch/arm/mach-pxa/irq.c
+@@ -38,33 +38,11 @@
+ 	ICMR |= (1 << irq);
+ }
+ 
+-static int pxa_set_wake(unsigned int irq, unsigned int on)
+-{
+-	u32	mask;
+-
+-	switch (irq) {
+-	case IRQ_RTCAlrm:
+-		mask = PWER_RTC;
+-		break;
+-#ifdef CONFIG_PXA27x
+-	/* REVISIT can handle USBH1, USBH2, USB, MSL, USIM, ... */
+-#endif
+-	default:
+-		return -EINVAL;
+-	}
+-	if (on)
+-		PWER |= mask;
+-	else
+-		PWER &= ~mask;
+-	return 0;
+-}
+-
+ static struct irq_chip pxa_internal_chip_low = {
+ 	.name		= "SC",
+ 	.ack		= pxa_mask_low_irq,
+ 	.mask		= pxa_mask_low_irq,
+ 	.unmask		= pxa_unmask_low_irq,
+-	.set_wake	= pxa_set_wake,
+ };
+ 
+ void __init pxa_init_irq_low(void)
+@@ -87,7 +65,7 @@
+ 	}
+ }
+ 
+-#ifdef CONFIG_PXA27x
++#if defined(CONFIG_PXA27x) || defined(CONFIG_PXA3xx)
+ 
+ /*
+  * This is for the second set of internal IRQs as found on the PXA27x.
+@@ -125,26 +103,6 @@
+ }
+ #endif
+ 
+-/* Note that if an input/irq line ever gets changed to an output during
+- * suspend, the relevant PWER, PRER, and PFER bits should be cleared.
+- */
+-#ifdef CONFIG_PXA27x
+-
+-/* PXA27x:  Various gpios can issue wakeup events.  This logic only
+- * handles the simple cases, not the WEMUX2 and WEMUX3 options
+- */
+-#define PXA27x_GPIO_NOWAKE_MASK \
+-	((1 << 8) | (1 << 7) | (1 << 6) | (1 << 5) | (1 << 2))
+-#define	WAKEMASK(gpio) \
+-	(((gpio) <= 15) \
+-		? ((1 << (gpio)) & ~PXA27x_GPIO_NOWAKE_MASK) \
+-		: ((gpio == 35) ? (1 << 24) : 0))
+-#else
+-
+-/* pxa 210, 250, 255, 26x:  gpios 0..15 can issue wakeups */
+-#define	WAKEMASK(gpio) (((gpio) <= 15) ? (1 << (gpio)) : 0)
+-#endif
+-
+ /*
+  * PXA GPIO edge detection for IRQs:
+  * IRQs are generated on Falling-Edge, Rising-Edge, or both.
+@@ -158,11 +116,9 @@
+ static int pxa_gpio_irq_type(unsigned int irq, unsigned int type)
+ {
+ 	int gpio, idx;
+-	u32 mask;
+ 
+ 	gpio = IRQ_TO_GPIO(irq);
+ 	idx = gpio >> 5;
+-	mask = WAKEMASK(gpio);
+ 
+ 	if (type == IRQT_PROBE) {
+ 	    /* Don't mess with enabled GPIOs using preconfigured edges or
+@@ -182,19 +138,15 @@
+ 	if (type & __IRQT_RISEDGE) {
+ 		/* printk("rising "); */
+ 		__set_bit (gpio, GPIO_IRQ_rising_edge);
+-		PRER |= mask;
+ 	} else {
+ 		__clear_bit (gpio, GPIO_IRQ_rising_edge);
+-		PRER &= ~mask;
+ 	}
+ 
+ 	if (type & __IRQT_FALEDGE) {
+ 		/* printk("falling "); */
+ 		__set_bit (gpio, GPIO_IRQ_falling_edge);
+-		PFER |= mask;
+ 	} else {
+ 		__clear_bit (gpio, GPIO_IRQ_falling_edge);
+-		PFER &= ~mask;
+ 	}
+ 
+ 	/* printk("edges\n"); */
+@@ -213,29 +165,12 @@
+ 	GEDR0 = (1 << (irq - IRQ_GPIO0));
+ }
+ 
+-static int pxa_set_gpio_wake(unsigned int irq, unsigned int on)
+-{
+-	int	gpio = IRQ_TO_GPIO(irq);
+-	u32	mask = WAKEMASK(gpio);
+-
+-	if (!mask)
+-		return -EINVAL;
+-
+-	if (on)
+-		PWER |= mask;
+-	else
+-		PWER &= ~mask;
+-	return 0;
+-}
+-
+-
+ static struct irq_chip pxa_low_gpio_chip = {
+ 	.name		= "GPIO-l",
+ 	.ack		= pxa_ack_low_gpio,
+ 	.mask		= pxa_mask_low_irq,
+ 	.unmask		= pxa_unmask_low_irq,
+ 	.set_type	= pxa_gpio_irq_type,
+-	.set_wake	= pxa_set_gpio_wake,
+ };
+ 
+ /*
+@@ -342,13 +277,14 @@
+ 	.mask		= pxa_mask_muxed_gpio,
+ 	.unmask		= pxa_unmask_muxed_gpio,
+ 	.set_type	= pxa_gpio_irq_type,
+-	.set_wake	= pxa_set_gpio_wake,
+ };
+ 
+ void __init pxa_init_irq_gpio(int gpio_nr)
+ {
+ 	int irq, i;
+ 
++	pxa_last_gpio = gpio_nr - 1;
++
+ 	/* clear all GPIO edge detects */
+ 	for (i = 0; i < gpio_nr; i += 32) {
+ 		GFER(i) = 0;
+@@ -375,3 +311,13 @@
+ 	set_irq_chip(IRQ_GPIO_2_x, &pxa_internal_chip_low);
+ 	set_irq_chained_handler(IRQ_GPIO_2_x, pxa_gpio_demux_handler);
+ }
++
++void __init pxa_init_irq_set_wake(int (*set_wake)(unsigned int, unsigned int))
++{
++	pxa_internal_chip_low.set_wake = set_wake;
++#ifdef CONFIG_PXA27x
++	pxa_internal_chip_high.set_wake = set_wake;
++#endif
++	pxa_low_gpio_chip.set_wake = set_wake;
++	pxa_muxed_gpio_chip.set_wake = set_wake;
++}
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/mfp.c
+@@ -0,0 +1,235 @@
++/*
++ * linux/arch/arm/mach-pxa/mfp.c
++ *
++ * PXA3xx Multi-Function Pin Support
++ *
++ * Copyright (C) 2007 Marvell Internation Ltd.
++ *
++ * 2007-08-21: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/io.h>
++
++#include <asm/hardware.h>
++#include <asm/arch/mfp.h>
++
++/* mfp_spin_lock is used to ensure that MFP register configuration
++ * (most likely a read-modify-write operation) is atomic, and that
++ * mfp_table[] is consistent
++ */
++static DEFINE_SPINLOCK(mfp_spin_lock);
++
++static void __iomem *mfpr_mmio_base = (void __iomem *)&__REG(MFPR_BASE);
++static struct pxa3xx_mfp_pin mfp_table[MFP_PIN_MAX];
++
++#define mfpr_readl(off)			\
++	__raw_readl(mfpr_mmio_base + (off))
++
++#define mfpr_writel(off, val)		\
++	__raw_writel(val, mfpr_mmio_base + (off))
++
++/*
++ * perform a read-back of any MFPR register to make sure the
++ * previous writings are finished
++ */
++#define mfpr_sync()	(void)__raw_readl(mfpr_mmio_base + 0)
++
++static inline void __mfp_config(int pin, unsigned long val)
++{
++	unsigned long off = mfp_table[pin].mfpr_off;
++
++	mfp_table[pin].mfpr_val = val;
++	mfpr_writel(off, val);
++}
++
++void pxa3xx_mfp_config(mfp_cfg_t *mfp_cfgs, int num)
++{
++	int i, pin;
++	unsigned long val, flags;
++	mfp_cfg_t *mfp_cfg = mfp_cfgs;
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++
++	for (i = 0; i < num; i++, mfp_cfg++) {
++		pin = MFP_CFG_PIN(*mfp_cfg);
++		val = MFP_CFG_VAL(*mfp_cfg);
++
++		BUG_ON(pin >= MFP_PIN_MAX);
++
++		__mfp_config(pin, val);
++	}
++
++	mfpr_sync();
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++unsigned long pxa3xx_mfp_read(int mfp)
++{
++	unsigned long val, flags;
++
++	BUG_ON(mfp >= MFP_PIN_MAX);
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++	val = mfpr_readl(mfp_table[mfp].mfpr_off);
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++
++	return val;
++}
++
++void pxa3xx_mfp_write(int mfp, unsigned long val)
++{
++	unsigned long flags;
++
++	BUG_ON(mfp >= MFP_PIN_MAX);
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++	mfpr_writel(mfp_table[mfp].mfpr_off, val);
++	mfpr_sync();
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++void pxa3xx_mfp_set_afds(int mfp, int af, int ds)
++{
++	uint32_t mfpr_off, mfpr_val;
++	unsigned long flags;
++
++	BUG_ON(mfp >= MFP_PIN_MAX);
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++	mfpr_off = mfp_table[mfp].mfpr_off;
++
++	mfpr_val = mfpr_readl(mfpr_off);
++	mfpr_val &= ~(MFPR_AF_MASK | MFPR_DRV_MASK);
++	mfpr_val |= (((af & 0x7) << MFPR_ALT_OFFSET) |
++		     ((ds & 0x7) << MFPR_DRV_OFFSET));
++
++	mfpr_writel(mfpr_off, mfpr_val);
++	mfpr_sync();
++
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++void pxa3xx_mfp_set_rdh(int mfp, int rdh)
++{
++	uint32_t mfpr_off, mfpr_val;
++	unsigned long flags;
++
++	BUG_ON(mfp >= MFP_PIN_MAX);
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++
++	mfpr_off = mfp_table[mfp].mfpr_off;
++
++	mfpr_val = mfpr_readl(mfpr_off);
++	mfpr_val &= ~MFPR_RDH_MASK;
++
++	if (likely(rdh))
++		mfpr_val |= (1u << MFPR_SS_OFFSET);
++
++	mfpr_writel(mfpr_off, mfpr_val);
++	mfpr_sync();
++
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++void pxa3xx_mfp_set_lpm(int mfp, int lpm)
++{
++	uint32_t mfpr_off, mfpr_val;
++	unsigned long flags;
++
++	BUG_ON(mfp >= MFP_PIN_MAX);
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++
++	mfpr_off = mfp_table[mfp].mfpr_off;
++	mfpr_val = mfpr_readl(mfpr_off);
++	mfpr_val &= ~MFPR_LPM_MASK;
++
++	if (lpm & 0x1) mfpr_val |= 1u << MFPR_SON_OFFSET;
++	if (lpm & 0x2) mfpr_val |= 1u << MFPR_SD_OFFSET;
++	if (lpm & 0x4) mfpr_val |= 1u << MFPR_PU_OFFSET;
++	if (lpm & 0x8) mfpr_val |= 1u << MFPR_PD_OFFSET;
++	if (lpm &0x10) mfpr_val |= 1u << MFPR_PS_OFFSET;
++
++	mfpr_writel(mfpr_off, mfpr_val);
++	mfpr_sync();
++
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++void pxa3xx_mfp_set_pull(int mfp, int pull)
++{
++	uint32_t mfpr_off, mfpr_val;
++	unsigned long flags;
++
++	BUG_ON(mfp >= MFP_PIN_MAX);
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++
++	mfpr_off = mfp_table[mfp].mfpr_off;
++	mfpr_val = mfpr_readl(mfpr_off);
++	mfpr_val &= ~MFPR_PULL_MASK;
++	mfpr_val |= ((pull & 0x7u) << MFPR_PD_OFFSET);
++
++	mfpr_writel(mfpr_off, mfpr_val);
++	mfpr_sync();
++
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++void pxa3xx_mfp_set_edge(int mfp, int edge)
++{
++	uint32_t mfpr_off, mfpr_val;
++	unsigned long flags;
++
++	BUG_ON(mfp >= MFP_PIN_MAX);
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++
++	mfpr_off = mfp_table[mfp].mfpr_off;
++	mfpr_val = mfpr_readl(mfpr_off);
++
++	mfpr_val &= ~MFPR_EDGE_MASK;
++	mfpr_val |= (edge & 0x3u) << MFPR_ERE_OFFSET;
++	mfpr_val |= (!edge & 0x1) << MFPR_EC_OFFSET;
++
++	mfpr_writel(mfpr_off, mfpr_val);
++	mfpr_sync();
++
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++void __init pxa3xx_mfp_init_addr(struct pxa3xx_mfp_addr_map *map)
++{
++	struct pxa3xx_mfp_addr_map *p;
++	unsigned long offset, flags;
++	int i;
++
++	spin_lock_irqsave(&mfp_spin_lock, flags);
++
++	for (p = map; p->start != MFP_PIN_INVALID; p++) {
++		offset = p->offset;
++		i = p->start;
++
++		do {
++			mfp_table[i].mfpr_off = offset;
++			mfp_table[i].mfpr_val = 0;
++			offset += 4; i++;
++		} while ((i <= p->end) && (p->end != -1));
++	}
++
++	spin_unlock_irqrestore(&mfp_spin_lock, flags);
++}
++
++void __init pxa3xx_init_mfp(void)
++{
++	memset(mfp_table, 0, sizeof(mfp_table));
++}
+--- linux-2.6.23.orig/arch/arm/mach-pxa/pxa25x.c
++++ linux-2.6.23/arch/arm/mach-pxa/pxa25x.c
+@@ -30,6 +30,7 @@
+ 
+ #include "generic.h"
+ #include "devices.h"
++#include "clock.h"
+ 
+ /*
+  * Various clock factors driven by the CCCR register.
+@@ -53,7 +54,7 @@
+  * We assume these values have been applied via a fcs.
+  * If info is not 0 we also display the current settings.
+  */
+-unsigned int get_clk_frequency_khz(int info)
++unsigned int pxa25x_get_clk_frequency_khz(int info)
+ {
+ 	unsigned long cccr, turbo;
+ 	unsigned int l, L, m, M, n2, N;
+@@ -86,27 +87,48 @@
+ 	return (turbo & 1) ? (N/1000) : (M/1000);
+ }
+ 
+-EXPORT_SYMBOL(get_clk_frequency_khz);
+-
+ /*
+  * Return the current memory clock frequency in units of 10kHz
+  */
+-unsigned int get_memclk_frequency_10khz(void)
++unsigned int pxa25x_get_memclk_frequency_10khz(void)
+ {
+ 	return L_clk_mult[(CCCR >> 0) & 0x1f] * BASE_CLK / 10000;
+ }
+ 
+-EXPORT_SYMBOL(get_memclk_frequency_10khz);
+-
+-/*
+- * Return the current LCD clock frequency in units of 10kHz
+- */
+-unsigned int get_lcdclk_frequency_10khz(void)
++static unsigned long clk_pxa25x_lcd_getrate(struct clk *clk)
+ {
+-	return get_memclk_frequency_10khz();
++	return pxa25x_get_memclk_frequency_10khz() * 10000;
+ }
+ 
+-EXPORT_SYMBOL(get_lcdclk_frequency_10khz);
++static const struct clkops clk_pxa25x_lcd_ops = {
++	.enable		= clk_cken_enable,
++	.disable	= clk_cken_disable,
++	.getrate	= clk_pxa25x_lcd_getrate,
++};
++
++/*
++ * 3.6864MHz -> OST, GPIO, SSP, PWM, PLLs (95.842MHz, 147.456MHz)
++ * 95.842MHz -> MMC 19.169MHz, I2C 31.949MHz, FICP 47.923MHz, USB 47.923MHz
++ * 147.456MHz -> UART 14.7456MHz, AC97 12.288MHz, I2S 5.672MHz (allegedly)
++ */
++static struct clk pxa25x_clks[] = {
++	INIT_CK("LCDCLK", LCD, &clk_pxa25x_lcd_ops, &pxa_device_fb.dev),
++	INIT_CKEN("UARTCLK", FFUART, 14745600, 1, &pxa_device_ffuart.dev),
++	INIT_CKEN("UARTCLK", BTUART, 14745600, 1, &pxa_device_btuart.dev),
++	INIT_CKEN("UARTCLK", BTUART, 14745600, 1, &pxa_device_btuart.dev),
++	INIT_CKEN("UARTCLK", STUART, 14745600, 1, NULL),
++	INIT_CKEN("UDCCLK", USB, 47923000, 5, &pxa_device_udc.dev),
++	INIT_CKEN("MMCCLK", MMC, 19169000, 0, &pxa_device_mci.dev),
++	INIT_CKEN("I2CCLK", I2C, 31949000, 0, &pxa_device_i2c.dev),
++	/*
++	INIT_CKEN("PWMCLK",  PWM0, 3686400,  0, NULL),
++	INIT_CKEN("PWMCLK",  PWM0, 3686400,  0, NULL),
++	INIT_CKEN("SSPCLK",  SSP,  3686400,  0, NULL),
++	INIT_CKEN("I2SCLK",  I2S,  14745600, 0, NULL),
++	INIT_CKEN("NSSPCLK", NSSP, 3686400,  0, NULL),
++	*/
++	INIT_CKEN("FICPCLK", FICP, 47923000, 0, NULL),
++};
+ 
+ #ifdef CONFIG_PM
+ 
+@@ -207,10 +229,52 @@
+ }
+ #endif
+ 
++/* PXA25x: supports wakeup from GPIO0..GPIO15 and RTC alarm
++ */
++
++static int pxa25x_set_wake(unsigned int irq, unsigned int on)
++{
++	int gpio = IRQ_TO_GPIO(irq);
++	uint32_t gpio_bit, mask = 0;
++
++	if (gpio >= 0 && gpio <= 15) {
++		gpio_bit = GPIO_bit(gpio);
++		mask = gpio_bit;
++		if (on) {
++			if (GRER(gpio) | gpio_bit)
++				PRER |= gpio_bit;
++			else
++				PRER &= ~gpio_bit;
++
++			if (GFER(gpio) | gpio_bit)
++				PFER |= gpio_bit;
++			else
++				PFER &= ~gpio_bit;
++		}
++		goto set_pwer;
++	}
++
++	if (irq == IRQ_RTCAlrm) {
++		mask = PWER_RTC;
++		goto set_pwer;
++	}
++
++	return -EINVAL;
++
++set_pwer:
++	if (on)
++		PWER |= mask;
++	else
++		PWER &=~mask;
++
++	return 0;
++}
++
+ void __init pxa25x_init_irq(void)
+ {
+ 	pxa_init_irq_low();
+ 	pxa_init_irq_gpio(85);
++	pxa_init_irq_set_wake(pxa25x_set_wake);
+ }
+ 
+ static struct platform_device *pxa25x_devices[] __initdata = {
+@@ -231,6 +295,8 @@
+ 	int ret = 0;
+ 
+ 	if (cpu_is_pxa21x() || cpu_is_pxa25x()) {
++		clks_register(pxa25x_clks, ARRAY_SIZE(pxa25x_clks));
++
+ 		if ((ret = pxa_init_dma(16)))
+ 			return ret;
+ #ifdef CONFIG_PM
+--- linux-2.6.23.orig/arch/arm/mach-pxa/pxa27x.c
++++ linux-2.6.23/arch/arm/mach-pxa/pxa27x.c
+@@ -27,6 +27,7 @@
+ 
+ #include "generic.h"
+ #include "devices.h"
++#include "clock.h"
+ 
+ /* Crystal clock: 13MHz */
+ #define BASE_CLK	13000000
+@@ -36,7 +37,7 @@
+  * We assume these values have been applied via a fcs.
+  * If info is not 0 we also display the current settings.
+  */
+-unsigned int get_clk_frequency_khz( int info)
++unsigned int pxa27x_get_clk_frequency_khz(int info)
+ {
+ 	unsigned long ccsr, clkcfg;
+ 	unsigned int l, L, m, M, n2, N, S;
+@@ -79,7 +80,7 @@
+  * Return the current mem clock frequency in units of 10kHz as
+  * reflected by CCCR[A], B, and L
+  */
+-unsigned int get_memclk_frequency_10khz(void)
++unsigned int pxa27x_get_memclk_frequency_10khz(void)
+ {
+ 	unsigned long ccsr, clkcfg;
+ 	unsigned int l, L, m, M;
+@@ -104,7 +105,7 @@
+ /*
+  * Return the current LCD clock frequency in units of 10kHz as
+  */
+-unsigned int get_lcdclk_frequency_10khz(void)
++static unsigned int pxa27x_get_lcdclk_frequency_10khz(void)
+ {
+ 	unsigned long ccsr;
+ 	unsigned int l, L, k, K;
+@@ -120,9 +121,47 @@
+ 	return (K / 10000);
+ }
+ 
+-EXPORT_SYMBOL(get_clk_frequency_khz);
+-EXPORT_SYMBOL(get_memclk_frequency_10khz);
+-EXPORT_SYMBOL(get_lcdclk_frequency_10khz);
++static unsigned long clk_pxa27x_lcd_getrate(struct clk *clk)
++{
++	return pxa27x_get_lcdclk_frequency_10khz() * 10000;
++}
++
++static const struct clkops clk_pxa27x_lcd_ops = {
++	.enable		= clk_cken_enable,
++	.disable	= clk_cken_disable,
++	.getrate	= clk_pxa27x_lcd_getrate,
++};
++
++static struct clk pxa27x_clks[] = {
++	INIT_CK("LCDCLK", LCD,    &clk_pxa27x_lcd_ops, &pxa_device_fb.dev),
++	INIT_CK("CAMCLK", CAMERA, &clk_pxa27x_lcd_ops, NULL),
++
++	INIT_CKEN("UARTCLK", FFUART, 14857000, 1, &pxa_device_ffuart.dev),
++	INIT_CKEN("UARTCLK", BTUART, 14857000, 1, &pxa_device_btuart.dev),
++	INIT_CKEN("UARTCLK", STUART, 14857000, 1, NULL),
++
++	INIT_CKEN("I2SCLK",  I2S,  14682000, 0, &pxa_device_i2s.dev),
++	INIT_CKEN("I2CCLK",  I2C,  32842000, 0, &pxa_device_i2c.dev),
++	INIT_CKEN("UDCCLK",  USB,  48000000, 5, &pxa_device_udc.dev),
++	INIT_CKEN("MMCCLK",  MMC,  19500000, 0, &pxa_device_mci.dev),
++	INIT_CKEN("FICPCLK", FICP, 48000000, 0, &pxa_device_ficp.dev),
++
++	INIT_CKEN("USBCLK", USB,    48000000, 0, &pxa27x_device_ohci.dev),
++	INIT_CKEN("I2CCLK", PWRI2C, 13000000, 0, &pxa27x_device_i2c_power.dev),
++	INIT_CKEN("KBDCLK", KEYPAD, 32768, 0, NULL),
++
++	/*
++	INIT_CKEN("PWMCLK",  PWM0, 13000000, 0, NULL),
++	INIT_CKEN("SSPCLK",  SSP1, 13000000, 0, NULL),
++	INIT_CKEN("SSPCLK",  SSP2, 13000000, 0, NULL),
++	INIT_CKEN("SSPCLK",  SSP3, 13000000, 0, NULL),
++	INIT_CKEN("MSLCLK",  MSL,  48000000, 0, NULL),
++	INIT_CKEN("USIMCLK", USIM, 48000000, 0, NULL),
++	INIT_CKEN("MSTKCLK", MEMSTK, 19500000, 0, NULL),
++	INIT_CKEN("IMCLK",   IM,   0, 0, NULL),
++	INIT_CKEN("MEMCLK",  MEMC, 0, 0, NULL),
++	*/
++};
+ 
+ #ifdef CONFIG_PM
+ 
+@@ -269,6 +308,69 @@
+ }
+ #endif
+ 
++/* PXA27x:  Various gpios can issue wakeup events.  This logic only
++ * handles the simple cases, not the WEMUX2 and WEMUX3 options
++ */
++#define PXA27x_GPIO_NOWAKE_MASK \
++        ((1 << 8) | (1 << 7) | (1 << 6) | (1 << 5) | (1 << 2))
++#define WAKEMASK(gpio) \
++        (((gpio) <= 15) \
++                 ? ((1 << (gpio)) & ~PXA27x_GPIO_NOWAKE_MASK) \
++                 : ((gpio == 35) ? (1 << 24) : 0))
++
++static int pxa27x_set_wake(unsigned int irq, unsigned int on)
++{
++	int gpio = IRQ_TO_GPIO(irq);
++	uint32_t mask;
++
++	if ((gpio >= 0 && gpio <= 15) || (gpio == 35)) {
++		if (WAKEMASK(gpio) == 0)
++			return -EINVAL;
++
++		mask = WAKEMASK(gpio);
++
++		if (on) {
++			if (GRER(gpio) | GPIO_bit(gpio))
++				PRER |= mask;
++			else
++				PRER &= ~mask;
++
++			if (GFER(gpio) | GPIO_bit(gpio))
++				PFER |= mask;
++			else
++				PFER &= ~mask;
++		}
++		goto set_pwer;
++	}
++
++	switch (irq) {
++	case IRQ_RTCAlrm:
++		mask = PWER_RTC;
++		break;
++	case IRQ_USB:
++		mask = 1u << 26;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++set_pwer:
++	if (on)
++		PWER |= mask;
++	else
++		PWER &=~mask;
++
++	return 0;
++}
++
++void __init pxa27x_init_irq(void)
++{
++	pxa_init_irq_low();
++	pxa_init_irq_high();
++	pxa_init_irq_gpio(128);
++	pxa_init_irq_set_wake(pxa27x_set_wake);
++}
++
+ /*
+  * device registration specific to PXA27x.
+  */
+@@ -288,7 +390,7 @@
+ 	},
+ };
+ 
+-static struct platform_device pxa27x_device_ohci = {
++struct platform_device pxa27x_device_ohci = {
+ 	.name		= "pxa27x-ohci",
+ 	.id		= -1,
+ 	.dev		= {
+@@ -316,7 +418,7 @@
+ 	},
+ };
+ 
+-static struct platform_device pxa27x_device_i2c_power = {
++struct platform_device pxa27x_device_i2c_power = {
+ 	.name		= "pxa2xx-i2c",
+ 	.id		= 1,
+ 	.resource	= i2c_power_resources,
+@@ -338,17 +440,12 @@
+ 	&pxa27x_device_ohci,
+ };
+ 
+-void __init pxa27x_init_irq(void)
+-{
+-	pxa_init_irq_low();
+-	pxa_init_irq_high();
+-	pxa_init_irq_gpio(128);
+-}
+-
+ static int __init pxa27x_init(void)
+ {
+ 	int ret = 0;
+ 	if (cpu_is_pxa27x()) {
++		clks_register(pxa27x_clks, ARRAY_SIZE(pxa27x_clks));
++
+ 		if ((ret = pxa_init_dma(32)))
+ 			return ret;
+ #ifdef CONFIG_PM
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/pxa300.c
+@@ -0,0 +1,93 @@
++/*
++ * linux/arch/arm/mach-pxa/pxa300.c
++ *
++ * Code specific to PXA300/PXA310
++ *
++ * Copyright (C) 2007 Marvell Internation Ltd.
++ *
++ * 2007-08-21: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++
++#include <asm/hardware.h>
++#include <asm/arch/mfp-pxa300.h>
++
++static struct pxa3xx_mfp_addr_map pxa300_mfp_addr_map[] __initdata = {
++
++	MFP_ADDR_X(GPIO0,   GPIO2,   0x00b4),
++	MFP_ADDR_X(GPIO3,   GPIO26,  0x027c),
++	MFP_ADDR_X(GPIO27,  GPIO127, 0x0400),
++	MFP_ADDR_X(GPIO0_2, GPIO6_2, 0x02ec),
++
++	MFP_ADDR(nBE0, 0x0204),
++	MFP_ADDR(nBE1, 0x0208),
++
++	MFP_ADDR(nLUA, 0x0244),
++	MFP_ADDR(nLLA, 0x0254),
++
++	MFP_ADDR(DF_CLE_nOE, 0x0240),
++	MFP_ADDR(DF_nRE_nOE, 0x0200),
++	MFP_ADDR(DF_ALE_nWE, 0x020C),
++	MFP_ADDR(DF_INT_RnB, 0x00C8),
++	MFP_ADDR(DF_nCS0, 0x0248),
++	MFP_ADDR(DF_nCS1, 0x0278),
++	MFP_ADDR(DF_nWE, 0x00CC),
++
++	MFP_ADDR(DF_ADDR0, 0x0210),
++	MFP_ADDR(DF_ADDR1, 0x0214),
++	MFP_ADDR(DF_ADDR2, 0x0218),
++	MFP_ADDR(DF_ADDR3, 0x021C),
++
++	MFP_ADDR(DF_IO0, 0x0220),
++	MFP_ADDR(DF_IO1, 0x0228),
++	MFP_ADDR(DF_IO2, 0x0230),
++	MFP_ADDR(DF_IO3, 0x0238),
++	MFP_ADDR(DF_IO4, 0x0258),
++	MFP_ADDR(DF_IO5, 0x0260),
++	MFP_ADDR(DF_IO6, 0x0268),
++	MFP_ADDR(DF_IO7, 0x0270),
++	MFP_ADDR(DF_IO8, 0x0224),
++	MFP_ADDR(DF_IO9, 0x022C),
++	MFP_ADDR(DF_IO10, 0x0234),
++	MFP_ADDR(DF_IO11, 0x023C),
++	MFP_ADDR(DF_IO12, 0x025C),
++	MFP_ADDR(DF_IO13, 0x0264),
++	MFP_ADDR(DF_IO14, 0x026C),
++	MFP_ADDR(DF_IO15, 0x0274),
++
++	MFP_ADDR_END,
++};
++
++/* override pxa300 MFP register addresses */
++static struct pxa3xx_mfp_addr_map pxa310_mfp_addr_map[] __initdata = {
++	MFP_ADDR_X(GPIO30,  GPIO98,   0x0418),
++	MFP_ADDR_X(GPIO7_2, GPIO12_2, 0x052C),
++
++	MFP_ADDR(ULPI_STP, 0x040C),
++	MFP_ADDR(ULPI_NXT, 0x0410),
++	MFP_ADDR(ULPI_DIR, 0x0414),
++
++	MFP_ADDR_END,
++};
++
++static int __init pxa300_init(void)
++{
++	if (cpu_is_pxa300() || cpu_is_pxa310()) {
++		pxa3xx_init_mfp();
++		pxa3xx_mfp_init_addr(pxa300_mfp_addr_map);
++	}
++
++	if (cpu_is_pxa310())
++		pxa3xx_mfp_init_addr(pxa310_mfp_addr_map);
++
++	return 0;
++}
++
++core_initcall(pxa300_init);
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/pxa320.c
+@@ -0,0 +1,88 @@
++/*
++ * linux/arch/arm/mach-pxa/pxa320.c
++ *
++ * Code specific to PXA320
++ *
++ * Copyright (C) 2007 Marvell Internation Ltd.
++ *
++ * 2007-08-21: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++
++#include <asm/hardware.h>
++#include <asm/arch/mfp.h>
++#include <asm/arch/mfp-pxa320.h>
++
++static struct pxa3xx_mfp_addr_map pxa320_mfp_addr_map[] __initdata = {
++
++	MFP_ADDR_X(GPIO0,  GPIO4,   0x0124),
++	MFP_ADDR_X(GPIO5,  GPIO26,  0x028C),
++	MFP_ADDR_X(GPIO27, GPIO62,  0x0400),
++	MFP_ADDR_X(GPIO63, GPIO73,  0x04B4),
++	MFP_ADDR_X(GPIO74, GPIO98,  0x04F0),
++	MFP_ADDR_X(GPIO99, GPIO127, 0x0600),
++	MFP_ADDR_X(GPIO0_2,  GPIO5_2,   0x0674),
++	MFP_ADDR_X(GPIO6_2,  GPIO13_2,  0x0494),
++	MFP_ADDR_X(GPIO14_2, GPIO17_2, 0x04E0),
++
++	MFP_ADDR(nXCVREN, 0x0138),
++	MFP_ADDR(DF_CLE_nOE, 0x0204),
++	MFP_ADDR(DF_nADV1_ALE, 0x0208),
++	MFP_ADDR(DF_SCLK_S, 0x020C),
++	MFP_ADDR(DF_SCLK_E, 0x0210),
++	MFP_ADDR(nBE0, 0x0214),
++	MFP_ADDR(nBE1, 0x0218),
++	MFP_ADDR(DF_nADV2_ALE, 0x021C),
++	MFP_ADDR(DF_INT_RnB, 0x0220),
++	MFP_ADDR(DF_nCS0, 0x0224),
++	MFP_ADDR(DF_nCS1, 0x0228),
++	MFP_ADDR(DF_nWE, 0x022C),
++	MFP_ADDR(DF_nRE_nOE, 0x0230),
++	MFP_ADDR(nLUA, 0x0234),
++	MFP_ADDR(nLLA, 0x0238),
++	MFP_ADDR(DF_ADDR0, 0x023C),
++	MFP_ADDR(DF_ADDR1, 0x0240),
++	MFP_ADDR(DF_ADDR2, 0x0244),
++	MFP_ADDR(DF_ADDR3, 0x0248),
++	MFP_ADDR(DF_IO0, 0x024C),
++	MFP_ADDR(DF_IO8, 0x0250),
++	MFP_ADDR(DF_IO1, 0x0254),
++	MFP_ADDR(DF_IO9, 0x0258),
++	MFP_ADDR(DF_IO2, 0x025C),
++	MFP_ADDR(DF_IO10, 0x0260),
++	MFP_ADDR(DF_IO3, 0x0264),
++	MFP_ADDR(DF_IO11, 0x0268),
++	MFP_ADDR(DF_IO4, 0x026C),
++	MFP_ADDR(DF_IO12, 0x0270),
++	MFP_ADDR(DF_IO5, 0x0274),
++	MFP_ADDR(DF_IO13, 0x0278),
++	MFP_ADDR(DF_IO6, 0x027C),
++	MFP_ADDR(DF_IO14, 0x0280),
++	MFP_ADDR(DF_IO7, 0x0284),
++	MFP_ADDR(DF_IO15, 0x0288),
++
++	MFP_ADDR_END,
++};
++
++static void __init pxa320_init_mfp(void)
++{
++	pxa3xx_init_mfp();
++	pxa3xx_mfp_init_addr(pxa320_mfp_addr_map);
++}
++
++static int __init pxa320_init(void)
++{
++	if (cpu_is_pxa320())
++		pxa320_init_mfp();
++
++	return 0;
++}
++
++core_initcall(pxa320_init);
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/pxa3xx.c
+@@ -0,0 +1,216 @@
++/*
++ * linux/arch/arm/mach-pxa/pxa3xx.c
++ *
++ * code specific to pxa3xx aka Monahans
++ *
++ * Copyright (C) 2006 Marvell International Ltd.
++ *
++ * 2007-09-02: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/pm.h>
++#include <linux/platform_device.h>
++#include <linux/irq.h>
++
++#include <asm/hardware.h>
++#include <asm/arch/pxa3xx-regs.h>
++#include <asm/arch/ohci.h>
++#include <asm/arch/pm.h>
++#include <asm/arch/dma.h>
++#include <asm/arch/ssp.h>
++
++#include "generic.h"
++#include "devices.h"
++#include "clock.h"
++
++/* Crystal clock: 13MHz */
++#define BASE_CLK	13000000
++
++/* Ring Oscillator Clock: 60MHz */
++#define RO_CLK		60000000
++
++#define ACCR_D0CS	(1 << 26)
++
++/* crystal frequency to static memory controller multiplier (SMCFS) */
++static unsigned char smcfs_mult[8] = { 6, 0, 8, 0, 0, 16, };
++
++/* crystal frequency to HSIO bus frequency multiplier (HSS) */
++static unsigned char hss_mult[4] = { 8, 12, 16, 0 };
++
++/*
++ * Get the clock frequency as reflected by CCSR and the turbo flag.
++ * We assume these values have been applied via a fcs.
++ * If info is not 0 we also display the current settings.
++ */
++unsigned int pxa3xx_get_clk_frequency_khz(int info)
++{
++	unsigned long acsr, xclkcfg;
++	unsigned int t, xl, xn, hss, ro, XL, XN, CLK, HSS;
++
++	/* Read XCLKCFG register turbo bit */
++	__asm__ __volatile__("mrc\tp14, 0, %0, c6, c0, 0" : "=r"(xclkcfg));
++	t = xclkcfg & 0x1;
++
++	acsr = ACSR;
++
++	xl  = acsr & 0x1f;
++	xn  = (acsr >> 8) & 0x7;
++	hss = (acsr >> 14) & 0x3;
++
++	XL = xl * BASE_CLK;
++	XN = xn * XL;
++
++	ro = acsr & ACCR_D0CS;
++
++	CLK = (ro) ? RO_CLK : ((t) ? XN : XL);
++	HSS = (ro) ? RO_CLK : hss_mult[hss] * BASE_CLK;
++
++	if (info) {
++		pr_info("RO Mode clock: %d.%02dMHz (%sactive)\n",
++			RO_CLK / 1000000, (RO_CLK % 1000000) / 10000,
++			(ro) ? "" : "in");
++		pr_info("Run Mode clock: %d.%02dMHz (*%d)\n",
++			XL / 1000000, (XL % 1000000) / 10000, xl);
++		pr_info("Turbo Mode clock: %d.%02dMHz (*%d, %sactive)\n",
++			XN / 1000000, (XN % 1000000) / 10000, xn,
++			(t) ? "" : "in");
++		pr_info("HSIO bus clock: %d.%02dMHz\n",
++			HSS / 1000000, (HSS % 1000000) / 10000);
++	}
++
++	return CLK;
++}
++
++/*
++ * Return the current static memory controller clock frequency
++ * in units of 10kHz
++ */
++unsigned int pxa3xx_get_memclk_frequency_10khz(void)
++{
++	unsigned long acsr;
++	unsigned int smcfs, clk = 0;
++
++	acsr = ACSR;
++
++	smcfs = (acsr >> 23) & 0x7;
++	clk = (acsr & ACCR_D0CS) ? RO_CLK : smcfs_mult[smcfs] * BASE_CLK;
++
++	return (clk / 10000);
++}
++
++/*
++ * Return the current HSIO bus clock frequency
++ */
++static unsigned long clk_pxa3xx_hsio_getrate(struct clk *clk)
++{
++	unsigned long acsr;
++	unsigned int hss, hsio_clk;
++
++	acsr = ACSR;
++
++	hss = (acsr >> 14) & 0x3;
++	hsio_clk = (acsr & ACCR_D0CS) ? RO_CLK : hss_mult[hss] * BASE_CLK;
++
++	return hsio_clk;
++}
++
++static void clk_pxa3xx_cken_enable(struct clk *clk)
++{
++	unsigned long mask = 1ul << (clk->cken & 0x1f);
++
++	local_irq_disable();
++
++	if (clk->cken < 32)
++		CKENA |= mask;
++	else
++		CKENB |= mask;
++
++	local_irq_enable();
++}
++
++static void clk_pxa3xx_cken_disable(struct clk *clk)
++{
++	unsigned long mask = 1ul << (clk->cken & 0x1f);
++
++	local_irq_disable();
++
++	if (clk->cken < 32)
++		CKENA &= ~mask;
++	else
++		CKENB &= ~mask;
++
++	local_irq_enable();
++}
++
++static const struct clkops clk_pxa3xx_hsio_ops = {
++	.enable		= clk_pxa3xx_cken_enable,
++	.disable	= clk_pxa3xx_cken_disable,
++	.getrate	= clk_pxa3xx_hsio_getrate,
++};
++
++static struct clk pxa3xx_clks[] = {
++	INIT_CK("LCDCLK", LCD,    &clk_pxa3xx_hsio_ops, &pxa_device_fb.dev),
++	INIT_CK("CAMCLK", CAMERA, &clk_pxa3xx_hsio_ops, NULL),
++
++	INIT_CKEN("UARTCLK", FFUART, 14857000, 1, &pxa_device_ffuart.dev),
++	INIT_CKEN("UARTCLK", BTUART, 14857000, 1, &pxa_device_btuart.dev),
++	INIT_CKEN("UARTCLK", STUART, 14857000, 1, NULL),
++
++	INIT_CKEN("I2CCLK",  I2C,  32842000, 0, &pxa_device_i2c.dev),
++	INIT_CKEN("UDCCLK",  UDC,  48000000, 5, &pxa_device_udc.dev),
++};
++
++void __init pxa3xx_init_irq(void)
++{
++	/* enable CP6 access */
++	u32 value;
++	__asm__ __volatile__("mrc p15, 0, %0, c15, c1, 0\n": "=r"(value));
++	value |= (1 << 6);
++	__asm__ __volatile__("mcr p15, 0, %0, c15, c1, 0\n": :"r"(value));
++
++	pxa_init_irq_low();
++	pxa_init_irq_high();
++	pxa_init_irq_gpio(128);
++}
++
++/*
++ * device registration specific to PXA3xx.
++ */
++
++static struct platform_device *devices[] __initdata = {
++	&pxa_device_mci,
++	&pxa_device_udc,
++	&pxa_device_fb,
++	&pxa_device_ffuart,
++	&pxa_device_btuart,
++	&pxa_device_stuart,
++	&pxa_device_i2c,
++	&pxa_device_i2s,
++	&pxa_device_ficp,
++	&pxa_device_rtc,
++};
++
++static int __init pxa3xx_init(void)
++{
++	int ret = 0;
++
++	if (cpu_is_pxa3xx()) {
++		clks_register(pxa3xx_clks, ARRAY_SIZE(pxa3xx_clks));
++
++		if ((ret = pxa_init_dma(32)))
++			return ret;
++
++		return platform_add_devices(devices, ARRAY_SIZE(devices));
++	}
++	return 0;
++}
++
++subsys_initcall(pxa3xx_init);
+--- linux-2.6.23.orig/arch/arm/mach-pxa/time.c
++++ linux-2.6.23/arch/arm/mach-pxa/time.c
+@@ -16,10 +16,48 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/clockchips.h>
++#include <linux/sched.h>
+ 
++#include <asm/div64.h>
++#include <asm/cnt32_to_63.h>
+ #include <asm/mach/irq.h>
+ #include <asm/mach/time.h>
+ #include <asm/arch/pxa-regs.h>
++#include <asm/mach-types.h>
++
++/*
++ * This is PXA's sched_clock implementation. This has a resolution
++ * of at least 308 ns and a maximum value of 208 days.
++ *
++ * The return value is guaranteed to be monotonic in that range as
++ * long as there is always less than 582 seconds between successive
++ * calls to sched_clock() which should always be the case in practice.
++ */
++
++#define OSCR2NS_SCALE_FACTOR 10
++
++static unsigned long oscr2ns_scale;
++
++static void __init set_oscr2ns_scale(unsigned long oscr_rate)
++{
++	unsigned long long v = 1000000000ULL << OSCR2NS_SCALE_FACTOR;
++	do_div(v, oscr_rate);
++	oscr2ns_scale = v;
++	/*
++	 * We want an even value to automatically clear the top bit
++	 * returned by cnt32_to_63() without an additional run time
++	 * instruction. So if the LSB is 1 then round it up.
++	 */
++	if (oscr2ns_scale & 1)
++		oscr2ns_scale++;
++}
++
++unsigned long long sched_clock(void)
++{
++	unsigned long long v = cnt32_to_63(OSCR);
++	return (v * oscr2ns_scale) >> OSCR2NS_SCALE_FACTOR;
++}
++
+ 
+ static irqreturn_t
+ pxa_ost0_interrupt(int irq, void *dev_id)
+@@ -149,18 +187,29 @@
+ 
+ static void __init pxa_timer_init(void)
+ {
++	unsigned long clock_tick_rate;
++
+ 	OIER = 0;
+ 	OSSR = OSSR_M0 | OSSR_M1 | OSSR_M2 | OSSR_M3;
+ 
++	if (cpu_is_pxa21x() || cpu_is_pxa25x())
++		clock_tick_rate = 3686400;
++	else if (machine_is_mainstone())
++		clock_tick_rate = 3249600;
++	else
++		clock_tick_rate = 3250000;
++
++	set_oscr2ns_scale(clock_tick_rate);
++
+ 	ckevt_pxa_osmr0.mult =
+-		div_sc(CLOCK_TICK_RATE, NSEC_PER_SEC, ckevt_pxa_osmr0.shift);
++		div_sc(clock_tick_rate, NSEC_PER_SEC, ckevt_pxa_osmr0.shift);
+ 	ckevt_pxa_osmr0.max_delta_ns =
+ 		clockevent_delta2ns(0x7fffffff, &ckevt_pxa_osmr0);
+ 	ckevt_pxa_osmr0.min_delta_ns =
+ 		clockevent_delta2ns(MIN_OSCR_DELTA, &ckevt_pxa_osmr0) + 1;
+ 
+ 	cksrc_pxa_oscr0.mult =
+-		clocksource_hz2mult(CLOCK_TICK_RATE, cksrc_pxa_oscr0.shift);
++		clocksource_hz2mult(clock_tick_rate, cksrc_pxa_oscr0.shift);
+ 
+ 	setup_irq(IRQ_OST0, &pxa_ost0_irq);
+ 
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite.c
+@@ -0,0 +1,184 @@
++/*
++ * linux/arch/arm/mach-pxa/zylonite.c
++ *
++ * Support for the PXA3xx Development Platform (aka Zylonite)
++ *
++ * Copyright (C) 2006 Marvell International Ltd.
++ *
++ * 2007-09-04: eric miao <eric.y.miao@gmail.com>
++ *             rewrite to align with latest kernel
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/interrupt.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++
++#include <asm/mach-types.h>
++#include <asm/mach/arch.h>
++#include <asm/hardware.h>
++#include <asm/arch/gpio.h>
++#include <asm/arch/pxafb.h>
++#include <asm/arch/zylonite.h>
++
++#include "generic.h"
++
++int gpio_backlight;
++int gpio_eth_irq;
++
++int lcd_id;
++int lcd_orientation;
++
++static struct resource smc91x_resources[] = {
++	[0] = {
++		.start	= ZYLONITE_ETH_PHYS + 0x300,
++		.end	= ZYLONITE_ETH_PHYS + 0xfffff,
++		.flags	= IORESOURCE_MEM,
++	},
++	[1] = {
++		.start	= -1,	/* for run-time assignment */
++		.end	= -1,
++		.flags	= IORESOURCE_IRQ,
++	}
++};
++
++static struct platform_device smc91x_device = {
++	.name		= "smc91x",
++	.id		= 0,
++	.num_resources	= ARRAY_SIZE(smc91x_resources),
++	.resource	= smc91x_resources,
++};
++
++#if defined(CONFIG_FB_PXA) || (CONFIG_FB_PXA_MODULES)
++static void zylonite_backlight_power(int on)
++{
++	gpio_set_value(gpio_backlight, on);
++}
++
++static struct pxafb_mode_info toshiba_ltm035a776c_mode = {
++	.pixclock		= 110000,
++	.xres			= 240,
++	.yres			= 320,
++	.bpp			= 16,
++	.hsync_len		= 4,
++	.left_margin		= 6,
++	.right_margin		= 4,
++	.vsync_len		= 2,
++	.upper_margin		= 2,
++	.lower_margin		= 3,
++	.sync			= FB_SYNC_VERT_HIGH_ACT,
++};
++
++static struct pxafb_mode_info toshiba_ltm04c380k_mode = {
++	.pixclock		= 50000,
++	.xres			= 640,
++	.yres			= 480,
++	.bpp			= 16,
++	.hsync_len		= 1,
++	.left_margin		= 0x9f,
++	.right_margin		= 1,
++	.vsync_len		= 44,
++	.upper_margin		= 0,
++	.lower_margin		= 0,
++	.sync			= FB_SYNC_HOR_HIGH_ACT|FB_SYNC_VERT_HIGH_ACT,
++};
++
++static struct pxafb_mach_info zylonite_toshiba_lcd_info = {
++	.num_modes      	= 1,
++	.lccr0			= LCCR0_Act,
++	.lccr3			= LCCR3_PCP,
++	.pxafb_backlight_power	= zylonite_backlight_power,
++};
++
++static struct pxafb_mode_info sharp_ls037_modes[] = {
++	[0] = {
++		.pixclock	= 158000,
++		.xres		= 240,
++		.yres		= 320,
++		.bpp		= 16,
++		.hsync_len	= 4,
++		.left_margin	= 39,
++		.right_margin	= 39,
++		.vsync_len	= 1,
++		.upper_margin	= 2,
++		.lower_margin	= 3,
++		.sync		= 0,
++	},
++	[1] = {
++		.pixclock	= 39700,
++		.xres		= 480,
++		.yres		= 640,
++		.bpp		= 16,
++		.hsync_len	= 8,
++		.left_margin	= 81,
++		.right_margin	= 81,
++		.vsync_len	= 1,
++		.upper_margin	= 2,
++		.lower_margin	= 7,
++		.sync		= 0,
++	},
++};
++
++static struct pxafb_mach_info zylonite_sharp_lcd_info = {
++	.modes			= sharp_ls037_modes,
++	.num_modes		= 2,
++	.lccr0			= LCCR0_Act,
++	.lccr3			= LCCR3_PCP | LCCR3_HSP | LCCR3_VSP,
++	.pxafb_backlight_power	= zylonite_backlight_power,
++};
++
++static void __init zylonite_init_lcd(void)
++{
++	/* backlight GPIO: output, default on */
++	gpio_direction_output(gpio_backlight, 1);
++
++	if (lcd_id & 0x20) {
++		set_pxa_fb_info(&zylonite_sharp_lcd_info);
++		return;
++	}
++
++	/* legacy LCD panels, it would be handy here if LCD panel type can
++	 * be decided at run-time
++	 */
++	if (1)
++		zylonite_toshiba_lcd_info.modes = &toshiba_ltm035a776c_mode;
++	else
++		zylonite_toshiba_lcd_info.modes = &toshiba_ltm04c380k_mode;
++
++	set_pxa_fb_info(&zylonite_toshiba_lcd_info);
++}
++#else
++static inline void zylonite_init_lcd(void) {}
++#endif
++
++static void __init zylonite_init(void)
++{
++	/* board-processor specific initialization */
++	zylonite_pxa300_init();
++	zylonite_pxa320_init();
++
++	/*
++	 * Note: We depend that the bootloader set
++	 * the correct value to MSC register for SMC91x.
++	 */
++	smc91x_resources[1].start = gpio_to_irq(gpio_eth_irq);
++	smc91x_resources[1].end   = gpio_to_irq(gpio_eth_irq);
++	platform_device_register(&smc91x_device);
++
++	zylonite_init_lcd();
++}
++
++MACHINE_START(ZYLONITE, "PXA3xx Platform Development Kit (aka Zylonite)")
++	.phys_io	= 0x40000000,
++	.boot_params	= 0xa0000100,
++	.io_pg_offst	= (io_p2v(0x40000000) >> 18) & 0xfffc,
++	.map_io		= pxa_map_io,
++	.init_irq	= pxa3xx_init_irq,
++	.timer		= &pxa_timer,
++	.init_machine	= zylonite_init,
++MACHINE_END
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c
+@@ -0,0 +1,188 @@
++/*
++ * linux/arch/arm/mach-pxa/zylonite_pxa300.c
++ *
++ * PXA300/PXA310 specific support code for the
++ * PXA3xx Development Platform (aka Zylonite)
++ *
++ * Copyright (C) 2007 Marvell Internation Ltd.
++ * 2007-08-21: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++
++#include <asm/gpio.h>
++#include <asm/arch/mfp-pxa300.h>
++#include <asm/arch/zylonite.h>
++
++#define ARRAY_AND_SIZE(x)	(x), ARRAY_SIZE(x)
++
++/* PXA300/PXA310 common configurations */
++static mfp_cfg_t common_mfp_cfg[] __initdata = {
++	/* LCD */
++	GPIO54_LCD_LDD_0,
++	GPIO55_LCD_LDD_1,
++	GPIO56_LCD_LDD_2,
++	GPIO57_LCD_LDD_3,
++	GPIO58_LCD_LDD_4,
++	GPIO59_LCD_LDD_5,
++	GPIO60_LCD_LDD_6,
++	GPIO61_LCD_LDD_7,
++	GPIO62_LCD_LDD_8,
++	GPIO63_LCD_LDD_9,
++	GPIO64_LCD_LDD_10,
++	GPIO65_LCD_LDD_11,
++	GPIO66_LCD_LDD_12,
++	GPIO67_LCD_LDD_13,
++	GPIO68_LCD_LDD_14,
++	GPIO69_LCD_LDD_15,
++	GPIO70_LCD_LDD_16,
++	GPIO71_LCD_LDD_17,
++	GPIO72_LCD_FCLK,
++	GPIO73_LCD_LCLK,
++	GPIO74_LCD_PCLK,
++	GPIO75_LCD_BIAS,
++	GPIO76_LCD_VSYNC,
++	GPIO127_LCD_CS_N,
++
++	/* BTUART */
++	GPIO111_UART2_RTS,
++	GPIO112_UART2_RXD,
++	GPIO113_UART2_TXD,
++	GPIO114_UART2_CTS,
++
++	/* STUART */
++	GPIO109_UART3_TXD,
++	GPIO110_UART3_RXD,
++
++	/* AC97 */
++	GPIO23_AC97_nACRESET,
++	GPIO24_AC97_SYSCLK,
++	GPIO29_AC97_BITCLK,
++	GPIO25_AC97_SDATA_IN_0,
++	GPIO27_AC97_SDATA_OUT,
++	GPIO28_AC97_SYNC,
++
++	/* Keypad */
++	GPIO107_KP_DKIN_0,
++	GPIO108_KP_DKIN_1,
++	GPIO115_KP_MKIN_0,
++	GPIO116_KP_MKIN_1,
++	GPIO117_KP_MKIN_2,
++	GPIO118_KP_MKIN_3,
++	GPIO119_KP_MKIN_4,
++	GPIO120_KP_MKIN_5,
++	GPIO2_2_KP_MKIN_6,
++	GPIO3_2_KP_MKIN_7,
++	GPIO121_KP_MKOUT_0,
++	GPIO122_KP_MKOUT_1,
++	GPIO123_KP_MKOUT_2,
++	GPIO124_KP_MKOUT_3,
++	GPIO125_KP_MKOUT_4,
++	GPIO4_2_KP_MKOUT_5,
++	GPIO5_2_KP_MKOUT_6,
++	GPIO6_2_KP_MKOUT_7,
++};
++
++static mfp_cfg_t pxa300_mfp_cfg[] __initdata = {
++	/* FFUART */
++	GPIO30_UART1_RXD,
++	GPIO31_UART1_TXD,
++	GPIO32_UART1_CTS,
++	GPIO37_UART1_RTS,
++	GPIO33_UART1_DCD,
++	GPIO34_UART1_DSR,
++	GPIO35_UART1_RI,
++	GPIO36_UART1_DTR,
++
++	/* Ethernet */
++	GPIO2_nCS3,
++	GPIO99_GPIO,
++};
++
++static mfp_cfg_t pxa310_mfp_cfg[] __initdata = {
++	/* FFUART */
++	GPIO99_UART1_RXD,
++	GPIO100_UART1_TXD,
++	GPIO101_UART1_CTS,
++	GPIO106_UART1_RTS,
++
++	/* Ethernet */
++	GPIO2_nCS3,
++	GPIO102_GPIO,
++};
++
++#define NUM_LCD_DETECT_PINS	7
++
++static int lcd_detect_pins[] __initdata = {
++	MFP_PIN_GPIO71,	/* LCD_LDD_17 - ORIENT */
++	MFP_PIN_GPIO70, /* LCD_LDD_16 - LCDID[5] */
++	MFP_PIN_GPIO75, /* LCD_BIAS   - LCDID[4] */
++	MFP_PIN_GPIO73, /* LCD_LCLK   - LCDID[3] */
++	MFP_PIN_GPIO72, /* LCD_FCLK   - LCDID[2] */
++	MFP_PIN_GPIO127,/* LCD_CS_N   - LCDID[1] */
++	MFP_PIN_GPIO76, /* LCD_VSYNC  - LCDID[0] */
++};
++
++static void __init zylonite_detect_lcd_panel(void)
++{
++	unsigned long mfpr_save[NUM_LCD_DETECT_PINS];
++	int i, gpio, id = 0;
++
++	/* save the original MFP settings of these pins and configure
++	 * them as GPIO Input, DS01X, Pull Neither, Edge Clear
++	 */
++	for (i = 0; i < NUM_LCD_DETECT_PINS; i++) {
++		mfpr_save[i] = pxa3xx_mfp_read(lcd_detect_pins[i]);
++		pxa3xx_mfp_write(lcd_detect_pins[i], 0x8440);
++	}
++
++	for (i = 0; i < NUM_LCD_DETECT_PINS; i++) {
++		id = id << 1;
++		gpio = mfp_to_gpio(lcd_detect_pins[i]);
++		gpio_direction_input(gpio);
++
++		if (gpio_get_value(gpio))
++			id = id | 0x1;
++	}
++
++	/* lcd id, flush out bit 1 */
++	lcd_id = id & 0x3d;
++
++	/* lcd orientation, portrait or landscape */
++	lcd_orientation = (id >> 6) & 0x1;
++
++	/* restore the original MFP settings */
++	for (i = 0; i < NUM_LCD_DETECT_PINS; i++)
++		pxa3xx_mfp_write(lcd_detect_pins[i], mfpr_save[i]);
++}
++
++void __init zylonite_pxa300_init(void)
++{
++	if (cpu_is_pxa300() || cpu_is_pxa310()) {
++		/* initialize MFP */
++		pxa3xx_mfp_config(ARRAY_AND_SIZE(common_mfp_cfg));
++
++		/* detect LCD panel */
++		zylonite_detect_lcd_panel();
++
++		/* GPIO pin assignment */
++		gpio_backlight = mfp_to_gpio(MFP_PIN_GPIO20);
++	}
++
++	if (cpu_is_pxa300()) {
++		pxa3xx_mfp_config(ARRAY_AND_SIZE(pxa300_mfp_cfg));
++		gpio_eth_irq = mfp_to_gpio(MFP_PIN_GPIO99);
++	}
++
++	if (cpu_is_pxa310()) {
++		pxa3xx_mfp_config(ARRAY_AND_SIZE(pxa310_mfp_cfg));
++		gpio_eth_irq = mfp_to_gpio(MFP_PIN_GPIO102);
++	}
++}
+--- /dev/null
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa320.c
+@@ -0,0 +1,173 @@
++/*
++ * linux/arch/arm/mach-pxa/zylonite_pxa320.c
++ *
++ * PXA320 specific support code for the
++ * PXA3xx Development Platform (aka Zylonite)
++ *
++ * Copyright (C) 2007 Marvell Internation Ltd.
++ * 2007-08-21: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++
++#include <asm/arch/gpio.h>
++#include <asm/arch/mfp-pxa320.h>
++#include <asm/arch/zylonite.h>
++
++#define ARRAY_AND_SIZE(x)	(x), ARRAY_SIZE(x)
++
++static mfp_cfg_t mfp_cfg[] __initdata = {
++	/* LCD */
++	GPIO6_2_LCD_LDD_0,
++	GPIO7_2_LCD_LDD_1,
++	GPIO8_2_LCD_LDD_2,
++	GPIO9_2_LCD_LDD_3,
++	GPIO10_2_LCD_LDD_4,
++	GPIO11_2_LCD_LDD_5,
++	GPIO12_2_LCD_LDD_6,
++	GPIO13_2_LCD_LDD_7,
++	GPIO63_LCD_LDD_8,
++	GPIO64_LCD_LDD_9,
++	GPIO65_LCD_LDD_10,
++	GPIO66_LCD_LDD_11,
++	GPIO67_LCD_LDD_12,
++	GPIO68_LCD_LDD_13,
++	GPIO69_LCD_LDD_14,
++	GPIO70_LCD_LDD_15,
++	GPIO71_LCD_LDD_16,
++	GPIO72_LCD_LDD_17,
++	GPIO73_LCD_CS_N,
++	GPIO74_LCD_VSYNC,
++	GPIO14_2_LCD_FCLK,
++	GPIO15_2_LCD_LCLK,
++	GPIO16_2_LCD_PCLK,
++	GPIO17_2_LCD_BIAS,
++
++	/* FFUART */
++	GPIO41_UART1_RXD,
++	GPIO42_UART1_TXD,
++	GPIO43_UART1_CTS,
++	GPIO44_UART1_DCD,
++	GPIO45_UART1_DSR,
++	GPIO46_UART1_RI,
++	GPIO47_UART1_DTR,
++	GPIO48_UART1_RTS,
++
++	/* AC97 */
++	GPIO34_AC97_SYSCLK,
++	GPIO35_AC97_SDATA_IN_0,
++	GPIO37_AC97_SDATA_OUT,
++	GPIO38_AC97_SYNC,
++	GPIO39_AC97_BITCLK,
++	GPIO40_AC97_nACRESET,
++
++	/* I2C */
++	GPIO32_I2C_SCL,
++	GPIO33_I2C_SDA,
++
++	/* Keypad */
++	GPIO105_KP_DKIN_0,
++	GPIO106_KP_DKIN_1,
++	GPIO113_KP_MKIN_0,
++	GPIO114_KP_MKIN_1,
++	GPIO115_KP_MKIN_2,
++	GPIO116_KP_MKIN_3,
++	GPIO117_KP_MKIN_4,
++	GPIO118_KP_MKIN_5,
++	GPIO119_KP_MKIN_6,
++	GPIO120_KP_MKIN_7,
++	GPIO121_KP_MKOUT_0,
++	GPIO122_KP_MKOUT_1,
++	GPIO123_KP_MKOUT_2,
++	GPIO124_KP_MKOUT_3,
++	GPIO125_KP_MKOUT_4,
++	GPIO126_KP_MKOUT_5,
++	GPIO127_KP_MKOUT_6,
++	GPIO5_2_KP_MKOUT_7,
++
++	/* Ethernet */
++	GPIO4_nCS3,
++	GPIO90_GPIO,
++};
++
++#define NUM_LCD_DETECT_PINS	7
++
++static int lcd_detect_pins[] __initdata = {
++	MFP_PIN_GPIO72,   /* LCD_LDD_17 - ORIENT */
++	MFP_PIN_GPIO71,   /* LCD_LDD_16 - LCDID[5] */
++	MFP_PIN_GPIO17_2, /* LCD_BIAS   - LCDID[4] */
++	MFP_PIN_GPIO15_2, /* LCD_LCLK   - LCDID[3] */
++	MFP_PIN_GPIO14_2, /* LCD_FCLK   - LCDID[2] */
++	MFP_PIN_GPIO73,   /* LCD_CS_N   - LCDID[1] */
++	MFP_PIN_GPIO74,   /* LCD_VSYNC  - LCDID[0] */
++	/*
++	 * set the MFP_PIN_GPIO 14/15/17 to alternate function other than
++	 * GPIO to avoid input level confliction with 14_2, 15_2, 17_2
++	 */
++	MFP_PIN_GPIO14,
++	MFP_PIN_GPIO15,
++	MFP_PIN_GPIO17,
++};
++
++static int lcd_detect_mfpr[] __initdata = {
++	/* AF0, DS 1X, Pull Neither, Edge Clear */
++	0x8440, 0x8440, 0x8440, 0x8440, 0x8440, 0x8440, 0x8440,
++	0xc442, /* Backlight, Pull-Up, AF2 */
++	0x8445, /* AF5 */
++	0x8445, /* AF5 */
++};
++
++static void __init zylonite_detect_lcd_panel(void)
++{
++	unsigned long mfpr_save[ARRAY_SIZE(lcd_detect_pins)];
++	int i, gpio, id = 0;
++
++	/* save the original MFP settings of these pins and configure them
++	 * as GPIO Input, DS01X, Pull Neither, Edge Clear
++	 */
++	for (i = 0; i < ARRAY_SIZE(lcd_detect_pins); i++) {
++		mfpr_save[i] = pxa3xx_mfp_read(lcd_detect_pins[i]);
++		pxa3xx_mfp_write(lcd_detect_pins[i], lcd_detect_mfpr[i]);
++	}
++
++	for (i = 0; i < NUM_LCD_DETECT_PINS; i++) {
++		id = id << 1;
++		gpio = mfp_to_gpio(lcd_detect_pins[i]);
++		gpio_direction_input(gpio);
++
++		if (gpio_get_value(gpio))
++			id = id | 0x1;
++	}
++
++	/* lcd id, flush out bit 1 */
++	lcd_id = id & 0x3d;
++
++	/* lcd orientation, portrait or landscape */
++	lcd_orientation = (id >> 6) & 0x1;
++
++	/* restore the original MFP settings */
++	for (i = 0; i < ARRAY_SIZE(lcd_detect_pins); i++)
++		pxa3xx_mfp_write(lcd_detect_pins[i], mfpr_save[i]);
++}
++
++void __init zylonite_pxa320_init(void)
++{
++	if (cpu_is_pxa320()) {
++		/* initialize MFP */
++		pxa3xx_mfp_config(ARRAY_AND_SIZE(mfp_cfg));
++
++		/* detect LCD panel */
++		zylonite_detect_lcd_panel();
++
++		/* GPIO pin assignment */
++		gpio_backlight	= mfp_to_gpio(MFP_PIN_GPIO14);
++		gpio_eth_irq	= mfp_to_gpio(MFP_PIN_GPIO9);
++	}
++}
+--- linux-2.6.23.orig/arch/arm/mm/Kconfig
++++ linux-2.6.23/arch/arm/mm/Kconfig
+@@ -322,7 +322,7 @@
+ # XScale
+ config CPU_XSCALE
+ 	bool
+-	depends on ARCH_IOP32X || ARCH_IOP33X || ARCH_PXA || ARCH_IXP4XX || ARCH_IXP2000
++	depends on ARCH_IOP32X || ARCH_IOP33X || PXA25x || PXA27x || ARCH_IXP4XX || ARCH_IXP2000
+ 	default y
+ 	select CPU_32v5
+ 	select CPU_ABRT_EV5T
+@@ -333,7 +333,7 @@
+ # XScale Core Version 3
+ config CPU_XSC3
+ 	bool
+-	depends on ARCH_IXP23XX || ARCH_IOP13XX
++	depends on ARCH_IXP23XX || ARCH_IOP13XX || PXA3xx
+ 	default y
+ 	select CPU_32v5
+ 	select CPU_ABRT_EV5T
+--- linux-2.6.23.orig/drivers/i2c/busses/i2c-pxa.c
++++ linux-2.6.23/drivers/i2c/busses/i2c-pxa.c
+@@ -31,6 +31,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/i2c-pxa.h>
+ #include <linux/platform_device.h>
++#include <linux/err.h>
++#include <linux/clk.h>
+ 
+ #include <asm/hardware.h>
+ #include <asm/irq.h>
+@@ -48,6 +50,7 @@
+ 	unsigned int		slave_addr;
+ 
+ 	struct i2c_adapter	adap;
++	struct clk		*clk;
+ #ifdef CONFIG_I2C_PXA_SLAVE
+ 	struct i2c_slave_client *slave;
+ #endif
+@@ -869,6 +872,12 @@
+ 
+ 	sprintf(i2c->adap.name, "pxa_i2c-i2c.%u", dev->id);
+ 
++	i2c->clk = clk_get(&dev->dev, "I2CCLK");
++	if (IS_ERR(i2c->clk)) {
++		ret = PTR_ERR(i2c->clk);
++		goto eclk;
++	}
++
+ 	i2c->reg_base = ioremap(res->start, res_len(res));
+ 	if (!i2c->reg_base) {
+ 		ret = -EIO;
+@@ -889,22 +898,19 @@
+ 	}
+ #endif
+ 
++	clk_enable(i2c->clk);
++#ifdef CONFIG_PXA27x
+ 	switch (dev->id) {
+ 	case 0:
+-#ifdef CONFIG_PXA27x
+ 		pxa_gpio_mode(GPIO117_I2CSCL_MD);
+ 		pxa_gpio_mode(GPIO118_I2CSDA_MD);
+-#endif
+-		pxa_set_cken(CKEN_I2C, 1);
+ 		break;
+-#ifdef CONFIG_PXA27x
+ 	case 1:
+ 		local_irq_disable();
+ 		PCFR |= PCFR_PI2CEN;
+ 		local_irq_enable();
+-		pxa_set_cken(CKEN_PWRI2C, 1);
+-#endif
+ 	}
++#endif
+ 
+ 	ret = request_irq(irq, i2c_pxa_handler, IRQF_DISABLED,
+ 			  i2c->adap.name, i2c);
+@@ -948,19 +954,18 @@
+ eadapt:
+ 	free_irq(irq, i2c);
+ ereqirq:
+-	switch (dev->id) {
+-	case 0:
+-		pxa_set_cken(CKEN_I2C, 0);
+-		break;
++	clk_disable(i2c->clk);
++
+ #ifdef CONFIG_PXA27x
+-	case 1:
+-		pxa_set_cken(CKEN_PWRI2C, 0);
++	if (dev->id == 1) {
+ 		local_irq_disable();
+ 		PCFR &= ~PCFR_PI2CEN;
+ 		local_irq_enable();
+-#endif
+ 	}
++#endif
+ eremap:
++	clk_put(i2c->clk);
++eclk:
+ 	kfree(i2c);
+ emalloc:
+ 	release_mem_region(res->start, res_len(res));
+@@ -975,18 +980,18 @@
+ 
+ 	i2c_del_adapter(&i2c->adap);
+ 	free_irq(i2c->irq, i2c);
+-	switch (dev->id) {
+-	case 0:
+-		pxa_set_cken(CKEN_I2C, 0);
+-		break;
++
++	clk_disable(i2c->clk);
++	clk_put(i2c->clk);
++
+ #ifdef CONFIG_PXA27x
+-	case 1:
+-		pxa_set_cken(CKEN_PWRI2C, 0);
++	if (dev->id == 1) {
+ 		local_irq_disable();
+ 		PCFR &= ~PCFR_PI2CEN;
+ 		local_irq_enable();
+-#endif
+ 	}
++#endif
++
+ 	release_mem_region(i2c->iobase, i2c->iosize);
+ 	kfree(i2c);
+ 
+--- linux-2.6.23.orig/drivers/input/keyboard/pxa27x_keyboard.c
++++ linux-2.6.23/drivers/input/keyboard/pxa27x_keyboard.c
+@@ -23,6 +23,8 @@
+ #include <linux/input.h>
+ #include <linux/device.h>
+ #include <linux/platform_device.h>
++#include <linux/clk.h>
++#include <linux/err.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -40,6 +42,8 @@
+ 				 col/2 == 2 ? KPASMKP2 : KPASMKP3)
+ #define KPASMKPx_MKC(row, col)	(1 << (row + 16 * (col % 2)))
+ 
++static struct clk *pxakbd_clk;
++
+ static irqreturn_t pxakbd_irq_handler(int irq, void *dev_id)
+ {
+ 	struct platform_device *pdev = dev_id;
+@@ -104,7 +108,7 @@
+ 	KPREC = 0x7F;
+ 
+ 	/* Enable unit clock */
+-	pxa_set_cken(CKEN_KEYPAD, 1);
++	clk_enable(pxakbd_clk);
+ 
+ 	return 0;
+ }
+@@ -112,7 +116,7 @@
+ static void pxakbd_close(struct input_dev *dev)
+ {
+ 	/* Disable clock unit */
+-	pxa_set_cken(CKEN_KEYPAD, 0);
++	clk_disable(pxakbd_clk);
+ }
+ 
+ #ifdef CONFIG_PM
+@@ -140,7 +144,8 @@
+ 		KPREC = pdata->reg_kprec;
+ 
+ 		/* Enable unit clock */
+-		pxa_set_cken(CKEN_KEYPAD, 1);
++		clk_disable(pxakbd_clk);
++		clk_enable(pxakbd_clk);
+ 	}
+ 
+ 	mutex_unlock(&input_dev->mutex);
+@@ -158,11 +163,18 @@
+ 	struct input_dev *input_dev;
+ 	int i, row, col, error;
+ 
++	pxakbd_clk = clk_get(&pdev->dev, "KBDCLK");
++	if (IS_ERR(pxakbd_clk)) {
++		error = PTR_ERR(pxakbd_clk);
++		goto err_clk;
++	}
++
+ 	/* Create and register the input driver. */
+ 	input_dev = input_allocate_device();
+ 	if (!input_dev) {
+ 		printk(KERN_ERR "Cannot request keypad device\n");
+-		return -ENOMEM;
++		error = -ENOMEM;
++		goto err_alloc;
+ 	}
+ 
+ 	input_dev->name = DRIVER_NAME;
+@@ -185,7 +197,6 @@
+ 			    DRIVER_NAME, pdev);
+ 	if (error) {
+ 		printk(KERN_ERR "Cannot request keypad IRQ\n");
+-		pxa_set_cken(CKEN_KEYPAD, 0);
+ 		goto err_free_dev;
+ 	}
+ 
+@@ -217,6 +228,9 @@
+ 	free_irq(IRQ_KEYPAD, pdev);
+  err_free_dev:
+ 	input_free_device(input_dev);
++ err_alloc:
++	clk_put(pxakbd_clk);
++ err_clk:
+ 	return error;
+ }
+ 
+@@ -226,6 +240,7 @@
+ 
+ 	input_unregister_device(input_dev);
+ 	free_irq(IRQ_KEYPAD, pdev);
++	clk_put(pxakbd_clk);
+ 	platform_set_drvdata(pdev, NULL);
+ 
+ 	return 0;
+--- linux-2.6.23.orig/drivers/mmc/host/pxamci.c
++++ linux-2.6.23/drivers/mmc/host/pxamci.c
+@@ -23,6 +23,8 @@
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/dma-mapping.h>
++#include <linux/clk.h>
++#include <linux/err.h>
+ #include <linux/mmc/host.h>
+ 
+ #include <asm/dma.h>
+@@ -44,6 +46,8 @@
+ 	spinlock_t		lock;
+ 	struct resource		*res;
+ 	void __iomem		*base;
++	struct clk		*clk;
++	unsigned long		clkrate;
+ 	int			irq;
+ 	int			dma;
+ 	unsigned int		clkrt;
+@@ -119,7 +123,7 @@
+ 	writel(nob, host->base + MMC_NOB);
+ 	writel(data->blksz, host->base + MMC_BLKLEN);
+ 
+-	clks = (unsigned long long)data->timeout_ns * CLOCKRATE;
++	clks = (unsigned long long)data->timeout_ns * host->clkrate;
+ 	do_div(clks, 1000000000UL);
+ 	timeout = (unsigned int)clks + (data->timeout_clks << host->clkrt);
+ 	writel((timeout + 255) / 256, host->base + MMC_RDTO);
+@@ -358,18 +362,25 @@
+ 	struct pxamci_host *host = mmc_priv(mmc);
+ 
+ 	if (ios->clock) {
+-		unsigned int clk = CLOCKRATE / ios->clock;
+-		if (CLOCKRATE / clk > ios->clock)
++		unsigned long rate = host->clkrate;
++		unsigned int clk = rate / ios->clock;
++
++		/*
++		 * clk might result in a lower divisor than we
++		 * desire.  check for that condition and adjust
++		 * as appropriate.
++		 */
++		if (rate / clk > ios->clock)
+ 			clk <<= 1;
+ 		host->clkrt = fls(clk) - 1;
+-		pxa_set_cken(CKEN_MMC, 1);
++		clk_enable(host->clk);
+ 
+ 		/*
+ 		 * we write clkrt on the next command
+ 		 */
+ 	} else {
+ 		pxamci_stop_clock(host);
+-		pxa_set_cken(CKEN_MMC, 0);
++		clk_disable(host->clk);
+ 	}
+ 
+ 	if (host->power_mode != ios->power_mode) {
+@@ -429,8 +440,6 @@
+ 	}
+ 
+ 	mmc->ops = &pxamci_ops;
+-	mmc->f_min = CLOCKRATE_MIN;
+-	mmc->f_max = CLOCKRATE_MAX;
+ 
+ 	/*
+ 	 * We can do SG-DMA, but we don't because we never know how much
+@@ -457,6 +466,22 @@
+ 	host->mmc = mmc;
+ 	host->dma = -1;
+ 	host->pdata = pdev->dev.platform_data;
++
++	host->clk = clk_get(&pdev->dev, "MMCCLK");
++	if (IS_ERR(host->clk)) {
++		ret = PTR_ERR(host->clk);
++		host->clk = NULL;
++		goto out;
++	}
++
++	host->clkrate = clk_get_rate(host->clk);
++
++	/*
++	 * Calculate minimum clock rate, rounding up.
++	 */
++	mmc->f_min = (host->clkrate + 63) / 64;
++	mmc->f_max = host->clkrate;
++
+ 	mmc->ocr_avail = host->pdata ?
+ 			 host->pdata->ocr_mask :
+ 			 MMC_VDD_32_33|MMC_VDD_33_34;
+@@ -515,6 +540,8 @@
+ 			iounmap(host->base);
+ 		if (host->sg_cpu)
+ 			dma_free_coherent(&pdev->dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
++		if (host->clk)
++			clk_put(host->clk);
+ 	}
+ 	if (mmc)
+ 		mmc_free_host(mmc);
+@@ -549,6 +576,8 @@
+ 		iounmap(host->base);
+ 		dma_free_coherent(&pdev->dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
+ 
++		clk_put(host->clk);
++
+ 		release_resource(host->res);
+ 
+ 		mmc_free_host(mmc);
+--- linux-2.6.23.orig/drivers/mmc/host/pxamci.h
++++ linux-2.6.23/drivers/mmc/host/pxamci.h
+@@ -86,17 +86,3 @@
+ #define MMC_RXFIFO	0x0040	/* 8 bit */
+ 
+ #define MMC_TXFIFO	0x0044	/* 8 bit */
+-
+-/*
+- * The base MMC clock rate
+- */
+-#ifdef CONFIG_PXA27x
+-#define CLOCKRATE_MIN	304688
+-#define CLOCKRATE_MAX	19500000
+-#else
+-#define CLOCKRATE_MIN	312500
+-#define CLOCKRATE_MAX	20000000
+-#endif
+-
+-#define CLOCKRATE	CLOCKRATE_MAX
+-
+--- linux-2.6.23.orig/drivers/mtd/maps/lubbock-flash.c
++++ linux-2.6.23/drivers/mtd/maps/lubbock-flash.c
+@@ -22,6 +22,7 @@
+ 
+ #include <asm/io.h>
+ #include <asm/hardware.h>
++#include <asm/mach-types.h>
+ #include <asm/arch/pxa-regs.h>
+ #include <asm/arch/lubbock.h>
+ #include <asm/cacheflush.h>
+@@ -71,9 +72,14 @@
+ 
+ static int __init init_lubbock(void)
+ {
+-	int flashboot = (LUB_CONF_SWITCHES & 1);
++	int flashboot;
+ 	int ret = 0, i;
+ 
++	if (!machine_is_lubbock())
++		return -ENODEV;
++
++	flashboot = (LUB_CONF_SWITCHES & 1);
++
+ 	lubbock_maps[0].bankwidth = lubbock_maps[1].bankwidth =
+ 		(BOOT_DEF & 1) ? 2 : 4;
+ 
+--- linux-2.6.23.orig/drivers/mtd/maps/mainstone-flash.c
++++ linux-2.6.23/drivers/mtd/maps/mainstone-flash.c
+@@ -22,6 +22,7 @@
+ 
+ #include <asm/io.h>
+ #include <asm/hardware.h>
++#include <asm/mach-types.h>
+ #include <asm/arch/pxa-regs.h>
+ #include <asm/arch/mainstone.h>
+ #include <asm/cacheflush.h>
+@@ -76,6 +77,9 @@
+ 	int SW7 = 0;  /* FIXME: get from SCR (Mst doc section 3.2.1.1) */
+ 	int ret = 0, i;
+ 
++	if (!machine_is_mainstone())
++		return -ENODEV;
++
+ 	mainstone_maps[0].bankwidth = (BOOT_DEF & 1) ? 2 : 4;
+ 	mainstone_maps[1].bankwidth = 4;
+ 
+--- linux-2.6.23.orig/drivers/net/irda/pxaficp_ir.c
++++ linux-2.6.23/drivers/net/irda/pxaficp_ir.c
+@@ -23,6 +23,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
++#include <linux/clk.h>
+ 
+ #include <net/irda/irda.h>
+ #include <net/irda/irmod.h>
+@@ -87,8 +88,30 @@
+ 
+ 	struct device		*dev;
+ 	struct pxaficp_platform_data *pdata;
++	struct clk		*fir_clk;
++	struct clk		*sir_clk;
++	struct clk		*cur_clk;
+ };
+ 
++static inline void pxa_irda_disable_clk(struct pxa_irda *si)
++{
++	if (si->cur_clk)
++		clk_disable(si->cur_clk);
++	si->cur_clk = NULL;
++}
++
++static inline void pxa_irda_enable_firclk(struct pxa_irda *si)
++{
++	si->cur_clk = si->fir_clk;
++	clk_enable(si->fir_clk);
++}
++
++static inline void pxa_irda_enable_sirclk(struct pxa_irda *si)
++{
++	si->cur_clk = si->sir_clk;
++	clk_enable(si->sir_clk);
++}
++
+ 
+ #define IS_FIR(si)		((si)->speed >= 4000000)
+ #define IRDA_FRAME_SIZE_LIMIT	2047
+@@ -134,7 +157,7 @@
+ 			DCSR(si->rxdma) &= ~DCSR_RUN;
+ 			/* disable FICP */
+ 			ICCR0 = 0;
+-			pxa_set_cken(CKEN_FICP, 0);
++			pxa_irda_disable_clk(si);
+ 
+ 			/* set board transceiver to SIR mode */
+ 			si->pdata->transceiver_mode(si->dev, IR_SIRMODE);
+@@ -144,7 +167,7 @@
+ 			pxa_gpio_mode(GPIO47_STTXD_MD);
+ 
+ 			/* enable the STUART clock */
+-			pxa_set_cken(CKEN_STUART, 1);
++			pxa_irda_enable_sirclk(si);
+ 		}
+ 
+ 		/* disable STUART first */
+@@ -169,7 +192,7 @@
+ 		/* disable STUART */
+ 		STIER = 0;
+ 		STISR = 0;
+-		pxa_set_cken(CKEN_STUART, 0);
++		pxa_irda_disable_clk(si);
+ 
+ 		/* disable FICP first */
+ 		ICCR0 = 0;
+@@ -182,7 +205,7 @@
+ 		pxa_gpio_mode(GPIO47_ICPTXD_MD);
+ 
+ 		/* enable the FICP clock */
+-		pxa_set_cken(CKEN_FICP, 1);
++		pxa_irda_enable_firclk(si);
+ 
+ 		si->speed = speed;
+ 		pxa_irda_fir_dma_rx_start(si);
+@@ -592,16 +615,15 @@
+ 	STIER = 0;
+ 	/* disable STUART SIR mode */
+ 	STISR = 0;
+-	/* disable the STUART clock */
+-	pxa_set_cken(CKEN_STUART, 0);
+ 
+ 	/* disable DMA */
+ 	DCSR(si->txdma) &= ~DCSR_RUN;
+ 	DCSR(si->rxdma) &= ~DCSR_RUN;
+ 	/* disable FICP */
+ 	ICCR0 = 0;
+-	/* disable the FICP clock */
+-	pxa_set_cken(CKEN_FICP, 0);
++
++	/* disable the STUART or FICP clocks */
++	pxa_irda_disable_clk(si);
+ 
+ 	DRCMR17 = 0;
+ 	DRCMR18 = 0;
+@@ -792,6 +814,13 @@
+ 	si->dev = &pdev->dev;
+ 	si->pdata = pdev->dev.platform_data;
+ 
++	si->sir_clk = clk_get(&pdev->dev, "UARTCLK");
++	si->fir_clk = clk_get(&pdev->dev, "FICPCLK");
++	if (IS_ERR(si->sir_clk) || IS_ERR(si->fir_clk)) {
++		err = PTR_ERR(IS_ERR(si->sir_clk) ? si->sir_clk : si->fir_clk);
++		goto err_mem_4;
++	}
++
+ 	/*
+ 	 * Initialise the SIR buffers
+ 	 */
+@@ -831,6 +860,10 @@
+ err_mem_5:
+ 		kfree(si->rx_buff.head);
+ err_mem_4:
++		if (si->sir_clk && !IS_ERR(si->sir_clk))
++			clk_put(si->sir_clk);
++		if (si->fir_clk && !IS_ERR(si->fir_clk))
++			clk_put(si->fir_clk);
+ 		free_netdev(dev);
+ err_mem_3:
+ 		release_mem_region(__PREG(FICP), 0x1c);
+@@ -850,6 +883,8 @@
+ 		unregister_netdev(dev);
+ 		kfree(si->tx_buff.head);
+ 		kfree(si->rx_buff.head);
++		clk_put(si->fir_clk);
++		clk_put(si->sir_clk);
+ 		free_netdev(dev);
+ 	}
+ 
+--- linux-2.6.23.orig/drivers/net/smc91x.c
++++ linux-2.6.23/drivers/net/smc91x.c
+@@ -173,56 +173,6 @@
+  */
+ #define MII_DELAY		1
+ 
+-/* store this information for the driver.. */
+-struct smc_local {
+-	/*
+-	 * If I have to wait until memory is available to send a
+-	 * packet, I will store the skbuff here, until I get the
+-	 * desired memory.  Then, I'll send it out and free it.
+-	 */
+-	struct sk_buff *pending_tx_skb;
+-	struct tasklet_struct tx_task;
+-
+- 	/*
+-	 * these are things that the kernel wants me to keep, so users
+-	 * can find out semi-useless statistics of how well the card is
+-	 * performing
+-	 */
+-	struct net_device_stats stats;
+-
+-	/* version/revision of the SMC91x chip */
+-	int	version;
+-
+-	/* Contains the current active transmission mode */
+-	int	tcr_cur_mode;
+-
+-	/* Contains the current active receive mode */
+-	int	rcr_cur_mode;
+-
+-	/* Contains the current active receive/phy mode */
+-	int	rpc_cur_mode;
+-	int	ctl_rfduplx;
+-	int	ctl_rspeed;
+-
+-	u32	msg_enable;
+-	u32	phy_type;
+-	struct mii_if_info mii;
+-
+-	/* work queue */
+-	struct work_struct phy_configure;
+-	struct net_device *dev;
+-	int	work_pending;
+-
+-	spinlock_t lock;
+-
+-#ifdef SMC_USE_PXA_DMA
+-	/* DMA needs the physical address of the chip */
+-	u_long physaddr;
+-#endif
+-	void __iomem *base;
+-	void __iomem *datacs;
+-};
+-
+ #if SMC_DEBUG > 0
+ #define DBG(n, args...)					\
+ 	do {						\
+@@ -2238,17 +2188,19 @@
+ 		goto out_release_attrib;
+ 	}
+ 
+-	platform_set_drvdata(pdev, ndev);
+-	ret = smc_probe(ndev, addr);
+-	if (ret != 0)
+-		goto out_iounmap;
+ #ifdef SMC_USE_PXA_DMA
+-	else {
++	{
+ 		struct smc_local *lp = netdev_priv(ndev);
++		lp->device = &pdev->dev;
+ 		lp->physaddr = res->start;
+ 	}
+ #endif
+ 
++	platform_set_drvdata(pdev, ndev);
++	ret = smc_probe(ndev, addr);
++	if (ret != 0)
++		goto out_iounmap;
++
+ 	smc_request_datacs(pdev, ndev);
+ 
+ 	return 0;
+--- linux-2.6.23.orig/drivers/net/smc91x.h
++++ linux-2.6.23/drivers/net/smc91x.h
+@@ -461,6 +461,59 @@
+ 
+ #endif
+ 
++
++/* store this information for the driver.. */
++struct smc_local {
++	/*
++	 * If I have to wait until memory is available to send a
++	 * packet, I will store the skbuff here, until I get the
++	 * desired memory.  Then, I'll send it out and free it.
++	 */
++	struct sk_buff *pending_tx_skb;
++	struct tasklet_struct tx_task;
++
++	/*
++	 * these are things that the kernel wants me to keep, so users
++	 * can find out semi-useless statistics of how well the card is
++	 * performing
++	 */
++	struct net_device_stats stats;
++
++	/* version/revision of the SMC91x chip */
++	int	version;
++
++	/* Contains the current active transmission mode */
++	int	tcr_cur_mode;
++
++	/* Contains the current active receive mode */
++	int	rcr_cur_mode;
++
++	/* Contains the current active receive/phy mode */
++	int	rpc_cur_mode;
++	int	ctl_rfduplx;
++	int	ctl_rspeed;
++
++	u32	msg_enable;
++	u32	phy_type;
++	struct mii_if_info mii;
++
++	/* work queue */
++	struct work_struct phy_configure;
++	struct net_device *dev;
++	int	work_pending;
++
++	spinlock_t lock;
++
++#ifdef SMC_USE_PXA_DMA
++	/* DMA needs the physical address of the chip */
++	u_long physaddr;
++	struct device *device;
++#endif
++	void __iomem *base;
++	void __iomem *datacs;
++};
++
++
+ #ifdef SMC_USE_PXA_DMA
+ /*
+  * Let's use the DMA engine on the XScale PXA2xx for RX packets. This is
+@@ -475,11 +528,12 @@
+ #ifdef SMC_insl
+ #undef SMC_insl
+ #define SMC_insl(a, r, p, l) \
+-	smc_pxa_dma_insl(a, lp->physaddr, r, dev->dma, p, l)
++	smc_pxa_dma_insl(a, lp, r, dev->dma, p, l)
+ static inline void
+-smc_pxa_dma_insl(void __iomem *ioaddr, u_long physaddr, int reg, int dma,
++smc_pxa_dma_insl(void __iomem *ioaddr, struct smc_local *lp, int reg, int dma,
+ 		 u_char *buf, int len)
+ {
++	u_long physaddr = lp->physaddr;
+ 	dma_addr_t dmabuf;
+ 
+ 	/* fallback if no DMA available */
+@@ -496,7 +550,7 @@
+ 	}
+ 
+ 	len *= 4;
+-	dmabuf = dma_map_single(NULL, buf, len, DMA_FROM_DEVICE);
++	dmabuf = dma_map_single(lp->device, buf, len, DMA_FROM_DEVICE);
+ 	DCSR(dma) = DCSR_NODESC;
+ 	DTADR(dma) = dmabuf;
+ 	DSADR(dma) = physaddr + reg;
+@@ -506,18 +560,19 @@
+ 	while (!(DCSR(dma) & DCSR_STOPSTATE))
+ 		cpu_relax();
+ 	DCSR(dma) = 0;
+-	dma_unmap_single(NULL, dmabuf, len, DMA_FROM_DEVICE);
++	dma_unmap_single(lp->device, dmabuf, len, DMA_FROM_DEVICE);
+ }
+ #endif
+ 
+ #ifdef SMC_insw
+ #undef SMC_insw
+ #define SMC_insw(a, r, p, l) \
+-	smc_pxa_dma_insw(a, lp->physaddr, r, dev->dma, p, l)
++	smc_pxa_dma_insw(a, lp, r, dev->dma, p, l)
+ static inline void
+-smc_pxa_dma_insw(void __iomem *ioaddr, u_long physaddr, int reg, int dma,
++smc_pxa_dma_insw(void __iomem *ioaddr, struct smc_local *lp, int reg, int dma,
+ 		 u_char *buf, int len)
+ {
++	u_long physaddr = lp->physaddr;
+ 	dma_addr_t dmabuf;
+ 
+ 	/* fallback if no DMA available */
+@@ -534,7 +589,7 @@
+ 	}
+ 
+ 	len *= 2;
+-	dmabuf = dma_map_single(NULL, buf, len, DMA_FROM_DEVICE);
++	dmabuf = dma_map_single(lp->device, buf, len, DMA_FROM_DEVICE);
+ 	DCSR(dma) = DCSR_NODESC;
+ 	DTADR(dma) = dmabuf;
+ 	DSADR(dma) = physaddr + reg;
+@@ -544,7 +599,7 @@
+ 	while (!(DCSR(dma) & DCSR_STOPSTATE))
+ 		cpu_relax();
+ 	DCSR(dma) = 0;
+-	dma_unmap_single(NULL, dmabuf, len, DMA_FROM_DEVICE);
++	dma_unmap_single(lp->device, dmabuf, len, DMA_FROM_DEVICE);
+ }
+ #endif
+ 
+--- linux-2.6.23.orig/drivers/serial/pxa.c
++++ linux-2.6.23/drivers/serial/pxa.c
+@@ -42,6 +42,7 @@
+ #include <linux/tty.h>
+ #include <linux/tty_flip.h>
+ #include <linux/serial_core.h>
++#include <linux/clk.h>
+ 
+ #include <asm/io.h>
+ #include <asm/hardware.h>
+@@ -56,7 +57,7 @@
+ 	unsigned char           lcr;
+ 	unsigned char           mcr;
+ 	unsigned int            lsr_break_flag;
+-	unsigned int		cken;
++	struct clk		*clk;
+ 	char			*name;
+ };
+ 
+@@ -363,6 +364,8 @@
+ 	else
+ 		up->mcr = 0;
+ 
++	up->port.uartclk = clk_get_rate(up->clk);
++
+ 	/*
+ 	 * Allocate the IRQ
+ 	 */
+@@ -568,9 +571,11 @@
+ 	      unsigned int oldstate)
+ {
+ 	struct uart_pxa_port *up = (struct uart_pxa_port *)port;
+-	pxa_set_cken(up->cken, !state);
++
+ 	if (!state)
+-		udelay(1);
++		clk_enable(up->clk);
++	else
++		clk_disable(up->clk);
+ }
+ 
+ static void serial_pxa_release_port(struct uart_port *port)
+@@ -604,7 +609,7 @@
+ 
+ #ifdef CONFIG_SERIAL_PXA_CONSOLE
+ 
+-static struct uart_pxa_port serial_pxa_ports[];
++static struct uart_pxa_port *serial_pxa_ports[4];
+ static struct uart_driver serial_pxa_reg;
+ 
+ #define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
+@@ -654,9 +659,11 @@
+ static void
+ serial_pxa_console_write(struct console *co, const char *s, unsigned int count)
+ {
+-	struct uart_pxa_port *up = &serial_pxa_ports[co->index];
++	struct uart_pxa_port *up = serial_pxa_ports[co->index];
+ 	unsigned int ier;
+ 
++	clk_enable(up->clk);
++
+ 	/*
+ 	 *	First save the IER then disable the interrupts
+ 	 */
+@@ -671,6 +678,8 @@
+ 	 */
+ 	wait_for_xmitr(up);
+ 	serial_out(up, UART_IER, ier);
++
++	clk_disable(up->clk);
+ }
+ 
+ static int __init
+@@ -684,7 +693,9 @@
+ 
+ 	if (co->index == -1 || co->index >= serial_pxa_reg.nr)
+ 		co->index = 0;
+-       	up = &serial_pxa_ports[co->index];
++	up = serial_pxa_ports[co->index];
++	if (!up)
++		return -ENODEV;
+ 
+ 	if (options)
+ 		uart_parse_options(options, &baud, &parity, &bits, &flow);
+@@ -702,15 +713,6 @@
+ 	.data		= &serial_pxa_reg,
+ };
+ 
+-static int __init
+-serial_pxa_console_init(void)
+-{
+-	register_console(&serial_pxa_console);
+-	return 0;
+-}
+-
+-console_initcall(serial_pxa_console_init);
+-
+ #define PXA_CONSOLE	&serial_pxa_console
+ #else
+ #define PXA_CONSOLE	NULL
+@@ -736,73 +738,13 @@
+ 	.verify_port	= serial_pxa_verify_port,
+ };
+ 
+-static struct uart_pxa_port serial_pxa_ports[] = {
+-     {	/* FFUART */
+-	.name	= "FFUART",
+-	.cken	= CKEN_FFUART,
+-	.port	= {
+-		.type		= PORT_PXA,
+-		.iotype		= UPIO_MEM,
+-		.membase	= (void *)&FFUART,
+-		.mapbase	= __PREG(FFUART),
+-		.irq		= IRQ_FFUART,
+-		.uartclk	= 921600 * 16,
+-		.fifosize	= 64,
+-		.ops		= &serial_pxa_pops,
+-		.line		= 0,
+-	},
+-  }, {	/* BTUART */
+-	.name	= "BTUART",
+-	.cken	= CKEN_BTUART,
+-	.port	= {
+-		.type		= PORT_PXA,
+-		.iotype		= UPIO_MEM,
+-		.membase	= (void *)&BTUART,
+-		.mapbase	= __PREG(BTUART),
+-		.irq		= IRQ_BTUART,
+-		.uartclk	= 921600 * 16,
+-		.fifosize	= 64,
+-		.ops		= &serial_pxa_pops,
+-		.line		= 1,
+-	},
+-  }, {	/* STUART */
+-	.name	= "STUART",
+-	.cken	= CKEN_STUART,
+-	.port	= {
+-		.type		= PORT_PXA,
+-		.iotype		= UPIO_MEM,
+-		.membase	= (void *)&STUART,
+-		.mapbase	= __PREG(STUART),
+-		.irq		= IRQ_STUART,
+-		.uartclk	= 921600 * 16,
+-		.fifosize	= 64,
+-		.ops		= &serial_pxa_pops,
+-		.line		= 2,
+-	},
+-  }, {  /* HWUART */
+-	.name	= "HWUART",
+-	.cken	= CKEN_HWUART,
+-	.port = {
+-		.type		= PORT_PXA,
+-		.iotype		= UPIO_MEM,
+-		.membase	= (void *)&HWUART,
+-		.mapbase	= __PREG(HWUART),
+-		.irq		= IRQ_HWUART,
+-		.uartclk	= 921600 * 16,
+-		.fifosize	= 64,
+-		.ops		= &serial_pxa_pops,
+-		.line		= 3,
+-	},
+-  }
+-};
+-
+ static struct uart_driver serial_pxa_reg = {
+ 	.owner		= THIS_MODULE,
+ 	.driver_name	= "PXA serial",
+ 	.dev_name	= "ttyS",
+ 	.major		= TTY_MAJOR,
+ 	.minor		= 64,
+-	.nr		= ARRAY_SIZE(serial_pxa_ports),
++	.nr		= 4,
+ 	.cons		= PXA_CONSOLE,
+ };
+ 
+@@ -828,10 +770,68 @@
+ 
+ static int serial_pxa_probe(struct platform_device *dev)
+ {
+-	serial_pxa_ports[dev->id].port.dev = &dev->dev;
+-	uart_add_one_port(&serial_pxa_reg, &serial_pxa_ports[dev->id].port);
+-	platform_set_drvdata(dev, &serial_pxa_ports[dev->id]);
++	struct uart_pxa_port *sport;
++	struct resource *mmres, *irqres;
++	int ret;
++
++	mmres = platform_get_resource(dev, IORESOURCE_MEM, 0);
++	irqres = platform_get_resource(dev, IORESOURCE_IRQ, 0);
++	if (!mmres || !irqres)
++		return -ENODEV;
++
++	sport = kzalloc(sizeof(struct uart_pxa_port), GFP_KERNEL);
++	if (!sport)
++		return -ENOMEM;
++
++	sport->clk = clk_get(&dev->dev, "UARTCLK");
++	if (IS_ERR(sport->clk)) {
++		ret = PTR_ERR(sport->clk);
++		goto err_free;
++	}
++
++	sport->port.type = PORT_PXA;
++	sport->port.iotype = UPIO_MEM;
++	sport->port.mapbase = mmres->start;
++	sport->port.irq = irqres->start;
++	sport->port.fifosize = 64;
++	sport->port.ops = &serial_pxa_pops;
++	sport->port.line = dev->id;
++	sport->port.dev = &dev->dev;
++	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
++	sport->port.uartclk = clk_get_rate(sport->clk);
++
++	/*
++	 * Is it worth keeping this?
++	 */
++	if (mmres->start == __PREG(FFUART))
++		sport->name = "FFUART";
++	else if (mmres->start == __PREG(BTUART))
++		sport->name = "BTUART";
++	else if (mmres->start == __PREG(STUART))
++		sport->name = "STUART";
++	else if (mmres->start == __PREG(HWUART))
++		sport->name = "HWUART";
++	else
++		sport->name = "???";
++
++	sport->port.membase = ioremap(mmres->start, mmres->end - mmres->start + 1);
++	if (!sport->port.membase) {
++		ret = -ENOMEM;
++		goto err_clk;
++	}
++
++	serial_pxa_ports[dev->id] = sport;
++
++	uart_add_one_port(&serial_pxa_reg, &sport->port);
++	platform_set_drvdata(dev, sport);
++
+ 	return 0;
++
++ err_clk:
++	clk_put(sport->clk);
++ err_free:
++	kfree(sport);
++	return ret;
+ }
+ 
+ static int serial_pxa_remove(struct platform_device *dev)
+@@ -840,8 +840,9 @@
+ 
+ 	platform_set_drvdata(dev, NULL);
+ 
+-	if (sport)
+-		uart_remove_one_port(&serial_pxa_reg, &sport->port);
++	uart_remove_one_port(&serial_pxa_reg, &sport->port);
++	clk_put(sport->clk);
++	kfree(sport);
+ 
+ 	return 0;
+ }
+--- linux-2.6.23.orig/drivers/serial/serial_core.c
++++ linux-2.6.23/drivers/serial/serial_core.c
+@@ -2128,6 +2128,14 @@
+ 		spin_unlock_irqrestore(&port->lock, flags);
+ 
+ 		/*
++		 * If this driver supports console, and it hasn't been
++		 * successfully registered yet, try to re-register it.
++		 * It may be that the port was not available.
++		 */
++		if (port->cons && !(port->cons->flags & CON_ENABLED))
++			register_console(port->cons);
++
++		/*
+ 		 * Power down all ports by default, except the
+ 		 * console if we have one.
+ 		 */
+@@ -2288,6 +2296,7 @@
+ 	}
+ 
+ 	state->port = port;
++	state->pm_state = -1;
+ 
+ 	port->cons = drv->cons;
+ 	port->info = state->info;
+@@ -2310,15 +2319,6 @@
+ 	tty_register_device(drv->tty_driver, port->line, port->dev);
+ 
+ 	/*
+-	 * If this driver supports console, and it hasn't been
+-	 * successfully registered yet, try to re-register it.
+-	 * It may be that the port was not available.
+-	 */
+-	if (port->type != PORT_UNKNOWN &&
+-	    port->cons && !(port->cons->flags & CON_ENABLED))
+-		register_console(port->cons);
+-
+-	/*
+ 	 * Ensure UPF_DEAD is not set.
+ 	 */
+ 	port->flags &= ~UPF_DEAD;
+--- linux-2.6.23.orig/drivers/usb/gadget/pxa2xx_udc.c
++++ linux-2.6.23/drivers/usb/gadget/pxa2xx_udc.c
+@@ -43,6 +43,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/irq.h>
++#include <linux/clk.h>
++#include <linux/err.h>
+ 
+ #include <asm/byteorder.h>
+ #include <asm/dma.h>
+@@ -1157,7 +1159,7 @@
+ 
+ #ifdef	CONFIG_ARCH_PXA
+         /* Disable clock for USB device */
+-	pxa_set_cken(CKEN_USB, 0);
++	clk_disable(dev->clk);
+ #endif
+ 
+ 	ep0_idle (dev);
+@@ -1202,8 +1204,7 @@
+ 
+ #ifdef	CONFIG_ARCH_PXA
+         /* Enable clock for USB device */
+-	pxa_set_cken(CKEN_USB, 1);
+-	udelay(5);
++	clk_enable(dev->clk);
+ #endif
+ 
+ 	/* try to clear these bits before we enable the udc */
+@@ -2137,6 +2138,14 @@
+ 	if (irq < 0)
+ 		return -ENODEV;
+ 
++#ifdef	CONFIG_ARCH_PXA
++	dev->clk = clk_get(&pdev->dev, "UDCCLK");
++	if (IS_ERR(dev->clk)) {
++		retval = PTR_ERR(dev->clk);
++		goto err_clk;
++	}
++#endif
++
+ 	pr_debug("%s: IRQ %d%s%s\n", driver_name, irq,
+ 		dev->has_cfr ? "" : " (!cfr)",
+ 		SIZE_STR "(pio)"
+@@ -2152,11 +2161,10 @@
+ 			dev_dbg(&pdev->dev,
+ 				"can't get vbus gpio %d, err: %d\n",
+ 				dev->mach->gpio_vbus, retval);
+-			return -EBUSY;
++			goto err_gpio_vbus;
+ 		}
+ 		gpio_direction_input(dev->mach->gpio_vbus);
+ 		vbus_irq = gpio_to_irq(dev->mach->gpio_vbus);
+-		set_irq_type(vbus_irq, IRQT_BOTHEDGE);
+ 	} else
+ 		vbus_irq = 0;
+ 
+@@ -2166,9 +2174,7 @@
+ 			dev_dbg(&pdev->dev,
+ 				"can't get pullup gpio %d, err: %d\n",
+ 				dev->mach->gpio_pullup, retval);
+-			if (dev->mach->gpio_vbus)
+-				gpio_free(dev->mach->gpio_vbus);
+-			return -EBUSY;
++			goto err_gpio_pullup;
+ 		}
+ 		gpio_direction_output(dev->mach->gpio_pullup, 0);
+ 	}
+@@ -2195,11 +2201,7 @@
+ 	if (retval != 0) {
+ 		printk(KERN_ERR "%s: can't get irq %d, err %d\n",
+ 			driver_name, irq, retval);
+-		if (dev->mach->gpio_pullup)
+-			gpio_free(dev->mach->gpio_pullup);
+-		if (dev->mach->gpio_vbus)
+-			gpio_free(dev->mach->gpio_vbus);
+-		return -EBUSY;
++		goto err_irq1;
+ 	}
+ 	dev->got_irq = 1;
+ 
+@@ -2213,12 +2215,7 @@
+ 			printk(KERN_ERR "%s: can't get irq %i, err %d\n",
+ 				driver_name, LUBBOCK_USB_DISC_IRQ, retval);
+ lubbock_fail0:
+-			free_irq(irq, dev);
+-			if (dev->mach->gpio_pullup)
+-				gpio_free(dev->mach->gpio_pullup);
+-			if (dev->mach->gpio_vbus)
+-				gpio_free(dev->mach->gpio_vbus);
+-			return -EBUSY;
++			goto err_irq_lub;
+ 		}
+ 		retval = request_irq(LUBBOCK_USB_IRQ,
+ 				lubbock_vbus_irq,
+@@ -2234,22 +2231,37 @@
+ #endif
+ 	if (vbus_irq) {
+ 		retval = request_irq(vbus_irq, udc_vbus_irq,
+-				IRQF_DISABLED | IRQF_SAMPLE_RANDOM,
++				IRQF_DISABLED | IRQF_SAMPLE_RANDOM |
++				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+ 				driver_name, dev);
+ 		if (retval != 0) {
+ 			printk(KERN_ERR "%s: can't get irq %i, err %d\n",
+ 				driver_name, vbus_irq, retval);
+-			free_irq(irq, dev);
+-			if (dev->mach->gpio_pullup)
+-				gpio_free(dev->mach->gpio_pullup);
+-			if (dev->mach->gpio_vbus)
+-				gpio_free(dev->mach->gpio_vbus);
+-			return -EBUSY;
++			goto err_vbus_irq;
+ 		}
+ 	}
+ 	create_proc_files();
+ 
+ 	return 0;
++
++ err_vbus_irq:
++#ifdef	CONFIG_ARCH_LUBBOCK
++	free_irq(LUBBOCK_USB_DISC_IRQ, dev);
++ err_irq_lub:
++#endif
++	free_irq(irq, dev);
++ err_irq1:
++	if (dev->mach->gpio_pullup)
++		gpio_free(dev->mach->gpio_pullup);
++ err_gpio_pullup:
++	if (dev->mach->gpio_vbus)
++		gpio_free(dev->mach->gpio_vbus);
++ err_gpio_vbus:
++#ifdef	CONFIG_ARCH_PXA
++	clk_put(dev->clk);
++ err_clk:
++#endif
++	return retval;
+ }
+ 
+ static void pxa2xx_udc_shutdown(struct platform_device *_dev)
+@@ -2284,6 +2296,10 @@
+ 	if (dev->mach->gpio_pullup)
+ 		gpio_free(dev->mach->gpio_pullup);
+ 
++#ifdef	CONFIG_ARCH_PXA
++	clk_put(dev->clk);
++#endif
++
+ 	platform_set_drvdata(pdev, NULL);
+ 	the_controller = NULL;
+ 	return 0;
+--- linux-2.6.23.orig/drivers/usb/gadget/pxa2xx_udc.h
++++ linux-2.6.23/drivers/usb/gadget/pxa2xx_udc.h
+@@ -125,6 +125,7 @@
+ 	struct timer_list			timer;
+ 
+ 	struct device				*dev;
++	struct clk				*clk;
+ 	struct pxa2xx_udc_mach_info		*mach;
+ 	u64					dma_mask;
+ 	struct pxa2xx_ep			ep [PXA_UDC_NUM_ENDPOINTS];
+--- linux-2.6.23.orig/drivers/video/pxafb.c
++++ linux-2.6.23/drivers/video/pxafb.c
+@@ -37,6 +37,8 @@
+ #include <linux/cpufreq.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
++#include <linux/clk.h>
++#include <linux/err.h>
+ 
+ #include <asm/hardware.h>
+ #include <asm/io.h>
+@@ -574,15 +576,15 @@
+  *
+  * Factoring the 10^4 and 10^-12 out gives 10^-8 == 1 / 100000000 as used below.
+  */
+-static inline unsigned int get_pcd(unsigned int pixclock)
++static inline unsigned int get_pcd(struct pxafb_info *fbi, unsigned int pixclock)
+ {
+ 	unsigned long long pcd;
+ 
+ 	/* FIXME: Need to take into account Double Pixel Clock mode
+-         * (DPC) bit? or perhaps set it based on the various clock
+-         * speeds */
+-
+-	pcd = (unsigned long long)get_lcdclk_frequency_10khz() * pixclock;
++	 * (DPC) bit? or perhaps set it based on the various clock
++	 * speeds */
++	pcd = (unsigned long long)(clk_get_rate(fbi->clk) / 10000);
++	pcd *= pixclock;
+ 	do_div(pcd, 100000000 * 2);
+ 	/* no need for this, since we should subtract 1 anyway. they cancel */
+ 	/* pcd += 1; */ /* make up for integer math truncations */
+@@ -591,19 +593,21 @@
+ 
+ /*
+  * Some touchscreens need hsync information from the video driver to
+- * function correctly. We export it here.
++ * function correctly. We export it here.  Note that 'hsync_time' and
++ * the value returned from pxafb_get_hsync_time() is the *reciprocal*
++ * of the hsync period in seconds.
+  */
+ static inline void set_hsync_time(struct pxafb_info *fbi, unsigned int pcd)
+ {
+-	unsigned long long htime;
++	unsigned long htime;
+ 
+ 	if ((pcd == 0) || (fbi->fb.var.hsync_len == 0)) {
+ 		fbi->hsync_time=0;
+ 		return;
+ 	}
+ 
+-	htime = (unsigned long long)get_lcdclk_frequency_10khz() * 10000;
+-	do_div(htime, pcd * fbi->fb.var.hsync_len);
++	htime = clk_get_rate(fbi->clk) / (pcd * fbi->fb.var.hsync_len);
++
+ 	fbi->hsync_time = htime;
+ }
+ 
+@@ -628,7 +632,7 @@
+ {
+ 	struct pxafb_lcd_reg new_regs;
+ 	u_long flags;
+-	u_int lines_per_panel, pcd = get_pcd(var->pixclock);
++	u_int lines_per_panel, pcd = get_pcd(fbi, var->pixclock);
+ 
+ 	pr_debug("pxafb: Configuring PXA LCD\n");
+ 
+@@ -908,7 +912,7 @@
+ 	pr_debug("reg_lccr3 0x%08x\n", (unsigned int) fbi->reg_lccr3);
+ 
+ 	/* enable LCD controller clock */
+-	pxa_set_cken(CKEN_LCD, 1);
++	clk_enable(fbi->clk);
+ 
+ 	down(&fcs_lcd_sem);
+ 	/* Sequence from 11.7.10 */
+@@ -950,7 +954,7 @@
+ 	up(&fcs_lcd_sem);
+ 
+ 	/* disable LCD controller clock */
+-	pxa_set_cken(CKEN_LCD, 0);
++	clk_disable(fbi->clk);
+ }
+ 
+ /*
+@@ -1161,7 +1165,7 @@
+ 		if ((clkinfo->old == 13000))
+ 			break;
+ 
+-		pcd = get_pcd(fbi->fb.var.pixclock);
++		pcd = get_pcd(fbi, fbi->fb.var.pixclock);
+ 		lccr3 = fbi->reg_lccr3;
+ 		set_hsync_time(fbi, pcd);
+ 		fbi->reg_lccr3 = (fbi->reg_lccr3 & ~0xff) | LCCR3_PixClkDiv(pcd);
+@@ -1293,6 +1297,12 @@
+ 	memset(fbi, 0, sizeof(struct pxafb_info));
+ 	fbi->dev = dev;
+ 
++	fbi->clk = clk_get(dev, "LCDCLK");
++	if (IS_ERR(fbi->clk)) {
++		kfree(fbi);
++		return NULL;
++	}
++
+ 	strcpy(fbi->fb.fix.id, PXA_NAME);
+ 
+ 	fbi->fb.fix.type	= FB_TYPE_PACKED_PIXELS;
+--- linux-2.6.23.orig/drivers/video/pxafb.h
++++ linux-2.6.23/drivers/video/pxafb.h
+@@ -94,6 +94,7 @@
+ struct pxafb_info {
+ 	struct fb_info		fb;
+ 	struct device		*dev;
++	struct clk		*clk;
+ 
+ 	/*
+ 	 * These are the addresses we mapped
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/hardware.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/hardware.h
+@@ -80,6 +80,24 @@
+ 		_id == 0x411;				\
+ 	})
+ 
++#define __cpu_is_pxa300(id)				\
++	({						\
++		unsigned int _id = (id) >> 4 & 0xfff;	\
++		_id == 0x688;				\
++	 })
++
++#define __cpu_is_pxa310(id)				\
++	({						\
++		unsigned int _id = (id) >> 4 & 0xfff;	\
++		_id == 0x689;				\
++	 })
++
++#define __cpu_is_pxa320(id)				\
++	({						\
++		unsigned int _id = (id) >> 4 & 0xfff;	\
++		_id == 0x603 || _id == 0x682;		\
++	 })
++
+ #define cpu_is_pxa21x()					\
+ 	({						\
+ 		unsigned int id = read_cpuid(CPUID_ID);	\
+@@ -98,6 +116,53 @@
+ 		__cpu_is_pxa27x(id);			\
+ 	})
+ 
++#define cpu_is_pxa300()					\
++	({						\
++		unsigned int id = read_cpuid(CPUID_ID);	\
++		__cpu_is_pxa300(id);			\
++	 })
++
++#define cpu_is_pxa310()					\
++	({						\
++		unsigned int id = read_cpuid(CPUID_ID);	\
++		__cpu_is_pxa310(id);			\
++	 })
++
++#define cpu_is_pxa320()					\
++	({						\
++		unsigned int id = read_cpuid(CPUID_ID);	\
++		__cpu_is_pxa320(id);			\
++	 })
++
++/*
++ * CPUID Core Generation Bit
++ * <= 0x2 for pxa21x/pxa25x/pxa26x/pxa27x
++ * == 0x3 for pxa300/pxa310/pxa320
++ */
++#define __cpu_is_pxa2xx(id)				\
++	({						\
++		unsigned int _id = (id) >> 13 & 0x7;	\
++		_id <= 0x2;				\
++	 })
++
++#define __cpu_is_pxa3xx(id)				\
++	({						\
++		unsigned int _id = (id) >> 13 & 0x7;	\
++		_id == 0x3;				\
++	 })
++
++#define cpu_is_pxa2xx()					\
++	({						\
++		unsigned int id = read_cpuid(CPUID_ID);	\
++		__cpu_is_pxa2xx(id);			\
++	 })
++
++#define cpu_is_pxa3xx()					\
++	({						\
++		unsigned int id = read_cpuid(CPUID_ID);	\
++		__cpu_is_pxa3xx(id);			\
++	 })
++
+ /*
+  * Handy routine to set GPIO alternate functions
+  */
+@@ -116,13 +181,16 @@
+ /*
+  * Routine to enable or disable CKEN
+  */
+-extern void pxa_set_cken(int clock, int enable);
++static inline void __deprecated pxa_set_cken(int clock, int enable)
++{
++	extern void __pxa_set_cken(int clock, int enable);
++	__pxa_set_cken(clock, enable);
++}
+ 
+ /*
+  * return current memory and LCD clock frequency in units of 10kHz
+  */
+ extern unsigned int get_memclk_frequency_10khz(void);
+-extern unsigned int get_lcdclk_frequency_10khz(void);
+ 
+ #endif
+ 
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/irqs.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/irqs.h
+@@ -66,12 +66,6 @@
+ #define IRQ_TO_GPIO_2_x(i)	((i) - PXA_GPIO_IRQ_BASE)
+ #define IRQ_TO_GPIO(i)	(((i) < IRQ_GPIO(2)) ? ((i) - IRQ_GPIO0) : IRQ_TO_GPIO_2_x(i))
+ 
+-#if defined(CONFIG_PXA25x)
+-#define PXA_LAST_GPIO	84
+-#elif defined(CONFIG_PXA27x)
+-#define PXA_LAST_GPIO	127
+-#endif
+-
+ /*
+  * The next 16 interrupts are for board specific purposes.  Since
+  * the kernel can only run on one machine at a time, we can re-use
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/mfp-pxa300.h
+@@ -0,0 +1,574 @@
++/*
++ * linux/include/asm-arm/arch-pxa/mfp-pxa300.h
++ *
++ * PXA300/PXA310 specific MFP configuration definitions
++ *
++ * Copyright (C) 2007 Marvell International Ltd.
++ * 2007-08-21: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++
++#ifndef __ASM_ARCH_MFP_PXA300_H
++#define __ASM_ARCH_MFP_PXA300_H
++
++#include <asm/arch/mfp.h>
++
++/* GPIO */
++#define GPIO46_GPIO		MFP_CFG(GPIO46, AF1)
++#define GPIO49_GPIO		MFP_CFG(GPIO49, AF3)
++#define GPIO50_GPIO		MFP_CFG(GPIO50, AF2)
++#define GPIO51_GPIO		MFP_CFG(GPIO51, AF3)
++#define GPIO52_GPIO		MFP_CFG(GPIO52, AF3)
++#define GPIO56_GPIO		MFP_CFG(GPIO56, AF0)
++#define GPIO58_GPIO		MFP_CFG(GPIO58, AF0)
++#define GPIO59_GPIO		MFP_CFG(GPIO59, AF0)
++#define GPIO60_GPIO		MFP_CFG(GPIO60, AF0)
++#define GPIO61_GPIO		MFP_CFG(GPIO61, AF0)
++#define GPIO62_GPIO		MFP_CFG(GPIO62, AF0)
++
++#ifdef CONFIG_CPU_PXA310
++#define GPIO7_2_GPIO		MFP_CFG(GPIO7_2, AF0)
++#define GPIO8_2_GPIO		MFP_CFG(GPIO8_2, AF0)
++#define GPIO9_2_GPIO		MFP_CFG(GPIO9_2, AF0)
++#define GPIO10_2_GPIO		MFP_CFG(GPIO10_2, AF0)
++#define GPIO11_2_GPIO		MFP_CFG(GPIO11_2, AF0)
++#define GPIO12_2_GPIO		MFP_CFG(GPIO12_2, AF0)
++#endif
++
++/* Chip Select */
++#define GPIO2_nCS3		MFP_CFG(GPIO2,  AF1)
++
++/* AC97 */
++#define GPIO23_AC97_nACRESET	MFP_CFG(GPIO23, AF1)
++#define GPIO24_AC97_SYSCLK	MFP_CFG(GPIO24, AF1)
++#define GPIO29_AC97_BITCLK	MFP_CFG(GPIO29, AF1)
++#define GPIO25_AC97_SDATA_IN_0	MFP_CFG(GPIO25, AF1)
++#define GPIO26_AC97_SDATA_IN_1	MFP_CFG(GPIO26, AF1)
++#define GPIO17_AC97_SDATA_IN_2	MFP_CFG(GPIO17, AF3)
++#define GPIO21_AC97_SDATA_IN_2	MFP_CFG(GPIO21, AF2)
++#define GPIO18_AC97_SDATA_IN_3	MFP_CFG(GPIO18, AF3)
++#define GPIO22_AC97_SDATA_IN_3	MFP_CFG(GPIO22, AF2)
++#define GPIO27_AC97_SDATA_OUT	MFP_CFG(GPIO27, AF1)
++#define GPIO28_AC97_SYNC	MFP_CFG(GPIO28, AF1)
++
++/* I2C */
++#define GPIO21_I2C_SCL		MFP_CFG_LPM(GPIO21, AF1, PULL_HIGH)
++#define GPIO22_I2C_SDA		MFP_CFG_LPM(GPIO22, AF1, PULL_HIGH)
++
++/* QCI */
++#define GPIO39_CI_DD_0		MFP_CFG_DRV(GPIO39, AF1, DS04X)
++#define GPIO40_CI_DD_1		MFP_CFG_DRV(GPIO40, AF1, DS04X)
++#define GPIO41_CI_DD_2		MFP_CFG_DRV(GPIO41, AF1, DS04X)
++#define GPIO42_CI_DD_3		MFP_CFG_DRV(GPIO42, AF1, DS04X)
++#define GPIO43_CI_DD_4		MFP_CFG_DRV(GPIO43, AF1, DS04X)
++#define GPIO44_CI_DD_5		MFP_CFG_DRV(GPIO44, AF1, DS04X)
++#define GPIO45_CI_DD_6		MFP_CFG_DRV(GPIO45, AF1, DS04X)
++#define GPIO46_CI_DD_7		MFP_CFG_DRV(GPIO46, AF0, DS04X)
++#define GPIO47_CI_DD_8		MFP_CFG_DRV(GPIO47, AF1, DS04X)
++#define GPIO48_CI_DD_9		MFP_CFG_DRV(GPIO48, AF1, DS04X)
++#define GPIO52_CI_HSYNC		MFP_CFG_DRV(GPIO52, AF0, DS04X)
++#define GPIO51_CI_VSYNC		MFP_CFG_DRV(GPIO51, AF0, DS04X)
++#define GPIO49_CI_MCLK		MFP_CFG_DRV(GPIO49, AF0, DS04X)
++#define GPIO50_CI_PCLK		MFP_CFG_DRV(GPIO50, AF0, DS04X)
++
++/* KEYPAD */
++#define GPIO3_KP_DKIN_6		MFP_CFG_LPM(GPIO3,   AF2, FLOAT)
++#define GPIO4_KP_DKIN_7		MFP_CFG_LPM(GPIO4,   AF2, FLOAT)
++#define GPIO16_KP_DKIN_6	MFP_CFG_LPM(GPIO16,  AF6, FLOAT)
++#define GPIO83_KP_DKIN_2	MFP_CFG_LPM(GPIO83,  AF5, FLOAT)
++#define GPIO84_KP_DKIN_1	MFP_CFG_LPM(GPIO84,  AF5, FLOAT)
++#define GPIO85_KP_DKIN_0	MFP_CFG_LPM(GPIO85,  AF3, FLOAT)
++#define GPIO86_KP_DKIN_1	MFP_CFG_LPM(GPIO86,  AF3, FLOAT)
++#define GPIO87_KP_DKIN_2	MFP_CFG_LPM(GPIO87,  AF3, FLOAT)
++#define GPIO88_KP_DKIN_3	MFP_CFG_LPM(GPIO88,  AF3, FLOAT)
++#define GPIO89_KP_DKIN_3	MFP_CFG_LPM(GPIO89,  AF3, FLOAT)
++#define GPIO107_KP_DKIN_0	MFP_CFG_LPM(GPIO107, AF2, FLOAT)
++#define GPIO108_KP_DKIN_1	MFP_CFG_LPM(GPIO108, AF2, FLOAT)
++#define GPIO109_KP_DKIN_2	MFP_CFG_LPM(GPIO109, AF2, FLOAT)
++#define GPIO110_KP_DKIN_3	MFP_CFG_LPM(GPIO110, AF2, FLOAT)
++#define GPIO111_KP_DKIN_4	MFP_CFG_LPM(GPIO111, AF2, FLOAT)
++#define GPIO112_KP_DKIN_5	MFP_CFG_LPM(GPIO112, AF2, FLOAT)
++#define GPIO113_KP_DKIN_6	MFP_CFG_LPM(GPIO113, AF2, FLOAT)
++#define GPIO114_KP_DKIN_7	MFP_CFG_LPM(GPIO114, AF2, FLOAT)
++#define GPIO115_KP_DKIN_0	MFP_CFG_LPM(GPIO115, AF2, FLOAT)
++#define GPIO116_KP_DKIN_1	MFP_CFG_LPM(GPIO116, AF2, FLOAT)
++#define GPIO117_KP_DKIN_2	MFP_CFG_LPM(GPIO117, AF2, FLOAT)
++#define GPIO118_KP_DKIN_3	MFP_CFG_LPM(GPIO118, AF2, FLOAT)
++#define GPIO119_KP_DKIN_4	MFP_CFG_LPM(GPIO119, AF2, FLOAT)
++#define GPIO120_KP_DKIN_5	MFP_CFG_LPM(GPIO120, AF2, FLOAT)
++#define GPIO121_KP_DKIN_6	MFP_CFG_LPM(GPIO121, AF2, FLOAT)
++#define GPIO122_KP_DKIN_5	MFP_CFG_LPM(GPIO122, AF2, FLOAT)
++#define GPIO123_KP_DKIN_4	MFP_CFG_LPM(GPIO123, AF2, FLOAT)
++#define GPIO124_KP_DKIN_3	MFP_CFG_LPM(GPIO124, AF2, FLOAT)
++#define GPIO127_KP_DKIN_0	MFP_CFG_LPM(GPIO127, AF5, FLOAT)
++#define GPIO0_2_KP_DKIN_0	MFP_CFG_LPM(GPIO0_2, AF2, FLOAT)
++#define GPIO1_2_KP_DKIN_1	MFP_CFG_LPM(GPIO1_2, AF2, FLOAT)
++#define GPIO2_2_KP_DKIN_6	MFP_CFG_LPM(GPIO2_2, AF2, FLOAT)
++#define GPIO3_2_KP_DKIN_7	MFP_CFG_LPM(GPIO3_2, AF2, FLOAT)
++#define GPIO4_2_KP_DKIN_1	MFP_CFG_LPM(GPIO4_2, AF2, FLOAT)
++#define GPIO5_2_KP_DKIN_0	MFP_CFG_LPM(GPIO5_2, AF2, FLOAT)
++
++#define GPIO5_KP_MKIN_0		MFP_CFG_LPM(GPIO5,   AF2, FLOAT)
++#define GPIO6_KP_MKIN_1		MFP_CFG_LPM(GPIO6,   AF2, FLOAT)
++#define GPIO9_KP_MKIN_6		MFP_CFG_LPM(GPIO9,   AF3, FLOAT)
++#define GPIO10_KP_MKIN_7	MFP_CFG_LPM(GPIO10,  AF3, FLOAT)
++#define GPIO70_KP_MKIN_6	MFP_CFG_LPM(GPIO70,  AF3, FLOAT)
++#define GPIO71_KP_MKIN_7	MFP_CFG_LPM(GPIO71,  AF3, FLOAT)
++#define GPIO100_KP_MKIN_6	MFP_CFG_LPM(GPIO100, AF7, FLOAT)
++#define GPIO101_KP_MKIN_7	MFP_CFG_LPM(GPIO101, AF7, FLOAT)
++#define GPIO112_KP_MKIN_6	MFP_CFG_LPM(GPIO112, AF4, FLOAT)
++#define GPIO113_KP_MKIN_7	MFP_CFG_LPM(GPIO113, AF4, FLOAT)
++#define GPIO115_KP_MKIN_0	MFP_CFG_LPM(GPIO115, AF1, FLOAT)
++#define GPIO116_KP_MKIN_1	MFP_CFG_LPM(GPIO116, AF1, FLOAT)
++#define GPIO117_KP_MKIN_2	MFP_CFG_LPM(GPIO117, AF1, FLOAT)
++#define GPIO118_KP_MKIN_3	MFP_CFG_LPM(GPIO118, AF1, FLOAT)
++#define GPIO119_KP_MKIN_4	MFP_CFG_LPM(GPIO119, AF1, FLOAT)
++#define GPIO120_KP_MKIN_5	MFP_CFG_LPM(GPIO120, AF1, FLOAT)
++#define GPIO125_KP_MKIN_2	MFP_CFG_LPM(GPIO125, AF2, FLOAT)
++#define GPIO2_2_KP_MKIN_6	MFP_CFG_LPM(GPIO2_2, AF1, FLOAT)
++#define GPIO3_2_KP_MKIN_7	MFP_CFG_LPM(GPIO3_2, AF1, FLOAT)
++
++#define GPIO7_KP_MKOUT_5	MFP_CFG_LPM(GPIO7,   AF1, DRIVE_HIGH)
++#define GPIO11_KP_MKOUT_5	MFP_CFG_LPM(GPIO11,  AF3, DRIVE_HIGH)
++#define GPIO12_KP_MKOUT_6	MFP_CFG_LPM(GPIO12,  AF3, DRIVE_HIGH)
++#define GPIO13_KP_MKOUT_7	MFP_CFG_LPM(GPIO13,  AF3, DRIVE_HIGH)
++#define GPIO19_KP_MKOUT_4	MFP_CFG_LPM(GPIO19,  AF3, DRIVE_HIGH)
++#define GPIO20_KP_MKOUT_5	MFP_CFG_LPM(GPIO20,  AF3, DRIVE_HIGH)
++#define GPIO38_KP_MKOUT_5	MFP_CFG_LPM(GPIO38,  AF5, DRIVE_HIGH)
++#define GPIO53_KP_MKOUT_6	MFP_CFG_LPM(GPIO53,  AF5, DRIVE_HIGH)
++#define GPIO78_KP_MKOUT_7	MFP_CFG_LPM(GPIO78,  AF5, DRIVE_HIGH)
++#define GPIO85_KP_MKOUT_0	MFP_CFG_LPM(GPIO85,  AF2, DRIVE_HIGH)
++#define GPIO86_KP_MKOUT_1	MFP_CFG_LPM(GPIO86,  AF2, DRIVE_HIGH)
++#define GPIO87_KP_MKOUT_2	MFP_CFG_LPM(GPIO87,  AF2, DRIVE_HIGH)
++#define GPIO88_KP_MKOUT_3	MFP_CFG_LPM(GPIO88,  AF2, DRIVE_HIGH)
++#define GPIO104_KP_MKOUT_6	MFP_CFG_LPM(GPIO104, AF5, DRIVE_HIGH)
++#define GPIO105_KP_MKOUT_7	MFP_CFG_LPM(GPIO105, AF5, DRIVE_HIGH)
++#define GPIO121_KP_MKOUT_0	MFP_CFG_LPM(GPIO121, AF1, DRIVE_HIGH)
++#define GPIO122_KP_MKOUT_1	MFP_CFG_LPM(GPIO122, AF1, DRIVE_HIGH)
++#define GPIO123_KP_MKOUT_2	MFP_CFG_LPM(GPIO123, AF1, DRIVE_HIGH)
++#define GPIO124_KP_MKOUT_3	MFP_CFG_LPM(GPIO124, AF1, DRIVE_HIGH)
++#define GPIO125_KP_MKOUT_4	MFP_CFG_LPM(GPIO125, AF1, DRIVE_HIGH)
++#define GPIO126_KP_MKOUT_7	MFP_CFG_LPM(GPIO126, AF4, DRIVE_HIGH)
++#define GPIO5_2_KP_MKOUT_6	MFP_CFG_LPM(GPIO5_2, AF1, DRIVE_HIGH)
++#define GPIO4_2_KP_MKOUT_5	MFP_CFG_LPM(GPIO4_2, AF1, DRIVE_HIGH)
++#define GPIO6_2_KP_MKOUT_7	MFP_CFG_LPM(GPIO6_2, AF1, DRIVE_HIGH)
++
++/* LCD */
++#define GPIO54_LCD_LDD_0	MFP_CFG_DRV(GPIO54, AF1, DS01X)
++#define GPIO55_LCD_LDD_1	MFP_CFG_DRV(GPIO55, AF1, DS01X)
++#define GPIO56_LCD_LDD_2	MFP_CFG_DRV(GPIO56, AF1, DS01X)
++#define GPIO57_LCD_LDD_3	MFP_CFG_DRV(GPIO57, AF1, DS01X)
++#define GPIO58_LCD_LDD_4	MFP_CFG_DRV(GPIO58, AF1, DS01X)
++#define GPIO59_LCD_LDD_5	MFP_CFG_DRV(GPIO59, AF1, DS01X)
++#define GPIO60_LCD_LDD_6	MFP_CFG_DRV(GPIO60, AF1, DS01X)
++#define GPIO61_LCD_LDD_7	MFP_CFG_DRV(GPIO61, AF1, DS01X)
++#define GPIO62_LCD_LDD_8	MFP_CFG_DRV(GPIO62, AF1, DS01X)
++#define GPIO63_LCD_LDD_9	MFP_CFG_DRV(GPIO63, AF1, DS01X)
++#define GPIO64_LCD_LDD_10	MFP_CFG_DRV(GPIO64, AF1, DS01X)
++#define GPIO65_LCD_LDD_11	MFP_CFG_DRV(GPIO65, AF1, DS01X)
++#define GPIO66_LCD_LDD_12	MFP_CFG_DRV(GPIO66, AF1, DS01X)
++#define GPIO67_LCD_LDD_13	MFP_CFG_DRV(GPIO67, AF1, DS01X)
++#define GPIO68_LCD_LDD_14	MFP_CFG_DRV(GPIO68, AF1, DS01X)
++#define GPIO69_LCD_LDD_15	MFP_CFG_DRV(GPIO69, AF1, DS01X)
++#define GPIO70_LCD_LDD_16	MFP_CFG_DRV(GPIO70, AF1, DS01X)
++#define GPIO71_LCD_LDD_17	MFP_CFG_DRV(GPIO71, AF1, DS01X)
++#define GPIO62_LCD_CS_N		MFP_CFG_DRV(GPIO62, AF2, DS01X)
++#define GPIO72_LCD_FCLK		MFP_CFG_DRV(GPIO72, AF1, DS01X)
++#define GPIO73_LCD_LCLK		MFP_CFG_DRV(GPIO73, AF1, DS01X)
++#define GPIO74_LCD_PCLK		MFP_CFG_DRV(GPIO74, AF1, DS01X)
++#define GPIO75_LCD_BIAS		MFP_CFG_DRV(GPIO75, AF1, DS01X)
++#define GPIO76_LCD_VSYNC	MFP_CFG_DRV(GPIO76, AF2, DS01X)
++
++#define GPIO15_LCD_CS_N		MFP_CFG_DRV(GPIO15,  AF2, DS01X)
++#define GPIO127_LCD_CS_N	MFP_CFG_DRV(GPIO127, AF1, DS01X)
++#define GPIO63_LCD_VSYNC	MFP_CFG_DRV(GPIO63,  AF2, DS01X)
++
++/* Mini-LCD */
++#define GPIO72_MLCD_FCLK	MFP_CFG_DRV(GPIO72, AF7, DS08X)
++#define GPIO73_MLCD_LCLK	MFP_CFG_DRV(GPIO73, AF7, DS08X)
++#define GPIO54_MLCD_LDD_0	MFP_CFG_DRV(GPIO54, AF7, DS08X)
++#define GPIO55_MLCD_LDD_1	MFP_CFG_DRV(GPIO55, AF7, DS08X)
++#define GPIO56_MLCD_LDD_2	MFP_CFG_DRV(GPIO56, AF7, DS08X)
++#define GPIO57_MLCD_LDD_3	MFP_CFG_DRV(GPIO57, AF7, DS08X)
++#define GPIO58_MLCD_LDD_4	MFP_CFG_DRV(GPIO58, AF7, DS08X)
++#define GPIO59_MLCD_LDD_5	MFP_CFG_DRV(GPIO59, AF7, DS08X)
++#define GPIO60_MLCD_LDD_6	MFP_CFG_DRV(GPIO60, AF7, DS08X)
++#define GPIO61_MLCD_LDD_7	MFP_CFG_DRV(GPIO61, AF7, DS08X)
++#define GPIO62_MLCD_LDD_8	MFP_CFG_DRV(GPIO62, AF7, DS08X)
++#define GPIO63_MLCD_LDD_9	MFP_CFG_DRV(GPIO63, AF7, DS08X)
++#define GPIO64_MLCD_LDD_10	MFP_CFG_DRV(GPIO64, AF7, DS08X)
++#define GPIO65_MLCD_LDD_11	MFP_CFG_DRV(GPIO65, AF7, DS08X)
++#define GPIO66_MLCD_LDD_12	MFP_CFG_DRV(GPIO66, AF7, DS08X)
++#define GPIO67_MLCD_LDD_13	MFP_CFG_DRV(GPIO67, AF7, DS08X)
++#define GPIO68_MLCD_LDD_14	MFP_CFG_DRV(GPIO68, AF7, DS08X)
++#define GPIO69_MLCD_LDD_15	MFP_CFG_DRV(GPIO69, AF7, DS08X)
++#define GPIO74_MLCD_PCLK	MFP_CFG_DRV(GPIO74, AF7, DS08X)
++#define GPIO75_MLCD_BIAS	MFP_CFG_DRV(GPIO75, AF2, DS08X)
++
++/* MMC1 */
++#define GPIO7_MMC1_CLK		MFP_CFG_LPM(GPIO7,  AF4, DRIVE_HIGH)
++#define GPIO8_MMC1_CMD		MFP_CFG_LPM(GPIO8,  AF4, DRIVE_HIGH)
++#define GPIO14_MMC1_CMD		MFP_CFG_LPM(GPIO14, AF5, DRIVE_HIGH)
++#define GPIO15_MMC1_CMD		MFP_CFG_LPM(GPIO15, AF5, DRIVE_HIGH)
++#define GPIO3_MMC1_DAT0		MFP_CFG_LPM(GPIO3,  AF4, DRIVE_HIGH)
++#define GPIO4_MMC1_DAT1		MFP_CFG_LPM(GPIO4,  AF4, DRIVE_HIGH)
++#define GPIO5_MMC1_DAT2		MFP_CFG_LPM(GPIO5,  AF4, DRIVE_HIGH)
++#define GPIO6_MMC1_DAT3		MFP_CFG_LPM(GPIO6,  AF4, DRIVE_HIGH)
++
++/* MMC2 */
++#define GPIO9_MMC2_DAT0		MFP_CFG_LPM(GPIO9,  AF4, PULL_HIGH)
++#define GPIO10_MMC2_DAT1	MFP_CFG_LPM(GPIO10, AF4, PULL_HIGH)
++#define GPIO11_MMC2_DAT2	MFP_CFG_LPM(GPIO11, AF4, PULL_HIGH)
++#define GPIO12_MMC2_DAT3	MFP_CFG_LPM(GPIO12, AF4, PULL_HIGH)
++#define GPIO13_MMC2_CLK		MFP_CFG_LPM(GPIO13, AF4, PULL_HIGH)
++#define GPIO14_MMC2_CMD		MFP_CFG_LPM(GPIO14, AF4, PULL_HIGH)
++#define GPIO77_MMC2_DAT0	MFP_CFG_LPM(GPIO77, AF4, PULL_HIGH)
++#define GPIO78_MMC2_DAT1	MFP_CFG_LPM(GPIO78, AF4, PULL_HIGH)
++#define GPIO79_MMC2_DAT2	MFP_CFG_LPM(GPIO79, AF4, PULL_HIGH)
++#define GPIO80_MMC2_DAT3	MFP_CFG_LPM(GPIO80, AF4, PULL_HIGH)
++#define GPIO81_MMC2_CLK		MFP_CFG_LPM(GPIO81, AF4, PULL_HIGH)
++#define GPIO82_MMC2_CMD		MFP_CFG_LPM(GPIO82, AF4, PULL_HIGH)
++
++/* SSP1 */
++#define GPIO89_SSP1_EXTCLK	MFP_CFG(GPIO89, AF1)
++#define GPIO90_SSP1_SYSCLK	MFP_CFG(GPIO90, AF1)
++#define GPIO15_SSP1_SCLK	MFP_CFG(GPIO15, AF6)
++#define GPIO16_SSP1_FRM		MFP_CFG(GPIO16, AF2)
++#define GPIO33_SSP1_SCLK	MFP_CFG(GPIO33, AF5)
++#define GPIO34_SSP1_FRM		MFP_CFG(GPIO34, AF5)
++#define GPIO85_SSP1_SCLK	MFP_CFG(GPIO85, AF1)
++#define GPIO86_SSP1_FRM		MFP_CFG(GPIO86, AF1)
++#define GPIO18_SSP1_TXD		MFP_CFG(GPIO18, AF7)
++#define GPIO18_SSP1_RXD		MFP_CFG(GPIO18, AF2)
++#define GPIO20_SSP1_TXD		MFP_CFG(GPIO20, AF2)
++#define GPIO20_SSP1_RXD		MFP_CFG(GPIO20, AF7)
++#define GPIO35_SSP1_TXD		MFP_CFG(GPIO35, AF5)
++#define GPIO35_SSP1_RXD		MFP_CFG(GPIO35, AF4)
++#define GPIO36_SSP1_TXD		MFP_CFG(GPIO36, AF5)
++#define GPIO36_SSP1_RXD		MFP_CFG(GPIO36, AF6)
++#define GPIO87_SSP1_TXD		MFP_CFG(GPIO87, AF1)
++#define GPIO87_SSP1_RXD		MFP_CFG(GPIO87, AF6)
++#define GPIO88_SSP1_TXD		MFP_CFG(GPIO88, AF6)
++#define GPIO88_SSP1_RXD		MFP_CFG(GPIO88, AF1)
++
++/* SSP2 */
++#define GPIO29_SSP2_EXTCLK	MFP_CFG(GPIO29, AF2)
++#define GPIO23_SSP2_SCLK	MFP_CFG(GPIO23, AF2)
++#define GPIO17_SSP2_FRM		MFP_CFG(GPIO17, AF2)
++#define GPIO25_SSP2_SCLK	MFP_CFG(GPIO25, AF2)
++#define GPIO26_SSP2_FRM		MFP_CFG(GPIO26, AF2)
++#define GPIO33_SSP2_SCLK	MFP_CFG(GPIO33, AF6)
++#define GPIO34_SSP2_FRM		MFP_CFG(GPIO34, AF6)
++#define GPIO64_SSP2_SCLK	MFP_CFG(GPIO64, AF2)
++#define GPIO65_SSP2_FRM		MFP_CFG(GPIO65, AF2)
++#define GPIO19_SSP2_TXD		MFP_CFG(GPIO19, AF2)
++#define GPIO19_SSP2_RXD		MFP_CFG(GPIO19, AF7)
++#define GPIO24_SSP2_TXD		MFP_CFG(GPIO24, AF5)
++#define GPIO24_SSP2_RXD		MFP_CFG(GPIO24, AF4)
++#define GPIO27_SSP2_TXD		MFP_CFG(GPIO27, AF2)
++#define GPIO27_SSP2_RXD		MFP_CFG(GPIO27, AF5)
++#define GPIO28_SSP2_TXD		MFP_CFG(GPIO28, AF5)
++#define GPIO28_SSP2_RXD		MFP_CFG(GPIO28, AF2)
++#define GPIO35_SSP2_TXD		MFP_CFG(GPIO35, AF7)
++#define GPIO35_SSP2_RXD		MFP_CFG(GPIO35, AF6)
++#define GPIO66_SSP2_TXD		MFP_CFG(GPIO66, AF4)
++#define GPIO66_SSP2_RXD		MFP_CFG(GPIO66, AF2)
++#define GPIO67_SSP2_TXD		MFP_CFG(GPIO67, AF2)
++#define GPIO67_SSP2_RXD		MFP_CFG(GPIO67, AF4)
++#define GPIO36_SSP2_TXD		MFP_CFG(GPIO36, AF7)
++
++/* SSP3 */
++#define GPIO69_SSP3_FRM		MFP_CFG_X(GPIO69, AF2, DS08X, DRIVE_LOW)
++#define GPIO68_SSP3_SCLK	MFP_CFG_X(GPIO68, AF2, DS08X, FLOAT)
++#define GPIO92_SSP3_FRM		MFP_CFG_X(GPIO92, AF1, DS08X, DRIVE_LOW)
++#define GPIO91_SSP3_SCLK	MFP_CFG_X(GPIO91, AF1, DS08X, FLOAT)
++#define GPIO70_SSP3_TXD		MFP_CFG_X(GPIO70, AF2, DS08X, DRIVE_LOW)
++#define GPIO70_SSP3_RXD		MFP_CFG_X(GPIO70, AF5, DS08X, FLOAT)
++#define GPIO71_SSP3_TXD		MFP_CFG_X(GPIO71, AF5, DS08X, DRIVE_LOW)
++#define GPIO71_SSP3_RXD		MFP_CFG_X(GPIO71, AF2, DS08X, FLOAT)
++#define GPIO93_SSP3_TXD		MFP_CFG_X(GPIO93, AF1, DS08X, DRIVE_LOW)
++#define GPIO93_SSP3_RXD		MFP_CFG_X(GPIO93, AF5, DS08X, FLOAT)
++#define GPIO94_SSP3_TXD		MFP_CFG_X(GPIO94, AF5, DS08X, DRIVE_LOW)
++#define GPIO94_SSP3_RXD		MFP_CFG_X(GPIO94, AF1, DS08X, FLOAT)
++
++/* SSP4 */
++#define GPIO95_SSP4_SCLK	MFP_CFG_LPM(GPIO95, AF1, PULL_HIGH)
++#define GPIO96_SSP4_FRM		MFP_CFG_LPM(GPIO96, AF1, PULL_HIGH)
++#define GPIO97_SSP4_TXD		MFP_CFG_LPM(GPIO97, AF1, PULL_HIGH)
++#define GPIO97_SSP4_RXD		MFP_CFG_LPM(GPIO97, AF5, PULL_HIGH)
++#define GPIO98_SSP4_TXD		MFP_CFG_LPM(GPIO98, AF5, PULL_HIGH)
++#define GPIO98_SSP4_RXD		MFP_CFG_LPM(GPIO98, AF1, PULL_HIGH)
++
++/* UART1 */
++#define GPIO32_UART1_CTS	MFP_CFG_LPM(GPIO32,  AF2, FLOAT)
++#define GPIO37_UART1_CTS	MFP_CFG_LPM(GPIO37,  AF4, FLOAT)
++#define GPIO79_UART1_CTS	MFP_CFG_LPM(GPIO79,  AF1, FLOAT)
++#define GPIO84_UART1_CTS	MFP_CFG_LPM(GPIO84,  AF3, FLOAT)
++#define GPIO101_UART1_CTS	MFP_CFG_LPM(GPIO101, AF1, FLOAT)
++#define GPIO106_UART1_CTS	MFP_CFG_LPM(GPIO106, AF6, FLOAT)
++
++#define GPIO32_UART1_RTS	MFP_CFG_LPM(GPIO32,  AF4, FLOAT)
++#define GPIO37_UART1_RTS	MFP_CFG_LPM(GPIO37,  AF2, FLOAT)
++#define GPIO79_UART1_RTS	MFP_CFG_LPM(GPIO79,  AF3, FLOAT)
++#define GPIO84_UART1_RTS	MFP_CFG_LPM(GPIO84,  AF1, FLOAT)
++#define GPIO101_UART1_RTS	MFP_CFG_LPM(GPIO101, AF6, FLOAT)
++#define GPIO106_UART1_RTS	MFP_CFG_LPM(GPIO106, AF1, FLOAT)
++
++#define GPIO34_UART1_DSR	MFP_CFG_LPM(GPIO34,  AF2, FLOAT)
++#define GPIO36_UART1_DSR	MFP_CFG_LPM(GPIO36,  AF4, FLOAT)
++#define GPIO81_UART1_DSR	MFP_CFG_LPM(GPIO81,  AF1, FLOAT)
++#define GPIO83_UART1_DSR	MFP_CFG_LPM(GPIO83,  AF3, FLOAT)
++#define GPIO103_UART1_DSR	MFP_CFG_LPM(GPIO103, AF1, FLOAT)
++#define GPIO105_UART1_DSR	MFP_CFG_LPM(GPIO105, AF6, FLOAT)
++
++#define GPIO34_UART1_DTR	MFP_CFG_LPM(GPIO34,  AF4, FLOAT)
++#define GPIO36_UART1_DTR	MFP_CFG_LPM(GPIO36,  AF2, FLOAT)
++#define GPIO81_UART1_DTR	MFP_CFG_LPM(GPIO81,  AF3, FLOAT)
++#define GPIO83_UART1_DTR	MFP_CFG_LPM(GPIO83,  AF1, FLOAT)
++#define GPIO103_UART1_DTR	MFP_CFG_LPM(GPIO103, AF6, FLOAT)
++#define GPIO105_UART1_DTR	MFP_CFG_LPM(GPIO105, AF1, FLOAT)
++
++#define GPIO35_UART1_RI		MFP_CFG_LPM(GPIO35,  AF2, FLOAT)
++#define GPIO82_UART1_RI		MFP_CFG_LPM(GPIO82,  AF1, FLOAT)
++#define GPIO104_UART1_RI	MFP_CFG_LPM(GPIO104, AF1, FLOAT)
++
++#define GPIO33_UART1_DCD	MFP_CFG_LPM(GPIO33,  AF2, FLOAT)
++#define GPIO80_UART1_DCD	MFP_CFG_LPM(GPIO80,  AF1, FLOAT)
++#define GPIO102_UART1_DCD	MFP_CFG_LPM(GPIO102, AF1, FLOAT)
++
++#define GPIO30_UART1_RXD	MFP_CFG_LPM(GPIO30,  AF2, FLOAT)
++#define GPIO31_UART1_RXD	MFP_CFG_LPM(GPIO31,  AF4, FLOAT)
++#define GPIO77_UART1_RXD	MFP_CFG_LPM(GPIO77,  AF1, FLOAT)
++#define GPIO78_UART1_RXD	MFP_CFG_LPM(GPIO78,  AF3, FLOAT)
++#define GPIO99_UART1_RXD	MFP_CFG_LPM(GPIO99,  AF1, FLOAT)
++#define GPIO100_UART1_RXD	MFP_CFG_LPM(GPIO100, AF6, FLOAT)
++#define GPIO102_UART1_RXD	MFP_CFG_LPM(GPIO102, AF6, FLOAT)
++#define GPIO104_UART1_RXD	MFP_CFG_LPM(GPIO104, AF4, FLOAT)
++
++#define GPIO30_UART1_TXD	MFP_CFG_LPM(GPIO30,  AF4, FLOAT)
++#define GPIO31_UART1_TXD	MFP_CFG_LPM(GPIO31,  AF2, FLOAT)
++#define GPIO77_UART1_TXD	MFP_CFG_LPM(GPIO77,  AF3, FLOAT)
++#define GPIO78_UART1_TXD	MFP_CFG_LPM(GPIO78,  AF1, FLOAT)
++#define GPIO99_UART1_TXD	MFP_CFG_LPM(GPIO99,  AF6, FLOAT)
++#define GPIO100_UART1_TXD	MFP_CFG_LPM(GPIO100, AF1, FLOAT)
++#define GPIO102_UART1_TXD	MFP_CFG_LPM(GPIO102, AF4, FLOAT)
++
++/* UART2 */
++#define GPIO15_UART2_CTS	MFP_CFG_LPM(GPIO15,  AF3, FLOAT)
++#define GPIO16_UART2_CTS	MFP_CFG_LPM(GPIO16,  AF5, FLOAT)
++#define GPIO111_UART2_CTS	MFP_CFG_LPM(GPIO111, AF3, FLOAT)
++#define GPIO114_UART2_CTS	MFP_CFG_LPM(GPIO114, AF1, FLOAT)
++
++#define GPIO15_UART2_RTS	MFP_CFG_LPM(GPIO15,  AF4, FLOAT)
++#define GPIO16_UART2_RTS	MFP_CFG_LPM(GPIO16,  AF4, FLOAT)
++#define GPIO114_UART2_RTS	MFP_CFG_LPM(GPIO114, AF3, FLOAT)
++#define GPIO111_UART2_RTS	MFP_CFG_LPM(GPIO111, AF1, FLOAT)
++
++#define GPIO18_UART2_RXD	MFP_CFG_LPM(GPIO18,  AF5, FLOAT)
++#define GPIO19_UART2_RXD	MFP_CFG_LPM(GPIO19,  AF4, FLOAT)
++#define GPIO112_UART2_RXD	MFP_CFG_LPM(GPIO112, AF1, FLOAT)
++#define GPIO113_UART2_RXD	MFP_CFG_LPM(GPIO113, AF3, FLOAT)
++
++#define GPIO18_UART2_TXD	MFP_CFG_LPM(GPIO18,  AF4, FLOAT)
++#define GPIO19_UART2_TXD	MFP_CFG_LPM(GPIO19,  AF5, FLOAT)
++#define GPIO112_UART2_TXD	MFP_CFG_LPM(GPIO112, AF3, FLOAT)
++#define GPIO113_UART2_TXD	MFP_CFG_LPM(GPIO113, AF1, FLOAT)
++
++/* UART3 */
++#define GPIO91_UART3_CTS	MFP_CFG_LPM(GPIO91,  AF2, FLOAT)
++#define GPIO92_UART3_CTS	MFP_CFG_LPM(GPIO92,  AF4, FLOAT)
++#define GPIO107_UART3_CTS	MFP_CFG_LPM(GPIO107, AF1, FLOAT)
++#define GPIO108_UART3_CTS	MFP_CFG_LPM(GPIO108, AF3, FLOAT)
++
++#define GPIO91_UART3_RTS	MFP_CFG_LPM(GPIO91,  AF4, FLOAT)
++#define GPIO92_UART3_RTS	MFP_CFG_LPM(GPIO92,  AF2, FLOAT)
++#define GPIO107_UART3_RTS	MFP_CFG_LPM(GPIO107, AF3, FLOAT)
++#define GPIO108_UART3_RTS	MFP_CFG_LPM(GPIO108, AF1, FLOAT)
++
++#define GPIO7_UART3_RXD		MFP_CFG_LPM(GPIO7,   AF2, FLOAT)
++#define GPIO8_UART3_RXD		MFP_CFG_LPM(GPIO8,   AF6, FLOAT)
++#define GPIO93_UART3_RXD	MFP_CFG_LPM(GPIO93,  AF4, FLOAT)
++#define GPIO94_UART3_RXD	MFP_CFG_LPM(GPIO94,  AF2, FLOAT)
++#define GPIO109_UART3_RXD	MFP_CFG_LPM(GPIO109, AF3, FLOAT)
++#define GPIO110_UART3_RXD	MFP_CFG_LPM(GPIO110, AF1, FLOAT)
++
++#define GPIO7_UART3_TXD		MFP_CFG_LPM(GPIO7,   AF6, FLOAT)
++#define GPIO8_UART3_TXD		MFP_CFG_LPM(GPIO8,   AF2, FLOAT)
++#define GPIO93_UART3_TXD	MFP_CFG_LPM(GPIO93,  AF2, FLOAT)
++#define GPIO94_UART3_TXD	MFP_CFG_LPM(GPIO94,  AF4, FLOAT)
++#define GPIO109_UART3_TXD	MFP_CFG_LPM(GPIO109, AF1, FLOAT)
++#define GPIO110_UART3_TXD	MFP_CFG_LPM(GPIO110, AF3, FLOAT)
++
++/* USB Host */
++#define GPIO0_2_USBH_PEN	MFP_CFG(GPIO0_2, AF1)
++#define GPIO1_2_USBH_PWR	MFP_CFG(GPIO1_2, AF1)
++
++/* USB P3 */
++#define GPIO77_USB_P3_1		MFP_CFG(GPIO77,  AF2)
++#define GPIO78_USB_P3_2		MFP_CFG(GPIO78,  AF2)
++#define GPIO79_USB_P3_3		MFP_CFG(GPIO79,  AF2)
++#define GPIO80_USB_P3_4		MFP_CFG(GPIO80,  AF2)
++#define GPIO81_USB_P3_5		MFP_CFG(GPIO81,  AF2)
++#define GPIO82_USB_P3_6		MFP_CFG(GPIO82,  AF2)
++
++/* PWM */
++#define GPIO17_PWM0_OUT		MFP_CFG(GPIO17, AF1)
++#define GPIO18_PWM1_OUT		MFP_CFG(GPIO18, AF1)
++#define GPIO19_PWM2_OUT		MFP_CFG(GPIO19, AF1)
++#define GPIO20_PWM3_OUT		MFP_CFG(GPIO20, AF1)
++
++/* CIR */
++#define GPIO8_CIR_OUT		MFP_CFG(GPIO8, AF5)
++#define GPIO16_CIR_OUT		MFP_CFG(GPIO16, AF3)
++
++#define GPIO20_OW_DQ_IN		MFP_CFG(GPIO20, AF5)
++#define GPIO126_OW_DQ		MFP_CFG(GPIO126, AF2)
++
++#define GPIO0_DF_RDY		MFP_CFG(GPIO0, AF1)
++#define GPIO7_CLK_BYPASS_XSC	MFP_CFG(GPIO7, AF7)
++#define GPIO17_EXT_SYNC_MVT_0	MFP_CFG(GPIO17, AF6)
++#define GPIO18_EXT_SYNC_MVT_1	MFP_CFG(GPIO18, AF6)
++#define GPIO19_OST_CHOUT_MVT_0	MFP_CFG(GPIO19, AF6)
++#define GPIO20_OST_CHOUT_MVT_1	MFP_CFG(GPIO20, AF6)
++#define GPIO49_48M_CLK		MFP_CFG(GPIO49, AF2)
++#define GPIO126_EXT_CLK		MFP_CFG(GPIO126, AF3)
++#define GPIO127_CLK_BYPASS_GB	MFP_CFG(GPIO127, AF7)
++#define GPIO71_EXT_MATCH_MVT	MFP_CFG(GPIO71, AF6)
++
++#define GPIO3_uIO_IN		MFP_CFG(GPIO3, AF1)
++
++#define GPIO4_uSIM_CARD_STATE	MFP_CFG(GPIO4, AF1)
++#define GPIO5_uSIM_uCLK		MFP_CFG(GPIO5, AF1)
++#define GPIO6_uSIM_uRST		MFP_CFG(GPIO6, AF1)
++#define GPIO16_uSIM_UVS_0	MFP_CFG(GPIO16, AF1)
++
++#define GPIO9_SCIO		MFP_CFG(GPIO9, AF1)
++#define GPIO20_RTC_MVT		MFP_CFG(GPIO20, AF4)
++#define GPIO126_RTC_MVT		MFP_CFG(GPIO126, AF1)
++
++/*
++ * PXA300 specific MFP configurations
++ */
++#ifdef CONFIG_CPU_PXA300
++#define GPIO99_USB_P2_2		MFP_CFG(GPIO99, AF2)
++#define GPIO99_USB_P2_5		MFP_CFG(GPIO99, AF3)
++#define GPIO99_USB_P2_6		MFP_CFG(GPIO99, AF4)
++#define GPIO100_USB_P2_2	MFP_CFG(GPIO100, AF4)
++#define GPIO100_USB_P2_5	MFP_CFG(GPIO100, AF5)
++#define GPIO101_USB_P2_1	MFP_CFG(GPIO101, AF2)
++#define GPIO102_USB_P2_4	MFP_CFG(GPIO102, AF2)
++#define GPIO104_USB_P2_3	MFP_CFG(GPIO104, AF2)
++#define GPIO105_USB_P2_5	MFP_CFG(GPIO105, AF2)
++#define GPIO100_USB_P2_6	MFP_CFG(GPIO100, AF2)
++#define GPIO106_USB_P2_7	MFP_CFG(GPIO106, AF2)
++#define GPIO103_USB_P2_8	MFP_CFG(GPIO103, AF2)
++
++/* U2D UTMI */
++#define GPIO38_UTM_CLK		MFP_CFG(GPIO38,  AF1)
++#define GPIO26_U2D_RXERROR	MFP_CFG(GPIO26,  AF3)
++#define GPIO50_U2D_RXERROR	MFP_CFG(GPIO50,  AF1)
++#define GPIO89_U2D_RXERROR	MFP_CFG(GPIO89,  AF5)
++#define GPIO24_UTM_RXVALID	MFP_CFG(GPIO24,  AF3)
++#define GPIO48_UTM_RXVALID	MFP_CFG(GPIO48,  AF2)
++#define GPIO87_UTM_RXVALID	MFP_CFG(GPIO87,  AF5)
++#define GPIO25_UTM_RXACTIVE	MFP_CFG(GPIO25,  AF3)
++#define GPIO47_UTM_RXACTIVE	MFP_CFG(GPIO47,  AF2)
++#define GPIO49_UTM_RXACTIVE	MFP_CFG(GPIO49,  AF1)
++#define GPIO88_UTM_RXACTIVE	MFP_CFG(GPIO88,  AF5)
++#define GPIO53_UTM_TXREADY	MFP_CFG(GPIO53,  AF1)
++#define GPIO67_UTM_LINESTATE_0	MFP_CFG(GPIO67,  AF3)
++#define GPIO92_UTM_LINESTATE_0	MFP_CFG(GPIO92,  AF3)
++#define GPIO104_UTM_LINESTATE_0	MFP_CFG(GPIO104, AF3)
++#define GPIO109_UTM_LINESTATE_0	MFP_CFG(GPIO109, AF4)
++#define GPIO68_UTM_LINESTATE_1	MFP_CFG(GPIO68,  AF3)
++#define GPIO93_UTM_LINESTATE_1	MFP_CFG(GPIO93,  AF3)
++#define GPIO105_UTM_LINESTATE_1	MFP_CFG(GPIO105, AF3)
++#define GPIO27_U2D_OPMODE_0	MFP_CFG(GPIO27,  AF4)
++#define GPIO51_U2D_OPMODE_0	MFP_CFG(GPIO51,  AF2)
++#define GPIO90_U2D_OPMODE_0	MFP_CFG(GPIO90,  AF7)
++#define GPIO28_U2D_OPMODE_1	MFP_CFG(GPIO28,  AF4)
++#define GPIO52_U2D_OPMODE_1	MFP_CFG(GPIO52,  AF2)
++#define GPIO106_U2D_OPMODE_1	MFP_CFG(GPIO106, AF3)
++#define GPIO110_U2D_OPMODE_1	MFP_CFG(GPIO110, AF5)
++#define GPIO76_U2D_RESET	MFP_CFG(GPIO76,  AF1)
++#define GPIO95_U2D_RESET	MFP_CFG(GPIO95,  AF2)
++#define GPIO100_U2D_RESET	MFP_CFG(GPIO100, AF3)
++#define GPIO66_U2D_SUSPEND	MFP_CFG(GPIO66,  AF3)
++#define GPIO98_U2D_SUSPEND	MFP_CFG(GPIO98,  AF2)
++#define GPIO103_U2D_SUSPEND	MFP_CFG(GPIO103, AF3)
++#define GPIO65_U2D_TERM_SEL	MFP_CFG(GPIO65,  AF5)
++#define GPIO97_U2D_TERM_SEL	MFP_CFG(GPIO97,  AF3)
++#define GPIO102_U2D_TERM_SEL	MFP_CFG(GPIO102, AF5)
++#define GPIO29_U2D_TXVALID	MFP_CFG(GPIO29,  AF3)
++#define GPIO52_U2D_TXVALID	MFP_CFG(GPIO52,  AF4)
++#define GPIO69_U2D_TXVALID	MFP_CFG(GPIO69,  AF3)
++#define GPIO85_U2D_TXVALID	MFP_CFG(GPIO85,  AF7)
++#define GPIO64_U2D_XCVR_SEL	MFP_CFG(GPIO64,  AF5)
++#define GPIO96_U2D_XCVR_SEL	MFP_CFG(GPIO96,  AF3)
++#define GPIO101_U2D_XCVR_SEL	MFP_CFG(GPIO101, AF5)
++#define GPIO30_UTM_PHYDATA_0	MFP_CFG(GPIO30,  AF3)
++#define GPIO31_UTM_PHYDATA_1	MFP_CFG(GPIO31,  AF3)
++#define GPIO32_UTM_PHYDATA_2	MFP_CFG(GPIO32,  AF3)
++#define GPIO33_UTM_PHYDATA_3	MFP_CFG(GPIO33,  AF3)
++#define GPIO34_UTM_PHYDATA_4	MFP_CFG(GPIO34,  AF3)
++#define GPIO35_UTM_PHYDATA_5	MFP_CFG(GPIO35,  AF3)
++#define GPIO36_UTM_PHYDATA_6	MFP_CFG(GPIO36,  AF3)
++#define GPIO37_UTM_PHYDATA_7	MFP_CFG(GPIO37,  AF3)
++#define GPIO39_UTM_PHYDATA_0	MFP_CFG(GPIO39,  AF3)
++#define GPIO40_UTM_PHYDATA_1	MFP_CFG(GPIO40,  AF3)
++#define GPIO41_UTM_PHYDATA_2	MFP_CFG(GPIO41,  AF3)
++#define GPIO42_UTM_PHYDATA_3	MFP_CFG(GPIO42,  AF3)
++#define GPIO43_UTM_PHYDATA_4	MFP_CFG(GPIO43,  AF3)
++#define GPIO44_UTM_PHYDATA_5	MFP_CFG(GPIO44,  AF3)
++#define GPIO45_UTM_PHYDATA_6	MFP_CFG(GPIO45,  AF3)
++#define GPIO46_UTM_PHYDATA_7	MFP_CFG(GPIO46,  AF3)
++#endif /* CONFIG_CPU_PXA300 */
++
++/*
++ * PXA310 specific MFP configurations
++ */
++#ifdef CONFIG_CPU_PXA310
++/* USB P2 */
++#define GPIO36_USB_P2_1		MFP_CFG(GPIO36, AF1)
++#define GPIO30_USB_P2_2		MFP_CFG(GPIO30, AF1)
++#define GPIO35_USB_P2_3		MFP_CFG(GPIO35, AF1)
++#define GPIO32_USB_P2_4		MFP_CFG(GPIO32, AF1)
++#define GPIO34_USB_P2_5		MFP_CFG(GPIO34, AF1)
++#define GPIO31_USB_P2_6		MFP_CFG(GPIO31, AF1)
++
++/* MMC1 */
++#define GPIO24_MMC1_CMD		MFP_CFG(GPIO24, AF3)
++#define GPIO29_MMC1_DAT0	MFP_CFG(GPIO29, AF3)
++
++/* MMC3 */
++#define GPIO103_MMC3_CLK	MFP_CFG(GPIO103, AF2)
++#define GPIO105_MMC3_CMD	MFP_CFG(GPIO105, AF2)
++#define GPIO11_2_MMC3_CLK	MFP_CFG(GPIO11_2, AF1)
++#define GPIO12_2_MMC3_CMD	MFP_CFG(GPIO12_2, AF1)
++#define GPIO7_2_MMC3_DAT0	MFP_CFG(GPIO7_2, AF1)
++#define GPIO8_2_MMC3_DAT1	MFP_CFG(GPIO8_2, AF1)
++#define GPIO9_2_MMC3_DAT2	MFP_CFG(GPIO9_2, AF1)
++#define GPIO10_2_MMC3_DAT3	MFP_CFG(GPIO10_2, AF1)
++
++/* ULPI */
++#define GPIO38_ULPI_CLK		MFP_CFG(GPIO38, AF1)
++#define GPIO30_ULPI_DATA_OUT_0	MFP_CFG(GPIO30, AF3)
++#define GPIO31_ULPI_DATA_OUT_1	MFP_CFG(GPIO31, AF3)
++#define GPIO32_ULPI_DATA_OUT_2	MFP_CFG(GPIO32, AF3)
++#define GPIO33_ULPI_DATA_OUT_3	MFP_CFG(GPIO33, AF3)
++#define GPIO34_ULPI_DATA_OUT_4	MFP_CFG(GPIO34, AF3)
++#define GPIO35_ULPI_DATA_OUT_5	MFP_CFG(GPIO35, AF3)
++#define GPIO36_ULPI_DATA_OUT_6	MFP_CFG(GPIO36, AF3)
++#define GPIO37_ULPI_DATA_OUT_7	MFP_CFG(GPIO37, AF3)
++#define GPIO33_ULPI_OTG_INTR	MFP_CFG(GPIO33, AF1)
++
++#define ULPI_DIR	MFP_CFG_DRV(ULPI_DIR, MFP_AF0, MFP_DS01X)
++#define ULPI_NXT	MFP_CFG_DRV(ULPI_NXT, MFP_AF0, MFP_DS01X)
++#define ULPI_STP	MFP_CFG_DRV(ULPI_STP, MFP_AF0, MFP_DS01X)
++#endif /* CONFIG_CPU_PXA310 */
++
++#endif /* __ASM_ARCH_MFP_PXA300_H */
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/mfp-pxa320.h
+@@ -0,0 +1,446 @@
++/*
++ * linux/include/asm-arm/arch-pxa/mfp-pxa320.h
++ *
++ * PXA320 specific MFP configuration definitions
++ *
++ * Copyright (C) 2007 Marvell International Ltd.
++ * 2007-08-21: eric miao <eric.y.miao@gmail.com>
++ *             initial version
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++
++#ifndef __ASM_ARCH_MFP_PXA320_H
++#define __ASM_ARCH_MFP_PXA320_H
++
++#include <asm/arch/mfp.h>
++
++/* GPIO */
++#define GPIO46_GPIO		MFP_CFG(GPIO6, AF0)
++#define GPIO49_GPIO		MFP_CFG(GPIO49, AF0)
++#define GPIO50_GPIO		MFP_CFG(GPIO50, AF0)
++#define GPIO51_GPIO		MFP_CFG(GPIO51, AF0)
++#define GPIO52_GPIO		MFP_CFG(GPIO52, AF0)
++
++#define GPIO7_2_GPIO		MFP_CFG(GPIO7_2, AF0)
++#define GPIO8_2_GPIO		MFP_CFG(GPIO8_2, AF0)
++#define GPIO9_2_GPIO		MFP_CFG(GPIO9_2, AF0)
++#define GPIO10_2_GPIO		MFP_CFG(GPIO10_2, AF0)
++#define GPIO11_2_GPIO		MFP_CFG(GPIO11_2, AF0)
++#define GPIO12_2_GPIO		MFP_CFG(GPIO12_2, AF0)
++#define GPIO13_2_GPIO		MFP_CFG(GPIO13_2, AF0)
++#define GPIO14_2_GPIO		MFP_CFG(GPIO14_2, AF0)
++#define GPIO15_2_GPIO		MFP_CFG(GPIO15_2, AF0)
++#define GPIO16_2_GPIO		MFP_CFG(GPIO16_2, AF0)
++#define GPIO17_2_GPIO		MFP_CFG(GPIO17_2, AF0)
++
++/* Chip Select */
++#define GPIO4_nCS3		MFP_CFG(GPIO4, AF1)
++
++/* AC97 */
++#define GPIO34_AC97_SYSCLK	MFP_CFG(GPIO34, AF1)
++#define GPIO39_AC97_BITCLK	MFP_CFG(GPIO39, AF1)
++#define GPIO40_AC97_nACRESET	MFP_CFG(GPIO40, AF1)
++#define GPIO35_AC97_SDATA_IN_0	MFP_CFG(GPIO35, AF1)
++#define GPIO36_AC97_SDATA_IN_1	MFP_CFG(GPIO36, AF1)
++#define GPIO32_AC97_SDATA_IN_2	MFP_CFG(GPIO32, AF2)
++#define GPIO33_AC97_SDATA_IN_3	MFP_CFG(GPIO33, AF2)
++#define GPIO11_AC97_SDATA_IN_2	MFP_CFG(GPIO11, AF3)
++#define GPIO12_AC97_SDATA_IN_3	MFP_CFG(GPIO12, AF3)
++#define GPIO37_AC97_SDATA_OUT	MFP_CFG(GPIO37, AF1)
++#define GPIO38_AC97_SYNC	MFP_CFG(GPIO38, AF1)
++
++/* I2C */
++#define GPIO32_I2C_SCL		MFP_CFG_LPM(GPIO32, AF1, PULL_HIGH)
++#define GPIO33_I2C_SDA		MFP_CFG_LPM(GPIO33, AF1, PULL_HIGH)
++
++/* QCI */
++#define GPIO49_CI_DD_0		MFP_CFG_DRV(GPIO49, AF1, DS04X)
++#define GPIO50_CI_DD_1		MFP_CFG_DRV(GPIO50, AF1, DS04X)
++#define GPIO51_CI_DD_2		MFP_CFG_DRV(GPIO51, AF1, DS04X)
++#define GPIO52_CI_DD_3		MFP_CFG_DRV(GPIO52, AF1, DS04X)
++#define GPIO53_CI_DD_4		MFP_CFG_DRV(GPIO53, AF1, DS04X)
++#define GPIO54_CI_DD_5		MFP_CFG_DRV(GPIO54, AF1, DS04X)
++#define GPIO55_CI_DD_6		MFP_CFG_DRV(GPIO55, AF1, DS04X)
++#define GPIO56_CI_DD_7		MFP_CFG_DRV(GPIO56, AF0, DS04X)
++#define GPIO57_CI_DD_8		MFP_CFG_DRV(GPIO57, AF1, DS04X)
++#define GPIO58_CI_DD_9		MFP_CFG_DRV(GPIO58, AF1, DS04X)
++#define GPIO59_CI_MCLK		MFP_CFG_DRV(GPIO59, AF0, DS04X)
++#define GPIO60_CI_PCLK		MFP_CFG_DRV(GPIO60, AF0, DS04X)
++#define GPIO61_CI_HSYNC		MFP_CFG_DRV(GPIO61, AF0, DS04X)
++#define GPIO62_CI_VSYNC		MFP_CFG_DRV(GPIO62, AF0, DS04X)
++
++#define GPIO31_CIR_OUT		MFP_CFG(GPIO31, AF5)
++
++#define GPIO0_2_CLK_EXT		MFP_CFG(GPIO0_2, AF3)
++#define GPIO0_DRQ		MFP_CFG(GPIO0, AF2)
++#define GPIO11_EXT_SYNC0	MFP_CFG(GPIO11, AF5)
++#define GPIO12_EXT_SYNC1	MFP_CFG(GPIO12, AF6)
++#define GPIO0_2_HZ_CLK		MFP_CFG(GPIO0_2, AF1)
++#define GPIO14_HZ_CLK		MFP_CFG(GPIO14, AF4)
++#define GPIO30_ICP_RXD		MFP_CFG(GPIO30, AF1)
++#define GPIO31_ICP_TXD		MFP_CFG(GPIO31, AF1)
++
++#define GPIO83_KP_DKIN_0	MFP_CFG_LPM(GPIO83, AF3, FLOAT)
++#define GPIO84_KP_DKIN_1	MFP_CFG_LPM(GPIO84, AF3, FLOAT)
++#define GPIO85_KP_DKIN_2	MFP_CFG_LPM(GPIO85, AF3, FLOAT)
++#define GPIO86_KP_DKIN_3	MFP_CFG_LPM(GPIO86, AF3, FLOAT)
++
++#define GPIO105_KP_DKIN_0	MFP_CFG_LPM(GPIO105, AF2, FLOAT)
++#define GPIO106_KP_DKIN_1	MFP_CFG_LPM(GPIO106, AF2, FLOAT)
++#define GPIO107_KP_DKIN_2	MFP_CFG_LPM(GPIO107, AF2, FLOAT)
++#define GPIO108_KP_DKIN_3	MFP_CFG_LPM(GPIO108, AF2, FLOAT)
++#define GPIO109_KP_DKIN_4	MFP_CFG_LPM(GPIO109, AF2, FLOAT)
++#define GPIO110_KP_DKIN_5	MFP_CFG_LPM(GPIO110, AF2, FLOAT)
++#define GPIO111_KP_DKIN_6	MFP_CFG_LPM(GPIO111, AF2, FLOAT)
++#define GPIO112_KP_DKIN_7	MFP_CFG_LPM(GPIO112, AF2, FLOAT)
++
++#define GPIO113_KP_DKIN_0	MFP_CFG_LPM(GPIO113, AF2, FLOAT)
++#define GPIO114_KP_DKIN_1	MFP_CFG_LPM(GPIO114, AF2, FLOAT)
++#define GPIO115_KP_DKIN_2	MFP_CFG_LPM(GPIO115, AF2, FLOAT)
++#define GPIO116_KP_DKIN_3	MFP_CFG_LPM(GPIO116, AF2, FLOAT)
++#define GPIO117_KP_DKIN_4	MFP_CFG_LPM(GPIO117, AF2, FLOAT)
++#define GPIO118_KP_DKIN_5	MFP_CFG_LPM(GPIO118, AF2, FLOAT)
++#define GPIO119_KP_DKIN_6	MFP_CFG_LPM(GPIO119, AF2, FLOAT)
++#define GPIO120_KP_DKIN_7	MFP_CFG_LPM(GPIO120, AF2, FLOAT)
++
++#define GPIO127_KP_DKIN_0	MFP_CFG_LPM(GPIO127, AF2, FLOAT)
++#define GPIO126_KP_DKIN_1	MFP_CFG_LPM(GPIO126, AF2, FLOAT)
++
++#define GPIO2_2_KP_DKIN_0	MFP_CFG_LPM(GPIO2_2, AF2, FLOAT)
++#define GPIO3_2_KP_DKIN_1	MFP_CFG_LPM(GPIO3_2, AF2, FLOAT)
++#define GPIO125_KP_DKIN_2	MFP_CFG_LPM(GPIO125, AF2, FLOAT)
++#define GPIO124_KP_DKIN_3	MFP_CFG_LPM(GPIO124, AF2, FLOAT)
++#define GPIO123_KP_DKIN_4	MFP_CFG_LPM(GPIO123, AF2, FLOAT)
++#define GPIO122_KP_DKIN_5	MFP_CFG_LPM(GPIO122, AF2, FLOAT)
++#define GPIO121_KP_DKIN_6	MFP_CFG_LPM(GPIO121, AF2, FLOAT)
++#define GPIO4_2_KP_DKIN_7	MFP_CFG_LPM(GPIO4_2, AF2, FLOAT)
++
++#define GPIO113_KP_MKIN_0	MFP_CFG_LPM(GPIO113, AF1, FLOAT)
++#define GPIO114_KP_MKIN_1	MFP_CFG_LPM(GPIO114, AF1, FLOAT)
++#define GPIO115_KP_MKIN_2	MFP_CFG_LPM(GPIO115, AF1, FLOAT)
++#define GPIO116_KP_MKIN_3	MFP_CFG_LPM(GPIO116, AF1, FLOAT)
++#define GPIO117_KP_MKIN_4	MFP_CFG_LPM(GPIO117, AF1, FLOAT)
++#define GPIO118_KP_MKIN_5	MFP_CFG_LPM(GPIO118, AF1, FLOAT)
++#define GPIO119_KP_MKIN_6	MFP_CFG_LPM(GPIO119, AF1, FLOAT)
++#define GPIO120_KP_MKIN_7	MFP_CFG_LPM(GPIO120, AF1, FLOAT)
++
++#define GPIO83_KP_MKOUT_0	MFP_CFG_LPM(GPIO83, AF2, DRIVE_HIGH)
++#define GPIO84_KP_MKOUT_1	MFP_CFG_LPM(GPIO84, AF2, DRIVE_HIGH)
++#define GPIO85_KP_MKOUT_2	MFP_CFG_LPM(GPIO85, AF2, DRIVE_HIGH)
++#define GPIO86_KP_MKOUT_3	MFP_CFG_LPM(GPIO86, AF2, DRIVE_HIGH)
++#define GPIO13_KP_MKOUT_4	MFP_CFG_LPM(GPIO13, AF3, DRIVE_HIGH)
++#define GPIO14_KP_MKOUT_5	MFP_CFG_LPM(GPIO14, AF3, DRIVE_HIGH)
++
++#define GPIO121_KP_MKOUT_0	MFP_CFG_LPM(GPIO121, AF1, DRIVE_HIGH)
++#define GPIO122_KP_MKOUT_1	MFP_CFG_LPM(GPIO122, AF1, DRIVE_HIGH)
++#define GPIO123_KP_MKOUT_2	MFP_CFG_LPM(GPIO123, AF1, DRIVE_HIGH)
++#define GPIO124_KP_MKOUT_3	MFP_CFG_LPM(GPIO124, AF1, DRIVE_HIGH)
++#define GPIO125_KP_MKOUT_4	MFP_CFG_LPM(GPIO125, AF1, DRIVE_HIGH)
++#define GPIO126_KP_MKOUT_5	MFP_CFG_LPM(GPIO126, AF1, DRIVE_HIGH)
++#define GPIO127_KP_MKOUT_6	MFP_CFG_LPM(GPIO127, AF1, DRIVE_HIGH)
++#define GPIO5_2_KP_MKOUT_7	MFP_CFG_LPM(GPIO5_2, AF1, DRIVE_HIGH)
++
++/* LCD */
++#define GPIO6_2_LCD_LDD_0	MFP_CFG_DRV(GPIO6_2, AF1, DS01X)
++#define GPIO7_2_LCD_LDD_1	MFP_CFG_DRV(GPIO7_2, AF1, DS01X)
++#define GPIO8_2_LCD_LDD_2	MFP_CFG_DRV(GPIO8_2, AF1, DS01X)
++#define GPIO9_2_LCD_LDD_3	MFP_CFG_DRV(GPIO9_2, AF1, DS01X)
++#define GPIO10_2_LCD_LDD_4	MFP_CFG_DRV(GPIO10_2, AF1, DS01X)
++#define GPIO11_2_LCD_LDD_5	MFP_CFG_DRV(GPIO11_2, AF1, DS01X)
++#define GPIO12_2_LCD_LDD_6	MFP_CFG_DRV(GPIO12_2, AF1, DS01X)
++#define GPIO13_2_LCD_LDD_7	MFP_CFG_DRV(GPIO13_2, AF1, DS01X)
++#define GPIO63_LCD_LDD_8	MFP_CFG_DRV(GPIO63, AF1, DS01X)
++#define GPIO64_LCD_LDD_9	MFP_CFG_DRV(GPIO64, AF1, DS01X)
++#define GPIO65_LCD_LDD_10	MFP_CFG_DRV(GPIO65, AF1, DS01X)
++#define GPIO66_LCD_LDD_11	MFP_CFG_DRV(GPIO66, AF1, DS01X)
++#define GPIO67_LCD_LDD_12	MFP_CFG_DRV(GPIO67, AF1, DS01X)
++#define GPIO68_LCD_LDD_13	MFP_CFG_DRV(GPIO68, AF1, DS01X)
++#define GPIO69_LCD_LDD_14	MFP_CFG_DRV(GPIO69, AF1, DS01X)
++#define GPIO70_LCD_LDD_15	MFP_CFG_DRV(GPIO70, AF1, DS01X)
++#define GPIO71_LCD_LDD_16	MFP_CFG_DRV(GPIO71, AF1, DS01X)
++#define GPIO72_LCD_LDD_17	MFP_CFG_DRV(GPIO72, AF1, DS01X)
++#define GPIO73_LCD_CS_N		MFP_CFG_DRV(GPIO73, AF2, DS01X)
++#define GPIO74_LCD_VSYNC	MFP_CFG_DRV(GPIO74, AF2, DS01X)
++#define GPIO14_2_LCD_FCLK	MFP_CFG_DRV(GPIO14_2, AF1, DS01X)
++#define GPIO15_2_LCD_LCLK	MFP_CFG_DRV(GPIO15_2, AF1, DS01X)
++#define GPIO16_2_LCD_PCLK	MFP_CFG_DRV(GPIO16_2, AF1, DS01X)
++#define GPIO17_2_LCD_BIAS	MFP_CFG_DRV(GPIO17_2, AF1, DS01X)
++#define GPIO64_LCD_VSYNC	MFP_CFG_DRV(GPIO64, AF2, DS01X)
++#define GPIO63_LCD_CS_N		MFP_CFG_DRV(GPIO63, AF2, DS01X)
++
++#define GPIO6_2_MLCD_DD_0	MFP_CFG_DRV(GPIO6_2, AF7, DS08X)
++#define GPIO7_2_MLCD_DD_1	MFP_CFG_DRV(GPIO7_2, AF7, DS08X)
++#define GPIO8_2_MLCD_DD_2	MFP_CFG_DRV(GPIO8_2, AF7, DS08X)
++#define GPIO9_2_MLCD_DD_3	MFP_CFG_DRV(GPIO9_2, AF7, DS08X)
++#define GPIO10_2_MLCD_DD_4	MFP_CFG_DRV(GPIO10_2, AF7, DS08X)
++#define GPIO11_2_MLCD_DD_5	MFP_CFG_DRV(GPIO11_2, AF7, DS08X)
++#define GPIO12_2_MLCD_DD_6	MFP_CFG_DRV(GPIO12_2, AF7, DS08X)
++#define GPIO13_2_MLCD_DD_7	MFP_CFG_DRV(GPIO13_2, AF7, DS08X)
++#define GPIO63_MLCD_DD_8	MFP_CFG_DRV(GPIO63, AF7, DS08X)
++#define GPIO64_MLCD_DD_9	MFP_CFG_DRV(GPIO64, AF7, DS08X)
++#define GPIO65_MLCD_DD_10	MFP_CFG_DRV(GPIO65, AF7, DS08X)
++#define GPIO66_MLCD_DD_11	MFP_CFG_DRV(GPIO66, AF7, DS08X)
++#define GPIO67_MLCD_DD_12	MFP_CFG_DRV(GPIO67, AF7, DS08X)
++#define GPIO68_MLCD_DD_13	MFP_CFG_DRV(GPIO68, AF7, DS08X)
++#define GPIO69_MLCD_DD_14	MFP_CFG_DRV(GPIO69, AF7, DS08X)
++#define GPIO70_MLCD_DD_15	MFP_CFG_DRV(GPIO70, AF7, DS08X)
++#define GPIO71_MLCD_DD_16	MFP_CFG_DRV(GPIO71, AF7, DS08X)
++#define GPIO72_MLCD_DD_17	MFP_CFG_DRV(GPIO72, AF7, DS08X)
++#define GPIO73_MLCD_CS		MFP_CFG_DRV(GPIO73, AF7, DS08X)
++#define GPIO74_MLCD_VSYNC	MFP_CFG_DRV(GPIO74, AF7, DS08X)
++#define GPIO14_2_MLCD_FCLK	MFP_CFG_DRV(GPIO14_2, AF7, DS08X)
++#define GPIO15_2_MLCD_LCLK	MFP_CFG_DRV(GPIO15_2, AF7, DS08X)
++#define GPIO16_2_MLCD_PCLK	MFP_CFG_DRV(GPIO16_2, AF7, DS08X)
++#define GPIO17_2_MLCD_BIAS	MFP_CFG_DRV(GPIO17_2, AF7, DS08X)
++
++/* MMC1 */
++#define GPIO9_MMC1_CMD		MFP_CFG_LPM(GPIO9,  AF4, DRIVE_HIGH)
++#define GPIO22_MMC1_CLK		MFP_CFG_LPM(GPIO22, AF4, DRIVE_HIGH)
++#define GPIO23_MMC1_CMD		MFP_CFG_LPM(GPIO23, AF4, DRIVE_HIGH)
++#define GPIO30_MMC1_CLK		MFP_CFG_LPM(GPIO30, AF4, DRIVE_HIGH)
++#define GPIO31_MMC1_CMD		MFP_CFG_LPM(GPIO31, AF4, DRIVE_HIGH)
++#define GPIO5_MMC1_DAT0		MFP_CFG_LPM(GPIO5,  AF4, DRIVE_HIGH)
++#define GPIO6_MMC1_DAT1		MFP_CFG_LPM(GPIO6,  AF4, DRIVE_HIGH)
++#define GPIO7_MMC1_DAT2		MFP_CFG_LPM(GPIO7,  AF4, DRIVE_HIGH)
++#define GPIO8_MMC1_DAT3		MFP_CFG_LPM(GPIO8,  AF4, DRIVE_HIGH)
++#define GPIO18_MMC1_DAT0	MFP_CFG_LPM(GPIO18, AF4, DRIVE_HIGH)
++#define GPIO19_MMC1_DAT1	MFP_CFG_LPM(GPIO19, AF4, DRIVE_HIGH)
++#define GPIO20_MMC1_DAT2	MFP_CFG_LPM(GPIO20, AF4, DRIVE_HIGH)
++#define GPIO21_MMC1_DAT3	MFP_CFG_LPM(GPIO21, AF4, DRIVE_HIGH)
++
++#define GPIO28_MMC2_CLK		MFP_CFG_LPM(GPIO28, AF4, PULL_HIGH)
++#define GPIO29_MMC2_CMD		MFP_CFG_LPM(GPIO29, AF4, PULL_HIGH)
++#define GPIO30_MMC2_CLK		MFP_CFG_LPM(GPIO30, AF3, PULL_HIGH)
++#define GPIO31_MMC2_CMD		MFP_CFG_LPM(GPIO31, AF3, PULL_HIGH)
++#define GPIO79_MMC2_CLK		MFP_CFG_LPM(GPIO79, AF4, PULL_HIGH)
++#define GPIO80_MMC2_CMD		MFP_CFG_LPM(GPIO80, AF4, PULL_HIGH)
++
++#define GPIO5_MMC2_DAT0		MFP_CFG_LPM(GPIO5, AF2, PULL_HIGH)
++#define GPIO6_MMC2_DAT1		MFP_CFG_LPM(GPIO6, AF2, PULL_HIGH)
++#define GPIO7_MMC2_DAT2		MFP_CFG_LPM(GPIO7, AF2, PULL_HIGH)
++#define GPIO8_MMC2_DAT3		MFP_CFG_LPM(GPIO8, AF2, PULL_HIGH)
++#define GPIO24_MMC2_DAT0	MFP_CFG_LPM(GPIO24, AF4, PULL_HIGH)
++#define GPIO75_MMC2_DAT0	MFP_CFG_LPM(GPIO75, AF4, PULL_HIGH)
++#define GPIO25_MMC2_DAT1	MFP_CFG_LPM(GPIO25, AF4, PULL_HIGH)
++#define GPIO76_MMC2_DAT1	MFP_CFG_LPM(GPIO76, AF4, PULL_HIGH)
++#define GPIO26_MMC2_DAT2	MFP_CFG_LPM(GPIO26, AF4, PULL_HIGH)
++#define GPIO77_MMC2_DAT2	MFP_CFG_LPM(GPIO77, AF4, PULL_HIGH)
++#define GPIO27_MMC2_DAT3	MFP_CFG_LPM(GPIO27, AF4, PULL_HIGH)
++#define GPIO78_MMC2_DAT3	MFP_CFG_LPM(GPIO78, AF4, PULL_HIGH)
++
++/* 1-Wire */
++#define GPIO14_ONE_WIRE		MFP_CFG_LPM(GPIO14,  AF5, FLOAT)
++#define GPIO0_2_ONE_WIRE	MFP_CFG_LPM(GPIO0_2, AF2, FLOAT)
++
++/* SSP1 */
++#define GPIO87_SSP1_EXTCLK	MFP_CFG(GPIO87, AF1)
++#define GPIO88_SSP1_SYSCLK	MFP_CFG(GPIO88, AF1)
++#define GPIO83_SSP1_SCLK	MFP_CFG(GPIO83, AF1)
++#define GPIO84_SSP1_SFRM	MFP_CFG(GPIO84, AF1)
++#define GPIO85_SSP1_RXD		MFP_CFG(GPIO85, AF6)
++#define GPIO85_SSP1_TXD		MFP_CFG(GPIO85, AF1)
++#define GPIO86_SSP1_RXD		MFP_CFG(GPIO86, AF1)
++#define GPIO86_SSP1_TXD		MFP_CFG(GPIO86, AF6)
++
++/* SSP2 */
++#define GPIO39_SSP2_EXTCLK	MFP_CFG(GPIO39, AF2)
++#define GPIO40_SSP2_SYSCLK	MFP_CFG(GPIO40, AF2)
++#define GPIO12_SSP2_SCLK	MFP_CFG(GPIO12, AF2)
++#define GPIO35_SSP2_SCLK	MFP_CFG(GPIO35, AF2)
++#define GPIO36_SSP2_SFRM	MFP_CFG(GPIO36, AF2)
++#define GPIO37_SSP2_RXD		MFP_CFG(GPIO37, AF5)
++#define GPIO37_SSP2_TXD		MFP_CFG(GPIO37, AF2)
++#define GPIO38_SSP2_RXD		MFP_CFG(GPIO38, AF2)
++#define GPIO38_SSP2_TXD		MFP_CFG(GPIO38, AF5)
++
++#define GPIO69_SSP3_SCLK	MFP_CFG(GPIO69, AF2, DS08X, FLOAT)
++#define GPIO70_SSP3_FRM		MFP_CFG(GPIO70, AF2, DS08X, DRIVE_LOW)
++#define GPIO89_SSP3_SCLK	MFP_CFG(GPIO89, AF1, DS08X, FLOAT)
++#define GPIO90_SSP3_FRM		MFP_CFG(GPIO90, AF1, DS08X, DRIVE_LOW)
++#define GPIO71_SSP3_RXD		MFP_CFG_X(GPIO71, AF5, DS08X, FLOAT)
++#define GPIO71_SSP3_TXD		MFP_CFG_X(GPIO71, AF2, DS08X, DRIVE_LOW)
++#define GPIO72_SSP3_RXD		MFP_CFG_X(GPIO72, AF2, DS08X, FLOAT)
++#define GPIO72_SSP3_TXD		MFP_CFG_X(GPIO72, AF5, DS08X, DRIVE_LOW)
++#define GPIO91_SSP3_RXD		MFP_CFG_X(GPIO91, AF5, DS08X, FLOAT)
++#define GPIO91_SSP3_TXD		MFP_CFG_X(GPIO91, AF1, DS08X, DRIVE_LOW)
++#define GPIO92_SSP3_RXD		MFP_CFG_X(GPIO92, AF1, DS08X, FLOAT)
++#define GPIO92_SSP3_TXD		MFP_CFG_X(GPIO92, AF5, DS08X, DRIVE_LOW)
++
++#define GPIO93_SSP4_SCLK	MFP_CFG_LPM(GPIO93, AF1, PULL_HIGH)
++#define GPIO94_SSP4_FRM		MFP_CFG_LPM(GPIO94, AF1, PULL_HIGH)
++#define GPIO94_SSP4_RXD		MFP_CFG_LPM(GPIO94, AF5, PULL_HIGH)
++#define GPIO95_SSP4_RXD		MFP_CFG_LPM(GPIO95, AF5, PULL_HIGH)
++#define GPIO95_SSP4_TXD		MFP_CFG_LPM(GPIO95, AF1, PULL_HIGH)
++#define GPIO96_SSP4_RXD		MFP_CFG_LPM(GPIO96, AF1, PULL_HIGH)
++#define GPIO96_SSP4_TXD		MFP_CFG_LPM(GPIO96, AF5, PULL_HIGH)
++
++/* UART1 */
++#define GPIO41_UART1_RXD	MFP_CFG_LPM(GPIO41, AF2, FLOAT)
++#define GPIO41_UART1_TXD	MFP_CFG_LPM(GPIO41, AF4, FLOAT)
++#define GPIO42_UART1_RXD	MFP_CFG_LPM(GPIO42, AF4, FLOAT)
++#define GPIO42_UART1_TXD	MFP_CFG_LPM(GPIO42, AF2, FLOAT)
++#define GPIO97_UART1_RXD	MFP_CFG_LPM(GPIO97, AF1, FLOAT)
++#define GPIO97_UART1_TXD	MFP_CFG_LPM(GPIO97, AF6, FLOAT)
++#define GPIO98_UART1_RXD	MFP_CFG_LPM(GPIO98, AF6, FLOAT)
++#define GPIO98_UART1_TXD	MFP_CFG_LPM(GPIO98, AF1, FLOAT)
++#define GPIO43_UART1_CTS	MFP_CFG_LPM(GPIO43, AF2, FLOAT)
++#define GPIO43_UART1_RTS	MFP_CFG_LPM(GPIO43, AF4, FLOAT)
++#define GPIO48_UART1_CTS	MFP_CFG_LPM(GPIO48, AF4, FLOAT)
++#define GPIO48_UART1_RTS	MFP_CFG_LPM(GPIO48, AF2, FLOAT)
++#define GPIO99_UART1_CTS	MFP_CFG_LPM(GPIO99, AF1, FLOAT)
++#define GPIO99_UART1_RTS	MFP_CFG_LPM(GPIO99, AF6, FLOAT)
++#define GPIO104_UART1_CTS	MFP_CFG_LPM(GPIO104, AF6, FLOAT)
++#define GPIO104_UART1_RTS	MFP_CFG_LPM(GPIO104, AF1, FLOAT)
++#define GPIO45_UART1_DTR	MFP_CFG_LPM(GPIO45, AF4, FLOAT)
++#define GPIO45_UART1_DSR	MFP_CFG_LPM(GPIO45, AF2, FLOAT)
++#define GPIO47_UART1_DTR	MFP_CFG_LPM(GPIO47, AF2, FLOAT)
++#define GPIO47_UART1_DSR	MFP_CFG_LPM(GPIO47, AF4, FLOAT)
++#define GPIO101_UART1_DTR	MFP_CFG_LPM(GPIO101, AF6, FLOAT)
++#define GPIO101_UART1_DSR	MFP_CFG_LPM(GPIO101, AF1, FLOAT)
++#define GPIO103_UART1_DTR	MFP_CFG_LPM(GPIO103, AF1, FLOAT)
++#define GPIO103_UART1_DSR	MFP_CFG_LPM(GPIO103, AF6, FLOAT)
++#define GPIO44_UART1_DCD	MFP_CFG_LPM(GPIO44, AF2, FLOAT)
++#define GPIO100_UART1_DCD	MFP_CFG_LPM(GPIO100, AF1, FLOAT)
++#define GPIO46_UART1_RI		MFP_CFG_LPM(GPIO46, AF2, FLOAT)
++#define GPIO102_UART1_RI	MFP_CFG_LPM(GPIO102, AF1, FLOAT)
++
++/* UART2 */
++#define GPIO109_UART2_CTS	MFP_CFG_LPM(GPIO109, AF3, FLOAT)
++#define GPIO109_UART2_RTS	MFP_CFG_LPM(GPIO109, AF1, FLOAT)
++#define GPIO112_UART2_CTS	MFP_CFG_LPM(GPIO112, AF1, FLOAT)
++#define GPIO112_UART2_RTS	MFP_CFG_LPM(GPIO112, AF3, FLOAT)
++#define GPIO110_UART2_RXD	MFP_CFG_LPM(GPIO110, AF1, FLOAT)
++#define GPIO110_UART2_TXD	MFP_CFG_LPM(GPIO110, AF3, FLOAT)
++#define GPIO111_UART2_RXD	MFP_CFG_LPM(GPIO111, AF3, FLOAT)
++#define GPIO111_UART2_TXD	MFP_CFG_LPM(GPIO111, AF1, FLOAT)
++
++/* UART3 */
++#define GPIO89_UART3_CTS	MFP_CFG_LPM(GPIO89, AF2, FLOAT)
++#define GPIO89_UART3_RTS	MFP_CFG_LPM(GPIO89, AF4, FLOAT)
++#define GPIO90_UART3_CTS	MFP_CFG_LPM(GPIO90, AF4, FLOAT)
++#define GPIO90_UART3_RTS	MFP_CFG_LPM(GPIO90, AF2, FLOAT)
++#define GPIO105_UART3_CTS	MFP_CFG_LPM(GPIO105, AF1, FLOAT)
++#define GPIO105_UART3_RTS	MFP_CFG_LPM(GPIO105, AF3, FLOAT)
++#define GPIO106_UART3_CTS	MFP_CFG_LPM(GPIO106, AF3, FLOAT)
++#define GPIO106_UART3_RTS	MFP_CFG_LPM(GPIO106, AF1, FLOAT)
++#define GPIO30_UART3_RXD	MFP_CFG_LPM(GPIO30, AF2, FLOAT)
++#define GPIO30_UART3_TXD	MFP_CFG_LPM(GPIO30, AF6, FLOAT)
++#define GPIO31_UART3_RXD	MFP_CFG_LPM(GPIO31, AF6, FLOAT)
++#define GPIO31_UART3_TXD	MFP_CFG_LPM(GPIO31, AF2, FLOAT)
++#define GPIO91_UART3_RXD	MFP_CFG_LPM(GPIO91, AF4, FLOAT)
++#define GPIO91_UART3_TXD	MFP_CFG_LPM(GPIO91, AF2, FLOAT)
++#define GPIO92_UART3_RXD	MFP_CFG_LPM(GPIO92, AF2, FLOAT)
++#define GPIO92_UART3_TXD	MFP_CFG_LPM(GPIO92, AF4, FLOAT)
++#define GPIO107_UART3_RXD	MFP_CFG_LPM(GPIO107, AF3, FLOAT)
++#define GPIO107_UART3_TXD	MFP_CFG_LPM(GPIO107, AF1, FLOAT)
++#define GPIO108_UART3_RXD	MFP_CFG_LPM(GPIO108, AF1, FLOAT)
++#define GPIO108_UART3_TXD	MFP_CFG_LPM(GPIO108, AF3, FLOAT)
++
++
++/* USB 2.0 UTMI */
++#define GPIO10_UTM_CLK		MFP_CFG(GPIO10, AF1)
++#define GPIO36_U2D_RXERROR	MFP_CFG(GPIO36, AF3)
++#define GPIO60_U2D_RXERROR	MFP_CFG(GPIO60, AF1)
++#define GPIO87_U2D_RXERROR	MFP_CFG(GPIO87, AF5)
++#define GPIO34_UTM_RXVALID	MFP_CFG(GPIO34, AF3)
++#define GPIO58_UTM_RXVALID	MFP_CFG(GPIO58, AF2)
++#define GPIO85_UTM_RXVALID	MFP_CFG(GPIO85, AF5)
++#define GPIO35_UTM_RXACTIVE	MFP_CFG(GPIO35, AF3)
++#define GPIO59_UTM_RXACTIVE	MFP_CFG(GPIO59, AF1)
++#define GPIO86_UTM_RXACTIVE	MFP_CFG(GPIO86, AF5)
++#define GPIO73_UTM_TXREADY	MFP_CFG(GPIO73, AF1)
++#define GPIO68_UTM_LINESTATE_0	MFP_CFG(GPIO68, AF3)
++#define GPIO90_UTM_LINESTATE_0	MFP_CFG(GPIO90, AF3)
++#define GPIO102_UTM_LINESTATE_0	MFP_CFG(GPIO102, AF3)
++#define GPIO107_UTM_LINESTATE_0	MFP_CFG(GPIO107, AF4)
++#define GPIO69_UTM_LINESTATE_1	MFP_CFG(GPIO69, AF3)
++#define GPIO91_UTM_LINESTATE_1	MFP_CFG(GPIO91, AF3)
++#define GPIO103_UTM_LINESTATE_1	MFP_CFG(GPIO103, AF3)
++
++#define GPIO41_U2D_PHYDATA_0	MFP_CFG(GPIO41, AF3)
++#define GPIO42_U2D_PHYDATA_1	MFP_CFG(GPIO42, AF3)
++#define GPIO43_U2D_PHYDATA_2	MFP_CFG(GPIO43, AF3)
++#define GPIO44_U2D_PHYDATA_3	MFP_CFG(GPIO44, AF3)
++#define GPIO45_U2D_PHYDATA_4	MFP_CFG(GPIO45, AF3)
++#define GPIO46_U2D_PHYDATA_5	MFP_CFG(GPIO46, AF3)
++#define GPIO47_U2D_PHYDATA_6	MFP_CFG(GPIO47, AF3)
++#define GPIO48_U2D_PHYDATA_7	MFP_CFG(GPIO48, AF3)
++
++#define GPIO49_U2D_PHYDATA_0	MFP_CFG(GPIO49, AF3)
++#define GPIO50_U2D_PHYDATA_1	MFP_CFG(GPIO50, AF3)
++#define GPIO51_U2D_PHYDATA_2	MFP_CFG(GPIO51, AF3)
++#define GPIO52_U2D_PHYDATA_3	MFP_CFG(GPIO52, AF3)
++#define GPIO53_U2D_PHYDATA_4	MFP_CFG(GPIO53, AF3)
++#define GPIO54_U2D_PHYDATA_5	MFP_CFG(GPIO54, AF3)
++#define GPIO55_U2D_PHYDATA_6	MFP_CFG(GPIO55, AF3)
++#define GPIO56_U2D_PHYDATA_7	MFP_CFG(GPIO56, AF3)
++
++#define GPIO37_U2D_OPMODE0	MFP_CFG(GPIO37, AF4)
++#define GPIO61_U2D_OPMODE0	MFP_CFG(GPIO61, AF2)
++#define GPIO88_U2D_OPMODE0	MFP_CFG(GPIO88, AF7)
++
++#define GPIO38_U2D_OPMODE1	MFP_CFG(GPIO38, AF4)
++#define GPIO62_U2D_OPMODE1	MFP_CFG(GPIO62, AF2)
++#define GPIO104_U2D_OPMODE1	MFP_CFG(GPIO104, AF4)
++#define GPIO108_U2D_OPMODE1	MFP_CFG(GPIO108, AF5)
++
++#define GPIO74_U2D_RESET	MFP_CFG(GPIO74, AF1)
++#define GPIO93_U2D_RESET	MFP_CFG(GPIO93, AF2)
++#define GPIO98_U2D_RESET	MFP_CFG(GPIO98, AF3)
++
++#define GPIO67_U2D_SUSPEND	MFP_CFG(GPIO67, AF3)
++#define GPIO96_U2D_SUSPEND	MFP_CFG(GPIO96, AF2)
++#define GPIO101_U2D_SUSPEND	MFP_CFG(GPIO101, AF3)
++
++#define GPIO66_U2D_TERM_SEL	MFP_CFG(GPIO66, AF5)
++#define GPIO95_U2D_TERM_SEL	MFP_CFG(GPIO95, AF3)
++#define GPIO97_U2D_TERM_SEL	MFP_CFG(GPIO97, AF7)
++#define GPIO100_U2D_TERM_SEL	MFP_CFG(GPIO100, AF5)
++
++#define GPIO39_U2D_TXVALID	MFP_CFG(GPIO39, AF4)
++#define GPIO70_U2D_TXVALID	MFP_CFG(GPIO70, AF5)
++#define GPIO83_U2D_TXVALID	MFP_CFG(GPIO83, AF7)
++
++#define GPIO65_U2D_XCVR_SEL	MFP_CFG(GPIO65, AF5)
++#define GPIO94_U2D_XCVR_SEL	MFP_CFG(GPIO94, AF3)
++#define GPIO99_U2D_XCVR_SEL	MFP_CFG(GPIO99, AF5)
++
++/* USB Host 1.1 */
++#define GPIO2_2_USBH_PEN	MFP_CFG(GPIO2_2, AF1)
++#define GPIO3_2_USBH_PWR	MFP_CFG(GPIO3_2, AF1)
++
++/* USB P2 */
++#define GPIO97_USB_P2_2		MFP_CFG(GPIO97, AF2)
++#define GPIO97_USB_P2_6		MFP_CFG(GPIO97, AF4)
++#define GPIO98_USB_P2_2		MFP_CFG(GPIO98, AF4)
++#define GPIO98_USB_P2_6		MFP_CFG(GPIO98, AF2)
++#define GPIO99_USB_P2_1		MFP_CFG(GPIO99, AF2)
++#define GPIO100_USB_P2_4	MFP_CFG(GPIO100, AF2)
++#define GPIO101_USB_P2_8	MFP_CFG(GPIO101, AF2)
++#define GPIO102_USB_P2_3	MFP_CFG(GPIO102, AF2)
++#define GPIO103_USB_P2_5	MFP_CFG(GPIO103, AF2)
++#define GPIO104_USB_P2_7	MFP_CFG(GPIO104, AF2)
++
++/* USB P3 */
++#define GPIO75_USB_P3_1		MFP_CFG(GPIO75, AF2)
++#define GPIO76_USB_P3_2		MFP_CFG(GPIO76, AF2)
++#define GPIO77_USB_P3_3		MFP_CFG(GPIO77, AF2)
++#define GPIO78_USB_P3_4		MFP_CFG(GPIO78, AF2)
++#define GPIO79_USB_P3_5		MFP_CFG(GPIO79, AF2)
++#define GPIO80_USB_P3_6		MFP_CFG(GPIO80, AF2)
++
++#define GPIO13_CHOUT0		MFP_CFG(GPIO13, AF6)
++#define GPIO14_CHOUT1		MFP_CFG(GPIO14, AF6)
++
++#define GPIO2_RDY		MFP_CFG(GPIO2, AF1)
++#define GPIO5_NPIOR		MFP_CFG(GPIO5, AF3)
++
++#define GPIO11_PWM0_OUT		MFP_CFG(GPIO11, AF1)
++#define GPIO12_PWM1_OUT		MFP_CFG(GPIO12, AF1)
++#define GPIO13_PWM2_OUT		MFP_CFG(GPIO13, AF1)
++#define GPIO14_PWM3_OUT		MFP_CFG(GPIO14, AF1)
++
++#endif /* __ASM_ARCH_MFP_PXA320_H */
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/mfp.h
+@@ -0,0 +1,576 @@
++/*
++ * linux/include/asm-arm/arch-pxa/mfp.h
++ *
++ * Multi-Function Pin Definitions
++ *
++ * Copyright (C) 2007 Marvell International Ltd.
++ *
++ * 2007-8-21: eric miao <eric.y.miao@gmail.com>
++ *            initial version
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++
++#ifndef __ASM_ARCH_MFP_H
++#define __ASM_ARCH_MFP_H
++
++#define MFPR_BASE	(0x40e10000)
++#define MFPR_SIZE	(PAGE_SIZE)
++
++#define mfp_to_gpio(m)	((m) % 128)
++
++/* list of all the configurable MFP pins */
++enum {
++	MFP_PIN_INVALID = -1,
++
++	MFP_PIN_GPIO0 = 0,
++	MFP_PIN_GPIO1,
++	MFP_PIN_GPIO2,
++	MFP_PIN_GPIO3,
++	MFP_PIN_GPIO4,
++	MFP_PIN_GPIO5,
++	MFP_PIN_GPIO6,
++	MFP_PIN_GPIO7,
++	MFP_PIN_GPIO8,
++	MFP_PIN_GPIO9,
++	MFP_PIN_GPIO10,
++	MFP_PIN_GPIO11,
++	MFP_PIN_GPIO12,
++	MFP_PIN_GPIO13,
++	MFP_PIN_GPIO14,
++	MFP_PIN_GPIO15,
++	MFP_PIN_GPIO16,
++	MFP_PIN_GPIO17,
++	MFP_PIN_GPIO18,
++	MFP_PIN_GPIO19,
++	MFP_PIN_GPIO20,
++	MFP_PIN_GPIO21,
++	MFP_PIN_GPIO22,
++	MFP_PIN_GPIO23,
++	MFP_PIN_GPIO24,
++	MFP_PIN_GPIO25,
++	MFP_PIN_GPIO26,
++	MFP_PIN_GPIO27,
++	MFP_PIN_GPIO28,
++	MFP_PIN_GPIO29,
++	MFP_PIN_GPIO30,
++	MFP_PIN_GPIO31,
++	MFP_PIN_GPIO32,
++	MFP_PIN_GPIO33,
++	MFP_PIN_GPIO34,
++	MFP_PIN_GPIO35,
++	MFP_PIN_GPIO36,
++	MFP_PIN_GPIO37,
++	MFP_PIN_GPIO38,
++	MFP_PIN_GPIO39,
++	MFP_PIN_GPIO40,
++	MFP_PIN_GPIO41,
++	MFP_PIN_GPIO42,
++	MFP_PIN_GPIO43,
++	MFP_PIN_GPIO44,
++	MFP_PIN_GPIO45,
++	MFP_PIN_GPIO46,
++	MFP_PIN_GPIO47,
++	MFP_PIN_GPIO48,
++	MFP_PIN_GPIO49,
++	MFP_PIN_GPIO50,
++	MFP_PIN_GPIO51,
++	MFP_PIN_GPIO52,
++	MFP_PIN_GPIO53,
++	MFP_PIN_GPIO54,
++	MFP_PIN_GPIO55,
++	MFP_PIN_GPIO56,
++	MFP_PIN_GPIO57,
++	MFP_PIN_GPIO58,
++	MFP_PIN_GPIO59,
++	MFP_PIN_GPIO60,
++	MFP_PIN_GPIO61,
++	MFP_PIN_GPIO62,
++	MFP_PIN_GPIO63,
++	MFP_PIN_GPIO64,
++	MFP_PIN_GPIO65,
++	MFP_PIN_GPIO66,
++	MFP_PIN_GPIO67,
++	MFP_PIN_GPIO68,
++	MFP_PIN_GPIO69,
++	MFP_PIN_GPIO70,
++	MFP_PIN_GPIO71,
++	MFP_PIN_GPIO72,
++	MFP_PIN_GPIO73,
++	MFP_PIN_GPIO74,
++	MFP_PIN_GPIO75,
++	MFP_PIN_GPIO76,
++	MFP_PIN_GPIO77,
++	MFP_PIN_GPIO78,
++	MFP_PIN_GPIO79,
++	MFP_PIN_GPIO80,
++	MFP_PIN_GPIO81,
++	MFP_PIN_GPIO82,
++	MFP_PIN_GPIO83,
++	MFP_PIN_GPIO84,
++	MFP_PIN_GPIO85,
++	MFP_PIN_GPIO86,
++	MFP_PIN_GPIO87,
++	MFP_PIN_GPIO88,
++	MFP_PIN_GPIO89,
++	MFP_PIN_GPIO90,
++	MFP_PIN_GPIO91,
++	MFP_PIN_GPIO92,
++	MFP_PIN_GPIO93,
++	MFP_PIN_GPIO94,
++	MFP_PIN_GPIO95,
++	MFP_PIN_GPIO96,
++	MFP_PIN_GPIO97,
++	MFP_PIN_GPIO98,
++	MFP_PIN_GPIO99,
++	MFP_PIN_GPIO100,
++	MFP_PIN_GPIO101,
++	MFP_PIN_GPIO102,
++	MFP_PIN_GPIO103,
++	MFP_PIN_GPIO104,
++	MFP_PIN_GPIO105,
++	MFP_PIN_GPIO106,
++	MFP_PIN_GPIO107,
++	MFP_PIN_GPIO108,
++	MFP_PIN_GPIO109,
++	MFP_PIN_GPIO110,
++	MFP_PIN_GPIO111,
++	MFP_PIN_GPIO112,
++	MFP_PIN_GPIO113,
++	MFP_PIN_GPIO114,
++	MFP_PIN_GPIO115,
++	MFP_PIN_GPIO116,
++	MFP_PIN_GPIO117,
++	MFP_PIN_GPIO118,
++	MFP_PIN_GPIO119,
++	MFP_PIN_GPIO120,
++	MFP_PIN_GPIO121,
++	MFP_PIN_GPIO122,
++	MFP_PIN_GPIO123,
++	MFP_PIN_GPIO124,
++	MFP_PIN_GPIO125,
++	MFP_PIN_GPIO126,
++	MFP_PIN_GPIO127,
++	MFP_PIN_GPIO0_2,
++	MFP_PIN_GPIO1_2,
++	MFP_PIN_GPIO2_2,
++	MFP_PIN_GPIO3_2,
++	MFP_PIN_GPIO4_2,
++	MFP_PIN_GPIO5_2,
++	MFP_PIN_GPIO6_2,
++	MFP_PIN_GPIO7_2,
++	MFP_PIN_GPIO8_2,
++	MFP_PIN_GPIO9_2,
++	MFP_PIN_GPIO10_2,
++	MFP_PIN_GPIO11_2,
++	MFP_PIN_GPIO12_2,
++	MFP_PIN_GPIO13_2,
++	MFP_PIN_GPIO14_2,
++	MFP_PIN_GPIO15_2,
++	MFP_PIN_GPIO16_2,
++	MFP_PIN_GPIO17_2,
++
++	MFP_PIN_ULPI_STP,
++	MFP_PIN_ULPI_NXT,
++	MFP_PIN_ULPI_DIR,
++
++	MFP_PIN_nXCVREN,
++	MFP_PIN_DF_CLE_nOE,
++	MFP_PIN_DF_nADV1_ALE,
++	MFP_PIN_DF_SCLK_E,
++	MFP_PIN_DF_SCLK_S,
++	MFP_PIN_nBE0,
++	MFP_PIN_nBE1,
++	MFP_PIN_DF_nADV2_ALE,
++	MFP_PIN_DF_INT_RnB,
++	MFP_PIN_DF_nCS0,
++	MFP_PIN_DF_nCS1,
++	MFP_PIN_nLUA,
++	MFP_PIN_nLLA,
++	MFP_PIN_DF_nWE,
++	MFP_PIN_DF_ALE_nWE,
++	MFP_PIN_DF_nRE_nOE,
++	MFP_PIN_DF_ADDR0,
++	MFP_PIN_DF_ADDR1,
++	MFP_PIN_DF_ADDR2,
++	MFP_PIN_DF_ADDR3,
++	MFP_PIN_DF_IO0,
++	MFP_PIN_DF_IO1,
++	MFP_PIN_DF_IO2,
++	MFP_PIN_DF_IO3,
++	MFP_PIN_DF_IO4,
++	MFP_PIN_DF_IO5,
++	MFP_PIN_DF_IO6,
++	MFP_PIN_DF_IO7,
++	MFP_PIN_DF_IO8,
++	MFP_PIN_DF_IO9,
++	MFP_PIN_DF_IO10,
++	MFP_PIN_DF_IO11,
++	MFP_PIN_DF_IO12,
++	MFP_PIN_DF_IO13,
++	MFP_PIN_DF_IO14,
++	MFP_PIN_DF_IO15,
++
++	MFP_PIN_MAX,
++};
++
++/*
++ * Table that determines the low power modes outputs, with actual settings
++ * used in parentheses for don't-care values. Except for the float output,
++ * the configured driven and pulled levels match, so if there is a need for
++ * non-LPM pulled output, the same configuration could probably be used.
++ *
++ * Output value  sleep_oe_n  sleep_data  pullup_en  pulldown_en  pull_sel
++ *                 (bit 7)    (bit 8)    (bit 14d)   (bit 13d)
++ *
++ * Drive 0          0          0           0           X (1)      0
++ * Drive 1          0          1           X (1)       0	  0
++ * Pull hi (1)      1          X(1)        1           0	  0
++ * Pull lo (0)      1          X(0)        0           1	  0
++ * Z (float)        1          X(0)        0           0	  0
++ */
++#define MFP_LPM_DRIVE_LOW	0x8
++#define MFP_LPM_DRIVE_HIGH    	0x6
++#define MFP_LPM_PULL_HIGH     	0x7
++#define MFP_LPM_PULL_LOW      	0x9
++#define MFP_LPM_FLOAT         	0x1
++#define MFP_LPM_PULL_NEITHER	0x0
++
++/*
++ * The pullup and pulldown state of the MFP pin is by default determined by
++ * selected alternate function. In case some buggy devices need to override
++ * this default behavior,  pxa3xx_mfp_set_pull() can be invoked with one of
++ * the following definition as the parameter.
++ *
++ * Definition       pull_sel  pullup_en  pulldown_en
++ * MFP_PULL_HIGH        1         1        0
++ * MFP_PULL_LOW         1         0        1
++ * MFP_PULL_BOTH        1         1        1
++ * MFP_PULL_NONE        1         0        0
++ * MFP_PULL_DEFAULT     0         X        X
++ *
++ * NOTE: pxa3xx_mfp_set_pull() will modify the PULLUP_EN and PULLDOWN_EN
++ * bits,  which will cause potential conflicts with the low power mode
++ * setting, device drivers should take care of this
++ */
++#define MFP_PULL_BOTH		(0x7u)
++#define MFP_PULL_HIGH		(0x6u)
++#define MFP_PULL_LOW		(0x5u)
++#define MFP_PULL_NONE		(0x4u)
++#define MFP_PULL_DEFAULT	(0x0u)
++
++#define MFP_AF0			(0)
++#define MFP_AF1			(1)
++#define MFP_AF2			(2)
++#define MFP_AF3			(3)
++#define MFP_AF4			(4)
++#define MFP_AF5			(5)
++#define MFP_AF6			(6)
++#define MFP_AF7			(7)
++
++#define MFP_DS01X		(0)
++#define MFP_DS02X		(1)
++#define MFP_DS03X		(2)
++#define MFP_DS04X		(3)
++#define MFP_DS06X		(4)
++#define MFP_DS08X		(5)
++#define MFP_DS10X		(6)
++#define MFP_DS12X		(7)
++
++#define MFP_EDGE_BOTH		0x3
++#define MFP_EDGE_RISE		0x2
++#define MFP_EDGE_FALL		0x1
++#define MFP_EDGE_NONE		0x0
++
++#define MFPR_AF_MASK		0x0007
++#define MFPR_DRV_MASK		0x1c00
++#define MFPR_RDH_MASK		0x0200
++#define MFPR_LPM_MASK		0xe180
++#define MFPR_PULL_MASK		0xe000
++#define MFPR_EDGE_MASK		0x0070
++
++#define MFPR_ALT_OFFSET		0
++#define MFPR_ERE_OFFSET		4
++#define MFPR_EFE_OFFSET		5
++#define MFPR_EC_OFFSET		6
++#define MFPR_SON_OFFSET		7
++#define MFPR_SD_OFFSET		8
++#define MFPR_SS_OFFSET		9
++#define MFPR_DRV_OFFSET		10
++#define MFPR_PD_OFFSET		13
++#define MFPR_PU_OFFSET		14
++#define MFPR_PS_OFFSET		15
++
++#define MFPR(af, drv, rdh, lpm, edge) \
++	(((af) & 0x7) | (((drv) & 0x7) << 10) |\
++	 (((rdh) & 0x1) << 9) |\
++	 (((lpm) & 0x3) << 7) |\
++	 (((lpm) & 0x4) << 12)|\
++	 (((lpm) & 0x8) << 10)|\
++	 ((!(edge)) << 6) |\
++	 (((edge) & 0x1) << 5) |\
++	 (((edge) & 0x2) << 3))
++
++/*
++ * a possible MFP configuration is represented by a 32-bit integer
++ * bit  0..15 - MFPR value (16-bit)
++ * bit 16..31 - mfp pin index (used to obtain the MFPR offset)
++ *
++ * to facilitate the definition, the following macros are provided
++ *
++ * MFPR_DEFAULT - default MFPR value, with
++ * 		  alternate function = 0,
++ * 		  drive strength = fast 1mA (MFP_DS01X)
++ * 		  low power mode = default
++ * 		  release dalay hold = false (RDH bit)
++ * 		  edge detection = none
++ *
++ * MFP_CFG	- default MFPR value with alternate function
++ * MFP_CFG_DRV	- default MFPR value with alternate function and
++ * 		  pin drive strength
++ * MFP_CFG_LPM	- default MFPR value with alternate function and
++ * 		  low power mode
++ * MFP_CFG_X	- default MFPR value with alternate function,
++ * 		  pin drive strength and low power mode
++ *
++ * use
++ *
++ * MFP_CFG_PIN	- to get the MFP pin index
++ * MFP_CFG_VAL	- to get the corresponding MFPR value
++ */
++
++typedef uint32_t mfp_cfg_t;
++
++#define MFP_CFG_PIN(mfp_cfg)	(((mfp_cfg) >> 16) & 0xffff)
++#define MFP_CFG_VAL(mfp_cfg)	((mfp_cfg) & 0xffff)
++
++#define MFPR_DEFAULT	(0x0000)
++
++#define MFP_CFG(pin, af)		\
++	((MFP_PIN_##pin << 16) | MFPR_DEFAULT | (MFP_##af))
++
++#define MFP_CFG_DRV(pin, af, drv)	\
++	((MFP_PIN_##pin << 16) | MFPR_DEFAULT |\
++	 ((MFP_##drv) << 10) | (MFP_##af))
++
++#define MFP_CFG_LPM(pin, af, lpm)	\
++	((MFP_PIN_##pin << 16) | MFPR_DEFAULT | (MFP_##af) |\
++	 (((MFP_LPM_##lpm) & 0x3) << 7)  |\
++	 (((MFP_LPM_##lpm) & 0x4) << 12) |\
++	 (((MFP_LPM_##lpm) & 0x8) << 10))
++
++#define MFP_CFG_X(pin, af, drv, lpm)	\
++	((MFP_PIN_##pin << 16) | MFPR_DEFAULT |\
++	 ((MFP_##drv) << 10) | (MFP_##af) |\
++	 (((MFP_LPM_##lpm) & 0x3) << 7)  |\
++	 (((MFP_LPM_##lpm) & 0x4) << 12) |\
++	 (((MFP_LPM_##lpm) & 0x8) << 10))
++
++/* common MFP configurations - processor specific ones defined
++ * in mfp-pxa3xx.h
++ */
++#define GPIO0_GPIO		MFP_CFG(GPIO0, AF0)
++#define GPIO1_GPIO		MFP_CFG(GPIO1, AF0)
++#define GPIO2_GPIO		MFP_CFG(GPIO2, AF0)
++#define GPIO3_GPIO		MFP_CFG(GPIO3, AF0)
++#define GPIO4_GPIO		MFP_CFG(GPIO4, AF0)
++#define GPIO5_GPIO		MFP_CFG(GPIO5, AF0)
++#define GPIO6_GPIO		MFP_CFG(GPIO6, AF0)
++#define GPIO7_GPIO		MFP_CFG(GPIO7, AF0)
++#define GPIO8_GPIO		MFP_CFG(GPIO8, AF0)
++#define GPIO9_GPIO		MFP_CFG(GPIO9, AF0)
++#define GPIO10_GPIO		MFP_CFG(GPIO10, AF0)
++#define GPIO11_GPIO		MFP_CFG(GPIO11, AF0)
++#define GPIO12_GPIO		MFP_CFG(GPIO12, AF0)
++#define GPIO13_GPIO		MFP_CFG(GPIO13, AF0)
++#define GPIO14_GPIO		MFP_CFG(GPIO14, AF0)
++#define GPIO15_GPIO		MFP_CFG(GPIO15, AF0)
++#define GPIO16_GPIO		MFP_CFG(GPIO16, AF0)
++#define GPIO17_GPIO		MFP_CFG(GPIO17, AF0)
++#define GPIO18_GPIO		MFP_CFG(GPIO18, AF0)
++#define GPIO19_GPIO		MFP_CFG(GPIO19, AF0)
++#define GPIO20_GPIO		MFP_CFG(GPIO20, AF0)
++#define GPIO21_GPIO		MFP_CFG(GPIO21, AF0)
++#define GPIO22_GPIO		MFP_CFG(GPIO22, AF0)
++#define GPIO23_GPIO		MFP_CFG(GPIO23, AF0)
++#define GPIO24_GPIO		MFP_CFG(GPIO24, AF0)
++#define GPIO25_GPIO		MFP_CFG(GPIO25, AF0)
++#define GPIO26_GPIO		MFP_CFG(GPIO26, AF0)
++#define GPIO27_GPIO		MFP_CFG(GPIO27, AF0)
++#define GPIO28_GPIO		MFP_CFG(GPIO28, AF0)
++#define GPIO29_GPIO		MFP_CFG(GPIO29, AF0)
++#define GPIO30_GPIO		MFP_CFG(GPIO30, AF0)
++#define GPIO31_GPIO		MFP_CFG(GPIO31, AF0)
++#define GPIO32_GPIO		MFP_CFG(GPIO32, AF0)
++#define GPIO33_GPIO		MFP_CFG(GPIO33, AF0)
++#define GPIO34_GPIO		MFP_CFG(GPIO34, AF0)
++#define GPIO35_GPIO		MFP_CFG(GPIO35, AF0)
++#define GPIO36_GPIO		MFP_CFG(GPIO36, AF0)
++#define GPIO37_GPIO		MFP_CFG(GPIO37, AF0)
++#define GPIO38_GPIO		MFP_CFG(GPIO38, AF0)
++#define GPIO39_GPIO		MFP_CFG(GPIO39, AF0)
++#define GPIO40_GPIO		MFP_CFG(GPIO40, AF0)
++#define GPIO41_GPIO		MFP_CFG(GPIO41, AF0)
++#define GPIO42_GPIO		MFP_CFG(GPIO42, AF0)
++#define GPIO43_GPIO		MFP_CFG(GPIO43, AF0)
++#define GPIO44_GPIO		MFP_CFG(GPIO44, AF0)
++#define GPIO45_GPIO		MFP_CFG(GPIO45, AF0)
++
++#define GPIO47_GPIO		MFP_CFG(GPIO47, AF0)
++#define GPIO48_GPIO		MFP_CFG(GPIO48, AF0)
++
++#define GPIO53_GPIO		MFP_CFG(GPIO53, AF0)
++#define GPIO54_GPIO		MFP_CFG(GPIO54, AF0)
++#define GPIO55_GPIO		MFP_CFG(GPIO55, AF0)
++
++#define GPIO57_GPIO		MFP_CFG(GPIO57, AF0)
++
++#define GPIO63_GPIO		MFP_CFG(GPIO63, AF0)
++#define GPIO64_GPIO		MFP_CFG(GPIO64, AF0)
++#define GPIO65_GPIO		MFP_CFG(GPIO65, AF0)
++#define GPIO66_GPIO		MFP_CFG(GPIO66, AF0)
++#define GPIO67_GPIO		MFP_CFG(GPIO67, AF0)
++#define GPIO68_GPIO		MFP_CFG(GPIO68, AF0)
++#define GPIO69_GPIO		MFP_CFG(GPIO69, AF0)
++#define GPIO70_GPIO		MFP_CFG(GPIO70, AF0)
++#define GPIO71_GPIO		MFP_CFG(GPIO71, AF0)
++#define GPIO72_GPIO		MFP_CFG(GPIO72, AF0)
++#define GPIO73_GPIO		MFP_CFG(GPIO73, AF0)
++#define GPIO74_GPIO		MFP_CFG(GPIO74, AF0)
++#define GPIO75_GPIO		MFP_CFG(GPIO75, AF0)
++#define GPIO76_GPIO		MFP_CFG(GPIO76, AF0)
++#define GPIO77_GPIO		MFP_CFG(GPIO77, AF0)
++#define GPIO78_GPIO		MFP_CFG(GPIO78, AF0)
++#define GPIO79_GPIO		MFP_CFG(GPIO79, AF0)
++#define GPIO80_GPIO		MFP_CFG(GPIO80, AF0)
++#define GPIO81_GPIO		MFP_CFG(GPIO81, AF0)
++#define GPIO82_GPIO		MFP_CFG(GPIO82, AF0)
++#define GPIO83_GPIO		MFP_CFG(GPIO83, AF0)
++#define GPIO84_GPIO		MFP_CFG(GPIO84, AF0)
++#define GPIO85_GPIO		MFP_CFG(GPIO85, AF0)
++#define GPIO86_GPIO		MFP_CFG(GPIO86, AF0)
++#define GPIO87_GPIO		MFP_CFG(GPIO87, AF0)
++#define GPIO88_GPIO		MFP_CFG(GPIO88, AF0)
++#define GPIO89_GPIO		MFP_CFG(GPIO89, AF0)
++#define GPIO90_GPIO		MFP_CFG(GPIO90, AF0)
++#define GPIO91_GPIO		MFP_CFG(GPIO91, AF0)
++#define GPIO92_GPIO		MFP_CFG(GPIO92, AF0)
++#define GPIO93_GPIO		MFP_CFG(GPIO93, AF0)
++#define GPIO94_GPIO		MFP_CFG(GPIO94, AF0)
++#define GPIO95_GPIO		MFP_CFG(GPIO95, AF0)
++#define GPIO96_GPIO		MFP_CFG(GPIO96, AF0)
++#define GPIO97_GPIO		MFP_CFG(GPIO97, AF0)
++#define GPIO98_GPIO		MFP_CFG(GPIO98, AF0)
++#define GPIO99_GPIO		MFP_CFG(GPIO99, AF0)
++#define GPIO100_GPIO		MFP_CFG(GPIO100, AF0)
++#define GPIO101_GPIO		MFP_CFG(GPIO101, AF0)
++#define GPIO102_GPIO		MFP_CFG(GPIO102, AF0)
++#define GPIO103_GPIO		MFP_CFG(GPIO103, AF0)
++#define GPIO104_GPIO		MFP_CFG(GPIO104, AF0)
++#define GPIO105_GPIO		MFP_CFG(GPIO105, AF0)
++#define GPIO106_GPIO		MFP_CFG(GPIO106, AF0)
++#define GPIO107_GPIO		MFP_CFG(GPIO107, AF0)
++#define GPIO108_GPIO		MFP_CFG(GPIO108, AF0)
++#define GPIO109_GPIO		MFP_CFG(GPIO109, AF0)
++#define GPIO110_GPIO		MFP_CFG(GPIO110, AF0)
++#define GPIO111_GPIO		MFP_CFG(GPIO111, AF0)
++#define GPIO112_GPIO		MFP_CFG(GPIO112, AF0)
++#define GPIO113_GPIO		MFP_CFG(GPIO113, AF0)
++#define GPIO114_GPIO		MFP_CFG(GPIO114, AF0)
++#define GPIO115_GPIO		MFP_CFG(GPIO115, AF0)
++#define GPIO116_GPIO		MFP_CFG(GPIO116, AF0)
++#define GPIO117_GPIO		MFP_CFG(GPIO117, AF0)
++#define GPIO118_GPIO		MFP_CFG(GPIO118, AF0)
++#define GPIO119_GPIO		MFP_CFG(GPIO119, AF0)
++#define GPIO120_GPIO		MFP_CFG(GPIO120, AF0)
++#define GPIO121_GPIO		MFP_CFG(GPIO121, AF0)
++#define GPIO122_GPIO		MFP_CFG(GPIO122, AF0)
++#define GPIO123_GPIO		MFP_CFG(GPIO123, AF0)
++#define GPIO124_GPIO		MFP_CFG(GPIO124, AF0)
++#define GPIO125_GPIO		MFP_CFG(GPIO125, AF0)
++#define GPIO126_GPIO		MFP_CFG(GPIO126, AF0)
++#define GPIO127_GPIO		MFP_CFG(GPIO127, AF0)
++
++#define GPIO0_2_GPIO		MFP_CFG(GPIO0_2, AF0)
++#define GPIO1_2_GPIO		MFP_CFG(GPIO1_2, AF0)
++#define GPIO2_2_GPIO		MFP_CFG(GPIO2_2, AF0)
++#define GPIO3_2_GPIO		MFP_CFG(GPIO3_2, AF0)
++#define GPIO4_2_GPIO		MFP_CFG(GPIO4_2, AF0)
++#define GPIO5_2_GPIO		MFP_CFG(GPIO5_2, AF0)
++#define GPIO6_2_GPIO		MFP_CFG(GPIO6_2, AF0)
++
++/*
++ * each MFP pin will have a MFPR register, since the offset of the
++ * register varies between processors, the processor specific code
++ * should initialize the pin offsets by pxa3xx_mfp_init_addr()
++ *
++ * pxa3xx_mfp_init_addr - accepts a table of "pxa3xx_mfp_addr_map"
++ * structure, which represents a range of MFP pins from "start" to
++ * "end", with the offset begining at "offset", to define a single
++ * pin, let "end" = -1
++ *
++ * use
++ *
++ * MFP_ADDR_X() to define a range of pins
++ * MFP_ADDR()   to define a single pin
++ * MFP_ADDR_END to signal the end of pin offset definitions
++ */
++struct pxa3xx_mfp_addr_map {
++	unsigned int	start;
++	unsigned int	end;
++	unsigned long	offset;
++};
++
++#define MFP_ADDR_X(start, end, offset) \
++	{ MFP_PIN_##start, MFP_PIN_##end, offset }
++
++#define MFP_ADDR(pin, offset) \
++	{ MFP_PIN_##pin, -1, offset }
++
++#define MFP_ADDR_END	{ MFP_PIN_INVALID, 0 }
++
++struct pxa3xx_mfp_pin {
++	unsigned long	mfpr_off;	/* MFPRxx register offset */
++	unsigned long	mfpr_val;	/* MFPRxx register value */
++};
++
++/*
++ * pxa3xx_mfp_read()/pxa3xx_mfp_write() - for direct read/write access
++ * to the MFPR register
++ */
++unsigned long pxa3xx_mfp_read(int mfp);
++void pxa3xx_mfp_write(int mfp, unsigned long mfpr_val);
++
++/*
++ * pxa3xx_mfp_set_afds - set MFP alternate function and drive strength
++ * pxa3xx_mfp_set_rdh  - set MFP release delay hold on/off
++ * pxa3xx_mfp_set_lpm  - set MFP low power mode state
++ * pxa3xx_mfp_set_edge - set MFP edge detection in low power mode
++ *
++ * use these functions to override/change the default configuration
++ * done by pxa3xx_mfp_set_config(s)
++ */
++void pxa3xx_mfp_set_afds(int mfp, int af, int ds);
++void pxa3xx_mfp_set_rdh(int mfp, int rdh);
++void pxa3xx_mfp_set_lpm(int mfp, int lpm);
++void pxa3xx_mfp_set_edge(int mfp, int edge);
++
++/*
++ * pxa3xx_mfp_config - configure the MFPR registers
++ *
++ * used by board specific initialization code
++ */
++void pxa3xx_mfp_config(mfp_cfg_t *mfp_cfgs, int num);
++
++/*
++ * pxa3xx_mfp_init_addr() - initialize the mapping between mfp pin
++ * index and MFPR register offset
++ *
++ * used by processor specific code
++ */
++void __init pxa3xx_mfp_init_addr(struct pxa3xx_mfp_addr_map *);
++void __init pxa3xx_init_mfp(void);
++
++#endif /* __ASM_ARCH_MFP_H */
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/pxa-regs.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/pxa-regs.h
+@@ -1184,7 +1184,7 @@
+ 
+ #define GPIO_bit(x)	(1 << ((x) & 0x1f))
+ 
+-#ifdef CONFIG_PXA27x
++#if defined(CONFIG_PXA27x) || defined(CONFIG_PXA3xx)
+ 
+ /* Interrupt Controller */
+ 
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/pxa3xx-regs.h
+@@ -0,0 +1,75 @@
++/*
++ * linux/include/asm-arm/arch-pxa/pxa3xx-regs.h
++ *
++ * PXA3xx specific register definitions
++ *
++ * Copyright (C) 2007 Marvell International Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __ASM_ARCH_PXA3XX_REGS_H
++#define __ASM_ARCH_PXA3XX_REGS_H
++
++/*
++ * Application Subsystem Clock
++ */
++#define ACCR		__REG(0x41340000)	/* Application Subsystem Clock Configuration Register */
++#define ACSR		__REG(0x41340004)	/* Application Subsystem Clock Status Register */
++#define AICSR		__REG(0x41340008)	/* Application Subsystem Interrupt Control/Status Register */
++#define CKENA		__REG(0x4134000C)	/* A Clock Enable Register */
++#define CKENB		__REG(0x41340010)	/* B Clock Enable Register */
++#define AC97_DIV	__REG(0x41340014)	/* AC97 clock divisor value register */
++
++/*
++ * Clock Enable Bit
++ */
++#define CKEN_LCD	1	/* < LCD Clock Enable */
++#define CKEN_USBH	2	/* < USB host clock enable */
++#define CKEN_CAMERA	3	/* < Camera interface clock enable */
++#define CKEN_NAND	4	/* < NAND Flash Controller Clock Enable */
++#define CKEN_USB2	6	/* < USB 2.0 client clock enable. */
++#define CKEN_DMC	8	/* < Dynamic Memory Controller clock enable */
++#define CKEN_SMC	9	/* < Static Memory Controller clock enable */
++#define CKEN_ISC	10	/* < Internal SRAM Controller clock enable */
++#define CKEN_BOOT	11	/* < Boot rom clock enable */
++#define CKEN_MMC1	12	/* < MMC1 Clock enable */
++#define CKEN_MMC2	13	/* < MMC2 clock enable */
++#define CKEN_KEYPAD	14	/* < Keypand Controller Clock Enable */
++#define CKEN_CIR	15	/* < Consumer IR Clock Enable */
++#define CKEN_USIM0	17	/* < USIM[0] Clock Enable */
++#define CKEN_USIM1	18	/* < USIM[1] Clock Enable */
++#define CKEN_TPM	19	/* < TPM clock enable */
++#define CKEN_UDC	20	/* < UDC clock enable */
++#define CKEN_BTUART	21	/* < BTUART clock enable */
++#define CKEN_FFUART	22	/* < FFUART clock enable */
++#define CKEN_STUART	23	/* < STUART clock enable */
++#define CKEN_AC97	24	/* < AC97 clock enable */
++#define CKEN_TOUCH	25	/* < Touch screen Interface Clock Enable */
++#define CKEN_SSP1	26	/* < SSP1 clock enable */
++#define CKEN_SSP2	27	/* < SSP2 clock enable */
++#define CKEN_SSP3	28	/* < SSP3 clock enable */
++#define CKEN_SSP4	29	/* < SSP4 clock enable */
++#define CKEN_MSL0	30	/* < MSL0 clock enable */
++#define CKEN_PWM0	32	/* < PWM[0] clock enable */
++#define CKEN_PWM1	33	/* < PWM[1] clock enable */
++#define CKEN_I2C	36	/* < I2C clock enable */
++#define CKEN_INTC	38	/* < Interrupt controller clock enable */
++#define CKEN_GPIO	39	/* < GPIO clock enable */
++#define CKEN_1WIRE	40	/* < 1-wire clock enable */
++#define CKEN_HSIO2	41	/* < HSIO2 clock enable */
++#define CKEN_MINI_IM	48	/* < Mini-IM */
++#define CKEN_MINI_LCD	49	/* < Mini LCD */
++
++#if defined(CONFIG_CPU_PXA310)
++#define CKEN_MMC3	5	/* < MMC3 Clock Enable */
++#define CKEN_MVED	43	/* < MVED clock enable */
++#endif
++
++/* Note: GCU clock enable bit differs on PXA300/PXA310 and PXA320 */
++#define PXA300_CKEN_GRAPHICS	42	/* Graphics controller clock enable */
++#define PXA320_CKEN_GRAPHICS	7	/* Graphics controller clock enable */
++
++#endif /* __ASM_ARCH_PXA3XX_REGS_H */
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/timex.h
++++ linux-2.6.23/include/asm-arm/arch-pxa/timex.h
+@@ -21,4 +21,6 @@
+ #else
+ #define CLOCK_TICK_RATE 3250000
+ #endif
++#else
++#define CLOCK_TICK_RATE 3250000
+ #endif
+--- /dev/null
++++ linux-2.6.23/include/asm-arm/arch-pxa/zylonite.h
+@@ -0,0 +1,35 @@
++#ifndef __ASM_ARCH_ZYLONITE_H
++#define __ASM_ARCH_ZYLONITE_H
++
++#define ZYLONITE_ETH_PHYS	0x14000000
++
++/* the following variables are processor specific and initialized
++ * by the corresponding zylonite_pxa3xx_init()
++ */
++extern int gpio_backlight;
++extern int gpio_eth_irq;
++
++extern int lcd_id;
++extern int lcd_orientation;
++
++#ifdef CONFIG_CPU_PXA300
++extern void zylonite_pxa300_init(void);
++#else
++static inline void zylonite_pxa300_init(void)
++{
++	if (cpu_is_pxa300() || cpu_is_pxa310())
++		panic("%s: PXA300/PXA310 not supported\n", __FUNCTION__);
++}
++#endif
++
++#ifdef CONFIG_CPU_PXA320
++extern void zylonite_pxa320_init(void);
++#else
++static inline void zylonite_pxa320_init(void)
++{
++	if (cpu_is_pxa320())
++		panic("%s: PXA320 not supported\n", __FUNCTION__);
++}
++#endif
++
++#endif /* __ASM_ARCH_ZYLONITE_H */

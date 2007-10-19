@@ -1,0 +1,208 @@
+Index: linux-tosa/drivers/input/touchscreen/wm9712.c
+===================================================================
+--- linux-tosa.orig/drivers/input/touchscreen/wm9712.c	2006-08-29 16:52:36.008543280 +0100
++++ linux-tosa/drivers/input/touchscreen/wm9712.c	2006-08-29 16:52:50.923275896 +0100
+@@ -1,7 +1,7 @@
+ /*
+  * wm9712.c  --  Codec driver for Wolfson WM9712 AC97 Codecs.
+  *
+- * Copyright 2003, 2004, 2005 Wolfson Microelectronics PLC.
++ * Copyright 2003, 2004, 2005, 2006 Wolfson Microelectronics PLC.
+  * Author: Liam Girdwood
+  *         liam.girdwood@wolfsonmicro.com or linux@wolfsonmicro.com
+  * Parts Copyright : Ian Molton <spyro@f2s.com>
+@@ -13,6 +13,12 @@
+  *  Free Software Foundation;  either version 2 of the  License, or (at your
+  *  option) any later version.
+  *
++ *  Revision history
++ *     4th Jul 2005  Initial version.
++ *    29th Aug 2006  Mike Arthur <mike@mikearthur.co.uk>
++ *                   Added fixes for Sharp SL-6000 (Tosa) LCD noise causing
++ *                   touchscreen interference.
++ *
+  */
+ 
+ #include <linux/module.h>
+@@ -28,6 +34,10 @@
+ #define WM9705_VERSION		"0.60"
+ #define DEFAULT_PRESSURE	0xb0c0
+ 
++#define CCNT(a)     asm volatile ("mrc p14, 0, %0, C1, C1, 0" : "=r"(a))
++#define CCNT_ON()   asm("mcr p14, 0, %0, C0, C0, 0" : : "r"(1))
++#define CCNT_OFF()  asm("mcr p14, 0, %0, C0, C0, 0" : : "r"(1))
++
+ /*
+  * Debug
+  */
+@@ -243,6 +253,36 @@
+ 	return wm->dig[2] & WM9712_PDEN;
+ }
+ 
++
++#ifdef CONFIG_MACH_TOSA
++/* On the Sharp SL-6000 (Tosa), due to a noisy LCD, we need to perform a wait
++ * before sampling the Y axis of the touchscreen */
++static inline void wm9712_lcd_sync_on(struct wm97xx* wm, int adcsel) {
++    unsigned long timer1 = 0, timer2 = 0, wait_time = 0;
++    if (adcsel == WM97XX_ADCSEL_Y) {
++        wait_time = wm97xx_calc_lcd_waittime(wm);
++
++        CCNT_ON();
++
++        if (wait_time) {
++            /* wait for LCD rising edge */
++            wm_machinfo->wait_hsync();
++            /* get clock */
++            CCNT(timer1);
++            CCNT(timer2);
++
++            while ((timer2 - timer1) < wait_time) {
++                CCNT(timer2);
++            }
++        }
++    }
++}
++
++static inline void wm9712_lcd_sync_off(void) {
++    CCNT_OFF();
++}
++#endif
++
+ /*
+  * Read a sample from the WM9712 adc in polling mode.
+  */
+@@ -260,6 +300,9 @@
+ 	/* set up digitiser */
+ 	if (adcsel & 0x8000)
+ 		adcsel = ((adcsel & 0x7fff) + 3) << 12;
++    #ifdef CONFIG_MACH_TOSA
++    wm9712_lcd_sync_on(wm, adcsel);
++    #endif
+ 	wm97xx_reg_write(wm, AC97_WM97XX_DIGITISER1, adcsel | WM97XX_POLL | WM97XX_DELAY(delay));
+ 	
+ 	/* wait 3 AC97 time slots + delay for conversion */
+@@ -282,6 +325,10 @@
+ 	
+ 	*sample = wm97xx_reg_read(wm, AC97_WM97XX_DIGITISER_RD);
+ 	
++    #ifdef CONFIG_MACH_TOSA
++    wm9712_lcd_sync_off();
++    #endif
++
+ 	/* check we have correct sample */
+ 	if ((*sample & WM97XX_ADCSEL_MASK) != adcsel) {
+ 		dbg ("adc wrong sample, read %x got %x", adcsel,
+@@ -303,11 +350,12 @@
+ static int wm9712_poll_touch(struct wm97xx* wm, struct wm97xx_data *data)
+ {
+ 	int rc;
+-	
+ 	if ((rc = wm9712_poll_sample(wm, WM97XX_ADCSEL_X, &data->x)) != RC_VALID)
+ 		return rc;
++
+ 	if ((rc = wm9712_poll_sample(wm, WM97XX_ADCSEL_Y, &data->y)) != RC_VALID)
+ 		return rc;
++
+ 	if (pil && !five_wire) {
+ 		if ((rc = wm9712_poll_sample(wm, WM97XX_ADCSEL_PRES, &data->p)) != RC_VALID)
+ 			return rc;
+Index: linux-tosa/drivers/input/touchscreen/wm97xx-core.c
+===================================================================
+--- linux-tosa.orig/drivers/input/touchscreen/wm97xx-core.c	2006-08-29 16:52:36.008543280 +0100
++++ linux-tosa/drivers/input/touchscreen/wm97xx-core.c	2006-08-29 16:52:50.924275744 +0100
+@@ -2,7 +2,7 @@
+  * wm97xx-core.c  --  Touch screen driver core for Wolfson WM9705, WM9712
+  *                           and WM9713 AC97 Codecs.
+  *
+- * Copyright 2003, 2004, 2005 Wolfson Microelectronics PLC.
++ * Copyright 2003, 2004, 2005, 2006 Wolfson Microelectronics PLC.
+  * Author: Liam Girdwood
+  *         liam.girdwood@wolfsonmicro.com or linux@wolfsonmicro.com
+  * Parts Copyright : Ian Molton <spyro@f2s.com>
+@@ -67,6 +67,9 @@
+  *                   GPIOs) and 2.6 power management. 
+  *    29th Nov 2004  Added WM9713 support.
+  *     4th Jul 2005  Moved codec specific code out to seperate files.
++ *    29th Aug 2006  Mike Arthur <mike@mikearthur.co.uk>
++ *                   Added fixes for Sharp SL-6000 (Tosa) LCD noise causing
++ *                   touchscreen interference.
+  */  
+     
+ #include <linux/module.h>
+@@ -94,6 +97,7 @@
+ static DECLARE_MUTEX(gpio_sem);
+ static LIST_HEAD(wm97xx_misc_list);
+ static struct wm97xx* wm_codec = NULL;
++struct wm97xx_machinfo *wm_machinfo;
+ 
+ /*
+  * WM97xx - enable/disable AUX ADC sysfs 
+@@ -832,6 +836,23 @@
+ 		mdev->remove(wm_codec);
+ }
+ 
++#ifdef CONFIG_MACH_TOSA
++/* On the Sharp SL-6000 (Tosa), due to a noisy LCD, we need to perform a wait
++ * before sampling the Y axis of the touchscreen */
++unsigned long wm97xx_calc_lcd_waittime(struct wm97xx *wm) {
++    unsigned long hsync_time = wm_machinfo->get_hsync_time();
++    return hsync_time;
++}
++
++void wm97xx_set_machinfo(struct wm97xx_machinfo *machinfo) {
++    wm_machinfo = machinfo;
++}
++
++void wm97xx_unset_machinfo() {
++    wm_machinfo = NULL;
++}
++#endif
++
+ static struct device_driver wm97xx_driver = {
+ 	.name = 	"ac97", 
+ 	.bus = 		&ac97_bus_type, 
+@@ -861,6 +882,9 @@
+ EXPORT_SYMBOL_GPL(wm97xx_reg_write);
+ EXPORT_SYMBOL_GPL(wm97xx_register_misc_dev);
+ EXPORT_SYMBOL_GPL(wm97xx_unregister_misc_dev);
++EXPORT_SYMBOL_GPL(wm97xx_calc_lcd_waittime);
++EXPORT_SYMBOL_GPL(wm97xx_set_machinfo);
++EXPORT_SYMBOL_GPL(wm97xx_unset_machinfo);
+ 
+ module_init(wm97xx_init); 
+ module_exit(wm97xx_exit);
+Index: linux-tosa/include/linux/wm97xx.h
+===================================================================
+--- linux-tosa.orig/include/linux/wm97xx.h	2006-08-29 16:52:36.008543280 +0100
++++ linux-tosa/include/linux/wm97xx.h	2006-08-29 16:52:50.924275744 +0100
+@@ -207,6 +207,7 @@
+ 
+ struct wm97xx;
+ extern struct wm97xx_codec_drv wm97xx_codec;
++extern struct wm97xx_machinfo *wm_machinfo;
+ 
+ /*
+  * Codec driver interface - allows mapping to WM9705/12/13 and newer codecs
+@@ -253,6 +254,11 @@
+ 	struct list_head list;
+ };
+ 
++struct wm97xx_machinfo {
++    unsigned long (*get_hsync_time)(void);
++    void (*wait_hsync)(void);
++};
++
+ int wm97xx_register_misc_dev(struct wm97xx_misc_dev* mdev);
+ void wm97xx_unregister_misc_dev(struct wm97xx_misc_dev* mdev);
+ 
+@@ -281,4 +287,9 @@
+ int wm97xx_acc_startup(struct wm97xx* wm);
+ void wm97xx_acc_shutdown(struct wm97xx* wm);
+ 
++
++unsigned long wm97xx_calc_lcd_waittime(struct wm97xx *wm);
++void wm97xx_set_machinfo(struct wm97xx_machinfo *machinfo);
++void wm97xx_unset_machinfo(void);
++
+ #endif
