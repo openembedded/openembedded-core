@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r0"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -36,12 +36,14 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${RPSRC}/pxa27x_overlay-r7.patch;patch=1 \
            ${RPSRC}/w100_extaccel-r1.patch;patch=1 \
            ${RPSRC}/w100_extmem-r1.patch;patch=1 \
+           file://w100fb-unused-var.patch;patch=1 \
            file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
            ${RPSRC}/logo_oh-r1.patch.bz2;patch=1;status=unmergable \
            ${RPSRC}/logo_oz-r2.patch.bz2;patch=1;status=unmergable \
            ${RPSRC}/pxa-linking-bug.patch;patch=1;status=unmergable \
            ${RPSRC}/mmcsd_large_cards-r1.patch;patch=1;status=hack \
+           file://mmcsd_no_scr_check-r2.patch;patch=1 \
            ${RPSRC}/integrator_rgb-r1.patch;patch=1;status=hack \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1;status=hack \
            ${RPSRC}/corgi_rearrange_lcd-r0.patch;patch=1 \
