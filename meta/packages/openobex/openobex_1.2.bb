@@ -21,7 +21,7 @@ do_stage() {
 	ln -sf libopenobex.so ${STAGING_LIBDIR}/libopenobex-1.2.so
 	install -d ${STAGING_INCDIR}/openobex
 	install -m 0644 include/*.h ${STAGING_INCDIR}/openobex/
-	install -d ${STAGING_DIR}/aclocal
+	install -d ${STAGING_DATADIR}/aclocal
 	install -m 0644 openobex.m4 ${STAGING_DATADIR}/aclocal/
 }
 
