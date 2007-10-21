@@ -2,7 +2,7 @@ DESCRIPTION = "GNOME XML Parser library"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "MIT"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz"
 
@@ -16,7 +16,7 @@ do_stage() {
 	autotools_stage_all
 	install -m 0644 libxml.m4 ${STAGING_DATADIR}/aclocal/
         #this is need it by php during its install
-        install -m 0755 xml2-config ${STAGING_BINDIR}
+        install -m 0755 xml2-config ${STAGING_BINDIR_CROSS}
 }
 
 python populate_packages_prepend () {
