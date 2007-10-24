@@ -1,0 +1,2427 @@
+ drivers/video/Kconfig               |   18 
+ drivers/video/Makefile              |    1 
+ drivers/video/pxafb.c               |  305 +++++--
+ drivers/video/pxafb.h               |   65 +
+ drivers/video/pxafb_overlay.c       | 1525 ++++++++++++++++++++++++++++++++++++
+ include/asm-arm/arch-pxa/pxa-regs.h |  111 ++
+ 6 files changed, 1969 insertions(+), 56 deletions(-)
+
+--- linux-2.6.24-rc1.orig/drivers/video/Kconfig
++++ linux-2.6.24-rc1/drivers/video/Kconfig
+@@ -1718,6 +1718,24 @@
+ 
+ 	  If unsure, say N.
+ 
++choice
++	prompt "PXA LCD type"
++	depends on FB_PXA
++
++config FB_PXA_LCD_QVGA
++        bool "QVGA(320x240)"
++
++config FB_PXA_LCD_VGA
++        bool "VGA (640x480)"
++
++endchoice
++
++config FB_PXA_OVERLAY
++    tristate "PXA LCD overlay support"
++    depends on FB_PXA
++    ---help---
++        Frame buffer overlay driver for PXA27x
++
+ config FB_PXA_PARAMETERS
+ 	bool "PXA LCD command line parameters"
+ 	default n
+--- linux-2.6.24-rc1.orig/drivers/video/Makefile
++++ linux-2.6.24-rc1/drivers/video/Makefile
+@@ -96,6 +96,7 @@
+ obj-$(CONFIG_FB_CIRRUS)		  += cirrusfb.o
+ obj-$(CONFIG_FB_ASILIANT)	  += asiliantfb.o
+ obj-$(CONFIG_FB_PXA)		  += pxafb.o
++obj-$(CONFIG_FB_PXA_OVERLAY)	  += pxafb_overlay.o
+ obj-$(CONFIG_FB_W100)		  += w100fb.o
+ obj-$(CONFIG_FB_AU1100)		  += au1100fb.o
+ obj-$(CONFIG_FB_AU1200)		  += au1200fb.o
+--- linux-2.6.24-rc1.orig/drivers/video/pxafb.c
++++ linux-2.6.24-rc1/drivers/video/pxafb.c
+@@ -59,17 +59,49 @@
+ #define LCCR0_INVALID_CONFIG_MASK (LCCR0_OUM|LCCR0_BM|LCCR0_QDM|LCCR0_DIS|LCCR0_EFM|LCCR0_IUM|LCCR0_SFM|LCCR0_LDM|LCCR0_ENB)
+ #define LCCR3_INVALID_CONFIG_MASK (LCCR3_HSP|LCCR3_VSP|LCCR3_PCD|LCCR3_BPP)
+ 
++wait_queue_head_t fcs_wait_eof;
++int fcs_in_eof;
++static DECLARE_MUTEX(fcs_lcd_sem);
++
+ static void (*pxafb_backlight_power)(int);
+ static void (*pxafb_lcd_power)(int, struct fb_var_screeninfo *);
+ 
+ static int pxafb_activate_var(struct fb_var_screeninfo *var, struct pxafb_info *);
+-static void set_ctrlr_state(struct pxafb_info *fbi, u_int state);
++void pxafb_set_ctrlr_state(struct pxafb_info *fbi, u_int state);
+ 
+ #ifdef CONFIG_FB_PXA_PARAMETERS
+ #define PXAFB_OPTIONS_SIZE 256
+ static char g_options[PXAFB_OPTIONS_SIZE] __devinitdata = "";
+ #endif
+ 
++static struct pxafb_rgb def_rgb_8 = {
++	red:    { offset: 0,  length: 8, },
++	green:  { offset: 0,  length: 8, },
++	blue:   { offset: 0,  length: 8, },
++	transp: { offset: 0,  length: 0, },
++};
++
++static struct pxafb_rgb def_rgb_16 = {
++	red:    { offset: 11, length: 5, },
++	green:  { offset: 5,  length: 6, },
++	blue:   { offset: 0,  length: 5, },
++	transp: { offset: 0,  length: 0, },
++};
++
++static struct pxafb_rgb def_rgb_18 = {
++	red:    { offset: 12, length: 6, },
++	green:  { offset: 6,  length: 6, },
++	blue:   { offset: 0,  length: 6, },
++	transp: { offset: 0,  length: 0, },
++};
++
++static struct pxafb_rgb def_rgb_24 = {
++	red:    { offset: 16, length: 8, },
++	green:  { offset: 8,  length: 8, },
++	blue:   { offset: 0,  length: 8, },
++	transp: { offset: 0,  length: 0, },
++};
++
+ static inline void pxafb_schedule_work(struct pxafb_info *fbi, u_int state)
+ {
+ 	unsigned long flags;
+@@ -209,6 +241,10 @@
+         case 4:  ret = LCCR3_4BPP; break;
+         case 8:  ret = LCCR3_8BPP; break;
+         case 16: ret = LCCR3_16BPP; break;
++        case 18: ret = LCCR3_18BPP; break;
++        case 19: ret = LCCR3_19BPP; break;
++        case 24: ret = LCCR3_24BPP; break;
++        case 25: ret = LCCR3_25BPP; break;
+         }
+         return ret;
+ }
+@@ -320,18 +356,34 @@
+ 	 * The pixel packing format is described on page 7-11 of the
+ 	 * PXA2XX Developer's Manual.
+          */
+-	if (var->bits_per_pixel == 16) {
+-		var->red.offset   = 11; var->red.length   = 5;
+-		var->green.offset = 5;  var->green.length = 6;
+-		var->blue.offset  = 0;  var->blue.length  = 5;
+-		var->transp.offset = var->transp.length = 0;
+-	} else {
+-		var->red.offset = var->green.offset = var->blue.offset = var->transp.offset = 0;
+-		var->red.length   = 8;
+-		var->green.length = 8;
+-		var->blue.length  = 8;
+-		var->transp.length = 0;
+-	}
++    	switch (var->bits_per_pixel) {
++    	case 16:
++        	/* 2 pixels per line */
++        	var->red    = def_rgb_16.red;
++        	var->green  = def_rgb_16.green;
++        	var->blue   = def_rgb_16.blue;
++        	var->transp = def_rgb_16.transp;
++        	break;
++    	case 18:
++    	case 19:
++        	var->red    = def_rgb_18.red;
++        	var->green  = def_rgb_18.green;
++        	var->blue   = def_rgb_18.blue;
++        	var->transp = def_rgb_18.transp;
++        	break;
++    	case 24:
++    	case 25:
++        	var->red    = def_rgb_24.red;
++        	var->green  = def_rgb_24.green;
++        	var->blue   = def_rgb_24.blue;
++        	var->transp = def_rgb_24.transp;
++        	break;
++	 default:
++        	var->red    = def_rgb_8.red;
++        	var->green  = def_rgb_8.green;
++        	var->blue   = def_rgb_8.blue;
++        	var->transp = def_rgb_8.transp;
++    }
+ 
+ #ifdef CONFIG_CPU_FREQ
+ 	pr_debug("pxafb: dma period = %d ps, clock = %d kHz\n",
+@@ -345,7 +397,7 @@
+ static inline void pxafb_set_truecolor(u_int is_true_color)
+ {
+ 	pr_debug("pxafb: true_color = %d\n", is_true_color);
+-	// do your machine-specific setup if needed
++	/* do your machine-specific setup if needed */
+ }
+ 
+ /*
+@@ -360,7 +412,8 @@
+ 
+ 	pr_debug("pxafb: set_par\n");
+ 
+-	if (var->bits_per_pixel == 16)
++    	if (var->bits_per_pixel == 16 || var->bits_per_pixel == 18 ||var->bits_per_pixel == 19
++        || var->bits_per_pixel == 24 || var->bits_per_pixel == 25)
+ 		fbi->fb.fix.visual = FB_VISUAL_TRUECOLOR;
+ 	else if (!fbi->cmap_static)
+ 		fbi->fb.fix.visual = FB_VISUAL_PSEUDOCOLOR;
+@@ -373,12 +426,25 @@
+ 		fbi->fb.fix.visual = FB_VISUAL_STATIC_PSEUDOCOLOR;
+ 	}
+ 
+-	fbi->fb.fix.line_length = var->xres_virtual *
+-				  var->bits_per_pixel / 8;
+-	if (var->bits_per_pixel == 16)
+-		fbi->palette_size = 0;
+-	else
+-		fbi->palette_size = var->bits_per_pixel == 1 ? 4 : 1 << var->bits_per_pixel;
++    	switch (var->bits_per_pixel) {
++    	case 16:
++       	fbi->fb.fix.line_length = var->xres_virtual * 2;
++       	fbi->palette_size = 0;
++        	break;
++    	case 18:
++    	case 19:
++       	fbi->fb.fix.line_length = var->xres_virtual * 3;
++       	fbi->palette_size = 0;
++        	break;
++    	case 24:
++    	case 25:
++        	fbi->fb.fix.line_length = var->xres_virtual * 4;
++        	fbi->palette_size = 0;
++        	break;
++    	default:
++        	fbi->fb.fix.line_length = var->xres_virtual * var->bits_per_pixel / 8;
++        	fbi->palette_size = var->bits_per_pixel == 1 ? 4 : 1 << var->bits_per_pixel;
++    	}
+ 
+ 	if ((fbi->lccr4 & LCCR4_PAL_FOR_MASK) == LCCR4_PAL_FOR_0)
+ 		palette_mem_size = fbi->palette_size * sizeof(u16);
+@@ -395,7 +461,8 @@
+ 	 */
+ 	pxafb_set_truecolor(fbi->fb.fix.visual == FB_VISUAL_TRUECOLOR);
+ 
+-	if (fbi->fb.var.bits_per_pixel == 16)
++	if (fbi->fb.var.bits_per_pixel == 16 || fbi->fb.var.bits_per_pixel == 18 ||fbi->fb.var.bits_per_pixel == 19
++        || fbi->fb.var.bits_per_pixel == 24 || fbi->fb.var.bits_per_pixel == 25)
+ 		fb_dealloc_cmap(&fbi->fb.cmap);
+ 	else
+ 		fb_alloc_cmap(&fbi->fb.cmap, 1<<fbi->fb.var.bits_per_pixel, 0);
+@@ -441,7 +508,7 @@
+  * 	16 bpp mode does not really use the palette, so this will not
+  *      blank the display in all modes.
+  */
+-static int pxafb_blank(int blank, struct fb_info *info)
++int pxafb_blank(int blank, struct fb_info *info)
+ {
+ 	struct pxafb_info *fbi = (struct pxafb_info *)info;
+ 	int i;
+@@ -458,19 +525,20 @@
+ 			for (i = 0; i < fbi->palette_size; i++)
+ 				pxafb_setpalettereg(i, 0, 0, 0, 0, info);
+ 
+-		pxafb_schedule_work(fbi, C_DISABLE);
+-		//TODO if (pxafb_blank_helper) pxafb_blank_helper(blank);
++		pxafb_schedule_work(fbi, C_BLANK);
++		/* TODO if (pxafb_blank_helper) pxafb_blank_helper(blank); */
+ 		break;
+ 
+ 	case FB_BLANK_UNBLANK:
+-		//TODO if (pxafb_blank_helper) pxafb_blank_helper(blank);
++		/* TODO if (pxafb_blank_helper) pxafb_blank_helper(blank); */
+ 		if (fbi->fb.fix.visual == FB_VISUAL_PSEUDOCOLOR ||
+ 		    fbi->fb.fix.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
+ 			fb_set_cmap(&fbi->fb.cmap, info);
+-		pxafb_schedule_work(fbi, C_ENABLE);
++		pxafb_schedule_work(fbi, C_UNBLANK);
+ 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL(pxafb_blank);
+ 
+ static int pxafb_mmap(struct fb_info *info,
+ 		      struct vm_area_struct *vma)
+@@ -606,6 +674,10 @@
+ 	case 4:
+ 	case 8:
+ 	case 16:
++    	case 18:
++    	case 19:
++    	case 24:
++    	case 25:
+ 		break;
+ 	default:
+ 		printk(KERN_ERR "%s: invalid bit depth %d\n",
+@@ -637,7 +709,10 @@
+ 
+ 	new_regs.lccr0 = fbi->lccr0 |
+ 		(LCCR0_LDM | LCCR0_SFM | LCCR0_IUM | LCCR0_EFM |
+-                 LCCR0_QDM | LCCR0_BM  | LCCR0_OUM);
++#ifdef CONFIG_PXA27x	/* Enable overlay for PXA27x */
++		 LCCR0_OUC | LCCR0_CMDIM | LCCR0_RDSTM |
++#endif
++                 LCCR0_QDM | LCCR0_BM | LCCR0_OUM);
+ 
+ 	new_regs.lccr1 =
+ 		LCCR1_DisWdth(var->xres) +
+@@ -696,7 +771,7 @@
+ 
+ 	fbi->dmadesc_fbhigh_cpu->fsadr = fbi->screen_dma;
+ 	fbi->dmadesc_fbhigh_cpu->fidr = 0;
+-	fbi->dmadesc_fbhigh_cpu->ldcmd = BYTES_PER_PANEL;
++	fbi->dmadesc_fbhigh_cpu->ldcmd = BYTES_PER_PANEL | LDCMD_EOFINT;
+ 
+ 	fbi->dmadesc_palette_cpu->fsadr = fbi->palette_dma;
+ 	fbi->dmadesc_palette_cpu->fidr  = 0;
+@@ -708,7 +783,8 @@
+ 							sizeof(u32);
+ 	fbi->dmadesc_palette_cpu->ldcmd |= LDCMD_PAL;
+ 
+-	if (var->bits_per_pixel == 16) {
++	if (var->bits_per_pixel == 16 || var->bits_per_pixel == 18 ||var->bits_per_pixel == 19
++        || var->bits_per_pixel == 24 || var->bits_per_pixel == 25) {
+ 		/* palette shouldn't be loaded in true-color mode */
+ 		fbi->dmadesc_fbhigh_cpu->fdadr = fbi->dmadesc_fbhigh_dma;
+ 		fbi->fdadr0 = fbi->dmadesc_fbhigh_dma; /* no pal just fbhigh */
+@@ -763,8 +839,8 @@
+ }
+ 
+ /*
+- * NOTE!  The following functions are purely helpers for set_ctrlr_state.
+- * Do not call them directly; set_ctrlr_state does the correct serialisation
++ * NOTE!  The following functions are purely helpers for pxafb_set_ctrlr_state.
++ * Do not call them directly; pxafb_set_ctrlr_state does the correct serialisation
+  * to ensure that things happen in the right way 100% of time time.
+  *	-- rmk
+  */
+@@ -786,7 +862,8 @@
+ 
+ static void pxafb_setup_gpio(struct pxafb_info *fbi)
+ {
+-	int gpio, ldd_bits;
++	int gpio;
++	int ldd_bits = 0;
+         unsigned int lccr0 = fbi->lccr0;
+ 
+ 	/*
+@@ -796,28 +873,56 @@
+ 	/* 4 bit interface */
+ 	if ((lccr0 & LCCR0_CMS) == LCCR0_Mono &&
+ 	    (lccr0 & LCCR0_SDS) == LCCR0_Sngl &&
+-	    (lccr0 & LCCR0_DPD) == LCCR0_4PixMono)
++	    (lccr0 & LCCR0_DPD) == LCCR0_4PixMono) {
+ 		ldd_bits = 4;
+-
++	}
+ 	/* 8 bit interface */
+         else if (((lccr0 & LCCR0_CMS) == LCCR0_Mono &&
+ 		  ((lccr0 & LCCR0_SDS) == LCCR0_Dual || (lccr0 & LCCR0_DPD) == LCCR0_8PixMono)) ||
+                  ((lccr0 & LCCR0_CMS) == LCCR0_Color &&
+-		  (lccr0 & LCCR0_PAS) == LCCR0_Pas && (lccr0 & LCCR0_SDS) == LCCR0_Sngl))
++		  (lccr0 & LCCR0_PAS) == LCCR0_Pas && (lccr0 & LCCR0_SDS) == LCCR0_Sngl)) {
+ 		ldd_bits = 8;
+-
++	}
+ 	/* 16 bit interface */
+-	else if ((lccr0 & LCCR0_CMS) == LCCR0_Color &&
+-		 ((lccr0 & LCCR0_SDS) == LCCR0_Dual || (lccr0 & LCCR0_PAS) == LCCR0_Act))
+-		ldd_bits = 16;
++    	else if ((lccr0 & LCCR0_CMS) == LCCR0_Color &&
++         	((lccr0 & LCCR0_SDS) == LCCR0_Dual || (lccr0 & LCCR0_PAS) == LCCR0_Act)) {
++        	switch (fbi->fb.var.bits_per_pixel) {
++        	case 16:
++#ifdef CONFIG_PXA27x
++			/* bits 58-77 */
++            		GPDR1 |= (0x3f << 26);
++            		GPDR2 |= 0x00003fff;
+ 
++            		GAFR1_U = (GAFR1_U & ~(0xfff << 20)) | (0xaaa << 20);
++            		GAFR2_L = (GAFR2_L & 0xf0000000) | 0x0aaaaaaa;
++#endif
++			ldd_bits = 16;
++            		break;
++        	case 18:
++        	case 19:
++        	case 24:
++        	case 25:
++#ifdef CONFIG_PXA27x
++			/* bits 58-77 and 86, 87 */
++            		GPDR1 |= (0x3f << 26);
++            		GPDR2 |= 0x00c03fff;
++
++            		GAFR1_U = (GAFR1_U & ~(0xfff << 20)) | (0xaaa << 20);
++            		GAFR2_L = (GAFR2_L & 0xf0000000) | 0x0aaaaaaa;
++            		GAFR2_U = (GAFR2_U & 0xffff0fff) | 0xa000;
++#endif
++			ldd_bits = 25;
++            		break;
++        	}
++    	}
+ 	else {
+ 	        printk(KERN_ERR "pxafb_setup_gpio: unable to determine bits per pixel\n");
+ 		return;
+         }
+ 
+-	for (gpio = 58; ldd_bits; gpio++, ldd_bits--)
++	for (gpio = 58; ldd_bits > 0; gpio++, ldd_bits--) {
+ 		pxa_gpio_mode(gpio | GPIO_ALT_FN_2_OUT);
++	}
+ 	pxa_gpio_mode(GPIO74_LCD_FCLK_MD);
+ 	pxa_gpio_mode(GPIO75_LCD_LCLK_MD);
+ 	pxa_gpio_mode(GPIO76_LCD_PCLK_MD);
+@@ -837,6 +942,7 @@
+ 	/* enable LCD controller clock */
+ 	clk_enable(fbi->clk);
+ 
++	down(&fcs_lcd_sem);
+ 	/* Sequence from 11.7.10 */
+ 	LCCR3 = fbi->reg_lccr3;
+ 	LCCR2 = fbi->reg_lccr2;
+@@ -847,6 +953,8 @@
+ 	FDADR1 = fbi->fdadr1;
+ 	LCCR0 |= LCCR0_ENB;
+ 
++	up(&fcs_lcd_sem);
++
+ 	pr_debug("FDADR0 0x%08x\n", (unsigned int) FDADR0);
+ 	pr_debug("FDADR1 0x%08x\n", (unsigned int) FDADR1);
+ 	pr_debug("LCCR0 0x%08x\n", (unsigned int) LCCR0);
+@@ -862,6 +970,7 @@
+ 
+ 	pr_debug("pxafb: disabling LCD controller\n");
+ 
++	down(&fcs_lcd_sem);
+ 	set_current_state(TASK_UNINTERRUPTIBLE);
+ 	add_wait_queue(&fbi->ctrlr_wait, &wait);
+ 
+@@ -871,6 +980,7 @@
+ 
+ 	schedule_timeout(200 * HZ / 1000);
+ 	remove_wait_queue(&fbi->ctrlr_wait, &wait);
++	up(&fcs_lcd_sem);
+ 
+ 	/* disable LCD controller clock */
+ 	clk_disable(fbi->clk);
+@@ -888,6 +998,11 @@
+ 		LCCR0 |= LCCR0_LDM;
+ 		wake_up(&fbi->ctrlr_wait);
+ 	}
++	if (lcsr & LCSR_EOF && fcs_in_eof) {
++		LCCR0 |= LCCR0_EFM;
++		fcs_in_eof = 0;
++		wake_up(&fcs_wait_eof);
++	}
+ 
+ 	LCSR = lcsr;
+ 	return IRQ_HANDLED;
+@@ -898,7 +1013,7 @@
+  * sleep when disabling the LCD controller, or if we get two contending
+  * processes trying to alter state.
+  */
+-static void set_ctrlr_state(struct pxafb_info *fbi, u_int state)
++void pxafb_set_ctrlr_state(struct pxafb_info *fbi, u_int state)
+ {
+ 	u_int old_state;
+ 
+@@ -920,7 +1035,9 @@
+ 		 */
+ 		if (old_state != C_DISABLE && old_state != C_DISABLE_PM) {
+ 			fbi->state = state;
+-			//TODO __pxafb_lcd_power(fbi, 0);
++			/* TODO __pxafb_lcd_power(fbi, 0); */
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_DISABLE);
+ 			pxafb_disable_controller(fbi);
+ 		}
+ 		break;
+@@ -934,6 +1051,8 @@
+ 			fbi->state = state;
+ 			__pxafb_backlight_power(fbi, 0);
+ 			__pxafb_lcd_power(fbi, 0);
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_DISABLE);
+ 			if (old_state != C_DISABLE_CLKCHANGE)
+ 				pxafb_disable_controller(fbi);
+ 		}
+@@ -947,7 +1066,9 @@
+ 		if (old_state == C_DISABLE_CLKCHANGE) {
+ 			fbi->state = C_ENABLE;
+ 			pxafb_enable_controller(fbi);
+-			//TODO __pxafb_lcd_power(fbi, 1);
++			/* TODO __pxafb_lcd_power(fbi, 1); */
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_ENABLE);
+ 		}
+ 		break;
+ 
+@@ -959,9 +1080,13 @@
+ 		 */
+ 		if (old_state == C_ENABLE) {
+ 			__pxafb_lcd_power(fbi, 0);
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_DISABLE);
+ 			pxafb_disable_controller(fbi);
+ 			pxafb_setup_gpio(fbi);
+ 			pxafb_enable_controller(fbi);
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_ENABLE);
+ 			__pxafb_lcd_power(fbi, 1);
+ 		}
+ 		break;
+@@ -987,11 +1112,46 @@
+ 			pxafb_enable_controller(fbi);
+ 			__pxafb_lcd_power(fbi, 1);
+ 			__pxafb_backlight_power(fbi, 1);
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_ENABLE);
+ 		}
+ 		break;
++
++	case C_BLANK:
++		/*
++		 * Disable controller, blank overlays if exist.
++		 */
++		if ((old_state != C_DISABLE) && (old_state != C_BLANK)) {
++			fbi->state = state;
++			__pxafb_backlight_power(fbi, 0);
++			__pxafb_lcd_power(fbi, 0);
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_BLANK);
++			if (old_state != C_DISABLE_CLKCHANGE)
++				pxafb_disable_controller(fbi);
++		}
++		break;
++
++	case C_UNBLANK:
++		/*
++		 * Power up the LCD screen, enable controller, and
++		 * turn on the backlight, unblank overlays if exist.
++		 */
++		if ((old_state != C_ENABLE) && (old_state != C_UNBLANK)) {
++			fbi->state = C_UNBLANK;
++			pxafb_setup_gpio(fbi);
++			pxafb_enable_controller(fbi);
++			__pxafb_lcd_power(fbi, 1);
++			__pxafb_backlight_power(fbi, 1);
++			if(fbi->set_overlay_ctrlr_state)
++				fbi->set_overlay_ctrlr_state(fbi, C_UNBLANK);
++		}
++		break;
++
+ 	}
+ 	up(&fbi->ctrlr_sem);
+ }
++EXPORT_SYMBOL(pxafb_set_ctrlr_state);
+ 
+ /*
+  * Our LCD controller task (which is called when we blank or unblank)
+@@ -1003,7 +1163,7 @@
+ 		container_of(work, struct pxafb_info, task);
+ 	u_int state = xchg(&fbi->task_state, -1);
+ 
+-	set_ctrlr_state(fbi, state);
++	pxafb_set_ctrlr_state(fbi, state);
+ }
+ 
+ #ifdef CONFIG_CPU_FREQ
+@@ -1018,19 +1178,29 @@
+ pxafb_freq_transition(struct notifier_block *nb, unsigned long val, void *data)
+ {
+ 	struct pxafb_info *fbi = TO_INF(nb, freq_transition);
+-	//TODO struct cpufreq_freqs *f = data;
++	/* TODO struct cpufreq_freqs *f = data; */
++	struct cpufreq_freqs *clkinfo;
+ 	u_int pcd;
++	u_int lccr3;
+ 
+ 	switch (val) {
+ 	case CPUFREQ_PRECHANGE:
+-		set_ctrlr_state(fbi, C_DISABLE_CLKCHANGE);
++		pxafb_set_ctrlr_state(fbi, C_DISABLE_CLKCHANGE);
+ 		break;
+ 
+ 	case CPUFREQ_POSTCHANGE:
+-		pcd = get_pcd(fbi, fbi->fb.var.pixclock);
++		clkinfo = (struct cpufreq_freqs *)data;
++		/* If leaving a 13kHz state with the LCD sustained */
++		if ((clkinfo->old == 13000))
++			break;
++
++		pcd = get_pcd(fbi->fb.var.pixclock);
++		lccr3 = fbi->reg_lccr3;
+ 		set_hsync_time(fbi, pcd);
+ 		fbi->reg_lccr3 = (fbi->reg_lccr3 & ~0xff) | LCCR3_PixClkDiv(pcd);
+-		set_ctrlr_state(fbi, C_ENABLE_CLKCHANGE);
++		pxafb_set_ctrlr_state(fbi, C_ENABLE_CLKCHANGE);
++		if (lccr3 != fbi->reg_lccr3 && !((LCCR0 & LCCR0_DIS) || !(LCCR0 & LCCR0_ENB)))
++			LCCR3 = fbi->reg_lccr3;
+ 		break;
+ 	}
+ 	return 0;
+@@ -1049,7 +1219,7 @@
+ 		printk(KERN_DEBUG "min dma period: %d ps, "
+ 			"new clock %d kHz\n", pxafb_display_dma_period(var),
+ 			policy->max);
+-		// TODO: fill in min/max values
++		/* TODO: fill in min/max values */
+ 		break;
+ #if 0
+ 	case CPUFREQ_NOTIFY:
+@@ -1075,7 +1245,7 @@
+ {
+ 	struct pxafb_info *fbi = platform_get_drvdata(dev);
+ 
+-	set_ctrlr_state(fbi, C_DISABLE_PM);
++	pxafb_set_ctrlr_state(fbi, C_DISABLE_PM);
+ 	return 0;
+ }
+ 
+@@ -1083,7 +1253,11 @@
+ {
+ 	struct pxafb_info *fbi = platform_get_drvdata(dev);
+ 
+-	set_ctrlr_state(fbi, C_ENABLE_PM);
++	pxafb_set_ctrlr_state(fbi, C_ENABLE_PM);
++//RP#ifdef CONFIG_PXA27x
++//RP	LCCR4 |= (1 << 31); /* Disable the PCD Divisor, PCDDIV */
++//RP	LCCR4 |= (5 << 17); /* Undocumented feature */
++//RP#endif
+ 	return 0;
+ }
+ #else
+@@ -1197,11 +1371,21 @@
+ 	fbi->task_state			= (u_char)-1;
+ 
+ 	for (i = 0; i < inf->num_modes; i++) {
+-		smemlen = mode[i].xres * mode[i].yres * mode[i].bpp / 8;
++	     	if (mode[i].bpp <= 16) {       /* 8, 16 bpp */
++	         	smemlen = mode[i].xres * mode[i].yres * mode[i].bpp / 8;
++	     	} else if ( mode[i].bpp > 19 ) { /* 24, 25 bpp */
++	         	smemlen = mode[i].xres * mode[i].yres * 4;
++	     	} else {                          /* 18, 19 bpp */
++	         	/* packed format */
++	         	smemlen = mode[i].xres * mode[i].yres * 3;
++	     	}
++
+ 		if (smemlen > fbi->fb.fix.smem_len)
+ 			fbi->fb.fix.smem_len = smemlen;
+ 	}
+ 
++	fbi->set_overlay_ctrlr_state	= NULL;
++
+ 	init_waitqueue_head(&fbi->ctrlr_wait);
+ 	INIT_WORK(&fbi->task, pxafb_task);
+ 	init_MUTEX(&fbi->ctrlr_sem);
+@@ -1268,6 +1452,10 @@
+ 				case 4:
+ 				case 8:
+ 				case 16:
++                		case 18:
++                		case 19:
++                		case 24:
++                		case 25:
+ 					inf->modes[0].bpp = bpp;
+ 					dev_info(dev, "overriding bit depth: %d\n", bpp);
+ 					break;
+@@ -1416,7 +1604,7 @@
+ 	fbi = pxafb_init_fbinfo(&dev->dev);
+ 	if (!fbi) {
+ 		dev_err(&dev->dev, "Failed to initialize framebuffer device\n");
+-		ret = -ENOMEM; // only reason for pxafb_init_fbinfo to fail is kmalloc
++		ret = -ENOMEM; /* only reason for pxafb_init_fbinfo to fail is kmalloc */
+ 		goto failed;
+ 	}
+ 
+@@ -1451,7 +1639,7 @@
+ 	}
+ 
+ #ifdef CONFIG_PM
+-	// TODO
++	/* TODO */
+ #endif
+ 
+ #ifdef CONFIG_CPU_FREQ
+@@ -1464,7 +1652,12 @@
+ 	/*
+ 	 * Ok, now enable the LCD controller
+ 	 */
+-	set_ctrlr_state(fbi, C_ENABLE);
++	pxafb_set_ctrlr_state(fbi, C_ENABLE);
++//#ifdef CONFIG_PXA27x
++//	LCCR4 |= (1 << 31); /* Disabel the PCD Divisor, PCDDIV */
++//	LCCR4 |= (5 << 17); /* Undocumented feature */
++//#endif
++	init_waitqueue_head(&fcs_wait_eof);
+ 
+ 	return 0;
+ 
+--- linux-2.6.24-rc1.orig/drivers/video/pxafb.h
++++ linux-2.6.24-rc1/drivers/video/pxafb.h
+@@ -29,6 +29,60 @@
+ 	unsigned int lccr3;
+ };
+ 
++struct pxafb_rgb {
++	struct fb_bitfield	red;
++	struct fb_bitfield	green;
++	struct fb_bitfield	blue;
++	struct fb_bitfield	transp;
++};
++
++#ifdef CONFIG_PXA27x
++/* PXA Overlay Framebuffer Support */
++struct overlayfb_info
++{
++	struct fb_info	fb;
++
++	struct fb_var_screeninfo old_var;
++
++	struct semaphore mutex;
++	unsigned long	 refcount;
++
++	struct pxafb_info *basefb;
++
++	unsigned long	map_cpu;
++	unsigned long 	screen_cpu;
++	unsigned long	palette_cpu;
++	unsigned long 	map_size;
++	unsigned long   palette_size;
++
++	dma_addr_t 	screen_dma;
++	dma_addr_t	map_dma;
++	dma_addr_t	palette_dma;
++
++	volatile u_char	state;
++
++	/* overlay specific info */
++	unsigned long	xpos;		/* screen position (x, y)*/
++	unsigned long	ypos;
++	unsigned long 	format;
++
++	/* additional */
++	union {
++		struct pxafb_dma_descriptor *dma0;
++		struct pxafb_dma_descriptor *dma1;
++		struct {
++			struct pxafb_dma_descriptor *dma2;
++			struct pxafb_dma_descriptor *dma3;
++			struct pxafb_dma_descriptor *dma4;
++		};
++		struct {
++			struct pxafb_dma_descriptor *dma5_pal;
++			struct pxafb_dma_descriptor *dma5_frame;
++		};
++	};
++};
++#endif
++
+ /* PXA LCD DMA descriptor */
+ struct pxafb_dma_descriptor {
+ 	unsigned int fdadr;
+@@ -90,6 +144,14 @@
+ 	wait_queue_head_t	ctrlr_wait;
+ 	struct work_struct	task;
+ 
++#ifdef CONFIG_PXA27x
++	/* PXA Overlay Framebuffer Support */
++	struct overlayfb_info  *overlay1fb;
++	struct overlayfb_info  *overlay2fb;
++	struct overlayfb_info  *cursorfb;
++#endif
++	void (*set_overlay_ctrlr_state)(struct pxafb_info *, u_int);
++
+ #ifdef CONFIG_CPU_FREQ
+ 	struct notifier_block	freq_transition;
+ 	struct notifier_block	freq_policy;
+@@ -109,6 +171,9 @@
+ #define C_DISABLE_PM		(5)
+ #define C_ENABLE_PM		(6)
+ #define C_STARTUP		(7)
++#define C_BLANK  		(8)
++#define C_UNBLANK		(9)
++
+ 
+ #define PXA_NAME	"PXA"
+ 
+--- /dev/null
++++ linux-2.6.24-rc1/drivers/video/pxafb_overlay.c
+@@ -0,0 +1,1525 @@
++/*
++ *  linux/drivers/video/pxafb_overlay.c
++ *
++ *  Copyright (c) 2004, Intel Corporation
++ *
++ * 	Code Status:
++ * 	2004/10/28: <yan.yin@intel.com>
++ *      - Ported to 2.6 kernel
++ *      - Made overlay driver a loadable module
++ *      - Merged overlay optimized patch
++ * 	2004/03/10: <stanley.cai@intel.com>
++ *      - Fixed Bugs
++ *      - Added workaround for overlay1&2
++ * 	2003/08/27: <yu.tang@intel.com>
++ *      - Added Overlay 1 & Overlay2 & Hardware Cursor support
++ *
++ *
++ * 	This software program is licensed subject to the GNU Lesser General
++ * 	Public License (LGPL). Version 2.1, February 1999, available at
++ * 	http://www.gnu.org/copyleft/lesser.html
++ *
++ * 	Intel PXA27x LCD Controller Frame Buffer Overlay Driver
++ *
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/kernel.h>
++#include <linux/sched.h>
++#include <linux/errno.h>
++#include <linux/string.h>
++#include <linux/interrupt.h>
++#include <linux/slab.h>
++#include <linux/fb.h>
++#include <linux/delay.h>
++#include <linux/init.h>
++#include <linux/ioport.h>
++#include <linux/cpufreq.h>
++#include <linux/device.h>
++#include <linux/platform_device.h>
++#include <linux/dma-mapping.h>
++
++#include <asm/hardware.h>
++#include <asm/io.h>
++#include <asm/irq.h>
++#include <asm/uaccess.h>
++#include <asm/arch/bitfield.h>
++#include <asm/arch/pxafb.h>
++#include <asm/arch/pxa-regs.h>
++
++#include "pxafb.h"
++
++/* LCD enhancement : Overlay 1 & 2 & Hardware Cursor */
++
++/*
++ * LCD enhancement : Overlay 1
++ *
++ * Features:
++ * - support 16bpp (No palette)
++ */
++/*
++ * debugging?
++ */
++#define DEBUG 0
++
++#ifdef  DEBUG
++#define dbg(fmt,arg...) printk(KERN_ALERT "%s(): " fmt "\n", __FUNCTION__, ##arg)
++#else
++#define dbg(fmt,arg...)
++#endif
++
++static int overlay1fb_enable(struct fb_info *info);
++static int overlay2fb_enable(struct fb_info *info);
++static int cursorfb_enable(struct fb_info *info);
++
++static int overlay1fb_disable(struct fb_info *info);
++static int overlay2fb_disable(struct fb_info *info);
++static int cursorfb_disable(struct fb_info *info);
++
++static int overlay1fb_blank(int blank, struct fb_info *info);
++static int overlay2fb_blank(int blank, struct fb_info *info);
++static int cursorfb_blank(int blank, struct fb_info *info);
++
++extern void pxafb_set_ctrlr_state(struct pxafb_info *fbi, u_int state);
++extern int pxafb_blank(int blank, struct fb_info *info);
++
++static struct pxafb_rgb def_rgb_18 = {
++	red:    { offset: 12, length: 6, },
++	green:  { offset: 6,  length: 6, },
++	blue:   { offset: 0,  length: 6, },
++	transp: { offset: 0,  length: 0, },
++};
++
++static struct pxafb_rgb def_rgbt_16 = {
++	red:    { offset: 10, length: 5, },
++	green:  { offset: 5,  length: 5, },
++	blue:   { offset: 0,  length: 5, },
++	transp: { offset: 15,  length: 1, },
++};
++
++static struct pxafb_rgb  def_rgbt_19 = {
++	red:    { offset: 12, length: 6, },
++	green:  { offset: 6,  length: 6, },
++	blue:   { offset: 0,  length: 6, },
++	transp: { offset: 18, length: 1, },
++};
++
++static struct pxafb_rgb def_rgbt_24 = {
++	red:    { offset: 16, length: 7, },
++	green:  { offset: 8,  length: 8, },
++	blue:   { offset: 0,  length: 8, },
++	transp: { offset: 0,  length: 0, },
++};
++
++static struct pxafb_rgb def_rgbt_25 = {
++	red:    { offset: 16, length: 8, },
++	green:  { offset: 8,  length: 8, },
++	blue:   { offset: 0,  length: 8, },
++	transp: { offset: 24, length: 1, },
++};
++
++#define CLEAR_LCD_INTR(reg, intr) do {  \
++	reg = (intr);			\
++}while(0)
++
++#define WAIT_FOR_LCD_INTR(reg,intr,timeout) ({	\
++	int __done =0;				\
++	int __t = timeout;			\
++	while (__t) {				\
++		__done = (reg) & (intr);	\
++		if (__done) break;		\
++		mdelay(10);			\
++		__t--;				\
++	}					\
++	if (!__t) dbg("wait " #intr " timeount");\
++	__done;					\
++})
++
++#define DISABLE_OVERLAYS(fbi) do {	 				\
++	if (fbi->overlay1fb && (fbi->overlay1fb->state == C_ENABLE)) {	\
++		overlay1fb_disable((struct fb_info*)fbi->overlay1fb);	\
++	}								\
++	if (fbi->overlay2fb && (fbi->overlay2fb->state == C_ENABLE)) {	\
++		overlay2fb_disable((struct fb_info*)fbi->overlay2fb);	\
++	}								\
++	if (fbi->cursorfb && (fbi->cursorfb->state == C_ENABLE)) {	\
++		cursorfb_disable((struct fb_info*)fbi->cursorfb);	\
++	}								\
++}while(0)
++
++#define ENABLE_OVERLAYS(fbi) do {					\
++	if (fbi->overlay1fb && (fbi->overlay1fb->state == C_DISABLE)) {	\
++		overlay1fb_enable((struct fb_info*)fbi->overlay1fb);	\
++	}								\
++	if (fbi->overlay2fb && (fbi->overlay2fb->state == C_DISABLE)) {	\
++		overlay2fb_enable((struct fb_info*)fbi->overlay2fb);	\
++	}								\
++	if (fbi->cursorfb && (fbi->cursorfb->state == C_DISABLE)) {	\
++		cursorfb_enable((struct fb_info*)fbi->cursorfb);	\
++	}								\
++}while(0)
++
++#define BLANK_OVERLAYS(fbi) do {	 				\
++	if (fbi->overlay1fb && (fbi->overlay1fb->state == C_ENABLE)) {	\
++		overlay1fb_disable((struct fb_info*)fbi->overlay1fb);	\
++		fbi->overlay1fb->state = C_BLANK;			\
++	}								\
++	if (fbi->overlay2fb && (fbi->overlay2fb->state == C_ENABLE)) {	\
++		overlay2fb_disable((struct fb_info*)fbi->overlay2fb);	\
++		fbi->overlay2fb->state = C_BLANK;			\
++	}								\
++	if (fbi->cursorfb && (fbi->cursorfb->state == C_ENABLE)) {	\
++		cursorfb_disable((struct fb_info*)fbi->cursorfb);	\
++		fbi->cursorfb->state = C_BLANK;			\
++	}								\
++}while(0)
++
++#define UNBLANK_OVERLAYS(fbi) do {					\
++	if (fbi->overlay1fb && (fbi->overlay1fb->state == C_BLANK)) { 	\
++		overlay1fb_enable((struct fb_info*)fbi->overlay1fb);	\
++		fbi->overlay1fb->state = C_ENABLE;			\
++	}								\
++	if (fbi->overlay2fb && (fbi->overlay2fb->state == C_BLANK)) {	\
++		overlay2fb_enable((struct fb_info*)fbi->overlay2fb);	\
++		fbi->overlay2fb->state = C_ENABLE;			\
++	}								\
++	if (fbi->cursorfb && (fbi->cursorfb->state == C_BLANK)) {	\
++		cursorfb_enable((struct fb_info*)fbi->cursorfb);	\
++		fbi->cursorfb->state = C_ENABLE;			\
++	}								\
++}while(0)
++
++static int overlay1fb_open(struct fb_info *info, int user)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	int ret = 0;
++
++/* If basefb is disable, enable fb. */
++	if (fbi->basefb && fbi->basefb->state != C_ENABLE)
++		pxafb_blank(VESA_NO_BLANKING, (struct fb_info *)(fbi->basefb));
++
++	down(&fbi->mutex);
++
++	if (fbi->refcount)
++		ret = -EACCES;
++	else
++		fbi->refcount ++;
++
++	up(&fbi->mutex);
++
++	/* Initialize the variables in overlay1 framebuffer. */
++	fbi->fb.var.xres = fbi->fb.var.yres = 0;
++	fbi->fb.var.bits_per_pixel = 0;
++
++	return ret;
++}
++
++static int overlay1fb_release(struct fb_info *info, int user)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	down(&fbi->mutex);
++
++	if (fbi->refcount)
++		fbi->refcount --;
++
++	up(&fbi->mutex);
++	/* disable overlay when released */
++	overlay1fb_blank(1, info);
++
++	return 0;
++}
++
++static int overlay1fb_map_video_memory(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++
++	if (fbi->map_cpu)
++		dma_free_writecombine(NULL, fbi->map_size, (void*)fbi->map_cpu,  fbi->map_dma);
++	fbi->map_size = PAGE_ALIGN(fbi->fb.fix.smem_len + PAGE_SIZE);
++
++	fbi->map_cpu = (unsigned long)dma_alloc_writecombine(NULL, fbi->map_size,
++					       &fbi->map_dma, GFP_KERNEL );
++
++	if (!fbi->map_cpu) return -ENOMEM;
++
++	fbi->screen_cpu = fbi->map_cpu + PAGE_SIZE;
++	fbi->screen_dma = fbi->map_dma + PAGE_SIZE;
++
++	fbi->fb.fix.smem_start = fbi->screen_dma;
++
++	/* setup dma descriptor */
++	fbi->dma1 = (struct pxafb_dma_descriptor*)
++		(fbi->screen_cpu - sizeof(struct pxafb_dma_descriptor));
++
++	fbi->dma1->fdadr = (fbi->screen_dma - sizeof(struct pxafb_dma_descriptor));
++	fbi->dma1->fsadr = fbi->screen_dma;
++	fbi->dma1->fidr  = 0;
++	fbi->dma1->ldcmd = fbi->fb.fix.smem_len;
++
++	return 0;
++}
++
++static int overlay1fb_enable(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	unsigned long bpp1;
++
++	if (!fbi->map_cpu) return -EINVAL;
++
++	switch (fbi->fb.var.bits_per_pixel) {
++	case 16:
++		bpp1 = 0x4;
++		break;
++	case 18:
++		bpp1 = 0x6;
++		break;
++	case 19:
++		bpp1 = 0x8;
++		break;
++	case 24:
++		bpp1 = 0x9;
++		break;
++	case 25:
++		bpp1 = 0xa;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* disable branch/start/end of frame interrupt */
++	LCCR5 |= (LCCR5_IUM1 | LCCR5_BSM1 | LCCR5_EOFM1 | LCCR5_SOFM1);
++
++	if (fbi->state == C_DISABLE || fbi->state == C_BLANK)
++		FDADR1 = (fbi->dma1->fdadr);
++	else
++		FBR1 = fbi->dma1->fdadr | 0x1;
++
++	/* enable overlay 1 window */
++	OVL1C2 = (fbi->ypos << 10) | fbi->xpos;
++	OVL1C1 = OVL1C1_O1EN | (bpp1 << 20) | ((fbi->fb.var.yres-1)<<10) | (fbi->fb.var.xres-1);
++
++	fbi->state = C_ENABLE;
++
++	return 0;
++}
++
++static int overlay1fb_disable(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*)info;
++	int done;
++
++	if ((fbi->state == C_DISABLE) || (fbi->state == C_BLANK))
++               return 0;
++
++	fbi->state = C_DISABLE;
++
++	/* clear O1EN */
++	OVL1C1 &= ~OVL1C1_O1EN;
++
++	CLEAR_LCD_INTR(LCSR1, LCSR1_BS1);
++	FBR1 = 0x3;
++	done = WAIT_FOR_LCD_INTR(LCSR1, LCSR1_BS1, 100);
++
++	if (!done) {
++		pr_debug(KERN_INFO "%s: timeout\n", __FUNCTION__);
++		return -1;
++	}
++	return 0;
++}
++
++static int overlay1fb_blank(int blank, struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	int err=0;
++
++	switch (blank) {
++	case 0:
++		err = overlay1fb_enable(info);
++		if (err) {
++			fbi->state = C_DISABLE;
++			pxafb_set_ctrlr_state(fbi->basefb, C_REENABLE);
++		}
++		break;
++	case 1:
++		err = overlay1fb_disable(info);
++		if (err) {
++			fbi->state = C_DISABLE;
++			pxafb_set_ctrlr_state(fbi->basefb, C_REENABLE);
++		}
++		break;
++	default:
++		break;
++	}
++
++	return err;
++}
++
++static int overlay1fb_check_var( struct fb_var_screeninfo *var, struct fb_info *info)
++{
++	int xpos, ypos;
++	struct overlayfb_info *fbi=(struct overlayfb_info*)info;
++
++	/* must in base frame */
++	xpos = (var->nonstd & 0x3ff);
++	ypos = ((var->nonstd>>10) & 0x3ff);
++
++	if ( (xpos + var->xres) > fbi->basefb->fb.var.xres )
++		return -EINVAL;
++
++	if ( (ypos + var->yres) > fbi->basefb->fb.var.yres )
++		return -EINVAL;
++
++	switch (var->bits_per_pixel) {
++	case 16:
++		if ( var->xres & 0x1 ) {
++			printk("xres should be a multiple of 2 pixels!\n");
++			return -EINVAL;
++		}
++		break;
++	case 18:
++	case 19:
++		if ( var->xres & 0x7 ) {
++			printk("xres should be a multiple of 8 pixels!\n");
++			return -EINVAL;
++		}
++		break;
++	default:
++		break;
++	}
++
++	fbi->old_var=*var;
++
++	var->activate=FB_ACTIVATE_NOW;
++
++	return 0;
++}
++
++
++static int overlay1fb_set_par(struct fb_info *info)
++{
++	int nbytes=0, err=0, pixels_per_line=0;
++
++	struct overlayfb_info *fbi=(struct overlayfb_info*)info;
++	struct fb_var_screeninfo *var = &fbi->fb.var;
++
++	info->flags &= ~FBINFO_MISC_USEREVENT;
++
++	if (fbi->state == C_BLANK)
++		return 0;
++
++	if (fbi->state == C_DISABLE)
++		goto out1;
++
++	/* only xpos & ypos change */
++	if ( (var->xres == fbi->old_var.xres) &&
++		(var->yres == fbi->old_var.yres) &&
++		(var->bits_per_pixel == fbi->old_var.bits_per_pixel) )
++		goto out2;
++
++out1:
++	switch(var->bits_per_pixel) {
++		case 16:
++			/* 2 pixels per line */
++			pixels_per_line = (fbi->fb.var.xres + 0x1) & (~0x1);
++			nbytes = 2;
++
++			var->red    = def_rgbt_16.red;
++			var->green  = def_rgbt_16.green;
++			var->blue   = def_rgbt_16.blue;
++			var->transp = def_rgbt_16.transp;
++
++			break;
++		case 18:
++			/* 8 pixels per line */
++			pixels_per_line = (fbi->fb.var.xres + 0x7 ) & (~0x7);
++			nbytes = 3;
++
++			var->red    = def_rgb_18.red;
++			var->green  = def_rgb_18.green;
++			var->blue   = def_rgb_18.blue;
++			var->transp = def_rgb_18.transp;
++
++			break;
++		case 19:
++			/* 8 pixels per line */
++			pixels_per_line = (fbi->fb.var.xres + 0x7 ) & (~0x7);
++			nbytes = 3;
++
++			var->red    = def_rgbt_19.red;
++			var->green  = def_rgbt_19.green;
++			var->blue   = def_rgbt_19.blue;
++			var->transp = def_rgbt_19.transp;
++
++			break;
++		case 24:
++			pixels_per_line = fbi->fb.var.xres;
++			nbytes = 4;
++
++			var->red    = def_rgbt_24.red;
++			var->green  = def_rgbt_24.green;
++			var->blue   = def_rgbt_24.blue;
++			var->transp = def_rgbt_24.transp;
++
++			break;
++		case 25:
++			pixels_per_line = fbi->fb.var.xres;
++			nbytes = 4;
++
++			var->red    = def_rgbt_25.red;
++			var->green  = def_rgbt_25.green;
++			var->blue   = def_rgbt_25.blue;
++			var->transp = def_rgbt_25.transp;
++
++			break;
++		}
++
++		fbi->fb.fix.line_length = nbytes * pixels_per_line;
++		fbi->fb.fix.smem_len = fbi->fb.fix.line_length * fbi->fb.var.yres;
++
++		err= overlay1fb_map_video_memory((struct fb_info*)fbi);
++
++		if (err)
++			return err;
++
++out2:
++		fbi->xpos = var->nonstd & 0x3ff;
++		fbi->ypos = (var->nonstd>>10) & 0x3ff;
++
++		overlay1fb_enable(info);
++
++		return 0;
++
++}
++
++static struct fb_ops overlay1fb_ops = {
++	.owner			= THIS_MODULE,
++	.fb_open		= overlay1fb_open,
++	.fb_release		= overlay1fb_release,
++	.fb_check_var 		= overlay1fb_check_var,
++	.fb_set_par		= overlay1fb_set_par,
++	.fb_blank		= overlay1fb_blank,
++	.fb_fillrect		= cfb_fillrect,
++	.fb_copyarea		= cfb_copyarea,
++	.fb_imageblit		= cfb_imageblit,
++};
++
++ /*
++ * LCD enhancement : Overlay 2
++ *
++ * Features:
++ * - support planar YCbCr420/YCbCr422/YCbCr444;
++ */
++static int overlay2fb_open(struct fb_info *info, int user)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	int ret = 0;
++
++	/* if basefb is disable, enable fb. */
++	if (fbi->basefb && fbi->basefb->state != C_ENABLE)
++		pxafb_blank(VESA_NO_BLANKING, (struct fb_info *)(fbi->basefb));
++
++	down(&fbi->mutex);
++
++	if (fbi->refcount)
++		ret = -EACCES;
++	else
++		fbi->refcount ++;
++
++	up(&fbi->mutex);
++	fbi->fb.var.xres = fbi->fb.var.yres = 0;
++
++	return ret;
++}
++
++static int overlay2fb_release(struct fb_info *info, int user)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++
++	down(&fbi->mutex);
++
++	if (fbi->refcount)
++		fbi->refcount --;
++
++	up(&fbi->mutex);
++
++	/* disable overlay when released */
++	overlay2fb_blank(1, info);
++
++	return 0;
++}
++
++static int overlay2fb_map_YUV_memory( struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	unsigned int ylen, cblen, crlen, aylen, acblen, acrlen;
++	unsigned int yoff, cboff, croff;
++	unsigned int xres,yres;
++	unsigned int nbytes;
++
++	ylen = cblen = crlen = aylen = acblen = acrlen = 0;
++	yoff = cboff = croff = 0;
++
++	if (fbi->map_cpu)
++		dma_free_writecombine(NULL, fbi->map_size, (void*)fbi->map_cpu,  fbi->map_dma);
++
++	yres = fbi->fb.var.yres;
++
++	switch(fbi->format) {
++	case 0x4: /* YCbCr 4:2:0 planar */
++		pr_debug("420 planar\n");
++		/* 16 pixels per line */
++		xres = (fbi->fb.var.xres + 0xf) & (~0xf);
++		fbi->fb.fix.line_length = xres;
++
++		nbytes = xres * yres;
++		ylen = nbytes;
++		cblen = crlen = (nbytes/4);
++
++		break;
++	case 0x3: /* YCbCr 4:2:2 planar */
++		/* 8 pixles per line */
++		pr_debug("422 planar\n");
++		xres = (fbi->fb.var.xres + 0x7) & (~0x7);
++		fbi->fb.fix.line_length = xres;
++
++		nbytes = xres * yres;
++		ylen  = nbytes;
++		cblen = crlen = (nbytes/2);
++
++		break;
++	case 0x2: /* YCbCr 4:4:4 planar */
++		/* 4 pixels per line */
++		pr_debug("444 planar\n");
++		xres = (fbi->fb.var.xres + 0x3) & (~0x3);
++		fbi->fb.fix.line_length = xres;
++
++		nbytes = xres * yres;
++		ylen  = cblen = crlen = nbytes;
++		break;
++	}
++
++	/* 16-bytes alignment for DMA */
++	aylen  = (ylen + 0xf) & (~0xf);
++	acblen = (cblen + 0xf) & (~0xf);
++	acrlen = (crlen + 0xf) & (~0xf);
++
++	fbi->fb.fix.smem_len = aylen + acblen + acrlen;
++
++	/* alloc memory */
++
++	fbi->map_size = PAGE_ALIGN(fbi->fb.fix.smem_len + PAGE_SIZE);
++	fbi->map_cpu = (unsigned long)dma_alloc_writecombine(NULL, fbi->map_size,
++					       &fbi->map_dma, GFP_KERNEL );
++
++	if (!fbi->map_cpu) return -ENOMEM;
++
++	fbi->screen_cpu = fbi->map_cpu + PAGE_SIZE;
++	fbi->screen_dma = fbi->map_dma + PAGE_SIZE;
++
++	fbi->fb.fix.smem_start = fbi->screen_dma;
++
++	/* setup dma for Planar format */
++	fbi->dma2 = (struct pxafb_dma_descriptor*)
++		(fbi->screen_cpu - sizeof(struct pxafb_dma_descriptor));
++	fbi->dma3 = fbi->dma2 - 1;
++	fbi->dma4 = fbi->dma3 - 1;
++
++	/* offset */
++	yoff = 0;
++	cboff = aylen;
++	croff = cboff + acblen;
++
++	/* Y vector */
++	fbi->dma2->fdadr = (fbi->screen_dma - sizeof(struct pxafb_dma_descriptor));
++	fbi->dma2->fsadr = fbi->screen_dma + yoff;
++	fbi->dma2->fidr  = 0;
++	fbi->dma2->ldcmd = ylen;
++
++	/* Cb vector */
++	fbi->dma3->fdadr = (fbi->dma2->fdadr - sizeof(struct pxafb_dma_descriptor));
++	fbi->dma3->fsadr = (fbi->screen_dma + cboff);
++	fbi->dma3->fidr  = 0;
++	fbi->dma3->ldcmd = cblen;
++
++	/* Cr vector */
++
++	fbi->dma4->fdadr = (fbi->dma3->fdadr - sizeof(struct pxafb_dma_descriptor));
++	fbi->dma4->fsadr = (fbi->screen_dma + croff);
++	fbi->dma4->fidr  = 0;
++	fbi->dma4->ldcmd = crlen;
++
++	/* adjust for user */
++	fbi->fb.var.red.length   = ylen;
++	fbi->fb.var.red.offset   = yoff;
++	fbi->fb.var.green.length = cblen;
++	fbi->fb.var.green.offset = cboff;
++	fbi->fb.var.blue.length  = crlen;
++	fbi->fb.var.blue.offset  = croff;
++
++	return 0;
++};
++
++static int overlay2fb_map_RGB_memory( struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	struct fb_var_screeninfo *var = &fbi->fb.var;
++	int pixels_per_line=0 , nbytes=0;
++
++	if (fbi->map_cpu)
++		dma_free_writecombine(NULL,  fbi->map_size, (void*)fbi->map_cpu, fbi->map_dma);
++
++	switch(var->bits_per_pixel) {
++	case 16:
++		/* 2 pixels per line */
++		pixels_per_line = (fbi->fb.var.xres + 0x1) & (~0x1);
++		nbytes = 2;
++
++		var->red    = def_rgbt_16.red;
++		var->green  = def_rgbt_16.green;
++		var->blue   = def_rgbt_16.blue;
++		var->transp = def_rgbt_16.transp;
++		break;
++
++	case 18:
++		/* 8 pixels per line */
++		pixels_per_line = (fbi->fb.var.xres + 0x7 ) & (~0x7);
++		nbytes = 3;
++
++		var->red    = def_rgb_18.red;
++		var->green  = def_rgb_18.green;
++		var->blue   = def_rgb_18.blue;
++		var->transp = def_rgb_18.transp;
++
++		break;
++	case 19:
++		/* 8 pixels per line */
++		pixels_per_line = (fbi->fb.var.xres + 0x7 ) & (~0x7);
++		nbytes = 3;
++
++		var->red    = def_rgbt_19.red;
++		var->green  = def_rgbt_19.green;
++		var->blue   = def_rgbt_19.blue;
++		var->transp = def_rgbt_19.transp;
++
++		break;
++	case 24:
++		pixels_per_line = fbi->fb.var.xres;
++		nbytes = 4;
++
++		var->red    = def_rgbt_24.red;
++		var->green  = def_rgbt_24.green;
++		var->blue   = def_rgbt_24.blue;
++		var->transp = def_rgbt_24.transp;
++
++		break;
++
++	case 25:
++		pixels_per_line = fbi->fb.var.xres;
++		nbytes = 4;
++
++		var->red    = def_rgbt_25.red;
++		var->green  = def_rgbt_25.green;
++		var->blue   = def_rgbt_25.blue;
++		var->transp = def_rgbt_25.transp;
++
++		break;
++	}
++
++	fbi->fb.fix.line_length = nbytes * pixels_per_line;
++	fbi->fb.fix.smem_len = fbi->fb.fix.line_length * fbi->fb.var.yres;
++
++	fbi->map_size = PAGE_ALIGN(fbi->fb.fix.smem_len + PAGE_SIZE);
++	fbi->map_cpu = (unsigned long)dma_alloc_writecombine(NULL, fbi->map_size,
++					       &fbi->map_dma, GFP_KERNEL );
++
++	if (!fbi->map_cpu) return -ENOMEM;
++
++	fbi->screen_cpu = fbi->map_cpu + PAGE_SIZE;
++	fbi->screen_dma = fbi->map_dma + PAGE_SIZE;
++
++	fbi->fb.fix.smem_start = fbi->screen_dma;
++
++	/* setup dma descriptor */
++	fbi->dma2 = (struct pxafb_dma_descriptor*)
++		(fbi->screen_cpu - sizeof(struct pxafb_dma_descriptor));
++
++	fbi->dma2->fdadr = (fbi->screen_dma - sizeof(struct pxafb_dma_descriptor));
++	fbi->dma2->fsadr = fbi->screen_dma;
++	fbi->dma2->fidr  = 0;
++	fbi->dma2->ldcmd = fbi->fb.fix.smem_len;
++
++	return 0;
++}
++
++static int overlay2fb_enable(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	unsigned long bpp2;
++	unsigned int xres, yres;
++
++	if (!fbi->map_cpu) return -EINVAL;
++
++	switch(fbi->fb.var.bits_per_pixel) {
++	case 16:
++		bpp2 = 0x4;
++		break;
++	case 18:
++		bpp2 = 0x6;
++		break;
++	case 19:
++		bpp2 = 0x8;
++		break;
++	case 24:
++		bpp2 = 0x9;
++		break;
++	case 25:
++		bpp2 = 0xa;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++        /* disable branch/start/end of frame interrupt */
++	LCCR5 |= (LCCR5_IUM4 | LCCR5_IUM3 | LCCR5_IUM2 |
++		  LCCR5_BSM4 | LCCR5_BSM3 | LCCR5_BSM2 |
++		  LCCR5_EOFM4 | LCCR5_EOFM3 | LCCR5_EOFM2 |
++		  LCCR5_SOFM4 | LCCR5_SOFM3 | LCCR5_SOFM2);
++
++	if (fbi->format == 0) {
++		/* overlay2 RGB resolution, RGB and YUV have different xres value*/
++		xres = fbi->fb.var.xres;
++		yres = fbi->fb.var.yres;
++
++		OVL2C2 = (fbi->format << 20) | (fbi->ypos << 10) | fbi->xpos;
++		OVL2C1 = OVL2C1_O2EN | (bpp2 << 20) | ((yres-1)<<10) | (xres-1);
++		/* setup RGB DMA */
++		if (fbi->state == C_DISABLE || fbi->state == C_BLANK)
++			FDADR2 = fbi->dma2->fdadr;
++		else
++			FBR2 = fbi->dma2->fdadr | 0x1;
++	} else {
++		/* overlay2 YUV resolution */
++		xres = fbi->fb.fix.line_length;
++		yres = fbi->fb.var.yres;
++
++		OVL2C2 = (fbi->format << 20) | (fbi->ypos << 10) | fbi->xpos;
++		OVL2C1 = OVL2C1_O2EN | (bpp2 << 20) | ((yres-1)<<10) | (xres-1);
++
++		if (fbi->state == C_DISABLE || fbi->state == C_BLANK) {
++			FDADR2 = fbi->dma2->fdadr;
++			FDADR3 = fbi->dma3->fdadr;
++			FDADR4 = fbi->dma4->fdadr;
++		} else {
++			FBR2 = fbi->dma2->fdadr | 0x01;
++			FBR3 = fbi->dma3->fdadr | 0x01;
++			FBR4 = fbi->dma4->fdadr | 0x01;
++		}
++	}
++
++	fbi->state = C_ENABLE;
++	return 0;
++}
++
++static int overlay2fb_disable(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*)info;
++	int done;
++
++	if (fbi->state == C_DISABLE)
++		return 0;
++	if (fbi->state == C_BLANK) {
++		fbi->state = C_DISABLE;
++		return 0;
++	}
++
++	fbi->state = C_DISABLE;
++
++	/* clear O2EN */
++	OVL2C1 &= ~OVL2C1_O2EN;
++
++	/* Make overlay2 can't disable/enable
++	 * correctly sometimes.
++	 */
++	CLEAR_LCD_INTR(LCSR1, LCSR1_BS2);
++
++	if (fbi->format == 0)
++		FBR2 = 0x3;
++	else {
++		FBR2 = 0x3;
++		FBR3 = 0x3;
++		FBR4 = 0x3;
++	}
++
++	done = WAIT_FOR_LCD_INTR(LCSR1, LCSR1_BS2, 100);
++
++	if (!done) {
++		pr_debug(KERN_INFO "%s: timeout\n", __FUNCTION__);
++		return -1;
++	}
++	return 0;
++}
++
++static int overlay2fb_blank(int blank, struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	int err=0;
++
++	switch(blank)
++	{
++	case 0:
++		err = overlay2fb_enable(info);
++		if (err) {
++			fbi->state = C_DISABLE;
++			pxafb_set_ctrlr_state(fbi->basefb, C_REENABLE);
++		}
++		break;
++	case 1:
++		err = overlay2fb_disable(info);
++		if (err) {
++			fbi->state = C_DISABLE;
++			pxafb_set_ctrlr_state(fbi->basefb, C_REENABLE);
++		}
++		break;
++	default:
++		/* reserved */
++		break;
++	}
++
++	return err;
++}
++
++
++static int overlay2fb_check_var( struct fb_var_screeninfo *var, struct fb_info *info)
++{
++	int xpos, ypos, xres, yres;
++	int format;
++	struct overlayfb_info *fbi=(struct overlayfb_info*)info;
++
++	xres=yres=0;
++
++	xpos = (var->nonstd & 0x3ff);
++	ypos = (var->nonstd >> 10) & 0x3ff;
++	format = (var->nonstd >>20) & 0x7;
++
++
++	/* Palnar YCbCr444, YCbCr422, YCbCr420 */
++	if ( (format != 0x4) && (format != 0x3) && (format != 0x2) && (format !=0x0))
++		return -EINVAL;
++
++	/* dummy pixels */
++	switch(format) {
++	case 0x0: /* RGB */
++		xres = var->xres;
++		break;
++	case 0x2: /* 444 */
++		xres = (var->xres + 0x3) & ~(0x3);
++		break;
++	case 0x3: /* 422 */
++		xres = (var->xres + 0x7) & ~(0x7);
++		break;
++	case 0x4: /* 420 */
++		xres = (var->xres + 0xf) & ~(0xf);
++		break;
++	}
++	yres = var->yres;
++
++	if ( (xpos + xres) > fbi->basefb->fb.var.xres )
++		return -EINVAL;
++
++	if ( (ypos + yres) > fbi->basefb->fb.var.yres )
++		return -EINVAL;
++
++	fbi->old_var=*var;
++
++	var->activate=FB_ACTIVATE_NOW;
++
++	return 0;
++
++}
++
++
++/*
++ * overlay2fb_set_var()
++ *
++ * var.nonstd is used as YCbCr format.
++ * var.red/green/blue is used as (Y/Cb/Cr) vector
++ */
++
++static int overlay2fb_set_par(struct fb_info *info)
++{
++	unsigned int xpos, ypos;
++	int format, err;
++
++	struct overlayfb_info *fbi=(struct overlayfb_info*)info;
++	struct fb_var_screeninfo *var = &fbi->fb.var;
++
++	info->flags &= ~FBINFO_MISC_USEREVENT;
++
++	if (fbi->state == C_BLANK)
++		return 0;
++
++	if (fbi->state == C_DISABLE)
++		goto out1;
++
++	if ( (var->xres == fbi->old_var.xres) &&
++		(var->yres == fbi->old_var.yres) &&
++		(var->bits_per_pixel == fbi->old_var.bits_per_pixel) &&
++		(((var->nonstd>>20) & 0x7) == fbi->format) )
++		goto out2;
++
++out1:
++	xpos = var->nonstd & 0x3ff;
++	ypos = (var->nonstd>>10) & 0x3ff;
++	format = (var->nonstd>>20) & 0x7;
++
++
++	fbi->format = format;
++	if ( fbi->format==0 )
++		err = overlay2fb_map_RGB_memory(info);
++	else
++		err = overlay2fb_map_YUV_memory(info);
++
++	if (err) return err;
++
++out2:
++	/* position */
++	fbi->xpos = var->nonstd & 0x3ff;
++	fbi->ypos = (var->nonstd>>10) & 0x3ff;
++
++	overlay2fb_enable(info);
++
++	return 0;
++}
++
++static struct fb_ops overlay2fb_ops = {
++	.owner			= THIS_MODULE,
++	.fb_open		= overlay2fb_open,
++	.fb_release		= overlay2fb_release,
++	.fb_check_var 		= overlay2fb_check_var,
++	.fb_set_par		= overlay2fb_set_par,
++	.fb_blank		= overlay2fb_blank,
++	.fb_fillrect		= cfb_fillrect,
++	.fb_copyarea		= cfb_copyarea,
++	.fb_imageblit		= cfb_imageblit,
++};
++
++/* Hardware cursor */
++
++/* Bulverde Cursor Modes */
++struct cursorfb_mode{
++	int xres;
++	int yres;
++	int bpp;
++};
++
++static struct cursorfb_mode cursorfb_modes[]={
++	{ 32,  32, 2},
++	{ 32,  32, 2},
++	{ 32,  32, 2},
++	{ 64,  64, 2},
++	{ 64,  64, 2},
++	{ 64,  64, 2},
++	{128, 128, 1},
++	{128, 128, 1}
++};
++
++static int cursorfb_enable(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++
++	if (!fbi->map_cpu) return -EINVAL;
++
++	CCR &= ~CCR_CEN;
++
++	/* set palette format
++	 *
++	 * FIXME: if only cursor uses palette
++	 */
++	LCCR4 = (LCCR4 & (~(0x3<<15))) | (0x1<<15);
++
++	/* disable branch/start/end of frame interrupt */
++	LCCR5 |= (LCCR5_IUM5 | LCCR5_BSM5 | LCCR5_EOFM5 | LCCR5_SOFM5);
++
++	/* load palette and frame data */
++	if (fbi->state == C_DISABLE) {
++		FDADR5 = fbi->dma5_pal->fdadr;
++		udelay(1);
++		FDADR5 = fbi->dma5_frame->fdadr;
++		udelay(1);
++
++	}
++	else {
++		FBR5 = fbi->dma5_pal->fdadr | 0x1;
++		udelay(1);
++		FBR5 = fbi->dma5_frame->fdadr | 0x1;
++		udelay(1);
++	}
++
++	CCR = CCR_CEN | (fbi->ypos << 15) | (fbi->xpos << 5) | (fbi->format);
++
++	fbi->state = C_ENABLE;
++
++	return 0;
++}
++
++static int cursorfb_disable(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*)info;
++	int done, ret = 0;
++
++	fbi->state = C_DISABLE;
++
++	done = WAIT_FOR_LCD_INTR(LCSR1, LCSR1_BS5, 100);
++	if (!done) ret = -1;
++
++	CCR &= ~CCR_CEN;
++
++	return ret;
++}
++
++static int cursorfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
++		       u_int trans, struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info *)info;
++	u_int val, ret = 1;
++	u_int *pal=(u_int*) fbi->palette_cpu;
++
++	/* 25bit with Transparcy for 16bpp format */
++	if (regno < fbi->palette_size) {
++		val = ((trans << 24)  & 0x1000000);
++		val |= ((red << 16)  & 0x0ff0000);
++		val |= ((green << 8 ) & 0x000ff00);
++		val |= ((blue << 0) & 0x00000ff);
++
++		pal[regno] = val;
++		ret = 0;
++	}
++	return ret;
++}
++
++int cursorfb_blank(int blank, struct fb_info *info)
++{
++	switch(blank)
++	{
++	case 0:
++		cursorfb_enable(info);
++		break;
++	case 1:
++		cursorfb_disable(info);
++		break;
++	default:
++		/* reserved */
++		break;
++	}
++	return 0;
++}
++
++static int cursorfb_check_var( struct fb_var_screeninfo *var, struct fb_info *info)
++{
++	int xpos, ypos, xres, yres;
++	int mode;
++	struct cursorfb_mode *cursor;
++	struct overlayfb_info *fbi=(struct overlayfb_info*)info;
++
++	mode = var->nonstd & 0x7;
++	xpos = (var->nonstd>>5) & 0x3ff;
++	ypos = (var->nonstd>>15) & 0x3ff;
++
++	if (mode>7 || mode <0 )
++		return -EINVAL;
++
++	cursor = cursorfb_modes + mode;
++
++	xres = cursor->xres;
++	yres = cursor->yres;
++
++	if ( (xpos + xres) > fbi->basefb->fb.var.xres )
++		return -EINVAL;
++
++	if ( (ypos + yres) > fbi->basefb->fb.var.yres )
++		return -EINVAL;
++
++	return 0;
++
++}
++
++static int cursorfb_set_par(struct fb_info *info)
++{
++	struct overlayfb_info *fbi = (struct overlayfb_info*) info;
++	struct fb_var_screeninfo *var = &fbi->fb.var;
++	struct cursorfb_mode *cursor;
++	int mode, xpos, ypos;
++	int err;
++
++	info->flags &= ~FBINFO_MISC_USEREVENT;
++
++	mode = var->nonstd & 0x7;
++	xpos = (var->nonstd>>5) & 0x3ff;
++	ypos = (var->nonstd>>15) & 0x3ff;
++
++	if (mode != fbi->format) {
++		cursor = cursorfb_modes + mode;
++
++		/* update "var" info */
++		fbi->fb.var.xres = cursor->xres;
++		fbi->fb.var.yres = cursor->yres;
++		fbi->fb.var.bits_per_pixel = cursor->bpp;
++
++		/* alloc video memory
++		 *
++		 * 4k is engouh for 128x128x1 cursor,
++		 * - 2k for cursor pixels,
++		 * - 2k for palette data, plus 2 dma descriptor
++		 */
++		if (!fbi->map_cpu) {
++			fbi->map_size = PAGE_SIZE;
++			fbi->map_cpu = (unsigned long)dma_alloc_writecombine(NULL, fbi->map_size,
++					       &fbi->map_dma, GFP_KERNEL );
++ 			if (!fbi->map_cpu) return -ENOMEM;
++		}
++
++		cursor = cursorfb_modes + mode;
++
++		/* update overlay & fix "info" */
++		fbi->screen_cpu 	= fbi->map_cpu;
++		fbi->palette_cpu 	= fbi->map_cpu + (PAGE_SIZE/2);
++		fbi->screen_dma  	= fbi->map_dma;
++		fbi->palette_dma 	= fbi->map_dma + (PAGE_SIZE/2);
++
++		fbi->format 		= mode;
++		fbi->palette_size 	= (1<<cursor->bpp);
++		fbi->fb.fix.smem_start 	= fbi->screen_dma;
++		fbi->fb.fix.smem_len 	= cursor->xres * cursor->yres * cursor->bpp / 8;
++		fbi->fb.fix.line_length = cursor->xres * cursor->bpp / 8;
++
++		fbi->dma5_pal     	= (struct pxafb_dma_descriptor*)(fbi->map_cpu + PAGE_SIZE - 16 );
++		fbi->dma5_pal->fdadr 	= (fbi->map_dma + PAGE_SIZE - 16);
++		fbi->dma5_pal->fsadr 	= fbi->palette_dma;
++		fbi->dma5_pal->fidr  	= 0;
++		fbi->dma5_pal->ldcmd 	= (fbi->palette_size<<2) | LDCMD_PAL;
++
++		fbi->dma5_frame   		= (struct pxafb_dma_descriptor*)(fbi->map_cpu + PAGE_SIZE - 32 );
++		fbi->dma5_frame->fdadr 	= (fbi->map_dma + PAGE_SIZE - 32);
++		fbi->dma5_frame->fsadr 	= fbi->screen_dma;
++		fbi->dma5_frame->fidr  	= 0;
++		fbi->dma5_frame->ldcmd 	= fbi->fb.fix.smem_len;
++
++		/* alloc & set default cmap */
++		err = fb_alloc_cmap(&fbi->fb.cmap, fbi->palette_size, 0);
++		if (err) return err;
++		err = fb_set_cmap(&fbi->fb.cmap, info);
++		if (err) return err;
++	}
++
++	/* update overlay info */
++	if ( (xpos != fbi->xpos) || (ypos != fbi->ypos) ) {
++		fbi->xpos = xpos;
++		fbi->ypos = ypos;
++	}
++
++	cursorfb_enable(info);
++	pxafb_set_ctrlr_state(fbi->basefb, C_REENABLE);
++
++	return 0;
++}
++
++static struct fb_ops cursorfb_ops = {
++	.owner			= THIS_MODULE,
++	.fb_check_var		= cursorfb_check_var,
++	.fb_set_par		= cursorfb_set_par,
++	.fb_blank		= cursorfb_blank,
++	.fb_fillrect		= cfb_fillrect,
++	.fb_copyarea		= cfb_copyarea,
++	.fb_imageblit		= cfb_imageblit,
++	.fb_setcolreg		= cursorfb_setcolreg,
++};
++
++static struct overlayfb_info * __init overlay1fb_init_fbinfo(void)
++{
++	struct overlayfb_info *fbi;
++
++	fbi = kmalloc(sizeof(struct overlayfb_info) + sizeof(u16) * 16, GFP_KERNEL);
++	if (!fbi)
++		return NULL;
++
++	memset(fbi, 0, sizeof(struct overlayfb_info) );
++
++	fbi->refcount = 0;
++	init_MUTEX(&fbi->mutex);
++
++	strcpy(fbi->fb.fix.id, "overlay1");
++
++	fbi->fb.fix.type		= FB_TYPE_PACKED_PIXELS;
++	fbi->fb.fix.type_aux		= 0;
++	fbi->fb.fix.xpanstep		= 0;
++	fbi->fb.fix.ypanstep		= 0;
++	fbi->fb.fix.ywrapstep		= 0;
++	fbi->fb.fix.accel		= FB_ACCEL_NONE;
++
++	fbi->fb.var.nonstd		= 0;
++	fbi->fb.var.activate		= FB_ACTIVATE_NOW;
++	fbi->fb.var.height		= -1;
++	fbi->fb.var.width		= -1;
++	fbi->fb.var.accel_flags	= 0;
++	fbi->fb.var.vmode		= FB_VMODE_NONINTERLACED;
++
++
++	fbi->fb.fbops			= &overlay1fb_ops;
++	fbi->fb.flags			= FBINFO_FLAG_DEFAULT;
++	fbi->fb.node			= -1;
++	fbi->fb.pseudo_palette		= NULL;
++
++	fbi->xpos   			= 0;
++	fbi->ypos   			= 0;
++	fbi->format 			= -1;
++	fbi->state 			= C_DISABLE;
++
++	return fbi;
++}
++
++static struct overlayfb_info * __init overlay2fb_init_fbinfo(void)
++{
++	struct overlayfb_info *fbi;
++
++	fbi = kmalloc(sizeof(struct overlayfb_info) + sizeof(u16) * 16, GFP_KERNEL);
++	if (!fbi)
++		return NULL;
++
++	memset(fbi, 0, sizeof(struct overlayfb_info) );
++
++	fbi->refcount = 0;
++	init_MUTEX(&fbi->mutex);
++
++	strcpy(fbi->fb.fix.id, "overlay2");
++
++	fbi->fb.fix.type		= FB_TYPE_PACKED_PIXELS;
++	fbi->fb.fix.type_aux		= 0;
++	fbi->fb.fix.xpanstep		= 0;
++	fbi->fb.fix.ypanstep		= 0;
++	fbi->fb.fix.ywrapstep		= 0;
++	fbi->fb.fix.accel		= FB_ACCEL_NONE;
++
++	fbi->fb.var.nonstd		= 0;
++	fbi->fb.var.activate		= FB_ACTIVATE_NOW;
++	fbi->fb.var.height		= -1;
++	fbi->fb.var.width		= -1;
++	fbi->fb.var.accel_flags		= 0;
++	fbi->fb.var.vmode		= FB_VMODE_NONINTERLACED;
++
++	fbi->fb.fbops			= &overlay2fb_ops;
++	fbi->fb.flags			= FBINFO_FLAG_DEFAULT;
++	fbi->fb.node			= -1;
++	fbi->fb.pseudo_palette		= NULL;
++
++	fbi->xpos   			= 0;
++	fbi->ypos   			= 0;
++	fbi->format 			= -1;
++	fbi->state 			= C_DISABLE;
++
++	return fbi;
++}
++
++static struct overlayfb_info * __init cursorfb_init_fbinfo(void)
++{
++	struct overlayfb_info *fbi;
++
++	fbi = kmalloc(sizeof(struct overlayfb_info) + sizeof(u16) * 16, GFP_KERNEL);
++	if (!fbi)
++		return NULL;
++
++	memset(fbi, 0, sizeof(struct overlayfb_info) );
++
++	fbi->refcount = 0;
++	init_MUTEX(&fbi->mutex);
++
++	strcpy(fbi->fb.fix.id, "cursor");
++
++	fbi->fb.fix.type		= FB_TYPE_PACKED_PIXELS;
++	fbi->fb.fix.type_aux		= 0;
++	fbi->fb.fix.xpanstep		= 0;
++	fbi->fb.fix.ypanstep		= 0;
++	fbi->fb.fix.ywrapstep		= 0;
++	fbi->fb.fix.accel		= FB_ACCEL_NONE;
++
++	fbi->fb.var.nonstd		= 0;
++	fbi->fb.var.activate		= FB_ACTIVATE_NOW;
++	fbi->fb.var.height		= -1;
++	fbi->fb.var.width		= -1;
++	fbi->fb.var.accel_flags		= 0;
++	fbi->fb.var.vmode		= FB_VMODE_NONINTERLACED;
++
++	fbi->fb.fbops			= &cursorfb_ops;
++	fbi->fb.flags			= FBINFO_FLAG_DEFAULT;
++	fbi->fb.node			= -1;
++	fbi->fb.pseudo_palette		= NULL;
++
++
++	fbi->xpos   			= 0;
++	fbi->ypos   			= 0;
++	fbi->format 			= -1;
++	fbi->state 			= C_DISABLE;
++
++	return fbi;
++}
++
++
++void pxa_set_overlay_ctrlr_state(struct pxafb_info *fbi, u_int state)
++{
++	switch (state) {
++	case C_DISABLE:
++			DISABLE_OVERLAYS(fbi);
++			break;
++	case C_ENABLE:
++			ENABLE_OVERLAYS(fbi);
++			break;
++	case C_BLANK:
++			BLANK_OVERLAYS(fbi);
++			break;
++	case C_UNBLANK:
++			UNBLANK_OVERLAYS(fbi);
++			break;
++	default:
++			break;
++	}
++}
++
++static int is_pxafb_device(struct device * dev, void * data)
++{
++	struct platform_device *pdev = container_of(dev, struct platform_device, dev);
++
++	return (strncmp(pdev->name, "pxa2xx-fb", 9) == 0);
++}
++
++static int __devinit pxafb_overlay_init(void)
++{
++	int ret;
++	struct overlayfb_info *overlay1fb, *overlay2fb, *cursorfb;
++	struct pxafb_info *fbi;
++	struct device *dev;
++
++	ret = -1;
++	overlay1fb = overlay2fb = cursorfb = NULL;
++	fbi = NULL;
++
++	dev = bus_find_device(&platform_bus_type, NULL, NULL, is_pxafb_device);
++	if (!dev) {
++		printk(KERN_INFO "Base framebuffer not exists, failed to load overlay driver!\n");
++		return ret;
++	}
++
++	fbi = dev_get_drvdata(dev);
++	if (fbi == NULL) {
++		printk(KERN_INFO "Base framebuffer not initialized, failed to load overlay driver!\n");
++		return ret;
++	}
++
++	/* Overlay 1 windows */
++	overlay1fb = overlay1fb_init_fbinfo();
++
++	if (!overlay1fb) {
++		ret = -ENOMEM;
++		printk("overlay1fb_init_fbinfo failed\n");
++		goto failed;
++	}
++
++	ret = register_framebuffer(&overlay1fb->fb);
++	if (ret < 0)
++		goto failed;
++
++	/* Overlay 2 window */
++	overlay2fb = overlay2fb_init_fbinfo();
++
++	if (!overlay2fb) {
++		ret = -ENOMEM;
++		printk("overlay2fb_init_fbinfo failed\n");
++		goto failed;
++	}
++
++	ret = register_framebuffer(&overlay2fb->fb);
++	if (ret < 0) goto failed;
++
++	/* Hardware cursor window */
++	cursorfb = cursorfb_init_fbinfo();
++
++	if (!cursorfb) {
++		ret = -ENOMEM;
++		printk("cursorfb_init_fbinfo failed\n");
++		goto failed;
++	}
++
++	ret = register_framebuffer(&cursorfb->fb);
++	if (ret < 0) goto failed;
++
++
++	/* set refernce to Overlays  */
++	fbi->overlay1fb  = overlay1fb;
++	fbi->overlay2fb  = overlay2fb;
++	fbi->cursorfb    = cursorfb;
++	fbi->set_overlay_ctrlr_state=pxa_set_overlay_ctrlr_state;
++
++	/* set refernce to BaseFrame */
++	overlay1fb->basefb = fbi;
++	overlay2fb->basefb = fbi;
++	cursorfb->basefb = fbi;
++
++	printk(KERN_INFO "Load PXA Overlay driver successfully!\n");
++
++	return 0;
++
++failed:
++	if (overlay1fb)
++		kfree(overlay1fb);
++	if (overlay2fb)
++		kfree(overlay2fb);
++	if (cursorfb)
++		kfree(cursorfb);
++	printk(KERN_INFO "Load PXA Overlay driver failed!\n");
++	return ret;
++}
++
++static void __exit pxafb_overlay_exit(void)
++{
++	struct pxafb_info *fbi;
++	struct device *dev;
++
++	dev = bus_find_device(&platform_bus_type, NULL, NULL, is_pxafb_device);
++	if (!dev)
++		return;
++
++	fbi = dev_get_drvdata(dev);
++	if (!fbi)
++		return;
++
++	if (fbi->overlay1fb) {
++		unregister_framebuffer(&(fbi->overlay1fb->fb));
++		kfree(fbi->overlay1fb);
++		fbi->overlay1fb  = NULL;
++	}
++
++	if (fbi->overlay2fb) {
++		unregister_framebuffer(&(fbi->overlay2fb->fb));
++		kfree(fbi->overlay2fb);
++		fbi->overlay2fb  = NULL;
++	}
++
++	if (fbi->cursorfb) {
++		unregister_framebuffer(&(fbi->cursorfb->fb));
++		kfree(fbi->cursorfb);
++		fbi->cursorfb  = NULL;
++	}
++
++	fbi->set_overlay_ctrlr_state = NULL;
++
++	printk(KERN_INFO "Unload PXA Overlay driver successfully!\n");
++	return;
++}
++
++
++module_init(pxafb_overlay_init);
++module_exit(pxafb_overlay_exit);
++
++MODULE_DESCRIPTION("Loadable framebuffer overlay driver for PXA");
++MODULE_LICENSE("GPL");
++
+--- linux-2.6.24-rc1.orig/include/asm-arm/arch-pxa/pxa-regs.h
++++ linux-2.6.24-rc1/include/asm-arm/arch-pxa/pxa-regs.h
+@@ -789,11 +789,18 @@
+ #define UDC_INT_PACKETCMP  (0x1)
+ 
+ #define UDCICR_INT(n,intr) (((intr) & 0x03) << (((n) & 0x0F) * 2))
++/* Older defines, do not use. */
+ #define UDCICR1_IECC	(1 << 31)	/* IntEn - Configuration Change */
+ #define UDCICR1_IESOF	(1 << 30)	/* IntEn - Start of Frame */
+ #define UDCICR1_IERU	(1 << 29)	/* IntEn - Resume */
+ #define UDCICR1_IESU	(1 << 28)	/* IntEn - Suspend */
+ #define UDCICR1_IERS	(1 << 27)	/* IntEn - Reset */
++/* New defines. */
++#define UDCISR1_IRCC	(1 << 31)	/* IntEn - Configuration Change */
++#define UDCISR1_IRSOF	(1 << 30)	/* IntEn - Start of Frame */
++#define UDCISR1_IRRU	(1 << 29)	/* IntEn - Resume */
++#define UDCISR1_IRSU	(1 << 28)	/* IntEn - Suspend */
++#define UDCISR1_IRRS	(1 << 27)	/* IntEn - Reset */
+ 
+ #define UDCISR0         __REG(0x4060000C) /* UDC Interrupt Status Register 0 */
+ #define UDCISR1         __REG(0x40600010) /* UDC Interrupt Status Register 1 */
+@@ -1827,6 +1834,8 @@
+ #define DFBR0		__REG(0x44000020)  /* DMA Channel 0 Frame Branch Register */
+ #define DFBR1		__REG(0x44000024)  /* DMA Channel 1 Frame Branch Register */
+ #define LCSR		__REG(0x44000038)  /* LCD Controller Status Register */
++#define LCSR0		__REG(0x44000038)  /* LCD Controller Status Register */
++#define LCSR1		__REG(0x44000034)  /* LCD Controller Status Register */
+ #define LIIDR		__REG(0x4400003C)  /* LCD Controller Interrupt ID Register */
+ #define TMEDRGBR	__REG(0x44000040)  /* TMED RGB Seed Register */
+ #define TMEDCR		__REG(0x44000044)  /* TMED Control Register */
+@@ -1836,6 +1845,10 @@
+ #define LCCR3_4BPP (2 << 24)
+ #define LCCR3_8BPP (3 << 24)
+ #define LCCR3_16BPP (4 << 24)
++#define LCCR3_18BPP (6 << 24)
++#define LCCR3_19BPP (8 << 24)
++#define LCCR3_24BPP (9 << 24)
++#define LCCR3_25BPP (10<< 24)
+ 
+ #define LCCR3_PDFOR_0 (0 << 30)
+ #define LCCR3_PDFOR_1 (1 << 30)
+@@ -2010,6 +2023,104 @@
+ 
+ #define LDCMD_PAL	(1 << 26)	/* instructs DMA to load palette buffer */
+ 
++/* Overlay1 & Overlay2 & Hardware Cursor */
++#define LCSR1_SOF1	(1 << 0)
++#define LCSR1_SOF2	(1 << 1)
++#define LCSR1_SOF3	(1 << 2)
++#define LCSR1_SOF4	(1 << 3)
++#define LCSR1_SOF5	(1 << 4)
++#define LCSR1_SOF6	(1 << 5)
++
++#define LCSR1_EOF1	(1 << 8)
++#define LCSR1_EOF2	(1 << 9)
++#define LCSR1_EOF3	(1 << 10)
++#define LCSR1_EOF4	(1 << 11)
++#define LCSR1_EOF5	(1 << 12)
++#define LCSR1_EOF6	(1 << 13)
++
++#define LCSR1_BS1	(1 << 16)
++#define LCSR1_BS2	(1 << 17)
++#define LCSR1_BS3	(1 << 18)
++#define LCSR1_BS4	(1 << 19)
++#define LCSR1_BS5	(1 << 20)
++#define LCSR1_BS6	(1 << 21)
++
++#define LCSR1_IU2	(1 << 25)
++#define LCSR1_IU3	(1 << 26)
++#define LCSR1_IU4	(1 << 27)
++#define LCSR1_IU5	(1 << 28)
++#define LCSR1_IU6	(1 << 29)
++
++#define LDCMD_SOFINT	(1 << 22)
++#define LDCMD_EOFINT	(1 << 21)
++
++
++#define LCCR5_SOFM1	(1<<0)		/* Start Of Frame Mask for Overlay 1 (channel 1) */
++#define LCCR5_SOFM2	(1<<1)		/* Start Of Frame Mask for Overlay 2 (channel 2) */
++#define LCCR5_SOFM3	(1<<2)		/* Start Of Frame Mask for Overlay 2 (channel 3) */
++#define LCCR5_SOFM4	(1<<3)		/* Start Of Frame Mask for Overlay 2 (channel 4) */
++#define LCCR5_SOFM5	(1<<4)		/* Start Of Frame Mask for cursor (channel 5) */
++#define LCCR5_SOFM6	(1<<5)		/* Start Of Frame Mask for command data (channel 6) */
++
++#define LCCR5_EOFM1	(1<<8)		/* End Of Frame Mask for Overlay 1 (channel 1) */
++#define LCCR5_EOFM2	(1<<9)		/* End Of Frame Mask for Overlay 2 (channel 2) */
++#define LCCR5_EOFM3	(1<<10)		/* End Of Frame Mask for Overlay 2 (channel 3) */
++#define LCCR5_EOFM4	(1<<11)		/* End Of Frame Mask for Overlay 2 (channel 4) */
++#define LCCR5_EOFM5	(1<<12)		/* End Of Frame Mask for cursor (channel 5) */
++#define LCCR5_EOFM6	(1<<13)		/* End Of Frame Mask for command data (channel 6) */
++
++#define LCCR5_BSM1	(1<<16)		/* Branch mask for Overlay 1 (channel 1) */
++#define LCCR5_BSM2	(1<<17)		/* Branch mask for Overlay 2 (channel 2) */
++#define LCCR5_BSM3	(1<<18)		/* Branch mask for Overlay 2 (channel 3) */
++#define LCCR5_BSM4	(1<<19)		/* Branch mask for Overlay 2 (channel 4) */
++#define LCCR5_BSM5	(1<<20)		/* Branch mask for cursor (channel 5) */
++#define LCCR5_BSM6	(1<<21)		/* Branch mask for data command  (channel 6) */
++
++#define LCCR5_IUM1	(1<<24)		/* Input FIFO Underrun Mask for Overlay 1  */
++#define LCCR5_IUM2	(1<<25)		/* Input FIFO Underrun Mask for Overlay 2  */
++#define LCCR5_IUM3	(1<<26)		/* Input FIFO Underrun Mask for Overlay 2  */
++#define LCCR5_IUM4	(1<<27)		/* Input FIFO Underrun Mask for Overlay 2  */
++#define LCCR5_IUM5	(1<<28)		/* Input FIFO Underrun Mask for cursor */
++#define LCCR5_IUM6	(1<<29)		/* Input FIFO Underrun Mask for data command */
++
++#define OVL1C1_O1EN	(1<<31)		/* Enable bit for Overlay 1 */
++#define OVL2C1_O2EN	(1<<31)		/* Enable bit for Overlay 2 */
++#define CCR_CEN		(1<<31)		/* Enable bit for Cursor */
++
++/* LCD registers */
++#define LCCR4		__REG(0x44000010)  /* LCD Controller Control Register 4 */
++#define LCCR5		__REG(0x44000014)  /* LCD Controller Control Register 5 */
++#define FBR0		__REG(0x44000020)  /* DMA Channel 0 Frame Branch Register */
++#define FBR1		__REG(0x44000024)  /* DMA Channel 1 Frame Branch Register */
++#define FBR2		__REG(0x44000028)  /* DMA Channel 2 Frame Branch Register */
++#define FBR3		__REG(0x4400002C)  /* DMA Channel 3 Frame Branch Register */
++#define FBR4		__REG(0x44000030)  /* DMA Channel 4 Frame Branch Register */
++#define FDADR2		__REG(0x44000220)  /* DMA Channel 2 Frame Descriptor Address Register */
++#define FSADR2		__REG(0x44000224)  /* DMA Channel 2 Frame Source Address Register */
++#define FIDR2		__REG(0x44000228)  /* DMA Channel 2 Frame ID Register */
++#define LDCMD2		__REG(0x4400022C)  /* DMA Channel 2 Command Register */
++#define FDADR3		__REG(0x44000230)  /* DMA Channel 3 Frame Descriptor Address Register */
++#define FSADR3		__REG(0x44000234)  /* DMA Channel 3 Frame Source Address Register */
++#define FIDR3		__REG(0x44000238)  /* DMA Channel 3 Frame ID Register */
++#define LDCMD3		__REG(0x4400023C)  /* DMA Channel 3 Command Register */
++#define FDADR4		__REG(0x44000240)  /* DMA Channel 4 Frame Descriptor Address Register */
++#define FSADR4		__REG(0x44000244)  /* DMA Channel 4 Frame Source Address Register */
++#define FIDR4		__REG(0x44000248)  /* DMA Channel 4 Frame ID Register */
++#define LDCMD4		__REG(0x4400024C)  /* DMA Channel 4 Command Register */
++#define FDADR5		__REG(0x44000250)  /* DMA Channel 5 Frame Descriptor Address Register */
++#define FSADR5		__REG(0x44000254)  /* DMA Channel 5 Frame Source Address Register */
++#define FIDR5		__REG(0x44000258)  /* DMA Channel 5 Frame ID Register */
++#define LDCMD5		__REG(0x4400025C)  /* DMA Channel 5 Command Register */
++
++#define OVL1C1		__REG(0x44000050)  /* Overlay 1 Control Register 1 */
++#define OVL1C2		__REG(0x44000060)  /* Overlay 1 Control Register 2 */
++#define OVL2C1		__REG(0x44000070)  /* Overlay 2 Control Register 1 */
++#define OVL2C2		__REG(0x44000080)  /* Overlay 2 Control Register 2 */
++#define CCR		__REG(0x44000090)  /* Cursor Control Register */
++
++#define FBR5		__REG(0x44000110)  /* DMA Channel 5 Frame Branch Register */
++#define FBR6		__REG(0x44000114)  /* DMA Channel 6 Frame Branch Register */
++
+ /*
+  * Memory controller
+  */
