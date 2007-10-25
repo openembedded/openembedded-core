@@ -1,12 +1,9 @@
 DESCRIPTION = "Touchscreen calibration data"
 SECTION = "base"
-PR = "r2"
+PR = "r4"
 
 SRC_URI = "file://pointercal"
 S = "${WORKDIR}"
-
-ALLOW_EMPTY_${PN} = "1"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install() {
 	# Only install file if it has a contents
@@ -15,3 +12,7 @@ do_install() {
 	        install -m 0644 ${S}/pointercal ${D}${sysconfdir}/
 	fi
 }
+
+ALLOW_EMPTY_${PN} = "1"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
