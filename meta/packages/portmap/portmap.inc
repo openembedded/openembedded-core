@@ -1,6 +1,7 @@
 DESCRIPTION = "RPC program number mapper."
 SECTION = "console/network"
 LICENSE = "GPL"
+DEPENDS = "fakeroot-native"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/p/portmap/portmap_5.orig.tar.gz \
 	${DEBIAN_MIRROR}/main/p/portmap/portmap_${PV}.diff.gz;patch=1 \
@@ -20,8 +21,9 @@ do_compile() {
 	oe_runmake
 }
 
-do_install() {
+fakeroot do_install() {
 	install -d ${D}${sysconfdir}/init.d
+	install -d ${D}${base_sbindir}
 	install -m 0755 ${WORKDIR}/portmap.init ${D}${sysconfdir}/init.d/portmap
 	oe_runmake 'docdir=${docdir}/portmap' 'DESTDIR=${D}' install
 }
