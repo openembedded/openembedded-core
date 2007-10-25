@@ -1,4 +1,5 @@
 DESCRIPTION = "Firmware for Spectrum Wireless LAN cards"
+DEPENDS += " unzip-native "
 LICENSE = "unknown"
 PR = "r1"
 
