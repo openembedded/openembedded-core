@@ -4,17 +4,12 @@ PRIORITY = "optional"
 LICENSE = "GPL"
 RDEPENDS = "update-modules"
 PACKAGE_ARCH = "all"
-PR = "r3"
+PR = "r4"
 
-SRC_URI = "file://spectrum.conf \
-           file://hermes.conf \
-	   file://orinoco_cs.conf"
+SRC_URI = "file://orinoco_cs.conf"
 
 do_install() {
-        install -d ${D}${sysconfdir}/pcmcia
         install -d ${D}${sysconfdir}/modutils
-        install -m 0644 ${WORKDIR}/spectrum.conf ${D}${sysconfdir}/pcmcia/
-        install -m 0644 ${WORKDIR}/hermes.conf ${D}${sysconfdir}/pcmcia/
         install -m 0644 ${WORKDIR}/orinoco_cs.conf ${D}${sysconfdir}/modutils/
 }
 
