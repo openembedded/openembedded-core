@@ -13,7 +13,7 @@ inherit autotools gettext
 
 ALLOW_EMPTY = "1"
 
-PACKAGES = "psmisc-dbg ${PN} fuser psmisc-doc \
+PACKAGES = "${PN} fuser fuser-doc \
 	    killall killall-doc \
 	    pstree pstree-doc"
 
@@ -21,10 +21,13 @@ FILES_${PN} = ""
 RDEPENDS_${PN} = "fuser killall pstree"
 
 FILES_fuser = "${bindir}/fuser"
+FILES_fuser-doc = "${mandir}/man1/fuser*"
 
 FILES_killall = "${bindir}/killall.${PN}"
+FILES_killall-doc = "${mandir}/man1/killall*"
 
 FILES_pstree = "${bindir}/pstree"
+FILES_pstree-doc = "${mandir}/man1/pstree*"
 
 do_install_append() {
 	mv ${D}${bindir}/killall ${D}${bindir}/killall.${PN}
