@@ -21,6 +21,7 @@ exec_prefix = "${prefix}"
 base_prefix = "${exec_prefix}"
 
 FILES_${PN} = "${prefix}"
-FILES_${PN}-dbg += "${prefix}/bin/.debug \
+FILES_${PN}-dbg += "${prefix}/.debug \
+                    ${prefix}/bin/.debug \
                     ${prefix}/sbin/.debug \
                    "
