@@ -11,4 +11,3 @@ do_configure() {
 	libtoolize --force
 	oe_runconf
 }
-			 
