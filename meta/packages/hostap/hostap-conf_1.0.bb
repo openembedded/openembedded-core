@@ -4,21 +4,15 @@ PRIORITY = "optional"
 LICENSE = "GPL"
 RDEPENDS = "update-modules"
 PACKAGE_ARCH = "all"
-PR = "r9"
+PR = "r10"
 
-SRC_URI = "file://hostap_cs.conf \
-           file://hostap_cs.modalias \
-           file://hostap_cs.conf-upstream"
+SRC_URI = "file://hostap_cs.modalias"
 
 do_compile() {
 }
 
 do_install() {
-        install -d ${D}${sysconfdir}/pcmcia
         install -d ${D}${sysconfdir}/modutils
-
-        install -m 0644 ${WORKDIR}/hostap_cs.conf-upstream ${D}${sysconfdir}/pcmcia/hostap_cs.conf
-	cat ${WORKDIR}/hostap_cs.conf >>${D}${sysconfdir}/pcmcia/hostap_cs.conf
 
 	install -m 0644 ${WORKDIR}/hostap_cs.modalias ${D}${sysconfdir}/modutils/hostap_cs.conf
 }
