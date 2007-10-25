@@ -9,7 +9,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.bz2 \
            file://drop-ctl-proc.patch;patch=1 \
            file://sh-arch-update.patch;patch=1 \
            file://sh-syscall-update.patch;patch=1 \
-           file://strace-fix-arm-bad-syscall.patch;patch=1"
+           file://strace-fix-arm-bad-syscall.patch;patch=1 \
+           file://strace-undef-syscall.patch;patch=1 "
 
 inherit autotools
 
