@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.alsa-project.org"
 SECTION = "libs/multimedia"
 LICENSE = "GPL"
 
-PR = "r1"
+PR = "r2"
 
 # configure.in sets -D__arm__ on the command line for any arm system
 # (not just those with the ARM instruction set), this should be removed,
@@ -16,6 +16,9 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://unbreak_plugindir.patch;patch=1"
 
 inherit autotools pkgconfig
+
+require alsa-fpu.inc
+EXTRA_OECONF += "${@get_alsa_fpu_setting(bb, d)} "
 
 EXTRA_OECONF = "--with-cards=pdaudiocf --with-oss=yes"
 
