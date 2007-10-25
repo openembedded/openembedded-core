@@ -29,5 +29,5 @@ S = "${WORKDIR}/${PN}"
 
 FILES_${PN} += "${datadir}/icons"
 
-# SVNREV = "r${SRCREV}"
-SVNREV = "${SRCDATE}"
+SVNREV = "r${SRCREV}"
+#SVNREV = "${SRCDATE}"
