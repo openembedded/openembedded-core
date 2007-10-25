@@ -3,7 +3,8 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "GPL"
 DEPENDS = "virtual/kernel"
-PR = "r27"
+RDEPENDS = "hostap-conf orinoco-conf"
+PR = "r28"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmcia-cs/pcmcia-cs-${PV}.tar.gz \
 	   file://busybox.patch;patch=1 \
@@ -85,7 +86,7 @@ do_install() {
 
 	# ensure that config.opts always exists, albeit empty
 	echo >> ${D}${sysconfdir}/pcmcia/config.opts
-	
+
 	install -m 0644 ${WORKDIR}/ide.opts ${D}${sysconfdir}/pcmcia/
 	install -m 0644 ${WORKDIR}/wireless.opts ${D}${sysconfdir}/pcmcia/
 	for i in etc/cis/*; do
