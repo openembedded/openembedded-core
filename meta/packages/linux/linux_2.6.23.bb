@@ -2,16 +2,16 @@ require linux.inc
 
 # Mark archs/machines that this kernel supports
 DEFAULT_PREFERENCE = "-1"
-DEFAULT_PREFERENCE_avr32 = "1"
 DEFAULT_PREFERENCE_cm-x270 = "1"
+DEFAULT_PREFERENCE_mpc8313e-rdb = "1"
+DEFAULT_PREFERENCE_mpc8323e-rdb = "1"
 
-PR = "r3"
+PR = "r2"
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.22.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
+	   file://binutils-buildid-arm.patch;patch=1 \
            file://defconfig \
 	   "
-
-SRC_URI_append_avr32 = "http://avr32linux.org/twiki/pub/Main/LinuxPatches/linux-2.6.22.atmel.3.patch.bz2;patch=1"
 
 SRC_URI_append_cm-x270 = "\
 	file://0001-cm-x270-base2.patch;patch=1 \
@@ -51,6 +51,15 @@ python do_compulab_image() {
 	    fo.write(size_s)
 	    fo.write(image_data)
 	    fo.close()
+
+	    os.chdir(deploy_dir)
+	    link_file = bb.data.expand('${KERNEL_IMAGE_SYMLINK_NAME}', d) + '.cmx270'
+	    img_file = bb.data.expand('${KERNEL_IMAGE_BASE_NAME}', d) + '.cmx270'
+	    try:
+		os.unlink(link_file)
+	    except:
+		pass
+	    os.symlink(img_file, link_file)
 }
 
 addtask compulab_image after do_deploy before do_package

@@ -4,19 +4,12 @@ LICENSE = "GPL"
 
 inherit kernel
 
-# These devices need mkimage to generate a kernel image 
-DEPENDS_append_kb9202         = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_at32stk1000    = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_atngw100       = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_at91sam9263ek  = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_at91sam9261ek  = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_at91sam9260ek  = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_sarge-at91     = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_gumstix-connex = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_gumstix-verdex = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_fic-gta01      = " u-boot-mkimage-openmoko-native "
-DEPENDS_append_fic-gta02      = " u-boot-mkimage-openmoko-native "
+# Not every device needs mkimage to generate a kernel image, but lets make OE a bit more
+# friendly and increase the "Just Works(TM) factor. Building uboot takes only a minute.
+DEPENDS += " u-boot-mkimage-openmoko-native "
 
+
+RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
 
 # Specify the commandline for your device
 
@@ -42,7 +35,7 @@ do_configure_prepend() {
         #
         if [ "${TARGET_OS}" = "linux-gnueabi" -o  "${TARGET_OS}" = "linux-uclibcgnueabi" ]; then
                 echo "CONFIG_AEABI=y"                   >> ${S}/.config
-                echo "CONFIG_OABI_COMPAT=y"             >> ${S}/.config
+                echo "# CONFIG_OABI_COMPAT is not set"             >> ${S}/.config
         else
                 echo "# CONFIG_AEABI is not set"        >> ${S}/.config
                 echo "# CONFIG_OABI_COMPAT is not set"  >> ${S}/.config
@@ -104,11 +97,16 @@ do_install_prepend() {
         if test -e arch/${ARCH}/boot/images/uImage ; then
              ln -f arch/${ARCH}/boot/images/uImage arch/${ARCH}/boot/uImage
         fi
+
+        if test -e arch/${ARCH}/kernel/vmlinux.lds ; then
+             ln -f arch/${ARCH}/kernel/vmlinux.lds arch/${ARCH}/boot/vmlinux
+        fi
 }
 
 UBOOT_ENTRYPOINT ?= "20008000"
 
-KERNEL_IMAGE_BASE_NAME = ${KERNEL_IMAGETYPE}-${PV}-${PR}-${MACHINE}-${DATETIME}
+KERNEL_IMAGE_BASE_NAME = "${KERNEL_IMAGETYPE}-${PV}-${PR}-${MACHINE}-${DATETIME}"
+KERNEL_IMAGE_SYMLINK_NAME = "${KERNEL_IMAGETYPE}-${MACHINE}"
 
 do_deploy() {
         install -d ${DEPLOY_DIR_IMAGE}
@@ -128,6 +126,10 @@ do_deploy() {
                 rm -f linux.bin.gz
             fi
         fi
+
+		cd ${DEPLOY_DIR_IMAGE}
+		rm -f ${KERNEL_IMAGE_SYMLINK_NAME}.bin
+		ln -sf ${KERNEL_IMAGE_BASE_NAME}.bin ${KERNEL_IMAGE_SYMLINK_NAME}.bin
 }
 
 do_deploy[dirs] = "${S}"

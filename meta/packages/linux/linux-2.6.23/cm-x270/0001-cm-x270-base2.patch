@@ -1,4 +1,4 @@
-From 0db989f536f29c343bb4e42dc0b34d892d86de60 Mon Sep 17 00:00:00 2001
+From 299199b0cf17d0247a58af6ccd6cf6b859c60e9a Mon Sep 17 00:00:00 2001
 From: Cliff Brake <cbrake@happy.dev.bec-systems.com>
 Date: Fri, 20 Jul 2007 18:55:59 -0400
 Subject: [PATCH] cm-x270-base2
@@ -6,7 +6,7 @@ Subject: [PATCH] cm-x270-base2
 ---
  arch/arm/Kconfig                    |    8 +-
  arch/arm/configs/cm_x270_defconfig  | 1567 +++++++++++++++++++++++++++++++++++
- arch/arm/mach-pxa/Kconfig           |    5 +
+ arch/arm/mach-pxa/Kconfig           |    6 +
  arch/arm/mach-pxa/Makefile          |    7 +
  arch/arm/mach-pxa/cm-x270.c         |  821 ++++++++++++++++++
  drivers/leds/Kconfig                |    6 +
@@ -18,17 +18,17 @@ Subject: [PATCH] cm-x270-base2
  include/asm-arm/arch-pxa/hardware.h |   11 +
  include/asm-arm/arch-pxa/irqs.h     |   20 +
  include/asm-arm/memory.h            |   10 +
- 14 files changed, 2666 insertions(+), 1 deletions(-)
+ 14 files changed, 2667 insertions(+), 1 deletions(-)
  create mode 100644 arch/arm/configs/cm_x270_defconfig
  create mode 100644 arch/arm/mach-pxa/cm-x270.c
  create mode 100644 drivers/leds/leds-cm-x270.c
  create mode 100644 include/asm-arm/arch-pxa/cm-x270.h
 
 diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 50d9f3e..dec0a27 100644
+index 691aae3..b9a2b11 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -519,7 +519,7 @@ config ISA_DMA_API
+@@ -534,7 +534,7 @@ config ISA_DMA_API
  	bool
  
  config PCI
@@ -37,7 +37,7 @@ index 50d9f3e..dec0a27 100644
  	help
  	  Find out whether you have a PCI motherboard. PCI is the name of a
  	  bus system, i.e. the way the CPU talks to the other stuff inside
-@@ -537,6 +537,12 @@ config PCI_HOST_VIA82C505
+@@ -555,6 +555,12 @@ config PCI_HOST_VIA82C505
  	depends on PCI && ARCH_SHARK
  	default y
  
@@ -1624,34 +1624,35 @@ index 0000000..f728363
 +CONFIG_HAS_IOMEM=y
 +CONFIG_HAS_IOPORT=y
 diff --git a/arch/arm/mach-pxa/Kconfig b/arch/arm/mach-pxa/Kconfig
-index 5c0a100..e1cd439 100644
+index 5ebec6d..e126926 100644
 --- a/arch/arm/mach-pxa/Kconfig
 +++ b/arch/arm/mach-pxa/Kconfig
-@@ -37,6 +37,11 @@ config MACH_TRIZEPS4
- 	bool "Keith und Koep Trizeps4 DIMM-Module"
+@@ -40,6 +40,12 @@ config MACH_TRIZEPS4
+ config MACH_EM_X270
+ 	bool "CompuLab EM-x270 platform"
  	select PXA27x
- 
++	select IWMMXT
++
 +config MACH_ARMCORE
 +	bool "CompuLab CM-X270 modules"
 +	select PXA27x
 +	select IWMMXT
-+
+ 
  endchoice
  
- if PXA_SHARPSL
 diff --git a/arch/arm/mach-pxa/Makefile b/arch/arm/mach-pxa/Makefile
-index 9093eb1..2a110f8 100644
+index 7d6ab5c..b369289 100644
 --- a/arch/arm/mach-pxa/Makefile
 +++ b/arch/arm/mach-pxa/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PXA_SHARP_Cxx00)	+= spitz.o corgi_ssp.o corgi_lcd.o sharpsl_pm.o sp
- obj-$(CONFIG_MACH_AKITA)	+= akita-ioexp.o
+@@ -19,6 +19,7 @@ obj-$(CONFIG_MACH_AKITA)	+= akita-ioexp.o
  obj-$(CONFIG_MACH_POODLE)	+= poodle.o corgi_ssp.o
  obj-$(CONFIG_MACH_TOSA)         += tosa.o
+ obj-$(CONFIG_MACH_EM_X270) += em-x270.o
 +obj-$(CONFIG_MACH_ARMCORE)      += cm-x270.o
  
  # Support for blinky lights
  led-y := leds.o
-@@ -25,6 +26,8 @@ led-$(CONFIG_ARCH_LUBBOCK) += leds-lubbock.o
+@@ -26,6 +27,8 @@ led-$(CONFIG_ARCH_LUBBOCK) += leds-lubbock.o
  led-$(CONFIG_MACH_MAINSTONE) += leds-mainstone.o
  led-$(CONFIG_ARCH_PXA_IDP) += leds-idp.o
  led-$(CONFIG_MACH_TRIZEPS4) += leds-trizeps4.o
@@ -1660,7 +1661,7 @@ index 9093eb1..2a110f8 100644
  
  obj-$(CONFIG_LEDS) += $(led-y)
  
-@@ -35,3 +38,7 @@ obj-$(CONFIG_PXA_SSP) += ssp.o
+@@ -36,3 +39,7 @@ obj-$(CONFIG_PXA_SSP) += ssp.o
  ifeq ($(CONFIG_PXA27x),y)
  obj-$(CONFIG_PM) += standby.o
  endif
@@ -1670,7 +1671,7 @@ index 9093eb1..2a110f8 100644
 +endif
 diff --git a/arch/arm/mach-pxa/cm-x270.c b/arch/arm/mach-pxa/cm-x270.c
 new file mode 100644
-index 0000000..88b080d
+index 0000000..7b4e288
 --- /dev/null
 +++ b/arch/arm/mach-pxa/cm-x270.c
 @@ -0,0 +1,821 @@
@@ -2445,7 +2446,7 @@ index 0000000..88b080d
 +{
 +	int irq;
 +
-+	pxa_init_irq();
++	pxa27x_init_irq();
 +
 +	IT8152_INTC_PDCNIMR = 0xffff;
 +
@@ -2496,10 +2497,10 @@ index 0000000..88b080d
 +	.init_machine	= cmx270_init,
 +MACHINE_END
 diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 87d2046..1023411 100644
+index 4468cb3..02b04e2 100644
 --- a/drivers/leds/Kconfig
 +++ b/drivers/leds/Kconfig
-@@ -89,6 +89,12 @@ config LEDS_H1940
+@@ -87,6 +87,12 @@ config LEDS_H1940
  	help
  	  This option enables support for the LEDs on the h1940.
  
@@ -2513,13 +2514,13 @@ index 87d2046..1023411 100644
  	tristate "LED Support for Cobalt Server front LED"
  	depends on LEDS_CLASS && MIPS_COBALT
 diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index aa2c18e..808900c 100644
+index f8995c9..12a860c 100644
 --- a/drivers/leds/Makefile
 +++ b/drivers/leds/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_LEDS_NET48XX)		+= leds-net48xx.o
- obj-$(CONFIG_LEDS_WRAP)			+= leds-wrap.o
+@@ -17,6 +17,7 @@ obj-$(CONFIG_LEDS_WRAP)			+= leds-wrap.o
  obj-$(CONFIG_LEDS_H1940)		+= leds-h1940.o
  obj-$(CONFIG_LEDS_COBALT)		+= leds-cobalt.o
+ obj-$(CONFIG_LEDS_GPIO)			+= leds-gpio.o
 +obj-$(CONFIG_LEDS_CM_X270)              += leds-cm-x270.o
  
  # LED Triggers
@@ -2657,10 +2658,10 @@ index 0000000..63b7e9e
 +MODULE_DESCRIPTION("Corgi LED driver");
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index b49375a..7ee6561 100644
+index c551925..b34f875 100644
 --- a/drivers/net/Kconfig
 +++ b/drivers/net/Kconfig
-@@ -875,6 +875,14 @@ config DM9000
+@@ -940,6 +940,14 @@ config DM9000
  	  <file:Documentation/networking/net-modules.txt>.  The module will be
  	  called dm9000.
  
@@ -2676,10 +2677,10 @@ index b49375a..7ee6561 100644
  	tristate "SMSC LAN911[5678] support"
  	select CRC32
 diff --git a/drivers/net/dm9000.c b/drivers/net/dm9000.c
-index 264fa0e..4e2954b 100644
+index 738aa59..2371c6b 100644
 --- a/drivers/net/dm9000.c
 +++ b/drivers/net/dm9000.c
-@@ -562,6 +562,7 @@ dm9000_probe(struct platform_device *pdev)
+@@ -577,6 +577,7 @@ dm9000_probe(struct platform_device *pdev)
  	db->mii.mdio_read    = dm9000_phy_read;
  	db->mii.mdio_write   = dm9000_phy_write;
  
@@ -2687,7 +2688,7 @@ index 264fa0e..4e2954b 100644
  	/* Read SROM content */
  	for (i = 0; i < 64; i++)
  		((u16 *) db->srom)[i] = read_srom_word(db, i);
-@@ -569,6 +570,11 @@ dm9000_probe(struct platform_device *pdev)
+@@ -584,6 +585,11 @@ dm9000_probe(struct platform_device *pdev)
  	/* Set Node Address */
  	for (i = 0; i < 6; i++)
  		ndev->dev_addr[i] = db->srom[i];
@@ -2777,10 +2778,10 @@ index 0000000..24613a5
 + 
 +
 diff --git a/include/asm-arm/arch-pxa/hardware.h b/include/asm-arm/arch-pxa/hardware.h
-index e2bdc2f..989303a 100644
+index 3861217..beb240e 100644
 --- a/include/asm-arm/arch-pxa/hardware.h
 +++ b/include/asm-arm/arch-pxa/hardware.h
-@@ -90,4 +90,15 @@ extern unsigned int get_lcdclk_frequency_10khz(void);
+@@ -126,4 +126,15 @@ extern unsigned int get_lcdclk_frequency_10khz(void);
  
  #endif
  
@@ -2797,10 +2798,10 @@ index e2bdc2f..989303a 100644
 +
  #endif  /* _ASM_ARCH_HARDWARE_H */
 diff --git a/include/asm-arm/arch-pxa/irqs.h b/include/asm-arm/arch-pxa/irqs.h
-index 67ed436..f9c075f 100644
+index a07fe0f..efb3d42 100644
 --- a/include/asm-arm/arch-pxa/irqs.h
 +++ b/include/asm-arm/arch-pxa/irqs.h
-@@ -222,3 +222,23 @@
+@@ -216,3 +216,23 @@
  #define IRQ_LOCOMO_GPIO_BASE	(IRQ_BOARD_START + 1)
  #define IRQ_LOCOMO_LT_BASE	(IRQ_BOARD_START + 2)
  #define IRQ_LOCOMO_SPI_BASE	(IRQ_BOARD_START + 3)
@@ -2846,5 +2847,5 @@ index d9bfb39..83db3cb 100644
  #define ISA_DMA_THRESHOLD	(0xffffffffULL)
  #endif
 -- 
-1.5.1.6
+1.5.2.5
 
