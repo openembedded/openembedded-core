@@ -1,5 +1,5 @@
 SECTION = "x11/utils"
-DEPENDS = "intltool-native glib-2.0 dbus dbus-glib libxml2 popt gtk-doc-native"
+DEPENDS = "intltool-native virtual/libintl glib-2.0 dbus dbus-glib libxml2 popt gtk-doc-native"
 DESCRIPTION = "Settings daemon using DBUS for communication."
 LICENSE = "GPL"
 PROVIDES = "gconf"
@@ -22,7 +22,6 @@ FILES_${PN}-dbg += " ${libdir}/GConf-dbus/2/.debug"
 
 EXTRA_OECONF = " --with-ipc=dbus --disable-gtk-doc --disable-gtk --enable-shared --disable-static"
 
-HEADERS = "gconf.h gconf-changeset.h gconf-listeners.h gconf-schema.h gconf-value.h gconf-error.h gconf-engine.h gconf-client.h gconf-enum-types.h"
 
 do_configure_prepend() {
         touch gtk-doc.make
