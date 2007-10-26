@@ -1,0 +1,22 @@
+--- lame-3.96.1/libmp3lame/Makefile.am.old	2007-01-16 13:41:48.000000000 +0000
++++ lame-3.96.1/libmp3lame/Makefile.am	2007-01-16 13:41:53.000000000 +0000
+@@ -18,7 +18,7 @@
+ decoder_ldadd =
+ endif
+ 
+-libmp3lame_la_LIBADD = $(nasm_ldadd) $(decoder_ldadd)
++libmp3lame_la_LIBADD = $(nasm_ldadd) $(decoder_ldadd) -lm
+ libmp3lame_la_LDFLAGS = -version-info @LIB_MAJOR_VERSION@:@LIB_MINOR_VERSION@ \
+ 			-no-undefined
+ 
+--- lame-3.96.1/libmp3lame/Makefile.in.old	2007-01-16 13:47:17.000000000 +0000
++++ lame-3.96.1/libmp3lame/Makefile.in	2007-01-16 13:47:29.000000000 +0000
+@@ -177,7 +177,7 @@
+ @LIB_WITH_DECODER_TRUE@decoder_ldadd = $(top_builddir)/mpglib/libmpgdecoder.la
+ @LIB_WITH_DECODER_FALSE@decoder_ldadd = 
+ 
+-libmp3lame_la_LIBADD = $(nasm_ldadd) $(decoder_ldadd)
++libmp3lame_la_LIBADD = $(nasm_ldadd) $(decoder_ldadd) -lm
+ libmp3lame_la_LDFLAGS = -version-info @LIB_MAJOR_VERSION@:@LIB_MINOR_VERSION@ \
+ 			-no-undefined
+ 
