@@ -3,7 +3,7 @@ SECTION = "console/network"
 PRIORITY = "standard"
 DESCRIPTION = "Tools for zmodem/xmodem/ymodem file transfer"
 DEPENDS = ""
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://www.ohse.de/uwe/releases/lrzsz-${PV}.tar.gz \
 	   file://autotools.patch;patch=1 \
@@ -15,10 +15,16 @@ inherit autotools gettext
 do_install() {
 	install -d ${D}${bindir}/
 	install -m 0755 src/lrz src/lsz ${D}${bindir}/
-	ln -sf ./lrz ${D}${bindir}/rz
-	ln -sf ./lrz ${D}${bindir}/rx
-	ln -sf ./lrz ${D}${bindir}/rb
-	ln -sf ./lsz ${D}${bindir}/sz
-	ln -sf ./lsz ${D}${bindir}/sx
-	ln -sf ./lsz ${D}${bindir}/sb
+}
+
+pkg_postinst() {
+	for util in rz rx rb sz sx sb; do
+		update-alternatives --install ${bindir}/$util $util lrz 100
+	done
+}
+
+pkg_postrm() {
+	for util in rz rx rb sz sx sb; do
+		update-alternatives --remove $util ${bindir}/lrz
+	done
 }
