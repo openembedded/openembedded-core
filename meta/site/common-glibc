@@ -33,3 +33,7 @@ mono_cv_uscore=${mono_cv_uscore=no}
 # guile
 ac_cv_func_pthread_attr_getstack=${ac_cv_func_pthread_attr_getstack=yes}
 
+#gcc-zlib
+ac_cv_func_getpagesize=${ac_cv_func_getpagesize=yes}
+ac_cv_func_memcpy=${ac_cv_func_memcpy=yes}
+ac_cv_func_strerror=${ac_cv_func_strerror=yes}
