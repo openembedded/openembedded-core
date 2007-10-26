@@ -15,5 +15,5 @@ do_stage() {
 	       includedir=${STAGING_INCDIR} \
 	       libdir=${STAGING_LIBDIR} \
 	       datadir=${STAGING_DATADIR} \
-	       infodir=${STAGING_DIR}/${HOST_SYS}/info 
+	       infodir=${STAGING_DIR}/${HOST_SYS}/info
 }
