@@ -36,7 +36,7 @@ do_install() {
 	set_arch
 	install -d ${D}${includedir}
 	cp -pfLR ${S}${includedir}/linux ${D}${includedir}/
-	cp -pfLR ${S}${includedir}/asm-$ARCH ${D}${includedir}/asm
+	cp -pfLR ${S}${includedir}/asm-${ARCH} ${D}${includedir}/asm
 	cp -pfLR ${S}${includedir}/asm-generic ${D}${includedir}/
 }
 
@@ -45,6 +45,14 @@ do_stage () {
 	install -d ${STAGING_INCDIR}
 	rm -rf ${STAGING_INCDIR}/linux ${STAGING_INCDIR}/asm ${STAGING_INCDIR}/asm-generic
 	cp -pfLR ${S}${includedir}/linux ${STAGING_INCDIR}/
-	cp -pfLR ${S}${includedir}/asm-$ARCH ${STAGING_INCDIR}/asm
+	cp -pfLR ${S}${includedir}/asm-${ARCH} ${STAGING_INCDIR}/asm
 	cp -pfLR ${S}${includedir}/asm-generic ${STAGING_INCDIR}/
 }
+
+do_stage_append_nylon () {
+	cp -pPR include/asm-${ARCH}/* ${STAGING_INCDIR}/asm/
+	cp -pPR include/asm-${ARCH}/* ${CROSS_DIR}/${TARGET_SYS}/include/asm/
+	cp -pPR include/linux/* ${STAGING_INCDIR}/linux/
+	cp -pPR include/linux/* ${CROSS_DIR}/${TARGET_SYS}/include/linux/
+}
+

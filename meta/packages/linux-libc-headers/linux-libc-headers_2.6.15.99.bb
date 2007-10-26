@@ -1,17 +1,16 @@
-SECTION = "devel"
-DESCRIPTION = "Sanitized set of 2.6 kernel headers for the C library's use."
+require linux-libc-headers.inc
+
 # This package is derived from the original linux-libc-headers at
 #   http://ep09.pld-linux.org/~mmazur/linux-libc-headers/
-# More specifically, llh-2.6.12.0 was patched up to 2.6.16-rc6 with 
+# More specifically, llh-2.6.12.0 was patched up to 2.6.16-rc6 with
 # the official linux patches (where applicable) and then fixed up just
 # enough to build glibc-2.4. BEWARE!
 #
-# license note from the linux-libc-headers package: 
+# license note from the linux-libc-headers package:
 #   Linux-libc-headers are derived from linux kernel headers. For license of a
 #   particular header, check it's content, and if copyright notice isn't present,
-#   standard linux kernel license applies. 
+#   standard linux kernel license applies.
 # since we assume GPL for linux i think we can also assume it here
-LICENSE = "GPL"
 DEFAULT_PREFERENCE = "-1"
 INHIBIT_DEFAULT_DEPS = "1"
 PR = "r4"
