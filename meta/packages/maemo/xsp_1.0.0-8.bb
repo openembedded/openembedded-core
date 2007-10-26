@@ -3,12 +3,12 @@ LICENSE= "MIT"
 DESCRIPTION = "X Server Nokia 770 extensions library"
 SECTION = "x11/libs"
 PRIORITY = "optional"
-DEPENDS = "virtual/libx11 xextproto libxext xpext"
+DEPENDS = "virtual/libx11 libxext xpext"
 
 SRC_URI = "http://repository.maemo.org/pool/maemo/ossw/source/x/xsp/${PN}_${PV}.tar.gz"
 S = "${WORKDIR}/Xsp"
 
-inherit autotools pkgconfig 
+inherit autotools pkgconfig
 
 do_stage() {
 	oe_runmake install prefix=${STAGING_DIR} \
