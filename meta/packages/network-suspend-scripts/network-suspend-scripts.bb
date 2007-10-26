@@ -5,7 +5,7 @@ PV = "1.1"
 PR = "r2"
 
 SRC_URI = "file://ifupdown \
-           file://usbnet"  
+           file://usbnet"
 
 do_install() {
 	install -d ${D}${sysconfdir}/apm/scripts.d
