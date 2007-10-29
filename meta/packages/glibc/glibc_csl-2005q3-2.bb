@@ -1,8 +1,5 @@
-DESCRIPTION = "GNU C Library"
-HOMEPAGE = "http://www.gnu.org/software/libc/libc.html"
-LICENSE = "LGPL"
-SECTION = "libs"
-PRIORITY = "required"
+require glibc.inc
+
 # DEFAULT_PREFERENCE = "-1"
 PV = "2.3.6+csl-arm-2005q3-2"
 PR = "r11"
@@ -14,7 +11,6 @@ TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${layout_includedir}"
 FILESDIR = "${FILE_DIRNAME}/files"
 
 GLIBC_ADDONS ?= "nptl,libidn"
-GLIBC_EXTRA_OECONF ?= ""
 
 GLIBC_BROKEN_LOCALES = "sid_ET tr_TR mn_MN gez_ET bn_BD gez_ER te_IN"
 
@@ -34,13 +30,6 @@ python __anonymous () {
                                    bb.data.getVar('TARGET_OS', d, 1))
 }
 
-# nptl needs unwind support in gcc, which can't be built without glibc.
-PROVIDES = "virtual/libc ${@['virtual/${TARGET_PREFIX}libc-for-gcc', '']['nptl' in '${GLIBC_ADDONS}']}"
-PROVIDES += "virtual/libintl virtual/libiconv"
-DEPENDS = "${@['virtual/${TARGET_PREFIX}gcc-initial', 'virtual/${TARGET_PREFIX}gcc']['nptl' in '${GLIBC_ADDONS}']} linux-libc-headers"
-RDEPENDS_${PN}-dev = ""
-INHIBIT_DEFAULT_DEPS = "1"
-
 SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-2005q3-2-arm-none-linux-gnueabi.src.tar.bz2 \
            file://nptl-crosscompile-2.3.6.patch;patch=1 \
            file://etc/ld.so.conf \
@@ -57,8 +46,6 @@ addtask unpack2 after do_unpack before do_patch
 
 S = "${WORKDIR}/glibc-2.3.5pre"
 B = "${WORKDIR}/build-${TARGET_SYS}"
-
-inherit autotools
 
 EXTRA_OECONF = "--without-cvs --disable-profile --disable-debug --without-gd \
 		--enable-clocale=gnu \

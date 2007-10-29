@@ -1,15 +1,10 @@
-DESCRIPTION = "GNU C Library"
-HOMEPAGE = "http://www.gnu.org/software/libc/libc.html"
-LICENSE = "LGPL"
-SECTION = "libs"
-PRIORITY = "required"
+require glibc.inc
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glibc-cvs-2.3.5"
 SRCDATE = "20050627"
 PR = "r4"
 
 GLIBC_ADDONS ?= "ports,linuxthreads"
-GLIBC_EXTRA_OECONF ?= ""
 
 GLIBC_BROKEN_LOCALES = "sid_ET tr_TR mn_MN"
 
@@ -28,13 +23,6 @@ python __anonymous () {
         raise bb.parse.SkipPackage("incompatible with target %s" %
                                    bb.data.getVar('TARGET_OS', d, 1))
 }
-
-# nptl needs unwind support in gcc, which can't be built without glibc.
-PROVIDES = "virtual/libc ${@['virtual/${TARGET_PREFIX}libc-for-gcc', '']['nptl' in '${GLIBC_ADDONS}']}"
-PROVIDES += "virtual/libintl virtual/libiconv"
-DEPENDS = "${@['virtual/${TARGET_PREFIX}gcc-initial', 'virtual/${TARGET_PREFIX}gcc']['nptl' in '${GLIBC_ADDONS}']} linux-libc-headers"
-RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
-INHIBIT_DEFAULT_DEPS = "1"
 
 #	   file://noinfo.patch;patch=1
 #	   file://ldconfig.patch;patch=1;pnum=0
@@ -61,8 +49,6 @@ SRC_URI_append_arm = " file://dyn-ldconfig-20041128.patch;patch=1"
 
 S = "${WORKDIR}/libc"
 B = "${WORKDIR}/build-${TARGET_SYS}"
-
-inherit autotools
 
 EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
 	        --without-cvs --disable-profile --disable-debug --without-gd \
@@ -122,4 +108,3 @@ do_compile () {
 require glibc-stage.inc
 
 require glibc-package.bbclass
-include glibc.inc

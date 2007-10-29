@@ -6,11 +6,9 @@ PR = "r5"
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
 TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${layout_includedir}"
 
-
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glibc-2.4"
 
 GLIBC_ADDONS ?= "ports,nptl,libidn"
-GLIBC_EXTRA_OECONF ?= ""
 
 GLIBC_BROKEN_LOCALES = "sid_ET tr_TR mn_MN gez_ET gez_ER bn_BD te_IN"
 
@@ -29,13 +27,6 @@ python __anonymous () {
         raise bb.parse.SkipPackage("incompatible with target %s" %
                                    bb.data.getVar('TARGET_OS', d, 1))
 }
-
-# nptl needs unwind support in gcc, which can't be built without glibc.
-PROVIDES = "virtual/libc ${@['virtual/${TARGET_PREFIX}libc-for-gcc', '']['nptl' in '${GLIBC_ADDONS}']}"
-PROVIDES += "virtual/libintl virtual/libiconv"
-DEPENDS = "${@['virtual/${TARGET_PREFIX}gcc-initial', 'virtual/${TARGET_PREFIX}gcc']['nptl' in '${GLIBC_ADDONS}']} linux-libc-headers"
-RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
-INHIBIT_DEFAULT_DEPS = "1"
 
 #	   file://noinfo.patch;patch=1
 #	   file://ldconfig.patch;patch=1;pnum=0
@@ -73,8 +64,6 @@ SRC_URI_append_powerpc = " file://powerpc-sqrt-hack.diff;patch=1"
 
 S = "${WORKDIR}/glibc-${PV}"
 B = "${WORKDIR}/build-${TARGET_SYS}"
-
-inherit autotools
 
 EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
 	        --without-cvs --disable-profile --disable-debug --without-gd \
