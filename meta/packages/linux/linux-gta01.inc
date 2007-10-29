@@ -3,7 +3,7 @@ SECTION = "kernel"
 AUTHOR = "Harald Welte <laforge@openmoko.org>"
 HOMEPAGE = "N/A"
 LICENSE = "GPL"
-DEPENDS += "u-boot-mkimage-gta01-native"
+DEPENDS += "u-boot-mkimage-openmoko-native"
 
 inherit kernel
 
