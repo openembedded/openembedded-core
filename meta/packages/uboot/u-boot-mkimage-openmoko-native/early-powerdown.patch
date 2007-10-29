@@ -1,0 +1,40 @@
+Index: u-boot/board/neo1973/neo1973.c
+===================================================================
+--- u-boot.orig/board/neo1973/gta01/gta01.c
++++ u-boot/board/neo1973/gta01/gta01.c
+@@ -68,8 +68,12 @@ DECLARE_GLOBAL_DATA_PTR;
+ #define U_M_PDIV	0x2
+ #define U_M_SDIV	0x3
+ 
++#define VALID_WAKEUP_REASONS (PCF50606_INT1_ONKEYF | PCF50606_INT1_ALARM)
++
+ unsigned int neo1973_wakeup_cause;
+ extern int nobootdelay;
++static unsigned char int1;
++
+ 
+ static inline void delay (unsigned long loops)
+ {
+@@ -179,6 +183,13 @@ int board_init (void)
+ #error Please define GTA01 version
+ #endif
+ 
++	i2c_init(CFG_I2C_SPEED, CFG_I2C_SLAVE);
++	int1 = pcf50606_reg_read(PCF50606_REG_INT1);
++	if (!(int1 & VALID_WAKEUP_REASONS) && !neo1973_aux_key_pressed()) {
++		pcf50606_reg_write(PCF50606_REG_OOCC1, PCF50606_OOCC1_GOSTDBY);
++		while (1);
++	}
++
+ 	/* arch number of SMDK2410-Board */
+ 	gd->bd->bi_arch_number = MACH_TYPE_NEO1973_GTA01;
+ 
+@@ -200,7 +211,7 @@ int board_late_init(void)
+ 	pcf50606_init();
+ 
+ 	/* obtain wake-up reason, save INT1 in environment */
+-	tmp = pcf50606_reg_read(PCF50606_REG_INT1);
++	tmp = int1; //pcf50606_reg_read(PCF50606_REG_INT1);
+ 	sprintf(buf, "0x%02x", tmp);
+ 	setenv("pcf50606_int1", buf);
+ 

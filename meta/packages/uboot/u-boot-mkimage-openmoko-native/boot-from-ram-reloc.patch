@@ -1,0 +1,62 @@
+This patch allows us to boot from anywhere in RAM. It mainly sets the stage
+for later patches. The only real changes here is the better handling of already
+cached code (e.g., if we were started by a previous instance of u-boot), and
+that we drop CONFIG_SKIP_RELOCATE_UBOOT from neo1973.h
+
+cpu/arm920t/start.S: if not relocating, instead of going straight to
+  stack_setup, jump to done_relocate, which may perform other setup tasks
+cpu/arm920t/start.S: after relocating, flush the cache and jump to the new code
+include/configs/neo1973.h: remove CONFIG_SKIP_RELOCATE_UBOOT
+
+- Werner Almesberger <werner@openmoko.org>
+
+Index: u-boot/cpu/arm920t/start.S
+===================================================================
+--- u-boot.orig/cpu/arm920t/start.S
++++ u-boot/cpu/arm920t/start.S
+@@ -171,7 +171,7 @@ relocate:				/* relocate U-Boot to RAM	 
+ 	adr	r0, _start		/* r0 <- current position of code   */
+ 	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */
+ 	cmp     r0, r1                  /* don't reloc during debug         */
+-	beq     stack_setup
++	beq     done_relocate
+ 
+ 	ldr	r2, _armboot_start
+ 	ldr	r3, _bss_start
+@@ -181,8 +181,14 @@ relocate:				/* relocate U-Boot to RAM	 
+ copy_loop:
+ 	ldmia	r0!, {r3-r10}		/* copy from source address [r0]    */
+ 	stmia	r1!, {r3-r10}		/* copy to   target address [r1]    */
+-	cmp	r0, r2			/* until source end addreee [r2]    */
++	cmp	r0, r2			/* until source end address [r2]    */
+ 	ble	copy_loop
++	mov	r0, #0			/* flush v3/v4 cache */
++	mcr	p15, 0, r0, c7, c7, 0
++	ldr	pc, _done_relocate	/* jump to relocated code */
++_done_relocate:
++	.word	done_relocate
++done_relocate:
+ #else /* NAND_BOOT */
+ relocate:
+ copy_myself:
+@@ -270,7 +276,7 @@ notmatch:
+ 1:	b	1b
+ done_nand_read:
+ #endif /* NAND_BOOT */
+-#endif	/* CONFIG_SKIP_RELOCATE_UBOOT */
++#endif /* CONFIG_SKIP_RELOCATE_UBOOT */
+ 
+ 	/* Set up the stack						    */
+ stack_setup:
+Index: u-boot/include/configs/neo1973_gta01.h
+===================================================================
+--- u-boot.orig/include/configs/neo1973_gta01.h
++++ u-boot/include/configs/neo1973_gta01.h
+@@ -28,7 +28,6 @@
+ 
+ #if defined(BUILD_FOR_RAM)
+ /* If we want to start u-boot from inside RAM */
+-#define CONFIG_SKIP_RELOCATE_UBOOT	1
+ #define CONFIG_SKIP_LOWLEVEL_INIT	1
+ #else
+ /* we want to start u-boot directly from within NAND flash */

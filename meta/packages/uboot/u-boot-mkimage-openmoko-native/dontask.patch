@@ -1,0 +1,22 @@
+common/cmd_nand.c (yes): if the environment variable "dontask" is set to "y" or
+  "Y", non-interactively assume the answer was "yes". In all other cases, ask.
+
+- Werner Almesberger <werner@openmoko.org>
+
+Index: u-boot/common/cmd_nand.c
+===================================================================
+--- u-boot.orig/common/cmd_nand.c
++++ u-boot/common/cmd_nand.c
+@@ -165,8 +165,12 @@ out:
+ 
+ static int yes(void)
+ {
++	char *s;
+ 	char c;
+ 
++	s = getenv("dontask");
++	if (s && (s[0] =='y' || s[0] == 'Y') && !s[1])
++		return 1;
+ 	c = getc();
+ 	if (c != 'y' && c != 'Y')
+ 		return 0;

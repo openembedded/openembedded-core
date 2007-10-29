@@ -1,0 +1,30 @@
+This patch makes nand_block_checkbad check both the BBT and the actual
+OOB data. This avoids accidently passing blocks as good when BBT and
+OOB markers are not synchronized, e.g., before "nand createbbt".
+
+Experimental.
+
+- Werner Almesberger <werner@openmoko.org>
+
+Index: u-boot/drivers/nand/nand_base.c
+===================================================================
+--- u-boot.orig/drivers/nand/nand_base.c
++++ u-boot/drivers/nand/nand_base.c
+@@ -517,11 +517,14 @@ static int nand_block_checkbad (struct m
+ {
+ 	struct nand_chip *this = mtd->priv;
+ 
+-	if (!this->bbt)
+-		return this->block_bad(mtd, ofs, getchip);
++	if (this->block_bad(mtd, ofs, getchip))
++		return 1;
+ 
+ 	/* Return info from the table */
+-	return nand_isbad_bbt (mtd, ofs, allowbbt);
++	if (this->bbt && nand_isbad_bbt (mtd, ofs, allowbbt))
++		return 1;
++
++	return 0;
+ }
+ 
+ /**

@@ -1,0 +1,17 @@
+Index: git/tools/Makefile
+===================================================================
+--- git.orig/tools/Makefile	2007-10-03 16:51:38.000000000 +0100
++++ git/tools/Makefile	2007-10-03 16:52:03.000000000 +0100
+@@ -114,9 +114,9 @@
+ #
+ # Use native tools and options
+ #
+-CPPFLAGS   = -idirafter $(SRCTREE)/include \
+-		-idirafter $(OBJTREE)/include2 \
+-		-idirafter $(OBJTREE)/include \
++CPPFLAGS   = -I$(SRCTREE)/include \
++		-I$(OBJTREE)/include2 \
++		-I$(OBJTREE)/include \
+ 		-DTEXT_BASE=$(TEXT_BASE) -DUSE_HOSTCC
+ CFLAGS     = $(HOST_CFLAGS) $(CPPFLAGS) -O
+ AFLAGS	   = -D__ASSEMBLY__ $(CPPFLAGS)

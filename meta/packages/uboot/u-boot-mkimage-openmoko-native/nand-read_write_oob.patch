@@ -1,0 +1,23 @@
+Re-introduce the 'nand read.oob' and 'nand write.oob' commands
+that used to exist with the legacy NAND code
+
+Signed-off-by: Harald Welte <laforge@openmoko.org>
+Index: u-boot.git/common/cmd_nand.c
+===================================================================
+--- u-boot.git.orig/common/cmd_nand.c	2007-01-26 15:41:13.000000000 +0100
++++ u-boot.git/common/cmd_nand.c	2007-01-26 15:49:37.000000000 +0100
+@@ -351,6 +351,14 @@
+ 				opts.quiet      = quiet;
+ 				ret = nand_write_opts(nand, &opts);
+ 			}
++		} else if (s != NULL && !strcmp(s, ".oob")) {
++			/* read out-of-band data */
++			if (read)
++				ret = nand->read_oob(nand, off, size, &size,
++						     (u_char *) addr);
++			else
++				ret = nand->write_oob(nand, off, size, &size, 
++						      (u_char *) addr);
+ 		} else {
+ 			if (read)
+ 				ret = nand_read(nand, off, &size, (u_char *)addr);

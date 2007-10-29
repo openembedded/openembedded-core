@@ -1,0 +1,126 @@
+This patch adds user-requested BBT creation. It includes the following changes:
+
+- common/cmd_nand.c: move yes/no decision to separate function
+- do_nand: ask for confirmation for "nand erase"
+- do_nand: add command "nand createbbt" to erase NAND and create a new BBT
+
+Experimental.
+
+- Werner Almesberger <werner@openmoko.org>
+
+
+Index: u-boot/common/cmd_nand.c
+===================================================================
+--- u-boot.orig/common/cmd_nand.c	2007-02-16 23:53:28.000000000 +0100
++++ u-boot/common/cmd_nand.c	2007-02-16 23:53:57.000000000 +0100
+@@ -163,6 +163,17 @@
+ 	return 0;
+ }
+ 
++static int yes(void)
++{
++	char c;
++
++	c = getc();
++	if (c != 'y' && c != 'Y')
++		return 0;
++	c = getc();
++	return c == '\r' || c == '\n';
++}
++
+ int do_nand(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
+ {
+ 	int i, dev, ret;
+@@ -228,7 +239,8 @@
+ 	    strncmp(cmd, "read", 4) != 0 && strncmp(cmd, "write", 5) != 0 &&
+ 	    strcmp(cmd, "scrub") != 0 && strcmp(cmd, "markbad") != 0 &&
+ 	    strcmp(cmd, "biterr") != 0 &&
+-	    strcmp(cmd, "lock") != 0 && strcmp(cmd, "unlock") != 0 )
++	    strcmp(cmd, "lock") != 0 && strcmp(cmd, "unlock") != 0 &&
++	    strcmp(cmd, "createbbt") != 0 )
+ 		goto usage;
+ 
+ 	/* the following commands operate on the current device */
+@@ -283,13 +295,23 @@
+ 			     "are sure of what you are doing!\n"
+ 			     "\nReally scrub this NAND flash? <y/N>\n");
+ 
+-			if (getc() == 'y' && getc() == '\r') {
++			if (yes()) {
+ 				opts.scrub = 1;
+ 			} else {
+ 				puts("scrub aborted\n");
+ 				return -1;
+ 			}
+ 		}
++		else {
++			if (opts.length == nand->size) {
++				puts("Really erase everything ? <y/N>\n");
++				if (!yes()) {
++					puts("erase aborted\n");
++					return -1;
++				}
++			}
++		}
++
+ 		ret = nand_erase_opts(nand, &opts);
+ 		printf("%s\n", ret ? "ERROR" : "OK");
+ 
+@@ -458,6 +480,33 @@
+ 		return 0;
+ 	}
+ 
++	if (strcmp(cmd, "createbbt") == 0) {
++		struct nand_chip *nand_chip = nand->priv;
++		nand_erase_options_t opts;
++
++		puts("Create BBT and erase everything ? <y/N>\n");
++		if (!yes()) {
++			puts("createbbt aborted\n");
++			return -1;
++		}
++		memset(&opts, 0, sizeof(opts));
++		opts.length = nand->size;
++		if (nand_erase_opts(nand, &opts)) {
++			puts("Erase failed\n");
++			return 1;
++		}
++		nand_chip->options &= ~NAND_DONT_CREATE_BBT;
++		puts("Creating BBT. Please wait ...");
++		if (nand_default_bbt(nand)) {
++			puts("\nFailed\n");
++			return 1;
++		}
++		else {
++			puts("\n");
++			return 0;
++		}
++	}
++
+ usage:
+ 	printf("Usage:\n%s\n", cmdtp->usage);
+ 	return 1;
+@@ -478,7 +527,8 @@
+ 	"nand markbad off - mark bad block at offset (UNSAFE)\n"
+ 	"nand biterr off - make a bit error at offset (UNSAFE)\n"
+ 	"nand lock [tight] [status] - bring nand to lock state or display locked pages\n"
+-	"nand unlock [offset] [size] - unlock section\n");
++	"nand unlock [offset] [size] - unlock section\n"
++	"nand createbbt - create bad block table\n");
+ 
+ static int nand_load_image(cmd_tbl_t *cmdtp, nand_info_t *nand,
+ 			   ulong offset, ulong addr, char *cmd)
+Index: u-boot/drivers/nand/nand_bbt.c
+===================================================================
+--- u-boot.orig/drivers/nand/nand_bbt.c	2007-02-16 23:53:54.000000000 +0100
++++ u-boot/drivers/nand/nand_bbt.c	2007-02-16 23:53:57.000000000 +0100
+@@ -795,7 +795,8 @@
+ 
+ 	len = mtd->size >> (this->bbt_erase_shift + 2);
+ 	/* Allocate memory (2bit per block) */
+-	this->bbt = kmalloc (len, GFP_KERNEL);
++	if (!this->bbt)
++		this->bbt = kmalloc (len, GFP_KERNEL);
+ 	if (!this->bbt) {
+ 		printk (KERN_ERR "nand_scan_bbt: Out of memory\n");
+ 		return -ENOMEM;

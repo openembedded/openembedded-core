@@ -1,0 +1,302 @@
+Index: u-boot/common/cmd_nand.c
+===================================================================
+--- u-boot.orig/common/cmd_nand.c
++++ u-boot/common/cmd_nand.c
+@@ -392,6 +392,14 @@
+ 			else
+ 				ret = nand->write_oob(nand, off, size, &size, 
+ 						      (u_char *) addr);
++		} else if (s != NULL && !strcmp(s, ".otp")) {
++			/* read out-of-band data */
++			if (read)
++				ret = nand->read_otp(nand, off, size, &size,
++						     (u_char *) addr);
++			else
++				ret = nand->write_otp(nand, off, size, &size,
++						      (u_char *) addr);
+ 		} else {
+ 			if (read)
+ 				ret = nand_read(nand, off, &size, (u_char *)addr);
+@@ -527,8 +535,9 @@
+ 	"nand    - NAND sub-system\n",
+ 	"info                  - show available NAND devices\n"
+ 	"nand device [dev]     - show or set current device\n"
+-	"nand read[.jffs2]     - addr off|partition size\n"
+-	"nand write[.jffs2]    - addr off|partiton size - read/write `size' bytes starting\n"
++	"nand read[.jffs2, .oob, .otp] addr off|partition size\n"
++	"nand write[.jffs2, .oob, .otp] addr off|partiton size\n"
++	"  - read/write `size' bytes starting\n"
+ 	"    at offset `off' to/from memory address `addr'\n"
+ 	"nand erase [clean] [off size] - erase `size' bytes from\n"
+ 	"    offset `off' (entire device if not specified)\n"
+Index: u-boot/cpu/arm920t/s3c24x0/nand.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/nand.c
++++ u-boot/cpu/arm920t/s3c24x0/nand.c
+@@ -205,7 +205,7 @@
+ }
+ #endif
+ 
+-int board_nand_init(struct nand_chip *nand)
++int s3c24x0_nand_init(struct nand_chip *nand)
+ {
+ 	u_int32_t cfg;
+ 	u_int8_t tacls, twrph0, twrph1;
+Index: u-boot/drivers/nand/nand_base.c
+===================================================================
+--- u-boot.orig/drivers/nand/nand_base.c
++++ u-boot/drivers/nand/nand_base.c
+@@ -2042,6 +2042,32 @@
+ }
+ #endif
+ 
++/*
++ * See nand_read_oob and nand_write_oob
++ */
++
++static int nand_read_otp(struct mtd_info *mtd, loff_t from, size_t len,
++    size_t *retlen, u_char *buf)
++{
++	struct nand_chip *this = mtd->priv;
++
++	if (!this->read_otp)
++		return -ENOSYS;
++	return this->read_otp(mtd, from, len, retlen, buf);
++
++}
++
++static int nand_write_otp(struct mtd_info *mtd, loff_t to, size_t len,
++    size_t *retlen, const u_char *buf)
++{
++	struct nand_chip *this = mtd->priv;
++
++	if (!this->write_otp)
++		return -ENOSYS;
++	return this->write_otp(mtd, to, len, retlen, buf);
++}
++
++
+ /**
+  * single_erease_cmd - [GENERIC] NAND standard block erase command function
+  * @mtd:	MTD device structure
+@@ -2613,6 +2639,8 @@
+ 	mtd->write_ecc = nand_write_ecc;
+ 	mtd->read_oob = nand_read_oob;
+ 	mtd->write_oob = nand_write_oob;
++	mtd->read_otp = nand_read_otp;
++	mtd->write_otp = nand_write_otp;
+ /* XXX U-BOOT XXX */
+ #if 0
+ 	mtd->readv = NULL;
+Index: u-boot/include/linux/mtd/mtd.h
+===================================================================
+--- u-boot.orig/include/linux/mtd/mtd.h
++++ u-boot/include/linux/mtd/mtd.h
+@@ -95,6 +95,9 @@
+ 	int (*read_oob) (struct mtd_info *mtd, loff_t from, size_t len, size_t *retlen, u_char *buf);
+ 	int (*write_oob) (struct mtd_info *mtd, loff_t to, size_t len, size_t *retlen, const u_char *buf);
+ 
++	int (*read_otp) (struct mtd_info *mtd, loff_t from, size_t len, size_t *retlen, u_char *buf);
++	int (*write_otp) (struct mtd_info *mtd, loff_t to, size_t len, size_t *retlen, const u_char *buf);
++
+ 	/*
+ 	 * Methods to access the protection register area, present in some
+ 	 * flash devices. The user data is one time programmable but the
+Index: u-boot/include/linux/mtd/nand.h
+===================================================================
+--- u-boot.orig/include/linux/mtd/nand.h
++++ u-boot/include/linux/mtd/nand.h
+@@ -307,6 +307,10 @@
+ 	void		(*enable_hwecc)(struct mtd_info *mtd, int mode);
+ 	void		(*erase_cmd)(struct mtd_info *mtd, int page);
+ 	int		(*scan_bbt)(struct mtd_info *mtd);
++	int		(*read_otp)(struct mtd_info *mtd, loff_t from,
++			    size_t len, size_t *retlen, u_char *buf);
++        int		(*write_otp) (struct mtd_info *mtd, loff_t to,
++			    size_t len, size_t *retlen, const u_char *buf);
+ 	int		eccmode;
+ 	int		eccsize;
+ 	int		eccbytes;
+Index: u-boot/board/neo1973/gta01/Makefile
+===================================================================
+--- u-boot.orig/board/neo1973/gta01/Makefile
++++ u-boot/board/neo1973/gta01/Makefile
+@@ -25,7 +25,7 @@
+ 
+ LIB	= lib$(BOARD).a
+ 
+-OBJS	:= gta01.o pcf50606.o ../common/cmd_neo1973.o ../common/jbt6k74.o ../common/udc.o ../common/bootmenu.o
++OBJS	:= gta01.o pcf50606.o nand.o ../common/cmd_neo1973.o ../common/jbt6k74.o ../common/udc.o ../common/bootmenu.o
+ SOBJS	:= ../common/lowlevel_init.o
+ 
+ .PHONY:	all
+Index: u-boot/board/neo1973/gta01/nand.c
+===================================================================
+--- /dev/null
++++ u-boot/board/neo1973/gta01/nand.c
+@@ -0,0 +1,121 @@
++/*
++ * nand.c - Board-specific NAND setup
++ *
++ * Copyright (C) 2007 by OpenMoko, Inc.
++ * Written by Werner Almesberger <werner@openmoko.org>
++ * All Rights Reserved
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++
++#include "config.h" /* nand.h needs NAND_MAX_CHIPS */
++#include "linux/mtd/mtd.h"
++#include "linux/mtd/nand.h"
++#include "asm/errno.h"
++
++
++int s3c24x0_nand_init(struct nand_chip *nand);
++
++
++static void samsung_nand_begin_otp(struct mtd_info *mtd)
++{
++	struct nand_chip *this = mtd->priv;
++
++	/* @@@FIXME: this is ugly - we select the NAND chip to send the
++	   mode switch commands, knowing that it will be switched off later */
++	this->select_chip(mtd, 0);
++	/* "magic" mode change */
++	this->cmdfunc(mtd, 0x30, -1, -1);
++	this->cmdfunc(mtd, 0x65, -1, -1);
++}
++
++
++static void samsung_nand_end_otp(struct mtd_info *mtd)
++{
++	struct nand_chip *this = mtd->priv;
++
++	/* read/write deselected the chip so now we need to select again */
++	this->select_chip(mtd, 0);
++	this->cmdfunc(mtd, NAND_CMD_RESET, -1, -1);
++	this->select_chip(mtd, -1);
++}
++
++
++static loff_t otp_page[] = {
++	0x15,	/* 00-XX-00-00, with XX = 15h-19h */
++	0x16,
++	0x17,
++	0x18,
++	0x19,
++	0x1b,	/* 00-1B-00-00 */
++};
++
++#define OTP_PAGES (sizeof(otp_page)/sizeof(*otp_page))
++
++
++static int convert_otp_address(loff_t *addr, size_t *len)
++{
++	int page;
++
++	if (*len && *addr >> 9 != (*addr+*len-1) >> 9)
++		return -EINVAL;
++	if (*len > 512)
++		return -EINVAL;
++	page = *addr >> 9;
++	if (page >= OTP_PAGES)
++		return -EINVAL;
++	*addr = otp_page[page] << 9;
++	return 0;
++}
++
++
++static int samsung_nand_read_otp(struct mtd_info *mtd, loff_t from,
++    size_t len, size_t *retlen, u_char *buf)
++{
++	int ret;
++
++	ret = convert_otp_address(&from, &len);
++	if (ret)
++		return ret;
++	samsung_nand_begin_otp(mtd);
++	ret = mtd->read(mtd, from, len, retlen, buf);
++	samsung_nand_end_otp(mtd);
++	return ret;
++}
++
++
++static int samsung_nand_write_otp(struct mtd_info *mtd, loff_t to,
++    size_t len, size_t *retlen, const u_char *buf)
++{
++	int ret;
++
++	ret = convert_otp_address(&to, &len);
++	if (ret)
++		return ret;
++	samsung_nand_begin_otp(mtd);
++	ret = mtd->write(mtd, to, len, retlen, buf);
++	samsung_nand_end_otp(mtd);
++	return ret;
++}
++
++
++int board_nand_init(struct nand_chip *nand)
++{
++	nand->read_otp = samsung_nand_read_otp;
++	nand->write_otp = samsung_nand_write_otp;
++	return s3c24x0_nand_init(nand);
++}
+Index: u-boot/board/neo1973/gta02/nand.c
+===================================================================
+--- /dev/null
++++ u-boot/board/neo1973/gta02/nand.c
+@@ -0,0 +1,39 @@
++/*
++ * nand.c - Board-specific NAND setup
++ *
++ * Copyright (C) 2007 by OpenMoko, Inc.
++ * Written by Werner Almesberger <werner@openmoko.org>
++ * All Rights Reserved
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++
++#include "config.h" /* nand.h needs NAND_MAX_CHIPS */
++#include "linux/mtd/mtd.h"
++#include "linux/mtd/nand.h"
++
++
++int s3c24x0_nand_init(struct nand_chip *nand);
++
++
++/* Add OTP et al later */
++
++
++int board_nand_init(struct nand_chip *nand)
++{
++	return s3c24x0_nand_init(nand);
++}

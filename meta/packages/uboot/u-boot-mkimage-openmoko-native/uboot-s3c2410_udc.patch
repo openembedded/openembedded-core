@@ -1,0 +1,1263 @@
+USB Device Controller Driver for Samsung S3C2410 SoC
+
+Index: u-boot/drivers/Makefile
+===================================================================
+--- u-boot.orig/drivers/Makefile
++++ u-boot/drivers/Makefile
+@@ -47,7 +47,7 @@
+ 	  status_led.o sym53c8xx.o systemace.o ahci.o \
+ 	  ti_pci1410a.o tigon3.o tsec.o \
+ 	  tsi108_eth.o tsi108_i2c.o tsi108_pci.o \
+-	  usbdcore.o usbdcore_ep0.o usbdcore_omap1510.o usbtty.o \
++	  usbdcore.o usbdcore_ep0.o usbdcore_omap1510.o usbdcore_s3c2410.o usbtty.o \
+ 	  videomodes.o w83c553f.o \
+ 	  ks8695eth.o \
+ 	  pcf50606.o \
+Index: u-boot/drivers/usbdcore_s3c2410.c
+===================================================================
+--- /dev/null
++++ u-boot/drivers/usbdcore_s3c2410.c
+@@ -0,0 +1,730 @@
++/* S3C2410 USB Device Controller Driver for u-boot
++ *
++ * (C) Copyright 2007 by OpenMoko, Inc.
++ * Author: Harald Welte <laforge@openmoko.org>
++ *
++ * based on Linux' s3c2410_udc.c, which is
++ * Copyright (C) 2004-2006 Herbert Pötzl - Arnaud Patard
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307	 USA
++ *
++ */
++
++#include <config.h>
++
++#if defined(CONFIG_S3C2410) && defined(CONFIG_USB_DEVICE)
++
++#include <common.h>
++
++/* we can't use the regular debug macros since the console might be
++ * set to usbtty, which would cause deadlocks! */
++#ifdef	DEBUG
++#undef debug
++#undef debugX
++#define debug(fmt,args...)	serial_printf (fmt ,##args)
++#define debugX(level,fmt,args...) if (DEBUG>=level) serial_printf(fmt,##args)
++#endif
++
++DECLARE_GLOBAL_DATA_PTR;
++
++#include <asm/io.h>
++#include <s3c2410.h>
++
++#include "usbdcore.h"
++#include "usbdcore_s3c2410.h"
++#include "usbdcore_ep0.h"
++#include <usb_cdc_acm.h>
++
++enum ep0_state {
++        EP0_IDLE,
++        EP0_IN_DATA_PHASE,
++        EP0_OUT_DATA_PHASE,
++        EP0_END_XFER,
++        EP0_STALL,
++};
++
++static struct urb *ep0_urb = NULL;
++
++static struct usb_device_instance *udc_device;	/* Used in interrupt handler */
++
++static inline int fifo_count_out(void)
++{
++	int tmp;
++
++	tmp = inl(S3C2410_UDC_OUT_FIFO_CNT2_REG) << 8;
++	tmp |= inl(S3C2410_UDC_OUT_FIFO_CNT1_REG);
++
++	return tmp & 0xffff;
++}
++
++static const unsigned long ep_fifo_reg[S3C2410_UDC_NUM_ENDPOINTS] = {
++	S3C2410_UDC_EP0_FIFO_REG,
++	S3C2410_UDC_EP1_FIFO_REG,
++	S3C2410_UDC_EP2_FIFO_REG,
++	S3C2410_UDC_EP3_FIFO_REG,
++	S3C2410_UDC_EP4_FIFO_REG,
++};
++
++static int s3c2410_write_noniso_tx_fifo(struct usb_endpoint_instance *endpoint)
++{
++	struct urb *urb = endpoint->tx_urb;
++	unsigned int last, i;
++	unsigned int ep = endpoint->endpoint_address & 0x7f;
++	unsigned long fifo_reg = ep_fifo_reg[ep];
++
++	/* WARNING: don't ever put serial debug printf's in non-error codepaths
++	 * here, it is called from the time critical EP0 codepath ! */
++
++	if (!urb || ep >= S3C2410_UDC_NUM_ENDPOINTS) {
++		serial_printf("no urb or wrong endpoint\n");
++		return -1;
++	}
++
++	S3C2410_UDC_SETIX(ep);
++	if ((last = MIN(urb->actual_length - endpoint->sent,
++		        endpoint->tx_packetSize))) {
++		u8 *cp = urb->buffer + endpoint->sent;
++
++		for (i = 0; i < last; i++)
++			outb(*(cp+i), fifo_reg);
++	}
++	endpoint->last = last;
++
++	if (endpoint->sent + last < urb->actual_length) {
++		/* not all data has been transmitted so far */
++		return 0;
++	}
++
++	if (last == endpoint->tx_packetSize) {
++		/* we need to send one more packet (ZLP) */
++		return 0;
++	}
++
++	return 1;
++}
++
++
++static void s3c2410_deconfigure_device (void)
++{
++	/* FIXME: Implement this */
++}
++
++static void s3c2410_configure_device (struct usb_device_instance *device)
++{
++	S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
++	S3C24X0_CLOCK_POWER * const cpower = S3C24X0_GetBase_CLOCK_POWER();
++
++	/* disable EP0-4 SUBD interrupts ? */
++	outl(0x00, S3C2410_UDC_USB_INT_EN_REG);
++
++	/* UPLL already configured by board-level init code */
++
++	/* configure USB pads to device mode */
++	gpio->MISCCR &= ~(S3C2410_MISCCR_USBHOST|S3C2410_MISCCR_USBSUSPND1);
++
++	/* don't disable USB clock */
++	cpower->CLKSLOW &= ~S3C2410_CLKSLOW_UCLK_OFF;
++
++	/* clear interrupt registers */
++	inl(S3C2410_UDC_EP_INT_REG);
++	inl(S3C2410_UDC_USB_INT_REG);
++	outl(0xff, S3C2410_UDC_EP_INT_REG);
++	outl(0xff, S3C2410_UDC_USB_INT_REG);
++
++	/* enable USB interrupts for RESET and SUSPEND/RESUME */
++	outl(S3C2410_UDC_USBINT_RESET|S3C2410_UDC_USBINT_SUSPEND,
++	     S3C2410_UDC_USB_INT_EN_REG);
++}
++
++static void udc_set_address(unsigned char address)
++{
++	address |= 0x80; /* ADDR_UPDATE bit */
++	outl(address, S3C2410_UDC_FUNC_ADDR_REG);
++}
++
++extern struct usb_device_descriptor device_descriptor;
++
++static void s3c2410_udc_ep0(void)
++{
++	u_int8_t ep0csr;
++	struct usb_endpoint_instance *ep0 = udc_device->bus->endpoint_array;
++
++	S3C2410_UDC_SETIX(0);
++	ep0csr = inl(S3C2410_UDC_IN_CSR1_REG);
++
++	/* clear stall status */
++	if (ep0csr & S3C2410_UDC_EP0_CSR_SENTSTL) {
++	    	serial_printf("Clearing SENT_STALL\n");
++		clear_ep0_sst();
++		if (ep0csr & S3C2410_UDC_EP0_CSR_SOPKTRDY)
++			clear_ep0_opr();
++		ep0->state = EP0_IDLE;
++		return;
++	}
++
++	/* clear setup end */
++	if (ep0csr & S3C2410_UDC_EP0_CSR_SE
++	    /* && ep0->state != EP0_IDLE */) {
++	    	serial_printf("Clearing SETUP_END\n");
++		clear_ep0_se();
++#if 1
++		if (ep0csr & S3C2410_UDC_EP0_CSR_SOPKTRDY) {
++			/* Flush FIFO */
++			while (inl(S3C2410_UDC_OUT_FIFO_CNT1_REG))
++				inl(S3C2410_UDC_EP0_FIFO_REG);
++			clear_ep0_opr();
++		}
++#endif
++		ep0->state = EP0_IDLE;
++		return;
++	}
++
++	/* Don't ever put [serial] debugging in non-error codepaths here, it
++	 * will violate the tight timing constraints of this USB Device
++	 * controller (and lead to bus enumeration failures) */
++
++	switch (ep0->state) {
++		int i, fifo_count;
++		unsigned char *datap;
++	case EP0_IDLE:
++		if (!(ep0csr & S3C2410_UDC_EP0_CSR_OPKRDY))
++			break;
++
++		datap = (unsigned char *) &ep0_urb->device_request;
++		/* host->device packet has been received */
++
++		/* pull it out of the fifo */
++		fifo_count = fifo_count_out();
++		for (i = 0; i < fifo_count; i++) {
++			*datap = (unsigned char)inl(S3C2410_UDC_EP0_FIFO_REG);
++			datap++;
++		}
++		if (fifo_count != 8) {
++			debug("STRANGE FIFO COUNT: %u bytes\n", fifo_count);
++			set_ep0_ss();
++			return;
++		}
++
++		if (ep0_urb->device_request.wLength == 0) {
++			if (ep0_recv_setup(ep0_urb)) {
++				/* Not a setup packet, stall next EP0 transaction */
++				debug("can't parse setup packet1\n");
++				set_ep0_ss();
++				set_ep0_de_out();
++				ep0->state = EP0_IDLE;
++				return;
++			}
++			/* There are some requests with which we need to deal
++			 * manually here */
++			switch (ep0_urb->device_request.bRequest) {
++			case USB_REQ_SET_CONFIGURATION:
++				if (!ep0_urb->device_request.wValue)
++					usbd_device_event_irq(udc_device,
++							DEVICE_DE_CONFIGURED, 0);
++				else
++					usbd_device_event_irq(udc_device,
++							DEVICE_CONFIGURED, 0);
++				break;
++			case USB_REQ_SET_ADDRESS:
++				udc_set_address(udc_device->address);
++				usbd_device_event_irq(udc_device,
++						DEVICE_ADDRESS_ASSIGNED, 0);
++				break;
++			default:
++				break;
++			}
++			set_ep0_de_out();
++			ep0->state = EP0_IDLE;
++		} else {
++			if ((ep0_urb->device_request.bmRequestType & USB_REQ_DIRECTION_MASK)
++			    == USB_REQ_HOST2DEVICE) {
++				clear_ep0_opr();
++				ep0->state = EP0_OUT_DATA_PHASE;
++				ep0_urb->buffer = ep0_urb->buffer_data;
++				ep0_urb->buffer_length = sizeof(ep0_urb->buffer_data);
++				ep0_urb->actual_length = 0;
++			} else {
++				ep0->state = EP0_IN_DATA_PHASE;
++
++				if (ep0_recv_setup(ep0_urb)) {
++					/* Not a setup packet, stall next EP0 transaction */
++					debug("can't parse setup packet2\n");
++					set_ep0_ss();
++					//set_ep0_de_out();
++					ep0->state = EP0_IDLE;
++					return;
++				}
++				clear_ep0_opr();
++				ep0->tx_urb = ep0_urb;
++				ep0->sent = ep0->last = 0;
++
++				if (s3c2410_write_noniso_tx_fifo(ep0)) {
++					ep0->state = EP0_IDLE;
++					set_ep0_de_in();
++				} else
++					set_ep0_ipr();
++			}
++		}
++		break;
++	case EP0_IN_DATA_PHASE:
++		if (!(ep0csr & S3C2410_UDC_EP0_CSR_IPKRDY)) {
++			ep0->sent += ep0->last;
++
++			if (s3c2410_write_noniso_tx_fifo(ep0)) {
++				ep0->state = EP0_IDLE;
++				set_ep0_de_in();
++			} else
++				set_ep0_ipr();
++		}
++		break;
++	case EP0_OUT_DATA_PHASE:
++		if (ep0csr & S3C2410_UDC_EP0_CSR_OPKRDY) {
++			u32 urb_avail = ep0_urb->buffer_length - ep0_urb->actual_length;
++			u_int8_t *cp = ep0_urb->buffer + ep0_urb->actual_length;
++			int i, fifo_count;
++
++			fifo_count = fifo_count_out();
++			if (fifo_count < urb_avail)
++				urb_avail = fifo_count;
++
++			for (i = 0; i < urb_avail; i++)
++				*cp++ = inl(S3C2410_UDC_EP0_FIFO_REG);
++
++			ep0_urb->actual_length += urb_avail;
++
++			if (fifo_count < ep0->rcv_packetSize ||
++			    ep0_urb->actual_length >= ep0_urb->device_request.wLength) {
++				ep0->state = EP0_IDLE;
++				if (ep0_recv_setup(ep0_urb)) {
++					/* Not a setup packet, stall next EP0 transaction */
++					debug("can't parse setup packet3\n");
++					set_ep0_ss();
++					//set_ep0_de_out();
++					return;
++				}
++				set_ep0_de_out();
++			} else
++				clear_ep0_opr();
++		}
++		break;
++	case EP0_END_XFER:
++		ep0->state = EP0_IDLE;
++		break;
++	case EP0_STALL:
++		//set_ep0_ss;
++		ep0->state = EP0_IDLE;
++		break;
++	}
++}
++
++
++static void s3c2410_udc_epn(int ep)
++{
++	struct usb_endpoint_instance *endpoint;
++	struct urb *urb;
++	u32 ep_csr1;
++
++	if (ep >= S3C2410_UDC_NUM_ENDPOINTS)
++		return;
++
++	endpoint = &udc_device->bus->endpoint_array[ep];
++
++	S3C2410_UDC_SETIX(ep);
++
++	if (endpoint->endpoint_address & USB_DIR_IN) {
++		/* IN transfer (device to host) */
++		ep_csr1 = inl(S3C2410_UDC_IN_CSR1_REG);
++		debug("for ep=%u, CSR1=0x%x ", ep, ep_csr1);
++
++		urb = endpoint->tx_urb;
++		if (ep_csr1 & S3C2410_UDC_ICSR1_SENTSTL) {
++			/* Stall handshake */
++			debug("stall\n");
++			outl(0x00, S3C2410_UDC_IN_CSR1_REG);
++			return;
++		}
++		if (!(ep_csr1 & S3C2410_UDC_ICSR1_PKTRDY) && urb &&
++		      urb->actual_length) {
++
++			debug("completing previously send data ");
++			usbd_tx_complete(endpoint);
++
++			/* push pending data into FIFO */
++			if ((endpoint->last == endpoint->tx_packetSize) &&
++			    (urb->actual_length - endpoint->sent - endpoint->last == 0)) {
++				endpoint->sent += endpoint->last;
++				/* Write 0 bytes of data (ZLP) */
++				debug("ZLP ");
++				outl(ep_csr1|S3C2410_UDC_ICSR1_PKTRDY, S3C2410_UDC_IN_CSR1_REG);
++			} else {
++				/* write actual data to fifo */
++				debug("TX_DATA ");
++				s3c2410_write_noniso_tx_fifo(endpoint);
++				outl(ep_csr1|S3C2410_UDC_ICSR1_PKTRDY, S3C2410_UDC_IN_CSR1_REG);
++			}
++		}
++		debug("\n");
++	} else {
++		/* OUT transfer (host to device) */
++		ep_csr1 = inl(S3C2410_UDC_OUT_CSR1_REG);
++		debug("for ep=%u, CSR1=0x%x ", ep, ep_csr1);
++
++		urb = endpoint->rcv_urb;
++		if (ep_csr1 & S3C2410_UDC_OCSR1_SENTSTL) {
++			/* Stall handshake */
++			outl(0x00, S3C2410_UDC_IN_CSR1_REG);
++			return;
++		}
++		if ((ep_csr1 & S3C2410_UDC_OCSR1_PKTRDY) && urb) {
++			/* Read pending data from fifo */
++			u32 fifo_count = fifo_count_out();
++			int is_last = 0;
++			u32 i, urb_avail = urb->buffer_length - urb->actual_length;
++			u8 *cp = urb->buffer + urb->actual_length;
++
++			if (fifo_count < endpoint->rcv_packetSize)
++				is_last = 1;
++
++			debug("fifo_count=%u is_last=%, urb_avail=%u)\n",
++				fifo_count, is_last, urb_avail);
++
++			if (fifo_count < urb_avail)
++				urb_avail = fifo_count;
++
++			for (i = 0; i < urb_avail; i++)
++				*cp++ = inb(ep_fifo_reg[ep]);
++
++			if (is_last)
++				outl(ep_csr1 & ~S3C2410_UDC_OCSR1_PKTRDY,
++				     S3C2410_UDC_OUT_CSR1_REG);
++
++			usbd_rcv_complete(endpoint, urb_avail, 0);
++		}
++	}
++
++	urb = endpoint->rcv_urb;
++}
++
++/*
++-------------------------------------------------------------------------------
++*/
++
++/* this is just an empty wrapper for usbtty who assumes polling operation */
++void udc_irq(void)
++{
++}
++
++/* Handle general USB interrupts and dispatch according to type.
++ * This function implements TRM Figure 14-13.
++ */
++void s3c2410_udc_irq(void)
++{
++	struct usb_endpoint_instance *ep0 = udc_device->bus->endpoint_array;
++	u_int32_t save_idx = inl(S3C2410_UDC_INDEX_REG);
++
++	/* read interrupt sources */
++	u_int32_t usb_status = inl(S3C2410_UDC_USB_INT_REG);
++	u_int32_t usbd_status = inl(S3C2410_UDC_EP_INT_REG);
++
++	//debug("< IRQ usbs=0x%02x, usbds=0x%02x start >", usb_status, usbd_status);
++
++	/* clear interrupts */
++	outl(usb_status, S3C2410_UDC_USB_INT_REG);
++
++	if (usb_status & S3C2410_UDC_USBINT_RESET) {
++		//serial_putc('R');
++		debug("RESET pwr=0x%x\n", inl(S3C2410_UDC_PWR_REG));
++		udc_setup_ep(udc_device, 0, ep0);
++		outl(S3C2410_UDC_EP0_CSR_SSE|S3C2410_UDC_EP0_CSR_SOPKTRDY, S3C2410_UDC_EP0_CSR_REG);
++		ep0->state = EP0_IDLE;
++		usbd_device_event_irq (udc_device, DEVICE_RESET, 0);
++	}
++
++	if (usb_status & S3C2410_UDC_USBINT_RESUME) {
++		debug("RESUME\n");
++		usbd_device_event_irq(udc_device, DEVICE_BUS_ACTIVITY, 0);
++	}
++
++	if (usb_status & S3C2410_UDC_USBINT_SUSPEND) {
++		debug("SUSPEND\n");
++		usbd_device_event_irq(udc_device, DEVICE_BUS_INACTIVE, 0);
++	}
++
++	/* Endpoint Interrupts */
++	if (usbd_status) {
++		int i;
++
++		if (usbd_status & S3C2410_UDC_INT_EP0) {
++			outl(S3C2410_UDC_INT_EP0, S3C2410_UDC_EP_INT_REG);
++			s3c2410_udc_ep0();
++		}
++
++		for (i = 1; i < 5; i++) {
++			u_int32_t tmp = 1 << i;
++
++			if (usbd_status & tmp) {
++				/* FIXME: Handle EP X */
++				outl(tmp, S3C2410_UDC_EP_INT_REG);
++				s3c2410_udc_epn(i);
++			}
++		}
++	}
++	S3C2410_UDC_SETIX(save_idx);
++}
++
++/*
++-------------------------------------------------------------------------------
++*/
++
++
++/*
++ * Start of public functions.
++ */
++
++/* Called to start packet transmission. */
++void udc_endpoint_write (struct usb_endpoint_instance *endpoint)
++{
++	unsigned short epnum =
++		endpoint->endpoint_address & USB_ENDPOINT_NUMBER_MASK;
++
++	debug("Entering for ep %x ", epnum);
++
++	if (endpoint->tx_urb) {
++		u32 ep_csr1;
++		debug("We have an URB, transmitting\n");
++
++		s3c2410_write_noniso_tx_fifo(endpoint);
++
++		S3C2410_UDC_SETIX(epnum);
++
++		ep_csr1 = inl(S3C2410_UDC_IN_CSR1_REG);
++		outl(ep_csr1|S3C2410_UDC_ICSR1_PKTRDY, S3C2410_UDC_IN_CSR1_REG);
++	} else
++		debug("\n");
++}
++
++/* Start to initialize h/w stuff */
++int udc_init (void)
++{
++	S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
++	S3C24X0_INTERRUPT * irq = S3C24X0_GetBase_INTERRUPT();
++
++	udc_device = NULL;
++
++	/* Set and check clock control.
++	 * We might ought to be using the clock control API to do
++	 * this instead of fiddling with the clock registers directly
++	 * here.
++	 */
++	clk_power->CLKCON |= (1 << 7);
++
++	/* Print banner with device revision */
++	printf("USB:   S3C2410 USB Deviced\n");
++
++	/*
++	 * At this point, device is ready for configuration...
++	 */
++	outl(0x00, S3C2410_UDC_EP_INT_EN_REG);
++	outl(0x00, S3C2410_UDC_USB_INT_EN_REG);
++
++	irq->INTMSK &= ~BIT_USBD;
++
++	return 0;
++}
++
++/*
++ * udc_setup_ep - setup endpoint
++ *
++ * Associate a physical endpoint with endpoint_instance
++ */
++int udc_setup_ep (struct usb_device_instance *device,
++		   unsigned int ep, struct usb_endpoint_instance *endpoint)
++{
++	int ep_addr = endpoint->endpoint_address;
++	int packet_size;
++	int attributes;
++	u_int32_t maxp;
++
++	S3C2410_UDC_SETIX(ep);
++
++	if (ep) {
++		if ((ep_addr & USB_ENDPOINT_DIR_MASK) == USB_DIR_IN) {
++			/* IN endpoint */
++			outl(S3C2410_UDC_ICSR1_FFLUSH|S3C2410_UDC_ICSR1_CLRDT,
++			     S3C2410_UDC_IN_CSR1_REG);
++			outl(S3C2410_UDC_ICSR2_MODEIN, S3C2410_UDC_IN_CSR2_REG);
++			packet_size = endpoint->tx_packetSize;
++			attributes = endpoint->tx_attributes;
++		} else {
++			/* OUT endpoint */
++			outl(S3C2410_UDC_ICSR1_CLRDT, S3C2410_UDC_IN_CSR1_REG);
++			outl(0, S3C2410_UDC_IN_CSR2_REG);
++			outl(S3C2410_UDC_OCSR1_FFLUSH|S3C2410_UDC_OCSR1_CLRDT,
++			     S3C2410_UDC_OUT_CSR1_REG);
++			outl(0, S3C2410_UDC_OUT_CSR2_REG);
++			packet_size = endpoint->rcv_packetSize;
++			attributes = endpoint->rcv_attributes;
++		}
++	} else
++		packet_size = endpoint->tx_packetSize;
++
++	switch (packet_size) {
++	case 8:
++		maxp = S3C2410_UDC_MAXP_8;
++		break;
++	case 16:
++		maxp = S3C2410_UDC_MAXP_16;
++		break;
++	case 32:
++		maxp = S3C2410_UDC_MAXP_32;
++		break;
++	case 64:
++		maxp = S3C2410_UDC_MAXP_64;
++		break;
++	default:
++		debug("invalid packet size %u\n", packet_size);
++		return -1;
++	}
++
++	debug("setting up endpoint %u addr %x packet_size %u maxp %u\n", ep,
++		endpoint->endpoint_address, packet_size, maxp);
++
++	/* Set maximum packet size */
++	writel(maxp, S3C2410_UDC_MAXP_REG);
++
++	return 0;
++}
++
++/* ************************************************************************** */
++
++/**
++ * udc_connected - is the USB cable connected
++ *
++ * Return non-zero if cable is connected.
++ */
++#if 0
++int udc_connected (void)
++{
++	return ((inw (UDC_DEVSTAT) & UDC_ATT) == UDC_ATT);
++}
++#endif
++
++/* Turn on the USB connection by enabling the pullup resistor */
++void udc_connect (void)
++{
++	debug("connect, enable Pullup\n");
++	S3C24X0_INTERRUPT * irq = S3C24X0_GetBase_INTERRUPT();
++
++	udc_ctrl(UDC_CTRL_PULLUP_ENABLE, 0);
++	udelay(10000);
++	udc_ctrl(UDC_CTRL_PULLUP_ENABLE, 1);
++
++	irq->INTMSK &= ~BIT_USBD;
++}
++
++/* Turn off the USB connection by disabling the pullup resistor */
++void udc_disconnect (void)
++{
++	debug("disconnect, disable Pullup\n");
++	S3C24X0_INTERRUPT * irq = S3C24X0_GetBase_INTERRUPT();
++
++	udc_ctrl(UDC_CTRL_PULLUP_ENABLE, 0);
++
++	/* Disable interrupt (we don't want to get interrupts while the kernel
++	 * is relocating itself */
++	irq->INTMSK |= BIT_USBD;
++}
++
++/* Switch on the UDC */
++void udc_enable (struct usb_device_instance *device)
++{
++	debug("enable device %p, status %d\n", device, device->status);
++
++	/* Save the device structure pointer */
++	udc_device = device;
++
++	/* Setup ep0 urb */
++	if (!ep0_urb)
++		ep0_urb = usbd_alloc_urb(udc_device,
++					 udc_device->bus->endpoint_array);
++	else
++		serial_printf("udc_enable: ep0_urb already allocated %p\n",
++			       ep0_urb);
++
++	s3c2410_configure_device(device);
++}
++
++/* Switch off the UDC */
++void udc_disable (void)
++{
++	debug("disable UDC\n");
++
++	s3c2410_deconfigure_device();
++
++	/* Free ep0 URB */
++	if (ep0_urb) {
++		/*usbd_dealloc_urb(ep0_urb); */
++		ep0_urb = NULL;
++	}
++
++	/* Reset device pointer.
++	 * We ought to do this here to balance the initialization of udc_device
++	 * in udc_enable, but some of our other exported functions get called
++	 * by the bus interface driver after udc_disable, so we have to hang on
++	 * to the device pointer to avoid a null pointer dereference. */
++	/* udc_device = NULL; */
++}
++
++/**
++ * udc_startup - allow udc code to do any additional startup
++ */
++void udc_startup_events (struct usb_device_instance *device)
++{
++	/* The DEVICE_INIT event puts the USB device in the state STATE_INIT. */
++	usbd_device_event_irq (device, DEVICE_INIT, 0);
++
++	/* The DEVICE_CREATE event puts the USB device in the state
++	 * STATE_ATTACHED.
++	 */
++	usbd_device_event_irq (device, DEVICE_CREATE, 0);
++
++	/* Some USB controller driver implementations signal
++	 * DEVICE_HUB_CONFIGURED and DEVICE_RESET events here.
++	 * DEVICE_HUB_CONFIGURED causes a transition to the state STATE_POWERED,
++	 * and DEVICE_RESET causes a transition to the state STATE_DEFAULT.
++	 * The OMAP USB client controller has the capability to detect when the
++	 * USB cable is connected to a powered USB bus via the ATT bit in the
++	 * DEVSTAT register, so we will defer the DEVICE_HUB_CONFIGURED and
++	 * DEVICE_RESET events until later.
++	 */
++
++	/* The GTA01 can detect usb device attachment, but we just assume being
++	 * attached for now (go to STATE_POWERED) */
++	usbd_device_event_irq (device, DEVICE_HUB_CONFIGURED, 0);
++
++	udc_enable (device);
++}
++
++void udc_set_nak(int epid)
++{
++	/* FIXME: implement this */
++}
++
++void udc_unset_nak(int epid)
++{
++	/* FIXME: implement this */
++}
++
++#endif /* CONFIG_S3C2410 && CONFIG_USB_DEVICE */
+Index: u-boot/drivers/usbdcore_s3c2410.h
+===================================================================
+--- /dev/null
++++ u-boot/drivers/usbdcore_s3c2410.h
+@@ -0,0 +1,273 @@
++/* linux/include/asm/arch-s3c2410/regs-udc.h
++ *
++ * Copyright (C) 2004 Herbert Poetzl <herbert@13thfloor.at>
++ *
++ * This include file is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ *  Changelog:
++ *    01-08-2004	Initial creation
++ *    12-09-2004	Cleanup for submission
++ *    24-10-2004	Fixed S3C2410_UDC_MAXP_REG definition
++ *    10-03-2005	Changed S3C2410_VA to S3C24XX_VA
++ *    10-01-2007	Modify for u-boot
++ */
++
++#ifndef __ASM_ARCH_REGS_UDC_H
++#define __ASM_ARCH_REGS_UDC_H
++
++#define S3C2410_UDC_REG_BASE_PHYS	0x52000000
++#define S3C2410_UDC_NUM_ENDPOINTS	5
++
++#define S3C2410_USBDREG(x) (x + S3C2410_UDC_REG_BASE_PHYS)
++
++#define S3C2410_UDC_FUNC_ADDR_REG	S3C2410_USBDREG(0x0140)
++#define S3C2410_UDC_PWR_REG		S3C2410_USBDREG(0x0144)
++#define S3C2410_UDC_EP_INT_REG		S3C2410_USBDREG(0x0148)
++
++#define S3C2410_UDC_USB_INT_REG		S3C2410_USBDREG(0x0158)
++#define S3C2410_UDC_EP_INT_EN_REG	S3C2410_USBDREG(0x015c)
++
++#define S3C2410_UDC_USB_INT_EN_REG	S3C2410_USBDREG(0x016c)
++
++#define S3C2410_UDC_FRAME_NUM1_REG	S3C2410_USBDREG(0x0170)
++#define S3C2410_UDC_FRAME_NUM2_REG	S3C2410_USBDREG(0x0174)
++
++#define S3C2410_UDC_EP0_FIFO_REG	S3C2410_USBDREG(0x01c0)
++#define S3C2410_UDC_EP1_FIFO_REG	S3C2410_USBDREG(0x01c4)
++#define S3C2410_UDC_EP2_FIFO_REG	S3C2410_USBDREG(0x01c8)
++#define S3C2410_UDC_EP3_FIFO_REG	S3C2410_USBDREG(0x01cc)
++#define S3C2410_UDC_EP4_FIFO_REG	S3C2410_USBDREG(0x01d0)
++
++#define S3C2410_UDC_EP1_DMA_CON		S3C2410_USBDREG(0x0200)
++#define S3C2410_UDC_EP1_DMA_UNIT	S3C2410_USBDREG(0x0204)
++#define S3C2410_UDC_EP1_DMA_FIFO	S3C2410_USBDREG(0x0208)
++#define S3C2410_UDC_EP1_DMA_TTC_L	S3C2410_USBDREG(0x020c)
++#define S3C2410_UDC_EP1_DMA_TTC_M	S3C2410_USBDREG(0x0210)
++#define S3C2410_UDC_EP1_DMA_TTC_H	S3C2410_USBDREG(0x0214)
++
++#define S3C2410_UDC_EP2_DMA_CON		S3C2410_USBDREG(0x0218)
++#define S3C2410_UDC_EP2_DMA_UNIT	S3C2410_USBDREG(0x021c)
++#define S3C2410_UDC_EP2_DMA_FIFO	S3C2410_USBDREG(0x0220)
++#define S3C2410_UDC_EP2_DMA_TTC_L	S3C2410_USBDREG(0x0224)
++#define S3C2410_UDC_EP2_DMA_TTC_M	S3C2410_USBDREG(0x0228)
++#define S3C2410_UDC_EP2_DMA_TTC_H	S3C2410_USBDREG(0x022c)
++
++#define S3C2410_UDC_EP3_DMA_CON		S3C2410_USBDREG(0x0240)
++#define S3C2410_UDC_EP3_DMA_UNIT	S3C2410_USBDREG(0x0244)
++#define S3C2410_UDC_EP3_DMA_FIFO	S3C2410_USBDREG(0x0248)
++#define S3C2410_UDC_EP3_DMA_TTC_L	S3C2410_USBDREG(0x024c)
++#define S3C2410_UDC_EP3_DMA_TTC_M	S3C2410_USBDREG(0x0250)
++#define S3C2410_UDC_EP3_DMA_TTC_H	S3C2410_USBDREG(0x0254)
++
++#define S3C2410_UDC_EP4_DMA_CON		S3C2410_USBDREG(0x0258)
++#define S3C2410_UDC_EP4_DMA_UNIT	S3C2410_USBDREG(0x025c)
++#define S3C2410_UDC_EP4_DMA_FIFO	S3C2410_USBDREG(0x0260)
++#define S3C2410_UDC_EP4_DMA_TTC_L	S3C2410_USBDREG(0x0264)
++#define S3C2410_UDC_EP4_DMA_TTC_M	S3C2410_USBDREG(0x0268)
++#define S3C2410_UDC_EP4_DMA_TTC_H	S3C2410_USBDREG(0x026c)
++
++#define S3C2410_UDC_INDEX_REG		S3C2410_USBDREG(0x0178)
++
++/* indexed registers */
++
++#define S3C2410_UDC_MAXP_REG		S3C2410_USBDREG(0x0180)
++
++#define S3C2410_UDC_EP0_CSR_REG		S3C2410_USBDREG(0x0184)
++
++#define S3C2410_UDC_IN_CSR1_REG		S3C2410_USBDREG(0x0184)
++#define S3C2410_UDC_IN_CSR2_REG		S3C2410_USBDREG(0x0188)
++
++#define S3C2410_UDC_OUT_CSR1_REG	S3C2410_USBDREG(0x0190)
++#define S3C2410_UDC_OUT_CSR2_REG	S3C2410_USBDREG(0x0194)
++#define S3C2410_UDC_OUT_FIFO_CNT1_REG	S3C2410_USBDREG(0x0198)
++#define S3C2410_UDC_OUT_FIFO_CNT2_REG	S3C2410_USBDREG(0x019c)
++
++
++
++#define S3C2410_UDC_PWR_ISOUP		(1<<7) // R/W
++#define S3C2410_UDC_PWR_RESET		(1<<3) // R
++#define S3C2410_UDC_PWR_RESUME		(1<<2) // R/W
++#define S3C2410_UDC_PWR_SUSPEND		(1<<1) // R
++#define S3C2410_UDC_PWR_ENSUSPEND	(1<<0) // R/W
++
++#define S3C2410_UDC_PWR_DEFAULT		0x00
++
++#define S3C2410_UDC_INT_EP4		(1<<4) // R/W (clear only)
++#define S3C2410_UDC_INT_EP3		(1<<3) // R/W (clear only)
++#define S3C2410_UDC_INT_EP2		(1<<2) // R/W (clear only)
++#define S3C2410_UDC_INT_EP1		(1<<1) // R/W (clear only)
++#define S3C2410_UDC_INT_EP0		(1<<0) // R/W (clear only)
++
++#define S3C2410_UDC_USBINT_RESET	(1<<2) // R/W (clear only)
++#define S3C2410_UDC_USBINT_RESUME	(1<<1) // R/W (clear only)
++#define S3C2410_UDC_USBINT_SUSPEND	(1<<0) // R/W (clear only)
++
++#define S3C2410_UDC_INTE_EP4		(1<<4) // R/W
++#define S3C2410_UDC_INTE_EP3		(1<<3) // R/W
++#define S3C2410_UDC_INTE_EP2		(1<<2) // R/W
++#define S3C2410_UDC_INTE_EP1		(1<<1) // R/W
++#define S3C2410_UDC_INTE_EP0		(1<<0) // R/W
++
++#define S3C2410_UDC_USBINTE_RESET	(1<<2) // R/W
++#define S3C2410_UDC_USBINTE_SUSPEND	(1<<0) // R/W
++
++
++#define S3C2410_UDC_INDEX_EP0		(0x00)
++#define S3C2410_UDC_INDEX_EP1		(0x01) // ??
++#define S3C2410_UDC_INDEX_EP2		(0x02) // ??
++#define S3C2410_UDC_INDEX_EP3		(0x03) // ??
++#define S3C2410_UDC_INDEX_EP4		(0x04) // ??
++
++#define S3C2410_UDC_ICSR1_CLRDT		(1<<6) // R/W
++#define S3C2410_UDC_ICSR1_SENTSTL	(1<<5) // R/W (clear only)
++#define S3C2410_UDC_ICSR1_SENDSTL	(1<<4) // R/W
++#define S3C2410_UDC_ICSR1_FFLUSH	(1<<3) // W   (set only)
++#define S3C2410_UDC_ICSR1_UNDRUN	(1<<2) // R/W (clear only)
++#define S3C2410_UDC_ICSR1_PKTRDY	(1<<0) // R/W (set only)
++
++#define S3C2410_UDC_ICSR2_AUTOSET	(1<<7) // R/W
++#define S3C2410_UDC_ICSR2_ISO		(1<<6) // R/W
++#define S3C2410_UDC_ICSR2_MODEIN	(1<<5) // R/W
++#define S3C2410_UDC_ICSR2_DMAIEN	(1<<4) // R/W
++
++#define S3C2410_UDC_OCSR1_CLRDT		(1<<7) // R/W
++#define S3C2410_UDC_OCSR1_SENTSTL	(1<<6) // R/W (clear only)
++#define S3C2410_UDC_OCSR1_SENDSTL	(1<<5) // R/W
++#define S3C2410_UDC_OCSR1_FFLUSH	(1<<4) // R/W
++#define S3C2410_UDC_OCSR1_DERROR	(1<<3) // R
++#define S3C2410_UDC_OCSR1_OVRRUN	(1<<2) // R/W (clear only)
++#define S3C2410_UDC_OCSR1_PKTRDY	(1<<0) // R/W (clear only)
++
++#define S3C2410_UDC_OCSR2_AUTOCLR	(1<<7) // R/W
++#define S3C2410_UDC_OCSR2_ISO		(1<<6) // R/W
++#define S3C2410_UDC_OCSR2_DMAIEN	(1<<5) // R/W
++
++#define S3C2410_UDC_SETIX(X)	writel(X, S3C2410_UDC_INDEX_REG)
++
++#define S3C2410_UDC_EP0_CSR_OPKRDY	(1<<0)
++#define S3C2410_UDC_EP0_CSR_IPKRDY	(1<<1)
++#define S3C2410_UDC_EP0_CSR_SENTSTL	(1<<2)
++#define S3C2410_UDC_EP0_CSR_DE		(1<<3)
++#define S3C2410_UDC_EP0_CSR_SE		(1<<4)
++#define S3C2410_UDC_EP0_CSR_SENDSTL	(1<<5)
++#define S3C2410_UDC_EP0_CSR_SOPKTRDY	(1<<6)
++#define S3C2410_UDC_EP0_CSR_SSE	(1<<7)
++
++#define S3C2410_UDC_MAXP_8		(1<<0)
++#define S3C2410_UDC_MAXP_16		(1<<1)
++#define S3C2410_UDC_MAXP_32		(1<<2)
++#define S3C2410_UDC_MAXP_64		(1<<3)
++
++/****************** MACROS ******************/
++#define BIT_MASK	0xFF
++
++#if 1
++#define maskl(v,m,a)      \
++		writel((readl(a) & ~(m))|((v)&(m)), (a))
++#else
++#define maskl(v,m,a)	do {					\
++	unsigned long foo = readl(a);				\
++	unsigned long bar = (foo & ~(m)) | ((v)&(m));		\
++	serial_printf("0x%08x:0x%x->0x%x\n", (a), foo, bar);	\
++	writel(bar, (a));					\
++} while(0)
++#endif
++
++#define clear_ep0_sst() do {			\
++	S3C2410_UDC_SETIX(0); 			\
++	writel(0x00, S3C2410_UDC_EP0_CSR_REG); 	\
++} while(0)
++
++#define clear_ep0_se() do {				\
++	S3C2410_UDC_SETIX(0); 				\
++	maskl(S3C2410_UDC_EP0_CSR_SSE,			\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG); 	\
++} while(0)
++
++#define clear_ep0_opr() do {				\
++	S3C2410_UDC_SETIX(0);				\
++	maskl(S3C2410_UDC_EP0_CSR_SOPKTRDY,		\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG); 	\
++} while(0)
++
++#define set_ep0_ipr() do {				\
++	S3C2410_UDC_SETIX(0);				\
++	maskl(S3C2410_UDC_EP0_CSR_IPKRDY,		\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG); 	\
++} while(0)
++
++#define set_ep0_de() do {				\
++	S3C2410_UDC_SETIX(0);				\
++	maskl(S3C2410_UDC_EP0_CSR_DE,			\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG);	\
++} while(0)
++
++#define set_ep0_ss() do {				\
++	S3C2410_UDC_SETIX(0);				\
++	maskl(S3C2410_UDC_EP0_CSR_SENDSTL,		\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG);	\
++} while(0)
++
++#define set_ep0_de_out() do {				\
++	S3C2410_UDC_SETIX(0);				\
++	maskl((S3C2410_UDC_EP0_CSR_SOPKTRDY	 	\
++		| S3C2410_UDC_EP0_CSR_DE),		\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG);	\
++} while(0)
++
++#define set_ep0_sse_out() do {				\
++	S3C2410_UDC_SETIX(0);				\
++	maskl((S3C2410_UDC_EP0_CSR_SOPKTRDY 		\
++		| S3C2410_UDC_EP0_CSR_SSE),		\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG);	\
++} while(0)
++
++#define set_ep0_de_in() do {				\
++	S3C2410_UDC_SETIX(0);				\
++	maskl((S3C2410_UDC_EP0_CSR_IPKRDY		\
++		| S3C2410_UDC_EP0_CSR_DE),		\
++		BIT_MASK, S3C2410_UDC_EP0_CSR_REG);	\
++} while(0)
++
++
++#if 0
++
++#define clear_stall_ep1_out(base) do {			\
++	S3C2410_UDC_SETIX(base,EP1);			\
++	orl(0,base+S3C2410_UDC_OUT_CSR1_REG);		\
++} while(0)
++
++
++#define clear_stall_ep2_out(base) do {			\
++	S3C2410_UDC_SETIX(base,EP2);			\
++	orl(0, base+S3C2410_UDC_OUT_CSR1_REG);		\
++} while(0)
++
++
++#define clear_stall_ep3_out(base) do {			\
++	S3C2410_UDC_SETIX(base,EP3);			\
++	orl(0,base+S3C2410_UDC_OUT_CSR1_REG);		\
++} while(0)
++
++
++#define clear_stall_ep4_out(base) do {			\
++	S3C2410_UDC_SETIX(base,EP4);			\
++	orl(0, base+S3C2410_UDC_OUT_CSR1_REG);		\
++} while(0)
++
++#endif
++
++/* S3C2410 Endpoint parameters */
++#define EP0_MAX_PACKET_SIZE	16
++#define UDC_OUT_ENDPOINT 	2
++#define UDC_OUT_PACKET_SIZE	64
++#define UDC_IN_ENDPOINT		1
++#define UDC_IN_PACKET_SIZE 	64
++#define UDC_INT_ENDPOINT	5
++#define UDC_INT_PACKET_SIZE	16
++#define UDC_BULK_PACKET_SIZE	16
++
++#endif
+Index: u-boot/drivers/usbdcore_ep0.c
+===================================================================
+--- u-boot.orig/drivers/usbdcore_ep0.c
++++ u-boot/drivers/usbdcore_ep0.c
+@@ -43,7 +43,7 @@
+ 
+ #include <common.h>
+ 
+-#if defined(CONFIG_OMAP1510) && defined(CONFIG_USB_DEVICE)
++#if defined(CONFIG_USB_DEVICE)
+ #include "usbdcore.h"
+ 
+ #if 0
+@@ -187,9 +187,13 @@
+ 	if (!urb || !urb->buffer || !urb->buffer_length
+ 	    || (urb->buffer_length < 255)) {
+ 		dbg_ep0 (2, "invalid urb %p", urb);
++		serial_printf("invalid urb %p", urb);
+ 		return -1L;
+ 	}
+ 
++	/* re-initialize the ep0 buffer pointer */
++	urb->buffer = (u8 *) urb->buffer_data;
++
+ 	/* setup tx urb */
+ 	urb->actual_length = 0;
+ 	cp = urb->buffer;
+@@ -206,17 +210,8 @@
+ 			     usbd_device_device_descriptor (device, port))) {
+ 				return -1;
+ 			}
+-			/* copy descriptor for this device */
+-			copy_config (urb, device_descriptor,
+-				     sizeof (struct usb_device_descriptor),
+-				     max);
+-
+-			/* correct the correct control endpoint 0 max packet size into the descriptor */
+-			device_descriptor =
+-				(struct usb_device_descriptor *) urb->buffer;
+-			device_descriptor->bMaxPacketSize0 =
+-				urb->device->bus->maxpacketsize;
+-
++			urb->buffer = device_descriptor;
++			urb->actual_length = MIN(sizeof(*device_descriptor), max);
+ 		}
+ 		/*dbg_ep0(3, "copied device configuration, actual_length: %x", urb->actual_length); */
+ 		break;
+@@ -250,11 +245,9 @@
+ 					 index);
+ 				return -1;
+ 			}
+-			copy_config (urb, configuration_descriptor,
+-				     sizeof (struct
+-					     usb_configuration_descriptor),
+-				     max);
+-
++			urb->buffer = configuration_descriptor;
++			urb->actual_length =
++				MIN(le16_to_cpu(configuration_descriptor->wTotalLength), max);
+ 		}
+ 		break;
+ 
+@@ -376,6 +369,7 @@
+ 	dbg_ep0 (0, "entering ep0_recv_setup()");
+ 	if (!urb || !urb->device) {
+ 		dbg_ep0 (3, "invalid URB %p", urb);
++		serial_printf("invalid URB %p", urb);
+ 		return -1;
+ 	}
+ 
+@@ -400,6 +394,7 @@
+ 			return device->cdc_recv_setup(request, urb);
+ 		dbg_ep0 (1, "non standard request: %x",
+ 			 request->bmRequestType & USB_REQ_TYPE_MASK);
++		serial_printf("non standard request: %x", request->bmRequestType & USB_REQ_TYPE_MASK);
+ 		return -1;	/* Stall here */
+ 	}
+ 
+@@ -448,6 +443,8 @@
+ 		dbg_ep0 (1, "request %s not allowed in UNKNOWN state: %s",
+ 			 USBD_DEVICE_REQUESTS (request->bRequest),
+ 			 usbd_device_states[device->device_state]);
++		serial_printf("request %s not allowed in UNKNOWN state: %s", USBD_DEVICE_REQUESTS (request->bRequest), usbd_device_states[device->device_state]);
++		break;
+ 		return -1;
+ 	}
+ 
+@@ -545,7 +542,8 @@
+ 			/*dbg_ep0(2, "address: %d %d %d", */
+ 			/*        request->wValue, le16_to_cpu(request->wValue), device->address); */
+ 
+-			serial_printf ("DEVICE_ADDRESS_ASSIGNED.. event?\n");
++			//serial_printf ("DEVICE_ADDRESS_ASSIGNED.. event?\n");
++			//udc_set_address(device->address);
+ 			return 0;
+ 
+ 		case USB_REQ_SET_DESCRIPTOR:	/* XXX should we support this? */
+Index: u-boot/include/configs/neo1973_gta01.h
+===================================================================
+--- u-boot.orig/include/configs/neo1973_gta01.h
++++ u-boot/include/configs/neo1973_gta01.h
+@@ -173,6 +173,16 @@
+ #define CONFIG_USB_OHCI		1
+ #endif
+ 
++#define CONFIG_USB_DEVICE	1
++#define CONFIG_USB_TTY		1
++#define CFG_CONSOLE_IS_IN_ENV	1
++#define CONFIG_USBD_VENDORID 		0x1457     /* Linux/NetChip */
++#define CONFIG_USBD_PRODUCTID_GSERIAL	0x5120    /* gserial */
++#define CONFIG_USBD_PRODUCTID_CDCACM 	0x5119    /* CDC ACM */
++#define CONFIG_USBD_MANUFACTURER	"OpenMoko, Inc"
++#define CONFIG_USBD_PRODUCT_NAME	"Neo1973 Bootloader " U_BOOT_VERSION
++#define CONFIG_EXTRA_ENV_SETTINGS 	"usbtty=cdc_acm\0"
++
+ /*-----------------------------------------------------------------------
+  * Physical Memory Map
+  */
+Index: u-boot/cpu/arm920t/s3c24x0/interrupts.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/interrupts.c
++++ u-boot/cpu/arm920t/s3c24x0/interrupts.c
+@@ -222,6 +222,13 @@
+ 	S3C24X0_INTERRUPT * irq = S3C24X0_GetBase_INTERRUPT();
+ 	u_int32_t intpnd = irq->INTPND;
+ 
++#ifdef CONFIG_USB_DEVICE
++	if (intpnd & BIT_USBD) {
++		s3c2410_udc_irq();
++		irq->SRCPND = BIT_USBD;
++		irq->INTPND = BIT_USBD;
++	}
++#endif /* USB_DEVICE */
+ }
+ #endif /* USE_IRQ */
+ 
+Index: u-boot/drivers/usbtty.h
+===================================================================
+--- u-boot.orig/drivers/usbtty.h
++++ u-boot/drivers/usbtty.h
+@@ -29,6 +29,8 @@
+ #include "usbdcore_mpc8xx.h"
+ #elif defined(CONFIG_OMAP1510)
+ #include "usbdcore_omap1510.h"
++#elif defined(CONFIG_S3C2410)
++#include "usbdcore_s3c2410.h"
+ #endif
+ 
+ #include <config.h>
+Index: u-boot/board/neo1973/common/cmd_neo1973.c
+===================================================================
+--- u-boot.orig/board/neo1973/common/cmd_neo1973.c
++++ u-boot/board/neo1973/common/cmd_neo1973.c
+@@ -72,6 +72,18 @@
+ 			neo1973_vibrator(1);
+ 		else
+ 			neo1973_vibrator(0);
++	} else if (!strcmp(argv[1], "udc")) {
++		if (argc < 3)
++			goto out_help;
++		if (!strcmp(argv[2], "udc")) {
++			if (argc < 4)
++				goto out_help;
++			if (!strcmp(argv[3], "on"))
++				udc_connect();
++			else
++				udc_disconnect();
++		} else
++			goto out_help;
+ 	} else {
+ out_help:
+ 		printf("Usage:\n%s\n", cmdtp->usage);
+@@ -95,5 +107,6 @@
+ 	"neo1973 charger off - disable charging\n"
+ 	"neo1973 backlight (on|off) - switch backlight on or off\n"
+ 	"neo1973 vibrator (on|off) - switch vibrator on or off\n"
++	"neo1973 udc pullup (on|off) - switch pull-up on or off\n"
+ );
+ #endif	/* CFG_CMD_BDI */
+Index: u-boot/board/neo1973/gta01/Makefile
+===================================================================
+--- u-boot.orig/board/neo1973/gta01/Makefile
++++ u-boot/board/neo1973/gta01/Makefile
+@@ -25,7 +25,7 @@
+ 
+ LIB	= lib$(BOARD).a
+ 
+-OBJS	:= gta01.o pcf50606.o ../common/cmd_neo1973.o ../common/jbt6k74.o
++OBJS	:= gta01.o pcf50606.o ../common/cmd_neo1973.o ../common/jbt6k74.o ../common/udc.o
+ SOBJS	:= ../common/lowlevel_init.o
+ 
+ $(LIB):	$(OBJS) $(SOBJS)
+Index: u-boot/board/neo1973/common/udc.c
+===================================================================
+--- /dev/null
++++ u-boot/board/neo1973/common/udc.c
+@@ -0,0 +1,23 @@
++
++#include <common.h>
++#include <usbdcore.h>
++#include <s3c2410.h>
++
++void udc_ctrl(enum usbd_event event, int param)
++{
++	S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
++
++	switch (event) {
++	case UDC_CTRL_PULLUP_ENABLE:
++#if defined(CONFIG_ARCH_GTA01_v4) || defined(CONFIG_ARCH_GTA01B_v2) || \
++    defined(CONFIG_ARCH_GTA01B_v3) || defined(CONFIG_ARCH_GTA01B_v4)
++		if (param)
++			gpio->GPBDAT |= (1 << 9);
++		else
++			gpio->GPBDAT &= ~(1 << 9);
++#endif
++		break;
++	default:
++		break;
++	}
++}
+Index: u-boot/include/usbdcore.h
+===================================================================
+--- u-boot.orig/include/usbdcore.h
++++ u-boot/include/usbdcore.h
+@@ -671,4 +671,10 @@
+ void usbd_rcv_complete(struct usb_endpoint_instance *endpoint, int len, int urb_bad);
+ void usbd_tx_complete (struct usb_endpoint_instance *endpoint);
+ 
++enum usbd_event {
++	UDC_CTRL_PULLUP_ENABLE,
++};
++
++void udc_ctrl(enum usbd_event event, int param);
++#endif
+ #endif

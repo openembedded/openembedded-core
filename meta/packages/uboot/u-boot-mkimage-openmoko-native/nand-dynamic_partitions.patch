@@ -1,0 +1,354 @@
+This patch adds support for 'dynamic partitions'.  This basically 
+works as follows:
+* The nand code generates a bad-block-table at the first scan of the chip
+* The dynamic partition code calculates the raw partition sizes based on 
+  the bad block table.  E.g. if you have a partition of size 0x30000, and there are 
+  two bad blocks (0x4000 each) in it, the raw size will increase to 0x38000, and the
+  following partitions get shifted towards the end of flash.
+
+Please note that currently the desired partition sizes are stored at compile-time
+in an array in drivers/nand/nand_bbt.c, so this definitely needs to change before
+submitting/merging upstream.
+
+In order to calculate the partiton map (and set mtdparts accordingly), you can use
+the 'dynpart' command at the prompt.  Use 'saveenv' to make the setting permanent.
+
+Signed-off-by: Harald Welte <laforge@openmoko.org>
+
+Index: u-boot/drivers/nand/nand_bbt.c
+===================================================================
+--- u-boot.orig/drivers/nand/nand_bbt.c
++++ u-boot/drivers/nand/nand_bbt.c
+@@ -1044,9 +1044,86 @@
+ 	switch ((int)res) {
+ 	case 0x00:	return 0;
+ 	case 0x01:	return 1;
++	case 0x03:	return 1;
+ 	case 0x02:	return allowbbt ? 0 : 1;
+ 	}
+ 	return 1;
+ }
+ 
++#if defined(CONFIG_NAND_DYNPART)
++
++extern unsigned int dynpart_size[];
++extern char *dynpart_names[];
++
++#define MTDPARTS_MAX_SIZE 512
++
++
++static int skip_offs(const struct nand_chip *this, unsigned int offs)
++{
++	int block = (int) (offs >> (this->bbt_erase_shift - 1));
++	u_int8_t bbt = (this->bbt[block >> 3] >> (block & 0x06)) & 0x03;
++
++	return bbt == 3;
++}
++
++int nand_create_mtd_dynpart(struct mtd_info *mtd)
++{
++	struct nand_chip *this = mtd->priv;
++	int part;
++	char *mtdparts;
++	unsigned int cur_offs = 0;
++
++	mtdparts = malloc(MTDPARTS_MAX_SIZE); /* FIXME: bounds checking */
++	if (!mtdparts)
++		return -ENOMEM;
++
++	sprintf(mtdparts, "mtdparts=" CFG_NAND_DYNPART_MTD_KERNEL_NAME ":");
++
++	for (part = 0; dynpart_size[part] != 0; part++) {
++		unsigned int bb_delta = 0;
++		unsigned int offs = 0;
++		char mtdpart[32];
++
++		for (offs = cur_offs;
++		     offs < cur_offs + dynpart_size[part] + bb_delta;
++		     offs += mtd->erasesize) {
++			if (skip_offs(this, offs))
++				bb_delta += mtd->erasesize;
++		}
++
++		/*
++		 * Absorb bad blocks immediately following this partition also
++		 * into the partition, in order to make next partition start
++		 * with a good block. This simplifies handling of the
++		 * environment partition.
++		 */
++		while (offs < this->chipsize && skip_offs(this, offs)) {
++			bb_delta += mtd->erasesize;
++			offs += mtd->erasesize;
++		}
++
++		if (cur_offs + dynpart_size[part] + bb_delta > this->chipsize)
++			dynpart_size[part] = this->chipsize - cur_offs - bb_delta;
++#if 0
++		printf("partition %u: start = 0x%08x, end=%08x size=%08x, size_inc_bb=%08x\n",
++			part, cur_offs, cur_offs + dynpart_size[part] + bb_delta,
++			dynpart_size[part], dynpart_size[part] + bb_delta);
++#endif
++		cur_offs += dynpart_size[part] + bb_delta;
++		sprintf(mtdpart, "0x%.8x(%.16s),", dynpart_size[part] + bb_delta,
++			dynpart_names[part]);
++		mtdpart[sizeof(mtdpart)-1] = '\0';
++		strncat(mtdparts, mtdpart,
++		    MTDPARTS_MAX_SIZE-strlen(mtdparts)-1);
++	}
++
++	mtdparts[strlen(mtdparts)-1] = '\0';
++	printf("mtdparts %s\n", mtdparts);
++	setenv("mtdparts", mtdparts);
++
++	free(mtdparts);
++	return 0;
++}
++#endif /* CONFIG_NAND_DYNPART */
++
+ #endif
+Index: u-boot/include/configs/neo1973_gta01.h
+===================================================================
+--- u-boot.orig/include/configs/neo1973_gta01.h
++++ u-boot/include/configs/neo1973_gta01.h
+@@ -99,7 +99,7 @@
+ 			CFG_CMD_ELF	 | \
+ 			CFG_CMD_MISC	 | \
+ 			/* CFG_CMD_USB	 | */ \
+-			/* CFG_CMD_JFFS2	 | */ \
++			CFG_CMD_JFFS2	 | \
+ 			CFG_CMD_DIAG	 | \
+ 			/* CFG_CMD_HWFLOW	 | */ \
+ 			CFG_CMD_SAVES	 | \
+@@ -212,13 +212,13 @@
+ #define CONFIG_FAT		1
+ #define CONFIG_SUPPORT_VFAT
+ 
+-#if 0
++#if 1
+ /* JFFS2 driver */
+ #define CONFIG_JFFS2_CMDLINE	1
+ #define CONFIG_JFFS2_NAND	1
+ #define CONFIG_JFFS2_NAND_DEV	0
+-#define CONFIG_JFFS2_NAND_OFF	0x634000
+-#define CONFIG_JFFS2_NAND_SIZE	0x39cc000
++//#define CONFIG_JFFS2_NAND_OFF	0x634000
++//#define CONFIG_JFFS2_NAND_SIZE	0x39cc000
+ #endif
+ 
+ /* ATAG configuration */
+@@ -257,4 +257,9 @@
+ 
+ #define CONFIG_DRIVER_PCF50606		1
+ 
++#define MTDIDS_DEFAULT	"nand0=neo1973-nand"
++#define MTPARTS_DEFAULT	"neo1973-nand:256k(u-boot),16k(u-boot_env),2M(kernel),640k(splash),-(jffs2)"
++#define CFG_NAND_DYNPART_MTD_KERNEL_NAME "neo1973-nand"
++#define CONFIG_NAND_DYNPART
++
+ #endif	/* __CONFIG_H */
+Index: u-boot/common/cmd_jffs2.c
+===================================================================
+--- u-boot.orig/common/cmd_jffs2.c
++++ u-boot/common/cmd_jffs2.c
+@@ -1841,6 +1841,29 @@
+ 	return NULL;
+ }
+ 
++/* Return the 'net size' of the partition (i.e. excluding any bad blocks) */
++unsigned int nand_net_part_size(struct part_info *part)
++{
++	struct mtd_info *mtd;
++	unsigned int offs;
++	unsigned int bb_delta = 0;
++
++	if (!part || !part->dev || !part->dev->id ||
++	    part->dev->id->num >= CFG_MAX_NAND_DEVICE)
++		return 0;
++
++ 	mtd = &nand_info[part->dev->id->num];
++
++	for (offs = part->offset; offs < part->offset + part->size;
++	     offs += mtd->erasesize) {
++		if (nand_isbad_bbt(mtd, offs, 0))
++			bb_delta += mtd->erasesize;
++	}
++
++	return part->size - bb_delta;
++}
++
++
+ /***************************************************/
+ /* U-boot commands				   */
+ /***************************************************/
+@@ -2132,6 +2155,24 @@
+ 	printf ("Usage:\n%s\n", cmdtp->usage);
+ 	return 1;
+ }
++
++#if defined(CONFIG_NAND_DYNPART)
++extern int nand_create_mtd_dynpart(struct mtd_info *mtd);
++
++int do_dynpart(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
++{
++#if 0
++	int i = simple_strtoul(argv[1], NULL, 0);
++	if (i >= CFG_MAX_NAND_DEVICE)
++		return -EINVAL;
++#endif
++	nand_create_mtd_dynpart(&nand_info[0]);
++
++	return 0;
++}
++#endif /* CONFIG_NAND_DYNPART */
++
++
+ #endif /* #ifdef CONFIG_JFFS2_CMDLINE */
+ 
+ /***************************************************/
+@@ -2197,6 +2238,15 @@
+ 	"<name>     := '(' NAME ')'\n"
+ 	"<ro-flag>  := when set to 'ro' makes partition read-only (not used, passed to kernel)\n"
+ );
++
++#if defined(CONFIG_NAND_DYNPART)
++U_BOOT_CMD(
++	dynpart, 1,	1,	do_dynpart,
++	"dynpart\t- dynamically calculate partition table based on BBT\n",
++	"\n"
++	"    - sets 'mtdparts' according to BBT\n");
++#endif /* CONFIG_NAND_DYNPART */
++
+ #endif /* #ifdef CONFIG_JFFS2_CMDLINE */
+ 
+ /***************************************************/
+Index: u-boot/common/cmd_nand.c
+===================================================================
+--- u-boot.orig/common/cmd_nand.c
++++ u-boot/common/cmd_nand.c
+@@ -101,7 +101,7 @@
+ }
+ 
+ int
+-arg_off_size(int argc, char *argv[], nand_info_t *nand, ulong *off, ulong *size)
++arg_off_size(int argc, char *argv[], nand_info_t *nand, ulong *off, ulong *size, int net)
+ {
+ 	int idx = nand_curr_device;
+ #if (CONFIG_COMMANDS & CFG_CMD_JFFS2) && defined(CONFIG_JFFS2_CMDLINE)
+@@ -122,10 +122,17 @@
+ 					printf("'%s' is not a number\n", argv[1]);
+ 					return -1;
+ 				}
+-				if (*size > part->size)
+-					*size = part->size;
++				if (*size > part->size) {
++					if (net)
++						*size = nand_net_part_size(part);
++					else
++						*size = part->size;
++				}
+ 			} else {
+-				*size = part->size;
++				if (net)
++					*size = nand_net_part_size(part);
++				else
++					*size = part->size;
+ 			}
+ 			idx = dev->id->num;
+ 			*nand = nand_info[idx];
+@@ -261,7 +268,7 @@
+ 
+ 		printf("\nNAND %s: ", scrub ? "scrub" : "erase");
+ 		/* skip first two or three arguments, look for offset and size */
+-		if (arg_off_size(argc - o, argv + o, nand, &off, &size) != 0)
++		if (arg_off_size(argc - o, argv + o, nand, &off, &size, 0) != 0)
+ 			return 1;
+ 
+ 		memset(&opts, 0, sizeof(opts));
+@@ -323,7 +330,7 @@
+ 
+ 		read = strncmp(cmd, "read", 4) == 0; /* 1 = read, 0 = write */
+ 		printf("\nNAND %s: ", read ? "read" : "write");
+-		if (arg_off_size(argc - 3, argv + 3, nand, &off, &size) != 0)
++		if (arg_off_size(argc - 3, argv + 3, nand, &off, &size, 1) != 0)
+ 			return 1;
+ 
+ 		s = strchr(cmd, '.');
+@@ -445,7 +452,7 @@
+ 	}
+ 
+ 	if (strcmp(cmd, "unlock") == 0) {
+-		if (arg_off_size(argc - 2, argv + 2, nand, &off, &size) < 0)
++		if (arg_off_size(argc - 2, argv + 2, nand, &off, &size, 0) < 0)
+ 			return 1;
+ 
+ 		if (!nand_unlock(nand, off, size)) {
+Index: u-boot/common/cmd_dynenv.c
+===================================================================
+--- u-boot.orig/common/cmd_dynenv.c
++++ u-boot/common/cmd_dynenv.c
+@@ -60,7 +60,7 @@
+ 		buf[2] = 'V';
+ 		buf[3] = '0';
+ 
+-		if (arg_off_size(argc-2, argv+2, mtd, &addr, &dummy) < 0) {
++		if (arg_off_size(argc-2, argv+2, mtd, &addr, &dummy, 1) < 0) {
+ 			printf("Offset or partition name expected\n");
+ 			goto fail;
+ 		}
+Index: u-boot/include/util.h
+===================================================================
+--- u-boot.orig/include/util.h
++++ u-boot/include/util.h
+@@ -28,6 +28,6 @@
+ 
+ /* common/cmd_nand.c */
+ int arg_off_size(int argc, char *argv[], nand_info_t *nand, ulong *off,
+-  ulong *size);
++  ulong *size, int net);
+ 
+ #endif /* UTIL_H */
+Index: u-boot/board/qt2410/qt2410.c
+===================================================================
+--- u-boot.orig/board/qt2410/qt2410.c
++++ u-boot/board/qt2410/qt2410.c
+@@ -126,3 +126,9 @@
+ 
+ 	return 0;
+ }
++
++unsigned int dynpart_size[] = {
++    CFG_UBOOT_SIZE, 0x4000, 0x200000, 0xa0000, 0x3d5c000-CFG_UBOOT_SIZE, 0 };
++char *dynpart_names[] = {
++    "u-boot", "u-boot_env", "kernel", "splash", "rootfs", NULL };
++
+Index: u-boot/board/neo1973/gta01/gta01.c
+===================================================================
+--- u-boot.orig/board/neo1973/gta01/gta01.c
++++ u-boot/board/neo1973/gta01/gta01.c
+@@ -429,3 +434,14 @@
+ 	return 0;
+ }
+ 
++
++/* The sum of all part_size[]s must equal to the NAND size, i.e., 0x4000000.
++   "initrd" is sized such that it can hold two uncompressed 16 bit 640*480
++   images: 640*480*2*2 = 1228800 < 1245184. */
++
++unsigned int dynpart_size[] = {
++    CFG_UBOOT_SIZE, 0x4000, 0x200000, 0xa0000, 0x3d5c000-CFG_UBOOT_SIZE, 0 };
++char *dynpart_names[] = {
++    "u-boot", "u-boot_env", "kernel", "splash", "rootfs", NULL };
++
++
+Index: u-boot/include/configs/qt2410.h
+===================================================================
+--- u-boot.orig/include/configs/qt2410.h
++++ u-boot/include/configs/qt2410.h
+@@ -283,5 +283,7 @@
+ 
+ #define MTDIDS_DEFAULT		"nand0=qt2410-nand"
+ #define MTPARTS_DEFAULT		"qt2410-nand:192k(u-boot),8k(u-boot_env),2M(kernel),2M(splash),-(jffs2)"
++#define CFG_NAND_DYNPART_MTD_KERNEL_NAME "qt2410-nand"
++#define CONFIG_NAND_DYNPART
+ 
+ #endif	/* __CONFIG_H */

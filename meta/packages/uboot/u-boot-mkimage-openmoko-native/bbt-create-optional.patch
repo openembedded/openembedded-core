@@ -1,0 +1,52 @@
+This patch makes creation of the BBT optional for the s3c24x0 platform.
+It adds:
+
+- a new platform-independent NAND-wide flag NAND_DONT_CREATE_BBT
+- one user of this flag, namely s3c24x0
+
+Experimental.
+
+- Werner Almesberger <werner@openmoko.org>
+
+
+Index: u-boot/cpu/arm920t/s3c24x0/nand.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/nand.c	2007-02-16 23:53:29.000000000 +0100
++++ u-boot/cpu/arm920t/s3c24x0/nand.c	2007-02-16 23:53:54.000000000 +0100
+@@ -169,7 +169,7 @@
+ 
+ 	nand->eccmode = NAND_ECC_SOFT;
+ #ifdef CONFIG_S3C2410_NAND_BBT
+-	nand->options = NAND_USE_FLASH_BBT;
++	nand->options = NAND_USE_FLASH_BBT | NAND_DONT_CREATE_BBT;
+ #else
+ 	nand->options = 0;
+ #endif
+Index: u-boot/drivers/nand/nand_bbt.c
+===================================================================
+--- u-boot.orig/drivers/nand/nand_bbt.c	2007-02-16 23:53:36.000000000 +0100
++++ u-boot/drivers/nand/nand_bbt.c	2007-02-16 23:53:54.000000000 +0100
+@@ -678,7 +678,8 @@
+ 		}
+ create:
+ 		/* Create the bad block table by scanning the device ? */
+-		if (!(td->options & NAND_BBT_CREATE))
++		if (!(td->options & NAND_BBT_CREATE) ||
++		  (this->options & NAND_DONT_CREATE_BBT))
+ 			continue;
+ 
+ 		/* Create the table in memory by scanning the chip(s) */
+Index: u-boot/include/linux/mtd/nand.h
+===================================================================
+--- u-boot.orig/include/linux/mtd/nand.h	2007-02-16 23:53:08.000000000 +0100
++++ u-boot/include/linux/mtd/nand.h	2007-02-16 23:53:54.000000000 +0100
+@@ -187,7 +187,8 @@
+  * This can only work if we have the ecc bytes directly behind the
+  * data bytes. Applies for DOC and AG-AND Renesas HW Reed Solomon generators */
+ #define NAND_HWECC_SYNDROME	0x00020000
+-
++/* Do not create an BBT if none is found. Overrides NAND_BBT_CREATE. */
++#define NAND_DONT_CREATE_BBT	0x00040000
+ 
+ /* Options set by nand scan */
+ /* Nand scan has allocated oob_buf */

@@ -1,0 +1,198 @@
+This patch adds support for CFG_ENV_OFFSET_PATCHED and 
+CFG_ENV_OFFSET_OOB.
+
+Both try to solve the problem of fixing the environment location in NAND flash
+at compile time, which doesn't work well if the NAND flash has a bad block at
+exactly that location.
+
+CFG_ENV_OFFSET_PATCHED puts the environment in a global variable.  You can then
+use the linker script to put that variable to a fixed location in the u-boot
+image.  Then you can use bianry patching during the production flash process.
+
+The idea of CFG_ENV_OFFSET_OOB is to store the environment offset in the NAND
+OOB data of block 0.  We can do this in case the vendor makes a guarantee that
+block 0 never is a factory-default bad block. 
+
+Signed-off-by: Harald Welte <laforge@openmoko.org>
+
+Index: u-boot/common/env_nand.c
+===================================================================
+--- u-boot.orig/common/env_nand.c
++++ u-boot/common/env_nand.c
+@@ -271,6 +271,33 @@
+ 	ulong total;
+ 	int ret;
+ 
++#if defined(CFG_ENV_OFFSET_OOB)
++	struct mtd_info *mtd = &nand_info[0];
++	struct nand_chip *this = mtd->priv;
++	int buf_len;
++	uint8_t *buf;
++
++	buf_len = (1 << this->bbt_erase_shift);
++	buf_len += (buf_len >> this->page_shift) * mtd->oobsize;
++	buf = malloc(buf_len);
++	if (!buf)
++		return;
++
++	nand_read_raw(mtd, buf, 0, mtd->oobblock, mtd->oobsize);
++	if (buf[mtd->oobblock + 8 + 0] == 'E' &&
++	    buf[mtd->oobblock + 8 + 1] == 'N' &&
++	    buf[mtd->oobblock + 8 + 2] == 'V' &&
++	    buf[mtd->oobblock + 8 + 3] == '0') {
++		CFG_ENV_OFFSET = *((unsigned long *) &buf[mtd->oobblock + 8 + 4]);
++		/* fall through to the normal environment reading code below */
++		free(buf);
++		puts("Found Environment offset in OOB..\n");
++	} else {
++		free(buf);
++		return use_default();
++	}
++#endif
++
+ 	total = CFG_ENV_SIZE;
+ 	ret = nand_read(&nand_info[0], CFG_ENV_OFFSET, &total, (u_char*)env_ptr);
+   	if (ret || total != CFG_ENV_SIZE)
+Index: u-boot/common/environment.c
+===================================================================
+--- u-boot.orig/common/environment.c
++++ u-boot/common/environment.c
+@@ -29,6 +29,12 @@
+ #undef	__ASSEMBLY__
+ #include <environment.h>
+ 
++#if defined(CFG_ENV_OFFSET_PATCHED)
++unsigned long env_offset = CFG_ENV_OFFSET_PATCHED;
++#elif defined(CFG_ENV_OFFSET_OOB)
++unsigned long env_offset = CFG_ENV_OFFSET_OOB;
++#endif
++
+ /*
+  * Handle HOSTS that have prepended
+  * crap on symbol names, not TARGETS.
+Index: u-boot/include/environment.h
+===================================================================
+--- u-boot.orig/include/environment.h
++++ u-boot/include/environment.h
+@@ -70,6 +70,10 @@
+ #endif	/* CFG_ENV_IS_IN_FLASH */
+ 
+ #if defined(CFG_ENV_IS_IN_NAND)
++#if defined(CFG_ENV_OFFSET_PATCHED) || defined(CFG_ENV_OFFSET_OOB)
++extern unsigned long env_offset;
++#define CFG_ENV_OFFSET env_offset
++#else
+ # ifndef CFG_ENV_OFFSET
+ #  error "Need to define CFG_ENV_OFFSET when using CFG_ENV_IS_IN_NAND"
+ # endif
+@@ -82,6 +86,7 @@
+ # ifdef CFG_ENV_IS_EMBEDDED
+ #  define ENV_IS_EMBEDDED	1
+ # endif
++#endif /* CFG_ENV_NAND_PATCHED */
+ #endif /* CFG_ENV_IS_IN_NAND */
+ 
+ 
+Index: u-boot/common/Makefile
+===================================================================
+--- u-boot.orig/common/Makefile
++++ u-boot/common/Makefile
+@@ -31,7 +31,7 @@
+ 	  cmd_bdinfo.o cmd_bedbug.o cmd_bmp.o cmd_boot.o cmd_bootm.o \
+ 	  cmd_cache.o cmd_console.o \
+ 	  cmd_date.o cmd_dcr.o cmd_diag.o cmd_display.o cmd_doc.o cmd_dtt.o \
+-	  cmd_eeprom.o cmd_elf.o cmd_ext2.o \
++	  cmd_dynenv.o cmd_eeprom.o cmd_elf.o cmd_ext2.o \
+ 	  cmd_fat.o cmd_fdc.o cmd_fdt.o cmd_fdos.o cmd_flash.o cmd_fpga.o \
+ 	  cmd_i2c.o cmd_ide.o cmd_immap.o cmd_itest.o cmd_jffs2.o \
+ 	  cmd_load.o cmd_log.o \
+Index: u-boot/common/cmd_dynenv.c
+===================================================================
+--- /dev/null
++++ u-boot/common/cmd_dynenv.c
+@@ -0,0 +1,85 @@
++/*
++ * (C) Copyright 2006-2007 OpenMoko, Inc.
++ * Author: Harald Welte <laforge@openmoko.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++#include <common.h>
++#include <command.h>
++#include <malloc.h>
++#include <environment.h>
++#include <nand.h>
++#include <asm/errno.h>
++
++#if defined(CFG_ENV_OFFSET_OOB)
++
++int do_dynenv(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
++{
++	struct mtd_info *mtd = &nand_info[0];
++	int ret, size = 8;
++	uint8_t *buf;
++
++	char *cmd = argv[1];
++
++	buf = malloc(mtd->oobsize);
++	if (!buf)
++		return -ENOMEM;
++
++	if (!strcmp(cmd, "get")) {
++		ret = mtd->read_oob(mtd, 8, size, (size_t *) &size, (u_char *) buf);
++
++		if (buf[0] == 'E' && buf[1] == 'N' &&
++		    buf[2] == 'V' && buf[3] == '0')
++			printf("0x%08x\n", *((u_int32_t *) &buf[4]));
++		else
++			printf("No dynamic environment marker in OOB block 0\n");
++
++	} else if (!strcmp(cmd, "set")) {
++		unsigned long addr;
++		if (argc < 3)
++			goto usage;
++
++		buf[0] = 'E';
++		buf[1] = 'N';
++		buf[2] = 'V';
++		buf[3] = '0';
++		addr = simple_strtoul(argv[2], NULL, 16);
++		memcpy(buf+4, &addr, 4);
++
++		printf("%02x %02x %02x %02x - %02x %02x %02x %02x\n",
++			buf[0], buf[1], buf[2], buf[3],
++			buf[4], buf[5], buf[6], buf[7]);
++
++		ret = mtd->write_oob(mtd, 8, size, (size_t *) &size, (u_char *) buf);
++	} else
++		goto usage;
++
++	free(buf);
++	return ret;
++
++usage:
++	free(buf);
++	printf("Usage:\n%s\n", cmdtp->usage);
++	return 1;
++}
++
++U_BOOT_CMD(dynenv, 3, 1, do_dynenv,
++	"dynenv  - dynamically placed (NAND) environment\n",
++	"dynenv set off	- set enviromnent offset\n"
++	"dynenv get	- get environment offset\n");
++
++#endif /* CFG_ENV_OFFSET_OOB */

@@ -1,0 +1,56 @@
+This patch adds a IRQ demultiplexer callback to the arm920 cpu core code,
+plus a stub implementation of it for the S3C2410.
+
+Index: u-boot.git/cpu/arm920t/interrupts.c
+===================================================================
+--- u-boot.git.orig/cpu/arm920t/interrupts.c	2007-02-05 22:49:11.000000000 +0100
++++ u-boot.git/cpu/arm920t/interrupts.c	2007-02-05 23:19:01.000000000 +0100
+@@ -161,11 +161,16 @@
+ 
+ void do_irq (struct pt_regs *pt_regs)
+ {
+-#if defined (CONFIG_USE_IRQ) && defined (CONFIG_ARCH_INTEGRATOR)
++#if defined (CONFIG_USE_IRQ)
++#if defined (ARM920_IRQ_CALLBACK)
++	ARM920_IRQ_CALLBACK();
++	return;
++#elif defined (CONFIG_ARCH_INTEGRATOR)
+ 	/* ASSUMED to be a timer interrupt  */
+ 	/* Just clear it - count handled in */
+ 	/* integratorap.c                   */
+ 	*(volatile ulong *)(CFG_TIMERBASE + 0x0C) = 0;
++#endif /* ARCH_INTEGRATOR */
+ #else
+ 	printf ("interrupt request\n");
+ 	show_regs (pt_regs);
+Index: u-boot.git/cpu/arm920t/s3c24x0/interrupts.c
+===================================================================
+--- u-boot.git.orig/cpu/arm920t/s3c24x0/interrupts.c	2007-02-05 22:49:11.000000000 +0100
++++ u-boot.git/cpu/arm920t/s3c24x0/interrupts.c	2007-02-05 23:21:35.000000000 +0100
+@@ -216,4 +216,13 @@
+ 	/*NOTREACHED*/
+ }
+ 
++#ifdef CONFIG_USE_IRQ
++void s3c2410_irq(void)
++{
++	S3C24X0_INTERRUPT * irq = S3C24X0_GetBase_INTERRUPT();
++	u_int32_t intpnd = irq->INTPND;
++
++}
++#endif /* USE_IRQ */
++
+ #endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) */
+Index: u-boot.git/include/common.h
+===================================================================
+--- u-boot.git.orig/include/common.h	2007-02-05 22:49:11.000000000 +0100
++++ u-boot.git/include/common.h	2007-02-05 23:19:01.000000000 +0100
+@@ -452,6 +452,8 @@
+ ulong	get_PCI_freq (void);
+ #endif
+ #if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_LH7A40X)
++void	s3c2410_irq(void);
++#define ARM920_IRQ_CALLBACK s3c2410_irq
+ ulong	get_FCLK (void);
+ ulong	get_HCLK (void);
+ ulong	get_PCLK (void);

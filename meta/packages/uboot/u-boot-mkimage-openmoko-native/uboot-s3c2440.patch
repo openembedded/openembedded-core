@@ -1,0 +1,1301 @@
+Add proper support for S3C2440 CPU's
+
+Index: u-boot/include/s3c24x0.h
+===================================================================
+--- u-boot.orig/include/s3c24x0.h
++++ u-boot/include/s3c24x0.h
+@@ -82,7 +82,7 @@
+ 	S3C24X0_REG32	PRIORITY;
+ 	S3C24X0_REG32	INTPND;
+ 	S3C24X0_REG32	INTOFFSET;
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	S3C24X0_REG32	SUBSRCPND;
+ 	S3C24X0_REG32	INTSUBMSK;
+ #endif
+@@ -92,11 +92,11 @@
+ /* DMAS (see manual chapter 8) */
+ typedef struct {
+ 	S3C24X0_REG32	DISRC;
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	S3C24X0_REG32	DISRCC;
+ #endif
+ 	S3C24X0_REG32	DIDST;
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	S3C24X0_REG32	DIDSTC;
+ #endif
+ 	S3C24X0_REG32	DCON;
+@@ -107,7 +107,7 @@
+ #ifdef CONFIG_S3C2400
+ 	S3C24X0_REG32	res[1];
+ #endif
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	S3C24X0_REG32	res[7];
+ #endif
+ } /*__attribute__((__packed__))*/ S3C24X0_DMA;
+@@ -126,6 +126,9 @@
+ 	S3C24X0_REG32	CLKCON;
+ 	S3C24X0_REG32	CLKSLOW;
+ 	S3C24X0_REG32	CLKDIVN;
++#ifdef CONFIG_S3C2440
++	S3C24X0_REG32	CAMDIVN;
++#endif
+ } /*__attribute__((__packed__))*/ S3C24X0_CLOCK_POWER;
+ 
+ 
+@@ -145,7 +148,7 @@
+ 	S3C24X0_REG32	res[8];
+ 	S3C24X0_REG32	DITHMODE;
+ 	S3C24X0_REG32	TPAL;
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	S3C24X0_REG32	LCDINTPND;
+ 	S3C24X0_REG32	LCDSRCPND;
+ 	S3C24X0_REG32	LCDINTMSK;
+@@ -157,6 +160,9 @@
+ /* NAND FLASH (see S3C2410 manual chapter 6) */
+ typedef struct {
+ 	S3C24X0_REG32	NFCONF;
++#ifdef CONFIG_S3C2440
++	S3C24X0_REG32	NFCONT;
++#endif
+ 	S3C24X0_REG32	NFCMD;
+ 	S3C24X0_REG32	NFADDR;
+ 	S3C24X0_REG32	NFDATA;
+@@ -164,6 +170,15 @@
+ 	S3C24X0_REG32	NFECC;
+ } /*__attribute__((__packed__))*/ S3C2410_NAND;
+ 
++/* NAND FLASH (see S3C2440 manual chapter 6) */
++typedef struct {
++	S3C24X0_REG32	NFCONF;
++	S3C24X0_REG32	NFCMD;
++	S3C24X0_REG32	NFADDR;
++	S3C24X0_REG32	NFDATA;
++	S3C24X0_REG32	NFSTAT;
++	S3C24X0_REG32	NFECC;
++} /*__attribute__((__packed__))*/ S3C2440_NAND;
+ 
+ /* UART (see manual chapter 11) */
+ typedef struct {
+@@ -451,6 +466,65 @@
+ 	S3C24X0_REG32	GSTATUS3;
+ 	S3C24X0_REG32	GSTATUS4;
+ #endif
++#ifdef CONFIG_S3C2440
++	S3C24X0_REG32	GPACON;
++	S3C24X0_REG32	GPADAT;
++	S3C24X0_REG32	res1[2];
++	S3C24X0_REG32	GPBCON;
++	S3C24X0_REG32	GPBDAT;
++	S3C24X0_REG32	GPBUP;
++	S3C24X0_REG32	res2;
++	S3C24X0_REG32	GPCCON;
++	S3C24X0_REG32	GPCDAT;
++	S3C24X0_REG32	GPCUP;
++	S3C24X0_REG32	res3;
++	S3C24X0_REG32	GPDCON;
++	S3C24X0_REG32	GPDDAT;
++	S3C24X0_REG32	GPDUP;
++	S3C24X0_REG32	res4;
++	S3C24X0_REG32	GPECON;
++	S3C24X0_REG32	GPEDAT;
++	S3C24X0_REG32	GPEUP;
++	S3C24X0_REG32	res5;
++	S3C24X0_REG32	GPFCON;
++	S3C24X0_REG32	GPFDAT;
++	S3C24X0_REG32	GPFUP;
++	S3C24X0_REG32	res6;
++	S3C24X0_REG32	GPGCON;
++	S3C24X0_REG32	GPGDAT;
++	S3C24X0_REG32	GPGUP;
++	S3C24X0_REG32	res7;
++	S3C24X0_REG32	GPHCON;
++	S3C24X0_REG32	GPHDAT;
++	S3C24X0_REG32	GPHUP;
++	S3C24X0_REG32	res8;
++
++	S3C24X0_REG32	MISCCR;
++	S3C24X0_REG32	DCLKCON;
++	S3C24X0_REG32	EXTINT0;
++	S3C24X0_REG32	EXTINT1;
++	S3C24X0_REG32	EXTINT2;
++	S3C24X0_REG32	EINTFLT0;
++	S3C24X0_REG32	EINTFLT1;
++	S3C24X0_REG32	EINTFLT2;
++	S3C24X0_REG32	EINTFLT3;
++	S3C24X0_REG32	EINTMASK;
++	S3C24X0_REG32	EINTPEND;
++	S3C24X0_REG32	GSTATUS0;
++	S3C24X0_REG32	GSTATUS1;
++	S3C24X0_REG32	GSTATUS2;
++	S3C24X0_REG32	GSTATUS3;
++	S3C24X0_REG32	GSTATUS4;
++
++	S3C24X0_REG32	res9;
++	S3C24X0_REG32	DSC0;
++	S3C24X0_REG32	DSC1;
++	S3C24X0_REG32	MSLCON;
++	S3C24X0_REG32	GPJCON;
++	S3C24X0_REG32	GPJDAT;
++	S3C24X0_REG32	GPJUP;
++	S3C24X0_REG32	res10;
++#endif
+ } /*__attribute__((__packed__))*/ S3C24X0_GPIO;
+ 
+ 
+@@ -637,8 +711,13 @@
+ 	S3C24X0_REG32	SDIDCNT;
+ 	S3C24X0_REG32	SDIDSTA;
+ 	S3C24X0_REG32	SDIFSTA;
++#if defined(CONFIG_S3C2410)
+ 	S3C24X0_REG32	SDIDAT;
+ 	S3C24X0_REG32	SDIIMSK;
++#elif defined(CONFIG_S3C2440)
++	S3C24X0_REG32	SDIIMSK;
++	S3C24X0_REG32	SDIDAT;
++#endif
+ } /*__attribute__((__packed__))*/ S3C2410_SDI;
+ 
+ 
+Index: u-boot/rtc/s3c24x0_rtc.c
+===================================================================
+--- u-boot.orig/rtc/s3c24x0_rtc.c
++++ u-boot/rtc/s3c24x0_rtc.c
+@@ -34,6 +34,8 @@
+ #include <s3c2400.h>
+ #elif defined(CONFIG_S3C2410)
+ #include <s3c2410.h>
++#elif defined(CONFIG_S3C2440)
++#include <s3c2440.h>
+ #endif
+ 
+ #include <rtc.h>
+Index: u-boot/include/s3c2440.h
+===================================================================
+--- /dev/null
++++ u-boot/include/s3c2440.h
+@@ -0,0 +1,300 @@
++/*
++ * (C) Copyright 2003
++ * David Müller ELSOFT AG Switzerland. d.mueller@elsoft.ch
++ *
++ * See file CREDITS for list of people who contributed to this
++ * project.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++/************************************************
++ * NAME	    : s3c2440.h
++ * Version  : 2007.
++ *
++ * Based on S3C2410X User's manual Rev 1.1
++ ************************************************/
++
++#ifndef __S3C2440_H__
++#define __S3C2440_H__
++
++#define S3C24X0_UART_CHANNELS	3
++#define S3C24X0_SPI_CHANNELS	2
++
++/* S3C2440 only supports 512 Byte HW ECC */
++#define S3C2440_ECCSIZE		512
++#define S3C2440_ECCBYTES	3
++
++/* S3C2440 device base addresses */
++#define S3C24X0_MEMCTL_BASE		0x48000000
++#define S3C24X0_USB_HOST_BASE		0x49000000
++#define S3C24X0_INTERRUPT_BASE		0x4A000000
++#define S3C24X0_DMA_BASE		0x4B000000
++#define S3C24X0_CLOCK_POWER_BASE	0x4C000000
++#define S3C24X0_LCD_BASE		0x4D000000
++#define S3C2440_NAND_BASE		0x4E000000
++#define S3C24X0_UART_BASE		0x50000000
++#define S3C24X0_TIMER_BASE		0x51000000
++#define S3C24X0_USB_DEVICE_BASE		0x52000140
++#define USB_DEVICE_PHYS_ADR		0x52000000
++#define S3C24X0_WATCHDOG_BASE		0x53000000
++#define S3C24X0_I2C_BASE		0x54000000
++#define S3C24X0_I2S_BASE		0x55000000
++#define S3C24X0_GPIO_BASE		0x56000000
++#define S3C24X0_RTC_BASE		0x57000000
++#define S3C2440_ADC_BASE		0x58000000
++#define S3C24X0_SPI_BASE		0x59000000
++#define S3C2440_SDI_BASE		0x5A000000
++
++#define oNFCONF			0x00
++#define oNFCONT			0x04
++
++#ifndef __ASSEMBLER__
++
++/* include common stuff */
++#include <s3c24x0.h>
++
++typedef enum {
++	S3C24X0_UART0,
++	S3C24X0_UART1,
++	S3C24X0_UART2
++} S3C24X0_UARTS_NR;
++
++static inline S3C24X0_MEMCTL * S3C24X0_GetBase_MEMCTL(void)
++{
++	return (S3C24X0_MEMCTL * const)S3C24X0_MEMCTL_BASE;
++}
++static inline S3C24X0_USB_HOST * S3C24X0_GetBase_USB_HOST(void)
++{
++	return (S3C24X0_USB_HOST * const)S3C24X0_USB_HOST_BASE;
++}
++static inline S3C24X0_INTERRUPT * S3C24X0_GetBase_INTERRUPT(void)
++{
++	return (S3C24X0_INTERRUPT * const)S3C24X0_INTERRUPT_BASE;
++}
++static inline S3C24X0_DMAS * S3C24X0_GetBase_DMAS(void)
++{
++	return (S3C24X0_DMAS * const)S3C24X0_DMA_BASE;
++}
++static inline S3C24X0_CLOCK_POWER * S3C24X0_GetBase_CLOCK_POWER(void)
++{
++	return (S3C24X0_CLOCK_POWER * const)S3C24X0_CLOCK_POWER_BASE;
++}
++static inline S3C24X0_LCD * S3C24X0_GetBase_LCD(void)
++{
++	return (S3C24X0_LCD * const)S3C24X0_LCD_BASE;
++}
++static inline S3C2440_NAND * S3C2440_GetBase_NAND(void)
++{
++	return (S3C2440_NAND * const)S3C2440_NAND_BASE;
++}
++static inline S3C24X0_UART * S3C24X0_GetBase_UART(S3C24X0_UARTS_NR nr)
++{
++	return (S3C24X0_UART * const)(S3C24X0_UART_BASE + (nr * 0x4000));
++}
++static inline S3C24X0_TIMERS * S3C24X0_GetBase_TIMERS(void)
++{
++	return (S3C24X0_TIMERS * const)S3C24X0_TIMER_BASE;
++}
++static inline S3C24X0_USB_DEVICE * S3C24X0_GetBase_USB_DEVICE(void)
++{
++	return (S3C24X0_USB_DEVICE * const)S3C24X0_USB_DEVICE_BASE;
++}
++static inline S3C24X0_WATCHDOG * S3C24X0_GetBase_WATCHDOG(void)
++{
++	return (S3C24X0_WATCHDOG * const)S3C24X0_WATCHDOG_BASE;
++}
++static inline S3C24X0_I2C * S3C24X0_GetBase_I2C(void)
++{
++	return (S3C24X0_I2C * const)S3C24X0_I2C_BASE;
++}
++static inline S3C24X0_I2S * S3C24X0_GetBase_I2S(void)
++{
++	return (S3C24X0_I2S * const)S3C24X0_I2S_BASE;
++}
++static inline S3C24X0_GPIO * S3C24X0_GetBase_GPIO(void)
++{
++	return (S3C24X0_GPIO * const)S3C24X0_GPIO_BASE;
++}
++static inline S3C24X0_RTC * S3C24X0_GetBase_RTC(void)
++{
++	return (S3C24X0_RTC * const)S3C24X0_RTC_BASE;
++}
++/*
++static inline S3C2440_ADC * S3C2440_GetBase_ADC(void)
++{
++	return (S3C2440_ADC * const)S3C2440_ADC_BASE;
++}
++static inline S3C24X0_SPI * S3C24X0_GetBase_SPI(void)
++{
++	return (S3C24X0_SPI * const)S3C24X0_SPI_BASE;
++}
++*/
++static inline S3C2410_SDI * S3C2410_GetBase_SDI(void)
++{
++	return (S3C2410_SDI * const)S3C2440_SDI_BASE;
++}
++
++#endif /* __ASSEMBLER__ */
++
++/* ISR */
++#define pISR_RESET		(*(unsigned *)(_ISR_STARTADDRESS+0x0))
++#define pISR_UNDEF		(*(unsigned *)(_ISR_STARTADDRESS+0x4))
++#define pISR_SWI		(*(unsigned *)(_ISR_STARTADDRESS+0x8))
++#define pISR_PABORT		(*(unsigned *)(_ISR_STARTADDRESS+0xC))
++#define pISR_DABORT		(*(unsigned *)(_ISR_STARTADDRESS+0x10))
++#define pISR_RESERVED		(*(unsigned *)(_ISR_STARTADDRESS+0x14))
++#define pISR_IRQ		(*(unsigned *)(_ISR_STARTADDRESS+0x18))
++#define pISR_FIQ		(*(unsigned *)(_ISR_STARTADDRESS+0x1C))
++
++#define pISR_EINT0		(*(unsigned *)(_ISR_STARTADDRESS+0x20))
++#define pISR_EINT1		(*(unsigned *)(_ISR_STARTADDRESS+0x24))
++#define pISR_EINT2		(*(unsigned *)(_ISR_STARTADDRESS+0x28))
++#define pISR_EINT3		(*(unsigned *)(_ISR_STARTADDRESS+0x2C))
++#define pISR_EINT4_7		(*(unsigned *)(_ISR_STARTADDRESS+0x30))
++#define pISR_EINT8_23		(*(unsigned *)(_ISR_STARTADDRESS+0x34))
++#define pISR_BAT_FLT		(*(unsigned *)(_ISR_STARTADDRESS+0x3C))
++#define pISR_TICK		(*(unsigned *)(_ISR_STARTADDRESS+0x40))
++#define pISR_WDT		(*(unsigned *)(_ISR_STARTADDRESS+0x44))
++#define pISR_TIMER0		(*(unsigned *)(_ISR_STARTADDRESS+0x48))
++#define pISR_TIMER1		(*(unsigned *)(_ISR_STARTADDRESS+0x4C))
++#define pISR_TIMER2		(*(unsigned *)(_ISR_STARTADDRESS+0x50))
++#define pISR_TIMER3		(*(unsigned *)(_ISR_STARTADDRESS+0x54))
++#define pISR_TIMER4		(*(unsigned *)(_ISR_STARTADDRESS+0x58))
++#define pISR_UART2		(*(unsigned *)(_ISR_STARTADDRESS+0x5C))
++#define pISR_NOTUSED		(*(unsigned *)(_ISR_STARTADDRESS+0x60))
++#define pISR_DMA0		(*(unsigned *)(_ISR_STARTADDRESS+0x64))
++#define pISR_DMA1		(*(unsigned *)(_ISR_STARTADDRESS+0x68))
++#define pISR_DMA2		(*(unsigned *)(_ISR_STARTADDRESS+0x6C))
++#define pISR_DMA3		(*(unsigned *)(_ISR_STARTADDRESS+0x70))
++#define pISR_SDI		(*(unsigned *)(_ISR_STARTADDRESS+0x74))
++#define pISR_SPI0		(*(unsigned *)(_ISR_STARTADDRESS+0x78))
++#define pISR_UART1		(*(unsigned *)(_ISR_STARTADDRESS+0x7C))
++#define pISR_USBD		(*(unsigned *)(_ISR_STARTADDRESS+0x84))
++#define pISR_USBH		(*(unsigned *)(_ISR_STARTADDRESS+0x88))
++#define pISR_IIC		(*(unsigned *)(_ISR_STARTADDRESS+0x8C))
++#define pISR_UART0		(*(unsigned *)(_ISR_STARTADDRESS+0x90))
++#define pISR_SPI1		(*(unsigned *)(_ISR_STARTADDRESS+0x94))
++#define pISR_RTC		(*(unsigned *)(_ISR_STARTADDRESS+0x98))
++#define pISR_ADC		(*(unsigned *)(_ISR_STARTADDRESS+0xA0))
++
++
++/* PENDING BIT */
++#define BIT_EINT0		(0x1)
++#define BIT_EINT1		(0x1<<1)
++#define BIT_EINT2		(0x1<<2)
++#define BIT_EINT3		(0x1<<3)
++#define BIT_EINT4_7		(0x1<<4)
++#define BIT_EINT8_23		(0x1<<5)
++#define BIT_BAT_FLT		(0x1<<7)
++#define BIT_TICK		(0x1<<8)
++#define BIT_WDT			(0x1<<9)
++#define BIT_TIMER0		(0x1<<10)
++#define BIT_TIMER1		(0x1<<11)
++#define BIT_TIMER2		(0x1<<12)
++#define BIT_TIMER3		(0x1<<13)
++#define BIT_TIMER4		(0x1<<14)
++#define BIT_UART2		(0x1<<15)
++#define BIT_LCD			(0x1<<16)
++#define BIT_DMA0		(0x1<<17)
++#define BIT_DMA1		(0x1<<18)
++#define BIT_DMA2		(0x1<<19)
++#define BIT_DMA3		(0x1<<20)
++#define BIT_SDI			(0x1<<21)
++#define BIT_SPI0		(0x1<<22)
++#define BIT_UART1		(0x1<<23)
++#define BIT_USBD		(0x1<<25)
++#define BIT_USBH		(0x1<<26)
++#define BIT_IIC			(0x1<<27)
++#define BIT_UART0		(0x1<<28)
++#define BIT_SPI1		(0x1<<29)
++#define BIT_RTC			(0x1<<30)
++#define BIT_ADC			(0x1<<31)
++#define BIT_ALLMSK		(0xFFFFFFFF)
++
++#define ClearPending(bit) {\
++		 rSRCPND = bit;\
++		 rINTPND = bit;\
++		 rINTPND;\
++		 }
++/* Wait until rINTPND is changed for the case that the ISR is very short. */
++
++#define __REG(x)	(*(volatile unsigned long *)(x))
++#define __REGl(x)	(*(volatile unsigned long *)(x))
++#define __REGw(x)	(*(volatile unsigned short *)(x))
++#define __REGb(x)	(*(volatile unsigned char *)(x))
++#define __REG2(x,y)	(*(volatile unsigned long *)((x) + (y)))
++
++/*
++ *  * Nand flash controller
++ *   */
++
++#define NFDATA8			(*(volatile unsigned char *)0x4E000010)
++#define NFDATA16		(*(volatile unsigned short *)0x4E000010)
++#define NFDATA32		(*(volatile unsigned *)0x4E000010)
++
++#define NFCONF                  __REG(0x4E000000)
++#define NFCONT                  __REG(0x4E000004)
++#define NFCMD                  __REG(0x4E000008)
++#define NFADDR                  __REGb(0x4E00000C)
++#define NFMECCD0                __REG(0x4E000014)
++#define NFMECCD1                __REG(0x4E000018)
++#define NFSECCD                 __REG(0x4E00001C)
++#define NFSTAT                  __REG(0x4E000020)
++#define NFESTAT0                __REG(0x4E000024)
++#define NFESTAT1                __REG(0x4E000028)
++#define NFMECC0                 __REG(0x4E00002C)
++#define NFMECC1                 __REG(0x4E000030)
++#define NFSECC                  __REG(0x4E000034)
++#define NFSBLK                  __REG(0x4E000038)
++
++
++#define S3C2410_MISCCR_USBDEV	    (0<<3)
++#define S3C2410_MISCCR_USBHOST	    (1<<3)
++
++#define S3C2410_MISCCR_CLK0_MPLL    (0<<4)
++#define S3C2410_MISCCR_CLK0_UPLL    (1<<4)
++#define S3C2410_MISCCR_CLK0_FCLK    (2<<4)
++#define S3C2410_MISCCR_CLK0_HCLK    (3<<4)
++#define S3C2410_MISCCR_CLK0_PCLK    (4<<4)
++#define S3C2410_MISCCR_CLK0_DCLK0   (5<<4)
++#define S3C2410_MISCCR_CLK0_MASK    (7<<4)
++
++#define S3C2410_MISCCR_CLK1_MPLL    (0<<8)
++#define S3C2410_MISCCR_CLK1_UPLL    (1<<8)
++#define S3C2410_MISCCR_CLK1_FCLK    (2<<8)
++#define S3C2410_MISCCR_CLK1_HCLK    (3<<8)
++#define S3C2410_MISCCR_CLK1_PCLK    (4<<8)
++#define S3C2410_MISCCR_CLK1_DCLK1   (5<<8)
++#define S3C2410_MISCCR_CLK1_MASK    (7<<8)
++
++#define S3C2410_MISCCR_USBSUSPND0   (1<<12)
++#define S3C2410_MISCCR_USBSUSPND1   (1<<13)
++
++#define S3C2410_MISCCR_nRSTCON	    (1<<16)
++
++#define S3C2410_MISCCR_nEN_SCLK0    (1<<17)
++#define S3C2410_MISCCR_nEN_SCLK1    (1<<18)
++#define S3C2410_MISCCR_nEN_SCLKE    (1<<19)
++#define S3C2410_MISCCR_SDSLEEP	    (7<<17)
++
++#define S3C2410_CLKSLOW_UCLK_OFF	(1<<7)
++#define S3C2410_CLKSLOW_MPLL_OFF	(1<<5)
++#define S3C2410_CLKSLOW_SLOW		(1<<4)
++#define S3C2410_CLKSLOW_SLOWVAL(x)	(x)
++#define S3C2410_CLKSLOW_GET_SLOWVAL(x)	((x) & 7)
++
++#endif /*__S3C2440_H__*/
+Index: u-boot/include/common.h
+===================================================================
+--- u-boot.orig/include/common.h
++++ u-boot/include/common.h
+@@ -454,7 +454,7 @@
+ ulong	get_OPB_freq (void);
+ ulong	get_PCI_freq (void);
+ #endif
+-#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_LH7A40X)
++#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440) || defined(CONFIG_LH7A40X)
+ void	s3c2410_irq(void);
+ #define ARM920_IRQ_CALLBACK s3c2410_irq
+ ulong	get_FCLK (void);
+Index: u-boot/cpu/arm920t/s3c24x0/usb_ohci.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/usb_ohci.c
++++ u-boot/cpu/arm920t/s3c24x0/usb_ohci.c
+@@ -44,6 +44,8 @@
+ #include <s3c2400.h>
+ #elif defined(CONFIG_S3C2410)
+ #include <s3c2410.h>
++#elif defined(CONFIG_S3C2440)
++#include <s3c2440.h>
+ #endif
+ 
+ #include <malloc.h>
+Index: u-boot/cpu/arm920t/s3c24x0/speed.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/speed.c
++++ u-boot/cpu/arm920t/s3c24x0/speed.c
+@@ -30,12 +30,15 @@
+  */
+ 
+ #include <common.h>
+-#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB)
++#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || \
++    defined (CONFIG_S3C2440) || defined (CONFIG_TRAB)
+ 
+ #if defined(CONFIG_S3C2400)
+ #include <s3c2400.h>
+ #elif defined(CONFIG_S3C2410)
+ #include <s3c2410.h>
++#elif defined(CONFIG_S3C2440)
++#include <s3c2440.h>
+ #endif
+ 
+ #define MPLL 0
+@@ -66,8 +69,12 @@
+     m = ((r & 0xFF000) >> 12) + 8;
+     p = ((r & 0x003F0) >> 4) + 2;
+     s = r & 0x3;
+-
++#ifndef CONFIG_S3C2440
+     return((CONFIG_SYS_CLK_FREQ * m) / (p << s));
++#else
++    /* To avoid integer overflow, changed the calc order */
++    return( 2 * m * (CONFIG_SYS_CLK_FREQ / (p << s )) );
++#endif
+ }
+ 
+ /* return FCLK frequency */
+@@ -81,7 +88,21 @@
+ {
+     S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
+ 
++#ifndef CONFIG_S3C2440
+     return((clk_power->CLKDIVN & 0x2) ? get_FCLK()/2 : get_FCLK());
++#else
++    switch (clk_power->CLKDIVN & 0x6) {
++        case 0x0:
++	    return get_FCLK();
++	case 0x2:
++	    return get_FCLK()/2;
++	case 0x4:
++	    return (clk_power->CAMDIVN & 0x200) ? get_FCLK()/8 : get_FCLK()/4;
++	case 0x6:
++	    return (clk_power->CAMDIVN & 0x100) ? get_FCLK()/6 : get_FCLK()/3;
++    }
++    return 0;
++#endif
+ }
+ 
+ /* return PCLK frequency */
+@@ -98,4 +119,5 @@
+     return(get_PLLCLK(UPLL));
+ }
+ 
+-#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) */
++#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) ||
++          defined(CONFIG_S3C2440) || defined (CONFIG_TRAB) */
+Index: u-boot/cpu/arm920t/s3c24x0/interrupts.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/interrupts.c
++++ u-boot/cpu/arm920t/s3c24x0/interrupts.c
+@@ -30,13 +30,16 @@
+  */
+ 
+ #include <common.h>
+-#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB)
++#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || \
++    defined(CONFIG_S3C2440) || defined (CONFIG_TRAB)
+ 
+ #include <arm920t.h>
+ #if defined(CONFIG_S3C2400)
+ #include <s3c2400.h>
+ #elif defined(CONFIG_S3C2410)
+ #include <s3c2410.h>
++#elif defined(CONFIG_S3C2440)
++#include <s3c2440.h>
+ #endif
+ 
+ int timer_load_val = 0;
+@@ -59,6 +62,7 @@
+ 	/* use PWM Timer 4 because it has no output */
+ 	/* prescaler for Timer 4 is 16 */
+ 	timers->TCFG0 = 0x0f00;
++#ifndef CONFIG_S3C2440
+ 	if (timer_load_val == 0)
+ 	{
+ 		/*
+@@ -68,6 +72,9 @@
+ 		 */
+ 		timer_load_val = get_PCLK()/(2 * 16 * 100);
+ 	}
++#else
++	timer_load_val = get_PCLK()/(2 * 16 * 100);
++#endif
+ 	/* load value for 10 ms timeout */
+ 	lastdec = timers->TCNTB4 = timer_load_val;
+ 	/* auto load, manual update of Timer 4 */
+@@ -178,6 +185,7 @@
+ 	tbclk = timer_load_val * 100;
+ #elif defined(CONFIG_SBC2410X) || \
+       defined(CONFIG_SMDK2410) || \
++      defined(CONFIG_SMDK2440) || \
+       defined(CONFIG_VCMA9)
+ 	tbclk = CFG_HZ;
+ #else
+@@ -232,4 +240,5 @@
+ }
+ #endif /* USE_IRQ */
+ 
+-#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) */
++#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) ||
++	  defined(CONFIG_S3C2440) || defined (CONFIG_TRAB) */
+Index: u-boot/cpu/arm920t/s3c24x0/serial.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/serial.c
++++ u-boot/cpu/arm920t/s3c24x0/serial.c
+@@ -19,12 +19,15 @@
+  */
+ 
+ #include <common.h>
+-#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB)
++#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || \
++    defined(CONFIG_S3C2440) || defined (CONFIG_TRAB)
+ 
+ #if defined(CONFIG_S3C2400) || defined(CONFIG_TRAB)
+ #include <s3c2400.h>
+ #elif defined(CONFIG_S3C2410)
+ #include <s3c2410.h>
++#elif defined(CONFIG_S3C2440)
++#include <s3c2440.h>
+ #endif
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+@@ -180,4 +183,5 @@
+ 	}
+ }
+ 
+-#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) */
++#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) ||
++	  defined(CONFIG_S3C2440) || defined (CONFIG_TRAB) */
+Index: u-boot/cpu/arm920t/s3c24x0/i2c.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/i2c.c
++++ u-boot/cpu/arm920t/s3c24x0/i2c.c
+@@ -34,6 +34,8 @@
+ #include <s3c2400.h>
+ #elif defined(CONFIG_S3C2410)
+ #include <s3c2410.h>
++#elif defined(CONFIG_S3C2440)
++#include <s3c2440.h>
+ #endif
+ #include <i2c.h>
+ 
+@@ -63,7 +65,7 @@
+ {
+ 	S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
+ 
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	return (gpio->GPEDAT & 0x8000) >> 15;
+ #endif
+ #ifdef CONFIG_S3C2400
+@@ -82,7 +84,7 @@
+ {
+ 	S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
+ 
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	gpio->GPEDAT = (gpio->GPEDAT & ~0x4000) | (x&1) << 14;
+ #endif
+ #ifdef CONFIG_S3C2400
+@@ -139,7 +141,7 @@
+ 	}
+ 
+ 	if ((status & I2CSTAT_BSY) || GetI2CSDA () == 0) {
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 		ulong old_gpecon = gpio->GPECON;
+ #endif
+ #ifdef CONFIG_S3C2400
+@@ -147,7 +149,7 @@
+ #endif
+ 		/* bus still busy probably by (most) previously interrupted transfer */
+ 
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 		/* set I2CSDA and I2CSCL (GPE15, GPE14) to GPIO */
+ 		gpio->GPECON = (gpio->GPECON & ~0xF0000000) | 0x10000000;
+ #endif
+@@ -171,7 +173,7 @@
+ 		udelay (1000);
+ 
+ 		/* restore pin functions */
+-#ifdef CONFIG_S3C2410
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 		gpio->GPECON = old_gpecon;
+ #endif
+ #ifdef CONFIG_S3C2400
+Index: u-boot/drivers/usbdcore_s3c2410.c
+===================================================================
+--- u-boot.orig/drivers/usbdcore_s3c2410.c
++++ u-boot/drivers/usbdcore_s3c2410.c
+@@ -24,7 +24,7 @@
+ 
+ #include <config.h>
+ 
+-#if defined(CONFIG_S3C2410) && defined(CONFIG_USB_DEVICE)
++#if (defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)) && defined(CONFIG_USB_DEVICE)
+ 
+ #include <common.h>
+ 
+Index: u-boot/drivers/usbtty.h
+===================================================================
+--- u-boot.orig/drivers/usbtty.h
++++ u-boot/drivers/usbtty.h
+@@ -29,7 +29,7 @@
+ #include "usbdcore_mpc8xx.h"
+ #elif defined(CONFIG_OMAP1510)
+ #include "usbdcore_omap1510.h"
+-#elif defined(CONFIG_S3C2410)
++#elif defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ #include "usbdcore_s3c2410.h"
+ #endif
+ 
+Index: u-boot/cpu/arm920t/start.S
+===================================================================
+--- u-boot.orig/cpu/arm920t/start.S
++++ u-boot/cpu/arm920t/start.S
+@@ -31,7 +31,11 @@
+ 
+ #include <config.h>
+ #include <version.h>
++#if defined(CONFIG_S3C2410)
+ #include <s3c2410.h>
++#elif defined(CONFIG_S3C2440)
++#include <s3c2440.h>
++#endif
+ 
+ 
+ /*
+@@ -142,14 +146,32 @@
+ # define pWTCON		0x15300000
+ # define INTMSK		0x14400008	/* Interupt-Controller base addresses */
+ # define CLKDIVN	0x14800014	/* clock divisor register */
+-#elif defined(CONFIG_S3C2410)
++#elif defined(CONFIG_S3C2410) || defined (CONFIG_S3C2440)
+ # define pWTCON		0x53000000
+ # define INTMSK		0x4A000008	/* Interupt-Controller base addresses */
+ # define INTSUBMSK	0x4A00001C
+ # define CLKDIVN	0x4C000014	/* clock divisor register */
+ #endif
+ 
+-#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410)
++#if defined(CONFIG_S3C2410)
++# define INTSUBMSK_val	0x7ff
++# define MPLLCON_val	((0x90 << 12) + (0x7 << 4) + 0x0)	/* 202 MHz */
++# define UPLLCON_val	((0x78 << 12) + (0x2 << 4) + 0x3)
++# define CLKDIVN_val	3 /* FCLK:HCLK:PCLK = 1:2:4 */
++#elif defined(CONFIG_S3C2440)
++# define INTSUBMSK_val	0xffff
++#if (CONFIG_SYS_CLK_FREQ == 16934400)
++# define MPLLCON_val	((0x61 << 12) + (0x1 << 4) + 0x2)	/* 296.35 MHz */
++# define UPLLCON_val	((0x3c << 12) + (0x4 << 4) + 0x2)	/*  47.98 MHz */
++#else if (CONFIG_SYS_CLK_FREQ == 12000000)
++# define MPLLCON_val	((0x44 << 12) + (0x1 << 4) + 0x1)	/* 304.00 MHz */
++# define UPLLCON_val	((0x38 << 12) + (0x2 << 4) + 0x2)	/*  48.00 MHz */
++#endif
++# define CLKDIVN_val	7 /* FCLK:HCLK:PCLK = 1:3:6 */
++# define CAMDIVN	0x4C000018
++#endif
++
++#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	ldr     r0, =pWTCON
+ 	mov     r1, #0x0
+ 	str     r1, [r0]
+@@ -160,24 +182,34 @@
+ 	mov	r1, #0xffffffff
+ 	ldr	r0, =INTMSK
+ 	str	r1, [r0]
+-# if defined(CONFIG_S3C2410)
+-	ldr	r1, =0x3ff
++# if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
++	ldr	r1, =INTSUBMSK_val
+ 	ldr	r0, =INTSUBMSK
+ 	str	r1, [r0]
+ # endif
+ 
+-	/* default FCLK is 202 MHz ! */
++#if defined(CONFIG_S3C2440)
++	/* Make sure we get FCLK:HCLK:PCLK = 1:3:6 */
++	ldr	r0, =CAMDIVN
++	mov	r1, #0
++	str	r1, [r0]
++#endif
++
++	/* Clock asynchronous mode */
++	mrc	p15, 0, r1, c1, c0, 0
++	orr	r1, r1, #0xc0000000
++	mcr	p15, 0, r1, c1, c0, 0
++
++
+ #define LOCKTIME	0x4c000000
+ #define UPLLCON		0x4c000008
+-//#define MPLLCFG		((0x90 << 12) + (0x2 << 4) + 0x2)
+-#define MPLLCFG		((0x90 << 12) + (0x7 << 4) + 0x0)
+-#define UPLLCFG		((0x78 << 12) + (0x2 << 4) + 0x3)
++
+ 	ldr	r0, =LOCKTIME
+ 	mov	r1, #0xffffff
+ 	str	r1, [r0]
+ 
+ 	ldr	r0, =UPLLCON
+-	ldr	r1, =UPLLCFG
++	ldr	r1, =UPLLCON_val
+ 	str	r1, [r0]
+ 
+ 	/* Page 7-19, seven nops between UPLL and MPLL */
+@@ -189,12 +221,12 @@
+ 	nop
+ 	nop
+ 
+-	ldr	r1, =MPLLCFG
++	ldr	r1, =MPLLCON_val
+ 	str	r1, [r0, #-4]		/* MPLLCON */
+ 
+ 	/* FCLK:HCLK:PCLK = 1:2:4 */
+ 	ldr	r0, =CLKDIVN
+-	mov	r1, #3
++	mov	r1, #CLKDIVN_val
+ 	str	r1, [r0]
+ 
+ #if 1
+@@ -222,7 +254,7 @@
+ 	str	r1, [r0, #0x28]
+ #endif
+ 
+-#endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 */
++#endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 || CONFIG_S3C2440 */
+ 
+ #ifndef CONFIG_SKIP_LOWLEVEL_INIT
+ #ifndef CONFIG_LL_INIT_NAND_ONLY
+@@ -279,7 +311,7 @@
+ #if !defined(CONFIG_SKIP_LOWLEVEL_INIT) && defined(CONFIG_LL_INIT_NAND_ONLY)
+ 	bl	cpu_init_crit
+ #endif
+-#if defined(CONFIG_S3C2410)
++#if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
+ 	/* ensure some refresh has happened */
+ 	ldr	r1, =0xfffff
+ 1:	subs	r1, r1, #1
+@@ -290,11 +322,12 @@
+ 	ldr	r0, [ r1 ]
+ 	tst	r0, #0x02		/* is this resume from power down */
+ 	ldrne	pc, [r1, #4]		/* gstatus3 */
+-#endif /* CONFIG_S3C2410 */
++#endif /* CONFIG_S3C2410 || CONFIG_S3C2440 */
+ #endif /* CONFIG_SKIP_LOWLEVEL_INIT */
+ 
+ 	/* mov	r10, lr */
+ 
++#if defined(CONFIG_S3C2410)
+ 	@ reset NAND
+ 	mov	r1, #S3C2410_NAND_BASE
+ 	ldr	r2, =0xf842		@ initial value enable tacls=3,rph0=6,rph1=0
+@@ -314,6 +347,17 @@
+ 	ldr	r2, [r1, #oNFCONF]
+ 	orr	r2, r2, #0x800		@ disable chip
+ 	str	r2, [r1, #oNFCONF]
++#elif defined(CONFIG_S3C2440)
++	mov	r1, #S3C2440_NAND_BASE
++	ldr	r2, =0xfff0		@ initial value tacls=3,rph0=7,rph1=7
++	ldr	r3, [r1, #oNFCONF]
++	orr	r3, r3, r2
++	str	r3, [r1, #oNFCONF]
++
++	ldr	r3, [r1, #oNFCONT]
++	orr	r3, r3, #1		@ enable nand controller
++	str	r3, [r1, #oNFCONT]
++#endif
+ 
+ #if 0
+ 	@ get ready to call C functions (for nand_read())
+@@ -382,7 +426,7 @@
+ #endif /* CONFIG_S3C2410_NAND_BOOT */
+ done_relocate:
+ 
+-#if defined(CONFIG_USE_IRQ) && defined(CONFIG_S3C2410)
++#if defined(CONFIG_USE_IRQ) && (defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440))
+ 	/* In the case of the S3C2410, if we've somehow magically (JTAG, ...)
+ 	   ended up in RAM, then that ram is mapped to 0x30000000 and not 0.
+ 	   So we need to copy the interrupt vectors, etc.  */
+Index: u-boot/cpu/arm920t/s3c24x0/nand_read.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/nand_read.c
++++ u-boot/cpu/arm920t/s3c24x0/nand_read.c
+@@ -16,30 +16,141 @@
+  */
+ 
+ #include <common.h>
++#include <linux/mtd/nand.h>
+ 
+ #ifdef CONFIG_S3C2410_NAND_BOOT
+ 
+ #define __REGb(x)	(*(volatile unsigned char *)(x))
++#define __REGw(x)	(*(volatile unsigned short *)(x))
+ #define __REGi(x)	(*(volatile unsigned int *)(x))
+ #define NF_BASE		0x4e000000
++#if defined(CONFIG_S3C2410)
+ #define NFCONF		__REGi(NF_BASE + 0x0)
+ #define NFCMD		__REGb(NF_BASE + 0x4)
+ #define NFADDR		__REGb(NF_BASE + 0x8)
+ #define NFDATA		__REGb(NF_BASE + 0xc)
+ #define NFSTAT		__REGb(NF_BASE + 0x10)
++#define NFSTAT_BUSY	1
++#define nand_select()	(NFCONF &= ~0x800)
++#define nand_deselect()	(NFCONF |= 0x800)
++#define nand_clear_RnB()	do {} while (0)
++#elif defined(CONFIG_S3C2440)
++#define NFCONF		__REGi(NF_BASE + 0x0)
++#define NFCONT		__REGi(NF_BASE + 0x4)
++#define NFCMD		__REGb(NF_BASE + 0x8)
++#define NFADDR		__REGb(NF_BASE + 0xc)
++#define NFDATA		__REGb(NF_BASE + 0x10)
++#define NFDATA16	__REGw(NF_BASE + 0x10)
++#define NFSTAT		__REGb(NF_BASE + 0x20)
++#define NFSTAT_BUSY	1
++#define nand_select()	(NFCONT &= ~(1 << 1))
++#define nand_deselect()	(NFCONT |= (1 << 1))
++#define nand_clear_RnB()	(NFSTAT |= (1 << 2))
++#endif
+ 
+-#define BUSY 1
+-inline void wait_idle(void)
++static inline void nand_wait(void)
+ {
+ 	int i;
+ 
+-	while (!(NFSTAT & BUSY))
++	while (!(NFSTAT & NFSTAT_BUSY))
+ 		for (i=0; i<10; i++);
+ }
+ 
+-#define NAND_SECTOR_SIZE	512
+-#define NAND_BLOCK_MASK		(NAND_SECTOR_SIZE - 1)
+-#define NAND_PAGE_SIZE		0x4000
++#if defined(CONFIG_S3C2410)
++/* configuration for 2410 with 512byte sized flash */
++#define NAND_PAGE_SIZE		512
++#define BAD_BLOCK_OFFSET	517
++#define NAND_BLOCK_MASK		(NAND_PAGE_SIZE - 1)
++#define NAND_BLOCK_SIZE		0x4000
++#else
++/* configuration for 2440 with 2048byte sized flash */
++#define NAND_5_ADDR_CYCLE
++#define NAND_PAGE_SIZE		2048
++#define BAD_BLOCK_OFFSET	NAND_PAGE_SIZE
++#define	NAND_BLOCK_MASK		(NAND_PAGE_SIZE - 1)
++#define NAND_BLOCK_SIZE		(NAND_PAGE_SIZE * 64)
++#endif
++
++/* compile time failure in case of an invalid configuration */
++#if defined(CONFIG_S3C2410) && (NAND_PAGE_SIZE != 512)
++#error "S3C2410 does not support nand page size != 512"
++#endif
++
++static int is_bad_block(unsigned long i)
++{
++	unsigned char data;
++	unsigned long page_num;
++
++	/* FIXME: do this twice, for first and second page in block */
++
++	nand_clear_RnB();
++#if (NAND_PAGE_SIZE == 512)
++	NFCMD = NAND_CMD_READOOB; /* 0x50 */
++	NFADDR = BAD_BLOCK_OFFSET & 0xf;
++	NFADDR = (i >> 9) & 0xff;
++	NFADDR = (i >> 17) & 0xff;
++	NFADDR = (i >> 25) & 0xff;
++#elif (NAND_PAGE_SIZE == 2048)
++	page_num = i >> 11; /* addr / 2048 */
++	NFCMD = NAND_CMD_READ0;
++	NFADDR = BAD_BLOCK_OFFSET & 0xff;
++	NFADDR = (BAD_BLOCK_OFFSET >> 8) & 0xff;
++	NFADDR = page_num & 0xff;
++	NFADDR = (page_num >> 8) & 0xff;
++	NFADDR = (page_num >> 16) & 0xff;
++	NFCMD = NAND_CMD_READSTART;
++#endif
++	nand_wait();
++	data = (NFDATA & 0xff);
++	if (data != 0xff)
++		return 1;
++
++	return 0;
++}
++
++static int nand_read_page_ll(unsigned char *buf, unsigned long addr)
++{
++	unsigned short *ptr16 = (unsigned short *)buf;
++	unsigned int i, page_num;
++
++	nand_clear_RnB();
++
++	NFCMD = NAND_CMD_READ0;
++
++#if (NAND_PAGE_SIZE == 512)
++	/* Write Address */
++	NFADDR = addr & 0xff;
++	NFADDR = (addr >> 9) & 0xff;
++	NFADDR = (addr >> 17) & 0xff;
++	NFADDR = (addr >> 25) & 0xff;
++#elif (NAND_PAGE_SIZE == 2048)
++	page_num = addr >> 11; /* addr / 2048 */
++	/* Write Address */
++	NFADDR = 0;
++	NFADDR = 0;
++	NFADDR = page_num & 0xff;
++	NFADDR = (page_num >> 8) & 0xff;
++	NFADDR = (page_num >> 16) & 0xff;
++	NFCMD = NAND_CMD_READSTART;
++#else
++#error "unsupported nand page size"
++#endif
++	nand_wait();
++
++#if defined(CONFIG_S3C2410)
++	for (i = 0; i < NAND_PAGE_SIZE; i++) {
++		*buf = (NFDATA & 0xff);
++		buf++;
++	}
++#elif defined(CONFIG_S3C2440)
++	for (i = 0; i < NAND_PAGE_SIZE/2; i++) {
++		*ptr16 = NFDATA16;
++		ptr16++;
++	}
++#endif
++
++	return NAND_PAGE_SIZE;
++}
+ 
+ /* low level nand read function */
+ int nand_read_ll(unsigned char *buf, unsigned long start_addr, int size)
+@@ -50,47 +161,28 @@
+ 		return -1;	/* invalid alignment */
+ 
+ 	/* chip Enable */
+-	NFCONF &= ~0x800;
++	nand_select();
++	nand_clear_RnB();
+ 	for (i=0; i<10; i++);
+ 
+ 	for (i=start_addr; i < (start_addr + size);) {
+ #ifdef CONFIG_S3C2410_NAND_SKIP_BAD
+-		if (start_addr % NAND_PAGE_SIZE == 0) {
+-			unsigned char data;
+-			NFCMD = 0x50;
+-			NFADDR = 517&0xf;
+-			NFADDR = (i >> 9) & 0xff;
+-			NFADDR = (i >> 17) & 0xff;
+-			NFADDR = (i >> 25) & 0xff;
+-			wait_idle();
+-			data = (NFDATA & 0xff);
+-			if (data != 0xff) {
++		if (start_addr % NAND_BLOCK_SIZE == 0) {
++			if (is_bad_block(i)) {
+ 				/* Bad block */
+-				i += NAND_PAGE_SIZE;
+-				size += NAND_PAGE_SIZE;
++				i += NAND_BLOCK_SIZE;
++				size += NAND_BLOCK_SIZE;
+ 				continue;
+ 			}
+ 		}
+ #endif
+-		/* READ0 */
+-		NFCMD = 0;
+-
+-		/* Write Address */
+-		NFADDR = i & 0xff;
+-		NFADDR = (i >> 9) & 0xff;
+-		NFADDR = (i >> 17) & 0xff;
+-		NFADDR = (i >> 25) & 0xff;
+-
+-		wait_idle();
+-
+-		for (j=0; j < NAND_SECTOR_SIZE; j++, i++) {
+-			*buf = (NFDATA & 0xff);
+-			buf++;
+-		}
++		j = nand_read_page_ll(buf, i);
++		i += j;
++		buf += j;
+ 	}
+ 
+ 	/* chip Disable */
+-	NFCONF |= 0x800;	/* chip disable */
++	nand_deselect();
+ 
+ 	return 0;
+ }
+Index: u-boot/cpu/arm920t/s3c24x0/nand.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/nand.c
++++ u-boot/cpu/arm920t/s3c24x0/nand.c
+@@ -36,24 +36,54 @@
+ #define __REGi(x)	(*(volatile unsigned int *)(x))
+ 
+ #define	NF_BASE		0x4e000000
++
+ #define	NFCONF		__REGi(NF_BASE + 0x0)
+-#define	NFCMD		__REGb(NF_BASE + 0x4)
+-#define	NFADDR		__REGb(NF_BASE + 0x8)
+-#define	NFDATA		__REGb(NF_BASE + 0xc)
+-#define	NFSTAT		__REGb(NF_BASE + 0x10)
++
++#if defined(CONFIG_S3C2410)
++
++#define oNFCMD		0x4
++#define	oNFADDR		0x8
++#define oNFDATA		0xc
++#define oNFSTAT		0x10
+ #define NFECC0		__REGb(NF_BASE + 0x14)
+ #define NFECC1		__REGb(NF_BASE + 0x15)
+ #define NFECC2		__REGb(NF_BASE + 0x16)
++#define NFCONF_nFCE	(1<<11)
+ 
+ #define S3C2410_NFCONF_EN          (1<<15)
+ #define S3C2410_NFCONF_512BYTE     (1<<14)
+ #define S3C2410_NFCONF_4STEP       (1<<13)
+ #define S3C2410_NFCONF_INITECC     (1<<12)
+-#define S3C2410_NFCONF_nFCE        (1<<11)
+ #define S3C2410_NFCONF_TACLS(x)    ((x)<<8)
+ #define S3C2410_NFCONF_TWRPH0(x)   ((x)<<4)
+ #define S3C2410_NFCONF_TWRPH1(x)   ((x)<<0)
+ 
++#elif defined(CONFIG_S3C2440)
++
++#define oNFCMD		0x8
++#define oNFADDR		0xc
++#define oNFDATA		0x10
++#define oNFSTAT		0x20
++
++#define	NFCONT		__REGi(NF_BASE + 0x04)
++#define	NFMECC0		__REGi(NF_BASE + 0x2C)
++#define NFCONF_nFCE	(1<<1)
++#define S3C2440_NFCONF_INITECC		(1<<4)
++#define S3C2440_NFCONF_MAINECCLOCK	(1<<5)
++#define nand_select()		(NFCONT &= ~(1 << 1))
++#define nand_deselect()		(NFCONT |= (1 << 1))
++#define nand_clear_RnB()	(NFSTAT |= (1 << 2))
++#define nand_detect_RB()	{ while(!(NFSTAT&(1<<2))); }
++#define nand_wait()		{ while(!(NFSTAT & 0x4)); } /* RnB_TransDectect */
++
++#endif
++
++#define	NFCMD		__REGb(NF_BASE + oNFCMD)
++#define	NFADDR		__REGb(NF_BASE + oNFADDR)
++#define	NFDATA		__REGb(NF_BASE + oNFDATA)
++#define	NFSTAT		__REGb(NF_BASE + oNFSTAT)
++
++
+ static void s3c2410_hwcontrol(struct mtd_info *mtd, int cmd)
+ {
+ 	struct nand_chip *chip = mtd->priv;
+@@ -62,23 +92,31 @@
+ 
+ 	switch (cmd) {
+ 	case NAND_CTL_SETNCE:
+-		NFCONF &= ~S3C2410_NFCONF_nFCE;
++#if defined(CONFIG_S3C2410)
++		NFCONF &= ~NFCONF_nFCE;
++#elif defined(CONFIG_S3C2440)
++		NFCONT &= ~NFCONF_nFCE;
++#endif
+ 		DEBUGN("NFCONF=0x%08x\n", NFCONF);
+ 		break;
+ 	case NAND_CTL_CLRNCE:
+-		NFCONF |= S3C2410_NFCONF_nFCE;
++#if defined(CONFIG_S3C2410)
++		NFCONF |= NFCONF_nFCE;
++#elif defined(CONFIG_S3C2440)
++		NFCONT &= ~NFCONF_nFCE;
++#endif
+ 		DEBUGN("NFCONF=0x%08x\n", NFCONF);
+ 		break;
+ 	case NAND_CTL_SETALE:
+-		chip->IO_ADDR_W = NF_BASE + 0x8;
++		chip->IO_ADDR_W = NF_BASE + oNFADDR;
+ 		DEBUGN("SETALE\n");
+ 		break;
+ 	case NAND_CTL_SETCLE:
+-		chip->IO_ADDR_W = NF_BASE + 0x4;
++		chip->IO_ADDR_W = NF_BASE + oNFCMD;
+ 		DEBUGN("SETCLE\n");
+ 		break;
+ 	default:
+-		chip->IO_ADDR_W = NF_BASE + 0xc;
++		chip->IO_ADDR_W = NF_BASE + oNFDATA;
+ 		break;
+ 	}
+ 	return;
+@@ -180,16 +218,21 @@
+ 	/* initialize hardware */
+ 	twrph0 = 3; twrph1 = 0; tacls = 0;
+ 
++#if defined(CONFIG_S3C2410)
+ 	cfg = S3C2410_NFCONF_EN;
+ 	cfg |= S3C2410_NFCONF_TACLS(tacls - 1);
+ 	cfg |= S3C2410_NFCONF_TWRPH0(twrph0 - 1);
+ 	cfg |= S3C2410_NFCONF_TWRPH1(twrph1 - 1);
+ 
+ 	NFCONF = cfg;
+-	//NFCONF = 0xf842;
++#elif defined(CONFIG_S3C2440)
++	twrph0 = 7; twrph1 = 7; tacls = 7;
++	NFCONF = (tacls<<12)|(twrph0<<8)|(twrph1<<4)|(0<<0);
++	NFCONT = (0<<13)|(0<<12)|(0<<10)|(0<<9)|(0<<8)|(1<<6)|(1<<5)|(1<<4)|(1<<1)|(1<<0);
++#endif
+ 
+ 	/* initialize nand_chip data structure */
+-	nand->IO_ADDR_R = nand->IO_ADDR_W = 0x4e00000c;
++	nand->IO_ADDR_R = nand->IO_ADDR_W = NF_BASE + oNFDATA;
+ 
+ 	/* read_buf and write_buf are default */
+ 	/* read_byte and write_byte are default */
+@@ -214,12 +257,23 @@
+ 	nand->options = 0;
+ #endif
+ 
++#if defined(CONFIG_S3C2440)
++/*
++	nand_select();
++	nand_clear_RnB();
++	NFCMD = NAND_CMD_RESET;
++	{ volatile int i; for (i = 0; i < 10; i ++); }
++	nand_detect_RB();
++	nand_deselect();
++*/
++#endif
++
+ 	DEBUGN("end of nand_init\n");
+ 
+ 	return 0;
+ }
+ 
+ #else
+- #error "U-Boot legacy NAND support not available for S3C2410"
++ #error "U-Boot legacy NAND support not available for S3C24xx"
+ #endif
+ #endif
+Index: u-boot/cpu/arm920t/s3c24x0/mmc.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/mmc.c
++++ u-boot/cpu/arm920t/s3c24x0/mmc.c
+@@ -137,6 +137,9 @@
+ 	dcon |= S3C2410_SDIDCON_RXAFTERCMD|S3C2410_SDIDCON_XFER_RXSTART;
+ 	if (wide)
+ 		dcon |= S3C2410_SDIDCON_WIDEBUS;
++#if defined(CONFIG_S3C2440)
++	dcon |= S3C2440_SDIDCON_DS_WORD | S3C2440_SDIDCON_DATSTART;
++#endif
+ 	sdi->SDIDCON = dcon;
+ 
+ 	/* send read command */
+@@ -394,13 +397,18 @@
+ 
+ 	clk_power->CLKCON |= (1 << 9);
+ 
++	sdi->SDIBSIZE = 512;
++#if defined(CONFIG_S3C2410)
+ 	/* S3C2410 has some bug that prevents reliable operation at higher speed */
+ 	//sdi->SDIPRE = 0x3e;  /* SDCLK = PCLK/2 / (SDIPRE+1) = 396kHz */
+-	sdi->SDIPRE = 0x02;  /* SDCLK = PCLK/2 / (SDIPRE+1) = 396kHz */
+-	sdi->SDIBSIZE = 512;
++	sdi->SDIPRE = 0x02;  /* 2410: SDCLK = PCLK/2 / (SDIPRE+1) = 11MHz */
+ 	sdi->SDIDTIMER = 0xffff;
++#elif defined(CONFIG_S3C2440)
++	sdi->SDIPRE = 0x05;  /* 2410: SDCLK = PCLK / (SDIPRE+1) = 11MHz */
++	sdi->SDIDTIMER = 0x7fffff;
++#endif
+ 	sdi->SDIIMSK = 0x0;
+-	sdi->SDICON = S3C2410_SDICON_FIFORESET|S3C2440_SDICON_MMCCLOCK;
++	sdi->SDICON = S3C2410_SDICON_FIFORESET|S3C2410_SDICON_CLOCKTYPE;
+ 	udelay(125000); /* FIXME: 74 SDCLK cycles */
+ 
+ 	mmc_csd.c_size = 0;

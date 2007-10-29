@@ -1,0 +1,256 @@
+Index: u-boot/cpu/arm920t/start.S
+===================================================================
+--- u-boot.orig/cpu/arm920t/start.S
++++ u-boot/cpu/arm920t/start.S
+@@ -35,6 +35,8 @@
+ #include <s3c2410.h>
+ #elif defined(CONFIG_S3C2440)
+ #include <s3c2440.h>
++#elif defined(CONFIG_S3C2443)
++#include <s3c2443.h>
+ #endif
+ 
+ 
+@@ -164,9 +166,15 @@
+ # define UPLLCON_val	((0x3c << 12) + (0x4 << 4) + 0x2)
+ # define CLKDIVN_val	7 /* FCLK:HCLK:PCLK = 1:3:6 */
+ # define CAMDIVN	0x4C000018
++#elif defined(CONFIG_S3C2443)
++# define INTSUBMSK_val	0x1fffffff
++# define EPLLCON_val	((40 << 16) | (1 << 8) | (1))		/* 96 MHz */
++# define MPLLCON_val	((81 << 16) | (2 << 8) | (0))		/* 1068 MHz */
++# define CLKDIV0_val	((8 << 9) | (1 << 4) | (1 << 3) | (1 << 2)
+ #endif
+ 
+-#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
++#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || \
++    defined(CONFIG_S3C2440) || defined(CONFIG_S3C2443)
+ 	ldr     r0, =pWTCON
+ 	mov     r1, #0x0
+ 	str     r1, [r0]
+@@ -177,7 +185,7 @@
+ 	mov	r1, #0xffffffff
+ 	ldr	r0, =INTMSK
+ 	str	r1, [r0]
+-# if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
++# if defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440) || defined(CONFIG_S3C2443)
+ 	ldr	r1, =INTSUBMSK_val
+ 	ldr	r0, =INTSUBMSK
+ 	str	r1, [r0]
+@@ -196,6 +204,43 @@
+ 	mcr	p15, 0, r1, c1, c0, 0
+ 
+ 
++#if defined(CONFIG_S3C2443)
++#define LOCKCON0	0x4c000000
++#define LOCKCON1	0x4c000004
++#define MPLLCON		0x4c000010
++#define EPLLCON		0x4c000018
++
++	ldr	r0, =CLKDIV0
++	ldr	r1, =CLKDIV0_val
++	str	r1, [r0]
++
++	/* set safe (way too long) locktime for both PLLs */
++	ldr	r0, =LOCKCON0
++	mov	r1, #0xffffff
++	str	r1, [r0]
++	ldr	r0, =LOCKCON1
++	str	r1, [r0]
++
++	/* configure MPLL */
++	ldr	r0, =MPLLCON
++	ldr	r1, =MPLLCON_val
++	str	r1, [r0]
++
++	/* select MPLL clock out for SYSCLK */
++	ldr	r0, =CLKSRC
++	ldr	r1, [r0]
++	orr	r1, r1, #0x10
++	str	r1, [r0]
++
++#if 0
++	/* configure EPLL */
++	ldr	r0, =EPLLCON
++	ldr	r1, =EPLLCON_val
++	str	r1, [r0]
++#endif
++
++
++#else /* i.e. 2440, 2410 and 2440 */
+ #define LOCKTIME	0x4c000000
+ #define UPLLCON		0x4c000008
+ 
+@@ -223,6 +268,7 @@
+ 	ldr	r0, =CLKDIVN
+ 	mov	r1, #CLKDIVN_val
+ 	str	r1, [r0]
++#endif
+ 
+ #if 1
+ 	/* enable uart */
+@@ -249,7 +295,7 @@
+ 	str	r1, [r0, #0x28]
+ #endif
+ 
+-#endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 || CONFIG_S3C2440 */
++#endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 || CONFIG_S3C2440 || CONFIG_S3C2443 */
+ 
+ #ifndef CONFIG_SKIP_LOWLEVEL_INIT
+ #ifndef CONFIG_LL_INIT_NAND_ONLY
+Index: u-boot/cpu/arm920t/s3c24x0/interrupts.c
+===================================================================
+--- u-boot.orig/cpu/arm920t/s3c24x0/interrupts.c
++++ u-boot/cpu/arm920t/s3c24x0/interrupts.c
+@@ -31,7 +31,8 @@
+ 
+ #include <common.h>
+ #if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || \
+-    defined(CONFIG_S3C2440) || defined (CONFIG_TRAB)
++    defined(CONFIG_S3C2440) || defined(CONFIG_S3C2443) || \
++    defined (CONFIG_TRAB)
+ 
+ #include <arm920t.h>
+ #if defined(CONFIG_S3C2400)
+@@ -40,6 +41,8 @@
+ #include <s3c2410.h>
+ #elif defined(CONFIG_S3C2440)
+ #include <s3c2440.h>
++#elif defined(CONFIG_S3C2443)
++#include <s3c2443.h>
+ #endif
+ 
+ int timer_load_val = 0;
+@@ -186,6 +189,7 @@
+ #elif defined(CONFIG_SBC2410X) || \
+       defined(CONFIG_SMDK2410) || \
+       defined(CONFIG_SMDK2440) || \
++      defined(CONFIG_SMDK2443) || \
+       defined(CONFIG_VCMA9)
+ 	tbclk = CFG_HZ;
+ #else
+Index: u-boot/drivers/usbdcore_s3c2410.c
+===================================================================
+--- u-boot.orig/drivers/usbdcore_s3c2410.c
++++ u-boot/drivers/usbdcore_s3c2410.c
+@@ -24,7 +24,8 @@
+ 
+ #include <config.h>
+ 
+-#if (defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)) && defined(CONFIG_USB_DEVICE)
++#if (defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440) || \
++     defined(CONFIG_S3C2443)) && defined(CONFIG_USB_DEVICE)
+ 
+ #include <common.h>
+ 
+Index: u-boot/include/s3c2443.h
+===================================================================
+--- /dev/null
++++ u-boot/include/s3c2443.h
+@@ -0,0 +1,106 @@
++/*
++ * (C) Copyright 2007 OpenMoko, Inc.
++ * Author: Harald Welte <laforge@openmoko.org>
++ *
++ * See file CREDITS for list of people who contributed to this
++ * project.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++#ifndef __S3C2443_H
++#define __S3C2443_H
++
++#include <s3c24x0.h>
++
++/* CLOCK & POWER MANAGEMENT (see S3C2443 manual chapter 2) */
++typedef struct {
++	S3C24X0_REG32	LOCKCON0;
++	S3C24X0_REG32	LOCKCON1;
++	S3C24X0_REG32	OSCSET;
++	S3C24X0_REG32	res1;
++	S3C24X0_REG32	MPLLCON;
++	S3C24X0_REG32	res2;
++	S3C24X0_REG32	EPLLCON;
++	S3C24X0_REG32	res3;
++	S3C24X0_REG32	CLKSRC;
++	S3C24X0_REG32	CLKDIV0;
++	S3C24X0_REG32	CLKDIV1;
++	S3C24X0_REG32	res4;
++	S3C24X0_REG32	HCLKCON;
++	S3C24X0_REG32	PCLKCON;
++	S3C24X0_REG32	SCLKCON;
++	S3C24X0_REG32	res5;
++	S3C24X0_REG32	PWRMODE;
++	S3C24X0_REG32	SWRST;
++	S3C24X0_REG32	res6[2];
++	S3C24X0_REG32	BUSPRI0;
++	S3C24X0_REG32	res7[3];
++} /*__attribute__((__packed__))*/ S3C2443_CLOCK_POWER;
++
++/* NAND FLASH (see S3C2443 manual chapter 7) */
++typedef struct {
++	S3C24X0_REG32	NFCONF;
++	S3C24X0_REG32	NFCONT;
++	S3C24X0_REG32	NFCMD;
++	S3C24X0_REG32	NFADDR;
++	S3C24X0_REG32	NFDATA;
++	S3C24X0_REG32	NFMECCD0;
++	S3C24X0_REG32	NFMECCD1;
++	S3C24X0_REG32	NFSECCD;
++	S3C24X0_REG32	NFSBLK;
++	S3C24X0_REG32	NFEBLK;
++	S3C24X0_REG32	NFSTAT;
++	S3C24X0_REG32	NFECCERR0;
++	S3C24X0_REG32	NFECCERR1;
++	S3C24X0_REG32	NFMECC0;
++	S3C24X0_REG32	NFMECC1;
++	S3C24X0_REG32	NFSECC;
++	S3C24X0_REG32	NFMLCBITPT;
++} /*__attribute__((__packed__))*/ S3C2443_NAND;
++
++/* STATIC MEMORY (see S3C2443 manual chapter 5) */
++struct s3c2443_sm_bank {
++	S3C24X0_REG32	SMBIDCYR;
++	S3C24X0_REG32	SMBWSTRDR;
++	S3C24X0_REG32	SMBWSTWRR;
++	S3C24X0_REG32	SMBWSTOENR;
++	S3C24X0_REG32	SMBWSTWENR;
++	S3C24X0_REG32	SMBCR;
++	S3C24X0_REG32	SMBSR;
++	S3C24X0_REG32	SMBWSTBRDR;
++};
++
++typedef struct {
++	struct s3c2443_sm_bank bank[5];	/* 0x4f000000..0x4f0000bf */
++	S3C24X0_REG32	res[0x40];	/* 0x4f0000c0..0x4f0000ff */
++	S3C24X0_REG32	SMBONETYPER;
++	S3C24X0_REG32	SMCSR;
++	S3C24X0_REG32	SMCCR;
++} /*__attribute__((__packed__))*/ S3C2443_SMEM;
++
++
++/* MOBILE DRAM (see S3C2443 manual chapter 6) */
++typedef struct {
++	S3C24X0_REG32	BANKCFG;
++	S3C24X0_REG32	BANKCON1;
++	S3C24X0_REG32	BANKCON2;
++	S3C24X0_REG32	BANKCON3;
++	S3C24X0_REG32	REFRESH;
++	S3C24X0_REG32	TIMEOUT;
++} /*__attribute__((__packed__))*/ S3C2443_MDRAM
++
++#endif /* __S3C2443_H */

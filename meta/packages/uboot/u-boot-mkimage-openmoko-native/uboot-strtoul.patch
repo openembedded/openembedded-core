@@ -1,0 +1,43 @@
+Make simple_strtoul work with upper-case hex numbers.
+
+Signed-off-by: Harald Welte <laforge@openmoko.org>
+
+Index: u-boot/lib_generic/vsprintf.c
+===================================================================
+--- u-boot.orig/lib_generic/vsprintf.c
++++ u-boot/lib_generic/vsprintf.c
+@@ -25,21 +25,22 @@ unsigned long simple_strtoul(const char 
+ {
+ 	unsigned long result = 0,value;
+ 
+-	if (*cp == '0') {
+-		cp++;
+-		if ((*cp == 'x') && isxdigit(cp[1])) {
+-			base = 16;
+-			cp++;
+-		}
+-		if (!base) {
+-			base = 8;
+-		}
+-	}
+ 	if (!base) {
+ 		base = 10;
++		if (*cp == '0') {
++			base = 8;
++			cp++;
++			if ((toupper(*cp) == 'X') && isxdigit(cp[1])) {
++				cp++;
++				base = 16;
++			}
++		}
++	} else if (base == 16) {
++		if (cp[0] == '0' && toupper(cp[1]) == 'X')
++			cp += 2;
+ 	}
+-	while (isxdigit(*cp) && (value = isdigit(*cp) ? *cp-'0' : (islower(*cp)
+-	    ? toupper(*cp) : *cp)-'A'+10) < base) {
++	while (isxdigit(*cp) &&
++	       (value = isdigit(*cp) ? *cp-'0' : toupper(*cp)-'A'+10) < base) {
+ 		result = result*base + value;
+ 		cp++;
+ 	}

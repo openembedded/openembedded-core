@@ -1,0 +1,68 @@
+This patch should get rid of spurious poweroff after booting from RAM.
+Experimental.
+
+cpu/arm920t/start.S: record in global variable "booted_from_nand" whether we
+  booted from NAND or not
+board/neo1973/neo1973.c (board_late_init): if booted from RAM, assume that
+  wakeup cause was "reset", and skip poweroff check
+
+- Werner Almesberger <werner@openmoko.org>
+
+Index: u-boot/board/neo1973/gta01/gta01.c
+===================================================================
+--- u-boot.orig/board/neo1973/gta01/gta01.c
++++ u-boot/board/neo1973/gta01/gta01.c
+@@ -226,12 +226,16 @@
+ 
+ int board_late_init(void)
+ {
++	extern unsigned char booted_from_nand;
+ 	unsigned char tmp;
+ 	char buf[32];
+ 
+ 	/* Initialize the Power Management Unit with a safe register set */
+ 	pcf50606_init();
+ 
++	if (!booted_from_nand)
++		goto woken_by_reset;
++
+ 	/* obtain wake-up reason, save INT1 in environment */
+ 	tmp = pcf50606_reg_read(PCF50606_REG_INT1);
+ 	sprintf(buf, "0x%02x", tmp);
+@@ -274,6 +278,7 @@
+ 		neo1973_poweroff();
+ 	}
+ 
++woken_by_reset:
+ 	/* if there's no other reason, must be regular reset */
+ 	neo1973_wakeup_cause = NEO1973_WAKEUP_RESET;
+ 
+Index: u-boot/cpu/arm920t/start.S
+===================================================================
+--- u-boot.orig/cpu/arm920t/start.S
++++ u-boot/cpu/arm920t/start.S
+@@ -77,6 +77,14 @@
+  *************************************************************************
+  */
+ 
++#ifdef CONFIG_S3C2410_NAND_BOOT
++.globl	booted_from_nand
++booted_from_nand:
++	.word	0
++_booted_from_nand:
++	.word	booted_from_nand
++#endif /* CONFIG_S3C2410_NAND_BOOT */
++
+ _TEXT_BASE:
+ 	.word	TEXT_BASE
+ 
+@@ -281,6 +289,9 @@
+ #endif
+ 1:	b	1b
+ done_nand_read:
++	ldr	r0, _booted_from_nand
++	mov	r1, #1
++	strb	r1, [r0]
+ #endif /* CONFIG_S3C2410_NAND_BOOT */
+ done_relocate:
+ #endif /* CONFIG_SKIP_RELOCATE_UBOOT */
