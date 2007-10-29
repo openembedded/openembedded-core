@@ -10,4 +10,4 @@ require gcc_${PV}.bb
 require gcc4-build-sdk.inc
 require gcc-package-sdk.inc
 
-EXTRA_OECONF += "--disable-libunwind-exceptions --with-mpfr=${STAGING_DIR}/${BUILD_SYS}"
+EXTRA_OECONF += "--disable-libunwind-exceptions --with-mpfr=${STAGING_DIR_NATIVE}${layout_exec_prefix}"
