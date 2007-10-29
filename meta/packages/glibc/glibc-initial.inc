@@ -30,14 +30,14 @@ do_compile () {
 }
 
 do_stage () {
-	oe_runmake cross-compiling=yes install_root=${STAGING_DIR}/${HOST_SYS} includedir=/include prefix="" install-headers
+	oe_runmake cross-compiling=yes install_root=${STAGING_DIR_HOST} includedir='${layout_includedir}' prefix='${layout_prefix}' install-headers
 
 	# Two headers -- stubs.h and features.h -- aren't installed by install-headers,
 	# so do them by hand.  We can tolerate an empty stubs.h for the moment.
 	# See e.g. http://gcc.gnu.org/ml/gcc/2002-01/msg00900.html
-	mkdir -p ${STAGING_DIR}/${HOST_SYS}/include/gnu
-	touch ${STAGING_DIR}/${HOST_SYS}/include/gnu/stubs.h
-	cp ${S}/include/features.h ${STAGING_DIR}/${HOST_SYS}/include/features.h
+	mkdir -p ${STAGING_INCDIR}/gnu
+	touch ${STAGING_INCDIR}/gnu/stubs.h
+	cp ${S}/include/features.h ${STAGING_INCDIR}/features.h
 }
 
 do_install () {

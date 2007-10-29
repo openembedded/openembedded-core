@@ -3,8 +3,8 @@ require glibc.inc
 PR = "r5"
 
 # the -isystem in bitbake.conf screws up glibc do_stage
-BUILD_CPPFLAGS = "-I${STAGING_DIR}/${BUILD_SYS}/include"
-TARGET_CPPFLAGS = "-I${STAGING_DIR}/${TARGET_SYS}/include"
+BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
+TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${layout_includedir}"
 
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glibc-2.4"
@@ -152,10 +152,10 @@ do_compile () {
 }
 
 do_stage() {
-	rm -f ${STAGING_LIBDIR}/libc.so.6
-	oe_runmake 'install_root=${STAGING_DIR}/${HOST_SYS}' \
-		   'includedir=/include' 'libdir=/lib' 'slibdir=/lib' \
-		   '${STAGING_LIBDIR}/libc.so.6' \
+	rm -f ${STAGING_DIR_HOST}${layout_base_libdir}/libc.so.6
+	oe_runmake 'install_root=${STAGING_DIR_HOST}' \
+		   'includedir=${layout_includedir}' 'libdir=${layout_libdir}' 'slibdir=${layout_base_libdir}' \
+		   '${STAGING_DIR_HOST}${layout_base_libdir}/libc.so.6' \
 		   install-headers install-lib
 
 	install -d ${STAGING_INCDIR}/gnu \
@@ -169,10 +169,10 @@ do_stage() {
 		install -m 0644 ${S}/sunrpc/rpcsvc/$h ${STAGING_INCDIR}/rpcsvc/
 	done
 	for i in libc.a libc_pic.a libc_nonshared.a; do
-		install -m 0644 ${B}/$i ${STAGING_LIBDIR}/ || die "failed to install $i"
+		install -m 0644 ${B}/$i ${STAGING_DIR_HOST}/${layout_base_libdir} || die "failed to install $i"
 	done
-	echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${STAGING_LIBDIR}/libpthread.so
-	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${STAGING_LIBDIR}/libc.so
+	echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${STAGING_DIR_HOST}/${layout_base_libdir}/libpthread.so
+	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${STAGING_DIR_HOST}/${layout_base_libdir}/libc.so
 }
 
 require glibc-package.bbclass
