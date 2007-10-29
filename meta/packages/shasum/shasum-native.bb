@@ -7,5 +7,6 @@ PATCHTOOL = "patch"
 
 do_fetch[depends] = ""
 do_populate_staging() {
+    install -d ${STAGING_BINDIR}
     install ${S}/oe_sha256sum ${STAGING_BINDIR}
 }
