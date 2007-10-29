@@ -44,7 +44,7 @@ do_stage () {
 	for i in ${S}/fontconfig/*.h; do install -m 0644 $i ${STAGING_INCDIR}/fontconfig/; done
 }
 
-BUILD_CFLAGS += " -I${STAGING_DIR}/${BUILD_SYS}/include/freetype2"
+BUILD_CFLAGS += " -I${STAGING_INCDIR_NATIVE}/freetype2"
 
 do_configure_append () {
 	sed -i 's|LDFLAGS =.*|LDFLAGS =|' fc-case/Makefile
