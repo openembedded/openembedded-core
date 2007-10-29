@@ -15,8 +15,8 @@ FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
 
 do_configure_prepend() {
-	install -m 0644 ${STAGING_DIR}/${BUILD_SYS}/share/dbus/dbus-bus-introspect.xml ${S}/tools/
-	install -m 0644 ${STAGING_DIR}/${BUILD_SYS}/share/dbus/dbus-glib-bindings.h ${S}/tools/
+	install -m 0644 ${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml ${S}/tools/
+	install -m 0644 ${STAGING_DATADIR_NATIVE}/dbus/dbus-glib-bindings.h ${S}/tools/
 }
 
 do_stage () {
