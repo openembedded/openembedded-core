@@ -21,5 +21,5 @@ do_configure_prepend () {
 }
 
 do_stage_prepend() {
-	install -d -m 0755 ${STAGING_DATADIR}/pkgconfig
+	install -d -m 0755 ${STAGING_LIBDIR}/pkgconfig
 }
