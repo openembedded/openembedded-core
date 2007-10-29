@@ -684,10 +684,10 @@ base_do_stage () {
 	:
 }
 
-do_populate_staging[dirs] = "${STAGING_DIR}/${TARGET_SYS}/bin ${STAGING_DIR}/${TARGET_SYS}/lib \
-			     ${STAGING_DIR}/${TARGET_SYS}/include \
-			     ${STAGING_DIR}/${BUILD_SYS}/bin ${STAGING_DIR}/${BUILD_SYS}/lib \
-			     ${STAGING_DIR}/${BUILD_SYS}/include \
+do_populate_staging[dirs] = "${STAGING_DIR_TARGET}/bin ${STAGING_DIR_TARGET}/lib \
+			     ${STAGING_DIR_TARGET}/include \
+			     ${STAGING_BINDIR_NATIVE} ${STAGING_LIBDIR_NATIVE} \
+			     ${STAGING_INCDIR_NATIVE} \
 			     ${STAGING_DATADIR} \
 			     ${S} ${B}"
 
