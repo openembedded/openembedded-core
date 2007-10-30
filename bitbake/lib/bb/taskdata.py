@@ -559,7 +559,11 @@ class TaskData:
                 self.tasks_name[task], 
                 self.tasks_tdepends[task]))
 
-        bb.msg.debug(3, bb.msg.domain.TaskData, "runtime ids (per fn):")
+        bb.msg.debug(3, bb.msg.domain.TaskData, "dependency ids (per fn):")
+        for fnid in self.depids:
+            bb.msg.debug(3, bb.msg.domain.TaskData, " %s %s: %s" % (fnid, self.fn_index[fnid], self.depids[fnid]))
+
+        bb.msg.debug(3, bb.msg.domain.TaskData, "runtime dependency ids (per fn):")
         for fnid in self.rdepids:
             bb.msg.debug(3, bb.msg.domain.TaskData, " %s %s: %s" % (fnid, self.fn_index[fnid], self.rdepids[fnid]))
 
