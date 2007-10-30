@@ -1,7 +1,7 @@
 SECTION = "devel"
 require libtool_${PV}.bb
 
-PR = "r5"
+PR = "r6"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://libdir-la.patch;patch=1 \
@@ -11,8 +11,8 @@ SRC_URI_append = " file://libdir-la.patch;patch=1 \
                    file://install-path-check.patch;patch=1"
 S = "${WORKDIR}/libtool-${PV}"
 
-prefix = "${STAGING_DIR}"
-exec_prefix = "${prefix}/${BUILD_SYS}"
+prefix = "${STAGING_DIR_NATIVE}${layout_prefix}"
+exec_prefix = "${STAGING_DIR_NATIVE}${layout_exec_prefix}"
 bindir = "${STAGING_BINDIR_NATIVE}"
 
 do_compile () {
