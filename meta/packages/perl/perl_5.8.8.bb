@@ -5,18 +5,21 @@ LICENSE = "Artistic|GPL"
 PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db perl-native grep-native"
-PR = "r19"
+PR = "r20"
 
 # Major part of version
 PVM = "5.8"
 
 SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
         file://Makefile.patch;patch=1 \
-        file://Makefile.SH.patch \
+        file://Makefile.SH.patch;patch=1 \
+        file://makedepend-dash.patch;patch=1 \
+        file://installperl.patch;patch=1 \
         file://perl-dynloader.patch;patch=1 \
         file://perl-moreconfig.patch;patch=1 \
         file://letgcc-find-errno.patch;patch=1 \
         file://generate-sh.patch;patch=1 \
+        file://perl-5.8.8-gcc-4.2.patch;patch=1 \
         file://09_fix_installperl.patch;patch=1 \
         file://52_debian_extutils_hacks.patch;patch=1 \
         file://53_debian_mod_paths.patch;patch=1 \
@@ -25,6 +28,7 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
         file://60_debian_libnet_config_path.patch;patch=1 \
         file://62_debian_cpan_definstalldirs.patch;patch=1 \
         file://64_debian_enc2xs_inc.patch;patch=1 \
+        file://asm-pageh-fix.patch;patch=1 \
         file://config.sh \
         file://config.sh-32 \
         file://config.sh-32-le \
@@ -37,15 +41,14 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
 HOSTPERL = "${STAGING_BINDIR_NATIVE}/perl${PV}"
 
 # Where to find .so files - use the -native versions not those from the target build
-export PERLHOSTLIB = "${STAGING_DIR}/${BUILD_SYS}/lib/perl/${PV}/"
+export PERLHOSTLIB = "${STAGING_LIBDIR_NATIVE}/perl/${PV}/"
 
 do_configure() {
         # Make hostperl in build directory be the native perl
         cp -f ${HOSTPERL} hostperl
 
-        # This is silly - should just patch Makefile.SH directly
+        # Do our work in the cross subdir
         cd Cross
-        cp -f ${WORKDIR}/Makefile.SH.patch .
 
         # Generate configuration
         rm -f config.sh-${TARGET_ARCH}-${TARGET_OS}
@@ -87,8 +90,6 @@ do_configure() {
         rm -f config
         echo "ARCH = ${TARGET_ARCH}" > config
         echo "OS = ${TARGET_OS}" >> config
-
-        oe_runmake patch
 }
 do_compile() {
         if test "${MACHINE}" != "native"; then
@@ -121,18 +122,28 @@ do_install() {
             sed -i -e "s,${D},,g" \
                    -e "s,-isystem${STAGING_INCDIR} ,,g" \
                    -e "s,${STAGING_LIBDIR},${libdir},g" \
+                   -e "s,${STAGING_BINDIR},${bindir},g" \
                    -e "s,${STAGING_INCDIR},${includedir},g" \
-                ${D}/${libdir}/perl/${PV}/Config_heavy.pl
+                   -e "s,${CROSS_DIR}${base_bindir}/,,g" \
+                ${D}${bindir}/h2xs \
+                ${D}${bindir}/h2ph \
+                ${D}${datadir}/perl/${PV}/pod/*.pod \
+                ${D}${datadir}/perl/${PV}/cacheout.pl \
+                ${D}${datadir}/perl/${PV}/FileCache.pm \
+                ${D}${libdir}/perl/${PV}/Config.pm \
+                ${D}${libdir}/perl/${PV}/Config_heavy.pl \
+                ${D}${libdir}/perl/${PV}/CORE/perl.h \
+                ${D}${libdir}/perl/${PV}/CORE/pp.h
         fi
 }
 do_stage() {
         install -d ${STAGING_DIR}/${HOST_SYS}/perl \
-                   ${STAGING_DIR}/${BUILD_SYS}/lib/perl/${PV} \
+                   ${STAGING_LIBDIR_NATIVE}/perl/${PV} \
                    ${STAGING_LIBDIR}/perl/${PV}/CORE
         # target config, used by cpan.bbclass to extract version information
         install config.sh ${STAGING_DIR}/${HOST_SYS}/perl/
         # target configuration, used by native perl when cross-compiling
-        install lib/Config_heavy.pl ${STAGING_DIR}/${BUILD_SYS}/lib/perl/${PV}/Config_heavy-target.pl
+        install lib/Config_heavy.pl ${STAGING_LIBDIR_NATIVE}/perl/${PV}/Config_heavy-target.pl
         # perl shared library headers
         for i in av.h embed.h gv.h keywords.h op.h perlio.h pp.h regexp.h \
                  uconfig.h XSUB.h cc_runtime.h embedvar.h handy.h opnames.h \

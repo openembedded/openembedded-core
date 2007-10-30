@@ -1,6 +1,37 @@
---- perl-5.8.8/Makefile.SH	2007/04/20 12:43:33	1.1
-+++ perl-5.8.8/Makefile.SH	2007/04/20 15:20:40
-@@ -129,18 +129,7 @@
+Index: perl-5.8.8/Makefile.SH
+===================================================================
+--- perl-5.8.8.orig/Makefile.SH	2006-01-24 23:49:44.000000000 +1100
++++ perl-5.8.8/Makefile.SH	2007-06-14 13:29:37.000000000 +1000
+@@ -43,12 +43,12 @@
+ true)
+ 	# Prefix all runs of 'miniperl' and 'perl' with
+ 	# $ldlibpth so that ./perl finds *this* shared libperl.
+-	case "$LD_LIBRARY_PATH" in
+-	'')
+-		ldlibpth="LD_LIBRARY_PATH=`pwd`";;
+-	*)
+-		ldlibpth="LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}";;
+-	esac
++#	case "$LD_LIBRARY_PATH" in
++#	'')
++#		ldlibpth="LD_LIBRARY_PATH=`pwd`";;
++#	*)
++#		ldlibpth="LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}";;
++#	esac
+ 
+ 	pldlflags="$cccdlflags"
+ 	static_target='static_pic'
+@@ -108,7 +108,8 @@
+ 	        ldlibpth=''
+ 	        ;;
+ 	    *)
+-		eval "ldlibpth=\"$ldlibpthname=`pwd`:\$$ldlibpthname\""
++# We compile in the library path in OE from cross-compile, so lets not do this
++#		eval "ldlibpth=\"$ldlibpthname=`pwd`:\$$ldlibpthname\""
+ 		;;
+ 	    esac
+ 	    # Strip off any trailing :'s
+@@ -129,18 +130,7 @@
  	    # INSTALL file, under "Building a shared perl library".
  	    # If there is no pre-existing $libperl, we don't need
  	    # to do anything further.
@@ -20,7 +51,7 @@
  	    ;;
  	os390)	test -f /bin/env && ldlibpth="/bin/env $ldlibpth"
  		;;
-@@ -401,9 +390,19 @@
+@@ -401,9 +391,19 @@
  .c.s:
  	$(CCCMDSRC) -S $*.c
  
@@ -43,7 +74,7 @@
  
  .PHONY: all compile translators utilities
  
-@@ -413,10 +412,10 @@
+@@ -413,10 +413,10 @@
  	cd x2p; $(MAKE) compile;
  	cd pod; $(MAKE) compile;
  
@@ -56,7 +87,7 @@
  	@echo " "; echo "	Making utilities"; cd utils; $(LDLIBPTH) $(MAKE) all
  
  
-@@ -550,7 +549,7 @@
+@@ -550,7 +550,7 @@
  	case "$useshrplib" in
  	true)
  		$spitshell >>Makefile <<'!NO!SUBS!'
@@ -65,7 +96,7 @@
  !NO!SUBS!
  		case "$osname" in
  		aix)
-@@ -591,7 +590,9 @@
+@@ -591,7 +591,9 @@
  	$(CC) -o miniperl $(CLDFLAGS) \
  	    `echo $(obj) | sed 's/ op$(OBJ_EXT) / /'` \
  	    miniperlmain$(OBJ_EXT) opmini$(OBJ_EXT) perl$(OBJ_EXT) $(libs)
@@ -76,7 +107,7 @@
  !NO!SUBS!
  		;;
  	next4*)
-@@ -599,7 +600,9 @@
+@@ -599,7 +601,9 @@
  miniperl: $& miniperlmain$(OBJ_EXT) $(LIBPERL) opmini$(OBJ_EXT)
  	$(CC) -o miniperl `echo $(obj) | sed 's/ op$(OBJ_EXT) / /'` \
  	    miniperlmain$(OBJ_EXT) opmini$(OBJ_EXT) perl$(OBJ_EXT) $(libs)
@@ -87,7 +118,7 @@
  !NO!SUBS!
  		;;
  	darwin*)
-@@ -620,7 +623,9 @@
+@@ -620,7 +624,9 @@
  	-@rm -f miniperl.xok
  	$(CC) $(CLDFLAGS) $(NAMESPACEFLAGS) -o miniperl \
  	    miniperlmain$(OBJ_EXT) opmini$(OBJ_EXT) $(LLIBPERL) $(libs)
@@ -98,7 +129,7 @@
  !NO!SUBS!
  		;;
  	*)
-@@ -629,7 +634,9 @@
+@@ -629,7 +635,9 @@
  	-@rm -f miniperl.xok
  	$(LDLIBPTH) $(CC) $(CLDFLAGS) -o miniperl \
  	    miniperlmain$(OBJ_EXT) opmini$(OBJ_EXT) $(LLIBPERL) $(libs)
@@ -109,7 +140,7 @@
  !NO!SUBS!
  		;;
  	esac
-@@ -766,7 +773,7 @@
+@@ -766,7 +774,7 @@
  # We need to autosplit in two steps because VOS can't handle so many args
  #
  .PHONY: preplibrary
@@ -118,7 +149,7 @@
  	@sh ./makedir lib/auto
  	@echo "	AutoSplitting perl library"
  	$(LDLIBPTH) ./miniperl -Ilib -e 'use AutoSplit; \
-@@ -775,35 +782,35 @@
+@@ -775,35 +783,35 @@
  		autosplit_lib_modules(@ARGV)' lib/*/*.pm
  	$(MAKE) lib/re.pm
  
@@ -161,7 +192,7 @@
  	-@test -f extra.pods && rm -f `cat extra.pods`
  	-@rm -f extra.pods
  	-@for x in `grep -l '^=[a-z]' README.* | grep -v README.vms` ; do \
-@@ -850,18 +857,7 @@
+@@ -850,18 +858,7 @@
  INSTALL_DEPENDENCE = all
  
  install.perl:	$(INSTALL_DEPENDENCE) installperl
@@ -181,7 +212,7 @@
  
  # XXX Experimental. Hardwired values, but useful for testing.
  # Eventually Configure could ask for some of these values.
-@@ -978,16 +974,16 @@
+@@ -978,16 +975,16 @@
  #
  # DynaLoader may be needed for extensions that use Makefile.PL.
  
@@ -202,7 +233,7 @@
  	@$(LDLIBPTH) sh ext/util/make_ext nonxs $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL)
  
  .PHONY: clean _tidy _mopup _cleaner1 _cleaner2 \
-@@ -1125,7 +1121,7 @@
+@@ -1125,7 +1122,7 @@
  
  test_prep_pre: preplibrary utilities $(nonxs_ext)
  
@@ -211,7 +242,7 @@
  	PERL=./perl $(MAKE) _test_prep
  
  _test_tty:
-@@ -1238,7 +1234,7 @@
+@@ -1238,7 +1235,7 @@
  
  # Can't depend on lib/Config.pm because that might be where miniperl
  # is crashing.

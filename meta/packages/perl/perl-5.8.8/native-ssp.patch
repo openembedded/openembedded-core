@@ -1,0 +1,14 @@
+Fix for compiling with ssp enabled gcc:
+See http://bugs.openembedded.org/show_bug.cgi?id=1980
+
+diff -Naur perl-5.8.7.orig/cflags.SH perl-5.8.7/cflags.SH
+--- perl-5.8.7.orig/cflags.SH	2002-09-30 10:59:07.000000000 +0000
++++ perl-5.8.7/cflags.SH	2005-10-02 04:08:39.000000000 +0000
+@@ -165,6 +165,8 @@
+ esac
+ 
+     : Can we perhaps use $ansi2knr here
++    [[ $file == regcomp ]] && export ccflags="${ccflags} -fno-stack-protector"
++    [[ $file == regexec ]] && export ccflags="${ccflags} -fno-stack-protector"
+     echo "$cc -c -DPERL_CORE $ccflags $optimize $warn"
+     eval "$also "'"$cc -DPERL_CORE -c $ccflags $optimize $warn"'

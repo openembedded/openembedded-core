@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.perl.org/"
 SECTION = "libs"
 LICENSE = "Artistic|GPL"
 DEPENDS = "virtual/db-native gdbm-native"
-PR = "r10"
+PR = "r13"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/perl-${PV}"
 
@@ -14,7 +14,8 @@ SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
            file://native-nopacklist.patch;patch=1 \
            file://native-no-gdbminc.patch;patch=1 \
            file://native-perlinc.patch;patch=1 \
-           file://native-makedepend-dash.patch;patch=1"
+           file://makedepend-dash.patch;patch=1 \
+           file://asm-pageh-fix.patch;patch=1"
 
 S = "${WORKDIR}/perl-${PV}"
 

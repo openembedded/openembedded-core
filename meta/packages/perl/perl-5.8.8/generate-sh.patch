@@ -35,7 +35,7 @@ Index: perl-5.8.8/Cross/generate_config_sh
 +		$value =~ s/^\'//;
 +		$value =~ s/\'$//;
 +		# Remove -I/usr/local/... from the value
-+		$value =~ s#\W-I/usr/local/\w+\W##g;
++		$value =~ s#\W-I/usr/local/\w+\W# #g;
 +		# Prepend env var (OE setting) to value
 +		print("$key=\'$ENV{$envvar} $value\'\n");
 +	}
