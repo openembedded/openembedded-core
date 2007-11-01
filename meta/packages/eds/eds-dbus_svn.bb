@@ -4,6 +4,7 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib"
 
 PV = "1.4.0+svnr${SRCREV}"
+PR = "r1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://oh-contact.patch;patch=1;pnum=0 \
@@ -37,7 +38,7 @@ RRECOMMENDS_libebook = "libedata-book"
 
 FILES_libecal = "${libdir}/libecal-*.so.* ${datadir}/evolution-data-server-1.4/zoneinfo"
 FILES_libecal-dev = "${libdir}/libecal-*.so ${libdir}/pkgconfig/libecal-*.pc ${includedir}/evolution-data-server*/libecal/*.h ${includedir}/evolution-data-server*/libical/*.h"
-RRECOMMENDS_libecal = "libedata-cal"
+RRECOMMENDS_libecal = "libedata-cal tzdata"
 
 FILES_libedata-book = "${libexecdir}/e-addressbook-factory ${datadir}/dbus-1/services/*.AddressBook.service ${libdir}/libedata-book-*.so.* ${libdir}/evolution-data-server-*/extensions/libebook*.so"
 FILES_libedata-book-dev = "${libdir}/libedata-book-*.so ${libdir}/pkgconfig/libedata-book-*.pc ${includedir}/evolution-data-server-*/libedata-book"
