@@ -5,7 +5,7 @@ PR = "r7"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.17.tar.bz2 \
 	   http://raph.people.8d.com/kernels/8d-cmx2xx-2.6.17.1-june21.diff;patch=1 \
            http://raph.people.8d.com/kernels/hardcode-archID.diff;patch=1 \
 	   file://cm_x2xx_mbx.patch;patch=1                               \

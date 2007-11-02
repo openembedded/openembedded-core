@@ -6,7 +6,7 @@ FILESDIR = "${WORKDIR}"
 
 LOCALPATCH = "file://linux-2.6.14-pxa320-patches/generic_kernel_patch"
 
-SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.14.tar.gz \
+SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.14.tar.gz \
            http://downloads.linux.hp.com/public/ipaq/monahans-ldk/linux-2.6.14-pxa320-patches-gpl.tgz \
            ${LOCALPATCH}/patch-2.6.14.7;patch=1 \
            ${LOCALPATCH}/3168-1-arm-signal-delivery-and-masking.diff;patch=1 \

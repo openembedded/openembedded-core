@@ -3,7 +3,7 @@ DESCRIPTION = "Linux kernel CM-X270"
 LICENSE = "GPL"
 PR = "r1"
 
-SRC_URI = "http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2 \
 	   file://diff-2.6.16-cm-x270;patch=1                               \
 	   file://CL_FlashDrv"
 
