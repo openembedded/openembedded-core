@@ -1,6 +1,7 @@
 DESCRIPTION = "A boot profiling tool"
 HOMEPAGE = "http://code.google.com/p/ubootchart/"
-LICENSE="GPLv3"
+LICENSE = "GPLv3"
+PV = "0.0+r${SRCREV}"
 
 SRC_URI = "svn://ubootchart.googlecode.com/svn/;proto=http;module=trunk \
         file://sysvinit.patch;patch=1;pnum=0"
