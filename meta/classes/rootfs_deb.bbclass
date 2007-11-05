@@ -10,8 +10,8 @@ fakeroot rootfs_deb_do_rootfs () {
 	mkdir -p ${IMAGE_ROOTFS}/var/dpkg/info
 	mkdir -p ${IMAGE_ROOTFS}/var/dpkg/updates
 
-	rm -f ${STAGING_DIR}/etc/apt/sources.list.rev
-	rm -f ${STAGING_DIR}/etc/apt/preferences
+	rm -f ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
+	rm -f ${STAGING_ETCDIR_NATIVE}/apt/preferences
 	> ${IMAGE_ROOTFS}/var/dpkg/status
 	> ${IMAGE_ROOTFS}/var/dpkg/available
 	# > ${STAGING_DIR}/var/dpkg/status
@@ -28,21 +28,21 @@ fakeroot rootfs_deb_do_rootfs () {
 		apt-ftparchive packages . | bzip2 > Packages.bz2
 		echo "Label: $arch" > Release
 
-		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_DIR}/etc/apt/sources.list.rev
+		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
 		(echo "Package: *"
 		echo "Pin: release l=$arch"
 		echo "Pin-Priority: $((800 + $priority))"
-		echo) >> ${STAGING_DIR}/etc/apt/preferences
+		echo) >> ${STAGING_ETCDIR_NATIVE}/apt/preferences
 		priority=$(expr $priority + 5)
 	done
 
-	tac ${STAGING_DIR}/etc/apt/sources.list.rev > ${STAGING_DIR}/etc/apt/sources.list
+	tac ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev > ${STAGING_ETCDIR_NATIVE}/apt/sources.list
 
-	cat "${STAGING_DIR}/etc/apt/apt.conf.sample" \
+	cat "${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample" \
 		| sed -e 's#Architecture ".*";#Architecture "${TARGET_ARCH}";#' \
-		> "${STAGING_DIR}/etc/apt/apt-rootfs.conf"
+		> "${STAGING_ETCDIR_NATIVE}/apt/apt-rootfs.conf"
 
-	export APT_CONFIG="${STAGING_DIR}/etc/apt/apt-rootfs.conf"
+	export APT_CONFIG="${STAGING_ETCDIR_NATIVE}/apt/apt-rootfs.conf"
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
@@ -112,6 +112,7 @@ fakeroot rootfs_deb_do_rootfs () {
 	if [ -e ${IMAGE_ROOTFS}/usr/dpkg/alternatives ]; then
 		rmdir ${IMAGE_ROOTFS}/usr/dpkg/alternatives
 	fi
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib/ipkg
 	ln -s /usr/lib/ipkg/alternatives ${IMAGE_ROOTFS}/usr/dpkg/alternatives
 	ln -s /usr/dpkg/info ${IMAGE_ROOTFS}/usr/lib/ipkg/info
 	ln -s /usr/dpkg/status ${IMAGE_ROOTFS}/usr/lib/ipkg/status
