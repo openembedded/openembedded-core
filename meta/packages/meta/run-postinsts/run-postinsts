@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Copyright 2007 Openedhand Ltd.
+#
+# Author: Richard Purdie <rpurdie@openedhand.com>
+#
+
+PKGSYSTEM=/usr/lib/ipkg
+STAMP=$PKGSYSTEM/postinsts-done
+STATFILE=$PKGSYSTEM/status
+STATFILE2=$PKGSYSTEM/status2
+
+if [ -e $STAMP ]; then
+  exit 0
+fi
+
+awk -f /usr/share/run-postinsts/run-postinsts.awk $STATFILE > $STATFILE2
+if [ $? = 0 ]; then
+  mv $STATFILE2 $STATFILE
+  touch $STAMP
+  exit 0
+else
+  rm -f $STATFILE2
+  rm -f $STAMP
+  exit 1
+fi
