@@ -1,0 +1,3 @@
+#! /bin/sh
+
+kill -USR1 $(pidof ubootchartd_bin)

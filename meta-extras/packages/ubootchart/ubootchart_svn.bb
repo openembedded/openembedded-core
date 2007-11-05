@@ -2,22 +2,37 @@ DESCRIPTION = "A boot profiling tool"
 HOMEPAGE = "http://code.google.com/p/ubootchart/"
 LICENSE = "GPLv3"
 PV = "0.0+r${SRCREV}"
+PR = "r2"
+
+RRECOMMENDS = "acct"
 
 SRC_URI = "svn://ubootchart.googlecode.com/svn/;proto=http;module=trunk \
-        file://sysvinit.patch;patch=1;pnum=0"
+        file://sysvinit.patch;patch=1;pnum=0 \
+        file://pass-args.patch;patch=1;pnum=0 \
+        file://ubootchart-stop \
+        file://ubootchart.desktop"
 
 S = "${WORKDIR}/trunk"
+
+inherit update-alternatives
+
+ALTERNATIVE_NAME = "init"
+ALTERNATIVE_LINK = "${base_sbindir}/init"
+ALTERNATIVE_PATH = "${base_sbindir}/ubootchartd"
+ALTERNATIVE_PRIORITY = "20"
 
 do_compile() {
         ${CC} ${CFLAGS} ${LDFLAGS} ${LIBS} ${INCLUDES} ${S}/ubootchartd_bin.c -o ubootchartd_bin
 }
 
 do_install() {
-        install -m 0755 -d ${D}/sbin ${D}/etc/ubootchart
+        install -m 0755 -d ${D}/sbin ${D}/etc/ubootchart ${D}/usr/share/applications
         install -m 0755 ${S}/ubootchartd_bin ${D}/sbin
         install -m 0755 ${S}/ubootchartd ${D}/sbin
         install -m 0644 ${S}/ubootchart.conf ${D}/etc/ubootchart
         install -m 0755 ${S}/start.sh ${D}/etc/ubootchart
         install -m 0755 ${S}/finish.sh ${D}/etc/ubootchart
+        
+        install -m 0755 ${WORKDIR}/ubootchart-stop ${D}/sbin
+        install -m 0644 ${WORKDIR}/ubootchart.desktop ${D}/usr/share/applications
 }
-

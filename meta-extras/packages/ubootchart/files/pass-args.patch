@@ -1,0 +1,21 @@
+Index: ubootchartd
+===================================================================
+--- ubootchartd	(revision 9)
++++ ubootchartd	(working copy)
+@@ -7,9 +7,11 @@
+ # can read.
+ . /etc/ubootchart/ubootchart.conf
+ 
+-####################################################
+-# Now start capturing the stats:
+-####################################################
+-/sbin/ubootchartd_bin &
+-exec $init_prog
++if [ $$ -eq 1 ]; then
++  ####################################################
++  # Now start capturing the stats:
++  ####################################################
++  /sbin/ubootchartd_bin &
++fi
+ 
++exec $init_prog "$@"

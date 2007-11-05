@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=/sbin/ubootchart-stop
+Name=Stop Bootchart
+Type=Application
+Categories=Programming;
