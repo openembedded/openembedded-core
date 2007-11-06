@@ -6,29 +6,29 @@
 
 Index: clutter/tests/Makefile.am
 ===================================================================
---- clutter.orig/tests/Makefile.am	2007-07-09 13:51:59.000000000 +0100
-+++ clutter/tests/Makefile.am	2007-07-09 19:14:47.000000000 +0100
+--- clutter.orig/tests/Makefile.am	2007-11-06 12:29:17.000000000 +0000
++++ clutter/tests/Makefile.am	2007-11-06 12:30:11.000000000 +0000
 @@ -1,4 +1,4 @@
 -noinst_PROGRAMS = test-textures test-events test-offscreen test-scale \
 +bin_PROGRAMS = test-textures test-events test-offscreen test-scale \
                    test-actors test-behave test-text test-entry test-project \
- 		  test-boxes test-perspective
- 
-@@ -19,4 +19,9 @@ test_project_SOURCES   = test-project.c
- test_boxes_SOURCES     = test-boxes.c
- test_perspective_SOURCES = test-perspective.c
+ 		  test-boxes test-perspective test-rotate test-depth \
+ 		  test-threads test-timeline test-score test-script
+@@ -26,4 +26,9 @@ test_timeline_SOURCES  = test-timeline.c
+ test_score_SOURCES     = test-score.c
+ test_script_SOURCES    = test-script.c
  
 +test_textdir           = $(pkgdatadir)
 +test_text_DATA         = test-text.c
 +test_actorsdir         = $(pkgdatadir)
 +test_actors_DATA       = redhand.png
 +
- EXTRA_DIST = redhand.png
+ EXTRA_DIST = redhand.png test-script.json
 Index: clutter/tests/test-actors.c
 ===================================================================
---- clutter.orig/tests/test-actors.c	2007-07-09 19:17:50.000000000 +0100
-+++ clutter/tests/test-actors.c	2007-07-09 19:18:10.000000000 +0100
-@@ -146,7 +146,7 @@ main (int argc, char *argv[])
+--- clutter.orig/tests/test-actors.c	2007-11-06 12:29:17.000000000 +0000
++++ clutter/tests/test-actors.c	2007-11-06 12:29:21.000000000 +0000
+@@ -143,7 +143,7 @@ main (int argc, char *argv[])
    stage = clutter_stage_get_default ();
    clutter_actor_set_size (stage, 800, 600);
  
@@ -39,8 +39,8 @@ Index: clutter/tests/test-actors.c
      g_error("pixbuf load failed");
 Index: clutter/tests/test-text.c
 ===================================================================
---- clutter.orig/tests/test-text.c	2007-07-09 19:17:57.000000000 +0100
-+++ clutter/tests/test-text.c	2007-07-09 19:18:47.000000000 +0100
+--- clutter.orig/tests/test-text.c	2007-11-06 12:29:17.000000000 +0000
++++ clutter/tests/test-text.c	2007-11-06 12:29:21.000000000 +0000
 @@ -27,7 +27,7 @@ main (int argc, char *argv[])
  
    stage = clutter_stage_get_default ();
