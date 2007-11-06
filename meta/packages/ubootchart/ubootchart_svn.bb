@@ -8,7 +8,6 @@ PR = "r3"
 
 SRC_URI = "svn://ubootchart.googlecode.com/svn/;proto=http;module=trunk \
         file://sysvinit.patch;patch=1;pnum=0 \
-        file://pass-args.patch;patch=1;pnum=0 \
         file://ubootchart-stop \
         file://ubootchart.desktop"
 
