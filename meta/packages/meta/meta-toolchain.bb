@@ -75,10 +75,10 @@ do_populate_sdk() {
 	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/shlibs/
 	for pkg in $target_pkgs ; do
 		for arch in $revipkgarchs; do
-			if [ -e ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ]; then
-				echo "Found ${DEPLOY_DIR_IPK}/${pkg}_$arch.ipk"
-				cp ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk ${SDK_OUTPUT}/${prefix}/ipk/
-				orig_pkg=`ipkg-list-fields ${DEPLOY_DIR_IPK}/${pkg}_*_$arch.ipk | grep OE: | cut -d ' ' -f2`
+			if [ -e ${DEPLOY_DIR_IPK}/$arch/${pkg}_*_$arch.ipk ]; then
+				echo "Found ${DEPLOY_DIR_IPK}/$arch/${pkg}_$arch.ipk"
+				cp ${DEPLOY_DIR_IPK}/$arch/${pkg}_*_$arch.ipk ${SDK_OUTPUT}/${prefix}/ipk/
+				orig_pkg=`ipkg-list-fields ${DEPLOY_DIR_IPK}/$arch/${pkg}_*_$arch.ipk | grep OE: | cut -d ' ' -f2`
 				pkg_subdir=$arch${TARGET_VENDOR}${@['-' + bb.data.getVar('TARGET_OS', d, 1), ''][bb.data.getVar('TARGET_OS', d, 1) == ('' or 'custom')]}
 				mkdir -p ${SDK_OUTPUT}/${prefix}/pkgdata/$pkg_subdir/runtime
 				cp ${STAGING_DIR}/pkgdata/$pkg_subdir/$orig_pkg ${SDK_OUTPUT}/${prefix}/pkgdata/$pkg_subdir/
@@ -109,7 +109,7 @@ do_populate_sdk() {
 
         mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}
-	fakeroot tar cfj ${SDK_DEPLOY}/${DISTRO}-${DISTRO_VERSION}-${TARGET_ARCH}-toolchain.tar.bz2 .
+	fakeroot tar cfj ${SDK_DEPLOY}/${SDK_NAME}-toolchain-${DISTRO_VERSION}.tar.bz2 .
 }
 
 do_populate_sdk[nostamp] = "1"
