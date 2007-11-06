@@ -2,10 +2,11 @@ LICENSE = "GPLv2"
 PRIORITY = "optional"
 DEPENDS = "gtk+ startup-notification apmd"
 PV = "0.0+svnr${SRCREV}"
+PR = "r1"
 
-RPROVIDES = "matchbox-panel"
-RREPLACES = "matchbox-panel"
-RCONFLICTS = "matchbox-panel"
+RPROVIDES_${PN} = "matchbox-panel"
+RREPLACES_${PN} = "matchbox-panel"
+RCONFLICTS_${PN} = "matchbox-panel"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
