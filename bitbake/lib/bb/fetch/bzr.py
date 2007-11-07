@@ -48,16 +48,14 @@ class Bzr(Fetch):
         if 'rev' in ud.parm:
             ud.revision = ud.parm['rev']
         else:
-            # ***Nasty hack***
-            rev = data.getVar("SRCREV", d, 0)
-            if rev and "get_srcrev" in rev:
-                ud.revision = self.latest_revision(url, ud, d)
-            elif rev:
+            rev = data.getVar("SRCREV", d, 1)
+            if rev is "SRCREVINACTION":
+                rev = self.latest_revision(url, ud, d)
+            if rev:
                 ud.revision = rev
             else:
-                ud.revision = ""
+                ud.revision = ""	
 
-        
         ud.localfile = data.expand('bzr_%s_%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.revision), d)
         
         return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)

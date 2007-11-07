@@ -170,6 +170,8 @@ def localpaths(d):
 
     return local
 
+srcrev_internal_call = False
+
 def get_srcrev(d):
     """
     Return the version string for the current package
@@ -178,6 +180,19 @@ def get_srcrev(d):
     In the multi SCM case, we build a value based on SRCREV_FORMAT which must 
     have been set.
     """
+
+    #
+    # Ugly code alert. localpath in the fetchers will try to evaluate SRCREV which 
+    # could translate into a call to here. If it does, we need to catch this
+    # and provide some way so it knows get_srcrev is active instead of being
+    # some number etc. hence the srcrev_internal_call tracking and the magic  
+    # "SRCREVINACTION" return value.
+    #
+    # Neater solutions welcome!
+    #
+    if bb.fetch.srcrev_internal_call:
+        return "SRCREVINACTION"
+
     scms = []
     # Only call setup_localpath on URIs which suppports_srcrev() 
     urldata = init(bb.data.getVar('SRC_URI', d, 1).split(), d, False)
@@ -273,12 +288,14 @@ class FetchData(object):
     def setup_localpath(self, d):
         self.setup = True
         if "localpath" in self.parm:
+            # if user sets localpath for file, use it instead.
             self.localpath = self.parm["localpath"]
         else:
+            bb.fetch.srcrev_internal_call = True
             self.localpath = self.method.localpath(self.url, self, d)
+            bb.fetch.srcrev_internal_call = False
         self.md5 = self.localpath + '.md5'
         self.lockfile = self.localpath + '.lock'
-        # if user sets localpath for file, use it instead.
 
 
 class Fetch(object):

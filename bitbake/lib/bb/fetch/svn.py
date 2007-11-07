@@ -62,22 +62,18 @@ class Svn(Fetch):
             ud.revision = ""
         else:
             #
-            # ***Nasty hacks***
+            # ***Nasty hack***
             # If DATE in unexpanded PV, use ud.date (which is set from SRCDATE)
-            # Will warn people to switch to SRCREV here
-            #
-            # How can we tell when a user has overriden SRCDATE? 
-            # check for "get_srcdate" in unexpanded SRCREV - ugly
+            # Should warn people to switch to SRCREV here
             #
             pv = data.getVar("PV", d, 0)
             if "DATE" in pv:
                 ud.revision = ""
             else:
-                rev = data.getVar("SRCREV", d, 0)
-                if rev and "get_srcrev" in rev:
-                    ud.revision = self.latest_revision(url, ud, d)
-                    ud.date = ""
-                elif rev:
+                rev = data.getVar("SRCREV", d, 1)
+                if rev is "SRCREVINACTION":
+                    rev = self.latest_revision(url, ud, d)
+                if rev:
                     ud.revision = rev
                     ud.date = ""
                 else:

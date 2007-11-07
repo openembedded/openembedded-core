@@ -50,12 +50,15 @@ class Git(Fetch):
         if 'protocol' in ud.parm:
             ud.proto = ud.parm['protocol']
 
-        tag = data.getVar("SRCREV", d, 0)
+        tag = data.getVar("SRCREV", d, 1)
         if 'tag' in ud.parm:
             ud.tag = ud.parm['tag']
-        elif tag and "get_srcrev" not in tag and len(tag) == 40:
-            ud.tag = tag
+        elif tag is "SRCREVINACTION":
+            ud.tag = self.latest_revision(url, ud, d)
         else:
+            ud.tag = tag            
+
+        if ud.tag == "master":
             ud.tag = self.latest_revision(url, ud, d)
 
         ud.localfile = data.expand('git_%s%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.tag), d)
@@ -93,12 +96,12 @@ class Git(Fetch):
         runfetchcmd("git pull --tags %s://%s%s" % (ud.proto, ud.host, ud.path), d)
         runfetchcmd("git prune-packed", d)
         runfetchcmd("git pack-redundant --all | xargs -r rm", d)
-        # old method of downloading tags
-        #runfetchcmd("rsync -a --verbose --stats --progress rsync://%s%s/ %s" % (ud.host, ud.path, os.path.join(repodir, ".git", "")), d)
 
         os.chdir(repodir)
-        bb.msg.note(1, bb.msg.domain.Fetcher, "Creating tarball of git repository")
-        runfetchcmd("tar -czf %s %s" % (repofile, os.path.join(".", ".git", "*") ), d)
+        mirror_tarballs = data.getVar("BB_GENERATE_MIRROR_TARBALLS", d, True)
+        if mirror_tarballs != "0": 
+            bb.msg.note(1, bb.msg.domain.Fetcher, "Creating tarball of git repository")
+            runfetchcmd("tar -czf %s %s" % (repofile, os.path.join(".", ".git", "*") ), d)
 
         if os.path.exists(codir):
             prunedir(codir)
