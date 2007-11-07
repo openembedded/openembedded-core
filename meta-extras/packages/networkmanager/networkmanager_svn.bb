@@ -7,7 +7,7 @@ DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp"
 RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
 PV = "0.7+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
 	file://no-restarts.diff;patch=1;pnum=0 \
@@ -34,7 +34,7 @@ do_stage () {
 	autotools_stage_all
 }
 
-pkg_postinst () {
+pkg_postinst_${PN} () {
         if [ "x$D" != "x" ]; then
                 exit 1
         fi
