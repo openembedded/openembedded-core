@@ -1,0 +1,193 @@
+--- linux-2.6.22.5/arch/arm/common/gta01_pm_gsm.c.orig	2007-09-27 11:23:20.000000000 -0500
++++ linux-2.6.22.5/arch/arm/common/gta01_pm_gsm.c	2007-09-27 21:09:00.000000000 -0500
+@@ -23,6 +23,9 @@
+ #include <asm/arch/gta01.h>
+ #include <asm/arch/gta02.h>
+ 
++#include <linux/serial_core.h>
++void s3c24xx_set_flow_control(struct uart_port *port, int fc_on);
++
+ struct gta01pm_priv {
+ 	int gpio_ngsm_en;
+ 	struct console *con;
+@@ -49,6 +52,23 @@
+ static ssize_t gsm_read(struct device *dev, struct device_attribute *attr,
+ 			char *buf)
+ {
++	struct uart_driver *udrive = NULL;
++	struct uart_state *ustate = NULL;
++	struct uart_port *uport = NULL;
++
++	if (gta01_gsm.con) {
++		udrive = gta01_gsm.con->data;
++		if (udrive) {
++			ustate = udrive->state;
++			if (ustate) {
++				uport = ustate->port;
++			}
++		}
++	}
++	printk("gsm: gsm_read of \"%s\"\n", attr->attr.name);
++	printk("gsm: con=%p udrive=%p ustate=%p uport=%p\n",
++	       gta01_gsm.con, udrive, ustate, uport);
++
+ 	if (!strcmp(attr->attr.name, "power_on")) {
+ 		if (s3c2410_gpio_getpin(GTA01_GPIO_MODEM_ON))
+ 			goto out_1;
+@@ -58,6 +78,24 @@
+ 	} else if (!strcmp(attr->attr.name, "download")) {
+ 		if (s3c2410_gpio_getpin(GTA01_GPIO_MODEM_DNLOAD))
+ 			goto out_1;
++	} else if (!strcmp(attr->attr.name, "flowcontrol")) {
++		if (uport) {
++			if (uport->unused[2] & 0x2) {
++				if (uport->unused[2] & 0x1) {
++					printk("gsm: flow control allowed and on\n");
++					goto out_1;
++				} else {
++					printk("gsm: flow control allowed and not on\n");
++				}
++			} else {
++				if (uport->unused[2] & 0x1)
++					printk("gsm: flow control not allowed, "
++					       "but is pending\n");
++				else
++					printk("gsm: flow control not allowed, "
++					       "not pending\n");
++			}
++		}
+ 	}
+ 
+ 	return strlcpy(buf, "0\n", 3);
+@@ -68,10 +106,26 @@
+ static ssize_t gsm_write(struct device *dev, struct device_attribute *attr,
+ 			 const char *buf, size_t count)
+ {
++	struct uart_driver *udrive = NULL;
++	struct uart_state *ustate = NULL;
++	struct uart_port *uport = NULL;
++	static int was_on = 0;
+ 	unsigned long on = simple_strtoul(buf, NULL, 10);
+ 
++	if (gta01_gsm.con) {
++		udrive = gta01_gsm.con->data;
++		if (udrive) {
++			ustate = udrive->state;
++			if (ustate) {
++				uport = ustate->port;
++			}
++		}
++	}
++	printk("gsm: con=%p udrive=%p ustate=%p uport=%p\n",
++	       gta01_gsm.con, udrive, ustate, uport);
++
+ 	if (!strcmp(attr->attr.name, "power_on")) {
+-		if (on) {
++		if (on && !was_on) {
+ 			if (gta01_gsm.con) {
+ 				dev_info(dev, "powering up GSM, thus "
+ 					 "disconnecting serial console\n");
+@@ -83,7 +137,24 @@
+ 				s3c2410_gpio_setpin(gta01_gsm.gpio_ngsm_en, 0);
+ 
+ 			s3c2410_gpio_setpin(GTA01_GPIO_MODEM_ON, 1);
+-		} else {
++
++			if (uport) {
++				/* set any pending flow-control mode */
++				uport->unused[2] |= 0x2;
++				s3c24xx_set_flow_control(uport,
++							 (uport->unused[2] & 0x1));
++				dev_info(dev, "flow control allowed\n");
++			}
++
++			was_on = 1;
++
++		} else if (!on && was_on) {
++			if (uport) {
++				uport->unused[2] &= ~0x2;
++				s3c24xx_set_flow_control(uport, 0);
++				dev_info(dev, "flow control not allowed\n");
++			}
++
+ 			s3c2410_gpio_setpin(GTA01_GPIO_MODEM_ON, 0);
+ 
+ 			if (gta01_gsm.gpio_ngsm_en)
+@@ -95,6 +166,8 @@
+ 				dev_info(dev, "powered down GSM, thus enabling "
+ 					 "serial console\n");
+ 			}
++
++			was_on = 0;
+ 		}
+ 	} else if (!strcmp(attr->attr.name, "reset")) {
+ 		s3c2410_gpio_setpin(GTA01_GPIO_MODEM_RST, on);
+@@ -105,6 +178,7 @@
+ 	return count;
+ }
+ 
++static DEVICE_ATTR(flowcontrol, 0644, gsm_read, gsm_write);
+ static DEVICE_ATTR(power_on, 0644, gsm_read, gsm_write);
+ static DEVICE_ATTR(reset, 0644, gsm_read, gsm_write);
+ static DEVICE_ATTR(download, 0644, gsm_read, gsm_write);
+@@ -136,6 +210,7 @@
+ #endif
+ 
+ static struct attribute *gta01_gsm_sysfs_entries[] = {
++	&dev_attr_flowcontrol.attr,
+ 	&dev_attr_power_on.attr,
+ 	&dev_attr_reset.attr,
+ 	NULL,
+--- linux-2.6.22.5/drivers/serial/s3c2410.c.orig	2007-09-27 11:23:27.000000000 -0500
++++ linux-2.6.22.5/drivers/serial/s3c2410.c	2007-09-27 21:07:21.000000000 -0500
+@@ -80,6 +80,8 @@
+ 
+ #include <asm/arch/regs-serial.h>
+ #include <asm/arch/regs-gpio.h>
++#include <asm/mach-types.h>
++#include <asm/arch/gta01.h>
+ 
+ /* structures */
+ 
+@@ -729,6 +731,17 @@
+ 	return best->quot;
+ }
+ 
++/* This routine is called whenever the gta01 modem/console switches */
++void s3c24xx_set_flow_control(struct uart_port *port, int fc_on)
++{
++	unsigned int umcon;
++	if (machine_is_neo1973_gta01() && port) {
++		umcon = (fc_on) ? S3C2410_UMCOM_AFC : 0;
++		wr_regl(port, S3C2410_UMCON, umcon);
++	}
++}
++EXPORT_SYMBOL(s3c24xx_set_flow_control);
++
+ static void s3c24xx_serial_set_termios(struct uart_port *port,
+ 				       struct ktermios *termios,
+ 				       struct ktermios *old)
+@@ -803,6 +816,23 @@
+ 
+ 	umcon = (termios->c_cflag & CRTSCTS) ? S3C2410_UMCOM_AFC : 0;
+ 
++        /*
++	 * Custom handling of flow control on hwport 0 for the GTA01:
++	 *  Save the desired state for flow control, but if the port
++	 *  is being used as a console, then do not actually enable
++	 *  flow control unless the flag permiting us to do so is set.
++	 */
++	if (machine_is_neo1973_gta01() && (cfg->hwport == 0)) {
++		if (umcon)
++			port->unused[2] |= 0x1;
++		else
++			port->unused[2] &= ~0x1;
++		if (port->cons && (port->cons->index >= 0)) {
++			if (!(port->unused[2] & 0x2))
++				umcon = 0;
++		}
++	}
++
+ 	if (termios->c_cflag & PARENB) {
+ 		if (termios->c_cflag & PARODD)
+ 			ulcon |= S3C2410_LCON_PODD;

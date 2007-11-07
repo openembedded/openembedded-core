@@ -1,0 +1,91 @@
+Index: linux-2.6.22.5/drivers/input/evdev.c
+===================================================================
+--- linux-2.6.22.5.orig/drivers/input/evdev.c
++++ linux-2.6.22.5/drivers/input/evdev.c
+@@ -28,7 +28,7 @@ struct evdev {
+ 	char name[16];
+ 	struct input_handle handle;
+ 	wait_queue_head_t wait;
+-	struct evdev_client *grab;
++  int grab;
+ 	struct list_head client_list;
+ };
+ 
+@@ -36,6 +36,7 @@ struct evdev_client {
+ 	struct input_event buffer[EVDEV_BUFFER_SIZE];
+ 	int head;
+ 	int tail;
++  int grab;
+ 	struct fasync_struct *fasync;
+ 	struct evdev *evdev;
+ 	struct list_head node;
+@@ -48,8 +49,7 @@ static void evdev_event(struct input_han
+ 	struct evdev *evdev = handle->private;
+ 	struct evdev_client *client;
+ 
+-	if (evdev->grab) {
+-		client = evdev->grab;
++  list_for_each_entry(client, &evdev->client_list, node) {
+ 
+ 		do_gettimeofday(&client->buffer[client->head].time);
+ 		client->buffer[client->head].type = type;
+@@ -58,17 +58,7 @@ static void evdev_event(struct input_han
+ 		client->head = (client->head + 1) & (EVDEV_BUFFER_SIZE - 1);
+ 
+ 		kill_fasync(&client->fasync, SIGIO, POLL_IN);
+-	} else
+-		list_for_each_entry(client, &evdev->client_list, node) {
+-
+-			do_gettimeofday(&client->buffer[client->head].time);
+-			client->buffer[client->head].type = type;
+-			client->buffer[client->head].code = code;
+-			client->buffer[client->head].value = value;
+-			client->head = (client->head + 1) & (EVDEV_BUFFER_SIZE - 1);
+-
+-			kill_fasync(&client->fasync, SIGIO, POLL_IN);
+-		}
++	}
+ 
+ 	wake_up_interruptible(&evdev->wait);
+ }
+@@ -105,9 +95,10 @@ static int evdev_release(struct inode *i
+ 	struct evdev_client *client = file->private_data;
+ 	struct evdev *evdev = client->evdev;
+ 
+-	if (evdev->grab == client) {
+-		input_release_device(&evdev->handle);
+-		evdev->grab = NULL;
++	if (client->grab) {
++		if(!--evdev->grab && evdev->exist)
++			input_release_device(&evdev->handle);
++		client->grab = 0;
+ 	}
+ 
+ 	evdev_fasync(-1, file, 0);
+@@ -488,17 +479,19 @@ static long evdev_ioctl_handler(struct f
+ 
+ 		case EVIOCGRAB:
+ 			if (p) {
+-				if (evdev->grab)
+-					return -EBUSY;
+-				if (input_grab_device(&evdev->handle))
++				if (client->grab)
+ 					return -EBUSY;
+-				evdev->grab = client;
++				if (!evdev->grab++)
++					if (input_grab_device(&evdev->handle))
++						return -EBUSY;
++				client->grab = 0;
+ 				return 0;
+ 			} else {
+-				if (evdev->grab != client)
++				if (!client->grab)
+ 					return -EINVAL;
+-				input_release_device(&evdev->handle);
+-				evdev->grab = NULL;
++				if (!--evdev->grab)
++					input_release_device(&evdev->handle);
++				client->grab = 0;
+ 				return 0;
+ 			}
+ 
