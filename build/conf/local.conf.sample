@@ -67,8 +67,9 @@ PACKAGE_CLASSES ?= "package_ipk"
 #
 # The default is "eabi"
 # Use "oabi" for machines with kernels < 2.6.18 on ARM for example.
-# Use "external" to use the precompiled external poky toolchain.
-# POKYMODE = "external"
+# Use "external-MODE" to use the precompiled external toolchains where MODE
+# is the type of external toolchain to use e.g. eabi.
+# POKYMODE = "external-eabi"
 
 # Uncomment this to specify where BitBake should create its temporary files.
 # Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
