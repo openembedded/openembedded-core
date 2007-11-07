@@ -13,7 +13,16 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz"
 
 inherit autotools pkgconfig update-rc.d
 
-EXTRA_OECONF = "--with-distro=debian --disable-gdbm --disable-gtk --disable-mono --disable-monodoc --disable-qt3 --disable-qt4 --disable-python"
+EXTRA_OECONF = "--with-distro=debian \
+             --with-avahi-priv-access-group=adm \
+             --disable-gdbm \
+             --disable-gtk \
+             --disable-mono \
+             --disable-monodoc \
+             --disable-qt3 \
+             --disable-qt4 \
+             --disable-python \
+             --disable-doxygen-doc"
 
 PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-autoipd avahi-utils"
 
