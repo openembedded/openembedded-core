@@ -3,7 +3,7 @@ SECTION = "base"
 DEPENDS = "zlib"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
-PR = "r0"
+PR = "r1"
 
 # RP/kergoth: Builds seem to break with recent mtd-utils
 # Can't pin down the exact problems
