@@ -294,6 +294,9 @@ class FetchData(object):
             bb.fetch.srcrev_internal_call = True
             self.localpath = self.method.localpath(self.url, self, d)
             bb.fetch.srcrev_internal_call = False
+            # We have to clear data's internal caches since the cached value of SRCREV is now wrong.
+            # Horrible...
+            bb.data.delVar("ISHOULDNEVEREXIST", d)
         self.md5 = self.localpath + '.md5'
         self.lockfile = self.localpath + '.lock'
 
