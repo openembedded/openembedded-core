@@ -10,10 +10,10 @@ S = "${WORKDIR}/mpfr-${PV}"
 inherit autotools
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
+	oe_runmake install prefix=${STAGING_DIR_HOST}${layout_prefix} \
 	       bindir=${STAGING_BINDIR} \
 	       includedir=${STAGING_INCDIR} \
 	       libdir=${STAGING_LIBDIR} \
 	       datadir=${STAGING_DATADIR} \
-	       infodir=${STAGING_DIR}/${HOST_SYS}/info
+	       infodir=${STAGING_DIR_HOST}${layout_infodir}
 }
