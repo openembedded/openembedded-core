@@ -1,4 +1,5 @@
 LICENSE = "LGPL"
+DEPENDS = "gtk+"
 
 inherit gnome
 
