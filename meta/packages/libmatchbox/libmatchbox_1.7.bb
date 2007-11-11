@@ -4,5 +4,5 @@ SRC_URI = "http://projects.o-hand.com/matchbox/sources/${PN}/${PV}/${PN}-${PV}.t
 	   file://check.m4"
 
 do_configure_prepend () {
-	mv ${WORKDIR}/check.m4 ${S}/
+	cp ${WORKDIR}/check.m4 ${S}/
 }
