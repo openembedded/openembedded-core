@@ -30,8 +30,8 @@ do_stage () {
 		install -m 0644 ${S}/libexslt/$i ${STAGING_INCDIR}/libexslt/$i
 	done
 
-	cat xslt-config | sed -e "s,^prefix=.*,prefix=${STAGING_DIR}/${HOST_SYS}," \
-		       	     -e "s,^exec_prefix=.*,exec_prefix=${STAGING_DIR}/${HOST_SYS}," \
+	cat xslt-config | sed -e "s,^prefix=.*,prefix=${STAGING_DIR_HOST}${layout_prefix}," \
+		       	     -e "s,^exec_prefix=.*,exec_prefix=${STAGING_DIR_HOST}${layout_exec_prefix}," \
 			     -e "s,^includedir=.*,includedir=${STAGING_INCDIR}," \
 			     -e "s,^libdir=.*,libdir=${STAGING_LIBDIR}," > ${STAGING_BINDIR_CROSS}/xslt-config
 	chmod a+rx ${STAGING_BINDIR_CROSS}/xslt-config

@@ -10,7 +10,7 @@ S = "${WORKDIR}/curl-${PV}"
 
 inherit autotools pkgconfig binconfig
 
-EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
+EXTRA_OECONF = "--with-zlib=${STAGING_DIR_HOST}${layout_prefix}/ \
 		--without-ssl \
 		--with-random=/dev/urandom \
 		--without-idn \

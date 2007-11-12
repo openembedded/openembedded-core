@@ -15,7 +15,7 @@ inherit autotools pkgconfig binconfig
 
 do_stage() {
 	oe_runmake install \
-		prefix=${STAGING_DIR} \
+		prefix=${STAGING_DIR_HOST}${layout_prefix} \
 		bindir=${STAGING_BINDIR} \
 		includedir=${STAGING_INCDIR} \
 		libdir=${STAGING_LIBDIR} \

@@ -21,7 +21,6 @@ LEAD_SONAME = "libopensync.so"
 FILES_${PN} += " ${libdir}/opensync/formats/*.so ${datadir}/opensync/ ${libdir}/*.so"
 
 export HOST_SYS = "${HOST_ARCH}${HOST_VENDOR}-${HOST_OS}"
-#export PKG_CONFIG_PATH = "${STAGING_DIR}/${TARGET_SYS}/share/pkgconfig"
 
 do_stage() {
     install -d ${STAGING_LIBDIR}/formats

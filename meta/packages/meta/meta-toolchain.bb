@@ -91,8 +91,8 @@ do_populate_sdk() {
 					if [ -e ${STAGING_DIR}/pkgmaps/debian/$subpkg ]; then
 						cp ${STAGING_DIR}/pkgmaps/debian/$subpkg ${SDK_OUTPUT}/${prefix}/pkgmaps/debian/
 					fi
-					if [ -e ${STAGING_DIR}/${TARGET_SYS}/shlibs/$subpkg.list ]; then
-						cp ${STAGING_DIR}/${TARGET_SYS}/shlibs/$subpkg.* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/shlibs/
+					if [ -e ${STAGING_DIR_TARGET}/shlibs/$subpkg.list ]; then
+						cp ${STAGING_DIR_TARGET}/shlibs/$subpkg.* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/shlibs/
 					fi
 				done
 				break

@@ -19,7 +19,7 @@ EXTRA_OECONF=" --enable-shared --disable-rpath  "
 #}
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
+	oe_runmake install prefix=${STAGING_DIR_HOST}${layout_prefix} \
 	       bindir=${STAGING_BINDIR} \
 	       includedir=${STAGING_INCDIR}/tremor \
 	       libdir=${STAGING_LIBDIR} \

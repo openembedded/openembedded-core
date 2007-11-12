@@ -21,7 +21,7 @@ inherit autotools pkgconfig
 LDFLAGS += "-lpthread"
 
 do_configure_append = " cp ${WORKDIR}/iconv-detect.h ${S} "
-EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb=${STAGING_DIR}/${HOST_SYS} --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
+EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy --without-soup --with-libdb=${STAGING_DIR_HOST}${layout_prefix} --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
 
 
 PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev libedata-book libedata-book-dev libedata-cal libedata-cal-dev libedataserver libedataserver-dev"

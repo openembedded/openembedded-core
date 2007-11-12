@@ -28,11 +28,11 @@ do_stage() {
 	install -d ${DEPLOY_DIR}/ipk/
 	install -d ${STAGING_DIR}/pkgdata/
 	install -d ${STAGING_DIR}/pkgmaps/
-	install -d ${STAGING_DIR}/${TARGET_SYS}/shlibs/
+	install -d ${STAGING_DIR_TARGET}/shlibs/
 
 	cp -ar ${prefix}/ipk/* ${DEPLOY_DIR}/ipk/
 	cp -ar ${prefix}/pkgdata/* ${STAGING_DIR}/pkgdata/
 	cp -ar ${prefix}/pkgmaps/* ${STAGING_DIR}/pkgmaps/
-	cp -ar ${prefix}/${TARGET_SYS}/shlibs/* ${STAGING_DIR}/${TARGET_SYS}/shlibs/
+	cp -ar ${prefix}/${TARGET_SYS}/shlibs/* ${STAGING_DIR_TARGET}/shlibs/
 }
 

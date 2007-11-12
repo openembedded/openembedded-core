@@ -7,8 +7,8 @@ EXTRA_OECONF += "--with-sysroot=${SYSROOT}"
 do_configure () {
        # Work around Hardcoded path assumptions in gcc
        mkdir -p ${SYSROOT}/usr/
-       ln -s ${STAGING_DIR}/${TARGET_SYS}/include ${SYSROOT}/usr/include
-       ln -s ${STAGING_DIR}/${TARGET_SYS}/lib ${SYSROOT}/usr/lib
+       ln -s ${STAGING_DIR_TARGET}${layout_includedir} ${SYSROOT}/usr/include
+       ln -s ${STAGING_DIR_TARGET}${layout_libdir} ${SYSROOT}/usr/lib
        (cd ${S} && gnu-configize) || die "failure running gnu-configize"
        (cd ${S}/libstdc++-v3 && autoreconf)
        oe_runconf

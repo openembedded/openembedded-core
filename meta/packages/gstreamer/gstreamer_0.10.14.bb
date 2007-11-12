@@ -20,12 +20,12 @@ EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=
 #}
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
+	oe_runmake install prefix=${STAGING_DIR_HOST}${layout_prefix} \
 	       bindir=${STAGING_BINDIR} \
 	       includedir=${STAGING_INCDIR} \
 	       libdir=${STAGING_LIBDIR} \
 	       datadir=${STAGING_DATADIR} \
-	       mandir=${STAGING_DIR}/share/man
+	       mandir=${STAGING_DIR_HOST}${layout_mandir}
 }
 
 FILES_${PN} += " ${libdir}/gstreamer-0.10/*.so"
