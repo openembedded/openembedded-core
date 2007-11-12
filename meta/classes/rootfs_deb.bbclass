@@ -47,6 +47,8 @@ fakeroot rootfs_deb_do_rootfs () {
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 
+	mkdir -p ${IMAGE_ROOTFS}/var/lib/dpkg/alternatives
+
 	apt-get update
 
 	_flag () {
