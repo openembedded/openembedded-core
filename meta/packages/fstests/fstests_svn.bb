@@ -2,7 +2,9 @@ DESCRIPTION = "Various benchmarning tests for X"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "GPL"
+DEPENDS = "pango"
 PV = "0.0+svnr${SRCREV}"
+PR = "r1"
 
 inherit autotools
 
