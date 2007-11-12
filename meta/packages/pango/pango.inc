@@ -18,6 +18,7 @@ RRECOMMENDS_${PN} = "pango-module-basic-x pango-module-basic-fc"
 FULL_OPTIMIZATION_arm = "-O2"
 
 SRC_URI += "file://no-tests.patch;patch=1 \
+            file://configure_fixes.patch;patch=1 \
            "
 
 EXTRA_OECONF = "--disable-glibtest \
