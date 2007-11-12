@@ -4,8 +4,8 @@
 
 inherit package
 
-BOOTSTRAP_EXTRA_RDEPENDS += "dpkg"
-DISTRO_EXTRA_RDEPENDS += "dpkg"
+BOOTSTRAP_EXTRA_RDEPENDS += "dpkg run-postinsts"
+DISTRO_EXTRA_RDEPENDS += "dpkg run-postinsts"
 IMAGE_PKGTYPE ?= "deb"
 
 # Map TARGET_ARCH to Debian's ideas about architectures
@@ -28,7 +28,7 @@ python do_package_deb_install () {
     pkgfn = bb.data.getVar('PKGFN', d, 1)
     rootfs = bb.data.getVar('IMAGE_ROOTFS', d, 1)
     debdir = bb.data.getVar('DEPLOY_DIR_DEB', d, 1)
-    stagingdir = bb.data.getVar('STAGING_DIR', d, 1)
+    apt_config = bb.data.expand('${STAGING_ETCDIR_NATIVE}/apt/apt.conf', d)
     stagingbindir = bb.data.getVar('STAGING_BINDIR_NATIVE', d, 1)
     tmpdir = bb.data.getVar('TMPDIR', d, 1)
 
@@ -54,8 +54,8 @@ python do_package_deb_install () {
     # env of the fork+execve'd processs
 
     # Set up environment
-    apt_config = os.getenv('APT_CONFIG')
-    os.putenv('APT_CONFIG', os.path.join(stagingdir, 'etc', 'apt', 'apt.conf'))
+    apt_config_backup = os.getenv('APT_CONFIG')
+    os.putenv('APT_CONFIG', apt_config)
     path = os.getenv('PATH')
     os.putenv('PATH', '%s:%s' % (stagingbindir, os.getenv('PATH')))
 
@@ -64,7 +64,7 @@ python do_package_deb_install () {
     commands.getstatusoutput('apt-get install -y %s' % pkgfn)
 
     # revert environment
-    os.putenv('APT_CONFIG', apt_config)
+    os.putenv('APT_CONFIG', apt_config_backup)
     os.putenv('PATH', path)
 }
 
