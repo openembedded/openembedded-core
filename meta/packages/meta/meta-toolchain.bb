@@ -51,19 +51,14 @@ do_populate_sdk() {
 		fi
 	done
 
-	mv ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/gcc* ${SDK_OUTPUT}/${prefix}/lib
-
-	cp -pPR ${TMPDIR}/cross/${TARGET_SYS}/include/linux/ ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/
-        cp -pPR ${TMPDIR}/cross/${TARGET_SYS}/include/asm/ ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/
-	chmod -R a+r ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/
-	find ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/ -type d | xargs chmod +x
+	mv ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/gcc ${SDK_OUTPUT}/${prefix}/lib
 
 	echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libpthread.so
 	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libc.so
 
 	# remove unwanted housekeeping files
-	mv ${SDK_OUTPUT}${libdir}/../${TARGET_SYS}/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
-	rm -Rf ${SDK_OUTPUT}${libdir}/ipkg
+	mv ${SDK_OUTPUT}${prefix}/${TARGET_SYS}/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
+	rm -Rf ${SDK_OUTPUT}${prefix}/${TARGET_SYS}/lib/ipkg
 	mv ${SDK_OUTPUT}/usr/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status-host
 	rm -Rf ${SDK_OUTPUT}/usr/lib
 
