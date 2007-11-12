@@ -3,7 +3,7 @@ inherit cross
 DEPENDS += "flex-native bison-native"
 PROVIDES = "virtual/${TARGET_PREFIX}binutils"
 PACKAGES = ""
-EXTRA_OECONF = "--with-sysroot=${CROSS_DIR}/${TARGET_SYS} \
+EXTRA_OECONF = "--with-sysroot=${STAGING_DIR_TARGET} \
 		--program-prefix=${TARGET_PREFIX}"
 
 do_stage () {

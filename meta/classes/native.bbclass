@@ -27,7 +27,7 @@ CPPFLAGS = "${BUILD_CPPFLAGS}"
 CFLAGS = "${BUILD_CFLAGS}"
 CXXFLAGS = "${BUILD_CFLAGS}"
 LDFLAGS = "${BUILD_LDFLAGS}"
-LDFLAGS_build-darwin = "-L${STAGING_DIR}/${BUILD_SYS}/lib "
+LDFLAGS_build-darwin = "-L${STAGING_LIBDIR_NATIVE} "
 
 STAGING_BINDIR = "${STAGING_BINDIR_NATIVE}"
 STAGING_BINDIR_CROSS = "${STAGING_BINDIR_NATIVE}"
@@ -47,39 +47,33 @@ export AS = "${HOST_PREFIX}as"
 export RANLIB = "${HOST_PREFIX}ranlib"
 export STRIP = "${HOST_PREFIX}strip"
 
-
 # Path prefixes
-base_prefix = "${exec_prefix}"
-prefix = "${STAGING_DIR}"
-exec_prefix = "${STAGING_DIR}/${BUILD_ARCH}-${BUILD_OS}"
+export base_prefix = "${STAGING_DIR_NATIVE}"
+export prefix = "${STAGING_DIR_NATIVE}${layout_prefix}"
+export exec_prefix = "${STAGING_DIR_NATIVE}${layout_exec_prefix}"
 
 # Base paths
-base_bindir = "${base_prefix}/bin"
-base_sbindir = "${base_prefix}/bin"
-base_libdir = "${base_prefix}/lib"
+export base_bindir = "${STAGING_DIR_NATIVE}${layout_base_bindir}"
+export base_sbindir = "${STAGING_DIR_NATIVE}${layout_base_sbindir}"
+export base_libdir = "${STAGING_DIR_NATIVE}${layout_base_libdir}"
 
 # Architecture independent paths
-sysconfdir = "${prefix}/etc"
-sharedstatedir = "${prefix}/com"
-localstatedir = "${prefix}/var"
-infodir = "${datadir}/info"
-mandir = "${datadir}/man"
-docdir = "${datadir}/doc"
-servicedir = "${prefix}/srv"
+export datadir = "${STAGING_DIR_NATIVE}${layout_datadir}"
+export sysconfdir = "${STAGING_DIR_NATIVE}${layout_sysconfdir}"
+export sharedstatedir = "${STAGING_DIR_NATIVE}${layout_sharedstatedir}"
+export localstatedir = "${STAGING_DIR_NATIVE}${layout_localstatedir}"
+export infodir = "${STAGING_DIR_NATIVE}${layout_infodir}"
+export mandir = "${STAGING_DIR_NATIVE}${layout_mandir}"
+export docdir = "${STAGING_DIR_NATIVE}${layout_docdir}"
+export servicedir = "${STAGING_DIR_NATIVE}${layout_servicedir}"
 
 # Architecture dependent paths
-bindir = "${exec_prefix}/bin"
-sbindir = "${exec_prefix}/bin"
-libexecdir = "${exec_prefix}/libexec"
-libdir = "${exec_prefix}/lib"
-includedir = "${exec_prefix}/include"
-oldincludedir = "${exec_prefix}/include"
-
-# Datadir is made arch dependent here, primarily
-# for autoconf macros, and other things that
-# may be manipulated to handle crosscompilation
-# issues.
-datadir = "${exec_prefix}/share"
+export bindir = "${STAGING_DIR_NATIVE}${layout_bindir}"
+export sbindir = "${STAGING_DIR_NATIVE}${layout_sbindir}"
+export libexecdir = "${STAGING_DIR_NATIVE}${layout_libexecdir}"
+export libdir = "${STAGING_DIR_NATIVE}${layout_libdir}"
+export includedir = "${STAGING_DIR_NATIVE}${layout_includedir}"
+export oldincludedir = "${STAGING_DIR_NATIVE}${layout_includedir}"
 
 do_stage () {
 	if [ "${INHIBIT_NATIVE_STAGE_INSTALL}" != "1" ]
