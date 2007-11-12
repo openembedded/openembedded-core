@@ -1,7 +1,7 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r57"
+PR = "r58"
 LICENSE = "GPL"
 
 SRC_URI = " \
@@ -141,7 +141,7 @@ do_install_append_netbook-pro () {
 	mkdir -p ${D}/initrd
 }
 
-PACKAGES = "${PN}-doc ${PN}"
+PACKAGES = "${PN}-doc ${PN} ${PN}-dev ${PN}-dbg"
 FILES_${PN} = "/"
 FILES_${PN}-doc = "${docdir} ${datadir}/common-licenses"
 
