@@ -15,8 +15,8 @@ def get_pkgconfig_mangle(d):
 		s += " -e 's:OELIBDIR:${STAGING_LIBDIR}:;'"
 		s += " -e 's:OEINCDIR:${STAGING_INCDIR}:;'"
 		s += " -e 's:OEDATADIR:${STAGING_DATADIR}:'"
-		s += " -e 's:OEPREFIX:${STAGING_LIBDIR}/..:'"
-		s += " -e 's:OEEXECPREFIX:${STAGING_LIBDIR}/..:'"
+		s += " -e 's:OEPREFIX::${STAGING_DIR_HOST}${layout_prefix}:'"
+		s += " -e 's:OEEXECPREFIX::${STAGING_DIR_HOST}${layout_exec_prefix}:'"
 	return s
 
 do_stage_append () {
