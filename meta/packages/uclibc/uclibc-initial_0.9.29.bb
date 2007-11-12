@@ -9,18 +9,14 @@ PACKAGES = ""
 
 do_stage() {
 	# Install initial headers into the cross dir
-	make PREFIX= DEVEL_PREFIX=${UCLIBC_PREFIX}/ \
-		RUNTIME_PREFIX=${UCLIBC_PREFIX}/ \
+	make PREFIX= DEVEL_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
+		RUNTIME_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
 		pregen install_dev
 
-	mkdir -p ${CROSS_DIR}/${TARGET_SYS}
-	mkdir -p ${CROSS_DIR}/${TARGET_SYS}/include
-	mkdir -p ${CROSS_DIR}/${TARGET_SYS}/lib
 	ln -sf include ${CROSS_DIR}/${TARGET_SYS}/sys-include
-	rm -rf ${CROSS_DIR}/${TARGET_SYS}/${prefix}
 
 	# This conflicts with the c++ version of this header
-	rm -f ${UCLIBC_PREFIX}/include/bits/atomicity.h
+	rm -f ${UCLIBC_STAGE_PREFIX}/include/bits/atomicity.h
 }
 
 do_install() {

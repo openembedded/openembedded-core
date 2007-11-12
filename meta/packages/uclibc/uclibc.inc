@@ -66,8 +66,7 @@ UCLIBC_LOCALE_URI_arm = "http://openembedded.org/dl/uclibc-locale/${UCLIBC_LOCAL
 SRC_URI = "${@['${UCLIBC_LOCALE_URI}', ''][bb.data.getVar('USE_NLS', d, 1) != 'yes']} \
 	   file://uClibc.config"
 
-UCLIBC_PREFIX = "${CROSS_DIR}/${TARGET_SYS}"
-UCLIBC_STAGE_PREFIX = "${STAGING_DIR}/${HOST_SYS}"
+UCLIBC_STAGE_PREFIX = "${STAGING_DIR_HOST}${layout_prefix}"
 
 # do_stage barfs on a CC with whitepspace, therefore put the 'HOST_CC_ARCH' in
 # the CFLAGS (for when building the utils).
@@ -145,34 +144,14 @@ do_configure() {
 }
 
 do_stage() {
-	# Install into the cross dir (this MUST be done first because we
-	# will install crt1.o in the install_dev stage and gcc needs it)
-	oe_runmake PREFIX= DEVEL_PREFIX=${UCLIBC_PREFIX}/ \
-		RUNTIME_PREFIX=${UCLIBC_PREFIX}/ \
+	oe_runmake PREFIX= DEVEL_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
+		RUNTIME_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
 		install_dev install_runtime
 
 	oe_runmake utils
-	oe_runmake PREFIX= DEVEL_PREFIX=${UCLIBC_PREFIX}/ \
-		RUNTIME_PREFIX=${UCLIBC_PREFIX}/ \
-		install_utils
-
-	# We don't really need this
-	rm -f ${UCLIBC_PREFIX}/include/.cvsignore
-
-	# Fixup shared lib symlinks
-	( cd ${UCLIBC_PREFIX}/lib
-		for f in c crypt dl m nsl pthread resolv thread_db util; do
-			ln -sf lib${f}.so.? lib${f}.so
-		done
-	)
-
-	# This conflicts with the c++ version of this header
-	rm -f ${UCLIBC_PREFIX}/include/bits/atomicity.h
-
-	# Install into the staging dir
 	oe_runmake PREFIX= DEVEL_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
 		RUNTIME_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
-		install_dev install_runtime install_utils
+		install_utils
 
 	# We don't really need this
 	rm -f ${UCLIBC_STAGE_PREFIX}/include/.cvsignore
