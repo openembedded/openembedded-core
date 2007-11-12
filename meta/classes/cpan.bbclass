@@ -20,14 +20,14 @@ cpan_do_configure () {
 				-e "s:\(SITEARCHEXP = \).*:\1${sitearchexp}:" \
 				-e "s:\(INSTALLVENDORLIB = \).*:\1${D}${datadir}/perl5:" \
 				-e "s:\(INSTALLVENDORARCH = \).*:\1${D}${libdir}/perl5:" \
-				-e "s:\(LDDLFLAGS.*\)${STAGING_DIR}/${BUILD_SYS}/lib:\1${STAGING_LIBDIR}:" \
+				-e "s:\(LDDLFLAGS.*\)${STAGING_LIBDIR_NATIVE}:\1${STAGING_LIBDIR}:" \
 				Makefile
 		else
 			sed -i -e "s:\(SITELIBEXP = \).*:\1${sitelibexp}:" \
 				-e "s:\(SITEARCHEXP = \).*:\1${sitearchexp}:" \
 				-e "s:\(INSTALLVENDORLIB = \).*:\1${D}${libdir}/perl5/site_perl/${version}:" \
 				-e "s:\(INSTALLVENDORARCH = \).*:\1${D}${libdir}/perl5/site_perl/${version}:" \
-				-e "s:\(LDDLFLAGS.*\)${STAGING_DIR}/${BUILD_SYS}/lib:\1${STAGING_LIBDIR}:" \
+				-e "s:\(LDDLFLAGS.*\)${STAGING_LIBDIR_NATIVE}:\1${STAGING_LIBDIR}:" \
 				Makefile
 		fi
 	fi

@@ -41,7 +41,7 @@ build_boot_bin() {
     		install -m 0644 ${INITRD} ${HDDDIR}/initrd
 	fi
 
-	install -m 444 ${STAGING_DIR}/${BUILD_SYS}/share/syslinux/ldlinux.sys \
+	install -m 444 ${STAGING_DATADIR_NATIVE}/syslinux/ldlinux.sys \
 	${HDDDIR}/ldlinux.sys
 
 	# Do a little math, bash style
@@ -75,7 +75,7 @@ build_boot_bin() {
 		install -m 0644 ${INITRD} ${ISODIR}/initrd
 
 		# And install the syslinux stuff 
-		cp ${STAGING_DIR}/${BUILD_SYS}/share/syslinux/isolinux.bin \
+		cp ${STAGING_DATADIR_NATIVE}/syslinux/isolinux.bin \
 		${ISODIR}
 
 		mkisofs -V ${BOOTIMG_VOLUME_ID} \

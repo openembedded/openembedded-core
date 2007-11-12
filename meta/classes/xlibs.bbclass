@@ -6,10 +6,10 @@ XLIBS_CVS = "${FREEDESKTOP_CVS}/xlibs"
 inherit autotools pkgconfig
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR} \
+	oe_runmake install prefix=${STAGING_DIR_HOST}${layout_prefix} \
 	       bindir=${STAGING_BINDIR} \
 	       includedir=${STAGING_INCDIR} \
 	       libdir=${STAGING_LIBDIR} \
 	       datadir=${STAGING_DATADIR} \
-		mandir=${STAGING_DATADIR}/man
+		mandir=${STAGING_DIR_HOST}${layout_mandir}
 }

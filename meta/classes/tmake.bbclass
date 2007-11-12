@@ -54,7 +54,7 @@ python tmake_do_createpro() {
 }
 
 tmake_do_configure() {
-	paths="${STAGING_DATADIR}/tmake/qws/${TARGET_OS}-${TARGET_ARCH}-g++ $STAGING_DIR/share/tmake/$OS-g++"
+	paths="${STAGING_DATADIR}/tmake/qws/${TARGET_OS}-${TARGET_ARCH}-g++ ${STAGING_DATADIR}/tmake/$OS-g++"
 	if (echo "${TARGET_ARCH}"|grep -q 'i.86'); then
 		paths="${STAGING_DATADIR}/tmake/qws/${TARGET_OS}-x86-g++ $paths"
 	fi
