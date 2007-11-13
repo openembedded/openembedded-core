@@ -4,10 +4,10 @@ LICENSE = "GPL"
 SECTION = "bootloader"
 PRIORITY = "optional"
 PROVIDES = "virtual/bootloader"
-PV = "1.2.0+git${SRCDATE}+svnr${SRCREV}"
+PV = "1.2.0${SRCREV}"
 PR = "r1"
 
-SRCREV_FORMAT = "patches"
+SRCREV_FORMAT = "+svnrpatches+git-locrevupstream"
 
 UBOOT_MACHINES = "gta01bv2 gta01bv3 gta01bv4 smdk2440 hxd8 qt2410 gta02v1 gta02v2"
 
