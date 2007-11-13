@@ -13,7 +13,7 @@ inherit autotools pkgconfig
 
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
 RDEPENDS_${PN}-dev = ""
-RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${PE}:${PV}-${PR})"
+RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${DEBPV})"
 
 do_stage() {
         autotools_stage_all

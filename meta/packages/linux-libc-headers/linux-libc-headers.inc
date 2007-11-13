@@ -4,4 +4,4 @@ LICENSE = "GPL"
 
 #DEPENDS = "cross-linkage"
 RDEPENDS_${PN}-dev = ""
-RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${PV}-${PR})"
+RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${DEBPV})"
