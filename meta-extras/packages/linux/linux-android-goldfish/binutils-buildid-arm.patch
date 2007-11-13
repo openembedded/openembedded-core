@@ -1,0 +1,16 @@
+---
+ arch/arm/kernel/vmlinux.lds.S |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: linux-2.6.22/arch/arm/kernel/vmlinux.lds.S
+===================================================================
+--- linux-2.6.22.orig/arch/arm/kernel/vmlinux.lds.S	2007-09-11 18:32:29.000000000 +0200
++++ linux-2.6.22/arch/arm/kernel/vmlinux.lds.S	2007-09-11 18:33:42.000000000 +0200
+@@ -94,6 +94,7 @@
+ 			TEXT_TEXT
+ 			SCHED_TEXT
+ 			LOCK_TEXT
++			*(.note.*)
+ #ifdef CONFIG_MMU
+ 			*(.fixup)
+ #endif

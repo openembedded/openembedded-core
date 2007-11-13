@@ -1,0 +1,45 @@
+Index: qemu/linux-user/elfload.c
+===================================================================
+--- qemu.orig/linux-user/elfload.c	2007-11-12 06:58:42.000000000 +0000
++++ qemu/linux-user/elfload.c	2007-11-12 20:41:37.000000000 +0000
+@@ -12,6 +12,10 @@
+ #include "qemu.h"
+ #include "disas.h"
+ 
++#ifndef O_BINARY
++#define O_BINARY    0 
++#endif
++
+ /* this flag is uneffective under linux too, should be deleted */
+ #ifndef MAP_DENYWRITE
+ #define MAP_DENYWRITE 0
+Index: qemu/linux-user/linuxload.c
+===================================================================
+--- qemu.orig/linux-user/linuxload.c	2007-11-12 06:58:42.000000000 +0000
++++ qemu/linux-user/linuxload.c	2007-11-12 20:35:16.000000000 +0000
+@@ -12,6 +12,10 @@
+ 
+ #define NGROUPS 32
+ 
++#ifndef O_BINARY
++#define O_BINARY    0 
++#endif
++
+ /* ??? This should really be somewhere else.  */
+ void memcpy_to_target(target_ulong dest, const void *src,
+                       unsigned long len)
+Index: qemu/hw/qfb_fs.c
+===================================================================
+--- qemu.orig/hw/qfb_fs.c	2007-11-12 06:58:41.000000000 +0000
++++ qemu/hw/qfb_fs.c	2007-11-12 20:59:34.000000000 +0000
+@@ -14,6 +14,10 @@
+ #include <sys/xattr.h>
+ #include <errno.h>
+ 
++#ifndef O_BINARY
++#define O_BINARY    0 
++#endif
++
+ /* all mount paths */
+ static int next_path_index = 0;
+ static struct mount_path mount_paths[MAX_MOUNT_PATHS];
