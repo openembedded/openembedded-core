@@ -50,13 +50,14 @@ class Git(Fetch):
         if 'protocol' in ud.parm:
             ud.proto = ud.parm['protocol']
 
-        tag = data.getVar("SRCREV", d, 1)
-        if 'tag' in ud.parm:
-            ud.tag = ud.parm['tag']
-        elif tag is "SRCREVINACTION":
-            ud.tag = self.latest_revision(url, ud, d)
-        else:
-            ud.tag = tag            
+        tag = Fetch.srcrev_internal_helper(ud, d)
+        if tag is True:
+            ud.tag = self.latest_revision(url, ud, d)	
+        elif tag:
+            ud.tag = tag
+
+        if not ud.tag:
+            ud.tag = self.latest_revision(url, ud, d)	
 
         if ud.tag == "master":
             ud.tag = self.latest_revision(url, ud, d)
@@ -132,3 +133,5 @@ class Git(Fetch):
         output = runfetchcmd("git ls-remote %s://%s%s" % (ud.proto, ud.host, ud.path), d, True)
         return output.split()[0]
 
+    def _build_revision(self, url, ud, d):
+        return ud.tag        

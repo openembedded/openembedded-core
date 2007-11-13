@@ -194,6 +194,7 @@ def get_srcrev(d):
         return "SRCREVINACTION"
 
     scms = []
+
     # Only call setup_localpath on URIs which suppports_srcrev() 
     urldata = init(bb.data.getVar('SRC_URI', d, 1).split(), d, False)
     for u in urldata:
@@ -365,6 +366,34 @@ class Fetch(object):
         return data.getVar("SRCDATE", d, 1) or data.getVar("CVSDATE", d, 1) or data.getVar("DATE", d, 1)
     getSRCDate = staticmethod(getSRCDate)
 
+    def srcrev_internal_helper(ud, d):
+        """
+        Return:
+            a) a source revision if specified
+	    b) True if auto srcrev is in action
+	    c) False otherwise
+        """
+
+        if 'rev' in ud.parm:
+            return ud.parm['rev']
+
+        if 'tag' in ud.parm:
+            return ud.parm['tag']
+
+        rev = None
+        if 'name' in ud.parm:
+            pn = data.getVar("PN", d, 1)
+            rev = data.getVar("SRCREV_pn-" + pn + "_" + ud.parm['name'], d, 1)
+        if not rev:
+            rev = data.getVar("SRCREV", d, 1)
+        if not rev:
+            return False
+        if rev is "SRCREVINACTION":
+            return True
+        return rev
+
+    srcrev_internal_helper = staticmethod(srcrev_internal_helper)
+
     def try_mirror(d, tarfn):
         """
         Try to use a mirrored version of the sources. We do this
@@ -454,7 +483,7 @@ class Fetch(object):
 
         pd = persist_data.PersistData(d)
         key = self._revision_key(url, ud, d)
-        latest_rev = self.latest_revision(url, ud, d)
+        latest_rev = self._build_revision(url, ud, d)
         last_rev = pd.getValue("BB_URI_LOCALCOUNT", key + "_rev")
         count = pd.getValue("BB_URI_LOCALCOUNT", key + "_count")
 

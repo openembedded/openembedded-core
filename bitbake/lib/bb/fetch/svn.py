@@ -70,10 +70,11 @@ class Svn(Fetch):
             if "DATE" in pv:
                 ud.revision = ""
             else:
-                rev = data.getVar("SRCREV", d, 1)
-                if rev is "SRCREVINACTION":
-                    rev = self.latest_revision(url, ud, d)
-                if rev:
+                rev = Fetch.srcrev_internal_helper(ud, d)
+                if rev is True:
+                    ud.revision = self.latest_revision(url, ud, d)
+                    ud.date = ""
+                elif rev:
                     ud.revision = rev
                     ud.date = ""
                 else:
@@ -195,8 +196,9 @@ class Svn(Fetch):
     def _sortable_revision(self, url, ud, d):
         """
         Return a sortable revision number which in our case is the revision number
-        (use the cached version to avoid network access)
         """
 
-        return self.latest_revision(url, ud, d)
+        return self._build_revision(url, ud, d)
 
+    def _build_revision(self, url, ud, d):
+        return ud.revision
