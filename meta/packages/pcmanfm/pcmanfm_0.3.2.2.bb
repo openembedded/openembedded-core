@@ -4,7 +4,7 @@ SECTION = "x11"
 PRIORITY = "optional"
 DEPENDS = "gtk+ libowl"
 
-PR="r1"
+PR="r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-fs-directory.png \
