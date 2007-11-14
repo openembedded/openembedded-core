@@ -23,7 +23,7 @@ FILES_${PN} = "${bindir}/* \
                ${datadir}/themes/Default/matchbox \
                ${datadir}/themes/MBOpus/matchbox"
 
-EXTRA_OECONF = "--enable-startup-notification --disable-xrm --enable-expat"
+EXTRA_OECONF = " --enable-startup-notification --disable-xrm --with-expat-lib=${STAGING_LIBDIR} --with-expat-includes=${STAGING_INCDIR} --enable-expat"
 
 do_install_prepend() {
 	install ${WORKDIR}/kbdconfig ${S}/data/kbdconfig

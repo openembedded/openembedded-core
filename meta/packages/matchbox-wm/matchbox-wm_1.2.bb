@@ -24,7 +24,7 @@ ALTERNATIVE_LINK = "${bindir}/x-window-manager"
 ALTERNATIVE_PATH = "${bindir}/matchbox-session"
 ALTERNATIVE_PRIORITY = "10"
 
-EXTRA_OECONF = " --enable-startup-notification --disable-xrm"
+EXTRA_OECONF = " --enable-startup-notification --disable-xrm --with-expat-lib=${STAGING_LIBDIR} --with-expat-includes=${STAGING_INCDIR}"
 
 do_configure_prepend () {
         cp ${WORKDIR}/gconf-2.m4 ${S}/
