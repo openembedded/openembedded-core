@@ -6,6 +6,8 @@ RDEPENDS = "gst-meta-base"
 RRECOMMENDS = "gst-meta-audio gst-meta-video"
 
 PV = "0.1+svnr${SRCREV}"
+PR = "r1"
+
 S = "${WORKDIR}/${PN}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http \

@@ -1,11 +1,10 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Video
 Exec=video
 Icon=video-player
 Terminal=false
 Type=Application
 Categories=AudioVideo;Video;Player;
-SingleInstance=true
+X-MB-SingleInstance=true
 StartupNotify=true
 Comment=Video Player
