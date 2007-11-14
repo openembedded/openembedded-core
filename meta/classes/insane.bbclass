@@ -318,7 +318,10 @@ def package_qa_check_desktop(path, name, d):
     import bb, os
     if path.endswith(".desktop"):
         validate = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True), 'desktop-file-validate')
-        os.system ("%s %s" % (validate, path))
+        output = os.popen("%s %s" % (validate, path))
+        # This only produces output on errors
+        for l in output:
+            bb.error(l.strip())
     return True
 
 def package_qa_check_staged(path,d):
