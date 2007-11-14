@@ -1,0 +1,33 @@
+Index: gettext-0.14.1/gettext-tools/configure.ac
+===================================================================
+--- gettext-0.14.1.orig/gettext-tools/configure.ac	2004-01-16 10:49:06.000000000 +0000
++++ gettext-0.14.1/gettext-tools/configure.ac	2007-11-14 21:43:39.000000000 +0000
+@@ -37,28 +37,16 @@
+ AC_PROG_YACC
+ 
+ gt_GCJ
+-if test -n "$HAVE_GCJ"; then
+-  BUILDJAVAEXE=yes
+-else
+   BUILDJAVAEXE=no
+-fi
+ AC_SUBST(BUILDJAVAEXE)
+ 
+ gt_JAVACOMP
+ AC_CHECK_PROG(JAR, jar, jar)
+-if test -n "$HAVE_JAVACOMP" && test -n "$JAR"; then
+-  BUILDJAVA=yes
+-else
+   BUILDJAVA=no
+-fi
+ AC_SUBST(BUILDJAVA)
+ 
+ gt_JAVAEXEC
+-if test -n "$HAVE_JAVAEXEC" && test $BUILDJAVA = yes; then
+-  TESTJAVA=yes
+-else
+   TESTJAVA=no
+-fi
+ AC_SUBST(TESTJAVA)
+ 
+ gt_CSHARPCOMP

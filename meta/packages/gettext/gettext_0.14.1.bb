@@ -8,7 +8,8 @@ PROVIDES = "virtual/libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://gettext-vpath.patch;patch=1;pnum=1 \
 	   file://fixchicken.patch;patch=1;pnum=1 \
-           file://getline.m4.patch;patch=1"
+           file://getline.m4.patch;patch=1 \
+           file://disable_java.patch;patch=1"
 
 SRC_URI_append_linux-uclibc = " file://gettext-error_print_progname.patch;patch=1"
 SRC_URI_append_linux-uclibcgnueabi = " file://gettext-error_print_progname.patch;patch=1"
