@@ -5,6 +5,7 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "glib-2.0 gettext-native libxml2 bison-native flex-native"
+PR = "r1"
 
 inherit autotools pkgconfig
 
@@ -20,14 +21,8 @@ EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=
 #}
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR_HOST}${layout_prefix} \
-	       bindir=${STAGING_BINDIR} \
-	       includedir=${STAGING_INCDIR} \
-	       libdir=${STAGING_LIBDIR} \
-	       datadir=${STAGING_DATADIR} \
-	       mandir=${STAGING_DIR_HOST}${layout_mandir}
+	autotools_stage_all
 }
 
 FILES_${PN} += " ${libdir}/gstreamer-0.10/*.so"
 FILES_${PN}-dev += " ${libdir}/gstreamer-0.10/*.la ${libdir}/gstreamer-0.10/*.a"
-
