@@ -3,7 +3,7 @@ LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 PV = "0.1+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 bindir = "/usr/games"
 
@@ -24,7 +24,6 @@ do_install_append () {
 	    echo "making ${D}/${datadir}/applications/$prog.desktop"
 	    cat <<STOP > ${D}/${datadir}/applications/$prog.desktop
 [Desktop Entry]
-Encoding=UTF-8
 Name=$title
 Exec=${prefix}/games/$prog
 Icon=applications-games

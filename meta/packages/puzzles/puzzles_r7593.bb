@@ -1,6 +1,6 @@
 
 DEPENDS = "gtk+"
-PR = "r6"
+PR = "r7"
 MOD_PV = "${@bb.data.getVar('PV',d,1)[1:]}"
 
 #SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
@@ -39,7 +39,6 @@ do_install () {
 	    echo "making ${D}/${datadir}/applications/$prog.desktop"
 	    cat <<STOP > ${D}/${datadir}/applications/$prog.desktop
 [Desktop Entry]
-Encoding=UTF-8
 Name=$title
 Exec=${prefix}/games/$prog
 Icon=applications-games
