@@ -4,7 +4,8 @@ DEPENDS = "libfakekey expat libxft"
 SECTION = "x11/wm"
 PV = "0.0+svnr${SRCREV}"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
+SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
+           file://configure_fix.patch;patch=1 "
 
 S = "${WORKDIR}/${PN}"
 
