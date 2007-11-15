@@ -23,3 +23,5 @@ EXTRA_OECONF_append_angstrom = " ac_cv_glibc_ver=libc6.4"
 # They also provide glibc 2.5 in 'experimental' and it works with APT built
 # for 2.3 so we set it in same way
 EXTRA_OECONF_append = " ac_cv_glibc_ver=libc6.3"
+
+FILES_${PN}-dbg += "${libdir}/apt/methods/.debug/"
