@@ -1,5 +1,7 @@
 require autoconf.inc
 
+PR = "r1"
+
 DEPENDS += "m4-native"
 RDEPENDS_${PN} = "m4 gnu-config"
 
