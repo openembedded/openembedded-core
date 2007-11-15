@@ -25,6 +25,6 @@ do_configure () {
 
 do_stage_append() {
 	# install pgen for later usage with non-native builds
-	install Parser/pgen ${STAGING_DIR}/${BUILD_SYS}/bin/
+	install Parser/pgen ${STAGING_BINDIR_NATIVE}/
 }
 
