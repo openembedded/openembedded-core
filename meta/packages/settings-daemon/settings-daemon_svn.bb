@@ -1,6 +1,6 @@
 DESCRIPTION = "Settings-daemon provides a bridge between gconf and xsettings"
 LICENSE = "GPL"
-DEPENDS = "gconf glib-2.0"
+DEPENDS = "gconf glib-2.0 gtk+"
 RDEPENDS = "xrdb"
 SECTION = "x11"
 PV = "0.0+svnr${SRCREV}"
