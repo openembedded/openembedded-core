@@ -1,0 +1,13 @@
+Index: Python-2.5.1/Python/compile.c
+===================================================================
+--- Python-2.5.1.orig/Python/compile.c
++++ Python-2.5.1/Python/compile.c
+@@ -30,7 +30,7 @@
+ #include "symtable.h"
+ #include "opcode.h"
+ 
+-int Py_OptimizeFlag = 0;
++int Py_OptimizeFlag = 1;
+ 
+ /*
+   ISSUES:

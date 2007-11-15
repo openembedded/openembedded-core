@@ -1,0 +1,16 @@
+
+#
+# Signed off by Michael 'Mickey' Lauer <mickey@Vanille.de>
+#
+
+--- Python-2.4/Lib/distutils/command/build_scripts.py~dont-modify-shebang-line
++++ Python-2.4/Lib/distutils/command/build_scripts.py
+@@ -87,7 +87,7 @@
+                     continue
+ 
+                 match = first_line_re.match(first_line)
+-                if match:
++                if False: #match:
+                     adjust = 1
+                     post_interp = match.group(1) or ''
+ 

@@ -3,9 +3,11 @@
 # Patch managed by http://www.holgerschurig.de/patcher.html
 #
 
---- Python-2.4.1/setup.py~fix-tkinter-detection
-+++ Python-2.4.1/setup.py
-@@ -999,7 +999,7 @@
+Index: Python-2.5.1/setup.py
+===================================================================
+--- Python-2.5.1.orig/setup.py
++++ Python-2.5.1/setup.py
+@@ -1227,7 +1227,7 @@ class PyBuildExt(build_ext):
                  dotversion = dotversion[:-1] + '.' + dotversion[-1]
              tcl_include_sub = []
              tk_include_sub = []
@@ -14,7 +16,7 @@
                  tcl_include_sub += [dir + os.sep + "tcl" + dotversion]
                  tk_include_sub += [dir + os.sep + "tk" + dotversion]
              tk_include_sub += tcl_include_sub
-@@ -1018,22 +1018,6 @@
+@@ -1246,22 +1246,6 @@ class PyBuildExt(build_ext):
              if dir not in include_dirs:
                  include_dirs.append(dir)
  

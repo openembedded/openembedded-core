@@ -3,9 +3,11 @@
 # Patch managed by http://www.holgerschurig.de/patcher.html
 #
 
---- Python-2.4.3/Lib/site.py~sitebranding
-+++ Python-2.4.3/Lib/site.py
-@@ -305,8 +305,9 @@
+Index: Python-2.5.1/Lib/site.py
+===================================================================
+--- Python-2.5.1.orig/Lib/site.py
++++ Python-2.5.1/Lib/site.py
+@@ -323,8 +323,9 @@ def setcopyright():
              "Jython is maintained by the Jython developers (www.jython.org).")
      else:
          __builtin__.credits = _Printer("credits", """\

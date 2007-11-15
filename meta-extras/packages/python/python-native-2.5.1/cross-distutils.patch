@@ -16,22 +16,20 @@
  
  # python_build: (Boolean) if true, we're either building Python or
  # building an extension with an un-installed Python, so we use
-@@ -192,7 +192,8 @@
+@@ -192,7 +192,7 @@
      else:
          # The name of the config.h file changed in 2.2
          config_h = 'pyconfig.h'
 -    return os.path.join(inc_dir, config_h)
-+    print "NOTE: sysconfig.get_config_h_filename() altered for OpenEmbedded"
 +    return os.path.join(inc_dir, config_h).replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
  
  
  def get_makefile_filename():
-@@ -200,7 +201,8 @@
+@@ -200,7 +200,7 @@
      if python_build:
          return os.path.join(os.path.dirname(sys.executable), "Makefile")
      lib_dir = get_python_lib(plat_specific=1, standard_lib=1)
 -    return os.path.join(lib_dir, "config", "Makefile")
-+    print "NOTE: sysconfig.get_config_h_filename() altered for OpenEmbedded"
 +    return os.path.join(lib_dir, "config", "Makefile").replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
  
  
