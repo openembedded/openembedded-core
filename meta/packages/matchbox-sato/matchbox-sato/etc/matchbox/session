@@ -1,6 +1,12 @@
 #!/bin/sh
 
-SHOWCURSOR="no"
+. /etc/formfactor/config
+
+if [ "$HAVE_TOUCHSCREEN" = "1" ]; then
+    SHOWCURSOR="no"
+else
+    SHOWCURSOR="yes"
+fi
 
 matchbox-desktop &
 
