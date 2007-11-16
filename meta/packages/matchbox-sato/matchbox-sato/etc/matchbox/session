@@ -2,7 +2,6 @@
 
 SHOWCURSOR="no"
 
-## All this should be done by themeing/xsettings.. ## 
 matchbox-desktop &
 
 matchbox-panel --titlebar --start-applets showdesktop,windowselector --end-applets clock,battery,systray,startup &
