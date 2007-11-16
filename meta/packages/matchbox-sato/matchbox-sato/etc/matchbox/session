@@ -5,8 +5,6 @@ SHOWCURSOR="no"
 ## All this should be done by themeing/xsettings.. ## 
 matchbox-desktop &
 
-# mb-applet-startup-monitor &                 
-
 matchbox-panel --titlebar --start-applets showdesktop,windowselector --end-applets clock,battery,systray,startup &
 
 exec matchbox-window-manager -theme Sato -use_desktop_mode decorated -use_cursor $SHOWCURSOR $@
