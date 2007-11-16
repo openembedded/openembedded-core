@@ -15,21 +15,11 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
            file://syslog.conf \
            file://udhcpscript.patch;patch=1 \
            file://umount.busybox \
-	   file://run_parts.c"
-
-
-SRC_URI += "http://busybox.net/downloads/fixes-1.7.2/busybox-1.7.2-ash.patch;patch=1 \
-            http://busybox.net/downloads/fixes-1.7.2/busybox-1.7.2-iptun.patch;patch=1 \
-	    http://busybox.net/downloads/fixes-1.7.2/busybox-1.7.2-logger.patch;patch=1 \
-	    http://busybox.net/downloads/fixes-1.7.2/busybox-1.7.2-tail.patch;patch=1 \
-            file://defconfig"
+           file://defconfig"
 
 EXTRA_OEMAKE_append = " V=1 ARCH=${TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX}"
 
 do_configure () {
-	# default run-parts does not sort entries == X11 session broken
-	install -m 0644 ${WORKDIR}/run_parts.c ${S}/debianutils/
-
 	install -m 0644 ${WORKDIR}/defconfig ${S}/.config
 	cml1_do_configure
 }
