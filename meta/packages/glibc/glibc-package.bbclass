@@ -27,7 +27,7 @@ ENABLE_BINARY_LOCALE_GENERATION ?= "0"
 BINARY_LOCALE_ARCHES ?= "arm.*"
 
 PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
-PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* libc6* locale-base-* glibc-binary-localedata-*"
+PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base-* glibc-binary-localedata-*"
 
 libc_baselibs = "/lib/libc* /lib/libm* /lib/ld* /lib/libpthread* /lib/libresolv* /lib/librt* /lib/libutil* /lib/libnsl* /lib/libnss_files* /lib/libnss_compat* /lib/libnss_dns* /lib/libdl* /lib/libanl* /lib/libBrokenLocale*"
 
@@ -56,14 +56,13 @@ DESCRIPTION_localedef = "glibc: compile locale definition files"
 DESCRIPTION_glibc-utils = "glibc: misc utilities like iconf, local, gencat, tzselect, rpcinfo, ..."
 
 def get_glibc_fpu_setting(bb, d):
-	if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
-		return "--without-fp"
-	return ""
+    if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
+        return "--without-fp"
+    return ""
 
 EXTRA_OECONF += "${@get_glibc_fpu_setting(bb, d)}"
 
 OVERRIDES_append = ":${TARGET_ARCH}-${TARGET_OS}"
-EXTRA_OECONF_append_arm-linuxeabi = " --without-fp"
 
 do_install() {
 	oe_runmake install_root=${D} install
@@ -179,10 +178,10 @@ python package_do_split_gconvs () {
 		bb.error("datadir not defined")
 		return
 
-	gconv_libdir = os.path.join(libdir, "gconv")
-	charmap_dir = os.path.join(datadir, "i18n", "charmaps")
-	locales_dir = os.path.join(datadir, "i18n", "locales")
-	binary_locales_dir = os.path.join(libdir, "locale")
+	gconv_libdir = base_path_join(libdir, "gconv")
+	charmap_dir = base_path_join(datadir, "i18n", "charmaps")
+	locales_dir = base_path_join(datadir, "i18n", "locales")
+	binary_locales_dir = base_path_join(libdir, "locale")
 
 	do_split_packages(d, gconv_libdir, file_regex='^(.*)\.so$', output_pattern='glibc-gconv-%s', description='gconv module for character set %s', extra_depends='glibc-gconv')
 
@@ -256,9 +255,9 @@ python package_do_split_gconvs () {
 		bb.data.setVar('ALLOW_EMPTY_%s' % pkgname, '1', d)
 		bb.data.setVar('PACKAGES', '%s %s' % (pkgname, bb.data.getVar('PACKAGES', d, 1)), d)
 
-		treedir = os.path.join(bb.data.getVar("WORKDIR", d, 1), "locale-tree")
+		treedir = base_path_join(bb.data.getVar("WORKDIR", d, 1), "locale-tree")
 		path = bb.data.getVar("PATH", d, 1)
-		i18npath = os.path.join(treedir, datadir, "i18n")
+		i18npath = base_path_join(treedir, datadir, "i18n")
 
 		localedef_opts = "--force --old-style --no-archive --prefix=%s --inputfile=%s/i18n/locales/%s --charmap=%s %s" % (treedir, datadir, locale, encoding, name)
 		cmd = "PATH=\"%s\" I18NPATH=\"%s\" %s -L %s %s/bin/localedef %s" % (path, i18npath, qemu, treedir, treedir, localedef_opts)

@@ -5,5 +5,3 @@ require glibc-intermediate.inc
 do_configure_prepend() {
 	sed -i s:-Werror:: ${S}/configure
 }
-
-
