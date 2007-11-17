@@ -57,14 +57,6 @@ class Hg(Fetch):
 
         if 'rev' in ud.parm:
             ud.revision = ud.parm['rev']
-        #else:
-        #    rev = data.getVar("SRCREV", d, 1)
-        #    if rev is "SRCREVINACTION":
-        #        rev = self.latest_revision(url, ud, d)
-        #    if rev:
-        #        ud.revision = rev
-        #    else:
-        #        ud.revision = ""
 
         ud.localfile = data.expand('%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision), d)
 

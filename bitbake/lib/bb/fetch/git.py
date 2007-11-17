@@ -134,4 +134,5 @@ class Git(Fetch):
         return output.split()[0]
 
     def _build_revision(self, url, ud, d):
-        return ud.tag        
+        return ud.tag
+
