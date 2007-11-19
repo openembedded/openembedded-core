@@ -7,7 +7,7 @@ DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
 RDEPENDS_${PN} += "udev hal-info"
 RRECOMMENDS_${PN} += "udev-utils"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz \
         file://sg-inhibit.patch;patch=1 \

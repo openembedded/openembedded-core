@@ -33,7 +33,7 @@ do_start() {
 
 do_stop() {
 	echo "Stopping $DESC" "$NAME"
-	start-stop-daemon --stop --oknodo --quiet --pidfile $PIDFILE \
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE \
 		--exec $DAEMON 
 }
 
