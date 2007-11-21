@@ -1,8 +1,10 @@
 LICENSE = "GPL"
 SECTION = "x11/gnome"
-PR = "r0"
+PR = "r1"
 DESCRIPTION = "Common macros for building GNOME applications"
 inherit gnome
+
+PACKAGE_ARCH="all"
 
 # The omf.make file failed if scrollkeeper doesn't happen to be
 # installed
