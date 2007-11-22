@@ -23,7 +23,7 @@ if [ "x$BUILDDIR" = "x" ]; then
     exit 1
 fi
 
-PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/bin:$BUILDDIR/tmp/cross/bin:$PATH
+PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$BUILDDIR/tmp/cross/bin:$PATH
 
 if [ "x$1" = "x" ]; then
     echo
