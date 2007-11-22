@@ -5,9 +5,9 @@ DEPENDS += "flex-native bison-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/binutils-${PV}"
 EXTRA_OECONF = "--with-sysroot=${prefix}/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"
-PR = "r2"
+PR = "r3"
 
-FILES_${PN}-dbg += "${prefix}/${TARGET_SYS}/bin"
+FILES_${PN}-dbg += "${prefix}/${TARGET_SYS}/bin/.debug"
 
 do_stage() {
 	:
