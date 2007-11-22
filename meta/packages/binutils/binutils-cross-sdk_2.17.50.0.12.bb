@@ -7,6 +7,8 @@ EXTRA_OECONF = "--with-sysroot=${prefix}/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"
 PR = "r2"
 
+FILES_${PN}-dbg += "${prefix}/${TARGET_SYS}/bin"
+
 do_stage() {
 	:
 }
