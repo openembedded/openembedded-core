@@ -1,6 +1,6 @@
 require glibc.inc
 
-PR = "r5"
+PR = "r6"
 
 # the -isystem in bitbake.conf screws up glibc do_stage
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
@@ -41,7 +41,6 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
            file://arm-longlong.patch;patch=1 \
            file://fhs-linux-paths.patch;patch=1 \
            file://dl-cache-libcmp.patch;patch=1 \
-           file://ldsocache-varrun.patch;patch=1 \
            file://nptl-crosscompile.patch;patch=1 \
 	   file://glibc-check_pf.patch;patch=1;pnum=0 \
 #	   file://glibc-2.4-compile.patch;patch=1 \
