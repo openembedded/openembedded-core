@@ -1,0 +1,46 @@
+gdb configure checks CFLAGS haven't changed. Sadly if CFLAGS have a double 
+space in, this gets lost somewhere and convinces gdb the flags have changed.
+Wipe out the test for now...
+
+RP - 23/11/2007
+---
+ gdb/gdbserver/configure |    7 -------
+ gdb/testsuite/configure |    7 -------
+ 2 files changed, 14 deletions(-)
+
+Index: gdb-6.6/gdb/testsuite/configure
+===================================================================
+--- gdb-6.6.orig/gdb/testsuite/configure	2007-11-23 10:25:08.000000000 +0000
++++ gdb-6.6/gdb/testsuite/configure	2007-11-23 10:27:36.000000000 +0000
+@@ -1271,13 +1271,6 @@ echo "$as_me:   current value: $ac_new_v
+     esac
+   fi
+ done
+-if $ac_cache_corrupted; then
+-  { echo "$as_me:$LINENO: error: changes in the environment can compromise the build" >&5
+-echo "$as_me: error: changes in the environment can compromise the build" >&2;}
+-  { { echo "$as_me:$LINENO: error: run \`make distclean' and/or \`rm $cache_file' and start over" >&5
+-echo "$as_me: error: run \`make distclean' and/or \`rm $cache_file' and start over" >&2;}
+-   { (exit 1); exit 1; }; }
+-fi
+ 
+ ac_ext=c
+ ac_cpp='$CPP $CPPFLAGS'
+Index: gdb-6.6/gdb/gdbserver/configure
+===================================================================
+--- gdb-6.6.orig/gdb/gdbserver/configure	2007-11-23 10:29:06.000000000 +0000
++++ gdb-6.6/gdb/gdbserver/configure	2007-11-23 10:29:20.000000000 +0000
+@@ -1262,13 +1262,6 @@ echo "$as_me:   current value: $ac_new_v
+     esac
+   fi
+ done
+-if $ac_cache_corrupted; then
+-  { echo "$as_me:$LINENO: error: changes in the environment can compromise the build" >&5
+-echo "$as_me: error: changes in the environment can compromise the build" >&2;}
+-  { { echo "$as_me:$LINENO: error: run \`make distclean' and/or \`rm $cache_file' and start over" >&5
+-echo "$as_me: error: run \`make distclean' and/or \`rm $cache_file' and start over" >&2;}
+-   { (exit 1); exit 1; }; }
+-fi
+ 
+ ac_ext=c
+ ac_cpp='$CPP $CPPFLAGS'
