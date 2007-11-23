@@ -5,7 +5,7 @@ PACKAGES = ""
 RDEPENDS += "${IMAGE_INSTALL}"
 
 # "export IMAGE_BASENAME" not supported at this time
-IMAGE_BASENAME[export] = 1
+IMAGE_BASENAME[export] = "1"
 export PACKAGE_INSTALL ?= "${IMAGE_INSTALL}"
 
 # We need to recursively follow RDEPENDS and RRECOMMENDS for images
@@ -20,7 +20,7 @@ PID = "${@os.getpid()}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-do_rootfs[depends] += "makedevs-native:do_populate_staging fakeroot-native:do_populate_staging"
+do_rootfs[depends] += "makedevs-native:do_populate_staging fakeroot-native:do_populate_staging ldconfig-native:do_populate_staging"
 
 python () {
     import bb
@@ -103,6 +103,10 @@ fakeroot do_rootfs () {
 		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
 		ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
 	done
+
+	# Run ldconfig on the image to create a valid cache 
+	# (new format for cross arch compatibility)
+	ldconfig -r ${IMAGE_ROOTFS} -c new
 
 	${IMAGE_POSTPROCESS_COMMAND}
 	
