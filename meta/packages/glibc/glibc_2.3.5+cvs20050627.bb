@@ -54,7 +54,7 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
 	        --without-cvs --disable-profile --disable-debug --without-gd \
 		--enable-clocale=gnu \
 	        --enable-add-ons=${GLIBC_ADDONS} \
-		--with-headers=${CROSS_DIR}/${TARGET_SYS}/include \
+		--with-headers=${STAGING_INCDIR} \
 		--without-selinux \
 		${GLIBC_EXTRA_OECONF}"
 
