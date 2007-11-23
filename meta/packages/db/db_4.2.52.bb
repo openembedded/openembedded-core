@@ -16,7 +16,8 @@ VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
 PR = "r7"
 
-SRC_URI = "http://downloads.sleepycat.com/db-${PV}.tar.gz"
+SRC_URI = "http://downloads.sleepycat.com/db-${PV}.tar.gz \
+           file://configure_fixes.patch;patch=1 "
 #SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"
 #TODO SRC_URI += "file://arm-thumb-mutex.patch;patch=1"
 
