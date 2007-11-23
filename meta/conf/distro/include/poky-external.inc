@@ -6,7 +6,7 @@ TARGET_VENDOR = "-poky"
 
 EXTERNAL_TOOLCHAIN = "${SDK_PREFIX}"
 
-PATH =. ":${EXTERNAL_TOOLCHAIN}/bin:"
+PATH =. "${EXTERNAL_TOOLCHAIN}/bin:"
 
 PREFERRED_PROVIDER_linux-libc-headers = "external-poky-toolchain"
 PREFERRED_PROVIDER_virtual/arm-poky-linux-gnueabi-gcc = "external-poky-toolchain"
