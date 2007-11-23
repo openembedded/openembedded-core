@@ -13,7 +13,7 @@ PROVIDES = "\
     virtual/libiconv \
     glibc-thread-db \
     virtual/linux-libc-headers "
-RPROVIDES = "glibc-utils libsegfault glibc-thread-db"
+RPROVIDES = "glibc-utils libsegfault glibc-thread-db libgcc-dev libstdc++-dev libstdc++"
 PACKAGES_DYNAMIC = "glibc-gconv-*"
 PR = "r1"
 
