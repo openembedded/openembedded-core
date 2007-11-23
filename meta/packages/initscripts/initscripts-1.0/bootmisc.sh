@@ -56,11 +56,6 @@ then
 	ln -sf /var/tmp /tmp
 fi
 
-#
-# Update dynamic library cache
-#
-/sbin/ldconfig
-
 # Set the system clock from hardware clock
 # If the timestamp is 1 day or more recent than the current time,
 # use the timestamp instead.
