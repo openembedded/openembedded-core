@@ -34,9 +34,6 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 		return
 
 	packages = bb.data.getVar('PACKAGES', d, 1).split()
-	if not packages:
-		# nothing to do
-		return
 
 	if postinst:
 		postinst = '#!/bin/sh\n' + postinst + '\n'
@@ -189,42 +186,16 @@ def runstrip(file, d):
 # Package data handling routines
 #
 
-STAGING_PKGMAPS_DIR ?= "${STAGING_DIR}/pkgmaps"
-
-def add_package_mapping (pkg, new_name, d):
-	import bb, os
-
-	def encode(str):
-		import codecs
-		c = codecs.getencoder("string_escape")
-		return c(str)[0]
-
-	pmap_dir = bb.data.getVar('STAGING_PKGMAPS_DIR', d, 1)
-
-	bb.mkdirhier(pmap_dir)
-
-	data_file = os.path.join(pmap_dir, pkg)
-
-	f = open(data_file, 'w')
-	f.write("%s\n" % encode(new_name))
-	f.close()
-
 def get_package_mapping (pkg, d):
 	import bb, os
 
-	def decode(str):
-		import codecs
-		c = codecs.getdecoder("string_escape")
-		return c(str)[0]
+	data = read_subpkgdata(pkg, d)
+	key = "PKG_%s" % pkg
 
-	data_file = bb.data.expand("${STAGING_PKGMAPS_DIR}/%s" % pkg, d)
+	if key in data:
+		bb.msg.plain("Data for %s is %s" % (key, data[key]))
+		return data[key]
 
-	if os.access(data_file, os.R_OK):
-		f = file(data_file, 'r')
-		lines = f.readlines()
-		f.close()
-		for l in lines:
-			return decode(l).strip()
 	return pkg
 
 def runtime_mapping_rename (varname, d):
@@ -258,9 +229,6 @@ python package_do_split_locales() {
 		return
 
 	packages = (bb.data.getVar('PACKAGES', d, 1) or "").split()
-	if not packages:
-		bb.debug(1, "no packages to build; not splitting locales")
-		return
 
 	datadir = bb.data.getVar('datadir', d, 1)
 	if not datadir:
@@ -340,9 +308,6 @@ python populate_packages () {
 	bb.mkdirhier(dvar)
 
 	packages = bb.data.getVar('PACKAGES', d, 1)
-	if not packages:
-		bb.debug(1, "PACKAGES not defined, nothing to package")
-		return
 
 	pn = bb.data.getVar('PN', d, 1)
 	if not pn:
@@ -445,8 +410,6 @@ python populate_packages () {
 		pkgname = bb.data.getVar('PKG_%s' % pkg, d, 1)
 		if pkgname is None:
 			bb.data.setVar('PKG_%s' % pkg, pkg, d)
-		else:
-			add_package_mapping(pkg, pkgname, d)
 
 	dangling_links = {}
 	pkg_files = {}
