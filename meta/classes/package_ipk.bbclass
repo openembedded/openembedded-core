@@ -33,7 +33,7 @@ python package_ipk_install () {
 
 	# Generate ipk.conf if it or the stamp doesnt exist
 	conffile = os.path.join(stagingdir,"ipkg.conf")
-	if not  os.access(conffile, os.R_OK):
+	if not os.access(conffile, os.R_OK):
 		ipkg_archs = bb.data.getVar('PACKAGE_ARCHS',d)
 		if ipkg_archs is None:
 			bb.error("PACKAGE_ARCHS missing")
@@ -152,20 +152,11 @@ python do_package_ipk () {
 		bb.debug(1, "No packages; nothing to do")
 		return
 
-	def lockfile(name):
-		lf = open(name, "a+")
-		fcntl.flock(lf.fileno(), fcntl.LOCK_EX)
-		return lf
-
-	def unlockfile(lf):
-		fcntl.flock(lf.fileno(), fcntl.LOCK_UN)
-		lf.close
-
 	for pkg in packages.split():
 		localdata = bb.data.createCopy(d)
 		root = "%s/install/%s" % (workdir, pkg)
 
-		lf = lockfile(root + ".lock")
+		lf = bb.utils.lockfile(root + ".lock")
 
 		bb.data.setVar('ROOT', '', localdata)
 		bb.data.setVar('ROOT_%s' % pkg, root, localdata)
@@ -195,7 +186,7 @@ python do_package_ipk () {
 		if not g and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
 			from bb import note
 			note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, 1), bb.data.getVar('PR', localdata, 1)))
-			unlockfile(lf)
+			bb.utils.unlockfile(lf)
 			continue
 
 		controldir = os.path.join(root, 'CONTROL')
@@ -203,6 +194,7 @@ python do_package_ipk () {
 		try:
 			ctrlfile = file(os.path.join(controldir, 'control'), 'w')
 		except OSError:
+			bb.utils.unlockfile(lf)
 			raise bb.build.FuncFailed("unable to open control file for writing.")
 
 		fields = []
@@ -236,6 +228,7 @@ python do_package_ipk () {
 		except KeyError:
 			(type, value, traceback) = sys.exc_info()
 			ctrlfile.close()
+			bb.utils.unlockfile(lf)
 			raise bb.build.FuncFailed("Missing field for ipk generation: %s" % value)
 		# more fields
 
@@ -272,6 +265,7 @@ python do_package_ipk () {
 			try:
 				scriptfile = file(os.path.join(controldir, script), 'w')
 			except OSError:
+				bb.utils.unlockfile(lf)
 				raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
 			scriptfile.write(scriptvar)
 			scriptfile.close()
@@ -282,6 +276,7 @@ python do_package_ipk () {
 			try:
 				conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
 			except OSError:
+				bb.utils.unlockfile(lf)
 				raise bb.build.FuncFailed("unable to open conffiles for writing.")
 			for f in conffiles_str.split():
 				conffiles.write('%s\n' % f)
@@ -291,6 +286,7 @@ python do_package_ipk () {
 		ret = os.system("PATH=\"%s\" %s %s %s" % (bb.data.getVar("PATH", localdata, 1), 
                                                           bb.data.getVar("IPKGBUILDCMD",d,1), pkg, pkgoutdir))
 		if ret != 0:
+			bb.utils.unlockfile(lf)
 			raise bb.build.FuncFailed("ipkg-build execution failed")
 
 		for script in ["preinst", "postinst", "prerm", "postrm", "control" ]:
@@ -303,7 +299,7 @@ python do_package_ipk () {
 			os.rmdir(controldir)
 		except OSError:
 			pass
-		unlockfile(lf)
+		bb.utils.unlockfile(lf)
 }
 
 python () {

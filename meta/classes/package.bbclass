@@ -318,76 +318,6 @@ python package_do_split_locales() {
 	#bb.data.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep), d)
 }
 
-def copyfile(src,dest,newmtime=None,sstat=None):
-    """
-    Copies a file from src to dest, preserving all permissions and
-    attributes; mtime will be preserved even when moving across
-    filesystems.  Returns true on success and false on failure.
-    """
-    import os, stat, shutil, commands
-
-    #print "copyfile("+src+","+dest+","+str(newmtime)+","+str(sstat)+")"
-    try:
-        if not sstat:
-            sstat=os.lstat(src)
-    except Exception, e:
-        print "copyfile: Stating source file failed...", e
-        return False
-
-    destexists=1
-    try:
-        dstat=os.lstat(dest)
-    except:
-        dstat=os.lstat(os.path.dirname(dest))
-        destexists=0
-
-    if destexists:
-        if stat.S_ISLNK(dstat[stat.ST_MODE]):
-            try:
-                os.unlink(dest)
-                destexists=0
-            except Exception, e:
-                pass
-
-    if stat.S_ISLNK(sstat[stat.ST_MODE]):
-        try:
-            target=os.readlink(src)
-            if destexists and not stat.S_ISDIR(dstat[stat.ST_MODE]):
-                os.unlink(dest)
-            os.symlink(target,dest)
-            #os.lchown(dest,sstat[stat.ST_UID],sstat[stat.ST_GID])
-            return os.lstat(dest)
-        except Exception, e:
-            print "copyfile: failed to properly create symlink:", dest, "->", target, e
-            return False
-
-    if stat.S_ISREG(sstat[stat.ST_MODE]):
-            try: # For safety copy then move it over.
-                shutil.copyfile(src,dest+"#new")
-                os.rename(dest+"#new",dest)
-            except Exception, e:
-                print 'copyfile: copy', src, '->', dest, 'failed.', e
-                return False
-    else:
-            #we don't yet handle special, so we need to fall back to /bin/mv
-            a=commands.getstatusoutput("/bin/cp -f "+"'"+src+"' '"+dest+"'")
-            if a[0]!=0:
-                print "copyfile: Failed to copy special file:" + src + "' to '" + dest + "'", a
-                return False # failure
-    try:
-        os.lchown(dest,sstat[stat.ST_UID],sstat[stat.ST_GID])
-        os.chmod(dest, stat.S_IMODE(sstat[stat.ST_MODE])) # Sticky is reset on chown
-    except Exception, e:
-        print "copyfile: Failed to chown/chmod/unlink", dest, e
-        return False
-
-    if newmtime:
-        os.utime(dest,(newmtime,newmtime))
-    else:
-        os.utime(dest, (sstat[stat.ST_ATIME], sstat[stat.ST_MTIME]))
-        newmtime=sstat[stat.ST_MTIME]
-    return newmtime
-
 python populate_packages () {
 	import glob, stat, errno, re
 
@@ -491,7 +421,7 @@ python populate_packages () {
 			fpath = os.path.join(root,file)
 			dpath = os.path.dirname(fpath)
 			bb.mkdirhier(dpath)
-			ret = copyfile(file, fpath)
+			ret = bb.copyfile(file, fpath)
 			if ret is False or ret == 0:
 				raise bb.build.FuncFailed("File population failed")
 		del localdata
