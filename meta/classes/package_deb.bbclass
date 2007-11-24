@@ -69,7 +69,7 @@ python do_package_deb_install () {
 }
 
 python do_package_deb () {
-    import sys, re, fcntl, copy
+    import sys, re, copy
 
     workdir = bb.data.getVar('WORKDIR', d, 1)
     if not workdir:
@@ -104,7 +104,8 @@ python do_package_deb () {
 
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
-        root = "%s/install/%s" % (workdir, pkg)
+        pkgdest = bb.data.getVar('PKGDEST', d, 1)
+        root = "%s/%s" % (pkgdest, pkg)
 
         lf = bb.utils.lockfile(root + ".lock")
 
