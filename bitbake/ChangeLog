@@ -12,6 +12,19 @@ Changes in BitBake 1.8.x:
 	- Add bzr fetcher
 	- Add support for cleaning directories before a task in the form:
 	  do_taskname[cleandirs] = "dir"
+	- bzr fetcher tweaks from Robert Schuster (#2913)
+	- Add mercurial (hg) fetcher from Robert Schuster (#2913)
+	- Fix bogus preferred_version return values
+	- Fix 'depends' flag splitting
+	- Fix unexport handling (#3135)
+	- Add bb.copyfile function similar to bb.movefile (and improve movefile error reporting)
+	- Allow multiple options for deptask flag
+	- Use git-fetch instead of git-pull removing any need for merges when 
+	  fetching (we don't care about the index). Fixes fetch errors.
+	- Add BB_GENERATE_MIRROR_TARBALLS option, set to 0 to make git fetches 
+	  faster at the expense of not creating mirror tarballs.
+	- SRCREV handling updates, improvements and fixes from Poky
+	- Add bb.utils.lockfile() and bb.utils.unlockfile() from Poky
 
 Changes in Bitbake 1.8.8:
 	- Rewrite svn fetcher to make adding extra operations easier 

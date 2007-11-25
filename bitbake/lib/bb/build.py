@@ -297,7 +297,7 @@ def exec_task(task, d):
         task_graph.walkdown(task, execute)
 
     # make stamp, or cause event and raise exception
-    if not data.getVarFlag(task, 'nostamp', d):
+    if not data.getVarFlag(task, 'nostamp', d) and not data.getVarFlag(task, 'selfstamp', d):
         make_stamp(task, d)
 
 def extract_stamp_data(d, fn):
