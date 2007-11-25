@@ -1,0 +1,16 @@
+---
+ facilities/Makefile.am |    1 -
+ 1 file changed, 1 deletion(-)
+
+Index: ltt-control-0.43-10082007/facilities/Makefile.am
+===================================================================
+--- ltt-control-0.43-10082007.orig/facilities/Makefile.am	2007-08-24 17:30:56.000000000 +0100
++++ ltt-control-0.43-10082007/facilities/Makefile.am	2007-08-24 17:31:07.000000000 +0100
+@@ -43,7 +43,6 @@ stack_arch_x86_64.xml \
+ list.xml \
+ user_generic.xml \
+ xen.xml \
+-compact.xml \
+ block.xml
+ 
+ 
