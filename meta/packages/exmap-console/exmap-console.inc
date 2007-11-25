@@ -11,7 +11,6 @@ TEMPPACKAGE_ARCH := "${PACKAGE_ARCH}"
 inherit module-base
 inherit autotools
 
-MYPV := "${PV}"
 PACKAGE_ARCH = "${TEMPPACKAGE_ARCH}"
 
 PACKAGES =+ "exmap-server kernel-module-exmap"
@@ -24,7 +23,6 @@ RDEPENDS_exmap-server += "kernel-module-exmap"
 
 FILES_kernel-module-exmap = "${base_libdir}"
 PACKAGE_ARCH_kernel-module-exmap = "${MACHINE_ARCH}"
-PV_kernel-module-exmap = "${MYPV}-${KERNEL_VERSION}"
 RDEPENDS_kernel-module-exmap += "update-modules kernel-image-${KERNEL_VERSION}"
 
 S = "${WORKDIR}/exmap-console-${PV}"
