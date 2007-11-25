@@ -128,10 +128,6 @@ python do_package_ipk () {
 		bb.error("DEPLOY_DIR_IPK not defined, unable to package")
 		return
 
-	arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
-	outdir = "%s/%s" % (outdir, arch)
-	bb.mkdirhier(outdir)
-
 	dvar = bb.data.getVar('D', d, 1)
 	if not dvar:
 		bb.error("D not defined, unable to package")
@@ -174,7 +170,8 @@ python do_package_ipk () {
 
 		bb.data.update_data(localdata)
 		basedir = os.path.join(os.path.dirname(root))
-		pkgoutdir = outdir
+		arch = bb.data.getVar('PACKAGE_ARCH', localdata, 1)
+		pkgoutdir = "%s/%s" % (outdir, arch)
 		bb.mkdirhier(pkgoutdir)
 		os.chdir(root)
 		from glob import glob
