@@ -36,3 +36,5 @@ FILES_libstdc++-dev = "${includedir}/c++/${BINV} \
 FILES_libmudflap = "${prefix}/${TARGET_SYS}/lib/libmudflap*.so.*"
 FILES_libmudflap-dev = "${prefix}/${TARGET_SYS}/lib/libmudflap*.so \
                         ${prefix}/${TARGET_SYS}/lib/libmudflap*.a"
+
+RRECOMMENDS_${PN} += "libgcc libgcc-dev cpp g++ libstdc++ libstdc++-dev"
