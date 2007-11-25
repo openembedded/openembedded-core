@@ -1,5 +1,5 @@
 DESCRIPTION = "Helper script for packaged-staging.bbclass"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "file://stage-manager"
 LICENSE = "GPLv2"

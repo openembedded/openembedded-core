@@ -93,7 +93,7 @@ if __name__ == "__main__":
                 if options.copydir:
                     copypath = os.path.join(options.copydir, path.replace(options.parentdir, '', 1))
                     mkdirhier(os.path.split(copypath)[0])
-                    os.system("mv " + path + " " + copypath)
+                    os.system("cp " + path + " " + copypath)
                     found = True
             else:
                 if cache[path]['ts'] != fstamp[stat.ST_MTIME] or cache[path]['size'] != fstamp[stat.ST_SIZE]:
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 		    if options.copydir:
                         copypath = os.path.join(options.copydir, path.replace(options.parentdir, '', 1))
                         mkdirhier(os.path.split(copypath)[0])
-                        os.system("mv " + path + " " + copypath)
+                        os.system("cp " + path + " " + copypath)
                         found = True
 
     if options.update:
