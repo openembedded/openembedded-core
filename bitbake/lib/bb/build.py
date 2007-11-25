@@ -97,10 +97,18 @@ def exec_func(func, d, dirs = None):
     if adir and os.access(adir, os.F_OK):
         os.chdir(adir)
 
+    locks = []
+    lockfiles = (data.expand(data.getVarFlag(func, 'lockfiles', d), d) or "").split()
+    for lock in lockfiles:
+        locks.append(bb.utils.lockfile(lock))
+
     if data.getVarFlag(func, "python", d):
         exec_func_python(func, d)
     else:
         exec_func_shell(func, d)
+
+    for lock in locks:
+        bb.utils.unlockfile(lock)
 
     if os.path.exists(prevdir):
         os.chdir(prevdir)
