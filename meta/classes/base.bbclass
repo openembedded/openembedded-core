@@ -511,6 +511,13 @@ base_do_fetchall() {
 	:
 }
 
+addtask buildall after do_build
+do_buildall[recrdeptask] = "do_build"
+base_do_buildall() {
+	:
+}
+
+
 def oe_unpack_file(file, data, url = None):
 	import bb, os
 	if not url:
