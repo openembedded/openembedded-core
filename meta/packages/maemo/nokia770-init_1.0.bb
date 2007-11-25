@@ -24,20 +24,15 @@ do_install () {
 pkg_postinst () {
 #!/bin/sh
 
-# can't do adduser stuff offline
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
 # set up some links to firmware and modules in initrd
-	mkdir -p /lib/firmware
-        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/3825.arm /lib/firmware/3825.arm
-        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/3826.arm /lib/firmware/3826.arm
-        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/bc4fw.bin /lib/firmware/bc4fw.bin
-        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/brf6150fw.bin /lib/firmware/brf6150fw.bin
-        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/mtlm3825.arm /lib/firmware/mtlm3825.arm
-        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/mtlm3826.arm /lib/firmware/mtlm3826.arm
+	mkdir -p $D/lib/firmware
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/3825.arm $D/lib/firmware/3825.arm
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/3826.arm $D/lib/firmware/3826.arm
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/bc4fw.bin $D/lib/firmware/bc4fw.bin
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/brf6150fw.bin $D/lib/firmware/brf6150fw.bin
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/mtlm3825.arm $D/lib/firmware/mtlm3825.arm
+        ln -sf /mnt/initfs/usr/lib/hotplug/firmware/mtlm3826.arm $D/lib/firmware/mtlm3826.arm
 
-#	rm -rf /lib/modules
-#	ln -s /mnt/initfs/lib/modules /lib/modules
+#	rm -rf $D/lib/modules
+#	ln -s /mnt/initfs/lib/modules $D/lib/modules
 }
