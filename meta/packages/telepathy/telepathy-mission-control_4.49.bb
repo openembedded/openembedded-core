@@ -1,9 +1,9 @@
-DESCRIPTION = "Telepathy Mission Control"
+DESCRIPTION = "Central control for Telepathy connection managers"
 HOMEPAGE = "http://mission-control.sourceforge.net/"
 LICENSE = "LGPL"
 SECTION = "libs"
 DEPENDS = "libtelepathy dbus-glib gconf"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/mission-control/telepathy-mission-control-${PV}.tar.gz"
 
