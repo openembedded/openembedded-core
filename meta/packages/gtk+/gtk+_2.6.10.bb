@@ -1,6 +1,6 @@
 require gtk+.inc
 
-PR = "r13"
+PR = "r14"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.6/gtk+-${PV}.tar.bz2 \
            file://no-demos.patch;patch=1 \
@@ -40,12 +40,13 @@ python populate_packages_prepend () {
 	import os.path
 
 	prologue = bb.data.getVar("postinst_prologue", d, 1)
+	postinst_pixbufloader = bb.data.getVar("postinst_pixbufloader", d, 1)
 
 	gtk_libdir = bb.data.expand('${libdir}/gtk-2.0/${LIBV}', d)
 	loaders_root = os.path.join(gtk_libdir, 'loaders')
 	immodules_root = os.path.join(gtk_libdir, 'immodules')
 
-	do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s', prologue + 'gdk-pixbuf-query-loaders > /etc/gtk-2.0/gdk-pixbuf.loaders')
+	do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s', postinst_pixbufloader)
 	do_split_packages(d, immodules_root, '^im-(.*)\.so$', 'gtk-immodule-%s', 'GTK input module for %s', prologue + 'gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules')
 
         if (bb.data.getVar('DEBIAN_NAMES', d, 1)):

@@ -59,3 +59,13 @@ if [ "x$D" != "x" ]; then
 fi
 
 }
+
+postinst_pixbufloader() {
+if [ "x$D" != "x" ]; then
+  exit 1
+fi
+
+gdk-pixbuf-query-loaders > /etc/gtk-2.0/gdk-pixbuf.loaders
+
+test -x /usr/bin/gtk-update-icon-cache && gtk-update-icon-cache  -q /usr/share/icons/hicolor
+}
