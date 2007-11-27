@@ -1,0 +1,52 @@
+Index: utils/opcontrol
+===================================================================
+RCS file: /cvsroot/oprofile/oprofile/utils/opcontrol,v
+retrieving revision 1.148
+diff -u -r1.148 opcontrol
+--- utils/opcontrol	8 Nov 2007 09:24:30 -0000	1.148
++++ utils/opcontrol	27 Nov 2007 17:02:20 -0000
+@@ -395,7 +395,7 @@
+ 	echo "SESSION_DIR=$SESSION_DIR" >>$SETUP_FILE
+ 
+ 	if test "$NR_CHOSEN" != "0"; then
+-		for f in `seq 0 $((NR_CHOSEN - 1))`; do
++		for f in `seq 0 $(($NR_CHOSEN - 1))`; do
+ 			get_event $f
+ 			echo "CHOSEN_EVENTS_${f}=$GOTEVENT" >>$SETUP_FILE
+ 		done
+@@ -590,7 +590,7 @@
+ 	OPHELP_ARGS=
+ 
+ 	if test "$NR_CHOSEN" != 0; then
+-		for f in `seq 0 $((NR_CHOSEN - 1))`; do
++		for f in `seq 0 $(($NR_CHOSEN - 1))`; do
+ 			get_event $f
+ 			if test "$GOTEVENT" != ""; then
+ 				OPHELP_ARGS="$OPHELP_ARGS $GOTEVENT"
+@@ -612,7 +612,7 @@
+ 		return
+ 	fi
+ 
+-	for f in `seq 0 $((NR_CHOSEN - 1))`; do
++	for f in `seq 0 $(($NR_CHOSEN - 1))`; do
+ 		get_event $f
+ 		if test "$GOTEVENT" != ""; then
+ 			EVENT=`echo $GOTEVENT | awk -F: '{print $1}'`
+@@ -1226,7 +1226,7 @@
+ 	verify_counters
+ 
+ 	OPROFILED_EVENTS=
+-	for f in `seq 0 $((NR_CHOSEN - 1))`; do
++	for f in `seq 0 $(($NR_CHOSEN - 1))`; do
+ 		get_event $f
+ 		if test "$GOTEVENT" != ""; then
+ 			EVENT=`echo $GOTEVENT | awk -F: '{print $1}'`
+@@ -1383,7 +1383,7 @@
+ 	fi
+ 
+ 	if test "$NR_CHOSEN" != "0"; then
+-		for f in `seq 0 $((NR_CHOSEN - 1))`; do
++		for f in `seq 0 $(($NR_CHOSEN - 1))`; do
+ 			get_event $f
+ 			echo "Event $f: $GOTEVENT"
+ 		done
