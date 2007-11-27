@@ -1,0 +1,16 @@
+Without this, do_compile fails, unable to find linux/errno.h
+
+RP - 27/11/2007
+
+Index: libc/nscd/Makefile
+===================================================================
+--- libc.orig/nscd/Makefile	2005-06-14 22:51:24.000000000 +0000
++++ libc/nscd/Makefile	2007-11-27 16:31:02.000000000 +0000
+@@ -68,7 +68,6 @@
+ # contains only the basic kernel interface headers, not something like
+ # libselinux.  So the simplest thing is to presume that the standard
+ # system headers will be ok for this file.
+-$(objpfx)nscd_stat.o: sysincludes = # nothing
+ $(objpfx)selinux.o: sysincludes = # nothing
+ 
+ distribute := nscd.h nscd-client.h dbg_log.h \
