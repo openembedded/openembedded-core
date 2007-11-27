@@ -48,8 +48,8 @@ if [ ! -e "$CONFFILE" ]; then
         mkdir -p "./build/conf"
     fi
     echo 'PACKAGE_CLASSES = "package_ipk package_deb"' > "$CONFFILE"
-    echo 'BB_NUMBER_THREADS = "4"' >> "$CONFFILE"
-    echo 'PARALLEL_MAKE = "-j 4"' >> "$CONFFILE"
+    echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
+    echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo 'DL_DIR = "/srv/poky/sources"' >> "$CONFFILE"
 fi
 
