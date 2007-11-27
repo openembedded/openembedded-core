@@ -7,7 +7,8 @@ HOMEPAGE="http://mtools.linux.lu"
 LICENSE="GPL"
 PR = "r2"
 
-SRC_URI="http://mtools.linux.lu/mtools-${PV}.tar.gz \
+#http://mtools.linux.lu/mtools-${PV}.tar.gz 
+SRC_URI="http://folks.o-hand.com/richard/poky/sources/mtools-${PV}.tar.gz \
 	file://mtools-makeinfo.patch;patch=1 \
 	file://mtools.patch;patch=1"
 
