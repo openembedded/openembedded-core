@@ -1,7 +1,8 @@
+DESCRIPTION = "Telepathy framework - GLib library"
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
 DEPENDS = "glib-2.0 dbus telepathy-glib"
 LICENSE = "LGPL"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/libtelepathy/libtelepathy-${PV}.tar.gz"
 
