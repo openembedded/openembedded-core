@@ -193,7 +193,6 @@ def get_package_mapping (pkg, d):
 	key = "PKG_%s" % pkg
 
 	if key in data:
-		bb.msg.plain("Data for %s is %s" % (key, data[key]))
 		return data[key]
 
 	return pkg
