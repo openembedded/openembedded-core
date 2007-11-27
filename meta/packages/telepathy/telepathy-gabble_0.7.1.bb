@@ -1,4 +1,4 @@
-DESCRIPTION = "Gabble: a Jabber/XMPP connection manager"
+DESCRIPTION = "Jabber/XMPP connection manager"
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
 DEPENDS = "glib-2.0 dbus loudmouth telepathy-glib"
 LICENSE = "LGPL"
