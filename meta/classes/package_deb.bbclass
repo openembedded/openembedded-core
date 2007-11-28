@@ -266,7 +266,10 @@ python do_package_deb () {
 python () {
     import bb
     if bb.data.getVar('PACKAGES', d, True) != '':
-        bb.data.setVarFlag('do_package_write_deb', 'depends', 'dpkg-native:do_populate_staging fakeroot-native:do_populate_staging', d)
+        deps = (bb.data.getVarFlag('do_package_write_deb', 'depends', d) or "").split()
+        deps.append('dpkg-native:do_populate_staging')
+        deps.append('fakeroot-native:do_populate_staging')
+        bb.data.setVarFlag('do_package_write_deb', 'depends', " ".join(deps), d)
 }
 
 python do_package_write_deb () {

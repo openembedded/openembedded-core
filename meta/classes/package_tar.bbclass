@@ -99,7 +99,10 @@ python do_package_tar () {
 python () {
     import bb
     if bb.data.getVar('PACKAGES', d, True) != '':
-        bb.data.setVarFlag('do_package_write_tar', 'depends', 'tar-native:do_populate_staging', d)
+        deps = (bb.data.getVarFlag('do_package_write_tar', 'depends', d) or "").split()
+        deps.append('tar-native:do_populate_staging')
+        deps.append('fakeroot-native:do_populate_staging')
+        bb.data.setVarFlag('do_package_write_tar', 'depends', " ".join(deps), d)
 }
 
 

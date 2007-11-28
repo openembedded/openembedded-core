@@ -134,7 +134,10 @@ python do_package_rpm () {
 python () {
     import bb
     if bb.data.getVar('PACKAGES', d, True) != '':
-        bb.data.setVarFlag('do_package_write_rpm', 'depends', 'rpm-native:do_populate_staging', d)
+        deps = (bb.data.getVarFlag('do_package_write_rpm', 'depends', d) or "").split()
+        deps.append('rpm-native:do_populate_staging')
+        deps.append('fakeroot-native:do_populate_staging')
+        bb.data.setVarFlag('do_package_write_rpm', 'depends', " ".join(deps), d)
 }
 
 
