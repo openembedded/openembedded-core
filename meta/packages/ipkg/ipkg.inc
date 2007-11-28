@@ -11,7 +11,8 @@ AUTO_LIBNAME_PKGS = "libipkg"
 
 SRC_URI = "${HANDHELDS_CVS};module=familiar/dist/ipkg;tag=${@'V' + bb.data.getVar('PV',d,1).replace('.', '-')} \
         file://fix_tar_extension.patch;patch=1 \
-	file://terse.patch;patch=1 \
+        file://terse.patch;patch=1 \
+	file://ipkg_bugfix.patch;patch=1 \
         file://noupdalt.patch;patch=1"
 
 S = "${WORKDIR}/ipkg/C"
