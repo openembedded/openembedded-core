@@ -2,7 +2,7 @@ DESCRIPTION = "distcc is a parallel build system that distributes \
 compilation of C/C++/ObjC code across machines on a network."
 SECTION = "devel"
 LICENSE = "GPLv2"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "avahi gtk+"
 RRECOMMENDS = "avahi-daemon"
@@ -34,11 +34,11 @@ FILES_${PN} = " ${sysconfdir} \
 FILES_distcc-distmon-gnome = "  ${bindir}/distccmon-gnome \
 				${datadir}/distcc"
 
-pkg_postinst() {
+pkg_postinst_${PN} () {
 	if test "x$D" != "x"; then
 		exit 1
 	else
-		grep distcc /etc/passwd || adduser --system --home /dev/null --empty-password --ingroup nogroup distcc
+		grep distcc /etc/passwd || adduser --system --home /dev/null --no-create-home --empty-password --ingroup nogroup distcc
 	fi
 }
 	
