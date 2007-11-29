@@ -5,7 +5,7 @@ inherit cross
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gcc-${PV}"
 # NOTE: split PR.  If the main .oe changes something that affects its *build*
 # remember to increment this one too.
-PR = "r4"
+PR = "r5"
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}libc-for-gcc gmp-native mpfr-native"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
