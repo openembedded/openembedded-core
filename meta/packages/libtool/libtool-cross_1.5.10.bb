@@ -1,13 +1,15 @@
 SECTION = "devel"
 require libtool_${PV}.bb
 
-PR = "r8"
+PR = "r9"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://libdir-la.patch;patch=1 \
+                   file://libdir-la2.patch;patch=1 \
                    file://prefix.patch;patch=1 \
                    file://tag.patch;patch=1 \
                    file://install-path-check.patch;patch=1 \
+		   file://nmedit_fix.patch;patch=1 \
 		   file://nousrlib.patch;patch=1"
 
 S = "${WORKDIR}/libtool-${PV}"
@@ -17,7 +19,13 @@ exec_prefix = "${STAGING_DIR_NATIVE}${layout_exec_prefix}"
 bindir = "${STAGING_BINDIR_NATIVE}"
 
 do_compile () {
-	:
+	rm -f ltmain.shT
+	date=`/bin/sh ./mkstamp < ./ChangeLog` && \
+        sed -e 's/@''PACKAGE@/libtool/' -e 's/@''VERSION@/1.5.10/' \
+            -e "s%@""TIMESTAMP@%$date%" ./ltmain.in > ltmain.shT
+	mv -f ltmain.shT ltmain.sh || \
+	        (rm -f ltmain.sh && cp ltmain.shT ltmain.sh && rm -f ltmain.shT)
+	cp ltmain.sh ./libltdl/
 }
 
 do_stage () {

@@ -1,0 +1,64 @@
+OE changes to installed=no which means we can't run the original test
+and just look in $objdir. We therefore look in both, preferring 
+$objdir if it exists - RP 29/11/2007
+
+--- libtool-1.5.10/ltmain.in.orig
++++ libtool-1.5.10/ltmain.in
+@@ -3105,8 +3105,11 @@
+ 		  fi
+ 		  ;;
+ 		esac
+-		if grep "^installed=no" $deplib > /dev/null; then
+-		  path="$absdir/$objdir"
++#		OE changes to installed=no which means we can't run the original test
++#		and just look in $objdir. We therefore look in both, preferring 
++#		$objdir if it exists, see below. - RP 29/11/2007
++#		if grep "^installed=no" $deplib > /dev/null; then
++#		  path="$absdir/$objdir"
+ #		This interferes with crosscompilation. -CL
+ #		else
+ #		  eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+@@ -3117,7 +3120,7 @@
+ #		  if test "$absdir" != "$libdir"; then
+ #		    $echo "$modename: warning: \`$deplib' seems to be moved" 1>&2
+ #		  fi
+-		else
++		if ! grep "^installed=no" $deplib > /dev/null; then
+ 		  eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+ 		  if test -z "$libdir"; then
+ 		    $echo "$modename: \`$deplib' is not a valid libtool archive" 1>&2
+@@ -3138,9 +3141,17 @@
+ 		    for tmp in $deplibrary_names ; do
+ 		      depdepl=$tmp
+ 		    done
+-		    if test -f "$path/$depdepl" ; then
+-		      depdepl="$path/$depdepl"
++
++		    if test -f "$absdir/$objdir/$depdepl" ; then
++		      depdepl="$absdir/$objdir/$depdepl"
++		      path="$absdir/$objdir"
++		    elif test -f "$absdir/$depdepl" ; then
++		      depdepl="$absdir/$depdepl"
++		      path="$absdir"
++		    else
++		      path="$absdir/$objdir"
+ 		    fi
++		    
+ 		    # do not add paths which are already there
+ 		    case " $newlib_search_path " in
+ 		    *" $path "*) ;;
+@@ -3150,7 +3161,13 @@
+ 		  path=""
+ 		  ;;
+ 		*)
+-		  path="-L$path"
++		  if test -d "$absdir/$objdir" ; then
++		    path="-L$absdir/$objdir"
++		  elif test -d "$absdir" ; then
++		    path="-L$absdir"
++		  else
++		    path="-L$absdir/$objdir"
++		  fi
+ 		  ;;
+ 		esac
+ 		;;
