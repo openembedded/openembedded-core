@@ -705,7 +705,7 @@ do_populate_staging[dirs] = "${STAGING_DIR_TARGET}/${layout_bindir} ${STAGING_DI
 addtask populate_staging after do_install
 
 python do_populate_staging () {
-	bb.build.exec_func('do_stage', d)
+    bb.build.exec_func('do_stage', d)
 }
 
 addtask install after do_compile
