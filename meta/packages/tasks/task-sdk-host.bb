@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Host packages for the standalone SDK or external toolchain"
-PR = "r1"
+PR = "r2"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -15,10 +15,4 @@ RDEPENDS_${PN} = "\
     binutils-cross-sdk \
     gcc-cross-sdk \
     gdb-cross-sdk \
-    g++ \
-    cpp \
-    libgcc \
-    libgcc-dev \
-    libstdc++ \
-    libstdc++-dev \
     "
