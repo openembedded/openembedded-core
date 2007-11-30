@@ -4,8 +4,8 @@
 #
 FILES_${PN} += "${libdir}/perl5 ${datadir}/perl5"
 
-DEPENDS  += "perl perl-native"
-RDEPENDS += "perl"
+DEPENDS  += "${@["perl", "perl-native"][(bb.data.inherits_class('native', d))]}"
+RDEPENDS  += "${@["perl", ""][(bb.data.inherits_class('native', d))]}"
 
 # Determine the staged version of perl from the perl configuration file
 def get_perl_version(d):
