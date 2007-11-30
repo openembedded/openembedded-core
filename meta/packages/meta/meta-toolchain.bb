@@ -12,7 +12,7 @@ IPKG_HOST = "ipkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
 IPKG_TARGET = "ipkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/${prefix}"
 
 TOOLCHAIN_HOST_TASK ?= "task-sdk-host"
-TOOLCHAIN_TARGET_TASK ?= "task-poky-standalone-sdk-target"
+TOOLCHAIN_TARGET_TASK ?= "task-poky-standalone-gmae-sdk-target"
 
 RDEPENDS = "${TOOLCHAIN_TARGET_TASK} ${TOOLCHAIN_HOST_TASK}"
 
