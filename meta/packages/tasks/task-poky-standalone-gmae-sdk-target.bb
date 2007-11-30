@@ -4,12 +4,11 @@
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
 DEPENDS = "task-poky-standalone-sdk-target"
+PR = "r1"
 
 ALLOW_EMPTY = "1"
 
-PACKAGES = "\
-    task-poky-standalone-gmae-sdk-gmae \
-    task-poky-standalone-gmae-sdk-gmae-dbg"
+PACKAGES = "${PN}"
 
 RDEPENDS_${PN} = "\
     task-poky-standalone-sdk-target \
