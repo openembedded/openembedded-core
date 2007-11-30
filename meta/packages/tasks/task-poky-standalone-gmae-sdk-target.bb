@@ -19,5 +19,5 @@ RDEPENDS_${PN} = "\
     gnome-vfs-dev \
     gconf-dbus-dev \
     avahi-dev \
-    libtelepathy-dev \
+#    libtelepathy-dev \
     "
