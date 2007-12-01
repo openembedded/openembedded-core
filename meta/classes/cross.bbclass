@@ -20,18 +20,7 @@ CXXFLAGS = "${BUILD_CFLAGS}"
 LDFLAGS = "${BUILD_LDFLAGS}"
 LDFLAGS_build-darwin = "-L${STAGING_LIBDIR_NATIVE}"
 
-# Set the compiler. It could have been set to something else
-export CC = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
-export CXX = "${CCACHE}${HOST_PREFIX}g++ ${HOST_CC_ARCH}"
-export F77 = "${CCACHE}${HOST_PREFIX}g77 ${HOST_CC_ARCH}"
-export CPP = "${HOST_PREFIX}gcc -E"
-export LD = "${HOST_PREFIX}ld"
-export CCLD = "${CC}"
-export AR = "${HOST_PREFIX}ar"
-export AS = "${HOST_PREFIX}as"
-export RANLIB = "${HOST_PREFIX}ranlib"
-export STRIP = "${HOST_PREFIX}strip"
-
+TOOLCHAIN_OPTIONS = ""
 
 # Overrides for paths
 
