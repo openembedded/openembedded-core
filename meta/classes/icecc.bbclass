@@ -9,7 +9,8 @@
 # ICECC_VERSION accordingly.
 #
 #The class now handles all 3 different compile 'stages' (i.e native ,cross-kernel and target) creating the
-#necessary enviroment tar.gz file to be used by the remote machines
+#necessary enviroment tar.gz file to be used by the remote machines.
+#It also supports meta-toolchain generation
 #
 #If ICECC_PATH is not set in local.conf then the class will try to locate it using 'which'
 #but nothing is sure ;)
@@ -186,11 +187,14 @@ def create_cross_kernel_env(bb,d):
 def create_env(bb,d):
 
         #return create_cross_kernel_env(bb,d) 
+
         if bb.data.inherits_class("native", d):
           return create_native_env(bb,d)
         elif bb.data.inherits_class("kernel", d):
           return create_cross_kernel_env(bb,d)
         elif bb.data.inherits_class("cross", d):
+          return create_native_env(bb,d)
+        elif bb.data.inherits_class("sdk", d):
           return create_native_env(bb,d)
         else:  
           return create_cross_env(bb,d)
@@ -253,11 +257,11 @@ def icc_path(bb,d,compile):
 
     #"system" package blacklist contains a list of packages that can not distribute compile tasks
     #for one reason or the other
-    system_package_blacklist = [ "uclibc", "glibc-intermediate", "qemu" ]
+    system_package_blacklist = [ "uclibc", "glibc-intermediate", "gcc", "qemu", "bind", "u-boot", "dhcp-forwarder", "enchant" ]
 
     for black in system_package_blacklist:
       if black in package_tmp:
-         bb.data.setVar('PARALLEL_MAKE' , '', d) 
+         bb.data.setVar("PARALLEL_MAKE" , "", d) 
          return ""
 
     #user defined exclusion list
@@ -266,7 +270,7 @@ def icc_path(bb,d,compile):
 
     for black in user_package_blacklist:
       if black in package_tmp:
-         bb.data.setVar('PARALLEL_MAKE' , '', d) 
+         bb.data.setVar("PARALLEL_MAKE" , "", d) 
          return ""
 
 
@@ -280,7 +284,6 @@ def icc_path(bb,d,compile):
          return create_path( ["gcc", "g++"], "native", bb, d)
 
     elif compile and bb.data.inherits_class("kernel", d):
-         #kernel_cc = bb.data.expand('${KERNEL_CC}', d) 
           return create_path( [get_cross_kernel_ver(bb,d), "foo"], "cross-kernel", bb, d)
 
     elif not compile or len(prefix) == 0:
@@ -305,7 +308,7 @@ def check_for_kernel(bb,d):
 def get_cross_kernel_ver(bb,d):
 
        return  bb.data.expand('${KERNEL_CC}', d).strip() or "gcc"
- 
+
 # set the icecream environment variables
 do_configure_prepend() {
     export PATH=${@icc_path(bb,d,False)}$PATH
@@ -316,7 +319,7 @@ do_configure_prepend() {
 do_compile_prepend() {
 
     export PATH=${@icc_path(bb,d,True)}$PATH
-
+ 
  #check if we are building a kernel and select gcc-cross-kernel
  if [ "${@check_for_kernel(bb,d)}" = "yes" ]; then
     export ICECC_CC="${@get_cross_kernel_ver(bb,d)}"
