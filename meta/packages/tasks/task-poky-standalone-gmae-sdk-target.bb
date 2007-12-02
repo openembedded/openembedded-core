@@ -4,7 +4,7 @@
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
 DEPENDS = "task-poky-standalone-sdk-target"
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY = "1"
 
@@ -19,5 +19,5 @@ RDEPENDS_${PN} = "\
     gnome-vfs-dev \
     gconf-dbus-dev \
     avahi-dev \
-#    libtelepathy-dev \
+    libtelepathy-dev \
     "
