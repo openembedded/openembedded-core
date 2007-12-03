@@ -7,4 +7,6 @@ SDK-GMAE = " \
     gconf-dbus-dev \
     avahi-dev \
     libtelepathy-dev \
+    libecal-dev \
+    libebook-dev \
     "
