@@ -277,7 +277,7 @@ CONFIG_DC=y
 # CONFIG_MT is not set
 # CONFIG_RX is not set
 CONFIG_STRINGS=y
-# CONFIG_TIME is not set
+CONFIG_TIME=y
 # CONFIG_WATCHDOG is not set
 
 #
