@@ -3,21 +3,14 @@
 #
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
-DEPENDS = "task-poky-standalone-sdk-target"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY = "1"
 
+require task-sdk-gmae.inc
+
 PACKAGES = "${PN}"
 
-RDEPENDS_${PN} = "\
+RDEPENDS = "\
     task-poky-standalone-sdk-target \
-    gtk+-dev \
-    eds-dbus-dev \
-    gstreamer-dev \
-    bluez-libs-dev \
-    gnome-vfs-dev \
-    gconf-dbus-dev \
-    avahi-dev \
-    libtelepathy-dev \
-    "
+    ${SDK-GMAE}"
