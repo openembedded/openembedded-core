@@ -212,10 +212,13 @@ python package_do_split_gconvs () {
 	dot_re = re.compile("(.*)\.(.*)")
 
 	# Collate the locales by base and encoding
+	utf8_only = int(bb.data.getVar('LOCALE_UTF8_ONLY', d, 1) or 0)
 	encodings = {}
 	for l in supported:
 		l = l[:-1]
 		(locale, charset) = l.split(" ")
+		if utf8_only and charset != 'UTF-8':
+			continue
 		m = dot_re.match(locale)
 		if m:
 			locale = m.group(1)
