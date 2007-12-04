@@ -47,9 +47,9 @@ SRC_URI = "\
 
 S = "${WORKDIR}/qemu"
 
-#EXTRA_OECONF = "--disable-sdl"
-#EXTRA_OECONF = "--disable-gfx-check --target-list=arm-linux-user"
-EXTRA_OECONF = "--disable-gfx-check"
+#EXTRA_OECONF += "--disable-sdl"
+#EXTRA_OECONF += "--target-list=arm-linux-user"
+EXTRA_OECONF += "--disable-gfx-check"
 
 inherit autotools
 

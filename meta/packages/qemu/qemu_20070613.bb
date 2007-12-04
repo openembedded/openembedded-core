@@ -4,6 +4,7 @@ SRCDATE = "20070613"
 PV = "0.9.0+cvs${SRCDATE}"
 PR = "r4"
 
+FILESPATH = "${FILE_DIRNAME}/qemu-${PV}:${FILE_DIRNAME}/files"
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = "\
@@ -47,9 +48,9 @@ SRC_URI = "\
 
 S = "${WORKDIR}/qemu"
 
-#EXTRA_OECONF = "--disable-sdl"
-#EXTRA_OECONF = "--disable-gfx-check --target-list=arm-linux-user"
-EXTRA_OECONF = "--disable-gfx-check"
+#EXTRA_OECONF += "--disable-sdl"
+#EXTRA_OECONF += "--target-list=arm-linux-user"
+EXTRA_OECONF += "--disable-gfx-check"
 
 inherit autotools
 
