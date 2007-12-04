@@ -260,7 +260,11 @@ python package_do_split_gconvs () {
 		i18npath = base_path_join(treedir, datadir, "i18n")
 
 		localedef_opts = "--force --old-style --no-archive --prefix=%s --inputfile=%s/i18n/locales/%s --charmap=%s %s" % (treedir, datadir, locale, encoding, name)
-		qemu_options = bb.data.getVar('QEMU_OPTIONS', d, 1)
+
+		qemu_options = bb.data.getVar("QEMU_OPTIONS_%s" % bb.data.getVar('PACKAGE_ARCH', d, 1), d, 1)
+		if not qemu_options:
+			qemu_options = bb.data.getVar('QEMU_OPTIONS', d, 1)
+		
 		cmd = "PATH=\"%s\" I18NPATH=\"%s\" %s -L %s %s %s/bin/localedef %s" % (path, i18npath, qemu, treedir, qemu_options, treedir, localedef_opts)
 		bb.note("generating locale %s (%s)" % (locale, encoding))
 		if os.system(cmd):
