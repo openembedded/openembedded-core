@@ -2,6 +2,7 @@ LICENSE = "GPL"
 DEPENDS = "zlib"
 SRCDATE = "20071121"
 PV = "0.9.0+cvs${SRCDATE}"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 
