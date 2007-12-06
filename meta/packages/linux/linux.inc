@@ -4,10 +4,16 @@ LICENSE = "GPL"
 
 inherit kernel
 
-# Not every device needs mkimage to generate a kernel image, but lets make OE a bit more
-# friendly and increase the "Just Works(TM) factor. Building uboot takes only a minute.
-DEPENDS += " u-boot-mkimage-openmoko-native "
+python __anonymous () {
 
+    import bb
+    
+    kerneltype = bb.data.getVar('KERNEL_IMAGETYPE', d, 1) or ''
+    if kerneltype == 'uImage':
+    	depends = bb.data.getVar("DEPENDS", d, 1)
+    	depends = "%s u-boot-mkimage-openmoko-native" % depends
+    	bb.data.setVar("DEPENDS", depends, d)
+}
 
 RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
 
@@ -77,17 +83,7 @@ do_configure_prepend() {
         yes '' | oe_runmake oldconfig
 }
 
-# Support checking the kernel size since some kernels need to reside in partitions
-# with a fixed length or there is a limit in transferring the kernel to memory
-do_sizecheck() {
-        if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
-            size=`ls -l arch/${ARCH}/boot/${KERNEL_IMAGETYPE} | awk '{ print $5}'`
-            if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
-                    rm arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
-                    die  "This kernel (size=$size) is too big for your device. Please reduce the size of the kernel by making more of it modular."
-            fi
-        fi
-}
+
 
 do_install_prepend() {
         if test -e arch/${ARCH}/boot/Image ; then
@@ -134,6 +130,5 @@ do_deploy() {
 
 do_deploy[dirs] = "${S}"
 
-addtask sizecheck before do_install after do_compile
 addtask deploy before do_package after do_install
 
