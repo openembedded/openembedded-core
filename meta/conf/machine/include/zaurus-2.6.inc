@@ -40,6 +40,9 @@ GUI_MACHINE_CLASS = "bigscreen"
 GUI_MACHINE_CLASS_collie = "smallscreen"
 GUI_MACHINE_CLASS_poodle = "smallscreen"
 
+KERNEL_IMAGE_MAXSIZE = "1294336"
+KERNEL_IMAGE_MAXSIZE_collie = "1048576"
+
 MACHINE_POSTPROCESS_COMMAND = "zaurus_make_installkit"
 
 zaurus_make_installkit () {
