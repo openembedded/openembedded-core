@@ -33,7 +33,10 @@ gtk-port:INCLUDEPATH += \
     $$BASE_DIR/WebCore/loader/gtk \
     $$BASE_DIR/WebCore/page/gtk \
     $$BASE_DIR/WebKit/gtk/Api \
-    $$BASE_DIR/WebKit/gtk/WebCoreSupport
+    $$BASE_DIR/WebKit/gtk/WebView \
+    $$BASE_DIR/WebKit/gtk/WebCoreSupport \
+    $$BASE_DIR/JavaScriptCore/ForwardingHeaders \
+    $$BASE_DIR
 INCLUDEPATH += \
     $$BASE_DIR/JavaScriptCore/ \
     $$BASE_DIR/JavaScriptCore/kjs \

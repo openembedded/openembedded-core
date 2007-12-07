@@ -34,7 +34,13 @@ do_configure() {
 do_compile_prepend() {
 	mkdir -p ${S}/WebKitBuilds/Debug/JavaScriptCore/pcre/tmp/
 	cd ${S}/JavaScriptCore/pcre 
-	${BUILD_CC} dftables.c -o dftables -I. -I../wtf
+	if test -e dftables.c
+	then
+	    ${BUILD_CC} dftables.c -o dftables -I. -I../wtf
+	elif test -e dftables.cpp
+	then
+	    ${BUILD_CXX} dftables.cpp -o dftables -I. -I../wtf
+	fi
 	cp dftables ${S}/WebKitBuilds/Debug/JavaScriptCore/pcre/tmp/
 	cd ${S}/WebKitBuilds/Debug
 }
