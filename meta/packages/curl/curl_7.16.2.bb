@@ -3,7 +3,7 @@ LICENSE = "MIT"
 DEPENDS = "zlib"
 SECTION = "console/network"
 RPROVIDES_lib${PN} += "libcurl"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2"
 S = "${WORKDIR}/curl-${PV}"
@@ -13,7 +13,7 @@ inherit autotools pkgconfig binconfig
 EXTRA_OECONF = "--with-zlib=${STAGING_DIR_HOST}${layout_prefix}/ \
 		--without-ssl \
 		--with-random=/dev/urandom \
-		--without-idn \
+		--without-libidn \
 		--enable-http \
 		--enable-file"
 
