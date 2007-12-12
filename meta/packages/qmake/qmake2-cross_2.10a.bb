@@ -15,7 +15,7 @@ S = "${WORKDIR}/${QTVER}"
 
 # we need the real target system here
 CROSS_SYS := "${TARGET_SYS}"
-inherit autotools native
+inherit autotools cross
 
 export QTDIR = "${S}"
 EXTRA_OEMAKE = "-e"
