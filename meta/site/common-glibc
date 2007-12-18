@@ -37,3 +37,10 @@ ac_cv_func_pthread_attr_getstack=${ac_cv_func_pthread_attr_getstack=yes}
 ac_cv_func_getpagesize=${ac_cv_func_getpagesize=yes}
 ac_cv_func_memcpy=${ac_cv_func_memcpy=yes}
 ac_cv_func_strerror=${ac_cv_func_strerror=yes}
+
+# squid
+ac_cv_af_unix_large_dgram=${ac_cv_af_unix_large_dgram=yes}
+ac_cv_func_setresuid=${ac_cv_func_setresuid=yes}
+ac_cv_func_va_copy=${ac_cv_func_va_copy=yes}
+ac_cv_func___va_copy=${ac_cv_func___va_copy=yes}
+ac_cv_epoll_works=${ac_cv_epoll_works=yes}
