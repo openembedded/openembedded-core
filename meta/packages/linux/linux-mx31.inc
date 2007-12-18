@@ -6,7 +6,7 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/compressed/${KERNEL_IMAGETYPE}"
 
 inherit kernel
 
-COMPATIBLE_MACHINE = "mx31litekit"
+COMPATIBLE_MACHINE = "mx31litekit|mx31ads"
 
 do_configure_prepend() {
 
