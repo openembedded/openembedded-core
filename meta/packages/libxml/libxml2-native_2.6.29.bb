@@ -1,16 +1,13 @@
-DESCRIPTION = "GNOME XML library"
-PR = "r3"
+require libxml2.inc
 
-SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz"
+PR = "r4"
 
-DEPENDS = "python-native-runtime"
+DEPENDS += "python-native-runtime"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libxml2-${PV}"
 S = "${WORKDIR}/libxml2-${PV}"
 
-inherit autotools native pkgconfig
-
-EXTRA_OECONF = "--without-python --without-debug --without-legacy --without-catalog --without-docbook --with-c14n"
+inherit native
 
 do_stage () {
 	oe_runmake install
