@@ -18,6 +18,11 @@ EXTRA_OECONF_mx31litekit = "${BASE_CONF} --with-flavour=eglnative"
 PACKAGE_ARCH_mx31litekit = "${MACHINE_ARCH}"
 LDFLAGS_append_mx31litekit = " -lpvrNULLWSEGL -lstdc++ "
 
+DEPENDS_mx31ads = "${STDDEPENDS} libgles-mx31 tslib"
+EXTRA_OECONF_mx31ads = "${BASE_CONF} --with-flavour=eglnative"
+PACKAGE_ARCH_mx31ads = "${MACHINE_ARCH}"
+LDFLAGS_append_mx31ads = " -lpvrNULLWSEGL -lstdc++ "
+
 inherit autotools pkgconfig
 
 PACKAGES =+ "clutter-examples"
