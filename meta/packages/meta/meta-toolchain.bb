@@ -1,6 +1,7 @@
 DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
 DEPENDS = "ipkg-native ipkg-utils-native fakeroot-native sed-native"
+PR = "r1"
 
 inherit sdk meta
 
@@ -97,6 +98,10 @@ do_populate_sdk() {
 
 	# remove broken .la files
 	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/*.la
+
+	# /usr/local/poky/eabi-glibc/arm/arm-poky-linux-gnueabi/usr -> .
+	cd ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}
+	ln -sf . usr 
 
         mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}
