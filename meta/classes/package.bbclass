@@ -385,8 +385,9 @@ python populate_packages () {
 			if file in seen:
 				continue
 			seen.append(file)
-			if os.path.isdir(file):
+			if os.path.isdir(file) and not os.path.islink(file):
 				bb.mkdirhier(os.path.join(root,file))
+				os.chmod(os.path.join(root,file), os.stat(file).st_mode)
 				continue
 			fpath = os.path.join(root,file)
 			dpath = os.path.dirname(fpath)
@@ -501,11 +502,14 @@ python emit_pkgdata() {
 		sf.close()
 
 		allow_empty = bb.data.getVar('ALLOW_EMPTY_%s' % pkg, d, 1)
+		if not allow_empty:
+			allow_empty = bb.data.getVar('ALLOW_EMPTY', d, 1)
 		root = "%s/install/%s" % (workdir, pkg)
 		os.chdir(root)
 		g = glob('*')
 		if g or allow_empty == "1":
-			file(bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d), 'w').close()
+			packagedfile = bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d)
+			file(packagedfile, 'w').close()
 }
 emit_pkgdata[dirs] = "${PKGDATA_DIR}/runtime"
 
@@ -555,6 +559,7 @@ python package_do_shlibs() {
 	bb.mkdirhier(shlibs_dir)
 
 	needed = {}
+	private_libs = bb.data.getVar('PRIVATE_LIBS', d, 1)
 	for pkg in packages.split():
 		needs_ldconfig = False
 		bb.debug(2, "calculating shlib provides for %s" % pkg)
@@ -567,7 +572,8 @@ python package_do_shlibs() {
 				soname = None
 				path = os.path.join(root, file)
 				if os.access(path, os.X_OK) or lib_re.match(file):
-					cmd = (bb.data.getVar('BUILD_PREFIX', d, 1) or "") + "objdump -p " + path + " 2>/dev/null"
+					cmd = bb.data.getVar('OBJDUMP', d, 1) + " -p " + path + " 2>/dev/null"
+					cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', d, 1), cmd)
 					fd = os.popen(cmd)
 					lines = fd.readlines()
 					fd.close()
@@ -577,7 +583,9 @@ python package_do_shlibs() {
 							needed[pkg].append(m.group(1))
 						m = re.match("\s+SONAME\s+([^\s]*)", l)
 						if m and not m.group(1) in sonames:
-							sonames.append(m.group(1))
+							# if library is private (only used by package) then do not build shlib for it
+							if not private_libs or -1 == private_libs.find(m.group(1)):
+								sonames.append(m.group(1))
 						if m and libdir_re.match(root):
 							needs_ldconfig = True
 		shlibs_file = os.path.join(shlibs_dir, pkg + ".list")
@@ -766,20 +774,14 @@ python read_shlibdeps () {
 	packages = bb.data.getVar('PACKAGES', d, 1).split()
 	for pkg in packages:
 		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
-		shlibsfile = bb.data.expand("${PKGDEST}/" + pkg + ".shlibdeps", d)
-		if os.access(shlibsfile, os.R_OK):
-			fd = file(shlibsfile)
-			lines = fd.readlines()
-			fd.close()
-			for l in lines:
-				rdepends.append(l.rstrip())
-		pcfile = bb.data.expand("${PKGDEST}/" + pkg + ".pcdeps", d)
-		if os.access(pcfile, os.R_OK):
-			fd = file(pcfile)
-			lines = fd.readlines()
-			fd.close()
-			for l in lines:
-				rdepends.append(l.rstrip())
+		for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
+			depsfile = bb.data.expand("${PKGDEST}/" + pkg + extension, d)
+			if os.access(depsfile, os.R_OK):
+				fd = file(depsfile)
+				lines = fd.readlines()
+				fd.close()
+				for l in lines:
+					rdepends.append(l.rstrip())
 		bb.data.setVar('RDEPENDS_' + pkg, " " + " ".join(rdepends), d)
 }
 
@@ -802,10 +804,7 @@ python package_depchains() {
 	prefixes  = (bb.data.getVar('DEPCHAIN_PRE', d, 1) or '').split()
 
 	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
-		#def packaged(pkg, d):
-		#	return os.access(bb.data.expand('${PKGDATA_DIR}/runtime/%s.packaged' % pkg, d), os.R_OK)
-
-                #bb.note('rdepends for %s is %s' % (base, rdepends))
+        #bb.note('rdepends for %s is %s' % (base, rdepends))
 
 		rreclist = explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
 
