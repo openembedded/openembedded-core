@@ -23,3 +23,5 @@ do_stage() {
 	oe_libinstall -so libmad ${STAGING_LIBDIR}
 	install -m 0644 mad.h ${STAGING_INCDIR}
 }
+
+ARM_INSTRUCTION_SET = "arm"
