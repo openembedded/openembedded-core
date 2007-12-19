@@ -93,17 +93,34 @@ do_populate_sdk() {
 		done
 	done
 
-	# remove unwanted executables
+	# Remove unwanted executables
 	rm -rf ${SDK_OUTPUT}/${prefix}/sbin ${SDK_OUTPUT}/${prefix}/etc
 
-	# remove broken .la files
+	# Remove broken .la files
 	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/*.la
 
+	# Generate link for sysroot use
 	# /usr/local/poky/eabi-glibc/arm/arm-poky-linux-gnueabi/usr -> .
 	cd ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}
 	ln -sf . usr 
 
-        mkdir -p ${SDK_DEPLOY}
+	# Setup site file for external use
+	siteconfig=${SDK_OUTPUT}/${prefix}/site-config
+	touch $siteconfig
+	for sitefile in ${CONFIG_SITE} ; do
+		cat $sitefile >> $siteconfig
+	done
+
+	# Create environment setup script
+	script=${SDK_OUTPUT}/${prefix}/environment-setup
+	touch $script
+	echo 'export PATH=${prefix}/bin:$PATH' >> $script
+	echo 'export PKG_CONFIG_SYSROOT_DIR=${prefix}/${TARGET_SYS}' >> $script
+	echo 'export PKG_CONFIG_PATH=${prefix}/${TARGET_SYS}/lib/pkgconfig' >> $script
+	echo 'export CONFIG_SITE=${prefix}/site-config' >> $script
+
+	# Package it up
+	mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}
 	fakeroot tar cfj ${SDK_DEPLOY}/${SDK_NAME}-toolchain-${DISTRO_VERSION}.tar.bz2 .
 }
