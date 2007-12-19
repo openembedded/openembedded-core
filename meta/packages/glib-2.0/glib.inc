@@ -41,3 +41,5 @@ do_stage () {
 
 FILES_${PN} = "${libdir}/lib*so.*"
 FILES_${PN}-dev += "${libdir}/glib-2.0/include"
+
+ARM_INSTRUCTION_SET = "arm"
