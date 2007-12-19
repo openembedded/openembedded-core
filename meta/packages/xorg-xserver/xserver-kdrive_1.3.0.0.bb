@@ -1,4 +1,4 @@
-require xserver-kdrive-common.inc
+require xserver-kdrive.inc
 
 DEPENDS += "libxkbfile libxcalibrate"
 
