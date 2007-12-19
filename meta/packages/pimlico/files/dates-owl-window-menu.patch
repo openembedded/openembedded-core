@@ -1,21 +1,30 @@
-Index: trunk/src/Makefile.am
-===================================================================
---- trunk.orig/src/Makefile.am	2007-07-11 22:16:15.000000000 +0100
-+++ trunk/src/Makefile.am	2007-07-13 08:21:11.000000000 +0100
-@@ -47,7 +47,7 @@
- libgtkdatesviewinclude_HEADERS = \
- 	dates_view.h
+---
+ src/Makefile.am      |    2 +-
+ src/dates_gtk.c      |    5 -----
+ src/dates_main.c     |    5 +++++
+ src/dates_platform.h |    2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+--- dates-0.4.5.orig/src/Makefile.am
++++ dates-0.4.5/src/Makefile.am
+@@ -33,11 +33,11 @@ dates_SOURCES = $(platform) 	\
+ 	dates_callbacks.h 	\
+ 	dates_callbacks.c 	\
+ 	gconf-bridge.h		\
+ 	gconf-bridge.c
  
--dates_LDADD   = $(DATES_LIBS) libgtkdatesview.la
-+dates_LDADD   = $(DATES_LIBS) libgtkdatesview.la -lowl
+-dates_LDADD = $(DATES_LIBS) libgtkdatesview.la
++dates_LDADD = $(DATES_LIBS) libgtkdatesview.la -lowl
  
  if USE_OWL
  dates_LDADD += $(top_builddir)/libowl/libowl.la
-Index: trunk/src/dates_gtk.c
-===================================================================
---- trunk.orig/src/dates_gtk.c	2007-07-11 22:16:15.000000000 +0100
-+++ trunk/src/dates_gtk.c	2007-07-13 08:33:48.000000000 +0100
-@@ -32,10 +32,6 @@
+ endif 
+ 
+--- dates-0.4.5.orig/src/dates_gtk.c
++++ dates-0.4.5/src/dates_gtk.c
+@@ -30,14 +30,10 @@
+ #ifdef WITH_HILDON
+ #include <hildon/hildon-color-button.h>
  #endif
  
  #ifndef DATES_PLATFORM_create_main_window
@@ -26,7 +35,11 @@ Index: trunk/src/dates_gtk.c
  static GtkWidget *
  create_main_window (DatesData * d, GtkWidget * toolbar,
  					GtkWidget * menu, GtkAccelGroup * accel_group)
-@@ -57,7 +53,6 @@
+ {
+ 	GtkWidget *main_vbox;
+@@ -55,11 +51,10 @@ create_main_window (DatesData * d, GtkWi
+ 	main_vbox = gtk_vbox_new (FALSE, 0);
+ 	gtk_widget_show (main_vbox);
  	gtk_container_add (GTK_CONTAINER (d->main_window), main_vbox);
  
  	gtk_widget_show (menu);
@@ -34,24 +47,13 @@ Index: trunk/src/dates_gtk.c
  
  	gtk_box_pack_end (GTK_BOX (main_vbox), toolbar, FALSE, FALSE, 0);
  	gtk_container_set_border_width (GTK_CONTAINER (toolbar), 3);
-Index: trunk/src/dates_platform.h
-===================================================================
---- trunk.orig/src/dates_platform.h	2007-07-11 22:16:15.000000000 +0100
-+++ trunk/src/dates_platform.h	2007-07-13 08:21:11.000000000 +0100
-@@ -20,7 +20,7 @@
  
- #include "dates_types.h"
  
--#ifdef WITH_HILDON
-+#if 1
- #define DATES_MENU_WITHOUT_BAR 1
- #endif
- 
-Index: trunk/src/dates_main.c
-===================================================================
---- trunk.orig/src/dates_main.c	2007-07-11 22:16:15.000000000 +0100
-+++ trunk/src/dates_main.c	2007-07-13 08:36:11.000000000 +0100
-@@ -25,6 +25,8 @@
+--- dates-0.4.5.orig/src/dates_main.c
++++ dates-0.4.5/src/dates_main.c
+@@ -23,10 +23,12 @@
+ #include <math.h>
+ #include <libecal/e-cal-time-util.h>
  #include <libical/icaltime.h>
  #include <gconf/gconf-client.h>
  
@@ -60,7 +62,11 @@ Index: trunk/src/dates_main.c
  #include "dates_types.h"
  #include "dates_platform.h"
  #include "dates_callbacks.h"
-@@ -566,6 +568,9 @@
+ 
+ #include "gconf-bridge.h"
+@@ -564,10 +566,13 @@ main (int argc, char **argv)
+ 		gtk_widget_show (plug_widget);
+ 	} else {
  		gtk_widget_show (data.main_window);
  	}
  
@@ -70,3 +76,20 @@ Index: trunk/src/dates_main.c
  	gtk_main ();
  
  	/* clean up */
+ 	g_option_context_free (context);
+ 	
+--- dates-0.4.5.orig/src/dates_platform.h
++++ dates-0.4.5/src/dates_platform.h
+@@ -18,11 +18,11 @@
+ #ifndef DATES_UI_GTK_H
+ #define DATES_UI_GTK_H
+ 
+ #include "dates_types.h"
+ 
+-#ifdef WITH_HILDON
++#if 1
+ #define DATES_MENU_WITHOUT_BAR 1
+ #endif
+ 
+ struct DatesData;
+ 
