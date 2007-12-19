@@ -149,6 +149,12 @@ def runstrip(file, d):
         bb.debug(1, "runstrip: skip %s" % file)
         return 0
 
+    # If the file is in a .debug directory it was already stripped,
+    # don't do it again...
+    if os.path.dirname(file).endswith(".debug"):
+        bb.note("Already run strip")
+        return 0
+
     strip = bb.data.getVar("STRIP", d, 1)
     objcopy = bb.data.getVar("OBJCOPY", d, 1)
 
