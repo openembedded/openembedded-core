@@ -6,8 +6,8 @@ DEPENDS = "gtk+ dbus-glib intltool-native hal"
 RDEPENDS_${PN} += "udev hal-info"
 SRC_URI = "git://anongit.freedesktop.org/git/ohm/;protocol=git"
 
-PV = "0.0+git${SRCDATE}"
-PR = "r5"
+PV = "0.1.2+git-locrev${SRCREV}"
+PR = "r0"
 
 S = "${WORKDIR}/git"
 
