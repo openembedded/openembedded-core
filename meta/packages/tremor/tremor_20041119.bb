@@ -25,3 +25,5 @@ do_stage() {
 	       libdir=${STAGING_LIBDIR} \
 	       datadir=${STAGING_DATADIR}
 }
+
+ARM_INSTRUCTION_SET = "arm"
