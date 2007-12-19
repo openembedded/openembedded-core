@@ -6,3 +6,5 @@ EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl \
 		--with-plugins=musicbrainz,wavpack,ivorbis"
 
 SRC_URI += " file://ivorbisdec.patch;patch=1;pnum=0"
+
+ARM_INSTRUCTION_SET = "arm"
