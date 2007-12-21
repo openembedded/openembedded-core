@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r14"
+PR = "r15"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -135,6 +135,9 @@ RDEPENDS_task-poky-tools-testapps = "\
     owl-video-widget \
     gst-meta-video \
     gst-meta-audio \
+    xrestop \
+    xwininfo \
+    xprop \
     xvideo-tests"
 
 
