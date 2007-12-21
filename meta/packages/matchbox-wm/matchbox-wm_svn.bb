@@ -6,7 +6,7 @@ PV = "1.2+svnr${SRCREV}"
 PR = "r1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager;proto=http \
-           file://configure_fix.patch;patch=1 \
+           file://configure_fix.patch;patch=1;maxrev=1818 \
            file://kbdconfig"
 
 S = "${WORKDIR}/matchbox-window-manager"
