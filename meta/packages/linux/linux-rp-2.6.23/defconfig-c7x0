@@ -246,6 +246,7 @@ CONFIG_ZBOOT_ROM_BSS=0x0
 CONFIG_CMDLINE="console=ttyS0,115200n8 console=tty1 noinitrd root=/dev/mtdblock2 rootfstype=jffs2   dyntick=enable quiet"
 # CONFIG_XIP_KERNEL is not set
 CONFIG_KEXEC=y
+CONFIG_ATAGS_PROC=y
 CONFIG_CPU_FREQ_PXA25x=y
 
 #
