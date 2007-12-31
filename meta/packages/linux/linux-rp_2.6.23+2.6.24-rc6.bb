@@ -1,5 +1,7 @@
 require linux-rp.inc
 
+PR = "r1"
+
 DEFAULT_PREFERENCE = "-1"
 
 # Handy URLs
