@@ -1,7 +1,5 @@
 require linux-rp.inc
 
-PR = "r1"
-
 DEFAULT_PREFERENCE = "-1"
 
 # Handy URLs
@@ -16,7 +14,7 @@ DEFAULT_PREFERENCE = "-1"
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
-           ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.24-rc1.bz2;patch=1 \
+           ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.24-rc6.bz2;patch=1 \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
            file://hx2750_base-r31.patch;patch=1 \
@@ -25,7 +23,8 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${RPSRC}/pxa_keys-r8.patch;patch=1 \
 #          ${RPSRC}/tsc2101-r16.patch;patch=1 \
            ${RPSRC}/hx2750_test1-r7.patch;patch=1 \
-#          ${RPSRC}/input_power-r9.patch;patch=1 \
+           ${RPSRC}/input_power-r10.patch;patch=1 \
+           ${RPSRC}/input_power_fix-r0.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r2.patch;patch=1 \
            ${RPSRC}/sharpsl_pm_fixes1-r0.patch;patch=1 \
            ${RPSRC}/pm_changes-r1.patch;patch=1 \
@@ -36,6 +35,8 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            file://pxa27x_overlay-r8.patch;patch=1 \
            ${RPSRC}/w100_extaccel-r1.patch;patch=1 \
            ${RPSRC}/w100_extmem-r1.patch;patch=1 \
+           ${RPSRC}/export_atags-r1.patch;patch=1 \
+           ${RPSRC}/pxa25x_suspend_fixes-r0.patch;patch=1 \
            file://w100fb-unused-var.patch;patch=1 \
            file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
@@ -51,6 +52,7 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
 #          file://squashfs3.2-2.6.20-r0.patch;patch=1;status=external \
 #          file://htcuni.patch;patch=1 \
            file://binutils-buildid-arm.patch;patch=1 \
+	   file://versatile-armv6.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-hx2000 \
            file://defconfig-collie \
