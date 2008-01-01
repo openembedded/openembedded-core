@@ -1,9 +1,6 @@
 require linux-rp.inc
 
-PR = "r9"
-
-DEFAULT_PREFERENCE_qemuarm = "-1"
-DEFAULT_PREFERENCE_qemux86 = "-1"
+PR = "r20"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -17,6 +14,7 @@ DEFAULT_PREFERENCE_qemux86 = "-1"
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
+           file://hrw-add-wcf11-to-hostap.patch;patch=1;status=pending \
            ${RPSRC}/lzo_jffs2-r3.patch;patch=1 \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_lzomode-r1.patch;patch=1 \
@@ -42,6 +40,8 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${RPSRC}/export_atags-r0.patch;patch=1 \
            ${RPSRC}/pxa25x_suspend_fixes-r0.patch;patch=1 \
            ${RPSRC}/poodle_lcd_hack-r0.patch;patch=1 \
+           ${RPSRC}/poodle_asoc_fix-r1.patch;patch=1 \
+           ${RPSRC}/locomo_led_fix-r0.patch;patch=1 \
            file://w100fb-unused-var.patch;patch=1 \
            file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
@@ -54,6 +54,7 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1;status=hack \
            file://pxa-serial-hack.patch;patch=1;status=hack \
            file://connectplus-remove-ide-HACK.patch;patch=1;status=hack \
+           file://connectplus-prevent-oops-HACK.patch;patch=1;status=hack \
            file://squashfs3.0-2.6.15.patch;patch=1;status=external \
            file://uvesafb-0.1-rc3-2.6.22.patch;patch=1;status=external \
            file://htcuni.patch;patch=1 \
@@ -73,7 +74,6 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
 
 # FIXMEs before made default	   
 # ${RPSRC}/mmcsd_no_scr_check-r1.patch;patch=1;status=hack
-
 
 # Add this to enable pm debug code (useful with a serial lead)
 #  ${RPSRC}/sharpsl_pm_debug-r0.patch;patch=1
@@ -97,27 +97,38 @@ SRC_URI_append_collie = "\
 #          ${DOSRC}/collie/collie-pm-r1.patch;patch=1 \
 "
 
+SRC_URI_append_poodle = "\
+           ${RPSRC}/poodle_serial_vcc-r0.patch;patch=1 \
+"
+
 SRC_URI_append_tosa = "\
-           ${CHSRC}/usb-ohci-hooks-r1.patch;patch=1 \
            ${CHSRC}/tmio-core-r4.patch;patch=1 \
            file://tmio-tc6393-r8.patch;patch=1 \
-           file://tmio-nand-r7.patch;patch=1 \
-           file://tmio-ohci-r6.patch;patch=1 \
+           file://tmio-nand-r8.patch;patch=1 \
            ${CHSRC}/tmio-fb-r6.patch;patch=1 \
-           file://tosa-keyboard-r18.patch;patch=1 \
+	   file://tmio-fb-r6-fix-r0.patch;patch=1 \
+           file://tosa-keyboard-r19.patch;patch=1 \
            ${DOSRC}/tosa-pxaac97-r6.patch;patch=1 \
+	   file://tosa-pxaac97-r6-fix-r0.patch;patch=1 \
            ${DOSRC}/tosa-tmio-r6.patch;patch=1 \
-           ${DOSRC}/tosa-power-r17.patch;patch=1 \
+           file://tosa-power-r18.patch;patch=1 \
+           file://tosa-power-r18-fix-r0.patch;patch=1 \
            file://tosa-tmio-lcd-r10.patch;patch=1 \
-           ${DOSRC}/tosa-bluetooth-r8.patch;patch=1 \
-           ${DOSRC}/wm97xx-lg7-r0.patch;patch=1 \
+           file://tosa-tmio-lcd-r10-fix-r0.patch;patch=1 \
+           file://tosa-bluetooth-r8.patch;patch=1 \
+           file://wm97xx-lg13-r0.patch;patch=1 \
+           file://wm97xx-lg13-r0-fix-r0.patch;patch=1 \
            file://wm9712-suspend-cold-res-r2.patch;patch=1 \
            file://sharpsl-pm-postresume-r1.patch;patch=1 \
-           ${DOSRC}/wm97xx-dig-restore-r0.patch;patch=1 \
-           ${DOSRC}/wm97xx-miscdevs-resume-r0.patch;patch=1 \
            file://wm9712-reset-loop-r2.patch;patch=1 \
            file://tosa-lcdnoise-r1.patch;patch=1 \
-           file://wm97xx-lcdnoise-r0.patch;patch=1 "
+           file://tosa-lcdnoise-r1-fix-r0.patch;patch=1 \
+	   file://arm-dma-coherent.patch;patch=1 \
+           file://usb-ohci-hooks-r3.patch;patch=1 \
+           file://tmio-ohci-r9.patch;patch=1 \
+           file://pxa2xx_udc_support_inverse_vbus.patch;patch=1 \
+           file://tosa_udc_use_gpio_vbus.patch;patch=1 \
+           "
 #          ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
 
 SRC_URI_append_htcuniversal ="\
