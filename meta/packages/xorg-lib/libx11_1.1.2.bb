@@ -12,7 +12,7 @@ XORG_PN = "libX11"
 SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \
             file://include_fix.patch;patch=1" 
 
-EXTRA_OECONF += "--without-xcb"
+EXTRA_OECONF += "--without-xcb --with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h"
 
 do_compile() {
         (
