@@ -897,6 +897,23 @@ python () {
     base_after_parse(d)
 }
 
+def check_app_exists(app, d):
+	from bb import which, data
+
+	app = data.expand(app, d)
+	path = data.getVar('PATH', d)
+	return len(which(path, app)) != 0
+
+def check_gcc3(data):
+
+	gcc3_versions = 'gcc-3.4 gcc34 gcc-3.4.4 gcc-3.4.6 gcc-3.4.7 gcc-3.3 gcc33 gcc-3.3.6 gcc-3.2 gcc32'
+
+	for gcc3 in gcc3_versions.split():
+		if check_app_exists(gcc3, data):
+			return gcc3
+	
+	return False
+
 # Patch handling
 inherit patch
 
