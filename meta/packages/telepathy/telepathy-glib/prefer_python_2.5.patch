@@ -1,0 +1,13 @@
+Index: telepathy-glib-0.7.0/configure.ac
+===================================================================
+--- telepathy-glib-0.7.0.orig/configure.ac	2007-11-22 18:09:07.000000000 +0000
++++ telepathy-glib-0.7.0/configure.ac	2007-12-31 23:07:04.000000000 +0000
+@@ -179,7 +179,7 @@
+   AC_MSG_ERROR([dbus-binding-tool (from dbus-glib) is required])
+ fi
+ PYTHON=
+-AC_CHECK_PROGS([PYTHON], [python2.3 python2.4 python2.5 python])
++AC_CHECK_PROGS([PYTHON], [python2.5 python2.4 python2.3 python])
+ if test -z "$PYTHON"; then
+   AC_MSG_ERROR([Python is required to compile this package])
+ fi
