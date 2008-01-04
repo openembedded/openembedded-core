@@ -3,9 +3,6 @@ require gtk+.inc
 DEPENDS += "cairo"
 PR = "r19"
 
-# disable per default - untested and not all patches included.
-DEFAULT_PREFERENCE = "-1" 
-
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
            file://gtklabel-resize-patch;patch=1 \
            file://menu-deactivate.patch;patch=1 \

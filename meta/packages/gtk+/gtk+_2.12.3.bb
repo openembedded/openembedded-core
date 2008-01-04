@@ -3,9 +3,6 @@ require gtk+.inc
 DEPENDS += "cairo"
 PR = "r3"
 
-# disable per default - untested and not all patches included.
-DEFAULT_PREFERENCE = "-1"
-
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \
            file://run-iconcache.patch;patch=1 \
