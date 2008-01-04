@@ -1,10 +1,10 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r2"
+PR = "r3"
 
 # disable per default - untested and not all patches included.
-DEFAULT_PREFERENCE = "-1" 
+DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \
@@ -12,16 +12,21 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://disable-print.patch;patch=1 \
            file://hardcoded_libtool.patch;patch=1 \
            file://no-demos.patch;patch=1 \
-        file://cellrenderer-cairo.patch;patch=1;pnum=0 \
-        file://entry-cairo.patch;patch=1;pnum=0 \
-        file://toggle-font.diff;patch=1;pnum=0 \
-        file://scrolled-placement.patch;patch=1;pnum=0"
+           file://cellrenderer-cairo.patch;patch=1;pnum=0 \
+           file://entry-cairo.patch;patch=1;pnum=0 \
+           file://toggle-font.diff;patch=1;pnum=0 \
+           file://scrolled-placement.patch;patch=1;pnum=0 \
+           file://filesystem-volumes.patch;patch=1 \
+           file://filechooser-utils.patch;patch=1 \
+           file://filechooser.patch;patch=1 \
+           file://filechooser-default.patch;patch=1 \
 # temporary
 #           file://gtklabel-resize-patch;patch=1 \
 #           file://menu-deactivate.patch;patch=1 \
 #        file://combo-arrow-size.patch;patch=1;pnum=0 \
 # die die die
-#           file://pangoxft2.10.6.diff;patch=1"
+#           file://pangoxft2.10.6.diff;patch=1 \
+	  "
 
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-display-migration"
 
