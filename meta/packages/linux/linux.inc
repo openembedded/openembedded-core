@@ -4,6 +4,8 @@ LICENSE = "GPL"
 
 inherit kernel
 
+DEPENDS_append_em-x270 = " mtd-utils "
+
 python __anonymous () {
 
     import bb

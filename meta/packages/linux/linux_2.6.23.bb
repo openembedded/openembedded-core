@@ -67,3 +67,14 @@ python do_compulab_image() {
 }
 
 addtask compulab_image after do_deploy before do_package
+
+do_kernel_image() {
+	
+	if [ "${MACHINE}" = "em-x270" ]
+	then
+		mkdir -p ${WORKDIR}/t
+		install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_SYMLINK_NAME}.bin ${WORKDIR}/t/uImage
+		mkfs.jffs2 --eraseblock=0x20000 --pad --no-cleanmarkers --faketime --root=${WORKDIR}/t --output=${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.jffs2
+	fi
+}
+addtask kernel_image after do_deploy
