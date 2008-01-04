@@ -75,6 +75,7 @@ do_kernel_image() {
 		mkdir -p ${WORKDIR}/t
 		install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_SYMLINK_NAME}.bin ${WORKDIR}/t/uImage
 		mkfs.jffs2 --eraseblock=0x20000 --pad --no-cleanmarkers --faketime --root=${WORKDIR}/t --output=${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.jffs2
+		cd ${DEPLOY_DIR_IMAGE} && ln -sf ${KERNEL_IMAGE_BASE_NAME}.jffs2 uImage-em-x270.jffs2
 	fi
 }
 addtask kernel_image after do_deploy
