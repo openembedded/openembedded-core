@@ -68,7 +68,6 @@ leave_mainloop = False
 last_exception = None
 cooker = None
 parsed = False
-initdata = None
 debug = os.environ.get( "BBSHELL_DEBUG", "" )
 
 ##########################################################################
@@ -156,11 +155,14 @@ class BitBakeShellCommands:
         cooker.configuration.cmd = cmd
 
         td = taskdata.TaskData(cooker.configuration.abort)
+        localdata = data.createCopy(cooker.configuration.data)
+        data.update_data(localdata)
+        data.expandKeys(localdata)
 
         try:
             tasks = []
             for name in names:
-                td.add_provider(cooker.configuration.data, cooker.status, name)
+                td.add_provider(localdata, cooker.status, name)
                 providers = td.get_provider(name)
 
                 if len(providers) == 0:
@@ -168,9 +170,9 @@ class BitBakeShellCommands:
 
                 tasks.append([name, "do_%s" % cooker.configuration.cmd])
 
-            td.add_unresolved(cooker.configuration.data, cooker.status)
+            td.add_unresolved(localdata, cooker.status)
             
-            rq = runqueue.RunQueue(cooker, cooker.configuration.data, cooker.status, td, tasks)
+            rq = runqueue.RunQueue(cooker, localdata, cooker.status, td, tasks)
             rq.prepare_runqueue()
             rq.execute_runqueue()
 
@@ -217,8 +219,8 @@ class BitBakeShellCommands:
     edit.usage = "<providee>"
 
     def environment( self, params ):
-        """Dump out the outer BitBake environment (see bbread)"""
-        data.emit_env(sys.__stdout__, cooker.configuration.data, True)
+        """Dump out the outer BitBake environment"""
+        cooker.showEnvironment()
 
     def exit_( self, params ):
         """Leave the BitBake Shell"""
@@ -241,11 +243,10 @@ class BitBakeShellCommands:
         oldcmd = cooker.configuration.cmd
         cooker.configuration.cmd = cmd
 
-        thisdata = copy.deepcopy( initdata )
-        # Caution: parse.handle modifies thisdata, hence it would
-        # lead to pollution cooker.configuration.data, which is
-        # why we use it on a safe copy we obtained from cooker right after
-        # parsing the initial *.conf files
+        thisdata = data.createCopy(cooker.configuration.data)
+        data.update_data(thisdata)
+        data.expandKeys(thisdata)
+
         try:
             bbfile_data = parse.handle( bf, thisdata )
         except parse.ParseError:
@@ -393,6 +394,11 @@ SRC_URI = ""
             os.system( "%s %s/%s" % ( os.environ.get( "EDITOR" ), fulldirname, filename ) )
     new.usage = "<directory> <filename>"
 
+    def package( self, params ):
+        """Execute 'package' on a providee"""
+        self.build( params, "package" )
+    package.usage = "<providee>"
+
     def pasteBin( self, params ):
         """Send a command + output buffer to the pastebin at http://rafb.net/paste"""
         index = params[0]
@@ -501,8 +507,8 @@ SRC_URI = ""
         interpreter.interact( "SHELL: Expert Mode - BitBake Python %s\nType 'help' for more information, press CTRL-D to switch back to BBSHELL." % sys.version )
 
     def showdata( self, params ):
-        """Execute 'showdata' on a providee"""
-        self.build( params, "showdata" )
+        """Show the parsed metadata for a given providee"""
+        cooker.showEnvironment(None, params)
     showdata.usage = "<providee>"
 
     def setVar( self, params ):
@@ -731,10 +737,6 @@ class BitBakeShell:
             pass  # It doesn't exist yet.
 
         print __credits__
-
-        # save initial cooker configuration (will be reused in file*** commands)
-        global initdata
-        initdata = copy.deepcopy( cooker.configuration.data )
 
     def cleanup( self ):
         """Write readline history and clean up resources"""
