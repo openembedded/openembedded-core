@@ -1,0 +1,24 @@
+Index: gstreamer-cvs/gst/gstregistry.c
+===================================================================
+RCS file: /cvs/gstreamer/gstreamer/gst/gstregistry.c,v
+retrieving revision 1.75
+diff -u -r1.75 gstregistry.c
+--- gstreamer-cvs/gst/gstregistry.c	31 Jul 2007 11:51:38 -0000	1.75
++++ gstreamer-cvs/gst/gstregistry.c	8 Jan 2008 14:12:40 -0000
+@@ -813,6 +813,16 @@
+     GST_LOG_OBJECT (registry, "examining file: %s", filename);
+ 
+     if (g_file_test (filename, G_FILE_TEST_IS_DIR)) {
++      /* 
++       * skip .debug directories, these contain elf files that can crash
++       * dlopen 
++       */
++      if (g_str_equal (dirent, ".debug")) {
++        GST_LOG_OBJECT (registry, "found .debug directory, ignoring");
++        g_free (filename);
++        continue;
++      }
++
+       if (level > 0) {
+         GST_LOG_OBJECT (registry, "found directory, recursing");
+         changed |= gst_registry_scan_path_level (registry, filename, level - 1);
