@@ -143,10 +143,23 @@ do_deploy() {
 	ln -sf ${KERNEL_DEPLOY_NAME} ${KERNEL_SYMLINK_NAME}
 	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${MACHINE}.tgz -C ${D} lib	
 }
-
 do_deploy[dirs] = "${S}"
-
 addtask deploy before do_package after do_install
+
+do_bootkern() {
+	echo "Copying Kernel"
+	scp ${DEPLOY_DIR_IMAGE}/${KERNEL_SYMLINK_NAME} root@${TARGET_DEVICE_IP}:/zImage-bootkern
+	echo "Copying Modules"
+	scp ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${MACHINE}.tgz root@${TARGET_DEVICE_IP}:/
+	echo "Unpacking Modules"
+	ssh root@${TARGET_DEVICE_IP} "cd /; tar -xvzf modules-${KERNEL_VERSION}-${MACHINE}.tgz; rm modules-${KERNEL_VERSION}-${MACHINE}.tgz"
+	echo "Loading Kernel into kexec"
+	ssh root@${TARGET_DEVICE_IP} "/usr/sbin/kexec -l /zImage-bootkern" 
+	echo "Launching kernel"
+	ssh root@${TARGET_DEVICE_IP} "/usr/sbin/kexec -f -e" 
+}
+addtask bootkern after do_deploy
+do_bootkern[nostamp] = "1"
 
 # wlan-ng stuff need compiled kernel sources
 do_rm_work() {
