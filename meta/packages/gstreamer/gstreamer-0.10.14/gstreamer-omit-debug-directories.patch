@@ -1,10 +1,10 @@
-Index: gstreamer-cvs/gst/gstregistry.c
+Index: gstreamer-0.10.4/gst/gstregistry.c
 ===================================================================
 RCS file: /cvs/gstreamer/gstreamer/gst/gstregistry.c,v
 retrieving revision 1.75
 diff -u -r1.75 gstregistry.c
---- gstreamer-cvs/gst/gstregistry.c	31 Jul 2007 11:51:38 -0000	1.75
-+++ gstreamer-cvs/gst/gstregistry.c	8 Jan 2008 14:12:40 -0000
+--- gstreamer-0.10.4/gst/gstregistry.c	31 Jul 2007 11:51:38 -0000	1.75
++++ gstreamer-0.10.4/gst/gstregistry.c	8 Jan 2008 14:12:40 -0000
 @@ -813,6 +813,16 @@
      GST_LOG_OBJECT (registry, "examining file: %s", filename);
  
