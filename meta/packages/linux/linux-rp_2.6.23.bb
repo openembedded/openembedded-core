@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r21"
+PR = "r22"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
