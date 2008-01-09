@@ -4,7 +4,7 @@
 
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 DEPENDS = "task-poky"
-PR = "r3"
+PR = "r4"
 
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -37,6 +37,7 @@ RDEPENDS_task-poky-sdk = "\
     perl-module-re \
     perl-module-text-wrap \
     pkgconfig \
+    findutils \
     quilt \
     less \
     distcc"
