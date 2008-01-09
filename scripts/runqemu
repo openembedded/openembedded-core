@@ -62,7 +62,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o 
     if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-$MACHINE.bin
     fi
-    CROSSPATH=$BUILDDIR/tmp/cross/arm-poky-linux/bin
+    CROSSPATH=$BUILDDIR/tmp/cross/arm-poky-linux-gnueabi/bin
 fi
 
 if [ "$MACHINE" = "qemuarm" ]; then
@@ -73,6 +73,8 @@ if [ "$MACHINE" = "qemuarm" ]; then
                 HDIMAGE="$T-sdk-qemuarm.ext2"
             elif [ -e "$T-sato-qemuarm.ext2" ]; then
                 HDIMAGE="$T-sato-qemuarm.ext2"
+            elif [ -e "$T-minimal-qemuarm.ext2" ]; then
+                HDIMAGE="$T-minimal-qemuarm.ext2"
             fi
         fi
     fi
@@ -105,10 +107,12 @@ if [ "$MACHINE" = "qemux86" ]; then
                 HDIMAGE=$T-sdk-qemux86.ext2
             elif [ -e "$T-sato-qemux86.ext2" ]; then
                 HDIMAGE=$T-sato-qemux86.ext2
+            elif [ -e "$T-minimal-qemux86.ext2" ]; then
+                HDIMAGE=$T-minimal-qemux86.ext2
             fi
         fi
     fi
-    CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
+    CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux-gnueabi/bin
 fi
 
 export PATH=$CROSSPATH:$PATH
