@@ -1,12 +1,13 @@
 require linux-mx31.inc
 
-PR = "r3"
+PR = "r4"
 
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.19.2.tar.bz2 \
            file://defconfig-mx31litekit \
            file://defconfig-mx31ads \
+           file://defconfig-mx31phy \
 	   "
 
 SRC_URI_append_mx31litekit = " \
@@ -162,6 +163,64 @@ SRC_URI_append_mx31ads = " \
            file://linux-2.6.19.2-mx-reserve_mx3_uart2_for_fir.patch;patch=1 \
            file://linux-2.6.19.2-mx31_TO2_reg_swizzle_workaround.patch;patch=1 \
            file://linux-2.6.19.2-mx31_suspend_resumes_on_eth_activity.patch;patch=1 \
+           "
+
+SRC_URI_append_mx31phy = " \
+           file://mx31phy-patches.tgz \
+           file://linux-2.6.19.2-mx-arch_arm.patch;patch=1 \
+           file://linux-2.6.19.2-mx-arm_oprofile.patch;patch=1 \
+           file://linux-2.6.19.2-mx-codetest.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_char.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_i2c.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_ide.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_input.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_media.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_mmc.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_mtd.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_mxc.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_net.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_pcmcia.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_serial.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_spi.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_usb.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_video.patch;patch=1 \
+           file://linux-2.6.19.2-mx-drivers_w1.patch;patch=1 \
+           file://linux-2.6.19.2-mx-include_mxc.patch;patch=1 \
+           file://linux-2.6.19.2-mx-mach_mx27.patch;patch=1 \
+           file://linux-2.6.19.2-mx-mach_mx31.patch;patch=1 \
+           file://linux-2.6.19.2-mx-plat_mxc.patch;patch=1 \
+           file://linux-2.6.19.2-mx-sound.patch;patch=1 \
+           file://linux-2.6.19.2-mx-irttp_reserve.patch;patch=1 \
+           file://linux-2.6.19.2-mx-porting.patch;patch=1 \
+           file://linux-2.6.19.2-mx-fsl_logos.patch;patch=1 \
+           file://linux-2.6.19.2-mx-remove_kfi.patch;patch=1 \
+           file://linux-2.6.19.2-mx-touchscreen_fix.patch;patch=1 \
+           file://linux-2.6.19.2-mx-xip_boot_with_nor.patch;patch=1 \
+           file://linux-2.6.19.2-mx-xip_with_nand.patch;patch=1 \
+           file://linux-2.6.19.2-mx-alsa_playback_ata_corruption.patch;patch=1 \
+           file://linux-2.6.19.2-mx-sdma_channel_priority.patch;patch=1 \
+           file://linux-2.6.19.2-mx-dpm.patch;patch=1 \
+           file://linux-2.6.19.2-mx-voice_codec_noise.patch;patch=1 \
+           file://linux-2.6.19.2-mx-mx27_hrt.patch;patch=1 \
+           file://linux-2.6.19.2-mx-ata_clk_fix.patch;patch=1 \
+           file://linux-2.6.19.2-mx-ts_suspend_fix.patch;patch=1 \
+           file://linux-2.6.19.2-mx-i2c_stop_fix.patch;patch=1 \
+           file://linux-2.6.19.2-mx-mc521da_camera.patch;patch=1 \
+           file://linux-2.6.19.2-mx-ipu_pm_sleep.patch;patch=1 \
+           file://linux-2.6.19.2-mx-warns_fix.patch;patch=1 \
+           file://linux-2.6.19.2-can_base.diff;patch=1 \
+           file://linux-2.6.19.2-drivers_can_loopback.diff;patch=1 \
+           file://linux-2.6.19.2-drivers_can_ccan.diff;patch=1 \
+           file://linux-2.6.19.2-drivers_can_sja.diff;patch=1 \
+           file://linux-2.6.19.2-drivers_can_nios.diff;patch=1 \
+           file://linux-2.6.19.2-pcm037can.patch;patch=1 \
+           file://linux-2.6.19.2-smsc-lan921x.patch;patch=1 \
+           file://linux-2.6.19.2-phyCORE-i.MX31.patch;patch=1 \
+           file://linux-2.6.19.2-bootlogo.patch;patch=1 \
+           file://linux-2.6.19.2-mt9v111_bus_fix.patch;patch=1 \
+           file://linux-2.6.19.2-i2c_fix.patch;patch=1 \
+           file://linux-2.6.19.2-clock_fix.patch;patch=1 \
+           file://linux-2.6.19.2-ipu_rgb_fix.patch;patch=1 \
            "
 
 S = "${WORKDIR}/linux-2.6.19.2"

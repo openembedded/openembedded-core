@@ -1,12 +1,12 @@
 SECTION = "kernel"
-DESCRIPTION = "Linux kernel for imx31 Lite Kit"
+DESCRIPTION = "Linux kernel for imx31 devices"
 LICENSE = "GPL"
 
 KERNEL_OUTPUT = "arch/${ARCH}/boot/compressed/${KERNEL_IMAGETYPE}"
 
 inherit kernel
 
-COMPATIBLE_MACHINE = "mx31litekit|mx31ads"
+COMPATIBLE_MACHINE = "mx31litekit|mx31ads|mx31phy"
 
 do_configure_prepend() {
 
