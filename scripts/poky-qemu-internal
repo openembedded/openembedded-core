@@ -32,6 +32,7 @@
 QEMUIFUP=`which poky-qemu-ifup`
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
 QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$QEMUIFUP"
+KERNCMDLINE="mem=$QEMU_MEMORY"
 
 if [ -z "$QEMU_MEMORY" ]; then
     QEMU_MEMORY="64M"
@@ -60,7 +61,8 @@ fi
 if [ "$MACHINE" = "qemuarm" ]; then
     QEMU=`which qemu-system-arm`
     if [ "$TYPE" = "ext2" ]; then
-        QEMUOPTIONS="-append 'root=/dev/sda console=ttyAMA0 console=tty0 mem=$QEMU_MEMORY' $QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
+        KERNCMDLINE="root=/dev/sda console=ttyAMA0 console=tty0 mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
     fi
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
@@ -70,14 +72,16 @@ if [ "$MACHINE" = "qemuarm" ]; then
             echo "Error, NFS mount point $HDIMAGE doesn't exist"
             return
         fi
-        QEMUOPTIONS="-append 'root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD' $QEMU_NETWORK_CMD -M versatilepb"
+        KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb"
     fi
 fi
 
 if [ "$MACHINE" = "qemux86" ]; then
     QEMU=`which qemu`
     if [ "$TYPE" = "ext2" ]; then
-        QEMUOPTIONS="-std-vga -append 'root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD' $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet"
+        KERNCMDLINE="root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
+        QEMUOPTIONS="-std-vga $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet"
     fi
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
@@ -87,7 +91,8 @@ if [ "$MACHINE" = "qemux86" ]; then
             echo "Error, NFS mount point $HDIMAGE doesn't exist."
             return
         fi
-        QEMUOPTIONS="-std-vga -append 'root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD' $QEMU_NETWORK_CMD"
+        KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="-std-vga $QEMU_NETWORK_CMD"
     fi
 fi
 
@@ -123,5 +128,5 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
 fi
 
 echo "Running $QEMU using sudo..."
-echo "$QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS"
-sudo "$QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS"
+echo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE"
+sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE"

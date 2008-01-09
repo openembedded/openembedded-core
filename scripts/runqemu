@@ -112,7 +112,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             fi
         fi
     fi
-    CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux-gnueabi/bin
+    CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
 fi
 
 export PATH=$CROSSPATH:$PATH
