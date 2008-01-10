@@ -86,29 +86,6 @@ RDEPENDS_xserver-kdrive-smi = "${PN}"
 RDEPENDS_xserver-kdrive-vesa = "${PN}"
 RDEPENDS_xserver-kdrive-via = "${PN}"
 
-SRC_URI ?= "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
-	${KDRIVE_COMMON_PATCHES}"
-KDRIVE_COMMON_PATCHES = " \
-	file://kmode.patch;patch=1 \
-	file://disable-apm.patch;patch=1 \
-	file://no-serial-probing.patch;patch=1 \
-	file://kdrive-evdev.patch;patch=1  \
-	file://kdrive-use-evdev.patch;patch=1  \
-	file://fbdev-not-fix.patch;patch=1  \
-	file://enable-builtin-fonts.patch;patch=1 \
-	file://disable-xf86-dga-xorgcfg.patch;patch=1 \
-	file://optional-xkb.patch;patch=1 \
-	file://enable-epson.patch;patch=1 \
-	file://enable-tslib.patch;patch=1 \
-	file://kmode-palm.patch;patch=1 \
-	"
-
-SRC_URI_append_mnci   = " file://onlyfb.patch;patch=1"
-SRC_URI_append_poodle = " file://xserver-kdrive-poodle.patch;patch=1"
-SRC_URI_append_qemux86 = " file://xserver-kdrive-poodle.patch;patch=1"
-PACKAGE_ARCH_poodle = "${MACHINE_ARCH}"
-PACKAGE_ARCH_qemux86 = "${MACHINE_ARCH}"
-
 inherit autotools pkgconfig
 
 ARM_INSTRUCTION_SET = "arm"
