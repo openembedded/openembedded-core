@@ -3,7 +3,7 @@
 #
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
-PR = "r3"
+PR = "r4"
 
 ALLOW_EMPTY = "1"
 
@@ -13,5 +13,5 @@ PACKAGES = "${PN}"
 
 RDEPENDS = "\
     task-poky-sdk \
-    libglade \
+    libglade-dev \
     ${SDK-GMAE}"
