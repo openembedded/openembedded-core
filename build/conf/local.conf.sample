@@ -35,7 +35,7 @@ DISTRO ?= "poky"
 # For bleeding edge / experimental / unstable package versions
 # DISTRO ?= "poky-bleeding"
 
-# IMAGE_FEATURES configuration of the generated images 
+# EXTRA_IMAGE_FEATURES allows extra packages to be added to the generated images 
 # (Some of these are automatically added to certain image types)
 # "dbg-pkgs"     - add -dbg packages for all installed packages
 #                  (adds symbol information for debugging/profiling)
@@ -50,13 +50,13 @@ DISTRO ?= "poky"
 # There are other application targets too, see meta/classes/poky-image.bbclass 
 # and meta/packages/tasks/task-poky.bb for more details.
 
-IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"
+EXTRA_IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"
 
 # The default IMAGE_FEATURES above are too large for the mx31phy and 
 # c700/c750 machines which have limited space. The code below limits
 # the default features for those machines.
-IMAGE_FEATURES_c7x0 = "tools-testapps debug-tweaks"
-IMAGE_FEATURES_mx31phy = "tools-testapps debug-tweaks"
+EXTRA_IMAGE_FEATURES_c7x0 = "tools-testapps debug-tweaks"
+EXTRA_IMAGE_FEATURES_mx31phy = "tools-testapps debug-tweaks"
 
 # A list of packaging systems used in generated images
 # The first package type listed will be used for rootfs generation
