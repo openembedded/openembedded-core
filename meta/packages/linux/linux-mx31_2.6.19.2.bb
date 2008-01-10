@@ -221,6 +221,7 @@ SRC_URI_append_mx31phy = " \
            file://linux-2.6.19.2-i2c_fix.patch;patch=1 \
            file://linux-2.6.19.2-clock_fix.patch;patch=1 \
            file://linux-2.6.19.2-ipu_rgb_fix.patch;patch=1 \
+           file://nor-query-table-fix.patch;patch=1 \
            "
 
 S = "${WORKDIR}/linux-2.6.19.2"
