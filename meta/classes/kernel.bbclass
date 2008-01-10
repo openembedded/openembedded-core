@@ -80,25 +80,12 @@ kernel_do_stage() {
 	mkdir -p ${STAGING_KERNEL_DIR}/include/pcmcia
 	cp -fR include/pcmcia/* ${STAGING_KERNEL_DIR}/include/pcmcia/
 
-	if [ -d drivers/crypto ]; then
-		mkdir -p ${STAGING_KERNEL_DIR}/drivers/crypto
-		cp -fR drivers/crypto/* ${STAGING_KERNEL_DIR}/drivers/crypto/
-	fi
-
-        if [ -d include/media ]; then
-                mkdir -p ${STAGING_KERNEL_DIR}/include/media
-                cp -fR include/media/* ${STAGING_KERNEL_DIR}/include/media/
-        fi
-
-	if [ -d include/acpi ]; then
-		mkdir -p ${STAGING_KERNEL_DIR}/include/acpi
-		cp -fR include/acpi/* ${STAGING_KERNEL_DIR}/include/acpi/
-	fi
-
-	if [ -d include/sound ]; then
-		mkdir -p ${STAGING_KERNEL_DIR}/include/sound
-		cp -fR include/sound/* ${STAGING_KERNEL_DIR}/include/sound/
-	fi
+	for entry in drivers/crypto include/media include/acpi include/sound include/video; do
+		if [ -d $entry ]; then
+			mkdir -p ${STAGING_KERNEL_DIR}/$entry
+			cp -fR $entry/* ${STAGING_KERNEL_DIR}/$entry/
+		fi
+	done
 
 	if [ -d drivers/sound ]; then
 		# 2.4 alsa needs some headers from this directory
