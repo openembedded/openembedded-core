@@ -8,6 +8,8 @@ SRC_URI = " \
           file://defconfig-mx31ads \
           "
 
+COMPATIBLE_MACHINE = "mx31ads"
+
 SRC_URI_append_mx31ads = " \
           file://mx31ads-patches.tgz \
           file://linux-2.6.22-mx-arch_arm.patch;patch=1 \
