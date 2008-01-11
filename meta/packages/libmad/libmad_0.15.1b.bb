@@ -3,11 +3,14 @@ SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "libid3tag"
 LICENSE = "GPL"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz"
+           file://add-pkgconfig.patch;patch=1"
+
 S = "${WORKDIR}/libmad-${PV}"
 
-inherit autotools
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "-enable-speed --enable-shared"
 # The ASO's don't take any account of thumb...
