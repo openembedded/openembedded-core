@@ -6,6 +6,7 @@ LICENSE = "GPLv2"
 RRECOMMENDS_${PN} = "kernel-module-uvesafb"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+COMPATIBLE_MACHINE = "qemux86"
 
 do_configure () {
 	./configure --default
