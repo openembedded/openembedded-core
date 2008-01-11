@@ -5,7 +5,7 @@ DEPENDS = "libid3tag"
 LICENSE = "GPL"
 PR = "r1"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz \
            file://add-pkgconfig.patch;patch=1"
 
 S = "${WORKDIR}/libmad-${PV}"
