@@ -11,6 +11,7 @@ PR="r2"
 
 SRC_URI = "http://download.gnome.org/sources/glib/2.12/glib-${PV}.tar.bz2 \
            file://glib-gettextize-dir.patch;patch=1 \
+           file://configure-libtool.patch;patch=1 \
            file://glibconfig-sysdefs.h"
 
 S = "${WORKDIR}/glib-${PV}"
