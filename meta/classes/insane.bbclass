@@ -351,8 +351,12 @@ def package_qa_check_staged(path,d):
             path = os.path.join(root,file)
             if file[-2:] == "la":
                 file_content = open(path).read()
-                if installed in file_content or workdir in file_content:
-                    bb.error("QA issue: %s failed sanity test (reference to workdir or installed)" % file )
+                if installed in file_content:
+                    bb.error("QA issue: %s failed sanity test (installed)" % file )
+                    if package_qa_make_fatal_error( 5, "staging", path, d):
+                        sane = True
+                if workdir in file_content:
+                    bb.error("QA issue: %s failed sanity test (reference to workdir)" % file )
                     if package_qa_make_fatal_error( 5, "staging", path, d):
                         sane = True
             elif file[-2:] == "pc":
