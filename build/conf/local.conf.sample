@@ -56,7 +56,7 @@ EXTRA_IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"
 # c700/c750 machines which have limited space. The code below limits
 # the default features for those machines.
 EXTRA_IMAGE_FEATURES_c7x0 = "tools-testapps debug-tweaks"
-EXTRA_IMAGE_FEATURES_mx31phy = "tools-testapps debug-tweaks"
+EXTRA_IMAGE_FEATURES_mx31phy = "debug-tweaks"
 
 # A list of packaging systems used in generated images
 # The first package type listed will be used for rootfs generation
