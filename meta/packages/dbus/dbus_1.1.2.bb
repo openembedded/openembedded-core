@@ -6,13 +6,15 @@ DESCRIPTION = "message bus system for applications to talk to one another"
 LICENSE = "GPL"
 DEPENDS = "expat glib-2.0 virtual/libintl"
 
-PR = "r4"
+PR = "r0"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://tmpdir.patch;patch=1 \
 	   file://dbus-1.init \
 	   file://cross.patch;patch=1 \
-	   file://fix-install-daemon.patch;patch=1"
+	   file://fix-install-daemon.patch;patch=1 \
+	   file://fix-validate.patch;patch=1 \
+	   "
 
 inherit autotools pkgconfig update-rc.d gettext
 
@@ -40,7 +42,7 @@ chgrp "$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || addgroup "$MESSAGEUSER"
 chown "$MESSAGEUSER"."$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || adduser --system --home "$MESSAGEHOME" --no-create-home --disabled-password --ingroup "$MESSAGEUSER" "$MESSAGEUSER"
 }
 
-EXTRA_OECONF = " --disable-tests --disable-asserts --disable-xml-docs \
+EXTRA_OECONF = " --disable-tests --disable-checks --disable-xml-docs \
                  --disable-doxygen-docs --with-xml=expat --without-x"
 
 do_stage () {

@@ -9,9 +9,10 @@ DEPENDS = "glib-2.0-native libxml2-native expat-native"
 
 DEFAULT_PREFERENCE = "-1"
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dbus-1.0.2"
+FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dbus-${PV}"
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://cross.patch;patch=1 \
+	   file://fix-validate.patch;patch=1 \
 	   "
 
 inherit autotools pkgconfig gettext native
