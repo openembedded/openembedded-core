@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.19.2
-# Tue May 22 09:24:22 2007
+# Tue Jul 31 10:38:06 2007
 #
 CONFIG_ARM=y
 # CONFIG_GENERIC_TIME is not set
@@ -1031,6 +1031,7 @@ CONFIG_LOGO=y
 # CONFIG_LOGO_LINUX_CLUT224 is not set
 # CONFIG_LOGO_PHYTEC_VGA is not set
 CONFIG_LOGO_PHYTEC_QVGA=y
+CONFIG_LOGO_PHYTEC_SILICA_QVGA=y
 # CONFIG_BACKLIGHT_LCD_SUPPORT is not set
 
 #
