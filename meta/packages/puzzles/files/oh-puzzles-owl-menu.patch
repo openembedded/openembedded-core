@@ -120,7 +120,7 @@ Index: src/gtk.c
 +    gtk_ui_manager_ensure_update (merge);
 +
 +    owl_set_window_menu_item (GTK_WINDOW (fe->window),
-+			      GTK_MENU_ITEM (gtk_ui_manager_get_widget (merge, "/menubar/Top")));
++			      GTK_MENU_ITEM (gtk_ui_manager_get_widget (merge, "/menubar/TopMenu")));
 +    
      setup_colours (fe);
      setup_pixbufs (fe);
@@ -157,7 +157,7 @@ Index: src/menu.xml
 -	<separator name="GameSep3"/>
 -	<menuitem name="QuitMenu" action="Quit"/>
 -</menu>
-+<menu action="Top">
++<menu name="TopMenu" action="Top">
 +	<menu name="GameMenu" action="Game">
 +		<menuitem name="NewMenu" action="New"/>
 +		<menuitem name="RestartMenu" action="Restart"/>

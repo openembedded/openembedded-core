@@ -3,7 +3,7 @@ LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 PV = "0.1+svnr${SRCREV}"
-PR = "r3"
+PR = "r4"
 
 bindir = "/usr/games"
 
