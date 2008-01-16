@@ -7,8 +7,10 @@ PR = "r3"
 DEPENDS = "avahi gtk+"
 RRECOMMENDS = "avahi-daemon"
 
+# Upstream change this patch periodically so store locally
+# http://0pointer.de/public/distcc-avahi.patch
 SRC_URI = "http://distcc.samba.org/ftp/distcc/distcc-${PV}.tar.bz2 \
-	   http://0pointer.de/public/distcc-avahi.patch;patch=1 \
+           file://distcc-avahi.patch;patch=1 \	  
 	   file://default \
 	   file://distcc"
 
