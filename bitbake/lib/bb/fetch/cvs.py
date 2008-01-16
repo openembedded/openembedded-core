@@ -62,7 +62,11 @@ class Cvs(Fetch):
         if 'norecurse' in ud.parm:
             norecurse = '_norecurse'
 
-        ud.localfile = data.expand('%s_%s_%s_%s%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.tag, ud.date, norecurse), d)
+        fullpath = ''
+        if 'fullpath' in ud.parm:
+            fullpath = '_fullpath'
+
+        ud.localfile = data.expand('%s_%s_%s_%s%s%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.tag, ud.date, norecurse, fullpath), d)
 
         return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
 
@@ -150,10 +154,15 @@ class Cvs(Fetch):
                  pass
             raise FetchError(ud.module)
 
-        os.chdir(moddir)
-        os.chdir('..')
         # tar them up to a defined filename
-        myret = os.system("tar -czf %s %s" % (ud.localpath, os.path.basename(moddir)))
+        if 'fullpath' in ud.parm:
+            os.chdir(pkgdir)
+            myret = os.system("tar -czf %s %s" % (ud.localpath, localdir))
+        else:
+            os.chdir(moddir)
+            os.chdir('..')
+            myret = os.system("tar -czf %s %s" % (ud.localpath, os.path.basename(moddir)))
+
         if myret != 0:
             try:
                 os.unlink(ud.localpath)
