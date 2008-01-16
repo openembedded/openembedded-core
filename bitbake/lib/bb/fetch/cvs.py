@@ -58,7 +58,11 @@ class Cvs(Fetch):
         elif ud.tag:
             ud.date = ""
 
-        ud.localfile = data.expand('%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.tag, ud.date), d)
+        norecurse = ''
+        if 'norecurse' in ud.parm:
+            norecurse = '_norecurse'
+
+        ud.localfile = data.expand('%s_%s_%s_%s%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.tag, ud.date, norecurse), d)
 
         return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
 
@@ -100,6 +104,8 @@ class Cvs(Fetch):
             cvsroot += "@" + ud.host + ":" + cvs_port + ud.path
 
         options = []
+        if 'norecurse' in ud.parm:
+            options.append("-l")
         if ud.date:
             options.append("-D %s" % ud.date)
         if ud.tag:
