@@ -15,14 +15,14 @@ SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \
 EXTRA_OECONF += "--without-xcb --with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h"
 
 do_compile() {
-        (
-         unset CC LD CXX CCLD CFLAGS CPPFLAGS LDFLAGS CXXFLAGS
-         cd src/util; touch makekeys-makekeys.o ; ${BUILD_CC} ${BUILD_CFLAGS} makekeys.c -o makekeys
-	 # mv to stop it getting rebuilt
-         mv makekeys.c makekeys.c.orig
-         cd ../../
-        ) || exit 1
-        oe_runmake
+	(
+		unset CC LD CXX CCLD CFLAGS CPPFLAGS LDFLAGS CXXFLAGS
+		cd src/util; touch makekeys-makekeys.o ; ${BUILD_CC} ${BUILD_CFLAGS} makekeys.c -o makekeys
+		# mv to stop it getting rebuilt
+		mv makekeys.c makekeys.c.orig
+		cd ../../
+	) || exit 1
+	oe_runmake
 }
 
 FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${libdir}/X11/Xcms.txt"

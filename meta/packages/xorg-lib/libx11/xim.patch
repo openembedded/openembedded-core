@@ -1,0 +1,55 @@
+--- libX11-6.2.1/src/X18NCMSstubs.c	2003-12-04 22:47:47.000000000 +0000
++++ libX11-6.2.1/src/X18NCMSstubs.c-new	2005-12-09 12:09:03.000000000 +0000
+@@ -90,6 +90,52 @@
+   return;
+ }
+ 
++XIM
++XOpenIM (
++    Display* display,
++    struct _XrmHashBucketRec* rdb,
++    char* res_name,
++    char* res_class)
++{
++  return (XIM) NULL;
++}
++
++Status
++XCloseIM ( XIM im )
++{
++  return NULL;
++}
++
++XIC
++XCreateIC ( XIM im, ...)
++{
++  return NULL;
++}
++
++void
++XDestroyIC ( XIC ic )
++{
++  return;
++}
++
++int
++XmbLookupString (
++    XIC ic,
++    XKeyPressedEvent* ev,
++    char* buffer,
++    int nbytes,
++    KeySym* keysym,
++    Status* status)
++{
++  return XLookupNone;
++}
++
++char *
++XGetICValues( XIC ic, ...)
++{
++  return (char *) NULL;
++}
++
+ XPointer
+ _XimGetLocaleCode ( _Xconst char* encoding_name )
+ {
