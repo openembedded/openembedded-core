@@ -13,7 +13,6 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://dbus-1.init \
 	   file://cross.patch;patch=1 \
 	   file://fix-install-daemon.patch;patch=1 \
-	   file://fix-validate.patch;patch=1 \
 	   "
 
 inherit autotools pkgconfig update-rc.d gettext

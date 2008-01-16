@@ -12,7 +12,6 @@ DEFAULT_PREFERENCE = "-1"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dbus-${PV}"
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://cross.patch;patch=1 \
-	   file://fix-validate.patch;patch=1 \
 	   "
 
 inherit autotools pkgconfig gettext native
