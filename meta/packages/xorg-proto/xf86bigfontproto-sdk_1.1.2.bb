@@ -1,3 +1,3 @@
 require xf86bigfontproto_${PV}.bb
 
-inherit native
+inherit sdk
