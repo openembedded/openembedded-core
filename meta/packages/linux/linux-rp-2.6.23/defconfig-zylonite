@@ -271,7 +271,7 @@ CONFIG_NET=y
 #
 # Networking options
 #
-# CONFIG_PACKET is not set
+CONFIG_PACKET=m
 CONFIG_UNIX=y
 CONFIG_XFRM=y
 # CONFIG_XFRM_USER is not set

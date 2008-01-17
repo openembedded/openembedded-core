@@ -294,7 +294,7 @@ CONFIG_NET=y
 #
 # Networking options
 #
-CONFIG_PACKET=y
+CONFIG_PACKET=m
 CONFIG_PACKET_MMAP=y
 CONFIG_UNIX=y
 # CONFIG_NET_KEY is not set

@@ -314,7 +314,7 @@ CONFIG_NET=y
 # Networking options
 #
 # CONFIG_NETDEBUG is not set
-CONFIG_PACKET=y
+CONFIG_PACKET=m
 # CONFIG_PACKET_MMAP is not set
 CONFIG_UNIX=y
 # CONFIG_NET_KEY is not set
