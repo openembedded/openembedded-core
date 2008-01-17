@@ -1,0 +1,33 @@
+--- tmp/work/armv5te-angstrom-linux-gnueabi/libsdl-directfb-1.2.9-r1/SDL-1.2.9/src/video/directfb/SDL_DirectFB_video.c	2007-02-18 11:40:38.000000000 -0500
++++ SDL/src/video/directfb/SDL_DirectFB_video.c	2007-02-18 11:00:07.000000000 -0500
+@@ -376,7 +376,7 @@
+ {
+   int                      i;
+   DFBResult                ret;
+-  DFBCardCapabilities      caps;
++  DFBGraphicsDeviceDescription      caps;
+   DFBDisplayLayerConfig    dlc;
+   struct DirectFBEnumRect *rect;
+   IDirectFB               *dfb    = NULL;
+@@ -448,7 +448,7 @@
+ 
+ 
+   /* Query card capabilities to get the video memory size */
+-  dfb->GetCardCapabilities (dfb, &caps);
++  dfb->GetDeviceDescription (dfb, &caps);
+ 
+   this->info.wm_available = 1;
+   this->info.hw_available = 1;
+diff -u'rNF^function' tmp/work/armv5te-angstrom-linux-gnueabi/libsdl-directfb-1.2.9-r1/SDL-1.2.9/src/video/directfb/SDL_Direct
+/SDL_DirectFB_events.c
+--- tmp/work/armv5te-angstrom-linux-gnueabi/libsdl-directfb-1.2.9-r1/SDL-1.2.9/src/video/directfb/SDL_DirectFB_events.c 2004-0
++++ SDL/src/video/directfb/SDL_DirectFB_events.c        2007-02-18 11:00:07.000000000 -0500
+@@ -161,7 +161,7 @@
+   keymap[DIKI_SHIFT_L - DIKI_UNKNOWN] = SDLK_LSHIFT;
+   keymap[DIKI_SHIFT_R - DIKI_UNKNOWN] = SDLK_RSHIFT;
+   keymap[DIKI_ALT_L - DIKI_UNKNOWN] = SDLK_LALT;
+-  keymap[DIKI_ALTGR - DIKI_UNKNOWN] = SDLK_RALT;
++  keymap[DIKI_ALT_R - DIKI_UNKNOWN] = SDLK_RALT;
+   keymap[DIKI_TAB - DIKI_UNKNOWN] = SDLK_TAB;
+   keymap[DIKI_ENTER - DIKI_UNKNOWN] = SDLK_RETURN;
+   keymap[DIKI_SPACE - DIKI_UNKNOWN] = SDLK_SPACE;
