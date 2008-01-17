@@ -8,3 +8,5 @@ PR = "r2"
 SRC_URI += "file://fix-missing-includepath.patch;patch=1"
 
 RDEPENDS_${PN}-dev = ""
+
+XORG_PN = "xtrans"
