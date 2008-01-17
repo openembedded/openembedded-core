@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Host packages for the standalone SDK or external toolchain"
-PR = "r3"
+PR = "r4"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -16,4 +16,5 @@ RDEPENDS_${PN} = "\
     gcc-cross-sdk \
     gdb-cross-sdk \
     pkgconfig-sdk \
+    qemu-sdk \
     "
