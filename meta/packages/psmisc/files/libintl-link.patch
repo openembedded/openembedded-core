@@ -1,0 +1,29 @@
+uClibc needs to link against an external libintl but it doesn't do this by
+default. The configure script correctly figures out if this is needed, but
+doesn't actually link to the libraries it decides on. This makes it link to
+them if they are needed:
+
+--- psmisc-22.2/src/Makefile.am	2006/06/28 00:14:07	1.1
++++ psmisc-22.2/src/Makefile.am	2006/06/28 00:14:24
+@@ -5,15 +5,19 @@
+ 
+ oldfuser_SOURCES = oldfuser.c comm.h signals.c signals.h loop.h i18n.h
+ 
++oldfuser_LDADD = @INTLLIBS@
++
+ fuser_SOURCES = fuser.c comm.h signals.c signals.h i18n.h fuser.h
+ 
++fuser_LDADD = @INTLLIBS@
++
+ killall_SOURCES = killall.c comm.h signals.c signals.h i18n.h
+ 
+-killall_LDADD = @SELINUX_LIB@
++killall_LDADD = @SELINUX_LIB@ @INTLLIBS@
+ 
+ pstree_SOURCES = pstree.c comm.h i18n.h
+ 
+-pstree_LDADD = @TERMCAP_LIB@ @SELINUX_LIB@
++pstree_LDADD = @TERMCAP_LIB@ @SELINUX_LIB@ @INTLLIBS@
+ 
+ BUILT_SOURCES = signames.h
+ 
