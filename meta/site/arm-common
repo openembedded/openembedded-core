@@ -74,6 +74,9 @@ ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 
+# gio
+ac_cv_func_getgrgid_r=${ac_cv_func_getgrgid_r=yes}
+
 # glib
 glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24}
 glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
