@@ -170,6 +170,7 @@ autotools_stage_all() {
 	mkdir -p ${STAGE_TEMP}
 	oe_runmake DESTDIR="${STAGE_TEMP}" install
 	if [ -d ${STAGE_TEMP}/${includedir} ]; then
+		mkdir -p ${STAGING_INCDIR}
 		cp -fpPR -t ${STAGING_INCDIR} ${STAGE_TEMP}/${includedir}/*
 	fi
 	if [ -d ${STAGE_TEMP}/${libdir} ]
