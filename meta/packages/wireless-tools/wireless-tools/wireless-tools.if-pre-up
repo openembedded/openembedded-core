@@ -60,10 +60,6 @@ if [ -n "$IF_WIRELESS_RETRY" ]; then
   $IWCONFIG "$IFACE" retry $IF_WIRELESS_RETRY
 fi
 
-if [ -n "$IF_WIRELESS_ESSID" ]; then
-  $IWCONFIG "$IFACE" essid "$IF_WIRELESS_ESSID"
-fi
-
 if [ -n "$IF_WIRELESS_NICK" ]; then
   $IWCONFIG "$IFACE" nick "$IF_WIRELESS_NICK"
 fi
@@ -114,6 +110,10 @@ fi
 
 if [ -n "$IF_WIRELESS_CHANNEL" ]; then
   $IWCONFIG "$IFACE" channel $IF_WIRELESS_CHANNEL
+fi
+
+if [ -n "$IF_WIRELESS_ESSID" ]; then
+  $IWCONFIG "$IFACE" essid "$IF_WIRELESS_ESSID"
 fi
 
 if [ -n "$IF_WIRELESS_COMMIT" ]; then
