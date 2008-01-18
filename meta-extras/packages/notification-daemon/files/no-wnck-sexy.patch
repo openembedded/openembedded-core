@@ -1,0 +1,98 @@
+diff -ur notification-daemon-0.3.7.orig/configure.ac notification-daemon-0.3.7/configure.ac
+--- notification-daemon-0.3.7.orig/configure.ac	2007-02-28 05:16:16.000000000 +0000
++++ notification-daemon-0.3.7/configure.ac	2008-01-18 11:29:28.000000000 +0000
+@@ -82,9 +82,7 @@
+ 	glib-2.0 >= $REQ_GLIB_VERSION, \
+ 	dbus-1 >= $REQ_DBUS_VERSION, \
+ 	dbus-glib-1 >= $REQ_DBUS_VERSION, \
+-	libsexy >= $REQ_SEXY_VERSION, \
+-	gconf-2.0, \
+-	libwnck-1.0 \
++	gconf-2.0 \
+ "
+ PKG_CHECK_MODULES(NOTIFICATION_DAEMON, $pkg_modules)
+ AC_SUBST(NOTIFICATION_DAEMON_CFLAGS)
+Only in notification-daemon-0.3.7/: configure.ac~
+Only in notification-daemon-0.3.7.orig/: debian
+diff -ur notification-daemon-0.3.7.orig/src/daemon/daemon.c notification-daemon-0.3.7/src/daemon/daemon.c
+--- notification-daemon-0.3.7.orig/src/daemon/daemon.c	2007-02-15 10:47:09.000000000 +0000
++++ notification-daemon-0.3.7/src/daemon/daemon.c	2008-01-18 11:24:40.000000000 +0000
+@@ -39,9 +39,6 @@
+ #include <X11/Xatom.h>
+ #include <gdk/gdkx.h>
+ 
+-#define WNCK_I_KNOW_THIS_IS_UNSTABLE
+-#include <libwnck/libwnck.h>
+-
+ #include "daemon.h"
+ #include "engines.h"
+ #include "stack.h"
+@@ -771,37 +768,6 @@
+ static gboolean
+ fullscreen_window_exists(GtkWidget *nw)
+ {
+-	WnckScreen *wnck_screen;
+-	GList *l;
+-
+-	wnck_screen = wnck_screen_get(GDK_SCREEN_XNUMBER(
+-		gdk_drawable_get_screen(GDK_DRAWABLE(GTK_WIDGET(nw)->window))));
+-	wnck_screen_force_update(wnck_screen);
+-
+-	for (l = wnck_screen_get_windows_stacked(wnck_screen);
+-		 l != NULL;
+-		 l = l->next)
+-	{
+-		WnckWindow *wnck_win = (WnckWindow *)l->data;
+-
+-		if (wnck_window_is_fullscreen(wnck_win))
+-		{
+-			/*
+-			 * Sanity check if the window is _really_ fullscreen to
+-			 * work around a bug in libwnck that doesn't get all
+-			 * unfullscreen events.
+-			 */
+-			int sw = wnck_screen_get_width(wnck_screen);
+-			int sh = wnck_screen_get_height(wnck_screen);
+-			int x, y, w, h;
+-
+-			wnck_window_get_geometry(wnck_win, &x, &y, &w, &h);
+-
+-			if (sw == w && sh == h)
+-				return TRUE;
+-		}
+-	}
+-
+ 	return FALSE;
+ }
+ 
+Only in notification-daemon-0.3.7/src/daemon: daemon.c~
+diff -ur notification-daemon-0.3.7.orig/src/themes/standard/theme.c notification-daemon-0.3.7/src/themes/standard/theme.c
+--- notification-daemon-0.3.7.orig/src/themes/standard/theme.c	2007-01-26 04:20:15.000000000 +0000
++++ notification-daemon-0.3.7/src/themes/standard/theme.c	2008-01-18 11:34:58.000000000 +0000
+@@ -1,7 +1,6 @@
+ #include "config.h"
+ 
+ #include <gtk/gtk.h>
+-#include <libsexy/sexy-url-label.h>
+ 
+ typedef void (*ActionInvokedCb)(GtkWindow *nw, const char *key);
+ typedef void (*UrlClickedCb)(GtkWindow *nw, const char *url);
+@@ -799,7 +798,7 @@
+ 	gtk_widget_show(vbox);
+ 	gtk_box_pack_start(GTK_BOX(windata->content_hbox), vbox, TRUE, TRUE, 0);
+ 
+-	windata->body_label = sexy_url_label_new();
++	windata->body_label = gtk_label_new(NULL);
+ 	gtk_box_pack_start(GTK_BOX(vbox), windata->body_label, TRUE, TRUE, 0);
+ 	gtk_misc_set_alignment(GTK_MISC(windata->body_label), 0, 0);
+ 	gtk_label_set_line_wrap(GTK_LABEL(windata->body_label), TRUE);
+@@ -874,7 +873,7 @@
+ 	gtk_label_set_markup(GTK_LABEL(windata->summary_label), str);
+ 	g_free(str);
+ 
+-	sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), body);
++	gtk_label_set_markup(GTK_LABEL(windata->body_label), body);
+ 
+ 	if (body == NULL || *body == '\0')
+ 		gtk_widget_hide(windata->body_label);
+Only in notification-daemon-0.3.7/src/themes/standard: theme.c~
