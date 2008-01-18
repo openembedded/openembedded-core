@@ -2,7 +2,7 @@ DESCRIPTION = "userspace utilities for kernel nfs"
 PRIORITY = "optional"
 SECTION = "console/network"
 LICENSE = "GPL"
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.gz \
 	file://acinclude-lossage.patch;patch=1 \
