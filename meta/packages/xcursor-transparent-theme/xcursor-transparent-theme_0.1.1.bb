@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DESCRIPTION = "Transparent xcursor theme for handheld systems"
 SECTION = "x11/base"
-PR="r1"
+PR="r2"
 
 SRC_URI = "http://matchbox-project.org/sources/utils/xcursor-transparent-theme-${PV}.tar.gz \
 	   file://use-relative-symlinks.patch;patch=1 \
@@ -9,3 +9,5 @@ SRC_URI = "http://matchbox-project.org/sources/utils/xcursor-transparent-theme-$
 FILES_${PN} = "${datadir}/icons/xcursor-transparent/cursors/*"
 
 inherit autotools
+
+PACKAGE_ARCH = "all"
