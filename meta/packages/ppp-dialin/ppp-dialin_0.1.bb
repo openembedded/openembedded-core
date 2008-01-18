@@ -2,7 +2,7 @@ SECTION = "console/network"
 DESCRIPTION = "Enables PPP dial-in through a serial connection"
 DEPENDS = "ppp"
 RDEPENDS = "ppp"
-PR = "r4"
+PR = "r5"
 LICENSE = "MIT"
 
 SRC_URI = "file://host-peer \
@@ -16,6 +16,7 @@ do_install() {
 	install -m 0755 ${WORKDIR}/ppp-dialin ${D}${sbindir}
 }
 
+PACKAGE_ARCH = "all"
 
 pkg_postinst() {
 if test "x$D" != "x"; then
