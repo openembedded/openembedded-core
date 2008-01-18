@@ -20,5 +20,5 @@ fi
 # dont exist. 
 
 matchbox-desktop &
-matchbox-panel  --orientation south &
+matchbox-panel &
 exec matchbox-window-manager $@
