@@ -13,6 +13,7 @@ LICENSE = "LGPL"
 SECTION = "libs"
 DEPENDS = "gtk+"
 PV = "0.0+svnr${SRCREV}"
+PR = "r3"
 
 PACKAGES = ""
 
