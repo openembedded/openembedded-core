@@ -9,4 +9,4 @@ S = "${WORKDIR}/mb-applet-volume-${PV}"
 inherit autotools pkgconfig
 
 FILES_${PN} = "${bindir} ${datadir}/applications ${datadir}/pixmaps"
- 
+
