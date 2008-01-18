@@ -22,7 +22,7 @@ PREFERRED_PROVIDER_xserver = "xserver-kdrive"
 
 PCMCIA_MANAGER ?= "pcmciautils"
 
-MACHINE_FEATURES = "kernel26 apm alsa pcmcia irda usbgadget keyboard touchscreen screen"
+MACHINE_FEATURES = "kernel26 apm alsa pcmcia irda usbgadget keyboard touchscreen screen vfat"
 MACHINE_FEATURES_append_tosa  = " usbhost wifi "
 MACHINE_FEATURES_append_akita = " usbhost "
 MACHINE_FEATURES_append_spitz = " usbhost ext2 "
@@ -48,13 +48,13 @@ zaurus_make_installkit () {
     mkdir ${IMAGE_NAME}-installkit/
 
     # Get the latest kernel using the zImage-<machine>.bin symlink
-    cp zImage-${MACHINE}.bin ${IMAGE_NAME}-installkit/zImage.bin
+    cp zImage-${MACHINE}.bin ${IMAGE_NAME}-installkit/zImage
 
     if [ "${MACHINE}" = "spitz" ]; then
         cp gnu-tar ${IMAGE_NAME}-installkit/
         cp ${IMAGE_NAME}.rootfs.tar.gz ${IMAGE_NAME}-installkit/hdimage1.tgz
     else
-        cp ${IMAGE_NAME}.rootfs.jffs2 ${IMAGE_NAME}-installkit/initrd.bin
+        [ -f ${IMAGE_NAME}.rootfs.jffs2 ] && cp ${IMAGE_NAME}.rootfs.jffs2 ${IMAGE_NAME}-installkit/initrd.bin
     fi
 
     # All zaurus machines except collie need updater.sh
