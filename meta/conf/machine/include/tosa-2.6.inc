@@ -1,6 +1,0 @@
-include conf/machine/include/zaurus-2.6.inc
-# wlan-ng Modules
-MACHINE_EXTRA_RDEPENDS += "wlan-ng-modules-usb"
-
-# WM97xx Modules
-#MACHINE_EXTRA_RRECOMMENDS += "kernel-module-wm97xx-core kernel-module-wm9705 kernel-module-pxa-wm97xx"
