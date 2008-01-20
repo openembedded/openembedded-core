@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r2"
+PR = "r4"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -17,43 +17,44 @@ DEFAULT_PREFERENCE = "-1"
 # Hacks should clearly named and at the bottom
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.24-rc8.bz2;patch=1 \
-           ${RPSRC}/lzo_crypto-r2.patch;patch=1 \
+           ${RPSRC}/export_atags-r2.patch;patch=1;status=pending \
+           ${RPSRC}/lzo_crypto-r2.patch;patch=1;status=pending \
+           ${RPSRC}/corgi_rearrange_lcd-r0.patch;patch=1;status=pending \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
-           file://hx2750_base-r31.patch;patch=1 \
+           ${RPSRC}/hx2750_base-r31.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r9.patch;patch=1 \
            ${RPSRC}/hx2750_pcmcia-r3.patch;patch=1 \
            ${RPSRC}/pxa_keys-r8.patch;patch=1 \
-#          ${RPSRC}/tsc2101-r16.patch;patch=1 \
+           ${RPSRC}/tsc2101-r17.patch;patch=1 \
            ${RPSRC}/hx2750_test1-r7.patch;patch=1 \
            ${RPSRC}/input_power-r10.patch;patch=1 \
-           ${RPSRC}/input_power_fix-r0.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r2.patch;patch=1 \
            ${RPSRC}/sharpsl_pm_fixes1-r0.patch;patch=1 \
            ${RPSRC}/pm_changes-r1.patch;patch=1 \
            ${RPSRC}/usb_add_epalloc-r4.patch;patch=1 \
-           ${RPSRC}/usb_pxa27x_udc-r7.patch;patch=1 \
+           ${RPSRC}/usb_pxa27x_udc-r8.patch;patch=1 \
            ${RPSRC}/locomo_kbd_tweak-r1.patch;patch=1 \
-           ${RPSRC}/poodle_pm-r5.patch;patch=1 \
-           file://pxa27x_overlay-r8.patch;patch=1 \
-           ${RPSRC}/w100_extaccel-r1.patch;patch=1 \
+           ${RPSRC}/pxa27x_overlay-r8.patch;patch=1 \
+           ${RPSRC}/w100_extaccel-r2.patch;patch=1 \
            ${RPSRC}/w100_extmem-r1.patch;patch=1 \
-           ${RPSRC}/export_atags-r1.patch;patch=1 \
-           file://w100fb-unused-var.patch;patch=1 \
-           file://hostap-monitor-mode.patch;patch=1 \
-           file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
+           ${RPSRC}/poodle_pm-r5.patch;patch=1 \
+           ${RPSRC}/poodle_lcd_hack-r0.patch;patch=1 \
+           ${RPSRC}/poodle_asoc_fix-r1.patch;patch=1 \
+           file://squashfs3.3.patch;patch=1;status=external \
            ${RPSRC}/logo_oh-r1.patch.bz2;patch=1;status=unmergable \
            ${RPSRC}/pxa-linking-bug.patch;patch=1;status=unmergable \
+           file://hostap-monitor-mode.patch;patch=1;status=unmergable \
+           file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1;status=unmergable \
            ${RPSRC}/mmcsd_large_cards-r1.patch;patch=1;status=hack \
-           file://mmcsd_no_scr_check-r2.patch;patch=1 \
+           ${RPSRC}/mmcsd_no_scr_check-r2.patch;patch=1;status=hack \
            ${RPSRC}/integrator_rgb-r1.patch;patch=1;status=hack \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1;status=hack \
-           ${RPSRC}/corgi_rearrange_lcd-r0.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1;status=hack \
            file://connectplus-remove-ide-HACK.patch;patch=1;status=hack \
-#          file://squashfs3.2-2.6.20-r0.patch;patch=1;status=external \
+           file://connectplus-prevent-oops-HACK.patch;patch=1;status=hack \
 #          file://htcuni.patch;patch=1 \
            file://binutils-buildid-arm.patch;patch=1 \
-	   file://versatile-armv6.patch;patch=1 \
+           file://versatile-armv6.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-hx2000 \
            file://defconfig-collie \
@@ -84,36 +85,51 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
 # These patches are extracted from Pavel Machek's git tree
 # (diff against vanilla kernel)
 SRC_URI_append_collie = "\
-           ${DOSRC}/collie/mtd-sharp-flash-hack-r0.patch;patch=1 \
-           ${DOSRC}/collie/collie-r0.patch;patch=1 \
-           ${DOSRC}/collie/locomolcd-backlight-r0.patch;patch=1 \
-           ${DOSRC}/collie/ucb1x00-touch-audio-r0.patch;patch=1 \
-           file://collie-mcp-r1.patch;patch=1 \
-           ${DOSRC}/collie/sa1100-udc-r0.patch;patch=1 \
-#          ${DOSRC}/collie/collie-pm-r1.patch;patch=1 \
+	${TKSRC}/mtd-sharp-flash-hack-r3.patch;patch=1 \
+	${TKSRC}/mcp-sa11x0-r0.patch;patch=1 \
+	${TKSRC}/locomo-r0.patch;patch=1 \
+#	${TKSRC}/locomo_spi-4.patch;patch=1 \
+	${TKSRC}/collie-kexec.patch;patch=1 \
+	${TKSRC}/sharpsl_pm-3.patch;patch=1 \
+	${TKSRC}/collie_pm-2.patch;patch=1 \
+	${TKSRC}/locomokeyb_suspendkey-2.patch;patch=1 \
+	${TKSRC}/ucb1x00_suspend.patch;patch=1 \
+	${TKSRC}/collie-ts.patch;patch=1 \
+	${TKSRC}/pcmcia_suspend.patch;patch=1 \
+"
+
+SRC_URI_append_poodle = "\
+           ${RPSRC}/poodle_serial_vcc-r0.patch;patch=1 \
 "
 
 SRC_URI_append_tosa = "\
-           ${CHSRC}/usb-ohci-hooks-r1.patch;patch=1 \
            ${CHSRC}/tmio-core-r4.patch;patch=1 \
            file://tmio-tc6393-r8.patch;patch=1 \
-           file://tmio-nand-r7.patch;patch=1 \
-           file://tmio-ohci-r6.patch;patch=1 \
+           file://tmio-nand-r8.patch;patch=1 \
            ${CHSRC}/tmio-fb-r6.patch;patch=1 \
-           file://tosa-keyboard-r18.patch;patch=1 \
+           file://tmio-fb-r6-fix-r0.patch;patch=1 \
+           file://tosa-keyboard-r19.patch;patch=1 \
            ${DOSRC}/tosa-pxaac97-r6.patch;patch=1 \
+           file://tosa-pxaac97-r6-fix-r0.patch;patch=1 \
            ${DOSRC}/tosa-tmio-r6.patch;patch=1 \
-           ${DOSRC}/tosa-power-r17.patch;patch=1 \
+           file://tosa-power-r18.patch;patch=1 \
+           file://tosa-power-r18-fix-r0.patch;patch=1 \
            file://tosa-tmio-lcd-r10.patch;patch=1 \
-           ${DOSRC}/tosa-bluetooth-r8.patch;patch=1 \
-           ${DOSRC}/wm97xx-lg7-r0.patch;patch=1 \
+           file://tosa-tmio-lcd-r10-fix-r0.patch;patch=1 \
+           file://tosa-bluetooth-r8.patch;patch=1 \
+           file://wm97xx-lg13-r0.patch;patch=1 \
+           file://wm97xx-lg13-r0-fix-r0.patch;patch=1 \
            file://wm9712-suspend-cold-res-r2.patch;patch=1 \
            file://sharpsl-pm-postresume-r1.patch;patch=1 \
-           ${DOSRC}/wm97xx-dig-restore-r0.patch;patch=1 \
-           ${DOSRC}/wm97xx-miscdevs-resume-r0.patch;patch=1 \
            file://wm9712-reset-loop-r2.patch;patch=1 \
            file://tosa-lcdnoise-r1.patch;patch=1 \
-           file://wm97xx-lcdnoise-r0.patch;patch=1 "
+           file://tosa-lcdnoise-r1-fix-r0.patch;patch=1 \
+           file://arm-dma-coherent.patch;patch=1 \
+           file://usb-ohci-hooks-r3.patch;patch=1 \
+           file://tmio-ohci-r9.patch;patch=1 \
+           file://pxa2xx_udc_support_inverse_vbus.patch;patch=1 \
+           file://tosa_udc_use_gpio_vbus.patch;patch=1 \
+           "
 #          ${DOSRC}/tosa-asoc-r1.patch;patch=1 "
 
 SRC_URI_append_htcuniversal ="\

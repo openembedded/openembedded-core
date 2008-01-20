@@ -1,0 +1,44 @@
+ sound/soc/codecs/wm9712.c |   28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
+
+Index: git/sound/soc/codecs/wm9712.c
+===================================================================
+--- git.orig/sound/soc/codecs/wm9712.c	2006-11-07 22:10:01.000000000 +0000
++++ git/sound/soc/codecs/wm9712.c	2006-11-07 22:11:50.000000000 +0000
+@@ -618,18 +618,26 @@ static int wm9712_dapm_event(struct snd_
+ 
+ static int wm9712_reset(struct snd_soc_codec *codec, int try_warm)
+ {
+-	if (try_warm && soc_ac97_ops.warm_reset) {
+-		soc_ac97_ops.warm_reset(codec->ac97);
+-		if (!(ac97_read(codec, 0) & 0x8000))
+-			return 1;
+-	}
++	int retry = 3;
+ 
+-	soc_ac97_ops.reset(codec->ac97);
+-	if (ac97_read(codec, 0) & 0x8000)
+-		goto err;
+-	return 0;
++	while (retry--)
++	{
++		if(try_warm && soc_ac97_ops.warm_reset) {
++			soc_ac97_ops.warm_reset(codec->ac97);
++			if(ac97_read(codec, 0) & 0x8000)
++				continue;
++			else
++				return 1;
++		}
++
++		soc_ac97_ops.reset(codec->ac97);
++		if(ac97_read(codec, 0) & 0x8000)
++			continue;
++		else
++			return 0;
++
++	}
+ 
+-err:
+ 	printk(KERN_ERR "WM9712 AC97 reset failed\n");
+ 	return -EIO;
+ }

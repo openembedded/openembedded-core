@@ -1,0 +1,17 @@
+Index: linux-2.6.21/drivers/net/wireless/hostap/hostap_hw.c
+===================================================================
+--- linux-2.6.21.orig/drivers/net/wireless/hostap/hostap_hw.c	2007-07-07 12:45:39.000000000 +0100
++++ linux-2.6.21/drivers/net/wireless/hostap/hostap_hw.c	2007-07-07 12:47:30.000000000 +0100
+@@ -2666,6 +2666,12 @@
+ 	iface = netdev_priv(dev);
+ 	local = iface->local;
+ 
++	if(dev->base_addr == 0)
++	{
++		printk(KERN_DEBUG "%s: IRQ before base_addr set\n", dev->name);
++		return IRQ_HANDLED;
++	}
++
+ 	prism2_io_debug_add(dev, PRISM2_IO_DEBUG_CMD_INTERRUPT, 0, 0);
+ 
+ 	if (local->func->card_present && !local->func->card_present(local)) {
