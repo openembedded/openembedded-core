@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r4"
+PR = "r5"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -137,7 +137,6 @@ SRC_URI_append_htcuniversal ="\
 	"
 
 SRC_URI_append_zylonite ="\
-	file://arm_pxa_20070923.patch;patch=1 \
 	file://pxa_fb_overlay.patch;patch=1 \
 	file://zylonite-boot.patch;patch=1 \
 	"
