@@ -26,10 +26,10 @@
  drivers/net/wireless/acx/wlan_mgmt.h        |  582 ++
  25 files changed, 33355 insertions(+)
 
-Index: linux-2.6.22/drivers/net/wireless/acx/acx_config.h
+Index: linux-2.6.23/drivers/net/wireless/acx/acx_config.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/acx_config.h	2007-08-23 18:46:40.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/acx_config.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,50 @@
 +#define ACX_RELEASE "v0.3.36"
 +
@@ -81,10 +81,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/acx_config.h
 +/* 0 - normal mode */
 +/* 1 - development/debug: probe for IEs on modprobe */
 +#define CMD_DISCOVERY 0
-Index: linux-2.6.22/drivers/net/wireless/acx/acx_func.h
+Index: linux-2.6.23/drivers/net/wireless/acx/acx_func.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/acx_func.h	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/acx_func.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,710 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -796,10 +796,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/acx_func.h
 +#endif
 +int __init acx_cs_init(void);
 +void __exit acx_cs_cleanup(void);
-Index: linux-2.6.22/drivers/net/wireless/acx/acx.h
+Index: linux-2.6.23/drivers/net/wireless/acx/acx.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/acx.h	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/acx.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,14 @@
 +#if defined(CONFIG_ACX_MEM) && !defined(ACX_MEM)
 +#define ACX_MEM
@@ -815,10 +815,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/acx.h
 +#include "wlan_mgmt.h"
 +#include "acx_struct.h"
 +#include "acx_func.h"
-Index: linux-2.6.22/drivers/net/wireless/acx/acx_hw.h
+Index: linux-2.6.23/drivers/net/wireless/acx/acx_hw.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/acx_hw.h	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/acx_hw.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,18 @@
 +/*
 + * Interface for ACX slave memory driver
@@ -838,10 +838,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/acx_hw.h
 +};
 +
 +#endif /* _ACX_HW_H */
-Index: linux-2.6.22/drivers/net/wireless/acx/acx_struct.h
+Index: linux-2.6.23/drivers/net/wireless/acx/acx_struct.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/acx_struct.h	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/acx_struct.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,2114 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -2957,10 +2957,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/acx_struct.h
 +};
 +
 +extern const struct iw_handler_def acx_ioctl_handler_def;
-Index: linux-2.6.22/drivers/net/wireless/acx/common.c
+Index: linux-2.6.23/drivers/net/wireless/acx/common.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/common.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/common.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,7388 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -10350,10 +10350,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/common.c
 +
 +module_init(acx_e_init_module)
 +module_exit(acx_e_cleanup_module)
-Index: linux-2.6.22/drivers/net/wireless/acx/conv.c
+Index: linux-2.6.23/drivers/net/wireless/acx/conv.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/conv.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/conv.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,504 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -10859,10 +10859,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/conv.c
 +	FN_EXIT1((int)NULL);
 +	return NULL;
 +}
-Index: linux-2.6.22/drivers/net/wireless/acx/cs.c
+Index: linux-2.6.23/drivers/net/wireless/acx/cs.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/cs.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/cs.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,5703 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -16567,10 +16567,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/cs.c
 +MODULE_DESCRIPTION( "ACX Cardbus Driver" );
 +MODULE_LICENSE( "GPL" );
 +
-Index: linux-2.6.22/drivers/net/wireless/acx/htcsable_acx.c
+Index: linux-2.6.23/drivers/net/wireless/acx/htcsable_acx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/htcsable_acx.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/htcsable_acx.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,118 @@
 +/*
 + * WLAN (TI TNETW1100B) support in the HTC Sable
@@ -16690,10 +16690,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/htcsable_acx.c
 +MODULE_DESCRIPTION( "WLAN driver for HTC Sable" );
 +MODULE_LICENSE( "GPL" );
 +
-Index: linux-2.6.22/drivers/net/wireless/acx/htcuniversal_acx.c
+Index: linux-2.6.23/drivers/net/wireless/acx/htcuniversal_acx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/htcuniversal_acx.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/htcuniversal_acx.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,108 @@
 +/*
 + * WLAN (TI TNETW1100B) support in the HTC Universal
@@ -16803,10 +16803,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/htcuniversal_acx.c
 +MODULE_DESCRIPTION( "WLAN driver for HTC Universal" );
 +MODULE_LICENSE( "GPL" );
 +
-Index: linux-2.6.22/drivers/net/wireless/acx/hx4700_acx.c
+Index: linux-2.6.23/drivers/net/wireless/acx/hx4700_acx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/hx4700_acx.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/hx4700_acx.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,108 @@
 +/*
 + * WLAN (TI TNETW1100B) support in the hx470x.
@@ -16916,10 +16916,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/hx4700_acx.c
 +MODULE_DESCRIPTION( "WLAN driver for iPAQ hx4700" );
 +MODULE_LICENSE( "GPL" );
 +
-Index: linux-2.6.22/drivers/net/wireless/acx/ioctl.c
+Index: linux-2.6.23/drivers/net/wireless/acx/ioctl.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/ioctl.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/ioctl.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,2748 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -19669,10 +19669,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/ioctl.c
 +	.get_wireless_stats = acx_e_get_wireless_stats
 +#endif /* IW > 5 */
 +};
-Index: linux-2.6.22/drivers/net/wireless/acx/Kconfig
+Index: linux-2.6.23/drivers/net/wireless/acx/Kconfig
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/Kconfig	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/Kconfig	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,113 @@
 +config ACX
 +	tristate "TI acx100/acx111 802.11b/g wireless chipsets"
@@ -19787,10 +19787,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/Kconfig
 +	---help---
 +	Include memory interface support in acx for the IPAQ RX3000.
 +
-Index: linux-2.6.22/drivers/net/wireless/acx/Makefile
+Index: linux-2.6.23/drivers/net/wireless/acx/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/Makefile	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/Makefile	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,21 @@
 +#obj-m += acx.o
 +
@@ -19813,10 +19813,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/Makefile
 +acx-obj-$(CONFIG_ACX_CS) += cs.o
 +#
 +acx-objs := wlan.o conv.o ioctl.o common.o $(acx-obj-y)
-Index: linux-2.6.22/drivers/net/wireless/acx/mem.c
+Index: linux-2.6.23/drivers/net/wireless/acx/mem.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/mem.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/mem.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,5363 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -25181,10 +25181,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/mem.c
 +MODULE_DESCRIPTION( "ACX Slave Memory Driver" );
 +MODULE_LICENSE( "GPL" );
 +
-Index: linux-2.6.22/drivers/net/wireless/acx/pci.c
+Index: linux-2.6.23/drivers/net/wireless/acx/pci.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/pci.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/pci.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,4234 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -29420,10 +29420,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/pci.c
 +
 +	FN_EXIT0;
 +}
-Index: linux-2.6.22/drivers/net/wireless/acx/rx3000_acx.c
+Index: linux-2.6.23/drivers/net/wireless/acx/rx3000_acx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/rx3000_acx.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/rx3000_acx.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,110 @@
 +/*
 + * WLAN (TI TNETW1100B) support in the HP iPAQ RX3000
@@ -29535,10 +29535,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/rx3000_acx.c
 +MODULE_DESCRIPTION("WLAN driver for HP iPAQ RX3000");
 +MODULE_LICENSE("GPL");
 +
-Index: linux-2.6.22/drivers/net/wireless/acx/setrate.c
+Index: linux-2.6.23/drivers/net/wireless/acx/setrate.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/setrate.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/setrate.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,213 @@
 +/* TODO: stop #including, move into wireless.c
 + * until then, keep in sync copies in prism54/ and acx/ dirs
@@ -29753,10 +29753,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/setrate.c
 +		return -EINVAL;
 +	return 0;
 +}
-Index: linux-2.6.22/drivers/net/wireless/acx/usb.c
+Index: linux-2.6.23/drivers/net/wireless/acx/usb.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/usb.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/usb.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,1922 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -31680,10 +31680,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/usb.c
 +#endif /* UNUSED */
 +
 +#endif /* ACX_DEBUG */
-Index: linux-2.6.22/drivers/net/wireless/acx/wlan.c
+Index: linux-2.6.23/drivers/net/wireless/acx/wlan.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/wlan.c	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/wlan.c	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,424 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -32109,10 +32109,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/wlan.c
 +
 +	/*-- Information elements */
 +}
-Index: linux-2.6.22/drivers/net/wireless/acx/wlan_compat.h
+Index: linux-2.6.23/drivers/net/wireless/acx/wlan_compat.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/wlan_compat.h	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/wlan_compat.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,260 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -32374,10 +32374,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/wlan_compat.h
 +	u8	oui[WLAN_IEEE_OUI_LEN];
 +	u16	type;
 +} WLAN_PACKED wlan_snap_t;
-Index: linux-2.6.22/drivers/net/wireless/acx/wlan_hdr.h
+Index: linux-2.6.23/drivers/net/wireless/acx/wlan_hdr.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/wlan_hdr.h	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/wlan_hdr.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,497 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -32876,10 +32876,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/wlan_hdr.h
 +#define WLANSNIFFFRM_rate	0x8041
 +#define WLANSNIFFFRM_istx	0x9041
 +#define WLANSNIFFFRM_frmlen	0xA041
-Index: linux-2.6.22/drivers/net/wireless/acx/wlan_mgmt.h
+Index: linux-2.6.23/drivers/net/wireless/acx/wlan_mgmt.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.22/drivers/net/wireless/acx/wlan_mgmt.h	2007-08-23 18:34:19.000000000 +0200
++++ linux-2.6.23/drivers/net/wireless/acx/wlan_mgmt.h	2008-01-20 21:13:40.000000000 +0000
 @@ -0,0 +1,582 @@
 +/***********************************************************************
 +** Copyright (C) 2003  ACX100 Open Source Project
@@ -33463,10 +33463,10 @@ Index: linux-2.6.22/drivers/net/wireless/acx/wlan_mgmt.h
 +		ie->virt_bm[0] = 0;
 +	return p + len + 3 + 2;
 +}
-Index: linux-2.6.22/drivers/net/wireless/Kconfig
+Index: linux-2.6.23/drivers/net/wireless/Kconfig
 ===================================================================
---- linux-2.6.22.orig/drivers/net/wireless/Kconfig	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/net/wireless/Kconfig	2007-08-23 18:34:19.000000000 +0200
+--- linux-2.6.23.orig/drivers/net/wireless/Kconfig	2008-01-20 21:13:17.000000000 +0000
++++ linux-2.6.23/drivers/net/wireless/Kconfig	2008-01-20 21:15:12.000000000 +0000
 @@ -5,6 +5,36 @@
  menu "Wireless LAN"
  	depends on !S390
@@ -33504,18 +33504,19 @@ Index: linux-2.6.22/drivers/net/wireless/Kconfig
  config WLAN_PRE80211
  	bool "Wireless LAN (pre-802.11)"
  	depends on NETDEVICES
-@@ -549,5 +579,6 @@
- source "drivers/net/wireless/hostap/Kconfig"
- source "drivers/net/wireless/bcm43xx/Kconfig"
- source "drivers/net/wireless/zd1211rw/Kconfig"
-+source "drivers/net/wireless/acx/Kconfig"
+@@ -650,6 +680,7 @@ config P54_PCI
  
- endmenu
-Index: linux-2.6.22/drivers/net/wireless/Makefile
+ source "drivers/net/wireless/iwlwifi/Kconfig"
+ source "drivers/net/wireless/hostap/Kconfig"
++source "drivers/net/wireless/acx/Kconfig"
+ source "drivers/net/wireless/bcm43xx/Kconfig"
+ source "drivers/net/wireless/b43/Kconfig"
+ source "drivers/net/wireless/b43legacy/Kconfig"
+Index: linux-2.6.23/drivers/net/wireless/Makefile
 ===================================================================
---- linux-2.6.22.orig/drivers/net/wireless/Makefile	2007-07-09 01:32:17.000000000 +0200
-+++ linux-2.6.22/drivers/net/wireless/Makefile	2007-08-23 18:34:19.000000000 +0200
-@@ -34,6 +34,8 @@
+--- linux-2.6.23.orig/drivers/net/wireless/Makefile	2008-01-20 21:13:17.000000000 +0000
++++ linux-2.6.23/drivers/net/wireless/Makefile	2008-01-20 21:13:40.000000000 +0000
+@@ -34,6 +34,8 @@ obj-$(CONFIG_PCMCIA_ATMEL)      += atmel
  
  obj-$(CONFIG_PRISM54)		+= prism54/
  
@@ -33523,4 +33524,4 @@ Index: linux-2.6.22/drivers/net/wireless/Makefile
 +
  obj-$(CONFIG_HOSTAP)		+= hostap/
  obj-$(CONFIG_BCM43XX)		+= bcm43xx/
- obj-$(CONFIG_ZD1211RW)		+= zd1211rw/
+ obj-$(CONFIG_B43)		+= b43/
