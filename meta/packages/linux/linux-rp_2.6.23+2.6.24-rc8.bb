@@ -16,7 +16,7 @@ DEFAULT_PREFERENCE = "-1"
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
-           ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.24-rc6.bz2;patch=1 \
+           ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.24-rc8.bz2;patch=1 \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
            file://hx2750_base-r31.patch;patch=1 \
@@ -38,7 +38,6 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${RPSRC}/w100_extaccel-r1.patch;patch=1 \
            ${RPSRC}/w100_extmem-r1.patch;patch=1 \
            ${RPSRC}/export_atags-r1.patch;patch=1 \
-           ${RPSRC}/pxa25x_suspend_fixes-r0.patch;patch=1 \
            file://w100fb-unused-var.patch;patch=1 \
            file://hostap-monitor-mode.patch;patch=1 \
            file://serial-add-support-for-non-standard-xtals-to-16c950-driver.patch;patch=1 \
