@@ -9,7 +9,7 @@ SDK_OUTPUT = "${SDK_DIR}/image"
 SDK_DEPLOY = "${TMPDIR}/deploy/sdk"
 
 IPKG_HOST = "ipkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
-IPKG_TARGET = "ipkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/${prefix}"
+IPKG_TARGET = "ipkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/temp-target"
 
 TOOLCHAIN_HOST_TASK ?= "task-sdk-host"
 TOOLCHAIN_TARGET_TASK ?= "task-poky-standalone-sdk-target"
@@ -34,12 +34,16 @@ do_populate_sdk() {
 	${IPKG_TARGET} update
 	${IPKG_TARGET} install ${TOOLCHAIN_TARGET_TASK}
 
-	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}
-	cp -pPR ${SDK_OUTPUT}/${prefix}/usr/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}
-	rm -rf ${SDK_OUTPUT}/${prefix}/usr/
-
-	cp -pPR ${SDK_OUTPUT}/${prefix}/lib/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib
-	rm -rf ${SDK_OUTPUT}/${prefix}/lib/*
+	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include
+	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib
+	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/share
+	mv ${SDK_OUTPUT}/temp-target/usr/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
+	rm -rf ${SDK_OUTPUT}/temp-target/usr/lib/ipkg/
+	cp -pPR ${SDK_OUTPUT}/temp-target/usr/include/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/
+	cp -pPR ${SDK_OUTPUT}/temp-target/usr/lib/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/
+	cp -pPR ${SDK_OUTPUT}/temp-target/usr/share/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/share/
+	cp -pPR ${SDK_OUTPUT}/temp-target/lib/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/
+	rm -rf ${SDK_OUTPUT}/temp-target/
 
 	for fn in `ls ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/`; do
 		if [ -h ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/$fn ]; then
@@ -52,14 +56,10 @@ do_populate_sdk() {
 		fi
 	done
 
-	mv ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/gcc ${SDK_OUTPUT}/${prefix}/lib
-
 	echo 'GROUP ( libpthread.so.0 libpthread_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libpthread.so
 	echo 'GROUP ( libc.so.6 libc_nonshared.a )' > ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/libc.so
 
 	# remove unwanted housekeeping files
-	mv ${SDK_OUTPUT}${prefix}/${TARGET_SYS}/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
-	rm -Rf ${SDK_OUTPUT}${prefix}/${TARGET_SYS}/lib/ipkg
 	mv ${SDK_OUTPUT}/usr/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status-host
 	rm -Rf ${SDK_OUTPUT}/usr/lib
 
@@ -92,9 +92,6 @@ do_populate_sdk() {
 			fi
 		done
 	done
-
-	# Remove unwanted executables
-	rm -rf ${SDK_OUTPUT}/${prefix}/sbin ${SDK_OUTPUT}/${prefix}/etc
 
 	# Remove broken .la files
 	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/*.la
