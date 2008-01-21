@@ -1,6 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 SRCDATE = "20071230"
+PR = "r3"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}:${FILE_DIRNAME}/files"
 FILESDIR = "${WORKDIR}"
@@ -45,7 +46,7 @@ SRC_URI = "\
 S = "${WORKDIR}/qemu-${PV}"
 
 #EXTRA_OECONF += "--disable-sdl"
-#EXTRA_OECONF += "--target-list=arm-linux-user"
+#EXTRA_OECONF += "--target-list=arm-linux-user,arm-softmmu"
 EXTRA_OECONF += "--disable-gfx-check"
 
 inherit autotools
