@@ -1,0 +1,27 @@
+---
+ ports/sysdeps/unix/sysv/linux/arm/eabi/configure    |    2 +-
+ ports/sysdeps/unix/sysv/linux/arm/eabi/configure.in |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: glibc-2.5/ports/sysdeps/unix/sysv/linux/arm/eabi/configure
+===================================================================
+--- glibc-2.5.orig/ports/sysdeps/unix/sysv/linux/arm/eabi/configure	2007-12-20 17:39:25.000000000 +0000
++++ glibc-2.5/ports/sysdeps/unix/sysv/linux/arm/eabi/configure	2007-12-20 17:39:30.000000000 +0000
+@@ -1,5 +1,5 @@
+ # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+  # Local configure fragment for sysdeps/unix/sysv/linux/arm/eabi.
+ 
+-arch_minimum_kernel=2.6.14
++arch_minimum_kernel=2.6.10
+ libc_cv_gcc_unwind_find_fde=no
+Index: glibc-2.5/ports/sysdeps/unix/sysv/linux/arm/eabi/configure.in
+===================================================================
+--- glibc-2.5.orig/ports/sysdeps/unix/sysv/linux/arm/eabi/configure.in	2007-12-20 17:39:27.000000000 +0000
++++ glibc-2.5/ports/sysdeps/unix/sysv/linux/arm/eabi/configure.in	2007-12-20 17:39:36.000000000 +0000
+@@ -1,5 +1,5 @@
+ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+ # Local configure fragment for sysdeps/unix/sysv/linux/arm/eabi.
+ 
+-arch_minimum_kernel=2.6.14
++arch_minimum_kernel=2.6.10
+ libc_cv_gcc_unwind_find_fde=no
