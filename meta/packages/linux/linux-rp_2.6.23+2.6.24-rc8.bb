@@ -3,6 +3,7 @@ require linux-rp.inc
 PR = "r5"
 
 DEFAULT_PREFERENCE = "-1"
+DEFAULT_PREFERENCE_collie = "1"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -21,12 +22,12 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1;status=pending \
            ${RPSRC}/corgi_rearrange_lcd-r0.patch;patch=1;status=pending \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
-           ${RPSRC}/hx2750_base-r31.patch;patch=1 \
+           ${RPSRC}/hx2750_base-r33.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r9.patch;patch=1 \
            ${RPSRC}/hx2750_pcmcia-r3.patch;patch=1 \
            ${RPSRC}/pxa_keys-r8.patch;patch=1 \
-           ${RPSRC}/tsc2101-r17.patch;patch=1 \
-           ${RPSRC}/hx2750_test1-r7.patch;patch=1 \
+           ${RPSRC}/tsc2101-r18.patch;patch=1 \
+           ${RPSRC}/hx2750_test1-r8.patch;patch=1 \
            ${RPSRC}/input_power-r10.patch;patch=1 \
            ${RPSRC}/pxa25x_cpufreq-r2.patch;patch=1 \
            ${RPSRC}/sharpsl_pm_fixes1-r0.patch;patch=1 \
@@ -65,8 +66,9 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            file://defconfig-qemux86 \
            file://defconfig-bootcdx86 \
            file://defconfig-htcuniversal \
-           file://defconfig-zylonite \
-           file://defconfig-tosa "
+           file://defconfig-zylonite"
+# Tosa disabled until the patchset is updated
+#           file://defconfig-tosa
 
 # FIXMEs before made default	   
 # ${RPSRC}/mmcsd_no_scr_check-r1.patch;patch=1;status=hack
