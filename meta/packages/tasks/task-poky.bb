@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r15"
+PR = "r16"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -115,6 +115,7 @@ RDEPENDS_task-poky-tools-profile = "\
     exmap-server \
     oprofile \
     oprofileui-server \
+    powertop \
     lttng-control \
     lttng-viewer"
 
