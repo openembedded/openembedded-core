@@ -3,7 +3,10 @@ HOMEPAGE = "http://www.linuxpowertop.org/"
 LICENSE = "GPLv2"
 DEPENDS = "ncurses"
 
-SRC_URI = "http://www.linuxpowertop.org/download/powertop-${PV}.tar.gz"
+PR="r1"
+
+SRC_URI = "http://www.linuxpowertop.org/download/powertop-${PV}.tar.gz \
+        file://dump-fixes.patch;patch=1"
 
 CFLAGS += "${LDFLAGS}"
 

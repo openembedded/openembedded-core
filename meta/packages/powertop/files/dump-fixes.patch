@@ -1,0 +1,107 @@
+=== modified file 'display.c'
+--- powertop-1.9/display.c	2008-01-22 14:35:03 +0000
++++ powertop-1.9/display.c	2008-01-22 14:42:30 +0000
+@@ -182,7 +182,8 @@
+ 		print(cstate_window, i, 38, "%s", cpufreqstrings[i]);
+ 	}
+ 
+-	wrefresh(cstate_window);
++	if (!dump)
++		wrefresh(cstate_window);
+ }
+ 
+ 
+@@ -192,7 +193,7 @@
+ 
+ 	sprintf(buffer,  _("no ACPI power usage estimate available") );
+ 
+-	werase(acpi_power_window);
++	if (!dump) werase(acpi_power_window);
+ 	if (rate > 0.001) {
+ 		char *c;
+ 		sprintf(buffer, _("Power usage (ACPI estimate): %3.1fW (%3.1f hours)"), rate, cap/rate);
+@@ -205,45 +206,51 @@
+ 		sprintf(buffer, _("Power usage (5 minute ACPI estimate) : %5.1f W (%3.1f hours left)"), 3600*capdelta / ti, cap / (3600*capdelta/ti+0.01));
+ 
+ 	print(acpi_power_window, 0, 0, "%s\n", buffer);	
+-	wrefresh(acpi_power_window);
++	if (!dump) wrefresh(acpi_power_window);
+ }
+ 
+ void show_wakeups(double d, double interval, double C0time)
+ {
+-	werase(wakeup_window);
+-
+-	wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_RED));   
+-	if (d <= 25.0)
+-		wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_YELLOW));   
+-	if (d <= 10.0)
+-		wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_GREEN));   
+-
+-	/* 
+-	 * if the cpu is really busy.... then make it blue to indicate
+-	 * that it's not the primary power consumer anymore 
+-	 */
+-	if (C0time > 25.0)
+-		wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_BLUE));   
+-		
+-	wattron(wakeup_window, A_BOLD);
++	if (!dump) {
++		werase(wakeup_window);
++		
++		wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_RED));   
++		if (d <= 25.0)
++			wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_YELLOW));   
++		if (d <= 10.0)
++			wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_GREEN));   
++		
++		/* 
++		 * if the cpu is really busy.... then make it blue to indicate
++		 * that it's not the primary power consumer anymore 
++		 */
++		if (C0time > 25.0)
++			wbkgd(wakeup_window, COLOR_PAIR(PT_COLOR_BLUE));   
++		
++		wattron(wakeup_window, A_BOLD);
++	}
++
+ 	print(wakeup_window, 0, 0, _("Wakeups-from-idle per second : %4.1f\tinterval: %0.1fs\n"), d, interval);
+-	wrefresh(wakeup_window);
++
++	if (!dump) wrefresh(wakeup_window);
+ }
+ 
+ void show_timerstats(int nostats, int ticktime)
+ {
+ 	int i;
+-	werase(timerstat_window);
++	if (!dump) werase(timerstat_window);
+ 
+ 	if (!nostats) {
+ 		int counter = 0;
+ 		print(timerstat_window, 0, 0, _("Top causes for wakeups:\n"));
+ 		for (i = 0; i < linehead; i++)
+ 			if (lines[i].count > 0 && counter++ < maxtimerstats) {
+-				if ((lines[i].count * 1.0 / ticktime) >= 10.0)
+-					wattron(timerstat_window, A_BOLD);
+-				else
+-					wattroff(timerstat_window, A_BOLD);
++				if (!dump) {
++					if ((lines[i].count * 1.0 / ticktime) >= 10.0)
++						wattron(timerstat_window, A_BOLD);
++					else
++						wattroff(timerstat_window, A_BOLD);
++				}
+ 				print(timerstat_window, i+1, 0," %5.1f%% (%5.1f)   %s \n", lines[i].count * 100.0 / linectotal,
+ 						lines[i].count * 1.0 / ticktime, 
+ 						lines[i].string);
+@@ -259,7 +266,7 @@
+ 	}
+ 
+ 
+-	wrefresh(timerstat_window);
++	if (!dump) wrefresh(timerstat_window);
+ }
+ 
+ void show_suggestion(char *sug)
+
