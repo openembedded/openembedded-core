@@ -1,0 +1,7 @@
+#!/bin/sh
+
+. /etc/profile
+export DISPLAY=:0
+dbus-launch $@
+
+
