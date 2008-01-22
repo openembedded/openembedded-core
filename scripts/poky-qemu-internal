@@ -2,7 +2,7 @@
 
 # Handle running Poky images under qemu
 #
-# Copyright (C) 2006-2007 OpenedHand Ltd.
+# Copyright (C) 2006-2008 OpenedHand Ltd.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -73,7 +73,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -no-reboot"
     fi
 fi
 
