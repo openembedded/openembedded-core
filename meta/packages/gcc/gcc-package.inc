@@ -12,6 +12,10 @@ PACKAGES = "libgcc libgcc-dev \
 	    libstdc++-dev libg2c-dev \
             ${PN}-doc"
 
+# We really need HOST_SYS here for some packages and TARGET_SYS for others.
+# For now, libgcc is most important so we fix for that - RP.
+SHLIBSDIR = "${STAGING_DIR}/${TARGET_SYS}/shlibs"
+
 FILES_${PN} = "${bindir}/${TARGET_PREFIX}gcc \
 	       ${bindir}/${TARGET_PREFIX}gccbug \
 	       ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc1 \
