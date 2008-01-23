@@ -520,6 +520,8 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
+SHLIBSDIR = "${STAGING_DIR}/${HOST_SYS}/shlibs"
+
 python package_do_shlibs() {
 	import os, re, os.path
 
@@ -538,24 +540,14 @@ python package_do_shlibs() {
 		bb.error("WORKDIR not defined")
 		return
 
-	staging = bb.data.getVar('STAGING_DIR', d, 1)
-	if not staging:
-		bb.error("STAGING_DIR not defined")
-		return
-
 	ver = bb.data.getVar('PV', d, 1)
 	if not ver:
 		bb.error("PV not defined")
 		return
 
-	host_sys = bb.data.getVar('HOST_SYS', d, 1)
-	if not host_sys:
-		bb.error("HOST_SYS not defined")
-		return
-
 	pkgdest = bb.data.getVar('PKGDEST', d, 1)
 
-	shlibs_dir = os.path.join(staging, host_sys, "shlibs")
+	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, 1)
 	bb.mkdirhier(shlibs_dir)
 
 	needed = {}
@@ -672,19 +664,9 @@ python package_do_pkgconfig () {
 		bb.error("WORKDIR not defined")
 		return
 
-	staging = bb.data.getVar('STAGING_DIR', d, 1)
-	if not staging:
-		bb.error("STAGING_DIR not defined")
-		return
-
-	host_sys = bb.data.getVar('HOST_SYS', d, 1)
-	if not host_sys:
-		bb.error("HOST_SYS not defined")
-		return
-
 	pkgdest = bb.data.getVar('PKGDEST', d, 1)
 
-	shlibs_dir = os.path.join(staging, host_sys, "shlibs")
+	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, 1)
 	bb.mkdirhier(shlibs_dir)
 
 	pc_re = re.compile('(.*)\.pc$')
