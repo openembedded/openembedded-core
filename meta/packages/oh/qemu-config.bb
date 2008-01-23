@@ -1,13 +1,14 @@
 DESCRIPTION = "Adds scripts to use distcc on the host system under qemu"
 LICENSE = "GPL"
-RDEPENDS = "distcc task-poky-nfs-server fakeroot"
-PR = "r6"
+RDEPENDS = "distcc task-poky-nfs-server fakeroot oprofileui-server"
+PR = "r9"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
            file://exports \
 	   file://shutdown.desktop \
-	   file://shutdown.png"
+	   file://shutdown.png \
+           file://qemu-autostart"
 
 S = "${WORKDIR}"
 
@@ -28,4 +29,12 @@ do_install() {
 
     install -d ${D}${datadir}/pixmaps
     install -m 0644 shutdown.png ${D}${datadir}/pixmaps/
-}    
+
+    install -d ${D}/etc/init.d
+    install qemu-autostart ${D}/etc/init.d
+}
+
+inherit update-rc.d
+
+INITSCRIPT_NAME = "qemu-autostart"
+INITSCRIPT_PARAMS = "start 999 5 2 . stop 20 0 1 6 ."

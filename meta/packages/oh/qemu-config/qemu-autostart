@@ -1,0 +1,34 @@
+#!/bin/sh
+
+killproc() {            # kill the named process(es)
+        pid=`/bin/ps -e x |
+             /bin/grep $1 |
+             /bin/grep -v grep |
+             /bin/sed -e 's/^  *//' -e 's/ .*//'`
+        [ "$pid" != "" ] && kill $pid
+}
+
+case "$1" in
+  start)
+        echo "Starting automatic qemu services"
+	. /etc/profile
+	/usr/bin/oprofile-server &
+  ;;
+
+  stop)
+        echo "Stopping qemu services"
+        killproc oprofile-server
+  ;;
+
+  restart)
+	$0 stop
+        sleep 1
+        $0 start
+  ;;
+
+  *)
+        echo "usage: $0 { start | stop | restart }"
+  ;;
+esac
+
+exit 0
