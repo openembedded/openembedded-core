@@ -14,6 +14,6 @@ PROVIDES = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 # cross build
 require gcc4-build-cross.inc
 # cross packaging
-require gcc-package-cross-no-fortran.inc
+require gcc-package-cross.inc
 
 S = "${WORKDIR}/gcc-2006q1"

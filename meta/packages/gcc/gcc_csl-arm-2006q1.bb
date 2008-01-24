@@ -10,7 +10,7 @@ FILESDIR = "${FILE_DIRNAME}/gcc-csl-arm"
 
 inherit autotools gettext
 
-require gcc-package-no-fortran.inc
+require gcc-package.inc
 
 SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm-none-eabi/arm-2006q1-6-arm-none-eabi.src.tar.bz2 \
            file://gcc-configure-no-fortran.patch;patch=1;pnum=1"
