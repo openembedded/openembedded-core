@@ -43,16 +43,8 @@ FILES_${PN}-symlinks = " \
 	${bindir}/strings \
 	${bindir}/strip"
 
-SRC_URI = \
-    "http://www.codesourcery.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-2005q3-2-arm-none-linux-gnueabi.src.tar.bz2 \
-#     file://binutils-2.16.91.0.6-objcopy-rename-errorcode.patch;patch=1;pnum=1\
-#    file://binutils-uclibc-100-uclibc-conf.patch;patch=1;pnum=1 \
-#     file://binutils-uclibc-300-001_ld_makefile_patch.patch;patch=1;pnum=1 \
-#     file://binutils-uclibc-300-006_better_file_error.patch;patch=1;pnum=1 \
-#     file://binutils-uclibc-300-012_check_ldrunpath_length.patch;patch=1;pnum=1 \
-#     file://binutils-uclibc-400-mips-ELF_MAXPAGESIZE-4K.patch;patch=1;pnum=1 \
-#     file://binutils-uclibc-702-binutils-skip-comments.patch;patch=1;pnum=1  \
-      "
+SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-2005q3-2-arm-none-linux-gnueabi.src.tar.bz2"
+
 do_unpack2() {
 	cd ${WORKDIR}
 	pwd
