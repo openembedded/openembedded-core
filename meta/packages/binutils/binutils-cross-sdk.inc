@@ -4,7 +4,7 @@ FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/binutils-${PV}"
 EXTRA_OECONF = "--with-sysroot=${prefix}/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"
 
-FILES_${PN}-dbg += "${prefix}/${TARGET_SYS}/bin/.debug"
+FILES_binutils-cross-sdk-dbg += "${prefix}/${TARGET_SYS}/bin/.debug"
 
 do_stage() {
 	:
