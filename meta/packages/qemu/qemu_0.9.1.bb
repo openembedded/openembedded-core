@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 SRCDATE = "20071230"
-PR = "r3"
+PR = "r4"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}:${FILE_DIRNAME}/files"
 FILESDIR = "${WORKDIR}"
@@ -32,6 +32,7 @@ SRC_URI = "\
     file://qemu-amd64-32b-mapping-0.9.0.patch;patch=1 \
     file://workaround_bad_futex_headers.patch;patch=1 \
     file://fix_segfault.patch;patch=1 \
+    file://configure_symlinkpath_fix.patch;patch=1 \
     file://disable-error-in-configure.patch;patch=1"
 
 #    svn://svn.o-hand.com/repos/misc/trunk/qemu-packaging/qemu;module=debian;proto=http;srcdate=20070119 \
