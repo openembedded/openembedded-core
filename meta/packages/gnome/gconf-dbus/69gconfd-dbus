@@ -1,3 +1,0 @@
-#!/bin/sh
-
-/usr/libexec/gconfd-2 &
