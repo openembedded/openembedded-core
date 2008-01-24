@@ -20,3 +20,6 @@ PREFERRED_VERSION_elfutils ?= "0.89"
 
 GLIBCTARGETOS = "linux"
 UCLIBCTARGETOS = "linux-uclibc"
+
+# gcc 3.x needs a different arm926ejs option
+TARGET_CC_ARCH_qemuarm = "-march=armv5te -mtune=arm926ejs"
