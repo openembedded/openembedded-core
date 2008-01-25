@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r5"
+PR = "r0"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_collie = "1"
@@ -16,11 +16,11 @@ DEFAULT_PREFERENCE_collie = "1"
 
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
-SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
-           ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.24-rc8.bz2;patch=1 \
+SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.24.tar.bz2 \
            ${RPSRC}/export_atags-r2.patch;patch=1;status=pending \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1;status=pending \
            ${RPSRC}/corgi_rearrange_lcd-r0.patch;patch=1;status=pending \
+           ${RPSRC}/allow_disable_deferrred-r0.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
            ${RPSRC}/hx2750_base-r33.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r9.patch;patch=1 \
@@ -143,4 +143,4 @@ SRC_URI_append_zylonite ="\
 	file://zylonite-boot.patch;patch=1 \
 	"
 
-S = "${WORKDIR}/linux-2.6.23"
+S = "${WORKDIR}/linux-2.6.24"
