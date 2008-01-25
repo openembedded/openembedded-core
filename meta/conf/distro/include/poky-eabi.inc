@@ -13,7 +13,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
 
 PREFERRED_VERSION_gcc ?= "4.1.2"
 PREFERRED_VERSION_gcc-cross ?= "4.1.2"
-PREFERRED_VERSION_gcc-cross-initial ?= "4.1.1"
+PREFERRED_VERSION_gcc-cross-initial ?= "4.1.2"
 PREFERRED_VERSION_binutils ?= "2.18"
 PREFERRED_VERSION_binutils-cross ?= "2.18"
 PREFERRED_VERSION_linux-libc-headers ?= "2.6.20"
