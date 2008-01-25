@@ -1,7 +1,7 @@
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibcgnueabi", "no", "", d )}'
 
-EXTRA_OECONF += "--with-sysroot=${STAGING_DIR_TARGET} --with-build-sysroot=${STAGING_DIR_TARGET}"
+EXTRA_OECONF += "--with-sysroot=${prefix}/${TARGET_SYS} --with-build-sysroot=${STAGING_DIR_TARGET}"
 
 do_configure () {
        (cd ${S} && gnu-configize) || die "failure running gnu-configize"
