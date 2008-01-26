@@ -25,3 +25,4 @@ PREFERRED_VERSION_glibc-initial ?= "2.5"
 PREFERRED_VERSION_elfutils ?= "0.108"
 
 TARGET_LDFLAGS = "-Wl,-rpath-link,${CROSS_DIR}/${TARGET_SYS}/lib -Wl,-O1"
+FULL_OPTIMIZATION = "-fexpensive-optimizations -fomit-frame-pointer -O2"
