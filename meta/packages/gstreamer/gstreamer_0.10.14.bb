@@ -21,6 +21,8 @@ EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=
 #	mv ${WORKDIR}/gstregistrybinary.[ch] ${S}/gst/
 #}
 
+PARALLEL_MAKE = ""
+
 do_stage() {
 	autotools_stage_all
 }
