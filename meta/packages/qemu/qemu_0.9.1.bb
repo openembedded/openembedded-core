@@ -1,9 +1,8 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
-SRCDATE = "20071230"
 PR = "r4"
 
-FILESPATH = "${FILE_DIRNAME}/qemu-${PV}:${FILE_DIRNAME}/files"
+FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = "\
@@ -34,15 +33,6 @@ SRC_URI = "\
     file://fix_segfault.patch;patch=1 \
     file://configure_symlinkpath_fix.patch;patch=1 \
     file://disable-error-in-configure.patch;patch=1"
-
-#    svn://svn.o-hand.com/repos/misc/trunk/qemu-packaging/qemu;module=debian;proto=http;srcdate=20070119 \
-#    file://debian/patches/21_net_soopts.patch;patch=1;pnum=0 \
-#    file://debian/patches/35_syscall_sockaddr.patch;patch=1;pnum=0 \
-#    file://debian/patches/43_arm_cpustate.patch;patch=1;pnum=0 \
-#    file://debian/patches/62_linux_boot_nasm.patch;patch=1;pnum=0 \
-#    file://debian/patches/67_ppc_ftbfs.patch;patch=1;pnum=0 \
-#    file://debian/patches/80_ui_curses.patch;patch=1;pnum=0 \
-#    file://debian/patches/96-x.patch;patch=1"
 
 S = "${WORKDIR}/qemu-${PV}"
 
