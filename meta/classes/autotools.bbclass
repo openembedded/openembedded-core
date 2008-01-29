@@ -175,8 +175,10 @@ autotools_stage_all() {
 	fi
 	if [ -d ${STAGE_TEMP}/${libdir} ]
 	then
+		olddir=`pwd`
 		cd ${STAGE_TEMP}/${libdir}
 		las=$(find . -name \*.la -type f)
+		cd $olddir
 		echo "Found la files: $las"		 
 		if [ -n "$las" ]; then
 			# If there are .la files then libtool was used in the
