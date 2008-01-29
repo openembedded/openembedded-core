@@ -175,14 +175,24 @@ autotools_stage_all() {
 	fi
 	if [ -d ${STAGE_TEMP}/${libdir} ]
 	then
-		for i in ${STAGE_TEMP}/${libdir}/*.la
-		do
-			if [ ! -f "$i" ]; then
-				cp -fpPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}
-				break
-			fi
-			oe_libinstall -so $(basename $i .la) ${STAGING_LIBDIR}
-		done
+		cd ${STAGE_TEMP}/${libdir}
+		las=$(find . -name \*.la -type f)
+		echo "Found la files: $las"		 
+		if [ -n "$las" ]; then
+			# If there are .la files then libtool was used in the
+			# build, so install them with magic mangling.
+			for i in $las
+			do
+				dir=$(dirname $i)
+				echo "oe_libinstall -C ${S} -so $(basename $i .la) ${STAGING_LIBDIR}/${dir}"
+				oe_libinstall -C ${S} -so $(basename $i .la) ${STAGING_LIBDIR}/${dir}
+			done
+		else
+			# Otherwise libtool wasn't used, and lib/ can be copied
+			# directly.
+			echo "cp -fpPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}"
+			cp -fpPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}
+		fi
 	fi
 	if [ -d ${STAGE_TEMP}/${datadir}/aclocal ]; then
 		install -d ${STAGING_DATADIR}/aclocal
