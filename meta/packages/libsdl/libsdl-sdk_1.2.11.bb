@@ -35,5 +35,5 @@ do_configure() {
 
 do_stage() {
 	autotools_stage_all
-	install -m 0644 build/libSDLmain.a ${STAGING_LIBDIR}
+	install -m 0644 ${S}/build/libSDLmain.a ${STAGING_LIBDIR}
 }
