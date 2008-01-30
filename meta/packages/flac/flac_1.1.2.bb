@@ -7,7 +7,7 @@ PR = "r5"
 SRC_URI = "${SOURCEFORGE_MIRROR}/flac/flac-${PV}.tar.gz \
 	   file://disable-xmms-plugin.patch;patch=1 \
 	   file://xmms.m4"
-	   
+
 S = "${WORKDIR}/flac-${PV}"
 
 inherit autotools
@@ -31,6 +31,9 @@ do_configure () {
 	install -d ${S}/m4
 	install -m 0644 ${WORKDIR}/xmms.m4 ${S}/m4/
 	autotools_do_configure
+	# removes '-read-only-relocs' which is enabled for PowerPC builds.
+	# It makes the build fail, other archs are not affected. Fixes #1775.
+	sed -i 's/-Wl,-read_only_relocs,warning//g' src/libFLAC/Makefile
 }
 
 do_stage () {
@@ -39,7 +42,7 @@ do_stage () {
 	oe_libinstall -a -so -C src/libOggFLAC libOggFLAC ${STAGING_LIBDIR}/
 	install -d ${STAGING_INCDIR}/OggFLAC
 	install -m 0644 ${S}/include/OggFLAC/export.h ${STAGING_INCDIR}/OggFLAC/export.h
-	
+
 	install -m 0644 ${S}/include/OggFLAC/all.h ${STAGING_INCDIR}/OggFLAC/all.h
 	install -m 0644 ${S}/include/OggFLAC/stream_encoder.h ${STAGING_INCDIR}/OggFLAC/stream_encoder.h
 	install -m 0644 ${S}/include/OggFLAC/stream_decoder.h ${STAGING_INCDIR}/OggFLAC/stream_decoder.h
