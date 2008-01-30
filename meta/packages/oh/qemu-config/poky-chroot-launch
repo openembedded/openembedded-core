@@ -1,0 +1,26 @@
+#!/bin/bash
+
+export USER=root
+export HOME=/home/root
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+export DISPLAY=:1
+
+unset DBUS_SESSION_BUS_ADDRESS
+
+SERVICES=dbus-1
+
+for S in $SERVICES; do
+        fakeroot /etc/init.d/$S start
+done
+
+/etc/X11/Xsession &
+
+bash -l
+
+for S in $SERVICES; do
+        fakeroot /etc/init.d/$S stop
+done
+
+# The --user option in the dbus stop script breaks under chroot
+/sbin/start-stop-daemon --stop  --pidfile /var/run/dbus/pid
