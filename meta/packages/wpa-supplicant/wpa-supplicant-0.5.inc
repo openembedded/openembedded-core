@@ -8,7 +8,6 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
 	file://wpa_supplicant-0.5.7-always-scan.patch;patch=1 \
 	file://wpa_supplicant-fix-deprecated-dbus-function.patch;patch=1;pnum=0 \
 	file://defconfig-gnutls \
-	file://init.sh \
 	file://defaults-sane \
 	file://wpa-supplicant.sh \
 	file://wpa_supplicant.conf \
@@ -21,10 +20,6 @@ FILES_wpa-supplicant-passphrase = "/usr/sbin/wpa_passphrase"
 FILES_wpa-supplicant-cli = "/usr/sbin/wpa_cli"
 
 RRECOMMENDS_${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
-
-INITSCRIPT_NAME = "wpa"
-INITSCRIPT_PARAMS = "defaults 10"
-inherit update-rc.d
 
 do_configure () {
         install -m 0755 ${WORKDIR}/defconfig-gnutls  .config
@@ -44,9 +39,6 @@ do_install () {
 
 	install -d ${D}${docdir}/wpa_supplicant
 	install -m 644 README ${WORKDIR}/wpa_supplicant.conf ${D}${docdir}/wpa_supplicant
-
-	install -d ${D}${sysconfdir}/init.d
-	install -m 700 ${WORKDIR}/init.sh ${D}${sysconfdir}/init.d/wpa
 
 	install -d ${D}${sysconfdir}/default
 	install -m 600 ${WORKDIR}/defaults-sane ${D}${sysconfdir}/default/wpa
