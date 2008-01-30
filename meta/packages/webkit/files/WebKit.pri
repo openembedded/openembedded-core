@@ -11,12 +11,47 @@ qt-port:DEFINES += BUILDING_QT__=1
 qt-port:!building-libs {
     QMAKE_LIBDIR = $$OUTPUT_DIR/lib $$QMAKE_LIBDIR
     LIBS += -lQtWebKit
+    DEPENDPATH += $$PWD/WebKit/qt/Api
 }
-gtk-port:CONFIG += link_pkgconfig
-gtk-port:PKGCONFIG += cairo cairo-ft gdk-2.0 gtk+-2.0 libcurl
-gtk-port:DEFINES += BUILDING_GTK__=1 BUILDING_CAIRO__
-gtk-port:LIBS += -L$$OUTPUT_DIR/lib -lWebKitGtk $$system(icu-config --ldflags) -ljpeg -lpng
-gtk-port:QMAKE_CXXFLAGS += $$system(icu-config --cppflags)
+
+gtk-port:!building-libs {
+    QMAKE_LIBDIR = $$OUTPUT_DIR/lib $$QMAKE_LIBDIR
+    LIBS += -lWebKitGtk
+    DEPENDPATH += $$PWD/WebKit/gtk/WebView $$PWD/WebKit/gtk/WebCoreSupport
+}
+
+gtk-port {
+    CONFIG += link_pkgconfig
+
+    DEFINES += BUILDING_CAIRO__=1 BUILDING_GTK__=1
+
+    # We use FreeType directly with Cairo
+    PKGCONFIG += cairo-ft
+
+    directfb: PKGCONFIG += cairo-directfb gtk+-directfb-2.0
+    else: PKGCONFIG += cairo gtk+-2.0
+
+    # Set a CONFIG flag for the GTK+ target (x11, quartz, win32, directfb)
+    CONFIG += $$system(pkg-config --variable=target $$PKGCONFIG)
+
+    # We use the curl http backend on all platforms
+    PKGCONFIG += libcurl
+
+    LIBS += -lWebKitGtk -ljpeg -lpng
+
+    QMAKE_CXXFLAGS += $$system(icu-config --cppflags)
+    QMAKE_LIBS += $$system(icu-config --ldflags)
+
+    # This set of warnings is borrowed from the Mac build
+    QMAKE_CXXFLAGS += -Wall -W -Wcast-align -Wchar-subscripts -Wformat-security -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wundef
+
+    # These flags are based on optimization experience from the Mac port:
+    # Helps code size significantly and speed a little
+    QMAKE_CXXFLAGS += -fno-exceptions -fno-rtti
+
+    DEPENDPATH += $$PWD/JavaScriptCore/API
+    INCLUDEPATH += $$PWD
+}
 
 DEFINES += USE_SYSTEM_MALLOC
 CONFIG(release) {
@@ -32,11 +67,8 @@ gtk-port:INCLUDEPATH += \
     $$BASE_DIR/WebCore/platform/graphics/cairo \
     $$BASE_DIR/WebCore/loader/gtk \
     $$BASE_DIR/WebCore/page/gtk \
-    $$BASE_DIR/WebKit/gtk/Api \
     $$BASE_DIR/WebKit/gtk/WebView \
-    $$BASE_DIR/WebKit/gtk/WebCoreSupport \
-    $$BASE_DIR/JavaScriptCore/ForwardingHeaders \
-    $$BASE_DIR
+    $$BASE_DIR/WebKit/gtk/WebCoreSupport
 INCLUDEPATH += \
     $$BASE_DIR/JavaScriptCore/ \
     $$BASE_DIR/JavaScriptCore/kjs \
