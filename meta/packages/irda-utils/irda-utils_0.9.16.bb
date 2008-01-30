@@ -3,7 +3,7 @@ IrDA allows communication over Infrared with other devices \
 such as phones and laptops."
 SECTION = "base"
 LICENSE = "GPL"
-PR = "r6"
+PR = "r8"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/irda/irda-utils-${PV}.tar.gz \
 	   file://configure.patch;patch=1 \
@@ -12,7 +12,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/irda/irda-utils-${PV}.tar.gz \
 
 export SYS_INCLUDES="-I${STAGING_INCDIR}"
 
-inherit autotools update-rc.d
+inherit autotools
 
 INITSCRIPT_NAME = "irattach"
 INITSCRIPT_PARAMS = "defaults 20"
@@ -28,5 +28,5 @@ do_install () {
 	oe_runmake -C irdaping ROOT="${D}" install
 
 	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/irattach
+	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
 }
