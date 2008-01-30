@@ -18,9 +18,9 @@ done
 
 bash -l
 
+# The --user option in the dbus stop script breaks under chroot
+/sbin/start-stop-daemon --stop  --pidfile /var/run/dbus/pid
+
 for S in $SERVICES; do
         fakeroot /etc/init.d/$S stop
 done
-
-# The --user option in the dbus stop script breaks under chroot
-/sbin/start-stop-daemon --stop  --pidfile /var/run/dbus/pid

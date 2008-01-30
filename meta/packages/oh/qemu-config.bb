@@ -1,7 +1,7 @@
 DESCRIPTION = "Adds scripts to use distcc on the host system under qemu"
 LICENSE = "GPL"
 RDEPENDS = "distcc task-poky-nfs-server fakeroot oprofileui-server rsync bash"
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
