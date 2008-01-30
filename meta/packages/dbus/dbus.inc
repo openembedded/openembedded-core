@@ -1,16 +1,17 @@
 SECTION = "base"
 PR = "r0"
-HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
-DESCRIPTION = "message bus system for applications to talk to one another"
+HOMEPAGE = "http://dbus.freedesktop.org"
+DESCRIPTION = "Message bus system for applications to talk to one another"
 LICENSE = "GPL"
-DEPENDS = "expat glib-2.0 virtual/libintl"
+DEPENDS = "expat glib-2.0 virtual/libintl virtual/libx11"
+
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "http://freedesktop.org/software/dbus/releases/dbus-${PV}.tar.gz \
+SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://cross.patch;patch=1 \
 	   file://tmpdir.patch;patch=1 \
-	   file://dbus-1.init \
-	   ${SRC_URI_EXTRA}"
+	   file://fix-install-daemon.patch;patch=1 \
+           file://dbus-1.init"
 
 
 inherit autotools pkgconfig update-rc.d gettext
@@ -20,8 +21,8 @@ INITSCRIPT_PARAMS = "defaults"
 
 CONFFILES_${PN} = "${sysconfdir}/dbus-1/system.conf ${sysconfdir}/dbus-1/session.conf"
 
-FILES_${PN} = "${bindir}/dbus-daemon-1 ${bindir}/dbus-launch ${bindir}/dbus-cleanup-sockets ${bindir}/dbus-send ${bindir}/dbus-monitor ${sysconfdir} ${datadir}/dbus-1/services ${libdir}/lib*.so.*"
-FILES_${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
+FILES_${PN} = "${bindir}/dbus-daemon ${bindir}/dbus-launch ${bindir}/dbus-cleanup-sockets ${bindir}/dbus-send ${bindir}/dbus-monitor ${bindir}/dbus-uuidgen ${sysconfdir} ${datadir}/dbus-1/services ${libdir}/lib*.so.*"
+FILES_${PN}-dev += "${libdir}/dbus-1.0/include"
 
 pkg_postinst_dbus() {
 #!/bin/sh
@@ -37,16 +38,16 @@ MESSAGEHOME=/var/run/dbus
 mkdir -p $MESSAGEHOME || true
 chgrp "$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || addgroup "$MESSAGEUSER"
 chown "$MESSAGEUSER"."$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || adduser --system --home "$MESSAGEHOME" --no-create-home --disabled-password --ingroup "$MESSAGEUSER" "$MESSAGEUSER"
+grep -q netdev: /etc/group || addgroup netdev
 }
 
-EXTRA_OECONF = "--disable-qt --disable-gtk --disable-tests \
-		--disable-checks --disable-xml-docs --disable-doxygen-docs \
-		--with-xml=expat --without-x"
+EXTRA_OECONF = "--disable-qt --disable-qt3  --disable-gtk --disable-tests \
+		--disable-asserts --disable-xml-docs --disable-doxygen-docs \
+		--with-xml=expat --with-x"
 
 
 do_stage () {
 	oe_libinstall -so -C dbus libdbus-1 ${STAGING_LIBDIR}
-	oe_libinstall -so -C glib libdbus-glib-1 ${STAGING_LIBDIR}
 
 	autotools_stage_includes
 
