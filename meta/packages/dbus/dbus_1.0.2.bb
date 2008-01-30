@@ -2,9 +2,9 @@ SECTION = "base"
 HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
 DESCRIPTION = "message bus system for applications to talk to one another"
 LICENSE = "GPL"
-DEPENDS = "expat glib-2.0 virtual/libintl"
+DEPENDS = "expat glib-2.0 virtual/libintl libx11"
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
 	   file://tmpdir.patch;patch=1 \
@@ -39,7 +39,7 @@ chown "$MESSAGEUSER"."$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || adduser --syst
 }
 
 EXTRA_OECONF = " --disable-tests --disable-asserts --disable-xml-docs \
-                 --disable-doxygen-docs --with-xml=expat --without-x"
+                 --disable-doxygen-docs --with-xml=expat --with-x"
 
 do_stage () {
 	oe_libinstall -so -C dbus libdbus-1 ${STAGING_LIBDIR}
