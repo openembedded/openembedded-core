@@ -7,7 +7,7 @@ DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
 RDEPENDS_${PN} += "udev hal-info"
 RRECOMMENDS_${PN} += "udev-utils"
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://freedesktop.org/~david/dist/hal-${PV}.tar.gz \
         file://sg-inhibit.patch;patch=1 \
@@ -46,7 +46,7 @@ do_stage() {
 
 # At the time the postinst runs, dbus might not be setup so only restart if running
 pkg_postinst_hal () {
-	# can't do this offline
+	# can not do this offline
 	if [ "x$D" != "x" ]; then
 		exit 1
 	fi
@@ -67,6 +67,11 @@ pkg_postrm_hal () {
 	deluser haldaemon || true
 	delgroup haldaemon || true
 }
+
+PACKAGES =+ "libhal libhal-storage"
+
+FILES_libhal = "${libdir}/libhal.so.*"
+FILES_libhal-storage = "${libdir}/libhal-storage.so.*"
 
 FILES_${PN} = "${sysconfdir} \
                 ${bindir}/lshal \
