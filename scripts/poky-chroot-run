@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Runs a command within a Poky chroot
+#
+
+set -e
+
+case $# in
+    0)
+    echo "Invalid arguments."
+    echo "$ $0 <target> [command]"
+    exit 1
+    ;;
+    1)
+    ROOTFS=$1
+    shift
+    # Set $1 to be the boot script
+    set -- /usr/bin/poky-chroot-launch
+    ;;
+    *)
+    ROOTFS=$1
+    shift
+    # Now $1 onwards are the command and arguments to run
+    ;;
+esac
+
+test -f "$ROOTFS/.pokychroot" || { echo "$ROOTFS is not setup for use as a Poky chroot." ; exit 1 ;}
+
+# chrootuid doesn't handle relative paths, so ensure that the rootfs path is
+# absolute
+if test ${ROOTFS:0:1} != /; then
+    ROOTFS="$(pwd)/$ROOTFS"
+fi
+
+safe_mount() {
+    if ! mountpoint -q "$ROOTFS/$1"; then
+        sudo mount --bind $1 "$ROOTFS/$1"
+    fi
+}
+safe_umount() {
+    if mountpoint -q "$ROOTFS/$1"; then
+        sudo umount "$ROOTFS/$1"
+    fi
+}
+
+# Mount the directories we need
+for m in /dev /dev/pts /dev/shm /proc /sys /tmp; do
+    safe_mount $m
+done
+
+# Set up the environment
+export PATH=/bin:/usr/bin:/sbin:/usr/sbin
+export HOME=/home/$USER
+
+if [ ! -f "$ROOTFS/.pokychroot.init" ]; then
+    sudo chrootuid -i "$ROOTFS" $USER /bin/sh -c "/usr/bin/poky-chroot-init"
+    touch "$ROOTFS/.pokychroot.init"
+fi
+
+Xephyr :1 -ac -screen 640x480x16 &
+
+# Go go go!
+sudo chrootuid -i "$ROOTFS" $USER "$@" || /bin/true
+
+# Trap term signals so we don't kill ourselves
+trap true TERM
+# send term signal to the process group
+kill -- -$$
+
+# Unmount TODO: only umount if there are no other sessions active, somehow.
+for m in /tmp /sys /proc /dev/shm /dev/pts /dev; do
+    safe_umount $m
+done

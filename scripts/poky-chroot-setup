@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Script to extract a poky qemux86 rootfs and prepare it for 
+# use as a chroot
+#
+
+set -e
+
+case $# in
+    2)
+    TGZ=$1
+    TARGET=$2
+    ;;
+    *)
+    echo "Invalid arguments, please run as:"
+    echo "$ $0 <qemux86-rootfs.tar.gz> <target-directory>"
+    exit 1
+esac
+
+echo "Extracting $TGZ into $TARGET"
+
+test -d "$TARGET" && { echo "$TARGET already exists, please remove and retry or specify a dirferent directory." ; exit 1 ; }
+mkdir --parents "$TARGET"
+
+tar -C "$TARGET" --exclude ./dev/\* -jxp -f "$TGZ"
+echo "HAVE_TOUCHSCREEN=0" >> "$TARGET/etc/formfactor/machconfig"
+echo "DISPLAY_WIDTH_PIXELS=640" >> "$TARGET/etc/formfactor/machconfig"
+echo "DISPLAY_HEIGHT_PIXELS=480" >> "$TARGET/etc/formfactor/machconfig"
+cp /etc/passwd "$TARGET/etc/passwd"
+touch "$TARGET/.pokychroot"
