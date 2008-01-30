@@ -3,7 +3,18 @@
 # Runs a command within a Poky chroot
 #
 
-set -e
+XEPHYR=`which Xephyr`
+if [ ! -n "$XEPHYR" -o ! -x "$XEPHYR" ]; then
+    echo "You need to install Xephyr to use $0"
+    exit 1
+fi
+
+CHROOTUID=`which chrootuid`
+if [ ! -n "$CHROOTUID" -o ! -x "$CHROOTUID" ]; then
+    echo "You need to install Xephyr to use $0"
+    exit 1
+fi
+
 
 case $# in
     0)
@@ -25,6 +36,8 @@ case $# in
 esac
 
 test -f "$ROOTFS/.pokychroot" || { echo "$ROOTFS is not setup for use as a Poky chroot." ; exit 1 ;}
+
+set -e
 
 # chrootuid doesn't handle relative paths, so ensure that the rootfs path is
 # absolute
@@ -53,14 +66,14 @@ export PATH=/bin:/usr/bin:/sbin:/usr/sbin
 export HOME=/home/$USER
 
 if [ ! -f "$ROOTFS/.pokychroot.init" ]; then
-    sudo chrootuid -i "$ROOTFS" $USER /bin/sh -c "/usr/bin/poky-chroot-init"
+    sudo $CHROOTUID -i "$ROOTFS" $USER /bin/sh -c "/usr/bin/poky-chroot-init"
     touch "$ROOTFS/.pokychroot.init"
 fi
 
-Xephyr :1 -ac -screen 640x480x16 &
+$XEPHYR :1 -ac -screen 640x480x16 &
 
 # Go go go!
-sudo chrootuid -i "$ROOTFS" $USER "$@" || /bin/true
+sudo $CHROOTUID -i "$ROOTFS" $USER "$@" || /bin/true
 
 # Trap term signals so we don't kill ourselves
 trap true TERM
