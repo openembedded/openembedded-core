@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r0"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_collie = "1"
@@ -20,6 +20,7 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.24.tar.bz2 \
            ${RPSRC}/export_atags-r2.patch;patch=1;status=pending \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1;status=pending \
            ${RPSRC}/corgi_rearrange_lcd-r0.patch;patch=1;status=pending \
+	   file://hrw-hostapcard.patch;patch=1;status=pending \
            ${RPSRC}/allow_disable_deferrred-r0.patch;patch=1 \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
            ${RPSRC}/hx2750_base-r33.patch;patch=1 \
