@@ -23,7 +23,10 @@ if [ "x$BUILDDIR" = "x" ]; then
     exit 1
 fi
 
-PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$BUILDDIR/tmp/cross/bin:$PATH
+INTERNAL_SCRIPT=`which poky-qemu-internal`
+
+SDKDIR=/usr/local/poky/eabi-glibc/arm/bin/
+PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$BUILDDIR/tmp/cross/bin:$SDKDIR:$PATH
 
 if [ "x$1" = "x" ]; then
     echo
@@ -121,17 +124,5 @@ if [ ! -e $CROSSPATH/cc ]; then
    ln -s $CROSSPATH/gcc $CROSSPATH/cc
 fi
 
-DISTCCD=`which distccd`
-
-if [ -x "$DISTCCD" ]; then
-    $DISTCCD --allow 192.168.7.2 --daemon
-else
-    echo "Warning: distccd not present, no distcc support loaded"
-fi
-
-INTERNAL_SCRIPT=`which poky-qemu-internal`
 . $INTERNAL_SCRIPT
 
-if [ -x "$DISTCCD" ]; then
-    killall distccd
-fi

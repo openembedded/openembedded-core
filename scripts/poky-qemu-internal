@@ -30,8 +30,9 @@
 #
 
 QEMUIFUP=`which poky-qemu-ifup`
+QEMUIFDOWN=`which poky-qemu-ifdown`
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
-QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$QEMUIFUP"
+QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$QEMUIFUP,downscript=$QEMUIFDOWN"
 KERNCMDLINE="mem=$QEMU_MEMORY"
 
 if [ -z "$QEMU_MEMORY" ]; then
@@ -127,6 +128,30 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return
 fi
 
+function _quit() {
+    if [ -n "$PIDFILE" ]; then
+        echo kill `cat $PIDFILE`
+        kill `cat $PIDFILE`
+    fi
+    return
+}
+
+DISTCCD=`which distccd`
+PIDFILE=""
+
+trap _quit INT TERM QUIT
+
+if [ -x "$DISTCCD" ]; then
+    echo "Starting distccd..."
+    PIDFILE=`mktemp`
+    $DISTCCD --allow 192.168.7.2 --daemon --pid-file $PIDFILE &
+else
+    echo "Warning: distccd not present, no distcc support loaded."
+fi
+
 echo "Running $QEMU using sudo..."
 echo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE"
-sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE"
+sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE" || /bin/true
+
+trap - INT TERM QUIT
+return
