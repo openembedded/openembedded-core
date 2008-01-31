@@ -25,9 +25,6 @@ fi
 
 INTERNAL_SCRIPT=`which poky-qemu-internal`
 
-SDKDIR=/usr/local/poky/eabi-glibc/arm/bin/
-PATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$BUILDDIR/tmp/cross/bin:$SDKDIR:$PATH
-
 if [ "x$1" = "x" ]; then
     echo
     echo "Run as $0 MACHINE IMAGETYPE ZIMAGE IMAGEFILE"
@@ -118,7 +115,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
 fi
 
-export PATH=$CROSSPATH:$PATH
+CROSSPATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$CROSSPATH:$BUILDDIR/tmp/cross/bin
 
 if [ ! -e $CROSSPATH/cc ]; then
    ln -s $CROSSPATH/gcc $CROSSPATH/cc

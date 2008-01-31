@@ -19,8 +19,9 @@
 
 
 # Call setting:
-#   QEMU_MEMORY (optional) set the amount of memory in the emualted system.
-#   SERIAL_LOGFILE (optional) log the serial port output to a file
+#   QEMU_MEMORY (optional) - set the amount of memory in the emualted system.
+#   SERIAL_LOGFILE (optional) - log the serial port output to a file
+#   CROSSPATH - the path to any cross toolchain to use with distcc
 #
 # Image options:
 #   MACHINE - the machine to run
@@ -128,9 +129,19 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return
 fi
 
+SDKDIR="/usr/local/poky/eabi-glibc"
+if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" ]; then
+    SDKPATH="$SDKDIR/arm/arm-poky-linux-gnueabi/bin:$SDKDIR/arm/bin"
+fi
+
+if [ "$MACHINE" = "qemux86" ]; then
+    SDKPATH="$SDKDIR/i586/i586-poky-linux/bin:$SDKDIR/i586/bin"
+fi
+PATH=$CROSSPATH:$SDKPATH:$PATH
+
 function _quit() {
     if [ -n "$PIDFILE" ]; then
-        echo kill `cat $PIDFILE`
+        #echo kill `cat $PIDFILE`
         kill `cat $PIDFILE`
     fi
     return

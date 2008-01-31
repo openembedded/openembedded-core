@@ -50,7 +50,4 @@ fi
 
 INTERNAL_SCRIPT=`which poky-qemu-internal`
 
-SDKDIR=/usr/local/poky/eabi-glibc/arm/bin/
-PATH=$SDKDIR:$PATH
-
 . $INTERNAL_SCRIPT
