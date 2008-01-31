@@ -1,0 +1,19 @@
+---
+ src/Makefile.am |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- webkit.orig/src/Makefile.am
++++ webkit/src/Makefile.am
+@@ -1,11 +1,11 @@
+ AM_CPPFLAGS=-DPKGDATADIR=\"$(pkgdatadir)\"
+ AM_CFLAGS = -Wall -export-dynamic $(WEB_CFLAGS)
+ 
+ bin_PROGRAMS = web2
+ 
+-web2_SOURCES = web2.h web2-main.c web2-utils.c web2-utils.h
++web2_SOURCES = web2.h web2-main.c web2-utils.c web2-utils.h dummy.cpp
+ web2_LDADD   = $(WEB_LIBS)
+ 
+ MAINTAINERCLEANFILES = config.h.in Makefile.in
+ 
+ uidir = $(pkgdatadir)
