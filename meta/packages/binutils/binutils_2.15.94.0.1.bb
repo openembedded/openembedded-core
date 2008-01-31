@@ -6,7 +6,7 @@ PR = "r3"
 
 inherit autotools gettext
 
-PACKAGES = "${PN} ${PN}-dev ${PN}-doc ${PN}-symlinks"
+PACKAGES += "${PN}-symlinks"
 
 FILES_${PN} = " \
 	${bindir}/${TARGET_PREFIX}* \
