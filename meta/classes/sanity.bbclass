@@ -108,7 +108,21 @@ def check_sanity(e):
 
 	oes_bb_conf = data.getVar( 'OES_BITBAKE_CONF', e.data, True )
 	if not oes_bb_conf:
-		messages = messages + 'You do not include OpenEmbeddeds version of conf/bitbake.conf\n'
+		messages = messages + 'You do not include OpenEmbeddeds version of conf/bitbake.conf. This means your environment is misconfigured, in particular check BBPATH.\n'
+
+	#
+	# Check that TMPDIR hasn't changed location since the last time we were run
+	#
+	tmpdir = data.getVar('TMPDIR', e.data, True)
+	checkfile = os.path.join(tmpdir, "saved_tmpdir")
+	if os.path.exists(checkfile):
+		f = file(checkfile, "r")
+		if (f.read().strip() != tmpdir):
+			messages = messages + "Error, TMPDIR has changed location. You need to either move it back to %s or rebuild\n" % tmpdir
+	else:
+		f = file(checkfile, "w")
+		f.write(tmpdir)
+	f.close()
 
 	if messages != "":
 		raise_sanity_error(messages)
