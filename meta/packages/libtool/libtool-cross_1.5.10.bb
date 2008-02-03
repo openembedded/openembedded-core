@@ -1,4 +1,4 @@
-SECTION = "devel"
+require libtool.inc
 require libtool_${PV}.bb
 
 PR = "r9"
