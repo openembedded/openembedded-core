@@ -1,6 +1,6 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
-PR = "r4"
+PR = "r5"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
@@ -31,6 +31,7 @@ SRC_URI = "\
     file://qemu-amd64-32b-mapping-0.9.0.patch;patch=1 \
     file://workaround_bad_futex_headers.patch;patch=1 \
     file://fix_segfault.patch;patch=1 \
+    file://writev_fix.patch;patch=1 \
     file://configure_symlinkpath_fix.patch;patch=1 \
     file://disable-error-in-configure.patch;patch=1"
 
