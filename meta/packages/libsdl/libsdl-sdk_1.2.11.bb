@@ -22,6 +22,8 @@ EXTRA_OECONF = "--disable-static --disable-debug --disable-cdrom --enable-thread
                 --disable-video-opengl --enable-input-events --enable-pthreads \
                 --disable-video-picogui --disable-video-qtopia --enable-dlopen"
 
+PARALLEL_MAKE = ""
+
 do_configure() {
 	rm -f ${S}/acinclude.m4
 	cp ${WORKDIR}/acinclude.m4 ${S}/
