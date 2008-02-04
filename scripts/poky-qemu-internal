@@ -61,7 +61,7 @@ if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" -a "$MACHINE" != "akita"
 fi
 
 if [ "$MACHINE" = "qemuarm" ]; then
-    QEMU=`which qemu-system-arm`
+    QEMU=qemu-system-arm
     if [ "$TYPE" = "ext2" ]; then
         KERNCMDLINE="root=/dev/sda console=ttyAMA0 console=tty0 mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
@@ -80,7 +80,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
 fi
 
 if [ "$MACHINE" = "qemux86" ]; then
-    QEMU=`which qemu`
+    QEMU=qemu
     if [ "$TYPE" = "ext2" ]; then
         KERNCMDLINE="root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
         QEMUOPTIONS="-std-vga $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet"
@@ -99,7 +99,7 @@ if [ "$MACHINE" = "qemux86" ]; then
 fi
 
 if [ "$MACHINE" = "spitz" ]; then
-    QEMU=`which qemu-system-arm`
+    QEMU=qemu-system-arm
     if [ "$TYPE" = "ext3" ]; then
         echo $HDIMAGE
         HDIMAGE=`readlink -f $HDIMAGE`
@@ -113,7 +113,7 @@ if [ "$MACHINE" = "spitz" ]; then
 fi
 
 if [ "$MACHINE" = "akita" ]; then
-    QEMU=`which qemu-system-arm`
+    QEMU=qemu-system-arm
     if [ "$TYPE" = "jffs2" ]; then
         HDIMAGE=`readlink -f $HDIMAGE`
         if [ ! -e "$HDIMAGE.qemuflash" ]; then
@@ -139,6 +139,8 @@ if [ "$MACHINE" = "qemux86" ]; then
 fi
 PATH=$CROSSPATH:$SDKPATH:$PATH
 
+QEMUBIN=`which $QEMU`
+
 function _quit() {
     if [ -n "$PIDFILE" ]; then
         #echo kill `cat $PIDFILE`
@@ -161,8 +163,8 @@ else
 fi
 
 echo "Running $QEMU using sudo..."
-echo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE"
-sudo $QEMU -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE" || /bin/true
+echo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE"
+sudo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE" || /bin/true
 
 trap - INT TERM QUIT
 return
