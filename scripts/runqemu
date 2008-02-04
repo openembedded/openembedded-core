@@ -115,11 +115,11 @@ if [ "$MACHINE" = "qemux86" ]; then
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
 fi
 
-CROSSPATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$CROSSPATH:$BUILDDIR/tmp/cross/bin
-
 if [ ! -e $CROSSPATH/cc ]; then
    ln -s $CROSSPATH/gcc $CROSSPATH/cc
 fi
+
+CROSSPATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$CROSSPATH:$BUILDDIR/tmp/cross/bin
 
 . $INTERNAL_SCRIPT
 
