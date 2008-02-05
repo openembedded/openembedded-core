@@ -85,12 +85,15 @@ def check_sanity(e):
 	required_utilities = "patch help2man diffstat texi2html makeinfo cvs svn bzip2 tar gzip gawk md5sum"
 
 	# qemu-native needs gcc 3.x
-	if "qemu-native" not in assume_provided:
+	if "qemu-native" not in assume_provided and "gcc3-native" in assume_provided:
 		gcc_version = commands.getoutput("${BUILD_PREFIX}gcc --version | head -n 1 | cut -f 3 -d ' '")
 
 		if not check_gcc3(e.data) and gcc_version[0] != '3':
+			messages = messages + "gcc3-native was in ASSUME_PROVIDED but the gcc-3.x binary can't be found in PATH"
 			missing = missing + "gcc-3.x (needed for qemu-native),"
-	else:
+
+	if "qemu-native" in assume_provided:
+		messages = messages + "qemu-native was in ASSUME_PROVIDED but the QEMU binaries can't be found in PATH"
 		required_utilities = required_utilities + " qemu-arm"
 
 	for util in required_utilities.split():
