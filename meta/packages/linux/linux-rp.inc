@@ -136,16 +136,6 @@ do_configure() {
 	yes '' | oe_runmake oldconfig
 }
 
-do_deploy() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_DEPLOY_NAME}
-	cd ${DEPLOY_DIR_IMAGE}
-	ln -sf ${KERNEL_DEPLOY_NAME} ${KERNEL_SYMLINK_NAME}
-	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${MACHINE}.tgz -C ${D} lib	
-}
-do_deploy[dirs] = "${S}"
-addtask deploy before do_package after do_install
-
 do_bootkern() {
 	echo "Copying Kernel"
 	scp ${DEPLOY_DIR_IMAGE}/${KERNEL_SYMLINK_NAME} root@${TARGET_DEVICE_IP}:/zImage-bootkern
