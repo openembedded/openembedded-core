@@ -256,7 +256,7 @@ CONFIG_ALIGNMENT_TRAP=y
 CONFIG_ZBOOT_ROM_TEXT=0x10C08000
 CONFIG_ZBOOT_ROM_BSS=0x10200000
 # CONFIG_ZBOOT_ROM is not set
-CONFIG_CMDLINE="root=1f03 rootfstype=jffs2 ro"
+CONFIG_CMDLINE="root=1f03 rootfstype=jffs2 ro console=tty0"
 # CONFIG_XIP_KERNEL is not set
 # CONFIG_KEXEC is not set
 
