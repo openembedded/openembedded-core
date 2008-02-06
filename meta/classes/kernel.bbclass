@@ -406,13 +406,13 @@ python populate_packages_prepend () {
 # Support checking the kernel size since some kernels need to reside in partitions
 # with a fixed length or there is a limit in transferring the kernel to memory
 do_sizecheck() {
-        if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
-            size=`ls -l arch/${ARCH}/boot/${KERNEL_IMAGETYPE} | awk '{ print $5}'`
-            if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
-                    rm arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
-                    die  "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
-            fi
+    if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
+        size=`ls -l arch/${ARCH}/boot/${KERNEL_IMAGETYPE} | awk '{ print $5}'`
+        if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
+                rm arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
+                die  "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
         fi
+    fi
 }
 
 addtask sizecheck before do_install after do_compile
