@@ -1,0 +1,234 @@
+Index: trunk/src/applet.c
+===================================================================
+--- trunk.orig/src/applet.c	2008-02-06 20:30:04.000000000 +0000
++++ trunk/src/applet.c	2008-02-06 20:46:59.000000000 +0000
+@@ -111,8 +111,6 @@
+ 
+ static void nma_init (NMApplet *applet)
+ {
+-	applet->animation_id = 0;
+-	applet->animation_step = 0;
+ 	applet->passphrase_dialog = NULL;
+ 	applet->icon_theme = NULL;
+ #ifdef ENABLE_NOTIFY
+@@ -1006,20 +1004,6 @@
+ 	}
+ }
+ 
+-static gboolean
+-vpn_animation_timeout (gpointer data)
+-{
+-	NMApplet *applet = NM_APPLET (data);
+-
+-	foo_set_icon (applet, applet->vpn_connecting_icons[applet->animation_step], ICON_LAYER_VPN);
+-
+-	applet->animation_step++;
+-	if (applet->animation_step >= NUM_VPN_CONNECTING_FRAMES)
+-		applet->animation_step = 0;
+-
+-	return TRUE;
+-}
+-
+ static void
+ vpn_connection_state_changed (NMVPNConnection *connection,
+                               NMVPNConnectionState state,
+@@ -1030,10 +1014,6 @@
+ 
+ 	switch (state) {
+ 	case NM_VPN_CONNECTION_STATE_ACTIVATED:
+-		if (applet->animation_id) {
+-			g_source_remove (applet->animation_id);
+-			applet->animation_id = 0;
+-		}
+ 		foo_set_icon (applet, applet->vpn_lock_icon, ICON_LAYER_VPN);
+ //		vpn_connection_info_set_last_attempt_success (info, TRUE);
+ 		break;
+@@ -1041,10 +1021,7 @@
+ 	case NM_VPN_CONNECTION_STATE_NEED_AUTH:
+ 	case NM_VPN_CONNECTION_STATE_CONNECT:
+ 	case NM_VPN_CONNECTION_STATE_IP_CONFIG_GET:
+-		if (applet->animation_id == 0) {
+-			applet->animation_step = 0;
+-			applet->animation_id = g_timeout_add (100, vpn_animation_timeout, applet);
+-		}
++		foo_set_icon (applet, applet->network_connecting_icon, ICON_LAYER_VPN);
+ 		break;
+ 	case NM_VPN_CONNECTION_STATE_FAILED:
+ //		vpn_connection_info_set_last_attempt_success (info, FALSE);
+@@ -1053,10 +1030,6 @@
+ 		g_hash_table_remove (applet->vpn_connections, nm_vpn_connection_get_name (connection));
+ 		/* Fall through */
+ 	default:
+-		if (applet->animation_id) {
+-			g_source_remove (applet->animation_id);
+-			applet->animation_id = 0;
+-		}
+ 		foo_set_icon (applet, NULL, ICON_LAYER_VPN);
+ 		break;
+ 	}
+@@ -2295,45 +2268,6 @@
+ } FooAnimationTimeoutInfo;
+ 
+ static void
+-foo_animation_timeout_info_destroy (gpointer data)
+-{
+-	g_slice_free (FooAnimationTimeoutInfo, data);
+-}
+-
+-static gboolean
+-foo_animation_timeout (gpointer data)
+-{
+-	FooAnimationTimeoutInfo *info = (FooAnimationTimeoutInfo *) data;
+-	NMApplet *applet = info->applet;
+-	int stage = -1;
+-
+-	switch (info->state) {
+-	case NM_DEVICE_STATE_PREPARE:
+-		stage = 0;
+-		break;
+-	case NM_DEVICE_STATE_CONFIG:
+-		stage = 1;
+-		break;
+-	case NM_DEVICE_STATE_IP_CONFIG:
+-		stage = 2;
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	if (stage >= 0)
+-		foo_set_icon (applet,
+-				    applet->network_connecting_icons[stage][applet->animation_step],
+-				    ICON_LAYER_LINK);
+-
+-	applet->animation_step++;
+-	if (applet->animation_step >= NUM_CONNECTING_FRAMES)
+-		applet->animation_step = 0;
+-
+-	return TRUE;
+-}
+-
+-static void
+ foo_common_state_change (NMDevice *device, NMDeviceState state, NMApplet *applet)
+ {
+ 	FooAnimationTimeoutInfo *info;
+@@ -2345,11 +2279,7 @@
+ 		info = g_slice_new (FooAnimationTimeoutInfo);
+ 		info->applet = applet;
+ 		info->state = state;
+-		applet->animation_step = 0;
+-		applet->animation_id = g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE,
+-										   100, foo_animation_timeout,
+-										   info,
+-										   foo_animation_timeout_info_destroy);
++		foo_set_icon (applet, applet->network_connecting_icon, ICON_LAYER_LINK);
+ 		break;
+ 	case NM_DEVICE_STATE_ACTIVATED:
+ 		break;
+@@ -2602,12 +2532,6 @@
+ 	NMApplet *applet = NM_APPLET (user_data);
+ 	gboolean handled = FALSE;
+ 
+-	applet->animation_step = 0;
+-	if (applet->animation_id) {
+-		g_source_remove (applet->animation_id);
+-		applet->animation_id = 0;
+-	}
+-
+ 	clear_active_connections (applet);
+ 	applet->active_connections = nm_client_get_active_connections (applet->nm_client);
+ 
+@@ -3166,17 +3090,8 @@
+ 	if (applet->wireless_100_icon)
+ 		g_object_unref (applet->wireless_100_icon);
+ 
+-	for (i = 0; i < NUM_CONNECTING_STAGES; i++) {
+-		int j;
+-
+-		for (j = 0; j < NUM_CONNECTING_FRAMES; j++)
+-			if (applet->network_connecting_icons[i][j])
+-				g_object_unref (applet->network_connecting_icons[i][j]);
+-	}
+-
+-	for (i = 0; i < NUM_VPN_CONNECTING_FRAMES; i++)
+-		if (applet->vpn_connecting_icons[i])
+-			g_object_unref (applet->vpn_connecting_icons[i]);
++	if (applet->network_connecting_icon)
++		g_object_unref (applet->network_connecting_icon);
+ 
+ 	nma_icons_zero (applet);
+ }
+@@ -3196,16 +3111,7 @@
+ 	applet->wireless_75_icon = NULL;
+ 	applet->wireless_100_icon = NULL;
+ 
+-	for (i = 0; i < NUM_CONNECTING_STAGES; i++)
+-	{
+-		int j;
+-
+-		for (j = 0; j < NUM_CONNECTING_FRAMES; j++)
+-			applet->network_connecting_icons[i][j] = NULL;
+-	}
+-
+-	for (i = 0; i < NUM_VPN_CONNECTING_FRAMES; i++)
+-		applet->vpn_connecting_icons[i] = NULL;
++	applet->network_connecting_icon = NULL;
+ 
+ 	applet->icons_loaded = FALSE;
+ }
+@@ -3257,28 +3163,7 @@
+ 	ICON_LOAD(applet->wireless_75_icon, "nm-signal-75");
+ 	ICON_LOAD(applet->wireless_100_icon, "nm-signal-100");
+ 
+-	for (i = 0; i < NUM_CONNECTING_STAGES; i++)
+-	{
+-		int j;
+-
+-		for (j = 0; j < NUM_CONNECTING_FRAMES; j++)
+-		{
+-			char *name;
+-
+-			name = g_strdup_printf ("nm-stage%02d-connecting%02d", i+1, j+1);
+-			ICON_LOAD(applet->network_connecting_icons[i][j], name);
+-			g_free (name);
+-		}
+-	}
+-
+-	for (i = 0; i < NUM_VPN_CONNECTING_FRAMES; i++)
+-	{
+-		char *name;
+-
+-		name = g_strdup_printf ("nm-vpn-connecting%02d", i+1);
+-		ICON_LOAD(applet->vpn_connecting_icons[i], name);
+-		g_free (name);
+-	}
++	ICON_LOAD(applet->network_connecting_icon, "nm-connecting");
+ 
+ 	success = TRUE;
+ 
+Index: trunk/src/applet.h
+===================================================================
+--- trunk.orig/src/applet.h	2008-02-06 20:30:06.000000000 +0000
++++ trunk/src/applet.h	2008-02-06 20:46:05.000000000 +0000
+@@ -111,20 +111,12 @@
+ 	GdkPixbuf *		wireless_50_icon;
+ 	GdkPixbuf *		wireless_75_icon;
+ 	GdkPixbuf *		wireless_100_icon;
+-#define NUM_CONNECTING_STAGES 3
+-#define NUM_CONNECTING_FRAMES 11
+-	GdkPixbuf *		network_connecting_icons[NUM_CONNECTING_STAGES][NUM_CONNECTING_FRAMES];
+-#define NUM_VPN_CONNECTING_FRAMES 14
+-	GdkPixbuf *		vpn_connecting_icons[NUM_VPN_CONNECTING_FRAMES];
++	GdkPixbuf *		network_connecting_icon;
+ 	GdkPixbuf *		vpn_lock_icon;
+ 
+ 	/* Active status icon pixbufs */
+ 	GdkPixbuf *		icon_layers[ICON_LAYER_MAX + 1];
+ 
+-	/* Animation stuff */
+-	int				animation_step;
+-	guint			animation_id;
+-
+ 	/* Direct UI elements */
+ #ifdef HAVE_STATUS_ICON
+ 	GtkStatusIcon *		status_icon;
