@@ -64,7 +64,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
     QEMU=qemu-system-arm
     if [ "$TYPE" = "ext2" ]; then
         KERNCMDLINE="root=/dev/sda console=ttyAMA0 console=tty0 mem=$QEMU_MEMORY"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet -no-reboot"
     fi
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
