@@ -46,6 +46,9 @@ KERNEL_LOCALVERSION ?= ""
 # kernels are generally machine specific
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+# U-Boot support
+UBOOT_ENTRYPOINT ?= "20008000"
+
 kernel_do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
@@ -416,3 +419,34 @@ do_sizecheck() {
 }
 
 addtask sizecheck before do_install after do_compile
+
+KERNEL_IMAGE_BASE_NAME = "${KERNEL_IMAGETYPE}-${PV}-${PR}-${MACHINE}-${DATETIME}"
+KERNEL_IMAGE_SYMLINK_NAME = "${KERNEL_IMAGETYPE}-${MACHINE}"
+
+do_deploy() {
+    install -d ${DEPLOY_DIR_IMAGE}
+    install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.bin
+    tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${PR}-${MACHINE}.tgz -C ${D} lib
+    
+    if test "x${KERNEL_IMAGETYPE}" = "xuImage" ; then 
+        if test -e arch/${ARCH}/boot/compressed/vmlinux ; then
+            ${OBJCOPY} -O binary -R .note -R .comment -S arch/${ARCH}/boot/compressed/vmlinux linux.bin
+            uboot-mkimage -A ${ARCH} -O linux -T kernel -C none -a ${UBOOT_ENTRYPOINT} -e ${UBOOT_ENTRYPOINT} -n "${DISTRO_NAME}/${PV}/${MACHINE}" -d linux.bin ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
+            rm -f linux.bin
+        else
+            ${OBJCOPY} -O binary -R .note -R .comment -S vmlinux linux.bin
+            rm -f linux.bin.gz
+            gzip -9 linux.bin
+            uboot-mkimage -A ${ARCH} -O linux -T kernel -C gzip -a ${UBOOT_ENTRYPOINT} -e ${UBOOT_ENTRYPOINT} -n "${DISTRO_NAME}/${PV}/${MACHINE}" -d linux.bin.gz ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
+            rm -f linux.bin.gz
+        fi
+    fi
+
+	cd ${DEPLOY_DIR_IMAGE}
+	rm -f ${KERNEL_IMAGE_SYMLINK_NAME}.bin
+	ln -sf ${KERNEL_IMAGE_BASE_NAME}.bin ${KERNEL_IMAGE_SYMLINK_NAME}.bin
+}
+
+do_deploy[dirs] = "${S}"
+
+addtask deploy before do_package after do_install
