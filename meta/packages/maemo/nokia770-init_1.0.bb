@@ -1,5 +1,5 @@
 LICENSE    = "GPL"
-PR         = "r6"
+PR         = "r7"
 
 DEPENDS    = "base-passwd"
 

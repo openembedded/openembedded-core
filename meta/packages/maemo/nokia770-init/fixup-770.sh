@@ -12,6 +12,7 @@ case "$1" in
         ln -s /dev/vc/5 /dev/tty5
         ln -s /dev/vc/6 /dev/tty6
         ln -s /dev/vc/7 /dev/tty7
+        /sbin/ifconfig wlan0 up
         ;;
   stop)
         ;;
