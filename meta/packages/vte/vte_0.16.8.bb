@@ -1,5 +1,7 @@
 LICENSE = "LGPL"
-DEPENDS = "gtk+"
+DEPENDS = "gtk+ intltool-native"
+
+PR="r1"
 
 inherit gnome
 
