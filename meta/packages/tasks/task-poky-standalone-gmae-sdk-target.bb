@@ -3,13 +3,13 @@
 #
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
-PR = "r6"
+PR = "r7"
 
 ALLOW_EMPTY = "1"
 
 require task-sdk-gmae.inc
 
-PACKAGES = "${PN}"
+PACKAGES = "${PN} ${PN}-dbg"
 
 RDEPENDS = "\
     task-poky-standalone-sdk-target \
