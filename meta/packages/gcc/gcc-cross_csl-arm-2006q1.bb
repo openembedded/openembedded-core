@@ -4,7 +4,7 @@ require gcc-paths-cross.inc
 inherit cross
 # NOTE: split PR.  If the main .oe changes something that affects its *build*
 # remember to increment this one too.
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}libc-for-gcc"
 # gmp-native mpfr-native"
