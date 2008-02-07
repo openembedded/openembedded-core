@@ -9,6 +9,7 @@ case $1 in
     echo -n "Starting NetworkManager daemon: NetworkManager"
     /usr/sbin/NetworkManager 
     /usr/sbin/NetworkManagerDispatcher
+    /usr/sbin/wpa_supplicant -u &
     echo "."
   ;;
 
@@ -16,6 +17,7 @@ case $1 in
     echo -n "Stopping NetworkManager daemon: NetworkManager"
     kill `ps |grep  /usr/sbin/NetworkManagerDispatcher | grep -v grep | cut "-d " -f2`
     kill `ps |grep  /usr/sbin/NetworkManager | grep -v grep | cut "-d " -f2`
+    kill `ps |grep  /usr/sbin/wpa_supplicant | grep -v grep | cut "-d " -f2`
     echo "."
   ;;
 
