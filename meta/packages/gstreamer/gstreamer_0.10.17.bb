@@ -5,7 +5,7 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "glib-2.0 gettext-native libxml2 bison-native flex-native"
-PR = "r3"
+PR = "r4"
 
 inherit autotools pkgconfig
 
@@ -29,3 +29,4 @@ do_stage() {
 
 FILES_${PN} += " ${libdir}/gstreamer-0.10/*.so"
 FILES_${PN}-dev += " ${libdir}/gstreamer-0.10/*.la ${libdir}/gstreamer-0.10/*.a"
+FILES_${PN}-dbg += " ${libdir}/gstreamer-0.10/.debug/"
