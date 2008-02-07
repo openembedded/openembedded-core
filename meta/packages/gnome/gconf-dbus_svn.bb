@@ -7,10 +7,8 @@ RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
 PV = "2.16.0+svnr${SRCREV}"
-PR = "r5"
 
-SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http \
-        file://notify-fix.patch;patch=1;pnum=0"
+SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http"
 
 inherit pkgconfig autotools 
 S = "${WORKDIR}/trunk"
