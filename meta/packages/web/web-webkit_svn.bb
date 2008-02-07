@@ -11,6 +11,8 @@ SRC_URI = "svn://svn.o-hand.com/repos/web/branches;module=webkit;proto=http \
 
 S = "${WORKDIR}/webkit"
 
+EXTRA_OECONF = "--enable-libowl"
+
 inherit autotools pkgconfig gconf
 
 do_configure_prepend() {
