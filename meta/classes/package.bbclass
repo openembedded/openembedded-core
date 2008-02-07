@@ -793,6 +793,10 @@ python package_depchains() {
 			if depend.find('-native') != -1 or depend.find('-cross') != -1 or depend.startswith('virtual/'):
 				#bb.note("Skipping %s" % depend)
 				continue
+			if depend.endswith('-dev'):
+				depend = depend.replace('-dev', '')
+			if depend.endswith('-dbg'):
+				depend = depend.replace('-dbg', '')
 			pkgname = getname(depend, suffix)
 			#bb.note("Adding %s for %s" % (pkgname, depend))
 			if not pkgname in rreclist:
@@ -807,6 +811,10 @@ python package_depchains() {
 		rreclist = explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
 
 		for depend in rdepends:
+			if depend.endswith('-dev'):
+				depend = depend.replace('-dev', '')
+			if depend.endswith('-dbg'):
+				depend = depend.replace('-dbg', '')
 			pkgname = getname(depend, suffix)
 			if not pkgname in rreclist:
 				rreclist.append(pkgname)
