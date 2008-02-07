@@ -43,7 +43,8 @@ FILES_${PN}-symlinks = " \
 	${bindir}/strings \
 	${bindir}/strip"
 
-SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-2005q3-2-arm-none-linux-gnueabi.src.tar.bz2"
+SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-2005q3-2-arm-none-linux-gnueabi.src.tar.bz2 \
+           file://binutils-configure-texinfo-version.patch;patch=1"
 
 do_unpack2() {
 	cd ${WORKDIR}
