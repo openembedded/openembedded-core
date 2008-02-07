@@ -1,7 +1,8 @@
 DESCRIPTION = "cx3110x wifi support as found in the Nokia 770/800"
 SECTION = "kernel/modules"
 LICENSE = "GPL"
-PR = "r0"
+PR = "r1"
+PACKAGES = "${PN}"
 
 COMPATIBLE_MACHINE = "(nokia770|nokia800)"
 
