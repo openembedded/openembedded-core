@@ -93,8 +93,8 @@ def check_sanity(e):
 			missing = missing + "gcc-3.x (needed for qemu-native),"
 
 	if "qemu-native" in assume_provided:
-		messages = messages + "qemu-native was in ASSUME_PROVIDED but the QEMU binaries can't be found in PATH"
-		required_utilities = required_utilities + " qemu-arm"
+		if not check_app_exists("qemu_arm", e.data):
+			messages = messages + "qemu-native was in ASSUME_PROVIDED but the QEMU binaries (qemu-arm) can't be found in PATH"
 
 	for util in required_utilities.split():
 		if not check_app_exists( util, e.data ):
