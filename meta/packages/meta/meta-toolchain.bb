@@ -13,7 +13,7 @@ IPKG_HOST = "ipkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
 IPKG_TARGET = "ipkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/temp-target"
 
 TOOLCHAIN_HOST_TASK ?= "task-sdk-host"
-TOOLCHAIN_TARGET_TASK ?= "task-poky-standalone-sdk-target"
+TOOLCHAIN_TARGET_TASK ?= "task-poky-standalone-sdk-target task-poky-standalone-sdk-target-dbg"
 TOOLCHAIN_OUTPUTNAME ?= "${SDK_NAME}-toolchain-${DISTRO_VERSION}"
 
 RDEPENDS = "${TOOLCHAIN_TARGET_TASK} ${TOOLCHAIN_HOST_TASK}"
@@ -36,14 +36,20 @@ do_populate_sdk() {
 	${IPKG_TARGET} install ${TOOLCHAIN_TARGET_TASK}
 
 	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include
-	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib
+	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/.debug/
 	mkdir -p ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/share
 	mv ${SDK_OUTPUT}/temp-target/usr/lib/ipkg/status ${SDK_OUTPUT}/${prefix}/package-status
 	rm -rf ${SDK_OUTPUT}/temp-target/usr/lib/ipkg/
 	cp -pPR ${SDK_OUTPUT}/temp-target/usr/include/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/include/
 	cp -pPR ${SDK_OUTPUT}/temp-target/usr/lib/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/
+	if [ -d ${SDK_OUTPUT}/temp-target/usr/lib/.debug ]; then
+		cp -pPR ${SDK_OUTPUT}/temp-target/usr/lib/.debug/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/.debug/
+	fi
 	cp -pPR ${SDK_OUTPUT}/temp-target/usr/share/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/share/
 	cp -pPR ${SDK_OUTPUT}/temp-target/lib/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/
+	if [ -d ${SDK_OUTPUT}/temp-target/lib/.debug ]; then
+		cp -pPR ${SDK_OUTPUT}/temp-target/lib/.debug/* ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/.debug/
+	fi
 	rm -rf ${SDK_OUTPUT}/temp-target/
 
 	for fn in `ls ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/`; do
