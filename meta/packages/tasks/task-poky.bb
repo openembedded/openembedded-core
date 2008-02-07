@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r16"
+PR = "r17"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -97,7 +97,6 @@ RDEPENDS_task-poky-x11-sato = "\
     matchbox-stroke \
     matchbox-config-gtk \
     matchbox-themes-gtk \
-    matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
     sato-icon-theme \
     settings-daemon \
