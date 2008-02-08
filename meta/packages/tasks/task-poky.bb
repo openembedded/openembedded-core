@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r17"
+PR = "r18"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -100,6 +100,7 @@ RDEPENDS_task-poky-x11-sato = "\
     xcursor-transparent-theme \
     sato-icon-theme \
     settings-daemon \
+    networkmanager-applet \
     gtk-sato-engine"
 
 
