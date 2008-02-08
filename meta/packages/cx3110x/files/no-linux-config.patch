@@ -1,0 +1,12 @@
+Index: cx3110x-module-src-2.0.15/src/sm_drv_spi.c
+===================================================================
+--- cx3110x-module-src-2.0.15.orig/src/sm_drv_spi.c	2008-02-08 13:52:28.000000000 +0100
++++ cx3110x-module-src-2.0.15/src/sm_drv_spi.c	2008-02-08 13:52:40.000000000 +0100
+@@ -36,7 +36,6 @@
+ #include <linux/platform_device.h>
+ #include <linux/string.h>
+ #include <linux/firmware.h>
+-#include <linux/config.h>
+ #if !defined(CONFIG_FW_LOADER) && !defined(CONFIG_FW_LOADER_MODULE)
+ #error No Firmware Loading configured in the kernel !
+ #endif
