@@ -1,0 +1,12 @@
+Index: webkit-gtk-0.1+svnr28656-r4/WebKit/gtk/WebView/webkitwebview.cpp
+===================================================================
+--- webkit-gtk-0.1+svnr28656-r4.orig/WebKit/gtk/WebView/webkitwebview.cpp	2008-02-08 17:41:55.000000000 +0000
++++ webkit-gtk-0.1+svnr28656-r4/WebKit/gtk/WebView/webkitwebview.cpp	2008-02-08 17:42:17.000000000 +0000
+@@ -183,6 +183,7 @@
+         hildon_gtk_im_context_filter_event(webViewData->imContext, (GdkEvent*)event);
+         hildon_gtk_im_context_show(webViewData->imContext);
+ #endif
++        gtk_im_context_focus_in(webViewData->imContext);
+     }
+ 
+     return frame->eventHandler()->handleMouseReleaseEvent(PlatformMouseEvent(event));

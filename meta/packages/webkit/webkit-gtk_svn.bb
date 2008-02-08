@@ -15,9 +15,10 @@ require webkit.inc
 SRC_URI += "file://autogen.sh \
             file://configure.ac \
             file://GNUmakefile.am \
+            file://fix_im.patch;patch=1 \
 	   "
 
-PR = "r4"
+PR = "r5"
 
 do_install() {
 	install -d ${D}${bindir}
