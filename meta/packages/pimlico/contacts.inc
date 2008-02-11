@@ -6,6 +6,8 @@ RDEPENDS = "libedata-book"
 
 inherit autotools pkgconfig
 
+EXTRA_OEMAKE += "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1"
+
 do_install_append () {
 	install -d ${D}/${datadir}/pixmaps
 	install -m 0644 ${WORKDIR}/stock_contact.png ${D}/${datadir}/pixmaps
