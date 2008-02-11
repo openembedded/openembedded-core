@@ -1,9 +1,0 @@
---- XvMC/hw/via/Makefile.am.old	2005-03-06 11:25:11.000000000 +0000
-+++ XvMC/hw/via/Makefile.am	2005-03-06 11:25:22.000000000 +0000
-@@ -1,5 +1,5 @@
- AM_CFLAGS = $(XVMC_CFLAGS)
--libviaXvMC_la_LIBADD = $(XVMC_LIBS) -lxf86drm
-+libviaXvMC_la_LIBADD = $(XVMC_LIBS) -ldrm
- 
- lib_LTLIBRARIES = libviaXvMC.la
- 
