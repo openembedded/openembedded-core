@@ -1,7 +1,7 @@
 Index: gettext-0.14.1/gettext-tools/configure.ac
 ===================================================================
---- gettext-0.14.1.orig/gettext-tools/configure.ac	2004-01-16 10:49:06.000000000 +0000
-+++ gettext-0.14.1/gettext-tools/configure.ac	2007-11-14 21:43:39.000000000 +0000
+--- gettext-0.14.1.orig/gettext-tools/configure.ac	2008-02-11 16:57:19.000000000 +0000
++++ gettext-0.14.1/gettext-tools/configure.ac	2008-02-11 16:57:28.000000000 +0000
 @@ -37,28 +37,16 @@
  AC_PROG_YACC
  
@@ -29,5 +29,22 @@ Index: gettext-0.14.1/gettext-tools/configure.ac
    TESTJAVA=no
 -fi
  AC_SUBST(TESTJAVA)
+ 
+ gt_CSHARPCOMP
+Index: gettext-0.14.1/gettext-runtime/configure.ac
+===================================================================
+--- gettext-0.14.1.orig/gettext-runtime/configure.ac	2008-02-11 16:57:34.000000000 +0000
++++ gettext-0.14.1/gettext-runtime/configure.ac	2008-02-11 16:58:04.000000000 +0000
+@@ -37,11 +37,7 @@
+ 
+ gt_JAVACOMP
+ AC_CHECK_PROG(JAR, jar, jar)
+-if test -n "$HAVE_JAVACOMP" && test -n "$JAR"; then
+-  BUILDJAVA=yes
+-else
+-  BUILDJAVA=no
+-fi
++BUILDJAVA=no
+ AC_SUBST(BUILDJAVA)
  
  gt_CSHARPCOMP
