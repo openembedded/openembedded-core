@@ -1,9 +1,9 @@
 PACKAGES += "${PN}-bin"
 
-FILES_${PN} = "${libexecdir} ${libdir}/lib*.so.* \
+FILES_${PN} = "${libexecdir} ${libdir}/lib*${SOLIBS} \
 	    ${sysconfdir} ${sharedstatedir} ${localstatedir} \
-	    /lib/*.so* ${datadir}/${PN} ${libdir}/${PN}"
-FILES_${PN}-dev = "${includedir} ${libdir}/lib*.so ${libdir}/*.la \
+	    /lib/*${SOLIBS} ${datadir}/${PN} ${libdir}/${PN}"
+FILES_${PN}-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
 		${libdir}/*.a ${libdir}/pkgconfig /lib/*.a /lib/*.o \
 		${datadir}/aclocal ${bindir}/*-config"
 FILES_${PN}-bin = "${bindir}/* ${sbindir}/* /bin/* /sbin/*"
