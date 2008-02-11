@@ -5,6 +5,8 @@ SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-s
 
 S = "${WORKDIR}/icu/source"
 
+PARALLEL_MAKE = ""
+
 inherit autotools pkgconfig binconfig
 
 do_configure() {
