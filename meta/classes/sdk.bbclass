@@ -50,3 +50,4 @@ FILES_${PN}-dbg += "${prefix}/.debug \
                     ${prefix}/bin/.debug \
                    "
 
+export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR}/${HOST_SYS}"
