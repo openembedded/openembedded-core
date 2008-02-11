@@ -79,6 +79,8 @@ export LANG=C
 # Kill PYTHONPATH as otherwise the Python specified there will conflict with
 # python-native.
 unset PYTHONPATH
+# Don't allow custom GConf schema paths to get into the system
+unset GCONF_SCHEMA_INSTALL_SOURCE
 
 echo
 echo "### Shell environment set up for Poky builds. ###"
