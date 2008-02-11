@@ -55,6 +55,7 @@ oe_runconf () {
 		    --oldincludedir=${oldincludedir} \
 		    --infodir=${infodir} \
 		    --mandir=${mandir} \
+                                --enable-mainainer-mode \
 			${EXTRA_OECONF} \
 		    $@"
 		oenote "Running $cfgcmd..."
