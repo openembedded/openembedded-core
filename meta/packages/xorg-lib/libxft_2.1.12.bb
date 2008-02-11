@@ -14,7 +14,7 @@ python do_package() {
         bb.build.exec_func('package_do_package', d)
 }
 
-FILES_${PN} = "${libdir}/lib*.so.*"
-FILES_${PN}-dev = "${includedir} ${libdir}/lib*.so ${libdir}/*.la \
+FILES_${PN} = "${libdir}/lib*${SOLIBS}"
+FILES_${PN}-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
 		${libdir}/*.a ${libdir}/pkgconfig \
 		${datadir}/aclocal ${bindir} ${sbindir}"
