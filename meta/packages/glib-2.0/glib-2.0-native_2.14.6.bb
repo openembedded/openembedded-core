@@ -18,6 +18,8 @@ S = "${WORKDIR}/glib-${PV}"
 
 inherit autotools pkgconfig native gettext
 
+FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glib-2.0-${PV}"
+
 acpaths = ""
 do_configure_prepend () {
 	install -m 0644 ${WORKDIR}/glibconfig-sysdefs.h .
