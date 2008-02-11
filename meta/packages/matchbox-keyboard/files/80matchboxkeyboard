@@ -4,14 +4,14 @@
 
 CMD=""
 
-if [ "$DISPLAY_CAN_ROTATE" = "1" ]; then
+if [ "$HAVE_KEYBOARD" = "0" ]; then
+    CMD="matchbox-keyboard -d"
+elif [ "$DISPLAY_CAN_ROTATE" = "1" ]; then
     if [ "$HAVE_KEYBOARD_PORTRAIT" = "1" -a "$HAVE_KEYBOARD_LANDSCAPE" = "0" ]; then
         CMD="matchbox-keyboard -d -o landscape"
     elif [ "$HAVE_KEYBOARD_LANDSCAPE" = "1" -a "$HAVE_KEYBOARD_PORTRAIT" = "0" ]; then
         CMD="matchbox-keyboard -d -o portrait"
     fi
-elif [ "$HAVE_KEYBOARD" = "0" ]; then
-    CMD="matchbox-keyboard -d"
 fi
 					
 # Delay to make sure the window manager is active
