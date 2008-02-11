@@ -66,7 +66,7 @@ if [ "x$D" != "x" ]; then
   exit 1
 fi
 
-gdk-pixbuf-query-loaders > /etc/gtk-2.0/gdk-pixbuf.loaders
+gdk-pixbuf-query-loaders > ${sysconfdir}/gtk-2.0/gdk-pixbuf.loaders
 
-test -x /usr/bin/gtk-update-icon-cache && gtk-update-icon-cache  -q /usr/share/icons/hicolor
+test -x ${bindir}/gtk-update-icon-cache && gtk-update-icon-cache  -q ${datadir}/icons/hicolor
 }
