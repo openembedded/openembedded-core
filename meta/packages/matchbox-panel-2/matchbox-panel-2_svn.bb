@@ -2,7 +2,7 @@ LICENSE = "GPLv2"
 PRIORITY = "optional"
 DEPENDS = "gtk+ startup-notification apmd"
 PV = "0.0+svnr${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
@@ -16,6 +16,7 @@ S = "${WORKDIR}/${PN}"
 
 FILES_${PN} += "${libdir}/matchbox-panel/*.so \
                 ${datadir}/matchbox-panel/battery/*.png \
+                ${datadir}/matchbox-panel/brightness/*.png \
                 ${datadir}/matchbox-panel/startup/*.png "
 FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 
