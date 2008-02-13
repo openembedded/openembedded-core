@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r31"
+PR = "r32"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
@@ -139,6 +139,7 @@ SRC_URI_append_zylonite ="\
 	file://pxa_fb_overlay.patch;patch=1 \
 	file://zylonite-boot.patch;patch=1 \
 	file://zylonite_mtd-r0.patch;patch=1 \
+	file://zylonite_touch-r0.patch;patch=1 \
 	"
 
 S = "${WORKDIR}/linux-2.6.23"

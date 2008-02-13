@@ -4,8 +4,8 @@ Flash driver forward ported to 2.6.14
 
 Index: linux-2.6.23/drivers/mtd/nand/Kconfig
 ===================================================================
---- linux-2.6.23.orig/drivers/mtd/nand/Kconfig	2008-02-12 18:02:36.000000000 +0000
-+++ linux-2.6.23/drivers/mtd/nand/Kconfig	2008-02-12 18:03:07.000000000 +0000
+--- linux-2.6.23.orig/drivers/mtd/nand/Kconfig	2007-10-09 21:31:38.000000000 +0100
++++ linux-2.6.23/drivers/mtd/nand/Kconfig	2008-02-13 00:59:45.000000000 +0000
 @@ -223,6 +223,10 @@
  	tristate "Support for NAND Flash on Sharp SL Series (C7xx + others)"
  	depends on ARCH_PXA
@@ -19,8 +19,8 @@ Index: linux-2.6.23/drivers/mtd/nand/Kconfig
  	depends on BASLER_EXCITE
 Index: linux-2.6.23/drivers/mtd/nand/Makefile
 ===================================================================
---- linux-2.6.23.orig/drivers/mtd/nand/Makefile	2008-02-12 18:02:36.000000000 +0000
-+++ linux-2.6.23/drivers/mtd/nand/Makefile	2008-02-12 18:03:27.000000000 +0000
+--- linux-2.6.23.orig/drivers/mtd/nand/Makefile	2007-10-09 21:31:38.000000000 +0100
++++ linux-2.6.23/drivers/mtd/nand/Makefile	2008-02-13 00:59:45.000000000 +0000
 @@ -19,6 +19,7 @@
  obj-$(CONFIG_MTD_NAND_H1900)		+= h1910.o
  obj-$(CONFIG_MTD_NAND_RTC_FROM4)	+= rtc_from4.o
@@ -32,7 +32,7 @@ Index: linux-2.6.23/drivers/mtd/nand/Makefile
 Index: linux-2.6.23/drivers/mtd/nand/mhn_nand.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.23/drivers/mtd/nand/mhn_nand.c	2008-02-12 23:54:00.000000000 +0000
++++ linux-2.6.23/drivers/mtd/nand/mhn_nand.c	2008-02-13 00:59:45.000000000 +0000
 @@ -0,0 +1,3869 @@
 +/*
 + *  drivers/mtd/nand/mhn_nand.c
@@ -3905,8 +3905,8 @@ Index: linux-2.6.23/drivers/mtd/nand/mhn_nand.c
 +
 Index: linux-2.6.23/arch/arm/mach-pxa/zylonite.c
 ===================================================================
---- linux-2.6.23.orig/arch/arm/mach-pxa/zylonite.c	2008-02-12 21:12:29.000000000 +0000
-+++ linux-2.6.23/arch/arm/mach-pxa/zylonite.c	2008-02-13 00:50:30.000000000 +0000
+--- linux-2.6.23.orig/arch/arm/mach-pxa/zylonite.c	2008-02-13 00:59:45.000000000 +0000
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite.c	2008-02-13 09:11:02.000000000 +0000
 @@ -29,6 +29,8 @@
  #include "generic.h"
  
@@ -3916,7 +3916,7 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite.c
  int gpio_eth_irq;
  
  int lcd_id;
-@@ -54,6 +56,11 @@
+@@ -54,6 +56,16 @@
  	.resource	= smc91x_resources,
  };
  
@@ -3925,10 +3925,15 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite.c
 +	.id		= -1,
 +};
 +
++static struct platform_device touch_device = {
++	.name		= "pxa2xx-touch",
++	.id		= -1,
++};
++
  #if defined(CONFIG_FB_PXA) || (CONFIG_FB_PXA_MODULES)
  static void zylonite_backlight_power(int on)
  {
-@@ -96,7 +103,7 @@
+@@ -96,7 +108,7 @@
  };
  
  static struct pxafb_mode_info sharp_ls037_modes[] = {
@@ -3937,7 +3942,7 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite.c
  		.pixclock	= 158000,
  		.xres		= 240,
  		.yres		= 320,
-@@ -109,8 +116,8 @@
+@@ -109,8 +121,8 @@
  		.lower_margin	= 3,
  		.sync		= 0,
  	},
@@ -3948,7 +3953,7 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite.c
  		.xres		= 480,
  		.yres		= 640,
  		.bpp		= 16,
-@@ -137,6 +144,11 @@
+@@ -137,6 +149,11 @@
  	/* backlight GPIO: output, default on */
  	gpio_direction_output(gpio_backlight, 1);
  
@@ -3960,20 +3965,35 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite.c
  	if (lcd_id & 0x20) {
  		set_pxa_fb_info(&zylonite_sharp_lcd_info);
  		return;
-@@ -169,6 +181,8 @@
+@@ -169,6 +186,8 @@
  	smc91x_resources[1].start = gpio_to_irq(gpio_eth_irq);
  	smc91x_resources[1].end   = gpio_to_irq(gpio_eth_irq);
  	platform_device_register(&smc91x_device);
 +	platform_device_register(&nand_device);
-+	printk(KERN_ERR "Nand device registered\n");
++	platform_device_register(&touch_device);
  
  	zylonite_init_lcd();
  }
 Index: linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c
 ===================================================================
---- linux-2.6.23.orig/arch/arm/mach-pxa/zylonite_pxa300.c	2008-02-12 20:52:26.000000000 +0000
-+++ linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c	2008-02-13 00:26:37.000000000 +0000
-@@ -104,6 +104,30 @@
+--- linux-2.6.23.orig/arch/arm/mach-pxa/zylonite_pxa300.c	2008-02-13 00:59:45.000000000 +0000
++++ linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c	2008-02-13 14:01:13.000000000 +0000
+@@ -62,12 +62,12 @@
+ 	GPIO110_UART3_RXD,
+ 
+ 	/* AC97 */
+-	GPIO23_AC97_nACRESET,
++	/*GPIO23_AC97_nACRESET,
+ 	GPIO24_AC97_SYSCLK,
+ 	GPIO29_AC97_BITCLK,
+ 	GPIO25_AC97_SDATA_IN_0,
+ 	GPIO27_AC97_SDATA_OUT,
+-	GPIO28_AC97_SYNC,
++	GPIO28_AC97_SYNC,*/
+ 
+ 	/* Keypad */
+ 	GPIO107_KP_DKIN_0,
+@@ -104,6 +104,41 @@
  	/* Ethernet */
  	GPIO2_nCS3,
  	GPIO99_GPIO,
@@ -4001,10 +4021,21 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c
 +	MFP_CFG_X(DF_IO12, AF1, DS08X, PULL_LOW),
 +	MFP_CFG_X(DF_IO13, AF1, DS08X, PULL_LOW),
 +	MFP_CFG_X(DF_IO14, AF1, DS08X, PULL_LOW),
++
++	/* AC97 */
++	MFP_CFG_X(GPIO23, AF1, DS03X, PULL_LOW),
++	MFP_CFG_X(GPIO27, AF1, DS03X, PULL_LOW),
++	MFP_CFG_X(GPIO28, AF1, DS03X, PULL_LOW),
++	MFP_CFG_X(GPIO29, AF1, DS03X, PULL_LOW),
++	MFP_CFG_X(GPIO25, AF1, DS03X, PULL_LOW),
++
++	MFP_CFG_X(GPIO26, AF0, DS01X, PULL_LOW), /* Interrupt */
++	MFP_CFG_X(GPIO24, AF0, DS03X, PULL_LOW), /*SYSCLK external */
++	MFP_CFG_X(GPIO11, AF0, DS01X, PULL_LOW),
  };
  
  static mfp_cfg_t pxa310_mfp_cfg[] __initdata = {
-@@ -163,6 +187,9 @@
+@@ -163,6 +198,9 @@
  		pxa3xx_mfp_write(lcd_detect_pins[i], mfpr_save[i]);
  }
  
@@ -4014,7 +4045,7 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c
  void __init zylonite_pxa300_init(void)
  {
  	if (cpu_is_pxa300() || cpu_is_pxa310()) {
-@@ -174,6 +201,8 @@
+@@ -174,6 +212,8 @@
  
  		/* GPIO pin assignment */
  		gpio_backlight = mfp_to_gpio(MFP_PIN_GPIO20);
@@ -4025,8 +4056,8 @@ Index: linux-2.6.23/arch/arm/mach-pxa/zylonite_pxa300.c
  	if (cpu_is_pxa300()) {
 Index: linux-2.6.23/drivers/video/pxafb.c
 ===================================================================
---- linux-2.6.23.orig/drivers/video/pxafb.c	2008-02-13 00:05:42.000000000 +0000
-+++ linux-2.6.23/drivers/video/pxafb.c	2008-02-13 00:06:02.000000000 +0000
+--- linux-2.6.23.orig/drivers/video/pxafb.c	2008-02-13 00:59:45.000000000 +0000
++++ linux-2.6.23/drivers/video/pxafb.c	2008-02-13 00:59:45.000000000 +0000
 @@ -1543,9 +1543,9 @@
          if (inf->lccr0 & LCCR0_INVALID_CONFIG_MASK)
                  dev_warn(&dev->dev, "machine LCCR0 setting contains illegal bits: %08x\n",
@@ -4042,8 +4073,8 @@ Index: linux-2.6.23/drivers/video/pxafb.c
  	     (inf->lccr0 & LCCR0_SDS) != LCCR0_Sngl ||
 Index: linux-2.6.23/include/asm-arm/arch-pxa/mfp-pxa300.h
 ===================================================================
---- linux-2.6.23.orig/include/asm-arm/arch-pxa/mfp-pxa300.h	2008-02-13 00:44:38.000000000 +0000
-+++ linux-2.6.23/include/asm-arm/arch-pxa/mfp-pxa300.h	2008-02-13 00:49:38.000000000 +0000
+--- linux-2.6.23.orig/include/asm-arm/arch-pxa/mfp-pxa300.h	2008-02-13 00:59:45.000000000 +0000
++++ linux-2.6.23/include/asm-arm/arch-pxa/mfp-pxa300.h	2008-02-13 00:59:45.000000000 +0000
 @@ -175,13 +175,13 @@
  #define GPIO68_LCD_LDD_14	MFP_CFG_DRV(GPIO68, AF1, DS01X)
  #define GPIO69_LCD_LDD_15	MFP_CFG_DRV(GPIO69, AF1, DS01X)
