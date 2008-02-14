@@ -278,7 +278,7 @@ Sharp Zaurus SL-C7x0 series (c7x0)
 ==================================
 
 The Sharp Zaurus c7x0 series (SL-C700, SL-C750, SL-C760, SL-C860, SL-7500)
-are PXA255 based handheld PDAs with VGA screens. To install Poky images on
+are PXA25x based handheld PDAs with VGA screens. To install Poky images on
 these devices follow these steps:
 
   1. Obtain an SD/MMC or CF card with a vfat or ext2 filesystem.
