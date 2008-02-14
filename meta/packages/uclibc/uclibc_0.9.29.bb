@@ -7,7 +7,7 @@
 # on whether the base patches apply to the selected (SRCDATE) svn release.
 #
 UCLIBC_BASE ?= "0.9.29"
-PR = "r7"
+PR = "r9"
 
 require uclibc.inc
 
@@ -16,7 +16,13 @@ PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 SRC_URI += "file://uClibc.machine file://uClibc.distro \
 	    file://errno_values.h.patch;patch=1 \
 	    file://termios.h.patch;patch=1 \
-	   "
+            file://uClibc-0.9.29-001-fix-mmap.patch;patch=1 \
+	    file://uClibc-0.9.29-conditional-sched_affinity.patch;patch=1 \
+	    file://uClibc-0.9.29-fix-gethostent_r-failure-retval.patch;patch=1 \
+	    file://uClibc-0.9.29-fix-internal_function-definition.patch;patch=1 \
+	    file://uClibc-0.9.29-rm-whitespace.patch;patch=1 \
+	    file://arm_fix_alignment.patch;patch=1 \
+	    "
 
 # mmap-unsigned-shift_bugid1303.patch
 # http://uclibc.org/lists/uclibc-cvs/2007-May/011360.html;patch=1"

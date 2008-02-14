@@ -76,8 +76,8 @@ EXTRA_OEMAKE = "${OEMAKE_NO_CC} 'CC=${CC}'"
 EXTRA_OEMAKE_task_do_populate_staging = "${OEMAKE_NO_CC}"
 EXTRA_OEMAKE_task_do_package = "${OEMAKE_NO_CC}"
 
-KERNEL_SOURCE = "${CROSS_DIR}/${TARGET_SYS}/include"
-KERNEL_HEADERS = "${CROSS_DIR}/${TARGET_SYS}/include"
+KERNEL_SOURCE = "${STAGING_INCDIR}"
+KERNEL_HEADERS = "${STAGING_INCDIR}"
 
 # Lets munge this via siteinfo.bbclass as well:
 # ARCH_BIG_ENDIAN=y
@@ -140,15 +140,19 @@ do_configure() {
 		echo "# CONFIG_ARM_EABI is not set"     >> ${S}/.config
 	fi
 
-	oe_runmake oldconfig
+	yes '' | oe_runmake oldconfig
 }
 
 do_stage() {
+	# This MUST be done first because we
+	# will install crt1.o in the install_dev stage and gcc needs it
+
+	# Install into the staging dir
 	oe_runmake PREFIX= DEVEL_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
 		RUNTIME_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
 		install_dev install_runtime
 
-	oe_runmake utils
+	# Install into the staging dir
 	oe_runmake PREFIX= DEVEL_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
 		RUNTIME_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
 		install_utils
@@ -168,8 +172,14 @@ do_stage() {
 }
 
 do_install() {
+        # Tis MUST be done first because we
+        # will install crt1.o in the install_dev stage and gcc needs it)
+	oe_runmake PREFIX= DEVEL_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
+		RUNTIME_PREFIX=${UCLIBC_STAGE_PREFIX}/ \
+		install_dev install_runtime
+
 	oe_runmake PREFIX=${D} DEVEL_PREFIX=${prefix}/ RUNTIME_PREFIX=/ \
-		install_dev install_runtime install_utils
+		install_dev install_runtime 
 
 	# We don't really need this in ${includedir}
 	rm -f ${D}${prefix}/include/.cvsignore
@@ -195,5 +205,9 @@ do_install() {
 		mv ${D}/usr/bin/* ${D}${bindir}/
 		rmdir ${D}/usr/bin
 	fi
+
+        oe_runmake utils
+        oe_runmake PREFIX=${D} DEVEL_PREFIX=${prefix}/ RUNTIME_PREFIX=/ \
+                install_utils
 }
 
