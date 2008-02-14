@@ -4,7 +4,7 @@ SECTION = "libs"
 HOMEPAGE = "http://www.trolltech.com"
 PRIORITY = "optional"
 LICENSE = "GPL"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.trolltech.com/qt/source/qtopia-core-opensource-src-${PV}.tar.gz"
 S = "${WORKDIR}/qtopia-core-opensource-src-${PV}"
@@ -22,6 +22,7 @@ EXTRA_OECONF = "-prefix ${STAGING_DIR_NATIVE}/qt4 \
                 -no-tablet    -no-xkb            \
                 -no-libpng                       \
                 -verbose -release  -fast -static \
+                -L ${STAGING_LIBDIR_NATIVE}      \
                 -qt3support "
 # yank default -e
 EXTRA_OEMAKE = " "
