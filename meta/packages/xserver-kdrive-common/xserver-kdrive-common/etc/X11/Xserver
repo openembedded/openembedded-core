@@ -48,9 +48,9 @@ case `module_id` in
 	"Generic OMAP1510/1610/1710")
 		ARGS="$ARGS -mouse /dev/input/event0" ;;
 	"Compulab CM-x270")
-                modprobe mbxfb
-	        ARGS="$ARGS -fb /dev/fb1"
-                ;;
+    		#modprobe mbxfb
+		#ARGS="$ARGS -fb /dev/fb1"
+    		;;
 	"Nokia N800")
 		ARGS="$ARGS -mouse tslib" ;;
 	"Nokia 770")
