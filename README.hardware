@@ -216,7 +216,7 @@ which you can build with "bitbake dfu-util-native" command.
 
 Flashing requires these steps:
 
-  1. Power down the device.</para>
+  1. Power down the device.
   2. Connect the device to the host machine via USB.
   3. Hold AUX key and press Power key. There should be a bootmenu
      on screen.
