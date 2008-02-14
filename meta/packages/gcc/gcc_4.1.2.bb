@@ -4,6 +4,8 @@ HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
 LICENSE = "GPL"
 
+ARM_INSTRUCTION_SET = "arm"
+
 inherit autotools gettext
 
 require gcc-package.inc
