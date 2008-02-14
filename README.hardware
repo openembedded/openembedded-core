@@ -212,7 +212,7 @@ FIC Neo1973 GTA01 smartphone (fic-gta01)
 ========================================
 
 To install Poky on a GTA01 smartphone you will need "dfu-util" tool
-which you can build with <command>bitbake dfu-util-native</command>.
+which you can build with "bitbake dfu-util-native" command.
 
 Flashing requires these steps:
 
