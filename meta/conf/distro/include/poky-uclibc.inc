@@ -14,3 +14,6 @@ TARGET_OS = "${UCLIBCTARGETOS}"
 CXXFLAGS += "-fvisibility-inlines-hidden"
 
 IMAGE_LINGUAS = ""
+
+DEPLOY_DIR = "${TMPDIR}/deploy-uclibc"
+DEPLOY_DIR_IMAGE = "${TMPDIR}/deploy/images"
