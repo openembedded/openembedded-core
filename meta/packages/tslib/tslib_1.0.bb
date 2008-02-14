@@ -4,7 +4,7 @@ AUTHOR = "Russell King w/ plugins by Chris Larson et. al."
 SECTION = "base"
 LICENSE = "LGPL"
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-1.0.tar.bz2 \
            file://fix_version.patch;patch=1 \
