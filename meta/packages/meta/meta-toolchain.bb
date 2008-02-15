@@ -123,6 +123,14 @@ do_populate_sdk() {
 	echo 'export PKG_CONFIG_PATH=${prefix}/${TARGET_SYS}/lib/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${prefix}/site-config' >> $script
 
+	# Add version information
+	versionfile=${SDK_OUTPUT}/${prefix}/version
+	touch $versionfile
+	echo 'Distro: ${DISTRO}' >> $versionfile
+	echo 'Distro Version: ${DISTRO_VERSION}' >> $versionfile
+	echo 'Metadata Revision: ${METADATA_REVISION}' >> $versionfile
+	echo 'Timestamp: ${DATETIME}' >> $versionfile
+
 	# Package it up
 	mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}
