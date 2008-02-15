@@ -627,7 +627,7 @@ def base_get_metadata_svn_revision(d):
 		pass
 	return revision
 
-METADATA_REVISION_FUNCTION ?= "${@base_get_metadata_monotone_revision(d)}"
+METADATA_REVISION ?= "${@base_get_metadata_monotone_revision(d)}"
 
 addhandler base_eventhandler
 python base_eventhandler() {
@@ -659,8 +659,6 @@ python base_eventhandler() {
 
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
-		revision = bb.data.getVar('METADATA_REVISION_FUNCTION', e.data, 1)
-		bb.data.setVar( 'METADATA_REVISION', revision, e.data )
 		statusvars = ['BB_VERSION', 'METADATA_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
 		statuslines = ["%-14s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
