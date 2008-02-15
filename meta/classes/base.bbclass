@@ -603,6 +603,31 @@ python base_do_unpack() {
 			raise bb.build.FuncFailed()
 }
 
+def base_get_scmbasepath(d):
+	import bb
+	path_to_bbfiles = bb.data.getVar( 'BBFILES', d, 1 ).split()
+	return path_to_bbfiles[0][:path_to_bbfiles[0].rindex( "packages" )]
+
+def base_get_metadata_monotone_revision(d):
+	monotone_revision = "<unknown>"
+	try:
+		monotone_revision = file( "%s/_MTN/revision" % base_get_scmbasepath(d) ).read().strip()
+		if monotone_revision.startswith( "format_version" ):
+			monotone_revision_words = monotone_revision.split()
+			monotone_revision = monotone_revision_words[ monotone_revision_words.index( "old_revision" )+1][1:-1]
+	except IOError:
+		pass
+	return monotone_revision
+
+def base_get_metadata_svn_revision(d):
+	revision = "<unknown>"
+	try:
+		revision = file( "%s/.svn/entries" % base_get_scmbasepath(d) ).readlines()[3].strip()
+	except IOError:
+		pass
+	return revision
+
+METADATA_REVISION_FUNCTION ?= "${@base_get_metadata_monotone_revision(d)}"
 
 addhandler base_eventhandler
 python base_eventhandler() {
@@ -634,18 +659,9 @@ python base_eventhandler() {
 
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
-		path_to_bbfiles = bb.data.getVar( 'BBFILES', e.data, 1 )
-		path_to_packages = path_to_bbfiles[:path_to_bbfiles.rindex( "packages" )]
-		monotone_revision = "<unknown>"
-		try:
-			monotone_revision = file( "%s/_MTN/revision" % path_to_packages ).read().strip()
-			if monotone_revision.startswith( "format_version" ):
-				monotone_revision_words = monotone_revision.split()
-				monotone_revision = monotone_revision_words[ monotone_revision_words.index( "old_revision" )+1][1:-1]
-		except IOError:
-			pass
-		bb.data.setVar( 'OE_REVISION', monotone_revision, e.data )
-		statusvars = ['BB_VERSION', 'OE_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
+		revision = bb.data.getVar('METADATA_REVISION_FUNCTION', e.data, 1)
+		bb.data.setVar( 'METADATA_REVISION', revision, e.data )
+		statusvars = ['BB_VERSION', 'METADATA_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
 		statuslines = ["%-14s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
 		print statusmsg
