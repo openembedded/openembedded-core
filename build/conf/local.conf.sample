@@ -23,13 +23,21 @@ BBMASK = ""
 MACHINE ?= "qemuarm"
 
 # Other supported machines
-#MACHINE ?= "cmx270"
 #MACHINE ?= "qemux86"
 #MACHINE ?= "c7x0"
 #MACHINE ?= "akita"
 #MACHINE ?= "spitz"
 #MACHINE ?= "nokia770"
-
+#MACHINE ?= "nokia800"
+#MACHINE ?= "fic-gta01"
+#MACHINE ?= "bootcdx86"
+#MACHINE ?= "cm-x270"
+#MACHINE ?= "em-x270"
+#MACHINE ?= "htcuniversal"
+#MACHINE ?= "mx31ads"
+#MACHINE ?= "mx31litekit"
+#MACHINE ?= "mx31phy"
+#MACHINE ?= "zylonite"
 
 DISTRO ?= "poky"
 # For bleeding edge / experimental / unstable package versions
