@@ -24,7 +24,7 @@ The following boards are supported by Poky:
   * Compulab EM-X270 (em-x270)
   * FreeScale iMX31ADS (mx31ads)
   * Marvell PXA3xx Zylonite (zylonite)
-  * Logic iMX31 Lite Kit (mx31lite)
+  * Logic iMX31 Lite Kit (mx31litekit)
   * Phytec phyCORE-iMX31 (mx31phy)
 
 For more information see board's section below. The Poky MACHINE setting
@@ -193,10 +193,18 @@ To boot the board:
   blob> boot
 
 
-Logic iMX31 Lite Kit (mx31lite)
+Logic iMX31 Lite Kit (mx31litekit)
 ===============================
 
-FIXME
+The easiest method to boot this board is to take an MMC/SD card and format 
+the first partition as ext2, then extract the poky image onto this as root. 
+Assuming the board is network connected, a TFTP server is available at 
+192.168.1.33 and a serial terminal is available (115200 8N1), the following 
+commands will boot a kernel called "mx31kern" from the TFTP server:
+
+  losh> ifconfig sm0 192.168.1.203 255.255.255.0 192.168.1.33
+  losh> load raw 0x80100000 0x200000 /tftp/192.168.1.33:mx31kern
+  losh> exec 0x80100000 - 
 
 
 Phytec phyCORE-iMX31 (mx31phy)
