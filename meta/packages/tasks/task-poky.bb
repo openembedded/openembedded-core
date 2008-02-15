@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r19"
+PR = "r20"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -80,6 +80,9 @@ RDEPENDS_task-poky-apps-x11-core = "\
 RDEPENDS_task-poky-apps-x11-games = "\
     oh-puzzles"
 
+WEB = "web-webkit"
+# WebKit takes too much space to fit on c7x0
+WEB_c7x0 = ""
 
 RDEPENDS_task-poky-apps-x11-pimlico = "\
     eds-dbus \
@@ -87,7 +90,7 @@ RDEPENDS_task-poky-apps-x11-pimlico = "\
     dates \
     tasks \
     gaku \
-    web-webkit"
+    ${WEB}"
 
 
 RDEPENDS_task-poky-x11-sato = "\
