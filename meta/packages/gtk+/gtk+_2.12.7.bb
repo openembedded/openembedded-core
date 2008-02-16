@@ -14,8 +14,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://toggle-font.diff;patch=1;pnum=0 \
            file://scrolled-placement.patch;patch=1;pnum=0 \
            file://filesystem-volumes.patch;patch=1 \
-           file://filechooser-utils.patch;patch=1 \
-           file://filechooser.patch;patch=1 \
+           file://filechooser-props.patch;patch=1 \
            file://filechooser-default.patch;patch=1 \
 # temporary
 #           file://gtklabel-resize-patch;patch=1 \
