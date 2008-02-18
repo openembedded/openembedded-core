@@ -1,8 +1,8 @@
 LICENSE = "GPLv2"
 PRIORITY = "optional"
-DEPENDS = "gtk+ startup-notification apmd"
+DEPENDS = "gtk+ startup-notification apmd dbus"
 PV = "0.0+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
@@ -10,12 +10,11 @@ RCONFLICTS_${PN} = "matchbox-panel"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
-EXTRA_OECONF = "--enable-startup-notification --disable-libnotify"
+EXTRA_OECONF = "--enable-startup-notification --enable-dbus"
 
 S = "${WORKDIR}/${PN}"
 
 FILES_${PN} += "${libdir}/matchbox-panel/*.so \
-                ${datadir}/matchbox-panel/battery/*.png \
                 ${datadir}/matchbox-panel/brightness/*.png \
                 ${datadir}/matchbox-panel/startup/*.png "
 FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
