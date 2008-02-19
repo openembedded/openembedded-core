@@ -1,4 +1,4 @@
 require ipkg.inc
-PR = "r9"
+PR = "r10"
 
 RDEPENDS_${PN} += "${VIRTUAL-RUNTIME_update-alternatives}"
