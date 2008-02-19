@@ -140,6 +140,7 @@ SRC_URI_append_zylonite ="\
 	file://zylonite-boot.patch;patch=1 \
 	file://zylonite_mtd-r0.patch;patch=1 \
 	file://zylonite_touch-r0.patch;patch=1 \
+	file://zylonite_keypad-r0.patch;patch=1 \
 	"
 
 S = "${WORKDIR}/linux-2.6.23"
