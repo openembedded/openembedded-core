@@ -10,6 +10,6 @@ fi
 
 matchbox-desktop &
 
-matchbox-panel --titlebar --start-applets showdesktop,windowselector --end-applets clock,battery,systray,startup &
+matchbox-panel --titlebar --start-applets showdesktop,windowselector --end-applets clock,battery,systray,startup-notify,notify &
 
 exec matchbox-window-manager -theme Sato -use_desktop_mode decorated -use_cursor $SHOWCURSOR $@
