@@ -125,11 +125,13 @@ FIXME
 FreeScale iMX31ADS (mx31ads)
 ===========================
 
-FIXME - needs testing
+The correct serial port is the top-most female connector to the right of the
+ethernet socket.
 
-It is assumed a serial connection to the board is available (115200 8N1), a 
-TFTP server is available at 192.168.9.1 and the board is to be given an IP 
-address of 192.168.9.2. To set the IP address, run:
+For uploading data to RedBoot we are going to use tftp. In this example we
+assume that the tftpserver is on 192.168.9.1 and the board is on192.168.9.2. 
+
+To set the IP address, run:
 
   ip_address -l 192.168.9.2/24 -h 192.168.9.1
 
@@ -159,6 +161,47 @@ To load and boot a kernel from a TFTP server with the rootfs over NFS:
   load -r -b 0x100000 zimage
   exec -b 0x100000 -l 0x200000 -c "noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.9.1:/mnt/nfsmx31 rw ip=192.168.9.2::192.168.9.1:255.255.255.0"
 
+Alternative flash (NAND)
+~~~~~~~~~~~ ~~~~~ ~~~~~~
+
+The instructions above are for using the (default) NOR flash on the board,
+there is also 128M of NAND flash.
+
+It is possible to install Poky to the NAND flash which gives more space for the
+rootfs.
+
+To switch to the NAND flash:
+
+  factive NAND
+
+This will then restart RedBoot using the NAND rather than the NOR. If you
+have not used the NAND before then it is unlikely that there will be a
+partition table yet. You can get the list of partitions with 'fis list'.
+
+If this shows no partitions then you can create them with:
+
+  fis init
+
+The output of 'fis list' should now show:
+
+Name              FLASH addr  Mem addr    Length      Entry point
+RedBoot           0xE0000000  0xE0000000  0x00040000  0x00000000
+FIS directory     0xE7FF4000  0xE7FF4000  0x00003000  0x00000000
+RedBoot config    0xE7FF7000  0xE7FF7000  0x00001000  0x00000000
+
+Partitions for the kernel and rootfs need to be created:
+
+fis create -l 0x1A0000 -e 0x00100000 kernel
+fis create -l 0x5000000 -e 0x00100000 root
+
+You may now use the instructions above for flashing. However it is important
+to note that the erase block size for the NAND is different to the NOR so the
+JFFS erase size will need to be changed to 0x4000
+
+You will also need to update the kernel command line to use the correct root
+filesystem. This should be '/dev/mtdblock7' if you adhere to the partitioning
+scheme shown above. If this fails then you can doublecheck against the output
+from the kernel when it evaluates the available mtd partitions.
 
 Marvell PXA3xx Zylonite (zylonite)
 ==================================
