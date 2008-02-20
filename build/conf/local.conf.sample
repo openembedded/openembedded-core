@@ -65,6 +65,7 @@ EXTRA_IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"
 # the default features for those machines.
 EXTRA_IMAGE_FEATURES_c7x0 = "tools-testapps debug-tweaks"
 EXTRA_IMAGE_FEATURES_mx31phy = "debug-tweaks"
+EXTRA_IMAGE_FEATURES_mx31ads = "tools-testapps debug-tweaks"
 
 # A list of packaging systems used in generated images
 # The first package type listed will be used for rootfs generation
