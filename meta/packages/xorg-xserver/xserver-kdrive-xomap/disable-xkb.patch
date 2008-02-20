@@ -1,0 +1,82 @@
+Index: xorg-server-1.1.99.3/Makefile.am
+===================================================================
+--- xorg-server-1.1.99.3.orig/Makefile.am	2008-02-20 22:22:56.000000000 +0000
++++ xorg-server-1.1.99.3/Makefile.am	2008-02-20 22:23:22.000000000 +0000
+@@ -34,6 +34,11 @@
+ XSP_DIR=xsp
+ endif
+ 
++if XKB
++XKB_DIR=xkb
++endif
++
++
+ SUBDIRS = \
+ 	doc \
+ 	include \
+@@ -46,7 +51,7 @@
+ 	randr \
+ 	render  \
+ 	Xi \
+-	xkb \
++	$(XKB_DIR) \
+ 	$(DBE_DIR) \
+ 	$(MFB_DIR) \
+ 	$(AFB_DIR) \
+Index: xorg-server-1.1.99.3/configure.ac
+===================================================================
+--- xorg-server-1.1.99.3.orig/configure.ac	2008-02-20 22:04:15.000000000 +0000
++++ xorg-server-1.1.99.3/configure.ac	2008-02-20 22:28:35.000000000 +0000
+@@ -434,6 +434,7 @@
+ AC_ARG_ENABLE(dbus,           AS_HELP_STRING([--disable-dbus], [Build D-BUS support (default: auto)]), [DBUS=$enableval], [DBUS=auto])
+ AC_ARG_ENABLE(xsp,            AS_HELP_STRING([--disable-xsp], [Build XSP support (default: auto)]), [XSP=$enableval], [XSP=auto])
+ AC_ARG_ENABLE(tslib,          AS_HELP_STRING([--disable-tslib], [Build embedded touchscreen support (default: auto)]), [TSLIB=$enableval], [TSLIB=auto])
++AC_ARG_ENABLE(xkb,            AS_HELP_STRING([--disable-xkb], [Build XKB (default: enabled)]), [XKB=$enableval], [XKB=yes])
+ 
+ dnl DDXes.
+ AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
+@@ -751,12 +752,15 @@
+ 
+ AC_DEFINE(SHAPE, 1, [Support SHAPE extension])
+ 
+-AC_DEFINE(XKB, 1, [Build XKB])
+-AC_DEFINE(XKB_IN_SERVER, 1, [Build XKB server])
+-AC_DEFINE(XKB_DFLT_DISABLED, 0, [Disable XKB per default])
+-REQUIRED_MODULES="$REQUIRED_MODULES xkbfile"
+-XKB_LIB='$(top_builddir)/xkb/libxkb.la'
+-XKB_STUB_LIB='$(top_builddir)/xkb/libxkbstubs.la'
++AM_CONDITIONAL(XKB, [test "x$XKB" = xyes])
++if test "x$XKB" = xyes; then
++	AC_DEFINE(XKB, 1, [Build XKB])
++	AC_DEFINE(XKB_IN_SERVER, 1, [Build XKB server])
++	AC_DEFINE(XKB_DFLT_DISABLED, 0, [Disable XKB per default])
++	REQUIRED_MODULES="$REQUIRED_MODULES xkbfile"
++	XKB_LIB='$(top_builddir)/xkb/libxkb.la'
++	XKB_STUB_LIB='$(top_builddir)/xkb/libxkbstubs.la'
++fi
+ 
+ AC_CHECK_FUNC(strcasecmp, [], AC_DEFINE([NEED_STRCASECMP], 1,
+                                         [Do not have `strcasecmp'.]))
+Index: xorg-server-1.1.99.3/hw/kdrive/src/Makefile.am
+===================================================================
+--- xorg-server-1.1.99.3.orig/hw/kdrive/src/Makefile.am	2008-02-20 22:28:04.000000000 +0000
++++ xorg-server-1.1.99.3/hw/kdrive/src/Makefile.am	2008-02-20 22:28:31.000000000 +0000
+@@ -39,4 +39,4 @@
+ libkdrivestubs_a_SOURCES = \
+         $(top_srcdir)/fb/fbcmap.c
+ 
+-libkdrivexkb_a_SOURCES = kxkb.c
++libkdrivexkb_a_SOURCES =
+Index: xorg-server-1.1.99.3/hw/kdrive/src/kinput.c
+===================================================================
+--- xorg-server-1.1.99.3.orig/hw/kdrive/src/kinput.c	2008-02-20 22:25:58.000000000 +0000
++++ xorg-server-1.1.99.3/hw/kdrive/src/kinput.c	2008-02-20 22:27:29.000000000 +0000
+@@ -777,7 +777,7 @@
+         KdInitModMap(ki);
+         KdInitAutoRepeats(ki);
+ 
+-#ifndef XKB
++#ifdef XKB
+         if (!noXkbExtension) {
+             memset(&names, 0, sizeof(XkbComponentNamesRec));
+             if (XkbInitialMap) 
