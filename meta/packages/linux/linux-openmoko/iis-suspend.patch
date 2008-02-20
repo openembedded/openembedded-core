@@ -1,0 +1,63 @@
+Index: linux-2.6.22/sound/soc/s3c24xx/s3c24xx-i2s.c
+===================================================================
+--- linux-2.6.22.orig/sound/soc/s3c24xx/s3c24xx-i2s.c	2007-11-09 16:13:04.000000000 +0000
++++ linux-2.6.22/sound/soc/s3c24xx/s3c24xx-i2s.c	2007-11-09 16:17:47.000000000 +0000
+@@ -75,6 +75,10 @@
+ struct s3c24xx_i2s_info {
+ 	void __iomem	*regs;
+ 	struct clk	*iis_clk;
++	u32		iiscon;
++	u32		iismod;
++	u32		iisfcon;
++	u32		iispsr;
+ };
+ static struct s3c24xx_i2s_info s3c24xx_i2s;
+ 
+@@ -404,6 +408,38 @@
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM
++int s3c24xx_i2s_suspend(struct platform_device *pdev,
++                struct snd_soc_cpu_dai *cpu_dai)
++{
++        s3c24xx_i2s.iiscon=readl(s3c24xx_i2s.regs + S3C2410_IISCON);
++	s3c24xx_i2s.iismod=readl(s3c24xx_i2s.regs + S3C2410_IISMOD);
++	s3c24xx_i2s.iisfcon=readl(s3c24xx_i2s.regs + S3C2410_IISFCON);
++	s3c24xx_i2s.iispsr=readl(s3c24xx_i2s.regs + S3C2410_IISPSR);
++
++	clk_disable(s3c24xx_i2s.iis_clk);
++
++	return 0;
++}
++
++int s3c24xx_i2s_resume(struct platform_device *pdev,
++                struct snd_soc_cpu_dai *cpu_dai)
++{
++	clk_enable(s3c24xx_i2s.iis_clk);
++
++        writel(s3c24xx_i2s.iiscon, s3c24xx_i2s.regs + S3C2410_IISCON);
++        writel(s3c24xx_i2s.iismod, s3c24xx_i2s.regs + S3C2410_IISMOD);
++        writel(s3c24xx_i2s.iisfcon, s3c24xx_i2s.regs + S3C2410_IISFCON);
++        writel(s3c24xx_i2s.iispsr, s3c24xx_i2s.regs + S3C2410_IISPSR);
++
++	return 0;
++}
++#else
++#define s3c24xx_i2s_suspend NULL
++#define s3c24xx_i2s_resume NULL
++#endif
++
++
+ #define S3C24XX_I2S_RATES \
+ 	(SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 | SNDRV_PCM_RATE_16000 | \
+ 	SNDRV_PCM_RATE_22050 | SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 | \
+@@ -414,6 +450,8 @@
+ 	.id = 0,
+ 	.type = SND_SOC_DAI_I2S,
+ 	.probe = s3c24xx_i2s_probe,
++	.suspend = s3c24xx_i2s_suspend,
++	.resume = s3c24xx_i2s_resume,
+ 	.playback = {
+ 		.channels_min = 2,
+ 		.channels_max = 2,
