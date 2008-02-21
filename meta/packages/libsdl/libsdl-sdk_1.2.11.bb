@@ -4,10 +4,11 @@ SECTION = "libs"
 LICENSE = "LGPL"
 DEPENDS = "libx11-sdk libxext-sdk libxrandr-sdk libxrender-sdk"
 RDEPENDS = "libx11-sdk libxrandr-sdk libxrender-sdk libxext-sdk"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
 	   file://acinclude.m4 \
+	   file://configure_tweak.patch;patch=1 \
 	   file://kernel-asm-page.patch;patch=1 "
 S = "${WORKDIR}/SDL-${PV}"
 
@@ -23,17 +24,6 @@ EXTRA_OECONF = "--disable-static --disable-debug --disable-cdrom --enable-thread
                 --disable-video-picogui --disable-video-qtopia --enable-dlopen"
 
 PARALLEL_MAKE = ""
-
-do_configure() {
-	rm -f ${S}/acinclude.m4
-	cp ${WORKDIR}/acinclude.m4 ${S}/
-	gnu-configize
-	oe_runconf
-	cd ${S}
-	# prevent libtool from linking libs against libstdc++, libgcc, ...
-	cat ${TARGET_PREFIX}libtool | sed -e 's/postdeps=".*"/postdeps=""/' > ${TARGET_PREFIX}libtool.tmp
-	mv ${TARGET_PREFIX}libtool.tmp ${TARGET_PREFIX}libtool
-}
 
 do_stage() {
 	autotools_stage_all
