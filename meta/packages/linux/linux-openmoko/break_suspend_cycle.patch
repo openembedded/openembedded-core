@@ -1,0 +1,34 @@
+Index: linux-2.6.21/drivers/char/apm-emulation.c
+===================================================================
+--- linux-2.6.21.orig/drivers/char/apm-emulation.c	2008-02-21 00:32:41.000000000 +0000
++++ linux-2.6.21/drivers/char/apm-emulation.c	2008-02-21 00:33:43.000000000 +0000
+@@ -206,10 +206,18 @@
+ 	return ret;
+ }
+ 
++static in_suspend;
++
+ static void apm_suspend(void)
+ {
+ 	struct apm_user *as;
+-	int err = pm_suspend(PM_SUSPEND_MEM);
++	int err;
++
++	in_suspend = 1;
++
++	err = pm_suspend(PM_SUSPEND_MEM);
++
++	in_suspend = 0;
+ 
+ 	/*
+ 	 * Anyone on the APM queues will think we're still suspended.
+@@ -663,6 +671,9 @@
+ {
+ 	unsigned long flags;
+ 
++	if (in_suspend)
++		return;
++
+ 	spin_lock_irqsave(&kapmd_queue_lock, flags);
+ 	queue_add_event(&kapmd_queue, event);
+ 	spin_unlock_irqrestore(&kapmd_queue_lock, flags);

@@ -9,7 +9,7 @@ KERNEL_RELEASE = "2.6.22.5"
 #PV = "${VANILLA_VERSION}+${KERNEL_RELEASE}-moko11+svnr${SRCREV}"
 
 PV = "${KERNEL_RELEASE}-moko11+svnr${SRCREV}"
-PR = "r14"
+PR = "r15"
 
 KERNEL_IMAGETYPE = "uImage"
 UBOOT_ENTRYPOINT = "30008000"
@@ -26,6 +26,7 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${VANILLA_VERSION}.ta
            file://fix-gta01-flowcontrol2-2.6.22.5.patch;patch=1 \
            file://gta-vibro-pwm-suspend.patch;patch=1 \
            file://tweak_power_button.patch;patch=1 \
+	   file://break_suspend_cycle.patch;patch=1 \
            http://www.rpsys.net/openzaurus/patches/archive/input_power-r9.patch;patch=1 \
            file://defconfig-${KERNEL_RELEASE}"
 
