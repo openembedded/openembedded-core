@@ -161,16 +161,10 @@ To load and boot a kernel from a TFTP server with the rootfs over NFS:
   load -r -b 0x100000 zimage
   exec -b 0x100000 -l 0x200000 -c "noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.9.1:/mnt/nfsmx31 rw ip=192.168.9.2::192.168.9.1:255.255.255.0"
 
-Alternative flash (NAND)
-~~~~~~~~~~~ ~~~~~ ~~~~~~
-
 The instructions above are for using the (default) NOR flash on the board,
-there is also 128M of NAND flash.
-
-It is possible to install Poky to the NAND flash which gives more space for the
-rootfs.
-
-To switch to the NAND flash:
+there is also 128M of NAND flash. It is possible to install Poky to the NAND 
+flash which gives more space for the rootfs and instructions for using this are
+given below. To switch to the NAND flash:
 
   factive NAND
 
@@ -196,12 +190,14 @@ fis create -l 0x5000000 -e 0x00100000 root
 
 You may now use the instructions above for flashing. However it is important
 to note that the erase block size for the NAND is different to the NOR so the
-JFFS erase size will need to be changed to 0x4000
+JFFS erase size will need to be changed to 0x4000. Stardard images are built
+for NOR and you will need to build custom images for NAND.
 
 You will also need to update the kernel command line to use the correct root
 filesystem. This should be '/dev/mtdblock7' if you adhere to the partitioning
 scheme shown above. If this fails then you can doublecheck against the output
 from the kernel when it evaluates the available mtd partitions.
+
 
 Marvell PXA3xx Zylonite (zylonite)
 ==================================
@@ -288,8 +284,42 @@ Flashing requires these steps:
 HTC Universal (htcuniversal)
 ============================
 
-FIXME
+Note: HTC Universal support is highly experimental.
 
+On the HTC Universal, entirely replacing the Windows installation is not 
+supported, instead Poky is booted from an MMC/SD card from Windows. Once Poky
+has booted, Windows is no longer in memory or active but when power is removed,
+the user will be returned to windows and will need to return to Linux from 
+there.
+
+Once an MMC/SD card is available it is suggested its split into two partitions,
+one for a program called HaRET which lets you boot Linux from within Windows
+and the second for the rootfs. The HaRET partition should be the first partition
+on the card and be vfat formatted. It doesn't need to be large, just enough for
+HaRET and a kernel (say 5MB max). The rootfs should be ext2 and is usually the 
+second partition. The first partition should be vfat so Windows recognises it 
+as if it doesn't, it has been known to reformat cards.
+
+On the first partition you need three files:
+
+  * a HaRET binary (version 0.5.1 works well and a working version 
+    should be part of the last Poky release)
+  * a kernel renamed to "zImage"
+  * a default.txt which contains:
+
+set kernel "zImage"
+set mtype "855"
+set cmdline "root=/dev/mmcblk0p2 rw console=ttyS0,115200n8 console=tty0 rootdelay=5 fbcon=rotate:1"
+boot2
+
+On the second parition the root file system is extracted as root. A different
+partition layout or other kernel options can be changed in the default.txt file.
+
+When inserted into the device, Windows should see the card and let you browse
+its contents using File Explorer. Running the HaRET binary will present a dialog
+box (maybe after messages warning about running unsigned binaries) where you 
+select OK and you should then see Poky boot. Kernel messages can be seen by 
+adding psplash=false to the kernel commandline.
 
 
 Nokia 770/N800/N810 Internet Tablets (nokia770 and nokia800)
