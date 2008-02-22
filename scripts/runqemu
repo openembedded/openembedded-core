@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Handle Poky <-> QEmu interface voodoo
 #
@@ -122,4 +122,3 @@ fi
 CROSSPATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$CROSSPATH:$BUILDDIR/tmp/cross/bin
 
 . $INTERNAL_SCRIPT
-

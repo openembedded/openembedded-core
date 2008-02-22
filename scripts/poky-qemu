@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Handle running Poky images standalone with QEMU
 #

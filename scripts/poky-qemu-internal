@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Handle running Poky images under qemu
 #
@@ -45,18 +45,24 @@ if [ "x$SERIAL_LOGFILE" != "x" ]; then
     SERIALOPTS="-serial file:$SERIAL_LOGFILE"
 fi
 
+case "$MACHINE" in
+	"qemuarm") ;;
+	"qemux86") ;;
+	"akita") ;;
+	"spitz") ;;
+	*)
+		echo "Error: Unsupported machine type $MACHINE"
+		return
+		;;
+esac
+
 if [ "$TYPE" != "nfs" -a ! -f "$HDIMAGE" ]; then
-    echo "Error, image file $HDIMAGE doesn't exist"
+    echo "Error: Image file $HDIMAGE doesn't exist"
     return
 fi
 
 if [ ! -f "$ZIMAGE" ]; then
-    echo "Error, kernel image file $ZIMAGE doesn't exist"
-    return
-fi
-
-if [ "$MACHINE" != "qemuarm" -a "$MACHINE" != "qemux86" -a "$MACHINE" != "akita" -a "$MACHINE" != "spitz" ]; then
-    echo "Error, unsupported machine type $MACHINE"
+    echo "Error: Kernel image file $ZIMAGE doesn't exist"
     return
 fi
 
@@ -71,7 +77,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
             HDIMAGE=/srv/nfs/qemuarm
         fi
         if [ ! -d "$HDIMAGE" ]; then
-            echo "Error, NFS mount point $HDIMAGE doesn't exist"
+            echo "Error: NFS mount point $HDIMAGE doesn't exist"
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
@@ -90,7 +96,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             HDIMAGE=/srv/nfs/qemux86
         fi
         if [ ! -d "$HDIMAGE" ]; then
-            echo "Error, NFS mount point $HDIMAGE doesn't exist."
+            echo "Error: NFS mount point $HDIMAGE doesn't exist."
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
@@ -125,7 +131,7 @@ if [ "$MACHINE" = "akita" ]; then
 fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
-    echo "Error, unable to support this combination of options"
+    echo "Error: Unable to support this combination of options"
     return
 fi
 
@@ -140,6 +146,11 @@ fi
 PATH=$CROSSPATH:$SDKPATH:$PATH
 
 QEMUBIN=`which $QEMU`
+
+if [ ! -x "$QEMUBIN" ]; then
+    echo "Error: No QEMU binary '$QEMU' could be found."
+    return
+fi
 
 function _quit() {
     if [ -n "$PIDFILE" ]; then
