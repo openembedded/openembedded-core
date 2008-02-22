@@ -35,5 +35,5 @@ do_stage() {
 	 oe_libinstall -so -a -C objs libfreetype ${STAGING_LIBDIR}
 }
 
-FILES_${PN} = "${libdir}/lib*.so.*"
+FILES_${PN} = "${libdir}/lib*${SOLIBS}"
 FILES_${PN}-dev += "${bindir}"

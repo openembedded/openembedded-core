@@ -12,7 +12,7 @@ inherit autotools pkgconfig
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
 	${bindir}/gtk-update-icon-cache \
 	${bindir}/gtk-query-immodules-2.0 \
-	${libdir}/lib*.so.* \
+	${libdir}/lib*${SOLIBS} \
 	${datadir}/themes ${sysconfdir} \
 	${libdir}/gtk-2.0/${LIBV}/engines/libpixmap.so"
 

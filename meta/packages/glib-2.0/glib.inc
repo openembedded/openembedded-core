@@ -32,7 +32,7 @@ do_stage () {
 	install -m 0755 ${S}/glibconfig.h ${STAGING_INCDIR}/glib-2.0/glibconfig.h
 }
 
-FILES_${PN} = "${libdir}/lib*so.*"
+FILES_${PN} = "${libdir}/lib*${SOLIBS}"
 FILES_${PN}-dev += "${libdir}/glib-2.0/include"
 
 ARM_INSTRUCTION_SET = "arm"

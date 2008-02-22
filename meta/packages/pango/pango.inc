@@ -28,7 +28,7 @@ EXTRA_OECONF = "--disable-glibtest \
 LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.6.0"
 
-FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*.so.*"
+FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*${SOLIBS}"
 FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
 FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
