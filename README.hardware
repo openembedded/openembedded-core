@@ -44,7 +44,7 @@ The following consumer devices are supported by Poky:
 
 For more information see board's section below. The Poky MACHINE setting
 corresponding to the board is given in brackets.
-	
+
 Poky Boot CD (bootcdx86)
 ========================
 
@@ -119,7 +119,16 @@ IMAGE_FSTYPES=cpio.gz MACHINE=cm-x270 POKYLIBC=uclibc bitbake poky-image-minimal
 Compulab EM-X270 (em-x270)
 ==========================
 
-FIXME
+Fetch the "Linux - kernel and run-time image (Angstrom)" ZIP file from the
+Compulab website. Inside the images directory of this ZIP file is another ZIP
+file called 'LiveDisk.zip'. Extract this over a cleanly formatted vfat USB flash
+drive. Replace the 'em_x270.img' file with the 'updater-em-x270.ext2' file.
+
+Insert this USB disk into the supplied adapter and connect this to the
+board. Whilst holding down the the suspend button press the reset button. The
+board will now boot off the USB key and into a version of Angstrom. On the
+desktop is an icon labelled "Updater". Run this program to launch the updater
+that will flash the Poky kernel and rootfs to the board.
 
 
 FreeScale iMX31ADS (mx31ads)
