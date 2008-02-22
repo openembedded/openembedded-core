@@ -258,7 +258,9 @@ commands will boot a kernel called "mx31kern" from the TFTP server:
 Phytec phyCORE-iMX31 (mx31phy)
 ==============================
 
-FIXME
+Support for this board is currently being developed. Experimental jffs2 
+images and a suitable kernel are available and are known to work with the
+board.
 
 
                              Consumer Devices
