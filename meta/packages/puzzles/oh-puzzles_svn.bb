@@ -2,8 +2,9 @@ DESCRIPTION = "Portable Puzzle Collection"
 LICENSE = "MIT"
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
+
 PV = "0.1+svnr${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 bindir = "/usr/games"
 
@@ -40,5 +41,20 @@ STOP
     done
 }
 
-FILES_${PN} += "/usr/games/*"
+PACKAGES += ${PN}-extra
+RDEPENDS_${PN}-extra += "oh-puzzles"
+
+FILES_${PN} = "/usr/share/pixmaps /usr/share/oh-puzzles/"
 FILES_${PN}-dbg += "/usr/games/.debug/*"
+FILES_${PN}-extra = "/usr/games/ /usr/share/applications /etc/gconf/schemas"
+
+python __anonymous () {
+    import bb
+    var = bb.data.expand("FILES_${PN}", d, 1)
+    data = bb.data.getVar(var, d, 1)
+    for name in ("bridges", "fifteen", "inertia", "map", "mines", "samegame"):
+        data = data + " /usr/games/%s" % name
+        data = data + " /usr/share/applications/%s.desktop" % name
+        data = data + " /etc/gconf/schemas/%s.schemas" % name
+    bb.data.setVar(var, data, d)
+}
