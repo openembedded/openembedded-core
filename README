@@ -1,70 +1,15 @@
-Introduction
-==
+Poky
+====
 
-'Poky' is a combined cross build system and linux distribution based
-upon OpenEmbedded. It features support for building X11/Matchbox/GTK
-based filesystem images for various embedded devices and boards.
+Poky platform builder is a combined cross build system and development 
+environment. It features support for building X11/Matchbox/GTK based 
+filesystem images for various embedded devices and boards. It also 
+supports cross-architecture application development using QEMU emulation
+and a standalone toolchain and SDK with IDE integration.
 
+Poky has an extensive handbook, the source of which is contained in
+the handbook directory. For compiled HTML or pdf versions of this, 
+see the Poky website http://pokylinux.org.
 
-Required Packages
-===
-
-Running Poky on Debian based distributions requires the following
-extra packages be installed;
-
-build-essential
-diffstat
-texinfo
-texi2html
-cvs
-subversion
-gawk
-bochsbios (to run qemux86 images)
-
-You also need to install the qemu from http://debian.o-hand.com/. A
-poky-depends deb is also available from this source which will install 
-all the dependencies mentioned above for you.
-
-Alternatively poky can build qemu itself, but for this you need the
-following packages installed;
-
-gcc-3.4
-libsdl1.2-dev
-zlib1g-dev
-
-You will also need to comment out ASSUME_PROVIDED += "qemu-native"' in  
-build/conf/local.conf.
-
-Building under other distro's such as Fedora is known to work. Use the above
-package names as a guide for dependencies.
-
-Building An Image
-===
-
-Simply run;
-
-% source poky-init-build-env
-% bitbake poky-image-sato
-
-This will result in an ext2 image and kernel for qemu arm (see scripts dir).
-
-To build for other machine types see MACHINE in build/conf/local.conf
-
-Other image targets such as poky-image-sdk or poky-image-minimal are available, 
-see meta/packages/images/*.
-
-Notes:
-===
-
-Useful Links;
-
-OpenedHand
-http://openedhand.com
-
-Poky Homepage
-http://projects.o-hand.com/poky
-
-OE Homepage and wiki
-http://openembedded.org
- 
-                                         Copyright (C) 2006-2007 OpenedHand Ltd.
+Additional information on the specifics of hardware that Poky supports
+is available in README.hardware.
