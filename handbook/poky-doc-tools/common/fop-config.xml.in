@@ -1,0 +1,33 @@
+<configuration>
+  <entry>
+  <!--
+   Set the baseDir so common/openedhand.svg references in plans still
+   work ok. Note, relative file references to current dir should still work.
+   -->	
+    <key>baseDir</key>
+    <value>@datadir@</value>
+  </entry>
+  <fonts>
+    <font  metrics-file="@datadir@/common/VeraMono.xml"
+           kerning="yes" 
+           embed-file="@datadir@/common/VeraMono.ttf">
+      <font-triplet name="veramono" style="normal" weight="normal"/>
+    </font>
+
+    <font  metrics-file="@datadir@/common/VeraMoBd.xml"
+           kerning="yes" 
+           embed-file="@datadir@/common/VeraMoBd.ttf">
+      <font-triplet name="veramono" style="normal" weight="bold"/>
+    </font>
+
+    <font  metrics-file="@datadir@/common/Vera.xml"
+           kerning="yes" 
+           embed-file="@datadir@/common/Vera.ttf">
+     <font-triplet name="verasans" style="normal" weight="normal"/>
+     <font-triplet name="verasans" style="normal" weight="bold"/>
+     <font-triplet name="verasans" style="italic" weight="normal"/>
+     <font-triplet name="verasans" style="italic" weight="bold"/>
+    </font>
+
+  </fonts>
+</configuration>

@@ -1,0 +1,204 @@
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<appendix id='ref-varlocality'>
+    <title>Reference: Variable Locality (Distro, Machine, Recipe etc.)</title>
+
+    <para>
+        Whilst most variables can be used in almost any context (.conf, .bbclass, 
+        .inc or .bb file), variables are often associated with a particular 
+        locality/context. This section describes some common associations.
+    </para>
+
+    <section id='ref-varlocality-config-distro'>
+        <title>Distro Configuration</title>
+
+        <itemizedlist>
+            <listitem>
+                <para><glossterm linkend='var-DISTRO'><link linkend='var-DISTRO'>DISTRO</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-DISTRO_NAME'><link linkend='var-DISTRO_NAME'>DISTRO_NAME</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-DISTRO_VERSION'><link linkend='var-DISTRO_VERSION'>DISTRO_VERSION</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-MAINTAINER'><link linkend='var-MAINTAINER'>MAINTAINER</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-PACKAGE_CLASSES'><link linkend='var-PACKAGE_CLASSES'>PACKAGE_CLASSES</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-TARGET_OS'><link linkend='var-TARGET_OS'>TARGET_OS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-TARGET_FPU'><link linkend='var-TARGET_FPU'>TARGET_FPU</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-POKYMODE'><link linkend='var-POKYMODE'>POKYMODE</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-POKYLIBC'><link linkend='var-POKYLIBC'>POKYLIBC</link></glossterm></para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-varlocality-config-machine'>
+        <title>Machine Configuration</title>
+
+        <itemizedlist>
+            <listitem>
+                <para><glossterm linkend='var-TARGET_ARCH'><link linkend='var-TARGET_ARCH'>TARGET_ARCH</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-SERIAL_CONSOLE'><link linkend='var-SERIAL_CONSOLE'>SERIAL_CONSOLE</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-PACKAGE_EXTRA_ARCHS'><link linkend='var-PACKAGE_EXTRA_ARCHS'>PACKAGE_EXTRA_ARCHS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-IMAGE_FSTYPES'><link linkend='var-IMAGE_FSTYPES'>IMAGE_FSTYPES</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-ROOT_FLASH_SIZE'><link linkend='var-ROOT_FLASH_SIZE'>ROOT_FLASH_SIZE</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-MACHINE_FEATURES'><link linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-MACHINE_EXTRA_RDEPENDS'><link linkend='var-MACHINE_EXTRA_RDEPENDS'>MACHINE_EXTRA_RDEPENDS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-MACHINE_EXTRA_RRECOMMENDS'><link linkend='var-MACHINE_EXTRA_RRECOMMENDS'>MACHINE_EXTRA_RRECOMMENDS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-MACHINE_ESSENTIAL_RDEPENDS'><link linkend='var-MACHINE_ESSENTIAL_RDEPENDS'>MACHINE_ESSENTIAL_RDEPENDS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-MACHINE_ESSENTIAL_RRECOMMENDS'><link linkend='var-MACHINE_ESSENTIAL_RRECOMMENDS'>MACHINE_ESSENTIAL_RRECOMMENDS</link></glossterm></para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-varlocality-config-local'>
+        <title>Local Configuration (local.conf)</title>
+        <itemizedlist>
+            <listitem>
+                <para><glossterm linkend='var-DISTRO'><link linkend='var-DISTRO'>DISTRO</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-MACHINE'><link linkend='var-MACHINE'>MACHINE</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-DL_DIR'><link linkend='var-DL_DIR'>DL_DIR</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-BBFILES'><link linkend='var-BBFILES'>BBFILES</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-IMAGE_FEATURES'><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-PACKAGE_CLASSES'><link linkend='var-PACKAGE_CLASSES'>PACKAGE_CLASSES</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-BB_NUMBER_THREADS'><link linkend='var-BB_NUMBER_THREADS'>BB_NUMBER_THREADS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-BBINCLUDELOGS'><link linkend='var-BBINCLUDELOGS'>BBINCLUDELOGS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-CVS_TARBALL_STASH'><link linkend='var-CVS_TARBALL_STASH'>CVS_TARBALL_STASH</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm linkend='var-ENABLE_BINARY_LOCALE_GENERATION'><link linkend='var-ENABLE_BINARY_LOCALE_GENERATION'>ENABLE_BINARY_LOCALE_GENERATION</link></glossterm></para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-varlocality-recipe-required'>
+        <title>Recipe Variables - Required</title>
+
+        <itemizedlist>
+            <listitem>
+                <para><glossterm><link linkend='var-DESCRIPTION'>DESCRIPTION</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-LICENSE'>LICENSE</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-SECTION'>SECTION</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-HOMEPAGE'>HOMEPAGE</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-AUTHOR'>AUTHOR</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm></para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-varlocality-recipe-dependencies'>
+        <title>Recipe Variables - Dependencies</title>
+
+        <itemizedlist>
+            <listitem>
+                <para><glossterm><link linkend='var-DEPENDS'>DEPENDS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-RDEPENDS'>RDEPENDS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-RRECOMMENDS'>RRECOMMENDS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-RCONFLICTS'>RCONFLICTS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-RREPLACES'>RREPLACES</link></glossterm></para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-varlocality-recipe-paths'>
+        <title>Recipe Variables - Paths</title>
+
+        <itemizedlist>
+            <listitem>
+                <para><glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-S'>S</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-FILES'>FILES</link></glossterm></para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-varlocality-recipe-build'>
+        <title>Recipe Variables - Extra Build Information</title>
+
+        <itemizedlist>
+            <listitem>
+                <para><glossterm><link linkend='var-EXTRA_OECONF'>EXTRA_OECONF</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-EXTRA_OEMAKE'>EXTRA_OEMAKE</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-PACKAGES'>PACKAGES</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-DEFAULT_PREFERENCE'>DEFAULT_PREFERENCE</link></glossterm></para>
+            </listitem>
+        </itemizedlist>
+    </section>
+</appendix>
+<!-- 
+vim: expandtab tw=80 ts=4 spell spelllang=en_gb
+-->

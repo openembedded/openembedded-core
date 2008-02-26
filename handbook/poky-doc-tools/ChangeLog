@@ -1,0 +1,30 @@
+2008-02-15  Matthew Allum  <mallum@openedhand.com>
+
+	* common/Makefile.am:
+	* common/poky-handbook.png:
+        Add a PNG image for the manual. Seems our logo SVG
+        is too complex/transparent for PDF
+
+2008-02-14  Matthew Allum  <mallum@openedhand.com>
+
+	* common/Makefile.am:
+	* common/fop-config.xml.in:
+	* common/poky-db-pdf.xsl:
+	* poky-docbook-to-pdf.in:
+        Font tweakage.
+
+2008-01-27  Matthew Allum  <mallum@openedhand.com>
+
+	* INSTALL:
+	* Makefile.am:
+	* README:
+	* autogen.sh:
+	* common/Makefile.am:
+	* common/fop-config.xml.in:
+	* common/ohand-color.svg:
+	* common/poky-db-pdf.xsl:
+	* common/poky.svg:
+	* common/titlepage.templates.xml:
+	* configure.ac:
+	* poky-docbook-to-pdf.in:
+	Initial import.

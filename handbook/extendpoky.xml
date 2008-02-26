@@ -1,0 +1,726 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<chapter id='extendpoky'>
+
+<title>Extending Poky</title>
+
+    <para>
+        This section gives information about how to extend the functionality
+        already present in Poky, documenting standard tasks such as adding new
+        software packages, extending or customising images or porting poky to
+        new hardware (adding a new machine). It also contains advice about how
+        to manage the process of making changes to Poky to achieve best results.
+    </para>
+
+    <section id='usingpoky-extend-addpkg'>
+        <title>Adding a Package</title>
+
+        <para>
+            To add package into Poky you need to write a recipe for it. 
+            Writing a recipe means creating a .bb file which sets various
+            variables. The variables
+            useful for recipes are detailed in the <link linkend='ref-varlocality-recipe-required'>
+                recipe reference</link> section along with more detailed information 
+            about issues such as recipe naming.
+        </para>
+
+        <para>
+            The simplest way to add a new package is to base it on a similar
+            pre-existing recipe. There are some examples below of how to add 
+            standard types of packages:
+        </para>
+
+        <section id='usingpoky-extend-addpkg-singlec'>
+            <title>Single .c File Package (Hello World!)</title>
+
+            <para>
+                To build an application from a single file stored locally requires a
+                recipe which has the file listed in the <glossterm><link
+                linkend='var-SRC_URI'>SRC_URI</link></glossterm> variable. In addition 
+                the <function>do_compile</function> and <function>do_install</function> 
+                tasks need to be manually written. The <glossterm><link linkend='var-S'>
+                S</link></glossterm> variable defines the directory containing the source 
+                code which in this case is set equal to <glossterm><link linkend='var-WORKDIR'>
+                WORKDIR</link></glossterm>, the directory BitBake uses for the build.
+            </para>
+            <programlisting>
+DESCRIPTION = "Simple helloworld application"
+SECTION = "examples"
+LICENSE = "MIT"
+
+SRC_URI = "file://helloworld.c"
+
+S = "${WORKDIR}"
+
+do_compile() {
+	${CC} helloworld.c -o helloworld
+}
+
+do_install() {
+	install -d ${D}${bindir}
+	install -m 0755 helloworld ${D}${bindir}
+}
+            </programlisting>
+
+            <para>
+                As a result of the build process "helloworld" and "helloworld-dbg"
+                packages will be built.
+            </para>
+        </section>
+
+        <section id='usingpoky-extend-addpkg-autotools'>
+            <title>Autotooled Package</title>
+
+            <para>
+                Applications which use autotools (autoconf, automake)
+                require a recipe which has a source archive listed in 
+                <glossterm><link
+                        linkend='var-SRC_URI'>SRC_URI</link></glossterm> and 
+                <command>inherit autotools</command> to instruct BitBake to use the
+                <filename>autotools.bbclass</filename> which has 
+                definitions of all the steps
+                needed to build an autotooled application.
+                The result of the build will be automatically packaged and if
+                the application uses NLS to localise then packages with
+                locale information will be generated (one package per
+                language).
+            </para>
+
+            <programlisting>
+DESCRIPTION = "GNU Helloworld application"
+SECTION = "examples"
+LICENSE = "GPLv2"
+
+SRC_URI = "${GNU_MIRROR}/hello/hello-${PV}.tar.bz2"
+
+inherit autotools
+            </programlisting>
+
+        </section>
+
+        <section id='usingpoky-extend-addpkg-makefile'>
+            <title>Makefile-Based Package</title>
+
+            <para>
+                Applications which use GNU make require a recipe which has
+                the source archive listed in <glossterm><link
+                        linkend='var-SRC_URI'>SRC_URI</link></glossterm>. 
+                Adding a <function>do_compile</function> step
+                is not needed as by default BitBake will start the "make"
+                command to compile the application. If there is a need for
+                additional options to make then they should be stored in the
+                <glossterm><link
+                        linkend='var-EXTRA_OEMAKE'>EXTRA_OEMAKE</link></glossterm> variable - BitBake 
+                will pass them into the GNU
+                make invocation. A <function>do_install</function> task is required
+                - otherwise BitBake will run an empty <function>do_install</function> 
+                task by default. 
+            </para>
+
+            <para>
+                Some applications may require extra parameters to be passed to
+                the compiler, for example an additional header path. This can
+                be done buy adding to the <glossterm><link
+                        linkend='var-CFLAGS'>CFLAGS</link></glossterm> variable, as in the example below.
+            </para>
+
+            <programlisting>
+DESCRIPTION = "Tools for managing memory technology devices."
+SECTION = "base"
+DEPENDS = "zlib"
+HOMEPAGE = "http://www.linux-mtd.infradead.org/"
+LICENSE = "GPLv2"
+
+SRC_URI = "ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-${PV}.tar.gz"
+
+CFLAGS_prepend = "-I ${S}/include "
+
+do_install() {
+	oe_runmake install DESTDIR=${D}
+}
+            </programlisting>
+
+        </section>
+
+        <section id='usingpoky-extend-addpkg-files'>
+            <title>Controlling packages content</title>
+
+            <para>                        
+                The variables <glossterm><link
+                        linkend='var-PACKAGES'>PACKAGES</link></glossterm> and 
+                <glossterm><link linkend='var-FILES'>FILES</link></glossterm> are used to split an
+                application into multiple packages.
+            </para>
+
+            <para>
+                Below the "libXpm" recipe is used as an example. By
+                default the "libXpm" recipe generates one package 
+                which contains the library
+                and also a few binaries. The recipe can be adapted to 
+                split the binaries into separate packages.
+            </para>
+
+            <programlisting>
+require xorg-lib-common.inc
+
+DESCRIPTION = "X11 Pixmap library"
+LICENSE = "X-BSD"
+DEPENDS += "libxext"
+PE = "1"
+
+XORG_PN = "libXpm"
+
+PACKAGES =+ "sxpm cxpm"
+FILES_cxpm = "${bindir}/cxpm"
+FILES_sxpm = "${bindir}/sxpm"
+            </programlisting>
+
+            <para>
+                In this example we want to ship the "sxpm" and "cxpm" binaries 
+                in separate packages. Since "bindir" would be packaged into the 
+                main <glossterm><link linkend='var-PN'>PN</link></glossterm> 
+                package as standard we prepend the <glossterm><link
+                linkend='var-PACKAGES'>PACKAGES</link></glossterm> variable so
+                additional package names are added to the start of list. The 
+                extra <glossterm><link linkend='var-PN'>FILES</link></glossterm>_*
+                variables then contain information to specify which files and
+                directories goes into which package. 
+            </para>
+        </section>
+
+        <section id='usingpoky-extend-addpkg-postinstalls'>
+            <title>Post Install Scripts</title>
+
+            <para>
+                To add a post-installation script to a package, add
+                a <function>pkg_postinst_PACKAGENAME()</function> 
+                function to the .bb file
+                where PACKAGENAME is the name of the package to attach
+                the postinst script to. A post-installation function has the following structure:
+            </para>
+            <programlisting>
+pkg_postinst_PACKAGENAME () {
+#!/bin/sh -e
+# Commands to carry out
+}
+            </programlisting>
+            <para>
+                The script defined in the post installation function
+                gets called when the rootfs is made. If the script succeeds,
+                the package is marked as installed. If the script fails,
+                the package is marked as unpacked and the script will be
+                executed again on the first boot of the image.
+            </para>
+
+            <para>
+                Sometimes it is necessary that the execution of a post-installation
+                script is delayed until the first boot, because the script 
+                needs to be executed the device itself.  To delay script execution
+                until boot time, the post-installation function should have the
+                following structure:
+            </para>
+            
+            <programlisting>
+pkg_postinst_PACKAGENAME () {
+#!/bin/sh -e
+if [ x"$D" = "x" ]; then
+# Actions to carry out on the device go here
+else
+exit 1
+fi
+}
+            </programlisting>
+            
+            <para>
+                The structure above delays execution until first boot 
+                because the <glossterm><link
+                        linkend='var-D'>D</link></glossterm> variable points
+                to the 'image'
+                directory when the rootfs is being made at build time but
+                is unset when executed on the first boot. 
+            </para>
+        </section>
+
+    </section>
+
+    <section id='usingpoky-extend-customimage'>
+        <title>Customising Images</title>
+
+        <para>
+        Poky images can be customised to satisfy 
+        particular requirements. Several methods are detailed below 
+        along with guidelines of when to use them.
+        </para>
+
+        <section id='usingpoky-extend-customimage-custombb'>
+            <title>Customising Images through a custom image .bb files</title>
+
+            <para>
+                One way to get additional software into an image is by creating a
+                custom image. The recipe will contain two lines:
+            </para>
+
+            <programlisting>
+IMAGE_INSTALL = "task-poky-x11-base package1 package2"
+
+inherit poky-image
+            </programlisting>
+
+            <para>
+                By creating a custom image, a developer has total control
+                over the contents of the image. It is important use 
+                the correct names of packages in the <glossterm><link
+                linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm> variable. 
+                The names must be in 
+                the OpenEmbedded notation instead of Debian notation, for example
+                "glibc-dev" instead of "libc6-dev" etc.
+            </para>
+
+            <para>
+                The other method of creating a new image is by modifying
+                an existing image. For example if a developer wants to add
+                "strace" into "poky-image-sato" the following recipe can
+                be used:
+            </para>
+
+            <programlisting>
+require poky-image-sato.bb
+
+IMAGE_INSTALL += "strace"
+            </programlisting>
+
+        </section>
+
+        <section id='usingpoky-extend-customimage-customtasks'>
+            <title>Customising Images through custom tasks</title>
+
+            <para>
+                For for complex custom images, the best approach is to create a custom 
+                task package which is them used to build the image (or images). A good
+                example of a tasks package is <filename>meta/packages/tasks/task-poky.bb
+                </filename>. The <glossterm><link linkend='var-PACKAGES'>PACKAGES</link></glossterm> 
+                variable lists the task packages to build (along with the complimentary
+                -dbg and -dev packages). For each package added,
+                <glossterm><link linkend='var-PACKAGES'>RDEPENDS</link></glossterm> and
+                <glossterm><link linkend='var-PACKAGES'>RRECOMMENDS</link></glossterm> 
+                entries can then be added each containing a list of packages the parent 
+                task package should contain. An example would be:
+            </para>
+
+            <para>
+            <programlisting>
+DESCRIPTION = "My Custom Tasks"
+
+PACKAGES = "\
+    task-custom-apps \
+    task-custom-apps-dbg \
+    task-custom-apps-dev \
+    task-custom-tools \
+    task-custom-tools-dbg \
+    task-custom-tools-dev \
+    "
+
+RDEPENDS_task-custom-apps = "\
+    dropbear \
+    portmap \
+    psplash"
+
+RDEPENDS_task-custom-tools = "\
+    oprofile \
+    oprofileui-server \
+    lttng-control \
+    lttng-viewer"
+
+RRECOMMENDS_task-custom-tools = "\
+    kernel-module-oprofile"
+</programlisting>
+            </para>
+
+            <para>
+                In this example, two tasks packages are created, task-custom-apps and 
+                task-custom-tools with the dependencies and recommended package dependencies 
+                listed. To build an image using these task packages, you would then add 
+                "task-custom-apps" and/or "task-custom-tools" to <glossterm><link 
+                linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm> or other forms 
+                of image dependencies as described in other areas of this section.
+            </para>
+        </section>
+
+        <section id='usingpoky-extend-customimage-imagefeatures'>
+            <title>Customising Images through custom <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm></title>
+
+            <para>
+                Ultimately users may want to add extra image "features" as used by Poky with the 
+                <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
+                variable. To create these, the best reference is <filename>meta/classes/poky-image.bbclass</filename>
+                which illustrates how poky achieves this. In summary, the file looks at the contents of the 
+                <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
+                variable and based on this generates the <glossterm><link linkend='var-IMAGE_INSTALL'>
+                IMAGE_INSTALL</link></glossterm> variable automatically. Extra features can be added by 
+                extending the class or creating a custom class for use with specialised image .bb files.
+            </para>
+        </section>
+
+        <section id='usingpoky-extend-customimage-localconf'>
+            <title>Customising Images through local.conf</title>
+
+            <para>
+                It is possible to customise image contents by abusing
+                variables used by distribution maintainers in local.conf.
+                This method only allows the addition of packages and 
+                is not recommended.
+            </para>
+
+            <para>
+                To add an "strace" package into the image the following is 
+                added to local.conf:
+            </para>
+
+            <programlisting>
+DISTRO_EXTRA_RDEPENDS += "strace"
+            </programlisting>
+
+            <para>
+                However, since the <glossterm><link linkend='var-DISTRO_EXTRA_RDEPENDS'>
+                DISTRO_EXTRA_RDEPENDS</link></glossterm> variable is for
+                distribution maintainers this method does not make
+                adding packages as simple as a custom .bb file. Using
+                this method, a few packages will need to be recreated
+                and the the image built.
+            </para>
+            <programlisting>
+bitbake -cclean task-boot task-base task-poky
+bitbake poky-image-sato
+            </programlisting>
+
+            <para>
+                Cleaning task-* packages is required because they use the
+                <glossterm><link linkend='var-DISTRO_EXTRA_RDEPENDS'>
+                DISTRO_EXTRA_RDEPENDS</link></glossterm> variable. There is no need to
+                build them by hand as Poky images depend on the packages they contain so
+                dependencies will be built automatically. For this reason we don't use the
+                "rebuild" task in this case since "rebuild" does not care about
+                dependencies - it only rebuilds the specified package.
+            </para>
+
+        </section>
+
+    </section>
+
+<section id="platdev-newmachine">
+    <title>Porting Poky to a new machine</title>
+    <para>
+        Adding a new machine to Poky is a straightforward process and
+        this section gives an idea of the changes that are needed. This guide is
+        meant to cover adding machines similar to those Poky already supports. 
+        Adding a totally new architecture might require gcc/glibc changes as 
+        well as updates to the site information and, whilst well within Poky's 
+        capabilities, is outside the scope of this section.
+    </para>
+
+    <section id="platdev-newmachine-conffile">
+        <title>Adding the machine configuration file</title>
+        <para>
+            A .conf file needs to be added to conf/machine/ with details of the
+            device being added. The name of the file determines the name Poky will
+            use to reference this machine.
+        </para>
+
+        <para>
+            The most important variables to set in this file are <glossterm>
+            <link linkend='var-TARGET_ARCH'>TARGET_ARCH</link></glossterm> 
+            (e.g. "arm"), <glossterm><link linkend='var-PREFERRED_PROVIDER'>
+            PREFERRED_PROVIDER</link></glossterm>_virtual/kernel (see below) and 
+            <glossterm><link linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES
+            </link></glossterm> (e.g. "kernel26 apm screen wifi"). Other variables
+            like <glossterm><link linkend='var-SERIAL_CONSOLE'>SERIAL_CONSOLE
+            </link></glossterm> (e.g. "115200 ttyS0"), <glossterm> 
+            <link linkend='var-KERNEL_IMAGETYPE'>KERNEL_IMAGETYPE</link>
+            </glossterm> (e.g. "zImage") and <glossterm><link linkend='var-IMAGE_FSTYPES'>
+            IMAGE_FSTYPES</link></glossterm> (e.g. "tar.gz jffs2") might also be 
+            needed. Full details on what these variables do and the meaning of
+            their contents is available through the links.
+        </para>
+    </section>
+
+    <section id="platdev-newmachine-kernel">
+        <title>Adding a kernel for the machine</title>
+        <para>
+             Poky needs to be able to build a kernel for the machine. You need 
+             to either create a new kernel recipe for this machine or extend an 
+             existing recipe. There are plenty of kernel examples in the 
+             packages/linux directory which can be used as references.
+        </para>
+        <para>
+             If creating a new recipe  the "normal" recipe writing rules apply 
+             for setting up a <glossterm><link linkend='var-SRC_URI'>SRC_URI
+             </link></glossterm> including any patches and setting <glossterm>
+             <link linkend='var-S'>S</link></glossterm> to point at the source 
+             code. You will need to create a configure task which configures the 
+             unpacked kernel with a defconfig be that through a "make defconfig" 
+             command or more usually though copying in a suitable defconfig and 
+             running "make oldconfig". By making use of "inherit kernel" and also 
+             maybe some of the linux-*.inc files, most other functionality is 
+             centralised and the the defaults of the class normally work well.
+        </para>
+        <para>
+            If extending an existing kernel it is usually a case of adding a 
+            suitable defconfig file in a location similar to that used by other 
+            machine's defconfig files in a given kernel, possibly listing it in
+            the SRC_URI and adding the machine to the expression in <glossterm>
+            <link linkend='var-COMPATIBLE_MACHINES'>COMPATIBLE_MACHINES</link>
+            </glossterm>.
+        </para>
+    </section>
+
+    <section id="platdev-newmachine-formfactor">
+        <title>Adding a formfactor configuration file</title>
+        <para>
+            A formfactor configuration file provides information about the 
+            target hardware on which Poky is running, and that Poky cannot 
+            obtain from other sources such as the kernel.  Some examples of 
+            information contained in a formfactor configuration file include 
+            framebuffer orientation, whether or not the system has a keyboard, 
+            the positioning of the keyboard in relation to the screen, and 
+            screen resolution.
+        </para>
+        <para>
+            Sane defaults should be used in most cases, but if customisation is 
+            necessary you need to create a <filename>machconfig</filename> file 
+            under <filename>meta/packages/formfactor/files/MACHINENAME/</filename>
+            where <literal>MACHINENAME</literal> is the name for which this infomation
+            applies. For information about the settings available and the defaults, please see 
+            <filename>meta/packages/formfactor/files/config</filename>.
+        </para>
+    </section>
+</section>
+
+<section id='usingpoky-changes'>
+        <title>Making and Maintaining Changes</title>
+
+        <para>
+            We recognise that people will want to extend/configure/optimise Poky for
+            their specific uses, especially due to the extreme configurability and 
+            flexibility Poky offers. To ensure ease of keeping pace with future 
+            changes in Poky we recommend making changes to Poky in a controlled way.
+        </para>
+        <para>
+            Poky supports the idea of <link
+                linkend='usingpoky-changes-collections'>"collections"</link> which when used
+            properly can massively ease future upgrades and allow segregation
+            between the Poky core and a given developer's changes. Some other advice on 
+            managing changes to Poky is also given in the following section.
+        </para>
+
+        <section id="usingpoky-changes-collections">
+            <title>Bitbake Collections</title>
+
+            <para>
+                Often, people want to extend Poky either through adding packages
+                or overriding files contained within Poky to add their own
+                functionality. Bitbake has a powerful mechanism called
+                collections which provide a way to handle this which is fully
+                supported and actively encouraged within Poky.
+            </para>
+            <para>
+                In the standard tree, meta-extras is an example of how you can
+                do this. As standard the data in meta-extras is not used on a
+                Poky build but local.conf.sample shows how to enable it:
+            </para>
+            <para>
+                <literallayout class='monospaced'>
+BBFILES := "${OEROOT}/meta/packages/*/*.bb ${OEROOT}/meta-extras/packages/*/*.bb"
+BBFILE_COLLECTIONS = "normal extras"
+BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
+BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
+BBFILE_PRIORITY_normal = "5"
+BBFILE_PRIORITY_extras = "5"</literallayout>
+            </para>
+            <para>
+                As can be seen, the extra recipes are added to BBFILES. The
+                BBFILE_COLLECTIONS variable is then set to contain a list of
+                collection names. The BBFILE_PATTERN variables are regular
+                expressions used to match files from BBFILES into a particular
+                collection in this case by using the base pathname. 
+                The BBFILE_PRIORITY variable then assigns the different
+                priorities to the files in different collections. This is useful
+                in situations where the same package might appear in both
+                repositories and allows you to choose which collection should
+                'win'.
+            </para>
+            <para>
+                This works well for recipes. For bbclasses and configuration
+                files, you can use the BBPATH environment variable. In this
+                case, the first file with the matching name found in BBPATH is
+                the one that is used, just like the PATH variable for binaries.
+            </para>
+        </section>
+
+
+        <section id='usingpoky-changes-commits'>
+            <title>Committing Changes</title>
+
+            <para>
+                Modifications to Poky are often managed under some kind of source
+                revision control system. The policy for committing to such systems
+                is important as some simple policy can significantly improve 
+                usability. The tips below are based on the policy that OpenedHand 
+                uses for commits to Poky.
+            </para>
+
+            <para>
+                It helps to use a consistent style for commit messages when committing 
+                changes. We've found a style where the first line of a commit message 
+                summarises the change and starts with the name of any package affected
+                work well. Not all changes are to specific packages so the prefix could 
+                also be a machine name or class name instead. If a change needs a longer 
+                description this should follow the summary.
+            </para>
+
+            <para>
+                Any commit should be self contained in that it should leave the 
+                metadata in a consistent state, buildable before and after the 
+                commit. This helps ensure the autobuilder test results are valid 
+                but is good practice regardless.
+            </para>
+        </section>
+
+        <section id='usingpoky-changes-prbump'>
+            <title>Package Revision Incrementing</title>
+
+            <para>
+                If a committed change will result in changing the package output
+                then the value of the <glossterm><link linkend='var-PR'>PR</link>
+                </glossterm> variable needs to be increased (commonly referred to 
+                as 'bumped') as part of that commit. Only integer values are used
+                and <glossterm><link linkend='var-PR'>PR</link></glossterm> = 
+                "r0" should not be added into new recipes as this is default value.
+                When upgrading the version of a package (<glossterm><link 
+                linkend='var-PV'>PV</link></glossterm>), the <glossterm><link 
+                linkend='var-PR'>PR</link></glossterm> variable should be removed.
+            </para>
+
+            <para>
+                The aim is that the package version will only ever increase. If 
+                for some reason <glossterm><link linkend='var-PV'>PV</link></glossterm> 
+                will change and but not increase, the <glossterm><link 
+                linkend='var-PE'>PE</link></glossterm> (Package Epoch) can 
+                be increased (it defaults to '0'). The version numbers aim to 
+                follow the <ulink url='http://www.debian.org/doc/debian-policy/ch-controlfields.html'>
+                Debian Version Field Policy Guidelines</ulink> which define how 
+                versions are compared and hence what "increasing" means.
+            </para>
+
+            <para>
+                There are two reasons for doing this, the first is to ensure that 
+                when a developer updates and rebuilds, they get all the changes to
+                the repository and don't have to remember to rebuild any sections.
+                The second is to ensure that target users are able to upgrade their
+                devices via their package manager such as with the <command>
+                ipkg update;ipkg upgrade</command> commands (or similar for 
+                dpkg/apt or rpm based systems). The aim is to ensure Poky has 
+                upgradable packages in all cases.
+            </para>
+        </section>
+    </section>
+
+    <section id='usingpoky-modifing-packages'>
+        <title>Modifying Package Source Code</title>
+
+        <para>
+            Poky is usually used to build software rather than modifying
+            it. However, there are ways Poky can be used to modify software. 
+        </para>
+
+        <para>
+            During building, the sources are available in <glossterm><link
+                    linkend='var-WORKDIR'>WORKDIR</link></glossterm> directory.
+            Where exactly this is depends on the type of package and the
+            architecture of target device. For a standard recipe not
+            related to <glossterm><link
+                    linkend='var-MACHINE'>MACHINE</link></glossterm> it will be
+            <filename>tmp/work/PACKAGE_ARCH-poky-TARGET_OS/PN-PV-PR/</filename>.
+            Target device dependent packages use <glossterm><link
+                    linkend='var-MACHINE'>MACHINE
+            </link></glossterm> 
+            instead of <glossterm><link linkend='var-PACKAGE_ARCH'>PACKAGE_ARCH
+            </link></glossterm> 
+            in the directory name.
+        </para>
+
+        <tip>
+            <para>
+                Check the package recipe sets the <glossterm><link
+                        linkend='var-S'>S</link></glossterm> variable to something
+            other than standard <filename>WORKDIR/PN-PV/</filename> value.
+            </para>
+        </tip>
+        <para>
+            After building a package, a user can modify the package source code
+            without problem. The easiest way to test changes is by calling the
+            "compile" task:
+        </para>
+
+        <programlisting>
+bitbake --cmd compile --force NAME_OF_PACKAGE
+        </programlisting>
+
+        <para>
+            Other tasks may also be called this way.
+        </para>
+
+        <section id='usingpoky-modifying-packages-quilt'>
+            <title>Modifying Package Source Code with quilt</title>
+
+            <para>
+                By default Poky uses <ulink
+                    url='http://savannah.nongnu.org/projects/quilt'>quilt</ulink>
+                to manage patches in <function>do_patch</function> task. 
+                It is a powerful tool which can be used to track all
+                modifications done to package sources.
+            </para>
+
+            <para>
+                Before modifying source code it is important to
+                notify quilt so it will track changes into new patch
+                file:
+                <programlisting>
+quilt new NAME-OF-PATCH.patch
+                </programlisting>
+
+                Then add all files which will be modified into that
+                patch:
+                <programlisting>
+quilt add file1 file2 file3
+                </programlisting>
+
+                Now start editing. At the end quilt needs to be used
+                to generate final patch which will contain all
+                modifications:
+                <programlisting>
+quilt refresh
+                </programlisting>
+
+                The resulting patch file can be found in the
+                <filename class="directory">patches/</filename> subdirectory of the source 
+                (<glossterm><link linkend='var-S'>S</link></glossterm>) directory. For future builds it
+                should be copied into
+                Poky metadata and added into <glossterm><link
+                        linkend='var-SRC_URI'>SRC_URI</link></glossterm> of a recipe:
+                <programlisting>
+SRC_URI += "file://NAME-OF-PATCH.patch;patch=1"
+                </programlisting>
+
+                This also requires a bump of <glossterm><link
+                        linkend='var-PR'>PR</link></glossterm> value in the same recipe as we changed resulting packages.
+            </para>
+
+        </section>
+
+</section>
+
+</chapter>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

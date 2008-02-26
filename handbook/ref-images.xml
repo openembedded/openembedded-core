@@ -1,0 +1,69 @@
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<appendix id='ref-images'>
+    <title>Reference: Images</title>
+
+    <para>
+        Poky has several standard images covering most people's standard needs. A full 
+        list of image targets can be found by looking in the <filename class="directory">
+        meta/packages/images/</filename> directory. The standard images are listed below 
+        along with details of what they contain:
+    </para>
+
+    <itemizedlist>
+            <listitem>
+                <para>
+                    <emphasis>poky-image-minimal</emphasis> - A small image, just enough 
+                    to allow a device to boot
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>poky-image-base</emphasis> - console only image with full
+                    support of target device hardware
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>poky-image-core</emphasis> - X11 image with simple apps like
+                    terminal, editor and file manager
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>poky-image-sato</emphasis> - X11 image with Sato theme and
+                    Pimlico applications. Also contains terminal, editor and file manager.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>poky-image-sdk</emphasis> - X11 image like poky-image-sato but
+                    also include native toolchain and libraries needed to build applications 
+                    on the device itself. Also includes testing and profiling tools and debug
+                    symbols.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>meta-toolchain</emphasis> - This generates a tarball containing
+                    a standalone toolchain which can be used externally to Poky. It is self
+                    contained and unpacks to the <filename class="directory">/usr/local/poky</filename>
+                    directory. It also contains a copy of QEMU and the scripts neccessary to run 
+                    poky QEMU images.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>meta-toolchain-sdk</emphasis> - This includes everything in 
+                    meta-toolchain but also includes development headers and libraries
+                    forming a complete standalone SDK. See the <link linkend='platdev-appdev-external-sdk'> 
+                    Developing using the Poky SDK</link> and <link linkend='platdev-appdev-external-anjuta'>
+                    Developing using the Anjuta Plugin</link> sections for more information.
+                </para>
+            </listitem>
+    </itemizedlist>
+</appendix>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

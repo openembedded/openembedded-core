@@ -1,0 +1,92 @@
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<appendix id='resources'>
+<title>Contributing to Poky</title>
+
+<section id='resources-intro'>
+    <title>Introduction</title>
+    <para>
+        We're happy for people to experiment with Poky and there are a number of places to
+        find help if you run into difficulties or find bugs. To find out how to download
+        source code see the <link linkend='intro-getit'>Obtaining Poky</link> section of
+        the Introduction.
+    </para>
+</section>
+
+<section id='resources-bugtracker'>
+    <title>Bugtracker</title>
+
+    <para>
+        Problems with Poky should be reported in the 
+        <ulink url='http://bugzilla.o-hand.com/'>bug tracker</ulink>.
+    </para>
+</section>
+
+<section id='resources-mailinglist'>
+    <title>Mailing list</title>
+
+    <para>
+        To subscribe to the mailing list send mail to:
+    </para>
+    <para>
+        <literallayout class='monospaced'>
+poky+subscribe &lt;at&gt; openedhand &lt;dot&gt; com
+        </literallayout>
+    </para>
+    <para>
+        Then follow the simple instructions in subsequent reply. Archives are
+        available <ulink
+            url="http://lists.o-hand.com/poky/">here</ulink>.
+    </para>
+</section>
+
+<section id='resources-irc'>
+    <title>IRC</title>
+
+    <para> 
+        Join #poky on freenode.
+    </para>
+</section>
+
+<section id='resources-links'>
+    <title>Links</title>
+
+    <itemizedlist>
+        <listitem><para>
+            <ulink url='http://pokylinux.org'>The Poky website</ulink> 
+        </para></listitem>
+        <listitem><para>
+            <ulink url='http://www.openedhand.com/'>OpenedHand</ulink> - The
+            company behind Poky.
+        </para></listitem>
+        <listitem><para>
+            <ulink url='http://www.openembedded.org/'>OpenEmbedded</ulink>
+            - The upstream generic embedded distribution Poky derives
+            from (and contributes to).
+        </para></listitem>
+        <listitem><para>
+            <ulink url='http://developer.berlios.de/projects/bitbake/'>Bitbake</ulink>
+            - The tool used to process Poky metadata.
+        </para></listitem>
+        <listitem><para>
+            <ulink url='http://bitbake.berlios.de/manual/'>Bitbake User
+                Manual</ulink>
+        </para></listitem>
+        <listitem><para>
+            <ulink url='http://pimlico-project.org/'>Pimlico</ulink> - A
+            suite of lightweight Personal Information Management (PIM)
+            applications designed primarily for handheld and mobile
+            devices.
+        </para></listitem>
+        <listitem><para>
+            <ulink url='http://fabrice.bellard.free.fr/qemu/'>QEMU</ulink>
+            - An open source machine emulator and virtualizer.
+        </para></listitem>
+    </itemizedlist>
+</section>
+
+</appendix>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

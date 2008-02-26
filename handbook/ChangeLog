@@ -1,0 +1,29 @@
+2008-02-15  Matthew Allum  <mallum@openedhand.com>
+
+	* introduction.xml:
+        Minor tweaks to 'What is Poky'
+
+2008-02-15  Matthew Allum  <mallum@openedhand.com>
+
+	* poky-handbook.xml:
+        * poky-handbook.png
+        * poky-beaver.png
+	* poky-logo.svg:
+	* style.css:
+        Add some title images.
+
+2008-02-14  Matthew Allum  <mallum@openedhand.com>
+
+	* development.xml:
+        remove uri's
+	* style.css:
+        Fix glossary
+
+2008-02-06  Matthew Allum  <mallum@openedhand.com>
+
+	* Makefile:
+        Add various xslto options for html.
+	* introduction.xml:
+        Remove link in title.
+	* style.css:
+        Add initial version

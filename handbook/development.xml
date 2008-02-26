@@ -1,0 +1,815 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<chapter id="platdev">
+<title>Platform Development with Poky</title>
+
+<section id="platdev-appdev">
+    <title>Software development</title>
+    <para>
+        Poky supports several methods of software development. These different
+        forms of development are explained below and can be switched
+        between as needed.
+    </para>
+
+    <section id="platdev-appdev-external-sdk">
+        <title>Developing externally using the Poky SDK</title>
+
+        <para>
+            The meta-toolchain and meta-toolchain-sdk targets (<link linkend='ref-images'>see
+            the images section</link>) build tarballs which contain toolchains and 
+            libraries suitable for application development outside Poky. These unpack into the 
+            <filename class="directory">/usr/local/poky</filename> directory and contain
+            a setup script, e.g. 
+            <filename>/usr/local/poky/eabi-glibc/arm/environment-setup</filename> which
+            can be sourced to initialise a suitable environment. After sourcing this, the 
+            compiler, QEMU scripts, QEMU binary, a special version of pkgconfig and other 
+            useful utilities are added to the PATH. Variables to assist pkgconfig and 
+            autotools are also set so that, for example, configure can find pre-generated test 
+            results for tests which need target hardware to run.
+        </para>
+
+        <para>
+            Using the toolchain with autotool enabled packages is straightforward, just pass the 
+            appropriate host option to configure e.g. "./configure --host=arm-poky-linux-gnueabi".
+            For other projects it is usually a case of ensuring the cross tools are used e.g.
+            CC=arm-poky-linux-gnueabi-gcc and LD=arm-poky-linux-gnueabi-ld.
+        </para>
+    </section>
+
+    <section id="platdev-appdev-qemu">
+        <title>Developing externally in QEMU</title>
+        <para>
+            Running Poky QEMU images is covered in the <link 
+            linkend='intro-quickstart-qemu'>Running an Image</link> section.
+        </para>
+        <para>
+            Poky's QEMU images contain a complete native toolchain. This means 
+            that applications can be developed within QEMU in the same was as a 
+            normal system. Using qemux86 on an x86 machine is fast since the 
+            guest and host architectures match, qemuarm is slower but gives 
+            faithful emulation of ARM specific issues. To speed things up these 
+            images support using distcc to call a cross-compiler outside the 
+            emulated system too. If <command>runqemu</command> was used to start
+            QEMU, and distccd is present on the host system, any bitbake cross 
+            compiling toolchain available from the build system will automatically
+            be used from within qemu simply by calling distcc 
+            (<command>export CC="distcc"</command> can be set in the enviroment).
+            Alterntatively, if a suitable SDK/toolchain is present in 
+            <filename class="directory">/usr/local/poky</filename> it will also
+            automatically be used.
+        </para>
+
+        <para>
+            There are several options for connecting into the emulated system. 
+            QEMU provides a framebuffer interface which has standard consoles 
+            available. There is also a serial connection available which has a 
+            console to the system running on it and IP networking as standard. 
+            The images have a dropbear ssh server running with the root password 
+            disabled allowing standard ssh and scp commands to work. The images
+            also contain an NFS server exporting the guest's root filesystem 
+            allowing that to be made available to the host.
+        </para>
+    </section>              
+
+    <section id="platdev-appdev-chroot">
+        <title>Developing externally in a chroot</title>
+        <para>
+            If you have a system that matches the architecture of the Poky machine you're using,
+            such as qemux86, you can run binaries directly from the image on the host system
+            using a chroot combined with tools like <ulink url='http://projects.o-hand.com/xephyr'>Xephyr</ulink>.
+        </para>
+        <para>
+            Poky has some scripts to make using its qemux86 images within a chroot easier. To use
+            these you need to install the poky-scripts package or otherwise obtain the 
+            <filename>poky-chroot-setup</filename> and <filename>poky-chroot-run</filename> scripts.
+            You also need Xephyr and chrootuid binaries available. To initialize a system use the setup script:
+        </para>
+        <para>
+            <literallayout class='monospaced'>
+# poky-chroot-setup &lt;qemux86-rootfs.tgz&gt; &lt;target-directory&gt;
+</literallayout>
+        </para>
+        <para>
+            which will unpack the specified qemux86 rootfs tarball into the target-directory. 
+            You can then start the system with:
+        </para>
+        <para>
+            <literallayout class='monospaced'>
+# poky-chroot-run &lt;target-directory&gt; &lt;command&gt;
+</literallayout>
+        </para>
+        <para>
+            where the target-directory is the place the rootfs was unpacked to and command is 
+            an optional command to run. If no command is specified, the system will drop you 
+            within a bash shell. A Xephyr window will be displayed containing the emulated 
+            system and you may be asked for a password since some of the commands used for 
+            bind mounting directories need to be run using sudo.
+        </para>
+        <para>
+            There are limits as to how far the the realism of the chroot environment extends.
+            It is useful for simple development work or quick tests but full system emulation 
+            with QEMU offers a much more realistic environment for more complex development 
+            tasks. Note that chroot support within Poky is still experimental.
+        </para>
+    </section>  
+
+    <section id="platdev-appdev-insitu">
+        <title>Developing in Poky directly</title>
+        <para>
+            Working directly in Poky is a fast and effective development technique.
+            The idea is that you can directly edit files in 
+            <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm> 
+            or the source directory <glossterm><link linkend='var-S'>S</link></glossterm> 
+            and then force specific tasks to rerun in order to test the changes. 
+            An example session working on the matchbox-desktop package might 
+            look like this:
+        </para>
+
+        <para>
+            <literallayout class='monospaced'>
+$ bitbake matchbox-desktop
+$ sh
+$ cd tmp/work/armv5te-poky-linux-gnueabi/matchbox-desktop-2.0+svnr1708-r0/
+$ cd matchbox-desktop-2
+$ vi src/main.c
+$ exit
+$ bitbake matchbox-desktop -c compile -f
+$ bitbake matchbox-desktop
+</literallayout>
+        </para>
+
+        <para>
+            Here, we build the package, change into the work directory for the package,
+            change a file, then recompile the package. Instead of using sh like this,
+            you can also use two different terminals. The risk with working like this 
+            is that a command like unpack could wipe out the changes you've made to the
+            work directory so you need to work carefully.
+        </para>
+
+        <para>
+            It is useful when making changes directly to the work directory files to do
+            so using quilt as detailed in the <link linkend='usingpoky-modifying-packages-quilt'> 
+            modifying packages with quilt</link> section. The resulting patches can be copied 
+            into the recipe directory and used directly in the <glossterm><link 
+            linkend='var-SRC_URI'>SRC_URI</link></glossterm>.
+        </para>
+        <para>
+            For a review of the skills used in this section see Sections <link
+            linkend="usingpoky-components-bitbake">2.1.1</link> and <link 
+            linkend="usingpoky-debugging-taskrunning">2.4.2</link>.
+        </para>
+
+    </section>
+
+    <section id="platdev-appdev-devshell">
+        <title>Developing with 'devshell'</title>
+
+        <para>
+            When debugging certain commands or even to just edit packages, the
+            'devshell' can be a useful tool. To start it you run a command like:
+        </para>
+
+        <para>
+            <literallayout class='monospaced'>
+$ bitbake matchbox-desktop -c devshell
+</literallayout>
+        </para>
+
+        <para>
+            which will open a terminal with a shell prompt within the Poky 
+            environment. This means PATH is setup to include the cross toolchain, 
+            the pkgconfig variables are setup to find the right .pc files, 
+            configure will be able to find the Poky site files etc. Within this 
+            environment, you can run configure or compile command as if they 
+            were being run by Poky itself. You are also changed into the 
+            source (<glossterm><link linkend='var-S'>S</link></glossterm>) 
+            directory automatically. When finished with the shell just exit it
+            or close the terminal window.
+        </para>
+
+        <para>
+            The default shell used by devshell is the gnome-terminal. Other 
+            forms of terminal can also be used by setting the <glossterm>
+            <link linkend='var-TERMCMD'>TERMCMD</link></glossterm> and <glossterm>
+            <link linkend='var-TERMCMDRUN'>TERMCMDRUN</link></glossterm> variables 
+            in local.conf. For examples of the other options available, see 
+            <filename>meta/conf/bitbake.conf</filename>. An external shell is 
+            launched rather than opening directly into the original terminal 
+            window to make interaction with bitbakes multiple threads easier 
+            and also allow a client/server split of bitbake in the future 
+            (devshell will still work over X11 forwarding or similar).
+        </para>
+
+        <para>
+            It is worth remembering that inside devshell you need to use the full
+            compiler name such as <command>arm-poky-linux-gnueabi-gcc</command> 
+            instead of just <command>gcc</command> and the same applies to other 
+            applications from gcc, bintuils, libtool etc. Poky will have setup 
+            environmental variables such as CC to assist applications, such as make,
+            find the correct tools.
+        </para>
+
+    </section>
+
+    <section id="platdev-appdev-srcrev">
+        <title>Developing within Poky with an external SCM based package</title>
+
+        <para>
+            If you're working on a recipe which pulls from an external SCM it 
+            is possible to have Poky notice new changes added to the 
+            SCM and then build the latest version. This only works for SCMs
+            where its possible to get a sensible revision number for changes.
+            Currently it works for svn, git and bzr repositories.
+        </para>
+
+        <para>
+            To enable this behaviour it is simply a case of adding <glossterm>
+            <link linkend='var-SRCREV'>SRCREV</link></glossterm>_pn-<glossterm>
+            <link linkend='var-PN'>PN</link></glossterm> = "${AUTOREV}" to 
+            local.conf where <glossterm><link linkend='var-PN'>PN</link></glossterm> 
+            is the name of the package for which you want to enable automatic source 
+            revision updating.
+        </para>
+    </section>
+
+    <section id="platdev-appdev-external-anjuta">
+        <title>Developing externally using the Anjuta plugin</title>
+
+        <para>
+            An Anjuta IDE plugin exists to make developing software within the Poky framework
+            easier for the application developer. It presents a graphical IDE from which the 
+            developer can cross compile an application then deploy and execute the output in a QEMU 
+            emulation session. It also supports cross debugging and profiling.
+        </para>
+
+        <para>
+            To use the plugin, a toolchain and SDK built by Poky is required along with Anjuta and the Anjuta 
+            plugin. The Poky Anjuta plugin is available from the OpenedHand SVN repository located at
+            http://svn.o-hand.com/repos/anjuta-poky/trunk/anjuta-plugin-sdk/; a web interface
+            to the repository can be accessed at <ulink url='http://svn.o-hand.com/view/anjuta-poky/'/>.
+            See the README file contained in the project for more information
+            about the dependencies and how to get them along with details of
+            the prebuilt packages.
+        </para>
+
+        <section id="platdev-appdev-external-anjuta-setup">
+          <title>Setting up the Anjuta plugin</title>
+
+            <para>Extract the tarball for the toolchain into / as root. The
+              toolchain will be installed into
+              <filename class="directory">/usr/local/poky</filename>.</para>
+
+            <para>To use the plugin, first open or create an existing
+              project. If creating a new project the "C GTK+" project type
+              will allow itself to be cross-compiled.  However you should be
+              aware that this uses glade for the UI.</para>
+
+            <para>To activate the plugin go
+              <menuchoice><guimenu>Edit</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>,
+              then choose <guilabel>General</guilabel> from the left hand side. Choose the
+              Installed plugins tab, scroll down to <guilabel>Poky
+                SDK</guilabel> and check the
+              box. The plugin is now activated but first it must be
+              configured.</para> </section>
+
+        <section id="platdev-appdev-external-anjuta-configuration">
+          <title>Configuring the Anjuta plugin</title>
+
+          <para>The configuration options for the SDK can be found by choosing
+            the <guilabel>Poky SDK</guilabel> icon from the left hand side. The following options
+            need to be set:</para>
+
+          <itemizedlist>
+            
+            <listitem><para><guilabel>SDK root</guilabel>: this is the root directory of the SDK
+                for an ARM EABI SDK this will be <filename
+                  class="directory">/usr/local/poky/eabi-glibc/arm</filename>.
+                This directory will contain directories named like "bin",
+                "include", "var", etc. With the file chooser it is important
+                to enter into the "arm" subdirectory for this
+                example.</para></listitem>
+
+            <listitem><para><guilabel>Toolchain triplet</guilabel>: this is the cross compile
+                triplet, e.g. "arm-poky-linux-gnueabi".</para></listitem>
+
+            <listitem><para><guilabel>Kernel</guilabel>: use the file chooser to select the kernel
+                to use with QEMU</para></listitem>
+
+            <listitem><para><guilabel>Root filesystem</guilabel>: use the file chooser to select
+                the root filesystem image, this should be an image (not a
+                tarball)</para></listitem>
+          </itemizedlist>
+
+        </section>
+
+        <section id="platdev-appdev-external-anjuta-usage">
+            <title>Using the Anjuta plugin</title>
+
+            <para>As an example, cross-compiling a project, deploying it into
+              QEMU and running a debugger against it and then doing a system
+              wide profile.</para>
+
+            <para>Choose <menuchoice><guimenu>Build</guimenu><guimenuitem>Run
+                  Configure</guimenuitem></menuchoice> or
+              <menuchoice><guimenu>Build</guimenu><guimenuitem>Run
+                  Autogenerate</guimenuitem></menuchoice> to run "configure"
+              (or to run "autogen") for the project. This passes command line
+              arguments to instruct it to cross-compile.</para>
+
+            <para>Next do
+              <menuchoice><guimenu>Build</guimenu><guimenuitem>Build
+                  Project</guimenuitem></menuchoice> to build and compile the
+              project. If you have previously built the project in the same
+              tree without using the cross-compiler you may find that your
+              project fails to link. Simply do
+              <menuchoice><guimenu>Build</guimenu><guimenuitem>Clean
+                  Project</guimenuitem></menuchoice> to remove the old
+              binaries. You may then try building again.</para>
+
+            <para>Next start QEMU by using
+              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Start
+                  QEMU</guimenuitem></menuchoice>, this will start QEMU and
+              will show any error messages in the message view. Once Poky has
+              fully booted within QEMU you may now deploy into it.</para>
+
+            <para>Once built and QEMU is running, choose
+              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Deploy</guimenuitem></menuchoice>,
+              this will install the package into a temporary directory and
+              then copy using rsync over SSH into the target.  Progress and
+              messages will be shown in the message view.</para>
+
+            <para>To debug a program installed into onto the target choose
+              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Debug
+                  remote</guimenuitem></menuchoice>. This prompts for the
+              local binary to debug and also the command line to run on the
+              target. The command line to run should include the full path to
+              the to binary installed in the target. This will start a
+              gdbserver over SSH on the target and also an instance of a
+              cross-gdb in a local terminal. This will be preloaded to connect
+              to the server and use the <guilabel>SDK root</guilabel> to find
+              symbols. This gdb will connect to the target and load in
+              various libraries and the target program.  You should setup any
+              breakpoints or watchpoints now since you might not be able to
+              interrupt the execution later. You may stop
+              the debugger on the target using
+              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Stop
+                  debugger</guimenuitem></menuchoice>.</para>
+
+            <para>It is also possible to execute a command in the target over
+              SSH, the appropriate environment will be be set for the
+              execution. Choose
+              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Run
+                  remote</guimenuitem></menuchoice> to do this. This will open
+              a terminal with the SSH command inside.</para>
+
+            <para>To do a system wide profile against the system running in
+              QEMU choose
+              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Profile
+                  remote</guimenuitem></menuchoice>. This will start up
+              OProfileUI with the appropriate parameters to connect to the
+              server running inside QEMU and will also supply the path to the
+              debug information necessary to get a useful profile.</para>
+
+        </section>
+    </section>
+  </section>
+
+<section id="platdev-gdb-remotedebug">
+    <title>Debugging with GDB Remotely</title>
+
+    <para>
+        <ulink url="http://sourceware.org/gdb/">GDB</ulink> (The GNU Project Debugger)
+        allows you to examine running programs to understand and fix problems and
+        also to perform postmortem style analsys of program crashes. It is available
+        as a package within poky and installed by default in sdk images. It works best
+        when -dbg packages for the application being debugged are installed as the 
+        extra symbols give more meaningful output from GDB. 
+    </para>
+
+    <para>
+        Sometimes, due to memory or disk space constraints, it is not possible
+        to use GDB directly on the remote target to debug applications. This is 
+        due to the fact that
+        GDB needs to load the debugging information and the binaries of the
+        process being debugged. GDB then needs to perform many
+        computations to locate information such as function names, variable
+        names and values, stack traces, etc. even before starting the debugging
+        process. This places load on the target system and can alter the
+        characteristics of the program being debugged.
+    </para>
+    <para>
+        This is where GDBSERVER comes into play as it runs on the remote target
+        and does not load any debugging information from the debugged process.
+        Instead, the debugging information processing is done by a GDB instance
+        running on a distant computer - the host GDB. The host GDB then sends 
+        control commands to GDBSERVER to make it stop or start the debugged 
+        program, as well as read or write some memory regions of that debugged
+        program. All the debugging information loading and processing as well
+        as the heavy debugging duty is done by the host GDB, giving the 
+        GDBSERVER running on the target a chance to remain small and fast.
+    </para>
+    <para>
+        As the host GDB is responsible for loading the debugging information and 
+        doing the necessary processing to make actual debugging happen, the 
+        user has to make sure it can access the unstripped binaries complete
+        with their debugging information and compiled with no optimisations. The
+        host GDB must also have local access to all the libraries used by the 
+        debugged program. On the remote target the binaries can remain stripped
+        as GDBSERVER does not need any debugging information there. However they 
+        must also be compiled without optimisation matching the host's binaries.
+    </para>
+
+    <para>
+        The binary being debugged on the remote target machine is hence referred
+        to as the 'inferior' in keeping with GDB documentation and terminology.
+        Further documentation on GDB, is available on 
+        <ulink url="http://sourceware.org/gdb/documentation/">on their site</ulink>.
+    </para>
+
+    <section id="platdev-gdb-remotedebug-launch-gdbserver">
+        <title>Launching GDBSERVER on the target</title>
+        <para>
+            First, make sure gdbserver is installed on the target. If not, 
+            install the gdbserver package (which needs the libthread-db1
+            package).
+        </para>
+        <para>
+            To launch GDBSERVER on the target and make it ready to "debug" a 
+            program located at <emphasis>/path/to/inferior</emphasis>, connect
+            to the target and launch:
+            <programlisting>$ gdbserver localhost:2345 /path/to/inferior</programlisting>
+            After that, gdbserver should be listening on port 2345 for debugging
+            commands coming from a remote GDB process running on the host computer.
+            Communication between the GDBSERVER and the host GDB will be done using
+            TCP. To use other communication protocols please refer to the 
+            GDBSERVER documentation.
+        </para>
+    </section>
+
+    <section id="platdev-gdb-remotedebug-launch-gdb">
+        <title>Launching GDB on the host computer</title>
+
+        <para>
+            Running GDB on the host computer takes a number of stages, described in the
+            following sections.
+        </para>
+
+        <section id="platdev-gdb-remotedebug-launch-gdb-buildcross">
+            <title>Build the cross GDB package</title>
+            <para>
+                A suitable gdb cross binary is required which runs on your host computer but
+                knows about the the ABI of the remote target. This can be obtained from
+                the the Poky toolchain, e.g. 
+                <filename>/usr/local/poky/eabi-glibc/arm/bin/arm-poky-linux-gnueabi-gdb</filename> 
+                which "arm" is the target architecture and "linux-gnueabi" the target ABI.
+            </para>
+
+            <para>
+                Alternatively this can be built directly by Poky. To do this you would build 
+                the gdb-cross package so for example you would run:
+                <programlisting>bitbake gdb-cross</programlisting>
+                Once built, the cross gdb binary can be found at
+                <programlisting>tmp/cross/bin/&lt;target-abi&gt;-gdb </programlisting>
+            </para>
+
+        </section>
+        <section id="platdev-gdb-remotedebug-launch-gdb-inferiorbins">
+
+            <title>Making the inferior binaries available</title>
+
+            <para>
+                The inferior binary needs to be available to GDB complete with all debugging 
+                symbols in order to get the best possible results along with any libraries
+                the inferior depends on and their debugging symbols. There are a number of
+                ways this can be done.
+            </para>
+
+            <para>
+                Perhaps the easiest is to have an 'sdk' image corresponding to the plain
+                image installed on the device. In the case of 'pky-image-sato', 
+                'poky-image-sdk' would contain suitable symbols. The sdk images already 
+                have the debugging symbols installed so its just a question expanding the 
+                archive to some location and telling GDB where this is. 
+            </para>
+
+            <para>
+                Alternatively, poky can build a custom directory of files for a specific 
+                debugging purpose by reusing its tmp/rootfs directory, on the host computer
+                in a slightly different way to normal. This directory contains the contents 
+                of the last built image. This process assumes the image running on the
+                target was the last image to be built by Poky, the package <emphasis>foo</emphasis>
+                contains the inferior binary to be debugged has been built without without 
+                optimisation and has debugging information available.
+            </para>
+            <para>
+                Firstly you want to install the <emphasis>foo</emphasis> package to tmp/rootfs 
+                by doing:
+                </para>
+                <programlisting>tmp/staging/i686-linux/usr/bin/ipkg-cl -f \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/ipkg.conf -o \
+tmp/rootfs/ update</programlisting>
+               <para>
+                then,
+                </para>
+                <programlisting>tmp/staging/i686-linux/usr/bin/ipkg-cl -f \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/ipkg.conf \
+-o tmp/rootfs install foo
+
+tmp/staging/i686-linux/usr/bin/ipkg-cl -f \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/ipkg.conf \
+-o tmp/rootfs install foo-dbg</programlisting>
+             <para>
+                which installs the debugging information too.
+            </para>
+
+        </section>
+        <section id="platdev-gdb-remotedebug-launch-gdb-launchhost">
+
+            <title>Launch the host GDB</title>
+            <para>
+                To launch the host GDB, run the cross gdb binary identified above with
+                the inferior binary specified on the commandline:
+                <programlisting>&lt;target-abi&gt;-gdb rootfs/usr/bin/foo</programlisting>
+                This loads the binary of program <emphasis>foo</emphasis>
+                as well as its debugging information. Once the gdb prompt
+                appears, you must instruct GDB to load all the libraries
+                of the inferior from tmp/rootfs:
+                <programlisting>set solib-absolute-prefix /path/to/tmp/rootfs</programlisting>
+                where <filename>/path/to/tmp/rootfs</filename> must be 
+                the absolute path to <filename>tmp/rootfs</filename> or wherever the 
+                binaries with debugging information are located.
+            </para>
+            <para>
+                Now, tell GDB to connect to the GDBSERVER running on the remote target:
+                <programlisting>target remote remote-target-ip-address:2345</programlisting>
+                Where remote-target-ip-address is the IP address of the
+                remote target where the GDBSERVER is running. 2345 is the
+                port on which the GDBSERVER is running.
+            </para>
+
+        </section>
+        <section id="platdev-gdb-remotedebug-launch-gdb-using">
+
+            <title>Using the Debugger</title>
+            <para>
+                Debugging can now proceed as normal, as if the debugging were being done on the 
+                local machine, for example to tell GDB to break in the <emphasis>main</emphasis> 
+                function, for instance:
+                <programlisting>break main</programlisting>
+                and then to tell GDB to "continue" the inferior execution,
+                <programlisting>continue</programlisting>
+            </para>
+            <para>
+                For more information about using GDB please see the 
+                project's online documentation at <ulink 
+                url="http://sourceware.org/gdb/download/onlinedocs/"/>.
+            </para>
+        </section>
+    </section>
+
+</section>
+
+<section id="platdev-oprofile">
+    <title>Profiling with OProfile</title>
+
+    <para>
+        <ulink url="http://oprofile.sourceforge.net/">OProfile</ulink> is a 
+        statistical profiler well suited to finding performance 
+        bottlenecks in both userspace software and the kernel. It provides 
+        answers to questions like "Which functions does my application spend 
+        the most time in when doing X?". Poky is well integrated with OProfile
+        to make profiling applications on target hardware straightforward.
+    </para>
+
+    <para>
+        To use OProfile you need an image with OProfile installed. The easiest 
+        way to do this is with "tools-profile" in <glossterm><link 
+        linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>. You also
+        need debugging symbols to be available on the system where the analysis 
+        will take place. This can be achieved with "dbg-pkgs" in <glossterm><link 
+        linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm> or by
+        installing the appropriate -dbg packages. For 
+        successful call graph analysis the binaries must preserve the frame 
+        pointer register and hence should be compiled with the 
+        "-fno-omit-framepointer" flag. In Poky this can be achieved with 
+        <glossterm><link linkend='var-SELECTED_OPTIMIZATION'>SELECTED_OPTIMIZATION
+        </link></glossterm> = "-fexpensive-optimizations -fno-omit-framepointer 
+        -frename-registers -O2" or by setting <glossterm><link 
+        linkend='var-DEBUG_BUILD'>DEBUG_BUILD</link></glossterm> = "1" in 
+        local.conf (the latter will also add extra debug information making the
+        debug packages large).
+    </para>
+
+    <section id="platdev-oprofile-target">
+        <title>Profiling on the target</title>
+
+        <para>
+            All the profiling work can be performed on the target device. A 
+            simple OProfile session might look like:
+        </para>
+
+        <para>
+            <literallayout class='monospaced'>
+# opcontrol --reset
+# opcontrol --start --separate=lib --no-vmlinux -c 5
+[do whatever is being profiled]
+# opcontrol --stop
+$ opreport -cl
+</literallayout>
+        </para>
+
+        <para>
+            Here, the reset command clears any previously profiled data, 
+            OProfile is then started. The options used to start OProfile mean
+            dynamic library data is kept separately per application, kernel 
+            profiling is disabled and callgraphing is enabled up to 5 levels 
+            deep. To profile the kernel, you would specify the 
+            <parameter>--vmlinux=/path/to/vmlinux</parameter> option (the vmlinux file is usually in 
+            <filename class="directory">/boot/</filename> in Poky and must match the running kernel). The profile is 
+            then stopped and the results viewed with opreport with options
+            to see the separate library symbols and callgraph information.
+        </para>
+        <para>
+            Callgraphing means OProfile not only logs infomation about which 
+            functions time is being spent in but also which functions
+            called those functions (their parents) and which functions that 
+            function calls (its children). The higher the callgraphing depth, 
+            the more accurate the results but this also increased the loging 
+            overhead so it should be used with caution. On ARM, binaries need 
+            to have the frame pointer enabled for callgraphing to work (compile
+            with the gcc option -fno-omit-framepointer).
+        </para>
+        <para>
+            For more information on using OProfile please see the OProfile 
+            online documentation at <ulink 
+            url="http://oprofile.sourceforge.net/docs/"/>.
+        </para>
+    </section>
+
+    <section id="platdev-oprofile-oprofileui">
+        <title>Using OProfileUI</title>
+
+        <para>
+            A graphical user interface for OProfile is also available. You can
+            either use prebuilt Debian packages from the <ulink
+                url='http://debian.o-hand.com/'>OpenedHand repository</ulink> or
+            download and build from svn at
+            http://svn.o-hand.com/repos/oprofileui/trunk/. If the
+            "tools-profile" image feature is selected, all necessary binaries
+            are installed onto the target device for OProfileUI interaction.
+        </para>
+
+        <para>
+            In order to convert the data in the sample format from the target
+            to the host the <filename>opimport</filename> program is needed. 
+            This is not included in standard Debian OProfile packages but an 
+            OProfile package with this addition is also available from the <ulink
+                url='http://debian.o-hand.com/'>OpenedHand repository</ulink>.
+            We recommend using OProfile 0.9.3 or greater. Other patches to
+            OProfile may be needed for recent OProfileUI features, but Poky 
+            usually includes all needed patches on the target device.  Please 
+            see the <ulink
+                url='http://svn.o-hand.com/repos/oprofileui/trunk/README'>
+                OProfileUI README</ulink> for up to date information, and the 
+            <ulink url="http://labs.o-hand.com/oprofileui">OProfileUI website
+            </ulink> for more information on the OProfileUI project. 
+        </para>
+
+        <section id="platdev-oprofile-oprofileui-online">
+            <title>Online mode</title>
+
+            <para>
+                This assumes a working network connection with the target 
+                hardware. In this case you just need to run <command>
+                "oprofile-server"</command> on the device. By default it listens 
+                on port 4224. This can be changed with the <parameter>--port</parameter> command line 
+                option.
+
+            </para>
+
+            <para>
+                The client program is called <command>oprofile-viewer</command>. The  
+                UI is relatively straightforward, the key functionality is accessed
+                through the buttons on the toolbar (which are duplicated in the 
+                menus.) These buttons are:
+            </para>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Connect - connect to the remote host, the IP address or hostname for the
+                        target can be supplied here.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Disconnect - disconnect from the target.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Start - start the profiling on the device.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Stop - stop the profiling on the device and download the data to the local
+                        host. This will generate the profile and show it in the viewer.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Download - download the data from the target, generate the profile and show it
+                        in the viewer.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Reset - reset the sample data on the device. This will remove the sample
+                        information that was collected on a previous sampling run. Ensure you do this
+                        if you do not want to include old sample information.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Save - save the data downloaded from the target to another directory for later
+                        examination.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Open - load data that was previously saved.
+                    </para>
+                </listitem>
+            </itemizedlist>
+
+            <para>
+                The behaviour of the client is to download the complete 'profile archive' from
+                the target to the host for processing. This archive is a directory containing
+                the sample data, the object files and the debug information for said object
+                files. This archive is then converted using a script included in this
+                distribution ('oparchconv') that uses 'opimport' to convert the archive from
+                the target to something that can be processed on the host.
+            </para>
+
+            <para>
+                Downloaded archives are kept in /tmp and cleared up when they are no longer in
+                use.
+            </para>
+
+            <para>
+                If you wish to profile into the kernel, this is possible, you just need to ensure
+                a vmlinux file matching the running kernel is available. In Poky this is usually 
+                located in /boot/vmlinux-KERNELVERSION, where KERNEL-version is the version of 
+                the kernel e.g. 2.6.23. Poky generates separate vmlinux packages for each kernel
+                it builds so it should be a question of just ensuring a matching package is 
+                installed (<command> ipkg install kernel-vmlinux</command>. These are automatically 
+                installed into development and profiling images alongside OProfile. There is a 
+                configuration option within the OProfileUI settings page where the location of 
+                the vmlinux file can be entered. 
+            </para>
+
+            <para>
+                Waiting for debug symbols to transfer from the device can be slow and it's not     
+                always necessary to actually have them on device for OProfile use. All that is 
+                needed is a copy of the filesystem with the debug symbols present on the viewer 
+                system. The <link linkend='platdev-gdb-remotedebug-launch-gdb'>GDB remote debug
+                section</link> covers how to create such a directory with Poky and the location 
+                of this directory can again be specified in the OProfileUI settings dialog. If
+                specified, it will be used where the file checksums match those on the system 
+                being profiled.
+            </para>
+        </section>
+        <section id="platdev-oprofile-oprofileui-offline">
+            <title>Offline mode</title>
+
+            <para>
+                If no network access to the target is available an archive for processing in
+                'oprofile-viewer' can be generated with the following set of command.
+            </para>
+
+            <para>
+                <literallayout class='monospaced'>
+# opcontrol --reset
+# opcontrol --start --separate=lib --no-vmlinux -c 5
+[do whatever is being profiled]
+# opcontrol --stop
+# oparchive -o my_archive
+</literallayout>
+            </para>
+
+            <para>
+                Where my_archive is the name of the archive directory where you would like the
+                profile archive to be kept. The directory will be created for you. This can
+                then be copied to another host and loaded using 'oprofile-viewer''s open
+                functionality. The archive will be converted if necessary.
+            </para>
+        </section>
+    </section>
+</section>
+
+</chapter> 
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

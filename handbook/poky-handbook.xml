@@ -1,0 +1,111 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<book id='poky-handbook' lang='en' 
+      xmlns:xi="http://www.w3.org/2003/XInclude"
+      xmlns="http://docbook.org/ns/docbook"
+      >
+    <bookinfo>
+
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref='common/poky-handbook.png' 
+                    format='SVG' 
+                    align='center'/>
+            </imageobject>    
+        </mediaobject>
+
+        <title>Poky Handbook</title>
+        <subtitle>Hitchhiker's Guide to Poky</subtitle>
+
+        <authorgroup>
+            <author>
+                <firstname>Richard</firstname> <surname>Purdie</surname>
+                <affiliation>
+                    <orgname>OpenedHand Ltd</orgname>
+                </affiliation>
+                <email>richard@openedhand.com</email>
+            </author>
+
+            <author>
+                <firstname>Tomas</firstname> <surname>Frydrych</surname>
+                <affiliation>
+                    <orgname>OpenedHand Ltd</orgname>
+                </affiliation>
+                <email>tf@openedhand.com</email>
+            </author>
+
+            <author>
+                <firstname>Marcin</firstname> <surname>Juszkiewicz</surname>
+                <affiliation>
+                    <orgname>OpenedHand Ltd</orgname>
+                </affiliation>
+                <email>hrw@openedhand.com</email>
+            </author>
+            <author>
+                <firstname>Dodji</firstname> <surname>Seketeli</surname>
+                <affiliation>
+                    <orgname>OpenedHand Ltd</orgname>
+                </affiliation>
+                <email>dodji@openedhand.com</email>
+            </author>
+        </authorgroup>
+
+        <revhistory>
+            <revision>
+                <revnumber>3.1</revnumber>
+                <date>15 Feburary 2008</date>
+                <revremark>Poky 3.1 (Pinky) Documentation Release</revremark>
+            </revision>
+        </revhistory>
+
+    <copyright>
+      <year>2007</year>
+      <holder>OpenedHand Limited</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>
+        Permission is granted to copy, distribute and/or modify this document under 
+        the terms of the <ulink type="http" url="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/">Creative Commons Attribution-Non-Commercial-Share Alike 2.0 UK: England &amp; Wales</ulink> as published by Creative Commons.
+      </para>
+    </legalnotice>
+
+    </bookinfo>
+
+    <xi:include href="introduction.xml"/>
+
+    <xi:include href="usingpoky.xml"/>
+
+    <xi:include href="extendpoky.xml"/>
+
+    <xi:include href="development.xml"/>
+
+    <xi:include href="ref-structure.xml"/>
+
+    <xi:include href="ref-bitbake.xml"/>
+
+    <xi:include href="ref-classes.xml"/>
+
+    <xi:include href="ref-images.xml"/>
+
+    <xi:include href="ref-features.xml"/>
+
+    <xi:include href="ref-variables.xml"/>
+
+    <xi:include href="ref-varlocality.xml"/>
+
+    <xi:include href="faq.xml"/>
+
+    <xi:include href="resources.xml"/>
+
+    <xi:include href="contactus.xml"/>
+
+    <index id='index'>
+      <title>Index</title>
+    </index>
+
+</book>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

@@ -1,0 +1,390 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<chapter id='usingpoky'>
+<title>Using Poky</title>
+
+    <para>
+        This section gives an overview of the components that make up Poky 
+        following by information about running poky builds and dealing with any
+        problems that may arise.
+    </para>
+
+<section id='usingpoky-components'>
+    <title>Poky Overview</title>
+
+    <para>
+        At the core of Poky is the bitbake task executor together with various types of
+        configuration files. This section gives an overview of bitbake and the
+        configuration files, in particular what they are used for, and how they
+        interact.
+    </para>
+    
+    <para>  
+        Bitbake handles the parsing and execution of the data
+        files. The data itself is of various types; recipes which give
+        details about particular pieces of software, class data which is an
+        abstraction of common build information (e.g. how to build a Linux kernel)
+        and configuration data for machines, policy decisions, etc., which acts as
+        a glue and binds everything together. Bitbake knows how to combine multiple
+        data sources together, each data source being referred to as a <link
+            linkend='usingpoky-changes-collections'>'collection'</link>.
+    </para>
+
+    <para>
+        The <link linkend='ref-structure'>directory structure walkthrough</link>
+        section gives details on the meaning of specific directories but some
+        brief details on the core components follows:
+    </para>
+
+    <section id='usingpoky-components-bitbake'>
+        <title>Bitbake</title>
+
+        <para>
+            Bitbake is the tool at the heart of Poky and is responsible
+            for parsing the metadata, generating a list of tasks from it
+            and then executing them. To see a list of the options it
+            supports look at <command>bitbake --help</command>.
+        </para>
+
+        <para>
+            The most common usage is <command>bitbake packagename</command> where
+            packagename is the name of the package you wish to build
+            (from now on called the target). This often equates to the first part of a .bb
+            filename, so to run the <filename>matchbox-desktop_1.2.3.bb</filename> file, you
+            might type <command>bitbake matchbox-desktop</command>.
+            Several different versions of matchbox-desktop might exist and
+            bitbake will choose the one selected by the distribution configuration
+            (more details about how bitbake chooses between different versions
+            and providers is available in the <link linkend='ref-bitbake-providers'>
+            'Preferences and Providers' section</link>). Bitbake will also try to execute any
+            dependent tasks first so before building matchbox-desktop it
+            would build a cross compiler and glibc if not already built.
+        </para>
+
+    </section>
+
+    <section id='usingpoky-components-metadata'>
+        <title>Metadata (Recipes)</title>
+
+        <para>
+            The .bb files are usually referred to as 'recipes'. In general, a
+            recipe contains information about a single piece of software such
+            as where to download the source, any patches that are needed,
+            any special configuration options, how to compile the source files
+            and how to package the compiled output.
+        </para>
+
+        <para>
+            'package' can also used to describe recipes but since the same
+            word is used for the packaged output from Poky (i.e. .ipk or .deb
+            files), this document will avoid it.
+        </para>
+
+    </section>
+
+    <section id='usingpoky-components-classes'>
+        <title>Classes</title>
+
+        <para>
+            Class (.bbclass) files contain information which is useful to share
+            between metadata files. An example is the autotools class which contains
+            the common settings that any application using autotools would use. The
+            <link linkend='ref-classes'>classes reference section</link> gives details
+            on common classes and how to use them.
+        </para>
+    </section>
+
+    <section id='usingpoky-components-configuration'>
+        <title>Configuration</title>
+
+        <para>
+            The configuration (.conf) files define various configuration variables
+            which govern what Poky does. These are split into several areas, such
+            as machine configuration options, distribution configuration options,
+            compiler tuning options, general common configuration and user
+            configuration (local.conf).
+        </para>
+    </section>
+
+</section>
+
+
+
+<section id='usingpoky-build'>
+    <title>Running a Build</title>
+
+    <para>
+        First the Poky build environment needs to be setup using the following command:
+    </para>
+    <para>
+        <literallayout class='monospaced'>
+$ source poky-init-build-env
+</literallayout>
+    </para>
+    <para>
+        Once the Poky build environment is setup, a target can now be built using:
+    </para>
+    <para>
+        <literallayout class='monospaced'>
+$ bitbake &lt;target&gt;
+</literallayout>
+    </para>
+    <para>
+        The target is the name of the recipe you want to build. Common targets are the
+        images (in <filename class="directory">meta/packages/images/</filename>)
+        or the name of a recipe for a specific piece of software like 
+        <application>busybox</application>. More details about the standard images 
+        are available in the <link linkend='ref-images'>image reference section</link>.
+    </para>
+</section>
+
+<section id='usingpoky-install'>
+    <title>Installing and Using the Result</title>
+
+    <para>
+        Once an image has been built it often needs to be installed. The images/kernels built
+        by Poky are placed in the <filename class="directory">tmp/deploy/images</filename>
+        directory. Running qemux86 and qemuarm images is covered in the <link 
+        linkend='intro-quickstart-qemu'>Running an Image</link> section. See your 
+        board/machine documentation for information about how to install these images.
+    </para>
+
+    <section id='usingpoky-install-usbnetworking'>
+        <title>USB Networking</title>
+
+        <para>
+            Devices commonly have USB connectivity. To connect to the usbnet interface, on 
+            the host machine run:
+        </para>
+        <para>
+            <programlisting>
+modprobe usbnet
+ifconfig usb0 192.168.0.200
+route add 192.168.0.202 usb0 
+</programlisting>
+        </para>
+    </section>
+
+    <section id='usingpoky-install-qemu-networking'>
+        <title>QEMU/USB networking with IP masquerading</title>
+
+        <para>
+            On Ubuntu, Debian or similar distributions you can have the network automatically 
+            configured. You can also enable masquerading between the QEMU system and the rest 
+            of your network. To do this you need to edit <filename>/etc/network/interfaces</filename> to include:
+        </para>
+
+        <para><programlisting>
+allow-hotplug tap0
+iface tap0 inet static
+        address 192.168.7.200
+        netmask 255.255.255.0
+        network 192.168.7.0
+        post-up iptables -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.0/24
+        post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+        post-up iptables -P FORWARD ACCEPT
+</programlisting>
+        </para>
+
+        <para>
+            This ensures the tap0 interface will be up everytime you run QEMU
+            and it will have network/internet access.
+        </para>
+
+        <para>
+            Under emulation there are two steps to configure for internet access
+            via tap0. The first step is to configure routing:
+        </para>
+
+        <para><programlisting>
+route add default gw 192.168.7.200 tap0
+</programlisting>
+        </para>
+
+        <para>
+            The second is to configure name resolution which is configured in the 
+            <filename>/etc/resolv.conf</filename> file. The simplest solution is 
+            to copy it's content from the host machine.
+        </para>
+
+        <para>
+            USB connections to devices can be setup and automated in a similar way.
+            First add the following to
+            <filename>/etc/network/interfaces</filename>:
+        </para>
+
+        <para><programlisting>
+allow-hotplug usb0
+iface usb0 inet static
+        address 192.168.0.200
+        netmask 255.255.255.0
+        network 192.168.0.0
+        post-up iptables -A POSTROUTING -t nat -j MASQUERADE -s 192.168.0.0/24
+        post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+        post-up iptables -P FORWARD ACCEPT
+</programlisting>
+        </para>
+
+        <para>
+            and then to configure routing on the device you would use:
+        </para>
+
+        <para><programlisting>
+route add default gw 192.168.0.202 usb0
+</programlisting>
+        </para>
+
+    </section>
+</section>
+
+<section id='usingpoky-debugging'>
+    <title>Debugging Build Failures</title>
+
+    <para>
+        The exact method for debugging Poky depends on the nature of the 
+        bug(s) and which part of the system they might be from. Standard 
+        debugging practises such as comparing to the last 
+        known working version and examining the changes, reapplying the 
+        changes in steps to identify the one causing the problem etc. are
+        valid for Poky just like any other system. Its impossible to detail
+        every possible potential failure here but there are some general
+        tips to aid debugging:
+    </para>
+
+    <section id='usingpoky-debugging-taskfailures'>
+        <title>Task Failures</title>
+
+        <para>The log file for shell tasks is available in <filename>${WORKDIR}/temp/log.do_taskname.pid</filename>. 
+            For the compile task of busybox 1.01 on the ARM spitz machine, this 
+            might be <filename>tmp/work/armv5te-poky-linux-gnueabi/busybox-1.01/temp/log.do_compile.1234</filename> 
+            for example. To see what bitbake ran to generate that log, look at the <filename>run.do_taskname.pid </filename>
+            file in the same directory.
+        </para>
+
+        <para>The output from python tasks is sent directly to the console at present.</para>
+    </section>
+
+    <section id='usingpoky-debugging-taskrunning'>
+        <title>Running specific tasks</title>
+
+        <para> Any given package consists of a set of tasks, in most
+            cases the series is fetch, unpack, patch, configure,
+            compile, install, package, package_write and build. The
+            default task is "build" and any tasks this depends on are
+            built first hence the standard bitbake behaviour. There are
+            some tasks such as devshell which are not part of the
+            default build chain.  If you wish to run such a task you can
+            use the "-c" option to bitbake e.g. <command>bitbake
+            matchbox-desktop -c devshell</command>.
+        </para>
+
+        <para>
+            If you wish to rerun a task you can use the force option
+            "-f". A typical usage session might look like: </para>
+
+        <para>
+            <literallayout class='monospaced'>
+% bitbake matchbox-desktop
+[change some source in the WORKDIR for example]
+% bitbake matchbox-desktop -c compile -f
+% bitbake matchbox-desktop</literallayout>
+        </para>
+
+        <para>
+            which would build matchbox-desktop, then recompile it. The
+            final command reruns all tasks after the compile (basically
+            the packaging tasks) since bitbake will notice the the
+            compile has been rerun and hence the other tasks also need
+            to run again.
+        </para>
+
+        <para>
+            You can view a list of tasks in a given package by running
+            the listtasks task e.g. <command>bitbake matchbox-desktop -c
+            listtasks</command>.
+        </para>
+    </section>
+
+    <section id='usingpoky-debugging-dependencies'>
+        <title>Dependency Graphs</title>
+
+        <para>
+            Sometimes it can be hard to see why bitbake wants to build
+            some other packages before a given package you've specified.
+            <command>bitbake -g targetname</command> will create
+            <filename>depends.dot</filename> and
+            <filename>task-depends.dot</filename> files in the current 
+            directory. They show
+            which packages and tasks depend on which other packages and
+            tasks and are useful for debugging purposes.
+        </para>
+    </section>
+
+    <section id='usingpoky-debugging-bitbake'>
+        <title>General Bitbake Problems</title>
+
+        <para>
+            Debug output from bitbake can be seen with the "-D" option.
+            The debug output gives more information about what bitbake
+            is doing and/or why. Each -D option increases the logging
+            level, the most common usage being "-DDD".
+        </para>
+
+        <para>
+            The output from <command>bitbake -DDD -v targetname</command> can reveal why
+            a certain version of a package might be chosen, why bitbake
+            picked a certain provider or help in other situations where
+            bitbake does something you're not expecting.
+        </para>
+    </section>
+
+    <section id='usingpoky-debugging-buildfile'>
+        <title>Building with no dependencies</title>
+
+        <para>
+            If you really want to build a specific .bb file, you can use
+            the form <command>bitbake -b somepath/somefile.bb</command>. Note that this
+            will not check the dependencies so this option should only
+            be used when you know its dependencies already exist. You
+            can specify fragments of the filename and bitbake will see
+            if it can find a unique match.
+        </para>
+
+    </section>
+
+    <section id='usingpoky-debugging-variables'>
+        <title>Variables</title>
+
+        <para>
+            The "-e" option will dump the resulting environment for
+            either the configuration (no package specified) or for a
+            specific package when specified with the "-b" option.
+        </para>
+    </section>
+    
+    <section id='usingpoky-debugging-others'>
+        <title>Other Tips</title>
+
+        <tip>
+        <para>When adding new packages it is worth keeping an eye open for bad 
+            things creeping into compiler commandlines such as references to local 
+            system files (<filename>/usr/lib/</filename> or <filename>/usr/include/</filename> etc.).
+        </para>
+        </tip>
+        
+        <tip>
+        <para>
+            If you want to remove the psplash boot splashscreen, add "psplash=false"
+            to  the kernel commandline and psplash won't load allowing you to see 
+            the console. It's also possible to switch out of the splashscreen by 
+            switching virtual console (Fn+Left or Fn+Right on a Zaurus).
+        </para>
+        </tip>
+
+    </section>
+</section>
+
+</chapter>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

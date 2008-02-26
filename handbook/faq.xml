@@ -1,0 +1,234 @@
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<appendix id='faq'>
+<title>FAQ</title>
+<qandaset>
+    <qandaentry>
+        <question>
+            <para>
+                How does Poky differ from <ulink url='http://www.openembedded.org/'>OpenEmbedded</ulink>?
+            </para>
+        </question>
+        <answer>
+            <para>
+                Poky is a derivative of <ulink 
+                url='http://www.openembedded.org/'>OpenEmbedded</ulink>, a stable, 
+                smaller subset focused on the GNOME Mobile environment. Development
+                in Poky is closely tied to OpenEmbedded with features being merged
+                regularly between the two for mutual benefit.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                How can you claim Poky is stable?
+            </para>
+        </question>
+        <answer>
+            <para>
+                There are three areas that help with stability;
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        We keep Poky small and focused - around 650 packages compared to over 5000 for full OE
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        We only support hardware that we have access to for testing
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        We have a Buildbot which provides continuous build and integration tests
+                    </para>
+                </listitem>
+            </itemizedlist>
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                How do I get support for my board added to Poky?
+            </para>
+        </question>
+        <answer>
+            <para>
+                There are two main ways to get a board supported in Poky;
+            <itemizedlist>
+                <listitem>
+                    <para>    
+                    Send us the board if we don't have it yet
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    Send us bitbake recipes if you have them (see the Poky handbook to find out how to create recipes)
+                    </para>
+                </listitem>
+            </itemizedlist>
+                    Usually if it's not a completely exotic board then adding support in Poky should be fairly straightforward.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                Are there any products running poky ?
+            </para>
+        </question>
+        <answer>
+            <para>
+                The <ulink url='http://vernier.com/labquest/'>Vernier Labquest</ulink> is using Poky (for more about the Labquest see the case study at OpenedHand). There are a number of pre-production devices using Poky and we will announce those as soon as they are released.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                What is the Poky output ?
+            </para>
+        </question>
+        <answer>
+            <para>
+                The output of a Poky build will depend on how it was started, as the same set of recipes can be used to output various formats. Usually the output is a flashable image ready for the target device.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                How do I add my package to Poky?
+            </para>
+        </question>
+        <answer>
+            <para>
+                To add a package you need to create a bitbake recipe - see the Poky handbook to find out how to create a recipe.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                Do I have to reflash my entire board with a new poky image when recompiling a package?
+            </para>
+        </question>
+        <answer>
+            <para>
+                Poky can build packages in various formats, ipkg, Debian package, or RPM. The package can then be upgraded using the package tools on the device, much like on a desktop distribution like Ubuntu or Fedora.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                What is GNOME Mobile? What's the difference between GNOME Mobile and GNOME?
+            </para>
+        </question>
+        <answer>
+            <para>
+                <ulink url='http://www.gnome.org/mobile/'>GNOME Mobile</ulink> is a subset of the GNOME platform targeted at mobile and embedded devices. The the main difference between GNOME Mobile and standard GNOME is that desktop-orientated libraries have been removed, along with deprecated libraries, creating a much smaller footprint. 
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                How do I make Poky work in RHEL/CentOS?
+            </para>
+        </question>
+        <answer>
+            <para>
+                To get Poky working under RHEL/CentOS 5.1 you need to first install some required packages. The standard CentOS packages needed are:
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            "Development tools" (selected during installation)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            texi2html
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            compat-gcc-34
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <para>
+                On top of those the following external packages are needed:
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            python-sqlite2 from <ulink
+                                url='http://dag.wieers.com/rpm/packages/python-sqlite2/'>DAG
+                                repository</ulink>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            help2man from <ulink
+                                url='http://centos.karan.org/el5/extras/testing/i386/RPMS/help2man-1.33.1-2.noarch.rpm'>Karan
+                                repository</ulink>
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <para>
+                Once these packages are installed Poky will be able to build standard images however there 
+                may be a problem with QEMU segfaulting. You can either disable the generation of binary 
+                locales by setting <glossterm><link linkend='var-ENABLE_BINARY_LOCALE_GENERATION'>ENABLE_BINARY_LOCALE_GENERATION</link>
+                </glossterm> to "0" or remove the linux-2.6-execshield.patch from the kernel and rebuild 
+                it since its that patch which causes the problems with QEMU.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                I see lots of 404 responses for files on http://folks.o-hand.com/~richard/poky/sources/*. Is something wrong?
+            </para>
+        </question>
+        <answer>
+            <para>
+                Nothing is wrong, Poky will check any configured source mirrors before downloading 
+                from the upstream sources. It does this searching for both source archives and 
+                pre-checked out versions of SCM managed software. This is so in large installations, 
+                it can reduce load on the SCM servers themselves. The address above is one of the 
+                default mirrors configured into standard Poky so if an upstream source disappears, 
+                we can place sources there so builds continue to work.
+            </para>
+        </answer>
+    </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                I have a machine specific data in a package for one machine only but the package is 
+                 being marked as machine specific in all cases, how do I stop it?
+            </para>
+        </question>
+        <answer>
+            <para>
+                Set <glossterm><link linkend='var-SRC_URI_OVERRIDES_PACKAGE_ARCH'>SRC_URI_OVERRIDES_PACKAGE_ARCH</link>
+                </glossterm> = "0" in the .bb file but make sure the package is manually marked as 
+                machine specific in the case that needs it. The code which handles <glossterm><link 
+                linkend='var-SRC_URI_OVERRIDES_PACKAGE_ARCH'>SRC_URI_OVERRIDES_PACKAGE_ARCH</link></glossterm>
+		is in base.bbclass.
+            </para>
+        </answer>
+    </qandaentry>
+</qandaset>
+</appendix>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->
+

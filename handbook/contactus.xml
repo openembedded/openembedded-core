@@ -1,0 +1,30 @@
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<appendix id='contact'>
+    <title>OpenedHand Contact Information</title>
+
+    <literallayout>
+OpenedHand Ltd
+Unit R, Homesdale Business Center
+216-218 Homesdale Rd
+Bromley, BR1 2QZ
+England
++44 (0) 208 819 6559
+info@openedhand.com</literallayout>
+
+    <!-- Fop messes this up so we do like above
+    <address>
+        OpenedHand Ltd
+        Unit R, Homesdale Business Center
+        <street>216-218 Homesdale Rd</street>
+        <city>Bromley</city>, <postcode>BR1 2QZ</postcode>
+        <country>England</country>
+        <phone> +44 (0) 208 819 6559</phone>
+        <email>info@openedhand.com</email>
+    </address>
+    -->
+</appendix>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

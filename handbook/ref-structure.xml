@@ -1,0 +1,365 @@
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<appendix id='ref-structure'>
+
+<title>Reference: Directory Structure</title>
+
+<para>
+    Poky consists of several components and understanding what these are 
+    and where they're located is one of the keys to using it. This section walks 
+    through the Poky directory structure giving information about the various 
+    files and directories.
+</para>
+
+<section id='structure-core'>
+    <title>Top level core components</title>
+
+    <section id='structure-core-bitbake'>
+        <title><filename class="directory">bitbake/</filename></title>
+
+        <para>
+            A copy of BitBake is included within Poky for ease of use, and should 
+            usually match the current BitBake stable release from the BitBake project. 
+            Bitbake, a metadata interpreter, reads the Poky metadata and runs the tasks 
+            defined in the Poky metadata. Failures are usually from the metadata, not 
+            BitBake itself, so most users don't need to worry about BitBake. The 
+            <filename class="directory">bitbake/bin/</filename> directory is placed 
+            into the PATH environment variable by the <link 
+            linkend="structure-core-script">poky-init-build-env</link> script.
+        </para>
+        <para>
+            For more information on BitBake please see the BitBake project site at 
+            <ulink url="http://bitbake.berlios.de/"/> 
+            and the BitBake on-line manual at <ulink url="http://bitbake.berlios.de/manual/"/>.
+        </para>
+    </section>
+
+    <section id='structure-core-build'>
+        <title><filename class="directory">build/</filename></title>
+
+        <para>
+            This directory contains user configuration files and the output 
+            from Poky.
+        </para>
+    </section>
+
+    <section id='structure-core-meta'>
+        <title><filename class="directory">meta/</filename></title>
+
+        <para>
+            This directory contains the core metadata, a key part of Poky. Within this 
+            directory there are definitions of the machines, the Poky distribution 
+            and the packages that make up a given system.
+        </para>
+    </section>
+
+    <section id='structure-core-meta-extras'>
+        <title><filename class="directory">meta-extras/</filename></title>
+
+        <para>
+            This directory is similar to <filename class="directory">meta/</filename>, 
+            and contains some extra metadata not included in standard Poky.  These are 
+            disabled by default, and are not supported as part of Poky.
+        </para>
+    </section>
+
+    <section id='structure-core-scripts'>
+        <title><filename class="directory">scripts/</filename></title>
+
+        <para>
+            This directory contains various integration scripts which implement 
+            extra functionality in the Poky environment, such as the QEMU 
+            scripts. This directory is appended to the PATH environment variable by the 
+            <link linkend="structure-core-script">poky-init-build-env</link> script.
+        </para>
+    </section>
+
+    <section id='structure-core-sources'>
+        <title><filename class="directory">sources/</filename></title>
+
+        <para>
+            While not part of a checkout, Poky will create this directory as 
+            part of any build. Any downloads are placed in this directory (as 
+            specified by the <glossterm><link linkend='var-DL_DIR'>DL_DIR</link>
+            </glossterm> variable). This directory can be shared between Poky 
+            builds to save downloading files multiple times. SCM checkouts are 
+            also stored here as e.g. <filename class="directory">sources/svn/
+            </filename>, <filename class="directory">sources/cvs/</filename> or 
+            <filename class="directory">sources/git/</filename> and the 
+            sources directory may contain archives of checkouts for various 
+            revisions or dates.
+        </para>
+
+        <para>
+            It's worth noting that BitBake creates <filename class="extension">.md5 
+            </filename> stamp files for downloads. It uses these to mark downloads as 
+            complete as well as for checksum and access accounting purposes. If you add 
+            a file manually to the directory, you need to touch the corresponding 
+            <filename class="extension">.md5</filename> file too.
+        </para>
+
+        <para>
+            This location can be overridden by setting <glossterm><link 
+            linkend='var-DL_DIR'>DL_DIR</link></glossterm> in <filename>local.conf
+            </filename>. This directory can be shared between builds and even between 
+            machines via NFS, so downloads are only made once, speeding up builds.
+        </para>
+
+    </section>
+
+    <section id='structure-core-script'>
+        <title><filename>poky-init-build-env</filename></title>
+
+        <para>
+            This script is used to setup the Poky build environment. Sourcing this file in
+            a shell makes changes to PATH and sets other core BitBake variables based on the
+            current working directory. You need to use this before running Poky commands.
+            Internally it uses scripts within the <filename class="directory">scripts/ 
+            </filename> directory to do the bulk of the work.
+        </para>
+    </section>
+</section>
+
+<section id='structure-build'>
+    <title><filename class="directory">build/</filename> - The Build Directory</title>
+
+    <section id='structure-build-conf-local.conf'>
+        <title><filename>build/conf/local.conf</filename></title>
+
+        <para>
+            This file contains all the local user configuration of Poky. If there
+            is no <filename>local.conf</filename> present, it is created from 
+            <filename>local.conf.sample</filename>. The <filename>local.conf</filename> 
+            file contains documentation on the various configuration options.  Any 
+            variable set here overrides any variable set elsewhere within Poky unless 
+            that variable is hardcoded within Poky (e.g. by using '=' instead of '?='). 
+            Some variables are hardcoded for various reasons but these variables are 
+            relatively rare.
+        </para>
+
+        <para>
+            Edit this file to set the <glossterm><link linkend='var-MACHINE'>MACHINE</link></glossterm> for which you want to build, which package types you
+            wish to use (PACKAGE_CLASSES) or where downloaded files should go 
+            (<glossterm><link linkend='var-DL_DIR'>DL_DIR</link></glossterm>).
+        </para>
+    </section>
+
+    <section id='structure-build-tmp'>
+        <title><filename class="directory">build/tmp/</filename></title>
+
+        <para>
+            This is created by BitBake if it doesn't exist and is where all the Poky output
+            is placed. To clean Poky and start a build from scratch (other than downloads), 
+            you can wipe this directory. The <filename class="directory">tmp/
+            </filename> directory has some important sub-components detailed below.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-cache'>
+        <title><filename class="directory">build/tmp/cache/</filename></title>
+
+        <para>
+            When BitBake parses the metadata it creates a cache file of the result which can
+            be used when subsequently running commands. These are stored here on 
+            a per machine basis.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-cross'>
+        <title><filename class="directory">build/tmp/cross/</filename></title>
+
+        <para>
+            The cross compiler when generated is placed into this directory and those
+            beneath it.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-deploy'>
+        <title><filename class="directory">build/tmp/deploy/</filename></title>
+
+        <para>Any 'end result' output from Poky is placed under here.</para>
+    </section>
+
+    <section id='structure-build-tmp-deploy-deb'>
+        <title><filename class="directory">build/tmp/deploy/deb/</filename></title>
+
+        <para>
+            Any .deb packages emitted by Poky are placed here, sorted into feeds for 
+            different architecture types.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-deploy-images'>
+        <title><filename class="directory">build/tmp/deploy/images/</filename></title>
+
+        <para>
+            Complete filesystem images are placed here. If you want to flash the resulting 
+            image from a build onto a device, look here for them.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-deploy-ipk'>
+        <title><filename class="directory">build/tmp/deploy/ipk/</filename></title>
+
+        <para>Any resulting .ipk packages emitted by Poky are placed here.</para>
+    </section>
+
+    <section id='structure-build-tmp-rootfs'>
+        <title><filename class="directory">build/tmp/rootfs/</filename></title>
+
+        <para>
+            This is a temporary scratch area used when creating filesystem images. It is run
+            under fakeroot and is not useful once that fakeroot session has ended as 
+            information is lost. It is left around since it is still useful in debugging 
+            image creation problems.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-staging'>
+        <title><filename class="directory">build/tmp/staging/</filename></title>
+
+        <para>
+            Any package needing to share output with other packages does so within staging.
+            This means it contains any shared header files and any shared libraries amongst
+            other data. It is subdivided by architecture so multiple builds can run within
+            the one build directory.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-stamps'>
+        <title><filename class="directory">build/tmp/stamps/</filename></title>
+
+        <para>
+            This is used by BitBake for accounting purposes to keep track of which tasks 
+            have been run and when. It is also subdivided by architecture. The files are 
+            empty and the important information is the filenames and timestamps.</para>
+    </section>
+
+    <section id='structure-build-tmp-work'>
+        <title><filename class="directory">build/tmp/work/</filename></title>
+
+        <para>
+            This directory contains various subdirectories for each architecture, and each package built by BitBake has its own work directory under the appropriate architecture subdirectory.  All tasks are executed from this work directory.  As an example, the source for a particular package will be unpacked, patched, configured and compiled all within its own work directory.
+        </para>
+
+        <para>
+            It is worth considering the structure of a typical work directory. An 
+            example is the linux-rp kernel, version 2.6.20 r7 on the machine spitz 
+            built within Poky.  For this package a work directory of <filename 
+            class="directory">tmp/work/spitz-poky-linux-gnueabi/linux-rp-2.6.20-r7/
+            </filename>, referred to as <glossterm><link linkend='var-WORKDIR'>WORKDIR
+            </link></glossterm>, is created.  Within this directory, the source is 
+            unpacked to linux-2.6.20 and then patched by quilt (see <link 
+            linkend="usingpoky-modifying-packages-quilt">Section 3.5.1</link>).   
+            Within the <filename class="directory">linux-2.6.20</filename> directory, 
+            standard Quilt directories <filename class="directory">linux-2.6.20/patches</filename>
+            and <filename class="directory">linux-2.6.20/.pc</filename> are created,
+            and standard quilt commands can be used.
+        </para>
+
+        <para>
+            There are other directories generated within <glossterm><link 
+            linkend='var-WORKDIR'>WORKDIR</link></glossterm>. The most important 
+            is <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm><filename class="directory">/temp/</filename> which has log files for each 
+            task (<filename>log.do_*.pid</filename>) and the scripts BitBake runs for 
+            each task (<filename>run.do_*.pid</filename>). The <glossterm><link 
+            linkend='var-WORKDIR'>WORKDIR</link></glossterm><filename 
+            class="directory">/image/</filename> directory is where <command>make 
+            install</command> places its output which is then split into subpackages 
+            within <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm><filename class="directory">/install/</filename>.
+        </para>
+    </section>
+</section>
+
+<section id='structure-meta'>
+    <title><filename class="directory">meta/</filename> - The Metadata</title>
+
+    <para>
+        As mentioned previously, this is the core of Poky. It has several 
+        important subdivisions:
+    </para>
+
+    <section id='structure-meta-classes'>
+        <title><filename class="directory">meta/classes/</filename></title>
+
+        <para>
+            Contains the <filename class="extension">*.bbclass</filename> files. Class 
+            files are used to abstract common code allowing it to be reused by multiple 
+            packages. The <filename>base.bbclass</filename> file is inherited by every 
+            package. Examples of other important classes are 
+            <filename>autotools.bbclass</filename> that in theory allows any 
+            Autotool-enabled package to work with Poky with minimal effort, or 
+            <filename>kernel.bbclass</filename> that contains common code and functions 
+            for working with the linux kernel. Functions like image generation or 
+            packaging also have their specific class files (<filename>image.bbclass
+            </filename>, <filename>rootfs_*.bbclass</filename> and 
+            <filename>package*.bbclass</filename>).
+        </para>
+    </section>
+
+    <section id='structure-meta-conf'>
+        <title><filename class="directory">meta/conf/</filename></title>
+
+        <para>
+            This is the core set of configuration files which start from 
+            <filename>bitbake.conf</filename> and from which all other configuration 
+            files are included (see the includes at the end of the file, even 
+            <filename>local.conf</filename> is loaded from there!). While 
+            <filename>bitbake.conf</filename> sets up the defaults, these can often be 
+            overridden by user (<filename>local.conf</filename>), machine or 
+            distribution configuration files.
+        </para>
+    </section>
+
+    <section id='structure-meta-conf-machine'>
+        <title><filename class="directory">meta/conf/machine/</filename></title>
+
+        <para>
+            Contains all the machine configuration files. If you set MACHINE="spitz", the 
+            end result is Poky looking for a <filename>spitz.conf</filename> file in this directory. The includes
+            directory contains various data common to multiple machines. If you want to add
+            support for a new machine to Poky, this is the directory to look in.
+        </para>
+    </section>
+
+    <section id='structure-meta-conf-distro'>
+        <title><filename class="directory">meta/conf/distro/</filename></title>
+
+        <para>
+            Any distribution specific configuration is controlled from here. OpenEmbedded 
+            supports multiple distributions of which Poky is one. Poky only contains the 
+            Poky distribution so poky.conf is the main file here.  This includes the 
+            versions and SRCDATES for applications which are configured here. An example of 
+            an alternative configuration is poky-bleeding.conf although this mainly inherits
+            its configuration from Poky itself.
+        </para>
+    </section>
+
+    <section id='structure-meta-packages'>
+        <title><filename class="directory">meta/packages/</filename></title>
+
+        <para>
+            Each application (package) Poky can build has an associated .bb file which are 
+            all stored under this directory. Poky finds them through the BBFILES variable 
+            which defaults to packages/*/*.bb. Adding a new piece of software to Poky 
+            consists of adding the appropriate .bb file. The .bb files from OpenEmbedded
+            upstream are usually compatible although they are not supported.
+        </para>
+    </section>
+
+    <section id='structure-meta-site'>
+        <title><filename class="directory">meta/site/</filename></title>
+
+        <para>
+            Certain autoconf test results cannot be determined when cross compiling since it 
+            can't run tests on a live system. This directory therefore contains a list of 
+            cached results for various architectures which is passed to autoconf.
+        </para>
+    </section>
+</section>
+
+</appendix>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->

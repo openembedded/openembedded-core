@@ -1,0 +1,302 @@
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<appendix id='ref-features'>
+    <title>Reference: Features</title>
+
+    <para>'Features' provide a mechanism for working out which packages
+        should be included in the generated images. Distributions can
+        select which features they want to support through the
+        <glossterm linkend='var-DISTRO_FEATURES'><link
+        linkend='var-DISTRO_FEATURES'>DISTRO_FEATURES</link></glossterm>
+        variable which is set in the distribution configuration file
+        (poky.conf for Poky).  Machine features are set in the
+        <glossterm linkend='var-MACHINE_FEATURES'><link
+        linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES</link></glossterm>
+        variable which is set in the machine configuration file and
+        specifies which hardware features a given machine has.
+    </para>
+
+    <para>These two variables are combined to work out which kernel modules,
+        utilities and other packages to include. A given distribution can 
+        support a selected subset of features so some machine features might not
+        be included if the distribution itself doesn't support them.
+    </para>
+
+    <section id='ref-features-distro'>
+        <title>Distro</title>
+
+        <para>The items below are valid options for <glossterm linkend='var-DISTRO_FEATURES'><link
+        linkend='var-DISTRO_FEATURES'>DISTRO_FEATURES</link></glossterm>.
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    alsa - ALSA support will be included (OSS compatibility
+                    kernel modules will be installed if available)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    bluetooth - Include bluetooth support (integrated BT only)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ext2 - Include tools for supporting for devices with internal
+                    HDD/Microdrive for storing files (instead of Flash only devices)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    irda - Include Irda support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    keyboard - Include keyboard support (e.g. keymaps will be 
+                    loaded during boot).
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    pci - Include PCI bus support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    pcmcia - Include PCMCIA/CompactFlash support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    usbgadget - USB Gadget Device support (for USB
+                    networking/serial/storage)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    usbhost - USB Host support (allows to connect external
+                    keyboard, mouse, storage, network etc)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    wifi - WiFi support (integrated only)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    cramfs - CramFS support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ipsec - IPSec support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ipv6 - IPv6 support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    nfs - NFS client support (for mounting NFS exports on
+                    device)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ppp - PPP dialup support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    smbfs - SMB networks client support (for mounting
+                    Samba/Microsoft Windows shares on device)
+                </para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-features-machine'>
+        <title>Machine</title>
+
+        <para>The items below are valid options for <glossterm linkend='var-MACHINE_FEATURES'><link
+        linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES</link></glossterm>.
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    acpi - Hardware has ACPI (x86/x86_64 only)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    alsa - Hardware has ALSA audio drivers
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    apm - Hardware uses APM (or APM emulation)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    bluetooth - Hardware has integrated BT
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ext2 - Hardware HDD or Microdrive
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    irda - Hardware has Irda support
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    keyboard - Hardware has a keyboard
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    pci - Hardware has a PCI bus
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    pcmcia - Hardware has PCMCIA or CompactFlash sockets
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    screen - Hardware has a screen
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    serial - Hardware has serial support (usually RS232)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    touchscreen - Hardware has a touchscreen
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    usbgadget - Hardware is USB gadget device capable
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    usbhost - Hardware is USB Host capable
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    wifi - Hardware has integrated WiFi
+                </para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
+    <section id='ref-features-image'>
+        <title>Reference: Images</title>
+
+        <para>
+            The contents of images generated by Poky can be controlled by the <glossterm
+        linkend='var-IMAGE_FEATURES'><link
+        linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
+        variable in local.conf. Through this you can add several different
+        predefined packages such as development utilities or packages with debug
+        information needed to investigate application problems or profile applications.
+        </para>
+
+        <para>
+            Current list of <glossterm
+        linkend='var-IMAGE_FEATURES'><link
+        linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm> contains:
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    apps-console-core - Core console applications such as ssh daemon, 
+                    avahi daemon, portmap (for mounting NFS shares)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    x11-base - X11 server + minimal desktop
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    x11-sato - OpenedHand Sato environment
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    apps-x11-core - Core X11 applications such as an X Terminal, file manager, file editor
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    apps-x11-games - A set of X11 games
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    apps-x11-pimlico - OpenedHand Pimlico application suite
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    tools-sdk - A full SDK which runs on device
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    tools-debug - Debugging tools such as strace and gdb
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    tools-profile - Profiling tools such as oprofile, exmap and LTTng
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    tools-testapps - Device testing tools (e.g. touchscreen debugging)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    nfs-server - NFS server (exports / over NFS to everybody)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    dev-pkgs - Development packages (headers and extra library links) for all packages
+                    installed in a given image
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    dbg-pkgs - Debug packages for all packages installed in a given image
+                </para>
+            </listitem>
+        </itemizedlist>
+    </section>
+</appendix>
+
+<!-- 
+vim: expandtab tw=80 ts=4 spell spelllang=en_gb
+-->
