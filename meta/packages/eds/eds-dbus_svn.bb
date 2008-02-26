@@ -1,10 +1,10 @@
 DESCRIPTION = "Evolution database backend server"
 HOMEPAGE = "http://projects.o-hand.com/eds"
 LICENSE = "LGPL"
-DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib"
+DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup"
 
 PV = "1.4.0+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://oh-contact.patch;patch=1;pnum=0 \
@@ -29,7 +29,7 @@ do_stage () {
 }
 
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \
-                --without-soup --with-libdb=${STAGING_DIR_HOST}${layout_prefix} \
+                --with-soup --with-libdb=${STAGING_DIR_HOST}${layout_prefix} \
                 --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
 
 
