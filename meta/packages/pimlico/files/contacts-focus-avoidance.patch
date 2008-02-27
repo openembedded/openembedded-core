@@ -1,7 +1,7 @@
 Index: src/contacts-gtk.c
 ===================================================================
---- src/contacts-gtk.c	(revision 405)
-+++ src/contacts-gtk.c	(working copy)
+--- a/src/contacts-gtk.c	(revision 405)
++++ b/src/contacts-gtk.c	(working copy)
 @@ -426,7 +426,6 @@
  	GTK_WIDGET_SET_FLAGS (edit_done_button, GTK_CAN_DEFAULT);
  
@@ -23,8 +23,8 @@ Index: src/contacts-gtk.c
  			G_CALLBACK (contacts_main_window_delete_event_cb), data);
 Index: src/contacts-edit-pane.c
 ===================================================================
---- src/contacts-edit-pane.c	(revision 405)
-+++ src/contacts-edit-pane.c	(working copy)
+--- a/src/contacts-edit-pane.c	(revision 405)
++++ b/src/contacts-edit-pane.c	(working copy)
 @@ -86,7 +86,7 @@
  	if (data->ui->edit_button)
  		gtk_window_set_default (window, data->ui->edit_button);
