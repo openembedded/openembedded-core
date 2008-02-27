@@ -1,0 +1,36 @@
+Index: src/contacts-gtk.c
+===================================================================
+--- src/contacts-gtk.c	(revision 405)
++++ src/contacts-gtk.c	(working copy)
+@@ -426,7 +426,6 @@
+ 	GTK_WIDGET_SET_FLAGS (edit_done_button, GTK_CAN_DEFAULT);
+ 
+ 
+-	gtk_widget_grab_focus (search_entry);
+ 	gtk_widget_grab_default (edit_button);
+ 	gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
+ 
+@@ -436,8 +435,9 @@
+ 	gtk_size_group_add_widget (size_group, summary_hbuttonbox);
+ 	g_object_unref (size_group);
+ 
++	/* Set it so no focus on the search box by default */
++	gtk_window_set_focus (GTK_WINDOW (main_window), NULL);
+ 
+-
+ 	/* connect signals */
+ 	g_signal_connect (G_OBJECT (main_window), "delete-event",
+ 			G_CALLBACK (contacts_main_window_delete_event_cb), data);
+Index: src/contacts-edit-pane.c
+===================================================================
+--- src/contacts-edit-pane.c	(revision 405)
++++ src/contacts-edit-pane.c	(working copy)
+@@ -86,7 +86,7 @@
+ 	if (data->ui->edit_button)
+ 		gtk_window_set_default (window, data->ui->edit_button);
+ 	if ((widget = data->ui->search_entry) && GTK_WIDGET_VISIBLE (widget))
+-		gtk_window_set_focus (window, data->ui->search_entry);
++		gtk_window_set_focus (window, NULL);
+ }
+ 
+ static void
