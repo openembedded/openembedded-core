@@ -74,6 +74,18 @@
         using the GNOME Mobile stack, providing a well defined user experience.
     </para>
 
+    <screenshot>
+    <mediaobject>
+        <imageobject>
+            <imagedata fileref="screenshots/ss-sato.png" format="PNG"/>
+        </imageobject>
+        <caption>
+            <para>The Sato Desktop - A screenshot from a machine running a Poky built image</para>
+        </caption>
+     </mediaobject>
+     </screenshot>
+
+
     <para>
 
     Poky has a growing open source community backed up by commercial support provided by <ulink url="http://o-hand.com/">OpenedHand</ulink>.
