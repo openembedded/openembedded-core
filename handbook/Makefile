@@ -18,5 +18,8 @@ html:
 #       -- old way --
 #	xmlto xhtml-nochunks poky-handbook.xml
 
+tarball: html
+	tar -cvzf poky-handbook.tgz poky-handbook.html
+
 validate:
 	xmllint --postvalid --xinclude --noout poky-handbook.xml
