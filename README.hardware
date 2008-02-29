@@ -163,7 +163,7 @@ To write the root filesystem  to flash run:
 To load and boot a kernel and rootfs from flash:
 
   fis load kernel
-  exec -b 0x100000 -l 0x200000 -c "noinitrd console=ttymxc0,115200 root=/dev/mtdblock2 rootfstype=jffs2 init=linuxrc ip=none”
+  exec -b 0x100000 -l 0x200000 -c "noinitrd console=ttymxc0,115200 root=/dev/mtdblock2 rootfstype=jffs2 init=linuxrc ip=none"
 
 To load and boot a kernel from a TFTP server with the rootfs over NFS:
 
