@@ -1,0 +1,15 @@
+Index: gtk+-2.12.7/gtk/gtkfilechooserdefault.c
+===================================================================
+--- gtk+-2.12.7.orig/gtk/gtkfilechooserdefault.c	2008-02-29 15:04:29.000000000 +0000
++++ gtk+-2.12.7/gtk/gtkfilechooserdefault.c	2008-02-29 15:05:23.000000000 +0000
+@@ -178,8 +178,8 @@
+ #define FALLBACK_ICON_SIZE 24
+ 
+ #define LIST_HBOX_SPACING DEFAULT_SPACING
+-#define NUM_LINES 45
+-#define NUM_CHARS 60
++#define NUM_LINES 15
++#define NUM_CHARS 20
+ 
+ static void gtk_file_chooser_default_iface_init       (GtkFileChooserIface        *iface);
+ static void gtk_file_chooser_embed_default_iface_init (GtkFileChooserEmbedIface   *iface);

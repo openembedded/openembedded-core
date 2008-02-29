@@ -1,7 +1,7 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \
@@ -16,6 +16,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://filesystem-volumes.patch;patch=1 \
            file://filechooser-props.patch;patch=1 \
            file://filechooser-default.patch;patch=1 \
+           file://filechooser-sizefix.patch;patch=1 \
 # temporary
 #           file://gtklabel-resize-patch;patch=1 \
 #           file://menu-deactivate.patch;patch=1 \
