@@ -3,14 +3,15 @@ LICENSE = "GPL"
 DEPENDS = "networkmanager dbus-glib libglade gconf gnome-keyring"
 #TODO DEPENDS libnotify
 RDEPENDS = "networkmanager"
-PR = "r2"
+PR = "r3"
 
 inherit gnome gtk-icon-cache
 
 SRC_URI = "svn://svn.gnome.org/svn/network-manager-applet/;module=trunk;proto=http \
            file://applet-no-gnome.diff;patch=1;pnum=0 \
            file://applet-no-animation.patch;patch=1 \
-	   file://70NetworkManagerApplet"
+           file://no_vpn.patch;patch=1 \
+           file://70NetworkManagerApplet"
 
 PV = "0.0+svnr${SRCREV}"
 

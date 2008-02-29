@@ -1,0 +1,13 @@
+Index: trunk/src/applet.c
+===================================================================
+--- trunk.orig/src/applet.c	2008-02-29 17:47:39.000000000 +0000
++++ trunk/src/applet.c	2008-02-29 17:48:38.000000000 +0000
+@@ -1783,7 +1783,7 @@
+ 	}
+ 
+ 	nma_menu_add_devices (menu, applet);
+-	nma_menu_add_vpn_submenu (menu, applet);
++	//nma_menu_add_vpn_submenu (menu, applet);
+ 
+ 	gtk_widget_show_all (applet->menu);
+ 
