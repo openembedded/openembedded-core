@@ -34,25 +34,6 @@
         </listitem>
     </itemizedlist>
 
-    <para><ulink url='http://www.o-hand.com'>OpenedHand</ulink> is the principle developer and maintainer of Poky and uses it to:</para>
-
-    <itemizedlist>
-        <listitem>
-            <para>Provide <ulink url='http://www.o-hand.com'>OpenedHand</ulink> with stable R&amp;D platform we can build and develop upon.</para>
-        </listitem>
-        <listitem>
-            <para>
-                Provide a testbed and showcase for OpenedHand's software products
-                (such as the <ulink url='http://www.matchbox-project.org/'>Matchbox</ulink>, <ulink url='http://www.clutter-project.org/'>Clutter</ulink> and
-                <ulink url='http://www.pimlico-project.org/'>Pimlico</ulink> software packages and
-                Sato, the default user interface in Poky).
-            </para>
-        </listitem>
-        <listitem>
-            <para>Provide a supported base we can supply to our clients for building and developing their customised platforms.</para>
-        </listitem>
-    </itemizedlist>
-
     <para>
         Poky is primarily a platform builder which generates filesystem images
         based on open source software such as the Kdrive X server, the Matchbox
@@ -88,7 +69,7 @@
 
     <para>
 
-    Poky has a growing open source community backed up by commercial support provided by <ulink url="http://o-hand.com/">OpenedHand</ulink>.
+    Poky has a growing open source community backed up by commercial support provided by the principle developer and maintainer of Poky, <ulink url="http://o-hand.com/">OpenedHand Ltd</ulink>.
 
     </para>
 </section>

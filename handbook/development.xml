@@ -46,7 +46,7 @@
             developer can cross compile an application then deploy and execute the output in a QEMU 
             emulation session. It also supports cross debugging and profiling.
         </para>
-
+<!-- DISBALED, TOO BIG!
         <screenshot>
         <mediaobject>
             <imageobject>
@@ -57,7 +57,7 @@
             </caption>
          </mediaobject>
          </screenshot>
-
+-->
         <para>
             To use the plugin, a toolchain and SDK built by Poky is required along with Anjuta and the Anjuta 
             plugin. The Poky Anjuta plugin is available from the OpenedHand SVN repository located at
@@ -116,7 +116,7 @@
                 the root filesystem image, this should be an image (not a
                 tarball)</para></listitem>
           </itemizedlist>
-
+<!-- DISBALED, TOO BIG!
         <screenshot>
         <mediaobject>
             <imageobject>
@@ -127,7 +127,7 @@
             </caption>
          </mediaobject>
          </screenshot>
-
+-->
 
         </section>
 
@@ -686,6 +686,7 @@ $ opreport -cl
             are installed onto the target device for OProfileUI interaction.
         </para>
 
+<!-- DISBALED, Need a more 'contexual' shot?
         <screenshot>
         <mediaobject>
             <imageobject>
@@ -696,7 +697,7 @@ $ opreport -cl
             </caption>
          </mediaobject>
          </screenshot>
-
+-->
         <para>
             In order to convert the data in the sample format from the target
             to the host the <filename>opimport</filename> program is needed. 

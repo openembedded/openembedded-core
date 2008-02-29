@@ -1,3 +1,12 @@
+2008-02-29  Matthew Allum  <mallum@openedhand.com>
+
+	* development.xml:
+        Disable images too big / lack context for now.
+	* introduction.xml:
+        Remove some OH specific stuff.
+	* style.css:
+        Remove limit on image size
+
 2008-02-15  Matthew Allum  <mallum@openedhand.com>
 
 	* introduction.xml:

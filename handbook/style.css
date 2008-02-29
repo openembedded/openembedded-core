@@ -263,11 +263,6 @@ img {
   border: none;
 }
 
-.mediaobject img,
-.mediaobjectco img{
-  max-width: 36em;
-}
-
 ul {
   padding: 0 0 0 1.5em;
 }
