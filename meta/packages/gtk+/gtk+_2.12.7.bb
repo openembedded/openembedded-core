@@ -1,7 +1,7 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \
