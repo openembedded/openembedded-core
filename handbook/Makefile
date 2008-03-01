@@ -19,7 +19,7 @@ html:
 #	xmlto xhtml-nochunks poky-handbook.xml
 
 tarball: html
-	tar -cvzf poky-handbook.tgz poky-handbook.html
+	tar -cvzf poky-handbook.tgz poky-handbook.html style.css screenshots/ss-sato.png poky-beaver.png poky-handbook.png
 
 validate:
 	xmllint --postvalid --xinclude --noout poky-handbook.xml
