@@ -95,6 +95,10 @@ def handle(fn, d, include = 0):
     if ext == ".bbclass":
         __classname__ = root
         classes.append(__classname__)
+        __inherit_cache = data.getVar('__inherit_cache', d) or []
+        if not fn in __inherit_cache:
+            __inherit_cache.append(fn)
+            data.setVar('__inherit_cache', __inherit_cache, d)
 
     if include != 0:
         oldfile = data.getVar('FILE', d)
@@ -126,10 +130,6 @@ def handle(fn, d, include = 0):
 
     if ext != ".bbclass":
         data.setVar('FILE', fn, d)
-        i = (data.getVar("INHERIT", d, 1) or "").split()
-        if not "base" in i and __classname__ != "base":
-            i[0:0] = ["base"]
-        inherit(i, d)
 
     lineno = 0
     while 1:
@@ -171,32 +171,11 @@ def handle(fn, d, include = 0):
             all_handlers = {} 
             for var in data.getVar('__BBHANDLERS', d) or []:
                 # try to add the handler
-                # if we added it remember the choiche
                 handler = data.getVar(var,d)
-                if bb.event.register(var,handler) == bb.event.Registered:
-                    all_handlers[var] = handler
+                bb.event.register(var, handler)
 
-            tasklist = {}
-            for var in data.getVar('__BBTASKS', d) or []:
-                if var not in tasklist:
-                    tasklist[var] = []
-                deps = data.getVarFlag(var, 'deps', d) or []
-                for p in deps:
-                    if p not in tasklist[var]:
-                        tasklist[var].append(p)
-
-                postdeps = data.getVarFlag(var, 'postdeps', d) or []
-                for p in postdeps:
-                    if p not in tasklist:
-                        tasklist[p] = []
-                    if var not in tasklist[p]:
-                        tasklist[p].append(var)
-
+            tasklist = data.getVar('__BBTASKS', d) or []
             bb.build.add_tasks(tasklist, d)
-
-            # now add the handlers
-            if not len(all_handlers) == 0:
-                data.setVar('__all_handlers__', all_handlers, d)
 
         bbpath.pop(0)
     if oldfile:
@@ -342,15 +321,23 @@ def feeder(lineno, s, fn, root, d):
         data.setVarFlag(var, "task", 1, d)
 
         bbtasks = data.getVar('__BBTASKS', d) or []
-        bbtasks.append(var)
+        if not var in bbtasks:
+            bbtasks.append(var)
         data.setVar('__BBTASKS', bbtasks, d)
 
+        existing = data.getVarFlag(var, "deps", d) or []
         if after is not None:
-#           set up deps for function
-            data.setVarFlag(var, "deps", after.split(), d)
+            # set up deps for function
+            for entry in after.split():
+                if entry not in existing:
+                    existing.append(entry)
+        data.setVarFlag(var, "deps", existing, d)
         if before is not None:
-#           set up things that depend on this func
-            data.setVarFlag(var, "postdeps", before.split(), d)
+            # set up things that depend on this func
+            for entry in before.split():
+                existing = data.getVarFlag(entry, "deps", d) or []
+                if var not in existing:
+                    data.setVarFlag(entry, "deps", [var] + existing, d)
         return
 
     m = __addhandler_regexp__.match(s)

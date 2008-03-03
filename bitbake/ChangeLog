@@ -1,6 +1,26 @@
 Changes in BitBake 1.8.x:
 	- Fix exit code for build failures in --continue mode
 	- Fix git branch tags fetching
+	- Change parseConfigurationFile so it works on real data, not a copy
+	- Handle 'base' inherit and all other INHERITs from parseConfigurationFile 
+	  instead of BBHandler
+	- Fix getVarFlags bug in data_smart
+	- Optmise cache handling by more quickly detecting an invalid cache, only 
+	  saving the cache when its changed, moving the cache validity check into
+	  the parsing loop and factoring some getVar calls outside a for loop
+	- Cooker: Remove a debug message from the parsing loop to lower overhead
+	- Convert build.py exec_task to use getVarFlags
+	- Update shell to use cooker.buildFile
+	- Add StampUpdate event
+	- Convert -b option to use taskdata/runqueue
+	- Remove digraph and switch to new stamp checking code. exec_task no longer
+	  honours dependencies
+	- Make fetcher timestamp updating non-fatal when permissions don't allow 
+	  updates
+	- Add BB_SCHEDULER variable/option ("completion" or "speed") controlling
+	  the way bitbake schedules tasks
+	- Add BB_STAMP_POLICY variable/option ("perfile" or "full") controlling
+	  how extensively stamps are looked at for validity
 
 Changes in BitBake 1.8.10:
 	- Psyco is available only for x86 - do not use it on other architectures.

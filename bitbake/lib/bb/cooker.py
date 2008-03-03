@@ -97,14 +97,12 @@ class BBCooker:
             bb.msg.note(2, bb.msg.domain.Build, "Renice to %s " % os.nice(nice))
  
 
-    def tryBuildPackage(self, fn, item, task, the_data, build_depends):
+    def tryBuildPackage(self, fn, item, task, the_data):
         """
         Build one task of a package, optionally build following task depends
         """
         bb.event.fire(bb.event.PkgStarted(item, the_data))
         try:
-            if not build_depends:
-                bb.data.setVarFlag('do_%s' % task, 'dontrundeps', 1, the_data)
             if not self.configuration.dry_run:
                 bb.build.exec_task('do_%s' % task, the_data)
             bb.event.fire(bb.event.PkgSucceeded(item, the_data))
@@ -119,21 +117,20 @@ class BBCooker:
             bb.event.fire(bb.event.PkgFailed(item, the_data))
             raise
 
-    def tryBuild( self, fn, build_depends):
+    def tryBuild(self, fn):
         """
         Build a provider and its dependencies. 
         build_depends is a list of previous build dependencies (not runtime)
         If build_depends is empty, we're dealing with a runtime depends
         """
-
         the_data = self.bb_cache.loadDataFull(fn, self.configuration.data)
 
         item = self.status.pkg_fn[fn]
 
-        if bb.build.stamp_is_current('do_%s' % self.configuration.cmd, the_data):
-            return True
+        #if bb.build.stamp_is_current('do_%s' % self.configuration.cmd, the_data):
+        #    return True
 
-        return self.tryBuildPackage(fn, item, self.configuration.cmd, the_data, build_depends)
+        return self.tryBuildPackage(fn, item, self.configuration.cmd, the_data)
 
     def showVersions(self):
         pkg_pn = self.status.pkg_pn
@@ -184,6 +181,8 @@ class BBCooker:
             self.cb = None
             self.bb_cache = bb.cache.init(self)
             fn = self.matchFile(buildfile)
+            if not fn:
+                sys.exit(1)
         elif len(pkgs_to_build) == 1:
             self.updateCache()
 
@@ -220,7 +219,7 @@ class BBCooker:
         except Exception, e:
             bb.msg.fatal(bb.msg.domain.Parsing, "%s" % e)
         # emit the metadata which isnt valid shell
-        data.expandKeys( envdata )	
+        data.expandKeys( envdata )
         for e in envdata.keys():
             if data.getVarFlag( e, 'python', envdata ):
                 sys.__stdout__.write("\npython %s () {\n%s}\n" % (e, data.getVar(e, envdata, 1)))
@@ -273,7 +272,7 @@ class BBCooker:
             if fnid not in seen_fnids:
                 seen_fnids.append(fnid)
                 packages = []
-                print >> depends_file, '"%s" [label="%s %s\\n%s"]' % (pn, pn, version, fn)		
+                print >> depends_file, '"%s" [label="%s %s\\n%s"]' % (pn, pn, version, fn)
                 for depend in self.status.deps[fn]:
                     print >> depends_file, '"%s" -> "%s"' % (pn, depend)
                 rdepends = self.status.rundeps[fn]
@@ -387,19 +386,15 @@ class BBCooker:
         try:
             self.configuration.data = bb.parse.handle( afile, self.configuration.data )
 
-            # Add the handlers we inherited by INHERIT
-            # we need to do this manually as it is not guranteed
-            # we will pick up these classes... as we only INHERIT
-            # on .inc and .bb files but not on .conf
-            data = bb.data.createCopy( self.configuration.data )
-            inherits  = ["base"] + (bb.data.getVar('INHERIT', data, True ) or "").split()
+            # Handle any INHERITs and inherit the base class
+            inherits  = ["base"] + (bb.data.getVar('INHERIT', self.configuration.data, True ) or "").split()
             for inherit in inherits:
-                data = bb.parse.handle( os.path.join('classes', '%s.bbclass' % inherit ), data, True )
+                self.configuration.data = bb.parse.handle(os.path.join('classes', '%s.bbclass' % inherit), self.configuration.data, True )
 
-            # FIXME: This assumes that we included at least one .inc file
-            for var in bb.data.keys(data):
-                if bb.data.getVarFlag(var, 'handler', data):
-                    bb.event.register(var,bb.data.getVar(var, data))
+            # Nomally we only register event handlers at the end of parsing .bb files
+            # We register any handlers we've found so far here...
+            for var in data.getVar('__BBHANDLERS', self.configuration.data) or []:
+                bb.event.register(var,bb.data.getVar(var, self.configuration.data))
 
             bb.fetch.fetcher_init(self.configuration.data)
 
@@ -463,30 +458,62 @@ class BBCooker:
                 bb.msg.error(bb.msg.domain.Parsing, "Unable to match %s (%s matches found):" % (buildfile, len(matches)))
                 for f in matches:
                     bb.msg.error(bb.msg.domain.Parsing, "    %s" % f)
-                sys.exit(1)
-            return matches[0]		    
+                return False
+            return matches[0]
 
     def buildFile(self, buildfile):
         """
         Build the file matching regexp buildfile
         """
 
-        bf = self.matchFile(buildfile)
+        # Make sure our target is a fully qualified filename
+        fn = self.matchFile(buildfile)
+        if not fn:
+            return False
 
-        bbfile_data = bb.parse.handle(bf, self.configuration.data)
+        # Load data into the cache for fn
+        self.bb_cache = bb.cache.init(self)
+        self.bb_cache.loadData(fn, self.configuration.data)      
+
+        # Parse the loaded cache data
+        self.status = bb.cache.CacheData()
+        self.bb_cache.handle_data(fn, self.status)  
+
+        # Tweak some variables
+        item = self.bb_cache.getVar('PN', fn, True)
+        self.status.ignored_dependencies = Set()
+        self.status.bbfile_priority[fn] = 1
+
+        # Remove external dependencies
+        self.status.task_deps[fn]['depends'] = {}
+        self.status.deps[fn] = []
+        self.status.rundeps[fn] = []
+        self.status.runrecs[fn] = []
 
         # Remove stamp for target if force mode active
         if self.configuration.force:
-            bb.msg.note(2, bb.msg.domain.RunQueue, "Remove stamp %s, %s" % (self.configuration.cmd, bf))
+            bb.msg.note(2, bb.msg.domain.RunQueue, "Remove stamp %s, %s" % (self.configuration.cmd, fn))
             bb.build.del_stamp('do_%s' % self.configuration.cmd, bbfile_data)
 
-        item = bb.data.getVar('PN', bbfile_data, 1)
-        try:
-            self.tryBuildPackage(bf, item, self.configuration.cmd, bbfile_data, True)
-        except bb.build.EventException:
-            bb.msg.error(bb.msg.domain.Build,  "Build of '%s' failed" % item )
+        # Setup taskdata structure
+        taskdata = bb.taskdata.TaskData(self.configuration.abort)
+        taskdata.add_provider(self.configuration.data, self.status, item)
 
-        sys.exit(0)
+        buildname = bb.data.getVar("BUILDNAME", self.configuration.data)
+        bb.event.fire(bb.event.BuildStarted(buildname, [item], self.configuration.event_data))
+
+        # Execute the runqueue
+        runlist = [[item, "do_%s" % self.configuration.cmd]]
+        rq = bb.runqueue.RunQueue(self, self.configuration.data, self.status, taskdata, runlist)
+        rq.prepare_runqueue()
+        try:
+            failures = rq.execute_runqueue()
+        except runqueue.TaskFailure, fnids:
+            for fnid in fnids:
+                bb.msg.error(bb.msg.domain.Build, "'%s' failed" % taskdata.fn_index[fnid])
+            return False
+        bb.event.fire(bb.event.BuildCompleted(buildname, [item], self.configuration.event_data, failures))
+        return True
 
     def buildTargets(self, targets):
         """
@@ -568,7 +595,9 @@ class BBCooker:
             self.interactiveMode()
 
         if self.configuration.buildfile is not None:
-            return self.buildFile(self.configuration.buildfile)
+            if not self.buildFile(self.configuration.buildfile):
+                sys.exit(1)
+            sys.exit(0)
 
         # initialise the parsing status now we know we will need deps
         self.updateCache()
@@ -676,7 +705,7 @@ class BBCooker:
         for i in xrange( len( filelist ) ):
             f = filelist[i]
 
-            bb.msg.debug(1, bb.msg.domain.Collection, "parsing %s" % f)
+            #bb.msg.debug(1, bb.msg.domain.Collection, "parsing %s" % f)
 
             # read a file's metadata
             try:
