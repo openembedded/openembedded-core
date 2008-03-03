@@ -2,8 +2,6 @@ require busybox.inc
 
 PR = "r2"
 
-DEFAULT_PREFERENCE = "-1"
-
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
            file://busybox-cron \
            file://busybox-httpd \
