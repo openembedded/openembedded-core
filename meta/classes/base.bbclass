@@ -85,7 +85,7 @@ def base_chk_file(parser, pn, pv, src_uri, localpath, data):
 
 
 def base_dep_prepend(d):
-	import bb;
+	import bb
 	#
 	# Ideally this will check a flag so we will operate properly in
 	# the case where host == build == target, for now we don't work in
@@ -127,6 +127,14 @@ def base_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
 		return truevalue
 	else:
 		return falsevalue
+
+def base_version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
+    import bb
+    result = bb.vercmp(bb.data.getVar(variable,d,True), checkvalue)
+    if result <= 0:
+        return truevalue
+    else:
+        return falsevalue
 
 def base_contains(variable, checkvalues, truevalue, falsevalue, d):
 	import bb
@@ -405,7 +413,6 @@ python do_listtasks() {
 addtask clean
 do_clean[dirs] = "${TOPDIR}"
 do_clean[nostamp] = "1"
-do_clean[bbdepcmd] = ""
 python base_do_clean() {
 	"""clear the build and temp directories"""
 	dir = bb.data.expand("${WORKDIR}", d)
@@ -418,27 +425,24 @@ python base_do_clean() {
 	os.system('rm -f '+ dir)
 }
 
+addtask rebuild after do_${BB_DEFAULT_TASK}
 addtask rebuild
 do_rebuild[dirs] = "${TOPDIR}"
 do_rebuild[nostamp] = "1"
-do_rebuild[bbdepcmd] = ""
 python base_do_rebuild() {
 	"""rebuild a package"""
-	bb.build.exec_task('do_clean', d)
-	bb.build.exec_task('do_' + bb.data.getVar('BB_DEFAULT_TASK', d, 1), d)
 }
 
 addtask mrproper
 do_mrproper[dirs] = "${TOPDIR}"
 do_mrproper[nostamp] = "1"
-do_mrproper[bbdepcmd] = ""
 python base_do_mrproper() {
 	"""clear downloaded sources, build and temp directories"""
 	dir = bb.data.expand("${DL_DIR}", d)
 	if dir == '/': bb.build.FuncFailed("wrong DATADIR")
 	bb.debug(2, "removing " + dir)
 	os.system('rm -rf ' + dir)
-	bb.build.exec_task('do_clean', d)
+	bb.build.exec_func('do_clean', d)
 }
 
 addtask fetch
@@ -532,7 +536,7 @@ def oe_unpack_file(file, data, url = None):
 		cmd = 'tar x --no-same-owner -f %s' % file
 	elif file.endswith('.tgz') or file.endswith('.tar.gz') or file.endswith('.tar.Z'):
 		cmd = 'tar xz --no-same-owner -f %s' % file
-	elif file.endswith('.tbz') or file.endswith('.tar.bz2'):
+	elif file.endswith('.tbz') or file.endswith('.tbz2') or file.endswith('.tar.bz2'):
 		cmd = 'bzip2 -dc %s | tar x --no-same-owner -f -' % file
 	elif file.endswith('.gz') or file.endswith('.Z') or file.endswith('.z'):
 		cmd = 'gzip -dc %s > %s' % (file, efile)
@@ -673,6 +677,17 @@ python base_eventhandler() {
 		if pesteruser:
 			bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
+	#
+	# Handle removing stamps for 'rebuild' task
+	#
+	if name.startswith("StampUpdate"):
+		for (fn, task) in e.targets:
+			#print "%s %s" % (task, fn)         
+			if task == "do_rebuild":
+				dir = "%s.*" % e.stampPrefix[fn]
+				bb.note("Removing stamps: " + dir)
+				os.system('rm -f '+ dir)
+
 	if not data in e.__dict__:
 		return NotHandled
 
@@ -687,7 +702,6 @@ python base_eventhandler() {
 
 addtask configure after do_unpack do_patch
 do_configure[dirs] = "${S} ${B}"
-do_configure[bbdepcmd] = "do_populate_staging"
 do_configure[deptask] = "do_populate_staging"
 base_do_configure() {
 	:
@@ -695,7 +709,6 @@ base_do_configure() {
 
 addtask compile after do_configure
 do_compile[dirs] = "${S} ${B}"
-do_compile[bbdepcmd] = "do_populate_staging"
 base_do_compile() {
 	if [ -e Makefile -o -e makefile ]; then
 		oe_runmake || die "make failed"
@@ -826,6 +839,20 @@ python read_subpackage_metadata () {
 			bb.data.setVar(key, sdata[key], d)
 }
 
+# Make sure MACHINE isn't exported
+# (breaks binutils at least)
+MACHINE[unexport] = "1"
+
+# Make sure TARGET_ARCH isn't exported
+# (breaks Makefiles using implicit rules, e.g. quilt, as GNU make has this 
+# in them, undocumented)
+TARGET_ARCH[unexport] = "1"
+
+# Make sure DISTRO isn't exported
+# (breaks sysvinit at least)
+DISTRO[unexport] = "1"
+
+
 def base_after_parse(d):
     import bb, os, exceptions
 
@@ -845,8 +872,6 @@ def base_after_parse(d):
             if this_machine and not re.match(need_machine, this_machine):
                 raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
 
-
-
     pn = bb.data.getVar('PN', d, 1)
 
     # OBSOLETE in bitbake 1.7.4
@@ -857,16 +882,6 @@ def base_after_parse(d):
     use_nls = bb.data.getVar('USE_NLS_%s' % pn, d, 1)
     if use_nls != None:
         bb.data.setVar('USE_NLS', use_nls, d)
-
-    # Make sure MACHINE isn't exported
-    # (breaks binutils at least)
-    bb.data.delVarFlag('MACHINE', 'export', d)
-    bb.data.setVarFlag('MACHINE', 'unexport', 1, d)
-    
-    # Make sure DISTRO isn't exported
-    # (breaks sysvinit at least)
-    bb.data.delVarFlag('DISTRO', 'export', d)
-    bb.data.setVarFlag('DISTRO', 'unexport', 1, d)
 
     # Git packages should DEPEND on git-native
     srcuri = bb.data.getVar('SRC_URI', d, 1)
@@ -897,7 +912,7 @@ def base_after_parse(d):
     if len(paths) == 0:
         return
 
-    for s in bb.data.getVar('SRC_URI', d, 1).split():
+    for s in srcuri.split():
         if not s.startswith("file://"):
             continue
         local = bb.data.expand(bb.fetch.localpath(s, d), d)
