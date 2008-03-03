@@ -11,24 +11,6 @@ LICENSE = "GPL"
 SECTION = "base"
 PRIORITY = "required"
 
-SRC_URI = "\
-  http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
-  file://busybox-cron \
-  file://busybox-httpd \
-  file://busybox-udhcpd \
-  file://default.script \
-  file://dhcp-hostname.patch;patch=1 \
-  file://hwclock.sh \
-  file://ifupdown-spurious-environ.patch;patch=1 \
-  file://mount.busybox \
-  file://syslog \
-  file://syslog.conf \
-  file://udhcpscript.patch;patch=1 \
-  file://umount.busybox \
-"
-
-SRC_URI_append_nylon = " file://xargs-double-size.patch;patch=1"
-
 export EXTRA_CFLAGS = "${CFLAGS}"
 EXTRA_OEMAKE_append = " CROSS=${HOST_PREFIX}"
 PACKAGES =+ "${PN}-httpd ${PN}-udhcpd"
