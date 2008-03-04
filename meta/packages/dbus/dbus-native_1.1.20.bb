@@ -3,6 +3,7 @@ inherit native
 
 DEPENDS = "glib-2.0-native libxml2-native expat-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dbus-${PV}"
+PR = "r1"
 
 do_stage() {
 	oe_runmake install
