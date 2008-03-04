@@ -1,0 +1,34 @@
+---
+ bits/stdio-lock.h |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+--- glibc-2.7.orig/bits/stdio-lock.h
++++ glibc-2.7/bits/stdio-lock.h
+@@ -45,14 +45,23 @@ __libc_lock_define_recursive (typedef, _
+ #define _IO_cleanup_region_end(_doit) \
+   __libc_cleanup_region_end (_doit)
+ 
+ #if defined _LIBC && !defined NOT_IN_libc
+ # define _IO_acquire_lock(_fp) \
+-  _IO_cleanup_region_start ((void (*) (void *)) _IO_funlockfile, (_fp));      \
+-  _IO_flockfile (_fp)
++  { \
++  _IO_FILE *_IO_acquire_lock_file = _fp; \
++  __libc_cleanup_region_start (1, (void (*) (void *)) _IO_acquire_lock_fct, &_IO_acquire_lock_file); \
++  _IO_flockfile (_IO_acquire_lock_file)
++
++# define _IO_acquire_lock_clear_flags2(_fp) \
++  { \
++  _IO_FILE *_IO_acquire_lock_file = _fp; \
++  __libc_cleanup_region_start (1, (void (*) (void *)) _IO_acquire_lock_clear_flags2_fct, &_IO_acquire_lock_file); \
++  _IO_flockfile (_IO_acquire_lock_file)
+ 
+ # define _IO_release_lock(_fp) \
+-  _IO_funlockfile (_fp);						      \
+-  _IO_cleanup_region_end (0)
++  __libc_cleanup_region_end (1); \
++   }
++
+ #endif
+ 
+ #endif /* bits/stdio-lock.h */

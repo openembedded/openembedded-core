@@ -1,0 +1,20 @@
+Submitted By: Joe Ciccone <jciccone@linuxfromscratch.org>
+Date: 07-02-2007
+Initial Package Version: 2.6
+Origin: http://sourceware.org/ml/libc-ports/2007-05/msg00051.html
+Upstream Status: Unknown
+Description: Defines RTLD_SINGLE_THREAD_P for arm.
+
+diff -Naur glibc-2.6.orig/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h glibc-2.6/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
+--- glibc-2.6.orig/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h	2007-07-02 17:39:22.000000000 -0400
++++ glibc-2.6/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h	2007-07-02 17:39:36.000000000 -0400
+@@ -126,3 +126,9 @@
+ # define NO_CANCELLATION 1
+ 
+ #endif
++
++#ifndef __ASSEMBLER__
++# define RTLD_SINGLE_THREAD_P \
++  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
++   header.multiple_threads) == 0, 1)
++#endif 
