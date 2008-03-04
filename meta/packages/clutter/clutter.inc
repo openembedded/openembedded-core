@@ -39,6 +39,5 @@ do_configure_prepend() {
 }
 
 do_stage () {
-	cp ${S}/clutter.pc ${S}/clutter-0.5.pc
         autotools_stage_all
 }
