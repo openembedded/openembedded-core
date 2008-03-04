@@ -1,5 +1,5 @@
 require linux-nokia800.inc
-PR = "r3"
+PR = "r4"
 
 DEFAULT_PREFERENCE_nokia770 = "-1"
 
