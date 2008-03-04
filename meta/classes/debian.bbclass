@@ -3,6 +3,9 @@
 # before building the current package to make the packages runtime
 # depends are correct
 #
+# Custom library package names can be defined setting
+# DEBIANNAME_ + pkgname to the desired name.
+#
 # Better expressed as ensure all RDEPENDS package before we package
 # This means we can't have circular RDEPENDS/RRECOMMENDS
 do_package_write_ipk[rdeptask] = "do_package"
@@ -88,7 +91,10 @@ python debian_package_name_hook () {
 				for pkg in packages.split():
 					if (bb.data.getVar('PKG_' + pkg, d) or bb.data.getVar('DEBIAN_NOAUTONAME_' + pkg, d)):
 						continue
-					if pkg == orig_pkg:
+					debian_pn = bb.data.getVar('DEBIANNAME_' + pkg, d)
+					if debian_pn:
+						newpkg = debian_pn
+					elif pkg == orig_pkg:
 						newpkg = pkgname
 					else:
 						newpkg = pkg.replace(orig_pkg, devname, 1)
