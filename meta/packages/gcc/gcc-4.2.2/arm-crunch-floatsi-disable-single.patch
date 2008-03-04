@@ -1,0 +1,38 @@
+--- gcc-4.1.2/gcc/config/arm/cirrus.md-cfcvt	2007-06-25 12:12:39.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/cirrus.md	2007-06-25 12:16:13.000000000 +1000
+@@ -301,13 +301,14 @@
+ )
+ 
+ ;; Convert Cirrus-SI to Cirrus-SF
++; appears to be buggy
+ (define_insn "cirrus_floatsisf2"
+   [(set (match_operand:SF           0 "cirrus_fp_register" "=v")
+  	(float:SF (match_operand:SI 1 "s_register_operand"  "r")))
+    (clobber (match_scratch:DF 2 "=v"))]
+-  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK && 0"
+   "cfmv64lr%?\\t%Z2, %1\;cfcvt32s%?\\t%V0, %Y2"
+   [(set_attr "length" "8")
+    (set_attr "cirrus" "move")]
+ )
+ 
+--- gcc-4.1.2/gcc/config/arm/arm.md-cfcvt	2007-06-25 12:16:53.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/arm.md	2007-06-25 12:18:20.000000000 +1000
+@@ -3125,14 +3125,15 @@
+ 
+ ;; Fixed <--> Floating conversion insns
+ 
++;; Maverick Crunch floatsisf2 is buggy - see cirrus.md
+ (define_expand "floatsisf2"
+   [(set (match_operand:SF           0 "s_register_operand" "")
+ 	(float:SF (match_operand:SI 1 "s_register_operand" "")))]
+-  "TARGET_ARM && TARGET_HARD_FLOAT"
++  "TARGET_ARM && TARGET_HARD_FLOAT && (TARGET_FPA || TARGET_VFP)"
+   "
+-  if (TARGET_MAVERICK)
++  if (TARGET_MAVERICK && 0)
+     {
+       emit_insn (gen_cirrus_floatsisf2 (operands[0], operands[1]));
+       DONE;
+     }
+ ")

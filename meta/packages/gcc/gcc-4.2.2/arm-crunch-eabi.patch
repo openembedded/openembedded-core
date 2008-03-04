@@ -1,0 +1,64 @@
+--- /home/hwilliams/original/gcc-4.1.2/gcc/config/arm/t-linux-eabi	2005-10-10 11:04:31.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/t-linux-eabi	2007-05-15 13:53:05.000000000 +1000
+@@ -1,11 +1,21 @@
+ # These functions are included in shared libraries.
+ TARGET_LIBGCC2_CFLAGS = -fPIC
++TARGET_LIBGCC2_CFLAGS += -mcpu=ep9312 -mfpu=maverick
++LIBGCC2_DEBUG_CFLAGS = -g0
+ 
+ # We do not build a Thumb multilib for Linux because the definition of
+ # CLEAR_INSN_CACHE in linux-gas.h does not work in Thumb mode.
+ MULTILIB_OPTIONS	=
+ MULTILIB_DIRNAMES	=
+ 
++LIB1ASMSRC = arm/lib1funcs.asm
++LIB1ASMFUNCS += _udivsi3 _divsi3 _umodsi3 _modsi3 _dvmd_lnx \
++	_negdf2 _addsubdf3 _muldivdf3 _cmpdf2 _unorddf2 _fixdfsi _fixunsdfsi \
++	_truncdfsf2 _negsf2 _addsubsf3 _muldivsf3 _cmpsf2 _unordsf2 \
++	_fixsfsi _fixunssfsi
++
++CRTSTUFF_T_CFLAGS += -mcpu=ep9312 -mfpu=maverick
++
+ # Use a version of div0 which raises SIGFPE.
+ LIB1ASMFUNCS := $(filter-out _dvmd_tls,$(LIB1ASMFUNCS)) _dvmd_lnx
+
+diff -ruN arm/elf.h gcc-3.4.3/gcc/config/arm/elf.h
+--- ../gcc-4.1.2-orig/gcc/config/arm/elf.h	2004-02-24 16:25:22.000000000 +0200
++++ gcc-4.1.2/gcc/config/arm/elf.h	2005-02-10 00:31:28.000000000 +0200
+@@ -46,7 +46,7 @@
+ 
+ #ifndef SUBTARGET_ASM_FLOAT_SPEC
+ #define SUBTARGET_ASM_FLOAT_SPEC "\
+-%{mapcs-float:-mfloat}"
++%{mapcs-float:-mfloat} %{msoft-float:-mfpu=softfpa} %{mcpu=ep9312:-mfpu=maverick}"
+ #endif
+
+ #ifndef ASM_SPEC 
+diff -ruN t-linux gcc-4.1.2/gcc/config/arm/t-linux
+--- t-linux	2007-05-09 16:32:28.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/t-linux	2007-05-25 11:02:17.000000000 +1000
+@@ -1,19 +1,22 @@
+ # Just for these, we omit the frame pointer since it makes such a big
+ # difference.  It is then pointless adding debugging.
+ TARGET_LIBGCC2_CFLAGS = -fomit-frame-pointer -fPIC
++TARGET_LIBGCC2_CFLAGS += -mcpu=ep9312 -mfpu=maverick -mfloat-abi=softfp -D__MAVERICK__
+ LIBGCC2_DEBUG_CFLAGS = -g0
+ 
+ LIB1ASMSRC = arm/lib1funcs.asm
+ LIB1ASMFUNCS = _udivsi3 _divsi3 _umodsi3 _modsi3 _dvmd_lnx \
+     _negdf2 _addsubdf3 _muldivdf3 _cmpdf2 _unorddf2 _fixdfsi _fixunsdfsi \
+     _truncdfsf2 _negsf2 _addsubsf3 _muldivsf3 _cmpsf2 _unordsf2 \
+-    _call_via_rX \
+-    _fixsfsi _fixunssfsi _floatdidf _floatdisf
++    _fixsfsi _fixunssfsi
+ 
+ # MULTILIB_OPTIONS = mhard-float/msoft-float
+ # MULTILIB_DIRNAMES = hard-float soft-float
+ 
+ # EXTRA_MULTILIB_PARTS = crtbegin.o crtend.o
+ 
++# EXTRA_PARTS = crtbegin.o crtend.o crtbeginS.o crtendS.o
++CRTSTUFF_T_CFLAGS += -mcpu=ep9312 -mfpu=maverick -mfloat-abi=softfp -D__MAVERICK__
++
+ # LIBGCC = stmp-multilib
+ # INSTALL_LIBGCC = install-multilib

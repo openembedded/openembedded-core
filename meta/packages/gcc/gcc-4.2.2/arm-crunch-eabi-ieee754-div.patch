@@ -1,0 +1,139 @@
+--- gcc-4.1.2/gcc/config/arm/ieee754-df-original.S	2007-06-25 10:22:06.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/ieee754-df.S	2007-06-25 10:27:17.000000000 +1000
+@@ -717,6 +717,10 @@
+ 	cmn	r4, #(53 + 1)
+ 	movle	xl, #0
+ 	bicle	xh, xh, #0x7fffffff
++#ifdef __MAVERICK__
++    cfmvdlr mvd0, xl
++    cfmvdhr mvd0, xh
++#endif
+ 	RETLDM	"r4, r5, r6" le
+ 
+ 	@ Find out proper shift value.
+@@ -738,6 +742,10 @@
+ 	adc	xh, r2, xh, lsr r4
+ 	orrs	lr, lr, r3, lsl #1
+ 	biceq	xl, xl, r3, lsr #31
++#ifdef __MAVERICK__
++    cfmvdlr mvd0, xl
++    cfmvdhr mvd0, xh
++#endif
+ 	RETLDM	"r4, r5, r6"
+ 
+ 	@ shift result right of 21 to 31 bits, or left 11 to 1 bits after
+@@ -752,6 +760,10 @@
+ 	adc	xh, xh, #0
+ 	orrs	lr, lr, r3, lsl #1
+ 	biceq	xl, xl, r3, lsr #31
++#ifdef __MAVERICK__
++    cfmvdlr mvd0, xl
++    cfmvdhr mvd0, xh
++#endif
+ 	RETLDM	"r4, r5, r6"
+ 
+ 	@ Shift value right of 32 to 64 bits, or 0 to 32 bits after a switch
+@@ -766,6 +778,10 @@
+ 	add	xl, xl, r3, lsr #31
+ 	orrs	lr, lr, r3, lsl #1
+ 	biceq	xl, xl, r3, lsr #31
++#ifdef __MAVERICK__
++    cfmvdlr mvd0, xl
++    cfmvdhr mvd0, xh
++#endif
+ 	RETLDM	"r4, r5, r6"
+ 
+ 	@ One or both arguments are denormalized.
+@@ -808,6 +824,10 @@
+ 	eor	xh, xh, yh
+ 	bic	xh, xh, #0x7fffffff
+ 	mov	xl, #0
++#ifdef __MAVERICK__
++    cfmvdlr mvd0, xl
++    cfmvdhr mvd0, xh
++#endif
+ 	RETLDM	"r4, r5, r6"
+ 
+ 1:	@ One or both args are INF or NAN.
+@@ -837,12 +857,20 @@
+ 	orr	xh, xh, #0x7f000000
+ 	orr	xh, xh, #0x00f00000
+ 	mov	xl, #0
++#ifdef __MAVERICK__
++    cfmvdlr mvd0, xl
++    cfmvdhr mvd0, xh
++#endif
+ 	RETLDM	"r4, r5, r6"
+ 
+ 	@ Return a quiet NAN.
+ LSYM(Lml_n):
+ 	orr	xh, xh, #0x7f000000
+ 	orr	xh, xh, #0x00f80000
++#ifdef __MAVERICK__
++    cfmvdlr mvd0, xl
++    cfmvdhr mvd0, xh
++#endif
+ 	RETLDM	"r4, r5, r6"
+ 
+ 	FUNC_END aeabi_dmul
+--- gcc-4.1.2/gcc/config/arm/ieee754-sf-original.S	2007-06-25 10:18:52.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/ieee754-sf.S	2007-06-25 10:40:25.000000000 +1000
+@@ -518,6 +518,9 @@
+ 	@ Check if denormalized result is possible, otherwise return signed 0.
+ 	cmn	r2, #(24 + 1)
+ 	bicle	r0, r0, #0x7fffffff
++#ifdef __MAVERICK__
++    cfmvsr  mvf0, r0
++#endif
+ 	RETc(le)
+ 
+ 	@ Shift value right, round, etc.
+@@ -530,6 +533,9 @@
+ 	adc	r0, r0, #0
+ 	orrs	r3, r3, ip, lsl #1
+ 	biceq	r0, r0, ip, lsr #31
++#ifdef __MAVERICK__
++    cfmvsr  mvf0, r0
++#endif
+ 	RET
+ 
+ 	@ One or both arguments are denormalized.
+@@ -567,6 +573,9 @@
+ LSYM(Lml_z):
+ 	eor	r0, r0, r1
+ 	bic	r0, r0, #0x7fffffff
++#ifdef __MAVERICK__
++    cfmvsr  mvf0, r0 
++#endif
+ 	RET
+ 
+ 1:	@ One or both args are INF or NAN.
+@@ -595,12 +604,18 @@
+ 	and	r0, r0, #0x80000000
+ 	orr	r0, r0, #0x7f000000
+ 	orr	r0, r0, #0x00800000
++#ifdef __MAVERICK__
++    cfmvsr  mvf0, r0
++#endif
+ 	RET
+ 
+ 	@ Return a quiet NAN.
+ LSYM(Lml_n):
+ 	orr	r0, r0, #0x7f000000
+ 	orr	r0, r0, #0x00c00000
++#ifdef __MAVERICK__
++    cfmvsr  mvf0, r0
++#endif
+ 	RET
+ 
+ 	FUNC_END aeabi_fmul
+@@ -677,6 +692,9 @@
+ 	adds	r2, r2, #127
+ 	rsbgts	r3, r2, #255
+ 	orrgt	r0, r0, r2, lsl #23
++#ifdef __MAVERICK__
++    cfmvsr  mvf0, r0
++#endif
+ 	RETc(gt)
+ 
+ 	orr	r0, r0, #0x00800000

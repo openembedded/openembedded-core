@@ -1,0 +1,116 @@
+diff -urN ../gcc-cross-4.1.2-r4/gcc-4.1.2/gcc/config/arm/arm.md gcc-4.1.2/gcc/config/arm/arm.md
+--- ../gcc-cross-4.1.2-r4/gcc-4.1.2/gcc/config/arm/arm.md	2007-06-14 11:50:53.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/arm.md	2007-06-14 11:43:17.000000000 +1000
+@@ -7488,6 +7488,22 @@
+ 				      arm_compare_op1);"
+ )
+ 
++;(define_expand "suneq"
++;  [(set (match_operand:SI 0 "s_register_operand" "")
++;	(uneq:SI (match_dup 1) (const_int 0)))]
++;  "TARGET_ARM && TARGET_HARD_FLOAT && (TARGET_MAVERICK)"
++;  "operands[1] = arm_gen_compare_reg (UNEQ, arm_compare_op0,
++;				      arm_compare_op1);"
++;)
++
++;(define_expand "sltgt"
++;  [(set (match_operand:SI 0 "s_register_operand" "")
++;	(ltgt:SI (match_dup 1) (const_int 0)))]
++;  "TARGET_ARM && TARGET_HARD_FLOAT && (TARGET_MAVERICK)"
++;  "operands[1] = arm_gen_compare_reg (LTGT, arm_compare_op0,
++;				      arm_compare_op1);"
++;)
++
+ ;;; DO NOT add patterns for SUNEQ or SLTGT, these can't be represented with
+ ;;; simple ARM instructions. 
+ ;
+@@ -10284,13 +10284,73 @@
+   "TARGET_ARM && arm_arch5e"
+   "pld\\t%a0")
+ 
++;; Special predication pattern for Maverick Crunch floating-point
++
++(define_cond_exec
++  [(match_operator 0 "maverick_comparison_operator"
++    [(match_operand:CCFP 1 "cc_register" "")
++     (const_int 0)])]
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  ""
++)
++
++;; Special predication pattern for Maverick Crunch - !CCFP
++
++(define_cond_exec
++  [(match_operator 0 "arm_comparison_operator"
++    [(match_operand:CC_NOOV 1 "cc_register" "")
++     (const_int 0)])]
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  ""
++)
++
++(define_cond_exec
++  [(match_operator 0 "arm_comparison_operator"
++    [(match_operand:CC_Z 1 "cc_register" "")
++     (const_int 0)])]
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  ""
++)
++
++(define_cond_exec
++  [(match_operator 0 "arm_comparison_operator"
++    [(match_operand:CC_SWP 1 "cc_register" "")
++     (const_int 0)])]
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  ""
++)
++
++(define_cond_exec
++  [(match_operator 0 "arm_comparison_operator"
++    [(match_operand:CC_C 1 "cc_register" "")
++     (const_int 0)])]
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  ""
++)
++
++(define_cond_exec
++  [(match_operator 0 "arm_comparison_operator"
++    [(match_operand:CC_N 1 "cc_register" "")
++     (const_int 0)])]
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  ""
++)
++
++(define_cond_exec
++  [(match_operator 0 "arm_comparison_operator"
++    [(match_operand:CC 1 "cc_register" "")
++     (const_int 0)])]
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  ""
++)
++
+ ;; General predication pattern
+ 
+ (define_cond_exec
+   [(match_operator 0 "arm_comparison_operator"
+     [(match_operand 1 "cc_register" "")
+      (const_int 0)])]
+-  "TARGET_ARM"
++  "TARGET_ARM && !(TARGET_HARD_FLOAT && TARGET_MAVERICK)"
+   ""
+ )
+ 
+diff -urN ../gcc-cross-4.1.2-r4/gcc-4.1.2/gcc/config/arm/predicates.md gcc-4.1.2/gcc/config/arm/predicates.md
+--- ../gcc-cross-4.1.2-r4/gcc-4.1.2/gcc/config/arm/predicates.md	2005-09-11 17:38:02.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/predicates.md	2007-06-14 11:46:13.000000000 +1000
+@@ -172,7 +172,11 @@
+ 
+ ;; True for comparisons other than LTGT or UNEQ.
+ (define_special_predicate "arm_comparison_operator"
+   (match_code "eq,ne,le,lt,ge,gt,geu,gtu,leu,ltu,unordered,ordered,unlt,unle,unge,ungt"))
++
++;; True for comparisons other than GE, GEU, UNLT, UNORDERED or ORDERED - TODO add LTGT and UNEQ - needs extra support elsewhere 
++(define_special_predicate "maverick_comparison_operator"
++(match_code "eq,ne,le,lt,gt,gtu,leu,ltu,unle,unge,ungt"))
+ 
+ (define_special_predicate "minmax_operator"
+   (and (match_code "smin,smax,umin,umax")

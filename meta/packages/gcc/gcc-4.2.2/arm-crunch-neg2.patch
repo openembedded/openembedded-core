@@ -1,0 +1,25 @@
+--- gcc-4.1.2/gcc/config/arm/cirrus.md-original	2007-06-12 17:01:24.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/cirrus.md	2007-06-12 17:03:26.000000000 +1000
+@@ -255,18 +256,20 @@
+   [(set_attr "cirrus" "normal")]
+ )
+ 
++;; appears to be buggy: neg 0 != -0
+ (define_insn "*cirrus_negsf2"
+   [(set (match_operand:SF         0 "cirrus_fp_register" "=v")
+ 	(neg:SF (match_operand:SF 1 "cirrus_fp_register"  "v")))]
+-  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK && 0"
+   "cfnegs%?\\t%V0, %V1"
+   [(set_attr "cirrus" "normal")]
+ )
+ 
++;; appears to be buggy: neg 0 != -0
+ (define_insn "*cirrus_negdf2"
+   [(set (match_operand:DF         0 "cirrus_fp_register" "=v")
+ 	(neg:DF (match_operand:DF 1 "cirrus_fp_register"  "v")))]
+-  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK && 0"
+   "cfnegd%?\\t%V0, %V1"
+   [(set_attr "cirrus" "normal")]
+ )

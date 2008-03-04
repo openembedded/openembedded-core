@@ -1,0 +1,11 @@
+--- gcc-4.1.2/gcc/testsuite/gcc.c-torture/execute/ieee/20000320-1.c.original	2007-06-07 16:33:44.000000000 +1000
++++ gcc-4.1.2/gcc/testsuite/gcc.c-torture/execute/ieee/20000320-1.c	2007-06-07 16:34:05.000000000 +1000
+@@ -49,7 +49,7 @@
+     exit (0);
+   
+   c(0x3690000000000000ULL, 0x00000000U);
+-#if (defined __arm__ || defined __thumb__) && ! (defined __ARMEB__ || defined __VFP_FP__)
++#if (defined __arm__ || defined __thumb__) && ! (defined __ARMEB__ || defined __VFP_FP__) && ! (defined __MAVERICK__)
+   /* The ARM always stores FP numbers in big-wordian format,
+      even when running in little-byteian mode.  */
+   c(0x0000000136900000ULL, 0x00000001U);

@@ -1,0 +1,32 @@
+--- gcc-4.1.2/gcc/config/arm/cirrus.md-cfcvt	2007-06-15 10:06:24.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/cirrus.md	2007-06-15 10:07:21.000000000 +1000
+@@ -355,11 +355,12 @@
+    (set_attr "cirrus" "normal")]
+ )
+ 
++; appears to be buggy - causes 20000320-1.c to fail in execute/ieee
+ (define_insn "*cirrus_truncdfsf2"
+   [(set (match_operand:SF  0 "cirrus_fp_register" "=v")
+         (float_truncate:SF
+          (match_operand:DF 1 "cirrus_fp_register" "v")))]
+-  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK"
++  "TARGET_ARM && TARGET_HARD_FLOAT && TARGET_MAVERICK && 0"
+   "cfcvtds%?\\t%V0, %V1"
+   [(set_attr "cirrus" "normal")]
+ )
+--- gcc-4.1.2/gcc/config/arm/arm.md-truncdfsf2	2007-06-15 10:25:43.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/arm.md	2007-06-15 10:27:01.000000000 +1000
+@@ -3181,11 +3181,12 @@
+ 
+ ;; Truncation insns
+ 
++;; Maverick Crunch truncdfsf2 is buggy - see cirrus.md
+ (define_expand "truncdfsf2"
+   [(set (match_operand:SF  0 "s_register_operand" "")
+ 	(float_truncate:SF
+  	 (match_operand:DF 1 "s_register_operand" "")))]
+-  "TARGET_ARM && TARGET_HARD_FLOAT"
++  "TARGET_ARM && TARGET_HARD_FLOAT && (TARGET_FPA || TARGET_VFP)"
+   ""
+ )
+ 

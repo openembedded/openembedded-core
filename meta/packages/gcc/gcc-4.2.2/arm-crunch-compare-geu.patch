@@ -1,0 +1,48 @@
+--- gcc-4.1.2/gcc/config/arm/arm.md-original	2007-06-08 06:39:41.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/arm.md	2007-06-08 06:41:00.000000000 +1000
+@@ -7125,6 +7125,22 @@
+    (set_attr "length" "8")]
+ )
+ 
++; Special pattern to match GEU for MAVERICK.
++(define_insn "*arm_bgeu"
++  [(set (pc)
++	(if_then_else (geu (match_operand 1 "cc_register" "") (const_int 0))
++		      (label_ref (match_operand 0 "" ""))
++		      (pc)))]
++  "TARGET_ARM && (TARGET_MAVERICK)"
++  "*
++  gcc_assert (!arm_ccfsm_state);
++  if (get_attr_cirrus (prev_active_insn(insn)) == CIRRUS_COMPARE)
++      return \"beq\\t%l0\;bvs\\t%l0\"; else return \"bge\\t%l0\;nop\";
++  "
++  [(set_attr "conds" "jump_clob")
++   (set_attr "length" "8")]
++)
++
+ ; Special pattern to match UNLT for MAVERICK - UGLY since we need to test for Z=0 && V=0.
+ (define_insn "*arm_bunlt"
+   [(set (pc)
+@@ -7240,6 +7256,22 @@
+    (set_attr "length" "8")]
+ )
+ 
++; Special pattern to match reversed GEU for MAVERICK.
++(define_insn "*arm_bgeu_reversed"
++  [(set (pc)
++	(if_then_else (geu (match_operand 1 "cc_register" "") (const_int 0))
++              (pc)
++		      (label_ref (match_operand 0 "" ""))))]
++  "TARGET_ARM && (TARGET_MAVERICK)"
++  "*
++  gcc_assert (!arm_ccfsm_state);
++
++  return \"beq\\t.+12\;bvs\\t.+8\;b\\t%l0\";
++  "
++  [(set_attr "conds" "jump_clob")
++   (set_attr "length" "12")]
++)
++
+ ; Special pattern to match reversed UNLT for MAVERICK.
+ (define_insn "*arm_bunlt_reversed"
+   [(set (pc)

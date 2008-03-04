@@ -1,0 +1,20 @@
+--- gcc-4.1.2/gcc/config/arm/arm.c-original	2007-06-12 14:46:20.000000000 +1000
++++ gcc-4.1.2/gcc/config/arm/arm.c	2007-06-12 14:48:06.000000000 +1000
+@@ -3460,7 +3460,7 @@
+ 
+   use_ldrd = (TARGET_LDRD
+ 	      && (mode == DImode
+-		  || (mode == DFmode && (TARGET_SOFT_FLOAT || TARGET_VFP))));
++		  || (mode == DFmode && (TARGET_SOFT_FLOAT || TARGET_MAVERICK || TARGET_VFP))));
+ 
+   if (code == POST_INC || code == PRE_DEC
+       || ((code == PRE_INC || code == POST_DEC)
+@@ -3960,7 +3960,7 @@
+ 	  /* VFP addressing modes actually allow greater offsets, but for
+ 	     now we just stick with the lowest common denominator.  */
+ 	  if (mode == DImode
+-	      || ((TARGET_SOFT_FLOAT || TARGET_VFP) && mode == DFmode))
++	      || ((TARGET_SOFT_FLOAT || TARGET_MAVERICK || TARGET_VFP) && mode == DFmode))
+ 	    {
+ 	      low_n = n & 0x0f;
+ 	      n &= ~0x0f;
