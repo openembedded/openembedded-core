@@ -1,6 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.22.6
+# Wed Mar  5 11:51:51 2008
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -220,7 +221,7 @@ CONFIG_ISA=y
 CONFIG_PREEMPT=y
 CONFIG_HZ=100
 CONFIG_AEABI=y
-# CONFIG_OABI_COMPAT is not set
+CONFIG_OABI_COMPAT=y
 # CONFIG_ARCH_DISCONTIGMEM_ENABLE is not set
 CONFIG_SELECT_MEMORY_MODEL=y
 CONFIG_FLATMEM_MANUAL=y
@@ -251,6 +252,8 @@ CONFIG_CMDLINE="noinitrd console=ttymxc0 root=/dev/mtdblock2 rw ip=off"
 #
 # At least one emulation must be selected
 #
+# CONFIG_FPE_NWFPE is not set
+# CONFIG_FPE_FASTFPE is not set
 CONFIG_VFP=y
 
 #
@@ -1540,7 +1543,11 @@ CONFIG_NLS_UTF8=m
 #
 # Profiling support
 #
-# CONFIG_PROFILING is not set
+CONFIG_PROFILING=y
+CONFIG_OPROFILE=y
+CONFIG_OPROFILE_ARMV6=y
+CONFIG_OPROFILE_ARM11_CORE=y
+CONFIG_OPROFILE_ARM11_EVTMON=y
 
 #
 # Kernel hacking
