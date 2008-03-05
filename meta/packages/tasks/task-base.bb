@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r47"
+PR = "r48"
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
@@ -31,6 +31,7 @@ PACKAGES = ' \
             ${@base_contains("DISTRO_FEATURES", "nfs", "task-base-nfs task-base-nfs-dev task-base-nfs-dbg", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "ppp", "task-base-ppp task-base-ppp-dev task-base-ppp-dbg", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "smbfs", "task-base-smbfs task-base-smbfs-dev task-base-smbfs-dbg", "", d)} \
+            ${@base_contains("DISTRO_FEATURES", "zeroconf", "task-base-zeroconf task-base-zeroconf-dev task-base-zeroconf-dbg", "", d)} \
 	\
             task-base-kernel26 task-base-kernel26-dev task-base-kernel26-dbg \
             '
@@ -72,6 +73,8 @@ RDEPENDS_task-base = "\
     ${@base_contains('DISTRO_FEATURES', 'ipv6', 'task-base-ipv6', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'ipsec', 'task-base-ipsec', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'ppp', 'task-base-ppp', '',d)} \
+    ${@base_contains('DISTRO_FEATURES', 'smbfs', 'task-base-smbfs', '',d)} \
+    ${@base_contains('DISTRO_FEATURES', 'zeroconf', 'task-base-zeroconf', '',d)} \
     "
 # bluez-dtl1-workaround above is workaround for bitbake not handling DEPENDS on it in
 
@@ -294,6 +297,9 @@ RDEPENDS_task-base-nfs = "\
 
 RRECOMMENDS_task-base-nfs = "\
     kernel-module-nfs "
+
+RDEPENDS_task-base-zeroconf = "\
+    avahi-daemon"
 
 RDEPENDS_task-base-screen = "\
 	"
