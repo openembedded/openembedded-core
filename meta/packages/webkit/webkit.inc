@@ -1,3 +1,4 @@
+DESCRIPTION = "WebKit browser engine, GTK+ edition"
 DEPENDS += "flex-native gperf-native perl-native sqlite3"
 SRCREV_FORMAT = "webcore-rwebkit"
 
@@ -6,7 +7,7 @@ PACKAGES =+ "${PN}launcher-dbg ${PN}launcher"
 # Yes, this is wrong...
 PV = "0.1+svnr${SRCREV}"
 
-inherit qmake2 
+inherit qmake2 pkgconfig
 
 SRC_URI = "\
   svn://svn.webkit.org/repository/webkit/trunk/;module=JavaScriptCore;proto=http \
@@ -51,7 +52,5 @@ do_stage() {
 	cd ${S}/WebKitBuilds/Debug
 	PWD=`pwd` ${WEBKIT_QMAKE} WEBKIT_INC_DIR=${STAGING_INCDIR} WEBKIT_LIB_DIR=${STAGING_LIBDIR} $PWD/../../WebKit.pro
 	oe_runmake install
-
-#sed -i -e "s:${WORKDIR}/image/::g" ${PKG_CONFIG_DIR}/WebKitGtk.pc
 }
 

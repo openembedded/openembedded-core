@@ -21,8 +21,10 @@
 #
 # global_cppflags   = CPPFLAGS that apply to JSC, WebCore, and to any
 #                     specific port
-# global_cflags     = CFLAGS and CXXFLAGS that apply to JSC, WebCore, and to
+# global_cflags     = CFLAGS that apply to JSC, WebCore, and to
 #                     any specific port
+# global_cxxflags   = CXXFLAGS that apply to JSC, WebCore, and to any
+#                     specific port
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -34,8 +36,6 @@ GENSOURCES := $(top_builddir)/DerivedSources
 CREATE_HASH_TABLE = $(srcdir)/JavaScriptCore/kjs/create_hash_table
 
 # Libraries and support components
-noinst_LTLIBRARIES :=
-
 noinst_HEADERS :=
 
 noinst_PROGRAMS :=
@@ -49,124 +49,185 @@ EXTRA_DIST :=
 
 #
 # Global flags to CPP
-global_cppflags := 
+global_cppflags :=
 
 global_cppflags += \
-	-I $(srcdir)/JavaScriptCore \
-	-I $(srcdir)/JavaScriptCore/ForwardingHeaders \
-	-I $(srcdir)/JavaScriptCore/wtf \
-	-I $(srcdir)/JavaScriptCore/kjs \
-	-I $(top_builddir)/DerivedSources
+	-I$(srcdir)/JavaScriptCore \
+	-I$(srcdir)/JavaScriptCore/ForwardingHeaders \
+	-I$(srcdir)/JavaScriptCore/wtf \
+	-I$(srcdir)/JavaScriptCore/kjs \
+	-I$(top_builddir)/DerivedSources
 
 # Default compiler flags
 global_cflags := \
 	-Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type \
 	-Wformat -Wformat-security -Wno-format-y2k -Wundef \
 	-Wmissing-format-attribute -Wpointer-arith -Wwrite-strings \
-	-Wno-unused-parameter -fno-exceptions -fno-strict-aliasing
+	-Wno-unused-parameter
 
-# Libraries
-lib_LTLIBRARIES = libJavaScriptCore.la libWebKitGtk.la
+global_cxxflags := \
+	$(SYMBOL_VISIBILITY_INLINES)
+
+if !ENABLE_DEBUG
+global_cflags += \
+	-fno-exceptions \
+	$(SYMBOL_VISIBILITY)
+
+global_cxxflags += \
+	-fno-rtti
+endif
+
+# Shared libraries
+lib_LTLIBRARIES = \
+	libwebkit-1.0.la
+
+# Convenience libraries
+noinst_LTLIBRARIES = \
+	libJavaScriptCore.la \
+	libWebCore.la
 
 #
 # JavaScriptCore
 javascriptcore_h_api :=
 javascriptcore_cppflags:=
 javascriptcore_sources :=
-javascriptcore_built_sources := 
+javascriptcore_built_sources :=
 javascriptcore_built_nosources :=
 
 # The variables above are already included below so no need to touch
 # these variables unless you really have to
-libJavaScriptCore_ladir = $(prefix)/include/WebKit/JavaScriptCore
-libJavaScriptCore_la_HEADERS := $(javascriptcore_h_api)
+libJavaScriptCore_ladir = $(prefix)/include/webkit-1.0/JavaScriptCore
+libJavaScriptCore_la_HEADERS = $(javascriptcore_h_api)
 
-libJavaScriptCore_la_SOURCES := \
+libJavaScriptCore_la_SOURCES = \
 	$(javascriptcore_built_sources) \
 	$(javascriptcore_sources)
 
-libJavaScriptCore_la_LDFLAGS := -lpthread
+libJavaScriptCore_la_LIBADD = \
+	$(ICU_LIBS) \
+	$(GLOBALDEPS_LIBS) \
+	-lpthread
 
-libJavaScriptCore_la_CXXFLAGS := $(global_cflags)
+libJavaScriptCore_la_CXXFLAGS = \
+	$(global_cxxflags) \
+	$(global_cflags) \
+	$(GLOBALDEPS_CFLAGS) \
+	-fstrict-aliasing
 
-libJavaScriptCore_la_CFLAGS := $(global_cflags)
+libJavaScriptCore_la_CFLAGS = \
+	$(global_cflags) \
+	$(GLOBALDEPS_CFLAGS) \
+	-fstrict-aliasing
 
-libJavaScriptCore_la_CPPFLAGS := $(global_cppflags) $(javascriptcore_cppflags)
+libJavaScriptCore_la_CPPFLAGS = \
+	$(global_cppflags) \
+	$(javascriptcore_cppflags) \
+	$(ICU_CPPFLAGS)
 
 #
 # WebCore
 webcore_cppflags :=
 webcore_sources :=
 webcore_headers :=
+webcore_libadd :=
 webcore_built_sources :=
 webcore_built_nosources :=
 
-# WebKitGtk
+webcore_cppflags += $(HILDON_CPPFLAGS)
+
+# WebKit
 webkitgtk_h_api :=
 webkitgtk_headers :=
 webkitgtk_sources :=
 webkitgtk_cppflags :=
-webkitgtk_ldflags :=
 webkitgtk_built_sources :=
 webkitgtk_built_nosources :=
 webkitgtk_cleanfiles :=
 
-# No need to touch the following variables unless you have to. If you need to change the values
-# for the following variables, use the "webkitgtk_" variables above
-libWebKitGtk_ladir := $(prefix)/include/WebKit
-
-libWebKitGtk_la_HEADERS := $(webkitgtk_h_api)
-
-libWebKitGtk_la_SOURCES := \
+libWebCore_la_SOURCES = \
 	$(webcore_built_sources) \
 	$(webcore_headers) \
-	$(webcore_sources) \
-	$(webkitgtk_built_sources) \
-	$(webkitgtk_headers) \
-	$(webkitgtk_sources)
+	$(webcore_sources)
 
-libWebKitGtk_la_CXXFLAGS := \
-	-fno-rtti \
+libWebCore_la_CXXFLAGS = \
+	-fno-strict-aliasing \
+	$(global_cxxflags) \
 	$(global_cflags) \
-	$(DEPENDENCIES_CFLAGS) \
+	$(GLOBALDEPS_CFLAGS) \
+	$(WEBKITDEPS_CFLAGS) \
+	$(LIBCURL_CFLAGS) \
 	$(SQLITE3_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
 	$(LIBXSLT_CFLAGS) \
-	$(COVERAGE_CFLAGS)
+	$(COVERAGE_CFLAGS) \
+	$(HILDON_CFLAGS)
 
-libWebKitGtk_la_CFLAGS := \
+libWebCore_la_CFLAGS = \
+	-fno-strict-aliasing \
 	$(global_cflags) \
-	$(DEPENDENCIES_CFLAGS) \
+	$(GLOBALDEPS_CFLAGS) \
+	$(WEBKITDEPS_CFLAGS) \
+	$(LIBCURL_CFLAGS) \
 	$(SQLITE3_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
 	$(LIBXSLT_CFLAGS) \
-	$(COVERAGE_CFLAGS)
+	$(COVERAGE_CFLAGS) \
+	$(HILDON_CFLAGS)
 
-libWebKitGtk_la_CPPFLAGS := \
+libWebCore_la_CPPFLAGS = \
+	$(ICU_CPPFLAGS) \
 	$(global_cppflags) \
 	$(webcore_cppflags) \
 	$(webkitgtk_cppflags)
 
-libWebKitGtk_la_LIBADD := @LTLIBOBJS@ libJavaScriptCore.la
-
-libWebKitGtk_la_LDFLAGS := \
-	$(webkitgtk_ldflags) \
-	$(DEPENDENCIES_LIBS) \
+libWebCore_la_LIBADD = \
+	libJavaScriptCore.la \
+	$(webcore_libadd) \
+	$(GLOBALDEPS_LIBS) \
+	$(WEBKITDEPS_LIBS) \
+	$(LIBCURL_LIBS) \
 	$(ICU_LIBS) \
 	$(SQLITE3_LIBS) \
 	$(GSTREAMER_LIBS) \
 	$(LIBXSLT_LIBS) \
-	$(COVERAGE_LDFLAGS) \
+	$(HILDON_LIBS) \
 	-lpthread \
-	-ljpeg \
+	-ljpeg
+
+libwebkit_1_0_ladir = $(prefix)/include/webkit-1.0/webkit
+libwebkit_1_0_la_HEADERS = $(webkitgtk_h_api)
+
+libwebkit_1_0_la_SOURCES = \
+	$(webkitgtk_built_sources) \
+	$(webkitgtk_headers) \
+	$(webkitgtk_sources)
+
+libwebkit_1_0_la_CXXFLAGS = \
+	$(libWebCore_la_CXXFLAGS)
+
+libwebkit_1_0_la_CFLAGS = \
+	$(libWebCore_la_CFLAGS)
+
+libwebkit_1_0_la_CPPFLAGS = \
+	$(libWebCore_la_CPPFLAGS)
+
+libwebkit_1_0_la_LDFLAGS = \
+	$(COVERAGE_LDFLAGS) \
 	-version-info @LIBWEBKITGTK_VERSION@
+
+libwebkit_1_0_la_LIBADD = \
+	libWebCore.la
 
 #
 # Extra checks and flags
 global_cppflags += \
 	-DBUILDING_GTK__=1 \
-	-DUSE_SYSTEM_MALLOC \
 	-DWTF_CHANGES
+
+if !ENABLE_FAST_MALLOC
+global_cppflags += \
+	-DUSE_SYSTEM_MALLOC
+endif
 
 if TARGET_X11
 global_cppflags += -DXP_UNIX
@@ -174,15 +235,17 @@ endif
 
 if !ENABLE_DEBUG
 global_cppflags += -DNDEBUG
-else 
+else
 webkitgtk_cppflags += \
 	-DG_DISABLE_DEPRECATED \
 	-DGDK_PIXBUF_DISABLE_DEPRECATED \
 	-DGDK_DISABLE_DEPRECATED \
 	-DGTK_DISABLE_DEPRECATED \
-	-DPANGO_DISABLE_DEPRECATED \
-	-DGDK_MULTIHEAD_SAFE \
-	-DGTK_MULTIHEAD_SAFE
+	-DPANGO_DISABLE_DEPRECATED
+
+# Might be useful in the future
+#	-DGDK_MULTIHEAD_SAFE \
+#	-DGTK_MULTIHEAD_SAFE
 endif
 
 if !ENABLE_DATABASE
@@ -200,30 +263,30 @@ global_cppflags += \
 endif
 
 if ENABLE_VIDEO
-webkitgtk_ldflags += -lgstinterfaces-0.10 -lgstvideo-0.10
+webcore_libadd += -lgstinterfaces-0.10 -lgstvideo-0.10
 endif
 
-#
-# WEBKIT GTK+
 webkitgtk_cppflags += \
--I $(top_builddir)/WebKit/gtk/WebView \
+-I$(top_builddir)/WebKit/gtk/webkit \
 -DBUILDING_CAIRO__=1 \
 -DBUILD_WEBKIT
 
 webkitgtk_h_api += \
-	WebKit/gtk/WebView/webkit.h \
-	WebKit/gtk/WebView/webkitdefines.h \
-	WebKit/gtk/WebView/webkitnetworkrequest.h \
-	WebKit/gtk/WebView/webkitwebframe.h \
-	WebKit/gtk/WebView/webkitwebview.h 
+	WebKit/gtk/webkit/webkit.h \
+	WebKit/gtk/webkit/webkitdefines.h \
+	WebKit/gtk/webkit/webkitnetworkrequest.h \
+	WebKit/gtk/webkit/webkitwebbackforwardlist.h \
+	WebKit/gtk/webkit/webkitwebframe.h \
+	WebKit/gtk/webkit/webkitwebhistoryitem.h \
+	WebKit/gtk/webkit/webkitwebsettings.h \
+	WebKit/gtk/webkit/webkitwebview.h
 
 webkitgtk_built_sources += \
-	WebKit/gtk/WebView/webkit-marshal.h \
-	WebKit/gtk/WebView/webkit-marshal.cpp
+	WebKit/gtk/webkit/webkit-marshal.h \
+	WebKit/gtk/webkit/webkit-marshal.cpp
 
 webkitgtk_headers += \
-	WebKit/gtk/WebView/webkitprivate.h \
-	WebKit/gtk/WebView/webkitsettings.h \
+	WebKit/gtk/webkit/webkitprivate.h \
 	WebKit/gtk/WebCoreSupport/ChromeClientGtk.h \
 	WebKit/gtk/WebCoreSupport/ContextMenuClientGtk.h \
 	WebKit/gtk/WebCoreSupport/DragClientGtk.h \
@@ -233,37 +296,39 @@ webkitgtk_headers += \
 	WebKit/gtk/WebCoreSupport/PasteboardHelperGtk.h
 
 webkitgtk_sources += \
-	WebKit/gtk/WebView/webkitnetworkrequest.cpp \
-	WebKit/gtk/WebView/webkitprivate.cpp \
-	WebKit/gtk/WebView/webkitsettings.cpp \
-	WebKit/gtk/WebView/webkitwebframe.cpp \
-	WebKit/gtk/WebView/webkitwebview.cpp \
+	WebKit/gtk/webkit/webkitnetworkrequest.cpp \
+	WebKit/gtk/webkit/webkitprivate.cpp \
+	WebKit/gtk/webkit/webkitwebbackforwardlist.cpp \
+	WebKit/gtk/webkit/webkitwebframe.cpp \
+	WebKit/gtk/webkit/webkitwebhistoryitem.cpp \
+	WebKit/gtk/webkit/webkitwebsettings.cpp \
+	WebKit/gtk/webkit/webkitwebview.cpp \
 	WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp \
 	WebKit/gtk/WebCoreSupport/ContextMenuClientGtk.cpp \
 	WebKit/gtk/WebCoreSupport/DragClientGtk.cpp \
 	WebKit/gtk/WebCoreSupport/EditorClientGtk.cpp \
 	WebKit/gtk/WebCoreSupport/FrameLoaderClientGtk.cpp \
 	WebKit/gtk/WebCoreSupport/InspectorClientGtk.cpp \
-	WebKit/gtk/WebCoreSupport/PasteboardHelperGtk.cpp 
+	WebKit/gtk/WebCoreSupport/PasteboardHelperGtk.cpp
 
 webkitgtk_cleanfiles += \
 	$(top_builddir)/Programs/GtkLauncher \
-	$(top_builddir)/WebKit/gtk/WebKitGtk.pc
+	$(top_builddir)/WebKit/gtk/webkit-1.0.pc
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = WebKit/gtk/WebKitGtk.pc
+pkgconfig_DATA = WebKit/gtk/webkit-1.0.pc
 
-WEBKIT_MARSHAL = $(CURDIR)/WebKit/gtk/WebView/webkit-marshal
-WEBKIT_MARSHAL_LIST = $(srcdir)/WebKit/gtk/WebView/webkit-marshal.list
+WEBKIT_MARSHAL = $(CURDIR)/WebKit/gtk/webkit/webkit-marshal
+WEBKIT_MARSHAL_LIST = $(srcdir)/WebKit/gtk/webkit/webkit-marshal.list
 
 stamp_files := \
 	stamp-webkit-marshal.cpp \
 	stamp-webkit-marshal.h
 
-WebKit/gtk/WebView/webkit-marshal.cpp: stamp-webkit-marshal.cpp
+WebKit/gtk/webkit/webkit-marshal.cpp: stamp-webkit-marshal.cpp
 	@true
 
-WebKit/gtk/WebView/webkit-marshal.h: stamp-webkit-marshal.h
+WebKit/gtk/webkit/webkit-marshal.h: stamp-webkit-marshal.h
 	@true
 
 stamp-webkit-marshal.cpp: $(WEBKIT_MARSHAL_LIST)
@@ -289,7 +354,7 @@ include WebKitTools/GNUmakefile.am
 
 
 # Autogenerated sources
-BUILT_SOURCES := \
+BUILT_SOURCES = \
 	$(javascriptcore_built_sources) \
 	$(javascriptcore_built_nosources) \
 	$(webcore_built_sources) \
@@ -302,7 +367,6 @@ CLEANFILES += \
 	$(webkitgtk_cleanfiles) \
 	$(top_builddir)/Programs/DumpRenderTree \
 	$(top_builddir)/Programs/testkjs \
-	$(top_builddir)/Programs/dftables \
 	$(GENSOURCES)
 
 MAINTAINERCLEANFILES += \
