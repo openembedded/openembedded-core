@@ -4,7 +4,7 @@ SECTION = "libs"
 LICENSE = "LGPL"
 DEPENDS = "libx11-sdk libxext-sdk libxrandr-sdk libxrender-sdk"
 RDEPENDS = "libx11-sdk libxrandr-sdk libxrender-sdk libxext-sdk"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
 	   file://acinclude.m4 \
@@ -21,6 +21,7 @@ EXTRA_OECONF = "--disable-static --disable-debug --disable-cdrom --enable-thread
                 --disable-video-fbcon --disable-video-directfb --disable-video-ps2gs \
                 --disable-video-xbios --disable-video-gem --disable-video-dummy \
                 --disable-video-opengl --enable-input-events --enable-pthreads \
+		--disable-video-svga \
                 --disable-video-picogui --disable-video-qtopia --enable-dlopen"
 
 PARALLEL_MAKE = ""
