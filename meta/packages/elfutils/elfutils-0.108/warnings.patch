@@ -7,7 +7,7 @@ Index: elfutils-0.108/configure.ac
  ALL_LINGUAS=
  
 +if test X"$CFLAGS" = X; then
-+  CFLAGS="-Wall -Werror -g -O2"
++  CFLAGS="-Wall  -g -O2"
 +fi
 +
  AC_PROG_CC
@@ -109,7 +109,7 @@ Index: elfutils-0.108/src/Makefile.am
 -	    $(if $($(*F)_no_Wunused),,-Wunused -Wextra) \
 -	    $(if $($(*F)_no_Wformat),,-Wformat=2)
 +AM_CFLAGS = -Wshadow -std=gnu99 $(native_ld_cflags) \
-+	    $(if $($(*F)_no_Werror),,-Werror)	    
++	    $(if $($(*F)_no_Werror),,)	    
  endif
  if MUDFLAP
  libmudflap = -lmudflap
