@@ -1,9 +1,10 @@
 require coreutils.inc
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://alpha.gnu.org/gnu/coreutils/coreutils-${PV}.tar.bz2 \
            file://install-cross.patch;patch=1;pnum=0 \
+           file://futimens.patch;patch=1 \
            file://man.patch;patch=1 \
            file://rename-tee-for-glibc2.5.patch;patch=1 \
            file://uptime-pow-lib.patch;patch=1"
