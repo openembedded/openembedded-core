@@ -1,6 +1,6 @@
 require linux-mx31.inc
 
-PR = "r4"
+PR = "r5"
 
 FILESDIR = "${WORKDIR}"
 
