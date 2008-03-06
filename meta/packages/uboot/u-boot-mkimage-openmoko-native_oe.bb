@@ -1,6 +1,7 @@
 require uboot-openmoko_svn.bb
 
 PV = "1.2.0+git9912121f7ed804ea58fd62f3f230b5dcfc357d88svn2238"
+PR = "r1"
 
 SRC_URI = "git://www.denx.de/git/u-boot.git/;protocol=git;tag=9912121f7ed804ea58fd62f3f230b5dcfc357d88 \
 file://uboot-machtypes.patch;patch=1 \
@@ -72,12 +73,11 @@ do_compile () {
         oe_runmake tools
 }
 
-do_deploy () {
+do_stage () {
         install -m 0755 tools/mkimage ${STAGING_BINDIR_NATIVE}/uboot-mkimage
         ln -sf ${STAGING_BINDIR_NATIVE}/uboot-mkimage ${STAGING_BINDIR_NATIVE}/mkimage
 }
 
-do_deploy[dirs] = "${S}"
-addtask deploy before do_package after do_install
-
-
+do_deploy() {
+:
+}
