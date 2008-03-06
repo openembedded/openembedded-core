@@ -2,7 +2,7 @@ DESCRIPTION = "The GNU cc and gcc C compilers."
 HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r6"
+PR = "r7"
 
 inherit autotools gettext
 

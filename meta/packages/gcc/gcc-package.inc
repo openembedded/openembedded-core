@@ -126,6 +126,9 @@ do_install () {
 	ln -sf gcc cc
 	ln -sf ${bindir}/${TARGET_SYS}-cpp ${D}${base_libdir}/cpp
 	ln -sf ${bindir}/${TARGET_SYS}-cpp ${D}${bindir}/cpp
+
+	# Remove precompiled c++ headers as they are really big
+	rm -rf ${D}${includedir}/c++/${BINV}/${TARGET_SYS}/bits/*.gch
 }
 
 # The gcc package contains symlinks that trip up insane
