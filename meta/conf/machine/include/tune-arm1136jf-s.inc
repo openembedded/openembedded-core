@@ -3,6 +3,6 @@ TARGET_CC_ARCH += "${@['', '-mfloat-abi=softfp -mfpu=vfp'][(bb.data.getVar('TARG
 FEED_ARCH = "armv6"
 PACKAGE_ARCH = "armv6"
 
-ARM_INSTRUCTION_SET = "${@['arm', 'thumb'][bb.data.getVar('CPU_FEATURES', d, 1).find('thumb') != 1]}"
+ARM_INSTRUCTION_SET = "${@['thumb','arm'][bb.data.getVar('CPU_FEATURES', d, 1).find('thumb') == -1]}"
 
 require conf/machine/include/tune-thumb.inc
