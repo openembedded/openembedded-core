@@ -1,0 +1,39 @@
+Index: git/configure.in
+===================================================================
+--- git.orig/configure.in	2007-12-19 13:43:52.000000000 +0000
++++ git/configure.in	2008-03-06 23:59:57.000000000 +0000
+@@ -201,9 +201,6 @@
+ # Like AC_CHECK_HEADER, but it uses the already-computed -I directories.
+ AC_DEFUN(AC_CHECK_X_HEADER, [
+   ac_save_CPPFLAGS="$CPPFLAGS"
+-  if test \! -z "$includedir" ; then 
+-    CPPFLAGS="$CPPFLAGS -I$includedir"
+-  fi
+   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+   AC_CHECK_HEADER([$1],[$2],[$3],[$4])
+   CPPFLAGS="$ac_save_CPPFLAGS"])
+@@ -211,9 +208,6 @@
+ # Like AC_TRY_COMPILE, but it uses the already-computed -I directories.
+ AC_DEFUN(AC_TRY_X_COMPILE, [
+   ac_save_CPPFLAGS="$CPPFLAGS"
+-  if test \! -z "$includedir" ; then 
+-    CPPFLAGS="$CPPFLAGS -I$includedir"
+-  fi
+   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+   AC_TRY_COMPILE([$1], [$2], [$3], [$4])
+   CPPFLAGS="$ac_save_CPPFLAGS"])
+@@ -224,14 +218,8 @@
+   ac_save_CPPFLAGS="$CPPFLAGS"
+   ac_save_LDFLAGS="$LDFLAGS"
+ #  ac_save_LIBS="$LIBS"
+-  if test \! -z "$includedir" ; then 
+-    CPPFLAGS="$CPPFLAGS -I$includedir"
+-  fi
+   # note: $X_CFLAGS includes $x_includes
+   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+-  if test \! -z "$libdir" ; then
+-    LDFLAGS="$LDFLAGS -L$libdir"
+-  fi
+   # note: $X_LIBS includes $x_libraries
+   LDFLAGS="$LDFLAGS $ALL_X_LIBS"
+   AC_CHECK_LIB([$1], [$2], [$3], [$4], [$5])

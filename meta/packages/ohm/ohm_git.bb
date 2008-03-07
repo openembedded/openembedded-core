@@ -4,10 +4,11 @@ LICENSE = "LGPL"
 
 DEPENDS = "gtk+ dbus-glib intltool-native hal"
 RDEPENDS_${PN} += "udev hal-info"
-SRC_URI = "git://anongit.freedesktop.org/git/ohm/;protocol=git"
+SRC_URI = "git://anongit.freedesktop.org/git/ohm/;protocol=git \
+           file://fix_configure.patch;patch=1"
 
 PV = "0.1.2+git-locrev${SRCREV}"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/git"
 
