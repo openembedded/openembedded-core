@@ -1,7 +1,7 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r58"
+PR = "r59"
 LICENSE = "GPL"
 
 SRC_URI = " \
@@ -20,8 +20,11 @@ SRC_URI = " \
            file://share/dot.profile \
            file://licenses/BSD \
            file://licenses/GPL-2 \
+           file://licenses/GPL-3 \
            file://licenses/LGPL-2 \
            file://licenses/LGPL-2.1 \
+           file://licenses/LGPL-3 \
+           file://licenses/GFDL-1.2 \
            file://licenses/Artistic "
 S = "${WORKDIR}"
 
@@ -107,7 +110,7 @@ do_install () {
 	install -m 0644 ${WORKDIR}/host.conf ${D}${sysconfdir}/host.conf
 	install -m 0644 ${WORKDIR}/motd ${D}${sysconfdir}/motd
 
-	for license in BSD GPL-2 LGPL-2 LGPL-2.1 Artistic; do
+	for license in BSD GPL-2 LGPL-2 LGPL-2.1 Artistic GPL-3 LGPL-3 GFDL-1.2; do
 		install -m 0644 ${WORKDIR}/licenses/$license ${D}${datadir}/common-licenses/
 	done
 
