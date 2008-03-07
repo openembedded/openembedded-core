@@ -6,7 +6,7 @@ SECTION = "console/utils"
 LICENSE = "BSD"
 DEPENDS = "ncurses"
 
-SRC_URI = "http://www.greenwoodsoftware.com/less/less-406.tar.gz "
+SRC_URI = "${GNU_MIRROR}/less/less-${PV}.tar.gz"
 
 inherit autotools update-alternatives
 
