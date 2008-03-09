@@ -1,7 +1,7 @@
 require libtool.inc
 require libtool_${PV}.bb
 
-PR = "r9"
+PR = "r10"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://libdir-la.patch;patch=1 \
@@ -18,7 +18,7 @@ prefix = "${STAGING_DIR_NATIVE}${layout_prefix}"
 exec_prefix = "${STAGING_DIR_NATIVE}${layout_exec_prefix}"
 bindir = "${STAGING_BINDIR_NATIVE}"
 
-do_compile () {
+do_configure_prepend () {
 	rm -f ltmain.shT
 	date=`/bin/sh ./mkstamp < ./ChangeLog` && \
         sed -e 's/@''PACKAGE@/libtool/' -e 's/@''VERSION@/1.5.10/' \
@@ -26,6 +26,10 @@ do_compile () {
 	mv -f ltmain.shT ltmain.sh || \
 	        (rm -f ltmain.sh && cp ltmain.shT ltmain.sh && rm -f ltmain.shT)
 	cp ltmain.sh ./libltdl/
+}
+
+do_compile () {
+	:
 }
 
 do_stage () {
