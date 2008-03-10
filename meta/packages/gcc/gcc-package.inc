@@ -1,7 +1,7 @@
 gcclibdir ?= "${libdir}/gcc"
 BINV ?= "${PV}"
 
-PACKAGES = "libgcc libgcc-dev \
+PACKAGES = "libgcc \
             ${PN} ${PN}-symlinks \
             g++ g++-symlinks \
 	    cpp cpp-symlinks \
@@ -41,7 +41,7 @@ FILES_gcov = "${bindir}/${TARGET_PREFIX}gcov"
 FILES_gcov-symlinks = "${bindir}/gcov"
 
 FILES_libgcc = "${base_libdir}/libgcc*.so.*"
-FILES_libgcc-dev = "${base_libdir}/libgcc*.so"
+#FILES_libgcc-dev = "${base_libdir}/libgcc*.so"
 
 # Called from within gcc-cross, so libdir is set wrong
 FILES_libg2c = "${target_libdir}/libg2c.so.*"
