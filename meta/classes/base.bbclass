@@ -1,4 +1,4 @@
-BB_DEFAULT_TASK = "build"
+BB_DEFAULT_TASK ?= "build"
 
 # like os.path.join but doesn't treat absolute RHS specially
 def base_path_join(a, *p):
@@ -160,9 +160,9 @@ DEPENDS_prepend="${@base_dep_prepend(d)} "
 def base_set_filespath(path, d):
 	import os, bb
 	filespath = []
+	# The ":" ensures we have an 'empty' override
+	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
 	for p in path:
-		overrides = bb.data.getVar("OVERRIDES", d, 1) or ""
-		overrides = overrides + ":"
 		for o in overrides.split(":"):
 			filespath.append(os.path.join(p, o))
 	return ":".join(filespath)
@@ -585,6 +585,7 @@ def oe_unpack_file(file, data, url = None):
 	return ret == 0
 
 addtask unpack after do_fetch
+do_unpack[cleandirs] = "${WORKDIR}"
 do_unpack[dirs] = "${WORKDIR}"
 python base_do_unpack() {
 	import re, os
@@ -802,8 +803,10 @@ def get_subpkgedata_fn(pkg, d):
 	import bb, os
 	archs = bb.data.expand("${PACKAGE_ARCHS}", d).split(" ")
 	archs.reverse()
+	pkgdata = bb.data.expand('${STAGING_DIR}/pkgdata/', d)
+	targetdir = bb.data.expand('${TARGET_VENDOR}-${TARGET_OS}/runtime/', d)
 	for arch in archs:
-		fn = bb.data.expand('${STAGING_DIR}/pkgdata/' + arch + '${TARGET_VENDOR}-${TARGET_OS}/runtime/%s' % pkg, d)
+		fn = pkgdata + arch + targetdir + pkg
 		if os.path.exists(fn):
 			return fn
 	return bb.data.expand('${PKGDATA_DIR}/runtime/%s' % pkg, d)
