@@ -4,7 +4,7 @@
 
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 DEPENDS = "task-poky"
-PR = "r4"
+PR = "r5"
 
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -30,7 +30,6 @@ RDEPENDS_task-poky-sdk = "\
     gettext \
     make \
     intltool \
-    libgcc-dev \
     libstdc++ \
     libstdc++-dev \
     libtool \
