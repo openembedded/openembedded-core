@@ -91,7 +91,4 @@ python do_bootimg() {
 	bb.build.exec_func('build_boot_bin', d)
 }
 
-# We need to run after bootsplash if it exists, so thats why this line
-# is such.  Don't worry, if you don't do bootsplash, nobody will notice
-
-addtask bootimg before do_build after do_bootsplash
+addtask bootimg before do_build
