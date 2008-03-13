@@ -3,7 +3,7 @@ SECTION = "multimedia"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
-DEPENDS = "gstreamer zlib"
+DEPENDS = "gstreamer zlib gst-plugins-base"
 PR = "r1"
 
 inherit autotools pkgconfig
