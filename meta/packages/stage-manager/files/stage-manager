@@ -33,6 +33,7 @@ def read_cache(cachefile):
         cache[data[0]] = {}
         cache[data[0]]['ts'] = int(data[1])
         cache[data[0]]['size'] = int(data[2])
+        cache[data[0]]['seen'] = False
     return cache
 
 def mkdirhier(dir):
@@ -77,13 +78,14 @@ if __name__ == "__main__":
     if os.access(options.cachefile, os.F_OK):
 	cache = read_cache(options.cachefile)
 
-    found = False
+    found_difference = False
 
     def updateCache(path, fstamp):
         cache[path] = {}
         cache[path]['ts'] = fstamp[stat.ST_MTIME]
         cache[path]['size'] = fstamp[stat.ST_SIZE]
-        found = True
+        cache[path]['seen'] = True
+        found_difference = True
 
     def copyfile(path):
         if options.copydir:
@@ -94,11 +96,13 @@ if __name__ == "__main__":
     def copydir(path, fstamp):
         if options.copydir:
             copypath = os.path.join(options.copydir, path.replace(options.parentdir, '', 1))
+            if os.path.exists(copypath):
+                os.system("rm -rf " + copypath)
             if os.path.islink(path):
                 os.symlink(os.readlink(path), copypath)
             else:
                 mkdirhier(copypath)
-            os.utime(copypath, (fstamp[stat.ST_ATIME], fstamp[stat.ST_MTIME]))
+                os.utime(copypath, (fstamp[stat.ST_ATIME], fstamp[stat.ST_MTIME]))
 
     for root, dirs, files in os.walk(options.parentdir):
         for f in files:
@@ -115,6 +119,7 @@ if __name__ == "__main__":
                     print "file %s changed" % path
                     updateCache(path, fstamp)
                     copyfile(path)
+		cache[path]['seen'] = True
         for d in dirs:
             path = os.path.join(root, d)
             fstamp = os.lstat(path)
@@ -127,13 +132,23 @@ if __name__ == "__main__":
                     print "dir %s changed" % path
                     updateCache(path, fstamp)
                     copydir(path, fstamp)
+		cache[path]['seen'] = True
+
+    todel = []
+    for path in cache:
+        if not cache[path]['seen']:
+            print "%s removed" % path
+            found_difference = True
+            todel.append(path)
 
     if options.update:
         print "Updating"
+        for path in todel:
+            del cache[path]
         mkdirhier(os.path.split(options.cachefile)[0])
         write_cache(options.cachefile, cache)
 
-    if found:
+    if found_difference:
         sys.exit(5)
     sys.exit(0)
 

@@ -1,5 +1,5 @@
 DESCRIPTION = "Helper script for packaged-staging.bbclass"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "file://stage-manager"
 LICENSE = "GPLv2"
@@ -10,7 +10,6 @@ inherit native
 
 DEPENDS = " "
 PACKAGE_DEPENDS = " "
-PATCHTOOL = ""
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_install() {
