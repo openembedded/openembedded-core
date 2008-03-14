@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Host packages for the standalone SDK or external toolchain"
-PR = "r5"
+PR = "r6"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -18,4 +18,5 @@ RDEPENDS_${PN} = "\
     pkgconfig-sdk \
     qemu-sdk \
     qemu-helper-sdk \
+    ipkg-sdk \
     "
