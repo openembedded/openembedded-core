@@ -1,0 +1,54 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+Index: libgpg-error-1.3/configure.ac
+===================================================================
+--- libgpg-error-1.3.orig/configure.ac
++++ libgpg-error-1.3/configure.ac
+@@ -117,6 +117,7 @@ GPG_ERROR_CONFIG_CFLAGS=""
+ AC_SUBST(GPG_ERROR_CONFIG_LIBS)
+ AC_SUBST(GPG_ERROR_CONFIG_CFLAGS)
+ AC_CONFIG_FILES([src/gpg-error-config], [chmod +x src/gpg-error-config])
++AC_CONFIG_FILES([src/gpg-error.pc])
+ 
+ 
+ # Special defines for certain platforms
+Index: libgpg-error-1.3/src/Makefile.am
+===================================================================
+--- libgpg-error-1.3.orig/src/Makefile.am
++++ libgpg-error-1.3/src/Makefile.am
+@@ -28,6 +28,8 @@ include_HEADERS = gpg-error.h
+ bin_SCRIPTS = gpg-error-config
+ m4datadir = $(datadir)/aclocal
+ m4data_DATA = gpg-error.m4
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = gpg-error.pc
+ 
+ 
+ EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
+@@ -35,7 +37,7 @@ EXTRA_DIST = mkstrtable.awk err-sources.
+ 	mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
+ 	mkheader.awk gpg-error.h.in \
+ 	err-sources.h err-codes.h gpg-error-config.in gpg-error.m4 \
+-	gpg-error.def versioninfo.rc.in
++	gpg-error.def versioninfo.rc.in gpg-error.pc.in
+ 
+ BUILT_SOURCES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
+ 	err-sources-sym.h err-codes-sym.h errnos-sym.h gpg-error.h
+Index: libgpg-error-1.3/src/gpg-error.pc.in
+===================================================================
+--- /dev/null
++++ libgpg-error-1.3/src/gpg-error.pc.in
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: gpg-error
++Description: a library that defines common error values for all GnuPG components
++Version: @VERSION@
++Libs: -L{libdir} -lgpg-error
++Cflags: -I${includedir}
