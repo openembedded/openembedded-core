@@ -2,6 +2,7 @@
 ac_cv_have_decl_sys_siglist=${ac_cv_have_decl_sys_siglist=yes}
 ac_cv_func_malloc_0_nonnull=${ac_cv_func_malloc_0_nonnull=yes}
 ac_cv_func_memcmp_working=${ac_cv_func_memcmp_working=yes}
+ac_cv_type_uid_t={ac_cv_type_uid_t=yes}
 
 # bash
 bash_cv_under_sys_siglist=${bash_cv_under_sys_siglist=yes}
@@ -44,3 +45,4 @@ ac_cv_func_setresuid=${ac_cv_func_setresuid=yes}
 ac_cv_func_va_copy=${ac_cv_func_va_copy=yes}
 ac_cv_func___va_copy=${ac_cv_func___va_copy=yes}
 ac_cv_epoll_works=${ac_cv_epoll_works=yes}
+
