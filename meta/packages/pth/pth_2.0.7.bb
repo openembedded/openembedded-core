@@ -2,7 +2,6 @@ DESCRIPTION = "GNU Portable Threads"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "GPL LGPL FDL"
-PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/pth/pth-${PV}.tar.gz"
 
