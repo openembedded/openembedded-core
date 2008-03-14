@@ -1,6 +1,6 @@
 LICENSE = "GPL"
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2"
-DEPENDS = "libgpg-error pth libassuan"
+DEPENDS = "libgpg-error pth"
 PR = "r2"
 
 EXTRA_OECONF = "--with-pth=${STAGING_DIR}/${HOST_SYS} --without-pth-test \
