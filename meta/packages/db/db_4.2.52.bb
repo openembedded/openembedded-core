@@ -10,13 +10,13 @@
 # same system at the same time if really necessary.
 SECTION = "libs"
 DESCRIPTION = "Berkeley DB v4."
-HOMEPAGE = "http://www.sleepycat.com"
+HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "BSD Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r7"
+PR = "r8"
 
-SRC_URI = "http://downloads.sleepycat.com/db-${PV}.tar.gz \
+SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz \
            file://configure_fixes.patch;patch=1 "
 #SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"
 #TODO SRC_URI += "file://arm-thumb-mutex.patch;patch=1"

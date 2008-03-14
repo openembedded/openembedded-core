@@ -10,11 +10,11 @@
 # same system at the same time if really necessary.
 SECTION = "libs"
 DESCRIPTION = "Berkeley DB v4."
-HOMEPAGE = "http://www.sleepycat.com"
+HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "BSD Sleepycat"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "http://downloads.sleepycat.com/${P}.tar.gz"
+SRC_URI = "http://download.oracle.com/berkeley-db/${P}.tar.gz"
 
 inherit autotools
 
