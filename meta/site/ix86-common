@@ -134,6 +134,7 @@ glib_cv_stack_grows=${glib_cv_stack_grows=no}
 utils_cv_sys_open_max=${utils_cv_sys_open_max=1015}
 ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
+ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
 
 # guile
 ac_cv_sys_restartable_syscalls=yes
