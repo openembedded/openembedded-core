@@ -1,21 +1,33 @@
-DESCRIPTION = "Open Package Manager"
-DESCRIPTION_libopkg = "Open Package Manager Library"
-SECTION = "base"
-LICENSE = "GPL"
-DEPENDS = "curl gpgme"
-PV = "0.0+svnr${SRCREV}"
-PR = "r1"
+require opkg.inc
 
-SRC_URI = "svn://svn.openmoko.org/trunk/src/target/;module=opkg;proto=http"
-S = "${WORKDIR}/opkg"
-
-inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
+PR = "r2"
 
 PACKAGES =+ "libopkg-dev libopkg"
 
 FILES_libopkg-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so"
 FILES_libopkg = "${libdir}/*.so.*"
+
+# Define a variable to allow distros to run configure earlier.
+# (for example, to enable loading of ethernet kernel modules before networking starts)
+OPKG_INIT_POSITION = "98"
+OPKG_INIT_POSITION_slugos = "41"
+
+pkg_postinst_opkg () {
+#!/bin/sh
+if [ "x$D" != "x" ]; then
+	install -d ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d
+	# this happens at S98 where our good 'ole packages script used to run
+	echo "#!/bin/sh
+opkg-cl configure
+" > ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${OPKG_INIT_POSITION}configure
+	chmod 0755 ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${OPKG_INIT_POSITION}configure
+fi
+
+update-alternatives --install ${bindir}/opkg opkg ${bindir}/opkg-cl 100
+}
+
+pkg_postrm_opkg () {
+#!/bin/sh
+update-alternatives --remove opkg ${bindir}/opkg-cl
+}
+
