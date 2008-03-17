@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r49"
+PR = "r50"
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
