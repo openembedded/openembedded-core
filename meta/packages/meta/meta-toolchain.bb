@@ -1,6 +1,6 @@
 DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
-DEPENDS = "ipkg-native ipkg-utils-native fakeroot-native sed-native"
+DEPENDS = "opkg-native ipkg-utils-native fakeroot-native sed-native"
 
 inherit sdk meta
 
@@ -9,8 +9,8 @@ SDK_OUTPUT = "${SDK_DIR}/image"
 SDK_OUTPUT2 = "${SDK_DIR}/image-extras"
 SDK_DEPLOY = "${TMPDIR}/deploy/sdk"
 
-IPKG_HOST = "ipkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
-IPKG_TARGET = "ipkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/${SDK_PREFIX}/${TARGET_SYS}"
+IPKG_HOST = "opkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
+IPKG_TARGET = "opkg-cl -f ${IPKGCONF_TARGET} -o ${SDK_OUTPUT}/${SDK_PREFIX}/${TARGET_SYS}"
 
 TOOLCHAIN_HOST_TASK ?= "task-sdk-host"
 TOOLCHAIN_TARGET_TASK ?= "task-poky-standalone-sdk-target task-poky-standalone-sdk-target-dbg"
@@ -30,14 +30,14 @@ do_populate_sdk() {
 	done
 
 	${IPKG_HOST} update
-	${IPKG_HOST} install ${TOOLCHAIN_HOST_TASK} ipkg-sdk
+	${IPKG_HOST} install ${TOOLCHAIN_HOST_TASK}
 
 	${IPKG_TARGET} update
 	${IPKG_TARGET} install ${TOOLCHAIN_TARGET_TASK}
 
-	install -d ${SDK_OUTPUT}/${prefix}/usr/lib/ipkg
-	mv ${SDK_OUTPUT}/usr/lib/ipkg/* ${SDK_OUTPUT}/${prefix}/usr/lib/ipkg/
-	#rm -Rf ${SDK_OUTPUT}/usr/lib
+	install -d ${SDK_OUTPUT}/${prefix}/usr/lib/opkg
+	mv ${SDK_OUTPUT}/usr/lib/opkg/* ${SDK_OUTPUT}/${prefix}/usr/lib/opkg/
+	rm -Rf ${SDK_OUTPUT}/usr/lib
 
 	install -d ${SDK_OUTPUT}/${sysconfdir}
 	install -m 0644 ${IPKGCONF_TARGET} ${IPKGCONF_SDK} ${SDK_OUTPUT}/${sysconfdir}
@@ -89,8 +89,8 @@ do_populate_sdk() {
 	echo 'export PKG_CONFIG_SYSROOT_DIR=${prefix}/${TARGET_SYS}' >> $script
 	echo 'export PKG_CONFIG_PATH=${prefix}/${TARGET_SYS}/lib/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${prefix}/site-config' >> $script
-	echo "alias ipkg='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/ipkg-cl -f ${sysconfdir}/ipkg-sdk.conf -o ${prefix}'" >> $script
-	echo "alias ipkg-target='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/ipkg-cl -f ${sysconfdir}/ipkg.conf -o ${prefix}/${TARGET_SYS}'" >> $script
+	echo "alias opkg='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${sysconfdir}/ipkg-sdk.conf -o ${prefix}'" >> $script
+	echo "alias opkg-target='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${sysconfdir}/ipkg.conf -o ${prefix}/${TARGET_SYS}'" >> $script
 
 	# Add version information
 	versionfile=${SDK_OUTPUT}/${prefix}/version
