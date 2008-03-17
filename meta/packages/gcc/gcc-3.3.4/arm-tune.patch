@@ -1,9 +1,0 @@
---- gcc/config/arm/linux-elf.h.orig	2004-03-11 14:46:33.000000000 +0000
-+++ gcc/config/arm/linux-elf.h	2004-03-11 14:48:23.000000000 +0000
-@@ -128,3 +128,6 @@
- 
- #define LINK_GCC_C_SEQUENCE_SPEC \
-   "%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
-+
-+/* Tune for XScale.  */
-+#define TARGET_TUNE_DEFAULT TARGET_CPU_xscale
