@@ -1,11 +1,10 @@
 inherit package
 
-BOOTSTRAP_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
-DISTRO_EXTRA_RDEPENDS += "ipkg-collateral ipkg ipkg-link"
+DISTRO_EXTRA_RDEPENDS += "opkg-collateral opkg"
 IMAGE_PKGTYPE ?= "ipk"
 
-IPKGCONF_TARGET = "${STAGING_ETCDIR_NATIVE}/ipkg.conf"
-IPKGCONF_SDK =  "${STAGING_ETCDIR_NATIVE}/ipkg-sdk.conf"
+IPKGCONF_TARGET = "${STAGING_ETCDIR_NATIVE}/opkg.conf"
+IPKGCONF_SDK =  "${STAGING_ETCDIR_NATIVE}/opkg-sdk.conf"
 
 python package_ipk_fn () {
 	from bb import data
@@ -57,8 +56,8 @@ python package_ipk_install () {
 		f = open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),"w")
 		f.close()
 
-	ret = os.system('ipkg-cl  -o %s -f %s update' % (rootfs, conffile))
-	ret = os.system('ipkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn))
+	ret = os.system('opkg-cl  -o %s -f %s update' % (rootfs, conffile))
+	ret = os.system('opkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn))
 	if (ret != 0 ):
 		raise bb.build.FuncFailed
 }
