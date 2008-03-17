@@ -20,7 +20,7 @@ PR = "r1"
 inherit sdk
 
 do_stage() {
-	if [ ! -e  ${prefix}/package-status ]; then
+	if [ ! -e  ${prefix}/environment-setup ]; then
 		echo "The Poky toolchain could not be found in ${prefix}!"
 		exit 1
 	fi
