@@ -5,7 +5,7 @@
 # See image.bbclass for a usage of this.
 #
 
-do_rootfs[depends] += "ipkg-native:do_populate_staging ipkg-utils-native:do_populate_staging"
+do_rootfs[depends] += "opkg-native:do_populate_staging ipkg-utils-native:do_populate_staging"
 do_rootfs[recrdeptask] += "do_package_write_ipk"
 
 IPKG_ARGS = "-f ${IPKGCONF_TARGET} -o ${IMAGE_ROOTFS}"
@@ -18,35 +18,35 @@ fakeroot rootfs_ipk_do_rootfs () {
 
 	mkdir -p ${T}
 
-	ipkg-cl ${IPKG_ARGS} update
+	opkg-cl ${IPKG_ARGS} update
 
 	# Uclibc builds don't provide this stuff...
 	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then 
 		if [ ! -z "${LINGUAS_INSTALL}" ]; then
-			ipkg-cl ${IPKG_ARGS} install glibc-localedata-i18n
+			opkg-cl ${IPKG_ARGS} install glibc-localedata-i18n
 			for i in ${LINGUAS_INSTALL}; do
-				ipkg-cl ${IPKG_ARGS} install $i 
+				opkg-cl ${IPKG_ARGS} install $i 
 			done
 		fi
 	fi
 	if [ ! -z "${PACKAGE_INSTALL}" ]; then
-		ipkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL}
+		opkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL}
 	fi
 
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
-	mkdir -p ${IMAGE_ROOTFS}/etc/ipkg/
-	grep "^arch" ${IPKGCONF_TARGET} >${IMAGE_ROOTFS}/etc/ipkg/arch.conf
+	mkdir -p ${IMAGE_ROOTFS}/etc/opkg/
+	grep "^arch" ${IPKGCONF_TARGET} >${IMAGE_ROOTFS}/etc/opkg/arch.conf
 
-	for i in ${IMAGE_ROOTFS}${libdir}/ipkg/info/*.preinst; do
+	for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.preinst; do
 		if [ -f $i ] && ! sh $i; then
-			ipkg-cl ${IPKG_ARGS} flag unpacked `basename $i .preinst`
+			opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .preinst`
 		fi
 	done
-	for i in ${IMAGE_ROOTFS}${libdir}/ipkg/info/*.postinst; do
+	for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.postinst; do
 		if [ -f $i ] && ! sh $i configure; then
-			ipkg-cl ${IPKG_ARGS} flag unpacked `basename $i .postinst`
+			opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .postinst`
 		fi
 	done
 
@@ -79,5 +79,5 @@ rootfs_ipk_log_check() {
 }
 
 remove_packaging_data_files() {
-	rm -rf ${IMAGE_ROOTFS}/usr/lib/ipkg/
+	rm -rf ${IMAGE_ROOTFS}/usr/lib/opkg/
 }
