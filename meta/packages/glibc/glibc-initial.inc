@@ -38,6 +38,10 @@ do_stage () {
 	mkdir -p ${STAGING_INCDIR}/gnu
 	touch ${STAGING_INCDIR}/gnu/stubs.h
 	cp ${S}/include/features.h ${STAGING_INCDIR}/features.h
+
+	if [ -e ${B}/bits/stdio_lim.h ]; then
+		cp ${B}/bits/stdio_lim.h  ${STAGING_INCDIR}/bits/
+	fi
 }
 
 do_install () {
