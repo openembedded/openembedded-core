@@ -1,0 +1,32 @@
+Index: gcc-3.4.4/gcc/c-incpath.c
+===================================================================
+--- gcc-3.4.4.orig/gcc/c-incpath.c	2004-05-31 12:37:47.000000000 +0200
++++ gcc-3.4.4/gcc/c-incpath.c	2006-05-15 20:07:31.000000000 +0200
+@@ -328,6 +328,27 @@
+   else
+     heads[chain] = p;
+   tails[chain] = p;
++
++
++#ifdef CROSS_COMPILE
++    /* A common error when cross compiling is including
++    host headers. This code below will try to fail fast
++    for cross compiling. Currently we consider /usr/include,
++    /opt/include and /sw/include as harmful.  */
++	{
++		/* printf("Adding Path: %s\n", p->name ); */
++		if( strstr(p->name, "/usr/include" ) == p->name ) {
++			fprintf(stderr, _("CROSS COMPILE Badness: /usr/include in INCLUDEPATH: %s\n"), p->name);
++			abort();
++		} else if( strstr(p->name, "/sw/include") == p->name ) {
++			fprintf(stderr, _("CROSS COMPILE Badness: /sw/include in INCLUDEPATH: %s\n"), p->name);
++			abort();
++		} else if( strstr(p->name, "/opt/include") == p->name ) {
++			fprintf(stderr, _("CROSS COMPILE Badness: /opt/include in INCLUDEPATH: %s\n"), p->name);
++			abort();
++		}
++	}
++#endif
+ }
+ 
+ /* Exported function to handle include chain merging, duplicate

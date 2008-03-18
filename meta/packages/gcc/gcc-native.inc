@@ -4,8 +4,6 @@ PROVIDES = "gcc-native-${PV}"
 
 inherit native
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gcc-${PV}"
-
 # This is intended to be a -very- basic config
 EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${layout_prefix} \
 		--with-newlib \

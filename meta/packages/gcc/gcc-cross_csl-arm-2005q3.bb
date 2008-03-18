@@ -1,6 +1,6 @@
-PR = "r1"
+PR = "r2"
 
-require gcc-csl-arm-2006q1.inc
+require gcc-csl-arm-2005q3.inc
 require gcc-cross.inc
 require gcc-configure-cross.inc
 require gcc-package-cross.inc
