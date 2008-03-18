@@ -1,7 +1,7 @@
 require gcc-common.inc
 
 BINV = "3.4.4"
-PV = "3.4.4+csl-arm-2005q3"
+PV = "3.4.4+csl-arm-2005q3-2"
 PV_chinook-compat = "3.4.4cs2005q3.2"
 
 FILESDIR = "${FILE_DIRNAME}/gcc-csl-arm"
