@@ -125,7 +125,7 @@ insert_feed_uris () {
 		echo "Added $feed_name feed with URL $feed_uri"
 		
 		# insert new feed-sources
-		echo "src/gz $feed_name $feed_uri" >> ${IMAGE_ROOTFS}/etc/ipkg/${feed_name}-feed.conf
+		echo "src/gz $feed_name $feed_uri" >> ${IMAGE_ROOTFS}/etc/opkg/${feed_name}-feed.conf
 	done			
 }
 
