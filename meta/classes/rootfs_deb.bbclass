@@ -109,15 +109,15 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	set -e
 
-	# Hacks to make dpkg/ipkg coexist for now
+	# Hacks to make dpkg/opkg coexist for now
 	mv ${IMAGE_ROOTFS}/var/dpkg ${IMAGE_ROOTFS}/usr/
 	if [ -e ${IMAGE_ROOTFS}/usr/dpkg/alternatives ]; then
 		rmdir ${IMAGE_ROOTFS}/usr/dpkg/alternatives
 	fi
-	mkdir -p ${IMAGE_ROOTFS}/usr/lib/ipkg
-	ln -s /usr/lib/ipkg/alternatives ${IMAGE_ROOTFS}/usr/dpkg/alternatives
-	ln -s /usr/dpkg/info ${IMAGE_ROOTFS}/usr/lib/ipkg/info
-	ln -s /usr/dpkg/status ${IMAGE_ROOTFS}/usr/lib/ipkg/status
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib/opkg
+	ln -s /usr/lib/opkg/alternatives ${IMAGE_ROOTFS}/usr/dpkg/alternatives
+	ln -s /usr/dpkg/onfo ${IMAGE_ROOTFS}/usr/lib/opkg/info
+	ln -s /usr/dpkg/status ${IMAGE_ROOTFS}/usr/lib/opkg/status
 
 	${ROOTFS_POSTPROCESS_COMMAND}
 
@@ -145,6 +145,6 @@ rootfs_deb_log_check() {
 }
 
 remove_packaging_data_files() {
-	rm -rf ${IMAGE_ROOTFS}/usr/lib/ipkg/
+	rm -rf ${IMAGE_ROOTFS}/usr/lib/opkg/
 	rm -rf ${IMAGE_ROOTFS}/usr/dpkg/
 }
