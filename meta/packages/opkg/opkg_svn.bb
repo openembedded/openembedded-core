@@ -1,10 +1,16 @@
 require opkg.inc
 
+PROVIDES += "virtual/update-alternatives"
+RPROVIDES_update-alternatives-cworth += "update-alternatives"
+RCONFLICTS_update-alternatives-cworth = "update-alternatives-dpkg"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
-PR = "r3"
+PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PACKAGES =+ "libopkg-dev libopkg"
+PR = "r4"
 
+PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
+
+FILES_update-alternatives-cworth = "${bindir}/update-alternatives"
 FILES_libopkg-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so"
 FILES_libopkg = "${libdir}/*.so.*"
 
