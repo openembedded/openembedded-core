@@ -1,0 +1,62 @@
+diff -Nur libgcrypt-1.2.4/configure.ac libgcrypt11-1.2.4/configure.ac
+--- libgcrypt-1.2.4/configure.ac 2007-02-01 19:41:06.000000000 +0100
++++ libgcrypt11-1.2.4/configure.ac 2007-02-11 13:05:36.000000000 +0100
+@@ -808,6 +808,7 @@
+ src/Makefile
+ src/gcrypt.h
+ src/libgcrypt-config
++src/libgcrypt.pc
+ tests/Makefile
+ w32-dll/Makefile
+ ])
+diff -Nur libgcrypt-1.2.4/src/libgcrypt.pc.in libgcrypt11-1.2.4/src/libgcrypt.pc.in
+--- libgcrypt-1.2.4/src/libgcrypt.pc.in 1970-01-01 01:00:00.000000000 +0100
++++ libgcrypt11-1.2.4/src/libgcrypt.pc.in 2007-02-11 13:03:30.000000000 +0100
+@@ -0,0 +1,32 @@
++# Process this file with autoconf to produce a pkg-config metadata file.
++# Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation
++# Author: Simon Josefsson
++#
++# This file is free software; as a special exception the author gives
++# unlimited permission to copy and/or distribute it, with or without
++# modifications, as long as this notice is preserved.
++#
++# This file is distributed in the hope that it will be useful, but
++# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
++# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
++
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++# API info
++api_version=@LIBGCRYPT_CONFIG_API_VERSION@
++
++# Misc information.
++symmetric_ciphers=@LIBGCRYPT_CIPHERS@
++asymmetric_ciphers=@LIBGCRYPT_PUBKEY_CIPHERS@
++digests=@LIBGCRYPT_DIGESTS@
++
++Name: libgcrypt
++Description: GNU crypto library
++URL: http://www.gnupg.org
++Version: @VERSION@
++Libs: -L${libdir} @LIBGCRYPT_CONFIG_LIBS@
++Libs.private: @GPG_ERROR_LIBS@
++Cflags: -I${includedir} @LIBGCRYPT_CONFIG_CFLAGS@ @GPG_ERROR_CFLAGS@
+diff -Nur libgcrypt-1.2.4/src/Makefile.am libgcrypt11-1.2.4/src/Makefile.am
+--- libgcrypt-1.2.4/src/Makefile.am 2006-11-30 16:38:18.000000000 +0100
++++ libgcrypt11-1.2.4/src/Makefile.am 2007-02-11 13:10:03.000000000 +0100
+@@ -27,6 +27,11 @@
+ 
+ lib_LTLIBRARIES = libgcrypt.la
+ 
++# Pkg-config script.
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = libgcrypt.pc
++DISTCLEANFILES = $(pkgconfig_DATA)
++
+ if HAVE_LD_VERSION_SCRIPT
+   libgcrypt_version_script_cmd = -Wl,--version-script=$(srcdir)/libgcrypt.vers
+ else 
