@@ -4,7 +4,7 @@ DEPENDS = "libogg"
 DESCRIPTION = "tremor is a fixed point implementation of the vorbis codec."
 LICENSE = "BSD"
 SRCDATE = "${PV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=4573;proto=http"
 
@@ -19,11 +19,7 @@ EXTRA_OECONF=" --enable-shared --disable-rpath  "
 #}
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR_HOST}${layout_prefix} \
-	       bindir=${STAGING_BINDIR} \
-	       includedir=${STAGING_INCDIR}/tremor \
-	       libdir=${STAGING_LIBDIR} \
-	       datadir=${STAGING_DATADIR}
+	autotools_stage_all
 }
 
 ARM_INSTRUCTION_SET = "arm"
