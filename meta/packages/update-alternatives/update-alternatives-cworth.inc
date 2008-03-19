@@ -1,6 +1,0 @@
-LICENSE = "GPL"
-SECTION = "base"
-SRC_URI = "svn://svn.openmoko.org/trunk/src/target/;module=opkg;proto=http"
-S = "${WORKDIR}/opkg"
-PACKAGE_ARCH = "all"
-PR = "r1"
