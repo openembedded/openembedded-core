@@ -5,4 +5,6 @@
 require mtools_${PV}.bb
 S="${WORKDIR}/mtools-${PV}"
 
+EXTRA_OECONF = "--without-x"
+
 inherit autotools native
