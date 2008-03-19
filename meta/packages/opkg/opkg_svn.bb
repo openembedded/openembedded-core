@@ -1,6 +1,7 @@
 require opkg.inc
 
-PR = "r2"
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
+PR = "r3"
 
 PACKAGES =+ "libopkg-dev libopkg"
 
