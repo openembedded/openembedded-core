@@ -1,0 +1,35 @@
+Index: curl-7.16.4/libcurl.pc.in
+===================================================================
+--- curl-7.16.4.orig/libcurl.pc.in	2007-02-18 09:41:27.000000000 +0000
++++ curl-7.16.4/libcurl.pc.in	2008-03-18 11:42:43.000000000 +0000
+@@ -33,6 +33,7 @@
+ URL: http://curl.haxx.se/
+ Description: Library to transfer files with ftp, http, etc.
+ Version: @VERSION@
+-Libs: -L${libdir} -lcurl @LDFLAGS@ @LIBS@
+-Libs.private: @LIBCURL_LIBS@ @LIBS@
++Requires.private: @GNUTLS_REQUIRED@
++Libs: -L${libdir} -lcurl
++Libs.private: -ldl -lz
+ Cflags: -I${includedir}
+Index: curl-7.16.4/configure.ac
+===================================================================
+--- curl-7.16.4.orig/configure.ac	2008-03-18 11:40:30.000000000 +0000
++++ curl-7.16.4/configure.ac	2008-03-18 11:42:06.000000000 +0000
+@@ -1361,6 +1361,7 @@
+        AC_SUBST(USE_GNUTLS, [1])
+        GNUTLS_ENABLED=1
+        USE_GNUTLS="yes"
++       GNUTLS_REQUIRED="gnutls"
+        curl_ssl_msg="enabled (GnuTLS)"
+        ],
+        [
+@@ -1387,6 +1388,8 @@
+ 
+ fi dnl OPENSSL != 1
+ 
++AC_SUBST(GNUTLS_REQUIRED)
++
+ dnl ----------------------------------------------------
+ dnl NSS. Only check if GnuTLS and OpenSSL are not enabled
+ dnl ----------------------------------------------------

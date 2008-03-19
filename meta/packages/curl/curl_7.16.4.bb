@@ -1,21 +1,27 @@
 DESCRIPTION = "Command line tool and library for client-side URL transfers."
 LICENSE = "MIT"
-DEPENDS = "zlib"
+DEPENDS = "zlib gnutls"
 SECTION = "console/network"
-RPROVIDES_lib${PN} += "libcurl"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2"
+SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
+           file://pkgconfig_fix.patch;patch=1"
 S = "${WORKDIR}/curl-${PV}"
 
 inherit autotools pkgconfig binconfig
 
-EXTRA_OECONF = "--with-zlib=${STAGING_DIR_HOST}${layout_prefix}/ \
-		--without-ssl \
+EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
+                --with-gnutls=${STAGING_BINDIR_CROSS}/ \
+                --without-ssl \
+                --without-libssh2 \
 		--with-random=/dev/urandom \
 		--without-libidn \
-		--enable-http \
-		--enable-file"
+		--enable-crypto-auth \
+		"
+
+do_configure_prepend() {
+	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g configure.ac
+}
 
 do_stage () {
 	install -d ${STAGING_INCDIR}/curl
@@ -23,13 +29,17 @@ do_stage () {
 	oe_libinstall -so -a -C lib libcurl ${STAGING_LIBDIR}
 }
 
-PACKAGES += "libcurl libcurl-dev libcurl-doc libcurl-dbg"
+PACKAGES += "${PN}-certs libcurl libcurl-dev libcurl-doc"
+
 FILES_${PN} = "${bindir}/curl"
-FILES_${PN}-dbg = "${bindir}/.debug/"
-FILES_${PN}-dev = " "
+
+FILES_${PN}-certs = "${datadir}/curl/curl-*"
+PACKAGE_ARCH_${PN}-certs = "all"
+
 FILES_${PN}-doc = "${mandir}/man1/curl.1"
+
 FILES_lib${PN} = "${libdir}/lib*.so.*"
-FILES_lib${PN}-dbg = "${libdir}/.debug/lib*.so.*"
+RRECOMMENDS_lib${PN} += "${PN}-certs"
 FILES_lib${PN}-dev = "${includedir} \
                       ${libdir}/lib*.so \
                       ${libdir}/lib*.a \
@@ -37,6 +47,7 @@ FILES_lib${PN}-dev = "${includedir} \
                       ${libdir}/pkgconfig \
                       ${datadir}/aclocal \
                       ${bindir}/*-config"
+
 FILES_lib${PN}-doc = "${mandir}/man3 \
                       ${mandir}/man1/curl-config.1"
 
