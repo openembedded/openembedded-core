@@ -8,28 +8,25 @@
 #  -Check the RUNTIME path for the $TMPDIR
 #  -Check if .la files wrongly point to workdir
 #  -Check if .pc files wrongly point to workdir
-#  -Check if packages contains .debug directories  or .so files where they should be in -dev or -dbg
+#  -Check if packages contains .debug directories or .so files
+#   where they should be in -dev or -dbg
 #  -Check if config.log contains traces to broken autoconf tests
-#
 
 
 #
 # We need to have the scanelf utility as soon as
-# possible and this is contained within the pax-utils-native
+# possible and this is contained within the pax-utils-native.
+# The package.bbclass can help us here.
 #
-
-
-# We play a special package function
 inherit package
 PACKAGE_DEPENDS += "pax-utils-native desktop-file-utils-native"
-#PACKAGE_DEPENDS += chrpath-native"
 PACKAGEFUNCS += " do_package_qa "
 
 
 #
 # dictionary for elf headers
 #
-# feel free to add and correct. 
+# feel free to add and correct.
 #
 #           TARGET_OS  TARGET_ARCH   MACHINE, OSABI, ABIVERSION, Little Endian, 32bit?
 def package_qa_get_machine_dict():
@@ -57,8 +54,12 @@ def package_qa_get_machine_dict():
                         "arm" :       (  40,    97,    0,          True,          True),
                         "armeb":      (  40,    97,    0,          False,         True),
                         "powerpc":    (  20,     0,    0,          False,         True),
+                        "i386":       (   3,     0,    0,          True,          True),
+                        "i486":       (   3,     0,    0,          True,          True),
+                        "i586":       (   3,     0,    0,          True,          True),
+                        "i686":       (   3,     0,    0,          True,          True),
                         "mipsel":     (   8,     0,    0,          True,          True),
-			"avr32":      (6317,     0,    0,          False,         True),
+                        "avr32":      (6317,     0,    0,          False,         True),
                       },
             "uclinux-uclibc" : {
                         "bfin":       ( 106,     0,    0,          True,         True),
@@ -71,7 +72,7 @@ def package_qa_get_machine_dict():
                         "arm" :       (40,     0,    0,          True,          True),
                         "armeb" :     (40,     0,    0,          False,         True),
                       },
- 
+
        }
 
 # factory for a class, embedded in a method
@@ -98,11 +99,10 @@ def package_qa_get_elf(path, bits32):
         ELFDATA2LSB  = 1
         ELFDATA2MSB  = 2
 
-        def my_assert(expectation, result):
+        def my_assert(self, expectation, result):
             if not expectation == result:
-                #print "'%x','%x'" % (ord(expectation), ord(result))
+                #print "'%x','%x' %s" % (ord(expectation), ord(result), self.name)
                 raise Exception("This does not work as expected")
-        my_assert = staticmethod(my_assert)
 
         def __init__(self, name):
             self.name = name
@@ -111,16 +111,16 @@ def package_qa_get_elf(path, bits32):
             self.file = file(self.name, "r")
             self.data = self.file.read(ELFFile.EI_NIDENT+4)
 
-            ELFFile.my_assert(len(self.data), ELFFile.EI_NIDENT+4)
-            ELFFile.my_assert(self.data[0], chr(0x7f) )
-            ELFFile.my_assert(self.data[1], 'E')
-            ELFFile.my_assert(self.data[2], 'L')
-            ELFFile.my_assert(self.data[3], 'F')
+            self.my_assert(len(self.data), ELFFile.EI_NIDENT+4)
+            self.my_assert(self.data[0], chr(0x7f) )
+            self.my_assert(self.data[1], 'E')
+            self.my_assert(self.data[2], 'L')
+            self.my_assert(self.data[3], 'F')
             if bits32 :
-                ELFFile.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS32)) # only 32 bits
+                self.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS32))
             else:
-                ELFFile.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS64)) # only 64 bits
-            ELFFile.my_assert(self.data[ELFFile.EI_VERSION], chr(ELFFile.EV_CURRENT) )
+                self.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS64))
+            self.my_assert(self.data[ELFFile.EI_VERSION], chr(ELFFile.EV_CURRENT) )
 
             self.sex = self.data[ELFFile.EI_DATA]
             if self.sex == chr(ELFFile.ELFDATANONE):
@@ -156,8 +156,6 @@ def package_qa_get_elf(path, bits32):
     return ELFFile(path)
 
 
-#
-#
 # Known Error classes
 # 0 - non dev contains .so
 # 1 - package contains a dangerous RPATH
@@ -166,10 +164,11 @@ def package_qa_get_elf(path, bits32):
 # 4 - wrong architecture
 # 5 - .la contains installed=yes or reference to the workdir
 # 6 - .pc contains reference to /usr/include or workdir
-#
-#
+# 7 - the desktop file is not valid
+# 8 - .la contains reference to the workdir
 
 def package_qa_clean_path(path,d):
+    """ Remove the common prefix from the path. In this case it is the TMPDIR"""
     import bb
     return path.replace(bb.data.getVar('TMPDIR',d,True),"")
 
@@ -179,14 +178,15 @@ def package_qa_make_fatal_error(error_class, name, path,d):
 
     TODO: Load a whitelist of known errors
     """
-    if error_class == 0:
-        return False
-    else:
-        return True
+    return not error_class in [0, 5, 7, 8]
 
 def package_qa_write_error(error_class, name, path, d):
+    """
+    Log the error
+    """
     import bb, os
     if not bb.data.getVar('QA_LOG', d):
+        bb.note("a QA error occured but will not be logged because QA_LOG is not set")
         return
 
     ERROR_NAMES =[
@@ -197,44 +197,45 @@ def package_qa_write_error(error_class, name, path, d):
         "wrong architecture",
         "evil hides inside the .la",
         "evil hides inside the .pc",
+        "the desktop file is not valid",
+        ".la contains reference to the workdir",
     ]
-
 
     log_path = os.path.join( bb.data.getVar('T', d, True), "log.qa_package" )
     f = file( log_path, "a+")
-    print >> f, "%s, %s, %s" % (ERROR_NAMES[error_class], name, package_qa_clean_path(path,d))
+    print >> f, "%s, %s, %s" % \
+             (ERROR_NAMES[error_class], name, package_qa_clean_path(path,d))
     f.close()
 
+def package_qa_handle_error(error_class, error_msg, name, path, d):
+    import bb
+    bb.error("QA Issue: %s" % error_msg)
+    package_qa_write_error(error_class, name, path, d)
+    return not package_qa_make_fatal_error(error_class, name, path, d)
 
 def package_qa_check_rpath(file,name,d):
     """
     Check for dangerous RPATHs
     """
     import bb, os
+    sane = True
     scanelf = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True),'scanelf')
-    #chrpath = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True),'chrpath')
     bad_dir = bb.data.getVar('TMPDIR', d, True) + "/work"
     bad_dir_test = bb.data.getVar('TMPDIR', d, True)
     if not os.path.exists(scanelf):
         bb.fatal("Can not check RPATH, scanelf (part of pax-utils-native) not found")
-    #if not os.path.exists(chrpath):
-    #    bb.fatal("Can not fix RPATH, chrpath (part of chrpath-native) not found")
+
     if not bad_dir in bb.data.getVar('WORKDIR', d, True):
         bb.fatal("This class assumed that WORKDIR is ${TMPDIR}/work... Not doing any check")
 
-    #bb.note("%s -B -F%%r#F %s" % (scanelf,file))
     output = os.popen("%s -B -F%%r#F '%s'" % (scanelf,file))
     txt    = output.readline().split()
-    #bb.note("???%s???" % bad_dir_test)
     for line in txt:
-        #bb.note("===%s===" % line)
         if bad_dir in line:
-            package_qa_write_error( 1, name, file, d)
-            bb.error("QA Issue package %s contains bad RPATH %s in file %s" % (name, line, file))
-            #bb.note("Fixing RPATH for you in %s" % file)
-            #os.popen("%s -r /lib %s" % (chrpath,file))
-            #return False
-    return True
+            error_msg = "package %s contains bad RPATH %s in file %s" % (name, line, file)
+            sane = package_qa_handle_error(1, error_msg, name, file, d)
+
+    return sane
 
 def package_qa_check_devdbg(path, name,d):
     """
@@ -247,17 +248,15 @@ def package_qa_check_devdbg(path, name,d):
 
     if not "-dev" in name:
         if path[-3:] == ".so" and os.path.islink(path):
-            package_qa_write_error( 0, name, path, d )
-            bb.error("QA Issue: non -dev package contains symlink .so: %s path '%s'" % (name, package_qa_clean_path(path,d)))
-            if package_qa_make_fatal_error( 0, name, path, d ):
-                sane = False
+            error_msg = "non -dev package contains symlink .so: %s path '%s'" % \
+                     (name, package_qa_clean_path(path,d))
+            sane = package_qa_handle_error(0, error_msg, name, path, d)
 
     if not "-dbg" in name:
         if '.debug' in path:
-            package_qa_write_error( 3, name, path, d )
-            bb.error("QA Issue: non debug package contains .debug directory: %s path %s" % (name, package_qa_clean_path(path,d)))
-            if package_qa_make_fatal_error( 3, name, path, d ):
-                sane = False
+            error_msg = "non debug package contains .debug directory: %s path %s" % \
+                     (name, package_qa_clean_path(path,d))
+            sane = package_qa_handle_error(3, error_msg, name, path, d)
 
     return sane
 
@@ -273,9 +272,10 @@ def package_qa_check_arch(path,name,d):
     Check if archs are compatible
     """
     import bb, os
+    sane = True
     target_os   = bb.data.getVar('TARGET_OS',   d, True)
     target_arch = bb.data.getVar('TARGET_ARCH', d, True)
-  
+
     # FIXME: Cross package confuse this check, so just skip them
     if bb.data.inherits_class('cross', d) or bb.data.inherits_class('sdk', d):
         return True
@@ -286,29 +286,24 @@ def package_qa_check_arch(path,name,d):
         return True
 
     #if this will throw an exception, then fix the dict above
-    (machine, osabi, abiversion, littleendian, bits32) = package_qa_get_machine_dict()[target_os][target_arch]
+    (machine, osabi, abiversion, littleendian, bits32) \
+        = package_qa_get_machine_dict()[target_os][target_arch]
     elf = package_qa_get_elf(path, bits32)
     try:
         elf.open()
     except:
-        # just for debbugging to check the parser, remove once convinced...
         return True
 
+    # Check the architecture and endiannes of the binary
     if not machine == elf.machine():
-        bb.error("Architecture did not match (%d to %d) on %s" %(machine, elf.machine(), package_qa_clean_path(path,d)))
-        return not package_qa_make_fatal_error( 4, name, path, d )
+        error_msg = "Architecture did not match (%d to %d) on %s" % \
+                 (machine, elf.machine(), package_qa_clean_path(path,d))
+        sane = package_qa_handle_error(4, error_msg, name, path, d)
     elif not littleendian == elf.isLittleEndian():
-        bb.error("Endiannes did not match (%d to %d) on %s" % (littleendian, elf.isLittleEndian(), package_qa_clean_path(path,d)))
-        return not package_qa_make_fatal_error( 4, name, path, d )
+        error_msg = "Endiannes did not match (%d to %d) on %s" % \
+                 (littleendian, elf.isLittleEndian(), package_qa_clean_path(path,d))
+        sane = package_qa_handle_error(4, error_msg, name, path, d)
 
-    return True
-
-def package_qa_check_pcla(path,name,d):
-    """
-    .pc and .la files should not point to the WORKDIR
-    """
-    sane = True
-    # TODO
     return sane
 
 def package_qa_check_desktop(path, name, d):
@@ -316,12 +311,14 @@ def package_qa_check_desktop(path, name, d):
     Run all desktop files through desktop-file-validate.
     """
     import bb, os
+    sane = True
     if path.endswith(".desktop"):
         output = os.popen("desktop-file-validate %s" % path)
         # This only produces output on errors
         for l in output:
-            bb.error(l.strip())
-    return True
+            sane = package_qa_handle_error(7, l.strip(), name, path, d)
+
+    return sane
 
 def package_qa_check_staged(path,d):
     """
@@ -335,12 +332,14 @@ def package_qa_check_staged(path,d):
     import os, bb
 
     sane = True
-    workdir = os.path.join(bb.data.getVar('TMPDIR', d, True), "work")
+    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    workdir = os.path.join(tmpdir, "work")
 
-    if bb.data.inherits_class("native", d):
-        installed = "installed=no"
+    installed = "installed=yes"
+    if bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d):
+        pkgconfigcheck = workdir
     else:
-        installed = "installed=yes"
+        pkgconfigcheck = tmpdir
 
     # find all .la and .pc files
     # read the content
@@ -350,20 +349,19 @@ def package_qa_check_staged(path,d):
             path = os.path.join(root,file)
             if file[-2:] == "la":
                 file_content = open(path).read()
-                if installed in file_content:
-                    bb.error("QA issue: %s failed sanity test (installed)" % file )
-                    if package_qa_make_fatal_error( 5, "staging", path, d):
-                        sane = True
+                # Don't check installed status for native/cross packages
+                if not bb.data.inherits_class("native", d) and not bb.data.inherits_class("cross", d):
+                    if installed in file_content:
+                        error_msg = "%s failed sanity test (installed) in path %s" % (file,root)
+                        sane = package_qa_handle_error(5, error_msg, "staging", path, d)
                 if workdir in file_content:
-                    bb.error("QA issue: %s failed sanity test (reference to workdir)" % file )
-                    if package_qa_make_fatal_error( 5, "staging", path, d):
-                        sane = True
+                    error_msg = "%s failed sanity test (workdir) in path %s" % (file,root)
+                    sane = package_qa_handle_error(8, error_msg, "staging", path, d)
             elif file[-2:] == "pc":
                 file_content = open(path).read()
-                if workdir in file_content:
-                    bb.error("QA issue: %s failed sanity test (reference to workdir)" % file )
-                    if package_qa_make_fatal_error( 6, "staging", path, d):
-                        sane = False
+                if pkgconfigcheck in file_content:
+                    error_msg = "%s failed sanity test (tmpdir) in path %s" % (file,root)
+                    sane = package_qa_handle_error(6, error_msg, "staging", path, d)
 
     return sane
 
@@ -380,7 +378,6 @@ def package_qa_walk(path, funcs, package,d):
                     sane = False
 
     return sane
-
 
 def package_qa_check_rdepends(pkg, workdir, d):
     import bb
@@ -413,10 +410,8 @@ def package_qa_check_rdepends(pkg, workdir, d):
         # Now do the sanity check!!!
         for rdepend in rdepends:
             if "-dbg" in rdepend:
-                package_qa_write_error( 2, pkgname, rdepend, d )
-                bb.error("QA issue: %s rdepends on %s" % (pkgname,rdepend))
-                if package_qa_make_fatal_error( 2, pkgname, rdepend, d ):
-                    sane = False
+                error_msg = "%s rdepends on %s" % (pkgname,rdepend)
+                sane = package_qa_handle_error(2, error_msg, pkgname, rdepend, d)
 
     return sane
 
@@ -430,6 +425,9 @@ python do_package_qa () {
     if not packages:
         return
 
+    checks = [package_qa_check_rpath, package_qa_check_devdbg,
+              package_qa_check_perm, package_qa_check_arch,
+              package_qa_check_desktop]
     walk_sane = True
     rdepends_sane = True
     for package in packages.split():
@@ -439,7 +437,7 @@ python do_package_qa () {
 
         bb.note("Checking Package: %s" % package)
         path = "%s/install/%s" % (workdir, package)
-        if not package_qa_walk(path, [package_qa_check_rpath, package_qa_check_devdbg, package_qa_check_perm, package_qa_check_arch, package_qa_check_desktop], package, d):
+        if not package_qa_walk(path, checks, package, d):
             walk_sane  = False
         if not package_qa_check_rdepends(package, workdir, d):
             rdepends_sane = False
@@ -465,7 +463,10 @@ python do_qa_configure() {
     bb.note("Checking sanity of the config.log file")
     import os
     for root, dirs, files in os.walk(bb.data.getVar('WORKDIR', d, True)):
+        statement = "grep 'CROSS COMPILE Badness:' %s > /dev/null" % \
+                    os.path.join(root,"config.log")
         if "config.log" in files:
-            if os.system("grep 'CROSS COMPILE Badness:' %s > /dev/null" % (os.path.join(root,"config.log"))) == 0:
-                bb.fatal("This autoconf log indicates errors, it looked at host includes. Rerun configure task after fixing this. Path was '%s'" % root)
+            if os.system(statement) == 0:
+                bb.fatal("""This autoconf log indicates errors, it looked at host includes.
+Rerun configure task after fixing this. The path was '%s'""" % root)
 }
