@@ -22,10 +22,5 @@ do_configure_prepend () {
 }
 
 do_stage() {
-	oe_runmake install prefix=${STAGING_DIR_HOST}${layout_prefix} \
-	       bindir=${STAGING_BINDIR} \
-	       includedir=${STAGING_INCDIR} \
-	       libdir=${STAGING_LIBDIR} \
-	       datadir=${STAGING_DATADIR} \
-	       mandir=${STAGING_DIR_HOST}${layout_mandir}
+	autotools_stage_all
 }
