@@ -2,9 +2,10 @@ DESCRIPTION = "neon is an HTTP and WebDAV client library, with a C interface."
 SECTION = "libs"
 LICENSE = "LGPL"
 DEPENDS = "zlib libxml2 expat time gnutls"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "http://www.webdav.org/${PN}/${P}.tar.gz"
+SRC_URI = "http://www.webdav.org/${PN}/${P}.tar.gz \
+           file://pkgconfig.patch;patch=1"
 
 inherit autotools binconfig lib_package pkgconfig
 
