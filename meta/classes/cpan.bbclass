@@ -50,7 +50,16 @@ cpan_do_compile () {
 }
 
 cpan_do_install () {
-	oe_runmake install_vendor
+	if [ ${@is_target(d)} == "yes" ]; then
+		oe_runmake install_vendor
+	fi
 }
 
-EXPORT_FUNCTIONS do_configure do_compile do_install
+cpan_do_stage () {
+	if [ ${@is_target(d)} == "no" ]; then
+		oe_runmake install_vendor
+	fi
+}
+								
+
+EXPORT_FUNCTIONS do_configure do_compile do_install do_stage
