@@ -1,0 +1,12 @@
+Index: telepathy-mission-control-4.49/libmissioncontrol.pc.in
+===================================================================
+--- telepathy-mission-control-4.49.orig/libmissioncontrol.pc.in	2008-03-19 22:36:30.000000000 +0000
++++ telepathy-mission-control-4.49/libmissioncontrol.pc.in	2008-03-19 22:37:27.000000000 +0000
+@@ -8,5 +8,5 @@
+ Description:  Mission Control Client Library
+ Requires: dbus-1 >= 0.50, libtelepathy >= 0.0.54
+ Version: @VERSION@
+-Libs: -L${libdir} -lmissioncontrol-client @DBUS_LIBS@
+-Cflags: -I${includedir} @DBUS_CFLAGS@
++Libs: -L${libdir} -lmissioncontrol-client
++Cflags: -I${includedir}
