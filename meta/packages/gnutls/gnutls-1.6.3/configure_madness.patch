@@ -28,7 +28,7 @@ Index: gnutls-1.6.3/lib/gnutls.pc.in
  Name: GnuTLS
  Description: Transport Security Layer implementation for the GNU system
  Version: @VERSION@
-+Requires.private: gcrypt
++Requires.private: libgcrypt
  Libs: -L${libdir} -lgnutls
 -Libs.private: @LIBGNUTLS_LIBS@ 
 +Libs.private: -L${libdir} -lgnutls
