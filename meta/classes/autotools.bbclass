@@ -177,6 +177,18 @@ autotools_stage_all() {
 		mkdir -p ${STAGING_INCDIR}
 		cp -fpPR -t ${STAGING_INCDIR} ${STAGE_TEMP}/${includedir}/*
 	fi
+	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
+		if [ -d ${STAGE_TEMP}/${bindir} ]; then
+			echo "here 1"
+			mkdir -p ${STAGING_DIR_HOST}${bindir}
+			cp -fpPR -t ${STAGING_DIR_HOST}/${layout_bindir} ${STAGE_TEMP}/${bindir}/*
+		fi
+		if [ -d ${STAGE_TEMP}/${sbindir} ]; then
+			echo "here 2"
+			mkdir -p ${STAGING_DIR_HOST}${sbindir}
+			cp -fpPR -t ${STAGING_DIR_HOST}/${layout_sbindir} ${STAGE_TEMP}/${bindir}/*
+		fi
+	fi
 	if [ -d ${STAGE_TEMP}/${libdir} ]
 	then
 		olddir=`pwd`
