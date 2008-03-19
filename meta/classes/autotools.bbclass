@@ -214,11 +214,13 @@ autotools_stage_all() {
 	fi
 	rm -rf ${STAGE_TEMP}/${mandir} || true
 	rm -rf ${STAGE_TEMP}/${infodir} || true
+	# This will remove an empty directory so we can ignore it
+	rmdir ${STAGE_TEMP}/${datadir} || true
 	if [ -d ${STAGE_TEMP}/${datadir} ]; then
 		install -d ${STAGING_DATADIR}/
 		cp -fpPR ${STAGE_TEMP}/${datadir}/* ${STAGING_DATADIR}/
 	fi
-	#rm -rf ${STAGE_TEMP}
+	rm -rf ${STAGE_TEMP}
 }
 
 EXPORT_FUNCTIONS do_configure do_install
