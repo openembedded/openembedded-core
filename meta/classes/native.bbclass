@@ -1,5 +1,3 @@
-inherit base
-
 # Native packages are built indirectly via dependency,
 # no need for them to be a direct target of 'world'
 EXCLUDE_FROM_WORLD = "1"
@@ -78,7 +76,12 @@ export oldincludedir = "${STAGING_DIR_NATIVE}${layout_includedir}"
 do_stage () {
 	if [ "${INHIBIT_NATIVE_STAGE_INSTALL}" != "1" ]
 	then
-		oe_runmake install
+		if [ "${AUTOTOOLS_NATIVE_STAGE_INSTALL}" != "1"]
+		then
+			oe_runmake install
+		else
+			autotools_stage_all
+		fi
 	fi
 }
 

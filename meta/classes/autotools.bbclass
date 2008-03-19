@@ -1,5 +1,8 @@
 inherit base
 
+# use autotools_stage_all for native packages
+AUTOTOOLS_NATIVE_STAGE_INSTALL = "1"
+
 def autotools_dep_prepend(d):
 	import bb;
 
