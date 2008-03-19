@@ -4,11 +4,12 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "gstreamer zlib gst-plugins-base"
-PR = "r1"
+PR = "r2"
 
 inherit autotools pkgconfig
 
-SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2"
+SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2 \
+           file://configure_fix.patch;patch=1"
 
 FILES_${PN} += "${libdir}/gstreamer-0.10/*.so"
 FILES_${PN}-dbg += "${libdir}/gstreamer-0.10/.debug"
@@ -27,8 +28,4 @@ PATH_prepend="${CROSS_DIR}/${TARGET_SYS}/bin:"
 # Hack to get STAGING_LIBDIR into the linker path when building ffmpeg
 CC = "${CCACHE} ${HOST_PREFIX}gcc -L${STAGING_LIBDIR}"
 
-do_configure () {
-        cd ${S}
-        oe_runconf
-}
-
+acpaths = "-I ${S}/common/m4"
