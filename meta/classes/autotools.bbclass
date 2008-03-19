@@ -212,11 +212,13 @@ autotools_stage_all() {
 			cp -fpPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}
 		fi
 	fi
-	if [ -d ${STAGE_TEMP}/${datadir}/aclocal ]; then
-		install -d ${STAGING_DATADIR}/aclocal
-		cp -fpPR ${STAGE_TEMP}/${datadir}/aclocal/* ${STAGING_DATADIR}/aclocal
+	rm -rf ${STAGE_TEMP}/${mandir} || true
+	rm -rf ${STAGE_TEMP}/${infodir} || true
+	if [ -d ${STAGE_TEMP}/${datadir} ]; then
+		install -d ${STAGING_DATADIR}/
+		cp -fpPR ${STAGE_TEMP}/${datadir}/* ${STAGING_DATADIR}/
 	fi
-	rm -rf ${STAGE_TEMP}
+	#rm -rf ${STAGE_TEMP}
 }
 
 EXPORT_FUNCTIONS do_configure do_install
