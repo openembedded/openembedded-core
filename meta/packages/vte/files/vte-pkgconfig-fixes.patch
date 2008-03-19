@@ -1,0 +1,47 @@
+Index: vte-0.16.9/configure.in
+===================================================================
+--- vte-0.16.9.orig/configure.in	2007-09-17 23:07:18.000000000 +0100
++++ vte-0.16.9/configure.in	2008-03-05 15:59:04.000000000 +0000
+@@ -381,8 +381,6 @@
+ 
+ # Search for the required modules.
+ PKG_CHECK_MODULES(VTE,[$wantedmodules])
+-NEEDEDPACKAGES="$wantedmodules"
+-AC_SUBST(NEEDEDPACKAGES)
+ 
+ # Check for various optional functions within those modules
+ save_CFLAGS="$CFLAGS"
+@@ -403,10 +401,12 @@
+ 
+ # Require Freetype2. First see if there is suitable pkgconfig file...
+ PKG_CHECK_EXISTS(freetype2 >= 6.1.0,
+-		 [PKG_CHECK_MODULES(FT2, freetype2)], [
++		 [PKG_CHECK_MODULES(FT2, freetype2)
++                 wantedmodules="$wantedmodules freetype2 >= 6.1.0"], [
+ 	# We use our local copy of the macro because packages of
+ 	# freetype's development files don't always include the proper macro.
+-	VTE_CHECK_FT2(6.1.0,,
++	VTE_CHECK_FT2(6.1.0,[
++                      wantedmodules="$wantedmodules freetype2 >= 6.1.0" ],
+ 		      [AC_MSG_ERROR([You must have freetype 2.0.2 or later to build vte.])])])
+ 
+ # Temporarily pull in the Freetype cflags and libs for checking what's
+@@ -508,6 +508,8 @@
+ CFLAGS="$savecflags"
+ CPPFLAGS="$savecppflags"
+ 
++NEEDEDPACKAGES="$wantedmodules"
++AC_SUBST(NEEDEDPACKAGES)
+ 
+ wcs_funcs_includes="
+ #ifdef HAVE_STRING_H
+Index: vte-0.16.9/vte.pc.in
+===================================================================
+--- vte-0.16.9.orig/vte.pc.in	2007-02-26 21:05:19.000000000 +0000
++++ vte-0.16.9/vte.pc.in	2008-03-05 15:56:37.000000000 +0000
+@@ -11,4 +11,4 @@
+ Requires: @NEEDEDPACKAGES@
+ Libs: -L${libdir} -lvte @OTHERLIBS@
+ Libs.private: @FT2_LIBS@
+-Cflags: -I${includedir} @FT2_CFLAGS@ @OTHERCFLAGS@
++Cflags: -I${includedir} @OTHERCFLAGS@
