@@ -179,11 +179,11 @@ autotools_stage_all() {
 	fi
 	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
 		if [ -d ${STAGE_TEMP}/${bindir} ]; then
-			mkdir -p ${STAGING_DIR_HOST}${bindir}
+			mkdir -p ${STAGING_DIR_HOST}${layout_bindir}
 			cp -fpPR -t ${STAGING_DIR_HOST}/${layout_bindir} ${STAGE_TEMP}/${bindir}/*
 		fi
 		if [ -d ${STAGE_TEMP}/${sbindir} ]; then
-			mkdir -p ${STAGING_DIR_HOST}${sbindir}
+			mkdir -p ${STAGING_DIR_HOST}${layout_sbindir}
 			cp -fpPR -t ${STAGING_DIR_HOST}/${layout_sbindir} ${STAGE_TEMP}/${sbindir}/*
 		fi
 	fi
