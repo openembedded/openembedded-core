@@ -18,8 +18,3 @@ EXTRA_OECONF = "--disable-debug --disable-valgrind"
 # Hack to get STAGING_LIBDIR into the linker path when building
 CC = "${CCACHE} ${HOST_PREFIX}gcc -L${STAGING_LIBDIR}"
 
-do_configure () {
-        cd ${S}
-        oe_runconf
-}
-

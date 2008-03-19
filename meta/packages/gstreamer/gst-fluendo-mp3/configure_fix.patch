@@ -1,0 +1,16 @@
+Index: gst-fluendo-mp3-0.10.2/configure.ac
+===================================================================
+--- gst-fluendo-mp3-0.10.2.orig/configure.ac	2008-03-19 23:00:15.000000000 +0000
++++ gst-fluendo-mp3-0.10.2/configure.ac	2008-03-19 23:00:31.000000000 +0000
+@@ -19,10 +19,9 @@
+ AC_SUBST(ACLOCAL_AMFLAGS, "-I m4 -I common/m4")
+ 
+ dnl check for tools
+-AS_LIBTOOL_TAGS
+ AM_PROG_LIBTOOL
+ dnl AC_PROG_CC
+-dnl AC_PROG_LIBTOOL
++AC_PROG_LIBTOOL
+ 
+ dnl decide on error flags
+ AS_COMPILER_FLAG(-Wall, GST_WALL="yes", GST_WALL="no")
