@@ -4,10 +4,7 @@ DEPENDS = "zlib libgcrypt lzo"
 
 LICENSE = "LGPL"
 
-SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2 \
-           file://gnutls-openssl.patch;patch=1 \
-           file://gnutls-texinfo-euro.patch;patch=1 \
-           file://configure_madness.patch;patch=1 "
+SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2"
 
 inherit autotools binconfig pkgconfig
 
