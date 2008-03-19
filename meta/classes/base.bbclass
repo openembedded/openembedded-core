@@ -368,6 +368,25 @@ oe_libinstall() {
 	__runcmd cd "$olddir"
 }
 
+def package_stagefile(file, d):
+    import bb, os
+
+    if bb.data.getVar('PSTAGING_ACTIVE', d, True) == "1":
+        destfile = file.replace(bb.data.getVar("TMPDIR", d, 1), bb.data.getVar("PSTAGE_TMPDIR_STAGE", d, 1))
+        bb.mkdirhier(os.path.dirname(destfile))
+        #print "%s to %s" % (file, destfile)
+        bb.copyfile(file, destfile)
+
+package_stagefile_shell() {
+	if [ "$PSTAGING_ACTIVE" = "1" ]; then
+		srcfile=$1
+		destfile=`echo $srcfile | sed s#${TMPDIR}#${PSTAGE_TMPDIR_STAGE}#`
+		destdir=`dirname $destfile`
+		mkdir -p $destdir
+		cp -dp $srcfile $destfile
+	fi
+}
+
 oe_machinstall() {
 	# Purpose: Install machine dependent files, if available
 	#          If not available, check if there is a default
