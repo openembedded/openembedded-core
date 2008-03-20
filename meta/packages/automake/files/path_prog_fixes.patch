@@ -1,8 +1,15 @@
-Index: automake-1.9.3/Makefile.am
-===================================================================
---- automake-1.9.3.orig/Makefile.am	2004-10-25 14:57:30.000000000 -0400
-+++ automake-1.9.3/Makefile.am	2005-03-09 16:47:38.241364016 -0500
-@@ -66,7 +66,8 @@
+---
+ Makefile.am |    3 ++-
+ Makefile.in |    3 ++-
+ aclocal.in  |    4 ++--
+ automake.in |    6 ++++--
+ 4 files changed, 10 insertions(+), 6 deletions(-)
+
+--- automake-1.10.orig/Makefile.am
++++ automake-1.10/Makefile.am
+@@ -73,11 +73,12 @@ do_subst = sed \
+   -e 's,[@]PATH_SEPARATOR[@],$(PATH_SEPARATOR),g' \
+   -e 's,[@]PERL[@],$(PERL),g' \
    -e 's,[@]SHELL[@],$(SHELL),g' \
    -e 's,[@]VERSION[@],$(VERSION),g' \
    -e 's,[@]configure_input[@],Generated from $@.in; do not edit by hand.,g' \
@@ -12,11 +19,13 @@ Index: automake-1.9.3/Makefile.am
  
  ## These files depend on Makefile so they are rebuilt if $(VERSION),
  ## $(datadir) or other do_subst'ituted variables change.
-Index: automake-1.9.3/Makefile.in
-===================================================================
---- automake-1.9.3.orig/Makefile.in	2004-11-01 05:23:54.000000000 -0500
-+++ automake-1.9.3/Makefile.in	2005-03-09 16:47:54.712859968 -0500
-@@ -161,7 +161,8 @@
+ ## Use chmod a-w to prevent people from editing the wrong file by accident.
+ automake: automake.in
+--- automake-1.10.orig/Makefile.in
++++ automake-1.10/Makefile.in
+@@ -183,11 +183,12 @@ do_subst = sed \
+   -e 's,[@]PATH_SEPARATOR[@],$(PATH_SEPARATOR),g' \
+   -e 's,[@]PERL[@],$(PERL),g' \
    -e 's,[@]SHELL[@],$(SHELL),g' \
    -e 's,[@]VERSION[@],$(VERSION),g' \
    -e 's,[@]configure_input[@],Generated from $@.in; do not edit by hand.,g' \
@@ -26,12 +35,12 @@ Index: automake-1.9.3/Makefile.in
  
  WGET = wget
  WGETSGO = $(WGET) http://savannah.gnu.org/cgi-bin/viewcvs/~checkout~
-Index: automake-1.9.3/aclocal.in
-===================================================================
---- automake-1.9.3.orig/aclocal.in	2004-10-10 12:10:24.000000000 -0400
-+++ automake-1.9.3/aclocal.in	2005-03-09 16:47:38.241364016 -0500
-@@ -1,8 +1,8 @@
--#!@PERL@
+ FETCHFILES = \
+ INSTALL \
+--- automake-1.10.orig/aclocal.in
++++ automake-1.10/aclocal.in
+@@ -1,10 +1,10 @@
+-#!@PERL@ -w
 +#!@bindir@/env perl
  # -*- perl -*-
  # @configure_input@
@@ -41,11 +50,11 @@ Index: automake-1.9.3/aclocal.in
      if 0;
  
  # aclocal - create aclocal.m4 by scanning configure.ac
-Index: automake-1.9.3/automake.in
-===================================================================
---- automake-1.9.3.orig/automake.in	2004-10-21 16:23:26.000000000 -0400
-+++ automake-1.9.3/automake.in	2005-03-09 16:47:38.245363408 -0500
-@@ -1,8 +1,10 @@
+ 
+ # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+--- automake-1.10.orig/automake.in
++++ automake-1.10/automake.in
+@@ -1,10 +1,12 @@
 -#!@PERL@ -w
 +#!@bindir@/env perl
  # -*- perl -*-
@@ -58,3 +67,5 @@ Index: automake-1.9.3/automake.in
      if 0;
  
  # automake - create Makefile.in from Makefile.am
+ # Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+ # 2003, 2004, 2005, 2006  Free Software Foundation, Inc.
