@@ -1,23 +1,16 @@
-RDEPENDS_automake += "\
-    autoconf \
-    perl \
-    perl-module-bytes \
-    perl-module-constant \
-    perl-module-cwd \
-    perl-module-data-dumper \
-    perl-module-dynaloader \
-    perl-module-errno \
-    perl-module-exporter-heavy \
-    perl-module-file-basename \
-    perl-module-file-compare \
-    perl-module-file-copy \
-    perl-module-file-glob \
-    perl-module-file-spec-unix \
-    perl-module-file-stat \
-    perl-module-getopt-long \
-    perl-module-io \
-    perl-module-io-file \
-    perl-module-posix \
-    perl-module-strict \
-    perl-module-text-parsewords \
-    perl-module-vars "
+DESCRIPTION = "A tool for automatically generating Makefiles."
+LICENSE = "GPL"
+HOMEPAGE = "http://www.gnu.org/software/automake/"
+SECTION = "devel"
+FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/automake-${PV}"
+PR = "r1"
+
+SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.bz2 "
+
+S = "${WORKDIR}/automake-${PV}"
+
+inherit autotools
+
+export AUTOMAKE = "${@bb.which('automake', bb.data.getVar('PATH', d, 1))}"
+
+FILES_${PN} += "${datadir}/automake* ${datadir}/aclocal*"

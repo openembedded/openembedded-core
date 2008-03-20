@@ -1,29 +1,38 @@
-DESCRIPTION = "A tool for automatically generating Makefiles."
-LICENSE = "GPL"
-HOMEPAGE = "http://www.gnu.org/software/automake/"
-SECTION = "devel"
-
-SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.bz2 \
-	${@['file://path_prog_fixes.patch;patch=1', ''][bb.data.inherits_class('native', d)]}"
-
-S = "${WORKDIR}/automake-${PV}"
-
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/automake-${PV}"
-
-inherit autotools
-
-export AUTOMAKE = "${@bb.which('automake', bb.data.getVar('PATH', d, 1))}"
-FILES_${PN} += "${datadir}/automake* ${datadir}/aclocal*"
-
 require automake.inc
+
+RDEPENDS_automake += "\
+    autoconf \
+    perl \
+    perl-module-bytes \
+    perl-module-constant \
+    perl-module-cwd \
+    perl-module-data-dumper \
+    perl-module-dynaloader \
+    perl-module-errno \
+    perl-module-exporter-heavy \
+    perl-module-file-basename \
+    perl-module-file-compare \
+    perl-module-file-copy \
+    perl-module-file-glob \
+    perl-module-file-spec-unix \
+    perl-module-file-stat \
+    perl-module-getopt-long \
+    perl-module-io \
+    perl-module-io-file \
+    perl-module-posix \
+    perl-module-strict \
+    perl-module-text-parsewords \
+    perl-module-vars "
+
+SRC_URI += "file://path_prog_fixes.patch;patch=1"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	install -d ${D}${datadir}
 	if [ ! -e ${D}${datadir}/aclocal ]; then
-		ln -sf aclocal-1.9 ${D}${datadir}/aclocal
+		ln -sf aclocal-1.10 ${D}${datadir}/aclocal
 	fi
 	if [ ! -e ${D}${datadir}/automake ]; then
-		ln -sf automake-1.9 ${D}${datadir}/automake
+		ln -sf automake-1.10 ${D}${datadir}/automake
 	fi
 }
