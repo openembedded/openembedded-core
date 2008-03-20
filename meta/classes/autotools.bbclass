@@ -165,6 +165,17 @@ autotools_stage_includes() {
 	fi
 }
 
+autotools_stage_dir() {
+	from="$1"
+	to="$2"
+	# This will remove empty directories so we can ignore them
+	rmdir "$from" 2> /dev/null || true
+	if [ -d "$from" ]; then
+		mkdir -p "$to"
+		cp -fpPR -t "$to" "$from"/*
+	fi
+}
+
 autotools_stage_all() {
 	if [ "${INHIBIT_AUTO_STAGE}" = "1" ]
 	then
@@ -173,19 +184,13 @@ autotools_stage_all() {
 	rm -rf ${STAGE_TEMP}
 	mkdir -p ${STAGE_TEMP}
 	oe_runmake DESTDIR="${STAGE_TEMP}" install
-	if [ -d ${STAGE_TEMP}/${includedir} ]; then
-		mkdir -p ${STAGING_INCDIR}
-		cp -fpPR -t ${STAGING_INCDIR} ${STAGE_TEMP}/${includedir}/*
-	fi
+	autotools_stage_dir ${STAGE_TEMP}/${includedir} ${STAGING_INCDIR}
 	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
-		if [ -d ${STAGE_TEMP}/${bindir} ]; then
-			mkdir -p ${STAGING_DIR_HOST}${layout_bindir}
-			cp -fpPR -t ${STAGING_DIR_HOST}/${layout_bindir} ${STAGE_TEMP}/${bindir}/*
-		fi
-		if [ -d ${STAGE_TEMP}/${sbindir} ]; then
-			mkdir -p ${STAGING_DIR_HOST}${layout_sbindir}
-			cp -fpPR -t ${STAGING_DIR_HOST}/${layout_sbindir} ${STAGE_TEMP}/${sbindir}/*
-		fi
+		autotools_stage_dir ${STAGE_TEMP}/${bindir} ${STAGING_DIR_HOST}${layout_bindir}
+		autotools_stage_dir ${STAGE_TEMP}/${sbindir} ${STAGING_DIR_HOST}${layout_sbindir}
+		autotools_stage_dir ${STAGE_TEMP}/${base_bindir} ${STAGING_DIR_HOST}${layout_base_bindir}
+		autotools_stage_dir ${STAGE_TEMP}/${base_sbindir} ${STAGING_DIR_HOST}${layout_base_sbindir}
+		autotools_stage_dir ${STAGE_TEMP}/${libexecdir} ${STAGING_DIR_HOST}${layout_libexecdir}
 	fi
 	if [ -d ${STAGE_TEMP}/${libdir} ]
 	then
@@ -212,13 +217,8 @@ autotools_stage_all() {
 	fi
 	rm -rf ${STAGE_TEMP}/${mandir} || true
 	rm -rf ${STAGE_TEMP}/${infodir} || true
-	# This will remove an empty directory so we can ignore it
-	rmdir ${STAGE_TEMP}/${datadir} || true
-	if [ -d ${STAGE_TEMP}/${datadir} ]; then
-		install -d ${STAGING_DATADIR}/
-		cp -fpPR ${STAGE_TEMP}/${datadir}/* ${STAGING_DATADIR}/
-	fi
-	rm -rf ${STAGE_TEMP}
+	autotools_stage_dir ${STAGE_TEMP}/${datadir} ${STAGING_DATADIR}
+	#rm -rf ${STAGE_TEMP}
 }
 
 EXPORT_FUNCTIONS do_configure do_install
