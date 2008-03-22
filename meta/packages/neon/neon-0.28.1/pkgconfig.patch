@@ -1,0 +1,16 @@
+---
+ neon.pc.in |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- neon-0.28.1.orig/neon.pc.in
++++ neon-0.28.1/neon.pc.in
+@@ -4,8 +4,8 @@ libdir=@libdir@
+ includedir=@includedir@
+ 
+ Name: neon
+ Description: HTTP/WebDAV client library
+ Version: @NEON_VERSION@
+-Libs.private: @NEON_LIBS@
++Libs.private: -L${libdir} -lz -lgcrypt -lgpg-error -lexpat -lgnutls
+ Libs: -L${libdir} -lneon @NEON_PC_LIBS@
+ Cflags: -I${includedir}/neon @NEON_CFLAGS@
