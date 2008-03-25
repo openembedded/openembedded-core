@@ -3,6 +3,19 @@ inherit linux-kernel-base module_strip
 PROVIDES += "virtual/kernel"
 DEPENDS += "virtual/${TARGET_PREFIX}depmod-${@get_kernelmajorversion('${PV}')} virtual/${TARGET_PREFIX}gcc${KERNEL_CCSUFFIX} update-modules"
 
+KERNEL_IMAGETYPE ?= "zImage"
+
+python __anonymous () {
+
+    import bb
+    
+    kerneltype = bb.data.getVar('KERNEL_IMAGETYPE', d, 1) or ''
+    if kerneltype == 'uImage':
+    	depends = bb.data.getVar("DEPENDS", d, 1)
+    	depends = "%s u-boot-mkimage-native" % depends
+    	bb.data.setVar("DEPENDS", depends, d)
+}
+
 inherit kernel-arch
 
 PACKAGES_DYNAMIC += "kernel-module-*"
@@ -10,7 +23,6 @@ PACKAGES_DYNAMIC += "kernel-image-*"
 
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
-KERNEL_IMAGETYPE ?= "zImage"
 
 KERNEL_PRIORITY = "${@bb.data.getVar('PV',d,1).split('-')[0].split('.')[-1]}"
 

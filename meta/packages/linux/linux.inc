@@ -6,17 +6,6 @@ inherit kernel
 
 DEPENDS_append_em-x270 = " mtd-utils "
 
-python __anonymous () {
-
-    import bb
-    
-    kerneltype = bb.data.getVar('KERNEL_IMAGETYPE', d, 1) or ''
-    if kerneltype == 'uImage':
-    	depends = bb.data.getVar("DEPENDS", d, 1)
-    	depends = "%s u-boot-mkimage-native" % depends
-    	bb.data.setVar("DEPENDS", depends, d)
-}
-
 RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
 
 # Specify the commandline for your device
