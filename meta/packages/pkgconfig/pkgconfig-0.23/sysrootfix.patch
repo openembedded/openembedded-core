@@ -1,0 +1,31 @@
+Index: pkg-config-0.23/pkg.c
+===================================================================
+--- pkg-config-0.23.orig/pkg.c	2008-03-26 22:18:39.000000000 +0000
++++ pkg-config-0.23/pkg.c	2008-03-26 22:31:11.000000000 +0000
+@@ -472,19 +472,15 @@
+   while (tmp != NULL)
+     {
+       char *tmpstr = (char*) tmp->data;
+-      if (pcsysrootdir != NULL)
++      if (pcsysrootdir != NULL && tmpstr[0] == '-' &&
++	      (tmpstr[1] == 'I' || tmpstr[1] == 'L'))
+ 	{
+-	  if (tmpstr[0] == '-' &&
+-	      (tmpstr[1] == 'I' ||
+-	       tmpstr[1] == 'L'))
+-	    {
+-	      g_string_append_c (str, '-');
+-	      g_string_append_c (str, tmpstr[1]);
+-	      g_string_append (str, pcsysrootdir);
+-	      g_string_append (str, tmpstr+2);
+-	    }
++	  g_string_append_c (str, '-');
++	  g_string_append_c (str, tmpstr[1]);
++	  g_string_append (str, pcsysrootdir);
++	  g_string_append (str, tmpstr+2);
+ 	}
+-      else 
++      else
+ 	{
+ 	  g_string_append (str, tmpstr);
+ 	}
