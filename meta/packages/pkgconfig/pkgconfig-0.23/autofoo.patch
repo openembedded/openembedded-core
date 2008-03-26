@@ -1,13 +1,13 @@
 ---
- glib-1.2.8/acglib.m4    |   12 +-
- glib-1.2.8/configure.in |  212 ++++++++++++++++++++++++++++++------------------
+ glib-1.2.10/acglib.m4    |   12 +-
+ glib-1.2.10/configure.in |  212 ++++++++++++++++++++++++++++++------------------
  2 files changed, 140 insertions(+), 84 deletions(-)
 
-Index: pkg-config-0.22/glib-1.2.8/acglib.m4
+Index: pkg-config-0.23/glib-1.2.10/acglib.m4
 ===================================================================
---- pkg-config-0.22.orig/glib-1.2.8/acglib.m4	2007-08-01 20:00:00.000000000 +0100
-+++ pkg-config-0.22/glib-1.2.8/acglib.m4	2007-08-01 20:11:08.000000000 +0100
-@@ -10,7 +10,7 @@ $1
+--- pkg-config-0.23.orig/glib-1.2.10/acglib.m4	2008-01-16 22:52:24.000000000 +0000
++++ pkg-config-0.23/glib-1.2.10/acglib.m4	2008-03-26 20:59:12.000000000 +0000
+@@ -10,7 +10,7 @@
  AC_DIVERT_POP()])])])
  
  dnl GLIB_IF_VAR_EQ (ENV_VAR, VALUE [, EQUALS_ACTION] [, ELSE_ACTION])
@@ -16,7 +16,7 @@ Index: pkg-config-0.22/glib-1.2.8/acglib.m4
          case "$[$1]" in
          "[$2]"[)]
                  [$3]
-@@ -21,7 +21,7 @@ AC_DEFUN(GLIB_IF_VAR_EQ,[
+@@ -21,7 +21,7 @@
          esac
  ])
  dnl GLIB_STR_CONTAINS (SRC_STRING, SUB_STRING [, CONTAINS_ACTION] [, ELSE_ACTION])
@@ -25,7 +25,7 @@ Index: pkg-config-0.22/glib-1.2.8/acglib.m4
          case "[$1]" in
          *"[$2]"*[)]
                  [$3]
-@@ -32,12 +32,12 @@ AC_DEFUN(GLIB_STR_CONTAINS,[
+@@ -32,12 +32,12 @@
          esac
  ])
  dnl GLIB_ADD_TO_VAR (ENV_VARIABLE, CHECK_STRING, ADD_STRING)
@@ -40,7 +40,7 @@ Index: pkg-config-0.22/glib-1.2.8/acglib.m4
  [changequote(<<, >>)dnl
  dnl The name to #define.
  define(<<AC_TYPE_NAME>>, translit(glib_sizeof_$3, [a-z *], [A-Z_P]))dnl
-@@ -62,7 +62,7 @@ undefine([AC_CV_NAME])dnl
+@@ -62,7 +62,7 @@
  ])
  
  dnl GLIB_BYTE_CONTENTS (INCLUDES, TYPE, ALIAS, N_BYTES, INITIALIZER)
@@ -49,7 +49,7 @@ Index: pkg-config-0.22/glib-1.2.8/acglib.m4
  [changequote(<<, >>)dnl
  dnl The name to #define.
  define(<<AC_TYPE_NAME>>, translit(glib_byte_contents_$3, [a-z *], [A-Z_P]))dnl
-@@ -92,7 +92,7 @@ undefine([AC_CV_NAME])dnl
+@@ -92,7 +92,7 @@
  ])
  
  dnl GLIB_SYSDEFS (INCLUDES, DEFS_LIST, OFILE [, PREFIX])
@@ -58,10 +58,10 @@ Index: pkg-config-0.22/glib-1.2.8/acglib.m4
  [glib_sysdefso="translit($3, [-_a-zA-Z0-9 *], [-_a-zA-Z0-9])"
  glib_sysdef_msg=`echo $2 | sed 's/:[[^ 	]]*//g'`
  if test "x`(echo '\n') 2>/dev/null`" != 'x\n'; then
-Index: pkg-config-0.22/glib-1.2.8/configure.in
+Index: pkg-config-0.23/glib-1.2.10/configure.in
 ===================================================================
---- pkg-config-0.22.orig/glib-1.2.8/configure.in	2007-08-01 18:03:34.000000000 +0100
-+++ pkg-config-0.22/glib-1.2.8/configure.in	2007-05-23 11:47:53.000000000 +0100
+--- pkg-config-0.23.orig/glib-1.2.10/configure.in	2008-01-16 22:52:24.000000000 +0000
++++ pkg-config-0.23/glib-1.2.10/configure.in	2008-03-26 20:59:12.000000000 +0000
 @@ -1,10 +1,11 @@
  dnl ***********************************
  dnl *** include special GLib macros ***
@@ -76,7 +76,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  
  # init autoconf (and check for presence of glist.c)
  AC_INIT(glist.c)
-@@ -13,11 +14,48 @@ AC_INIT(glist.c)
+@@ -13,11 +14,48 @@
  cflags_set=${CFLAGS+set}
  
  # we rewrite this file
@@ -126,8 +126,8 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  #
  # The following version number definitions apply to GLib, GModule and GThread
  # as a whole, so if changes occoured in any of them, they are all
-@@ -38,7 +76,7 @@ GLIB_INTERFACE_AGE=8
- GLIB_BINARY_AGE=8
+@@ -38,7 +76,7 @@
+ GLIB_BINARY_AGE=10
  GLIB_VERSION=$GLIB_MAJOR_VERSION.$GLIB_MINOR_VERSION.$GLIB_MICRO_VERSION
  dnl
 -])
@@ -135,7 +135,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  
  AC_SUBST(GLIB_MAJOR_VERSION)
  AC_SUBST(GLIB_MINOR_VERSION)
-@@ -72,22 +110,20 @@ AC_DEFINE_UNQUOTED(GLIB_INTERFACE_AGE, $
+@@ -72,22 +110,20 @@
  AC_DEFINE_UNQUOTED(GLIB_BINARY_AGE, $GLIB_BINARY_AGE)
  
  dnl Initialize libtool
@@ -161,7 +161,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  
  dnl declare --enable-* args and collect ac_help strings
  AC_ARG_ENABLE(debug, [  --enable-debug=[no/minimum/yes] turn on debugging [default=$debug_default]],,enable_debug=$debug_default)
-@@ -173,7 +209,9 @@ AC_TRY_RUN([#include <math.h>
+@@ -194,7 +230,9 @@
           CFLAGS=$glib_save_CFLAGS
           AC_MSG_WARN(
                  [No ANSI prototypes found in library. (-std1 didn't work.)])
@@ -171,7 +171,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  )
  LIBS=$glib_save_LIBS
  
-@@ -315,7 +353,7 @@ AC_TRY_COMPILE([#include <sys/types.h>],
+@@ -336,7 +374,7 @@
  if test $gtk_ok = yes; then
      AC_MSG_RESULT([yes, found in sys/types.h])
  else
@@ -180,7 +180,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
      if test $gtk_ok = yes; then
          AC_DEFINE(HAVE_SYS_SELECT_H)
          AC_MSG_RESULT([yes, found in sys/select.h])
-@@ -388,7 +426,7 @@ AC_CACHE_VAL(glib_cv_sane_realloc,[
+@@ -409,7 +447,7 @@
  	glib_cv_sane_realloc=no
  	,)
  ])
@@ -189,7 +189,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  	AC_DEFINE(REALLOC_0_WORKS)
  fi
  AC_MSG_RESULT($glib_cv_sane_realloc)
-@@ -466,7 +504,8 @@ AC_CACHE_VAL(glib_cv_va_val_copy,[
+@@ -487,7 +525,8 @@
  ])
  if test "x$glib_cv_va_copy" = "xyes"; then
    AC_DEFINE(G_VA_COPY, va_copy)
@@ -199,7 +199,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
    AC_DEFINE(G_VA_COPY, __va_copy)
  fi
  fi
-@@ -475,6 +514,7 @@ if test "x$glib_cv_va_val_copy" = "xno";
+@@ -496,6 +535,7 @@
  fi
  AC_MSG_RESULT($glib_cv_va_val_copy)
  
@@ -207,8 +207,8 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  
  dnl ***********************
  dnl *** g_module checks ***
-@@ -485,23 +525,27 @@ dnl G_MODULE_IMPL= don't reset, so cmd-l
- G_MODULE_NEED_USCORE=0
+@@ -507,23 +547,27 @@
+ G_MODULE_BROKEN_RTLD_GLOBAL=0
  G_MODULE_HAVE_DLERROR=0
  dnl *** dlopen() and dlsym() in system libraries
 +AC_CHECK_FUNC(dlopen,[
@@ -245,15 +245,15 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  fi
  dnl *** shl_load() in libdld (HP-UX)
  if test -z "$G_MODULE_IMPL"; then
-@@ -580,6 +624,7 @@ AC_SUBST(G_MODULE_LDFLAGS)
- AC_SUBST(G_MODULE_HAVE_DLERROR)
+@@ -633,6 +677,7 @@
  AC_SUBST(G_MODULE_NEED_USCORE)
+ AC_SUBST(G_MODULE_BROKEN_RTLD_GLOBAL)
  AC_SUBST(GLIB_DEBUG_FLAGS)
 +AC_MSG_WARN([hi mom])
  
  
  dnl ***********************
-@@ -816,40 +861,50 @@ if test x"$have_threads" != xnone; then
+@@ -869,40 +914,50 @@
  	fi
  	if test x"$have_threads" = xposix; then
  		LIBS="$LIBS $G_THREAD_LIBS"
@@ -335,7 +335,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  	fi
  	LIBS="$glib_save_LIBS"
  	CFLAGS="$glib_save_CFLAGS"
-@@ -893,13 +948,14 @@ GLIB_IF_VAR_EQ(mutex_has_default, yes,
+@@ -946,13 +1001,14 @@
  dnl ****************************************
  dnl *** GLib POLL* compatibility defines ***
  dnl ****************************************
@@ -351,16 +351,16 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  
  dnl ******************************
  dnl *** output the whole stuff ***
-@@ -956,7 +1012,7 @@ _______EOF
+@@ -1005,7 +1061,7 @@
  	  echo '#define GLIB_HAVE_SYS_POLL_H' >> $outfile
  	fi
  
 -	cat >> $outfile <<_______EOF
 +	cat >> $outfile <<EOF
  
- #define G_MINFLOAT	$glib_mf
- #define G_MAXFLOAT	$glib_Mf
-@@ -969,60 +1025,60 @@ _______EOF
+ #ifdef __cplusplus
+ extern "C" {
+@@ -1022,60 +1078,60 @@
  #define G_MINLONG	$glib_ml
  #define G_MAXLONG	$glib_Ml
  
@@ -433,7 +433,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  $glib_atexit
  $glib_memmove
  $glib_defines
-@@ -1034,11 +1090,11 @@ $glib_vacopy
+@@ -1087,11 +1143,11 @@
  #else	/* !__cplusplus */
  $glib_inline
  #endif	/* !__cplusplus */
@@ -447,7 +447,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  $g_enable_threads_def G_THREADS_ENABLED
  #define G_THREADS_IMPL_$g_threads_impl_def
  typedef struct _GStaticMutex GStaticMutex;
-@@ -1056,15 +1112,15 @@ struct _GStaticMutex
+@@ -1109,15 +1165,15 @@
  #define	g_static_mutex_get_mutex(mutex) \
    (g_thread_use_default_impl ? ((GMutex*) &((mutex)->aligned_pad_u)) : \
     g_static_mutex_get_mutex_impl (&((mutex)->runtime_mutex)))
@@ -466,7 +466,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  	fi
  
  	echo >>$outfile
-@@ -1073,15 +1129,15 @@ _______EOF
+@@ -1126,15 +1182,15 @@
  	  g_bit_sizes="$g_bit_sizes 64"
  	fi
  	for bits in $g_bit_sizes; do
@@ -485,7 +485,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  #define GLONG_TO_LE(val)	((glong) GINT${glongbits}_TO_LE (val))
  #define GULONG_TO_LE(val)	((gulong) GUINT${glongbits}_TO_LE (val))
  #define GLONG_TO_BE(val)	((glong) GINT${glongbits}_TO_BE (val))
-@@ -1092,14 +1148,14 @@ _______EOF
+@@ -1145,14 +1201,14 @@
  #define GUINT_TO_BE(val)	((guint) GUINT${gintbits}_TO_BE (val))
  #define G_BYTE_ORDER $g_byte_order
  
@@ -502,7 +502,7 @@ Index: pkg-config-0.22/glib-1.2.8/configure.in
  
  $glib_wc
  
-@@ -1109,7 +1165,7 @@ $glib_wc
+@@ -1162,7 +1218,7 @@
  #endif /* __cplusplus */
  
  #endif /* GLIBCONFIG_H */
