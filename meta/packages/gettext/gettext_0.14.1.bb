@@ -2,7 +2,7 @@ DESCRIPTION = "The GNU internationalization library."
 HOMEPAGE = "http://www.gnu.org/software/gettext/gettext.html"
 SECTION = "libs"
 LICENSE = "GPL"
-PR = "r6"
+PR = "r8"
 PROVIDES = "virtual/libintl"
 
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
@@ -29,10 +29,5 @@ do_configure_prepend() {
 }
 
 do_stage () {
-	autotools_stage_includes
-	oe_libinstall -so -C gettext-tools/lib libgettextlib ${STAGING_LIBDIR}/
-	oe_libinstall -so -C gettext-tools/src libgettextpo ${STAGING_LIBDIR}/
-	oe_libinstall -so -C gettext-tools/src libgettextsrc ${STAGING_LIBDIR}/
-	oe_libinstall -so -C gettext-tools/intl libintl ${STAGING_LIBDIR}/
-	oe_libinstall -so -C gettext-runtime/lib libasprintf ${STAGING_LIBDIR}/
+	autotools_stage_all
 }
