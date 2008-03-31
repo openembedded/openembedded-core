@@ -52,11 +52,7 @@ EXTRA_DIST :=
 global_cppflags :=
 
 global_cppflags += \
-	-I$(srcdir)/JavaScriptCore \
-	-I$(srcdir)/JavaScriptCore/ForwardingHeaders \
-	-I$(srcdir)/JavaScriptCore/wtf \
-	-I$(srcdir)/JavaScriptCore/kjs \
-	-I$(top_builddir)/DerivedSources
+	-DWTF_USE_ICU_UNICODE=1
 
 # Default compiler flags
 global_cflags := \
@@ -94,6 +90,13 @@ javascriptcore_sources :=
 javascriptcore_built_sources :=
 javascriptcore_built_nosources :=
 
+javascriptcore_cppflags += \
+	-I$(srcdir)/JavaScriptCore \
+	-I$(srcdir)/JavaScriptCore/ForwardingHeaders \
+	-I$(srcdir)/JavaScriptCore/wtf \
+	-I$(srcdir)/JavaScriptCore/kjs \
+	-I$(top_builddir)/DerivedSources
+
 # The variables above are already included below so no need to touch
 # these variables unless you really have to
 libJavaScriptCore_ladir = $(prefix)/include/webkit-1.0/JavaScriptCore
@@ -104,7 +107,7 @@ libJavaScriptCore_la_SOURCES = \
 	$(javascriptcore_sources)
 
 libJavaScriptCore_la_LIBADD = \
-	$(ICU_LIBS) \
+	$(UNICODE_LIBS) \
 	$(GLOBALDEPS_LIBS) \
 	-lpthread
 
@@ -112,17 +115,18 @@ libJavaScriptCore_la_CXXFLAGS = \
 	$(global_cxxflags) \
 	$(global_cflags) \
 	$(GLOBALDEPS_CFLAGS) \
+	$(UNICODE_CFLAGS) \
 	-fstrict-aliasing
 
 libJavaScriptCore_la_CFLAGS = \
 	$(global_cflags) \
 	$(GLOBALDEPS_CFLAGS) \
+	$(UNICODE_CFLAGS) \
 	-fstrict-aliasing
 
 libJavaScriptCore_la_CPPFLAGS = \
 	$(global_cppflags) \
-	$(javascriptcore_cppflags) \
-	$(ICU_CPPFLAGS)
+	$(javascriptcore_cppflags)
 
 #
 # WebCore
@@ -154,8 +158,10 @@ libWebCore_la_CXXFLAGS = \
 	$(global_cxxflags) \
 	$(global_cflags) \
 	$(GLOBALDEPS_CFLAGS) \
+	$(UNICODE_CFLAGS) \
 	$(WEBKITDEPS_CFLAGS) \
 	$(LIBCURL_CFLAGS) \
+	$(LIBSOUP_CFLAGS) \
 	$(SQLITE3_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
 	$(LIBXSLT_CFLAGS) \
@@ -166,8 +172,10 @@ libWebCore_la_CFLAGS = \
 	-fno-strict-aliasing \
 	$(global_cflags) \
 	$(GLOBALDEPS_CFLAGS) \
+	$(UNICODE_CFLAGS) \
 	$(WEBKITDEPS_CFLAGS) \
 	$(LIBCURL_CFLAGS) \
+	$(LIBSOUP_CFLAGS) \
 	$(SQLITE3_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
 	$(LIBXSLT_CFLAGS) \
@@ -175,9 +183,9 @@ libWebCore_la_CFLAGS = \
 	$(HILDON_CFLAGS)
 
 libWebCore_la_CPPFLAGS = \
-	$(ICU_CPPFLAGS) \
 	$(global_cppflags) \
 	$(webcore_cppflags) \
+	$(javascriptcore_cppflags) \
 	$(webkitgtk_cppflags)
 
 libWebCore_la_LIBADD = \
@@ -186,7 +194,8 @@ libWebCore_la_LIBADD = \
 	$(GLOBALDEPS_LIBS) \
 	$(WEBKITDEPS_LIBS) \
 	$(LIBCURL_LIBS) \
-	$(ICU_LIBS) \
+	$(LIBSOUP_LIBS) \
+	$(UNICODE_LIBS) \
 	$(SQLITE3_LIBS) \
 	$(GSTREAMER_LIBS) \
 	$(LIBXSLT_LIBS) \

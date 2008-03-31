@@ -129,24 +129,41 @@ if test "$PKG_CONFIG" = "no"; then
    AC_MSG_ERROR([Cannot find pkg-config, make sure it is installed in your PATH])
 fi
 
-# check for icu-config
-if test "$os_darwin" = "yes"; then
-ICU_CPPFLAGS="-I\$(srcdir)/JavaScriptCore/icu -I\$(srcdir)/WebCore/icu"
-ICU_LIBS="-licucore"
-else
-AC_PATH_PROG(icu_config, icu-config, no)
-if test "$icu_config" = "no"; then
-   AC_MSG_ERROR([Cannot find icu-config. ICU library is needed.])
+# determine the Unicode backend
+AC_MSG_CHECKING([the Unicode backend to use])
+AC_ARG_WITH(unicode_backend,
+            AC_HELP_STRING([--with-unicode-backend=@<:@icu@:>@],
+                           [Select Unicode backend [default=icu]]),
+            [],[unicode_backend="icu"])
+
+case "$unicode_backend" in
+     icu) ;;
+     *) AC_MSG_ERROR([Invalid Unicode backend: must be icu.]) ;;
+esac
+
+AC_MSG_RESULT([$unicode_backend])
+
+if test "$unicode_backend" = "icu"; then
+	# check for icu-config
+	if test "$os_darwin" = "yes"; then
+		UNICODE_CFLAGS="-I\$(srcdir)/JavaScriptCore/icu -I\$(srcdir)/WebCore/icu"
+		UNICODE_LIBS="-licucore"
+	else
+		AC_PATH_PROG(icu_config, icu-config, no)
+		if test "$icu_config" = "no"; then
+			AC_MSG_ERROR([Cannot find icu-config. The ICU library is needed.])
+		fi
+
+		# We don't use --cflags as this gives us a lot of things that we don't
+		# necessarily want, like debugging and optimization flags
+		# See man (1) icu-config for more info.
+		UNICODE_CFLAGS=`$icu_config --cppflags`
+		UNICODE_LIBS=`$icu_config --ldflags`
+	fi
 fi
 
-# We don't use --cflags as this gives us a lot of things that we don't
-# necessarily want, like debugging and optimization flags
-# See man (1) icu-config for more info.
-ICU_CPPFLAGS=`$icu_config --cppflags`
-ICU_LIBS=`$icu_config --ldflags`
-AC_SUBST([ICU_CPPFLAGS])
-AC_SUBST([ICU_LIBS])
-fi
+AC_SUBST([UNICODE_CFLAGS])
+AC_SUBST([UNICODE_LIBS])
 
 # determine the GDK/GTK+ target
 AC_MSG_CHECKING([the target windowing system])
@@ -180,16 +197,16 @@ fi
 # determine the http backend
 AC_MSG_CHECKING([the HTTP backend to use])
 AC_ARG_WITH(http_backend,
-            AC_HELP_STRING([--with-http-backend=@<:@curl@:>@],
+            AC_HELP_STRING([--with-http-backend=@<:@curl/soup@:>@],
                            [Select HTTP backend [default=curl]]),
-            [],[http_backend="curl"])
+            [],[with_http_backend="curl"])
 
-case "$http_backend" in
-     curl) ;;
-     *) AC_MSG_ERROR([Invalid HTTP backend: must be curl.]) ;;
+case "$with_http_backend" in
+     curl|soup) ;;
+     *) AC_MSG_ERROR([Invalid HTTP backend: must be curl, soup.]) ;;
 esac
 
-AC_MSG_RESULT([$http_backend])
+AC_MSG_RESULT([$with_http_backend])
 
 # minimum base dependencies
 CAIRO_REQUIRED_VERSION=1.4
@@ -206,6 +223,7 @@ GTK_REQUIRED_VERSION=2.8
 
 # optional modules
 LIBCURL_REQUIRED_VERSION=7.15
+LIBSOUP_REQUIRED_VERSION=2.4
 LIBXSLT_REQUIRED_VERSION=1.1.7
 SQLITE_REQUIRED_VERSION=3.0
 GSTREAMER_REQUIRED_VERSION=0.10
@@ -376,6 +394,19 @@ AC_ARG_ENABLE(fast_malloc,
               [],[if test "$enable_debug" = "yes"; then enable_fast_malloc="no"; else enable_fast_malloc="yes"; fi])
 AC_MSG_RESULT([$enable_fast_malloc])
 
+# determine the font backend
+AC_MSG_CHECKING([the font backend to use])
+AC_ARG_WITH(font_backend,
+            AC_HELP_STRING([--with-font-backend=@<:@freetype/pango@:>@],
+                           [Select font backend [default=freetype]]),
+            [],[with_font_backend="freetype"])
+
+case "$with_font_backend" in
+     freetype|pango) ;;
+     *) AC_MSG_ERROR([Invalid font backend: must be freetype or pango.]) ;;
+esac
+AC_MSG_RESULT([$with_font_backend])
+
 # Add '-g' flag to gcc if it's debug build
 if test "$enable_debug" = "yes"; then
    CXXFLAGS="$CXXFLAGS -g"
@@ -383,11 +414,18 @@ if test "$enable_debug" = "yes"; then
 fi
 
 # check if curl is available
-if test "$http_backend" = "curl"; then
+if test "$with_http_backend" = "curl"; then
    PKG_CHECK_MODULES([LIBCURL],
                      [libcurl >= $LIBCURL_REQUIRED_VERSION])
    AC_SUBST([LIBCURL_CFLAGS])
    AC_SUBST([LIBCURL_LIBS])
+fi
+
+if test "$with_http_backend" = "soup"; then
+   PKG_CHECK_MODULES([LIBSOUP],
+                     [libsoup-2.4 >= $LIBSOUP_REQUIRED_VERSION])
+   AC_SUBST([LIBSOUP_CFLAGS])
+   AC_SUBST([LIBSOUP_LIBS])
 fi
 
 # check if sqlite 3 is available
@@ -450,7 +488,12 @@ AM_CONDITIONAL([TARGET_QUARTZ], [test "$with_target" = "quartz"])
 AM_CONDITIONAL([TARGET_DIRECTFB], [test "$with_target" = "directfb"])
 
 # HTTP backend conditionals
-AM_CONDITIONAL([USE_CURL], [test "$http_backend" = "curl"])
+AM_CONDITIONAL([USE_CURL], [test "$with_http_backend" = "curl"])
+AM_CONDITIONAL([USE_SOUP], [test "$with_http_backend" = "soup"])
+
+# Font backend conditionals
+AM_CONDITIONAL([USE_FREETYPE], [test "$with_font_backend" = "freetype"])
+AM_CONDITIONAL([USE_PANGO], [test "$with_font_backend" = "pango"])
 
 # WebKit feature conditionals
 AM_CONDITIONAL([ENABLE_DEBUG],[test "$enable_debug" = "yes"])
@@ -485,7 +528,9 @@ WebKit was configured with the following options:
 Build configuration:
  Enable debugging (slow)           : $enable_debug
  Code coverage support             : $enable_coverage
- HTTP backend                      : $http_backend
+ Unicode backend                   : $unicode_backend
+ HTTP backend                      : $with_http_backend
+ Font backend                      : $with_font_backend
  Optimized memory allocator        : $enable_fast_malloc
 Features:
  HTML5 cross-document messaging    : $enable_cross_document_messaging

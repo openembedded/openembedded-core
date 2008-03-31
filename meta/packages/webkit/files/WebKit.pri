@@ -17,7 +17,7 @@ qt-port:!building-libs {
 gtk-port:!building-libs {
     QMAKE_LIBDIR = $$OUTPUT_DIR/lib $$QMAKE_LIBDIR
     LIBS += -lWebKitGtk
-    DEPENDPATH += $$PWD/WebKit/gtk/WebView $$PWD/WebKit/gtk/WebCoreSupport
+    DEPENDPATH += $$PWD/WebKit/gtk $$PWD/WebKit/gtk/WebCoreSupport $$PWD/WebKit/gtk/webkit
 }
 
 gtk-port {
@@ -36,6 +36,7 @@ gtk-port {
 
     # We use the curl http backend on all platforms
     PKGCONFIG += libcurl
+    DEFINES += WTF_USE_CURL=1
 
     LIBS += -lWebKitGtk -ljpeg -lpng
 
@@ -72,8 +73,9 @@ gtk-port:INCLUDEPATH += \
     $$BASE_DIR/WebCore/platform/graphics/cairo \
     $$BASE_DIR/WebCore/loader/gtk \
     $$BASE_DIR/WebCore/page/gtk \
-    $$BASE_DIR/WebKit/gtk/WebView \
-    $$BASE_DIR/WebKit/gtk/WebCoreSupport
+    $$BASE_DIR/WebKit/gtk \
+    $$BASE_DIR/WebKit/gtk/WebCoreSupport \
+    $$BASE_DIR/WebKit/gtk/webkit
 INCLUDEPATH += \
     $$BASE_DIR/JavaScriptCore/ \
     $$BASE_DIR/JavaScriptCore/kjs \
@@ -95,7 +97,8 @@ INCLUDEPATH += \
     $$BASE_DIR/WebCore/rendering \
     $$BASE_DIR/WebCore/history \
     $$BASE_DIR/WebCore/xml \
-    $$BASE_DIR/WebCore/html
+    $$BASE_DIR/WebCore/html \
+    $$BASE_DIR/WebCore/plugins
 
 
 macx {

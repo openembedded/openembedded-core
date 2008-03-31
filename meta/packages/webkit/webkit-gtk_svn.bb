@@ -27,6 +27,7 @@ inherit autotools pkgconfig
 EXTRA_OECONF = "\
                 --enable-debug=no \
                 --enable-svg \
+		--enable-svg-fonts \
                 --enable-icon-database=yes \
                "
 
