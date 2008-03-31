@@ -5,7 +5,7 @@
 # Author: Richard Purdie <rpurdie@openedhand.com>
 #
 
-PKGSYSTEM=/usr/lib/ipkg
+PKGSYSTEM=/usr/lib/opkg
 STAMP=$PKGSYSTEM/postinsts-done
 STATFILE=$PKGSYSTEM/status
 STATFILE2=$PKGSYSTEM/status2

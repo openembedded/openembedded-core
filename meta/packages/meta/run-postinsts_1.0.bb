@@ -1,6 +1,6 @@
 DESCRIPTION = "Run postinstall scripts on device using awk"
 SECTION = "devel"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://run-postinsts file://run-postinsts.awk"
 

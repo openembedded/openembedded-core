@@ -14,7 +14,7 @@ BEGIN {
 }
 /Status:.*unpacked.*/ {
   print "Configuring: " package > "/dev/stderr"
-  ret = system("/usr/lib/ipkg/info/" package ".postinst 1>&2")
+  ret = system("/usr/lib/opkg/info/" package ".postinst 1>&2")
   if (ret == 0)
     $0 = gensub("unpacked", "installed", 1)
   else
