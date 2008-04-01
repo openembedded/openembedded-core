@@ -5,7 +5,7 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "glib-2.0 gettext-native libxml2 bison-native flex-native"
-PR = "r5"
+PR = "r6"
 
 inherit autotools pkgconfig
 
