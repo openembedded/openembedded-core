@@ -50,13 +50,13 @@ cpan_do_compile () {
 }
 
 cpan_do_install () {
-	if [ ${@is_target(d)} == "yes" ]; then
+	if [ ${@is_target(d)} = "yes" ]; then
 		oe_runmake install_vendor
 	fi
 }
 
 cpan_do_stage () {
-	if [ ${@is_target(d)} == "no" ]; then
+	if [ ${@is_target(d)} = "no" ]; then
 		oe_runmake install_vendor
 	fi
 }
