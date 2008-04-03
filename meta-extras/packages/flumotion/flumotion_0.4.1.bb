@@ -2,8 +2,8 @@ DESCRIPTION = "Fluendo Streaming Server"
 LICENSE = "GPL"
 DEPENDS = "gstreamer python-gst twisted python-pygtk2"
 RDEPENDS = "python-twisted-core python-twisted-web python-core python-gst"
-RDEPENDS_${PN}-gui = "${PN} python-pygtk2"
-PR = "r3"
+RDEPENDS_${PN}-gui = "${PN} python-pygtk"
+PR = "r4"
 
 SRC_URI = "http://www.flumotion.net/src/flumotion/flumotion-${PV}.tar.bz2 \
            file://python-path.patch;patch=1 \
