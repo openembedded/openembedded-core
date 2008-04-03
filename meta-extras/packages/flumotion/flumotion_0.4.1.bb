@@ -9,7 +9,7 @@ RDEPENDS = "python-resource python-pprint python-threading \
             python-lang python-zopeinterface  python-textutils \
             python-gst python-misc"
 RDEPENDS_${PN}-gui = "${PN} python-pygtk python-pycairo"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "http://www.flumotion.net/src/flumotion/flumotion-${PV}.tar.bz2 \
            file://python-path.patch;patch=1 \
@@ -30,7 +30,11 @@ FILES_${PN}-gui = "${bindir}/flumotion-admin ${bindir}/flumotion-tester \
                    ${libdir}/flumotion/python/flumotion/admin/gtk \
                    ${libdir}/flumotion/python/flumotion/component/*/admin_gtk* \
                    ${libdir}/flumotion/python/flumotion/component/*/*/admin_gtk* \
-                   ${libdir}/flumotion/python/flumotion/extern \
+                   ${libdir}/flumotion/python/flumotion/extern/*.py* \
+                   ${libdir}/flumotion/python/flumotion/extern/fdpass/*.py* \
+                   ${libdir}/flumotion/python/flumotion/extern/fdpass/fdpass.so \
+                   ${libdir}/flumotion/python/flumotion/extern/pytrayicon/*.py* \
+                   ${libdir}/flumotion/python/flumotion/extern/pytrayicon/pytrayicon.so \
                    ${libdir}/flumotion/python/flumotion/manager \
                    ${libdir}/flumotion/python/flumotion/ui \
                    ${libdir}/flumotion/python/flumotion/wizard \
