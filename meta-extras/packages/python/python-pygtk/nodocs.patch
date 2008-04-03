@@ -1,0 +1,13 @@
+Index: pygtk-2.10.4/Makefile.am
+===================================================================
+--- pygtk-2.10.4.orig/Makefile.am
++++ pygtk-2.10.4/Makefile.am
+@@ -4,7 +4,7 @@ if BUILD_GTK
+   GTK_SUBDIR = gtk
+ endif
+ 
+-SUBDIRS = codegen . $(GTK_SUBDIR) examples tests docs
++SUBDIRS = codegen . $(GTK_SUBDIR) examples tests
+ 
+ PLATFORM_VERSION = 2.0
+ 
