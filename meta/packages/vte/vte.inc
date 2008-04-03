@@ -1,6 +1,7 @@
 DESCRIPTION = "vte is a virtual terminal emulator"
 LICENSE = "LGPL"
 DEPENDS += " glib-2.0 gtk+ intltool-native"
+RDEPENDS_libvte = "vte-termcap"
 
 inherit gnome
 
@@ -12,5 +13,6 @@ do_stage() {
 	autotools_stage_all
 }
 
-PACKAGES =+ "libvte"
+PACKAGES =+ "libvte vte-termcap"
 FILES_libvte = "${libdir}/*.so*"
+FILES_vte-termcap = "${datadir}/vte/termcap"
