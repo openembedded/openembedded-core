@@ -1,0 +1,20 @@
+Index: tiff-3.7.2/configure.ac
+===================================================================
+--- tiff-3.7.2.orig/configure.ac	2005-03-15 10:42:19.000000000 -0500
++++ tiff-3.7.2/configure.ac	2007-10-10 12:05:58.000000000 -0400
+@@ -32,7 +32,6 @@
+ AC_CANONICAL_TARGET
+ 
+ AM_INIT_AUTOMAKE
+-AM_PROG_CC_C_O
+ dnl Do not rebuild generated files every time
+ AM_MAINTAINER_MODE
+ 
+@@ -55,6 +54,7 @@
+ 
+ dnl Checks for programs.
+ AC_PROG_CC
++AM_PROG_CC_C_O
+ 
+ dnl We want warnings. As many warnings as possible.
+ #VL_PROG_CC_WARNINGS()
