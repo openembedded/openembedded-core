@@ -1,22 +1,19 @@
-#
-# FIXME: Don't simply rip this test out... add getting it from cache
-#
-Index: Python-2.5.1/configure.in
+Index: Python-2.5.2/configure.in
 ===================================================================
---- Python-2.5.1.orig/configure.in
-+++ Python-2.5.1/configure.in
-@@ -3367,41 +3367,6 @@ else
-   AC_MSG_RESULT(no)
- fi
+--- Python-2.5.2.orig/configure.in
++++ Python-2.5.2/configure.in
+@@ -3410,45 +3410,6 @@ esac
+ 					   
+ 
  
 -AC_MSG_CHECKING(for %zd printf() format support)
 -AC_TRY_RUN([#include <stdio.h>
 -#include <stddef.h>
 -#include <string.h>
 -
--int main()
--{
--    char buffer[256];
+-#ifdef HAVE_SYS_TYPES_H
+-#include <sys/types.h>
+-#endif
 -
 -#ifdef HAVE_SSIZE_T
 -typedef ssize_t Py_ssize_t;
@@ -25,6 +22,10 @@ Index: Python-2.5.1/configure.in
 -#else
 -typedef int Py_ssize_t;
 -#endif
+-
+-int main()
+-{
+-    char buffer[256];
 -
 -    if(sprintf(buffer, "%zd", (size_t)123) < 0)
 -       	return 1;

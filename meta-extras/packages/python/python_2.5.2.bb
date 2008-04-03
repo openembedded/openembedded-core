@@ -5,8 +5,6 @@ SECTION = "devel/python"
 PRIORITY = "optional"
 DEPENDS = "python-native readline zlib gdbm openssl sqlite3"
 DEPENDS_sharprom = "python-native readline zlib gdbm openssl"
-
-# NOTE: Keep the digit in sync with BASEREV in contrib/generate-manifest-2.5.py
 PR = "ml1"
 
 PYTHON_MAJMIN = "2.5"
@@ -17,7 +15,9 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
            file://fix-tkinter-detection.patch;patch=1 \
            file://autohell.patch;patch=1 \
            file://sitebranding.patch;patch=1 \
-           file://default-is-optimized.patch;patch=1"
+           file://enable-ctypes-module.patch;patch=1 \
+           file://default-is-optimized.patch;patch=1 \
+           file://sitecustomize.py"
 S = "${WORKDIR}/Python-${PV}"
 
 inherit autotools
@@ -43,21 +43,21 @@ do_compile_prepend() {
 }
 
 do_compile() {
-        oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
-                   HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
-                   STAGING_LIBDIR=${STAGING_LIBDIR} \
-                   STAGING_INCDIR=${STAGING_INCDIR} \
-                   BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
-                   OPT="${CFLAGS}" libpython2.5.so
+	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
+		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
+		STAGING_LIBDIR=${STAGING_LIBDIR} \
+		STAGING_INCDIR=${STAGING_INCDIR} \
+		BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
+		OPT="${CFLAGS}" libpython2.5.so
 
 	oe_libinstall -so libpython2.5 ${STAGING_LIBDIR}
 
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
-		   HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
-		   STAGING_LIBDIR=${STAGING_LIBDIR} \
-		   STAGING_INCDIR=${STAGING_INCDIR} \
-		   BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
-		   OPT="${CFLAGS}"
+		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
+		STAGING_LIBDIR=${STAGING_LIBDIR} \
+		STAGING_INCDIR=${STAGING_INCDIR} \
+		BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
+		OPT="${CFLAGS}"
 }
 
 do_stage() {
@@ -67,19 +67,28 @@ do_stage() {
 
 do_install() {
 	install -m 0644 Makefile.orig Makefile
-        oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
-                   HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
-                   STAGING_LIBDIR=${STAGING_LIBDIR} \
-                   STAGING_INCDIR=${STAGING_INCDIR} \
-		   BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
-		   DESTDIR=${D} LIBDIR=${libdir} install
+
+	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
+		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
+		STAGING_LIBDIR=${STAGING_LIBDIR} \
+		STAGING_INCDIR=${STAGING_INCDIR} \
+		BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
+		DESTDIR=${D} LIBDIR=${libdir} install
+
+	install -m 0644 ${WORKDIR}/sitecustomize.py ${D}/${libdir}/python${PYTHON_MAJMIN}
 }
 
 require python-${PYTHON_MAJMIN}-manifest.inc
 
+# manual dependency additions
 RPROVIDES_python-core = "python"
-RPROVIDES_python-curses = "python"
+RRECOMMENDS_python-core = "python-readline"
+RRECOMMENDS_python-crypt = "openssl"
 
+# add sitecustomize
+FILES_python-core += "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py"
+
+# package libpython
 PACKAGES =+ "libpython2"
 FILES_libpython2 = "${libdir}/libpython*"
 

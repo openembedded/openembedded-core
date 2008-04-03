@@ -1,11 +1,11 @@
 #
 # Patch (C) by Michael 'Mickey' Lauer <mlauer@vanille-media.de>
 #
-Index: Python-2.5.1/Makefile.pre.in
+Index: Python-2.5.2/Makefile.pre.in
 ===================================================================
---- Python-2.5.1.orig/Makefile.pre.in
-+++ Python-2.5.1/Makefile.pre.in
-@@ -170,6 +170,7 @@ UNICODE_OBJS=   @UNICODE_OBJS@
+--- Python-2.5.2.orig/Makefile.pre.in
++++ Python-2.5.2/Makefile.pre.in
+@@ -173,6 +173,7 @@ UNICODE_OBJS=   @UNICODE_OBJS@
  
  PYTHON=		python$(EXE)
  BUILDPYTHON=	python$(BUILDEXE)
@@ -13,7 +13,7 @@ Index: Python-2.5.1/Makefile.pre.in
  
  # === Definitions added by makesetup ===
  
-@@ -196,7 +197,7 @@ GRAMMAR_INPUT=	$(srcdir)/Grammar/Grammar
+@@ -199,7 +200,7 @@ GRAMMAR_INPUT=	$(srcdir)/Grammar/Grammar
  ##########################################################################
  # Parser
  PGEN=		Parser/pgen$(EXE)
@@ -22,7 +22,7 @@ Index: Python-2.5.1/Makefile.pre.in
  POBJS=		\
  		Parser/acceler.o \
  		Parser/grammar1.o \
-@@ -345,8 +346,8 @@ platform: $(BUILDPYTHON)
+@@ -348,8 +349,8 @@ platform: $(BUILDPYTHON)
  # Build the shared modules
  sharedmods: $(BUILDPYTHON)
  	case $$MAKEFLAGS in \
@@ -33,16 +33,16 @@ Index: Python-2.5.1/Makefile.pre.in
  	esac
  
  # Build static library
-@@ -470,7 +471,7 @@ Modules/python.o: $(srcdir)/Modules/pyth
- 
+@@ -474,7 +475,7 @@ Modules/python.o: $(srcdir)/Modules/pyth
  
  $(GRAMMAR_H) $(GRAMMAR_C): $(PGEN) $(GRAMMAR_INPUT)
+ 		-@ mkdir Include
 -		-$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
 +		-$(HOSTPGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
  
  $(PGEN):	$(PGENOBJS)
  		$(CC) $(OPT) $(LDFLAGS) $(PGENOBJS) $(LIBS) -o $(PGEN)
-@@ -773,19 +774,19 @@ libinstall:	$(BUILDPYTHON) $(srcdir)/Lib
+@@ -782,19 +783,19 @@ libinstall:	$(BUILDPYTHON) $(srcdir)/Lib
  	done
  	$(INSTALL_DATA) $(srcdir)/LICENSE $(DESTDIR)$(LIBDEST)/LICENSE.txt
  	PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
@@ -66,7 +66,7 @@ Index: Python-2.5.1/Makefile.pre.in
  		-d $(LIBDEST)/site-packages -f \
  		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
  
-@@ -885,7 +886,7 @@ libainstall:	all
+@@ -894,7 +895,7 @@ libainstall:	all
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
  sharedinstall:
@@ -75,10 +75,10 @@ Index: Python-2.5.1/Makefile.pre.in
  	   	--prefix=$(prefix) \
  		--install-scripts=$(BINDIR) \
  		--install-platlib=$(DESTSHARED) \
-Index: Python-2.5.1/setup.py
+Index: Python-2.5.2/setup.py
 ===================================================================
---- Python-2.5.1.orig/setup.py
-+++ Python-2.5.1/setup.py
+--- Python-2.5.2.orig/setup.py
++++ Python-2.5.2/setup.py
 @@ -211,6 +211,7 @@ class PyBuildExt(build_ext):
          except ImportError, why:
              self.announce('*** WARNING: renaming "%s" since importing it'
@@ -98,7 +98,7 @@ Index: Python-2.5.1/setup.py
  
          # Add paths specified in the environment variables LDFLAGS and
          # CPPFLAGS for header and library files.
-@@ -341,6 +342,9 @@ class PyBuildExt(build_ext):
+@@ -342,6 +343,9 @@ class PyBuildExt(build_ext):
  
          # XXX Omitted modules: gl, pure, dl, SGI-specific modules
  
