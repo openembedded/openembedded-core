@@ -1,6 +1,6 @@
 DESCRIPTION = "gdb - GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
-LICENSE="GPL"
+LICENSE="GPLv3+"
 SECTION = "devel"
 PRIORITY = "optional"
 
