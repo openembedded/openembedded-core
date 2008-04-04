@@ -6,7 +6,8 @@ PRIORITY = "optional"
 
 inherit autotools
 
-SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
+           file://no-werror.patch;patch=1"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gdb-${PV}"
 

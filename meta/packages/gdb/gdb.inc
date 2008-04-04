@@ -12,7 +12,7 @@ inherit gettext
 
 SRC_URI += "file://kill_arm_map_symbols.patch;patch=1 \
             file://gdbserver-cflags-last.diff;patch=1;pnum=0 \
-	    file://ignore_whitespace_changes.patch;patch=1"
+			file://ignore_whitespace_changes.patch;patch=1 "
 #FIXME	   file://uclibc.patch;patch=1 \
 
 EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
