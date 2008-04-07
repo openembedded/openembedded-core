@@ -1,7 +1,7 @@
 DESCRIPTION = "Qemu helper scripts from Poky"
 LICENSE = "GPL"
 RDEPENDS = "qemu-sdk"
-PR = "r6"
+PR = "r7"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 
@@ -9,6 +9,7 @@ SRC_URI = "file://${OEROOT}/scripts/poky-qemu \
            file://${OEROOT}/scripts/poky-qemu-internal \
            file://${OEROOT}/scripts/poky-addptable2image \
            file://${OEROOT}/scripts/poky-qemu-ifup \
+           file://${OEROOT}/scripts/poky-qemu-ifdown \
 	   file://raw2flash.c"
 		      
 S = "${WORKDIR}"
