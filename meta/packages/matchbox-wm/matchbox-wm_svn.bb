@@ -3,7 +3,7 @@ DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat gconf"
 PV = "1.2+svnr${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager;proto=http \
            file://configure_fix.patch;patch=1;maxrev=1818 \
@@ -13,8 +13,8 @@ S = "${WORKDIR}/matchbox-window-manager"
 
 inherit autotools pkgconfig update-alternatives
 
-ALTERNATIVE_NAME = "x-window-manager"
-ALTERNATIVE_LINK = "${bindir}/x-window-manager"
+ALTERNATIVE_NAME = "x-session-manager"
+ALTERNATIVE_LINK = "${bindir}/x-session-manager"
 ALTERNATIVE_PATH = "${bindir}/matchbox-session"
 ALTERNATIVE_PRIORITY = "10"
 

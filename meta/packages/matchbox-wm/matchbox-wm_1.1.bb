@@ -2,7 +2,7 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxcomposite libxfixes xdamage libxrender startup-notification expat"
-PR="r3"
+PR="r4"
 
 
 SRC_URI = "http://projects.o-hand.com/matchbox/sources/matchbox-window-manager/1.1/matchbox-window-manager-${PV}.tar.gz \
@@ -20,8 +20,8 @@ FILES_${PN} = "${bindir}/* \
 	       ${datadir}/themes/Default/matchbox \
 	       ${datadir}/themes/MBOpus/matchbox"
 
-ALTERNATIVE_NAME = "x-window-manager"
-ALTERNATIVE_LINK = "${bindir}/x-window-manager"
+ALTERNATIVE_NAME = "x-session-manager"
+ALTERNATIVE_LINK = "${bindir}/x-session-manager"
 ALTERNATIVE_PATH = "${bindir}/matchbox-session"
 ALTERNATIVE_PRIORITY = "10"
 
