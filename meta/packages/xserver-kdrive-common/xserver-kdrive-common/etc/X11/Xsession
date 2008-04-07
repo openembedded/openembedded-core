@@ -7,12 +7,9 @@ HOME=/home/$USER
 export HOME
 
 if [ -f /usr/bin/dbus-launch ]; then
-  ## test for an existing bus daemon, just to be safe
-  if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
-     ## if not found, launch a new one
-     eval `dbus-launch --auto-syntax --exit-with-session`
-     echo "D-BUS per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS"
-  fi
+    # As this is the X session script, always start a new DBus session.
+    eval `dbus-launch --sh-syntax --exit-with-session`
+    echo "D-BUS per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS"
 fi
 
 . /etc/profile
