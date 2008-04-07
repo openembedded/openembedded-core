@@ -73,7 +73,9 @@ do_populate_sdk() {
 	done
 
 	# Remove broken .la files
-	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/lib/*.la
+	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/${layout_base_libdir}/*.la
+	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/${layout_libdir}/*.la
+	rm -f ${SDK_OUTPUT}/${prefix}/lib/*.la
 
 	# Setup site file for external use
 	siteconfig=${SDK_OUTPUT}/${prefix}/site-config
