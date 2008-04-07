@@ -9,7 +9,7 @@ SRC_URI = " \
           file://defconfig-mx31phy \
           "
 
-COMPATIBLE_MACHINE = "mx31ads mx31phy"
+COMPATIBLE_MACHINE = "(mx31ads|mx31phy)"
 
 SRC_URI_append_mx31ads = " \
           file://mx31ads-patches.tgz \
@@ -136,6 +136,7 @@ SRC_URI_append_mx31ads = " \
           file://linux-2.6.22-mx-CR-ENGR00053563-Fix-Sahara-Issue-For-MX27.patch;patch=1 \
           "
 SRC_URI_append_mx31phy = " \
+        file://mx31phy-patches.tgz \
         file://linux-2.6.22-mx-arch_arm.patch;patch=1 \ 
         file://linux-2.6.22-mx-arm_oprofile.patch;patch=1 \ 
         file://linux-2.6.22-mx-codetest.patch;patch=1 \ 
