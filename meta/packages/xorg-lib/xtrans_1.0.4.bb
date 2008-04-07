@@ -5,7 +5,7 @@ libraries from OS network vageries."
 PE = "1"
 PR = "r2"
 
-SRC_URI += "file://fix-missing-includepath.patch;patch=1"
+FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/xtrans"
 
 RDEPENDS_${PN}-dev = ""
 
