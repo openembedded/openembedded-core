@@ -5,7 +5,7 @@
 #
 
 valid_archs = "alpha cris ia64 \
-               x86_64,i386 \
+               x86_64 i386 x86 \
                m68knommu m68k ppc powerpc ppc64  \
 	       sparc sparc64 \
                arm  arm26 \
@@ -30,3 +30,11 @@ def map_kernel_arch(a, d):
 		bb.error("cannot map '%s' to a linux kernel architecture" % a)
 
 export ARCH = "${@map_kernel_arch(bb.data.getVar('TARGET_ARCH', d, 1), d)}"
+
+def map_uboot_arch(a, d):
+	if a == "powerpc":
+		return "ppc"
+	return a
+
+export UBOOT_ARCH = "${@map_uboot_arch(bb.data.getVar('ARCH', d, 1), d)}"
+
