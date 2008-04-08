@@ -8,6 +8,8 @@ if ( > /dev/tty0 ) 2>/dev/null; then
     vtmaster=/dev/tty0
 elif ( > /dev/vc/0 ) 2>/dev/null; then
     vtmaster=/dev/vc/0
+elif ( > /dev/console ) 2>/dev/null; then
+    vtmaster=/dev/console
 else
     vtmaster=/dev/null
 fi
