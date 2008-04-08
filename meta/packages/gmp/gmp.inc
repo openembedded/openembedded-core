@@ -9,6 +9,8 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/gmp/gmp-${PV}.tar.bz2 \
 
 inherit autotools 
 
+ARM_INSTRUCTION_SET = "arm"
+
 acpaths = ""
 
 do_stage () {
