@@ -32,6 +32,8 @@ python () {
     for dep in (bb.data.getVar('EXTRA_IMAGEDEPENDS', d, True) or "").split():
         deps += " %s:do_populate_staging" % dep
     bb.data.setVarFlag('do_rootfs', 'depends', deps, d)
+
+    runtime_mapping_rename("PACKAGE_INSTALL", d)
 }
 
 #
