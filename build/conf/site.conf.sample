@@ -1,0 +1,16 @@
+#
+# local.conf covers user settings, site.conf covers site specific information
+# such as proxy server addresses and optionally any shared download location
+#
+
+# Uncomment to cause CVS to use the proxy host specified
+#CVS_PROXY_HOST = "proxy.example.com"
+#CVS_PROXY_PORT = "81"
+
+# Uncomment to cause git to use the proxy host specificed
+#GIT_PROXY_HOST = "proxy.example.com"
+#GIT_PROXY_PORT = "81"
+#export GIT_PROXY_COMMAND = "${OEROOT}/scripts/poky-git-proxy-command"
+
+# Uncomment this to use a shared download directory
+#DL_DIR = "/some/shared/download/directory/"
