@@ -1,7 +1,7 @@
 HOMEPAGE = "http://www.x.org"
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
-DEPENDS = "util-macros xorg-headers-native"
+DEPENDS = "util-macros"
 
 XORG_PN = "${PN}"
 
