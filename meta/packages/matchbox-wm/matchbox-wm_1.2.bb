@@ -2,7 +2,7 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxcomposite libxfixes xdamage libxrender startup-notification expat"
-PR="r3"
+PR = "r4"
 
 SRC_URI = "http://matchbox-project.org/sources/matchbox-window-manager/1.2/matchbox-window-manager-${PV}.tar.bz2 \
            file://configure_fix.patch;patch=1 \
@@ -25,7 +25,12 @@ ALTERNATIVE_LINK = "${bindir}/x-session-manager"
 ALTERNATIVE_PATH = "${bindir}/matchbox-session"
 ALTERNATIVE_PRIORITY = "10"
 
-EXTRA_OECONF = " --enable-startup-notification --disable-xrm --with-expat-lib=${STAGING_LIBDIR} --with-expat-includes=${STAGING_INCDIR}"
+EXTRA_OECONF = " --enable-startup-notification \
+                 --disable-xrm \
+                 --enable-expat \
+                 --with-expat-lib=${STAGING_LIBDIR} \
+                 --with-expat-includes=${STAGING_INCDIR}"
+
 
 do_configure_prepend () {
         cp ${WORKDIR}/gconf-2.m4 ${S}/

@@ -3,10 +3,17 @@ LICENSE = "GPL"
 SECTION = "x11"
 RDEPENDS = "formfactor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2 matchbox-desktop-sato initscripts"
 RCONFLICTS = "matchbox-common"
-PR = "r20"
+PR = "r21"
 
 SRC_URI = "file://etc file://matchbox-session"
 S = ${WORKDIR}
+
+inherit update-alternatives
+
+ALTERNATIVE_NAME = "x-session-manager"
+ALTERNATIVE_LINK = "${bindir}/x-session-manager"
+ALTERNATIVE_PATH = "${bindir}/matchbox-session"
+ALTERNATIVE_PRIORITY = "10"
 
 do_install() {
 	install -d ${D}/${bindir}
