@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r21"
+PR = "r22"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -60,6 +60,7 @@ RDEPENDS_task-poky-x11-base = "\
     matchbox-keyboard-im \
     matchbox-panel-2 \
     matchbox-desktop \
+    matchbox-session \
     ${XSERVER} \
     xserver-kdrive-common \
     xserver-nodm-init \
