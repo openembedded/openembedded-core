@@ -1,6 +1,6 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
-PR = "r7"
+PR = "r8"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
@@ -33,7 +33,6 @@ SRC_URI = "\
     file://fix_segfault.patch;patch=1 \
     file://writev_fix.patch;patch=1 \
     file://configure_symlinkpath_fix.patch;patch=1 \
-    file://disable-error-in-configure.patch;patch=1 \
     file://no-strip.patch;patch=1"
 
 S = "${WORKDIR}/qemu-${PV}"
@@ -45,5 +44,5 @@ EXTRA_OECONF += "--disable-gfx-check"
 inherit autotools
 
 do_configure() {
-    oe_runconf
+    ${S}/configure --prefix=${prefix} ${EXTRA_OECONF}
 }
