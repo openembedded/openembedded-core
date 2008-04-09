@@ -2,7 +2,7 @@ DESCRIPTION = "Custom MB session files for poky"
 LICENSE = "GPL"
 SECTION = "x11"
 RDEPENDS = "formfactor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2 matchbox-desktop-sato initscripts matchbox-session"
-PR = "r22"
+PR = "r23"
 
 SRC_URI = "file://session"
 S = "${WORKDIR}"
@@ -12,7 +12,7 @@ do_install() {
 	install -m 0755 ${S}/session ${D}/${sysconfdir}/matchbox/
 }
 
-pkg_postinst_matchbox-sato () {
+pkg_postinst_${PN} () {
 #!/bin/sh -e
 if [ "x$D" != "x" ]; then
     exit 1
