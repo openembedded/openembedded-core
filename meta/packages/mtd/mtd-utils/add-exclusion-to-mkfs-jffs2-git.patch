@@ -1,26 +1,29 @@
 ---
- mkfs.jffs2.c |   45 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 3 deletions(-)
+ mkfs.jffs2.c |   44 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 42 insertions(+), 2 deletions(-)
 
-Index: git/mkfs.jffs2.c
-===================================================================
---- git.orig/mkfs.jffs2.c	2007-01-23 15:42:34.000000000 +0000
-+++ git/mkfs.jffs2.c	2007-01-23 15:46:08.000000000 +0000
-@@ -97,7 +97,12 @@ struct filesystem_entry {
+--- git.orig/mkfs.jffs2.c
++++ git/mkfs.jffs2.c
+@@ -98,10 +98,16 @@ struct filesystem_entry {
+ 	struct filesystem_entry *next;	/* Only relevant to non-directories */
  	struct filesystem_entry *files;	/* Only relevant to directories */
+ 	struct rb_node hardlink_rb;
  };
  
--
 +struct ignorepath_entry {
 +	struct ignorepath_entry* next;	/* Points to the next ignorepath element */
 +	char name[PATH_MAX];		/* Name of the entry */
 +};
-+ 
++
 +static struct ignorepath_entry* ignorepath = 0;
+ struct rb_root hardlinks;
  static int out_fd = -1;
  static int in_fd = -1;
  static char default_rootdir[] = ".";
-@@ -372,7 +377,7 @@ static struct filesystem_entry *recursiv
+ static char *rootdir = default_rootdir;
+@@ -404,19 +410,28 @@ static struct filesystem_entry *recursiv
+ 	int i, n;
+ 	struct stat sb;
  	char *hpath, *tpath;
  	struct dirent *dp, **namelist;
  	struct filesystem_entry *entry;
@@ -29,7 +32,8 @@ Index: git/mkfs.jffs2.c
  
  	if (lstat(hostpath, &sb)) {
  		perror_msg_and_die("%s", hostpath);
-@@ -381,6 +386,15 @@ static struct filesystem_entry *recursiv
+ 	}
+ 
  	entry = add_host_filesystem_entry(targetpath, hostpath,
  			sb.st_uid, sb.st_gid, sb.st_mode, 0, parent);
  
@@ -45,7 +49,11 @@ Index: git/mkfs.jffs2.c
  	n = scandir(hostpath, &namelist, 0, alphasort);
  	if (n < 0) {
  		perror_msg_and_die("opening directory %s", hostpath);
-@@ -1405,6 +1419,7 @@ static struct option long_options[] = {
+ 	}
+ 
+@@ -1446,10 +1461,11 @@ static void create_target_filesystem(str
+ static struct option long_options[] = {
+ 	{"pad", 2, NULL, 'p'},
  	{"root", 1, NULL, 'r'},
  	{"pagesize", 1, NULL, 's'},
  	{"eraseblock", 1, NULL, 'e'},
@@ -53,7 +61,11 @@ Index: git/mkfs.jffs2.c
  	{"output", 1, NULL, 'o'},
  	{"help", 0, NULL, 'h'},
  	{"verbose", 0, NULL, 'v'},
-@@ -1452,6 +1467,7 @@ static char *helptext =
+ 	{"version", 0, NULL, 'V'},
+ 	{"big-endian", 0, NULL, 'b'},
+@@ -1493,10 +1509,11 @@ static char *helptext =
+ "  -y, --compressor-priority=PRIORITY:COMPRESSOR_NAME\n"
+ "                          Set the priority of a compressor\n"
  "  -L, --list-compressors  Show the list of the avaiable compressors\n"
  "  -t, --test-compression  Call decompress and compare with the original (for test)\n"
  "  -n, --no-cleanmarkers   Don't add a cleanmarker to every eraseblock\n"
@@ -61,22 +73,36 @@ Index: git/mkfs.jffs2.c
  "  -o, --output=FILE       Output to FILE (default: stdout)\n"
  "  -l, --little-endian     Create a little-endian filesystem\n"
  "  -b, --big-endian        Create a big-endian filesystem\n"
-@@ -1617,11 +1633,12 @@ int main(int argc, char **argv)
+ "  -D, --devtable=FILE     Use the named FILE as a device table file\n"
+ "  -f, --faketime          Change all file times to '0' for regression testing\n"
+@@ -1659,21 +1676,22 @@ int main(int argc, char **argv)
+ 	FILE *devtable = NULL;
  	struct filesystem_entry *root;
  	char *compr_name = NULL;
  	int compr_prior  = -1;
-+	struct ignorepath_entry* element = ignorepath;
+ 	int warn_page_size = 0;
++ 	struct ignorepath_entry* element = ignorepath;
  
  	jffs2_compressors_init();
  
+ 	page_size = sysconf(_SC_PAGESIZE);
+ 	if (page_size < 0) /* System doesn't know so ... */
+ 		page_size = 4096; /* ... we make an educated guess */
+ 	if (page_size != 4096)
+ 		warn_page_size = 1; /* warn user if page size not 4096 */
+ 
  	while ((opt = getopt_long(argc, argv,
 -					"D:d:r:s:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
-+					"D:d:r:s:I:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
++  					"D:d:r:s:I:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
  	{
  		switch (opt) {
  			case 'D':
-@@ -1644,6 +1661,28 @@ int main(int argc, char **argv)
+ 				devtable = xfopen(optarg, "r");
+ 				if (fstat(fileno(devtable), &sb) < 0)
+@@ -1693,10 +1711,32 @@ int main(int argc, char **argv)
+ 			case 's':
  				page_size = strtol(optarg, NULL, 0);
+ 				warn_page_size = 0; /* set by user, so don't need to warn */
  				break;
  
 +			case 'I':
@@ -104,3 +130,5 @@ Index: git/mkfs.jffs2.c
  			case 'o':
  				if (out_fd != -1) {
  					error_msg_and_die("output filename specified more than once");
+ 				}
+ 				out_fd = open(optarg, O_CREAT | O_TRUNC | O_RDWR, 0644);

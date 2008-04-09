@@ -3,10 +3,10 @@ SECTION = "base"
 DEPENDS = "zlib lzo"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
-PR = "r6"
 
-SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=2a032bca585e27ceb0f293905718b416bc297ce2 \
+SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=e6088d987c545d60a86e1f44836ab8ba072fffd9 \
            file://add-exclusion-to-mkfs-jffs2-git.patch;patch=1 \
+	   file://remove-ubi.patch;patch=1 \
 	   file://fix-ignoreerrors-git.patch;patch=1"
 
 S = "${WORKDIR}/git/"
@@ -24,12 +24,11 @@ do_stage () {
 }
 
 mtd_utils = "ftl_format flash_erase flash_eraseall nanddump doc_loadbios \
-             mkfs.jffs ftl_check mkfs.jffs2 flash_lock flash_unlock flash_info mtd_debug \
+             ftl_check mkfs.jffs2 flash_lock flash_unlock flash_info mtd_debug \
              flashcp nandwrite jffs2dump sumtool"
 
 do_install () {
-	install -d ${D}${bindir}
-	for binary in ${mtd_utils}; do
-		install -m 0755 $binary ${D}${bindir}
-	done
+	oe_runmake install DESTDIR=${D}
 }
+
+PARALLEL_MAKE = ""
