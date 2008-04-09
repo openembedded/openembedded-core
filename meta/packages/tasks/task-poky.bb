@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r22"
+PR = "r23"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -99,7 +99,7 @@ RDEPENDS_task-poky-apps-x11-pimlico = "\
 
 RDEPENDS_task-poky-x11-sato = "\
     matchbox-desktop \
-    matchbox-sato \
+    matchbox-session-sato \
     matchbox-keyboard \
     matchbox-stroke \
     matchbox-config-gtk \
