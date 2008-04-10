@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.9.1+cvs${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 DEFAULT_PREFERENCE = "-1"
 FILESDIR = "${WORKDIR}"
@@ -31,7 +31,8 @@ SRC_URI = "\
     file://qemu-amd64-32b-mapping-0.9.0.patch;patch=1 \
     file://workaround_bad_futex_headers.patch;patch=1 \
     file://fix_segfault.patch;patch=1 \
-    file://no-strip.patch;patch=1"
+    file://no-strip.patch;patch=1 \
+    file://qemu-n800-support.patch;patch=1"
 
 S = "${WORKDIR}/qemu"
 
