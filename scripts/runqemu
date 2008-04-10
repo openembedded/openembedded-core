@@ -45,6 +45,9 @@ else
     if [ "$MACHINE" = "akita" ]; then
         TYPE="jffs2"
     fi
+    if [ "$MACHINE" = "nokia800" ]; then
+        TYPE="jffs2"
+    fi
     if [ "$MACHINE" = "spitz" ]; then
         TYPE="ext3"
     fi
@@ -58,7 +61,7 @@ if [ "x$4" != "x" ]; then
     HDIMAGE=$4
 fi
 
-if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" ]; then
+if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" -o "$MACHINE" = "nokia800" ]; then
     if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-$MACHINE.bin
     fi
@@ -95,6 +98,15 @@ if [ "$MACHINE" = "akita" ]; then
         fi
     fi
 fi
+
+if [ "$MACHINE" = "nokia800" ]; then
+    if [ "$TYPE" = "jffs2" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+           HDIMAGE=$BUILDDIR/tmp/deploy/images/poky-image-sato-nokia800.jffs2
+        fi
+    fi
+fi
+
 
 if [ "$MACHINE" = "qemux86" ]; then
     if [ "x$ZIMAGE" = "x" ]; then

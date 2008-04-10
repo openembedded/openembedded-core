@@ -30,15 +30,15 @@
 #   HDIMAGE - the disk image file to use
 #
 
+if [ -z "$QEMU_MEMORY" ]; then
+    QEMU_MEMORY="64M"
+fi
+
 QEMUIFUP=`which poky-qemu-ifup`
 QEMUIFDOWN=`which poky-qemu-ifdown`
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
 QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$QEMUIFUP,downscript=$QEMUIFDOWN"
 KERNCMDLINE="mem=$QEMU_MEMORY"
-
-if [ -z "$QEMU_MEMORY" ]; then
-    QEMU_MEMORY="64M"
-fi
 
 SERIALOPTS=""
 if [ "x$SERIAL_LOGFILE" != "x" ]; then
@@ -50,6 +50,7 @@ case "$MACHINE" in
 	"qemux86") ;;
 	"akita") ;;
 	"spitz") ;;
+	"nokia800") ;;
 	*)
 		echo "Error: Unsupported machine type $MACHINE"
 		return
@@ -130,13 +131,39 @@ if [ "$MACHINE" = "akita" ]; then
     fi
 fi
 
+if [ "$MACHINE" = "nokia800" ]; then
+    QEMU=qemu-system-arm
+    if [ "$TYPE" = "jffs2" ]; then
+        HDIMAGE=`readlink -f $HDIMAGE`
+        if [ ! -e "$HDIMAGE.qemuflash" ]; then
+            #if [ ! -e "$HDIMAGE.initfs" ]; then
+            #    echo "Error, $HDIMAGE.initfs must exist!"
+            #    return
+            #fi
+            #if [ ! -e "$HDIMAGE.config" ]; then
+            #    echo "Error, $HDIMAGE.config must exist!"
+            #    return
+            #fi
+            #echo "'Flashing' config partition, please wait..."
+            #poky-nokia800-flashutil $HDIMAGE.config $HDIMAGE.qemuflash config
+            #echo "'Flashing' initfs, please wait..."
+            #poky-nokia800-flashutil $HDIMAGE.initfs $HDIMAGE.qemuflash initfs
+            echo "'Flashing' rootfs, please wait..."
+            poky-nokia800-flashutil $HDIMAGE $HDIMAGE.qemuflash 
+        fi
+	KERNCMDLINE="root=/dev/mtdblock4 rootfstype=jffs2"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M n800 -mtdblock $HDIMAGE.qemuflash -serial vc -m 130 -serial vc -serial vc -serial vc"
+    fi
+fi
+
+
 if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Error: Unable to support this combination of options"
     return
 fi
 
 SDKDIR="/usr/local/poky/eabi-glibc"
-if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" ]; then
+if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" -o "$MACHINE" = "nokia800" ]; then
     SDKPATH="$SDKDIR/arm/arm-poky-linux-gnueabi/bin:$SDKDIR/arm/bin"
 fi
 
