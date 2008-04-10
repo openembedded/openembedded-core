@@ -45,6 +45,9 @@ else
     if [ "$MACHINE" = "spitz" ]; then
         TYPE="ext3"
     fi
+    if [ "$MACHINE" = "nokia800" ]; then
+        TYPE="jffs2"
+    fi
     HDIMAGE=$2
 fi
 
