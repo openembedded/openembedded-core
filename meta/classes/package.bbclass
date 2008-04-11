@@ -657,6 +657,7 @@ python package_do_shlibs() {
 		for root, dirs, files in os.walk(top):
 			for file in files:
 				soname = None
+				path = os.path.join(root, file)
 				if targetos == "darwin":
 					darwin_so(root, dirs, file)
 				elif os.access(path, os.X_OK) or lib_re.match(file):
