@@ -1,7 +1,7 @@
 require libtool.inc
 require libtool_${PV}.bb
 
-PR = "r10"
+PR = "r11"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://libdir-la.patch;patch=1 \
@@ -11,6 +11,13 @@ SRC_URI_append = " file://libdir-la.patch;patch=1 \
                    file://install-path-check.patch;patch=1 \
 		   file://nmedit_fix.patch;patch=1 \
 		   file://nousrlib.patch;patch=1"
+
+DOLT_PATCH = ""
+DOLT_PATCH_arm = " file://add_dolt.patch;patch=1"
+DOLT_PATCH_i586 = " file://add_dolt.patch;patch=1"
+
+SRC_URI_append_linux = "${DOLT_PATCH}"
+SRC_URI_append_linux-gnueabi = "${DOLT_PATCH}"
 
 S = "${WORKDIR}/libtool-${PV}"
 
@@ -41,6 +48,7 @@ do_stage () {
         install -c -m 0644 ltmain.sh ${STAGING_DATADIR}/libtool/
         install -c -m 0644 libtool.m4 ${STAGING_DATADIR}/aclocal/
         install -c -m 0644 ltdl.m4 ${STAGING_DATADIR}/aclocal/
+        install -c -m 0644 ${WORKDIR}/dolt.m4 ${STAGING_DATADIR}/aclocal/
 }
 
 do_install () {
