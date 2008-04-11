@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r23"
+PR = "r24"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -86,7 +86,6 @@ WEB = "web-webkit"
 # List here for now...
 WEB_c7x0 = ""
 WEB_mx31ads = ""
-WEB_mx31phy = ""
 
 RDEPENDS_task-poky-apps-x11-pimlico = "\
     eds-dbus \
