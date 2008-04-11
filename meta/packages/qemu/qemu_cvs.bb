@@ -3,6 +3,7 @@ DEPENDS = "zlib"
 PV = "0.9.1+cvs${SRCDATE}"
 PR = "r2"
 
+FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = "\
