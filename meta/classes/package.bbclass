@@ -547,6 +547,7 @@ python package_do_shlibs() {
 	libdir_re = re.compile(".*/lib$")
 
 	packages = bb.data.getVar('PACKAGES', d, 1)
+	targetos = bb.data.getVar('TARGET_OS', d, 1)
 
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	if not workdir:
@@ -567,6 +568,83 @@ python package_do_shlibs() {
 	if pstageactive == "1":
 		lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
 
+	def linux_so(root, path, file):
+		cmd = bb.data.getVar('OBJDUMP', d, 1) + " -p " + os.path.join(root, file) + " 2>/dev/null"
+		cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', d, 1), cmd)
+		fd = os.popen(cmd)
+		lines = fd.readlines()
+		fd.close()
+		for l in lines:
+			m = re.match("\s+NEEDED\s+([^\s]*)", l)
+			if m:
+				needed[pkg].append(m.group(1))
+			m = re.match("\s+SONAME\s+([^\s]*)", l)
+			if m and not m.group(1) in sonames:
+				# if library is private (only used by package) then do not build shlib for it
+				if not private_libs or -1 == private_libs.find(m.group(1)):
+					sonames.append(m.group(1))
+			if m and libdir_re.match(root):
+				needs_ldconfig = True
+	def darwin_so(root, path, file):
+		fullpath = os.path.join(root, file)
+		if not os.path.exists(fullpath):
+			return
+
+		def get_combinations(base):
+			#
+			# Given a base library name, find all combinations of this split by "." and "-"
+			#
+			combos = []
+			options = base.split(".")
+			for i in range(1, len(options) + 1):
+				combos.append(".".join(options[0:i]))
+			options = base.split("-")
+			for i in range(1, len(options) + 1):
+				combos.append("-".join(options[0:i]))
+			return combos		
+
+		if (file.endswith('.dylib') or file.endswith('.so')) and not pkg.endswith('-dev') and not pkg.endswith('-dbg'):
+			# Drop suffix
+			name = file.rsplit(".",1)[0]
+			# Find all combinations
+			combos = get_combinations(name)
+			for combo in combos:
+				if not combo in sonames:
+					sonames.append(combo)
+		if file.endswith('.dylib') or file.endswith('.so'):
+			lafile = fullpath.replace(os.path.join(pkgdest, pkg), bb.data.getVar('D', d, 1))
+			# Drop suffix
+			lafile = lafile.rsplit(".",1)[0]
+			lapath = os.path.dirname(lafile)
+			lafile = os.path.basename(lafile)
+			# Find all combinations
+			combos = get_combinations(lafile)
+			for combo in combos:
+				if os.path.exists(lapath + '/' + combo + '.la'):
+					break
+			lafile = lapath + '/' + combo + '.la'
+
+			#bb.note("Foo2: %s" % lafile)
+			#bb.note("Foo %s %s" % (file, fullpath))
+			fd = open(lafile, 'r')
+			lines = fd.readlines()
+			fd.close()
+			for l in lines:
+				m = re.match("\s*dependency_libs=\s*'(.*)'", l)
+				if m:
+					deps = m.group(1).split(" ")
+					for dep in deps:
+						#bb.note("Trying %s for %s" % (dep, pkg))
+						name = None
+						if dep.endswith(".la"):
+							name = os.path.basename(dep).replace(".la", "")
+						elif dep.startswith("-l"):
+							name = dep.replace("-l", "lib")
+						if pkg not in needed:
+							needed[pkg] = []
+						if name:
+							needed[pkg].append(name)
+							#bb.note("Adding %s for %s" % (name, pkg))
 	needed = {}
 	private_libs = bb.data.getVar('PRIVATE_LIBS', d, 1)
 	for pkg in packages.split():
@@ -579,24 +657,10 @@ python package_do_shlibs() {
 		for root, dirs, files in os.walk(top):
 			for file in files:
 				soname = None
-				path = os.path.join(root, file)
-				if os.access(path, os.X_OK) or lib_re.match(file):
-					cmd = bb.data.getVar('OBJDUMP', d, 1) + " -p " + path + " 2>/dev/null"
-					cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', d, 1), cmd)
-					fd = os.popen(cmd)
-					lines = fd.readlines()
-					fd.close()
-					for l in lines:
-						m = re.match("\s+NEEDED\s+([^\s]*)", l)
-						if m:
-							needed[pkg].append(m.group(1))
-						m = re.match("\s+SONAME\s+([^\s]*)", l)
-						if m and not m.group(1) in sonames:
-							# if library is private (only used by package) then do not build shlib for it
-							if not private_libs or -1 == private_libs.find(m.group(1)):
-								sonames.append(m.group(1))
-						if m and libdir_re.match(root):
-							needs_ldconfig = True
+				if targetos == "darwin":
+					darwin_so(root, dirs, file)
+				elif os.access(path, os.X_OK) or lib_re.match(file):
+					linux_so(root, dirs, file)
 		shlibs_file = os.path.join(shlibs_dir, pkg + ".list")
 		if os.path.exists(shlibs_file):
 			os.remove(shlibs_file)
