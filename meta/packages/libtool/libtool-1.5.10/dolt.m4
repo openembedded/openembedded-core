@@ -125,6 +125,5 @@ dnl Done writing out doltcompile; substitute it for libtool compilation.
     AC_SUBST(LTCOMPILE)
     LTCXXCOMPILE='$(top_builddir)/doltcompile $(CXXCOMPILE)'
     AC_SUBST(LTCXXCOMPILE)
-fi
 # end dolt
 ])
