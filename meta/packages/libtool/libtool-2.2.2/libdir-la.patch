@@ -1,0 +1,56 @@
+Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
+===================================================================
+--- libtool-2.2.2.orig/libltdl/config/ltmain.m4sh	2008-04-02 01:20:54.000000000 +0100
++++ libtool-2.2.2/libltdl/config/ltmain.m4sh	2008-04-13 22:32:15.000000000 +0100
+@@ -4453,8 +4453,14 @@
+ 	    absdir="$abs_ladir"
+ 	    libdir="$abs_ladir"
+ 	  else
+-	    dir="$libdir"
+-	    absdir="$libdir"
++            # Adding 'libdir' from the .la file to our library search paths
++            # breaks crosscompilation horribly.  We cheat here and don't add
++            # it, instead adding the path where we found the .la.  -CL
++	    dir="$abs_ladir"
++	    absdir="$abs_ladir"
++	    libdir="$abs_ladir"
++	    #dir="$libdir"
++	    #absdir="$libdir"
+ 	  fi
+ 	  test "X$hardcode_automatic" = Xyes && avoidtemprpath=yes
+ 	else
+@@ -4973,10 +4979,22 @@
+ 		  fi
+ 		  ;;
+ 		*)
+-		  path="-L$absdir/$objdir"
++                  # OE sets installed=no in staging. We need to look in $objdir and $absdir, 
++                  # preferring $objdir. RP 31/04/2008
++                  if test -f "$absdir/$objdir/$depdepl" ; then
++		    depdepl="$absdir/$objdir/$depdepl"
++		    path="-L$absdir/$objdir"
++                  elif test -f "$absdir/$depdepl" ; then
++		    depdepl="$absdir/$depdepl"
++		    path="-L$absdir"
++                  else
++		    path="-L$absdir/$objdir"
++                  fi
+ 		  ;;
+ 		esac
+ 		else
++                  # This would break cross compiling if we didn't change to installed=no in 
++                  # staging. RP 31/04/2008
+ 		  eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+ 		  test -z "$libdir" && \
+ 		    func_fatal_error "\`$deplib' is not a valid libtool archive"
+@@ -7046,6 +7064,10 @@
+ 	    # Replace all uninstalled libtool libraries with the installed ones
+ 	    newdependency_libs=
+ 	    for deplib in $dependency_libs; do
++              # Replacing uninstalled with installed can easily break crosscompilation,
++              # since the installed path is generally the wrong architecture.  -CL
++              newdependency_libs="$newdependency_libs $deplib"
++              continue
+ 	      case $deplib in
+ 	      *.la)
+ 		func_basename "$deplib"

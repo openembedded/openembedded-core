@@ -1,0 +1,100 @@
+Index: libtool-2.2.2/libltdl/m4/libtool.m4
+===================================================================
+--- libtool-2.2.2.orig/libltdl/m4/libtool.m4	2008-04-13 22:43:05.000000000 +0100
++++ libtool-2.2.2/libltdl/m4/libtool.m4	2008-04-13 22:43:05.000000000 +0100
+@@ -89,7 +89,8 @@
+ LIBTOOL_DEPS="$ltmain"
+ 
+ # Always use our own libtool.
+-LIBTOOL='$(SHELL) $(top_builddir)/libtool'
++LIBTOOL='$(SHELL) $(top_builddir)'
++LIBTOOL="$LIBTOOL/$host_alias-libtool"
+ AC_SUBST(LIBTOOL)dnl
+ 
+ _LT_SETUP
+@@ -211,7 +212,7 @@
+ no_glob_subst='s/\*/\\\*/g'
+ 
+ # Global variables:
+-ofile=libtool
++ofile=${host_alias}-libtool
+ can_build_shared=yes
+ 
+ # All known linkers require a `.a' archive for static linking (except MSVC,
+Index: libtool-2.2.2/Makefile.am
+===================================================================
+--- libtool-2.2.2.orig/Makefile.am	2008-04-01 19:06:08.000000000 +0100
++++ libtool-2.2.2/Makefile.am	2008-04-13 22:49:17.000000000 +0100
+@@ -31,7 +31,7 @@
+ DIST_SUBDIRS		= .
+ EXTRA_DIST		=
+ 
+-BUILT_SOURCES		= libtool
++BUILT_SOURCES		= $(host_alias)-libtool
+ 
+ CLEANFILES		=
+ MOSTLYCLEANFILES	=
+@@ -64,7 +64,7 @@
+ ## ---------------- ##
+ 
+ # The libtool distributor and the standalone libtool script.
+-bin_SCRIPTS = libtoolize libtool
++bin_SCRIPTS = libtoolize $(host_alias)-libtool
+ 
+ libtoolize: $(srcdir)/libtoolize.in $(top_builddir)/config.status
+ 	rm -f libtoolize.tmp libtoolize
+@@ -90,8 +90,8 @@
+ # We used to do this with a 'stamp-vcl' file, but non-gmake builds
+ # would rerun configure on every invocation, so now we manually
+ # check the version numbers from the build rule when necessary.
+-libtool: $(top_builddir)/config.status $(srcdir)/$(auxdir)/ltmain.sh ChangeLog
+-	@target=libtool; $(rebuild); \
++$(host_alias)-libtool: $(top_builddir)/config.status $(srcdir)/$(auxdir)/ltmain.sh ChangeLog
++	@target=$(host_alias)-libtool; $(rebuild); \
+ 	if test -f "$$target"; then \
+ 	  set dummy `./$$target --version | sed 1q`; actualver="$$5"; \
+ 	  test "$$actualver" = "$$correctver" && rebuild=false; \
+@@ -100,8 +100,8 @@
+ 	  case $$prereq in *ChangeLog);; *) rebuild=:;; esac; \
+ 	done; \
+ 	if $$rebuild; then \
+-	  echo $(SHELL) ./config.status $$target; \
+-	  cd $(top_builddir) && $(SHELL) ./config.status $$target; \
++	  echo $(SHELL) ./config.status libtool; \
++	  cd $(top_builddir) && $(SHELL) ./config.status libtool; \
+ 	fi
+ 
+ .PHONY: configure-subdirs
+@@ -145,7 +145,7 @@
+ 		  ChangeLog.1999 ChangeLog.2000 ChangeLog.2001 \
+ 		  ChangeLog.2002 ChangeLog.2003 ChangeLog.2004 \
+ 		  ChangeLog.2005 ChangeLog.2006 ChangeLog.2007
+-CLEANFILES     += libtool libtoolize libtoolize.tmp \
++CLEANFILES     += $(host_alias)-libtool libtoolize libtoolize.tmp \
+ 		  $(auxdir)/ltmain.tmp $(m4dir)/ltversion.tmp
+ 
+ ## We build ltversion.m4 here, instead of from config.status,
+@@ -483,12 +483,12 @@
+ 
+ BUILDCHECK_ENVIRONMENT = _lt_pkgdatadir="$(abs_top_srcdir)" \
+ 	LIBTOOLIZE="$(abs_top_builddir)/libtoolize" \
+-	LIBTOOL="$(abs_top_builddir)/libtool" \
++	LIBTOOL="$(abs_top_builddir)/$(host_alias)-libtool" \
+ 	tst_aclocaldir="$(abs_top_srcdir)/libltdl/m4"
+ 
+ INSTALLCHECK_ENVIRONMENT = \
+ 	LIBTOOLIZE="$(bindir)/`echo libtoolize | sed '$(program_transform_name)'`" \
+-	LIBTOOL="$(bindir)/`echo libtool | sed '$(program_transform_name)'`" \
++	LIBTOOL="$(bindir)/`echo $(host_alias)-libtool | sed '$(program_transform_name)'`" \
+ 	LTDLINCL="-I$(includedir)" \
+ 	LIBLTDL="$(libdir)/libltdl.la" \
+ 	tst_aclocaldir="$(aclocaldir)"
+@@ -620,7 +620,7 @@
+ TESTS += $(FC_TESTS)
+ endif
+ 
+-tests/demo-conf.test: libtool
++tests/demo-conf.test: $(host_alias)-libtool
+ 
+ EXTRA_DIST     += $(srcdir)/tests/defs.in tests/defs.m4sh \
+ 		  $(COMMON_TESTS) $(CXX_TESTS) $(F77_TESTS) $(FC_TESTS)
