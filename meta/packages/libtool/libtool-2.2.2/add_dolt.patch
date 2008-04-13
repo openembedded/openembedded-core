@@ -1,15 +1,12 @@
-Index: libtool-1.5.10/libtool.m4
+Index: libtool-2.2.2/libltdl/m4/libtool.m4
 ===================================================================
---- libtool-1.5.10.orig/libtool.m4	2008-04-10 16:08:19.000000000 +0100
-+++ libtool-1.5.10/libtool.m4	2008-04-10 16:08:44.000000000 +0100
-@@ -67,7 +67,9 @@
-        ifdef([LT_AC_PROG_GCJ],
- 	     [define([LT_AC_PROG_GCJ],
- 		defn([LT_AC_PROG_GCJ])[AC_LIBTOOL_GCJ])])])])
--])])# AC_PROG_LIBTOOL
-+])
+--- libtool-2.2.2.orig/libltdl/m4/libtool.m4	2008-04-13 22:40:30.000000000 +0100
++++ libtool-2.2.2/libltdl/m4/libtool.m4	2008-04-13 23:38:45.000000000 +0100
+@@ -97,6 +97,7 @@
+ 
+ # Only expand once:
+ m4_define([LT_INIT])
 +DOLT
-+])# AC_PROG_LIBTOOL
+ ])# LT_INIT
  
- 
- # _AC_PROG_LIBTOOL
+ # Old names:
