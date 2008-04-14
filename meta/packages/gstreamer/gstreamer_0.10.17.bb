@@ -18,6 +18,11 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz
 #           file://gstreamer-0.9-binary-registry.patch;patch=1"
 EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind --disable-debug"
 
+do_configure_prepend() {
+	# This m4 file contains nastiness which conflicts with libtool 2.2.2
+	rm ${S}/common/m4/lib-link.m4 || true
+}
+
 #do_compile_prepend () {
 #	mv ${WORKDIR}/gstregistrybinary.[ch] ${S}/gst/
 #}
