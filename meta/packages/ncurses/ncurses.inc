@@ -20,6 +20,7 @@ FILES_${PN} = "${bindir}/tput ${bindir}/tset ${libdir}/lib*.so.* usr/share/tabse
 PARALLEL_MAKE=""
 
 EXTRA_OECONF = "--with-shared \
+                --with-libtool \
 	        --without-profile \
 	        --without-debug \
 	        --disable-rpath \
