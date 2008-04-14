@@ -7,7 +7,7 @@ LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS += "gtk-doc-native"
-PR="r2"
+PR = "r3"
 
 SRC_URI = "http://download.gnome.org/sources/glib/2.16/glib-${PV}.tar.bz2 \
            file://glib-gettextize-dir.patch;patch=1 \
