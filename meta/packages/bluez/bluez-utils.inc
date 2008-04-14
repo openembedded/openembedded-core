@@ -29,7 +29,12 @@ do_install_append() {
 	rmdir ${D}${bindir} ${D}${sbindir}
 	chmod u+s ${D}${base_sbindir}/hciattach ${D}${base_sbindir}/hciconfig
 	install -m 0644 ${WORKDIR}/hcid.conf ${D}${sysconfdir}/bluetooth/
-        install -m 0755 ${S}/daemon/.libs/passkey-agent ${D}${base_bindir}/
+	# libtool 2.2.2 doesn't put this in a .libs directory
+	if [ -e  ${S}/daemon/.libs/passkey-agent ]; then
+	        install -m 0755 ${S}/daemon/.libs/passkey-agent ${D}${base_bindir}/
+	else
+	        install -m 0755 ${S}/daemon/passkey-agent ${D}${base_bindir}/	
+	fi
 }
 
 PACKAGES =+ "${PN}-alsa ${PN}-alsa-dev gst-plugin-bluez gst-plugin-bluez-dbg"
