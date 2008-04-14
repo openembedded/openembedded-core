@@ -1,0 +1,17 @@
+For some reason libtool 2.2.2 can't cope with this, LT_LANG(C++) works though.
+
+RP - 14/4/08
+
+Index: libusb-0.1.12/configure.in
+===================================================================
+--- libusb-0.1.12.orig/configure.in	2008-04-14 22:08:26.000000000 +0100
++++ libusb-0.1.12/configure.in	2008-04-14 22:09:43.000000000 +0100
+@@ -149,7 +149,7 @@
+ fi
+ 
+ # Checks for programs.
+-AC_LANG_CPLUSPLUS
++LT_LANG(C++)
+ AC_PROG_CC
+ AM_PROG_CC_C_O
+ AC_PROG_INSTALL
