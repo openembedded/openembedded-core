@@ -4,11 +4,12 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "gstreamer zlib gst-plugins-base"
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2 \
+           file://no_beos.patch;patch=1 \
            file://configure_fix.patch;patch=1"
 
 FILES_${PN} += "${libdir}/gstreamer-0.10/*.so"
