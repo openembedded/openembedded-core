@@ -4,7 +4,7 @@ SRCREV_FORMAT = "webcore-rwebkit"
 
 # Yes, this is wrong...
 PV = "0.1+svnr${SRCREV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "\
   svn://svn.webkit.org/repository/webkit/trunk/;module=JavaScriptCore;proto=http \
@@ -27,7 +27,6 @@ inherit autotools pkgconfig
 EXTRA_OECONF = "\
                 --enable-debug=no \
                 --enable-svg \
-		--enable-svg-fonts \
                 --enable-icon-database=yes \
                "
 
