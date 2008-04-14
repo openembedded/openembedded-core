@@ -3,7 +3,7 @@ DESCRIPTION = "Mail user agent"
 #DEPENDS = "gtk+ gpgme libetpan libgnomeprint aspell openssl"
 DEPENDS = "gtk+ libetpan openssl libowl"
 LICENSE = "GPL"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "\
 	${SOURCEFORGE_MIRROR}/sylpheed-claws/claws-mail-${PV}.tar.bz2	\
@@ -41,19 +41,11 @@ CFLAGS += "-D_GNU_SOURCE"
 
 inherit autotools pkgconfig
 
-
-do_configure() {
-	gnu-configize
-	libtoolize --force
-	oe_runconf
-}
-
 do_install_append() {
 	install -d ${D}${datadir}/applications
 	install -m 0644 claws-mail.desktop ${D}${datadir}/applications/
 	install -d ${D}${datadir}/pixmaps
 	install -m 0644 claws-mail.png ${D}${datadir}/pixmaps/
-	mv ${D}${bindir}/${TARGET_SYS}-claws-mail ${D}${bindir}/${PN}
 }
 
 do_stage () {
