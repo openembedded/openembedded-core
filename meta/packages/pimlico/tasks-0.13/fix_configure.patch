@@ -1,0 +1,12 @@
+Index: tasks-0.13/configure.ac
+===================================================================
+--- tasks-0.13.orig/configure.ac	2008-04-14 19:50:29.000000000 +0100
++++ tasks-0.13/configure.ac	2008-04-14 19:50:34.000000000 +0100
+@@ -4,7 +4,6 @@
+ AC_CONFIG_HEADERS([libkoto/config.h])
+ AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+ 
+-AM_DISABLE_STATIC
+ AC_PROG_CPP
+ AC_PROG_CC
+ AM_PROG_CC_C_O
