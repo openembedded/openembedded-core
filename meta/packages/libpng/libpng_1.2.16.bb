@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.libpng.org/"
 LICENSE = "libpng"
 SECTION = "libs"
 PRIORITY = "required"
-PR = "r5"
+PR = "r6"
 
 DEPENDS = "zlib"
 
@@ -17,7 +17,8 @@ FILES_${PN}-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
 		${libdir}/*.a ${libdir}/pkgconfig \
 		${datadir}/aclocal ${bindir} ${sbindir}"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/libpng-${PV}.tar.bz2"
+SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/libpng-${PV}.tar.bz2 \
+           file://makefile_fix.patch;patch=1"
 S = "${WORKDIR}/libpng-${PV}"
 
 inherit autotools binconfig pkgconfig

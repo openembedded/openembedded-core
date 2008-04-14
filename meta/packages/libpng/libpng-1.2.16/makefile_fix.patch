@@ -1,0 +1,18 @@
+Old versions of libtool (1.5.10) used to set ECHO as a side effect. With
+libtool 2.2.2 we need to do this manually
+
+RP - 14/4/08
+
+Index: libpng-1.2.16/Makefile.am
+===================================================================
+--- libpng-1.2.16.orig/Makefile.am	2008-04-14 14:47:21.000000000 +0100
++++ libpng-1.2.16/Makefile.am	2008-04-14 14:47:47.000000000 +0100
+@@ -102,6 +102,8 @@
+ 			>$@.new
+ 	mv $@.new $@
+ 
++ECHO=echo
++
+ libpng.vers: libpng.sym
+ 	rm -f $@ $@.new
+ 	$(ECHO) PNG@PNGLIB_MAJOR@@PNGLIB_MINOR@_0 '{global:' > $@.new
