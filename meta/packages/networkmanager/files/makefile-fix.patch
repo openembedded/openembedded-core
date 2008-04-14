@@ -1,0 +1,17 @@
+This line causes libtool to try and create a program which fails since there is no
+main(). This is hidden with libtool 1.5.10 but appears with 2.2.2.
+
+RP - 14/4/08
+
+Index: trunk/src/ppp-manager/Makefile.am
+===================================================================
+--- trunk.orig/src/ppp-manager/Makefile.am	2008-04-14 23:00:54.000000000 +0100
++++ trunk/src/ppp-manager/Makefile.am	2008-04-14 23:01:24.000000000 +0100
+@@ -25,7 +25,6 @@
+ 	$(top_builddir)/src/marshallers/libmarshallers.la
+ 
+ nm_pppd_plugindir = $(libdir)
+-nm_pppd_plugin_PROGRAMS = nm-pppd-plugin.so
+ 
+ nm_pppd_plugin_so_SOURCES = \
+ 	nm-pppd-plugin.c	\
