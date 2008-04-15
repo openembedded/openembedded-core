@@ -19,7 +19,7 @@ EXTRA_OECONF = "--without-zlib"
 do_configure() {
 	cd builds/unix
 	gnu-configize
-	libtoolize
+	libtoolize --force
 	aclocal -I .
 	autoconf
 	cd ${S}
