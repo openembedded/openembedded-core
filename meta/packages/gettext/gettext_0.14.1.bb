@@ -2,12 +2,13 @@ DESCRIPTION = "The GNU internationalization library."
 HOMEPAGE = "http://www.gnu.org/software/gettext/gettext.html"
 SECTION = "libs"
 LICENSE = "GPL"
-PR = "r8"
+PR = "r10"
 PROVIDES = "virtual/libintl"
 
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://gettext-vpath.patch;patch=1;pnum=1 \
 	   file://fixchicken.patch;patch=1;pnum=1 \
+           file://linklib_from_0.17.patch;patch=1 \
            file://getline.m4.patch;patch=1 \
            file://disable_java.patch;patch=1"
 
@@ -30,4 +31,11 @@ do_configure_prepend() {
 
 do_stage () {
 	autotools_stage_all
+
+	# config.rpath is needed by some configure macros and needs to be autoinstalled.
+	# automake will do this but config.rpath needs to be visible to automake
+	for i in `ls -d ${STAGING_DATADIR}/automake*`
+	do
+		cp ${STAGING_DATADIR}/gettext/config.rpath $i
+	done
 }

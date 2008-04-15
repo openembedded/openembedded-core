@@ -50,4 +50,11 @@ do_stage_append() {
 		fi
 		install -m 0644 $src ${STAGING_DATADIR}/aclocal/$i
 	done
+
+	# config.rpath is needed by some configure macros and needs to be autoinstalled.
+	# automake will do this but config.rpath needs to be visible to automake
+	for i in `ls -d ${STAGING_DATADIR}/automake*`
+	do
+		cp ${STAGING_DATADIR}/gettext/config.rpath $i
+	done							
 }
