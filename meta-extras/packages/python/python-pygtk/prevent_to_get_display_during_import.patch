@@ -8,7 +8,7 @@ Index: pygtk-2.10.4/gtk/__init__.py
  
 -_init()
 +if not hasattr(sys.modules['__main__'], 'python_launcher_enabled'):
-+    init()
++    _init()
  
  # CAPI
  _PyGtk_API = _gtk._PyGtk_API

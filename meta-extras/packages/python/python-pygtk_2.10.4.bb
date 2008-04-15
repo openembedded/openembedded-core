@@ -6,7 +6,7 @@ RDEPENDS = "python-shell python-pycairo python-pygobject"
 PROVIDES = "python-pygtk2"
 SRCNAME = "pygtk"
 LICENSE = "LGPL"
-PR = "ml7"
+PR = "ml8"
 
 SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.10/${SRCNAME}-${PV}.tar.bz2 \
            file://fix-gtkunixprint.patch;patch=1 \
