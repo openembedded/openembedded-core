@@ -1,0 +1,14 @@
+# Breaks with libtool 2.2.2
+
+Index: libvorbis-1.0.1/examples/Makefile.am
+===================================================================
+--- libvorbis-1.0.1.orig/examples/Makefile.am	2008-04-15 17:48:52.000000000 +0100
++++ libvorbis-1.0.1/examples/Makefile.am	2008-04-15 17:48:57.000000000 +0100
+@@ -7,7 +7,6 @@
+ noinst_PROGRAMS = decoder_example encoder_example chaining_example\
+ 		vorbisfile_example seeking_example
+ 
+-LDFLAGS = -all-static
+ LDADD = ../lib/libvorbis.la
+ 
+ decoder_example_SOURCES = decoder_example.c
