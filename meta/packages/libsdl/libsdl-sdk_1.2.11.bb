@@ -26,6 +26,10 @@ EXTRA_OECONF = "--disable-static --disable-debug --disable-cdrom --enable-thread
 
 PARALLEL_MAKE = ""
 
+do_configure_prepend() {
+	cp ${WORKDIR}/acinclude.m4 ${S}/acinclude.m4
+}
+
 do_stage() {
 	autotools_stage_all
 	install -m 0644 ${S}/build/libSDLmain.a ${STAGING_LIBDIR}
