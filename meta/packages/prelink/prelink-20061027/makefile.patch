@@ -1,0 +1,14 @@
+# Hack to make this work with libtool 2.2.2
+
+Index: prelink-0.0.20061027/src/Makefile.am
+===================================================================
+--- prelink-0.0.20061027.orig/src/Makefile.am	2008-04-15 17:52:39.000000000 +0100
++++ prelink-0.0.20061027/src/Makefile.am	2008-04-15 17:52:45.000000000 +0100
+@@ -21,7 +21,6 @@
+ 		  verify.c canonicalize.c md5.c md5.h sha.c sha.h 	     \
+ 		  $(common_SOURCES) $(arch_SOURCES)
+ prelink_LDADD = @LIBGELF@
+-prelink_LDFLAGS = -all-static
+ 
+ execstack_SOURCES = execstack.c $(common_SOURCES) $(arch_SOURCES)
+ 

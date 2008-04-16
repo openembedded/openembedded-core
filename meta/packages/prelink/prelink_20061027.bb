@@ -4,11 +4,12 @@ DESCRIPTION = " The prelink package contains a utility which modifies ELF shared
 and executables, so that far fewer relocations need to be resolved at \
 runtime and thus programs come up faster."
 LICENSE = "GPL"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/p/prelink/prelink_0.0.${PV}.orig.tar.gz \
            file://prelink.conf \
            file://prelink.cron.daily \
+           file://makefile.patch;patch=1 \
            file://prelink.default"
 
 TARGET_OS_ORIG := "${TARGET_OS}"
