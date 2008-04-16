@@ -3,10 +3,10 @@ access to USB devices."
 HOMEPAGE = "http://libusb.sf.net"
 SECTION = "libs"
 LICENSE = "LGPL"
-PR = "r3"
+PR = "r5"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.gz"
-#           file://configure_fix.patch;patch=1
+SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.gz \
+           file://configure_fix.patch;patch=1"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libusb"
 
