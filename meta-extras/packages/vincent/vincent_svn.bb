@@ -3,9 +3,11 @@ HOMEPAGE = "http://sourceforge.net/projects/ogl-es/"
 LICENSE = "BSD"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=ogles;proto=http"
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=ogles;proto=http \
+           file://libtool222.patch;patch=1"
+
 S = "${WORKDIR}/ogles/"
 
 inherit autotools pkgconfig
