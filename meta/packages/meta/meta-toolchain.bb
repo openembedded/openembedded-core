@@ -91,8 +91,8 @@ do_populate_sdk() {
 	echo 'export PKG_CONFIG_SYSROOT_DIR=${prefix}/${TARGET_SYS}' >> $script
 	echo 'export PKG_CONFIG_PATH=${prefix}/${TARGET_SYS}/${layout_libdir}/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${prefix}/site-config' >> $script
-	echo "alias opkg='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${sysconfdir}/ipkg-sdk.conf -o ${prefix}'" >> $script
-	echo "alias opkg-target='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${sysconfdir}/ipkg.conf -o ${prefix}/${TARGET_SYS}'" >> $script
+	echo "alias opkg='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${sysconfdir}/opkg-sdk.conf -o ${prefix}'" >> $script
+	echo "alias opkg-target='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${sysconfdir}/opkg.conf -o ${prefix}/${TARGET_SYS}'" >> $script
 
 	# Add version information
 	versionfile=${SDK_OUTPUT}/${prefix}/version
