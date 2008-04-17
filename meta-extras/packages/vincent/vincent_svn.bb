@@ -2,7 +2,7 @@ DESCRIPTION = "Vincent OpenGL-ES library "
 HOMEPAGE = "http://sourceforge.net/projects/ogl-es/"
 LICENSE = "BSD"
 
-PV = "0.0+svn${SRCDATE}"
+PV = "0.0+svnr${SRCREV}"
 PR = "r1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=ogles;proto=http"
