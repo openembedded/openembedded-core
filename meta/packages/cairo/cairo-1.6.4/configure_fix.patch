@@ -1,0 +1,70 @@
+Libtool 2.2.2 can't cope unless the LT_ variables are marked as AC_SUBST
+as otherwise autofoo tries to expand them, fails and gets upset.
+
+You can't conditionally add AC_PROG_CXX to a configure.ac file since the
+mere mention of it triggers some internals which then get upset it if
+wasn't really called at configure time.
+
+Referring to a .cpp file in Makefiles without calling AC_PROG_CXX is
+now also a fatal error. Easiest fix is to drop the CXX stuff entirely.
+
+RP - 14/4/08
+
+---
+ boilerplate/Makefile.am |    1 -
+ configure.in            |    6 +++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+--- cairo-1.6.4.orig/boilerplate/Makefile.am
++++ cairo-1.6.4/boilerplate/Makefile.am
+@@ -11,11 +11,10 @@ libcairoboilerplate_la_SOURCES =	\
+ 	xmalloc.c			\
+ 	xmalloc.h
+ libcairoboilerplate_la_LIBADD = $(top_builddir)/src/libcairo.la $(CAIRO_LDADD)
+ 
+ if CAIRO_HAS_BEOS_SURFACE
+-libcairoboilerplate_la_SOURCES += cairo-boilerplate-beos.cpp
+ libcairoboilerplate_la_SOURCES += cairo-boilerplate-beos-private.h
+ # BeOS system headers trigger this warning
+ libcairoboilerplate_la_CXXFLAGS = -Wno-multichar
+ endif
+ 
+--- cairo-1.6.4.orig/configure.in
++++ cairo-1.6.4/configure.in
+@@ -25,19 +25,22 @@ dnl ====================================
+ 
+ # libtool shared library version
+ 
+ # Increment if the interface has additions, changes, removals.
+ LT_CURRENT=19
++AC_SUBST(LT_CURRENT)
+ 
+ # Increment any time the source changes; set to
+ # 0 if you increment CURRENT
+ LT_REVISION=5
++AC_SUBST(LT_REVISION)
+ 
+ # Increment if any interfaces have been added; set to 0
+ # if any interfaces have been removed. removal has
+ # precedence over adding, so set to 0 if both happened.
+ LT_AGE=17
++AC_SUBST(LT_AGE)
+ 
+ dnl ===========================================================================
+ 
+ VERSION_INFO="$LT_CURRENT:$LT_REVISION:$LT_AGE"
+ AC_SUBST(VERSION_INFO)
+@@ -442,13 +445,10 @@ CAIRO_BACKEND_ENABLE(beos, BeOS/Zeta, be
+       use_beos="no (requires a BeOS platform)"
+       ;;
+   esac
+ ])
+ 
+-if test "x$use_beos" = "xyes"; then
+-  AC_PROG_CXX
+-fi
+ 
+ dnl ===========================================================================
+ 
+ CAIRO_BACKEND_ENABLE(png, PNG, png, PNG_FUNCTIONS, yes, [
+   use_png=no
