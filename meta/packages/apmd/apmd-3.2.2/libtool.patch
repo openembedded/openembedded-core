@@ -1,0 +1,16 @@
+Index: apmd-3.2.2.orig/Makefile
+===================================================================
+--- apmd-3.2.2.orig.orig/Makefile	2004-01-04 08:13:18.000000000 +0000
++++ apmd-3.2.2.orig/Makefile	2008-04-21 17:10:03.000000000 +0100
+@@ -58,9 +57,8 @@
+ #CFLAGS=-O3 -m486 -fomit-frame-pointer
+ #LDFLAGS=-s
+ 
+-LIBTOOL=libtool --quiet
+-LT_COMPILE = $(LIBTOOL) --mode=compile $(CC)
+-LT_LINK = $(LIBTOOL) --mode=link $(CC)
++LT_COMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC)
++LT_LINK = $(LIBTOOL)  --tag=CC --mode=link $(CC)
+ LT_INSTALL = $(LIBTOOL) --mode=install install
+ LT_CLEAN = $(LIBTOOL) --mode=clean rm
+ 

@@ -3,13 +3,14 @@ SECTION = "base"
 PRIORITY = "required"
 DEPENDS = "libtool-cross"
 LICENSE = "GPL"
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/apmd/apmd_${PV}.orig.tar.gz \
            file://debian.patch;patch=1 \
            file://workaround.patch;patch=1 \
            file://zaurus24.patch;patch=1 \
            file://unlinux.patch;patch=1 \
+           file://libtool.patch;patch=1 \
            file://init \
            file://default \
            file://apmd_proxy \
