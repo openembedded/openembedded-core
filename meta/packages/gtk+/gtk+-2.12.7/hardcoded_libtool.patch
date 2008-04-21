@@ -5,7 +5,7 @@
    auto)
      export SED
 -    deplibs_check_method=`(./libtool --config; echo 'eval echo $deplibs_check_method') | sh`
-+    deplibs_check_method=`(./$host_alias-libtool --config; echo 'eval echo $deplibs_check_method') | sh`
++    deplibs_check_method=`($host_alias-libtool --config; echo 'eval echo $deplibs_check_method') | sh`
      if test "x$deplibs_check_method" '!=' xpass_all || test "x$enable_static" = xyes ; then
        enable_explicit_deps=yes  
      else
@@ -14,7 +14,7 @@
      dnl (in a rather ugly way even)
      if $dynworks; then
 -        pixbuf_libtool_config="${CONFIG_SHELL-/bin/sh} ./libtool --config"
-+        pixbuf_libtool_config="${CONFIG_SHELL-/bin/sh} ./$host_alias-libtool --config"
++        pixbuf_libtool_config="${CONFIG_SHELL-/bin/sh} $host_alias-libtool --config"
          pixbuf_deplibs_check=`$pixbuf_libtool_config | \
              grep '^[[a-z_]]*check[[a-z_]]*_method=[['\''"]]' | \
              sed 's/.*[['\''"]]\(.*\)[['\''"]]$/\1/'`
@@ -23,7 +23,7 @@
  # code in place for now, since pango and atk still require gmodule.
  export SED
 -export_dynamic=`(./libtool --config; echo eval echo \\$export_dynamic_flag_spec) | sh`
-+export_dynamic=`(./$host_alias-libtool --config; echo eval echo \\$export_dynamic_flag_spec) | sh`
++export_dynamic=`($host_alias-libtool --config; echo eval echo \\$export_dynamic_flag_spec) | sh`
  if test -n "$export_dynamic"; then
    GDK_PIXBUF_DEP_LIBS=`echo $GDK_PIXBUF_DEP_LIBS | sed -e "s/$export_dynamic//"`
    GDK_PIXBUF_XLIB_DEP_LIBS=`echo $GDK_PIXBUF_XLIB_DEP_LIBS | sed -e "s/$export_dynamic//"`
