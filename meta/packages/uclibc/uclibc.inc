@@ -72,7 +72,7 @@ UCLIBC_STAGE_PREFIX = "${STAGING_DIR_HOST}${layout_prefix}"
 # the CFLAGS (for when building the utils).
 OEMAKE_NO_CC = "'OPTIMIZATION=' 'CPU_CFLAGS=${CFLAGS}' 'STRIPTOOL=true' 'LD=${LD}' \
 		'LOCALE_DATA_FILENAME=${UCLIBC_LOCALE_FILE}'"
-EXTRA_OEMAKE = "${OEMAKE_NO_CC} 'CC=${CC}'"
+EXTRA_OEMAKE = "${OEMAKE_NO_CC} 'CC=${CC}' HOSTCFLAGS="-I${STAGING_INCDIR}"
 EXTRA_OEMAKE_task_do_populate_staging = "${OEMAKE_NO_CC}"
 EXTRA_OEMAKE_task_do_package = "${OEMAKE_NO_CC}"
 
