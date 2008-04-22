@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://uclibc.patch;patch=1 \

@@ -49,8 +49,8 @@ Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
  	    for deplib in $dependency_libs; do
 +              # Replacing uninstalled with installed can easily break crosscompilation,
 +              # since the installed path is generally the wrong architecture.  -CL
-+              newdependency_libs="$newdependency_libs $deplib"
-+              continue
++              # newdependency_libs="$newdependency_libs $deplib"
++              # continue
  	      case $deplib in
  	      *.la)
  		func_basename "$deplib"
