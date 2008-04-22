@@ -3,7 +3,7 @@ LICENSE = "GPL"
 DEPENDS = "networkmanager dbus-glib libglade gconf gnome-keyring"
 #TODO DEPENDS libnotify
 RDEPENDS = "networkmanager"
-PR = "r3"
+PR = "r4"
 
 inherit gnome gtk-icon-cache
 
@@ -26,3 +26,6 @@ do_install_append () {
 	install -d ${D}${sysconfdir}/X11/Xsession.d/
 	install -m 755 ${WORKDIR}/70NetworkManagerApplet ${D}${sysconfdir}/X11/Xsession.d/
 }
+
+#TODO: remove if libnotify in DEPENDS
+EXTRA_OECONF += "--without-libnotify"
