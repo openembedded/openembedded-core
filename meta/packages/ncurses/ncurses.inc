@@ -19,6 +19,8 @@ FILES_${PN} = "${bindir}/tput ${bindir}/tset ${libdir}/lib*.so.* usr/share/tabse
 
 PARALLEL_MAKE=""
 
+FILESPATH = "${FILE_DIRNAME}/local:${FILE_DIRNAME}/ncurses-${PV}-${PR}:${FILE_DIRNAME}/ncurses-${PV}:${FILE_DIRNAME}/ncurses:${FILE_DIRNAME}"
+
 EXTRA_OECONF = "--with-shared \
                 --with-libtool \
 	        --without-profile \
@@ -74,18 +76,24 @@ do_install() {
 		ln -sf xterm-color ${D}${sysconfdir}/terminfo/x/xterm
 	fi
 
-	mv ${D}${bindir}/clear ${D}${bindir}/clear.${PN}
-	mv ${D}${bindir}/reset ${D}${bindir}/reset.${PN}
+	if [ "${PN}" = "ncurses" ]; then
+		mv ${D}${bindir}/clear ${D}${bindir}/clear.${PN}
+		mv ${D}${bindir}/reset ${D}${bindir}/reset.${PN}
+	fi
 }
 		
 		
 pkg_postinst_ncurses-tools () {
-	update-alternatives --install ${bindir}/clear clear clear.${PN} 100
-	update-alternatives --install ${bindir}/reset reset reset.${PN} 100
+	if [ "${PN}" = "ncurses" ]; then
+		update-alternatives --install ${bindir}/clear clear clear.${PN} 100
+		update-alternatives --install ${bindir}/reset reset reset.${PN} 100
+	fi
 }
 				
 			
 pkg_prerm_ncurses-tools () {
-	update-alternatives --remove clear clear.${PN}
-	update-alternatives --remove reset reset.${PN}
+	if [ "${PN}" = "ncurses" ]; then
+		update-alternatives --remove clear clear.${PN}
+		update-alternatives --remove reset reset.${PN}
+	fi
 }
