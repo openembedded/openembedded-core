@@ -1,0 +1,129 @@
+From Ralf.Wildenhues@gmx.de Tue Apr 22 20:44:16 2008
+Return-Path: <Ralf.Wildenhues@gmx.de>
+X-Spam-Checker-Version: SpamAssassin 3.2.4 (2008-01-01) on tim.rpsys.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.0 required=5.0 tests=AWL,BAYES_00 autolearn=ham
+	version=3.2.4
+Received: from localhost (localhost [127.0.0.1]) by tim.rpsys.net
+	(8.13.6/8.13.8) with ESMTP id m3MJiGXW016935 for <rpurdie@[127.0.0.1]>;
+	Tue, 22 Apr 2008 20:44:16 +0100
+Received: from tim.rpsys.net ([127.0.0.1]) by localhost (tim.rpsys.net
+	[127.0.0.1]) (amavisd-new, port 10024) with LMTP id 16773-04 for
+	<rpurdie@[127.0.0.1]>; Tue, 22 Apr 2008 20:44:07 +0100 (BST)
+Received: from merkur.ins.uni-bonn.de (merkur.ins.uni-bonn.de
+	[131.220.223.13]) by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id
+	m3MJi2sT016913 for <rpurdie@rpsys.net>; Tue, 22 Apr 2008 20:44:02 +0100
+Received: from localhost.localdomain (xdsl-87-79-251-12.netcologne.de
+	[87.79.251.12]) by merkur.ins.uni-bonn.de (Postfix) with ESMTP id
+	54F1C400002D4; Tue, 22 Apr 2008 21:43:56 +0200 (CEST)
+Received: from ralf by localhost.localdomain with local (Exim 4.63)
+	(envelope-from <Ralf.Wildenhues@gmx.de>) id 1JoOP7-0007yr-Aw; Tue, 22 Apr
+	2008 21:43:49 +0200
+Date: Tue, 22 Apr 2008 21:43:49 +0200
+From: Ralf Wildenhues <Ralf.Wildenhues@gmx.de>
+To: Richard Purdie <rpurdie@rpsys.net>, libtool-patches@gnu.org
+Cc: libtool@gnu.org
+Subject: Re: libtool 2.2.2, ccache and -all-static
+Message-ID: <20080422194348.GE5035@ins.uni-bonn.de>
+Mail-Followup-To: Richard Purdie <rpurdie@rpsys.net>,
+	libtool-patches@gnu.org, libtool@gnu.org
+References: <1208860190.5479.8.camel@dax.rpnet.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1208860190.5479.8.camel@dax.rpnet.com>
+Organization: Department of Numerical Simulation, University of Bonn
+User-Agent: Mutt/1.5.17+20080114 (2008-01-14)
+X-Virus-Scanned: amavisd-new at rpsys.net
+X-Evolution-Source: imap://richard@tim.rpsys.net/
+Content-Transfer-Encoding: 8bit
+
+Hi Richard,
+
+* Richard Purdie wrote on Tue, Apr 22, 2008 at 12:29:50PM CEST:
+> 
+> I've noticed another problem with two packages in poky, prelink and
+> libvorbis. Both packages have areas where LDFLAGS="-all-static" is used.
+> 
+> The problem comes about since Poky sets CC to "ccache gcc", then libtool
+> puts the -static flag between ccache and gcc.
+
+Thanks for the bug report, and especially for providing an example to
+reproduce it!
+
+> libtool: link: ccache -static gcc -O20 -ffast-math -D_REENTRANT -fsigned-char -DUSE_MEMORY_H -o decoder_example decoder_example.o  ../lib/.libs/libvorbis.a -lm /usr/lib/libogg.a
+
+Confirmed.  Fixed as below, committed, put you in THANKS.
+
+Cheers,
+Ralf
+
+2008-04-22  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	Fix regression over 1.5.26 with ccache $CC -all-static.
+	* libltdl/config/ltmain.m4sh (func_mode_link): Add
+	$link_static_flag to compile_command and link_command only
+	later, instead of right after a possible compiler wrapper.
+	* tests/static.at (ccache -all-static): New test.
+	* THANKS: Update.
+	Report by Richard Purdie.
+
+diff --git a/libltdl/config/ltmain.m4sh b/libltdl/config/ltmain.m4sh
+index ff1e50d..ac334dc 100644
+--- a/libltdl/config/ltmain.m4sh
++++ b/libltdl/config/ltmain.m4sh
+@@ -3160,9 +3160,6 @@ func_mode_link ()
+ 	  fi
+ 	  if test -n "$link_static_flag"; then
+ 	    dlopen_self=$dlopen_self_static
+-	    # See comment for -static flag below, for more details.
+-	    func_append compile_command " $link_static_flag"
+-	    func_append finalize_command " $link_static_flag"
+ 	  fi
+ 	  prefer_static_libs=yes
+ 	  ;;
+@@ -3450,7 +3447,11 @@ func_mode_link ()
+ 
+       case $arg in
+       -all-static)
+-	# The effects of -all-static are defined in a previous loop.
++	if test -n "$link_static_flag"; then
++	  # See comment for -static flag below, for more details.
++	  func_append compile_command " $link_static_flag"
++	  func_append finalize_command " $link_static_flag"
++	fi
+ 	continue
+ 	;;
+ 
+diff --git a/tests/static.at b/tests/static.at
+index 74b1c63..1a51d0d 100644
+--- a/tests/static.at
++++ b/tests/static.at
+@@ -352,3 +352,26 @@ for withdep in no yes; do
+ done
+ 
+ AT_CLEANUP
++
++
++AT_SETUP([ccache -all-static])
++
++AT_DATA([ccache],
++[[#! /bin/sh
++# poor man's ccache clone
++case $1 in
++-*) echo "bogus argument: $1" >&2; exit 1 ;;
++esac
++exec "$@"
++]])
++chmod +x ./ccache
++
++AT_DATA([a.c],
++[[int main(void) { return 0; }
++]])
++
++AT_CHECK([$CC $CPPFLAGS $CFLAGS -c a.c], [], [ignore])
++AT_CHECK([$LIBTOOL --mode=link --tag=CC ./ccache $CC $CFLAGS $LDFLAGS -all-static a.$OBJEXT -o a],
++	 [], [ignore])
++
++AT_CLEANUP
+
