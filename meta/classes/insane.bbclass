@@ -178,16 +178,13 @@ def package_qa_make_fatal_error(error_class, name, path,d):
 
     TODO: Load a whitelist of known errors
     """
-    return not error_class in [0, 5, 7, 8]
+    return not error_class in [0, 5, 7, 8, 9]
 
 def package_qa_write_error(error_class, name, path, d):
     """
     Log the error
     """
     import bb, os
-    if not bb.data.getVar('QA_LOG', d):
-        bb.note("a QA error occured but will not be logged because QA_LOG is not set")
-        return
 
     ERROR_NAMES =[
         "non dev contains .so",
@@ -199,6 +196,7 @@ def package_qa_write_error(error_class, name, path, d):
         "evil hides inside the .pc",
         "the desktop file is not valid",
         ".la contains reference to the workdir",
+        "package contains reference to tmpdir paths",
     ]
 
     log_path = os.path.join( bb.data.getVar('T', d, True), "log.qa_package" )
@@ -207,11 +205,25 @@ def package_qa_write_error(error_class, name, path, d):
              (ERROR_NAMES[error_class], name, package_qa_clean_path(path,d))
     f.close()
 
+    logfile = bb.data.getVar('QA_LOGFILE', d, True)
+    if logfile:
+        p = bb.data.getVar('P', d, True)
+        f = file( logfile, "a+")
+        print >> f, "%s, %s, %s, %s" % \
+             (p, ERROR_NAMES[error_class], name, package_qa_clean_path(path,d))
+        f.close()
+
 def package_qa_handle_error(error_class, error_msg, name, path, d):
     import bb
-    bb.error("QA Issue: %s" % error_msg)
+    fatal = package_qa_make_fatal_error(error_class, name, path, d)
+    if fatal:
+        bb.error("QA Issue: %s" % error_msg)
+    else:
+        # Use bb.warn here when it works
+        bb.note("QA Issue: %s" % error_msg)
     package_qa_write_error(error_class, name, path, d)
-    return not package_qa_make_fatal_error(error_class, name, path, d)
+
+    return not fatal
 
 def package_qa_check_rpath(file,name,d):
     """
@@ -321,6 +333,28 @@ def package_qa_check_desktop(path, name, d):
 
     return sane
 
+def package_qa_check_buildpaths(path, name, d):
+    """
+    Check for build paths inside target files and error if not found in the whitelist
+    """
+    import bb, os
+    sane = True
+
+    # Ignore .debug files, not interesting
+    if path.find(".debug") != -1:
+        return True
+
+    # Ignore symlinks
+    if os.path.islink(path):
+        return True
+
+    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    file_content = open(path).read()
+    if tmpdir in file_content:
+        error_msg = "File %s in package contained reference to tmpdir" % package_qa_clean_path(path,d)
+        sane = package_qa_handle_error(9, error_msg, name, path, d)
+    return sane
+
 def package_qa_check_staged(path,d):
     """
     Check staged la and pc files for sanity
@@ -428,7 +462,7 @@ python do_package_qa () {
 
     checks = [package_qa_check_rpath, package_qa_check_devdbg,
               package_qa_check_perm, package_qa_check_arch,
-              package_qa_check_desktop]
+              package_qa_check_desktop, package_qa_check_buildpaths]
     walk_sane = True
     rdepends_sane = True
     for package in packages.split():
