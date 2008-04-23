@@ -51,6 +51,7 @@ case "$MACHINE" in
 	"akita") ;;
 	"spitz") ;;
 	"nokia800") ;;
+	"nokia800-maemo") ;;
 	*)
 		echo "Error: Unsupported machine type $MACHINE"
 		return
@@ -136,18 +137,6 @@ if [ "$MACHINE" = "nokia800" ]; then
     if [ "$TYPE" = "jffs2" ]; then
         HDIMAGE=`readlink -f $HDIMAGE`
         if [ ! -e "$HDIMAGE.qemuflash" ]; then
-            #if [ ! -e "$HDIMAGE.initfs" ]; then
-            #    echo "Error, $HDIMAGE.initfs must exist!"
-            #    return
-            #fi
-            #if [ ! -e "$HDIMAGE.config" ]; then
-            #    echo "Error, $HDIMAGE.config must exist!"
-            #    return
-            #fi
-            #echo "'Flashing' config partition, please wait..."
-            #poky-nokia800-flashutil $HDIMAGE.config $HDIMAGE.qemuflash config
-            #echo "'Flashing' initfs, please wait..."
-            #poky-nokia800-flashutil $HDIMAGE.initfs $HDIMAGE.qemuflash initfs
             echo "'Flashing' rootfs, please wait..."
             poky-nokia800-flashutil $HDIMAGE $HDIMAGE.qemuflash 
         fi
@@ -156,6 +145,31 @@ if [ "$MACHINE" = "nokia800" ]; then
     fi
 fi
 
+if [ "$MACHINE" = "nokia800-maemo" ]; then
+    QEMU=qemu-system-arm
+    if [ "$TYPE" = "jffs2" ]; then
+        HDIMAGE=`readlink -f $HDIMAGE`
+        if [ ! -e "$HDIMAGE.qemuflash" ]; then
+            if [ ! -e "$HDIMAGE.initfs" ]; then
+                echo "Error, $HDIMAGE.initfs must exist!"
+                return
+            fi
+            if [ ! -e "$HDIMAGE.config" ]; then
+                echo "Error, $HDIMAGE.config must exist!"
+                echo "To generate it, take an n800 and cat /dev/mtdblock1 > $HDIMAGE.config"
+                return
+            fi
+            echo "'Flashing' config partition, please wait..."
+            poky-nokia800-flashutil $HDIMAGE.config $HDIMAGE.qemuflash config
+            echo "'Flashing' initfs, please wait..."
+            poky-nokia800-flashutil $HDIMAGE.initfs $HDIMAGE.qemuflash initfs
+            echo "'Flashing' rootfs, please wait..."
+            poky-nokia800-flashutil $HDIMAGE $HDIMAGE.qemuflash 
+        fi
+	KERNCMDLINE=""
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M n800 -mtdblock $HDIMAGE.qemuflash -serial vc -m 130 -serial vc -serial vc -serial vc"
+    fi
+fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Error: Unable to support this combination of options"

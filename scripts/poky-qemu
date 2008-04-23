@@ -48,6 +48,9 @@ else
     if [ "$MACHINE" = "nokia800" ]; then
         TYPE="jffs2"
     fi
+    if [ "$MACHINE" = "nokia800-maemo" ]; then
+        TYPE="jffs2"
+    fi
     HDIMAGE=$2
 fi
 
