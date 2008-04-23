@@ -13,7 +13,7 @@ SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://no-serial-probing.patch;patch=1 \
 	file://fbdev-not-fix.patch;patch=1  \
 	file://optional-xkb.patch;patch=1 \
-	file://enable-tslib.patch;patch=1 \
+	file://enable-tslib.patch;patch=1;merged \
 	file://kmode-palm.patch;patch=1 \
 	file://enable-epson.patch;patch=1 \
         file://fix_default_mode.patch;patch=1 \
@@ -25,12 +25,12 @@ SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://w100-new-input-world-order.patch;patch=1 \
 	file://linux-keyboard-mediumraw.patch;patch=1 \
 	file://xcalibrate-new-input-world-order.patch;patch=1 \
-	file://tslib-default-device.patch;patch=1 \
+	file://tslib-default-device.patch;patch=1;merged \
 #	file://fbdev-evdev.patch;patch=1 \
 	file://keyboard-resume-workaround.patch;patch=1 \
-	file://xorg-avr32-support.diff;patch=1 \
+	file://xorg-avr32-support.diff;patch=1;merged \
 #	file://pkgconfig_fix.patch;patch=1 \
-	file://no_xkb.patch;patch=1;pnum=0 \
+	file://no_xkb.patch;patch=1;pnum=0;merged \
         "
 
 S = "${WORKDIR}/xorg-server-${PV}"
