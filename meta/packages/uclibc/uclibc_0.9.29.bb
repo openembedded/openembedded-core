@@ -13,6 +13,8 @@ require uclibc.inc
 
 PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
+DEPENDS += "ncurses-native"
+
 SRC_URI += "file://uClibc.machine file://uClibc.distro \
 	    file://errno_values.h.patch;patch=1 \
 	    file://termios.h.patch;patch=1 \
