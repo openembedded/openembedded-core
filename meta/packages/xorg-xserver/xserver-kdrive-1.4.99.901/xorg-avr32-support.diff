@@ -1,0 +1,19 @@
+--- /tmp/servermd.h	2007-09-30 17:27:22.310911628 +0200
++++ xorg-server-1.4/include/servermd.h	2007-09-30 17:28:25.297799199 +0200
+@@ -130,6 +130,16 @@
+ 
+ #endif /* vax */
+ 
++#ifdef __avr32__
++
++#define IMAGE_BYTE_ORDER        MSBFirst
++#define BITMAP_BIT_ORDER        MSBFirst
++#define GLYPHPADBYTES           4
++#define GETLEFTBITS_ALIGNMENT   1
++#define AVOID_MEMORY_READ
++
++#endif /* __avr32__ */ 
++
+ #ifdef __arm32__
+ 
+ #define IMAGE_BYTE_ORDER        LSBFirst

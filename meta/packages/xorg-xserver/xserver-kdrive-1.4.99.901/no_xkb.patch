@@ -1,0 +1,12 @@
+--- dix/devices.c~	2008-04-16 13:01:08.000000000 +0200
++++ dix/devices.c	2008-04-16 13:01:08.000000000 +0200
+@@ -527,8 +527,8 @@
+ #ifdef XKB
+ 	if (dev->key->xkbInfo)
+ 	    XkbFreeInfo(dev->key->xkbInfo);
+-#endif
+         dev->key->xkbInfo = NULL;
++#endif
+ 	xfree(dev->key->curKeySyms.map);
+ 	xfree(dev->key->modifierKeyMap);
+ 	xfree(dev->key);

@@ -1,0 +1,58 @@
+Index: xorg-server-1.4/Makefile.am
+===================================================================
+--- xorg-server-1.4.orig/Makefile.am	2007-08-23 21:04:52.000000000 +0200
++++ xorg-server-1.4/Makefile.am	2007-09-06 23:19:59.000000000 +0200
+@@ -26,6 +26,10 @@
+ GLX_DIR=GL
+ endif
+ 
++if XKB
++XKB_DIR=xkb
++endif
++
+ if DBE
+ DBE_DIR=dbe
+ endif
+@@ -42,7 +46,7 @@
+ 	randr \
+ 	render  \
+ 	Xi \
+-	xkb \
++	$(XKB_DIR) \
+ 	$(DBE_DIR) \
+ 	$(MFB_DIR) \
+ 	$(AFB_DIR) \
+Index: xorg-server-1.4/configure.ac
+===================================================================
+--- xorg-server-1.4.orig/configure.ac	2007-09-06 07:59:00.000000000 +0200
++++ xorg-server-1.4/configure.ac	2007-09-06 23:19:19.000000000 +0200
+@@ -514,6 +514,7 @@
+ AC_ARG_ENABLE(config-dbus,    AS_HELP_STRING([--enable-config-dbus], [Build D-BUS API support (default: no)]), [CONFIG_DBUS_API=$enableval], [CONFIG_DBUS_API=no])
+ AC_ARG_ENABLE(config-hal,     AS_HELP_STRING([--disable-config-hal], [Build HAL support (default: auto)]), [CONFIG_HAL=$enableval], [CONFIG_HAL=auto])
+ AC_ARG_ENABLE(xfree86-utils,     AS_HELP_STRING([--enable-xfree86-utils], [Build xfree86 DDX utilities (default: enabled)]), [XF86UTILS=$enableval], [XF86UTILS=yes])
++AC_ARG_ENABLE(xkb,            AS_HELP_STRING([--disable-xkb], [Build XKB (default: enabled)]), [XKB=$enableval], [XKB=yes])
+ 
+ dnl DDXes.
+ AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
+@@ -889,12 +890,15 @@
+ 
+ AC_DEFINE(SHAPE, 1, [Support SHAPE extension])
+ 
+-AC_DEFINE(XKB, 1, [Build XKB])
+-AC_DEFINE(XKB_IN_SERVER, 1, [Build XKB server])
+-AC_DEFINE(XKB_DFLT_DISABLED, 0, [Disable XKB per default])
+-REQUIRED_MODULES="$REQUIRED_MODULES xkbfile"
+-XKB_LIB='$(top_builddir)/xkb/libxkb.la'
+-XKB_STUB_LIB='$(top_builddir)/xkb/libxkbstubs.la'
++AM_CONDITIONAL(XKB, [test "x$XKB" = xyes])
++if test "x$XKB" = xyes; then
++	AC_DEFINE(XKB, 1, [Build XKB])
++	AC_DEFINE(XKB_IN_SERVER, 1, [Build XKB server])
++	AC_DEFINE(XKB_DFLT_DISABLED, 0, [Disable XKB per default])
++	REQUIRED_MODULES="$REQUIRED_MODULES xkbfile"
++	XKB_LIB='$(top_builddir)/xkb/libxkb.la'
++	XKB_STUB_LIB='$(top_builddir)/xkb/libxkbstubs.la'
++fi
+ 
+ AC_CHECK_FUNC(strcasecmp, [], AC_DEFINE([NEED_STRCASECMP], 1,
+                                         [Do not have 'strcasecmp'.]))
