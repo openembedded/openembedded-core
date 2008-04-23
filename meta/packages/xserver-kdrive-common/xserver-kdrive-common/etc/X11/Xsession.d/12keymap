@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# since kdrive 1.4 there is no default keymap in server
+xmodmap - </etc/X11/default.xmodmap

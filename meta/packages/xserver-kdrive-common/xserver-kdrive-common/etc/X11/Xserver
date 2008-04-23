@@ -43,6 +43,11 @@ if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ] && [ "$XSERVER" != "Xorg" 
   ARGS="$ARGS -mouse /dev/input/mice"
 fi
 
+# kdrive 1.4 onwards needs -mouse args
+if [ -n "$TSLIB_TSDEVICE" ]; then
+  ARGS="$ARGS -mouse tslib"
+fi
+
 # start off server in conventional location.
 case `module_id` in
 	"Generic OMAP1510/1610/1710")
