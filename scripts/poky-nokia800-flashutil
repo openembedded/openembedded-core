@@ -24,7 +24,7 @@ if [ ! -e "$2" ]; then
 	cat .16k .16k .16k .16k .16k .16k .16k .16k > .128k
 	# N800 NAND is 512k sectors big
 	cat  .128k .128k .128k .128k >> $2
-	rm -rf .8b .16b .8sec .64sec .512sec .2ksec .16k, .128k
+	rm -rf .8b .16b .8sec .64sec .512sec .2ksec .16k .128k
 fi
 
 if [ "$3" != "" ]; then
