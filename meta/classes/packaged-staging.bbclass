@@ -201,7 +201,7 @@ populate_staging_preamble () {
 populate_staging_postamble () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		# list the packages currently installed in staging
-		${PSTAGE_LIST_CMD} | awk '{print $1}' > ${DEPLOY_DIR_PSTAGE}/installed-list         
+		# ${PSTAGE_LIST_CMD} | awk '{print $1}' > ${DEPLOY_DIR_PSTAGE}/installed-list         
 
 		set +e
 		stage-manager -p ${STAGING_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-staging -u -d ${PSTAGE_TMPDIR_STAGE}/staging
@@ -320,3 +320,13 @@ python do_package_stage () {
 # Note an assumption here is that do_deploy runs before do_package_write/do_populate_staging
 #
 addtask package_stage after do_package_write do_populate_staging before do_build
+
+do_package_stage_all () {
+	:
+}
+do_package_stage_all[recrdeptask] = "do_package_stage"
+addtask package_stage_all after do_package_stage before do_build
+
+
+
+
