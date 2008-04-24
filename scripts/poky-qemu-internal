@@ -215,8 +215,8 @@ else
 fi
 
 echo "Running $QEMU using sudo..."
-echo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE"
-sudo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS --append "$KERNCMDLINE" || /bin/true
+echo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE"
+sudo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE" || /bin/true
 
 trap - INT TERM QUIT
 return

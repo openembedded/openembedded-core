@@ -20,22 +20,24 @@
 
 if [ "x$1" = "x" ]; then
     MYNAME=`basename $0`
-    echo "Run as MACHINE=xyz $MYNAME ZIMAGE IMAGEFILE"
+    echo "Run as MACHINE=xyz $MYNAME ZIMAGE IMAGEFILE [OPTIONS]"
     echo "where:"
     echo "  ZIMAGE - the kernel image file to use"
     echo "  IMAGEFILE - the image file/location to use"
     echo "  (NFS booting assumed if IMAGEFILE not specified)"
     echo "  MACHINE=xyz - the machine name (optional, autodetected from ZIMAGE if unspecified)"
+    echo "  OPTIONS - extra options to pass to QEMU"
     exit 1
 else
     ZIMAGE=$1
+    shift
 fi
 
 if [ "x$MACHINE" = "x" ]; then
     MACHINE=`basename $ZIMAGE | sed -r -e 's#.*-([a-z]+[0-9]*)-?[0-9]*..*#\1#'`
 fi
 
-if [ "x$2" = "x" ]; then
+if [ "x$1" = "x" ]; then
     TYPE="nfs"
 else
     TYPE="ext2"
@@ -51,7 +53,8 @@ else
     if [ "$MACHINE" = "nokia800-maemo" ]; then
         TYPE="jffs2"
     fi
-    HDIMAGE=$2
+    HDIMAGE=$1
+    shift
 fi
 
 INTERNAL_SCRIPT=`which poky-qemu-internal`
