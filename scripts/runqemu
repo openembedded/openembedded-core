@@ -36,10 +36,12 @@ if [ "x$1" = "x" ]; then
     exit 1
 else
     MACHINE=$1
+    shift
 fi
 
-if [ "x$2" != "x" ]; then
-    TYPE=$2
+if [ "x$1" != "x" ]; then
+    TYPE=$1
+    shift
 else
     TYPE="ext2"
     if [ "$MACHINE" = "akita" ]; then
@@ -53,12 +55,14 @@ else
     fi
 fi
 
-if [ "x$3" != "x" ]; then
-    ZIMAGE=$3
+if [ "x$1" != "x" ]; then
+    ZIMAGE=$1
+    shift
 fi
 
-if [ "x$4" != "x" ]; then
-    HDIMAGE=$4
+if [ "x$1" != "x" ]; then
+    HDIMAGE=$1
+    shift
 fi
 
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" -o "$MACHINE" = "nokia800" ]; then
