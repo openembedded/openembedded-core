@@ -37,7 +37,8 @@ fi
 QEMUIFUP=`which poky-qemu-ifup`
 QEMUIFDOWN=`which poky-qemu-ifdown`
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
-QEMU_NETWORK_CMD="-net nic,vlan=0 -net tap,vlan=0,ifname=tap0,script=$QEMUIFUP,downscript=$QEMUIFDOWN"
+QEMU_TAP_CMD="-net tap,vlan=0,ifname=tap0,script=$QEMUIFUP,downscript=$QEMUIFDOWN"
+QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
 KERNCMDLINE="mem=$QEMU_MEMORY"
 
 SERIALOPTS=""
@@ -141,7 +142,8 @@ if [ "$MACHINE" = "nokia800" ]; then
             poky-nokia800-flashutil $HDIMAGE $HDIMAGE.qemuflash 
         fi
 	KERNCMDLINE="root=/dev/mtdblock4 rootfstype=jffs2"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M n800 -mtdblock $HDIMAGE.qemuflash -serial vc -m 130 -serial vc -serial vc -serial vc"
+        QEMU_NETWORK_CMD="-net nic,model=usb,vlan=0 $QEMU_TAP_CMD"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M n800 -mtdblock $HDIMAGE.qemuflash -serial vc -m 130 -serial vc -serial vc -serial vc -usb -usbdevice net:0"
     fi
 fi
 
@@ -167,7 +169,8 @@ if [ "$MACHINE" = "nokia800-maemo" ]; then
             poky-nokia800-flashutil $HDIMAGE $HDIMAGE.qemuflash 
         fi
 	KERNCMDLINE=""
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M n800 -mtdblock $HDIMAGE.qemuflash -serial vc -m 130 -serial vc -serial vc -serial vc"
+        QEMU_NETWORK_CMD="-net nic,model=usb,vlan=0 $QEMU_TAP_CMD"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M n800 -mtdblock $HDIMAGE.qemuflash -serial vc -m 130 -serial vc -serial vc -serial vc -usb -usbdevice net:0 -show-cursor"
     fi
 fi
 
