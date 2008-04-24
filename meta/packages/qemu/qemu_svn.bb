@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.9.1+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-0.9.1+svn/"
 
@@ -31,6 +31,8 @@ SRC_URI = "\
     file://workaround_bad_futex_headers.patch;patch=1 \
     file://fix_segfault.patch;patch=1 \
     file://no-strip.patch;patch=1 \
+    file://fix_brk.patch;patch=1 \
+    file://fix_protection_bits.patch;patch=1 \
     file://qemu-n800-support.patch;patch=1"
 
 S = "${WORKDIR}/trunk"

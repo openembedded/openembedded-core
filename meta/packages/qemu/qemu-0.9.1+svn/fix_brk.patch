@@ -1,0 +1,55 @@
+--- qemu/linux-user/syscall.c1	(revision 16)
++++ qemu/linux-user/syscall.c	(working copy)
+@@ -441,7 +441,7 @@
+     if (!new_brk)
+         return target_brk;
+     if (new_brk < target_original_brk)
+-        return -TARGET_ENOMEM;
++        return target_brk;
+ 
+     brk_page = HOST_PAGE_ALIGN(target_brk);
+ 
+@@ -456,12 +456,11 @@
+     mapped_addr = get_errno(target_mmap(brk_page, new_alloc_size,
+                                         PROT_READ|PROT_WRITE,
+                                         MAP_ANON|MAP_FIXED|MAP_PRIVATE, 0, 0));
+-    if (is_error(mapped_addr)) {
+-	return mapped_addr;
+-    } else {
++
++    if (!is_error(mapped_addr))
+ 	target_brk = new_brk;
+-    	return target_brk;
+-    }
++    
++    return target_brk;
+ }
+ 
+ static inline abi_long copy_from_user_fdset(fd_set *fds,
+--- qemu/linux-user/mmap.c1	(revision 16)
++++ qemu/linux-user/mmap.c	(working copy)
+@@ -260,6 +259,9 @@
+             host_start += offset - host_offset;
+         start = h2g(host_start);
+     } else {
++        int flg;
++        target_ulong addr;
++
+         if (start & ~TARGET_PAGE_MASK) {
+             errno = EINVAL;
+             return -1;
+@@ -267,6 +269,14 @@
+         end = start + len;
+         real_end = HOST_PAGE_ALIGN(end);
+         
++        for(addr = real_start; addr < real_end; addr += TARGET_PAGE_SIZE) {
++            flg = page_get_flags(addr);
++            if( flg & PAGE_RESERVED ) {
++                errno = ENXIO;
++                return -1;
++            }
++        }
++
+         /* worst case: we cannot map the file because the offset is not
+            aligned, so we read it */
+         if (!(flags & MAP_ANONYMOUS) &&
