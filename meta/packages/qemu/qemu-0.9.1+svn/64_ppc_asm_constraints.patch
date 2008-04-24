@@ -3,11 +3,11 @@
 # cpu-all.h |    2 +-
 # 1 file changed, 1 insertion(+), 1 deletion(-)
 #
-Index: qemu/cpu-all.h
+Index: trunk/cpu-all.h
 ===================================================================
---- qemu.orig/cpu-all.h	2007-06-13 11:48:22.000000000 +0100
-+++ qemu/cpu-all.h	2007-06-13 11:51:56.000000000 +0100
-@@ -250,7 +250,7 @@ static inline void stw_le_p(void *ptr, i
+--- trunk.orig/cpu-all.h	2008-04-24 20:15:46.000000000 +0100
++++ trunk/cpu-all.h	2008-04-24 20:16:08.000000000 +0100
+@@ -285,7 +285,7 @@
  static inline void stl_le_p(void *ptr, int v)
  {
  #ifdef __powerpc__

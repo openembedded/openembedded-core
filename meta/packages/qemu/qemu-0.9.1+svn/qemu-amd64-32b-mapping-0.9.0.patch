@@ -2,10 +2,10 @@
  linux-user/mmap.c |    8 ++++++--
  1 file changed, 6 insertions(+), 2 deletions(-)
 
-Index: qemu/linux-user/mmap.c
+Index: trunk/linux-user/mmap.c
 ===================================================================
---- qemu.orig/linux-user/mmap.c	2007-12-03 15:40:25.000000000 +0000
-+++ qemu/linux-user/mmap.c	2007-12-03 16:37:21.000000000 +0000
+--- trunk.orig/linux-user/mmap.c	2008-04-24 20:15:37.000000000 +0100
++++ trunk/linux-user/mmap.c	2008-04-24 20:16:16.000000000 +0100
 @@ -29,6 +29,10 @@
  
  //#define DEBUG_MMAP
@@ -17,7 +17,7 @@ Index: qemu/linux-user/mmap.c
  /* NOTE: all the constants are the HOST ones, but addresses are target. */
  int target_mprotect(abi_ulong start, abi_ulong len, int prot)
  {
-@@ -251,7 +255,7 @@ abi_long target_mmap(abi_ulong start, ab
+@@ -251,7 +255,7 @@
             especially important if qemu_host_page_size >
             qemu_real_host_page_size */
          p = mmap(g2h(mmap_start),
@@ -26,7 +26,7 @@ Index: qemu/linux-user/mmap.c
          if (p == MAP_FAILED)
              return -1;
          /* update start so that it points to the file position at 'offset' */
-@@ -406,7 +410,7 @@ abi_long target_mremap(abi_ulong old_add
+@@ -406,7 +410,7 @@
      unsigned long host_addr;
  
      /* XXX: use 5 args syscall */

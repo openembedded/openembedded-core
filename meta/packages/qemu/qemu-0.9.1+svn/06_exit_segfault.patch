@@ -5,9 +5,9 @@
 #
 Index: linux-user/main.c
 ===================================================================
---- linux-user/main.c.orig	2007-12-03 23:47:25.000000000 +0000
-+++ linux-user/main.c	2007-12-03 23:47:41.000000000 +0000
-@@ -714,7 +714,7 @@ void cpu_loop (CPUSPARCState *env)
+--- linux-user/main.c.orig	2008-04-24 20:15:46.000000000 +0100
++++ linux-user/main.c	2008-04-24 20:15:53.000000000 +0100
+@@ -765,7 +765,7 @@
          default:
              printf ("Unhandled trap: 0x%x\n", trapnr);
              cpu_dump_state(env, stderr, fprintf, 0);
@@ -16,7 +16,7 @@ Index: linux-user/main.c
          }
          process_pending_signals (env);
      }
-@@ -1634,7 +1634,7 @@ void cpu_loop (CPUState *env)
+@@ -1697,7 +1697,7 @@
          default:
              printf ("Unhandled trap: 0x%x\n", trapnr);
              cpu_dump_state(env, stderr, fprintf, 0);
@@ -25,7 +25,7 @@ Index: linux-user/main.c
          }
          process_pending_signals (env);
      }
-@@ -1954,7 +1954,7 @@ int main(int argc, char **argv)
+@@ -2026,7 +2026,7 @@
                  for(item = cpu_log_items; item->mask != 0; item++) {
                      printf("%-10s %s\n", item->name, item->help);
                  }
@@ -34,7 +34,7 @@ Index: linux-user/main.c
              }
              cpu_set_log(mask);
          } else if (!strcmp(r, "s")) {
-@@ -1973,7 +1973,7 @@ int main(int argc, char **argv)
+@@ -2045,7 +2045,7 @@
              if (qemu_host_page_size == 0 ||
                  (qemu_host_page_size & (qemu_host_page_size - 1)) != 0) {
                  fprintf(stderr, "page size must be a power of two\n");

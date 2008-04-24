@@ -5,9 +5,9 @@
 #
 Index: linux-user/syscall.c
 ===================================================================
---- linux-user/syscall.c.orig	2007-12-03 15:58:11.000000000 +0000
-+++ linux-user/syscall.c	2007-12-03 15:58:46.000000000 +0000
-@@ -2750,11 +2750,7 @@ int do_fork(CPUState *env, unsigned int 
+--- linux-user/syscall.c.orig	2008-04-24 20:16:01.000000000 +0100
++++ linux-user/syscall.c	2008-04-24 20:16:02.000000000 +0100
+@@ -2760,11 +2760,7 @@
          if (!newsp)
              newsp = env->gpr[1];
          new_env->gpr[1] = newsp;

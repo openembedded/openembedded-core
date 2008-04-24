@@ -1,6 +1,8 @@
---- qemu.orig/Makefile	2008-01-29 23:16:27.000000000 -0800
-+++ qemu-0.9.1/Makefile	2008-01-29 23:16:38.000000000 -0800
-@@ -174,7 +174,7 @@
+Index: trunk/Makefile
+===================================================================
+--- trunk.orig/Makefile	2008-04-24 20:15:37.000000000 +0100
++++ trunk/Makefile	2008-04-24 20:16:30.000000000 +0100
+@@ -196,7 +196,7 @@
  install: all $(if $(BUILD_DOCS),install-doc)
  	mkdir -p "$(DESTDIR)$(bindir)"
  ifneq ($(TOOLS),)
@@ -8,10 +10,12 @@
 +	$(INSTALL) -m 755 $(TOOLS) "$(DESTDIR)$(bindir)"
  endif
  	mkdir -p "$(DESTDIR)$(datadir)"
- 	for x in bios.bin vgabios.bin vgabios-cirrus.bin ppc_rom.bin \
---- qemu.orig/Makefile.target	2008-01-29 23:16:27.000000000 -0800
-+++ qemu-0.9.1/Makefile.target	2008-01-29 23:17:33.000000000 -0800
-@@ -632,7 +632,7 @@
+ 	set -e; for x in bios.bin vgabios.bin vgabios-cirrus.bin ppc_rom.bin \
+Index: trunk/Makefile.target
+===================================================================
+--- trunk.orig/Makefile.target	2008-04-24 20:15:37.000000000 +0100
++++ trunk/Makefile.target	2008-04-24 20:16:30.000000000 +0100
+@@ -685,7 +685,7 @@
  
  install: all
  ifneq ($(PROGS),)
@@ -19,4 +23,4 @@
 +	$(INSTALL) -m 755 $(PROGS) "$(DESTDIR)$(bindir)"
  endif
  
- ifneq ($(wildcard .depend),)
+ # Include automatically generated dependency files

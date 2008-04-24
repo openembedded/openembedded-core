@@ -5,9 +5,9 @@
 
 Index: arm.ld
 ===================================================================
---- arm.ld.orig	2007-06-13 11:48:22.000000000 +0100
-+++ arm.ld	2007-06-13 11:51:56.000000000 +0100
-@@ -26,6 +26,10 @@ SECTIONS
+--- arm.ld.orig	2008-04-24 20:15:45.000000000 +0100
++++ arm.ld	2008-04-24 20:16:11.000000000 +0100
+@@ -26,6 +26,10 @@
      { *(.rel.rodata) *(.rel.gnu.linkonce.r*) }
    .rela.rodata   :
      { *(.rela.rodata) *(.rela.gnu.linkonce.r*) }
@@ -18,7 +18,7 @@ Index: arm.ld
    .rel.got       : { *(.rel.got)		}
    .rela.got      : { *(.rela.got)		}
    .rel.ctors     : { *(.rel.ctors)	}
-@@ -58,6 +62,9 @@ SECTIONS
+@@ -58,6 +62,9 @@
    .ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
     __exidx_end = .;
    .reginfo : { *(.reginfo) }
@@ -30,9 +30,9 @@ Index: arm.ld
    . = ALIGN(0x100000) + (. & (0x100000 - 1));
 Index: i386.ld
 ===================================================================
---- i386.ld.orig	2007-06-13 11:48:22.000000000 +0100
-+++ i386.ld	2007-06-13 11:51:56.000000000 +0100
-@@ -28,6 +28,10 @@ SECTIONS
+--- i386.ld.orig	2008-04-24 20:15:45.000000000 +0100
++++ i386.ld	2008-04-24 20:16:11.000000000 +0100
+@@ -28,6 +28,10 @@
      { *(.rel.rodata) *(.rel.gnu.linkonce.r*) }
    .rela.rodata   :
      { *(.rela.rodata) *(.rela.gnu.linkonce.r*) }
@@ -43,7 +43,7 @@ Index: i386.ld
    .rel.got       : { *(.rel.got)		}
    .rela.got      : { *(.rela.got)		}
    .rel.ctors     : { *(.rel.ctors)	}
-@@ -53,6 +57,9 @@ SECTIONS
+@@ -53,6 +57,9 @@
    _etext = .;
    PROVIDE (etext = .);
    .fini      : { *(.fini)    } =0x47ff041f

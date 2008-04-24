@@ -5,9 +5,9 @@
 #
 Index: linux-user/signal.c
 ===================================================================
---- linux-user/signal.c.orig	2007-12-03 23:47:44.000000000 +0000
-+++ linux-user/signal.c	2007-12-03 23:47:46.000000000 +0000
-@@ -512,6 +512,11 @@ int do_sigaction(int sig, const struct t
+--- linux-user/signal.c.orig	2008-04-24 20:15:55.000000000 +0100
++++ linux-user/signal.c	2008-04-24 20:15:57.000000000 +0100
+@@ -512,6 +512,11 @@
  
      if (sig < 1 || sig > TARGET_NSIG || sig == SIGKILL || sig == SIGSTOP)
          return -EINVAL;

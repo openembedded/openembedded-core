@@ -2,11 +2,11 @@
  hw/ne2000.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: qemu/hw/ne2000.c
+Index: trunk/hw/ne2000.c
 ===================================================================
---- qemu.orig/hw/ne2000.c	2007-12-03 19:32:52.000000000 +0000
-+++ qemu/hw/ne2000.c	2007-12-03 19:33:55.000000000 +0000
-@@ -217,7 +217,7 @@ static int ne2000_can_receive(void *opaq
+--- trunk.orig/hw/ne2000.c	2008-04-24 20:15:46.000000000 +0100
++++ trunk/hw/ne2000.c	2008-04-24 20:16:05.000000000 +0100
+@@ -217,7 +217,7 @@
      NE2000State *s = opaque;
  
      if (s->cmd & E8390_STOP)

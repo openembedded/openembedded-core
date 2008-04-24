@@ -5,9 +5,9 @@
 #
 Index: linux-user/signal.c
 ===================================================================
---- linux-user/signal.c.orig	2007-12-03 15:40:26.000000000 +0000
-+++ linux-user/signal.c	2007-12-03 15:55:49.000000000 +0000
-@@ -364,10 +364,15 @@ int queue_signal(int sig, target_siginfo
+--- linux-user/signal.c.orig	2008-04-24 20:15:46.000000000 +0100
++++ linux-user/signal.c	2008-04-24 20:15:55.000000000 +0100
+@@ -364,10 +364,15 @@
      k = &sigact_table[sig - 1];
      handler = k->sa._sa_handler;
      if (handler == TARGET_SIG_DFL) {

@@ -5,8 +5,8 @@
 #
 Index: linux-user/syscall.c
 ===================================================================
---- linux-user/syscall.c.orig	2007-12-03 15:56:24.000000000 +0000
-+++ linux-user/syscall.c	2007-12-03 15:57:36.000000000 +0000
+--- linux-user/syscall.c.orig	2008-04-24 20:15:59.000000000 +0100
++++ linux-user/syscall.c	2008-04-24 20:16:01.000000000 +0100
 @@ -52,6 +52,7 @@
  //#include <sys/user.h>
  #include <netinet/ip.h>
@@ -15,7 +15,7 @@ Index: linux-user/syscall.c
  
  #define termios host_termios
  #define winsize host_winsize
-@@ -4739,9 +4740,34 @@ abi_long do_syscall(void *cpu_env, int n
+@@ -4758,9 +4759,34 @@
          break;
  #endif
      case TARGET_NR__sysctl:

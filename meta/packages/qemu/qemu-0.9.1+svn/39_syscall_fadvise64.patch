@@ -4,9 +4,9 @@
 
 Index: linux-user/syscall.c
 ===================================================================
---- linux-user/syscall.c.orig	2007-12-03 19:33:47.000000000 +0000
-+++ linux-user/syscall.c	2007-12-03 19:33:48.000000000 +0000
-@@ -5317,6 +5317,12 @@ abi_long do_syscall(void *cpu_env, int n
+--- linux-user/syscall.c.orig	2008-04-24 20:16:02.000000000 +0100
++++ linux-user/syscall.c	2008-04-24 20:16:03.000000000 +0100
+@@ -5350,6 +5350,12 @@
          ret = get_errno(mincore((void*)arg1, (size_t)arg2, (unsigned char*)arg3));
          break;
  #endif

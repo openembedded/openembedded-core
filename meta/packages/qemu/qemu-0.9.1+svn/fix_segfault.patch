@@ -2,11 +2,11 @@
  linux-user/syscall.c |   22 ----------------------
  1 file changed, 22 deletions(-)
 
-Index: qemu/linux-user/syscall.c
+Index: trunk/linux-user/syscall.c
 ===================================================================
---- qemu.orig/linux-user/syscall.c	2007-12-03 23:40:11.000000000 +0000
-+++ qemu/linux-user/syscall.c	2007-12-03 23:40:21.000000000 +0000
-@@ -5695,28 +5695,6 @@ abi_long do_syscall(void *cpu_env, int n
+--- trunk.orig/linux-user/syscall.c	2008-04-24 20:16:21.000000000 +0100
++++ trunk/linux-user/syscall.c	2008-04-24 20:16:24.000000000 +0100
+@@ -5728,28 +5728,6 @@
             goto unimplemented_nowarn;
  #endif
  

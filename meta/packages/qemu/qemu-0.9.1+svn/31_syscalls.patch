@@ -5,9 +5,9 @@
 #
 Index: linux-user/syscall.c
 ===================================================================
---- linux-user/syscall.c.orig	2007-12-03 19:32:56.000000000 +0000
-+++ linux-user/syscall.c	2007-12-03 19:33:41.000000000 +0000
-@@ -250,6 +250,7 @@ extern int getresuid(uid_t *, uid_t *, u
+--- linux-user/syscall.c.orig	2008-04-24 20:15:46.000000000 +0100
++++ linux-user/syscall.c	2008-04-24 20:15:59.000000000 +0100
+@@ -250,6 +250,7 @@
  extern int setresgid(gid_t, gid_t, gid_t);
  extern int getresgid(gid_t *, gid_t *, gid_t *);
  extern int setgroups(int, gid_t *);
@@ -15,7 +15,7 @@ Index: linux-user/syscall.c
  
  #define ERRNO_TABLE_SIZE 1200
  
-@@ -4024,7 +4025,8 @@ abi_long do_syscall(void *cpu_env, int n
+@@ -4041,7 +4042,8 @@
  #endif
  #ifdef TARGET_NR_uselib
      case TARGET_NR_uselib:
@@ -25,7 +25,7 @@ Index: linux-user/syscall.c
  #endif
  #ifdef TARGET_NR_swapon
      case TARGET_NR_swapon:
-@@ -5289,7 +5291,9 @@ abi_long do_syscall(void *cpu_env, int n
+@@ -5322,7 +5324,9 @@
          goto unimplemented;
  #ifdef TARGET_NR_mincore
      case TARGET_NR_mincore:
@@ -36,7 +36,7 @@ Index: linux-user/syscall.c
  #endif
  #ifdef TARGET_NR_madvise
      case TARGET_NR_madvise:
-@@ -5429,7 +5433,8 @@ abi_long do_syscall(void *cpu_env, int n
+@@ -5462,7 +5466,8 @@
          break;
  #ifdef TARGET_NR_readahead
      case TARGET_NR_readahead:
