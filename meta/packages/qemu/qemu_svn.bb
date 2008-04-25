@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.9.1+svnr${SRCREV}"
-PR = "r8"
+PR = "r9"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-0.9.1+svn/"
 
@@ -39,7 +39,7 @@ SRC_URI = "\
 S = "${WORKDIR}/trunk"
 
 #EXTRA_OECONF += "--disable-sdl"
-EXTRA_OECONF += "--target-list=arm-linux-user,arm-softmmu,i386-softmmu"
+#EXTRA_OECONF += "--target-list=arm-linux-user,arm-softmmu,i386-softmmu"
 EXTRA_OECONF += "--disable-gfx-check"
 
 inherit autotools
