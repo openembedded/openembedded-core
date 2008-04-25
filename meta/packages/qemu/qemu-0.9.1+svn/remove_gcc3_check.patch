@@ -1,0 +1,54 @@
+Index: trunk/configure
+===================================================================
+--- trunk.orig/configure	2008-04-25 09:09:31.000000000 +0100
++++ trunk/configure	2008-04-25 09:11:31.000000000 +0100
+@@ -22,8 +22,6 @@
+ static="no"
+ cross_prefix=""
+ cc="gcc"
+-gcc3_search="yes"
+-gcc3_list="gcc-3.4.6 gcc-3.4 gcc34 gcc-3.3.6 gcc-3.3 gcc33 gcc-3.2 gcc32"
+ host_cc="gcc"
+ ar="ar"
+ make="make"
+@@ -245,9 +243,6 @@
+   ;;
+   --cross-prefix=*) cross_prefix="$optarg"
+   ;;
+-  --cc=*) cc="$optarg"
+-  gcc3_search="no"
+-  ;;
+   --host-cc=*) host_cc="$optarg"
+   ;;
+   --make=*) make="$optarg"
+@@ -479,30 +474,6 @@
+ #endif
+ int main(){return 0;}
+ EOF
+-    if "$cc" $ARCH_CFLAGS -o $TMPE $TMPC 2> /dev/null ; then
+-	echo "WARNING: \"$cc\" looks like gcc 4.x"
+-	found_compat_cc="no"
+-	if test "$gcc3_search" = "yes" ; then
+-	    echo "Looking for gcc 3.x"
+-	    for compat_cc in $gcc3_list ; do
+-		if "$cross_prefix$compat_cc" --version 2> /dev/null | fgrep '(GCC) 3.' > /dev/null 2>&1 ; then
+-		    echo "Found \"$compat_cc\""
+-		    cc="$cross_prefix$compat_cc"
+-		    found_compat_cc="yes"
+-		    break
+-		fi
+-	    done
+-	    if test "$found_compat_cc" = "no" ; then
+-		echo "gcc 3.x not found!"
+-	    fi
+-	fi
+-	if test "$found_compat_cc" = "no" ; then
+-	    echo "QEMU is known to have problems when compiled with gcc 4.x"
+-	    echo "It is recommended that you use gcc 3.x to build QEMU"
+-	    echo "To use this compiler anyway, configure with --disable-gcc-check"
+-	    exit 1;
+-	fi
+-    fi
+ fi
+ 
+ #

@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.9.1+svnr${SRCREV}"
-PR = "r6"
+PR = "r7"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-0.9.1+svn/"
 
@@ -30,12 +30,13 @@ SRC_URI = "\
     file://no-strip.patch;patch=1 \
     file://fix_brk.patch;patch=1 \
     file://fix_protection_bits.patch;patch=1 \
+    file://remove_gcc3_check.patch;patch=1 \
     file://qemu-n800-support.patch;patch=1"
 
 S = "${WORKDIR}/trunk"
 
 #EXTRA_OECONF += "--disable-sdl"
-#EXTRA_OECONF += "--target-list=arm-linux-user,arm-softmmu"
+EXTRA_OECONF += "--target-list=arm-linux-user,arm-softmmu,i386-softmmu"
 EXTRA_OECONF += "--disable-gfx-check"
 
 inherit autotools
