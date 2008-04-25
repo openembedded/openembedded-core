@@ -7,6 +7,7 @@ FILESDIR = "${WORKDIR}"
 
 SRC_URI = "\
     http://fabrice.bellard.free.fr/qemu/qemu-0.9.1.tar.gz \
+    file://02_snapshot_use_tmpdir.patch;patch=1;pnum=0 \
     file://04_do_not_print_rtc_freq_if_ok.patch;patch=1;pnum=1 \
     file://05_non-fatal_if_linux_hd_missing.patch;patch=1;pnum=1 \
     file://06_exit_segfault.patch;patch=1;pnum=0 \
