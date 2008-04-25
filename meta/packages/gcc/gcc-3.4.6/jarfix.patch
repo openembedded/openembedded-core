@@ -1,0 +1,30 @@
+ libjava/Makefile.am |    2 +-
+ libjava/Makefile.in |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: gcc-3.4.4/libjava/Makefile.am
+===================================================================
+--- gcc-3.4.4.orig/libjava/Makefile.am	2006-12-05 15:37:50.000000000 +0000
++++ gcc-3.4.4/libjava/Makefile.am	2006-12-05 15:38:27.000000000 +0000
+@@ -77,7 +77,7 @@ if NULL_TARGET
+ ZIP = $(MULTIBUILDTOP)../$(COMPPATH)/fastjar/jar
+ GCJH = gcjh
+ else
+-ZIP = jar
++ZIP = $(MULTIBUILDTOP)../$(COMPPATH)/fastjar/jar
+ GCJH = $(target_alias)-gcjh
+ endif
+ else # CANADIAN
+Index: gcc-3.4.4/libjava/Makefile.in
+===================================================================
+--- gcc-3.4.4.orig/libjava/Makefile.in	2006-12-05 15:39:08.000000000 +0000
++++ gcc-3.4.4/libjava/Makefile.in	2006-12-05 15:39:21.000000000 +0000
+@@ -193,7 +193,7 @@ propdir = $(libdir)
+ 
+ bin_SCRIPTS = addr2name.awk
+ @CANADIAN_TRUE@@NULL_TARGET_TRUE@ZIP = @CANADIAN_TRUE@@NULL_TARGET_TRUE@$(MULTIBUILDTOP)../$(COMPPATH)/fastjar/jar
+-@CANADIAN_TRUE@@NULL_TARGET_FALSE@ZIP = @CANADIAN_TRUE@@NULL_TARGET_FALSE@jar
++@CANADIAN_TRUE@@NULL_TARGET_FALSE@ZIP = @CANADIAN_TRUE@@NULL_TARGET_FALSE@$(MULTIBUILDTOP)../$(COMPPATH)/fastjar/jar
+ @CANADIAN_FALSE@ZIP = @CANADIAN_FALSE@$(MULTIBUILDTOP)../$(COMPPATH)/fastjar/jar
+ @CANADIAN_TRUE@@NULL_TARGET_TRUE@GCJH = @CANADIAN_TRUE@@NULL_TARGET_TRUE@gcjh
+ @CANADIAN_TRUE@@NULL_TARGET_FALSE@GCJH = @CANADIAN_TRUE@@NULL_TARGET_FALSE@$(target_alias)-gcjh

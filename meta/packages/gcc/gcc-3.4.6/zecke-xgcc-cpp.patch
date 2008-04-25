@@ -1,0 +1,13 @@
+Index: gcc-3.4.4/Makefile.in
+===================================================================
+--- gcc-3.4.4.orig/Makefile.in	2005-05-19 11:58:00.000000000 +0200
++++ gcc-3.4.4/Makefile.in	2006-08-06 13:08:14.000000000 +0200
+@@ -21964,6 +21964,8 @@
+ 	AS="$(AS_FOR_TARGET)"; export AS; \
+ 	CC="$(CC_FOR_TARGET)"; export CC; \
+ 	CFLAGS="$(CFLAGS_FOR_TARGET)"; export CFLAGS; \
++	CPP="$(CC_FOR_TARGET) -E"; export CCP; \
++	CPPFLAGS=""; export CPPFLAGS; \
+ 	CONFIG_SHELL="$(SHELL)"; export CONFIG_SHELL; \
+ 	CPPFLAGS="$(CFLAGS_FOR_TARGET)"; export CPPFLAGS; \
+ 	CXX_FOR_TARGET="$(RAW_CXX_FOR_TARGET)"; export CXX_FOR_TARGET; \

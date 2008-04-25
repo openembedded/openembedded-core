@@ -1,0 +1,389 @@
+2005-05-04  Grigory Zagorodnev  <grigory.zagorodnev@intel.com>
+            H.J. Lu  <hongjiu.lu@intel.com>
+
+
+	Cross-profiling support: relocate .gcda files when
+	running at system other than executable been built on.
+
+
+	* gcov-io.c (gcov_open): When in libgcov library
+	use given data file relocation prefix to build file name.
+	* gcov-io.h (gcov_open): Updated proto to accept
+	data file relocation prefix.
+	* libgcov.c (create_file_directory): New function.
+	(gcov_prefix): New static variable to hold data file
+	relocation prefix.
+	(gcov_version): Use relocation prefix.
+	(gcov_exit): Always try to create directory for output
+	file. Relocate filename at each use.
+	(__gcov_init): Initialize directory relocation prefix
+	if required. Strip off leading directories from
+	the initial filename.
+	* tsystem.h: include filenames.h
+	(DIR_SEPARATOR): Macro copied from system.h.
+	(DIR_SEPARATOR_2): Likewise.
+	* doc/gcov.texi (Cross-profiling): New node documenting
+	cross-profiling management.
+	* doc/invoke.texi (-fprofile-arcs): xref to cross-profiling.
+
+Grigory Zagorodnev
+Intel Corporation
+
+--- gcc-3.4/gcc/gcov-io.c.prefix	2004-02-26 13:54:47.000000000 -0800
++++ gcc-3.4/gcc/gcov-io.c	2005-05-04 11:46:01.000000000 -0700
+@@ -55,13 +55,14 @@ static inline gcov_unsigned_t from_file 
+ 
+ GCOV_LINKAGE int
+ #if IN_LIBGCOV
+-gcov_open (const char *name)
++gcov_open (const char *prefix, const char *name)
+ #else
+ gcov_open (const char *name, int mode)
+ #endif
+ {
+ #if IN_LIBGCOV
+   const int mode = 0;
++  char *tmp;
+ #endif
+ #if GCOV_LOCKED
+   struct flock s_flock;
+@@ -83,6 +84,14 @@ gcov_open (const char *name, int mode)
+ #if !IN_LIBGCOV
+   gcov_var.endian = 0;
+ #endif
++
++#if IN_LIBGCOV
++  /* Build complete filename with prefix */
++  tmp = alloca( strlen(prefix) + strlen(name) + 1);
++  *tmp = '\0';
++  name = strcat( strcat(tmp, prefix), name);
++#endif
++
+ #if GCOV_LOCKED
+   if (mode > 0)
+     fd = open (name, O_RDWR);
+--- gcc-3.4/gcc/gcov-io.h.prefix	2005-05-02 15:37:58.000000000 -0700
++++ gcc-3.4/gcc/gcov-io.h	2005-05-04 11:46:01.000000000 -0700
+@@ -502,7 +502,7 @@ GCOV_LINKAGE struct gcov_var
+    functions for writing.  Your file may become corrupted if you break
+    these invariants.  */
+ #if IN_LIBGCOV
+-GCOV_LINKAGE int gcov_open (const char */*name*/) ATTRIBUTE_HIDDEN;
++GCOV_LINKAGE int gcov_open (const char */*prefix*/, const char */*name*/) ATTRIBUTE_HIDDEN;
+ #else
+ GCOV_LINKAGE int gcov_open (const char */*name*/, int /*direction*/);
+ GCOV_LINKAGE int gcov_magic (gcov_unsigned_t, gcov_unsigned_t);
+--- gcc-3.4/gcc/libgcov.c.prefix	2004-02-26 13:54:47.000000000 -0800
++++ gcc-3.4/gcc/libgcov.c	2005-05-04 12:01:58.000000000 -0700
+@@ -92,6 +92,70 @@ static struct gcov_info *gcov_list;
+    object file included in multiple programs.  */
+ static gcov_unsigned_t gcov_crc32;
+ 
++/* Directory prefix to relocate coverage data file names */
++static char *gcov_prefix = 0;
++
++/* Level of dirs to strip off the initial filename to relocate */
++static int gcov_prefix_strip = 0;
++
++static int
++create_file_directory (const char *prefix, const char *filename)
++{
++  char *dname;
++  char sep, *r, *s;
++  size_t plen, flen;
++  
++  /* Detect directory separator */
++  s = strrchr (prefix, DIR_SEPARATOR);
++#ifdef DIR_SEPARATOR_2
++  if (! s)
++    s = strrchr (prefix, DIR_SEPARATOR_2);
++#endif
++  if (s)
++    sep = *s;
++  else
++    sep = DIR_SEPARATOR;
++
++  /* join prefix and filename, split path */
++  plen  = strlen(prefix);
++  flen  = strlen(filename);
++  r     = alloca(plen + flen + 1);
++  strncpy(r, prefix, plen);
++  strncpy(r + plen, filename, flen);
++  r[plen + flen] = '\0';
++  s = strrchr(r, sep);
++  if (s)
++    *(s + 1) = '\0';
++
++  if (access (r, F_OK) == 0)
++    return 0;
++
++  /* Skip consecutive separators.  */
++  for (dname = r; *dname && *dname == sep; ++dname);
++  while (1)
++    {
++      char *s = strchr (dname, sep);
++      if (s == 0)
++        break;
++      *s = '\0';
++      /* Try to make directory if it doesn't already exist.  */
++      if (access (r, F_OK) == -1
++          && mkdir (r, 0755) == -1
++          /* The directory might have been made by another process.  */
++	  && errno != EEXIST)
++	{
++          *s = sep;
++          fprintf (stderr, "profiling:%s:Cannot create directory\n", r);
++	  return -1;
++	};
++      *s = sep;
++      /* Skip consecutive separators.  */
++      for (dname = s + 1; *dname && *dname == sep; ++dname)
++        ;
++    }
++  return 0;
++}
++
+ static int
+ gcov_version (struct gcov_info *ptr, gcov_unsigned_t version)
+ {
+@@ -103,8 +167,8 @@ gcov_version (struct gcov_info *ptr, gco
+       GCOV_UNSIGNED2STRING (e, GCOV_VERSION);
+       
+       fprintf (stderr,
+-	       "profiling:%s:Version mismatch - expected %.4s got %.4s\n",
+-	       ptr->filename, e, v);
++	       "profiling:%s%s:Version mismatch - expected %.4s got %.4s\n",
++	       gcov_prefix, ptr->filename, e, v);
+       return 0;
+     }
+   return 1;
+@@ -204,9 +268,14 @@ gcov_exit (void)
+ 	  fi_stride &= ~(__alignof__ (struct gcov_fn_info) - 1);
+ 	}
+       
+-      if (!gcov_open (gi_ptr->filename))
++      if (create_file_directory (gcov_prefix, gi_ptr->filename))
+ 	{
+-	  fprintf (stderr, "profiling:%s:Cannot open\n", gi_ptr->filename);
++	  fprintf (stderr, "profiling:%s%s:Skip\n", gcov_prefix, gi_ptr->filename);
++	  continue;
++	}
++      else if (!gcov_open (gcov_prefix, gi_ptr->filename))
++	{
++	  fprintf (stderr, "profiling:%s%s:Cannot open\n", gcov_prefix, gi_ptr->filename);
+ 	  continue;
+ 	}
+ 
+@@ -216,8 +285,8 @@ gcov_exit (void)
+ 	  /* Merge data from file.  */
+ 	  if (tag != GCOV_DATA_MAGIC)
+ 	    {
+-	      fprintf (stderr, "profiling:%s:Not a gcov data file\n",
+-		       gi_ptr->filename);
++	      fprintf (stderr, "profiling:%s%s:Not a gcov data file\n",
++		       gcov_prefix, gi_ptr->filename);
+ 	    read_fatal:;
+ 	      gcov_close ();
+ 	      continue;
+@@ -250,8 +319,8 @@ gcov_exit (void)
+ 		  || gcov_read_unsigned () != fi_ptr->checksum)
+ 		{
+ 		read_mismatch:;
+-		  fprintf (stderr, "profiling:%s:Merge mismatch for %s\n",
+-			   gi_ptr->filename,
++		  fprintf (stderr, "profiling:%s%s:Merge mismatch for %s\n",
++			   gcov_prefix, gi_ptr->filename,
+ 			   f_ix + 1 ? "function" : "summaries");
+ 		  goto read_fatal;
+ 		}
+@@ -309,8 +378,8 @@ gcov_exit (void)
+       if (!gcov_is_eof ())
+  	{
+  	read_error:;
+- 	  fprintf (stderr, error < 0 ? "profiling:%s:Overflow merging\n"
+- 		   : "profiling:%s:Error merging\n", gi_ptr->filename);
++ 	  fprintf (stderr, error < 0 ? "profiling:%s%s:Overflow merging\n"
++ 		   : "profiling:%s%s:Error merging\n", gcov_prefix, gi_ptr->filename);
+  	  goto read_fatal;
+  	}
+     rewrite:;
+@@ -357,8 +426,8 @@ gcov_exit (void)
+ 		   && (!GCOV_LOCKED || cs_all->runs == cs_prg->runs)
+ 		   && memcmp (cs_all, cs_prg, sizeof (*cs_all)))
+ 	    {
+-	      fprintf (stderr, "profiling:%s:Invocation mismatch - some data files may have been removed%s",
+-		       gi_ptr->filename, GCOV_LOCKED
++	      fprintf (stderr, "profiling:%s%s:Invocation mismatch - some data files may have been removed%s",
++		       gcov_prefix, gi_ptr->filename, GCOV_LOCKED
+ 		       ? "" : " or concurrent update without locking support");
+ 	      all.checksum = ~0u;
+ 	    }
+@@ -418,9 +487,9 @@ gcov_exit (void)
+       gcov_write_summary (GCOV_TAG_PROGRAM_SUMMARY, &program);
+       if ((error = gcov_close ()))
+ 	  fprintf (stderr, error  < 0 ?
+-		   "profiling:%s:Overflow writing\n" :
+-		   "profiling:%s:Error writing\n",
+-		   gi_ptr->filename);
++		   "profiling:%s%s:Overflow writing\n" :
++		   "profiling:%s%s:Error writing\n",
++		   gcov_prefix, gi_ptr->filename);
+     }
+ }
+ 
+@@ -430,11 +499,69 @@ gcov_exit (void)
+ void
+ __gcov_init (struct gcov_info *info)
+ {
++  /* Save initial filename pointer to calculate CRC. */
++  const char *ptr = info->filename;
++  
+   if (!info->version)
+     return;
++
++  /* Initialize directory prefix if requred */
++  if (gcov_prefix == 0)
++    {
++      if ((gcov_prefix = getenv("GCOV_PREFIX")))
++        {
++          char *tmp;
++	
++          /* Normalize prefix: take off trailing separator. */
++	  tmp = gcov_prefix + strlen(gcov_prefix) - 1;
++          if (IS_DIR_SEPARATOR(*tmp))
++            *tmp = '\0';
++
++          /* Check if the level of dirs to strip off specified */
++          if ((tmp = getenv("GCOV_PREFIX_STRIP")))
++            {
++	      gcov_prefix_strip = atoi (tmp);
++	      /* Do not consider negative values. */
++	      if (gcov_prefix_strip < 0)
++	        gcov_prefix_strip = 0;
++	    };
++        }
++      else 
++          gcov_prefix = (char *) "";
++    };
++    
++  /* Strip off leading directories from the initial filename */
++  if (gcov_prefix_strip > 0)
++    {
++      char sep, *s;
++      int level;
++      const char *fname = info->filename;
++      
++      /* Detect directory separator */
++      s = strrchr (fname, DIR_SEPARATOR);
++#ifdef DIR_SEPARATOR_2
++      if (! s)
++        s = strrchr (fname, DIR_SEPARATOR_2);
++#endif
++      if (s)
++        sep = *s;
++      else
++        sep = DIR_SEPARATOR;
++
++      /* Skip selected directory levels */
++      for ( level = gcov_prefix_strip; level > 0; level--)
++        if ((s = strchr(fname + 1, sep)))
++	  fname = s;
++	else
++	  break;
++	  
++      /* From this point info block refers stripped file name and 
++         further operations must add prefix to get complete name.*/
++      info->filename = fname;
++    };
++
+   if (gcov_version (info, info->version))
+     {
+-      const char *ptr = info->filename;
+       gcov_unsigned_t crc32 = gcov_crc32;
+   
+       do
+--- gcc-3.4/gcc/tsystem.h.prefix	2003-11-12 16:07:48.000000000 -0800
++++ gcc-3.4/gcc/tsystem.h	2005-05-04 12:12:08.000000000 -0700
+@@ -106,4 +106,15 @@ extern int errno;
+ #define NULL 0
+ #endif
+ 
++/* Filename handling macros.  */
++#include "filenames.h"
++
++/* These should be phased out in favor of IS_DIR_SEPARATOR, where possible.  */
++#ifndef DIR_SEPARATOR
++# define DIR_SEPARATOR '/'
++# ifdef HAVE_DOS_BASED_FILE_SYSTEM
++#  define DIR_SEPARATOR_2 '\\'
++# endif
++#endif
++
+ #endif /* ! GCC_TSYSTEM_H */
+Index: gcc-3.4/gcc/doc/gcov.texi
+===================================================================
+RCS file: /cvsroot/gcc/gcc/gcc/doc/gcov.texi,v
+retrieving revision 1.19.4.3
+diff -u -p -r1.19.4.3 gcov.texi
+--- gcc-3.4/gcc/doc/gcov.texi	14 Mar 2004 22:31:20 -0000	1.19.4.3
++++ gcc-3.4/gcc/doc/gcov.texi	4 May 2005 13:44:25 -0000
+@@ -42,6 +42,7 @@ test code coverage in your programs.
+ * Invoking Gcov::       	How to use gcov.
+ * Gcov and Optimization::       Using gcov with GCC optimization.
+ * Gcov Data Files::             The files used by gcov.
++* Cross-profiling::             Data files relocation.
+ @end menu
+ 
+ @node Gcov Intro
+@@ -510,3 +511,36 @@ information.
+ The full details of the file format is specified in @file{gcov-io.h},
+ and functions provided in that header file should be used to access the
+ coverage files.
++
++@node Cross-profiling
++@section Data files relocation to support cross-profiling
++
++Running the program will cause profile output to be generated.  For each 
++source file compiled with @option{-fprofile-arcs}, an accompanying @file{.gcda} 
++file will be placed in the object file directory. That implicitly requires 
++running the program at the same system as it was build or having same 
++absolute directory structure on the target system (program will try 
++to create needed directory structure).
++
++To support cross-profiling, program compiled with @option{-fprofile-arcs}
++performs data file relocation basing on two environment variables:
++
++@itemize @bullet
++@item
++GCOV_PREFIX contains the prefix to add to the absolute paths 
++in the object file.
++
++@item
++GCOV_PREFIX_STRIP indicates the how many initial directory names to strip off 
++the hardwired absolute paths. Default value is 0.
++@end itemize
++
++For example, if object file @file{/user/build/foo.o} was build with 
++@option{-fprofile-arcs}, the final executable will try to create data file 
++@file{/user/build/foo.gcda} when running at the target system and will 
++fail if corresponding directory does not exists and is not allowed to create. 
++
++In this case, manipulating environment variables you can relocate data file 
++to the suitable local directory. For our example, setting @samp{GCOV_PREFIX=/target/run} 
++and @samp{GCOV_PREFIX_STRIP=1} values will force use of @file{/target/run/build/foo.gcda} 
++file name.
+Index: gcc-3.4/gcc/doc/invoke.texi
+===================================================================
+RCS file: /cvsroot/gcc/gcc/gcc/doc/invoke.texi,v
+retrieving revision 1.390.2.40
+diff -u -p -r1.390.2.40 invoke.texi
+--- gcc-3.4/gcc/doc/invoke.texi	22 Apr 2005 06:49:59 -0000	1.390.2.40
++++ gcc-3.4/gcc/doc/invoke.texi	4 May 2005 13:44:25 -0000
+@@ -3158,6 +3158,7 @@ explicitly specified and it is not the f
+ the basename of the source file. In both cases any suffix is removed
+ (e.g.  @file{foo.gcda} for input file @file{dir/foo.c}, or
+ @file{dir/foo.gcda} for output file specified as @option{-o dir/foo.o}).
++@xref{Cross-profiling}.
+ 
+ @itemize
+
