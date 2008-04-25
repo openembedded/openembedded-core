@@ -957,7 +957,7 @@ def check_app_exists(app, d):
 
 def check_gcc3(data):
 
-	gcc3_versions = 'gcc-3.4 gcc34 gcc-3.4.4 gcc-3.4.6 gcc-3.4.7 gcc-3.3 gcc33 gcc-3.3.6 gcc-3.2 gcc32'
+	gcc3_versions = 'gcc-3.4.6 gcc-3.4.7 gcc-3.4 gcc34 gcc-3.4.4 gcc-3.3 gcc33 gcc-3.3.6 gcc-3.2 gcc32'
 
 	for gcc3 in gcc3_versions.split():
 		if check_app_exists(gcc3, data):
