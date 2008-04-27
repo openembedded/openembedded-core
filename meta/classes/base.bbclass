@@ -552,6 +552,45 @@ base_do_fetchall() {
 	:
 }
 
+addtask checkuri
+do_checkuri[nostamp] = "1"
+python do_checkuri() {
+	import sys
+
+	localdata = bb.data.createCopy(d)
+	bb.data.update_data(localdata)
+
+	src_uri = bb.data.getVar('SRC_URI', localdata, 1)
+
+	try:
+		bb.fetch.init(src_uri.split(),d)
+	except bb.fetch.NoMethodError:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("No method: %s" % value)
+
+	try:
+		bb.fetch.checkstatus(localdata)
+	except bb.fetch.MissingParameterError:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("Missing parameters: %s" % value)
+	except bb.fetch.FetchError:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("Fetch failed: %s" % value)
+	except bb.fetch.MD5SumError:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("MD5  failed: %s" % value)
+	except:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("Unknown fetch Error: %s" % value)
+}
+
+addtask checkuriall after do_checkuri
+do_checkuriall[recrdeptask] = "do_checkuri"
+do_checkuriall[nostamp] = "1"
+base_do_checkuriall() {
+	:
+}
+
 addtask buildall after do_build
 do_buildall[recrdeptask] = "do_build"
 base_do_buildall() {
