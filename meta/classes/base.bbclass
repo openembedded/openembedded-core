@@ -892,7 +892,7 @@ def has_subpkgdata(pkg, d):
 	return os.access(get_subpkgedata_fn(pkg, d), os.R_OK)
 
 def read_subpkgdata(pkg, d):
-	import bb, os
+	import bb
 	return read_pkgdatafile(get_subpkgedata_fn(pkg, d))
 
 def has_pkgdata(pn, d):
@@ -901,7 +901,7 @@ def has_pkgdata(pn, d):
 	return os.access(fn, os.R_OK)
 
 def read_pkgdata(pn, d):
-	import bb, os
+	import bb
 	fn = bb.data.expand('${PKGDATA_DIR}/%s' % pn, d)
 	return read_pkgdatafile(fn)
 
