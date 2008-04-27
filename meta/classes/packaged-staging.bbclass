@@ -123,7 +123,9 @@ staging_helper () {
 
 PSTAGE_TASKS_COVERED = "fetch unpack munge patch configure qa_configure rig_locales compile sizecheck install deploy package populate_staging package_write_deb package_write_ipk package_write package_stage qa_staging"
 
-python do_prepackaged_stage () {
+SCENEFUNCS += "packagestage_scenefunc"
+
+python packagestage_scenefunc () {
     import os
 
     if bb.data.getVar("PSTAGING_ACTIVE", d, 1) == "0":
@@ -156,17 +158,10 @@ python do_prepackaged_stage () {
         if ret != 0:
             bb.note("Failure installing prestage package")
 
-        #bb.build.make_stamp("do_prepackaged_stage", d)
-        #for task in bb.data.getVar("PSTAGE_TASKS_COVERED", d, 1).split():
-        #    bb.build.make_stamp("do_" + task, d)
         bb.build.make_stamp("do_stage_package_populated", d)
 
-    else:
-        bb.build.make_stamp("do_prepackaged_stage", d)
 }
-do_prepackaged_stage[cleandirs] = "${PSTAGE_TMPDIR_STAGE}"
-do_prepackaged_stage[selfstamp] = "1"
-addtask prepackaged_stage before do_fetch
+packagestage_scenefunc[cleandirs] = "${PSTAGE_TMPDIR_STAGE}"
 
 addhandler packagedstage_stampfixing_eventhandler
 python packagedstage_stampfixing_eventhandler() {
