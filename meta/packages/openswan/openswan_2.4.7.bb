@@ -8,7 +8,7 @@ RRECOMMENDS = "kernel-module-ipsec"
 RDEPENDS_nylon = "perl"
 PR = "r0"
 
-SRC_URI = "http://www.openswan.org/download/openswan-${PV}.tar.gz \
+SRC_URI = "http://www.openswan.org/download/old/openswan-${PV}.tar.gz \
 	   file://openswan-2.4.7-gentoo.patch;patch=1 \
            file://installflags.patch;patch=1 \
 	   file://ld-library-path-breakage.patch;patch=1"
