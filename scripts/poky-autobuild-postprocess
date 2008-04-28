@@ -1,0 +1,124 @@
+#!/bin/sh
+
+TARGETDIR=/srv/poky/autobuild-output
+if [ "$1" = "/srv/poky/autobuild/full-shihtzu/build" ]; then
+    DISTRO="poky"
+fi
+if [ "$1" = "/srv/poky/autobuild/full-bleeding-shihtzu/build" ]; then
+    DISTRO="poky-bleeding"
+fi
+if [ "$1" = "/srv/poky/autobuild/toolchain-shihtzu/build" ]; then
+    DISTRO="toolchain"
+fi
+if [ "$1" = "/srv/poky/autobuild/incremental-shihtzu/build" ]; then
+    DISTRO="incremental"
+fi
+
+cd $1/build/tmp/deploy/
+
+LASTREV=`tail images/svninfo | grep Revision | cut -f 2 -d ' '`
+DEST=$TARGETDIR/$DISTRO/$LASTREV/
+
+if [ -e $DEST ]; then
+    rm -Rf $DEST
+fi
+
+mkdir -p $DEST
+
+COMPRESS_FILES=()
+FILES=()
+
+if [ "x$DISTRO" = "xpoky-bleeding" ]; then
+    COMPRESS_FILES=(
+        poky-image-sato-qemuarm-*.rootfs.ext2
+    )
+
+    FILES=(
+        images/svninfo
+        images/`readlink images/zImage-akita.bin`
+        images/`readlink images/zImage-qemuarm.bin`
+        images/updater.sh.akita
+        images/poky-image-sato-akita-*.rootfs.summary.jffs2
+        images/poky-image-sato-qemuarm-*.rootfs.tar.bz2
+        images/poky-image-sato-qemuarm-*.rootfs.ext2
+    )
+fi
+
+if [ "x$DISTRO" = "xtoolchain" ]; then
+    FILES=(
+        images/svninfo
+        sdk/poky-*-toolchain-*.tar.bz2
+    )
+fi
+
+if [ "x$DISTRO" = "xpoky" ]; then
+    COMPRESS_FILES=(
+        poky-image-sdk-qemuarm-*.rootfs.ext2
+        poky-image-sdk-qemux86-*.rootfs.ext2
+        poky-image-minimal-qemuarm-*.rootfs.ext2
+        poky-image-minimal-qemux86-*.rootfs.ext2
+        poky-image-sato-cd-*.iso
+    )
+
+    FILES=(
+        images/svninfo
+        `readlink -f images/zImage-akita.bin`
+        `readlink -f images/zImage-c7x0.bin`
+        `readlink -f images/zImage-qemuarm.bin`
+        `readlink -f images/zImage-spitz.bin`
+        `readlink -f images/zImage-nokia800.bin`
+        `readlink -f images/bzImage-qemux86.bin`
+        `readlink -f images/zImage-htcuniversal.bin`
+        `readlink -f images/zImage-mx31litekit.bin`
+        `readlink -f images/zImage-mx31ads.bin`
+        `readlink -f images/zImage-nokia770.bin`
+        `readlink -f images/zImage-zylonite.bin`
+        `readlink -f images/zImage-cm-x270.bin`
+        `readlink -f images/uImage-em-x270.bin`
+        `readlink -f images/uImage-mx31phy.bin`
+        `readlink -f images/uImage-neo1973-latest.bin`
+        `readlink -f images/uImage-fic-gta01.bin`
+        images/updater.sh.akita
+        images/updater.sh.c7x0
+        images/updater.sh.spitz
+        images/gnu-tar
+        images/poky-image-sato-akita-*.rootfs.summary.jffs2
+        images/poky-image-sato-c7x0-*.rootfs.jffs2
+        images/poky-image-sato-spitz-*.rootfs.tar.gz
+        images/poky-image-sdk-qemuarm-*.rootfs.tar.bz2
+        images/poky-image-sdk-qemux86-*.rootfs.tar.bz2
+        images/poky-image-sdk-qemuarm-*.rootfs.ext2
+        images/poky-image-sdk-qemux86-*.rootfs.ext2
+        images/poky-image-minimal-qemuarm-*.rootfs.tar.bz2
+        images/poky-image-minimal-qemux86-*.rootfs.tar.bz2
+        images/poky-image-minimal-qemuarm-*.rootfs.ext2
+        images/poky-image-minimal-qemux86-*.rootfs.ext2
+        images/poky-image-sdk-spitz-*.rootfs.tar.gz
+        images/poky-image-sdk-nokia800-*.rootfs.jffs2
+        images/poky-image-sato-nokia770-*.rootfs.jffs2
+        images/poky-image-sato-zylonite-*.rootfs.jffs2
+        images/poky-image-sato-cm-x270-*.rootfs.jffs2
+        images/poky-image-sato-em-x270-*.rootfs.jffs2
+        images/poky-image-sato-mx31litekit-*.rootfs.tar.gz
+        images/poky-image-sato-htcuniversal-*.rootfs.tar.gz
+        images/poky-image-sato-fic-gta01-*.rootfs.jffs2
+        images/poky-image-sato-cd-*.iso
+        images/poky-image-sato-mx31phy-*.jffs2
+        images/poky-image-sato-mx31ads-*.jffs2
+        `readlink -f images/updater-em-x270.ext2`
+    )
+fi
+
+for FILE in ${FILES[@]}; do
+    #echo "-i $KEY $FILE $DEST"
+    cp $FILE $DEST
+done
+
+for FILE in ${COMPRESS_FILES[@]}; do
+    bzip2 $DEST/$FILE
+done
+
+touch $DEST/complete
+
+#chgrp -R backup $DEST
+chmod a+w -R $DEST
