@@ -30,7 +30,7 @@ FILES=()
 
 if [ "x$DISTRO" = "xpoky-bleeding" ]; then
     COMPRESS_FILES=(
-        poky-image-sato-qemuarm-*.rootfs.ext2
+        images/poky-image-sato-qemuarm-*.rootfs.ext2
     )
 
     FILES=(
@@ -40,7 +40,6 @@ if [ "x$DISTRO" = "xpoky-bleeding" ]; then
         images/updater.sh.akita
         images/poky-image-sato-akita-*.rootfs.summary.jffs2
         images/poky-image-sato-qemuarm-*.rootfs.tar.bz2
-        images/poky-image-sato-qemuarm-*.rootfs.ext2
     )
 fi
 
@@ -53,11 +52,11 @@ fi
 
 if [ "x$DISTRO" = "xpoky" ]; then
     COMPRESS_FILES=(
-        poky-image-sdk-qemuarm-*.rootfs.ext2
-        poky-image-sdk-qemux86-*.rootfs.ext2
-        poky-image-minimal-qemuarm-*.rootfs.ext2
-        poky-image-minimal-qemux86-*.rootfs.ext2
-        poky-image-sato-cd-*.iso
+        images/poky-image-sdk-qemuarm-*.rootfs.ext2
+        images/poky-image-sdk-qemux86-*.rootfs.ext2
+        images/poky-image-minimal-qemuarm-*.rootfs.ext2
+        images/poky-image-minimal-qemux86-*.rootfs.ext2
+        images/poky-image-sato-cd-*.iso
     )
 
     FILES=(
@@ -87,12 +86,8 @@ if [ "x$DISTRO" = "xpoky" ]; then
         images/poky-image-sato-spitz-*.rootfs.tar.gz
         images/poky-image-sdk-qemuarm-*.rootfs.tar.bz2
         images/poky-image-sdk-qemux86-*.rootfs.tar.bz2
-        images/poky-image-sdk-qemuarm-*.rootfs.ext2
-        images/poky-image-sdk-qemux86-*.rootfs.ext2
         images/poky-image-minimal-qemuarm-*.rootfs.tar.bz2
         images/poky-image-minimal-qemux86-*.rootfs.tar.bz2
-        images/poky-image-minimal-qemuarm-*.rootfs.ext2
-        images/poky-image-minimal-qemux86-*.rootfs.ext2
         images/poky-image-sdk-spitz-*.rootfs.tar.gz
         images/poky-image-sdk-nokia800-*.rootfs.jffs2
         images/poky-image-sato-nokia770-*.rootfs.jffs2
@@ -102,7 +97,6 @@ if [ "x$DISTRO" = "xpoky" ]; then
         images/poky-image-sato-mx31litekit-*.rootfs.tar.gz
         images/poky-image-sato-htcuniversal-*.rootfs.tar.gz
         images/poky-image-sato-fic-gta01-*.rootfs.jffs2
-        images/poky-image-sato-cd-*.iso
         images/poky-image-sato-mx31phy-*.jffs2
         images/poky-image-sato-mx31ads-*.jffs2
         `readlink -f images/updater-em-x270.ext2`
@@ -110,15 +104,24 @@ if [ "x$DISTRO" = "xpoky" ]; then
 fi
 
 for FILE in ${FILES[@]}; do
-    #echo "-i $KEY $FILE $DEST"
-    cp $FILE $DEST
+    for $FILE2 in `find -name $FILE`; do
+        if [ ! -e "$DEST/$FILE2" ]; then
+            cp $FILE2 $DEST
+        fi
+    done
 done
 
 for FILE in ${COMPRESS_FILES[@]}; do
-    bzip2 $DEST/$FILE
+    for $FILE2 in `find -name $FILE`; do
+        if [ ! -e "$DEST/$FILE2.bz2" ]; then
+            bzip2 $FILE2
+            cp $FILE2.bz2 $DEST
+        fi
+    done
 done
 
-touch $DEST/complete
-
-#chgrp -R backup $DEST
+if [ -e ./images-complete ]; then
+    touch $DEST/complete
+fi
 chmod a+w -R $DEST
+

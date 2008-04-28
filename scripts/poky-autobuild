@@ -31,10 +31,11 @@ if [ "xpreamble" = "x$1" ]; then
     exit 0
 fi
 
+POSTPROCESS=`which poky-autobuild-postprocess`
+
 if [ "xcomplete" = "x$1" ]; then
     touch ./build/tmp/deploy/images/images-complete
     chmod a+w ./build/tmp/deploy/images/images-complete
-    POSTPROCESS=`which poky-autobuild-postprocess`
     if [ "x$POSTPROCESS" != "x" ]; then
         $POSTPROCESS `pwd` 
     fi
@@ -59,3 +60,8 @@ shift
 . ./scripts/poky-env-internal
 
 bitbake $BBTARGET
+
+if [ "x$POSTPROCESS" != "x" ]; then
+    $POSTPROCESS `pwd` 
+fi
+
