@@ -97,7 +97,7 @@
             </glossdef>
         </glossentry>
 
-        <glossentry id='var-COMPATIBLE_MACHINES'><glossterm>COMPATIBLE_MACHINES</glossterm>
+        <glossentry id='var-COMPATIBLE_MACHINE'><glossterm>COMPATIBLE_MACHINE</glossterm>
             <glossdef>
                 <para>A regular expression which evalutates to match the machines the recipe 
                 works with. It stops recipes being run on machines they're incompatible with 

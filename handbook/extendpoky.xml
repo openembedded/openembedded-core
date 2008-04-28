@@ -469,7 +469,7 @@ bitbake poky-image-sato
             suitable defconfig file in a location similar to that used by other 
             machine's defconfig files in a given kernel, possibly listing it in
             the SRC_URI and adding the machine to the expression in <glossterm>
-            <link linkend='var-COMPATIBLE_MACHINES'>COMPATIBLE_MACHINES</link>
+            <link linkend='var-COMPATIBLE_MACHINE'>COMPATIBLE_MACHINE</link>
             </glossterm>.
         </para>
     </section>
