@@ -104,7 +104,7 @@ if [ "x$DISTRO" = "xpoky" ]; then
 fi
 
 for FILE in ${FILES[@]}; do
-    for $FILE2 in `find -name $FILE`; do
+    for FILE2 in `find -name $FILE`; do
         if [ ! -e "$DEST/$FILE2" ]; then
             cp $FILE2 $DEST
         fi
@@ -112,7 +112,7 @@ for FILE in ${FILES[@]}; do
 done
 
 for FILE in ${COMPRESS_FILES[@]}; do
-    for $FILE2 in `find -name $FILE`; do
+    for FILE2 in `find -name $FILE`; do
         if [ ! -e "$DEST/$FILE2.bz2" ]; then
             bzip2 $FILE2
             cp $FILE2.bz2 $DEST
