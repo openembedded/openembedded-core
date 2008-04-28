@@ -119,5 +119,5 @@ done
 if [ -e ./images-complete ]; then
     touch $DEST/complete
 fi
-chmod a+w -R $DEST
+chmod a+w -R $DEST || true
 
