@@ -31,10 +31,13 @@ if [ "xpreamble" = "x$1" ]; then
     exit 0
 fi
 
+BBTARGET="$1"
+shift
+
 . ./scripts/poky-env-internal
 POSTPROCESS=`which poky-autobuild-postprocess`
 
-if [ "xcomplete" = "x$1" ]; then
+if [ "xcomplete" = "x$BBTARGET" ]; then
     touch ./build/tmp/deploy/images/images-complete
     chmod a+w ./build/tmp/deploy/images/images-complete
     if [ "x$POSTPROCESS" != "x" ]; then
@@ -54,9 +57,6 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo 'DL_DIR = "/srv/poky/sources"' >> "$CONFFILE"
 fi
-
-BBTARGET="$1"
-shift
 
 bitbake $BBTARGET
 
