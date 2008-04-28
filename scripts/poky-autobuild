@@ -38,8 +38,8 @@ shift
 POSTPROCESS=`which poky-autobuild-postprocess`
 
 if [ "xcomplete" = "x$BBTARGET" ]; then
-    touch ./build/tmp/deploy/images/images-complete
-    chmod a+w ./build/tmp/deploy/images/images-complete
+    touch ./tmp/deploy/images/images-complete
+    chmod a+w ./tmp/deploy/images/images-complete
     cd ..
     if [ "x$POSTPROCESS" != "x" ]; then
         $POSTPROCESS `pwd` 
@@ -47,11 +47,11 @@ if [ "xcomplete" = "x$BBTARGET" ]; then
     exit 0
 fi
 
-CONFFILE="./build/conf/auto.conf"
+CONFFILE="./conf/auto.conf"
 
 if [ ! -e "$CONFFILE" ]; then
-    if [ ! -d "./build/conf" ]; then
-        mkdir -p "./build/conf"
+    if [ ! -d "./conf" ]; then
+        mkdir -p "./conf"
     fi
     echo 'PACKAGE_CLASSES = "package_ipk package_deb"' > "$CONFFILE"
     echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
