@@ -40,6 +40,7 @@ POSTPROCESS=`which poky-autobuild-postprocess`
 if [ "xcomplete" = "x$BBTARGET" ]; then
     touch ./build/tmp/deploy/images/images-complete
     chmod a+w ./build/tmp/deploy/images/images-complete
+    cd ..
     if [ "x$POSTPROCESS" != "x" ]; then
         $POSTPROCESS `pwd` 
     fi
@@ -59,6 +60,8 @@ if [ ! -e "$CONFFILE" ]; then
 fi
 
 bitbake $BBTARGET
+
+cd ..
 
 if [ "x$POSTPROCESS" != "x" ]; then
     $POSTPROCESS `pwd` 
