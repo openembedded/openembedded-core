@@ -90,17 +90,48 @@ PSTAGE_LIST_CMD		= "opkg-cl list_installed -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
 
 PSTAGE_TMPDIR_STAGE     = "${WORKDIR}/staging-pkg"
 
-do_clean_append() {
+def pstage_manualclean(srcname, destvarname, d):
+	import os, bb
+
+	src = os.path.join(bb.data.getVar('PSTAGE_TMPDIR_STAGE', d, True), srcname)
+	dest = bb.data.getVar(destvarname, d, True)
+
+	for walkroot, dirs, files in os.walk(src):
+		for file in files:
+			filepath = os.path.join(walkroot, file).replace(src, dest)
+			bb.note("rm %s" % filepath)
+			os.system("rm %s" % filepath)
+
+def pstage_cleanpackage(pkgname, d):
+	import os, bb
+
+        path = bb.data.getVar("PATH", d, 1)
+	list_cmd = bb.data.getVar("PSTAGE_LIST_CMD", d, True)
+
+	bb.note("Checking if staging package installed")
+	lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
+	ret = os.system("PATH=\"%s\" %s | grep %s" % (path, list_cmd, pkgname))
+	if ret == 0:
+		bb.note("Yes. Uninstalling package from staging...")
+		removecmd = bb.data.getVar("PSTAGE_REMOVE_CMD", d, 1)
+		ret = os.system("PATH=\"%s\" %s %s" % (path, removecmd, removepkg))
+		if ret != 0:
+			bb.note("Failure removing staging package")
+	else:
+		bb.note("No. Manually removing any installed files")
+		pstage_manualclean("staging", "STAGING_DIR", d)
+		pstage_manualclean("cross", "CROSS_DIR", d)
+		pstage_manualclean("deploy", "DEPLOY_DIR", d)
+
+	bb.utils.unlockfile(lf)
+
+do_clean_prepend() {
         """
         Clear the build and temp directories
         """
-	bb.note("Uninstalling package from staging...")
-        path = bb.data.getVar("PATH", d, 1)
-	removecmd = bb.data.getVar("PSTAGE_REMOVE_CMD", d, 1)
+
 	removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
-        ret = os.system("PATH=\"%s\" %s %s" % (path, removecmd, removepkg))
-        if ret != 0:
-            bb.note("Failure removing staging package")
+	pstage_cleanpackage(removepkg, d)
 
         stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
         bb.note("Removing staging package %s" % stagepkg)
@@ -132,15 +163,8 @@ python packagestage_scenefunc () {
         bb.build.make_stamp("do_prepackaged_stage", d)
         return
 
-    bb.note("Uninstalling any existing package from staging...")
-    path = bb.data.getVar("PATH", d, 1)
-    removecmd = bb.data.getVar("PSTAGE_REMOVE_CMD", d, 1)
     removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
-    lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
-    ret = os.system("PATH=\"%s\" %s %s" % (path, removecmd, removepkg))
-    bb.utils.unlockfile(lf)
-    if ret != 0:
-        bb.note("Failure attempting to remove staging package")
+    pstage_cleanpackage(removepkg, d)
 
     stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
 
@@ -162,6 +186,7 @@ python packagestage_scenefunc () {
 
 }
 packagestage_scenefunc[cleandirs] = "${PSTAGE_TMPDIR_STAGE}"
+packagestage_scenefunc[dirs] = "${STAGING_DIR}"
 
 addhandler packagedstage_stampfixing_eventhandler
 python packagedstage_stampfixing_eventhandler() {
@@ -241,7 +266,14 @@ staging_packager () {
 }
 
 staging_package_installer () {
-	${PSTAGE_INSTALL_CMD} ${PSTAGE_PKG}
+	#${PSTAGE_INSTALL_CMD} ${PSTAGE_PKG}
+
+	STATUSFILE=${TMPDIR}${layout_libdir}/opkg/status
+	echo "Package: ${PSTAGE_PKGPN}"        >> $STATUSFILE
+	echo "Version: ${PSTAGE_PKGVERSION}"   >> $STATUSFILE
+	echo "Status: install user installed"  >> $STATUSFILE
+	echo "Architecture: ${PSTAGE_PKGARCH}" >> $STATUSFILE
+	echo "" >> $STATUSFILE
 }
 
 python do_package_stage () {
