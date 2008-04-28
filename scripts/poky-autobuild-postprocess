@@ -19,10 +19,6 @@ cd $1/build/tmp/deploy/
 LASTREV=`tail images/svninfo | grep Revision | cut -f 2 -d ' '`
 DEST=$TARGETDIR/$DISTRO/$LASTREV/
 
-if [ -e $DEST ]; then
-    rm -Rf $DEST
-fi
-
 mkdir -p $DEST
 
 COMPRESS_FILES=()
