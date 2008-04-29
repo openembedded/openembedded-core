@@ -31,13 +31,11 @@ if [ "xpreamble" = "x$1" ]; then
     exit 0
 fi
 
-BBTARGET="$1"
-shift
-
+BDIR="build"
 . ./scripts/poky-env-internal
 POSTPROCESS=`which poky-autobuild-postprocess`
 
-if [ "xcomplete" = "x$BBTARGET" ]; then
+if [ "xcomplete" = "x$1" ]; then
     touch ./tmp/deploy/images/images-complete
     chmod a+w ./tmp/deploy/images/images-complete
     cd ..
@@ -59,7 +57,7 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'DL_DIR = "/srv/poky/sources"' >> "$CONFFILE"
 fi
 
-bitbake $BBTARGET
+bitbake $@
 
 cd ..
 

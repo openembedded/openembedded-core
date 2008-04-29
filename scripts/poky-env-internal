@@ -23,11 +23,12 @@
 # Also update the locations at the top of conf/local.conf
 
 OEROOT=`pwd`
-
-if [ "x$1" = "x" ]; then
-	BDIR="build"
-else
-	BDIR="$1"
+if [ "x$BDIR" = "x" ]; then
+	if [ "x$1" = "x" ]; then
+		BDIR="build"
+	else
+		BDIR="$1"
+	fi
 fi
 
 BBDIR="$OEROOT/bitbake/"
