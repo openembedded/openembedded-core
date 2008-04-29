@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Poky Build Enviroment Setup Script
+# Poky Automated Build Server Enviroment Setup Script
 #
 # Copyright (C) 2006-2007 OpenedHand Ltd.
 #
@@ -18,11 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
-#if test x"$0" = x"./poky-init-build-env"; then
-#   echo "Error: Run via '. ./poky-init-build-env'"
-#   exit 1
-#fi
+TARGETDIR=/srv/poky/autobuild-output
+CURRDIR=`pwd`
+if   [ "$CURRDIR" = "/srv/poky/autobuild/full-shihtzu/build" ]; then
+    ABTARGET="poky"
+elif [ "$CURRDIR" = "/srv/poky/autobuild/full-bleeding-shihtzu/build" ]; then
+    ABTARGET="poky-bleeding"
+elif [ "$CURRDIR" = "/srv/poky/autobuild/toolchain-shihtzu/build" ]; then
+    ABTARGET="toolchain"
+elif [ "$CURRDIR" = "/srv/poky/autobuild/incremental-shihtzu/build" ]; then
+    ABTARGET="incremental"
+fi
 
 if [ "xpreamble" = "x$1" ]; then
     mkdir -p ./build/tmp/deploy/images 
@@ -38,9 +44,9 @@ POSTPROCESS=`which poky-autobuild-postprocess`
 if [ "xcomplete" = "x$1" ]; then
     touch ./tmp/deploy/images/images-complete
     chmod a+w ./tmp/deploy/images/images-complete
-    cd ..
     if [ "x$POSTPROCESS" != "x" ]; then
-        $POSTPROCESS `pwd` 
+        cd ..
+        $POSTPROCESS $ABTARGET $TARGETDIR
     fi
     exit 0
 fi
@@ -59,9 +65,8 @@ fi
 
 bitbake $@
 
-cd ..
-
 if [ "x$POSTPROCESS" != "x" ]; then
-    $POSTPROCESS `pwd` 
+    cd ..
+    $POSTPROCESS $ABTARGET $TARGETDIR
 fi
 

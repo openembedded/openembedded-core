@@ -1,30 +1,37 @@
 #!/bin/sh
 
-TARGETDIR=/srv/poky/autobuild-output
-if [ "$1" = "/srv/poky/autobuild/full-shihtzu/build" ]; then
-    DISTRO="poky"
-fi
-if [ "$1" = "/srv/poky/autobuild/full-bleeding-shihtzu/build" ]; then
-    DISTRO="poky-bleeding"
-fi
-if [ "$1" = "/srv/poky/autobuild/toolchain-shihtzu/build" ]; then
-    DISTRO="toolchain"
-fi
-if [ "$1" = "/srv/poky/autobuild/incremental-shihtzu/build" ]; then
-    DISTRO="incremental"
-fi
+# Poky Automated Build Server Post Processing Script
+#
+# Copyright (C) 2006-2007 OpenedHand Ltd.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-cd $1/build/tmp/deploy/
+ABTARGET=$1
+TARGETDIR=$2
+
+cd ./build/tmp/deploy/
 
 LASTREV=`tail images/svninfo | grep Revision | cut -f 2 -d ' '`
-DEST=$TARGETDIR/$DISTRO/$LASTREV/
+DEST=$TARGETDIR/$ABTARGET/$LASTREV/
 
 mkdir -p $DEST
 
 COMPRESS_FILES=()
 FILES=()
 
-if [ "x$DISTRO" = "xpoky-bleeding" ]; then
+if [ "x$ABTARGET" = "xpoky-bleeding" ]; then
     COMPRESS_FILES=(
         poky-image-sato-qemuarm-*.rootfs.ext2
     )
@@ -39,14 +46,14 @@ if [ "x$DISTRO" = "xpoky-bleeding" ]; then
     )
 fi
 
-if [ "x$DISTRO" = "xtoolchain" ]; then
+if [ "x$ABTARGET" = "xtoolchain" ]; then
     FILES=(
         svninfo
         poky-*-toolchain-*.tar.bz2
     )
 fi
 
-if [ "x$DISTRO" = "xpoky" ]; then
+if [ "x$ABTARGET" = "xpoky" ]; then
     COMPRESS_FILES=(
         poky-image-sdk-qemuarm-*.rootfs.ext2
         poky-image-sdk-qemux86-*.rootfs.ext2
@@ -116,8 +123,8 @@ for FILE in ${COMPRESS_FILES[@]}; do
     done
 done
 
-if [ -e ./images-complete ]; then
+if [ -e ./images/images-complete ]; then
     touch $DEST/complete
 fi
-chmod a+w -R $DEST || true
+chmod a+w -R $DEST 2> /dev/null || true
 
