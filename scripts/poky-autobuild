@@ -65,8 +65,11 @@ fi
 
 bitbake $@
 
+retval=$?
+
 if [ "x$POSTPROCESS" != "x" ]; then
     cd ..
     $POSTPROCESS $ABTARGET $TARGETDIR
 fi
 
+exit $?
