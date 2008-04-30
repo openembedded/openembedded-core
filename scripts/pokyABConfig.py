@@ -98,7 +98,7 @@ runImage(f6, 'qemuarm', 'meta-toolchain')
 runImage(f6, 'qemuarm', 'meta-toolchain-sdk')
 runImage(f6, 'qemux86', 'meta-toolchain')
 runImage(f6, 'qemux86', 'meta-toolchain-sdk')
-runImage(f6, 'qemuarm', 'world -c uricheckall')
+runImage(f6, 'qemuarm', 'world -c checkuriall')
 runComplete(f6)
 
 #from buildbot.process import step, factory
