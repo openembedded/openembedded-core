@@ -2,11 +2,11 @@
  configure.in |   24 +++++++++---------------
  2 files changed, 23 insertions(+), 27 deletions(-)
 
-Index: gmp-4.2.1/acinclude.m4
+Index: gmp-4.2.2/acinclude.m4
 ===================================================================
---- gmp-4.2.1.orig/acinclude.m4	2006-05-04 17:39:01.000000000 +0100
-+++ gmp-4.2.1/acinclude.m4	2006-11-06 20:36:14.000000000 +0000
-@@ -32,20 +32,20 @@ dnl    a_out.exe - OpenVMS DEC C called 
+--- gmp-4.2.2.orig/acinclude.m4	2007-09-01 11:09:03.000000000 +0100
++++ gmp-4.2.2/acinclude.m4	2008-04-30 17:19:16.000000000 +0100
+@@ -30,20 +30,20 @@
  dnl    conftest.exe - various DOS compilers
  
  
@@ -31,7 +31,7 @@ Index: gmp-4.2.1/acinclude.m4
  [[i?86*-*-* | k[5-8]*-*-* | pentium*-*-* | athlon-*-* | viac3*-*-*]])
  
  
-@@ -64,7 +64,7 @@ dnl      x86         ->  x86
+@@ -62,7 +62,7 @@
  dnl      x86/k6      ->  k6
  dnl      x86/k6/mmx  ->  k6_mmx
  
@@ -40,7 +40,7 @@ Index: gmp-4.2.1/acinclude.m4
  [[$1=`echo $2 | sed -e '/\//s:^[^/]*/::' -e 's:[\\/]:_:g'`]])
  
  
-@@ -73,7 +73,7 @@ dnl  ----------------------------------
+@@ -71,7 +71,7 @@
  dnl  Emit code to remove any occurance of ITEM from $LISTVAR.  ITEM can be a
  dnl  shell expression like $foo if desired.
  
@@ -49,9 +49,9 @@ Index: gmp-4.2.1/acinclude.m4
  [remove_from_list_tmp=
  for remove_from_list_i in $[][$1]; do
    if test $remove_from_list_i = [$2]; then :;
-@@ -89,12 +89,12 @@ dnl  GMP_STRIP_PATH(subdir)
+@@ -87,12 +87,12 @@
  dnl  ----------------------
- dnl  Strip entries */subdir from $path and $fat_path.
+ dnl  Strip entries subdir from $path and $fat_path.
  
 -define(GMP_STRIP_PATH,
 +define([GMP_STRIP_PATH],
@@ -64,7 +64,7 @@ Index: gmp-4.2.1/acinclude.m4
  [tmp_path=
  for i in $[][$1]; do
    case $i in
-@@ -115,7 +115,7 @@ dnl
+@@ -113,7 +113,7 @@
  dnl  Dummy values for __GMP_BITS_PER_MP_LIMB and GMP_LIMB_BITS are enough
  dnl  for all current configure-time uses of gmp.h.
  
@@ -73,7 +73,7 @@ Index: gmp-4.2.1/acinclude.m4
  [[#define __GMP_WITHIN_CONFIGURE 1   /* ignore template stuff */
  #define GMP_NAIL_BITS $GMP_NAIL_BITS
  #define __GMP_BITS_PER_MP_LIMB 123 /* dummy for GMP_NUMB_BITS etc */
-@@ -131,7 +131,7 @@ dnl  Expand at autoconf time to the valu
+@@ -129,7 +129,7 @@
  dnl  FILE.  The regexps here aren't very rugged, but are enough for gmp.
  dnl  /dev/null as a parameter prevents a hang if $2 is accidentally omitted.
  
@@ -82,7 +82,7 @@ Index: gmp-4.2.1/acinclude.m4
  [patsubst(patsubst(
  esyscmd([grep "^#define $1 " $2 /dev/null 2>/dev/null]),
  [^.*$1[ 	]+],[]),
-@@ -145,7 +145,7 @@ dnl  The gmp version number, extracted f
+@@ -143,7 +143,7 @@
  dnl  autoconf time.  Two digits like 3.0 if patchlevel <= 0, or three digits
  dnl  like 3.0.1 if patchlevel > 0.
  
@@ -91,10 +91,10 @@ Index: gmp-4.2.1/acinclude.m4
  [GMP_HEADER_GETVAL(__GNU_MP_VERSION,gmp-h.in)[]dnl
  .GMP_HEADER_GETVAL(__GNU_MP_VERSION_MINOR,gmp-h.in)[]dnl
  ifelse(m4_eval(GMP_HEADER_GETVAL(__GNU_MP_VERSION_PATCHLEVEL,gmp-h.in) > 0),1,
-@@ -1491,7 +1491,9 @@ esac
+@@ -1489,7 +1489,9 @@
  echo ["define(<CONFIG_TOP_SRCDIR>,<\`$tmp'>)"] >>$gmp_tmpconfigm4
  
- # All CPUs use asm-defs.m4 
+ # All CPUs use asm-defs.m4
 -echo ["include][(CONFIG_TOP_SRCDIR\`/mpn/asm-defs.m4')"] >>$gmp_tmpconfigm4i
 +echo -n ["include("] >>$gmp_tmpconfigm4i
 +echo -n ["CONFIG_TOP_SRCDIR\`/mpn/asm-defs.m4'"] >>$gmp_tmpconfigm4i
@@ -102,11 +102,11 @@ Index: gmp-4.2.1/acinclude.m4
  ])
  
  
-Index: gmp-4.2.1/configure.in
+Index: gmp-4.2.2/configure.in
 ===================================================================
---- gmp-4.2.1.orig/configure.in	2006-04-30 00:31:08.000000000 +0100
-+++ gmp-4.2.1/configure.in	2006-11-06 20:39:17.000000000 +0000
-@@ -31,12 +31,6 @@ AC_REVISION($Revision: 1.11 $)
+--- gmp-4.2.2.orig/configure.in	2007-09-09 17:39:14.000000000 +0100
++++ gmp-4.2.2/configure.in	2008-04-30 17:09:10.000000000 +0100
+@@ -29,12 +29,6 @@
  AC_PREREQ(2.59)
  AC_INIT(GNU MP, GMP_VERSION, gmp-bugs@swox.com, gmp)
  AC_CONFIG_SRCDIR(gmp-impl.h)
@@ -119,7 +119,7 @@ Index: gmp-4.2.1/configure.in
  
  # If --target is not used then $target_alias is empty, but if say
  # "./configure athlon-pc-freebsd3.5" is used, then all three of
-@@ -277,7 +271,7 @@ AH_VERBATIM([HAVE_HOST_CPU_1],
+@@ -275,7 +269,7 @@
  # After GMP specific searches and tests, the standard autoconf AC_PROG_CC is
  # called.  User selections of CC etc are respected.
  #
@@ -128,7 +128,7 @@ Index: gmp-4.2.1/configure.in
  # pre-testing, since they of course depend on AC_PROG_CC, and also some of
  # them cache their results, which is not wanted.
  #
-@@ -369,7 +363,7 @@ abilist="standard"
+@@ -367,7 +361,7 @@
  # FIXME: We'd like to prefer an ANSI compiler, perhaps by preferring
  # c89 over cc here.  But note that on HP-UX c89 provides a castrated
  # environment, and would want to be excluded somehow.  Maybe
@@ -137,7 +137,7 @@ Index: gmp-4.2.1/configure.in
  # we don't need to worry.
  #
  cclist="gcc cc"
-@@ -1498,7 +1492,7 @@ esac
+@@ -1518,7 +1512,7 @@
  CFLAGS_or_unset=${CFLAGS-'(unset)'}
  CPPFLAGS_or_unset=${CPPFLAGS-'(unset)'}
  
@@ -146,7 +146,7 @@ Index: gmp-4.2.1/configure.in
  User:
  ABI=$ABI
  CC=$CC
-@@ -1869,7 +1863,6 @@ AC_SUBST(DEFN_LONG_LONG_LIMB)
+@@ -1889,7 +1883,6 @@
  
  # The C compiler and preprocessor, put into ANSI mode if possible.
  AC_PROG_CC
@@ -154,7 +154,7 @@ Index: gmp-4.2.1/configure.in
  AC_PROG_CPP
  GMP_H_ANSI
  
-@@ -1892,11 +1885,11 @@ AC_SUBST(CCAS)
+@@ -1912,11 +1905,11 @@
  
  # The C++ compiler, if desired.
  want_cxx=no
@@ -168,7 +168,7 @@ Index: gmp-4.2.1/configure.in
    cxxflags_ac_prog_cxx=$CXXFLAGS
    cxxflags_list=ac_prog_cxx
  
-@@ -2002,7 +1995,7 @@ case $host in
+@@ -2022,7 +2015,7 @@
  esac
  
  
@@ -177,7 +177,7 @@ Index: gmp-4.2.1/configure.in
  Decided:
  ABI=$ABI
  CC=$CC
-@@ -3175,7 +3168,7 @@ GMP_FINISH
+@@ -3199,7 +3192,7 @@
  # FIXME: Upcoming version of autoconf/automake may not like broken lines.
  #        Right now automake isn't accepting the new AC_CONFIG_FILES scheme.
  
@@ -186,7 +186,7 @@ Index: gmp-4.2.1/configure.in
    mpbsd/Makefile mpf/Makefile mpn/Makefile mpq/Makefile			\
    mpz/Makefile printf/Makefile scanf/Makefile cxx/Makefile		\
    tests/Makefile tests/devel/Makefile tests/mpbsd/Makefile		\
-@@ -3184,4 +3177,5 @@ AC_OUTPUT(Makefile							\
+@@ -3208,4 +3201,5 @@
    tests/cxx/Makefile							\
    doc/Makefile tune/Makefile						\
    demos/Makefile demos/calc/Makefile demos/expr/Makefile		\
