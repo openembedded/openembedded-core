@@ -1,14 +1,19 @@
 ---
- docs/reference/Makefile.am |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ docs/reference/Makefile.am |    2 ++
+ 1 file changed, 2 insertions(+)
 
-Index: gypsy/docs/reference/Makefile.am
-===================================================================
---- gypsy.orig/docs/reference/Makefile.am	2007-10-04 23:04:44.000000000 +0100
-+++ gypsy/docs/reference/Makefile.am	2007-10-04 23:04:53.000000000 +0100
-@@ -82,4 +82,4 @@ include $(top_srcdir)/gtk-doc.make
+--- gypsy.orig/docs/reference/Makefile.am
++++ gypsy/docs/reference/Makefile.am
+@@ -81,10 +81,12 @@ expand_content_files=
+ # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
+ 
+ INCLUDES=-I$(top_srcdir) $(GYPSY_CFLAGS)
+ GTKDOC_LIBS=$(top_builddir)/gypsy/libgypsy.la $(GYPSY_LIBS)
+ 
++EXTRA_DIST =
++CLEANFILES =
+ # This includes the standard gtk-doc make rules, copied by gtkdocize.
+ include $(top_srcdir)/gtk-doc.make
  
  # Other files to distribute
  # e.g. EXTRA_DIST += version.xml.in
--EXTRA_DIST +=
-+# EXTRA_DIST =
