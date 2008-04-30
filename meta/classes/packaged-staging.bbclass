@@ -114,7 +114,7 @@ def pstage_cleanpackage(pkgname, d):
 	if ret == 0:
 		bb.note("Yes. Uninstalling package from staging...")
 		removecmd = bb.data.getVar("PSTAGE_REMOVE_CMD", d, 1)
-		ret = os.system("PATH=\"%s\" %s %s" % (path, removecmd, removepkg))
+		ret = os.system("PATH=\"%s\" %s %s" % (path, removecmd, pkgname))
 		if ret != 0:
 			bb.note("Failure removing staging package")
 	else:
