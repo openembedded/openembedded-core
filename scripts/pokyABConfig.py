@@ -103,7 +103,7 @@ runComplete(f6)
 
 from buildbot.process import step, factory
 f7 = factory.BuildFactory()
-f7.addStep(step.SVN, svnurl="http://svn.o-hand.com/repos/poky/trunk", timeout=10000)
+f7.addStep(step.SVN, svnurl="http://svn.o-hand.com/repos/poky/trunk", mode="copy", timeout=10000)
 runPreamble(f7)
 defaultenv['DISTRO'] = 'poky'
 defaultenv['POKYLIBC'] = 'dummy'
