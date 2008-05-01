@@ -28,6 +28,8 @@ elif [ "$CURRDIR" = "/srv/poky/autobuild/toolchain-shihtzu/build" ]; then
     ABTARGET="toolchain"
 elif [ "$CURRDIR" = "/srv/poky/autobuild/incremental-shihtzu/build" ]; then
     ABTARGET="incremental"
+elif [ "$CURRDIR" = "/srv/poky/autobuild/full-darwin-shihtzu/build" ]; then
+    ABTARGET="darwin"
 fi
 
 if [ "xpreamble" = "x$1" ]; then
@@ -61,6 +63,24 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo 'DL_DIR = "/srv/poky/sources"' >> "$CONFFILE"
+    if [ "$ABTARGET" = "darwin" ]; then
+	if [ ! -d "$CURRDIR/meta-darwin" ]; then
+	    svn co http://svn.o-hand.com/repos/poky/branches/experimental/meta-darwin $CURRDIR/meta-darwin
+	else
+	    cd $CURRDIR/meta-darwin
+	    svn up
+	fi
+        echo 'PACKAGE_CLASSES += "package_tar"' > "$CONFFILE"
+	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" > "$CONFFILE"
+        echo 'POKYMODE = "darwin"' > "$CONFFILE"
+        echo 'DARWINFILES = "file:///srv/poky/sources/"' > "$CONFFILE"
+        echo 'INHERIT_INSANE = ""' > "$CONFFILE"
+        echo 'FILESPATH_append = ":$CURRDIR/meta-darwin/files"' > "$CONFFILE"
+    fi
+fi
+
+if [ "$ABTARGET" = "darwin" ]; then
+    BBPATH=$CURRDIR/meta-darwin:$BBPATH
 fi
 
 bitbake $@

@@ -101,6 +101,16 @@ runImage(f6, 'qemux86', 'meta-toolchain-sdk')
 runImage(f6, 'qemuarm', 'world -c checkuriall')
 runComplete(f6)
 
+from buildbot.process import step, factory
+f7 = factory.BuildFactory()
+f7.addStep(step.SVN, svnurl="http://svn.o-hand.com/repos/poky/trunk", mode="copy", timeout=10000)
+runPreamble(f7)
+defaultenv['DISTRO'] = 'poky'
+defaultenv['POKYLIBC'] = 'dummy'
+runImage(f7, 'ipodtouch', 'meta-clutter')
+defaultenv['POKYLIBC'] = 'glibc'
+runComplete(f7)
+
 #from buildbot.process import step, factory
 #f7 = factory.BuildFactory()
 #f7.addStep(step.SVN, svnurl="http://svn.o-hand.com/repos/poky/trunk", timeout=10000)
@@ -134,11 +144,17 @@ b6 = {'name': "poky-toolchain-shihtzu",
       'factory': f6
       }
 
+b7 = {'name': "poky-full-darwin-shihtzu",
+      'slavename': "shihtzu-autobuild",
+      'builddir': "full-darwin-shihtzu",
+      'factory': f7
+      }
+
 #b7 = {'name': "poky-incremental-world-shihtzu",
 #      'slavename': "shihtzu-autobuild",
 #      'builddir': "incremental-world-shihtzu",
 #      'factory': f7
 #      }
 
-poky_builders = [b3, b4, b5, b6]
+poky_builders = [b3, b4, b5, b6, b7]
 
