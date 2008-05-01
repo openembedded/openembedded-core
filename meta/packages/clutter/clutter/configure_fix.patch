@@ -1,0 +1,47 @@
+Index: clutter/doc/reference/clutter/Makefile.am
+===================================================================
+--- clutter.orig/doc/reference/clutter/Makefile.am	2008-05-01 16:02:49.000000000 +0100
++++ clutter/doc/reference/clutter/Makefile.am	2008-05-01 16:03:00.000000000 +0100
+@@ -124,7 +124,7 @@
+ 
+ # Other files to distribute
+ # e.g. EXTRA_DIST += version.xml.in
+-EXTRA_DIST += \
++EXTRA_DIST = \
+ 	version.xml.in \
+ 	actor-box.png \
+ 	alpha-func.png \
+Index: clutter/configure.ac
+===================================================================
+--- clutter.orig/configure.ac	(revision 2666)
++++ clutter/configure.ac	(working copy)
+@@ -321,6 +321,9 @@
+     CLUTTER_STAGE_TYPE="CLUTTER_TYPE_STAGE_EGL"
+     AC_DEFINE([HAVE_CLUTTER_EGL], 1, [Have the EGL backend])
+ 
++    CLUTTER_COGL="gles"
++    AC_DEFINE([HAVE_COGL_GLES], [1], [Have GLES for rendering])
++
+     EGL_LIBS="$GLES_LIBS $X11_LIBS"
+     EGL_CFLAGS="$GLES_CFLAGS $X11_CFLAGS"
+     backendextra=x11
+@@ -333,6 +336,9 @@
+     CLUTTER_STAGE_TYPE="CLUTTER_TYPE_STAGE_EGLNATIVE"
+     AC_DEFINE([HAVE_CLUTTER_EGL], 1, [Have the EGL backend])
+ 
++    CLUTTER_COGL="gles"
++    AC_DEFINE([HAVE_COGL_GLES], [1], [Have GLES for rendering])
++
+     PKG_CHECK_MODULES(TSLIB, tslib-1.0, [have_tslib=yes], [have_tslib=no])
+     if test x$have_tslib = xyes; then
+            AC_DEFINE([HAVE_TSLIB], 1, [Have tslib for touchscreen handling])
+@@ -348,6 +354,9 @@
+     CLUTTER_STAGE_TYPE="CLUTTER_TYPE_STAGE_FRUITY"
+     AC_DEFINE([HAVE_CLUTTER_FRUITY], 1, [We're building a fruity version of the eglnative backend])
+ 
++    CLUTTER_COGL="gles"
++    AC_DEFINE([HAVE_COGL_GLES], [1], [Have GLES for rendering])
++
+     EGL_LIBS="-ObjC -framework Foundation  -framework CoreFoundation  -framework CoreGraphics  -framework CoreSurface  -framework GraphicsServices  -framework OpenGLES  -framework LayerKit  -framework UIKit"
+     EGL_CFLAGS=""
+      ;;
