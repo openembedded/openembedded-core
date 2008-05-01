@@ -1,0 +1,55 @@
+Tweaks to make cross-compiling work combined and updated from various
+older patches, some by Chris Larson.
+Not upstreable in this form.
+
+RP - 01/05/2008
+
+Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
+===================================================================
+--- libtool-2.2.2.orig/libltdl/config/ltmain.m4sh	2008-05-01 21:48:42.000000000 +0100
++++ libtool-2.2.2/libltdl/config/ltmain.m4sh	2008-05-01 21:51:41.000000000 +0100
+@@ -4454,8 +4454,14 @@
+ 	    absdir="$abs_ladir"
+ 	    libdir="$abs_ladir"
+ 	  else
+-	    dir="$libdir"
+-	    absdir="$libdir"
++	    # Adding 'libdir' from the .la file to our library search paths
++	    # breaks crosscompilation horribly.  We cheat here and don't add
++	    # it, instead adding the path where we found the .la.  -CL
++	    dir="$abs_ladir"
++	    absdir="$abs_ladir"
++	    libdir="$abs_ladir"
++	    #dir="$libdir"
++	    #absdir="$libdir"
+ 	  fi
+ 	  test "X$hardcode_automatic" = Xyes && avoidtemprpath=yes
+ 	else
+@@ -4825,8 +4831,6 @@
+ 		add="$libdir/$linklib"
+ 	      fi
+ 	    else
+-	      # We cannot seem to hardcode it, guess we'll fake it.
+-	      add_dir="-L$libdir"
+ 	      # Try looking first in the location we're being installed to.
+ 	      if test -n "$inst_prefix_dir"; then
+ 		case $libdir in
+@@ -4972,7 +4976,17 @@
+ 		  fi
+ 		  ;;
+ 		*)
+-		  path="-L$absdir/$objdir"
++                  # OE sets installed=no in staging. We need to look in $objdir and $absdir, 
++                  # preferring $objdir. RP 31/04/2008
++                  if test -f "$absdir/$objdir/$depdepl" ; then
++		    depdepl="$absdir/$objdir/$depdepl"
++		    path="-L$absdir/$objdir"
++                  elif test -f "$absdir/$depdepl" ; then
++		    depdepl="$absdir/$depdepl"
++		    path="-L$absdir"
++                  else
++		    path="-L$absdir/$objdir"
++                  fi
+ 		  ;;
+ 		esac
+ 		else

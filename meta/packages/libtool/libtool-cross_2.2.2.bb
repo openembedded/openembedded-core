@@ -1,14 +1,11 @@
 require libtool.inc
 require libtool_${PV}.bb
 
-PR = "r16"
+PR = "r18"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
-SRC_URI_append = " file://libdir-la.patch;patch=1 \
-                    file://prefix.patch;patch=1 \
-#                   file://sysroot.patch;patch=1 \
-#                   file://tag.patch;patch=1 \
-		   file://nousrlib.patch;patch=1"
+SRC_URI_append = " file://cross_compile.patch;patch=1 \
+                   file://prefix.patch;patch=1"
 
 DOLT_PATCH = ""
 DOLT_PATCH_arm = " file://add_dolt.patch;patch=1"
