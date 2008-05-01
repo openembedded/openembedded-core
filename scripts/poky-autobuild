@@ -75,7 +75,7 @@ if [ ! -e "$CONFFILE" ]; then
         echo 'POKYMODE = "darwin"' >> "$CONFFILE"
         echo 'DARWINFILES = "file:///srv/poky/sources/"' >> "$CONFFILE"
         echo 'INHERIT_INSANE = ""' >> "$CONFFILE"
-        echo 'FILESPATH_append = ":$CURRDIR/meta-darwin/files"' >> "$CONFFILE"
+        echo "FILESPATH_append = \":$CURRDIR/meta-darwin/files\"" >> "$CONFFILE"
     fi
 fi
 
