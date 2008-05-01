@@ -91,10 +91,20 @@ def base_dep_prepend(d):
 	# the case where host == build == target, for now we don't work in
 	# that case though.
 	#
-	deps = "shasum-native "
-	if bb.data.getVar('PN', d, True) == "shasum-native":
-		deps = ""
 
+	deps = ""
+    
+	# bb.utils.sha256_file() will return None on Python 2.4 because hashlib
+	# isn't present.  In this case we use a shasum-native to checksum, so if
+	# hashlib isn't present then add shasum-native to the dependencies.
+	try:
+		import hashlib
+	except ImportError:
+		# Adding shasum-native as a dependency of shasum-native would be
+		# stupid, so don't do that.
+		if bb.data.getVar('PN', d, True) != "shasum-native":
+			deps = "shasum-native "
+            
 	# INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
 	# we need that built is the responsibility of the patch function / class, not
 	# the application.
@@ -484,7 +494,6 @@ python base_scenefunction () {
 
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
-do_fetch[depends] = "shasum-native:do_populate_staging"
 python base_do_fetch() {
 	import sys
 
@@ -967,6 +976,15 @@ def base_after_parse(d):
     if "git://" in srcuri:
         depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
         depends = depends + " git-native:do_populate_staging"
+        bb.data.setVarFlag('do_fetch', 'depends', depends, d)
+
+    # bb.utils.sha256_file() will fail if hashlib isn't present, so we fallback
+    # on shasum-native.  We need to ensure that it is staged before we fetch.
+    try:
+        import hashlib
+    except ImportError:
+        depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
+        depends = depends + " shasum-native:do_populate_staging"
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
