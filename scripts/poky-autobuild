@@ -70,12 +70,12 @@ if [ ! -e "$CONFFILE" ]; then
 	    cd $CURRDIR/meta-darwin
 	    svn up
 	fi
-        echo 'PACKAGE_CLASSES += "package_tar"' > "$CONFFILE"
-	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" > "$CONFFILE"
-        echo 'POKYMODE = "darwin"' > "$CONFFILE"
-        echo 'DARWINFILES = "file:///srv/poky/sources/"' > "$CONFFILE"
-        echo 'INHERIT_INSANE = ""' > "$CONFFILE"
-        echo 'FILESPATH_append = ":$CURRDIR/meta-darwin/files"' > "$CONFFILE"
+        echo 'PACKAGE_CLASSES += "package_tar"' >> "$CONFFILE"
+	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" >> "./conf/local.conf"
+        echo 'POKYMODE = "darwin"' >> "$CONFFILE"
+        echo 'DARWINFILES = "file:///srv/poky/sources/"' >> "$CONFFILE"
+        echo 'INHERIT_INSANE = ""' >> "$CONFFILE"
+        echo 'FILESPATH_append = ":$CURRDIR/meta-darwin/files"' >> "$CONFFILE"
     fi
 fi
 
