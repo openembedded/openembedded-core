@@ -72,4 +72,4 @@ if [ "x$POSTPROCESS" != "x" ]; then
     $POSTPROCESS $ABTARGET $TARGETDIR
 fi
 
-exit $?
+exit $retval
