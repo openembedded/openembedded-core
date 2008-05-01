@@ -30,6 +30,13 @@ elif [ "$CURRDIR" = "/srv/poky/autobuild/incremental-shihtzu/build" ]; then
     ABTARGET="incremental"
 elif [ "$CURRDIR" = "/srv/poky/autobuild/full-darwin-shihtzu/build" ]; then
     ABTARGET="darwin"
+    if [ ! -d "$CURRDIR/meta-darwin" ]; then
+        svn co http://svn.o-hand.com/repos/poky/branches/experimental/meta-darwin $CURRDIR/meta-darwin
+    else
+        cd $CURRDIR/meta-darwin
+	svn up
+	cd $CURRDIR
+    fi
 fi
 
 if [ "xpreamble" = "x$1" ]; then
@@ -64,12 +71,6 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo 'DL_DIR = "/srv/poky/sources"' >> "$CONFFILE"
     if [ "$ABTARGET" = "darwin" ]; then
-	if [ ! -d "$CURRDIR/meta-darwin" ]; then
-	    svn co http://svn.o-hand.com/repos/poky/branches/experimental/meta-darwin $CURRDIR/meta-darwin
-	else
-	    cd $CURRDIR/meta-darwin
-	    svn up
-	fi
         echo 'PACKAGE_CLASSES += "package_tar"' >> "$CONFFILE"
 	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" >> "./conf/local.conf"
         echo 'POKYMODE = "darwin"' >> "$CONFFILE"
