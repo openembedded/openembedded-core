@@ -1,10 +1,10 @@
 require libtool.inc
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://fix_static.patch;patch=1 \
-           file://uclibc.patch;patch=1 \
+           file://darwin_fixes.patch;patch=1 \
            file://dolt.m4"
 S = "${WORKDIR}/libtool-${PV}"
 

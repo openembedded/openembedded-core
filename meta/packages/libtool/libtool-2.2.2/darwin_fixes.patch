@@ -1,0 +1,17 @@
+Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
+===================================================================
+--- libtool-2.2.2.orig/libltdl/config/ltmain.m4sh	2008-05-01 12:19:37.000000000 +0100
++++ libtool-2.2.2/libltdl/config/ltmain.m4sh	2008-05-01 12:29:05.000000000 +0100
+@@ -4965,10 +4965,10 @@
+ 		    done
+ 		    if test -f "$absdir/$objdir/$depdepl" ; then
+ 		      depdepl="$absdir/$objdir/$depdepl"
+-		      darwin_install_name=`otool -L $depdepl | $SED -n -e '3q;2,2p' | $SED -e 's/(.*//'`
++		      darwin_install_name=`$host-otool -L $depdepl | $SED -n -e '3q;2,2p' | $SED -e 's/(.*//'`
+ 		      darwin_install_name=`$ECHO $darwin_install_name`
+                       if test -z "$darwin_install_name"; then
+-                          darwin_install_name=`otool64 -L $depdepl | $SED -n -e '3q;2,2p' | $SED -e 's/(.*//'`
++                          darwin_install_name=`$host-otool64 -L $depdepl | $SED -n -e '3q;2,2p' | $SED -e 's/(.*//'`
+                           darwin_install_name=`$ECHO $darwin_install_name`
+                       fi
+ 		      compiler_flags="$compiler_flags ${wl}-dylib_file ${wl}${darwin_install_name}:${depdepl}"
