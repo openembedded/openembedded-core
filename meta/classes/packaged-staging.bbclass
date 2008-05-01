@@ -71,9 +71,9 @@ python () {
         deps += " stagemanager-native:do_populate_staging"
         bb.data.setVarFlag('do_populate_staging', 'depends', deps, d)
 
-        deps = bb.data.getVarFlag('do_prepackaged_stage', 'depends', d) or ""
+        deps = bb.data.getVarFlag('do_setscene', 'depends', d) or ""
         deps += " opkg-native:do_populate_staging ipkg-utils-native:do_populate_staging"
-        bb.data.setVarFlag('do_prepackaged_stage', 'depends', deps, d)
+        bb.data.setVarFlag('do_setscene', 'depends', deps, d)
         bb.data.setVar("PSTAGING_ACTIVE", "1", d)
     else:
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
@@ -160,7 +160,6 @@ python packagestage_scenefunc () {
     import os
 
     if bb.data.getVar("PSTAGING_ACTIVE", d, 1) == "0":
-        bb.build.make_stamp("do_prepackaged_stage", d)
         return
 
     removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
