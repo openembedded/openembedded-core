@@ -45,21 +45,21 @@ def base_chk_file(parser, pn, pv, src_uri, localpath, data):
         raise Exception("The path does not exist '%s'" % localpath)
 
 
-    # call md5(sum) and shasum
-    try:
-        md5pipe = os.popen('md5sum ' + localpath)
-        md5data = (md5pipe.readline().split() or [ "" ])[0]
-        md5pipe.close()
-    except OSError:
-        raise Exception("Executing md5sum failed")
+    # Calculate the MD5 and 256-bit SHA checksums
+    md5data = bb.utils.md5_file(localpath)
+    shadata = bb.utils.sha256_file(localpath)
 
-    try:
-        shapipe = os.popen('PATH=%s oe_sha256sum %s' % (bb.data.getVar('PATH', data, True), localpath))
-        shadata = (shapipe.readline().split() or [ "" ])[0]
-        shapipe.close()
-    except OSError:
-        raise Exception("Executing shasum failed")
-
+    # sha256_file() can return None if we are running on Python 2.4 (hashlib is
+    # 2.5 onwards, sha in 2.4 is 160-bit only), so check for this and call the
+    # standalone shasum binary if required.
+    if shadata is None:
+        try:
+            shapipe = os.popen('PATH=%s oe_sha256sum %s' % (bb.data.getVar('PATH', data, True), localpath))
+            shadata = (shapipe.readline().split() or [ "" ])[0]
+            shapipe.close()
+        except OSError:
+            raise Exception("Executing shasum failed, please build shasum-native")
+    
     if no_checksum == True:	# we do not have conf/checksums.ini entry
         try:
             file = open("%s/checksums.ini" % bb.data.getVar("TMPDIR", data, 1), "a")
