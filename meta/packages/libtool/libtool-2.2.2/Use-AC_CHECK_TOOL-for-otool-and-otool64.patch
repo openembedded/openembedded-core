@@ -37,11 +37,11 @@ Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
  		      depdepl="$absdir/$objdir/$depdepl"
 -		      darwin_install_name=`otool -L $depdepl | $SED -n -e '3q;2,2p' | $SED -e 's/(.*//'`
 -		      darwin_install_name=`$ECHO $darwin_install_name`
-+		      darwin_install_name=`${OTOOL} -L $depdepl | awk '{if (NR == 2) {print $1;exit}}`
++		      darwin_install_name=`${OTOOL} -L $depdepl | awk '{if (NR == 2) {print $1;exit}}'`
                        if test -z "$darwin_install_name"; then
 -                          darwin_install_name=`otool64 -L $depdepl | $SED -n -e '3q;2,2p' | $SED -e 's/(.*//'`
 -                          darwin_install_name=`$ECHO $darwin_install_name`
-+                          darwin_install_name=`${OTOOL64} -L $depdepl  | awk '{if (NR == 2) {print $1;exit}}`
++                          darwin_install_name=`${OTOOL64} -L $depdepl  | awk '{if (NR == 2) {print $1;exit}}'`
                        fi
  		      compiler_flags="$compiler_flags ${wl}-dylib_file ${wl}${darwin_install_name}:${depdepl}"
  		      linker_flags="$linker_flags -dylib_file ${darwin_install_name}:${depdepl}"
