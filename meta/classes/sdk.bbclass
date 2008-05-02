@@ -4,9 +4,10 @@ EXCLUDE_FROM_WORLD = "1"
 
 OLD_PACKAGE_ARCH := ${PACKAGE_ARCH}
 PACKAGE_ARCH = "${BUILD_ARCH}-${OLD_PACKAGE_ARCH}-sdk"
+STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_SYS}-sdk"
 
 HOST_ARCH = "${BUILD_ARCH}"
-HOST_VENDOR = "${TARGET_VENDOR}"
+HOST_VENDOR = "${BUILD_VENDOR}"
 HOST_OS = "${BUILD_OS}"
 HOST_PREFIX = "${BUILD_PREFIX}"
 HOST_CC_ARCH = "${BUILD_CC_ARCH}"
@@ -50,4 +51,4 @@ FILES_${PN}-dbg += "${prefix}/.debug \
                     ${prefix}/bin/.debug \
                    "
 
-export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR}/${HOST_SYS}"
+export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
