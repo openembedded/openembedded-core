@@ -41,6 +41,8 @@ PSTAGE_NATIVEDEPENDS = "\
     stagemanager-native \
     "
 
+BB_STAMP_WHITELIST = "${PSTAGE_NATIVEDEPENDS}"
+
 python () {
     import bb
     pstage_allowed = True
@@ -307,11 +309,10 @@ python do_package_stage () {
             if bb.data.inherits_class('package_ipk', d):
                 srcname = bb.data.expand(pkgname + "_${PV}-" + pr + "_" + arch + ".ipk", d)
                 srcfile = bb.data.expand("${DEPLOY_DIR_IPK}/" + arch + "/" + srcname, d)
-                if not os.path.exists(srcfile):
-                    bb.fatal("Package %s does not exist yet it should" % srcfile)
-                destpath = ipkpath + "/" + arch + "/"
-                bb.mkdirhier(destpath)
-                bb.copyfile(srcfile, destpath + srcname)
+                if os.path.exists(srcfile):
+                    destpath = ipkpath + "/" + arch + "/"
+                    bb.mkdirhier(destpath)
+                    bb.copyfile(srcfile, destpath + srcname)
 
             if bb.data.inherits_class('package_deb', d):
                 if arch == 'all':
@@ -319,11 +320,10 @@ python do_package_stage () {
                 else:	
                     srcname = bb.data.expand(pkgname + "_${PV}-" + pr + "_${DPKG_ARCH}.deb", d)
                 srcfile = bb.data.expand("${DEPLOY_DIR_DEB}/" + arch + "/" + srcname, d)
-                if not os.path.exists(srcfile):
-                    bb.fatal("Package %s does not exist yet it should" % srcfile)
-                destpath = debpath + "/" + arch + "/" 
-                bb.mkdirhier(destpath)
-                bb.copyfile(srcfile, destpath + srcname)
+                if os.path.exists(srcfile):
+                    destpath = debpath + "/" + arch + "/" 
+                    bb.mkdirhier(destpath)
+                    bb.copyfile(srcfile, destpath + srcname)
 
     #
     # Handle stamps/ files
@@ -333,7 +333,7 @@ python do_package_stage () {
     bb.mkdirhier(destdir)
     # We need to include the package_stage stamp in the staging package so create one
     bb.build.make_stamp("do_package_stage", d)
-    os.system("cp %s.do_* %s/" % (stampfn, destdir))
+    os.system("cp -dpR %s.do_* %s/" % (stampfn, destdir))
 
     bb.build.exec_func("staging_helper", d)
     bb.build.exec_func("staging_packager", d)
