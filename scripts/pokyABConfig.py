@@ -108,6 +108,7 @@ runPreamble(f7)
 defaultenv['DISTRO'] = 'poky'
 defaultenv['POKYLIBC'] = 'dummy'
 runImage(f7, 'ipodtouch', 'meta-clutter')
+runImage(f7, 'ipodtouch', 'meta-toolchain')
 defaultenv['POKYLIBC'] = 'glibc'
 runComplete(f7)
 
