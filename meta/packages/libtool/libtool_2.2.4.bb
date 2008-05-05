@@ -3,8 +3,6 @@ require libtool.inc
 PR = "r10"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
-           file://fix_static.patch;patch=1;status=merged \
-           file://Use-AC_CHECK_TOOL-for-otool-and-otool64.patch;patch=1;status=merged \
            file://dolt.m4"
 S = "${WORKDIR}/libtool-${PV}"
 
