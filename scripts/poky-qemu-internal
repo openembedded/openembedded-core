@@ -31,7 +31,15 @@
 #
 
 if [ -z "$QEMU_MEMORY" ]; then
-    QEMU_MEMORY="64M"
+	case "$MACHINE" in
+		"qemux86") 
+			QEMU_MEMORY="128M"
+			;;
+		*)
+			QEMU_MEMORY="64M"
+			;;
+	esac
+
 fi
 
 QEMUIFUP=`which poky-qemu-ifup`
