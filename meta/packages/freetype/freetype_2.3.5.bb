@@ -18,9 +18,9 @@ EXTRA_OECONF = "--without-zlib"
 
 do_configure() {
 	cd builds/unix
-	gnu-configize
-	libtoolize --force
+	libtoolize --force --copy
 	aclocal -I .
+	gnu-configize --force
 	autoconf
 	cd ${S}
 	oe_runconf
