@@ -626,25 +626,26 @@ python package_do_shlibs() {
 
 			#bb.note("Foo2: %s" % lafile)
 			#bb.note("Foo %s %s" % (file, fullpath))
-			fd = open(lafile, 'r')
-			lines = fd.readlines()
-			fd.close()
-			for l in lines:
-				m = re.match("\s*dependency_libs=\s*'(.*)'", l)
-				if m:
-					deps = m.group(1).split(" ")
-					for dep in deps:
-						#bb.note("Trying %s for %s" % (dep, pkg))
-						name = None
-						if dep.endswith(".la"):
-							name = os.path.basename(dep).replace(".la", "")
-						elif dep.startswith("-l"):
-							name = dep.replace("-l", "lib")
-						if pkg not in needed:
-							needed[pkg] = []
-						if name:
-							needed[pkg].append(name)
-							#bb.note("Adding %s for %s" % (name, pkg))
+			if os.path.exists(lafile):
+				fd = open(lafile, 'r')
+				lines = fd.readlines()
+				fd.close()
+				for l in lines:
+					m = re.match("\s*dependency_libs=\s*'(.*)'", l)
+					if m:
+						deps = m.group(1).split(" ")
+						for dep in deps:
+							#bb.note("Trying %s for %s" % (dep, pkg))
+							name = None
+							if dep.endswith(".la"):
+								name = os.path.basename(dep).replace(".la", "")
+							elif dep.startswith("-l"):
+								name = dep.replace("-l", "lib")
+							if pkg not in needed:
+								needed[pkg] = []
+							if name:
+								needed[pkg].append(name)
+								#bb.note("Adding %s for %s" % (name, pkg))
 	needed = {}
 	private_libs = bb.data.getVar('PRIVATE_LIBS', d, 1)
 	for pkg in packages.split():
@@ -658,7 +659,7 @@ python package_do_shlibs() {
 			for file in files:
 				soname = None
 				path = os.path.join(root, file)
-				if targetos == "darwin":
+				if targetos == "darwin" or targetos == "darwin8":
 					darwin_so(root, dirs, file)
 				elif os.access(path, os.X_OK) or lib_re.match(file):
 					linux_so(root, dirs, file)
