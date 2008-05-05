@@ -26,4 +26,5 @@ RDEPENDS_${PN}_darwin8 = "\
     llvm-cross-sdk \
     pkgconfig-sdk \
     opkg-sdk \
+    libtool-sdk \
     "
