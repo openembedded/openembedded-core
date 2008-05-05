@@ -75,9 +75,14 @@ do_populate_sdk() {
 		done
 	done
 
-	# Remove broken .la files
-	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/${layout_base_libdir}/*.la
-	rm -f ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/${layout_libdir}/*.la
+	# Fix or remove broken .la files
+	for i in `find ${SDK_OUTPUT}/${prefix}/${TARGET_SYS} -name \*.la`; do
+		sed -i 	-e "/^dependency_libs=/s,\([[:space:]']\)${layout_base_libdir},\1${prefix}/${TARGET_SYS}${layout_base_libdir},g" \
+			-e "/^dependency_libs=/s,\([[:space:]']\)${layout_libdir},\1${prefix}/${TARGET_SYS}${layout_libdir},g" \
+			-e "/^dependency_libs=/s,\-\([LR]\)${layout_base_libdir},-\1${prefix}/${TARGET_SYS}${layout_base_libdir},g" \
+			-e "/^dependency_libs=/s,\-\([LR]\)${layout_libdir},-\1${prefix}/${TARGET_SYS}${layout_libdir},g" \
+			-e 's/^installed=yes$/installed=no/' $i
+	done
 	rm -f ${SDK_OUTPUT}/${prefix}/lib/*.la
 
 	# Setup site file for external use
