@@ -20,6 +20,7 @@ do_configure() {
 	aclocal
 	autoconf
 	libtoolize --force
+	gnu-configize --force
 	oe_runconf
 }
 
