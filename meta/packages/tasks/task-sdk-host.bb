@@ -20,3 +20,10 @@ RDEPENDS_${PN} = "\
     qemu-helper-sdk \
     opkg-sdk \
     "
+
+RDEPENDS_${PN}_darwin8 = "\
+    odcctools-cross-sdk \
+    llvm-cross-sdk \
+    pkgconfig-sdk \
+    opkg-sdk \
+    "
