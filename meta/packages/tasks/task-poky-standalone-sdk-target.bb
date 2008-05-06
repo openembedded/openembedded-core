@@ -1,5 +1,5 @@
 DESCRIPTION = "Target packages for the standalone SDK"
-PR = "r3"
+PR = "r4"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -32,7 +32,6 @@ UCLIBC_DEPENDENCIES = "\
     uclibc \
     uclibc-dbg \
     uclibc-dev \
-    uclibc-utils \
     uclibc-thread-db \
     "
 
