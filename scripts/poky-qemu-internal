@@ -77,6 +77,13 @@ if [ ! -f "$ZIMAGE" ]; then
     return
 fi
 
+if [ -e /proc/sys/vm/mmap_min_addr ]; then
+    if [ `cat /proc/sys/vm/mmap_min_addr` != "0" ]; then
+        echo "Error, please set /proc/sys/vm/mmap_min_addr to 0 since otherwise it can cause problems with QEMU"
+	return
+    fi
+fi
+
 if [ "$MACHINE" = "qemuarm" ]; then
     QEMU=qemu-system-arm
     if [ "$TYPE" = "ext2" ]; then
