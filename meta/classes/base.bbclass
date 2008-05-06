@@ -980,12 +980,13 @@ def base_after_parse(d):
 
     # bb.utils.sha256_file() will fail if hashlib isn't present, so we fallback
     # on shasum-native.  We need to ensure that it is staged before we fetch.
-    try:
-        import hashlib
-    except ImportError:
-        depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
-        depends = depends + " shasum-native:do_populate_staging"
-        bb.data.setVarFlag('do_fetch', 'depends', depends, d)
+    if bb.data.getVar('PN', d, True) != "shasum-native":
+        try:
+            import hashlib
+        except ImportError:
+            depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
+            depends = depends + " shasum-native:do_populate_staging"
+            bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
     old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
