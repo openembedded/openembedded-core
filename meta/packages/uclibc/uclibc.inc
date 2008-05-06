@@ -84,6 +84,9 @@ KERNEL_HEADERS = "${STAGING_INCDIR}"
 # ARCH_WANTS_BIG_ENDIAN=y
 # ARCH_WANTS_LITTLE_ENDIAN is not set
 
+# How to enable verbose logs:
+#export VERBOSE="1"
+
 configmangle = 's,^KERNEL_SOURCE=.*,KERNEL_SOURCE="${KERNEL_SOURCE}",g; \
 		s,^KERNEL_HEADERS=.*,KERNEL_HEADERS="${KERNEL_HEADERS}",g; \
 		s,^RUNTIME_PREFIX=.*,RUNTIME_PREFIX="/",g; \
