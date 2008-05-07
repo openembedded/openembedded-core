@@ -62,9 +62,10 @@ def check_sanity(e):
 	if "diffstat-native" not in assume_provided:
 		messages = messages + 'Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf\n'
 	
-	# Check that the MACHINE is valid
-	if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
-		messages = messages + 'Please set a valid MACHINE in your local.conf\n'
+	# Check that the MACHINE is valid, if it is set
+	if data.getVar('MACHINE', e.data, True):
+		if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
+			messages = messages + 'Please set a valid MACHINE in your local.conf\n'
 	
 	# Check that the DISTRO is valid
 	# need to take into account DISTRO renaming DISTRO
@@ -96,11 +97,12 @@ def check_sanity(e):
 		if not check_app_exists("qemu-arm", e.data):
 			messages = messages + "qemu-native was in ASSUME_PROVIDED but the QEMU binaries (qemu-arm) can't be found in PATH"
 
-	if os.path.exists("/proc/sys/vm/mmap_min_addr"):
-		f = file("/proc/sys/vm/mmap_min_addr", "r")
-		if (f.read().strip() != "0"):
-			messages = messages + "/proc/sys/vm/mmap_min_addr is not 0. This will cause problems with qemu so please fix the value (as root).\n"
-		f.close()
+	if data.getVar('TARGET_ARCH', e.data, True) == "arm":
+		if os.path.exists("/proc/sys/vm/mmap_min_addr"):
+			f = file("/proc/sys/vm/mmap_min_addr", "r")
+			if (f.read().strip() != "0"):
+				messages = messages + "/proc/sys/vm/mmap_min_addr is not 0. This will cause problems with qemu so please fix the value (as root).\n"
+			f.close()
 
 	for util in required_utilities.split():
 		if not check_app_exists( util, e.data ):
@@ -136,6 +138,25 @@ def check_sanity(e):
 		f.write(tmpdir)
 	f.close()
 
+	#
+	# Check the 'ABI' of TMPDIR
+	#
+	current_abi = data.getVar('SANITY_ABI', e.data, True)
+	abifile = data.getVar('SANITY_ABIFILE', e.data, True)
+	if os.path.exists(abifile):
+		f = file(abifile, "r")
+		abi = f.read().strip()
+		if not abi.isdigit():
+			f = file(abifile, "w")
+			f.write(current_abi)
+		elif (abi != current_abi):
+			# Code to convert from one ABI to another could go here if possible.
+			messages = messages + "Error, TMPDIR has changed ABI (%s to %s) and you need to either rebuild, revert or adjust it at your own risk.\n" % (abi, current_abi)
+	else:
+		f = file(abifile, "w")
+		f.write(current_abi)
+	f.close()
+
 	if messages != "":
 		raise_sanity_error(messages)
 
@@ -144,17 +165,7 @@ python check_sanity_eventhandler() {
     from bb import note, error, data, __version__
     from bb.event import getName
 
-    try:
-        from distutils.version import LooseVersion
-    except ImportError:
-        def LooseVersion(v): print "WARNING: sanity.bbclass can't compare versions without python-distutils"; return 1
-
-    if (LooseVersion(bb.__version__) > LooseVersion("1.8.6")):
-        if getName(e) == "ConfigParsed":
-            check_sanity(e)
-        return NotHandled
-
-    if getName(e) == "BuildStarted":
+    if getName(e) == "ConfigParsed":
         check_sanity(e)
 
     return NotHandled
