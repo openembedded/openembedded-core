@@ -1,0 +1,52 @@
+Index: jpeg-6b/configure
+===================================================================
+--- jpeg-6b.orig/configure	2008-05-07 15:53:15.000000000 +0100
++++ jpeg-6b/configure	2008-05-07 15:54:40.000000000 +0100
+@@ -1532,7 +1532,7 @@
+   LIBTOOL="./libtool"
+   O="lo"
+   A="la"
+-  LN='$(LIBTOOL) --mode=link $(CC)'
++  LN='$(LIBTOOL) --tag=CC --mode=link $(CC)'
+   INSTALL_LIB='$(LIBTOOL) --mode=install ${INSTALL}'
+   INSTALL_PROGRAM="\$(LIBTOOL) --mode=install $INSTALL_PROGRAM"
+ else
+@@ -1559,7 +1559,6 @@
+   if test "x$LTSTATIC" = xno; then
+     disable_static="--disable-static"
+   fi
+-  $srcdir/ltconfig $disable_shared $disable_static $srcdir/ltmain.sh
+ fi
+ 
+ # Select memory manager depending on user input.
+Index: jpeg-6b/makefile.cfg
+===================================================================
+--- jpeg-6b.orig/makefile.cfg	2008-05-07 15:53:24.000000000 +0100
++++ jpeg-6b/makefile.cfg	2008-05-07 15:56:22.000000000 +0100
+@@ -141,7 +141,7 @@
+ 
+ # How to compile with libtool.
+ @COM_LT@.c.lo:
+-@COM_LT@	$(LIBTOOL) --mode=compile $(CC) $(CFLAGS) -c $(srcdir)/$*.c
++@COM_LT@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) -c $(srcdir)/$*.c
+ 
+ # How to use ansi2knr, when not using libtool.
+ @COM_A2K@.c.o:
+@@ -152,7 +152,7 @@
+ # How to use ansi2knr AND libtool.
+ @COM_A2K@.c.lo:
+ @COM_A2K@	./ansi2knr $(srcdir)/$*.c knr/$*.c
+-@COM_A2K@	$(LIBTOOL) --mode=compile $(CC) $(CFLAGS) -c knr/$*.c
++@COM_A2K@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) -c knr/$*.c
+ @COM_A2K@	$(RM) knr/$*.c
+ 
+ ansi2knr: ansi2knr.c
+@@ -169,7 +169,7 @@
+ 
+ # with libtool:
+ libjpeg.la: @A2K_DEPS@ $(LIBOBJECTS)
+-	$(LIBTOOL) --mode=link $(CC) -o libjpeg.la $(LIBOBJECTS) \
++	$(LIBTOOL) --tag=CC --mode=link $(CC) -o libjpeg.la $(LIBOBJECTS) \
+ 		-rpath $(libdir) -version-info $(JPEG_LIB_VERSION) $(LDFLAGS)
+ 
+ # sample programs:
