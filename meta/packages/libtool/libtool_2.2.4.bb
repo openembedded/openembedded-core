@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://dolt.m4"

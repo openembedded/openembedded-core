@@ -1,11 +1,13 @@
 require libtool.inc
 require libtool_${PV}.bb
 
-PR = "r19"
+PR = "r20"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://cross_compile.patch;patch=1 \
                    file://prefix.patch;patch=1"
+
+DEPENDS += "libtool-native"
 
 DOLT_PATCH = ""
 DOLT_PATCH_arm = " file://add_dolt.patch;patch=1"
