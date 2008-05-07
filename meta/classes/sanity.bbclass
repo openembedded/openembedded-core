@@ -96,6 +96,12 @@ def check_sanity(e):
 		if not check_app_exists("qemu-arm", e.data):
 			messages = messages + "qemu-native was in ASSUME_PROVIDED but the QEMU binaries (qemu-arm) can't be found in PATH"
 
+	if os.path.exists("/proc/sys/vm/mmap_min_addr"):
+		f = file("/proc/sys/vm/mmap_min_addr", "r")
+		if (f.read().strip() != "0"):
+			messages = messages + "/proc/sys/vm/mmap_min_addr is not 0. This will cause problems with qemu so please fix the value (as root).\n"
+		f.close()
+
 	for util in required_utilities.split():
 		if not check_app_exists( util, e.data ):
 			missing = missing + "%s," % util
