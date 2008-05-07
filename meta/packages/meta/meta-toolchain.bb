@@ -46,7 +46,7 @@ do_populate_sdk() {
 	install -m 0644 ${IPKGCONF_SDK} ${SDK_OUTPUT}/${sysconfdir}/
 
 	# extract and store ipks, pkgdata and shlibs data
-	target_pkgs=`cat ${SDK_OUTPUT}/${prefix}/package-status | grep Package: | cut -f 2 -d ' '`
+	target_pkgs=`cat ${SDK_OUTPUT}/${prefix}/${TARGET_SYS}/usr/lib/opkg/status | grep Package: | cut -f 2 -d ' '`
 	mkdir -p ${SDK_OUTPUT2}/${prefix}/ipk/
 	mkdir -p ${SDK_OUTPUT2}/${prefix}/pkgdata/runtime/
 	mkdir -p ${SDK_OUTPUT2}/${prefix}/${TARGET_SYS}/shlibs/
