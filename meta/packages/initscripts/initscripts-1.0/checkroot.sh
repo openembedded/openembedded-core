@@ -152,14 +152,7 @@ fi
 mount -n -o remount,$rootmode /
 if test "$rootmode" = rw
 then
-	if test ! -L /etc/mtab
-	then
-		rm -f /etc/mtab~ /etc/nologin
-		: > /etc/mtab
-	fi
-	mount -f -o remount /
-	mount -f /proc
-	test "$devfs" && grep -q '^devfs /dev' /proc/mounts && mount -f "$devfs"
+	ln -sf /proc/mounts /dev/mtab
 fi
 
 : exit 0
