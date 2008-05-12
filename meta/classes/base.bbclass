@@ -297,7 +297,16 @@ oe_libinstall() {
 	if [ -z "$dir" ]; then
 		dir=`pwd`
 	fi
+
 	dotlai=$libname.lai
+
+	# Sanity check that the libname.lai is unique
+	number_of_files=`(cd $dir; find . -name "$dotlai") | wc -l`
+	if [ $number_of_files -gt 1 ]; then
+		oefatal "oe_libinstall: $dotlai is not unique in $dir"
+	fi
+
+
 	dir=$dir`(cd $dir;find . -name "$dotlai") | sed "s/^\.//;s/\/$dotlai\$//;q"`
 	olddir=`pwd`
 	__runcmd cd $dir
