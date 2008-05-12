@@ -198,21 +198,14 @@ autotools_stage_all() {
 		las=$(find . -name \*.la -type f)
 		cd $olddir
 		echo "Found la files: $las"		 
-		if [ -n "$las" ]; then
-			# If there are .la files then libtool was used in the
-			# build, so install them with magic mangling.
-			for i in $las
-			do
-				dir=$(dirname $i)
-				echo "oe_libinstall -C ${S} -so $(basename $i .la) ${STAGING_LIBDIR}/${dir}"
-				oe_libinstall -C ${S} -so $(basename $i .la) ${STAGING_LIBDIR}/${dir}
-			done
-		else
-			# Otherwise libtool wasn't used, and lib/ can be copied
-			# directly.
-			echo "cp -fpPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}"
-			cp -fpPR ${STAGE_TEMP}/${libdir}/* ${STAGING_LIBDIR}
-		fi
+		for i in $las
+		do
+			sed -e 's/^installed=yes$/installed=no/' \
+			    -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
+			    -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
+			    -i ${STAGE_TEMP}/${libdir}/$i
+		done
+		autotools_stage_dir ${STAGE_TEMP}/${libdir} ${STAGING_LIBDIR}
 	fi
 	rm -rf ${STAGE_TEMP}/${mandir} || true
 	rm -rf ${STAGE_TEMP}/${infodir} || true
