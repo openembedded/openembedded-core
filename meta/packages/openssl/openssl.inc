@@ -7,11 +7,12 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz"
 S = "${WORKDIR}/openssl-${PV}"
 
 AR_append = " r"
-export CFLAG = "-fPIC -DTHREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -DTERMIO -Wall ${FULL_OPTIMIZATION}"
+CFLAG = "${@base_conditional('SITEINFO_ENDIANESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
+	-DTERMIO ${FULL_OPTIMIZATION} -Wall"
 
 # -02 does not work on mipsel: ssh hangs when it tries to read /dev/urandom
-export CFLAG_mtx-1 := "${@'${CFLAG}'.replace('-O2', '')}"
-export CFLAG_mtx-2 := "${@'${CFLAG}'.replace('-O2', '')}"
+CFLAG_mtx-1 := "${@'${CFLAG}'.replace('-O2', '')}"
+CFLAG_mtx-2 := "${@'${CFLAG}'.replace('-O2', '')}"
 
 export DIRS = "crypto ssl apps"
 export EX_LIBS = "-lgcc -ldl"
@@ -21,14 +22,11 @@ PACKAGES =+ "libcrypto libssl"
 FILES_libcrypto = "${libdir}/libcrypto.so.*"
 FILES_libssl = "${libdir}/libssl.so.*"
 
-do_compile () {
+do_configure () {
 	cd util
 	perl perlpath.pl ${bindir}
 	cd ..
 	ln -sf apps/openssl.pod crypto/crypto.pod ssl/ssl.pod doc/
-
-	# Additional flag based on target endiness (see siteinfo.bbclass)
-	CFLAG="${CFLAG} ${@base_conditional('SITEINFO_ENDIANESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)}"
 
 	os=${HOST_OS}
 	if [ "x$os" = "xlinux-uclibc" ]; then
@@ -49,27 +47,35 @@ do_compile () {
 		target=debian-sh4
 		;;
 	linux-i486)
-		target=linux-pentium
+		target=debian-i386-i486
 		;;
 	linux-i586)
-		target=linux-pentium
+		target=debian-i386-i586
 		;;
 	linux-i686)
-		target=linux-ppro
+		target=debian-i386-i686/cmov
 		;;
 	linux-powerpc)
 		target=linux-ppc
 		;;
+	linux-supersparc)
+		target=linux-sparcv8
+		;;
+	linux-sparc)
+		target=linux-sparcv8
+		;;
 	esac
+	# inject machine-specific flags
+	sed -i -e "s|^\(\"$target\",\s*\"[^:]\+\):\([^:]\+\)|\1:${CFLAG}|g" Configure
 	perl ./Configure shared --prefix=${prefix} --openssldir=${libdir}/ssl $target
+}
+
+do_compile () {
 	oe_runmake
 }
 
 do_stage () {
-	install -d ${STAGING_INCDIR}
-	install -d ${STAGING_LIBDIR}/pkgconfig/
 	cp --dereference -R include/openssl ${STAGING_INCDIR}/
-	cp --dereference openssl.pc ${STAGING_LIBDIR}/pkgconfig/
 	oe_libinstall -a -so libcrypto ${STAGING_LIBDIR}
 	oe_libinstall -a -so libssl ${STAGING_LIBDIR}
 }
