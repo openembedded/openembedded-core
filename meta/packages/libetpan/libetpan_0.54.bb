@@ -4,9 +4,10 @@ HOMEPAGE = "http://www.etpan.org"
 SECTION = "libs"
 DEPENDS = "curl expat gnutls"
 LICENSE = "BSD"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libetpan/libetpan-${PV}.tar.gz \
-           file://cxx-is-here.patch"
+           file://cxx-is-here.patch;patch=1"
 
 inherit autotools pkgconfig gettext binconfig
 
