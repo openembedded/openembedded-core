@@ -273,6 +273,7 @@ def exec_task(task, d):
         localdata = data.createCopy(d)
         data.setVar('OVERRIDES', 'task_%s:%s' % (task, old_overrides), localdata)
         data.update_data(localdata)
+        data.expandKeys(localdata)
         event.fire(TaskStarted(task, localdata))
         exec_func(task, localdata)
         event.fire(TaskSucceeded(task, localdata))
