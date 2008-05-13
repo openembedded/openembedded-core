@@ -2,12 +2,11 @@ DESCRIPTION = "libetpan is a library for communicating with mail and news server
 It supports the protocols SMTP, POP3, IMAP and NNTP."
 HOMEPAGE = "http://www.etpan.org"
 SECTION = "libs"
-DEPENDS = "gnutls"
+DEPENDS = "curl expat gnutls"
 LICENSE = "BSD"
-PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libetpan/libetpan-${PV}.tar.gz \
-           file://honor-oe-lflags.patch;patch=1"
+           file://cxx-is-here.patch"
 
 inherit autotools pkgconfig gettext binconfig
 
