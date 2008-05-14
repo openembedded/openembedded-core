@@ -47,5 +47,5 @@ echo "1" >> /tmp/fdisk.cmds
 echo "$size2" >> /tmp/fdisk.cmds
 echo "w" >> /tmp/fdisk.cmds
 
-fdisk $IMAGEOUT < /tmp/fdisk.cmds
+/sbin/fdisk $IMAGEOUT < /tmp/fdisk.cmds
 cat $IMAGE >> $IMAGEOUT
