@@ -4,7 +4,7 @@ DEPENDS = "zlib lzo"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
 
-SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=e6088d987c545d60a86e1f44836ab8ba072fffd9 \
+SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=d9f463a49600b60f313a94d8765da261aabf867a \
            file://add-exclusion-to-mkfs-jffs2-git.patch;patch=1 \
 	   file://remove-ubi.patch;patch=1 \
 	   file://fix-ignoreerrors-git.patch;patch=1"

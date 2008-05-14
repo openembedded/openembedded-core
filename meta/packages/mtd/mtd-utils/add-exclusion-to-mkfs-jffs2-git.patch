@@ -81,9 +81,7 @@
  	char *compr_name = NULL;
  	int compr_prior  = -1;
  	int warn_page_size = 0;
-+ 	struct ignorepath_entry* element = ignorepath;
- 
- 	jffs2_compressors_init();
++  	struct ignorepath_entry* element = ignorepath;
  
  	page_size = sysconf(_SC_PAGESIZE);
  	if (page_size < 0) /* System doesn't know so ... */
@@ -91,9 +89,11 @@
  	if (page_size != 4096)
  		warn_page_size = 1; /* warn user if page size not 4096 */
  
+ 	jffs2_compressors_init();
+ 
  	while ((opt = getopt_long(argc, argv,
 -					"D:d:r:s:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
-+  					"D:d:r:s:I:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
++   					"D:d:r:s:I:o:qUPfh?vVe:lbp::nc:m:x:X:Lty:i:", long_options, &c)) >= 0)
  	{
  		switch (opt) {
  			case 'D':
