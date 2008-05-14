@@ -16,7 +16,7 @@ PSTAGE_PKGARCH    = "${BUILD_SYS}"
 PSTAGE_EXTRAPATH  ?= ""
 PSTAGE_PKGPATH    = "${DISTRO}${PSTAGE_EXTRAPATH}"
 PSTAGE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
-PSTAGE_PKGNAME 	  = "${PSTAGE_PKGPN}_${PSTAGE_PKGVERSION}_${PSTAGE_PKGARCH}.ipk"
+PSTAGE_PKGNAME    = "${PSTAGE_PKGPN}_${PSTAGE_PKGVERSION}_${PSTAGE_PKGARCH}.ipk"
 PSTAGE_PKG        = "${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}/${PSTAGE_PKGNAME}"
 
 # multimachine.bbclass will override this but add a default in case we're not using it
@@ -107,7 +107,7 @@ def pstage_manualclean(srcname, destvarname, d):
 def pstage_cleanpackage(pkgname, d):
 	import os, bb
 
-        path = bb.data.getVar("PATH", d, 1)
+	path = bb.data.getVar("PATH", d, 1)
 	list_cmd = bb.data.getVar("PSTAGE_LIST_CMD", d, True)
 
 	bb.note("Checking if staging package installed")
@@ -170,20 +170,64 @@ python packagestage_scenefunc () {
     stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
 
     if os.path.exists(stagepkg):
-        bb.note("Following speedup\n")
         path = bb.data.getVar("PATH", d, 1)
-        installcmd = bb.data.getVar("PSTAGE_INSTALL_CMD", d, 1)
+        file = bb.data.getVar("FILE", d, True)
+        bb.debug(2, "Packaged staging active for %s\n" % file)
 
         bb.build.exec_func("staging_helper", d)
 
-        bb.debug(1, "Staging stuff already packaged, using that instead")
-        lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
-        ret = os.system("PATH=\"%s\" %s %s" % (path, installcmd, stagepkg))
-        bb.utils.unlockfile(lf)
+        #
+        # Install the staging package somewhere temporarily so we can extract the stamp files
+        #
+        cmd = bb.data.expand("opkg-cl install -force-depends -f ${PSTAGE_MACHCONFIG} -o ${WORKDIR}/tstage", d)
+        ret = os.system("PATH=\"%s\" %s %s" % (path, cmd, stagepkg))
         if ret != 0:
-            bb.note("Failure installing prestage package")
+            bb.fatal("Couldn't install the staging package to a temp directory")
 
-        bb.build.make_stamp("do_stage_package_populated", d)
+        #
+        # Copy the stamp files into the main stamps directoy
+        #
+        cmd = bb.data.expand("cp -dpR ${WORKDIR}/tstage/stamps/* ${TMPDIR}/stamps/", d)
+        ret = os.system(cmd)
+        if ret != 0:
+            bb.fatal("Couldn't copy the staging package stamp files")
+
+        #
+        # Iterate over the stamps seeing if they're valid. If we find any that
+        # are invalid or the task wasn't in the taskgraph, assume caution and 
+        # do a rebuild.
+        #
+        # FIXME - some tasks are safe to ignore in the task graph. e.g. package_write_*
+        stageok = True
+        taskscovered = bb.data.getVar("PSTAGE_TASKS_COVERED", d, True).split()
+        stamp = bb.data.getVar("STAMP", d, True)
+        for task in taskscovered:
+            task = 'do_' + task
+            stampfn = "%s.%s" % (stamp, task)
+            bb.debug(1, "Checking %s" % (stampfn))
+            if os.path.exists(stampfn):
+                stageok = bb.runqueue.check_stamp_fn(file, task, d)
+                bb.debug(1, "Result %s" % (stageok))
+                if not stageok:
+                    break
+
+        # Remove the stamps and files we added above
+        # FIXME - we should really only remove the stamps we added
+        os.system('rm -f ' + stamp + '.*')
+        os.system(bb.data.expand("rm -rf ${WORKDIR}/tstage", d))
+
+        if stageok:
+            bb.note("Staging package found, using it for %s." % file)
+            installcmd = bb.data.getVar("PSTAGE_INSTALL_CMD", d, 1)
+            lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
+            ret = os.system("PATH=\"%s\" %s %s" % (path, installcmd, stagepkg))
+            bb.utils.unlockfile(lf)
+            if ret != 0:
+                bb.note("Failure installing prestage package")
+
+            bb.build.make_stamp("do_stage_package_populated", d)
+        else:
+            bb.note("Staging package found but invalid for %s" % file)
 
 }
 packagestage_scenefunc[cleandirs] = "${PSTAGE_TMPDIR_STAGE}"
@@ -317,7 +361,7 @@ python do_package_stage () {
             if bb.data.inherits_class('package_deb', d):
                 if arch == 'all':
                     srcname = bb.data.expand(pkgname + "_${PV}-" + pr + "_all.deb", d)
-                else:	
+                else:
                     srcname = bb.data.expand(pkgname + "_${PV}-" + pr + "_${DPKG_ARCH}.deb", d)
                 srcfile = bb.data.expand("${DEPLOY_DIR_DEB}/" + arch + "/" + srcname, d)
                 if os.path.exists(srcfile):
@@ -353,6 +397,6 @@ do_package_stage_all () {
 do_package_stage_all[recrdeptask] = "do_package_stage"
 addtask package_stage_all after do_package_stage before do_build
 
-
+#do_setscene[recrdeptask] = "do_setscene"
 
 
