@@ -23,7 +23,7 @@ EXTRA_OECONF_mx31ads = "${BASE_CONF} --with-flavour=eglnative"
 PACKAGE_ARCH_mx31ads = "${MACHINE_ARCH}"
 LDFLAGS_append_mx31ads = " -lpvrNULLWSEGL -lstdc++ "
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig gtk-doc
 
 PACKAGES =+ "clutter-examples"
 FILES_clutter-examples = "${bindir}/test-*"
@@ -33,7 +33,6 @@ require clutter-fpu.inc
 
 #Fix up some weirdness in the docs
 do_configure_prepend() {
-	touch ${S}/gtk-doc.make
         sed -i s:doc/reference/Makefile::g ${S}/configure.ac
         sed -i s:doc::g ${S}/Makefile.am
 }
