@@ -99,6 +99,15 @@ do_populate_sdk() {
 	echo 'export PKG_CONFIG_SYSROOT_DIR=${prefix}/${TARGET_SYS}' >> $script
 	echo 'export PKG_CONFIG_PATH=${prefix}/${TARGET_SYS}${layout_libdir}/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${prefix}/site-config' >> $script
+	echo 'export CC=${TARGET_PREFIX}gcc' >> $script
+	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${HOST_SYS}"' >> $script
+	if [ "${TARGET_OS}" = "darwin8" ]; then
+		echo 'export TARGET_CFLAGS="-I${prefix}/${TARGET_SYS}${layout_includedir}"' >> $script
+		echo 'export TARGET_LDFLAGS="-L${prefix}/${TARGET_SYS}${layout_libdir}"' >> $script
+		# Workaround darwin toolchain sysroot path problems
+		cd ${SDK_OUTPUT}/usr
+		ln -s local /usr/local
+	fi
 	echo "alias opkg='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${sysconfdir}/opkg-sdk.conf -o ${prefix}'" >> $script
 	echo "alias opkg-target='LD_LIBRARY_PATH=${prefix}/lib ${prefix}/bin/opkg-cl -f ${prefix}/${TARGET_SYS}${layout_sysconfdir}/opkg.conf -o ${prefix}/${TARGET_SYS}'" >> $script
 
