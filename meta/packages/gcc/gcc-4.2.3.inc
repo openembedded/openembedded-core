@@ -68,6 +68,6 @@ FORTRAN = ""
 FORTRAN_linux-gnueabi = ",fortran"
 JAVA = ""
 
-EXTRA_OECONF += " --disable-libssp --disable-bootstrap "
+EXTRA_OECONF_BASE += " --disable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap"
 
 ARM_INSTRUCTION_SET = "arm"

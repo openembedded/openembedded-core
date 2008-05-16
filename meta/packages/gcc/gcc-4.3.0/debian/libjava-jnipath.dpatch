@@ -1,0 +1,94 @@
+#! /bin/sh -e
+
+# DP: - Add /usr/lib/jni to java.library.path.
+# DP: - When running the i386 binaries on amd64, look in
+# DP: - /usr/lib32/gcj-x.y and /usr/lib32/jni instead.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+--- libjava/gnu/classpath/natSystemProperties.cc~	2006-08-02 00:53:40.000000000 +0200
++++ libjava/gnu/classpath/natSystemProperties.cc	2006-08-19 00:41:50.063803000 +0200
+@@ -141,6 +141,34 @@
+   return retval;
+ }
+ 
++static char*
++AppendJniLibdir (char *path, struct utsname *u)
++{
++  char* retval;
++  const char* jnilibdir = "/usr/lib/jni";
++
++#if defined(__linux__) && defined (__i386__)
++  if (! strcmp ("x86_64", u->machine))
++    jnilibdir = "/usr/lib32/jni";
++#endif
++
++  if (path)
++    {
++      jsize total = strlen (path)
++	+ (sizeof (PATH_SEPARATOR) - 1) + strlen (jnilibdir) + 1;
++      retval = (char*) _Jv_Malloc (total);
++      strcpy (retval, path);
++      strcat (retval, PATH_SEPARATOR);
++      strcat (retval, jnilibdir);
++    }
++  else
++    {
++      retval = (char*) _Jv_Malloc (strlen (jnilibdir) + 1);
++      strcpy (retval, jnilibdir);
++    }
++  return retval;
++}
++
+ void
+ gnu::classpath::SystemProperties::insertSystemProperties (java::util::Properties *newprops)
+ {
+@@ -370,8 +398,13 @@
+       // Prepend GCJ_VERSIONED_LIBDIR to the module load path so that
+       // libgcj will find its own JNI libraries, like libgtkpeer.so.
+       char* val = PrependVersionedLibdir (path);
+-      _Jv_SetDLLSearchPath (val);
++
++      // Append jnilibdir
++      char* val2 = AppendJniLibdir (val, &u);
++
++      _Jv_SetDLLSearchPath (val2);
+       _Jv_Free (val);
++      _Jv_Free (val2);
+     }
+   else
+     {
+@@ -379,9 +412,12 @@
+ #ifdef USE_LTDL
+       char *libpath = getenv (LTDL_SHLIBPATH_VAR);
+       char* val = _Jv_PrependVersionedLibdir (libpath);
+-      SET ("java.library.path", val);
+-      _Jv_SetDLLSearchPath (val);
++      // Append jnilibdir
++      char* val2 = AppendJniLibdir (val, &u);
++      SET ("java.library.path", val2);
++      _Jv_SetDLLSearchPath (val2);
+       _Jv_Free (val);
++      _Jv_Free (val2);
+ #else
+       SET ("java.library.path", "");
+ #endif

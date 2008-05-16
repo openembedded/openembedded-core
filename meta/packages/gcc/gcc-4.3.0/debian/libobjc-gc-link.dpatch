@@ -1,0 +1,73 @@
+#! /bin/sh -e
+
+# DP: Link libobjc_gc with libgcjgc_convenience.la.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        cd ${dir}libobjc && autoconf
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        rm -f ${dir}libobjc/configure
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+2008-02-06  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac (OBJC_BOEHM_GC_LIBS): Link with libgcjgc_convenience.la.
+	* configure: Regenerate.
+	* Makefile.in (libobjc_gc$(libsuffix).la): Link with OBJC_BOEHM_GC_LIBS.
+
+--- libobjc/Makefile.in~	2007-07-05 10:18:52.000000000 +0200
++++ libobjc/Makefile.in	2008-02-07 17:17:17.243167905 +0100
+@@ -95,6 +95,7 @@
+ OBJC_THREAD_FILE=thr-objc
+ OBJC_BOEHM_GC=@OBJC_BOEHM_GC@
+ OBJC_BOEHM_GC_INCLUDES=@OBJC_BOEHM_GC_INCLUDES@
++OBJC_BOEHM_GC_LIBS=@OBJC_BOEHM_GC_LIBS@
+ 
+ INCLUDES = -I$(srcdir)/objc  -I$(srcdir)/$(MULTISRCTOP)../gcc \
+   -I$(srcdir)/$(MULTISRCTOP)../gcc/config \
+@@ -281,6 +282,7 @@
+ 
+ libobjc_gc$(libsuffix).la: $(OBJS_GC)
+ 	$(LIBTOOL_LINK) $(CC) -o $@ $(OBJS_GC) \
++		$(OBJC_BOEHM_GC_LIBS) \
+ 		-rpath $(toolexeclibdir) \
+ 		-version-info $(LIBOBJC_GC_VERSION) $(extra_ldflags_libobjc)
+ 
+--- libobjc/configure.ac~	2007-10-19 15:14:58.000000000 +0200
++++ libobjc/configure.ac	2008-02-07 17:25:15.750386077 +0100
+@@ -66,15 +66,18 @@
+   no)
+     OBJC_BOEHM_GC=''
+     OBJC_BOEHM_GC_INCLUDES=''
++    OBJC_BOEHM_GC_LIBS=''
+     ;;
+   *)
+     OBJC_BOEHM_GC=libobjc_gc.la
+     OBJC_BOEHM_GC_INCLUDES='-I$(top_srcdir)/../boehm-gc/include -I../boehm-gc/include'
++    OBJC_BOEHM_GC_LIBS='../boehm-gc/libgcjgc_convenience.la -pthread'
+     ;;
+ esac],
+ [OBJC_BOEHM_GC=''; OBJC_BOEHM_GC_INCLUDES=''])
+ AC_SUBST(OBJC_BOEHM_GC)
+ AC_SUBST(OBJC_BOEHM_GC_INCLUDES)
++AC_SUBST(OBJC_BOEHM_GC_LIBS)
+ 
+ # -----------
+ # Directories
+

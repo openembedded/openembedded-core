@@ -1,0 +1,710 @@
+#! /bin/sh -e
+
+# DP: Allow transformations on info file names. Reference the
+# DP: transformed info file names in the texinfo files.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+
+gcc/ChangeLog:
+
+2004-02-17  Matthias Klose  <doko@debian.org>
+
+	* Makefile.in: Allow transformations on info file names.
+	Define MAKEINFODEFS, macros to pass transformated info file
+	names to makeinfo.
+	* doc/cpp.texi: Use macros defined in MAKEINFODEFS for references.
+	* doc/cppinternals.texi: Likewise.
+	* doc/extend.texi: Likewise.
+	* doc/gcc.texi: Likewise.
+	* doc/gccint.texi: Likewise.
+	* doc/invoke.texi: Likewise.
+	* doc/libgcc.texi: Likewise.
+	* doc/makefile.texi: Likewise.
+	* doc/passes.texi: Likewise.
+	* doc/sourcebuild.texi: Likewise.
+	* doc/standards.texi: Likewise.
+	* doc/trouble.texi: Likewise.
+
+gcc/fortran/ChangeLog:
+	* Make-lang.in: Allow transformations on info file names.
+	Pass macros of transformated info file defined in MAKEINFODEFS
+	names to makeinfo.
+	* gfortran.texi: Use macros defined in MAKEINFODEFS for references.
+
+gcc/java/ChangeLog:
+	* Make-lang.in: Allow transformations on info file names.
+	Pass macros of transformated info file defined in MAKEINFODEFS
+	names to makeinfo.
+	* gcj.texi: Use macros defined in MAKEINFODEFS for references.
+
+gcc/treelang/ChangeLog:
+	* Make-lang.in: Allow transformations on info file names.
+	Pass macros of transformated info file defined in MAKEINFODEFS
+	names to makeinfo.
+	Define TREELANG_MAKEINFODEFS macros to pass transformated info file
+	names to makeinfo.
+	* treelang.texi: Use macros defined in MAKEINFO_DEFS for references.
+
+
+Index: libgomp/libgomp.texi
+===================================================================
+--- libgomp/libgomp.texi.orig	2007-10-29 12:36:42.000000000 +0100
++++ libgomp/libgomp.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -32,7 +32,7 @@ texts being (a) (see below), and with th
+ @ifinfo
+ @dircategory GNU Libraries
+ @direntry
+-* libgomp: (libgomp).                    GNU OpenMP runtime library
++* @value{fnlibgomp}: (@value{fnlibgomp}).                    GNU OpenMP runtime library
+ @end direntry
+ 
+ This manual documents the GNU implementation of the OpenMP API for 
+Index: libgomp/Makefile.am
+===================================================================
+--- libgomp/Makefile.am.orig	2007-12-12 12:01:26.000000000 +0100
++++ libgomp/Makefile.am	2008-02-08 16:27:44.000000000 +0100
+@@ -91,16 +91,19 @@ endif
+ 
+ all-local: $(STAMP_GENINSRC)
+ 
+-stamp-geninsrc: libgomp.info
+-	cp -p $(top_builddir)/libgomp.info $(srcdir)/libgomp.info
++INFO_LIBGOMP_NAME = $(shell echo libgomp|sed '$(program_transform_name)')
++stamp-geninsrc: $(INFO_LIBGOMP_NAME).info
++	cp -p $(top_builddir)/$(INFO_LIBGOMP_NAME).info $(srcdir)/libgomp.info
+ 	@touch $@
+ 
+-libgomp.info: $(STAMP_BUILD_INFO)
++libgomp.info: $(INFO_LIBGOMP_NAME).info
++	cp $(INFO_LIBGOMP_NAME).info libgomp.info
++$(INFO_LIBGOMP_NAME).info: $(STAMP_BUILD_INFO)
+ 
+ stamp-build-info: libgomp.texi
+-	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(srcdir) -o libgomp.info $(srcdir)/libgomp.texi
++	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -D 'fnlibgomp $(INFO_LIBGOMP_NAME)' -I $(srcdir) -o $(INFO_LIBGOMP_NAME).info $(srcdir)/libgomp.texi
+ 	@touch $@
+ 
+ 
+-CLEANFILES = $(STAMP_GENINSRC) $(STAMP_BUILD_INFO) libgomp.info
++CLEANFILES = $(STAMP_GENINSRC) $(STAMP_BUILD_INFO) $(INFO_LIBGOMP_NAME).info
+ MAINTAINERCLEANFILES = $(srcdir)/libgomp.info
+Index: libgomp/Makefile.in
+===================================================================
+--- libgomp/Makefile.in.orig	2008-01-08 17:45:56.000000000 +0100
++++ libgomp/Makefile.in	2008-02-08 16:27:44.000000000 +0100
+@@ -316,7 +316,8 @@ info_TEXINFOS = libgomp.texi
+ 
+ # AM_CONDITIONAL on configure check ACX_CHECK_PROG_VER([MAKEINFO])
+ @BUILD_INFO_TRUE@STAMP_BUILD_INFO = stamp-build-info
+-CLEANFILES = $(STAMP_GENINSRC) $(STAMP_BUILD_INFO) libgomp.info
++INFO_LIBGOMP_NAME = $(shell echo libgomp|sed '$(program_transform_name)')
++CLEANFILES = $(STAMP_GENINSRC) $(STAMP_BUILD_INFO) $(INFO_LIBGOMP_NAME).info
+ MAINTAINERCLEANFILES = $(srcdir)/libgomp.info
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+@@ -1079,15 +1080,16 @@ install-pdf: $(PDFS)
+ 	done
+ 
+ all-local: $(STAMP_GENINSRC)
+-
+-stamp-geninsrc: libgomp.info
+-	cp -p $(top_builddir)/libgomp.info $(srcdir)/libgomp.info
++stamp-geninsrc: $(INFO_LIBGOMP_NAME).info
++	cp -p $(top_builddir)/$(INFO_LIBGOMP_NAME).info $(srcdir)/libgomp.info
+ 	@touch $@
+ 
+-libgomp.info: $(STAMP_BUILD_INFO)
++libgomp.info: $(INFO_LIBGOMP_NAME).info
++	cp $(INFO_LIBGOMP_NAME).info libgomp.info
++$(INFO_LIBGOMP_NAME).info: $(STAMP_BUILD_INFO)
+ 
+ stamp-build-info: libgomp.texi
+-	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(srcdir) -o libgomp.info $(srcdir)/libgomp.texi
++	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -D 'fnlibgomp $(INFO_LIBGOMP_NAME)' -I $(srcdir) -o $(INFO_LIBGOMP_NAME).info $(srcdir)/libgomp.texi
+ 	@touch $@
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+Index: gcc/doc/cpp.texi
+===================================================================
+--- gcc/doc/cpp.texi.orig	2008-02-04 11:28:51.000000000 +0100
++++ gcc/doc/cpp.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -52,7 +52,7 @@ This manual contains no Invariant Sectio
+ @ifinfo
+ @dircategory Software development
+ @direntry
+-* Cpp: (cpp).		       The GNU C preprocessor.
++* @value{fncpp}: (@value{fncpp}).		       The GNU C preprocessor.
+ @end direntry
+ @end ifinfo
+ 
+Index: gcc/doc/cppinternals.texi
+===================================================================
+--- gcc/doc/cppinternals.texi.orig	2007-03-11 13:17:34.000000000 +0100
++++ gcc/doc/cppinternals.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -7,7 +7,7 @@
+ @ifinfo
+ @dircategory Software development
+ @direntry
+-* Cpplib: (cppinternals).      Cpplib internals.
++* @value{fncppint}: (@value{fncppint}).      Cpplib internals.
+ @end direntry
+ @end ifinfo
+ 
+Index: gcc/doc/extend.texi
+===================================================================
+--- gcc/doc/extend.texi.orig	2008-02-04 11:28:51.000000000 +0100
++++ gcc/doc/extend.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -11497,7 +11497,7 @@ want to write code that checks whether t
+ test for the GNU compiler the same way as for C programs: check for a
+ predefined macro @code{__GNUC__}.  You can also use @code{__GNUG__} to
+ test specifically for GNU C++ (@pxref{Common Predefined Macros,,
+-Predefined Macros,cpp,The GNU C Preprocessor}).
++Predefined Macros,@value{fncpp},The GNU C Preprocessor}).
+ 
+ @menu
+ * Volatiles::		What constitutes an access to a volatile object.
+Index: gcc/doc/gcc.texi
+===================================================================
+--- gcc/doc/gcc.texi.orig	2008-01-24 17:57:55.000000000 +0100
++++ gcc/doc/gcc.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -65,8 +65,8 @@ included in the section entitled ``GNU F
+ @ifnottex
+ @dircategory Software development
+ @direntry
+-* gcc: (gcc).                  The GNU Compiler Collection.
+-* g++: (gcc).                  The GNU C++ compiler.
++* @value{fngcc}: (@value{fngcc}).                  The GNU Compiler Collection.
++* @value{fngxx}: (@value{fngcc}).                  The GNU C++ compiler.
+ @end direntry
+ This file documents the use of the GNU compilers.
+ @sp 1
+@@ -126,7 +126,7 @@ version @value{version-GCC}.
+ The internals of the GNU compilers, including how to port them to new
+ targets and some information about how to write front ends for new
+ languages, are documented in a separate manual.  @xref{Top,,
+-Introduction, gccint, GNU Compiler Collection (GCC) Internals}.
++Introduction, @value{fngccint}, GNU Compiler Collection (GCC) Internals}.
+ 
+ @menu
+ * G++ and GCC::     You can compile C or C++ programs.
+Index: gcc/doc/gccint.texi
+===================================================================
+--- gcc/doc/gccint.texi.orig	2007-10-29 14:31:38.000000000 +0100
++++ gcc/doc/gccint.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -51,7 +51,7 @@ included in the section entitled ``GNU F
+ @ifnottex
+ @dircategory Software development
+ @direntry
+-* gccint: (gccint).            Internals of the GNU Compiler Collection.
++* @value{fngccint}: (@value{fngccint}).            Internals of the GNU Compiler Collection.
+ @end direntry
+ This file documents the internals of the GNU compilers.
+ @sp 1
+@@ -83,7 +83,7 @@ write front ends for new languages.  It 
+ @value{VERSION_PACKAGE}
+ @end ifset
+ version @value{version-GCC}.  The use of the GNU compilers is documented in a
+-separate manual.  @xref{Top,, Introduction, gcc, Using the GNU
++separate manual.  @xref{Top,, Introduction, @value{fngcc}, Using the GNU
+ Compiler Collection (GCC)}.
+ 
+ This manual is mainly a reference manual rather than a tutorial.  It
+Index: gcc/doc/invoke.texi
+===================================================================
+--- gcc/doc/invoke.texi.orig	2008-02-07 12:10:09.000000000 +0100
++++ gcc/doc/invoke.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -7456,7 +7456,7 @@ One of the standard libraries bypassed b
+ @option{-nodefaultlibs} is @file{libgcc.a}, a library of internal subroutines
+ that GCC uses to overcome shortcomings of particular machines, or special
+ needs for some languages.
+-(@xref{Interface,,Interfacing to GCC Output,gccint,GNU Compiler
++(@xref{Interface,,Interfacing to GCC Output,@value{fngccint},GNU Compiler
+ Collection (GCC) Internals},
+ for more discussion of @file{libgcc.a}.)
+ In most cases, you need @file{libgcc.a} even when you want to avoid
+@@ -7464,7 +7464,7 @@ other standard libraries.  In other word
+ or @option{-nodefaultlibs} you should usually specify @option{-lgcc} as well.
+ This ensures that you have no unresolved references to internal GCC
+ library subroutines.  (For example, @samp{__main}, used to ensure C++
+-constructors will be called; @pxref{Collect2,,@code{collect2}, gccint,
++constructors will be called; @pxref{Collect2,,@code{collect2}, @value{fngccint},
+ GNU Compiler Collection (GCC) Internals}.)
+ 
+ @item -pie
+@@ -15215,7 +15215,7 @@ Note that you can also specify places to
+ @option{-B}, @option{-I} and @option{-L} (@pxref{Directory Options}).  These
+ take precedence over places specified using environment variables, which
+ in turn take precedence over those specified by the configuration of GCC@.
+-@xref{Driver,, Controlling the Compilation Driver @file{gcc}, gccint,
++@xref{Driver,, Controlling the Compilation Driver @file{gcc}, @value{fngccint},
+ GNU Compiler Collection (GCC) Internals}.
+ 
+ @table @env
+@@ -15370,7 +15370,7 @@ the headers it contains change.
+ 
+ A precompiled header file will be searched for when @code{#include} is
+ seen in the compilation.  As it searches for the included file
+-(@pxref{Search Path,,Search Path,cpp,The C Preprocessor}) the
++(@pxref{Search Path,,Search Path,@value{fncpp},The C Preprocessor}) the
+ compiler looks for a precompiled header in each directory just before it
+ looks for the include file in that directory.  The name searched for is
+ the name specified in the @code{#include} with @samp{.gch} appended.  If
+Index: gcc/doc/libgcc.texi
+===================================================================
+--- gcc/doc/libgcc.texi.orig	2007-10-29 14:31:38.000000000 +0100
++++ gcc/doc/libgcc.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -24,7 +24,7 @@ that needs them.
+ GCC will also generate calls to C library routines, such as
+ @code{memcpy} and @code{memset}, in some cases.  The set of routines
+ that GCC may possibly use is documented in @ref{Other
+-Builtins,,,gcc, Using the GNU Compiler Collection (GCC)}.
++Builtins,,,@value{fngcc}, Using the GNU Compiler Collection (GCC)}.
+ 
+ These routines take arguments and return values of a specific machine
+ mode, not a specific C type.  @xref{Machine Modes}, for an explanation
+Index: gcc/doc/makefile.texi
+===================================================================
+--- gcc/doc/makefile.texi.orig	2008-02-04 11:28:51.000000000 +0100
++++ gcc/doc/makefile.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -139,7 +139,7 @@ regardless of how it itself was compiled
+ @item profiledbootstrap
+ Builds a compiler with profiling feedback information.  For more
+ information, see
+-@ref{Building,,Building with profile feedback,gccinstall,Installing GCC}.
++@ref{Building,,Building with profile feedback,@value{fngccinstall},Installing GCC}.
+ 
+ @item restrap
+ Restart a bootstrap, so that everything that was not built with
+Index: gcc/doc/passes.texi
+===================================================================
+--- gcc/doc/passes.texi.orig	2008-02-04 11:28:51.000000000 +0100
++++ gcc/doc/passes.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -191,7 +191,7 @@ rid of it.  This pass is located in @fil
+ @item Mudflap declaration registration
+ 
+ If mudflap (@pxref{Optimize Options,,-fmudflap -fmudflapth
+--fmudflapir,gcc,Using the GNU Compiler Collection (GCC)}) is
++-fmudflapir,@value{fngcc},Using the GNU Compiler Collection (GCC)}) is
+ enabled, we generate code to register some variable declarations with
+ the mudflap runtime.  Specifically, the runtime tracks the lifetimes of
+ those variable declarations that have their addresses taken, or whose
+Index: gcc/doc/standards.texi
+===================================================================
+--- gcc/doc/standards.texi.orig	2007-12-12 12:01:27.000000000 +0100
++++ gcc/doc/standards.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -230,8 +230,8 @@ HTML format.
+ GNAT Reference Manual}, for information on standard
+ conformance and compatibility of the Ada compiler.
+ 
+-@xref{Standards,,Standards, gfortran, The GNU Fortran Compiler}, for details
++@xref{Standards,,Standards, @value{fngfortran}, The GNU Fortran Compiler}, for details
+ of standards supported by GNU Fortran.
+ 
+-@xref{Compatibility,,Compatibility with the Java Platform, gcj, GNU gcj},
++@xref{Compatibility,,Compatibility with the Java Platform, @value{fngcj}, GNU gcj},
+ for details of compatibility between @command{gcj} and the Java Platform.
+Index: gcc/java/Make-lang.in
+===================================================================
+--- gcc/java/Make-lang.in.orig	2008-02-07 12:10:09.000000000 +0100
++++ gcc/java/Make-lang.in	2008-02-08 16:27:44.000000000 +0100
+@@ -127,11 +127,23 @@ java.tags: force
+ 	etags --include TAGS.sub --include ../TAGS.sub
+ 
+ 
+-java.info: doc/gcj.info
++TEXI_GCJ_FILES = java/gcj.texi \
++		 $(gcc_docdir)/include/gpl.texi $(gcc_docdir)/include/funding.texi \
++		 $(gcc_docdir)/include/fdl.texi $(gcc_docdir)/include/gcc-common.texi gcc-vers.texi
++INFO_GCJ_NAME = $(shell echo gcj|sed '$(program_transform_name)')
+ 
+-java.srcinfo: doc/gcj.info
++java.info: doc/$(INFO_GCJ_NAME).info
++
++java.srcinfo: doc/$(INFO_GCJ_NAME).info
+ 	-cp -p $^ $(srcdir)/doc
+ 
++doc/$(INFO_GCJ_NAME).info: $(TEXI_GCJ_FILES)
++	if test "x$(BUILD_INFO)" = xinfo; then \
++	  rm -f $(@)*; \
++	  $(MAKEINFO) $(MAKEINFOFLAGS) $(MAKEINFODEFS) \
++	    -I$(gcc_docdir)/include -I$(srcdir)/f -o$@ $<; \
++	fi
++
+ java.dvi: doc/gcj.dvi
+ 
+ JAVA_PDFFILES = doc/gcj.pdf
+@@ -187,8 +199,9 @@ java.uninstall:
+ 	-rm -rf $(DESTDIR)$(man1dir)/gij$(man1ext)
+ 	-rm -rf $(DESTDIR)$(man1dir)/jv-convert$(man1ext)
+ 	-rm -rf $(DESTDIR)$(man1dir)/gcj-dbtool$(man1ext)
++	-rm -f $(DESTDIR)$(infodir)/$(INFO_GCJ_NAME).info*
+ 
+-java.install-info: $(DESTDIR)$(infodir)/gcj.info
++java.install-info: $(DESTDIR)$(infodir)/$(INFO_GCJ_NAME).info
+ 
+ java.install-pdf: $(JAVA_PDFFILES)
+ 	@$(NORMAL_INSTALL)
+Index: gcc/java/gcj.texi
+===================================================================
+--- gcc/java/gcj.texi.orig	2007-12-12 12:01:27.000000000 +0100
++++ gcc/java/gcj.texi	2008-02-08 17:19:48.000000000 +0100
+@@ -56,21 +56,21 @@ man page gfdl(7).
+ @format
+ @dircategory Software development
+ @direntry
+-* Gcj: (gcj).               Ahead-of-time compiler for the Java language
++* @value{fngcj}: (@value{fngcj}).               Ahead-of-time compiler for the Java language
+ @end direntry
+ 
+ @dircategory Individual utilities
+ @direntry
+-* jcf-dump: (gcj)Invoking jcf-dump.
++* jcf-dump: (@value{fngcj}) Invoking jcf-dump.
+                             Print information about Java class files
+-* gij: (gcj)Invoking gij.   GNU interpreter for Java bytecode
+-* gcj-dbtool: (gcj)Invoking gcj-dbtool.
++* gij: (@value{fngcj}) Invoking gij.   GNU interpreter for Java bytecode
++* gcj-dbtool: (@value{fngcj}) Invoking gcj-dbtool.
+                             Tool for manipulating class file databases.
+-* jv-convert: (gcj)Invoking jv-convert.
++* jv-convert: (@value{fngcj}) Invoking jv-convert.
+                             Convert file from one encoding to another
+-* grmic: (gcj)Invoking grmic.
++* grmic: (@value{fngcj}) Invoking grmic.
+                             Generate stubs for Remote Method Invocation.
+-* gc-analyze: (gcj)Invoking gc-analyze.
++* gc-analyze: (@value{fngcj}) Invoking gc-analyze.
+                             Analyze Garbage Collector (GC) memory dumps.
+ @end direntry
+ @end format
+@@ -152,7 +152,7 @@ and the Info entries for @file{gcj} and 
+ 
+ As @command{gcj} is just another front end to @command{gcc}, it supports many
+ of the same options as gcc.  @xref{Option Summary, , Option Summary,
+-gcc, Using the GNU Compiler Collection (GCC)}.  This manual only documents the
++@value{fngcc}, Using the GNU Compiler Collection (GCC)}.  This manual only documents the
+ options specific to @command{gcj}.
+ 
+ @c man end
+Index: gcc/fortran/Make-lang.in
+===================================================================
+--- gcc/fortran/Make-lang.in.orig	2008-02-07 12:10:11.000000000 +0100
++++ gcc/fortran/Make-lang.in	2008-02-08 16:27:44.000000000 +0100
+@@ -112,7 +112,8 @@ fortran.tags: force
+ 	cd $(srcdir)/fortran; etags -o TAGS.sub *.c *.h; \
+ 	etags --include TAGS.sub --include ../TAGS.sub
+ 
+-fortran.info: doc/gfortran.info doc/gfc-internals.info
++INFO_FORTRAN_NAME = $(shell echo gfortran|sed '$(program_transform_name)')
++fortran.info: doc/$(INFO_FORTRAN_NAME).info
+ fortran.dvi: doc/gfortran.dvi doc/gfc-internals.dvi
+ fortran.html: $(build_htmldir)/gfortran/index.html
+ 
+@@ -154,10 +155,10 @@ GFORTRAN_TEXI = \
+   $(srcdir)/doc/include/gcc-common.texi \
+   gcc-vers.texi
+ 
+-doc/gfortran.info: $(GFORTRAN_TEXI)
++doc/$(INFO_FORTRAN_NAME).info: $(GFORTRAN_TEXI)
+ 	if [ x$(BUILD_INFO) = xinfo ]; then \
+ 	  rm -f doc/gfortran.info-*; \
+-	  $(MAKEINFO) -I $(srcdir)/doc/include -I $(srcdir)/fortran \
++	  $(MAKEINFO) $(MAKEINFODEFS) -I $(srcdir)/doc/include -I $(srcdir)/fortran \
+ 	    -o $@ $<; \
+ 	else true; fi
+ 
+@@ -225,7 +226,7 @@ fortran.install-common: install-finclude
+ 	  fi ; \
+ 	fi
+ 
+-fortran.install-info: $(DESTDIR)$(infodir)/gfortran.info
++fortran.install-info: $(DESTDIR)$(infodir)/$(INFO_FORTRAN_NAME).info
+ 
+ fortran.install-man: $(DESTDIR)$(man1dir)/$(GFORTRAN_INSTALL_NAME)$(man1ext)
+ 
+@@ -243,7 +244,7 @@ fortran.uninstall:
+ 	rm -rf $(DESTDIR)$(bindir)/$(GFORTRAN_INSTALL_NAME)$(exeext); \
+ 	rm -rf $(DESTDIR)$(man1dir)/$(GFORTRAN_INSTALL_NAME)$(man1ext); \
+ 	rm -rf $(DESTDIR)$(bindir)/$(GFORTRAN_TARGET_INSTALL_NAME)$(exeext); \
+-	rm -rf $(DESTDIR)$(infodir)/gfortran.info*
++	rm -rf $(DESTDIR)$(infodir)/$(INFO_FORTRAN_NAME).info*
+ 
+ #
+ # Clean hooks:
+Index: gcc/fortran/gfortran.texi
+===================================================================
+--- gcc/fortran/gfortran.texi.orig	2008-01-25 16:49:43.000000000 +0100
++++ gcc/fortran/gfortran.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -102,7 +102,7 @@ texts being (a) (see below), and with th
+ @ifinfo
+ @dircategory Software development
+ @direntry
+-* gfortran: (gfortran).                  The GNU Fortran Compiler.
++* @value{fngfortran}: (@value{fngfortran}).                  The GNU Fortran Compiler.
+ @end direntry
+ This file documents the use and the internals of
+ the GNU Fortran compiler, (@command{gfortran}).
+Index: gcc/treelang/Make-lang.in
+===================================================================
+--- gcc/treelang/Make-lang.in.orig	2008-02-07 12:10:11.000000000 +0100
++++ gcc/treelang/Make-lang.in	2008-02-08 16:27:44.000000000 +0100
+@@ -153,9 +153,12 @@ treelang.tags: force
+ 	cd $(srcdir)/treelang; etags -o TAGS.sub *.y *.l *.c *.h; \
+ 	etags --include TAGS.sub --include ../TAGS.sub
+ 
+-treelang.info: doc/treelang.info
++INFO_TREELANG_NAME = $(shell echo treelang|sed '$(program_transform_name)')
++TREELANG_MAKEINFODEFS = -D 'fntreelang $(INFO_TREELANG_NAME)'
+ 
+-treelang.srcinfo: doc/treelang.info
++treelang.info: doc/$(INFO_TREELANG_NAME).info
++
++treelang.srcinfo: doc/$(INFO_TREELANG_NAME).info
+ 	-cp -p $^ $(srcdir)/doc
+ 
+ treelang.dvi: doc/treelang.dvi
+@@ -171,8 +174,8 @@ TEXI_TREELANG_FILES = treelang/treelang.
+ 	 $(gcc_docdir)/include/funding.texi \
+ 	 gcc-vers.texi
+ 
+-doc/treelang.info: $(TEXI_TREELANG_FILES)
+-	$(MAKEINFO) $(MAKEINFOFLAGS) -I $(gcc_docdir)/include -o $@ $<
++doc/$(INFO_TREELANG_NAME).info: $(TEXI_TREELANG_FILES)
++	$(MAKEINFO) $(MAKEINFOFLAGS) $(TREELANG_MAKEINFODEFS) -I $(gcc_docdir)/include -o $@ $<
+ 
+ doc/treelang.dvi: $(TEXI_TREELANG_FILES)
+ 	$(TEXI2DVI) -I $(abs_docdir)/include -o $@ $<
+@@ -210,7 +213,7 @@ treelang.install.common.done:  installdi
+ 	$(STAMP) treelang.install.common.done
+ 
+ # We might not be able to build the info files
+-treelang.install-info: $(DESTDIR)$(infodir)/treelang.info
++treelang.install-info: $(DESTDIR)$(infodir)/$(INFO_TREELANG_NAME).info
+ 
+ treelang.install-pdf: $(TREELANG_PDFFILES)
+ 	@$(NORMAL_INSTALL)
+@@ -233,6 +236,7 @@ treelang.uninstall:
+ 	  echo -rm -rf $(DESTDIR)$(bindir)/$$name2$(exeext); \
+ 	  rm -rf $(DESTDIR)$(bindir)/$$name2$(exeext); \
+ 	done
++	-rm -f $(DESTDIR)$(infodir)/$(INFO_TREELANG_NAME).info*
+ 	-rm treelang.install.common.done
+ 
+ #
+Index: gcc/treelang/treelang.texi
+===================================================================
+--- gcc/treelang/treelang.texi.orig	2007-10-29 14:33:20.000000000 +0100
++++ gcc/treelang/treelang.texi	2008-02-08 16:27:44.000000000 +0100
+@@ -107,7 +107,7 @@ texts being (a) (see below), and with th
+ @ifnottex
+ @dircategory Software development
+ @direntry
+-* treelang: (treelang).                  The GNU Treelang compiler.
++* @value{fntreelang}: (@value{fntreelang}).                  The GNU Treelang compiler.
+ @end direntry
+ @ifset INTERNALS
+ @ifset USING
+@@ -260,7 +260,7 @@ James A. Morrison.
+ @item
+ The packaging and compiler portions of GNU Treelang are based largely
+ on the GCC compiler.
+-@xref{Contributors,,Contributors to GCC,GCC,Using and Maintaining GCC},
++@xref{Contributors,,Contributors to GCC,@value{fngcc},Using and Maintaining GCC},
+ for more information.
+ 
+ @item
+@@ -880,7 +880,7 @@ files and accepts Treelang-specific comm
+ command-line options that are designed to cater to Treelang users
+ but apply to other languages as well.
+ 
+-@xref{G++ and GCC,,Programming Languages Supported by GCC,GCC,Using
++@xref{G++ and GCC,,Programming Languages Supported by GCC,@value{fngcc},Using
+ the GNU Compiler Collection (GCC)},
+ for information on the way different languages are handled
+ by the GCC compiler (@code{gcc}).
+Index: gcc/Makefile.in
+===================================================================
+--- gcc/Makefile.in.orig	2008-02-08 16:27:44.000000000 +0100
++++ gcc/Makefile.in	2008-02-08 17:18:23.000000000 +0100
+@@ -3617,8 +3617,27 @@ stmp-install-fixproto: fixproto
+ 
+ doc: $(BUILD_INFO) $(GENERATED_MANPAGES) gccbug
+ 
+-INFOFILES = doc/cpp.info doc/gcc.info doc/gccint.info \
+-            doc/gccinstall.info doc/cppinternals.info
++INFO_CPP_NAME = $(shell echo cpp|sed '$(program_transform_name)')
++INFO_GCC_NAME = $(shell echo gcc|sed '$(program_transform_name)')
++INFO_GXX_NAME = $(shell echo g++|sed '$(program_transform_name)')
++INFO_GCCINT_NAME = $(shell echo gccint|sed '$(program_transform_name)')
++INFO_GCCINSTALL_NAME = $(shell echo gccinstall|sed '$(program_transform_name)')
++INFO_CPPINT_NAME = $(shell echo cppinternals|sed '$(program_transform_name)')
++
++INFO_FORTRAN_NAME = $(shell echo gfortran|sed '$(program_transform_name)')
++INFO_GCJ_NAME = $(shell echo gcj|sed '$(program_transform_name)')
++
++INFOFILES = doc/$(INFO_CPP_NAME).info doc/$(INFO_GCC_NAME).info \
++            doc/$(INFO_GCCINT_NAME).info \
++            doc/$(INFO_GCCINSTALL_NAME).info doc/$(INFO_CPPINT_NAME).info
++
++MAKEINFODEFS = -D 'fncpp $(INFO_CPP_NAME)' -D 'fngcc $(INFO_GCC_NAME)' \
++               -D 'fngxx $(INFO_GXX_NAME)' \
++               -D 'fngccint $(INFO_GCCINT_NAME)' \
++               -D 'fngccinstall $(INFO_GCCINSTALL_NAME)' \
++               -D 'fncppint $(INFO_CPPINT_NAME)' \
++               -D 'fngfortran $(INFO_FORTRAN_NAME)' \
++               -D 'fngcj $(INFO_GCJ_NAME)'
+ 
+ info: $(INFOFILES) lang.info @GENINSRC@ srcinfo lang.srcinfo
+ 
+@@ -3668,21 +3687,41 @@ gcc-vers.texi: $(BASEVER) $(DEVPHASE)
+ # patterns.  To use them, put each of the specific targets with its
+ # specific dependencies but no build commands.
+ 
+-doc/cpp.info: $(TEXI_CPP_FILES)
+-doc/gcc.info: $(TEXI_GCC_FILES)
+-doc/gccint.info: $(TEXI_GCCINT_FILES)
+-doc/cppinternals.info: $(TEXI_CPPINT_FILES)
+-
++# Generic entry to handle info files, which are not renamed (currently Ada)
+ doc/%.info: %.texi
+ 	if [ x$(BUILD_INFO) = xinfo ]; then \
+ 		$(MAKEINFO) $(MAKEINFOFLAGS) -I . -I $(gcc_docdir) \
+ 			-I $(gcc_docdir)/include -o $@ $<; \
+ 	fi
+ 
++doc/$(INFO_CPP_NAME).info: $(TEXI_CPP_FILES)
++	if [ x$(BUILD_INFO) = xinfo ]; then \
++		$(MAKEINFO) $(MAKEINFOFLAGS) $(MAKEINFODEFS) -I $(gcc_docdir) \
++			-I $(gcc_docdir)/include -o $@ $<; \
++	fi
++
++doc/$(INFO_GCC_NAME).info: $(TEXI_GCC_FILES)
++	if [ x$(BUILD_INFO) = xinfo ]; then \
++		$(MAKEINFO) $(MAKEINFOFLAGS) $(MAKEINFODEFS) -I $(gcc_docdir) \
++			-I $(gcc_docdir)/include -o $@ $<; \
++	fi
++
++doc/$(INFO_GCCINT_NAME).info: $(TEXI_GCCINT_FILES)
++	if [ x$(BUILD_INFO) = xinfo ]; then \
++		$(MAKEINFO) $(MAKEINFOFLAGS) $(MAKEINFODEFS) -I $(gcc_docdir) \
++			-I $(gcc_docdir)/include -o $@ $<; \
++	fi
++
++doc/$(INFO_CPPINT_NAME).info: $(TEXI_CPPINT_FILES)
++	if [ x$(BUILD_INFO) = xinfo ]; then \
++		$(MAKEINFO) $(MAKEINFOFLAGS) $(MAKEINFODEFS) -I $(gcc_docdir) \
++			-I $(gcc_docdir)/include -o $@ $<; \
++	fi
++
+ # Duplicate entry to handle renaming of gccinstall.info
+-doc/gccinstall.info: $(TEXI_GCCINSTALL_FILES)
++doc/$(INFO_GCCINSTALL_NAME).info: $(TEXI_GCCINSTALL_FILES)
+ 	if [ x$(BUILD_INFO) = xinfo ]; then \
+-		$(MAKEINFO) $(MAKEINFOFLAGS) -I $(gcc_docdir) \
++		$(MAKEINFO) $(MAKEINFOFLAGS) $(MAKEINFODEFS) -I $(gcc_docdir) \
+ 			-I $(gcc_docdir)/include -o $@ $<; \
+ 	fi
+ 
+@@ -3990,11 +4029,11 @@ install-driver: installdirs xgcc$(exeext
+ # $(INSTALL_DATA) might be a relative pathname, so we can't cd into srcdir
+ # to do the install.
+ install-info:: doc installdirs \
+-	$(DESTDIR)$(infodir)/cpp.info \
+-	$(DESTDIR)$(infodir)/gcc.info \
+-	$(DESTDIR)$(infodir)/cppinternals.info \
+-	$(DESTDIR)$(infodir)/gccinstall.info \
+-	$(DESTDIR)$(infodir)/gccint.info \
++	$(DESTDIR)$(infodir)/$(INFO_CPP_NAME).info \
++	$(DESTDIR)$(infodir)/$(INFO_GCC_NAME).info \
++	$(DESTDIR)$(infodir)/$(INFO_CPPINT_NAME).info \
++	$(DESTDIR)$(infodir)/$(INFO_GCCINSTALL_NAME).info \
++	$(DESTDIR)$(infodir)/$(INFO_GCCINT_NAME).info \
+ 	lang.install-info
+ 
+ $(DESTDIR)$(infodir)/%.info: doc/%.info installdirs
+@@ -4195,8 +4234,11 @@ uninstall: lang.uninstall
+ 	-rm -rf $(DESTDIR)$(man1dir)/cpp$(man1ext)
+ 	-rm -rf $(DESTDIR)$(man1dir)/protoize$(man1ext)
+ 	-rm -rf $(DESTDIR)$(man1dir)/unprotoize$(man1ext)
+-	-rm -f $(DESTDIR)$(infodir)/cpp.info* $(DESTDIR)$(infodir)/gcc.info*
+-	-rm -f $(DESTDIR)$(infodir)/cppinternals.info* $(DESTDIR)$(infodir)/gccint.info*
++	-rm -f $(DESTDIR)$(infodir)/$(INFO_CPP_NAME).info*
++	-rm -f $(DESTDIR)$(infodir)/$(INFO_GCC_NAME).info*
++	-rm -f $(DESTDIR)$(infodir)/$(INFO_CPPINT_NAME).info*
++	-rm -f $(DESTDIR)$(infodir)/$(INFO_GCCINT_NAME).info*
++	-rm -f $(DESTDIR)$(infodir)/$(INFO_GCCINSTALL_NAME).info*
+ #
+ # These targets are for the dejagnu testsuites. The file site.exp
+ # contains global variables that all the testsuites will use.
+Index: gcc/doc/install.texi
+===================================================================
+--- gcc/doc/install.texi.orig	2008-01-30 11:21:55.000000000 +0100
++++ gcc/doc/install.texi	2008-02-08 16:29:13.000000000 +0100
+@@ -96,7 +96,7 @@ Free Documentation License}''.
+ @end ifinfo
+ @dircategory Software development
+ @direntry
+-* gccinstall: (gccinstall).    Installing the GNU Compiler Collection.
++* @value{fngccinstall}: (@value{fngccinstall}).    Installing the GNU Compiler Collection.
+ @end direntry
+ 
+ @c Part 3 Titlepage and Copyright
+Index: gcc/ada/gnat-style.texi
+===================================================================
+--- gcc/ada/gnat-style.texi.orig	2007-10-29 12:59:35.000000000 +0100
++++ gcc/ada/gnat-style.texi	2008-02-08 17:15:59.000000000 +0100
+@@ -31,7 +31,7 @@
+ 
+ @dircategory Software development
+ @direntry
+-* gnat-style: (gnat-style).      GNAT Coding Style
++* gnat-style: (gnat-style-4.3).      GNAT Coding Style
+ @end direntry
+ 
+ @macro syntax{element}
+Index: gcc/ada/gnat_rm.texi
+===================================================================
+--- gcc/ada/gnat_rm.texi.orig	2008-01-02 11:19:07.000000000 +0100
++++ gcc/ada/gnat_rm.texi	2008-02-08 17:15:12.000000000 +0100
+@@ -30,7 +30,7 @@
+ 
+ @dircategory GNU Ada tools
+ @direntry
+-* GNAT Reference Manual: (gnat_rm).  Reference Manual for GNU Ada tools.
++* GNAT Reference Manual: (gnat_rm-4.3).  Reference Manual for GNU Ada tools.
+ @end direntry
+ 
+ @copying
+Index: gcc/ada/gnat_ugn.texi
+===================================================================
+--- gcc/ada/gnat_ugn.texi.orig	2008-01-02 11:19:08.000000000 +0100
++++ gcc/ada/gnat_ugn.texi	2008-02-08 17:15:37.000000000 +0100
+@@ -96,7 +96,7 @@
+ 
+ @ifset unw
+ @set PLATFORM
+-@set FILE gnat_ugn_unw
++@set FILE gnat_ugn_unw-4.3
+ @end ifset
+ 
+ @ifset vms

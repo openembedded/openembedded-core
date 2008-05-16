@@ -55,6 +55,6 @@ do_compile_prepend_avr32() {
 FORTRAN = ""
 JAVA = ""
 
-EXTRA_OECONF += " --disable-libssp "
+EXTRA_OECONF_BASE = "--disable-libssp --disable-libmudflap"
 
 ARM_INSTRUCTION_SET = "arm"

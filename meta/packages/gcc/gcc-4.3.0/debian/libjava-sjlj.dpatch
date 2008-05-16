@@ -1,0 +1,65 @@
+#! /bin/sh -e
+
+# DP: Don't try to use _Unwind_Backtrace on SJLJ targets.
+# DP: See bug #387875, #388505, GCC PR 29206.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p1 < $0
+        #cd ${dir}gcc && autoconf
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p1 < $0
+        #rm ${dir}gcc/configure
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+---
+ libjava/sysdep/generic/backtrace.h |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+Index: src/libjava/sysdep/generic/backtrace.h
+===================================================================
+--- src.orig/libjava/sysdep/generic/backtrace.h	2006-11-06 14:00:32.000000000 -0500
++++ src/libjava/sysdep/generic/backtrace.h	2006-11-06 14:04:38.000000000 -0500
+@@ -13,6 +13,20 @@ details.  */
+ 
+ #include <java-stack.h>
+ 
++#ifdef SJLJ_EXCEPTIONS
++
++#undef _Unwind_GetIPInfo
++#define _Unwind_GetIPInfo(ctx,ip_before_insn) \
++  (abort (), (void) (ctx), *ip_before_insn = 1, 0)
++
++#undef _Unwind_GetRegionStart
++#define _Unwind_GetRegionStart(ctx) \
++  (abort (), (void) (ctx), 0)
++
++#undef _Unwind_Backtrace
++#define _Unwind_Backtrace(trace_fn,state_ptr) \
++  (fallback_backtrace (trace_fn, state_ptr))
++
+ /* Unwind through the call stack calling TRACE_FN with STATE for every stack
+    frame.  Returns the reason why the unwinding was stopped.  */
+ _Unwind_Reason_Code
+@@ -20,4 +34,7 @@ fallback_backtrace (_Unwind_Trace_Fn, _J
+ {
+   return _URC_NO_REASON;
+ }
++
++#endif /* SJLJ_EXCEPTIONS */
++
+ #endif

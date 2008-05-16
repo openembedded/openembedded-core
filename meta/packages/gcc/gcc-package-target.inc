@@ -115,9 +115,9 @@ do_install () {
 	if [ -f ${D}${libdir}/nof/libgcc_s.so ]; then
 		mv ${D}${libdir}/nof/libgcc_s.so.* ${D}${base_libdir}
 	else
-		mv ${D}${libdir}/libgcc_s.so.* ${D}${base_libdir}
+		mv ${D}${libdir}/libgcc_s.so.* ${D}${base_libdir} || true
 	fi
-	rm -f ${D}${libdir}/libgcc_s.so
+	rm -f ${D}${libdir}/libgcc_s.so || true 
 	ln -sf `echo ${libdir}/gcc/${TARGET_SYS}/${BINV} \
 		| tr -s / \
 		| sed -e 's,^/,,' -e 's,[^/]*,..,g'`/lib/libgcc_s.so.1 \

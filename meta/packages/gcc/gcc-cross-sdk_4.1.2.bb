@@ -1,4 +1,4 @@
-PR = "r5"
+PR = "r6"
 
 require gcc-${PV}.inc
 require gcc-cross-sdk.inc

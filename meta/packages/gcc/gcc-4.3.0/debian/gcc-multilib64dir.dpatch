@@ -1,0 +1,62 @@
+#! /bin/sh -e
+
+# DP: Use lib instead of lib64 as multilibdir on amd64 and ppc64.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+Index: gcc/config/i386/t-linux64
+===================================================================
+--- gcc/config/i386/t-linux64	(revision 130706)
++++ gcc/config/i386/t-linux64	(working copy)
+@@ -13,7 +13,7 @@
+ 
+ MULTILIB_OPTIONS = m64/m32
+ MULTILIB_DIRNAMES = 64 32 
+-MULTILIB_OSDIRNAMES = ../lib64 $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)
++MULTILIB_OSDIRNAMES = ../lib $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)
+ 
+ LIBGCC = stmp-multilib
+ INSTALL_LIBGCC = install-multilib
+Index: gcc/config/rs6000/t-linux64
+===================================================================
+--- gcc/config/rs6000/t-linux64	(revision 130706)
++++ gcc/config/rs6000/t-linux64	(working copy)
+@@ -14,13 +14,13 @@
+ # it doesn't tell anything about the 32bit libraries on those systems.  Set
+ # MULTILIB_OSDIRNAMES according to what is found on the target.
+ 
+-MULTILIB_OPTIONS        = m64/m32 msoft-float
+-MULTILIB_DIRNAMES       = 64 32 nof
++MULTILIB_OPTIONS        = m64/m32
++MULTILIB_DIRNAMES       = 64 32
+ MULTILIB_EXTRA_OPTS     = fPIC mstrict-align
+-MULTILIB_EXCEPTIONS     = m64/msoft-float
+-MULTILIB_EXCLUSIONS     = m64/!m32/msoft-float
+-MULTILIB_OSDIRNAMES	= ../lib64 $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib) nof
+-MULTILIB_MATCHES        = $(MULTILIB_MATCHES_FLOAT)
++MULTILIB_EXCEPTIONS     =
++MULTILIB_EXCLUSIONS     =
++MULTILIB_OSDIRNAMES	= ../lib $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)
++MULTILIB_MATCHES        =
+ 
+ softfp_wrap_start := '\#ifndef __powerpc64__'
+ softfp_wrap_end := '\#endif'

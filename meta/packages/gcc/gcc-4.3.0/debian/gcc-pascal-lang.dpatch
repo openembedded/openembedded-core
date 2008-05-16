@@ -1,0 +1,726 @@
+#! /bin/sh -e
+
+# DP: Add pascal options and specs for the gcc driver.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+	ln -sf p ${dir}/gcc/pascal
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+diff -urN gcc.orig/p/lang.opt gcc/p/lang.opt
+--- gcc.orig/p/lang.opt	1970-01-01 01:00:00.000000000 +0100
++++ gcc/p/lang.opt	2006-03-03 20:17:49.000000000 +0100
+@@ -0,0 +1,635 @@
++; This file was generated automatically by mk-lang_opt.
++; DO NOT CHANGE THIS FILE MANUALLY!
++;
++; Options for the Pascal front end.
++; Copyright (C) 2004-2006 Free Software Foundation, Inc.
++;
++; This file is part of GNU Pascal.
++;
++; GNU Pascal is free software; you can redistribute it and/or modify
++; it under the terms of the GNU General Public License as published by
++; the Free Software Foundation; either version 2, or (at your option)
++; any later version.
++;
++; GNU Pascal is distributed in the hope that it will be useful,
++; but WITHOUT ANY WARRANTY; without even the implied warranty of
++; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++; GNU General Public License for more details.
++;
++; You should have received a copy of the GNU General Public License
++; along with GNU Pascal; see the file COPYING.  If not, write to the
++; Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA
++; 02111-1307, USA.
++
++; See c.opt for a description of this file's format.
++
++; Please try to keep this file in ASCII collating order.
++
++Language
++Pascal
++
++A
++Pascal
++Ignored
++
++D
++Pascal Joined Separate
++-D<macro>[=<val>]       Define a <macro> with <val> as its value.  If just <macro> is given, <val> is taken to be 1
++
++E
++Pascal
++Preprocess only
++
++H
++Pascal
++Print the name of include files as they are used
++
++I
++Pascal Joined Separate
++-I <dir>        Add <dir> to the end of the main include path.
++
++M
++Pascal
++Generate make dependencies
++
++MM
++Pascal
++Like -M but ignore system header files
++
++P
++Pascal
++Do not generate #line directives
++
++U
++Pascal Joined Separate
++-U<macro>       Undefine <macro>
++
++Wabsolute
++Pascal
++Warn about variables at absolute adresses and `absolute' variable with non-constant addresses (default)
++
++Wall
++Pascal
++
++
++Wcomment
++Pascal
++
++
++Wdynamic-arrays
++Pascal
++Warn about arrays whose size is determined at run time (including array slices)
++
++Werror
++Pascal
++
++
++Wfloat-equal
++Pascal
++Warn about `=' and `<>' comparisons of real numbers
++
++Widentifier-case
++Pascal
++Warn about an identifier written with varying case
++
++Widentifier-case-local
++Pascal
++Warn about an identifier written with varying case within one program/module/unit
++
++Wimplicit-abstract
++Pascal
++Warn when an object type not declared `abstract' contains an abstract method (default)
++
++Wimplicit-io
++Pascal
++Warn when `Input' or `Output' are used implicitly
++
++Winherited-abstract
++Pascal
++Warn when an abstract object type inherits from a non-abstract one (default)
++
++Winterface-file-name
++Pascal
++Warn when a unit/module interface differs from the file name
++
++Wlocal-external
++Pascal
++Warn about local `external' declarations
++
++Wmissing-declarations
++Pascal
++
++
++Wmissing-prototypes
++Pascal
++
++
++Wmixed-comments
++Pascal
++Warn about mixed comments like `{ ... *)'
++
++Wnear-far
++Pascal
++Warn about use of useless `near' or `far' directives (default)
++
++Wnested-comments
++Pascal
++Warn about nested comments like `{ { } }'
++
++Wobject-assignment
++Pascal
++Warn when when assigning objects or declaring them as value parameters or function results (default)
++
++Wpointer-arith
++Pascal
++
++
++Wsemicolon
++Pascal
++Warn about a semicolon after `then', `else' or `do' (default)
++
++Wtyped-const
++Pascal
++Warn about misuse of typed constants as initialized variables (default)
++
++Wundef
++Pascal
++
++
++Wunderscore
++Pascal
++Warn about double/leading/trailing underscores in identifiers
++
++Wwarnings
++Pascal
++Enable warnings (same as `{$W+}')
++
++Wwrite-strings
++Pascal
++
++
++famtmpfile=
++Pascal Joined RejectNegative
++(Internal switch used for automake)
++
++fassertions
++Pascal
++Enable assertion checking (default)
++
++fautobuild
++Pascal
++Automatically compile all units/modules/`{$L ...}' files and link the object files provided
++
++fautolink
++Pascal
++Automatically link object files provided by units/modules or `{$L ...}' (default)
++
++fautomake
++Pascal
++Automatically compile changed units/modules/`{$L ...}' files and link the object files provided
++
++fautomake-g++=
++Pascal Joined RejectNegative
++Set the C++ compiler invoked by automake
++
++fautomake-gcc=
++Pascal Joined RejectNegative
++Set the C compiler invoked by automake
++
++fautomake-gpc=
++Pascal Joined RejectNegative
++Set the Pascal compiler invoked by automake
++
++fbig-endian
++Pascal RejectNegative
++Tell GPC that the system is big-endian (for those targets where it can vary)
++
++fborland-objects
++Pascal RejectNegative
++Choose Borland object model
++
++fborland-pascal
++Pascal RejectNegative
++Try to emulate Borland Pascal, version 7.0
++
++fcase-value-checking
++Pascal
++Cause a runtime error if a `case' matches no branch (default in ISO Pascal modes)
++
++fcidefine=
++Pascal Joined RejectNegative
++Define a case-insensitive macro
++
++fclassic-pascal
++Pascal RejectNegative
++Reject anything besides ISO 7185 Pascal
++
++fclassic-pascal-level-0
++Pascal RejectNegative
++Reject conformant arrays and anything besides ISO 7185 Pascal
++
++fcsdefine=
++Pascal Joined RejectNegative
++Define a case-sensitive macro
++
++fcstrings-as-strings
++Pascal
++Treat CStrings as strings
++
++fdebug-automake
++Pascal RejectNegative
++(For GPC developers.) Give additional information about the actions of automake
++
++fdebug-gpi
++Pascal RejectNegative
++(For GPC developers.) Show what is written to and read from GPI files (huge output!)
++
++fdebug-source
++Pascal
++Output the source while it is processed to standard error
++
++fdebug-tree=
++Pascal Joined RejectNegative
++(For GPC developers.) Show the internal representation of a given tree node (name or address)
++
++fdelphi
++Pascal RejectNegative
++Try to emulate Borland Pascal, version 7.0, with some Delphi extensions
++
++fdelphi-comments
++Pascal
++Allow Delphi style `//' comments (default)
++
++fdelphi-method-shadowing
++Pascal
++Redefining methods silently shadows old definition (default in `--delphi')
++
++fdisable-debug-info
++Pascal RejectNegative
++Inhibit `-g' options (temporary work-around, this option may disappear in the future)
++
++fdisable-default-paths
++Pascal RejectNegative
++Do not add a default path to the unit and object path
++
++fdisable-keyword=
++Pascal Joined RejectNegative
++Disable a keyword, independently of dialect defaults
++
++fdisable-predefined-identifier=
++Pascal Joined RejectNegative
++Disable a predefined identifier, independently of dialect defaults
++
++fdouble-quoted-strings
++Pascal
++Allow strings enclosed in \"\" (default)
++
++fenable-keyword=
++Pascal Joined RejectNegative
++Enable a keyword, independently of dialect defaults
++
++fenable-predefined-identifier=
++Pascal Joined RejectNegative
++Enable a predefined identifier, independently of dialect defaults
++
++fexact-compare-strings
++Pascal
++Do not blank-pad strings for comparisons
++
++fexecutable-file-name
++Pascal RejectNegative
++Derive output file name from main source file name
++
++fexecutable-file-name=
++Pascal Joined RejectNegative
++Specify the name of the output file
++
++fexecutable-path
++Pascal
++`--no-executable-path': Create the executable file in the directory where the main source is (default)
++
++fexecutable-path=
++Pascal Joined RejectNegative
++Path where to create the executable file
++
++fextended-pascal
++Pascal RejectNegative
++Reject anything besides ISO 10206 Extended Pascal
++
++fextended-syntax
++Pascal
++same as `--ignore-function-results --pointer-arithmetic --cstrings-as-strings -Wno-absolute' (same as `{$X+}')
++
++ffield-widths
++Pascal
++Use default field widths in write statements
++
++ffield-widths=
++Pascal Joined RejectNegative
++Specify as a colon-separated list the default field widths in write statements for Integer, Real, Boolean, LongInt, LongReal
++
++fgnu-objects
++Pascal RejectNegative
++Reset object model to default state
++
++fgnu-pascal
++Pascal RejectNegative
++Undo the effect of previous dialect options, allow all features again
++
++fgpc-main=
++Pascal Joined RejectNegative
++External name for the program's entry point (default: `main')
++
++fgpi-destination-path=
++Pascal Joined RejectNegative
++(Internal switch used for automake)
++
++fignore-function-results
++Pascal
++Do not complain when a function is called like a procedure
++
++fignore-garbage-after-dot
++Pascal
++Ignore anything after the terminating `.' (default in `--borland-pascal')
++
++fignore-packed
++Pascal
++Ignore `packed' in the source code (default in `--borland-pascal')
++
++fimplementation-only
++Pascal RejectNegative
++Do not produce a GPI file; only compile the implementation part
++
++fimplicit-result
++Pascal
++Enable implicit `Result' for functions (default only in `--delphi')
++
++finit-modules=
++Pascal Joined RejectNegative
++Initialize the named modules in addition to those imported regularly; kind of a kludge
++
++finterface-only
++Pascal RejectNegative
++Compile only the interface part of a unit/module and exit (creates `.gpi' file, no `.o' file)
++
++fio-checking
++Pascal
++Check I/O operations automatically (same as `{$I+}') (default)
++
++fiso-goto-restrictions
++Pascal
++Do not allow jumps into structured instructions (default)
++
++flittle-endian
++Pascal RejectNegative
++Tell GPC that the system is little-endian (for those targets where it can vary)
++
++flongjmp-all-nonlocal-labels
++Pascal
++Use `longjmp' for all nonlocal labels (default for Darwin/PPC)
++
++fmac-objects
++Pascal RejectNegative
++Choose Mac object model
++
++fmac-pascal
++Pascal RejectNegative
++Support (some features of) traditional Macintosh Pascal compilers
++
++fmacros
++Pascal
++Expand macros (default except with `--ucsd-pascal', `--borland-pascal' or `--delphi')
++
++fmaximum-field-alignment=
++Pascal Joined RejectNegative
++Set the maximum field alignment in bits if `pack-struct' is in effect
++
++fmethods-always-virtual
++Pascal
++Make all methods virtual (default in `--mac-pascal')
++
++fmixed-comments
++Pascal
++Allow comments like `{ ... *)' as required in ISO Pascal (default in ISO 7185/10206 Pascal mode)
++
++fnested-comments
++Pascal
++Allow nested comments like `{ { } }' and `(* (* *) *)'
++
++fnonlocal-exit
++Pascal
++Allow non-local `Exit' statements (default in `--ucsd-pascal' and `--mac-pascal')
++
++fobject-checking
++Pascal
++Check for valid objects on virtual method calls (default)
++
++fobject-destination-path
++Pascal
++`--no-object-destination-path': Create additional object files (e.g. of C files, not Pascal units) in the current directory (default)
++
++fobject-destination-path=
++Pascal Joined RejectNegative
++Path where to create additional object files (e.g. of C files, not Pascal units)
++
++fobject-pascal
++Pascal RejectNegative
++Reject anything besides (the implemented parts of) ANSI draft Object Pascal
++
++fobject-path
++Pascal
++`--no-object-path': Forget about directories where to look for additional object (and source) files
++
++fobject-path=
++Pascal Joined RejectNegative
++Directories where to look for additional object (and source) files
++
++fobjects-are-references
++Pascal
++Turn objects into references (default in `--mac-pascal')
++
++fobjects-require-override
++Pascal
++Require override directive for objects (default in `--mac-pascal')
++
++fooe-objects
++Pascal RejectNegative
++Choose OOE object model
++
++fpascal-sc
++Pascal RejectNegative
++Be strict about the implemented Pascal-SC extensions
++
++fpedantic
++Pascal
++Reject everything not allowed in some dialect, e.g. redefinition of its keywords
++
++fpointer-arithmetic
++Pascal
++Enable pointer arithmetic
++
++fpointer-checking
++Pascal
++Validate pointers before dereferencing
++
++fpointer-checking-user-defined
++Pascal
++Use user-defined procedure for validating pointers
++
++fpreprocessed
++Pascal RejectNegative
++Treat the input file as already preprocessed
++
++fprint-needed-options
++Pascal RejectNegative
++Print the needed options
++
++fprogress-bar
++Pascal
++Output number of processed lines while compiling
++
++fprogress-messages
++Pascal
++Output source file names and line numbers while compiling
++
++fpropagate-units
++Pascal
++Automalically export all imported identifiers from a unit
++
++frange-and-object-checking
++Pascal
++Same as `--range-checking --object-checking', same as `{$R+}'
++
++frange-checking
++Pascal
++Do automatic range checks (default)
++
++fread-base-specifier
++Pascal
++In read statements, allow input base specifier `n#' (default)
++
++fread-hex
++Pascal
++In read statements, allow hexadecimal input with `$' (default)
++
++fread-white-space
++Pascal
++In read statements, require whitespace after numbers
++
++fsetlimit=
++Pascal Joined RejectNegative
++Define the range for `set of Integer' etc.
++
++fshort-circuit
++Pascal
++Guarantee short-circuit Boolean evaluation (default; same as `{$B-}')
++
++fstack-checking
++Pascal
++Enable stack checking (same as `{$S+}')
++
++fstandard-pascal
++Pascal RejectNegative
++Synonym for `--classic-pascal'
++
++fstandard-pascal-level-0
++Pascal RejectNegative
++Synonym for `--classic-pascal-level-0'
++
++fsun-pascal
++Pascal RejectNegative
++Support (a few features of) Sun Pascal
++
++ftransparent-file-names
++Pascal
++Derive external file names from variable names
++
++ftruncate-strings
++Pascal
++Truncate strings being assigned to other strings of too short capacity
++
++ftyped-address
++Pascal
++Make the result of the address operator typed (same as `{$T+}', default)
++
++fucsd-pascal
++Pascal RejectNegative
++Try to emulate UCSD Pascal
++
++funit-destination-path
++Pascal
++`--no-unit-destination-path': Create object and GPI files of Pascal units in the current directory (default)
++
++funit-destination-path=
++Pascal Joined RejectNegative
++Path where to create object and GPI files of Pascal units
++
++funit-path
++Pascal
++`--no-unit-path': Forget about directories where to look for unit/module sources
++
++funit-path=
++Pascal Joined RejectNegative
++Directories where to look for unit/module sources
++
++fuses=
++Pascal Joined RejectNegative
++Add an implicit `uses' clause
++
++fvax-pascal
++Pascal RejectNegative
++Support (a few features of) VAX Pascal
++
++fwrite-capital-exponent
++Pascal
++Write real exponents with a capital `E'
++
++fwrite-clip-strings
++Pascal
++In write statements, truncate strings exceeding their field width (`Write (SomeLongString : 3)')
++
++fwrite-real-blank
++Pascal
++Output a blank in front of positive reals in exponential form (default)
++
++idirafter
++Pascal Joined Separate
++`-idirafter <dir>'    Add <dir> to the end of the system include path
++
++imacros
++Pascal Joined Separate
++-imacros <file> Accept definition of macros in <file>
++
++include
++Pascal Joined Separate
++-include <file> Include the contents of <file> before other files
++
++iprefix
++Pascal Joined Separate
++-iprefix <path> Specify <path> as a prefix for next two options
++
++isystem
++Pascal Joined Separate
++-isystem <dir>  Add <dir> to the start of the system include path
++
++iwithprefix
++Pascal Joined Separate
++-iwithprefix <dir>      Add <dir> to the end of the system include path
++
++iwithprefixbefore
++Pascal Joined Separate
++-iwithprefixbefore <dir>        Add <dir> to the end of the main include path
++
++nostdinc
++Pascal
++Do not search standard system include directories (those specified with -isystem will still be used)
++
++remap
++Pascal
++Remap file names when including files
++
++v
++Pascal
++Enable verbose output
++
++; This comment is to ensure we retain the blank line above.
+diff -urN gcc.orig/p/lang-specs.h gcc/p/lang-specs.h
+--- gcc.orig/p/lang-specs.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc/p/lang-specs.h	2006-03-25 02:53:09.000000000 +0100
+@@ -0,0 +1,46 @@
++/*Definitions for specs for Pascal.
++
++  Copyright (C) 1997-2006 Free Software Foundation, Inc.
++
++  Authors: Peter Gerwinski <peter@gerwinski.de>
++           Frank Heckenbach <frank@pascal.gnu.de>
++
++  This file is part of GNU Pascal.
++
++  GNU Pascal is free software; you can redistribute it and/or modify
++  it under the terms of the GNU General Public License as published
++  by the Free Software Foundation; either version 2, or (at your
++  option) any later version.
++
++  GNU Pascal is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++  General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with GNU Pascal; see the file COPYING. If not, write to the
++  Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA
++  02111-1307, USA. */
++
++#include "p/p-version.h"
++
++/* This is the contribution to the `default_compilers' array for Pascal. */
++  {".pas", "@Pascal", 0},
++  {".p", "@Pascal", 0},
++  {".pp", "@Pascal", 0},
++  {".dpr", "@Pascal", 0},
++  {"@Pascal",
++    "gpc1 %{E:-E %{!M:%(cpp_unique_options) %1 %{m*} %{f*&W*&pedantic*} %{w} "
++    "%(cpp_debug_options) %{O*}}}"
++    "%{M:%(cpp_unique_options) %1 %{m*} %{f*&W*&pedantic*} %{w}" 
++    "%(cpp_debug_options) %{O*}}"
++    "%{!E:%{!M:%{save-temps:-E %(cpp_unique_options) %1 %{m*} "
++    "%{f*&W*&pedantic*} %{w}  %{O*} -o %b.i \n\
++     gpc1 -fpreprocessed %b.i} %{!save-temps:%(cpp_unique_options)} \
++     %(cc1_options)\
++    %{!famtmpfile*:%eInternal GPC problem: internal option `--amtmpfile' not given}\
++    %{!fsyntax-only:%(invoke_as)}}}", 0},
++  {"@Preprocessed-Pascal",
++   "%{!M:%{!MM:%{!E:gpc1 -fpreprocessed %i %(cc1_options)\
++    %{!famtmpfile*:%eInternal GPC problem: internal option `--amtmpfile' not given}\
++    %{!fsyntax-only:%(invoke_as)} }}}", 0},
+diff -urN gcc.orig/p/p-version.h gcc/p/p-version.h
+--- gcc.orig/p/p-version.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc/p/p-version.h	2006-03-25 02:53:09.000000000 +0100
+@@ -0,0 +1,7 @@
++/* Generated automatically by the Makefile.
++   DO NOT CHANGE THIS FILE MANUALLY! */
++
++#define GPC_MAJOR "2"
++#define GPC_MINOR "1"
++#define GPC_VERSION_STRING "20060325"
++#define GPC_RELEASE_STRING GPC_VERSION_STRING

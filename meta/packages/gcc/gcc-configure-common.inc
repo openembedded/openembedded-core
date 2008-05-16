@@ -13,6 +13,9 @@ JAVA_sh3 ?= ""
 FORTRAN ?= ",f77"
 LANGUAGES ?= "c,c++${FORTRAN}${JAVA}"
 
+EXTRA_OECONF_BASE ?= ""
+EXTRA_OECONF_PATHS ?= ""
+
 EXTRA_OECONF = "${@['--enable-clocale=generic', ''][bb.data.getVar('USE_NLS', d, 1) != 'no']} \
                 --with-gnu-ld \
                 --enable-shared \
@@ -25,6 +28,8 @@ EXTRA_OECONF = "${@['--enable-clocale=generic', ''][bb.data.getVar('USE_NLS', d,
                 --enable-symvers=gnu \
                 --enable-libstdcxx-pch \
                 --program-prefix=${TARGET_PREFIX} \
+                ${EXTRA_OECONF_BASE} \
+                ${EXTRA_OECONF_FPU} \
                 ${EXTRA_OECONF_PATHS}"
 
 # Build uclibc compilers without cxa_atexit support
@@ -32,16 +37,12 @@ EXTRA_OECONF_append_linux               = " --enable-__cxa_atexit"
 EXTRA_OECONF_append_linux-gnueabi       = " --enable-__cxa_atexit"
 EXTRA_OECONF_append_linux-uclibc        = " --disable-__cxa_atexit"
 EXTRA_OECONF_append_linux-uclibcgnueabi = " --disable-__cxa_atexit"
-EXTRA_OECONF += "${@get_gcc_fpu_setting(bb, d)}"
+EXTRA_OECONF_FPU = "${@get_gcc_fpu_setting(bb, d)}"
 CPPFLAGS = ""
 
 # Used by configure to define additional values for FLAGS_FOR_TARGET -
 # passed to all the compilers.
-ARCH_FLAGS_FOR_TARGET = ""
-#NOTE: not tested on other platforms, the following is probably correct
-# everywhere!
-ARCH_FLAGS_FOR_TARGET_slugos = "${TARGET_CC_ARCH}"
-ARCH_FLAGS_FOR_TARGET_unslung = "${TARGET_CC_ARCH}"
+ARCH_FLAGS_FOR_TARGET = "${TARGET_CC_ARCH}"
 EXTRA_OEMAKE += "ARCH_FLAGS_FOR_TARGET='${ARCH_FLAGS_FOR_TARGET}'"
 
 do_configure () {

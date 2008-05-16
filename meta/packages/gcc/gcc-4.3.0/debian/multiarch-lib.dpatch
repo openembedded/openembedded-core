@@ -1,0 +1,52 @@
+#! /bin/sh -e
+
+# multiarch-lib.dpatch by Stephen Frost <sfrost@debian.org>
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+diff -urN gcc.old/config/i386/t-linux64 gcc/config/i386/t-linux64
+--- gcc.old/config/i386/t-linux64	2002-11-28 15:47:02.000000000 +0100
++++ gcc/config/i386/t-linux64	2004-07-10 07:28:01.000000000 +0200
+@@ -6,7 +6,7 @@
+ 
+ MULTILIB_OPTIONS = m64/m32
+ MULTILIB_DIRNAMES = 64 32 
+-MULTILIB_OSDIRNAMES = ../lib64 ../lib
++MULTILIB_OSDIRNAMES = x86_64-linux i486-linux
+ 
+ LIBGCC = stmp-multilib
+ INSTALL_LIBGCC = install-multilib
+diff -urN gcc.old/config/t-linux gcc/config/t-linux
+--- gcc.old/config/t-linux	2004-05-04 18:09:38.000000000 +0200
++++ gcc/config/t-linux	2004-07-10 07:28:01.000000000 +0200
+@@ -11,3 +11,11 @@
+ LIB2ADDEH = $(srcdir)/unwind-dw2.c $(srcdir)/unwind-dw2-fde-glibc.c \
+   $(srcdir)/unwind-sjlj.c $(srcdir)/gthr-gnat.c $(srcdir)/unwind-c.c
+ LIB2ADDEHDEP = unwind.inc unwind-dw2-fde.h unwind-dw2-fde.c
++
++MULTILIB_OPTIONS = m32
++MULTILIB_DIRNAMES = 32 
++MULTILIB_OSDIRNAMES = $TARGET_ARCH
++
++LIBGCC = stmp-multilib
++INSTALL_LIBGCC = install-multilib
++

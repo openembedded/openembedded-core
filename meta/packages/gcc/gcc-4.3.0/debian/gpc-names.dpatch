@@ -1,0 +1,117 @@
+#! /bin/sh -e
+
+# DP: versioned gpc names
+
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch $pdir -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch $pdir -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+--- gcc/p/doc/en/gpc.texi.orig	2007-08-27 00:21:02.340767891 +0200
++++ gcc/p/doc/en/gpc.texi	2007-08-27 00:21:29.921183935 +0200
+@@ -23,11 +23,11 @@
+ 
+ @dircategory GNU programming tools
+ @direntry
+-* GPC: (gpc).                   The GNU Pascal Compiler.
++* GPC-4.1: (gpc-4.1).           The GNU Pascal Compiler (v2.1, based on GCC 4.1).
+ @end direntry
+ @dircategory Individual utilities
+ @direntry
+-* GPC: (gpc)Invoking GPC.       The GNU Pascal Compiler.
++* GPC-4.1: (gpc-4.1)Invoking GPC. The GNU Pascal Compiler (v2.1, based on GCC 4.1).
+ @end direntry
+ 
+ @c For FSF printing, turn on finalout (to get rid of the black
+--- gcc/p/Make-lang.in.orig	2007-08-27 00:21:02.340767891 +0200
++++ gcc/p/Make-lang.in	2007-08-27 00:23:19.412835592 +0200
+@@ -799,42 +799,43 @@
+ pascal.start.encap:
+ pascal.rest.encap: pascal.rts pascal.utils
+ 
+-pascal.info: $(srcdir)/p/doc/info/gpc.info \
+-             $(srcdir)/p/doc/info/gpcs.info \
+-             $(srcdir)/p/doc/info/gpcs-de.info \
+-             $(srcdir)/p/doc/info/gpc-hr.info \
+-             $(srcdir)/p/doc/info/gpcs-hr.info \
+-             $(srcdir)/p/doc/info/gpc-es.info \
+-             $(srcdir)/p/doc/info/gpcs-es.info
++iv=-4.1
++pascal.info: $(srcdir)/p/doc/info/gpc$(iv).info \
++             $(srcdir)/p/doc/info/gpcs$(iv).info \
++             $(srcdir)/p/doc/info/gpcs-de$(iv).info \
++             $(srcdir)/p/doc/info/gpc-hr$(iv).info \
++             $(srcdir)/p/doc/info/gpcs-hr$(iv).info \
++             $(srcdir)/p/doc/info/gpc-es$(iv).info \
++             $(srcdir)/p/doc/info/gpcs-es$(iv).info
+ pascal.dvi: gpc.dvi
+ 
+-$(srcdir)/p/doc/info/gpc.info: $(GPC_TEXI_EN)
++$(srcdir)/p/doc/info/gpc$(iv).info: $(GPC_TEXI_EN)
+ 	[ -d "$(srcdir)/p/doc/info" ] || $(srcdir)/p/script/mkdir-p "$(srcdir)/p/doc/info"
+-	$(MAKEINFO_EN) -o $(srcdir)/p/doc/info/gpc.info gpc.texi
++	$(MAKEINFO_EN) -o $(srcdir)/p/doc/info/gpc$(iv).info gpc.texi
+ 
+-$(srcdir)/p/doc/info/gpcs.info: $(GPC_TEXI_EN)
++$(srcdir)/p/doc/info/gpcs$(iv).info: $(GPC_TEXI_EN)
+ 	[ -d "$(srcdir)/p/doc/info" ] || $(srcdir)/p/script/mkdir-p "$(srcdir)/p/doc/info"
+-	$(MAKEINFO_EN) --no-split -o $(srcdir)/p/doc/info/gpcs.info gpcs.texi
++	$(MAKEINFO_EN) --no-split -o $(srcdir)/p/doc/info/gpcs$(iv).info gpcs.texi
+ 
+-$(srcdir)/p/doc/info/gpcs-de.info: $(GPC_TEXI_DE)
++$(srcdir)/p/doc/info/gpcs-de$(iv).info: $(GPC_TEXI_DE)
+ 	[ -d "$(srcdir)/p/doc/info" ] || $(srcdir)/p/script/mkdir-p "$(srcdir)/p/doc/info"
+-	$(MAKEINFO_DE) --no-split -o $(srcdir)/p/doc/info/gpcs-de.info gpcs.texi
++	$(MAKEINFO_DE) --no-split -o $(srcdir)/p/doc/info/gpcs-de$(iv).info gpcs.texi
+ 
+-$(srcdir)/p/doc/info/gpc-hr.info: $(GPC_TEXI_HR)
++$(srcdir)/p/doc/info/gpc-hr$(iv).info: $(GPC_TEXI_HR)
+ 	[ -d "$(srcdir)/p/doc/info" ] || $(srcdir)/p/script/mkdir-p "$(srcdir)/p/doc/info"
+-	$(MAKEINFO_HR) -o $(srcdir)/p/doc/info/gpc-hr.info gpc.texi
++	$(MAKEINFO_HR) -o $(srcdir)/p/doc/info/gpc-hr$(iv).info gpc.texi
+ 
+-$(srcdir)/p/doc/info/gpcs-hr.info: $(GPC_TEXI_HR)
++$(srcdir)/p/doc/info/gpcs-hr$(iv).info: $(GPC_TEXI_HR)
+ 	[ -d "$(srcdir)/p/doc/info" ] || $(srcdir)/p/script/mkdir-p "$(srcdir)/p/doc/info"
+-	$(MAKEINFO_HR) --no-split -o $(srcdir)/p/doc/info/gpcs-hr.info gpcs.texi
++	$(MAKEINFO_HR) --no-split -o $(srcdir)/p/doc/info/gpcs-hr$(iv).info gpcs.texi
+ 
+-$(srcdir)/p/doc/info/gpc-es.info: $(GPC_TEXI_ES)
++$(srcdir)/p/doc/info/gpc-es$(iv).info: $(GPC_TEXI_ES)
+ 	[ -d "$(srcdir)/p/doc/info" ] || $(srcdir)/p/script/mkdir-p "$(srcdir)/p/doc/info"
+-	$(MAKEINFO_ES) -o $(srcdir)/p/doc/info/gpc-es.info gpc.texi
++	$(MAKEINFO_ES) -o $(srcdir)/p/doc/info/gpc-es$(iv).info gpc.texi
+ 
+-$(srcdir)/p/doc/info/gpcs-es.info: $(GPC_TEXI_ES)
++$(srcdir)/p/doc/info/gpcs-es$(iv).info: $(GPC_TEXI_ES)
+ 	[ -d "$(srcdir)/p/doc/info" ] || $(srcdir)/p/script/mkdir-p "$(srcdir)/p/doc/info"
+-	$(MAKEINFO_ES) --no-split -o $(srcdir)/p/doc/info/gpcs-es.info gpcs.texi
++	$(MAKEINFO_ES) --no-split -o $(srcdir)/p/doc/info/gpcs-es$(iv).info gpcs.texi
+ 
+ gpc.dvi: $(GPC_TEXI_EN)
+ 	TEXINPUTS=$(srcdir)/p/doc:$(srcdir)/p/doc/images:$$TEXINPUTS \
+@@ -1023,11 +1024,11 @@
+ 	fi
+ 
+ pascal.install-info: pascal.install-info-man-dirs pascal.info
+-	rm -f $(DESTDIR)$(infodir)/gpc.info* $(DESTDIR)$(infodir)/gpcs.info* $(DESTDIR)$(infodir)/gpcs-de.info* $(DESTDIR)$(infodir)/gpcs-hr.info* $(DESTDIR)$(infodir)/gpcs-es.info*
+-	for f in `cd $(srcdir)/p/doc/info && echo gpc.info* gpcs*.info*`; do \
++	rm -f $(DESTDIR)$(infodir)/gpc*.info* $(DESTDIR)$(infodir)/gpcs*.info* $(DESTDIR)$(infodir)/gpcs-de*.info* $(DESTDIR)$(infodir)/gpcs-hr*.info* $(DESTDIR)$(infodir)/gpcs-es*.info*
++	for f in `cd $(srcdir)/p/doc/info && echo gpc$(iv).info* gpcs*.info*`; do \
+ 	  $(INSTALL_DATA) $(srcdir)/p/doc/info/$$f $(DESTDIR)$(infodir)/$$f || exit 1; \
+ 	done
+-	chmod a-x $(DESTDIR)$(infodir)/gpc.info* $(DESTDIR)$(infodir)/gpcs.info* $(DESTDIR)$(infodir)/gpcs-de.info* $(DESTDIR)$(infodir)/gpcs-hr.info* $(DESTDIR)$(infodir)/gpcs-es.info*
++	chmod a-x $(DESTDIR)$(infodir)/gpc*.info* $(DESTDIR)$(infodir)/gpcs*.info* $(DESTDIR)$(infodir)/gpcs-de*.info* $(DESTDIR)$(infodir)/gpcs-hr*.info* $(DESTDIR)$(infodir)/gpcs-es*.info*
+ 
+ pascal.install-man: pascal.install-info-man-dirs $(srcdir)/p/doc/en/gpc.1 $(srcdir)/p/doc/generated/gpc-run.1
+ 	-if [ -f gpc1$(exeext) ]; then \

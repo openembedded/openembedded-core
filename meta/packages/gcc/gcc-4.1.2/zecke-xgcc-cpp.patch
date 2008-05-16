@@ -1,3 +1,7 @@
+upstream: n/a
+comment: Use the preprocessor we have just compiled instead the one of
+the system. There might be incompabilities between us and them.
+
 Index: gcc-4.1.1/Makefile.in
 ===================================================================
 --- gcc-4.1.1.orig/Makefile.in	2006-08-06 13:32:44.000000000 +0200

@@ -1,0 +1,39 @@
+#! /bin/sh -e
+
+# DP: Set cross include path to .../include, not .../sys-include
+# DP: This should be a fix for famous limits.h issue
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        cd ${dir}gcc && autoconf
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        cd ${dir}gcc && autoconf
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+--- gcc/configure.ac.orig	2005-08-24 06:24:11.000000000 +0400
++++ gcc/configure.ac	2005-12-06 00:40:45.000000000 +0300
+@@ -681,7 +681,7 @@
+ ], [
+  TARGET_SYSTEM_ROOT=
+  TARGET_SYSTEM_ROOT_DEFINE=
+- CROSS_SYSTEM_HEADER_DIR='$(gcc_tooldir)/sys-include'
++ CROSS_SYSTEM_HEADER_DIR='$(prefix)/$(target_noncanonical)/include'
+ ])
+ AC_SUBST(TARGET_SYSTEM_ROOT)
+ AC_SUBST(TARGET_SYSTEM_ROOT_DEFINE)
