@@ -268,9 +268,17 @@ populate_staging_postamble () {
 		# list the packages currently installed in staging
 		# ${PSTAGE_LIST_CMD} | awk '{print $1}' > ${DEPLOY_DIR_PSTAGE}/installed-list         
 
+		# exitcode == 5 is ok, it means the files change
 		set +e
 		stage-manager -p ${STAGING_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-staging -u -d ${PSTAGE_TMPDIR_STAGE}/staging
+		exitcode=$?
+		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
+			exit $exitcode
+		fi
 		stage-manager -p ${CROSS_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-cross -u -d ${PSTAGE_TMPDIR_STAGE}/cross
+		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
+			exit $exitcode
+		fi
 		set -e
 	fi
 }
