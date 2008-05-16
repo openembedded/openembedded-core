@@ -67,5 +67,5 @@ SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
 FORTRAN = ""
 JAVA = ""
 
-EXTRA_OECONF_BASE = " --disable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap"
+EXTRA_OECONF_BASE = " --enable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap"
 

@@ -2,10 +2,12 @@ INHIBIT_PACKAGE_STRIP ?= ""
 OLD_INHIBIT_PACKAGE_STRIP := "${INHIBIT_PACKAGE_STRIP}"
 INHIBIT_PACKAGE_STRIP = "1"
 
-PACKAGES = "libgcc libstdc++ libg2c libgfortran"
+PACKAGES = "libgcc libssp libstdc++ libg2c libgfortran"
 
 # Called from within gcc-cross, so libdir is set wrong
 FILES_libg2c = "${target_libdir}/libg2c.so.*"
+
+FILES_libssp = "${target_libdir}/libssp.so.*"
 
 FILES_libgfortran = "${target_libdir}/libgfortran.so.*"
 
@@ -40,11 +42,13 @@ do_install () {
            mv -f ${D}${prefix}/*/lib/nof/libstdc++.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/nof/libg2c.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/nof/libgfortran*.so* ${D}${target_libdir} || true
+           mv -f ${D}${prefix}/*/lib/nof/libssp*.so* ${D}${target_libdir} || true 	
 
         else
            mv -f ${D}${prefix}/*/lib/libstdc++.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/libg2c.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/libgfortran*.so* ${D}${target_libdir} || true
+           mv -f ${D}${prefix}/*/lib/libssp*.so* ${D}${target_libdir} || true
         fi
 
 
