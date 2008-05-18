@@ -23,20 +23,7 @@ PSTAGE_PKG        = "${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}/${PSTAGE_PKGNAME}"
 MULTIMACH_ARCH ?= "${PACKAGE_ARCH}"
 
 PSTAGE_NATIVEDEPENDS = "\
-    pkgconfig-native \
-    autoconf-native \
-    automake-native \
-    curl-native \
-    zlib-native \
-    libtool-native \
-    gnu-config-native \
     shasum-native \
-    libtool-native \
-    automake-native \
-    update-alternatives-cworth-native \
-    opkg-native \
-    m4-native \
-    quilt-native \
     stagemanager-native \
     "
 
@@ -68,27 +55,31 @@ python () {
     # Add task dependencies if we're active, otherwise mark packaged staging
     # as inactive.
     if pstage_allowed:
-        deps = bb.data.getVarFlag('do_populate_staging', 'depends', d) or ""
-        deps += " stagemanager-native:do_populate_staging"
-        bb.data.setVarFlag('do_populate_staging', 'depends', deps, d)
-
         deps = bb.data.getVarFlag('do_setscene', 'depends', d) or ""
-        deps += " opkg-native:do_populate_staging"
+        deps += " stagemanager-native:do_populate_staging"
         bb.data.setVarFlag('do_setscene', 'depends', deps, d)
+
+        policy = bb.data.getVar("BB_STAMP_POLICY", d, True)
+        if policy == "whitelist" or policy == "full":
+           deps = bb.data.getVarFlag('do_setscene', 'recrdeptask', d) or ""
+           deps += " do_setscene"
+           bb.data.setVarFlag('do_setscene', 'recrdeptask', deps, d)
 
         bb.data.setVar("PSTAGING_ACTIVE", "1", d)
     else:
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
 }
 
-DEPLOY_DIR_PSTAGE 	= "${DEPLOY_DIR}/pstage"
-PSTAGE_MACHCONFIG       = "${DEPLOY_DIR_PSTAGE}/opkg.conf"
+DEPLOY_DIR_PSTAGE   = "${DEPLOY_DIR}/pstage"
+PSTAGE_MACHCONFIG   = "${DEPLOY_DIR_PSTAGE}/opkg.conf"
+
+PSTAGE_PKGMANAGER = "stage-manager-ipkg"
 
 PSTAGE_BUILD_CMD        = "stage-manager-ipkg-build -o 0 -g 0"
-PSTAGE_INSTALL_CMD      = "opkg-cl install -force-depends -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
-PSTAGE_UPDATE_CMD	= "opkg-cl update -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
-PSTAGE_REMOVE_CMD       = "opkg-cl remove -force-depends -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
-PSTAGE_LIST_CMD		= "opkg-cl list_installed -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
+PSTAGE_INSTALL_CMD      = "${PSTAGE_PKGMANAGER} -f ${PSTAGE_MACHCONFIG} -force-depends -o ${TMPDIR} install"
+PSTAGE_UPDATE_CMD       = "${PSTAGE_PKGMANAGER} -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR} update"
+PSTAGE_REMOVE_CMD       = "${PSTAGE_PKGMANAGER} -f ${PSTAGE_MACHCONFIG} -force-depends -o ${TMPDIR} remove"
+PSTAGE_LIST_CMD         = "${PSTAGE_PKGMANAGER} -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR} list_installed"
 
 PSTAGE_TMPDIR_STAGE     = "${WORKDIR}/staging-pkg"
 
@@ -104,10 +95,21 @@ def pstage_manualclean(srcname, destvarname, d):
 			bb.note("rm %s" % filepath)
 			os.system("rm %s" % filepath)
 
+def pstage_set_pkgmanager(d):
+    import bb
+    path = bb.data.getVar("PATH", d, 1)
+    pkgmanager = bb.which(path, 'opkg-cl')
+    if pkgmanager == "":
+        pkgmanager = bb.which(path, 'ipkg-cl')
+    if pkgmanager != "":
+        bb.data.setVar("PSTAGE_PKGMANAGER", pkgmanager, d)
+
+
 def pstage_cleanpackage(pkgname, d):
 	import os, bb
 
 	path = bb.data.getVar("PATH", d, 1)
+	pstage_set_pkgmanager(d)
 	list_cmd = bb.data.getVar("PSTAGE_LIST_CMD", d, True)
 
 	bb.note("Checking if staging package installed")
@@ -128,16 +130,16 @@ def pstage_cleanpackage(pkgname, d):
 	bb.utils.unlockfile(lf)
 
 do_clean_prepend() {
-        """
-        Clear the build and temp directories
-        """
+	"""
+	Clear the build and temp directories
+	"""
 
 	removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
 	pstage_cleanpackage(removepkg, d)
 
-        stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
-        bb.note("Removing staging package %s" % stagepkg)
-        os.system('rm -rf ' + stagepkg)
+	stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
+	bb.note("Removing staging package %s" % stagepkg)
+	os.system('rm -rf ' + stagepkg)
 }
 
 staging_helper () {
@@ -151,8 +153,15 @@ staging_helper () {
 			echo "arch $arch $priority" >> $conffile
 			priority=$(expr $priority + 5)
 		done
+		echo "dest root /" >> $conffile
 	fi
-	echo "dest root /" >> $conffile
+	if [ ! -e ${TMPDIR}${layout_libdir}/opkg/info/ ]; then
+		mkdir -p ${TMPDIR}${layout_libdir}/opkg/info/
+	fi
+ 	if [ ! -e ${TMPDIR}${layout_libdir}/ipkg/ ]; then
+		cd ${TMPDIR}${layout_libdir}/
+		ln -s opkg/ ipkg
+	fi
 }
 
 PSTAGE_TASKS_COVERED = "fetch unpack munge patch configure qa_configure rig_locales compile sizecheck install deploy package populate_staging package_write_deb package_write_ipk package_write package_stage qa_staging"
@@ -174,13 +183,14 @@ python packagestage_scenefunc () {
 
     if os.path.exists(stagepkg):
         path = bb.data.getVar("PATH", d, 1)
+        pstage_set_pkgmanager(d)
         file = bb.data.getVar("FILE", d, True)
         bb.debug(2, "Packaged staging active for %s\n" % file)
 
         #
         # Install the staging package somewhere temporarily so we can extract the stamp files
         #
-        cmd = bb.data.expand("opkg-cl install -force-depends -f ${PSTAGE_MACHCONFIG} -o ${WORKDIR}/tstage", d)
+        cmd = bb.data.expand("${PSTAGE_PKGMANAGER} -force-depends -f ${PSTAGE_MACHCONFIG} -o ${WORKDIR}/tstage install", d)
         ret = os.system("PATH=\"%s\" %s %s" % (path, cmd, stagepkg))
         if ret != 0:
             bb.fatal("Couldn't install the staging package to a temp directory")
@@ -396,6 +406,7 @@ python do_package_stage () {
     bb.build.make_stamp("do_package_stage", d)
     os.system("cp -dpR %s.do_* %s/" % (stampfn, destdir))
 
+    pstage_set_pkgmanager(d)
     bb.build.exec_func("staging_helper", d)
     bb.build.exec_func("staging_packager", d)
     lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
@@ -413,8 +424,3 @@ do_package_stage_all () {
 }
 do_package_stage_all[recrdeptask] = "do_package_stage"
 addtask package_stage_all after do_package_stage before do_build
-
-# FIXME - needed for BB_STAMP_POLICY = "whitelist"
-#do_setscene[recrdeptask] = "do_setscene"
-
-
