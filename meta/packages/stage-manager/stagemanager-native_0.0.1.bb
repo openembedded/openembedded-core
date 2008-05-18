@@ -12,7 +12,7 @@ inherit native
 
 DEPENDS = " "
 PACKAGE_DEPENDS = " "
-PATCHTOOL = ""
+PATCHDEPENDENCY = ""
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_install() {
