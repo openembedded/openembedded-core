@@ -34,7 +34,6 @@ PSTAGE_NATIVEDEPENDS = "\
     libtool-native \
     automake-native \
     update-alternatives-cworth-native \
-    ipkg-utils-native \
     opkg-native \
     m4-native \
     quilt-native \
@@ -74,8 +73,9 @@ python () {
         bb.data.setVarFlag('do_populate_staging', 'depends', deps, d)
 
         deps = bb.data.getVarFlag('do_setscene', 'depends', d) or ""
-        deps += " opkg-native:do_populate_staging ipkg-utils-native:do_populate_staging"
+        deps += " opkg-native:do_populate_staging"
         bb.data.setVarFlag('do_setscene', 'depends', deps, d)
+
         bb.data.setVar("PSTAGING_ACTIVE", "1", d)
     else:
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
@@ -84,7 +84,7 @@ python () {
 DEPLOY_DIR_PSTAGE 	= "${DEPLOY_DIR}/pstage"
 PSTAGE_MACHCONFIG       = "${DEPLOY_DIR_PSTAGE}/opkg.conf"
 
-PSTAGE_BUILD_CMD        = "${IPKGBUILDCMD}"
+PSTAGE_BUILD_CMD        = "stage-manager-ipkg-build -o 0 -g 0"
 PSTAGE_INSTALL_CMD      = "opkg-cl install -force-depends -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
 PSTAGE_UPDATE_CMD	= "opkg-cl update -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
 PSTAGE_REMOVE_CMD       = "opkg-cl remove -force-depends -f ${PSTAGE_MACHCONFIG} -o ${TMPDIR}"
@@ -152,6 +152,7 @@ staging_helper () {
 			priority=$(expr $priority + 5)
 		done
 	fi
+	echo "dest root /" >> $conffile
 }
 
 PSTAGE_TASKS_COVERED = "fetch unpack munge patch configure qa_configure rig_locales compile sizecheck install deploy package populate_staging package_write_deb package_write_ipk package_write package_stage qa_staging"
@@ -164,6 +165,8 @@ python packagestage_scenefunc () {
     if bb.data.getVar("PSTAGING_ACTIVE", d, 1) == "0":
         return
 
+    bb.build.exec_func("staging_helper", d)
+
     removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
     pstage_cleanpackage(removepkg, d)
 
@@ -173,8 +176,6 @@ python packagestage_scenefunc () {
         path = bb.data.getVar("PATH", d, 1)
         file = bb.data.getVar("FILE", d, True)
         bb.debug(2, "Packaged staging active for %s\n" % file)
-
-        bb.build.exec_func("staging_helper", d)
 
         #
         # Install the staging package somewhere temporarily so we can extract the stamp files
@@ -327,6 +328,14 @@ staging_package_installer () {
 	echo "Status: install user installed"  >> $STATUSFILE
 	echo "Architecture: ${PSTAGE_PKGARCH}" >> $STATUSFILE
 	echo "" >> $STATUSFILE
+
+	CTRLFILE=${TMPDIR}${layout_libdir}/opkg/info/${PSTAGE_PKGPN}.control
+	echo "Package: ${PSTAGE_PKGPN}"        > $CTRLFILE
+	echo "Version: ${PSTAGE_PKGVERSION}"   >> $CTRLFILE
+	echo "Architecture: ${PSTAGE_PKGARCH}" >> $CTRLFILE
+
+	cd ${PSTAGE_TMPDIR_STAGE}
+	find -type f | grep -v ./CONTROL | sed -e 's/^\.//' > ${TMPDIR}${layout_libdir}/opkg/info/${PSTAGE_PKGPN}.list
 }
 
 python do_package_stage () {
@@ -405,6 +414,7 @@ do_package_stage_all () {
 do_package_stage_all[recrdeptask] = "do_package_stage"
 addtask package_stage_all after do_package_stage before do_build
 
+# FIXME - needed for BB_STAMP_POLICY = "whitelist"
 #do_setscene[recrdeptask] = "do_setscene"
 
 
