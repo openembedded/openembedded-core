@@ -12,5 +12,5 @@ do_stage () {
 
 do_install_append () {
 	install -d ${D}${bindir}
-	install ${S}/examples/blockbox ${D}${bindir}
+	install ${S}/examples/.libs/blockbox ${D}${bindir}
 }
