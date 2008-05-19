@@ -20,6 +20,7 @@ FILES_${PN} = "\
     ${includedir}/c++/${BINV} \
     ${prefix}/${TARGET_SYS}/bin/* \
     ${prefix}/${TARGET_SYS}/lib/* \
+    ${prefix}/${TARGET_SYS}/usr/include/* \
     "
 FILES_${PN}-doc = "\
     ${infodir} \
