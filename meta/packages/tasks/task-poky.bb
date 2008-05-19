@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r24"
+PR = "r25"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -33,9 +33,6 @@ PACKAGES = "\
     task-poky-tools-testapps \
     task-poky-tools-testapps-dbg \
     task-poky-tools-testapps-dev \
-    task-poky-nfs-server \
-    task-poky-nfs-server-dbg \
-    task-poky-nfs-server-dev \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -146,11 +143,3 @@ RDEPENDS_task-poky-tools-testapps = "\
     xwininfo \
     xprop \
     xvideo-tests"
-
-
-RDEPENDS_task-poky-nfs-server = "\
-    nfs-utils"
-
-# rpcinfo can be useful
-RRECOMMENDS_task-poky-nfs-server = "\
-    glibc-utils"
