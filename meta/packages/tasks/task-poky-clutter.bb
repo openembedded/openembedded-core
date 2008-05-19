@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Clutter Tasks for OpenedHand Poky"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "\
     task-poky-clutter-core \
@@ -31,4 +31,5 @@ RDEPENDS_task-poky-clutter-tests = "\
 
 RDEPENDS_task-poky-clutter-apps = "\
     aaina \
+    clutter-box2d \
     table"
