@@ -230,6 +230,10 @@ class BuildStarted(BuildBase):
     """bbmake build run started"""
 
 
+class BuildFailed(BuildBase):
+    """bbmake build run failed"""
+
+
 class BuildCompleted(BuildBase):
     """bbmake build run completed"""
 
