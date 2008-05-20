@@ -14,7 +14,7 @@ fakeroot rootfs_deb_do_rootfs () {
 	rm -f ${STAGING_ETCDIR_NATIVE}/apt/preferences
 	> ${IMAGE_ROOTFS}/var/dpkg/status
 	> ${IMAGE_ROOTFS}/var/dpkg/available
-	# > ${STAGING_DIR}/var/dpkg/status
+	mkdir -p ${IMAGE_ROOTFS}/var/dpkg/alternatives
 
 	priority=1
 	for arch in ${PACKAGE_ARCHS}; do
@@ -47,8 +47,6 @@ fakeroot rootfs_deb_do_rootfs () {
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export OPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
-
-	mkdir -p ${IMAGE_ROOTFS}/var/lib/dpkg/alternatives
 
 	apt-get update
 
@@ -110,15 +108,14 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	set -e
 
-	# Hacks to make dpkg/opkg coexist for now
-	mv ${IMAGE_ROOTFS}/var/dpkg ${IMAGE_ROOTFS}/usr/
-	if [ -e ${IMAGE_ROOTFS}/usr/dpkg/alternatives ]; then
-		rmdir ${IMAGE_ROOTFS}/usr/dpkg/alternatives
-	fi
+	# Hacks to allow opkg's update-alternatives and opkg to coexist for now
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib/opkg
-	ln -s /usr/lib/opkg/alternatives ${IMAGE_ROOTFS}/usr/dpkg/alternatives
-	ln -s /usr/dpkg/onfo ${IMAGE_ROOTFS}/usr/lib/opkg/info
-	ln -s /usr/dpkg/status ${IMAGE_ROOTFS}/usr/lib/opkg/status
+	if [ -e ${IMAGE_ROOTFS}/var/dpkg/alternatives ]; then
+		rmdir ${IMAGE_ROOTFS}/var/dpkg/alternatives
+	fi
+	ln -s /usr/lib/opkg/alternatives ${IMAGE_ROOTFS}/var/dpkg/alternatives
+	ln -s /var/dpkg/info ${IMAGE_ROOTFS}/usr/lib/opkg/info
+	ln -s /var/dpkg/status ${IMAGE_ROOTFS}/usr/lib/opkg/status
 
 	${ROOTFS_POSTPROCESS_COMMAND}
 
