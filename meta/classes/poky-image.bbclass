@@ -73,12 +73,14 @@ POKY_BASE_INSTALL = '\
     ${@base_contains("IMAGE_FEATURES", "nfs-server", "task-poky-nfs-server", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dbg-pkgs"], "task-poky-nfs-server-dbg", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dev-pkgs"], "task-poky-nfs-server-dev", "",d)} \
+    \
+    ${@base_contains("IMAGE_FEATURES", "package-management", "${ROOTFS_PKGMANAGE}", "",d)} \
     '
 
 IMAGE_INSTALL ?= "${POKY_BASE_INSTALL}"
 
-X11_IMAGE_FEATURES  = "x11-base apps-x11-core"
-SATO_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-sato apps-x11-games apps-x11-pimlico"
+X11_IMAGE_FEATURES  = "x11-base apps-x11-core package-management"
+SATO_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-sato apps-x11-games apps-x11-pimlico package-management"
 
 inherit image
 

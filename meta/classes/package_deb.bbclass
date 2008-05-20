@@ -1,11 +1,9 @@
 #
-# Copyright 2006-2007 OpenedHand Ltd.
+# Copyright 2006-2008 OpenedHand Ltd.
 #
 
 inherit package
 
-BOOTSTRAP_EXTRA_RDEPENDS += "dpkg run-postinsts"
-DISTRO_EXTRA_RDEPENDS += "dpkg run-postinsts"
 IMAGE_PKGTYPE ?= "deb"
 
 # Map TARGET_ARCH to Debian's ideas about architectures

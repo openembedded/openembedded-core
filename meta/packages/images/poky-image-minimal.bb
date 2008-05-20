@@ -1,7 +1,7 @@
 #
 # Copyright (C) 2007 OpenedHand Ltd.
 #
-IMAGE_INSTALL = "task-poky-boot"
+IMAGE_INSTALL = "task-poky-boot package-management"
 
 IMAGE_LINGUAS = " "
 

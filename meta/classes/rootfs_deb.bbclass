@@ -2,6 +2,9 @@
 # Copyright 2006-2007 Openedhand Ltd.
 #
 
+ROOTFS_PKGMANAGE = "run-postinsts dpkg"
+ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
+
 do_rootfs[depends] += "dpkg-native:do_populate_staging apt-native:do_populate_staging"
 do_rootfs[recrdeptask] += "do_package_write_deb"
 

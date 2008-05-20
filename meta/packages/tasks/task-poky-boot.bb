@@ -6,7 +6,7 @@ DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS = "virtual/kernel"
 ALLOW_EMPTY = "1"
-PR = "r6"
+PR = "r7"
 
 #
 # Set by the machine configuration with packages essential for device bootup
