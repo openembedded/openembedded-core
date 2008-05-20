@@ -15,7 +15,11 @@ DELAYLOGIN=no
 VERBOSE=no
 # Set EDITMOTD to "no" if you don't want /etc/motd to be editted automatically
 EDITMOTD=no
+# Whether to fsck root on boot
+ENABLE_ROOTFS_FSCK=no
 # Set FSCKFIX to "yes" if you want to add "-y" to the fsck at startup.
 FSCKFIX=yes
 # Set TICKADJ to the correct tick value for this specific machine
 #TICKADJ=10000
+# Enable caching in populate-volatile.sh
+VOLATILE_ENABLE_CACHE=yes
