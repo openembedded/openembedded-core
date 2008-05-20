@@ -9,5 +9,5 @@ proc		/proc	proc	defaults	0  0
 # SD/MMC in kernel 2.4
 /dev/mmcda1	/media/card	auto	defaults,sync,noauto	0  0
 
-tmpfs		/var		tmpfs	defaults	0  0
+tmpfs		/var/volatile	tmpfs	defaults	0  0
 tmpfs		/media/ram	tmpfs	defaults	0  0

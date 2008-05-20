@@ -1,7 +1,7 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r59"
+PR = "r60"
 LICENSE = "GPL"
 
 SRC_URI = " \
@@ -12,7 +12,7 @@ SRC_URI = " \
            file://host.conf \
            file://profile \
            file://fstab \
-	   file://filesystems \
+           file://filesystems \
            file://issue.net \
            file://issue \
            file://usbd \
@@ -29,7 +29,7 @@ SRC_URI = " \
 S = "${WORKDIR}"
 
 docdir_append = "/${P}"
-dirs1777 = "/tmp ${localstatedir}/lock ${localstatedir}/tmp"
+dirs1777 = "/tmp ${localstatedir}/volatile/lock ${localstatedir}/volatile/tmp"
 dirs2775 = "/home ${prefix}/src ${localstatedir}/local"
 dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
 	   ${sysconfdir}/skel /lib /mnt /proc /home/root /sbin \
@@ -37,13 +37,16 @@ dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
 	   ${libdir} ${sbindir} ${datadir} \
 	   ${datadir}/common-licenses ${datadir}/dict ${infodir} \
 	   ${mandir} ${datadir}/misc ${localstatedir} \
-	   ${localstatedir}/backups ${localstatedir}/cache \
-	   ${localstatedir}/lib /sys ${localstatedir}/lib/misc \
-	   ${localstatedir}/lock/subsys ${localstatedir}/log \
-	   ${localstatedir}/run ${localstatedir}/spool \
+	   ${localstatedir}/backups ${localstatedir}/lib \
+	   /sys ${localstatedir}/lib/misc ${localstatedir}/spool \
+	   ${localstatedir}/volatile ${localstatedir}/volatile/cache \
+	   ${localstatedir}/volatile/lock/subsys \
+	   ${localstatedir}/volatile/log \
+	   ${localstatedir}/volatile/run \
 	   /mnt /media /media/card /media/cf /media/net /media/ram \
 	   /media/union /media/realroot /media/hdd \
-           /media/mmc1"
+	   /media/mmc1"
+volatiles = "cache run log lock tmp"
 conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
 	     ${sysconfdir}/inputrc ${sysconfdir}/issue /${sysconfdir}/issue.net \
 	     ${sysconfdir}/nsswitch.conf ${sysconfdir}/profile \
@@ -67,6 +70,9 @@ do_install () {
 	done
 	for d in ${dirs2775}; do
 		install -m 2755 -d ${D}$d
+	done
+	for d in ${volatiles}; do
+		ln -sf volatile/$d ${D}/${localstatedir}/$d
 	done
 	for d in card cf net ram; do
 		ln -sf /media/$d ${D}/mnt/$d
@@ -120,7 +126,6 @@ do_install () {
 
 do_install_append_mnci () {
 	rmdir ${D}/tmp
-	mkdir -p ${D}${localstatedir}/tmp
 	ln -s var/tmp ${D}/tmp
 }
 
@@ -149,9 +154,10 @@ FILES_${PN} = "/"
 FILES_${PN}-doc = "${docdir} ${datadir}/common-licenses"
 
 # M&N specific packaging
-PACKAGE_ARCH_${PN} = "${MACHINE_ARCH}"
 PACKAGE_ARCH_mnci = "mnci"
 PACKAGE_ARCH_rt3000 = "rt3000"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # Unslung distribution specific packaging
 
