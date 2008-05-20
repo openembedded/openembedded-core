@@ -5,7 +5,17 @@
 # Author: Richard Purdie <rpurdie@openedhand.com>
 #
 
-PKGSYSTEM=/usr/lib/opkg
+PKGSYSTEM=/usr/dpkg
+
+if [ ! -e $PKGSYSTEM/status ]; then
+  if [ -e /usr/lib/opkg/status ]; then
+    PKGSYSTEM=/usr/lib/opkg
+  else
+    echo "No package system found"
+    exit 1
+  fi
+fi
+
 STAMP=$PKGSYSTEM/postinsts-done
 STATFILE=$PKGSYSTEM/status
 STATFILE2=$PKGSYSTEM/status2

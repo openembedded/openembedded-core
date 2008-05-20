@@ -7,6 +7,11 @@
 #
 
 BEGIN {
+  rc=system("test -d /usr/dpkg/info/")
+  if (rc==0)
+    pkgdir="/usr/dpkg/info"
+  else
+    pkgdir="/usr/lib/opkg/info"
   package=""
 }
 /Package:.*/ {
@@ -14,7 +19,7 @@ BEGIN {
 }
 /Status:.*unpacked.*/ {
   print "Configuring: " package > "/dev/stderr"
-  ret = system("/usr/lib/opkg/info/" package ".postinst 1>&2")
+  ret = system(pkgdir "/" package ".postinst 1>&2")
   if (ret == 0)
     $0 = gensub("unpacked", "installed", 1)
   else
