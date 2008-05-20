@@ -24,7 +24,9 @@
 # - dbg-pkgs            - debug packages
 #
 
-DISTRO_TASKS += '\
+POKY_BASE_INSTALL = '\
+    task-poky-boot \
+    task-base-extended \
     ${@base_contains("IMAGE_FEATURES", "dbg-pkgs", "task-poky-boot-dbg task-base-dbg", "",d)} \
     ${@base_contains("IMAGE_FEATURES", "dev-pkgs", "task-poky-boot-dev task-base-dev", "",d)} \
     \
@@ -73,7 +75,7 @@ DISTRO_TASKS += '\
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dev-pkgs"], "task-poky-nfs-server-dev", "",d)} \
     '
 
-IMAGE_INSTALL ?= "${DISTRO_TASKS}"
+IMAGE_INSTALL ?= "${POKY_BASE_INSTALL}"
 
 X11_IMAGE_FEATURES  = "x11-base apps-x11-core"
 SATO_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-sato apps-x11-games apps-x11-pimlico"
