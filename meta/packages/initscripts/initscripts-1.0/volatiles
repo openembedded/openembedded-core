@@ -3,14 +3,14 @@
 #
 # Every line must either be a comment starting with #
 # or a definition of format:
-# <type> <owner> <group> <mode> <path> [<linksource>]
+# <type> <owner> <group> <mode> <path> <linksource>
 # where the items are separated by whitespace !
 #
 # <type> : d|f|l : (d)irectory|(f)ile|(l)ink
 #
 # A linking example:
 # l root root 0777 /var/test /tmp/testfile
-# f root root 0644 /var/test
+# f root root 0644 /var/test none
 #
 # Understanding links:
 # When populate-volatile is to verify/create a directory or file, it will first
@@ -21,19 +21,19 @@
 # This explains the order of "link before object" as in the example above, where
 # a link will be created at /var/test pointing to /tmp/testfile and due to this
 # link the file defined as /var/test will actually be created as /tmp/testfile.
-d root root 0775 /var
-d root root 0755 /var/backups
-d root root 0755 /var/cache
-d root root 0755 /var/lib
-d root root 0755 /var/lib/ipkg
-d root root 0755 /var/lib/misc
-d root root 2775 /var/local
-d root root 1777 /var/lock
-d root root 0755 /var/lock/subsys
-d root root 0755 /var/log
-d root root 0755 /var/run
-d root root 0755 /var/spool
-d root root 1777 /var/tmp
-f root root 0664 /var/run/utmp
-f root root 0664 /var/log/wtmp
-f root root 0664 /var/log/lastlog
+d root root 0775 /var none
+d root root 0755 /var/backups none
+d root root 0755 /var/cache none
+d root root 0755 /var/lib none
+d root root 0755 /var/lib/ipkg none
+d root root 0755 /var/lib/misc none
+d root root 2775 /var/local none
+d root root 1777 /var/lock none
+d root root 0755 /var/lock/subsys none
+d root root 0755 /var/log none
+d root root 0755 /var/run none
+d root root 0755 /var/spool none
+d root root 1777 /var/tmp none
+f root root 0664 /var/run/utmp none
+f root root 0664 /var/log/wtmp none
+f root root 0664 /var/log/lastlog none

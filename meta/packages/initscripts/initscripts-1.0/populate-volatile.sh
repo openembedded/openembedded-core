@@ -8,6 +8,47 @@ COREDEF="00_core"
 
 [ "${VERBOSE}" != "no" ] && echo "Populating volatile Filesystems."
 
+create_file() {
+	EXEC=" 
+	touch \"$1\"; 
+	chown ${TUSER}.${TGROUP} $1 || echo \"Failed to set owner -${TUSER}- for -$1-.\" >/dev/tty0 2>&1; 
+	chmod ${TMODE} $1 || echo \"Failed to set mode -${TMODE}- for -$1-.\" >/dev/tty0 2>&1 " 
+
+	test "$VOLATILE_ENABLE_CACHE" = yes && echo "$EXEC" >> /etc/volatile.cache
+
+	[ -e "$1" ] && {
+	  [ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
+	} || {
+	  eval $EXEC &
+	}
+}
+
+mk_dir() {
+	EXEC=" 
+	mkdir -p \"$1\"; 
+	chown ${TUSER}.${TGROUP} $1 || echo \"Failed to set owner -${TUSER}- for -$1-.\" >/dev/tty0 2>&1; 
+	chmod ${TMODE} $1 || echo \"Failed to set mode -${TMODE}- for -$1-.\" >/dev/tty0 2>&1 "
+
+	test "$VOLATILE_ENABLE_CACHE" = yes && echo "$EXEC" >> /etc/volatile.cache
+	
+	[ -e "$1" ] && {
+	  [ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
+	} || {
+	  eval $EXEC &
+	}
+}
+
+link_file() {
+	EXEC="test -e \"$2\" -o -L $2 || ln -s \"$1\" \"$2\" >/dev/tty0 2>&1" 
+
+	test "$VOLATILE_ENABLE_CACHE" = yes && echo "	$EXEC" >> /etc/volatile.cache
+	
+	[ -e "$2" ] && {
+	  echo "Cannot create link over existing -${TNAME}-." >&2
+	} || {
+	  eval $EXEC &
+	}
+}
 
 check_requirements() {
 
@@ -72,21 +113,17 @@ apply_cfgfile() {
 
   cat ${CFGFILE} | grep -v "^#" | \
   while read LINE; do
-    TTYPE=`echo ${LINE} | cut -d " " -f 1`
-    TUSER=`echo ${LINE} | cut -d " " -f 2`
-    TGROUP=`echo ${LINE} | cut -d " " -f 3`
-    TMODE=`echo ${LINE} | cut -d " " -f 4`
-    TNAME=`echo ${LINE} | cut -d " " -f 5`
+
+    eval `echo "$LINE" | sed -n "s/\(.*\)\ \(.*\) \(.*\)\ \(.*\)\ \(.*\)\ \(.*\)/TTYPE=\1 ; TUSER=\2; TGROUP=\3; TMODE=\4; TNAME=\5 TLTARGET=\6/p"`
 
     [ "${VERBOSE}" != "no" ] && echo "Checking for -${TNAME}-."
 
+
     [ "${TTYPE}" = "l" ] && {
-      [ -e "${TNAME}" ] && {
-        echo "Cannot create link over existing -${TNAME}-." >&2
-        } || {
-        TSOURCE=`echo ${LINE} | cut -d " " -f 6`
+      TSOURCE="$TLTARGET"
+      [ -L "${TNAME}" ] || {
         [ "${VERBOSE}" != "no" ] && echo "Creating link -${TNAME}- pointing to -${TSOURCE}-."
-        ln -s "${TSOURCE}" "${TNAME}"
+        link_file "${TSOURCE}" "${TNAME}" &
         }
       continue
       }
@@ -103,17 +140,12 @@ apply_cfgfile() {
         }
       }
 
-    [ -e "${TNAME}" ] && {
-      [ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
-      continue
-      }
-
     case "${TTYPE}" in
       "f")  [ "${VERBOSE}" != "no" ] && echo "Creating file -${TNAME}-."
-            touch "${TNAME}"
+            create_file "${TNAME}" &
 	    ;;
       "d")  [ "${VERBOSE}" != "no" ] && echo "Creating directory -${TNAME}-."
-            mkdir -p "${TNAME}"
+            mk_dir "${TNAME}" &
 	    # Add check to see if there's an entry in fstab to mount.
 	    ;;
       *)    [ "${VERBOSE}" != "no" ] && echo "Invalid type -${TTYPE}-."
@@ -121,9 +153,6 @@ apply_cfgfile() {
 	    ;;
     esac
 
-    chown ${TUSER} ${TNAME} || echo "Failed to set owner -${TUSER}- for -${TNAME}-." >&2
-    chgrp ${TGROUP} ${TNAME} || echo "Failed to set group -${TGROUP}- for -${TNAME}-." >&2
-    chmod ${TMODE} ${TNAME} || echo "Failed to set mode -${TMODE}- for -${TNAME}-." >&2
 
     done
 
@@ -131,8 +160,12 @@ apply_cfgfile() {
 
   }
 
-
-for file in `ls -1 "${CFGDIR}" | sort`; do
-  apply_cfgfile "${CFGDIR}/${file}"
-  done
-
+if test -e /etc/volatile.cache -a "$VOLATILE_ENABLE_CACHE" = "yes" -a "x$1" != "xupdate"
+then
+	sh /etc/volatile.cache
+else	
+	rm -f /etc/volatile.cache
+	for file in `ls -1 "${CFGDIR}" | sort`; do
+		apply_cfgfile "${CFGDIR}/${file}"
+	done
+fi
