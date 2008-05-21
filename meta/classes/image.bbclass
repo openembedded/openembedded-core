@@ -57,6 +57,22 @@ def get_devtable_list(d):
         str += " %s" % bb.which(bb.data.getVar('BBPATH', d, 1), devtable)
     return str
 
+def get_imagecmds(d):
+    import bb
+    cmds = "\n"
+    old_overrides = bb.data.getVar('OVERRIDES', d, 0)
+    for type in bb.data.getVar('IMAGE_FSTYPES', d, True).split():
+        localdata = bb.data.createCopy(d)
+        bb.data.setVar('OVERRIDES', '%s:%s' % (type, old_overrides), localdata)
+        bb.data.update_data(localdata)
+        cmd  = "\t#Code for image type " + type + "\n"
+        cmd += "\t${IMAGE_CMD_" + type + "}\n"
+        cmd += "\tcd ${DEPLOY_DIR_IMAGE}/\n"
+        cmd += "\trm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}." + type + "\n"
+        cmd += "\tln -s ${IMAGE_NAME}.rootfs." + type + " ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}." + type + "\n\n"
+        cmds += bb.data.expand(cmd, localdata)
+    return cmds
+
 IMAGE_POSTPROCESS_COMMAND ?= ""
 MACHINE_POSTPROCESS_COMMAND ?= ""
 ROOTFS_POSTPROCESS_COMMAND ?= ""
@@ -89,21 +105,8 @@ fakeroot do_rootfs () {
 	insert_feed_uris
 
 	${IMAGE_PREPROCESS_COMMAND}
-		
-	export TOPDIR=${TOPDIR}
-	export MACHINE=${MACHINE}
 
-	for type in ${IMAGE_FSTYPES}; do
-		if test -z "$FAKEROOTKEY"; then
-			fakeroot -i ${TMPDIR}/fakedb.image ${PYTHON} `which bbimage` -t $type -e ${FILE}
-		else
-			${PYTHON} `which bbimage` -n "${IMAGE_NAME}" -t "$type" -e "${FILE}"
-		fi
-
-		cd ${DEPLOY_DIR_IMAGE}/
-		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
-		ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
-	done
+	${@get_imagecmds(d)}
 
 	# Run ldconfig on the image to create a valid cache 
 	# (new format for cross arch compatibility)
