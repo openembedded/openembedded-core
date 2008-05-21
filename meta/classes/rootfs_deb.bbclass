@@ -42,7 +42,7 @@ fakeroot rootfs_deb_do_rootfs () {
 	tac ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev > ${STAGING_ETCDIR_NATIVE}/apt/sources.list
 
 	cat "${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample" \
-		| sed -e 's#Architecture ".*";#Architecture "${TARGET_ARCH}";#' \
+		| sed -e 's#Architecture ".*";#Architecture "${DPKG_ARCH}";#' \
 		> "${STAGING_ETCDIR_NATIVE}/apt/apt-rootfs.conf"
 
 	export APT_CONFIG="${STAGING_ETCDIR_NATIVE}/apt/apt-rootfs.conf"
