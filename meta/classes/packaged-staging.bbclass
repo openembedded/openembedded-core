@@ -326,7 +326,6 @@ staging_packager () {
 	fi
         
 	${PSTAGE_BUILD_CMD} ${PSTAGE_TMPDIR_STAGE} ${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}
-	${PSTAGE_INSTALL_CMD} ${PSTAGE_PKG}
 }
 
 staging_package_installer () {
