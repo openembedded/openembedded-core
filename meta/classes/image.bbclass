@@ -45,17 +45,17 @@ python () {
 # is searched for in the BBPATH (same as the old version.)
 #
 def get_devtable_list(d):
-	import bb
-	devtable = bb.data.getVar('IMAGE_DEVICE_TABLE', d, 1)
-	if devtable != None:
-		return devtable
-	str = ""
-	devtables = bb.data.getVar('IMAGE_DEVICE_TABLES', d, 1)
-	if devtables == None:
-		devtables = 'files/device_table-minimal.txt'
-	for devtable in devtables.split():
-		str += " %s" % bb.which(bb.data.getVar('BBPATH', d, 1), devtable)
-	return str
+    import bb
+    devtable = bb.data.getVar('IMAGE_DEVICE_TABLE', d, 1)
+    if devtable != None:
+        return devtable
+    str = ""
+    devtables = bb.data.getVar('IMAGE_DEVICE_TABLES', d, 1)
+    if devtables == None:
+        devtables = 'files/device_table-minimal.txt'
+    for devtable in devtables.split():
+        str += " %s" % bb.which(bb.data.getVar('BBPATH', d, 1), devtable)
+    return str
 
 IMAGE_POSTPROCESS_COMMAND ?= ""
 MACHINE_POSTPROCESS_COMMAND ?= ""
@@ -86,7 +86,7 @@ fakeroot do_rootfs () {
 
 	rootfs_${IMAGE_PKGTYPE}_do_rootfs
 
-	insert_feed_uris	
+	insert_feed_uris
 
 	${IMAGE_PREPROCESS_COMMAND}
 		
@@ -117,19 +117,19 @@ fakeroot do_rootfs () {
 insert_feed_uris () {
 	
 	echo "Building feeds for [${DISTRO}].."
-		
+
 	for line in ${FEED_URIS}
 	do
 		# strip leading and trailing spaces/tabs, then split into name and uri
 		line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
 		feed_name="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\1/p'`"
-		feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"					
+		feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"
 		
 		echo "Added $feed_name feed with URL $feed_uri"
 		
 		# insert new feed-sources
 		echo "src/gz $feed_name $feed_uri" >> ${IMAGE_ROOTFS}/etc/opkg/${feed_name}-feed.conf
-	done			
+	done
 }
 
 log_check() {
@@ -146,7 +146,7 @@ log_check() {
 		else
 			echo "Cannot find logfile [$lf_path]"
 		fi
-		echo "Logfile is clean"		
+		echo "Logfile is clean"
 	done
 
 	set -x
@@ -157,7 +157,7 @@ log_check() {
 
 zap_root_password () {
 	sed 's%^root:[^:]*:%root:*:%' < ${IMAGE_ROOTFS}/etc/passwd >${IMAGE_ROOTFS}/etc/passwd.new
-	mv ${IMAGE_ROOTFS}/etc/passwd.new ${IMAGE_ROOTFS}/etc/passwd	
+	mv ${IMAGE_ROOTFS}/etc/passwd.new ${IMAGE_ROOTFS}/etc/passwd
 } 
 
 create_etc_timestamp() {
