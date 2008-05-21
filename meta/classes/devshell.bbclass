@@ -3,6 +3,9 @@ EXTRA_OEMAKE[export] = "1"
 do_devshell[dirs] = "${S}"
 do_devshell[nostamp] = "1"
 
+export DISPLAY
+export XAUTHORITY
+
 devshell_do_devshell() {
 	export TERMWINDOWTITLE="Bitbake Developer Shell"
 	${TERMCMD}
