@@ -2,30 +2,36 @@
 
 . /etc/init.d/functions
 
-case `cpuinfo_id` in
-	"GTA01"|"GTA02")
+case `machine_id` in
+	"gta01"|"gta02")
 		GSMD_OPTS="-s 115200 -F"
+		if [ -d '/sys/bus/platform/devices/gta01-pm-gsm.0' ] ; then
 		GSM_POW="/sys/bus/platform/devices/gta01-pm-gsm.0/power_on"
 		GSM_RES="/sys/bus/platform/devices/gta01-pm-gsm.0/reset"
+		else
+		GSM_POW="/sys/bus/platform/devices/neo1973-pm-gsm.0/power_on"
+		GSM_RES="/sys/bus/platform/devices/neo1973-pm-gsm.0/reset"
+		fi
 		GSM_DEV="/dev/ttySAC0"
+		GSM_DL="/sys/devices/platform/neo1973-pm-gsm.0/download"
 		;;
-	"HTC Apache"|"HTC Blueangel"|"HTC Universal")
+	"htc_apache"|"htc_blueangel"|"htc_universal")
 		GSMD_OPTS="-s 115200 -F"
 		GSM_DEV="/dev/ttyS0"
 		;;
-	"HTC Himalaya")
+	"htc_himalaya")
 		GSMD_OPTS="-s 115200 -F"
 		GSM_DEV="/dev/ttyS2"
 		;;
-	"HTC Magician")
+	"htc_magician")
 		GSMD_OPTS="-s 115200 -F"
 		GSM_DEV="/dev/ttyS1"
 		;;
-	"Palm Treo 650")
+	"palm_treo_650")
 		GSMD_OPTS="-s 460800 -F -w 1"
 		GSM_DEV="/dev/ttyS0"
 		;;
-        "Motorola Ezx Platform")
+        "motorola_ezx_platform")
                 GSMD_OPTS="-s 115200 -F -v ti"
                 GSM_DEV="/dev/mux0"
                 ;;

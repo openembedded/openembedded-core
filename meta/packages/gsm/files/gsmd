@@ -19,7 +19,7 @@ case "$1" in
         [ -n "$GSM_RES" ] && ( echo "0" >$GSM_RES; sleep 2 )
 
         echo -n "Starting GSM daemon: "
-        start-stop-daemon -S -x /usr/sbin/gsmd -- gsmd -p $GSM_DEV $GSMD_OPTS >/tmp/gsm.log 2>&1 &
+        start-stop-daemon -S -x /usr/sbin/gsmd -- gsmd -p $GSM_DEV $GSMD_OPTS -d -l syslog
 
         if [ $? = 0 ]; then
             echo "gsmd."
