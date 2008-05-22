@@ -1,0 +1,127 @@
+Index: psplash-fb.c
+===================================================================
+--- psplash-fb.c	(revision 376)
++++ psplash-fb.c	(working copy)
+@@ -25,6 +25,77 @@
+   free(fb);
+ }
+ 
++static int
++attempt_to_change_pixel_format (PSplashFB *fb,
++                                struct fb_var_screeninfo *fb_var)
++{
++  /* By default the framebuffer driver may have set an oversized
++   * yres_virtual to support VT scrolling via the panning interface.
++   *
++   * We don't try and maintain this since it's more likely that we
++   * will fail to increase the bpp if the driver's pre allocated
++   * framebuffer isn't large enough.
++   */
++  fb_var->yres_virtual = fb_var->yres;
++
++  /* First try setting an 8,8,8,0 pixel format so we don't have to do
++   * any conversions while drawing. */
++
++  fb_var->bits_per_pixel = 32;
++
++  fb_var->red.offset = 0;
++  fb_var->red.length = 8;
++
++  fb_var->green.offset = 8;
++  fb_var->green.length = 8;
++
++  fb_var->blue.offset = 16;
++  fb_var->blue.length = 8;
++
++  fb_var->transp.offset = 0;
++  fb_var->transp.length = 0;
++
++  if (ioctl (fb->fd, FBIOPUT_VSCREENINFO, fb_var) == 0)
++    {
++      fprintf(stdout, "Switched to a 32 bpp 8,8,8 frame buffer\n");
++      return 1;
++    }
++  else
++    {
++      fprintf(stderr,
++              "Error, failed to switch to a 32 bpp 8,8,8 frame buffer\n");
++    }
++
++  /* Otherwise try a 16bpp 5,6,5 format */
++
++  fb_var->bits_per_pixel = 16;
++
++  fb_var->red.offset = 11;
++  fb_var->red.length = 5;
++
++  fb_var->green.offset = 5;
++  fb_var->green.length = 6;
++
++  fb_var->blue.offset = 0;
++  fb_var->blue.length = 5;
++
++  fb_var->transp.offset = 0;
++  fb_var->transp.length = 0;
++
++  if (ioctl (fb->fd, FBIOPUT_VSCREENINFO, fb_var) == 0)
++    {
++      fprintf(stdout, "Switched to a 16 bpp 5,6,5 frame buffer\n");
++      return 1;
++    }
++  else
++    {
++      fprintf(stderr,
++              "Error, failed to switch to a 16 bpp 5,6,5 frame buffer\n");
++    }
++
++  return 0;
++}
++
+ PSplashFB*
+ psplash_fb_new (int angle)
+ {
+@@ -55,20 +126,31 @@
+       goto fail;
+     }
+ 
+-  if (ioctl (fb->fd, FBIOGET_FSCREENINFO, &fb_fix) == -1
+-      || ioctl (fb->fd, FBIOGET_VSCREENINFO, &fb_var) == -1)
++  if (ioctl (fb->fd, FBIOGET_VSCREENINFO, &fb_var) == -1)
+     {
+-      perror ("Error getting framebuffer info");
++      perror ("Error getting variable framebuffer info");
+       goto fail;
+     }
+   
+   if (fb_var.bits_per_pixel < 16)
+     {
+       fprintf(stderr,
+-	      "Error, no support currently for %i bpp frame buffers\n",
++              "Error, no support currently for %i bpp frame buffers\n"
++              "Trying to change pixel format...\n",
+ 	      fb_var.bits_per_pixel);
++      if (!attempt_to_change_pixel_format (fb, &fb_var))
++        goto fail;
+     }
+ 
++  /* NB: It looks like the fbdev concept of fixed vs variable screen info is
++   * broken. The line_length is part of the fixed info but it can be changed
++   * if you set a new pixel format. */
++  if (ioctl (fb->fd, FBIOGET_FSCREENINFO, &fb_fix) == -1)
++    {
++      perror ("Error getting fixed framebuffer info");
++      goto fail;
++    }
++
+   fb->real_width  = fb->width  = fb_var.xres;
+   fb->real_height = fb->height = fb_var.yres;
+   fb->bpp    = fb_var.bits_per_pixel;
+Index: psplash.c
+===================================================================
+--- psplash.c	(revision 376)
++++ psplash.c	(working copy)
+@@ -286,3 +286,4 @@
+ 
+   return 0;
+ }
++
