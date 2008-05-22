@@ -95,5 +95,5 @@ RDEPENDS_task-poky-x11-sato = "\
     sato-icon-theme \
     settings-daemon \
     gtk-sato-engine \
-    $(NETWORK_MANAGER)"
+    ${NETWORK_MANAGER}"
 
