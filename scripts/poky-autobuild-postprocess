@@ -80,6 +80,7 @@ if [ "x$ABTARGET" = "xpoky" ]; then
         `readlink images/uImage-mx31phy.bin`
         `readlink images/uImage-neo1973-latest.bin`
         `readlink images/uImage-om-gta01.bin`
+        `readlink images/uImage-om-gta02.bin`
         updater.sh.akita
         updater.sh.c7x0
         updater.sh.spitz
@@ -100,6 +101,7 @@ if [ "x$ABTARGET" = "xpoky" ]; then
         poky-image-sato-mx31litekit-*.rootfs.tar.gz
         poky-image-sato-htcuniversal-*.rootfs.tar.gz
         poky-image-sato-om-gta01-*.rootfs.jffs2
+        poky-image-sato-om-gta02-*.rootfs.jffs2
         poky-image-sato-mx31phy-*.jffs2
         poky-image-sato-mx31ads-*.jffs2
         `readlink images/updater-em-x270.ext2`
