@@ -23,15 +23,15 @@ ALLOW_EMPTY = "1"
 CMDLINE = "unused -- bootloader passes ATAG list"
 
 COMPATIBLE_HOST = "arm.*-linux"
-COMPATIBLE_MACHINE = "fic-gta01|fic-gta02"
+COMPATIBLE_MACHINE = "om-gta01|om-gta02"
 DEFAULT_PREFERENCE = "1"
 
 KERNEL_IMAGETYPE = "uImage"
 KERNEL_RELEASE = "2.6.24"
 KERNEL_VERSION = "${KERNEL_RELEASE}"
 
-CONFIG_NAME_fic-gta01 = "gta01"
-CONFIG_NAME_fic-gta02 = "gta02"
+CONFIG_NAME_om-gta01 = "gta01"
+CONFIG_NAME_om-gta02 = "gta02"
 
 UBOOT_ENTRYPOINT = "30008000"
 
