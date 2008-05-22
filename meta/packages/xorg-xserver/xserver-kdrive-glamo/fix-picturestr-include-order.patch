@@ -1,0 +1,15 @@
+# Reverse include order in render/picturestr.h to be able to compile against renderproto >= 0.9.3
+Index: xorg-server-1.2.0/render/picturestr.h
+===================================================================
+--- xorg-server-1.2.0.orig/render/picturestr.h	2008-02-09 22:54:46.000000000 +0100
++++ xorg-server-1.2.0/render/picturestr.h	2008-02-09 22:54:50.000000000 +0100
+@@ -26,8 +26,8 @@
+ #ifndef _PICTURESTR_H_
+ #define _PICTURESTR_H_
+ 
+-#include "glyphstr.h"
+ #include "scrnintstr.h"
++#include "glyphstr.h"
+ #include "resource.h"
+ 
+ typedef struct _DirectFormat {
