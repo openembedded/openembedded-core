@@ -83,7 +83,7 @@ RDEPENDS_task-poky-apps-x11-pimlico = "\
     gaku \
     ${WEB}"
 
-
+NETWORK_MANAGER = "networkmanager-applet"
 RDEPENDS_task-poky-x11-sato = "\
     matchbox-desktop \
     matchbox-session-sato \
@@ -94,5 +94,6 @@ RDEPENDS_task-poky-x11-sato = "\
     xcursor-transparent-theme \
     sato-icon-theme \
     settings-daemon \
-    networkmanager-applet \
-    gtk-sato-engine"
+    gtk-sato-engine \
+    $(NETWORK_MANAGER)"
+
