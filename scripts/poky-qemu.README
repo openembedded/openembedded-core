@@ -34,10 +34,10 @@ The runqemu script is run as:
 
 where:
 
-   <target> is "qemuarm" or "qemux86"
-   <type> is "ext2" or "nfs"
-   <zimage> is the path to a kernel (zimage-qemuarm.bin)
-   <filesystem> is the path to an ext2 image (filesystem-qemuarm.ext2)
+   <target> is "qemuarm","qemux86","nokia800","spitz" or "akita"
+   <type> is "ext2", "nfs", "ext3" or "jffs2". (not all machines support all options)
+   <zimage> is the path to a kernel (e.g. zimage-qemuarm.bin)
+   <filesystem> is the path to the image (e.g. filesystem-qemuarm.ext2)
 
 It will default to the qemuarm, ext2 and the last kernel and poky-image-sdk 
 image built by poky.
@@ -86,12 +86,5 @@ Finally, launch:
 
 (Substitute qemux86 for qemuarm when using qemux86)
 
-   
-Known Issues
-============
 
- - There is a bug in the ARM qemu in that means occasionally it will use 100% 
-   cpu. You will need to restart it in this situation.
-
-
-                                         Copyright (C) 2006-2007 OpenedHand Ltd.
+                                         Copyright (C) 2006-2008 OpenedHand Ltd.
