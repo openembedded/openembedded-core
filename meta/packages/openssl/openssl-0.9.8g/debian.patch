@@ -173,93 +173,6 @@
  			--release=$(VERSION) `basename $$i`") \
  			>  $(INSTALL_PREFIX)$(MANDIR)/man$$sec/$$fn.$${sec}$(MANSUFFIX); \
  		$(PERL) util/extract-names.pl < $$i | \
---- openssl-0.9.8g.orig/VMS/VMSify-conf.pl
-+++ openssl-0.9.8g/VMS/VMSify-conf.pl
-@@ -1,4 +1,4 @@
--#! /usr/bin/perl
-+#!/usr/local/bin/perl
- 
- use strict;
- use warnings;
---- openssl-0.9.8g.orig/Netware/do_tests.pl
-+++ openssl-0.9.8g/Netware/do_tests.pl
-@@ -1,4 +1,4 @@
--# perl script to run OpenSSL tests
-+#!/usr/local/bin/perl
- 
- 
- my $base_path      = "\\openssl";
---- openssl-0.9.8g.orig/apps/CA.sh
-+++ openssl-0.9.8g/apps/CA.sh
-@@ -91,6 +91,7 @@
- 			   -out ${CATOP}/$CAREQ
- 	    $CA -out ${CATOP}/$CACERT $CADAYS -batch \
- 			   -keyfile ${CATOP}/private/$CAKEY -selfsign \
-+			   -extensions v3_ca \
- 			   -infiles ${CATOP}/$CAREQ 
- 	    RET=$?
- 	fi
---- openssl-0.9.8g.orig/apps/CA.pl.in
-+++ openssl-0.9.8g/apps/CA.pl.in
-@@ -65,6 +65,7 @@
- foreach (@ARGV) {
- 	if ( /^(-\?|-h|-help)$/ ) {
- 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
-+	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
- 	    exit 0;
- 	} elsif (/^-newcert$/) {
- 	    # create a certificate
-@@ -165,6 +166,7 @@
- 	} else {
- 	    print STDERR "Unknown arg $_\n";
- 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
-+	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
- 	    exit 1;
- 	}
- }
---- openssl-0.9.8g.orig/apps/speed.c
-+++ openssl-0.9.8g/apps/speed.c
-@@ -577,7 +577,7 @@
- #define MAX_BLOCK_SIZE 64
- #endif
- 	unsigned char DES_iv[8];
--	unsigned char iv[MAX_BLOCK_SIZE/8];
-+	unsigned char iv[2*MAX_BLOCK_SIZE/8];
- #ifndef OPENSSL_NO_DES
- 	DES_cblock *buf_as_des_cblock = NULL;
- 	static DES_cblock key ={0x12,0x34,0x56,0x78,0x9a,0xbc,0xde,0xf0};
---- openssl-0.9.8g.orig/apps/CA.pl
-+++ openssl-0.9.8g/apps/CA.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/perl
-+#!/usr/local/bin/perl
- #
- # CA - wrapper around ca to make it easier to use ... basically ca requires
- #      some setup stuff to be done before you can use it and this makes
-@@ -65,6 +65,7 @@
- foreach (@ARGV) {
- 	if ( /^(-\?|-h|-help)$/ ) {
- 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
-+	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
- 	    exit 0;
- 	} elsif (/^-newcert$/) {
- 	    # create a certificate
-@@ -165,6 +166,7 @@
- 	} else {
- 	    print STDERR "Unknown arg $_\n";
- 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
-+	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
- 	    exit 1;
- 	}
- }
---- openssl-0.9.8g.orig/os2/backwardify.pl
-+++ openssl-0.9.8g/os2/backwardify.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/perl -w
-+#!/usr/local/bin/perl
- use strict;
- 
- # Use as $0
 --- openssl-0.9.8g.orig/Configure
 +++ openssl-0.9.8g/Configure
 @@ -1,4 +1,4 @@
@@ -363,6 +276,220 @@
  	elsif	(/^#((define)|(undef))\s+OPENSSL_EXPORT_VAR_AS_FUNCTION/)
  		{ printf OUT "#undef OPENSSL_EXPORT_VAR_AS_FUNCTION\n"
  			if $export_var_as_fn;
+--- openssl-0.9.8g.orig/Makefile.shared
++++ openssl-0.9.8g/Makefile.shared
+@@ -151,9 +151,9 @@
+ 	SHLIB_SUFFIX=; \
+ 	ALLSYMSFLAGS='-Wl,--whole-archive'; \
+ 	NOALLSYMSFLAGS='-Wl,--no-whole-archive'; \
+-	SHAREDFLAGS="$(CFLAGS) $(SHARED_LDFLAGS) -shared -Wl,-Bsymbolic -Wl,-soname=$$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX"
++	SHAREDFLAGS="$(CFLAGS) $(SHARED_LDFLAGS) -shared -Wl,-soname=$$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX"
+ 
+-DO_GNU_APP=LDFLAGS="$(CFLAGS) -Wl,-rpath,$(LIBRPATH)"
++DO_GNU_APP=LDFLAGS="$(CFLAGS)"
+ 
+ #This is rather special.  It's a special target with which one can link
+ #applications without bothering with any features that have anything to
+--- openssl-0.9.8g.orig/config
++++ openssl-0.9.8g/config
+@@ -162,8 +162,8 @@
+ 	echo "${MACHINE}-whatever-linux1"; exit 0
+ 	;;
+ 
+-    GNU*)
+-	echo "hurd-x86"; exit 0;
++    GNU:*|GNU/*:*)
++	echo "${MACHINE}-gnuish"; exit 0;
+ 	;;
+ 
+     LynxOS:*)
+--- openssl-0.9.8g.orig/Makefile.org
++++ openssl-0.9.8g/Makefile.org
+@@ -104,7 +104,7 @@
+ ZLIB_INCLUDE=
+ LIBZLIB=
+ 
+-DIRS=   crypto ssl engines apps test tools
++DIRS=   crypto ssl engines apps tools
+ SHLIBDIRS= crypto ssl
+ 
+ # dirs in crypto to build
+@@ -125,10 +125,11 @@
+ 
+ MAKEFILE= Makefile
+ 
+-MANDIR=$(OPENSSLDIR)/man
++MANDIR=/usr/share/man
+ MAN1=1
+ MAN3=3
+-MANSUFFIX=
++MANSUFFIX=ssl
++MANSECTION=SSL
+ SHELL=/bin/sh
+ 
+ TOP=    .
+@@ -308,7 +309,8 @@
+ 	    echo 'Description: OpenSSL cryptography library'; \
+ 	    echo 'Version: '$(VERSION); \
+ 	    echo 'Requires: '; \
+-	    echo 'Libs: -L$${libdir} -lcrypto $(EX_LIBS)'; \
++	    echo 'Libs: -L$${libdir} -lcrypto'; \
++	    echo 'Libs.private: $(EX_LIBS)'; \
+ 	    echo 'Cflags: -I$${includedir} $(KRB5_INCLUDES)' ) > libcrypto.pc
+ 
+ libssl.pc: Makefile
+@@ -321,7 +323,8 @@
+ 	    echo 'Description: Secure Sockets Layer and cryptography libraries'; \
+ 	    echo 'Version: '$(VERSION); \
+ 	    echo 'Requires: '; \
+-	    echo 'Libs: -L$${libdir} -lssl -lcrypto $(EX_LIBS)'; \
++	    echo 'Libs: -L$${libdir} -lssl'; \
++	    echo 'Libs.private: -lcrypto $(EX_LIBS)'; \
+ 	    echo 'Cflags: -I$${includedir} $(KRB5_INCLUDES)' ) > libssl.pc
+ 
+ openssl.pc: Makefile
+@@ -334,7 +337,8 @@
+ 	    echo 'Description: Secure Sockets Layer and cryptography libraries and tools'; \
+ 	    echo 'Version: '$(VERSION); \
+ 	    echo 'Requires: '; \
+-	    echo 'Libs: -L$${libdir} -lssl -lcrypto $(EX_LIBS)'; \
++	    echo 'Libs: -L$${libdir} -lssl -lcrypto'; \
++	    echo 'Libs.private: $(EX_LIBS)'; \
+ 	    echo 'Cflags: -I$${includedir} $(KRB5_INCLUDES)' ) > openssl.pc
+ 
+ Makefile: Makefile.org Configure config
+@@ -478,7 +482,7 @@
+ install_sw:
+ 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib \
+-		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines \
++		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/ssl/engines \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/pkgconfig \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl \
+ 		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
+@@ -556,7 +560,7 @@
+ 		echo "installing man$$sec/$$fn.$${sec}$(MANSUFFIX)"; \
+ 		(cd `$(PERL) util/dirname.pl $$i`; \
+ 		sh -c "$$pod2man \
+-			--section=$$sec --center=OpenSSL \
++			--section=$${sec}$(MANSECTION) --center=OpenSSL \
+ 			--release=$(VERSION) `basename $$i`") \
+ 			>  $(INSTALL_PREFIX)$(MANDIR)/man$$sec/$$fn.$${sec}$(MANSUFFIX); \
+ 		$(PERL) util/extract-names.pl < $$i | \
+@@ -573,7 +577,7 @@
+ 		echo "installing man$$sec/$$fn.$${sec}$(MANSUFFIX)"; \
+ 		(cd `$(PERL) util/dirname.pl $$i`; \
+ 		sh -c "$$pod2man \
+-			--section=$$sec --center=OpenSSL \
++			--section=$${sec}$(MANSECTION) --center=OpenSSL \
+ 			--release=$(VERSION) `basename $$i`") \
+ 			>  $(INSTALL_PREFIX)$(MANDIR)/man$$sec/$$fn.$${sec}$(MANSUFFIX); \
+ 		$(PERL) util/extract-names.pl < $$i | \
+--- openssl-0.9.8g.orig/openssl.ld
++++ openssl-0.9.8g/openssl.ld
+@@ -0,0 +1,5 @@
++OPENSSL_0.9.8 {
++	 global:
++		 *;
++};
++
+--- openssl-0.9.8g.orig/VMS/VMSify-conf.pl
++++ openssl-0.9.8g/VMS/VMSify-conf.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/local/bin/perl
+ 
+ use strict;
+ use warnings;
+--- openssl-0.9.8g.orig/Netware/do_tests.pl
++++ openssl-0.9.8g/Netware/do_tests.pl
+@@ -1,4 +1,4 @@
+-# perl script to run OpenSSL tests
++#!/usr/local/bin/perl
+ 
+ 
+ my $base_path      = "\\openssl";
+--- openssl-0.9.8g.orig/apps/s_time.c
++++ openssl-0.9.8g/apps/s_time.c
+@@ -117,6 +117,7 @@
+ 
+ /* The following if from times(3) man page.  It may need to be changed
+ */
++#undef HZ
+ #ifndef HZ
+ # ifdef _SC_CLK_TCK
+ #  define HZ ((double)sysconf(_SC_CLK_TCK))
+--- openssl-0.9.8g.orig/apps/CA.sh
++++ openssl-0.9.8g/apps/CA.sh
+@@ -91,6 +91,7 @@
+ 			   -out ${CATOP}/$CAREQ
+ 	    $CA -out ${CATOP}/$CACERT $CADAYS -batch \
+ 			   -keyfile ${CATOP}/private/$CAKEY -selfsign \
++			   -extensions v3_ca \
+ 			   -infiles ${CATOP}/$CAREQ 
+ 	    RET=$?
+ 	fi
+--- openssl-0.9.8g.orig/apps/CA.pl.in
++++ openssl-0.9.8g/apps/CA.pl.in
+@@ -65,6 +65,7 @@
+ foreach (@ARGV) {
+ 	if ( /^(-\?|-h|-help)$/ ) {
+ 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
++	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
+ 	    exit 0;
+ 	} elsif (/^-newcert$/) {
+ 	    # create a certificate
+@@ -165,6 +166,7 @@
+ 	} else {
+ 	    print STDERR "Unknown arg $_\n";
+ 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
++	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
+ 	    exit 1;
+ 	}
+ }
+--- openssl-0.9.8g.orig/apps/speed.c
++++ openssl-0.9.8g/apps/speed.c
+@@ -577,7 +577,7 @@
+ #define MAX_BLOCK_SIZE 64
+ #endif
+ 	unsigned char DES_iv[8];
+-	unsigned char iv[MAX_BLOCK_SIZE/8];
++	unsigned char iv[2*MAX_BLOCK_SIZE/8];
+ #ifndef OPENSSL_NO_DES
+ 	DES_cblock *buf_as_des_cblock = NULL;
+ 	static DES_cblock key ={0x12,0x34,0x56,0x78,0x9a,0xbc,0xde,0xf0};
+--- openssl-0.9.8g.orig/apps/CA.pl
++++ openssl-0.9.8g/apps/CA.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#!/usr/local/bin/perl
+ #
+ # CA - wrapper around ca to make it easier to use ... basically ca requires
+ #      some setup stuff to be done before you can use it and this makes
+@@ -65,6 +65,7 @@
+ foreach (@ARGV) {
+ 	if ( /^(-\?|-h|-help)$/ ) {
+ 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
++	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
+ 	    exit 0;
+ 	} elsif (/^-newcert$/) {
+ 	    # create a certificate
+@@ -165,6 +166,7 @@
+ 	} else {
+ 	    print STDERR "Unknown arg $_\n";
+ 	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
++	    print STDERR "usage: CA -signcert certfile keyfile|-newcert|-newreq|-newca|-sign|-verify\n";
+ 	    exit 1;
+ 	}
+ }
+--- openssl-0.9.8g.orig/os2/backwardify.pl
++++ openssl-0.9.8g/os2/backwardify.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl -w
++#!/usr/local/bin/perl
+ use strict;
+ 
+ # Use as $0
 --- openssl-0.9.8g.orig/engines/Makefile
 +++ openssl-0.9.8g/engines/Makefile
 @@ -97,13 +97,13 @@
@@ -461,20 +588,6 @@
  		chomp $hash;
  		chomp $fprint;
  		$fprint =~ s/^.*=//;
---- openssl-0.9.8g.orig/Makefile.shared
-+++ openssl-0.9.8g/Makefile.shared
-@@ -151,9 +151,9 @@
- 	SHLIB_SUFFIX=; \
- 	ALLSYMSFLAGS='-Wl,--whole-archive'; \
- 	NOALLSYMSFLAGS='-Wl,--no-whole-archive'; \
--	SHAREDFLAGS="$(CFLAGS) $(SHARED_LDFLAGS) -shared -Wl,-Bsymbolic -Wl,-soname=$$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX"
-+	SHAREDFLAGS="$(CFLAGS) $(SHARED_LDFLAGS) -shared -Wl,-soname=$$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX"
- 
--DO_GNU_APP=LDFLAGS="$(CFLAGS) -Wl,-rpath,$(LIBRPATH)"
-+DO_GNU_APP=LDFLAGS="$(CFLAGS)"
- 
- #This is rather special.  It's a special target with which one can link
- #applications without bothering with any features that have anything to
 --- openssl-0.9.8g.orig/ssl/t1_lib.c
 +++ openssl-0.9.8g/ssl/t1_lib.c
 @@ -132,6 +132,10 @@
@@ -507,19 +620,6 @@
  #
  # For Microsoft CL this is implemented as inline assembler. So that
  # even though this script can generate even Win32 code, we'll be
---- openssl-0.9.8g.orig/config
-+++ openssl-0.9.8g/config
-@@ -162,8 +162,8 @@
- 	echo "${MACHINE}-whatever-linux1"; exit 0
- 	;;
- 
--    GNU*)
--	echo "hurd-x86"; exit 0;
-+    GNU:*|GNU/*:*)
-+	echo "${MACHINE}-gnuish"; exit 0;
- 	;;
- 
-     LynxOS:*)
 --- openssl-0.9.8g.orig/demos/tunala/configure.in
 +++ openssl-0.9.8g/demos/tunala/configure.in
 @@ -1,4 +1,4 @@
@@ -629,96 +729,170 @@
 +No known bugs
 +
 +=cut
---- openssl-0.9.8g.orig/Makefile.org
-+++ openssl-0.9.8g/Makefile.org
-@@ -104,7 +104,7 @@
- ZLIB_INCLUDE=
- LIBZLIB=
+--- openssl-0.9.8g.orig/crypto/Makefile
++++ openssl-0.9.8g/crypto/Makefile
+@@ -57,7 +57,7 @@
+ 	echo "  #define DATE \"`LC_ALL=C LC_TIME=C date`\""; \
+ 	echo '#endif' ) >buildinf.h
  
--DIRS=   crypto ssl engines apps test tools
-+DIRS=   crypto ssl engines apps tools
- SHLIBDIRS= crypto ssl
+-x86cpuid-elf.s:	x86cpuid.pl perlasm/x86asm.pl
++x86cpuid-elf.S:	x86cpuid.pl perlasm/x86asm.pl
+ 	$(PERL) x86cpuid.pl elf $(CFLAGS) $(PROCESSOR) > $@
+ x86cpuid-cof.s: x86cpuid.pl perlasm/x86asm.pl
+ 	$(PERL) x86cpuid.pl coff $(CFLAGS) $(PROCESSOR) > $@
+@@ -70,7 +70,7 @@
+ uplink-cof.s:	../ms/uplink.pl
+ 	$(PERL) ../ms/uplink.pl coff > $@
  
- # dirs in crypto to build
-@@ -125,10 +125,11 @@
+-x86_64cpuid.s: x86_64cpuid.pl
++x86_64cpuid.S: x86_64cpuid.pl
+ 	$(PERL) x86_64cpuid.pl $@
+ ia64cpuid.s: ia64cpuid.S
+ 	$(CC) $(CFLAGS) -E ia64cpuid.S > $@
+--- openssl-0.9.8g.orig/crypto/x86cpuid.pl
++++ openssl-0.9.8g/crypto/x86cpuid.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/local/bin/perl
  
- MAKEFILE= Makefile
+ push(@INC,"perlasm");
+ require "x86asm.pl";
+--- openssl-0.9.8g.orig/crypto/opensslconf.h
++++ openssl-0.9.8g/crypto/opensslconf.h
+@@ -10,6 +10,9 @@
+ #ifndef OPENSSL_NO_GMP
+ # define OPENSSL_NO_GMP
+ #endif
++#ifndef OPENSSL_NO_IDEA
++# define OPENSSL_NO_IDEA
++#endif
+ #ifndef OPENSSL_NO_KRB5
+ # define OPENSSL_NO_KRB5
+ #endif
+@@ -25,11 +28,11 @@
+ #ifndef OPENSSL_NO_SEED
+ # define OPENSSL_NO_SEED
+ #endif
+-#ifndef OPENSSL_NO_TLSEXT
+-# define OPENSSL_NO_TLSEXT
+-#endif
  
--MANDIR=$(OPENSSLDIR)/man
-+MANDIR=/usr/share/man
- MAN1=1
- MAN3=3
--MANSUFFIX=
-+MANSUFFIX=ssl
-+MANSECTION=SSL
- SHELL=/bin/sh
+ #endif /* OPENSSL_DOING_MAKEDEPEND */
++#ifndef OPENSSL_THREADS
++# define OPENSSL_THREADS
++#endif
+ #ifndef OPENSSL_NO_DYNAMIC_ENGINE
+ # define OPENSSL_NO_DYNAMIC_ENGINE
+ #endif
+@@ -45,6 +48,9 @@
+ # if defined(OPENSSL_NO_GMP) && !defined(NO_GMP)
+ #  define NO_GMP
+ # endif
++# if defined(OPENSSL_NO_IDEA) && !defined(NO_IDEA)
++#  define NO_IDEA
++# endif
+ # if defined(OPENSSL_NO_KRB5) && !defined(NO_KRB5)
+ #  define NO_KRB5
+ # endif
+@@ -60,11 +66,10 @@
+ # if defined(OPENSSL_NO_SEED) && !defined(NO_SEED)
+ #  define NO_SEED
+ # endif
+-# if defined(OPENSSL_NO_TLSEXT) && !defined(NO_TLSEXT)
+-#  define NO_TLSEXT
+-# endif
+ #endif
  
- TOP=    .
-@@ -308,7 +309,8 @@
- 	    echo 'Description: OpenSSL cryptography library'; \
- 	    echo 'Version: '$(VERSION); \
- 	    echo 'Requires: '; \
--	    echo 'Libs: -L$${libdir} -lcrypto $(EX_LIBS)'; \
-+	    echo 'Libs: -L$${libdir} -lcrypto'; \
-+	    echo 'Libs.private: $(EX_LIBS)'; \
- 	    echo 'Cflags: -I$${includedir} $(KRB5_INCLUDES)' ) > libcrypto.pc
- 
- libssl.pc: Makefile
-@@ -321,7 +323,8 @@
- 	    echo 'Description: Secure Sockets Layer and cryptography libraries'; \
- 	    echo 'Version: '$(VERSION); \
- 	    echo 'Requires: '; \
--	    echo 'Libs: -L$${libdir} -lssl -lcrypto $(EX_LIBS)'; \
-+	    echo 'Libs: -L$${libdir} -lssl'; \
-+	    echo 'Libs.private: -lcrypto $(EX_LIBS)'; \
- 	    echo 'Cflags: -I$${includedir} $(KRB5_INCLUDES)' ) > libssl.pc
- 
- openssl.pc: Makefile
-@@ -334,7 +337,8 @@
- 	    echo 'Description: Secure Sockets Layer and cryptography libraries and tools'; \
- 	    echo 'Version: '$(VERSION); \
- 	    echo 'Requires: '; \
--	    echo 'Libs: -L$${libdir} -lssl -lcrypto $(EX_LIBS)'; \
-+	    echo 'Libs: -L$${libdir} -lssl -lcrypto'; \
-+	    echo 'Libs.private: $(EX_LIBS)'; \
- 	    echo 'Cflags: -I$${includedir} $(KRB5_INCLUDES)' ) > openssl.pc
- 
- Makefile: Makefile.org Configure config
-@@ -478,7 +482,7 @@
- install_sw:
- 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
- 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib \
--		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines \
-+		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/ssl/engines \
- 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/pkgconfig \
- 		$(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl \
- 		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
-@@ -556,7 +560,7 @@
- 		echo "installing man$$sec/$$fn.$${sec}$(MANSUFFIX)"; \
- 		(cd `$(PERL) util/dirname.pl $$i`; \
- 		sh -c "$$pod2man \
--			--section=$$sec --center=OpenSSL \
-+			--section=$${sec}$(MANSECTION) --center=OpenSSL \
- 			--release=$(VERSION) `basename $$i`") \
- 			>  $(INSTALL_PREFIX)$(MANDIR)/man$$sec/$$fn.$${sec}$(MANSUFFIX); \
- 		$(PERL) util/extract-names.pl < $$i | \
-@@ -573,7 +577,7 @@
- 		echo "installing man$$sec/$$fn.$${sec}$(MANSUFFIX)"; \
- 		(cd `$(PERL) util/dirname.pl $$i`; \
- 		sh -c "$$pod2man \
--			--section=$$sec --center=OpenSSL \
-+			--section=$${sec}$(MANSECTION) --center=OpenSSL \
- 			--release=$(VERSION) `basename $$i`") \
- 			>  $(INSTALL_PREFIX)$(MANDIR)/man$$sec/$$fn.$${sec}$(MANSUFFIX); \
- 		$(PERL) util/extract-names.pl < $$i | \
---- openssl-0.9.8g.orig/openssl.ld
-+++ openssl-0.9.8g/openssl.ld
-@@ -0,0 +1,5 @@
-+OPENSSL_0.9.8 {
-+	 global:
-+		 *;
-+};
++#define OPENSSL_CPUID_OBJ
 +
+ /* crypto/opensslconf.h.in */
+ 
+ /* Generate 80386 code? */
+@@ -72,8 +77,8 @@
+ 
+ #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
+ #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
+-#define ENGINESDIR "/usr/local/ssl/lib/engines"
+-#define OPENSSLDIR "/usr/local/ssl"
++#define ENGINESDIR "/usr/lib/ssl/engines"
++#define OPENSSLDIR "/usr/lib/ssl"
+ #endif
+ #endif
+ 
+@@ -104,14 +109,14 @@
+  * - Intel P6 because partial register stalls are very expensive;
+  * - elder Alpha because it lacks byte load/store instructions;
+  */
+-#define RC4_INT unsigned int
++#define RC4_INT unsigned char
+ #endif
+ #if !defined(RC4_CHUNK)
+ /*
+  * This enables code handling data aligned at natural CPU word
+  * boundary. See crypto/rc4/rc4_enc.c for further details.
+  */
+-#undef RC4_CHUNK
++#define RC4_CHUNK unsigned long
+ #endif
+ #endif
+ 
+@@ -119,7 +124,7 @@
+ /* If this is set to 'unsigned int' on a DEC Alpha, this gives about a
+  * %20 speed up (longs are 8 bytes, int's are 4). */
+ #ifndef DES_LONG
+-#define DES_LONG unsigned long
++#define DES_LONG unsigned int
+ #endif
+ #endif
+ 
+@@ -133,9 +138,9 @@
+ /* The prime number generation stuff may not work when
+  * EIGHT_BIT but I don't care since I've only used this mode
+  * for debuging the bignum libraries */
+-#undef SIXTY_FOUR_BIT_LONG
++#define SIXTY_FOUR_BIT_LONG
+ #undef SIXTY_FOUR_BIT
+-#define THIRTY_TWO_BIT
++#undef THIRTY_TWO_BIT
+ #undef SIXTEEN_BIT
+ #undef EIGHT_BIT
+ #endif
+@@ -149,7 +154,7 @@
+ 
+ #if defined(HEADER_BF_LOCL_H) && !defined(CONFIG_HEADER_BF_LOCL_H)
+ #define CONFIG_HEADER_BF_LOCL_H
+-#undef BF_PTR
++#define BF_PTR2
+ #endif /* HEADER_BF_LOCL_H */
+ 
+ #if defined(HEADER_DES_LOCL_H) && !defined(CONFIG_HEADER_DES_LOCL_H)
+@@ -179,7 +184,7 @@
+ /* Unroll the inner loop, this sometimes helps, sometimes hinders.
+  * Very mucy CPU dependant */
+ #ifndef DES_UNROLL
+-#undef DES_UNROLL
++#define DES_UNROLL
+ #endif
+ 
+ /* These default values were supplied by
+--- openssl-0.9.8g.orig/crypto/x86_64cpuid.pl
++++ openssl-0.9.8g/crypto/x86_64cpuid.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/local/bin/perl
+ 
+ $output=shift;
+ $win64a=1 if ($output =~ /win64a\.[s|asm]/);
+@@ -134,5 +134,9 @@
+ .size	OPENSSL_ia32_cpuid,.-OPENSSL_ia32_cpuid
+ 
+ .section	.init
++#ifdef OPENSSL_PIC
++	call	OPENSSL_cpuid_setup\@PLT
++#else
+ 	call	OPENSSL_cpuid_setup
++#endif
+ ___
 --- openssl-0.9.8g.orig/crypto/md5/asm/md5-x86_64.pl
 +++ openssl-0.9.8g/crypto/md5/asm/md5-x86_64.pl
 @@ -1,4 +1,4 @@
@@ -747,26 +921,16 @@
  #else
  # define	LOAD			ld
  # define	X(i)			[%i1+i*4]
---- openssl-0.9.8g.orig/crypto/Makefile
-+++ openssl-0.9.8g/crypto/Makefile
-@@ -57,7 +57,7 @@
- 	echo "  #define DATE \"`LC_ALL=C LC_TIME=C date`\""; \
- 	echo '#endif' ) >buildinf.h
+--- openssl-0.9.8g.orig/crypto/sha/sha.h
++++ openssl-0.9.8g/crypto/sha/sha.h
+@@ -59,6 +59,7 @@
+ #ifndef HEADER_SHA_H
+ #define HEADER_SHA_H
  
--x86cpuid-elf.s:	x86cpuid.pl perlasm/x86asm.pl
-+x86cpuid-elf.S:	x86cpuid.pl perlasm/x86asm.pl
- 	$(PERL) x86cpuid.pl elf $(CFLAGS) $(PROCESSOR) > $@
- x86cpuid-cof.s: x86cpuid.pl perlasm/x86asm.pl
- 	$(PERL) x86cpuid.pl coff $(CFLAGS) $(PROCESSOR) > $@
-@@ -70,7 +70,7 @@
- uplink-cof.s:	../ms/uplink.pl
- 	$(PERL) ../ms/uplink.pl coff > $@
++#include <stddef.h>
+ #include <openssl/e_os2.h>
+ #include <stddef.h>
  
--x86_64cpuid.s: x86_64cpuid.pl
-+x86_64cpuid.S: x86_64cpuid.pl
- 	$(PERL) x86_64cpuid.pl $@
- ia64cpuid.s: ia64cpuid.S
- 	$(CC) $(CFLAGS) -E ia64cpuid.S > $@
 --- openssl-0.9.8g.orig/crypto/sha/asm/sha1-ia64.pl
 +++ openssl-0.9.8g/crypto/sha/asm/sha1-ia64.pl
 @@ -1,4 +1,4 @@
@@ -791,30 +955,9 @@
  #
  # ====================================================================
  # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8g.orig/crypto/sha/sha.h
-+++ openssl-0.9.8g/crypto/sha/sha.h
-@@ -59,6 +59,7 @@
- #ifndef HEADER_SHA_H
- #define HEADER_SHA_H
- 
-+#include <stddef.h>
- #include <openssl/e_os2.h>
- #include <stddef.h>
- 
 --- openssl-0.9.8g.orig/crypto/rand/md_rand.c
 +++ openssl-0.9.8g/crypto/rand/md_rand.c
-@@ -271,7 +271,10 @@
- 		else
- 			MD_Update(&m,&(state[st_idx]),j);
- 			
-+/*		
-+ * Don't add uninitialised data.
- 		MD_Update(&m,buf,j);
-+*/
- 		MD_Update(&m,(unsigned char *)&(md_c[0]),sizeof(md_c));
- 		MD_Final(&m,local_md);
- 		md_c[1]++;
-@@ -465,8 +468,10 @@
+@@ -465,8 +465,10 @@
  		MD_Update(&m,local_md,MD_DIGEST_LENGTH);
  		MD_Update(&m,(unsigned char *)&(md_c[0]),sizeof(md_c));
  #ifndef PURIFY
@@ -864,14 +1007,6 @@
  
  	&stack_pop(3);
  	&mov($L,&DWP(0,"ebx","",0));
---- openssl-0.9.8g.orig/crypto/x86cpuid.pl
-+++ openssl-0.9.8g/crypto/x86cpuid.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/local/bin/perl
- 
- push(@INC,"perlasm");
- require "x86asm.pl";
 --- openssl-0.9.8g.orig/crypto/rc4/asm/rc4-x86_64.pl
 +++ openssl-0.9.8g/crypto/rc4/asm/rc4-x86_64.pl
 @@ -1,4 +1,4 @@
@@ -992,124 +1127,6 @@
  
  # Ascetic x86_64 AT&T to MASM assembler translator by <appro>.
  #
---- openssl-0.9.8g.orig/crypto/opensslconf.h
-+++ openssl-0.9.8g/crypto/opensslconf.h
-@@ -10,6 +10,9 @@
- #ifndef OPENSSL_NO_GMP
- # define OPENSSL_NO_GMP
- #endif
-+#ifndef OPENSSL_NO_IDEA
-+# define OPENSSL_NO_IDEA
-+#endif
- #ifndef OPENSSL_NO_KRB5
- # define OPENSSL_NO_KRB5
- #endif
-@@ -25,11 +28,11 @@
- #ifndef OPENSSL_NO_SEED
- # define OPENSSL_NO_SEED
- #endif
--#ifndef OPENSSL_NO_TLSEXT
--# define OPENSSL_NO_TLSEXT
--#endif
- 
- #endif /* OPENSSL_DOING_MAKEDEPEND */
-+#ifndef OPENSSL_THREADS
-+# define OPENSSL_THREADS
-+#endif
- #ifndef OPENSSL_NO_DYNAMIC_ENGINE
- # define OPENSSL_NO_DYNAMIC_ENGINE
- #endif
-@@ -45,6 +48,9 @@
- # if defined(OPENSSL_NO_GMP) && !defined(NO_GMP)
- #  define NO_GMP
- # endif
-+# if defined(OPENSSL_NO_IDEA) && !defined(NO_IDEA)
-+#  define NO_IDEA
-+# endif
- # if defined(OPENSSL_NO_KRB5) && !defined(NO_KRB5)
- #  define NO_KRB5
- # endif
-@@ -60,11 +66,10 @@
- # if defined(OPENSSL_NO_SEED) && !defined(NO_SEED)
- #  define NO_SEED
- # endif
--# if defined(OPENSSL_NO_TLSEXT) && !defined(NO_TLSEXT)
--#  define NO_TLSEXT
--# endif
- #endif
- 
-+#define OPENSSL_CPUID_OBJ
-+
- /* crypto/opensslconf.h.in */
- 
- /* Generate 80386 code? */
-@@ -72,8 +77,8 @@
- 
- #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
- #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
--#define ENGINESDIR "/usr/local/ssl/lib/engines"
--#define OPENSSLDIR "/usr/local/ssl"
-+#define ENGINESDIR "/usr/lib/ssl/engines"
-+#define OPENSSLDIR "/usr/lib/ssl"
- #endif
- #endif
- 
-@@ -104,14 +109,14 @@
-  * - Intel P6 because partial register stalls are very expensive;
-  * - elder Alpha because it lacks byte load/store instructions;
-  */
--#define RC4_INT unsigned int
-+#define RC4_INT unsigned char
- #endif
- #if !defined(RC4_CHUNK)
- /*
-  * This enables code handling data aligned at natural CPU word
-  * boundary. See crypto/rc4/rc4_enc.c for further details.
-  */
--#undef RC4_CHUNK
-+#define RC4_CHUNK unsigned long
- #endif
- #endif
- 
-@@ -119,7 +124,7 @@
- /* If this is set to 'unsigned int' on a DEC Alpha, this gives about a
-  * %20 speed up (longs are 8 bytes, int's are 4). */
- #ifndef DES_LONG
--#define DES_LONG unsigned long
-+#define DES_LONG unsigned int
- #endif
- #endif
- 
-@@ -133,9 +138,9 @@
- /* The prime number generation stuff may not work when
-  * EIGHT_BIT but I don't care since I've only used this mode
-  * for debuging the bignum libraries */
--#undef SIXTY_FOUR_BIT_LONG
-+#define SIXTY_FOUR_BIT_LONG
- #undef SIXTY_FOUR_BIT
--#define THIRTY_TWO_BIT
-+#undef THIRTY_TWO_BIT
- #undef SIXTEEN_BIT
- #undef EIGHT_BIT
- #endif
-@@ -149,7 +154,7 @@
- 
- #if defined(HEADER_BF_LOCL_H) && !defined(CONFIG_HEADER_BF_LOCL_H)
- #define CONFIG_HEADER_BF_LOCL_H
--#undef BF_PTR
-+#define BF_PTR2
- #endif /* HEADER_BF_LOCL_H */
- 
- #if defined(HEADER_DES_LOCL_H) && !defined(CONFIG_HEADER_DES_LOCL_H)
-@@ -179,7 +184,7 @@
- /* Unroll the inner loop, this sometimes helps, sometimes hinders.
-  * Very mucy CPU dependant */
- #ifndef DES_UNROLL
--#undef DES_UNROLL
-+#define DES_UNROLL
- #endif
- 
- /* These default values were supplied by
 --- openssl-0.9.8g.orig/crypto/pkcs7/pk7_mime.c
 +++ openssl-0.9.8g/crypto/pkcs7/pk7_mime.c
 @@ -335,9 +335,9 @@
@@ -1131,24 +1148,6 @@
  #
  # Implemented as a Perl wrapper as we want to support several different
  # architectures with single file. We pick up the target based on the
---- openssl-0.9.8g.orig/crypto/x86_64cpuid.pl
-+++ openssl-0.9.8g/crypto/x86_64cpuid.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/local/bin/perl
- 
- $output=shift;
- $win64a=1 if ($output =~ /win64a\.[s|asm]/);
-@@ -134,5 +134,9 @@
- .size	OPENSSL_ia32_cpuid,.-OPENSSL_ia32_cpuid
- 
- .section	.init
-+#ifdef OPENSSL_PIC
-+	call	OPENSSL_cpuid_setup\@PLT
-+#else
- 	call	OPENSSL_cpuid_setup
-+#endif
- ___
 --- openssl-0.9.8g.orig/crypto/aes/asm/aes-586.pl
 +++ openssl-0.9.8g/crypto/aes/asm/aes-586.pl
 @@ -1,4 +1,4 @@
@@ -1263,14 +1262,6 @@
  
  while(<STDIN>) {
  	if (/=for\s+comment\s+openssl_manual_section:(\S+)/)
---- openssl-0.9.8g.orig/util/pl/netware.pl
-+++ openssl-0.9.8g/util/pl/netware.pl
-@@ -1,4 +1,4 @@
--# Metrowerks Codewarrior for NetWare
-+#!/usr/local/bin/perl
- #
- 
- # The import files and other misc imports needed to link
 --- openssl-0.9.8g.orig/util/mkdef.pl
 +++ openssl-0.9.8g/util/mkdef.pl
 @@ -1,4 +1,4 @@
@@ -1279,3 +1270,11 @@
  #
  # generate a .def file
  #
+--- openssl-0.9.8g.orig/util/pl/netware.pl
++++ openssl-0.9.8g/util/pl/netware.pl
+@@ -1,4 +1,4 @@
+-# Metrowerks Codewarrior for NetWare
++#!/usr/local/bin/perl
+ #
+ 
+ # The import files and other misc imports needed to link

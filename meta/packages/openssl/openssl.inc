@@ -55,6 +55,12 @@ do_configure () {
 	linux-i686)
 		target=debian-i386-i686/cmov
 		;;
+	linux-mips)
+		target=debian-mips
+		;;
+	linux-mipsel)
+		target=debian-mipsel
+		;;
 	linux-powerpc)
 		target=linux-ppc
 		;;
