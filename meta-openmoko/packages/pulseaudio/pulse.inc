@@ -3,8 +3,7 @@ HOMEPAGE = "http://www.pulseaudio.org"
 AUTHOR = "Lennart Poettering"
 SECTION = "libs/multimedia"
 LICENSE = "LGPL"
-
-DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool"
+DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool hal"
 # optional
 DEPENDS += "alsa-lib glib-2.0"
 
@@ -21,7 +20,8 @@ EXTRA_OECONF = "\
 		--with-glib \
 		--with-alsa \
 		--with-oss \
-		"
+		--with-hal \
+"
 
 PARALLEL_MAKE = ""
 
@@ -83,7 +83,8 @@ pkg_postinst_${PN}-server() {
         grep -q pulse: /etc/group || addgroup pulse
         grep -q pulse: /etc/passwd || \
             adduser --disabled-password --home=/var/run/pulse --system \
-                    --ingroup pulse --no-create-home -g "Pulse audio daemon" pulse                                            
+                    --ingroup pulse --no-create-home -g "Pulse audio daemon" pulse
+        addgroup pulse audio
         /etc/init.d/populate-volatile.sh update
 }
 
