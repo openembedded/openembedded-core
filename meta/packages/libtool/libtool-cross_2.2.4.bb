@@ -1,7 +1,7 @@
 require libtool.inc
 require libtool_${PV}.bb
 
-PR = "r20"
+PR = "r21"
 PACKAGES = ""
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://cross_compile.patch;patch=1 \
@@ -29,6 +29,8 @@ do_compile () {
 do_stage () {
 	install -m 0755 ${HOST_SYS}-libtool ${bindir}/${HOST_SYS}-libtool
 	install -m 0644 libltdl/ltdl.h ${STAGING_INCDIR}/
+	install -d ${STAGING_INCDIR}/libltdl
+	install -m 0644 libltdl/libltdl/*.h ${STAGING_INCDIR}/libltdl/
 	install -d ${STAGING_DATADIR}/libtool ${STAGING_DATADIR}/aclocal
 	install -c ${S}/libltdl/config/config.guess ${STAGING_DATADIR}/libtool/
 	install -c ${S}/libltdl/config/config.sub ${STAGING_DATADIR}/libtool/

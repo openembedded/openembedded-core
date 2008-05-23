@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://dolt.m4"
@@ -17,6 +17,5 @@ inherit autotools
 EXTRA_AUTORECONF = "--exclude=libtoolize"
 
 do_stage () {
-	oe_libinstall -a -so -C libltdl libltdl ${STAGING_LIBDIR}
-	install -m 0644 libltdl/ltdl.h ${STAGING_INCDIR}/
+	autotools_stage_all
 }
