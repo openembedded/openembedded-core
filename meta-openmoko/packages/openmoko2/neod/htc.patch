@@ -1,0 +1,32 @@
+Index: neod/configure.ac
+===================================================================
+--- neod.orig/configure.ac	2007-09-15 23:01:30.000000000 +0200
++++ neod/configure.ac	2007-09-15 23:02:01.000000000 +0200
+@@ -32,6 +32,10 @@
+         NEOD_CFLAGS="$NEOD_CFLAGS -DNEOD_PLATFORM_MOTOROLA_EZX"
+ fi
+ 
++if test x"$neod_platform" = x"htc"; then
++	NEOD_CFLAGS="$NEOD_CFLAGS -DNEOD_PLATFORM_HTC"
++fi
++
+ CFLAGS=$NEOD_CFLAGS
+ 
+ AC_OUTPUT([
+Index: neod/src/buttonactions.c
+===================================================================
+--- neod.orig/src/buttonactions.c	2007-09-15 23:02:15.000000000 +0200
++++ neod/src/buttonactions.c	2007-09-15 23:04:16.000000000 +0200
+@@ -63,6 +63,12 @@
+     #define TOUCHSCREEN_BUTTON_KEYCODE 0x14a
+ #endif
+ 
++#ifdef NEOD_PLATFORM_HTC
++    #define AUX_BUTTON_KEYCODE 0xd4   /* camera */
++    #define POWER_BUTTON_KEYCODE 0x74 /* power */
++    #define TOUCHSCREEN_BUTTON_KEYCODE 0x14a
++#endif
++
+ #define HEADPHONE_INSERTION_SWITCHCODE 0x02
+ 
+ GPollFD input_fd[10];

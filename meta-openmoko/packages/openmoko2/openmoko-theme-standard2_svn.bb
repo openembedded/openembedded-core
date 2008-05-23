@@ -1,8 +1,8 @@
-DESCRIPTION = "Standard Gtk+ theme for the OpenMoko distribution"
+DESCRIPTION = "Standard Gtk+ theme for the Openmoko framework"
 SECTION = "openmoko/base"
 RCONFLICTS = "openmoko-theme-standard"
-PV = "0.1.0+svnr${SRCDATE}"
-PR = "r2"
+PV = "0.1.1+svnr${SRCREV}"
+PR = "r5"
 
 inherit openmoko2
 
@@ -15,11 +15,7 @@ do_install() {
 	cp -fpPR ${S}/* ${D}${datadir}/themes/openmoko-standard-2/
 	rm -rf ${D}${datadir}/themes/openmoko-standard-2/patches/
 	
-	install -d ${D}${sysconfdir}/gtk-2.0
-	echo 'include "${datadir}/themes/openmoko-standard-2/gtk-2.0/gtkrc"' >> ${D}${sysconfdir}/gtk-2.0/gtkrc
 }
 
-CONFFILES_${PN} = "${sysconfdir}/gtk-2.0/gtkrc"
-
 PACKAGE_ARCH = "all"
-FILES_${PN} = "${datadir} ${sysconfdir}"
+FILES_${PN} = "${datadir}"

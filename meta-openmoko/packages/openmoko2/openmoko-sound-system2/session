@@ -1,0 +1,28 @@
+#!/usr/bin/pulseaudio -nF
+
+# Create autoload entries for the device drivers
+add-autoload-sink output module-alsa-sink sink_name=output
+add-autoload-source input module-alsa-source source_name=input
+
+# Load several protocols
+load-module module-esound-protocol-unix
+load-module module-simple-protocol-tcp
+load-module module-native-protocol-unix
+load-module module-cli-protocol-unix
+
+# Make some devices default
+set-default-sink output
+set-default-source input
+
+# Don't fail if the audio files referred to below don't exist
+.nofail
+
+# Load an audio to the sample cache for usage with module-x11-bell
+load-sample-lazy x11-bell /usr/share/openmoko/sounds/notify_doorbell.wav
+load-module module-x11-bell sample=x11-bell
+
+# Load samples
+load-sample startup /usr/share/openmoko/sounds/startup_unintrusive.wav
+load-sample touchscreen /usr/share/openmoko/sounds/touchscreen_click.wav
+load-sample ringtone /usr/share/openmoko/sounds/ringtone_classy.wav
+

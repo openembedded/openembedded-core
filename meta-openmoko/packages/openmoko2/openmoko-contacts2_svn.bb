@@ -1,9 +1,9 @@
-DESCRIPTION = "The OpenMoko Address Book"
+DESCRIPTION = "The Openmoko Address Book"
 SECTION = "openmoko/pim"
-DEPENDS = "libmokoui2 libmokojournal2 dbus-glib"
+DEPENDS = "libmokoui2 libmokojournal2 dbus-glib libjana"
 RDEPENDS = "libedata-book"
-PV = "0.1.0+svn${SVNREV}"
-PR = "r4"
+PV = "0.1.0+svnr${SRCREV}"
+PR = "r5"
 
 inherit openmoko2
 
