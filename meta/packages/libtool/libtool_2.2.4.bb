@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://dolt.m4"
@@ -15,7 +15,3 @@ FILES_libltdl-dbg = "${libdir}/.debug/"
 inherit autotools
 
 EXTRA_AUTORECONF = "--exclude=libtoolize"
-
-do_stage () {
-	autotools_stage_all
-}
