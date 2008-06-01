@@ -1,5 +1,5 @@
 DESCRIPTION = "User support binary for the uvesafb kernel module"
-SRC_URI = "http://dev.gentoo.org/~spock/projects/uvesafb/archive/v86d-0.1.3.tar.bz2 \
+SRC_URI = "http://dev.gentoo.org/~spock/projects/uvesafb/archive/v86d-${PV}.tar.bz2 \
            file://fbsetup"
 DEPENDS = "virtual/kernel"
 LICENSE = "GPLv2"
