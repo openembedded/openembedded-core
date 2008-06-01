@@ -4,6 +4,7 @@ LICENSE = "GPL"
 
 inherit kernel
 
+DEPENDS_append_collie = " bc-native"
 RPROVIDES_kernel-base += "hostap-modules"
 
 DOSRC = "http://www.do13.de/openzaurus/patches"
@@ -34,8 +35,8 @@ CMDLINE_DEBUG = '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "debug", "qu
 ##############################################################
 # Configure memory/ramdisk split for collie
 #
-export mem = '${@bb.data.getVar("COLLIE_MEMORY_SIZE",d,1) or "32"}'
-export rd  = '${@bb.data.getVar("COLLIE_RAMDISK_SIZE",d,1) or "32"}'
+export mem = '${@bb.data.getVar("COLLIE_MEMORY_SIZE",d,1) or "64"}'
+export rd  = '${@bb.data.getVar("COLLIE_RAMDISK_SIZE",d,1) or "0"}'
 
 CMDLINE_MEM_collie = "mem=${mem}M"
 CMDLINE_MEM_zylonite = "mem=64M"
@@ -59,6 +60,12 @@ module_autoload_snd-soc-spitz_spitz = "snd-soc-spitz"
 module_autoload_snd-soc-poodle_poodle = "snd-soc-poodle"
 module_autoload_locomo-spi_collie = "locomo-spi"
 module_autoload_mmc_block_collie = "mmc_block"
+module_autoload_mmc_spi = "mmc-spi"
+module_autoload_locomokbd_collie = "locomokbd"
+module_autoload_sa1100-cs_collie = "sa1100_cs"
+module_autoload_collie-ts_collie = "collie-ts"
+module_autoload_leds-locomo_collie = "leds-locomo"
+module_autoload_power_collie = "power"
 
 do_configure() {
 	rm -f ${S}/.config
