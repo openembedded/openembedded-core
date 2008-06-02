@@ -45,7 +45,6 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.25.tar.bz2 \
            ${RPSRC}/integrator_rgb-r1.patch;patch=1;status=hack \
            ${RPSRC}/pxa_cf_initorder_hack-r1.patch;patch=1;status=hack \
            file://sharpsl-rc-r1.patch;patch=1 \
-           file://sharpsl-rc-r2.patch;patch=1 \
            file://spitz_h_rewrite.patch;patch=1 \
            file://pxa-serial-hack.patch;patch=1;status=hack \
            file://connectplus-remove-ide-HACK.patch;patch=1;status=hack \
