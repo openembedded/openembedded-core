@@ -1,9 +1,3 @@
-# extra stuff we need for openmoko that is not in linux.inc
-do_deploy_append() {
-	rm -f ${KERNEL_IMAGE_SYMLINK_NAME}.bin
-	ln -sf ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE_ARCH}.bin ${DEPLOY_DIR_IMAGE}/uImage-${MACHINE_ARCH}-latest.bin
-}
-
 RDEPENDS_kernel-image += "mtd-utils"
 
 pkg_postinst_kernel-image () {
