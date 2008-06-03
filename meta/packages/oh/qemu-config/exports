@@ -1,1 +1,1 @@
-/ *(rw)
+/ *(rw,no_root_squash,async)
