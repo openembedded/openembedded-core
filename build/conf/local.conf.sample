@@ -125,8 +125,9 @@ TMPDIR = "${OEROOT}/build/tmp"
 BBINCLUDELOGS = "yes"
 
 # Specifies a location to search for pre-generated tarballs when fetching
-# a cvs:// URI.  Uncomment this, if you not want to pull directly from CVS.
-CVS_TARBALL_STASH = "http://folks.o-hand.com/~richard/poky/sources/"
+# a cvs:// or svn:// URI.  Uncomment this, if you do not want to pull directly
+# from CVS or Subversion
+SRC_TARBALL_STASH = "http://folks.o-hand.com/~richard/poky/sources/"
 
 # Set this if you wish to make pkgconfig libraries from your system available 
 # for native builds. Combined with extra ASSUME_PROVIDEDs this can allow 
