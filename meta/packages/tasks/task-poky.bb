@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r27"
+PR = "r28"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -18,9 +18,6 @@ PACKAGES = "\
     task-poky-x11-base \
     task-poky-x11-base-dbg \
     task-poky-x11-base-dev \
-    task-poky-x11-sato \
-    task-poky-x11-sato-dbg \
-    task-poky-x11-sato-dev \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -65,18 +62,3 @@ RDEPENDS_task-poky-apps-x11-core = "\
 
 RDEPENDS_task-poky-apps-x11-games = "\
     oh-puzzles"
-
-NETWORK_MANAGER ?= "networkmanager-applet"
-RDEPENDS_task-poky-x11-sato = "\
-    matchbox-desktop \
-    matchbox-session-sato \
-    matchbox-keyboard \
-    matchbox-stroke \
-    matchbox-config-gtk \
-    matchbox-themes-gtk \
-    xcursor-transparent-theme \
-    sato-icon-theme \
-    settings-daemon \
-    gtk-sato-engine \
-    ${NETWORK_MANAGER}"
-
