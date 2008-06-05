@@ -14,7 +14,7 @@ INITSCRIPT_NAME = "fbsetup"
 INITSCRIPT_PARAMS = "start 0 S ."
 
 do_configure () {
-	./configure --default
+	./configure --with-x86emu
 }
 
 do_compile () {
