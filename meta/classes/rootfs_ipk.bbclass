@@ -87,3 +87,24 @@ rootfs_ipk_log_check() {
 remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}/usr/lib/opkg/
 }
+
+install_all_locales() {
+
+    PACKAGES_TO_INSTALL=""
+
+    for pkg in `grep ^Package: ${IMAGE_ROOTFS}${libdir}/opkg/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+    do
+	for lang in ${IMAGE_LOCALES}
+	do
+	    if [ `opkg-cl ${IPKG_ARGS} info $pkg-locale-$lang | wc -l` -gt 0 ]
+	    then
+                PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $pkg-locale-$lang"
+	    fi
+	done
+    done
+    if [ "$PACKAGES_TO_INSTALL" != "" ]
+    then
+	opkg-cl ${IPKG_ARGS} install $PACKAGES_TO_INSTALL
+    fi
+}
+
