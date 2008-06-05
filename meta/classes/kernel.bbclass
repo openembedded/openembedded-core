@@ -45,6 +45,7 @@ HOST_LD_KERNEL_ARCH ?= "${TARGET_LD_KERNEL_ARCH}"
 KERNEL_CC = "${CCACHE}${HOST_PREFIX}gcc${KERNEL_CCSUFFIX} ${HOST_CC_KERNEL_ARCH}"
 KERNEL_LD = "${LD}${KERNEL_LDSUFFIX} ${HOST_LD_KERNEL_ARCH}"
 
+# Where built kernel lies in the kernel tree
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_IMAGEDEST = "boot"
 
@@ -63,6 +64,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # U-Boot support
 UBOOT_ENTRYPOINT ?= "20008000"
+UBOOT_LOADADDRESS ?= "${UBOOT_ENTRYPOINT}"
 
 kernel_do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
@@ -125,8 +127,14 @@ kernel_do_stage() {
 	if [ -e arch/${ARCH}/Makefile ]; then
 		install -d ${STAGING_KERNEL_DIR}/arch/${ARCH}
 		install -m 0644 arch/${ARCH}/Makefile* ${STAGING_KERNEL_DIR}/arch/${ARCH}
+	# Otherwise check arch/x86/Makefile for i386 and x86_64 on kernels >= 2.6.24
+	elif [ -e arch/x86/Makefile ]; then
+		install -d ${STAGING_KERNEL_DIR}/arch/x86
+		install -m 0644 arch/x86/Makefile* ${STAGING_KERNEL_DIR}/arch/x86
 	fi
 	cp -fR include/config* ${STAGING_KERNEL_DIR}/include/	
+	# Install kernel images and system.map to staging
+	[ -e vmlinux ] && install -m 0644 vmlinux ${STAGING_KERNEL_DIR}/	
 	install -m 0644 ${KERNEL_OUTPUT} ${STAGING_KERNEL_DIR}/${KERNEL_IMAGETYPE}
 	install -m 0644 System.map ${STAGING_KERNEL_DIR}/System.map-${KERNEL_VERSION}
 	[ -e Module.symvers ] && install -m 0644 Module.symvers ${STAGING_KERNEL_DIR}/
@@ -249,6 +257,8 @@ module_autoload_ipsec = "ipsec"
 module_autoload_ircomm-tty = "ircomm-tty"
 module_autoload_rfcomm = "rfcomm"
 module_autoload_sa1100-rtc = "sa1100-rtc"
+# sa1100-rtc was renamed in 2.6.23 onwards
+module_autoload_rtc-sa1100 = "rtc-sa1100"
 
 # alias defaults (alphabetically sorted)
 module_conf_af_packet = "alias net-pf-17 af_packet"
@@ -405,7 +415,7 @@ python populate_packages_prepend () {
 	metapkg = "kernel-modules"
 	bb.data.setVar('ALLOW_EMPTY_' + metapkg, "1", d)
 	bb.data.setVar('FILES_' + metapkg, "", d)
-	blacklist = [ 'kernel-dev', 'kernel-image', 'kernel-base' ]
+	blacklist = [ 'kernel-dev', 'kernel-image', 'kernel-base', 'kernel-vmlinux' ]
 	for l in module_deps.values():
 		for i in l:
 			pkg = module_pattern % legitimize_package_name(re.match(module_regex, os.path.basename(i)).group(1))
@@ -424,45 +434,45 @@ python populate_packages_prepend () {
 # Support checking the kernel size since some kernels need to reside in partitions
 # with a fixed length or there is a limit in transferring the kernel to memory
 do_sizecheck() {
-    if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
-        size=`ls -l arch/${ARCH}/boot/${KERNEL_IMAGETYPE} | awk '{ print $5}'`
-        if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
-                rm arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
-                die  "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
-        fi
-    fi
+	if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
+        	size=`ls -l arch/${ARCH}/boot/${KERNEL_IMAGETYPE} | awk '{ print $5}'`
+        	if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
+                	rm arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
+                	die  "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
+        	fi
+    	fi
 }
 
 addtask sizecheck before do_install after do_compile
 
-KERNEL_IMAGE_BASE_NAME = "${KERNEL_IMAGETYPE}-${PV}-${PR}-${MACHINE}-${DATETIME}"
-KERNEL_IMAGE_SYMLINK_NAME = "${KERNEL_IMAGETYPE}-${MACHINE}"
+KERNEL_IMAGE_BASE_NAME ?= "${KERNEL_IMAGETYPE}-${PV}-${PR}-${MACHINE}-${DATETIME}"
+KERNEL_IMAGE_SYMLINK_NAME ?= "${KERNEL_IMAGETYPE}-${MACHINE}"
 
 do_deploy() {
-    install -d ${DEPLOY_DIR_IMAGE}
-    install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.bin
-    package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.bin
-    tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${PR}-${MACHINE}.tgz -C ${D} lib
-    
-    if test "x${KERNEL_IMAGETYPE}" = "xuImage" ; then 
-        if test -e arch/${ARCH}/boot/compressed/vmlinux ; then
-            ${OBJCOPY} -O binary -R .note -R .comment -S arch/${ARCH}/boot/compressed/vmlinux linux.bin
-            uboot-mkimage -A ${ARCH} -O linux -T kernel -C none -a ${UBOOT_ENTRYPOINT} -e ${UBOOT_ENTRYPOINT} -n "${DISTRO_NAME}/${PV}/${MACHINE}" -d linux.bin ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
-            rm -f linux.bin
-        else
-            ${OBJCOPY} -O binary -R .note -R .comment -S vmlinux linux.bin
-            rm -f linux.bin.gz
-            gzip -9 linux.bin
-            uboot-mkimage -A ${ARCH} -O linux -T kernel -C gzip -a ${UBOOT_ENTRYPOINT} -e ${UBOOT_ENTRYPOINT} -n "${DISTRO_NAME}/${PV}/${MACHINE}" -d linux.bin.gz ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
-            rm -f linux.bin.gz
-        fi
-        package_stagefile_shell ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
-    fi
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.bin
+	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.bin
+	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_VERSION}-${PR}-${MACHINE}.tgz -C ${D} lib
+
+	if test "x${KERNEL_IMAGETYPE}" = "xuImage" ; then 
+		if test -e arch/${ARCH}/boot/compressed/vmlinux ; then
+			${OBJCOPY} -O binary -R .note -R .comment -S arch/${ARCH}/boot/compressed/vmlinux linux.bin
+			uboot-mkimage -A ${ARCH} -O linux -T kernel -C none -a ${UBOOT_ENTRYPOINT} -e ${UBOOT_ENTRYPOINT} -n "${DISTRO_NAME}/${PV}/${MACHINE}" -d linux.bin ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
+			rm -f linux.bin
+		else
+			${OBJCOPY} -O binary -R .note -R .comment -S vmlinux linux.bin
+			rm -f linux.bin.gz
+			gzip -9 linux.bin
+			uboot-mkimage -A ${ARCH} -O linux -T kernel -C gzip -a ${UBOOT_ENTRYPOINT} -e ${UBOOT_ENTRYPOINT} -n "${DISTRO_NAME}/${PV}/${MACHINE}" -d linux.bin.gz ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
+			rm -f linux.bin.gz
+		fi
+	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
+	fi
 
 	cd ${DEPLOY_DIR_IMAGE}
 	rm -f ${KERNEL_IMAGE_SYMLINK_NAME}.bin
 	ln -sf ${KERNEL_IMAGE_BASE_NAME}.bin ${KERNEL_IMAGE_SYMLINK_NAME}.bin
-        package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_SYMLINK_NAME}.bin
+	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_SYMLINK_NAME}.bin
 }
 
 do_deploy[dirs] = "${S}"
