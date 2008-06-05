@@ -1,13 +1,11 @@
-PREFERRED_VERSION_matchbox-common ?= ""
-PREFERRED_VERSION_matchbox-config-gtk ?= ""
-PREFERRED_VERSION_matchbox-desktop ?= ""
-PREFERRED_VERSION_matchbox-keyboard ?= ""
-PREFERRED_VERSION_matchbox-panel ?= ""
-PREFERRED_VERSION_matchbox-stroke ?= ""
-PREFERRED_VERSION_matchbox-themes-extra ?= ""
-PREFERRED_VERSION_matchbox-wm ?= ""
-PREFERRED_VERSION_dates ?= ""
+#
+# Package Versions for cutting edge testing:
+#
 
+SRCREV_pn-exmap-console ?= "${AUTOREV}"
+SRCREV_pn-opkg-native ?= "${AUTOREV}"
+SRCREV_pn-opkg-sdk ?= "${AUTOREV}"
+SRCREV_pn-opkg ?= "${AUTOREV}"
 SRCREV_pn-gconf-dbus ?= "${AUTOREV}"
 SRCREV_pn-contacts ?= "${AUTOREV}"
 SRCREV_pn-dates ?= "${AUTOREV}"
@@ -56,3 +54,12 @@ SRCREV_pn-libmatchbox ?= "${AUTOREV}"
 SRCREV_pn-tasks ?= "${AUTOREV}"
 SRCREV_pn-libjana = "${AUTOREV}"
 
+PREFERRED_VERSION_matchbox-common ?= ""
+PREFERRED_VERSION_matchbox-config-gtk ?= ""
+PREFERRED_VERSION_matchbox-desktop ?= ""
+PREFERRED_VERSION_matchbox-keyboard ?= ""
+PREFERRED_VERSION_matchbox-panel ?= ""
+PREFERRED_VERSION_matchbox-stroke ?= ""
+PREFERRED_VERSION_matchbox-themes-extra ?= ""
+PREFERRED_VERSION_matchbox-wm ?= ""
+PREFERRED_VERSION_dates ?= ""
