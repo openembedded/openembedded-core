@@ -19,7 +19,8 @@ fakeroot rootfs_ipk_do_rootfs () {
 	package_update_index_ipk
 	package_generate_ipkg_conf
 
-	mkdir -p ${T}
+	mkdir -p ${T}/
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib/opkg/
 
 	opkg-cl ${IPKG_ARGS} update
 
