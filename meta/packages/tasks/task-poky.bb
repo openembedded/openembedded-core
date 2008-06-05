@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r26"
+PR = "r27"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -15,9 +15,6 @@ PACKAGES = "\
     task-poky-apps-x11-games \
     task-poky-apps-x11-games-dbg \
     task-poky-apps-x11-games-dev \
-    task-poky-apps-x11-pimlico \
-    task-poky-apps-x11-pimlico-dbg \
-    task-poky-apps-x11-pimlico-dev \
     task-poky-x11-base \
     task-poky-x11-base-dbg \
     task-poky-x11-base-dev \
@@ -68,20 +65,6 @@ RDEPENDS_task-poky-apps-x11-core = "\
 
 RDEPENDS_task-poky-apps-x11-games = "\
     oh-puzzles"
-
-WEB = "web-webkit"
-# WebKit takes too much space to fit on some devices
-# List here for now...
-WEB_c7x0 = ""
-WEB_mx31ads = ""
-
-RDEPENDS_task-poky-apps-x11-pimlico = "\
-    eds-dbus \
-    contacts \
-    dates \
-    tasks \
-    gaku \
-    ${WEB}"
 
 NETWORK_MANAGER ?= "networkmanager-applet"
 RDEPENDS_task-poky-x11-sato = "\
