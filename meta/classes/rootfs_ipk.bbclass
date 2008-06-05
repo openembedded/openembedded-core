@@ -57,10 +57,10 @@ fakeroot rootfs_ipk_do_rootfs () {
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
 
-	rm -f ${IMAGE_ROOTFS}${libdir}/opkg/lists/*
-	
 	${ROOTFS_POSTPROCESS_COMMAND}
 	
+	rm -f ${IMAGE_ROOTFS}${libdir}/opkg/lists/*
+
 	log_check rootfs 	
 }
 
