@@ -101,7 +101,7 @@ install_all_locales() {
     do
         for lang in ${IMAGE_LOCALES}
         do
-            if [ `opkg-cl ${IPKG_ARGS} info $pkg-locale-$lang | wc -l` -gt 0 ]
+            if [ `opkg-cl ${IPKG_ARGS} info $pkg-locale-$lang | wc -l` -gt 2 ]
             then
                     PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $pkg-locale-$lang"
             fi
