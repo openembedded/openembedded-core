@@ -14,5 +14,5 @@ do_stage() {
 }
 
 PACKAGES =+ "libvte vte-termcap"
-FILES_libvte = "${libdir}/*.so*"
+FILES_libvte = "${libdir}/*.so.*"
 FILES_vte-termcap = "${datadir}/vte/termcap"
