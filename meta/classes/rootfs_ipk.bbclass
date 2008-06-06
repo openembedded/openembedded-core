@@ -95,7 +95,9 @@ install_all_locales() {
 
     PACKAGES_TO_INSTALL=""
 
-    for pkg in `grep ^Package: ${IMAGE_ROOTFS}${libdir}/opkg/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+	INSTALLED_PACKAGES=`grep ^Package: ${IMAGE_ROOTFS}${libdir}/opkg/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+
+    for pkg in $INSTALLED_PACKAGES
     do
         for lang in ${IMAGE_LOCALES}
         do
