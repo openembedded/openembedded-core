@@ -1,0 +1,325 @@
+http://sources.redhat.com/ml/libc-ports/2006-10/msg00040.html
+Avoid using asm/procinfo.h
+
+    * From: "Joseph S. Myers" <joseph at codesourcery dot com>
+    * To: libc-ports at sourceware dot org
+    * Date: Tue, 24 Oct 2006 19:25:12 +0000 (UTC)
+    * Subject: Avoid using asm/procinfo.h
+
+I previously noted
+<http://sourceware.org/ml/libc-ports/2006-08/msg00023.html> that the
+use of <asm/procinfo.h>, a Linux-specific kernel header, in
+sysdeps/arm/eabi, is an abstraction violation, and that in principle
+all the files in sysdeps/arm/eabi should use sysdep.h not
+asm/procinfo.h for HWCAP_VFP.
+
+The ARM kernel maintainers have now declared that <asm/procinfo.h>
+should not be used outside the kernel at all (and in particular that
+headers_install is correct in not exporting it), and that these
+definitions will move to a different kernel header.  This gives a
+concrete reason for making the change to use glibc's internal
+definitions, which this patch does, thereby allowing glibc to build
+with the exported headers.
+
+2006-10-24  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/eabi/fclrexcpt.c: Include <sysdep.h> instead of
+	<asm/procinfo.h>.  Use HWCAP_ARM_VFP instead of HWCAP_VFP.
+	* sysdeps/arm/eabi/fedisblxcpt.c: Likewise.
+	* sysdeps/arm/eabi/feenablxcpt.c: Likewise.
+	* sysdeps/arm/eabi/fegetenv.c: Likewise.
+	* sysdeps/arm/eabi/fegetexcept.c: Likewise.
+	* sysdeps/arm/eabi/fegetround.c: Likewise.
+	* sysdeps/arm/eabi/feholdexcpt.c: Likewise.
+	* sysdeps/arm/eabi/fesetenv.c: Likewise.
+	* sysdeps/arm/eabi/fesetround.c: Likewise.
+	* sysdeps/arm/eabi/fraiseexcpt.c: Likewise.
+	* sysdeps/arm/eabi/fsetexcptflg.c: Likewise.
+	* sysdeps/arm/eabi/ftestexcept.c: Likewise.
+	* sysdeps/arm/eabi/setfpucw.c: Likewise.
+
+Index: libc/ports/sysdeps/arm/eabi/fclrexcpt.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fclrexcpt.c,v
+retrieving revision 1.1
+diff -u -r1.1 fclrexcpt.c
+--- libc/ports/sysdeps/arm/eabi/fclrexcpt.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fclrexcpt.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ __feclearexcept (int excepts)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned long int temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/fedisblxcpt.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fedisblxcpt.c,v
+retrieving revision 1.1
+diff -u -r1.1 fedisblxcpt.c
+--- libc/ports/sysdeps/arm/eabi/fedisblxcpt.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fedisblxcpt.c	24 Oct 2006 19:17:51 -0000
+@@ -24,12 +24,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ fedisableexcept (int excepts)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned long int new_exc, old_exc;
+ 
+Index: libc/ports/sysdeps/arm/eabi/feenablxcpt.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/feenablxcpt.c,v
+retrieving revision 1.1
+diff -u -r1.1 feenablxcpt.c
+--- libc/ports/sysdeps/arm/eabi/feenablxcpt.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/feenablxcpt.c	24 Oct 2006 19:17:51 -0000
+@@ -24,12 +24,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ feenableexcept (int excepts)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned long int new_exc, old_exc;
+ 
+Index: libc/ports/sysdeps/arm/eabi/fegetenv.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fegetenv.c,v
+retrieving revision 1.1
+diff -u -r1.1 fegetenv.c
+--- libc/ports/sysdeps/arm/eabi/fegetenv.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fegetenv.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ __fegetenv (fenv_t *envp)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned long int temp;
+       _FPU_GETCW (temp);
+Index: libc/ports/sysdeps/arm/eabi/fegetexcept.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fegetexcept.c,v
+retrieving revision 1.1
+diff -u -r1.1 fegetexcept.c
+--- libc/ports/sysdeps/arm/eabi/fegetexcept.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fegetexcept.c	24 Oct 2006 19:17:51 -0000
+@@ -24,12 +24,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ fegetexcept (void)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned long temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/fegetround.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fegetround.c,v
+retrieving revision 1.1
+diff -u -r1.1 fegetround.c
+--- libc/ports/sysdeps/arm/eabi/fegetround.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fegetround.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ fegetround (void)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned int temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/feholdexcpt.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/feholdexcpt.c,v
+retrieving revision 1.1
+diff -u -r1.1 feholdexcpt.c
+--- libc/ports/sysdeps/arm/eabi/feholdexcpt.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/feholdexcpt.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ feholdexcept (fenv_t *envp)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned long int temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/fesetenv.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fesetenv.c,v
+retrieving revision 1.1
+diff -u -r1.1 fesetenv.c
+--- libc/ports/sysdeps/arm/eabi/fesetenv.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fesetenv.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ __fesetenv (const fenv_t *envp)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       unsigned int temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/fesetround.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fesetround.c,v
+retrieving revision 1.1
+diff -u -r1.1 fesetround.c
+--- libc/ports/sysdeps/arm/eabi/fesetround.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fesetround.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ fesetround (int round)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       fpu_control_t temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/fraiseexcpt.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fraiseexcpt.c,v
+retrieving revision 1.1
+diff -u -r1.1 fraiseexcpt.c
+--- libc/ports/sysdeps/arm/eabi/fraiseexcpt.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fraiseexcpt.c	24 Oct 2006 19:17:51 -0000
+@@ -24,12 +24,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ feraiseexcept (int excepts)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       int fpscr;
+       const float fp_zero = 0.0, fp_one = 1.0, fp_max = FLT_MAX,
+Index: libc/ports/sysdeps/arm/eabi/fsetexcptflg.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/fsetexcptflg.c,v
+retrieving revision 1.1
+diff -u -r1.1 fsetexcptflg.c
+--- libc/ports/sysdeps/arm/eabi/fsetexcptflg.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/fsetexcptflg.c	24 Oct 2006 19:17:51 -0000
+@@ -24,12 +24,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ __fesetexceptflag (const fexcept_t *flagp, int excepts)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       fexcept_t temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/ftestexcept.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/ftestexcept.c,v
+retrieving revision 1.1
+diff -u -r1.1 ftestexcept.c
+--- libc/ports/sysdeps/arm/eabi/ftestexcept.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/ftestexcept.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ int
+ fetestexcept (int excepts)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       fexcept_t temp;
+ 
+Index: libc/ports/sysdeps/arm/eabi/setfpucw.c
+===================================================================
+RCS file: /cvs/glibc/ports/sysdeps/arm/eabi/setfpucw.c,v
+retrieving revision 1.1
+diff -u -r1.1 setfpucw.c
+--- libc/ports/sysdeps/arm/eabi/setfpucw.c	10 Oct 2005 15:29:32 -0000	1.1
++++ libc/ports/sysdeps/arm/eabi/setfpucw.c	24 Oct 2006 19:17:51 -0000
+@@ -23,12 +23,12 @@
+ #include <unistd.h>
+ #include <ldsodefs.h>
+ #include <dl-procinfo.h>
+-#include <asm/procinfo.h>
++#include <sysdep.h>
+ 
+ void
+ __setfpucw (fpu_control_t set)
+ {
+-  if (GLRO (dl_hwcap) & HWCAP_VFP)
++  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+     {
+       fpu_control_t cw;
