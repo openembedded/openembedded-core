@@ -5,7 +5,7 @@ SECTION = "network"
 PRIORITY = "optional"
 LICENSE = "GPL"
 
-DEPENDS = "expat libdaemon dbus glib-2.0"
+DEPENDS = "expat libdaemon dbus glib-2.0 gtk+"
 RRECOMMENDS = "libnss-mdns"
 RRECOMMENDS_avahi-daemon = "libnss-mdns"
 
@@ -16,7 +16,6 @@ inherit autotools pkgconfig update-rc.d
 EXTRA_OECONF = "--with-distro=debian \
              --with-avahi-priv-access-group=adm \
              --disable-gdbm \
-             --disable-gtk \
              --disable-mono \
              --disable-monodoc \
              --disable-qt3 \
@@ -24,10 +23,11 @@ EXTRA_OECONF = "--with-distro=debian \
              --disable-python \
              --disable-doxygen-doc"
 
-PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-autoipd avahi-utils"
+PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib avahi-autoipd avahi-utils libavahi-ui"
 
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core = "${libdir}/libavahi-core.so.*"
+FILES_libavahi-ui = "${libdir}/libavahi-ui.so.*"
 FILES_avahi-daemon = "${sbindir}/avahi-daemon \
                       ${sysconfdir}/avahi/avahi-daemon.conf \
                       ${sysconfdir}/avahi/hosts \
