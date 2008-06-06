@@ -44,6 +44,8 @@ fakeroot rootfs_ipk_do_rootfs () {
 	mkdir -p ${IMAGE_ROOTFS}/etc/opkg/
 	grep "^arch" ${IPKGCONF_TARGET} >${IMAGE_ROOTFS}/etc/opkg/arch.conf
 
+	${ROOTFS_POSTINSTALL_COMMAND}
+	
 	for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.preinst; do
 		if [ -f $i ] && ! sh $i; then
 			opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .preinst`
