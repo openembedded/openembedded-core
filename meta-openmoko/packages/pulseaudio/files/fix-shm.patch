@@ -1,0 +1,20 @@
+# fixes building against uclibc
+# fixed upstream, see http://www.pulseaudio.org/ticket/200
+Index: pulseaudio-0.9.9/src/pulsecore/shm.c
+===================================================================
+--- pulseaudio-0.9.9/src/pulsecore/shm.c (revision 1971)
++++ pulseaudio-0.9.9/src/pulsecore/shm.c (revision 2110)
+@@ -319,4 +319,5 @@
+ int pa_shm_cleanup(void) {
+ 
++#ifdef HAVE_SHM_OPEN
+ #ifdef SHM_PATH
+     DIR *d;
+@@ -376,5 +377,6 @@
+ 
+     closedir(d);
+-#endif
++#endif /* SHM_PATH */
++#endif /* HAVE_SHM_OPEN */
+ 
+     return 0;
