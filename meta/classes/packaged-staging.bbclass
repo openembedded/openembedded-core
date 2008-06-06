@@ -190,7 +190,7 @@ python packagestage_scenefunc () {
         #
         # Install the staging package somewhere temporarily so we can extract the stamp files
         #
-        cmd = bb.data.expand("${PSTAGE_PKGMANAGER} -force-depends -f ${PSTAGE_MACHCONFIG} -o ${WORKDIR}/tstage install", d)
+        cmd = bb.data.expand("${PSTAGE_PKGMANAGER} -f ${PSTAGE_MACHCONFIG} -force-depends -o ${WORKDIR}/tstage install", d)
         ret = os.system("PATH=\"%s\" %s %s" % (path, cmd, stagepkg))
         if ret != 0:
             bb.fatal("Couldn't install the staging package to a temp directory")
