@@ -54,7 +54,8 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
 	   file://generic-bits_time.h \
            file://etc/ld.so.conf \
            file://generate-supported.mk \
-           file://glibc-arm-no-procinfo_h.patch;patch=1"
+           file://glibc-arm-no-procinfo_h.patch;patch=1 \
+           file://glibc-include-fixed.patch;patch=1;pnum=0"
 
 
 # Build fails on sh3 and sh4 without additional patches
