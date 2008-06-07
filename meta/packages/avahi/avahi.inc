@@ -5,7 +5,7 @@ SECTION = "network"
 PRIORITY = "optional"
 LICENSE = "GPL"
 
-DEPENDS = "expat libdaemon dbus glib-2.0 gtk+"
+DEPENDS = "expat libdaemon dbus glib-2.0 gtk+ libglade"
 RRECOMMENDS = "libnss-mdns"
 RRECOMMENDS_avahi-daemon = "libnss-mdns"
 
