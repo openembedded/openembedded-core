@@ -23,3 +23,5 @@ PREFERRED_VERSION_external-csl-toolchain = "2006q3-27"
 
 TARGET_CPPFLAGS_prepend = " -isystem${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/include "
 TARGET_LDFLAGS_prepend = " -L${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib "
+
+TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
