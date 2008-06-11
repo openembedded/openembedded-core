@@ -40,6 +40,10 @@ do_stage_append () {
 
 	# We probably don't need these
 	rmdir ${CROSS_DIR}/include || :
+	
+	# Move libssp into staging
+	install -d ${STAGING_DIR_TARGET}${layout_base_libdir}/
+	mv ${CROSS_DIR}/${TARGET_SYS}/lib/libssp* ${STAGING_DIR_TARGET}${layout_base_libdir}/ || true
 
 	# We don't really need to keep this around
 	# rm -rf ${CROSS_DIR}/share but leave java there
