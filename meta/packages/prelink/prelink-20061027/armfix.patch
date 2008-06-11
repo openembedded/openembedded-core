@@ -1,0 +1,67 @@
+Index: prelink-0.0.20061027/src/arch-arm.c
+===================================================================
+--- prelink-0.0.20061027.orig/src/arch-arm.c	2008-06-04 19:41:07.000000000 +0100
++++ prelink-0.0.20061027/src/arch-arm.c	2008-06-04 19:41:59.000000000 +0100
+@@ -145,13 +145,12 @@
+       error (0, 0, "%s: R_ARM_PC24 relocs with non-zero addend should not be present in prelinked REL sections",
+ 	     dso->filename);
+       return 1;
+-    /* DTPOFF32, DTPMOD32 and TPOFF32 is impossible to predict unless prelink
+-       sets the rules.  Also for DTPOFF32/TPOFF32 there is REL->RELA problem.  */
++    /* DTPMOD32 is impossible to predict unless prelink sets the rules. 
++       DTPOFF32/TPOFF32 are converted REL->RELA.  */
+     case R_ARM_TLS_DTPOFF32:
+-      if (dso->ehdr.e_type == ET_EXEC)
+-	error (0, 0, "%s: R_ARM_TLS_DTPOFF32 relocs should not be present in prelinked ET_EXEC REL sections",
++      error (0, 0, "%s: R_ARM_TLS_DTPOFF32 relocs should not be present in prelinked REL section",
+ 	       dso->filename);
+-      break;
++      return 1;
+     case R_ARM_TLS_DTPMOD32:
+       if (dso->ehdr.e_type == ET_EXEC)
+ 	{
+@@ -161,9 +160,11 @@
+ 	}
+       break;
+     case R_ARM_TLS_TPOFF32:
+-      if (dso->ehdr.e_type == ET_EXEC)
++      if (dso->ehdr.e_type == ET_EXEC) {
+ 	error (0, 0, "%s: R_ARM_TLS_TPOFF32 relocs should not be present in prelinked ET_EXEC REL sections",
+ 	       dso->filename);
++	return 1;
++      }
+       break;
+     case R_ARM_COPY:
+       if (dso->ehdr.e_type == ET_EXEC)
+@@ -216,8 +217,7 @@
+ 		  (read_ule32 (dso, rela->r_offset) & 0xff000000) | val);
+       break;
+     case R_ARM_TLS_DTPOFF32:
+-      if (dso->ehdr.e_type == ET_EXEC)
+-	write_le32 (dso, rela->r_offset, value + rela->r_addend);
++      write_le32 (dso, rela->r_offset, value + rela->r_addend);
+       break;
+     /* DTPMOD32 and TPOFF32 are impossible to predict unless prelink
+        sets the rules.  */
+@@ -521,7 +521,7 @@
+ 	  && (conflict->reloc_class != RTYPE_CLASS_TLS
+ 	      || conflict->lookup.tls == NULL))
+ 	{
+-	  error (0, 0, "%s: R_386_TLS not resolving to STT_TLS symbol",
++	  error (0, 0, "%s: R_ARM_TLS not resolving to STT_TLS symbol",
+ 		 dso->filename);
+ 	  return 1;
+ 	}
+@@ -637,8 +637,11 @@
+ 	      case R_ARM_PC24:
+ 		return 1;
+ 	      case R_ARM_TLS_DTPOFF32:
++		/* We can prelink these fields, and the addend is relative
++		   to the symbol value.  A RELA entry is needed.  */
++		return 1;
+ 	      case R_ARM_TLS_TPOFF32:
+-		/* In shared libraries {D,}TPOFF32 is changed always into
++		/* In shared libraries TPOFF32 is changed always into
+ 		   conflicts, for executables we need to preserve
+ 		   original addend.  */
+ 		if (dso->ehdr.e_type == ET_EXEC) {

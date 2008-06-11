@@ -4,7 +4,7 @@ DESCRIPTION = " The prelink package contains a utility which modifies ELF shared
 and executables, so that far fewer relocations need to be resolved at \
 runtime and thus programs come up faster."
 LICENSE = "GPL"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/p/prelink/prelink_0.0.${PV}.orig.tar.gz \
            file://prelink.conf \
@@ -13,7 +13,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/p/prelink/prelink_0.0.${PV}.orig.tar.gz \
 
 TARGET_OS_ORIG := "${TARGET_OS}"
 OVERRIDES_append = ":${TARGET_OS_ORIG}"
-SRC_URI_append_linux-gnueabi = " file://arm_eabi.patch;patch=1"
+SRC_URI_append_linux-gnueabi = " file://arm_eabi.patch;patch=1 \
+                                 file://armfix.patch;patch=1 "
 
 S = "${WORKDIR}/prelink-0.0.${PV}"
 
