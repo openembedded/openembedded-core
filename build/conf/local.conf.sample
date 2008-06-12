@@ -127,7 +127,7 @@ BBINCLUDELOGS = "yes"
 # Specifies a location to search for pre-generated tarballs when fetching
 # a cvs:// or svn:// URI.  Uncomment this, if you do not want to pull directly
 # from CVS or Subversion
-SRC_TARBALL_STASH = "http://folks.o-hand.com/~richard/poky/sources/"
+SRC_TARBALL_STASH = "http://pokylinux.org/sources/"
 
 # Set this if you wish to make pkgconfig libraries from your system available 
 # for native builds. Combined with extra ASSUME_PROVIDEDs this can allow 
