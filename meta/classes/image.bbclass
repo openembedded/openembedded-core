@@ -93,6 +93,7 @@ fakeroot do_rootfs () {
 	set -x
 	rm -rf ${IMAGE_ROOTFS}
 	mkdir -p ${IMAGE_ROOTFS}
+	mkdir -p ${DEPLOY_DIR_IMAGE}
 
 	if [ "${USE_DEVFS}" != "1" ]; then
 		for devtable in ${@get_devtable_list(d)}; do
