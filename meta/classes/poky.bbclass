@@ -1,4 +1,4 @@
 MIRRORS_append () {
-ftp://.*/.*    http://www.o-hand.com/~richard/poky/sources/
-http://.*/.*   http://www.o-hand.com/~richard/poky/sources/
+ftp://.*/.*    http://pokylinux.org/sources/
+http://.*/.*   http://pokylinux.org/sources/
 }
