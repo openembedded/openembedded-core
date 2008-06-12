@@ -31,10 +31,15 @@ FILES_${PN}-dbg += " \
 	${libdir}/gtk-2.0/${LIBV}/engines/.debug/* \
 	${libdir}/gtk-2.0/${LIBV}/printbackends/.debug/*"
 
-RRECOMMENDS_${PN} = "glibc-gconv-iso8859-1 ttf-dejavu-sans"
-RRECOMMENDS_${PN}_angstrom = "glibc-gconv-iso8859-1 ttf-dejavu-sans gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm"
-RRECOMMENDS_${PN}_openzaurus = "glibc-gconv-iso8859-1 ttf-dejavu-sans gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm"
-RRECOMMENDS_${PN}_poky = "glibc-gconv-iso8859-1 gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm shared-mime-info"
+BASE_RRECOMMENDS = "ttf-dejavu-sans"
+BASE_RRECOMMENDS_angstrom = "ttf-dejavu-sans gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm"
+BASE_RRECOMMENDS_poky = "gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm shared-mime-info"
+
+GLIBC_RRECOMMENDS= "${BASE_RRECOMMENDS} glibc-gconv-iso8859-1"
+
+RRECOMMENDS_${PN} = "${BASE_RRECOMMENDS}"
+RRECOMMENDS_${PN}_linux = "${GLIBC_RRECOMMENDS}"
+RRECOMMENDS_${PN}_linux-gnueabi = "${GLIBC_RRECOMMENDS}"
 
 do_stage () {
 	oe_libinstall -so -C gtk libgtk-x11-2.0 ${STAGING_LIBDIR}
