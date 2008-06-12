@@ -16,6 +16,8 @@ ALLOW_EMPTY = "1"
 RDEPENDS_task-poky-nfs-server = "\
     nfs-utils"
 
-# rpcinfo can be useful
-RRECOMMENDS_task-poky-nfs-server = "\
-    glibc-utils"
+# rpcinfo can be useful but only with glibc images
+GLIBC_DEPENDENCIES = "glibc-utils"
+
+RRECOMMENDS_task-poky-nfs-server_append_linux = "${GLIBC_DEPENDENCIES}"
+RRECOMMENDS_task-poky-nfs-server_append_linux-gnueabi = "${GLIBC_DEPENDENCIES}"
