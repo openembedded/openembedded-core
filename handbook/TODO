@@ -7,4 +7,5 @@ Handbook Todo List:
     intended target and could be a different arch etc and thus special case. 
   * Expand insane.bbclass documentation to cover tests
   * Document remaining classes (see list in ref-classes)
+  * Document formfactor
 
