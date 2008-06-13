@@ -4,13 +4,12 @@ PRIORITY = "required"
 DEPENDS = "makedevs"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r106"
+PR = "r107"
 
 SRC_URI = "file://functions \
            file://halt \
            file://ramdisk \
            file://umountfs \
-           file://devices \
            file://devpts.sh \
            file://devpts \
            file://hostname.sh \
@@ -81,7 +80,6 @@ do_install () {
 # Install device dependent scripts
 #
 	install -m 0755 ${WORKDIR}/banner	${D}${sysconfdir}/init.d/banner
-	install -m 0755 ${WORKDIR}/devices	${D}${sysconfdir}/init.d/devices
 	install -m 0755 ${WORKDIR}/umountfs	${D}${sysconfdir}/init.d/umountfs
 #
 # Create runlevel links
@@ -114,7 +112,6 @@ do_install () {
 	ln -sf		../init.d/bootmisc.sh	${D}${sysconfdir}/rcS.d/S55bootmisc.sh
 #	ln -sf		../init.d/urandom	${D}${sysconfdir}/rcS.d/S55urandom
 	ln -sf		../init.d/finish	${D}${sysconfdir}/rcS.d/S99finish
-	ln -sf		../init.d/devices	${D}${sysconfdir}/rcS.d/S05devices
 	# udev will run at S04 if installed
 	ln -sf		../init.d/sysfs.sh	${D}${sysconfdir}/rcS.d/S03sysfs
 	ln -sf		../init.d/populate-volatile.sh	${D}${sysconfdir}/rcS.d/S37populate-volatile.sh
