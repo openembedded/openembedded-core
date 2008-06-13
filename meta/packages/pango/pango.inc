@@ -17,10 +17,6 @@ RRECOMMENDS_${PN} = "pango-module-basic-x pango-module-basic-fc"
 # seems to go wrong with default cflags
 FULL_OPTIMIZATION_arm = "-O2"
 
-SRC_URI += "file://no-tests.patch;patch=1 \
-            file://configure_fixes.patch;patch=1 \
-           "
-
 EXTRA_OECONF = "--disable-glibtest \
 		--enable-explicit-deps=no \
 	        --disable-debug"
