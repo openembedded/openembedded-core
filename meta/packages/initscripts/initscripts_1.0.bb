@@ -4,7 +4,7 @@ PRIORITY = "required"
 DEPENDS = "makedevs"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r108"
+PR = "r109"
 
 SRC_URI = "file://functions \
            file://halt \
@@ -13,8 +13,8 @@ SRC_URI = "file://functions \
            file://devpts \
            file://hostname.sh \
            file://mountall.sh \
-           file://banner \
-           file://finish \
+           file://banner.sh \
+           file://finish.sh \
            file://bootmisc.sh \
            file://mountnfs.sh \
            file://reboot \
@@ -54,7 +54,7 @@ do_install () {
 	install -m 0755    ${WORKDIR}/functions		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/bootmisc.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/checkroot.sh	${D}${sysconfdir}/init.d
-	install -m 0755    ${WORKDIR}/finish		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/finish.sh		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/halt		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/hostname.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/mountall.sh	${D}${sysconfdir}/init.d
@@ -77,7 +77,7 @@ do_install () {
 #
 # Install device dependent scripts
 #
-	install -m 0755 ${WORKDIR}/banner	${D}${sysconfdir}/init.d/banner
+	install -m 0755 ${WORKDIR}/banner.sh	${D}${sysconfdir}/init.d/banner.sh
 	install -m 0755 ${WORKDIR}/umountfs	${D}${sysconfdir}/init.d/umountfs
 #
 # Create runlevel links
@@ -100,7 +100,7 @@ do_install () {
 	ln -sf		../init.d/halt		${D}${sysconfdir}/rc0.d/S90halt
 	ln -sf		../init.d/save-rtc.sh	${D}${sysconfdir}/rc0.d/S25save-rtc.sh
 	ln -sf		../init.d/save-rtc.sh	${D}${sysconfdir}/rc6.d/S25save-rtc.sh
-	ln -sf		../init.d/banner	${D}${sysconfdir}/rcS.d/S02banner
+	ln -sf		../init.d/banner.sh	${D}${sysconfdir}/rcS.d/S02banner.sh
 	ln -sf		../init.d/checkroot.sh	${D}${sysconfdir}/rcS.d/S10checkroot.sh
 #	ln -sf		../init.d/checkfs.sh	${D}${sysconfdir}/rcS.d/S30checkfs.sh
 	ln -sf		../init.d/mountall.sh	${D}${sysconfdir}/rcS.d/S35mountall.sh
@@ -108,13 +108,13 @@ do_install () {
 	ln -sf		../init.d/mountnfs.sh	${D}${sysconfdir}/rcS.d/S45mountnfs.sh
 	ln -sf		../init.d/bootmisc.sh	${D}${sysconfdir}/rcS.d/S55bootmisc.sh
 #	ln -sf		../init.d/urandom	${D}${sysconfdir}/rcS.d/S55urandom
-	ln -sf		../init.d/finish	${D}${sysconfdir}/rcS.d/S99finish
+	ln -sf		../init.d/finish.sh	${D}${sysconfdir}/rcS.d/S99finish.sh
 	# udev will run at S04 if installed
-	ln -sf		../init.d/sysfs.sh	${D}${sysconfdir}/rcS.d/S03sysfs
+	ln -sf		../init.d/sysfs.sh	${D}${sysconfdir}/rcS.d/S03sysfs.sh
 	ln -sf		../init.d/populate-volatile.sh	${D}${sysconfdir}/rcS.d/S37populate-volatile.sh
 	ln -sf		../init.d/devpts.sh	${D}${sysconfdir}/rcS.d/S38devpts.sh
 	if [ "${TARGET_ARCH}" = "arm" ]; then
-		ln -sf	../init.d/alignment.sh	${D}${sysconfdir}/rcS.d/S06alignment
+		ln -sf	../init.d/alignment.sh	${D}${sysconfdir}/rcS.d/S06alignment.sh
 	fi
 
 	install -m 0755		${WORKDIR}/device_table.txt		${D}${sysconfdir}/device_table
