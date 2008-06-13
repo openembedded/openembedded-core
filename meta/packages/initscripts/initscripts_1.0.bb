@@ -4,11 +4,10 @@ PRIORITY = "required"
 DEPENDS = "makedevs"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r107"
+PR = "r108"
 
 SRC_URI = "file://functions \
            file://halt \
-           file://ramdisk \
            file://umountfs \
            file://devpts.sh \
            file://devpts \
@@ -60,7 +59,6 @@ do_install () {
 	install -m 0755    ${WORKDIR}/hostname.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/mountall.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/mountnfs.sh	${D}${sysconfdir}/init.d
-	install -m 0755    ${WORKDIR}/ramdisk		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/reboot		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/rmnologin	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/sendsigs		${D}${sysconfdir}/init.d
@@ -93,7 +91,6 @@ do_install () {
 	ln -sf		../init.d/umountnfs.sh	${D}${sysconfdir}/rc6.d/S31umountnfs.sh
 	ln -sf		../init.d/umountfs	${D}${sysconfdir}/rc6.d/S40umountfs
 	# udev will run at S55 if installed
-	ln -sf          ../init.d/ramdisk       ${D}${sysconfdir}/rcS.d/S30ramdisk
 	ln -sf		../init.d/reboot	${D}${sysconfdir}/rc6.d/S90reboot
 	ln -sf		../init.d/sendsigs	${D}${sysconfdir}/rc0.d/S20sendsigs
 #	ln -sf		../init.d/urandom	${D}${sysconfdir}/rc0.d/S30urandom
