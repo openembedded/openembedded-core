@@ -21,6 +21,8 @@ RDEPENDS = "${TOOLCHAIN_TARGET_TASK} ${TOOLCHAIN_HOST_TASK}"
 do_populate_sdk() {
 	rm -rf ${SDK_OUTPUT}
 	mkdir -p ${SDK_OUTPUT}
+	mkdir -p ${SDK_OUTPUT}${target_libdir}/opkg/
+	mkdir -p ${SDK_OUTPUT}/${SDK_PREFIX}/${TARGET_SYS}${target_libdir}/opkg/
 
 	package_update_index_ipk
 	package_generate_ipkg_conf
