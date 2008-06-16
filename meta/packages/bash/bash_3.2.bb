@@ -1,5 +1,5 @@
 require bash.inc
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${GNU_MIRROR}/bash/bash-${PV}.tar.gz \
            http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-001;patch=1;pnum=0 \
@@ -35,4 +35,10 @@ SRC_URI = "${GNU_MIRROR}/bash/bash-${PV}.tar.gz \
            http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-031;patch=1;pnum=0 \
            http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-032;patch=1;pnum=0 \
            http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-033;patch=1;pnum=0 \
+           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-034;patch=1;pnum=0 \
+           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-035;patch=1;pnum=0 \
+           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-036;patch=1;pnum=0 \
+           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-037;patch=1;pnum=0 \
+           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-038;patch=1;pnum=0 \
+           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-039;patch=1;pnum=0 \
            "
