@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Sato Tasks for Poky"
-PR = "r28"
+PR = "r29"
 
 PACKAGES = "\
     task-poky-x11-sato \
@@ -22,7 +22,6 @@ RDEPENDS_task-poky-x11-sato = "\
     matchbox-keyboard \
     matchbox-stroke \
     matchbox-config-gtk \
-    matchbox-themes-gtk \
     xcursor-transparent-theme \
     sato-icon-theme \
     settings-daemon \
