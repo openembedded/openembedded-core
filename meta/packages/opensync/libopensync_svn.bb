@@ -9,6 +9,8 @@ SRC_URI = "svn://svn.opensync.org;module=trunk;proto=http \
 	   file://zlib.patch;patch=1 \
 	   file://no-werror.patch;patch=1"
 
+DEFAULT_PREFERENCE = "-1"
+
 inherit scons
 
 S = "${WORKDIR}/trunk"
