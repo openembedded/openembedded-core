@@ -3,10 +3,8 @@
 # Author: Richard Purdie
 #
 
-"""
-Designed for use with the Poky autobuilder only and provides custom hooks for 
-certain specific events.
-"""
+# Designed for use with the Poky autobuilder only and provides custom hooks for 
+# certain specific events.
 
 def do_autobuilder_failure_report(event):
     from bb.event import getName
