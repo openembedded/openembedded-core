@@ -70,6 +70,7 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo 'DL_DIR = "/srv/poky/sources"' >> "$CONFFILE"
+    echo 'INHERIT += "poky-autobuild-notifier"' >> "$CONFFILE"
     if [ "$ABTARGET" = "darwin" ]; then
         echo 'PACKAGE_CLASSES += "package_tar"' >> "$CONFFILE"
 	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" >> "./conf/local.conf"
