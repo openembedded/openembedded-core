@@ -19,8 +19,11 @@ def do_autobuilder_failure_report(event):
 
     version = data.expand("${PN}: ${PV}-${PR}", event.data)
 
+    recipients = ["richard@o-hand.com", "ebassi@o-hand.com", "pippin@o-hand.com"]
+    COMMASPACE = ', '
+
     message = email.Message.Message()
-    message["To"]      = "richard@o-hand.com, ebassi@o-hand.com, pippin@o-hand.com"
+    message["To"]      = COMMASPACE.join(recipients)
     message["From"]    = "Poky Autobuilder Failure <poky@o-hand.com>"
     message["Subject"] = "Poky Autobuild Failure Report - " + version
 
@@ -38,7 +41,7 @@ def do_autobuilder_failure_report(event):
     message.set_payload(mesg)
 
     mailServer = smtplib.SMTP("pug.o-hand.com")
-    mailServer.sendmail(message["From"], message["To"], message.as_string())
+    mailServer.sendmail(message["From"], recipients, message.as_string())
     mailServer.quit()
 
 # we want to be an event handler
