@@ -1,0 +1,21 @@
+---
+ CMakeLists.txt |    4 ----
+ 1 file changed, 4 deletions(-)
+
+--- libsyncml-0.4.6.orig/CMakeLists.txt
++++ libsyncml-0.4.6/CMakeLists.txt
+@@ -39,14 +39,10 @@ CHECK_INCLUDE_FILES( unistd.h HAVE_UNIST
+ 
+ CHECK_TYPE_SIZE( uint16_t UINT16_T )
+ CHECK_TYPE_SIZE( uint32_t UINT32_T )
+ CHECK_TYPE_SIZE( uint8_t UINT8_T )
+ 
+-# ensure out od source build
+-INCLUDE( MacroEnsureOutOfSourceBuild )
+-MACRO_ENSURE_OUT_OF_SOURCE_BUILD("${CMAKE_PROJECT_NAME} doesn't allow to build within the source directory. Please, create a seperate build directory and run 'cmake ${PROJECT_SOURCE_DIR} [options]'!")
+-
+ # find requirements
+ SET ( OPENOBEX_MIN_VERSION "1.1" )
+ SET ( LIBSOUP2_MIN_VERSION "2.2.91" )
+ #SET ( LIBWBXML2_MIN_VERSION "0.9.0" )
+ #SET ( BLUEZ_MIN_VERSION "3.19" )
