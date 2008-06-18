@@ -1,11 +1,12 @@
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.opensync.org/"
 
-DEPENDS = "sqlite3 libxml2 glib-2.0"
+DEPENDS = "sqlite3 libxml2 glib-2.0 check"
 
 SRC_URI = "http://opensync.org/download/releases/${PV}/libopensync-${PV}.tar.bz2\
            file://cmake.patch;patch=1 \
-	   file://build-in-src.patch;patch=1"
+	   file://build-in-src.patch;patch=1 \
+	   file://no-python-check.patch;patch=1"
 
 inherit cmake pkgconfig
 

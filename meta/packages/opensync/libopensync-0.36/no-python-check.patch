@@ -1,0 +1,18 @@
+---
+ CMakeLists.txt |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- libopensync-0.36.orig/CMakeLists.txt
++++ libopensync-0.36/CMakeLists.txt
+@@ -26,11 +26,10 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BIN
+ 
+ FIND_PACKAGE( GLIB2 REQUIRED )
+ FIND_PACKAGE( Sqlite3 REQUIRED )
+ FIND_PACKAGE( LibXml2 REQUIRED )
+ FIND_PACKAGE( SWIG )	
+-FIND_PACKAGE( PythonLibs )
+ FIND_PACKAGE( Check )
+ 
+ ADD_SUBDIRECTORY( opensync )
+ ADD_SUBDIRECTORY( formats )
+ ADD_SUBDIRECTORY( tools )
