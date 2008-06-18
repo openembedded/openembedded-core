@@ -1,8 +1,0 @@
---- tmp/src/missing-syncml-client-plugin	2007-01-09 12:55:48.000000000 +0000
-+++ tmp/src/syncml-client-plugin	2007-01-09 12:55:48.000000000 +0000
-@@ -0,0 +1,5 @@
-+<config>
-+    <gconf-uri>/apps/syncml-client</gconf-uri>
-+    <object-type>contact</object-type>
-+    <sync-source-name>card</sync-source-name>
-+</config>
