@@ -543,7 +543,7 @@ python package_do_shlibs() {
 		bb.note("not generating shlibs")
 		return
 		
-	lib_re = re.compile("^lib.*\.so")
+	lib_re = re.compile("^.*\.so")
 	libdir_re = re.compile(".*/lib$")
 
 	packages = bb.data.getVar('PACKAGES', d, 1)
