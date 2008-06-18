@@ -4,9 +4,7 @@ LICENSE = "LGPL"
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ libglade libopensync"
 RRECOMMENDS = "\
-	libopensync-plugin-file-sync \
-	libopensync-plugin-syncml-client-plugin \
-	libopensync-plugin-syncml-plugin \
+	libopensync-plugin-file \
 	"
 PV = "0.0+svnr${SRCREV}"
 
