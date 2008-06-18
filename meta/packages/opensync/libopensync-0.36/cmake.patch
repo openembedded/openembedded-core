@@ -1,0 +1,18 @@
+---
+ opensync/CMakeLists.txt |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- libopensync-0.36.orig/opensync/CMakeLists.txt
++++ libopensync-0.36/opensync/CMakeLists.txt
+@@ -55,11 +55,10 @@ SET( libopensync_LIB_SRCS
+ ADD_LIBRARY( opensync SHARED ${libopensync_LIB_SRCS} )
+ 
+ TARGET_LINK_LIBRARIES( opensync ${GLIB2_LIBRARIES} ${GTHREAD2_LIBRARIES} ${GMODULE2_LIBRARIES} ${LIBXML2_LIBRARIES} ${SQLITE3_LIBRARIES} )
+ 
+ SET_TARGET_PROPERTIES( opensync PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+-SET_TARGET_PROPERTIES( opensync PROPERTIES LINK_FLAGS ${SYMBOLS_VISIBILITY} )
+ 
+ IF ( OPENSYNC_UNITTESTS )
+ 	ADD_LIBRARY( opensync-testing SHARED ${libopensync_LIB_SRCS} )
+ 	TARGET_LINK_LIBRARIES( opensync-testing ${GLIB2_LIBRARIES} ${GTHREAD2_LIBRARIES} ${GMODULE2_LIBRARIES} ${LIBXML2_LIBRARIES} ${SQLITE3_LIBRARIES} )
+ ENDIF ( OPENSYNC_UNITTESTS )
