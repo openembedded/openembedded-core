@@ -32,3 +32,4 @@ PACKAGES += "${PN}-tools"
 FILES_${PN}-tools = "${bindir}"
 FILES_${PN} = "${libdir}/*.so.*"
 
+DEFAULT_PREFERENCE = "-1"

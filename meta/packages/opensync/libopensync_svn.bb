@@ -15,8 +15,6 @@ inherit scons
 
 S = "${WORKDIR}/trunk"
 
-DEFAULT_PREFERENCE = "-1"
-
 EXTRA_OECONF = "--disable-python"
 LEAD_SONAME = "libopensync.so"
 

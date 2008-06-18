@@ -14,3 +14,4 @@ do_install() {
         install -m 755 src/.libs/${PLUGIN_SONAME} ${D}${libdir}/opensync/plugins/
 }
 
+DEFAULT_PREFERENCE = "-1"
