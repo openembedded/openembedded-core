@@ -1,10 +1,11 @@
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.opensync.org/"
 
-DEPENDS = "sqlite3 libxml2 zlib glib-2.0"
+DEPENDS = "sqlite3 libxml2 glib-2.0"
 
 SRC_URI = "http://opensync.org/download/releases/${PV}/libopensync-${PV}.tar.bz2\
-           file://cmake.patch;patch=1"
+           file://cmake.patch;patch=1 \
+	   file://build-in-src.patch;patch=1"
 
 inherit cmake pkgconfig
 
@@ -20,5 +21,5 @@ FILES_${PN}-dbg += " ${libdir}/opensync*/formats/.debug/*.so \
 	             ${libdir}/opensync*/.debug/osplugin "
 
 do_stage() {
-autotools_stage_all
+    autotools_stage_all
 }
