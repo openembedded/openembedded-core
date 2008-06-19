@@ -1,6 +1,6 @@
 DESCRIPTION = "Touchscreen calibration data"
 SECTION = "base"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "file://pointercal"
 S = "${WORKDIR}"
@@ -15,4 +15,3 @@ do_install() {
 
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
