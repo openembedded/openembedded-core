@@ -5,22 +5,17 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "glib-2.0 gettext-native libxml2 bison-native flex-native"
-PR = "r6"
 
 inherit autotools pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz2 \
            file://gst-inspect-check-error.patch;patch=1 \
-           file://gstreamer-omit-debug-directories.patch;patch=1 \
            file://po-makefile-fix.patch;patch=1"
-#           file://gstregistrybinary.c \
-#           file://gstregistrybinary.h \
-#           file://gstreamer-0.9-binary-registry.patch;patch=1"
 EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind --disable-debug"
 
 do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
-	rm ${S}/common/m4/lib-link.m4 || true
+	rm -f ${S}/common/m4/lib-link.m4 || true
 }
 
 #do_compile_prepend () {
