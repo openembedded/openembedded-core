@@ -5,7 +5,9 @@ DEPENDS = "curl db"
 RDEPENDS = "dpkg"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/apt_${PV}.tar.gz \
-           file://environment.patch;patch=1"
+	    file://no-ko-translation.patch;patch=1 \
+		"
+
 S = "${WORKDIR}/apt-${PV}"
 
 inherit autotools gettext

@@ -1,10 +1,10 @@
 require apt.inc
 inherit native
 
-DEPENDS += "dpkg-native curl-native db-native"
+DEPENDS += "dpkg-native curl-native db-native gettext-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/apt-${PV}"
 PACKAGES = ""
-USE_NLS = "no"
+USE_NLS = "yes"
 
 SRC_URI += "file://db_linking_hack.patch;patch=1"
 
