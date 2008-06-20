@@ -2,7 +2,7 @@ DESCRIPTION = "A boot profiling tool"
 HOMEPAGE = "http://code.google.com/p/ubootchart/"
 LICENSE = "GPLv3"
 PV = "0.0+r${SRCREV}"
-PR = "r3"
+PR = "r4"
 
 #RRECOMMENDS = "acct"
 
@@ -18,7 +18,7 @@ inherit update-alternatives
 ALTERNATIVE_NAME = "init"
 ALTERNATIVE_LINK = "${base_sbindir}/init"
 ALTERNATIVE_PATH = "${base_sbindir}/ubootchartd"
-ALTERNATIVE_PRIORITY = "20"
+ALTERNATIVE_PRIORITY = "70"
 
 do_compile() {
         ${CC} ${CFLAGS} ${LDFLAGS} ${LIBS} ${INCLUDES} ${S}/ubootchartd_bin.c -o ubootchartd_bin
