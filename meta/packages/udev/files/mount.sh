@@ -1,16 +1,15 @@
 #!/bin/sh
 #
 # Called from udev
-# Attemp to mount any added block devices 
-# and remove any removed devices
 #
+# Attempt to mount any added block devices and umount any removed devices
+
 
 MOUNT="/bin/mount"
 PMOUNT="/usr/bin/pmount"
 UMOUNT="/bin/umount"
-name="`basename "$DEVNAME"`"
 
-for line in `cat /etc/udev/mount.blacklist | grep -v ^#`
+for line in `grep -v ^# /etc/udev/mount.blacklist`
 do
 	if ( echo "$DEVNAME" | grep -q "$line" )
 	then
@@ -20,6 +19,8 @@ do
 done
 
 automount() {	
+	name="`basename "$DEVNAME"`"
+
 	! test -d "/media/$name" && mkdir -p "/media/$name"
 	
 	if ! $MOUNT -t auto -o sync $DEVNAME "/media/$name"
@@ -50,8 +51,7 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ]; then
 	fi
 	
 	# If the device isn't mounted at this point, it isn't configured in fstab
-	cat /proc/mounts | awk '{print $1}' | grep -q "^$DEVNAME$" || automount 
-	
+	grep -q "^$DEVNAME " /proc/mounts || automount
 fi
 
 
@@ -63,5 +63,6 @@ if [ "$ACTION" = "remove" ] && [ -x "$UMOUNT" ] && [ -n "$DEVNAME" ]; then
 	done
 	
 	# Remove empty directories from auto-mounter
+	name="`basename "$DEVNAME"`"
 	test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
 fi
