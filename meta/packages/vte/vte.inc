@@ -14,5 +14,6 @@ do_stage() {
 }
 
 PACKAGES =+ "libvte vte-termcap"
-FILES_libvte = "${libdir}/*.so.*"
+FILES_libvte = "${libdir}/*.so.* ${libexecdir}/gnome-pty-helper"
+FILES_vte-dbg =+ ${libexecdir}/.debug"
 FILES_vte-termcap = "${datadir}/vte/termcap"
