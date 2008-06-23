@@ -10,8 +10,8 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.13/gtk+-${PV}.tar.bz2 \
            file://cellrenderer-cairo.patch;patch=1;pnum=0 \
            file://entry-cairo.patch;patch=1;pnum=0 \
            file://toggle-font.diff;patch=1;pnum=0 \
-           file://filesystem-volumes.patch;patch=1 \
 # TO MERGE
+#           file://filesystem-volumes.patch;patch=1 \
 #           file://filechooser-props.patch;patch=1 \
 #           file://filechooser-default.patch;patch=1 \
 #           file://filechooser-sizefix.patch;patch=1 \
