@@ -1,8 +1,11 @@
-#
-# checkroot.sh	Check to root filesystem.
-#
-# Version:	@(#)checkroot.sh  2.84  25-Jan-2002  miquels@cistron.nl
-#
+### BEGIN INIT INFO
+# Provides:          checkroot
+# Required-Start:    udev sysfs
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Check to root file system.
+### END INIT INFO
 
 . /etc/default/rcS
 
@@ -11,12 +14,6 @@
 # from this script *before anything else* with a timeout, like SCO does.
 #
 test "$SULOGIN" = yes && sulogin -t 30 $CONSOLE
-
-#
-# Ensure that bdflush (update) is running before any major I/O is
-# performed (the following fsck is a good example of such activity :).
-#
-test -x /sbin/update && update
 
 #
 # Read /etc/fstab.
@@ -60,26 +57,8 @@ exec 0>&9 9>&-
 # Activate the swap device(s) in /etc/fstab. This needs to be done
 # before fsck, since fsck can be quite memory-hungry.
 #
-doswap=no
-test -d /proc/1 || mount -n /proc
-case "`uname -r`" in
-	2.[0123].*)
-		if test $swap_on_md = yes && grep -qs resync /proc/mdstat
-		then
-			test "$VERBOSE" != no && echo "Not activating swap - RAID array resyncing"
-		else
-			doswap=yes
-		fi
-		;;
-	*)
-		doswap=yes
-		;;
-esac
-if test $doswap = yes
-then
-	test "$VERBOSE" != no && echo "Activating swap"
-	swapon -a 2> /dev/null
-fi
+test "$VERBOSE" != no && echo "Activating swap"
+swapon -a 2> /dev/null
 
 #
 # Check the root filesystem.
