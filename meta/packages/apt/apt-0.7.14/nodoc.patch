@@ -2,9 +2,11 @@
  Makefile |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- apt-0.6.45exp2.orig/Makefile
-+++ apt-0.6.45exp2/Makefile
-@@ -17,7 +17,7 @@ all headers library clean veryclean bina
+--- apt-0.7.14.orig/Makefile
++++ apt-0.7.14/Makefile
+@@ -15,11 +15,11 @@ all headers library clean veryclean bina
+ 	$(MAKE) -C apt-inst $@
+ 	$(MAKE) -C methods $@
  	$(MAKE) -C cmdline $@
  	$(MAKE) -C ftparchive $@
  	$(MAKE) -C dselect $@
@@ -13,3 +15,5 @@
  	$(MAKE) -C po $@
  
  # Some very common aliases
+ .PHONY: maintainer-clean dist-clean distclean pristine sanity 
+ maintainer-clean dist-clean distclean pristine sanity: veryclean
