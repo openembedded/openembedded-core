@@ -1,14 +1,16 @@
 #! /bin/sh
+### BEGIN INIT INFO
+# Provides:          devpts
+# Required-Start: udev
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Mount /dev/pts file systems.
+### END INIT INFO
 
 . /etc/default/devpts
 
-test "`uname -s`" = "Linux" || exit 0
-
-#
-#	First find out if devpts is available. Also check if devfs
-#	is already mounted - in that case we don't want to use devpts.
-#
-if test ! -e /dev/.devfsd && ( grep -q devpts /proc/filesystems )
+if grep -q devpts /proc/filesystems
 then
 	#
 	#	Create multiplexor device.
@@ -18,11 +20,9 @@ then
 	#
 	#	Mount /dev/pts if needed.
 	#
-	if ( ! grep -q devpts /proc/mounts )
+	if ! grep -q devpts /proc/mounts
 	then
 		mkdir -p /dev/pts
 		mount -t devpts devpts /dev/pts -ogid=${TTYGRP},mode=${TTYMODE}
 	fi
 fi
-
-exit 0
