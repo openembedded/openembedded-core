@@ -27,6 +27,11 @@ fi
 $IFCONFIG tap0 192.168.7.1
 
 # setup NAT for tap0 interface to have internet access in QEMU
-iptables -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.0/24
+IPTABLES=`which iptables`
+if [ "x$IPTABLES" = "x" ]; then
+    IPTABLES=/sbin/iptables
+fi
+
+$IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.0/24
 echo 1 > /proc/sys/net/ipv4/ip_forward
-iptables -P FORWARD ACCEPT
+$IPTABLES -P FORWARD ACCEPT
