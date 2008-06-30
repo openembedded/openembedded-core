@@ -1,7 +1,7 @@
 require apt.inc
 inherit native
 
-DEPENDS += "dpkg-native curl-native db-native gettext-native"
+DEPENDS += "dpkg-native gettext-native"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/apt-${PV}"
 PACKAGES = ""
 USE_NLS = "yes"
@@ -37,7 +37,6 @@ do_stage_base () {
 	install -m 0755 bin/apt-get ${bindir}/
 	install -m 0755 bin/apt-config ${bindir}/
 	install -m 0755 bin/apt-cache ${bindir}/
-	install -m 0755 bin/apt-ftparchive ${bindir}/
 	install -m 0755 bin/apt-sortpkgs ${bindir}/
 	install -m 0755 bin/apt-extracttemplates ${bindir}/
 

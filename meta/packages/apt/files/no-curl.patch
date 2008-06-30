@@ -1,0 +1,44 @@
+---
+ configure.in     |    6 ------
+ methods/makefile |    7 -------
+ 2 files changed, 13 deletions(-)
+
+--- apt-0.7.14.orig/configure.in
++++ apt-0.7.14/configure.in
+@@ -84,16 +84,10 @@ AC_CHECK_HEADER(db.h,
+     )]
+ )
+ 
+ LIBS="$saveLIBS"
+ 
+-AC_CHECK_LIB(curl, curl_easy_init,
+-     [AC_CHECK_HEADER(curl/curl.h,
+-        curl_ok=yes,
+-        curl_ok=no)],
+-     AC_MSG_ERROR([failed: I need CURL due https support]),
+-)
+ 
+ AC_SUBST(BDBLIB)
+ 
+ dnl Converts the ARCH to be something singular for this general CPU family
+ dnl This is often the dpkg architecture string.
+--- apt-0.7.14.orig/methods/makefile
++++ apt-0.7.14/methods/makefile
+@@ -50,17 +50,10 @@ PROGRAM=http
+ SLIBS = -lapt-pkg $(SOCKETLIBS)
+ LIB_MAKES = apt-pkg/makefile
+ SOURCE = http.cc rfc2553emu.cc connect.cc
+ include $(PROGRAM_H)
+ 
+-# The https method
+-PROGRAM=https
+-SLIBS = -lapt-pkg -lcurl
+-LIB_MAKES = apt-pkg/makefile
+-SOURCE = https.cc
+-include $(PROGRAM_H)
+-
+ # The ftp method
+ PROGRAM=ftp
+ SLIBS = -lapt-pkg $(SOCKETLIBS)
+ LIB_MAKES = apt-pkg/makefile
+ SOURCE = ftp.cc rfc2553emu.cc connect.cc
