@@ -1,12 +1,12 @@
 SECTION = "libs"
 LICENSE = "BSD"
 DESCRIPTION = "A library for configuring and customizing font access."
-DEPENDS = "expat freetype freetype-native zlib"
+DEPENDS = "expat freetype zlib"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://configure_fix.patch;patch=1"
 
-PR = "r9"
+PR = "r10"
 
 PACKAGES =+ "fontconfig-utils-dbg fontconfig-utils "
 FILES_fontconfig-utils-dbg = "${bindir}/*.dbg"
@@ -45,7 +45,7 @@ do_stage () {
 	for i in ${S}/fontconfig/*.h; do install -m 0644 $i ${STAGING_INCDIR}/fontconfig/; done
 }
 
-BUILD_CFLAGS += " -I${STAGING_INCDIR_NATIVE}/freetype2"
+BUILD_CFLAGS += " -I${STAGING_INCDIR}/freetype2"
 
 do_configure_append () {
 	sed -i 's|LDFLAGS =.*|LDFLAGS =|' fc-case/Makefile
