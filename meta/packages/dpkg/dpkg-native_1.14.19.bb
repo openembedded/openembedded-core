@@ -1,5 +1,5 @@
 require dpkg.inc
-DEPENDS += "ncurses-native bzip2-native zlib-native virtual/update-alternatives-native"
+DEPENDS += "bzip2-native zlib-native virtual/update-alternatives-native"
 SRC_URI += "file://noman.patch;patch=1"
 
 inherit native
