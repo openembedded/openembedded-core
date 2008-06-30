@@ -4,7 +4,8 @@ of profiling all running code at low overhead."
 LICENSE = "GPL"
 DEPENDS = "popt binutils"
 RDEPENDS = "binutils-symlinks"
-PR = "r4"
+RRECOMMENDS = "kernel-vmlinux"
+PR = "r5"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
            file://armv6_fix.patch;patch=1 \
