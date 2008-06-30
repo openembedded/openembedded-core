@@ -119,7 +119,7 @@
         </question>
         <answer>
             <para>
-                Poky can build packages in various formats, ipkg, Debian package, or RPM. The package can then be upgraded using the package tools on the device, much like on a desktop distribution like Ubuntu or Fedora.
+                Poky can build packages in various formats, ipk (for ipkg/opkg), Debian package (.deb), or RPM. The packages can then be upgraded using the package tools on the device, much like on a desktop distribution like Ubuntu or Fedora.
             </para>
         </answer>
     </qandaentry>

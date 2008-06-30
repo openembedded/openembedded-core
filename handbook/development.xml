@@ -532,18 +532,18 @@ $ bitbake matchbox-desktop -c devshell
                 Firstly you want to install the <emphasis>foo</emphasis> package to tmp/rootfs 
                 by doing:
                 </para>
-                <programlisting>tmp/staging/i686-linux/usr/bin/ipkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/ipkg.conf -o \
+                <programlisting>tmp/staging/i686-linux/usr/bin/opkg-cl -f \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf -o \
 tmp/rootfs/ update</programlisting>
                <para>
                 then,
                 </para>
-                <programlisting>tmp/staging/i686-linux/usr/bin/ipkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/ipkg.conf \
+                <programlisting>tmp/staging/i686-linux/usr/bin/opkg-cl -f \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 -o tmp/rootfs install foo
 
-tmp/staging/i686-linux/usr/bin/ipkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/ipkg.conf \
+tmp/staging/i686-linux/usr/bin/opkg-cl -f \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 -o tmp/rootfs install foo-dbg</programlisting>
              <para>
                 which installs the debugging information too.
@@ -802,7 +802,7 @@ $ opreport -cl
                 located in /boot/vmlinux-KERNELVERSION, where KERNEL-version is the version of 
                 the kernel e.g. 2.6.23. Poky generates separate vmlinux packages for each kernel
                 it builds so it should be a question of just ensuring a matching package is 
-                installed (<command> ipkg install kernel-vmlinux</command>. These are automatically 
+                installed (<command> opkg install kernel-vmlinux</command>. These are automatically 
                 installed into development and profiling images alongside OProfile. There is a 
                 configuration option within the OProfileUI settings page where the location of 
                 the vmlinux file can be entered. 

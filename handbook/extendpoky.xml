@@ -618,7 +618,7 @@ BBFILE_PRIORITY_extras = "5"</literallayout>
                 the repository and don't have to remember to rebuild any sections.
                 The second is to ensure that target users are able to upgrade their
                 devices via their package manager such as with the <command>
-                ipkg update;ipkg upgrade</command> commands (or similar for 
+                opkg update;opkg upgrade</command> commands (or similar for 
                 dpkg/apt or rpm based systems). The aim is to ensure Poky has 
                 upgradable packages in all cases.
             </para>
