@@ -28,7 +28,7 @@ fakeroot rootfs_deb_do_rootfs () {
 		# if [ -z "${DEPLOY_KEEP_PACKAGES}" ]; then
 			rm -f Packages.gz Packages Packages.bz2
 		# fi
-		apt-ftparchive packages . | bzip2 > Packages.bz2
+		dpkg-scanpackages . | bzip2 > Packages.bz2
 		echo "Label: $arch" > Release
 
 		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
