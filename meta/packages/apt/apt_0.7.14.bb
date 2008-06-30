@@ -1,3 +1,6 @@
+DEPENDS = "curl db"
+RDEPENDS = "dpkg"
+
 require apt.inc
 
 PR = "r1"
