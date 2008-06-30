@@ -1,0 +1,15 @@
+---
+ fontconfig.pc.in |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- fontconfig-2.6.0.orig/fontconfig.pc.in
++++ fontconfig-2.6.0/fontconfig.pc.in
+@@ -5,7 +5,7 @@ includedir=@includedir@
+ 
+ Name: Fontconfig
+ Description: Font configuration and customization library
+ Version: @VERSION@
+ Libs: -L${libdir} -lfontconfig
+-Libs.private: @EXPAT_LIBS@ @FREETYPE_LIBS@
++Libs.private: @EXPAT_LIBS@ -L${libdir} -lfreetype
+ Cflags: -I${includedir}

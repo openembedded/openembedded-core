@@ -4,9 +4,7 @@ DESCRIPTION = "A library for configuring and customizing font access."
 DEPENDS = "expat freetype zlib"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
-           file://configure_fix.patch;patch=1"
-
-PR = "r10"
+           file://fix-pkgconfig.patch;patch=1"
 
 PACKAGES =+ "fontconfig-utils-dbg fontconfig-utils "
 FILES_fontconfig-utils-dbg = "${bindir}/*.dbg"
