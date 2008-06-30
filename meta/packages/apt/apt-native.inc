@@ -59,4 +59,6 @@ do_stage_base () {
 	install -d ${sysconfdir}/apt
 	install -d ${localstatedir}/lib/apt/lists/partial
 	install -d ${localstatedir}/cache/apt/archives/partial
+
+	install -d ${localstatedir}/log/apt/
 }
