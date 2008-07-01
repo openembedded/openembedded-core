@@ -70,7 +70,7 @@ python () {
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
 }
 
-DEPLOY_DIR_PSTAGE   = "${DEPLOY_DIR}/pstage"
+DEPLOY_DIR_PSTAGE   ?= "${DEPLOY_DIR}/pstage"
 PSTAGE_MACHCONFIG   = "${DEPLOY_DIR_PSTAGE}/opkg.conf"
 
 PSTAGE_PKGMANAGER = "stage-manager-ipkg"
