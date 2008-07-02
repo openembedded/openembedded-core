@@ -1,5 +1,5 @@
 
-DEPENDS = "gtk+"
+DEPENDS = "gtk+ libxt"
 PR = "r7"
 MOD_PV = "${@bb.data.getVar('PV',d,1)[1:]}"
 
