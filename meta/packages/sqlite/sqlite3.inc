@@ -28,6 +28,7 @@ do_compile_prepend() {
 
 do_stage() {
 	oe_libinstall -so libsqlite3 ${STAGING_LIBDIR}
+	install -m 0644 sqlite3.h ${STAGING_INCDIR}
 }
 
 #do_install() {
