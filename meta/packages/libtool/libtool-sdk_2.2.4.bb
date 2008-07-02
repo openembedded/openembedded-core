@@ -39,6 +39,8 @@ do_stage () {
 	install -m 0755 libtool ${STAGING_BINDIR}/${HOST_SYS}-libtool
 	install -m 0755 libtoolize ${STAGING_BINDIR}/libtoolize
 
+	install -d ${STAGING_INCDIR}
+	install -d ${STAGING_LIBDIR}
 	oe_libinstall -a -so -C libltdl libltdl ${STAGING_LIBDIR}
 	install -m 0644 libltdl/ltdl.h ${STAGING_INCDIR}/
 
