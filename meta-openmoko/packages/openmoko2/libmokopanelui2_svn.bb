@@ -1,5 +1,5 @@
 SECTION = "openmoko/libs"
-DEPENDS = "gtk+ matchbox-panel-2"
+DEPENDS = "gtk+ matchbox-panel-2 dbus"
 PV = "0.3.0+svnr${SRCREV}"
 PR = "r0"
 
