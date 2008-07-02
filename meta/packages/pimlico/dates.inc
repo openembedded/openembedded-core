@@ -1,7 +1,7 @@
 DESCRIPTION = "Dates is a calendar application."
 LICENSE = "LGPL"
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
+DEPENDS = "glib-2.0 gtk+ libglade eds-dbus libowl"
 RDEPENDS = "libedata-cal"
 
 inherit autotools pkgconfig gtk-icon-cache
