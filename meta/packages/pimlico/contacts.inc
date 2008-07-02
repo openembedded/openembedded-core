@@ -6,6 +6,7 @@ RDEPENDS = "libedata-book"
 
 inherit autotools pkgconfig
 
+EXTRA_OECONF += "--disable-gnome-vfs"
 EXTRA_OEMAKE += "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1"
 
 do_install_append () {
