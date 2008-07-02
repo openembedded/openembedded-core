@@ -1,6 +1,6 @@
 LICENSE = "GPLv2"
 PRIORITY = "optional"
-DEPENDS = "gtk+ startup-notification apmd dbus"
+DEPENDS = "gtk+ startup-notification apmd dbus dbus-glib"
 PV = "0.0+svnr${SRCREV}"
 PR = "r3"
 
