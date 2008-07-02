@@ -1,0 +1,29 @@
+Index: libspiff-0.8.2/configure.in
+===================================================================
+--- libspiff-0.8.2.orig/configure.in
++++ libspiff-0.8.2/configure.in
+@@ -80,24 +80,6 @@ AC_ARG_WITH(uriparser-lib, [  --with-uri
+ 
+ 
+ 
+-# Local headers must come very first. Otherwise we
+-# risk including headers of an already installed
+-# libSpiff version if its path is in CPPFLAGS
+-CPPFLAGS="-I${srcdir}/include ${CPPFLAGS}"
+-
+-
+-
+-# Append $prefix as a fallback at the very end
+-if test "x${prefix}" != "xNONE"; then
+-	WORKING_PREFIX=${prefix}
+-else
+-	WORKING_PREFIX=${ac_default_prefix}
+-fi
+-LDFLAGS="${LDFLAGS} -L${WORKING_PREFIX}/lib"
+-CPPFLAGS="${CPPFLAGS} -I${WORKING_PREFIX}/include"
+-
+-
+-
+ # Check presence
+ EXPAT_MISSING="Please install libexpat 1.95.8 or later.
+    On Ubuntu enter 'sudo apt-get install libexpat-dev'."
