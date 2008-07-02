@@ -1,7 +1,6 @@
 LICENSE = "GPL"
 DESCRIPTION = "clipboard manager"
-
-PR = "r0"
+DEPENDS = "virtual/libx11"
 
 SRC_URI = "svn://stage.maemo.org/svn/maemo/projects/haf/tags/clipboard-manager/;module=${PV};proto=https \
 	   file://makefile.patch;patch=1  \
