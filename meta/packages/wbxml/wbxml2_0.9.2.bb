@@ -1,7 +1,7 @@
 DESCRIPTION = "parser for wbxml"
 LICENSE = "GPLv2"
 
-DEPENDS = "libxml2 sed-native"
+DEPENDS = "libxml2 sed-native expat"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/wbxmllib/${P}.tar.gz \
 	   file://no-doc-install.patch;patch=1"
