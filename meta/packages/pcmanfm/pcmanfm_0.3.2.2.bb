@@ -2,7 +2,7 @@ LICENSE = "GPL"
 DESCRIPTION = "procfs tools"
 SECTION = "x11"
 PRIORITY = "optional"
-DEPENDS = "gtk+ libowl"
+DEPENDS = "gtk+ libowl startup-notification"
 
 PR="r2"
 
