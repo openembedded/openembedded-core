@@ -1,0 +1,10 @@
+--- /tmp/configure.in	2008-06-21 12:20:52.000000000 +0200
++++ uriparser-0.5.1/configure.in	2008-06-21 12:21:16.000000000 +0200
+@@ -9,6 +9,7 @@
+ AC_PROG_LIBTOOL
+ AC_HEADER_STDC
+ 
++AM_PROG_CC_C_O
+ 
+ 
+ # URI_SIZEDOWN
