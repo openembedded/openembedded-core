@@ -1,7 +1,7 @@
 DESCRIPTION = "Portable Puzzle Collection"
 LICENSE = "MIT"
 SECTION = "x11"
-DEPENDS = "gtk+ gconf intltool-native librsvg"
+DEPENDS = "gtk+ gconf intltool-native librsvg libowl"
 
 PV = "0.1+svnr${SRCREV}"
 PR = "r7"
