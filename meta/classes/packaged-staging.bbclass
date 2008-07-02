@@ -160,7 +160,7 @@ staging_helper () {
 	fi
  	if [ ! -e ${TMPDIR}${layout_libdir}/ipkg/ ]; then
 		cd ${TMPDIR}${layout_libdir}/
-		ln -s opkg/ ipkg
+		ln -sf opkg/ ipkg
 	fi
 }
 
