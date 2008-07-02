@@ -1,6 +1,7 @@
 DESCRIPTION = "Vincent OpenGL-ES library "
 HOMEPAGE = "http://sourceforge.net/projects/ogl-es/"
 LICENSE = "BSD"
+DEPENDS = "virtual/libx11"
 
 PV = "0.0+svnr${SRCREV}"
 PR = "r2"
