@@ -1,7 +1,7 @@
 DESCRIPTION = "Address-book application."
 LICENSE = "LGPL"
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ eds-dbus"
+DEPENDS = "glib-2.0 gtk+ eds-dbus libowl"
 RDEPENDS = "libedata-book"
 
 inherit autotools pkgconfig
