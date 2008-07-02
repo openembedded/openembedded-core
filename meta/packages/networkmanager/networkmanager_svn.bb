@@ -3,7 +3,7 @@ SECTION = "net/misc"
 LICENSE = "GPL"
 HOMEPAGE = "http://www.gnome.org"
 PRIORITY = "optional"
-DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp"
+DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp gnome-common"
 RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
 PV = "0.7+svnr${SRCREV}"
