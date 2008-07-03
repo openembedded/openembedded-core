@@ -1,7 +1,12 @@
-#! /bin/sh
-#
-# umountnfs.sh	Unmount all network filesystems.
-#
+### BEGIN INIT INFO
+# Provides:          umountnfs
+# Required-Start:
+# Required-Stop:     umountfs
+# Should-Stop:       $network $portmap
+# Default-Start:
+# Default-Stop:      0 6
+# Short-Description: Unmount all network filesystems
+### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -25,4 +30,3 @@ done
 ) < /etc/fstab
 
 : exit 0
-

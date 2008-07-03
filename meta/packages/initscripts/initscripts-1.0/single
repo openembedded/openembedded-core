@@ -1,9 +1,12 @@
 #! /bin/sh
-#
-# single	executed by init(8) upon entering runlevel 1 (single).
-#
-# Version:	@(#)single  1.20  26-Geb-2001  miquels@cistron.nl
-#
+### BEGIN INIT INFO
+# Provides:          single
+# Required-Start:    $local_fs $all killprocs
+# Required-Stop:
+# Default-Start:     1
+# Default-Stop:
+# Short-Description: executed by init(8) upon entering runlevel 1 (single).
+### END INIT INFO
 
 PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 

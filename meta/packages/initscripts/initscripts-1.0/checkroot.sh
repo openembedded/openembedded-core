@@ -1,6 +1,6 @@
 ### BEGIN INIT INFO
 # Provides:          checkroot
-# Required-Start:    udev sysfs
+# Required-Start:    udev
 # Required-Stop:     
 # Default-Start:     S
 # Default-Stop:

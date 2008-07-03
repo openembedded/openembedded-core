@@ -1,6 +1,11 @@
-#
-# bootmisc.sh	Miscellaneous things to be done during bootup.
-#
+### BEGIN INIT INFO
+# Provides:          bootmisc
+# Required-Start:    $local_fs mountvirtfs
+# Required-Stop:     $local_fs
+# Default-Start:     S
+# Default-Stop:      0 6
+# Short-Description: Misc and other.
+### END INIT INFO
 
 . /etc/default/rcS
 #

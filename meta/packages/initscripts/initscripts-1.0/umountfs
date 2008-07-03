@@ -1,7 +1,13 @@
 #! /bin/sh
-#
-# umountfs	Turn off swap and unmount all local filesystems.
-#
+### BEGIN INIT INFO
+# Provides:          umountfs
+# Required-Start:
+# Required-Stop:     
+# Default-Start:
+# Default-Stop:      0 6
+# Short-Description: Turn off swap and unmount all local file systems.
+# Description:
+### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 

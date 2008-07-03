@@ -1,8 +1,11 @@
-#
-# checkfs.sh	Check all filesystems.
-#
-# Version:	@(#)checkfs  2.83  05-Oct-2001  miquels@cistron.nl
-#
+### BEGIN INIT INFO
+# Provides:          checkfs
+# Required-Start:    checkroot
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Check all other file systems
+### END INIT INFO
 
 . /etc/default/rcS
 

@@ -1,9 +1,13 @@
 #! /bin/sh
-#
-# sendsigs	Kill all remaining processes.
-#
-# Version:      @(#)sendsigs  2.75  22-Jun-1998  miquels@cistron.nl
-#
+### BEGIN INIT INFO
+# Provides:          sendsigs
+# Required-Start:    
+# Required-Stop:     umountnfs
+# Default-Start:
+# Default-Stop:      0 6
+# Short-Description: Kill all remaining processes.
+# Description: 
+### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 

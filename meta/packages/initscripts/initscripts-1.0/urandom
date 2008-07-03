@@ -1,10 +1,15 @@
 #! /bin/sh
-#
-# urandom	This script saves the random seed between reboots.
-#		It is called from the boot, halt and reboot scripts.
-#
-# Version:	@(#)urandom  1.33  22-Jun-1998  miquels@cistron.nl
-#
+### BEGIN INIT INFO
+# Provides:          urandom
+# Required-Start:    $local_fs mountvirtfs
+# Required-Stop:     $local_fs
+# Default-Start:     S
+# Default-Stop:      0 6
+# Short-Description: Save and restore the random seed
+# Description:       Save the random seed on shutdown and restore it on boot,
+#                    to ensure that the seed isn't predicable on startup
+#                    (because the boot process is predictable)
+### END INIT INFO
 
 test -c /dev/urandom || exit 0
 . /etc/default/rcS

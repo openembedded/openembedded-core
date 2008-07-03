@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          sysfs
+# Provides:          mountvirtfs
 # Required-Start:
 # Required-Stop:
 # Default-Start:     S

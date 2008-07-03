@@ -1,8 +1,13 @@
-#
-# mountall.sh	Mount all filesystems.
-#
-# Version:	@(#)mountall.sh  2.83-2  01-Nov-2001  miquels@cistron.nl
-#
+### BEGIN INIT INFO
+# Provides:          mountall
+# Required-Start:    mountvirtfs
+# Required-Stop: 
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Mount all filesystems.
+# Description:
+### END INIT INFO
+
 . /etc/default/rcS
 
 #

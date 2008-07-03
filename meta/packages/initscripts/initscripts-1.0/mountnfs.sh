@@ -1,14 +1,10 @@
-#
-# mountnfs.sh	Now that TCP/IP is configured, mount the NFS file
-#		systems in /etc/fstab if needed. If possible,
-#		start the portmapper before mounting (this is needed for
-#		Linux 2.1.x and up).
-#
-#		Also mounts SBM filesystems now, so the name of
-#		this script is getting increasingly inaccurate.
-#
-# Version:	@(#)mountnfs.sh  2.83  05-Oct-2001  miquels@cistron.nl
-#
+### BEGIN INIT INFO
+# Provides:          mountnfs
+# Required-Start:    $local_fs $network $portmap
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+### END INIT INFO
 
 . /etc/default/rcS
 
