@@ -1,6 +1,14 @@
 #!/bin/sh
-# hwclock.sh Set system clock to hardware clock, according to the UTC
-#               setting in /etc/default/rcS (see also rcS(5)).
+### BEGIN INIT INFO
+# Provides:          hwclock
+# Required-Start:    
+# Required-Stop:     $local_fs
+# Default-Start:     S
+# Default-Stop:      0 6
+# Short-Description: Set system clock
+# Description:       Set system clock to hardware clock, according to the UTC
+#                    setting in /etc/default/rcS (see also rcS(5)).
+### END INIT INFO
 #
 # WARNING:      If your hardware clock is not in UTC/GMT, this script
 #               must know the local time zone. This information is

@@ -1,8 +1,13 @@
 #! /bin/sh
-#
-# syslog	init.d script for busybox syslogd/klogd
-#		Written by Robert Griebl <sandman@handhelds.org>
-#               Configuration file added by <bruno.randolf@4g-systems.biz>
+### BEGIN INIT INFO
+# Provides:             sysklogd
+# Required-Start:       $remote_fs $time
+# Required-Stop:        $remote_fs $time
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    System logger
+### END INIT INFO
+
 set -e
 
 if [ -f /etc/syslog.conf ]; then
