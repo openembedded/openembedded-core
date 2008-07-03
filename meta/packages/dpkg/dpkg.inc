@@ -1,7 +1,7 @@
 DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPL"
 SECTION = "base"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz \
            file://ignore_extra_fields.patch;patch=1 \
@@ -23,6 +23,7 @@ if [ "x$D" != "x" ]; then
 	# this happens at S98 where our good 'ole packages script used to run
 	echo -e "#!/bin/sh
 	dpkg --configure -a
+	rm -f /${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
 " > ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
 	chmod 0755 ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
 fi
