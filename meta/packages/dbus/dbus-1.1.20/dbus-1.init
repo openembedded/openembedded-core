@@ -1,4 +1,15 @@
 #! /bin/sh
+### BEGIN INIT INFO
+# Provides:          dbus
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      1
+# Short-Description: D-Bus systemwide message bus
+# Description:       D-Bus is a simple interprocess messaging system, used
+#                    for sending messages between applications.
+### END INIT INFO
+#
 # -*- coding: utf-8 -*-
 # Debian init.d script for D-BUS
 # Copyright © 2003 Colin Walters <walters@debian.org>
