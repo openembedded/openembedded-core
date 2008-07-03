@@ -1,6 +1,6 @@
 require portmap.inc
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://neil.brown.name/portmap/portmap-6.0.tgz \
            file://destdir-no-strip.patch;patch=1 \
