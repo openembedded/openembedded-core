@@ -2,7 +2,7 @@ DESCRIPTION = "Simple Xserver Init Script (no dm)"
 LICENSE = "GPL"
 SECTION = "x11"
 PRIORITY = "optional"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "file://xserver-nodm"
 S = ${WORKDIR}
@@ -18,4 +18,4 @@ do_install() {
 inherit update-rc.d
 
 INITSCRIPT_NAME = "xserver-nodm"
-INITSCRIPT_PARAMS = "start 99 5 2 . stop 20 0 1 6 ."
+INITSCRIPT_PARAMS = "start 09 5 2 . stop 20 0 1 6 ."
