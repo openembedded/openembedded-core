@@ -1,4 +1,15 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          module-init-tools
+# Required-Start:    
+# Required-Stop:     
+# Should-Start:      checkroot
+# Should-stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Process /etc/modules.
+# Description:       Load the modules listed in /etc/modules.
+### END INIT INFO
 
 LOAD_MODULE=modprobe
 [ -f /proc/modules ] || exit 0
