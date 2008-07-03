@@ -1,4 +1,11 @@
 #!/bin/sh 
+### BEGIN INIT INFO
+# Provides:             psplash
+# Required-Start:
+# Required-Stop:
+# Default-Start:        S
+# Default-Stop:
+### END INIT INFO
 
 for x in $(cat /proc/cmdline); do
         case $x in
