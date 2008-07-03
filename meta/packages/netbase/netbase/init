@@ -1,6 +1,13 @@
 #!/bin/sh
 #
-# manage network interfaces and configure some networking options
+### BEGIN INIT INFO
+# Provides:          networking
+# Required-Start:    $local_fs mountvirtfs
+# Required-Stop:     $local_fs
+# Default-Start:     S
+# Default-Stop:      0 6
+# Short-Description: Raise network interfaces and configure them
+### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -99,4 +106,3 @@ case "$1" in
 esac
 
 exit 0
-
