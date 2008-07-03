@@ -1,12 +1,12 @@
 #!/bin/sh
-#
-# Start or stop the Advanced Power Management daemon.
-#
-# Written by Dirk Eddelbuettel <edd@debian.org>
-# Greatly modified by Avery Pennarun <apenwarr@debian.org>
-#
-# I think this script is now free of bashisms.
-# Please correct me if I'm wrong!
+### BEGIN INIT INFO
+# Provides:          apmd
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Advanced Power Management daemon
+### END INIT INFO
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
