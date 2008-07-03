@@ -27,19 +27,7 @@ kill -USR1 1
 # Execute swapon command again, in case we want to swap to
 # a file on a now mounted filesystem.
 #
-doswap=yes
-case "`uname -r`" in
-	2.[0123].*)
-		if grep -qs resync /proc/mdstat
-		then
-			doswap=no
-		fi
-		;;
-esac
-if test $doswap = yes
-then
-	swapon -a 2> /dev/null
-fi
+swapon -a 2> /dev/null
 
 : exit 0
 
