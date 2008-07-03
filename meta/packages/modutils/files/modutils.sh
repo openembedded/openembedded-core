@@ -5,9 +5,7 @@ LOAD_MODULE=modprobe
 [ -f /etc/modules ] || exit 0
 [ -e /sbin/modprobe ] || LOAD_MODULE=insmod
 
-if [ ! -e /sbin/depmod ]; then
-	[ -f /lib/modules/`uname -r`/modules.dep ] || LOAD_MODULE=insmod
-else 
+if [ ! -f /lib/modules/`uname -r`/modules.dep ]; then
 	[ "$VERBOSE" != no ] && echo "Calculating module dependencies ..."
 	depmod -Ae
 fi
