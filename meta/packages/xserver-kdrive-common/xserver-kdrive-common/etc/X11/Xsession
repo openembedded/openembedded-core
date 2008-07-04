@@ -15,12 +15,25 @@ fi
 . /etc/profile
 
 if [ -f $HOME/.profile ]; then
- . $HOME/.profile
+    . $HOME/.profile
 fi
 
 SYSSESSIONDIR=/etc/X11/Xsession.d
 
-run-parts $SYSSESSIONDIR
+for SESSIONFILE in $SYSSESSIONDIR/*; do
+    set +e
+    case "$SESSIONFILE" in
+        *.sh)
+            . "$SESSIONFILE"
+            ;;
+        *~)
+            # Ignore backup files
+            ;;
+        *)
+            "$SESSIONFILE"
+            ;;
+    esac
+    set -e
+done
 
 exit 0
-
