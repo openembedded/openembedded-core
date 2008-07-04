@@ -21,7 +21,7 @@ fi
 #
 # Set pseudo-terminal access permissions.
 #
-if ( ! grep -q devfs /proc/mounts ) && test -c /dev/ttyp0
+if test -c /dev/ttyp0
 then
 	chmod 666 /dev/tty[p-za-e][0-9a-f]
 	chown root:tty /dev/tty[p-za-e][0-9a-f]
