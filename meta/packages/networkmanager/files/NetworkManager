@@ -1,6 +1,17 @@
 #!/bin/sh
 #
-# NetworkManager startup script
+### BEGIN INIT INFO
+# Provides:          NetworkManager
+# Required-Start:    $remote_fs dbus hal
+# Required-Stop:     $remote_fs dbus hal
+# Should-Start:	     $syslog
+# Should-Stop:       $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: network connection manager
+# Description:       Daemon for automatically switching network 
+#		     connections to the best available connection.
+### END INIT INFO
 
 . /etc/profile
 

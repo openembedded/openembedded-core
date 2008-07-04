@@ -7,12 +7,12 @@ DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp gnome-common"
 RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
 PV = "0.7+svnr${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
 	file://no-restarts.diff;patch=1;pnum=0 \
         file://makefile-fix.patch;patch=1 \
-	file://25NetworkManager \
+	file://NetworkManager \
 	file://99_networkmanager"
 
 EXTRA_OECONF = " \
@@ -22,13 +22,16 @@ EXTRA_OECONF = " \
 
 S = "${WORKDIR}/trunk"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig update-rc.d
+
+INITSCRIPT_NAME = "NetworkManager"
+INITSCRIPT_PARAMS = "defaults 22"
 
 do_install_append () {
 	install -d ${D}/etc/default/volatiles
 	install -m 0644 ${WORKDIR}/99_networkmanager ${D}/etc/default/volatiles
-	install -d ${D}/etc/dbus-1/event.d
-	install -m 0755 ${WORKDIR}/25NetworkManager ${D}/etc/dbus-1/event.d
+        # This overwrites the provided init script
+	install -m 0755 ${WORKDIR}/NetworkManager ${D}/etc/init.d/
 }
 
 do_stage () {
