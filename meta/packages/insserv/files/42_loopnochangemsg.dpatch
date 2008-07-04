@@ -1,0 +1,20 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 40_loopnochangemsg.dpatch by Petter Reinholdtsen
+
+Make it more obvious that introducing a loop will not change the
+existing boot sequence.  Thanks to Frans Pop for the rationale for
+this change.
+
+@DPATCH@
+
+--- insserv-1.11.0.orig/insserv.c
++++ insserv-1.11.0/insserv.c
+@@ -2647,7 +2647,7 @@
+     follow_all();
+ 
+     if (is_loop_detected() && !ignore)
+-	error("exiting now!\n");
++	error("exiting without changing boot order!\n");
+ 
+     /*
+      * Re-order some well known scripts to get

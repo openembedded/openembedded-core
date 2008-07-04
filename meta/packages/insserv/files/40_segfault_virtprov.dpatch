@@ -1,0 +1,89 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 40_segfault_virtprov.dpatch by Petter Reinholdtsen
+
+Avoid segfault when an enabled service provide a virtual system
+facility.
+
+@DPATCH@
+--- insserv/insserv.c
++++ insserv/insserv.c	2008-02-01 11:43:45.634618329 +0100
+@@ -166,7 +166,7 @@ typedef struct pwd_struct {
+ 
+ static list_t pwd = { &(pwd), &(pwd) }, * topd = &(pwd);
+ 
+-static void pushd(const char *const __restrict path);
++static void pushd(const char *const __restrict path) __attribute__((nonnull(1)));
+ static void pushd(const char *const path)
+ {
+     pwd_t *  dir;
+@@ -305,13 +305,13 @@ out:
+     return getserv(ptr);
+ }
+ 
+-static serv_t * findserv(const char *const __restrict serv) __attribute__((nonnull(1)));
++static serv_t * findserv(const char *const __restrict serv);
+ static serv_t * findserv(const char *const serv)
+ {
+     list_t * ptr;
+     serv_t * ret = (serv_t*)0;
+ 
+-    if (!serv)
++    if (serv == (const char*)0)
+ 	goto out;
+ 
+     list_for_each(ptr, serv_start) {
+@@ -334,6 +334,9 @@ static void rememberreq(serv_t *serv, ui
+     list_t * ptr;
+     uint old = bit;
+ 
++    if (!tmp)
++	error("%s", strerror(errno));
++
+     while ((token = strsep(&tmp, delimeter))) {
+ 	boolean found = false;
+ 	req_t * this;
+@@ -399,6 +402,9 @@ static void reversereq(const serv_t * se
+     char * rev = strdupa(list);
+     uint old = bit;
+ 
++    if (!rev)
++	error("%s", strerror(errno));
++
+     while ((dep = strsep(&rev, delimeter)) && *dep) {
+ 	serv_t * tmp;
+ 	list_t * ptr;
+@@ -437,7 +443,7 @@ static void reversereq(const serv_t * se
+ /*
+  * Check required services for name
+  */
+-static boolean chkrequired(const char *const __restrict name) __attribute__((nonnull(1)));
++static boolean chkrequired(const char *const __restrict name);
+ static boolean chkrequired(const char *const name)
+ {
+     serv_t * serv = findserv(name);
+--- insserv/listing.h
++++ insserv/listing.h	2008-02-01 11:40:45.347748072 +0100
+@@ -97,11 +97,11 @@ extern int makeprov(const char *__restri
+ extern void setorder(const char *__restrict script, const int order, boolean recursive) __attribute__((nonnull(1)));
+ extern int getorder(const char *__restrict script) __attribute__((nonnull(1)));
+ extern boolean notincluded(const char *__restrict script, const int runlevel) __attribute__((nonnull(1)));
+-extern boolean foreach(const char **__restrict script, int *__restrict order, const int runlevel) __attribute__((nonnull(1,2)));
+-extern void virtprov(const char *__restrict virt, const char *__restrict real) __attribute__((nonnull(1,2)));
++extern boolean foreach(const char **__restrict script, int *__restrict order, const int runlevel) __attribute__((nonnull(2)));
++extern void virtprov(const char *__restrict virt, const char *__restrict real) __attribute__((nonnull(1)));
+ extern const char * getscript(const char *__restrict prov) __attribute__((nonnull(1)));
+ extern const char * getprovides(const char *__restrict script) __attribute__((nonnull(1)));
+-extern boolean listscripts(const char **__restrict script, const int lvl) __attribute__((nonnull(1)));
++extern boolean listscripts(const char **__restrict script, const int lvl);
+ extern int maxorder;
+ extern boolean is_loop_detected(void);
+ 
+@@ -116,7 +116,7 @@ extern int map_has_runlevels(void);
+ extern int map_runlevel_to_lvl (const int runlevel);
+ extern int map_key_to_lvl(const char key);
+ 
+-static inline char * xstrdup(const char *__restrict s) __attribute__((always_inline,nonnull(1)));
++static inline char * xstrdup(const char *__restrict s) __attribute__((always_inline));
+ static inline char * xstrdup(const char * s)
+ {
+     char * r;
