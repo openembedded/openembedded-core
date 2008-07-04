@@ -17,5 +17,5 @@ fi
 # Delay to make sure the window manager is active
 
 if [ "$CMD" ]; then
-    (sleep 2 && $CMD) &
+    { sleep 2 ; $CMD ; } &
 fi
