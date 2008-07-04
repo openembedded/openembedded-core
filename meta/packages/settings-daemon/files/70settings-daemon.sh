@@ -1,3 +1,1 @@
-#!/bin/sh
-
 /usr/bin/settings-daemon &
