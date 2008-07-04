@@ -1,6 +1,6 @@
 require gdb-cross.inc
 
-DEPENDS = "ncurses-sdk"
+DEPENDS = "ncurses-sdk expat-sdk"
 
 inherit sdk
 
