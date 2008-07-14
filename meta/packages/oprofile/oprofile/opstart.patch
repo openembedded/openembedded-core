@@ -1,8 +1,8 @@
 Index: oprofile/utils/Makefile.am
 ===================================================================
---- oprofile.orig/utils/Makefile.am
-+++ oprofile/utils/Makefile.am
-@@ -3,8 +3,15 @@ AM_CFLAGS = @OP_CFLAGS@
+--- oprofile.orig/utils/Makefile.am	2005-03-31 18:20:41.000000000 +0100
++++ oprofile/utils/Makefile.am	2008-07-02 15:14:07.000000000 +0100
+@@ -3,8 +3,15 @@
  
  LIBS=@POPT_LIBS@ @LIBERTY_LIBS@
  
@@ -21,8 +21,8 @@ Index: oprofile/utils/Makefile.am
 +		$(LN_S) opstart opstop
 Index: oprofile/utils/opstart.c
 ===================================================================
---- /dev/null
-+++ oprofile/utils/opstart.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ oprofile/utils/opstart.c	2008-07-02 15:14:07.000000000 +0100
 @@ -0,0 +1,110 @@
 +/**
 + * @file opstart.c
@@ -136,17 +136,17 @@ Index: oprofile/utils/opstart.c
 +
 Index: oprofile/configure.in
 ===================================================================
---- oprofile.orig/configure.in
-+++ oprofile/configure.in
-@@ -16,6 +16,7 @@ AM_INIT_AUTOMAKE(oprofile, 0.9.4cvs)
+--- oprofile.orig/configure.in	2008-07-02 15:13:58.000000000 +0100
++++ oprofile/configure.in	2008-07-02 15:17:37.000000000 +0100
+@@ -16,6 +16,7 @@
  AM_CONFIG_HEADER(config.h)
  
  AC_PROG_RANLIB
 +AC_PROG_LN_S
+ AC_PROG_LIBTOOL
  
  dnl for the man page
- DATE="`date '+%a %d %B %Y'`"
-@@ -227,6 +228,8 @@ AC_OUTPUT(Makefile \
+@@ -241,6 +242,8 @@
  	doc/xsl/catalog-1.xml \
  	doc/oprofile.1 \
  	doc/opcontrol.1 \
@@ -157,9 +157,9 @@ Index: oprofile/configure.in
  	doc/opannotate.1 \
 Index: oprofile/doc/Makefile.am
 ===================================================================
---- oprofile.orig/doc/Makefile.am
-+++ oprofile/doc/Makefile.am
-@@ -11,6 +11,8 @@ STYLESHEETS=$(CHUNK_XHTML_STYLESHEET) $(
+--- oprofile.orig/doc/Makefile.am	2008-07-02 15:13:59.000000000 +0100
++++ oprofile/doc/Makefile.am	2008-07-02 15:14:07.000000000 +0100
+@@ -11,6 +11,8 @@
  man_MANS = \
  	oprofile.1 \
  	opcontrol.1 \
@@ -170,8 +170,8 @@ Index: oprofile/doc/Makefile.am
  	opgprof.1 \
 Index: oprofile/doc/opstart.1.in
 ===================================================================
---- /dev/null
-+++ oprofile/doc/opstart.1.in
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ oprofile/doc/opstart.1.in	2008-07-02 15:14:07.000000000 +0100
 @@ -0,0 +1,27 @@
 +.TH OPSTART 1 "@DATE@" "oprofile @VERSION@"
 +.UC 4
@@ -202,8 +202,8 @@ Index: oprofile/doc/opstart.1.in
 +.BR oprofile(1)
 Index: oprofile/doc/opstop.1.in
 ===================================================================
---- /dev/null
-+++ oprofile/doc/opstop.1.in
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ oprofile/doc/opstop.1.in	2008-07-02 15:14:07.000000000 +0100
 @@ -0,0 +1,28 @@
 +.TH OPSTOP 1 "@DATE@" "oprofile @VERSION@"
 +.UC 4
