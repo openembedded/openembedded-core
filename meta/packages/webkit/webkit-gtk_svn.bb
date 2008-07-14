@@ -5,7 +5,7 @@ SRCREV_FORMAT = "webcore-rwebkit"
 
 # Yes, this is wrong...
 PV = "0.1+svnr${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "\
   svn://svn.webkit.org/repository/webkit/trunk/;module=JavaScriptCore;proto=http \
@@ -29,6 +29,7 @@ EXTRA_OECONF = "\
                 --enable-debug=no \
                 --enable-svg \
                 --enable-icon-database=yes \
+		--disable-fast-malloc \
                "
 
 do_compile_prepend() {
