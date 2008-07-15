@@ -1,0 +1,17 @@
+---
+ extras/volume_id/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: udev-115/extras/volume_id/Makefile
+===================================================================
+--- udev-115.orig/extras/volume_id/Makefile	2007-09-20 18:17:59.000000000 +0200
++++ udev-115/extras/volume_id/Makefile	2007-09-20 18:18:08.000000000 +0200
+@@ -44,7 +44,7 @@
+ ifeq ($(strip $(VOLUME_ID_STATIC)),true)
+ 	$(Q) $(LD) $(LDFLAGS) -o $@ $@.o $(LIBUDEV) lib/libvolume_id.a $(LIB_OBJS)
+ else
+-	$(Q) $(LD) $(LDFLAGS) -o $@ $@.o $(LIBUDEV) -Llib -lvolume_id $(LIB_OBJS)
++	$(Q) $(LD) -Llib $(LDFLAGS) -o $@ $@.o $(LIBUDEV) -lvolume_id $(LIB_OBJS)
+ endif
+ 
+ # man pages

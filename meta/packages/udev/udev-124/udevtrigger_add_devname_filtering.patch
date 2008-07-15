@@ -1,0 +1,99 @@
+diff -pru udev-124.orig/udevtrigger.c udev-124/udevtrigger.c
+--- udev-124.orig/udevtrigger.c	2008-06-12 06:24:30.000000000 +0100
++++ udev-124/udevtrigger.c	2008-07-07 15:10:09.000000000 +0100
+@@ -42,6 +42,8 @@ static int dry_run;
+ LIST_HEAD(device_list);
+ LIST_HEAD(filter_subsystem_match_list);
+ LIST_HEAD(filter_subsystem_nomatch_list);
++LIST_HEAD(filter_kernel_match_list);
++LIST_HEAD(filter_kernel_nomatch_list);
+ LIST_HEAD(filter_attr_match_list);
+ LIST_HEAD(filter_attr_nomatch_list);
+ static int sock = -1;
+@@ -331,6 +333,26 @@ static int attr_match(const char *path, 
+ 	return 0;
+ }
+ 
++static int kernel_filtered(const char *kernel)
++{
++	struct name_entry *loop_name;
++
++	/* skip devices matching the prohibited kernel device names */
++	list_for_each_entry(loop_name, &filter_kernel_nomatch_list, node)
++		if (fnmatch(loop_name->name, kernel, 0) == 0)
++			return 1;
++
++	/* skip devices not matching the listed kernel device names */
++	if (!list_empty(&filter_kernel_match_list)) {
++		list_for_each_entry(loop_name, &filter_kernel_match_list, node)
++			if (fnmatch(loop_name->name, kernel, 0) == 0)
++				return 0;
++		return 1;
++	}
++
++	return 0;
++}
++
+ static int attr_filtered(const char *path)
+ {
+ 	struct name_entry *loop_name;
+@@ -409,6 +431,9 @@ static void scan_subsystem(const char *s
+ 					if (dent2->d_name[0] == '.')
+ 						continue;
+ 
++					if (kernel_filtered(dent2->d_name))
++						continue;
++
+ 					strlcpy(dirname2, dirname, sizeof(dirname2));
+ 					strlcat(dirname2, "/", sizeof(dirname2));
+ 					strlcat(dirname2, dent2->d_name, sizeof(dirname2));
+@@ -465,6 +490,9 @@ static void scan_block(void)
+ 					if (!strcmp(dent2->d_name,"device"))
+ 						continue;
+ 
++					if (kernel_filtered(dent2->d_name))
++						continue;
++
+ 					strlcpy(dirname2, dirname, sizeof(dirname2));
+ 					strlcat(dirname2, "/", sizeof(dirname2));
+ 					strlcat(dirname2, dent2->d_name, sizeof(dirname2));
+@@ -576,6 +604,8 @@ int udevtrigger(int argc, char *argv[], 
+ 		{ "subsystem-nomatch", 1, NULL, 'S' },
+ 		{ "attr-match", 1, NULL, 'a' },
+ 		{ "attr-nomatch", 1, NULL, 'A' },
++		{ "kernel-match", 1, NULL, 'k' },
++		{ "kernel-nomatch", 1, NULL, 'K' },
+ 		{ "env", 1, NULL, 'e' },
+ 		{}
+ 	};
+@@ -622,6 +652,12 @@ int udevtrigger(int argc, char *argv[], 
+ 		case 'A':
+ 			name_list_add(&filter_attr_nomatch_list, optarg, 0);
+ 			break;
++		case 'k':
++			name_list_add(&filter_kernel_match_list, optarg, 0);
++			break;
++		case 'K':
++			name_list_add(&filter_kernel_nomatch_list, optarg, 0);
++			break;
+ 		case 'h':
+ 			printf("Usage: udevadm trigger OPTIONS\n"
+ 			       "  --verbose                       print the list of devices while running\n"
+@@ -632,6 +668,8 @@ int udevtrigger(int argc, char *argv[], 
+ 			       "  --env=<KEY>=<value>             pass an additional key (works only with --socket=)\n"
+ 			       "  --subsystem-match=<subsystem>   trigger devices from a matching subystem\n"
+ 			       "  --subsystem-nomatch=<subsystem> exclude devices from a matching subystem\n"
++			       "  --kernel-match=<subsystem>	  trigger devices from a matching kernel device name\n"
++			       "  --kernel-nomatch=<subsystem>	  exclude devices from a matching kernel device name\n"
+ 			       "  --attr-match=<file[=<value>]>   trigger devices with a matching sysfs\n"
+ 			       "                                  attribute\n"
+ 			       "  --attr-nomatch=<file[=<value>]> exclude devices with a matching sysfs\n"
+@@ -701,6 +739,8 @@ int udevtrigger(int argc, char *argv[], 
+ exit:
+ 	name_list_cleanup(&filter_subsystem_match_list);
+ 	name_list_cleanup(&filter_subsystem_nomatch_list);
++	name_list_cleanup(&filter_kernel_match_list);
++	name_list_cleanup(&filter_kernel_nomatch_list);
+ 	name_list_cleanup(&filter_attr_match_list);
+ 	name_list_cleanup(&filter_attr_nomatch_list);
+ 

@@ -1,0 +1,45 @@
+diff -pru udev-124.orig/test-udev.c udev-124/test-udev.c
+--- udev-124.orig/test-udev.c	2008-06-12 06:24:30.000000000 +0100
++++ udev-124/test-udev.c	2008-07-07 14:43:37.000000000 +0100
+@@ -46,7 +46,7 @@ void log_message(int priority, const cha
+ }
+ #endif
+ 
+-static void asmlinkage sig_handler(int signum)
++static void sig_handler(int signum)
+ {
+ 	switch (signum) {
+ 		case SIGALRM:
+diff -pru udev-124.orig/udevd.c udev-124/udevd.c
+--- udev-124.orig/udevd.c	2008-06-12 06:24:30.000000000 +0100
++++ udev-124/udevd.c	2008-07-07 14:43:58.000000000 +0100
+@@ -87,7 +87,7 @@ void log_message(int priority, const cha
+ 
+ #endif
+ 
+-static void asmlinkage udev_event_sig_handler(int signum)
++static void udev_event_sig_handler(int signum)
+ {
+ 	if (signum == SIGALRM)
+ 		exit(1);
+@@ -798,7 +798,7 @@ static struct udevd_uevent_msg *get_netl
+ 	return msg;
+ }
+ 
+-static void asmlinkage sig_handler(int signum)
++static void sig_handler(int signum)
+ {
+ 	switch (signum) {
+ 		case SIGINT:
+diff -pru udev-124.orig/udevmonitor.c udev-124/udevmonitor.c
+--- udev-124.orig/udevmonitor.c	2008-06-12 06:24:30.000000000 +0100
++++ udev-124/udevmonitor.c	2008-07-07 14:44:24.000000000 +0100
+@@ -97,7 +97,7 @@ static int init_uevent_netlink_sock(void
+ 	return 0;
+ }
+ 
+-static void asmlinkage sig_handler(int signum)
++static void sig_handler(int signum)
+ {
+ 	if (signum == SIGINT || signum == SIGTERM)
+ 		udev_exit = 1;
