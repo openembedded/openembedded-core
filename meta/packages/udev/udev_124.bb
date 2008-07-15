@@ -16,8 +16,6 @@ PACKAGE_ARCH_h2200 = "h2200"
 
 require udev.inc
 
-DEFAULT_PREFERENCE = "-1"
-
 INITSCRIPT_PARAMS = "start 03 S ."
 
 FILES_${PN} += "${base_libdir}/udev/*"
