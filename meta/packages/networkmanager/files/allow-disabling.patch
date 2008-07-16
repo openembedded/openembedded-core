@@ -1,0 +1,45 @@
+Allow interfaces to be ignored by networkmanager by creation of a
+/etc/network/nm-disabled-INTERFACENAME file.
+
+RP - 16/7/2008
+
+Index: trunk/src/backends/NetworkManagerDebian.c
+===================================================================
+--- trunk.orig/src/backends/NetworkManagerDebian.c	2008-07-15 19:23:11.000000000 +0100
++++ trunk/src/backends/NetworkManagerDebian.c	2008-07-15 19:37:05.000000000 +0100
+@@ -29,6 +29,7 @@
+ 
+ #include <stdio.h>
+ #include <sys/types.h>
++#include <sys/stat.h>
+ #include <signal.h>
+ #include <arpa/inet.h>
+ #include "NetworkManagerGeneric.h"
+@@ -374,12 +375,25 @@
+ /*
+  * nm_system_device_get_disabled
+  *
+- * Return whether the distro-specific system config tells us to use
+- * dhcp for this device.
++ * Return whether the distro-specific system config tells us to interact
++ * with this device.
+  *
+  */
+ gboolean nm_system_device_get_disabled (NMDevice *dev)
+ {
++	struct stat statbuf;
++	gchar *filepath;
++
++	g_return_val_if_fail (dev != NULL, FALSE);
++
++	filepath = g_strdup_printf (SYSCONFDIR"/network/nm-disabled-%s", nm_device_get_iface (dev));
++
++	if (stat(filepath, &statbuf) == 0) {
++		g_free(filepath);
++		return TRUE;
++	}
++
++	g_free(filepath);
+ 	return FALSE;
+ }
+ 

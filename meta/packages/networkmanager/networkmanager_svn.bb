@@ -7,11 +7,12 @@ DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp gnome-common"
 RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
 PV = "0.7+svnr${SRCREV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
 	file://no-restarts.diff;patch=1;pnum=0 \
         file://makefile-fix.patch;patch=1 \
+	file://allow-disabling.patch;patch=1 \
 	file://NetworkManager \
 	file://99_networkmanager"
 
