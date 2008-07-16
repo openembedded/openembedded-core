@@ -20,10 +20,10 @@ iface eth1 inet dhcp
 # Ethernet/RNDIS gadget (g_ether)
 # ... or on host side, usbnet and random hwaddr
 iface usb0 inet static
-	address 192.168.0.202
+	address 192.168.7.2
 	netmask 255.255.255.0
-	network 192.168.0.0
-	gateway 192.168.0.200
+	network 192.168.7.0
+	gateway 192.168.7.1
 
 # Bluetooth networking
 iface bnep0 inet dhcp
