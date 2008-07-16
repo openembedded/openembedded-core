@@ -18,6 +18,8 @@ DEBIAN_NOAUTONAME_fontconfig-utils = "1"
 
 S = "${WORKDIR}/fontconfig-${PV}"
 
+PARALLEL_MAKE = ""
+
 inherit autotools pkgconfig
 
 export HASDOCBOOK="no"
