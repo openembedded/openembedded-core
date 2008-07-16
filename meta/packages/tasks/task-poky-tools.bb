@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tools tasks for Poky"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -48,7 +48,7 @@ RDEPENDS_task-poky-tools-testapps = "\
     kexec-tools \
     alsa-utils-amixer \
     alsa-utils-aplay \
-    owl-video-widget \
+    owl-video \
     gst-meta-video \
     gst-meta-audio \
     xrestop \

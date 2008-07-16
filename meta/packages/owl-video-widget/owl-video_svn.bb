@@ -1,16 +1,14 @@
 DESCRIPTION = "OpenedHand Widget Library video widget"
 LICENSE = "LGPL"
 SECTION = "x11"
-DEPENDS = "gtk+ gstreamer gst-plugins-base"
-RDEPENDS = "gst-meta-base"
-RRECOMMENDS = "gst-meta-audio gst-meta-video"
+DEPENDS = "libowl-av"
 
-PV = "0.1+svnr${SRCREV}"
-PR = "r1"
+PV = "0.0+svnr${SRCREV}"
+PR = "r0"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/video"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http \
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=video;proto=http \
            file://owl-video-widget.png \
            file://stock_media-play.png \
            file://stock_volume-0.png \
