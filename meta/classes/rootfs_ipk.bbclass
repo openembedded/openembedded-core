@@ -8,7 +8,7 @@
 ROOTFS_PKGMANAGE = "opkg opkg-collateral"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
-do_rootfs[depends] += "opkg-native:do_populate_staging ipkg-utils-native:do_populate_staging"
+do_rootfs[depends] += "opkg-native:do_populate_staging opkg-utils-native:do_populate_staging"
 do_rootfs[recrdeptask] += "do_package_write_ipk"
 
 IPKG_ARGS = "-f ${IPKGCONF_TARGET} -o ${IMAGE_ROOTFS}"
