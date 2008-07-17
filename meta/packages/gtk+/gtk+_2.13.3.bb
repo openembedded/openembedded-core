@@ -1,6 +1,7 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
+PR = "r1"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.13/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \

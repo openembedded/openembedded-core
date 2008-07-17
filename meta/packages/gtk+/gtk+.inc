@@ -53,6 +53,10 @@ do_stage () {
 	install -m 0644 gdk/gdkconfig.h ${STAGING_LIBDIR}/gtk-2.0/include/gdkconfig.h
 
 	install -m 0644 m4macros/gtk-2.0.m4 ${STAGING_DATADIR}/aclocal/
+
+	install -m 0644 gtk/gtkfilechooserprivate.h ${STAGING_INCDIR}/gtk-2.0/gtk/
+	install -m 0644 gtk/gtkfilechooserutils.h   ${STAGING_INCDIR}/gtk-2.0/gtk/
+	install -m 0644 gtk/gtkfilesystemmodel.h    ${STAGING_INCDIR}/gtk-2.0/gtk/
 }
 
 do_install_append () {

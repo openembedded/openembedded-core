@@ -1,7 +1,7 @@
 require gtk+.inc
 
 DEPENDS += "cairo"
-PR = "r19"
+PR = "r20"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \
            file://gtklabel-resize-patch;patch=1 \
