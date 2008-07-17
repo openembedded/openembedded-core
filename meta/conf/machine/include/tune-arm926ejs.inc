@@ -4,4 +4,4 @@ FEED_ARCH = "armv5te"
 #TARGET_CC_ARCH = "-march=armv5te -mtune=arm926ejs"
 # For gcc 4.x you need:
 TARGET_CC_ARCH = "-march=armv5te -mtune=arm926ej-s"
-PACKAGE_ARCH = "armv5te"
+BASE_PACKAGE_ARCH = "armv5te"
