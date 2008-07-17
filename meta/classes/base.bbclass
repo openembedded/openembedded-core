@@ -997,10 +997,12 @@ def base_after_parse(d):
             depends = depends + " shasum-native:do_populate_staging"
             bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
+    # 'multimachine' handling
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
-    old_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
-    if (old_arch == mach_arch):
-        # Nothing to do
+    pkg_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
+
+    if (pkg_arch == mach_arch):
+        # Already machine specific - nothing further to do
         return
 
     #
@@ -1008,26 +1010,38 @@ def base_after_parse(d):
     # unless the package sets SRC_URI_OVERRIDES_PACKAGE_ARCH=0
     #
     override = bb.data.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', d, 1)
-    if override == '0':
-        return
+    if override != '0':
+        paths = []
+        for p in [ "${PF}", "${P}", "${PN}", "files", "" ]:
+            path = bb.data.expand(os.path.join("${FILE_DIRNAME}", p, "${MACHINE}"), d)
+            if os.path.isdir(path):
+                paths.append(path)
+        if len(paths) != 0:
+            for s in srcuri.split():
+                if not s.startswith("file://"):
+                    continue
+                local = bb.data.expand(bb.fetch.localpath(s, d), d)
+                for mp in paths:
+                    if local.startswith(mp):
+                        #bb.note("overriding PACKAGE_ARCH from %s to %s" % (pkg_arch, mach_arch))
+                        bb.data.setVar('PACKAGE_ARCH', "${MACHINE_ARCH}", d)
+                        bb.data.setVar('MULTIMACH_ARCH', mach_arch, d)
+                        return
 
-    paths = []
-    for p in [ "${PF}", "${P}", "${PN}", "files", "" ]:
-        path = bb.data.expand(os.path.join("${FILE_DIRNAME}", p, "${MACHINE}"), d)
-        if os.path.isdir(path):
-            paths.append(path)
-    if len(paths) == 0:
-        return
+    multiarch = pkg_arch
 
-    for s in srcuri.split():
-        if not s.startswith("file://"):
-            continue
-        local = bb.data.expand(bb.fetch.localpath(s, d), d)
-        for mp in paths:
-            if local.startswith(mp):
-                #bb.note("overriding PACKAGE_ARCH from %s to %s" % (old_arch, mach_arch))
-                bb.data.setVar('PACKAGE_ARCH', "${MACHINE_ARCH}", d)
-                return
+    packages = bb.data.getVar('PACKAGES', d, 1).split()
+    for pkg in packages:
+        pkgarch = bb.data.getVar("PACKAGE_ARCH_%s" % pkg, d, 1)
+
+        # We could look for != PACKAGE_ARCH here but how to choose 
+        # if multiple differences are present?
+        # Look through PACKAGE_ARCHS for the priority order?
+        if pkgarch and pkgarch == mach_arch:
+            multiarch = mach_arch
+            break
+
+    bb.data.setVar('MULTIMACH_ARCH', multiarch, d)
 
 python () {
     base_after_parse(d)
