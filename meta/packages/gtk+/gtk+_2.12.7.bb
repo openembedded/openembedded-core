@@ -1,6 +1,5 @@
 require gtk+.inc
 
-DEPENDS += "cairo"
 PR = "r9"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \

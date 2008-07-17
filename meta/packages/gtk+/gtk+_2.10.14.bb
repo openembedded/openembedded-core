@@ -1,6 +1,5 @@
 require gtk+.inc
 
-DEPENDS += "cairo"
 PR = "r20"
 
 SRC_URI = "ftp://ftp.gtk.org/pub/gtk/v2.10/gtk+-${PV}.tar.bz2 \

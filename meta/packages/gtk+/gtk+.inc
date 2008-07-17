@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "LGPL"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc-native \
-           libgcrypt libxdamage libxrender libxcomposite"
+           libgcrypt libxdamage libxrender libxcomposite cairo"
 
 inherit autotools pkgconfig
 
