@@ -19,9 +19,6 @@ PSTAGE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_
 PSTAGE_PKGNAME    = "${PSTAGE_PKGPN}_${PSTAGE_PKGVERSION}_${PSTAGE_PKGARCH}.ipk"
 PSTAGE_PKG        = "${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}/${PSTAGE_PKGNAME}"
 
-# multimachine.bbclass will override this but add a default in case we're not using it
-MULTIMACH_ARCH ?= "${PACKAGE_ARCH}"
-
 PSTAGE_NATIVEDEPENDS = "\
     shasum-native \
     stagemanager-native \
