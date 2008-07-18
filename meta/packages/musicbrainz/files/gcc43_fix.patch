@@ -1,0 +1,63 @@
+Index: libmusicbrainz-2.1.3/lib/c_wrapper.cpp
+===================================================================
+--- libmusicbrainz-2.1.3.orig/lib/c_wrapper.cpp	2008-07-18 15:40:55.000000000 +0100
++++ libmusicbrainz-2.1.3/lib/c_wrapper.cpp	2008-07-18 15:42:05.000000000 +0100
+@@ -21,6 +21,7 @@
+      $Id: c_wrapper.cpp 665 2003-10-16 22:21:10Z robert $
+ 
+ ----------------------------------------------------------------------------*/
++#include <cstring>
+ #include "musicbrainz.h"
+ #include "trm.h"
+ #include "mb_c.h"
+Index: libmusicbrainz-2.1.3/lib/comhttpsocket.cpp
+===================================================================
+--- libmusicbrainz-2.1.3.orig/lib/comhttpsocket.cpp	2008-07-18 15:40:55.000000000 +0100
++++ libmusicbrainz-2.1.3/lib/comhttpsocket.cpp	2008-07-18 15:42:38.000000000 +0100
+@@ -10,6 +10,8 @@
+ #pragma warning(disable:4786)
+ #endif
+ 
++#include <cstring>
++
+ #include "comhttpsocket.h"
+ #ifdef WIN32
+ #include "../config_win32.h"
+Index: libmusicbrainz-2.1.3/lib/comsocket.cpp
+===================================================================
+--- libmusicbrainz-2.1.3.orig/lib/comsocket.cpp	2008-07-18 15:40:55.000000000 +0100
++++ libmusicbrainz-2.1.3/lib/comsocket.cpp	2008-07-18 15:43:05.000000000 +0100
+@@ -28,6 +28,7 @@
+     programed by         : Sean Ward
+     email                : sward@relatable.com
+  ***************************************************************************/
++#include <cstring>
+ 
+ #include "config.h"
+ 
+Index: libmusicbrainz-2.1.3/lib/http.cpp
+===================================================================
+--- libmusicbrainz-2.1.3.orig/lib/http.cpp	2008-07-18 15:40:55.000000000 +0100
++++ libmusicbrainz-2.1.3/lib/http.cpp	2008-07-18 15:41:32.000000000 +0100
+@@ -23,6 +23,8 @@
+ 
+ ----------------------------------------------------------------------------*/
+ #include <stdio.h> 
++#include <cstring>
++#include <cstdlib>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <ctype.h>
+Index: libmusicbrainz-2.1.3/lib/sigclient.cpp
+===================================================================
+--- libmusicbrainz-2.1.3.orig/lib/sigclient.cpp	2008-07-18 15:40:55.000000000 +0100
++++ libmusicbrainz-2.1.3/lib/sigclient.cpp	2008-07-18 15:43:27.000000000 +0100
+@@ -29,6 +29,8 @@
+ email                : ijr@relatable.com
+ ***************************************************************************/
+ 
++#include <cstring>
++
+ #ifdef WIN32
+ #pragma warning(disable:4786)
+ #endif
