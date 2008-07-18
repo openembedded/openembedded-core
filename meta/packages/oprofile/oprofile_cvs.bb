@@ -1,5 +1,5 @@
-PV = "0.9.3+cvs${SRCDATE}"
-PR = "r4"
+PV = "0.9.4+cvs${SRCDATE}"
+PR = "r0"
 SECTION = "devel"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
@@ -8,10 +8,10 @@ DEPENDS = "popt binutils"
 RDEPENDS = "binutils-symlinks"
 RRECOMMENDS = "kernel-vmlinux"
 
+DEFAULT_PREFERENCE = "-1"
+
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
            file://opstart.patch;patch=1 \
-           file://fix_debug_search.patch;patch=1;pnum=0 \
-	   file://op-cross-compile.patch;patch=1;pnum=0 \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 
