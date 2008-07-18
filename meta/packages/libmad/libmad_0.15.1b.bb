@@ -6,6 +6,7 @@ LICENSE = "GPL"
 PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz \
+           file://no-force-mem.patch;patch=1 \
            file://add-pkgconfig.patch;patch=1"
 
 S = "${WORKDIR}/libmad-${PV}"
