@@ -63,7 +63,7 @@ do_configure_prepend() {
                     -e '/CONFIG_CMDLINE=/d' \
                     -i ${S}/.config
                 echo "CONFIG_INET=y"                     >> ${S}/.config
-				echo "CONFIG_IP_PNP=y"                   >> ${S}/.config
+                echo "CONFIG_IP_PNP=y"                   >> ${S}/.config
                 echo "CONFIG_USB_GADGET=y"               >> ${S}/.config
                 echo "CONFIG_USB_GADGET_SELECTED=y"      >> ${S}/.config
                 echo "CONFIG_USB_ETH=y"                  >> ${S}/.config
