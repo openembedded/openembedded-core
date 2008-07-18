@@ -10,7 +10,7 @@ Index: gcc-4.1.1/Makefile.in
  	AS="$(COMPILER_AS_FOR_TARGET)"; export AS; \
  	CC="$(CC_FOR_TARGET)"; export CC; \
  	CFLAGS="$(CFLAGS_FOR_TARGET)"; export CFLAGS; \
-+	CPP="$(CC_FOR_TARGET) -E"; export CCP; \
++	CPP="$(CC_FOR_TARGET) -E"; export CPP; \
  	CONFIG_SHELL="$(SHELL)"; export CONFIG_SHELL; \
  	CPPFLAGS="$(CPPFLAGS_FOR_TARGET)"; export CPPFLAGS; \
  	CXXFLAGS="$(CXXFLAGS_FOR_TARGET)"; export CXXFLAGS; \

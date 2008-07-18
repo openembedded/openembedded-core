@@ -18,9 +18,7 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	file://fedora/gcc43-cpp-pragma.patch;patch=1;pnum=0 \
 	file://fedora/gcc43-java-debug-iface-type.patch;patch=1;pnum=0 \
 	file://fedora/gcc43-libgomp-speedup.patch;patch=1;pnum=0 \
-	file://fedora/gcc43-pr35440.patch;patch=1;pnum=0 \
 	file://fedora/gcc43-i386-libgomp.patch;patch=1;pnum=0 \
-	file://fedora/gcc43-pr35751.patch;patch=1;pnum=0 \
 	file://fedora/gcc43-rh251682.patch;patch=1;pnum=0 \
         file://debian/arm-unbreak-eabi-armv4t.dpatch;patch=1 \
 	file://debian/libstdc++-pic.dpatch;patch=1;pnum=0 \
@@ -59,6 +57,8 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 #	file://pr34130.patch;patch=1 \
 #	file://fortran-static-linking.patch;patch=1 \
 #	file://intermask-bigendian.patch;patch=1 \
+	file://gcc-arm-frename-registers.patch;patch=1 \
+	file://gcc-release-branch/PR-36500-fix-neon.patch;patch=1 \
 "
 
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
@@ -67,5 +67,5 @@ SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
 FORTRAN = ""
 JAVA = ""
 
-EXTRA_OECONF_BASE = " --enable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap"
+EXTRA_OECONF_BASE = "  --enable-cheaders=c_std --enable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap"
 
