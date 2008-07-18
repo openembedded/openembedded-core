@@ -55,3 +55,7 @@ SRCREV_pn-libmatchbox ?= "${AUTOREV}"
 SRCREV_pn-tasks ?= "${AUTOREV}"
 SRCREV_pn-libjana = "${AUTOREV}"
 
+SRCDATE_oprofile ?= "${DATE}"
+
+PREFERRED_VERSION_oprofile ?= "0.9.4+cvs${SRCDATE_oprofile}"
+
