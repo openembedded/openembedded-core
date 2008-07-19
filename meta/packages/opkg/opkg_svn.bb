@@ -19,6 +19,8 @@ FILES_libopkg = "${libdir}/*.so.*"
 OPKG_INIT_POSITION = "98"
 OPKG_INIT_POSITION_slugos = "41"
 
+TARGET_CFLAGS += "-Wno-array-bounds"
+
 pkg_postinst_opkg () {
 #!/bin/sh
 if [ "x$D" != "x" ]; then
