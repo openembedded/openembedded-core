@@ -897,7 +897,7 @@ def get_subpkgedata_fn(pkg, d):
 	import bb, os
 	archs = bb.data.expand("${PACKAGE_ARCHS}", d).split(" ")
 	archs.reverse()
-	pkgdata = bb.data.expand('${STAGING_DIR}/pkgdata/', d)
+	pkgdata = bb.data.expand('${TMPDIR}/pkgdata/', d)
 	targetdir = bb.data.expand('${TARGET_VENDOR}-${TARGET_OS}/runtime/', d)
 	for arch in archs:
 		fn = pkgdata + arch + targetdir + pkg
