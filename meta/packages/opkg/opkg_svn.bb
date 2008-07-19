@@ -6,7 +6,7 @@ RCONFLICTS_update-alternatives-cworth = "update-alternatives-dpkg"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PR = "r6"
+PR = "r7"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
@@ -19,7 +19,12 @@ FILES_libopkg = "${libdir}/*.so.*"
 OPKG_INIT_POSITION = "98"
 OPKG_INIT_POSITION_slugos = "41"
 
-TARGET_CFLAGS += "-Wno-array-bounds"
+EXTRACFLAGS = ""
+EXTRACFLAGS_omap-3430ldp = "-Wno-array-bounds"
+EXTRACFLAGS_omap-3430sdp = "-Wno-array-bounds"
+EXTRACFLAGS_beagleboard = "-Wno-array-bounds"
+
+TARGET_CFLAGS += "${EXTRACFLAGS}"
 
 pkg_postinst_opkg () {
 #!/bin/sh
