@@ -284,7 +284,7 @@ populate_staging_postamble () {
 		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
 			exit $exitcode
 		fi
-		stage-manager -p ${CROSS_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-cross -u -d ${PSTAGE_TMPDIR_STAGE}/cross
+		stage-manager -p ${CROSS_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-cross -u -d ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}
 		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
 			exit $exitcode
 		fi
