@@ -18,6 +18,8 @@ PACKAGES =+ "udev-utils libvolume-id"
 FILES_udev-utils = "${usrbindir}/udevinfo ${usrbindir}/udevtest"
 FILES_libvolume-id = "${base_libdir}/libvolume_id.so.*"
 
+RRECOMMENDS_${PN} = "udev-extraconf"
+
 inherit update-rc.d autotools pkgconfig
 
 INITSCRIPT_NAME = "udev"

@@ -11,7 +11,6 @@ SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
 	   file://udevsynthesize.patch;patch=1 \
 	   file://udevsynthesize.sh \
            file://arm_inotify_fix.patch;patch=1 \
-	   file://mount.blacklist \
 	   "
 
 SRC_URI_append_h2200 = " file://50-hostap_cs.rules "
@@ -35,7 +34,6 @@ do_install () {
 
 	install -d ${D}${sysconfdir}/udev/rules.d/
 
-	install -m 0644 ${WORKDIR}/mount.blacklist     ${D}${sysconfdir}/udev/
 	install -m 0644 ${WORKDIR}/local.rules         ${D}${sysconfdir}/udev/rules.d/local.rules
 	install -m 0644 ${WORKDIR}/permissions.rules   ${D}${sysconfdir}/udev/rules.d/permissions.rules
 	install -m 0644 ${WORKDIR}/udev.rules          ${D}${sysconfdir}/udev/rules.d/udev.rules
