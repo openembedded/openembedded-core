@@ -4,7 +4,8 @@ PR = "r1"
 DESCRIPTION = "Common macros for building GNOME applications"
 inherit gnome
 
-PACKAGE_ARCH="all"
+# all isn't appropriate since STAGING_DATADIR is target specific
+# PACKAGE_ARCH="all"
 
 # The omf.make file failed if scrollkeeper doesn't happen to be
 # installed
