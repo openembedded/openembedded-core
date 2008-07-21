@@ -1,6 +1,6 @@
 DESCRIPTION = "Telepathy framework - GLib library"
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
-DEPENDS = "glib-2.0 dbus telepathy-glib"
+DEPENDS = "glib-2.0 dbus dbus-glib telepathy-glib"
 LICENSE = "LGPL"
 PR = "r2"
 
