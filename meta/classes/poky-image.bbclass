@@ -75,7 +75,10 @@ POKY_BASE_INSTALL = '\
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dev-pkgs"], "task-poky-nfs-server-dev", "",d)} \
     \
     ${@base_contains("IMAGE_FEATURES", "package-management", "${ROOTFS_PKGMANAGE}", "",d)} \
+    ${POKY_EXTRA_INSTALL} \
     '
+
+POKY_EXTRA_INSTALL ?= ""
 
 IMAGE_INSTALL ?= "${POKY_BASE_INSTALL}"
 
