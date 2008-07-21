@@ -18,6 +18,10 @@ EXTRA_OECONF_mx31litekit = "${BASE_CONF} --with-flavour=eglnative"
 PACKAGE_ARCH_mx31litekit = "${MACHINE_ARCH}"
 LDFLAGS_append_mx31litekit = " -lpvrNULLWSEGL -lstdc++ "
 
+DEPENDS_omap-3430ldp = "${STDDEPENDS} libgles-omap3 tslib"
+EXTRA_OECONF_omap-3430ldp = "${BASE_CONF} --with-flavour=eglnative"
+PACKAGE_ARCH_omap-3430ldp = "${MACHINE_ARCH}"
+
 DEPENDS_omap-3430sdp = "${STDDEPENDS} libgles-omap3 tslib"
 EXTRA_OECONF_omap-3430sdp = "${BASE_CONF} --with-flavour=eglnative"
 PACKAGE_ARCH_omap-3430sdp = "${MACHINE_ARCH}"
