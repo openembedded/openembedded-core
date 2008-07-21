@@ -1,0 +1,68 @@
+Typo in poodle chunk fixed: set_pxa_i2c_info->pxa_set_i2c_info.
+
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+To: Richard Purdie <rpurdie@rpsys.net>
+Date: Wed, 16 Jul 2008 23:19:36 +0100
+Message-Id: <1216246776-4500-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+List-Id: ARM Linux kernel discussions
+	<linux-arm-kernel.lists.arm.linux.org.uk>
+
+Both spitz and poodle have audio codecs on their primary I2C bus so need
+to call pxa_set_i2c_info() to set it up during init.  Tested on spitz by
+Stanislav.
+
+Reported-by: Stanislav Brabec <utx@penguin.cz>
+Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+---
+ arch/arm/mach-pxa/poodle.c |    2 ++
+ arch/arm/mach-pxa/spitz.c  |    2 ++
+ 2 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-pxa/poodle.c b/arch/arm/mach-pxa/poodle.c
+index 39612cf..510018b 100644
+--- a/arch/arm/mach-pxa/poodle.c
++++ b/arch/arm/mach-pxa/poodle.c
+@@ -36,6 +36,7 @@
+ #include <asm/arch/pxa2xx-gpio.h>
+ #include <asm/arch/mmc.h>
+ #include <asm/arch/udc.h>
++#include <asm/arch/i2c.h>
+ #include <asm/arch/irda.h>
+ #include <asm/arch/poodle.h>
+ #include <asm/arch/pxafb.h>
+@@ -387,6 +388,7 @@ static void __init poodle_init(void)
+ 	pxa_set_udc_info(&udc_info);
+ 	pxa_set_mci_info(&poodle_mci_platform_data);
+ 	pxa_set_ficp_info(&poodle_ficp_platform_data);
++	pxa_set_i2c_info(NULL);
+ 
+ 	platform_scoop_config = &poodle_pcmcia_config;
+ 
+diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
+index 35616a5..e2bde09 100644
+--- a/arch/arm/mach-pxa/spitz.c
++++ b/arch/arm/mach-pxa/spitz.c
+@@ -38,6 +38,7 @@
+ #include <asm/arch/pxa-regs.h>
+ #include <asm/arch/pxa2xx-regs.h>
+ #include <asm/arch/pxa2xx-gpio.h>
++#include <asm/arch/i2c.h>
+ #include <asm/arch/irda.h>
+ #include <asm/arch/mmc.h>
+ #include <asm/arch/ohci.h>
+@@ -572,6 +573,7 @@ static void __init common_init(void)
+ 	pxa_set_ficp_info(&spitz_ficp_platform_data);
+ 	set_pxa_fb_parent(&spitzssp_device.dev);
+ 	set_pxa_fb_info(&spitz_pxafb_info);
++	pxa_set_i2c_info(NULL);
+ }
+ 
+ #if defined(CONFIG_MACH_SPITZ) || defined(CONFIG_MACH_BORZOI)
+-- 
+1.5.6.2
+
+
+-------------------------------------------------------------------
+List admin: http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel
+FAQ:        http://www.arm.linux.org.uk/mailinglists/faq.php
+Etiquette:  http://www.arm.linux.org.uk/mailinglists/etiquette.php
