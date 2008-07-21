@@ -5,6 +5,9 @@ EXCLUDE_FROM_WORLD = "1"
 PACKAGES = ""
 PACKAGE_ARCH = "${BUILD_ARCH}"
 
+BASEPKG_HOST_SYS = "${BUILD_ARCH}${BUILD_VENDOR}-${BUILD_OS}"
+BASEPKG_TARGET_SYS = "${BUILD_ARCH}${BUILD_VENDOR}-${BUILD_OS}"
+
 # When this class has packaging enabled, setting 
 # RPROVIDES becomes unnecessary.
 RPROVIDES = "${PN}"
