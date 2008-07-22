@@ -1,0 +1,135 @@
+---
+ libfreesmartphone/Makefile.am |   14 +++++++-------
+ serial/Makefile.am            |    2 +-
+ src/Makefile.am               |   14 +++++++-------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
+
+--- git.orig/libfreesmartphone/Makefile.am
++++ git/libfreesmartphone/Makefile.am
+@@ -21,47 +21,47 @@ fso-marshallers.h: $(top_srcdir)/src/sma
+ fso-marshallers.c: $(top_srcdir)/src/smartphone_marshaller.txt
+ 	glib-genmarshal --prefix fso_marshaller --body $(top_srcdir)/src/smartphone_marshaller.txt > fso-marshallers.c
+ 
+ 
+ freesmartphone-call-binding.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Call.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_call --mode=glib-client \
+                    --output=freesmartphone-call-binding.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Call.xml
+ 
+ freesmartphone-sms-binding.h: $(top_srcdir)/interface/org.freesmartphone.GSM.SMS.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_sms --mode=glib-client \
+                    --output=freesmartphone-sms-binding.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.SMS.xml
+ 
+ freesmartphone-device-binding.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Device.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_device --mode=glib-client \
+                    --output=freesmartphone-device-binding.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Device.xml
+ 
+ freesmartphone-sim-binding.h: $(top_srcdir)/interface/org.freesmartphone.GSM.SIM.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_sim --mode=glib-client \
+                    --output=freesmartphone-sim-binding.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.SIM.xml
+ 
+ freesmartphone-phonebook-binding.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Phonebook.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_phonebook --mode=glib-client \
+                    --output=freesmartphone-phonebook-binding.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Phonebook.xml
+ 
+ freesmartphone-pdp-binding.h: $(top_srcdir)/interface/org.freesmartphone.GSM.PDP.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_pdp --mode=glib-client \
+                    --output=freesmartphone-pdp-binding.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.PDP.xml
+ 
+ freesmartphone-network-binding.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Network.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_network --mode=glib-client \
+                    --output=freesmartphone-network-binding.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Network.xml
+ 
+ CLEANFILES = $(BUILT_SOURCES)
+--- git.orig/serial/Makefile.am
++++ git/serial/Makefile.am
+@@ -11,11 +11,11 @@ COMMON_LDFLAGS =  -avoid-version -module
+ BUILT_SOURCES = fsomuxer_client.h
+ 
+ CLEANFILES = $(BUILT_SOURCES)
+ 
+ fsomuxer_client.h: fsomuxer.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --mode=glib-client \
+                    --output=fsomuxer_client.h \
+                    fsomuxer.xml
+ 
+ 
+--- git.orig/src/Makefile.am
++++ git/src/Makefile.am
+@@ -30,47 +30,47 @@ dbus_marshal.h: $(srcdir)/smartphone_mar
+ dbus_marshal.c: $(srcdir)/smartphone_marshaller.txt
+ 	glib-genmarshal --prefix gsmd_smartphone_marshaller --body $(srcdir)/smartphone_marshaller.txt > dbus_marshal.c
+ 
+ 
+ dbus_call_glue.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Call.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_call --mode=glib-server \
+                    --output=dbus_call_glue.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Call.xml
+ 
+ dbus_sms_glue.h: $(top_srcdir)/interface/org.freesmartphone.GSM.SMS.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_sms --mode=glib-server \
+                    --output=dbus_sms_glue.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.SMS.xml
+ 
+ dbus_device_glue.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Device.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_device --mode=glib-server \
+                    --output=dbus_device_glue.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Device.xml
+ 
+ dbus_sim_glue.h: $(top_srcdir)/interface/org.freesmartphone.GSM.SIM.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_sim --mode=glib-server \
+                    --output=dbus_sim_glue.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.SIM.xml
+ 
+ dbus_phonebook_glue.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Phonebook.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_phonebook --mode=glib-server \
+                    --output=dbus_phonebook_glue.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Phonebook.xml
+ 
+ dbus_pdp_glue.h: $(top_srcdir)/interface/org.freesmartphone.GSM.PDP.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_pdp --mode=glib-server \
+                    --output=dbus_pdp_glue.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.PDP.xml
+ 
+ dbus_network_glue.h: $(top_srcdir)/interface/org.freesmartphone.GSM.Network.xml
+-	$(LIBTOOL) --mode=execute /usr/bin/dbus-binding-tool \
++	$(LIBTOOL) --mode=execute dbus-binding-tool \
+ 		   --prefix=smartphone_network --mode=glib-server \
+                    --output=dbus_network_glue.h \
+                    $(top_srcdir)/interface/org.freesmartphone.GSM.Network.xml
+ 
+ gsmd-types.h: $(srcdir)/gsmd-error.h
