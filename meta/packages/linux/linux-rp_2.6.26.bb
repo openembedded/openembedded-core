@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r7"
+PR = "r8"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_qemuarm = "1"
@@ -56,6 +56,7 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.25.tar.bz2 \
            file://versatile-armv6.patch;patch=1 \
 	   file://cpufreq-fix.patch;patch=1 \
 	   file://zaurus-i2c-init.patch;patch=1 \
+	   file://fixes.patch;patch=1 \
            file://defconfig-c7x0 \
            file://defconfig-hx2000 \
            file://defconfig-akita \
