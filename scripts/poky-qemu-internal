@@ -56,6 +56,8 @@ fi
 
 case "$MACHINE" in
 	"qemuarm") ;;
+	"qemuarmv6") ;;
+	"qemuarmv7") ;;
 	"qemux86") ;;
 	"akita") ;;
 	"spitz") ;;
@@ -84,7 +86,7 @@ if [ -e /proc/sys/vm/mmap_min_addr ]; then
     fi
 fi
 
-if [ "$MACHINE" = "qemuarm" ]; then
+if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarmv7" ]; then
     QEMU=qemu-system-arm
     if [ "$TYPE" = "ext2" ]; then
         KERNCMDLINE="root=/dev/sda console=ttyAMA0 console=tty0 mem=$QEMU_MEMORY"
@@ -101,6 +103,12 @@ if [ "$MACHINE" = "qemuarm" ]; then
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -no-reboot"
     fi
+	if [ "$MACHINE" = "qemuarmv6" ]; then
+		QEMUOPTIONS="$QEMUOPTIONS -cpu arm1136"
+	fi
+	if [ "$MACHINE" = "qemuarmv7" ]; then
+		QEMUOPTIONS="$QEMUOPTIONS -cpu cortex-a8"
+	fi
 fi
 
 if [ "$MACHINE" = "qemux86" ]; then
