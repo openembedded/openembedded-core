@@ -4,6 +4,8 @@ PR = "r7"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_qemuarm = "1"
+DEFAULT_PREFERENCE_qemuarmv6 = "1"
+DEFAULT_PREFERENCE_qemuarmv7 = "1"
 DEFAULT_PREFERENCE_qemux86 = "1"
 DEFAULT_PREFERENCE_spitz = "1"
 DEFAULT_PREFERENCE_c7x0 = "1"
@@ -59,6 +61,8 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.25.tar.bz2 \
            file://defconfig-akita \
            file://defconfig-spitz \
            file://defconfig-qemuarm \
+           file://defconfig-qemuarmv6 \
+           file://defconfig-qemuarmv7 \
            file://defconfig-qemux86 \
            file://defconfig-bootcdx86 \
            file://defconfig-htcuniversal \
