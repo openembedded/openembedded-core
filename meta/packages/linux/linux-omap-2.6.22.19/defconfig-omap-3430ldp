@@ -312,7 +312,7 @@ CONFIG_PM=y
 # CONFIG_PM_LEGACY is not set
 # CONFIG_PM_DEBUG is not set
 CONFIG_PM_SYSFS_DEPRECATED=y
-# CONFIG_APM_EMULATION is not set
+CONFIG_APM_EMULATION=y
 
 #
 # OMAP power management options
