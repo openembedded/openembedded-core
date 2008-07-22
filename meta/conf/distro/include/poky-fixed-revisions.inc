@@ -133,6 +133,8 @@ SRCREV_pn-uboot-openmoko_upstream ?= "1ce55151c85d068f70317a8d65c61058b891afb4"
 SRCREV_pn-usbpath-native = "3172"
 SRCREV_pn-usbpath = "3172"
 SRCREV_pn-xserver-kdrive-glamo ?= "a51364e2f23d4b6331c5ed613ce3f7e15f8e540f"
+SRCREV_pn-gsm0710muxd ?= "6fecc78198dd821bbe29efd096bd8fecd855179d"
+SRCREV_pn-gsmd2 ?= "963f34df8fa3ff4b301079dcf86e9acea6b6fe0f"
 
 #
 # Preferred Versions:
