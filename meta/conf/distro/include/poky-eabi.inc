@@ -13,6 +13,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "gcc-cross"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
 
 GCCVERSION = "4.2.3"
+GCCVERSION_qemuarmv7 = "4.3.1"
 GCCVERSION_beagleboard = "4.3.1"
 GCCVERSION_omap-3430sdp = "4.3.1"
 GCCVERSION_omap-3430ldp = "4.3.1"
