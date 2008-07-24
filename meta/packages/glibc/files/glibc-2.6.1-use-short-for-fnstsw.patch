@@ -1,0 +1,30 @@
+Source: http://sourceware.org/ml/libc-alpha/2008-01/msg00017.html
+
+I am checking this x86 assembler patch:
+
+http://sourceware.org/ml/binutils/2008-01/msg00148.html
+
+to check operand size. fnstsw stores 16bit into %ax. The upper
+16bit of %eax is unchanged.  The new assembler will disallow
+"fnstsw %eax".  Here is a patch for glibc.
+
+
+H.J.
+
+---
+ sysdeps/i386/fpu/ftestexcept.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: glibc-2.6.1/sysdeps/i386/fpu/ftestexcept.c
+===================================================================
+--- glibc-2.6.1.orig/sysdeps/i386/fpu/ftestexcept.c	2008-07-19 11:00:45.000000000 -0700
++++ glibc-2.6.1/sysdeps/i386/fpu/ftestexcept.c	2008-07-19 11:01:25.000000000 -0700
+@@ -26,7 +26,7 @@
+ int
+ fetestexcept (int excepts)
+ {
+-  int temp;
++  short temp;
+   int xtemp = 0;
+ 
+   /* Get current exceptions.  */

@@ -1,4 +1,4 @@
-PR = "r16"
+PR = "r17"
 
 require gcc-${PV}.inc
 require gcc-cross4.inc

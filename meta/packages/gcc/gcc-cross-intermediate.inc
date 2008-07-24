@@ -1,16 +1,14 @@
 DEPENDS = "virtual/${TARGET_PREFIX}binutils"
-PROVIDES = "virtual/${TARGET_PREFIX}gcc-initial"
+DEPENDS += "virtual/${TARGET_PREFIX}libc-initial"
+PROVIDES = "virtual/${TARGET_PREFIX}gcc-intermediate"
 PACKAGES = ""
 
 # This is intended to be a -very- basic config
 # sysroot is needed in case we use libc-initial
 EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${layout_prefix} \
-		--with-newlib \
-		--without-headers \
-		--disable-shared \
-		--disable-threads \
+		--enable-shared \
 		--disable-multilib \
-		--disable-__cxa_atexit \
+		--disable-threads \
 		--enable-languages=c \
 		--enable-target-optspace \
 		--program-prefix=${TARGET_PREFIX} \

@@ -7,10 +7,6 @@ EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${layout_prefix} 
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 
-do_configure_prepend () {
-	rm -f ${CROSS_DIR}/lib/gcc/${TARGET_SYS}/${BINV}/libgcc_eh.a
-}
-
 do_compile_prepend () {
 	export CC="${BUILD_CC}"
 	export AR_FOR_TARGET="${TARGET_SYS}-ar"

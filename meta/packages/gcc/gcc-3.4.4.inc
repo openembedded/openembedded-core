@@ -17,6 +17,7 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://always-fixincperm.patch;patch=1 \
 	   file://GCOV_PREFIX_STRIP-cross-profile_3.4.patch;patch=1 \
 	   file://zecke-xgcc-cpp.patch;patch=1 \
+	   file://gcc-libgcc2-inhibit-libc.patch;patch=1 \
 	   file://gcc4-mtune-compat.patch;patch=1"
 
 SRC_URI += "file://gcc34-configure.in.patch;patch=1"

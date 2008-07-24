@@ -1,5 +1,5 @@
 SECTION = "libs"
-DEPENDS = "linux-libc-headers"
+DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial linux-libc-headers"
 PROVIDES = "virtual/${TARGET_PREFIX}libc-initial"
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/glibc-2.4', '${FILE_DIRNAME}/glibc', '${FILE_DIRNAME}/files', '${FILE_DIRNAME}' ], d)}"
 
@@ -9,7 +9,8 @@ PACKAGES_DYNAMIC = ""
 do_configure () {
 	sed -ie 's,{ (exit 1); exit 1; }; },{ (exit 0); }; },g' ${S}/configure
 	chmod +x ${S}/configure
-	CC="${BUILD_CC}" CPP="${BUILD_CPP}" LD="${BUILD_LD}" ${S}/configure --host=${TARGET_SYS} --build=${BUILD_SYS} \
+	find ${S} -name "configure" | xargs touch
+	${S}/configure --host=${TARGET_SYS} --build=${BUILD_SYS} \
 		--without-cvs --disable-sanity-checks \
 		--with-headers=${STAGING_DIR_TARGET}${layout_includedir} \
 		--enable-hacker-mode
@@ -30,8 +31,11 @@ do_compile () {
 }
 
 do_stage () {
-	oe_runmake cross-compiling=yes install_root=${STAGING_DIR_HOST} includedir='${layout_includedir}' prefix='${layout_prefix}' install-headers
+	oe_runmake cross-compiling=yes install_root=${STAGING_DIR_HOST} \
+	includedir='${layout_includedir}' prefix='${layout_prefix}' \
+	install-bootstrap-headers=yes install-headers
 
+	oe_runmake csu/subdir_lib
 	# Two headers -- stubs.h and features.h -- aren't installed by install-headers,
 	# so do them by hand.  We can tolerate an empty stubs.h for the moment.
 	# See e.g. http://gcc.gnu.org/ml/gcc/2002-01/msg00900.html
@@ -42,6 +46,10 @@ do_stage () {
 	if [ -e ${B}/bits/stdio_lim.h ]; then
 		cp ${B}/bits/stdio_lim.h  ${STAGING_INCDIR}/bits/
 	fi
+	mkdir -p ${STAGING_DIR_TARGET}${layout_libdir}
+	install -m 644 csu/crt[1in].o ${STAGING_DIR_TARGET}${layout_libdir}
+	${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
+		-o ${STAGING_DIR_TARGET}${layout_libdir}/libc.so
 }
 
 do_install () {
