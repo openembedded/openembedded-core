@@ -141,7 +141,7 @@ def check_sanity(e):
 	#
 	# Check the 'ABI' of TMPDIR
 	#
-	current_abi = data.getVar('SANITY_ABI', e.data, True)
+	current_abi = data.getVar('OELAYOUT_ABI', e.data, True)
 	abifile = data.getVar('SANITY_ABIFILE', e.data, True)
 	if os.path.exists(abifile):
 		f = file(abifile, "r")
