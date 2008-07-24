@@ -1,13 +1,10 @@
 PROVIDES = "\
     linux-libc-headers \
-    virtual/arm-poky-linux-gnueabi-gcc \
-    virtual/arm-poky-linux-gnueabi-gcc-initial \
-    virtual/arm-poky-linux-binutils \
-    virtual/arm-poky-linux-libc-for-gcc \
-    virtual/i586-poky-linux-gcc \
-    virtual/i586-poky-linux-gcc-initial \
-    virtual/i586-poky-linux-binutils \
-    virtual/i586-poky-linux-libc-for-gcc \
+    virtual/${TARGET_PREFIX}gcc \
+    virtual/${TARGET_PREFIX}gcc-intermediate \
+    virtual/${TARGET_PREFIX}gcc-initial \
+    virtual/${TARGET_PREFIX}binutils \
+    virtual/${TARGET_PREFIX}libc-for-gcc \
     virtual/libc \
     virtual/libintl \
     virtual/libiconv \
