@@ -1,12 +1,12 @@
 DESCRIPTION = "Matchbox Window Manager Desktop"
 LICENSE = "GPL"
-DEPENDS = "gtk+ startup-notification"
+DEPENDS = "gtk+ startup-notification dbus"
 SECTION = "x11/wm"
 PV = "2.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN}-2;proto=http"
 
-EXTRA_OECONF = "--enable-startup-notification"
+EXTRA_OECONF = "--enable-startup-notification --with-dbus"
 
 S = "${WORKDIR}/${PN}-2"
 
