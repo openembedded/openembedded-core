@@ -1,5 +1,5 @@
 require linux-omap.inc
-PR = "r4"
+PR = "r5"
 COMPATIBLE_MACHINE = "omap-3430ldp"
 SRC_URI="http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.22.19.tar.bz2 \
          file://defconfig-omap-3430ldp \
