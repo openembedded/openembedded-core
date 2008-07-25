@@ -4,7 +4,6 @@ HOMEPAGE = "http://avahi.org"
 SECTION = "network"
 PRIORITY = "optional"
 LICENSE = "GPL"
-
 DEPENDS = "expat libdaemon dbus glib-2.0 gtk+ libglade"
 RRECOMMENDS = "libnss-mdns"
 RRECOMMENDS_avahi-daemon = "libnss-mdns"
@@ -16,6 +15,7 @@ inherit autotools pkgconfig update-rc.d
 
 EXTRA_OECONF = "--with-distro=debian \
              --with-avahi-priv-access-group=adm \
+             --disable-stack-protector \
              --disable-gdbm \
              --disable-mono \
              --disable-monodoc \
