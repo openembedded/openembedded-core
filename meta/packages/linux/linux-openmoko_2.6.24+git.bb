@@ -5,9 +5,10 @@ DESCRIPTION = "Linux 2.6.x (development) kernel for FIC SmartPhones shipping w/ 
 
 PE = "1"
 PV = "${KERNEL_RELEASE}+git${SRCREV}"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "git://git.openmoko.org/git/kernel.git;protocol=git;branch=stable"
+SRC_URI = "git://git.openmoko.org/git/kernel.git;protocol=git;branch=stable \
+           file://timespec_add_ns_avoid_udivdi3.patch;patch=1"
 
 S = "${WORKDIR}/git"
 

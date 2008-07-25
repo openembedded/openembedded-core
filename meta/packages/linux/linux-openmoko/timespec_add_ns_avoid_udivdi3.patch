@@ -1,0 +1,20 @@
+Backport of this patch here
+
+http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg270684.html
+
+Needed for 2.6.24 to compile with gcc 4.3
+Index: linux-2.6.24/include/linux/time.h
+===================================================================
+--- linux-2.6.24.orig/include/linux/time.h	2008-05-28 15:39:46.000000000 -0700
++++ linux-2.6.24/include/linux/time.h	2008-05-28 15:40:48.000000000 -0700
+@@ -173,6 +173,10 @@
+ {
+ 	ns += a->tv_nsec;
+ 	while(unlikely(ns >= NSEC_PER_SEC)) {
++		/* The following asm() prevents the compiler from
++		* optimising this loop into a modulo operation.  */
++		asm("" : "+r"(ns));
++
+ 		ns -= NSEC_PER_SEC;
+ 		a->tv_sec++;
+ 	}
