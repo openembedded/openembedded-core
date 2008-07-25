@@ -4,7 +4,7 @@ AUTHOR = "Russell King w/ plugins by Chris Larson et. al."
 SECTION = "base"
 LICENSE = "LGPL"
 
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-1.0.tar.bz2 \
            file://fix_version.patch;patch=1 \
@@ -66,7 +66,7 @@ PACKAGE_ARCH_tslib-conf_omap1610h2 = "${MACHINE_ARCH}"
 PACKAGE_ARCH_tslib-conf_omap5912osk = "${MACHINE_ARCH}"
 PACKAGE_ARCH_tslib-conf_simpad = "${MACHINE_ARCH}"
 
-PACKAGES =+ "tslib-conf libts-dev tslib-tests tslib-calibrate"
+PACKAGES =+ "tslib-conf tslib-tests tslib-calibrate"
 DEBIAN_NOAUTONAME_tslib-conf = "1"
 DEBIAN_NOAUTONAME_tslib-tests = "1"
 DEBIAN_NOAUTONAME_tslib-calibrate = "1"
@@ -77,6 +77,5 @@ RRECOMMENDS_${PN} = "pointercal"
 FILES_${PN}-dbg += "${libdir}/ts/.debug*"
 FILES_tslib-conf = "${sysconfdir}/ts.conf ${sysconfdir}/profile.d/tslib.sh ${datadir}/tslib"
 FILES_${PN} = "${libdir}/*.so.* ${libdir}/ts/*.so*"
-FILES_libts-dev = "${FILES_tslib-dev}"
 FILES_tslib-calibrate += "${bindir}/ts_calibrate"
 FILES_tslib-tests = "${bindir}/ts_harvest ${bindir}/ts_print ${bindir}/ts_print_raw ${bindir}/ts_test"
