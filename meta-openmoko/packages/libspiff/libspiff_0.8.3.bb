@@ -5,7 +5,9 @@ LICENSE = "BSD"
 DEPENDS = "expat liburiparser"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libspiff/libspiff-${PV}.tar.bz2 \
-           file://autofoo.patch;patch=1"
+           file://autofoo.patch;patch=1 \
+	   file://makefile.patch;patch=1"
+
 S = "${WORKDIR}/libspiff-${PV}"
 
 inherit autotools pkgconfig lib_package

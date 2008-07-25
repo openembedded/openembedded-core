@@ -1,0 +1,15 @@
+---
+ Makefile.am |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- libspiff-0.8.3.orig/Makefile.am
++++ libspiff-0.8.3/Makefile.am
+@@ -1,7 +1,7 @@
+ ## Process this file with automake to produce Makefile.in
+-AUTOMAKE_OPTIONS = 1.10.1 gnu dist-zip dist-bzip2 dist-lzma subdir-objects
++AUTOMAKE_OPTIONS = 1.10 gnu dist-zip dist-bzip2 subdir-objects
+ 
+ lib_LTLIBRARIES = libspiff.la
+ 
+ bin_PROGRAMS = \
+ 	examples/check/spiff_check \
