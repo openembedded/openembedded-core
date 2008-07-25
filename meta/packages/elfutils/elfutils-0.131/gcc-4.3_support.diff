@@ -1,0 +1,100 @@
+Index: elfutils-0.131/libelf/common.h
+===================================================================
+--- elfutils-0.131.orig/libelf/common.h	2008-04-02 13:32:19.000000000 -0300
++++ elfutils-0.131/libelf/common.h	2008-04-02 13:35:53.000000000 -0300
+@@ -110,45 +110,6 @@
+ }
+ 
+ 
+-/* Acquire lock for the descriptor and all children.  */
+-static void
+-libelf_acquire_all (Elf *elf)
+-{
+-  rwlock_wrlock (elf->lock);
+-
+-  if (elf->kind == ELF_K_AR)
+-    {
+-      Elf *child = elf->state.ar.children;
+-
+-      while (child != NULL)
+-	{
+-	  if (child->ref_count != 0)
+-	    libelf_acquire_all (child);
+-	  child = child->next;
+-	}
+-    }
+-}
+-
+-/* Release own lock and those of the children.  */
+-static void
+-libelf_release_all (Elf *elf)
+-{
+-  if (elf->kind == ELF_K_AR)
+-    {
+-      Elf *child = elf->state.ar.children;
+-
+-      while (child != NULL)
+-	{
+-	  if (child->ref_count != 0)
+-	    libelf_release_all (child);
+-	  child = child->next;
+-	}
+-    }
+-
+-  rwlock_unlock (elf->lock);
+-}
+-
+-
+ /* Macro to convert endianess in place.  It determines the function it
+    has to use itself.  */
+ #define CONVERT(Var) \
+Index: elfutils-0.131/libelf/elf_readall.c
+===================================================================
+--- elfutils-0.131.orig/libelf/elf_readall.c	2008-04-02 13:36:06.000000000 -0300
++++ elfutils-0.131/libelf/elf_readall.c	2008-04-02 13:38:25.000000000 -0300
+@@ -60,6 +60,45 @@
+ #include "common.h"
+ 
+ 
++/* Acquire lock for the descriptor and all children.  */
++static void
++libelf_acquire_all (Elf *elf)
++{
++  rwlock_wrlock (elf->lock);
++
++  if (elf->kind == ELF_K_AR)
++    {
++      Elf *child = elf->state.ar.children;
++
++      while (child != NULL)
++	{
++	  if (child->ref_count != 0)
++	    libelf_acquire_all (child);
++	  child = child->next;
++	}
++    }
++}
++
++/* Release own lock and those of the children.  */
++static void
++libelf_release_all (Elf *elf)
++{
++  if (elf->kind == ELF_K_AR)
++    {
++      Elf *child = elf->state.ar.children;
++
++      while (child != NULL)
++	{
++	  if (child->ref_count != 0)
++	    libelf_release_all (child);
++	  child = child->next;
++	}
++    }
++
++  rwlock_unlock (elf->lock);
++}
++
++
+ static void
+ set_address (Elf *elf, size_t offset)
+ {

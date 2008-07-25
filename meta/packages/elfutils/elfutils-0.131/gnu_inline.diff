@@ -1,0 +1,105 @@
+---
+ backends/ia64_retval.c |    3 +++
+ libdw/libdw.h          |    2 +-
+ libdw/libdwP.h         |    3 +++
+ src/ld.h               |    3 +++
+ src/strip.c            |    3 +++
+ src/unstrip.c          |    4 ++++
+ 6 files changed, 17 insertions(+), 1 deletion(-)
+
+--- elfutils-0.131.orig/backends/ia64_retval.c
++++ elfutils-0.131/backends/ia64_retval.c
+@@ -31,10 +31,13 @@
+ #include <dwarf.h>
+ 
+ #define BACKEND ia64_
+ #include "libebl_CPU.h"
+ 
++#if defined(__GNUC_GNU_INLINE__) || defined(__GNUC_STDC_INLINE__)
++#define inline inline __attribute__ ((gnu_inline))
++#endif
+ 
+ /* r8, or pair r8, r9, or aggregate up to r8-r11.  */
+ static const Dwarf_Op loc_intreg[] =
+   {
+     { .atom = DW_OP_reg8 }, { .atom = DW_OP_piece, .number = 8 },
+--- elfutils-0.131.orig/libdw/libdw.h
++++ elfutils-0.131/libdw/libdw.h
+@@ -62,11 +62,11 @@
+ # define __nonnull_attribute__(args...)
+ # define __deprecated_attribute__
+ #endif
+ 
+ 
+-#ifdef __GNUC_STDC_INLINE__
++#if defined(__GNUC_GNU_INLINE__) || defined(__GNUC_STDC_INLINE__)
+ # define __libdw_extern_inline extern __inline __attribute__ ((__gnu_inline__))
+ #else
+ # define __libdw_extern_inline extern __inline
+ #endif
+ 
+--- elfutils-0.131.orig/libdw/libdwP.h
++++ elfutils-0.131/libdw/libdwP.h
+@@ -54,10 +54,13 @@
+ #include <libintl.h>
+ #include <stdbool.h>
+ 
+ #include <libdw.h>
+ 
++#if defined(__GNUC_GNU_INLINE__) || defined(__GNUC_STDC_INLINE__)
++#define inline inline __attribute__ ((gnu_inline))
++#endif
+ 
+ /* gettext helper macros.  */
+ #define _(Str) dgettext ("elfutils", Str)
+ 
+ 
+--- elfutils-0.131.orig/src/ld.h
++++ elfutils-0.131/src/ld.h
+@@ -30,10 +30,13 @@
+ #include <obstack.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include "xelf.h"
+ 
++#if defined(__GNUC_GNU_INLINE__) || defined(__GNUC_STDC_INLINE__)
++#define inline inline __attribute__ ((gnu_inline))
++#endif
+ 
+ /* Recommended size of the buffer passed to ld_strerror.  */
+ #define ERRBUFSIZE	(512)
+ 
+ /* Character used to introduce version name after symbol.  */
+--- elfutils-0.131.orig/src/strip.c
++++ elfutils-0.131/src/strip.c
+@@ -50,10 +50,13 @@
+ 
+ #include <elf-knowledge.h>
+ #include <libebl.h>
+ #include <system.h>
+ 
++#if defined(__GNUC_GNU_INLINE__) || defined(__GNUC_STDC_INLINE__)
++#define inline inline __attribute__ ((gnu_inline))
++#endif
+ 
+ /* Name and version of program.  */
+ static void print_version (FILE *stream, struct argp_state *state);
+ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
+ 
+--- elfutils-0.131.orig/src/unstrip.c
++++ elfutils-0.131/src/unstrip.c
+@@ -60,10 +60,14 @@
+ 
+ #ifndef _
+ # define _(str) gettext (str)
+ #endif
+ 
++#if defined(__GNUC_GNU_INLINE__) || defined(__GNUC_STDC_INLINE__)
++#define inline inline __attribute__ ((gnu_inline))
++#endif
++
+ /* Name and version of program.  */
+ static void print_version (FILE *stream, struct argp_state *state);
+ void (*argp_program_version_hook) (FILE *, struct argp_state *)
+   = print_version;
+ 

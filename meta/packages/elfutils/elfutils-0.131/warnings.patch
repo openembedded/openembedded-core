@@ -1,0 +1,154 @@
+---
+ configure.ac       |    4 ++++
+ lib/Makefile.am    |    2 +-
+ libasm/Makefile.am |    2 +-
+ libcpu/Makefile.am |    2 +-
+ libdw/Makefile.am  |    2 +-
+ libebl/Makefile.am |    2 +-
+ libelf/Makefile.am |    2 +-
+ src/Makefile.am    |    2 +-
+ tests/Makefile.am  |    4 ++--
+ 9 files changed, 13 insertions(+), 9 deletions(-)
+
+--- elfutils-0.131.orig/configure.ac
++++ elfutils-0.131/configure.ac
+@@ -54,10 +54,14 @@ AC_DEFINE(USE_TLS))
+ AH_TEMPLATE([USE_TLS], [Defined if thread local storage should be used.])
+ 
+ dnl Add all the languages for which translations are available.
+ ALL_LINGUAS=
+ 
++if test X"$CFLAGS" = X; then
++  CFLAGS="-Wall  -g -O2"
++fi
++
+ AC_PROG_CC
+ AC_PROG_RANLIB
+ AC_PROG_YACC
+ AM_PROG_LEX
+ 
+--- elfutils-0.131.orig/lib/Makefile.am
++++ elfutils-0.131/lib/Makefile.am
+@@ -28,11 +28,11 @@ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H
+ if MUDFLAP
+ AM_CFLAGS = -fmudflap
+ else
+ AM_CFLAGS =
+ endif
+-AM_CFLAGS += -fpic -Wall -Wshadow -Werror -Wunused -Wextra $($(*F)_CFLAGS)
++AM_CFLAGS += -fpic -Wshadow -Wunused $($(*F)_CFLAGS)
+ INCLUDES = -I$(srcdir)/../libelf -I..
+ 
+ noinst_LIBRARIES = libeu.a
+ 
+ libeu_a_SOURCES = xstrndup.c xmalloc.c next_prime.c \
+--- elfutils-0.131.orig/libasm/Makefile.am
++++ elfutils-0.131/libasm/Makefile.am
+@@ -28,11 +28,11 @@ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H
+ if MUDFLAP
+ AM_CFLAGS = -fmudflap
+ else
+ AM_CFLAGS =
+ endif
+-AM_CFLAGS += -std=gnu99 -Wall -Wshadow -Werror -Wunused -Wextra -Wformat=2
++AM_CFLAGS += -std=gnu99 -Wall -Wshadow -Wunused -Wextra -Wformat=2
+ INCLUDES = -I. -I$(srcdir) -I.. \
+ 	   -I$(top_srcdir)/libelf -I$(top_srcdir)/libebl -I$(top_srcdir)/libdw\
+ 	   -I$(top_srcdir)/lib
+ GCC_INCLUDE = -I$(shell $(CC) -print-file-name=include)
+ VERSION = 1
+--- elfutils-0.131.orig/libcpu/Makefile.am
++++ elfutils-0.131/libcpu/Makefile.am
+@@ -23,11 +23,11 @@
+ ## included package.  Should you wish to participate in the Open Invention
+ ## Network licensing program, please visit www.openinventionnetwork.com
+ ## <http://www.openinventionnetwork.com>.
+ ##
+ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H
+-AM_CFLAGS = -Wall -Wshadow -Werror -Wextra -Wformat=2 -Wunused
++AM_CFLAGS = -Wshadow -Wformat=2 -Wunused
+ INCLUDES = -I$(srcdir)
+ 
+ noinst_LIBRARIES = libcpu_i386.a
+ 
+ libcpu_i386_a_SOURCES = i386_dis.c
+--- elfutils-0.131.orig/libdw/Makefile.am
++++ elfutils-0.131/libdw/Makefile.am
+@@ -31,11 +31,11 @@ else
+ AM_CFLAGS =
+ endif
+ if BUILD_STATIC
+ AM_CFLAGS += -fpic
+ endif
+-AM_CFLAGS += -Wall -Werror -Wshadow -Wunused -Wformat=2 -Wextra -std=gnu99
++AM_CFLAGS += -Wshadow -Wunused -Wformat=2 -std=gnu99
+ INCLUDES = -I. -I$(srcdir) -I$(srcdir)/../libelf -I.. -I$(srcdir)/../lib
+ VERSION = 1
+ 
+ COMPILE.os = $(filter-out -fprofile-arcs, $(filter-out -ftest-coverage, \
+ 						       $(COMPILE)))
+--- elfutils-0.131.orig/libebl/Makefile.am
++++ elfutils-0.131/libebl/Makefile.am
+@@ -28,11 +28,11 @@ DEFS = -D_GNU_SOURCE -DHAVE_CONFIG_H -DO
+ if MUDFLAP
+ AM_CFLAGS = -fmudflap
+ else
+ AM_CFLAGS =
+ endif
+-AM_CFLAGS += -fpic -Wall -Wshadow -Werror -Wunused -Wextra -Wformat=2 \
++AM_CFLAGS += -fpic -Wshadow -Wunused -Wformat=2 \
+ 	     -std=gnu99
+ 
+ INCLUDES = -I$(srcdir) -I$(top_srcdir)/libelf -I$(top_srcdir)/libdw \
+ 	   -I$(top_srcdir)/lib -I..
+ VERSION = 1
+--- elfutils-0.131.orig/libelf/Makefile.am
++++ elfutils-0.131/libelf/Makefile.am
+@@ -31,11 +31,11 @@ else
+ AM_CFLAGS =
+ endif
+ if BUILD_STATIC
+ AM_CFLAGS += -fpic
+ endif
+-AM_CFLAGS += -Wall -Wshadow -Werror -Wunused -Wextra -Wformat=2 -std=gnu99 \
++AM_CFLAGS += -Wshadow -Wunused -Wformat=2 -std=gnu99 \
+ 	     $($(*F)_CFLAGS)
+ INCLUDES = -I$(srcdir) -I$(top_srcdir)/lib -I..
+ GCC_INCLUDE = -I$(shell $(CC) -print-file-name=include)
+ VERSION = 1
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+--- elfutils-0.131.orig/src/Makefile.am
++++ elfutils-0.131/src/Makefile.am
+@@ -30,11 +30,11 @@ if MUDFLAP
+ AM_CFLAGS = -fmudflap
+ else
+ AM_CFLAGS =
+ endif
+ AM_CFLAGS += -Wall -Wshadow -std=gnu99 $(native_ld_cflags) \
+-	     $(if $($(*F)_no_Werror),,-Werror) \
++	     $(if $($(*F)_no_Werror),,) \
+ 	     $(if $($(*F)_no_Wunused),,-Wunused -Wextra) \
+ 	     $(if $($(*F)_no_Wformat),,-Wformat=2) $(CFLAGS_$(*F))
+ 
+ INCLUDES = -I$(srcdir) -I$(srcdir)/../libelf -I$(srcdir)/../libebl \
+ 	   -I$(srcdir)/../libdw -I$(srcdir)/../libdwfl \
+--- elfutils-0.131.orig/tests/Makefile.am
++++ elfutils-0.131/tests/Makefile.am
+@@ -24,15 +24,15 @@
+ ## Network licensing program, please visit www.openinventionnetwork.com
+ ## <http://www.openinventionnetwork.com>.
+ ##
+ DEFS = -DHAVE_CONFIG_H -D_GNU_SOURCE
+ if MUDFLAP
+-AM_CFLAGS = -Wall -Werror -Wextra -std=gnu99 -fmudflap\
++AM_CFLAGS = -Wall -Wextra -std=gnu99 -fmudflap\
+ 	    $(if $($(*F)_no_Wformat),-Wno-format,-Wformat=2)
+ BUILD_RPATH = \$$ORIGIN/../backends
+ else
+-AM_CFLAGS = -Wall -Werror -Wextra -std=gnu99 \
++AM_CFLAGS = -Wall -Wextra -std=gnu99 \
+ 	    $(if $($(*F)_no_Wformat),-Wno-format,-Wformat=2)
+ BUILT_RPATH = \$$ORIGIN/../libasm:\$$ORIGIN/../libdw:\$$ORIGIN/../backends:\$$ORIGIN/../libelf
+ endif
+ 
+ AM_LDFLAGS =
