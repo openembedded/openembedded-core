@@ -3,6 +3,8 @@ require icu-3.6.inc
 DEPENDS += "icu-native"
 PR = "r3"
 
+FULL_OPTIMIZATION_arm = "-Os"
+
 SRC_URI += "file://use-g++-for-linking.patch;patch=1"
 
 do_configure_append() {
