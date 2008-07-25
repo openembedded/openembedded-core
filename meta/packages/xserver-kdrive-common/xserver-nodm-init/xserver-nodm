@@ -27,7 +27,8 @@ case "$1" in
        . /etc/profile
        echo "Starting Xserver"
        /etc/X11/Xserver &
-	   sleep 20
+       # Wait for the desktop to say its finished loading
+       dbus-wait org.matchbox_project.desktop Loaded
   ;;
 
   stop)
