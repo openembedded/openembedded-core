@@ -15,14 +15,14 @@ do_configure() {
 }
 
 do_compile() {
-	oe_runmake HOST_SYS=${HOST_SYS} BUILD_SYS=${BUILD_SYS}
+	oe_runmake HOST_SYS=${HOST_SYS} BUILD_SYS=${BUILD_SYS} STAGING_INCDIR=${STAGING_INCDIR} STAGING_LIBDIR=${STAGING_LIBDIR}
 }
 
 PYTHON_MAJMIN = "2.5"
 
 do_install() {
 	install -d ${D}${libdir}/python${PYTHON_MAJMIN}
-	oe_runmake install prefix=${D}${prefix} HOST_SYS=${HOST_SYS} BUILD_SYS=${BUILD_SYS}
+	oe_runmake install prefix=${D}${prefix} HOST_SYS=${HOST_SYS} BUILD_SYS=${BUILD_SYS} STAGING_INCDIR=${STAGING_INCDIR} STAGING_LIBDIR=${STAGING_LIBDIR}
 	mv ${D}${libdir}/python/* ${D}${libdir}/python${PYTHON_MAJMIN} 
 }
 
