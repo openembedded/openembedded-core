@@ -3,9 +3,11 @@
 #
 
 SRCREV_pn-exmap-console ?= "${AUTOREV}"
-SRCREV_pn-opkg-native ?= "${AUTOREV}"
-SRCREV_pn-opkg-sdk ?= "${AUTOREV}"
-SRCREV_pn-opkg ?= "${AUTOREV}"
+#SRCREV_pn-opkg-native ?= "${AUTOREV}"
+#SRCREV_pn-opkg-sdk ?= "${AUTOREV}"
+#SRCREV_pn-opkg ?= "${AUTOREV}"
+#SRCREV_pn-opkg-utils-naitve ?= "${AUTOREV}"
+#SRCREV_pn-opkg-utils ?= "${AUTOREV}"
 SRCREV_pn-gconf-dbus ?= "${AUTOREV}"
 SRCREV_pn-contacts ?= "${AUTOREV}"
 SRCREV_pn-dates ?= "${AUTOREV}"
