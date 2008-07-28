@@ -1,0 +1,38 @@
+---
+ Lib/distutils/sysconfig.py |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- Python-2.5.1.orig/Lib/distutils/sysconfig.py
++++ Python-2.5.1/Lib/distutils/sysconfig.py
+@@ -52,11 +52,14 @@ def get_python_inc(plat_specific=0, pref
+ 
+     If 'prefix' is supplied, use it instead of sys.prefix or
+     sys.exec_prefix -- i.e., ignore 'plat_specific'.
+     """
+     if prefix is None:
+-        prefix = plat_specific and EXEC_PREFIX or PREFIX
++        if plat_specific:
++            prefix = plat_specific and os.environ['STAGING_INCDIR'].rstrip('include')
++        else:
++            prefix = plat_specific and EXEC_PREFIX or PREFIX
+     if os.name == "posix":
+         if python_build:
+             base = os.path.dirname(os.path.abspath(sys.executable))
+             if plat_specific:
+                 inc_dir = base
+@@ -94,11 +97,14 @@ def get_python_lib(plat_specific=0, stan
+ 
+     If 'prefix' is supplied, use it instead of sys.prefix or
+     sys.exec_prefix -- i.e., ignore 'plat_specific'.
+     """
+     if prefix is None:
+-        prefix = plat_specific and EXEC_PREFIX or PREFIX
++        if plat_specific:
++            prefix = plat_specific and os.environ['STAGING_LIBDIR'].rstrip('lib')
++        else:
++            prefix = plat_specific and EXEC_PREFIX or PREFIX
+ 
+     if os.name == "posix":
+         libpython = os.path.join(prefix,
+                                  "lib", "python" + get_python_version())
+         if standard_lib:
