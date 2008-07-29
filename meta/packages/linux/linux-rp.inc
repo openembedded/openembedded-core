@@ -103,7 +103,11 @@ do_configure() {
 
 	if [ "${TARGET_OS}" = "linux-gnueabi" -o "${TARGET_OS}" = "linux-uclibcgnueabi" ]; then
 		echo "CONFIG_AEABI=y"                   >> ${S}/.config
-		echo "CONFIG_OABI_COMPAT=y"             >> ${S}/.config
+		if [ "${MACHINE}" = "qemuarm" -o "${MACHINE}" = "qemuarmv6" -o "${MACHINE}" = "qemuarmv7" -o ]; then
+		    echo "CONFIG_OABI_COMPAT=y"             >> ${S}/.config
+		else
+		    echo "# CONFIG_OABI_COMPAT is not set"  >> ${S}/.config
+		fi
 	else 
 		echo "# CONFIG_AEABI is not set"        >> ${S}/.config
 		echo "# CONFIG_OABI_COMPAT is not set"  >> ${S}/.config
