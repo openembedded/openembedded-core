@@ -14,15 +14,42 @@ Stanislav.
 Reported-by: Stanislav Brabec <utx@penguin.cz>
 Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 ---
+ arch/arm/mach-pxa/corgi.c  |    2 ++
  arch/arm/mach-pxa/poodle.c |    2 ++
  arch/arm/mach-pxa/spitz.c  |    2 ++
- 2 files changed, 4 insertions(+), 0 deletions(-)
+ 3 files changed, 6 insertions(+)
 
-diff --git a/arch/arm/mach-pxa/poodle.c b/arch/arm/mach-pxa/poodle.c
-index 39612cf..510018b 100644
---- a/arch/arm/mach-pxa/poodle.c
-+++ b/arch/arm/mach-pxa/poodle.c
-@@ -36,6 +36,7 @@
+--- linux-2.6.26.orig/arch/arm/mach-pxa/corgi.c
++++ linux-2.6.26/arch/arm/mach-pxa/corgi.c
+@@ -38,10 +38,11 @@
+ #include <asm/arch/pxa-regs.h>
+ #include <asm/arch/pxa2xx-gpio.h>
+ #include <asm/arch/irda.h>
+ #include <asm/arch/mmc.h>
+ #include <asm/arch/udc.h>
++#include <asm/arch/i2c.h>
+ #include <asm/arch/corgi.h>
+ #include <asm/arch/sharpsl.h>
+ 
+ #include <asm/mach/sharpsl_param.h>
+ #include <asm/hardware/scoop.h>
+@@ -529,10 +530,11 @@ static void __init corgi_init(void)
+ 	pxa_gpio_mode(CORGI_GPIO_HSYNC | GPIO_IN);
+ 
+  	pxa_set_udc_info(&udc_info);
+ 	pxa_set_mci_info(&corgi_mci_platform_data);
+ 	pxa_set_ficp_info(&corgi_ficp_platform_data);
++	pxa_set_i2c_info(NULL);
+ 
+ 	platform_scoop_config = &corgi_pcmcia_config;
+ 
+ 	platform_add_devices(devices, ARRAY_SIZE(devices));
+ }
+--- linux-2.6.26.orig/arch/arm/mach-pxa/poodle.c
++++ linux-2.6.26/arch/arm/mach-pxa/poodle.c
+@@ -33,10 +33,11 @@
+ 
+ #include <asm/arch/pxa-regs.h>
  #include <asm/arch/pxa2xx-gpio.h>
  #include <asm/arch/mmc.h>
  #include <asm/arch/udc.h>
@@ -30,7 +57,11 @@ index 39612cf..510018b 100644
  #include <asm/arch/irda.h>
  #include <asm/arch/poodle.h>
  #include <asm/arch/pxafb.h>
-@@ -387,6 +388,7 @@ static void __init poodle_init(void)
+ #include <asm/arch/sharpsl.h>
+ #include <asm/arch/ssp.h>
+@@ -386,10 +387,11 @@ static void __init poodle_init(void)
+ 	pxa_gpio_mode(POODLE_GPIO_USB_PULLUP | GPIO_OUT);
+ 	pxa_gpio_mode(POODLE_GPIO_IR_ON | GPIO_OUT);
  	pxa_set_udc_info(&udc_info);
  	pxa_set_mci_info(&poodle_mci_platform_data);
  	pxa_set_ficp_info(&poodle_ficp_platform_data);
@@ -38,11 +69,13 @@ index 39612cf..510018b 100644
  
  	platform_scoop_config = &poodle_pcmcia_config;
  
-diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
-index 35616a5..e2bde09 100644
---- a/arch/arm/mach-pxa/spitz.c
-+++ b/arch/arm/mach-pxa/spitz.c
-@@ -38,6 +38,7 @@
+ 	ret = platform_add_devices(devices, ARRAY_SIZE(devices));
+ 	if (ret) {
+--- linux-2.6.26.orig/arch/arm/mach-pxa/spitz.c
++++ linux-2.6.26/arch/arm/mach-pxa/spitz.c
+@@ -36,10 +36,11 @@
+ #include <asm/mach/irq.h>
+ 
  #include <asm/arch/pxa-regs.h>
  #include <asm/arch/pxa2xx-regs.h>
  #include <asm/arch/pxa2xx-gpio.h>
@@ -50,7 +83,11 @@ index 35616a5..e2bde09 100644
  #include <asm/arch/irda.h>
  #include <asm/arch/mmc.h>
  #include <asm/arch/ohci.h>
-@@ -572,6 +573,7 @@ static void __init common_init(void)
+ #include <asm/arch/udc.h>
+ #include <asm/arch/pxafb.h>
+@@ -579,10 +580,11 @@ static void __init common_init(void)
+ 	pxa_set_mci_info(&spitz_mci_platform_data);
+ 	pxa_set_ohci_info(&spitz_ohci_platform_data);
  	pxa_set_ficp_info(&spitz_ficp_platform_data);
  	set_pxa_fb_parent(&spitzssp_device.dev);
  	set_pxa_fb_info(&spitz_pxafb_info);
@@ -58,11 +95,5 @@ index 35616a5..e2bde09 100644
  }
  
  #if defined(CONFIG_MACH_SPITZ) || defined(CONFIG_MACH_BORZOI)
--- 
-1.5.6.2
-
-
--------------------------------------------------------------------
-List admin: http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel
-FAQ:        http://www.arm.linux.org.uk/mailinglists/faq.php
-Etiquette:  http://www.arm.linux.org.uk/mailinglists/etiquette.php
+ static void spitz_bl_set_intensity(int intensity)
+ {
