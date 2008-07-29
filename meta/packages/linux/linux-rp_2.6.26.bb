@@ -1,6 +1,6 @@
 require linux-rp.inc
 
-PR = "r8"
+PR = "r9"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_qemuarm = "1"
@@ -21,8 +21,7 @@ DEFAULT_PREFERENCE_c7x0 = "1"
 
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
-SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.25.tar.bz2 \
-           ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.26-rc4.bz2;patch=1 \
+SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
            ${RPSRC}/lzo_jffs2_sysfs-r1.patch;patch=1 \
            ${RPSRC}/hx2750_base-r34.patch;patch=1 \
            ${RPSRC}/hx2750_bl-r9.patch;patch=1 \
@@ -194,4 +193,4 @@ SRC_URI_append_zylonite ="\
 	file://zylonite_keypad-r0.patch;patch=1 \
 	"
 
-S = "${WORKDIR}/linux-2.6.25"
+S = "${WORKDIR}/linux-2.6.26"
