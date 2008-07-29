@@ -7,5 +7,5 @@ do_install_append() {
     update-mime-database ${D}${datadir}/mime
 
     # we do not need it on device and it is huge
-    rm ${D}${destdir}/mime/packages/freedesktop.org.xml
+    rm ${D}${datadir}/mime/packages/freedesktop.org.xml
 }
