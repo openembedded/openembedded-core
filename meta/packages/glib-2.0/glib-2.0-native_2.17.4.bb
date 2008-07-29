@@ -7,7 +7,7 @@ LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS += "gtk-doc-native"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://download.gnome.org/sources/glib/2.17/glib-${PV}.tar.bz2 \
            file://glib-gettextize-dir.patch;patch=1 \
@@ -33,6 +33,7 @@ do_stage () {
 	oe_libinstall -so -C gmodule libgmodule-2.0 ${STAGING_LIBDIR}
 	oe_libinstall -so -C gthread libgthread-2.0 ${STAGING_LIBDIR}
 	oe_libinstall -so -C gobject libgobject-2.0 ${STAGING_LIBDIR}
+	oe_libinstall -so -C gio libgio-2.0 ${STAGING_LIBDIR}
 	autotools_stage_includes
 	install -d ${STAGING_INCDIR}/glib-2.0/glib
 	install -m 0755 ${S}/glibconfig.h ${STAGING_INCDIR}/glib-2.0/glibconfig.h
