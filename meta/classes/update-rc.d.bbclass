@@ -45,10 +45,12 @@ python populate_packages_prepend () {
 		bb.data.setVar("OVERRIDES", "%s:%s" % (pkg, overrides), localdata)
 		bb.data.update_data(localdata)
 
-		postinst = bb.data.getVar('pkg_postinst', localdata, 1)
-		if not postinst:
-			postinst = '#!/bin/sh\n'
+		postinst = '#!/bin/sh\n'
 		postinst += bb.data.getVar('updatercd_postinst', localdata, 1)
+		try:
+			postinst += bb.data.getVar('pkg_postinst', localdata, 1)
+		except:
+			pass
 		bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
 		prerm = bb.data.getVar('pkg_prerm', localdata, 1)
 		if not prerm:
