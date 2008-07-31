@@ -2,7 +2,7 @@ DESCRIPTION = "Simple Xserver Init Script (no dm)"
 LICENSE = "GPL"
 SECTION = "x11"
 PRIORITY = "optional"
-PR = "r15"
+PR = "r16"
 RDEPENDS = "dbus-wait"
 
 SRC_URI = "file://xserver-nodm"
