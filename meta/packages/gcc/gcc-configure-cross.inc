@@ -24,13 +24,6 @@ do_stage_append () {
 		rm -rf ${CROSS_DIR}/$d
 	done
 
-	# Fix a few include links so cross builds are happier
-	if [ ! -e ${STAGING_INCDIR}/c++ ]; then
-		mkdir -p ${STAGING_INCDIR}
-		ln -sf ${CROSS_DIR}/${TARGET_SYS}/include/c++ \
-			${STAGING_INCDIR}/
-	fi
-
 	# We use libiberty from binutils
 	rm -f ${CROSS_DIR}/lib/libiberty.a
 
