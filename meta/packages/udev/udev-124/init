@@ -1,3 +1,14 @@
+#!/bin/sh -e
+
+### BEGIN INIT INFO
+# Provides:          udev
+# Required-Start:    mountvirtfs
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Start udevd, populate /dev and load drivers.
+### END INIT INFO
+
 export TZ=/etc/localtime
 
 [ -d /sys/class ] || exit 1
