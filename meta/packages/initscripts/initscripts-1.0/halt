@@ -1,6 +1,5 @@
 #! /bin/sh
-###
-# BEGIN INIT INFO
+### BEGIN INIT INFO
 # Provides:          halt
 # Required-Start:
 # Required-Stop:
