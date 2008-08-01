@@ -1,4 +1,16 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          nfs-kernel-server
+# Required-Start:    $remote_fs $portmap hwclock
+# Required-Stop:     $remote_fs $portmap hwclock
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Kernel NFS server support
+# Description:       NFS is a popular protocol for file sharing across
+#                    TCP/IP networks. This service provides NFS server
+#                    functionality, which is configured via the
+#                    /etc/exports file.
+### END INIT INFO
 #
 # Startup script for nfs-utils
 #
