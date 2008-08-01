@@ -1,0 +1,21 @@
+---
+ scripts/bluetooth.init |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- bluez-utils-3.18.orig/scripts/bluetooth.init
++++ bluez-utils-3.18/scripts/bluetooth.init
+@@ -47,10 +47,14 @@ case "$1" in
+ 	echo -n "Stopping $DESC:"
+ 	killall $DAEMON_NAME > /dev/null 2>&1 || true
+ 	echo -n " $DAEMON_NAME"
+ 	echo "."
+ 	;;
++  restart)
++    $0 stop
++	$0 start
++    ;;
+   *)
+ 	N=/etc/init.d/$NAME
+ 	echo "Usage: $N {start|stop}" >&2
+ 	exit 1
+ 	;;
