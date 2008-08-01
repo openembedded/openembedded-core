@@ -4,7 +4,7 @@ PRIORITY = "required"
 DEPENDS = "makedevs"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r114"
+PR = "r115"
 
 SRC_URI = "file://functions \
            file://halt \
@@ -51,7 +51,7 @@ do_install () {
 	install -d ${D}${sysconfdir}/default
 	install -d ${D}${sysconfdir}/default/volatiles
 
-	install -m 0755    ${WORKDIR}/functions		${D}${sysconfdir}/init.d
+	install -m 0644    ${WORKDIR}/functions		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/bootmisc.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/checkroot.sh	${D}${sysconfdir}/init.d
 #	install -m 0755    ${WORKDIR}/finish.sh		${D}${sysconfdir}/init.d
