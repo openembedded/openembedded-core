@@ -1,0 +1,23 @@
+Index: src/gsmd/gsmd.c
+===================================================================
+--- a/src/gsmd/gsmd.c	(revision 4304)
++++ b/src/gsmd/gsmd.c	(working copy)
+@@ -196,13 +196,13 @@
+ 
+ 	sms_cb_init(gsmd);
+ 
+-	if (gsmd->vendorpl && gsmd->vendorpl->initsettings){
++	if (gsmd->vendorpl && gsmd->vendorpl->initsettings)
+ 		rc |= gsmd->vendorpl->initsettings(gsmd);
++
++	if (gsmd->machinepl && gsmd->machinepl->initsettings)
+ 		rc |= gsmd->machinepl->initsettings(gsmd);
+-		return rc;
+-	}	
+-	else
+-		return rc;
++
++	return rc;
+ }
+ 
+ static int firstcmd_response = 0;
