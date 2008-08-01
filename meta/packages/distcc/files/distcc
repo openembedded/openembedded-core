@@ -1,4 +1,12 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          distcc
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      1
+# Short-Description: simple distributed compiler client and server
+### END INIT INFO
 #
 # distccd Debian init.d script contributed by Jason Thomas.  (Debian #161136)
 #
