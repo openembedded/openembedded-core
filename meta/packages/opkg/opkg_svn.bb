@@ -6,7 +6,7 @@ RCONFLICTS_update-alternatives-cworth = "update-alternatives-dpkg"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PR = "r7"
+PR = "r8"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
@@ -36,7 +36,7 @@ if [ "x$D" != "x" ]; then
 opkg-cl configure
 rm -f /${sysconfdir}/rcS.d/S${OPKG_INIT_POSITION}configure
 " > ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${OPKG_INIT_POSITION}configure
-	chmod 0755 ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${OPKG_INIT_POSITION}configure
+	chmod 0755 ${IMAGE_ROOTFS}${sysconfdir}/rcS.d/S${OPKG_INIT_POSITION}configure
 fi
 
 update-alternatives --install ${bindir}/opkg opkg ${bindir}/opkg-cl 100
