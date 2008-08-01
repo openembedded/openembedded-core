@@ -22,7 +22,7 @@ SRC_URI = "file://functions \
            file://single \
            file://sendsigs \
            file://urandom \
-           file://rmnologin \
+           file://rmnologin.sh \
            file://checkroot.sh \
            file://umountnfs.sh \
            file://sysfs.sh \
@@ -54,13 +54,13 @@ do_install () {
 	install -m 0755    ${WORKDIR}/functions		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/bootmisc.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/checkroot.sh	${D}${sysconfdir}/init.d
-	install -m 0755    ${WORKDIR}/finish.sh		${D}${sysconfdir}/init.d
+#	install -m 0755    ${WORKDIR}/finish.sh		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/halt		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/hostname.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/mountall.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/mountnfs.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/reboot		${D}${sysconfdir}/init.d
-	install -m 0755    ${WORKDIR}/rmnologin	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/rmnologin.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/sendsigs		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/single		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/umountnfs.sh	${D}${sysconfdir}/init.d
@@ -82,10 +82,10 @@ do_install () {
 #
 # Create runlevel links
 #
-	ln -sf		../init.d/rmnologin	${D}${sysconfdir}/rc2.d/S99rmnologin
-	ln -sf		../init.d/rmnologin	${D}${sysconfdir}/rc3.d/S99rmnologin
-	ln -sf		../init.d/rmnologin	${D}${sysconfdir}/rc4.d/S99rmnologin
-	ln -sf		../init.d/rmnologin	${D}${sysconfdir}/rc5.d/S99rmnologin
+	ln -sf		../init.d/rmnologin.sh	${D}${sysconfdir}/rc2.d/S99rmnologin.sh
+	ln -sf		../init.d/rmnologin.sh	${D}${sysconfdir}/rc3.d/S99rmnologin.sh
+	ln -sf		../init.d/rmnologin.sh	${D}${sysconfdir}/rc4.d/S99rmnologin.sh
+	ln -sf		../init.d/rmnologin.sh	${D}${sysconfdir}/rc5.d/S99rmnologin.sh
 	ln -sf		../init.d/sendsigs	${D}${sysconfdir}/rc6.d/S20sendsigs
 #	ln -sf		../init.d/urandom	${D}${sysconfdir}/rc6.d/S30urandom
 	ln -sf		../init.d/umountnfs.sh	${D}${sysconfdir}/rc6.d/S31umountnfs.sh
@@ -108,7 +108,7 @@ do_install () {
 	ln -sf		../init.d/mountnfs.sh	${D}${sysconfdir}/rcS.d/S45mountnfs.sh
 	ln -sf		../init.d/bootmisc.sh	${D}${sysconfdir}/rcS.d/S55bootmisc.sh
 #	ln -sf		../init.d/urandom	${D}${sysconfdir}/rcS.d/S55urandom
-	ln -sf		../init.d/finish.sh	${D}${sysconfdir}/rcS.d/S99finish.sh
+#	ln -sf		../init.d/finish.sh	${D}${sysconfdir}/rcS.d/S99finish.sh
 	# udev will run at S04 if installed
 	ln -sf		../init.d/sysfs.sh	${D}${sysconfdir}/rcS.d/S03sysfs.sh
 	ln -sf		../init.d/populate-volatile.sh	${D}${sysconfdir}/rcS.d/S37populate-volatile.sh
