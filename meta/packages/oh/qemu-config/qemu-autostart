@@ -1,12 +1,15 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          hddtemp
+# Required-Start:    $network
+# Required-Stop:     $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: OProfile server
+# Description:       
+### END INIT INFO
 
-killproc() {            # kill the named process(es)
-        pid=`/bin/ps -e x |
-             /bin/grep $1 |
-             /bin/grep -v grep |
-             /bin/sed -e 's/^  *//' -e 's/ .*//'`
-        [ "$pid" != "" ] && kill $pid
-}
+. /etc/init.d/functions
 
 case "$1" in
   start)
