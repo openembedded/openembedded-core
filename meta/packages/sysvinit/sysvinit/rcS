@@ -17,15 +17,6 @@ export PATH runlevel prevlevel
 [ -d "/proc/1" ] || mount /proc
 
 #
-#	See if system needs to be setup. This is ONLY meant to
-#	be used for the initial setup after a fresh installation!
-#
-if [ -x /sbin/unconfigured.sh ]
-then
-  /sbin/unconfigured.sh
-fi
-
-#
 #	Source defaults.
 #
 . /etc/default/rcS
@@ -40,17 +31,4 @@ trap ":" INT QUIT TSTP
 #
 exec /etc/init.d/rc S
 
-#
-#	For compatibility, run the files in /etc/rc.boot too.
-#
-[ -d /etc/rc.boot ] && run-parts /etc/rc.boot
-
-#
-#	Finish setup if needed. The comment above about
-#	/sbin/unconfigured.sh applies here as well!
-#
-if [ -x /sbin/setup.sh ]
-then
-  /sbin/setup.sh
-fi
 
