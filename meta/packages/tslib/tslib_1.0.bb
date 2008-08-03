@@ -4,7 +4,7 @@ AUTHOR = "Russell King w/ plugins by Chris Larson et. al."
 SECTION = "base"
 LICENSE = "LGPL"
 
-PR = "r12"
+PR = "r14"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-1.0.tar.bz2 \
            file://fix_version.patch;patch=1 \
@@ -17,8 +17,7 @@ SRC_URI_append_mnci += " file://event1.patch;patch=1"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF        = "--enable-shared"
-EXTRA_OECONF_mnci   = "--enable-shared --disable-h3600 --enable-input --disable-corgi --disable-collie --disable-mk712 --disable-arctic2 --disable-ucb1x00 "
+EXTRA_OECONF = "--enable-shared --disable-h3600 --enable-input --disable-corgi --disable-collie --disable-mk712 --disable-arctic2 --disable-ucb1x00"
 
 do_stage() {
 	autotools_stage_all
