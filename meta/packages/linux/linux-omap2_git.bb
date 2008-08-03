@@ -1,13 +1,15 @@
 require linux-omap2.inc
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/linux-omap2-git/${MACHINE}"
+FILESPATH = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/linux-omap2-git/${MACHINE}:${@os.path.dirname(bb.data.getVar('FILE',d,1))}/linux-omap2-git"
 
-SRCREV = "c32c81d59d2d8a66e63f82c9732db256d302068e"
+SRCREV = "d3b3ae0fe6c71641da19c8de466ec366d39847e3"
 
-PV = "2.6.25+2.6.26-rc8+${PR}+git${SRCREV}"
-PR = "r38"
+PV = "2.6.26"
+#PV = "2.6.25+2.6.26-rc9+${PR}+git${SRCREV}"
+PR = "r49"
 
 SRC_URI = "git://source.mvista.com/git/linux-omap-2.6.git;protocol=git \
+           file://fixes.patch;patch=1 \
 	   file://defconfig"
 
 SRC_URI_append_beagleboard = " file://no-harry-potter.diff;patch=1 \
@@ -21,6 +23,29 @@ SRC_URI_append_beagleboard = " file://no-harry-potter.diff;patch=1 \
            file://no-empty-flash-warnings.patch;patch=1 \
            file://logo_linux_clut224.ppm \
            file://oprofile-0.9.3.armv7.diff;patch=1 \
+           file://01-fix-timing-print.diff;patch=1 \
+           file://03-enable-overlay-opt.diff;patch=1 \
+           file://04-use-pcd.diff;patch=1 \
+           file://05-fix-display-panning.diff;patch=1 \
+           file://06-ensure-fclk.diff;patch=1 \
+           file://07-set-burst-size.diff;patch=1 \
+           file://cache-display-fix.patch;patch=1 \
+           file://serialfix.diff;patch=1 \
+           file://i2c-omap-race-fix.diff;patch=1 \
+           file://TWL4030-01.patch;patch=1 \
+           file://TWL4030-02.patch;patch=1 \
+           file://TWL4030-03.patch;patch=1 \
+           file://TWL4030-04.patch;patch=1 \
+           file://TWL4030-05.patch;patch=1 \
+           file://TWL4030-06.patch;patch=1 \
+           file://TWL4030-07.patch;patch=1 \
+           file://TWL4030-08.patch;patch=1 \
+           file://TWL4030-09.patch;patch=1 \
+           file://mru-clocks1.diff;patch=1 \
+           file://mru-clocks2.diff;patch=1 \
+           file://mru-clocks3.diff;patch=1 \	
+           file://4bitmmc.diff;patch=1 \
+	   file://400khz-i2c.diff;patch=1 \
 "
 
 SRC_URI_append_omap3evm = " file://no-harry-potter.diff;patch=1 \

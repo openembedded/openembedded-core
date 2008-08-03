@@ -29,10 +29,10 @@ index 4e1314c..d2c0b12 100644
 +obj-$(CONFIG_SND_SOC_TWL4030)	+= snd-soc-twl4030.o
 diff --git a/sound/soc/codecs/twl4030.c b/sound/soc/codecs/twl4030.c
 new file mode 100644
-index 0000000..c9eee19
+index 0000000..eb8370c
 --- /dev/null
 +++ b/sound/soc/codecs/twl4030.c
-@@ -0,0 +1,595 @@
+@@ -0,0 +1,625 @@
 +/*
 + * ALSA SoC TWL4030 codec driver
 + *
@@ -196,7 +196,7 @@ index 0000000..c9eee19
 +	twl4030_i2c_write_u8(TWL4030_MODULE_AUDIO_VOICE,
 +		twl4030_reg[REG_CODEC_MODE] & 0xfd, REG_CODEC_MODE);
 +
-+	udelay(10); /* 10 ms delay for power settling */
++	udelay(10); /* delay for power settling */
 +
 +	for (i = REG_OPTION; i <= REG_MISC_SET_2; i++) {
 +		twl4030_i2c_write_u8(TWL4030_MODULE_AUDIO_VOICE, twl4030_reg[i], i);
@@ -205,7 +205,7 @@ index 0000000..c9eee19
 +	twl4030_i2c_write_u8(TWL4030_MODULE_AUDIO_VOICE,
 +		twl4030_reg[REG_CODEC_MODE], REG_CODEC_MODE);
 +
-+	udelay(10); /* 10 ms delay for power settling */
++	udelay(10); /* delay for power settling */
 +
 +	/* initiate offset cancellation */
 +	twl4030_i2c_write_u8(TWL4030_MODULE_AUDIO_VOICE,
@@ -219,7 +219,6 @@ index 0000000..c9eee19
 +	twl4030_i2c_write_u8(TWL4030_MODULE_AUDIO_VOICE,
 +		twl4030_reg[REG_MISC_SET_1] | 0x02, REG_MISC_SET_1);
 +
-+	twl4030_dump_registers();
 +}
 +
 +static const struct snd_kcontrol_new twl4030_snd_controls[] = {
@@ -246,8 +245,6 @@ index 0000000..c9eee19
 +
 +	return 0;
 +}
-+
-+#define TWL4030_PWR 0
 +
 +static const struct snd_soc_dapm_widget twl4030_dapm_widgets[] = {
 +	SND_SOC_DAPM_INPUT("INL"),
@@ -314,32 +311,40 @@ index 0000000..c9eee19
 +
 +static void twl4030_power_up (struct snd_soc_codec *codec, u8 mode)
 +{
++	u8 popn, hsgain;
++
 +	twl4030_write(codec, REG_CODEC_MODE, mode & ~CODECPDZ);
 +	twl4030_write(codec, REG_CODEC_MODE, mode | CODECPDZ);
 +	udelay(10);
 +
-+	u8 popn = twl4030_read_reg_cache(codec, REG_HS_POPN_SET) | (0x40);
++	popn = twl4030_read_reg_cache(codec, REG_HS_POPN_SET);
++	popn &= RAMP_DELAY;
++	popn |=	VMID_EN | RAMP_DELAY_161MS;
 +	twl4030_write(codec, REG_HS_POPN_SET, popn);
 +
-+	u8 hsgain = twl4030_read_reg_cache(codec, REG_HS_GAIN_SET) | (0x0a);
++	hsgain = HSR_GAIN_0DB| HSL_GAIN_0DB;
 +	twl4030_write(codec, REG_HS_GAIN_SET, hsgain);
 +
-+	popn = twl4030_read_reg_cache(codec, REG_HS_POPN_SET) | (0x02);
++	popn |= RAMP_EN;
 +	twl4030_write(codec, REG_HS_POPN_SET, popn);
 +}
 +
 +static void twl4030_power_down (struct snd_soc_codec *codec)
 +{
-+	u8 popn = twl4030_read_reg_cache(codec, REG_HS_POPN_SET) & ~(0x02);
++	u8 popn, hsgain, mode;
++
++	popn = twl4030_read_reg_cache(codec, REG_HS_POPN_SET);
++	popn &= ~RAMP_EN;
 +	twl4030_write(codec, REG_HS_POPN_SET, popn);
 +
-+	u8 hsgain = twl4030_read_reg_cache(codec, REG_HS_GAIN_SET) & ~(0x0f);
++	hsgain = HSR_GAIN_PWR_DOWN | HSL_GAIN_PWR_DOWN;
 +	twl4030_write(codec, REG_HS_GAIN_SET, hsgain);
 +
-+	popn = twl4030_read_reg_cache(codec, REG_HS_POPN_SET) & ~(0x40);
++	popn &= ~VMID_EN;
 +	twl4030_write(codec, REG_HS_POPN_SET, popn);
 +
-+	u8 mode = twl4030_read_reg_cache(codec, REG_CODEC_MODE) & ~CODECPDZ;
++	mode = twl4030_read_reg_cache(codec, REG_CODEC_MODE);
++	mode &= ~CODECPDZ;
 +	twl4030_write(codec, REG_CODEC_MODE, mode);
 +	udelay(10);
 +}
@@ -352,19 +357,18 @@ index 0000000..c9eee19
 +	struct snd_soc_device *socdev = rtd->socdev;
 +	struct snd_soc_codec *codec = socdev->codec;
 +	struct twl4030_priv *twl4030 = codec->private_data;
++	u8 mode, old_mode, format, old_format;
 +
-+	twl4030_power_down(codec);
 +
-+	u8 mode = twl4030_read_reg_cache(codec, REG_CODEC_MODE) & ~CODECPDZ;
-+
++	/* bit rate */
++	old_mode = twl4030_read_reg_cache(codec, REG_CODEC_MODE) & ~CODECPDZ;
++	mode = old_mode;
 +	mode &= ~APLL_RATE;
 +	switch (params_rate(params)) {
 +	case 44100:
-+		printk(KERN_INFO "TWL4030 hw params: set rate to 44.1khz\n");
 +		mode |= APLL_RATE_44100;
 +		break;
 +	case 48000:
-+		printk(KERN_INFO "TWL4030 hw params: set rate to 48khz\n");
 +		mode |= APLL_RATE_48000;
 +		break;
 +	default:
@@ -372,22 +376,43 @@ index 0000000..c9eee19
 +		return -EINVAL;
 +	}
 +
-+	/* bit size */
++	if (mode != old_mode) {
++		/* change rate and turn codec back on */
++		twl4030_write(codec, REG_CODEC_MODE, mode);
++		mode |= CODECPDZ;
++		twl4030_write(codec, REG_CODEC_MODE, mode);
++	}
++
++	/* sample size */
++	old_format = twl4030_read_reg_cache(codec, REG_AUDIO_IF);
++	format = old_format;
++	format &= ~DATA_WIDTH;
 +	switch (params_format(params)) {
 +	case SNDRV_PCM_FORMAT_S16_LE:
-+		printk(KERN_INFO "TWL4030 hw params: set format to S16_LE\n");
++		format |= DATA_WIDTH_16S_16W;
 +		break;
 +	case SNDRV_PCM_FORMAT_S24_LE:
-+		printk(KERN_INFO "TWL4030 hw params: set format to S24_LE\n");
++		format |= DATA_WIDTH_32S_24W;
 +		break;
 +	default:
 +		printk(KERN_INFO "TWL4030 hw params: unknown format %d\n", params_format(params));
 +		return -EINVAL;
 +	}
 +
-+	/* change rate and turn codec back on */
-+	twl4030_power_up(codec, mode);
++	if (format != old_format) {
 +
++		/* turn off codec before changing format */
++		mode = twl4030_read_reg_cache(codec, REG_CODEC_MODE);
++		mode &= ~CODECPDZ;
++		twl4030_write(codec, REG_CODEC_MODE, mode);
++
++		/* change format */
++		twl4030_write(codec, REG_AUDIO_IF, format);
++	
++		/* turn on codec */
++		mode |= CODECPDZ;
++		twl4030_write(codec, REG_CODEC_MODE, mode);
++	}
 +	return 0;
 +}
 +
@@ -399,14 +424,14 @@ index 0000000..c9eee19
 +	u8 rdac_reg = twl4030_read_reg_cache(codec, REG_ARXR2PGA);
 +
 +	if (mute) {
-+		printk(KERN_INFO "TWL4030 Audio Codec mute\n");
++		/* printk(KERN_INFO "TWL4030 Audio Codec mute\n"); */
 +		twl4030_write(codec, REG_ARXL2PGA, 0x00);
 +		twl4030_write(codec, REG_ARXR2PGA, 0x00);
 +		twl4030_write_reg_cache(codec, REG_ARXL2PGA, ldac_reg);
 +		twl4030_write_reg_cache(codec, REG_ARXR2PGA, rdac_reg);
 +	}
 +	else {
-+		printk(KERN_INFO "TWL4030 Audio Codec unmute: %02x/%02x\n", ldac_reg, rdac_reg);
++		/* printk(KERN_INFO "TWL4030 Audio Codec unmute: %02x/%02x\n", ldac_reg, rdac_reg); */
 +		twl4030_write(codec, REG_ARXL2PGA, ldac_reg);
 +		twl4030_write(codec, REG_ARXR2PGA, rdac_reg);
 +	}
@@ -419,19 +444,21 @@ index 0000000..c9eee19
 +{
 +	struct snd_soc_codec *codec = codec_dai->codec;
 +	struct twl4030_priv *twl4030 = codec->private_data;
++	u8 mode, old_format, format;
 +
-+	/* get current format */
-+	u8 format = twl4030_read_reg_cache(codec, REG_AUDIO_IF);
++	/* get format */
++	old_format = twl4030_read_reg_cache(codec, REG_AUDIO_IF);
++	format = old_format;
 +
 +	/* set master/slave audio interface */
 +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
 +	case SND_SOC_DAIFMT_CBM_CFM:
-+		printk(KERN_INFO "TWL4030 set dai fmt: master\n");
++		/* printk(KERN_INFO "TWL4030 set dai fmt: master\n"); */
 +		format &= ~(AIF_SLAVE_EN);
 +		format |= CLK256FS_EN;
 +		break;
 +	case SND_SOC_DAIFMT_CBS_CFS:
-+		printk(KERN_INFO "TWL4030 set dai fmt: slave\n");
++		/* printk(KERN_INFO "TWL4030 set dai fmt: slave\n"); */
 +		format &= ~(CLK256FS_EN);
 + 		format |= AIF_SLAVE_EN;
 +		break;
@@ -443,21 +470,26 @@ index 0000000..c9eee19
 +	format &= ~AIF_FORMAT;
 +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
 +	case SND_SOC_DAIFMT_I2S:
-+		printk(KERN_INFO "TWL4030 set dai fmt: i2s\n");
++		/* printk(KERN_INFO "TWL4030 set dai fmt: i2s\n"); */
 +		format |= AIF_FORMAT_CODEC;
 +		break;
 +	default:
 +		return -EINVAL;
 +	}
 +
-+	/* turn off codec before changing format */
-+	twl4030_power_down(codec);
++	if (format != old_format) {
 +
-+	/* change format */
-+	twl4030_write(codec, REG_AUDIO_IF, format);
++		/* turn off codec before changing format */
++		mode = twl4030_read_reg_cache(codec, REG_CODEC_MODE);
++		mode &= ~CODECPDZ;
++		twl4030_write(codec, REG_CODEC_MODE, mode);
 +
-+	u8 mode = twl4030_read_reg_cache(codec, REG_CODEC_MODE);
-+	twl4030_power_up(codec, mode);
++		/* change format */
++		twl4030_write(codec, REG_AUDIO_IF, format);
++	
++		mode |= CODECPDZ;
++		twl4030_write(codec, REG_CODEC_MODE, mode);
++	}
 +
 +	return 0;
 +}
@@ -530,8 +562,6 @@ index 0000000..c9eee19
 +
 +	printk(KERN_INFO "TWL4030 Audio Codec init \n");
 +
-+	twl4030_init_chip();
-+
 +	codec->name = "twl4030";
 +	codec->owner = THIS_MODULE;
 +	codec->read = twl4030_read_reg_cache;
@@ -560,6 +590,9 @@ index 0000000..c9eee19
 +		goto card_err;
 +	}
 +
++	twl4030_init_chip();
++	twl4030_power_up(codec, APLL_RATE_44100 | OPT_MODE);
++
 +	return ret;
 +
 +card_err:
@@ -580,8 +613,6 @@ index 0000000..c9eee19
 +	struct snd_soc_codec *codec;
 +	struct twl4030_priv *twl4030;
 +
-+	printk(KERN_INFO "TWL4030 Audio Codec probe\n");
-+
 +	codec = kzalloc(sizeof(struct snd_soc_codec), GFP_KERNEL);
 +	if (codec == NULL)
 +		return -ENOMEM;
@@ -601,7 +632,6 @@ index 0000000..c9eee19
 +	twl4030_socdev = socdev;
 +	twl4030_init(socdev);
 +
-+	printk(KERN_INFO "TWL4030 Audio Codec probe exit\n");
 +	return 0;
 +}
 +
@@ -630,10 +660,10 @@ index 0000000..c9eee19
 +MODULE_LICENSE("GPL");
 diff --git a/sound/soc/codecs/twl4030.h b/sound/soc/codecs/twl4030.h
 new file mode 100644
-index 0000000..af8eb43
+index 0000000..e126f96
 --- /dev/null
 +++ b/sound/soc/codecs/twl4030.h
-@@ -0,0 +1,125 @@
+@@ -0,0 +1,152 @@
 +/*
 + * ALSA SoC TWL4030 codec driver
 + *
@@ -722,7 +752,7 @@ index 0000000..af8eb43
 +
 +/* Bitfield Definitions */
 +
-+/* CODEC_MODE Fields */
++/* CODEC_MODE (0x01) Fields */
 +
 +#define APLL_RATE		0xF0
 +#define APLL_RATE_8000		0x00
@@ -738,7 +768,7 @@ index 0000000..af8eb43
 +#define CODECPDZ		0x02
 +#define OPT_MODE		0x01
 +
-+/* AUDIO_IF Fields */
++/* AUDIO_IF (0x0E) Fields */
 +
 +#define AIF_SLAVE_EN		0x80
 +#define DATA_WIDTH		0x60
@@ -754,6 +784,33 @@ index 0000000..af8eb43
 +#define CLK256FS_EN		0x02
 +#define AIF_EN			0x01
 +
++/* HS_GAIN_SET (0x23) Fields */
++
++#define HSR_GAIN		0x0c
++#define HSR_GAIN_PWR_DOWN	0x00
++#define HSR_GAIN_PLUS_6DB	0x04
++#define HSR_GAIN_0DB		0x08
++#define HSR_GAIN_MINUS_6DB	0x0c
++#define HSL_GAIN		0x0c
++#define HSL_GAIN_PWR_DOWN	0x00
++#define HSL_GAIN_PLUS_6DB	0x01
++#define HSL_GAIN_0DB		0x02
++#define HSL_GAIN_MINUS_6DB	0x03
++
++/* HS_POPN_SET (0x24) Fields */
++
++#define VMID_EN			0x40
++#define	EXTMUTE			0x20
++#define RAMP_DELAY		0x1C
++#define RAMP_DELAY_20MS		0x00
++#define RAMP_DELAY_40MS		0x04
++#define RAMP_DELAY_81MS		0x08
++#define RAMP_DELAY_161MS	0x0c
++#define RAMP_DELAY_323MS	0x10
++#define RAMP_DELAY_645MS	0x14
++#define RAMP_DELAY_1291MS	0x18
++#define RAMP_DELAY_2581MS	0x1c
++#define RAMP_EN			0x02
 +
 +extern struct snd_soc_codec_dai twl4030_dai;
 +extern struct snd_soc_codec_device soc_codec_dev_twl4030;
@@ -801,10 +858,10 @@ index d8d8d58..638a240 100644
 +
 diff --git a/sound/soc/omap/omap3beagle.c b/sound/soc/omap/omap3beagle.c
 new file mode 100644
-index 0000000..fb79938
+index 0000000..878f894
 --- /dev/null
 +++ b/sound/soc/omap/omap3beagle.c
-@@ -0,0 +1,180 @@
+@@ -0,0 +1,142 @@
 +/*
 + * omap3beagle.c  --  SoC audio for OMAP3 Beagle
 + *
@@ -877,50 +934,12 @@ index 0000000..fb79938
 +	.hw_params = omap3beagle_hw_params,
 +};
 +
-+static const struct snd_soc_dapm_widget twl4030_dapm_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphone Jack", NULL),
-+	SND_SOC_DAPM_LINE("Line In", NULL),
-+};
-+
-+static const char *audio_map[][3] = {
-+	{"Headphone Jack", NULL, "HPLOUT"},
-+	{"Headphone Jack", NULL, "HPROUT"},
-+
-+	{"Line In", NULL, "Line In"},
-+	{"Line In", NULL, "Line In"},
-+};
-+
-+static int omap3beagle_twl4030_init(struct snd_soc_codec *codec)
-+{
-+	int i;
-+
-+	printk(KERN_INFO "OMAP3 Beagle TWL4030 SoC init\n");
-+
-+	/* Add omap3beagle specific widgets */
-+	for (i = 0; i < ARRAY_SIZE(twl4030_dapm_widgets); i++)
-+		snd_soc_dapm_new_control(codec, &twl4030_dapm_widgets[i]);
-+
-+	/* Set up omap3beagle specific audio path audio_map */
-+	for (i = 0; i < ARRAY_SIZE(audio_map); i++)
-+		snd_soc_dapm_connect_input(codec, audio_map[i][0],
-+			audio_map[i][1], audio_map[i][2]);
-+
-+	/* always connected */
-+	snd_soc_dapm_set_endpoint(codec, "Headphone Jack", 1);
-+	snd_soc_dapm_set_endpoint(codec, "Line In", 1);
-+
-+	snd_soc_dapm_sync_endpoints(codec);
-+
-+	return 0;
-+}
-+
 +/* Digital audio interface glue - connects codec <--> CPU */
 +static struct snd_soc_dai_link omap3beagle_dai = {
 +	.name = "TWL4030",
 +	.stream_name = "TWL4030",
 +	.cpu_dai = &omap_mcbsp_dai[0],
 +	.codec_dai = &twl4030_dai,
-+	.init = omap3beagle_twl4030_init,
 +	.ops = &omap3beagle_ops,
 +};
 +
@@ -987,10 +1006,10 @@ index 0000000..fb79938
 +MODULE_LICENSE("GPL");
 diff --git a/sound/soc/omap/omap3evm.c b/sound/soc/omap/omap3evm.c
 new file mode 100644
-index 0000000..32d4f5d
+index 0000000..a64c788
 --- /dev/null
 +++ b/sound/soc/omap/omap3evm.c
-@@ -0,0 +1,180 @@
+@@ -0,0 +1,142 @@
 +/*
 + * omap3evm.c  --  SoC audio for OMAP3 EVM
 + *
@@ -1063,50 +1082,12 @@ index 0000000..32d4f5d
 +	.hw_params = omap3evm_hw_params,
 +};
 +
-+static const struct snd_soc_dapm_widget twl4030_dapm_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphone Jack", NULL),
-+	SND_SOC_DAPM_LINE("Line In", NULL),
-+};
-+
-+static const char *audio_map[][3] = {
-+	{"Headphone Jack", NULL, "HPLOUT"},
-+	{"Headphone Jack", NULL, "HPROUT"},
-+
-+	{"Line In", NULL, "Line In"},
-+	{"Line In", NULL, "Line In"},
-+};
-+
-+static int omap3evm_twl4030_init(struct snd_soc_codec *codec)
-+{
-+	int i;
-+
-+	printk(KERN_INFO "OMAP3 EVM TWL4030 SoC init\n");
-+
-+	/* Add omap3evm specific widgets */
-+	for (i = 0; i < ARRAY_SIZE(twl4030_dapm_widgets); i++)
-+		snd_soc_dapm_new_control(codec, &twl4030_dapm_widgets[i]);
-+
-+	/* Set up omap3evm specific audio path audio_map */
-+	for (i = 0; i < ARRAY_SIZE(audio_map); i++)
-+		snd_soc_dapm_connect_input(codec, audio_map[i][0],
-+			audio_map[i][1], audio_map[i][2]);
-+
-+	/* always connected */
-+	snd_soc_dapm_set_endpoint(codec, "Headphone Jack", 1);
-+	snd_soc_dapm_set_endpoint(codec, "Line In", 1);
-+
-+	snd_soc_dapm_sync_endpoints(codec);
-+
-+	return 0;
-+}
-+
 +/* Digital audio interface glue - connects codec <--> CPU */
 +static struct snd_soc_dai_link omap3evm_dai = {
 +	.name = "TWL4030",
 +	.stream_name = "TWL4030",
 +	.cpu_dai = &omap_mcbsp_dai[0],
 +	.codec_dai = &twl4030_dai,
-+	.init = omap3evm_twl4030_init,
 +	.ops = &omap3evm_ops,
 +};
 +
