@@ -1,0 +1,23 @@
+OMAP2/3 TAP: enable debug messages
+
+From: Paul Walmsley <paul@pwsan.com>
+
+This patch causes the OMAP2/3 chip ID code to display the full DIE_ID registers at boot.
+
+---
+
+ arch/arm/mach-omap2/id.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/id.c b/arch/arm/mach-omap2/id.c
+index c7f9ab7..a154b5e 100644
+--- a/arch/arm/mach-omap2/id.c
++++ b/arch/arm/mach-omap2/id.c
+@@ -10,6 +10,7 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  */
++#define DEBUG
+ 
+ #include <linux/module.h>
+ #include <linux/kernel.h>
