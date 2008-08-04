@@ -35,6 +35,10 @@ case `machine_id` in
                 GSMD_OPTS="-s 115200 -F -v ti"
                 GSM_DEV="/dev/mux0"
                 ;;
+        "omap3430_ldp_board")
+                GSMD_OPTS="-s 460800 -F"
+                GSM_DEV="/dev/ttyS0"
+                ;;
 	*)
 		# Unknown board
 
