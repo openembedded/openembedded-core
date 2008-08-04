@@ -9,4 +9,5 @@ SDK-GMAE = " \
     libtelepathy-dev \
     libecal-dev \
     libebook-dev \
+    libxi-dev \
     "

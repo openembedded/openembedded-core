@@ -3,7 +3,7 @@
 #
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
-PR = "r7"
+PR = "r8"
 
 ALLOW_EMPTY = "1"
 
