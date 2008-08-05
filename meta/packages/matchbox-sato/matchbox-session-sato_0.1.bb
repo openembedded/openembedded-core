@@ -2,7 +2,7 @@ DESCRIPTION = "Custom MB session files for poky"
 LICENSE = "GPL"
 SECTION = "x11"
 RDEPENDS = "formfactor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2 matchbox-desktop-sato initscripts matchbox-session"
-PR = "r23"
+PR = "r24"
 
 SRC_URI = "file://session"
 S = "${WORKDIR}"
@@ -24,7 +24,7 @@ gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --dire
 gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string --set /desktop/poky/interface/icon_theme Sato
 gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type bool --set /desktop/poky/interface/touchscreen true
 
-if [ "`cpuinfo_id`" = "GTA01" ]
+if [ "`machine_id`" = "gta01" ]
 then
     gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string --set /desktop/poky/interface/font_name "Sans 6"
 else
