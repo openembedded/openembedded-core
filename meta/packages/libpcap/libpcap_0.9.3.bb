@@ -4,7 +4,7 @@ LICENSE = "BSD"
 SECTION = "libs/network"
 PR = "r1"
 
-SRC_URI = "http://www.tcpdump.org/release/libpcap-${PV}.tar.gz \
+SRC_URI = "http://www.at.tcpdump.org/release/libpcap-${PV}.tar.gz \
            file://shared.patch;patch=1"
 
 inherit autotools
