@@ -36,7 +36,8 @@ case `machine_id` in
                 GSM_DEV="/dev/mux0"
                 ;;
         "omap3430_ldp_board")
-                GSMD_OPTS="-s 460800 -F"
+                # Need a machine for the Zoom modem, but this will do
+                GSMD_OPTS="-s 460800 -F -v ti -m gta01"
                 GSM_DEV="/dev/ttyS0"
                 ;;
 	*)
