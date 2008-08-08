@@ -34,7 +34,7 @@ LDFLAGS_append_mx31ads = " -lpvrNULLWSEGL -lstdc++ "
 inherit autotools pkgconfig gtk-doc
 
 PACKAGES =+ "clutter-examples"
-FILES_clutter-examples = "${bindir}/test-*"
+FILES_clutter-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
 
 #check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points
 require clutter-fpu.inc
