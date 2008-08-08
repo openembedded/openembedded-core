@@ -4,11 +4,10 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "all"
 RDEPENDS = "fontconfig-utils"
+PE = "1"
 
-SRC_URI = "http://www.redhat.com/f/fonts/liberation-fonts-ttf-3.tar.gz \
+SRC_URI = "https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-${PV}.tar.gz \
            file://30-liberation-aliases.conf"
-
-S = "${WORKDIR}/${PN}-0.2/"
 
 do_install () { 
         install -d ${D}${datadir}/fonts/ttf/ 
