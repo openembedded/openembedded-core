@@ -2,7 +2,7 @@ LICENSE = "GPL"
 DESCRIPTION = "A JavaScript engine"
 SECTION = "libs"
 DEPENDS = "readline"
-SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/js-1.5.tar.gz \
+SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/older-packages/js-1.5.tar.gz \
            file://link_with_gcc.patch;patch=1 \
 	   file://jsautocfg.h"
 
