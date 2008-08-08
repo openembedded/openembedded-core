@@ -6,7 +6,3 @@ SRC_URI = "svn://svn.o-hand.com/repos/clutter/branches;module=clutter-0-6;proto=
 	   file://enable_tests-0.6.patch;patch=1 "
 
 S = "${WORKDIR}/clutter-0-6"
-
-do_stage () {
-        autotools_stage_all
-}
