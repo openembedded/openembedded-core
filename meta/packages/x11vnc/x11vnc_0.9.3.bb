@@ -5,7 +5,7 @@ AUTHOR = "Karl Runge"
 LICENSE = "GPL"
 DEPENDS = "openssl virtual/libx11 libxext avahi jpeg zlib"
 
-SRC_URI = "http://www.karlrunge.com/x11vnc/x11vnc-0.9.3.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/libvncserver/x11vnc-${PV}.tar.gz"
 
 inherit autotools
 
