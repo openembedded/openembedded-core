@@ -4,6 +4,7 @@ require gcc-cross-initial.inc
 DEPENDS += "gmp-native mpfr-native"
 
 EXTRA_OECONF += " --disable-libmudflap \
+		  --disable-decimal-float \
 		  --disable-libgomp \
 		  --disable-libssp"
 
