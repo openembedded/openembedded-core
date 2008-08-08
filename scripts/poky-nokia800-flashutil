@@ -10,6 +10,17 @@ if [ ! -r "$1" ]; then
 	exit -1
 fi
 
+uboot_offset=0
+config_offset=64
+kernel_offset=256
+initfs_offset=1280
+rootfs_offset=2304 # chinook
+
+# This value should be selected for Diablo based firmwares
+# It also require patching qemu to get proper size of flash partitions
+# (by default qemu has Chinook split).
+#rootfs_offset=3328 # diablo
+
 if [ ! -e "$2" ]; then
         echo "foo"
 	# Making an empty/erased flash image.  Need a correct echo behavior.
@@ -31,15 +42,15 @@ if [ "$3" != "" ]; then
 	case "$3" in
 	config)
 		partition=/dev/mtd1
-		page=64
+		page=$config_offset
 		;;
 	initfs)
 		partition=/dev/mtd3
-		page=1280
+		page=$initfs_offset
 		;;
 	rootfs)
 		partition=/dev/mtd4
-		page=2304
+		page=$rootfs_offset
 		;;
 	*)
 		echo "Unknown partition $2"
@@ -47,7 +58,7 @@ if [ "$3" != "" ]; then
 	esac
 else
 	partition=/dev/mtd4
-	page=2304
+	page=$rootfs_offset
 fi
 
 dd if=$1 of=$2 conv=notrunc bs=2048 seek=$page
