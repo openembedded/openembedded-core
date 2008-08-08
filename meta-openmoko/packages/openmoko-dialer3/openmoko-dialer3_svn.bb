@@ -3,8 +3,11 @@ SECTION = "openmoko/pim"
 HOMEPAGE = "http://projects.openmoko.org/projects/shr/"
 PKG_TAGS_${PN} = "group::communication"
 DEPENDS = " libmokoui2 libmokojournal2 pulseaudio dbus-glib libnotify libjana"
+RDEPENDS = "gsmd2"
+
 PV = "0.0.1+svnr${SRCREV}"
 SRCREV = "${AUTOREV}"
+PR = "r1"
 
 inherit autotools pkgconfig openmoko2
 
