@@ -2,7 +2,7 @@ DESCRIPTION = "Custom MB session files for poky"
 LICENSE = "GPL"
 SECTION = "x11"
 RDEPENDS = "formfactor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2 matchbox-desktop-sato initscripts matchbox-session"
-PR = "r25"
+PR = "r26"
 
 # This package is architecture specific because the session script is modified
 # based on the machine architecture.
@@ -25,6 +25,7 @@ do_install() {
 
 	install -d ${D}/${sysconfdir}/matchbox
 	sed -f "$SCRIPT" ${S}/session > ${D}/${sysconfdir}/matchbox/session
+        chmod +x ${D}/${sysconfdir}/matchbox/session
 }
 
 pkg_postinst_${PN} () {
