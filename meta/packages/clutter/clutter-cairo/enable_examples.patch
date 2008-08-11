@@ -5,18 +5,18 @@
 
 Index: clutter-cairo/examples/Makefile.am
 ===================================================================
---- clutter-cairo.orig/examples/Makefile.am	2007-07-10 00:25:03.000000000 +0100
-+++ clutter-cairo/examples/Makefile.am	2007-07-10 12:06:49.000000000 +0100
+--- clutter-cairo.orig/examples/Makefile.am	2008-08-11 16:30:04.000000000 +0100
++++ clutter-cairo/examples/Makefile.am	2008-08-11 16:30:24.000000000 +0100
 @@ -1,4 +1,4 @@
--noinst_PROGRAMS = clock flowers
-+bin_PROGRAMS = clock flowers
+-noinst_PROGRAMS = clock flowers bubbles
++bin_PROGRAMS = clock flowers bubbles
  
  INCLUDES = -I$(top_srcdir)/ @GCC_FLAGS@ @DEPS_CFLAGS@
- LDFLAGS = @DEPS_LIBS@ $(top_builddir)/libclutter-cairo-@CLUTTER_CAIRO_MAJORMINOR@.la 
+ AM_LDFLAGS = @DEPS_LIBS@ $(top_builddir)/libclutter-cairo-@CLUTTER_CAIRO_MAJORMINOR@.la 
 Index: clutter-cairo/examples/flowers.c
 ===================================================================
---- clutter-cairo.orig/examples/flowers.c	2007-07-10 12:30:44.000000000 +0100
-+++ clutter-cairo/examples/flowers.c	2007-07-10 12:30:51.000000000 +0100
+--- clutter-cairo.orig/examples/flowers.c	2008-08-11 16:30:04.000000000 +0100
++++ clutter-cairo/examples/flowers.c	2008-08-11 16:30:10.000000000 +0100
 @@ -11,7 +11,7 @@
  
  #define PETAL_MIN 20
