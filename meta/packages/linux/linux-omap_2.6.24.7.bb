@@ -1,7 +1,13 @@
 require linux-omap.inc
-PR = "r0"
+
+PR = "r1"
+
 COMPATIBLE_MACHINE = "omap-3430ldp"
-#http://omapzoom.org/gf/download/frsrelease/110/425/linux-ldp-v1.4.tar
+
+#
+# Patch extracted from:
+# http://omapzoom.org/gf/download/frsrelease/110/425/linux-ldp-v1.4.tar
+#
 
 SRC_URI="http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.24.tar.bz2 \
          http://kernel.org/pub/linux/kernel/v2.6/patch-2.6.24.7.bz2;patch=1 \
