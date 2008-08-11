@@ -1,7 +1,7 @@
 require clutter.inc
 
 PV = "0.7.0+svnr${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "svn://svn.o-hand.com/repos/clutter/trunk;module=clutter;proto=http \
            file://enable_tests.patch;patch=1;maxrev=2989 \
