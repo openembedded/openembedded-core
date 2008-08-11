@@ -82,7 +82,7 @@ SRCREV_pn-xvideo-tests ?= "272"
 SRCREV_pn-zaurusd ?= "358"
 
 # Previously floating revisions
-SRCREV_pn-aaina ?= "1231"
+SRCREV_pn-aaina ?= "2191"
 SRCREV_pn-libmatchbox ?= "1531"
 SRCREV_pn-libopensync-plugin-evo2-sync ?= "2394"
 SRCREV_pn-libopensync-plugin-file-sync ?= "2392"
@@ -91,7 +91,7 @@ SRCREV_pn-libsync ?= "208"
 SRCREV_pn-msynctool ?= "314"
 SRCREV_pn-networkmanager-applet ?= "263"
 SRCREV_pn-networkmanager ?= "2984"
-SRCREV_pn-table ?= "1456"
+SRCREV_pn-table ?= "2191"
 SRCREV_pn-ubootchart ?= "10"
 
 SRCREV_pn-dfu-util-native = "3139"
