@@ -26,8 +26,11 @@ startup_progress() {
         progress=$progress_size
     fi
     #echo "PROGRESS is $progress $runlevel $first_step + ($step of $num_steps) $step_change $progress_size"
-    if type psplash-write >/dev/null 2>&1; then
-        TMPDIR=/mnt/.psplash psplash-write "PROGRESS $progress" || true
+    #if type psplash-write >/dev/null 2>&1; then
+    #    TMPDIR=/mnt/.psplash psplash-write "PROGRESS $progress" || true
+    #fi
+    if [ -e /mnt/.psplash/psplash_fifo ]; then
+        echo "PROGRESS $progress" > /mnt/.psplash/psplash_fifo
     fi
 }
 
