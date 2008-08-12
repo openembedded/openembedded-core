@@ -18,13 +18,11 @@ test -f /sbin/portmap || exit 0
 
 case "$1" in
     start)
-	echo -n "Starting portmap daemon:"
-	echo -n " portmap"
+	echo "Starting portmap daemon..."
         start-stop-daemon --start --quiet --exec /sbin/portmap
-	echo "."
 
 	if [ -f /var/run/portmap.upgrade-state ]; then
-          echo -n "Restoring old RPC service information..."
+          echo "Restoring old RPC service information..."
           sleep 1 # needs a short pause or pmap_set won't work. :(
 	  pmap_set </var/run/portmap.upgrade-state
 	  rm -f /var/run/portmap.upgrade-state
@@ -33,9 +31,8 @@ case "$1" in
 
 	;;
     stop)
-        echo -n "Stopping portmap daemon:"
-        echo -n " portmap" ; start-stop-daemon --stop --quiet --exec /sbin/portmap
-        echo "."
+        echo "Stopping portmap daemon..."
+        start-stop-daemon --stop --quiet --exec /sbin/portmap
 	;;
     reload)
 	;;
