@@ -3,7 +3,7 @@ DESCRIPTION = "udev is a daemon which dynamically creates and removes device nod
 the hotplug package and requires a kernel not older than 2.6.12."
 RPROVIDES_${PN} = "hotplug"
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
 	   file://noasmlinkage.patch;patch=1 \
@@ -42,6 +42,11 @@ do_install () {
 	if [ "${UDEV_DEVFS_RULES}" = "1" ]; then
 		install -m 0644 ${WORKDIR}/devfs-udev.rules ${D}${sysconfdir}/udev/rules.d/devfs-udev.rules
 	fi
+
+	# Remove some default rules that don't work well on embedded devices
+	rm ${D}${sysconfdir}/udev/rules.d/60-persistent-input.rules
+	rm ${D}${sysconfdir}/udev/rules.d/60-persistent-storage.rules
+	rm ${D}${sysconfdir}/udev/rules.d/60-persistent-storage-tape.rules
 
 	install -d ${D}${sysconfdir}/udev/scripts/
 
