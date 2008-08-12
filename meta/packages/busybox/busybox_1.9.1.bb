@@ -1,5 +1,5 @@
 require busybox.inc
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.gz \
            http://busybox.net/downloads/fixes-1.9.1/busybox-1.9.1-lineedit.patch;patch=1 \

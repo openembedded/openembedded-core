@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Busybox version: 1.9.1
-# Thu Feb 14 11:54:00 2008
+# Fri Jul 25 12:25:34 2008
 #
 CONFIG_HAVE_DOT_CONFIG=y
 
@@ -386,7 +386,7 @@ CONFIG_XARGS=y
 # CONFIG_FEATURE_ADDUSER_LONG_OPTIONS is not set
 # CONFIG_DELUSER is not set
 # CONFIG_GETTY is not set
-# CONFIG_FEATURE_UTMP is not set
+CONFIG_FEATURE_UTMP=y
 # CONFIG_FEATURE_WTMP is not set
 # CONFIG_LOGIN is not set
 # CONFIG_PAM is not set
@@ -705,7 +705,7 @@ CONFIG_ASH_ALIAS=y
 CONFIG_ASH_MATH_SUPPORT=y
 # CONFIG_ASH_MATH_SUPPORT_64 is not set
 CONFIG_ASH_GETOPTS=y
-# CONFIG_ASH_BUILTIN_ECHO is not set
+CONFIG_ASH_BUILTIN_ECHO=y
 CONFIG_ASH_BUILTIN_TEST=y
 # CONFIG_ASH_CMDCMD is not set
 # CONFIG_ASH_MAIL is not set
