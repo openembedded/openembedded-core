@@ -1,0 +1,44 @@
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile	2008-08-11 22:49:48.000000000 +0100
++++ git/Makefile	2008-08-12 12:16:52.000000000 +0100
+@@ -15,7 +15,7 @@
+ 
+ SCP_DESTINATION=pug.vpn:tmp
+ 
+-BINARY=$(shell basename `pwd`)#
++BINARY=moblin-proto
+ PACKAGE=../$(BINARY).tar.bz2 # you can use both .gz and .bz2 as extension here
+ 
+ #CFLAGS= -Wall -I /home/pippin/src/clutter-box2d/clutter-box2d
+@@ -61,7 +61,7 @@
+ %.o: %.c $(HFILES)
+ 	$(CC) -g $(CFLAGS) $(INCS) -c $< -o$@
+ $(BINARY): $(OBJECTS)
+-	$(CC) -o $@ $(OBJECTS) $(LIBS)
++	$(CXX) -o $@ $(OBJECTS) $(LIBS)
+ 
+ #$(BINARY): $(CFILES)
+ #	$(LD) $(CFLAGS) $(INCS) $(CFILES) $(LIBS) -o $@
+Index: git/moblin-desktop.c
+===================================================================
+--- git.orig/moblin-desktop.c	2008-08-11 22:49:49.000000000 +0100
++++ git/moblin-desktop.c	2008-08-12 12:14:44.000000000 +0100
+@@ -620,17 +620,10 @@
+ 
+   attach_reactivate_on_press (old_app);
+ 
+-<<<<<<< HEAD:moblin-desktop.c
+   shuttle = clutter_group_new ();
+   clutter_group_add (CLUTTER_GROUP(desktop->mainstuff), shuttle);
+   copy_geometry (desktop->middle, shuttle);
+   clutter_actor_reparent (old_app, shuttle);
+-=======
+-  box = clutter_group_new ();
+-  clutter_group_add (CLUTTER_GROUP(desktop->stage), box);
+-  copy_geometry (desktop->middle, box);
+-  clutter_actor_reparent (old_app, box);
+->>>>>>> Removed now unneeded forcible shows of apps.:moblin-desktop.c
+ 
+   {
+     gint    x, y;
