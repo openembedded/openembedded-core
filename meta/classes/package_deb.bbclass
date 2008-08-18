@@ -247,17 +247,7 @@ python do_package_deb () {
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("dpkg-deb execution failed")
 
-        for script in ["preinst", "postinst", "prerm", "postrm", "control" ]:
-            scriptfile = os.path.join(controldir, script)
-            try:
-                os.remove(scriptfile)
-            except OSError:
-                pass
-        try:
-            os.rmdir(controldir)
-        except OSError:
-            pass
-
+        bb.utils.prunedir(controldir)
         bb.utils.unlockfile(lf)
 }
 
