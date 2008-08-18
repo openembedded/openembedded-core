@@ -268,3 +268,13 @@ def sha256_file(filename):
     for line in open(filename):
         s.update(line)
     return s.hexdigest()
+
+def prunedir(topdir):
+    # Delete everything reachable from the directory named in 'topdir'.
+    # CAUTION:  This is dangerous!
+    for root, dirs, files in os.walk(topdir, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+    os.rmdir(topdir)
