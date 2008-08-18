@@ -1,0 +1,108 @@
+Index: rpm-4.4.2.3/configure.ac
+===================================================================
+--- rpm-4.4.2.3.orig/configure.ac	2008-04-01 08:30:14.000000000 +0100
++++ rpm-4.4.2.3/configure.ac	2008-08-17 10:57:30.000000000 +0100
+@@ -529,7 +529,7 @@
+ WITH_MAGIC_INCLUDE=
+ WITH_MAGIC_LIB=
+ 
+-if test -d file ; then
++if test -d file_disabled ; then
+   WITH_RPMFILE=rpmfile
+   WITH_MAGIC_SUBDIR=file
+   WITH_MAGIC_INCLUDE="-I\${top_srcdir}/${WITH_MAGIC_SUBDIR}/src"
+@@ -1307,7 +1307,7 @@
+ dnl # XXX Propagate -lucb to popt ...
+ dnl export LIBS INCPATH CONFIG_SITE
+ 
+-AC_CONFIG_SUBDIRS(popt file db3)
++AC_CONFIG_SUBDIRS(db/dist)
+ 
+ AC_CONFIG_FILES([ Doxyfile Makefile rpmrc macros platform rpmpopt
+ 	rpmio/Makefile rpmdb/Makefile lib/Makefile build/Makefile
+Index: rpm-4.4.2.3/db/dist/configure.ac
+===================================================================
+--- rpm-4.4.2.3.orig/db/dist/configure.ac	2008-04-01 08:28:21.000000000 +0100
++++ rpm-4.4.2.3/db/dist/configure.ac	2008-08-17 09:54:37.000000000 +0100
+@@ -11,14 +11,6 @@
+ AC_CANONICAL_HOST()
+ AC_ARG_PROGRAM()
+ 
+-# Don't build in the top-level or dist directories.
+-AC_MSG_CHECKING(if building in the top-level or dist directories)
+-if [ test -d db_archive -o -f configure.ac ] ; then
+-	AC_MSG_RESULT(yes)
+-	AC_MSG_ERROR(
+-    [Berkeley DB should not be built in the top-level or dist directories.])
+-fi
+-AC_MSG_RESULT(no)
+ 
+ # Substitution variables.
+ AC_SUBST(ADDITIONAL_INCS)
+@@ -281,7 +273,7 @@
+ AC_PROG_LIBTOOL
+ 
+ SOFLAGS="-rpath \$(libdir)"
+-LIBTOOL_PROG="${SHELL} ./libtool"
++LIBTOOL_PROG="${SHELL} ./$host_alias-libtool"
+ 
+ # Set SOSUFFIX and friends
+ SOSUFFIX_CONFIG
+@@ -297,7 +289,7 @@
+ MAKEFILE_XSOLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CXXLINK} -avoid-version"
+ MAKEFILE_CXXLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CXXLINK}"
+ 
+-LIBTOOL="\$(SHELL) ./libtool"
++LIBTOOL="\$(SHELL) ./$host_alias-libtool"
+ 
+ case "$host_os" in
+ cygwin* | mingw*)
+Index: rpm-4.4.2.3/db/dist/aclocal/options.ac
+===================================================================
+--- rpm-4.4.2.3.orig/db/dist/aclocal/options.ac	2008-08-17 09:57:49.000000000 +0100
++++ rpm-4.4.2.3/db/dist/aclocal/options.ac	2008-08-17 09:57:59.000000000 +0100
+@@ -277,10 +277,6 @@
+ 
+ # Uniquename excludes C++, Java, RPC.
+ if test "$db_cv_uniquename" = "yes"; then
+-	if test "$db_cv_rpc" = "yes"; then
+-		AC_MSG_ERROR(
+-		    [--with-uniquename is not compatible with --enable-rpc])
+-	fi
+ 	if test "$db_cv_cxx" = "yes"; then
+ 		AC_MSG_ERROR(
+ 		    [--with-uniquename is not compatible with --enable-cxx])
+Index: rpm-4.4.2.3/db/dist/aclocal/rpc.ac
+===================================================================
+--- rpm-4.4.2.3.orig/db/dist/aclocal/rpc.ac	2008-08-17 10:46:26.000000000 +0100
++++ rpm-4.4.2.3/db/dist/aclocal/rpc.ac	2008-08-17 10:46:47.000000000 +0100
+@@ -60,6 +60,7 @@
+ 	    -e 's/^}/__dbsrv_timeout(0);}/' \
+ 	    -e '}' \
+ 	    -e '1,/^#include/s/^#include/#include "db_config.h"\
++#include "db_int_def.h"\
+ &/' > db_server_svc.c
+ 
+ 	$RPCGEN -c $XDR_FILE |
+Index: rpm-4.4.2.3/tools/rpmfile.c
+===================================================================
+--- rpm-4.4.2.3.orig/tools/rpmfile.c	2008-08-17 11:01:51.000000000 +0100
++++ rpm-4.4.2.3/tools/rpmfile.c	2008-08-17 11:03:07.000000000 +0100
+@@ -29,7 +29,7 @@
+  * file - find type of a file or files - main program.
+  */
+ 
+-#include "file.h"
++#include "../file/src/file.h"
+ #include "magic.h"
+ 
+ #include <stdio.h>
+@@ -69,7 +69,7 @@
+ 
+ #include <netinet/in.h>		/* for byte swapping */
+ 
+-#include "patchlevel.h"
++#include "../file/src/patchlevel.h"
+ 
+ #ifndef	lint
+ FILE_RCSID("@(#)$Id: file.c,v 1.96 2005/03/06 05:58:22 christos Exp $")

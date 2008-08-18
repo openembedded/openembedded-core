@@ -1,0 +1,145 @@
+Index: rpm-4.4.2.3/configure.ac
+===================================================================
+--- rpm-4.4.2.3.orig/configure.ac	2008-08-17 11:40:29.000000000 +0100
++++ rpm-4.4.2.3/configure.ac	2008-08-17 11:40:29.000000000 +0100
+@@ -326,10 +326,8 @@
+ 
+ localdone=
+ 
+-dirs=$prefix
+ if test "$cross_compiling" != "yes"; then
+-  dirs="$dirs /usr/local"
+-fi
++dirs="$prefix /usr/local"
+ for dir in $dirs
+ do
+ 	case $dir in
+@@ -371,6 +369,7 @@
+ else
+ 	AC_MSG_RESULT(no)
+ fi
++fi
+ 
+ dnl
+ dnl Check for features
+@@ -473,7 +472,7 @@
+     AC_CHECK_HEADER([beecrypt/api.h], [
+       AC_DEFINE(HAVE_BEECRYPT_API_H, 1, [Define to 1 if you have the <beecrypt/api.h> header file.])
+     ])
+-    WITH_BEECRYPT_INCLUDE="-I${includedir}/beecrypt"
++    WITH_BEECRYPT_INCLUDE=""
+     WITH_BEECRYPT_LIB="-lbeecrypt"
+   ])
+ ],[
+@@ -506,7 +505,7 @@
+     AC_CHECK_LIB(neon, ne_send_request_chunk, [
+ 	AC_DEFINE(HAVE_NEON_NE_SEND_REQUEST_CHUNK, 1, [Define to 1 if you have ne_send_request_chunk() in libneon.])
+     ])
+-    WITH_NEON_INCLUDE="-I${includedir}/neon"
++    WITH_NEON_INCLUDE=""
+     WITH_NEON_LIB="-lneon"
+   ])
+ ],[
+Index: rpm-4.4.2.3/rpmio/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/rpmio/Makefile.am	2008-04-01 08:28:22.000000000 +0100
++++ rpm-4.4.2.3/rpmio/Makefile.am	2008-08-17 11:40:29.000000000 +0100
+@@ -26,8 +26,6 @@
+ 
+ BEECRYPTLOBJS = $(shell test X"@WITH_BEECRYPT_SUBDIR@" != X && cat $(top_builddir)/@WITH_BEECTYPT_SUBDIR@/listobjs)
+ 
+-LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
+-
+ usrlibdir = $(libdir)@MARK64@
+ usrlib_LTLIBRARIES = librpmio.la
+ librpmio_la_SOURCES = \
+Index: rpm-4.4.2.3/rpmio/rpmio_internal.h
+===================================================================
+--- rpm-4.4.2.3.orig/rpmio/rpmio_internal.h	2008-04-01 08:28:22.000000000 +0100
++++ rpm-4.4.2.3/rpmio/rpmio_internal.h	2008-08-17 11:40:29.000000000 +0100
+@@ -12,22 +12,22 @@
+ #if HAVE_BEECRYPT_API_H
+ #include <api.h>
+ #else
+-#include <beecrypt.api.h>
++#include <beecrypt/beecrypt.api.h>
+ #endif
+ 
+ #include <rpmpgp.h>
+ #include <rpmsw.h>
+ 
+ /* Drag in the beecrypt includes. */
+-#include <beecrypt.h>
+-#include <base64.h>
+-#include <dsa.h>
+-#include <endianness.h>
+-#include <md5.h>
+-#include <mp.h>
+-#include <rsa.h>
+-#include <rsapk.h>
+-#include <sha1.h>
++#include <beecrypt/beecrypt.h>
++#include <beecrypt/base64.h>
++#include <beecrypt/dsa.h>
++#include <beecrypt/endianness.h>
++#include <beecrypt/md5.h>
++#include <beecrypt/mp.h>
++#include <beecrypt/rsa.h>
++#include <beecrypt/rsapk.h>
++#include <beecrypt/sha1.h>
+ #if HAVE_BEECRYPT_API_H
+ #include <sha256.h>
+ #include <sha384.h>
+Index: rpm-4.4.2.3/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/Makefile.am	2008-08-17 11:42:36.000000000 +0100
++++ rpm-4.4.2.3/Makefile.am	2008-08-17 11:42:50.000000000 +0100
+@@ -10,7 +10,7 @@
+ 	po/*.in po/*.po po/rpm.pot \
+ 	rpm.magic rpmpopt-$(VERSION) rpmqv.c 
+ 
+-SUBDIRS = po misc @WITH_ZLIB_SUBDIR@ @WITH_ELFUTILS_SUBDIR@ @WITH_MAGIC_SUBDIR@ @WITH_DB_SUBDIR@ @WITH_SQLITE3_SUBDIR@ @WITH_POPT_SUBDIR@ @WITH_BEECRYPT_SUBDIR@ @WITH_NEON_SUBDIR@ lua rpmio rpmdb lib build @WITH_PYTHON_SUBDIR@ tools scripts doc .
++SUBDIRS = po misc @WITH_ZLIB_SUBDIR@ @WITH_ELFUTILS_SUBDIR@ @WITH_MAGIC_SUBDIR@ @WITH_DB_SUBDIR@ @WITH_SQLITE3_SUBDIR@ @WITH_POPT_SUBDIR@ @WITH_BEECRYPT_SUBDIR@ @WITH_NEON_SUBDIR@ rpmio rpmdb lib build @WITH_PYTHON_SUBDIR@ tools scripts doc .
+ 
+ INCLUDES = \
+ 	-I$(top_srcdir)/build \
+Index: rpm-4.4.2.3/rpmdb/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/rpmdb/Makefile.am	2008-08-17 11:43:36.000000000 +0100
++++ rpm-4.4.2.3/rpmdb/Makefile.am	2008-08-17 11:43:57.000000000 +0100
+@@ -41,9 +41,6 @@
+ # XXX watchout, ../db3/libdb.la created by this Makefile may surprise
+ libdb_la = $(top_builddir)/$(WITH_DB_SUBDIR)/libdb.la
+ 
+-# XXX grrr, RPM_BUILD_ROOT prevents build pollution if/when -lrpm different
+-LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
+-
+ usrlibdir = $(libdir)@MARK64@
+ usrlib_LTLIBRARIES = librpmdb.la
+ librpmdb_la_SOURCES = \
+Index: rpm-4.4.2.3/lib/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/lib/Makefile.am	2008-08-17 11:46:43.000000000 +0100
++++ rpm-4.4.2.3/lib/Makefile.am	2008-08-17 11:46:51.000000000 +0100
+@@ -29,8 +29,6 @@
+ mylibs = librpm.la
+ LIBS =
+ 
+-LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
+-
+ usrlibdir = $(libdir)@MARK64@
+ usrlib_LTLIBRARIES = librpm.la
+ librpm_la_SOURCES = \
+Index: rpm-4.4.2.3/build/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/build/Makefile.am	2008-08-17 11:47:37.000000000 +0100
++++ rpm-4.4.2.3/build/Makefile.am	2008-08-17 11:47:43.000000000 +0100
+@@ -22,8 +22,6 @@
+ pkginc_HEADERS = rpmbuild.h rpmfc.h rpmfile.h rpmspec.h
+ noinst_HEADERS = buildio.h
+ 
+-LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
+-
+ usrlibdir = $(libdir)@MARK64@
+ usrlib_LTLIBRARIES = librpmbuild.la
+ librpmbuild_la_SOURCES = \
