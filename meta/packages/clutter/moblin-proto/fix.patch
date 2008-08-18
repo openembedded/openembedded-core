@@ -20,25 +20,3 @@ Index: git/Makefile
  
  #$(BINARY): $(CFILES)
  #	$(LD) $(CFLAGS) $(INCS) $(CFILES) $(LIBS) -o $@
-Index: git/moblin-desktop.c
-===================================================================
---- git.orig/moblin-desktop.c	2008-08-11 22:49:49.000000000 +0100
-+++ git/moblin-desktop.c	2008-08-12 12:14:44.000000000 +0100
-@@ -620,17 +620,10 @@
- 
-   attach_reactivate_on_press (old_app);
- 
--<<<<<<< HEAD:moblin-desktop.c
-   shuttle = clutter_group_new ();
-   clutter_group_add (CLUTTER_GROUP(desktop->mainstuff), shuttle);
-   copy_geometry (desktop->middle, shuttle);
-   clutter_actor_reparent (old_app, shuttle);
--=======
--  box = clutter_group_new ();
--  clutter_group_add (CLUTTER_GROUP(desktop->stage), box);
--  copy_geometry (desktop->middle, box);
--  clutter_actor_reparent (old_app, box);
-->>>>>>> Removed now unneeded forcible shows of apps.:moblin-desktop.c
- 
-   {
-     gint    x, y;
