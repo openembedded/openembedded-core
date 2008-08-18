@@ -1,0 +1,20 @@
+Index: beecrypt-3.1.0/configure.ac
+===================================================================
+--- beecrypt-3.1.0.orig/configure.ac	2008-08-16 12:08:02.000000000 +0100
++++ beecrypt-3.1.0/configure.ac	2008-08-16 12:08:26.000000000 +0100
+@@ -754,15 +754,6 @@
+ 
+ # Check where to install the libraries
+ bc_libalt=
+-case $target_os in
+-linux*)
+-  case $bc_target_arch in
+-  alpha* | powerpc64 | s390x | x86_64)
+-    bc_libalt="64"
+-    ;;
+-  esac
+-  ;;
+-esac
+ AC_SUBST(LIBALT,$bc_libalt)
+ 
+ # Generate output files.
