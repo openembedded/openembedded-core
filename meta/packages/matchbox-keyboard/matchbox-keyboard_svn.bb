@@ -4,7 +4,7 @@ DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
 RDEPENDS = "formfactor dbus-wait"
 SECTION = "x11"
 PV = "0.0+svnr${SRCREV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
            file://configure_fix.patch;patch=1;maxrev=1819 \

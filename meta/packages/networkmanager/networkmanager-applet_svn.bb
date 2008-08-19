@@ -3,7 +3,7 @@ LICENSE = "GPL"
 DEPENDS = "networkmanager dbus-glib libglade gconf gnome-keyring"
 #TODO DEPENDS libnotify
 RDEPENDS = "networkmanager dbus-wait"
-PR = "r6"
+PR = "r7"
 
 inherit gnome gtk-icon-cache
 
