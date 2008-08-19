@@ -13,7 +13,8 @@ killproc() {            # kill the named process(es)
         [ "$pid" != "" ] && kill $pid
 }
 
-for x in $(cat /proc/cmdline); do
+read CMDLINE < /proc/cmdline
+for x in $CMDLINE; do
         case $x in
         x11=false)
 		echo "X Server disabled" 
