@@ -10,4 +10,4 @@
 ### END INIT INFO
 
 # Update the timestamp
-date +%2m%2d%2H%2M%Y > /etc/timestamp
+date +%Y%m%d%2H%2M > /etc/timestamp2

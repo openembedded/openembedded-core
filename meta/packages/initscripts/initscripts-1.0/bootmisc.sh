@@ -65,13 +65,13 @@ fi
 # If the timestamp is 1 day or more recent than the current time,
 # use the timestamp instead.
 /etc/init.d/hwclock.sh start
-if test -e /etc/timestamp
+if test -e /etc/timestamp2
 then
-	SYSTEMDATE=`date "+%Y%m%d"`
-	TIMESTAMP=`cat /etc/timestamp | awk '{ print substr($0,9,4) substr($0,1,4);}'`
-        NEEDUPDATE=`expr \( $TIMESTAMP \> $SYSTEMDATE \)`                                                 
+	SYSTEMDATE=`date "+%Y%m%d%2H%2M"`
+	read TIMESTAMP < /etc/timestamp2
+        NEEDUPDATE=`expr \( $TIMESTAMP \> $SYSTEMDATE + 10000 \)`
         if [ $NEEDUPDATE -eq 1 ]; then 
-		date `cat /etc/timestamp`
+		date $TIMESTAMP
 		/etc/init.d/hwclock.sh stop
 	fi
 fi
