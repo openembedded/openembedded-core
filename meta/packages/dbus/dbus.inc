@@ -9,6 +9,7 @@ SRC_URI = "\
   file://cross.patch;patch=1 \
   file://tmpdir.patch;patch=1 \
   file://dbus-1.init \
+  file://99_dbus \
 "
 S = "${WORKDIR}/dbus-${PV}"
 
@@ -80,6 +81,9 @@ do_stage() {
 }
 
 do_install_append() {
+	install -d ${D}/etc/default/volatiles
+	install -m 0644 ${WORKDIR}/99_dbus ${D}/etc/default/volatiles/
+
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/dbus-1.init ${D}${sysconfdir}/init.d/dbus-1
 	# the stock install seems to install the libtool wrapper script, so we have to copy this manually :M:
