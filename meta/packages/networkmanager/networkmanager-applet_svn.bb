@@ -2,8 +2,8 @@ DESCRIPTION = "GTK+ applet for NetworkManager"
 LICENSE = "GPL"
 DEPENDS = "networkmanager dbus-glib libglade gconf gnome-keyring"
 #TODO DEPENDS libnotify
-RDEPENDS = "networkmanager"
-PR = "r5"
+RDEPENDS = "networkmanager dbus-wait"
+PR = "r6"
 
 inherit gnome gtk-icon-cache
 
@@ -11,7 +11,7 @@ SRC_URI = "svn://svn.gnome.org/svn/network-manager-applet/;module=trunk;proto=ht
            file://applet-no-gnome.diff;patch=1;pnum=0 \
            file://applet-no-animation.patch;patch=1 \
            file://no_vpn.patch;patch=1 \
-           file://70NetworkManagerApplet.sh"
+           file://70NetworkManagerApplet.shbg"
 
 PV = "0.0+svnr${SRCREV}"
 
@@ -24,7 +24,7 @@ FILES_${PN} += "${datadir}/nm-applet/ \
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/X11/Xsession.d/
-	install -m 755 ${WORKDIR}/70NetworkManagerApplet.sh ${D}${sysconfdir}/X11/Xsession.d/
+	install -m 755 ${WORKDIR}/70NetworkManagerApplet.shbg ${D}${sysconfdir}/X11/Xsession.d/
 }
 
 #TODO: remove if libnotify in DEPENDS
