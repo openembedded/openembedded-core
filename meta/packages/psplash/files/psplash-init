@@ -7,7 +7,8 @@
 # Default-Stop:
 ### END INIT INFO
 
-for x in $(cat /proc/cmdline); do
+read CMDLINE < /proc/cmdline
+for x in $CMDLINE; do
         case $x in
         psplash=false)
 		echo "Boot splashscreen disabled" 
@@ -21,7 +22,7 @@ mount tmpfs -t tmpfs $TMPDIR -o,size=40k
 
 rotation=0
 if [ -e /etc/rotation ]; then
-	rotation=`cat /etc/rotation`
+	read rotation < /etc/rotation
 fi
 
 /usr/bin/psplash --angle $rotation &
