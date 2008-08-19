@@ -26,6 +26,9 @@ for SESSIONFILE in $SYSSESSIONDIR/*; do
         *.sh)
             . "$SESSIONFILE"
             ;;
+        *.shbg)
+            "$SESSIONFILE" &
+            ;;
         *~)
             # Ignore backup files
             ;;
