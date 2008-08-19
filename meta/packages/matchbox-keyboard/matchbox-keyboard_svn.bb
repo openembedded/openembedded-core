@@ -1,14 +1,14 @@
 DESCRIPTION = "Matchbox virtual keyboard for X11"
 LICENSE = "GPL"
 DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
-RDEPENDS = "formfactor"
+RDEPENDS = "formfactor dbus-wait"
 SECTION = "x11"
 PV = "0.0+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
            file://configure_fix.patch;patch=1;maxrev=1819 \
-	   file://80matchboxkeyboard"
+	   file://80matchboxkeyboard.shbg"
 
 S = "${WORKDIR}/${PN}"
 
@@ -33,7 +33,7 @@ FILES_matchbox-keyboard-applet-dbg += "${libdir}/matchbox-panel/.debug"
 
 do_install_append () {
 	install -d ${D}/${sysconfdir}/X11/Xsession.d/
-	install -m 755 ${WORKDIR}/80matchboxkeyboard ${D}/${sysconfdir}/X11/Xsession.d/
+	install -m 755 ${WORKDIR}/80matchboxkeyboard.shbg ${D}/${sysconfdir}/X11/Xsession.d/
 }
 
 pkg_postinst_matchbox-keyboard-im () {
