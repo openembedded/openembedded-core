@@ -4,6 +4,7 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
 PE = "1"
+PR = "r1"
 
 SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.tar.gz \
            file://man.patch;patch=1 \
@@ -32,9 +33,10 @@ do_install() {
 	oe_runmake PREFIX=${D} install-iwmulticall install-dynamic install-man install-hdr
 	install -d ${D}${sbindir}
 	install -m 0755 ifrename ${D}${sbindir}/ifrename
-	install -d ${D}${sysconfdir}/network/if-pre-up.d
-	install ${WORKDIR}/wireless-tools.if-pre-up ${D}${sysconfdir}/network/if-pre-up.d/wireless-tools
-	install ${WORKDIR}/zzz-wireless.if-pre-up ${D}${sysconfdir}/network/if-pre-up.d/zzz-wireless
+	# Disabled by RP - 20/8/08 - We don't seem to need/use these
+	#install -d ${D}${sysconfdir}/network/if-pre-up.d
+	#install ${WORKDIR}/wireless-tools.if-pre-up ${D}${sysconfdir}/network/if-pre-up.d/wireless-tools
+	#install ${WORKDIR}/zzz-wireless.if-pre-up ${D}${sysconfdir}/network/if-pre-up.d/zzz-wireless
 }
 
 PACKAGES = "libiw-dbg ifrename-dbg ${PN}-dbg \
