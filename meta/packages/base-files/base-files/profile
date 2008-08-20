@@ -21,7 +21,7 @@ fi
 
 if [ -d /etc/profile.d ]; then
   for i in /etc/profile.d/* ; do
-    . /etc/profile.d/$i
+    . $i
   done
   unset i
 fi
