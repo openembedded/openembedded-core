@@ -1,7 +1,7 @@
 Index: rpm-4.4.2.3/configure.ac
 ===================================================================
---- rpm-4.4.2.3.orig/configure.ac	2008-08-17 11:40:29.000000000 +0100
-+++ rpm-4.4.2.3/configure.ac	2008-08-17 11:40:29.000000000 +0100
+--- rpm-4.4.2.3.orig/configure.ac	2008-08-18 10:25:14.000000000 +0100
++++ rpm-4.4.2.3/configure.ac	2008-08-18 10:25:14.000000000 +0100
 @@ -326,10 +326,8 @@
  
  localdone=
@@ -43,7 +43,7 @@ Index: rpm-4.4.2.3/configure.ac
 Index: rpm-4.4.2.3/rpmio/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/rpmio/Makefile.am	2008-04-01 08:28:22.000000000 +0100
-+++ rpm-4.4.2.3/rpmio/Makefile.am	2008-08-17 11:40:29.000000000 +0100
++++ rpm-4.4.2.3/rpmio/Makefile.am	2008-08-18 10:25:14.000000000 +0100
 @@ -26,8 +26,6 @@
  
  BEECRYPTLOBJS = $(shell test X"@WITH_BEECRYPT_SUBDIR@" != X && cat $(top_builddir)/@WITH_BEECTYPT_SUBDIR@/listobjs)
@@ -56,7 +56,7 @@ Index: rpm-4.4.2.3/rpmio/Makefile.am
 Index: rpm-4.4.2.3/rpmio/rpmio_internal.h
 ===================================================================
 --- rpm-4.4.2.3.orig/rpmio/rpmio_internal.h	2008-04-01 08:28:22.000000000 +0100
-+++ rpm-4.4.2.3/rpmio/rpmio_internal.h	2008-08-17 11:40:29.000000000 +0100
++++ rpm-4.4.2.3/rpmio/rpmio_internal.h	2008-08-18 10:25:14.000000000 +0100
 @@ -12,22 +12,22 @@
  #if HAVE_BEECRYPT_API_H
  #include <api.h>
@@ -92,8 +92,8 @@ Index: rpm-4.4.2.3/rpmio/rpmio_internal.h
  #include <sha384.h>
 Index: rpm-4.4.2.3/Makefile.am
 ===================================================================
---- rpm-4.4.2.3.orig/Makefile.am	2008-08-17 11:42:36.000000000 +0100
-+++ rpm-4.4.2.3/Makefile.am	2008-08-17 11:42:50.000000000 +0100
+--- rpm-4.4.2.3.orig/Makefile.am	2008-04-01 08:28:21.000000000 +0100
++++ rpm-4.4.2.3/Makefile.am	2008-08-20 08:26:44.000000000 +0100
 @@ -10,7 +10,7 @@
  	po/*.in po/*.po po/rpm.pot \
  	rpm.magic rpmpopt-$(VERSION) rpmqv.c 
@@ -103,10 +103,19 @@ Index: rpm-4.4.2.3/Makefile.am
  
  INCLUDES = \
  	-I$(top_srcdir)/build \
+@@ -93,7 +93,7 @@
+ rpm2cpio_LDFLAGS =	$(myLDFLAGS)
+ rpm2cpio_LDADD =	$(myLDADD) @LIBMISC@
+ 
+-$(PROGRAMS): 		$(myLDADD) @WITH_APIDOCS_TARGET@
++$(PROGRAMS): 		@WITH_APIDOCS_TARGET@
+ 
+ .PHONY:	splint
+ splint:
 Index: rpm-4.4.2.3/rpmdb/Makefile.am
 ===================================================================
---- rpm-4.4.2.3.orig/rpmdb/Makefile.am	2008-08-17 11:43:36.000000000 +0100
-+++ rpm-4.4.2.3/rpmdb/Makefile.am	2008-08-17 11:43:57.000000000 +0100
+--- rpm-4.4.2.3.orig/rpmdb/Makefile.am	2008-04-01 08:28:22.000000000 +0100
++++ rpm-4.4.2.3/rpmdb/Makefile.am	2008-08-18 10:25:14.000000000 +0100
 @@ -41,9 +41,6 @@
  # XXX watchout, ../db3/libdb.la created by this Makefile may surprise
  libdb_la = $(top_builddir)/$(WITH_DB_SUBDIR)/libdb.la
@@ -119,8 +128,8 @@ Index: rpm-4.4.2.3/rpmdb/Makefile.am
  librpmdb_la_SOURCES = \
 Index: rpm-4.4.2.3/lib/Makefile.am
 ===================================================================
---- rpm-4.4.2.3.orig/lib/Makefile.am	2008-08-17 11:46:43.000000000 +0100
-+++ rpm-4.4.2.3/lib/Makefile.am	2008-08-17 11:46:51.000000000 +0100
+--- rpm-4.4.2.3.orig/lib/Makefile.am	2008-04-01 08:28:22.000000000 +0100
++++ rpm-4.4.2.3/lib/Makefile.am	2008-08-18 10:25:14.000000000 +0100
 @@ -29,8 +29,6 @@
  mylibs = librpm.la
  LIBS =
@@ -132,8 +141,8 @@ Index: rpm-4.4.2.3/lib/Makefile.am
  librpm_la_SOURCES = \
 Index: rpm-4.4.2.3/build/Makefile.am
 ===================================================================
---- rpm-4.4.2.3.orig/build/Makefile.am	2008-08-17 11:47:37.000000000 +0100
-+++ rpm-4.4.2.3/build/Makefile.am	2008-08-17 11:47:43.000000000 +0100
+--- rpm-4.4.2.3.orig/build/Makefile.am	2008-04-01 08:28:21.000000000 +0100
++++ rpm-4.4.2.3/build/Makefile.am	2008-08-18 10:25:14.000000000 +0100
 @@ -22,8 +22,6 @@
  pkginc_HEADERS = rpmbuild.h rpmfc.h rpmfile.h rpmspec.h
  noinst_HEADERS = buildio.h
