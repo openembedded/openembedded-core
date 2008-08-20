@@ -1,0 +1,52 @@
+Disable the extra hwcaps fields, they cause ld.so to look in many strange paths 
+before searching for binaries in /lib. We don't install binaries into any other 
+place so this just wastes time.
+
+RP - 20/08/2008
+
+Index: glibc-2.6.1/elf/dl-sysdep.c
+===================================================================
+--- glibc-2.6.1.orig/elf/dl-sysdep.c	2008-08-15 15:54:49.000000000 +0100
++++ glibc-2.6.1/elf/dl-sysdep.c	2008-08-15 17:45:28.000000000 +0100
+@@ -346,7 +346,7 @@
+ {
+   /* Determine how many important bits are set.  */
+   uint64_t masked = GLRO(dl_hwcap) & GLRO(dl_hwcap_mask);
+-  size_t cnt = platform != NULL;
++  size_t cnt = 0;
+   size_t n, m;
+   size_t total;
+   struct r_strlenpair *temp;
+@@ -354,11 +354,6 @@
+   struct r_strlenpair *rp;
+   char *cp;
+ 
+-  /* Count the number of bits set in the masked value.  */
+-  for (n = 0; (~((1ULL << n) - 1) & masked) != 0; ++n)
+-    if ((masked & (1ULL << n)) != 0)
+-      ++cnt;
+-
+ #if (defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO) && defined SHARED
+   /* The system-supplied DSO can contain a note of type 2, vendor "GNU".
+      This gives us a list of names to treat as fake hwcap bits.  */
+@@ -434,20 +429,6 @@
+ 	}
+     }
+ #endif
+-  for (n = 0; masked != 0; ++n)
+-    if ((masked & (1ULL << n)) != 0)
+-      {
+-	temp[m].str = _dl_hwcap_string (n);
+-	temp[m].len = strlen (temp[m].str);
+-	masked ^= 1ULL << n;
+-	++m;
+-      }
+-  if (platform != NULL)
+-    {
+-      temp[m].str = platform;
+-      temp[m].len = platform_len;
+-      ++m;
+-    }
+ 
+   temp[m].str = "tls";
+   temp[m].len = 3;
