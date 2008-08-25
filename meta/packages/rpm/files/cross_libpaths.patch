@@ -1,7 +1,7 @@
 Index: rpm-4.4.2.3/configure.ac
 ===================================================================
---- rpm-4.4.2.3.orig/configure.ac	2008-08-18 10:25:14.000000000 +0100
-+++ rpm-4.4.2.3/configure.ac	2008-08-18 10:25:14.000000000 +0100
+--- rpm-4.4.2.3.orig/configure.ac	2008-08-23 16:03:51.000000000 +0100
++++ rpm-4.4.2.3/configure.ac	2008-08-25 16:26:11.000000000 +0100
 @@ -326,10 +326,8 @@
  
  localdone=
@@ -40,23 +40,47 @@ Index: rpm-4.4.2.3/configure.ac
      WITH_NEON_LIB="-lneon"
    ])
  ],[
+@@ -857,6 +856,12 @@
+ dnl
+ dnl Auto-detect which python bindings should be built.
+ dnl
++
++AC_ARG_WITH(python-incdir, [  --with-python-incdir    python include directory ])
++PYTHON_INCDIR=$withval
++AC_ARG_WITH(python-libdir, [  --with-python-libdir    python library directory ])
++PYTHON_LIBDIR=$withval
++
+ withval=auto
+ AC_ARG_WITH(python, [  --with-python           build rpm python bindings ])
+ 
+@@ -934,6 +939,8 @@
+ AC_SUBST(WITH_PYTHON_SUBDIR)
+ AC_SUBST(WITH_PYTHON_SUBPACKAGE)
+ AC_SUBST(WITH_PYTHON_VERSION)
++AC_SUBST(PYTHON_LIBDIR)
++AC_SUBST(PYTHON_INCDIR)
+ 
+ AC_PATH_PROG(__DOXYGEN, doxygen, no, $PATH)
+ dnl
 Index: rpm-4.4.2.3/rpmio/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/rpmio/Makefile.am	2008-04-01 08:28:22.000000000 +0100
-+++ rpm-4.4.2.3/rpmio/Makefile.am	2008-08-18 10:25:14.000000000 +0100
-@@ -26,8 +26,6 @@
++++ rpm-4.4.2.3/rpmio/Makefile.am	2008-08-23 12:14:12.000000000 +0100
+@@ -26,9 +26,7 @@
  
  BEECRYPTLOBJS = $(shell test X"@WITH_BEECRYPT_SUBDIR@" != X && cat $(top_builddir)/@WITH_BEECTYPT_SUBDIR@/listobjs)
  
 -LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
 -
- usrlibdir = $(libdir)@MARK64@
+-usrlibdir = $(libdir)@MARK64@
++usrlibdir = $(libdir)
  usrlib_LTLIBRARIES = librpmio.la
  librpmio_la_SOURCES = \
+ 	argv.c digest.c fts.c macro.c rpmdav.c \
 Index: rpm-4.4.2.3/rpmio/rpmio_internal.h
 ===================================================================
 --- rpm-4.4.2.3.orig/rpmio/rpmio_internal.h	2008-04-01 08:28:22.000000000 +0100
-+++ rpm-4.4.2.3/rpmio/rpmio_internal.h	2008-08-18 10:25:14.000000000 +0100
++++ rpm-4.4.2.3/rpmio/rpmio_internal.h	2008-08-23 12:07:29.000000000 +0100
 @@ -12,22 +12,22 @@
  #if HAVE_BEECRYPT_API_H
  #include <api.h>
@@ -93,7 +117,7 @@ Index: rpm-4.4.2.3/rpmio/rpmio_internal.h
 Index: rpm-4.4.2.3/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/Makefile.am	2008-04-01 08:28:21.000000000 +0100
-+++ rpm-4.4.2.3/Makefile.am	2008-08-20 08:26:44.000000000 +0100
++++ rpm-4.4.2.3/Makefile.am	2008-08-23 12:07:29.000000000 +0100
 @@ -10,7 +10,7 @@
  	po/*.in po/*.po po/rpm.pot \
  	rpm.magic rpmpopt-$(VERSION) rpmqv.c 
@@ -103,52 +127,118 @@ Index: rpm-4.4.2.3/Makefile.am
  
  INCLUDES = \
  	-I$(top_srcdir)/build \
-@@ -93,7 +93,7 @@
- rpm2cpio_LDFLAGS =	$(myLDFLAGS)
- rpm2cpio_LDADD =	$(myLDADD) @LIBMISC@
- 
--$(PROGRAMS): 		$(myLDADD) @WITH_APIDOCS_TARGET@
-+$(PROGRAMS): 		@WITH_APIDOCS_TARGET@
- 
- .PHONY:	splint
- splint:
 Index: rpm-4.4.2.3/rpmdb/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/rpmdb/Makefile.am	2008-04-01 08:28:22.000000000 +0100
-+++ rpm-4.4.2.3/rpmdb/Makefile.am	2008-08-18 10:25:14.000000000 +0100
-@@ -41,9 +41,6 @@
++++ rpm-4.4.2.3/rpmdb/Makefile.am	2008-08-23 12:13:18.000000000 +0100
+@@ -41,10 +41,7 @@
  # XXX watchout, ../db3/libdb.la created by this Makefile may surprise
  libdb_la = $(top_builddir)/$(WITH_DB_SUBDIR)/libdb.la
  
 -# XXX grrr, RPM_BUILD_ROOT prevents build pollution if/when -lrpm different
 -LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
 -
- usrlibdir = $(libdir)@MARK64@
+-usrlibdir = $(libdir)@MARK64@
++usrlibdir = $(libdir)
  usrlib_LTLIBRARIES = librpmdb.la
  librpmdb_la_SOURCES = \
+ 	dbconfig.c fprint.c \
 Index: rpm-4.4.2.3/lib/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/lib/Makefile.am	2008-04-01 08:28:22.000000000 +0100
-+++ rpm-4.4.2.3/lib/Makefile.am	2008-08-18 10:25:14.000000000 +0100
-@@ -29,8 +29,6 @@
++++ rpm-4.4.2.3/lib/Makefile.am	2008-08-23 16:03:51.000000000 +0100
+@@ -29,9 +29,7 @@
  mylibs = librpm.la
  LIBS =
  
 -LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
 -
- usrlibdir = $(libdir)@MARK64@
+-usrlibdir = $(libdir)@MARK64@
++usrlibdir = $(libdir)
  usrlib_LTLIBRARIES = librpm.la
  librpm_la_SOURCES = \
+ 	cpio.c depends.c formats.c fs.c fsm.c getdate.c \
 Index: rpm-4.4.2.3/build/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/build/Makefile.am	2008-04-01 08:28:21.000000000 +0100
-+++ rpm-4.4.2.3/build/Makefile.am	2008-08-18 10:25:14.000000000 +0100
-@@ -22,8 +22,6 @@
++++ rpm-4.4.2.3/build/Makefile.am	2008-08-23 16:03:51.000000000 +0100
+@@ -22,9 +22,7 @@
  pkginc_HEADERS = rpmbuild.h rpmfc.h rpmfile.h rpmspec.h
  noinst_HEADERS = buildio.h
  
 -LDFLAGS = -L$(RPM_BUILD_ROOT)$(usrlibdir) -L$(DESTDIR)$(usrlibdir)
 -
- usrlibdir = $(libdir)@MARK64@
+-usrlibdir = $(libdir)@MARK64@
++usrlibdir = $(libdir)
  usrlib_LTLIBRARIES = librpmbuild.la
  librpmbuild_la_SOURCES = \
+ 	build.c expression.c files.c misc.c names.c pack.c \
+Index: rpm-4.4.2.3/python/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/python/Makefile.am	2008-04-01 08:28:22.000000000 +0100
++++ rpm-4.4.2.3/python/Makefile.am	2008-08-25 16:26:56.000000000 +0100
+@@ -4,8 +4,8 @@
+ 
+ LINT = splint
+ 
+-pylibdir = ${prefix}/lib@MARK64@/python@WITH_PYTHON_VERSION@
+-pyincdir = $(prefix)/include/python@WITH_PYTHON_VERSION@
++pylibdir = @PYTHON_LIBDIR@
++pyincdir = @PYTHON_INCDIR@
+ 
+ SUBDIRS = rpm
+ 
+Index: rpm-4.4.2.3/python/rpm/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/python/rpm/Makefile.am	2008-04-01 08:28:22.000000000 +0100
++++ rpm-4.4.2.3/python/rpm/Makefile.am	2008-08-25 16:27:29.000000000 +0100
+@@ -4,8 +4,8 @@
+ 
+ PYVER = @WITH_PYTHON_VERSION@
+ 
+-pylibdir = ${prefix}/lib@MARK64@/python@WITH_PYTHON_VERSION@
+-pyincdir = $(prefix)/include/python@WITH_PYTHON_VERSION@
++pylibdir = @PYTHON_LIBDIR@
++pyincdir = @PYTHON_INCDIR@
+ 
+ EXTRA_DIST = \
+ 	__init__.py
+Index: rpm-4.4.2.3/file/src/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/file/src/Makefile.am	2008-08-23 16:06:25.000000000 +0100
++++ rpm-4.4.2.3/file/src/Makefile.am	2008-08-23 16:06:39.000000000 +0100
+@@ -4,7 +4,7 @@
+ EXTRA_DIST = test.c
+ 
+ # XXX Make sure compress.c links internal zlib
+-INCLUDES = -I. -I ../../zlib
++INCLUDES = -I. 
+ 
+ pkglibdir =  @prefix@/lib/rpm
+ MAGIC    = $(pkglibdir)/magic
+@@ -26,7 +26,7 @@
+ 
+ noinst_PROGRAMS = file
+ file_SOURCES = file.c
+-file_LDFLAGS = -L../../zlib # -all-static
++#file_LDFLAGS = -L../../zlib # -all-static
+ file_LDADD = libmagic.la
+ 
+ listobjs:
+Index: rpm-4.4.2.3/file/magic/Makefile.am
+===================================================================
+--- rpm-4.4.2.3.orig/file/magic/Makefile.am	2008-08-25 16:14:47.000000000 +0100
++++ rpm-4.4.2.3/file/magic/Makefile.am	2008-08-25 16:15:02.000000000 +0100
+@@ -18,10 +18,10 @@
+ 	done >> $@
+ 
+ magic.mgc: magic
+-	$(top_builddir)/src/file -C -m magic
++	file -C -m magic
+ 
+ magic.mime.mgc: magic.mime
+-	$(top_builddir)/src/file -C -m $(srcdir)/magic.mime
++	file -C -m $(srcdir)/magic.mime
+ 
+ magic_FRAGMENTS = \
+ Magdir/acorn \

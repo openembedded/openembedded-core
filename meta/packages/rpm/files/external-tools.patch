@@ -7,7 +7,7 @@ Index: rpm-4.4.2.3/configure.ac
  WITH_MAGIC_LIB=
  
 -if test -d file ; then
-+if test -d file_disabled ; then
++if test -d file  ; then
    WITH_RPMFILE=rpmfile
    WITH_MAGIC_SUBDIR=file
    WITH_MAGIC_INCLUDE="-I\${top_srcdir}/${WITH_MAGIC_SUBDIR}/src"
@@ -16,7 +16,7 @@ Index: rpm-4.4.2.3/configure.ac
  dnl export LIBS INCPATH CONFIG_SITE
  
 -AC_CONFIG_SUBDIRS(popt file db3)
-+AC_CONFIG_SUBDIRS(db/dist)
++AC_CONFIG_SUBDIRS(db/dist file)
  
  AC_CONFIG_FILES([ Doxyfile Makefile rpmrc macros platform rpmpopt
  	rpmio/Makefile rpmdb/Makefile lib/Makefile build/Makefile

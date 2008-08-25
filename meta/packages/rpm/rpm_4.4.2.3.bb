@@ -1,8 +1,8 @@
 DESCRIPTION = "The RPM Package Manager."
 HOMEPAGE = "http://rpm.org/"
 LICENSE = "LGPL GPL"
-DEPENDS = "zlib beecrypt file popt"
-PR = "r2"
+DEPENDS = "zlib beecrypt file popt python"
+PR = "r3"
 
 SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
            file://external-tools.patch;patch=1 \
@@ -14,7 +14,9 @@ S = "${WORKDIR}/rpm-${PV}"
 
 acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 
-EXTRA_OECONF = "--without-python \
+EXTRA_OECONF = "--with-python=${PYTHONVER} \
+		--with-python-incdir=${STAGING_INCDIR}/python${PYTHONVER} \
+		--with-python-libdir=${STAGING_LIBDIR}/python${PYTHONVER} \
 		--without-apidocs \
 		--without-selinux \
 		--without-lua \
@@ -82,3 +84,13 @@ do_configure () {
 		    --with-pic
 
 }
+
+def rpm_python_version(d):
+	import os, bb
+	staging_incdir = bb.data.getVar( "STAGING_INCDIR", d, 1 )
+	if os.path.exists( "%s/python2.5" % staging_incdir ): return "2.5"
+	if os.path.exists( "%s/python2.4" % staging_incdir ): return "2.4"
+	if os.path.exists( "%s/python2.3" % staging_incdir ): return "2.3"
+	raise "No Python in STAGING_INCDIR. Forgot to build python/python-native?"
+
+PYTHONVER = "${@rpm_python_version(d)}"
