@@ -1,0 +1,22 @@
+Index: insserv-1.11.0/Makefile
+===================================================================
+--- insserv-1.11.0.orig/Makefile	2008-08-25 16:00:00.000000000 +0100
++++ insserv-1.11.0/Makefile	2008-08-25 16:00:25.000000000 +0100
+@@ -18,16 +18,7 @@
+ #
+ # Architecture
+ #
+-ifdef RPM_OPT_FLAGS
+-	  COPTS = -g $(RPM_OPT_FLAGS)
+-else
+-	   ARCH = $(shell uname -i)
+-ifeq ($(ARCH),i386)
+-	  COPTS = -O2 -mcpu=i586 -mtune=i686
+-else
+-	  COPTS = -O2
+-endif
+-endif
++COPTS = -O2
+ COPTS += -g
+ 
+ 	 MY_CFLAGS = $(CFLAGS) -Wall $(COPTS) $(DEBUG) $(LOOPS) -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
