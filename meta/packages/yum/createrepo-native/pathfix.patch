@@ -1,0 +1,81 @@
+Index: createrepo-0.9/Makefile
+===================================================================
+--- createrepo-0.9.orig/Makefile	2008-08-23 17:49:24.000000000 +0100
++++ createrepo-0.9/Makefile	2008-08-23 17:52:01.000000000 +0100
+@@ -10,22 +10,6 @@
+ SHELL = /bin/sh
+ top_srcdir = .
+ srcdir = .
+-prefix = /usr
+-exec_prefix = ${prefix}
+-
+-bindir = ${exec_prefix}/bin
+-sbindir = ${exec_prefix}/sbin
+-libexecdir = ${exec_prefix}/libexec
+-datadir = ${prefix}/share
+-sysconfdir = ${prefix}/etc
+-sharedstatedir = ${prefix}/com
+-localstatedir = ${prefix}/var
+-libdir = ${exec_prefix}/lib
+-infodir = ${prefix}/info
+-docdir = 
+-includedir = ${prefix}/include
+-oldincludedir = /usr/include
+-mandir = ${prefix}/share/man
+ 
+ pkgdatadir = $(datadir)/$(PKGNAME)
+ pkglibdir = $(libdir)/$(PKGNAME)
+Index: createrepo-0.9/bin/Makefile
+===================================================================
+--- createrepo-0.9.orig/bin/Makefile	2008-08-23 17:50:13.000000000 +0100
++++ createrepo-0.9/bin/Makefile	2008-08-23 17:50:23.000000000 +0100
+@@ -1,22 +1,6 @@
+ SHELL = /bin/sh
+ top_srcdir = ..
+ srcdir = ../bin
+-prefix = /usr
+-exec_prefix = ${prefix}
+-
+-bindir = ${exec_prefix}/bin
+-sbindir = ${exec_prefix}/sbin
+-libexecdir = ${exec_prefix}/libexec
+-datadir = ${prefix}/share
+-sysconfdir = ${prefix}/etc
+-sharedstatedir = ${prefix}/com
+-localstatedir = ${prefix}/var
+-libdir = ${exec_prefix}/lib
+-infodir = ${prefix}/info
+-docdir = 
+-includedir = ${prefix}/include
+-oldincludedir = /usr/include
+-mandir = ${prefix}/man
+ 
+ pkgdatadir = $(datadir)/$(PKGNAME)
+ pkglibdir = $(libdir)/$(PKGNAME)
+Index: createrepo-0.9/docs/Makefile
+===================================================================
+--- createrepo-0.9.orig/docs/Makefile	2008-08-23 17:52:42.000000000 +0100
++++ createrepo-0.9/docs/Makefile	2008-08-23 17:52:50.000000000 +0100
+@@ -1,22 +1,6 @@
+ SHELL = /bin/sh
+ top_srcdir = ..
+ srcdir = ../docs
+-prefix = /usr
+-exec_prefix = ${prefix}
+-
+-bindir = ${exec_prefix}/bin
+-sbindir = ${exec_prefix}/sbin
+-libexecdir = ${exec_prefix}/libexec
+-datadir = ${prefix}/share
+-sysconfdir = ${prefix}/etc
+-sharedstatedir = ${prefix}/com
+-localstatedir = ${prefix}/var
+-libdir = ${exec_prefix}/lib
+-infodir = ${prefix}/info
+-docdir = 
+-includedir = ${prefix}/include
+-oldincludedir = /usr/include
+-mandir = ${datadir}/man
+ 
+ pkgdatadir = $(datadir)/$(PKGNAME)
+ pkglibdir = $(libdir)/$(PKGNAME)
