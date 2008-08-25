@@ -117,7 +117,7 @@ Index: rpm-4.4.2.3/rpmio/rpmio_internal.h
 Index: rpm-4.4.2.3/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/Makefile.am	2008-04-01 08:28:21.000000000 +0100
-+++ rpm-4.4.2.3/Makefile.am	2008-08-23 12:07:29.000000000 +0100
++++ rpm-4.4.2.3/Makefile.am	2008-08-25 23:09:40.000000000 +0100
 @@ -10,7 +10,7 @@
  	po/*.in po/*.po po/rpm.pot \
  	rpm.magic rpmpopt-$(VERSION) rpmqv.c 
@@ -127,6 +127,15 @@ Index: rpm-4.4.2.3/Makefile.am
  
  INCLUDES = \
  	-I$(top_srcdir)/build \
+@@ -93,7 +93,7 @@
+ rpm2cpio_LDFLAGS =	$(myLDFLAGS)
+ rpm2cpio_LDADD =	$(myLDADD) @LIBMISC@
+ 
+-$(PROGRAMS): 		$(myLDADD) @WITH_APIDOCS_TARGET@
++$(PROGRAMS): 		@WITH_APIDOCS_TARGET@
+ 
+ .PHONY:	splint
+ splint:
 Index: rpm-4.4.2.3/rpmdb/Makefile.am
 ===================================================================
 --- rpm-4.4.2.3.orig/rpmdb/Makefile.am	2008-04-01 08:28:22.000000000 +0100
