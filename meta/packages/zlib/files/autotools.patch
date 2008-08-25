@@ -1,7 +1,8 @@
-diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
---- zlib-1.2.3/configure	2005-07-11 22:11:57.000000000 +0200
-+++ zlib-1.2.3new/configure	1970-01-01 01:00:00.000000000 +0100
-@@ -1,459 +0,0 @@
+Index: zlib-1.2.3/configure
+===================================================================
+--- zlib-1.2.3.orig/configure	2008-08-23 11:23:47.000000000 +0100
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,558 +0,0 @@
 -#!/bin/sh
 -# configure script for zlib. This script is needed only if
 -# you wish to build a shared library and your system supports them,
@@ -27,7 +28,8 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -VER=`sed -n -e '/VERSION "/s/.*"\(.*\)".*/\1/p' < zlib.h`
 -VER2=`sed -n -e '/VERSION "/s/.*"\([0-9]*\\.[0-9]*\)\\..*/\1/p' < zlib.h`
 -VER1=`sed -n -e '/VERSION "/s/.*"\([0-9]*\)\\..*/\1/p' < zlib.h`
--AR=${AR-"ar rc"}
+-AR=${AR-"ar"}
+-AR_RC="${AR} rc"
 -RANLIB=${RANLIB-"ranlib"}
 -prefix=${prefix-/usr/local}
 -exec_prefix=${exec_prefix-'${prefix}'}
@@ -35,7 +37,8 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -includedir=${includedir-'${prefix}/include'}
 -mandir=${mandir-'${prefix}/share/man'}
 -shared_ext='.so'
--shared=0
+-shared=1
+-zprefix=0
 -gcc=0
 -old_cc="$CC"
 -old_cflags="$CFLAGS"
@@ -43,20 +46,25 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -while test $# -ge 1
 -do
 -case "$1" in
--    -h* | --h*)
+-    -h* | --help)
 -      echo 'usage:'
 -      echo '  configure [--shared] [--prefix=PREFIX]  [--exec_prefix=EXPREFIX]'
--      echo '     [--libdir=LIBDIR] [--includedir=INCLUDEDIR]'
+-      echo '     [--libdir=LIBDIR] [--includedir=INCLUDEDIR] [--zprefix]'
 -        exit 0;;
--    -p*=* | --p*=*) prefix=`echo $1 | sed 's/[-a-z_]*=//'`; shift;;
--    -e*=* | --e*=*) exec_prefix=`echo $1 | sed 's/[-a-z_]*=//'`; shift;;
+-    -p*=* | --prefix=*) prefix=`echo $1 | sed 's/[-a-z_]*=//'`; shift;;
+-    -e*=* | --eprefix=*) exec_prefix=`echo $1 | sed 's/[-a-z_]*=//'`; shift;;
 -    -l*=* | --libdir=*) libdir=`echo $1 | sed 's/[-a-z_]*=//'`; shift;;
 -    -i*=* | --includedir=*) includedir=`echo $1 | sed 's/[-a-z_]*=//'`;shift;;
--    -p* | --p*) prefix="$2"; shift; shift;;
--    -e* | --e*) exec_prefix="$2"; shift; shift;;
--    -l* | --l*) libdir="$2"; shift; shift;;
--    -i* | --i*) includedir="$2"; shift; shift;;
--    -s* | --s*) shared=1; shift;;
+-    -u*=* | --uname=*) uname=`echo $1 | sed 's/[-a-z_]*=//'`;shift;;
+-    -p* | --prefix) prefix="$2"; shift; shift;;
+-    -e* | --eprefix) exec_prefix="$2"; shift; shift;;
+-    -l* | --libdir) libdir="$2"; shift; shift;;
+-    -i* | --includedir) includedir="$2"; shift; shift;;
+-    -s* | --shared | --enable-shared) shared=1; shift;;
+-    -t | --static) shared=0; shift;;
+-    -z* | --zprefix) zprefix=1; shift;;
+-    --sysconfdir=*) echo "ignored option: --sysconfdir"; shift;;
+-    --localstatedir=*) echo "ignored option: --localstatedir"; shift;;
 -    *) echo "unknown option: $1"; echo "$0 --help for help"; exit 1;;
 -    esac
 -done
@@ -77,10 +85,13 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -
 -if test "$gcc" -eq 1 && ($cc -c $cflags $test.c) 2>/dev/null; then
 -  CC="$cc"
--  SFLAGS=${CFLAGS-"-fPIC -O3"}
--  CFLAGS="$cflags"
--  case `(uname -s || echo unknown) 2>/dev/null` in
--  Linux | linux | GNU | GNU/*) LDSHARED=${LDSHARED-"$cc -shared -Wl,-soname,libz.so.1"};;
+-  SFLAGS="${CFLAGS-"-O3"} -fPIC"
+-  CFLAGS="${CFLAGS-"-O3"}"
+-  if test -z $uname; then
+-    uname=`(uname -s || echo unknown) 2>/dev/null`
+-  fi
+-  case "$uname" in
+-  Linux | linux | GNU | GNU/*) LDSHARED=${LDSHARED-"$cc -shared -Wl,-soname,libz.so.1,--version-script,zlib.map"};;
 -  CYGWIN* | Cygwin* | cygwin* | OS/2* )
 -             EXE='.exe';;
 -  QNX*)  # This is for QNX6. I suppose that the QNX rule below is for QNX2,QNX4
@@ -106,7 +117,10 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -else
 -  # find system name and corresponding cc options
 -  CC=${CC-cc}
--  case `(uname -sr || echo unknown) 2>/dev/null` in
+-  if test -z $uname; then
+-    uname=`(uname -sr || echo unknown) 2>/dev/null`
+-  fi
+-  case "$uname" in
 -  HP-UX*)    SFLAGS=${CFLAGS-"-O +z"}
 -             CFLAGS=${CFLAGS-"-O"}
 -#            LDSHARED=${LDSHARED-"ld -b +vnocompatwarnings"}
@@ -121,24 +135,30 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -         esac;;
 -  IRIX*)     SFLAGS=${CFLAGS-"-ansi -O2 -rpath ."}
 -             CFLAGS=${CFLAGS-"-ansi -O2"}
--             LDSHARED=${LDSHARED-"cc -shared"};;
+-             LDSHARED=${LDSHARED-"cc -shared -Wl,-soname,libz.so.1"};;
 -  OSF1\ V4*) SFLAGS=${CFLAGS-"-O -std1"}
 -             CFLAGS=${CFLAGS-"-O -std1"}
 -             LDSHARED=${LDSHARED-"cc -shared  -Wl,-soname,libz.so -Wl,-msym -Wl,-rpath,$(libdir) -Wl,-set_version,${VER}:1.0"};;
 -  OSF1*)     SFLAGS=${CFLAGS-"-O -std1"}
 -             CFLAGS=${CFLAGS-"-O -std1"}
--             LDSHARED=${LDSHARED-"cc -shared"};;
+-             LDSHARED=${LDSHARED-"cc -shared -Wl,-soname,libz.so.1"};;
 -  QNX*)      SFLAGS=${CFLAGS-"-4 -O"}
 -             CFLAGS=${CFLAGS-"-4 -O"}
 -             LDSHARED=${LDSHARED-"cc"}
 -             RANLIB=${RANLIB-"true"}
--             AR="cc -A";;
+-             AR_RC="cc -A";;
 -  SCO_SV\ 3.2*) SFLAGS=${CFLAGS-"-O3 -dy -KPIC "}
 -             CFLAGS=${CFLAGS-"-O3"}
 -             LDSHARED=${LDSHARED-"cc -dy -KPIC -G"};;
--  SunOS\ 5*) SFLAGS=${CFLAGS-"-fast -xcg89 -KPIC -R."}
--             CFLAGS=${CFLAGS-"-fast -xcg89"}
--             LDSHARED=${LDSHARED-"cc -G"};;
+-  SunOS\ 5*) LDSHARED=${LDSHARED-"cc -G"}
+-         case `(uname -m || echo unknown) 2>/dev/null` in
+-         i86*)
+-             SFLAGS=${CFLAGS-"-xpentium -fast -KPIC -R."}
+-             CFLAGS=${CFLAGS-"-xpentium -fast"};;
+-         *)
+-             SFLAGS=${CFLAGS-"-fast -xcg92 -KPIC -R."}
+-             CFLAGS=${CFLAGS-"-fast -xcg92"};;
+-         esac;;
 -  SunOS\ 4*) SFLAGS=${CFLAGS-"-O2 -PIC"}
 -             CFLAGS=${CFLAGS-"-O2"}
 -             LDSHARED=${LDSHARED-"ld"};;
@@ -177,22 +197,63 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -  # we must test in two steps (cc then ld), required at least on SunOS 4.x
 -  if test "`($CC -c $SFLAGS $test.c) 2>&1`" = "" &&
 -     test "`($LDSHARED -o $test$shared_ext $test.o) 2>&1`" = ""; then
--    CFLAGS="$SFLAGS"
--    LIBS="$SHAREDLIBV"
+-    LIBS="$LIBS $SHAREDLIBV"
 -    echo Building shared library $SHAREDLIBV with $CC.
 -  elif test -z "$old_cc" -a -z "$old_cflags"; then
 -    echo No shared library support.
 -    shared=0;
 -  else
+-    echo Tested $CC -c $SFLAGS $test.c
+-    $CC -c $SFLAGS $test.c
+-    echo Tested $LDSHARED -o $test$shared_ext $test.o
+-    $LDSHARED -o $test$shared_ext $test.o
 -    echo 'No shared library support; try without defining CC and CFLAGS'
 -    shared=0;
 -  fi
 -fi
 -if test $shared -eq 0; then
 -  LDSHARED="$CC"
+-  ALL="allstatic"
+-  TEST="teststatic"
 -  echo Building static library $LIBS version $VER with $CC.
 -else
--  LDFLAGS="-L. ${SHAREDLIBV}"
+-  ALL="allstatic allshared"
+-  TEST="teststatic testshared"
+-fi
+-
+-cat > zlibdefs.h << EOF
+-/* zlibdefs.h -- compile-time definitions for the zlib compression library
+- * Copyright (C) 1995-2006 Jean-loup Gailly.
+- * For conditions of distribution and use, see copyright notice in zlib.h
+- */
+-
+-EOF
+-
+-cat > $test.c <<EOF
+-#include <sys/types.h>
+-off64_t dummy = 0;
+-EOF
+-if test "`($CC -c $CFLAGS -D_LARGEFILE64_SOURCE=1 $test.c) 2>&1`" = ""; then
+-  CFLAGS="${CFLAGS} -D_LARGEFILE64_SOURCE=1"
+-  SFLAGS="${SFLAGS} -D_LARGEFILE64_SOURCE=1"
+-  echo "Checking for off64_t... Yes."
+-  echo "Checking for fseeko... Yes."
+-else
+-  echo "Checking for off64_t... No."
+-  cat > $test.c <<EOF
+-#include <stdio.h>
+-int main(void) {
+-  fseeko(NULL, 0, 0);
+-  return 0;
+-}
+-EOF
+-  if test "`($CC $CFLAGS -o $test $test.c) 2>&1`" = ""; then
+-    echo "Checking for fseeko... Yes."
+-  else
+-    CFLAGS="${CFLAGS} -DNO_FSEEKO"
+-    SFLAGS="${SFLAGS} -DNO_FSEEKO"
+-    echo "Checking for fseeko... No."
+-  fi
 -fi
 -
 -cat > $test.c <<EOF
@@ -200,11 +261,25 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -int main() { return 0; }
 -EOF
 -if test "`($CC -c $CFLAGS $test.c) 2>&1`" = ""; then
--  sed < zconf.in.h "/HAVE_UNISTD_H/s%0%1%" > zconf.h
+-  cat >> zlibdefs.h <<EOF
+-#include <sys/types.h>	/* for off_t */
+-#include <unistd.h>	/* for SEEK_* and off_t */
+-#ifdef VMS
+-#  include <unixio.h>	/* for off_t */
+-#endif
+-#ifndef z_off_t
+-#  define z_off_t off_t
+-#endif
+-EOF
 -  echo "Checking for unistd.h... Yes."
 -else
--  cp -p zconf.in.h zconf.h
 -  echo "Checking for unistd.h... No."
+-fi
+-
+-if test $zprefix -eq 1; then
+-  sed < zconf.h "/#ifdef Z_PREFIX/s/def Z_PREFIX/ 1/" > zconf.temp.h
+-  mv zconf.temp.h zconf.h
+-  echo "Using z_ prefix on all symbols."
 -fi
 -
 -cat > $test.c <<EOF
@@ -223,7 +298,7 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -EOF
 -
 -if test "`($CC -c $CFLAGS $test.c) 2>&1`" = ""; then
--  echo "Checking whether to use vs[n]printf() or s[n]printf()... using vs[n]printf()"
+-  echo "Checking whether to use vs[n]printf() or s[n]printf()... using vs[n]printf()."
 -
 -  cat > $test.c <<EOF
 -#include <stdio.h>
@@ -320,7 +395,7 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -    fi
 -  fi
 -else
--  echo "Checking whether to use vs[n]printf() or s[n]printf()... using s[n]printf()"
+-  echo "Checking whether to use vs[n]printf() or s[n]printf()... using s[n]printf()."
 -
 -  cat >$test.c <<EOF
 -#include <stdio.h>
@@ -445,13 +520,36 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -sed < Makefile.in "
 -/^CC *=/s#=.*#=$CC#
 -/^CFLAGS *=/s#=.*#=$CFLAGS#
+-/^SFLAGS *=/s#=.*#=$SFLAGS#
+-/^LDFLAGS *=/s#=.*#=$LDFLAGS#
+-/^LDSHARED *=/s#=.*#=$LDSHARED#
+-/^CPP *=/s#=.*#=$CPP#
+-/^LIBS *=/s#=.*#=$LIBS#
+-/^SHAREDLIB *=/s#=.*#=$SHAREDLIB#
+-/^SHAREDLIBV *=/s#=.*#=$SHAREDLIBV#
+-/^SHAREDLIBM *=/s#=.*#=$SHAREDLIBM#
+-/^AR *=/s#=.*#=$AR_RC#
+-/^RANLIB *=/s#=.*#=$RANLIB#
+-/^EXE *=/s#=.*#=$EXE#
+-/^prefix *=/s#=.*#=$prefix#
+-/^exec_prefix *=/s#=.*#=$exec_prefix#
+-/^libdir *=/s#=.*#=$libdir#
+-/^includedir *=/s#=.*#=$includedir#
+-/^mandir *=/s#=.*#=$mandir#
+-/^all: */s#:.*#: $ALL#
+-/^test: */s#:.*#: $TEST#
+-" > Makefile
+-
+-sed < zlib.pc.in "
+-/^CC *=/s#=.*#=$CC#
+-/^CFLAGS *=/s#=.*#=$CFLAGS#
 -/^CPP *=/s#=.*#=$CPP#
 -/^LDSHARED *=/s#=.*#=$LDSHARED#
 -/^LIBS *=/s#=.*#=$LIBS#
 -/^SHAREDLIB *=/s#=.*#=$SHAREDLIB#
 -/^SHAREDLIBV *=/s#=.*#=$SHAREDLIBV#
 -/^SHAREDLIBM *=/s#=.*#=$SHAREDLIBM#
--/^AR *=/s#=.*#=$AR#
+-/^AR *=/s#=.*#=$AR_RC#
 -/^RANLIB *=/s#=.*#=$RANLIB#
 -/^EXE *=/s#=.*#=$EXE#
 -/^prefix *=/s#=.*#=$prefix#
@@ -460,11 +558,14 @@ diff -Naur zlib-1.2.3/configure zlib-1.2.3new/configure
 -/^includedir *=/s#=.*#=$includedir#
 -/^mandir *=/s#=.*#=$mandir#
 -/^LDFLAGS *=/s#=.*#=$LDFLAGS#
--" > Makefile
-diff -Naur zlib-1.2.3/configure.ac zlib-1.2.3new/configure.ac
---- zlib-1.2.3/configure.ac	1970-01-01 01:00:00.000000000 +0100
-+++ zlib-1.2.3new/configure.ac	2006-08-07 20:38:31.612402750 +0200
-@@ -0,0 +1,14 @@
+-" | sed -e "
+-s/\@VERSION\@/$VER/g;
+-" > zlib.pc
+Index: zlib-1.2.3/configure.ac
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ zlib-1.2.3/configure.ac	2008-08-23 12:01:15.000000000 +0100
+@@ -0,0 +1,48 @@
 +AC_INIT(zlib,1.2.3)
 +AC_CONFIG_SRCDIR(adler32.c)
 +AM_INIT_AUTOMAKE(zlibs,1.2.3)
@@ -476,27 +577,63 @@ diff -Naur zlib-1.2.3/configure.ac zlib-1.2.3new/configure.ac
 +
 +AC_HEADER_STDC
 +
++zlib_save_CPPFLAGS=$CPPFLAGS
++CPPFLAGS="$CPPFLAGS -D_LARGEFILE64_SOURCE"
++AC_CHECK_TYPES(off64_t)
++CPPFLAGS=$zlib_save_CPPFLAGS
++
++AC_CACHE_CHECK([whether to enable -D_LARGEFILE64_SOURCE], [zlib_cv_use_lfs64], [
++    zlib_cv_use_lfs64=yes
++    if test "$ac_cv_off64_t" = "yes"; then
++        zlib_cv_use_lfs64=yes
++    fi
++])
++
++if test "$zlib_cv_use_lfs64" = "yes"; then
++    CPPFLAGS="$CPPFLAGS -D_LARGEFILE64_SOURCE"
++    echo "eek"
++    #APR_ADDTO(CPPFLAGS, [-D_LARGEFILE64_SOURCE])
++fi    
++
++cat > zlibdefs.h << EOF
++/* zlibdefs.h -- compile-time definitions for the zlib compression library
++ * Copyright (C) 1995-2006 Jean-loup Gailly.
++ * For conditions of distribution and use, see copyright notice in zlib.h
++ */
++
++#include <sys/types.h>	/* for off_t */
++#include <unistd.h>	/* for SEEK_* and off_t */
++#ifdef VMS
++#  include <unixio.h>	/* for off_t */
++#endif
++#ifndef z_off_t
++#  define z_off_t off_t
++#endif
++EOF
++
 +AC_CONFIG_FILES([Makefile])
 +
 +AC_OUTPUT
-diff -Naur zlib-1.2.3/Makefile.am zlib-1.2.3new/Makefile.am
---- zlib-1.2.3/Makefile.am	2006/10/14 05:35:40	1.1
-+++ zlib-1.2.3new/Makefile.am	2006/10/14 05:36:49
+Index: zlib-1.2.3/Makefile.am
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ zlib-1.2.3/Makefile.am	2008-08-23 11:23:47.000000000 +0100
 @@ -0,0 +1,8 @@
 +lib_LTLIBRARIES = libz.la
 +
 +libz_la_SOURCES = adler32.c compress.c crc32.c gzio.c uncompr.c deflate.c \
 +		  trees.c zutil.c inflate.c infback.c inftrees.c inffast.c
 +
-+libz_la_LDFLAGS = -version-number 1:2:3
++libz_la_LDFLAGS = -version-number 1:2:3 --version-script zlib.map
 +
-+include_HEADERS = zconf.h zlib.h
-diff -Naur zlib-1.2.3/Makefile.in zlib-1.2.3new/Makefile.in
---- zlib-1.2.3/Makefile.in	2005-07-18 04:25:21.000000000 +0200
-+++ zlib-1.2.3new/Makefile.in	1970-01-01 01:00:00.000000000 +0100
-@@ -1,154 +0,0 @@
++include_HEADERS = zconf.h zlib.h zlibdefs.h
+Index: zlib-1.2.3/Makefile.in
+===================================================================
+--- zlib-1.2.3.orig/Makefile.in	2008-08-23 11:23:47.000000000 +0100
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,215 +0,0 @@
 -# Makefile for zlib
--# Copyright (C) 1995-2005 Jean-loup Gailly.
+-# Copyright (C) 1995-2006 Jean-loup Gailly.
 -# For conditions of distribution and use, see copyright notice in zlib.h
 -
 -# To compile and test, type:
@@ -521,16 +658,18 @@ diff -Naur zlib-1.2.3/Makefile.in zlib-1.2.3new/Makefile.in
 -#CFLAGS=-O3 -Wall -Wwrite-strings -Wpointer-arith -Wconversion \
 -#           -Wstrict-prototypes -Wmissing-prototypes
 -
+-SFLAGS=-O
+-
 -LDFLAGS=libz.a
 -LDSHARED=$(CC)
 -CPP=$(CC) -E
 -
 -LIBS=libz.a
 -SHAREDLIB=libz.so
--SHAREDLIBV=libz.so.1.2.3
+-SHAREDLIBV=libz.so.1.2.3.3
 -SHAREDLIBM=libz.so.1
 -
--AR=ar rc
+-AR=ar
 -RANLIB=ranlib
 -TAR=tar
 -SHELL=/bin/sh
@@ -542,21 +681,28 @@ diff -Naur zlib-1.2.3/Makefile.in zlib-1.2.3new/Makefile.in
 -includedir = ${prefix}/include
 -mandir = ${prefix}/share/man
 -man3dir = ${mandir}/man3
+-pkgconfigdir = ${libdir}/pkgconfig
 -
--OBJS = adler32.o compress.o crc32.o gzio.o uncompr.o deflate.o trees.o \
+-OBJC = adler32.o compress.o crc32.o gzio.o uncompr.o deflate.o trees.o \
 -       zutil.o inflate.o infback.o inftrees.o inffast.o
 -
 -OBJA =
 -# to use the asm code: make OBJA=match.o
 -
+-OBJS = $(OBJC) $(OBJA)
+-
+-PIC_OBJS = $(OBJS:%.o=%.lo)
+-
 -TEST_OBJS = example.o minigzip.o
 -
--all: example$(EXE) minigzip$(EXE)
+-allstatic: example$(EXE) minigzip$(EXE)
 -
--check: test
--test: all
--	@LD_LIBRARY_PATH=.:$(LD_LIBRARY_PATH) ; export LD_LIBRARY_PATH; \
--	echo hello world | ./minigzip | ./minigzip -d || \
+-allshared: examplesh$(EXE) minigzipsh$(EXE)
+-
+-all: allstatic allshared
+-
+-teststatic: allstatic
+-	@echo hello world | ./minigzip | ./minigzip -d || \
 -	  echo '		*** minigzip test FAILED ***' ; \
 -	if ./example; then \
 -	  echo '		*** zlib test OK ***'; \
@@ -564,8 +710,24 @@ diff -Naur zlib-1.2.3/Makefile.in zlib-1.2.3new/Makefile.in
 -	  echo '		*** zlib test FAILED ***'; \
 -	fi
 -
--libz.a: $(OBJS) $(OBJA)
--	$(AR) $@ $(OBJS) $(OBJA)
+-testshared: allshared
+-	@LD_LIBRARY_PATH=`pwd`:$(LD_LIBRARY_PATH) ; export LD_LIBRARY_PATH; \
+-	DYLD_LIBRARY_PATH=`pwd`:$(DYLD_LIBRARY_PATH) ; export DYLD_LIBRARY_PATH; \
+-	SHLIB_PATH=`pwd`:$(SHLIB_PATH) ; export SHLIB_PATH; \
+-	echo hello world | ./minigzipsh | ./minigzipsh -d || \
+-	  echo '		*** minigzip shared test FAILED ***' ; \
+-	if ./examplesh; then \
+-	  echo '		*** zlib shared test OK ***'; \
+-	else \
+-	  echo '		*** zlib shared test FAILED ***'; \
+-	fi
+-
+-test: teststatic testshared
+-
+-check: test
+-
+-libz.a: $(OBJS)
+-	$(AR) $@ $(OBJS)
 -	-@ ($(RANLIB) $@ || true) >/dev/null 2>&1
 -
 -match.o: match.S
@@ -574,8 +736,17 @@ diff -Naur zlib-1.2.3/Makefile.in zlib-1.2.3new/Makefile.in
 -	mv _match.o match.o
 -	rm -f _match.s
 -
--$(SHAREDLIBV): $(OBJS)
--	$(LDSHARED) -o $@ $(OBJS)
+-match.lo: match.S
+-	$(CPP) match.S > _match.s
+-	$(CC) -c -fPIC _match.s
+-	mv _match.o match.lo
+-	rm -f _match.s
+-
+-%.lo: %.c
+-	$(CC) $(SFLAGS) -DPIC -c $< -o $@
+-
+-$(SHAREDLIBV): $(PIC_OBJS)
+-	$(LDSHARED) -o $@ $(PIC_OBJS) -lc
 -	rm -f $(SHAREDLIB) $(SHAREDLIBM)
 -	ln -s $@ $(SHAREDLIB)
 -	ln -s $@ $(SHAREDLIBM)
@@ -586,46 +757,60 @@ diff -Naur zlib-1.2.3/Makefile.in zlib-1.2.3new/Makefile.in
 -minigzip$(EXE): minigzip.o $(LIBS)
 -	$(CC) $(CFLAGS) -o $@ minigzip.o $(LDFLAGS)
 -
--install: $(LIBS)
--	-@if [ ! -d $(exec_prefix) ]; then mkdir -p $(exec_prefix); fi
--	-@if [ ! -d $(includedir)  ]; then mkdir -p $(includedir); fi
--	-@if [ ! -d $(libdir)      ]; then mkdir -p $(libdir); fi
--	-@if [ ! -d $(man3dir)     ]; then mkdir -p $(man3dir); fi
--	cp zlib.h zconf.h $(includedir)
--	chmod 644 $(includedir)/zlib.h $(includedir)/zconf.h
--	cp $(LIBS) $(libdir)
--	cd $(libdir); chmod 755 $(LIBS)
--	-@(cd $(libdir); $(RANLIB) libz.a || true) >/dev/null 2>&1
--	cd $(libdir); if test -f $(SHAREDLIBV); then \
+-examplesh$(EXE): example.o $(LIBS)
+-	$(CC) $(CFLAGS) -o $@ example.o -L. $(SHAREDLIB)
+-
+-minigzipsh$(EXE): minigzip.o $(LIBS)
+-	$(CC) $(CFLAGS) -o $@ minigzip.o -L. $(SHAREDLIB)
+-
+-install-libs: $(LIBS)
+-	-@if [ ! -d $(DESTDIR)$(exec_prefix)  ]; then mkdir -p $(DESTDIR)$(exec_prefix); fi
+-	-@if [ ! -d $(DESTDIR)$(libdir)       ]; then mkdir -p $(DESTDIR)$(libdir); fi
+-	-@if [ ! -d $(DESTDIR)$(man3dir)      ]; then mkdir -p $(DESTDIR)$(man3dir); fi
+-	-@if [ ! -d $(DESTDIR)$(pkgconfigdir) ]; then mkdir -p $(DESTDIR)$(pkgconfigdir); fi
+-	cp $(LIBS) $(DESTDIR)$(libdir)
+-	cd $(DESTDIR)$(libdir); chmod 755 $(LIBS)
+-	-@(cd $(DESTDIR)$(libdir); $(RANLIB) libz.a || true) >/dev/null 2>&1
+-	cd $(DESTDIR)$(libdir); if test -f $(SHAREDLIBV); then \
 -	  rm -f $(SHAREDLIB) $(SHAREDLIBM); \
 -	  ln -s $(SHAREDLIBV) $(SHAREDLIB); \
 -	  ln -s $(SHAREDLIBV) $(SHAREDLIBM); \
 -	  (ldconfig || true)  >/dev/null 2>&1; \
 -	fi
--	cp zlib.3 $(man3dir)
--	chmod 644 $(man3dir)/zlib.3
+-	cp zlib.3 $(DESTDIR)$(man3dir)
+-	chmod 644 $(DESTDIR)$(man3dir)/zlib.3
+-	cp zlib.pc $(DESTDIR)$(pkgconfigdir)
+-	chmod 644 $(DESTDIR)$(pkgconfigdir)/zlib.pc
 -# The ranlib in install is needed on NeXTSTEP which checks file times
 -# ldconfig is for Linux
 -
+-install: install-libs
+-	-@if [ ! -d $(DESTDIR)$(includedir)   ]; then mkdir -p $(DESTDIR)$(includedir); fi
+-	cp zlib.h zconf.h zlibdefs.h $(DESTDIR)$(includedir)
+-	chmod 644 $(DESTDIR)$(includedir)/zlib.h $(DESTDIR)$(includedir)/zconf.h $(DESTDIR)$(includedir)/zlibdefs.h
+-
 -uninstall:
--	cd $(includedir); \
--	cd $(libdir); rm -f libz.a; \
+-	cd $(DESTDIR)$(includedir); rm -f zlib.h zconf.h zlibdefs.h
+-	cd $(DESTDIR)$(libdir); rm -f libz.a; \
 -	if test -f $(SHAREDLIBV); then \
 -	  rm -f $(SHAREDLIBV) $(SHAREDLIB) $(SHAREDLIBM); \
 -	fi
--	cd $(man3dir); rm -f zlib.3
+-	cd $(DESTDIR)$(man3dir); rm -f zlib.3
+-	cd $(DESTDIR)$(pkgconfigdir); rm -f zlib.pc
 -
 -mostlyclean: clean
 -clean:
--	rm -f *.o *~ example$(EXE) minigzip$(EXE) \
+-	rm -f *.o *.lo *~ \
+-	   example$(EXE) minigzip$(EXE) examplesh$(EXE) minigzipsh$(EXE) \
 -	   libz.* foo.gz so_locations \
 -	   _match.s maketree contrib/infback9/*.o
 -
 -maintainer-clean: distclean
 -distclean: clean
 -	cp -p Makefile.in Makefile
--	cp -p zconf.in.h zconf.h
--	rm -f .DS_Store
+-	rm zlibdefs.h
+-	touch -r configure zlibdefs.h
+-	rm -f zlib.pc .DS_Store
 -
 -tags:
 -	etags *.[ch]
@@ -635,17 +820,30 @@ diff -Naur zlib-1.2.3/Makefile.in zlib-1.2.3new/Makefile.in
 -
 -# DO NOT DELETE THIS LINE -- make depend depends on it.
 -
--adler32.o: zlib.h zconf.h
--compress.o: zlib.h zconf.h
--crc32.o: crc32.h zlib.h zconf.h
--deflate.o: deflate.h zutil.h zlib.h zconf.h
--example.o: zlib.h zconf.h
--gzio.o: zutil.h zlib.h zconf.h
--inffast.o: zutil.h zlib.h zconf.h inftrees.h inflate.h inffast.h
--inflate.o: zutil.h zlib.h zconf.h inftrees.h inflate.h inffast.h
--infback.o: zutil.h zlib.h zconf.h inftrees.h inflate.h inffast.h
--inftrees.o: zutil.h zlib.h zconf.h inftrees.h
--minigzip.o: zlib.h zconf.h
--trees.o: deflate.h zutil.h zlib.h zconf.h trees.h
--uncompr.o: zlib.h zconf.h
--zutil.o: zutil.h zlib.h zconf.h
+-adler32.o: zlib.h zconf.h zlibdefs.h
+-compress.o: zlib.h zconf.h zlibdefs.h
+-crc32.o: crc32.h zlib.h zconf.h zlibdefs.h
+-deflate.o: deflate.h zutil.h zlib.h zconf.h zlibdefs.h
+-example.o: zlib.h zconf.h zlibdefs.h
+-gzio.o: zutil.h zlib.h zconf.h zlibdefs.h
+-inffast.o: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h inflate.h inffast.h
+-inflate.o: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h inflate.h inffast.h inffixed.h
+-infback.o: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h inflate.h inffast.h inffixed.h
+-inftrees.o: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h
+-minigzip.o: zlib.h zconf.h zlibdefs.h
+-trees.o: deflate.h zutil.h zlib.h zconf.h zlibdefs.h trees.h
+-uncompr.o: zlib.h zconf.h zlibdefs.h
+-zutil.o: zutil.h zlib.h zconf.h zlibdefs.h
+-
+-adler32.lo: zlib.h zconf.h zlibdefs.h
+-compress.lo: zlib.h zconf.h zlibdefs.h
+-crc32.lo: crc32.h zlib.h zconf.h zlibdefs.h
+-deflate.lo: deflate.h zutil.h zlib.h zconf.h zlibdefs.h
+-gzio.lo: zutil.h zlib.h zconf.h zlibdefs.h
+-inffast.lo: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h inflate.h inffast.h
+-inflate.lo: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h inflate.h inffast.h inffixed.h
+-infback.lo: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h inflate.h inffast.h inffixed.h
+-inftrees.lo: zutil.h zlib.h zconf.h zlibdefs.h inftrees.h
+-trees.lo: deflate.h zutil.h zlib.h zconf.h zlibdefs.h trees.h
+-uncompr.lo: zlib.h zconf.h zlibdefs.h
+-zutil.lo: zutil.h zlib.h zconf.h zlibdefs.h
