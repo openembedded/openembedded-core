@@ -1,0 +1,17 @@
+---
+ createrepo/yumbased.py |    2 ++
+ 1 file changed, 2 insertions(+)
+
+Index: createrepo-0.9/createrepo/yumbased.py
+===================================================================
+--- createrepo-0.9.orig/createrepo/yumbased.py	2008-08-26 11:41:13.000000000 +0100
++++ createrepo-0.9/createrepo/yumbased.py	2008-08-26 11:37:01.000000000 +0100
+@@ -37,6 +37,8 @@ class CreateRepoPackage(YumLocalPackage)
+         self._hdrend = None
+         
+     def _xml(self, item):
++        if item == []:
++                return []	
+         return xml.sax.saxutils.escape(item)
+         
+     def _do_checksum(self):
