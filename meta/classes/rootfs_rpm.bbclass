@@ -96,6 +96,7 @@ EOF
 	rm -rf ${IMAGE_ROOTFS}/var/cache2/
 	rm -rf ${IMAGE_ROOTFS}/var/run2/
 	rm -rf ${IMAGE_ROOTFS}/var/log2/
+	rm -rf ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
 
 	log_check rootfs 	
 }
