@@ -68,6 +68,8 @@ python write_specfile() {
 		val = bb.data.getVar(var, d, 1)
 		fd.write("%s\t: %s\n" % (out_vartranslate[var], val))
 
+	fd.write("AutoReqProv: no\n")
+
 	bb.build.exec_func("mapping_rename_hook", d)
 	rdepends = " ".join(bb.utils.explode_deps(bb.data.getVar('RDEPENDS', d, True) or ""))
 	if rdepends:
