@@ -1,0 +1,37 @@
+Backported some new tags and sense values.
+
+Index: lib/rpmlib.h
+===================================================================
+--- lib/rpmlib.h.orig	2008-08-26 17:07:12.000000000 +0100
++++ lib/rpmlib.h	2008-08-26 17:22:21.000000000 +0100
+@@ -447,7 +447,19 @@
+     RPMTAG_PRIORITY		= 1162, /* i   extension placeholder */
+     RPMTAG_CVSID		= 1163, /* s */
+ #define	RPMTAG_SVNID	RPMTAG_CVSID	/* s */
++    RPMTAG_BLINKPKGID		= 1164, /* s[] */
++    RPMTAG_BLINKHDRID		= 1165, /* s[] */
++    RPMTAG_BLINKNEVRA		= 1166, /* s[] */
++    RPMTAG_FLINKPKGID		= 1167, /* s[] */
++    RPMTAG_FLINKHDRID		= 1168, /* s[] */
++    RPMTAG_FLINKNEVRA		= 1169, /* s[] */
++    RPMTAG_PACKAGEORIGIN	= 1170, /* s */
+     RPMTAG_TRIGGERPREIN		= 1171, /*!< internal */
++    RPMTAG_BUILDSUGGESTS	= 1172, /*!< internal */
++    RPMTAG_BUILDENHANCES	= 1173, /*!< internal */
++    RPMTAG_SCRIPTSTATES		= 1174, /*!< i scriptlet exit codes */
++    RPMTAG_SCRIPTMETRICS	= 1175, /*!< i scriptlet execution times */
++    RPMTAG_BUILDCPUCLOCK	= 1176, /*!< i */
+ 
+ /*@-enummemuse@*/
+     RPMTAG_FIRSTFREE_TAG	/*!< internal */
+@@ -531,7 +543,9 @@
+ /*@=enummemuse@*/
+     RPMSENSE_KEYRING	= (1 << 26),
+     RPMSENSE_STRONG	= (1 << 27),
+-    RPMSENSE_CONFIG	= (1 << 28)
++    RPMSENSE_CONFIG	= (1 << 28),
++    RPMSENSE_PROBE	= (1 << 29),
++    RPMSENSE_PACKAGE	= (1 << 30)
+ } rpmsenseFlags;
+ 
+ #define	RPMSENSE_SENSEMASK	15	 /* Mask to get senses, ie serial, */
