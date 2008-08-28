@@ -84,6 +84,8 @@ python write_specfile() {
 
 	fd.write("%files\n")
 	for file in files:
+		if file[0] != '/':
+			fd.write('/')
 		fd.write("%s\n" % file)
 
 	fd.close()
