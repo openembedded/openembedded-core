@@ -3,8 +3,7 @@ HOMEPAGE = "http://www.python.org"
 LICENSE = "PSF"
 SECTION = "devel/python"
 PRIORITY = "optional"
-DEPENDS = "libxml2-native"
-PR = "ml3"
+PR = "ml4"
 
 EXCLUDE_FROM_WORLD = "1"
 
