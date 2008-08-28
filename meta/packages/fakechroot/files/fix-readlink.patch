@@ -1,0 +1,32 @@
+---
+ src/libfakechroot.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- fakechroot-2.5.orig/src/libfakechroot.c
++++ fakechroot-2.5/src/libfakechroot.c
+@@ -596,11 +596,11 @@ void fakechroot_init (void)
+     nextsym(open64, "open64");
+ #if !defined(HAVE___OPENDIR2)
+     nextsym(opendir, "opendir");
+ #endif
+     nextsym(pathconf, "pathconf");
+-    nextsym(readlink, "readlink");
++    nextsym(readlink, "own_readlink");
+     nextsym(realpath, "realpath");
+     nextsym(remove, "remove");
+ #ifdef HAVE_REMOVEXATTR
+     nextsym(removexattr, "removexattr");
+ #endif
+@@ -1864,11 +1864,11 @@ long pathconf (const char *path, int nam
+     return next_pathconf(path, name);
+ }
+ 
+ 
+ /* #include <unistd.h> */
+-int readlink (const char *path, char *buf, READLINK_TYPE_ARG3)
++int own_readlink (const char *path, char *buf, READLINK_TYPE_ARG3)
+ {
+     int status;
+     char tmp[FAKECHROOT_MAXPATH], *tmpptr;
+     char *fakechroot_path, *fakechroot_ptr, fakechroot_buf[FAKECHROOT_MAXPATH];
+ 
