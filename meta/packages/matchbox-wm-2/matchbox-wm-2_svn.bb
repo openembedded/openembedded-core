@@ -4,7 +4,7 @@ LICENSE = "GPL"
 DEPENDS = "virtual/libx11 libxext libxrender startup-notification expat gconf pango libxdamage libxcomposite gtk+"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager-2;proto=http \
 	  "
@@ -25,6 +25,8 @@ FILES_${PN} = "${bindir}/* \
 
 EXTRA_OECONF = 	"--enable-debug			\
                  --enable-compositing-manager	\
+                 --enable-libmatchbox \
+                 --enable-png-theme \
 		"
 
 do_install_append () {
