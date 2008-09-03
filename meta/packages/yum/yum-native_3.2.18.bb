@@ -3,7 +3,7 @@ HOMEPAGE = "http://linux.duke.edu/projects/yum/"
 SRC_URI = "http://linux.duke.edu/projects/yum/download/3.2/yum-${PV}.tar.gz \
            file://hacks.patch;patch=1 \
            file://paths.patch;patch=1"
-PR = "r3"
+PR = "r4"
 
 DEPENDS = "rpm-native python-native python-iniparse-native python-urlgrabber-native yum-metadata-parser-native libxml2-native"
 

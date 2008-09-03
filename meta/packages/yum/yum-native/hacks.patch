@@ -7,9 +7,9 @@
 
 Index: yum-3.2.18/rpmUtils/arch.py
 ===================================================================
---- yum-3.2.18.orig/rpmUtils/arch.py	2008-08-26 12:43:14.000000000 +0100
-+++ yum-3.2.18/rpmUtils/arch.py	2008-08-26 12:50:11.000000000 +0100
-@@ -275,6 +275,7 @@ def getCanonX86_64Arch(arch):
+--- yum-3.2.18.orig/rpmUtils/arch.py	2008-06-17 14:05:42.000000000 +0100
++++ yum-3.2.18/rpmUtils/arch.py	2008-09-01 15:47:11.000000000 +0100
+@@ -275,6 +275,7 @@
      return arch
          
  def getCanonArch(skipRpmPlatform = 0):
@@ -17,7 +17,7 @@ Index: yum-3.2.18/rpmUtils/arch.py
      if not skipRpmPlatform and os.access("/etc/rpm/platform", os.R_OK):
          try:
              f = open("/etc/rpm/platform", "r")
-@@ -331,6 +332,8 @@ def getBaseArch(myarch=None):
+@@ -331,6 +332,8 @@
         base arch is the arch before noarch in the arches dict if myarch is not
         a key in the multilibArches."""
  
@@ -28,9 +28,9 @@ Index: yum-3.2.18/rpmUtils/arch.py
  
 Index: yum-3.2.18/rpmUtils/transaction.py
 ===================================================================
---- yum-3.2.18.orig/rpmUtils/transaction.py	2008-08-26 13:03:13.000000000 +0100
-+++ yum-3.2.18/rpmUtils/transaction.py	2008-08-26 13:10:52.000000000 +0100
-@@ -43,6 +43,7 @@ class TransactionWrapper:
+--- yum-3.2.18.orig/rpmUtils/transaction.py	2008-06-17 14:05:42.000000000 +0100
++++ yum-3.2.18/rpmUtils/transaction.py	2008-09-03 17:55:27.000000000 +0100
+@@ -43,6 +43,7 @@
                           'clean']
          self.tsflags = []
          self.open = True
@@ -40,9 +40,9 @@ Index: yum-3.2.18/rpmUtils/transaction.py
          # Automatically close the rpm transaction when the reference is lost
 Index: yum-3.2.18/yum/constants.py
 ===================================================================
---- yum-3.2.18.orig/yum/constants.py	2008-08-26 13:12:39.000000000 +0100
-+++ yum-3.2.18/yum/constants.py	2008-08-26 13:12:46.000000000 +0100
-@@ -17,7 +17,7 @@ Yum constants. Usually dealing with rpm 
+--- yum-3.2.18.orig/yum/constants.py	2008-07-21 16:56:54.000000000 +0100
++++ yum-3.2.18/yum/constants.py	2008-09-01 15:47:11.000000000 +0100
+@@ -17,7 +17,7 @@
  """
  
  #Constants
@@ -53,9 +53,15 @@ Index: yum-3.2.18/yum/constants.py
  TS_UPDATE = 10
 Index: yum-3.2.18/yum/depsolve.py
 ===================================================================
---- yum-3.2.18.orig/yum/depsolve.py	2008-08-26 12:44:37.000000000 +0100
-+++ yum-3.2.18/yum/depsolve.py	2008-08-26 13:17:45.000000000 +0100
-@@ -144,6 +144,8 @@ class Depsolve(object):
+--- yum-3.2.18.orig/yum/depsolve.py	2008-08-06 17:05:16.000000000 +0100
++++ yum-3.2.18/yum/depsolve.py	2008-09-03 21:05:52.000000000 +0100
+@@ -141,9 +141,14 @@
+             else:
+                 self.logger.critical(_('Invalid tsflag in config file: %s'), flag)
+ 
++        self._ts.addTsFlag(rpm.RPMTRANS_FLAG_NOPOST)
++        self._ts.addTsFlag(rpm.RPMTRANS_FLAG_NOTRIGGERS)
++
          probfilter = 0
          for flag in self.tsInfo.probFilterFlags:
              probfilter |= flag
