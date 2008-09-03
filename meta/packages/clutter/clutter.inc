@@ -21,7 +21,8 @@ PACKAGE_ARCH_mx31litekit = "${MACHINE_ARCH}"
 LDFLAGS_append_mx31litekit = " -lpvrNULLWSEGL -lstdc++ "
 
 DEPENDS_omap-3430ldp = "${STDDEPENDS} libgles-omap3 tslib"
-EXTRA_OECONF_omap-3430ldp = "${BASE_CONF} --with-flavour=eglx"
+# The eglx drivers are pretty dire, use eglnative
+EXTRA_OECONF_omap-3430ldp = "${BASE_CONF} --with-flavour=eglnative"
 PACKAGE_ARCH_omap-3430ldp = "${MACHINE_ARCH}"
 
 DEPENDS_omap-3430sdp = "${STDDEPENDS} libgles-omap3 tslib"
