@@ -27,6 +27,8 @@ python write_specfile() {
 		"ROOT": "BuildRoot",
 		"LICENSE": "License",
 		"SECTION": "Group",
+		"pkg_postinst": "%post",
+		"pkg_preinst": "%pre",
 	}
 
 	root = bb.data.getVar('ROOT', d)
@@ -71,7 +73,8 @@ python write_specfile() {
 		if out_vartranslate[var][0] == "%":
 			continue
 		val = bb.data.getVar(var, d, 1)
-		fd.write("%s\t: %s\n" % (out_vartranslate[var], val))
+		if val:
+			fd.write("%s\t: %s\n" % (out_vartranslate[var], val))
 
 	fd.write("AutoReqProv: no\n")
 
@@ -99,8 +102,10 @@ python write_specfile() {
 	for var in out_vartranslate.keys():
 		if out_vartranslate[var][0] != "%":
 			continue
-		fd.write(out_vartranslate[var] + "\n")
-		fd.write(bb.data.getVar(var, d) + "\n\n")
+		val = bb.data.getVar(var, d)
+		if val:
+			fd.write(out_vartranslate[var] + "\n")
+			fd.write(val + "\n\n")
 
 	fd.write("%files\n")
 	for file in files:
