@@ -12,6 +12,8 @@ do_rootfs[recrdeptask] += "do_package_write_rpm"
 YUMCONF = "${IMAGE_ROOTFS}/etc/yum.conf"
 YUMARGS = "-c ${YUMCONF} --installroot ${IMAGE_ROOTFS}"
 
+AWKPOSTINSTSCRIPT = "${STAGING_BINDIR_NATIVE}/extract-postinst.awk"
+
 fakeroot rootfs_rpm_do_rootfs () {
 	set -x
 
@@ -67,26 +69,26 @@ EOF
 		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL}
 	fi
 
-	#export D=${IMAGE_ROOTFS}
-	#export OFFLINE_ROOT=${IMAGE_ROOTFS}
-	#export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
-	#export OPKG_OFFLINE_ROOT=${IPKG_OFFLINE_ROOT}
+	export D=${IMAGE_ROOTFS}
+	export OFFLINE_ROOT=${IMAGE_ROOTFS}
+	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
+	export OPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 
 	#mkdir -p ${IMAGE_ROOTFS}/etc/opkg/
 	#grep "^arch" ${IPKGCONF_TARGET} >${IMAGE_ROOTFS}/etc/opkg/arch.conf
 
 	${ROOTFS_POSTINSTALL_COMMAND}
-	
-	#for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.preinst; do
-	#	if [ -f $i ] && ! sh $i; then
-	#		opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .preinst`
-	#	fi
-	#done
-	#for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.postinst; do
-	#	if [ -f $i ] && ! sh $i configure; then
-	#		opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .postinst`
-	#	fi
-	#done
+
+	mkdir -p ${IMAGE_ROOTFS}/etc/rpm-postinsts/
+	rpm --root ${IMAGE_ROOTFS} -aq --queryformat 'Name: %{NAME}\n' --scripts > ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
+	awk -f ${AWKPOSTINSTSCRIPT} < ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
+	rm ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined	
+
+	for i in ${IMAGE_ROOTFS}/etc/rpm-postinsts/*.sh; do
+		if [ -f $i ] && sh $i; then
+			rm $i
+		fi
+	done
 
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
