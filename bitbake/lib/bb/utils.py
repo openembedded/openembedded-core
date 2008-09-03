@@ -96,7 +96,34 @@ def explode_deps(s):
             #r[-1] += ' ' + ' '.join(j)
     return r
 
+def explode_dep_versions(s):
+    """
+    Take an RDEPENDS style string of format:
+    "DEPEND1 (optional version) DEPEND2 (optional version) ..."
+    and return a dictonary of dependencies and versions.
+    """
+    r = {}
+    l = s.split()
+    lastdep = None
+    lastver = ""
+    inversion = False
+    for i in l:
+        if i[0] == '(':
+            inversion = True
+            lastver = i[1:] or ""
+            #j = []
+        elif inversion and i.endswith(')'):
+            inversion = False
+            lastver = lastver + " " + (i[:-1] or "")
+            r[lastdep] = lastver
+        elif not inversion:
+            r[i] = None
+            lastdep = i
+            lastver = ""
+        elif inversion:
+            lastver = lastver + " " + i
 
+    return r
 
 def _print_trace(body, line):
     """
