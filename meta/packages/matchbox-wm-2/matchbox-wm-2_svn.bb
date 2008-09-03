@@ -4,7 +4,7 @@ LICENSE = "GPL"
 DEPENDS = "virtual/libx11 libxext libxrender startup-notification expat gconf pango libxdamage libxcomposite gtk+"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager-2;proto=http \
 	  "
@@ -13,6 +13,9 @@ S = "${WORKDIR}/matchbox-window-manager-2"
 
 inherit autotools pkgconfig update-alternatives
 
+# Change this to x-session-manager->matchbox-session and put in
+# matchbox-session, then change this to x-window-manager to
+# matchbox-window-manager-2.
 ALTERNATIVE_NAME = "x-window-manager"
 ALTERNATIVE_LINK = "${bindir}/x-window-manager"
 ALTERNATIVE_PATH = "${bindir}/matchbox-session"
@@ -32,4 +35,8 @@ EXTRA_OECONF = 	"--enable-debug			\
 do_install_append () {
 	cd ${D}${bindir}
 	ln -s matchbox-window-manager-2-simple matchbox-window-manager
+}
+
+do_stage() {
+           autotools_stage_all
 }
