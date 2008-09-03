@@ -126,13 +126,11 @@ python build_syslinux_cfg () {
 		cfgfile.write('DISPLAY %s\n' % (mfile.split('/')[-1]) )
 	
 	for label in labels.split():
-		from copy import deepcopy
-		localdata = deepcopy(d)
+		localdata = bb.data.createCopy(d)
 
-		overrides = bb.data.getVar('OVERRIDES', localdata)
+		overrides = bb.data.getVar('OVERRIDES', localdata, True)
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
-		overrides = bb.data.expand(overrides, localdata)
 	
 		bb.data.setVar('OVERRIDES', label + ':' + overrides, localdata)
 		bb.data.update_data(localdata)
@@ -149,8 +147,6 @@ python build_syslinux_cfg () {
 				cfgfile.write('initrd=initrd ')
 
 			cfgfile.write('%s\n' % (append))
-	
-		del localdata
-	
+
 	cfgfile.close()
 }
