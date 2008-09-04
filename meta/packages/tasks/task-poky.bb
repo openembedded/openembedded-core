@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r28"
+PR = "r29"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -30,11 +30,13 @@ ALLOW_EMPTY = "1"
 RDEPENDS_task-poky-apps-console = "\
     avahi-daemon \
     dropbear \
+    dbus \
     portmap \
     psplash"
 
 
 RDEPENDS_task-poky-x11-base = "\
+    dbus \
     pointercal \
     matchbox-wm \
     matchbox-keyboard \
