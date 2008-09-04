@@ -35,5 +35,6 @@ PREFERRED_VERSION_elfutils ?= "0.131"
 
 ASNEEDED = "-Wl,--as-needed"
 ASNEEDED_pn-console-tools = ""
+ASNEEDED_pn-distcc = ""
 
 TARGET_LDFLAGS += "${ASNEEDED}"
