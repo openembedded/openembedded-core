@@ -69,6 +69,15 @@ EOF
 		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL}
 	fi
 
+	# Symlinks created under fakeroot are wrong, now we have to fix them...
+	cd ${IMAGE_ROOTFS}
+	for f in `find . -type l -print`
+	do
+		link=`readlink $f | sed -e 's#${IMAGE_ROOTFS}##'`
+		rm $f
+		ln -s $link $f
+	done
+
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
@@ -86,9 +95,28 @@ EOF
 
 	for i in ${IMAGE_ROOTFS}/etc/rpm-postinsts/*.sh; do
 		if [ -f $i ] && sh $i; then
-			rm $i
+			# rm $i
+			mv $i $i.done
 		fi
 	done
+
+	install -d ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d
+	# Stop $i getting expanded below...
+	i=\$i
+	cat > ${IMAGE_ROOTFS}${sysconfdir}/rcS.d/S98configure << EOF
+#!/bin/sh
+for i in /etc/rpm-postinsts/*.sh; do
+	echo "Running postinst $i..."
+	if [ -f $i ] && sh $i; then
+		# rm $i
+		mv $i $i.done
+	else
+		echo "ERROR: postinst $i failed."
+	fi
+done
+rm -f ${sysconfdir}/rcS.d/S98configure
+EOF
+	chmod 0755 ${IMAGE_ROOTFS}${sysconfdir}/rcS.d/S98configure
 
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
