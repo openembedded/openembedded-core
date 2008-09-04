@@ -32,3 +32,8 @@ PREFERRED_VERSION_linux-libc-headers ?= "2.6.24"
 PREFERRED_VERSION_glibc ?= "2.6.1"
 PREFERRED_VERSION_glibc-initial ?= "2.6.1"
 PREFERRED_VERSION_elfutils ?= "0.131"
+
+ASNEEDED = "-Wl,--as-needed"
+ASNEEDED_pn-console-tools = ""
+
+TARGET_LDFLAGS += "${ASNEEDED}"
