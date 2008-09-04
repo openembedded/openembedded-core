@@ -1,6 +1,6 @@
 require yum-metadata-parser_${PV}.bb
 inherit native
-DEPENDS = "python-native sqlite3-native"
+DEPENDS = "python-native sqlite3-native glib-2.0-native"
 RDEPENDS = ""
 
 #BUILD_CFLAGS += "-I${STAGING_LIBDIR}/glib-2.0"
