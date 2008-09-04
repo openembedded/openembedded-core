@@ -1,3 +1,5 @@
+DEPENDS = "python-native"
+
 SRC_URI = "http://linux.duke.edu/projects/metadata/generate/createrepo-${PV}.tar.gz \
            file://fix.patch;patch=1 \
            file://pathfix.patch;patch=1 "
