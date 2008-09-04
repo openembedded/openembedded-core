@@ -1,32 +1,28 @@
 DEPENDS += "gconf"
 
 gconf_postinst() {
-if [ "$1" = configure ]; then
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-        SCHEMA_LOCATION=/etc/gconf/schemas
-        for SCHEMA in ${SCHEMA_FILES}; do
-                if [ -e $SCHEMA_LOCATION/$SCHEMA ]; then
-                        HOME=/root GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-                                gconftool-2 \
-                                --makefile-install-rule $SCHEMA_LOCATION/$SCHEMA > /dev/null
-                fi
-        done
+if [ "x$D" != "x" ]; then
+	exit 1
 fi
+SCHEMA_LOCATION=/etc/gconf/schemas
+for SCHEMA in ${SCHEMA_FILES}; do
+	if [ -e $SCHEMA_LOCATION/$SCHEMA ]; then
+		HOME=/root GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
+			gconftool-2 \
+			--makefile-install-rule $SCHEMA_LOCATION/$SCHEMA > /dev/null
+	fi
+done
 }
 
 gconf_prerm() {
-if [ "$1" = remove ] || [ "$1" = upgrade ]; then
-        SCHEMA_LOCATION=/etc/gconf/schemas
-        for SCHEMA in ${SCHEMA_FILES}; do
-                if [ -e $SCHEMA_LOCATION/$SCHEMA ]; then
-                        HOME=/root GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-                                gconftool-2 \
-                                        --makefile-uninstall-rule $SCHEMA_LOCATION/$SCHEMA > /dev/null
-                fi
-        done
-fi
+SCHEMA_LOCATION=/etc/gconf/schemas
+for SCHEMA in ${SCHEMA_FILES}; do
+	if [ -e $SCHEMA_LOCATION/$SCHEMA ]; then
+		HOME=/root GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
+			gconftool-2 \
+			--makefile-uninstall-rule $SCHEMA_LOCATION/$SCHEMA > /dev/null
+	fi
+done
 }
 
 python populate_packages_append () {
