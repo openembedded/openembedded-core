@@ -1,9 +1,10 @@
 DESCRIPTION = "The Python Programming Language"
 HOMEPAGE = "http://www.python.org"
 LICENSE = "PSF"
+DEPENDS = "openssl-native"
 SECTION = "devel/python"
 PRIORITY = "optional"
-PR = "ml4"
+PR = "ml5"
 
 EXCLUDE_FROM_WORLD = "1"
 
