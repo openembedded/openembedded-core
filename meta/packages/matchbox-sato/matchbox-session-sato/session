@@ -15,7 +15,7 @@ matchbox-desktop &
 
 START_APPLETS=showdesktop,windowselector
 END_APPLETS=clock,battery,systray,startup-notify,notify
-END_APPETS=openmoko-panel-gsm,$APPLETS # feature-phone
+END_APPLETS=openmoko-panel-gsm,$END_APPLETS # feature-phone
 
 matchbox-panel --titlebar --start-applets $START_APPLETS --end-applets $END_APPLETS &
 
