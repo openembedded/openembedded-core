@@ -5,7 +5,7 @@ SECTION = "libs"
 PROVIDES = "openobex-apps"
 DEPENDS = "libusb bluez-libs"
 LICENSE = "GPL"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/openobex/openobex-${PV}.tar.gz \
            file://disable-cable-test.patch;patch=1 \
