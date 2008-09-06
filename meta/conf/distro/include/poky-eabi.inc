@@ -36,5 +36,8 @@ PREFERRED_VERSION_elfutils ?= "0.131"
 ASNEEDED = "-Wl,--as-needed"
 ASNEEDED_pn-console-tools = ""
 ASNEEDED_pn-distcc = ""
+ASNEEDED_pn-openobex = ""
+ASNEEDED_pn-icu = ""
+ASNEEDED_pn-xserver-kdrive-xomap = ""
 
 TARGET_LDFLAGS += "${ASNEEDED}"
