@@ -39,5 +39,7 @@ ASNEEDED_pn-distcc = ""
 ASNEEDED_pn-openobex = ""
 ASNEEDED_pn-icu = ""
 ASNEEDED_pn-xserver-kdrive-xomap = ""
+ASNEEDED_pn-minimo = ""
+ASNEEDED_pn-pciutils = ""
 
 TARGET_LDFLAGS += "${ASNEEDED}"
