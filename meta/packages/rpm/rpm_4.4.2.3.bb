@@ -2,13 +2,15 @@ DESCRIPTION = "The RPM Package Manager."
 HOMEPAGE = "http://rpm.org/"
 LICENSE = "LGPL GPL"
 DEPENDS = "zlib beecrypt file popt python"
-PR = "r7"
+PR = "r9"
 
 SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
            file://external-tools.patch;patch=1 \
 	   file://cross_libpaths.patch;patch=1 \
 	   file://weakdeps.patch;patch=1;pnum=0 \
-	   file://tagsbackport.patch;patch=1;pnum=0"
+	   file://tagsbackport.patch;patch=1;pnum=0 \
+	   file://missingok.patch;patch=1;pnum=0 \
+	   file://extcond.patch;patch=1;pnum=0"
 
 inherit autotools gettext
 
@@ -16,9 +18,9 @@ S = "${WORKDIR}/rpm-${PV}"
 
 acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 
-EXTRA_OECONF = "--with-python=${PYTHONVER} \
-		--with-python-incdir=${STAGING_INCDIR}/python${PYTHONVER} \
-		--with-python-libdir=${STAGING_LIBDIR}/python${PYTHONVER} \
+EXTRA_OECONF = "--with-python=$PYTHONVER \
+		--with-python-incdir=${STAGING_INCDIR}/python$PYTHONVER \
+		--with-python-libdir=${STAGING_LIBDIR}/python$PYTHONVER \
 		--without-apidocs \
 		--without-selinux \
 		--without-lua \
@@ -97,4 +99,6 @@ def rpm_python_version(d):
 	if os.path.exists( "%s/python2.3" % staging_incdir ): return "2.3"
 	raise "No Python in STAGING_INCDIR. Forgot to build python/python-native?"
 
-PYTHONVER = "${@rpm_python_version(d)}"
+# Use a shell variable here since otherwise gettext trys to expand this at 
+# parse time when it manipulates EXTRA_OECONF which fails
+export PYTHONVER = "${@rpm_python_version(d)}"
