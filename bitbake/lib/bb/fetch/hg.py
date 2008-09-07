@@ -79,7 +79,10 @@ class Hg(Fetch):
             host = "/"
             ud.host = "localhost"
 
-        hgroot = host + ud.path
+        if ud.user == None:
+            hgroot = host + ud.path
+        else:
+            hgroot = ud.user + "@" + host + ud.path
 
         if command is "info":
             return "%s identify -i %s://%s/%s" % (basecmd, proto, hgroot, ud.module)
