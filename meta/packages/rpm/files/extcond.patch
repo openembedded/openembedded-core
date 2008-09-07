@@ -1,0 +1,78 @@
+This patch supports an extension in the condition evaluation.
+If the condition is a format and returns an nonempty string, it is
+assumed to be true.
+This mechanism is used by the weakdeps patch to filter the
+"RPMSENSE_STRONG" flag.
+
+--- ./rpmdb/header.c.orig	2005-06-06 23:33:54.000000000 +0000
++++ ./rpmdb/header.c	2006-03-17 18:08:02.000000000 +0000
+@@ -2980,8 +2980,12 @@ static int parseExpression(headerSprintf
+ 
+     *endPtr = chptr;
+ 
++    token->u.cond.tag.type = NULL;
++    token->u.cond.tag.format = "";
+     token->type = PTOK_COND;
+ 
++    if ((token->u.cond.tag.type = strchr(str, ':')) != 0)
++	*token->u.cond.tag.type++ = 0;
+     (void) findTag(hsa, token, str);
+ 
+     return 0;
+@@ -3239,6 +3243,7 @@ static char * singleSprintf(headerSprint
+     int_32 type;
+     int_32 count;
+     sprintfToken spft;
++    sprintfTag stag;
+     int condNumFormats;
+     size_t need;
+ 
+@@ -3270,6 +3275,18 @@ static char * singleSprintf(headerSprint
+ 	if (token->u.cond.tag.ext || headerIsEntry(hsa->h, token->u.cond.tag.tag)) {
+ 	    spft = token->u.cond.ifFormat;
+ 	    condNumFormats = token->u.cond.numIfTokens;
++	    if (token->u.cond.tag.fmt) {
++		/* check if format creates output */
++		size_t vallen = hsa->vallen;
++		formatValue(hsa, &token->u.cond.tag, element);
++		if (hsa->vallen == vallen) {
++		    spft = token->u.cond.elseFormat;
++		    condNumFormats = token->u.cond.numElseTokens;
++		} else {
++		    hsa->vallen = vallen;
++		    hsa->val[hsa->vallen] = 0;
++		}
++	    }
+ 	} else {
+ 	    spft = token->u.cond.elseFormat;
+ 	    condNumFormats = token->u.cond.numElseTokens;
+@@ -3291,19 +3308,22 @@ static char * singleSprintf(headerSprint
+ 	spft = token->u.array.format;
+ 	for (i = 0; i < token->u.array.numTokens; i++, spft++)
+ 	{
+-	    if (spft->type != PTOK_TAG ||
+-		spft->u.tag.arrayCount ||
+-		spft->u.tag.justOne) continue;
++	    if (spft->type != PTOK_TAG && spft->type != PTOK_COND)
++		continue;
++
++	    stag = (spft->type == PTOK_COND ? &spft->u.cond.tag : &spft->u.tag);
++	    if (stag->arrayCount || stag->justOne)
++		continue;
+ 
+-	    if (spft->u.tag.ext) {
++	    if (stag->ext) {
+ /*@-boundswrite@*/
+-		if (getExtension(hsa, spft->u.tag.ext, &type, NULL, &count, 
+-				 hsa->ec + spft->u.tag.extNum))
++		if (getExtension(hsa, stag->ext, &type, NULL, &count, 
++				 hsa->ec + stag->extNum))
+ 		     continue;
+ /*@=boundswrite@*/
+ 	    } else {
+ /*@-boundswrite@*/
+-		if (!headerGetEntry(hsa->h, spft->u.tag.tag, &type, NULL, &count))
++		if (!headerGetEntry(hsa->h, stag->tag, &type, NULL, &count))
+ 		    continue;
+ /*@=boundswrite@*/
+ 	    } 
