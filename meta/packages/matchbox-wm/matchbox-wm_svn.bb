@@ -2,8 +2,10 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPL"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat gconf"
+PROVIDES = "matchbox-wm"
+
 PV = "1.2+svnr${SRCREV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager;proto=http \
            file://configure_fix.patch;patch=1;maxrev=1818 \
