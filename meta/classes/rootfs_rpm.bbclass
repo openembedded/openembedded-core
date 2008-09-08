@@ -69,6 +69,10 @@ EOF
 		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL}
 	fi
 
+	# Add any recommended packages to the image
+	# (added as an extra script since yum itself doesn't support this)
+	yum-install-recommends.py ${IMAGE_ROOTFS} "fakechroot yum ${YUMARGS} -y install"
+
 	# Symlinks created under fakeroot are wrong, now we have to fix them...
 	cd ${IMAGE_ROOTFS}
 	for f in `find . -type l -print`
