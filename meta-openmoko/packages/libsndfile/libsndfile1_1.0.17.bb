@@ -1,6 +1,7 @@
 DESCRIPTION = "An audio format Conversion library"
 HOMEPAGE = "http://www.mega-nerd.com/libsndfile"
 AUTHOR = "Erik de Castro Lopo"
+DEPENDS = "sqlite3"
 SECTION = "libs/multimedia"
 LICENSE = "LGPL"
 PR = "r2"
