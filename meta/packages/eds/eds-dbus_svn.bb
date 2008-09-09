@@ -7,7 +7,8 @@ PV = "1.4.0+svnr${SRCREV}"
 PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
-           file://oh-contact.patch;patch=1;pnum=0 \
+           file://oh-contact.patch;patch=1;pnum=0;maxrev=680 \
+           file://oh-contact-bleeding.patch;patch=1;pnum=0;minrev=681 \
            file://no_libdb.patch;patch=1 \
            file://no_iconv_test.patch;patch=1 \
            file://no_libedataserverui.patch;patch=1 \
