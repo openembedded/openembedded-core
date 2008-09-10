@@ -1,7 +1,7 @@
-Index: addressbook/libedata-book-orbit/ximian-vcard.h
+Index: addressbook/libedata-book/ximian-vcard.h
 ===================================================================
---- addressbook/libedata-book-orbit/ximian-vcard.h	(revision 578)
-+++ addressbook/libedata-book-orbit/ximian-vcard.h	(working copy)
+--- addressbook/libedata-book/ximian-vcard.h	(revision 578)
++++ addressbook/libedata-book/ximian-vcard.h	(working copy)
 @@ -1,80 +1,40 @@
  #define XIMIAN_VCARD \
  "BEGIN:VCARD\n" \

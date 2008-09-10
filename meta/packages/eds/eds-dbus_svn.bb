@@ -4,14 +4,11 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup"
 
 PV = "1.4.0+svnr${SRCREV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
-           file://oh-contact.patch;patch=1;pnum=0;maxrev=680 \
-           file://oh-contact-bleeding.patch;patch=1;pnum=0;minrev=681 \
-           file://no_libdb.patch;patch=1 \
+           file://oh-contact.patch;patch=1;pnum=0 \
            file://no_iconv_test.patch;patch=1 \
-           file://no_libedataserverui.patch;patch=1 \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/trunk"
@@ -84,4 +81,9 @@ FILES_libedataserver = "${libdir}/libedataserver-*.so.*"
 FILES_libedataserver-dev = "${libdir}/libedataserver-*.so \
                             ${libdir}/pkgconfig/libedataserver-*.pc \
                             ${includedir}/evolution-data-server-*/libedataserver/*.h"
+
+FILES_libedataserverui = "${libdir}/libedataserverui-*.so.*"
+FILES_libedataserverui-dev = "${libdir}/libedataserverui-*.so \
+                              ${libdir}/pkgconfig/libedataserverui-*.pc \
+                              ${includedir}/evolution-data-server-*/libedataserverui/*.h"
 
