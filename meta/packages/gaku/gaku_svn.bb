@@ -1,15 +1,20 @@
 DESCRIPTION = "Music player"
 LICENSE = "GPL"
 DEPENDS = "gtk+ gstreamer"
-PV = "0.0+svnr${SRCREV}"
 
 RDEPENDS = "gst-plugin-audioconvert \
         gst-plugin-audioresample \
-        gst-plugin-alsa \
         gst-plugin-typefindfunctions \
-        gst-plugin-id3demux \
         gst-plugin-playbin"
-RRECOMMENDS = "gst-plugin-mad gst-plugin-ivorbis gst-plugin-ogg"
+
+RRECOMMENDS = "gst-plugin-mad \
+            gst-plugin-id3demux \
+            gst-plugin-ivorbis \
+            gst-plugin-alsa \
+            gst-plugin-ogg"
+
+PV = "0.0+svnr${SRCREV}"
+PR = "r1"
 
 S = "${WORKDIR}/${PN}"
 
