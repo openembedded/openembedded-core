@@ -1,0 +1,27 @@
+From: Keith Packard <keithp@keithp.com>
+Date: Fri, 20 Jun 2008 07:08:06 +0000 (-0700)
+Subject: Export shmem_file_setup for DRM-GEM
+X-Git-Tag: v2.6.12-rc2
+X-Git-Url: http://gitweb.freedesktop.org/?p=users/anholt/anholt/linux-2.6.git;a=commitdiff;h=350ea3ece12744ae154bbc2ea13da6ba84ca5515
+
+Export shmem_file_setup for DRM-GEM
+
+GEM needs to create shmem files to back buffer objects.  Though currently
+creation of files for objects could have been driven from userland, the
+modesetting work will require allocation of buffer objects before userland
+is running, for boot-time message display.
+
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2582,6 +2582,7 @@ put_memory:
+ 	shmem_unacct_size(flags, size);
+ 	return ERR_PTR(error);
+ }
++EXPORT_SYMBOL(shmem_file_setup);
+ 
+ /**
+  * shmem_zero_setup - setup a shared anonymous mapping
+
