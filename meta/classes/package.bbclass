@@ -79,6 +79,8 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 				packages = [pkg] + packages
 			else:
 				packages.append(pkg)
+		oldfiles = bb.data.getVar('FILES_' + pkg, d, 1)
+		if not oldfiles:
 			the_files = [os.path.join(root, o)]
 			if aux_files_pattern:
 				if type(aux_files_pattern) is list:
@@ -106,9 +108,6 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 			if postrm:
 				bb.data.setVar('pkg_postrm_' + pkg, postrm, d)
 		else:
-			oldfiles = bb.data.getVar('FILES_' + pkg, d, 1)
-			if not oldfiles:
-				bb.fatal("Package '%s' exists but has no files" % pkg)
 			bb.data.setVar('FILES_' + pkg, oldfiles + " " + os.path.join(root, o), d)
 		if callable(hook):
 			hook(f, pkg, file_regex, output_pattern, m.group(1))
