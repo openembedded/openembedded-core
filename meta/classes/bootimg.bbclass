@@ -23,7 +23,7 @@ HDDDIR = "${S}/hdd/boot"
 ISODIR = "${S}/cd/isolinux"
 
 BOOTIMG_VOLUME_ID   ?= "oe"
-BOOTIMG_EXTRA_SPACE ?= "64"
+BOOTIMG_EXTRA_SPACE ?= "512"
 
 # Get the build_syslinux_cfg() function from the syslinux class
 
@@ -39,6 +39,10 @@ build_boot_bin() {
 
 	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then 
     		install -m 0644 ${INITRD} ${HDDDIR}/initrd
+	fi
+
+	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then 
+    		install -m 0644 ${ROOTFS} ${HDDDIR}/rootfs.img
 	fi
 
 	install -m 444 ${STAGING_DATADIR_NATIVE}/syslinux/ldlinux.sys \
