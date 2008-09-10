@@ -4,7 +4,7 @@ LICENSE = "GPL"
 DEPENDS = "virtual/libx11 libxext libxrender startup-notification expat gconf pango libxdamage libxcomposite gtk+"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager-2;proto=http \
 	  "
@@ -21,12 +21,16 @@ ALTERNATIVE_LINK = "${bindir}/x-window-manager"
 ALTERNATIVE_PATH = "${bindir}/matchbox-session"
 ALTERNATIVE_PRIORITY = "10"
 
-FILES_${PN} = "${bindir}/* \
-               ${datadir}/matchbox-2 \
-               ${sysconfdir}/matchbox-2 \
-               ${datadir}/themes/*"
+PACKAGES =+ "libmatchbox2"
+
+FILES_libmatchbox2 = "${libdir}/*${SOLIBS}"
+
+FILES_${PN} += "${datadir}/matchbox-2 \
+                ${sysconfdir}/matchbox-2 \
+                ${datadir}/themes/*"
 
 EXTRA_OECONF = 	"--enable-debug			\
+                 --enable-simple-manager \
                  --enable-compositing-manager	\
                  --enable-libmatchbox \
                  --enable-png-theme \
