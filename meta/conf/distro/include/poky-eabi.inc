@@ -42,6 +42,5 @@ ASNEEDED_pn-xserver-kdrive-xomap = ""
 ASNEEDED_pn-minimo = ""
 ASNEEDED_pn-pciutils = ""
 ASNEEDED_pn-puzzles = ""
-ASNEEDED_pn-matchbox-wm-2 = ""
 
 TARGET_LDFLAGS += "${ASNEEDED}"
