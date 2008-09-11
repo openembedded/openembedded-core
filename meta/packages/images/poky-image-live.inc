@@ -1,8 +1,9 @@
-
 AUTO_SYSLINUXCFG = "1"
 INITRD = "${DEPLOY_DIR_IMAGE}/poky-image-minimal-initramfs-${MACHINE}.cpio.gz"
 LABELS = "poky"
-APPEND += "root=/dev/ram0 video=vesafb:800x600-16@60 vga=788"
+APPEND += "root=/dev/ram0 "
+
+EXCLUDE_FROM_WORLD = "1"
 
 do_bootimg[depends] += "poky-image-minimal-initramfs:do_rootfs"
 
