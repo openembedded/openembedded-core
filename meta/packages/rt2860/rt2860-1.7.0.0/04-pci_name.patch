@@ -1,0 +1,17 @@
+---
+ src/2860_main_dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: rt2860-clean/src/2860_main_dev.c
+===================================================================
+--- rt2860-clean.orig/src/2860_main_dev.c	2008-09-11 16:29:27.000000000 +0200
++++ rt2860-clean/src/2860_main_dev.c	2008-09-11 16:29:32.000000000 +0200
+@@ -1074,7 +1074,7 @@ BOOLEAN RT28XXNetDevInit(
+ 	IN RTMP_ADAPTER 		*pAd)
+ {
+ 	struct pci_dev *pci_dev = (struct pci_dev *)_dev_p;
+-    CHAR	*print_name;
++    const char	*print_name;
+     ULONG	csr_addr;
+ 
+ 

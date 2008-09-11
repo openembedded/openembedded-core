@@ -1,0 +1,118 @@
+---
+ src/sta_ioctl.c |   26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+Index: rt2860-clean/src/sta_ioctl.c
+===================================================================
+--- rt2860-clean.orig/src/sta_ioctl.c	2008-09-11 15:14:44.000000000 +0200
++++ rt2860-clean/src/sta_ioctl.c	2008-09-11 15:44:27.000000000 +0200
+@@ -1010,8 +1010,8 @@ int rt_ioctl_siwscan(struct net_device *
+ }
+ 
+ int rt_ioctl_giwscan(struct net_device *dev,
+-			struct iw_request_info *info,
+-			struct iw_point *data, char *extra)
++		     struct iw_request_info *info,
++		     struct iw_point *data, char *extra)
+ {
+ 
+ 	PRTMP_ADAPTER pAdapter = (PRTMP_ADAPTER) dev->priv;
+@@ -1073,7 +1073,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 				memcpy(iwe.u.ap_addr.sa_data, &pAdapter->ScanTab.BssEntry[i].Bssid, ETH_ALEN);
+ 
+         previous_ev = current_ev;
+-			current_ev = iwe_stream_add_event(current_ev,end_buf, &iwe, IW_EV_ADDR_LEN);
++	current_ev = iwe_stream_add_event(info, current_ev,end_buf, &iwe, IW_EV_ADDR_LEN);
+         if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+             return -E2BIG;
+@@ -1089,7 +1089,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 		iwe.u.data.flags = 1;
+  
+         previous_ev = current_ev;
+-		current_ev = iwe_stream_add_point(current_ev,end_buf, &iwe, pAdapter->ScanTab.BssEntry[i].Ssid);
++		current_ev = iwe_stream_add_point(info, current_ev,end_buf, &iwe, pAdapter->ScanTab.BssEntry[i].Ssid);
+         if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+             return -E2BIG;
+@@ -1116,7 +1116,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 		iwe.len = IW_EV_UINT_LEN;
+ 
+         previous_ev = current_ev;
+-		current_ev = iwe_stream_add_event(current_ev, end_buf, &iwe,  IW_EV_UINT_LEN);
++		current_ev = iwe_stream_add_event(info, current_ev, end_buf, &iwe,  IW_EV_UINT_LEN);
+         if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+             return -E2BIG;
+@@ -1136,7 +1136,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 		iwe.u.freq.i = 0;
+ 		
+ 		previous_ev = current_ev;
+-		current_ev = iwe_stream_add_event(current_ev,end_buf, &iwe, IW_EV_FREQ_LEN);
++		current_ev = iwe_stream_add_event(info, current_ev,end_buf, &iwe, IW_EV_FREQ_LEN);
+         if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+             return -E2BIG;
+@@ -1151,7 +1151,7 @@ int rt_ioctl_giwscan(struct net_device *
+     	iwe.u.qual.level = 0;
+     	iwe.u.qual.noise = 0;
+         set_quality(pAdapter, &iwe.u.qual, pAdapter->ScanTab.BssEntry[i].Rssi);
+-    	current_ev = iwe_stream_add_event(current_ev, end_buf, &iwe, IW_EV_QUAL_LEN);
++    	current_ev = iwe_stream_add_event(info, current_ev, end_buf, &iwe, IW_EV_QUAL_LEN);
+         if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+             return -E2BIG;
+@@ -1169,7 +1169,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 			iwe.u.data.flags = IW_ENCODE_DISABLED;
+ 
+         previous_ev = current_ev;		
+-        current_ev = iwe_stream_add_point(current_ev, end_buf,&iwe, (char *)pAdapter->SharedKey[BSS0][(iwe.u.data.flags & IW_ENCODE_INDEX)-1].Key);
++        current_ev = iwe_stream_add_point(info, current_ev, end_buf,&iwe, (char *)pAdapter->SharedKey[BSS0][(iwe.u.data.flags & IW_ENCODE_INDEX)-1].Key);
+         if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+             return -E2BIG;
+@@ -1197,7 +1197,7 @@ int rt_ioctl_giwscan(struct net_device *
+     		    iwe.u.bitrate.value =  (tmpRate/2) * 1000000;
+             
+ 			iwe.u.bitrate.disabled = 0;
+-			current_val = iwe_stream_add_value(current_ev,
++			current_val = iwe_stream_add_value(info, current_ev,
+ 				current_val, end_buf, &iwe,
+     			IW_EV_PARAM_LEN);            
+ 
+@@ -1221,7 +1221,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 						   pAdapter->ScanTab.BssEntry[i].WpaIE.IELen);
+ 			iwe.cmd = IWEVGENIE;
+ 			iwe.u.data.length = pAdapter->ScanTab.BssEntry[i].WpaIE.IELen;
+-			current_ev = iwe_stream_add_point(current_ev, end_buf, &iwe, custom);
++			current_ev = iwe_stream_add_point(info, current_ev, end_buf, &iwe, custom);
+ 			if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+                 return -E2BIG;
+@@ -1239,7 +1239,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 						   pAdapter->ScanTab.BssEntry[i].RsnIE.IELen);
+ 			iwe.cmd = IWEVGENIE;
+ 			iwe.u.data.length = pAdapter->ScanTab.BssEntry[i].RsnIE.IELen;
+-			current_ev = iwe_stream_add_point(current_ev, end_buf, &iwe, custom);
++			current_ev = iwe_stream_add_point(info, current_ev, end_buf, &iwe, custom);
+ 			if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+                 return -E2BIG;
+@@ -1260,7 +1260,7 @@ int rt_ioctl_giwscan(struct net_device *
+             for (idx = 0; idx < pAdapter->ScanTab.BssEntry[i].WpaIE.IELen; idx++)
+                 sprintf(custom, "%s%02x", custom, pAdapter->ScanTab.BssEntry[i].WpaIE.IE[idx]);
+             previous_ev = current_ev;
+-    		current_ev = iwe_stream_add_point(current_ev, end_buf, &iwe,  custom);
++    		current_ev = iwe_stream_add_point(info, current_ev, end_buf, &iwe,  custom);
+             if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+                 return -E2BIG;
+@@ -1280,7 +1280,7 @@ int rt_ioctl_giwscan(struct net_device *
+ 			for (idx = 0; idx < pAdapter->ScanTab.BssEntry[i].RsnIE.IELen; idx++)
+                 sprintf(custom, "%s%02x", custom, pAdapter->ScanTab.BssEntry[i].RsnIE.IE[idx]);
+             previous_ev = current_ev;
+-    		current_ev = iwe_stream_add_point(current_ev, end_buf, &iwe,  custom);
++    		current_ev = iwe_stream_add_point(info, current_ev, end_buf, &iwe,  custom);
+             if (current_ev == previous_ev)
+ #if WIRELESS_EXT >= 17
+                 return -E2BIG;

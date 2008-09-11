@@ -1,0 +1,24 @@
+---
+ src/rt_main_dev.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+Index: rt2860-clean/src/rt_main_dev.c
+===================================================================
+--- rt2860-clean.orig/src/rt_main_dev.c	2008-09-11 15:05:14.000000000 +0200
++++ rt2860-clean/src/rt_main_dev.c	2008-09-11 15:05:17.000000000 +0200
+@@ -800,7 +800,14 @@ static NDIS_STATUS rt_ieee80211_if_setup
+ 		sprintf(slot_name, "ra%d", i);
+ 	    
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,5,0)
+-		device = dev_get_by_name(dev->nd_net, slot_name);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,24)
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
++	device = dev_get_by_name(dev_net(dev), slot_name);
++#else
++	device = dev_get_by_name(dev->nd_net, slot_name);
++#endif
++
+ #else
+ 		device = dev_get_by_name(slot_name);
+ #endif
