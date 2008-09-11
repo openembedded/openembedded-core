@@ -4,7 +4,7 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade"
 
 PV = "1.4.0+svnr${SRCREV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://oh-contact.patch;patch=1;pnum=0 \
@@ -82,7 +82,7 @@ FILES_libedataserver-dev = "${libdir}/libedataserver-*.so \
                             ${libdir}/pkgconfig/libedataserver-*.pc \
                             ${includedir}/evolution-data-server-*/libedataserver/*.h"
 
-FILES_libedataserverui = "${libdir}/libedataserverui-*.so.*"
+FILES_libedataserverui = "${libdir}/libedataserverui-*.so.* ${datadir}/evolution-data-server-1.4/glade/*.glade"
 FILES_libedataserverui-dev = "${libdir}/libedataserverui-*.so \
                               ${libdir}/pkgconfig/libedataserverui-*.pc \
                               ${includedir}/evolution-data-server-*/libedataserverui/*.h"
