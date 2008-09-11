@@ -66,7 +66,7 @@
 
         <glossentry id='var-BB_NUMBER_THREADS'><glossterm>BB_NUMBER_THREADS</glossterm>
             <glossdef>
-                <para>Number of BitBake threads</para>
+                <para>The maximum number of tasks BitBake should run in parallel at any one time</para>
             </glossdef>
         </glossentry>
 
@@ -480,6 +480,14 @@
             <glossdef>
                 <para>List of packages to be created from recipe.
                     The default value is "${PN}-dbg ${PN} ${PN}-doc ${PN}-dev"</para>
+            </glossdef>
+        </glossentry>
+
+        <glossentry id='var-PARALLEL_MAKE'><glossterm>PARALLEL_MAKE</glossterm>
+            <glossdef>
+                <para>Extra options that are passed to the make command during the 
+                    compile tasks. This is usually of the form '-j 4' where the number
+                    represents the maximum number of parallel threads make can run.</para>
             </glossdef>
         </glossentry>
 

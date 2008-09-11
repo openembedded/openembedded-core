@@ -196,9 +196,14 @@ $ runqemu qemuarm
 
         <para>
             To build for other machines see the <glossterm><link
-                    linkend='var-MACHINE'>MACHINE</link></glossterm> variable in build/conf/local.conf
-            which also contains other configuration information. The images/kernels built
-            by Poky are placed in the <filename class="directory">tmp/deploy/images</filename>
+                    linkend='var-MACHINE'>MACHINE</link></glossterm> variable in build/conf/local.conf.
+            This file contains other useful configuration information and the default version
+            has examples of common setup needs and is worth 
+            reading. To take advantage of multiple processor cores to speed up builds for example, set the 
+            <glossterm><link linkend='var-BB_NUMBER_THREADS'>BB_NUMBER_THREADS</link></glossterm>
+            and <glossterm><link linkend='var-PARALLEL_MAKE'>PARALLEL_MAKE</link></glossterm> variables.
+
+            The images/kernels built by Poky are placed in the <filename class="directory">tmp/deploy/images</filename>
             directory.
         </para>
 
