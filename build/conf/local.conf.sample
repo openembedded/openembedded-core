@@ -2,22 +2,12 @@
 DL_DIR ?= "${OEROOT}/sources"
 BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 
-# Poky has various extra metadata collections (openmoko, extras).
-# To enable these, uncomment all (or some of) the following lines:
-# BBFILES = "\
-#    ${OEROOT}/meta/packages/*/*.bb 
-#    ${OEROOT}/meta-extras/packages/*/*.bb
-#    ${OEROOT}/meta-openmoko/packages/*/*.bb
-#    "
-# BBFILE_COLLECTIONS = "normal extras openmoko"
-# BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
-# BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
-# BBFILE_PATTERN_openmoko = "^${OEROOT}/meta-openmoko/"
-# BBFILE_PRIORITY_normal = "5"
-# BBFILE_PRIORITY_extras = "5"
-# BBFILE_PRIORITY_openmoko = "5"
-
-BBMASK = ""
+# Uncomment and set to allow bitbake to execute multiple tasks at once.
+# For a quadcore, BB_NUMBER_THREADS = "4", PARALLEL_MAKE = "-j 4" would
+# be appropriate.
+# BB_NUMBER_THREADS = "4"
+# Also, make can be passed flags so it run parallel threads e.g.:
+# PARALLEL_MAKE = "-j 4"
 
 # The machine to target
 MACHINE ?= "qemuarm"
@@ -43,6 +33,23 @@ MACHINE ?= "qemuarm"
 DISTRO ?= "poky"
 # For bleeding edge / experimental / unstable package versions
 # DISTRO ?= "poky-bleeding"
+
+# Poky has various extra metadata collections (openmoko, extras).
+# To enable these, uncomment all (or some of) the following lines:
+# BBFILES = "\
+#    ${OEROOT}/meta/packages/*/*.bb 
+#    ${OEROOT}/meta-extras/packages/*/*.bb
+#    ${OEROOT}/meta-openmoko/packages/*/*.bb
+#    "
+# BBFILE_COLLECTIONS = "normal extras openmoko"
+# BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
+# BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
+# BBFILE_PATTERN_openmoko = "^${OEROOT}/meta-openmoko/"
+# BBFILE_PRIORITY_normal = "5"
+# BBFILE_PRIORITY_extras = "5"
+# BBFILE_PRIORITY_openmoko = "5"
+
+BBMASK = ""
 
 # EXTRA_IMAGE_FEATURES allows extra packages to be added to the generated images 
 # (Some of these are automatically added to certain image types)
@@ -93,11 +100,6 @@ PACKAGE_CLASSES ?= "package_ipk"
 # <build directory>/tmp
 TMPDIR = "${OEROOT}/build/tmp"
 
-# Uncomment and set to allow bitbake to execute multiple tasks at once.
-# Note, This option is currently experimental - YMMV.
-# BB_NUMBER_THREADS = "1"
-# Also, make can be passed flags so it run parallel threads e.g.:
-# PARALLEL_MAKE = "-j 4"
 
 # Uncomment this if you are using the Openedhand provided qemu deb - see README
 # ASSUME_PROVIDED += "qemu-native"
