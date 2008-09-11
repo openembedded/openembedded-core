@@ -226,6 +226,24 @@
             </para>
         </answer>
     </qandaentry>
+    <qandaentry>
+        <question>
+            <para>
+                I'm behind a firewall and need to use a proxy server. How do I do that?
+            </para>
+        </question>
+        <answer>
+            <para>
+                Most source fetching by Poky is done by wget and you therefore need to specify the proxy 
+                settings in a .wgetrc file in your home directory. Example settings in that file would be
+                'http_proxy = http://proxy.yoyodyne.com:18023/' and 'ftp_proxy = http://proxy.yoyodyne.com:18023/'.
+                Poky also includes a site.conf.sample file which shows how to configure cvs and git proxy servers
+                if needed.
+            </para>
+        </answer>
+    </qandaentry>
+
+
 </qandaset>
 </appendix>
 <!-- 
