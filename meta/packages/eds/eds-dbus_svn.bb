@@ -4,7 +4,7 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade"
 
 PV = "1.4.0+svnr${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
            file://oh-contact.patch;patch=1;pnum=0 \
@@ -33,7 +33,8 @@ EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \
 
 PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev \
              libedata-book libedata-book-dev libedata-cal libedata-cal-dev \
-             libedataserver libedataserver-dev"
+             libedataserver libedataserver-dev \
+             libedataserverui libedataserverui-dev"
 
 FILES_${PN}-dev =+ "${libdir}/pkgconfig/evolution-data-server-*.pc"
 FILES_${PN}-dbg =+ "${libdir}/evolution-data-server-*/camel-providers/.debug \
