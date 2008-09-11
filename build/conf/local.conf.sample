@@ -24,6 +24,7 @@ MACHINE ?= "qemuarm"
 
 # Other supported machines
 #MACHINE ?= "qemux86"
+#MACHINE ?= "eee901"
 #MACHINE ?= "c7x0"
 #MACHINE ?= "akita"
 #MACHINE ?= "spitz"
