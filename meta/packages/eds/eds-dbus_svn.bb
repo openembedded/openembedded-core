@@ -1,7 +1,7 @@
 DESCRIPTION = "Evolution database backend server"
 HOMEPAGE = "http://projects.o-hand.com/eds"
 LICENSE = "LGPL"
-DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup"
+DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade"
 
 PV = "1.4.0+svnr${SRCREV}"
 PR = "r4"
