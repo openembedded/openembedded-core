@@ -12,6 +12,8 @@ SRC_URI = "http://folks.o-hand.com/sameo/rt2860/rt2860-1.7.0.0.tar.bz2 \
 
 S = "${WORKDIR}/rt2860-1.7.0.0"
 
+COMPATIBLE_MACHINE = "eee901"
+
 inherit module
 
 EXTRA_OEMAKE = "'CC=${KERNEL_CC}' \
