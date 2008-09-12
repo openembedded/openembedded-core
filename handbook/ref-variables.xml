@@ -540,6 +540,13 @@
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-POKY_EXTRA_INSTALL'><glossterm>POKY_EXTRA_INSTALL</glossterm>
+            <glossdef>
+                <para>List of packages to be added to the image. This should
+                only be set in <filename>local.conf</filename>.</para>
+            </glossdef>
+        </glossentry>
+
         <glossentry id='var-POKYLIBC'><glossterm>POKYLIBC</glossterm>
             <glossdef>
                 <para>Libc implementation selector - glibc or uclibc can be selected.</para>
