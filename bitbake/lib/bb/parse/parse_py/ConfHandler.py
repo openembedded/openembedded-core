@@ -118,6 +118,7 @@ def handle(fn, data, include = 0):
     init(data)
 
     if include == 0:
+        bb.data.inheritFromOS(data)
         oldfile = None
     else:
         oldfile = bb.data.getVar('FILE', data)
