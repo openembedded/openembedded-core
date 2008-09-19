@@ -1,0 +1,14 @@
+Index: gcc-4.1.1/gcc/config/arm/linux-eabi.h
+===================================================================
+--- gcc-4.1.1.orig/gcc/config/arm/linux-eabi.h	2007-02-20 14:51:33.416193250 +0100
++++ gcc-4.1.1/gcc/config/arm/linux-eabi.h	2007-02-20 14:52:11.622581000 +0100
+@@ -48,7 +48,8 @@
+ #define SUBTARGET_CPU_DEFAULT TARGET_CPU_arm9tdmi
+ 
+ #undef SUBTARGET_EXTRA_LINK_SPEC
+-#define SUBTARGET_EXTRA_LINK_SPEC " -m armelf_linux_eabi"
++#define SUBTARGET_EXTRA_LINK_SPEC \
++    " %{mbig-endian:-m armelfb_linux_eabi} %{mlittle-endian:-m armelf_linux_eabi} "
+ 
+ /* Use ld-linux.so.3 so that it will be possible to run "classic"
+    GNU/Linux binaries on an EABI system.  */

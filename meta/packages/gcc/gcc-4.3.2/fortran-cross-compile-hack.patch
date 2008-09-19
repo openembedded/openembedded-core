@@ -1,0 +1,30 @@
+* Fortran would have searched for arm-angstrom-gnueabi-gfortran but would have used
+  used gfortan. For gcc_4.2.2.bb we want to use the gfortran compiler from our cross
+  directory.
+
+diff --git a/libgfortran/configure b/libgfortran/configure
+index f7d86fb..d0966ec 100755
+--- a/libgfortran/configure
++++ b/libgfortran/configure
+@@ -4475,6 +4475,6 @@ exec 5>>./config.log
+ 
+ # We need gfortran to compile parts of the library
+ #AC_PROG_FC(gfortran)
+-FC="$GFORTRAN"
++#FC="$GFORTRAN"
+ ac_ext=${FC_SRCEXT-f}
+ ac_compile='$FC -c $FCFLAGS $FCFLAGS_SRCEXT conftest.$ac_ext >&5'
+\ No newline at end of file
+diff --git a/libgfortran/configure.ac b/libgfortran/configure.ac
+index 4661306..9f83e55 100644
+--- a/libgfortran/configure.ac
++++ b/libgfortran/configure.ac
+@@ -140,7 +140,7 @@ AC_SUBST(enable_static)
+ 
+ # We need gfortran to compile parts of the library
+ #AC_PROG_FC(gfortran)
+-FC="$GFORTRAN"
++#FC="$GFORTRAN"
+ AC_PROG_FC(gfortran)
+ 
+ # extra LD Flags which are required for targets

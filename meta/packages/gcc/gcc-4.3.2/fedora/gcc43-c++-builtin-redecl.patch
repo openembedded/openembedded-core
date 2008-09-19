@@ -1,0 +1,102 @@
+2007-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* decl.c (duplicate_decls): When redeclaring a builtin function,
+	keep the merged decl builtin whenever types match, even if new
+	decl defines a function.
+
+	* gcc.dg/builtins-65.c: New test.
+	* g++.dg/ext/builtin10.C: New test.
+
+--- gcc/cp/decl.c.jj	2007-10-01 22:11:09.000000000 +0200
++++ gcc/cp/decl.c	2007-10-02 11:39:46.000000000 +0200
+@@ -1988,23 +1988,21 @@ duplicate_decls (tree newdecl, tree oldd
+ 	  DECL_ARGUMENTS (olddecl) = DECL_ARGUMENTS (newdecl);
+ 	  DECL_RESULT (olddecl) = DECL_RESULT (newdecl);
+ 	}
++      /* If redeclaring a builtin function, it stays built in.  */
++      if (types_match && DECL_BUILT_IN (olddecl))
++	{
++	  DECL_BUILT_IN_CLASS (newdecl) = DECL_BUILT_IN_CLASS (olddecl);
++	  DECL_FUNCTION_CODE (newdecl) = DECL_FUNCTION_CODE (olddecl);
++	  /* If we're keeping the built-in definition, keep the rtl,
++	     regardless of declaration matches.  */
++	  COPY_DECL_RTL (olddecl, newdecl);
++	}
+       if (new_defines_function)
+ 	/* If defining a function declared with other language
+ 	   linkage, use the previously declared language linkage.  */
+ 	SET_DECL_LANGUAGE (newdecl, DECL_LANGUAGE (olddecl));
+       else if (types_match)
+ 	{
+-	  /* If redeclaring a builtin function, and not a definition,
+-	     it stays built in.  */
+-	  if (DECL_BUILT_IN (olddecl))
+-	    {
+-	      DECL_BUILT_IN_CLASS (newdecl) = DECL_BUILT_IN_CLASS (olddecl);
+-	      DECL_FUNCTION_CODE (newdecl) = DECL_FUNCTION_CODE (olddecl);
+-	      /* If we're keeping the built-in definition, keep the rtl,
+-		 regardless of declaration matches.  */
+-	      COPY_DECL_RTL (olddecl, newdecl);
+-	    }
+-
+ 	  DECL_RESULT (newdecl) = DECL_RESULT (olddecl);
+ 	  /* Don't clear out the arguments if we're redefining a function.  */
+ 	  if (DECL_ARGUMENTS (olddecl))
+--- gcc/testsuite/gcc.dg/builtins-65.c.jj	2007-10-02 11:23:51.000000000 +0200
++++ gcc/testsuite/gcc.dg/builtins-65.c	2007-10-02 11:24:12.000000000 +0200
+@@ -0,0 +1,25 @@
++/* { dg-do compile } */
++/* { dg-options "-O2" } */
++
++typedef __SIZE_TYPE__ size_t;
++extern void __chk_fail (void);
++extern int snprintf (char *, size_t, const char *, ...);
++extern inline __attribute__((gnu_inline, always_inline)) int snprintf (char *a, size_t b, const char *fmt, ...)
++{
++  if (__builtin_object_size (a, 0) != -1UL && __builtin_object_size (a, 0) < b)
++    __chk_fail ();
++  return __builtin_snprintf (a, b, fmt, __builtin_va_arg_pack ());
++}
++extern int snprintf (char *, size_t, const char *, ...) __asm ("mysnprintf");
++
++char buf[10];
++
++int
++main (void)
++{
++  snprintf (buf, 10, "%d%d\n", 10, 10);
++  return 0;
++}
++
++/* { dg-final { scan-assembler "mysnprintf" } } */
++/* { dg-final { scan-assembler-not "__chk_fail" } } */
+--- gcc/testsuite/g++.dg/ext/builtin10.C.jj	2007-10-02 11:19:45.000000000 +0200
++++ gcc/testsuite/g++.dg/ext/builtin10.C	2007-10-02 11:23:26.000000000 +0200
+@@ -0,0 +1,27 @@
++// { dg-do compile }
++// { dg-options "-O2" }
++
++typedef __SIZE_TYPE__ size_t;
++extern "C" {
++extern void __chk_fail (void);
++extern int snprintf (char *, size_t, const char *, ...);
++extern inline __attribute__((gnu_inline, always_inline)) int snprintf (char *a, size_t b, const char *fmt, ...)
++{
++  if (__builtin_object_size (a, 0) != -1UL && __builtin_object_size (a, 0) < b)
++    __chk_fail ();
++  return __builtin_snprintf (a, b, fmt, __builtin_va_arg_pack ());
++}
++extern int snprintf (char *, size_t, const char *, ...) __asm ("mysnprintf");
++}
++
++char buf[10];
++
++int
++main (void)
++{
++  snprintf (buf, 10, "%d%d\n", 10, 10);
++  return 0;
++}
++
++// { dg-final { scan-assembler "mysnprintf" } }
++// { dg-final { scan-assembler-not "__chk_fail" } }
