@@ -1,12 +1,12 @@
 include mesa-common.inc
 
-PROTO_DEPS = "xf86driproto glproto"
+PROTO_DEPS = "xf86driproto glproto dri2proto"
 LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
 PV = "7.1+git${SRCREV}"
-PR = "r0"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 
