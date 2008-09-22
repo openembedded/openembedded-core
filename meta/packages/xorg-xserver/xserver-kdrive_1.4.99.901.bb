@@ -5,7 +5,7 @@ DEPENDS += "hal libxkbfile libxcalibrate pixman"
 DEFAULT_PREFERENCE = "-99" 
 
 PE = "1"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://extra-kmodes.patch;patch=1 \

@@ -3,7 +3,7 @@ require xserver-kdrive.inc
 DEPENDS += "libxkbfile libxcalibrate"
 
 PE = "1"
-PR = "r18"
+PR = "r19"
 
 SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://extra-kmodes.patch;patch=1 \
