@@ -46,7 +46,7 @@ RDEPENDS_task-poky-x11-base = "\
     matchbox-desktop \
     matchbox-session \
     ${XSERVER} \
-    xserver-kdrive-common \
+    x11-common \
     xserver-nodm-init \
     liberation-fonts \
     xauth \

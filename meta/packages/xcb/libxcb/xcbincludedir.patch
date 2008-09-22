@@ -1,0 +1,11 @@
+--- libxcb-1.0.orig/configure.ac	2006-11-23 15:33:01.000000000 +0000
++++ libxcb-1.0/configure.ac	2008-09-10 20:29:12.000000000 +0100
+@@ -50,7 +50,7 @@
+ 
+ # Find the xcb-proto protocol descriptions
+ AC_MSG_CHECKING(XCBPROTO_XCBINCLUDEDIR)
+-XCBPROTO_XCBINCLUDEDIR=`$PKG_CONFIG --variable=xcbincludedir xcb-proto`
++XCBPROTO_XCBINCLUDEDIR=$PKG_CONFIG_SYSROOT_DIR/`$PKG_CONFIG --variable=xcbincludedir xcb-proto`
+ AC_MSG_RESULT($XCBPROTO_XCBINCLUDEDIR)
+ AC_SUBST(XCBPROTO_XCBINCLUDEDIR)
+ 

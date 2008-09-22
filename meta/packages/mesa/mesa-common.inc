@@ -1,9 +1,21 @@
 SECTION = "x11"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/mesa3d/MesaLib-${PV}.tar.bz2 \
-	file://mklib-rpath-link.patch;patch=1"
+DESCRIPTION = "An open source implementation of the OpenGL spec"
+HOMEPAGE = "http://mesa3d.org"
+LICENSE = "MIT"
+
+SRC_URI = "${SOURCEFORGE_MIRROR}/mesa3d/MesaLib-${PV}.tar.bz2"
 S = "${WORKDIR}/Mesa-${PV}"
 
-LICENSE = "LGPL"
+inherit autotools pkgconfig
 
-DEPENDS = "makedepend-native xf86vidmodeproto glproto virtual/libx11 libxext libxxf86vm libxi libxmu libice"
+EXTRA_OECONF = "--disable-glu \
+                --disable-glw \
+                --disable-glut \
+                --enable-glx-tls"
+
+do_stage() {
+        autotools_stage_all
+}
+
+

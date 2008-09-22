@@ -263,3 +263,6 @@ ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}
 
 #dbus
 ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
+
+#libpciaccess
+have_mtrr_h=yes

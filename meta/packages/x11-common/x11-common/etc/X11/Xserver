@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+
+. /etc/formfactor/config
+
+# note xinit needs full server path
+XSERVER=/usr/bin/Xipaq
+if [ -f /usr/bin/Xfbdev ]; then
+  XSERVER=/usr/bin/Xfbdev
+fi
+if [ -f /usr/bin/Xepson ]; then
+  XSERVER=/usr/bin/Xepson
+fi
+if [ -f /usr/bin/Xorg ]; then
+  XSERVER=/usr/bin/Xorg
+fi
+if [ -f /usr/bin/Xomap ]; then
+  XSERVER=/usr/bin/Xomap
+fi
+
+. /etc/profile
+
+module_id() {
+    ## used to read from assets, but sometimes assets is corrupted
+    # grep "Module ID" /proc/hal/assets | sed "s/.*://"
+    ## used to read from /proc/hal/model, but that is removed in 2.6
+    # echo ' iPAQ' `cat /proc/hal/model`
+    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
+}
+
+export USER=root
+
+ARGS=" -br -pn"
+
+if [ "$XSERVER" != "/usr/bin/Xorg" ]; then
+
+        # use ucb 1x00 touchscreen if present
+        if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then
+          ARGS="$ARGS -mouse /dev/touchscreen/ucb1x00"
+        fi
+
+        # use usb mouse if present
+        if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ]; then
+          ARGS="$ARGS -mouse /dev/input/mice"
+        fi
+
+        # kdrive 1.4 onwards needs -mouse args
+        if [ -n "$TSLIB_TSDEVICE" ]; then
+          ARGS="$ARGS -mouse tslib"
+        fi
+
+        # start off server in conventional location.
+        case `module_id` in
+                "Generic OMAP1510/1610/1710")
+                        ARGS="$ARGS -mouse /dev/input/event0" ;;
+                "Compulab CM-x270")
+                        #modprobe mbxfb
+                        #ARGS="$ARGS -fb /dev/fb1"
+                        ;;
+                "Nokia N800")
+                        ARGS="$ARGS -mouse tslib" ;;
+                "Nokia 770")
+                        ARGS="$ARGS -mouse tslib" ;;
+                *)
+                        ;;
+        esac
+
+        ARGS="$ARGS -screen ${DISPLAY_WIDTH_PIXELS}x${DISPLAY_HEIGHT_PIXELS}@${DISPLAY_ORIENTATION}x${DISPLAY_BPP}"
+
+        if [ ! -z "$DISPLAY_DPI" ]; then
+                ARGS="$ARGS -dpi $DISPLAY_DPI"
+        fi
+
+        if [ ! -z "$DISPLAY_SUBPIXEL_ORDER" ]; then
+                ARGS="$ARGS -rgba $DISPLAY_SUBPIXEL_ORDER"
+        fi
+
+fi
+
+DISPLAY=':0'
+
+exec xinit /etc/X11/Xsession -- $XSERVER $DISPLAY $ARGS $*
+
