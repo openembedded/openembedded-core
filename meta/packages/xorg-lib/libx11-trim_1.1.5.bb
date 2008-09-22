@@ -1,7 +1,7 @@
 require xorg-lib-common.inc
 
 DESCRIPTION = "X11 protocol and utility library"
-DEPENDS += "libxcb xproto xextproto xtrans libxau"
+DEPENDS += "libxcb xproto xextproto xtrans libxau kbproto inputproto"
 
 #FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libx11"
 #SRC_URI += "file://X18NCMSstubs.diff;patch=1 "
