@@ -1,0 +1,26 @@
+Index: cdrtools-2.01/DEFAULTS/Defaults.gnu
+===================================================================
+--- cdrtools-2.01.orig/DEFAULTS/Defaults.gnu	2008-09-22 12:42:12.000000000 +0100
++++ cdrtools-2.01/DEFAULTS/Defaults.gnu	2008-09-22 12:42:27.000000000 +0100
+@@ -18,7 +18,7 @@
+ ###########################################################################
+ CWARNOPTS=
+ 
+-DEFINCDIRS=	$(SRCROOT)/include /usr/src/linux/include
++DEFINCDIRS=	$(SRCROOT)/include
+ LDPATH=		-L/opt/schily/lib
+ RUNPATH=	-R $(INS_BASE)/lib -R /opt/schily/lib -R $(OLIBSDIR)
+ 
+Index: cdrtools-2.01/DEFAULTS/Defaults.linux
+===================================================================
+--- cdrtools-2.01.orig/DEFAULTS/Defaults.linux	2008-09-22 12:42:08.000000000 +0100
++++ cdrtools-2.01/DEFAULTS/Defaults.linux	2008-09-22 12:42:37.000000000 +0100
+@@ -18,7 +18,7 @@
+ ###########################################################################
+ CWARNOPTS=
+ 
+-DEFINCDIRS=	$(SRCROOT)/include /usr/src/linux/include
++DEFINCDIRS=	$(SRCROOT)/include
+ LDPATH=		-L/opt/schily/lib
+ RUNPATH=	-R $(INS_BASE)/lib -R /opt/schily/lib -R $(OLIBSDIR)
+ 
