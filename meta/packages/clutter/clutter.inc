@@ -2,7 +2,7 @@ DESCRIPTION = "Clutter graphics library"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPL"
 
-COMPATIBLE_MACHINE = "(zylonite|mx31litekit|omap-3430ldp|omap-34030sdp|mx31ads|qemuarm|qemux86|ipodtouch)"
+COMPATIBLE_MACHINE = "(zylonite|mx31litekit|omap-3430ldp|omap-34030sdp|mx31ads|qemuarm|qemux86|ipodtouch|eee901)"
 
 STDDEPENDS = "virtual/libx11 gtk-doc-native pango glib-2.0 libxfixes gtk+"
 BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
@@ -33,6 +33,10 @@ DEPENDS_mx31ads = "${STDDEPENDS} libgles-mx31 tslib"
 EXTRA_OECONF_mx31ads = "${BASE_CONF} --with-flavour=eglnative"
 PACKAGE_ARCH_mx31ads = "${MACHINE_ARCH}"
 LDFLAGS_append_mx31ads = " -lpvrNULLWSEGL -lstdc++ "
+
+DEPENDS_eee901 = "${STDDEPENDS} virtual/xserver-xf86 virtual/libgl"
+EXTRA_OECONF_eee901 = "${BASE_CONF} --with-flavour=glx"
+PACKAGE_ARCH_eee901 = "${MACHINE_ARCH}"
 
 inherit autotools pkgconfig gtk-doc
 

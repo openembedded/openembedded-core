@@ -7,6 +7,8 @@ LICENSE = "MIT"
 SRC_URI = "${SOURCEFORGE_MIRROR}/mesa3d/MesaLib-${PV}.tar.bz2"
 S = "${WORKDIR}/Mesa-${PV}"
 
+PROVIDES = "virtual/libgl"
+
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-glu \
