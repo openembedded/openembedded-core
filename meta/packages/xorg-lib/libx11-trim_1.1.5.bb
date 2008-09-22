@@ -9,11 +9,14 @@ DEPENDS += "libxcb xproto xextproto xtrans libxau"
 PROVIDES = "virtual/libx11"
 
 PE = "1"
-PR = "r0"
+PR = "r1"
 
 XORG_PN = "libX11"
 LEAD_SONAME = "libX11.so"
 
+SRC_URI += "file://include_fix.patch;patch=1"
+
+EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h"
 #EXTRA_OECONF += "--disable-xlocale --disable-xcms --with-xcb"
 EXTRA_OECONF += "--disable-xcms --with-xcb"
 
