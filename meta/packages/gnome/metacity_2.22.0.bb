@@ -2,13 +2,13 @@ SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you."
 LICENSE = "GPL"
 DEPENDS = "startup-notification gtk+ gconf"
-PR = "r0"
+PR = "r1"
 
 inherit gnome update-alternatives
 
-ALTERNATIVE_NAME = "x-session-manager"
-ALTERNATIVE_LINK = "${bindir}/x-session-manager"
-ALTERNATIVE_PATH = "${bindir}/metacity-session"
+ALTERNATIVE_NAME = "x-window-manager"
+ALTERNATIVE_LINK = "${bindir}/x-window-manager"
+ALTERNATIVE_PATH = "${bindir}/metacity"
 ALTERNATIVE_PRIORITY = "10"
 
 EXTRA_OECONF += "--disable-verbose \
