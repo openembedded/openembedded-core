@@ -8,6 +8,12 @@ DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 PE = "1"
 PR = "r3"
 
+# most of our targets do not have DRI so will use mesa-xlib
+DEFAULT_PREFERENCE = "-1"
+
+# ASUS EeePC 901 has DRI support so use mesa-dri by default
+DEFAULT_PREFERENCE_eee901 = "1"
+
 PACKAGES =+ "${PN}-xprogs"
 
 FILES_${PN} += "${libdir}/dri/*.so"
