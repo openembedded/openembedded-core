@@ -3,6 +3,7 @@ DESCRIPTION = "ISO language, territory, currency, script codes and their transla
 PRIORITY = "optional"
 LICENSE = "LGPL"
 SECTION = "libs"
+PACKAGE_ARCH = "all"
 
 SRC_URI = "ftp://pkg-isocodes.alioth.debian.org/pub/pkg-isocodes/iso-codes-${PV}.tar.gz"
 
