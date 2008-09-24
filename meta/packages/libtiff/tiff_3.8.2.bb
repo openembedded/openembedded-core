@@ -1,8 +1,8 @@
 DESCRIPTION = "This software provides support for the Tag Image File Format (TIFF)"
-LICENSE = ""
+LICENSE = "${PN}"
 HOMEPAGE = "http://www.remotesensing.org/libtiff/"
 DEPENDS = "zlib jpeg lzo"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${PV}.tar.gz \
            file://libtool2.patch;patch=1"
