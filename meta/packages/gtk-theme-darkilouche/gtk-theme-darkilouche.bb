@@ -1,10 +1,11 @@
 DESCRIPTION = "Dark GTK+ theme"
 LICENSE = "GPL"
-RDEPENDS = "gtk-theme-clearlooks gnome-icon-theme"
+DEPENDS = "gtk-engines"
+RDEPENDS = "gtk-engine-clearlooks gnome-icon-theme"
 SECTION = "x11/base"
 PACKAGE_ARCH = "all"
 
-PR = "r0"
+PR = "r1"
 
 #SRC_URI = "http://art.gnome.org/download/themes/gtk2/1285/GTK2-Darkilouche.tar.bz2"
 SRC_URI = "git://people.freedesktop.org/~jimmac/Darkilouche.git;protocol=git \
