@@ -3,6 +3,10 @@ SECTION = "x11/base"
 DESCRIPTION = "GTK theme engines"
 DEPENDS = "gtk+"
 
+PR = "r1"
+
+PACKAGES_DYNAMIC = "gtk-engine-* gtk-theme-*"
+
 RDEPENDS_gtk-theme-redmond = "gtk-engine-redmond95"
 RDEPENDS_gtk-theme-metal = "gtk-engine-metal"
 RDEPENDS_gtk-theme-mist = "gtk-engine-mist"
