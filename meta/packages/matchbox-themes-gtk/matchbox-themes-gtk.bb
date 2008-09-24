@@ -1,7 +1,7 @@
 DESCRIPTION = "Gtk2 theme files to accompany default Matchbox themes"
 LICENSE = "GPL"
-DEPENDS = "matchbox-wm gtk-clearlooks-engine"
-RDEPENDS = "matchbox-wm gtk-clearlooks-engine"
+DEPENDS = "gtk-engines"
+RDEPENDS = "matchbox-wm gtk-engine-clearlooks"
 SECTION = "x11/base"
 PR = "r2"
 
