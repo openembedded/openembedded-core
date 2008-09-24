@@ -1,12 +1,10 @@
 SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you."
 LICENSE = "GPL"
-DEPENDS = "startup-notification gtk+ gconf"
-PR = "r2"
+DEPENDS = "startup-notification gtk+ gconf gdk-pixbuf-csource-native"
+PR = "r3"
 
 inherit gnome update-alternatives
-
-SRC_URI += "file://no-csource.patch;patch=1"
 
 ALTERNATIVE_NAME = "x-window-manager"
 ALTERNATIVE_LINK = "${bindir}/x-window-manager"

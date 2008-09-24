@@ -1,7 +1,7 @@
 SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you."
 LICENSE = "GPL"
-DEPENDS = "startup-notification gtk+ gconf clutter"
+DEPENDS = "startup-notification gtk+ gconf clutter gdk-pixbuf-csource-native"
 PR = "r0"
 PV = "2.25.1+gitr${SRCREV}"
 inherit gnome update-alternatives
