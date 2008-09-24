@@ -56,6 +56,7 @@ SRCREV_pn-table ?= "${AUTOREV}"
 SRCREV_pn-libmatchbox ?= "${AUTOREV}"
 SRCREV_pn-tasks ?= "${AUTOREV}"
 SRCREV_pn-libjana = "${AUTOREV}"
+SRCREV_pn-metacity-clutter = "${AUTOREV}"
 
 SRCDATE_oprofile ?= "${DATE}"
 
