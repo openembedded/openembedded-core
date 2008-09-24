@@ -3,6 +3,10 @@ SECTION = "x11/base"
 DESCRIPTION = "GTK theme engines"
 DEPENDS = "gtk+"
 
+PR = "r1"
+
+PACKAGES_DYNAMIC = "gtk-engine-* gtk-theme-*"
+
 RDEPENDS_gtk-theme-redmond = "gtk-engine-redmond95"
 RDEPENDS_gtk-theme-metal = "gtk-engine-metal"
 RDEPENDS_gtk-theme-mist = "gtk-engine-mist"
@@ -24,4 +28,5 @@ python populate_packages_prepend() {
 
 	do_split_packages(d, engines_root, '^lib(.*)\.so$', 'gtk-engine-%s', 'GTK %s theme engine', extra_depends='')
 	do_split_packages(d, themes_root, '(.*)', 'gtk-theme-%s', 'GTK theme %s', allow_dirs=True, extra_depends='')
+	# TODO: mark theme packages as arch all
 }
