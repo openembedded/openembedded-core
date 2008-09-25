@@ -9,6 +9,7 @@ IMAGE_FSTYPES ?= "tar.bz2 ext2"
 
 ROOT_FLASH_SIZE = "280"
 IMAGE_ROOTFS_SIZE_ext2 ?= "280000"
+IMAGE_ROOTFS_SIZE_ext3 ?= "280000"
 
 # Don't include kernels in standard images
 RDEPENDS_kernel-base = ""
