@@ -2,6 +2,7 @@ SECTION = "base"
 DESCRIPTION = "eeePC specific ACPI scripts"
 LICENSE="GPL"
 
+PV = "0.0+git${SRCREV}"
 PR = "r2"
 
 RDEPENDS = "pm-utils"
