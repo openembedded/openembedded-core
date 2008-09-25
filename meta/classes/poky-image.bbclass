@@ -12,6 +12,7 @@
 # - apps-console-core
 # - x11-base            - X11 server + minimal desktop	
 # - x11-sato            - OpenedHand Sato environment
+# - x11-netbook         - Metacity based environment for netbooks
 # - apps-x11-core       - X Terminal, file manager, file editor
 # - apps-x11-games
 # - apps-x11-pimlico    - OpenedHand Pimlico apps
@@ -42,6 +43,9 @@ POKY_BASE_INSTALL = '\
     ${@base_contains("IMAGE_FEATURES", ["x11-sato", "dbg-pkgs"], "task-poky-x11-sato-dbg", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["x11-sato", "dev-pkgs"], "task-poky-x11-sato-dev", "",d)} \
     \
+    ${@base_contains("IMAGE_FEATURES", "x11-netbook", "task-poky-x11-netbook", "", d)} \
+    ${@base_contains("IMAGE_FEATURES", ["x11-netbook", "dbg-pkgs"], "task-poky-x11-netbook-dbg", "", d)} \
+    ${@base_contains("IMAGE_FEATURES", ["x11-netbook", "dev-pkgs"], "task-poky-x11-netbook-dev", "", d)} \
     ${@base_contains("IMAGE_FEATURES", "apps-x11-core", "task-poky-apps-x11-core", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["apps-x11-core", "dbg-pkgs"], "task-poky-apps-x11-core-dbg", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["apps-x11-core", "dev-pkgs"], "task-poky-apps-x11-core-dev", "",d)} \
@@ -72,6 +76,7 @@ POKY_BASE_INSTALL = '\
     \
     ${@base_contains("IMAGE_FEATURES", "nfs-server", "task-poky-nfs-server", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dbg-pkgs"], "task-poky-nfs-server-dbg", "",d)} \
+
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dev-pkgs"], "task-poky-nfs-server-dev", "",d)} \
     \
     ${@base_contains("IMAGE_FEATURES", "package-management", "${ROOTFS_PKGMANAGE}", "",d)} \
@@ -83,7 +88,9 @@ POKY_EXTRA_INSTALL ?= ""
 IMAGE_INSTALL ?= "${POKY_BASE_INSTALL}"
 
 X11_IMAGE_FEATURES  = "x11-base apps-x11-core package-management"
-SATO_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-sato apps-x11-games apps-x11-pimlico package-management"
+ENHANCED_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-games apps-x11-pimlico package-management"
+SATO_IMAGE_FEATURES = "${ENHANCED_IMAGE_FEATURES} apps-x11-sato"
+NETBOOK_IMAGE_FEATURES = "${ENHANCED_IMAGE_FEATURES} apps-x11-netbook"
 
 inherit image
 
