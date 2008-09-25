@@ -17,3 +17,5 @@ do_stage() {
 	install ${D}${datadir}/xcb/*.xml ${STAGING_DATADIR}/xcb
 }
 
+RDEPENDS_${PN}-dev = ""
+RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${DEBPV})"
