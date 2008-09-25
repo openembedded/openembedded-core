@@ -107,6 +107,7 @@ fakeroot do_rootfs () {
 
 	${IMAGE_PREPROCESS_COMMAND}
 
+	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{print ${IMAGE_EXTRA_SPACE} + $1}'`
 	${@get_imagecmds(d)}
 
 	# Run ldconfig on the image to create a valid cache 
