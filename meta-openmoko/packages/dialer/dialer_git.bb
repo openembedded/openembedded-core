@@ -8,7 +8,6 @@ inherit autotools pkgconfig
 
 SRC_URI = "git://folks.o-hand.com/thomas/git/phone.git;protocol=http"
 S = "${WORKDIR}/git"
-SRCREV = "${AUTOREV}"
 
 EXTRA_OECONF = "--with-dbusbindir=${STAGING_BINDIR_NATIVE}"
 
