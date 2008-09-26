@@ -6,5 +6,6 @@ PV = "1.5.0+git${SRCREV}"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git "
+SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git \
+           file://libdri-xinerama-symbol.patch;patch=1"
 
