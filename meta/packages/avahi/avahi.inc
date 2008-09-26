@@ -45,7 +45,7 @@ FILES_avahi-dnsconfd = "${sbindir}/avahi-dnsconfd \
 FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
 FILES_libavahi-gobject = "${libdir}/libavahi-gobject.so.*"
 FILES_avahi-utils = "${bindir}/avahi-*"
-FILES_avahi-ui-utils = "${bindir}/bssh ${bindir}/bvnc \
+FILES_avahi-ui-utils = "${bindir}/bssh ${bindir}/bvnc ${bindir}/bshell \
                         ${datadir}/applications \
                         ${datadir}/avahi/interfaces"
 
