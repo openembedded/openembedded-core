@@ -1,13 +1,17 @@
 SDK-GMAE = " \
+    dbus-dev \
+    dbus-glib-dev \
     gtk+-dev \
-    eds-dbus-dev \
     gstreamer-dev \
     bluez-libs-dev \
-    gnome-vfs-dev \
     gconf-dbus-dev \
     avahi-dev \
-    libtelepathy-dev \
+    telepathy-glib-dev \
+    eds-dbus-dev \
     libecal-dev \
     libebook-dev \
     libxi-dev \
+    sqlite-dev \
     "
+
+# TODO: gvfs-dev, mission-control
