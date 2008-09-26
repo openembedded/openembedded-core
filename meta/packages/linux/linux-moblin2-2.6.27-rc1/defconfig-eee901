@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.27-rc1
-# Wed Sep 10 12:10:52 2008
+# Fri Sep 26 11:40:46 2008
 #
 # CONFIG_64BIT is not set
 CONFIG_X86_32=y
@@ -2139,7 +2139,7 @@ CONFIG_STACKTRACE=y
 # CONFIG_DEBUG_KOBJECT is not set
 # CONFIG_DEBUG_HIGHMEM is not set
 CONFIG_DEBUG_BUGVERBOSE=y
-CONFIG_DEBUG_INFO=y
+# CONFIG_DEBUG_INFO is not set
 # CONFIG_DEBUG_VM is not set
 # CONFIG_DEBUG_WRITECOUNT is not set
 CONFIG_DEBUG_MEMORY_INIT=y
