@@ -18,3 +18,4 @@ FILES_${PN}-dbg += "${libdir}/dri/.debug/*"
 
 EXTRA_OECONF += "--with-driver=dri --with-dri-drivers=${MACHINE_DRI_MODULES}"
 
+COMPATIBLE_HOST = '(i.86.*-linux)'
