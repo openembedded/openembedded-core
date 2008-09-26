@@ -3,6 +3,7 @@ not provided in libc or otherwise available by default."
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
 HOMEPAGE = "http://xcb.freedesktop.org"
+PR = "r1"
 
 PARALLEL_MAKE = ""
 #DEPENDS = "xcb-proto xproto libxau libxslt-native"
@@ -15,3 +16,6 @@ inherit autotools pkgconfig
 do_stage() {
 	autotools_stage_all
 }
+
+RDEPENDS_${PN}-dev = ""
+RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${DEBPV})"
