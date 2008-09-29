@@ -583,15 +583,15 @@ Index: zlib-1.2.3/configure.ac
 +CPPFLAGS=$zlib_save_CPPFLAGS
 +
 +AC_CACHE_CHECK([whether to enable -D_LARGEFILE64_SOURCE], [zlib_cv_use_lfs64], [
-+    zlib_cv_use_lfs64=yes
-+    if test "$ac_cv_off64_t" = "yes"; then
++    zlib_cv_use_lfs64=no
++    if test "$ac_cv_type_off64_t" = "yes"; then
 +        zlib_cv_use_lfs64=yes
 +    fi
 +])
 +
 +if test "$zlib_cv_use_lfs64" = "yes"; then
 +    CPPFLAGS="$CPPFLAGS -D_LARGEFILE64_SOURCE"
-+    echo "eek"
++    
 +    #APR_ADDTO(CPPFLAGS, [-D_LARGEFILE64_SOURCE])
 +fi    
 +

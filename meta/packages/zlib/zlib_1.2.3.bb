@@ -3,7 +3,7 @@ SECTION = "libs"
 PRIORITY = "required"
 HOMEPAGE = "http://www.gzip.org/zlib/"
 LICENSE = "zlib"
-PR = "r4"
+PR = "r6"
 
 SRC_URI = "http://www.zlib.net/zlib-1.2.3.tar.bz2 \
 		file://1.2.3.3.dfsg.patch.gz;patch=1 \
