@@ -1,7 +1,7 @@
 include mesa-common.inc
 
 PROTO_DEPS = "xf86driproto glproto dri2proto"
-LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes"
+LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
