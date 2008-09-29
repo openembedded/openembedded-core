@@ -1,6 +1,5 @@
-require libx11_${PV}.bb
+require libx11.inc
 
-PE = "1"
 PR = "r0"
 
 SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \

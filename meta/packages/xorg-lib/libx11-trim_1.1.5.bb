@@ -1,6 +1,5 @@
 require libx11.inc
 
-PE = "1"
 PR = "r4"
 
 DEPENDS += "libxcb xproto xextproto xtrans libxau kbproto inputproto xf86bigfontproto"
