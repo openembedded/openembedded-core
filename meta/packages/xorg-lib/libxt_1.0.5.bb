@@ -1,7 +1,7 @@
 require xorg-lib-common.inc
 
 DESCRIPTION = "X11 toolkit intrinsics library"
-DEPENDS += "libsm virtual/libx11 kbproto"
+DEPENDS += "libsm virtual/libx11 kbproto libxdmcp"
 PROVIDES = "xt"
 PR = "r1"
 PE = "1"
