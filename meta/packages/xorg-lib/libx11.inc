@@ -1,18 +1,12 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "Base X libs."
-DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
-            libxdmcp xf86bigfontproto kbproto inputproto xproto-native"
+DESCRIPTION = "X11 protocol and utility library"
 PROVIDES = "virtual/libx11"
-PE = "1"
-PR = "r3"
 
 XORG_PN = "libX11"
+LEAD_SONAME = "libX11.so"
 
-SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \
-            file://include_fix.patch;patch=1" 
-
-EXTRA_OECONF += "--without-xcb --with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h"
+EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h"
 
 do_compile() {
 	(
