@@ -1,6 +1,6 @@
 require linux-omap.inc
 
-PR = "r1"
+PR = "r2"
 
 COMPATIBLE_MACHINE = "omap-3430ldp"
 
