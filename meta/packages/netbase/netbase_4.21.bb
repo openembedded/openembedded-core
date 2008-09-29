@@ -2,7 +2,7 @@ DESCRIPTION = "This package provides the necessary \
 infrastructure for basic TCP/IP based networking."
 SECTION = "base"
 LICENSE = "GPL"
-PR = "r22"
+PR = "r23"
 
 inherit update-rc.d
 
@@ -38,7 +38,7 @@ do_install () {
 
 	# Disable network manager on machines that commonly do NFS booting
 	case "${MACHINE}" in
-		"omap-3430sdp" | "omap-3430ldp" | "omap-2430sdp")
+		"omap-3430sdp" | "omap-3430ldp" | "omap-2430sdp" | "qemuarm" | "qemux86" )
 			touch ${D}${sysconfdir}/network/nm-disabled-eth0
 			;;
 		*)
@@ -51,3 +51,5 @@ CONFFILES_${PN} = "${sysconfdir}/hosts ${sysconfdir}/network/interfaces"
 PACKAGE_ARCH_omap-3430sdp = "${MACHINE_ARCH}"
 PACKAGE_ARCH_omap-3430ldp = "${MACHINE_ARCH}"
 PACKAGE_ARCH_omap-2430sdp = "${MACHINE_ARCH}"
+PACKAGE_ARCH_qemuarm = "${MACHINE_ARCH}"
+PACKAGE_ARCH_qemux86 = "${MACHINE_ARCH}"
