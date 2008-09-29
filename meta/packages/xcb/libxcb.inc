@@ -46,7 +46,7 @@ inherit autotools pkgconfig
 # but the xcbincludedir variable doesn't point into the staging area, so it needs some
 # tweeking here:
 do_configure_prepend () {
-    sed -i "s|XCBPROTO_XCBINCLUDEDIR=|XCBPROTO_XCBINCLUDEDIR=${STAGING_DIR}/${HOST_SYS}/|" \
+    sed -i "s|XCBPROTO_XCBINCLUDEDIR=|XCBPROTO_XCBINCLUDEDIR=${STAGING_DIR_HOST}/|" \
         ${S}/configure.ac
 }
 

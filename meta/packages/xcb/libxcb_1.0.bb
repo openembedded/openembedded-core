@@ -1,5 +1,5 @@
 include libxcb.inc
-PR = "r0"
+PR = "r1"
 
 DEPENDS += "libpthread-stubs"
 
