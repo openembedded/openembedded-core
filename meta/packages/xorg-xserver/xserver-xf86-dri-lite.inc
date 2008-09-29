@@ -29,3 +29,5 @@ EXTRA_OECONF += "--disable-cfb \
                  --with-xkb-output=/var/lib/xkb \
                  ac_cv_file__usr_share_sgml_X11_defs_ent=no"
 
+# Due to mesa-dri
+COMPATIBLE_HOST = '(i.86.*-linux)'
