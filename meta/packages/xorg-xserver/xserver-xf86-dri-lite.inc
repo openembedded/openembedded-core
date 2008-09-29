@@ -1,5 +1,7 @@
 require xserver-xf86-common.inc
 
+PROVIDES += "xserver-xf86-dri-lite"
+
 PROTO_DEPS = "randrproto renderproto fixesproto damageproto xextproto xproto xf86dgaproto xf86miscproto xf86rushproto xf86vidmodeproto xf86bigfontproto compositeproto recordproto resourceproto videoproto scrnsaverproto evieext trapproto xineramaproto fontsproto kbproto inputproto bigreqsproto xcmiscproto glproto xf86driproto dri2proto"
 
 LIB_DEPS = "pixman mesa-dri libxfont xtrans libxau libxext libxdmcp libdrm libxkbfile libpciaccess openssl"
