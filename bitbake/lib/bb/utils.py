@@ -305,3 +305,4 @@ def prunedir(topdir):
         for name in dirs:
             os.rmdir(os.path.join(root, name))
     os.rmdir(topdir)
+
