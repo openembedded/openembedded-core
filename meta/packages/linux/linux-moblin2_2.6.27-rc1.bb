@@ -1,6 +1,6 @@
 require linux-moblin2.inc
 
-PR = "r1"
+PR = "r2"
 
 DEFAULT_PREFERENCE_eee901 = "1"
 
