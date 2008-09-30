@@ -184,7 +184,8 @@ RDEPENDS_task-base-pci = "\
     pciutils"
 
 RDEPENDS_task-base-acpi = "\
-    acpid"
+    acpid \
+    libacpi "
 
 RDEPENDS_task-base-apm = "\
     apm \
