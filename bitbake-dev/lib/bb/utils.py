@@ -314,6 +314,7 @@ def preserved_envvars_list():
         'HOME',
         'LANG',
         'LOGNAME',
+        'OEROOT',
         'PATH',
         'PWD',
         'SESSION_MANAGER',
