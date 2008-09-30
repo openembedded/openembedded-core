@@ -47,7 +47,8 @@ dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
 	   /mnt /media /media/card /media/cf /media/net /media/ram \
 	   /media/union /media/realroot /media/hdd \
 	   /media/mmc1"
-volatiles = "cache run log lock tmp"
+volatiles = "log lock tmp"
+volatiles2 = "cache run"
 conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
 	     ${sysconfdir}/inputrc ${sysconfdir}/issue /${sysconfdir}/issue.net \
 	     ${sysconfdir}/nsswitch.conf ${sysconfdir}/profile \
@@ -75,6 +76,10 @@ do_install () {
 	for d in ${volatiles}; do
 		ln -sf volatile/$d ${D}/${localstatedir}/$d
 	done
+	for d in ${volatiles2}; do
+		install -d ${D}/${localstatedir}/$d
+	done
+
 	for d in card cf net ram; do
 		ln -sf /media/$d ${D}/mnt/$d
 	done

@@ -15,7 +15,7 @@ inherit autotools
 # clear/reset are in already busybox
 FILES_ncurses-tools = "${bindir}/tic ${bindir}/toe ${bindir}/infotocap ${bindir}/captoinfo ${bindir}/infocmp ${bindir}/clear.${PN} ${bindir}/reset.${PN} ${bindir}/tack "
 FILES_ncurses-terminfo = "${datadir}/terminfo"
-FILES_${PN} = "${bindir}/tput ${bindir}/tset ${libdir}/lib*.so.* usr/share/tabset etc/terminfo"
+FILES_${PN} = "${bindir}/tput ${bindir}/tset ${libdir}/lib*.so.* /usr/share/tabset /etc/terminfo"
 
 PARALLEL_MAKE=""
 

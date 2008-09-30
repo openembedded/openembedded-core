@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tools tasks for Poky"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -55,3 +55,5 @@ RDEPENDS_task-poky-tools-testapps = "\
     xwininfo \
     xprop \
     xvideo-tests"
+
+RDEPENDS_task-poky-tools-testapps_append_beagleboard = " omapfbplay ffmpeg"
