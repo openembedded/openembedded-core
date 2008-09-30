@@ -72,6 +72,5 @@ do_configure_append () {
 
 do_install () {
 	autotools_do_install
-	rm -fr ${D}/var/cache
 }
 
