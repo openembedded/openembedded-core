@@ -31,7 +31,7 @@ if [ "x$BDIR" = "x" ]; then
 	fi
 fi
 
-BBDIR="$OEROOT/bitbake/"
+BBDIR="$OEROOT/bitbake$BBEXTRA/"
 PKGDIR="$OEROOT/meta/"
 BUILDDIR="$OEROOT/$BDIR/"
 MSG=''
@@ -86,3 +86,5 @@ unset GCONF_SCHEMA_INSTALL_SOURCE
 echo
 echo "### Shell environment set up for Poky builds. ###"
 echo 
+
+export BB_ENV_EXTRAWHITE="MACHINE DISTRO POKYLIBC"
