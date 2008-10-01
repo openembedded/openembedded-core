@@ -2,12 +2,15 @@ DESCRIPTION = "ACPI data gathering library."
 SECTION = "base"
 HOMEPAGE = "http://www.ngolde.de/libacpi.html"
 LICENSE = "MIT"
+PR = "r1"
 
 SRC_URI = "http://www.ngolde.de/download/libacpi-${PV}.tar.gz \
 	   file://makefile-fix.patch;patch=1 "
 
-FILES_${PN} = "${libdir}"
-FILES_libacpi-dev = "${includedir}"
+PACKAGES += "${PN}-bin"
+
+FILES_${PN} = "${libdir}/libacpi.so.*"
+FILES_${PN}-bin = "${bindir}"
 
 do_stage() {
 	install -m 0644 libacpi.h ${STAGING_INCDIR}
