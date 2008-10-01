@@ -17,6 +17,6 @@ START_APPLETS=showdesktop,windowselector
 END_APPLETS=clock,battery,brightness,systray,startup-notify,notify
 END_APPLETS=openmoko-panel-gsm,$END_APPLETS # feature-phone
 
-matchbox-panel --titlebar --start-applets $START_APPLETS --end-applets $END_APPLETS &
+matchbox-panel --start-applets $START_APPLETS --end-applets $END_APPLETS &
 
 exec metacity
