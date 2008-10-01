@@ -2,13 +2,14 @@ DESCRIPTION = "Driver for the 802.11n RaLink rt2860 chipset"
 PRIORITY = "optional"
 SECTION = "kernel/modules"
 LICENSE = "GPL"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://folks.o-hand.com/sameo/rt2860/rt2860-1.7.0.0.tar.bz2 \
            file://01_dev_get_by_name.patch;patch=1 \
-           file://02_wpa-fix.patch;patch=1" \
-           file://03-iwe_stream_add.patch;patch=1" \
-           file://04-pci_name.patch;patch=1"
+           file://02_wpa-fix.patch;patch=1 \
+           file://03-iwe_stream_add.patch;patch=1 \
+           file://04-pci_name.patch;patch=1 \
+           file://05-iwpriv.patch;patch=1"
 
 S = "${WORKDIR}/rt2860-1.7.0.0"
 
