@@ -96,3 +96,4 @@ python do_bootimg() {
 }
 
 addtask bootimg before do_build
+do_bootimg[nostamp] = "1"
