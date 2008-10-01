@@ -1,6 +1,6 @@
 require libx11.inc
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \
             file://include_fix.patch;patch=1 \
@@ -13,5 +13,5 @@ DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libx11"
 
-EXTRA_OECONF += "--without-xcb --disable-udc --disable-xcms --disable-xlocale --disable-xkb"
+EXTRA_OECONF += "--without-xcb --disable-udc --disable-xcms --disable-xlocale"
 CFLAGS += "-D_GNU_SOURCE"
