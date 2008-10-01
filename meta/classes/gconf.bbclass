@@ -1,4 +1,4 @@
-DEPENDS += "gconf"
+DEPENDS += "gconf gconf-native"
 
 gconf_postinst() {
 if [ "x$D" != "x" ]; then
