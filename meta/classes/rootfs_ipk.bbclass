@@ -120,7 +120,7 @@ ipk_insert_feed_uris () {
 
         echo "Building from feeds activated!"
 
-        for line in ${FEED_URIS}
+        for line in ${IPK_FEED_URIS}
         do
                 # strip leading and trailing spaces/tabs, then split into name and uri
                 line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
