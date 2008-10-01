@@ -13,14 +13,19 @@ do_rootfs[recrdeptask] += "do_package_write_ipk"
 
 IPKG_ARGS = "-f ${IPKGCONF_TARGET} -o ${IMAGE_ROOTFS}"
 
-OPKG_FEED_URIS = ""
+OPKG_PREPROCESS_COMMANDS = " \
+	package_update_index_ipk \
+	package_generate_ipkg_conf \
+"
+
+OPKG_POSTPROCESS_COMMANDS = " \
+	ipk_insert_feed_uris \
+"
 
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
 
-	package_update_index_ipk
-	package_generate_ipkg_conf
-	${OPKG_FEED_URIS}
+	${OPKG_PREPROCESS_COMMANDS}
 
 	mkdir -p ${T}/
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib/opkg/
@@ -47,6 +52,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 	mkdir -p ${IMAGE_ROOTFS}/etc/opkg/
 	grep "^arch" ${IPKGCONF_TARGET} >${IMAGE_ROOTFS}/etc/opkg/arch.conf
 
+	${OPKG_POSTPROCESS_COMMANDS}
 	${ROOTFS_POSTINSTALL_COMMAND}
 	
 	for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.preinst; do
@@ -142,7 +148,7 @@ python () {
         flags = flags.replace("do_deploy", "")
         flags = flags.replace("do_populate_staging", "")
         bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
-        bb.data.setVar('OPKG_FEED_URIS', 'ipk_insert_feed_uris', d)
+        bb.data.setVar('OPKG_PREPROCESS_COMMANDS', "package_generate_ipkg_conf\nipk_insert_feed_uris", d)
+        bb.data.setVar('OPKG_POSTPROCESS_COMMANDS', '', d)
 }
-
 
