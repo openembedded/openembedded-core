@@ -18,7 +18,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 	set -x
 
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
-	#echo "arm" > ${IMAGE_ROOTFS}/etc/rpm/platform
+	echo ${TARGET_ARCH} >${IMAGE_ROOTFS}/etc/rpm/platform
 
 	# Generate an apprpriate yum.conf
 	rm -rf ${YUMCONF}
@@ -31,8 +31,6 @@ logfile=/var/log2/yum.log
 exactarch=0
 obsoletes=1
 tolerant=1
-arch=arm
-basearch=arm
 
 EOF
 
