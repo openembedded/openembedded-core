@@ -470,6 +470,11 @@ python emit_pkgdata() {
 		val = bb.data.getVar('%s_%s' % (var, pkg), d, 1)
 		if val:
 			f.write('%s_%s: %s\n' % (var, pkg, encode(val)))
+			return
+		val = bb.data.getVar('%s' % (var), d, 1)
+		if val:
+			f.write('%s: %s\n' % (var, encode(val)))
+		return
 
 	packages = bb.data.getVar('PACKAGES', d, True)
 	pkgdatadir = bb.data.getVar('PKGDATA_DIR', d, True)
@@ -490,6 +495,7 @@ python emit_pkgdata() {
 		subdata_file = pkgdatadir + "/runtime/%s" % pkg
 		sf = open(subdata_file, 'w')
 		write_if_exists(sf, pkg, 'PN')
+		write_if_exists(sf, pkg, 'PV')
 		write_if_exists(sf, pkg, 'PR')
 		write_if_exists(sf, pkg, 'DESCRIPTION')
 		write_if_exists(sf, pkg, 'RDEPENDS')
