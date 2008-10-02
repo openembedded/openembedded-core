@@ -17,17 +17,8 @@ AWKPOSTINSTSCRIPT = "${STAGING_BINDIR_NATIVE}/extract-postinst.awk"
 fakeroot rootfs_rpm_do_rootfs () {
 	set -x
 
-	# Update the repository index
-	createrepo ${DEPLOY_DIR_RPM}
-
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
 	#echo "arm" > ${IMAGE_ROOTFS}/etc/rpm/platform
-
-	# Copy the packages into the target image
-	# Ugly ugly ugly but rpm is braindead and can't see outside the chroot 
-	# when installing :(
-	mkdir -p ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}
-	cp -r ${DEPLOY_DIR_RPM}/* ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
 
 	# Generate an apprpriate yum.conf
 	rm -rf ${YUMCONF}
@@ -43,12 +34,29 @@ tolerant=1
 arch=arm
 basearch=arm
 
-[poky-feed]
-name = Poky RPM Feed
-baseurl=file://${DEPLOY_DIR_RPM}
-gpgcheck=0
-
 EOF
+
+	#priority=1
+	for arch in ${PACKAGE_ARCHS}; do
+		if [ ! -d ${DEPLOY_DIR_RPM}/$arch ]; then
+			continue;
+		fi
+		createrepo ${DEPLOY_DIR_RPM}/$arch
+
+		echo "[poky-feed-$arch]" >> ${YUMCONF}
+		echo "name = Poky RPM $arch Feed" >> ${YUMCONF}
+		echo "baseurl=file://${DEPLOY_DIR_RPM}/$arch" >> ${YUMCONF}
+		echo "gpgcheck=0" >> ${YUMCONF}
+		echo "" >> ${YUMCONF}
+		#priority=$(expr $priority + 5)
+	done
+
+	# Copy the packages into the target image
+	# Ugly ugly ugly but rpm is braindead and can't see outside the chroot 
+	# when installing :(
+	mkdir -p ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}
+	cp -r ${DEPLOY_DIR_RPM}/* ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
+
 	#mkdir -p ${IMAGE_ROOTFS}/var/lib/rpm
 	#rpm --root ${IMAGE_ROOTFS} --initdb
 	#rpm --root ${IMAGE_ROOTFS} --dbpath ${IMAGE_ROOTFS}/var/lib/rpm -ihv --nodeps --ignoreos  

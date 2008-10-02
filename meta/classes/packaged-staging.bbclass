@@ -361,6 +361,8 @@ python do_package_stage () {
             ipkpath = bb.data.getVar('DEPLOY_DIR_IPK', d, True).replace(tmpdir, stagepath)
         if bb.data.inherits_class('package_deb', d):
             debpath = bb.data.getVar('DEPLOY_DIR_DEB', d, True).replace(tmpdir, stagepath)
+        if bb.data.inherits_class('package_rpm', d):
+            rpmpath = bb.data.getVar('DEPLOY_DIR_RPM', d, True).replace(tmpdir, stagepath)
 
         for pkg in packages:
             pkgname = bb.data.getVar('PKG_%s' % pkg, d, 1)
@@ -392,6 +394,18 @@ python do_package_stage () {
                     destpath = debpath + "/" + arch + "/" 
                     bb.mkdirhier(destpath)
                     bb.copyfile(srcfile, destpath + srcname)
+
+            if bb.data.inherits_class('package_rpm', d):
+		version = bb.data.getVar('PV', d, 1)
+		version = version.replace('-', '+')
+		bb.data.setVar('RPMPV', version, d)
+                srcname = bb.data.expand(pkgname + "-${RPMPV}-" + pr + ".${TARGET_ARCH}.rpm", d)
+                srcfile = bb.data.expand("${DEPLOY_DIR_RPM}/" + arch + "/" + srcname, d)
+                if os.path.exists(srcfile):
+                    destpath = rpmpath + "/" + arch + "/" 
+                    bb.mkdirhier(destpath)
+                    bb.copyfile(srcfile, destpath + srcname)
+
 
     #
     # Handle stamps/ files
