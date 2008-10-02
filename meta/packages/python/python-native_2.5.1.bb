@@ -1,7 +1,7 @@
 DESCRIPTION = "The Python Programming Language"
 HOMEPAGE = "http://www.python.org"
 LICENSE = "PSF"
-DEPENDS = "openssl-native bzip2-full-native"
+DEPENDS = "openssl-native bzip2-full-native sqlite3-native"
 SECTION = "devel/python"
 PRIORITY = "optional"
 PR = "ml5"
