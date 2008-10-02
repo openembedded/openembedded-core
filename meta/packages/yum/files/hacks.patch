@@ -5,10 +5,40 @@
  yum/depsolve.py         |    2 ++
  4 files changed, 7 insertions(+), 1 deletion(-)
 
+Index: yum-3.2.18/rpmUtils/arch.py
+===================================================================
+--- yum-3.2.18.orig/rpmUtils/arch.py	2008-06-17 14:05:42.000000000 +0100
++++ yum-3.2.18/rpmUtils/arch.py	2008-10-02 22:09:19.000000000 +0100
+@@ -275,6 +275,12 @@
+     return arch
+         
+ def getCanonArch(skipRpmPlatform = 0):
++    import os
++    if 'YUM_ARCH_FORCE' in os.environ:
++        return os.environ['YUM_ARCH_FORCE']
++
++    sys.exit(1)
++
+     if not skipRpmPlatform and os.access("/etc/rpm/platform", os.R_OK):
+         try:
+             f = open("/etc/rpm/platform", "r")
+@@ -331,6 +338,12 @@
+        base arch is the arch before noarch in the arches dict if myarch is not
+        a key in the multilibArches."""
+ 
++    import os
++    if 'YUM_ARCH_FORCE' in os.environ:
++        return os.environ['YUM_ARCH_FORCE']
++
++    sys.exit(1)
++
+     if not myarch:
+         myarch = canonArch
+ 
 Index: yum-3.2.18/rpmUtils/transaction.py
 ===================================================================
 --- yum-3.2.18.orig/rpmUtils/transaction.py	2008-06-17 14:05:42.000000000 +0100
-+++ yum-3.2.18/rpmUtils/transaction.py	2008-09-03 17:55:27.000000000 +0100
++++ yum-3.2.18/rpmUtils/transaction.py	2008-10-02 17:09:57.000000000 +0100
 @@ -43,6 +43,7 @@
                           'clean']
          self.tsflags = []
@@ -20,7 +50,7 @@ Index: yum-3.2.18/rpmUtils/transaction.py
 Index: yum-3.2.18/yum/constants.py
 ===================================================================
 --- yum-3.2.18.orig/yum/constants.py	2008-07-21 16:56:54.000000000 +0100
-+++ yum-3.2.18/yum/constants.py	2008-09-01 15:47:11.000000000 +0100
++++ yum-3.2.18/yum/constants.py	2008-10-02 17:09:57.000000000 +0100
 @@ -17,7 +17,7 @@
  """
  
@@ -33,7 +63,7 @@ Index: yum-3.2.18/yum/constants.py
 Index: yum-3.2.18/yum/depsolve.py
 ===================================================================
 --- yum-3.2.18.orig/yum/depsolve.py	2008-08-06 17:05:16.000000000 +0100
-+++ yum-3.2.18/yum/depsolve.py	2008-09-03 21:05:52.000000000 +0100
++++ yum-3.2.18/yum/depsolve.py	2008-10-02 17:09:57.000000000 +0100
 @@ -141,9 +141,14 @@
              else:
                  self.logger.critical(_('Invalid tsflag in config file: %s'), flag)
