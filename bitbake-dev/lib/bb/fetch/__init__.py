@@ -550,6 +550,7 @@ import ssh
 import perforce
 import bzr
 import hg
+import osc
 
 methods.append(local.Local())
 methods.append(wget.Wget())
@@ -561,3 +562,4 @@ methods.append(ssh.SSH())
 methods.append(perforce.Perforce())
 methods.append(bzr.Bzr())
 methods.append(hg.Hg())
+methods.append(osc.Osc())
