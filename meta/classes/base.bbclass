@@ -936,6 +936,19 @@ python read_subpackage_metadata () {
 			bb.data.setVar(key, sdata[key], d)
 }
 
+
+#
+# Collapse FOO_pkg variables into FOO
+#
+def read_subpkgdata_dict(pkg, d):
+	import bb
+	ret = {}
+	subd = read_pkgdatafile(get_subpkgedata_fn(pkg, d))
+	for var in subd:
+		newvar = var.replace("_" + pkg, "")
+		ret[newvar] = subd[var]
+	return ret
+
 # Make sure MACHINE isn't exported
 # (breaks binutils at least)
 MACHINE[unexport] = "1"
