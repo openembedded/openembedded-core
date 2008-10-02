@@ -2,7 +2,7 @@ DESCRIPTION = "Clutter Box2D"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "GPLv2"
 
-DEPENDS = "clutter"
+DEPENDS = "clutter-0.8"
 
 # The main clutter lib is machine specific so we need to be too
 PACKAGE_ARCH = "${MACHINE_ARCH}"

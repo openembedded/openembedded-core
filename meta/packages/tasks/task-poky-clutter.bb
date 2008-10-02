@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Clutter Tasks for OpenedHand Poky"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "\
     task-poky-clutter-core \
@@ -20,14 +20,16 @@ PACKAGES = "\
 ALLOW_EMPTY = "1"
 
 RDEPENDS_task-poky-clutter-core = "\
-    clutter \
-    clutter-cairo \
-    clutter-gst"
+    clutter-0.8 \
+    clutter-cairo-0.8 \
+    clutter-gst-0.8 \
+    clutter-gtk-0.8"
 
 RDEPENDS_task-poky-clutter-tests = "\
-    clutter-examples \
-    clutter-cairo-examples \
-    clutter-gst-examples"
+    clutter-0.8-examples \
+    clutter-cairo-0.8-examples \
+    clutter-gst-0.8-examples \
+    clutter-gtk-0.8-examples"
 
 RDEPENDS_task-poky-clutter-apps = "\
     aaina \

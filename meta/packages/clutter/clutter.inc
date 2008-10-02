@@ -39,6 +39,8 @@ DEPENDS_eee901 = "${STDDEPENDS} virtual/xserver-xf86 virtual/libgl"
 EXTRA_OECONF_eee901 = "${BASE_CONF} --with-flavour=glx"
 PACKAGE_ARCH_eee901 = "${MACHINE_ARCH}"
 
+FILESPATH = "${FILE_DIRNAME}/clutter"
+
 inherit autotools pkgconfig gtk-doc
 
 PACKAGES =+ "clutter-examples"
