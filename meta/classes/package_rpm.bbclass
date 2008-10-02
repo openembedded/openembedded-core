@@ -125,7 +125,7 @@ python write_specfile() {
 
 	# move the rpm into the pkgoutdir
 	rpm = bb.data.expand('${RPMBUILDPATH}/RPMS/${TARGET_ARCH}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
-	outrpm = bb.data.expand('${DEPLOY_DIR_RPM}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
+	outrpm = bb.data.expand('${DEPLOY_DIR_RPM}/${PACKAGE_ARCH}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
 	bb.movefile(rpm, outrpm)
 }
 
@@ -187,7 +187,7 @@ python do_package_rpm () {
 
 		bb.data.update_data(localdata)
 		basedir = os.path.join(os.path.dirname(root))
-		pkgoutdir = outdir
+	        pkgoutdir = os.path.join(outdir, bb.data.getVar('PACKAGE_ARCH', localdata, 1))
 		bb.mkdirhier(pkgoutdir)
 		bb.data.setVar('OUTSPECFILE', os.path.join(workdir, "%s.spec" % pkg), localdata)
 		# Save the value of RPMBUILD expanded into the new dictonary so any 
