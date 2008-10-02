@@ -13,14 +13,9 @@ do_rootfs[recrdeptask] += "do_package_write_ipk"
 
 IPKG_ARGS = "-f ${IPKGCONF_TARGET} -o ${IMAGE_ROOTFS}"
 
-OPKG_PREPROCESS_COMMANDS = " \
-	package_update_index_ipk \
-	package_generate_ipkg_conf \
-"
+OPKG_PREPROCESS_COMMANDS = "package_update_index_ipk; package_generate_ipkg_conf"
 
-OPKG_POSTPROCESS_COMMANDS = " \
-	ipk_insert_feed_uris \
-"
+OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris"
 
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
