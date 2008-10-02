@@ -78,10 +78,9 @@ python write_specfile() {
 
 	fd.write("AutoReqProv: no\n")
 
-	bb.build.exec_func("mapping_rename_hook", d)
-
-	def write_dep_field(varname, outstring):
+	def fix_dep_versions(varname):
 		depends = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
+		newdeps = []
 		for dep in depends:
 			ver = depends[dep]
 			if dep and ver:
@@ -90,10 +89,24 @@ python write_specfile() {
 					pv = subd['PV']
 					reppv = pv.replace('-', '+')
 					ver = ver.replace(pv, reppv)
+				newdeps.append("%s (%s)" % (dep, ver))
+			elif dep:
+				newdeps.append(dep)
+		bb.data.setVar(varname, ", ".join(newdeps), d)
+
+	fix_dep_versions('RDEPENDS')
+	fix_dep_versions('RRECOMMENDS')
+
+	bb.build.exec_func("mapping_rename_hook", d)
+
+	def write_dep_field(varname, outstring):
+		depends = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
+		for dep in depends:
+			ver = depends[dep]
+			if dep and ver:
 				fd.write("%s: %s %s\n" % (outstring, dep, ver))
 			elif dep:
 				fd.write("%s: %s\n" % (outstring, dep))
-
 
 	write_dep_field('RDEPENDS', 'Requires')
 	write_dep_field('RRECOMMENDS', 'Recommends')
