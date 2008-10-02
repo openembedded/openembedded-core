@@ -5,27 +5,6 @@
  yum/depsolve.py         |    2 ++
  4 files changed, 7 insertions(+), 1 deletion(-)
 
-Index: yum-3.2.18/rpmUtils/arch.py
-===================================================================
---- yum-3.2.18.orig/rpmUtils/arch.py	2008-06-17 14:05:42.000000000 +0100
-+++ yum-3.2.18/rpmUtils/arch.py	2008-09-01 15:47:11.000000000 +0100
-@@ -275,6 +275,7 @@
-     return arch
-         
- def getCanonArch(skipRpmPlatform = 0):
-+    return "arm"
-     if not skipRpmPlatform and os.access("/etc/rpm/platform", os.R_OK):
-         try:
-             f = open("/etc/rpm/platform", "r")
-@@ -331,6 +332,8 @@
-        base arch is the arch before noarch in the arches dict if myarch is not
-        a key in the multilibArches."""
- 
-+    return "arm"
-+
-     if not myarch:
-         myarch = canonArch
- 
 Index: yum-3.2.18/rpmUtils/transaction.py
 ===================================================================
 --- yum-3.2.18.orig/rpmUtils/transaction.py	2008-06-17 14:05:42.000000000 +0100
