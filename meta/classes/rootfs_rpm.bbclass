@@ -2,8 +2,8 @@
 # Creates a root filesystem out of rpm packages
 #
 
-ROOTFS_PKGMANAGE = "opkg" 
-# "rpm" "yum"
+ROOTFS_PKGMANAGE = "rpm yum" 
+
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "rpm-native:do_populate_staging yum-native:do_populate_staging createrepo-native:do_populate_staging fakechroot-native:do_populate_staging"
