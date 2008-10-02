@@ -79,23 +79,24 @@ python write_specfile() {
 	fd.write("AutoReqProv: no\n")
 
 	bb.build.exec_func("mapping_rename_hook", d)
-	rdepends = bb.utils.explode_dep_versions(bb.data.getVar('RDEPENDS', d, True) or "")
-	for dep in rdepends:
-		ver = rdepends[dep]
-		if dep and ver:
-			ver = ver.replace('-', '+')
-			fd.write("Requires: %s %s\n" % (dep, ver))
-		elif dep:
-			fd.write("Requires: %s\n" % (dep))
 
-	rdepends = bb.utils.explode_dep_versions(bb.data.getVar('RRECOMMENDS', d, True) or "")
-	for dep in rdepends:
-		ver = rdepends[dep]
-		if dep and ver:
-			ver = ver.replace('-', '+')
-			fd.write("Recommends: %s %s\n" % (dep, ver))
-		elif dep:
-			fd.write("Recommends: %s\n" % (dep))
+	def write_dep_field(varname, outstring):
+		depends = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
+		for dep in depends:
+			ver = depends[dep]
+			if dep and ver:
+				if '-' in ver:
+					subd = read_subpkgdata_dict(dep, d)
+					pv = subd['PV']
+					reppv = pv.replace('-', '+')
+					ver = ver.replace(pv, reppv)
+				fd.write("%s: %s %s\n" % (outstring, dep, ver))
+			elif dep:
+				fd.write("%s: %s\n" % (outstring, dep))
+
+
+	write_dep_field('RDEPENDS', 'Requires')
+	write_dep_field('RRECOMMENDS', 'Recommends')
 
 	fd.write("Summary\t: .\n")
 
