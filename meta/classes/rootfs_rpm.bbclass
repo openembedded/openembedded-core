@@ -37,6 +37,8 @@ basearch=arm
 EOF
 
 	#priority=1
+	mkdir -p ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}
+
 	for arch in ${PACKAGE_ARCHS}; do
 		if [ ! -d ${DEPLOY_DIR_RPM}/$arch ]; then
 			continue;
@@ -49,13 +51,13 @@ EOF
 		echo "gpgcheck=0" >> ${YUMCONF}
 		echo "" >> ${YUMCONF}
 		#priority=$(expr $priority + 5)
+		
+		# Copy the packages into the target image
+		# Ugly ugly ugly but rpm is braindead and can't see outside the chroot 
+		# when installing :(
+		cp -r ${DEPLOY_DIR_RPM}/$arch ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
 	done
 
-	# Copy the packages into the target image
-	# Ugly ugly ugly but rpm is braindead and can't see outside the chroot 
-	# when installing :(
-	mkdir -p ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}
-	cp -r ${DEPLOY_DIR_RPM}/* ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
 
 	#mkdir -p ${IMAGE_ROOTFS}/var/lib/rpm
 	#rpm --root ${IMAGE_ROOTFS} --initdb
