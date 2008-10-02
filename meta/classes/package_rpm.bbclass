@@ -92,7 +92,7 @@ python write_specfile() {
 				newdeps.append("%s (%s)" % (dep, ver))
 			elif dep:
 				newdeps.append(dep)
-		bb.data.setVar(varname, ", ".join(newdeps), d)
+		bb.data.setVar(varname, " ".join(newdeps), d)
 
 	fix_dep_versions('RDEPENDS')
 	fix_dep_versions('RRECOMMENDS')
