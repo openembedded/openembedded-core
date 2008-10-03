@@ -8,4 +8,3 @@ SRC_URI = "svn://svn.o-hand.com/repos/clutter/branches;module=clutter-0-8;proto=
 	   file://enable_tests-0.8.patch;patch=1 "
 
 S = "${WORKDIR}/clutter-0-8"
-

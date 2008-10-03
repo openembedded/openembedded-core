@@ -9,4 +9,4 @@ SRC_URI = "svn://svn.o-hand.com/repos/clutter/branches;module=clutter-cairo-0-6;
 
 S = "${WORKDIR}/clutter-cairo-0-6"
 
-
+PR = "r1"
