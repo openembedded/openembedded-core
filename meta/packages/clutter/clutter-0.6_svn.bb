@@ -7,4 +7,4 @@ SRC_URI = "svn://svn.o-hand.com/repos/clutter/branches;module=clutter-0-6;proto=
 
 S = "${WORKDIR}/clutter-0-6"
 
-PR = "r1"
+PR = "r2"
