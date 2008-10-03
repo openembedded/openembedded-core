@@ -141,6 +141,9 @@ EOF
 	rm -rf ${IMAGE_ROOTFS}/var/log2/
 	rm -rf ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
 
+	# remove lock files
+	rm -f ${IMAGE_ROOTFS}/var/lib/rpm/__db.*
+
 	log_check rootfs 	
 }
 
