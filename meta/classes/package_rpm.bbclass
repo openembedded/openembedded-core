@@ -207,6 +207,7 @@ python do_package_rpm () {
 		# Save the value of RPMBUILD expanded into the new dictonary so any 
 		# changes in the compoents that make up workdir don't break packaging
 		bb.data.setVar('RPMBUILD', bb.data.getVar("RPMBUILD", d, True), localdata)
+		bb.data.setVar('RPMBUILDPATH', bb.data.getVar("RPMBUILDPATH", d, True), localdata)
 		bb.build.exec_func('write_specfile', localdata)
 		bb.utils.unlockfile(lf)
 }
