@@ -1,10 +1,11 @@
 DEPENDS = "clutter-box2d"
 
 PV = "0.0+git${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://moblin.org/repos/users/pippin/prototype.git/;protocol=http \
-           file://paths.patch;patch=1"
+           file://paths.patch;patch=1 \
+	   file://fix-shader-and-callbacks.patch;patch=1"
 
 S = "${WORKDIR}/git"
 

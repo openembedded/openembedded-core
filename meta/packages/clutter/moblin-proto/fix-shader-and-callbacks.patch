@@ -1,0 +1,44 @@
+diff --git a/Makefile b/Makefile
+index e05b5b7..c348a1e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -64,7 +64,7 @@ HFILES  = $(wildcard *.h)
+ %.o: %.c $(HFILES)
+ 	$(CC) -g $(CFLAGS) $(INCS) -c $< -o$@
+ $(BINARY): $(OBJECTS)
+-	$(CXX) -o $@ $(OBJECTS) $(LIBS)
++	$(CXX) -rdynamic -o $@ $(OBJECTS) $(LIBS)
+ 
+ #$(BINARY): $(CFILES)
+ #	$(LD) $(CFLAGS) $(INCS) $(CFILES) $(LIBS) -o $@
+diff --git a/moblin-desktop.c b/moblin-desktop.c
+index 6dd4f2c..fb9d231 100644
+--- a/moblin-desktop.c
++++ b/moblin-desktop.c
+@@ -103,6 +103,8 @@ void moblin_blur (void)
+   if (desktop->maincopy)
+     return;
+ 
++  if (clutter_feature_available (CLUTTER_FEATURE_SHADERS_GLSL))
++    {
+ #if 0
+   desktop->maincopy = clutter_texture_new_from_actor (desktop->mainstuff);
+ #else
+@@ -158,6 +160,17 @@ void moblin_blur (void)
+                                     1.0f / moblin_desktop_width ());
+   }
+  clutter_actor_set_shader_param (desktop->maincopy, "radius", 3.0);
++    }
++  else
++    {
++      ClutterColor clr= { 0x44, 0x44, 0x44, 0x77 };
++      guint w, h;
++
++      desktop->maincopy = clutter_rectangle_new_with_color (&clr);
++      clutter_actor_get_size (desktop->mainstuff, &w, &h);
++      clutter_actor_set_size (desktop->maincopy, w, h);
++      clutter_group_add (desktop->copyholder, desktop->maincopy);
++    }
+ }
+ 
+ void moblin_unblur (void)
