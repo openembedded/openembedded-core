@@ -21,7 +21,7 @@ def legitimize_package_name(s):
 	# Remaining package name validity fixes
 	return s.lower().replace('_', '-').replace('@', '+').replace(',', '+').replace('/', '-')
 
-def do_split_packages(d, root, file_regex, output_pattern, description, postinst=None, recursive=False, hook=None, extra_depends=None, aux_files_pattern=None, postrm=None, allow_dirs=False, prepend=False, match_path=False, aux_files_pattern_verbatim=None):
+def do_split_packages(d, root, file_regex, output_pattern, description, postinst=None, recursive=False, hook=None, extra_depends=None, aux_files_pattern=None, postrm=None, allow_dirs=False, prepend=False, match_path=False, aux_files_pattern_verbatim=None, allow_links=False):
 	"""
 	Used in .bb files to split up dynamically generated subpackages of a 
 	given package, usually plugins or modules.
@@ -70,7 +70,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 			continue
 		f = os.path.join(dvar + root, o)
 		mode = os.lstat(f).st_mode
-		if not (stat.S_ISREG(mode) or (allow_dirs and stat.S_ISDIR(mode))):
+		if not (stat.S_ISREG(mode) or (allow_links and stat.S_ISLNK(mode)) or (allow_dirs and stat.S_ISDIR(mode))):
 			continue
 		on = legitimize_package_name(m.group(1))
 		pkg = output_pattern % on
