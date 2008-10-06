@@ -2,7 +2,7 @@ DESCRIPTION = "The RPM Package Manager."
 HOMEPAGE = "http://rpm.org/"
 LICENSE = "LGPL GPL"
 DEPENDS = "zlib beecrypt file popt python"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
            file://external-tools.patch;patch=1 \
@@ -20,12 +20,15 @@ acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 
 EXTRA_OECONF = "--with-python=$PYTHONVER \
 		--with-python-incdir=${STAGING_INCDIR}/python$PYTHONVER \
-		--with-python-libdir=${STAGING_LIBDIR}/python$PYTHONVER \
+		--with-python-libdir=${libdir}/python$PYTHONVER \
 		--without-apidocs \
 		--without-selinux \
 		--without-lua \
 		--without-dmalloc \
 		--without-efence"
+
+PACKAGES += "python-rpm"
+FILES_python-rpm = "${libdir}/python*/site-packages/rpm/_*"
 
 # Handle the db MUTEX settings here, the POSIX library is
 # the default - "POSIX/pthreads/library".
