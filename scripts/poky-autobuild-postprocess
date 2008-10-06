@@ -87,6 +87,7 @@ if [ "x$ABTARGET" = "xpoky" ]; then
         updater.sh.spitz
         gnu-tar
         poky-image-netbook-live-eee901-*.hddimg
+        poky-image-minimal-live-eee901-*.hddimg
         poky-image-sato-akita-*.rootfs.summary.jffs2
         poky-image-sato-c7x0-*.rootfs.jffs2
         poky-image-sato-spitz-*.rootfs.tar.gz
