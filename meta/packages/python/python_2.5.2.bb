@@ -3,9 +3,9 @@ HOMEPAGE = "http://www.python.org"
 LICENSE = "PSF"
 SECTION = "devel/python"
 PRIORITY = "optional"
-DEPENDS = "python-native readline zlib gdbm openssl sqlite3"
+DEPENDS = "python-native readline zlib gdbm openssl sqlite3 bzip2"
 DEPENDS_sharprom = "python-native readline zlib gdbm openssl"
-PR = "ml1"
+PR = "ml2"
 
 PYTHON_MAJMIN = "2.5"
 
