@@ -10,9 +10,9 @@ RPROVIDES_${PN} += "readline"
 LEAD_SONAME = "libreadline.so"
 PR = "r3"
 
-SRC_URI = "ftp://ftp.cwru.edu/pub/bash/readline-${PV}.tar.gz \
-	   file://shlink-termcap.patch;patch=1 \
+SRC_URI = "ftp://ftp.gnu.org/gnu/readline/readline-${PV}.tar.gz \
 	   file://acinclude.m4"
+
 S = "${WORKDIR}/readline-${PV}"
 
 inherit autotools
