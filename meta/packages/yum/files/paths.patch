@@ -1,8 +1,14 @@
-Index: yum-3.2.18/Makefile
-===================================================================
---- yum-3.2.18.orig/Makefile	2008-08-23 09:13:56.000000000 +0100
-+++ yum-3.2.18/Makefile	2008-08-23 09:18:09.000000000 +0100
-@@ -18,19 +18,19 @@
+---
+ Makefile      |   18 +++++++++---------
+ docs/Makefile |   12 ++++++------
+ etc/Makefile  |   20 ++++++++++----------
+ 3 files changed, 25 insertions(+), 25 deletions(-)
+
+--- yum-3.2.18.orig/Makefile
++++ yum-3.2.18/Makefile
+@@ -16,23 +16,23 @@ clean:
+ 
+ subdirs:
  	for d in $(SUBDIRS); do make PYTHON=$(PYTHON) -C $$d; [ $$? = 0 ] || exit 1 ; done
  
  install:
@@ -27,15 +33,17 @@ Index: yum-3.2.18/Makefile
 -	mkdir -p $(DESTDIR)/var/cache/yum
 -	mkdir -p $(DESTDIR)/var/lib/yum	
 +	mkdir -p $(DESTDIR)$(localstatedir)/cache/yum
-+	mkdir -p $(DESTDIR)$(localstatedir)/lib/yum	
++	mkdir -p $(DESTDIR)$(localstatedir)/lib/yum
  
  	for d in $(SUBDIRS); do make PYTHON=$(PYTHON) DESTDIR=`cd $(DESTDIR); pwd` -C $$d install; [ $$? = 0 ] || exit 1; done
  
-Index: yum-3.2.18/docs/Makefile
-===================================================================
---- yum-3.2.18.orig/docs/Makefile	2008-08-23 09:19:07.000000000 +0100
-+++ yum-3.2.18/docs/Makefile	2008-08-23 09:19:37.000000000 +0100
-@@ -6,9 +6,9 @@
+ .PHONY: docs test
+ 
+--- yum-3.2.18.orig/docs/Makefile
++++ yum-3.2.18/docs/Makefile
+@@ -4,11 +4,11 @@ all:
+ clean:
+ 	rm -f *.pyc *.pyo *~
  	rm -fr epydoc
  
  install:
@@ -51,11 +59,11 @@ Index: yum-3.2.18/docs/Makefile
 +	install -m 644 yum.conf.5 $(DESTDIR)$(mandir)/man5/yum.conf.5
 +	install -m 644 yum-updatesd.8 $(DESTDIR)$(mandir)/man8/yum-updatesd.8
 +	install -m 644 yum-updatesd.conf.5 $(DESTDIR)$(mandir)/man5/yum-updatesd.conf.5
-Index: yum-3.2.18/etc/Makefile
-===================================================================
---- yum-3.2.18.orig/etc/Makefile	2008-08-23 09:19:51.000000000 +0100
-+++ yum-3.2.18/etc/Makefile	2008-08-23 09:20:28.000000000 +0100
-@@ -5,20 +5,20 @@
+--- yum-3.2.18.orig/etc/Makefile
++++ yum-3.2.18/etc/Makefile
+@@ -3,22 +3,22 @@ all:
+ 
+ clean:
  	rm -f *.pyc *.pyo *~
  
  install:
