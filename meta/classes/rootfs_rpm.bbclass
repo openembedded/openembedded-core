@@ -15,6 +15,31 @@ export YUM_ARCH_FORCE = "${TARGET_ARCH}"
 
 AWKPOSTINSTSCRIPT = "${STAGING_BINDIR_NATIVE}/extract-postinst.awk"
 
+RPM_POSTPROCESS_COMMANDS = "rpm_insert_feeds_uris"
+
+rpm_insert_feeds_uris () {
+
+        echo "Building from feeds activated!"
+
+	mkdir -p ${IMAGE_ROOTFS}/etc/yum/repos.d/
+        for line in ${RPM_FEED_URIS}
+        do
+                # strip leading and trailing spaces/tabs, then split into name and uri
+                line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
+                feed_name="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\1/p'`"
+                feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"
+
+                echo "Added $feed_name feed with URL $feed_uri"
+
+		FEED_FILE=${IMAGE_ROOTFS}/etc/yum/repos.d/$feed_name
+
+		echo "[poky-feed-$feed_name]" >> $FEED_FILE
+		echo "name = $feed_name" >> $FEED_FILE
+		echo "baseurl = $feed_uri" >> $FEED_FILE
+		echo "gpgcheck = 0" >> $FEED_FILE
+        done
+}
+
 fakeroot rootfs_rpm_do_rootfs () {
 	set -x
 
@@ -134,6 +159,7 @@ EOF
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
 
+	${RPM_POSTPROCESS_COMMANDS}
 	${ROOTFS_POSTPROCESS_COMMAND}
 	
 	rm -rf ${IMAGE_ROOTFS}/var/cache2/
