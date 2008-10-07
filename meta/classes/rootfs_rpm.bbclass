@@ -144,6 +144,9 @@ EOF
 	# remove lock files
 	rm -f ${IMAGE_ROOTFS}/var/lib/rpm/__db.*
 
+	# remove no longer used yum.conf
+	rm -f ${IMAGE_ROOTFS}/etc/yum.conf
+
 	log_check rootfs 	
 }
 
