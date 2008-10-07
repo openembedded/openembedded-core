@@ -1000,6 +1000,13 @@ def base_after_parse(d):
         depends = depends + " git-native:do_populate_staging"
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
+    # OSC packages should DEPEND on osc-native
+    srcuri = bb.data.getVar('SRC_URI', d, 1)
+    if "osc://" in srcuri:
+        depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
+        depends = depends + " osc-native:do_populate_staging"
+        bb.data.setVarFlag('do_fetch', 'depends', depends, d)
+
     # bb.utils.sha256_file() will fail if hashlib isn't present, so we fallback
     # on shasum-native.  We need to ensure that it is staged before we fetch.
     if bb.data.getVar('PN', d, True) != "shasum-native":
