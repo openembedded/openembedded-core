@@ -1,5 +1,5 @@
 HOMEPAGE = "http://linux.duke.edu/projects/yum/"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://linux.duke.edu/projects/yum/download/3.2/yum-${PV}.tar.gz \
            file://paths.patch;patch=1 \
@@ -7,8 +7,12 @@ SRC_URI = "http://linux.duke.edu/projects/yum/download/3.2/yum-${PV}.tar.gz \
 	   file://yum-install-recommends.py \
 	   file://extract-postinst.awk"
 
-DEPENDS = "python"
-RDEPENDS = "rpm python-core python-iniparse python-urlgrabber yum-metadata-parser"
+RDEPENDS = "python-rpm python-core python-iniparse python-urlgrabber \
+            python-shell python-re python-logging python-pickle \
+	    python-netserver python-compression \
+	    python-bzip2 python-unixadmin python-xml python-sqlite3 \
+	    python-textutils python-fcntl python-email \
+	    yum-metadata-parser"
 
 S = "${WORKDIR}/yum-${PV}"
 
