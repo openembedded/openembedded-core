@@ -19,7 +19,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 	set -x
 
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
-	echo ${TARGET_ARCH} >${IMAGE_ROOTFS}/etc/rpm/platform
+	echo "${TARGET_ARCH}-linux" >${IMAGE_ROOTFS}/etc/rpm/platform
 
 	# Generate an apprpriate yum.conf
 	rm -rf ${YUMCONF}
