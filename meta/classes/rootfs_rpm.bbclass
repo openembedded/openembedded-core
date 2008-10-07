@@ -15,6 +15,7 @@ export YUM_ARCH_FORCE = "${TARGET_ARCH}"
 
 AWKPOSTINSTSCRIPT = "${STAGING_BINDIR_NATIVE}/extract-postinst.awk"
 
+RPM_PREPROCESS_COMMANDS = ""
 RPM_POSTPROCESS_COMMANDS = "rpm_insert_feeds_uris"
 
 rpm_insert_feeds_uris () {
@@ -42,6 +43,8 @@ rpm_insert_feeds_uris () {
 
 fakeroot rootfs_rpm_do_rootfs () {
 	set -x
+	
+	${RPM_PREPROCESS_COMMANDS}
 
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
 	echo "${TARGET_ARCH}-linux" >${IMAGE_ROOTFS}/etc/rpm/platform
@@ -222,3 +225,14 @@ install_all_locales() {
     fi
 }
 
+python () {
+    import bb
+    if bb.data.getVar('BUILD_IMAGES_FROM_FEEDS', d, True):
+        flags = bb.data.getVarFlag('do_rootfs', 'recrdeptask', d)
+        flags = flags.replace("do_package_write_rpm", "")
+        flags = flags.replace("do_deploy", "")
+        flags = flags.replace("do_populate_staging", "")
+        bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
+        bb.data.setVar('RPM_PREPROCESS_COMMANDS', "rpm_insert_feed_uris", d)
+        bb.data.setVar('RPM_POSTPROCESS_COMMANDS', '', d)
+}
