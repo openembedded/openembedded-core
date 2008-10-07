@@ -8,9 +8,9 @@
 ########################################################################################################################
  
 
-PROVIDES+="python-profile python-threading python-distutils python-textutils python-codecs python-ctypes python-pickle python-datetime python-core python-io python-compiler python-compression python-re python-xmlrpc python-terminal python-email python-image python-tests python-core-dbg python-resource python-devel python-math python-hotshot python-unixadmin python-syslog python-tkinter python-gdbm python-fcntl python-netclient python-pprint python-netserver python-curses python-smtpd python-html python-readline python-subprocess python-pydoc python-logging python-mailbox python-xml python-mime python-sqlite3 python-sqlite3-tests python-unittest python-stringold python-robotparser python-lib-old-and-deprecated python-compile python-debugger python-shell python-bsddb python-mmap python-zlib python-db python-crypt python-idle python-lang python-audio python-bzip2 python-elementtree"
+PROVIDES+="python-profile python-threading python-distutils python-textutils python-codecs python-ctypes python-pickle python-datetime python-core python-io python-compiler python-compression python-re python-xmlrpc python-terminal python-email python-image python-tests python-core-dbg python-resource python-devel python-math python-hotshot python-unixadmin python-syslog python-tkinter python-gdbm python-fcntl python-netclient python-pprint python-netserver python-curses python-smtpd python-html python-readline python-subprocess python-pydoc python-logging python-mailbox python-xml python-mime python-sqlite3 python-sqlite3-tests python-unittest python-stringold python-robotparser python-lib-old-and-deprecated python-compile python-debugger python-shell python-bsddb python-mmap python-zlib python-db python-crypt python-idle python-lang python-audio python-bzip2 python-elementtree python-shlex"
 
-PACKAGES="python-profile python-threading python-distutils python-textutils python-codecs python-ctypes python-pickle python-datetime python-core python-io python-compiler python-compression python-re python-xmlrpc python-terminal python-email python-image python-tests python-core-dbg python-resource python-devel python-math python-hotshot python-unixadmin python-syslog python-tkinter python-gdbm python-fcntl python-netclient python-pprint python-netserver python-curses python-smtpd python-html python-readline python-subprocess python-pydoc python-logging python-mailbox python-xml python-mime python-sqlite3 python-sqlite3-tests python-unittest python-stringold python-robotparser python-lib-old-and-deprecated python-compile python-debugger python-shell python-bsddb python-mmap python-zlib python-db python-crypt python-idle python-lang python-audio python-bzip2 python-elementtree"
+PACKAGES="python-profile python-threading python-distutils python-textutils python-codecs python-ctypes python-pickle python-datetime python-core python-io python-compiler python-compression python-re python-xmlrpc python-terminal python-email python-image python-tests python-core-dbg python-resource python-devel python-math python-hotshot python-unixadmin python-syslog python-tkinter python-gdbm python-fcntl python-netclient python-pprint python-netserver python-curses python-smtpd python-html python-readline python-subprocess python-pydoc python-logging python-mailbox python-xml python-mime python-sqlite3 python-sqlite3-tests python-unittest python-stringold python-robotparser python-lib-old-and-deprecated python-compile python-debugger python-shell python-bsddb python-mmap python-zlib python-db python-crypt python-idle python-lang python-audio python-bzip2 python-elementtree python-shlex"
 
 DESCRIPTION_python-profile="Python Basic Profiling Support"
 PR_python-profile="ml0"
@@ -209,7 +209,7 @@ FILES_python-mailbox="${libdir}/python2.5/mailbox.* "
 
 DESCRIPTION_python-xml="Python basic XML support."
 PR_python-xml="ml0"
-RDEPENDS_python-xml="python-core python-re python-netclient"
+RDEPENDS_python-xml="python-core python-re python-netclient python-elementtree"
 FILES_python-xml="${libdir}/python2.5/lib-dynload/pyexpat.so ${libdir}/python2.5/xml ${libdir}/python2.5/xmllib.* "
 
 DESCRIPTION_python-mime="Python MIME Handling APIs"
@@ -306,3 +306,10 @@ DESCRIPTION_python-bzip2="Python bzip2 Handling"
 RDEPENDS_python-bzip2="python-core"
 FILES_python-bzip2="${libdir}/python2.5/lib-dynload/bz2.so"
 
+DESCRIPTION_python-elementtree="Python elementree"
+RDEPENDS_python-elementtree="python-core"
+FILES_python-elementtree="${libdir}/python2.5/lib-dynload/_elementtree.so"
+
+DESCRIPTION_python-shlex="Python shlex"
+RDEPENDS_python-shlex="python-core"
+FILES_python-shlex="${libdir}/python2.5/shlex.*"

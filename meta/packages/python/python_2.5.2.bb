@@ -5,7 +5,7 @@ SECTION = "devel/python"
 PRIORITY = "optional"
 DEPENDS = "python-native readline zlib gdbm openssl sqlite3 bzip2"
 DEPENDS_sharprom = "python-native readline zlib gdbm openssl"
-PR = "ml2"
+PR = "ml3"
 
 PYTHON_MAJMIN = "2.5"
 
