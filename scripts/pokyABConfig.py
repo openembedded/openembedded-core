@@ -68,6 +68,7 @@ runImage(f3, 'eee901', 'poky-image-minimal')
 runImage(f3, 'eee901', 'poky-image-minimal-live')
 runImage(f3, 'eee901', 'poky-image-sato')
 runImage(f3, 'eee901', 'poky-image-sato-live')
+runImage(f3, 'eee901', 'poky-image-netbook-live')
 runImage(f3, 'eee901', 'poky-image-sdk')
 runImage(f3, 'bootcdx86', 'poky-image-sato-cd')
 defaultenv['POKYLIBC'] = 'uclibc'
