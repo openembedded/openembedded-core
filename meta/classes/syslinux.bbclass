@@ -146,6 +146,8 @@ python build_syslinux_cfg () {
 			if initrd:
 				cfgfile.write('initrd=initrd ')
 
+			cfgfile.write('LABEL=%s '% (label))
+
 			cfgfile.write('%s\n' % (append))
 
 	cfgfile.close()
