@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Busybox version: 1.9.1
-# Fri Jul 25 12:25:34 2008
+# Wed Oct  8 16:19:41 2008
 #
 CONFIG_HAVE_DOT_CONFIG=y
 
@@ -369,7 +369,7 @@ CONFIG_XARGS=y
 # CONFIG_FEATURE_EXTRA_QUIET is not set
 # CONFIG_FEATURE_INIT_COREDUMPS is not set
 # CONFIG_FEATURE_INITRD is not set
-# CONFIG_HALT is not set
+CONFIG_HALT=y
 # CONFIG_MESG is not set
 
 #
