@@ -1,8 +1,11 @@
 LICENSE = "GPLv2"
 PRIORITY = "optional"
-DEPENDS = "gtk+ startup-notification apmd dbus dbus-glib"
+DEPENDS = "gtk+ startup-notification dbus dbus-glib"
+DEPENDS += " ${@base_contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
+DEPENDS += " ${@base_contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
+
 PV = "0.0+svnr${SRCREV}"
-PR = "r3"
+PR = "r4"
 
 RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
@@ -11,6 +14,8 @@ RCONFLICTS_${PN} = "matchbox-panel"
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dbus"
+EXTRA_OECONF += " ${@base_contains("MACHINE_FEATURES", "acpi", "--with-battery=acpi", "",d)}"
+EXTRA_OECONF += " ${@base_contains("MACHINE_FEATURES", "apm", "--with-battery=apm", "",d)}"
 
 S = "${WORKDIR}/${PN}"
 
