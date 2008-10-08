@@ -20,7 +20,7 @@ OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris"
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
 
-	rm ${IPKGCONF_TARGET}
+	rm -f ${IPKGCONF_TARGET}
 	touch ${IPKGCONF_TARGET}
 
 	${OPKG_PREPROCESS_COMMANDS}
