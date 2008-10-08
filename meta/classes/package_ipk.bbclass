@@ -95,8 +95,8 @@ package_update_index_ipk () {
 #
 package_generate_ipkg_conf () {
 	package_generate_archlist
-	echo "src oe file:${DEPLOY_DIR_IPK}" > ${IPKGCONF_TARGET}
-	echo "src oe file:${DEPLOY_DIR_IPK}" > ${IPKGCONF_SDK}
+	echo "src oe file:${DEPLOY_DIR_IPK}" >> ${IPKGCONF_TARGET}
+	echo "src oe file:${DEPLOY_DIR_IPK}" >> ${IPKGCONF_SDK}
 	ipkgarchs="${PACKAGE_ARCHS}"
 	for arch in $ipkgarchs; do
 		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
