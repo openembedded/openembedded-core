@@ -44,6 +44,5 @@ ASNEEDED_pn-minimo = ""
 ASNEEDED_pn-pciutils = ""
 ASNEEDED_pn-puzzles = ""
 ASNEEDED_pn-dialer = ""
-ASNEEDED_pn-parted = ""
 
 TARGET_LDFLAGS += "${ASNEEDED}"
