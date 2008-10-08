@@ -3,12 +3,13 @@ DESCRIPTION = "eeePC specific ACPI scripts"
 LICENSE="GPL"
 
 PV = "0.0+git${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 RDEPENDS = "pm-utils"
 
 SRC_URI = "git://git.debian.org/git/debian-eeepc/eeepc-acpi-scripts.git;protocol=git \
 	   file://remove-doc-check.patch;patch=1 \
+	   file://powerbtn.patch;patch=1 \
 	   file://policy-funcs "
 
 S = "${WORKDIR}/git"
