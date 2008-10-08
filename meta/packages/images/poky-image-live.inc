@@ -1,7 +1,7 @@
 AUTO_SYSLINUXCFG = "1"
 INITRD = "${DEPLOY_DIR_IMAGE}/poky-image-minimal-initramfs-${MACHINE}.cpio.gz"
-LABELS = "poky"
 APPEND += "root=/dev/ram0 "
+TIMEOUT = "10"
 
 EXCLUDE_FROM_WORLD = "1"
 

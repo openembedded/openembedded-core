@@ -2,7 +2,7 @@ DESCRIPTION = "Netbook Bootable Live Image"
 
 require poky-image-live.inc
 
-LABELS += "boot install"
+LABELS += "install"
 
 ROOTFS = "${DEPLOY_DIR_IMAGE}/poky-image-netbook-${MACHINE}.ext3"
 
