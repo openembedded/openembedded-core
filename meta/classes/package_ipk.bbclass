@@ -94,21 +94,27 @@ package_update_index_ipk () {
 # use against the host system in sdk builds
 #
 package_generate_ipkg_conf () {
-	mkdir -p ${STAGING_ETCDIR_NATIVE}/
+	package_generate_archlist
 	echo "src oe file:${DEPLOY_DIR_IPK}" > ${IPKGCONF_TARGET}
 	echo "src oe file:${DEPLOY_DIR_IPK}" > ${IPKGCONF_SDK}
 	ipkgarchs="${PACKAGE_ARCHS}"
-	priority=1
 	for arch in $ipkgarchs; do
-		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
-		echo "arch ${BUILD_ARCH}-$arch-sdk $priority" >> ${IPKGCONF_SDK}
-		priority=$(expr $priority + 5)
 		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
 		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
 		fi
 		if [ -e ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk/Packages ] ; then
 		        echo "src oe-${BUILD_ARCH}-$arch-sdk file:${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk" >> ${IPKGCONF_SDK}
 		fi
+	done
+}
+
+package_generate_archlist () {
+	ipkgarchs="${PACKAGE_ARCHS}"
+	priority=1
+	for arch in $ipkgarchs; do
+		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
+		echo "arch ${BUILD_ARCH}-$arch-sdk $priority" >> ${IPKGCONF_SDK}
+		priority=$(expr $priority + 5)
 	done
 }
 

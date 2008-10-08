@@ -20,6 +20,9 @@ OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris"
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
 
+	rm ${IPKGCONF_TARGET}
+	touch ${IPKGCONF_TARGET}
+
 	${OPKG_PREPROCESS_COMMANDS}
 
 	mkdir -p ${T}/
@@ -119,19 +122,19 @@ install_all_locales() {
 
 ipk_insert_feed_uris () {
 
-        echo "Building from feeds activated!"
+	echo "Building from feeds activated!"
 
-        for line in ${IPK_FEED_URIS}
-        do
-                # strip leading and trailing spaces/tabs, then split into name and uri
-                line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
-                feed_name="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\1/p'`"
-                feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"
+	for line in ${IPK_FEED_URIS}
+	do
+		# strip leading and trailing spaces/tabs, then split into name and uri
+		line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
+		feed_name="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\1/p'`"
+		feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"
 
-                echo "Added $feed_name feed with URL $feed_uri"
+		echo "Added $feed_name feed with URL $feed_uri"
 
-                # insert new feed-sources
-                echo "src/gz $feed_name $feed_uri" >> ${IPKGCONF_TARGET}
+		# insert new feed-sources
+		echo "src/gz $feed_name $feed_uri" >> ${IPKGCONF_TARGET}
         done
 }
 
@@ -143,7 +146,7 @@ python () {
         flags = flags.replace("do_deploy", "")
         flags = flags.replace("do_populate_staging", "")
         bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
-        bb.data.setVar('OPKG_PREPROCESS_COMMANDS', "package_generate_ipkg_conf\nipk_insert_feed_uris", d)
+        bb.data.setVar('OPKG_PREPROCESS_COMMANDS', "package_generate_archlist\nipk_insert_feed_uris", d)
         bb.data.setVar('OPKG_POSTPROCESS_COMMANDS', '', d)
 }
 
