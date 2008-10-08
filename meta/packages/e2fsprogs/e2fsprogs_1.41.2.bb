@@ -2,8 +2,9 @@ require e2fsprogs.inc
 
 PR = "r8"
 
-SRC_URI += "file://no-hardlinks.patch;patch=1"
 S = "${WORKDIR}/e2fsprogs-${PV}"
+
+SRC_URI += "file://no-hardlinks.patch;patch=1"
 
 PARALLEL_MAKE = ""
 
