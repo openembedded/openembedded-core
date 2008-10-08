@@ -1,6 +1,6 @@
 require gtk+_${PV}.bb
 inherit native
-DEPENDS = "jpeg-native libpng-native gettext-native glib-2.0-native"
+DEPENDS = "jpeg-native libpng-native gettext-native glib-2.0-native libx11-native"
 S = "${WORKDIR}/gtk+-${PV}"
 FILESPATH = "${FILE_DIRNAME}/gdk-pixbuf-csource:${FILE_DIRNAME}/gtk+-${PV}:${FILE_DIRNAME}/files"
 SRC_URI += "file://reduce-dependencies.patch;patch=1"
@@ -15,6 +15,8 @@ EXTRA_OECONF = "\
   --without-libtiff \
   --with-libjpeg \
   --with-libpng \
+  --x-includes=${STAGING_INCDIR} \
+  --x-libraries=${STAGING_LIBDIR} \
 "
 
 do_compile() {
