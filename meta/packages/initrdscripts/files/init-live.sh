@@ -7,7 +7,9 @@ UMOUNT="/bin/umount"
 
 early_setup() {
     mkdir /proc
+    mkdir /sys
     mount -t proc proc /proc
+    mount -t sysfs sysfs /sys
     udevd --daemon
 }
 
@@ -22,6 +24,12 @@ read_args() {
                 ROOT_FSTYPE=$optarg ;;
             rootdelay=*)
                 rootdelay=$optarg ;;
+	    LABEL=*)
+		label=$optarg ;;
+	    video=*)
+		video_mode=$optarg ;;
+	    vga=*)
+		vga_mode=$optarg ;;	    
         esac
     done
 }
@@ -38,14 +46,13 @@ fatal() {
     exec sh
 }
 
-echo "Starting initramfs boot..."
 early_setup
 
 [ -z "$CONSOLE" ] && CONSOLE="/dev/console"
 
 read_args
 
-echo "Waiting for Live image to show up..."
+echo "Waiting for removable media..."
 while true
 do
   for i in `ls /media 2>/dev/null`; do
@@ -59,12 +66,26 @@ do
   sleep 1
 done
 
-mkdir $ROOT_MOUNT
-mknod /dev/loop0 b 7 0
+case $label in
+    boot)
+	mkdir $ROOT_MOUNT
+	mknod /dev/loop0 b 7 0
 
-if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ROOT_IMAGE $ROOT_MOUNT
-then
-    fatal "Couldnt mount rootfs image"
-else
-    boot_live_root
-fi
+	if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ROOT_IMAGE $ROOT_MOUNT ; then
+	    fatal "Couldnt mount rootfs image"
+	else
+	    boot_live_root
+	fi
+	;;
+    install)
+	if [ -f /media/$i/$ROOT_IMAGE ] ; then
+	    ./install.sh $i $ROOT_IMAGE $video_mode $vga
+	else
+	    fatal "Couldnt find install script"
+	fi
+
+	# If we're getting here, we failed...
+	fatal "Installation image failed"
+	;;
+esac
+
