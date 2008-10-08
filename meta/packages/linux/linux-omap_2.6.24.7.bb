@@ -2,7 +2,8 @@ require linux-omap.inc
 
 PR = "r2"
 
-COMPATIBLE_MACHINE = "omap-3430ldp"
+COMPATIBLE_MACHINE = "omap-3430ldp|omap-3430sdp"
+DEFAULT_PREFERENCE = "1"
 
 #
 # Patch extracted from:
@@ -14,7 +15,7 @@ SRC_URI="http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.24.tar.bz2 \
          file://linux-2.6.24.7-ldp-v1.4.patch.gz;patch=1 \
          file://fixes.patch;patch=1 \
          file://module_fix.patch;patch=1 \
-         file://defconfig-omap-3430ldp"
+         file://defconfig-${MACHINE}"
 
 S = "${WORKDIR}/linux-2.6.24"
 
