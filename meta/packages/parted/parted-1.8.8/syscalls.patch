@@ -1,0 +1,53 @@
+---
+ libparted/arch/linux.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+Index: parted-1.8.8/libparted/arch/linux.c
+===================================================================
+--- parted-1.8.8.orig/libparted/arch/linux.c	2007-08-09 20:47:57.000000000 +0200
++++ parted-1.8.8/libparted/arch/linux.c	2008-10-06 13:49:17.000000000 +0200
+@@ -18,6 +18,8 @@
+ 
+ #define PROC_DEVICES_BUFSIZ 16384
+ 
++#include <linux/version.h>
++
+ #include <config.h>
+ 
+ #include <parted/parted.h>
+@@ -1361,12 +1363,14 @@ linux_refresh_close (PedDevice* dev)
+ 
+ #if SIZEOF_OFF_T < 8
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,20)
+ static _syscall5(int,_llseek,
+                  unsigned int, fd,
+                  unsigned long, offset_high,
+                  unsigned long, offset_low,
+                  loff_t*, result,
+                  unsigned int, origin)
++#endif
+ 
+ loff_t
+ llseek (unsigned int fd, loff_t offset, unsigned int whence)
+@@ -1374,11 +1378,20 @@ llseek (unsigned int fd, loff_t offset, 
+         loff_t result;
+         int retval;
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,20)
+         retval = _llseek(fd,
+                          ((unsigned long long)offset) >> 32,
+                          ((unsigned long long)offset) & 0xffffffff,
+                          &result,
+                          whence);
++#else
++ 	retval = syscall(__NR__llseek, fd,
++			 ((unsigned long long)offset) >> 32,
++                         ((unsigned long long)offset) & 0xffffffff,
++                          &result,
++			 whence);
++#endif
++
+         return (retval==-1 ? (loff_t) retval : result);
+ }
+ 
