@@ -12,3 +12,6 @@ do_install() {
 
 PACKAGE_ARCH = "all"
 FILES_${PN} = " /install.sh "
+
+# Alternatives to grub need adding for other arch support
+COMPATIBLE_HOST = "(i.86).*-linux"
