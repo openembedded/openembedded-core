@@ -118,10 +118,12 @@ fakeroot do_rootfs () {
 	# This part is done by kernel-module-* postinstall scripts but if image do
 	# not contains modules at all there are few moments in boot sequence with
 	# "unable to open modules.dep" message.
-	KERNEL_VERSION=`cat ${STAGING_KERNEL_DIR}/kernel-abiversion`
+	if [ -e ${STAGING_KERNEL_DIR}/kernel-abiversion ]; then
+		KERNEL_VERSION=`cat ${STAGING_KERNEL_DIR}/kernel-abiversion`
 
-	mkdir -p ${IMAGE_ROOTFS}/lib/modules/$KERNEL_VERSION
-	${TARGET_SYS}-depmod-2.6 -a -b ${IMAGE_ROOTFS} -F ${STAGING_KERNEL_DIR}/System.map-$KERNEL_VERSION $KERNEL_VERSION
+		mkdir -p ${IMAGE_ROOTFS}/lib/modules/$KERNEL_VERSION
+		${TARGET_SYS}-depmod-2.6 -a -b ${IMAGE_ROOTFS} -F ${STAGING_KERNEL_DIR}/System.map-$KERNEL_VERSION $KERNEL_VERSION
+	fi
 
 	${IMAGE_POSTPROCESS_COMMAND}
 	
