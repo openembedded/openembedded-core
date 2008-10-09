@@ -16,13 +16,13 @@ Index: gcc-3.4.4/gcc/c-incpath.c
 +	{
 +		/* printf("Adding Path: %s\n", p->name ); */
 +		if( strstr(p->name, "/usr/include" ) == p->name ) {
-+			fprintf(stderr, _("CROSS COMPILE Badness: /usr/include in INCLUDEPATH: %s\n"), p->name);
++			fprintf(stderr, _("BUILD ISOLATION FAILURE: /usr/include in INCLUDEPATH: %s\n Please fix the flags passed to the compiler to use the correct prefix.\n"), p->name);
 +			abort();
 +		} else if( strstr(p->name, "/sw/include") == p->name ) {
-+			fprintf(stderr, _("CROSS COMPILE Badness: /sw/include in INCLUDEPATH: %s\n"), p->name);
++			fprintf(stderr, _("BUILD ISOLATION FAILURE: /sw/include in INCLUDEPATH: %s\n Please fix the flags passed to the compiler to use the correct prefix.\n"), p->name);
 +			abort();
 +		} else if( strstr(p->name, "/opt/include") == p->name ) {
-+			fprintf(stderr, _("CROSS COMPILE Badness: /opt/include in INCLUDEPATH: %s\n"), p->name);
++			fprintf(stderr, _("BUILD ISOLATION FAILURE: /opt/include in INCLUDEPATH: %s\n Please fix the flags passed to the compiler to use the correct prefix.\n"), p->name);
 +			abort();
 +		}
 +	}
