@@ -5,9 +5,12 @@ SRC_URI = "git://anongit.freedesktop.org/DeviceKit/DeviceKit;protocol=git \
         file://volatile"
 
 PV = "002+git${SRCREV}"
+PR = "r1"
 SRCREV = "014d168ba4bf40c9bae487bacff8bf2aa054b5f6"
 
 S = "${WORKDIR}/git"
+
+EXTRA_OECONF = "--disable-man-pages"
 
 inherit autotools pkgconfig
 
