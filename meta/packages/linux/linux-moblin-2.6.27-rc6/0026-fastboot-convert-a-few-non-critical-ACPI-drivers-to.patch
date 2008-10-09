@@ -1,0 +1,54 @@
+From 60ddc2e5c44b4b9f5fcb440065469eacbeabf5eb Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Fri, 18 Jul 2008 15:17:35 -0700
+Subject: [PATCH] fastboot: convert a few non-critical ACPI drivers to async initcalls
+
+This patch converts a few non-critical ACPI drivers to async initcalls;
+these initcalls (battery, button and thermal) tend to take quite a bit of
+time (100's of milliseconds) due to the hardware they need to talk to,
+but are otherwise clearly non-essential for the boot process.
+
+Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+---
+ drivers/acpi/battery.c |    2 +-
+ drivers/acpi/button.c  |    2 +-
+ drivers/acpi/thermal.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+index b1c723f..d5d30ca 100644
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -904,5 +904,5 @@ static void __exit acpi_battery_exit(void)
+ #endif
+ }
+ 
+-module_init(acpi_battery_init);
++module_init_async(acpi_battery_init);
+ module_exit(acpi_battery_exit);
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index 1dfec41..46b3805 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -545,5 +545,5 @@ static void __exit acpi_button_exit(void)
+ 	remove_proc_entry(ACPI_BUTTON_CLASS, acpi_root_dir);
+ }
+ 
+-module_init(acpi_button_init);
++module_init_async(acpi_button_init);
+ module_exit(acpi_button_exit);
+diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+index 84c795f..1f529af 100644
+--- a/drivers/acpi/thermal.c
++++ b/drivers/acpi/thermal.c
+@@ -1833,5 +1833,5 @@ static void __exit acpi_thermal_exit(void)
+ 	return;
+ }
+ 
+-module_init(acpi_thermal_init);
++module_init_async(acpi_thermal_init);
+ module_exit(acpi_thermal_exit);
+-- 
+1.5.4.3
+

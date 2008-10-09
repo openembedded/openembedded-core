@@ -1,0 +1,23 @@
+commit 930469634910fa87c21f0a7423c98b270d35d8c6
+Author: Eric Anholt <eric@anholt.net>
+Date:   Mon Sep 15 13:13:34 2008 -0700
+
+    drm: G33-class hardware has a newer 965-style MCH (no DCC register).
+    
+    Fixes bad software fallback rendering in Mesa in dual-channel configurations.
+    
+    d9a2470012588dc5313a5ac8bb2f03575af00e99
+
+diff --git a/drivers/gpu/drm/i915/i915_gem_tiling.c b/drivers/gpu/drm/i915/i915_gem_tiling.c
+index 0c1b3a0..6b3f1e4 100644
+--- a/drivers/gpu/drm/i915/i915_gem_tiling.c
++++ b/drivers/gpu/drm/i915/i915_gem_tiling.c
+@@ -96,7 +96,7 @@ i915_gem_detect_bit_6_swizzle(struct drm_device *dev)
+ 		 */
+ 		swizzle_x = I915_BIT_6_SWIZZLE_NONE;
+ 		swizzle_y = I915_BIT_6_SWIZZLE_NONE;
+-	} else if (!IS_I965G(dev) || IS_I965GM(dev)) {
++	} else if ((!IS_I965G(dev) && !IS_G33(dev)) || IS_I965GM(dev)) {
+ 		uint32_t dcc;
+ 
+ 		/* On 915-945 and GM965, channel interleave by the CPU is

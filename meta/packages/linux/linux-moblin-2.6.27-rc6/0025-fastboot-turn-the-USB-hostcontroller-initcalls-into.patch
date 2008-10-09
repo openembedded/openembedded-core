@@ -1,0 +1,62 @@
+From d1a26186ee222329a797bb0b2c8e2b5bc7d94d42 Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Fri, 18 Jul 2008 15:16:53 -0700
+Subject: [PATCH] fastboot: turn the USB hostcontroller initcalls into async initcalls
+
+the USB host controller init calls take a long time, mostly due to a
+"minimally 100 msec" delay *per port* during initialization.
+These are prime candidates for going in parallel to everything else.
+
+The USB device ordering is not affected by this due to the
+serialized-within-eachother property of async initcalls.
+
+Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+---
+ drivers/usb/host/ehci-hcd.c |    2 +-
+ drivers/usb/host/ohci-hcd.c |    2 +-
+ drivers/usb/host/uhci-hcd.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+index 369a8a5..8f84b17 100644
+--- a/drivers/usb/host/ehci-hcd.c
++++ b/drivers/usb/host/ehci-hcd.c
+@@ -1101,7 +1101,7 @@ clean0:
+ #endif
+ 	return retval;
+ }
+-module_init(ehci_hcd_init);
++module_init_async(ehci_hcd_init);
+ 
+ static void __exit ehci_hcd_cleanup(void)
+ {
+diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
+index a8160d6..e060ed1 100644
+--- a/drivers/usb/host/ohci-hcd.c
++++ b/drivers/usb/host/ohci-hcd.c
+@@ -1165,7 +1165,7 @@ static int __init ohci_hcd_mod_init(void)
+ 
+ 	return retval;
+ }
+-module_init(ohci_hcd_mod_init);
++module_init_async(ohci_hcd_mod_init);
+ 
+ static void __exit ohci_hcd_mod_exit(void)
+ {
+diff --git a/drivers/usb/host/uhci-hcd.c b/drivers/usb/host/uhci-hcd.c
+index 3a7bfe7..f2a05ac 100644
+--- a/drivers/usb/host/uhci-hcd.c
++++ b/drivers/usb/host/uhci-hcd.c
+@@ -999,7 +999,7 @@ static void __exit uhci_hcd_cleanup(void)
+ 	kfree(errbuf);
+ }
+ 
+-module_init(uhci_hcd_init);
++module_init_async(uhci_hcd_init);
+ module_exit(uhci_hcd_cleanup);
+ 
+ MODULE_AUTHOR(DRIVER_AUTHOR);
+-- 
+1.5.4.3
+

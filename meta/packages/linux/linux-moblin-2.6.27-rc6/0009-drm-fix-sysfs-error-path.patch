@@ -1,0 +1,23 @@
+commit 2e9c9eedfe0be777c051a2198dddf459adcc407b
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Tue Sep 2 10:06:06 2008 +1000
+
+    drm: fix sysfs error path.
+    
+    Pointed out by Roel Kluin on dri-devel.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+
+diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
+index af211a0..1611b9b 100644
+--- a/drivers/gpu/drm/drm_sysfs.c
++++ b/drivers/gpu/drm/drm_sysfs.c
+@@ -184,7 +184,7 @@ int drm_sysfs_device_add(struct drm_minor *minor)
+ err_out_files:
+ 	if (i > 0)
+ 		for (j = 0; j < i; j++)
+-			device_remove_file(&minor->kdev, &device_attrs[i]);
++			device_remove_file(&minor->kdev, &device_attrs[j]);
+ 	device_unregister(&minor->kdev);
+ err_out:
+ 

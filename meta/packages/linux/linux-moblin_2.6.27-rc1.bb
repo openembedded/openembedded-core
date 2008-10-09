@@ -2,8 +2,6 @@ require linux-moblin.inc
 
 PR = "r4"
 
-DEFAULT_PREFERENCE_eee901 = "1"
-
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
 		${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.27-rc1.bz2;patch=1 \
 		file://0001_Export_shmem_file_setup_for_DRM-GEM.patch;patch=1 \

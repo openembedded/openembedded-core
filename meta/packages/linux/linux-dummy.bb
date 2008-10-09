@@ -9,7 +9,7 @@ PACKAGES_DYNAMIC += "kernel-image-*"
 
 #COMPATIBLE_MACHINE = "your_machine"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = ""
 
