@@ -1,3 +1,3 @@
 require exmap-console.inc
 
-PR = "r6"
+PR = "r7"
