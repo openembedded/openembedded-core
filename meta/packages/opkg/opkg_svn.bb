@@ -24,6 +24,7 @@ EXTRACFLAGS_omap-3430ldp = "-Wno-array-bounds"
 EXTRACFLAGS_omap-3430sdp = "-Wno-array-bounds"
 EXTRACFLAGS_beagleboard = "-Wno-array-bounds"
 EXTRACFLAGS_qemuarmv7 = "-Wno-array-bounds"
+EXTRACFLAGS_overo = "-Wno-array-bounds"
 
 TARGET_CFLAGS += "${EXTRACFLAGS}"
 
