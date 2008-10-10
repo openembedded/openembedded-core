@@ -166,10 +166,9 @@ python do_package_ipk () {
 			pkgname = pkg
 		bb.data.setVar('PKG', pkgname, localdata)
 
-		overrides = bb.data.getVar('OVERRIDES', localdata)
+		overrides = bb.data.getVar('OVERRIDES', localdata, True)
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
-		overrides = bb.data.expand(overrides, localdata)
 		bb.data.setVar('OVERRIDES', overrides + ':' + pkg, localdata)
 
 		bb.data.update_data(localdata)
