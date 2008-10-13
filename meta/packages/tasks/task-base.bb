@@ -1,5 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
-PR = "r68"
+PR = "r69"
 
 inherit task
 
@@ -30,9 +30,8 @@ PACKAGES = ' \
             ${@base_contains("MACHINE_FEATURES", "redboot", "task-base-redboot", "",d)} \
             ${@base_contains("MACHINE_FEATURES", "apex", "task-base-apex", "",d)} \
 	    \
-            task-base-bluetooth \
-            task-base-wifi \
-            \
+            ${@base_contains("DISTRO_FEATURES", "bluetooth", "task-base-bluetooth", "", d)} \
+            ${@base_contains("DISTRO_FEATURES", "wifi", "task-base-wifi", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "cramfs", "task-base-cramfs", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "ipsec", "task-base-ipsec", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "ipv6", "task-base-ipv6", "", d)} \
