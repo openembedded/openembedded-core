@@ -154,7 +154,11 @@ SRCREV_pn-usbpath = "3172"
 SRCREV_pn-xserver-kdrive-glamo ?= "a51364e2f23d4b6331c5ed613ce3f7e15f8e540f"
 SRCREV_pn-gsm0710muxd ?= "6fecc78198dd821bbe29efd096bd8fecd855179d"
 SRCREV_pn-gsmd2 ?= "963f34df8fa3ff4b301079dcf86e9acea6b6fe0f"
-SRCREV_pn-metacity-clutter ?= "389ce295417bdd99bf583026f7f1dedae29650da"
+SRCREV_pn-metacity-clutter ?= "b52f1df75af8216b13539431283fd1cfaa33cf51"
+SRCREV_pn-dri2proto ?= "abb1edc487543c26856afdbe6a7e2c088a1e82ee"
+SRCREV_pn-inputproto ?= "2166b77ea60bd9cd87f1311a2e7d461db071cb07"
+SRCREV_pn-inputproto-native ?= "2166b77ea60bd9cd87f1311a2e7d461db071cb07"
+SRCREV_pn-inputproto-sdk ?= "2166b77ea60bd9cd87f1311a2e7d461db071cb07"
 
 #
 # Preferred Versions:
