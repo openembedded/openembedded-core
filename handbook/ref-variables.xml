@@ -515,7 +515,7 @@
         <glossentry id='var-PE'><glossterm>PE</glossterm>
             <glossdef>
                 <para>
-                    Epoch of the package. The default value is "1". The field is used 
+                    Epoch of the package. The default value is "0". The field is used 
                     to make upgrades possible when the versioning scheme changes in 
                     some backwards incompatible way.
                 </para>
