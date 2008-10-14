@@ -3,7 +3,7 @@ require xserver-kdrive.inc
 DEPENDS += "libxkbfile libxcalibrate"
 
 PE = "1"
-PR = "r21"
+PR = "r22"
 
 SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://extra-kmodes.patch;patch=1 \
@@ -21,6 +21,7 @@ SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://hide-cursor-and-ppm-root.patch;patch=1 \
 	file://xcalibrate_coords.patch;patch=1 \
 	file://fbdev_xrandr_ioctl.patch;patch=1 \
-	file://scheduler.patch;patch=1"
+	file://scheduler.patch;patch=1 \
+	file://fix-newer-xorg-headers.patch;patch=1"
 
 S = "${WORKDIR}/xorg-server-${PV}"
