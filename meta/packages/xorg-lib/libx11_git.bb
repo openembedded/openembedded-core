@@ -7,6 +7,7 @@ DEPENDS = "libxcb xproto xextproto libxau xtrans libxdmcp xcmiscproto xf86bigfon
 PROVIDES = "virtual/libx11"
 RPROVIDES = "virtual/libx11"
 PR = "r1"
+PV = "1.1.99.1+git${SRCREV}"
 
 FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB"
 FILES_${PN}-locale += "${datadir}/X11/locale"
