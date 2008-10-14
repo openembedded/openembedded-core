@@ -1,23 +1,16 @@
 DEFAULT_PREFERENCE = "-1"
 
-DESCRIPTION = "Xlib/XCB: Xlib with XCB transport"
-SECTION = "x11/libs"
-LICENSE = "XFree86"
-DEPENDS = "libxcb xproto xextproto libxau xtrans libxdmcp xcmiscproto xf86bigfontproto kbproto inputproto bigreqsproto util-macros"
-PROVIDES = "virtual/libx11"
-RPROVIDES = "virtual/libx11"
-PR = "r1"
+require libx11.inc
 PV = "1.1.99.1+git${SRCREV}"
 
-FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB"
-FILES_${PN}-locale += "${datadir}/X11/locale"
+DEPENDS = "xproto xextproto xcmiscproto xf86bigfontproto kbproto inputproto \
+           bigreqsproto xtrans libxau libxcb libxdmcp util-macros"
+PV = "1.1.99.1+gitr${SRCREV}"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libX11;protocol=git"
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
-
-EXTRA_OECONF="--enable-malloc0returnsnull"
+EXTRA_OECONF += "--enable-malloc0returnsnull"
 
 do_compile() {
 	(
