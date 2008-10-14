@@ -25,8 +25,8 @@ inherit autotools pkgconfig
 
 do_compile_prepend() {
 	# have to unstage the library first so that the tests build
-	rm -f ${STAGING_LIBDIR}/libowl*
-	rm -f ${STAGING_INCDIR}/owl*
+	rm -f ${STAGING_LIBDIR}/libowl.*
+	rm -f ${STAGING_INCDIR}/owl*.h
 }
 
 do_stage() {
