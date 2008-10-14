@@ -2,12 +2,10 @@ require xorg-lib-common.inc
 
 DESCRIPTION = "X11 Input extension library"
 DEPENDS += "libxext inputproto"
-PR = "r0"
 PE = "1"
-PV = "1.1.99.1+git${SRCREV}"
-
-SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libXi;protocol=git"
-S = "${WORKDIR}/git"
+PV = "1.9.99.5+gitr${SRCREV}"
 
 XORG_PN = "libXi"
 
+SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/${XORG_PN};protocol=git"
+S = "${WORKDIR}/git"
