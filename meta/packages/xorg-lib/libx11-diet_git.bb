@@ -1,5 +1,5 @@
 require libx11.inc
-PV = "1.1.99.1+git${SRCREV}"
+PV = "1.1.99.1+gitr${SRCREV}"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libX11;protocol=git"
 S = "${WORKDIR}/git"

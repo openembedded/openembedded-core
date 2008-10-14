@@ -1,7 +1,6 @@
 DEFAULT_PREFERENCE = "-1"
 
 require libx11.inc
-PV = "1.1.99.1+git${SRCREV}"
 
 DEPENDS = "xproto xextproto xcmiscproto xf86bigfontproto kbproto inputproto \
            bigreqsproto xtrans libxau libxcb libxdmcp util-macros"
