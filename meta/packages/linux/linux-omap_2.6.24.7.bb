@@ -1,6 +1,6 @@
 require linux-omap.inc
 
-PR = "r3"
+PR = "r5"
 
 COMPATIBLE_MACHINE = "omap-3430ldp|omap-3430sdp"
 DEFAULT_PREFERENCE = "1"
