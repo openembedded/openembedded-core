@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r9"
+PR = "r10"
 
 S = "${WORKDIR}/e2fsprogs-${PV}"
 
@@ -17,7 +17,7 @@ do_compile_prepend () {
 
 ext2fsheaders = "ext2_ext_attr.h bitops.h ext2_err.h \
 		 ext2_types.h ext2_fs.h ext2_io.h \
-		 ext2fs.h"
+		 ext2fs.h ext3_extents.h"
 e2pheaders = "e2p.h"
 
 do_stage () {
