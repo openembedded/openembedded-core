@@ -17,3 +17,5 @@ UBOOT_MACHINE_overo = "omap3_overo_config"
 S = "${WORKDIR}/git"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+COMPATIBLE_MACHINE = "(beagleboard|omap3evm|overo)"
