@@ -2,9 +2,9 @@
  CMakeLists.txt |    4 ----
  1 file changed, 4 deletions(-)
 
---- libsyncml-0.4.6.orig/CMakeLists.txt
-+++ libsyncml-0.4.6/CMakeLists.txt
-@@ -39,14 +39,10 @@ CHECK_INCLUDE_FILES( unistd.h HAVE_UNIST
+--- libsyncml-0.4.7.orig/CMakeLists.txt
++++ libsyncml-0.4.7/CMakeLists.txt
+@@ -66,14 +66,10 @@ CHECK_INCLUDE_FILES( unistd.h HAVE_UNIST
  
  CHECK_TYPE_SIZE( uint16_t UINT16_T )
  CHECK_TYPE_SIZE( uint32_t UINT32_T )
@@ -16,6 +16,6 @@
 -
  # find requirements
  SET ( OPENOBEX_MIN_VERSION "1.1" )
- SET ( LIBSOUP2_MIN_VERSION "2.2.91" )
- #SET ( LIBWBXML2_MIN_VERSION "0.9.0" )
- #SET ( BLUEZ_MIN_VERSION "3.19" )
+ # do not set LIBSOUP2_MIN_VERSION
+ # if you set LIBSOUP2_MIN_VERSION then you cannot support 2.2 and 2.4
+ SET ( LIBSOUP22_MIN_VERSION "2.2.91" )
