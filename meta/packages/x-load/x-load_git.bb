@@ -25,3 +25,5 @@ SRC_URI_append_overo = " \
 S = "${WORKDIR}/git"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+COMPATIBLE_MACHINE = "(beagleboard|omap3evm|overo)"
