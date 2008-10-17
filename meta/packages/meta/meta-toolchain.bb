@@ -2,7 +2,7 @@ DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
 DEPENDS = "opkg-native opkg-utils-native fakeroot-native sed-native"
 
-inherit sdk meta
+inherit meta
 
 SDK_DIR = "${WORKDIR}/sdk"
 SDK_OUTPUT = "${SDK_DIR}/image"
