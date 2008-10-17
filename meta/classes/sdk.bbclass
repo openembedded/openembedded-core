@@ -60,3 +60,13 @@ FILES_${PN}-dbg += "${prefix}/.debug \
                    "
 
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
+
+python () {
+    barch = bb.data.getVar('BUILD_ARCH', d, True)
+    archs = bb.data.getVar('PACKAGE_ARCHS', d, True).split()
+    sdkarchs = []
+    for arch in archs:
+        sdkarchs.append(barch + '-' + arch + '-sdk')
+    bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
+}
+
