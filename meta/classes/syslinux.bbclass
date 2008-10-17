@@ -37,7 +37,7 @@ python build_syslinux_menu () {
 	cfgfile.write('\x07\x0C')
 
 	# The title should be configurable
-	cfgfile.write('AMD Geode Linux Boot Menu\n')
+	cfgfile.write('Linux Boot Menu\n')
 	cfgfile.write('The following targets are available on this image:\n')
 	cfgfile.write('\n')
 
