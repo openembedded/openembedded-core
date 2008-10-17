@@ -324,6 +324,9 @@ class NCursesUI:
                 pass
 
 def init(server, eventHandler):
+    if not os.isatty(sys.stdout.fileno()):
+        print "FATAL: Unable to run 'ncurses' UI without a TTY."
+        return
     ui = NCursesUI()
     try:
         curses.wrapper(ui.main, server, eventHandler)

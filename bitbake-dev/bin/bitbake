@@ -123,7 +123,6 @@ Default BBFILES are the .bb files in the current directory.""" )
     configuration.pkgs_to_build = []
     configuration.pkgs_to_build.extend(args[1:])
 
-
     # Work out which UI(s) to use
     curseUI = False
     depexplorerUI = False
@@ -168,10 +167,6 @@ Default BBFILES are the .bb files in the current directory.""" )
 
     # Launch the UI
     try:
-        # Disable UIs that need a terminal
-        if not os.isatty(sys.stdout.fileno()):
-            curseUI = False
-
         if curseUI:
             try:
                 import curses
