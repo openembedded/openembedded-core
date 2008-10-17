@@ -907,6 +907,10 @@ class BBCooker:
 
     def serve(self):
 
+        # Empty the environment. The environment will be populated as
+        # necessary from the data store.
+        bb.utils.empty_environment()
+
         if self.configuration.profile:
             try:
                 import cProfile as profile
