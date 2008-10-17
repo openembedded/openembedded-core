@@ -168,12 +168,6 @@ Default BBFILES are the .bb files in the current directory.""" )
     # Launch the UI
     try:
         if curseUI:
-            try:
-                import curses
-            except ImportError, details:
-                curseUI = False
-
-        if curseUI:
             from bb.ui import ncurses
             ncurses.init(server, eventHandler)
         elif depexplorerUI:
@@ -182,7 +176,8 @@ Default BBFILES are the .bb files in the current directory.""" )
         else:
             from bb.ui import knotty
             return_value = knotty.init(server, eventHandler)
-
+    except Exception, e:
+       print "FATAL: Unable to start to '%s' UI: %s" % (configuration.ui, e.message)
     finally:
         # Don't wait for server indefinitely
         import socket
