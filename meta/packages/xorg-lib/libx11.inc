@@ -8,6 +8,9 @@ LEAD_SONAME = "libX11.so"
 
 EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h"
 
+FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${libdir}/X11/Xcms.txt"
+FILES_${PN}-locale += "${datadir}/X11/locale ${libdir}/X11/locale"
+
 do_compile() {
 	cd ${S}/src/util
 	mv makekeys.c.orig makekeys.c || true
@@ -25,5 +28,4 @@ do_compile() {
 	oe_runmake
 }
 
-FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${libdir}/X11/Xcms.txt"
-FILES_${PN}-locale += "${datadir}/X11/locale ${libdir}/X11/locale"
+
