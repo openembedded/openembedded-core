@@ -59,6 +59,10 @@ build_boot_bin() {
 	syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
 	chmod 644 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
 
+	cd ${DEPLOY_DIR_IMAGE}
+	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
+	ln -s ${IMAGE_NAME}.hddimg ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
+	
 	#Create an ISO if we have an INITRD
 	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ] && [ "${NOISO}" != "1" ] ; then
 		install -d ${ISODIR}
@@ -87,6 +91,11 @@ build_boot_bin() {
 		-b isolinux/isolinux.bin -c isolinux/boot.cat -r \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		${S}/cd/
+
+		cd ${DEPLOY_DIR_IMAGE}
+		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
+		ln -s ${IMAGE_NAME}.iso ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
+
 	fi
 } 
 
