@@ -13,7 +13,8 @@
 # ${SYSLINUX_OPTS} - additional options to add to the syslinux file ';' delimited 
 
 do_bootimg[depends] += "dosfstools-native:do_populate_staging \
-                       syslinux-native:do_populate_staging \
+                       syslinux:do_populate_staging \
+                       syslinux-installer-native:do_populate_staging \
 		       mtools-native:do_populate_staging \
 		       cdrtools-native:do_populate_staging"
 
@@ -45,7 +46,7 @@ build_boot_bin() {
     		install -m 0644 ${ROOTFS} ${HDDDIR}/rootfs.img
 	fi
 
-	install -m 444 ${STAGING_DATADIR_NATIVE}/syslinux/ldlinux.sys \
+	install -m 444 ${STAGING_DATADIR}/syslinux/ldlinux.sys \
 	${HDDDIR}/ldlinux.sys
 
 	# Do a little math, bash style
@@ -83,7 +84,7 @@ build_boot_bin() {
 		install -m 0644 ${INITRD} ${ISODIR}/initrd
 
 		# And install the syslinux stuff 
-		cp ${STAGING_DATADIR_NATIVE}/syslinux/isolinux.bin \
+		cp ${STAGING_DATADIR}/syslinux/isolinux.bin \
 		${ISODIR}
 
 		mkisofs -V ${BOOTIMG_VOLUME_ID} \
