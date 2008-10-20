@@ -12,6 +12,8 @@ PACKAGES += "${PN}-bin"
 FILES_${PN} = "${libdir}/libacpi.so.*"
 FILES_${PN}-bin = "${bindir}"
 
+COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
+
 do_stage() {
 	install -m 0644 libacpi.h ${STAGING_INCDIR}
 	oe_libinstall -so libacpi ${STAGING_LIBDIR}
