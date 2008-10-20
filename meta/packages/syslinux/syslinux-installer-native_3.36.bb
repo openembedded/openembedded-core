@@ -1,14 +1,13 @@
-# syslinux-native OE build file
 # Copyright (C) 2004-2006, Advanced Micro Devices, Inc.  All Rights Reserved
 # Released under the MIT license (see packages/COPYING)
 
-DESCRIPTION="A multi-purpose linux bootloader"
-HOMEPAGE="http://syslinux.zytor.com/"
-LICENSE="GPL"
+DESCRIPTION = "A multi-purpose linux bootloader"
+HOMEPAGE = "http://syslinux.zytor.com/"
+LICENSE = "GPL"
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/boot/syslinux/syslinux-${PV}.tar.bz2 "
 
-S="${WORKDIR}/syslinux-${PV}"
-STAGE_TEMP="${WORKDIR}/stage_temp"
+S = "${WORKDIR}/syslinux-${PV}"
+STAGE_TEMP = "${WORKDIR}/stage_temp"
 
 inherit native
 
