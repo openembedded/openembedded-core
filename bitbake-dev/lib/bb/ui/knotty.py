@@ -56,9 +56,6 @@ def init(server, eventHandler):
             if event is None:
                 continue
             #print event
-            if event[0].startswith('bb.event.Pkg'):
-                print "NOTE: %s" % event[1]['_message']
-                continue
             if event[0].startswith('bb.msg.MsgPlain'):
                 print event[1]['_message']
                 continue
