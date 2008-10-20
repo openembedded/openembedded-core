@@ -16,6 +16,8 @@ do_configure() {
 
 STAGE_TEMP = "${WORKDIR}/stage_temp"
 
+COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
+
 do_stage() {
 	install -d ${STAGE_TEMP}
 	oe_runmake install INSTALLROOT="${STAGE_TEMP}"
