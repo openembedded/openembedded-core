@@ -88,6 +88,9 @@ def pstage_manualclean(srcname, destvarname, d):
 
 	for walkroot, dirs, files in os.walk(src):
 		for file in files:
+			# Avoid breaking the held lock
+			if (file == "staging.lock"):
+				continue
 			filepath = os.path.join(walkroot, file).replace(src, dest)
 			bb.note("rm %s" % filepath)
 			os.system("rm %s" % filepath)
