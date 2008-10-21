@@ -1,0 +1,41 @@
+commit 20ae3cf7d4a9ae8d23bcffa67c9a34fc2640d217
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Jul 30 12:36:08 2008 -0700
+
+    i915: Ignore X server provided mmio address
+    
+    It is already correctly detected by the kernel for use in suspend/resume.
+    
+    Signed-off-by: Eric Anholt <eric@anholt.net>
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+
+diff --git a/drivers/gpu/drm/i915/i915_dma.c b/drivers/gpu/drm/i915/i915_dma.c
+index 24adbde..01a869b 100644
+--- a/drivers/gpu/drm/i915/i915_dma.c
++++ b/drivers/gpu/drm/i915/i915_dma.c
+@@ -121,13 +121,6 @@ static int i915_initialize(struct drm_device * dev, drm_i915_init_t * init)
+ 		return -EINVAL;
+ 	}
+ 
+-	dev_priv->mmio_map = drm_core_findmap(dev, init->mmio_offset);
+-	if (!dev_priv->mmio_map) {
+-		i915_dma_cleanup(dev);
+-		DRM_ERROR("can not find mmio map!\n");
+-		return -EINVAL;
+-	}
+-
+ 	dev_priv->sarea_priv = (drm_i915_sarea_t *)
+ 	    ((u8 *) dev_priv->sarea->handle + init->sarea_priv_offset);
+ 
+@@ -194,11 +187,6 @@ static int i915_dma_resume(struct drm_device * dev)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!dev_priv->mmio_map) {
+-		DRM_ERROR("can not find mmio map!\n");
+-		return -EINVAL;
+-	}
+-
+ 	if (dev_priv->ring.map.handle == NULL) {
+ 		DRM_ERROR("can not ioremap virtual address for"
+ 			  " ring buffer\n");

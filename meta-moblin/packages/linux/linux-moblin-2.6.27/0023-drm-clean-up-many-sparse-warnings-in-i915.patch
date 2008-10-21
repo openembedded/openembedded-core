@@ -1,0 +1,192 @@
+commit 034994cfffbb2371b720e3f49378031ebc12645e
+Author: Eric Anholt <eric@anholt.net>
+Date:   Thu Oct 2 12:24:47 2008 -0700
+
+    drm: Clean up many sparse warnings in i915.
+    
+    Signed-off-by: Eric Anholt <eric@anholt.net>
+
+diff --git a/drivers/gpu/drm/i915/i915_dma.c b/drivers/gpu/drm/i915/i915_dma.c
+index dbd3f49..814cc12 100644
+--- a/drivers/gpu/drm/i915/i915_dma.c
++++ b/drivers/gpu/drm/i915/i915_dma.c
+@@ -76,7 +76,7 @@ int i915_wait_ring(struct drm_device * dev, int n, const char *caller)
+  * Sets up the hardware status page for devices that need a physical address
+  * in the register.
+  */
+-int i915_init_phys_hws(struct drm_device *dev)
++static int i915_init_phys_hws(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	/* Program Hardware Status Page */
+@@ -101,7 +101,7 @@ int i915_init_phys_hws(struct drm_device *dev)
+  * Frees the hardware status page, whether it's a physical address or a virtual
+  * address set up by the X Server.
+  */
+-void i915_free_hws(struct drm_device *dev)
++static void i915_free_hws(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	if (dev_priv->status_page_dmah) {
+@@ -145,8 +145,8 @@ static int i915_dma_cleanup(struct drm_device * dev)
+ 
+ 	if (dev_priv->ring.virtual_start) {
+ 		drm_core_ioremapfree(&dev_priv->ring.map, dev);
+-		dev_priv->ring.virtual_start = 0;
+-		dev_priv->ring.map.handle = 0;
++		dev_priv->ring.virtual_start = NULL;
++		dev_priv->ring.map.handle = NULL;
+ 		dev_priv->ring.map.size = 0;
+ 	}
+ 
+@@ -827,9 +827,7 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
+ 	base = drm_get_resource_start(dev, mmio_bar);
+ 	size = drm_get_resource_len(dev, mmio_bar);
+ 
+-	ret = drm_addmap(dev, base, size, _DRM_REGISTERS,
+-			 _DRM_KERNEL | _DRM_DRIVER,
+-			 &dev_priv->mmio_map);
++	dev_priv->regs = ioremap(base, size);
+ 
+ 	i915_gem_load(dev);
+ 
+@@ -867,8 +865,8 @@ int i915_driver_unload(struct drm_device *dev)
+ 
+ 	i915_free_hws(dev);
+ 
+-	if (dev_priv->mmio_map)
+-		drm_rmmap(dev, dev_priv->mmio_map);
++	if (dev_priv->regs != NULL)
++		iounmap(dev_priv->regs);
+ 
+ 	intel_opregion_free(dev);
+ 
+diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
+index 8547f0a..b184d54 100644
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@ -110,8 +110,8 @@ struct intel_opregion {
+ typedef struct drm_i915_private {
+ 	struct drm_device *dev;
+ 
++	void __iomem *regs;
+ 	drm_local_map_t *sarea;
+-	drm_local_map_t *mmio_map;
+ 
+ 	drm_i915_sarea_t *sarea_priv;
+ 	drm_i915_ring_buffer_t ring;
+@@ -553,12 +553,12 @@ extern void opregion_enable_asle(struct drm_device *dev);
+ 		LOCK_TEST_WITH_RETURN(dev, file_priv);			\
+ } while (0)
+ 
+-#define I915_READ(reg)          DRM_READ32(dev_priv->mmio_map, (reg))
+-#define I915_WRITE(reg,val)     DRM_WRITE32(dev_priv->mmio_map, (reg), (val))
+-#define I915_READ16(reg)	DRM_READ16(dev_priv->mmio_map, (reg))
+-#define I915_WRITE16(reg,val)	DRM_WRITE16(dev_priv->mmio_map, (reg), (val))
+-#define I915_READ8(reg)		DRM_READ8(dev_priv->mmio_map, (reg))
+-#define I915_WRITE8(reg,val)	DRM_WRITE8(dev_priv->mmio_map, (reg), (val))
++#define I915_READ(reg)          readl(dev_priv->regs + (reg))
++#define I915_WRITE(reg,val)     writel(val, dev_priv->regs + (reg))
++#define I915_READ16(reg)	readw(dev_priv->regs + (reg))
++#define I915_WRITE16(reg,val)	writel(val, dev_priv->regs + (reg))
++#define I915_READ8(reg)		readb(dev_priv->regs + (reg))
++#define I915_WRITE8(reg,val)	writeb(val, dev_priv->regs + (reg))
+ 
+ #define I915_VERBOSE 0
+ 
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index 6ecfd10..6a89449 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -176,7 +176,8 @@ i915_gem_gtt_pwrite(struct drm_device *dev, struct drm_gem_object *obj,
+ 	ssize_t remain;
+ 	loff_t offset;
+ 	char __user *user_data;
+-	char *vaddr;
++	char __iomem *vaddr;
++	char *vaddr_atomic;
+ 	int i, o, l;
+ 	int ret = 0;
+ 	unsigned long pfn;
+@@ -219,16 +220,20 @@ i915_gem_gtt_pwrite(struct drm_device *dev, struct drm_gem_object *obj,
+ 		pfn = (dev->agp->base >> PAGE_SHIFT) + i;
+ 
+ #ifdef CONFIG_HIGHMEM
+-		/* kmap_atomic can't map IO pages on non-HIGHMEM kernels
++		/* This is a workaround for the low performance of iounmap
++		 * (approximate 10% cpu cost on normal 3D workloads).
++		 * kmap_atomic on HIGHMEM kernels happens to let us map card
++		 * memory without taking IPIs.  When the vmap rework lands
++		 * we should be able to dump this hack.
+ 		 */
+-		vaddr = kmap_atomic_pfn(pfn, KM_USER0);
++		vaddr_atomic = kmap_atomic_pfn(pfn, KM_USER0);
+ #if WATCH_PWRITE
+ 		DRM_INFO("pwrite i %d o %d l %d pfn %ld vaddr %p\n",
+-			 i, o, l, pfn, vaddr);
++			 i, o, l, pfn, vaddr_atomic);
+ #endif
+-		unwritten = __copy_from_user_inatomic_nocache(vaddr + o,
++		unwritten = __copy_from_user_inatomic_nocache(vaddr_atomic + o,
+ 							      user_data, l);
+-		kunmap_atomic(vaddr, KM_USER0);
++		kunmap_atomic(vaddr_atomic, KM_USER0);
+ 
+ 		if (unwritten)
+ #endif /* CONFIG_HIGHMEM */
+@@ -271,7 +276,7 @@ fail:
+ 	return ret;
+ }
+ 
+-int
++static int
+ i915_gem_shmem_pwrite(struct drm_device *dev, struct drm_gem_object *obj,
+ 		      struct drm_i915_gem_pwrite *args,
+ 		      struct drm_file *file_priv)
+@@ -587,7 +592,7 @@ i915_add_request(struct drm_device *dev, uint32_t flush_domains)
+  * Ensures that all commands in the ring are finished
+  * before signalling the CPU
+  */
+-uint32_t
++static uint32_t
+ i915_retire_commands(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+@@ -734,7 +739,7 @@ i915_gem_retire_work_handler(struct work_struct *work)
+  * Waits for a sequence number to be signaled, and cleans up the
+  * request and object lists appropriately for that event.
+  */
+-int
++static int
+ i915_wait_request(struct drm_device *dev, uint32_t seqno)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+@@ -1483,7 +1488,7 @@ i915_gem_object_pin_and_relocate(struct drm_gem_object *obj,
+ 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
+ 	int i, ret;
+ 	uint32_t last_reloc_offset = -1;
+-	void *reloc_page = NULL;
++	void __iomem *reloc_page = NULL;
+ 
+ 	/* Choose the GTT offset for our buffer and put it there. */
+ 	ret = i915_gem_object_pin(obj, (uint32_t) entry->alignment);
+@@ -1500,8 +1505,8 @@ i915_gem_object_pin_and_relocate(struct drm_gem_object *obj,
+ 	for (i = 0; i < entry->relocation_count; i++) {
+ 		struct drm_gem_object *target_obj;
+ 		struct drm_i915_gem_object *target_obj_priv;
+-		uint32_t reloc_val, reloc_offset, *reloc_entry;
+-		int ret;
++		uint32_t reloc_val, reloc_offset;
++		uint32_t __iomem *reloc_entry;
+ 
+ 		ret = copy_from_user(&reloc, relocs + i, sizeof(reloc));
+ 		if (ret != 0) {
+@@ -1624,7 +1629,7 @@ i915_gem_object_pin_and_relocate(struct drm_gem_object *obj,
+ 			}
+ 		}
+ 
+-		reloc_entry = (uint32_t *)((char *)reloc_page +
++		reloc_entry = (uint32_t __iomem *)(reloc_page +
+ 					   (reloc_offset & (PAGE_SIZE - 1)));
+ 		reloc_val = target_obj_priv->gtt_offset + reloc.delta;
+ 

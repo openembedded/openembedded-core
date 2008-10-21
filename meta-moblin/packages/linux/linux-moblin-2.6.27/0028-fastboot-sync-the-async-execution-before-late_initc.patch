@@ -1,0 +1,92 @@
+From 660625fb93f2fc0e633da9cb71d13d895b385f64 Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Sun, 20 Jul 2008 09:00:41 -0700
+Subject: [PATCH] fastboot: sync the async execution before late_initcall and move level 6s (sync) first
+
+Rene Herman points out several cases where it's basically needed to have
+all level 6/6a/6s calls done before the level 7 (late_initcall) code
+runs. This patch adds a sync point in the transition from the 6's to the
+7's.
+
+Second, this patch makes sure that level 6s (sync) happens before the
+async code starts, and puts a user in driver/pci in this category that
+needs to happen before device init.
+
+Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+---
+ drivers/pci/pci.c                 |    2 +-
+ include/asm-generic/vmlinux.lds.h |    3 ++-
+ init/main.c                       |   14 +++++++++++++-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
+
+Index: linux-2.6.27/drivers/pci/pci.c
+===================================================================
+--- linux-2.6.27.orig/drivers/pci/pci.c	2008-10-14 16:55:30.000000000 +0200
++++ linux-2.6.27/drivers/pci/pci.c	2008-10-14 17:01:42.000000000 +0200
+@@ -1909,7 +1909,7 @@ static int __devinit pci_setup(char *str
+ }
+ early_param("pci", pci_setup);
+ 
+-device_initcall(pci_init);
++device_initcall_sync(pci_init);
+ 
+ EXPORT_SYMBOL(pci_reenable_device);
+ EXPORT_SYMBOL(pci_enable_device_io);
+Index: linux-2.6.27/include/asm-generic/vmlinux.lds.h
+===================================================================
+--- linux-2.6.27.orig/include/asm-generic/vmlinux.lds.h	2008-10-14 17:00:59.000000000 +0200
++++ linux-2.6.27/include/asm-generic/vmlinux.lds.h	2008-10-14 17:01:42.000000000 +0200
+@@ -376,11 +376,12 @@
+   	*(.initcall5.init)						\
+   	*(.initcall5s.init)						\
+ 	*(.initcallrootfs.init)						\
++	*(.initcall6s.init)						\
+ 	__async_initcall_start = .;					\
+ 	*(.initcall6a.init)						\
+ 	__async_initcall_end = .;					\
+   	*(.initcall6.init)						\
+-  	*(.initcall6s.init)						\
++	__device_initcall_end = .;					\
+   	*(.initcall7.init)						\
+   	*(.initcall7s.init)
+ 
+Index: linux-2.6.27/init/main.c
+===================================================================
+--- linux-2.6.27.orig/init/main.c	2008-10-14 17:01:38.000000000 +0200
++++ linux-2.6.27/init/main.c	2008-10-14 17:01:42.000000000 +0200
+@@ -746,6 +746,7 @@ int do_one_initcall(initcall_t fn)
+ 
+ extern initcall_t __initcall_start[], __initcall_end[], __early_initcall_end[];
+ extern initcall_t __async_initcall_start[], __async_initcall_end[];
++extern initcall_t __device_initcall_end[];
+ 
+ static void __init do_async_initcalls(struct work_struct *dummy)
+ {
+@@ -767,7 +768,13 @@ static void __init do_initcalls(void)
+ {
+ 	initcall_t *call;
+ 	static DECLARE_WORK(async_work, do_async_initcalls);
+-	int phase = 0; /* 0 = levels 0 - 6, 1 = level 6a, 2 = after level 6a */
++	/*
++	 * 0 = levels 0 - 6,
++	 * 1 = level 6a,
++	 * 2 = after level 6a,
++	 * 3 = after level 6
++	 */
++	int phase = 0;
+ 
+ 	async_init_wq = create_singlethread_workqueue("kasyncinit");
+ 
+@@ -778,6 +785,11 @@ static void __init do_initcalls(void)
+ 		}
+ 		if (phase == 1 && call >= __async_initcall_end)
+ 			phase = 2;
++		if (phase == 2 && call >= __device_initcall_end) {
++			phase = 3;
++			/* make sure all async work is done before level 7 */
++			flush_workqueue(async_init_wq);
++		}
+ 		if (phase != 1)
+ 			do_one_initcall(*call);
+ 	}

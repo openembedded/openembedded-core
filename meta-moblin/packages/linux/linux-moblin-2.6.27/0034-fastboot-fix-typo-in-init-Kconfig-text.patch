@@ -1,0 +1,26 @@
+From 1a23ed42e1baf0481cc70c2f71d97b0bf0f1be70 Mon Sep 17 00:00:00 2001
+From: Ingo Molnar <mingo@elte.hu>
+Date: Thu, 31 Jul 2008 12:52:29 +0200
+Subject: [PATCH] fastboot: fix typo in init/Kconfig text
+
+noticed by Randy Dunlap.
+
+Reported-by: Randy Dunlap <randy.dunlap@oracle.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+---
+ init/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: linux-2.6.27/init/Kconfig
+===================================================================
+--- linux-2.6.27.orig/init/Kconfig	2008-10-14 17:02:39.000000000 +0200
++++ linux-2.6.27/init/Kconfig	2008-10-14 17:02:56.000000000 +0200
+@@ -530,7 +530,7 @@ config FASTBOOT
+ 	  The fastboot option will cause the kernel to try to optimize
+ 	  for faster boot.
+ 
+-	  This includes doing some of the device initialization asynchronous
++	  This includes doing some of the device initialization asynchronously
+ 	  as well as opportunistically trying to mount the root fs early.
+ 
+ 	  If unsure, say N.
