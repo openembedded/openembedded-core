@@ -971,8 +971,6 @@ class RunQueue:
                     self.stats.taskSkipped()
                     continue
 
-                bb.event.fire(runQueueTaskStarted(task, self.stats, self, self.cfgData))
-                bb.msg.note(1, bb.msg.domain.RunQueue, "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + 1, self.stats.total, task, self.get_user_idstring(task)))
                 sys.stdout.flush()
                 sys.stderr.flush()
                 try: 
@@ -980,6 +978,16 @@ class RunQueue:
                 except OSError, e: 
                     bb.msg.fatal(bb.msg.domain.RunQueue, "fork failed: %d (%s)" % (e.errno, e.strerror))
                 if pid == 0:
+                    # Save out the PID so that the event can include it the
+                    # events
+                    bb.event.worker_pid = os.getpid()
+
+                    bb.event.fire(runQueueTaskStarted(task, self.stats, self, self.cfgData))
+                    bb.msg.note(1, bb.msg.domain.RunQueue,
+                                "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + 1,
+                                                                        self.stats.total,
+                                                                        task,
+                                                                        self.get_user_idstring(task)))
                     self.state = runQueueChildProcess
                     # Make the child the process group leader
                     os.setpgid(0, 0)
