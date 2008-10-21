@@ -33,6 +33,7 @@ fi
 
 BBDIR="$OEROOT/bitbake$BBEXTRA/"
 PKGDIR="$OEROOT/meta/"
+PKGDIR_MOBLIN="$OEROOT/meta-moblin/"
 BUILDDIR="$OEROOT/$BDIR/"
 MSG=''
 
@@ -59,6 +60,9 @@ if ! (test -r "$BUILDDIR/conf/local.conf"); then
 fi
 
 BBPATH=$BBDIR
+if test x"$BBDIR" != x"$PKGDIR_MOBLIN"; then
+	BBPATH=$PKGDIR_MOBLIN:$BBPATH
+fi
 if test x"$BBDIR" != x"$PKGDIR"; then
 	BBPATH=$PKGDIR:$BBPATH
 fi

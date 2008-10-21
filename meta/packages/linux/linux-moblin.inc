@@ -15,4 +15,4 @@ do_configure() {
 }
 
 
-COMPATIBLE_MACHINE = "eee901"
+COMPATIBLE_MACHINE = "netbook"

@@ -1,6 +1,15 @@
 # Where to cache the files Poky downloads
 DL_DIR ?= "${OEROOT}/sources"
-BBFILES = "${OEROOT}/meta/packages/*/*.bb"
+BBFILES = "\
+    ${OEROOT}/meta/packages/*/*.bb \
+    ${OEROOT}/meta-moblin/packages/*/*.bb"
+
+BBFILE_COLLECTIONS = "normal moblin"
+BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
+BBFILE_PATTERN_moblin = "^${OEROOT}/meta-moblin/"
+
+BBFILE_PRIORITY_normal = "5"
+BBFILE_PRIORITY_moblin = "5"
 
 # Uncomment and set to allow bitbake to execute multiple tasks at once.
 # For a quadcore, BB_NUMBER_THREADS = "4", PARALLEL_MAKE = "-j 4" would
@@ -10,11 +19,11 @@ BBFILES = "${OEROOT}/meta/packages/*/*.bb"
 # PARALLEL_MAKE = "-j 4"
 
 # The machine to target
-MACHINE ?= "qemuarm"
+MACHINE ?= "netbook"
 
 # Other supported machines
 #MACHINE ?= "qemux86"
-#MACHINE ?= "eee901"
+#MACHINE ?= "qemuarm"
 #MACHINE ?= "c7x0"
 #MACHINE ?= "akita"
 #MACHINE ?= "spitz"
@@ -37,17 +46,20 @@ DISTRO ?= "poky"
 # Poky has various extra metadata collections (openmoko, extras).
 # To enable these, uncomment all (or some of) the following lines:
 # BBFILES = "\
-#    ${OEROOT}/meta/packages/*/*.bb 
-#    ${OEROOT}/meta-extras/packages/*/*.bb
-#    ${OEROOT}/meta-openmoko/packages/*/*.bb
+#    ${OEROOT}/meta/packages/*/*.bb \
+#    ${OEROOT}/meta-extras/packages/*/*.bb \
+#    ${OEROOT}/meta-openmoko/packages/*/*.bb \
+#    ${OEROOT}/meta-moblin/packages/*/*.bb \
 #    "
-# BBFILE_COLLECTIONS = "normal extras openmoko"
+# BBFILE_COLLECTIONS = "normal extras openmoko moblin"
 # BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
 # BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
 # BBFILE_PATTERN_openmoko = "^${OEROOT}/meta-openmoko/"
+# BBFILE_PATTERN_moblin = "^${OEROOT}/meta-moblin/"
 # BBFILE_PRIORITY_normal = "5"
 # BBFILE_PRIORITY_extras = "5"
 # BBFILE_PRIORITY_openmoko = "5"
+# BBFILE_PRIORITY_moblin = "5"
 
 BBMASK = ""
 

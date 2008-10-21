@@ -1,7 +1,7 @@
 require clutter.inc
 
 PE = "1"
-PR = "r0"
+PR = "r1"
 PV = "0.8.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/clutter/branches;module=clutter-0-8;proto=http \

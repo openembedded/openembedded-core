@@ -70,7 +70,7 @@ if [ "x$ABTARGET" = "xpoky" ]; then
         `readlink images/zImage-spitz.bin`
         `readlink images/zImage-nokia800.bin`
         `readlink images/bzImage-qemux86.bin`
-        `readlink images/bzImage-eee901.bin`
+        `readlink images/bzImage-netbook.bin`
         `readlink images/zImage-htcuniversal.bin`
         `readlink images/zImage-mx31litekit.bin`
         `readlink images/zImage-mx31ads.bin`
@@ -86,8 +86,8 @@ if [ "x$ABTARGET" = "xpoky" ]; then
         updater.sh.c7x0
         updater.sh.spitz
         gnu-tar
-        poky-image-netbook-live-eee901-*.hddimg
-        poky-image-minimal-live-eee901-*.hddimg
+        poky-image-live-netbook-*.hddimg
+        poky-image-minimal-live-netbook-*.hddimg
         poky-image-sato-akita-*.rootfs.summary.jffs2
         poky-image-sato-c7x0-*.rootfs.jffs2
         poky-image-sato-spitz-*.rootfs.tar.gz

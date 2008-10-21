@@ -5,13 +5,13 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
-PR = "r4"
+PR = "r5"
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
 
-# ASUS EeePC 901 has DRI support so use mesa-dri by default
-DEFAULT_PREFERENCE_eee901 = "1"
+# Netbooks have DRI support so use mesa-dri by default
+DEFAULT_PREFERENCE_netbook = "1"
 
 PACKAGES =+ "${PN}-xprogs"
 

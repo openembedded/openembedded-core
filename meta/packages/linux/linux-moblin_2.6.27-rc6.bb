@@ -1,9 +1,9 @@
 require linux-moblin.inc
 
-PR = "r3"
+PR = "r4"
 
 DEFAULT_PREFERENCE = "-1"
-DEFAULT_PREFERENCE_eee901 = "1"
+DEFAULT_PREFERENCE_netbook = "1"
 
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
 		${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.27-rc6.bz2;patch=1 \
@@ -49,6 +49,6 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
 		file://0040-fastboot-fix-issues-and-improve-output-of-bootgraph.patch;patch=1 \
 		file://0041-r8169-8101e.patch;patch=1 \
 		file://0042-intelfb-945gme.patch;patch=1 \
-		file://defconfig-eee901"
+		file://defconfig-netbook"
 
 S = "${WORKDIR}/linux-2.6.26"

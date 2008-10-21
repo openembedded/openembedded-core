@@ -2,7 +2,7 @@ DESCRIPTION = "Driver for the 802.11n RaLink rt2860 chipset"
 PRIORITY = "optional"
 SECTION = "kernel/modules"
 LICENSE = "GPL"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://folks.o-hand.com/sameo/rt2860/rt2860-1.7.0.0.tar.bz2 \
            file://01_dev_get_by_name.patch;patch=1 \
@@ -13,7 +13,7 @@ SRC_URI = "http://folks.o-hand.com/sameo/rt2860/rt2860-1.7.0.0.tar.bz2 \
 
 S = "${WORKDIR}/rt2860-1.7.0.0"
 
-COMPATIBLE_MACHINE = "eee901"
+COMPATIBLE_MACHINE = "netbook"
 
 inherit module
 

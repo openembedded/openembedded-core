@@ -1,6 +1,6 @@
 require linux-moblin.inc
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
 		${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.27-rc1.bz2;patch=1 \
@@ -16,6 +16,6 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
 		file://0010_unionfs-2.4_for_2.6.27-rc1.patch;patch=1 \
 		file://0011_workaround_unidef_step.patch;patch=1 \
 		file://0012_intelfb_945gme.patch;patch=1 \
-		file://defconfig-eee901"
+		file://defconfig-netbook"
 
 S = "${WORKDIR}/linux-2.6.26"

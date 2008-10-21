@@ -6,13 +6,13 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
 PV = "7.3.0+git${SRCREV}"
-PR = "r0"
+PR = "r1"
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
 
-# ASUS EeePC 901 has DRI support so use mesa-dri by default
-DEFAULT_PREFERENCE_eee901 = "1"
+# Netbooks have has DRI support so use mesa-dri by default
+DEFAULT_PREFERENCE_netbook = "1"
 
 SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git"
 S = "${WORKDIR}/git"
