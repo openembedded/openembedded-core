@@ -70,7 +70,6 @@ class Wget(Fetch):
             if ftpproxy:
                 fetchcmd = "ftp_proxy=" + ftpproxy + " " + fetchcmd
             bb.msg.debug(2, bb.msg.domain.Fetcher, "executing " + fetchcmd)
-            sys.exit(1)
             ret = os.system(fetchcmd)
             if ret != 0:
                 return False
