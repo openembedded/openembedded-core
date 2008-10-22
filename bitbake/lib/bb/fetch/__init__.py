@@ -465,6 +465,12 @@ class Fetch(object):
             uri = stash + tarfn
             bb.msg.note(1, bb.msg.domain.Fetcher, "fetch " + uri)
             fetchcmd = fetchcmd.replace("${URI}", uri)
+            httpproxy = data.getVar("http_proxy", d, True)
+            ftpproxy = data.getVar("ftp_proxy", d, True)
+            if httpproxy:
+                fetchcmd = "http_proxy=" + httpproxy + " " + fetchcmd
+            if ftpproxy:
+                fetchcmd = "ftp_proxy=" + ftpproxy + " " + fetchcmd
             ret = os.system(fetchcmd)
             if ret == 0:
                 bb.msg.note(1, bb.msg.domain.Fetcher, "Fetched %s from tarball stash, skipping checkout" % tarfn)

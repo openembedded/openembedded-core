@@ -63,7 +63,14 @@ class Wget(Fetch):
             bb.msg.note(1, bb.msg.domain.Fetcher, "fetch " + uri)
             fetchcmd = fetchcmd.replace("${URI}", uri)
             fetchcmd = fetchcmd.replace("${FILE}", ud.basename)
+            httpproxy = data.getVar("http_proxy", d, True)
+            ftpproxy = data.getVar("ftp_proxy", d, True)
+            if httpproxy:
+                fetchcmd = "http_proxy=" + httpproxy + " " + fetchcmd
+            if ftpproxy:
+                fetchcmd = "ftp_proxy=" + ftpproxy + " " + fetchcmd
             bb.msg.debug(2, bb.msg.domain.Fetcher, "executing " + fetchcmd)
+            sys.exit(1)
             ret = os.system(fetchcmd)
             if ret != 0:
                 return False
