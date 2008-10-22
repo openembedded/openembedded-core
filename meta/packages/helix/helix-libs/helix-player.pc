@@ -6,6 +6,6 @@ includedir=${prefix}/include
 Name: helix-player
 Description: Helix Player Interface
 Version: 4.1.0 
-Libs: -L${libdir} -lhelix-player
+Libs: -L${libdir} -lhelix-player -lstdc++
 Cflags: -I/opt/helix/include -D_UNIX
 Requires: 
