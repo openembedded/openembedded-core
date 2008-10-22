@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<build id="clutter">
+  <inherit id="hxclient_3_1_0_atlas"/>
+  <cvs root="helix"/>
+  <cvs tag="hxclient_3_1_0_atlas"/>
+  <default target="clutter" profile="helix-client-all-defines" options=""/>
+  <targets>
+
+    <!-- clutter -->
+    <module id="clutter" name="clientapps/clutter" group="core">
+      <includeplatforms>
+        unix 
+      </includeplatforms>
+
+      <defines>
+        HELIX_FEATURE_AUDIO_VORBIS
+        HELIX_FEATURE_VIDEO_THEORA 
+        HELIX_FEATURE_NETSERVICES_SHIM
+        HELIX_FEATURE_AVIFF
+        HELIX_CONFIG_SLUGGISHAUTOUPGRADE
+        HELIX_FEATURE_ALSA
+        _FORTIFY_SOURCE=2
+      </defines>      
+
+      <source_dependlist>
+        client_include
+        datatype_tools_dtdriver_dtdrplin
+      </source_dependlist>
+
+      <dependlist>
+        helix_client_objs
+        player_hxclientkit
+        player_hxclientkit_src_hxrecordengine
+        client_core
+        client_resource
+        client_xres
+        protocol_sdp
+        video_site
+        datatype_smil
+        datatype_text_realtext_fileformat
+        datatype_text_realtext_renderer
+        datatype_tools_dtdriver_dtdrplin
+        datatype_ogg_fileformat
+        datatype_vorbis_renderer
+        datatype_theora_renderer
+        datatype_h261_renderer
+        datatype_h263
+        datatype_group_audio
+        datatype_group_image
+        datatype_ram
+        datatype_sdp
+        datatype_avi_fileformat        
+        filesystem_local
+        filesystem_http
+        filesystem_memory
+        common_auth_authmgr
+        common_auth_rn5auth
+        client_auth_basicauth
+        common_log_logsystem
+        common_log_logobserverfile
+      </dependlist>
+
+    </module>
+
+  </targets>
+
+</build>
+

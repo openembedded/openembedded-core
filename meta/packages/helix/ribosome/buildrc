@@ -1,0 +1,4 @@
+AddMultiCVS("helix",":ext:cvs.helixcommunity.org:/cvsroot/")
+AddBIFPath("common", "[helix]/common/build/BIF")
+AddBIFPath("client", "[helix]/client/build/BIF")
+SetSDKPath("oggvorbissdk", "/usr/")
