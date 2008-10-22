@@ -70,7 +70,7 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'PACKAGE_CLASSES = "package_ipk package_deb"' > "$CONFFILE"
     echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
-    echo 'DL_DIR = "$SRVWORKDIR/sources"' >> "$CONFFILE"
+    echo "DL_DIR = \"$SRVWORKDIR/sources\"" >> "$CONFFILE"
     echo 'INHERIT += "poky-autobuild-notifier"' >> "$CONFFILE"
     if [ "$ABTARGET" = "darwin" ]; then
         echo 'PACKAGE_CLASSES += "package_tar"' >> "$CONFFILE"
