@@ -1,4 +1,5 @@
 *.pyc
 build/tmp/
 sources/
+meta-moblin-internal/
 *.swp
