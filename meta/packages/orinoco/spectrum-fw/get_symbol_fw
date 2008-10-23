@@ -15,29 +15,15 @@
 
 set -e
 
-URL_BASE='ftp://symstore.longisland.com/Symstore/services_download/wirless_prod/'
-DL_FILE='MC&DriverOnlyInstallers.zip'
 DL_INT1='S24DRVR392B67-01.exe'
 DL_INT2='Driver Only Installer/NetWLan5.sys'
 DRIVER1=symbol1.drv
 DRIVER2=symbol2.drv
 
-get_file() {
-    curl --remote-name "$1" || \
-    wget --passive-ftp "$1" || \
-    wget "$1" || \
-    ftp "$1" </dev/null || \
-    exit 1
-}
-		    
-if ! test -f $DL_FILE; then
-    get_file $URL_BASE/$DL_FILE
-fi
-			
-unzip -p $DL_FILE "$DL_INT1" >$DRIVER1
-unzip -p $DRIVER1 "$DL_INT2" >$DRIVER2
-			
+unzip -p $DL_INT1 "$DL_INT2" >$DRIVER2
+	
 perl parse_symbol_fw $DRIVER2 spectrum_fw.h symbol_sp24t_prim_fw \
     symbol_sp24t_sec_fw
 			    
 rm -f $DRIVER1 $DRIVER2
+
