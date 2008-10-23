@@ -12,7 +12,6 @@ IMAGE_INSTALL += "openmoko-contacts2 openmoko-session2 \
     matchbox-stroke \
     matchbox-config-gtk \
     matchbox-themes-gtk \
-    matchbox-applet-startup-monitor \
     xcursor-transparent-theme \
     openmoko-icon-theme-standard \
     settings-daemon"
