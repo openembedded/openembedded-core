@@ -24,3 +24,16 @@ Index: opkg/libopkg/opkg_utils.h
  
  int get_available_blocks(char * filesystem);
  char **read_raw_pkgs_from_file(const char *file_name);
+Index: opkg/libopkg/opkg_cmd.c
+===================================================================
+--- opkg.orig/libopkg/opkg_cmd.c	2008-10-23 12:02:29.000000000 +0100
++++ opkg/libopkg/opkg_cmd.c	2008-10-23 12:02:53.000000000 +0100
+@@ -151,7 +151,7 @@
+            error_list = error_list->next;
+ 
+      }
+-     free_error_list(&error_list);
++     free_error_list();
+   }
+ 
+ }

@@ -6,7 +6,9 @@ LICENSE = "GPL"
 DEPENDS = "curl gpgme"
 PV = "0.0+svnr${SRCREV}"
 
-SRC_URI = "svn://svn.openmoko.org/trunk/src/target/;module=opkg;proto=http"
+SRC_URI = "svn://svn.openmoko.org/trunk/src/target/;module=opkg;proto=http \
+           file://fix_prototype.patch;patch=1"
+
 S = "${WORKDIR}/opkg"
 
 inherit autotools pkgconfig
