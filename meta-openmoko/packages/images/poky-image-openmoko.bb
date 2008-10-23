@@ -2,8 +2,6 @@
 # Copyright (C) 2007 OpenedHand Ltd.
 #
 
-PR = "r3"
-
 IMAGE_FEATURES += "apps-console-core ${X11_IMAGE_FEATURES} apps-x11-games"
 
 inherit poky-image
