@@ -145,7 +145,7 @@ class BBCooker:
             self.commandlineAction = ["parseFiles"]
         elif self.configuration.dot_graph:
             if self.configuration.pkgs_to_build:
-                self.commandlineAction = ["generateDotGraph", self.configuration.pkgs_to_build]
+                self.commandlineAction = ["generateDotGraph", self.configuration.pkgs_to_build, self.configuration.cmd]
             else:
                 self.commandlineAction = None
                 bb.error("Please specify a package name for dependency graph generation.")
@@ -302,7 +302,7 @@ class BBCooker:
             if data.getVarFlag( e, 'python', envdata ):
                 bb.msg.plain("\npython %s () {\n%s}\n" % (e, data.getVar(e, envdata, 1)))
 
-    def generateDepTreeData(self, pkgs_to_build):
+    def generateDepTreeData(self, pkgs_to_build, task):
         """
         Create a dependency tree of pkgs_to_build, returning the data.
         """
@@ -320,7 +320,7 @@ class BBCooker:
         runlist = []
         for k in pkgs_to_build:
             taskdata.add_provider(localdata, self.status, k)
-            runlist.append([k, "do_%s" % self.configuration.cmd])
+            runlist.append([k, "do_%s" % task])
         taskdata.add_unresolved(localdata, self.status)
 
         rq = bb.runqueue.RunQueue(self, self.configuration.data, self.status, taskdata, runlist)
@@ -390,21 +390,21 @@ class BBCooker:
         return depend_tree
 
 
-    def generateDepTreeEvent(self, pkgs_to_build):
+    def generateDepTreeEvent(self, pkgs_to_build, task):
         """
         Create a task dependency graph of pkgs_to_build.
         Generate an event with the result
         """
-        depgraph = self.generateDepTreeData(pkgs_to_build)
+        depgraph = self.generateDepTreeData(pkgs_to_build, task)
         bb.event.fire(bb.event.DepTreeGenerated(self.configuration.data, depgraph))
 
-    def generateDotGraphFiles(self, pkgs_to_build):
+    def generateDotGraphFiles(self, pkgs_to_build, task):
         """
         Create a task dependency graph of pkgs_to_build.
         Save the result to a set of .dot files.
         """
 
-        depgraph = self.generateDepTreeData(pkgs_to_build)
+        depgraph = self.generateDepTreeData(pkgs_to_build, task)
 
         # Prints a flattened form of package-depends below where subpackages of a package are merged into the main pn
         depends_file = file('pn-depends.dot', 'w' )
