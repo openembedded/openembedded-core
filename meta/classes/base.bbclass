@@ -641,7 +641,7 @@ def oe_unpack_file(file, data, url = None):
 		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
 		if 'dos' in parm:
 			cmd = '%s -a' % cmd
-		cmd = '%s %s' % (cmd, file)
+		cmd = "%s '%s'" % (cmd, file)
 	elif os.path.isdir(file):
 		filesdir = os.path.realpath(bb.data.getVar("FILESDIR", data, 1))
 		destdir = "."

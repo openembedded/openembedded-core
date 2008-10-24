@@ -7,10 +7,26 @@
 #CVS_PROXY_HOST = "proxy.example.com"
 #CVS_PROXY_PORT = "81"
 
-# Uncomment to cause git to use the proxy host specificed
+# For svn, you need to create ~/.subversion/servers containing:
+#[global]
+#http-proxy-host = proxy.example.com
+#http-proxy-port = 81
+#
+
+# Uncomment to cause git to use the proxy host specificed 
+# although this only works for http
 #GIT_PROXY_HOST = "proxy.example.com"
 #GIT_PROXY_PORT = "81"
 #export GIT_PROXY_COMMAND = "${OEROOT}/scripts/poky-git-proxy-command"
 
+# If SOCKS is available run the following command to comple a simple transport
+# gcc scripts/poky-git-proxy-socks.c -o poky-git-proxy-socks
+# and then share that binary somewhere in PATH, then use the following settings
+#GIT_PROXY_HOST = "proxy.example.com"
+#GIT_PROXY_PORT = "81"
+#export GIT_PROXY_COMMAND = "${OEROOT}/scripts/poky-git-proxy-socks-command"
+
+
 # Uncomment this to use a shared download directory
 #DL_DIR = "/some/shared/download/directory/"
+
