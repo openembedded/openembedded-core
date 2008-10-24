@@ -650,7 +650,7 @@ class BBCooker:
         bb.event.fire(bb.event.BuildStarted(buildname, [item], self.configuration.event_data))
 
         # Execute the runqueue
-        runlist = [[item, "do_%s" % self.configuration.cmd]]
+        runlist = [[item, "do_%s" % task]]
 
         rq = bb.runqueue.RunQueue(self, self.configuration.data, self.status, taskdata, runlist)
 
