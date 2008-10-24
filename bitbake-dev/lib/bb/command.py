@@ -155,8 +155,9 @@ class CommandsAsync:
         Build a set of targets
         """
         pkgs_to_build = params[0]
+        task = params[1]
 
-        command.cooker.buildTargets(pkgs_to_build)
+        command.cooker.buildTargets(pkgs_to_build, task)
 
     def generateDepTreeEvent(self, command, params):
         """

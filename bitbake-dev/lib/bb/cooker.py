@@ -151,7 +151,7 @@ class BBCooker:
                 bb.error("Please specify a package name for dependency graph generation.")
         else:
             if self.configuration.pkgs_to_build:
-                self.commandlineAction = ["buildTargets", self.configuration.pkgs_to_build]
+                self.commandlineAction = ["buildTargets", self.configuration.pkgs_to_build, self.configuration.cmd]
             else:
                 self.commandlineAction = None
                 bb.error("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
@@ -677,7 +677,7 @@ class BBCooker:
         self.cookerIdle = False
         self.server.register_idle_function(buildFileIdle, rq)
 
-    def buildTargets(self, targets):
+    def buildTargets(self, targets, task):
         """
         Attempt to build the targets specified
         """
@@ -721,7 +721,7 @@ class BBCooker:
         runlist = []
         for k in targets:
             taskdata.add_provider(localdata, self.status, k)
-            runlist.append([k, "do_%s" % self.configuration.cmd])
+            runlist.append([k, "do_%s" % task])
         taskdata.add_unresolved(localdata, self.status)
 
         rq = bb.runqueue.RunQueue(self, self.configuration.data, self.status, taskdata, runlist)
