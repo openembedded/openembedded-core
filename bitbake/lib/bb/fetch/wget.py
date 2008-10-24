@@ -61,7 +61,7 @@ class Wget(Fetch):
                 fetchcmd = data.getVar("FETCHCOMMAND", d, 1)
 
             bb.msg.note(1, bb.msg.domain.Fetcher, "fetch " + uri)
-            fetchcmd = fetchcmd.replace("${URI}", uri)
+            fetchcmd = fetchcmd.replace("${URI}", uri.split(";")[0])
             fetchcmd = fetchcmd.replace("${FILE}", ud.basename)
             httpproxy = data.getVar("http_proxy", d, True)
             ftpproxy = data.getVar("ftp_proxy", d, True)
