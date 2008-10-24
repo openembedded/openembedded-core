@@ -151,9 +151,6 @@ class BitBakeShellCommands:
         if len( names ) == 0: names = [ globexpr ]
         print "SHELL: Building %s" % ' '.join( names )
 
-        oldcmd = cooker.configuration.cmd
-        cooker.configuration.cmd = cmd
-
         td = taskdata.TaskData(cooker.configuration.abort)
         localdata = data.createCopy(cooker.configuration.data)
         data.update_data(localdata)
@@ -168,7 +165,7 @@ class BitBakeShellCommands:
                 if len(providers) == 0:
                     raise Providers.NoProvider
 
-                tasks.append([name, "do_%s" % cooker.configuration.cmd])
+                tasks.append([name, "do_%s" % cmd])
 
             td.add_unresolved(localdata, cooker.status)
             
@@ -189,7 +186,6 @@ class BitBakeShellCommands:
             print "ERROR: Couldn't build '%s'" % names
             last_exception = e
 
-        cooker.configuration.cmd = oldcmd
 
     build.usage = "<providee>"
 
@@ -240,18 +236,14 @@ class BitBakeShellCommands:
         bf = completeFilePath( name )
         print "SHELL: Calling '%s' on '%s'" % ( cmd, bf )
 
-        oldcmd = cooker.configuration.cmd
-        cooker.configuration.cmd = cmd
-
         try:
-            cooker.buildFile(bf)
+            cooker.buildFile(bf, cmd)
         except parse.ParseError:
             print "ERROR: Unable to open or parse '%s'" % bf
         except build.EventException, e:
             print "ERROR: Couldn't build '%s'" % name
             last_exception = e
 
-        cooker.configuration.cmd = oldcmd
     fileBuild.usage = "<bbfile>"
 
     def fileClean( self, params ):
