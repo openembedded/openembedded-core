@@ -83,6 +83,10 @@ build_boot_bin() {
 
 		install -m 0644 ${INITRD} ${ISODIR}/initrd
 
+		if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then 
+			install -m 0644 ${ROOTFS} ${ISODIR}/rootfs.img
+		fi
+
 		# And install the syslinux stuff 
 		cp ${STAGING_DATADIR}/syslinux/isolinux.bin \
 		${ISODIR}
