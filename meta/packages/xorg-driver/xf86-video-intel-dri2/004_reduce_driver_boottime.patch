@@ -1,7 +1,8 @@
-diff -urN xf86-video-intel-2.5.96.0/src/i830_display.c xf86-video-intel-2.5.96.0.new/src/i830_display.c
---- xf86-video-intel-2.5.96.0/src/i830_display.c	2008-09-11 05:10:10.000000000 +0800
-+++ xf86-video-intel-2.5.96.0.new/src/i830_display.c	2008-09-25 21:27:42.000000000 +0800
-@@ -376,7 +376,7 @@
+diff --git a/src/i830_display.c b/src/i830_display.c
+index 95ce51e..2c49b43 100644
+--- a/src/i830_display.c
++++ b/src/i830_display.c
+@@ -376,7 +376,7 @@ void
  i830WaitForVblank(ScrnInfoPtr pScreen)
  {
      /* Wait for 20ms, i.e. one cycle at 50hz. */
@@ -10,10 +11,11 @@ diff -urN xf86-video-intel-2.5.96.0/src/i830_display.c xf86-video-intel-2.5.96.0
  }
  
  void
-diff -urN xf86-video-intel-2.5.96.0/src/i830_driver.c xf86-video-intel-2.5.96.0.new/src/i830_driver.c
---- xf86-video-intel-2.5.96.0/src/i830_driver.c	2008-09-25 21:23:52.000000000 +0800
-+++ xf86-video-intel-2.5.96.0.new/src/i830_driver.c	2008-09-25 21:30:13.000000000 +0800
-@@ -2293,7 +2293,7 @@
+diff --git a/src/i830_driver.c b/src/i830_driver.c
+index 6cd30b2..223967f 100644
+--- a/src/i830_driver.c
++++ b/src/i830_driver.c
+@@ -2303,7 +2303,7 @@ SaveHWState(ScrnInfoPtr pScrn)
  static void
  i830_dpll_settle(void)
  {
@@ -22,7 +24,7 @@ diff -urN xf86-video-intel-2.5.96.0/src/i830_driver.c xf86-video-intel-2.5.96.0.
  }
  
  static Bool
-@@ -2315,14 +2315,12 @@
+@@ -2325,14 +2325,12 @@ RestoreHWState(ScrnInfoPtr pScrn)
        xf86OutputPtr   output = xf86_config->output[i];
        output->funcs->dpms(output, DPMSModeOff);
     }
@@ -37,21 +39,7 @@ diff -urN xf86-video-intel-2.5.96.0/src/i830_driver.c xf86-video-intel-2.5.96.0.
  
     if (IS_MOBILE(pI830) && !IS_I830(pI830))
        OUTREG(LVDS, pI830->saveLVDS);
-@@ -2369,11 +2367,13 @@
-    OUTREG(FPA0, pI830->saveFPA0);
-    OUTREG(FPA1, pI830->saveFPA1);
-    OUTREG(DPLL_A, pI830->saveDPLL_A);
-+   POSTING_READ(DPLL_A);
-    i830_dpll_settle();
-    if (IS_I965G(pI830))
-       OUTREG(DPLL_A_MD, pI830->saveDPLL_A_MD);
-    else
-       OUTREG(DPLL_A, pI830->saveDPLL_A);
-+   POSTING_READ(DPLL_A);
-    i830_dpll_settle();
- 
-    /* Restore mode config */
-@@ -2409,13 +2409,11 @@
+@@ -2422,13 +2420,11 @@ RestoreHWState(ScrnInfoPtr pScrn)
         DISPPLANE_SEL_PIPE_A) {
         OUTREG(DSPACNTR, pI830->saveDSPACNTR);
         OUTREG(DSPABASE, INREG(DSPABASE));
@@ -65,21 +53,7 @@ diff -urN xf86-video-intel-2.5.96.0/src/i830_driver.c xf86-video-intel-2.5.96.0.
     }
  
     /* See note about pipe programming above */
-@@ -2430,11 +2428,13 @@
-       OUTREG(FPB0, pI830->saveFPB0);
-       OUTREG(FPB1, pI830->saveFPB1);
-       OUTREG(DPLL_B, pI830->saveDPLL_B);
-+      POSTING_READ(DPLL_B);
-       i830_dpll_settle();
-       if (IS_I965G(pI830))
- 	 OUTREG(DPLL_B_MD, pI830->saveDPLL_B_MD);
-       else
- 	 OUTREG(DPLL_B, pI830->saveDPLL_B);
-+      POSTING_READ(DPLL_B);
-       i830_dpll_settle();
-    
-       /* Restore mode config */
-@@ -2468,13 +2468,11 @@
+@@ -2484,13 +2480,11 @@ RestoreHWState(ScrnInfoPtr pScrn)
  	  DISPPLANE_SEL_PIPE_B) {
  	  OUTREG(DSPACNTR, pI830->saveDSPACNTR);
  	  OUTREG(DSPABASE, INREG(DSPABASE));
