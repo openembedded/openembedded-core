@@ -28,3 +28,6 @@ EXCLUDE_FROM_WORLD_pn-libxml-simple-perl = "1"
 # Needs gtk+ <= 2.10
 EXCLUDE_FROM_WORLD_pn-gcalctool = "1"
 
+# The packages from these clash atm
+EXCLUDE_FROM_WORLD_pn-abiword = "1"
+EXCLUDE_FROM_WORLD_pn-abiword-embedded = "1"
