@@ -305,6 +305,10 @@ class BBCooker:
         # Need files parsed
         self.updateCache()
 
+        # If we are told to do the None task then query the default task
+        if (task == None):
+            task = self.configuration.cmd
+
         pkgs_to_build = self.checkPackages(pkgs_to_build)
 
         localdata = data.createCopy(self.configuration.data)
@@ -610,6 +614,14 @@ class BBCooker:
         Build the file matching regexp buildfile
         """
 
+        # Parse the configuration here. We need to do it explicitly here since
+        # buildFile() doesn't use the cache
+        self.parseConfiguration()
+
+        # If we are told to do the None task then query the default task
+        if (task == None):
+            task = self.configuration.cmd
+
         fn = self.matchFile(buildfile)
         self.buildSetVars()
 
@@ -679,6 +691,10 @@ class BBCooker:
 
         # Need files parsed
         self.updateCache()
+
+        # If we are told to do the NULL task then query the default task
+        if (task == None):
+            task = self.configuration.cmd
 
         targets = self.checkPackages(targets)
 
