@@ -31,3 +31,6 @@ EXCLUDE_FROM_WORLD_pn-gcalctool = "1"
 # The packages from these clash atm
 EXCLUDE_FROM_WORLD_pn-abiword = "1"
 EXCLUDE_FROM_WORLD_pn-abiword-embedded = "1"
+
+# helix is x86 only
+EXCLUDE_FROM_WORLD_pn-clutter-helix = "1"
