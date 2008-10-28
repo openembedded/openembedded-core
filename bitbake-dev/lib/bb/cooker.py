@@ -86,9 +86,30 @@ class BBCooker:
 
         self.configuration.data = bb.data.init()
 
-    def parseConfiguration(self):
-
         bb.data.inheritFromOS(self.configuration.data)
+
+        # TOSTOP must not be set or our children will hang when they output
+        fd = sys.stdout.fileno()
+        if os.isatty(fd):
+            import termios
+            tcattr = termios.tcgetattr(fd)
+            if tcattr[3] & termios.TOSTOP:
+                bb.msg.note(1, bb.msg.domain.Build, "The terminal had the TOSTOP bit set, clearing...")
+                tcattr[3] = tcattr[3] & ~termios.TOSTOP
+                termios.tcsetattr(fd, termios.TCSANOW, tcattr)
+
+        self.command = bb.command.Command(self)
+        self.cookerIdle = True
+        self.cookerState = cookerClean
+        self.cookerAction = cookerRun
+        self.server.register_idle_function(self.runCommands, self)
+
+    def parseConfiguration(self):
+        #
+        # Special updated configuration we use for firing events
+        #
+        self.configuration.event_data = bb.data.createCopy(self.configuration.data)
+        bb.data.update_data(self.configuration.event_data)
 
         for f in self.configuration.file:
             self.parseConfigurationFile( f )
@@ -102,29 +123,14 @@ class BBCooker:
         if bbpkgs:
             self.configuration.pkgs_to_build.extend(bbpkgs.split())
 
-        #
-        # Special updated configuration we use for firing events
-        #
-        self.configuration.event_data = bb.data.createCopy(self.configuration.data)
-        bb.data.update_data(self.configuration.event_data)
-
-        # TOSTOP must not be set or our children will hang when they output
-        fd = sys.stdout.fileno()
-        if os.isatty(fd):
-            import termios
-            tcattr = termios.tcgetattr(fd)
-            if tcattr[3] & termios.TOSTOP:
-                bb.msg.note(1, bb.msg.domain.Build, "The terminal had the TOSTOP bit set, clearing...")
-                tcattr[3] = tcattr[3] & ~termios.TOSTOP
-                termios.tcsetattr(fd, termios.TCSANOW, tcattr)
-
         # Change nice level if we're asked to
         nice = bb.data.getVar("BB_NICE_LEVEL", self.configuration.data, True)
         if nice:
             curnice = os.nice(0)
             nice = int(nice) - curnice
             bb.msg.note(2, bb.msg.domain.Build, "Renice to %s " % os.nice(nice))
- 
+
+    def parseCommandLine(self):
         # Parse any commandline into actions
         if self.configuration.show_environment:
             self.commandlineAction = None
@@ -155,17 +161,6 @@ class BBCooker:
             else:
                 self.commandlineAction = None
                 bb.error("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
-
-        # FIXME - implement
-        #if self.configuration.interactive:
-        #    self.interactiveMode()
-
-        self.command = bb.command.Command(self)
-        self.cookerIdle = True
-        self.cookerState = cookerClean
-        self.cookerAction = cookerRun
-        self.server.register_idle_function(self.runCommands, self)
-
 
     def runCommands(self, server, data, abort):
         """
@@ -731,6 +726,7 @@ class BBCooker:
 
     def updateCache(self):
 
+        self.parseConfiguration ()
         if self.cookerState == cookerParsed:
             return
 
