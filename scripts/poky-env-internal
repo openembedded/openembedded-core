@@ -37,6 +37,8 @@ PKGDIR_MOBLIN="$OEROOT/meta-moblin/"
 BUILDDIR="$OEROOT/$BDIR/"
 MSG=''
 
+unset BDIR
+
 BUILD_ARCH=`uname -m`
 BUILD_OS=`uname | tr [A-Z] [a-z]`
 BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
