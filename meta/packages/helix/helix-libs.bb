@@ -19,6 +19,8 @@ export BUILDRC=${BUILD_ROOT}/buildrc
 export SYSTEM_ID=linux-2.2-libc6-gcc32-i586
 export BUILD=$BUILD_ROOT/bin/build.py
 
+COMPATIBLE_HOST = '(i.86.*-linux)'
+
 do_compile() {
 	${BUILD} -k -trelease -mclutter -Phelix-client-all-defines clutter
 }

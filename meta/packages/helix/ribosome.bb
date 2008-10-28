@@ -16,6 +16,8 @@ SRC_URI = "${_TARBALL_SERVER}/ribosome-${_SNAPSHOT}.tar.bz2 \
 
 S = "${WORKDIR}"
 
+COMPATIBLE_HOST = '(i.86.*-linux)'
+
 do_stage() {
 	# Install build system of doom
 	install -d ${STAGING_DIR_HOST}${libdir}
