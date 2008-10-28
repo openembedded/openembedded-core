@@ -147,7 +147,7 @@ python write_specfile() {
 rpm_prep() {
 	if [ ! -e ${WORKDIR}/rpmrc ]; then
 		mkdir -p ${RPMBUILDPATH}/{SPECS,RPMS/{i386,i586,i686,noarch,ppc,mips,mipsel,arm},SRPMS,SOURCES,BUILD}
-		echo 'macrofiles:/usr/lib/rpm/macros:${WORKDIR}/macros' > ${WORKDIR}/rpmrc
+		echo 'macrofiles:${STAGING_DIR_NATIVE}/usr/lib/rpm/macros:${WORKDIR}/macros' > ${WORKDIR}/rpmrc
 		echo '%_topdir ${RPMBUILDPATH}' > ${WORKDIR}/macros
 		echo '%_repackage_dir ${WORKDIR}' >> ${WORKDIR}/macros
 	fi
