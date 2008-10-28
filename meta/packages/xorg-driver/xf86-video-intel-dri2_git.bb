@@ -13,8 +13,7 @@ SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-video-intel;protoc
            file://002_avoid_duplicate_SaveHWState.patch;patch=1 \
            file://004_reduce_driver_boottime.patch;patch=1 \
            file://005_disable_sdvo_TV_port_restoreHW.patch;patch=1 \
-           file://006_disable_check_lvds_panelpower_status.patch;patch=1 \
-           file://007_disable_tiling_and_enable_UXA.patch;patch=1"
+           file://006_disable_check_lvds_panelpower_status.patch;patch=1"
 
 S = "${WORKDIR}/git"
 
