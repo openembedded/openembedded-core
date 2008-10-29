@@ -1,4 +1,8 @@
-# Simple initramfs image. Mostly used for live images.
+#
+# Copyright (C) 2008 Intel Corporation.
+#
+
+DESCRIPTION = "Simple initramfs image. Mostly used for live images."
 
 IMAGE_INSTALL = "initramfs-live-boot initramfs-live-install busybox udev"
 

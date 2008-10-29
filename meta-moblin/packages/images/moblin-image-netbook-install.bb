@@ -6,7 +6,7 @@ DESCRIPTION = "Netbook Bootable Live Image"
 
 require moblin-image-live.inc
 
-LABELS += "boot install"
+LABELS += "install"
 
 ROOTFS = "${DEPLOY_DIR_IMAGE}/moblin-image-netbook-${MACHINE}.ext3"
 

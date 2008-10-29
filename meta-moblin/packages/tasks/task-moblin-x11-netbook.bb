@@ -1,8 +1,8 @@
 #
-# Copyright (C) 2008 Intel.
+# Copyright (C) 2008 Intel Corporation.
 #
 
-DESCRIPTION = "Netbook Tasks for Moblin"
+DESCRIPTION = "Netbook GUI Tasks for Moblin"
 PR = "r0"
 
 PACKAGES = "\

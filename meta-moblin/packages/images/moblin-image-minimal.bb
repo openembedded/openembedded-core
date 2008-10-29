@@ -1,6 +1,7 @@
 #
-# Copyright (C) 2007 OpenedHand Ltd.
+# Copyright (C) 2008 Intel Corporation.
 #
+
 IMAGE_INSTALL = "task-moblin-boot ${ROOTFS_PKGMANAGE}"
 
 IMAGE_LINGUAS = " "

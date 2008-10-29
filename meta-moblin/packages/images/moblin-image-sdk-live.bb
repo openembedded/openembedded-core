@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2008 Intel Corporation.
+#
+
 DESCRIPTION = "Bootable Live SDK Image"
 
 require moblin-image-live.inc

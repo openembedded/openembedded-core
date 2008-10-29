@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007 OpenedHand Ltd.
+# Copyright (C) 2008 Intel Corporation.
 #
 
 DESCRIPTON = "Software Development Tasks for Moblin"

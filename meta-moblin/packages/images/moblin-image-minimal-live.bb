@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2008 Intel Corporation.
+#
+
 DESCRIPTION = "Minimal Bootable Live Image"
 
 require moblin-image-live.inc

@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2008 Intel Corporation.
+#
+
 AUTO_SYSLINUXCFG = "1"
 INITRD = "${DEPLOY_DIR_IMAGE}/moblin-image-minimal-initramfs-${MACHINE}.cpio.gz"
 APPEND += "root=/dev/ram0 "

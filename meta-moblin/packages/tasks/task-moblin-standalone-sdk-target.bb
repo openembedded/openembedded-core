@@ -1,4 +1,8 @@
-DESCRIPTION = "Target packages for the standalone SDK"
+#
+# Copyright (C) 2008 Intel Corporation.
+#
+
+DESCRIPTION = "Target packages for the standalone Moblin SDK"
 PR = "r4"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"

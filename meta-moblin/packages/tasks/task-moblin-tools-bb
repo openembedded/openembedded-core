@@ -1,8 +1,8 @@
 #
-# Copyright (C) 2008 OpenedHand Ltd.
+# Copyright (C) 2008 Intel Corporation.
 #
 
-DESCRIPTION = "Tools tasks for Moblin"
+DESCRIPTION = "Debuggin and profiling tools tasks for Moblin"
 PR = "r1"
 
 PACKAGES = "\
