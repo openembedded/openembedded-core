@@ -10,7 +10,7 @@ do_rootfs[depends] += "rpm-native:do_populate_staging yum-native:do_populate_sta
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
 YUMCONF = "${IMAGE_ROOTFS}/etc/yum.conf"
-YUMARGS = "-c ${YUMCONF} --installroot ${IMAGE_ROOTFS}"
+YUMARGS = "--disablerepo=* --enablerepo=poky-feed-* --installroot ${IMAGE_ROOTFS}"
 export YUM_ARCH_FORCE = "${TARGET_ARCH}"
 
 AWKPOSTINSTSCRIPT = "${STAGING_BINDIR_NATIVE}/extract-postinst.awk"
