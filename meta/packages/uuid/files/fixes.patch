@@ -1,0 +1,42 @@
+Index: uuid-1.6.2/Makefile.in
+===================================================================
+--- uuid-1.6.2.orig/Makefile.in	2008-10-29 04:37:32.000000000 +0000
++++ uuid-1.6.2/Makefile.in	2008-10-29 04:40:18.000000000 +0000
+@@ -55,7 +55,6 @@
+ CP          = cp
+ RMDIR       = rmdir
+ SHTOOL      = $(S)/shtool
+-LIBTOOL     = $(C)/libtool
+ TRUE        = true
+ POD2MAN     = pod2man
+ PERL        = @PERL@
+Index: uuid-1.6.2/configure.ac
+===================================================================
+--- uuid-1.6.2.orig/configure.ac	2008-10-29 04:31:31.000000000 +0000
++++ uuid-1.6.2/configure.ac	2008-10-29 04:33:07.000000000 +0000
+@@ -40,11 +40,8 @@
+ 
+ AC_PROG_MAKE_SET
+ AC_PROG_CC
+-AC_CHECK_DEBUGGING
+-AC_CHECK_DMALLOC
+ 
+ with_tags=""
+-sinclude(libtool.m4)
+ AC_PROG_LIBTOOL
+ 
+ sinclude(uuid.ac)
+Index: uuid-1.6.2/uuid.ac
+===================================================================
+--- uuid-1.6.2.orig/uuid.ac	2008-10-29 04:31:39.000000000 +0000
++++ uuid-1.6.2/uuid.ac	2008-10-29 04:31:53.000000000 +0000
+@@ -39,9 +39,6 @@
+     fi
+     AC_CHECK_LIB(socket, accept)
+ 
+-    dnl #  check for portable va_copy()
+-    AC_CHECK_VA_COPY()
+-
+     dnl #   check for system headers
+     AC_CHECK_HEADERS(sys/types.h sys/param.h sys/time.h sys/socket.h sys/sockio.h sys/ioctl.h sys/select.h)
+     AC_CHECK_HEADERS(netdb.h ifaddrs.h net/if.h net/if_dl.h net/if_arp.h netinet/in.h arpa/inet.h,,,
