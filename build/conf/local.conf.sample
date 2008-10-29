@@ -1,6 +1,6 @@
 # Where to cache the files Poky downloads
 DL_DIR ?= "${OEROOT}/sources"
-BBFILES = "\
+BBFILES += "\
     ${OEROOT}/meta/packages/*/*.bb \
     ${OEROOT}/meta-moblin/packages/*/*.bb"
 
