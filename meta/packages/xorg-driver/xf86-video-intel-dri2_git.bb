@@ -7,7 +7,7 @@ PROVIDES = "xf86-video-intel"
 
 PE = "1"
 PR = "r0"
-PV = "1.5.0+git${SRCREV}"
+PV = "2.4.97+git${SRCREV}"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-video-intel;protocol=git;branch=dri2 \
            file://002_avoid_duplicate_SaveHWState.patch;patch=1 \
