@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Debuggin and profiling tools tasks for Moblin"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "\
     task-moblin-tools-debug \
