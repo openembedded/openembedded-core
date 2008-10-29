@@ -1,7 +1,8 @@
-diff -urN xf86-video-intel-2.5.96.0/src/i830_lvds.c xf86-video-intel-2.5.96.0.new/src/i830_lvds.c
---- xf86-video-intel-2.5.96.0/src/i830_lvds.c	2008-09-01 05:27:39.000000000 +0800
-+++ xf86-video-intel-2.5.96.0.new/src/i830_lvds.c	2008-09-25 21:36:13.000000000 +0800
-@@ -404,10 +404,11 @@
+diff --git a/src/i830_lvds.c b/src/i830_lvds.c
+index 0d67d50..adb0dba 100644
+--- a/src/i830_lvds.c
++++ b/src/i830_lvds.c
+@@ -404,10 +404,11 @@ i830SetLVDSPanelPower(xf86OutputPtr output, Bool on)
  	    dev_priv->backlight_duty_cycle = dev_priv->backlight_max;
  
  	OUTREG(PP_CONTROL, INREG(PP_CONTROL) | POWER_TARGET_ON);
@@ -14,7 +15,7 @@ diff -urN xf86-video-intel-2.5.96.0/src/i830_lvds.c xf86-video-intel-2.5.96.0.ne
  	dev_priv->set_backlight(output, dev_priv->backlight_duty_cycle);
  	dev_priv->dpmsoff = FALSE;
      } else {
-@@ -420,10 +421,11 @@
+@@ -420,10 +421,11 @@ i830SetLVDSPanelPower(xf86OutputPtr output, Bool on)
  	dev_priv->set_backlight(output, 0);
  
  	OUTREG(PP_CONTROL, INREG(PP_CONTROL) & ~POWER_TARGET_ON);

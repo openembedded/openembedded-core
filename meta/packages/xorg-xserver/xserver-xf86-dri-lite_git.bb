@@ -10,7 +10,8 @@ DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git \
            file://xorg.conf \
-           file://libdri-xinerama-symbol.patch;patch=1"
+           file://libdri-xinerama-symbol.patch;patch=1 \
+           file://xserver-boottime.patch;patch=1"
 
 # Misc build failure for master HEAD
 SRC_URI += "file://fix_open_max_preprocessor_error.patch;patch=1"
