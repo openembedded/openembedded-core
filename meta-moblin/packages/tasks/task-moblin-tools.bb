@@ -27,14 +27,14 @@ RDEPENDS_task-moblin-tools-debug = "\
     strace"
 
 RDEPENDS_task-moblin-tools-profile = "\
-    exmap-console \
-    exmap-server \
+#    exmap-console \
+#    exmap-server \
     oprofile \
     oprofileui-server \
     powertop \
     lttng-control \
-    lttng-viewer \
-    sreadahead"
+    lttng-viewer"
+#    sreadahead"
 
 RDEPENDS_task-moblin-tools-profile_qemux86 += "valgrind"
 
