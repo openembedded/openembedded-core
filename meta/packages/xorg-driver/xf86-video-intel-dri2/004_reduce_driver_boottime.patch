@@ -1,8 +1,8 @@
-diff --git a/src/i830_display.c b/src/i830_display.c
-index 95ce51e..2c49b43 100644
---- a/src/i830_display.c
-+++ b/src/i830_display.c
-@@ -376,7 +376,7 @@ void
+Index: git/src/i830_display.c
+===================================================================
+--- git.orig/src/i830_display.c	2008-10-29 15:46:24.000000000 +0000
++++ git/src/i830_display.c	2008-10-29 18:27:47.000000000 +0000
+@@ -376,7 +376,7 @@
  i830WaitForVblank(ScrnInfoPtr pScreen)
  {
      /* Wait for 20ms, i.e. one cycle at 50hz. */
@@ -11,59 +11,3 @@ index 95ce51e..2c49b43 100644
  }
  
  void
-diff --git a/src/i830_driver.c b/src/i830_driver.c
-index 6cd30b2..223967f 100644
---- a/src/i830_driver.c
-+++ b/src/i830_driver.c
-@@ -2303,7 +2303,7 @@ SaveHWState(ScrnInfoPtr pScrn)
- static void
- i830_dpll_settle(void)
- {
--    usleep(10000); /* 10 ms *should* be plenty */
-+    usleep(150); /* 10 ms *should* be plenty */
- }
- 
- static Bool
-@@ -2325,14 +2325,12 @@ RestoreHWState(ScrnInfoPtr pScrn)
-       xf86OutputPtr   output = xf86_config->output[i];
-       output->funcs->dpms(output, DPMSModeOff);
-    }
--   i830WaitForVblank(pScrn);
-    
-    /* Disable pipes */
-    for (i = 0; i < xf86_config->num_crtc; i++) {
-       xf86CrtcPtr crtc = xf86_config->crtc[i];
-       crtc->funcs->dpms(crtc, DPMSModeOff);
-    }
--   i830WaitForVblank(pScrn);
- 
-    if (IS_MOBILE(pI830) && !IS_I830(pI830))
-       OUTREG(LVDS, pI830->saveLVDS);
-@@ -2422,13 +2420,11 @@ RestoreHWState(ScrnInfoPtr pScrn)
-        DISPPLANE_SEL_PIPE_A) {
-        OUTREG(DSPACNTR, pI830->saveDSPACNTR);
-        OUTREG(DSPABASE, INREG(DSPABASE));
--       i830WaitForVblank(pScrn);
-    }
-    if ((pI830->saveDSPBCNTR & DISPPLANE_SEL_PIPE_MASK) ==
-        DISPPLANE_SEL_PIPE_A) {
-        OUTREG(DSPBCNTR, pI830->saveDSPBCNTR);
-        OUTREG(DSPBBASE, INREG(DSPBBASE));
--       i830WaitForVblank(pScrn);
-    }
- 
-    /* See note about pipe programming above */
-@@ -2484,13 +2480,11 @@ RestoreHWState(ScrnInfoPtr pScrn)
- 	  DISPPLANE_SEL_PIPE_B) {
- 	  OUTREG(DSPACNTR, pI830->saveDSPACNTR);
- 	  OUTREG(DSPABASE, INREG(DSPABASE));
--	  i830WaitForVblank(pScrn);
-       }
-       if ((pI830->saveDSPBCNTR & DISPPLANE_SEL_PIPE_MASK) ==
- 	  DISPPLANE_SEL_PIPE_B) {
- 	  OUTREG(DSPBCNTR, pI830->saveDSPBCNTR);
- 	  OUTREG(DSPBBASE, INREG(DSPBBASE));
--	  i830WaitForVblank(pScrn);
-       }
-    }
- 
