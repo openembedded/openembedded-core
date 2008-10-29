@@ -1,5 +1,5 @@
 HOMEPAGE = "http://linux.duke.edu/projects/yum/"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "http://linux.duke.edu/projects/yum/download/3.2/yum-${PV}.tar.gz \
            file://paths.patch;patch=1 \
@@ -27,6 +27,14 @@ do_install_append () {
 	install -d ${D}${bindir}/
 	install ${WORKDIR}/extract-postinst.awk ${D}${bindir}/
 	install ${WORKDIR}/yum-install-recommends.py ${D}${bindir}/
+	rmdir ${D}${localstatedir}/cache/yum
+	rmdir ${D}${localstatedir}/cache
+	install -d ${D}/etc/default/volatiles
+	install -m 0644 ${WORKDIR}/98_yum ${D}/etc/default/volatiles
+}
+
+pkg_postinst_yum () {
+	/etc/init.d/populate-volatile.sh update
 }
 
 FILES_${PN} += "${libdir}/python* ${datadir}/yum-cli"
