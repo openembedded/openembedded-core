@@ -2,7 +2,7 @@ DESCRIPTION = "The RPM Package Manager."
 HOMEPAGE = "http://rpm.org/"
 LICENSE = "LGPL GPL"
 DEPENDS = "zlib beecrypt file popt python"
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
            file://external-tools.patch;patch=1 \
@@ -92,6 +92,10 @@ do_configure () {
 		    ${EXTRA_OECONF} \
 		    --with-pic
 
+}
+
+do_install_append () {
+	rmdir ${D}${localstatedir}/tmp || true
 }
 
 def rpm_python_version(d):
