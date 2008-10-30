@@ -19,6 +19,11 @@
 #GIT_PROXY_PORT = "81"
 #export GIT_PROXY_COMMAND = "${OEROOT}/scripts/poky-git-proxy-command"
 
+# GIT_PROXY_IGNORE_* lines define hosts which do not require a proxy to access
+#GIT_CORE_CONFIG = "Yes"
+#GIT_PROXY_IGNORE_1 = "host.server.com"
+#GIT_PROXY_IGNORE_2 = "another.server.com"
+
 # If SOCKS is available run the following command to comple a simple transport
 # gcc scripts/poky-git-proxy-socks.c -o poky-git-proxy-socks
 # and then share that binary somewhere in PATH, then use the following settings

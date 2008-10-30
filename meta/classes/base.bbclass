@@ -725,6 +725,28 @@ def base_get_metadata_svn_revision(d):
 		pass
 	return revision
 
+def generate_git_config(e):
+        from bb import data
+
+        if data.getVar('GIT_CORE_CONFIG', e.data, True):
+                gitconfig_path = "${STAGING_DIR_HOST}/usr/etc/gitconfig"
+                proxy_command = "gitproxy = %s" % data.getVar('GIT_PROXY_COMMAND', e.data, True)
+
+                bb.mkdirhier("${STAGING_DIR_HOST}/usr/etc/")
+                if (os.path.exists(gitconfig_path)):
+                        os.remove(gitconfig_path)
+
+                f = open(gitconfig_path, 'w')
+                f.write("[core]\n")
+                f.write(proxy_command)
+
+                ignore_count = 1
+                ignore_host = data.getVar('GIT_PROXY_IGNORE_1', e.data, True)
+                while (ignore_host):
+                        f.write(ignore_host)
+                        ignore_count += 1
+                        ignore_host = data.getVar('GIT_PROXY_IGNORE_%s' % ignore_count)
+
 METADATA_REVISION ?= "${@base_get_metadata_monotone_revision(d)}"
 
 addhandler base_eventhandler
@@ -786,6 +808,9 @@ python base_eventhandler() {
 				bb.note("Removing stamps: " + dir)
 				os.system('rm -f '+ dir)
 				os.system('touch ' + e.stampPrefix[fn] + '.needclean')
+
+        if name == "ConfigParsed":
+                generate_git_config(e)
 
 	if not data in e.__dict__:
 		return NotHandled
