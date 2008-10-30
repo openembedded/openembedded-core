@@ -2,8 +2,8 @@ DESCRIPTION = "parted, the GNU partition resizing program"
 HOMEPAGE = "http://www.gnu.org/software/parted/parted.html"
 LICENSE = "GPLv2"
 SECTION = "console/tools"
-DEPENDS = "readline e2fsprogs-libs"
-PR = "r1"
+DEPENDS = "readline e2fsprogs"
+PR = "r2"
 
 SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
            file://syscalls.patch;patch=1 "
