@@ -173,6 +173,7 @@ SRCREV_pn-libxcb-sdk ?= "625ed596cae6dd8175aeb6cb6f26784928042f22"
 SRCREV_pn-xcb-proto ?= "d81ca233e98be8fa59e8c90d262c0516944c5a66"
 SRCREV_pn-xcb-proto-native ?= "d81ca233e98be8fa59e8c90d262c0516944c5a66"
 SRCREV_pn-libxext ?= "49563f5d76637e2ca28fe0b91ce3114271c0955d"
+SRCREV_pn-xf86-video-intel-dri2 ?= "afd089e9653e172cf1a9e28a216d834d5b69b2b7"
 #
 # Preferred Versions:
 #
