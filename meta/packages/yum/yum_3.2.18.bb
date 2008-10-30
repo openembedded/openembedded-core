@@ -1,11 +1,12 @@
 HOMEPAGE = "http://linux.duke.edu/projects/yum/"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://linux.duke.edu/projects/yum/download/3.2/yum-${PV}.tar.gz \
            file://paths.patch;patch=1 \
            file://paths2.patch;patch=1 \
 	   file://yum-install-recommends.py \
-	   file://extract-postinst.awk"
+	   file://extract-postinst.awk \
+	   file://98_yum"
 
 RDEPENDS = "python-rpm python-core python-iniparse python-urlgrabber \
             python-shell python-re python-logging python-pickle \
