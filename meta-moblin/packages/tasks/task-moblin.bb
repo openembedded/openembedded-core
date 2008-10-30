@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for Moblin"
-PR = "r30"
+PR = "r31"
 
 PACKAGES = "\
     task-moblin-apps-console \
