@@ -731,10 +731,10 @@ def generate_git_config(e):
         from bb import data
 
         if data.getVar('GIT_CORE_CONFIG', e.data, True):
-                gitconfig_path = bb.data.expand("${STAGING_DIR_NATTIVE}/usr/etc/gitconfig", e.data)
+                gitconfig_path = bb.data.expand("${STAGING_DIR_NATIVE}/usr/etc/gitconfig", e.data)
                 proxy_command = "    gitproxy = %s\n" % data.getVar('GIT_PROXY_COMMAND', e.data, True)
 
-                bb.mkdirhier(bb.data.expand("${STAGING_DIR_NATTIVE}/usr/etc/", e.data))
+                bb.mkdirhier(bb.data.expand("${STAGING_DIR_NATIVE}/usr/etc/", e.data))
                 if (os.path.exists(gitconfig_path)):
                         os.remove(gitconfig_path)
 
