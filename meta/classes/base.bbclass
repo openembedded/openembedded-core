@@ -747,7 +747,7 @@ def generate_git_config(e):
                 while (ignore_host):
                         f.write(ignore_host)
                         ignore_count += 1
-                        ignore_host = data.getVar('GIT_PROXY_IGNORE_%s' % ignore_count)
+                        ignore_host = data.getVar('GIT_PROXY_IGNORE_%s' % ignore_count, e.data, True)
 
 METADATA_REVISION ?= "${@base_get_metadata_monotone_revision(d)}"
 
