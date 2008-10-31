@@ -726,6 +726,7 @@ def base_get_metadata_svn_revision(d):
 	return revision
 
 def generate_git_config(e):
+        import bb
         from bb import data
 
         if data.getVar('GIT_CORE_CONFIG', e.data, True):
