@@ -3,8 +3,11 @@ LICENSE = "BSD"
 DESCRIPTION = "A library for configuring and customizing font access."
 DEPENDS = "expat freetype zlib"
 
+PR = "r1"
+
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
-           file://fix-pkgconfig.patch;patch=1"
+           file://fix-pkgconfig.patch;patch=1 \
+           file://97_fontconfig"
 
 PACKAGES =+ "fontconfig-utils-dbg fontconfig-utils "
 FILES_fontconfig-utils-dbg = "${bindir}/*.dbg"
@@ -74,3 +77,13 @@ do_install () {
 	autotools_do_install
 }
 
+do_install_append() {
+	install -d ${D}/etc/default/volatiles
+	install -m 0644 ${WORKDIR}/97_fontconfig ${D}/etc/default/volatiles
+	rmdir ${D}/var/cache/fontconfig
+	rmdir ${D}/var/cache/
+}
+
+pkg_postinst_hal () {
+	/etc/init.d/populate-volatile.sh update
+}
