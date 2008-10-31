@@ -3,7 +3,6 @@ require linux-moblin.inc
 PR = "r4"
 
 DEFAULT_PREFERENCE = "-1"
-DEFAULT_PREFERENCE_netbook = "1"
 
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
 		${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.27-rc6.bz2;patch=1 \
