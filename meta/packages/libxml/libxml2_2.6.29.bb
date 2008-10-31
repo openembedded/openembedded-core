@@ -1,6 +1,6 @@
 require libxml2.inc
 
-PR = "r6"
+PR = "r7"
 
 export LDFLAGS += "-ldl"
 

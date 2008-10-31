@@ -1,6 +1,6 @@
 require libxml2.inc
 
-PR = "r7"
+PR = "r8"
 
 DEPENDS += "python-native"
 

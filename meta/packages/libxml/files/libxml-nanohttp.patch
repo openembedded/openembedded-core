@@ -1,0 +1,13 @@
+Index: libxml2-2.6.29/nanohttp.c
+===================================================================
+--- libxml2-2.6.29.orig/nanohttp.c	2008-10-30 10:12:11.000000000 +0800
++++ libxml2-2.6.29/nanohttp.c	2008-10-30 10:12:30.000000000 +0800
+@@ -1585,7 +1585,7 @@
+     if (!strcmp(filename, "-")) 
+         fd = 0;
+     else {
+-        fd = open(filename, O_CREAT | O_WRONLY);
++        fd = open(filename, O_CREAT | O_WRONLY, 0644);
+ 	if (fd < 0) {
+ 	    xmlNanoHTTPClose(ctxt);
+ 	    return(-1);

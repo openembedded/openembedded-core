@@ -4,7 +4,8 @@ PRIORITY = "optional"
 LICENSE = "MIT"
 
 SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
-           file://libxml-64bit.patch;patch=1"
+           file://libxml-64bit.patch;patch=1 \
+	   file://libxml-nanohttp.patch;patch=1"
 
 inherit autotools pkgconfig binconfig
 
