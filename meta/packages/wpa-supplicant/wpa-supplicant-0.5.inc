@@ -11,7 +11,8 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
 	file://defaults-sane \
 	file://wpa-supplicant.sh \
 	file://wpa_supplicant.conf \
-	file://wpa_supplicant.conf-sane"
+	file://wpa_supplicant.conf-sane \
+	file://99_wpa_supplicant"
 
 S = "${WORKDIR}/wpa_supplicant-${PV}"
 
@@ -35,8 +36,6 @@ do_install () {
 	install -m 755 wpa_passphrase ${D}${sbindir}
 	install -m 755 wpa_cli        ${D}${sbindir}
 
-	install -d ${D}${localstatedir}/run/wpa_supplicant
-
 	install -d ${D}${docdir}/wpa_supplicant
 	install -m 644 README ${WORKDIR}/wpa_supplicant.conf ${D}${docdir}/wpa_supplicant
 
@@ -54,9 +53,14 @@ do_install () {
 
 	install -d ${D}/${sysconfdir}/dbus-1/system.d
 	install -m 644 ${S}/dbus-wpa_supplicant.conf ${D}/${sysconfdir}/dbus-1/system.d
+
+	install -d ${D}/etc/default/volatiles
+	install -m 0644 ${WORKDIR}/99_wpa_supplicant ${D}/etc/default/volatiles
 }
 
 pkg_postinst_wpa-supplicant () {
+	/etc/init.d/populate-volatile.sh update
+
 	# can't do this offline
 	if [ "x$D" != "x" ]; then
 		exit 1
