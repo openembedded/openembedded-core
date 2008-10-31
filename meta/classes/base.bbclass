@@ -741,11 +741,11 @@ def generate_git_config(e):
                 f = open(gitconfig_path, 'w')
                 f.write("[core]\n")
                 ignore_count = 1
-                ignore_host = "    gitproxy = non for %s" % data.getVar('GIT_PROXY_IGNORE_1', e.data, True)
+                ignore_host = data.getVar('GIT_PROXY_IGNORE_1', e.data, True)
                 while (ignore_host):
-                        f.write(ignore_host)
+                        f.write("    gitproxy = non for %s" % ignore_host)
                         ignore_count += 1
-                        ignore_host =  "    gitproxy = non for %s\n" % data.getVar('GIT_PROXY_IGNORE_%s' % ignore_count, e.data, True)
+                        ignore_host = data.getVar('GIT_PROXY_IGNORE_%s' % ignore_count, e.data, True)
                 f.write(proxy_command)
                 f.close
 
