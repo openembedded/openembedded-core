@@ -7,7 +7,7 @@ DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp gnome-common"
 RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
 PV = "0.7+svnr${SRCREV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
 	file://no-restarts.diff;patch=1;pnum=0 \
@@ -33,6 +33,8 @@ do_install_append () {
 	install -m 0644 ${WORKDIR}/99_networkmanager ${D}/etc/default/volatiles
         # This overwrites the provided init script
 	install -m 0755 ${WORKDIR}/NetworkManager ${D}/etc/init.d/
+	rmdir ${D}/var/run/NetworkManager
+	rmdir ${D}/var/run
 }
 
 do_stage () {
