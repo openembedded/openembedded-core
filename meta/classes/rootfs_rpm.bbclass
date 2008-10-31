@@ -7,6 +7,10 @@ ROOTFS_PKGMANAGE = "rpm yum"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "rpm-native:do_populate_staging yum-native:do_populate_staging createrepo-native:do_populate_staging fakechroot-native:do_populate_staging"
+
+# Needed for update-alternatives
+do_rootfs[depends] += "opkg-native:do_populate_staging"
+
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
 YUMCONF = "${IMAGE_ROOTFS}/etc/yum.conf"
