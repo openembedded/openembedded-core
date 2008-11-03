@@ -73,6 +73,7 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo "DL_DIR = \"$SRVWORKDIR/sources\"" >> "$CONFFILE"
     echo 'INHERIT += "poky-autobuild-notifier"' >> "$CONFFILE"
+    echo 'GIT_PROXY_COMMAND=poky-git-proxy-socks-command' >> "$CONFFILE"
     if [ "$ABTARGET" = "darwin" ]; then
         echo 'PACKAGE_CLASSES += "package_tar"' >> "$CONFFILE"
 	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" >> "./conf/local.conf"
