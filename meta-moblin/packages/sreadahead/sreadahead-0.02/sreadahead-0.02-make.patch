@@ -1,0 +1,27 @@
+diff -Nrup sreadahead-0.02.orig/Makefile sreadahead-0.02/Makefile
+--- sreadahead-0.02.orig/Makefile	2008-09-23 22:36:24.000000000 +0200
++++ sreadahead-0.02/Makefile	2008-09-26 07:43:19.000000000 +0200
+@@ -1,11 +1,18 @@
+-all: generate_filelist sreadahead
++CFLAGS=-Os -g -Wall
++PROGS=generate_filelist sreadahead
++
++all: $(PROGS)
+ 
+ 
+ generate_filelist: readahead.h filelist.c Makefile
+-	gcc -Os -g -Wall -W filelist.c -o generate_filelist
++	$(CC) $(CFLAGS) -W filelist.c -o generate_filelist
+ 
+ sreadahead: readahead.h readahead.c Makefile
+-	gcc -Os -g -Wall -lpthread -W readahead.c -o sreadahead
++	$(CC) $(CFLAGS) -lpthread -W readahead.c -o sreadahead
+ 	
+ clean:
+-	rm -f *~ sreadahead generate_filelist
+\ No newline at end of file
++	rm -f *~ sreadahead generate_filelist
++
++install: all
++	mkdir -p $(DESTDIR)/sbin
++	install -p -m 755 $(PROGS) $(DESTDIR)/sbin

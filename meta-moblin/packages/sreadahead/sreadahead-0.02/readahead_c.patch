@@ -1,0 +1,29 @@
+---
+ readahead.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+Index: sreadahead-0.02/readahead.c
+===================================================================
+--- sreadahead-0.02.orig/readahead.c	2008-09-23 22:35:20.000000000 +0200
++++ sreadahead-0.02/readahead.c	2008-10-27 16:27:52.000000000 +0100
+@@ -69,7 +69,11 @@ void *one_thread(void *ptr)
+ int main(int argc, char **argv)
+ {
+ 	FILE *file = fopen("/etc/readahead.packed", "r");
+-	
++	if (!file) {
++		perror("Couldnt open /etc/readahead.packed");
++		return -errno;
++	}
++
+ 	daemon(0,0);
+ 	
+ 	total_files = fread(&files, sizeof(struct readahead), MAXR, file);
+@@ -81,7 +85,6 @@ int main(int argc, char **argv)
+ 	pthread_create(&three, NULL, one_thread, NULL);
+ 	pthread_create(&four, NULL, one_thread, NULL);
+ 
+-	printf("Waiting\n");
+ 	pthread_join(one, NULL);
+ 	pthread_join(two, NULL);
+ 	pthread_join(three, NULL);
