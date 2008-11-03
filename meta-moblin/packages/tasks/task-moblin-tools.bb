@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Debuggin and profiling tools tasks for Moblin"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "\
     task-moblin-tools-debug \
@@ -33,8 +33,9 @@ RDEPENDS_task-moblin-tools-profile = "\
     oprofileui-server \
     powertop \
     lttng-control \
-    lttng-viewer"
-#    sreadahead"
+    lttng-viewer \
+    sreadahead \
+    sreadahead-generate "
 
 RDEPENDS_task-moblin-tools-profile_qemux86 += "valgrind"
 
