@@ -175,6 +175,26 @@ autotools_stage_dir() {
 	fi
 }
 
+autotools_stage_libdir() {
+	from="$1"
+	to="$2"
+
+	olddir=`pwd`
+	cd $from
+	las=$(find . -name \*.la -type f)
+	cd $olddir
+	echo "Found la files: $las"		 
+	for i in $las
+	do
+		sed -e 's/^installed=yes$/installed=no/' \
+		    -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
+		    -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
+		    -i $from/$i
+	done
+	autotools_stage_dir $from $to
+}
+
+
 autotools_stage_all() {
 	if [ "${INHIBIT_AUTO_STAGE}" = "1" ]
 	then
@@ -193,19 +213,11 @@ autotools_stage_all() {
 	fi
 	if [ -d ${STAGE_TEMP}/${libdir} ]
 	then
-		olddir=`pwd`
-		cd ${STAGE_TEMP}/${libdir}
-		las=$(find . -name \*.la -type f)
-		cd $olddir
-		echo "Found la files: $las"		 
-		for i in $las
-		do
-			sed -e 's/^installed=yes$/installed=no/' \
-			    -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
-			    -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
-			    -i ${STAGE_TEMP}/${libdir}/$i
-		done
-		autotools_stage_dir ${STAGE_TEMP}/${libdir} ${STAGING_LIBDIR}
+		autotools_stage_libdir ${STAGE_TEMP}/${libdir} ${STAGING_LIBDIR}
+	fi
+	if [ -d ${STAGE_TEMP}/${base_libdir} ]
+	then
+		autotools_stage_libdir ${STAGE_TEMP}/${base_libdir} ${STAGING_DIR_HOST}${layout_base_libdir}
 	fi
 	rm -rf ${STAGE_TEMP}/${mandir} || true
 	rm -rf ${STAGE_TEMP}/${infodir} || true

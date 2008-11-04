@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r10"
+PR = "r11"
 
 S = "${WORKDIR}/e2fsprogs-${PV}"
 

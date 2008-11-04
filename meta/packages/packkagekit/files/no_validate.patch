@@ -1,0 +1,21 @@
+Index: PackageKit-0.3.8/configure.ac
+===================================================================
+--- PackageKit-0.3.8.orig/configure.ac	2008-11-04 21:37:17.000000000 +0000
++++ PackageKit-0.3.8/configure.ac	2008-11-04 21:37:57.000000000 +0000
+@@ -451,11 +451,11 @@
+ 			  polkit-grant >= $POLKIT_GRANT_REQUIRED)
+ 	AC_SUBST(POLKIT_CFLAGS)
+ 	AC_SUBST(POLKIT_LIBS)
+-	AC_CHECK_PROG([POLKIT_POLICY_FILE_VALIDATE],
+-		      [polkit-policy-file-validate], [polkit-policy-file-validate])
+-	if test -z "$POLKIT_POLICY_FILE_VALIDATE"; then
+-	   AC_MSG_ERROR([polkit-policy-file-validate not found])
+-	fi
++	#AC_CHECK_PROG([POLKIT_POLICY_FILE_VALIDATE],
++	#	      [polkit-policy-file-validate], [polkit-policy-file-validate])
++	#if test -z "$POLKIT_POLICY_FILE_VALIDATE"; then
++	#   AC_MSG_ERROR([polkit-policy-file-validate not found])
++	#fi
+ 	AC_DEFINE(USE_SECURITY_POLKIT, 1, [if we should use PolicyKit])
+ elif test x$with_security_framework = xdummy; then
+ 	AC_DEFINE(USE_SECURITY_DUMMY, 1, [if we should use a dummy security framework])
