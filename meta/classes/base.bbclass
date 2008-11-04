@@ -748,7 +748,9 @@ def generate_git_config(e):
                         ignore_host = data.getVar('GIT_PROXY_IGNORE_%s' % ignore_count, e.data, True)
                 f.write(proxy_command)
                 f.close
-		if 
+		if not os.path.exists(os.path.expanduser("~/.gitconfig")):
+			import shutil
+			shutil.copyfile(gitconfig_path, os.path.expanduser("~/.gitconfig"))
 
 
 METADATA_REVISION ?= "${@base_get_metadata_monotone_revision(d)}"
