@@ -49,7 +49,7 @@ fi
 
 BDIR="build"
 . ./scripts/poky-env-internal
-BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE GIT_CORE_CONFIG GIT_PROXY_IGNORE_1"
+BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE GIT_CORE_CONFIG GIT_PROXY_IGNORE_1 GIT_PROXY_HOST GIT_PROXY_PORT"
 POSTPROCESS=`which poky-autobuild-postprocess-moblin`
 
 if [ "xcomplete" = "x$1" ]; then
