@@ -1,7 +1,8 @@
 HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
-PR = "r6"
+PR = "r7"
 
-SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-1.0.2.tar.bz2"
+SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-1.0.2.tar.bz2 \
+           file://disable_crossbinary.patch;patch=1 "
 
 EXTRA_OECONF = "--with-db-uniquename=_pam \
                  --includedir=${includedir}/security \
