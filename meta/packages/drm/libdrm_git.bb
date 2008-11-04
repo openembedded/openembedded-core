@@ -5,6 +5,8 @@ PROVIDES = "drm"
 
 S = ${WORKDIR}/git
 
+DEPENDS = "pthread-stubs"
+
 PR = "r0"
 PV = "2.4.0+git${SRCREV}"
 
