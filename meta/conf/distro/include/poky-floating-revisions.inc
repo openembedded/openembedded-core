@@ -58,7 +58,7 @@ SRCREV_pn-tasks ?= "${AUTOREV}"
 SRCREV_pn-libjana = "${AUTOREV}"
 SRCREV_pn-metacity-clutter = "${AUTOREV}"
 
-SRCDATE_oprofile ?= "${DATE}"
+#SRCDATE_oprofile ?= "${DATE}"
 
 PREFERRED_VERSION_oprofile ?= "0.9.4+cvs${SRCDATE_oprofile}"
 
