@@ -49,7 +49,7 @@ fi
 
 BDIR="build"
 . ./scripts/poky-env-internal
-BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE GIT_CORE_CONFIG GIT_PROXY_IGNORE_1 GIT_PROXY_HOST GIT_PROXY_PORT"
+BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE"
 POSTPROCESS=`which poky-autobuild-postprocess-moblin`
 
 if [ "xcomplete" = "x$1" ]; then
@@ -68,12 +68,12 @@ if [ ! -e "$CONFFILE" ]; then
     if [ ! -d "./conf" ]; then
         mkdir -p "./conf"
     fi
-    echo 'PACKAGE_CLASSES = "package_ipk package_deb"' > "$CONFFILE"
+    echo 'PACKAGE_CLASSES = "package_ipk package_deb package_rpm"' > "$CONFFILE"
     echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo "DL_DIR = \"$SRVWORKDIR/sources\"" >> "$CONFFILE"
     echo 'INHERIT += "poky-autobuild-notifier"' >> "$CONFFILE"
-    echo 'GIT_PROXY_COMMAND=poky-git-proxy-socks-command' >> "$CONFFILE"
+    echo 'INHERIT += "poky-moblin-autobuilder-proxy-config"' >> "$CONFFILE"
     if [ "$ABTARGET" = "darwin" ]; then
         echo 'PACKAGE_CLASSES += "package_tar"' >> "$CONFFILE"
 	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" >> "./conf/local.conf"
@@ -83,6 +83,8 @@ if [ ! -e "$CONFFILE" ]; then
         echo "FILESPATH_append = \":$CURRDIR/meta-darwin/files\"" >> "$CONFFILE"
     fi
 fi
+
+BBPATH=$SRVWORKDIR/localmeta:$BBPATH
 
 if [ "$ABTARGET" = "darwin" ]; then
     BBPATH=$CURRDIR/meta-darwin:$BBPATH
