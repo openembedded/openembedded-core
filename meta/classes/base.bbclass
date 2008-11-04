@@ -725,13 +725,15 @@ def base_get_metadata_svn_revision(d):
 		pass
 	return revision
 
+GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
+
 def generate_git_config(e):
         import bb
         import os
         from bb import data
 
         if data.getVar('GIT_CORE_CONFIG', e.data, True):
-                gitconfig_path = bb.data.expand("${STAGING_DIR_NATIVE}/usr/etc/gitconfig", e.data)
+                gitconfig_path = bb.data.getVar('GIT_CONFIG', e.data, True)
                 proxy_command = "    gitproxy = %s\n" % data.getVar('GIT_PROXY_COMMAND', e.data, True)
 
                 bb.mkdirhier(bb.data.expand("${STAGING_DIR_NATIVE}/usr/etc/", e.data))
@@ -748,10 +750,6 @@ def generate_git_config(e):
                         ignore_host = data.getVar('GIT_PROXY_IGNORE_%s' % ignore_count, e.data, True)
                 f.write(proxy_command)
                 f.close
-                if not os.path.exists(os.path.expanduser("~/.gitconfig")):
-                        import shutil
-                        shutil.copyfile(gitconfig_path, os.path.expanduser("~/.gitconfig"))
-
 
 METADATA_REVISION ?= "${@base_get_metadata_monotone_revision(d)}"
 
