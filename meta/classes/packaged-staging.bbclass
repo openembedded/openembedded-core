@@ -159,9 +159,8 @@ staging_helper () {
 		mkdir -p ${TMPDIR}${layout_libdir}/opkg/info/
 	fi
  	if [ ! -e ${TMPDIR}${layout_libdir}/ipkg/ ]; then
-		mkdir -p ${TMPDIR}${layout_libdir}/opkg
 		cd ${TMPDIR}${layout_libdir}/
-		ln -sf opkg/ ipkg
+		ln -sf opkg/ ipkg || true
 	fi
 }
 
