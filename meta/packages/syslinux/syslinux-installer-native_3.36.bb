@@ -5,6 +5,7 @@ DESCRIPTION = "A multi-purpose linux bootloader"
 HOMEPAGE = "http://syslinux.zytor.com/"
 LICENSE = "GPL"
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/boot/syslinux/syslinux-${PV}.tar.bz2 "
+DEPENDS = "nasm-native"
 
 S = "${WORKDIR}/syslinux-${PV}"
 STAGE_TEMP = "${WORKDIR}/stage_temp"
