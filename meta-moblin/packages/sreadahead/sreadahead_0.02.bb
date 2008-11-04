@@ -14,6 +14,12 @@ SRC_URI = "http://www.moblin.org/sites/all/files/sreadahead-${PV}.tar.gz \
 
 CFLAGS_prepend = "-I ${S}/include "
 
+#
+# Not compatible on arm due to the use of __sync_fetch_and_add
+# Would need to use a pthread mutex on arm
+#
+COMPATIBLE_HOST = "(i.86).*-linux"
+
 PACKAGES += "${PN}-generate"
 FILES_${PN} = "${base_sbindir}/sreadahead ${sysconfdir}/init.d/sreadahead.sh"
 FILES_${PN}-generate = "${base_sbindir}/generate_filelist ${sysconfdir}/init.d/sreadahead-generate.sh"
