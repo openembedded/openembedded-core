@@ -72,14 +72,14 @@ class Wget(Fetch):
             ftpproxy = None
             if uri_type == 'http':
                 httpproxy = data.getVar("HTTP_PROXY", d, True)
-                httpproxy_ignore = data.getVar("HTTP_PROXY_IGNORE", d, True).split()
+                httpproxy_ignore = (data.getVar("HTTP_PROXY_IGNORE", d, True) or "").split()
                 for p in httpproxy_ignore:
                     if uri_host.endswith(p):
                         httpproxy = None
                         break
             if uri_type == 'ftp':
                 ftpproxy = data.getVar("FTP_PROXY", d, True)
-                ftpproxy_ignore = data.getVar("HTTP_PROXY_IGNORE", d, True).split()
+                ftpproxy_ignore = (data.getVar("HTTP_PROXY_IGNORE", d, True) or "").split()
                 for p in ftpproxy_ignore:
                     if uri_host.endswith(p):
                         ftpproxy = None
