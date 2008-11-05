@@ -31,14 +31,7 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
 
 CONFFILES_${PN} += "${sysconfdir}/X11/xorg.conf"
 
-# xorg-server.m4 contains a macro used by the xf86-*-* drivers to check for
-# server extensions. The problem is that it modifies CFLAGS during the drivers
-# ./configure with -I`pkg-config --variable=sdkdir xorg-server` and the sdkdir
-# variable doesn't point into the staging area and so causes
-# "CROSS COMPILE Badness" warnings.
-do_configure_prepend () {
-        sed -i "s|\`pkg-config --variable=sdkdir xorg-server\`|${STAGING_DIR}/${HOST_SYS}/\`pkg-config --variable=sdkdir xorg-server\`|" xorg-server.m4
-}
+SRC_URI += "file://macro_tweak.patch;patch=1"
 
 do_stage() {
 	autotools_stage_all

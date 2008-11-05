@@ -1,7 +1,7 @@
 require xserver-xf86-dri-lite.inc
 
 PE = "1"
-PR = "r3"
+PR = "r4"
 
 PROTO_DEPS += "xf86driproto"
 
