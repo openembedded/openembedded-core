@@ -76,7 +76,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 # task-base contain stuff needed for base system (machine related)
 #
 RDEPENDS_task-base = "\
-    task-poky-boot \
     task-distro-base \
     task-machine-base \
     ${DISTRO_SSH_DAEMON} \
