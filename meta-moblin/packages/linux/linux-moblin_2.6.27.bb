@@ -1,6 +1,6 @@
 require linux-moblin.inc
 
-PR = "r3"
+PR = "r4"
 PE = "1"
 
 DEFAULT_PREFERENCE = "-1"
