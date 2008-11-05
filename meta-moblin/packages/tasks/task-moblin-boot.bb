@@ -6,7 +6,7 @@ DESCRIPTION = "Task for Moblin - minimal bootable image"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS = "virtual/kernel"
 ALLOW_EMPTY = "1"
-PR = "r7"
+PR = "r8"
 
 #
 # Set by the machine configuration with packages essential for device bootup
@@ -25,6 +25,8 @@ RDEPENDS_task-moblin-boot = "\
     sysvinit \
     tinylogin \
     udev \
+    sreadahead \
+    sreadahead-generate \
     ${VIRTUAL-RUNTIME_update-alternatives} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
