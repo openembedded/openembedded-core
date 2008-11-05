@@ -315,6 +315,10 @@ class FetchData(object):
         (self.type, self.host, self.path, self.user, self.pswd, self.parm) = bb.decodeurl(data.expand(url, d))
         self.date = Fetch.getSRCDate(self, d)
         self.url = url
+        if not self.user and "user" in self.parm:
+            self.user = self.parm["user"]
+        if not self.pswd and "pswd" in self.parm:
+            self.pswd = self.parm["pswd"]
         self.setup = False
         for m in methods:
             if m.supports(url, self, d):
