@@ -110,6 +110,10 @@ EOF
 		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL}
 	fi
 
+	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
+		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL_ATTEMPTONLY} > ${WORKDIR}/temp/log.do_$target-attemptonly.${PID} || true
+	fi
+
 	# Add any recommended packages to the image
 	# (added as an extra script since yum itself doesn't support this)
 	yum-install-recommends.py ${IMAGE_ROOTFS} "fakechroot yum ${YUMARGS} -y install"

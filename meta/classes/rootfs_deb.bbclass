@@ -81,11 +81,19 @@ fakeroot rootfs_deb_do_rootfs () {
 			if [ $? -ne 0 ]; then
 				exit 1
 			fi
-			find ${IMAGE_ROOTFS} -name \*.dpkg-new | for i in `cat`; do
-				mv $i `echo $i | sed -e's,\.dpkg-new$,,'`
-			done
 		done
 	fi
+
+	rm ${WORKDIR}/temp/log.do_$target-attemptonly.${PID}
+	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
+		for i in ${PACKAGE_INSTALL_ATTEMPTONLY}; do
+			apt-get install $i --force-yes --allow-unauthenticated >> ${WORKDIR}/temp/log.do_$target-attemptonly.${PID} || true
+		done
+	fi
+
+	find ${IMAGE_ROOTFS} -name \*.dpkg-new | for i in `cat`; do
+		mv $i `echo $i | sed -e's,\.dpkg-new$,,'`
+	done
 
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version

@@ -42,6 +42,10 @@ fakeroot rootfs_ipk_do_rootfs () {
 		opkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL}
 	fi
 
+	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
+		opkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL_ATTEMPTONLY} > "${WORKDIR}/temp/log.do_rootfs_attemptonly.${PID}" || true
+	fi
+
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
