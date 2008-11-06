@@ -540,8 +540,6 @@ class BBCooker:
 
         except IOError, e:
             bb.msg.fatal(bb.msg.domain.Parsing, "Error when parsing %s: %s" % (afile, str(e)))
-        except IOError:
-            bb.msg.fatal(bb.msg.domain.Parsing, "Unable to open %s" % afile )
         except bb.parse.ParseError, details:
             bb.msg.fatal(bb.msg.domain.Parsing, "Unable to parse %s (%s)" % (afile, details) )
 
