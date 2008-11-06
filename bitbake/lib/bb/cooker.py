@@ -404,8 +404,8 @@ class BBCooker:
 
             bb.event.fire(bb.event.ConfigParsed(self.configuration.data))
 
-        except IOError:
-            bb.msg.fatal(bb.msg.domain.Parsing, "Unable to open %s" % afile )
+        except IOError, e:
+            bb.msg.fatal(bb.msg.domain.Parsing, "IO Error: %s" % str(e) )
         except bb.parse.ParseError, details:
             bb.msg.fatal(bb.msg.domain.Parsing, "Unable to parse %s (%s)" % (afile, details) )
 
