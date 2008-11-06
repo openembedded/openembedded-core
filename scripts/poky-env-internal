@@ -30,14 +30,47 @@ if [ "x$BDIR" = "x" ]; then
 		BDIR="$1"
 	fi
 fi
-
-BBDIR="$OEROOT/bitbake$BBEXTRA/"
-PKGDIR="$OEROOT/meta/"
-PKGDIR_MOBLIN="$OEROOT/meta-moblin/"
 BUILDDIR="$OEROOT/$BDIR/"
-MSG=''
-
 unset BDIR
+BITBAKEDIR="$OEROOT/bitbake$BBEXTRA/"
+PKGDIR="$OEROOT/meta/"
+BBPATH="$BITBAKEDIR $PKGDIR"
+
+#
+# Add in any extra meta-* repositories to BBPATH
+#
+METAREPOS=`cd $OEROOT; find . -maxdepth 1 -name 'meta-*' -type d| sed -e 's#./##g'`
+for repo in $METAREPOS
+do
+    # meta-openmoko is disabled by default - see local.conf.sample to enable it
+    if [ $repo = "meta-openmoko" ]; then
+        continue
+    fi
+    # meta-extras is disabled by default - see local.conf.sample to enable it
+    if [ $repo = "meta-extras" ]; then
+        continue
+    fi
+    if [ -e $OEROOT/$repo/poky-extra-environment ]; then
+	. $OEROOT/$repo/poky-extra-environment
+    fi
+    BBPATH=" $BBPATH $OEROOT/$repo"
+done
+
+BBPATH="$BBPATH $HOME/.oe $HOME/.poky $BUILDDIR"
+
+#
+# Remove any symlinks from BBPATH
+#
+NEWPATH=""
+for p in $BBPATH
+do
+    p2=`readlink -f "$p"`
+    NEWPATH="$p2:$NEWPATH"
+done
+BBPATH="$NEWPATH"
+
+
+MSG=''
 
 BUILD_ARCH=`uname -m`
 BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
@@ -52,26 +85,19 @@ BBDIR=`readlink -f "$BBDIR"`
 PKGDIR=`readlink -f "$PKGDIR"`
 BUILDDIR=`readlink -f "$BUILDDIR"`
 
-if ! (test -d "$BBDIR" && test -d "$PKGDIR" && test -d "$BUILDDIR"); then
+if ! (test -d "$BITBAKEDIR" && test -d "$PKGDIR" && test -d "$BUILDDIR"); then
     echo >&2 "Error: Not all directories exist! Did you run this script in poky directory?"
     return
 fi
 
-if ! (test -r "$BUILDDIR/conf/local.conf"); then
-    cp -f $BUILDDIR/conf/local.conf.sample $BUILDDIR/conf/local.conf
+if [ "x" = "x$POKYLOCALCONF" ]; then
+    POKYLOCALCONF="$BUILDDIR/conf/local.conf.sample"
 fi
 
-BBPATH=$BBDIR
-if test x"$BBDIR" != x"$PKGDIR_MOBLIN"; then
-	BBPATH=$PKGDIR_MOBLIN:$BBPATH
+if ! (test -r "$BUILDDIR/conf/local.conf"); then
+    cp -f $POKYLOCALCONF $BUILDDIR/conf/local.conf
 fi
-if test x"$BBDIR" != x"$PKGDIR"; then
-	BBPATH=$PKGDIR:$BBPATH
-fi
-BBPATH="`readlink -f $HOME/.oe`:`readlink -f $HOME/.poky`:$BBPATH"
-if test x"$PKGDIR" != x"$BUILDDIR"; then
-	BBPATH=$BUILDDIR:$BBPATH
-fi
+
 export BBPATH OEROOT BUILD_SYS BUILDDIR
 
 # Kill off the TERMINFO variable, as glibc will grab its contents in its 'make
