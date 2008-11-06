@@ -1,11 +1,11 @@
 require linux-moblin.inc
 
-PR = "r4"
+PR = "r5"
 
 DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
-		${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.27-rc6.bz2;patch=1 \
+		${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/v2.6.27/patch-2.6.27-rc6.bz2;patch=1 \
 		file://0001-drm-remove-define-for-non-linux-systems.patch;patch=1 \
 		file://0002-i915-remove-settable-use_mi_batchbuffer_start.patch;patch=1 \
 		file://0003-i915-Ignore-X-server-provided-mmio-address.patch;patch=1 \
