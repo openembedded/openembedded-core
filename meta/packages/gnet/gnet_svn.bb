@@ -4,10 +4,12 @@ SECTION = "libs/network"
 HOMEPAGE = "http://www.gnetlibrary.org"
 DEPENDS = "glib-2.0"
 PV = "2.0.7+svn${SRCDATE}"
+PR = "r1"
 
 SRC_URI = "svn://svn.gnome.org/svn/${PN}/;module=trunk \
            file://buildfix.patch;patch=1 \
-	   file://configure_fix.patch;patch=1"
+           file://configure_fix.patch;patch=1 \
+           file://pkgconfig_fix.patch;patch=1 "
 
 S = "${WORKDIR}/trunk"
 
