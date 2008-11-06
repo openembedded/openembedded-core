@@ -1,6 +1,9 @@
 *.pyc
 build/conf/local.conf
 build/tmp/
+scripts/poky-git-proxy-socks
 sources/
 meta-moblin-internal
 *.swp
+*.orig
+*.rej
