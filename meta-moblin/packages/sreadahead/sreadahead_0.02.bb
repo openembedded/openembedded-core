@@ -9,6 +9,7 @@ inherit update-rc.d
 SRC_URI = "http://www.moblin.org/sites/all/files/sreadahead-${PV}.tar.gz \
 	  file://sreadahead-0.02-make.patch;patch=1 \
 	  file://readahead_c.patch;patch=1 \
+	  file://set_to_idle.patch;patch=1 \
 	  file://sreadahead-generate.sh \
 	  file://sreadahead.sh"
 
