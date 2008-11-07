@@ -111,7 +111,7 @@ EOF
 	fi
 
 	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
-		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL_ATTEMPTONLY} > ${WORKDIR}/temp/log.do_$target-attemptonly.${PID} || true
+		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL_ATTEMPTONLY} > ${WORKDIR}/temp/log.do_rootfs-attemptonly.${PID} || true
 	fi
 
 	# Add any recommended packages to the image

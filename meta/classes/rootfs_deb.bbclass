@@ -87,7 +87,7 @@ fakeroot rootfs_deb_do_rootfs () {
 	rm ${WORKDIR}/temp/log.do_$target-attemptonly.${PID}
 	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
 		for i in ${PACKAGE_INSTALL_ATTEMPTONLY}; do
-			apt-get install $i --force-yes --allow-unauthenticated >> ${WORKDIR}/temp/log.do_$target-attemptonly.${PID} || true
+			apt-get install $i --force-yes --allow-unauthenticated >> ${WORKDIR}/temp/log.do_rootfs-attemptonly.${PID} || true
 		done
 	fi
 
