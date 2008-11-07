@@ -3,10 +3,10 @@ LICENSE = "LGPL"
 SECTION = "libs/network"
 HOMEPAGE = "http://www.gnetlibrary.org"
 DEPENDS = "glib-2.0"
-PV = "2.0.7+svn${SRCDATE}"
+PV = "2.0.7+svnr${SRCREV}"
 PR = "r1"
 
-SRC_URI = "svn://svn.gnome.org/svn/${PN}/;module=trunk \
+SRC_URI = "svn://svn.gnome.org/svn/${PN}/;module=trunk;proto=http \
            file://buildfix.patch;patch=1 \
            file://configure_fix.patch;patch=1 \
            file://pkgconfig_fix.patch;patch=1 "
