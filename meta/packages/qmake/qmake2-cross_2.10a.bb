@@ -15,6 +15,7 @@ S = "${WORKDIR}/${QTVER}"
 
 # we need the real target system here
 CROSS_SYS := "${TARGET_SYS}"
+CROSS_BINDIR := "${STAGING_BINDIR_CROSS}"
 inherit autotools cross
 
 export QTDIR = "${S}"
@@ -54,8 +55,9 @@ do_compile() {
 }
 
 do_stage() {
-	install -m 0755 bin/qmake ${STAGING_BINDIR}/qmake2
-	install -m 0755 bin/qmake ${STAGING_BINDIR}/qmake-qt4
+	install -d ${CROSS_BINDIR}/
+	install -m 0755 bin/qmake ${CROSS_BINDIR}/qmake2
+	install -m 0755 bin/qmake ${CROSS_BINDIR}/qmake-qt4
 	install -d ${STAGING_DIR}/${CROSS_SYS}/qt4/
 	cp -PfR mkspecs ${STAGING_DIR}/${CROSS_SYS}/qt4/
 	install -d ${STAGING_DIR}/${HOST_SYS}/qt4/
