@@ -71,11 +71,11 @@ def init(server, eventHandler):
             if event[0].startswith('bb.msg.MsgError'):
                 return_value = 1
                 print 'ERROR: ' + event[1]['_message']
-                break
+                continue
             if event[0].startswith('bb.msg.MsgFatal'):
                 return_value = 1
                 print 'FATAL: ' + event[1]['_message']
-                continue
+                break
             if event[0].startswith('bb.build.TaskFailed'):
                 return_value = 1
                 logfile = event[1]['logfile']
@@ -140,6 +140,8 @@ def init(server, eventHandler):
             if event[0].startswith('bb.runqueue.runQueue'):
                 continue
             if event[0].startswith('bb.event.StampUpdate'):
+                continue
+            if event[0].startswith('bb.event.ConfigParsed'):
                 continue
             print "Unknown Event: %s" % event
 
