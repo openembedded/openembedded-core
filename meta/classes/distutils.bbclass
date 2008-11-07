@@ -52,6 +52,8 @@ distutils_do_install() {
         fi
 
 	rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/easy-install.pth
+        
+        find ${D}${libdir}/${PYTHON_DIR}/site-packages -iname '*.pyo' -exec rm {} \;
 }
 
 EXPORT_FUNCTIONS do_compile do_install
