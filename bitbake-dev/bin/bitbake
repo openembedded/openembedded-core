@@ -160,7 +160,7 @@ Default BBFILES are the .bb files in the current directory.""" )
             # suggest a fixed set this allows you to have flexibility in which
             # ones are available.
             exec "from bb.ui import " + ui
-            exec ui + ".init(server, eventHandler)"
+            exec "return_value = " + ui + ".init(server, eventHandler)"
     except ImportError:
         print "FATAL: Invalid user interface '%s' specified. " % ui
         print "Valid interfaces are 'ncurses', 'depexp' or the default, 'knotty'."
