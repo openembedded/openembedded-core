@@ -71,6 +71,10 @@ def init(server, eventHandler):
             if event[0].startswith('bb.msg.MsgError'):
                 return_value = 1
                 print 'ERROR: ' + event[1]['_message']
+                break
+            if event[0].startswith('bb.msg.MsgFatal'):
+                return_value = 1
+                print 'FATAL: ' + event[1]['_message']
                 continue
             if event[0].startswith('bb.build.TaskFailed'):
                 return_value = 1
