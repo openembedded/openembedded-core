@@ -207,6 +207,10 @@ def exec_func_python(func, d, runfile, logfile):
     try:
         utils.better_exec(comp, g, tmp, bbfile)
     except:
+        (t,value,tb) = sys.exc_info()
+
+        if t in [bb.parse.SkipPackage, bb.build.FuncFailed]:
+            raise
         bb.msg.error(bb.msg.domain.Build, "Function %s failed" % func)
         raise FuncFailed("function %s failed" % func, logfile)
 
