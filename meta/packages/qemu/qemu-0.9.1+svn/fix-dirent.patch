@@ -1,0 +1,20 @@
+Index: trunk/linux-user/syscall.c
+===================================================================
+--- trunk.orig/linux-user/syscall.c	2008-11-10 10:58:07.000000000 +0000
++++ trunk/linux-user/syscall.c	2008-11-10 11:00:37.000000000 +0000
+@@ -26,6 +26,7 @@
+ #include <errno.h>
+ #include <unistd.h>
+ #include <fcntl.h>
++#include <dirent.h>
+ #include <time.h>
+ #include <sys/types.h>
+ #include <sys/ipc.h>
+@@ -76,7 +77,6 @@
+ #include <linux/cdrom.h>
+ #include <linux/hdreg.h>
+ #include <linux/soundcard.h>
+-#include <linux/dirent.h>
+ #include <linux/kd.h>
+ 
+ #include "qemu.h"
