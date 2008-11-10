@@ -2,7 +2,7 @@ DESCRIPTON = "A live image init script"
 
 SRC_URI = "file://init-live.sh"
 
-PR = "r0"
+PR = "r1"
 
 do_install() {
         install -m 0755 ${WORKDIR}/init-live.sh ${D}/init

@@ -139,7 +139,7 @@ echo "default 0" > /ssd/boot/grub/menu.lst
 echo "timeout 30" >> /ssd/boot/grub/menu.lst
 echo "title Poky-Netbook" >> /ssd/boot/grub/menu.lst
 echo "root  (hd0,0)" >> /ssd/boot/grub/menu.lst
-echo "kernel /boot/vmlinuz root=$rootfs rw video=$3 vga=$4 quiet" >> /ssd/boot/grub/menu.lst
+echo "kernel /boot/vmlinuz root=$rootfs rw $3 $4 quiet" >> /ssd/boot/grub/menu.lst
 
 cp /media/$1/vmlinuz /ssd/boot/
 

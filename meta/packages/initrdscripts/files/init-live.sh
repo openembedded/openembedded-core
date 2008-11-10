@@ -27,9 +27,9 @@ read_args() {
 	    LABEL=*)
 		label=$optarg ;;
 	    video=*)
-		video_mode=$optarg ;;
+		video_mode=$arg ;;
 	    vga=*)
-		vga_mode=$optarg ;;	    
+		vga_mode=$arg ;;
         esac
     done
 }
@@ -79,7 +79,7 @@ case $label in
 	;;
     install)
 	if [ -f /media/$i/$ROOT_IMAGE ] ; then
-	    ./install.sh $i $ROOT_IMAGE $video_mode $vga
+	    ./install.sh $i $ROOT_IMAGE $video_mode $vga_mode
 	else
 	    fatal "Couldnt find install script"
 	fi
