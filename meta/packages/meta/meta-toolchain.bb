@@ -24,6 +24,11 @@ do_populate_sdk() {
 	mkdir -p ${SDK_OUTPUT}${layout_libdir}/opkg/
 	mkdir -p ${SDK_OUTPUT}/${SDK_PREFIX}/${TARGET_SYS}${layout_libdir}/opkg/
 
+	rm -f ${IPKGCONF_TARGET}
+	touch ${IPKGCONF_TARGET}
+	rm -f ${IPKGCONF_SDK}
+	touch ${IPKGCONF_SDK}
+
 	package_update_index_ipk
 	package_generate_ipkg_conf
 
