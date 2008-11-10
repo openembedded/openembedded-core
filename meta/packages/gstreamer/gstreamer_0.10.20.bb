@@ -5,11 +5,13 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "glib-2.0 gettext-native libxml2 bison-native flex-native"
+PR = "r1"
 
 inherit autotools pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz2 \
            file://gst-inspect-check-error.patch;patch=1 \
+           file://check_fix.patch;patch=1 \
            file://po-makefile-fix.patch;patch=1"
 EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind --disable-debug"
 
