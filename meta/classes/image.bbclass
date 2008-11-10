@@ -199,6 +199,13 @@ make_zimage_symlink_relative () {
 	fi
 }
 
+write_image_manifest () {
+	rootfs_${IMAGE_PKGTYPE}_write_manifest
+
+	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
+        ln -s ${IMAGE_NAME}.rootfs.manifest ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manfiest
+}
+
 # Make login manager(s) enable automatic login.
 # Useful for devices where we do not want to log in at all (e.g. phones)
 set_image_autologin () {
