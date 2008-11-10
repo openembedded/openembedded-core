@@ -203,7 +203,7 @@ write_image_manifest () {
 	rootfs_${IMAGE_PKGTYPE}_write_manifest
 
 	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
-        ln -s ${IMAGE_NAME}.rootfs.manifest ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manfiest
+        ln -s ${IMAGE_NAME}.rootfs.manifest ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
 }
 
 # Make login manager(s) enable automatic login.
