@@ -95,4 +95,4 @@ NETBOOK_IMAGE_FEATURES = "${ENHANCED_IMAGE_FEATURES} apps-x11-netbook"
 inherit image
 
 # Create /etc/timestamp during image construction to give a reasonably sane default time setting
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_update_timestamp"
+ROOTFS_POSTPROCESS_COMMAND += "rootfs_update_timestamp ; "

@@ -8,4 +8,4 @@ IMAGE_LINGUAS = " "
 inherit poky-image
 
 # remove not needed ipkg informations
-ROOTFS_POSTPROCESS_COMMAND += "remove_packaging_data_files"
+ROOTFS_POSTPROCESS_COMMAND += "remove_packaging_data_files ; "
