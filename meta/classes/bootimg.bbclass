@@ -54,7 +54,7 @@ build_boot_bin() {
 	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
 	SIZE=`expr $BLOCKS + ${BOOTIMG_EXTRA_SPACE}`	
 
-	mkdosfs -F 16 -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
+	mkdosfs -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
 	-C ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg $SIZE 
 
 	syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
