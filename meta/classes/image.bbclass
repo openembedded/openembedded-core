@@ -211,7 +211,14 @@ rootfs_update_timestamp () {
 	date "+%m%d%H%M%Y" >${IMAGE_ROOTFS}/etc/timestamp
 }
 
+# Prevent X from being started
+rootfs_no_x_startup () {
+	if [ -f ${IMAGE_ROOTFS}/etc/init.d/xserver-nodm ]; then
+		chmod a-x ${IMAGE_ROOTFS}/etc/init.d/xserver-nodm
+	fi
+}
+
 # export the zap_root_password, create_etc_timestamp and remote_init_link
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp
+EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
 
 addtask rootfs before do_build after do_install
