@@ -1,0 +1,17 @@
+Index: cairo-1.8.2/build/aclocal.dolt.m4
+===================================================================
+--- cairo-1.8.2.orig/build/aclocal.dolt.m4
++++ cairo-1.8.2/build/aclocal.dolt.m4
+@@ -163,7 +163,11 @@ done
+ if $modeok && $tagok ; then
+     . ${top_builddir_slash}doltcompile "${args@<:@@@:>@}"
+ else
+-    exec ${top_builddir_slash}libtool "$[]@"
++__DOLTLIBTOOL__EOF__
++
++echo '    exec ${top_builddir_slash}'${host_alias}-libtool' "$[]@"' >> doltlibtool
++
++    cat << '__DOLTLIBTOOL__EOF__' >> doltlibtool
+ fi
+ __DOLTLIBTOOL__EOF__
+ 
