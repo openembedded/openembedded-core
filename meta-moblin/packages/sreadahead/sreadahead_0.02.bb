@@ -2,7 +2,7 @@ DESCRIPTION = "Super readahead, part of the fastboot tool set."
 SECTION = "base"
 HOMEPAGE = "http://www.moblin.org"
 LICENSE = "GPLv2"
-PR = "r12"
+PR = "r13"
 
 inherit update-rc.d
 
