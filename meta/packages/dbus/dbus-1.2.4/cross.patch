@@ -1,0 +1,10 @@
+--- /tmp/configure.in	2006-11-09 21:47:10.000000000 +0100
++++ dbus-0.95/configure.in	2006-11-09 21:48:13.108554000 +0100
+@@ -719,6 +719,7 @@
+     exit (0);
+ ]])],
+               [ac_cv_have_abstract_sockets=yes],
++	      [ac_cv_have_abstract_sockets=no],
+               [ac_cv_have_abstract_sockets=no]
+ )])
+ AC_LANG_POP(C)
