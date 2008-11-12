@@ -4,6 +4,7 @@
 #
 PREFERRED_VERSION_dbus ?= "1.2.4"
 PREFERRED_VERSION_dbus-native ?= "1.2.4"
+PREFERRED_VERSION_eds-dbus ?= "2.20.0"
 
 PREFERRED_VERSION_atk ?= "1.24.0"
 PREFERRED_VERSION_pixman ?= "0.12.0"
