@@ -13,7 +13,7 @@ fi
 # That's our second boot, we can generate the sreadahead file list
 if [ -e /etc/readahead.packed.second ]; then
     rm -f /etc/readahead.packed.second
-    find / -type f > filelist.txt
+    find / -type f | grep -E -v "\/dev\/|\/proc\/|\/sys\/" > filelist.txt
 
     /sbin/generate_filelist filelist.txt
     rm filelist.txt
