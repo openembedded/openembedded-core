@@ -18,8 +18,9 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import gobject
 import gtk
+import gobject
+import gtk.glade
 
 class RunningBuildModel (gtk.TreeStore):
     (COL_TYPE, COL_PACKAGE, COL_TASK, COL_MESSAGE, COL_ICON, COL_ACTIVE) = (0, 1, 2, 3, 4, 5)
@@ -34,9 +35,12 @@ class RunningBuildModel (gtk.TreeStore):
 
 class RunningBuild (gobject.GObject):
     __gsignals__ = {
-          'build-finished' : (gobject.SIGNAL_RUN_LAST, 
-                              gobject.TYPE_NONE,
-                              ())
+          'build-succeeded' : (gobject.SIGNAL_RUN_LAST, 
+                               gobject.TYPE_NONE,
+                               ()),
+          'build-failed' : (gobject.SIGNAL_RUN_LAST,
+                            gobject.TYPE_NONE,
+                            ())
           }
     pids_to_task = {}
     tasks_to_iter = {}
@@ -150,6 +154,15 @@ class RunningBuild (gobject.GObject):
             del self.tasks_to_iter[(package, task)]
             del self.pids_to_task[pid]
 
+        elif event[0].startswith('bb.event.BuildCompleted'):
+            failures = int (event[1]['_failures'])
+
+            # Emit the appropriate signal depending on the number of failures
+            if (failures > 1):
+                self.emit ("build-failed")
+            else:
+                self.emit ("build-succeeded")
+
 class RunningBuildTreeView (gtk.TreeView):
     def __init__ (self):
         gtk.TreeView.__init__ (self)
@@ -164,6 +177,5 @@ class RunningBuildTreeView (gtk.TreeView):
         renderer = gtk.CellRendererText ()
         col = gtk.TreeViewColumn ("Message", renderer, text=3)
         self.append_column (col)
-
 
 
