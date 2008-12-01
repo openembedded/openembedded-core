@@ -1,0 +1,160 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- qt-embedded-free-3.3.5/src/embedded/qgfxlinuxfb_qws.cpp~64bit-cleanup.patch
++++ qt-embedded-free-3.3.5/src/embedded/qgfxlinuxfb_qws.cpp
+@@ -40,6 +40,7 @@
+ 
+ #include <unistd.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ #include <sys/ioctl.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -176,7 +177,7 @@
+ 				 MAP_SHARED, fd, 0);
+     data += dataoffset;
+ 
+-    if ((int)data == -1) {
++    if ((intptr_t)data == -1) {
+ 	perror("mapping /dev/fb0");
+ 	qWarning("Error: failed to map framebuffer device to memory.");
+ 	return FALSE;
+@@ -737,7 +738,7 @@
+     psize += 8;     // for alignment
+     psize &= ~0x7;  // align
+ 
+-    unsigned int pos=(unsigned int)data;
++    uintptr_t pos=(uintptr_t)data;
+     pos += psize;
+     entryp = ((int *)pos);
+     lowest = ((unsigned int *)pos)+1;
+--- qt-embedded-free-3.3.5/src/kernel/qsharedmemory_p.cpp~64bit-cleanup.patch
++++ qt-embedded-free-3.3.5/src/kernel/qsharedmemory_p.cpp
+@@ -31,6 +31,7 @@
+ **********************************************************************/
+ 
+ #include "qsharedmemory_p.h"
++#include <stdint.h>
+ 
+ #if !defined(QT_QWS_NO_SHM)
+ 
+@@ -132,7 +133,7 @@
+     shmId = shmget (key, shmSize, 0);
+ 
+   shmBase = shmat (shmId, 0, 0);
+-  if ((int) shmBase == -1 || shmBase == 0)
++  if ((intptr_t) shmBase == -1 || shmBase == 0)
+     return FALSE;
+   else
+     return TRUE;
+--- qt-embedded-free-3.3.5/src/kernel/qapplication_qws.cpp~64bit-cleanup.patch
++++ qt-embedded-free-3.3.5/src/kernel/qapplication_qws.cpp
+@@ -107,6 +107,7 @@
+ #include <locale.h>
+ #include <errno.h>
+ #include <sys/time.h>
++#include <stdint.h>
+ 
+ #if defined(Q_OS_QNX)
+ #include <sys/select.h>
+@@ -1879,7 +1880,7 @@
+ 	w = widgetAt(*qt_last_x, *qt_last_y, FALSE);
+     if ( !w )
+ 	w = desktop();
+-    QPaintDevice::qwsDisplay()->selectCursor(w, (int)app_cursor->handle());
++    QPaintDevice::qwsDisplay()->selectCursor(w, (intptr_t)app_cursor->handle());
+ }
+ 
+ void QApplication::restoreOverrideCursor()
+@@ -1898,11 +1899,11 @@
+ 	cursorStack = 0;
+ 	qws_overrideCursor = FALSE;
+ 	if ( w->testWState(WState_OwnCursor) )
+-	    QPaintDevice::qwsDisplay()->selectCursor(w, (int)w->cursor().handle());
++	    QPaintDevice::qwsDisplay()->selectCursor(w, (intptr_t)w->cursor().handle());
+ 	else
+ 	    QPaintDevice::qwsDisplay()->selectCursor(w, ArrowCursor);
+     } else {
+-	QPaintDevice::qwsDisplay()->selectCursor(w, (int)app_cursor->handle());
++	QPaintDevice::qwsDisplay()->selectCursor(w, (intptr_t)app_cursor->handle());
+     }
+ }
+ #endif// QT_NO_CURSOR
+@@ -2130,7 +2131,7 @@
+ 		    }
+ 		    if ( !qws_overrideCursor ) {
+ 			if (curs)
+-			    QPaintDevice::qwsDisplay()->selectCursor(widget, (int)curs->handle());
++			    QPaintDevice::qwsDisplay()->selectCursor(widget, (intptr_t)curs->handle());
+ 			else
+ 			    QPaintDevice::qwsDisplay()->selectCursor(widget, ArrowCursor);
+ 		    }
+--- qt-embedded-free-3.3.5/src/kernel/qfont_qws.cpp~64bit-cleanup.patch
++++ qt-embedded-free-3.3.5/src/kernel/qfont_qws.cpp
+@@ -49,6 +49,7 @@
+ #include "qgfx_qws.h"
+ #include "qtextengine_p.h"
+ #include "qfontengine_p.h"
++#include <stdint.h>
+ 
+ QFont::Script QFontPrivate::defaultScript = QFont::UnknownScript;
+ 
+@@ -133,7 +134,7 @@
+ 	req.pointSize = req.pixelSize*10;
+ 
+     if ( ! engineData ) {
+-	QFontCache::Key key( req, QFont::NoScript, (int)paintdevice );
++	QFontCache::Key key( req, QFont::NoScript, (intptr_t)paintdevice );
+ 
+ 	// look for the requested font in the engine data cache
+ 	engineData = QFontCache::instance->findEngineData( key );
+--- qt-embedded-free-3.3.5/src/kernel/qwsregionmanager_qws.cpp~64bit-cleanup.patch
++++ qt-embedded-free-3.3.5/src/kernel/qwsregionmanager_qws.cpp
+@@ -32,6 +32,7 @@
+ #include "qwsdisplay_qws.h"
+ #include "qwsregionmanager_qws.h"
+ #include <stdlib.h>
++#include <stdint.h>
+ 
+ #ifndef QT_NO_QWS_MULTIPROCESS
+ #include <sys/types.h>
+@@ -288,7 +289,7 @@
+ 	    data = (unsigned char *)shmat( shmId, 0, 0 );
+     }
+ 
+-    return ( shmId != -1 && (int)data != -1 );
++    return ( shmId != -1 && (intptr_t)data != -1 );
+ #else
+ 	int dataSize = sizeof(QWSRegionHeader)                // header
+ 		    + sizeof(QWSRegionIndex) * QT_MAX_REGIONS // + index
+--- qt-embedded-free-3.3.5/src/kernel/qwidget_qws.cpp~64bit-cleanup.patch
++++ qt-embedded-free-3.3.5/src/kernel/qwidget_qws.cpp
+@@ -53,6 +53,7 @@
+ #include "qwsmanager_qws.h"
+ #include "qwsregionmanager_qws.h"
+ #include "qinputcontext_p.h"
++#include <stdint.h>
+ 
+ void qt_insert_sip( QWidget*, int, int );	// defined in qapplication_x11.cpp
+ int  qt_sip_count( QWidget* );			// --- "" ---
+@@ -631,7 +632,7 @@
+ 	qt_mouseGrb->releaseMouse();
+ 
+     qwsDisplay()->grabMouse(this,TRUE);
+-    qwsDisplay()->selectCursor(this, (unsigned int)cursor.handle());
++    qwsDisplay()->selectCursor(this, (uintptr_t)cursor.handle());
+     qt_mouseGrb = this;
+     qt_pressGrab = 0;
+ }
+@@ -1845,7 +1846,7 @@
+ 	QSize s( qt_screen->width(), qt_screen->height() );
+ 	QPoint pos = qt_screen->mapToDevice(QPoint(*qt_last_x, *qt_last_y), s);
+ 	if ( r.contains(pos) )
+-	    qwsDisplay()->selectCursor((QWidget*)this, (unsigned int)cursor().handle());
++	    qwsDisplay()->selectCursor((QWidget*)this, (uintptr_t)cursor().handle());
+     }
+ }
+ #endif

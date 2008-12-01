@@ -1,0 +1,16 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- qt-embedded-free-3.3.2/Makefile~no-examples	2003-08-11 16:37:25.000000000 +0200
++++ qt-embedded-free-3.3.2/Makefile	2004-05-11 15:53:53.000000000 +0200
+@@ -11,7 +11,7 @@
+ install: FORCE
+ 	@$(MAKE) qt.install
+ 
+-all: symlinks src-qmake src-moc sub-src sub-tools sub-tutorial sub-examples
++all: symlinks src-qmake src-moc sub-src sub-tools
+ 	@echo
+ 	@echo "The Qt library is now built in ./lib"
+ 	@echo "The Qt examples are built in the directories in ./examples"
