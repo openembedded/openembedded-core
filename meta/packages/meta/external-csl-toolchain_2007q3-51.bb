@@ -14,12 +14,12 @@ PROVIDES = "\
     virtual/linux-libc-headers "
 RPROVIDES = "glibc-utils libsegfault glibc-thread-db"
 PACKAGES_DYNAMIC = "glibc-gconv-*"
-PR = "r3"
+PR = "r1"
 
 SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-${PV}-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2 \
 file://SUPPORTED"
 
-S = "${WORKDIR}/arm-2006q3"
+S = "${WORKDIR}/arm-2007q3"
 
 do_install() {
     install -d ${D}${sysconfdir} ${D}${bindir} ${D}${sbindir} ${D}${base_bindir} ${D}${libdir}
