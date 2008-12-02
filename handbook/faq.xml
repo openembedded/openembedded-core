@@ -242,8 +242,22 @@
             </para>
         </answer>
     </qandaentry>
-
-
+    <qandaentry>
+        <question>
+            <para>
+                I'm using Ubuntu Intrepid and am seeing build failures. Whats wrong?
+            </para>
+        </question>
+        <answer>
+            <para>
+	        In Intrepid, Ubuntu turned on by default normally optional compile-time security features 
+		and warnings. There are more details at <ulink
+                url='https://wiki.ubuntu.com/CompilerFlags'>https://wiki.ubuntu.com/CompilerFlags</ulink>.
+		You can work around this problem by disbaling those options by adding "https://wiki.ubuntu.com/CompilerFlags" 
+		to the BUILD_CPPFLAGS variable in conf/bitbake.conf.
+            </para>
+        </answer>
+    </qandaentry>
 </qandaset>
 </appendix>
 <!-- 
