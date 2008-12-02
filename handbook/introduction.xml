@@ -289,7 +289,7 @@ $ poky-qemu &lt;kernel&gt; &lt;image&gt;
             We make nightly builds of Poky for testing purposes and to make the
             latest developments available. The output from these builds is available
             at <ulink url='http://pokylinux.org/autobuild/'/>
-            where the numbers represent the svn revision the builds were made from.
+            where the numbers increase for each subsequent build and can be used to reference it.
         </para>
 
         <para>
@@ -308,13 +308,13 @@ $ poky-qemu &lt;kernel&gt; &lt;image&gt;
         <title>Development Checkouts</title>
 
         <para>
-            Poky is available from our SVN repository located at
-            http://svn.o-hand.com/repos/poky/trunk; a web interface to the repository
-            can be accessed at <ulink url='http://svn.o-hand.com/view/poky/'/>.
+            Poky is available from our GIT repository located at
+            git://git.pokylinux.org/poky.git; a web interface to the repository
+            can be accessed at <ulink url='http://git.pokylinux.org/'/>.
         </para>
 
         <para>
-           'trunk' is where the deveopment work takes place and you should use this if you're
+           The 'master' is where the deveopment work takes place and you should use this if you're
            after to work with the latest cutting edge developments. It is possible trunk
            can suffer temporary periods of instability while new features are developed and
            if this is undesireable we recommend using one of the release branches.
