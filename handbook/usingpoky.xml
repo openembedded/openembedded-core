@@ -75,7 +75,7 @@
         </para>
 
         <para>
-            'package' can also used to describe recipes but since the same
+            'package' can also be used to describe recipes but since the same
             word is used for the packaged output from Poky (i.e. .ipk or .deb
             files), this document will avoid it.
         </para>
@@ -114,7 +114,7 @@
     <title>Running a Build</title>
 
     <para>
-        First the Poky build environment needs to be setup using the following command:
+        First the Poky build environment needs to be set up using the following command:
     </para>
     <para>
         <literallayout class='monospaced'>
@@ -122,7 +122,7 @@ $ source poky-init-build-env
 </literallayout>
     </para>
     <para>
-        Once the Poky build environment is setup, a target can now be built using:
+        Once the Poky build environment is set up, a target can now be built using:
     </para>
     <para>
         <literallayout class='monospaced'>
@@ -204,11 +204,11 @@ route add default gw 192.168.7.200 tap0
         <para>
             The second is to configure name resolution which is configured in the 
             <filename>/etc/resolv.conf</filename> file. The simplest solution is 
-            to copy it's content from the host machine.
+            to copy its content from the host machine.
         </para>
 
         <para>
-            USB connections to devices can be setup and automated in a similar way.
+            USB connections to devices can be set up and automated in a similar way.
             First add the following to
             <filename>/etc/network/interfaces</filename>:
         </para>
@@ -246,7 +246,7 @@ route add default gw 192.168.0.202 usb0
         debugging practises such as comparing to the last 
         known working version and examining the changes, reapplying the 
         changes in steps to identify the one causing the problem etc. are
-        valid for Poky just like any other system. Its impossible to detail
+        valid for Poky just like any other system. It's impossible to detail
         every possible potential failure here but there are some general
         tips to aid debugging:
     </para>
@@ -293,7 +293,7 @@ route add default gw 192.168.0.202 usb0
         <para>
             which would build matchbox-desktop, then recompile it. The
             final command reruns all tasks after the compile (basically
-            the packaging tasks) since bitbake will notice the the
+            the packaging tasks) since bitbake will notice that the
             compile has been rerun and hence the other tasks also need
             to run again.
         </para>

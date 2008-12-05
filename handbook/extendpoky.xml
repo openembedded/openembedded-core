@@ -215,7 +215,7 @@ pkg_postinst_PACKAGENAME () {
             <para>
                 Sometimes it is necessary that the execution of a post-installation
                 script is delayed until the first boot, because the script 
-                needs to be executed the device itself.  To delay script execution
+                needs to be executed on the device itself.  To delay script execution
                 until boot time, the post-installation function should have the
                 following structure:
             </para>
@@ -268,7 +268,7 @@ inherit poky-image
 
             <para>
                 By creating a custom image, a developer has total control
-                over the contents of the image. It is important use 
+                over the contents of the image. It is important to use 
                 the correct names of packages in the <glossterm><link
                 linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm> variable. 
                 The names must be in 
@@ -295,11 +295,11 @@ IMAGE_INSTALL += "strace"
             <title>Customising Images through custom tasks</title>
 
             <para>
-                For for complex custom images, the best approach is to create a custom 
-                task package which is them used to build the image (or images). A good
+                For complex custom images, the best approach is to create a custom 
+                task package which is then used to build the image (or images). A good
                 example of a tasks package is <filename>meta/packages/tasks/task-poky.bb
                 </filename>. The <glossterm><link linkend='var-PACKAGES'>PACKAGES</link></glossterm> 
-                variable lists the task packages to build (along with the complimentary
+                variable lists the task packages to build (along with the complementary
                 -dbg and -dev packages). For each package added,
                 <glossterm><link linkend='var-PACKAGES'>RDEPENDS</link></glossterm> and
                 <glossterm><link linkend='var-PACKAGES'>RRECOMMENDS</link></glossterm> 

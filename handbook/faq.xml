@@ -253,7 +253,7 @@
 	        In Intrepid, Ubuntu turned on by default normally optional compile-time security features 
 		and warnings. There are more details at <ulink
                 url='https://wiki.ubuntu.com/CompilerFlags'>https://wiki.ubuntu.com/CompilerFlags</ulink>.
-		You can work around this problem by disbaling those options by adding " -Wno-format-security -U_FORTIFY_SOURCE" 
+		You can work around this problem by disabling those options by adding " -Wno-format-security -U_FORTIFY_SOURCE" 
 		to the BUILD_CPPFLAGS variable in conf/bitbake.conf.
             </para>
         </answer>
