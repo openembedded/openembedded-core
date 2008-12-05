@@ -25,9 +25,15 @@ do_stage() {
 	install -d ${DEPLOY_DIR}/ipk/
 	install -d ${STAGING_DIR}/pkgdata/
 	install -d ${STAGING_DIR_TARGET}/shlibs/
+	install -d ${STAGING_DIR_TARGET}/${layout_base_libdir}/
+	install -d ${STAGING_DIR_TARGET}/${layout_libdir}/
+	install -d ${STAGING_DIR_TARGET}/${layout_includedir}/
 
 	cp -ar ${prefix}/ipk/* ${DEPLOY_DIR}/ipk/
 	cp -ar ${prefix}/pkgdata/* ${STAGING_DIR}/pkgdata/
 	cp -ar ${prefix}/${TARGET_SYS}/shlibs/* ${STAGING_DIR_TARGET}/shlibs/
+	cp -ar ${prefix}/${TARGET_SYS}/lib/* ${STAGING_DIR_TARGET}/${layout_base_libdir}/
+	cp -ar ${prefix}/${TARGET_SYS}/usr/include/* ${STAGING_DIR_TARGET}/${layout_includedir}/
+	cp -ar ${prefix}/${TARGET_SYS}/usr/lib/* ${STAGING_DIR_TARGET}/${layout_libdir}/
 }
 
