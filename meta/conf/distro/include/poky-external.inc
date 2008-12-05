@@ -23,7 +23,7 @@ PREFERRED_PROVIDER_virtual/libiconv = "external-poky-toolchain"
 PREFERRED_PROVIDER_glibc-thread-db = "external-poky-toolchain"
 PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-poky-toolchain"
 
-TARGET_CPPFLAGS_prepend = " -isystem${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/include "
-TARGET_LDFLAGS_prepend = " -L${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib "
+#TARGET_CPPFLAGS_prepend = " -isystem${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/include "
+#TARGET_LDFLAGS_prepend = " -L${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib -L${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/usr/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/usr/lib "
 
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
