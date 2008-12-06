@@ -88,6 +88,24 @@ class BBCooker:
 
         bb.data.inheritFromOS(self.configuration.data)
 
+        for f in self.configuration.file:
+            self.parseConfigurationFile( f )
+
+        self.parseConfigurationFile( os.path.join( "conf", "bitbake.conf" ) )
+
+        if not self.configuration.cmd:
+            self.configuration.cmd = bb.data.getVar("BB_DEFAULT_TASK", self.configuration.data, True) or "build"
+
+        bbpkgs = bb.data.getVar('BBPKGS', self.configuration.data, True)
+        if bbpkgs:
+            self.configuration.pkgs_to_build.extend(bbpkgs.split())
+
+        #
+        # Special updated configuration we use for firing events
+        #
+        self.configuration.event_data = bb.data.createCopy(self.configuration.data)
+        bb.data.update_data(self.configuration.event_data)
+
         # TOSTOP must not be set or our children will hang when they output
         fd = sys.stdout.fileno()
         if os.isatty(fd):
@@ -105,23 +123,7 @@ class BBCooker:
         self.server.register_idle_function(self.runCommands, self)
 
     def parseConfiguration(self):
-        #
-        # Special updated configuration we use for firing events
-        #
-        self.configuration.event_data = bb.data.createCopy(self.configuration.data)
-        bb.data.update_data(self.configuration.event_data)
 
-        for f in self.configuration.file:
-            self.parseConfigurationFile( f )
-
-        self.parseConfigurationFile( os.path.join( "conf", "bitbake.conf" ) )
-
-        if not self.configuration.cmd:
-            self.configuration.cmd = bb.data.getVar("BB_DEFAULT_TASK", self.configuration.data, True) or "build"
-
-        bbpkgs = bb.data.getVar('BBPKGS', self.configuration.data, True)
-        if bbpkgs:
-            self.configuration.pkgs_to_build.extend(bbpkgs.split())
 
         # Change nice level if we're asked to
         nice = bb.data.getVar("BB_NICE_LEVEL", self.configuration.data, True)
@@ -149,6 +151,9 @@ class BBCooker:
             self.commandlineAction = ["showVersions"]
         elif self.configuration.parse_only:
             self.commandlineAction = ["parseFiles"]
+        # FIXME - implement
+        #elif self.configuration.interactive:
+        #    self.interactiveMode()
         elif self.configuration.dot_graph:
             if self.configuration.pkgs_to_build:
                 self.commandlineAction = ["generateDotGraph", self.configuration.pkgs_to_build, self.configuration.cmd]

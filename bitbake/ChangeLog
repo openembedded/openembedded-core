@@ -59,7 +59,20 @@ Changes in BitBake 1.8.x:
 	  all variable from the environment. If BB_ENV_WHITELIST is set, that whitelist will be
 	  used instead of the internal bitbake one. Alternatively, BB_ENV_EXTRAWHITE can be used
 	  to extend the internal whitelist.
+	- Perforce fetcher fix to use commandline options instead of being overriden by the environment
+	- use @rev when doing a svn checkout
+	- Add osc fetcher (from Joshua Lock in Poky)
 	- When SRCREV autorevisioning for a recipe is in use, don't cache the recipe
+	- Add tryaltconfigs option to control whether bitbake trys using alternative providers
+	  to fulfil failed dependencies. It defaults to off, changing the default since this
+	  behaviour confuses many users and isn't often useful.
+	- Improve lock file function error handling
+	- Add username handling to the git fetcher (Robert Bragg)
+	- Add support for HTTP_PROXY and HTTP_PROXY_IGNORE variables to the wget fetcher
+	- Export more variables to the fetcher commands to allow ssh checkouts and checkouts through 
+	  proxies to work better. (from Poky)
+	- Also allow user and pswd options in SRC_URIs globally (from Poky)
+	- Improve proxy handling when using mirrors (from Poky)
 
 Changes in BitBake 1.8.10:
 	- Psyco is available only for x86 - do not use it on other architectures.
@@ -104,6 +117,7 @@ Changes in BitBake 1.8.10:
 	- Add support for branches in git fetcher (Otavio Salvador, Michael Lauer)
 	- Make taskdata and runqueue errors more user friendly
 	- Add norecurse and fullpath options to cvs fetcher
+	- bb.utils.prunedir can cope with symlinks to directories without exceptions
 
 Changes in Bitbake 1.8.8:
 	- Rewrite svn fetcher to make adding extra operations easier 
