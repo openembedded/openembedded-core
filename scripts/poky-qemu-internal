@@ -101,7 +101,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -no-reboot"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -usb -usbdevice wacom-tablet -no-reboot"
     fi
 	if [ "$MACHINE" = "qemuarmv6" ]; then
 		QEMUOPTIONS="$QEMUOPTIONS -cpu arm1136"
@@ -126,7 +126,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="-std-vga $QEMU_NETWORK_CMD"
+        QEMUOPTIONS="-std-vga -usb -usbdevice wacom-tablet $QEMU_NETWORK_CMD"
     fi
 fi
 
