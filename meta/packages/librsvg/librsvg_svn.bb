@@ -10,7 +10,6 @@ inherit autotools pkgconfig gnome
 
 SRC_URI = "svn://svn.gnome.org/svn/${PN};module=trunk"
 PV = "2.22.3+svnr${SRCREV}"
-SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/trunk"
 

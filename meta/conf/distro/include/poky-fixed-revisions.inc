@@ -183,6 +183,8 @@ SRCREV_pn-xf86-input-synaptics ?= "934bc0012f948c52aadc8eda912f7728fb7394a2"
 SRCREV_pn-mesa-dri ?= "1bf94d419805538ac23a4d0b04d31ac5e4487aca"
 SRCREV_pn-libdrm ?= "b7d54b1dba8eba24da1b9cdd2116a26b98365b81"
 SRCREV_pn-gnet = "495"
+SRCREV_pn-tasks ?= "430"
+SRCREV_pn-librsvg ?= "1193"
 
 # Preferred Versions:
 #
