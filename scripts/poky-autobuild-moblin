@@ -2,7 +2,7 @@
 
 # Poky Automated Build Server Enviroment Setup Script
 #
-# Copyright (C) 2006-2007 OpenedHand Ltd.
+# Copyright (C) 2008 Intel
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-SRVWORKDIR=/home/buildbot
-TARGETDIR=$SRVWORKDIR/autobuild-output
+SRVWORKDIR=/home/rpurdie
+TARGETDIR=$SRVWORKDIR/httpd/autobuild-output
 CURRDIR=`pwd`
 if   [ "$CURRDIR" = "$SRVWORKDIR/poky/full-shihtzu/build" ]; then
     ABTARGET="poky"
@@ -43,7 +43,7 @@ fi
 if [ "xpreamble" = "x$1" ]; then
     mkdir -p ./build/tmp/deploy/images 
     rm -f ./build/tmp/deploy/images/images-complete
-    svn info > ./build/tmp/deploy/images/svninfo
+    #svn info > ./build/tmp/deploy/images/svninfo
     exit 0
 fi
 
@@ -55,9 +55,9 @@ POSTPROCESS=`which poky-autobuild-postprocess-moblin`
 if [ "xcomplete" = "x$1" ]; then
     touch ./tmp/deploy/images/images-complete
     chmod a+w ./tmp/deploy/images/images-complete
-    if [ "x$POSTPROCESS" != "x" ]; then
+    if [ "x$POSTPROCESS" != "x" -a -x "$POSTPROCESS" ]; then
         cd ..
-        $POSTPROCESS $ABTARGET $TARGETDIR
+        $POSTPROCESS $ABTARGET $TARGETDIR $BASEDIR
     fi
     exit 0
 fi
@@ -71,9 +71,9 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'PACKAGE_CLASSES = "package_ipk package_deb package_rpm"' > "$CONFFILE"
     echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
-    echo "DL_DIR = \"$SRVWORKDIR/sources\"" >> "$CONFFILE"
-    echo 'INHERIT += "poky-autobuild-notifier"' >> "$CONFFILE"
-    echo 'INHERIT += "poky-moblin-autobuilder-proxy-config"' >> "$CONFFILE"
+    echo "DL_DIR = \"$SRVWORKDIR/httpd/sources\"" >> "$CONFFILE"
+    #echo 'INHERIT += "poky-autobuild-notifier"' >> "$CONFFILE"
+    #echo 'INHERIT += "poky-moblin-autobuilder-proxy-config"' >> "$CONFFILE"
     if [ "$ABTARGET" = "darwin" ]; then
         echo 'PACKAGE_CLASSES += "package_tar"' >> "$CONFFILE"
 	echo "BBFILES += \"$CURRDIR/meta-darwin/packages/*/*.bb\"" >> "./conf/local.conf"
