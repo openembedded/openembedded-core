@@ -8,7 +8,7 @@ PV = "0.9+svnr${SRCREV}"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
+SRC_URI = "svn://svn.gnome.org/svn/${PN};module=trunk;proto=http \
 	   file://stock_contact.png \
 	   file://stock_person.png \
 	   file://contacts-owl-window-menu.patch;patch=1 \
