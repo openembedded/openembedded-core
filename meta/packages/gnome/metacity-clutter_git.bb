@@ -2,11 +2,12 @@ SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you."
 LICENSE = "GPL"
 DEPENDS = "startup-notification gtk+ gconf clutter-0.8 gdk-pixbuf-csource-native"
-PR = "r3"
+PR = "r4"
 PV = "2.25.1+git${SRCREV}"
 inherit gnome update-alternatives
 
-SRC_URI = "git://git.o-hand.com/metacity-clutter.git;protocol=git;branch=clutter"
+SRC_URI = "git://git.o-hand.com/metacity-clutter.git;protocol=git;branch=clutter \
+           file://fix_pkgconfig.patch;patch=1"
 S = "${WORKDIR}/git"
 
 ALTERNATIVE_NAME = "x-window-manager"
