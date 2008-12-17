@@ -1,9 +1,12 @@
 *.pyc
+*.pyo
 build/conf/local.conf
 build/tmp/
 scripts/poky-git-proxy-socks
 sources/
-meta-moblin-internal
+meta-darwin
+meta-maemo
+meta-prvt*
 *.swp
 *.orig
 *.rej
