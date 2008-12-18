@@ -72,6 +72,7 @@ if [ ! -e "$CONFFILE" ]; then
     echo 'BB_NUMBER_THREADS = "6"' >> "$CONFFILE"
     echo 'PARALLEL_MAKE = "-j 6"' >> "$CONFFILE"
     echo "DL_DIR = \"$SRVWORKDIR/httpd/sources\"" >> "$CONFFILE"
+    echo 'INHERIT += "rm_work"' >> "$CONFFILE"
     #echo 'INHERIT += "poky-autobuild-notifier"' >> "$CONFFILE"
     #echo 'INHERIT += "poky-moblin-autobuilder-proxy-config"' >> "$CONFFILE"
     if [ "$ABTARGET" = "darwin" ]; then
