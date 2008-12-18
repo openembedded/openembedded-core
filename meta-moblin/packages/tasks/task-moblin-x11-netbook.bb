@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -16,6 +16,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY = "1"
 
 NETWORK_MANAGER ?= "networkmanager-applet"
+EXTRA_MOBLIN_PACKAGES ?= ""
 RDEPENDS_task-moblin-x11-netbook = "\
     metacity-clutter \
     matchbox-desktop \
@@ -25,4 +26,6 @@ RDEPENDS_task-moblin-x11-netbook = "\
     sato-icon-theme \
     settings-daemon \
     gtk-sato-engine \
+    ${EXTRA_MOBLIN_PACKAGES} \
+    bijou bickley mojito librest nbtk mutter-moblin \
     ${NETWORK_MANAGER}"
