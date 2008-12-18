@@ -21,15 +21,19 @@
 SRVWORKDIR=/home/rpurdie
 TARGETDIR=$SRVWORKDIR/httpd/autobuild-output
 CURRDIR=`pwd`
-if   [ "$CURRDIR" = "$SRVWORKDIR/poky/full-shihtzu/build" ]; then
+if   [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/full-shihtzu/build" ]; then
     ABTARGET="poky"
-elif [ "$CURRDIR" = "$SRVWORKDIR/poky/full-bleeding-shihtzu/build" ]; then
+elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/full-bleeding-shihtzu/build" ]; then
     ABTARGET="poky-bleeding"
-elif [ "$CURRDIR" = "$SRVWORKDIR/poky/toolchain-shihtzu/build" ]; then
+elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/toolchain-shihtzu/build" ]; then
     ABTARGET="toolchain"
-elif [ "$CURRDIR" = "$SRVWORKDIR/pokky/incremental-shihtzu/build" ]; then
+elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/incremental-shihtzu/build" ]; then
     ABTARGET="incremental"
-elif [ "$CURRDIR" = "$SRVWORKDIR/poky/full-darwin-shihtzu/build" ]; then
+elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/moblin-incremental/build" ]; then
+    ABTARGET="moblin-incremental"
+elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/moblin-full/build" ]; then
+    ABTARGET="moblin-full"
+elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/full-darwin-shihtzu/build" ]; then
     ABTARGET="darwin"
     if [ ! -d "$CURRDIR/meta-darwin" ]; then
         svn co http://svn.o-hand.com/repos/poky/branches/experimental/meta-darwin $CURRDIR/meta-darwin
@@ -43,7 +47,7 @@ fi
 if [ "xpreamble" = "x$1" ]; then
     mkdir -p ./build/tmp/deploy/images 
     rm -f ./build/tmp/deploy/images/images-complete
-    #svn info > ./build/tmp/deploy/images/svninfo
+    git log -1 > ./build/tmp/deploy/images/svninfo
     exit 0
 fi
 
@@ -95,9 +99,9 @@ bitbake $@
 
 retval=$?
 
-if [ "x$POSTPROCESS" != "x" ]; then
-    cd ..
-    $POSTPROCESS $ABTARGET $TARGETDIR
-fi
+#if [ "x$POSTPROCESS" != "x" ]; then
+#    cd ..
+#    $POSTPROCESS $ABTARGET $TARGETDIR
+#fi
 
 exit $retval

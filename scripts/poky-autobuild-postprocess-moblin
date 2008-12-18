@@ -23,9 +23,16 @@ TARGETDIR=$2
 
 cd ./build/tmp/deploy/
 
-LASTREV=`tail images/svninfo | grep Revision | cut -f 2 -d ' '`
-DEST=$TARGETDIR/$ABTARGET/$LASTREV/
+DEST=$TARGETDIR/$ABTARGET/
+BASE=`date +%Y%m%d`
+REV=1
 
+while [ -d "$DEST$FOO$BASE-$REV" ]
+do
+    REV=`expr $REV + 1`
+done
+
+DEST="$DEST$FOO$BASE-$REV"
 mkdir -p $DEST
 
 COMPRESS_FILES=()
@@ -37,7 +44,7 @@ if [ "x$ABTARGET" = "xpoky-bleeding" ]; then
     )
 
     FILES=(
-        svninfo
+        gitinfo
         `readlink images/zImage-akita.bin`
         `readlink images/zImage-qemuarm.bin`
         updater.sh.akita
@@ -48,7 +55,7 @@ fi
 
 if [ "x$ABTARGET" = "xtoolchain" ]; then
     FILES=(
-        svninfo
+        gitinfo
         poky-*-toolchain-*.tar.bz2
     )
 fi
@@ -63,7 +70,7 @@ if [ "x$ABTARGET" = "xpoky" ]; then
     )
 
     FILES=(
-        svninfo
+        gitinfo
         `readlink images/zImage-akita.bin`
         `readlink images/zImage-c7x0.bin`
         `readlink images/zImage-qemuarm.bin`
@@ -110,6 +117,27 @@ if [ "x$ABTARGET" = "xpoky" ]; then
         `readlink images/updater-em-x270.ext2`
     )
 fi
+
+if [ "x$ABTARGET" = "xmoblin-incremental" -o "x$ABTARGET" = "xmoblin-full" ]; then
+    COMPRESS_FILES=(
+        moblin-image-live-netbook-*.hddimg
+        moblin-image-live-netbook-*.iso
+        moblin-image-netbook-netbook-*.ext3
+        moblin-image-sdk-live-netbook-*.hddimg
+        moblin-image-sdk-live-netbook-*.iso
+        moblin-image-sdk-netbook-*.ext3
+    )
+
+    FILES=(
+        gitinfo
+        `readlink images/bImage-netbook.bin`
+        moblin-image-netbook-netbook-*.cpio.gz
+        moblin-image-netbook-netbook-*.jffs2
+        moblin-image-sdk-netbook-*.cpio.gz
+        moblin-image-sdk-netbook-*.jffs2
+    )
+fi
+
 
 for FILE in ${FILES[@]}; do
     for FILE2 in `find -name $FILE`; do
