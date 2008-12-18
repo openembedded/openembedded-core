@@ -2,7 +2,7 @@ DESCRIPTION = "Clutter graphics library"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPL"
 
-COMPATIBLE_MACHINE = "(zylonite|mx31litekit|omap-3430ldp|omap-3430sdp|mx31ads|qemuarm|qemux86|ipodtouch|netbook)"
+COMPATIBLE_MACHINE = "(zylonite|mx31litekit|omap-3430ldp|omap-3430sdp|mx31ads|qemuarm|qemux86|ipodtouch|netbook|menlow)"
 
 STDDEPENDS = "virtual/libx11 gtk-doc-native pango glib-2.0 libxfixes gtk+ libxi"
 BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
@@ -38,6 +38,10 @@ LDFLAGS_append_mx31ads = " -lpvrNULLWSEGL -lstdc++ "
 DEPENDS_netbook = "${STDDEPENDS} virtual/xserver-xf86 virtual/libgl"
 EXTRA_OECONF_netbook = "${BASE_CONF} --with-flavour=glx"
 PACKAGE_ARCH_netbook = "${MACHINE_ARCH}"
+
+DEPENDS_menlow = "${STDDEPENDS} virtual/xserver-xf86 virtual/libgl"
+EXTRA_OECONF_menlow = "${BASE_CONF} --with-flavour=glx"
+PACKAGE_ARCH_menlow = "${MACHINE_ARCH}"
 
 FILESPATH = "${FILE_DIRNAME}/clutter"
 
