@@ -130,11 +130,12 @@ if [ "x$ABTARGET" = "xmoblin-incremental" -o "x$ABTARGET" = "xmoblin-full" ]; th
 
     FILES=(
         gitinfo
-        `readlink images/bImage-netbook.bin`
+        `readlink images/bzImage-netbook.bin`
         moblin-image-netbook-netbook-*.cpio.gz
         moblin-image-netbook-netbook-*.jffs2
         moblin-image-sdk-netbook-*.cpio.gz
         moblin-image-sdk-netbook-*.jffs2
+        moblin-*toolchain*tar.bz2
     )
 fi
 
