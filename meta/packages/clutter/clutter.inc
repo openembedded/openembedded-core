@@ -45,7 +45,7 @@ PACKAGE_ARCH_menlow = "${MACHINE_ARCH}"
 
 FILESPATH = "${FILE_DIRNAME}/clutter"
 
-inherit autotools pkgconfig gtk-doc
+inherit autotools_stage pkgconfig gtk-doc
 
 PACKAGES =+ "clutter-examples"
 FILES_clutter-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
@@ -57,8 +57,4 @@ require clutter-fpu.inc
 do_configure_prepend() {
         sed -i s:doc/reference/Makefile::g ${S}/configure.ac
         sed -i s:doc::g ${S}/Makefile.am
-}
-
-do_stage () {
-        autotools_stage_all
 }

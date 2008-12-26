@@ -12,8 +12,4 @@ PV = "2.4.0+git${SRCREV}"
 
 LEAD_SONAME = "libdrm.so"
 
-inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
+inherit autotools_stage pkgconfig

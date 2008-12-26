@@ -7,10 +7,6 @@ SRC_URI =	"http://www.galago-project.org/files/releases/source/${PN}/${P}.tar.gz
                  file://pkgconfig.patch;patch=1 "
 PR = "r1"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 EXTRA_OECONF = "--disable-tests --disable-check"
-
-do_stage() {
-	autotools_stage_all
-}

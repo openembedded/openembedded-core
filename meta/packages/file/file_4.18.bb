@@ -9,14 +9,10 @@ SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://filesystems"
 S = "${WORKDIR}/file-${PV}"
 
-inherit autotools
+inherit autotools_stage
 
 do_configure_prepend() {
 	sed -i -e 's,$(top_builddir)/src/file,file,' ${S}/magic/Makefile.am
 	cp ${WORKDIR}/dump ${S}/magic/Magdir/
 	cp ${WORKDIR}/filesystems ${S}/magic/Magdir/
-}
-
-do_stage() {
-	autotools_stage_all
 }

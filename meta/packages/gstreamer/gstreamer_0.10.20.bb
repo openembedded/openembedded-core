@@ -7,7 +7,7 @@ HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "glib-2.0 gettext-native libxml2 bison-native flex-native"
 PR = "r1"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz2 \
            file://gst-inspect-check-error.patch;patch=1 \
@@ -25,10 +25,6 @@ do_configure_prepend() {
 #}
 
 PARALLEL_MAKE = ""
-
-do_stage() {
-	autotools_stage_all
-}
 
 FILES_${PN} += " ${libdir}/gstreamer-0.10/*.so"
 FILES_${PN}-dev += " ${libdir}/gstreamer-0.10/*.la ${libdir}/gstreamer-0.10/*.a"

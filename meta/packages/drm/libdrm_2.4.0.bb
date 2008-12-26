@@ -4,8 +4,4 @@ SRC_URI = "http://dri.freedesktop.org/libdrm/libdrm-${PV}.tar.bz2"
 PROVIDES = "drm"
 DEPENDS = "libpthread-stubs"
 
-inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
+inherit autotools_stage pkgconfig

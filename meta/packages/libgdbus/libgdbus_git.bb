@@ -7,8 +7,4 @@ S        = "${WORKDIR}/git"
 
 SRC_URI  = "git://moblin.org/repos/projects/libgdbus.git;protocol=http"
 
-inherit autotools pkgconfig
-
-do_stage() {
-    autotools_stage_all
-}
+inherit autotools_stage pkgconfig

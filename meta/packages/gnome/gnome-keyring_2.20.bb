@@ -3,7 +3,7 @@ SECTION = "x11/gnome"
 
 PR = "r1"
 
-inherit autotools gnome pkgconfig
+inherit autotools_stage gnome pkgconfig
 
 DEPENDS = "gtk+ libgcrypt"
 
@@ -17,7 +17,3 @@ do_install_append () {
 }
 
 FILES_${PN} += "${datadir}/dbus-1/services"
-
-do_stage() {
-        autotools_stage_all
-}

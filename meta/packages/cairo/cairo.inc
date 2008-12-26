@@ -8,7 +8,7 @@ LICENSE = "MPL LGPL"
 require cairo-fpu.inc
 EXTRA_OECONF += "${@get_cairo_fpu_setting(bb, d)}"
 
-inherit autotools pkgconfig 
+inherit autotools_stage pkgconfig 
 
 do_stage () {
  	autotools_stage_all

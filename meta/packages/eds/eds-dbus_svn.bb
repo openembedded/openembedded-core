@@ -13,17 +13,13 @@ SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 
 S = "${WORKDIR}/trunk"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"
 
 do_configure_append () {
         cp ${WORKDIR}/iconv-detect.h ${S}
-}
-
-do_stage () {
-        autotools_stage_all
 }
 
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \

@@ -18,7 +18,7 @@ SRC_URI  = "git://moblin.org/repos/projects/connman.git;protocol=http \
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "defaults 22"
 
-inherit autotools pkgconfig update-rc.d
+inherit autotools_stage pkgconfig update-rc.d
 
 do_install_append() {
     install -m 0755 ${WORKDIR}/connman ${D}${sysconfdir}/init.d/connman
@@ -41,8 +41,4 @@ python populate_packages_prepend() {
 	plugin_dir = bb.data.expand('${libdir}/connman/plugins/', d)
 	plugin_name = bb.data.expand('${PN}-plugin-%s', d)
 	do_split_packages(d, plugin_dir, '^lib(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='' )
-}
-
-do_stage() {
-    autotools_stage_all
 }

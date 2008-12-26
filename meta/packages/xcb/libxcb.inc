@@ -40,7 +40,7 @@ FILES_libxcb-xtest = "${libdir}/libxcb-xtest.so.*"
 FILES_libxcb-xv = "${libdir}/libxcb-xv.so.*"
 FILES_libxcb-xvmc = "${libdir}/libxcb-xvmc.so.*"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 # XCBPROTO_XCBINCLUDEDIR is setup based on `pkg-config --variable=xcbincludedir xcb-proto`
 # but the xcbincludedir variable doesn't point into the staging area, so it needs some
@@ -48,8 +48,4 @@ inherit autotools pkgconfig
 do_configure_prepend () {
     sed -i "s|XCBPROTO_XCBINCLUDEDIR=|XCBPROTO_XCBINCLUDEDIR=${STAGING_DIR_HOST}/|" \
         ${S}/configure.ac
-}
-
-do_stage() {
-	autotools_stage_all
 }

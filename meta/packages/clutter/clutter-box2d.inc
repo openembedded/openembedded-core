@@ -7,11 +7,7 @@ DEPENDS = "clutter-0.8"
 # The main clutter lib is machine specific so we need to be too
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit autotools pkgconfig gtk-doc
-
-do_stage () {
-        autotools_stage_all
-}
+inherit autotools_stage pkgconfig gtk-doc
 
 do_install_append () {
 	install -d ${D}${bindir}

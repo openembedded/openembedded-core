@@ -13,17 +13,13 @@ SRC_URI = "svn://svn.openmoko.org/trunk/src/target;module=gsm;proto=http \
            file://default"
 S = "${WORKDIR}/gsm"
 
-inherit autotools pkgconfig update-rc.d
+inherit autotools_stage pkgconfig update-rc.d
 # handle update-rc.d RDEPENDS manually, we don't need it on
 # anything but gsmd
 RDEPENDS_append = ""
 
 INITSCRIPT_NAME = "gsmd"
 INITSCRIPT_PARAMS = "defaults 35"
-
-do_stage() {
-    autotools_stage_all
-}
 
 do_install_append() {
 	install -d ${D}/${sysconfdir}/init.d

@@ -3,7 +3,7 @@ LICENSE = "GPL"
 SECTION = "x11"
 DEPENDS = "glib-2.0 dbus bluez-libs dbus-glib"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 EXTRA_OECONF += "--with-distro=debian"
 

@@ -7,7 +7,7 @@ S = "${WORKDIR}/icu/source"
 
 PARALLEL_MAKE = ""
 
-inherit autotools pkgconfig binconfig
+inherit autotools_stage pkgconfig binconfig
 
 do_configure() {
 	libtoolize --force

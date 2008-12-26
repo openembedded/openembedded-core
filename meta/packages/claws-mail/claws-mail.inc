@@ -39,17 +39,13 @@ EXTRA_OECONF = "--disable-aspell-test 		\
 
 CFLAGS += "-D_GNU_SOURCE"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 do_install_append() {
 	install -d ${D}${datadir}/applications
 	install -m 0644 claws-mail.desktop ${D}${datadir}/applications/
 	install -d ${D}${datadir}/pixmaps
 	install -m 0644 claws-mail.png ${D}${datadir}/pixmaps/
-}
-
-do_stage () {
-	autotools_stage_all
 }
 
 #python populate_packages_prepend () {

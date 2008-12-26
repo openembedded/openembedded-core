@@ -11,11 +11,7 @@ PARALLEL_MAKE = ""
 
 SRC_URI = "http://xcb.freedesktop.org/dist/libpthread-stubs-${PV}.tar.bz2"
 
-inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
+inherit autotools_stage pkgconfig
 
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${DEBPV})"

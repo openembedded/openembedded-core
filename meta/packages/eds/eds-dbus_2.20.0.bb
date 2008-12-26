@@ -11,17 +11,13 @@ SRC_URI = "http://ftp.gnome.org/pub/GNOME/mobile/2.23/2.23.92/sources/evolution-
 
 S = "${WORKDIR}/evolution-data-server-dbus-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"
 
 do_configure_append () {
         cp ${WORKDIR}/iconv-detect.h ${S}
-}
-
-do_stage () {
-        autotools_stage_all
 }
 
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \

@@ -3,7 +3,7 @@ SECTION = "multimedia"
 PRIORITY = "optional"
 DEPENDS = "gstreamer"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2"
 
@@ -25,10 +25,6 @@ python populate_packages_prepend () {
 #	do_split_packages(d, gst_libdir, '\.debug/libgst(.*)\.so$', 'gst-plugin-%s-dbg', 'GStreamer plugin for %s (with debugging symbols)', recursive=True, extra_depends=bb.data.expand('${PN}-dbg', d), match_path=True)
 	do_split_packages(d, gst_libdir, 'libgst(.*)\.so$', 'gst-plugin-%s', 'GStreamer plugin for %s', postinst=postinst, extra_depends=bb.data.expand('${PN}',d))
 	do_split_packages(d, gst_libdir, 'libgst(.*)\.l?a$', 'gst-plugin-%s-dev', 'GStreamer plugin for %s (development files)', extra_depends=bb.data.expand('${PN}-dev',d))
-}
-
-do_stage() {
-	autotools_stage_all
 }
 
 ALLOW_EMPTY = "1"

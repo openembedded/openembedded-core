@@ -7,11 +7,7 @@ HOMEPAGE="http://sourceforge.net/projects/beecrypt"
 SRC_URI="${SOURCEFORGE_MIRROR}/beecrypt/beecrypt-${PV}.tar.gz \
          file://x64fix.patch;patch=1"
 
-inherit autotools
+inherit autotools_stage
 acpaths=""
 
 EXTRA_OECONF="--with-arch=${TARGET_ARCH} --enable-shared --enable-static"
-
-do_stage () {
-	autotools_stage_all
-}

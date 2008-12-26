@@ -23,7 +23,7 @@ SRC_URI = "\
 
 S = "${WORKDIR}/"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 EXTRA_OECONF = "\
                 --enable-debug=no \
@@ -46,10 +46,6 @@ do_compile_prepend() {
         cp dftables ${S}/WebKitBuilds/Debug/JavaScriptCore/pcre/tmp/
         cp dftables ${S}/Programs/        
 	cd ${S}
-}
-
-do_stage() {
-	autotools_stage_all
 }
 
 PACKAGES =+ "${PN}launcher-dbg ${PN}launcher libjavascriptcore"

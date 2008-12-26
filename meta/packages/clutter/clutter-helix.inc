@@ -9,9 +9,5 @@ FILESPATH = "${FILE_DIRNAME}/clutter-helix"
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${bindir}/video-player ${bindir}/audio-player"
 
-inherit autotools pkgconfig gtk-doc
-
-do_stage () {
-        autotools_stage_all
-}
+inherit autotools_stage pkgconfig gtk-doc
 
