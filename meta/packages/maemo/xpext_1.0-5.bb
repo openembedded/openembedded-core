@@ -13,14 +13,10 @@ S = "${WORKDIR}/xpext-1.0"
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${DEBPV})"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 do_configure_prepend () {
   cd ${S}
   chmod +x ./autogen.sh
   ./autogen.sh
-}
-
-do_stage() {
-	autotools_stage_all
 }

@@ -11,8 +11,4 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
            
 EXTRA_OECONF = "--disable-Werror"
 
-inherit autotools pkgconfig
-
-do_stage() {
-        autotools_stage_all
-}
+inherit autotools_stage pkgconfig

@@ -5,8 +5,4 @@ DEPENDS = "glib-2.0 gnutls check"
 
 SRC_URI = "http://ftp.imendio.com/pub/imendio/${PN}/src/${PN}-${PV}.tar.bz2"
 
-inherit autotools pkgconfig
-
-do_stage() {
-        autotools_stage_all
-}
+inherit autotools_stage pkgconfig

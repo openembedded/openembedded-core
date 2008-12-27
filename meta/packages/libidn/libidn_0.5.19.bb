@@ -4,7 +4,7 @@ SECTION = "libs"
 PRIORITY    = "optional"
 PR          = "r0"
 
-inherit pkgconfig autotools
+inherit pkgconfig autotools_stage
 
 SRC_URI = "http://josefsson.org/libidn/releases/${P}.tar.gz"
 
@@ -12,8 +12,4 @@ EXTRA_OECONF = " --disable-tld"
 
 do_configure_prepend () {
 	autoreconf -f -i -s
-}
-
-do_stage () {
-	autotools_stage_all
 }

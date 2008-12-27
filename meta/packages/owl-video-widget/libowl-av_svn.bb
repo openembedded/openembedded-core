@@ -12,8 +12,4 @@ S = "${WORKDIR}/${PN}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http"
 
-inherit autotools pkgconfig
-
-do_stage () {
-	autotools_stage_all
-}
+inherit autotools_stage pkgconfig

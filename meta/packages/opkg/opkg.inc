@@ -11,8 +11,4 @@ SRC_URI = "svn://svn.openmoko.org/trunk/src/target/;module=opkg;proto=http \
 
 S = "${WORKDIR}/opkg"
 
-inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
+inherit autotools_stage pkgconfig

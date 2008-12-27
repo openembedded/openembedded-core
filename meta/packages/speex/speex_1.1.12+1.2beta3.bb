@@ -9,15 +9,11 @@ S = "${WORKDIR}/${PN}-1.2beta3"
 
 PARALLEL_MAKE = ""
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 EXTRA_OECONF = " --enable-fixed-point --with-ogg-libraries=${STAGING_LIBDIR} \
 		 --disable-float-api --disable-vbr \
                  --with-ogg-includes=${STAGING_INCDIR} --disable-oggtest"
-
-do_stage() {
-    autotools_stage_all
-}
 
 PACKAGES += "${PN}-bin"
 FILES_${PN} = "${libdir}/libspeex.so.*"

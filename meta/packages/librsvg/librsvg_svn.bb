@@ -6,7 +6,7 @@ PR = "r3"
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
-inherit autotools pkgconfig gnome
+inherit autotools_stage pkgconfig gnome
 
 SRC_URI = "svn://svn.gnome.org/svn/${PN};module=trunk"
 PV = "2.22.3+svnr${SRCREV}"
@@ -29,10 +29,6 @@ FILES_librsvg-gtk-dev += "${libdir}/gtk-2.0/*.*a \
 			  ${libdir}/gtk-2.0/*/engines/*.*a"
 FILES_librsvg-gtk-dbg += "${libdir}/gtk-2.0/.debug \
                           ${libdir}/gtk-2.0/*/*/.debug"
-
-do_stage() {
-	autotools_stage_all
-}
 
 pkg_postinst_librsvg-gtk() {
 if [ "x$D" != "x" ]; then

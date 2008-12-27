@@ -9,13 +9,9 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxslt-${PV}.tar.gz \
            file://pkgconfig_fix.patch;patch=1"
 S = "${WORKDIR}/libxslt-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 EXTRA_OECONF = "--without-python --without-debug --without-mem-debug --without-crypto"
-
-do_stage () {
-	autotools_stage_all
-}
 
 PACKAGES = "${PN}-dbg ${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 

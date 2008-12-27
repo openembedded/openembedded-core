@@ -3,4 +3,4 @@ HOMEPAGE = "http://www.mpfr.org/"
 LICENSE = "LGPL"
 SECTION = "libs"
 
-inherit autotools
+inherit autotools_stage

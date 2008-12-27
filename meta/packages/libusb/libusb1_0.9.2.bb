@@ -12,7 +12,7 @@ SRC_URI = "\
 "
 S = "${WORKDIR}/libusb-${PV}"
 
-inherit autotools pkgconfig binconfig lib_package
+inherit autotools_stage pkgconfig binconfig lib_package
 
 PARALLEL_MAKE = ""
 EXTRA_OECONF = "--disable-build-docs"
@@ -21,10 +21,6 @@ export CXXFLAGS += "-lstdc++ -I${STAGING_INCDIR}"
 
 LIBTOOL = "${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
-
-do_stage() {
-	autotools_stage_all
-}
 
 PACKAGES =+ "libusbpp"
 FILES_libusbpp = "${libdir}/libusbpp*.so.*"

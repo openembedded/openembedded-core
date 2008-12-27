@@ -4,7 +4,7 @@ SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "gtk+ gtk-doc-native"
 
-inherit autotools pkgconfig gnome
+inherit autotools_stage pkgconfig gnome
 
 SRC_URI += "file://glade-cruft.patch;patch=1 file://no-xml2.patch;patch=1"
 
@@ -17,7 +17,3 @@ FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_${PN}-data = "${datadir}/xml/libglade/glade-2.0.dtd"
 FILES_${PN}-dev += "${bindir}/libglade-convert"
 #RDEPENDS_${PN} = "${PN}-data"
-
-do_stage () {
-        autotools_stage_all
-}

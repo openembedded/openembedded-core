@@ -7,7 +7,7 @@ DEPENDS = "libtelepathy dbus-glib gconf"
 SRC_URI = "${SOURCEFORGE_MIRROR}/mission-control/telepathy-mission-control-${PV}.tar.gz \
            file://pkgconfig.patch;patch=1"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 PACKAGES =+ " \
 	libmissioncontrol \
@@ -36,7 +36,3 @@ FILES_libmissioncontrol-server-dev = "${libdir}/libmissioncontrol-server.*"
 FILES_libmissioncontrol-dbg = "${libdir}/.debug/libmissioncontrol.so.*"
 FILES_libmissioncontrol-config-dbg = "${libdir}/.debug/libmissioncontrol-config.so.*"
 FILES_libmissioncontrol-server-dbg = "${libdir}/.debug/libmissioncontrol-server.so.*"
-
-do_stage() {
-        autotools_stage_all
-}

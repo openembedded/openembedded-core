@@ -9,14 +9,10 @@ SRC_URI = "http://www.oberhumer.com/opensource/lzo/download/lzo-${PV}.tar.gz \
            file://autofoo.patch;patch=1 \
            file://acinclude.m4"
 
-inherit autotools 
+inherit autotools_stage
 
 EXTRA_OECONF = "--enable-shared"
 
 do_configure_prepend () {
 	cp ${WORKDIR}/acinclude.m4 ${S}/
-}
-
-do_stage() {
-	autotools_stage_all
 }

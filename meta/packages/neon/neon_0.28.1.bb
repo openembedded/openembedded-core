@@ -6,10 +6,6 @@ DEPENDS = "zlib libxml2 expat time gnutls"
 SRC_URI = "http://www.webdav.org/${PN}/${P}.tar.gz \
            file://pkgconfig.patch;patch=1"
 
-inherit autotools binconfig lib_package pkgconfig
+inherit autotools_stage binconfig lib_package pkgconfig
 
 EXTRA_OECONF = "--with-ssl=gnutls --with-libxml2 --with-expat --enable-shared"
-
-do_stage () {
-	autotools_stage_all
-}

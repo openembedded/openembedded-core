@@ -9,10 +9,6 @@ SRC_URI = "svn://svn.openmoko.org/trunk/src/host/;module=opkg-utils;proto=http"
 
 S = "${WORKDIR}/opkg-utils"
 
-inherit autotools
+inherit autotools_stage
 
 S = "${WORKDIR}/opkg-utils"
-
-do_stage () {
-	autotools_stage_all
-}
