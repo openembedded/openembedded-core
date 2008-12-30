@@ -50,6 +50,7 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.27.tar.bz2 \
 		file://0041-r8169-8101e.patch;patch=1 \
 		file://0042-intelfb-945gme.patch;patch=1 \
 		file://0043-superreadahead-patch.patch;patch=1 \
+		file://defconfig-menlow \
 		file://defconfig-netbook"
 
 S = "${WORKDIR}/linux-2.6.27"

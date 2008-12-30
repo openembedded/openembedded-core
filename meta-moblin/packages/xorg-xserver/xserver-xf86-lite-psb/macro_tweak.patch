@@ -1,0 +1,30 @@
+Index: xorg-server-1.4/xorg-server.m4
+===================================================================
+--- xorg-server-1.4.orig/xorg-server.m4	2007-08-23 20:04:55.000000000 +0100
++++ xorg-server-1.4/xorg-server.m4	2008-12-26 23:59:53.000000000 +0000
+@@ -28,9 +28,12 @@
+ # Checks for the $1 define in xorg-server.h (from the sdk).  If it
+ # is defined, then add $1 to $REQUIRED_MODULES.
+ 
++m4_pattern_allow(PKG_CONFIG_SYSROOT_DIR)
++
+ AC_DEFUN([XORG_DRIVER_CHECK_EXT],[
++	PKG_PROG_PKG_CONFIG
+ 	SAVE_CFLAGS="$CFLAGS"
+-	CFLAGS="$CFLAGS -I`pkg-config --variable=sdkdir xorg-server`"
++	CFLAGS="$CFLAGS -I$PKG_CONFIG_SYSROOT_DIR`pkg-config --variable=sdkdir xorg-server`"
+ 	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+ #include "xorg-server.h"
+ #if !defined $1
+Index: xorg-server-1.4/xorg-server.pc.in
+===================================================================
+--- xorg-server-1.4.orig/xorg-server.pc.in	2008-12-27 00:07:37.000000000 +0000
++++ xorg-server-1.4/xorg-server.pc.in	2008-12-27 00:08:39.000000000 +0000
+@@ -8,5 +8,6 @@
+ Name: xorg-server
+ Description: Modular X.Org X Server
+ Version: @PACKAGE_VERSION@
+-Cflags: -I${sdkdir} @PIXMAN_CFLAGS@
++Requires: pixman-1
++Cflags: -I${sdkdir}
+ Libs: -L${libdir}

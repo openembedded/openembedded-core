@@ -1,0 +1,23 @@
+Index: git/src/psb_driver.c
+===================================================================
+--- git.orig/src/psb_driver.c	2008-12-12 15:14:28.000000000 +0000
++++ git/src/psb_driver.c	2008-12-30 14:18:16.000000000 +0000
+@@ -1326,7 +1326,7 @@
+ 
+     pScrn->pScreen = pScreen;
+ 
+-    psbDRILock(pScrn, 0);
++/*    psbDRILock(pScrn, 0);*/
+     pPsb->front = psbScanoutCreate(pScrn, pScrn->bitsPerPixel >> 3,
+ 				   pScrn->depth, pScrn->virtualX,
+ 				   pScrn->virtualY, 0, -1, 0);
+@@ -1489,7 +1489,9 @@
+     
+     return psbEnterVT(pScreen->myNum, 0);
+   out_err_unlock:
++    /* Temporary Fix TBD
+     psbDRIUnlock(pScrn);
++    */
+   out_err:
+     psbRestoreHWState(pDevice);
+     return FALSE;
