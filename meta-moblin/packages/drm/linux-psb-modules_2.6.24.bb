@@ -23,4 +23,5 @@ do_install () {
 	install -m 644 ${S}/media/drm-poulsbo/drm.ko ${D}${MODULE_PATH}/kernel/drivers/char/drm/
 	install -m 644 ${S}/media/drm-poulsbo/psb.ko ${D}${MODULE_PATH}/kernel/drivers/char/drm/
 }
-						
+
+COMPATIBLE_MACHINE = "menlow"					
