@@ -10,6 +10,8 @@ DEPENDS = "makedepend-native xf86vidmodeproto glproto virtual/libx11 libxext lib
 
 PACKAGES =+ "libglu libglu-dev libosmesa libosmesa-dev libgl libgl-dev"
 
+PROVIDES = "virtual/libgl"
+
 FILES_libgl = "${libdir}/libGL.so.*"
 FILES_libglu = "${libdir}/libGLU.so.*"
 FILES_libosmesa = "${libdir}/libOSMesa.so.*"
@@ -17,6 +19,8 @@ FILES_libosmesa = "${libdir}/libOSMesa.so.*"
 FILES_libgl-dev = "${libdir}/libGL.* ${includedir}/GL"
 FILES_libglu-dev = "${libdir}/libGLU.* ${includedir}/GL/glu*.h"
 FILES_libosmesa-dev = "${libdir}/libOSMesa.* ${includedir}/osmesa.h"
+
+ALLOW_EMPTY_${PN} = "1"
 
 do_configure() {
 	cd configs
