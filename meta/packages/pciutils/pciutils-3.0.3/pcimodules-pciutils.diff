@@ -1,69 +1,57 @@
-Index: pciutils-2.2.4/Makefile
+Index: pciutils-3.0.3/Makefile
 ===================================================================
---- pciutils-2.2.4.orig/Makefile	2006-09-09 14:57:03.000000000 +0200
-+++ pciutils-2.2.4/Makefile	2006-10-31 10:59:48.000000000 +0100
-@@ -24,7 +24,7 @@
+--- pciutils-3.0.3.orig/Makefile	2008-11-09 20:28:18.000000000 +0000
++++ pciutils-3.0.3/Makefile	2008-12-31 00:46:45.000000000 +0000
+@@ -52,7 +52,7 @@
  
  export
  
--all: $(PCILIB) lspci setpci lspci.8 setpci.8 update-pciids update-pciids.8 $(PCI_IDS)
-+all: $(PCILIB) lspci setpci lspci.8 setpci.8 update-pciids update-pciids.8 $(PCI_IDS) pcimodules pcimodules.8
+-all: lib/$(PCILIB) lspci setpci example lspci.8 setpci.8 pcilib.7 update-pciids update-pciids.8 $(PCI_IDS)
++all: lib/$(PCILIB) lspci setpci example lspci.8 setpci.8 pcilib.7 update-pciids update-pciids.8 $(PCI_IDS) pcimodules pcimodules.8
  
- $(PCILIB): $(PCIINC) force
+ lib/$(PCILIB): $(PCIINC) force
  	$(MAKE) -C lib all
-@@ -34,9 +34,11 @@
+@@ -62,9 +62,11 @@
  lib/config.h lib/config.mk:
- 	cd lib && ./configure "$(IDSDIR)" "$(VERSION)" "$(HOST)" "$(RELEASE)" "$(ZLIB)"
+ 	cd lib && ./configure
  
-+pcimodules: pcimodules.o common.o $(PCILIB)
- lspci: lspci.o common.o $(PCILIB)
- setpci: setpci.o common.o $(PCILIB)
++pcimodules: pcimodules.o common.o lib/$(PCILIB)
+ lspci: lspci.o common.o lib/$(PCILIB)
+ setpci: setpci.o common.o lib/$(PCILIB)
  
 +pcimodules.o: pcimodules.c pciutils.h
  lspci.o: lspci.c pciutils.h $(PCIINC)
  setpci.o: setpci.c pciutils.h $(PCIINC)
  common.o: common.c pciutils.h $(PCIINC)
-@@ -58,15 +60,15 @@
+@@ -93,10 +95,10 @@
  install: all
  # -c is ignored on Linux, but required on FreeBSD
- 	$(DIRINSTALL) -m 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(IDSDIR) $(DESTDIR)$(MANDIR)/man8
--	$(INSTALL) -c -m 755 -s lspci setpci $(DESTDIR)$(SBINDIR)
+ 	$(DIRINSTALL) -m 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(IDSDIR) $(DESTDIR)$(MANDIR)/man8 $(DESTDIR)$(MANDIR)/man7
+-	$(INSTALL) -c -m 755 lspci setpci $(DESTDIR)$(SBINDIR)
 +	$(INSTALL) -c -m 755 lspci setpci pcimodules $(DESTDIR)$(SBINDIR)
  	$(INSTALL) -c -m 755 update-pciids $(DESTDIR)$(SBINDIR)
  	$(INSTALL) -c -m 644 $(PCI_IDS) $(DESTDIR)$(IDSDIR)
 -	$(INSTALL) -c -m 644 lspci.8 setpci.8 update-pciids.8 $(DESTDIR)$(MANDIR)/man8
 +	$(INSTALL) -c -m 644 lspci.8 setpci.8 update-pciids.8 pcimodules.8 $(DESTDIR)$(MANDIR)/man8
+ 	$(INSTALL) -c -m 644 pcilib.7 $(DESTDIR)$(MANDIR)/man7
+ ifeq ($(SHARED),yes)
+ 	$(DIRINSTALL) -m 755 $(DESTDIR)$(LIBDIR)
+@@ -114,9 +116,9 @@
+ endif
  
  uninstall: all
 -	rm -f $(DESTDIR)$(SBINDIR)/lspci $(DESTDIR)$(SBINDIR)/setpci $(DESTDIR)$(SBINDIR)/update-pciids
-+	rm -f $(DESTDIR)$(SBINDIR)/lspci $(DESTDIR)$(SBINDIR)/setpci $(DESTDIR)$(SBINDIR)/update-pciids $(SBINDIR)/pcimodules
++	rm -f $(DESTDIR)$(SBINDIR)/lspci $(DESTDIR)$(SBINDIR)/setpci $(DESTDIR)$(SBINDIR)/pcimodules $(DESTDIR)$(SBINDIR)/update-pciids
  	rm -f $(DESTDIR)$(IDSDIR)/$(PCI_IDS)
 -	rm -f $(DESTDIR)$(MANDIR)/man8/lspci.8 $(DESTDIR)$(MANDIR)/man8/setpci.8 $(DESTDIR)$(MANDIR)/man8/update-pciids.8
-+	rm -f $(DESTDIR)$(MANDIR)/man8/lspci.8 $(DESTDIR)$(MANDIR)/man8/setpci.8 $(DESTDIR)$(MANDIR)/man8/update-pciids.8 $(MANDIR)/man8/pcimodules.8
- 
- pci.ids.gz: pci.ids
- 	gzip -9 <$< >$@
-Index: pciutils-2.2.4/lspci.c
-===================================================================
---- pciutils-2.2.4.orig/lspci.c	2006-09-09 14:32:29.000000000 +0200
-+++ pciutils-2.2.4/lspci.c	2006-10-31 10:56:57.000000000 +0100
-@@ -120,8 +120,10 @@
-   d->config = xmalloc(64);
-   d->present = xmalloc(64);
-   memset(d->present, 1, 64);
--  if (!pci_read_block(p, 0, d->config, 64))
--    die("Unable to read the standard configuration space header");
-+  if (!pci_read_block(p, 0, d->config, 64)) {
-+    fprintf(stderr, "Unable to read the standard configuration space header");
-+	return NULL;
-+  }
-   if ((d->config[PCI_HEADER_TYPE] & 0x7f) == PCI_HEADER_TYPE_CARDBUS)
-     {
-       /* For cardbus bridges, we need to fetch 64 bytes more to get the
-Index: pciutils-2.2.4/pcimodules.c
++	rm -f $(DESTDIR)$(MANDIR)/man8/lspci.8 $(DESTDIR)$(MANDIR)/man8/setpci.8 $(DESTDIR)$(MANDIR)/man8/pcimodules.8 $(DESTDIR)$(MANDIR)/man8/update-pciids.8
+ 	rm -f $(DESTDIR)$(MANDIR)/man7/pcilib.7
+ ifeq ($(SHARED),yes)
+ 	rm -f $(DESTDIR)$(LIBDIR)/$(PCILIB) $(DESTDIR)$(LIBDIR)/$(LIBNAME).so$(ABI_VERSION)
+Index: pciutils-3.0.3/pcimodules.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ pciutils-2.2.4/pcimodules.c	2006-10-31 10:51:09.000000000 +0100
++++ pciutils-3.0.3/pcimodules.c	2008-12-31 00:41:47.000000000 +0000
 @@ -0,0 +1,185 @@
 +/*
 + *	pcimodules:  Load all kernel modules for PCI device currently
@@ -250,10 +238,10 @@ Index: pciutils-2.2.4/pcimodules.c
 +	match_pci_modules();
 +	return 0;
 +}
-Index: pciutils-2.2.4/pcimodules.man
+Index: pciutils-3.0.3/pcimodules.man
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ pciutils-2.2.4/pcimodules.man	2006-10-31 10:51:09.000000000 +0100
++++ pciutils-3.0.3/pcimodules.man	2008-12-31 00:41:47.000000000 +0000
 @@ -0,0 +1,92 @@
 +.TH pcimodules 8 "@TODAY@" "@VERSION@" "Linux PCI Utilities"
 +.IX pcimodules
