@@ -50,7 +50,6 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 #	file://arm-thumb-cache.patch;patch=1 \
 	file://ldflags.patch;patch=1 \
 	file://zecke-xgcc-cpp.patch;patch=1 \
-	file://fix-ICE-in-arm_unwind_emit_set.diff;patch=1 \
 	file://cache-amnesia.patch;patch=1 \
 	file://gfortran.patch;patch=1 \
 #	file://gcc-4.0.2-e300c2c3.patch;patch=1 \
