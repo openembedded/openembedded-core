@@ -1,5 +1,5 @@
 DESCRIPTION = "A tool for automatically generating Makefiles."
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 HOMEPAGE = "http://www.gnu.org/software/automake/"
 SECTION = "devel"
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/automake-${PV}"
