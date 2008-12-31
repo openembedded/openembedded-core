@@ -25,10 +25,18 @@ RDEPENDS_task-moblin-boot = "\
     sysvinit \
     tinylogin \
     udev \
-    sreadahead \
-    sreadahead-generate \
     ${VIRTUAL-RUNTIME_update-alternatives} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
+
+RDEPENDS_task-moblin-boot_append_netbook = "\
+    sreadahead \
+    sreadahead-generate \
+    "
+
+RDEPENDS_task-moblin-boot_append_menlow = "\
+    sreadahead \
+    sreadahead-generate \
+    "
 
 RRECOMMENDS_task-moblin-boot = "\
     ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"
