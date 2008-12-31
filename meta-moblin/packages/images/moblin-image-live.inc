@@ -9,6 +9,8 @@ TIMEOUT = "10"
 
 EXCLUDE_FROM_WORLD = "1"
 
+LABELS += "boot install"
+
 do_bootimg[depends] += "moblin-image-minimal-initramfs:do_rootfs"
 
 inherit bootimg
@@ -20,3 +22,6 @@ do_bootimg_prepend () {
 		bb.msg.fatal(bb.msg.domain.Build, "ext3 not in IMAGE_FSTYPES")
 }
 
+ROOTFS = "${DEPLOY_DIR_IMAGE}/${MOBLIN_LIVE_IMAGENAME}-${MACHINE}.ext3"
+
+do_bootimg[depends] += "${MOBLIN_LIVE_IMAGENAME}:do_rootfs"
