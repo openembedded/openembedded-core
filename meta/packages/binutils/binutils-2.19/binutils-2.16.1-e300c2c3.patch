@@ -1,0 +1,19 @@
+Adds support for Freescale Power architecture e300c2 and e300c3 cores.
+http://www.bitshrine.org/gpp/tc-fsl-x86lnx-e300c3-nptl-4.0.2-2.src.rpm
+
+Leon Woestenberg <leonw@mailcan.com>
+
+diff -uNr binutils-2.16.1.orig/gas/config/tc-ppc.c binutils-2.16.1/gas/config/tc-ppc.c
+--- binutils-2.16.1.orig/gas/config/tc-ppc.c	2005-03-02 13:24:01.000000000 +0000
++++ binutils-2.16.1/gas/config/tc-ppc.c	2006-07-04 11:45:24.000000000 +0100
+@@ -879,6 +879,10 @@
+       else
+ 	ppc_cpu |= PPC_OPCODE_SPE;
+     }
++  else if (strcmp (arg, "pmr") == 0)
++    {
++      ppc_cpu |= PPC_OPCODE_PMR;
++    }
+   /* -mppc64 and -m620 mean to assemble for the 64-bit PowerPC
+      620.  */
+   else if (strcmp (arg, "ppc64") == 0 || strcmp (arg, "620") == 0)
