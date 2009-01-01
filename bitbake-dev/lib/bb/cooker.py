@@ -628,13 +628,10 @@ class BBCooker:
         fn = self.matchFile(buildfile)
         self.buildSetVars()
 
-        # Load data into the cache for fn
+        # Load data into the cache for fn and parse the loaded cache data
         self.bb_cache = bb.cache.init(self)
-        self.bb_cache.loadData(fn, self.configuration.data)      
-
-        # Parse the loaded cache data
         self.status = bb.cache.CacheData()
-        self.bb_cache.handle_data(fn, self.status)  
+        self.bb_cache.loadData(fn, self.configuration.data, self.status)      
 
         # Tweak some variables
         item = self.bb_cache.getVar('PN', fn, True)
