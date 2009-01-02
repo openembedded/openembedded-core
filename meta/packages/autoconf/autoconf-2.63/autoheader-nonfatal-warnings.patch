@@ -1,0 +1,13 @@
+--- autoconf-2.59/bin/autoheader.in~	2003-10-10 14:52:56.000000000 +0100
++++ autoconf-2.59/bin/autoheader.in	2004-05-03 01:36:45.000000000 +0100
+@@ -272,8 +272,8 @@
+ 	}
+ 
+     }
+-  exit 1
+-    if keys %symbol;
++#  exit 1
++#    if keys %symbol;
+ }
+ 
+ update_file ("$tmp/config.hin", "$config_h_in");

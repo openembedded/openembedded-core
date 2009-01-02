@@ -1,6 +1,6 @@
 DESCRIPTION = "A package of M4 macros to produce scripts to \
 automatically configure sourcecode."
-LICENSE = "GPL"
+LICENSE = "GPLv3"
 HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
 DEPENDS += "m4-native"

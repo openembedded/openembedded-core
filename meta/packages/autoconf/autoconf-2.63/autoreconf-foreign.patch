@@ -1,0 +1,11 @@
+--- autoconf-2.59/bin/autoreconf.in~autoreconf-foreign	2004-05-09 20:55:06.000000000 -0400
++++ autoconf-2.59/bin/autoreconf.in	2004-05-09 20:55:55.000000000 -0400
+@@ -184,6 +184,8 @@
+ 
+   $aclocal_supports_force = `$aclocal --help` =~ /--force/;
+ 
++  $automake   .= ' --foreign';
++
+   # Dispatch autoreconf's option to the tools.
+   # --include;
+   $autoconf   .= join (' --include=', '', @include);
