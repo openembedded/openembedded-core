@@ -694,10 +694,10 @@ python base_do_unpack() {
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
 
-	src_uri = bb.data.getVar('SRC_URI', localdata)
+	src_uri = bb.data.getVar('SRC_URI', localdata, True)
 	if not src_uri:
 		return
-	src_uri = bb.data.expand(src_uri, localdata)
+
 	for url in src_uri.split():
 		try:
 			local = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
