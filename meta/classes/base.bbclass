@@ -167,6 +167,14 @@ def base_both_contain(variable1, variable2, checkvalue, d):
 
 DEPENDS_prepend="${@base_dep_prepend(d)} "
 
+def base_prune_suffix(var, suffixes, d):
+    # See if var ends with any of the suffixes listed and 
+    # remove it if found
+    for suffix in suffixes:
+        if var.endswith(suffix):
+            return var.replace(suffix, "")
+    return var
+
 def base_set_filespath(path, d):
 	import os, bb
 	filespath = []
@@ -177,7 +185,7 @@ def base_set_filespath(path, d):
 			filespath.append(os.path.join(p, o))
 	return ":".join(filespath)
 
-FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
+FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/${BP}", "${FILE_DIRNAME}/${BPN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
 
 def oe_filter(f, str, d):
 	from re import match
