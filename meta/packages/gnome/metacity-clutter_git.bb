@@ -2,7 +2,7 @@ SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you."
 LICENSE = "GPL"
 DEPENDS = "startup-notification gtk+ gconf clutter-0.8 gdk-pixbuf-csource-native"
-PR = "r4"
+PR = "r5"
 PV = "2.25.1+git${SRCREV}"
 inherit gnome update-alternatives
 
@@ -34,6 +34,8 @@ fi
 
 . ${sysconfdir}/init.d/functions
 
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type list --list-type string --set /apps/metacity/general/clutter_plugins '[simple]'
+gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type list --list-type string --set /apps/metacity/general/clutter_plugins '[default]'
+
+gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type bool --set /apps/metacity/general/compositing_manager true
 }
 
