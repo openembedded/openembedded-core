@@ -12,7 +12,6 @@ SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
 	   file://ldflags.patch;patch=1 \
 	   file://paths.patch;patch=1 \
 	   file://libtool_tweak.patch;patch=1"
-S = "${WORKDIR}/jpeg-${PV}"
 
 inherit autotools 
 

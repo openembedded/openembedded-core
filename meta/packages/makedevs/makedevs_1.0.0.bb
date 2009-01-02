@@ -3,7 +3,6 @@ LICENSE = "GPL"
 SECTION = "base"
 PRIORITY = "required"
 SRC_URI = "file://makedevs.c"
-S = "${WORKDIR}/makedevs-${PV}"
 PR = "r5"
 
 do_configure() {

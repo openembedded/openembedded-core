@@ -2,7 +2,6 @@ require apt.inc
 inherit native
 
 DEPENDS += "dpkg-native gettext-native"
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/apt-${PV}"
 PACKAGES = ""
 USE_NLS = "yes"
 

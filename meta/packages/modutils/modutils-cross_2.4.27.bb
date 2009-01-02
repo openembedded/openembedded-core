@@ -1,8 +1,6 @@
-SECTION = "base"
 require modutils_${PV}.bb
 PR = "r9"
 inherit cross
-S = "${WORKDIR}/modutils-${PV}"
 DEPENDS = ""
 PACKAGES = ""
 PROVIDES += "virtual/${TARGET_PREFIX}depmod virtual/${TARGET_PREFIX}depmod-2.4"

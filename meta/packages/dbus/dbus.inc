@@ -11,7 +11,6 @@ SRC_URI = "\
   file://dbus-1.init \
   file://99_dbus \
 "
-S = "${WORKDIR}/dbus-${PV}"
 
 inherit autotools pkgconfig update-rc.d gettext
 

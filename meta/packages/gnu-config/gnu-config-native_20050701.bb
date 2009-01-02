@@ -1,9 +1,5 @@
-SECTION = "base"
 require gnu-config_${PV}.bb
-
 inherit native
-
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gnu-config"
 
 do_stage () {
 	install -d ${STAGING_DATADIR}/gnu-config/

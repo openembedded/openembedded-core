@@ -2,11 +2,8 @@ require libtool.inc
 require libtool_${PV}.bb
 
 PR = "r19"
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://cross_compile.patch;patch=1 \
                    file://prefix.patch;patch=1"
-
-S = "${WORKDIR}/libtool-${PV}"
 
 inherit native
 

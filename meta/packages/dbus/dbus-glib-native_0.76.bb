@@ -9,8 +9,6 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz
 
 inherit autotools pkgconfig gettext native
 
-S = "${WORKDIR}/dbus-glib-${PV}"
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dbus-glib-${PV}"
 DEPENDS = "glib-2.0-native dbus-native"
 
 do_stage() {

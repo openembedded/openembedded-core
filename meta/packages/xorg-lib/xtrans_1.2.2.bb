@@ -5,8 +5,6 @@ libraries from OS network vageries."
 PE = "1"
 PR = "r0"
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/xtrans"
-
 RDEPENDS_${PN}-dev = ""
 
 XORG_PN = "xtrans"

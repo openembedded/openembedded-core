@@ -8,10 +8,6 @@ PR = "r5"
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.gz \
            file://configure_fix.patch;patch=1"
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libusb"
-
-S = "${WORKDIR}/libusb-${PV}"
-
 inherit autotools pkgconfig binconfig lib_package
 
 PARALLEL_MAKE = ""

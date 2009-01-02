@@ -3,7 +3,6 @@ require libtool_${PV}.bb
 
 PR = "r23"
 PACKAGES = ""
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libtool-${PV}"
 SRC_URI_append = " file://cross_compile.patch;patch=1 \
                    file://prefix.patch;patch=1"
 
@@ -15,8 +14,6 @@ DOLT_PATCH_i586 = " file://add_dolt.patch;patch=1"
 
 #SRC_URI_append_linux = "${DOLT_PATCH}"
 #SRC_URI_append_linux-gnueabi = "${DOLT_PATCH}"
-
-S = "${WORKDIR}/libtool-${PV}"
 
 prefix = "${STAGING_DIR_NATIVE}${layout_prefix}"
 exec_prefix = "${STAGING_DIR_NATIVE}${layout_exec_prefix}"

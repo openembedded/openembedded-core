@@ -1,8 +1,5 @@
 require m4_${PV}.bb
-
 inherit native
-
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/m4"
 
 INHIBIT_AUTOTOOLS_DEPS = "1"
 DEPENDS += "gnu-config-native"

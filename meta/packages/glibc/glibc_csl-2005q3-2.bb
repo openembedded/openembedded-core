@@ -8,8 +8,6 @@ PR = "r11"
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
 TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${layout_includedir}"
 
-FILESDIR = "${FILE_DIRNAME}/files"
-
 GLIBC_ADDONS ?= "nptl,libidn"
 
 GLIBC_BROKEN_LOCALES = "sid_ET tr_TR mn_MN gez_ET bn_BD gez_ER te_IN"

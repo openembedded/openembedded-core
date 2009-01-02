@@ -3,11 +3,8 @@
 # Released under the MIT license (see packages/COPYING)
 
 require dosfstools_${PV}.bb
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/dosfstools-${PV}"
 
-S="${WORKDIR}/dosfstools-${PV}"
-
-PR="r4"
+PR="r5"
 
 SRC_URI = "ftp://ftp.uni-erlangen.de/pub/Linux/LOCAL/dosfstools/dosfstools-${PV}.src.tar.gz \
 	file://mkdosfs-bootcode.patch;patch=1 \

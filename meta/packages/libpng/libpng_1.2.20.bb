@@ -8,7 +8,6 @@ PR = "r6"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/libpng-${PV}.tar.bz2 \
            file://makefile_fix.patch;patch=1"
-S = "${WORKDIR}/libpng-${PV}"
 
 inherit autotools binconfig pkgconfig
 

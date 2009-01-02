@@ -19,8 +19,6 @@ RREPLACES_fontconfig-utils = "libfontconfig-utils"
 RCONFLICTS_fontconfig-utils = "libfontconfig-utils"
 DEBIAN_NOAUTONAME_fontconfig-utils = "1"
 
-S = "${WORKDIR}/fontconfig-${PV}"
-
 PARALLEL_MAKE = ""
 
 inherit autotools pkgconfig

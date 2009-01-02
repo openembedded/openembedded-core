@@ -1,8 +1,6 @@
-DESCRIPTION = "GNU m4 is an implementation of the traditional Unix macro \
-processor."
+DESCRIPTION = "GNU m4 is an implementation of the traditional Unix macro processor."
 LICENSE = "GPLv2"
 SRC_URI = "${GNU_MIRROR}/m4/m4-${PV}.tar.gz"
-S = "${WORKDIR}/m4-${PV}"
 
 inherit autotools
 

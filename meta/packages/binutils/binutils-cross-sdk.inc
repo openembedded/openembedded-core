@@ -1,6 +1,5 @@
 inherit sdk
 DEPENDS += "flex-native bison-native"
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/binutils-${PV}"
 EXTRA_OECONF = "--with-sysroot=${prefix}/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"
 

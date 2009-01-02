@@ -1,7 +1,6 @@
 require binutils_csl-arm-2008q1.bb
 require binutils-cross.inc
 PR = "r1"
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/binutils-${PV}"
 
 do_stage () {
 	oe_runmake install
