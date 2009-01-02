@@ -714,6 +714,17 @@ def base_get_scmbasepath(d):
 	path_to_bbfiles = bb.data.getVar( 'BBFILES', d, 1 ).split()
 	return path_to_bbfiles[0][:path_to_bbfiles[0].rindex( "packages" )]
 
+def base_get_metadata_monotone_branch(d):
+	monotone_branch = "<unknown>"
+	try:
+		monotone_branch = file( "%s/_MTN/options" % base_get_scmbasepath(d) ).read().strip()
+		if monotone_branch.startswith( "database" ):
+			monotone_branch_words = monotone_branch.split()
+			monotone_branch = monotone_branch_words[ monotone_branch_words.index( "branch" )+1][1:-1]
+	except:
+		pass
+	return monotone_branch
+
 def base_get_metadata_monotone_revision(d):
 	monotone_revision = "<unknown>"
 	try:
@@ -732,6 +743,47 @@ def base_get_metadata_svn_revision(d):
 	except IOError:
 		pass
 	return revision
+
+def base_get_metadata_git_branch(d):
+	import os
+	branch = os.popen('cd %s; git branch | grep "^* " | tr -d "* "' % base_get_scmbasepath(d)).read()
+
+	if len(branch) != 0:
+		return branch
+	return "<unknown>"
+
+def base_get_metadata_git_revision(d):
+	import os
+	rev = os.popen("cd %s; git log -n 1 --pretty=oneline --" % base_get_scmbasepath(d)).read().split(" ")[0]
+	if len(rev) != 0:
+		return rev
+	return "<unknown>"
+
+def base_detect_revision(d):
+	scms = [base_get_metadata_git_revision, \
+			base_get_metadata_svn_revision]
+
+	for scm in scms:
+		rev = scm(d)
+		if rev <> "<unknown>":
+			return rev
+
+	return "<unknown>"	
+
+def base_detect_branch(d):
+	scms = [base_get_metadata_git_branch]
+
+	for scm in scms:
+		rev = scm(d)
+		if rev <> "<unknown>":
+			return rev.strip()
+
+	return "<unknown>"	
+	
+	
+
+METADATA_BRANCH ?= "${@base_detect_branch(d)}"
+METADATA_REVISION ?= "${@base_detect_revision(d)}"
 
 GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
 
@@ -755,8 +807,6 @@ def generate_git_config(e):
                         f.write("    gitproxy = none for %s\n" % ignore_host)
                 f.write(proxy_command)
                 f.close
-
-METADATA_REVISION ?= "${@base_get_metadata_monotone_revision(d)}"
 
 addhandler base_eventhandler
 python base_eventhandler() {
@@ -792,7 +842,7 @@ python base_eventhandler() {
 
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
-		statusvars = ['BB_VERSION', 'METADATA_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
+		statusvars = ['BB_VERSION', 'METADATA_BRANCH', 'METADATA_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
 		statuslines = ["%-17s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
 		print statusmsg
