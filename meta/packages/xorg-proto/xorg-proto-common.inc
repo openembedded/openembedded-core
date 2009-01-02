@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.x.org"
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
 
-XORG_PN = "${PN}"
+XORG_PN = "${BPN}"
 
 SRC_URI = "${XORG_MIRROR}/individual/proto/${XORG_PN}-${PV}.tar.bz2"
 
