@@ -105,6 +105,12 @@ python __anonymous () {
     else:
         autoextend = False
     for dep in deps:
+        if dep.endswith("-cross"):
+            if autoextend:
+                depends = depends.replace(dep, dep.replace("-cross", "-native"))
+            else:
+                bb.note("%s has depends %s which ends in -cross?" % (pn, dep))
+
         if not dep.endswith("-native"):
             if autoextend:
                 depends = depends.replace(dep, dep + "-native")
