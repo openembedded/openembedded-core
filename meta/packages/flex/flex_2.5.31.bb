@@ -1,9 +1,6 @@
 require flex.inc
-PR = "r4"
+PR = "r5"
 
 SRC_URI += "file://include.patch;patch=1"
 
-do_stage() {
-	oe_libinstall -a libfl ${STAGING_LIBDIR}
-}
-
+BBCLASSEXTEND = "native"
