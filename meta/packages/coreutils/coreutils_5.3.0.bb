@@ -81,3 +81,5 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove uptime uptime.${PN}
 	update-alternatives --remove '[' 'lbracket.${PN}'
 }
+
+BBCLASSEXTEND = "native"
