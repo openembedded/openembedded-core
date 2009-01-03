@@ -5,9 +5,7 @@ LICENSE = "MIT"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.gz \
 	  "
-S = "${WORKDIR}/expat-${PV}"
-
 export LTCC = "${CC}"
 
-inherit autotools
+inherit autotools_stage
 
