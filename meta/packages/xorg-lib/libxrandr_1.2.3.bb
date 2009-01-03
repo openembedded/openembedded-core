@@ -7,3 +7,5 @@ PR = "r1"
 PE = "1"
 
 XORG_PN = "libXrandr"
+
+BBCLASSEXTEND = "sdk"

@@ -23,3 +23,4 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove sed sed.${PN}
 }
 
+BBCLASSEXTEND = "native"

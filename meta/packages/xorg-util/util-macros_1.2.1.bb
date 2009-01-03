@@ -11,3 +11,5 @@ XORG_PN = "util-macros"
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPV})"
+
+BBCLASSEXTEND = "native sdk"

@@ -9,3 +9,5 @@ PE = "1"
 #SRC_URI += "file://no-scalable-crash.patch;patch=1"
 
 XORG_PN = "libXfont"
+
+BBCLASSEXTEND = "native"

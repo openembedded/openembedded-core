@@ -8,3 +8,5 @@ SRC_URI = "git://anongit.freedesktop.org/git/xorg/proto/inputproto;protocol=git"
 S = "${WORKDIR}/git"
 
 XORG_PN = "inputproto"
+
+BBCLASSEXTEND = "native sdk"

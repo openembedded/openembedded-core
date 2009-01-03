@@ -10,3 +10,5 @@ XORG_PN = "libXext"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/${XORG_PN};protocol=git"
 S = "${WORKDIR}/git/"
+
+BBCLASSEXTEND = "sdk"

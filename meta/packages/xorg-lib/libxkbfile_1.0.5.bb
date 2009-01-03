@@ -5,3 +5,5 @@ LICENSE= "GPL"
 DEPENDS += "virtual/libx11 kbproto"
 PR = "r1"
 PE = "1"
+
+BBCLASSEXTEND = "native"

@@ -95,3 +95,21 @@ do_install () {
 
 PKG_CONFIG_PATH .= "${EXTRA_NATIVE_PKGCONFIG_PATH}"
 PKG_CONFIG_SYSROOT_DIR = ""
+
+python __anonymous () {
+    pn = bb.data.getVar("PN", d, True)
+    depends = bb.data.getVar("DEPENDS", d, True)
+    deps = bb.utils.explode_deps(depends)
+    if "native" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
+        autoextend = True
+    else:
+        autoextend = False
+    for dep in deps:
+        if not dep.endswith("-native"):
+            if autoextend:
+                depends = depends.replace(dep, dep + "-native")
+            else:
+                bb.note("%s has depends %s which doesn't end in -native?" % (pn, dep))
+    bb.data.setVar("DEPENDS", depends, d)
+}
+

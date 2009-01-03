@@ -6,3 +6,5 @@ PROVIDES = "xau"
 PE = "1"
 
 XORG_PN = "libXau"
+
+BBCLASSEXTEND = "native sdk"

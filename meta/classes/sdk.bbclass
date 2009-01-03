@@ -71,3 +71,34 @@ python () {
     bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
 }
 
+python __anonymous () {
+    pn = bb.data.getVar("PN", d, True)
+    depends = bb.data.getVar("DEPENDS", d, True)
+    deps = bb.utils.explode_deps(depends)
+    if "sdk" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
+        autoextend = True
+    else:
+        autoextend = False
+    for dep in deps:
+        if dep.endswith("-native") or dep.endswith("-cross") or dep.startswith("virtual/"):
+            continue
+        if not dep.endswith("-sdk"):
+            if autoextend:
+                depends = depends.replace(dep, dep + "-sdk")
+            else:
+                bb.note("%s has depends %s which doesn't end in -sdk?" % (pn, dep))
+    bb.data.setVar("DEPENDS", depends, d)
+    provides = bb.data.getVar("PROVIDES", d, True)
+    for prov in provides.split():
+        if prov.find(pn) != -1:
+            continue
+        if not prov.endswith("-sdk"):
+            if autoextend:
+                provides = provides.replace(prov, prov + "-sdk")
+            #else:
+            #    bb.note("%s has rouge PROVIDES of %s which doesn't end in -sdk?" % (pn, prov))
+    bb.data.setVar("PROVIDES", provides, d)
+
+}
+
+
