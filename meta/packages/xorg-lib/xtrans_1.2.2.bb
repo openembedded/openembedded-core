@@ -7,6 +7,4 @@ PR = "r0"
 
 RDEPENDS_${PN}-dev = ""
 
-XORG_PN = "xtrans"
-
 BBCLASSEXTEND = "native sdk"

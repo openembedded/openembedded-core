@@ -4,7 +4,7 @@ SECTION = "x11/apps"
 LICENSE = "MIT-X"
 DEPENDS = "util-macros-native virtual/libx11"
 
-XORG_PN = "${PN}"
+XORG_PN = "${BPN}"
 
 SRC_URI = "${XORG_MIRROR}/individual/app/${XORG_PN}-${PV}.tar.bz2"
 
