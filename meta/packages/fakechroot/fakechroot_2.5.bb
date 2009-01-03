@@ -5,4 +5,8 @@ LICENSE = "GPL"
 SRC_URI = "${DEBIAN_MIRROR}/main/f/fakechroot/fakechroot_${PV}.orig.tar.gz \
            file://fix-readlink.patch;patch=1"
 
-inherit autotools
+inherit autotools_stage
+
+PR = "r2"
+
+BBCLASSEXTEND = "native"
