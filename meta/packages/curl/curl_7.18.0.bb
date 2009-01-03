@@ -2,12 +2,13 @@ DESCRIPTION = "Command line tool and library for client-side URL transfers."
 LICENSE = "MIT"
 DEPENDS = "zlib gnutls"
 SECTION = "console/network"
+PR = "r1"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch;patch=1"
 S = "${WORKDIR}/curl-${PV}"
 
-inherit autotools pkgconfig binconfig
+inherit autotools_stage pkgconfig binconfig
 
 EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
                 --with-gnutls=${STAGING_BINDIR_CROSS}/ \
@@ -20,12 +21,6 @@ EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
 
 do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g configure.ac
-}
-
-do_stage () {
-	install -d ${STAGING_INCDIR}/curl
-	install -m 0644 ${S}/include/curl/*.h ${STAGING_INCDIR}/curl/
-	oe_libinstall -so -a -C lib libcurl ${STAGING_LIBDIR}
 }
 
 PACKAGES += "${PN}-certs libcurl libcurl-dev libcurl-doc"
