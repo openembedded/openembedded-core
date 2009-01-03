@@ -15,6 +15,8 @@ FILES_glib-2.0-utils = "${bindir}/*"
 
 EXTRA_OECONF = "--enable-included-printf=no"
 
+S = "${WORKDIR}/glib-${PV}"
+
 inherit autotools pkgconfig gettext
 
 require glib-2.0.inc

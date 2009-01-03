@@ -14,6 +14,8 @@ SRC_URI = "http://download.gnome.org/sources/glib/2.18/glib-${PV}.tar.bz2 \
            file://configure-libtool.patch;patch=1 \
            file://glibconfig-sysdefs.h"
 
+S = "${WORKDIR}/glib-${PV}"
+
 inherit autotools pkgconfig native gettext
 
 acpaths = ""
