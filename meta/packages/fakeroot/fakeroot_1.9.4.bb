@@ -4,15 +4,22 @@ SECTION = "base"
 LICENSE = "GPL"
 # fakeroot needs getopt which is provided by the util-linux package
 RDEPENDS = "util-linux"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.tar.gz \
            file://configure-libtool.patch;patch=1"
 	    
-inherit autotools
+inherit autotools_stage
 
-do_stage() {
+do_stage_append() {
         install -d ${STAGING_INCDIR}/fakeroot
         install -m 644 *.h ${STAGING_INCDIR}/fakeroot
-        autotools_stage_all
 }
+
+# Compatability for the rare systems not using or having SYSV
+python () {
+    if bb.data.inherits_class("native", d) and bb.data.getVar('HOST_NONSYSV', d, True) and bb.data.getVar('HOST_NONSYSV', d, True) != '0':
+        bb.data.setVar('EXTRA_OECONF', ' --with-ipc=tcp ', d)
+}
+
+BBCLASSEXTEND = "native"
