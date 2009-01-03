@@ -7,7 +7,6 @@ DEPENDS = "file-native"
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://dump \
            file://filesystems"
-S = "${WORKDIR}/file-${PV}"
 
 inherit autotools_stage
 

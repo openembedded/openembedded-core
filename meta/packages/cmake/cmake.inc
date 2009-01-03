@@ -10,8 +10,6 @@ SRC_URI = "http://www.cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz
 
 inherit autotools
 
-S = "${WORKDIR}/cmake-${PV}"
-
 do_configure () {
 	./configure --prefix=${prefix} || die "./bootstrap failed"
 }

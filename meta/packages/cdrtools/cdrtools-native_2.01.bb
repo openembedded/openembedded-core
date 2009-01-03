@@ -10,8 +10,6 @@ PR = "r1"
 SRC_URI="ftp://ftp.berlios.de/pub/cdrecord/cdrtools-${PV}.tar.bz2 \
          file://no_usr_src.patch;patch=1"
 
-S="${WORKDIR}/cdrtools-${PV}"
-
 inherit native
 
 STAGE_TEMP="${WORKDIR}/stage_temp"

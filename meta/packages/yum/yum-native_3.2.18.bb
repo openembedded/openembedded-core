@@ -9,8 +9,6 @@ PR = "r7"
 
 DEPENDS = "rpm-native python-native python-iniparse-native python-urlgrabber-native yum-metadata-parser-native libxml2-native"
 
-S = "${WORKDIR}/yum-${PV}"
-
 inherit autotools native
 
 do_compile_append () {

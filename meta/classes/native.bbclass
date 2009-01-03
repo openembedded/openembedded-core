@@ -80,6 +80,8 @@ export oldincludedir = "${STAGING_DIR_NATIVE}${layout_includedir}"
 do_stage () {
 	if [ "${INHIBIT_NATIVE_STAGE_INSTALL}" != "1" ]
 	then
+		# If autotools is active, use the autotools staging function, else 
+		# use our "make install" equivalent
 		if [ "${AUTOTOOLS_NATIVE_STAGE_INSTALL}" != "1" ]
 		then
 			oe_runmake install
