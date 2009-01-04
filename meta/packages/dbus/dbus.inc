@@ -79,7 +79,8 @@ do_stage() {
 	install -m 0644 dbus/dbus-arch-deps.h ${STAGING_LIBDIR}/dbus-1.0/include/dbus/
 }
 
-do_install_append() {
+do_install() {
+	autotools_do_install
 	install -d ${D}/etc/default/volatiles
 	install -m 0644 ${WORKDIR}/99_dbus ${D}/etc/default/volatiles/
 

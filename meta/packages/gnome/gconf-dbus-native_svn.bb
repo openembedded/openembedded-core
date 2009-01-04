@@ -1,5 +1,5 @@
 SECTION = "x11/utils"
-DEPENDS = "intltool-native virtual/libintl glib-2.0-native dbus-native dbus-glib-native libxml2-native popt-native gtk-doc-native"
+DEPENDS = "intltool-native glib-2.0-native dbus-native dbus-glib-native libxml2-native popt-native gtk-doc-native"
 DESCRIPTION = "Settings daemon using DBUS for communication."
 LICENSE = "GPL"
 PROVIDES = "gconf-native"
