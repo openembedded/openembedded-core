@@ -43,7 +43,7 @@ if [ "x$1" != "x" ]; then
     TYPE=$1
     shift
 else
-    TYPE="ext2"
+    TYPE="ext3"
     if [ "$MACHINE" = "akita" ]; then
         TYPE="jffs2"
     fi
@@ -73,15 +73,15 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o 
 fi
 
 if [ "$MACHINE" = "qemuarm" ]; then
-    if [ "$TYPE" = "ext2" ]; then
+    if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$BUILDDIR/tmp/deploy/images/poky-image
-            if [ -e "$T-sdk-qemuarm.ext2" ]; then
-                HDIMAGE="$T-sdk-qemuarm.ext2"
-            elif [ -e "$T-sato-qemuarm.ext2" ]; then
-                HDIMAGE="$T-sato-qemuarm.ext2"
-            elif [ -e "$T-minimal-qemuarm.ext2" ]; then
-                HDIMAGE="$T-minimal-qemuarm.ext2"
+            if [ -e "$T-sdk-qemuarm.ext3" ]; then
+                HDIMAGE="$T-sdk-qemuarm.ext3"
+            elif [ -e "$T-sato-qemuarm.ext3" ]; then
+                HDIMAGE="$T-sato-qemuarm.ext3"
+            elif [ -e "$T-minimal-qemuarm.ext3" ]; then
+                HDIMAGE="$T-minimal-qemuarm.ext3"
             fi
         fi
     fi
@@ -116,15 +116,15 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/bzImage-$MACHINE.bin
     fi
-    if [ "$TYPE" = "ext2" ]; then
+    if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$BUILDDIR/tmp/deploy/images/poky-image
-            if [ -e "$T-sdk-qemux86.ext2" ]; then
-                HDIMAGE=$T-sdk-qemux86.ext2
-            elif [ -e "$T-sato-qemux86.ext2" ]; then
-                HDIMAGE=$T-sato-qemux86.ext2
-            elif [ -e "$T-minimal-qemux86.ext2" ]; then
-                HDIMAGE=$T-minimal-qemux86.ext2
+            if [ -e "$T-sdk-qemux86.ext3" ]; then
+                HDIMAGE=$T-sdk-qemux86.ext3
+            elif [ -e "$T-sato-qemux86.ext3" ]; then
+                HDIMAGE=$T-sato-qemux86.ext3
+            elif [ -e "$T-minimal-qemux86.ext3" ]; then
+                HDIMAGE=$T-minimal-qemux86.ext3
             fi
         fi
     fi

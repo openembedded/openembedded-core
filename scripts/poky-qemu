@@ -40,7 +40,7 @@ fi
 if [ "x$1" = "x" ]; then
     TYPE="nfs"
 else
-    TYPE="ext2"
+    TYPE="ext3"
     if [ "$MACHINE" = "akita" ]; then
         TYPE="jffs2"
     fi
