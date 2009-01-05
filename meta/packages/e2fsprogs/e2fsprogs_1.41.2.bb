@@ -7,6 +7,8 @@ SRC_URI += "file://no-hardlinks.patch;patch=1"
 PARALLEL_MAKE = ""
 
 EXTRA_OECONF += " --sbindir=${base_sbindir} --enable-elf-shlibs"
+EXTRA_OECONF_darwin = "--enable-dynamic-e2fsck --sbindir=${base_sbindir} --enable-bsd-shlibs"
+EXTRA_OECONF_darwin8 = "--enable-dynamic-e2fsck --sbindir=${base_sbindir} --enable-bsd-shlibs"
 
 do_compile_prepend () {
 	find ./ -print|xargs chmod u=rwX
