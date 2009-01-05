@@ -119,5 +119,15 @@ python __anonymous () {
             else:
                 bb.note("%s has depends %s which doesn't end in -native?" % (pn, dep))
     bb.data.setVar("DEPENDS", depends, d)
+    provides = bb.data.getVar("PROVIDES", d, True)
+    for prov in provides.split():
+        if prov.find(pn) != -1:
+            continue
+        if not prov.endswith("-native"):
+            if autoextend:
+                provides = provides.replace(prov, prov + "-native")
+            #else:
+            #    bb.note("%s has rouge PROVIDES of %s which doesn't end in -sdk?" % (pn, prov))
+    bb.data.setVar("PROVIDES", provides, d)
 }
 
