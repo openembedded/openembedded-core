@@ -80,7 +80,7 @@ python __anonymous () {
     else:
         autoextend = False
     for dep in deps:
-        if dep.endswith("-native") or dep.endswith("-cross") or dep.startswith("virtual/"):
+        if dep.endswith("-native") or dep.endswith("-cross"):
             continue
         if not dep.endswith("-sdk"):
             if autoextend:
