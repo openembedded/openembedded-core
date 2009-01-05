@@ -129,5 +129,6 @@ python __anonymous () {
             #else:
             #    bb.note("%s has rouge PROVIDES of %s which doesn't end in -sdk?" % (pn, prov))
     bb.data.setVar("PROVIDES", provides, d)
+    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", d, False) + ":virtclass-native", d)
 }
 
