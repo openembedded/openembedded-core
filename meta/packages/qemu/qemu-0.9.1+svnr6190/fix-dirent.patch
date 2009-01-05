@@ -1,0 +1,12 @@
+Index: trunk/linux-user/syscall.c
+===================================================================
+--- trunk.orig/linux-user/syscall.c	2009-01-05 12:51:52.000000000 +0000
++++ trunk/linux-user/syscall.c	2009-01-05 12:51:52.000000000 +0000
+@@ -26,6 +26,7 @@
+ #include <errno.h>
+ #include <unistd.h>
+ #include <fcntl.h>
++#include <dirent.h>
+ #include <time.h>
+ #include <limits.h>
+ #include <sys/types.h>

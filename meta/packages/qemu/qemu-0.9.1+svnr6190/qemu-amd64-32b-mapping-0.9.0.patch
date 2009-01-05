@@ -4,11 +4,11 @@
 
 Index: trunk/linux-user/mmap.c
 ===================================================================
---- trunk.orig/linux-user/mmap.c	2008-04-24 20:15:37.000000000 +0100
-+++ trunk/linux-user/mmap.c	2008-04-24 20:16:16.000000000 +0100
-@@ -29,6 +29,10 @@
- 
- //#define DEBUG_MMAP
+--- trunk.orig/linux-user/mmap.c	2009-01-05 11:09:58.000000000 +0000
++++ trunk/linux-user/mmap.c	2009-01-05 12:46:33.000000000 +0000
+@@ -122,6 +122,10 @@
+     munmap(p, *p);
+ }
  
 +#ifndef MAP_32BIT
 +#define MAP_32BIT 0
@@ -17,21 +17,21 @@ Index: trunk/linux-user/mmap.c
  /* NOTE: all the constants are the HOST ones, but addresses are target. */
  int target_mprotect(abi_ulong start, abi_ulong len, int prot)
  {
-@@ -251,7 +255,7 @@
+@@ -365,7 +369,7 @@
             especially important if qemu_host_page_size >
             qemu_real_host_page_size */
          p = mmap(g2h(mmap_start),
 -                 host_len, prot, flags | MAP_FIXED, fd, host_offset);
 +                 host_len, prot, flags | MAP_FIXED | MAP_32BIT, fd, host_offset);
          if (p == MAP_FAILED)
-             return -1;
+             goto fail;
          /* update start so that it points to the file position at 'offset' */
-@@ -406,7 +410,7 @@
-     unsigned long host_addr;
- 
-     /* XXX: use 5 args syscall */
--    host_addr = (long)mremap(g2h(old_addr), old_size, new_size, flags);
-+    host_addr = (long)mremap(g2h(old_addr), old_size, new_size, flags | MAP_32BIT);
-     if (host_addr == -1)
-         return -1;
-     new_addr = h2g(host_addr);
+@@ -567,7 +571,7 @@
+                                          flags | MREMAP_FIXED,
+                                          g2h(mmap_start));
+     } else {
+-        host_addr = mremap(g2h(old_addr), old_size, new_size, flags);
++        host_addr = mremap(g2h(old_addr), old_size, new_size, flags | MAP_32BIT);
+         /* Check if address fits target address space */
+         if ((unsigned long)host_addr + new_size > (abi_ulong)-1) {
+             /* Revert mremap() changes */

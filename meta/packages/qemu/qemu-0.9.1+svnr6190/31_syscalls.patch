@@ -1,0 +1,27 @@
+#DPATCHLEVEL=0
+---
+# linux-user/syscall.c |   11 ++++++++---
+# 1 file changed, 8 insertions(+), 3 deletions(-)
+#
+Index: linux-user/syscall.c
+===================================================================
+--- linux-user/syscall.c.orig	2009-01-05 12:32:37.000000000 +0000
++++ linux-user/syscall.c	2009-01-05 12:32:37.000000000 +0000
+@@ -298,6 +298,7 @@
+ extern int setfsuid(int);
+ extern int setfsgid(int);
+ extern int setgroups(int, gid_t *);
++extern int uselib(const char*);
+ 
+ #define ERRNO_TABLE_SIZE 1200
+ 
+@@ -4397,7 +4398,8 @@
+ #endif
+ #ifdef TARGET_NR_uselib
+     case TARGET_NR_uselib:
+-        goto unimplemented;
++        ret = get_errno(uselib(path((const char*)arg1)));
++        break;
+ #endif
+ #ifdef TARGET_NR_swapon
+     case TARGET_NR_swapon:

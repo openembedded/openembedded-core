@@ -2,15 +2,14 @@
  linux-user/syscall.c |   10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
-Index: qemu/linux-user/syscall.c
+Index: trunk/linux-user/syscall.c
 ===================================================================
---- qemu.orig/linux-user/syscall.c	2007-08-09 20:28:06.000000000 +0100
-+++ qemu/linux-user/syscall.c	2007-08-09 20:28:41.000000000 +0100
-@@ -61,7 +61,15 @@
- #define tchars host_tchars /* same as target */
- #define ltchars host_ltchars /* same as target */
+--- trunk.orig/linux-user/syscall.c	2009-01-05 12:47:06.000000000 +0000
++++ trunk/linux-user/syscall.c	2009-01-05 12:48:04.000000000 +0000
+@@ -87,6 +87,15 @@
+ #define CLONE_NPTL_FLAGS2 0
+ #endif
  
--#include <linux/futex.h>
 +#define FUTEX_WAIT              0
 +#define FUTEX_WAKE              1
 +#define FUTEX_FD                2
@@ -20,6 +19,6 @@ Index: qemu/linux-user/syscall.c
 +#define FUTEX_LOCK_PI           6
 +#define FUTEX_UNLOCK_PI         7
 +
- #include <linux/termios.h>
- #include <linux/unistd.h>
- #include <linux/utsname.h>
+ //#define DEBUG
+ 
+ #if defined(TARGET_I386) || defined(TARGET_ARM) || defined(TARGET_SPARC) \

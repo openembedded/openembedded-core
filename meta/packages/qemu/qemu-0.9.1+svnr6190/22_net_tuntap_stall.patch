@@ -3,16 +3,16 @@
 # vl.c |    2 +-
 # 1 file changed, 1 insertion(+), 1 deletion(-)
 #
-Index: vl.c
+Index: net.c
 ===================================================================
---- vl.c.orig	2008-04-24 20:15:46.000000000 +0100
-+++ vl.c	2008-04-24 20:15:58.000000000 +0100
-@@ -4155,7 +4155,7 @@
+--- net.c.orig	2009-01-05 11:27:29.000000000 +0000
++++ net.c	2009-01-05 11:27:40.000000000 +0000
+@@ -852,7 +852,7 @@
          return -1;
      }
      memset(&ifr, 0, sizeof(ifr));
 -    ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
-+    ifr.ifr_flags = IFF_TAP | IFF_NO_PI | IFF_ONE_QUEUE;
++    ifr.ifr_flags = IFF_TAP | IFF_NO_PI | IFF_ONE_QUEUE;;
      if (ifname[0] != '\0')
          pstrcpy(ifr.ifr_name, IFNAMSIZ, ifname);
      else

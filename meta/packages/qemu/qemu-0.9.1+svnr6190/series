@@ -1,0 +1,13 @@
+06_exit_segfault.patch -p0
+11_signal_sigaction.patch -p0
+22_net_tuntap_stall.patch -p0
+31_syscalls.patch -p0
+52_ne2000_return.patch -p1
+63_sparc_build.patch -p0
+64_ppc_asm_constraints.patch -p1
+66_tls_ld.patch -p0
+91-oh-sdl-cursor.patch -p0
+qemu-amd64-32b-mapping-0.9.0.patch -p1
+workaround_bad_futex_headers.patch -p1
+no-strip.patch -p1
+fix-dirent.patch -p1
