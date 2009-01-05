@@ -9,7 +9,7 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz
 
 inherit autotools_stage pkgconfig gettext
 
-EXTRA_OECONF = "--with-introspect=${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml"
+EXTRA_OECONF = "--with-introspect-xml=${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml"
 
 FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
