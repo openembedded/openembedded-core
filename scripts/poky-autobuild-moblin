@@ -33,6 +33,8 @@ elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/moblin-incremental/build" ]; then
     ABTARGET="moblin-incremental"
 elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/moblin-full/build" ]; then
     ABTARGET="moblin-full"
+elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/moblin-uricheck/build" ]; then
+    ABTARGET="moblin-uricheck"
 elif [ "$CURRDIR" = "$SRVWORKDIR/poky-slave/full-darwin-shihtzu/build" ]; then
     ABTARGET="darwin"
     if [ ! -d "$CURRDIR/meta-darwin" ]; then
