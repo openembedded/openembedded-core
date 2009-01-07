@@ -1,5 +1,5 @@
 DEPENDS_append = " update-rc.d"
-RDEPENDS_append = " update-rc.d"
+RDEPENDS_${PN}_append = " update-rc.d"
 
 INITSCRIPT_PARAMS ?= "defaults"
 
