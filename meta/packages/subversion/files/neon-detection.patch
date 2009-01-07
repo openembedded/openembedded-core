@@ -1,0 +1,36 @@
+diff --git a/build/ac-macros/neon.m4 b/build/ac-macros/neon.m4
+index 9fcf859..8d964f3 100644
+--- a/build/ac-macros/neon.m4
++++ b/build/ac-macros/neon.m4
+@@ -38,7 +38,7 @@ AC_DEFUN(SVN_LIB_NEON,
+     if test "$withval" = "yes" ; then
+       AC_MSG_ERROR([--with-neon requires an argument.])
+     else
+-      neon_config="$withval/bin/neon-config"
++      neon_config="env env PKG_CONFIG_PATH=${withval}:${PKG_CONFIG_PATH} pkg-config neon"
+     fi
+ 
+     SVN_NEON_CONFIG()
+@@ -117,10 +117,10 @@ dnl SVN_NEON_CONFIG()
+ dnl neon-config found, gather relevant information from it
+ AC_DEFUN(SVN_NEON_CONFIG,
+ [
+-  if test -f "$neon_config"; then
+-    if test "$neon_config" != ""; then
++  if true; then
++    if true; then
+       AC_MSG_CHECKING([neon library version])
+-      NEON_VERSION=`$neon_config --version | sed -e 's/^neon //'`
++      NEON_VERSION=`$neon_config --modversion | sed -e 's/^neon //'`
+       AC_MSG_RESULT([$NEON_VERSION])
+ 
+       if test -n "`echo \"$NEON_VERSION\" | grep '^0\.25\.'`" ; then
+@@ -133,7 +133,7 @@ AC_DEFUN(SVN_NEON_CONFIG,
+            test "$svn_allowed_neon" = "any"; then
+             svn_allowed_neon_on_system="yes"
+             SVN_NEON_INCLUDES=[`$neon_config --cflags | sed -e 's/-D[^ ]*//g'`]
+-            NEON_LIBS=`$neon_config --la-file`
++            NEON_LIBS=`$neon_config --libs`
+             CFLAGS=["$CFLAGS `$neon_config --cflags | sed -e 's/-I[^ ]*//g'`"]
+             svn_lib_neon="yes"
+             break

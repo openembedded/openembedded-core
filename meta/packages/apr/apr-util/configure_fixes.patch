@@ -1,0 +1,27 @@
+Index: apr-util-1.3.4/configure.in
+===================================================================
+--- apr-util-1.3.4.orig/configure.in
++++ apr-util-1.3.4/configure.in
+@@ -8,14 +8,14 @@ AC_INIT(export_vars.sh.in)
+ AC_CONFIG_HEADER(include/private/apu_config.h)
+ AC_CONFIG_AUX_DIR(build)
+ 
+-sinclude(build/apu-conf.m4)
+-sinclude(build/apu-iconv.m4)
+-sinclude(build/apu-hints.m4)
+-sinclude(build/apr_common.m4)
+-sinclude(build/find_apr.m4)
+-sinclude(build/dbm.m4)
+-sinclude(build/dbd.m4)
+-sinclude(build/dso.m4)
++#sinclude(build/apu-conf.m4)
++#sinclude(build/apu-iconv.m4)
++#sinclude(build/apu-hints.m4)
++#sinclude(build/apr_common.m4)
++#sinclude(build/find_apr.m4)
++#sinclude(build/dbm.m4)
++#sinclude(build/dbd.m4)
++#sinclude(build/dso.m4)
+ 
+ dnl Generate ./config.nice for reproducing runs of configure
+ dnl 
