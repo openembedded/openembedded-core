@@ -4,7 +4,7 @@
 
 DESCRIPTON = "Software Development Tasks for Moblin"
 DEPENDS = "task-moblin"
-PR = "r5"
+PR = "r6"
 
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -27,6 +27,7 @@ RDEPENDS_task-moblin-sdk = "\
     gcc-symlinks \
     g++ \
     g++-symlinks \
+    git \
     gettext \
     make \
     intltool \
@@ -36,6 +37,7 @@ RDEPENDS_task-moblin-sdk = "\
     perl-module-re \
     perl-module-text-wrap \
     pkgconfig \
+    subversion \
     findutils \
     quilt \
     less \
