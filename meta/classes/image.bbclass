@@ -109,11 +109,6 @@ fakeroot do_rootfs () {
 
 	insert_feed_uris
 
-	${IMAGE_PREPROCESS_COMMAND}
-
-	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{print ${IMAGE_EXTRA_SPACE} + $1}'`
-	${@get_imagecmds(d)}
-
 	# Run ldconfig on the image to create a valid cache 
 	# (new format for cross arch compatibility)
 	ldconfig -r ${IMAGE_ROOTFS} -c new
@@ -128,6 +123,11 @@ fakeroot do_rootfs () {
 		mkdir -p ${IMAGE_ROOTFS}/lib/modules/$KERNEL_VERSION
 		${TARGET_SYS}-depmod-2.6 -a -b ${IMAGE_ROOTFS} -F ${STAGING_KERNEL_DIR}/System.map-$KERNEL_VERSION $KERNEL_VERSION
 	fi
+
+	${IMAGE_PREPROCESS_COMMAND}
+
+	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{print ${IMAGE_EXTRA_SPACE} + $1}'`
+	${@get_imagecmds(d)}
 
 	${IMAGE_POSTPROCESS_COMMAND}
 	
