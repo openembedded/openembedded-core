@@ -1,8 +1,9 @@
 require dbus-glib.inc
 
-PR = "r3"
+PR = "r4"
 
 do_configure_prepend() {
-	install -m 0644 ${STAGING_DATADIR_NATIVE}/dbus/dbus-glib-bindings.h ${S}/tools/
+	cp -p ${STAGING_DATADIR_NATIVE}/dbus/dbus-glib-bindings.h ${S}/tools/
 }
 
+SRC_URI += "file://native-binding-tool.patch;patch=1"
