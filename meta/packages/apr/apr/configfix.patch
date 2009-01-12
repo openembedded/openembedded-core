@@ -45,7 +45,7 @@ Index: apr-1.3.3/apr-config.in
 -    else
 -        flags="$flags $LA_FILE"
 -    fi
-+        flags="$flags ll${APR_LIBNAME}"
++        flags="$flags -l${APR_LIBNAME}"
      ;;
      --shlib-path-var)
      echo "$SHLIBPATH_VAR"

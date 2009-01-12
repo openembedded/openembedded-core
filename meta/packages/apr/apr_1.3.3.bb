@@ -2,7 +2,7 @@ DESCRIPTION = "Apache Portable Runtime (APR) library"
 SECTION = "libs"
 LICENSE = "Apache License, Version 2.0"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${P}.tar.bz2 \
            file://configure_fixes.patch;patch=1 \
