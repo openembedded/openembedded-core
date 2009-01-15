@@ -5,6 +5,7 @@ LICENSE = "GPL"
 DEPENDS = "expat glib-2.0 virtual/libintl dbus-glib-native dbus"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz \
+           file://fix_asneeded.patch;patch=1 \
            file://no-examples.patch;patch=1"
 
 inherit autotools_stage pkgconfig gettext

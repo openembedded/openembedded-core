@@ -3,7 +3,7 @@ inherit native
 
 DEPENDS = "glib-2.0-native dbus-native"
 
-PR = "r3"
+PR = "r0"
 
 SRC_URI += "file://run-with-tmp-session-bus.patch;patch=1"
 
