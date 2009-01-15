@@ -681,9 +681,20 @@ def oe_unpack_file(file, data, url = None):
 		if os.path.samefile(file, dest):
 			return True
 
+	# Change to subdir before executing command
+	save_cwd = os.getcwd();
+	parm = bb.decodeurl(url)[5]
+	if 'subdir' in parm:
+		newdir = ("%s/%s" % (os.getcwd(), parm['subdir']))
+		bb.mkdirhier(newdir)
+		os.chdir(newdir)
+
 	cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', data, 1), cmd)
 	bb.note("Unpacking %s to %s/" % (file, os.getcwd()))
 	ret = os.system(cmd)
+
+	os.chdir(save_cwd)
+
 	return ret == 0
 
 addtask unpack after do_fetch
