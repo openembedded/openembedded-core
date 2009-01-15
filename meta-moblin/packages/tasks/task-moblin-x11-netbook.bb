@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -27,5 +27,4 @@ RDEPENDS_task-moblin-x11-netbook = "\
     settings-daemon \
     gtk-sato-engine \
     ${EXTRA_MOBLIN_PACKAGES} \
-    bijou bickley mojito librest nbtk mutter-moblin \
     ${NETWORK_MANAGER}"
