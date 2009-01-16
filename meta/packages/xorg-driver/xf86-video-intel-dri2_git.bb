@@ -5,6 +5,8 @@ DEPENDS += "virtual/libx11 libxvmc drm dri2proto glproto \
 	    virtual/libgl xineramaproto libpciaccess"
 PROVIDES = "xf86-video-intel"
 
+DEFAULT_PREFERENCE = "-1"
+
 PE = "1"
 PR = "r2"
 PV = "2.4.97.0+git${SRCREV}"
