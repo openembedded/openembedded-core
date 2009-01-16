@@ -85,6 +85,8 @@ python __anonymous () {
         if not dep.endswith("-sdk"):
             if autoextend:
                 depends = depends.replace(dep, dep + "-sdk")
+            elif pn == 'gcc-cross-sdk':
+                continue
             else:
                 bb.note("%s has depends %s which doesn't end in -sdk?" % (pn, dep))
     bb.data.setVar("DEPENDS", depends, d)
