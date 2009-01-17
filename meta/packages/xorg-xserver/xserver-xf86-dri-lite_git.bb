@@ -10,6 +10,7 @@ DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git;branch=server-1.6-branch \
            file://xorg.conf \
+	   file://nodolt.patch;patch=1 \
            file://libdri-xinerama-symbol.patch;patch=1 \
            file://xserver-boottime.patch;patch=1"
 

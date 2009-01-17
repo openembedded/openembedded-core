@@ -9,6 +9,7 @@ DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git \
            file://xorg.conf \
+	   file://nodolt.patch;patch=1 \
            file://libdri-xinerama-symbol.patch;patch=1"
 
 # Copied from OBS
