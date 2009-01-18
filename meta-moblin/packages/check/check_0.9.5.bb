@@ -12,8 +12,3 @@ S = "${WORKDIR}/check-${PV}"
 inherit autotools_stage pkgconfig
 
 EXTRA_OECONF += "--enable-plain-docdir"
-
-do_stage() {
-	autotools_stage_all
-}
-

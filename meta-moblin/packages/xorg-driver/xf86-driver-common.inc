@@ -16,11 +16,7 @@ S = "${WORKDIR}/${XORG_PN}-${PV}"
 FILES_${PN} += " ${libdir}/xorg/modules/drivers/*.so"
 FILES_${PN}-dbg += " ${libdir}/xorg/modules/drivers/.debug"
 
-inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
+inherit autotools_stage pkgconfig
 
 # AC_CHECK_FILE doesn't work when cross compiling, so we create a replacement
 # macro that simply assumes the test succeeds. 

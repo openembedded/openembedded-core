@@ -17,8 +17,4 @@ EXTRA_OECONF =	"--disable-pthreads"
 
 FILES_${PN}-dev += "${libdir}/gnet-2.0"
 
-inherit autotools pkgconfig
-
-do_stage() {
-	autotools_stage_all
-}
+inherit autotools_stage pkgconfig

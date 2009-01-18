@@ -12,12 +12,7 @@ CFLAGS_append = " -fPIC "
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 
-inherit autotools pkgconfig
-
-
-do_stage() {
-        autotools_stage_all
-}
+inherit autotools_stage pkgconfig
 
 FILES_${PN}-dbg += "${base_libdir}/security/.debug"
 FILES_${PN}-dbg += "${base_libdir}/security/pam_filter/.debug"

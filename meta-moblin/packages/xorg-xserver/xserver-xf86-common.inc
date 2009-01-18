@@ -16,7 +16,7 @@ SRC_URI = "${XORG_MIRROR}/individual/xserver/${XORG_PN}-${PV}.tar.bz2 \
 
 S = "${WORKDIR}/${XORG_PN}-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 PACKAGES =+ "${PN}-utils"
 
@@ -32,10 +32,6 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
 CONFFILES_${PN} += "${sysconfdir}/X11/xorg.conf"
 
 SRC_URI += "file://macro_tweak.patch;patch=1"
-
-do_stage() {
-	autotools_stage_all
-}
 
 do_install_append () {
 	install -d ${D}/${sysconfdir}/X11

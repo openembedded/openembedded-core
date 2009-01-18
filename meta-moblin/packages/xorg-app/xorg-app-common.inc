@@ -10,10 +10,6 @@ SRC_URI = "${XORG_MIRROR}/individual/app/${XORG_PN}-${PV}.tar.bz2"
 
 S = "${WORKDIR}/${XORG_PN}-${PV}"
 
-inherit autotools pkgconfig
-
-do_stage() {
-        autotools_stage_all
-}
+inherit autotools_stage pkgconfig
 
 FILES_${PN} += "  /usr/lib/X11/${XORG_PN}"

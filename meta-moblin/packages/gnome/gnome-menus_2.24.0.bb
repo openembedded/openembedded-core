@@ -6,7 +6,7 @@ inherit gnome pkgconfig
 DEPENDS += "intltool"
 
 do_stage() {
-autotools_stage_all
+	autotools_stage_all
 }
 
 PACKAGES += "${PN}-python"

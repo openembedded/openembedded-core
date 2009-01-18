@@ -10,9 +10,4 @@ EXTRA_OECONF = "--with-authfw=pam --with-os-type=moblin --disable-man-pages --di
 
 S = "${WORKDIR}/PolicyKit-${PV}"
 
-inherit autotools pkgconfig
-
-do_stage() {
-        autotools_stage_all
-}
-
+inherit autotools_stage pkgconfig
