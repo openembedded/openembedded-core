@@ -6,7 +6,7 @@ PR = "r5"
 
 inherit autotools_stage pkgconfig lib_package
 
-SRC_URI = "svn://svn.o-hand.com/repos/jana/;module=trunk;proto=http"
+SRC_URI = "svn://svn.gnome.org/svn/jana/;module=trunk;proto=http"
 S = "${WORKDIR}/trunk/"
 
 EXTRA_OECONF = "--enable-examples "
