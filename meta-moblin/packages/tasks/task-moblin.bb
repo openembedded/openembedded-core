@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for Moblin"
-PR = "r32"
+PR = "r33"
 
 PACKAGES = "\
     task-moblin-apps-console \
@@ -38,13 +38,6 @@ RDEPENDS_task-moblin-apps-console = "\
 RDEPENDS_task-moblin-x11-base = "\
     dbus \
     pointercal \
-    matchbox-wm \
-    matchbox-keyboard \
-    matchbox-keyboard-applet \
-    matchbox-keyboard-im \
-    matchbox-panel-2 \
-    matchbox-desktop \
-    matchbox-session \
     ${XSERVER} \
     x11-common \
     xserver-nodm-init \
