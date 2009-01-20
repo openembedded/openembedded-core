@@ -186,6 +186,7 @@ SRCREV_pn-libdrm ?= "b7d54b1dba8eba24da1b9cdd2116a26b98365b81"
 SRCREV_pn-gnet = "495"
 SRCREV_pn-tasks ?= "430"
 SRCREV_pn-librsvg ?= "1193"
+SRCREV_pn-qemugl = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 
 # Preferred Versions:
 #
