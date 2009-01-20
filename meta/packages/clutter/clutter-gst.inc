@@ -2,7 +2,7 @@ DESCRIPTION = "Clutter GStreamer"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPL"
 
-DEPENDS = "gstreamer gst-plugins-base"
+DEPENDS = "clutter gstreamer gst-plugins-base"
 
 FILESPATH = "${FILE_DIRNAME}/clutter-gst"
 

@@ -1,6 +1,6 @@
 require clutter.inc
 
-PV = "0.8.0+git${SRCREV}"
+PV = "0.9.0+git${SRCREV}"
 PR = "r3"
 
 SRC_URI = "git://git.clutter-project.org/clutter.git;protocol=git;branch=master \

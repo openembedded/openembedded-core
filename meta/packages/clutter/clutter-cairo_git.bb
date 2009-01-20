@@ -1,6 +1,6 @@
 require clutter-cairo.inc
 
-PV = "0.8.0+git${SRCREV}"
+PV = "0.9.0+git${SRCREV}"
 PR = "r1"
 
 SRC_URI = "git://git.clutter-project.org/clutter-cairo.git;protocol=git \
@@ -8,4 +8,4 @@ SRC_URI = "git://git.clutter-project.org/clutter-cairo.git;protocol=git \
 
 S = "${WORKDIR}/git"
 
-
+DEPENDS += "clutter"
