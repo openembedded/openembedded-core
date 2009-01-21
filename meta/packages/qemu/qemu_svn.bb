@@ -13,7 +13,6 @@ SRC_URI = "\
     file://31_syscalls.patch;patch=1;pnum=0 \
     file://52_ne2000_return.patch;patch=1;pnum=1 \
     file://63_sparc_build.patch;patch=1;pnum=0 \
-    file://64_ppc_asm_constraints.patch;patch=1;pnum=1 \
     file://66_tls_ld.patch;patch=1;pnum=0 \
     file://91-oh-sdl-cursor.patch;patch=1;pnum=0 \
     file://qemu-amd64-32b-mapping-0.9.0.patch;patch=1 \
