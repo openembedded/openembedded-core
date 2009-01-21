@@ -11,12 +11,14 @@ SRC_URI = "git://git.o-hand.com/qemugl.git;protocol=git"
 S = "${WORKDIR}/git"
 
 PV = "0.0+git${SRCREV}"
+PR = "r1"
 
-FILES_${PN} += " ${libdir}/qemu/*"
-FILES_${PN}-dbg += " ${libdir}/qemu/.debug/*"
+PROVIDES = "virtual/libgl"
+
+DEFAULT_PREFERENCE = "-1"
 
 do_install () {
-	install -d ${D}${libdir}/qemu
-	install -m 0755 ${S}/libGL.so ${D}${libdir}/qemu
-	ln -s libGL.so ${D}${libdir}/qemu/libGL.so.1
+	install -d ${D}${libdir}
+	install -m 0755 ${S}/libGL.so ${D}${libdir}/
+	ln -s libGL.so ${D}${libdir}/libGL.so.1
 }
