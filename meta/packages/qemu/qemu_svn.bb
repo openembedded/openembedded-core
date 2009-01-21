@@ -25,7 +25,7 @@ SRC_URI = "\
 S = "${WORKDIR}/trunk"
 
 #EXTRA_OECONF += "--disable-sdl"
-EXTRA_OECONF += "--target-list=arm-linux-user,arm-softmmu,i386-softmmu"
+EXTRA_OECONF += "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu"
 EXTRA_OECONF += "--disable-gfx-check"
 
 inherit autotools
