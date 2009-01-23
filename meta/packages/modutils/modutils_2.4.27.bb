@@ -3,7 +3,7 @@ DESCRIPTION = "These utilities are intended to make a Linux modular kernel \
 manageable for all users, administrators and distribution maintainers."
 LICENSE = "GPLv2"
 DEPENDS = "bison-native"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/kernel/modutils/v2.4/modutils-${PV}.tar.bz2 \
            file://lex.l.diff;patch=1 \
@@ -40,9 +40,9 @@ done
 if test -n "$D"; then
 	D="-r $D"
 	if test -n "`which ${TARGET_PREFIX}depmod-2.4`"; then
-		for kerneldir in `ls -p ${IMAGE_ROOTFS}/lib/modules|grep /`; do
+		for kerneldir in `ls -p $D/lib/modules|grep /`; do
 			kernelver=`basename $kerneldir`
-			${TARGET_PREFIX}depmod-2.4 -a -b ${IMAGE_ROOTFS} -C ${IMAGE_ROOTFS}/${sysconfdir}/modules.conf -r $kernelver
+			${TARGET_PREFIX}depmod-2.4 -a -b $D -C ${IMAGE_ROOTFS}/${sysconfdir}/modules.conf -r $kernelver
 		done
 	fi
 fi
