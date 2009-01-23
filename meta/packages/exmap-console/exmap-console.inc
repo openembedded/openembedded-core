@@ -2,7 +2,7 @@ DESCRIPTION = "Console based version of exmap, a memory usage analysis tool"
 HOMEPAGE = "http://projects.o-hand.com/exmap-console"
 SECTION = "devel"
 LICENSE = "GPL"
-DEPENDS = "virtual/kernel readline"
+DEPENDS = "virtual/kernel readline glib-2.0"
 
 SRC_URI = "http://projects.o-hand.com/sources/exmap-console/exmap-console-${PV}.tgz"
 
