@@ -1,7 +1,7 @@
 DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r63"
+PR = "r64"
 LICENSE = "GPL"
 
 SRC_URI = " \
@@ -11,6 +11,7 @@ SRC_URI = " \
            file://inputrc \
            file://host.conf \
            file://profile \
+           file://shells \
            file://fstab \
            file://filesystems \
            file://issue.net \
@@ -111,6 +112,7 @@ do_install () {
 	install -m 0644 ${WORKDIR}/filesystems ${D}${sysconfdir}/filesystems
 	install -m 0644 ${WORKDIR}/usbd ${D}${sysconfdir}/default/usbd
 	install -m 0644 ${WORKDIR}/profile ${D}${sysconfdir}/profile
+	install -m 0644 ${WORKDIR}/shells ${D}${sysconfdir}/shells
 	install -m 0755 ${WORKDIR}/share/dot.profile ${D}${sysconfdir}/skel/.profile
 	install -m 0755 ${WORKDIR}/share/dot.bashrc ${D}${sysconfdir}/skel/.bashrc
 	install -m 0644 ${WORKDIR}/inputrc ${D}${sysconfdir}/inputrc
