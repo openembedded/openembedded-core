@@ -126,7 +126,7 @@ fakeroot do_rootfs () {
 
 	${IMAGE_PREPROCESS_COMMAND}
 
-	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{print ${IMAGE_EXTRA_SPACE} + $1}'`
+	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{size = ${IMAGE_EXTRA_SPACE} + $1; print (size > ${IMAGE_ROOTFS_SIZE} ? size : ${IMAGE_ROOTFS_SIZE}) }'`
 	${@get_imagecmds(d)}
 
 	${IMAGE_POSTPROCESS_COMMAND}
