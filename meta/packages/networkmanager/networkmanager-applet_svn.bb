@@ -11,6 +11,7 @@ SRC_URI = "svn://svn.gnome.org/svn/network-manager-applet/;module=trunk;proto=ht
            file://applet-no-gnome.diff;patch=1;pnum=0 \
            file://applet-no-animation.patch;patch=1 \
            file://no_vpn.patch;patch=1 \
+           file://nmutil-fix.patch;patch=1 \
            file://70NetworkManagerApplet.shbg"
 
 PV = "0.0+svnr${SRCREV}"

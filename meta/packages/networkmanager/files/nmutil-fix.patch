@@ -1,0 +1,12 @@
+Index: trunk/configure.ac
+===================================================================
+--- trunk.orig/configure.ac	2009-01-08 10:49:26.000000000 -0600
++++ trunk/configure.ac	2009-01-08 12:00:34.000000000 -0600
+@@ -62,6 +62,7 @@
+ 		 glib-2.0 >= 2.10
+ 		 NetworkManager >= 0.7.0
+ 		 libnm_glib
++		 libnm-util
+ 		 gtk+-2.0 >= 2.6
+ 		 libglade-2.0
+ 		 gconf-2.0
