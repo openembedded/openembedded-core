@@ -210,7 +210,7 @@ def runtime_mapping_rename (varname, d):
 	#bb.note("%s before: %s" % (varname, bb.data.getVar(varname, d, 1)))	
 
 	new_depends = []
-	for depend in explode_deps(bb.data.getVar(varname, d, 1) or ""):
+	for depend in bb.utils.explode_deps(bb.data.getVar(varname, d, 1) or ""):
 		# Have to be careful with any version component of the depend
 		split_depend = depend.split(' (')
 		new_depend = get_package_mapping(split_depend[0].strip(), d)
@@ -440,7 +440,7 @@ python populate_packages () {
 					dangling_links[pkg].append(os.path.normpath(target))
 
 	for pkg in package_list:
-		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "")
+		rdepends = bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or "")
 		for l in dangling_links[pkg]:
 			found = False
 			bb.debug(1, "%s contains dangling link %s" % (pkg, l))
@@ -870,7 +870,7 @@ python package_do_pkgconfig () {
 python read_shlibdeps () {
 	packages = bb.data.getVar('PACKAGES', d, 1).split()
 	for pkg in packages:
-		rdepends = explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
+		rdepends = bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
 		for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
 			depsfile = bb.data.expand("${PKGDEST}/" + pkg + extension, d)
 			if os.access(depsfile, os.R_OK):
@@ -903,7 +903,7 @@ python package_depchains() {
 	def pkg_adddeprrecs(pkg, base, suffix, getname, depends, d):
 
 		#bb.note('depends for %s is %s' % (base, depends))
-		rreclist = explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
+		rreclist = bb.utils.explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
 
 		for depend in depends:
 			if depend.find('-native') != -1 or depend.find('-cross') != -1 or depend.startswith('virtual/'):
@@ -924,7 +924,7 @@ python package_depchains() {
 	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
 
 		#bb.note('rdepends for %s is %s' % (base, rdepends))
-		rreclist = explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
+		rreclist = bb.utils.explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, 1) or bb.data.getVar('RRECOMMENDS', d, 1) or "")
 
 		for depend in rdepends:
 			if depend.find('virtual-locale-') != -1:
@@ -948,15 +948,15 @@ python package_depchains() {
 			list.append(dep)
 
 	depends = []
-	for dep in explode_deps(bb.data.getVar('DEPENDS', d, 1) or ""):
+	for dep in bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, 1) or ""):
 		add_dep(depends, dep)
 
 	rdepends = []
-	for dep in explode_deps(bb.data.getVar('RDEPENDS', d, 1) or ""):
+	for dep in bb.utils.explode_deps(bb.data.getVar('RDEPENDS', d, 1) or ""):
 		add_dep(rdepends, dep)
 
 	for pkg in packages.split():
-		for dep in explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 1) or ""):
+		for dep in bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 1) or ""):
 			add_dep(rdepends, dep)
 
 	#bb.note('rdepends is %s' % rdepends)
@@ -989,7 +989,7 @@ python package_depchains() {
 				pkg_addrrecs(pkg, base, suffix, func, rdepends, d)
 			else:
 				rdeps = []
-				for dep in explode_deps(bb.data.getVar('RDEPENDS_' + base, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or ""):
+				for dep in bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + base, d, 1) or bb.data.getVar('RDEPENDS', d, 1) or ""):
 					add_dep(rdeps, dep)
 				pkg_addrrecs(pkg, base, suffix, func, rdeps, d)
 }

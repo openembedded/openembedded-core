@@ -194,9 +194,9 @@ python do_package_deb () {
 
         bb.build.exec_func("mapping_rename_hook", localdata)
 
-        rdepends = explode_deps(unicode(bb.data.getVar("RDEPENDS", localdata, 1) or ""))
+        rdepends = bb.utils.explode_deps(unicode(bb.data.getVar("RDEPENDS", localdata, 1) or ""))
         rdepends = [dep for dep in rdepends if not '*' in dep]
-        rrecommends = explode_deps(unicode(bb.data.getVar("RRECOMMENDS", localdata, 1) or ""))
+        rrecommends = bb.utils.explode_deps(unicode(bb.data.getVar("RRECOMMENDS", localdata, 1) or ""))
         rrecommends = [rec for rec in rrecommends if not '*' in rec]
         rsuggests = (unicode(bb.data.getVar("RSUGGESTS", localdata, 1) or "")).split()
         rprovides = (unicode(bb.data.getVar("RPROVIDES", localdata, 1) or "")).split()

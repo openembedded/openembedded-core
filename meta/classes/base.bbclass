@@ -935,26 +935,6 @@ addtask build after do_populate_staging
 do_build = ""
 do_build[func] = "1"
 
-# Functions that update metadata based on files outputted
-# during the build process.
-
-def explode_deps(s):
-	r = []
-	l = s.split()
-	flag = False
-	for i in l:
-		if i[0] == '(':
-			flag = True
-			j = []
-		if flag:
-			j.append(i)
-			if i.endswith(')'):
-				flag = False
-				r[-1] += ' ' + ' '.join(j)
-		else:
-			r.append(i)
-	return r
-
 # Make sure MACHINE isn't exported
 # (breaks binutils at least)
 MACHINE[unexport] = "1"

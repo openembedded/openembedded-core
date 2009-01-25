@@ -439,7 +439,7 @@ def package_qa_check_rdepends(pkg, workdir, d):
         bb.data.update_data(localdata)
 
         # Now check the RDEPENDS
-        rdepends = explode_deps(bb.data.getVar('RDEPENDS', localdata, True) or "")
+        rdepends = bb.utils.explode_deps(bb.data.getVar('RDEPENDS', localdata, True) or "")
 
 
         # Now do the sanity check!!!
