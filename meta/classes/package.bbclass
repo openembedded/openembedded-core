@@ -2,6 +2,8 @@
 # General packaging help functions
 #
 
+inherit packagedata
+
 PKGDEST = "${WORKDIR}/install"
 
 def legitimize_package_name(s):
