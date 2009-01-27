@@ -2,11 +2,12 @@ SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you."
 LICENSE = "GPL"
 DEPENDS = "startup-notification gtk+ gconf clutter-0.8 gdk-pixbuf-csource-native intltool"
-PR = "r5"
+PR = "r7"
 PV = "2.25.1+git${SRCREV}"
 inherit gnome update-alternatives
 
 SRC_URI = "git://git.o-hand.com/metacity-clutter.git;protocol=git;branch=clutter \
+           file://nodocs.patch;patch=1 \
            file://fix_pkgconfig.patch;patch=1"
 S = "${WORKDIR}/git"
 
@@ -21,6 +22,10 @@ EXTRA_OECONF += "--disable-verbose	\
 
 FILES_${PN} += "${datadir}/themes ${libdir}/metacity/plugins/clutter/*.so"
 FILES_${PN}-dbg += "${libdir}/metacity/plugins/clutter/.debug/*"
+
+do_configure_prepend () {
+        echo "EXTRA_DIST=" > ${S}/gnome-doc-utils.make
+}		
 
 do_stage () {
 	 autotools_stage_all
