@@ -22,6 +22,9 @@ FILES_libosmesa-dev = "${libdir}/libOSMesa.* ${includedir}/osmesa.h"
 
 ALLOW_EMPTY_${PN} = "1"
 
+# Multiple virtual/gl providers being built breaks staging
+EXCLUDE_FROM_WORLD = "1"
+
 do_configure() {
 	cd configs
 

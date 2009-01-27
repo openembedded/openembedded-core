@@ -17,6 +17,9 @@ PROVIDES = "virtual/libgl"
 
 DEFAULT_PREFERENCE = "-1"
 
+# Multiple virtual/gl providers being built breaks staging
+EXCLUDE_FROM_WORLD = "1"
+
 do_install () {
 	install -d ${D}${libdir}
 	install -m 0755 ${S}/libGL.so ${D}${libdir}/

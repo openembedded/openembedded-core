@@ -17,4 +17,7 @@ EXTRA_OECONF = "--disable-glu \
                 --disable-glut \
                 --enable-glx-tls"
 
+# Multiple virtual/gl providers being built breaks staging
+EXCLUDE_FROM_WORLD = "1"
+
 
