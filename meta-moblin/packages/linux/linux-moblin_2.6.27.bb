@@ -5,6 +5,7 @@ PE = "1"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_netbook = "1"
+DEFAULT_PREFERENCE_menlow = "1"
 
 SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.27.tar.bz2 \
 		file://0001-drm-remove-define-for-non-linux-systems.patch;patch=1 \
