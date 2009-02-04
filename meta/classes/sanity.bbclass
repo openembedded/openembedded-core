@@ -78,10 +78,10 @@ def check_sanity(e):
 		missing = missing + "GNU make,"
 
 	if not check_app_exists('${BUILD_PREFIX}gcc', e.data):
-		missing = missing + "C Compiler (${BUILD_PREFIX}gcc),"
+		missing = missing + "C Compiler (%sgcc)," % data.getVar("BUILD_PREFIX", e.data, True)
 
 	if not check_app_exists('${BUILD_PREFIX}g++', e.data):
-		missing = missing + "C++ Compiler (${BUILD_PREFIX}g++),"
+		missing = missing + "C++ Compiler (%sg++)," % data.getVar("BUILD_PREFIX", e.data, True)
 
 	required_utilities = "patch help2man diffstat texi2html makeinfo cvs svn bzip2 tar gzip gawk"
 
