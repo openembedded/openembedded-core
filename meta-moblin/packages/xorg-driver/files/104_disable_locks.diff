@@ -1,8 +1,36 @@
 Index: git/src/psb_driver.c
 ===================================================================
---- git.orig/src/psb_driver.c	2008-12-12 15:14:28.000000000 +0000
-+++ git/src/psb_driver.c	2008-12-30 14:18:16.000000000 +0000
-@@ -1326,7 +1326,7 @@
+--- git.orig/src/psb_driver.c	2009-02-05 13:28:59.000000000 +0000
++++ git/src/psb_driver.c	2009-02-05 13:28:59.000000000 +0000
+@@ -325,7 +325,7 @@
+ 
+     if (!Initialised) {
+ 	Initialised = TRUE;
+-	xf86AddDriver(&psb, Module, 0);
++	xf86AddDriver(&psb, Module,  HaveDriverFuncs);
+ 	LoaderRefSymLists(fbSymbols, ddcSymbols, shadowSymbols,
+ 			  psbvgahwSymbols,
+ #ifdef XF86DRI
+@@ -839,6 +839,9 @@
+     xf86DrvMsg(pScrn->scrnIndex, X_PROBED, "Linear framebuffer at 0x%lX\n",
+ 	       (unsigned long)pScrn->memPhysBase);
+ 
++
++    pDevice->PciInfo = xf86GetPciInfoForEntity(pDevice->pEnt->index);
++
+     /* color weight */
+     if (!xf86SetWeight(pScrn, rzeros, rzeros)) {
+ 	return (FALSE);
+@@ -1030,7 +1033,7 @@
+ 	return FALSE;
+ 
+     pDevice->regPhys = pDevice->PciInfo->regions[0].base_addr;
+-    pDevice->regSize = 1 << pDevice->PciInfo->regions[0].size;
++    pDevice->regSize = pDevice->PciInfo->regions[0].size;
+ 
+     pDevice->regMap = xf86MapVidMem(scrnIndex, VIDMEM_MMIO_32BIT,
+ 				    pDevice->regPhys, pDevice->regSize);
+@@ -1303,7 +1306,7 @@
  
      pScrn->pScreen = pScreen;
  
@@ -11,7 +39,7 @@ Index: git/src/psb_driver.c
      pPsb->front = psbScanoutCreate(pScrn, pScrn->bitsPerPixel >> 3,
  				   pScrn->depth, pScrn->virtualX,
  				   pScrn->virtualY, 0, -1, 0);
-@@ -1489,7 +1489,9 @@
+@@ -1466,7 +1469,9 @@
      
      return psbEnterVT(pScreen->myNum, 0);
    out_err_unlock:
@@ -21,3 +49,16 @@ Index: git/src/psb_driver.c
    out_err:
      psbRestoreHWState(pDevice);
      return FALSE;
+Index: git/src/psb_ioctl.c
+===================================================================
+--- git.orig/src/psb_ioctl.c	2009-02-05 13:43:39.000000000 +0000
++++ git/src/psb_ioctl.c	2009-02-05 13:44:14.000000000 +0000
+@@ -167,7 +167,7 @@
+     buf->size = rep->size;
+     buf->offset = rep->offset;
+     buf->mapHandle = rep->arg_handle;
+-    buf->mask = rep->mask;
++    buf->mask = rep->proposed_flags;
+     buf->start = rep->buffer_start;
+     buf->fenceFlags = rep->fence_flags;
+     buf->replyFlags = rep->rep_flags;
