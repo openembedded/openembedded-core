@@ -1,8 +1,8 @@
 Index: trunk/Makefile.target
 ===================================================================
---- trunk.orig/Makefile.target	2009-01-21 13:34:48.000000000 +0000
-+++ trunk/Makefile.target	2009-01-21 13:55:54.000000000 +0000
-@@ -194,6 +194,12 @@
+--- trunk.orig/Makefile.target	2009-01-30 11:37:38.000000000 +0000
++++ trunk/Makefile.target	2009-01-30 11:46:55.000000000 +0000
+@@ -153,6 +153,12 @@
  CPPFLAGS+=-I$(SRC_PATH)/fpu
  LIBOBJS+= op_helper.o helper.o
  
@@ -15,9 +15,9 @@ Index: trunk/Makefile.target
  ifeq ($(TARGET_BASE_ARCH), arm)
  LIBOBJS+= neon_helper.o iwmmxt_helper.o
  endif
-@@ -272,6 +278,21 @@
- cpu-exec.o: cpu-exec.c
- 	$(CC) $(HELPER_CFLAGS) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+@@ -224,6 +230,21 @@
+ 
+ cpu-exec.o: CFLAGS += $(HELPER_CFLAGS)
  
 +parse_gl_h: parse_gl_h.c
 +	$(CC) -g -o $@ $<
@@ -37,7 +37,7 @@ Index: trunk/Makefile.target
  #########################################################
  # Linux user emulator target
  
-@@ -631,7 +652,7 @@
+@@ -580,7 +601,7 @@
  OBJS+= fdc.o mc146818rtc.o serial.o i8259.o i8254.o pcspk.o pc.o
  OBJS+= cirrus_vga.o apic.o parallel.o acpi.o piix_pci.o
  OBJS+= usb-uhci.o vmmouse.o vmport.o vmware_vga.o hpet.o
@@ -46,19 +46,19 @@ Index: trunk/Makefile.target
  endif
  ifeq ($(TARGET_BASE_ARCH), ppc)
  CPPFLAGS += -DHAS_AUDIO -DHAS_AUDIO_CHOICE
-@@ -769,7 +790,7 @@
+@@ -717,7 +738,7 @@
+ main.o: CFLAGS+=-p
  endif
  
+-$(QEMU_PROG): LIBS += $(SDL_LIBS) $(COCOA_LIBS) $(CURSES_LIBS) $(BRLAPI_LIBS) $(VDE_LIBS)
++$(QEMU_PROG): LIBS += $(SDL_LIBS) $(COCOA_LIBS) $(CURSES_LIBS) $(BRLAPI_LIBS) $(VDE_LIBS)  -lGL -lGLU
+ 
  $(QEMU_PROG): $(OBJS) ../libqemu_common.a libqemu.a
--	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS) $(SDL_LIBS) $(COCOA_LIBS) $(CURSES_LIBS) $(BRLAPI_LIBS) $(VDE_LIBS)
-+	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS) $(SDL_LIBS) $(COCOA_LIBS) $(CURSES_LIBS) $(BRLAPI_LIBS) $(VDE_LIBS) -lGL -lGLU
- 
- endif # !CONFIG_USER_ONLY
- 
+ 	$(LINK)
 Index: trunk/hw/vmware_vga.c
 ===================================================================
---- trunk.orig/hw/vmware_vga.c	2009-01-21 13:34:48.000000000 +0000
-+++ trunk/hw/vmware_vga.c	2009-01-21 13:34:49.000000000 +0000
+--- trunk.orig/hw/vmware_vga.c	2009-01-30 11:37:36.000000000 +0000
++++ trunk/hw/vmware_vga.c	2009-01-30 11:39:42.000000000 +0000
 @@ -484,6 +484,8 @@
  
  #define CMD(f)	le32_to_cpu(s->cmd->f)
@@ -117,8 +117,8 @@ Index: trunk/hw/vmware_vga.c
  
 Index: trunk/kqemu.c
 ===================================================================
---- trunk.orig/kqemu.c	2009-01-21 13:34:48.000000000 +0000
-+++ trunk/kqemu.c	2009-01-21 13:34:49.000000000 +0000
+--- trunk.orig/kqemu.c	2009-01-21 11:45:11.000000000 +0000
++++ trunk/kqemu.c	2009-01-30 11:39:42.000000000 +0000
 @@ -93,6 +93,8 @@
  int qpi_io_memory;
  uint32_t kqemu_comm_base; /* physical address of the QPI communication page */
@@ -153,8 +153,8 @@ Index: trunk/kqemu.c
          /* syscall instruction */
 Index: trunk/sdl.c
 ===================================================================
---- trunk.orig/sdl.c	2009-01-21 13:34:49.000000000 +0000
-+++ trunk/sdl.c	2009-01-21 13:59:10.000000000 +0000
+--- trunk.orig/sdl.c	2009-01-30 11:39:42.000000000 +0000
++++ trunk/sdl.c	2009-01-30 11:45:37.000000000 +0000
 @@ -26,6 +26,7 @@
  #include "sysemu.h"
  
@@ -180,7 +180,7 @@ Index: trunk/sdl.c
      int flags;
  
      //    printf("resizing to %d %d\n", w, h);
-@@ -93,12 +97,26 @@
+@@ -93,6 +97,15 @@
      if (gui_noframe)
          flags |= SDL_NOFRAME;
  
@@ -193,9 +193,10 @@ Index: trunk/sdl.c
 +                                    DefaultScreen(info.info.x11.display)));
 +    }
 +
-     real_screen = SDL_SetVideoMode(ds_get_width(ds), ds_get_height(ds), 0, flags);
-     if (!real_screen) {
-         fprintf(stderr, "Could not open SDL display\n");
+     width = ds_get_width(ds);
+     height = ds_get_height(ds);
+     real_screen = SDL_SetVideoMode(width, height, 0, flags);
+@@ -101,6 +114,11 @@
          exit(1);
      }
  
@@ -207,7 +208,7 @@ Index: trunk/sdl.c
      sdl_setdata(ds);
  }
  
-@@ -570,6 +588,10 @@
+@@ -574,6 +592,10 @@
          line = image;
          for (x = 0; x < width; x ++, dst ++) {
              switch (bpp) {
@@ -218,7 +219,7 @@ Index: trunk/sdl.c
              case 24:
                  src = *(line ++); src |= *(line ++); src |= *(line ++);
                  break;
-@@ -643,6 +665,7 @@
+@@ -647,6 +669,7 @@
      dcl->dpy_fill = sdl_fill;
      ds->mouse_set = sdl_mouse_warp;
      ds->cursor_define = sdl_mouse_define;
@@ -229,7 +230,7 @@ Index: trunk/sdl.c
 Index: trunk/target-i386/beginend_funcs.sh
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/beginend_funcs.sh	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/beginend_funcs.sh	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,23 @@
 +#! /bin/sh
 +# Copyright 2008 (C) Intel Corporation
@@ -257,7 +258,7 @@ Index: trunk/target-i386/beginend_funcs.sh
 Index: trunk/target-i386/ghash.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/ghash.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/ghash.c	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,347 @@
 +/* This is a modified and simplified version of original ghash.c */
 +
@@ -609,7 +610,7 @@ Index: trunk/target-i386/ghash.c
 Index: trunk/target-i386/ghash.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/ghash.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/ghash.h	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,59 @@
 +/* This is a modified and simplified version of original ghash.h  */
 +
@@ -673,7 +674,7 @@ Index: trunk/target-i386/ghash.h
 Index: trunk/target-i386/gl_func_perso.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/gl_func_perso.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/gl_func_perso.h	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,135 @@
 +/*
 + *  Hand-implemented GL/GLX API
@@ -812,8 +813,8 @@ Index: trunk/target-i386/gl_func_perso.h
 +MAGIC_MACRO(_glGetFeedbackBuffer_fake),
 Index: trunk/target-i386/helper.h
 ===================================================================
---- trunk.orig/target-i386/helper.h	2009-01-21 13:34:48.000000000 +0000
-+++ trunk/target-i386/helper.h	2009-01-21 13:34:49.000000000 +0000
+--- trunk.orig/target-i386/helper.h	2009-01-05 11:10:06.000000000 +0000
++++ trunk/target-i386/helper.h	2009-01-30 11:39:42.000000000 +0000
 @@ -214,4 +214,6 @@
  DEF_HELPER_2(rcrq, tl, tl, tl)
  #endif
@@ -824,7 +825,7 @@ Index: trunk/target-i386/helper.h
 Index: trunk/target-i386/helper_opengl.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/helper_opengl.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/helper_opengl.c	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,979 @@
 +/*
 + *  Host-side implementation of GL/GLX API
@@ -1808,7 +1809,7 @@ Index: trunk/target-i386/helper_opengl.c
 Index: trunk/target-i386/mesa_enums.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_enums.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_enums.c	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,4890 @@
 +/* DO NOT EDIT - This file generated automatically by gl_enums.py (from Mesa) script */
 +
@@ -6703,7 +6704,7 @@ Index: trunk/target-i386/mesa_enums.c
 Index: trunk/target-i386/mesa_get.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_get.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_get.c	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,5563 @@
 +
 +/***
@@ -12271,7 +12272,7 @@ Index: trunk/target-i386/mesa_get.c
 Index: trunk/target-i386/mesa_gl.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_gl.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_gl.h	2009-01-30 11:39:42.000000000 +0000
 @@ -0,0 +1,2251 @@
 +/*
 + * Mesa 3-D graphics library
@@ -14527,7 +14528,7 @@ Index: trunk/target-i386/mesa_gl.h
 Index: trunk/target-i386/mesa_glext.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_glext.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_glext.h	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,7279 @@
 +#ifndef __glext_h_
 +#define __glext_h_
@@ -21811,7 +21812,7 @@ Index: trunk/target-i386/mesa_glext.h
 Index: trunk/target-i386/mesa_glu.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_glu.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_glu.h	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,354 @@
 +/*
 +** License Applicability. Except to the extent portions of this file are
@@ -22170,7 +22171,7 @@ Index: trunk/target-i386/mesa_glu.h
 Index: trunk/target-i386/mesa_glx.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_glx.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_glx.h	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,510 @@
 +/*
 + * Mesa 3-D graphics library
@@ -22685,7 +22686,7 @@ Index: trunk/target-i386/mesa_glx.h
 Index: trunk/target-i386/mesa_glxext.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_glxext.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_glxext.h	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,785 @@
 +#ifndef __glxext_h_
 +#define __glxext_h_
@@ -23475,7 +23476,7 @@ Index: trunk/target-i386/mesa_glxext.h
 Index: trunk/target-i386/mesa_mipmap.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/mesa_mipmap.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/mesa_mipmap.c	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,824 @@
 +
 +/*
@@ -24304,7 +24305,7 @@ Index: trunk/target-i386/mesa_mipmap.c
 Index: trunk/target-i386/opengl_exec.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/opengl_exec.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/opengl_exec.c	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,3931 @@
 +/*
 + *  Host-side implementation of GL/GLX API
@@ -28240,7 +28241,7 @@ Index: trunk/target-i386/opengl_exec.c
 Index: trunk/target-i386/opengl_func.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/opengl_func.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/opengl_func.h	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,1108 @@
 +/*
 + *  Main header for both host and guest sides
@@ -29353,7 +29354,7 @@ Index: trunk/target-i386/opengl_func.h
 Index: trunk/target-i386/opengl_player.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/opengl_player.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/opengl_player.c	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,1461 @@
 +/*
 + *  Plays a sequence of OpenGL calls recorded either under qemu or with opengl_server
@@ -30819,7 +30820,7 @@ Index: trunk/target-i386/opengl_player.c
 Index: trunk/target-i386/opengl_server.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/opengl_server.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/opengl_server.c	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,826 @@
 +/*
 + *  TCP/IP OpenGL server
@@ -31650,7 +31651,7 @@ Index: trunk/target-i386/opengl_server.c
 Index: trunk/target-i386/opengl_utils.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/opengl_utils.h	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/opengl_utils.h	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,453 @@
 +/*
 + *  Functions used by host & client sides
@@ -32108,7 +32109,7 @@ Index: trunk/target-i386/opengl_utils.h
 Index: trunk/target-i386/parse_gl_h.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/parse_gl_h.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/parse_gl_h.c	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,1496 @@
 +/*
 + *  Parse gl.h et glx.h to auto-generate source code
@@ -33609,7 +33610,7 @@ Index: trunk/target-i386/parse_gl_h.c
 Index: trunk/target-i386/parse_mesa_get_c.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/target-i386/parse_mesa_get_c.c	2009-01-21 13:34:49.000000000 +0000
++++ trunk/target-i386/parse_mesa_get_c.c	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,225 @@
 +/*
 + *  Parse the "get.c" from mesa source tree to generate "glgetv_cst.h"
@@ -33838,8 +33839,8 @@ Index: trunk/target-i386/parse_mesa_get_c.c
 +}
 Index: trunk/target-i386/translate.c
 ===================================================================
---- trunk.orig/target-i386/translate.c	2009-01-21 13:34:48.000000000 +0000
-+++ trunk/target-i386/translate.c	2009-01-21 13:34:49.000000000 +0000
+--- trunk.orig/target-i386/translate.c	2009-01-21 11:45:03.000000000 +0000
++++ trunk/target-i386/translate.c	2009-01-30 11:39:43.000000000 +0000
 @@ -2592,11 +2592,18 @@
      s->is_jmp = 3;
  }
@@ -33861,9 +33862,9 @@ Index: trunk/target-i386/translate.c
      gen_jmp_im(cur_eip);
 Index: trunk/vl.c
 ===================================================================
---- trunk.orig/vl.c	2009-01-21 13:34:48.000000000 +0000
-+++ trunk/vl.c	2009-01-21 13:34:49.000000000 +0000
-@@ -251,6 +251,7 @@
+--- trunk.orig/vl.c	2009-01-30 11:37:38.000000000 +0000
++++ trunk/vl.c	2009-01-30 11:44:27.000000000 +0000
+@@ -247,6 +247,7 @@
      const char *file;
      char opt[1024];
  } drives_opt[MAX_DRIVES];
@@ -33871,23 +33872,23 @@ Index: trunk/vl.c
  
  static CPUState *cur_cpu;
  static CPUState *next_cpu;
-@@ -4097,6 +4098,7 @@
+@@ -4144,6 +4145,7 @@
+     QEMU_OPTION_show_cursor,
+     QEMU_OPTION_semihosting,
      QEMU_OPTION_old_param,
-     QEMU_OPTION_clock,
-     QEMU_OPTION_startdate,
 +    QEMU_OPTION_enable_gl,
      QEMU_OPTION_tb_size,
-     QEMU_OPTION_icount,
-     QEMU_OPTION_uuid,
-@@ -4219,6 +4221,7 @@
+     QEMU_OPTION_incoming,
+ };
+@@ -4274,6 +4276,7 @@
+     { "old-param", 0, QEMU_OPTION_old_param },
  #endif
-     { "clock", HAS_ARG, QEMU_OPTION_clock },
-     { "startdate", HAS_ARG, QEMU_OPTION_startdate },
-+    { "enable-gl", 0, QEMU_OPTION_enable_gl },
      { "tb-size", HAS_ARG, QEMU_OPTION_tb_size },
-     { "icount", HAS_ARG, QEMU_OPTION_icount },
++    { "enable-gl", 0, QEMU_OPTION_enable_gl },
      { "incoming", HAS_ARG, QEMU_OPTION_incoming },
-@@ -5166,6 +5169,11 @@
+     { NULL },
+ };
+@@ -5219,6 +5222,11 @@
                      }
                  }
                  break;
@@ -33902,7 +33903,7 @@ Index: trunk/vl.c
 Index: trunk/hw/opengl_dummy.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ trunk/hw/opengl_dummy.c	2009-01-21 14:03:41.000000000 +0000
++++ trunk/hw/opengl_dummy.c	2009-01-30 11:39:43.000000000 +0000
 @@ -0,0 +1,9 @@
 +#include "../qemu-common.h"
 +
