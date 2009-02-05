@@ -1,6 +1,6 @@
 require linux-moblin.inc
 
-PR = "r6"
+PR = "r7"
 PE = "1"
 
 DEFAULT_PREFERENCE = "-1"
@@ -54,6 +54,6 @@ SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.27.tar.bz2 \
 		file://defconfig-menlow \
 		file://defconfig-netbook"
 
-SRC_URI_append_menlow = "psb-driver.patch;patch=1"
+SRC_URI_append_menlow = " file://psb-driver.patch;patch=1"
 
 S = "${WORKDIR}/linux-2.6.27"

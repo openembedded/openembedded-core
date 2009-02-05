@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.27
-# Mon Jan 12 17:53:54 2009
+# Wed Jan 14 11:45:36 2009
 #
 # CONFIG_64BIT is not set
 CONFIG_X86_32=y
@@ -2106,16 +2106,17 @@ CONFIG_AGP_NVIDIA=m
 # CONFIG_AGP_VIA is not set
 # CONFIG_AGP_EFFICEON is not set
 CONFIG_DRM=m
-CONFIG_DRM_TDFX=m
+# CONFIG_DRM_TDFX is not set
 # CONFIG_DRM_R128 is not set
 # CONFIG_DRM_RADEON is not set
-CONFIG_DRM_I810=m
-CONFIG_DRM_I830=m
-CONFIG_DRM_I915=m
+# CONFIG_DRM_I810 is not set
+# CONFIG_DRM_I830 is not set
+# CONFIG_DRM_I915 is not set
 # CONFIG_DRM_MGA is not set
-CONFIG_DRM_SIS=m
+# CONFIG_DRM_SIS is not set
 # CONFIG_DRM_VIA is not set
-CONFIG_DRM_SAVAGE=m
+# CONFIG_DRM_SAVAGE is not set
+CONFIG_DRM_PSB=m
 CONFIG_VGASTATE=m
 CONFIG_VIDEO_OUTPUT_CONTROL=y
 CONFIG_FB=y

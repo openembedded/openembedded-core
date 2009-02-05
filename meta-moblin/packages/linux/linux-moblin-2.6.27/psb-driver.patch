@@ -6,7 +6,7 @@ Index: linux-2.6.27/include/drm/drm.h
  	_DRM_AGP = 3,		  /**< AGP/GART */
  	_DRM_SCATTER_GATHER = 4,  /**< Scatter/gather memory for PCI DMA */
  	_DRM_CONSISTENT = 5,	  /**< Consistent memory for PCI DMA */
-+	_DRM_TTM = 6
++	_DRM_TTM = 7
  };
  
  /**
