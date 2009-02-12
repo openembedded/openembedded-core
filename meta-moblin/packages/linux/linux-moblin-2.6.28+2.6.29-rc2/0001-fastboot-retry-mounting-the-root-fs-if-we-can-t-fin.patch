@@ -1,0 +1,61 @@
+From 0384d086e31092628596af98b1e33fad586cef0a Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Sun, 20 Jul 2008 13:01:28 -0700
+Subject: [PATCH] fastboot: retry mounting the root fs if we can't find init
+
+currently we wait until all device init is done before trying to mount
+the root fs, and to consequently execute init.
+
+In preparation for relaxing the first delay, this patch adds a retry
+attempt in case /sbin/init is not found. Before retrying, the code
+will wait for all device init to complete.
+
+While this patch by itself doesn't gain boot time yet (it needs follow on
+patches), the alternative already is to panic()...
+
+Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
+---
+--- a/init/main.c	2009-01-07 18:29:11.000000000 -0800
++++ b/init/main.c	2009-01-07 18:32:08.000000000 -0800
+@@ -837,6 +837,7 @@ static void run_init_process(char *init_
+  */
+ static noinline int init_post(void)
+ {
++	int retry_count = 1;
+ 	/* need to finish all async __init code before freeing the memory */
+ 	async_synchronize_full();
+ 	free_initmem();
+@@ -859,6 +860,8 @@ static noinline int init_post(void)
+ 				ramdisk_execute_command);
+ 	}
+ 
++retry:
++
+ 	/*
+ 	 * We try each of these until one succeeds.
+ 	 *
+@@ -871,6 +874,23 @@ static noinline int init_post(void)
+ 					"defaults...\n", execute_command);
+ 	}
+ 	run_init_process("/sbin/init");
++
++        if (retry_count > 0) {
++               retry_count--;
++               /* 
++                * We haven't found init yet... potentially because the device
++                * is still being probed. We need to
++                * - flush keventd and friends
++                * - wait for the known devices to complete their probing
++                * - try to mount the root fs again
++                */
++               flush_scheduled_work();
++               while (driver_probe_done() != 0)
++                       msleep(100);
++               prepare_namespace();
++               goto retry;
++        }
++
+ 	run_init_process("/etc/init");
+ 	run_init_process("/bin/init");
+ 	run_init_process("/bin/sh");
+

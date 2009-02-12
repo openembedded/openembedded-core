@@ -1,0 +1,55 @@
+From ee977685870767221dc763338bb6ed5fd83f65be Mon Sep 17 00:00:00 2001
+From: Yong Wang <yong.y.wang@intel.com>
+Date: Tue, 6 Jan 2009 15:13:41 +0800
+Subject: [PATCH] Revert "drm/i915: GEM on PAE has problems - disable it for now."
+
+This reverts commit ac5c4e76180a74c7f922f6fa71ace0cef45fa433.
+---
+ drivers/gpu/drm/i915/i915_dma.c |   10 +---------
+ drivers/gpu/drm/i915/i915_drv.h |    2 --
+ 2 files changed, 1 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_dma.c b/drivers/gpu/drm/i915/i915_dma.c
+index afa8a12..553dd4b 100644
+--- a/drivers/gpu/drm/i915/i915_dma.c
++++ b/drivers/gpu/drm/i915/i915_dma.c
+@@ -717,7 +717,7 @@ static int i915_getparam(struct drm_device *dev, void *data,
+ 		value = dev->pci_device;
+ 		break;
+ 	case I915_PARAM_HAS_GEM:
+-		value = dev_priv->has_gem;
++		value = 1;
+ 		break;
+ 	default:
+ 		DRM_ERROR("Unknown parameter %d\n", param->param);
+@@ -830,14 +830,6 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
+ 
+ 	dev_priv->regs = ioremap(base, size);
+ 
+-#ifdef CONFIG_HIGHMEM64G
+-	/* don't enable GEM on PAE - needs agp + set_memory_* interface fixes */
+-	dev_priv->has_gem = 0;
+-#else
+-	/* enable GEM by default */
+-	dev_priv->has_gem = 1;
+-#endif
+-
+ 	i915_gem_load(dev);
+ 
+ 	/* Init HWS */
+diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
+index b3cc473..adc972c 100644
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@ -106,8 +106,6 @@ struct intel_opregion {
+ typedef struct drm_i915_private {
+ 	struct drm_device *dev;
+ 
+-	int has_gem;
+-
+ 	void __iomem *regs;
+ 	drm_local_map_t *sarea;
+ 
+-- 
+1.5.5.1
+
