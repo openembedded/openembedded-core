@@ -1,0 +1,1627 @@
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_tv.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_tv.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_tv.c	2009-02-19 12:59:28.000000000 +0000
+@@ -902,7 +902,7 @@
+ intel_tv_dpms(struct drm_encoder *encoder, int mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+ 	switch(mode) {
+ 	case DRM_MODE_DPMS_ON:
+@@ -920,7 +920,7 @@
+ intel_tv_save(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_tv_priv *tv_priv = intel_output->dev_priv;
+ 	int i;
+@@ -970,7 +970,7 @@
+ intel_tv_restore(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_tv_priv *tv_priv = intel_output->dev_priv;
+ 	struct drm_crtc *crtc = connector->encoder->crtc;
+@@ -1117,7 +1117,7 @@
+ 		  struct drm_display_mode *adjusted_mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_crtc *crtc = encoder->crtc;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	struct intel_output *intel_output = enc_to_intel_output(encoder);
+@@ -1362,6 +1362,7 @@
+ 	struct drm_encoder *encoder = &intel_output->enc;
+ 	struct drm_device *dev = encoder->dev;
+ 	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	unsigned long irqflags;
+ 	u32 tv_ctl, save_tv_ctl;
+ 	u32 tv_dac, save_tv_dac;
+@@ -1626,6 +1627,7 @@
+ intel_tv_init(struct drm_device *dev)
+ {
+ 	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_connector *connector;
+ 	struct intel_output *intel_output;
+ 	struct intel_tv_priv *tv_priv;
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_modes.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_modes.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_modes.c	2009-02-19 12:59:28.000000000 +0000
+@@ -81,3 +81,6 @@
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL(intel_ddc_get_modes);
++
++MODULE_LICENSE("GPL and additional rights");
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_i2c.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_i2c.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_i2c.c	2009-02-20 14:50:20.000000000 +0000
+@@ -43,7 +43,7 @@
+ static int get_clock(void *data)
+ {
+ 	struct intel_i2c_chan *chan = data;
+-	struct drm_i915_private *dev_priv = chan->drm_dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = chan->drm_dev->dev_private;
+ 	u32 val;
+ 
+ 	val = I915_READ(chan->reg);
+@@ -53,7 +53,7 @@
+ static int get_data(void *data)
+ {
+ 	struct intel_i2c_chan *chan = data;
+-	struct drm_i915_private *dev_priv = chan->drm_dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = chan->drm_dev->dev_private;
+ 	u32 val;
+ 
+ 	val = I915_READ(chan->reg);
+@@ -64,7 +64,7 @@
+ {
+ 	struct intel_i2c_chan *chan = data;
+ 	struct drm_device *dev = chan->drm_dev;
+-	struct drm_i915_private *dev_priv = chan->drm_dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = chan->drm_dev->dev_private;
+ 	u32 reserved = 0, clock_bits;
+ 
+ 	/* On most chips, these bits must be preserved in software. */
+@@ -85,7 +85,7 @@
+ {
+ 	struct intel_i2c_chan *chan = data;
+ 	struct drm_device *dev = chan->drm_dev;
+-	struct drm_i915_private *dev_priv = chan->drm_dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = chan->drm_dev->dev_private;
+ 	u32 reserved = 0, data_bits;
+ 
+ 	/* On most chips, these bits must be preserved in software. */
+@@ -167,6 +167,7 @@
+ 	kfree(chan);
+ 	return NULL;
+ }
++EXPORT_SYMBOL(intel_i2c_create);
+ 
+ /**
+  * intel_i2c_destroy - unregister and free i2c bus resources
+@@ -182,3 +183,4 @@
+ 	i2c_del_adapter(&chan->adapter);
+ 	kfree(chan);
+ }
++EXPORT_SYMBOL(intel_i2c_destroy);
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_dvo.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_dvo.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_dvo.c	2009-02-19 15:14:20.000000000 +0000
+@@ -78,7 +78,7 @@
+ 
+ static void intel_dvo_dpms(struct drm_encoder *encoder, int mode)
+ {
+-	struct drm_i915_private *dev_priv = encoder->dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = encoder->dev->dev_private;
+ 	struct intel_output *intel_output = enc_to_intel_output(encoder);
+ 	struct intel_dvo_device *dvo = intel_output->dev_priv;
+ 	u32 dvo_reg = dvo->dvo_reg;
+@@ -98,15 +98,16 @@
+ static void intel_dvo_save(struct drm_connector *connector)
+ {
+ 	struct drm_i915_private *dev_priv = connector->dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = connector->dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_dvo_device *dvo = intel_output->dev_priv;
+ 
+ 	/* Each output should probably just save the registers it touches,
+ 	 * but for now, use more overkill.
+ 	 */
+-	dev_priv->saveDVOA = I915_READ(DVOA);
+-	dev_priv->saveDVOB = I915_READ(DVOB);
+-	dev_priv->saveDVOC = I915_READ(DVOC);
++	dev_priv->common.saveDVOA = I915_READ(DVOA);
++	dev_priv->common.saveDVOB = I915_READ(DVOB);
++	dev_priv->common.saveDVOC = I915_READ(DVOC);
+ 
+ 	dvo->dev_ops->save(dvo);
+ }
+@@ -114,14 +115,15 @@
+ static void intel_dvo_restore(struct drm_connector *connector)
+ {
+ 	struct drm_i915_private *dev_priv = connector->dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = connector->dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_dvo_device *dvo = intel_output->dev_priv;
+ 
+ 	dvo->dev_ops->restore(dvo);
+ 
+-	I915_WRITE(DVOA, dev_priv->saveDVOA);
+-	I915_WRITE(DVOB, dev_priv->saveDVOB);
+-	I915_WRITE(DVOC, dev_priv->saveDVOC);
++	I915_WRITE(DVOA, dev_priv->common.saveDVOA);
++	I915_WRITE(DVOB, dev_priv->common.saveDVOB);
++	I915_WRITE(DVOC, dev_priv->common.saveDVOC);
+ }
+ 
+ static int intel_dvo_mode_valid(struct drm_connector *connector,
+@@ -183,7 +185,7 @@
+ 			       struct drm_display_mode *adjusted_mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(encoder->crtc);
+ 	struct intel_output *intel_output = enc_to_intel_output(encoder);
+ 	struct intel_dvo_device *dvo = intel_output->dev_priv;
+@@ -349,7 +351,7 @@
+ intel_dvo_get_current_mode (struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_dvo_device *dvo = intel_output->dev_priv;
+ 	uint32_t dvo_reg = dvo->dvo_reg;
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_hdmi.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_hdmi.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_hdmi.c	2009-02-19 12:59:28.000000000 +0000
+@@ -46,7 +46,7 @@
+ 				struct drm_display_mode *adjusted_mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_crtc *crtc = encoder->crtc;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	struct intel_output *intel_output = enc_to_intel_output(encoder);
+@@ -71,7 +71,7 @@
+ static void intel_hdmi_dpms(struct drm_encoder *encoder, int mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = enc_to_intel_output(encoder);
+ 	struct intel_hdmi_priv *hdmi_priv = intel_output->dev_priv;
+ 	u32 temp;
+@@ -89,7 +89,7 @@
+ static void intel_hdmi_save(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_hdmi_priv *hdmi_priv = intel_output->dev_priv;
+ 
+@@ -99,7 +99,7 @@
+ static void intel_hdmi_restore(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_hdmi_priv *hdmi_priv = intel_output->dev_priv;
+ 
+@@ -132,7 +132,7 @@
+ intel_hdmi_detect(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_hdmi_priv *hdmi_priv = intel_output->dev_priv;
+ 	u32 temp, bit;
+@@ -220,7 +220,7 @@
+ 
+ void intel_hdmi_init(struct drm_device *dev, int sdvox_reg)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_connector *connector;
+ 	struct intel_output *intel_output;
+ 	struct intel_hdmi_priv *hdmi_priv;
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_suspend.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_suspend.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_suspend.c	2009-02-19 12:59:28.000000000 +0000
+@@ -31,7 +31,7 @@
+ 
+ static bool i915_pipe_enabled(struct drm_device *dev, enum pipe pipe)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+ 	if (pipe == PIPE_A)
+ 		return (I915_READ(DPLL_A) & DPLL_VCO_ENABLE);
+@@ -41,7 +41,7 @@
+ 
+ static void i915_save_palette(struct drm_device *dev, enum pipe pipe)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	unsigned long reg = (pipe == PIPE_A ? PALETTE_A : PALETTE_B);
+ 	u32 *array;
+ 	int i;
+@@ -50,9 +50,9 @@
+ 		return;
+ 
+ 	if (pipe == PIPE_A)
+-		array = dev_priv->save_palette_a;
++		array = dev_priv_common->save_palette_a;
+ 	else
+-		array = dev_priv->save_palette_b;
++		array = dev_priv_common->save_palette_b;
+ 
+ 	for(i = 0; i < 256; i++)
+ 		array[i] = I915_READ(reg + (i << 2));
+@@ -60,7 +60,7 @@
+ 
+ static void i915_restore_palette(struct drm_device *dev, enum pipe pipe)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	unsigned long reg = (pipe == PIPE_A ? PALETTE_A : PALETTE_B);
+ 	u32 *array;
+ 	int i;
+@@ -69,9 +69,9 @@
+ 		return;
+ 
+ 	if (pipe == PIPE_A)
+-		array = dev_priv->save_palette_a;
++		array = dev_priv_common->save_palette_a;
+ 	else
+-		array = dev_priv->save_palette_b;
++		array = dev_priv_common->save_palette_b;
+ 
+ 	for(i = 0; i < 256; i++)
+ 		I915_WRITE(reg + (i << 2), array[i]);
+@@ -79,7 +79,7 @@
+ 
+ static u8 i915_read_indexed(struct drm_device *dev, u16 index_port, u16 data_port, u8 reg)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+ 	I915_WRITE8(index_port, reg);
+ 	return I915_READ8(data_port);
+@@ -87,7 +87,7 @@
+ 
+ static u8 i915_read_ar(struct drm_device *dev, u16 st01, u8 reg, u16 palette_enable)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+ 	I915_READ8(st01);
+ 	I915_WRITE8(VGA_AR_INDEX, palette_enable | reg);
+@@ -96,7 +96,7 @@
+ 
+ static void i915_write_ar(struct drm_device *dev, u16 st01, u8 reg, u8 val, u16 palette_enable)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+ 	I915_READ8(st01);
+ 	I915_WRITE8(VGA_AR_INDEX, palette_enable | reg);
+@@ -105,7 +105,7 @@
+ 
+ static void i915_write_indexed(struct drm_device *dev, u16 index_port, u16 data_port, u8 reg, u8 val)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+ 	I915_WRITE8(index_port, reg);
+ 	I915_WRITE8(data_port, val);
+@@ -113,7 +113,8 @@
+ 
+ static void i915_save_vga(struct drm_device *dev)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
++	struct drm_i915_common_private *dev_priv = dev->dev_private;
+ 	int i;
+ 	u16 cr_index, cr_data, st01;
+ 
+@@ -176,7 +177,8 @@
+ 
+ static void i915_restore_vga(struct drm_device *dev)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
++	struct drm_i915_common_private *dev_priv = dev->dev_private;
+ 	int i;
+ 	u16 cr_index, cr_data, st01;
+ 
+@@ -235,7 +237,8 @@
+ 
+ int i915_save_state(struct drm_device *dev)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
++	struct drm_i915_common_private *dev_priv = dev->dev_private;
+ 	int i;
+ 
+ 	pci_read_config_byte(dev->pdev, LBB, &dev_priv->saveLBB);
+@@ -367,7 +370,8 @@
+ 
+ int i915_restore_state(struct drm_device *dev)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
++	struct drm_i915_common_private *dev_priv = dev->dev_private;
+ 	int i;
+ 
+ 	pci_write_config_byte(dev->pdev, LBB, dev_priv->saveLBB);
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_opregion.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_opregion.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_opregion.c	2009-02-19 12:59:28.000000000 +0000
+@@ -139,6 +139,7 @@
+ static u32 asle_set_backlight(struct drm_device *dev, u32 bclp)
+ {
+ 	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct opregion_asle *asle = dev_priv->opregion.asle;
+ 	u32 blc_pwm_ctl, blc_pwm_ctl2;
+ 
+@@ -172,7 +173,8 @@
+ 
+ static u32 asle_set_pwm_freq(struct drm_device *dev, u32 pfmb)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
++
+ 	if (pfmb & ASLE_PFMB_PWM_VALID) {
+ 		u32 blc_pwm_ctl = I915_READ(BLC_PWM_CTL);
+ 		u32 pwm = pfmb & ASLE_PFMB_PWM_MASK;
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_gem.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_gem.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_gem.c	2009-02-19 12:59:28.000000000 +0000
+@@ -877,6 +877,7 @@
+ i915_add_request(struct drm_device *dev, uint32_t flush_domains)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_gem_request *request;
+ 	uint32_t seqno;
+ 	int was_empty;
+@@ -942,6 +943,7 @@
+ static uint32_t
+ i915_retire_commands(struct drm_device *dev)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	uint32_t cmd = MI_FLUSH | MI_NO_WRITE_FLUSH;
+ 	uint32_t flush_domains = 0;
+@@ -1049,12 +1051,14 @@
+ void
+ i915_gem_retire_work_handler(struct work_struct *work)
+ {
++	struct drm_i915_common_private *dev_priv_common;
+ 	drm_i915_private_t *dev_priv;
+ 	struct drm_device *dev;
+ 
+ 	dev_priv = container_of(work, drm_i915_private_t,
+ 				mm.retire_work.work);
+ 	dev = dev_priv->dev;
++	dev_priv_common = dev->dev_private;
+ 
+ 	mutex_lock(&dev->struct_mutex);
+ 	i915_gem_retire_requests(dev);
+@@ -1109,6 +1113,7 @@
+ 	       uint32_t invalidate_domains,
+ 	       uint32_t flush_domains)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	uint32_t cmd;
+ 	RING_LOCALS;
+@@ -1422,7 +1427,7 @@
+ {
+ 	struct drm_gem_object *obj = reg->obj;
+ 	struct drm_device *dev = obj->dev;
+-	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
+ 	int regnum = obj_priv->fence_reg;
+ 	uint64_t val;
+@@ -1442,8 +1447,8 @@
+ {
+ 	struct drm_gem_object *obj = reg->obj;
+ 	struct drm_device *dev = obj->dev;
+-	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	int regnum = obj_priv->fence_reg;
+ 	uint32_t val;
+ 	uint32_t pitch_val;
+@@ -1475,7 +1480,7 @@
+ {
+ 	struct drm_gem_object *obj = reg->obj;
+ 	struct drm_device *dev = obj->dev;
+-	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
+ 	int regnum = obj_priv->fence_reg;
+ 	uint32_t val;
+@@ -1605,6 +1610,7 @@
+ {
+ 	struct drm_device *dev = obj->dev;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
+ 
+ 	if (IS_I965G(dev))
+@@ -2327,6 +2333,7 @@
+ 			      uint64_t exec_offset)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_clip_rect __user *boxes = (struct drm_clip_rect __user *)
+ 					     (uintptr_t) exec->cliprects_ptr;
+ 	int nbox = exec->num_cliprects;
+@@ -3035,6 +3042,7 @@
+ i915_gem_init_hws(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_gem_object *obj;
+ 	struct drm_i915_gem_object *obj_priv;
+ 	int ret;
+@@ -3081,6 +3089,7 @@
+ i915_gem_init_ringbuffer(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_gem_object *obj;
+ 	struct drm_i915_gem_object *obj_priv;
+ 	drm_i915_ring_buffer_t *ring = &dev_priv->ring;
+@@ -3186,6 +3195,7 @@
+ void
+ i915_gem_cleanup_ringbuffer(struct drm_device *dev)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 
+ 	if (dev_priv->ring.ring_obj == NULL)
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_gem_proc.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_gem_proc.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_gem_proc.c	2009-02-19 12:59:28.000000000 +0000
+@@ -213,6 +213,7 @@
+ 	struct drm_minor *minor = (struct drm_minor *) data;
+ 	struct drm_device *dev = minor->dev;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	int len = 0;
+ 
+ 	if (offset > DRM_PROC_LIMIT) {
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_gem_tiling.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_gem_tiling.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_gem_tiling.c	2009-02-19 12:59:28.000000000 +0000
+@@ -87,6 +87,7 @@
+ i915_gem_detect_bit_6_swizzle(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	uint32_t swizzle_x = I915_BIT_6_SWIZZLE_UNKNOWN;
+ 	uint32_t swizzle_y = I915_BIT_6_SWIZZLE_UNKNOWN;
+ 
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_irq.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_irq.c	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_irq.c	2009-02-20 14:53:08.000000000 +0000
+@@ -64,6 +64,8 @@
+ void
+ i915_enable_irq(drm_i915_private_t *dev_priv, u32 mask)
+ {
++	struct drm_i915_common_private *dev_priv_common = (struct drm_i915_common_private *) dev_priv;
++
+ 	if ((dev_priv->irq_mask_reg & mask) != 0) {
+ 		dev_priv->irq_mask_reg &= ~mask;
+ 		I915_WRITE(IMR, dev_priv->irq_mask_reg);
+@@ -74,6 +76,8 @@
+ static inline void
+ i915_disable_irq(drm_i915_private_t *dev_priv, u32 mask)
+ {
++	struct drm_i915_common_private *dev_priv_common = (struct drm_i915_common_private *) dev_priv;
++
+ 	if ((dev_priv->irq_mask_reg & mask) != mask) {
+ 		dev_priv->irq_mask_reg |= mask;
+ 		I915_WRITE(IMR, dev_priv->irq_mask_reg);
+@@ -94,6 +98,8 @@
+ void
+ i915_enable_pipestat(drm_i915_private_t *dev_priv, int pipe, u32 mask)
+ {
++	struct drm_i915_common_private *dev_priv_common = (struct drm_i915_common_private *) dev_priv;
++
+ 	if ((dev_priv->pipestat[pipe] & mask) != mask) {
+ 		u32 reg = i915_pipestat(pipe);
+ 
+@@ -107,6 +113,8 @@
+ void
+ i915_disable_pipestat(drm_i915_private_t *dev_priv, int pipe, u32 mask)
+ {
++	struct drm_i915_common_private *dev_priv_common = (struct drm_i915_common_private *) dev_priv;
++
+ 	if ((dev_priv->pipestat[pipe] & mask) != 0) {
+ 		u32 reg = i915_pipestat(pipe);
+ 
+@@ -128,7 +136,7 @@
+ static int
+ i915_pipe_enabled(struct drm_device *dev, int pipe)
+ {
+-	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	unsigned long pipeconf = pipe ? PIPEBCONF : PIPEACONF;
+ 
+ 	if (I915_READ(pipeconf) & PIPEACONF_ENABLE)
+@@ -142,7 +150,7 @@
+  */
+ u32 i915_get_vblank_counter(struct drm_device *dev, int pipe)
+ {
+-	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	unsigned long high_frame;
+ 	unsigned long low_frame;
+ 	u32 high1, high2, low, count;
+@@ -178,6 +186,7 @@
+ {
+ 	struct drm_device *dev = (struct drm_device *) arg;
+ 	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_master_private *master_priv;
+ 	u32 iir, new_iir;
+ 	u32 pipea_stats, pipeb_stats;
+@@ -284,6 +293,7 @@
+ static int i915_emit_irq(struct drm_device * dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_master_private *master_priv = dev->primary->master->driver_priv;
+ 	RING_LOCALS;
+ 
+@@ -409,6 +419,7 @@
+  */
+ int i915_enable_vblank(struct drm_device *dev, int pipe)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
+ 	unsigned long irqflags;
+ 	int pipeconf_reg = (pipe == 0) ? PIPEACONF : PIPEBCONF;
+@@ -510,6 +521,7 @@
+ */
+ void i915_driver_irq_preinstall(struct drm_device * dev)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
+ 
+ 	atomic_set(&dev_priv->irq_received, 0);
+@@ -554,6 +566,7 @@
+ 
+ void i915_driver_irq_uninstall(struct drm_device * dev)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
+ 
+ 	if (!dev_priv)
+Index: linux-2.6.28/drivers/gpu/drm/i915/Makefile
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/Makefile	2009-02-19 12:59:23.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/Makefile	2009-02-19 12:59:28.000000000 +0000
+@@ -9,24 +9,29 @@
+ 	  i915_gem_debug.o \
+ 	  i915_gem_proc.o \
+ 	  i915_gem_tiling.o \
+-	  intel_display.o \
+-	  intel_crt.o \
+-	  intel_lvds.o \
+ 	  intel_bios.o \
+-	  intel_hdmi.o \
+-	  intel_sdvo.o \
+-	  intel_modes.o \
+-	  intel_i2c.o \
+ 	  intel_fb.o \
+ 	  intel_tv.o \
++
++intel_gfx_common-y := \
++	  intel_display.o \
++	  intel_modes.o \
++	  intel_i2c.o \
++	  intel_crt.o \
+ 	  intel_dvo.o \
++	  intel_hdmi.o \
++	  intel_lvds.o \
++	  intel_sdvo.o \
+ 	  dvo_ch7xxx.o \
+ 	  dvo_ch7017.o \
+ 	  dvo_ivch.o \
+ 	  dvo_tfp410.o \
+ 	  dvo_sil164.o
+ 
++
+ i915-$(CONFIG_ACPI)	+= i915_opregion.o
+ i915-$(CONFIG_COMPAT)   += i915_ioc32.o
+ 
+ obj-$(CONFIG_DRM_I915)  += i915.o
++
++obj-$(CONFIG_DRM_INTEL_COMMON) += intel_gfx_common.o
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_common.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_common.h	2009-02-20 14:49:42.000000000 +0000
+@@ -0,0 +1,184 @@
++/*
++ *
++ * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.
++ * All Rights Reserved.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sub license, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the
++ * next paragraph) shall be included in all copies or substantial portions
++ * of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
++ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++ * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR
++ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ *
++ */
++
++#ifndef _I915_COMMON_H_
++#define _I915_COMMON_H_
++
++typedef struct drm_i915_common_private {
++	//struct drm_device *dev;
++
++	void __iomem *regs;
++
++	//drm_dma_handle_t *status_page_dmah;
++	//void *hw_status_page;
++	//dma_addr_t dma_status_page;
++	//uint32_t counter;
++	//unsigned int status_gfx_addr;
++	//drm_local_map_t hws_map;
++	//struct drm_gem_object *hws_obj;
++
++	//unsigned int cpp;
++	//int back_offset;
++	//int front_offset;
++	//int current_page;
++	//int page_flipping;
++
++	//wait_queue_head_t irq_queue;
++	//atomic_t irq_received;
++	/** Protects user_irq_refcount and irq_mask_reg */
++	//spinlock_t user_irq_lock;
++	/** Refcount for i915_user_irq_get() versus i915_user_irq_put(). */
++	//int user_irq_refcount;
++	/** Cached value of IMR to avoid reads in updating the bitfield */
++	//u32 irq_mask_reg;
++	//u32 pipestat[2];
++
++	//int tex_lru_log_granularity;
++	//int allow_batchbuffer;
++	//struct mem_block *agp_heap;
++	//unsigned int sr01, adpa, ppcr, dvob, dvoc, lvds;
++	//int vblank_pipe;
++
++	//bool cursor_needs_physical;
++
++	//struct drm_mm vram;
++
++	//int irq_enabled;
++
++	/* LVDS info */
++	int backlight_duty_cycle;  /* restore backlight to this value */
++	bool panel_wants_dither;
++	struct drm_display_mode *panel_fixed_mode;
++	//struct drm_display_mode *vbt_mode; /* if any */
++
++	/* Feature bits from the VBIOS */
++	//unsigned int int_tv_support:1;
++	//unsigned int lvds_dither:1;
++	//unsigned int lvds_vbt:1;
++	//unsigned int int_crt_support:1;
++
++	//int fence_reg_start; /* 4 if userland hasn't ioctl'd us yet */
++	//int num_fence_regs; /* 8 on pre-965, 16 otherwise */
++
++	/* Register state */
++	u8 saveLBB;
++	u32 saveDSPACNTR;
++	u32 saveDSPBCNTR;
++	u32 saveDSPARB;
++	u32 saveRENDERSTANDBY;
++	u32 saveHWS;
++	u32 savePIPEACONF;
++	u32 savePIPEBCONF;
++	u32 savePIPEASRC;
++	u32 savePIPEBSRC;
++	u32 saveFPA0;
++	u32 saveFPA1;
++	u32 saveDPLL_A;
++	u32 saveDPLL_A_MD;
++	u32 saveHTOTAL_A;
++	u32 saveHBLANK_A;
++	u32 saveHSYNC_A;
++	u32 saveVTOTAL_A;
++	u32 saveVBLANK_A;
++	u32 saveVSYNC_A;
++	u32 saveBCLRPAT_A;
++	u32 savePIPEASTAT;
++	u32 saveDSPASTRIDE;
++	u32 saveDSPASIZE;
++	u32 saveDSPAPOS;
++	u32 saveDSPAADDR;
++	u32 saveDSPASURF;
++	u32 saveDSPATILEOFF;
++	u32 savePFIT_PGM_RATIOS;
++	u32 saveBLC_PWM_CTL;
++	u32 saveBLC_PWM_CTL2;
++	u32 saveFPB0;
++	u32 saveFPB1;
++	u32 saveDPLL_B;
++	u32 saveDPLL_B_MD;
++	u32 saveHTOTAL_B;
++	u32 saveHBLANK_B;
++	u32 saveHSYNC_B;
++	u32 saveVTOTAL_B;
++	u32 saveVBLANK_B;
++	u32 saveVSYNC_B;
++	u32 saveBCLRPAT_B;
++	u32 savePIPEBSTAT;
++	u32 saveDSPBSTRIDE;
++	u32 saveDSPBSIZE;
++	u32 saveDSPBPOS;
++	u32 saveDSPBADDR;
++	u32 saveDSPBSURF;
++	u32 saveDSPBTILEOFF;
++	u32 saveVGA0;
++	u32 saveVGA1;
++	u32 saveVGA_PD;
++	u32 saveVGACNTRL;
++	u32 saveADPA;
++	u32 saveLVDS;
++	u32 savePP_ON_DELAYS;
++	u32 savePP_OFF_DELAYS;
++	u32 saveDVOA;
++	u32 saveDVOB;
++	u32 saveDVOC;
++	u32 savePP_ON;
++	u32 savePP_OFF;
++	u32 savePP_CONTROL;
++	u32 savePP_DIVISOR;
++	u32 savePFIT_CONTROL;
++	u32 save_palette_a[256];
++	u32 save_palette_b[256];
++	u32 saveFBC_CFB_BASE;
++	u32 saveFBC_LL_BASE;
++	u32 saveFBC_CONTROL;
++	u32 saveFBC_CONTROL2;
++	u32 saveIER;
++	u32 saveIIR;
++	u32 saveIMR;
++	u32 saveCACHE_MODE_0;
++	u32 saveD_STATE;
++	u32 saveCG_2D_DIS;
++	u32 saveMI_ARB_STATE;
++	u32 saveSWF0[16];
++	u32 saveSWF1[16];
++	u32 saveSWF2[3];
++	u8 saveMSR;
++	u8 saveSR[8];
++	u8 saveGR[25];
++	u8 saveAR_INDEX;
++	u8 saveAR[21];
++	u8 saveDACMASK;
++	u8 saveDACDATA[256*3]; /* 256 3-byte colors */
++	u8 saveCR[37];
++} drm_i915_common_private_t;
++
++struct drm_i915_master_private {
++	drm_local_map_t *sarea;
++	struct _drm_i915_sarea *sarea_priv;
++};
++
++#endif
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_drv.h
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_drv.h	2009-02-19 12:59:23.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_drv.h	2009-02-19 16:30:19.000000000 +0000
+@@ -32,6 +32,7 @@
+ 
+ #include "i915_reg.h"
+ #include "intel_bios.h"
++#include "i915_common.h"
+ #include <linux/io-mapping.h>
+ 
+ /* General customization:
+@@ -116,10 +117,6 @@
+ 	int enabled;
+ };
+ 
+-struct drm_i915_master_private {
+-	drm_local_map_t *sarea;
+-	struct _drm_i915_sarea *sarea_priv;
+-};
+ #define I915_FENCE_REG_NONE -1
+ 
+ struct drm_i915_fence_reg {
+@@ -127,12 +124,15 @@
+ };
+ 
+ typedef struct drm_i915_private {
+-	struct drm_device *dev;
++	/* common is assumed to be the first item in this structure */
++	struct drm_i915_common_private common;
+ 
+-	void __iomem *regs;
+-
+-	drm_i915_ring_buffer_t ring;
++	struct drm_device *dev;
+ 
++	//void __iomem *regs;
++ 
++ 	drm_i915_ring_buffer_t ring;
++ 
+ 	drm_dma_handle_t *status_page_dmah;
+ 	void *hw_status_page;
+ 	dma_addr_t dma_status_page;
+@@ -169,12 +169,12 @@
+ 
+ 	int irq_enabled;
+ 
+-	struct intel_opregion opregion;
+-
++ 	struct intel_opregion opregion;
++ 
+ 	/* LVDS info */
+-	int backlight_duty_cycle;  /* restore backlight to this value */
+-	bool panel_wants_dither;
+-	struct drm_display_mode *panel_fixed_mode;
++	//int backlight_duty_cycle;  /* restore backlight to this value */
++	//bool panel_wants_dither;
++	//struct drm_display_mode *panel_fixed_mode;
+ 	struct drm_display_mode *vbt_mode; /* if any */
+ 
+ 	/* Feature bits from the VBIOS */
+@@ -183,101 +183,10 @@
+ 	unsigned int lvds_vbt:1;
+ 	unsigned int int_crt_support:1;
+ 
+-	struct drm_i915_fence_reg fence_regs[16]; /* assume 965 */
++ 	struct drm_i915_fence_reg fence_regs[16]; /* assume 965 */
+ 	int fence_reg_start; /* 4 if userland hasn't ioctl'd us yet */
+ 	int num_fence_regs; /* 8 on pre-965, 16 otherwise */
+ 
+-	/* Register state */
+-	u8 saveLBB;
+-	u32 saveDSPACNTR;
+-	u32 saveDSPBCNTR;
+-	u32 saveDSPARB;
+-	u32 saveRENDERSTANDBY;
+-	u32 saveHWS;
+-	u32 savePIPEACONF;
+-	u32 savePIPEBCONF;
+-	u32 savePIPEASRC;
+-	u32 savePIPEBSRC;
+-	u32 saveFPA0;
+-	u32 saveFPA1;
+-	u32 saveDPLL_A;
+-	u32 saveDPLL_A_MD;
+-	u32 saveHTOTAL_A;
+-	u32 saveHBLANK_A;
+-	u32 saveHSYNC_A;
+-	u32 saveVTOTAL_A;
+-	u32 saveVBLANK_A;
+-	u32 saveVSYNC_A;
+-	u32 saveBCLRPAT_A;
+-	u32 savePIPEASTAT;
+-	u32 saveDSPASTRIDE;
+-	u32 saveDSPASIZE;
+-	u32 saveDSPAPOS;
+-	u32 saveDSPAADDR;
+-	u32 saveDSPASURF;
+-	u32 saveDSPATILEOFF;
+-	u32 savePFIT_PGM_RATIOS;
+-	u32 saveBLC_PWM_CTL;
+-	u32 saveBLC_PWM_CTL2;
+-	u32 saveFPB0;
+-	u32 saveFPB1;
+-	u32 saveDPLL_B;
+-	u32 saveDPLL_B_MD;
+-	u32 saveHTOTAL_B;
+-	u32 saveHBLANK_B;
+-	u32 saveHSYNC_B;
+-	u32 saveVTOTAL_B;
+-	u32 saveVBLANK_B;
+-	u32 saveVSYNC_B;
+-	u32 saveBCLRPAT_B;
+-	u32 savePIPEBSTAT;
+-	u32 saveDSPBSTRIDE;
+-	u32 saveDSPBSIZE;
+-	u32 saveDSPBPOS;
+-	u32 saveDSPBADDR;
+-	u32 saveDSPBSURF;
+-	u32 saveDSPBTILEOFF;
+-	u32 saveVGA0;
+-	u32 saveVGA1;
+-	u32 saveVGA_PD;
+-	u32 saveVGACNTRL;
+-	u32 saveADPA;
+-	u32 saveLVDS;
+-	u32 savePP_ON_DELAYS;
+-	u32 savePP_OFF_DELAYS;
+-	u32 saveDVOA;
+-	u32 saveDVOB;
+-	u32 saveDVOC;
+-	u32 savePP_ON;
+-	u32 savePP_OFF;
+-	u32 savePP_CONTROL;
+-	u32 savePP_DIVISOR;
+-	u32 savePFIT_CONTROL;
+-	u32 save_palette_a[256];
+-	u32 save_palette_b[256];
+-	u32 saveFBC_CFB_BASE;
+-	u32 saveFBC_LL_BASE;
+-	u32 saveFBC_CONTROL;
+-	u32 saveFBC_CONTROL2;
+-	u32 saveIER;
+-	u32 saveIIR;
+-	u32 saveIMR;
+-	u32 saveCACHE_MODE_0;
+-	u32 saveD_STATE;
+-	u32 saveCG_2D_DIS;
+-	u32 saveMI_ARB_STATE;
+-	u32 saveSWF0[16];
+-	u32 saveSWF1[16];
+-	u32 saveSWF2[3];
+-	u8 saveMSR;
+-	u8 saveSR[8];
+-	u8 saveGR[25];
+-	u8 saveAR_INDEX;
+-	u8 saveAR[21];
+-	u8 saveDACMASK;
+-	u8 saveDACDATA[256*3]; /* 256 3-byte colors */
+-	u8 saveCR[37];
+-
+ 	struct {
+ 		struct drm_mm gtt_space;
+ 
+@@ -672,17 +581,18 @@
+ 		LOCK_TEST_WITH_RETURN(dev, file_priv);			\
+ } while (0)
+ 
+-#define I915_READ(reg)          readl(dev_priv->regs + (reg))
+-#define I915_WRITE(reg, val)     writel(val, dev_priv->regs + (reg))
+-#define I915_READ16(reg)	readw(dev_priv->regs + (reg))
+-#define I915_WRITE16(reg, val)	writel(val, dev_priv->regs + (reg))
+-#define I915_READ8(reg)		readb(dev_priv->regs + (reg))
+-#define I915_WRITE8(reg, val)	writeb(val, dev_priv->regs + (reg))
++
++#define I915_READ(reg)          readl(dev_priv_common->regs + (reg))
++#define I915_WRITE(reg, val)     writel(val, dev_priv_common->regs + (reg))
++#define I915_READ16(reg)	readw(dev_priv_common->regs + (reg))
++#define I915_WRITE16(reg, val)	writel(val, dev_priv_common->regs + (reg))
++#define I915_READ8(reg)		readb(dev_priv_common->regs + (reg))
++#define I915_WRITE8(reg, val)	writeb(val, dev_priv_common->regs + (reg))
+ #ifdef writeq
+-#define I915_WRITE64(reg, val)	writeq(val, dev_priv->regs + (reg))
++#define I915_WRITE64(reg, val)	writeq(val, dev_priv_common->regs + (reg))
+ #else
+-#define I915_WRITE64(reg, val)	(writel(val, dev_priv->regs + (reg)), \
+-				 writel(upper_32_bits(val), dev_priv->regs + \
++#define I915_WRITE64(reg, val)	(writel(val, dev_priv_common->regs + (reg)), \
++				 writel(upper_32_bits(val), dev_priv_common->regs + \
+ 					(reg) + 4))
+ #endif
+ #define POSTING_READ(reg)	(void)I915_READ(reg)
+@@ -776,10 +686,15 @@
+ 			(dev)->pci_device == 0x29D2)
+ 
+ #define IS_I9XX(dev) (IS_I915G(dev) || IS_I915GM(dev) || IS_I945G(dev) || \
+-		      IS_I945GM(dev) || IS_I965G(dev) || IS_G33(dev))
++		      IS_I945GM(dev) || IS_I965G(dev) || IS_G33(dev) || \
++		      IS_POULSBO(dev))
++
++#define IS_POULSBO(dev) (((dev)->pci_device == 0x8108) || \
++			 ((dev)->pci_device == 0x8109))
+ 
+ #define IS_MOBILE(dev) (IS_I830(dev) || IS_I85X(dev) || IS_I915GM(dev) || \
+-			IS_I945GM(dev) || IS_I965GM(dev) || IS_GM45(dev))
++			IS_I945GM(dev) || IS_I965GM(dev) || IS_GM45(dev) || \
++			IS_POULSBO(dev))
+ 
+ #define I915_NEED_GFX_HWS(dev) (IS_G33(dev) || IS_GM45(dev) || IS_G4X(dev))
+ #define SUPPORTS_INTEGRATED_HDMI(dev)	(IS_G4X(dev))
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_display.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_display.c	2009-02-19 12:59:23.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_display.c	2009-02-20 14:53:08.000000000 +0000
+@@ -282,7 +282,7 @@
+ 				int refclk, intel_clock_t *best_clock)
+ {
+ 	struct drm_device *dev = crtc->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	intel_clock_t clock;
+ 	const intel_limit_t *limit = intel_limit(crtc);
+ 	int err = target;
+@@ -475,7 +475,7 @@
+ {
+ 	struct drm_device *dev = crtc->dev;
+ 	struct drm_i915_master_private *master_priv;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	int pipe = intel_crtc->pipe;
+ 	int dpll_reg = (pipe == 0) ? DPLL_A : DPLL_B;
+@@ -613,6 +613,7 @@
+ 	/* lvds has its own version of prepare see intel_lvds_prepare */
+ 	encoder_funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
+ }
++EXPORT_SYMBOL(intel_encoder_prepare);
+ 
+ void intel_encoder_commit (struct drm_encoder *encoder)
+ {
+@@ -620,6 +621,7 @@
+ 	/* lvds has its own version of commit see intel_lvds_commit */
+ 	encoder_funcs->dpms(encoder, DRM_MODE_DPMS_ON);
+ }
++EXPORT_SYMBOL(intel_encoder_commit);
+ 
+ static bool intel_crtc_mode_fixup(struct drm_crtc *crtc,
+ 				  struct drm_display_mode *mode,
+@@ -687,7 +689,7 @@
+  */
+ static int intel_panel_fitter_pipe (struct drm_device *dev)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	u32  pfit_control;
+ 
+ 	/* i830 doesn't have a panel fitter */
+@@ -715,7 +717,7 @@
+ 				struct drm_framebuffer *old_fb)
+ {
+ 	struct drm_device *dev = crtc->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	int pipe = intel_crtc->pipe;
+ 	int fp_reg = (pipe == 0) ? FPA0 : FPB0;
+@@ -980,7 +982,7 @@
+ 				 uint32_t width, uint32_t height)
+ {
+ 	struct drm_device *dev = crtc->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	struct drm_gem_object *bo;
+ 	struct drm_i915_gem_object *obj_priv;
+@@ -1071,7 +1073,7 @@
+ static int intel_crtc_cursor_move(struct drm_crtc *crtc, int x, int y)
+ {
+ 	struct drm_device *dev = crtc->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	int pipe = intel_crtc->pipe;
+ 	uint32_t temp = 0;
+@@ -1106,6 +1108,7 @@
+ 	intel_crtc->lut_g[regno] = green >> 8;
+ 	intel_crtc->lut_b[regno] = blue >> 8;
+ }
++EXPORT_SYMBOL(intel_crtc_fb_gamma_set);
+ 
+ static void intel_crtc_gamma_set(struct drm_crtc *crtc, u16 *red, u16 *green,
+ 				 u16 *blue, uint32_t size)
+@@ -1228,6 +1231,7 @@
+ 
+ 	return crtc;
+ }
++EXPORT_SYMBOL(intel_get_load_detect_pipe);
+ 
+ void intel_release_load_detect_pipe(struct intel_output *intel_output, int dpms_mode)
+ {
+@@ -1251,11 +1255,12 @@
+ 		crtc_funcs->dpms(crtc, dpms_mode);
+ 	}
+ }
++EXPORT_SYMBOL(intel_release_load_detect_pipe);
+ 
+ /* Returns the clock of the currently programmed mode of the given pipe. */
+ static int intel_crtc_clock_get(struct drm_device *dev, struct drm_crtc *crtc)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	int pipe = intel_crtc->pipe;
+ 	u32 dpll = I915_READ((pipe == 0) ? DPLL_A : DPLL_B);
+@@ -1333,7 +1338,7 @@
+ struct drm_display_mode *intel_crtc_mode_get(struct drm_device *dev,
+ 					     struct drm_crtc *crtc)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	int pipe = intel_crtc->pipe;
+ 	struct drm_display_mode *mode;
+@@ -1361,6 +1366,7 @@
+ 
+ 	return mode;
+ }
++EXPORT_SYMBOL(intel_crtc_mode_get);
+ 
+ static void intel_crtc_destroy(struct drm_crtc *crtc)
+ {
+@@ -1415,11 +1421,6 @@
+ 	intel_crtc->mode_set.connectors = (struct drm_connector **)(intel_crtc + 1);
+ 	intel_crtc->mode_set.num_connectors = 0;
+ 
+-	if (i915_fbpercrtc) {
+-
+-
+-
+-	}
+ }
+ 
+ struct drm_crtc *intel_get_crtc_from_pipe(struct drm_device *dev, int pipe)
+@@ -1433,6 +1434,7 @@
+ 	}
+ 	return crtc;
+ }
++EXPORT_SYMBOL(intel_get_crtc_from_pipe);
+ 
+ static int intel_connector_clones(struct drm_device *dev, int type_mask)
+ {
+@@ -1575,7 +1577,7 @@
+ 
+ 	return 0;
+ }
+-
++EXPORT_SYMBOL(intel_framebuffer_create);
+ 
+ static struct drm_framebuffer *
+ intel_user_framebuffer_create(struct drm_device *dev,
+@@ -1643,12 +1645,13 @@
+ 
+ 	intel_setup_outputs(dev);
+ }
++EXPORT_SYMBOL(intel_modeset_init);
+ 
+ void intel_modeset_cleanup(struct drm_device *dev)
+ {
+ 	drm_mode_config_cleanup(dev);
+ }
+-
++EXPORT_SYMBOL(intel_modeset_cleanup);
+ 
+ /* current intel driver doesn't take advantage of encoders
+    always give back the encoder for the connector
+@@ -1659,3 +1662,5 @@
+ 
+ 	return &intel_output->enc;
+ }
++EXPORT_SYMBOL(intel_best_encoder);
++
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_crt.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_crt.c	2009-02-19 12:59:23.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_crt.c	2009-02-20 14:53:08.000000000 +0000
+@@ -36,7 +36,7 @@
+ static void intel_crt_dpms(struct drm_encoder *encoder, int mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	u32 temp;
+ 
+ 	temp = I915_READ(ADPA);
+@@ -88,7 +88,7 @@
+ 	struct drm_device *dev = encoder->dev;
+ 	struct drm_crtc *crtc = encoder->crtc;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	int dpll_md_reg;
+ 	u32 adpa, dpll_md;
+ 
+@@ -132,7 +132,7 @@
+ static bool intel_crt_detect_hotplug(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	u32 temp;
+ 
+ 	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
+Index: linux-2.6.28/drivers/gpu/drm/i915/i915_dma.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_dma.c	2009-02-19 12:59:23.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_dma.c	2009-02-20 12:12:41.000000000 +0000
+@@ -41,6 +41,7 @@
+ int i915_wait_ring(struct drm_device * dev, int n, const char *caller)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_master_private *master_priv = dev->primary->master->driver_priv;
+ 	drm_i915_ring_buffer_t *ring = &(dev_priv->ring);
+ 	u32 acthd_reg = IS_I965G(dev) ? ACTHD_I965 : ACTHD;
+@@ -82,6 +83,7 @@
+ static int i915_init_phys_hws(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	/* Program Hardware Status Page */
+ 	dev_priv->status_page_dmah =
+ 		drm_pci_alloc(dev, PAGE_SIZE, PAGE_SIZE, 0xffffffff);
+@@ -107,6 +109,8 @@
+ static void i915_free_hws(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
++
+ 	if (dev_priv->status_page_dmah) {
+ 		drm_pci_free(dev, dev_priv->status_page_dmah);
+ 		dev_priv->status_page_dmah = NULL;
+@@ -124,6 +128,7 @@
+ void i915_kernel_lost_context(struct drm_device * dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_master_private *master_priv;
+ 	drm_i915_ring_buffer_t *ring = &(dev_priv->ring);
+ 
+@@ -231,6 +236,7 @@
+ static int i915_dma_resume(struct drm_device * dev)
+ {
+ 	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+ 	DRM_DEBUG("%s\n", __func__);
+ 
+@@ -358,6 +364,7 @@
+ 
+ static int i915_emit_cmds(struct drm_device * dev, int __user * buffer, int dwords)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	int i;
+ 	RING_LOCALS;
+@@ -401,6 +408,7 @@
+ 	      int i, int DR1, int DR4)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_clip_rect box;
+ 	RING_LOCALS;
+ 
+@@ -442,6 +450,7 @@
+ static void i915_emit_breadcrumb(struct drm_device *dev)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_master_private *master_priv = dev->primary->master->driver_priv;
+ 	RING_LOCALS;
+ 
+@@ -495,6 +504,7 @@
+ 				     drm_i915_batchbuffer_t * batch)
+ {
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_clip_rect __user *boxes = batch->cliprects;
+ 	int nbox = batch->num_cliprects;
+ 	int i = 0, count;
+@@ -544,6 +554,7 @@
+ 
+ static int i915_dispatch_flip(struct drm_device * dev)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	struct drm_i915_master_private *master_priv =
+ 		dev->primary->master->driver_priv;
+@@ -775,6 +786,7 @@
+ static int i915_set_status_page(struct drm_device *dev, void *data,
+ 				struct drm_file *file_priv)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	drm_i915_private_t *dev_priv = dev->dev_private;
+ 	drm_i915_hws_addr_t *hws = data;
+ 
+@@ -930,6 +942,7 @@
+ 
+ static int i915_load_modeset_init(struct drm_device *dev)
+ {
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_i915_private *dev_priv = dev->dev_private;
+ 	unsigned long agp_size, prealloc_size;
+ 	int fb_bar = IS_I9XX(dev) ? 2 : 0;
+@@ -1073,8 +1086,8 @@
+ 	base = drm_get_resource_start(dev, mmio_bar);
+ 	size = drm_get_resource_len(dev, mmio_bar);
+ 
+-	dev_priv->regs = ioremap(base, size);
+-	if (!dev_priv->regs) {
++	dev_priv->common.regs = ioremap(base, size);
++	if (!dev_priv->common.regs) {
+ 		DRM_ERROR("failed to map registers\n");
+ 		ret = -EIO;
+ 		goto free_priv;
+@@ -1126,7 +1139,7 @@
+ 	return 0;
+ 
+ out_rmmap:
+-	iounmap(dev_priv->regs);
++	iounmap(dev_priv->common.regs);
+ free_priv:
+ 	drm_free(dev_priv, sizeof(struct drm_i915_private), DRM_MEM_DRIVER);
+ 	return ret;
+@@ -1144,8 +1157,8 @@
+ 	if (dev->pdev->msi_enabled)
+ 		pci_disable_msi(dev->pdev);
+ 
+-	if (dev_priv->regs != NULL)
+-		iounmap(dev_priv->regs);
++	if (dev_priv->common.regs != NULL)
++		iounmap(dev_priv->common.regs);
+ 
+ 	intel_opregion_free(dev);
+ 
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_sdvo.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_sdvo.c	2009-02-19 12:59:23.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_sdvo.c	2009-02-20 14:53:08.000000000 +0000
+@@ -62,7 +62,7 @@
+ static void intel_sdvo_write_sdvox(struct intel_output *intel_output, u32 val)
+ {
+ 	struct drm_device *dev = intel_output->base.dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_sdvo_priv   *sdvo_priv = intel_output->dev_priv;
+ 	u32 bval = val, cval = val;
+ 	int i;
+@@ -552,7 +552,7 @@
+ 				struct drm_display_mode *adjusted_mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct drm_crtc *crtc = encoder->crtc;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
+ 	struct intel_output *intel_output = enc_to_intel_output(encoder);
+@@ -659,7 +659,7 @@
+ 	if (IS_I965G(dev)) {
+ 		/* done in crtc_mode_set as the dpll_md reg must be written
+ 		   early */
+-	} else if (IS_I945G(dev) || IS_I945GM(dev)) {
++	} else if (IS_POULSBO(dev) || IS_I945G(dev) || IS_I945GM(dev)) {
+ 		/* done in crtc_mode_set as it lives inside the
+ 		   dpll register */
+ 	} else {
+@@ -672,7 +672,7 @@
+ static void intel_sdvo_dpms(struct drm_encoder *encoder, int mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = enc_to_intel_output(encoder);
+ 	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;
+ 	u32 temp;
+@@ -722,7 +722,7 @@
+ static void intel_sdvo_save(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;
+ 	int o;
+@@ -759,7 +759,7 @@
+ static void intel_sdvo_restore(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_output *intel_output = to_intel_output(connector);
+ 	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;
+ 	int o;
+Index: linux-2.6.28/drivers/gpu/drm/i915/intel_lvds.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_lvds.c	2009-02-19 12:59:23.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_lvds.c	2009-02-20 14:53:08.000000000 +0000
+@@ -67,7 +67,7 @@
+  */
+ static void intel_lvds_set_power(struct drm_device *dev, bool on)
+ {
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	u32 pp_status;
+ 
+ 	if (on) {
+@@ -104,35 +104,35 @@
+ static void intel_lvds_save(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+-	dev_priv->savePP_ON = I915_READ(PP_ON_DELAYS);
+-	dev_priv->savePP_OFF = I915_READ(PP_OFF_DELAYS);
+-	dev_priv->savePP_CONTROL = I915_READ(PP_CONTROL);
+-	dev_priv->savePP_DIVISOR = I915_READ(PP_DIVISOR);
+-	dev_priv->saveBLC_PWM_CTL = I915_READ(BLC_PWM_CTL);
+-	dev_priv->backlight_duty_cycle = (dev_priv->saveBLC_PWM_CTL &
++	dev_priv_common->savePP_ON = I915_READ(PP_ON_DELAYS);
++	dev_priv_common->savePP_OFF = I915_READ(PP_OFF_DELAYS);
++	dev_priv_common->savePP_CONTROL = I915_READ(PP_CONTROL);
++	dev_priv_common->savePP_DIVISOR = I915_READ(PP_DIVISOR);
++	dev_priv_common->saveBLC_PWM_CTL = I915_READ(BLC_PWM_CTL);
++	dev_priv_common->backlight_duty_cycle = (dev_priv_common->saveBLC_PWM_CTL &
+ 				       BACKLIGHT_DUTY_CYCLE_MASK);
+ 
+ 	/*
+ 	 * If the light is off at server startup, just make it full brightness
+ 	 */
+-	if (dev_priv->backlight_duty_cycle == 0)
+-		dev_priv->backlight_duty_cycle =
++	if (dev_priv_common->backlight_duty_cycle == 0)
++		lvds_backlight=
+ 			intel_lvds_get_max_backlight(dev);
+ }
+ 
+ static void intel_lvds_restore(struct drm_connector *connector)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 
+-	I915_WRITE(BLC_PWM_CTL, dev_priv->saveBLC_PWM_CTL);
+-	I915_WRITE(PP_ON_DELAYS, dev_priv->savePP_ON);
+-	I915_WRITE(PP_OFF_DELAYS, dev_priv->savePP_OFF);
+-	I915_WRITE(PP_DIVISOR, dev_priv->savePP_DIVISOR);
+-	I915_WRITE(PP_CONTROL, dev_priv->savePP_CONTROL);
+-	if (dev_priv->savePP_CONTROL & POWER_TARGET_ON)
++	I915_WRITE(BLC_PWM_CTL, dev_priv_common->saveBLC_PWM_CTL);
++	I915_WRITE(PP_ON_DELAYS, dev_priv_common->savePP_ON);
++	I915_WRITE(PP_OFF_DELAYS, dev_priv_common->savePP_OFF);
++	I915_WRITE(PP_DIVISOR, dev_priv_common->savePP_DIVISOR);
++	I915_WRITE(PP_CONTROL, dev_priv_common->savePP_CONTROL);
++	if (dev_priv_common->savePP_CONTROL & POWER_TARGET_ON)
+ 		intel_lvds_set_power(dev, true);
+ 	else
+ 		intel_lvds_set_power(dev, false);
+@@ -142,8 +142,8 @@
+ 				 struct drm_display_mode *mode)
+ {
+ 	struct drm_device *dev = connector->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
+-	struct drm_display_mode *fixed_mode = dev_priv->panel_fixed_mode;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
++	struct drm_display_mode *fixed_mode = dev_priv_common->panel_fixed_mode;
+ 
+ 	if (fixed_mode)	{
+ 		if (mode->hdisplay > fixed_mode->hdisplay)
+@@ -160,7 +160,7 @@
+ 				  struct drm_display_mode *adjusted_mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(encoder->crtc);
+ 	struct drm_encoder *tmp_encoder;
+ 
+@@ -240,7 +240,7 @@
+ 				struct drm_display_mode *adjusted_mode)
+ {
+ 	struct drm_device *dev = encoder->dev;
+-	struct drm_i915_private *dev_priv = dev->dev_private;
++	struct drm_i915_common_private *dev_priv_common = dev->dev_private;
+ 	struct intel_crtc *intel_crtc = to_intel_crtc(encoder->crtc);
+ 	u32 pfit_control;
+ 
+@@ -264,7 +264,7 @@
+ 		pfit_control = 0;
+ 
+ 	if (!IS_I965G(dev)) {
+-		if (dev_priv->panel_wants_dither)
++		if (dev_priv_common->panel_wants_dither)
+ 			pfit_control |= PANEL_8TO6_DITHER_ENABLE;
+ 	}
+ 	else
+@@ -475,16 +475,16 @@
+ 	crtc = intel_get_crtc_from_pipe(dev, pipe);
+ 
+ 	if (crtc && (lvds & LVDS_PORT_EN)) {
+-		dev_priv->panel_fixed_mode = intel_crtc_mode_get(dev, crtc);
+-		if (dev_priv->panel_fixed_mode) {
+-			dev_priv->panel_fixed_mode->type |=
++		dev_priv_common->panel_fixed_mode = intel_crtc_mode_get(dev, crtc);
++		if (dev_priv_common->panel_fixed_mode) {
++			dev_priv_common->panel_fixed_mode->type |=
+ 				DRM_MODE_TYPE_PREFERRED;
+ 			goto out; /* FIXME: check for quirks */
+ 		}
+ 	}
+ 
+ 	/* If we still don't have a mode after all that, give up. */
+-	if (!dev_priv->panel_fixed_mode)
++	if (!dev_priv_common->panel_fixed_mode)
+ 		goto failed;
+ 
+ 	/* FIXME: detect aopen & mac mini type stuff automatically? */
+@@ -509,9 +509,9 @@
+ 			 * 800x600 display.
+ 			 */
+ 
+-			if (dev_priv->panel_fixed_mode != NULL &&
+-			    dev_priv->panel_fixed_mode->hdisplay == 800 &&
+-			    dev_priv->panel_fixed_mode->vdisplay == 600) {
++			if (dev_priv_common->panel_fixed_mode != NULL &&
++			    dev_priv_common->panel_fixed_mode->hdisplay == 800 &&
++			    dev_priv_common->panel_fixed_mode->vdisplay == 600) {
+ 				DRM_DEBUG("Suspected Mac Mini, ignoring the LVDS\n");
+ 				goto failed;
+ 			}
+Index: linux-2.6.28/drivers/gpu/drm/Kconfig
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/Kconfig	2009-02-19 12:59:22.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/Kconfig	2009-02-20 14:53:08.000000000 +0000
+@@ -43,6 +43,11 @@
+ 
+ 	  If M is selected, the module will be called radeon.
+ 
++config DRM_INTEL_COMMON
++	tristate
++	help
++	  Code common to several Intel drivers (autoselected)
++
+ config DRM_I810
+ 	tristate "Intel I810"
+ 	depends on DRM && AGP && AGP_INTEL
+@@ -70,6 +75,7 @@
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
++	select DRM_INTEL_COMMON
+ 	depends on FB
+ 	tristate "i915 driver"
+ 	help
