@@ -1,0 +1,13 @@
+Index: git/configure.in
+===================================================================
+--- git.orig/configure.in	2009-01-17 18:57:24.000000000 +0000
++++ git/configure.in	2009-01-17 18:57:29.000000000 +0000
+@@ -11,8 +11,6 @@
+ 
+ AM_MAINTAINER_MODE
+ 
+-AM_DISABLE_STATIC
+-	
+ changequote(,)dnl
+ if test "x$GCC" = "xyes"; then
+   case " $CFLAGS " in

@@ -1,0 +1,66 @@
+From be9df3282d24a7326bba2eea986c79d822f0e998 Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Sun, 21 Sep 2008 11:58:27 -0700
+Subject: [PATCH] superreadahead patch
+
+---
+ fs/ext3/ioctl.c         |    3 +++
+ fs/ext3/super.c         |    1 +
+ include/linux/ext3_fs.h |    1 +
+ include/linux/fs.h      |    2 ++
+ 4 files changed, 7 insertions(+), 0 deletions(-)
+
+diff --git a/fs/ext3/ioctl.c b/fs/ext3/ioctl.c
+index b7394d0..c2e7f23 100644
+--- a/fs/ext3/ioctl.c
++++ b/fs/ext3/ioctl.c
+@@ -290,6 +290,9 @@ group_add_out:
+ 		mnt_drop_write(filp->f_path.mnt);
+ 		return err;
+ 	}
++	case EXT3_IOC_INODE_JIFFIES: {
++		return inode->created_when;
++	}
+ 
+ 
+ 	default:
+diff --git a/fs/ext3/super.c b/fs/ext3/super.c
+index f6c94f2..268dd1d 100644
+--- a/fs/ext3/super.c
++++ b/fs/ext3/super.c
+@@ -461,6 +461,7 @@ static struct inode *ext3_alloc_inode(struct super_block *sb)
+ #endif
+ 	ei->i_block_alloc_info = NULL;
+ 	ei->vfs_inode.i_version = 1;
++	ei->vfs_inode.created_when = jiffies;
+ 	return &ei->vfs_inode;
+ }
+ 
+diff --git a/include/linux/ext3_fs.h b/include/linux/ext3_fs.h
+index d14f029..fff5510 100644
+--- a/include/linux/ext3_fs.h
++++ b/include/linux/ext3_fs.h
+@@ -225,6 +225,7 @@ struct ext3_new_group_data {
+ #endif
+ #define EXT3_IOC_GETRSVSZ		_IOR('f', 5, long)
+ #define EXT3_IOC_SETRSVSZ		_IOW('f', 6, long)
++#define EXT3_IOC_INODE_JIFFIES		_IOR('f', 19, long)
+ 
+ /*
+  * ioctl commands in 32 bit emulation
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 4a853ef..c346136 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -685,6 +685,8 @@ struct inode {
+ 	void			*i_security;
+ #endif
+ 	void			*i_private; /* fs or device private pointer */
++	
++	unsigned long		created_when; /* jiffies of creation time */
+ };
+ 
+ /*
+-- 
+1.5.5.1
+

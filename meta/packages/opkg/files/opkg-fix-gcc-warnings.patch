@@ -1,0 +1,53 @@
+diff -urN opkg.orig/libopkg/libopkg.c opkg/libopkg/libopkg.c
+--- opkg.orig/libopkg/libopkg.c	2009-02-09 10:49:40.000000000 +0000
++++ opkg/libopkg/libopkg.c	2009-02-09 10:50:23.000000000 +0000
+@@ -38,7 +38,7 @@
+           if ( level == OPKG_ERROR ){
+              push_error_list(&error_list, msg); 
+           } else
+-	     printf(msg);
++	     printf("%s", msg);
+      }
+      return 0;
+ }
+@@ -71,7 +71,7 @@
+ char* default_opkg_response_callback(char *question)
+ {
+      char *response = NULL;
+-     printf(question);
++     printf("%s", question);
+      fflush(stdout);
+      do {
+ 	  response = (char *)file_read_line_alloc(stdin);
+diff -urN opkg.orig/libopkg/opkg_cmd.c opkg/libopkg/opkg_cmd.c
+--- opkg.orig/libopkg/opkg_cmd.c	2009-02-09 10:49:40.000000000 +0000
++++ opkg/libopkg/opkg_cmd.c	2009-02-09 10:50:23.000000000 +0000
+@@ -369,7 +369,7 @@
+ 	perror (ctx->statedir);
+ 	
+     sprintf_alloc (&cmd, "rm -rf %s", ctx->statedir);
+-    system (cmd);
++    err = system (cmd);
+     free (cmd);
+ 
+     free (ctx->statedir);
+diff -urN opkg.orig/libopkg/pkg.c opkg/libopkg/pkg.c
+--- opkg.orig/libopkg/pkg.c	2009-02-09 10:49:40.000000000 +0000
++++ opkg/libopkg/pkg.c	2009-02-09 10:52:49.000000000 +0000
+@@ -1052,6 +1052,7 @@
+ 
+ void pkg_print_info(pkg_t *pkg, FILE *file)
+ {
++     int t = 0;
+      char * buff;
+      if (pkg == NULL) {
+ 	return;
+@@ -1061,7 +1062,7 @@
+      if ( buff == NULL ) 
+          return;
+      if (strlen(buff)>2){
+-         fwrite(buff, 1, strlen(buff), file);
++         t = fwrite(buff, 1, strlen(buff), file); /* TODO: check t */
+      } 
+      free(buff);
+ }

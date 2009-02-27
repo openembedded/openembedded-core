@@ -1,7 +1,7 @@
 Index: linux-2.6.27/include/drm/drm.h
 ===================================================================
---- linux-2.6.27.orig/include/drm/drm.h	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/include/drm/drm.h	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/include/drm/drm.h	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/include/drm/drm.h	2009-02-05 13:29:33.000000000 +0000
 @@ -173,6 +173,7 @@
  	_DRM_AGP = 3,		  /**< AGP/GART */
  	_DRM_SCATTER_GATHER = 4,  /**< Scatter/gather memory for PCI DMA */
@@ -380,7 +380,7 @@ Index: linux-2.6.27/include/drm/drm.h
 +	uint32_t value;
 +	unsigned char name[DRM_PROP_NAME_LEN];
 +};
-+		
++
 +struct drm_mode_get_property {
 +
 +	unsigned int prop_id;
@@ -473,8 +473,8 @@ Index: linux-2.6.27/include/drm/drm.h
  #endif
 Index: linux-2.6.27/include/drm/drmP.h
 ===================================================================
---- linux-2.6.27.orig/include/drm/drmP.h	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/include/drm/drmP.h	2009-01-14 11:58:31.000000000 +0000
+--- linux-2.6.27.orig/include/drm/drmP.h	2009-02-05 13:29:30.000000000 +0000
++++ linux-2.6.27/include/drm/drmP.h	2009-02-05 13:29:33.000000000 +0000
 @@ -57,6 +57,7 @@
  #include <linux/dma-mapping.h>
  #include <linux/mm.h>
@@ -738,8 +738,8 @@ Index: linux-2.6.27/include/drm/drmP.h
  extern long drm_compat_ioctl(struct file *filp,
 Index: linux-2.6.27/include/drm/drm_pciids.h
 ===================================================================
---- linux-2.6.27.orig/include/drm/drm_pciids.h	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/include/drm/drm_pciids.h	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/include/drm/drm_pciids.h	2008-10-09 23:13:53.000000000 +0100
++++ linux-2.6.27/include/drm/drm_pciids.h	2009-02-05 13:29:33.000000000 +0000
 @@ -413,3 +413,9 @@
  	{0x8086, 0x2e12, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0}, \
  	{0x8086, 0x2e22, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0}, \
@@ -752,8 +752,8 @@ Index: linux-2.6.27/include/drm/drm_pciids.h
 +
 Index: linux-2.6.27/drivers/gpu/drm/Makefile
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/Makefile	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/Makefile	2009-01-14 12:11:06.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/Makefile	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/Makefile	2009-02-05 13:29:33.000000000 +0000
 @@ -9,11 +9,14 @@
  		drm_drv.o drm_fops.o drm_gem.o drm_ioctl.o drm_irq.o \
  		drm_lock.o drm_memory.o drm_proc.o drm_stub.o drm_vm.o \
@@ -777,8 +777,8 @@ Index: linux-2.6.27/drivers/gpu/drm/Makefile
 -
 Index: linux-2.6.27/drivers/gpu/drm/drm_agpsupport.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_agpsupport.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_agpsupport.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_agpsupport.c	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_agpsupport.c	2009-02-05 13:29:33.000000000 +0000
 @@ -453,47 +453,158 @@
  	return agp_unbind_memory(handle);
  }
@@ -970,7 +970,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_agpsupport.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_bo.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_bo.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_bo.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,2660 @@
 +/**************************************************************************
 + *
@@ -1183,15 +1183,15 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_bo.c
 +			struct drm_bo_mem_reg *old_mem = &bo->mem;
 +			uint64_t save_flags = old_mem->flags;
 +			uint64_t save_mask = old_mem->mask;
-+			
++
 +			*old_mem = *mem;
 +			mem->mm_node = NULL;
 +			old_mem->mask = save_mask;
-+			DRM_FLAG_MASKED(save_flags, mem->flags, 
++			DRM_FLAG_MASKED(save_flags, mem->flags,
 +					DRM_BO_MASK_MEMTYPE);
 +			goto moved;
 +		}
-+		
++
 +	}
 +
 +	if (!(old_man->flags & _DRM_FLAG_MEMTYPE_FIXED) &&
@@ -1939,13 +1939,13 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_bo.c
 +		DRM_ERROR("DRM_BO_FLAG_NO_EVICT is only available to priviliged processes.\n");
 +		return -EPERM;
 +	}
-+	
-+	if (likely(used_mask & DRM_BO_MASK_MEM) && 
++
++	if (likely(used_mask & DRM_BO_MASK_MEM) &&
 +	    (bo->mem.flags & DRM_BO_FLAG_NO_EVICT) &&
 +	    !DRM_SUSER(DRM_CURPROC)) {
-+		if (likely(bo->mem.flags & new_flags & used_mask & 
-+			   DRM_BO_MASK_MEM)) 
-+			new_flags = (new_flags & ~DRM_BO_MASK_MEM) | 
++		if (likely(bo->mem.flags & new_flags & used_mask &
++			   DRM_BO_MASK_MEM))
++			new_flags = (new_flags & ~DRM_BO_MASK_MEM) |
 +				(bo->mem.flags & DRM_BO_MASK_MEM);
 +		else {
 +			DRM_ERROR("Incompatible memory type specification "
@@ -3635,7 +3635,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_bo.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_bo_lock.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_bo_lock.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_bo_lock.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,175 @@
 +/**************************************************************************
 + *
@@ -3815,7 +3815,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_bo_lock.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_bo_move.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_bo_move.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_bo_move.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,597 @@
 +/**************************************************************************
 + *
@@ -4416,8 +4416,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_bo_move.c
 +EXPORT_SYMBOL(drm_bo_kunmap);
 Index: linux-2.6.27/drivers/gpu/drm/drm_bufs.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_bufs.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_bufs.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_bufs.c	2008-10-09 23:13:53.000000000 +0100
++++ linux-2.6.27/drivers/gpu/drm/drm_bufs.c	2009-02-05 13:29:33.000000000 +0000
 @@ -409,6 +409,7 @@
  		break;
  	case _DRM_SHM:
@@ -4438,7 +4438,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_bufs.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_crtc.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_crtc.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,2170 @@
 +/*
 + * Copyright (c) 2006-2007 Intel Corporation
@@ -4502,7 +4502,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +
 +	ret = idr_get_new_above(&dev->mode_config.crtc_idr, ptr, 1, &new_id);
 +	if (ret == -EAGAIN)
-+		goto again;	
++		goto again;
 +
 +	return new_id;
 +}
@@ -4573,7 +4573,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	fb = kzalloc(sizeof(struct drm_framebuffer), GFP_KERNEL);
 +	if (!fb)
 +		return NULL;
-+	
++
 +	fb->id = drm_idr_get(dev, fb);
 +	fb->dev = dev;
 +	dev->mode_config.num_fb++;
@@ -4727,7 +4727,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	struct drm_output *output;
 +	struct drm_display_mode *mode, *t;
 +	int ret;
-+	//if (maxX == 0 || maxY == 0) 
++	//if (maxX == 0 || maxY == 0)
 +	// TODO
 +
 +	list_for_each_entry(output, &dev->mode_config.output_list, head) {
@@ -4735,7 +4735,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +		/* set all modes to the unverified state */
 +		list_for_each_entry_safe(mode, t, &output->modes, head)
 +			mode->status = MODE_UNVERIFIED;
-+		
++
 +		output->status = (*output->funcs->detect)(output);
 +
 +		if (output->status == output_status_disconnected) {
@@ -4757,7 +4757,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +			if (mode->status == MODE_OK)
 +				mode->status = (*output->funcs->mode_valid)(output,mode);
 +		}
-+		
++
 +
 +		drm_mode_prune_invalid(dev, &output->modes, 1);
 +
@@ -4832,7 +4832,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	saved_mode = crtc->mode;
 +	saved_x = crtc->x;
 +	saved_y = crtc->y;
-+	
++
 +	/* Update crtc values up front so the driver can rely on them for mode
 +	 * setting.
 +	 */
@@ -4841,21 +4841,21 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	crtc->y = y;
 +
 +	/* XXX short-circuit changes to base location only */
-+	
++
 +	/* Pass our mode to the outputs and the CRTC to give them a chance to
 +	 * adjust it according to limitations or output properties, and also
 +	 * a chance to reject the mode entirely.
 +	 */
 +	list_for_each_entry(output, &dev->mode_config.output_list, head) {
-+		
++
 +		if (output->crtc != crtc)
 +			continue;
-+		
++
 +		if (!output->funcs->mode_fixup(output, mode, adjusted_mode)) {
 +			goto done;
 +		}
 +	}
-+	
++
 +	if (!crtc->funcs->mode_fixup(crtc, mode, adjusted_mode)) {
 +		goto done;
 +	}
@@ -4865,13 +4865,13 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +
 +		if (output->crtc != crtc)
 +			continue;
-+		
++
 +		/* Disable the output as the first thing we do. */
 +		output->funcs->prepare(output);
 +	}
-+	
++
 +	crtc->funcs->prepare(crtc);
-+	
++
 +	/* Set up the DPLL and any output state that needs to adjust or depend
 +	 * on the DPLL.
 +	 */
@@ -4881,12 +4881,12 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +
 +		if (output->crtc != crtc)
 +			continue;
-+		
++
 +		DRM_INFO("%s: set mode %s %x\n", output->name, mode->name, mode->mode_id);
 +
 +		output->funcs->mode_set(output, mode, adjusted_mode);
 +	}
-+	
++
 +	/* Now, enable the clocks, plane, pipe, and outputs that we set up. */
 +	crtc->funcs->commit(crtc);
 +
@@ -4894,7 +4894,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +
 +		if (output->crtc != crtc)
 +			continue;
-+		
++
 +		output->funcs->commit(output);
 +
 +#if 0 // TODO def RANDR_12_INTERFACE
@@ -4902,7 +4902,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +			RRPostPendingProperties (output->randr_output);
 +#endif
 +	}
-+	
++
 +	/* XXX free adjustedmode */
 +	drm_mode_destroy(dev, adjusted_mode);
 +	ret = 1;
@@ -4916,10 +4916,10 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +		crtc->y = saved_y;
 +		crtc->mode = saved_mode;
 +	}
-+	
++
 +	if (didLock)
 +		crtc->funcs->unlock (crtc);
-+	
++
 +	return ret;
 +}
 +EXPORT_SYMBOL(drm_crtc_set_mode);
@@ -4958,7 +4958,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 + *
 + * LOCKING:
 + * Caller must hold mode config lock.
-+ * 
++ *
 + * Add @mode to @output's mode list for later use.
 + */
 +void drm_mode_probed_add(struct drm_output *output,
@@ -4975,7 +4975,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 + *
 + * LOCKING:
 + * Caller must hold mode config lock.
-+ * 
++ *
 + * Remove @mode from @output's mode list, then free it.
 + */
 +void drm_mode_remove(struct drm_output *output, struct drm_display_mode *mode)
@@ -5009,7 +5009,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	output = kzalloc(sizeof(struct drm_output), GFP_KERNEL);
 +	if (!output)
 +		return NULL;
-+		
++
 +	output->dev = dev;
 +	output->funcs = funcs;
 +	output->id = drm_idr_get(dev, output);
@@ -5197,7 +5197,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +		ret = -EINVAL;
 +		goto out_err;
 +	}
-+	
++
 +	*bo = drm_user_object_entry(uo, struct drm_buffer_object, base);
 +	ret = 0;
 +out_err:
@@ -5228,7 +5228,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +
 +	list_for_each_entry(output, &dev->mode_config.output_list, head) {
 +       		output->crtc = NULL;
-+    
++
 +    		/* Don't hook up outputs that are disconnected ??
 +		 *
 +		 * This is debateable. Do we want fixed /dev/fbX or
@@ -5280,7 +5280,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +			c++;
 +			if ((output->possible_crtcs & (1 << c)) == 0)
 +		    		continue;
-+	
++
 +			list_for_each_entry(output_equal, &dev->mode_config.output_list, head) {
 +				if (output->id == output_equal->id)
 +					continue;
@@ -5368,7 +5368,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +		dev->driver->fb_probe(dev, crtc);
 +	}
 +
-+	/* This is a little screwy, as we've already walked the outputs 
++	/* This is a little screwy, as we've already walked the outputs
 +	 * above, but it's a little bit of magic too. There's the potential
 +	 * for things not to get setup above if an existing device gets
 +	 * re-assigned thus confusing the hardware. By walking the outputs
@@ -5583,7 +5583,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	strncpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
 +	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
 +}
-+	
++
 +/**
 + * drm_mode_getresources - get graphics configuration
 + * @inode: inode from the ioctl
@@ -5687,7 +5687,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +		}
 +	}
 +	card_res->count_outputs = output_count;
-+	
++
 +	/* Modes */
 +	if (card_res->count_modes >= mode_count) {
 +		copied = 0;
@@ -5715,7 +5715,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	DRM_DEBUG("Counted %d %d %d\n", card_res->count_crtcs,
 +		  card_res->count_outputs,
 +		  card_res->count_modes);
-+	
++
 +	mutex_unlock(&dev->mode_config.mutex);
 +	return ret;
 +}
@@ -5819,7 +5819,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +
 +	list_for_each_entry(mode, &output->modes, head)
 +		mode_count++;
-+	
++
 +	for (i = 0; i < DRM_OUTPUT_MAX_UMODES; i++)
 +		if (output->user_mode_ids[i] != 0)
 +			mode_count++;
@@ -5933,13 +5933,13 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +		mode = idr_find(&dev->mode_config.crtc_idr, crtc_req->mode);
 +		if (!mode || (mode->mode_id != crtc_req->mode)) {
 +			struct drm_output *output;
-+			
-+			list_for_each_entry(output, 
++
++			list_for_each_entry(output,
 +					    &dev->mode_config.output_list,
 +					    head) {
 +				list_for_each_entry(mode, &output->modes,
 +						    head) {
-+					drm_mode_debug_printmodeline(dev, 
++					drm_mode_debug_printmodeline(dev,
 +								     mode);
 +				}
 +			}
@@ -5988,7 +5988,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +			output_set[i] = output;
 +		}
 +	}
-+		
++
 +	ret = drm_crtc_set_config(crtc, crtc_req, mode, output_set, fb);
 +
 +out:
@@ -6349,7 +6349,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	struct drm_display_mode *mode;
 +	int ret = -EINVAL;
 +
-+	mutex_lock(&dev->mode_config.mutex);	
++	mutex_lock(&dev->mode_config.mutex);
 +	mode = idr_find(&dev->mode_config.crtc_idr, *id);
 +	if (!mode || (*id != mode->mode_id)) {
 +		goto out;
@@ -6448,7 +6448,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +
 +
 +	ret = drm_mode_detachmode(dev, output, mode);
-+out:	       
++out:
 +	mutex_unlock(&dev->mode_config.mutex);
 +	return ret;
 +}
@@ -6461,7 +6461,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	property = kzalloc(sizeof(struct drm_output), GFP_KERNEL);
 +	if (!property)
 +		return NULL;
-+	
++
 +	property->values = kzalloc(sizeof(uint32_t)*num_values, GFP_KERNEL);
 +	if (!property->values)
 +		goto fail;
@@ -6493,7 +6493,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	if (!list_empty(&property->enum_list)) {
 +		list_for_each_entry(prop_enum, &property->enum_list, head) {
 +			if (prop_enum->value == value) {
-+				strncpy(prop_enum->name, name, DRM_PROP_NAME_LEN); 
++				strncpy(prop_enum->name, name, DRM_PROP_NAME_LEN);
 +				prop_enum->name[DRM_PROP_NAME_LEN-1] = '\0';
 +				return 0;
 +			}
@@ -6504,7 +6504,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	if (!prop_enum)
 +		return -ENOMEM;
 +
-+	strncpy(prop_enum->name, name, DRM_PROP_NAME_LEN); 
++	strncpy(prop_enum->name, name, DRM_PROP_NAME_LEN);
 +	prop_enum->name[DRM_PROP_NAME_LEN-1] = '\0';
 +	prop_enum->value = value;
 +
@@ -6526,7 +6526,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +	kfree(property->values);
 +	drm_idr_put(dev, property->id);
 +	list_del(&property->head);
-+	kfree(property);	
++	kfree(property);
 +}
 +EXPORT_SYMBOL(drm_property_destroy);
 +
@@ -6612,8 +6612,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_crtc.c
 +}
 Index: linux-2.6.27/drivers/gpu/drm/drm_drv.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_drv.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_drv.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_drv.c	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_drv.c	2009-02-05 13:29:33.000000000 +0000
 @@ -49,6 +49,9 @@
  #include "drmP.h"
  #include "drm_core.h"
@@ -6833,7 +6833,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_drv.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_edid.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_edid.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_edid.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,519 @@
 +/*
 + * Copyright (c) 2007 Intel Corporation
@@ -7157,7 +7157,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_edid.c
 +			if (i == 0 && edid->preferred_timing)
 +				newmode->type |= DRM_MODE_TYPE_PREFERRED;
 +			drm_mode_probed_add(output, newmode);
-+				     
++
 +			modes++;
 +			continue;
 +		}
@@ -7303,7 +7303,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_edid.c
 + * @adapter: i2c adapter to use for DDC
 + *
 + * Poke the given output's i2c channel to grab EDID data if possible.
-+ * 
++ *
 + * Return edid data or NULL if we couldn't find any.
 + */
 +struct edid *drm_get_edid(struct drm_output *output,
@@ -7357,7 +7357,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_edid.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_fence.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_fence.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,829 @@
 +/**************************************************************************
 + *
@@ -7398,7 +7398,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 + */
 +
 +int drm_fence_wait_polling(struct drm_fence_object *fence, int lazy,
-+			   int interruptible, uint32_t mask, 
++			   int interruptible, uint32_t mask,
 +			   unsigned long end_jiffies)
 +{
 +	struct drm_device *dev = fence->dev;
@@ -7411,9 +7411,9 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +	add_wait_queue(&fc->fence_queue, &entry);
 +
 +	ret = 0;
-+	
++
 +	for (;;) {
-+		__set_current_state((interruptible) ? 
++		__set_current_state((interruptible) ?
 +				    TASK_INTERRUPTIBLE :
 +				    TASK_UNINTERRUPTIBLE);
 +		if (drm_fence_object_signaled(fence, mask))
@@ -7427,10 +7427,10 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +		else if ((++count & 0x0F) == 0){
 +			__set_current_state(TASK_RUNNING);
 +			schedule();
-+			__set_current_state((interruptible) ? 
++			__set_current_state((interruptible) ?
 +					    TASK_INTERRUPTIBLE :
 +					    TASK_UNINTERRUPTIBLE);
-+		}			
++		}
 +		if (interruptible && signal_pending(current)) {
 +			ret = -EAGAIN;
 +			break;
@@ -7527,12 +7527,12 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +				driver->sequence_mask;
 +			if (diff > driver->wrap_diff)
 +				break;
-+			
++
 +			fc->waiting_types |= fence->waiting_types & ~fence->signaled_types;
 +		}
 +	}
 +
-+	if (wake) 
++	if (wake)
 +		wake_up_all(&fc->fence_queue);
 +}
 +EXPORT_SYMBOL(drm_fence_handler);
@@ -7621,7 +7621,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +	struct drm_device *dev = fence->dev;
 +	struct drm_fence_manager *fm = &dev->fm;
 +	struct drm_fence_driver *driver = dev->driver->fence_driver;
-+	
++
 +	mask &= fence->type;
 +	read_lock_irqsave(&fm->lock, flags);
 +	signaled = (mask & fence->signaled_types) == mask;
@@ -7658,7 +7658,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +	write_lock_irqsave(&fm->lock, irq_flags);
 +	fence->waiting_types |= type;
 +	fc->waiting_types |= fence->waiting_types;
-+	diff = (fence->sequence - fc->highest_waiting_sequence) & 
++	diff = (fence->sequence - fc->highest_waiting_sequence) &
 +		driver->sequence_mask;
 +
 +	if (diff < driver->wrap_diff)
@@ -7670,7 +7670,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +	 */
 +
 +	saved_pending_flush = fc->pending_flush;
-+	if (driver->needed_flush) 
++	if (driver->needed_flush)
 +		fc->pending_flush |= driver->needed_flush(fence);
 +
 +	if (driver->poll)
@@ -7709,14 +7709,14 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +		diff = (sequence - fence->sequence) & driver->sequence_mask;
 +		if (diff <= driver->flush_diff)
 +			break;
-+	
++
 +		fence->waiting_types = fence->type;
 +		fc->waiting_types |= fence->type;
 +
 +		if (driver->needed_flush)
 +			fc->pending_flush |= driver->needed_flush(fence);
-+	}	
-+	
++	}
++
 +	if (driver->poll)
 +		driver->poll(dev, fence_class, fc->waiting_types);
 +
@@ -7758,13 +7758,13 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +	if (driver->has_irq(dev, fence->fence_class, mask)) {
 +		if (!ignore_signals)
 +			ret = wait_event_interruptible_timeout
-+				(fc->fence_queue, 
-+				 drm_fence_object_signaled(fence, mask), 
++				(fc->fence_queue,
++				 drm_fence_object_signaled(fence, mask),
 +				 3 * DRM_HZ);
-+		else 
++		else
 +			ret = wait_event_timeout
-+				(fc->fence_queue, 
-+				 drm_fence_object_signaled(fence, mask), 
++				(fc->fence_queue,
++				 drm_fence_object_signaled(fence, mask),
 +				 3 * DRM_HZ);
 +
 +		if (unlikely(ret == -ERESTARTSYS))
@@ -8190,8 +8190,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fence.c
 +}
 Index: linux-2.6.27/drivers/gpu/drm/drm_fops.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_fops.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_fops.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_fops.c	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_fops.c	2009-02-05 13:29:33.000000000 +0000
 @@ -231,6 +231,7 @@
  	int minor_id = iminor(inode);
  	struct drm_file *priv;
@@ -8279,8 +8279,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_fops.c
  
 Index: linux-2.6.27/drivers/gpu/drm/drm_hashtab.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_hashtab.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_hashtab.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_hashtab.c	2008-10-09 23:13:53.000000000 +0100
++++ linux-2.6.27/drivers/gpu/drm/drm_hashtab.c	2009-02-05 13:29:33.000000000 +0000
 @@ -29,7 +29,7 @@
   * Simple open hash tab implementation.
   *
@@ -8292,8 +8292,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_hashtab.c
  #include "drmP.h"
 Index: linux-2.6.27/drivers/gpu/drm/drm_irq.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_irq.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_irq.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_irq.c	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_irq.c	2009-02-05 13:29:33.000000000 +0000
 @@ -70,6 +70,7 @@
  
  	return 0;
@@ -8737,8 +8737,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_irq.c
   * Tasklet wrapper function.
 Index: linux-2.6.27/drivers/gpu/drm/drm_mm.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_mm.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_mm.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_mm.c	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_mm.c	2009-02-05 13:29:33.000000000 +0000
 @@ -38,7 +38,7 @@
   * Aligned allocations can also see improvement.
   *
@@ -8751,7 +8751,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_mm.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_modes.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_modes.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,560 @@
 +/*
 + * Copyright © 1997-2003 by The XFree86 Project, Inc.
@@ -8927,7 +8927,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 +	return refresh;
 +}
 +EXPORT_SYMBOL(drm_mode_vrefresh);
-+	
++
 +/**
 + * drm_mode_set_crtcinfo - set CRTC modesetting parameters
 + * @p: mode
@@ -9045,7 +9045,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 +	    mode1->vscan == mode2->vscan &&
 +	    mode1->flags == mode2->flags)
 +		return true;
-+	
++
 +	return false;
 +}
 +EXPORT_SYMBOL(drm_mode_equal);
@@ -9074,7 +9074,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 +	list_for_each_entry(mode, mode_list, head) {
 +		if (maxPitch > 0 && mode->hdisplay > maxPitch)
 +			mode->status = MODE_BAD_WIDTH;
-+		
++
 +		if (maxX > 0 && mode->hdisplay > maxX)
 +			mode->status = MODE_VIRTUAL_X;
 +
@@ -9189,7 +9189,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 +{
 +	struct list_head *p, *q, *e, *list, *tail, *oldhead;
 +	int insize, nmerges, psize, qsize, i;
-+	
++
 +	list = head->next;
 +	list_del(head);
 +	insize = 1;
@@ -9197,7 +9197,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 +		p = oldhead = list;
 +		list = tail = NULL;
 +		nmerges = 0;
-+		
++
 +		while (p) {
 +			nmerges++;
 +			q = p;
@@ -9208,7 +9208,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 +				if (!q)
 +					break;
 +			}
-+			
++
 +			qsize = insize;
 +			while (psize > 0 || (qsize > 0 && q)) {
 +				if (!psize) {
@@ -9245,16 +9245,16 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 +			}
 +			p = q;
 +		}
-+		
++
 +		tail->next = list;
 +		list->prev = tail;
-+		
++
 +		if (nmerges <= 1)
 +			break;
-+		
++
 +		insize *= 2;
 +	}
-+	
++
 +	head->next = list;
 +	head->prev = list->prev;
 +	list->prev->next = head;
@@ -9316,7 +9316,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_modes.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_object.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_object.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_object.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,294 @@
 +/**************************************************************************
 + *
@@ -9615,7 +9615,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_object.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_regman.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_regman.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_regman.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,200 @@
 +/**************************************************************************
 + * Copyright (c) 2007 Tungsten Graphics, Inc., Cedar Park, TX., USA
@@ -9819,8 +9819,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_regman.c
 +EXPORT_SYMBOL(drm_regs_init);
 Index: linux-2.6.27/drivers/gpu/drm/drm_sman.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_sman.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_sman.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_sman.c	2008-10-09 23:13:53.000000000 +0100
++++ linux-2.6.27/drivers/gpu/drm/drm_sman.c	2009-02-05 13:29:33.000000000 +0000
 @@ -33,7 +33,7 @@
   * struct or a context identifier.
   *
@@ -9832,8 +9832,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_sman.c
  #include "drm_sman.h"
 Index: linux-2.6.27/drivers/gpu/drm/drm_stub.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_stub.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_stub.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_stub.c	2009-02-05 13:29:29.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_stub.c	2009-02-05 13:29:33.000000000 +0000
 @@ -97,6 +97,7 @@
  	init_timer(&dev->timer);
  	mutex_init(&dev->struct_mutex);
@@ -9890,7 +9890,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_stub.c
 Index: linux-2.6.27/drivers/gpu/drm/drm_ttm.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_ttm.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/drm_ttm.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,430 @@
 +/**************************************************************************
 + *
@@ -10324,8 +10324,8 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_ttm.c
 +EXPORT_SYMBOL(drm_bind_ttm);
 Index: linux-2.6.27/drivers/gpu/drm/drm_vm.c
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/drm_vm.c	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/drm_vm.c	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/drm_vm.c	2008-10-09 23:13:53.000000000 +0100
++++ linux-2.6.27/drivers/gpu/drm/drm_vm.c	2009-02-05 13:29:33.000000000 +0000
 @@ -40,6 +40,10 @@
  
  static void drm_vm_open(struct vm_area_struct *vma);
@@ -10480,7 +10480,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_vm.c
 +		if (address >= vma->vm_end)
 +			break;
 +		if (bus_size) {
-+			pfn = ((bus_base + bus_offset) >> PAGE_SHIFT) 
++			pfn = ((bus_base + bus_offset) >> PAGE_SHIFT)
 +				+ page_offset;
 +		} else {
 +			page = drm_ttm_get_page(ttm, page_offset);
@@ -10573,7 +10573,7 @@ Index: linux-2.6.27/drivers/gpu/drm/drm_vm.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/Makefile	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/Makefile	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,13 @@
 +#
 +# Makefile for the drm device driver.  This driver provides support for the
@@ -10591,7 +10591,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/Makefile
 Index: linux-2.6.27/drivers/gpu/drm/psb/i915_drv.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/i915_drv.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/i915_drv.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,795 @@
 +/* i915_drv.h -- Private header for the I915 driver -*- linux-c -*-
 + */
@@ -11391,28 +11391,33 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/i915_drv.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/i915_reg.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/i915_reg.h	2009-01-14 11:58:01.000000000 +0000
-@@ -0,0 +1,487 @@
-+#define BLC_PWM_CTL		0x61254
-+#define BLC_PWM_CTL2		0x61250
-+#define BACKLIGHT_MODULATION_FREQ_SHIFT		(17)
-+/**
-+ * This is the most significant 15 bits of the number of backlight cycles in a
-+ * complete cycle of the modulated backlight control.
++++ linux-2.6.27/drivers/gpu/drm/psb/i915_reg.h	2009-02-05 18:29:58.000000000 +0000
+@@ -0,0 +1,98 @@
++/* Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.
++ * All Rights Reserved.
 + *
-+ * The actual value is this field multiplied by two.
-+ */
-+#define BACKLIGHT_MODULATION_FREQ_MASK		(0x7fff << 17)
-+#define BLM_LEGACY_MODE				(1 << 16)
-+/**
-+ * This is the number of cycles out of the backlight modulation cycle for which
-+ * the backlight is on.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sub license, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
 + *
-+ * This field must be no greater than the number of cycles in the complete
-+ * backlight modulation cycle.
++ * The above copyright notice and this permission notice (including the
++ * next paragraph) shall be included in all copies or substantial portions
++ * of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
++ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++ * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR
++ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 + */
-+#define BACKLIGHT_DUTY_CYCLE_SHIFT		(0)
-+#define BACKLIGHT_DUTY_CYCLE_MASK		(0xffff)
++
++#include "../i915/i915_reg.h"
 +
 +#define I915_GCFGC			0xf0
 +#define I915_LOW_FREQUENCY_ENABLE		(1 << 7)
@@ -11427,426 +11432,11 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/i915_reg.h
 +#define I855_CLOCK_100_133			(2 << 0)
 +#define I855_CLOCK_166_250			(3 << 0)
 +
-+/* I830 CRTC registers */
-+#define HTOTAL_A	0x60000
-+#define HBLANK_A	0x60004
-+#define HSYNC_A 	0x60008
-+#define VTOTAL_A	0x6000c
-+#define VBLANK_A	0x60010
-+#define VSYNC_A 	0x60014
-+#define PIPEASRC	0x6001c
-+#define BCLRPAT_A	0x60020
-+#define VSYNCSHIFT_A	0x60028
-+
-+#define HTOTAL_B	0x61000
-+#define HBLANK_B	0x61004
-+#define HSYNC_B 	0x61008
-+#define VTOTAL_B	0x6100c
-+#define VBLANK_B	0x61010
-+#define VSYNC_B 	0x61014
-+#define PIPEBSRC	0x6101c
-+#define BCLRPAT_B	0x61020
-+#define VSYNCSHIFT_B	0x61028
-+
-+#define PP_STATUS	0x61200
-+# define PP_ON					(1 << 31)
-+/**
-+ * Indicates that all dependencies of the panel are on:
-+ *
-+ * - PLL enabled
-+ * - pipe enabled
-+ * - LVDS/DVOB/DVOC on
-+ */
-+# define PP_READY				(1 << 30)
-+# define PP_SEQUENCE_NONE			(0 << 28)
-+# define PP_SEQUENCE_ON				(1 << 28)
-+# define PP_SEQUENCE_OFF			(2 << 28)
-+# define PP_SEQUENCE_MASK			0x30000000
-+#define PP_CONTROL	0x61204
-+# define POWER_TARGET_ON			(1 << 0)
-+
 +#define LVDSPP_ON       0x61208
 +#define LVDSPP_OFF      0x6120c
 +#define PP_CYCLE        0x61210
 +
-+#define PFIT_CONTROL	0x61230
-+# define PFIT_ENABLE				(1 << 31)
-+# define PFIT_PIPE_MASK				(3 << 29)
-+# define PFIT_PIPE_SHIFT			29
-+# define VERT_INTERP_DISABLE			(0 << 10)
-+# define VERT_INTERP_BILINEAR			(1 << 10)
-+# define VERT_INTERP_MASK			(3 << 10)
-+# define VERT_AUTO_SCALE			(1 << 9)
-+# define HORIZ_INTERP_DISABLE			(0 << 6)
-+# define HORIZ_INTERP_BILINEAR			(1 << 6)
-+# define HORIZ_INTERP_MASK			(3 << 6)
-+# define HORIZ_AUTO_SCALE			(1 << 5)
-+# define PANEL_8TO6_DITHER_ENABLE		(1 << 3)
 +
-+#define PFIT_PGM_RATIOS	0x61234
-+# define PFIT_VERT_SCALE_MASK			0xfff00000
-+# define PFIT_HORIZ_SCALE_MASK			0x0000fff0
-+
-+#define PFIT_AUTO_RATIOS	0x61238
-+
-+
-+#define DPLL_A		0x06014
-+#define DPLL_B		0x06018
-+# define DPLL_VCO_ENABLE			(1 << 31)
-+# define DPLL_DVO_HIGH_SPEED			(1 << 30)
-+# define DPLL_SYNCLOCK_ENABLE			(1 << 29)
-+# define DPLL_VGA_MODE_DIS			(1 << 28)
-+# define DPLLB_MODE_DAC_SERIAL			(1 << 26) /* i915 */
-+# define DPLLB_MODE_LVDS			(2 << 26) /* i915 */
-+# define DPLL_MODE_MASK				(3 << 26)
-+# define DPLL_DAC_SERIAL_P2_CLOCK_DIV_10	(0 << 24) /* i915 */
-+# define DPLL_DAC_SERIAL_P2_CLOCK_DIV_5		(1 << 24) /* i915 */
-+# define DPLLB_LVDS_P2_CLOCK_DIV_14		(0 << 24) /* i915 */
-+# define DPLLB_LVDS_P2_CLOCK_DIV_7		(1 << 24) /* i915 */
-+# define DPLL_P2_CLOCK_DIV_MASK			0x03000000 /* i915 */
-+# define DPLL_FPA01_P1_POST_DIV_MASK		0x00ff0000 /* i915 */
-+/**
-+ *  The i830 generation, in DAC/serial mode, defines p1 as two plus this
-+ * bitfield, or just 2 if PLL_P1_DIVIDE_BY_TWO is set.
-+ */
-+# define DPLL_FPA01_P1_POST_DIV_MASK_I830	0x001f0000
-+/**
-+ * The i830 generation, in LVDS mode, defines P1 as the bit number set within
-+ * this field (only one bit may be set).
-+ */
-+# define DPLL_FPA01_P1_POST_DIV_MASK_I830_LVDS	0x003f0000
-+# define DPLL_FPA01_P1_POST_DIV_SHIFT		16
-+# define PLL_P2_DIVIDE_BY_4			(1 << 23) /* i830, required in DVO non-gang */
-+# define PLL_P1_DIVIDE_BY_TWO			(1 << 21) /* i830 */
-+# define PLL_REF_INPUT_DREFCLK			(0 << 13)
-+# define PLL_REF_INPUT_TVCLKINA			(1 << 13) /* i830 */
-+# define PLL_REF_INPUT_TVCLKINBC		(2 << 13) /* SDVO TVCLKIN */
-+# define PLLB_REF_INPUT_SPREADSPECTRUMIN	(3 << 13)
-+# define PLL_REF_INPUT_MASK			(3 << 13)
-+# define PLL_LOAD_PULSE_PHASE_SHIFT		9
-+/*
-+ * Parallel to Serial Load Pulse phase selection.
-+ * Selects the phase for the 10X DPLL clock for the PCIe
-+ * digital display port. The range is 4 to 13; 10 or more
-+ * is just a flip delay. The default is 6
-+ */
-+# define PLL_LOAD_PULSE_PHASE_MASK		(0xf << PLL_LOAD_PULSE_PHASE_SHIFT)
-+# define DISPLAY_RATE_SELECT_FPA1		(1 << 8)
-+
-+/**
-+ * SDVO multiplier for 945G/GM. Not used on 965.
-+ *
-+ * \sa DPLL_MD_UDI_MULTIPLIER_MASK
-+ */
-+# define SDVO_MULTIPLIER_MASK			0x000000ff
-+# define SDVO_MULTIPLIER_SHIFT_HIRES		4
-+# define SDVO_MULTIPLIER_SHIFT_VGA		0
-+
-+/** @defgroup DPLL_MD
-+ * @{
-+ */
-+/** Pipe A SDVO/UDI clock multiplier/divider register for G965. */
-+#define DPLL_A_MD		0x0601c
-+/** Pipe B SDVO/UDI clock multiplier/divider register for G965. */
-+#define DPLL_B_MD		0x06020
-+/**
-+ * UDI pixel divider, controlling how many pixels are stuffed into a packet.
-+ *
-+ * Value is pixels minus 1.  Must be set to 1 pixel for SDVO.
-+ */
-+# define DPLL_MD_UDI_DIVIDER_MASK		0x3f000000
-+# define DPLL_MD_UDI_DIVIDER_SHIFT		24
-+/** UDI pixel divider for VGA, same as DPLL_MD_UDI_DIVIDER_MASK. */
-+# define DPLL_MD_VGA_UDI_DIVIDER_MASK		0x003f0000
-+# define DPLL_MD_VGA_UDI_DIVIDER_SHIFT		16
-+/**
-+ * SDVO/UDI pixel multiplier.
-+ *
-+ * SDVO requires that the bus clock rate be between 1 and 2 Ghz, and the bus
-+ * clock rate is 10 times the DPLL clock.  At low resolution/refresh rate
-+ * modes, the bus rate would be below the limits, so SDVO allows for stuffing
-+ * dummy bytes in the datastream at an increased clock rate, with both sides of
-+ * the link knowing how many bytes are fill.
-+ *
-+ * So, for a mode with a dotclock of 65Mhz, we would want to double the clock
-+ * rate to 130Mhz to get a bus rate of 1.30Ghz.  The DPLL clock rate would be
-+ * set to 130Mhz, and the SDVO multiplier set to 2x in this register and
-+ * through an SDVO command.
-+ *
-+ * This register field has values of multiplication factor minus 1, with
-+ * a maximum multiplier of 5 for SDVO.
-+ */
-+# define DPLL_MD_UDI_MULTIPLIER_MASK		0x00003f00
-+# define DPLL_MD_UDI_MULTIPLIER_SHIFT		8
-+/** SDVO/UDI pixel multiplier for VGA, same as DPLL_MD_UDI_MULTIPLIER_MASK. 
-+ * This best be set to the default value (3) or the CRT won't work. No,
-+ * I don't entirely understand what this does...
-+ */
-+# define DPLL_MD_VGA_UDI_MULTIPLIER_MASK	0x0000003f
-+# define DPLL_MD_VGA_UDI_MULTIPLIER_SHIFT	0
-+/** @} */
-+
-+#define DPLL_TEST		0x606c
-+# define DPLLB_TEST_SDVO_DIV_1			(0 << 22)
-+# define DPLLB_TEST_SDVO_DIV_2			(1 << 22)
-+# define DPLLB_TEST_SDVO_DIV_4			(2 << 22)
-+# define DPLLB_TEST_SDVO_DIV_MASK		(3 << 22)
-+# define DPLLB_TEST_N_BYPASS			(1 << 19)
-+# define DPLLB_TEST_M_BYPASS			(1 << 18)
-+# define DPLLB_INPUT_BUFFER_ENABLE		(1 << 16)
-+# define DPLLA_TEST_N_BYPASS			(1 << 3)
-+# define DPLLA_TEST_M_BYPASS			(1 << 2)
-+# define DPLLA_INPUT_BUFFER_ENABLE		(1 << 0)
-+
-+#define ADPA			0x61100
-+#define ADPA_DAC_ENABLE 	(1<<31)
-+#define ADPA_DAC_DISABLE	0
-+#define ADPA_PIPE_SELECT_MASK	(1<<30)
-+#define ADPA_PIPE_A_SELECT	0
-+#define ADPA_PIPE_B_SELECT	(1<<30)
-+#define ADPA_USE_VGA_HVPOLARITY (1<<15)
-+#define ADPA_SETS_HVPOLARITY	0
-+#define ADPA_VSYNC_CNTL_DISABLE (1<<11)
-+#define ADPA_VSYNC_CNTL_ENABLE	0
-+#define ADPA_HSYNC_CNTL_DISABLE (1<<10)
-+#define ADPA_HSYNC_CNTL_ENABLE	0
-+#define ADPA_VSYNC_ACTIVE_HIGH	(1<<4)
-+#define ADPA_VSYNC_ACTIVE_LOW	0
-+#define ADPA_HSYNC_ACTIVE_HIGH	(1<<3)
-+#define ADPA_HSYNC_ACTIVE_LOW	0
-+
-+#define FPA0		0x06040
-+#define FPA1		0x06044
-+#define FPB0		0x06048
-+#define FPB1		0x0604c
-+# define FP_N_DIV_MASK				0x003f0000
-+# define FP_N_DIV_SHIFT				16
-+# define FP_M1_DIV_MASK				0x00003f00
-+# define FP_M1_DIV_SHIFT			8
-+# define FP_M2_DIV_MASK				0x0000003f
-+# define FP_M2_DIV_SHIFT			0
-+
-+
-+#define PORT_HOTPLUG_EN		0x61110
-+# define SDVOB_HOTPLUG_INT_EN			(1 << 26)
-+# define SDVOC_HOTPLUG_INT_EN			(1 << 25)
-+# define TV_HOTPLUG_INT_EN			(1 << 18)
-+# define CRT_HOTPLUG_INT_EN			(1 << 9)
-+# define CRT_HOTPLUG_FORCE_DETECT		(1 << 3)
-+
-+#define PORT_HOTPLUG_STAT	0x61114
-+# define CRT_HOTPLUG_INT_STATUS			(1 << 11)
-+# define TV_HOTPLUG_INT_STATUS			(1 << 10)
-+# define CRT_HOTPLUG_MONITOR_MASK		(3 << 8)
-+# define CRT_HOTPLUG_MONITOR_COLOR		(3 << 8)
-+# define CRT_HOTPLUG_MONITOR_MONO		(2 << 8)
-+# define CRT_HOTPLUG_MONITOR_NONE		(0 << 8)
-+# define SDVOC_HOTPLUG_INT_STATUS		(1 << 7)
-+# define SDVOB_HOTPLUG_INT_STATUS		(1 << 6)
-+
-+#define SDVOB			0x61140
-+#define SDVOC			0x61160
-+#define SDVO_ENABLE				(1 << 31)
-+#define SDVO_PIPE_B_SELECT			(1 << 30)
-+#define SDVO_STALL_SELECT			(1 << 29)
-+#define SDVO_INTERRUPT_ENABLE			(1 << 26)
-+/**
-+ * 915G/GM SDVO pixel multiplier.
-+ *
-+ * Programmed value is multiplier - 1, up to 5x.
-+ *
-+ * \sa DPLL_MD_UDI_MULTIPLIER_MASK
-+ */
-+#define SDVO_PORT_MULTIPLY_MASK			(7 << 23)
-+#define SDVO_PORT_MULTIPLY_SHIFT		23
-+#define SDVO_PHASE_SELECT_MASK			(15 << 19)
-+#define SDVO_PHASE_SELECT_DEFAULT		(6 << 19)
-+#define SDVO_CLOCK_OUTPUT_INVERT		(1 << 18)
-+#define SDVOC_GANG_MODE				(1 << 16)
-+#define SDVO_BORDER_ENABLE			(1 << 7)
-+#define SDVOB_PCIE_CONCURRENCY			(1 << 3)
-+#define SDVO_DETECTED				(1 << 2)
-+/* Bits to be preserved when writing */
-+#define SDVOB_PRESERVE_MASK			((1 << 17) | (1 << 16) | (1 << 14))
-+#define SDVOC_PRESERVE_MASK			(1 << 17)
-+
-+/** @defgroup LVDS
-+ * @{
-+ */
-+/**
-+ * This register controls the LVDS output enable, pipe selection, and data
-+ * format selection.
-+ *
-+ * All of the clock/data pairs are force powered down by power sequencing.
-+ */
-+#define LVDS			0x61180
-+/**
-+ * Enables the LVDS port.  This bit must be set before DPLLs are enabled, as
-+ * the DPLL semantics change when the LVDS is assigned to that pipe.
-+ */
-+# define LVDS_PORT_EN			(1 << 31)
-+/** Selects pipe B for LVDS data.  Must be set on pre-965. */
-+# define LVDS_PIPEB_SELECT		(1 << 30)
-+
-+/**
-+ * Enables the A0-A2 data pairs and CLKA, containing 18 bits of color data per
-+ * pixel.
-+ */
-+# define LVDS_A0A2_CLKA_POWER_MASK	(3 << 8)
-+# define LVDS_A0A2_CLKA_POWER_DOWN	(0 << 8)
-+# define LVDS_A0A2_CLKA_POWER_UP	(3 << 8)
-+/**
-+ * Controls the A3 data pair, which contains the additional LSBs for 24 bit
-+ * mode.  Only enabled if LVDS_A0A2_CLKA_POWER_UP also indicates it should be
-+ * on.
-+ */
-+# define LVDS_A3_POWER_MASK		(3 << 6)
-+# define LVDS_A3_POWER_DOWN		(0 << 6)
-+# define LVDS_A3_POWER_UP		(3 << 6)
-+/**
-+ * Controls the CLKB pair.  This should only be set when LVDS_B0B3_POWER_UP
-+ * is set.
-+ */
-+# define LVDS_CLKB_POWER_MASK		(3 << 4)
-+# define LVDS_CLKB_POWER_DOWN		(0 << 4)
-+# define LVDS_CLKB_POWER_UP		(3 << 4)
-+
-+/**
-+ * Controls the B0-B3 data pairs.  This must be set to match the DPLL p2
-+ * setting for whether we are in dual-channel mode.  The B3 pair will
-+ * additionally only be powered up when LVDS_A3_POWER_UP is set.
-+ */
-+# define LVDS_B0B3_POWER_MASK		(3 << 2)
-+# define LVDS_B0B3_POWER_DOWN		(0 << 2)
-+# define LVDS_B0B3_POWER_UP		(3 << 2)
-+
-+#define PIPEACONF 0x70008
-+#define PIPEACONF_ENABLE	(1<<31)
-+#define PIPEACONF_DISABLE	0
-+#define PIPEACONF_DOUBLE_WIDE	(1<<30)
-+#define I965_PIPECONF_ACTIVE	(1<<30)
-+#define PIPEACONF_SINGLE_WIDE	0
-+#define PIPEACONF_PIPE_UNLOCKED 0
-+#define PIPEACONF_PIPE_LOCKED	(1<<25)
-+#define PIPEACONF_PALETTE	0
-+#define PIPEACONF_GAMMA 	(1<<24)
-+#define PIPECONF_FORCE_BORDER	(1<<25)
-+#define PIPECONF_PROGRESSIVE	(0 << 21)
-+#define PIPECONF_INTERLACE_W_FIELD_INDICATION	(6 << 21)
-+#define PIPECONF_INTERLACE_FIELD_0_ONLY		(7 << 21)
-+
-+#define PIPEBCONF 0x71008
-+#define PIPEBCONF_ENABLE	(1<<31)
-+#define PIPEBCONF_DISABLE	0
-+#define PIPEBCONF_DOUBLE_WIDE	(1<<30)
-+#define PIPEBCONF_DISABLE	0
-+#define PIPEBCONF_GAMMA 	(1<<24)
-+#define PIPEBCONF_PALETTE	0
-+
-+#define PIPEBGCMAXRED		0x71010
-+#define PIPEBGCMAXGREEN		0x71014
-+#define PIPEBGCMAXBLUE		0x71018
-+#define PIPEBSTAT		0x71024
-+#define PIPEBFRAMEHIGH		0x71040
-+#define PIPEBFRAMEPIXEL		0x71044
-+
-+#define DSPACNTR		0x70180
-+#define DSPBCNTR		0x71180
-+#define DISPLAY_PLANE_ENABLE 			(1<<31)
-+#define DISPLAY_PLANE_DISABLE			0
-+#define DISPPLANE_GAMMA_ENABLE			(1<<30)
-+#define DISPPLANE_GAMMA_DISABLE			0
-+#define DISPPLANE_PIXFORMAT_MASK		(0xf<<26)
-+#define DISPPLANE_8BPP				(0x2<<26)
-+#define DISPPLANE_15_16BPP			(0x4<<26)
-+#define DISPPLANE_16BPP				(0x5<<26)
-+#define DISPPLANE_32BPP_NO_ALPHA 		(0x6<<26)
-+#define DISPPLANE_32BPP				(0x7<<26)
-+#define DISPPLANE_STEREO_ENABLE			(1<<25)
-+#define DISPPLANE_STEREO_DISABLE		0
-+#define DISPPLANE_SEL_PIPE_MASK			(1<<24)
-+#define DISPPLANE_SEL_PIPE_A			0
-+#define DISPPLANE_SEL_PIPE_B			(1<<24)
-+#define DISPPLANE_SRC_KEY_ENABLE		(1<<22)
-+#define DISPPLANE_SRC_KEY_DISABLE		0
-+#define DISPPLANE_LINE_DOUBLE			(1<<20)
-+#define DISPPLANE_NO_LINE_DOUBLE		0
-+#define DISPPLANE_STEREO_POLARITY_FIRST		0
-+#define DISPPLANE_STEREO_POLARITY_SECOND	(1<<18)
-+/* plane B only */
-+#define DISPPLANE_ALPHA_TRANS_ENABLE		(1<<15)
-+#define DISPPLANE_ALPHA_TRANS_DISABLE		0
-+#define DISPPLANE_SPRITE_ABOVE_DISPLAYA		0
-+#define DISPPLANE_SPRITE_ABOVE_OVERLAY		(1)
-+
-+#define DSPABASE		0x70184
-+#define DSPASTRIDE		0x70188
-+
-+#define DSPBBASE		0x71184
-+#define DSPBADDR		DSPBBASE
-+#define DSPBSTRIDE		0x71188
-+
-+#define DSPAKEYVAL		0x70194
-+#define DSPAKEYMASK		0x70198
-+
-+#define DSPAPOS			0x7018C /* reserved */
-+#define DSPASIZE		0x70190
-+#define DSPBPOS			0x7118C
-+#define DSPBSIZE		0x71190
-+
-+#define DSPASURF		0x7019C
-+#define DSPATILEOFF		0x701A4
-+
-+#define DSPBSURF		0x7119C
-+#define DSPBTILEOFF		0x711A4
-+
-+#define VGACNTRL		0x71400
-+# define VGA_DISP_DISABLE			(1 << 31)
-+# define VGA_2X_MODE				(1 << 30)
-+# define VGA_PIPE_B_SELECT			(1 << 29)
-+
-+/*
-+ * Some BIOS scratch area registers.  The 845 (and 830?) store the amount
-+ * of video memory available to the BIOS in SWF1.
-+ */
-+
-+#define SWF0			0x71410
-+#define SWF1			0x71414
-+#define SWF2			0x71418
-+#define SWF3			0x7141c
-+#define SWF4			0x71420
-+#define SWF5			0x71424
-+#define SWF6			0x71428
-+
-+/*
-+ * 855 scratch registers.
-+ */
-+#define SWF00			0x70410
-+#define SWF01			0x70414
-+#define SWF02			0x70418
-+#define SWF03			0x7041c
-+#define SWF04			0x70420
-+#define SWF05			0x70424
-+#define SWF06			0x70428
-+
-+#define SWF10			SWF0
-+#define SWF11			SWF1
-+#define SWF12			SWF2
-+#define SWF13			SWF3
-+#define SWF14			SWF4
-+#define SWF15			SWF5
-+#define SWF16			SWF6
-+
-+#define SWF30			0x72414
-+#define SWF31			0x72418
-+#define SWF32			0x7241c
-+
-+
-+/*
-+ * Palette registers
-+ */
-+#define PALETTE_A		0x0a000
-+#define PALETTE_B		0x0a800
 +
 +#define IS_I830(dev) ((dev)->pci_device == PCI_DEVICE_ID_INTEL_82830_CGC)
 +#define IS_845G(dev) ((dev)->pci_device == PCI_DEVICE_ID_INTEL_82845G_IG)
@@ -11880,10 +11470,31 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/i915_reg.h
 +
 +#define IS_POULSBO(dev) (((dev)->pci_device == 0x8108) || \
 +			 ((dev)->pci_device == 0x8109))
++
++#define FPA0		0x06040
++#define FPA1		0x06044
++#define FPB0		0x06048
++#define FPB1		0x0604c
++#define FP_N_DIV_MASK				0x003f0000
++#define FP_N_DIV_SHIFT				16
++#define FP_M1_DIV_MASK				0x00003f00
++#define FP_M1_DIV_SHIFT			8
++#define FP_M2_DIV_MASK				0x0000003f
++#define FP_M2_DIV_SHIFT			0
++
++#define DSPABASE		0x70184
++#define DSPBBASE       		0x71184
++#define DSPAKEYVAL		0x70194
++#define DSPAKEYMASK		0x70198
++
++#define VSYNCSHIFT_A	0x60028
++#define VSYNCSHIFT_B	0x61028
++#define DPLL_B_MD		0x06020
++
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,242 @@
 +/*
 + * Copyright © 2006-2007 Intel Corporation
@@ -11918,11 +11529,11 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c
 +	struct drm_device *dev = output->dev;
 +	DRM_DRIVER_PRIVATE_T *dev_priv = dev->dev_private;
 +	u32 temp;
-+	
++
 +	temp = I915_READ(ADPA);
 +	temp &= ~(ADPA_HSYNC_CNTL_DISABLE | ADPA_VSYNC_CNTL_DISABLE);
 +	temp &= ~ADPA_DAC_ENABLE;
-+	
++
 +	switch(mode) {
 +	case DPMSModeOn:
 +		temp |= ADPA_DAC_ENABLE;
@@ -11937,13 +11548,13 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c
 +		temp |= ADPA_HSYNC_CNTL_DISABLE | ADPA_VSYNC_CNTL_DISABLE;
 +		break;
 +	}
-+	
++
 +	I915_WRITE(ADPA, temp);
 +}
 +
 +static void intel_crt_save(struct drm_output *output)
 +{
-+	
++
 +}
 +
 +static void intel_crt_restore(struct drm_output *output)
@@ -11981,7 +11592,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c
 +	int dpll_md_reg;
 +	u32 adpa, dpll_md;
 +
-+	if (intel_crtc->pipe == 0) 
++	if (intel_crtc->pipe == 0)
 +		dpll_md_reg = DPLL_A_MD;
 +	else
 +		dpll_md_reg = DPLL_B_MD;
@@ -11995,18 +11606,18 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c
 +		I915_WRITE(dpll_md_reg,
 +			   dpll_md & ~DPLL_MD_UDI_MULTIPLIER_MASK);
 +	}
-+	
++
 +	adpa = 0;
 +	if (adjusted_mode->flags & V_PHSYNC)
 +		adpa |= ADPA_HSYNC_ACTIVE_HIGH;
 +	if (adjusted_mode->flags & V_PVSYNC)
 +		adpa |= ADPA_VSYNC_ACTIVE_HIGH;
-+	
++
 +	if (intel_crtc->pipe == 0)
 +		adpa |= ADPA_PIPE_A_SELECT;
 +	else
 +		adpa |= ADPA_PIPE_B_SELECT;
-+	
++
 +	I915_WRITE(ADPA, adpa);
 +}
 +
@@ -12050,14 +11661,14 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c
 +	/* CRT should always be at 0, but check anyway */
 +	if (intel_output->type != INTEL_OUTPUT_ANALOG)
 +		return false;
-+	
++
 +	return intel_ddc_probe(output);
 +}
 +
 +static enum drm_output_status intel_crt_detect(struct drm_output *output)
 +{
 +	struct drm_device *dev = output->dev;
-+	
++
 +	if (IS_I945G(dev) || IS_I945GM(dev) || IS_I965G(dev)) {
 +		if (intel_crt_detect_hotplug(output))
 +			return output_status_connected;
@@ -12130,7 +11741,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_crt.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_display.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_display.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,1472 @@
 +/*
 + * Copyright © 2006-2007 Intel Corporation
@@ -12163,7 +11774,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +bool intel_pipe_has_type (struct drm_crtc *crtc, int type);
 +
 +typedef struct {
-+    /* given values */    
++    /* given values */
 +    int n;
 +    int m1, m2;
 +    int p1, p2;
@@ -12302,7 +11913,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +{
 +	struct drm_device *dev = crtc->dev;
 +	const intel_limit_t *limit;
-+	
++
 +	if (IS_I9XX(dev)) {
 +		if (intel_pipe_has_type(crtc, INTEL_OUTPUT_LVDS))
 +			limit = &intel_limits[INTEL_LIMIT_I9XX_LVDS];
@@ -12374,7 +11985,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +static bool intel_PLL_is_valid(struct drm_crtc *crtc, intel_clock_t *clock)
 +{
 +	const intel_limit_t *limit = intel_limit (crtc);
-+	
++
 +	if (clock->p1  < limit->p1.min  || limit->p1.max  < clock->p1)
 +		INTELPllInvalid ("p1 out of range\n");
 +	if (clock->p   < limit->p.min   || limit->p.max   < clock->p)
@@ -12396,7 +12007,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	 */
 +	if (clock->dot < limit->dot.min || limit->dot.max < clock->dot)
 +		INTELPllInvalid ("dot out of range\n");
-+	
++
 +	return true;
 +}
 +
@@ -12433,9 +12044,9 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +		else
 +			clock.p2 = limit->p2.p2_fast;
 +	}
-+	
++
 +	memset (best_clock, 0, sizeof (*best_clock));
-+	
++
 +	for (clock.m1 = limit->m1.min; clock.m1 <= limit->m1.max; clock.m1++) {
 +		for (clock.m2 = limit->m2.min; clock.m2 < clock.m1 &&
 +			     clock.m2 <= limit->m2.max; clock.m2++) {
@@ -12444,12 +12055,12 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +				for (clock.p1 = limit->p1.min;
 +				     clock.p1 <= limit->p1.max; clock.p1++) {
 +					int this_err;
-+					
++
 +					intel_clock(dev, refclk, &clock);
-+					
++
 +					if (!intel_PLL_is_valid(crtc, &clock))
 +						continue;
-+					
++
 +					this_err = abs(clock.dot - target);
 +					if (this_err < err) {
 +						*best_clock = clock;
@@ -12515,11 +12126,11 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +		I915_WRITE(dspbase, Start + Offset);
 +		I915_READ(dspbase);
 +	}
-+	
 +
-+	if (!dev_priv->sarea_priv) 
++
++	if (!dev_priv->sarea_priv)
 +		return;
-+		
++
 +	switch (pipe) {
 +	case 0:
 +		dev_priv->sarea_priv->planeA_x = x;
@@ -12577,7 +12188,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +			/* Wait for the clocks to stabilize. */
 +			udelay(150);
 +		}
-+		
++
 +		/* Enable the pipe */
 +		temp = I915_READ(pipeconf_reg);
 +		if ((temp & PIPEACONF_ENABLE) == 0)
@@ -12595,16 +12206,16 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +			/* Flush the plane changes */
 +			I915_WRITE(dspbase_reg, I915_READ(dspbase_reg));
 +		}
-+		
++
 +		intel_crtc_load_lut(crtc);
-+		
++
 +		/* Give the overlay scaler a chance to enable if it's on this pipe */
 +		//intel_crtc_dpms_video(crtc, TRUE); TODO
 +	break;
 +	case DPMSModeOff:
 +		/* Give the overlay scaler a chance to disable if it's on this pipe */
 +		//intel_crtc_dpms_video(crtc, FALSE); TODO
-+		
++
 +		/* Disable display plane */
 +		temp = I915_READ(dspcntr_reg);
 +		if ((temp & DISPLAY_PLANE_ENABLE) != 0) {
@@ -12613,39 +12224,39 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +			I915_WRITE(dspbase_reg, I915_READ(dspbase_reg));
 +			I915_READ(dspbase_reg);
 +		}
-+		
++
 +		if (!IS_I9XX(dev)) {
 +			/* Wait for vblank for the disable to take effect */
 +			intel_wait_for_vblank(dev);
 +		}
-+		
++
 +		/* Next, disable display pipes */
 +		temp = I915_READ(pipeconf_reg);
 +		if ((temp & PIPEACONF_ENABLE) != 0) {
 +			I915_WRITE(pipeconf_reg, temp & ~PIPEACONF_ENABLE);
 +			I915_READ(pipeconf_reg);
 +		}
-+		
++
 +		/* Wait for vblank for the disable to take effect. */
 +		intel_wait_for_vblank(dev);
-+		
++
 +		temp = I915_READ(dpll_reg);
 +		if ((temp & DPLL_VCO_ENABLE) != 0) {
 +			I915_WRITE(dpll_reg, temp & ~DPLL_VCO_ENABLE);
 +			I915_READ(dpll_reg);
 +		}
-+		
++
 +		/* Wait for the clocks to turn off. */
 +		udelay(150);
 +		break;
 +	}
-+	
++
 +
 +	if (!dev_priv->sarea_priv)
 +		return;
 +
 +	enabled = crtc->enabled && mode != DPMSModeOff;
-+	
++
 +	switch (pipe) {
 +	case 0:
 +		dev_priv->sarea_priv->planeA_w = enabled ? crtc->mode.hdisplay : 0;
@@ -12727,7 +12338,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +		u16 gcfgc = 0;
 +
 +		pci_read_config_word(dev->pdev, I915_GCFGC, &gcfgc);
-+		
++
 +		if (gcfgc & I915_LOW_FREQUENCY_ENABLE)
 +			return 133000;
 +		else {
@@ -12745,7 +12356,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +#if 0
 +		PCITAG bridge = pciTag(0, 0, 0); /* This is always the host bridge */
 +		u16 hpllcc = pciReadWord(bridge, I855_HPLLCC);
-+		
++
 +#endif
 +		u16 hpllcc = 0;
 +		/* Assume that the hardware is in the high speed state.  This
@@ -12762,7 +12373,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +		}
 +	} else /* 852, 830 */
 +		return 133000;
-+	
++
 +	return 0; /* Silence gcc warning */
 +}
 +
@@ -12775,21 +12386,21 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +{
 +	DRM_DRIVER_PRIVATE_T *dev_priv = dev->dev_private;
 +	u32  pfit_control;
-+    
++
 +	/* i830 doesn't have a panel fitter */
 +	if (IS_I830(dev))
 +		return -1;
-+    
++
 +	pfit_control = I915_READ(PFIT_CONTROL);
-+    
++
 +	/* See if the panel fitter is in use */
 +	if ((pfit_control & PFIT_ENABLE) == 0)
 +		return -1;
-+	
++
 +	/* 965 can place panel fitter on either pipe */
 +	if (IS_I965G(dev))
 +		return (pfit_control >> 29) & 0x3;
-+	
++
 +	/* older chips can only use pipe 1 */
 +	return 1;
 +}
@@ -12926,7 +12537,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	I915_WRITE(VGACNTRL, vgacntrl_reg_value[pipe]);
 +	intel_wait_for_vblank(dev);
 +	I915_WRITE(PFIT_CONTROL, pfit_control_reg_value[pipe]);
-+	
++
 +	intel_crtc_commit(crtc);
 +	list_for_each_entry(output, &mode_config->output_list, head) {
 +		if (output->crtc != crtc)
@@ -12990,7 +12601,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +			break;
 +		}
 +	}
-+	
++
 +	fp_reg_value[pipe] = I915_READ(fp_reg);
 +	dpll_reg_value[pipe] = I915_READ(dpll_reg);
 +	dpll_md_reg_value[pipe] = I915_READ(dpll_md_reg);
@@ -13075,7 +12686,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +			break;
 +		}
 +	}
-+	
++
 +	if (IS_I9XX(dev)) {
 +		refclk = 96000;
 +	} else {
@@ -13089,7 +12700,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	}
 +
 +	fp = clock.n << 16 | clock.m1 << 8 | clock.m2;
-+	
++
 +	dpll = DPLL_VGA_MODE_DIS;
 +	if (IS_I9XX(dev)) {
 +		if (is_lvds) {
@@ -13105,7 +12716,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +				dpll |= (sdvo_pixel_multiply - 1) << SDVO_MULTIPLIER_SHIFT_HIRES;
 +			}
 +		}
-+		
++
 +		/* compute bitmask from p1 value */
 +		dpll |= (1 << (clock.p1 - 1)) << 16;
 +		switch (clock.p2) {
@@ -13136,7 +12747,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +				dpll |= PLL_P2_DIVIDE_BY_4;
 +		}
 +	}
-+	
++
 +	if (is_tv) {
 +		/* XXX: just matching BIOS for now */
 +/*	dpll |= PLL_REF_INPUT_TVCLKINBC; */
@@ -13148,7 +12759,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +#endif
 +	else
 +		dpll |= PLL_REF_INPUT_DREFCLK;
-+	
++
 +	/* setup pipeconf */
 +	pipeconf = I915_READ(pipeconf_reg);
 +
@@ -13172,13 +12783,13 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +		DRM_ERROR("Unknown color depth\n");
 +		return;
 +	}
-+	
++
 +
 +	if (pipe == 0)
 +		dspcntr |= DISPPLANE_SEL_PIPE_A;
 +	else
 +		dspcntr |= DISPPLANE_SEL_PIPE_B;
-+	
++
 +	if (pipe == 0 && !IS_I965G(dev)) {
 +		/* Enable pixel doubling when the dot clock is > 90% of the (display)
 +		 * core speed.
@@ -13196,7 +12807,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	pipeconf |= PIPEACONF_ENABLE;
 +	dpll |= DPLL_VCO_ENABLE;
 +
-+	
++
 +	/* Disable the panel fitter if it was on our pipe */
 +	if (intel_panel_fitter_pipe(dev) == pipe)
 +		I915_WRITE(PFIT_CONTROL, 0);
@@ -13206,7 +12817,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +
 +        /*psbPrintPll("chosen", &clock);*/
 +    DRM_DEBUG("clock regs: 0x%08x, 0x%08x,dspntr is 0x%8x, pipeconf is 0x%8x\n", (int)dpll,
-+	      (int)fp,(int)dspcntr,(int)pipeconf);	
++	      (int)fp,(int)dspcntr,(int)pipeconf);
 +#if 0
 +	if (!xf86ModesEqual(mode, adjusted_mode)) {
 +		xf86DrvMsg(pScrn->scrnIndex, X_INFO,
@@ -13222,14 +12833,14 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +		I915_READ(dpll_reg);
 +		udelay(150);
 +	}
-+	
++
 +	/* The LVDS pin pair needs to be on before the DPLLs are enabled.
 +	 * This is an exception to the general rule that mode_set doesn't turn
 +	 * things on.
 +	 */
 +	if (is_lvds) {
 +		u32 lvds = I915_READ(LVDS);
-+		
++
 +		lvds |= LVDS_PORT_EN | LVDS_A0A2_CLKA_POWER_UP | LVDS_PIPEB_SELECT;
 +		/* Set the B0-B3 data pairs corresponding to whether we're going to
 +		 * set the DPLLs for dual-channel mode or not.
@@ -13238,22 +12849,22 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +			lvds |= LVDS_B0B3_POWER_UP | LVDS_CLKB_POWER_UP;
 +		else
 +			lvds &= ~(LVDS_B0B3_POWER_UP | LVDS_CLKB_POWER_UP);
-+		
++
 +		/* It would be nice to set 24 vs 18-bit mode (LVDS_A3_POWER_UP)
 +		 * appropriately here, but we need to look more thoroughly into how
 +		 * panels behave in the two modes.
 +		 */
-+		
++
 +		I915_WRITE(LVDS, lvds);
 +		I915_READ(LVDS);
 +	}
-+	
++
 +	I915_WRITE(fp_reg, fp);
 +	I915_WRITE(dpll_reg, dpll);
 +	I915_READ(dpll_reg);
 +	/* Wait for the clocks to stabilize. */
 +	udelay(150);
-+	
++
 +	if (IS_I965G(dev)) {
 +		int sdvo_pixel_multiply = adjusted_mode->clock / mode->clock;
 +		I915_WRITE(dpll_md_reg, (0 << DPLL_MD_UDI_DIVIDER_SHIFT) |
@@ -13265,7 +12876,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	I915_READ(dpll_reg);
 +	/* Wait for the clocks to stabilize. */
 +	udelay(150);
-+	
++
 +	I915_WRITE(htot_reg, (adjusted_mode->crtc_hdisplay - 1) |
 +		   ((adjusted_mode->crtc_htotal - 1) << 16));
 +	I915_WRITE(hblank_reg, (adjusted_mode->crtc_hblank_start - 1) |
@@ -13287,14 +12898,14 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	I915_WRITE(pipesrc_reg, ((mode->hdisplay - 1) << 16) | (mode->vdisplay - 1));
 +	I915_WRITE(pipeconf_reg, pipeconf);
 +	I915_READ(pipeconf_reg);
-+	
++
 +	intel_wait_for_vblank(dev);
-+	
++
 +	I915_WRITE(dspcntr_reg, dspcntr);
-+	
++
 +	/* Flush the plane changes */
 +	intel_pipe_set_base(crtc, x, y);
-+	
++
 +#if 0
 +	intel_set_vblank(dev);
 +#endif
@@ -13302,7 +12913,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	/* Disable the VGA plane that we never use */
 +	I915_WRITE(VGACNTRL, VGA_DISP_DISABLE);
 +
-+	intel_wait_for_vblank(dev);    
++	intel_wait_for_vblank(dev);
 +}
 +
 +/** Loads the palette/gamma unit for the CRTC with the prepared values */
@@ -13331,7 +12942,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +				 u16 blue, int regno)
 +{
 +	struct intel_crtc *intel_crtc = crtc->driver_private;
-+	
++
 +	intel_crtc->lut_r[regno] = red >> 8;
 +	intel_crtc->lut_g[regno] = green >> 8;
 +	intel_crtc->lut_b[regno] = blue >> 8;
@@ -13389,7 +13000,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +				/* XXX: might not be 66MHz */
 +				i8xx_clock(66000, &clock);
 +			} else
-+				i8xx_clock(48000, &clock);		
++				i8xx_clock(48000, &clock);
 +		} else {
 +			if (dpll & PLL_P1_DIVIDE_BY_TWO)
 +				clock.p1 = 2;
@@ -13532,7 +13143,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 +	list_for_each_entry(output, &dev->mode_config.output_list, head) {
 +		struct intel_output *intel_output = output->driver_private;
 +		int crtc_mask = 0, clone_mask = 0;
-+		
++
 +		/* valid crtcs */
 +		switch(intel_output->type) {
 +		case INTEL_OUTPUT_DVO:
@@ -13607,7 +13218,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_display.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_drv.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_drv.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_drv.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,91 @@
 +/*
 + * Copyright (c) 2006 Dave Airlie <airlied@linux.ie>
@@ -13634,7 +13245,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_drv.h
 +#define INTEL_I2C_BUS_DVO 1
 +#define INTEL_I2C_BUS_SDVO 2
 +
-+/* these are outputs from the chip - integrated only 
++/* these are outputs from the chip - integrated only
 +   external chips are via DVO or SDVO output */
 +#define INTEL_OUTPUT_UNUSED 0
 +#define INTEL_OUTPUT_ANALOG 1
@@ -13703,7 +13314,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_drv.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,913 @@
 +/*
 + * Copyright © 2006-2007 Intel Corporation
@@ -13754,7 +13365,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +uint8_t blc_brightnesscmd;
 +int lvds_backlight;	/* restore backlight to this value */
 +
-+struct intel_i2c_chan *lvds_i2c_bus; 
++struct intel_i2c_chan *lvds_i2c_bus;
 +u32 CoreClock;
 +u32 PWMControlRegFreq;
 +
@@ -13773,7 +13384,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +{
 +	u8 out_buf[2];
 +	struct i2c_msg msgs[] = {
-+		{ 
++		{
 +			.addr = lvds_i2c_bus->slave_addr,
 +			.flags = 0,
 +			.len = 2,
@@ -13799,7 +13410,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +/**
 + * Calculate PWM control register value.
 + */
-+static int 
++static int
 +LVDSCalculatePWMCtrlRegFreq(struct drm_device *dev)
 +{
 +	unsigned long value = 0;
@@ -13857,7 +13468,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +	DRM_DRIVER_PRIVATE_T *dev_priv = dev->dev_private;
 +	//u32 blc_pwm_ctl;
 +
-+	/*           
++	/*
 +     	blc_pwm_ctl = I915_READ(BLC_PWM_CTL) & ~BACKLIGHT_DUTY_CYCLE_MASK;
 +	I915_WRITE(BLC_PWM_CTL, (blc_pwm_ctl |
 +		(level << BACKLIGHT_DUTY_CYCLE_SHIFT)));
@@ -13906,7 +13517,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +	return BRIGHTNESS_MAX_LEVEL;
 +	/*
 +	DRM_DRIVER_PRIVATE_T *dev_priv = dev->dev_private;
-+    
++
 +	return ((I915_READ(BLC_PWM_CTL) & BACKLIGHT_MODULATION_FREQ_MASK) >>
 +		BACKLIGHT_MODULATION_FREQ_SHIFT) * 2;
 +	*/
@@ -14201,7 +13812,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +static int update_bl_status(struct backlight_device *bd)
 +{
 +        int value = bd->props.brightness;
-+	
++
 +	struct drm_device *dev = bl_get_data(bd);
 +
 +	lvds_backlight = value;
@@ -14235,7 +13846,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +
 +	if (psbbl_device){
 +		backlight_device_unregister(psbbl_device);
-+	}		
++	}
 +	if(dev_OpRegion != NULL)
 +		iounmap(dev_OpRegion);
 +	intel_i2c_destroy(intel_output->ddc_bus);
@@ -14288,7 +13899,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +				  (int)obj->integer.value);
 +
 +			/* look for an LVDS type */
-+			if (obj->integer.value & 0x00000400) 
++			if (obj->integer.value & 0x00000400)
 +				found = 1;
 +		}
 +	}
@@ -14344,7 +13955,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +	blc_type = 0;
 +	blc_pol = 0;
 +
-+	if (1) { //get the BLC init data from VBT 
++	if (1) { //get the BLC init data from VBT
 +		u32 OpRegion_Phys;
 +		unsigned int OpRegion_Size = 0x100;
 +		OpRegionPtr OpRegion;
@@ -14371,7 +13982,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +			OpRegion_NewSize = OpRegion->size * 1024;
 +
 +			dev_OpRegionSize = OpRegion_NewSize;
-+			
++
 +			iounmap(dev_OpRegion);
 +			dev_OpRegion = ioremap(OpRegion_Phys, OpRegion_NewSize);
 +		} else {
@@ -14383,13 +13994,13 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +			DRM_INFO("intel_lvds_init: OpRegion has the VBT address\n");
 +			vbt_buf = dev_OpRegion + OFFSET_OPREGION_VBT;
 +			vbt = (struct vbt_header *)(dev_OpRegion + OFFSET_OPREGION_VBT);
-+		} else {		
++		} else {
 +			DRM_INFO("intel_lvds_init: No OpRegion, use the bios at fixed address 0xc0000\n");
 +			bios = phys_to_virt(0xC0000);
 +			if(*((u16 *)bios) != 0xAA55){
 +				bios = NULL;
 +				DRM_ERROR("the bios is incorrect\n");
-+				goto blc_out;		
++				goto blc_out;
 +			}
 +			vbt_off = bios[0x1a] | (bios[0x1a + 1] << 8);
 +			DRM_INFO("intel_lvds_init: the vbt off is %x\n", vbt_off);
@@ -14458,7 +14069,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +
 +	if(1){
 +		//get the Core Clock for calculating MAX PWM value
-+		//check whether the MaxResEnableInt is 
++		//check whether the MaxResEnableInt is
 +		struct pci_dev * pci_root = pci_get_bus_and_slot(0, 0);
 +		u32 clock;
 +		u32 sku_value = 0;
@@ -14478,7 +14089,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +			pci_read_config_dword(pci_root, 0xD4, &clock);
 +			CoreClock = CoreClocks[clock & 0x07];
 +			DRM_INFO("intel_lvds_init: the CoreClock is %d\n", CoreClock);
-+			
++
 +			pci_write_config_dword(pci_root, 0xD0, PCI_PORT5_REG80_FFUSE);
 +			pci_read_config_dword(pci_root, 0xD4, &sku_value);
 +			sku_bMaxResEnableInt = (sku_value & PCI_PORT5_REG80_MAXRES_INT_EN)? true : false;
@@ -14487,7 +14098,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +		}
 +	}
 +
-+	if ((blc_type == BLC_I2C_TYPE) || (blc_type == BLC_PWM_TYPE)){	
++	if ((blc_type == BLC_I2C_TYPE) || (blc_type == BLC_PWM_TYPE)){
 +		/* add /sys/class/backlight interface as standard */
 +		psbbl_device = backlight_device_register("psblvds", &dev->pdev->dev, dev, &psbbl_ops);
 +		if (psbbl_device){
@@ -14517,7 +14128,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +
 +	list_for_each_entry(scan, &output->probed_modes, head) {
 +		if (scan->type & DRM_MODE_TYPE_PREFERRED) {
-+			dev_priv->panel_fixed_mode = 
++			dev_priv->panel_fixed_mode =
 +				drm_mode_duplicate(dev, scan);
 +			goto out; /* FIXME: check for quirks */
 +		}
@@ -14531,7 +14142,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 +	lvds = I915_READ(LVDS);
 +	pipe = (lvds & LVDS_PIPEB_SELECT) ? 1 : 0;
 +	crtc = intel_get_crtc_from_pipe(dev, pipe);
-+		
++
 +	if (crtc && (lvds & LVDS_PORT_EN)) {
 +		dev_priv->panel_fixed_mode = intel_crtc_mode_get(dev, crtc);
 +		if (dev_priv->panel_fixed_mode) {
@@ -14621,7 +14232,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,174 @@
 +/*
 + * Copyright © 2006-2007 Intel Corporation
@@ -14662,10 +14273,10 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.h
 +#define BLC_MAX_PWM_REG_FREQ 0xfffe
 +#define BLC_MIN_PWM_REG_FREQ 0x2
 +#define BLC_PWM_LEGACY_MODE_ENABLE 0x0001
-+#define BLC_PWM_PRECISION_FACTOR 10//10000000 
-+#define BLC_PWM_FREQ_CALC_CONSTANT 32 
-+#define MHz 1000000 
-+#define OFFSET_OPREGION_VBT	0x400	
++#define BLC_PWM_PRECISION_FACTOR 10//10000000
++#define BLC_PWM_FREQ_CALC_CONSTANT 32
++#define MHz 1000000
++#define OFFSET_OPREGION_VBT	0x400
 +
 +typedef struct OpRegion_Header
 +{
@@ -14700,7 +14311,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.h
 +	u16 version;			/**< decimal */
 +	u16 header_size;		/**< in bytes */
 +	u16 bdb_size;			/**< in bytes */
-+} __attribute__ ((packed));	
++} __attribute__ ((packed));
 +
 +#define LVDS_CAP_EDID			(1 << 6)
 +#define LVDS_CAP_DITHER			(1 << 5)
@@ -14800,7 +14411,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_lvds.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_modes.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_modes.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_modes.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,60 @@
 +/*
 + * Copyright (c) 2007 Dave Airlie <airlied@linux.ie>
@@ -14865,7 +14476,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_modes.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,3973 @@
 +/*
 + * Copyright © 2006-2007 Intel Corporation
@@ -15026,7 +14637,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +    EXTVDATA OverScanY;		       /* Vertical Overscan : for TV onl */
 +    EXTVDATA OverScanX;		       /* Horizontal Overscan : for TV onl */
 +    sdvo_display_params dispParams;
-+    SDVO_ANCILLARY_INFO_T AncillaryInfo;	
++    SDVO_ANCILLARY_INFO_T AncillaryInfo;
 +};
 +
 +/* Define TV mode type */
@@ -15126,7 +14737,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +#define NUM_TV_MODES sizeof(tv_modes) / sizeof (tv_modes[0])
 +
 +typedef struct {
-+    /* given values */    
++    /* given values */
 +    int n;
 +    int m1, m2;
 +    int p1, p2;
@@ -15180,12 +14791,12 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	int ret;
 +
 +	struct i2c_msg msgs[] = {
-+		{ 
++		{
 +			.addr = sdvo_priv->i2c_bus->slave_addr,
 +			.flags = 0,
 +			.len = 1,
 +			.buf = out_buf,
-+		}, 
++		},
 +		{
 +			.addr = sdvo_priv->i2c_bus->slave_addr,
 +			.flags = I2C_M_RD,
@@ -15199,7 +14810,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +	if ((ret = i2c_transfer(&sdvo_priv->i2c_bus->adapter, msgs, 2)) == 2)
 +	{
-+//		DRM_DEBUG("got back from addr %02X = %02x\n", out_buf[0], buf[0]); 
++//		DRM_DEBUG("got back from addr %02X = %02x\n", out_buf[0], buf[0]);
 +		*ch = buf[0];
 +		return true;
 +	}
@@ -15224,7 +14835,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	struct intel_output *intel_output = output->driver_private;
 +	u8 out_buf[2];
 +	struct i2c_msg msgs[] = {
-+		{ 
++		{
 +			.addr = intel_output->i2c_bus->slave_addr,
 +			.flags = 0,
 +			.len = 2,
@@ -15313,7 +14924,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +                        printk("(%02X)",cmd);
 +                printk("\n");
 +        }
-+                        
++
 +	for (i = 0; i < args_len; i++) {
 +		intel_sdvo_write_byte(output, SDVO_I2C_ARG_0 - i, ((u8*)args)[i]);
 +	}
@@ -15473,7 +15084,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +		state = SDVO_ENCODER_STATE_OFF;
 +		break;
 +	}
-+	
++
 +	intel_sdvo_write_cmd(output, SDVO_CMD_SET_ENCODER_POWER_STATE, &state,
 +			     sizeof(state));
 +	status = intel_sdvo_read_response(output, NULL, 0);
@@ -15798,7 +15409,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	break;
 +    }
 +}
-+#endif 
++#endif
 +
 +static bool i830_sdvo_set_tvoutputs_formats(struct drm_output * output)
 +{
@@ -16031,7 +15642,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +					 u32 * pHDTVStdMask, u32 *pTVStdFormat)
 +{
 +	struct intel_output *intel_output = output->driver_private;
-+	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;	
++	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;
 +
 +    u8 byRets[6];
 +    u8 status;
@@ -16069,7 +15680,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +    else
 +    *pTVStdFormat = (((u32) byRets[2] & 0xF8) |
 +		     ((u32) byRets[3] << 8) |
-+		     ((u32) byRets[4] << 16) | ((u32) byRets[5] << 24));	
++		     ((u32) byRets[4] << 16) | ((u32) byRets[5] << 24));
 +	DRM_DEBUG("BIOS TV format is %d\n",*pTVStdFormat);
 +    return TRUE;
 +
@@ -17681,7 +17292,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	if (!crtc->fb) {
 +		DRM_ERROR("Can't set mode without attached fb\n");
 +		return;
-+	}     
++	}
 +    is_sdvo = TRUE;
 +    ok = TRUE;
 +    ulDotClock = mode->clock * 1000 / 1000;	/*xiaolin, fixme, do i need to by 1k hz */
@@ -17707,7 +17318,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	clock.m1 = 0x10;
 +	clock.m2 = 0x8;
 +    } else if ((dotclock >= 140500) && (dotclock <= 200000)) {
-+    
++
 +	DRM_DEBUG("dotclock is between 140500 and 200000!\n");
 +	clock.p1 = 0x1;
 +	/*CG was using 0x10 from spreadsheet it should be 0 */
@@ -17775,7 +17386,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	else
 +	   { pipeconf &= ~PIPEACONF_DOUBLE_WIDE; DRM_DEBUG("non PIPEACONF_DOUBLE_WIDE\n");}
 +    }
-+	
++
 +	dspcntr |= DISPLAY_PLANE_ENABLE;
 +    pipeconf |= PIPEACONF_ENABLE;
 +    dpll |= DPLL_VCO_ENABLE;
@@ -17786,12 +17397,12 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +    print_Pll("chosen", &clock);
 +	DRM_DEBUG("Mode for pipe %c:\n", pipe == 0 ? 'A' : 'B');
-+	drm_mode_debug_printmodeline(dev, mode);	
++	drm_mode_debug_printmodeline(dev, mode);
 +	DRM_DEBUG("Modeline %d:\"%s\" %d %d %d %d %d %d %d %d\n",
 +		  mode->mode_id, mode->name, mode->crtc_htotal, mode->crtc_hdisplay,
 +		  mode->crtc_hblank_end, mode->crtc_hblank_start,
 +		  mode->crtc_vtotal, mode->crtc_vdisplay,
-+		  mode->crtc_vblank_end, mode->crtc_vblank_start);	
++		  mode->crtc_vblank_end, mode->crtc_vblank_start);
 +    DRM_DEBUG("clock regs: 0x%08x, 0x%08x,dspntr is 0x%8x, pipeconf is 0x%8x\n", (int)dpll,
 +	      (int)fp,(int)dspcntr,(int)pipeconf);
 +
@@ -17851,14 +17462,14 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +    }
 +    I915_WRITE(pipeconf_reg, pipeconf);
 +    I915_READ(pipeconf_reg);
-+	
++
 +    intel_wait_for_vblank(dev);
 +
 +    I915_WRITE(dspcntr_reg, dspcntr);
 +	/* Flush the plane changes */
 +	//intel_pipe_set_base(crtc, 0, 0);
 +	/* Disable the VGA plane that we never use */
-+	//I915_WRITE(VGACNTRL, VGA_DISP_DISABLE);	
++	//I915_WRITE(VGACNTRL, VGA_DISP_DISABLE);
 +    //intel_wait_for_vblank(dev);
 +
 +}
@@ -17890,7 +17501,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	    mode = &tv_modes[0].mode_entry;
 +		drm_mode_set_crtcinfo(mode, 0);
 +	}
-+    }	
++    }
 +    save_mode = mode;
 +#if 0
 +	width = mode->crtc_hdisplay;
@@ -17915,7 +17526,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	output_dtd.part1.v_blank = v_blank_len & 0xff;
 +	output_dtd.part1.v_high = (((height >> 8) & 0xf) << 4) |
 +		((v_blank_len >> 8) & 0xf);
-+	
++
 +	output_dtd.part2.h_sync_off = h_sync_offset;
 +	output_dtd.part2.h_sync_width = h_sync_len & 0xff;
 +	output_dtd.part2.v_sync_off_width = (v_sync_offset & 0xf) << 4 |
@@ -17923,7 +17534,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	output_dtd.part2.sync_off_width_high = ((h_sync_offset & 0x300) >> 2) |
 +		((h_sync_len & 0x300) >> 4) | ((v_sync_offset & 0x30) >> 2) |
 +		((v_sync_len & 0x30) >> 4);
-+	
++
 +	output_dtd.part2.dtd_flags = 0x18;
 +	if (mode->flags & V_PHSYNC)
 +		output_dtd.part2.dtd_flags |= 0x2;
@@ -17940,9 +17551,9 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +    //intel_sdvo_set_active_outputs(output, sdvo_priv->active_outputs);
 +    memset(&output_dtd, 0, sizeof(struct intel_sdvo_dtd));
 +    /* check if this mode can be supported or not */
-+	
++
 +    i830_translate_timing2dtd(mode, &output_dtd);
-+#endif	
++#endif
 +    intel_sdvo_set_target_output(output, 0);
 +    /* set the target input & output first */
 +	/* Set the input timing to the screen. Assume always input 0. */
@@ -17973,7 +17584,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	/* Set the overscan values now as input timing is dependent on overscan values */
 +
 +    }
-+	
++
 +
 +	/* We would like to use i830_sdvo_create_preferred_input_timing() to
 +	 * provide the device with a timing it can support, if it supports that
@@ -17985,16 +17596,16 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +							   width, height);
 +	if (success) {
 +		struct intel_sdvo_dtd *input_dtd;
-+		
++
 +		intel_sdvo_get_preferred_input_timing(output, &input_dtd);
 +		intel_sdvo_set_input_timing(output, &input_dtd);
 +	}
 +#else
 +    /* Set input timing (in DTD) */
 +	intel_sdvo_set_input_timing(output, &output_dtd);
-+#endif	
++#endif
 +    if (sdvo_priv->ActiveDevice == SDVO_DEVICE_TV) {
-+	
++
 +	DRM_DEBUG("xxintel_sdvo_mode_set tv path\n");
 +	i830_tv_program_display_params(output);
 +	/* translate dtd 2 timing */
@@ -18030,7 +17641,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +		intel_sdvo_set_clock_rate_mult(output,
 +					       SDVO_CLOCK_RATE_MULT_4X);
 +		break;
-+	}	
++	}
 +    }
 +	/* Set the SDVO control regs. */
 +        if (0/*IS_I965GM(dev)*/) {
@@ -18052,17 +17663,17 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +	sdvo_pixel_multiply = intel_sdvo_get_pixel_multiplier(mode);
 +	if (IS_I965G(dev)) {
-+		/* done in crtc_mode_set as the dpll_md reg must be written 
++		/* done in crtc_mode_set as the dpll_md reg must be written
 +		   early */
 +	} else if (IS_POULSBO(dev) || IS_I945G(dev) || IS_I945GM(dev)) {
-+		/* done in crtc_mode_set as it lives inside the 
++		/* done in crtc_mode_set as it lives inside the
 +		   dpll register */
 +	} else {
 +		sdvox |= (sdvo_pixel_multiply - 1) << SDVO_PORT_MULTIPLY_SHIFT;
 +	}
 +
 +	intel_sdvo_write_sdvox(output, sdvox);
-+	i830_sdvo_set_iomap(output);	
++	i830_sdvo_set_iomap(output);
 +}
 +
 +static void intel_sdvo_dpms(struct drm_output *output, int mode)
@@ -18097,18 +17708,18 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +		bool input1, input2;
 +		int i;
 +		u8 status;
-+		
++
 +		temp = I915_READ(sdvo_priv->output_device);
 +		if ((temp & SDVO_ENABLE) == 0)
 +			intel_sdvo_write_sdvox(output, temp | SDVO_ENABLE);
 +		for (i = 0; i < 2; i++)
 +		  intel_wait_for_vblank(dev);
-+		
++
 +		status = intel_sdvo_get_trained_inputs(output, &input1,
 +						       &input2);
 +
-+		
-+		/* Warn if the device reported failure to sync. 
++
++		/* Warn if the device reported failure to sync.
 +		 * A lot of SDVO devices fail to notify of sync, but it's
 +		 * a given it the status is a success, we succeeded.
 +		 */
@@ -18116,13 +17727,13 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +			DRM_DEBUG("First %s output reported failure to sync\n",
 +				   SDVO_NAME(sdvo_priv));
 +		}
-+		
++
 +		if (0)
 +			intel_sdvo_set_encoder_power_state(output, mode);
-+		
++
 +		DRM_DEBUG("xiaolin active output is %d\n",sdvo_priv->active_outputs);
 +		intel_sdvo_set_active_outputs(output, sdvo_priv->active_outputs);
-+	}	
++	}
 +	return;
 +}
 +
@@ -18152,7 +17763,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +    intel_sdvo_set_target_output(output, sdvo_priv->active_outputs);
 +    intel_sdvo_get_output_timing(output,
-+				&sdvo_priv->save_output_dtd[sdvo_priv->active_outputs]);	
++				&sdvo_priv->save_output_dtd[sdvo_priv->active_outputs]);
 +	sdvo_priv->save_SDVOX = I915_READ(sdvo_priv->output_device);
 +}
 +
@@ -18181,11 +17792,11 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +		intel_sdvo_set_target_input(output, false, true);
 +		intel_sdvo_set_input_timing(output, &sdvo_priv->save_input_dtd_2);
 +	}
-+	
++
 +	intel_sdvo_set_clock_rate_mult(output, sdvo_priv->save_sdvo_mult);
-+	
++
 +	I915_WRITE(sdvo_priv->output_device, sdvo_priv->save_SDVOX);
-+	
++
 +	if (sdvo_priv->save_SDVOX & SDVO_ENABLE)
 +	{
 +		for (i = 0; i < 2; i++)
@@ -18195,8 +17806,8 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +			DRM_DEBUG("First %s output reported failure to sync\n",
 +				   SDVO_NAME(sdvo_priv));
 +	}
-+	
-+    i830_sdvo_set_iomap(output);	
++
++    i830_sdvo_set_iomap(output);
 +	intel_sdvo_set_active_outputs(output, sdvo_priv->save_active_outputs);
 +}
 +
@@ -18207,10 +17818,10 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +    bool find = FALSE;
 +    int i;
-+	
++
 +    DRM_DEBUG("i830_tv_mode_find,0x%x\n", sdvo_priv->TVStandard);
-+	
-+    for (i = 0; i < NUM_TV_MODES; i++) 
++
++    for (i = 0; i < NUM_TV_MODES; i++)
 +    {
 +       const tv_mode_t *tv_mode = &tv_modes[i];
 +       if (strcmp (tv_mode->mode_entry.name, pMode->name) == 0
@@ -18228,7 +17839,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +{
 +	struct intel_output *intel_output = output->driver_private;
 +	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;
-+	
++
 +	bool status = TRUE;
 +	DRM_DEBUG("xxintel_sdvo_mode_valid\n");
 +
@@ -18279,7 +17890,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	u32 dwTVStdBitmask = 0;
 +
 +	struct intel_output *intel_output = output->driver_private;
-+	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;	
++	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;
 +
 +
 +    /* Get supported TV Standard */
@@ -18302,15 +17913,15 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +    char *name_suffix;
 +	char *name_prefix;
 +	unsigned char bytes[2];
-+        
++
 +	struct drm_device *dev = output->dev;
-+	
++
 +	struct intel_output *intel_output = output->driver_private;
-+	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;	
-+	
++	struct intel_sdvo_priv *sdvo_priv = intel_output->dev_priv;
++
 +	DRM_DEBUG("xxintel_sdvo_detect\n");
 +    intel_sdvo_dpms(output, DPMSModeOn);
-+ 
++
 +    if (!intel_sdvo_get_capabilities(output, &sdvo_priv->caps)) {
 +        /*No SDVO support, power down the pipe */
 +        intel_sdvo_dpms(output, DPMSModeOff);
@@ -18339,10 +17950,10 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +	if ((status != SDVO_CMD_STATUS_SUCCESS) || (response[0] == 0 && response[1] == 0)) {
 +	    udelay(500);
-+	    continue;		
++	    continue;
 +    } else
 +     	break;
-+    }	
++    }
 +    if (response[0] != 0 || response[1] != 0) {
 +	/*Check what device types are connected to the hardware CRT/HDTV/S-Video/Composite */
 +	/*in case of CRT and multiple TV's attached give preference in the order mentioned below */
@@ -18420,9 +18031,9 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +            /*sdvo_priv->TVStandard = TVSTANDARD_NTSC_M;*/
 +                sdvo_priv->TVMode = TVMODE_SDTV;
 +            }
-+			
++
 +	    /*intel_output->pDevice->TVEnabled = TRUE;*/
-+		
++
 +		i830_tv_get_default_params(output);
 +	    /*Init Display parameter for TV */
 +	    sdvo_priv->OverScanX.Value = 0xffffffff;
@@ -18441,7 +18052,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +	    sdvo_priv->dispParams.Saturation.Value = 0x45;
 +	    sdvo_priv->dispParams.Hue.Value = 0x40;
 +	    sdvo_priv->dispParams.Dither.Value = 0;
-+		
++
 +	}
 +	else {
 +            name_prefix = "RGB0";
@@ -18474,7 +18085,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +        intel_sdvo_dpms(output, DPMSModeOff);
 +		sdvo_priv->ActiveDevice = SDVO_DEVICE_NONE;
 +		return output_status_disconnected;
-+    }	
++    }
 +}
 +
 +static int i830_sdvo_get_tvmode_from_table(struct drm_output *output)
@@ -18491,13 +18102,13 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +		((sdvo_priv->TVMode == TVMODE_SDTV) && /*sdtv mode list */
 +		(tv_modes[i].dwSupportedSDTVvss & TVSTANDARD_SDTV_ALL))) {
 +			struct drm_display_mode *newmode;
-+			newmode = drm_mode_duplicate(dev, &tv_modes[i].mode_entry);		
++			newmode = drm_mode_duplicate(dev, &tv_modes[i].mode_entry);
 +			drm_mode_set_crtcinfo(newmode,0);
 +			drm_mode_probed_add(output, newmode);
 +			modes++;
 +		}
 +
-+	return modes;	
++	return modes;
 +
 +}
 +
@@ -18527,7 +18138,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +#if 0
 +	/* Mac mini hack.  On this device, I get DDC through the analog, which
 +	 * load-detects as disconnected.  I fail to DDC through the SDVO DDC,
-+	 * but it does load-detect as connected.  So, just steal the DDC bits 
++	 * but it does load-detect as connected.  So, just steal the DDC bits
 +	 * from analog when we fail at finding it the right way.
 +	 */
 +	/* TODO */
@@ -18579,11 +18190,11 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +    int count = 3;
 +    u8 response[2];
-+    u8 status;	
++    u8 status;
 +	unsigned char bytes[2];
-+    
++
 +	DRM_DEBUG("xxintel_sdvo_init\n");
-+	
++
 +		if (IS_POULSBO(dev)) {
 +			struct pci_dev * pci_root = pci_get_bus_and_slot(0, 0);
 +			u32 sku_value = 0;
@@ -18788,7 +18399,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +            name_prefix = "RGB0";
 +	    DRM_INFO("non TV is attaced\n");
 +        }
-+        
++
 +        strcpy(name, name_prefix);
 +        strcat(name, name_suffix);
 +        if (!drm_output_rename(output, name)) {
@@ -18815,7 +18426,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +
 +	/* Set the input timing to the screen. Assume always input 0. */
 +	intel_sdvo_set_target_input(output, true, false);
-+	
++
 +	intel_sdvo_get_input_pixel_clock_range(output,
 +					       &sdvo_priv->pixel_clock_min,
 +					       &sdvo_priv->pixel_clock_max);
@@ -18833,17 +18444,17 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo.c
 +		  (sdvo_priv->caps.sdvo_inputs_mask & 0x1) ? 'Y' : 'N',
 +		  (sdvo_priv->caps.sdvo_inputs_mask & 0x2) ? 'Y' : 'N',
 +		  /* check currently supported outputs */
-+		  sdvo_priv->caps.output_flags & 
++		  sdvo_priv->caps.output_flags &
 +		  	(SDVO_OUTPUT_TMDS0 | SDVO_OUTPUT_RGB0) ? 'Y' : 'N',
-+		  sdvo_priv->caps.output_flags & 
++		  sdvo_priv->caps.output_flags &
 +		  	(SDVO_OUTPUT_TMDS1 | SDVO_OUTPUT_RGB1) ? 'Y' : 'N');
 +
-+	intel_output->ddc_bus = i2cbus;	
++	intel_output->ddc_bus = i2cbus;
 +}
 Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo_regs.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo_regs.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo_regs.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,580 @@
 +/*
 + * Copyright ?2006-2007 Intel Corporation
@@ -19428,7 +19039,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/intel_sdvo_regs.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_buffer.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_buffer.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_buffer.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,437 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -19870,7 +19481,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_buffer.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drm.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_drm.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_drm.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,370 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -20245,7 +19856,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drm.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,1006 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -20712,7 +20323,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 +	mutex_lock(&dev->mode_config.mutex);
 +
 +	drm_crtc_probe_output_modes(dev, 2048, 2048);
-+	
++
 +	/* strncpy(drm_init_mode, psb_init_mode, strlen(psb_init_mode)); */
 +	drm_init_xres = psb_init_xres;
 +	drm_init_yres = psb_init_yres;
@@ -20800,7 +20411,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 +	psb_scheduler_init(dev, &dev_priv->scheduler);
 +
 +	resource_start = pci_resource_start(dev->pdev, PSB_MMIO_RESOURCE);
-+	
++
 +	dev_priv->msvdx_reg =
 +	    ioremap(resource_start + PSB_MSVDX_OFFSET, PSB_MSVDX_SIZE);
 +	if (!dev_priv->msvdx_reg)
@@ -20955,7 +20566,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 +		} while (ret == -EINTR);
 +
 +	}
-+       
++
 +	/* Issue software reset */
 +        PSB_WMSVDX32 (msvdx_sw_reset_all, MSVDX_CONTROL);
 +
@@ -21025,7 +20636,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 +#ifdef USE_PAT_WC
 +#warning Init pat
 +	/* for single CPU's we do it here, then for more than one CPU we
-+	 * use the CPU notifier to reinit PAT on those CPU's. 
++	 * use the CPU notifier to reinit PAT on those CPU's.
 +	 */
 +	drm_init_pat();
 +#endif
@@ -21102,7 +20713,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 +	if (drm_psb_no_fb == 0)
 +		psbfb_resume(dev);
 +#ifdef WA_NO_FB_GARBAGE_DISPLAY
-+	else { 
++	else {
 +		if(num_registered_fb)
 +		{
 +			struct fb_info *fb_info=registered_fb[0];
@@ -21116,7 +20727,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 +				printk("set the fb_set_suspend resume end\n");
 +			}
 +		}
-+	} 
++	}
 +#endif
 +
 +	return 0;
@@ -21256,7 +20867,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_drv.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_drv.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,775 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -21709,7 +21320,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.h
 +	struct mutex msvdx_mutex;
 +	struct list_head msvdx_queue;
 +	int msvdx_busy;
-+    
++
 +};
 +
 +struct psb_mmu_driver;
@@ -22036,7 +21647,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_drv.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_fb.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_fb.c	2009-01-14 12:03:18.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_fb.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,1330 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -23371,7 +22982,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_fb.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_fence.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_fence.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_fence.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,285 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -23661,7 +23272,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_fence.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_gtt.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_gtt.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_gtt.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,233 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -23899,7 +23510,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_gtt.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_i2c.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_i2c.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_i2c.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,179 @@
 +/*
 + * Copyright © 2006-2007 Intel Corporation
@@ -24083,7 +23694,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_i2c.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_irq.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_irq.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_irq.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,382 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -24470,7 +24081,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_irq.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_mmu.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_mmu.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_mmu.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,1037 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -25512,7 +25123,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_mmu.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,676 @@
 +/**
 + * file psb_msvdx.c
@@ -25652,7 +25263,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.c
 +            {
 +                mmu_ptd |= 1;
 +                PSB_DEBUG_GENERAL ("MSVDX: Setting MMU invalidate flag\n");
-+	    }  
++	    }
 +	  /* PTD */
 +	  MEMIO_WRITE_FIELD (cmd, FW_VA_RENDER_MMUPTD, mmu_ptd);
 +	  break;
@@ -26160,8 +25771,8 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.c
 +	}
 +	if (dev_priv->msvdx_start_idle)
 +		dev_priv->msvdx_start_idle = 0;
-+    } 
-+    else 
++    }
++    else
 +    {
 +	if (dev_priv->msvdx_needs_reset == 0)
 +	{
@@ -26193,7 +25804,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,564 @@
 +/**************************************************************************
 + *
@@ -26762,7 +26373,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdx.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdxinit.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_msvdxinit.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_msvdxinit.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,625 @@
 +/**
 + * file psb_msvdxinit.c
@@ -27066,7 +26677,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdxinit.c
 +	PSB_DEBUG_GENERAL("MSVDX: Detected Poulsbo D1 or later revision.\n");
 +	PSB_WMSVDX32 (MSVDX_DEVICE_NODE_FLAGS_DEFAULT_D1, MSVDX_COMMS_OFFSET_FLAGS);
 +   }
-+  else 
++  else
 +   {
 +	PSB_DEBUG_GENERAL("MSVDX: Detected Poulsbo D0 or earlier revision.\n");
 +        PSB_WMSVDX32 (MSVDX_DEVICE_NODE_FLAGS_DEFAULT_D0, MSVDX_COMMS_OFFSET_FLAGS);
@@ -27212,7 +26823,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdxinit.c
 +      /* Clear any pending interrupt flags                                                                                    */
 +      PSB_WMSVDX32 (0xFFFFFFFF, MSVDX_INTERRUPT_CLEAR);
 +    }
-+  
++
 +  mutex_destroy (&dev_priv->msvdx_mutex);
 +
 +  return ret;
@@ -27381,7 +26992,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdxinit.c
 +    struct pci_dev * pci_root = pci_get_bus_and_slot(0, 0);
 +
 +    hw_info->rev_id = dev_priv->psb_rev_id;
-+   
++
 +    /*read the fuse info to determine the caps*/
 +    pci_write_config_dword(pci_root, 0xD0, PCI_PORT5_REG80_FFUSE);
 +    pci_read_config_dword(pci_root, 0xD4, &hw_info->caps);
@@ -27392,7 +27003,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_msvdxinit.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_reg.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_reg.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_reg.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,562 @@
 +/**************************************************************************
 + *
@@ -27410,7 +27021,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_reg.h
 + * more details.
 + *
 + * You should have received a copy of the GNU General Public License along with
-+ * this program; if not, write to the Free Software Foundation, Inc., 
++ * this program; if not, write to the Free Software Foundation, Inc.,
 + * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
 + *
 + * Intel funded Tungsten Graphics (http://www.tungstengraphics.com) to
@@ -27959,7 +27570,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_reg.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_regman.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_regman.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_regman.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,175 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -28139,7 +27750,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_regman.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_reset.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_reset.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_reset.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,374 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -28518,7 +28129,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_reset.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_scene.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_scene.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_scene.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,531 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -29054,7 +28665,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_scene.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_scene.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_scene.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_scene.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,112 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -29171,7 +28782,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_scene.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,1445 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -30621,7 +30232,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,170 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -30796,7 +30407,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_schedule.h
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_setup.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_setup.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_setup.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,17 @@
 +#include "drmP.h"
 +#include "drm.h"
@@ -30818,7 +30429,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_setup.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_sgx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_sgx.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_sgx.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,1422 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -32245,7 +31856,7 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_sgx.c
 Index: linux-2.6.27/drivers/gpu/drm/psb/psb_xhw.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/psb/psb_xhw.c	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/drivers/gpu/drm/psb/psb_xhw.c	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,614 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -32863,8 +32474,8 @@ Index: linux-2.6.27/drivers/gpu/drm/psb/psb_xhw.c
 +}
 Index: linux-2.6.27/drivers/gpu/drm/Kconfig
 ===================================================================
---- linux-2.6.27.orig/drivers/gpu/drm/Kconfig	2009-01-14 11:54:35.000000000 +0000
-+++ linux-2.6.27/drivers/gpu/drm/Kconfig	2009-01-14 11:58:01.000000000 +0000
+--- linux-2.6.27.orig/drivers/gpu/drm/Kconfig	2008-10-09 23:13:53.000000000 +0100
++++ linux-2.6.27/drivers/gpu/drm/Kconfig	2009-02-05 13:29:33.000000000 +0000
 @@ -105,3 +105,9 @@
  	help
  	  Choose this option if you have a Savage3D/4/SuperSavage/Pro/Twister
@@ -32878,7 +32489,7 @@ Index: linux-2.6.27/drivers/gpu/drm/Kconfig
 Index: linux-2.6.27/include/drm/drm_crtc.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/include/drm/drm_crtc.h	2009-01-14 12:01:13.000000000 +0000
++++ linux-2.6.27/include/drm/drm_crtc.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,592 @@
 +/*
 + * Copyright © 2006 Keith Packard
@@ -33321,7 +32932,7 @@ Index: linux-2.6.27/include/drm/drm_crtc.h
 +
 +	/* these are modes added by probing with DDC or the BIOS */
 +	struct list_head probed_modes;
-+	
++
 +	/* xf86MonPtr MonInfo; */
 +	enum subpixel_order subpixel_order;
 +	int mm_width, mm_height;
@@ -33440,7 +33051,7 @@ Index: linux-2.6.27/include/drm/drm_crtc.h
 +extern struct drm_property *drm_property_create(struct drm_device *dev, int flags,
 +						const char *name, int num_values);
 +extern void drm_property_destroy(struct drm_device *dev, struct drm_property *property);
-+extern int drm_property_add_enum(struct drm_property *property, int index, 
++extern int drm_property_add_enum(struct drm_property *property, int index,
 +				 uint32_t value, const char *name);
 +
 +/* IOCTLs */
@@ -33475,7 +33086,7 @@ Index: linux-2.6.27/include/drm/drm_crtc.h
 Index: linux-2.6.27/include/drm/drm_edid.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/include/drm/drm_edid.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/include/drm/drm_edid.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,179 @@
 +#ifndef __DRM_EDID_H__
 +#define __DRM_EDID_H__
@@ -33659,7 +33270,7 @@ Index: linux-2.6.27/include/drm/drm_edid.h
 Index: linux-2.6.27/include/drm/drm_objects.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.27/include/drm/drm_objects.h	2009-01-14 11:58:01.000000000 +0000
++++ linux-2.6.27/include/drm/drm_objects.h	2009-02-05 13:29:33.000000000 +0000
 @@ -0,0 +1,717 @@
 +/**************************************************************************
 + *
@@ -33858,7 +33469,7 @@ Index: linux-2.6.27/include/drm/drm_objects.h
 +	 *
 +	 * poll() : Call drm_fence_handler with any new information.
 +	 *
-+	 * needed_flush() : Given the current state of the fence->type flags and previusly 
++	 * needed_flush() : Given the current state of the fence->type flags and previusly
 +	 * executed or queued flushes, return the type_flags that need flushing.
 +	 *
 +	 * wait(): Wait for the "mask" flags to signal on a given fence, performing
@@ -34201,7 +33812,7 @@ Index: linux-2.6.27/include/drm/drm_objects.h
 +	int (*command_stream_barrier) (struct drm_buffer_object *bo,
 +				       uint32_t new_fence_class,
 +				       uint32_t new_fence_type,
-+				       int no_wait);				       
++				       int no_wait);
 +};
 +
 +/*

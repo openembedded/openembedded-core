@@ -1,0 +1,12 @@
+--- a/kernel/async.c	2009-01-19 18:30:29.000000000 -0800
++++ b/kernel/async.c	2009-01-19 18:31:12.000000000 -0800
+@@ -65,7 +65,7 @@ static LIST_HEAD(async_pending);
+ static LIST_HEAD(async_running);
+ static DEFINE_SPINLOCK(async_lock);
+ 
+-static int async_enabled = 0;
++static int async_enabled = 1;
+ 
+ struct async_entry {
+ 	struct list_head list;
+

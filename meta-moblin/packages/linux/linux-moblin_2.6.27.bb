@@ -1,6 +1,6 @@
 require linux-moblin.inc
 
-PR = "r7"
+PR = "r8"
 PE = "1"
 
 DEFAULT_PREFERENCE = "-1"
