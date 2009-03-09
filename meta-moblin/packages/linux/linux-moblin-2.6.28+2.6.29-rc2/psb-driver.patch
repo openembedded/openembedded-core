@@ -1,7 +1,7 @@
 Index: linux-2.6.28/include/drm/drm.h
 ===================================================================
---- linux-2.6.28.orig/include/drm/drm.h	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/include/drm/drm.h	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/include/drm/drm.h	2009-02-25 15:37:00.000000000 +0000
++++ linux-2.6.28/include/drm/drm.h	2009-02-25 15:37:02.000000000 +0000
 @@ -174,6 +174,7 @@
  	_DRM_SCATTER_GATHER = 4,  /**< Scatter/gather memory for PCI DMA */
  	_DRM_CONSISTENT = 5,	  /**< Consistent memory for PCI DMA */
@@ -336,8 +336,8 @@ Index: linux-2.6.28/include/drm/drm.h
  #endif
 Index: linux-2.6.28/include/drm/drmP.h
 ===================================================================
---- linux-2.6.28.orig/include/drm/drmP.h	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/include/drm/drmP.h	2009-02-20 12:30:10.000000000 +0000
+--- linux-2.6.28.orig/include/drm/drmP.h	2009-02-25 15:37:00.000000000 +0000
++++ linux-2.6.28/include/drm/drmP.h	2009-02-25 15:37:02.000000000 +0000
 @@ -57,6 +57,7 @@
  #include <linux/dma-mapping.h>
  #include <linux/mm.h>
@@ -532,8 +532,8 @@ Index: linux-2.6.28/include/drm/drmP.h
  extern long drm_compat_ioctl(struct file *filp,
 Index: linux-2.6.28/include/drm/drm_pciids.h
 ===================================================================
---- linux-2.6.28.orig/include/drm/drm_pciids.h	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/include/drm/drm_pciids.h	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/include/drm/drm_pciids.h	2008-12-24 23:26:37.000000000 +0000
++++ linux-2.6.28/include/drm/drm_pciids.h	2009-02-25 15:37:02.000000000 +0000
 @@ -419,3 +419,9 @@
  	{0x8086, 0x2e12, PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA << 8, 0xffff00, 0}, \
  	{0x8086, 0x2e22, PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA << 8, 0xffff00, 0}, \
@@ -546,8 +546,8 @@ Index: linux-2.6.28/include/drm/drm_pciids.h
 +
 Index: linux-2.6.28/drivers/gpu/drm/Makefile
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/Makefile	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/Makefile	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/Makefile	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/Makefile	2009-02-25 15:55:10.000000000 +0000
 @@ -10,6 +10,8 @@
  		drm_lock.o drm_memory.o drm_proc.o drm_stub.o drm_vm.o \
  		drm_agpsupport.o drm_scatter.o ati_pcigart.o drm_pci.o \
@@ -557,18 +557,20 @@ Index: linux-2.6.28/drivers/gpu/drm/Makefile
  		drm_crtc.o drm_crtc_helper.o drm_modes.o drm_edid.o
  
  drm-$(CONFIG_COMPAT) += drm_ioc32.o
-@@ -22,6 +24,7 @@
+@@ -21,7 +23,8 @@
+ obj-$(CONFIG_DRM_MGA)	+= mga/
  obj-$(CONFIG_DRM_I810)	+= i810/
  obj-$(CONFIG_DRM_I830)	+= i830/
- obj-$(CONFIG_DRM_I915)  += i915/
+-obj-$(CONFIG_DRM_I915)  += i915/
++obj-$(CONFIG_DRM_INTEL_COMMON)  += i915/
 +obj-$(CONFIG_DRM_PSB)	+= psb/
  obj-$(CONFIG_DRM_SIS)   += sis/
  obj-$(CONFIG_DRM_SAVAGE)+= savage/
  obj-$(CONFIG_DRM_VIA)	+=via/
 Index: linux-2.6.28/drivers/gpu/drm/drm_agpsupport.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_agpsupport.c	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_agpsupport.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_agpsupport.c	2008-12-24 23:26:37.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_agpsupport.c	2009-02-25 15:37:02.000000000 +0000
 @@ -502,4 +502,156 @@
  }
  EXPORT_SYMBOL(drm_agp_chipset_flush);
@@ -729,7 +731,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_agpsupport.c
 Index: linux-2.6.28/drivers/gpu/drm/drm_bo.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_bo.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_bo.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,2660 @@
 +/**************************************************************************
 + *
@@ -3394,7 +3396,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_bo.c
 Index: linux-2.6.28/drivers/gpu/drm/drm_bo_lock.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_bo_lock.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_bo_lock.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,175 @@
 +/**************************************************************************
 + *
@@ -3574,7 +3576,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_bo_lock.c
 Index: linux-2.6.28/drivers/gpu/drm/drm_bo_move.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_bo_move.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_bo_move.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,590 @@
 +/**************************************************************************
 + *
@@ -4168,8 +4170,8 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_bo_move.c
 +EXPORT_SYMBOL(drm_bo_kunmap);
 Index: linux-2.6.28/drivers/gpu/drm/drm_bufs.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_bufs.c	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_bufs.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_bufs.c	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_bufs.c	2009-02-25 15:37:02.000000000 +0000
 @@ -435,6 +435,8 @@
  	case _DRM_GEM:
  		DRM_ERROR("tried to rmmap GEM object\n");
@@ -4181,8 +4183,8 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_bufs.c
  
 Index: linux-2.6.28/drivers/gpu/drm/drm_drv.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_drv.c	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_drv.c	2009-02-20 12:27:53.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_drv.c	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_drv.c	2009-02-25 15:37:02.000000000 +0000
 @@ -143,6 +143,34 @@
  	DRM_IOCTL_DEF(DRM_IOCTL_MODE_GETFB, drm_mode_getfb, DRM_MASTER|DRM_CONTROL_ALLOW),
  	DRM_IOCTL_DEF(DRM_IOCTL_MODE_ADDFB, drm_mode_addfb, DRM_MASTER|DRM_CONTROL_ALLOW),
@@ -4258,7 +4260,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_drv.c
 Index: linux-2.6.28/drivers/gpu/drm/drm_fence.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_fence.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_fence.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,829 @@
 +/**************************************************************************
 + *
@@ -5091,8 +5093,8 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_fence.c
 +}
 Index: linux-2.6.28/drivers/gpu/drm/drm_fops.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_fops.c	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_fops.c	2009-02-20 12:31:55.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_fops.c	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_fops.c	2009-02-25 15:37:02.000000000 +0000
 @@ -1,3 +1,4 @@
 +
  /**
@@ -5133,8 +5135,8 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_fops.c
  		if (ret < 0)
 Index: linux-2.6.28/drivers/gpu/drm/drm_irq.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_irq.c	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_irq.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_irq.c	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_irq.c	2009-02-25 15:37:02.000000000 +0000
 @@ -124,6 +124,7 @@
  
  	dev->num_crtcs = 0;
@@ -5163,7 +5165,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_irq.c
 Index: linux-2.6.28/drivers/gpu/drm/drm_object.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_object.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_object.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,294 @@
 +/**************************************************************************
 + *
@@ -5462,7 +5464,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_object.c
 Index: linux-2.6.28/drivers/gpu/drm/drm_regman.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_regman.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_regman.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,200 @@
 +/**************************************************************************
 + * Copyright (c) 2007 Tungsten Graphics, Inc., Cedar Park, TX., USA
@@ -5666,8 +5668,8 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_regman.c
 +EXPORT_SYMBOL(drm_regs_init);
 Index: linux-2.6.28/drivers/gpu/drm/drm_stub.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_stub.c	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_stub.c	2009-02-20 12:33:16.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_stub.c	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_stub.c	2009-02-25 15:37:02.000000000 +0000
 @@ -201,6 +201,7 @@
  	init_timer(&dev->timer);
  	mutex_init(&dev->struct_mutex);
@@ -5715,7 +5717,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_stub.c
 Index: linux-2.6.28/drivers/gpu/drm/drm_ttm.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_ttm.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_ttm.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,430 @@
 +/**************************************************************************
 + *
@@ -6149,8 +6151,8 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_ttm.c
 +EXPORT_SYMBOL(drm_bind_ttm);
 Index: linux-2.6.28/drivers/gpu/drm/drm_vm.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_vm.c	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_vm.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_vm.c	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_vm.c	2009-02-25 15:37:02.000000000 +0000
 @@ -40,6 +40,10 @@
  
  static void drm_vm_open(struct vm_area_struct *vma);
@@ -6398,7 +6400,7 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_vm.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/Makefile	2009-02-20 14:48:03.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/Makefile	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,12 @@
 +#
 +# Makefile for the drm device driver.  This driver provides support for the
@@ -6415,7 +6417,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/Makefile
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_buffer.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_buffer.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_buffer.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,437 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -6857,7 +6859,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_buffer.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_drm.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_drm.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_drm.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,370 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -7232,7 +7234,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_drm.h
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_drv.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_drv.c	2009-02-20 14:48:16.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_drv.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,1028 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -8265,7 +8267,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_drv.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_drv.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_drv.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_drv.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,549 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -8819,7 +8821,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_drv.h
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_fb.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_fb.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_fb.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,1219 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -10043,7 +10045,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_fb.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_fence.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_fence.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_fence.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,285 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -10333,7 +10335,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_fence.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_gtt.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_gtt.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_gtt.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,253 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -10591,7 +10593,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_gtt.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_irq.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_irq.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_irq.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,519 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -11115,7 +11117,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_irq.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_mmu.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_mmu.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_mmu.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,1037 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -12157,7 +12159,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_mmu.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.c	2009-02-20 12:47:58.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,671 @@
 +/**
 + * file psb_msvdx.c
@@ -12833,7 +12835,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,564 @@
 +/**************************************************************************
 + *
@@ -13402,7 +13404,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_msvdx.h
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_msvdxinit.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_msvdxinit.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_msvdxinit.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,625 @@
 +/**
 + * file psb_msvdxinit.c
@@ -14032,7 +14034,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_msvdxinit.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_reg.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_reg.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_reg.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,562 @@
 +/**************************************************************************
 + *
@@ -14599,7 +14601,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_reg.h
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_regman.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_regman.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_regman.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,175 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -14779,7 +14781,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_regman.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_reset.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_reset.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_reset.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,374 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -15158,7 +15160,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_reset.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_scene.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_scene.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_scene.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,531 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -15694,7 +15696,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_scene.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_scene.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_scene.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_scene.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,112 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -15811,7 +15813,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_scene.h
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,1445 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -17261,7 +17263,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,170 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -17436,7 +17438,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_schedule.h
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_sgx.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_sgx.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_sgx.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,1422 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -18863,7 +18865,7 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_sgx.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_xhw.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_xhw.c	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_xhw.c	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,614 @@
 +/**************************************************************************
 + * Copyright (c) 2007, Intel Corporation.
@@ -19481,8 +19483,8 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_xhw.c
 +}
 Index: linux-2.6.28/drivers/gpu/drm/Kconfig
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/Kconfig	2009-02-20 12:22:54.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/Kconfig	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/Kconfig	2009-02-25 15:37:02.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/Kconfig	2009-02-25 15:37:02.000000000 +0000
 @@ -129,3 +129,10 @@
  	help
  	  Choose this option if you have a Savage3D/4/SuperSavage/Pro/Twister
@@ -19497,7 +19499,7 @@ Index: linux-2.6.28/drivers/gpu/drm/Kconfig
 Index: linux-2.6.28/include/drm/drm_objects.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/include/drm/drm_objects.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/include/drm/drm_objects.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,717 @@
 +/**************************************************************************
 + *
@@ -20218,8 +20220,8 @@ Index: linux-2.6.28/include/drm/drm_objects.h
 +#endif
 Index: linux-2.6.28/drivers/gpu/drm/drm_crtc.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/drm_crtc.c	2009-02-20 12:22:54.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/drm_crtc.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_crtc.c	2009-02-25 15:36:50.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_crtc.c	2009-02-25 15:37:02.000000000 +0000
 @@ -807,6 +807,53 @@
  }
  EXPORT_SYMBOL(drm_mode_config_init);
@@ -20367,8 +20369,8 @@ Index: linux-2.6.28/drivers/gpu/drm/drm_crtc.c
  }
 Index: linux-2.6.28/include/drm/drm_crtc.h
 ===================================================================
---- linux-2.6.28.orig/include/drm/drm_crtc.h	2009-02-20 12:22:53.000000000 +0000
-+++ linux-2.6.28/include/drm/drm_crtc.h	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/include/drm/drm_crtc.h	2009-02-25 15:37:00.000000000 +0000
++++ linux-2.6.28/include/drm/drm_crtc.h	2009-02-25 15:37:02.000000000 +0000
 @@ -50,6 +50,8 @@
  	uint32_t type;
  };
@@ -20390,8 +20392,8 @@ Index: linux-2.6.28/include/drm/drm_crtc.h
  
 Index: linux-2.6.28/drivers/gpu/drm/i915/intel_lvds.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_lvds.c	2009-02-20 12:22:54.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/i915/intel_lvds.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_lvds.c	2009-02-25 15:37:02.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_lvds.c	2009-02-25 15:37:02.000000000 +0000
 @@ -36,6 +36,259 @@
  #include "i915_drm.h"
  #include "i915_drv.h"
@@ -21132,8 +21134,8 @@ Index: linux-2.6.28/drivers/gpu/drm/i915/intel_lvds.c
  	 * on.  If so, assume that whatever is currently programmed is the
 Index: linux-2.6.28/drivers/gpu/drm/i915/intel_sdvo.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_sdvo.c	2009-02-20 12:22:54.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/i915/intel_sdvo.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_sdvo.c	2009-02-25 15:37:02.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_sdvo.c	2009-02-25 15:37:02.000000000 +0000
 @@ -37,6 +37,9 @@
  
  #undef SDVO_DEBUG
@@ -21169,7 +21171,7 @@ Index: linux-2.6.28/drivers/gpu/drm/i915/intel_sdvo.c
 Index: linux-2.6.28/drivers/gpu/drm/psb/psb_priv.h
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/psb/psb_priv.h	2009-02-20 12:23:06.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/psb/psb_priv.h	2009-02-25 15:37:02.000000000 +0000
 @@ -0,0 +1,181 @@
 +#include "psb_drm.h"
 +#include "psb_reg.h"
@@ -21354,8 +21356,8 @@ Index: linux-2.6.28/drivers/gpu/drm/psb/psb_priv.h
 +extern void intel_crtc_mode_save(struct drm_crtc *crtc);
 Index: linux-2.6.28/drivers/gpu/drm/i915/intel_display.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_display.c	2009-02-20 12:22:54.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/i915/intel_display.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/intel_display.c	2009-02-25 15:37:02.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/intel_display.c	2009-02-25 15:37:02.000000000 +0000
 @@ -342,60 +342,25 @@
  	/* Wait for 20ms, i.e. one cycle at 50hz. */
  	udelay(20000);
@@ -21552,8 +21554,8 @@ Index: linux-2.6.28/drivers/gpu/drm/i915/intel_display.c
  void intel_modeset_init(struct drm_device *dev)
 Index: linux-2.6.28/drivers/gpu/drm/i915/i915_irq.c
 ===================================================================
---- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_irq.c	2009-02-20 12:22:54.000000000 +0000
-+++ linux-2.6.28/drivers/gpu/drm/i915/i915_irq.c	2009-02-20 12:23:06.000000000 +0000
+--- linux-2.6.28.orig/drivers/gpu/drm/i915/i915_irq.c	2009-02-25 15:37:02.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_irq.c	2009-02-25 15:37:02.000000000 +0000
 @@ -536,6 +536,7 @@
  
  int i915_driver_irq_postinstall(struct drm_device *dev)
