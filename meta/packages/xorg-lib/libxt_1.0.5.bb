@@ -8,6 +8,8 @@ PE = "1"
 
 XORG_PN = "libXt"
 
+BBCLASSEXTEND = "native"
+
 EXTRA_OECONF += "--disable-install-makestrs --disable-xkb"
 
 do_compile() {
