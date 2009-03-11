@@ -9,7 +9,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools_stage
 
-FILES_${PN}-dbg += "${libdir}/mojito/sources/.debug/*"
+FILES_${PN}-dbg += "${libdir}/mojito/sources/.debug/* ${libdir}/mojito/services/.debug/"
 
 pkg_postinst_${PN} () {
 #!/bin/sh -e
