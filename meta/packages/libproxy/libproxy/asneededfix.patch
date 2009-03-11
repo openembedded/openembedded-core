@@ -1,0 +1,13 @@
+Index: libproxy-0.2.3/src/lib/Makefile.am
+===================================================================
+--- libproxy-0.2.3.orig/src/lib/Makefile.am	2009-03-09 16:24:08.000000000 +0000
++++ libproxy-0.2.3/src/lib/Makefile.am	2009-03-09 16:24:13.000000000 +0000
+@@ -2,7 +2,7 @@
+ libproxy_la_SOURCES = misc.c url.c pac.c dhcp.c dns.c slp.c wpad.c proxy_factory.c config_file.c \
+ 						misc.h url.h pac.h dhcp.h dns.h slp.h wpad.h proxy_factory.h proxy.h config_file.h
+ libproxy_la_CFLAGS  = -Wall
+-libproxy_la_LDFLAGS = -lm
++libproxy_la_LDFLAGS = -lm -ldl
+ 
+ include_HEADERS     = proxy.h
+ 
