@@ -11,6 +11,8 @@ inherit autotools_stage
 
 FILES_${PN}-dbg += "${libdir}/mojito/sources/.debug/* ${libdir}/mojito/services/.debug/"
 
+PARALLEL_MAKE = ""
+
 pkg_postinst_${PN} () {
 #!/bin/sh -e
 if [ "x$D" != "x" ]; then
