@@ -14,7 +14,7 @@ DEFAULT_PREFERENCE = "-1"
 # Netbooks have DRI support so use mesa-dri by default
 DEFAULT_PREFERENCE_netbook = "1"
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git;branch=intel-2008-q3 "
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git;branch=master"
 S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-xprogs"
