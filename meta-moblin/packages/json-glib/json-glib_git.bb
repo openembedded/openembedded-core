@@ -9,6 +9,8 @@ DEPENDS = "glib-2.0"
 
 inherit autotools_stage
 
+acpaths = "-I ${S}/build/autotools "
+
 do_configure_prepend () {
 	touch ${S}/gtk-doc.make
 }
