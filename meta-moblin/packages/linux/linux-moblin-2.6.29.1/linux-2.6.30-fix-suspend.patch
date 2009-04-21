@@ -1,0 +1,139 @@
+From: Rafael J. Wysocki <rjw@suse.com>
+Organization: SUSE
+To: Arjan van de Ven <arjan@linux.intel.com>
+CC: Linus Torvalds <torvalds@linux-foundation.org>
+
+
+OK, updated patch follows, with a changelog.
+
+I've added this check to user.c too, because that code can be called
+independently of the one in disk.c .  Also, if resume is user space-driven,
+it's a good idea to wait for all of the device probes to complete before
+continuing.
+
+Thanks,
+Rafael
+
+---
+From: Rafael J. Wysocki <rjw@sisk.pl>
+Subject: PM/Hibernate: Wait for SCSI devices scan to complete during resume
+
+There is a race between resume from hibernation and the asynchronous
+scanning of SCSI devices and to prevent it from happening we need to
+call scsi_complete_async_scans() during resume from hibernation.
+
+In addition, if the resume from hibernation is userland-driven, it's
+better to wait for all device probes in the kernel to complete before
+attempting to open the resume device.
+
+Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+---
+  drivers/scsi/scsi_priv.h      |    3 ---
+  drivers/scsi/scsi_wait_scan.c |    2 +-
+  include/scsi/scsi_scan.h      |   11 +++++++++++
+  kernel/power/disk.c           |    8 ++++++++
+  kernel/power/user.c           |    9 +++++++++
+  5 files changed, 29 insertions(+), 4 deletions(-)
+
+Index: linux-2.6/include/scsi/scsi_scan.h
+===================================================================
+--- /dev/null
++++ linux-2.6/include/scsi/scsi_scan.h
+@@ -0,0 +1,11 @@
++#ifndef _SCSI_SCSI_SCAN_H
++#define _SCSI_SCSI_SCAN_H
++
++#ifdef CONFIG_SCSI
++/* drivers/scsi/scsi_scan.c */
++extern int scsi_complete_async_scans(void);
++#else
++static inline int scsi_complete_async_scans(void) { return 0; }
++#endif
++
++#endif /* _SCSI_SCSI_SCAN_H */
+Index: linux-2.6/drivers/scsi/scsi_priv.h
+===================================================================
+--- linux-2.6.orig/drivers/scsi/scsi_priv.h
++++ linux-2.6/drivers/scsi/scsi_priv.h
+@@ -38,9 +38,6 @@ static inline void scsi_log_completion(s
+ 	{ };
+ #endif
+ 
+-/* scsi_scan.c */
+-int scsi_complete_async_scans(void);
+-
+ /* scsi_devinfo.c */
+ extern int scsi_get_device_flags(struct scsi_device *sdev,
+ 				 const unsigned char *vendor,
+Index: linux-2.6/drivers/scsi/scsi_wait_scan.c
+===================================================================
+--- linux-2.6.orig/drivers/scsi/scsi_wait_scan.c
++++ linux-2.6/drivers/scsi/scsi_wait_scan.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include <linux/module.h>
+-#include "scsi_priv.h"
++#include <scsi/scsi_scan.h>
+ 
+ static int __init wait_scan_init(void)
+ {
+Index: linux-2.6/kernel/power/disk.c
+===================================================================
+--- linux-2.6.orig/kernel/power/disk.c
++++ linux-2.6/kernel/power/disk.c
+@@ -22,5 +22,6 @@
+ #include <linux/console.h>
+ #include <linux/cpu.h>
+ #include <linux/freezer.h>
++#include <scsi/scsi_scan.h>
+ 
+ #include "power.h"
+@@ -645,6 +646,13 @@ static int software_resume(void)
+ 		return 0;
+ 
+ 	/*
++	 * We can't depend on SCSI devices being available after loading one of
++	 * their modules if scsi_complete_async_scans() is not called and the
++	 * resume device usually is a SCSI one.
++	 */
++	scsi_complete_async_scans();
++
++	/*
+ 	 * name_to_dev_t() below takes a sysfs buffer mutex when sysfs
+ 	 * is configured into the kernel. Since the regular hibernate
+ 	 * trigger path is via sysfs which takes a buffer mutex before
+Index: linux-2.6/kernel/power/user.c
+===================================================================
+--- linux-2.6.orig/kernel/power/user.c
++++ linux-2.6/kernel/power/user.c
+@@ -24,6 +24,7 @@
+ #include <linux/cpu.h>
+ #include <linux/freezer.h>
+ #include <linux/smp_lock.h>
++#include <scsi/scsi_scan.h>
+ 
+ #include <asm/uaccess.h>
+ 
+@@ -92,6 +93,7 @@ static int snapshot_open(struct inode *i
+ 	filp->private_data = data;
+ 	memset(&data->handle, 0, sizeof(struct snapshot_handle));
+ 	if ((filp->f_flags & O_ACCMODE) == O_RDONLY) {
++		/* Hibernating.  The image device should be accessible. */
+ 		data->swap = swsusp_resume_device ?
+ 			swap_type_of(swsusp_resume_device, 0, NULL) : -1;
+ 		data->mode = O_RDONLY;
+@@ -99,6 +101,13 @@ static int snapshot_open(struct inode *i
+ 		if (error)
+ 			pm_notifier_call_chain(PM_POST_HIBERNATION);
+ 	} else {
++		/*
++		 * Resuming.  We may need to wait for the image device to
++		 * appear.
++		 */
++		wait_for_device_probe();
++		scsi_complete_async_scans();
++
+ 		data->swap = -1;
+ 		data->mode = O_WRONLY;
+ 		error = pm_notifier_call_chain(PM_RESTORE_PREPARE);

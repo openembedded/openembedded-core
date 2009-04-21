@@ -1,0 +1,38 @@
+In IGD, DPCUNIT_CLOCK_GATE_DISABLE bit should be set, otherwise i2c
+access will be wrong.
+
+Signed-off-by: Shaohua Li <shaohua.li@intel.com>
+---
+ drivers/gpu/drm/i915/i915_reg.h      |    1 +
+ drivers/gpu/drm/i915/intel_display.c |    5 +++++
+ 2 files changed, 6 insertions(+)
+
+Index: linux/drivers/gpu/drm/i915/i915_reg.h
+===================================================================
+--- linux.orig/drivers/gpu/drm/i915/i915_reg.h	2009-03-16 14:18:27.000000000 +0800
++++ linux/drivers/gpu/drm/i915/i915_reg.h	2009-03-16 14:28:09.000000000 +0800
+@@ -523,6 +523,7 @@
+ #define   DPLLA_INPUT_BUFFER_ENABLE	(1 << 0)
+ #define D_STATE		0x6104
+ #define CG_2D_DIS	0x6200
++#define DPCUNIT_CLOCK_GATE_DISABLE	(1 << 24)
+ #define CG_3D_DIS	0x6204
+ 
+ /*
+Index: linux/drivers/gpu/drm/i915/intel_display.c
+===================================================================
+--- linux.orig/drivers/gpu/drm/i915/intel_display.c	2009-03-16 14:16:11.000000000 +0800
++++ linux/drivers/gpu/drm/i915/intel_display.c	2009-03-16 14:27:46.000000000 +0800
+@@ -1545,6 +1545,11 @@ static void intel_setup_outputs(struct d
+ 	struct drm_i915_private *dev_priv = dev->dev_private;
+ 	struct drm_connector *connector;
+ 
++	/* When using bit bashing for I2C, this bit needs to be set to 1 */
++	if (IS_IGD(dev))
++		I915_WRITE(CG_2D_DIS,
++			I915_READ(CG_2D_DIS) | DPCUNIT_CLOCK_GATE_DISABLE);
++
+ 	intel_crt_init(dev);
+ 
+ 	/* Set up integrated LVDS */
+

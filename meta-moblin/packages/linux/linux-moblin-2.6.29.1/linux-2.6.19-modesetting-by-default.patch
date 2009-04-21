@@ -1,0 +1,11 @@
+--- linux-2.6.28/drivers/gpu/drm/i915/i915_drv.c~	2009-02-20 21:36:06.000000000 -0800
++++ linux-2.6.28/drivers/gpu/drm/i915/i915_drv.c	2009-02-20 21:36:06.000000000 -0800
+@@ -35,7 +35,7 @@
+ #include "drm_pciids.h"
+ #include <linux/console.h>
+ 
+-static unsigned int i915_modeset = -1;
++static unsigned int i915_modeset = 1;
+ module_param_named(modeset, i915_modeset, int, 0400);
+ 
+ unsigned int i915_fbpercrtc = 0;
