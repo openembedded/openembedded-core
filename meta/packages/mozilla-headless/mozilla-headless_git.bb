@@ -1,14 +1,14 @@
 
-SRC_URI = "git://git.o-hand.com/${PN}.git;protocol=git \
+SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=c6fe23d41598;module=offscreen \
            file://configurefix.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
-PV = "0.0+git${SRCREV}"
-PR = "r8"
+PV = "0.0+hg-1.0+c6fe23d41598"
+PR = "r0"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/offscreen"
 
-DEPENDS = "gconf gnome-vfs pango dbus-glib alsa-lib libidl-native sqlite3"
+DEPENDS = "gconf gnome-vfs pango dbus-glib alsa-lib libidl-native sqlite3 libidl"
 
 FILES_${PN} += "${libdir}/xulrunner-1.9.2a1pre"
 FILES_${PN}-dev += "${libdir}/xulrunner-devel-1.9.2a1pre"
