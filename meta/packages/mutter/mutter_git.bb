@@ -1,12 +1,12 @@
 SECTION = "x11/wm"
-DESCRIPTION = "Metacity is the boring window manager for the adult in you."
+DESCRIPTION = "Metacity is the boring window manager for the adult in you. Mutter is metacity + clutter."
 LICENSE = "GPL"
-DEPENDS = "startup-notification gtk+ gconf clutter-0.8 gdk-pixbuf-csource-native intltool glib-2.0-native"
+DEPENDS = "startup-notification gtk+ gconf clutter gdk-pixbuf-csource-native intltool glib-2.0-native"
 PR = "r8"
 PV = "2.25.1+git${SRCREV}"
 inherit gnome update-alternatives
 
-SRC_URI = "git://git.o-hand.com/metacity-clutter.git;protocol=git;branch=clutter \
+SRC_URI = "git://git.gnome.org/mutter.git;protocol=git;branch=master \
            file://nodocs.patch;patch=1 \
 	   file://crosscompile.patch;patch=1 \
            file://fix_pkgconfig.patch;patch=1"
