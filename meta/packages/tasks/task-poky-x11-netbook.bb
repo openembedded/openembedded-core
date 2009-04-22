@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook Tasks for Poky"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "\
     task-poky-x11-netbook \
@@ -17,7 +17,7 @@ ALLOW_EMPTY = "1"
 
 NETWORK_MANAGER ?= "networkmanager-applet"
 RDEPENDS_task-poky-x11-netbook = "\
-    metacity-clutter \
+    mutter \
     matchbox-desktop \
     matchbox-session-netbook \
     matchbox-config-gtk \
