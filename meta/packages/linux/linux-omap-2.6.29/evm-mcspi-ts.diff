@@ -1,0 +1,132 @@
+From linux-omap-owner@vger.kernel.org Sun Nov 02 21:08:25 2008
+Received: from localhost
+	([127.0.0.1] helo=dominion ident=koen)
+	by dominion.dominion.void with esmtp (Exim 4.69)
+	(envelope-from <linux-omap-owner@vger.kernel.org>)
+	id 1KwjFJ-0008Hg-0T
+	for koen@localhost; Sun, 02 Nov 2008 21:08:25 +0100
+Received: from xs.service.utwente.nl [130.89.5.250]
+	by dominion with POP3 (fetchmail-6.3.9-rc2)
+	for <koen@localhost> (single-drop); Sun, 02 Nov 2008 21:08:25 +0100 (CET)
+Received: from mail.service.utwente.nl ([130.89.5.253]) by exchange.service.utwente.nl with Microsoft SMTPSVC(6.0.3790.3959);
+	 Sun, 2 Nov 2008 20:57:16 +0100
+Received: from mx.utwente.nl ([130.89.2.13]) by mail.service.utwente.nl with Microsoft SMTPSVC(6.0.3790.3959);
+	 Sun, 2 Nov 2008 20:57:16 +0100
+Received: from vger.kernel.org (vger.kernel.org [209.132.176.167])
+          by mx.utwente.nl (8.12.10/SuSE Linux 0.7) with ESMTP id mA2JudEK010968
+          for <k.kooi@student.utwente.nl>; Sun, 2 Nov 2008 20:56:40 +0100
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+	id S1752819AbYKBT4i (ORCPT <rfc822;k.kooi@student.utwente.nl>);
+	Sun, 2 Nov 2008 14:56:38 -0500
+Received: (majordomo@vger.kernel.org) by vger.kernel.org id S1752829AbYKBT4i
+	(ORCPT <rfc822;linux-omap-outgoing>); Sun, 2 Nov 2008 14:56:38 -0500
+Received: from fg-out-1718.google.com ([72.14.220.153]:32481 "EHLO
+	fg-out-1718.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752819AbYKBT4h (ORCPT
+	<rfc822;linux-omap@vger.kernel.org>); Sun, 2 Nov 2008 14:56:37 -0500
+Received: by fg-out-1718.google.com with SMTP id 19so1869080fgg.17
+        for <linux-omap@vger.kernel.org>; Sun, 02 Nov 2008 11:56:33 -0800 (PST)
+DKIM-Signature: 	v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=gamma;
+        h=domainkey-signature:received:received:from:to:cc:subject:date
+         :message-id:x-mailer:in-reply-to:references;
+        bh=Ftvoq8kE3ciPRy7pNy5VLkNnZD8o0HYWIrO1LMS/lAY=;
+        b=HpEcngDUbAObGNJuQmBIG3SoNHesUL57GluZGlYO7kxFxfH6N8zeHjKuRSk86+mT5s
+         gMhyCC07wjVp75HnqCtKbOJzNw/8F4ZGbL2lY1LC99+zxHW1JBQv5c3ZaoCVqTw6TuH0
+         bQ8Ew2BwHknT3wGA+QcGoMJJs5aw62AhPiyHY=
+DomainKey-Signature: a=rsa-sha1; c=nofws;
+        d=gmail.com; s=gamma;
+        h=from:to:cc:subject:date:message-id:x-mailer:in-reply-to:references;
+        b=aio1APZhCIcYIrMY844QkdaQzKw0/yiuaVjqfv52fnft1kafGT2qAS3KfXAc61a9If
+         sXHbi2fr/r1a7YZJJVGqkJX0WmWTY0OqdhS1lmugP/dXEMHeqaArKATbvxrq9/svb1bV
+         Vzpkm6sOzLrr54uo+BcZNoxHWqb8W2UrRxuTk=
+Received: by 10.103.131.18 with SMTP id i18mr6668205mun.126.1225655793072;
+        Sun, 02 Nov 2008 11:56:33 -0800 (PST)
+Received: from localhost.localdomain ([78.59.134.74])
+        by mx.google.com with ESMTPS id g1sm23199635muf.8.2008.11.02.11.56.31
+        (version=TLSv1/SSLv3 cipher=RC4-MD5);
+        Sun, 02 Nov 2008 11:56:31 -0800 (PST)
+From: Grazvydas Ignotas <notasas@gmail.com>
+To: linux-omap@vger.kernel.org
+Cc: Grazvydas Ignotas <notasas@gmail.com>
+Subject: Re: omap3evm LCD red-tint workaround
+Date: 	Sun,  2 Nov 2008 21:56:19 +0200
+Message-Id: <1225655779-18934-1-git-send-email-notasas@gmail.com>
+X-Mailer: git-send-email 1.5.4.3
+In-Reply-To: <57322719-1A5A-45DC-9846-5C0A3B6EF346@student.utwente.nl>
+References: <57322719-1A5A-45DC-9846-5C0A3B6EF346@student.utwente.nl>
+Sender: linux-omap-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-omap.vger.kernel.org>
+X-Mailing-List: 	linux-omap@vger.kernel.org
+X-UTwente-MailScanner-Information: Scanned by MailScanner. Contact servicedesk@icts.utwente.nl for more information.
+X-UTwente-MailScanner: Found to be clean
+X-UTwente-MailScanner-From: linux-omap-owner@vger.kernel.org
+X-Spam-Status: No
+X-OriginalArrivalTime: 02 Nov 2008 19:57:16.0876 (UTC) FILETIME=[34FBA0C0:01C93D25]
+
+> PS: TS is still unusable with the 16x16 pixel resolution
+This is also the case for Pandora. The patch below fixes the problem,
+but as I have no other boards to test this on, I haven't sent it.
+See if it helps you.
+
+
+From 91f3af26bbf751b846e6265d86387e81be7c1364 Mon Sep 17 00:00:00 2001
+From: Grazvydas Ignotas <notasas@gmail.com>
+Date: Tue, 28 Oct 2008 22:01:42 +0200
+Subject: [PATCH] OMAP3: fix McSPI transfers
+
+Currently on OMAP3 if both write and read is set up for a transfer,
+the first byte returned on read is corrupted. Work around this by
+disabling channel between reads and writes, instead of transfers.
+---
+ drivers/spi/omap2_mcspi.c |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/spi/omap2_mcspi.c b/drivers/spi/omap2_mcspi.c
+index 454a271..4890b6c 100644
+--- a/drivers/spi/omap2_mcspi.c
++++ b/drivers/spi/omap2_mcspi.c
+@@ -710,7 +710,6 @@ static void omap2_mcspi_work(struct work_struct *work)
+ 		spi = m->spi;
+ 		cs = spi->controller_state;
+ 
+-		omap2_mcspi_set_enable(spi, 1);
+ 		list_for_each_entry(t, &m->transfers, transfer_list) {
+ 			if (t->tx_buf == NULL && t->rx_buf == NULL && t->len) {
+ 				status = -EINVAL;
+@@ -741,6 +740,8 @@ static void omap2_mcspi_work(struct work_struct *work)
+ 			if (t->len) {
+ 				unsigned	count;
+ 
++				omap2_mcspi_set_enable(spi, 1);
++
+ 				/* RX_ONLY mode needs dummy data in TX reg */
+ 				if (t->tx_buf == NULL)
+ 					__raw_writel(0, cs->base
+@@ -752,6 +753,8 @@ static void omap2_mcspi_work(struct work_struct *work)
+ 					count = omap2_mcspi_txrx_pio(spi, t);
+ 				m->actual_length += count;
+ 
++				omap2_mcspi_set_enable(spi, 0);
++
+ 				if (count != t->len) {
+ 					status = -EIO;
+ 					break;
+@@ -777,8 +780,6 @@ static void omap2_mcspi_work(struct work_struct *work)
+ 		if (cs_active)
+ 			omap2_mcspi_force_cs(spi, 0);
+ 
+-		omap2_mcspi_set_enable(spi, 0);
+-
+ 		m->status = status;
+ 		m->complete(m->context);
+ 
+-- 
+1.5.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
+

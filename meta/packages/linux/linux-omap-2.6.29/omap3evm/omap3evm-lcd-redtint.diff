@@ -1,0 +1,66 @@
+Message-ID: <c656a4d20809270046u341aec27k6d896d4b42e799d4@mail.gmail.com>
+Date: 	Sat, 27 Sep 2008 03:46:18 -0400
+From: "arun c" <arun.edarath@gmail.com>
+To: "Daniel Schaeffer" <daniel.schaeffer@timesys.com>
+Subject: Re: OMAP3EVM LCD red tint
+
+Hi Daniel Schaeffer
+
+On Fri, Sep 26, 2008 at 4:20 PM, Daniel Schaeffer
+<daniel.schaeffer@timesys.com> wrote:
+> Has anyone looked into why the LCD display on the OMAP3EVM is always tinted
+> red? I created a couple of color test images that I cat'ed to /dev/fb and it
+> looks like the blue color channel is completely ignored.  I was testing on
+> v2.6.26-omap2 but is doesn't look like there have been any changes to the fb
+> driver since then so I'm assuming the issue is also present in the head of
+> the git tree.
+>
+> Regards,
+>
+> Daniel Schaeffer
+>
+
+Try the patch below(Remember that you may have to manually edit because
+this patch is against current HEAD)
+
+
+diff --git a/drivers/video/omap/lcd_omap3evm.c
+b/drivers/video/omap/lcd_omap3evm.c
+index a564ca5..821bafe 100644
+--- a/drivers/video/omap/lcd_omap3evm.c
++++ b/drivers/video/omap/lcd_omap3evm.c
+@@ -44,6 +44,8 @@
+ #define ENABLE_VDAC_DEV_GRP	0x20
+ #define ENABLE_VPLL2_DEDICATED	0x05
+ #define ENABLE_VPLL2_DEV_GRP	0xE0
++#define TWL4030_VPLL2_DEV_GRP	0x33
++#define TWL4030_VPLL2_DEDICATED	0x36
+
+ #define TWL_LED_LEDEN		0x00
+ #define TWL_PWMA_PWMAON		0x00
+@@ -86,12 +88,24 @@ static void omap3evm_panel_cleanup(struct lcd_panel *panel)
+
+ static int omap3evm_panel_enable(struct lcd_panel *panel)
+ {
++	if (omap_rev > OMAP3430_REV_ES1_0) {
++		twl4030_i2c_write_u8(TWL4030_MODULE_PM_RECEIVER,
++			ENABLE_VPLL2_DEDICATED, TWL4030_VPLL2_DEDICATED);
++		twl4030_i2c_write_u8(TWL4030_MODULE_PM_RECEIVER,
++			ENABLE_VPLL2_DEV_GRP, TWL4030_VPLL2_DEV_GRP);
++	}
+ 	omap_set_gpio_dataout(LCD_PANEL_ENABLE_GPIO, 0);
+ 	return 0;
+ }
+
+ static void omap3evm_panel_disable(struct lcd_panel *panel)
+ {
++	if (omap_rev > OMAP3430_REV_ES1_0) {
++		twl4030_i2c_write_u8(TWL4030_MODULE_PM_RECEIVER, 0x0,
++			TWL4030_VPLL2_DEDICATED);
++		twl4030_i2c_write_u8(TWL4030_MODULE_PM_RECEIVER, 0x0,
++			TWL4030_VPLL2_DEV_GRP);
++	}
+ 	omap_set_gpio_dataout(LCD_PANEL_ENABLE_GPIO, 1);
+ }
+
+
