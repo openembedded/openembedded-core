@@ -1,0 +1,285 @@
+diff --git a/drivers/gpu/drm/drm_crtc_helper.c b/drivers/gpu/drm/drm_crtc_helper.c
+index 1c3a8c5..144624a 100644
+--- a/drivers/gpu/drm/drm_crtc_helper.c
++++ b/drivers/gpu/drm/drm_crtc_helper.c
+@@ -29,6 +29,8 @@
+  *      Jesse Barnes <jesse.barnes@intel.com>
+  */
+ 
++#include <linux/async.h>
++
+ #include "drmP.h"
+ #include "drm_crtc.h"
+ #include "drm_crtc_helper.h"
+@@ -42,6 +44,8 @@ static struct drm_display_mode std_modes[] = {
+ 		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC) },
+ };
+ 
++LIST_HEAD(drm_async_list);
++
+ /**
+  * drm_helper_probe_connector_modes - get complete set of display modes
+  * @dev: DRM device
+@@ -137,6 +141,26 @@ int drm_helper_probe_connector_modes(struct drm_device *dev, uint32_t maxX,
+ }
+ EXPORT_SYMBOL(drm_helper_probe_connector_modes);
+ 
++int drm_helper_probe_connector_modes_fast(struct drm_device *dev, uint32_t maxX,
++				      uint32_t maxY)
++{
++	struct drm_connector *connector;
++	int count = 0;
++
++	list_for_each_entry(connector, &dev->mode_config.connector_list, head) {
++		count += drm_helper_probe_single_connector_modes(connector,
++								 maxX, maxY);
++		/*
++		 * If we found a 'good' connector, we stop probing futher.
++		 */
++		if (count > 0)
++			break;
++	}
++
++	return count;
++}
++EXPORT_SYMBOL(drm_helper_probe_connector_modes_fast);
++
+ static void drm_helper_add_std_modes(struct drm_device *dev,
+ 				     struct drm_connector *connector)
+ {
+@@ -882,6 +906,24 @@ bool drm_helper_plugged_event(struct drm_device *dev)
+ 	/* FIXME: send hotplug event */
+ 	return true;
+ }
++
++static void async_notify_fb_changed(void *data, async_cookie_t cookie)
++{
++	struct drm_device *dev = data;
++	dev->mode_config.funcs->fb_changed(dev);
++}
++
++static void async_probe_hard(void *data, async_cookie_t cookie)
++{
++	struct drm_device *dev = data;
++	/* Need to wait for async_notify_fb_changed to be done */
++	async_synchronize_cookie_domain(cookie, &drm_async_list);
++	drm_helper_probe_connector_modes(dev,
++					dev->mode_config.max_width,
++					dev->mode_config.max_height);
++}
++
++
+ /**
+  * drm_initial_config - setup a sane initial connector configuration
+  * @dev: DRM device
+@@ -902,7 +944,7 @@ bool drm_helper_initial_config(struct drm_device *dev, bool can_grow)
+ 	struct drm_connector *connector;
+ 	int count = 0;
+ 
+-	count = drm_helper_probe_connector_modes(dev,
++	count = drm_helper_probe_connector_modes_fast(dev,
+ 						 dev->mode_config.max_width,
+ 						 dev->mode_config.max_height);
+ 
+@@ -921,7 +963,9 @@ bool drm_helper_initial_config(struct drm_device *dev, bool can_grow)
+ 	drm_setup_crtcs(dev);
+ 
+ 	/* alert the driver fb layer */
+-	dev->mode_config.funcs->fb_changed(dev);
++	async_schedule_domain(async_notify_fb_changed, dev, &drm_async_list);
++	/* probe further outputs */
++	async_schedule_domain(async_probe_hard, dev, &drm_async_list);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 14c7a23..ef52021 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -48,6 +48,7 @@
+ 
+ #include "drmP.h"
+ #include "drm_core.h"
++#include <linux/async.h>
+ 
+ static int drm_version(struct drm_device *dev, void *data,
+ 		       struct drm_file *file_priv);
+@@ -345,6 +346,9 @@ void drm_exit(struct drm_driver *driver)
+ 	struct drm_device *dev, *tmp;
+ 	DRM_DEBUG("\n");
+ 
++	/* make sure all async DRM operations are finished */
++	async_synchronize_full_domain(&drm_async_list);
++
+ 	list_for_each_entry_safe(dev, tmp, &driver->device_list, driver_item)
+ 		drm_cleanup(dev);
+ 
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index a839a28..069b189 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -588,20 +588,22 @@ static unsigned char *drm_ddc_read(struct i2c_adapter *adapter)
+ {
+ 	struct i2c_algo_bit_data *algo_data = adapter->algo_data;
+ 	unsigned char *edid = NULL;
++	int divider = 5;
+ 	int i, j;
+ 
+ 	algo_data->setscl(algo_data->data, 1);
+ 
+-	for (i = 0; i < 1; i++) {
++	for (i = 0; i < 2; i++) {
+ 		/* For some old monitors we need the
+ 		 * following process to initialize/stop DDC
+ 		 */
++
+ 		algo_data->setsda(algo_data->data, 1);
+-		msleep(13);
++		msleep(13 / divider);
+ 
+ 		algo_data->setscl(algo_data->data, 1);
+ 		for (j = 0; j < 5; j++) {
+-			msleep(10);
++			msleep(10 / divider);
+ 			if (algo_data->getscl(algo_data->data))
+ 				break;
+ 		}
+@@ -609,31 +611,33 @@ static unsigned char *drm_ddc_read(struct i2c_adapter *adapter)
+ 			continue;
+ 
+ 		algo_data->setsda(algo_data->data, 0);
+-		msleep(15);
++		msleep(15 / divider);
+ 		algo_data->setscl(algo_data->data, 0);
+-		msleep(15);
++		msleep(15  / divider);
+ 		algo_data->setsda(algo_data->data, 1);
+-		msleep(15);
++		msleep(15 / divider);
+ 
+ 		/* Do the real work */
+ 		edid = drm_do_probe_ddc_edid(adapter);
+ 		algo_data->setsda(algo_data->data, 0);
+ 		algo_data->setscl(algo_data->data, 0);
+-		msleep(15);
++		msleep(15 / divider);
+ 
+ 		algo_data->setscl(algo_data->data, 1);
+ 		for (j = 0; j < 10; j++) {
+-			msleep(10);
++			msleep(10 / divider);
+ 			if (algo_data->getscl(algo_data->data))
+ 				break;
+ 		}
+ 
+ 		algo_data->setsda(algo_data->data, 1);
+-		msleep(15);
++		msleep(15 / divider);
+ 		algo_data->setscl(algo_data->data, 0);
+ 		algo_data->setsda(algo_data->data, 0);
++
+ 		if (edid)
+ 			break;
++		divider = 1;
+ 	}
+ 	/* Release the DDC lines when done or the Apple Cinema HD display
+ 	 * will switch off
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index a283427..6f2eced 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -319,7 +319,7 @@ void
+ intel_wait_for_vblank(struct drm_device *dev)
+ {
+ 	/* Wait for 20ms, i.e. one cycle at 50hz. */
+-	udelay(20000);
++	mdelay(20);
+ }
+ 
+ static int
+@@ -1466,12 +1466,12 @@ static void intel_setup_outputs(struct drm_device *dev)
+ 	struct drm_i915_private *dev_priv = dev->dev_private;
+ 	struct drm_connector *connector;
+ 
+-	intel_crt_init(dev);
+-
+-	/* Set up integrated LVDS */
++	/* Set up integrated LVDS -- will skip if the lid is closed */
+ 	if (IS_MOBILE(dev) && !IS_I830(dev))
+ 		intel_lvds_init(dev);
+ 
++	intel_crt_init(dev);
++
+ 	if (IS_I9XX(dev)) {
+ 		int found;
+ 
+diff --git a/drivers/gpu/drm/i915/intel_drv.h b/drivers/gpu/drm/i915/intel_drv.h
+index 957daef..22a74bd 100644
+--- a/drivers/gpu/drm/i915/intel_drv.h
++++ b/drivers/gpu/drm/i915/intel_drv.h
+@@ -81,6 +81,7 @@ struct intel_output {
+ 	int type;
+ 	struct intel_i2c_chan *i2c_bus; /* for control functions */
+ 	struct intel_i2c_chan *ddc_bus; /* for DDC only stuff */
++	struct edid *edid;
+ 	bool load_detect_temp;
+ 	bool needs_tv_clock;
+ 	void *dev_priv;
+diff --git a/drivers/gpu/drm/i915/intel_lvds.c b/drivers/gpu/drm/i915/intel_lvds.c
+index 0d211af..dc4fecc 100644
+--- a/drivers/gpu/drm/i915/intel_lvds.c
++++ b/drivers/gpu/drm/i915/intel_lvds.c
+@@ -336,6 +336,7 @@ static void intel_lvds_destroy(struct drm_connector *connector)
+ 		intel_i2c_destroy(intel_output->ddc_bus);
+ 	drm_sysfs_connector_remove(connector);
+ 	drm_connector_cleanup(connector);
++	kfree(intel_output->edid);
+ 	kfree(connector);
+ }
+ 
+@@ -516,5 +517,6 @@ failed:
+ 	if (intel_output->ddc_bus)
+ 		intel_i2c_destroy(intel_output->ddc_bus);
+ 	drm_connector_cleanup(connector);
++	kfree(intel_output->edid);
+ 	kfree(connector);
+ }
+diff --git a/drivers/gpu/drm/i915/intel_modes.c b/drivers/gpu/drm/i915/intel_modes.c
+index e42019e..8c0d5f6 100644
+--- a/drivers/gpu/drm/i915/intel_modes.c
++++ b/drivers/gpu/drm/i915/intel_modes.c
+@@ -70,13 +70,21 @@ int intel_ddc_get_modes(struct intel_output *intel_output)
+ 	struct edid *edid;
+ 	int ret = 0;
+ 
++	if (intel_output->edid) {
++		printk(KERN_INFO "Skipping EDID probe due to cached edid\n");
++		return ret;
++	}
++
+ 	edid = drm_get_edid(&intel_output->base,
+ 			    &intel_output->ddc_bus->adapter);
+ 	if (edid) {
+ 		drm_mode_connector_update_edid_property(&intel_output->base,
+ 							edid);
+ 		ret = drm_add_edid_modes(&intel_output->base, edid);
+-		kfree(edid);
++		if (intel_output->type == INTEL_OUTPUT_LVDS)
++			intel_output->edid = edid;
++		else
++			kfree(edid);
+ 	}
+ 
+ 	return ret;
+diff --git a/include/drm/drmP.h b/include/drm/drmP.h
+index e5f4ae9..69ce4f4 100644
+--- a/include/drm/drmP.h
++++ b/include/drm/drmP.h
+@@ -304,6 +304,7 @@ struct drm_vma_entry {
+ 	pid_t pid;
+ };
+ 
++extern struct list_head drm_async_list;
+ /**
+  * DMA buffer.
+  */

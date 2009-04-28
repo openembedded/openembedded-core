@@ -1,0 +1,53 @@
+From a5fef5986c407d56f4e4cf618d6099e122a096ef Mon Sep 17 00:00:00 2001
+From: Thomas Hellstrom <thellstrom-at-vmware-dot-com>
+Date: Fri, 27 Feb 2009 13:04:46 +0100
+Subject: [PATCH 7/8] drm: Add unlocked IOCTL functionality from the drm repo.
+
+---
+ drivers/gpu/drm/drm_drv.c |   11 ++++++++++-
+ include/drm/drmP.h        |    2 ++
+ 2 files changed, 12 insertions(+), 1 deletions(-)
+
+Index: linux-2.6.28/drivers/gpu/drm/drm_drv.c
+===================================================================
+--- linux-2.6.28.orig/drivers/gpu/drm/drm_drv.c	2009-03-12 13:15:18.000000000 +0000
++++ linux-2.6.28/drivers/gpu/drm/drm_drv.c	2009-03-12 13:15:41.000000000 +0000
+@@ -448,9 +450,16 @@
+  * Looks up the ioctl function in the ::ioctls table, checking for root
+  * previleges if so required, and dispatches to the respective function.
+  */
++
+ int drm_ioctl(struct inode *inode, struct file *filp,
+ 	      unsigned int cmd, unsigned long arg)
+ {
++	return drm_unlocked_ioctl(filp, cmd, arg);
++}
++EXPORT_SYMBOL(drm_ioctl);
++
++long drm_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++{
+ 	struct drm_file *file_priv = filp->private_data;
+ 	struct drm_device *dev = file_priv->minor->dev;
+ 	struct drm_ioctl_desc *ioctl;
+@@ -527,7 +536,7 @@
+ 	return retcode;
+ }
+ 
+-EXPORT_SYMBOL(drm_ioctl);
++EXPORT_SYMBOL(drm_unlocked_ioctl);
+ 
+ drm_local_map_t *drm_getsarea(struct drm_device *dev)
+ {
+Index: linux-2.6.28/include/drm/drmP.h
+===================================================================
+--- linux-2.6.28.orig/include/drm/drmP.h	2009-03-12 13:15:18.000000000 +0000
++++ linux-2.6.28/include/drm/drmP.h	2009-03-12 13:15:41.000000000 +0000
+@@ -1025,6 +1025,8 @@
+ extern void drm_exit(struct drm_driver *driver);
+ extern int drm_ioctl(struct inode *inode, struct file *filp,
+ 		     unsigned int cmd, unsigned long arg);
++extern long drm_unlocked_ioctl(struct file *filp,
++			       unsigned int cmd, unsigned long arg);
+ extern long drm_compat_ioctl(struct file *filp,
+ 			     unsigned int cmd, unsigned long arg);
+ extern int drm_lastclose(struct drm_device *dev);

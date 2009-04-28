@@ -58,6 +58,7 @@ do
   for i in `ls /media 2>/dev/null`; do
       if [ -f /media/$i/$ROOT_IMAGE ] ; then
 	  found="yes"
+	  break
       fi
   done
   if [ "$found" = "yes" ]; then

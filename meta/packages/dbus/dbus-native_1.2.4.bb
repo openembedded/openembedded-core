@@ -3,7 +3,7 @@ inherit native
 
 DEPENDS = "glib-2.0-native libxml2-native expat-native"
 
-PR = "r2"
+PR = "r3"
 
 do_stage() {
 	oe_runmake install
