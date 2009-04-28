@@ -26,7 +26,15 @@
         </para>
 
         <para>
-            The simplest way to add a new package is to base it on a similar
+            Before writing a recipe from scratch it is often useful to check
+            someone else hasn't written one already. OpenEmbedded is a good place 
+            to look as it has a wider scope and hence a wider range of packages.
+            Poky aims to be compatible with OpenEmbedded so most recipes should
+            just work in Poky.
+        </para>
+
+        <para>
+            For new packages, the simplest way to add a recipe is to base it on a similar
             pre-existing recipe. There are some examples below of how to add 
             standard types of packages:
         </para>
@@ -556,6 +564,37 @@ BBFILE_PRIORITY_extras = "5"</literallayout>
             </para>
         </section>
 
+        <section id="usingpoky-changes-supplement">
+            <title>Supplementry Metadata Repositories</title>
+
+            <para>
+                Often when developing a project based on Poky there will be components 
+                that are not ready for public consumption for whatever reason. By making
+                use of the collections mechanism and other functionality within Poky, it
+                is possible to have a public repository which is supplemented by a private 
+                one just containing the pieces that need to be kept private. 
+            </para>
+            <para>
+                The usual approach with these is to create a separate git repository called 
+                "meta-prvt-XXX" which is checked out alongside the other meta-* 
+                directories included in Poky. Under this directory there can be several 
+                different directories such as classes, conf and packages which all 
+                function as per the usual Poky directory structure. 
+            </para>
+            <para>
+                If extra meta-* directories are found, Poky will automatically add them 
+                into the BBPATH variable so the conf and class files contained there 
+                are found. If a file called poky-extra-environment is found within the 
+                meta-* directory, this will be sourced as the environment is setup, 
+                allowing certain configuration to be overridden such as the location of the 
+                local.conf.sample file that is used.
+            </para>
+            <para>
+                Note that at present, BBFILES is not automatically changed and this needs 
+                to be adjusted to find files in the packages/ directory. Usually a custom 
+                local.conf.sample file will be used to handle this instead.
+            </para>
+        </section>
 
         <section id='usingpoky-changes-commits'>
             <title>Committing Changes</title>
@@ -564,8 +603,8 @@ BBFILE_PRIORITY_extras = "5"</literallayout>
                 Modifications to Poky are often managed under some kind of source
                 revision control system. The policy for committing to such systems
                 is important as some simple policy can significantly improve 
-                usability. The tips below are based on the policy that OpenedHand 
-                uses for commits to Poky.
+                usability. The tips below are based on the policy followed for the 
+                Poky core.
             </para>
 
             <para>
@@ -620,6 +659,56 @@ BBFILE_PRIORITY_extras = "5"</literallayout>
                 opkg update;opkg upgrade</command> commands (or similar for 
                 dpkg/apt or rpm based systems). The aim is to ensure Poky has 
                 upgradable packages in all cases.
+            </para>
+        </section>
+        <section id='usingpoky-changes-collaborate'>
+            <title>Using Poky in a Team Environment</title>
+
+            <para>
+                It may not be immediately clear how Poky can work in a team environment, 
+                or scale to a large team of developers. The specifics of any situation
+                will determine the best solution and poky offers immense flexibility in 
+                that aspect but there are some practises that experience has shown to work
+                well.
+            </para>
+
+            <para>
+                The core component of any development effort with Poky is often an 
+                automated build testing framework and image generation process. This 
+                can be used to check that the metadata is buildable, highlight when 
+                commits break the builds and provide up to date images allowing people 
+                to test the end result and use them as a base platform for further 
+                development. Experience shows that buildbot is a good fit for this role 
+                and that it works well to configure it to make two types of build - 
+                incremental builds and 'from scratch'/full builds. The incremental builds 
+                can be tied to a commit hook which triggers them each time a commit is 
+                made to the metadata and are a useful acid test of whether a given commit 
+                breaks the build in some serious way. They catch lots of simple errors 
+                and whilst they won't catch 100% of failures, the tests are fast so 
+                developers can get feedback on their changes quickly. The full builds
+                are builds that build everything from the ground up and test everything. 
+                They usually happen at preset times such as at night when the machine 
+                load isn't high from the incremental builds.
+            </para>
+
+            <para>
+                Most teams have pieces of software undergoing active development. It is of
+                significant benefit to put these under control of a source control system 
+                compatible with Poky such as git or svn. The autobuilder can then be set to 
+                pull the latest revisions of these packages so the latest commits get tested 
+                by the builds allowing any issues to be highlighted quickly. Poky easily
+                supports configurations where there is both a stable known good revision 
+                and a floating revision to test. Poky can also only take changes from specific
+                source control branches giving another way it can be used to track/test only
+                specified changes.
+            </para>
+            <para>
+                Perhaps the hardest part of setting this up is the policy that surrounds 
+                the different source control systems, be them software projects or the Poky 
+                metadata itself. The circumstances will be different in each case but this is
+                one of Poky's advantages - the system itself doesn't force any particular policy
+                unlike a lot of build systems, allowing the best policy to be chosen for the 
+                circumstances.
             </para>
         </section>
     </section>
