@@ -23,10 +23,8 @@
 # Assign a file to __warn__ to get warnings about slow operations.
 #
 
-from inspect import getmro
-
 import copy
-import types, sets
+import types
 types.ImmutableTypes = tuple([ \
     types.BooleanType, \
     types.ComplexType, \
@@ -35,7 +33,7 @@ types.ImmutableTypes = tuple([ \
     types.LongType, \
     types.NoneType, \
     types.TupleType, \
-    sets.ImmutableSet] + \
+    frozenset] + \
     list(types.StringTypes))
 
 MUTABLE = "__mutable__"

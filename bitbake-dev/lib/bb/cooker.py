@@ -26,7 +26,6 @@ import sys, os, getopt, glob, copy, os.path, re, time
 import bb
 from bb import utils, data, parse, event, cache, providers, taskdata, runqueue
 from bb import xmlrpcserver, command
-from sets import Set
 import itertools, sre_constants
 
 class MultipleMatches(Exception):
@@ -97,7 +96,7 @@ class BBCooker:
             self.configuration.cmd = bb.data.getVar("BB_DEFAULT_TASK", self.configuration.data, True) or "build"
 
         bbpkgs = bb.data.getVar('BBPKGS', self.configuration.data, True)
-        if bbpkgs:
+        if bbpkgs and len(self.configuration.pkgs_to_build) == 0:
             self.configuration.pkgs_to_build.extend(bbpkgs.split())
 
         #
@@ -635,7 +634,7 @@ class BBCooker:
 
         # Tweak some variables
         item = self.bb_cache.getVar('PN', fn, True)
-        self.status.ignored_dependencies = Set()
+        self.status.ignored_dependencies = set()
         self.status.bbfile_priority[fn] = 1
 
         # Remove external dependencies
@@ -762,7 +761,7 @@ class BBCooker:
         self.status = bb.cache.CacheData()
 
         ignore = bb.data.getVar("ASSUME_PROVIDED", self.configuration.data, 1) or ""
-        self.status.ignored_dependencies = Set(ignore.split())
+        self.status.ignored_dependencies = set(ignore.split())
 
         for dep in self.configuration.extra_assume_provided:
             self.status.ignored_dependencies.add(dep)
@@ -836,7 +835,11 @@ class BBCooker:
                 if dirfiles:
                     newfiles += dirfiles
                     continue
-            newfiles += glob.glob(f) or [ f ]
+            else:
+                globbed = glob.glob(f)
+                if not globbed and os.path.exists(f):
+                    globbed = [f]
+                newfiles += globbed
 
         bbmask = bb.data.getVar('BBMASK', self.configuration.data, 1)
 
@@ -849,9 +852,8 @@ class BBCooker:
             bb.msg.fatal(bb.msg.domain.Collection, "BBMASK is not a valid regular expression.")
 
         finalfiles = []
-        for i in xrange( len( newfiles ) ):
-            f = newfiles[i]
-            if bbmask and bbmask_compiled.search(f):
+        for f in newfiles:
+            if bbmask_compiled.search(f):
                 bb.msg.debug(1, bb.msg.domain.Collection, "skipping masked file %s" % f)
                 masked += 1
                 continue

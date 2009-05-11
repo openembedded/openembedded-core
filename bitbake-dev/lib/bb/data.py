@@ -37,7 +37,7 @@ the speed is more critical here.
 #
 #Based on functions from the base bb module, Copyright 2003 Holger Schurig
 
-import sys, os, re, time, types
+import sys, os, re, types
 if sys.argv[0][-5:] == "pydoc":
     path = os.path.dirname(os.path.dirname(sys.argv[1]))
 else:
@@ -553,7 +553,9 @@ def inherits_class(klass, d):
 def _test():
     """Start a doctest run on this module"""
     import doctest
+    import bb
     from bb import data
+    bb.msg.set_debug_level(0)
     doctest.testmod(data)
 
 if __name__ == "__main__":
