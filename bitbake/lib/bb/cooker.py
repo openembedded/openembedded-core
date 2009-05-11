@@ -281,13 +281,13 @@ class BBCooker:
                     print >> depends_file, '"%s" -> "%s"' % (pn, depend)
                 rdepends = self.status.rundeps[fn]
                 for package in rdepends:
-                    for rdepend in rdepends[package]:
-                        print >> depends_file, '"%s" -> "%s" [style=dashed]' % (package, rdepend)
+                    for rdepend in re.findall("([\w.-]+)(\ \(.+\))?", rdepends[package]):
+                        print >> depends_file, '"%s" -> "%s%s" [style=dashed]' % (package, rdepend[0], rdepend[1])
                     packages.append(package)
                 rrecs = self.status.runrecs[fn]
                 for package in rrecs:
-                    for rdepend in rrecs[package]:
-                        print >> depends_file, '"%s" -> "%s" [style=dashed]' % (package, rdepend)
+                    for rdepend in re.findall("([\w.-]+)(\ \(.+\))?", rrecs[package]):
+                        print >> depends_file, '"%s" -> "%s%s" [style=dashed]' % (package, rdepend[0], rdepend[1])
                     if not package in packages:
                         packages.append(package)
                 for package in packages:
@@ -688,7 +688,11 @@ class BBCooker:
                 if dirfiles:
                     newfiles += dirfiles
                     continue
-            newfiles += glob.glob(f) or [ f ]
+            else:
+                globbed = glob.glob(f)
+                if not globbed and os.path.exists(f):
+                    globbed = [f]
+                newfiles += globbed
 
         bbmask = bb.data.getVar('BBMASK', self.configuration.data, 1)
 
@@ -701,9 +705,8 @@ class BBCooker:
             bb.msg.fatal(bb.msg.domain.Collection, "BBMASK is not a valid regular expression.")
 
         finalfiles = []
-        for i in xrange( len( newfiles ) ):
-            f = newfiles[i]
-            if bbmask and bbmask_compiled.search(f):
+        for f in newfiles:
+            if bbmask_compiled.search(f):
                 bb.msg.debug(1, bb.msg.domain.Collection, "skipping masked file %s" % f)
                 masked += 1
                 continue
