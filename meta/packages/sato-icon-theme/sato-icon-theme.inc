@@ -1,5 +1,3 @@
-require sato-icon-theme.inc
-
 SECTION = "x11"
 DESCRIPTION = "Sato Icon Theme"
 LICENSE = "CC-BY-SA3"
