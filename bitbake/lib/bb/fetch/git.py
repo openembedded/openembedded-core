@@ -37,9 +37,12 @@ class Git(Fetch):
 
     def localpath(self, url, ud, d):
 
-        ud.proto = "rsync"
         if 'protocol' in ud.parm:
             ud.proto = ud.parm['protocol']
+        elif not ud.host:
+            ud.proto = 'file'
+        else:
+            ud.proto = "rsync"
 
         ud.branch = ud.parm.get("branch", "master")
 
@@ -49,11 +52,8 @@ class Git(Fetch):
         elif tag:
             ud.tag = tag
 
-        if not ud.tag:
+        if not ud.tag or ud.tag == "master":
             ud.tag = self.latest_revision(url, ud, d)	
-
-        if ud.tag == "master":
-            ud.tag = self.latest_revision(url, ud, d)
 
         ud.localfile = data.expand('git_%s%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.tag), d)
 
@@ -90,11 +90,12 @@ class Git(Fetch):
 
         os.chdir(repodir)
         # Remove all but the .git directory
-        runfetchcmd("rm * -Rf", d)
-        runfetchcmd("git fetch %s://%s%s%s %s" % (ud.proto, username, ud.host, ud.path, ud.branch), d)
-        runfetchcmd("git fetch --tags %s://%s%s%s" % (ud.proto, username, ud.host, ud.path), d)
-        runfetchcmd("git prune-packed", d)
-        runfetchcmd("git pack-redundant --all | xargs -r rm", d)
+        if not self._contains_ref(ud.tag, d):
+            runfetchcmd("rm * -Rf", d)
+            runfetchcmd("git fetch %s://%s%s%s %s" % (ud.proto, username, ud.host, ud.path, ud.branch), d)
+            runfetchcmd("git fetch --tags %s://%s%s%s" % (ud.proto, username, ud.host, ud.path), d)
+            runfetchcmd("git prune-packed", d)
+            runfetchcmd("git pack-redundant --all | xargs -r rm", d)
 
         os.chdir(repodir)
         mirror_tarballs = data.getVar("BB_GENERATE_MIRROR_TARBALLS", d, True)
@@ -119,6 +120,10 @@ class Git(Fetch):
 
     def suppports_srcrev(self):
         return True
+
+    def _contains_ref(self, tag, d):
+        output = runfetchcmd("git log --pretty=oneline -n 1 %s -- 2> /dev/null | wc -l" % tag, d, quiet=True)
+        return output.split()[0] != "0"
 
     def _revision_key(self, url, ud, d):
         """
