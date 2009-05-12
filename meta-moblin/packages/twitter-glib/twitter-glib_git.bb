@@ -7,6 +7,8 @@ DEPENDS = "glib-2.0 gtk+ json-glib"
 
 S = "${WORKDIR}/git"
 
+EXTRA_OECONF = "--disable-shave --disable-introspection"
+
 inherit autotools_stage
 
 do_configure_prepend () {
