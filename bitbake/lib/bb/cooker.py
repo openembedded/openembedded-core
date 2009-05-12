@@ -25,7 +25,6 @@
 import sys, os, getopt, glob, copy, os.path, re, time
 import bb
 from bb import utils, data, parse, event, cache, providers, taskdata, runqueue
-from sets import Set
 import itertools, sre_constants
 
 parsespin = itertools.cycle( r'|/-\\' )
@@ -482,7 +481,7 @@ class BBCooker:
 
         # Tweak some variables
         item = self.bb_cache.getVar('PN', fn, True)
-        self.status.ignored_dependencies = Set()
+        self.status.ignored_dependencies = set()
         self.status.bbfile_priority[fn] = 1
 
         # Remove external dependencies
@@ -574,7 +573,7 @@ class BBCooker:
         self.status = bb.cache.CacheData()
 
         ignore = bb.data.getVar("ASSUME_PROVIDED", self.configuration.data, 1) or ""
-        self.status.ignored_dependencies = Set( ignore.split() )
+        self.status.ignored_dependencies = set( ignore.split() )
 
         self.handleCollections( bb.data.getVar("BBFILE_COLLECTIONS", self.configuration.data, 1) )
 
