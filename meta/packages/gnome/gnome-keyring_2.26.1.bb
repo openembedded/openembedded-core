@@ -5,7 +5,7 @@ PR = "r1"
 
 inherit autotools_stage gnome pkgconfig
 
-DEPENDS = "gtk+ libgcrypt"
+DEPENDS = "gtk+ libgcrypt libtasn1 libtasn1-native"
 
 EXTRA_OECONF = "--disable-gtk-doc"
 
@@ -17,3 +17,5 @@ do_install_append () {
 }
 
 FILES_${PN} += "${datadir}/dbus-1/services"
+FILES_${PN}-dbg += "${libdir}/gnome-keyring/standalone/.debug/"
+FILES_${PN}-dbg += "${libdir}/gnome-keyring/devel/.debug/"
