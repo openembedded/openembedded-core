@@ -2,6 +2,7 @@ SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you. Mutter is metacity + clutter."
 LICENSE = "GPL"
 DEPENDS = "startup-notification gtk+ gconf clutter gdk-pixbuf-csource-native intltool glib-2.0-native"
+# gobject-introspection
 PR = "r8"
 PV = "2.25.1+git${SRCREV}"
 inherit gnome update-alternatives
@@ -19,6 +20,7 @@ ALTERNATIVE_PRIORITY = "11"
 
 EXTRA_OECONF += "--disable-verbose	\
 	         --disable-xinerama	\
+	         --without-introspection \
 		 --with-clutter"
 
 FILES_${PN} += "${datadir}/themes ${libdir}/metacity/plugins/clutter/*.so"
