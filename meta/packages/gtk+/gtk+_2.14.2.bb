@@ -26,7 +26,7 @@ EXTRA_OECONF = "--without-libtiff --without-libjasper --disable-xkb --disable-gl
 
 LIBV = "2.10.0"
 
-PACKAGES_DYNAMIC = "gdk-pixbuf-loader-* gtk-immodule-* gtk-printbackend-*"
+PACKAGES_DYNAMIC += "gdk-pixbuf-loader-* gtk-immodule-* gtk-printbackend-*"
 
 python populate_packages_prepend () {
 	import os.path
