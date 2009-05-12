@@ -4,7 +4,7 @@ LICENSE = "PSF"
 DEPENDS = "openssl-native bzip2-full-native sqlite3-native"
 SECTION = "devel/python"
 PRIORITY = "optional"
-PR = "ml5"
+PR = "ml6"
 
 EXCLUDE_FROM_WORLD = "1"
 
@@ -16,6 +16,7 @@ SRC_URI = "\
   file://default-is-optimized.patch;patch=1 \
   file://catchup-with-swig.patch;patch=1 \
   file://fix-staging.patch;patch=1 \
+  file://enable-ctypes-module.patch;patch=1 \
 "
 S = "${WORKDIR}/Python-${PV}"
 
