@@ -1,4 +1,4 @@
-SRC_URI = "git://git.moblin.org/libccss.git;protocol=git;branch=branch-for-nbtk"
+SRC_URI = "git://anongit.freedesktop.org/git/ccss.git;protocol=git"
 PV = "0.0+git${SRCREV}"
 PR = "r0"
 
