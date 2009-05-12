@@ -3,7 +3,7 @@ SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git"
 PV = "0.0+git${SRCREV}"
 PR = "r2"
 
-DEPENDS = "libsoup-2.4 gconf-dbus librest glib-2.0 twitter-glib sqlite3"
+DEPENDS = "libsoup-2.4 gconf-dbus librest glib-2.0 twitter-glib sqlite3 gnome-keyring"
 
 S = "${WORKDIR}/git"
 
