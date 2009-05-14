@@ -7,4 +7,5 @@ SRC_URI = "git://git.clutter-project.org/clutter.git;protocol=git;branch=master 
            file://enable_tests.patch;patch=1 "
 S = "${WORKDIR}/git"
 
+BASE_CONF += "--disable-introspection"
 
