@@ -1,8 +1,8 @@
 Index: git/cluttermozembed/Makefile.am
 ===================================================================
---- git.orig/cluttermozembed/Makefile.am	2009-04-16 15:54:16.000000000 +0100
-+++ git/cluttermozembed/Makefile.am	2009-04-16 15:57:02.000000000 +0100
-@@ -51,12 +51,13 @@
+--- git.orig/cluttermozembed/Makefile.am	2009-05-11 23:16:52.000000000 +0100
++++ git/cluttermozembed/Makefile.am	2009-05-11 23:18:40.000000000 +0100
+@@ -53,13 +53,14 @@
  source_h = \
  	clutter-mozembed.h
  source_c = \
@@ -13,14 +13,15 @@ Index: git/cluttermozembed/Makefile.am
  
  clutter_mozheadless_SOURCES = \
  	clutter-mozheadless.c \
+ 	clutter-mozheadless.h \
 +	dummy2.cpp \
- 	clutter-mozheadless.h
- 
- lib_LTLIBRARIES = libcluttermozembed.la
+ 	clutter-mozheadless-history.c \
+ 	clutter-mozheadless-history.h \
+ 	clutter-mozheadless-prefs.c \
 Index: git/configure.ac
 ===================================================================
---- git.orig/configure.ac	2009-04-16 15:54:16.000000000 +0100
-+++ git/configure.ac	2009-04-16 15:54:30.000000000 +0100
+--- git.orig/configure.ac	2009-05-11 23:16:52.000000000 +0100
++++ git/configure.ac	2009-05-11 23:16:52.000000000 +0100
 @@ -7,6 +7,7 @@
  
  AC_ISC_POSIX
