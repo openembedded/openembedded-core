@@ -1,9 +1,9 @@
 
-SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=c6fe23d41598;module=offscreen \
+SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=71b4ab01cbf2;module=offscreen \
            file://configurefix.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
-PV = "0.0+hg-1.0+c6fe23d41598"
+PV = "0.0+hg-1.0+71b4ab01cbf2"
 PR = "r0"
 
 S = "${WORKDIR}/offscreen"
@@ -34,7 +34,7 @@ do_compile () {
 	base_do_compile
 }
 
-EXTRA_OECONF =+ "--enable-application=xulrunner --disable-javaxpcom --enable-system-sqlite --enable-default-toolkit=cairo-headless --disable-printing --disable-crashreporter --disable-plugins --disable-accessibility --enable-pango --disable-tests"
+EXTRA_OECONF =+ "--enable-application=xulrunner --enable-default-toolkit=cairo-headless --enable-pango --disable-optimize --enable-debug --disable-tests --disable-printing --disable-crashreporter --disable-accessibility --disable-javaxpcom --enable-plugins --enable-system-sqlite --disable-necko-wifi"
 
 export LIBXUL_DIST="${S}/dist"
 
