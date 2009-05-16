@@ -1,0 +1,179 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+--- source/configure.in~configure	2003-12-14 22:36:25.000000000 -0500
++++ source/configure.in	2004-01-26 14:33:15.000000000 -0500
+@@ -959,7 +959,7 @@
+ #endif
+        exit(0);
+ }
+-], [linux_getgrouplist_ok=yes], [linux_getgrouplist_ok=no])
++], [linux_getgrouplist_ok=yes], [linux_getgrouplist_ok=no], [linux_getgrouplist_ok=cross])
+        if test x"$linux_getgrouplist_ok" = x"yes"; then
+           AC_DEFINE(HAVE_GETGROUPLIST, 1, [Have good getgrouplist])
+        fi
+--- source/aclocal.m4~configure	2004-01-26 14:33:15.000000000 -0500
++++ source/aclocal.m4	2004-01-26 17:34:28.000000000 -0500
+@@ -2,7 +2,7 @@
+ dnl if the cache file is inconsistent with the current host,
+ dnl target and build system types, execute CMD or print a default
+ dnl error message.
+-AC_DEFUN(AC_VALIDATE_CACHE_SYSTEM_TYPE, [
++AC_DEFUN([AC_VALIDATE_CACHE_SYSTEM_TYPE], [
+     AC_REQUIRE([AC_CANONICAL_SYSTEM])
+     AC_MSG_CHECKING([config.cache system type])
+     if { test x"${ac_cv_host_system_type+set}" = x"set" &&
+@@ -24,7 +24,7 @@
+ 
+ 
+ dnl test whether dirent has a d_off member
+-AC_DEFUN(AC_DIRENT_D_OFF,
++AC_DEFUN([AC_DIRENT_D_OFF],
+ [AC_CACHE_CHECK([for d_off in dirent], ac_cv_dirent_d_off,
+ [AC_TRY_COMPILE([
+ #include <unistd.h>
+@@ -38,7 +38,7 @@
+ 
+ dnl Mark specified module as shared
+ dnl SMB_MODULE(name,static_files,shared_files,subsystem,whatif-static,whatif-shared)
+-AC_DEFUN(SMB_MODULE,
++AC_DEFUN([SMB_MODULE],
+ [
+ 	AC_MSG_CHECKING([how to build $1])
+ 	if test "$[MODULE_][$1]"; then
+@@ -68,7 +68,7 @@
+ 	fi
+ ])
+ 
+-AC_DEFUN(SMB_SUBSYSTEM,
++AC_DEFUN([SMB_SUBSYSTEM],
+ [
+ 	AC_SUBST($1_STATIC)
+ 	AC_SUBST($1_MODULES)
+@@ -77,7 +77,7 @@
+ ])
+ 
+ dnl AC_PROG_CC_FLAG(flag)
+-AC_DEFUN(AC_PROG_CC_FLAG,
++AC_DEFUN([AC_PROG_CC_FLAG],
+ [AC_CACHE_CHECK(whether ${CC-cc} accepts -$1, ac_cv_prog_cc_$1,
+ [echo 'void f(){}' > conftest.c
+ if test -z "`${CC-cc} -$1 -c conftest.c 2>&1`"; then
+@@ -91,7 +91,7 @@
+ dnl see if a declaration exists for a function or variable
+ dnl defines HAVE_function_DECL if it exists
+ dnl AC_HAVE_DECL(var, includes)
+-AC_DEFUN(AC_HAVE_DECL,
++AC_DEFUN([AC_HAVE_DECL],
+ [
+  AC_CACHE_CHECK([for $1 declaration],ac_cv_have_$1_decl,[
+     AC_TRY_COMPILE([$2],[int i = (int)$1],
+@@ -105,7 +105,7 @@
+ dnl check for a function in a library, but don't
+ dnl keep adding the same library to the LIBS variable.
+ dnl AC_LIBTESTFUNC(lib,func)
+-AC_DEFUN(AC_LIBTESTFUNC,
++AC_DEFUN([AC_LIBTESTFUNC],
+ [case "$LIBS" in
+   *-l$1*) AC_CHECK_FUNCS($2) ;;
+   *) AC_CHECK_LIB($1, $2) 
+@@ -223,7 +223,7 @@
+ 
+ dnl Define an AC_DEFINE with ifndef guard.
+ dnl AC_N_DEFINE(VARIABLE [, VALUE])
+-define(AC_N_DEFINE,
++define([AC_N_DEFINE],
+ [cat >> confdefs.h <<\EOF
+ [#ifndef] $1
+ [#define] $1 ifelse($#, 2, [$2], $#, 3, [$2], 1)
+@@ -233,14 +233,14 @@
+ 
+ dnl Add an #include
+ dnl AC_ADD_INCLUDE(VARIABLE)
+-define(AC_ADD_INCLUDE,
++define([AC_ADD_INCLUDE],
+ [cat >> confdefs.h <<\EOF
+ [#include] $1
+ EOF
+ ])
+ 
+ dnl Copied from libtool.m4
+-AC_DEFUN(AC_PROG_LD_GNU,
++AC_DEFUN([AC_PROG_LD_GNU],
+ [AC_CACHE_CHECK([if the linker ($LD) is GNU ld], ac_cv_prog_gnu_ld,
+ [# I'd rather use --version here, but apparently some GNU ld's only accept -v.
+ if $LD -v 2>&1 </dev/null | egrep '(GNU|with BFD)' 1>&5; then
+@@ -259,7 +259,7 @@
+ dnl AM_PATH_XML2([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
+ dnl Test for XML, and define XML_CFLAGS and XML_LIBS
+ dnl
+-AC_DEFUN(AM_PATH_XML2,[ 
++AC_DEFUN([AM_PATH_XML2],[ 
+ AC_ARG_WITH(xml-prefix,
+             [  --with-xml-prefix=PFX   Prefix where libxml is installed (optional)],
+             xml_config_prefix="$withval", xml_config_prefix="")
+@@ -443,7 +443,7 @@
+ dnl AM_PATH_MYSQL([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
+ dnl Test for MYSQL, and define MYSQL_CFLAGS and MYSQL_LIBS
+ dnl
+-AC_DEFUN(AM_PATH_MYSQL,
++AC_DEFUN([AM_PATH_MYSQL],
+ [dnl
+ dnl Get the cflags and libraries from the mysql_config script
+ dnl
+@@ -485,7 +485,7 @@
+ ])
+ 
+ dnl Removes -I/usr/include/? from given variable
+-AC_DEFUN(CFLAGS_REMOVE_USR_INCLUDE,[
++AC_DEFUN([CFLAGS_REMOVE_USR_INCLUDE],[
+   ac_new_flags=""
+   for i in [$]$1; do
+     case [$]i in
+@@ -497,7 +497,7 @@
+ ])
+     
+ dnl Removes -L/usr/lib/? from given variable
+-AC_DEFUN(LIB_REMOVE_USR_LIB,[
++AC_DEFUN([LIB_REMOVE_USR_LIB],[
+   ac_new_flags=""
+   for i in [$]$1; do
+     case [$]i in
+@@ -510,7 +510,7 @@
+ 
+ dnl From Bruno Haible.
+ 
+-AC_DEFUN(jm_ICONV,
++AC_DEFUN([jm_ICONV],
+ [
+   dnl Some systems have iconv in libc, some have it in libiconv (OSF/1 and
+   dnl those with the standalone portable libiconv installed).
+@@ -607,7 +607,7 @@
+   fi
+ ])
+ 
+-AC_DEFUN(rjs_CHARSET,[
++AC_DEFUN([rjs_CHARSET],[
+   dnl Find out if we can convert from $1 to UCS2-LE
+   AC_MSG_CHECKING([can we convert from $1 to UCS2-LE?])
+   AC_TRY_RUN([
+@@ -625,7 +625,7 @@
+ 
+ dnl CFLAGS_ADD_DIR(CFLAGS, $INCDIR)
+ dnl This function doesn't add -I/usr/include into CFLAGS
+-AC_DEFUN(CFLAGS_ADD_DIR,[
++AC_DEFUN([CFLAGS_ADD_DIR],[
+ if test "$2" != "/usr/include" ; then
+     $1="$$1 -I$2"
+ fi
+@@ -633,7 +633,7 @@
+ 
+ dnl LIB_ADD_DIR(LDFLAGS, $LIBDIR)
+ dnl This function doesn't add -L/usr/lib into LDFLAGS
+-AC_DEFUN(LIB_ADD_DIR,[
++AC_DEFUN([LIB_ADD_DIR],[
+ if test "$2" != "/usr/lib" ; then
+     $1="$$1 -L$2"
+ fi
