@@ -2,13 +2,17 @@ require e2fsprogs_${PV}.bb
 inherit native
 
 DEPENDS = "gettext-native"
-PR = "r1"
+PR = "r2"
 
 do_stage () {
 	oe_libinstall -a -C lib libblkid ${STAGING_LIBDIR}/
 	oe_libinstall -a -C lib libe2p ${STAGING_LIBDIR}/
 	oe_libinstall -a -C lib libext2fs ${STAGING_LIBDIR}/
 	oe_libinstall -a -C lib libuuid ${STAGING_LIBDIR}/
+	install -d ${STAGING_BINDIR_NATIVE}/
+	for b in ${e2miscbins}; do
+		install -m 0755 misc/$b ${STAGING_BINDIR_NATIVE}/ || die "failed to install $b"
+	done
 	install -d ${STAGING_INCDIR}/e2p
 	for h in ${e2pheaders}; do
 		install -m 0644 lib/e2p/$h ${STAGING_INCDIR}/e2p/ || die "failed to install $h"
