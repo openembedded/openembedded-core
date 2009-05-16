@@ -1,6 +1,6 @@
 require gtk+.inc
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.14/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \

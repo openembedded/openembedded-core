@@ -58,6 +58,8 @@ do_stage () {
 	install -m 0644 gtk/gtkfilechooserprivate.h ${STAGING_INCDIR}/gtk-2.0/gtk/
 	install -m 0644 gtk/gtkfilechooserutils.h   ${STAGING_INCDIR}/gtk-2.0/gtk/
 	install -m 0644 gtk/gtkfilesystemmodel.h    ${STAGING_INCDIR}/gtk-2.0/gtk/
+
+	install -m 755 gtk/gtk-builder-convert ${STAGING_BINDIR_NATIVE}
 }
 
 do_install_append () {
