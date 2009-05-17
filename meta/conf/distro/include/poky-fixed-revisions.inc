@@ -189,6 +189,17 @@ SRCREV_pn-librsvg ?= "1193"
 SRCREV_pn-qemugl = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 SRCREV_pn-gobject-introspection = "c54f10f4caef35b42229c48951ee647ef05ab557"
 SRCREV_pn-gobject-introspection-native = "c54f10f4caef35b42229c48951ee647ef05ab557"
+SRCREV_pn-json-glib ?= ""
+SRCREV_pn-librest ?= "e49d8730bfb277af59732822e78535ef37e29b6c"
+SRCREV_pn-twitter-glib ?= "574e324e2b37e370162e5fa76f13ae0534952c41"
+SRCREV_pn-libgdbus ?= "aeab6e3c0185b271ca343b439470491b99cc587f"
+SRCREV_pn-mozilla-headless-services ?= "c7873654894af6c7c6c01194d6185db46667b81f"
+SRCREV_pn-moblin-menus ?= "e1d63681739dd16195d005b3cf15752df294bd3c"
+SRCREV_pn-libccss ?= "92bc59e1d39302c8be500d53cb5dd8b05c2e4a15"
+SRCREV_pn-clutter-mozembed ?= "5f1f85dc878a83f64be4340b19e34139edf79744"
+SRCREV_pn-mojito ?= "88b39ace3f6a39c48a015d0bab9ae6599b42e900"
+SRCREV_pn-mutter ?= "aff4cf110307e149d3497d20543cde27b9699758"
+
 
 # Preferred Versions:
 #
