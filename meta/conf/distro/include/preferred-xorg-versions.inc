@@ -146,6 +146,6 @@ PREFERRED_VERSION_xf86-input-evdev ?= "2.2.1"
 PREFERRED_VERSION_xf86-input-mouse ?= "1.4.0"
 PREFERRED_VERSION_xf86-input-keyboard ?= "1.3.2"
 PREFERRED_VERSION_xf86-input-synaptics ?= "1.1.0"
-PREFERRED_VERSION_xf86-video-intel ?= "2.4.97.0+git${SRCREV}"
-PREFERRED_VERSION_xf86-video-intel-dri2 ?= "2.4.97.0+git${SRCREV}"
+PREFERRED_VERSION_xf86-video-intel ?= "2.7.0"
+
 

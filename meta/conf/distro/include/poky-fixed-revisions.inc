@@ -209,12 +209,11 @@ PREFERRED_VERSION_dbus-glib ?= "0.78"
 PREFERRED_VERSION_dbus-glib-native ?= "0.78"
 PREFERRED_VERSION_gnome-vfs ?= "2.22.0"
 PREFERRED_VERSION_libgnomecanvas ?= "2.20.0"
-PREFERRED_VERSION_gnome-keyring ?= "2.20"
 
 PREFERRED_VERSION_evince ?= "2.20.0"
 PREFERRED_VERSION_minimo ?= "0.02+cvs${SRCDATE_minimo}"
 PREFERRED_VERSION_oprofile ?= "0.9.4"
 PREFERRED_VERSION_elfutils ?= "0.89"
-PREFERRED_VERSION_hal ?= "0.5.9.1"
+PREFERRED_VERSION_hal ?= "0.5.11"
 PREFERRED_VERSION_hal-info ?= "20070831"
 
