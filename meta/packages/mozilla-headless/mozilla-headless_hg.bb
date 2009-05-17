@@ -34,6 +34,11 @@ do_compile () {
 	base_do_compile
 }
 
+do_install_append () {
+	install -d ${D}${sysconfdir}/ld.so.conf.d/
+	echo ${libdir}/xulrunner-1.9.2a1pre/ > ${D}${sysconfdir}/ld.so.conf.d/mozilla-headless
+}
+
 EXTRA_OECONF =+ "--enable-application=xulrunner --enable-default-toolkit=cairo-headless --enable-pango --disable-optimize --enable-debug --disable-tests --disable-printing --disable-crashreporter --disable-accessibility --disable-javaxpcom --enable-plugins --enable-system-sqlite --disable-necko-wifi"
 
 export LIBXUL_DIST="${S}/dist"
