@@ -32,12 +32,11 @@ EXCLUDE_FROM_WORLD_pn-gcalctool = "1"
 EXCLUDE_FROM_WORLD_pn-abiword = "1"
 EXCLUDE_FROM_WORLD_pn-abiword-embedded = "1"
 
-# helix is x86 only
-EXCLUDE_FROM_WORLD_pn-clutter-helix = "1"
-EXCLUDE_FROM_WORLD_pn-helix-libs = "1"
-
 # Broken - static assertion failure
 EXCLUDE_FROM_WORLD_pn-minimo = "1"
 
 # configure issues
 EXCLUDE_FROM_WORLD_pn-xlogo = "1"
+
+# recipe not finished yet
+EXCLUDE_FROM_WORLD_pn-gobject-introspection = "1"
