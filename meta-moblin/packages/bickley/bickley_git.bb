@@ -1,4 +1,4 @@
-
+DESCRIPTION = "A meta data manager API and framework (including Media)"
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git"
 PV = "0.0+git${SRCREV}"
 PR = "r1"
