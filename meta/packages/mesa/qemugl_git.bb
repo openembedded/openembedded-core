@@ -3,7 +3,7 @@ HOMEPAGE = "http://savannah.nongnu.org/projects/qemugl"
 SECTION = "x11/drivers"
 LICENSE = "GPL"
 
-DEPENDS = "virtual/xserver-xf86 xproto glproto"
+DEPENDS = "virtual/libx11 xproto glproto"
 
 COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
 
