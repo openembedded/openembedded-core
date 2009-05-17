@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r6"
+PR = "r7"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -15,7 +15,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
 
-NETWORK_MANAGER ?= "networkmanager-applet"
 EXTRA_MOBLIN_PACKAGES ?= ""
 RDEPENDS_task-moblin-x11-netbook = "\
     mutter \
@@ -23,5 +22,4 @@ RDEPENDS_task-moblin-x11-netbook = "\
     matchbox-config-gtk \
     xcursor-transparent-theme \
     settings-daemon \
-    ${EXTRA_MOBLIN_PACKAGES} \
-    ${NETWORK_MANAGER}"
+    ${EXTRA_MOBLIN_PACKAGES}"
