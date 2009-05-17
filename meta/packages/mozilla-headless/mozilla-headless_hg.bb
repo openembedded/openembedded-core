@@ -1,9 +1,9 @@
 
-SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=71b4ab01cbf2;module=offscreen \
+SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=75786cabae7f;module=offscreen \
            file://configurefix.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
-PV = "0.0+hg-1.0+71b4ab01cbf2"
+PV = "0.0+hg-1.0+75786cabae7f"
 PR = "r0"
 
 S = "${WORKDIR}/offscreen"
