@@ -6,6 +6,8 @@ DEPENDS = "helix-libs"
 
 FILESPATH = "${FILE_DIRNAME}/clutter-helix"
 
+COMPATIBLE_HOST = '(x86_64|i.86.*)-linux'
+
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${bindir}/video-player ${bindir}/audio-player"
 
