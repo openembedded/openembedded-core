@@ -46,9 +46,9 @@ export LIBXUL_DIST="${S}/dist"
 do_stage_append () {
 	autotools_stage_dir ${STAGE_TEMP}/${libdir}/xulrunner-1.9.2a1pre ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-1.9.2a1pre/
 	autotools_stage_dir ${STAGE_TEMP}/${libdir}/xulrunner-devel-1.9.2a1pre ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/
-	ln -fs ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-1.9.2a1pre/ /media/build2/builds/poky/build1/moblin/staging/i586-poky-linux/usr/lib/xulrunner-devel-1.9.2a1pre/bin
-	ln -fs ${STAGING_DIR_HOST}${layout_datadir}/xulrunner-1.9.2a1pre/unstable/ /media/build2/builds/poky/build1/moblin/staging/i586-poky-linux/usr/lib/xulrunner-devel-1.9.2a1pre/idl
-	ln -fs ${STAGING_DIR_HOST}${layout_includedir}/xulrunner-1.9.2a1pre/unstable/ /media/build2/builds/poky/build1/moblin/staging/i586-poky-linux/usr/lib/xulrunner-devel-1.9.2a1pre/include
-	ln -fs ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/ /media/build2/builds/poky/build1/moblin/staging/i586-poky-linux/usr/lib/xulrunner-devel-1.9.2a1pre/lib
+	ln -fs ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-1.9.2a1pre/ ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/bin
+	ln -fs ${STAGING_DIR_HOST}${layout_datadir}/xulrunner-1.9.2a1pre/unstable/ ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/idl
+	ln -fs ${STAGING_DIR_HOST}${layout_includedir}/xulrunner-1.9.2a1pre/unstable/ ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/include
+	ln -fs ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/ ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/lib
 }
 
