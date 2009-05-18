@@ -1,20 +1,26 @@
 DESCRIPTION = "Util-linux is a suite of essential utilities for any Linux system."
 SECTION = "base"
 LICENSE = "GPL"
-DEPENDS = "zlib ncurses"
+DEPENDS = "udev zlib ncurses virtual/libintl"
 
 inherit autotools
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux/util-linux-${PV}.tar.bz2 \
-           file://gcc34.patch;patch=1 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v2.15/util-linux-ng-${PV}.tar.bz2 \
            file://MCONFIG \
            file://make_include \
            file://swapargs.h \
 	   file://fdiskbsdlabel_thumb.diff;patch=1 \
 	   file://umount.diff;patch=1 \
            file://defines.h"
+#           file://gcc34.patch;patch=1 \
 
 PACKAGES_prepend = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-swaponoff util-linux-losetup util-linux-umount util-linux-mount util-linux-readprofile "
+
+S = "${WORKDIR}/util-linux-ng-${PV}"
+
+EXTRA_OECONF = "--disable-use-tty-group --disable-makeinstall-chown --enable-elvtune --enable-init --enable-kill --enable-last \
+ --enable-mesg --enable-partx --enable-raw --enable-rdev --enable-reset \
+  --disable-login-utils --enable-write --enable-arch --enable-mount --with-fsprobe=builtin"
 
 FILES_${PN}-doc += "/usr/share/misc/getopt/getopt-*.*"
 
@@ -72,17 +78,19 @@ do_install () {
 		'OPT=${CFLAGS}' 'CC=${CC}' 'LD=${LD}' \
 		'LDFLAGS=${LDFLAGS}' 'DESTDIR=${D}' install
 
-	test -f ${D}${base_sbindir}/pivot_root && \
-	mv ${D}${base_sbindir}/pivot_root ${D}${base_sbindir}/pivot_root.${PN}
-	mv ${D}${base_bindir}/dmesg ${D}${base_bindir}/dmesg.${PN}
-	mv ${D}${base_bindir}/kill ${D}${base_bindir}/kill.${PN}
-	mv ${D}${base_bindir}/more ${D}${base_bindir}/more.${PN}
-	mv ${D}${base_sbindir}/hwclock ${D}${base_sbindir}/hwclock.${PN}
-	mv ${D}${base_sbindir}/mkswap ${D}${base_sbindir}/mkswap.${PN}
-	mv ${D}${base_sbindir}/shutdown ${D}${base_sbindir}/shutdown.${PN}
-	mv ${D}${base_sbindir}/sln ${D}${base_sbindir}/sln.${PN}
-	mv ${D}${base_sbindir}/mkfs.minix ${D}${base_sbindir}/mkfs.minix.${PN}
-	mv ${D}${base_sbindir}/fsck.minix ${D}${base_sbindir}/fsck.minix.${PN}
+	install -d ${D}${base_bindir}
+	install -d ${D}${base_sbindir}
+	test -f ${D}${sbindir}/pivot_root && \
+	mv ${D}${sbindir}/pivot_root ${D}${base_sbindir}/pivot_root.${PN}
+	mv ${D}${bindir}/dmesg ${D}${base_bindir}/dmesg.${PN}
+	mv ${D}${bindir}/kill ${D}${base_bindir}/kill.${PN}
+	mv ${D}${bindir}/more ${D}${base_bindir}/more.${PN}
+	mv ${D}${sbindir}/hwclock ${D}${base_sbindir}/hwclock.${PN}
+	mv ${D}${sbindir}/mkswap ${D}${base_sbindir}/mkswap.${PN}
+	mv ${D}${sbindir}/shutdown ${D}${base_sbindir}/shutdown.${PN}
+#	mv ${D}${sbindir}/sln ${D}${base_sbindir}/sln.${PN}
+	mv ${D}${sbindir}/mkfs.minix ${D}${base_sbindir}/mkfs.minix.${PN}
+	mv ${D}${sbindir}/fsck.minix ${D}${base_sbindir}/fsck.minix.${PN}
 	mv ${D}${bindir}/hexdump ${D}${bindir}/hexdump.${PN}
 	mv ${D}${bindir}/last ${D}${bindir}/last.${PN}
 	mv ${D}${bindir}/logger ${D}${bindir}/logger.${PN}
@@ -90,17 +98,27 @@ do_install () {
 	mv ${D}${bindir}/renice ${D}${bindir}/renice.${PN}
 	mv ${D}${bindir}/wall ${D}${bindir}/wall.${PN}
 
-	mv ${D}${base_sbindir}/losetup ${D}${base_sbindir}/losetup.${PN}
-	mv ${D}${base_sbindir}/swapon ${D}${base_sbindir}/swapon.${PN}
-	mv ${D}${base_bindir}/umount ${D}${base_bindir}/umount.${PN}
-	mv ${D}${base_bindir}/mount ${D}${base_bindir}/mount.${PN}
-	mv ${D}${base_sbindir}/fdisk ${D}${base_sbindir}/fdisk.${PN}
+	mv ${D}${sbindir}/losetup ${D}${base_sbindir}/losetup.${PN}
+	mv ${D}${sbindir}/swapon ${D}${base_sbindir}/swapon.${PN}
+	mv ${D}${bindir}/umount ${D}${base_bindir}/umount.${PN}
+	mv ${D}${bindir}/mount ${D}${base_bindir}/mount.${PN}
+	mv ${D}${sbindir}/fdisk ${D}${base_sbindir}/fdisk.${PN}
 
-	checklink swapon ${D}${base_sbindir}/swapoff ".${PN}"
-	checklink shutdown ${D}${base_sbindir}/reboot ".${PN}"
-	checklink shutdown ${D}${base_sbindir}/halt ".${PN}"
-	checklink shutdown ${D}${base_sbindir}/fastboot ""
-	checklink shutdown ${D}${base_sbindir}/fasthalt ""
+	mv ${D}${sbindir}/agetty ${D}${base_sbindir}/ 
+	mv ${D}${sbindir}/blockdev ${D}${base_sbindir}/
+	mv ${D}${sbindir}/cfdisk ${D}${base_sbindir}/
+	mv ${D}${sbindir}/ctrlaltdel ${D}${base_sbindir}/
+
+	mv ${D}${sbindir}/readprofile ${D}${sbindir}/readprofile.${PN}
+	
+	install -d ${D}${sysconfdir}/default/
+	echo 'MOUNTALL="-t nonfs,nosmbfs,noncpfs"' > ${D}${sysconfdir}/default/mountall
+
+	ln -sf ${sbindir}/swapon ${D}${sbindir}/swapoff.${PN}
+	ln -sf ${sbindir}/shutdown ${D}${sbindir}/reboot.${PN}
+	ln -sf ${sbindir}/shutdown ${D}${sbindir}/halt.${PN}
+	ln -sf ${sbindir}/shutdown ${D}${sbindir}/fastboot
+	ln -sf ${sbindir}/shutdown ${D}${sbindir}/fasthalt
 }
 
 pkg_postinst_${PN} () {
@@ -110,7 +128,7 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${base_sbindir}/mkswap mkswap mkswap.${PN} 100
 	test -x ${base_sbindir}/pivot_root.${PN} && \
 	update-alternatives --install ${base_sbindir}/pivot_root pivot_root pivot_root.${PN} 100
-	update-alternatives --install ${base_sbindir}/sln sln sln.${PN} 100
+#	update-alternatives --install ${base_sbindir}/sln sln sln.${PN} 100
 	update-alternatives --install ${base_sbindir}/mkfs.minix mkfs.minix mkfs.minix.${PN} 100
 	update-alternatives --install ${base_sbindir}/fsck.minix fsck.minix fsck.minix.${PN} 100
 	update-alternatives --install ${bindir}/hexdump hexdump hexdump.${PN} 100
@@ -139,7 +157,7 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove mkswap mkswap.${PN}
 	update-alternatives --remove reboot reboot.${PN}
 	update-alternatives --remove shutdown shutdown.${PN}
-	update-alternatives --remove sln sln.${PN}
+#	update-alternatives --remove sln sln.${PN}
 	update-alternatives --remove mkfs.minix mkfs.minix.${PN}
 	update-alternatives --remove fsck.minix fsck.minix.${PN}
 	update-alternatives --remove hexdump hexdump.${PN}

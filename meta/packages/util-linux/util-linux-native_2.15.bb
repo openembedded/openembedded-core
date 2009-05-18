@@ -5,7 +5,7 @@ DEPENDS = "zlib-native ncurses-native"
 
 inherit autotools native
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux/util-linux-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v2.15/util-linux-ng-${PV}.tar.bz2 \
            file://gcc34.patch;patch=1 \
            file://MCONFIG \
            file://make_include \
@@ -13,7 +13,7 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux/util-linux-${PV}.tar.b
 	   file://fdiskbsdlabel_thumb.diff;patch=1 \
            file://defines.h"
 
-S="${WORKDIR}/util-linux-${PV}"
+S="${WORKDIR}/util-linux-ng-${PV}"
 
 EXTRA_OEMAKE="'OPT=${BUILD_CFLAGS}' 'CC=${BUILD_CC}' 'LD=${BUILD_LD}' 'LDFLAGS=${BUILD_LDFLAGS}' SBINDIR=${base_sbindir} USRSBINDIR=${base_sbindir} LOGDIR=${localstatedir}/log VARPATH=${localstatedir} LOCALEDIR=${datadir}/locale"
 
