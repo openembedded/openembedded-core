@@ -4,41 +4,42 @@
  misc/Makefile.in     |   30 ++++++++++--------------------
  3 files changed, 20 insertions(+), 38 deletions(-)
 
-Index: e2fsprogs-1.41.2/misc/Makefile.in
+Index: e2fsprogs-1.41.5/misc/Makefile.in
 ===================================================================
---- e2fsprogs-1.41.2.orig/misc/Makefile.in	2008-09-07 07:30:18.000000000 +0200
-+++ e2fsprogs-1.41.2/misc/Makefile.in	2008-10-08 10:54:50.000000000 +0200
-@@ -283,23 +283,17 @@ install: all $(SMANPAGES) $(UMANPAGES) i
+--- e2fsprogs-1.41.5.orig/misc/Makefile.in	2009-05-18 00:54:07.000000000 +0100
++++ e2fsprogs-1.41.5/misc/Makefile.in	2009-05-18 00:56:12.000000000 +0100
+@@ -394,24 +394,18 @@
  		$(INSTALL_PROGRAM) $$i $(DESTDIR)$(sbindir)/$$i; \
  	done
  	@echo "	LINK $(root_sbindir)/mkfs.ext2"
 -	@$(LN) -f $(DESTDIR)$(root_sbindir)/mke2fs \
 -		$(DESTDIR)$(root_sbindir)/mkfs.ext2
-+	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) -f mke2fs mkfs.ext2)
++	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) mke2fs mkfs.ext2)
  	@echo "	LINK $(root_sbindir)/mkfs.ext3"
 -	@$(LN) -f $(DESTDIR)$(root_sbindir)/mke2fs \
 -		$(DESTDIR)$(root_sbindir)/mkfs.ext3
-+	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) -f mke2fs mkfs.ext3)
++	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) mke2fs mkfs.ext3)
  	@echo "	LINK $(root_sbindir)/mkfs.ext4"
 -	@$(LN) -f $(DESTDIR)$(root_sbindir)/mke2fs \
 -		$(DESTDIR)$(root_sbindir)/mkfs.ext4
-+	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) -f mke2fs mkfs.ext4)
++	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) mke2fs mkfs.ext4)
  	@echo "	LINK $(root_sbindir)/mkfs.ext4dev"
 -	@$(LN) -f $(DESTDIR)$(root_sbindir)/mke2fs \
 -		$(DESTDIR)$(root_sbindir)/mkfs.ext4dev
-+	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) -f mke2fs mkfs.ext4dev)
++	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) mke2fs mkfs.ext4dev)
  	@echo "	LINK $(root_sbindir)/e2label"
 -	@$(LN) -f $(DESTDIR)$(root_sbindir)/tune2fs \
 -		$(DESTDIR)$(root_sbindir)/e2label
-+	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) -f tune2fs e2label)
- 	@echo "	LINK $(root_sbindir)/findfs"
--	@$(LN) -f $(DESTDIR)$(root_sbindir)/tune2fs \
--		$(DESTDIR)$(root_sbindir)/findfs
-+	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) -f tune2fs findfs)
++	@(cd $(DESTDIR)$(root_sbindir) && $(LN_S) tune2fs e2label)
+ 	@if test -n "$(FINDFS_LINK)"; then \
+ 		echo "  LINK $(root_sbindir)/findfs"; \
+-		$(LN) -f $(DESTDIR)$(root_sbindir)/tune2fs \
+-			$(DESTDIR)$(root_sbindir)/$(FINDFS_LINK); \
++		(cd $(DESTDIR)$(root_sbindir) && $(LN_S) tune2fs $(FINDFS_LINK)); \
+ 	fi
  	@for i in $(UPROGS); do \
  		echo "	INSTALL $(bindir)/$$i"; \
- 		$(INSTALL_PROGRAM) $$i $(DESTDIR)$(bindir)/$$i; \
-@@ -318,17 +312,13 @@ install: all $(SMANPAGES) $(UMANPAGES) i
+@@ -431,17 +425,13 @@
  	@$(RM) -f $(DESTDIR)$(man8dir)/mkfs.ext2.8.gz \
  		$(DESTDIR)$(man8dir)/mkfs.ext3.8.gz
  	@echo "	LINK mkfs.ext2.8"
@@ -60,11 +61,11 @@ Index: e2fsprogs-1.41.2/misc/Makefile.in
  	@for i in $(UMANPAGES); do \
  		for j in $(COMPRESS_EXT); do \
  			$(RM) -f $(DESTDIR)$(man1dir)/$$i.$$j; \
-Index: e2fsprogs-1.41.2/lib/uuid/Makefile.in
+Index: e2fsprogs-1.41.5/lib/uuid/Makefile.in
 ===================================================================
---- e2fsprogs-1.41.2.orig/lib/uuid/Makefile.in	2008-02-19 05:33:10.000000000 +0100
-+++ e2fsprogs-1.41.2/lib/uuid/Makefile.in	2008-10-08 10:49:14.000000000 +0200
-@@ -146,9 +146,9 @@ install:: all installdirs 
+--- e2fsprogs-1.41.5.orig/lib/uuid/Makefile.in	2009-05-18 00:54:07.000000000 +0100
++++ e2fsprogs-1.41.5/lib/uuid/Makefile.in	2009-05-18 00:54:07.000000000 +0100
+@@ -146,9 +146,9 @@
  	@$(RM) -f $(DESTDIR)$(man3dir)/uuid_generate_random.3.gz \
  		$(DESTDIR)$(man3dir)/uuid_generate_time.3.gz
  	@echo "	LINK $(man3dir)/uuid_generate_random.3"
@@ -76,11 +77,11 @@ Index: e2fsprogs-1.41.2/lib/uuid/Makefile.in
  	@echo "	INSTALL_DATA $(libdir)/pkgconfig/uuid.pc"
  	@$(INSTALL_DATA) uuid.pc $(DESTDIR)$(libdir)/pkgconfig/uuid.pc
  
-Index: e2fsprogs-1.41.2/e2fsck/Makefile.in
+Index: e2fsprogs-1.41.5/e2fsck/Makefile.in
 ===================================================================
---- e2fsprogs-1.41.2.orig/e2fsck/Makefile.in	2008-09-12 12:59:20.000000000 +0200
-+++ e2fsprogs-1.41.2/e2fsck/Makefile.in	2008-10-08 10:58:05.000000000 +0200
-@@ -195,17 +195,13 @@ install: $(PROGS) $(MANPAGES) $(FMANPAGE
+--- e2fsprogs-1.41.5.orig/e2fsck/Makefile.in	2009-05-18 00:54:07.000000000 +0100
++++ e2fsprogs-1.41.5/e2fsck/Makefile.in	2009-05-18 00:54:07.000000000 +0100
+@@ -195,17 +195,13 @@
  		$(INSTALL_PROGRAM) $$i $(DESTDIR)$(root_sbindir)/$$i; \
  	done
  	@echo "	LINK $(root_sbindir)/fsck.ext2"
@@ -102,7 +103,7 @@ Index: e2fsprogs-1.41.2/e2fsck/Makefile.in
  	@for i in $(MANPAGES); do \
  		for j in $(COMPRESS_EXT); do \
  			$(RM) -f $(DESTDIR)$(man8dir)/$$i.$$j; \
-@@ -221,17 +217,13 @@ install: $(PROGS) $(MANPAGES) $(FMANPAGE
+@@ -221,17 +217,13 @@
  		$(INSTALL_DATA) $$i $(DESTDIR)$(man5dir)/$$i; \
  	done
  	@echo "	LINK $(man8dir)/fsck.ext2.8"
