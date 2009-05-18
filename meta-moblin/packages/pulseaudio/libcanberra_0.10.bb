@@ -1,14 +1,14 @@
 DESCRIPTION = "Libcanberra is an implementation of the XDG Sound Theme and Name Specifications, for generating event sounds on free desktops."
 LICENSE = "LGPL"
-DEPENDS = "gtk+ pulseaudio alsa-lib"
-PR = "r1"
+DEPENDS = "gtk+ pulseaudio alsa-lib libtool"
+PR = "r2"
 
 inherit gconf autotools
 
 SRC_URI = "http://0pointer.de/lennart/projects/libcanberra/libcanberra-${PV}.tar.gz \
            file://autoconf_version.patch;patch=1"
 
-EXTRA_OECONF = " --disable-oss " 
+EXTRA_OECONF = " --disable-oss --disable-ltdl-install" 
 
 do_configure_prepend () {
 	rm -f ${S}/libltdl/configure*
