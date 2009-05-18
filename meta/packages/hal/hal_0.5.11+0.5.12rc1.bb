@@ -2,8 +2,11 @@ require hal.inc
 
 PR = "r1"
 
-SRC_URI += " file://hal-right-input-h.patch;patch=1 \
-             file://fix-configure.diff;patch=1"
+SRC_URI = "http://hal.freedesktop.org/releases/hal-0.5.12rc1.tar.gz \
+           file://99_hal \
+           file://20hal"
+
+S = "${WORKDIR}/hal-0.5.12rc1"
 
 EXTRA_OECONF += "--with-linux-input-header=${STAGING_INCDIR}/linux/input.h"
 
