@@ -1,7 +1,10 @@
 DESCRIPTION = "A standalone native ldconfig build"
 
 SRC_URI = "file://ldconfig-native-2.5.tar.bz2 \
-           file://ldconfig.patch;patch=1 "
+           file://ldconfig.patch;patch=1 \
+           file://32and64bit.patch;patch=1"
+
+PR = "r1"
 
 inherit native
 
