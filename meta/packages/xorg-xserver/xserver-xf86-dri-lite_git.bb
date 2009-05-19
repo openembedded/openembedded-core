@@ -17,6 +17,6 @@ SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git;branch=se
 # Misc build failure for master HEAD
 SRC_URI += "file://fix_open_max_preprocessor_error.patch;patch=1"
 
-EXTRA_OECONF += "--enable-dri --disable-dri2"
+EXTRA_OECONF += "--enable-dri --enable-dri2"
 
 S = "${WORKDIR}/git"
