@@ -8,7 +8,7 @@ RDEPENDS += "kernel-modules"
 PV = "0.2.6+git${SRCREV}"
 PR = "r5"
 
-SRC_URI = "git://git.moblin.org/projects/xf86-video-psb;protocol=git \
+SRC_URI = "git://git.moblin.org/deprecated/xf86-video-psb;protocol=git \
            file://pci.patch;patch=1 \
            file://104_disable_locks.diff;patch=1"
 
