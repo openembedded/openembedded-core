@@ -1,7 +1,7 @@
 require clutter-mozembed.inc
 
 PV = "0.8.0+git${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.clutter-project.org/clutter-mozembed.git;protocol=git \
            file://link-with-g++.patch;patch=1"
