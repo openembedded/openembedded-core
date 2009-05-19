@@ -3,8 +3,10 @@
 # from Poky:
 #
 PREFERRED_VERSION_eds-dbus ?= "2.20.0"
-PREFERRED_VERSION_hal ?= "0.5.11"
-PREFERRED_VERSION_hal-info ?= "20080508"
+PREFERRED_VERSION_hal ?= "0.5.11+0.5.12rc1"
+PREFERRED_VERSION_hal-info ?= "20000414"
+PREFERRED_VERSION_dbus ?= "1.2.14"
+PREFERRED_VERSION_dbus-native ?= "1.2.14"
 
 SRCREV_pn-xf86-video-psb ?= "b6b3bba06fe5a3fe0b1bd6e31a7369dd83812bab"
 SRCREV_pn-twitter-glib ?= "23f06104141d27f77019b58d71503873c38a7341"
