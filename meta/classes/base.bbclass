@@ -342,6 +342,7 @@ oe_libinstall() {
 	__runcmd install -d $destpath/
 	dota=$libname.a
 	if [ -f "$dota" -o -n "$require_static" ]; then
+		rm -f $destpath/$dota
 		__runcmd install -m 0644 $dota $destpath/
 	fi
 	if [ -f "$dotlai" -a -n "$libtool" ]; then
@@ -355,6 +356,7 @@ oe_libinstall() {
 				     -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
 				     $dotlai >$destpath/$libname.la
 		else
+			rm -f $destpath/$libname.la
 			__runcmd install -m 0644 $dotlai $destpath/$libname.la
 		fi
 	fi
@@ -370,6 +372,7 @@ oe_libinstall() {
 				__runcmd cp -P "$f" $destpath/
 			elif [ ! -L "$f" ]; then
 				libfile="$f"
+				rm -f $destpath/$libfile
 				__runcmd install -m 0755 $libfile $destpath/
 			fi
 		done
