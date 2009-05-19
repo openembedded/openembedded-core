@@ -177,3 +177,8 @@ else
 		apply_cfgfile "${CFGDIR}/${file}"
 	done
 fi
+
+if test -f /etc/ld.so.cache
+then
+	ln -s /etc/ld.so.cache /var/run/ld.so.cache
+fi

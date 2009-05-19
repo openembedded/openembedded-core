@@ -4,7 +4,7 @@ PRIORITY = "required"
 DEPENDS = "makedevs"
 RDEPENDS = "makedevs"
 LICENSE = "GPL"
-PR = "r118"
+PR = "r119"
 
 SRC_URI = "file://functions \
            file://halt \
