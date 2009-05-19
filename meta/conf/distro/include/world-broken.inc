@@ -40,3 +40,7 @@ EXCLUDE_FROM_WORLD_pn-xlogo = "1"
 
 # recipe not finished yet
 EXCLUDE_FROM_WORLD_pn-gobject-introspection = "1"
+
+# helix doesn't build
+EXCLUDE_FROM_WORLD_pn-helix-libs
+EXCLUDE_FROM_WORLD_pn-clutter-helix
