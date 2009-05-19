@@ -11,6 +11,9 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v2.15/util-linux-ng
            file://swapargs.h \
 	   file://fdiskbsdlabel_thumb.diff;patch=1 \
 	   file://umount.diff;patch=1 \
+	   file://fix-make-c.patch;patch=1 \
+	   file://optional-uuid.patch;patch=1 \
+	   file://uuid.patch;patch=1 \
            file://defines.h"
 #           file://gcc34.patch;patch=1 \
 
