@@ -5,6 +5,8 @@ PR = "r1"
 
 DEPENDS = "glib-2.0 dbus mozilla-headless"
 
+EXTRA_OECONF = "--enable-gnome-proxy"
+
 S = "${WORKDIR}/git"
 
 FILES_${PN} += "${datadir}/dbus-1/services"

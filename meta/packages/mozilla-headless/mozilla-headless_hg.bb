@@ -1,9 +1,11 @@
 
-SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=75786cabae7f;module=offscreen \
+FIXEDREV = "f4348fd85697"
+
+SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=${FIXEDREV};module=offscreen \
            file://configurefix.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
-PV = "0.0+hg-1.0+75786cabae7f"
+PV = "0.0+hg-1.0+${FIXEDREV}"
 PR = "r0"
 
 S = "${WORKDIR}/offscreen"
@@ -39,7 +41,10 @@ do_install_append () {
 	echo ${libdir}/xulrunner-1.9.2a1pre/ > ${D}${sysconfdir}/ld.so.conf.d/mozilla-headless
 }
 
-EXTRA_OECONF =+ "--enable-application=xulrunner --enable-default-toolkit=cairo-headless --enable-pango --disable-optimize --enable-debug --disable-tests --disable-printing --disable-crashreporter --disable-accessibility --disable-javaxpcom --enable-plugins --enable-system-sqlite --disable-necko-wifi"
+EXTRA_OECONF =+ "--enable-application=xulrunner --enable-default-toolkit=cairo-headless \
+                 --enable-pango --disable-optimize --disable-debug --disable-tests \
+                 --disable-printing --disable-crashreporter --disable-accessibility \
+                 --disable-javaxpcom --enable-plugins --enable-system-sqlite --disable-necko-wifi"
 
 export LIBXUL_DIST="${S}/dist"
 
