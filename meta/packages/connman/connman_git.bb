@@ -1,7 +1,7 @@
 HOMEPAGE = "http://www.moblin.org/projects/projects_connman.php"
 SUMMARY  = "Moblin Connection Manager"
 PV       = "0.19+git${SRCREV}"
-PR       = "r4"
+PR       = "r5"
 S        = "${WORKDIR}/git"
 LICENSE  = "GPL"
 
@@ -9,6 +9,10 @@ DEPENDS  = "libgdbus dbus glib-2.0 hal"
 RDEPENDS = "dhcp-client wpa-supplicant resolvconf"
 
 EXTRA_OECONF += " \
+    --enable-ethernet=builtin --enable-wifi=builtin --enable-dhclient=builtin \
+    --enable-bluetooth=builtin --enable-udev --enable-loopback=builtin \
+    --enable-dnsproxy=builtin --enable-threads --enable-resolvconf=builtin \
+    --enable-client --enable-fake \
     ac_cv_path_WPASUPPLICANT=/usr/sbin/wpa_supplicant \
     ac_cv_path_DHCLIENT=/sbin/dhclient "
 
