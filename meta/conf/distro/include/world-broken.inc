@@ -42,5 +42,5 @@ EXCLUDE_FROM_WORLD_pn-xlogo = "1"
 EXCLUDE_FROM_WORLD_pn-gobject-introspection = "1"
 
 # helix doesn't build
-EXCLUDE_FROM_WORLD_pn-helix-libs
-EXCLUDE_FROM_WORLD_pn-clutter-helix
+EXCLUDE_FROM_WORLD_pn-helix-libs = "1"
+EXCLUDE_FROM_WORLD_pn-clutter-helix = "1"
