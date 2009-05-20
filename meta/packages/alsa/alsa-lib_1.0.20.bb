@@ -23,7 +23,7 @@ do_stage () {
 	oe_libinstall -so -C src libasound ${STAGING_LIBDIR}/
 	install -d ${STAGING_INCDIR}/alsa/sound
 	install -m 0644 include/*.h ${STAGING_INCDIR}/alsa/
-	install -m 0644 include/sound/ainstr*.h ${STAGING_INCDIR}/alsa/sound/
+	#install -m 0644 include/sound/ainstr*.h ${STAGING_INCDIR}/alsa/sound/
 	install -d ${STAGING_DATADIR}/aclocal
 	install -m 0644 utils/alsa.m4 ${STAGING_DATADIR}/aclocal/
 }

@@ -10,6 +10,7 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2"
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
 # please close bug and remove this comment when properly fixed
 #
+EXTRA_OECONF = "--disable-xmlto"
 EXTRA_OECONF_linux-uclibc = "--disable-nls"
 EXTRA_OECONF_linux-uclibcgnueabi = "--disable-nls"
 
