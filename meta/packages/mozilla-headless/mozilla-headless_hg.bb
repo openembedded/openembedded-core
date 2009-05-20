@@ -3,10 +3,12 @@ FIXEDREV = "f4348fd85697"
 
 SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=${FIXEDREV};module=offscreen \
            file://configurefix.patch;patch=1 \
+           file://0001-Adds-initial-Gtk-clipboard-support-to-moz-headless.patch;patch=1 \
+           file://mozilla-jemalloc.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
 PV = "0.0+hg-1.0+${FIXEDREV}"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/offscreen"
 
@@ -15,6 +17,14 @@ DEPENDS = "gconf gnome-vfs pango dbus-glib alsa-lib libidl-native sqlite3 libidl
 FILES_${PN} += "${libdir}/xulrunner-1.9.2a1pre"
 FILES_${PN}-dev += "${libdir}/xulrunner-devel-1.9.2a1pre"
 FILES_${PN}-dbg += "${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/.debug"
+
+TARGET_CC_ARCH = ""
+
+CFLAGS = "${TARGET_CFLAGS}"
+TARGET_CFLAGS = "-Os -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse -fasynchronous-unwind-tables"
+
+LDFLAGS = "${TARGET_LDFLAGS}"
+TARGET_LDFLAGS = "-Wl,-rpath,${libdir}/xulrunner-1.9.2a1pre"
 
 inherit autotools_stage mozilla
 
@@ -41,8 +51,8 @@ do_install_append () {
 	echo ${libdir}/xulrunner-1.9.2a1pre/ > ${D}${sysconfdir}/ld.so.conf.d/mozilla-headless
 }
 
-EXTRA_OECONF =+ "--enable-application=xulrunner --enable-default-toolkit=cairo-headless \
-                 --enable-pango --disable-optimize --disable-debug --disable-tests \
+EXTRA_OECONF =+ "--enable-application=xulrunner --enable-default-toolkit=cairo-headless --with-pthreads \
+                 --enable-pango --enable-optimize --disable-debug --disable-tests \
                  --disable-printing --disable-crashreporter --disable-accessibility \
                  --disable-javaxpcom --enable-plugins --enable-system-sqlite --disable-necko-wifi"
 
@@ -55,5 +65,6 @@ do_stage_append () {
 	ln -fs ${STAGING_DIR_HOST}${layout_datadir}/xulrunner-1.9.2a1pre/unstable/ ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/idl
 	ln -fs ${STAGING_DIR_HOST}${layout_includedir}/xulrunner-1.9.2a1pre/unstable/ ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/include
 	ln -fs ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/ ${STAGING_DIR_HOST}${layout_libdir}/xulrunner-devel-1.9.2a1pre/lib
+	install -m 755 ${S}/dist/host/bin/host_xpidl ${STAGING_BINDIR_NATIVE}/xpidl
 }
 
