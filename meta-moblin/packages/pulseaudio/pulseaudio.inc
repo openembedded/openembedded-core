@@ -15,6 +15,7 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "\
 		--disable-lynx \
+		--disable-bluez \
 		--without-x \
 		--without-jack \
 		--with-glib \
@@ -68,6 +69,9 @@ FILES_${PN}-bin = "${bindir}/* \
 FILES_${PN}-server = "${bindir}/pulseaudio ${sysconfdir}"
 FILES_${PN}-gconf-helper = "${libexecdir}/pulse/gconf-helper"
 FILES_${PN}-misc = "${bindir}/*"
+
+# Allow the pulseaudio package to be created empty as a placeholder (-dbg and -dev depend on it)
+ALLOW_EMPTY_${PN} = "1"
 
 CONFFILES_pulseaudio-server = "\ 
   ${sysconfdir}/pulse/default.pa \
