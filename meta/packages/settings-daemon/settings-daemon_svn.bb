@@ -4,10 +4,11 @@ DEPENDS = "gconf glib-2.0 gtk+"
 SECTION = "x11"
 PV = "0.0+svnr${SRCREV}"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
-	   file://70settings-daemon.sh"
+           file://addsoundkeys.patch;patch=1 \
+           file://70settings-daemon.sh"
 
 S = "${WORKDIR}/${PN}"
 
