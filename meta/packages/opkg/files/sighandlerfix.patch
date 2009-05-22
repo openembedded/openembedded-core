@@ -1,0 +1,14 @@
+Index: opkg/libopkg/opkg_install.c
+===================================================================
+--- opkg.orig/libopkg/opkg_install.c	2009-05-23 00:20:04.000000000 +0100
++++ opkg/libopkg/opkg_install.c	2009-05-23 00:20:09.000000000 +0100
+@@ -21,7 +21,9 @@
+ #include <glob.h>
+ #include <time.h>
+ #include <signal.h>
++#ifndef __USE_GNU
+ typedef void (*sighandler_t)(int);
++#endif
+ 
+ #include "pkg.h"
+ #include "pkg_hash.h"
