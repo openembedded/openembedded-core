@@ -10,5 +10,6 @@ ASNEEDED_pn-minimo = ""
 ASNEEDED_pn-pciutils = ""
 ASNEEDED_pn-puzzles = ""
 ASNEEDED_pn-dialer = ""
+ASNEEDED_pn-pulseaudio = ""
 
 TARGET_LDFLAGS += "${ASNEEDED}"
