@@ -5,7 +5,7 @@ DEPENDS = "gettext-native"
 PR = "r2"
 
 do_stage () {
-	oe_libinstall -a -C lib libblkid ${STAGING_LIBDIR}/
+	#oe_libinstall -a -C lib libblkid ${STAGING_LIBDIR}/
 	oe_libinstall -a -C lib libe2p ${STAGING_LIBDIR}/
 	oe_libinstall -a -C lib libext2fs ${STAGING_LIBDIR}/
 	oe_libinstall -a -C lib libuuid ${STAGING_LIBDIR}/
@@ -21,10 +21,10 @@ do_stage () {
 	for h in ${ext2fsheaders}; do
 		install -m 0644 lib/ext2fs/$h ${STAGING_INCDIR}/ext2fs/ || die "failed to install $h"
 	done
-	install -d ${STAGING_INCDIR}/blkid
-	for h in blkid.h blkid_types.h; do
-		install -m 0644 lib/blkid/$h ${STAGING_INCDIR}/blkid/ || die "failed to install $h"
-	done
+	#install -d ${STAGING_INCDIR}/blkid
+	#for h in blkid.h blkid_types.h; do
+	#	install -m 0644 lib/blkid/$h ${STAGING_INCDIR}/blkid/ || die "failed to install $h"
+	#done
 	install -d ${STAGING_INCDIR}/uuid
         install -m 0644 lib/uuid/uuid.h ${STAGING_INCDIR}/uuid/ || die "failed to install $h"
         
