@@ -3,7 +3,7 @@ require opkg.inc
 DEPENDS = "curl-native"
 PROVIDES += "virtual/update-alternatives-native"
 RPROVIDES_${PN} += "update-alternatives-native"
-PR = "r4"
+PR = "r5"
 
 target_libdir := "${libdir}"
 

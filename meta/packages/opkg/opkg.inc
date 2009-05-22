@@ -11,8 +11,11 @@ PV = "0.0+svnr${SRCREV}"
 #                              http://opkg.googlecode.com/svn/trunk
 #                              with rev >= 150
 
+# sighandlerfix.patch: from r145
+
 SRC_URI = "svn://svn.openmoko.org/trunk/src/target/;module=opkg;proto=http \
            file://fix_prototype.patch;patch=1 \
+           file://sighandlerfix.patch;patch=1 \
            file://opkg-fix-gcc-warnings.patch;patch=1"
 
 S = "${WORKDIR}/opkg"
