@@ -3,9 +3,7 @@ DESCRIPTION = "udev is a daemon which dynamically creates and removes device nod
 the hotplug package and requires a kernel not older than 2.6.12."
 RPROVIDES_${PN} = "hotplug"
 
-PR = "r2"
-
-#DEFAULT_PREFERENCE = "-1"
+PR = "r3"
 
 SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
 	   file://noasmlinkage.patch;patch=1 \
@@ -17,8 +15,6 @@ SRC_URI_append_h2200 = " file://50-hostap_cs.rules "
 PACKAGE_ARCH_h2200 = "h2200"
 
 require udev.inc
-
-#DEFAULT_PREFERENCE = "-1"
 
 INITSCRIPT_PARAMS = "start 03 S ."
 
@@ -41,6 +37,7 @@ do_install () {
 	install -d ${D}${sysconfdir}/udev/rules.d/
 
 	cp ${S}/rules/rules.d/* ${D}${sysconfdir}/udev/rules.d/
+	cp ${S}/rules/packages/* ${D}${sysconfdir}/udev/rules.d/
 	install -m 0644 ${WORKDIR}/local.rules         ${D}${sysconfdir}/udev/rules.d/local.rules
 	#install -m 0644 ${WORKDIR}/permissions.rules   ${D}${sysconfdir}/udev/rules.d/permissions.rules
 	#install -m 0644 ${WORKDIR}/run.rules          ${D}${sysconfdir}/udev/rules.d/run.rules
