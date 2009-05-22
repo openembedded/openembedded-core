@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for Moblin"
-PR = "r33"
+PR = "r34"
 
 PACKAGES = "\
     task-moblin-apps-console \
@@ -29,6 +29,7 @@ ALLOW_EMPTY = "1"
 
 RDEPENDS_task-moblin-apps-console = "\
     avahi-daemon \
+    alsa-utils-alsamixer \
     dropbear \
     dbus \
     portmap \
@@ -42,6 +43,7 @@ RDEPENDS_task-moblin-x11-base = "\
     x11-common \
     xserver-nodm-init \
     liberation-fonts \
+    pulseaudio-server \
     xauth \
     xhost \
     xset \
