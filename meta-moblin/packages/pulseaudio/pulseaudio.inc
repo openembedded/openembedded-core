@@ -3,9 +3,9 @@ HOMEPAGE = "http://www.pulseaudio.org"
 AUTHOR = "Lennart Poettering"
 SECTION = "libs/multimedia"
 LICENSE = "LGPL"
-DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool hal"
+DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool hal virtual/libx11"
 # optional
-DEPENDS += "alsa-lib glib-2.0"
+DEPENDS += "alsa-lib glib-2.0 dbus consolekit hal"
 
 SRC_URI = "http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-${PV}.tar.gz \
            file://gcc4-compile-fix.patch;patch=1 \
@@ -16,7 +16,8 @@ inherit autotools pkgconfig
 EXTRA_OECONF = "\
 		--disable-lynx \
 		--disable-bluez \
-		--without-x \
+		--disable-polkit \
+		--with-x \
 		--without-jack \
 		--with-glib \
 		--with-alsa \
@@ -61,12 +62,12 @@ FILES_libpulse-browse = "${libdir}/libpulse-browse.so.*"
 FILES_libpulse-mainloop-glib = "${libdir}/libpulse-mainloop-glib.so.*"
 				   	 
 FILES_${PN}-dbg += "${libexecdir}/pulse/.debug \
-                    ${libdir}/pulse-0.9/modules/.debug"
-FILES_${PN}-dev += "${libdir}/pulse-0.9/modules/*.la"		    
+                    ${libdir}/pulse-${PV}/modules/.debug"
+FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la"		    
 FILES_${PN}-conf = "${sysconfdir}"
 FILES_${PN}-bin = "${bindir}/* \
                    ${sysconfdir}/default/volatiles/volatiles.04_pulse"
-FILES_${PN}-server = "${bindir}/pulseaudio ${sysconfdir}"
+FILES_${PN}-server = "${bindir}/pulseaudio ${bindir}/start-* ${sysconfdir}"
 FILES_${PN}-gconf-helper = "${libexecdir}/pulse/gconf-helper"
 FILES_${PN}-misc = "${bindir}/*"
 
@@ -99,7 +100,27 @@ pkg_postrm_${PN}-server() {
 python populate_packages_prepend() {
         #bb.data.setVar('PKG_pulseaudio', 'pulseaudio', d)
 
-        plugindir = bb.data.expand('${libdir}/pulse-0.9/modules/', d)
+        plugindir = bb.data.expand('${libdir}/pulse-${PV}/modules/', d)
         do_split_packages(d, plugindir, '^module-(.*)\.so$', 'pulseaudio-module-%s', 'PulseAudio module for %s', extra_depends='' )
         do_split_packages(d, plugindir, '^lib(.*)\.so$', 'pulseaudio-lib-%s', 'PulseAudio library for %s', extra_depends='' )
 }
+
+RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
+RDEPENDS_pulseaudio-module-hal_detect =+ "hal"
+RDEPENDS_pulseaudio-server = " \
+    pulseaudio-module-device-restore \
+    pulseaudio-module-stream-restore \
+    pulseaudio-module-card-restore \
+    pulseaudio-module-augment-properties \
+    pulseaudio-module-detect \
+    pulseaudio-module-alsa-sink \
+    pulseaudio-module-alsa-source \
+    pulseaudio-module-native-protocol-unix \
+    pulseaudio-module-default-device-restore \
+    pulseaudio-module-rescue-streams \
+    pulseaudio-module-always-sink \
+    pulseaudio-module-suspend-on-idle \
+    pulseaudio-module-console-kit \
+    pulseaudio-module-position-event-sounds \
+    pulseaudio-module-cork-music-on-phone "
+
