@@ -1,0 +1,32 @@
+#! /bin/sh -e
+
+# DP: The gpc patch from the gpc tarball.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    #pdir="-d $3/gcc"
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+
+gpc_gcc_patch=$pdir/p/diffs/gcc-4.1.diff
+gpc_gcc_patch=debian/patches/gpc-gcc-4.1.diff
+
+case "$1" in
+    -patch)
+	echo Using patch file ${gpc_gcc_patch}
+	patch $pdir -f -p0 < ${gpc_gcc_patch}
+	;;
+    -unpatch)
+	# get the patch from the gpc source
+	echo Using patch file ${gpc_gcc_patch}
+	patch $pdir -f -R -p0 < ${gpc_gcc_patch}
+	;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0

@@ -7,7 +7,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate = "gcc-cross-interme
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "gcc-cross"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
 
-GCCVERSION ?= "4.3.2"
+GCCVERSION ?= "4.3.3"
 BINUVERSION = "2.18"
 
 PREFERRED_VERSION_gcc ?= "4.3.1"

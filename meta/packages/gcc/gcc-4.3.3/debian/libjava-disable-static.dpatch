@@ -1,0 +1,45 @@
+#! /bin/sh -e
+
+# DP: Disable building the static libjava.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+--- Makefile.in~	2007-03-26 10:44:16.881179540 +0200
++++ Makefile.in	2007-03-26 10:48:27.564961048 +0200
+@@ -43901,7 +43901,7 @@
+ 	rm -f no-such-file || : ; \
+ 	CONFIG_SITE=no-such-file $(SHELL) $${libsrcdir}/configure \
+ 	  $(TARGET_CONFIGARGS) --build=${build_alias} --host=${target_alias} \
+-	  --target=${target_alias} $${srcdiroption}  \
++	  --target=${target_alias} --disable-static $${srcdiroption}  \
+ 	  || exit 1
+ @endif target-libjava
+ 
+@@ -44783,7 +44783,7 @@
+ 	rm -f no-such-file || : ; \
+ 	CONFIG_SITE=no-such-file $(SHELL) $${libsrcdir}/configure \
+ 	  $(TARGET_CONFIGARGS) --build=${build_alias} --host=${target_alias} \
+-	  --target=${target_alias} $${srcdiroption}  \
++	  --target=${target_alias} --disable-static $${srcdiroption}  \
+ 	  || exit 1
+ @endif target-boehm-gc
+ 

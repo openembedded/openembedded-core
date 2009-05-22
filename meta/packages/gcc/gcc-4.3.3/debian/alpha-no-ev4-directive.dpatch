@@ -1,0 +1,49 @@
+#! /bin/sh -e
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+Index: gcc/config/alpha/alpha.c
+===================================================================
+--- gcc/config/alpha/alpha.c	(revision 115263)
++++ gcc/config/alpha/alpha.c	(working copy)
+@@ -9372,7 +9372,7 @@
+     fputs ("\t.set nomacro\n", asm_out_file);
+   if (TARGET_SUPPORT_ARCH | TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)
+     {
+-      const char *arch;
++      const char *arch = NULL;
+ 
+       if (alpha_cpu == PROCESSOR_EV6 || TARGET_FIX || TARGET_CIX)
+ 	arch = "ev6";
+@@ -9382,10 +9382,9 @@
+ 	arch = "ev56";
+       else if (alpha_cpu == PROCESSOR_EV5)
+ 	arch = "ev5";
+-      else
+-	arch = "ev4";
+ 
+-      fprintf (asm_out_file, "\t.arch %s\n", arch);
++      if (arch)
++        fprintf (asm_out_file, "\t.arch %s\n", arch);
+     }
+ }
+ #endif
