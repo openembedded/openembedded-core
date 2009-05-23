@@ -1,2 +1,2 @@
-require qemu_svn.bb
+require qemu_git.bb
 require qemu-native.inc

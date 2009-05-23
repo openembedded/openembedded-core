@@ -1,4 +1,4 @@
-require qemu_svn.bb
+require qemu_git.bb
 require qemu-sdk.inc
 
 PR = "r1"
