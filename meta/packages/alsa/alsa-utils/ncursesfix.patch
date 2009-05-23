@@ -1,0 +1,33 @@
+Index: alsa-utils-1.0.20/configure.in
+===================================================================
+--- alsa-utils-1.0.20.orig/configure.in	2009-05-23 23:37:02.000000000 +0100
++++ alsa-utils-1.0.20/configure.in	2009-05-23 23:37:24.000000000 +0100
+@@ -106,28 +106,12 @@
+     curseslib="$withval",
+     curseslib="auto")
+   if test "$curseslib" = "ncursesw"; then
+-    AC_CHECK_PROG([ncursesw5_config], [ncursesw5-config], [yes])
+-    if test "$ncursesw5_config" = "yes"; then
+-      CURSESINC="<ncurses.h>"
+-      CURSESLIB=`ncursesw5-config --libs`
+-      CURSES_CFLAGS=`ncursesw5-config --cflags`
+-      curseslib="ncursesw"
+-    else
+       AC_CHECK_LIB(ncursesw, initscr, 
+                  [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncursesw'; curseslib="ncursesw"])
+-    fi
+   fi
+   if test "$curseslib" = "ncurses" -o "$curseslib" = "auto"; then
+-    AC_CHECK_PROG([ncurses5_config], [ncurses5-config], [yes])
+-    if test "$ncurses5_config" = "yes"; then
+-      CURSESINC="<ncurses.h>"
+-      CURSESLIB=`ncurses5-config --libs`
+-      CURSES_CFLAGS=`ncurses5-config --cflags`
+-      curseslib="ncurses"
+-    else
+       AC_CHECK_LIB(ncurses, initscr, 
+                  [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncurses'; curseslib="ncurses"])
+-    fi
+   fi
+   if test "$curseslib" = "curses" -o "$curseslib" = "auto"; then
+     AC_CHECK_LIB(curses, initscr, 
