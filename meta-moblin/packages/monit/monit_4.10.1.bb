@@ -1,8 +1,11 @@
 LICENSE = "GPL"
 DEPENDS = "openssl"
 
-SRC_URI = "http://www.tildeslash.com/monit/dist/monit-${PV}.tar.gz\
-	file://init"
+SRC_URI = "http://www.tildeslash.com/monit/dist/monit-${PV}.tar.gz \
+           file://nostrip.patch;patch=1 \
+           file://init"
+
+PR = "r1"
 
 INITSCRIPT_NAME = "monit"
 INITSCRIPT_PARAMS = "defaults 99"
