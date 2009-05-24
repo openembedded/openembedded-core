@@ -2,7 +2,7 @@ DESCRIPTION = "Clutter Mozilla Embedded"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPL"
 
-DEPENDS = "mozilla-headless mozilla-headless-services"
+DEPENDS = "mozilla-headless mozilla-headless-services clutter"
 
 FILESPATH = "${FILE_DIRNAME}/clutter-mozembed"
 
