@@ -44,3 +44,9 @@ EXCLUDE_FROM_WORLD_pn-gobject-introspection = "1"
 # helix doesn't build
 EXCLUDE_FROM_WORLD_pn-helix-libs = "1"
 EXCLUDE_FROM_WORLD_pn-clutter-helix = "1"
+
+# doesn't work with modern kernels
+EXCLUDE_FROM_WORLD_pn-exmap-console = "1"
+EXCLUDE_FROM_WORLD_pn-xf86-video-psb = "1"
+
+
