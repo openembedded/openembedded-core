@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.10.2+git${SRCREV}"
-PR = "r0"
+PR = "r1"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-git/"
 
@@ -18,7 +18,8 @@ SRC_URI = "\
     file://workaround_bad_futex_headers.patch;patch=1 \
     file://qemu-add-gl-host-code.patch;patch=1 \
     file://no-strip.patch;patch=1 \
-    file://fix-dirent.patch;patch=1"
+    file://fix-dirent.patch;patch=1 \
+    file://zlibsearch.patch;patch=1 "
 
 #    file://qemu-amd64-32b-mapping-0.9.0.patch;patch=1 
 
