@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tools tasks for Poky"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -27,13 +27,15 @@ RDEPENDS_task-poky-tools-debug = "\
     strace"
 
 RDEPENDS_task-poky-tools-profile = "\
-    exmap-console \
-    exmap-server \
     oprofile \
     oprofileui-server \
     powertop \
     lttng-control \
     lttng-viewer"
+
+#    exmap-console
+#    exmap-server
+
 
 RDEPENDS_task-poky-tools-profile_qemux86 += "valgrind"
 
