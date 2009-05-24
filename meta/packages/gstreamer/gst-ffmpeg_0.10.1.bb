@@ -20,7 +20,7 @@ EXTRA_OECONF = "--disable-sdltest --disable-ffplay --disable-freetypetest \
 		--disable-vorbis --disable-vorbistest --disable-encoders \
 		--disable-v4l --disable-audio-oss --disable-dv1394 \
 		--disable-vhook --disable-ffmpeg --disable-ffserver \
-		--enable-pp --disable-decoder-vorbis"
+		--enable-pp --disable-decoder-vorbis --with-pic=no"
 
 # We do this because the install program is called with -s which causes it to
 # call "strip" and it then mangles cross compiled stuff..
