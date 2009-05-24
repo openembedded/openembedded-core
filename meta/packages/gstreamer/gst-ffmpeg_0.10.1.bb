@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "gstreamer zlib gst-plugins-base"
-PR = "r3"
+PR = "r4"
 
 inherit autotools pkgconfig
 
