@@ -1,0 +1,126 @@
+Index: redland-1.0.8/configure.ac
+===================================================================
+--- redland-1.0.8.orig/configure.ac	2008-07-04 07:56:25.000000000 +0100
++++ redland-1.0.8/configure.ac	2008-12-17 23:04:25.000000000 +0000
+@@ -404,7 +404,7 @@
+ 
+     if test "$have_libdb" = yes; then
+       bdb_available="Version $bdb_version (library $bdb_dbname in $bdb_lib_dir)"
+-      LIBRDF_LIBS="$LIBRDF_LIBS $nLDFLAGS -l$bdb_dbname"
++      LIBRDF_LIBS="$LIBRDF_LIBS -l$bdb_dbname"
+       LIBRDF_CPPFLAGS="$LIBRDF_CPPFLAGS $nCPPFLAGS"
+     fi
+ 
+Index: redland-1.0.8/raptor/configure.ac
+===================================================================
+--- redland-1.0.8.orig/raptor/configure.ac	2008-12-17 23:04:25.000000000 +0000
++++ redland-1.0.8/raptor/configure.ac	2008-12-18 11:18:36.000000000 +0000
+@@ -304,9 +304,12 @@
+             AC_DEFINE(HAVE_ROUND, 1, [have round() in libm]),
+             AC_MSG_RESULT(no))
+ LIBS="$oLIBS"
++PRIV_PC_LIBS=""
++PRIV_PC_REQS=""
+ 
+ if test "X$need_libm" = Xyes; then
+   LIBS="$LIBS -lm"
++  PRIV_PC_LIBS="$PRIV_PC_LIBS -lm"
+ fi
+ 
+ 
+@@ -369,6 +372,7 @@
+ AC_MSG_CHECKING(for working expat in libxmlparse and libxmltok)
+ if test $xmlp = 1 -a $xmlt = 1 -a  $ac_cv_header_xmlparse_h = yes; then
+   LIBS="$LIBS -lxmlparse -lxmltok"
++  PRIV_PC_LIBS="$PRIV_PC_LIBS -lxmlparse -lxmltok"
+   AC_TRY_RUN([#include <stdio.h>
+ 	     main() {XML_ParserCreate(NULL); return(0);}],
+              worked=yes, worked=no, worked=no)
+@@ -391,6 +395,7 @@
+ AC_MSG_CHECKING(for working expat in libexpat)
+ if test $libexpat = 1 -a $ac_cv_header_expat_h = yes ; then
+   LIBS="$LIBS -lexpat"
++  PRIV_PC_LIBS="$PRIV_PC_LIBS -lexpat"
+   AC_TRY_RUN([#include <stdio.h>
+              main() {XML_ParserCreate(NULL); return(0);}],
+              worked=yes, worked=no, worked=no)
+@@ -531,6 +536,7 @@
+ oLIBS="$LIBS"
+ if test "X$XML_CONFIG" != X; then
+   LIBS="$LIBS `$XML_CONFIG --libs`"
++  PRIV_PC_REQS="$PRIV_PC_REQS libxml-2.0"
+   AC_CHECK_FUNC(xmlCreatePushParserCtxt, have_xmlCreatePushParserCtxt=yes, have_xmlCreatePushParserCtxt=no)
+   AC_MSG_CHECKING(for system (GNOME) libxml library)
+   if test $have_xmlCreatePushParserCtxt = yes; then
+@@ -637,6 +643,7 @@
+ oLIBS="$LIBS"
+ if test "X$XSLT_CONFIG" != X; then
+   LIBS="$LIBS `$XSLT_CONFIG --libs`"
++  PRIV_PC_REQS="$PRIV_PC_REQS libxslt"
+   AC_CHECK_FUNC(xsltSaveResultToString, have_xsltSaveResultToString=yes, have_xsltSaveResultToString=no)
+   AC_MSG_CHECKING(for system libxslt library)
+   if test $have_xsltSaveResultToString = yes; then
+@@ -1034,6 +1041,7 @@
+ if test $need_libcurl = 1; then
+   CPPFLAGS="$CPPFLAGS `$CURL_CONFIG --cflags`"
+   LIBS="$LIBS `$CURL_CONFIG --libs`"
++  PRIV_PC_REQS="$PRIV_PC_REQS libcurl"
+   AC_LIBOBJ(raptor_www_curl)
+ 
+ fi
+@@ -1054,6 +1062,7 @@
+ if test $ac_cv_header_libinn_h = yes; then
+   CPPFLAGS="$CPPFLAGS -I/usr/include/inn"
+   LIBS="$LIBS -L/usr/lib/news -linn"
++  PRIV_PC_LIBS="$PRIV_PC_LIBS -linn"
+   AC_CHECK_LIB(inn, HashMessageID, have_libinn=yes)
+ 
+   AC_MSG_CHECKING(parsedate in libinn)
+@@ -1102,6 +1111,7 @@
+ 
+ if test $need_libfetch = 1; then
+   LIBS="$LIBS -lfetch"
++  PRIV_PC_LIBS="$PRIV_PC_REQS -lfetch"
+   AC_LIBOBJ(raptor_www_libfetch)
+ fi
+ 
+@@ -1120,6 +1130,7 @@
+   else
+     LIBS="$LIBS `$XML_CONFIG --libs`"
+     CPPFLAGS="`$XML_CONFIG --cflags` $CPPFLAGS"
++    PRIV_PC_REQS="$PRIV_PC_REQS libxml-2.0"
+   fi
+   RAPTOR_XML_PARSER=libxml
+ fi
+@@ -1147,6 +1158,7 @@
+ if test $need_libxslt = 1; then
+   LIBS="$LIBS `$XSLT_CONFIG --libs`"
+   CPPFLAGS="`$XSLT_CONFIG --cflags` $CPPFLAGS"
++  PRIV_PC_REQS="$PRIV_PC_REQS libxslt"
+ fi
+ 
+ RAPTOR_LIBTOOLLIBS=libraptor.la
+@@ -1214,6 +1226,9 @@
+ AC_SUBST(MEM_LIBS)
+ AC_SUBST(STANDARD_CFLAGS)
+ 
++AC_SUBST(PRIV_PC_LIBS)
++AC_SUBST(PRIV_PC_REQS)
++
+ ECHO_N="$ECHO_N"
+ ECHO_C="$ECHO_C"
+ AC_SUBST(ECHO_N)
+Index: redland-1.0.8/raptor/raptor.pc.in
+===================================================================
+--- redland-1.0.8.orig/raptor/raptor.pc.in	2008-12-17 23:06:47.000000000 +0000
++++ redland-1.0.8/raptor/raptor.pc.in	2008-12-17 23:07:20.000000000 +0000
+@@ -6,7 +6,8 @@
+ Name: Raptor
+ Description: RDF Parser Toolkit Library
+ Version: @VERSION@
++Requires.private: @PRIV_PC_REQS@
+ Libs: -L${libdir} -lraptor
+-Libs.private: @LIBS@
++Libs.private: @PRIV_PC_LIBS@@
+ Cflags: -I${includedir}
+ 

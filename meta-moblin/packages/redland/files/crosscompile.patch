@@ -1,0 +1,29 @@
+Index: redland-1.0.8/raptor/configure.ac
+===================================================================
+--- redland-1.0.8.orig/raptor/configure.ac	2008-12-16 17:26:58.000000000 +0000
++++ redland-1.0.8/raptor/configure.ac	2008-12-16 17:27:41.000000000 +0000
+@@ -279,23 +279,7 @@
+ 
+ if test $ac_cv_func_vsnprintf = yes; then
+   AC_MSG_CHECKING(vsnprintf has C99 compatible return value)
+-  AC_TRY_RUN([#include <stdarg.h>
+-int is_c99(char *s, ...) {
+-  char buffer[32];
+-  va_list args;
+-  int r;
+-  va_start(args, s);
+-  r = vsnprintf(buffer, 5, s, args);
+-  va_end(args);
+-
+-  return (r == 7);
+-}
+-
+-int main(int argc, char* argv) {
+-  return is_c99("1234567");
+-}], AC_MSG_RESULT(no),
+-    AC_DEFINE(HAVE_C99_VSNPRINTF, 1, [vsnprint has C99 compatible return value])
+-    AC_MSG_RESULT(yes))
++  AC_DEFINE(HAVE_C99_VSNPRINTF, 1, [vsnprint has C99 compatible return value])
+ fi
+ 
+ need_libm=no
