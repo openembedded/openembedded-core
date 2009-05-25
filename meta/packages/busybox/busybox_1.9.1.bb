@@ -23,3 +23,8 @@ do_configure () {
 	install -m 0644 ${WORKDIR}/defconfig ${S}/.config
 	cml1_do_configure
 }
+
+#
+# libbb/appletlib.c:38:27: error: applet_tables.h: No such file or directory
+#
+PARALLEL_MAKE = ""
