@@ -178,7 +178,7 @@ else
 	done
 fi
 
-if test -f /etc/ld.so.cache
+if test -f /etc/ld.so.cache -a ! -f /var/run/ld.so.cache
 then
 	ln -s /etc/ld.so.cache /var/run/ld.so.cache
 fi
