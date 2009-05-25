@@ -1,0 +1,40 @@
+The -n option must appear after the iface options, else dhclient 
+just prints its help text. Crazy.
+
+RP - 25/5/09
+
+Index: git/plugins/dhclient.c
+===================================================================
+--- git.orig/plugins/dhclient.c	2009-05-26 00:01:02.000000000 +0100
++++ git/plugins/dhclient.c	2009-05-26 00:01:38.000000000 +0100
+@@ -165,18 +165,18 @@
+ 	argv[0] = DHCLIENT;
+ 	argv[1] = "-d";
+ 	argv[2] = "-q";
+-	argv[3] = "-n";
+-	argv[4] = "-e";
+-	argv[5] = address;
+-	argv[6] = "-pf";
+-	argv[7] = pidfile;
+-	argv[8] = "-lf";
+-	argv[9] = leases;
+-	argv[10] = "-cf";
+-	argv[11] = config;
+-	argv[12] = "-sf";
+-	argv[13] = script;
+-	argv[14] = task->ifname;
++	argv[3] = "-e";
++	argv[4] = address;
++	argv[5] = "-pf";
++	argv[6] = pidfile;
++	argv[7] = "-lf";
++	argv[8] = leases;
++	argv[9] = "-cf";
++	argv[10] = config;
++	argv[11] = "-sf";
++	argv[12] = script;
++	argv[13] = task->ifname;
++	argv[14] = "-n";
+ 	argv[15] = NULL;
+ 
+ 	envp[0] = NULL;

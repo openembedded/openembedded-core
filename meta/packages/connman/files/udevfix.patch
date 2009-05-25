@@ -1,0 +1,12 @@
+Index: git/src/connman.rules
+===================================================================
+--- git.orig/src/connman.rules	2009-05-25 14:24:53.000000000 +0100
++++ git/src/connman.rules	2009-05-25 14:25:16.000000000 +0100
+@@ -3,6 +3,7 @@
+ 
+ SUBSYSTEM=="net", KERNEL=="eth*", ENV{CONNMAN_TYPE}="ethernet"
+ SUBSYSTEM=="net", KERNEL=="wlan*", ENV{CONNMAN_TYPE}="wifi"
++SUBSYSTEM=="net", KERNEL=="ra0", ENV{CONNMAN_TYPE}="wifi"
+ 
+ SUBSYSTEM=="net", DRIVERS=="hso", ENV{CONNMAN_TYPE}="hso"
+ 
