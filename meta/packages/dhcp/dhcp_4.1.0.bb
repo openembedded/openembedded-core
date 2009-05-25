@@ -2,9 +2,8 @@ SECTION = "console/network"
 DESCRIPTION = "Internet Software Consortium DHCP package"
 HOMEPAGE = "http://www.isc.org/"
 LICENSE = "BSD"
-PR = "r4"
-SRC_URI = "ftp://ftp.isc.org/isc/dhcp/dhcp-3.0-history/dhcp-${PV}.tar.gz \
-	   file://noattrmode.patch;patch=1 \
+PR = "r5"
+SRC_URI = "ftp://ftp.isc.org/isc/dhcp/dhcp-${PV}.tar.gz \
 	   file://fixincludes.patch;patch=1 \
 	   file://dhcp-3.0.3-dhclient-dbus.patch;patch=1;pnum=0 \
 	   file://init-relay file://default-relay \
@@ -34,6 +33,9 @@ do_install() {
 	install -m 0644 ${WORKDIR}/default-server ${D}${sysconfdir}/default/dhcp-server
 	install -m 0644 ${WORKDIR}/dhclient.conf ${D}${sysconfdir}/dhcp/dhclient.conf
 	install -m 0644 ${WORKDIR}/dhcpd.conf ${D}${sysconfdir}/dhcp/dhcpd.conf
+	install -d ${D}${base_sbindir}/
+	mv ${D}${sbindir}/dhclient ${D}${base_sbindir}/
+	install -m 0755 ${S}/client/scripts/linux ${D}${base_sbindir}/dhclient-script
 }
 
 PACKAGES += "dhcp-server dhcp-client dhcp-relay dhcp-omshell"
