@@ -20,6 +20,9 @@ SRCDATE_yaffs2-utils = "20071107"
 PV_pn-calibrateproto ?= "0.0-poky1-${SRCREV}"
 SRCREV_pn-calibrateproto ?= "1da6fd1e2c7a49648245c98481fabea8b9690a8c"
 SRCREV_pn-clipboard-manager ?= "14994"
+SRCREV_pn-clutter ?= "654c26a1301c9bc5f8e3e5e3b68af5eb1b2e0673"
+SRCREV_pn-clutter-0.6 ?= "62e852a51e29dd42c84d6b34fe23b80b2542be59"
+SRCREV_pn-clutter-0.8 ?= "3ba37ff115ed3fbe6c94195775941091a3ac2b30"
 SRCREV_pn-clutter-box2d = "2bcf5b836548dc4909e13b8ae7f60dc64c93d559"
 SRCREV_pn-clutter-cairo-0.6 ?= "4dc4ef712ddc890d828a1cb65a69a835285af548"
 SRCREV_pn-clutter-cairo-0.8 ?= "e27e507dedddec3f279a2902ecee0da1011c78eb"
@@ -31,9 +34,7 @@ SRCREV_pn-clutter-helix ?= "b4514a7bae2a059f4e63de64245238a246ed10bd"
 SRCREV_pn-clutter-gtk-0.6 ?= "2ba362a1a223c2b28541030a80aa11191615340a"
 SRCREV_pn-clutter-gtk-0.8 ?= "7d3c3230376e731c06c21afa9d8c1d44dbea27cd"
 SRCREV_pn-clutter-gtk ?= "89bf3ebf4a5bd8a666ff94d81061f1209c5d53d9"
-SRCREV_pn-clutter-0.6 ?= "62e852a51e29dd42c84d6b34fe23b80b2542be59"
-SRCREV_pn-clutter-0.8 ?= "3ba37ff115ed3fbe6c94195775941091a3ac2b30"
-SRCREV_pn-clutter ?= "654c26a1301c9bc5f8e3e5e3b68af5eb1b2e0673"
+SRCREV_pn-clutter-mozembed ?= "2be79dccb6a14926c7e4c48429bba2cac3570fa3"
 SRCREV_pn-connman ?= "e952851502277cc41cd2a54ef5386cca7a8843dd"
 SRCREV_pn-connman-gnome ?= "b589f4f89bff20d54682cc6b49efa86feac8adb4"
 SRCREV_pn-dialer ?= "42a2b4dd62cf94dc905caeb087f5e7e9f418bf93"
@@ -190,16 +191,27 @@ SRCREV_pn-librsvg ?= "1193"
 SRCREV_pn-qemugl = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 SRCREV_pn-gobject-introspection = "c54f10f4caef35b42229c48951ee647ef05ab557"
 SRCREV_pn-gobject-introspection-native = "c54f10f4caef35b42229c48951ee647ef05ab557"
-SRCREV_pn-json-glib ?= ""
-SRCREV_pn-librest ?= "e49d8730bfb277af59732822e78535ef37e29b6c"
-SRCREV_pn-twitter-glib ?= "574e324e2b37e370162e5fa76f13ae0534952c41"
-SRCREV_pn-libgdbus ?= "aeab6e3c0185b271ca343b439470491b99cc587f"
-SRCREV_pn-mozilla-headless-services ?= "c7873654894af6c7c6c01194d6185db46667b81f"
-SRCREV_pn-moblin-menus ?= "e1d63681739dd16195d005b3cf15752df294bd3c"
+
+
+
+
+
+#
+# meta-moblin package SRCREVs
+#
+SRCREV_pn-bickley ?= "d524c663aaac9afe390d60971469f06ac24bba91"
+SRCREV_pn-json-glib ?= "930fdf4c4dff1f5310a946c2a9f5b6860f7c8ba8"
 SRCREV_pn-libccss ?= "92bc59e1d39302c8be500d53cb5dd8b05c2e4a15"
-SRCREV_pn-clutter-mozembed ?= "5f1f85dc878a83f64be4340b19e34139edf79744"
-SRCREV_pn-mojito ?= "88b39ace3f6a39c48a015d0bab9ae6599b42e900"
+SRCREV_pn-libgdbus ?= "aeab6e3c0185b271ca343b439470491b99cc587f"
+SRCREV_pn-librest ?= "14d35103d9649dc1e10c3e9ac2c690b3165c8184"
+SRCREV_pn-moblin-menus ?= "e1d63681739dd16195d005b3cf15752df294bd3c"
+SRCREV_pn-mojito ?= "0542c4b0e26c0e3b69c5ad1fa1898dc276fb9f48"
+SRCREV_pn-mozilla-headless-services ?= "c7873654894af6c7c6c01194d6185db46667b81f"
 SRCREV_pn-mutter ?= "aff4cf110307e149d3497d20543cde27b9699758"
+SRCREV_pn-twitter-glib ?= "849bec29292df88590e0b2898b50b9b8d766817e"
+SRCREV_pn-xf86-video-psb ?= "b6b3bba06fe5a3fe0b1bd6e31a7369dd83812bab"
+
+
 
 
 # Preferred Versions:
@@ -226,6 +238,6 @@ PREFERRED_VERSION_evince ?= "2.20.0"
 PREFERRED_VERSION_minimo ?= "0.02+cvs${SRCDATE_minimo}"
 PREFERRED_VERSION_oprofile ?= "0.9.4"
 PREFERRED_VERSION_elfutils ?= "0.89"
-PREFERRED_VERSION_hal ?= "0.5.11"
-PREFERRED_VERSION_hal-info ?= "20070831"
+PREFERRED_VERSION_hal ?= "0.5.11+0.5.12rc1"
+PREFERRED_VERSION_hal-info ?= "20090414"
 
