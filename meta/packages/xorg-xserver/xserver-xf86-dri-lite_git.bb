@@ -4,7 +4,7 @@ PE = "1"
 PR = "r4"
 PV = "1.5.99.1+git${SRCREV}"
 
-PROTO_DEPS += "xf86driproto"
+PROTO_DEPS += "xf86driproto dri2proto"
 
 DEFAULT_PREFERENCE = "-1"
 
