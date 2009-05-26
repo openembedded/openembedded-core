@@ -3,7 +3,7 @@ require xserver-xf86-dri-lite.inc
 PE = "1"
 PR = "r0"
 
-PROTO_DEPS += "xf86driproto"
+PROTO_DEPS += "xf86driproto dri2proto"
 
 SRC_URI += "file://nodolt.patch;patch=1 \
            file://libdri-xinerama-symbol.patch;patch=1 \
