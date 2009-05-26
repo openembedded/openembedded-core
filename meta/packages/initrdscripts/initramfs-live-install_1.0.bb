@@ -2,7 +2,7 @@ DESCRIPTON = "A live image init script"
 
 SRC_URI = "file://init-install.sh"
 
-PR = "r2"
+PR = "r3"
 
 RDEPENDS="grub parted e2fsprogs-mke2fs"
 

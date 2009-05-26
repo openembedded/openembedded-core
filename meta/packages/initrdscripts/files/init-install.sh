@@ -49,6 +49,22 @@ fi
 
 echo "Installing image on /dev/${device}"
 
+#
+# The udev automounter can cause pain here, kill it
+#
+rm -f /etc/udev/scripts/mount*
+
+#
+# Unmount anything the automounter had mounted
+#
+umount /dev/${device} 2> /dev/null || /bin/true
+umount /dev/${device}1 2> /dev/null || /bin/true
+umount /dev/${device}2 2> /dev/null || /bin/true
+umount /dev/${device}3 2> /dev/null || /bin/true
+umount /dev/${device}4 2> /dev/null || /bin/true
+umount /dev/${device}5 2> /dev/null || /bin/true
+umount /dev/${device}6 2> /dev/null || /bin/true
+
 if [ ! -b /dev/sda ] ; then
     mknod /dev/sda b 8 0
 fi
@@ -109,13 +125,13 @@ echo "Formatting swap partition...(/dev/${device}3)"
 mkswap $swap
 
 mkdir /ssd
-mkdir /mnt
+mkdir /rootmnt
 
 mount $rootfs /ssd
-mount -o rw,loop,noatime,nodiratime /media/$1/$2 /mnt
+mount -o rw,loop,noatime,nodiratime /media/$1/$2 /rootmnt
 
 echo "Copying rootfs files..."
-cp -a /mnt/* /ssd
+cp -a /rootmnt/* /ssd
 
 if [ -d /ssd/etc/ ] ; then
     echo "$swap                swap             swap       defaults              0  0" >> /ssd/etc/fstab
@@ -127,7 +143,7 @@ if [ -d /ssd/etc/ ] ; then
 fi
 
 umount /ssd
-umount /mnt
+umount /rootmnt
 
 echo "Preparing boot partition..."
 mount $bootfs /ssd
