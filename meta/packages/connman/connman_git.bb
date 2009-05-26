@@ -18,7 +18,6 @@ EXTRA_OECONF += " \
 SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git;protocol=git \
             file://connman-install-tests.patch;patch=1 \
             file://udevfix.patch;patch=1 \
-            file://dhclientreorder.patch;patch=1 \
             file://dbusperms.patch;patch=1 \
             file://connman "
 
