@@ -115,6 +115,7 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-detect \
     pulseaudio-module-alsa-sink \
     pulseaudio-module-alsa-source \
+    pulseaudio-module-alsa-card \
     pulseaudio-module-native-protocol-unix \
     pulseaudio-module-hal-detect \
     pulseaudio-module-default-device-restore \

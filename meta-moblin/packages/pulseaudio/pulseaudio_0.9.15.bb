@@ -1,10 +1,13 @@
 require pulseaudio.inc
 
 DEPENDS += "dbus gdbm speex"
-PR = "r8"
+PR = "r12"
 
 SRC_URI += "\
   file://buildfix.patch;patch=1 \
+  file://alsaerror.patch;patch=1 \
+  file://periodfix.patch;patch=1 \
+  file://fallback.patch;patch=1 \
   file://autoconf_version.patch;patch=1 \
 "
 
