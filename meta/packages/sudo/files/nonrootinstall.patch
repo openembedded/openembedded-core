@@ -1,0 +1,56 @@
+
+#
+# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+#
+
+Index: sudo-1.6.8p5/Makefile.in
+===================================================================
+--- sudo-1.6.8p5.orig/Makefile.in	2004-11-25 12:27:00.000000000 -0500
++++ sudo-1.6.8p5/Makefile.in	2005-01-21 18:02:00.447440568 -0500
+@@ -81,10 +81,16 @@
+ mandirform = $(mandir)/$(mantype)$(mansectform)
+ 
+ # User and group ids the installed files should be "owned" by
++ifeq ($(DESTDIR),)
++install_owncmd = -o $(install_uid) -g $(install_gid)
++endif
+ install_uid = 0
+ install_gid = 0
+ 
+ # User, group, and mode the sudoers file should be "owned" by (configure)
++ifeq ($(DESTDIR),)
++sudoers_owncmd = -o $(sudoers_uid) -g $(sudoers_gid)
++endif
+ sudoers_uid = @SUDOERS_UID@
+ sudoers_gid = @SUDOERS_GID@
+ sudoers_mode = @SUDOERS_MODE@
+@@ -301,12 +307,11 @@
+ 	    $(DESTDIR)$(noexecdir)
+ 
+ install-binaries: $(PROGS)
+-	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 4111 -s sudo $(DESTDIR)$(sudodir)/sudo
++	$(INSTALL) $(install_owncmd) -m 4555 -s sudo $(DESTDIR)$(sudodir)/sudo
++	$(INSTALL) $(install_owncmd) -m 0555 -s visudo $(DESTDIR)$(visudodir)/visudo
+ 	rm -f $(DESTDIR)$(sudodir)/sudoedit
+ 	ln $(DESTDIR)$(sudodir)/sudo $(DESTDIR)$(sudodir)/sudoedit
+ 
+-	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 0111 -s visudo $(DESTDIR)$(visudodir)/visudo
+-
+ install-noexec: sudo_noexec.la
+ 	$(LIBTOOL) --mode=install $(INSTALL) sudo_noexec.la $(DESTDIR)$(noexecdir)
+ 
+@@ -319,11 +324,11 @@
+ 		$(srcdir)/sudoers $(DESTDIR)$(sudoersdir)/sudoers
+ 
+ install-man:
+-	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 0444 @mansrcdir@/sudo.$(mantype) $(DESTDIR)$(mandirsu)/sudo.$(mansectsu)
++	$(INSTALL) $(install_owncmd) -m 0444 @mansrcdir@/sudo.$(mantype) $(DESTDIR)$(mandirsu)/sudo.$(mansectsu)
+ 	@rm -f $(DESTDIR)$(mandirsu)/sudoedit.$(mansectsu)
+ 	ln $(DESTDIR)$(mandirsu)/sudo.$(mansectsu) $(DESTDIR)$(mandirsu)/sudoedit.$(mansectsu)
+-	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 0444 @mansrcdir@/visudo.$(mantype) $(DESTDIR)$(mandirsu)/visudo.$(mansectsu)
+-	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 0444 @mansrcdir@/sudoers.$(mantype) $(DESTDIR)$(mandirform)/sudoers.$(mansectform)
++	$(INSTALL) $(install_owncmd) -m 0444 @mansrcdir@/visudo.$(mantype) $(DESTDIR)$(mandirsu)/visudo.$(mansectsu)
++	$(INSTALL) $(install_owncmd) -m 0444 @mansrcdir@/sudoers.$(mantype) $(DESTDIR)$(mandirform)/sudoers.$(mansectform)
+ @MAN_POSTINSTALL@
+ 
+ check:

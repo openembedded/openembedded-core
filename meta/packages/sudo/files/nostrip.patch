@@ -1,0 +1,20 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+Index: sudo-1.6.8p5/Makefile.in
+===================================================================
+--- sudo-1.6.8p5.orig/Makefile.in	2005-01-21 18:19:05.762568976 -0500
++++ sudo-1.6.8p5/Makefile.in	2005-01-21 18:19:34.701169640 -0500
+@@ -307,8 +307,8 @@
+ 	    $(DESTDIR)$(noexecdir)
+ 
+ install-binaries: $(PROGS)
+-	$(INSTALL) $(install_owncmd) -m 4555 -s sudo $(DESTDIR)$(sudodir)/sudo
+-	$(INSTALL) $(install_owncmd) -m 0555 -s visudo $(DESTDIR)$(visudodir)/visudo
++	$(INSTALL) $(install_owncmd) -m 4555 sudo $(DESTDIR)$(sudodir)/sudo
++	$(INSTALL) $(install_owncmd) -m 0555 visudo $(DESTDIR)$(visudodir)/visudo
+ 	rm -f $(DESTDIR)$(sudodir)/sudoedit
+ 	ln $(DESTDIR)$(sudodir)/sudo $(DESTDIR)$(sudodir)/sudoedit
+ 
