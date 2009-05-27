@@ -67,7 +67,7 @@ FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la"
 FILES_${PN}-conf = "${sysconfdir}"
 FILES_${PN}-bin = "${bindir}/* \
                    ${sysconfdir}/default/volatiles/volatiles.04_pulse"
-FILES_${PN}-server = "${bindir}/pulseaudio ${bindir}/start-* ${sysconfdir}"
+FILES_${PN}-server = "${bindir}/pulseaudio ${bindir}/start-* ${sysconfdir} ${bindir}/pactl"
 FILES_${PN}-gconf-helper = "${libexecdir}/pulse/gconf-helper"
 FILES_${PN}-misc = "${bindir}/*"
 
@@ -116,6 +116,7 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-alsa-sink \
     pulseaudio-module-alsa-source \
     pulseaudio-module-native-protocol-unix \
+    pulseaudio-module-hal-detect \
     pulseaudio-module-default-device-restore \
     pulseaudio-module-rescue-streams \
     pulseaudio-module-always-sink \
