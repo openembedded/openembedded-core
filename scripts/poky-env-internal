@@ -119,4 +119,4 @@ echo
 echo "### Shell environment set up for Poky builds. ###"
 echo 
 
-export BB_ENV_EXTRAWHITE="MACHINE DISTRO POKYMODE POKYLIBC OEROOT http_proxy ftp_proxy SSH_AGENT_PID SSH_AUTH_SOCK"
+export BB_ENV_EXTRAWHITE="MACHINE DISTRO POKYMODE POKYLIBC OEROOT http_proxy ftp_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY"
