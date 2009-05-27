@@ -4,6 +4,7 @@ PV = "0.0+git${SRCREV}"
 PR = "r2"
 
 DEPENDS = "redland gtk+ dbus-glib clutter-gst-0.8 libexif taglib gupnp gupnp-av samba"
+RDEPENDS = "xdg-user-dirs"
 
 S = "${WORKDIR}/git"
 
