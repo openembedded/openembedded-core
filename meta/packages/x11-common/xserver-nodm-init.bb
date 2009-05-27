@@ -2,8 +2,8 @@ DESCRIPTION = "Simple Xserver Init Script (no dm)"
 LICENSE = "GPL"
 SECTION = "x11"
 PRIORITY = "optional"
-PR = "r18"
-RDEPENDS = "dbus-wait"
+PR = "r21"
+RDEPENDS_${PN} = "dbus-wait sudo"
 
 SRC_URI = "file://xserver-nodm"
 S = ${WORKDIR}
