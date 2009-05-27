@@ -1,8 +1,6 @@
 #!/bin/sh
 #
 
-. /etc/formfactor/config
-
 # note xinit needs full server path
 XSERVER=/usr/bin/Xipaq
 if [ -f /usr/bin/Xfbdev ]; then
@@ -28,11 +26,11 @@ module_id() {
     awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
 }
 
-export USER=root
-
 ARGS=" -br -pn"
 
 if [ "$XSERVER" != "/usr/bin/Xorg" ]; then
+
+	. /etc/formfactor/config
 
         # use ucb 1x00 touchscreen if present
         if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then

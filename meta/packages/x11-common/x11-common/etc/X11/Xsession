@@ -1,11 +1,5 @@
 #!/bin/sh
 
-HOME_VOLATILE=/home/$USER/ramdisk
-export HOME_VOLATILE
-
-HOME=/home/$USER
-export HOME
-
 if [ -x /usr/bin/dbus-launch ]; then
     # As this is the X session script, always start a new DBus session.
     eval `dbus-launch --sh-syntax --exit-with-session`
