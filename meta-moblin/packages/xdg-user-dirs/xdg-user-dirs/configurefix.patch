@@ -1,0 +1,18 @@
+The AM_DISABLE_STATIC appears to pull in strange libtool junk so just remove it.
+
+RP - 27/5/09
+
+Index: xdg-user-dirs-0.10/configure.ac
+===================================================================
+--- xdg-user-dirs-0.10.orig/configure.ac	2009-05-27 22:27:20.000000000 +0100
++++ xdg-user-dirs-0.10/configure.ac	2009-05-27 22:27:28.000000000 +0100
+@@ -13,8 +13,7 @@
+ AC_PROG_INSTALL
+ AC_PROG_LN_S
+ AC_PROG_MAKE_SET
+-AM_PROG_MKDIR_P	
+-AM_DISABLE_STATIC
++AM_PROG_MKDIR_P
+ AM_ICONV
+ 
+ GETTEXT_PACKAGE=xdg-user-dirs
