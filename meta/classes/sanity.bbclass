@@ -131,7 +131,8 @@ def check_sanity(e):
 	checkfile = os.path.join(tmpdir, "saved_tmpdir")
 	if os.path.exists(checkfile):
 		f = file(checkfile, "r")
-		if (f.read().strip() != tmpdir):
+		saved_tmpdir = f.read().strip()
+		if (saved_tmpdir != tmpdir):
 			messages = messages + "Error, TMPDIR has changed location. You need to either move it back to %s or rebuild\n" % saved_tmpdir
 	else:
 		f = file(checkfile, "w")
