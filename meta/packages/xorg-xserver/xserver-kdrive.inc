@@ -1,6 +1,6 @@
 LICENSE = "MIT"
 DEPENDS = "compositeproto damageproto fixesproto recordproto resourceproto scrnsaverproto xineramaproto videoproto xextproto xproto \
-	libxau libxext libxdmcp libxfont libxrandr tslib virtual/libx11 xtrans"
+	libxau libxext libxdmcp libxfont libxrandr tslib virtual/libx11 xtrans bigreqsproto xcmiscproto"
 
 PROVIDES = "virtual/xserver"
 PACKAGES =+ "xserver-kdrive-fbdev \
