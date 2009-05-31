@@ -1,7 +1,7 @@
 HOMEPAGE = "http://www.moblin.org/projects/projects_connman.php"
 SUMMARY  = "Moblin Connection Manager"
 PV       = "0.19+git${SRCREV}"
-PR       = "r14"
+PR       = "r15"
 S        = "${WORKDIR}/git"
 LICENSE  = "GPL"
 
@@ -22,7 +22,7 @@ SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git;protocol=gi
             file://connman "
 
 INITSCRIPT_NAME = "connman"
-INITSCRIPT_PARAMS = "defaults 22"
+INITSCRIPT_PARAMS = "start 22 S . stop 22 0 1 6 ."
 
 inherit autotools_stage pkgconfig update-rc.d
 
