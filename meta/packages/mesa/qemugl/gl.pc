@@ -1,0 +1,12 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=/usr/lib
+includedir=/usr/include
+
+Name: gl
+Description: QEMU OpenGL library
+Requires.private: x11 xext xfixes
+Version: 7.3.0
+Libs: -L${libdir} -lGL
+Libs.private: -lm -lpthread -ldl 
+Cflags: -I${includedir} 
