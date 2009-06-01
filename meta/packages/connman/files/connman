@@ -11,7 +11,7 @@ fi
 set -e
 
 do_start() {
-	connmand 
+	$DAEMON
 }
 
 do_stop() {
