@@ -238,8 +238,7 @@ task-base-pcmcia26 = "\
 # Provide bluez-utils-compat utils for the time being, the binaries in that package will vanish soon from upstream releases, so beware! 
 
 RDEPENDS_task-base-bluetooth = "\ 
-    bluez-utils \
-    bluez-utils-compat \  
+    bluez4 \
     "
 
 RRECOMMENDS_task-base-bluetooth = "\
