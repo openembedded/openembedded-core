@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "X11 Pimlico Appications List"
-PR = "r27"
+PR = "r28"
 
 PACKAGES = "\
     task-moblin-apps-x11-pimlico \
@@ -15,12 +15,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
 
-WEB = "web-webkit"
-
 RDEPENDS_task-moblin-apps-x11-pimlico = "\
     eds-dbus \
     contacts \
     dates \
     tasks \
-    gaku \
-    ${WEB}"
+    gaku"
