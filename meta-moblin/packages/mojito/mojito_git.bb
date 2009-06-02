@@ -1,7 +1,7 @@
 
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git"
 PV = "0.0+git${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "libsoup-2.4 gconf-dbus librest glib-2.0 twitter-glib sqlite3 gnome-keyring"
 
@@ -23,7 +23,7 @@ fi
 . ${sysconfdir}/init.d/functions
     
 gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string -s /apps/mojito/sources/flickr/user 34402200@N07
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.default  --direct --type string -s /apps/mojito/sources/twitter/user ross@linux.intel.com
+gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string -s /apps/mojito/sources/twitter/user ross@linux.intel.com
 gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string -s /apps/mojito/sources/twitter/password password 
 
 }
