@@ -47,7 +47,7 @@ do_install_append() {
 	fi
 }
 
-PACKAGES =+ "libpulsecore libpulse libpulse-simple libpulse-browse libpulse-mainloop-glib \
+PACKAGES =+ "libpulsecore libpulsecommon libpulsedsp libpulse libpulse-simple libpulse-browse libpulse-mainloop-glib \
              pulseaudio-server pulseaudio-misc pulseaudio-gconf-helper"
 
 #upgrade path:
@@ -55,7 +55,9 @@ RREPLACES_pulseaudio-server = "libpulse-bin libpulse-conf"
 
 PACKAGES_DYNAMIC = "pulseaudio-lib* pulseaudio-module* libpulse-lib* libpulse-module* "
 
-FILES_libpulsecore = "${libdir}/libpulsecore.so.*"
+FILES_libpulsecore = "${libdir}/libpulsecore*.so"
+FILES_libpulsecommon = "${libdir}/libpulsecommon*.so"
+FILES_libpulsedsp = "${libdir}/libpulsedsp*.so"
 FILES_libpulse = "${libdir}/libpulse.so.*"
 FILES_libpulse-simple = "${libdir}/libpulse-simple.so.*"
 FILES_libpulse-browse = "${libdir}/libpulse-browse.so.*"
