@@ -23,11 +23,12 @@ PACKAGES_DYNAMIC = "mesa-dri-driver-*"
 FILES_${PN}-dbg += "${libdir}/dri/.debug/*"
 FILES_${PN}-xprogs = "${bindir}/glxdemo ${bindir}/glxgears ${bindir}/glxheads ${bindir}/glxinfo"
 
-EXTRA_OECONF += "--with-driver=dri"
+EXTRA_OECONF += "--with-driver=dri --with-state-trackers=glx" 
 
 do_install_append () {
     install -d ${D}/usr/bin
     install -m 0755 ${S}/progs/xdemos/{glxdemo,glxgears,glxheads,glxinfo} ${D}/usr/bin/
+    rm ${D}/usr/lib/libEGL*
 }
 
 python populate_packages_prepend() {
