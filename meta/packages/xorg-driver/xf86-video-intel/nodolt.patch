@@ -1,0 +1,12 @@
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac	2009-06-02 14:47:46.000000000 +0100
++++ git/configure.ac	2009-06-02 14:49:41.000000000 +0100
+@@ -43,7 +43,6 @@
+ # Checks for programs.
+ AC_DISABLE_STATIC
+ AC_PROG_LIBTOOL
+-DOLT
+ AC_PROG_CC
+ AM_PROG_CC_C_O
+ 
