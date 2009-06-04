@@ -176,10 +176,16 @@ python packagestage_scenefunc () {
 
     bb.build.exec_func("staging_helper", d)
 
-    removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
-    pstage_cleanpackage(removepkg, d)
+    bb.note("Here 1\n")
 
+    removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
+
+    bb.note("Here 1.1\n")
+    pstage_cleanpackage(removepkg, d)
+    bb.note("Here 1.2\n")
     stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
+
+    bb.note("Here 2 %s\n"% stagepkg)
 
     if os.path.exists(stagepkg):
         path = bb.data.getVar("PATH", d, 1)
@@ -236,6 +242,8 @@ python packagestage_scenefunc () {
             bb.utils.unlockfile(lf)
             if ret != 0:
                 bb.note("Failure installing prestage package")
+
+            bb.build.exec_func("staging_package_libtoolhack", d)
 
             bb.build.make_stamp("do_stage_package_populated", d)
         else:
@@ -320,11 +328,19 @@ staging_packager () {
 	echo "Architecture: ${PSTAGE_PKGARCH}"  >> ${PSTAGE_TMPDIR_STAGE}/CONTROL/control
 	
 	# Protect against empty SRC_URI
-	if [ "${SRC_URI}" != "" ] ; then		
-		echo "Source: ${SRC_URI}"               >> ${PSTAGE_TMPDIR_STAGE}/CONTROL/control
-	else
-		echo "Source: OpenEmbedded"               >> ${PSTAGE_TMPDIR_STAGE}/CONTROL/control
+	srcuri="${SRC_URI}"
+	if [ "$srcuri" == "" ]; then		
+		srcuri="OpenEmbedded"
 	fi
+	echo "Source: ${SRC_URI}"               >> ${PSTAGE_TMPDIR_STAGE}/CONTROL/control
+
+	# Deal with libtool not supporting sysroots
+	# Need to remove hardcoded paths and fix these when we install the
+	# staging packages.
+	# Could someone please add sysroot support to libtool!
+        for i in `find ${PSTAGE_TMPDIR_STAGE} -name "*.la" -type f` ; do \
+            sed -i -e s:${STAGING_DIR}:FIXMESTAGINGDIR:g $i
+        done
         
 	${PSTAGE_BUILD_CMD} ${PSTAGE_TMPDIR_STAGE} ${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}
 }
@@ -346,6 +362,14 @@ staging_package_installer () {
 
 	cd ${PSTAGE_TMPDIR_STAGE}
 	find -type f | grep -v ./CONTROL | sed -e 's/^\.//' > ${TMPDIR}${layout_libdir}/opkg/info/${PSTAGE_PKGPN}.list
+}
+
+staging_package_libtoolhack () {
+	# Deal with libtool not supporting sysroots and add our new
+	# staging location
+        for i in `find ${STAGING_DIR} -name "*.la" -type f` ; do \
+            sed -i -e s:FIXMESTAGINGDIR:${STAGING_DIR}:g $i
+        done
 }
 
 python do_package_stage () {
