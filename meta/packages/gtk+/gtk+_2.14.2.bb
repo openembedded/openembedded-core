@@ -1,6 +1,6 @@
 require gtk+.inc
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.14/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch;patch=1 \
@@ -10,6 +10,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.14/gtk+-${PV}.tar.bz2 \
            file://cellrenderer-cairo.patch;patch=1;pnum=0 \
            file://entry-cairo.patch;patch=1;pnum=0 \
            file://toggle-font.diff;patch=1;pnum=0 \
+	   file://0001-bgo-584832-Duplicate-the-exec-string-returned-by-gtk.patch;patch=1 \
 # TO MERGE
 #           file://filesystem-volumes.patch;patch=1 \
 #           file://filechooser-props.patch;patch=1 \
