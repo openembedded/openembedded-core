@@ -2,7 +2,7 @@ DESCRIPTION = "The GNU internationalization library."
 HOMEPAGE = "http://www.gnu.org/software/gettext/gettext.html"
 SECTION = "libs"
 LICENSE = "GPL"
-PR = "r10"
+PR = "r11"
 PROVIDES = "virtual/libintl"
 
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
@@ -23,6 +23,8 @@ EXTRA_OECONF += "--without-lisp"
 acpaths = '-I ${S}/autoconf-lib-link/m4/ \
 	   -I ${S}/gettext-runtime/m4 \
 	   -I ${S}/gettext-tools/m4'
+
+FILES_${PN} += "${libdir}/libgettextlib-${PV}.so ${libdir}/libgettextsrc-${PV}.so"
 
 do_configure_prepend() {
 	rm -f ${S}/config/m4/libtool.m4
