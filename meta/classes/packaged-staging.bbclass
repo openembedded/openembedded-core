@@ -92,8 +92,7 @@ def pstage_manualclean(srcname, destvarname, d):
 			if (file == "staging.lock"):
 				continue
 			filepath = os.path.join(walkroot, file).replace(src, dest)
-			bb.note("rm %s" % filepath)
-			os.system("rm %s" % filepath)
+			os.system("rm %s 2> /dev/null" % filepath)
 
 def pstage_set_pkgmanager(d):
     import bb
@@ -176,16 +175,11 @@ python packagestage_scenefunc () {
 
     bb.build.exec_func("staging_helper", d)
 
-    bb.note("Here 1\n")
-
     removepkg = bb.data.expand("${PSTAGE_PKGPN}", d)
 
-    bb.note("Here 1.1\n")
     pstage_cleanpackage(removepkg, d)
-    bb.note("Here 1.2\n")
-    stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
 
-    bb.note("Here 2 %s\n"% stagepkg)
+    stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
 
     if os.path.exists(stagepkg):
         path = bb.data.getVar("PATH", d, 1)
