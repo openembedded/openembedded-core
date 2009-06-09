@@ -8,36 +8,20 @@ DEPENDS = "virtual/libx11 xproto glproto libxfixes"
 COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
 
 SRC_URI = "git://git.o-hand.com/qemugl.git;protocol=git \
-           file://headers.tgz \
-           file://gl.pc"
+           file://versionfix.patch;patch=1"
 S = "${WORKDIR}/git"
 
 PV = "0.0+git${SRCREV}"
-PR = "r1"
-
-PROVIDES = "virtual/libgl"
+PR = "r5"
 
 DEFAULT_PREFERENCE = "-1"
 
-# Multiple virtual/gl providers being built breaks staging
-EXCLUDE_FROM_WORLD = "1"
-
 do_install () {
-	install -d ${D}${libdir}
-	install -m 0755 ${S}/libGL.so ${D}${libdir}/
-	ln -s libGL.so ${D}${libdir}/libGL.so.1
-	install -d ${D}{includedir}/GL/
-	cp -pPR ${WORKDIR}/headers/* ${D}{includedir}/GL/
-	install -d ${D}${libdir}/pkgconfig/
-	cp ${WORKDIR}/gl.pc ${D}${libdir}/pkgconfig/
+	install -d ${D}${libdir}/
+	install -m 0755 ${S}/libGL.so.1.2 ${D}${libdir}/libGL-qemu.so.1.2
 }
 
-do_stage () {
-	install -d ${STAGING_LIBDIR}/
-	install -m 0755 ${S}/libGL.so ${STAGING_LIBDIR}/
-	ln -s libGL.so ${STAGING_LIBDIR}/libGL.so.1
-	install -d ${STAGING_INCDIR}/GL/
-	cp -pPR ${WORKDIR}/headers/* ${STAGING_INCDIR}/GL/
-	install -d ${STAGING_LIBDIR}/pkgconfig/
-	cp ${WORKDIR}/gl.pc ${STAGING_LIBDIR}/pkgconfig/
+pkg_postinst_${PN} () {
+    rm -f $D${libdir}/libGL.so.1.2
+    ln -s libGL-qemu.so.1.2 $D${libdir}/libGL.so.1.2
 }
