@@ -1,0 +1,10 @@
+--- Makefile.am~	2007-05-22 16:50:35.000000000 +0200
++++ Makefile.am	2007-05-22 16:50:35.000000000 +0200
+@@ -3,7 +3,6 @@
+ 	libgnome-desktop 	\
+ 	gnome-about 		\
+ 	pixmaps			\
+-	desktop-docs		\
+ 	docs			\
+ 	man
+ 
