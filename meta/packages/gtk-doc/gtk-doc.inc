@@ -1,2 +1,0 @@
-SECTION = "x11/base"
-LICENSE = "LGPL"
