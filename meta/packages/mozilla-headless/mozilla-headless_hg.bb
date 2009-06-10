@@ -1,5 +1,5 @@
 
-FIXEDREV = "f4348fd85697"
+FIXEDREV = "${SRCREVMOZILLAHEADLESS}"
 
 SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=${FIXEDREV};module=offscreen \
            file://configurefix.patch;patch=1 \
