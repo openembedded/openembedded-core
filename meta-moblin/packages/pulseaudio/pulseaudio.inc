@@ -108,7 +108,7 @@ python populate_packages_prepend() {
 }
 
 RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
-RDEPENDS_pulseaudio-module-hal_detect =+ "hal"
+RDEPENDS_pulseaudio-module-hal-detect =+ "hal"
 RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-device-restore \
     pulseaudio-module-stream-restore \
