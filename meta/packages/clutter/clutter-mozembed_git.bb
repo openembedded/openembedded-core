@@ -1,6 +1,6 @@
 require clutter-mozembed.inc
 
-PV = "0.8.0+git${SRCREV}"
+PV = "0.8.0+git${SRCPV}"
 PR = "r2"
 
 SRC_URI = "git://git.clutter-project.org/clutter-mozembed.git;protocol=git \

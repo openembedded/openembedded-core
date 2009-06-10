@@ -1,6 +1,6 @@
 require clutter-gtk.inc
 
-PV = "0.6.0+git${SRCREV}"
+PV = "0.6.0+git${SRCPV}"
 
 DEPENDS += "clutter-0.6"
 

@@ -1,6 +1,6 @@
 DEPENDS = "clutter-box2d"
 
-PV = "0.0+git${SRCREV}"
+PV = "0.0+git${SRCPV}"
 PR = "r2"
 
 SRC_URI = "git://moblin.org/repos/users/pippin/prototype.git/;protocol=http \

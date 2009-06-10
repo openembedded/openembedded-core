@@ -1,6 +1,6 @@
-require clutter-gst.inc
+require clutter-gtk.inc
 
-PV = "0.9.0+git${SRCREV}"
+PV = "0.9.0+git${SRCPV}"
 PR = "r0"
 
 SRC_URI = "git://git.clutter-project.org/clutter-gtk.git;protocol=git"
