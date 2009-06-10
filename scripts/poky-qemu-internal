@@ -115,7 +115,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     QEMU=qemu
     if [ "$TYPE" = "ext3" ]; then
         KERNCMDLINE="vga=0 root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
-        QEMUOPTIONS="-vga vmware $QEMU_NETWORK_CMD -hda $HDIMAGE -usb -usbdevice wacom-tablet -enable-gl"
+        QEMUOPTIONS="-vga vmware $QEMU_NETWORK_CMD -hda $HDIMAGE -enable-gl"
     fi
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
@@ -126,7 +126,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="-vga std -usb -usbdevice wacom-tablet $QEMU_NETWORK_CMD"
+        QEMUOPTIONS="-vga std $QEMU_NETWORK_CMD"
     fi
 fi
 

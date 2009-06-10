@@ -134,7 +134,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$BUILDDIR/tmp/deploy/images
-            findimage $T qemux86 ext3 "poky-image-sdk poky-image-sato poky-image-minimal moblin-image-netbook"
+            findimage $T qemux86 ext3 "molbin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
         fi
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
