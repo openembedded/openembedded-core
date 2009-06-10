@@ -3,7 +3,7 @@ SRC_URI = "git://git.moblin.org/mozilla-headless-services.git;protocol=git \
 PV = "0.0+git${SRCREV}"
 PR = "r1"
 
-DEPENDS = "glib-2.0 dbus mozilla-headless"
+DEPENDS = "glib-2.0 dbus mozilla-headless json-glib"
 
 EXTRA_OECONF = "--enable-gnome-proxy"
 
