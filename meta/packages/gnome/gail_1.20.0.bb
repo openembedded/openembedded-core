@@ -3,6 +3,7 @@ SECTION = "x11/libs"
 PR = "r0"
 DESCRIPTION = "GNOME Accessibility Implementation Library"
 DEPENDS = "gtk+"
+PROVIDES = "virtual/gail"
 
 inherit gnome
 
