@@ -191,9 +191,7 @@ SRCREV_pn-qemugl = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 SRCREV_pn-gobject-introspection = "c54f10f4caef35b42229c48951ee647ef05ab557"
 SRCREV_pn-gobject-introspection-native = "c54f10f4caef35b42229c48951ee647ef05ab557"
 
-
-
-
+SRCREVMOZILLAHEADLESS ?= "f4348fd85697"
 
 #
 # meta-moblin package SRCREVs
