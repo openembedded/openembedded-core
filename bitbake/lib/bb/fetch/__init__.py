@@ -514,7 +514,7 @@ class Fetch(object):
             raise ParameterError
 
         pd = persist_data.PersistData(d)
-        key = self._revision_key(url, ud, d)
+        key = self.generate_revision_key(url, ud, d)
         rev = pd.getValue("BB_URI_HEADREVS", key)
         if rev != None:
             return str(rev)
@@ -527,11 +527,13 @@ class Fetch(object):
         """
         
         """
-        if hasattr(self, "_sortable_revision"):
+        has_sortable = hasattr(self, "_sortable_revision")
+        if has_sortable:
             return self._sortable_revision(url, ud, d)
 
         pd = persist_data.PersistData(d)
-        key = self._revision_key(url, ud, d)
+        key = self.generate_revision_key(url, ud, d)
+
         latest_rev = self._build_revision(url, ud, d)
         last_rev = pd.getValue("BB_URI_LOCALCOUNT", key + "_rev")
         count = pd.getValue("BB_URI_LOCALCOUNT", key + "_count")
@@ -549,6 +551,9 @@ class Fetch(object):
 
         return str(count + "+" + latest_rev)
 
+    def generate_revision_key(self, url, ud, d):
+        key = self._revision_key(url, ud, d)
+        return "%s-%s" % (key, bb.data.getVar("PN", d, True) or "")
 
 import cvs
 import git
