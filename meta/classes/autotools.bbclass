@@ -151,7 +151,9 @@ autotools_do_install() {
 	done
 }
 
+# STAGE_TEMP_PREFIX is used for a speedup by packaged-staging
 STAGE_TEMP="${WORKDIR}/temp-staging"
+STAGE_TEMP_PREFIX = ""
 
 autotools_stage_includes() {
 	if [ "${INHIBIT_AUTO_STAGE_INCLUDES}" != "1" ]
@@ -167,11 +169,12 @@ autotools_stage_includes() {
 autotools_stage_dir() {
 	from="$1"
 	to="$2"
+        prefix="${STAGE_TEMP_PREFIX}"
 	# This will remove empty directories so we can ignore them
 	rmdir "$from" 2> /dev/null || true
 	if [ -d "$from" ]; then
-		mkdir -p "$to"
-		cp -fpPR "$from"/* "$to"
+		mkdir -p "$prefix$to"
+		cp -fpPR "$from"/* "$prefix$to"
 	fi
 }
 
