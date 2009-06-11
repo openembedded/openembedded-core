@@ -1,5 +1,3 @@
-inherit base
-
 DEPENDS_prepend = "pkgconfig-native "
 
 do_stage_append () {
