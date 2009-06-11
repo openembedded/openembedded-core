@@ -73,8 +73,10 @@ python () {
         stagefunc = bb.data.getVar('do_stage', d, 1).strip()
         if stagefunc == "autotools_stage_all":
             fastpath = True
-        if stagefunc == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
+        elif stagefunc == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
             fastpath = True
+        if bb.data.getVar('PSTAGE_BROKEN_DESTDIR', d, 1) == "1":
+            fastpath = False
         if fastpath:         
             #bb.note("Can optimise " + bb.data.getVar('FILE', d, 1))
             bb.data.setVar("PSTAGING_NEEDSTAMP", "0", d)
@@ -325,6 +327,7 @@ autotools_staging_pstage () {
 do_populate_staging[dirs] =+ "${DEPLOY_DIR_PSTAGE}"
 python do_populate_staging_prepend() {
     needstamp = bb.data.getVar("PSTAGING_NEEDSTAMP", d, 1)
+    pstageactive = bb.data.getVar("PSTAGING_ACTIVE", d, True)
     lock = bb.data.expand("${STAGING_DIR}/staging.lock", d)
     if needstamp == "1":
         stamplock = bb.utils.lockfile(lock)
@@ -335,7 +338,7 @@ python do_populate_staging_append() {
     if needstamp == "1":
         bb.build.exec_func("populate_staging_postamble", d)
         bb.utils.unlockfile(stamplock)
-    else:
+    elif pstageactive == "1":
         stamplock = bb.utils.lockfile(lock)
         bb.build.exec_func("autotools_staging_pstage", d)
         bb.utils.unlockfile(stamplock)
