@@ -3,8 +3,6 @@
 #
 inherit cpan-base
 
-INHIBIT_NATIVE_STAGE_INSTALL = "1"
-
 #
 # We also need to have built libmodule-build-perl-native for
 # everything except libmodule-build-perl-native itself (which uses
@@ -61,7 +59,7 @@ cpan_build_do_install () {
 	fi
 }
 
-do_stage_append () {
+do_stage () {
 	if [ ${@is_target(d)} == "no" ]; then
 		perl Build install
 	fi
