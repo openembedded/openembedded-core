@@ -76,7 +76,7 @@ python () {
         if stagefunc == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
             fastpath = True
         if fastpath:         
-            bb.note("Can optimise " + bb.data.getVar('FILE', d, 1))
+            #bb.note("Can optimise " + bb.data.getVar('FILE', d, 1))
             bb.data.setVar("PSTAGING_NEEDSTAMP", "0", d)
             bb.data.setVar("STAGE_TEMP_PREFIX", "${WORKDIR}/temp-staging-pstage", d)
         else:
