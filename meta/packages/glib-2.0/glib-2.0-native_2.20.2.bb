@@ -41,6 +41,12 @@ do_stage () {
 	install -d ${STAGING_DATADIR}/glib-2.0/gettext/po
 	install -m 0755 mkinstalldirs ${STAGING_DATADIR}/glib-2.0/gettext/
 	install -m 0644 po/Makefile.in.in ${STAGING_DATADIR}/glib-2.0/gettext/po/
+	install -d ${STAGING_LIBDIR}/pkgconfig/
+	for i in glib-2.0 gmodule-2.0 gmodule-export-2.0 gmodule-no-export-2.0 gthread-2.0 gobject-2.0 gio-2.0 gio-unix-2.0; do
+		install -m 0644 $i.pc ${STAGING_LIBDIR}/pkgconfig/
+	done
+	
+
 }
 
 do_install () {
