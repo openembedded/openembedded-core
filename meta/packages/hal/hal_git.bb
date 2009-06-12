@@ -16,7 +16,7 @@ PR = "r4"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
                 --with-expat=${STAGING_DIR_HOST}${layout_prefix} \
@@ -35,13 +35,6 @@ do_install_append() {
 	install -m 0644 ${WORKDIR}/99_hal ${D}/etc/default/volatiles
 	install -d ${D}/etc/dbus-1/event.d
 	install -m 0755 ${WORKDIR}/20hal ${D}/etc/dbus-1/event.d
-}
-
-do_stage() {
-        autotools_stage_all
-        install -d ${STAGING_LIBDIR}
-        install -m 755 libhal/.libs/libhal.so.1.0.0 ${STAGING_LIBDIR}/libhal.so
-        install -m 755 libhal-storage/.libs/libhal-storage.so.1.0.0 ${STAGING_LIBDIR}/libhal-storage.so
 }
 
 # At the time the postinst runs, dbus might not be setup so only restart if running

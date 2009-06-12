@@ -7,7 +7,7 @@ SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz"
 
 S = "${WORKDIR}/hal-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 DEPENDS = "virtual/kernel dbus-glib udev intltool intltool-native expat libusb gperf-native"
 RDEPENDS += "udev hal-info"
@@ -41,15 +41,6 @@ do_install_append() {
 	install -m 0644 ${WORKDIR}/99_hal ${D}/etc/default/volatiles
         install -d ${D}/etc/dbus-1/event.d
         install -m 0755 ${WORKDIR}/20hal ${D}/etc/dbus-1/event.d
-}
-
-do_stage() {
-        oe_libinstall -C libhal -a -so libhal ${STAGING_LIBDIR}
-        oe_libinstall -C libhal-storage -a -so libhal-storage ${STAGING_LIBDIR}
-
-        install -d ${STAGING_INCDIR}/hal
-        install -m 0644 libhal/libhal.h ${STAGING_INCDIR}/hal
-        install -m 0644 libhal-storage/libhal-storage.h ${STAGING_INCDIR}/hal
 }
 
 # At the time the postinst runs, dbus might not be setup so only restart if running

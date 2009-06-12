@@ -1,6 +1,6 @@
 require hal.inc
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://hal.freedesktop.org/releases/hal-0.5.12rc1.tar.gz \
            file://99_hal \
