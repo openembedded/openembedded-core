@@ -5,7 +5,7 @@ DEPENDS += " ${@base_contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
 DEPENDS += " ${@base_contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r4"
+PR = "r5"
 
 RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
@@ -24,8 +24,4 @@ FILES_${PN} += "${libdir}/matchbox-panel/*.so \
                 ${datadir}/matchbox-panel/startup/*.png "
 FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 
-inherit autotools pkgconfig
-
-do_stage() {
-        autotools_stage_includes
-}
+inherit autotools_stage pkgconfig
