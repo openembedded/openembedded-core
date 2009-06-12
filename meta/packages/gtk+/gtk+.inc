@@ -7,7 +7,7 @@ PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc-native libxrandr \
            libgcrypt libxdamage libxrender libxcomposite cairo"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig pkgconfig_stage
 
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
 	${bindir}/gtk-update-icon-cache \
