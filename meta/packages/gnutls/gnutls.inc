@@ -6,7 +6,7 @@ LICENSE = "LGPL"
 
 SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2"
 
-inherit autotools binconfig pkgconfig
+inherit autotools binconfig pkgconfig pkgconfig_stage
 
 EXTRA_OECONF="--with-included-opencdk --with-included-libtasn1 --with-included-libcfg --with-libz-prefix=${STAGING_DIR_HOST}${layout_prefix} --with-lzo --disable-guile"
 
