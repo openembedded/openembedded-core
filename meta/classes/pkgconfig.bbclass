@@ -1,3 +1,3 @@
 DEPENDS_prepend = "pkgconfig-native "
 
-inherit pkconfig_stage
+inherit pkgconfig_stage
