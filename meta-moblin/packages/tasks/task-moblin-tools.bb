@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Debuggin and profiling tools tasks for Moblin"
-PR = "r4"
+PR = "r5"
 
 PACKAGES = "\
     task-moblin-tools-debug \
@@ -32,8 +32,8 @@ RDEPENDS_task-moblin-tools-profile = "\
     oprofile \
     oprofileui-server \
     powertop \
-    lttng-control \
-    lttng-viewer \
+#    lttng-control \
+#    lttng-viewer \
     "
 
 RDEPENDS_task-moblin-tools-profile_qemux86 += "valgrind"
