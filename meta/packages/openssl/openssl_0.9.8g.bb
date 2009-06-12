@@ -1,8 +1,8 @@
-inherit pkgconfig
+inherit pkgconfig pkgconfig_stage
 
 require openssl.inc
 
-PR = "r9"
+PR = "r10"
 
 SRC_URI += "file://debian.patch;patch=1 \
             file://configure-targets.patch;patch=1 \
