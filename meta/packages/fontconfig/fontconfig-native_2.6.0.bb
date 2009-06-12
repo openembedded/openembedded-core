@@ -9,4 +9,6 @@ do_stage () {
 	oe_runmake install
 	install fc-lang/fc-lang ${STAGING_BINDIR}
 	install fc-glyphname/fc-glyphname ${STAGING_BINDIR}
+	install -d ${STAGING_LIBDIR}/pkgconfig/
+	install -m 0644 fontconfig.pc ${STAGING_LIBDIR}/pkgconfig/
 }

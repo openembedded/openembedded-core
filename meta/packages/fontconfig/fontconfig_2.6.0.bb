@@ -44,6 +44,8 @@ do_stage () {
 	oe_libinstall -so -a -C src libfontconfig ${STAGING_LIBDIR}
 	install -d ${STAGING_INCDIR}/fontconfig
 	for i in ${S}/fontconfig/*.h; do install -m 0644 $i ${STAGING_INCDIR}/fontconfig/; done
+	install -d ${STAGING_LIBDIR}/pkgconfig/
+	install -m 0644 fontconfig.pc ${STAGING_LIBDIR}/pkgconfig/
 }
 
 BUILD_CFLAGS += " -I${STAGING_INCDIR}/freetype2"
