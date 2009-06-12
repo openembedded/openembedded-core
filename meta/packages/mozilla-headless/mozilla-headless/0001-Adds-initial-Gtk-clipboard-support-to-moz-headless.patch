@@ -21,11 +21,11 @@ the clipboard.
  create mode 100644 widget/src/headless/nsImageToPixbuf.cpp
  create mode 100644 widget/src/headless/nsImageToPixbuf.h
 
-diff --git a/widget/src/headless/Makefile.in b/widget/src/headless/Makefile.in
-index c8727d9..cbdf900 100644
---- a/widget/src/headless/Makefile.in
-+++ b/widget/src/headless/Makefile.in
-@@ -95,6 +95,12 @@ CPPSRCS		= \
+Index: offscreen/widget/src/headless/Makefile.in
+===================================================================
+--- offscreen.orig/widget/src/headless/Makefile.in	2009-05-16 18:23:25.000000000 +0100
++++ offscreen/widget/src/headless/Makefile.in	2009-06-12 14:14:05.000000000 +0100
+@@ -95,6 +95,12 @@
  		nsScreenManagerHeadless.cpp \
  		$(NULL)
  
@@ -38,11 +38,10 @@ index c8727d9..cbdf900 100644
  # build our subdirs, too
  SHARED_LIBRARY_LIBS = ../xpwidgets/libxpwidgets_s.a
  
-diff --git a/widget/src/headless/nsClipboard.cpp b/widget/src/headless/nsClipboard.cpp
-new file mode 100644
-index 0000000..72a37fc
---- /dev/null
-+++ b/widget/src/headless/nsClipboard.cpp
+Index: offscreen/widget/src/headless/nsClipboard.cpp
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ offscreen/widget/src/headless/nsClipboard.cpp	2009-06-12 14:14:05.000000000 +0100
 @@ -0,0 +1,948 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
@@ -992,11 +991,10 @@ index 0000000..72a37fc
 +    wait_for_retrieval(clipboard, &context);
 +    return static_cast<gchar *>(context.data);
 +}
-diff --git a/widget/src/headless/nsClipboard.h b/widget/src/headless/nsClipboard.h
-new file mode 100644
-index 0000000..dc690c0
---- /dev/null
-+++ b/widget/src/headless/nsClipboard.h
+Index: offscreen/widget/src/headless/nsClipboard.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ offscreen/widget/src/headless/nsClipboard.h	2009-06-12 14:14:05.000000000 +0100
 @@ -0,0 +1,93 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
@@ -1091,11 +1089,10 @@ index 0000000..dc690c0
 +};
 +
 +#endif /* __nsClipboard_h_ */
-diff --git a/widget/src/headless/nsIImageToPixbuf.h b/widget/src/headless/nsIImageToPixbuf.h
-new file mode 100644
-index 0000000..1c46015
---- /dev/null
-+++ b/widget/src/headless/nsIImageToPixbuf.h
+Index: offscreen/widget/src/headless/nsIImageToPixbuf.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ offscreen/widget/src/headless/nsIImageToPixbuf.h	2009-06-12 14:14:05.000000000 +0100
 @@ -0,0 +1,62 @@
 +/* ***** BEGIN LICENSE BLOCK *****
 + * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -1159,11 +1156,10 @@ index 0000000..1c46015
 +NS_DEFINE_STATIC_IID_ACCESSOR(nsIImageToPixbuf, NSIIMAGETOPIXBUF_IID)
 +
 +#endif
-diff --git a/widget/src/headless/nsImageToPixbuf.cpp b/widget/src/headless/nsImageToPixbuf.cpp
-new file mode 100644
-index 0000000..496815c
---- /dev/null
-+++ b/widget/src/headless/nsImageToPixbuf.cpp
+Index: offscreen/widget/src/headless/nsImageToPixbuf.cpp
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ offscreen/widget/src/headless/nsImageToPixbuf.cpp	2009-06-12 14:14:05.000000000 +0100
 @@ -0,0 +1,196 @@
 +/* vim:set sw=4 sts=4 et cin: */
 +/* ***** BEGIN LICENSE BLOCK *****
@@ -1361,11 +1357,10 @@ index 0000000..496815c
 +
 +    return ImgSurfaceToPixbuf(imgSurface, aWidth, aHeight);
 +}
-diff --git a/widget/src/headless/nsImageToPixbuf.h b/widget/src/headless/nsImageToPixbuf.h
-new file mode 100644
-index 0000000..0e3f516
---- /dev/null
-+++ b/widget/src/headless/nsImageToPixbuf.h
+Index: offscreen/widget/src/headless/nsImageToPixbuf.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ offscreen/widget/src/headless/nsImageToPixbuf.h	2009-06-12 14:14:05.000000000 +0100
 @@ -0,0 +1,71 @@
 +/* vim:set sw=4 sts=4 et cin: */
 +/* ***** BEGIN LICENSE BLOCK *****
@@ -1438,10 +1433,10 @@ index 0000000..0e3f516
 +  { 0x9e, 0x42, 0xb0, 0x5e, 0x5f, 0x06, 0x85, 0xb7 } }
 +
 +#endif
-diff --git a/widget/src/headless/nsWidgetFactory.cpp b/widget/src/headless/nsWidgetFactory.cpp
-index eb94333..a215988 100644
---- a/widget/src/headless/nsWidgetFactory.cpp
-+++ b/widget/src/headless/nsWidgetFactory.cpp
+Index: offscreen/widget/src/headless/nsWidgetFactory.cpp
+===================================================================
+--- offscreen.orig/widget/src/headless/nsWidgetFactory.cpp	2009-06-12 14:08:56.000000000 +0100
++++ offscreen/widget/src/headless/nsWidgetFactory.cpp	2009-06-12 14:15:24.000000000 +0100
 @@ -46,6 +46,10 @@
  #include "nsWindow.h"
  #include "nsTransferable.h"
@@ -1450,10 +1445,10 @@ index eb94333..a215988 100644
 +#include "nsClipboardHelper.h"
 +#include "nsClipboard.h"
 +#endif
- //#include "nsFilePicker.h"
  #include "nsSound.h"
  #include "nsBidiKeyboard.h"
-@@ -74,6 +78,10 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsLookAndFeel)
+ #include "nsScreenManagerHeadless.h"
+@@ -66,6 +70,10 @@
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsTransferable)
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsBidiKeyboard)
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsHTMLFormatConverter)
@@ -1464,7 +1459,7 @@ index eb94333..a215988 100644
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsSound)
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsScreenManagerHeadless)
  //NS_GENERIC_FACTORY_CONSTRUCTOR(nsImageToPixbuf)
-@@ -189,6 +197,16 @@ static const nsModuleComponentInfo components[] =
+@@ -142,6 +150,16 @@
      NS_TRANSFERABLE_CID,
      "@mozilla.org/widget/transferable;1",
      nsTransferableConstructor },
@@ -1481,6 +1476,3 @@ index eb94333..a215988 100644
    { "HTML Format Converter",
      NS_HTMLFORMATCONVERTER_CID,
      "@mozilla.org/widget/htmlformatconverter;1",
--- 
-1.6.0.4
-

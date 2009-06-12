@@ -14,7 +14,7 @@ S = "${WORKDIR}/offscreen"
 
 DEPENDS = "gconf gnome-vfs pango dbus-glib alsa-lib libidl-native sqlite3 libidl"
 
-FILES_${PN} += "${libdir}/xulrunner-1.9.2a1pre"
+FILES_${PN} += "${libdir}/xulrunner-1.9.2a1pre ${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/*.so"
 FILES_${PN}-dev += "${libdir}/xulrunner-devel-1.9.2a1pre"
 FILES_${PN}-dbg += "${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/.debug"
 
