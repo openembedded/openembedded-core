@@ -319,8 +319,8 @@ populate_staging_postamble () {
 
 autotools_staging_pstage () {
 	mkdir -p ${PSTAGE_TMPDIR_STAGE}/staging/
-	cp -fpPR ${WORKDIR}/temp-staging-pstage/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/staging/
-	cp -fpPR ${WORKDIR}/temp-staging-pstage/${STAGING_DIR}/* ${STAGING_DIR}/
+	cp -fpPR ${WORKDIR}/temp-staging-pstage/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/staging/ || /bin/true
+	cp -fpPR ${WORKDIR}/temp-staging-pstage/${STAGING_DIR}/* ${STAGING_DIR}/ || /bin/true
 }
 
 #do_populate_staging[lockfiles] = "${STAGING_DIR}/staging.lock"
