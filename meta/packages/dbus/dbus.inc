@@ -12,7 +12,7 @@ SRC_URI = "\
   file://99_dbus \
 "
 
-inherit autotools pkgconfig gettext
+inherit autotools pkgconfig gettext pkgconfig_stage
 
 INITSCRIPT_NAME = "dbus-1"
 INITSCRIPT_PARAMS = "start 02 5 2 . stop 20 0 1 6 ."
