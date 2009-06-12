@@ -1,0 +1,21 @@
+Index: kexec-tools-1.101/kexec/arch/i386/kexec-multiboot-x86.c
+===================================================================
+--- kexec-tools-1.101.orig/kexec/arch/i386/kexec-multiboot-x86.c	2009-06-12 12:09:04.000000000 +0100
++++ kexec-tools-1.101/kexec/arch/i386/kexec-multiboot-x86.c	2009-06-12 12:09:44.000000000 +0100
+@@ -47,7 +47,6 @@
+ #include <getopt.h>
+ #include <elf.h>
+ #include <boot/elf_boot.h>
+-#include <asm/page.h>
+ #include <ip_checksum.h>
+ #include "../../kexec.h"
+ #include "../../kexec-elf.h"
+@@ -341,7 +340,7 @@
+ 			/* Pick the next aligned spot to load it in */
+ 			freespace = add_buffer(info,
+ 				buf, mod_size, mod_size,
+-				PAGE_SIZE, 0, 0xffffffffUL, 1);
++				getpagesize(), 0, 0xffffffffUL, 1);
+ 
+ 			/* Add the module command line */
+ 			sprintf(mod_clp, "%s", mod_command_line);
