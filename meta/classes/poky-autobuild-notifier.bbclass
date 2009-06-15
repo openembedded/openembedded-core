@@ -19,7 +19,7 @@ def do_autobuilder_failure_report(event):
 
     version = data.expand("${PN}: ${PV}-${PR}", event.data)
 
-    recipients = ["richard@o-hand.com", "ebassi@o-hand.com", "pippin@o-hand.com"]
+    recipients = ["richard@o-hand.com"]
     COMMASPACE = ', '
 
     message = email.Message.Message()
