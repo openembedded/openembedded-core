@@ -1,7 +1,7 @@
 Index: offscreen/configure.in
 ===================================================================
---- offscreen.orig/configure.in	2009-06-12 14:08:51.000000000 +0100
-+++ offscreen/configure.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/configure.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/configure.in	2009-06-12 14:15:55.000000000 +0100
 @@ -62,7 +62,6 @@
  
  AC_PREREQ(2.13)
@@ -290,8 +290,8 @@ Index: offscreen/configure.in
  if cmp -s config/autoconf.mk config/autoconf.mk.orig; then
 Index: offscreen/js/src/configure.in
 ===================================================================
---- offscreen.orig/js/src/configure.in	2009-06-12 14:08:52.000000000 +0100
-+++ offscreen/js/src/configure.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/js/src/configure.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/js/src/configure.in	2009-06-12 14:15:55.000000000 +0100
 @@ -62,7 +62,6 @@
  
  AC_PREREQ(2.13)
@@ -481,8 +481,8 @@ Index: offscreen/js/src/configure.in
 +
 Index: offscreen/nsprpub/configure.in
 ===================================================================
---- offscreen.orig/nsprpub/configure.in	2009-06-12 14:08:54.000000000 +0100
-+++ offscreen/nsprpub/configure.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/nsprpub/configure.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/nsprpub/configure.in	2009-06-12 14:15:55.000000000 +0100
 @@ -42,7 +42,6 @@
  AC_PREREQ(2.12)
  AC_INIT(config/libc_r.h)
@@ -591,8 +591,8 @@ Index: offscreen/nsprpub/configure.in
 +
 Index: offscreen/js/src/Makefile.in
 ===================================================================
---- offscreen.orig/js/src/Makefile.in	2009-06-12 14:08:52.000000000 +0100
-+++ offscreen/js/src/Makefile.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/js/src/Makefile.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/js/src/Makefile.in	2009-06-12 14:15:55.000000000 +0100
 @@ -514,20 +514,8 @@
  
  export:: jsautocfg.h
@@ -625,8 +625,8 @@ Index: offscreen/js/src/Makefile.in
  
 Index: offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp
 ===================================================================
---- offscreen.orig/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-06-12 14:08:52.000000000 +0100
-+++ offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-06-12 14:15:55.000000000 +0100
 @@ -47,6 +47,8 @@
  
  #include <stdarg.h>
@@ -638,8 +638,8 @@ Index: offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp
  #include "nsCOMPtr.h"
 Index: offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp
 ===================================================================
---- offscreen.orig/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-04-16 18:08:00.000000000 +0100
-+++ offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-06-12 14:15:55.000000000 +0100
 @@ -39,6 +39,8 @@
   *
   * ***** END LICENSE BLOCK ***** */
@@ -651,8 +651,8 @@ Index: offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp
  #include "mozJSSubScriptLoader.h"
 Index: offscreen/modules/lcms/include/icc34.h
 ===================================================================
---- offscreen.orig/modules/lcms/include/icc34.h	2009-04-16 18:08:47.000000000 +0100
-+++ offscreen/modules/lcms/include/icc34.h	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/modules/lcms/include/icc34.h	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/modules/lcms/include/icc34.h	2009-06-12 14:15:55.000000000 +0100
 @@ -144,7 +144,7 @@
   */
  
@@ -664,8 +664,8 @@ Index: offscreen/modules/lcms/include/icc34.h
    Added the stupid check for autoconf by Marti Maria. 
 Index: offscreen/toolkit/mozapps/update/src/updater/Makefile.in
 ===================================================================
---- offscreen.orig/toolkit/mozapps/update/src/updater/Makefile.in	2009-06-12 14:08:56.000000000 +0100
-+++ offscreen/toolkit/mozapps/update/src/updater/Makefile.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/toolkit/mozapps/update/src/updater/Makefile.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/toolkit/mozapps/update/src/updater/Makefile.in	2009-06-12 14:15:55.000000000 +0100
 @@ -60,7 +60,7 @@
  
  LIBS += \
@@ -677,8 +677,8 @@ Index: offscreen/toolkit/mozapps/update/src/updater/Makefile.in
  ifeq ($(OS_ARCH),WINNT)
 Index: offscreen/xpcom/sample/program/Makefile.in
 ===================================================================
---- offscreen.orig/xpcom/sample/program/Makefile.in	2009-04-16 18:09:47.000000000 +0100
-+++ offscreen/xpcom/sample/program/Makefile.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/xpcom/sample/program/Makefile.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/xpcom/sample/program/Makefile.in	2009-06-12 14:15:55.000000000 +0100
 @@ -57,7 +57,7 @@
  # that the application be linked against the XPCOM dynamic library or the NSPR
  # dynamic libraries.
@@ -690,8 +690,8 @@ Index: offscreen/xpcom/sample/program/Makefile.in
  # Need to link with CoreFoundation on Mac
 Index: offscreen/xpcom/tools/registry/Makefile.in
 ===================================================================
---- offscreen.orig/xpcom/tools/registry/Makefile.in	2009-04-16 18:09:48.000000000 +0100
-+++ offscreen/xpcom/tools/registry/Makefile.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/xpcom/tools/registry/Makefile.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/xpcom/tools/registry/Makefile.in	2009-06-12 14:15:55.000000000 +0100
 @@ -54,7 +54,7 @@
  SIMPLE_PROGRAMS	= $(CPPSRCS:.cpp=$(BIN_SUFFIX))
  
@@ -703,8 +703,8 @@ Index: offscreen/xpcom/tools/registry/Makefile.in
  # Need to link with CoreFoundation on Mac
 Index: offscreen/xulrunner/app/Makefile.in
 ===================================================================
---- offscreen.orig/xulrunner/app/Makefile.in	2009-06-12 14:08:56.000000000 +0100
-+++ offscreen/xulrunner/app/Makefile.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/xulrunner/app/Makefile.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/xulrunner/app/Makefile.in	2009-06-12 14:15:55.000000000 +0100
 @@ -184,7 +184,7 @@
  RCFLAGS += -DXULRUNNER_ICO=\"$(DIST)/branding/xulrunner.ico\" -DDOCUMENT_ICO=\"$(DIST)/branding/document.ico\"
  endif
@@ -716,8 +716,8 @@ Index: offscreen/xulrunner/app/Makefile.in
  
 Index: offscreen/xulrunner/stub/Makefile.in
 ===================================================================
---- offscreen.orig/xulrunner/stub/Makefile.in	2009-04-16 18:09:50.000000000 +0100
-+++ offscreen/xulrunner/stub/Makefile.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/xulrunner/stub/Makefile.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/xulrunner/stub/Makefile.in	2009-06-12 14:15:55.000000000 +0100
 @@ -101,7 +101,7 @@
  endif
  endif
@@ -729,8 +729,8 @@ Index: offscreen/xulrunner/stub/Makefile.in
  
 Index: offscreen/modules/plugin/test/testplugin/Makefile.in
 ===================================================================
---- offscreen.orig/modules/plugin/test/testplugin/Makefile.in	2009-06-12 14:08:54.000000000 +0100
-+++ offscreen/modules/plugin/test/testplugin/Makefile.in	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/modules/plugin/test/testplugin/Makefile.in	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/modules/plugin/test/testplugin/Makefile.in	2009-06-12 14:15:55.000000000 +0100
 @@ -63,9 +63,7 @@
  CMMSRCS = nptest_macosx.mm
  endif
@@ -743,10 +743,22 @@ Index: offscreen/modules/plugin/test/testplugin/Makefile.in
  CPPSRCS += nptest_os2.cpp
 Index: offscreen/js/src/aclocal.m4
 ===================================================================
---- offscreen.orig/js/src/aclocal.m4	2009-04-16 18:07:56.000000000 +0100
-+++ offscreen/js/src/aclocal.m4	2009-06-12 14:11:18.000000000 +0100
+--- offscreen.orig/js/src/aclocal.m4	2009-06-12 14:15:55.000000000 +0100
++++ offscreen/js/src/aclocal.m4	2009-06-12 14:15:55.000000000 +0100
 @@ -9,4 +9,3 @@
  builtin(include, build/autoconf/moznbytetype.m4)dnl
  builtin(include, build/autoconf/mozprog.m4)dnl
  
 -MOZ_PROG_CHECKMSYS()
+Index: offscreen/toolkit/toolkit-makefiles.sh
+===================================================================
+--- offscreen.orig/toolkit/toolkit-makefiles.sh	2009-06-12 14:19:59.000000000 +0100
++++ offscreen/toolkit/toolkit-makefiles.sh	2009-06-12 14:20:09.000000000 +0100
+@@ -342,7 +342,6 @@
+   modules/plugin/sdk/samples/Makefile
+   modules/plugin/sdk/samples/common/Makefile
+   modules/plugin/sdk/samples/basic/windows/Makefile
+-  modules/plugin/sdk/samples/basic/unix/Makefile
+   modules/plugin/sdk/samples/winless/windows/Makefile
+ "
+ 
