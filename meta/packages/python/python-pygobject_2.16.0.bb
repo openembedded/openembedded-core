@@ -19,6 +19,8 @@ inherit autotools distutils-base pkgconfig
 # necessary to let the call for python-config succeed
 export BUILD_SYS
 export HOST_SYS
+export STAGING_INCDIR
+export STAGING_LIBDIR
 
 do_stage() {
 	autotools_stage_all
