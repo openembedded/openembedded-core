@@ -1,15 +1,19 @@
 SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you. Mutter is metacity + clutter."
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 DEPENDS = "startup-notification gtk+ gconf clutter gdk-pixbuf-csource-native intltool glib-2.0-native"
 # gobject-introspection
-PR = "r8"
-PV = "2.25.1+git${SRCREV}"
+PR = "r9"
+PV = "2.25.1+git${SRCPV}"
 inherit gnome update-alternatives
 
-SRC_URI = "git://git.gnome.org/mutter.git;protocol=git;branch=master \
+# Gnome is the upstream but moblin is under more active development atm
+# git://git.gnome.org/mutter.git;protocol=git;branch=master
+#
+SRC_URI = "git://git.moblin.org/mutter.git;protocol=git;branch=master \
            file://nodocs.patch;patch=1 \
-	   file://crosscompile.patch;patch=1 \
+           file://nozenity.patch;patch=1 \
+           file://crosscompile.patch;patch=1 \
            file://fix_pkgconfig.patch;patch=1"
 S = "${WORKDIR}/git"
 
