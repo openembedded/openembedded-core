@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.10.2+git${SRCREV}"
-PR = "r4"
+PR = "r5"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-git/"
 
@@ -12,7 +12,8 @@ SRC_URI = "\
     file://no-strip.patch;patch=1 \
     file://fix-dirent.patch;patch=1 \
     file://fix-nogl.patch;patch=1 \
-    file://zlibsearch.patch;patch=1 "
+    file://zlibsearch.patch;patch=1 \
+    file://qemugl-allow-glxcontext-release.patch;patch=1 "
 
 S = "${WORKDIR}/git"
 
