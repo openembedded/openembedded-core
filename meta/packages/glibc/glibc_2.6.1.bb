@@ -59,6 +59,7 @@ SRC_URI = "\
   file://glibc-2.6.1-use-short-for-fnstsw.patch;patch=1 \
   file://glibc-include-fixed.patch;patch=1;pnum=0 \
   file://no-hwcaps.patch;patch=1 \
+  file://nopageheader.patch;patch=1 \
 "
 
 # Build fails on sh3 and sh4 without additional patches
