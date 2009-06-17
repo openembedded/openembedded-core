@@ -3,7 +3,7 @@ SDK-GMAE = " \
     dbus-glib-dev \
     gtk+-dev \
     gstreamer-dev \
-    bluez-libs-dev \
+    bluez4-dev \
     gconf-dbus-dev \
     avahi-dev \
     telepathy-glib-dev \
