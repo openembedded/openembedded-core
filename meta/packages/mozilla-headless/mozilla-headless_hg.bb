@@ -5,10 +5,11 @@ SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=${FIXEDREV};module=of
            file://configurefix.patch;patch=1 \
            file://0001-Adds-initial-Gtk-clipboard-support-to-moz-headless.patch;patch=1 \
            file://mozilla-jemalloc.patch;patch=1 \
+           file://removebadrpath.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
 PV = "0.0+hg-1.0+${FIXEDREV}"
-PR = "r3"
+PR = "r5"
 
 S = "${WORKDIR}/offscreen"
 
