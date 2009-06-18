@@ -12,5 +12,6 @@ inherit autotools_stage
 acpaths = "-I ${S}/build/autotools "
 
 do_configure_prepend () {
-	touch ${S}/gtk-doc.make
+    echo "EXTRA_DIST = " > ${S}/gtk-doc.make
 }
+
