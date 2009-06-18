@@ -5,10 +5,11 @@
 LICENSE="GPL"
 DESCRIPTION="A set of tools for CD recording, including cdrecord"
 HOMEPAGE="http://cdrecord.berlios.de/old/private/cdrecord.html"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="ftp://ftp.berlios.de/pub/cdrecord/cdrtools-${PV}.tar.bz2 \
-         file://no_usr_src.patch;patch=1"
+         file://no_usr_src.patch;patch=1 \
+         file://glibc-conflict-rename.patch;patch=1"
 
 inherit native
 
