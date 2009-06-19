@@ -1,0 +1,35 @@
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac	2009-06-10 15:01:55.000000000 +0100
++++ git/configure.ac	2009-06-10 15:19:36.000000000 +0100
+@@ -36,6 +36,13 @@
+ MOZIDLDIR=`${PKG_CONFIG} --variable=idldir libxul-unstable`"/unstable"
+ AC_SUBST([MOZIDLDIR])
+ 
++IDLPREFIX=
++AC_ARG_WITH(idl-prefix, AC_HELP_STRING([--with-idl-prefix=DIR],[prefix to add to access to the idl files]), with_idl_prefix=${withval})
++if test x"${with_idl_prefix}" != x ; then
++    IDLPREFIX=${with_idl_prefix}
++fi
++AC_SUBST([IDLPREFIX])
++
+ AC_PATH_PROG(DBUSBINDINGTOOL, dbus-binding-tool)
+ 
+ AC_OUTPUT([
+Index: git/libmwbpages/Makefile.am
+===================================================================
+--- git.orig/libmwbpages/Makefile.am	2009-06-10 15:01:55.000000000 +0100
++++ git/libmwbpages/Makefile.am	2009-06-10 15:20:12.000000000 +0100
+@@ -23,10 +23,10 @@
+ mwb-start-page.lo : MwbIStartPage.h
+ 
+ MwbIStartPage.h : MwbIStartPage.idl
+-	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m header $<
++	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m header $<
+ 
+ MwbIStartPage.xpt : MwbIStartPage.idl
+-	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m typelib $<
++	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m typelib $<
+ 
+ xpt_DATA = MwbIStartPage.xpt
+ xptdir = $(MOZHOME)/components

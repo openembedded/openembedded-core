@@ -1,0 +1,51 @@
+Index: git/src/mnb-drop-down.c
+===================================================================
+--- git.orig/src/mnb-drop-down.c	2009-06-09 16:38:46.000000000 +0100
++++ git/src/mnb-drop-down.c	2009-06-09 16:41:21.000000000 +0100
+@@ -68,6 +68,37 @@
+   gboolean hide_toolbar      : 1;
+ };
+ 
++
++#include <dbus/dbus.h>
++
++static gboolean
++emit_loaded_signal (gpointer user_data)
++{
++  DBusError error = DBUS_ERROR_INIT;
++  DBusConnection *conn;
++  DBusMessage *msg;
++
++  conn = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
++  if (!conn) {
++    g_printerr ("Cannot connect to system bus: %s", error.message);
++    dbus_error_free (&error);
++    return FALSE;
++  }
++
++  msg = dbus_message_new_signal ("/", "org.matchbox_project.desktop", "Loaded");
++
++  dbus_connection_send (conn, msg, NULL);
++  dbus_message_unref (msg);
++
++  /* Flush explicitly because we're too lazy to integrate DBus into the main
++     loop. We're only sending a signal, so if we got as far as here it's
++     unlikely to block. */
++  dbus_connection_flush (conn);
++  dbus_connection_unref (conn);
++
++  return FALSE;
++}
++
+ static void
+ mnb_drop_down_get_property (GObject *object, guint property_id,
+                             GValue *value, GParamSpec *pspec)
+@@ -137,6 +168,8 @@
+ 
+   g_signal_emit (actor, dropdown_signals[SHOW_COMPLETED], 0);
+   g_object_unref (actor);
++
++  g_idle_add (emit_loaded_signal, NULL);
+ }
+ 
+ static void
