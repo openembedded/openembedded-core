@@ -489,6 +489,18 @@ python patch_do_patch() {
 				bb.note("Patch '%s' applies to earlier revisions" % pname)
 				continue
 
+		if "rev" in parm:
+			srcrev = bb.data.getVar('SRCREV', d, 1)		
+			if srcrev and parm["rev"] not in srcrev:
+				bb.note("Patch '%s' doesn't apply to revision" % pname)
+				continue
+
+		if "notrev" in parm:
+			srcrev = bb.data.getVar('SRCREV', d, 1)		
+			if srcrev and parm["notrev"] in srcrev:
+				bb.note("Patch '%s' doesn't apply to revision" % pname)
+				continue
+
 		bb.note("Applying patch '%s'" % pname)
 		try:
 			patchset.Import({"file":unpacked, "remote":url, "strippath": pnum}, True)
