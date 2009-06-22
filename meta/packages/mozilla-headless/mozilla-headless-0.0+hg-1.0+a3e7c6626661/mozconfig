@@ -1,0 +1,23 @@
+# this line sets the directory for all build output
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-headless-release
+
+# comment out the previous line and uncomment these two for a debug build
+#mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-headless-debug
+#ac_add_options --disable-optimize --enable-debug
+
+# this is the line that enables the headless implementation
+ac_add_options --enable-default-toolkit=cairo-headless
+
+# comment out the previous line and uncomment these two for a GTK build
+#ac_add_options --enable-system-cairo
+#ac_add_options --enable-default-toolkit=cairo-gtk2
+
+ac_add_options --disable-tests
+ac_add_options --disable-javaxpcom
+ac_add_options --enable-application=xulrunner
+ac_add_options --enable-pango
+ac_add_options --disable-printing
+ac_add_options --disable-crashreporter
+ac_add_options --enable-plugins
+ac_add_options --disable-accessibility
+mk_add_options MOZ_CO_PROJECT=xulrunner

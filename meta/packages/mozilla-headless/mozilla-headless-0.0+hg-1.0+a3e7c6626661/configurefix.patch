@@ -1,0 +1,775 @@
+Index: offscreen/configure.in
+===================================================================
+--- offscreen.orig/configure.in	2009-04-16 22:51:48.000000000 +0100
++++ offscreen/configure.in	2009-04-16 23:07:48.000000000 +0100
+@@ -62,7 +62,6 @@
+ 
+ AC_PREREQ(2.13)
+ AC_INIT(config/config.mk)
+-AC_CONFIG_AUX_DIR(${srcdir}/build/autoconf)
+ AC_CANONICAL_SYSTEM
+ TARGET_CPU="${target_cpu}"
+ TARGET_VENDOR="${target_vendor}"
+@@ -103,7 +102,6 @@
+ _SUBDIR_HOST_CFLAGS="$HOST_CFLAGS"
+ _SUBDIR_HOST_CXXFLAGS="$HOST_CXXFLAGS"
+ _SUBDIR_HOST_LDFLAGS="$HOST_LDFLAGS"
+-_SUBDIR_CONFIG_ARGS="$ac_configure_args"
+ 
+ dnl Set the version number of the libs included with mozilla
+ dnl ========================================================
+@@ -136,6 +134,9 @@
+ 
+ MSMANIFEST_TOOL=
+ 
++ac_cv_have_usable_wchar_v2=no
++ac_cv_have_usable_wchar_option_v2=no
++
+ dnl Set various checks
+ dnl ========================================================
+ MISSING_X=
+@@ -281,7 +282,7 @@
+     ;;
+ esac
+ 
+-if test -n "$CROSS_COMPILE" && test "$target" != "$host"; then
++
+     echo "cross compiling from $host to $target"
+     cross_compiling=yes
+ 
+@@ -319,7 +320,7 @@
+ 
+     AC_MSG_CHECKING([whether the host c compiler ($HOST_CC $HOST_CFLAGS $HOST_LDFLAGS) works])
+     AC_TRY_COMPILE([], [return(0);], 
+-	[ac_cv_prog_hostcc_works=1 AC_MSG_RESULT([yes])],
++	[ac_cv_prog_hostcc_works=1; AC_MSG_RESULT([yes])],
+ 	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CC cannot create executables.]) )
+ 
+     CC="$HOST_CXX"
+@@ -327,7 +328,7 @@
+ 
+     AC_MSG_CHECKING([whether the host c++ compiler ($HOST_CXX $HOST_CXXFLAGS $HOST_LDFLAGS) works])
+     AC_TRY_COMPILE([], [return(0);], 
+-	[ac_cv_prog_hostcxx_works=1 AC_MSG_RESULT([yes])],
++	[ac_cv_prog_hostcxx_works=1; AC_MSG_RESULT([yes])],
+ 	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CXX cannot create executables.]) )
+     
+     CC=$_SAVE_CC
+@@ -348,7 +349,7 @@
+         ;;
+     esac
+ 
+-    AC_CHECK_PROGS(CC, $CC "${target_alias}-gcc" "${target}-gcc", :)
++    CC="${target_alias}-gcc"
+     unset ac_cv_prog_CC
+     AC_PROG_CC
+     AC_CHECK_PROGS(CXX, $CXX "${target_alias}-g++" "${target}-g++", :)
+@@ -372,37 +373,6 @@
+     AC_CHECK_PROGS(STRIP, $STRIP "${target_alias}-strip" "${target}-strip", :)
+     AC_CHECK_PROGS(WINDRES, $WINDRES "${target_alias}-windres" "${target}-windres", :)
+     AC_DEFINE(CROSS_COMPILE)
+-else
+-    AC_PROG_CC
+-    AC_PROG_CXX
+-    AC_PROG_RANLIB
+-    MOZ_PATH_PROGS(AS, $AS as, $CC)
+-    AC_CHECK_PROGS(AR, ar, :)
+-    AC_CHECK_PROGS(LD, ld, :)
+-    AC_CHECK_PROGS(STRIP, strip, :)
+-    AC_CHECK_PROGS(WINDRES, windres, :)
+-    if test -z "$HOST_CC"; then
+-        HOST_CC="$CC"
+-    fi
+-    if test -z "$HOST_CFLAGS"; then
+-        HOST_CFLAGS="$CFLAGS"
+-    fi
+-    if test -z "$HOST_CXX"; then
+-        HOST_CXX="$CXX"
+-    fi
+-    if test -z "$HOST_CXXFLAGS"; then
+-        HOST_CXXFLAGS="$CXXFLAGS"
+-    fi
+-    if test -z "$HOST_LDFLAGS"; then
+-        HOST_LDFLAGS="$LDFLAGS"
+-    fi
+-    if test -z "$HOST_RANLIB"; then
+-        HOST_RANLIB="$RANLIB"
+-    fi
+-    if test -z "$HOST_AR"; then
+-       HOST_AR="$AR"
+-    fi
+-fi
+ 
+ GNU_AS=
+ GNU_LD=
+@@ -1569,6 +1539,7 @@
+ '
+ 
+ dnl test that the macros actually work:
++ac_cv_static_assertion_macros_work="yes"
+ AC_MSG_CHECKING(that static assertion macros used in autoconf tests work)
+ AC_CACHE_VAL(ac_cv_static_assertion_macros_work,
+  [AC_LANG_SAVE
+@@ -2730,9 +2701,13 @@
+ AC_LANG_C
+ AC_HEADER_STDC
+ AC_C_CONST
++ac_cv_type_mode_t=yes
+ AC_TYPE_MODE_T
++ac_cv_type_off_t=yes
+ AC_TYPE_OFF_T
++ac_cv_type_pid_t=yes
+ AC_TYPE_PID_T
++ac_cv_type_size_t=yes
+ AC_TYPE_SIZE_T
+ AC_STRUCT_ST_BLKSIZE
+ AC_MSG_CHECKING(for siginfo_t)
+@@ -3115,19 +3090,9 @@
+ dnl We don't want to link against libm or libpthread on Darwin since
+ dnl they both are just symlinks to libSystem and explicitly linking
+ dnl against libSystem causes issues when debugging (see bug 299601).
+-case $target in
+-*-darwin*)
+-    ;;
+-*-beos*)
+-    ;;
+-*)
+     AC_CHECK_LIB(m, atan)
+     AC_CHECK_LIB(dl, dlopen,
+-    AC_CHECK_HEADER(dlfcn.h, 
+-        LIBS="-ldl $LIBS"
+-        AC_DEFINE(HAVE_LIBDL)))
+-    ;;
+-esac
++        AC_DEFINE(HAVE_LIBDL))
+ 
+ _SAVE_CFLAGS="$CFLAGS"
+ CFLAGS="$CFLAGS -D_GNU_SOURCE"
+@@ -6931,18 +6896,13 @@
+ 
+ # Demangle only for debug or trace-malloc builds
+ MOZ_DEMANGLE_SYMBOLS=
+-if test "$HAVE_DEMANGLE" -a "$HAVE_GCC3_ABI" && test "$MOZ_DEBUG" -o "$NS_TRACE_MALLOC"; then
+-    MOZ_DEMANGLE_SYMBOLS=1
+-    AC_DEFINE(MOZ_DEMANGLE_SYMBOLS)
+-fi
++
+ AC_SUBST(MOZ_DEMANGLE_SYMBOLS)
+ 
+ dnl ========================================================
+ dnl = Support for gcc stack unwinding (from gcc 3.3)
+ dnl ========================================================
+-if test "$HAVE_GCC3_ABI" && test -z "$SKIP_LIBRARY_CHECKS"; then
+-    AC_CHECK_HEADER(unwind.h, AC_CHECK_FUNCS(_Unwind_Backtrace))
+-fi
++
+ 
+ dnl ========================================================
+ dnl =
+@@ -7454,10 +7414,7 @@
+     dnl if no gtk/libIDL1 or gtk2/libIDL2 combination was found, fall back
+     dnl to either libIDL1 or libIDL2.
+     if test -z "$_LIBIDL_FOUND"; then
+-        AM_PATH_LIBIDL($LIBIDL_VERSION,_LIBIDL_FOUND=1)
+-        if test -z "$_LIBIDL_FOUND"; then
+             PKG_CHECK_MODULES(LIBIDL, libIDL-2.0 >= 0.8.0,_LIBIDL_FOUND=1)
+-        fi
+     fi
+     dnl
+     dnl If we don't have a libIDL config program & not cross-compiling, 
+@@ -7529,13 +7486,7 @@
+ fi
+ 
+ if test -z "$SKIP_PATH_CHECKS"; then
+-if test -z "${GLIB_CFLAGS}" || test -z "${GLIB_LIBS}" ; then
+-    if test "$MOZ_ENABLE_GTK2" || test "$USE_ELF_DYNSTR_GC" || test "$MOZ_ENABLE_HEADLESS"; then
+         PKG_CHECK_MODULES(GLIB, glib-2.0 >= 1.3.7 gobject-2.0)
+-    else
+-        AM_PATH_GLIB(${GLIB_VERSION})
+-    fi
+-fi
+ fi
+ 
+ if test -z "${GLIB_GMODULE_LIBS}" -a -n "${GLIB_CONFIG}"; then
+@@ -8346,10 +8297,7 @@
+ HAVE_WCRTOMB
+ "
+ 
+-AC_CONFIG_HEADER(
+-netwerk/necko-config.h
+-xpcom/xpcom-config.h
+-xpcom/xpcom-private.h
++AC_CONFIG_HEADER(netwerk/necko-config.h xpcom/xpcom-config.h xpcom/xpcom-private.h
+ )
+ 
+ # Save the defines header file before autoconf removes it.
+@@ -8408,31 +8356,11 @@
+ dnl   To add new Makefiles, edit allmakefiles.sh.
+ dnl   allmakefiles.sh sets the variable, MAKEFILES.
+ . ${srcdir}/allmakefiles.sh
+-dnl 
+-dnl Run a perl script to quickly create the makefiles.
+-dnl If it succeeds, it outputs a shell command to set CONFIG_FILES
+-dnl   for the files it cannot handle correctly. This way, config.status
+-dnl   will handle these files.
+-dnl If it fails, nothing is set and config.status will run as usual.
+-dnl
+-dnl This does not change the $MAKEFILES variable.
+-dnl
+-dnl OpenVMS gets a line overflow on the long eval command, so use a temp file.
+-dnl
+-if test -z "${AS_PERL}"; then
+-echo $MAKEFILES | ${PERL} $srcdir/build/autoconf/acoutput-fast.pl > conftest.sh
+-else
+-echo $MAKEFILES | ${PERL} $srcdir/build/autoconf/acoutput-fast.pl -nowrap --cygwin-srcdir=$srcdir > conftest.sh
+-fi
+-. ./conftest.sh
+-rm conftest.sh
+ 
+ echo $MAKEFILES > unallmakefiles
+ 
+ mv -f config/autoconf.mk config/autoconf.mk.orig 2> /dev/null
+ 
+-AC_OUTPUT($MAKEFILES)
+-
+ dnl Prevent the regeneration of cairo-features.h forcing rebuilds of gfx stuff
+ if test "$CAIRO_FEATURES_H"; then
+   if cmp -s $CAIRO_FEATURES_H "$CAIRO_FEATURES_H".orig; then
+@@ -8458,14 +8386,14 @@
+ HOST_LDFLAGS="$_SUBDIR_HOST_LDFLAGS"
+ RC=
+ 
+-unset MAKEFILES
+-unset CONFIG_FILES
++#unset MAKEFILES
++#unset CONFIG_FILES
+ 
+ # No need to run subconfigures when building with LIBXUL_SDK_DIR
+ if test "$COMPILE_ENVIRONMENT" -a -z "$LIBXUL_SDK_DIR"; then
+ 
+ if test -z "$MOZ_NATIVE_NSPR"; then
+-    ac_configure_args="$_SUBDIR_CONFIG_ARGS --with-dist-prefix=$MOZ_BUILD_ROOT/dist --with-mozilla"
++    ac_configure_args="$ac_configure_args --with-dist-prefix=$MOZ_BUILD_ROOT/dist --with-mozilla"
+     if test -z "$MOZ_DEBUG"; then
+         ac_configure_args="$ac_configure_args --disable-debug"
+     fi
+@@ -8481,8 +8409,7 @@
+     if test -n "$USE_ARM_KUSER"; then
+         ac_configure_args="$ac_configure_args --with-arm-kuser"
+     fi
+-    AC_OUTPUT_SUBDIRS(nsprpub)
+-    ac_configure_args="$_SUBDIR_CONFIG_ARGS"
++    AC_CONFIG_SUBDIRS(nsprpub)
+ fi
+ 
+ if test -z "$MOZ_NATIVE_NSPR"; then
+@@ -8499,7 +8426,6 @@
+ 
+ # Run the SpiderMonkey 'configure' script.
+ dist=$MOZ_BUILD_ROOT/dist
+-ac_configure_args="$_SUBDIR_CONFIG_ARGS"
+ ac_configure_args="$ac_configure_args --enable-threadsafe"
+ if test -z "$MOZ_NATIVE_NSPR"; then
+     ac_configure_args="$ac_configure_args --with-nspr-cflags='$NSPR_CFLAGS'"
+@@ -8513,11 +8439,14 @@
+ if test "$MOZ_MEMORY"; then
+    ac_configure_args="$ac_configure_args --enable-jemalloc"  
+ fi
+-AC_OUTPUT_SUBDIRS(js/src)
+-ac_configure_args="$_SUBDIR_CONFIG_ARGS"
++AC_CONFIG_SUBDIRS(js/src)
+ 
+ fi # COMPILE_ENVIRONMENT && !LIBXUL_SDK_DIR
+ 
++m4_pattern_allow(AS_BIN)
++
++AC_OUTPUT($MAKEFILES)
++
+ dnl Prevent the regeneration of autoconf.mk forcing rebuilds of the world
+ dnl Needs to be at the end to respect possible changes from NSPR configure
+ if cmp -s config/autoconf.mk config/autoconf.mk.orig; then
+Index: offscreen/js/src/configure.in
+===================================================================
+--- offscreen.orig/js/src/configure.in	2009-04-16 22:51:49.000000000 +0100
++++ offscreen/js/src/configure.in	2009-04-16 23:06:42.000000000 +0100
+@@ -62,7 +62,6 @@
+ 
+ AC_PREREQ(2.13)
+ AC_INIT(jsapi.h)
+-AC_CONFIG_AUX_DIR(${srcdir}/build/autoconf)
+ AC_CONFIG_HEADER(js-config.h)
+ AC_CANONICAL_SYSTEM
+ TARGET_CPU="${target_cpu}"
+@@ -101,6 +100,9 @@
+ _SUBDIR_HOST_LDFLAGS="$HOST_LDFLAGS"
+ _SUBDIR_CONFIG_ARGS="$ac_configure_args"
+ 
++ac_cv_have_usable_wchar_v2=no
++ac_cv_have_usable_wchar_option_v2=no
++
+ dnl Set the version number of the libs included with mozilla
+ dnl ========================================================
+ NSPR_VERSION=4
+@@ -114,6 +116,8 @@
+ 
+ MSMANIFEST_TOOL=
+ 
++m4_pattern_allow(AS_BIN)
++
+ dnl Set various checks
+ dnl ========================================================
+ MISSING_X=
+@@ -200,7 +204,7 @@
+ 
+ if test "$COMPILE_ENVIRONMENT"; then
+ 
+-if test "$target" != "$host"; then
++
+     echo "cross compiling from $host to $target"
+ 
+     _SAVE_CC="$CC"
+@@ -237,7 +241,7 @@
+ 
+     AC_MSG_CHECKING([whether the host c compiler ($HOST_CC $HOST_CFLAGS $HOST_LDFLAGS) works])
+     AC_TRY_COMPILE([], [return(0);], 
+-	[ac_cv_prog_hostcc_works=1 AC_MSG_RESULT([yes])],
++	[ac_cv_prog_hostcc_works=1; AC_MSG_RESULT([yes])],
+ 	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CC cannot create executables.]) )
+ 
+     CC="$HOST_CXX"
+@@ -245,7 +249,7 @@
+ 
+     AC_MSG_CHECKING([whether the host c++ compiler ($HOST_CXX $HOST_CXXFLAGS $HOST_LDFLAGS) works])
+     AC_TRY_COMPILE([], [return(0);], 
+-	[ac_cv_prog_hostcxx_works=1 AC_MSG_RESULT([yes])],
++	[ac_cv_prog_hostcxx_works=1; AC_MSG_RESULT([yes])],
+ 	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CXX cannot create executables.]) )
+     
+     CC=$_SAVE_CC
+@@ -266,7 +270,7 @@
+         ;;
+     esac
+ 
+-    AC_CHECK_PROGS(CC, $CC "${target_alias}-gcc" "${target}-gcc", :)
++    CC="${target_alias}-gcc"
+     unset ac_cv_prog_CC
+     AC_PROG_CC
+     AC_CHECK_PROGS(CXX, $CXX "${target_alias}-g++" "${target}-g++", :)
+@@ -296,37 +300,6 @@
+     dnl able to run ppc code in a translated environment, making a cross
+     dnl compiler appear native.  So we override that here.
+     cross_compiling=yes
+-else
+-    AC_PROG_CC
+-    AC_PROG_CXX
+-    AC_PROG_RANLIB
+-    MOZ_PATH_PROGS(AS, $AS as, $CC)
+-    AC_CHECK_PROGS(AR, ar, :)
+-    AC_CHECK_PROGS(LD, ld, :)
+-    AC_CHECK_PROGS(STRIP, strip, :)
+-    AC_CHECK_PROGS(WINDRES, windres, :)
+-    if test -z "$HOST_CC"; then
+-        HOST_CC="$CC"
+-    fi
+-    if test -z "$HOST_CFLAGS"; then
+-        HOST_CFLAGS="$CFLAGS"
+-    fi
+-    if test -z "$HOST_CXX"; then
+-        HOST_CXX="$CXX"
+-    fi
+-    if test -z "$HOST_CXXFLAGS"; then
+-        HOST_CXXFLAGS="$CXXFLAGS"
+-    fi
+-    if test -z "$HOST_LDFLAGS"; then
+-        HOST_LDFLAGS="$LDFLAGS"
+-    fi
+-    if test -z "$HOST_RANLIB"; then
+-        HOST_RANLIB="$RANLIB"
+-    fi
+-    if test -z "$HOST_AR"; then
+-       HOST_AR="$AR"
+-    fi
+-fi
+ 
+ GNU_AS=
+ GNU_LD=
+@@ -1435,6 +1408,8 @@
+ fi # GNU_CC
+ fi # COMPILE_ENVIRONMENT
+ 
++ac_cv_static_assertion_macros_work=yes
++
+ dnl =================================================================
+ dnl Set up and test static assertion macros used to avoid AC_TRY_RUN,
+ dnl which is bad when cross compiling.
+@@ -2565,9 +2540,13 @@
+ AC_LANG_C
+ AC_HEADER_STDC
+ AC_C_CONST
++ac_cv_type_mode_t=yes
+ AC_TYPE_MODE_T
++ac_cv_type_off_t=yes
+ AC_TYPE_OFF_T
++ac_cv_type_pid_t=yes
+ AC_TYPE_PID_T
++ac_cv_type_size_t=yes
+ AC_TYPE_SIZE_T
+ AC_STRUCT_ST_BLKSIZE
+ AC_MSG_CHECKING(for siginfo_t)
+@@ -2592,7 +2571,8 @@
+ 
+ AC_CHECK_HEADER(stdint.h)
+ if test "$ac_cv_header_stdint_h" = yes; then
+-    AC_DEFINE(JS_HAVE_STDINT_H)
++    AC_DEFINE(JS_HAVE_STDINT_H, 1, [have stdint.h])
++    AC_DEFINE(HAVE_STDINT_H)
+ else
+     dnl We'll figure them out for ourselves.  List more likely types
+     dnl earlier.  If we ever really encounter a size for which none of
+@@ -2990,10 +2970,7 @@
+     ;;
+ *)
+     AC_CHECK_LIB(m, atan)
+-    AC_CHECK_LIB(dl, dlopen,
+-    AC_CHECK_HEADER(dlfcn.h, 
+-        LIBS="-ldl $LIBS"
+-        AC_DEFINE(HAVE_LIBDL)))
++    AC_CHECK_LIB(dl, dlopen, AC_DEFINE(HAVE_LIBDL))
+     ;;
+ esac
+ 
+@@ -3908,6 +3885,7 @@
+ [  --with-nspr-libs=LIBS   Pass LIBS to LD when linking code that uses NSPR.
+                           See --with-nspr-cflags for more details.],
+     NSPR_LIBS=$withval)
++$NSPR_LIBS="$NSPR_LIBS -L$(LIBXUL_DIST)/sdk/lib"
+ AC_SUBST(NSPR_CFLAGS)
+ AC_SUBST(NSPR_LIBS)
+ 
+@@ -4542,18 +4520,11 @@
+ 
+ # Demangle only for debug or trace-malloc builds
+ MOZ_DEMANGLE_SYMBOLS=
+-if test "$HAVE_DEMANGLE" -a "$HAVE_GCC3_ABI" && test "$MOZ_DEBUG" -o "$NS_TRACE_MALLOC"; then
+-    MOZ_DEMANGLE_SYMBOLS=1
+-    AC_DEFINE(MOZ_DEMANGLE_SYMBOLS)
+-fi
+ AC_SUBST(MOZ_DEMANGLE_SYMBOLS)
+ 
+ dnl ========================================================
+ dnl = Support for gcc stack unwinding (from gcc 3.3)
+ dnl ========================================================
+-if test "$HAVE_GCC3_ABI" && test -z "$SKIP_LIBRARY_CHECKS"; then
+-    AC_CHECK_HEADER(unwind.h, AC_CHECK_FUNCS(_Unwind_Backtrace))
+-fi
+ 
+ dnl ========================================================
+ dnl =
+@@ -5256,6 +5227,8 @@
+ done
+ AC_SUBST(LIBS_PATH)
+ 
++
++
+ dnl ========================================================
+ dnl JavaScript shell
+ dnl ========================================================
+@@ -5396,3 +5369,4 @@
+ # 'js-config' in Makefile.in.
+ AC_MSG_RESULT(invoking make to create js-config script)
+ $MAKE js-config
++
+Index: offscreen/nsprpub/configure.in
+===================================================================
+--- offscreen.orig/nsprpub/configure.in	2009-04-16 18:09:00.000000000 +0100
++++ offscreen/nsprpub/configure.in	2009-04-16 23:06:42.000000000 +0100
+@@ -42,7 +42,6 @@
+ AC_PREREQ(2.12)
+ AC_INIT(config/libc_r.h)
+ 
+-AC_CONFIG_AUX_DIR(${srcdir}/build/autoconf)
+ AC_CANONICAL_SYSTEM
+ 
+ dnl ========================================================
+@@ -400,7 +399,7 @@
+ dnl ========================================================
+ dnl Checks for compilers.
+ dnl ========================================================
+-if test "$target" != "$host"; then
++
+     echo "cross compiling from $host to $target"
+     cross_compiling=yes
+ 
+@@ -427,7 +426,7 @@
+ 
+     AC_MSG_CHECKING([whether the $host compiler ($HOST_CC $HOST_CFLAGS $HOST_LDFLAGS) works])
+     AC_TRY_COMPILE([], [return(0);], 
+-        [ac_cv_prog_host_cc_works=1 AC_MSG_RESULT([yes])],
++        [ac_cv_prog_host_cc_works=1; AC_MSG_RESULT([yes])],
+         AC_MSG_ERROR([installation or configuration problem: $host compiler $HOST_CC cannot create executables.]) )
+ 
+     CC=$_SAVE_CC
+@@ -448,7 +447,7 @@
+         ;;        
+     esac            
+ 
+-    AC_CHECK_PROGS(CC, $CC "${target_alias}-gcc" "${target}-gcc", echo)
++    CC="${target_alias}-gcc"
+     unset ac_cv_prog_CC
+     AC_PROG_CC
+     if test -n "$USE_CPLUS"; then
+@@ -474,30 +473,6 @@
+     AC_CHECK_PROGS(STRIP, $STRIP "${target_alias}-strip" "${target}-strip", echo)
+     AC_CHECK_PROGS(WINDRES, $WINDRES "${target_alias}-windres" "${target}-windres", echo)
+ 
+-else
+-    AC_PROG_CC
+-    if test -n "$USE_CPLUS"; then
+-        if test "$CC" = "cl" -a -z "$CXX"; then
+-            CXX=$CC
+-        else        
+-            AC_PROG_CXX
+-        fi
+-    fi
+-    AC_PROG_CPP
+-    AC_PROG_RANLIB
+-    AC_PATH_PROGS(AS, as, $CC)
+-    AC_PATH_PROGS(AR, ar, echo not_ar)
+-    AC_PATH_PROGS(LD, ld link, echo not_ld)
+-    AC_PATH_PROGS(STRIP, strip, echo not_strip)
+-    AC_PATH_PROGS(WINDRES, windres, echo not_windres)
+-    if test -z "$HOST_CC"; then
+-        HOST_CC="$CC"
+-    fi
+-    if test -z "$HOST_CFLAGS"; then
+-        HOST_CFLAGS="$CFLAGS"
+-    fi
+-fi
+-
+ if test "$GCC" = "yes"; then
+     GNU_CC=1
+ fi
+@@ -518,11 +493,8 @@
+         ;;
+ esac
+ 
+-if test "$cross_compiling"  = "yes"; then
++
+     CROSS_COMPILE=1
+-else
+-    CROSS_COMPILE=
+-fi
+ 
+ dnl ========================================================
+ dnl Check for gcc -pipe support
+@@ -2249,10 +2221,7 @@
+ *-darwin*|*-beos*)
+     ;;
+ *)
+-    AC_CHECK_LIB(dl, dlopen,
+-        AC_CHECK_HEADER(dlfcn.h,
+-            OS_LIBS="-ldl $OS_LIBS"))
+-    ;;
++    AC_CHECK_LIB(dl, dlopen)
+ esac
+ 
+ 
+@@ -2869,6 +2838,8 @@
+ dnl pr/tests/w16gui/Makefile
+ dnl tools/Makefile
+ 
++m4_pattern_allow(AS_BIN)
++
+ if test -z "$USE_PTHREADS" && test -z "$USE_BTHREADS"; then
+     MAKEFILES="$MAKEFILES pr/src/threads/combined/Makefile"
+ elif test -n "$USE_PTHREADS"; then
+@@ -2884,3 +2855,5 @@
+ echo $MAKEFILES > unallmakefiles
+ 
+ AC_OUTPUT([$MAKEFILES], [chmod +x config/nspr-config])
++
++
+Index: offscreen/toolkit/toolkit-makefiles.sh
+===================================================================
+--- offscreen.orig/toolkit/toolkit-makefiles.sh	2009-04-16 22:51:50.000000000 +0100
++++ offscreen/toolkit/toolkit-makefiles.sh	2009-04-16 23:06:42.000000000 +0100
+@@ -628,7 +628,6 @@
+   toolkit/crashreporter/client/Makefile
+   toolkit/crashreporter/google-breakpad/src/client/Makefile
+   toolkit/crashreporter/google-breakpad/src/client/mac/handler/Makefile
+-  toolkit/crashreporter/google-breakpad/src/client/windows/Makefile
+   toolkit/crashreporter/google-breakpad/src/client/windows/handler/Makefile
+   toolkit/crashreporter/google-breakpad/src/client/windows/sender/Makefile
+   toolkit/crashreporter/google-breakpad/src/common/Makefile
+Index: offscreen/js/src/Makefile.in
+===================================================================
+--- offscreen.orig/js/src/Makefile.in	2009-04-16 18:07:56.000000000 +0100
++++ offscreen/js/src/Makefile.in	2009-04-16 23:06:42.000000000 +0100
+@@ -507,20 +507,8 @@
+ 
+ export:: jsautocfg.h
+ 
+-ifeq (,$(CROSS_COMPILE)$(GNU_CC)$(filter-out WINNT,$(OS_ARCH)))
+ jsautocfg.h:
+ 	touch $@
+-else
+-ifeq ($(OS_ARCH),WINCE)
+-jsautocfg.h:
+-	touch $@
+-else
+-jsautocfg.h: jscpucfg$(HOST_BIN_SUFFIX)
+-	@rm -f $@ jsautocfg.tmp
+-	./jscpucfg > jsautocfg.tmp
+-	mv jsautocfg.tmp $@
+-endif
+-endif
+ 
+ # jscpucfg is a strange target
+ # Needs to be built with the host compiler but needs to include
+@@ -550,7 +538,7 @@
+ 	echo no need to build jscpucfg $<
+ else
+ jscpucfg$(HOST_BIN_SUFFIX): jscpucfg.cpp Makefile.in
+-	$(HOST_CXX) $(HOST_CXXFLAGS) $(JSCPUCFG_DEFINES) $(DEFINES) $(NSPR_CFLAGS) $(HOST_OUTOPTION)$@ $<
++	$(HOST_CXX) $(HOST_CXXFLAGS) $(JSCPUCFG_DEFINES) $(DEFINES) -I$(DIST)/sdk/include $(NSPR_CFLAGS) $(HOST_OUTOPTION)$@ $<
+ endif
+ endif
+ 
+Index: offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp
+===================================================================
+--- offscreen.orig/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-04-16 18:08:00.000000000 +0100
++++ offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-04-16 23:06:42.000000000 +0100
+@@ -47,6 +47,8 @@
+ 
+ #include <stdarg.h>
+ 
++#include "mozilla-config.h"
++
+ #include "prlog.h"
+ 
+ #include "nsCOMPtr.h"
+Index: offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp
+===================================================================
+--- offscreen.orig/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-04-16 18:08:00.000000000 +0100
++++ offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-04-16 23:06:42.000000000 +0100
+@@ -39,6 +39,8 @@
+  *
+  * ***** END LICENSE BLOCK ***** */
+ 
++#include "mozilla-config.h"
++
+ #if !defined(XPCONNECT_STANDALONE) && !defined(NO_SUBSCRIPT_LOADER)
+ 
+ #include "mozJSSubScriptLoader.h"
+Index: offscreen/modules/lcms/include/icc34.h
+===================================================================
+--- offscreen.orig/modules/lcms/include/icc34.h	2009-04-16 18:08:47.000000000 +0100
++++ offscreen/modules/lcms/include/icc34.h	2009-04-16 23:06:42.000000000 +0100
+@@ -144,7 +144,7 @@
+  */
+ 
+ 
+-#ifdef PACKAGE_NAME
++#if 0 
+ /*
+   June 9, 2003, Adapted for use with configure by Bob Friesenhahn
+   Added the stupid check for autoconf by Marti Maria. 
+Index: offscreen/toolkit/mozapps/update/src/updater/Makefile.in
+===================================================================
+--- offscreen.orig/toolkit/mozapps/update/src/updater/Makefile.in	2009-04-16 18:09:35.000000000 +0100
++++ offscreen/toolkit/mozapps/update/src/updater/Makefile.in	2009-04-16 23:06:42.000000000 +0100
+@@ -59,7 +59,7 @@
+ 
+ LIBS += \
+ 	$(DEPTH)/modules/libmar/src/$(LIB_PREFIX)mar.$(LIB_SUFFIX) \
+-	$(BZ2_LIBS) \
++	$(BZ2_LIBS) -lpthread \
+ 	$(NULL)
+ 
+ ifeq ($(OS_ARCH),WINNT)
+Index: offscreen/xpcom/sample/program/Makefile.in
+===================================================================
+--- offscreen.orig/xpcom/sample/program/Makefile.in	2009-04-16 18:09:47.000000000 +0100
++++ offscreen/xpcom/sample/program/Makefile.in	2009-04-16 23:06:42.000000000 +0100
+@@ -57,7 +57,7 @@
+ # that the application be linked against the XPCOM dynamic library or the NSPR
+ # dynamic libraries.
+ LIBS            = \
+-		$(XPCOM_STANDALONE_GLUE_LDOPTS) \
++		$(XPCOM_STANDALONE_GLUE_LDOPTS) -ldl \
+ 		$(NULL)
+ 
+ # Need to link with CoreFoundation on Mac
+Index: offscreen/xpcom/tools/registry/Makefile.in
+===================================================================
+--- offscreen.orig/xpcom/tools/registry/Makefile.in	2009-04-16 18:09:48.000000000 +0100
++++ offscreen/xpcom/tools/registry/Makefile.in	2009-04-16 23:06:42.000000000 +0100
+@@ -54,7 +54,7 @@
+ SIMPLE_PROGRAMS	= $(CPPSRCS:.cpp=$(BIN_SUFFIX))
+ 
+ LIBS            = \
+-		$(XPCOM_STANDALONE_GLUE_LDOPTS) \
++		$(XPCOM_STANDALONE_GLUE_LDOPTS) -ldl \
+ 		$(NULL)
+ 
+ # Need to link with CoreFoundation on Mac
+Index: offscreen/xulrunner/app/Makefile.in
+===================================================================
+--- offscreen.orig/xulrunner/app/Makefile.in	2009-04-16 18:09:50.000000000 +0100
++++ offscreen/xulrunner/app/Makefile.in	2009-04-16 23:06:42.000000000 +0100
+@@ -180,7 +180,7 @@
+ RCFLAGS += -DXULRUNNER_ICO=\"$(DIST)/branding/xulrunner.ico\" -DDOCUMENT_ICO=\"$(DIST)/branding/document.ico\"
+ endif
+ 
+-LIBS += $(JEMALLOC_LIBS)
++LIBS += $(JEMALLOC_LIBS) -lpthread -ldl
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
+Index: offscreen/xulrunner/stub/Makefile.in
+===================================================================
+--- offscreen.orig/xulrunner/stub/Makefile.in	2009-04-16 18:09:50.000000000 +0100
++++ offscreen/xulrunner/stub/Makefile.in	2009-04-16 23:06:42.000000000 +0100
+@@ -101,7 +101,7 @@
+ endif
+ endif
+ 
+-LIBS += $(JEMALLOC_LIBS)
++LIBS += $(JEMALLOC_LIBS) -lpthread -ldl
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
+Index: offscreen/modules/plugin/test/testplugin/Makefile.in
+===================================================================
+--- offscreen.orig/modules/plugin/test/testplugin/Makefile.in	2009-04-16 18:08:56.000000000 +0100
++++ offscreen/modules/plugin/test/testplugin/Makefile.in	2009-04-16 23:06:42.000000000 +0100
+@@ -63,9 +63,7 @@
+ CMMSRCS = nptest_macosx.mm
+ endif
+ 
+-ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
+ CPPSRCS += nptest_gtk2.cpp
+-endif
+ 
+ ifeq ($(MOZ_WIDGET_TOOLKIT),qt)
+ CPPSRCS += nptest_qt.cpp
+Index: offscreen/xulrunner/installer/libxul-unstable.pc.in
+===================================================================
+--- offscreen.orig/xulrunner/installer/libxul-unstable.pc.in	2009-04-16 18:09:50.000000000 +0100
++++ offscreen/xulrunner/installer/libxul-unstable.pc.in	2009-04-16 23:06:42.000000000 +0100
+@@ -8,5 +8,5 @@
+ Description: The Mozilla Runtime and Embedding Engine (unstable API)
+ Version: %MOZILLA_VERSION%
+ Requires: %NSPR_NAME% >= %NSPR_VERSION%
+-Libs: -L${sdkdir}/lib -lxpcomglue_s -lxul -lxpcom
++Libs: -L${sdkdir}/lib -lxpcomglue_s -lxul -lxpcom -lsmime3 -lnss3 -lssl3 -lnssutil3 -L${sdkdir}/../xulrunner-1.9.2a1pre
+ Cflags: -I${includedir}/${includetype} %WCHAR_CFLAGS%
+Index: offscreen/js/src/aclocal.m4
+===================================================================
+--- offscreen.orig/js/src/aclocal.m4	2009-04-16 18:07:56.000000000 +0100
++++ offscreen/js/src/aclocal.m4	2009-04-16 23:06:42.000000000 +0100
+@@ -9,4 +9,3 @@
+ builtin(include, build/autoconf/moznbytetype.m4)dnl
+ builtin(include, build/autoconf/mozprog.m4)dnl
+ 
+-MOZ_PROG_CHECKMSYS()
