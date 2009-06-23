@@ -1,9 +1,9 @@
 Index: git/configure.ac
 ===================================================================
---- git.orig/configure.ac	2009-06-23 17:46:31.000000000 +0100
-+++ git/configure.ac	2009-06-23 17:46:48.000000000 +0100
-@@ -44,6 +44,13 @@
- MOZIDLDIR=`${PKG_CONFIG} --variable=idldir libxul`""
+--- git.orig/configure.ac	2009-06-10 15:01:55.000000000 +0100
++++ git/configure.ac	2009-06-10 15:19:36.000000000 +0100
+@@ -36,6 +36,13 @@
+ MOZIDLDIR=`${PKG_CONFIG} --variable=idldir libxul-unstable`"/unstable"
  AC_SUBST([MOZIDLDIR])
  
 +IDLPREFIX=
@@ -18,18 +18,18 @@ Index: git/configure.ac
  AC_OUTPUT([
 Index: git/libmwbpages/Makefile.am
 ===================================================================
---- git.orig/libmwbpages/Makefile.am	2009-06-23 17:46:31.000000000 +0100
-+++ git/libmwbpages/Makefile.am	2009-06-23 17:47:46.000000000 +0100
-@@ -27,10 +27,10 @@
- mwb-gettext.lo : MwbIGettext.h
+--- git.orig/libmwbpages/Makefile.am	2009-06-10 15:01:55.000000000 +0100
++++ git/libmwbpages/Makefile.am	2009-06-10 15:20:12.000000000 +0100
+@@ -23,10 +23,10 @@
+ mwb-start-page.lo : MwbIStartPage.h
  
- .idl.h :
+ MwbIStartPage.h : MwbIStartPage.idl
 -	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m header $<
 +	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m header $<
  
- .idl.xpt :
+ MwbIStartPage.xpt : MwbIStartPage.idl
 -	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m typelib $<
 +	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m typelib $<
  
- dist_xpt_DATA = MwbIStartPage.xpt MwbIGettext.xpt
+ xpt_DATA = MwbIStartPage.xpt
  xptdir = $(MOZHOME)/components
