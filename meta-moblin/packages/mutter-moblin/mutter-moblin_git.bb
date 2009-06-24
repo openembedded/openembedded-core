@@ -3,13 +3,17 @@ SECTION = "x11/wm"
 LICENSE = "GPLv3"
 DEPENDS = "nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed"
 PV = "2.25.2+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
            file://startup-notify.patch;patch=1 \
            file://background-tile.png"
 
-FILES_${PN} += "${libdir}/metacity/plugins/clutter/*.so*  ${datadir}/mutter-moblin-netbook-plugin"
+FILES_${PN} += "\
+	${libdir}/metacity/plugins/clutter/*.so* \
+	${datadir}/mutter-moblin-netbook-plugin \
+	${datadir}/dbus-1/services \
+	${datadir}/moblin-panel-applications/theme"
 FILES_${PN}-dbg += "${libdir}/metacity/plugins/clutter/.debug/*"
 
 S = "${WORKDIR}/git"
