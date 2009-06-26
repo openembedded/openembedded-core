@@ -5,7 +5,7 @@ DEPENDS += "virtual/libx11 libxvmc drm dri2proto glproto \
 	    virtual/libgl xineramaproto libpciaccess"
 
 PR = "r1"
-PV = "2.4.98.0+git${SRCREV}"
+PV = "2.7.1+git${SRCREV}"
 
 EXTRA_OECONF += "--disable-xvmc"
 
