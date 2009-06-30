@@ -2,7 +2,7 @@ DESCRIPTION = "Custom MB session files for poky"
 LICENSE = "GPL"
 SECTION = "x11"
 RDEPENDS = "formfactor gtk-engines initscripts matchbox-session"
-PR = "r15"
+PR = "r16"
 
 # This package is architecture specific because the session script is modified
 # based on the machine architecture.
@@ -164,6 +164,15 @@ if [ ! -d /home/pokyuser ]; then
         audiousers=$audiousers,pokyuser
     fi
     sed -i -e "s/audio:\(.*\):\(.*\):\(.*\)/audio:\1:\2:$audiousers/" /etc/group
+
+    # Add pokyuser to the video group
+    videousers=`grep ^video < /etc/group | cut -d ':' -f 4`
+    if [ "x$videousers" == "x" ]; then
+        videousers=pokyuser
+    else
+        videousers=$videousers,pokyuser
+    fi
+    sed -i -e "s/video:\(.*\):\(.*\):\(.*\)/video:\1:\2:$videousers/" /etc/group
 fi
 
 }
