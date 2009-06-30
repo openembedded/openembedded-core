@@ -12,8 +12,8 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-idl-prefix=${STAGING_DIR_TARGET}/"
 
-FILES_${PN} += "${libdir}/xulrunner-*/chrome/*"
-FILES_${PN} += "${libdir}/xulrunner-*/components/*"
-FILES_${PN}-dbg += "${libdir}/xulrunner-*/components/.debug/*"
+FILES_${PN} += "${datadir}/moblin-web-browser/chrome/* ${libdir}/xulrunner-*/chrome/*"
+FILES_${PN} += "${datadir}/moblin-web-browser/components/* ${libdir}/xulrunner-*/components/*"
+FILES_${PN}-dbg += "${datadir}/moblin-web-browser/components/.debug/* ${libdir}/xulrunner-*/components/.debug/*"
 
 inherit autotools_stage
