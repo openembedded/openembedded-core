@@ -35,5 +35,21 @@ SRCREV_pn-sample-media ?= "${AUTOREV}"
 SRCREV_pn-twitter-glib ?= "${AUTOREV}"
 SRCREV_pn-xf86-video-gma500 ?= "${AUTOREV}"
 
+#PREFERRED_VERSION_mesa-dri ?= ""
+PREFERRED_VERSION_xf86-video-intel ?= ""
+PREFERRED_VERSION_xserver-xf86-dri-lite ?= ""
+PREFERRED_VERSION_libdrm ?= ""
+PREFERRED_VERSION_xorg-input-keyboard ?= ""
+PREFERRED_VERSION_dri2proto ?= ""
+PREFERRED_VERSION_libx11-trim ?= ""
+
+SRCREV_pn-xf86-video-intel ?= "${AUTOREV}"
+SRCREV_pn-xserver-xf86-dri-lite ?= "${AUTOREV}"
+SRCREV_pn-mesa-dri ?= "${AUTOREV}"
+SRCREV_pn-libdrm ?= "${AUTOREV}"
+SRCREV_pn-xorg-input-keyboard ?= "${AUTOREV}"
+SRCREV_pn-dri2proto ?= "${AUTOREV}"
+SRCREV_pn-libx11-trim ?= "${AUTOREV}"
+
 # hg fetcher can't autoincrement (yet)
-SRCREVMOZILLAHEADLESS ?= "e4ec725547f8"
+SRCREVMOZILLAHEADLESS ?= "e4eacfa39323"
