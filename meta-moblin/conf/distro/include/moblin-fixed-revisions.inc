@@ -6,6 +6,14 @@ PREFERRED_VERSION_eds-dbus ?= "2.20.0"
 PREFERRED_VERSION_dbus ?= "1.2.14"
 PREFERRED_VERSION_dbus-native ?= "1.2.14"
 
+
+PREFERRED_VERSION_mesa-dri ?= "7.4"
+PREFERRED_VERSION_xf86-video-intel ?= "2.7.1"
+PREFERRED_VERSION_xserver-xf86-dri-lite ?= "1.6.0"
+PREFERRED_VERSION_libdrm ?= "2.4.7"
+PREFERRED_VERSION_xorg-input-keyboard ?= "1.3.2"
+PREFERRED_VERSION_dri2proto ?= "1.99.3"
+
 SRCREV_pn-anerley ?= "91b39006456bf53423ed030928780fed609afd02"
 SRCREV_pn-bickley ?= "bfcb3ec0a16d785ef8a09fffdb9a55706b94c1b7"
 SRCREV_pn-bisho ?= "2d4909d18ed564e474d280f872fc02115917e35b"
