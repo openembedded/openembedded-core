@@ -8,8 +8,6 @@ PROTO_DEPS += "xf86driproto dri2proto"
 
 RDEPENDS_${PN} += "xkeyboard-config"
 
-DEFAULT_PREFERENCE = "-1"
-
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git;branch=server-1.6-branch \
 	   file://nodolt.patch;patch=1 \
            file://libdri-xinerama-symbol.patch;patch=1 \
