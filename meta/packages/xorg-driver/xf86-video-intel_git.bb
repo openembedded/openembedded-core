@@ -9,8 +9,6 @@ PV = "2.7.1+git${SRCREV}"
 
 EXTRA_OECONF += "--disable-xvmc"
 
-DEFAULT_PREFERENCE = "-1"
-
 #TODO: Investigate the fact that these patches fail to apply to git master a.t.m
 #file://002_avoid_duplicate_SaveHWState.patch;patch=1 
 #file://004_reduce_driver_boottime.patch;patch=1
