@@ -1,9 +1,9 @@
 DESCRIPTION = "A Moblin specific plugin for the Mutter composite window manager"
 SECTION = "x11/wm"
 LICENSE = "GPLv3"
-DEPENDS = "nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed"
+DEPENDS = "nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed bickley"
 PV = "2.25.2+git${SRCPV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
            file://startup-notify.patch;patch=1 \
@@ -13,7 +13,8 @@ FILES_${PN} += "\
 	${libdir}/metacity/plugins/clutter/*.so* \
 	${datadir}/mutter-moblin-netbook-plugin \
 	${datadir}/dbus-1/services \
-	${datadir}/moblin-panel-applications/theme"
+	${datadir}/moblin-panel-applications/theme \
+	${datadir}/moblin-panel-pasteboard/theme"
 FILES_${PN}-dbg += "${libdir}/metacity/plugins/clutter/.debug/*"
 
 S = "${WORKDIR}/git"
