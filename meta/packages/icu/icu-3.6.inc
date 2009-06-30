@@ -1,7 +1,8 @@
 
 LICENSE = "ICU"
 
-SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-src.tgz"
+SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-src.tgz \
+           file://gccfix.patch;patch=1"
 
 S = "${WORKDIR}/icu/source"
 

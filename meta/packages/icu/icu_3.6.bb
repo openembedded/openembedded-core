@@ -1,7 +1,7 @@
 require icu-3.6.inc
 
 DEPENDS += "icu-native"
-PR = "r3"
+PR = "r4"
 
 FULL_OPTIMIZATION_arm = "-Os"
 
