@@ -27,6 +27,8 @@ EXTRA_OECONF += "--disable-verbose	\
 	         --without-introspection \
 		 --with-clutter"
 
+#RDEPENDS_${PN} = "zenity"
+
 FILES_${PN} += "${datadir}/themes ${libdir}/metacity/plugins/clutter/*.so"
 FILES_${PN}-dbg += "${libdir}/metacity/plugins/clutter/.debug/*"
 
