@@ -39,7 +39,7 @@ SRCREV_pn-xf86-video-gma500 ?= "${AUTOREV}"
 PREFERRED_VERSION_xf86-video-intel ?= ""
 PREFERRED_VERSION_xserver-xf86-dri-lite ?= ""
 PREFERRED_VERSION_libdrm ?= ""
-PREFERRED_VERSION_xorg-input-keyboard ?= ""
+PREFERRED_VERSION_xf86-input-keyboard ?= ""
 PREFERRED_VERSION_dri2proto ?= ""
 PREFERRED_VERSION_libx11-trim ?= ""
 
