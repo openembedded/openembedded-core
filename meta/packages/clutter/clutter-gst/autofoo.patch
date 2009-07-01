@@ -5,20 +5,20 @@
 
 Index: git/examples/Makefile.am
 ===================================================================
---- git.orig/examples/Makefile.am	2009-06-15 13:32:10.000000000 +0100
-+++ git/examples/Makefile.am	2009-06-15 13:33:44.000000000 +0100
+--- git.orig/examples/Makefile.am	2009-06-30 16:41:53.000000000 +0100
++++ git/examples/Makefile.am	2009-06-30 16:43:00.000000000 +0100
 @@ -1,6 +1,6 @@
  NULL = #
  
--noinst_PROGRAMS = video-player video-sink audio
-+bin_PROGRAMS = video-player video-sink audio
+-noinst_PROGRAMS = video-player video-sink audio-player
++bin_PROGRAMS = video-player video-sink audio-player
  
  INCLUDES = -I$(top_srcdir) \
  	   $(MAINTAINER_CFLAGS) \
 Index: git/doc/reference/Makefile.am
 ===================================================================
---- git.orig/doc/reference/Makefile.am	2009-06-15 13:32:10.000000000 +0100
-+++ git/doc/reference/Makefile.am	2009-06-15 13:32:12.000000000 +0100
+--- git.orig/doc/reference/Makefile.am	2009-06-30 16:41:53.000000000 +0100
++++ git/doc/reference/Makefile.am	2009-06-30 16:41:53.000000000 +0100
 @@ -77,4 +77,4 @@
  
  # Other files to distribute
