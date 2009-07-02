@@ -5,7 +5,7 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
-PV = "7.4+git${SRCREV}"
+PV = "7.4+git${SRCPV}"
 PR = "r3"
 
 # most of our targets do not have DRI so will use mesa-xlib
@@ -28,7 +28,7 @@ EXTRA_OECONF += "--with-driver=dri --with-state-trackers=glx"
 do_install_append () {
     install -d ${D}/usr/bin
     install -m 0755 ${S}/progs/xdemos/{glxdemo,glxgears,glxheads,glxinfo} ${D}/usr/bin/
-    rm ${D}/usr/lib/libEGL*
+    rm ${D}/usr/lib/libEGL* || /bin/true
 }
 
 python populate_packages_prepend() {
