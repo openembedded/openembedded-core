@@ -128,9 +128,6 @@ python __anonymous () {
 
     import bb
 
-    if not hasattr(__builtins__, 'set'):
-	from sets import Set as set
-
     distro_features = set(bb.data.getVar("DISTRO_FEATURES", d, 1).split())
     machine_features= set(bb.data.getVar("MACHINE_FEATURES", d, 1).split())
 
