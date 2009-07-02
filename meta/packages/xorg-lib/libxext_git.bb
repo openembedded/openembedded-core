@@ -4,7 +4,7 @@ DESCRIPTION = "X11 miscellaneous extension library"
 DEPENDS += "xproto virtual/libx11 xextproto libxau libxdmcp"
 PROVIDES = "xext"
 PE = "1"
-PV = "1.0.99.1+gitr${SRCREV}"
+PV = "1.0.99.1+gitr${SRCPV}"
 
 XORG_PN = "libXext"
 

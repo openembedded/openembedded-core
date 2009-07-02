@@ -2,7 +2,7 @@ require xorg-proto-common.inc
 
 DESCRIPTION = "Touchscreen calibration protocol"
 
-PV = "0.0+git${SRCREV}"
+PV = "0.0+git${SRCPV}"
 PR = "r1"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/proto/calibrateproto;protocol=git"
