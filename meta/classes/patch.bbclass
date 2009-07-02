@@ -6,11 +6,29 @@ QUILTRCFILE ?= "${STAGING_BINDIR_NATIVE}/quiltrc"
 def patch_init(d):
 	import os, sys
 
-	def md5sum(fname):
-		import md5, sys
+	class NotFoundError(Exception):
+		def __init__(self, path):
+			self.path = path
+		def __str__(self):
+			return "Error: %s not found." % self.path
 
-		f = file(fname, 'rb')
-		m = md5.new()
+	def md5sum(fname):
+		import sys
+
+		# when we move to Python 2.5 as minimal supported
+		# we can kill that try/except as hashlib is 2.5+
+		try:
+			import hashlib
+			m = hashlib.md5()
+		except ImportError:
+			import md5
+			m = md5.new()
+
+		try:
+			f = file(fname, 'rb')
+		except IOError:
+			raise NotFoundError(fname)
+
 		while True:
 			d = f.read(8096)
 			if not d:
@@ -27,11 +45,6 @@ def patch_init(d):
 		def __str__(self):
 			return "Command Error: exit status: %d  Output:\n%s" % (self.status, self.output)
 
-	class NotFoundError(Exception):
-		def __init__(self, path):
-			self.path = path
-		def __str__(self):
-			return "Error: %s not found." % self.path
 
 	def runcmd(args, dir = None):
 		import commands
@@ -41,7 +54,7 @@ def patch_init(d):
 			if not os.path.exists(dir):
 				raise NotFoundError(dir)
 			os.chdir(dir)
-			# print("cwd: %s -> %s" % (olddir, self.dir))
+			# print("cwd: %s -> %s" % (olddir, dir))
 
 		try:
 			args = [ commands.mkarg(str(arg)) for arg in args ]
@@ -126,10 +139,13 @@ def patch_init(d):
 				i = 0
 			self.patches.insert(i, patch)
 
-		def _applypatch(self, patch, force = None, reverse = None):
+		def _applypatch(self, patch, force = False, reverse = False, run = True):
 			shellcmd = ["cat", patch['file'], "|", "patch", "-p", patch['strippath']]
 			if reverse:
 				shellcmd.append('-R')
+
+			if not run:
+				return "sh" + "-c" + " ".join(shellcmd)
 
 			if not force:
 				shellcmd.append('--dry-run')
@@ -143,7 +159,7 @@ def patch_init(d):
 			output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
 			return output
 
-		def Push(self, force = None, all = None):
+		def Push(self, force = False, all = False, run = True):
 			if all:
 				for i in self.patches:
 					if self._current is not None:
@@ -158,7 +174,7 @@ def patch_init(d):
 				else:
 					self._current = 0
 				bb.note("applying patch %s" % self.patches[self._current])
-				self._applypatch(self.patches[self._current], force)
+				return self._applypatch(self.patches[self._current], force)
 
 
 		def Pop(self, force = None, all = None):
@@ -172,8 +188,10 @@ def patch_init(d):
 			""""""
 
 	class QuiltTree(PatchSet):
-		def _runcmd(self, args):
+		def _runcmd(self, args, run = True):
 			quiltrc = bb.data.getVar('QUILTRCFILE', self.d, 1)
+			if not run:
+				return ["quilt"] + ["--quiltrc"] + [quiltrc] + args
 			runcmd(["quilt"] + ["--quiltrc"] + [quiltrc] + args, self.dir)
 
 		def _quiltpatchpath(self, file):
@@ -248,7 +266,7 @@ def patch_init(d):
 			self.patches.insert(self._current or 0, patch)
 
 
-		def Push(self, force = None, all = None):
+		def Push(self, force = False, all = False, run = True):
 			# quilt push [-f]
 
 			args = ["push"]
@@ -256,6 +274,8 @@ def patch_init(d):
 				args.append("-f")
 			if all:
 				args.append("-a")
+			if not run:
+				return self._runcmd(args, run)
 
 			self._runcmd(args)
 
@@ -342,17 +362,34 @@ def patch_init(d):
 
 			olddir = os.path.abspath(os.curdir)
 			os.chdir(self.patchset.dir)
-			try:
-				self.patchset.Push(True)
-			except CmdError, v:
-				# Patch application failed
-				if sys.exc_value.output.strip() == "No patches applied":
-					return
-				print(sys.exc_value)
-				print('NOTE: dropping user into a shell, so that patch rejects can be fixed manually.')
-				print('Press CTRL+D to exit.')
-
-				os.system('/bin/sh')
+ 			try:
+ 				self.patchset.Push(False)
+ 			except CmdError, v:
+ 				# Patch application failed
+ 				patchcmd = self.patchset.Push(True, False, False)
+ 
+ 				t = bb.data.getVar('T', d, 1)
+ 				if not t:
+ 					bb.msg.fatal(bb.msg.domain.Build, "T not set")
+ 				bb.mkdirhier(t)
+ 				import random
+ 				rcfile = "%s/bashrc.%s.%s" % (t, str(os.getpid()), random.random())
+ 				f = open(rcfile, "w")
+ 				f.write("echo '*** Manual patch resolution mode ***'\n")
+ 				f.write("echo 'Dropping to a shell, so patch rejects can be fixed manually.'\n")
+ 				f.write("echo 'Run \"quilt refresh\" when patch is corrected, press CTRL+D to exit.'\n")
+ 				f.write("echo ''\n")
+ 				f.write(" ".join(patchcmd) + "\n")
+ 				f.write("#" + bb.data.getVar('TERMCMDRUN', d, 1))
+ 				f.close()
+ 				os.chmod(rcfile, 0775)
+ 
+ 				os.environ['TERMWINDOWTITLE'] = "Bitbake: Please fix patch rejects manually"
+ 				os.environ['TERMRCFILE'] = rcfile
+ 				rc = os.system(bb.data.getVar('TERMCMDRUN', d, 1))
+				if os.WIFEXITED(rc) and os.WEXITSTATUS(rc) != 0:
+ 					bb.msg.fatal(bb.msg.domain.Build, ("Cannot proceed with manual patch resolution - '%s' not found. " \
+					    + "Check TERMCMDRUN variable.") % bb.data.getVar('TERMCMDRUN', d, 1))
 
 				# Construct a new PatchSet after the user's changes, compare the
 				# sets, checking patches for modifications, and doing a remote
@@ -395,6 +432,7 @@ def patch_init(d):
 
 addtask patch after do_unpack
 do_patch[dirs] = "${WORKDIR}"
+
 PATCHDEPENDENCY = "${PATCHTOOL}-native:do_populate_staging"
 do_patch[depends] = "${PATCHDEPENDENCY}"
 
