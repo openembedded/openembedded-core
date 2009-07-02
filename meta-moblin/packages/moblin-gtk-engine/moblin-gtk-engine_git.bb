@@ -4,6 +4,8 @@ LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
 PR = "r1"
 
+DEPENDS = "gtk+"
+
 S = "${WORKDIR}/git"
 
 inherit autotools_stage
