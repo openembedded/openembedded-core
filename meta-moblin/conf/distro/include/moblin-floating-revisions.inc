@@ -45,6 +45,8 @@ PREFERRED_VERSION_libx11-trim ?= ""
 PREFERRED_VERSION_libxcb ?= "1.3"
 PREFERRED_VERSION_xcb-proto ?= "1.5"
 
+SRCREV_pn-mesa-dri ?= "f7cbaae13d67c55abe81ac230de37f564365099f"
+
 SRCREV_pn-xf86-video-intel ?= "${AUTOREV}"
 SRCREV_pn-xserver-xf86-dri-lite ?= "${AUTOREV}"
 SRCREV_pn-mesa-dri ?= "${AUTOREV}"
