@@ -6,7 +6,7 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
 PV = "7.4+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
