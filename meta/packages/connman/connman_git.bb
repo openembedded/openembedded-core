@@ -1,7 +1,7 @@
 HOMEPAGE = "http://www.moblin.org/projects/projects_connman.php"
 SUMMARY  = "Moblin Connection Manager"
 PV       = "0.19+git${SRCREV}"
-PR       = "r15"
+PR       = "r16"
 S        = "${WORKDIR}/git"
 LICENSE  = "GPL"
 
@@ -17,7 +17,6 @@ EXTRA_OECONF += " \
 
 SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git;protocol=git \
             file://connman-install-tests.patch;patch=1 \
-            file://udevfix.patch;patch=1 \
             file://dbusperms.patch;patch=1 \
             file://connman "
 
