@@ -1,3 +1,8 @@
+SRCREV_pn-mesa-dri ?= "f7cbaae13d67c55abe81ac230de37f564365099f"
+SRCREV_pn-libccss ?= "992e2ffdf84cef5073fc52876319d1c0f4b5d83b"
+SRCREV_pn-xf86-video-intel ?= "74227141923a2f5049592219ab80e8733062a5d9"
+SRCREV_pn-nbtk ?= "7618a55265974904c33e5c20ffb2ae4cc366c950"
+    
 SRCREV_pn-ashford ?= "${AUTOREV}"
 SRCREV_pn-anerley ?= "${AUTOREV}"
 SRCREV_pn-bickley ?= "${AUTOREV}"
@@ -44,8 +49,6 @@ PREFERRED_VERSION_dri2proto ?= ""
 PREFERRED_VERSION_libx11-trim ?= ""
 PREFERRED_VERSION_libxcb ?= "1.3"
 PREFERRED_VERSION_xcb-proto ?= "1.5"
-
-SRCREV_pn-mesa-dri ?= "f7cbaae13d67c55abe81ac230de37f564365099f"
 
 SRCREV_pn-xf86-video-intel ?= "${AUTOREV}"
 SRCREV_pn-xserver-xf86-dri-lite ?= "${AUTOREV}"
