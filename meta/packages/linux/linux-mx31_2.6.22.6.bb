@@ -4,7 +4,7 @@ PR = "r4"
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = " \
-          ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.22.6.tar.bz2 \
+          ${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.22.6.tar.bz2 \
           file://defconfig-mx31ads \
           file://defconfig-mx31phy \
           "

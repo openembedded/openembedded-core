@@ -8,16 +8,16 @@ DEFAULT_PREFERENCE_tosa = "1"
 
 # Handy URLs
 # git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git;protocol=git;tag=ef7d1b244fa6c94fb76d5f787b8629df64ea4046
-# ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.18.tar.bz2
-# ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/linux-2.6.20-rc4.tar.bz2
-# ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/testing/patch-2.6.18-rc6.bz2;patch=1
-# ${KERNELORG_MIRROR}pub/linux/kernel/v2.6/snapshots/patch-2.6.18-rc2-git1.bz2;patch=1
-# ${KERNELORG_MIRROR}pub/linux/kernel/people/alan/linux-2.6/2.6.10/patch-2.6.10-ac8.gz;patch=1
-# ${KERNELORG_MIRROR}pub/linux/kernel/people/akpm/patches/2.6/2.6.14-rc2/2.6.14-rc2-mm1/2.6.14-rc2-mm1.bz2;patch=1
+# ${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.18.tar.bz2
+# ${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/testing/linux-2.6.20-rc4.tar.bz2
+# ${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/testing/patch-2.6.18-rc6.bz2;patch=1
+# ${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/snapshots/patch-2.6.18-rc2-git1.bz2;patch=1
+# ${KERNELORG_MIRROR}/pub/linux/kernel/people/alan/linux-2.6/2.6.10/patch-2.6.10-ac8.gz;patch=1
+# ${KERNELORG_MIRROR}/pub/linux/kernel/people/akpm/patches/2.6/2.6.14-rc2/2.6.14-rc2-mm1/2.6.14-rc2-mm1.bz2;patch=1
 
 # Patches submitted upstream are towards top of this list 
 # Hacks should clearly named and at the bottom
-SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.24.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.24.tar.bz2 \
            ${RPSRC}/export_atags-r2.patch;patch=1;status=pending \
            ${RPSRC}/lzo_crypto-r2.patch;patch=1;status=pending \
            ${RPSRC}/corgi_rearrange_lcd-r0.patch;patch=1;status=pending \

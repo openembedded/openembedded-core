@@ -6,7 +6,7 @@ DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_netbook = "1"
 DEFAULT_PREFERENCE_menlow = "1"
 
-SRC_URI = "${KERNELORG_MIRROR}pub/linux/kernel/v2.6/linux-2.6.29.1.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.29.1.tar.bz2 \
            file://linux-2.6-build-nonintconfig.patch;patch=1 \
            file://linux-2.6.29-retry-root-mount.patch;patch=1 \
            file://linux-2.6.29-dont-wait-for-mouse.patch;patch=1 \
