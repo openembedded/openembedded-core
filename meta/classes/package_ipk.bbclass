@@ -73,17 +73,15 @@ package_update_index_ipk () {
 		return
 	fi
 
-	touch ${DEPLOY_DIR_IPK}/Packages
-	opkg-make-index -r ${DEPLOY_DIR_IPK}/Packages -p ${DEPLOY_DIR_IPK}/Packages -l ${DEPLOY_DIR_IPK}/Packages.filelist -m ${DEPLOY_DIR_IPK}
-
+	packagedirs="${DEPLOY_DIR_IPK}"
 	for arch in $ipkgarchs; do
-		if [ -e ${DEPLOY_DIR_IPK}/$arch/ ] ; then 
-			touch ${DEPLOY_DIR_IPK}/$arch/Packages
-			opkg-make-index -r ${DEPLOY_DIR_IPK}/$arch/Packages -p ${DEPLOY_DIR_IPK}/$arch/Packages -l ${DEPLOY_DIR_IPK}/$arch/Packages.filelist -m ${DEPLOY_DIR_IPK}/$arch/
-		fi
-		if [ -e ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk/ ] ; then 
-			touch ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk/Packages
-			opkg-make-index -r ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk/Packages -p ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk/Packages -l ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk/Packages.filelist -m ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk/
+		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-sdk"
+	done
+
+	for pkgdir in $packagedirs; do
+		if [ -e $pkgdir/ ]; then
+			touch $pkgdir/Packages
+			flock $pkgdir/Packages.flock -c "opkg-make-index -r $pkgdir/Packages -p $pkgdir/Packages -l $pkgdir/Packages.filelist -m $pkgdir/"
 		fi
 	done
 }
