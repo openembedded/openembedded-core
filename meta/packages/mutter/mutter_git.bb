@@ -3,7 +3,7 @@ DESCRIPTION = "Metacity is the boring window manager for the adult in you. Mutte
 LICENSE = "GPLv2"
 DEPENDS = "startup-notification gtk+ gconf clutter gdk-pixbuf-csource-native intltool glib-2.0-native"
 # gobject-introspection
-PR = "r9"
+PR = "r10"
 PV = "2.25.1+git${SRCPV}"
 inherit gnome update-alternatives
 
@@ -13,13 +13,15 @@ inherit gnome update-alternatives
 SRC_URI = "git://git.moblin.org/mutter.git;protocol=git;branch=master \
            file://nodocs.patch;patch=1 \
            file://nozenity.patch;patch=1 \
-           file://crosscompile.patch;patch=1 \
-           file://fix_pkgconfig.patch;patch=1"
+           file://crosscompile.patch;patch=1;rev=7adb574bb3fa3880eb85dbc86e580cf3452d57c4 \
+           file://fix_pkgconfig-7adb574bb3fa3880eb85dbc86e580cf3452d57c4.patch;patch=1;rev=7adb574bb3fa3880eb85dbc86e580cf3452d57c4 \
+           file://fix_pkgconfig.patch;patch=1;notrev=7adb574bb3fa3880eb85dbc86e580cf3452d57c4 \
+           "
 S = "${WORKDIR}/git"
 
 ALTERNATIVE_NAME = "x-window-manager"
 ALTERNATIVE_LINK = "${bindir}/x-window-manager"
-ALTERNATIVE_PATH = "${bindir}/metacity"
+ALTERNATIVE_PATH = "${bindir}/mutter"
 ALTERNATIVE_PRIORITY = "11"
 
 EXTRA_OECONF += "--disable-verbose	\
@@ -29,8 +31,8 @@ EXTRA_OECONF += "--disable-verbose	\
 
 #RDEPENDS_${PN} = "zenity"
 
-FILES_${PN} += "${datadir}/themes ${libdir}/metacity/plugins/clutter/*.so"
-FILES_${PN}-dbg += "${libdir}/metacity/plugins/clutter/.debug/*"
+FILES_${PN} += "${datadir}/themes ${libdir}/mutter/plugins/*.so ${datadir}/gnome/wm-properties/"
+FILES_${PN}-dbg += "${libdir}/mutter/plugins/.debug/*"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE}/glib-2.0 -I${STAGING_INCDIR_NATIVE}/glib-2.0/include"
@@ -52,8 +54,8 @@ fi
 
 . ${sysconfdir}/init.d/functions
 
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type list --list-type string --set /apps/metacity/general/clutter_plugins '[default]'
+gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type list --list-type string --set /apps/mutter/general/clutter_plugins '[default]'
 
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type bool --set /apps/metacity/general/compositing_manager true
+gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type bool --set /apps/mutter/general/compositing_manager true
 }
 
