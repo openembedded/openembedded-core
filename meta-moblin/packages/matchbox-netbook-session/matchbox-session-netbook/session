@@ -1,5 +1,4 @@
 #!/bin/sh
 
 export LIBGL_ALWAYS_INDIRECT=1
-#--mutter-plugins=moblin-netbook
-exec /usr/bin/mutter
+exec /usr/bin/mutter --mutter-plugins=moblin-netbook
