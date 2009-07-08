@@ -1,5 +1,5 @@
 #!/bin/sh
 
 export LIBGL_ALWAYS_INDIRECT=1
-
-exec metacity --mutter-plugins=moblin-netbook
+#--mutter-plugins=moblin-netbook
+exec /usr/bin/mutter
