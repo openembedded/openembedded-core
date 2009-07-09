@@ -32,7 +32,7 @@ Index: src/gtk/main.c
  #include <libecal/e-cal.h>
  #include <glib/gi18n.h>
  #include <gtk/gtk.h>
-+#include <owlwindowmenu.h>
++#include <libowl/owlwindowmenu.h>
  
  #include <libkoto/ical-util.h>
  #include <libkoto/koto-actions.h>

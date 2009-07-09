@@ -6,7 +6,7 @@ Index: src/gtk.c
  #include <gdk/gdkx.h>
  #include <gdk-pixbuf/gdk-pixbuf.h>
  
-+#include <owlwindowmenu.h>
++#include <libowl/owlwindowmenu.h>
 +
  #include <librsvg/rsvg.h>
  

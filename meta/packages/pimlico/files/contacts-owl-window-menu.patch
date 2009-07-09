@@ -34,7 +34,7 @@ Index: contacts-0.9/src/contacts-main.c
  #include <libgnomevfs/gnome-vfs.h>
  #endif
  
-+#include "owlwindowmenu.h"
++#include <libowl/owlwindowmenu.h>
 +
  #include "bacon-message-connection.h"
  #include "contacts-defs.h"

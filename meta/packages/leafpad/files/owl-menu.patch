@@ -16,7 +16,7 @@
   */
  
  #include "leafpad.h"
-+#include "owlwindowmenu.h"
++#include <libowl/owlwindowmenu.h>
 +
  /*
  static void cb_scroll_event(GtkAdjustment *adj, GtkWidget *view)

@@ -38,7 +38,7 @@ Index: pcmanfm-0.3.2-beta/src/main.c
  #include "glade-support.h"
  #include "settings.h"
  
-+#include "owlwindowmenu.h"
++#include "libowl/owlwindowmenu.h"
 +
  static char* init_path = NULL;
  

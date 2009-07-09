@@ -1,6 +1,6 @@
 require contacts.inc
 
-PR="r0"
+PR="r1"
 
 SRC_URI = "http://pimlico-project.org/sources/${PN}/${PN}-${PV}.tar.gz \
 	   file://stock_contact.png \

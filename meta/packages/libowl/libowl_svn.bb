@@ -21,19 +21,4 @@ SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http"
 
 S = "${WORKDIR}/${PN}"
 
-inherit autotools pkgconfig
-
-do_compile_prepend() {
-	# have to unstage the library first so that the tests build
-	rm -f ${STAGING_LIBDIR}/libowl.*
-	rm -f ${STAGING_INCDIR}/owl*.h
-}
-
-do_stage() {
-	headers=`eval ls libowl/owl*.h`
-	for header in $headers; do
-		hdr_base=`eval basename $header`
-		install -m 644 $header ${STAGING_INCDIR}/$hdr_base
-	done
-	install -m 644 libowl/.libs/libowl.a ${STAGING_LIBDIR}/
-}
+inherit autotools_stage pkgconfig

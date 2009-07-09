@@ -58,7 +58,7 @@
  #include <gconf/gconf-client.h>
  
 +#include <gtk/gtkmenuitem.h>
-+#include "owlwindowmenu.h"
++#include <libowl/owlwindowmenu.h>
  #include "dates_types.h"
  #include "dates_platform.h"
  #include "dates_callbacks.h"
