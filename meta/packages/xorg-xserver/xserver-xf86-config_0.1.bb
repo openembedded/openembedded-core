@@ -2,7 +2,7 @@ DESCRIPTION = "X.Org X server configuration file"
 HOMEPAGE = "http://www.x.org"
 SECTION = "x11/base"
 LICENSE = "MIT-X"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "file://xorg.conf"
 
