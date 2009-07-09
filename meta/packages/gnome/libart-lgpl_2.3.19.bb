@@ -1,6 +1,7 @@
 DESCRIPTION = "Library of functions for 2D graphics"
 SECTION = "x11/gnome"
 LICENSE = "LGPL"
+PR = "r1"
 
 ART_CONFIG = "${HOST_ARCH}/art_config.h"
 
@@ -9,7 +10,7 @@ SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/libart_lgpl/2.3/libart_lgpl-${
        file://${ART_CONFIG} \
        file://Makefile.am.patch;patch=1"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 DEPENDS = ""
 
@@ -24,7 +25,3 @@ do_configure_prepend() {
 
 EXTRA_OECONF = "--disable-gtk-doc"
 
-do_stage() {
-	autotools_stage_includes
-	oe_libinstall -a -so libart_lgpl_2 ${STAGING_LIBDIR}
-}
