@@ -1,3 +1,5 @@
+# Must inherit package first before changing PACKAGEFUNCS
+inherit package
 PACKAGEFUNCS += "emit_pkghistory"
 
 PKGHIST_DIR = "${TMPDIR}/pkghistory/"
