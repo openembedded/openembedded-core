@@ -3,13 +3,15 @@ SECTION = "x11/wm"
 LICENSE = "GPLv3"
 DEPENDS = "nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed bickley"
 PV = "2.25.2+git${SRCPV}"
-PR = "r6"
+PR = "r8"
 
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
            file://startup-notify.patch;patch=1 \
+           file://88mutter-panelapps.sh \
            file://background-tile.png"
 
 FILES_${PN} += "\
+	${sysconfdir}/X11 \
 	${libdir}/metacity/plugins/clutter/*.so* \
 	${libdir}/mutter/plugins/*.so* \
 	${datadir}/mutter-moblin-netbook-plugin \
@@ -32,6 +34,12 @@ do_configure_prepend () {
 	cp ${WORKDIR}/background-tile.png ${S}/data/theme/panel/
 }
 
+do_install_append () {
+	install -d ${D}${sysconfdir}/X11/Xsession.d/
+	install ${WORKDIR}/88mutter-panelapps.sh ${D}${sysconfdir}/X11/Xsession.d/
+}
+
+
 pkg_postinst_${PN} () {
 #!/bin/sh -e
 if [ "x$D" != "x" ]; then
@@ -41,4 +49,6 @@ fi
 . ${sysconfdir}/init.d/functions
 
 gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type list --list-type string --set /apps/metacity/general/clutter_plugins '[moblin-netbook]'
-} 
+
+nbtk-create-image-cache ${datadir}/mutter-moblin/theme
+}
