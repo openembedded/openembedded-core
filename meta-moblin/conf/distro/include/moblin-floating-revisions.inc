@@ -56,7 +56,7 @@ PREFERRED_VERSION_xcb-proto ?= "1.5"
 #SRCREV_pn-xserver-xf86-dri-lite ?= "${AUTOREV}"
 #SRCREV_pn-mesa-dri ?= "${AUTOREV}"
 SRCREV_pn-libdrm ?= "${AUTOREV}"
-SRCREV_pn-xorg-input-keyboard ?= "${AUTOREV}"
+SRCREV_pn-xf86-input-keyboard ?= "${AUTOREV}"
 SRCREV_pn-dri2proto ?= "${AUTOREV}"
 SRCREV_pn-libx11-trim ?= "${AUTOREV}"
 
