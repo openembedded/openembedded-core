@@ -13,12 +13,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate = "gcc-cross-interme
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "gcc-cross"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
 
-GCCVERSION ?= "4.2.3"
-GCCVERSION_qemuarmv7 = "4.3.1"
-GCCVERSION_beagleboard = "4.3.1"
-GCCVERSION_omap-3430sdp = "4.3.1"
-GCCVERSION_omap-3430ldp = "4.3.1"
-GCCVERSION_overo = "4.3.2"
+GCCVERSION ?= "4.3.3"
 # 4.2.3+csl-arm-2008q1-126 doesn't work
 
 BINUVERSION = "2.18"
