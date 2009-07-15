@@ -1,4 +1,4 @@
-SRCREV_pn-clutter ?= "d1232509a21a7ce05aa8c85b2c14872ffc4df5cb"
+#SRCREV_pn-clutter ?= "d1232509a21a7ce05aa8c85b2c14872ffc4df5cb"
 #SRCREV_pn-mesa-dri ?= "f7cbaae13d67c55abe81ac230de37f564365099f"
 SRCREV_pn-libccss ?= "62697eb84fe190f9b8c65fcbaae10ec3d9edfffd"
 #SRCREV_pn-xf86-video-intel ?= "74227141923a2f5049592219ab80e8733062a5d9"
