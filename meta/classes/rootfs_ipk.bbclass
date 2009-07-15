@@ -5,6 +5,7 @@
 # See image.bbclass for a usage of this.
 #
 
+EXTRAOPKGCONFIG ?= ""
 ROOTFS_PKGMANAGE = "opkg opkg-collateral ${EXTRAOPKGCONFIG}"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
