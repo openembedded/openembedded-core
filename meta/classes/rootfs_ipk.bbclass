@@ -5,7 +5,7 @@
 # See image.bbclass for a usage of this.
 #
 
-ROOTFS_PKGMANAGE = "opkg opkg-collateral"
+ROOTFS_PKGMANAGE = "opkg opkg-collateral ${EXTRAOPKGCONFIG}"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "opkg-native:do_populate_staging opkg-utils-native:do_populate_staging"
@@ -51,8 +51,9 @@ fakeroot rootfs_ipk_do_rootfs () {
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export OPKG_OFFLINE_ROOT=${IPKG_OFFLINE_ROOT}
 
-	mkdir -p ${IMAGE_ROOTFS}/etc/opkg/
-	grep "^arch" ${IPKGCONF_TARGET} >${IMAGE_ROOTFS}/etc/opkg/arch.conf
+	# Distro specific packages should create this
+	#mkdir -p ${IMAGE_ROOTFS}/etc/opkg/
+	#grep "^arch" ${IPKGCONF_TARGET} >${IMAGE_ROOTFS}/etc/opkg/arch.conf
 
 	${OPKG_POSTPROCESS_COMMANDS}
 	${ROOTFS_POSTINSTALL_COMMAND}
