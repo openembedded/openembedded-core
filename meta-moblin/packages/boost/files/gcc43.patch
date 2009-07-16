@@ -1,0 +1,256 @@
+diff -aNru boost_1_34_1-ORIGINAL/boost/archive/polymorphic_iarchive.hpp boost_1_34_1/boost/archive/polymorphic_iarchive.hpp
+--- boost_1_34_1-ORIGINAL/boost/archive/polymorphic_iarchive.hpp	2005-12-11 00:12:51.000000000 -0600
++++ boost_1_34_1/boost/archive/polymorphic_iarchive.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -17,6 +17,7 @@
+ //  See http://www.boost.org for updates, documentation, and revision history.
+ 
+ #include <cstddef> // std::size_t
++#include <climits>
+ #include <boost/config.hpp>
+ 
+ #if defined(BOOST_NO_STDC_NAMESPACE)
+diff -aNru boost_1_34_1-ORIGINAL/boost/archive/polymorphic_oarchive.hpp boost_1_34_1/boost/archive/polymorphic_oarchive.hpp
+--- boost_1_34_1-ORIGINAL/boost/archive/polymorphic_oarchive.hpp	2006-02-11 23:43:06.000000000 -0600
++++ boost_1_34_1/boost/archive/polymorphic_oarchive.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -17,6 +17,7 @@
+ //  See http://www.boost.org for updates, documentation, and revision history.
+ 
+ #include <cstddef> // size_t
++#include <climits>
+ #include <string>
+ 
+ #include <boost/config.hpp>
+diff -aNru boost_1_34_1-ORIGINAL/boost/date_time/date_facet.hpp boost_1_34_1/boost/date_time/date_facet.hpp
+--- boost_1_34_1-ORIGINAL/boost/date_time/date_facet.hpp	2005-09-05 16:10:50.000000000 -0500
++++ boost_1_34_1/boost/date_time/date_facet.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -429,7 +429,7 @@
+     typedef std::basic_string<CharT> string_type;
+     typedef CharT                    char_type;
+     typedef boost::date_time::period_parser<date_type, CharT>  period_parser_type;
+-    typedef special_values_parser<date_type,CharT> special_values_parser_type; 
++    typedef boost::date_time::special_values_parser<date_type,CharT> special_values_parser_type; 
+     typedef std::vector<std::basic_string<CharT> > input_collection_type;
+     typedef format_date_parser<date_type, CharT> format_date_parser_type;
+     // date_generators stuff goes here
+diff -aNru boost_1_34_1-ORIGINAL/boost/mpl/zip_view.hpp boost_1_34_1/boost/mpl/zip_view.hpp
+--- boost_1_34_1-ORIGINAL/boost/mpl/zip_view.hpp	2004-09-02 10:40:42.000000000 -0500
++++ boost_1_34_1/boost/mpl/zip_view.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -37,7 +37,7 @@
+     typedef zip_iterator<
+           typename transform1<
+                 IteratorSeq
+-              , next<_1>
++              , boost::mpl::next<_1>
+             >::type
+         > next;
+ };
+@@ -48,8 +48,8 @@
+ struct zip_view
+ {
+  private:
+-    typedef typename transform1< Sequences, begin<_1> >::type first_ones_;
+-    typedef typename transform1< Sequences, end<_1> >::type last_ones_;
++    typedef typename transform1< Sequences, boost::mpl::begin<_1> >::type first_ones_;
++    typedef typename transform1< Sequences, boost::mpl::end<_1> >::type last_ones_;
+     
+  public:
+     typedef nested_begin_end_tag tag;
+diff -aNru boost_1_34_1-ORIGINAL/boost/python/detail/def_helper.hpp boost_1_34_1/boost/python/detail/def_helper.hpp
+--- boost_1_34_1-ORIGINAL/boost/python/detail/def_helper.hpp	2004-09-15 20:00:28.000000000 -0500
++++ boost_1_34_1/boost/python/detail/def_helper.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -155,7 +155,7 @@
+           , T3 const&
+           , T4 const&
+           , default_call_policies
+-          , keywords<0>
++          , boost::python::detail::keywords<0>
+           , char const*
+           , void(not_specified::*)()   // A function pointer type which is never an
+                                        // appropriate default implementation
+diff -aNru boost_1_34_1-ORIGINAL/boost/regex/v4/basic_regex_creator.hpp boost_1_34_1/boost/regex/v4/basic_regex_creator.hpp
+--- boost_1_34_1-ORIGINAL/boost/regex/v4/basic_regex_creator.hpp	2006-07-16 11:06:38.000000000 -0500
++++ boost_1_34_1/boost/regex/v4/basic_regex_creator.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -24,6 +24,8 @@
+ #  include BOOST_ABI_PREFIX
+ #endif
+ 
++#include <climits>
++
+ namespace boost{
+ 
+ namespace re_detail{
+diff -aNru boost_1_34_1-ORIGINAL/boost/regex/v4/basic_regex.hpp boost_1_34_1/boost/regex/v4/basic_regex.hpp
+--- boost_1_34_1-ORIGINAL/boost/regex/v4/basic_regex.hpp	2007-06-05 12:28:18.000000000 -0500
++++ boost_1_34_1/boost/regex/v4/basic_regex.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -23,6 +23,8 @@
+ #  include BOOST_ABI_PREFIX
+ #endif
+ 
++#include <climits>
++
+ namespace boost{
+ #ifdef BOOST_MSVC
+ #pragma warning(push)
+diff -aNru boost_1_34_1-ORIGINAL/boost/regex/v4/basic_regex_parser.hpp boost_1_34_1/boost/regex/v4/basic_regex_parser.hpp
+--- boost_1_34_1-ORIGINAL/boost/regex/v4/basic_regex_parser.hpp	2006-12-20 11:19:05.000000000 -0600
++++ boost_1_34_1/boost/regex/v4/basic_regex_parser.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -23,6 +23,8 @@
+ #  include BOOST_ABI_PREFIX
+ #endif
+ 
++#include <climits>
++
+ namespace boost{
+ namespace re_detail{
+ 
+diff -aNru boost_1_34_1-ORIGINAL/boost/regex/v4/cpp_regex_traits.hpp boost_1_34_1/boost/regex/v4/cpp_regex_traits.hpp
+--- boost_1_34_1-ORIGINAL/boost/regex/v4/cpp_regex_traits.hpp	2007-01-15 05:09:44.000000000 -0600
++++ boost_1_34_1/boost/regex/v4/cpp_regex_traits.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -41,6 +41,7 @@
+ 
+ #include <istream>
+ #include <ios>
++#include <climits>
+ 
+ #ifdef BOOST_HAS_ABI_HEADERS
+ #  include BOOST_ABI_PREFIX
+diff -aNru boost_1_34_1-ORIGINAL/boost/regex/v4/perl_matcher.hpp boost_1_34_1/boost/regex/v4/perl_matcher.hpp
+--- boost_1_34_1-ORIGINAL/boost/regex/v4/perl_matcher.hpp	2006-10-18 07:55:30.000000000 -0500
++++ boost_1_34_1/boost/regex/v4/perl_matcher.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -18,6 +18,8 @@
+ #  include BOOST_ABI_PREFIX
+ #endif
+ 
++#include <climits>
++
+ namespace boost{
+ namespace re_detail{
+ 
+diff -aNru boost_1_34_1-ORIGINAL/boost/regex/v4/regex_split.hpp boost_1_34_1/boost/regex/v4/regex_split.hpp
+--- boost_1_34_1-ORIGINAL/boost/regex/v4/regex_split.hpp	2005-01-21 11:22:38.000000000 -0600
++++ boost_1_34_1/boost/regex/v4/regex_split.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -21,6 +21,8 @@
+ #ifndef BOOST_REGEX_SPLIT_HPP
+ #define BOOST_REGEX_SPLIT_HPP
+ 
++#include <climits>
++
+ namespace boost{
+ 
+ #ifdef BOOST_HAS_ABI_HEADERS
+diff -aNru boost_1_34_1-ORIGINAL/boost/regex/v4/states.hpp boost_1_34_1/boost/regex/v4/states.hpp
+--- boost_1_34_1-ORIGINAL/boost/regex/v4/states.hpp	2005-09-20 07:01:25.000000000 -0500
++++ boost_1_34_1/boost/regex/v4/states.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -23,6 +23,8 @@
+ #  include BOOST_ABI_PREFIX
+ #endif
+ 
++#include <climits>
++
+ namespace boost{
+ namespace re_detail{
+ 
+diff -aNru boost_1_34_1-ORIGINAL/boost/serialization/collection_traits.hpp boost_1_34_1/boost/serialization/collection_traits.hpp
+--- boost_1_34_1-ORIGINAL/boost/serialization/collection_traits.hpp	2005-06-21 00:19:04.000000000 -0500
++++ boost_1_34_1/boost/serialization/collection_traits.hpp	2008-03-03 03:09:49.000000000 -0600
+@@ -22,6 +22,7 @@
+ // compiles recognize the same set of primitive types, the possibility
+ // exists for archives to be non-portable if class information for primitive
+ // types is included.  This is addressed by the following macros.
++#include <climits>
+ #include <boost/config.hpp>
+ #include <boost/mpl/integral_c.hpp>
+ #include <boost/mpl/integral_c_tag.hpp>
+diff -aNru boost_1_34_1-ORIGINAL/boost/spirit/phoenix/operators.hpp boost_1_34_1/boost/spirit/phoenix/operators.hpp
+--- boost_1_34_1-ORIGINAL/boost/spirit/phoenix/operators.hpp	2006-08-25 11:27:30.000000000 -0500
++++ boost_1_34_1/boost/spirit/phoenix/operators.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -24,6 +24,7 @@
+ #include <boost/spirit/phoenix/composite.hpp>
+ #include <boost/config.hpp>
+ #include <boost/mpl/if.hpp>
++#include <climits>
+ 
+ ///////////////////////////////////////////////////////////////////////////////
+ namespace phoenix {
+diff -aNru boost_1_34_1-ORIGINAL/boost/test/test_tools.hpp boost_1_34_1/boost/test/test_tools.hpp
+--- boost_1_34_1-ORIGINAL/boost/test/test_tools.hpp	2007-02-22 11:57:29.000000000 -0600
++++ boost_1_34_1/boost/test/test_tools.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -42,6 +42,7 @@
+ #include <boost/mpl/or.hpp>
+ 
+ // STL
++#include <climits>
+ #include <cstddef>          // for std::size_t
+ #include <iosfwd>
+ 
+diff -aNru boost_1_34_1-ORIGINAL/boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp boost_1_34_1/boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp
+--- boost_1_34_1-ORIGINAL/boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp	2006-12-20 10:38:24.000000000 -0600
++++ boost_1_34_1/boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -16,6 +16,7 @@
+ #include <string>
+ #include <cstdio>
+ #include <cstdarg>
++#include <cstring>
+ #if defined(BOOST_SPIRIT_DEBUG)
+ #include <iostream>
+ #endif // defined(BOOST_SPIRIT_DEBUG)
+diff -aNru boost_1_34_1-ORIGINAL/boost/wave/util/flex_string.hpp boost_1_34_1/boost/wave/util/flex_string.hpp
+--- boost_1_34_1-ORIGINAL/boost/wave/util/flex_string.hpp	2006-04-25 12:21:01.000000000 -0500
++++ boost_1_34_1/boost/wave/util/flex_string.hpp	2008-03-03 03:08:59.000000000 -0600
+@@ -94,6 +94,7 @@
+ #include <limits>
+ #include <stdexcept>
+ #include <cstddef>
++#include <cstring>
+ 
+ // this must occur after all of the includes and before any code appears
+ #ifdef BOOST_HAS_ABI_HEADERS
+ 
+--- boost_1_33_1/boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp	2008-07-05 01:50:04.000000000 +0200
++++ boost_1_34_1/boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp	2006-12-20 17:38:24.000000000 +0100
+@@ -295,17 +325,20 @@
+     
+     lex_functor(IteratorT const &first, IteratorT const &last, 
+             PositionT const &pos, boost::wave::language_support language)
+-    :   lexer(first, last, pos, language)
++    :   re2c_lexer(first, last, pos, language)
+     {}
+     virtual ~lex_functor() {}
+     
+ // get the next token from the input stream
+-    token_type get() { return lexer.get(); }
+-    void set_position(PositionT const &pos) 
+-    { lexer.set_position(pos); }
++    token_type get() { return re2c_lexer.get(); }
++    void set_position(PositionT const &pos) { re2c_lexer.set_position(pos); }
++#if BOOST_WAVE_SUPPORT_PRAGMA_ONCE != 0
++    bool has_include_guards(std::string& guard_name) const 
++        { return re2c_lexer.has_include_guards(guard_name); }
++#endif    
+ 
+ private:
+-    lexer<IteratorT, PositionT> lexer;
++    lexer<IteratorT, PositionT> re2c_lexer;
+ };
+ 
+ ///////////////////////////////////////////////////////////////////////////////
+@@ -338,7 +371,7 @@
+ //  It is coupled to the iterator type to allow to decouple the lexer/iterator 
+ //  configurations at compile time.
+ //
+-//  This function is declared inside the cpp_slex_token.hpp file, which is 
++//  This function is declared inside the cpp_lex_token.hpp file, which is 
+ //  referenced by the source file calling the lexer and the source file, which
+ //  instantiates the lex_functor. But is is defined here, so it will be 
+ //  instantiated only while compiling the source file, which instantiates the 
+@@ -356,8 +389,8 @@
+     IteratorT const &last, PositionT const &pos, 
+     boost::wave::language_support language)
+ {
+-    return new re2clex::lex_functor<IteratorT, PositionT>(first, last, pos,
+-        language);
++    using re2clex::lex_functor;
++    return new lex_functor<IteratorT, PositionT>(first, last, pos, language);
+ }
+ 
+ #undef BOOST_WAVE_RE2C_NEW_LEXER_INLINE

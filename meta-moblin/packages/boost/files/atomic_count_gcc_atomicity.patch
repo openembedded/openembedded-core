@@ -1,0 +1,13 @@
+Index: boost_1_33_1/boost/detail/atomic_count_gcc.hpp
+===================================================================
+--- boost_1_33_1.orig/boost/detail/atomic_count_gcc.hpp	2008-05-01 20:43:45.000000000 +0200
++++ boost_1_33_1/boost/detail/atomic_count_gcc.hpp	2008-05-01 20:43:55.000000000 +0200
+@@ -17,7 +17,7 @@
+ //  http://www.boost.org/LICENSE_1_0.txt)
+ //
+ 
+-#include <bits/atomicity.h>
++#include <ext/atomicity.h>
+ 
+ namespace boost
+ {

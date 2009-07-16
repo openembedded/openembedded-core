@@ -1,0 +1,14 @@
+diff -ur boost_1_33_1.orig/boost/bind.hpp boost_1_33_1/boost/bind.hpp
+--- boost_1_33_1.orig/boost/bind.hpp	2008-10-11 10:30:03.000000000 +0200
++++ boost_1_33_1/boost/bind.hpp	2008-10-11 10:41:25.000000000 +0200
+@@ -28,6 +28,10 @@
+ #include <boost/bind/arg.hpp>
+ #include <boost/detail/workaround.hpp>
+ 
++#if __GNUC__ == 4 && __GNUC_MINOR__ == 1
++#  include <boost/visit_each.hpp>
++#endif
++
+ // Borland-specific bug, visit_each() silently fails to produce code
+ 
+ #if defined(__BORLANDC__)

@@ -1,0 +1,20 @@
+--- boost_1_32_0/libs/test/src/unit_test_result.cpp.orig	2005-07-05 11:00:53.887594850 -0700
++++ boost_1_32_0/libs/test/src/unit_test_result.cpp	2005-07-05 11:01:20.683533034 -0700
+@@ -144,7 +144,7 @@
+                                         unit_test_counter num_passed, unit_test_counter num_failed )
+     {
+         unit_test_counter total_test_cases = num_passed + num_failed;
+-        std::size_t       width = static_cast<std::size_t>( std::log10( (float)(std::max)( num_passed, num_failed ) ) ) + 1;
++        std::size_t       width = static_cast<std::size_t>( std::log10( (double)(std::max)( num_passed, num_failed ) ) ) + 1;
+ 
+         where_to << std::setw( indent ) << "" << std::setw( width ) << num_passed
+                  << " test " << ps_name( num_passed != 1, "case" ) << " out of " << total_test_cases << " passed\n"
+@@ -158,7 +158,7 @@
+     {
+         unit_test_counter total_assertions = num_passed + num_failed;
+         std::size_t       width            = total_assertions > 0 
+-                                               ? static_cast<std::size_t>( std::log10( (float)(std::max)( num_passed, num_failed ) ) ) + 1
++                                               ? static_cast<std::size_t>( std::log10( (double)(std::max)( num_passed, num_failed ) ) ) + 1
+                                                : 1;
+         
+         where_to << std::setw( indent ) << "" << std::setw( width ) << num_passed 
