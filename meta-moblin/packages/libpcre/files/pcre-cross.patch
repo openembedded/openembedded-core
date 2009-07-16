@@ -1,0 +1,25 @@
+To be upstreamable, this patch requires check for *_FOR_BUILD, otherwise
+it needs to pass special variables.
+
+It would be nice to implement per-target compiler specification to
+automake, as it is done for linker.
+
+Even better it would be nice to implement native build time targets in
+automake.
+
+Index: pcre-7.6/Makefile.am
+===================================================================
+--- pcre-7.6.orig/Makefile.am	2008-01-23 17:58:28.000000000 +0000
++++ pcre-7.6/Makefile.am	2008-04-03 22:32:00.000000000 +0000
+@@ -147,6 +147,11 @@
+ 
+ noinst_PROGRAMS += dftables
+ dftables_SOURCES = dftables.c
++dftables_LINK = $(LINK_FOR_BUILD) -o $@
++dftables_LDFLAGS = $(LDFLAGS_FOR_BUILD)
++
++dftables.o: $(srcdir)/dftables.c
++	$(CC_FOR_BUILD) -c $(CFLAGS_FOR_BUILD) -o $@ $(srcdir)/dftables.c
+ 
+ pcre_chartables.c: dftables$(EXEEXT)
+ 	./dftables$(EXEEXT) $@
