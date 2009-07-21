@@ -464,10 +464,9 @@ class RunQueue:
             fnid = self.runq_fnid[task]
             if fnid not in reccumdepends:
                 reccumdepends[fnid] = set()
-            if task in self.runq_depends:
-                reccumdepends[fnid].update(self.runq_depends[task])
-            if fnid in tdepends_fnid:
-                reccumdepends[fnid].update(tdepends_fnid[fnid])
+                if fnid in tdepends_fnid:
+                    reccumdepends[fnid].update(tdepends_fnid[fnid])
+            reccumdepends[fnid].update(self.runq_depends[task])
         for task in range(len(self.runq_fnid)):
             taskfnid = self.runq_fnid[task]
             for fnid in reccumdepends:
@@ -485,6 +484,9 @@ class RunQueue:
             if len(runq_recrdepends[task]) > 0:
                 taskfnid = self.runq_fnid[task]
                 for dep in reccumdepends[taskfnid]:
+                    # Ignore self references 
+                    if dep == task:
+                        continue
                     for taskname in runq_recrdepends[task]:
                         if taskData.tasks_name[dep] == taskname:
                             self.runq_depends[task].add(dep)
