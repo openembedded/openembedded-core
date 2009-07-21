@@ -364,6 +364,33 @@ class RunQueue:
         # process is repeated for each type of dependency (tdepends, deptask, 
         # rdeptast, recrdeptask, idepends).
 
+        def add_build_dependencies(depids, tasknames, depends):
+            for depid in depids:
+                # Won't be in build_targets if ASSUME_PROVIDED
+                if depid not in taskData.build_targets:
+                    continue
+                depdata = taskData.build_targets[depid][0]
+                if depdata is None:
+                    continue
+                dep = taskData.fn_index[depdata]
+                for taskname in tasknames:
+                    taskid = taskData.gettask_id(dep, taskname, False)
+                    if taskid is not None:
+                        depends.append(taskid)
+
+        def add_runtime_dependencies(depids, tasknames, depends):
+            for depid in depids:
+                if depid not in taskData.run_targets:
+                    continue
+                depdata = taskData.run_targets[depid][0]
+                if depdata is None:
+                    continue
+                dep = taskData.fn_index[depdata]
+                for taskname in tasknames:
+                    taskid = taskData.gettask_id(dep, taskname, False)
+                    if taskid is not None:
+                        depends.append(taskid)
+
         for task in range(len(taskData.tasks_name)):
             depends = []
             recrdepends = []
@@ -386,14 +413,7 @@ class RunQueue:
                 # (makes sure sometask runs after someothertask of all DEPENDS)
                 if 'deptask' in task_deps and taskData.tasks_name[task] in task_deps['deptask']:
                     tasknames = task_deps['deptask'][taskData.tasks_name[task]].split()
-                    for depid in taskData.depids[fnid]:
-                        # Won't be in build_targets if ASSUME_PROVIDED
-                        if depid in taskData.build_targets:
-                            depdata = taskData.build_targets[depid][0]
-                            if depdata is not None:
-                                dep = taskData.fn_index[depdata]
-                                for taskname in tasknames:
-                                    depends.append(taskData.gettask_id(dep, taskname))
+                    add_build_dependencies(taskData.depids[fnid], tasknames, depends)
 
                 # Resolve 'rdeptask' dependencies 
                 #
@@ -401,12 +421,7 @@ class RunQueue:
                 # (makes sure sometask runs after someothertask of all RDEPENDS)
                 if 'rdeptask' in task_deps and taskData.tasks_name[task] in task_deps['rdeptask']:
                     taskname = task_deps['rdeptask'][taskData.tasks_name[task]]
-                    for depid in taskData.rdepids[fnid]:
-                        if depid in taskData.run_targets:
-                            depdata = taskData.run_targets[depid][0]
-                            if depdata is not None:
-                                dep = taskData.fn_index[depdata]
-                                depends.append(taskData.gettask_id(dep, taskname))
+                    add_runtime_dependencies(taskData.rdepids[fnid], [taskname], depends)
 
                 # Resolve inter-task dependencies 
                 #
@@ -435,23 +450,8 @@ class RunQueue:
                 if 'recrdeptask' in task_deps and taskData.tasks_name[task] in task_deps['recrdeptask']:
                     for taskname in task_deps['recrdeptask'][taskData.tasks_name[task]].split():
                         recrdepends.append(taskname)
-                        for depid in taskData.rdepids[fnid]:
-                            if depid in taskData.run_targets:
-                                depdata = taskData.run_targets[depid][0]
-                                if depdata is not None:
-                                    dep = taskData.fn_index[depdata]
-                                    taskid = taskData.gettask_id(dep, taskname, False)
-                                    if taskid is not None:
-                                        depends.append(taskid)
-                        for depid in taskData.depids[fnid]:
-                            # Won't be in build_targets if ASSUME_PROVIDED
-                            if depid in taskData.build_targets:
-                                depdata = taskData.build_targets[depid][0]
-                                if depdata is not None:
-                                    dep = taskData.fn_index[depdata]
-                                    taskid = taskData.gettask_id(dep, taskname, False)
-                                    if taskid is not None:
-                                        depends.append(taskid)
+                        add_build_dependencies(taskData.depids[fnid], [taskname], depends)
+                        add_runtime_dependencies(taskData.rdepids[fnid], [taskname], depends)
 
                 # Rmove all self references
                 if task in depends:
@@ -483,10 +483,9 @@ class RunQueue:
             fnid = self.runq_fnid[task]
             if fnid not in reccumdepends:
                 reccumdepends[fnid] = set()
-            if task in self.runq_depends:
-                reccumdepends[fnid].update(self.runq_depends[task])
-            if fnid in tdepends_fnid:
-                reccumdepends[fnid].update(tdepends_fnid[fnid])
+                if fnid in tdepends_fnid:
+                    reccumdepends[fnid].update(tdepends_fnid[fnid])
+            reccumdepends[fnid].update(self.runq_depends[task])
         for task in range(len(self.runq_fnid)):
             taskfnid = self.runq_fnid[task]
             for fnid in reccumdepends:
@@ -504,6 +503,9 @@ class RunQueue:
             if len(runq_recrdepends[task]) > 0:
                 taskfnid = self.runq_fnid[task]
                 for dep in reccumdepends[taskfnid]:
+                    # Ignore self references 
+                    if dep == task:
+                        continue
                     for taskname in runq_recrdepends[task]:
                         if taskData.tasks_name[dep] == taskname:
                             self.runq_depends[task].add(dep)
