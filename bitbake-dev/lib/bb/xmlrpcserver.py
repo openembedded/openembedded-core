@@ -115,13 +115,13 @@ class BitBakeXMLRPCServer(SimpleXMLRPCServer):
         """
         self.quit = False
         while not self.quit:
-            print "Idle queue length %s" % len(self._idlefuns)
+            #print "Idle queue length %s" % len(self._idlefuns)
             if len(self._idlefuns) == 0:
                 self.timeout = None
             else:
                 self.timeout = 0
             self.handle_request()
-            print "Idle timeout, running idle functions"
+            #print "Idle timeout, running idle functions"
             for function, data in self._idlefuns.items():
                 try:
                     retval = function(self, data, False)
