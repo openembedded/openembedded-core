@@ -299,11 +299,10 @@ def getRuntimeProviders(dataCache, rdepend):
 
     # Only search dynamic packages if we can't find anything in other variables
     for pattern in dataCache.packages_dynamic:
-
+        pattern = pattern.replace('+', "\+")
         if pattern in regexp_cache:
             regexp = regexp_cache[pattern]
         else:
-            pattern = pattern.replace('+', "\+")
             try:
                 regexp = re.compile(pattern)
             except:
