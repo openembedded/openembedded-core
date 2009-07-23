@@ -280,6 +280,8 @@ def filterProvidersRunTime(providers, item, cfgData, dataCache):
 
     return eligible, numberPreferred
 
+regexp_cache = {}
+
 def getRuntimeProviders(dataCache, rdepend):
     """
     Return any providers of runtime dependency
@@ -297,12 +299,17 @@ def getRuntimeProviders(dataCache, rdepend):
 
     # Only search dynamic packages if we can't find anything in other variables
     for pattern in dataCache.packages_dynamic:
-        pattern = pattern.replace('+', "\+")
-        try:
-            regexp = re.compile(pattern)
-        except:
-            bb.msg.error(bb.msg.domain.Provider, "Error parsing re expression: %s" % pattern)
-            raise
+
+        if pattern in regexp_cache:
+            regexp = regexp_cache[pattern]
+        else:
+            pattern = pattern.replace('+', "\+")
+            try:
+                regexp = re.compile(pattern)
+            except:
+                bb.msg.error(bb.msg.domain.Provider, "Error parsing re expression: %s" % pattern)
+                raise
+            regexp_cache[pattern] = regexp
         if regexp.match(rdepend):
             rproviders += dataCache.packages_dynamic[pattern]
 
