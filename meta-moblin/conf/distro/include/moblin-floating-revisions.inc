@@ -3,7 +3,7 @@
 SRCREV_pn-libccss ?= "62697eb84fe190f9b8c65fcbaae10ec3d9edfffd"
 #SRCREV_pn-xf86-video-intel ?= "74227141923a2f5049592219ab80e8733062a5d9"
 #SRCREV_pn-nbtk ?= "7618a55265974904c33e5c20ffb2ae4cc366c950"
-SRCREV_pn-mojito ?= "74482d5759c2a5c0b316f1e2d2029b3f03d3323c"
+#SRCREV_pn-mojito ?= "74482d5759c2a5c0b316f1e2d2029b3f03d3323c"
 
 SRCREV_pn-ashford ?= "${AUTOREV}"
 SRCREV_pn-anerley ?= "${AUTOREV}"
@@ -63,4 +63,4 @@ SRCREV_pn-dri2proto ?= "${AUTOREV}"
 SRCREV_pn-libx11-trim ?= "${AUTOREV}"
 
 # hg fetcher can't autoincrement (yet)
-SRCREVMOZILLAHEADLESS ?= "e4eacfa39323"
+SRCREVMOZILLAHEADLESS ?= "1a622cb7c384"
