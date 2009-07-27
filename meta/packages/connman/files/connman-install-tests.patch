@@ -1,13 +1,12 @@
 Index: git/test/Makefile.am
 ===================================================================
---- git.orig/test/Makefile.am	2009-05-21 12:07:39.000000000 +0100
-+++ git/test/Makefile.am	2009-05-21 17:29:33.000000000 +0100
-@@ -1,5 +1,7 @@
- 
--EXTRA_DIST = get-state list-profiles list-services \
+--- git.orig/test/Makefile.am	2009-07-24 16:14:10.000000000 +0100
++++ git/test/Makefile.am	2009-07-24 16:16:18.000000000 +0100
+@@ -1,5 +1,6 @@
 +testdir = $(pkgdatadir)/tests
-+
-+test_SCRIPTS = get-state list-profiles list-services \
+ 
+-EXTRA_DIST = get-state list-profiles list-services connect-service \
++test_SCRIPTS = get-state list-profiles list-services connect-service \
  		list-connections select-connection \
  		list-devices enable-device disable-device start-scanning \
  		list-networks select-network disable-network create-network \

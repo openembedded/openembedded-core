@@ -16,7 +16,8 @@ EXTRA_OECONF += " \
     ac_cv_path_WPASUPPLICANT=/usr/sbin/wpa_supplicant"
 
 SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git;protocol=git \
-            file://connman-install-tests.patch;patch=1 \
+            file://connman-install-tests-d52de88aff4771283b2ebee4f48a7af15862d0ae.patch;patch=1;rev=d52de88aff4771283b2ebee4f48a7af15862d0ae \
+            file://connman-install-tests.patch;patch=1;notrev=d52de88aff4771283b2ebee4f48a7af15862d0ae \
             file://dbusperms.patch;patch=1 \
             file://connman "
 
