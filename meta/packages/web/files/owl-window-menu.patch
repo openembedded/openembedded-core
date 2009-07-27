@@ -6,7 +6,7 @@ Index: trunk/src/web_main.c
  #include "web_bookmarks.h"
  #include "web_request.h"
  
-+#include "owlwindowmenu.h"
++#include <libowl/owlwindowmenu.h>
 +
  static void
  copy_cb (GtkWindow *main_window)
