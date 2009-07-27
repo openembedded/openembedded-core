@@ -1,9 +1,8 @@
 DESCRIPTION = "Synthesis SyncML Engine"
-SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
-           file://addpkgconfig.patch;patch=1"
+SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git"
 LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "libpcre"
 
