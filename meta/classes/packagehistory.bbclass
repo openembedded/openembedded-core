@@ -2,7 +2,7 @@
 inherit package
 PACKAGEFUNCS += "emit_pkghistory"
 
-PKGHIST_DIR = "${TMPDIR}/pkghistory/"
+PKGHIST_DIR = "${TMPDIR}/pkghistory/${BASEPKG_TARGET_SYS}/"
 
 
 #
