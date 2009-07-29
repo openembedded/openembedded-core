@@ -612,6 +612,9 @@ class BBCooker:
         # initialise the parsing status now we know we will need deps
         self.updateCache()
 
+        if self.configuration.revisions_changed:
+            sys.exit(bb.fetch.fetcher_compare_revisons(self.configuration.data))
+
         if self.configuration.parse_only:
             bb.msg.note(1, bb.msg.domain.Collection, "Requested parsing .bb files only.  Exiting.")
             return 0
