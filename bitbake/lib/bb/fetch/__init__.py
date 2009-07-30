@@ -84,6 +84,7 @@ def uri_replace(uri, uri_find, uri_replace, d):
 
 methods = []
 urldata_cache = {}
+saved_headrevs = {}
 
 def fetcher_init(d):
     """
@@ -97,12 +98,15 @@ def fetcher_init(d):
         bb.msg.debug(1, bb.msg.domain.Fetcher, "Keeping SRCREV cache due to cache policy of: %s" % srcrev_policy)
     elif srcrev_policy == "clear":
         bb.msg.debug(1, bb.msg.domain.Fetcher, "Clearing SRCREV cache due to cache policy of: %s" % srcrev_policy)
-        pd.renameDomain("BB_URI_HEADREVS", "BB_URI_HEADREVS_PREVIOUS")
+        try:
+            bb.fetch.saved_headrevs = pd.getKeyValues("BB_URI_HEADREVS")
+        except:
+            pass
+        pd.delDomain("BB_URI_HEADREVS")
     else:
         bb.msg.fatal(bb.msg.domain.Fetcher, "Invalid SRCREV cache policy of: %s" % srcrev_policy)
     # Make sure our domains exist
     pd.addDomain("BB_URI_HEADREVS")
-    pd.addDomain("BB_URI_HEADREVS_PREVIOUS")
     pd.addDomain("BB_URI_LOCALCOUNT")
 
 def fetcher_compare_revisons(d):
@@ -113,7 +117,7 @@ def fetcher_compare_revisons(d):
 
     pd = persist_data.PersistData(d)
     data = pd.getKeyValues("BB_URI_HEADREVS")
-    data2 = pd.getKeyValues("BB_URI_HEADREVS_PREVIOUS")
+    data2 = bb.fetch.saved_headrevs
 
     changed = False
     for key in data:

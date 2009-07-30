@@ -69,16 +69,6 @@ class PersistData:
         """
         self.connection.execute("DROP TABLE IF EXISTS %s;" % domain)
 
-
-    def renameDomain(self, domain, newdomain):
-        """
-        Renames a domain, removing the target if it already exists
-        """
- 
-        self.connection.execute("DROP TABLE IF EXISTS %s;" % newdomain)
-        self.addDomain(domain)
-        self.connection.execute("ALTER TABLE %s RENAME TO %s;" % (domain, newdomain))
-
     def getKeyValues(self, domain):
         """
         Return a list of key + value pairs for a domain
