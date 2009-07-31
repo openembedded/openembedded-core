@@ -2,11 +2,11 @@
  CMakeLists.txt |    4 ----
  1 file changed, 4 deletions(-)
 
---- libsyncml-0.4.7.orig/CMakeLists.txt
-+++ libsyncml-0.4.7/CMakeLists.txt
-@@ -66,14 +66,10 @@ CHECK_INCLUDE_FILES( unistd.h HAVE_UNIST
- 
- CHECK_TYPE_SIZE( uint16_t UINT16_T )
+Index: libsyncml-0.5.4/CMakeLists.txt
+===================================================================
+--- libsyncml-0.5.4.orig/CMakeLists.txt	2009-07-31 09:56:16.000000000 +0100
++++ libsyncml-0.5.4/CMakeLists.txt	2009-07-31 09:57:33.000000000 +0100
+@@ -72,10 +72,6 @@
  CHECK_TYPE_SIZE( uint32_t UINT32_T )
  CHECK_TYPE_SIZE( uint8_t UINT8_T )
  
@@ -15,7 +15,5 @@
 -MACRO_ENSURE_OUT_OF_SOURCE_BUILD("${CMAKE_PROJECT_NAME} doesn't allow to build within the source directory. Please, create a seperate build directory and run 'cmake ${PROJECT_SOURCE_DIR} [options]'!")
 -
  # find requirements
+ SET ( GLIB2_MIN_VERSION "2.12" )
  SET ( OPENOBEX_MIN_VERSION "1.1" )
- # do not set LIBSOUP2_MIN_VERSION
- # if you set LIBSOUP2_MIN_VERSION then you cannot support 2.2 and 2.4
- SET ( LIBSOUP22_MIN_VERSION "2.2.91" )
