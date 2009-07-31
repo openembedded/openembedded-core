@@ -1,7 +1,7 @@
 DESCRIPTION = "Linux Bluetooth Stack HCI Debugger Tool."
 SECTION = "console"
 PRIORITY = "optional"
-DEPENDS = "bluez-libs"
+DEPENDS = "bluez4"
 LICENSE = "GPL"
 PR = "r0"
 
