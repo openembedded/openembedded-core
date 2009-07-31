@@ -5,7 +5,7 @@ SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
            file://clutter10.patch;patch=1;notrev=5560cb14d6b83d0cd6750e33cad48b3b50f93207"
 LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
-PR = "r4"
+PR = "r5"
 
 DEPENDS = "clutter clutter-mozembed clutter-gtk libunique mozilla-headless-services libccss nbtk mozilla-headless"
 

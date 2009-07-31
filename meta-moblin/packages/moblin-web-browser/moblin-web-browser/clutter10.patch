@@ -7,7 +7,7 @@ Index: git/configure.ac
  ])
  
 -PKG_CHECK_MODULES(MWB, clutter-0.9 clutter-gtk-0.9 cluttermozembed nbtk-1.0 unique-1.0 >= 1.0.6 gtk+-2.0 libstartup-notification-1.0 >= 0.9)
-+PKG_CHECK_MODULES(MWB, clutter-1.0 clutter-gtk-1.0 cluttermozembed nbtk-1.0 unique-1.0 >= 1.0.6 gtk+-2.0 libstartup-notification-1.0 >= 0.9)
++PKG_CHECK_MODULES(MWB, clutter-1.0 clutter-gtk-0.10 cluttermozembed nbtk-1.0 unique-1.0 >= 1.0.6 gtk+-2.0 libstartup-notification-1.0 >= 0.9)
  
  PKG_CHECK_MODULES(MHS, mhs-1.0)
  
