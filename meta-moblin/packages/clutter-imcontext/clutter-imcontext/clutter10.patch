@@ -11,3 +11,16 @@ Index: git/configure.ac
  
  AC_SUBST(CLUTTER_CFLAGS)
  AC_SUBST(CLUTTER_LIBS)
+Index: git/clutter-imcontext/clutter-imcontext.pc.in
+===================================================================
+--- git.orig/clutter-imcontext/clutter-imcontext.pc.in	2009-07-31 11:25:27.000000000 +0100
++++ git/clutter-imcontext/clutter-imcontext.pc.in	2009-07-31 11:25:32.000000000 +0100
+@@ -11,7 +11,7 @@
+ 
+ Name: Clutter Input Method Context
+ Description: IMContext For Clutter
+-Requires: clutter-0.9 
++Requires: clutter-1.0
+ Version: @VERSION@
+ Libs: -L${libdir} -lclutter-imcontext-${apiversion}
+ Cflags: -I${includedir}/clutter-imcontext-${apiversion}
