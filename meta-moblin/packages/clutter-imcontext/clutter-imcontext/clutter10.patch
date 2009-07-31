@@ -1,0 +1,13 @@
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac	2009-07-31 10:09:38.000000000 +0100
++++ git/configure.ac	2009-07-31 10:09:56.000000000 +0100
+@@ -33,7 +33,7 @@
+ AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
+ 
+ PKG_CHECK_MODULES(CLUTTER, glib-2.0
+-			clutter-0.9 >= 0.9.3)
++			clutter-1.0 >= 1.0.0)
+ 
+ AC_SUBST(CLUTTER_CFLAGS)
+ AC_SUBST(CLUTTER_LIBS)
