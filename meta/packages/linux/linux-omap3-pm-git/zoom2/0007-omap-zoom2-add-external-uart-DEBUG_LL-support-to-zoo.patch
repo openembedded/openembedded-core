@@ -1,0 +1,71 @@
+From e2d19993731b3b4b083329f3acb4538e9d94fc36 Mon Sep 17 00:00:00 2001
+From: Erik Gilling <konkers@android.com>
+Date: Tue, 21 Apr 2009 13:38:12 -0700
+Subject: [PATCH 7/8] omap: zoom2: add external uart DEBUG_LL support to zoom2 board file
+
+Signed-off-by: Erik Gilling <konkers@android.com>
+---
+ arch/arm/mach-omap2/board-zoom2.c |   23 +++++++++++++++++++++--
+ 1 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/board-zoom2.c b/arch/arm/mach-omap2/board-zoom2.c
+index e4bf50a..5742b55 100644
+--- a/arch/arm/mach-omap2/board-zoom2.c
++++ b/arch/arm/mach-omap2/board-zoom2.c
+@@ -16,9 +16,11 @@
+ #include <linux/gpio.h>
+ #include <linux/i2c/twl4030.h>
+ #include <linux/regulator/machine.h>
++#include <linux/io.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
++#include <asm/mach/map.h>
+ 
+ #include <mach/common.h>
+ #include <mach/usb.h>
+@@ -27,6 +29,10 @@
+ #include "mmc-twl4030.h"
+ #include "omap3-opp.h"
+ 
++#define ZOOM2_QUART_PHYS        0x10000000
++#define ZOOM2_QUART_VIRT        0xFB000000
++#define ZOOM2_QUART_SIZE        SZ_1M
++
+ /* Zoom2 has Qwerty keyboard*/
+ static int zoom2_twl4030_keymap[] = {
+ 	KEY(0, 0, KEY_E),
+@@ -277,15 +283,28 @@ static void __init omap_zoom2_init(void)
+ 	usb_musb_init();
+ }
+ 
++static struct map_desc zoom2_io_desc[] __initdata = {
++	{
++		.virtual	= ZOOM2_QUART_VIRT,
++		.pfn		= __phys_to_pfn(ZOOM2_QUART_PHYS),
++		.length		= ZOOM2_QUART_SIZE,
++		.type		= MT_DEVICE
++	},
++};
++
+ static void __init omap_zoom2_map_io(void)
+ {
+ 	omap2_set_globals_343x();
++	iotable_init(zoom2_io_desc, ARRAY_SIZE(zoom2_io_desc));
+ 	omap2_map_common_io();
+ }
+ 
+ MACHINE_START(OMAP_ZOOM2, "OMAP Zoom2 board")
+-	.phys_io	= 0x48000000,
+-	.io_pg_offst	= ((0xd8000000) >> 18) & 0xfffc,
++	/* phys_io is only used for DEBUG_LL early printing.  The Zoom2's
++	 * console is on an external quad UART sitting at address 0x10000000
++	 */
++	.phys_io	= 0x10000000,
++	.io_pg_offst	= ((0xfb000000) >> 18) & 0xfffc,
+ 	.boot_params	= 0x80000100,
+ 	.map_io		= omap_zoom2_map_io,
+ 	.init_irq	= omap_zoom2_init_irq,
+-- 
+1.6.3.2
+

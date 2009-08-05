@@ -1,0 +1,103 @@
+From bef0894d8a200e43593117a3832cab825ea8aa8c Mon Sep 17 00:00:00 2001
+From: Erik Gilling <konkers@android.com>
+Date: Tue, 21 Apr 2009 13:37:25 -0700
+Subject: [PATCH 8/8] omap2: add support for DEBUG_LL on external UART
+
+Signed-off-by: Erik Gilling <konkers@android.com>
+---
+ arch/arm/plat-omap/Kconfig                    |    3 +++
+ arch/arm/plat-omap/include/mach/debug-macro.S |   14 +++++++++++++-
+ arch/arm/plat-omap/include/mach/serial.h      |    1 +
+ arch/arm/plat-omap/include/mach/uncompress.h  |    5 ++++-
+ 4 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/plat-omap/Kconfig b/arch/arm/plat-omap/Kconfig
+index c782418..e891f07 100644
+--- a/arch/arm/plat-omap/Kconfig
++++ b/arch/arm/plat-omap/Kconfig
+@@ -210,6 +210,9 @@ config OMAP_LL_DEBUG_UART2
+ config OMAP_LL_DEBUG_UART3
+ 	bool "UART3"
+ 
++config OMAP_LL_DEBUG_UART_EXT
++	bool "UART_EXT"
++
+ endchoice
+ 
+ config OMAP_SERIAL_WAKE
+diff --git a/arch/arm/plat-omap/include/mach/debug-macro.S b/arch/arm/plat-omap/include/mach/debug-macro.S
+index ac24050..5864019 100644
+--- a/arch/arm/plat-omap/include/mach/debug-macro.S
++++ b/arch/arm/plat-omap/include/mach/debug-macro.S
+@@ -37,6 +37,10 @@
+ #endif
+ 
+ #elif defined(CONFIG_ARCH_OMAP3) || defined(CONFIG_ARCH_OMAP4)
++#ifdef CONFIG_OMAP_LL_DEBUG_UART_EXT
++		moveq   \rx, #0x10000000        @ physical base address
++		movne   \rx, #0xfb000000        @ virtual base address
++#else
+ 		moveq	\rx, #0x48000000	@ physical base address
+ 		movne	\rx, #0xd8000000	@ virtual base
+ 		orr	\rx, \rx, #0x0006a000
+@@ -48,20 +52,28 @@
+ 		add	\rx, \rx, #0x00006000
+ #endif
+ #endif
++#endif
+ 		.endm
+ 
+ 		.macro	senduart,rd,rx
+ 		strb	\rd, [\rx]
+ 		.endm
+ 
++#ifdef CONFIG_OMAP_LL_DEBUG_UART_EXT
++#define REGSHIFT 1
++#else
++#define REGSHIFT 2
++#endif
+ 		.macro	busyuart,rd,rx
+-1001:		ldrb	\rd, [\rx, #(0x5 << 2)]	@ OMAP-1510 and friends
++1001:		ldrb	\rd, [\rx, #(0x5 << REGSHIFT)]	@ OMAP-1510 and friends
+ 		and	\rd, \rd, #0x60
+ 		teq	\rd, #0x60
++#ifndef CONFIG_OMAP_LL_DEBUG_UART_EXT
+ 		beq	1002f
+ 		ldrb	\rd, [\rx, #(0x5 << 0)]	@ OMAP-730 only
+ 		and	\rd, \rd, #0x60
+ 		teq	\rd, #0x60
++#endif
+ 		bne	1001b
+ 1002:
+ 		.endm
+diff --git a/arch/arm/plat-omap/include/mach/serial.h b/arch/arm/plat-omap/include/mach/serial.h
+index e249186..7ae4567 100644
+--- a/arch/arm/plat-omap/include/mach/serial.h
++++ b/arch/arm/plat-omap/include/mach/serial.h
+@@ -32,6 +32,7 @@
+ #define OMAP_UART1_BASE		0x4806a000
+ #define OMAP_UART2_BASE		0x4806c000
+ #define OMAP_UART3_BASE		0x49020000
++#define OMAP_UART_EXT_BASE	0x10000000
+ #define OMAP_MAX_NR_PORTS	3
+ #elif defined(CONFIG_ARCH_OMAP4)
+ /* OMAP4 serial ports */
+diff --git a/arch/arm/plat-omap/include/mach/uncompress.h b/arch/arm/plat-omap/include/mach/uncompress.h
+index 0814c5f..082c0cd 100644
+--- a/arch/arm/plat-omap/include/mach/uncompress.h
++++ b/arch/arm/plat-omap/include/mach/uncompress.h
+@@ -39,7 +39,10 @@ static void putc(int c)
+ #endif
+ 
+ #ifdef CONFIG_ARCH_OMAP
+-#ifdef	CONFIG_OMAP_LL_DEBUG_UART3
++#ifdef	CONFIG_OMAP_LL_DEBUG_UART_EXT
++	uart = (volatile u8 *)(OMAP_UART_EXT_BASE);
++	shift = 1;
++#elif defined(CONFIG_OMAP_LL_DEBUG_UART3)
+ 	uart = (volatile u8 *)(OMAP_UART3_BASE);
+ #elif defined(CONFIG_OMAP_LL_DEBUG_UART2)
+ 	uart = (volatile u8 *)(OMAP_UART2_BASE);
+-- 
+1.6.3.2
+
