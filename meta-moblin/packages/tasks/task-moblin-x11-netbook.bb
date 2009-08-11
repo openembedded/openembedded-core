@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r9"
+PR = "r10"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -26,6 +26,12 @@ RDEPENDS_task-moblin-x11-netbook = "\
     librest \
     nbtk \
     mutter-moblin \
+    moblin-panel-applications \
+    moblin-panel-media \
+    moblin-panel-myzone \
+    moblin-panel-pasteboard \
+    moblin-panel-people \
+    moblin-panel-status \
     moblin-gtk-engine \
     moblin-menus \
     moblin-user-skel \
