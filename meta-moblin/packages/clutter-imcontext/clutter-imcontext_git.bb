@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 PV = "0.0+git${SRCPV}"
 PR = "r3"
 
-DEPENDS = "clutter glib-2.0"
+DEPENDS = "clutter-1.0 glib-2.0"
 
 S = "${WORKDIR}/git"
 
