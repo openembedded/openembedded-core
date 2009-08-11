@@ -1,6 +1,4 @@
 SRCREV_pn-libccss ?= "62697eb84fe190f9b8c65fcbaae10ec3d9edfffd"
-#SRCREV_pn-mojito ?= "cfad50252a4ad60f28b12d21e2fdb35db56984f5"
-SRCREV_pn-clutter-1.0 ?= "420ed353b53bd624331bd249d7df98d14714b504"
 
 SRCREV_pn-ashford ?= "${AUTOREV}"
 SRCREV_pn-anerley ?= "${AUTOREV}"
