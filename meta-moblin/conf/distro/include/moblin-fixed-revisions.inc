@@ -21,7 +21,7 @@ SRCREV_pn-libdrm ?= "3f3c5be6f908272199ccf53f108b1124bfe0a00e"
 SRCREV_pn-xf86-input-keyboard ?= "3e28d68b50d291938734e9684b8296ca864f3892"
 SRCREV_pn-dri2proto ?= "66c56ab10d917e3f47f93178d7eac6430970d3c4"
 
-SRCREV_pn-anerley ?= "0cd2e8fd2c41f46ba3e7b0763958d6f5cfebf98f"
+SRCREV_pn-anerley ?= "20c6ceffda21595d8894293700006fe3a4cb33ba"
 SRCREV_pn-bickley ?= "3cbd5ef693c117ad5c094ddd1678a1a04d0feae3"
 SRCREV_pn-bisho ?= "53cc5951be36cee818bef3beb5770f10aabdc7f1"
 SRCREV_pn-bognor-regis ?= "c52c7f7013b4b62d7c59d25fc809ce951a5556af"
