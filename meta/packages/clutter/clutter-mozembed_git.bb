@@ -1,7 +1,7 @@
 require clutter-mozembed.inc
 
 PV = "0.8.0+git${SRCPV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://git.clutter-project.org/clutter-mozembed.git;protocol=git \
            file://link-with-g++-da7632f3e2c8d1a70ab01cc7adb63760d8718b41.patch;patch=1;rev=da7632f3e2c8d1a70ab01cc7adb63760d8718b41 \
@@ -9,6 +9,6 @@ SRC_URI = "git://git.clutter-project.org/clutter-mozembed.git;protocol=git \
 S = "${WORKDIR}/git"
 
 do_configure_prepend () {
-	touch ${S}/cluttermozembed/dummy.cpp
-	touch ${S}/cluttermozembed/dummy2.cpp
+	touch ${S}/clutter-mozembed/dummy.cpp
+	touch ${S}/clutter-mozembed/dummy2.cpp
 }
