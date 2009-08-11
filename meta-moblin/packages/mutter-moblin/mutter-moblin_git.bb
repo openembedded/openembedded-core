@@ -1,9 +1,9 @@
 DESCRIPTION = "A Moblin specific plugin for the Mutter composite window manager"
 SECTION = "x11/wm"
-LICENSE = "GPLv3"
-DEPENDS = "nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed bickley"
+LICENSE = "GPLv2"
+DEPENDS = "clutter-1.0 nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed bickley"
 PV = "2.25.2+git${SRCPV}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
            file://startup-notify.patch;patch=1 \
