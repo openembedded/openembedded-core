@@ -2,8 +2,8 @@ inherit package
 
 IMAGE_PKGTYPE ?= "ipk"
 
-IPKGCONF_TARGET = "${STAGING_ETCDIR_NATIVE}/opkg.conf"
-IPKGCONF_SDK =  "${STAGING_ETCDIR_NATIVE}/opkg-sdk.conf"
+IPKGCONF_TARGET = "${WORKDIR}/opkg.conf"
+IPKGCONF_SDK =  "${WORKDIR}/opkg-sdk.conf"
 
 python package_ipk_fn () {
 	from bb import data
