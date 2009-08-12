@@ -1,5 +1,3 @@
-inherit base
-
 # The namespaces can clash here hence the two step replace
 def get_binconfig_mangle(d):
 	import bb.data
