@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r10"
+PR = "r11"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -20,6 +20,7 @@ RDEPENDS_task-moblin-x11-netbook = "\
     bickley \
     mojito \
     mutter \
+    droid-fonts \
     matchbox-config-gtk \
     xcursor-transparent-theme \
     settings-daemon \
