@@ -14,7 +14,6 @@ PR = "r1"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-omap-pm.git;branch=pm;protocol=git"
 
 SRC_URI_append_zoom2 = " \
-	file://0001-OMAP3-MMC-Add-mux-for-pins.patch;patch=1 \
 	file://0002-OMAP3-Zoom2-Add-TWL4030-support.patch;patch=1 \
 	file://0003-OMAP3-Zoom2-Update-board-defconfig.patch;patch=1 \
 	file://0004-serial-8250-add-IRQ-trigger-support.patch;patch=1 \
@@ -64,7 +63,6 @@ do_configure_prepend() {
 					-e "s/CONFIG_MMC_OMAP_HS=m/CONFIG_MMC_OMAP_HS=y/" \
 					-i ${S}/.config
 				echo "CONFIG_OMAP_LL_DEBUG_UART_EXT=y" >> ${S}/.config
-#				yes '' | oe_runmake oldconfig
 				;;
 			*)
 				# its worth a try...
