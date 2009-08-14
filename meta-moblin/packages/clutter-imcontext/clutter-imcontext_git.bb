@@ -1,7 +1,7 @@
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git"
 LICENSE = "GPLv2"
 PV = "0.0+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 DEPENDS = "clutter-1.0 glib-2.0"
 

@@ -3,7 +3,7 @@ SECTION = "x11/wm"
 LICENSE = "GPLv2"
 DEPENDS = "clutter-1.0 nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed bickley"
 PV = "2.25.2+git${SRCPV}"
-PR = "r9"
+PR = "r11"
 
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
            file://startup-notify.patch;patch=1 \
