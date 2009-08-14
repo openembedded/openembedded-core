@@ -1,9 +1,9 @@
 SECTION = "x11/wm"
 DESCRIPTION = "Metacity is the boring window manager for the adult in you. Mutter is metacity + clutter."
 LICENSE = "GPLv2"
-DEPENDS = "startup-notification gtk+ gconf clutter gdk-pixbuf-csource-native intltool glib-2.0-native"
+DEPENDS = "startup-notification gtk+ gconf clutter-1.0 gdk-pixbuf-csource-native intltool glib-2.0-native"
 # gobject-introspection
-PR = "r10"
+PR = "r12"
 PV = "2.25.1+git${SRCPV}"
 inherit gnome update-alternatives
 
