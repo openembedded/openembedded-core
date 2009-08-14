@@ -1,7 +1,7 @@
 require clutter.inc
 
 PV = "1.0+git${SRCPV}"
-PR = "r0"
+PR = "r2"
 
 PACKAGES =+ "clutter-examples-1.0"
 FILES_clutter-examples-1.0 = "${bindir}/test-* ${pkgdatadir}/redhand.png"
