@@ -2,7 +2,7 @@ DESCRIPTION = "Custom MB session files for poky"
 LICENSE = "GPL"
 SECTION = "x11"
 RDEPENDS = "formfactor gtk-engines initscripts matchbox-session"
-PR = "r18"
+PR = "r19"
 
 # This package is architecture specific because the session script is modified
 # based on the machine architecture.
