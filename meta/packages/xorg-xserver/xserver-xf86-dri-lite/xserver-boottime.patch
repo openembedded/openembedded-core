@@ -2,7 +2,7 @@ diff --git a/os/log.c b/os/log.c
 index 0860847..2c46f1a 100644
 --- a/os/log.c
 +++ b/os/log.c
-@@ -255,6 +255,32 @@ LogVWrite(int verb, const char *f, va_list args)
+@@ -255,6 +255,33 @@ LogVWrite(int verb, const char *f, va_list args)
      static char tmpBuffer[1024];
      int len = 0;
  
@@ -30,7 +30,8 @@ index 0860847..2c46f1a 100644
 +    }
 +    sprintf(tmpBuffer, "[%d sec: %06d usec]", diff_sec , diff_usec);
 +    len = strlen(tmpBuffer);
-+    fwrite(tmpBuffer, len, 1, logFile);
++    if (logFile)
++          fwrite(tmpBuffer, len, 1, logFile);
 +
      /*
       * Since a va_list can only be processed once, write the string to a
