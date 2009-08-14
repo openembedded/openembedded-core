@@ -7,7 +7,7 @@ PREFERRED_VERSION_dbus ?= "1.2.14"
 PREFERRED_VERSION_dbus-native ?= "1.2.14"
 PREFERRED_VERSION_gtk+ ?= "2.16.4"
 
-PREFERRED_VERSION_mesa-dri ?= "7.4"
+PREFERRED_VERSION_mesa-dri ?= "7.5"
 PREFERRED_VERSION_xf86-video-intel ?= "2.7.1"
 PREFERRED_VERSION_xserver-xf86-dri-lite ?= "1.6.0"
 PREFERRED_VERSION_libxcb ?= "1.3"
