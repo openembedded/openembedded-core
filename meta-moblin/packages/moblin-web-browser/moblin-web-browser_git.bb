@@ -4,9 +4,9 @@ SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git \
            file://xpidl.patch;patch=1;notrev=b55d523da7681febfabf9fc40dcd6fcee982b079"
 LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
-PR = "r6"
+PR = "r7"
 
-DEPENDS = "clutter-1.0 clutter-mozembed clutter-gtk libunique mozilla-headless-services libccss nbtk mozilla-headless"
+DEPENDS = "clutter-1.0 clutter-mozembed clutter-gtk libunique mozilla-headless-services libccss nbtk mozilla-headless mutter-moblin"
 
 S = "${WORKDIR}/git"
 
