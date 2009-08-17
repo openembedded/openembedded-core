@@ -1,14 +1,14 @@
 include mesa-common.inc
 
-SRC_URI += "file://crossfix.patch;patch=1 \
-            file://mesa-DRI2Swapbuffer.patch;patch=1 "
+SRC_URI += "file://crossfix.patch;patch=1"
+#            file://mesa-DRI2Swapbuffer.patch;patch=1
 
 PROTO_DEPS = "xf86driproto glproto dri2proto"
 LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
-PR = "r10"
+PR = "r11"
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
