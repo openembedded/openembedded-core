@@ -1,0 +1,62 @@
+Index: gettext-0.17/gettext-runtime/man/Makefile.am
+===================================================================
+--- gettext-0.17.orig/gettext-runtime/man/Makefile.am	2007-10-07 21:37:36.000000000 +0200
++++ gettext-0.17/gettext-runtime/man/Makefile.am	2008-05-09 22:46:37.000000000 +0200
+@@ -158,8 +158,7 @@
+ 	$(MAN2HTML) $(srcdir)/bind_textdomain_codeset.3.in | sed -e '/CreationDate:/d' > t-$@
+ 	mv t-$@ $@
+ 
+-install-html-local:
+-	$(mkdir_p) $(DESTDIR)$(htmldir)
++install-html: installdirs-html
+ 	for file in $(man_HTML); do \
+ 	  if test -f $$file; then dir=.; else dir=$(srcdir); fi; \
+ 	  $(INSTALL_DATA) $$dir/$$file $(DESTDIR)$(htmldir)/$$file; \
+Index: gettext-0.17/gettext-tools/man/Makefile.am
+===================================================================
+--- gettext-0.17.orig/gettext-tools/man/Makefile.am	2007-10-28 00:18:37.000000000 +0200
++++ gettext-0.17/gettext-tools/man/Makefile.am	2008-05-09 22:46:37.000000000 +0200
+@@ -186,8 +186,7 @@
+ 	$(MAN2HTML) `if test -f autopoint.1; then echo .; else echo $(srcdir); fi`/autopoint.1 | sed -e '/CreationDate:/d' > t-$@
+ 	mv t-$@ $@
+ 
+-install-html-local:
+-	$(mkdir_p) $(DESTDIR)$(htmldir)
++install-html: installdirs-html
+ 	for file in $(man_HTML); do \
+ 	  if test -f $$file; then dir=.; else dir=$(srcdir); fi; \
+ 	  $(INSTALL_DATA) $$dir/$$file $(DESTDIR)$(htmldir)/$$file; \
+Index: gettext-0.17/gettext-runtime/libasprintf/configure.ac
+===================================================================
+--- gettext-0.17.orig/gettext-runtime/libasprintf/configure.ac	2008-05-09 22:53:42.000000000 +0200
++++ gettext-0.17/gettext-runtime/libasprintf/configure.ac	2008-05-09 22:53:54.000000000 +0200
+@@ -1,5 +1,5 @@
+ dnl Configuration for the GNU libasprintf library
+-dnl Copyright (C) 2002-2006 Free Software Foundation, Inc.
++dnl Copyright (C) 2002-2007 Free Software Foundation, Inc.
+ dnl
+ dnl This program is free software: you can redistribute it and/or modify
+ dnl it under the terms of the GNU General Public License as published by
+@@ -54,8 +54,7 @@
+ dnl Checks for typedefs, structures, and compiler characteristics.
+ AC_C_INLINE
+ AC_TYPE_SIZE_T
+-gl_AC_TYPE_LONG_LONG
+-gt_TYPE_LONGDOUBLE
++AC_TYPE_LONG_LONG_INT
+ gt_TYPE_WCHAR_T
+ gt_TYPE_WINT_T
+ AC_CHECK_TYPE([ptrdiff_t], ,
+@@ -79,8 +78,11 @@
+ AC_SUBST([ALLOCA_H])
+ 
+ AC_CHECK_FUNCS([snprintf vasprintf wcslen])
+-AC_CHECK_DECLS([_snprintf])
++dnl Use the _snprintf function only if it is declared (because on NetBSD it
++dnl is defined as a weak alias of snprintf; we prefer to use the latter).
++AC_CHECK_DECLS([_snprintf], , , [#include <stdio.h>])
+ gt_PRINTF_POSIX
++gl_EOVERFLOW
+ 
+ dnl Check for tools needed for formatting the documentation.
+ ac_aux_dir_abs=`cd $ac_aux_dir && pwd`

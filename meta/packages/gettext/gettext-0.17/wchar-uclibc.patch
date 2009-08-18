@@ -1,0 +1,96 @@
+Index: gettext-0.17/gettext-runtime/gnulib-lib/wchar.in.h
+===================================================================
+--- gettext-0.17.orig/gettext-runtime/gnulib-lib/wchar.in.h	2008-07-29 14:51:52.336394636 +0200
++++ gettext-0.17/gettext-runtime/gnulib-lib/wchar.in.h	2008-07-29 14:52:25.546430195 +0200
+@@ -1,6 +1,6 @@
+ /* A substitute for ISO C99 <wchar.h>, for platforms that have issues.
+ 
+-   Copyright (C) 2007 Free Software Foundation, Inc.
++   Copyright (C) 2007-2008 Free Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -26,6 +26,14 @@
+  * the declaration of wcwidth().
+  */
+ 
++#ifdef __need_mbstate_t
++/* Special invocation convention inside uClibc header files.  */
++
++#@INCLUDE_NEXT@ @NEXT_WCHAR_H@
++
++#else
++/* Normal invocation convention.  */
++
+ #ifndef _GL_WCHAR_H
+ 
+ /* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
+@@ -80,3 +88,4 @@
+ 
+ #endif /* _GL_WCHAR_H */
+ #endif /* _GL_WCHAR_H */
++#endif
+Index: gettext-0.17/gettext-tools/gnulib-lib/wchar.in.h
+===================================================================
+--- gettext-0.17.orig/gettext-tools/gnulib-lib/wchar.in.h	2008-07-29 14:52:03.886393956 +0200
++++ gettext-0.17/gettext-tools/gnulib-lib/wchar.in.h	2008-07-29 14:52:50.876388000 +0200
+@@ -1,6 +1,6 @@
+ /* A substitute for ISO C99 <wchar.h>, for platforms that have issues.
+ 
+-   Copyright (C) 2007 Free Software Foundation, Inc.
++   Copyright (C) 2007-2008 Free Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -26,6 +26,14 @@
+  * the declaration of wcwidth().
+  */
+ 
++#ifdef __need_mbstate_t
++/* Special invocation convention inside uClibc header files.  */
++
++#@INCLUDE_NEXT@ @NEXT_WCHAR_H@
++
++#else
++/* Normal invocation convention.  */
++
+ #ifndef _GL_WCHAR_H
+ 
+ /* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
+@@ -80,3 +88,4 @@
+ 
+ #endif /* _GL_WCHAR_H */
+ #endif /* _GL_WCHAR_H */
++#endif
+Index: gettext-0.17/gettext-tools/libgettextpo/wchar.in.h
+===================================================================
+--- gettext-0.17.orig/gettext-tools/libgettextpo/wchar.in.h	2008-07-29 14:51:58.826395009 +0200
++++ gettext-0.17/gettext-tools/libgettextpo/wchar.in.h	2008-07-29 14:52:38.609723575 +0200
+@@ -1,6 +1,6 @@
+ /* A substitute for ISO C99 <wchar.h>, for platforms that have issues.
+ 
+-   Copyright (C) 2007 Free Software Foundation, Inc.
++   Copyright (C) 2007-2008 Free Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -26,6 +26,14 @@
+  * the declaration of wcwidth().
+  */
+ 
++#ifdef __need_mbstate_t
++/* Special invocation convention inside uClibc header files.  */
++
++#@INCLUDE_NEXT@ @NEXT_WCHAR_H@
++
++#else
++/* Normal invocation convention.  */
++
+ #ifndef _GL_WCHAR_H
+ 
+ /* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
+@@ -80,3 +88,4 @@
+ 
+ #endif /* _GL_WCHAR_H */
+ #endif /* _GL_WCHAR_H */
++#endif

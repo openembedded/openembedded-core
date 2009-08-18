@@ -1,0 +1,13 @@
+Index: gettext-0.17/gettext-tools/libgettextpo/error.h
+===================================================================
+--- gettext-0.17.orig/gettext-tools/libgettextpo/error.h	2008-07-27 21:16:25.561115527 +0200
++++ gettext-0.17/gettext-tools/libgettextpo/error.h	2008-07-27 21:16:52.454440505 +0200
+@@ -49,7 +49,7 @@
+ /* If NULL, error will flush stdout, then print on stderr the program
+    name, a colon and a space.  Otherwise, error will call this
+    function without parameters instead.  */
+-extern DLL_VARIABLE void (*error_print_progname) (void);
++void (*error_print_progname) (void);
+ 
+ /* This variable is incremented each time `error' is called.  */
+ extern DLL_VARIABLE unsigned int error_message_count;
