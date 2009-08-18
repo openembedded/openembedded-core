@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r14"
+PR = "r16"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -15,15 +15,16 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
 
+#    matchbox-config-gtk \
+#    xcursor-transparent-theme \
+
 EXTRA_MOBLIN_PACKAGES ?= ""
 RDEPENDS_task-moblin-x11-netbook = "\
     bickley \
     mojito \
     mutter \
     droid-fonts \
-    matchbox-config-gtk \
-    xcursor-transparent-theme \
-    settings-daemon \
+    gnome-settings-daemon \
     librest \
     nbtk \
     mutter-moblin \
