@@ -15,8 +15,3 @@ EXTRA_OECONF += "--disable-verbose \
 	         --disable-xinerama"
 
 FILES_${PN} += "${datadir}/themes"
-
-do_stage () {
-	 autotools_stage_all
-}
-
