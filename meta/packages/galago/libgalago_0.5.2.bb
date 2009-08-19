@@ -4,8 +4,9 @@ LICENSE =	"LGPL"
 DEPENDS = 	"gettext dbus glib-2.0 dbus-glib"
 
 SRC_URI =	"http://www.galago-project.org/files/releases/source/${PN}/${P}.tar.gz \
+                 file://mkdir.patch;patch=1 \
                  file://pkgconfig.patch;patch=1 "
-PR = "r1"
+PR = "r2"
 
 inherit autotools_stage pkgconfig
 
