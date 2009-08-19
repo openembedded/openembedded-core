@@ -2,7 +2,8 @@ DESCRIPTION = "find, locate, and xargs binaries."
 SECTION = "console/utils"
 LICENSE = "GPL"
 
-SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz \
+           file://mkdir.patch;patch=1"
 
 inherit autotools gettext
 

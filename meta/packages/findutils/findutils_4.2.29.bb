@@ -1,8 +1,12 @@
 require findutils.inc
 
+PR = "r2"
+
 do_install_append () {
-        mv ${D}${bindir}/find ${D}${bindir}/find.${PN}
-        mv ${D}${bindir}/xargs ${D}${bindir}/xargs.${PN}
+        if [ -e ${D}${bindir}/find ]; then
+            mv ${D}${bindir}/find ${D}${bindir}/find.${PN}
+            mv ${D}${bindir}/xargs ${D}${bindir}/xargs.${PN}
+        fi
 }
 
 pkg_postinst_${PN} () {
@@ -12,3 +16,5 @@ pkg_postinst_${PN} () {
 pkg_prerm_${PN} () {
 	for i in find xargs; do update-alternatives --remove $i $i.${PN}; done
 }
+
+BBCLASSEXTEND = "native"
