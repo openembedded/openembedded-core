@@ -1,12 +1,24 @@
-Index: telepathy-mission-control-4.49/libmissioncontrol.pc.in
+Index: telepathy-mission-control-4.67/libmissioncontrol.pc.in
 ===================================================================
---- telepathy-mission-control-4.49.orig/libmissioncontrol.pc.in	2008-03-19 22:36:30.000000000 +0000
-+++ telepathy-mission-control-4.49/libmissioncontrol.pc.in	2008-03-19 22:37:27.000000000 +0000
+--- telepathy-mission-control-4.67.orig/libmissioncontrol.pc.in	2008-04-08 12:26:02.000000000 +0100
++++ telepathy-mission-control-4.67/libmissioncontrol.pc.in	2009-08-19 15:55:57.000000000 +0100
 @@ -8,5 +8,5 @@
  Description:  Mission Control Client Library
- Requires: dbus-1 >= 0.50, libtelepathy >= 0.0.54
+ Requires: dbus-1 >= 0.50, libtelepathy >= 0.3.2, telepathy-glib >= 0.7.1
  Version: @VERSION@
 -Libs: -L${libdir} -lmissioncontrol-client @DBUS_LIBS@
 -Cflags: -I${includedir} @DBUS_CFLAGS@
 +Libs: -L${libdir} -lmissioncontrol-client
++Cflags: -I${includedir}
+Index: telepathy-mission-control-4.67/libmcclient.pc.in
+===================================================================
+--- telepathy-mission-control-4.67.orig/libmcclient.pc.in	2009-08-19 16:33:46.000000000 +0100
++++ telepathy-mission-control-4.67/libmcclient.pc.in	2009-08-19 16:35:09.000000000 +0100
+@@ -8,5 +8,5 @@
+ Description:  Mission Control Client Library
+ Requires: dbus-1 >= 0.50, telepathy-glib >= 0.7.1
+ Version: @VERSION@
+-Libs: -L${libdir} -lmcclient @DBUS_LIBS@
+-Cflags: -I${includedir} @DBUS_CFLAGS@
++Libs: -L${libdir} -lmcclient
 +Cflags: -I${includedir}

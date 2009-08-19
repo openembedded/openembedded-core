@@ -7,6 +7,8 @@ DEPENDS = "libtelepathy dbus-glib gconf"
 SRC_URI = "${SOURCEFORGE_MIRROR}/mission-control/telepathy-mission-control-${PV}.tar.gz \
            file://pkgconfig.patch;patch=1"
 
+PR = "r1"
+
 inherit autotools_stage pkgconfig
 
 PACKAGES =+ " \
