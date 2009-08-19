@@ -27,3 +27,5 @@ do_build() {
 	package_update_index_ipk
 	set +ex
 }
+
+EXCLUDE_FROM_WORLD = "1"
