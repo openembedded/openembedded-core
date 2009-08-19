@@ -14,7 +14,7 @@ EXTRA_OECONF = " \
 "
 
 FILES_${PN} += "${libdir}/*/*.so"
-FILES_${PN}-dev += "${libdir}/*/*a"
+FILES_${PN}-dev += "${libdir}/f*/*a ${libdir}/g*/*a"
 FILES_${PN}-dbg += "${libdir}/*/.debug"
 
 
