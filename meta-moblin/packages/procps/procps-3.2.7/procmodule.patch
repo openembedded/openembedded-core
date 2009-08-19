@@ -1,0 +1,36 @@
+*** procps-3.2.5/proc/module.mk.orig	Sun Jul 24 11:53:49 2005
+--- procps-3.2.5/proc/module.mk	Sun Jul 24 11:54:32 2005
+***************
+*** 96,102 ****
+  #################### install rules ###########################
+  
+  $(lib)$(SOFILE) : proc/$(SONAME)
+! 	$(install) --mode a=rx $< $@
+  
+  ifneq ($(SOLINK),$(SOFILE))
+  .PHONY: $(lib)$(SOLINK)
+--- 96,102 ----
+  #################### install rules ###########################
+  
+  $(lib)$(SOFILE) : proc/$(SONAME)
+! 	$(install) -m 555 $< $@
+  
+  ifneq ($(SOLINK),$(SOFILE))
+  .PHONY: $(lib)$(SOLINK)
+***************
+*** 115,121 ****
+  	$(ldconfig)
+  
+  $(usr/lib)$(ANAME) : proc/$(ANAME)
+! 	$(install) --mode a=r $< $@
+  
+  # Junk anyway... supposed to go in /usr/include/$(NAME)
+  #INSTALL += $(addprefix $(include),$(HDRFILES))
+--- 115,121 ----
+  	$(ldconfig)
+  
+  $(usr/lib)$(ANAME) : proc/$(ANAME)
+! 	$(install) -m 444 $< $@
+  
+  # Junk anyway... supposed to go in /usr/include/$(NAME)
+  #INSTALL += $(addprefix $(include),$(HDRFILES))

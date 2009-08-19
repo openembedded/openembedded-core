@@ -1,0 +1,21 @@
+*** procps-3.2.5/ps/module.mk.orig	Sun Jul 24 11:54:40 2005
+--- procps-3.2.5/ps/module.mk	Sun Jul 24 11:55:02 2005
+***************
+*** 33,40 ****
+  
+  
+  $(bin)ps: ps/ps
+! 	$(install) --mode a=rx $< $@
+  
+  $(man1)ps.1 : ps/ps.1
+! 	$(install) --mode a=r $< $@
+  	-rm -f $(DESTDIR)/var/catman/cat1/ps.1.gz $(DESTDIR)/var/man/cat1/ps.1.gz
+--- 33,40 ----
+  
+  
+  $(bin)ps: ps/ps
+! 	$(install) -m 555 $< $@
+  
+  $(man1)ps.1 : ps/ps.1
+! 	$(install) -m 444 $< $@
+  	-rm -f $(DESTDIR)/var/catman/cat1/ps.1.gz $(DESTDIR)/var/man/cat1/ps.1.gz

@@ -1,0 +1,22 @@
+Index: procps-3.2.1/proc/devname.c
+===================================================================
+--- procps-3.2.1.orig/proc/devname.c	2004-03-18 05:43:50.000000000 +1100
++++ procps-3.2.1/proc/devname.c	2005-04-02 10:40:17.462138000 +1000
+@@ -227,7 +227,7 @@
+ 
+ /* number --> name */
+ unsigned dev_to_tty(char *restrict ret, unsigned chop, dev_t dev_t_dev, int pid, unsigned int flags) {
+-  static char buf[PAGE_SIZE];
++  static char buf[4096];
+   char *restrict tmp = buf;
+   unsigned dev = dev_t_dev;
+   unsigned i = 0;
+@@ -249,7 +249,7 @@
+   if((flags&ABBREV_TTY) && !strncmp(tmp,"tty",  3) && tmp[3]) tmp += 3;
+   if((flags&ABBREV_PTS) && !strncmp(tmp,"pts/", 4) && tmp[4]) tmp += 4;
+   /* gotta check before we chop or we may chop someone else's memory */
+-  if(chop + (unsigned long)(tmp-buf) <= sizeof buf)
++  if(chop + (unsigned long)(tmp-buf) < sizeof buf)
+     tmp[chop] = '\0';
+   /* replace non-ASCII characters with '?' and return the number of chars */
+   for(;;){

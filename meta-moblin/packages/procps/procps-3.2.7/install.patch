@@ -1,0 +1,27 @@
+--- procps-3.2.5.virgin/Makefile	2005-01-26 05:55:26.000000000 +0100
++++ procps-3.2.5/Makefile	2005-08-03 04:55:26.346984488 +0200
+@@ -30,7 +30,10 @@
+ install  := install -D --owner 0 --group 0
+ 
+ # Lame x86-64 /lib64 and /usr/lib64 abomination:
+-lib64    := lib$(shell [ -d /lib64 ] && echo 64)
++# lib64    := lib$(shell [ -d /lib64 ] && echo 64)
++
++# Equally lame hack to work around makefile lameness when the host arch is 64bit, but the target is not.
++lib64      := lib
+ 
+ usr/bin                  := $(DESTDIR)/usr/bin/
+ bin                      := $(DESTDIR)/bin/
+@@ -211,10 +214,10 @@
+ ###### install
+ 
+ $(BINFILES) : all
+-	$(install) --mode a=rx $(notdir $@) $@
++	$(install) -m 555 $(notdir $@) $@
+ 
+ $(MANFILES) : all
+-	$(install) --mode a=r $(notdir $@) $@
++	$(install) -m 444 $(notdir $@) $@
+ 
+ install: $(filter-out $(SKIP) $(addprefix $(DESTDIR),$(SKIP)),$(INSTALL))
+ 	cd $(usr/bin) && $(ln_f) skill snice
