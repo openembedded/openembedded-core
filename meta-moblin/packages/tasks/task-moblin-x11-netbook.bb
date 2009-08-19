@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r17"
+PR = "r19"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -49,4 +49,6 @@ RDEPENDS_task-moblin-x11-netbook = "\
     moblin-sound-theme \
     matchbox-session-netbook \
     carrick \
+    empathy \
+    gnome-terminal \
     ${EXTRA_MOBLIN_PACKAGES}"
