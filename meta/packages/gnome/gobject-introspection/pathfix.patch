@@ -1,22 +1,22 @@
 Index: git/gir/Makefile.am
 ===================================================================
---- git.orig/gir/Makefile.am	2009-05-12 14:37:40.000000000 +0100
-+++ git/gir/Makefile.am	2009-05-12 14:37:40.000000000 +0100
-@@ -40,7 +40,7 @@
+--- git.orig/gir/Makefile.am	2009-08-19 11:11:26.000000000 +0100
++++ git/gir/Makefile.am	2009-08-19 11:12:45.000000000 +0100
+@@ -41,7 +41,7 @@
  	    -I$(GLIB_LIBDIR)/glib-2.0/include \
  	    -DGETTEXT_PACKAGE=Dummy \
  	    -D__G_I18N_LIB_H__ \
 -	    $(GLIB_LIBDIR)/glib-2.0/include/glibconfig.h \
 +	    $(GLIB_INCLUDEDIR)/glibconfig.h \
  	    $(srcdir)/glib-2.0.c \
+ 	    -DGLIB_COMPILATION \
  	    $(GLIB_INCLUDEDIR)/glib/*.h
- 	$(SCANNER) $(SCANNER_ARGS) \
 Index: git/giscanner/dumper.py
 ===================================================================
---- git.orig/giscanner/dumper.py	2009-05-12 14:37:40.000000000 +0100
-+++ git/giscanner/dumper.py	2009-05-12 14:37:40.000000000 +0100
-@@ -79,7 +79,7 @@
-         self._tmpdir = tempfile.mkdtemp('', 'tmp-introspect')
+--- git.orig/giscanner/dumper.py	2009-08-19 11:11:26.000000000 +0100
++++ git/giscanner/dumper.py	2009-08-19 11:12:45.000000000 +0100
+@@ -82,7 +82,7 @@
+         self._tmpdir = tempfile.mkdtemp('', 'tmp-introspect', dir=os.getcwd())
  
          self._compiler_cmd = os.environ.get('CC', 'gcc')
 -        self._linker_cmd = os.environ.get('LD', self._compiler_cmd)
@@ -26,9 +26,9 @@ Index: git/giscanner/dumper.py
          self._uninst_srcdir = os.environ.get(
 Index: git/giscanner/scannermain.py
 ===================================================================
---- git.orig/giscanner/scannermain.py	2009-05-12 14:37:40.000000000 +0100
-+++ git/giscanner/scannermain.py	2009-05-12 14:37:40.000000000 +0100
-@@ -282,6 +282,7 @@
+--- git.orig/giscanner/scannermain.py	2009-08-19 11:11:26.000000000 +0100
++++ git/giscanner/scannermain.py	2009-08-19 11:12:45.000000000 +0100
+@@ -283,6 +283,7 @@
      shown_include_warning = False
      for include in options.includes:
          if os.sep in include:
@@ -36,18 +36,3 @@ Index: git/giscanner/scannermain.py
              raise ValueError("Invalid include path %r" % (include, ))
          include_obj = Include.from_string(include)
          transformer.register_include(include_obj)
-Index: git/configure.ac
-===================================================================
---- git.orig/configure.ac	2009-05-12 14:37:40.000000000 +0100
-+++ git/configure.ac	2009-05-12 14:38:01.000000000 +0100
-@@ -191,7 +191,9 @@
- esac
- AM_CHECK_PYTHON_HEADERS(,AC_MSG_ERROR([Python headers not found]))
- 
--SHAVE_INIT([scripts])
-+SHAVE_SAVED_LIBTOOL=$LIBTOOL
-+AC_SUBST(SHAVE_SAVED_LIBTOOL)
-+
- AC_CONFIG_FILES([
- Makefile
- gir/Makefile
