@@ -4,7 +4,8 @@ LICENSE = "GPL"
 SECTION = "base"
 DEPENDS = "gettext"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/e2fsprogs/e2fsprogs-${PV}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/e2fsprogs/e2fsprogs-${PV}.tar.gz \
+           file://mkdir.patch;patch=1"
 
 inherit autotools
 
