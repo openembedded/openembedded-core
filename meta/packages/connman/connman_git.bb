@@ -27,6 +27,7 @@ INITSCRIPT_PARAMS = "start 05 5 2 . stop 22 0 1 6 ."
 inherit autotools_stage pkgconfig update-rc.d
 
 do_install_append() {
+    install -d ${D}${sysconfdir}/init.d/
     install -m 0755 ${WORKDIR}/connman ${D}${sysconfdir}/init.d/connman
 }
 

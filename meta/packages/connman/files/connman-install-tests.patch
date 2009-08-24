@@ -1,12 +1,15 @@
-Index: git/test/Makefile.am
+Index: git/Makefile.am
 ===================================================================
---- git.orig/test/Makefile.am	2009-07-24 16:14:10.000000000 +0100
-+++ git/test/Makefile.am	2009-07-24 16:16:18.000000000 +0100
-@@ -1,5 +1,6 @@
-+testdir = $(pkgdatadir)/tests
+--- git.orig/Makefile.am	2009-08-24 15:56:33.000000000 +0100
++++ git/Makefile.am	2009-08-24 16:02:38.000000000 +0100
+@@ -115,7 +115,9 @@
+ tools_wifi_scan_LDADD = @GLIB_LIBS@ @NETLINK_LIBS@
+ endif
  
--EXTRA_DIST = get-state list-profiles list-services connect-service \
-+test_SCRIPTS = get-state list-profiles list-services connect-service \
- 		list-connections select-connection \
- 		list-devices enable-device disable-device start-scanning \
- 		list-networks select-network disable-network create-network \
+-EXTRA_DIST += test/get-state test/list-profiles test/list-services \
++testdir = $(pkgdatadir)/tests
++
++test_SCRIPTS = test/get-state test/list-profiles test/list-services \
+ 		test/connect-service test/list-connections \
+ 		test/select-connection test/list-devices test/enable-device \
+ 		test/disable-device test/start-scanning test/list-networks \
