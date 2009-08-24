@@ -6,6 +6,8 @@ PR = "r2"
 
 DEPENDS = "clutter-1.0 libccss clutter-imcontext"
 
+EXTRA_OECONF = "--disable-introspection"
+
 S = "${WORKDIR}/git"
 
 inherit autotools_stage
