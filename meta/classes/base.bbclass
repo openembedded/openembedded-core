@@ -1009,15 +1009,13 @@ def base_after_parse(d):
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     # Mercurial packages should DEPEND on mercurial-native
-    srcuri = bb.data.getVar('SRC_URI', d, 1)
-    if "hg://" in srcuri:
+    elif "hg://" in srcuri:
         depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
         depends = depends + " mercurial-native:do_populate_staging"
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     # OSC packages should DEPEND on osc-native
-    srcuri = bb.data.getVar('SRC_URI', d, 1)
-    if "osc://" in srcuri:
+    elif "osc://" in srcuri:
         depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
         depends = depends + " osc-native:do_populate_staging"
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
