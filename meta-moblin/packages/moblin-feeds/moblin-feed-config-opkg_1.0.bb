@@ -1,6 +1,6 @@
 DESCRIPTION = "Moblin feed configuration files (Online package repositories)"
 
-PR = "r0"
+PR = "r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 FEEDNAMEPREFIX ?= "INVALID"
