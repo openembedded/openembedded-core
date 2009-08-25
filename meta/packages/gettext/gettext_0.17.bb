@@ -2,7 +2,7 @@ DESCRIPTION = "The GNU internationalization library."
 HOMEPAGE = "http://www.gnu.org/software/gettext/gettext.html"
 SECTION = "libs"
 LICENSE = "GPLv3"
-PR = "r2"
+PR = "r3"
 DEPENDS = "gettext-native virtual/libiconv ncurses expat"
 PROVIDES = "virtual/libintl"
 
@@ -26,6 +26,7 @@ EXTRA_OECONF += "--without-lispdir \
 		 --disable-native-java \
 		 --disable-openmp \
 		 --with-included-glib \
+		 --with-libncurses-prefix=${STAGING_LIBDIR}/.. \
 		 --without-emacs \
 	        "
 
