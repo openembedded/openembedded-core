@@ -3,12 +3,17 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
 RDEPENDS = "python"
-PR = "r2"
+RDEPENDS_virtclass-native = ""
+PR = "r4"
 
-SRC_URI = "svn://svn.openmoko.org/trunk/src/host/;module=opkg-utils;proto=http"
-
-S = "${WORKDIR}/opkg-utils"
+SRC_URI = "svn://svn.openmoko.org/trunk/src/host/;module=opkg-utils;proto=http \
+           file://index-ignore-filenotfound.patch;patch=1"
 
 inherit autotools_stage
 
 S = "${WORKDIR}/opkg-utils"
+
+# Avoid circular dependencies from package_ipk.bbclass
+PACKAGES_virtclass-native = ""
+
+BBCLASSEXTEND = "native"

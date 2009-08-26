@@ -1,0 +1,29 @@
+If we're building an image and some package rebuilds while this is happening
+some package can be removed/added to the ipk deploy directory. The image will
+not depend on this package so we can safely ignore these cases rather than 
+error out.
+
+RP - 26/8/09
+
+Index: opkg-utils/opkg-make-index
+===================================================================
+--- opkg-utils.orig/opkg-make-index	2009-08-26 17:21:26.000000000 +0100
++++ opkg-utils/opkg-make-index	2009-08-26 17:24:05.000000000 +0100
+@@ -96,6 +96,7 @@
+ files=glob(pkg_dir + '/*.ipk') + glob(pkg_dir + '/*.deb')
+ files.sort()
+ for filename in files:
++  try:
+      basename = os.path.basename(filename)
+      pkg = None
+      fnameStat = os.stat(filename)
+@@ -130,6 +131,9 @@
+                to_morgue(basename)
+           if opt_s:
+                print filename
++  except OSError:
++      sys.stderr.write("Package %s disappeared on us!\n" % (filename,))
++      continue
+ 
+ pkgsStampsFile = open(stamplist_filename, "w")
+ for f in pkgsStamps.keys():
