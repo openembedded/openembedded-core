@@ -11,8 +11,9 @@ INITSCRIPT_NAME = "acpid"
 INITSCRIPT_PARAMS = "defaults"
 
 EXTRA_OEMAKE = ""
+
 do_compile () {
-	oe_runmake 'CC=${CC}' 'CROSS=${HOST_PREFIX}'
+	oe_runmake 'CC=${CC} -D_GNU_SOURCE' 'CROSS=${HOST_PREFIX}'
 }
 
 do_install () {
