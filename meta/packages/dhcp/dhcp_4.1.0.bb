@@ -2,7 +2,7 @@ SECTION = "console/network"
 DESCRIPTION = "Internet Software Consortium DHCP package"
 HOMEPAGE = "http://www.isc.org/"
 LICENSE = "BSD"
-PR = "r6"
+PR = "r7"
 SRC_URI = "ftp://ftp.isc.org/isc/dhcp/dhcp-${PV}.tar.gz \
 	   file://fixincludes.patch;patch=1 \
 	   file://dhcp-3.0.3-dhclient-dbus.patch;patch=1;pnum=0 \
@@ -11,6 +11,8 @@ SRC_URI = "ftp://ftp.isc.org/isc/dhcp/dhcp-${PV}.tar.gz \
 	   file://dhclient.conf file://dhcpd.conf"
 
 inherit autotools
+
+TARGET_CFLAGS += "-D_GNU_SOURCE"
 
 do_compile() {
 	make RANLIB=${RANLIB} PREDEFINES='-D_PATH_DHCPD_DB=\"/var/lib/dhcp/dhcpd.leases\" \
