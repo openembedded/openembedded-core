@@ -17,7 +17,6 @@ SRC_URI_append_zoom2 = " \
         file://0001-OMAP1-2-3-4-DEBUG_LL-cleanup.patch;patch=1 \
         file://0002-OMAP1-2-3-4-Adapt-board-files-for-cleand-DEBUG_LL-in.patch;patch=1 \
         file://0003-OMAP-Zoom2-Add-DEBUG_LL-interface-using-external-Qua.patch;patch=1 \
-        file://0005-OMAP-Zoom2-Release-Dbg-board-detect-gpio.patch;patch=1 \
         "
 
 COMPATIBLE_MACHINE = "beagleboard|omap-3430sdp|omap3evm|overo|rx51|zoom2"
