@@ -6,6 +6,6 @@ PR = "r2"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "telepathy-glib glib-2.0 telepathy-mission-control nbtk"
+DEPENDS = "telepathy-glib glib-2.0 telepathy-mission-control nbtk eds-dbus"
 
 inherit autotools_stage
