@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r12"
+PR = "r14"
 
 SRC_URI += "file://no-hardlinks.patch;patch=1"
 
@@ -41,6 +41,7 @@ do_stage () {
         install -m 0644 lib/uuid/uuid.h ${STAGING_INCDIR}/uuid/ || die "failed to install $h"
         
 	install -d ${STAGING_LIBDIR}/pkgconfig
+	rm lib/*/blkid.pc
 	for pc in lib/*/*.pc; do
 		install -m 0644 $pc ${STAGING_LIBDIR}/pkgconfig/ || die "failed to install $h"
 	done
