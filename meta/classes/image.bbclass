@@ -225,6 +225,18 @@ rootfs_no_x_startup () {
 	fi
 }
 
+rootfs_trim_schemas () {
+	for schema in ${IMAGE_ROOTFS}/etc/gconf/schemas/*.schemas
+	do
+		# Need this in case no files exist
+		if [ -e $schema ]; then
+			poky-trim-schemas $schema > $schema.new
+        	        mv $schema.new $schema
+		fi
+	done
+}
+
+
 # export the zap_root_password, create_etc_timestamp and remote_init_link
 EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
 

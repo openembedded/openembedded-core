@@ -95,3 +95,5 @@ inherit image
 
 # Create /etc/timestamp during image construction to give a reasonably sane default time setting
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_update_timestamp ; "
+
+ROOTFS_POSTINSTALL_COMMAND += "rootfs_trim_schemas ; "
