@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
 PR = "r2"
 
-DEPENDS = "clutter-1.0 clutter-gst bickley bognor-regis nbtk startup-notification libunique"
+DEPENDS = "clutter-1.0 clutter-gtk clutter-gst bickley bognor-regis nbtk startup-notification libunique"
 
 EXTRA_OECONF = "--disable-shave"
 
