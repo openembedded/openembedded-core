@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Target packages for the standalone Moblin SDK"
-PR = "r4"
+PR = "r5"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -12,6 +12,29 @@ PACKAGES = "${PN} ${PN}-dbg"
 RDEPENDS_${PN} = "\
     libgcc \
     libstdc++ \
+    task-poky-standalone-sdk-target \
+    dbus-dev \
+    dbus-glib-dev \
+    gtk+-dev \
+    gstreamer-dev \
+    bluez4-dev \
+    gconf-dbus-dev \
+    avahi-dev \
+    telepathy-glib-dev \
+    eds-dbus-dev \
+    libecal-dev \
+    libebook-dev \
+    libglade-dev \
+    libxi-dev \
+    libsqlite-dev \
+    clutter-1.0-dev \
+    nbtk-dev \
+    mutter-dev \
+    mutter-moblin-dev \
+    clutter-gst-dev \
+    clutter-gtk-dev \
+    clutter-imcontext \
+    libccss \
     "
 
 GLIBC_DEPENDENCIES = "\
