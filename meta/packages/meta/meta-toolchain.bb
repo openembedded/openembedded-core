@@ -108,7 +108,7 @@ do_populate_sdk() {
 	echo 'export PKG_CONFIG_PATH=${SDK_PREFIX}/${TARGET_SYS}${layout_libdir}/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${SDK_PREFIX}/site-config' >> $script
 	echo 'export CC=${TARGET_PREFIX}gcc' >> $script
-	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS}"' >> $script
+	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${BUILD_SYS}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
 		echo 'export TARGET_CFLAGS="-I${SDK_PREFIX}/${TARGET_SYS}${layout_includedir}"' >> $script
 		echo 'export TARGET_LDFLAGS="-L${SDK_PREFIX}/${TARGET_SYS}${layout_libdir}"' >> $script
