@@ -1,8 +1,8 @@
 Index: git/configure.ac
 ===================================================================
---- git.orig/configure.ac	2009-08-14 16:16:23.000000000 +0100
-+++ git/configure.ac	2009-08-14 16:17:27.000000000 +0100
-@@ -268,15 +268,6 @@
+--- git.orig/configure.ac	2009-09-01 16:38:26.000000000 +0100
++++ git/configure.ac	2009-09-01 16:38:47.000000000 +0100
+@@ -269,15 +269,6 @@
  GLAPI_ASM_SOURCES=""
  AC_MSG_CHECKING([whether to enable assembly])
  test "x$enable_asm" = xno && AC_MSG_RESULT([no])
@@ -20,8 +20,8 @@ Index: git/configure.ac
      case "$host_cpu" in
 Index: git/src/mesa/x86/Makefile
 ===================================================================
---- git.orig/src/mesa/x86/Makefile	2009-08-14 16:18:23.000000000 +0100
-+++ git/src/mesa/x86/Makefile	2009-08-14 16:19:10.000000000 +0100
+--- git.orig/src/mesa/x86/Makefile	2009-09-01 16:40:02.000000000 +0100
++++ git/src/mesa/x86/Makefile	2009-09-01 16:40:13.000000000 +0100
 @@ -14,19 +14,6 @@
  	-I../tnl
  
@@ -33,7 +33,7 @@ Index: git/src/mesa/x86/Makefile
 -
 -
 -gen_matypes: gen_matypes.c
--	$(HOST_CC) $(INCLUDE_DIRS) $(HOST_CFLAGS) gen_matypes.c -o gen_matypes
+-	$(HOST_CC) $(ARCH_FLAGS) $(INCLUDE_DIRS) $(HOST_CFLAGS) gen_matypes.c -o gen_matypes
 -
 -# need some special rules here, unfortunately
 -matypes.h: ../main/mtypes.h ../tnl/t_context.h gen_matypes
