@@ -8,21 +8,16 @@ FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/${PN}-git/${MACHINE}
 
 SRCREV = "${AUTOREV}"
 
-PV = "2.6.31-rc1+${PR}+git${SRCREV}"
-PR = "r1"
+PV = "2.6.31-rc7+pm+${PR}+git${SRCREV}"
+PR = "r3"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-omap-pm.git;branch=pm;protocol=git"
 
 SRC_URI_append_zoom2 = " \
-	file://0001-OMAP3-MMC-Add-mux-for-pins.patch;patch=1 \
-	file://0002-OMAP3-Zoom2-Add-TWL4030-support.patch;patch=1 \
-	file://0003-OMAP3-Zoom2-Update-board-defconfig.patch;patch=1 \
-	file://0004-serial-8250-add-IRQ-trigger-support.patch;patch=1 \
-	file://0005-OMAP2-Zoom2-Pass-irqflags-to-8250-driver.patch;patch=1 \
-	file://0006-OMAP3-Zoom2-ext-UART-needs-plaform_device.id-3.patch;patch=1 \
-	file://0007-omap-zoom2-add-external-uart-DEBUG_LL-support-to-zoo.patch;patch=1 \
-	file://0008-omap2-add-support-for-DEBUG_LL-on-external-UART.patch;patch=1 \
-	"
+        file://0001-OMAP1-2-3-4-DEBUG_LL-cleanup.patch;patch=1 \
+        file://0002-OMAP1-2-3-4-Adapt-board-files-for-cleand-DEBUG_LL-in.patch;patch=1 \
+        file://0003-OMAP-Zoom2-Add-DEBUG_LL-interface-using-external-Qua.patch;patch=1 \
+        "
 
 COMPATIBLE_MACHINE = "beagleboard|omap-3430sdp|omap3evm|overo|rx51|zoom2"
 
@@ -43,7 +38,7 @@ do_configure_prepend() {
 		yes '' | oe_runmake ${MACHINE}_external_defconfig
 	else
 		case ${MACHINE} in
-			omap-3430sdp|omap3evm)
+			omap-3430sdp | omap3evm)
 				# works out of the box
 				yes '' | oe_runmake omap3_pm_defconfig
 				;;
@@ -57,14 +52,11 @@ do_configure_prepend() {
 					-i ${S}/.config
 				;;
 			zoom2)
-				# adjust LL_DEBUG console for these boards
+				# adjust LL_DEBUG console for this board
 				yes '' | oe_runmake omap3_pm_defconfig
 				sed -e "s/CONFIG_OMAP_LL_DEBUG_UART1=y/# CONFIG_OMAP_LL_DEBUG_UART1 is not set/" \
-					-e "s/CONFIG_MMC_BLOCK=m/CONFIG_MMC_BLOCK=y/" \
-					-e "s/CONFIG_MMC_OMAP_HS=m/CONFIG_MMC_OMAP_HS=y/" \
 					-i ${S}/.config
 				echo "CONFIG_OMAP_LL_DEBUG_UART_EXT=y" >> ${S}/.config
-#				yes '' | oe_runmake oldconfig
 				;;
 			*)
 				# its worth a try...
