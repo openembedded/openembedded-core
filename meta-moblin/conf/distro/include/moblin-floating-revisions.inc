@@ -1,5 +1,5 @@
 SRCREV_pn-libccss ?= "62697eb84fe190f9b8c65fcbaae10ec3d9edfffd"
-SRCREV_pn-clutter-gtk ?= "afa3e7381d9776500a99f1045f31a3a268a6d243"
+SRCREV_pn-clutter-gtk ?= "5dfc07761adf3ab3d1c9ee97b92bc4a65473db36"
 
 SRCREV_pn-ashford ?= "${AUTOREV}"
 SRCREV_pn-anerley ?= "${AUTOREV}"
