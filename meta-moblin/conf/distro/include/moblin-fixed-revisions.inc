@@ -6,6 +6,7 @@ PREFERRED_VERSION_eds-dbus ?= "2.20.0"
 PREFERRED_VERSION_dbus ?= "1.2.14"
 PREFERRED_VERSION_dbus-native ?= "1.2.14"
 PREFERRED_VERSION_gtk+ ?= "2.16.4"
+PREFERRED_VERSION_udev ?= "145"
 
 PREFERRED_VERSION_mesa-dri ?= "7.5"
 PREFERRED_VERSION_xf86-video-intel ?= "2.7.1"
