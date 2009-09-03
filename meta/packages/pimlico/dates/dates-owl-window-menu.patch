@@ -5,11 +5,11 @@
  src/dates_platform.h |    2 +-
  4 files changed, 7 insertions(+), 7 deletions(-)
 
---- dates-0.4.5.orig/src/Makefile.am
-+++ dates-0.4.5/src/Makefile.am
-@@ -33,11 +33,11 @@ dates_SOURCES = $(platform) 	\
- 	dates_callbacks.h 	\
- 	dates_callbacks.c 	\
+Index: git/src/Makefile.am
+===================================================================
+--- git.orig/src/Makefile.am	2009-08-18 12:44:56.000000000 +0100
++++ git/src/Makefile.am	2009-09-03 22:28:50.000000000 +0100
+@@ -35,7 +35,7 @@
  	gconf-bridge.h		\
  	gconf-bridge.c
  
@@ -18,13 +18,11 @@
  
  if USE_OWL
  dates_LDADD += $(top_builddir)/libowl/libowl.la
- endif 
- 
---- dates-0.4.5.orig/src/dates_gtk.c
-+++ dates-0.4.5/src/dates_gtk.c
-@@ -30,14 +30,10 @@
- #ifdef WITH_HILDON
- #include <hildon/hildon-color-button.h>
+Index: git/src/dates_gtk.c
+===================================================================
+--- git.orig/src/dates_gtk.c	2009-08-18 12:44:56.000000000 +0100
++++ git/src/dates_gtk.c	2009-09-03 22:28:50.000000000 +0100
+@@ -33,10 +33,6 @@
  #endif
  
  #ifndef DATES_PLATFORM_create_main_window
@@ -35,11 +33,7 @@
  static GtkWidget *
  create_main_window (DatesData * d, GtkWidget * toolbar,
  					GtkWidget * menu, GtkAccelGroup * accel_group)
- {
- 	GtkWidget *main_vbox;
-@@ -55,11 +51,10 @@ create_main_window (DatesData * d, GtkWi
- 	main_vbox = gtk_vbox_new (FALSE, 0);
- 	gtk_widget_show (main_vbox);
+@@ -59,7 +55,6 @@
  	gtk_container_add (GTK_CONTAINER (d->main_window), main_vbox);
  
  	gtk_widget_show (menu);
@@ -47,13 +41,11 @@
  
  	gtk_box_pack_end (GTK_BOX (main_vbox), toolbar, FALSE, FALSE, 0);
  	gtk_container_set_border_width (GTK_CONTAINER (toolbar), 3);
- 
- 
---- dates-0.4.5.orig/src/dates_main.c
-+++ dates-0.4.5/src/dates_main.c
-@@ -23,10 +23,12 @@
- #include <math.h>
- #include <libecal/e-cal-time-util.h>
+Index: git/src/dates_main.c
+===================================================================
+--- git.orig/src/dates_main.c	2009-08-18 12:44:56.000000000 +0100
++++ git/src/dates_main.c	2009-09-03 22:29:21.000000000 +0100
+@@ -26,6 +26,8 @@
  #include <libical/icaltime.h>
  #include <gconf/gconf-client.h>
  
@@ -62,12 +54,8 @@
  #include "dates_types.h"
  #include "dates_platform.h"
  #include "dates_callbacks.h"
- 
- #include "gconf-bridge.h"
-@@ -564,10 +566,13 @@ main (int argc, char **argv)
- 		gtk_widget_show (plug_widget);
- 	} else {
- 		gtk_widget_show (data.main_window);
+@@ -582,6 +584,9 @@
+ 		g_free (url_uri);
  	}
  
 +	owl_set_window_menu (GTK_WINDOW (data.main_window),
@@ -75,14 +63,12 @@
 +
  	gtk_main ();
  
- 	/* clean up */
- 	g_option_context_free (context);
- 	
---- dates-0.4.5.orig/src/dates_platform.h
-+++ dates-0.4.5/src/dates_platform.h
-@@ -18,11 +18,11 @@
- #ifndef DATES_UI_GTK_H
- #define DATES_UI_GTK_H
+ 	return 0;
+Index: git/src/dates_platform.h
+===================================================================
+--- git.orig/src/dates_platform.h	2009-08-18 12:44:56.000000000 +0100
++++ git/src/dates_platform.h	2009-09-03 22:28:50.000000000 +0100
+@@ -20,7 +20,7 @@
  
  #include "dates_types.h"
  
@@ -90,6 +76,4 @@
 +#if 1
  #define DATES_MENU_WITHOUT_BAR 1
  #endif
- 
- struct DatesData;
  
