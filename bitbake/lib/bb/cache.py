@@ -331,6 +331,9 @@ class Cache:
             if '__BB_DONT_CACHE' in self.depends_cache[fn] and self.depends_cache[fn]['__BB_DONT_CACHE']:
                 bb.msg.debug(2, bb.msg.domain.Cache, "Not caching %s, marked as not cacheable" % fn)
                 del cache_data[fn]
+            elif 'PV' in self.depends_cache[fn] and 'SRCREVINACTION' in self.depends_cache[fn]['PV']:
+                bb.msg.error(bb.msg.domain.Cache, "Not caching %s as it had SRCREVINACTION in PV - need to trace this bug" % fn)
+                del cache_data[fn]
 
         p = pickle.Pickler(file(self.cachefile, "wb" ), -1 )
         p.dump([cache_data, version_data])
