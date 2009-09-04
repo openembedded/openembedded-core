@@ -1,0 +1,12 @@
+Index: libnl-1.1/include/netlink-local.h
+===================================================================
+--- libnl-1.1.orig/include/netlink-local.h	2009-09-04 10:10:09.000000000 +0100
++++ libnl-1.1/include/netlink-local.h	2009-09-04 10:10:15.000000000 +0100
+@@ -26,6 +26,7 @@
+ #include <sys/socket.h>
+ #include <inttypes.h>
+ #include <assert.h>
++#include <limits.h>
+ 
+ #include <arpa/inet.h>
+ #include <netdb.h>
