@@ -12,3 +12,7 @@ S = "${WORKDIR}/git"
 FILES_${PN} += "${datadir}/icons/hicolor"
 
 inherit autotools_stage
+
+do_configure_prepend () {
+	mkdir -p ${S}/build/autotools
+}
