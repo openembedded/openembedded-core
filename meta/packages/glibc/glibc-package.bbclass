@@ -29,22 +29,22 @@ BINARY_LOCALE_ARCHES ?= "arm.*"
 PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
 PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base-* glibc-binary-localedata-*"
 
-libc_baselibs = "/lib/libc* /lib/libm* /lib/ld* /lib/libpthread* /lib/libresolv* /lib/librt* /lib/libutil* /lib/libnsl* /lib/libnss_files* /lib/libnss_compat* /lib/libnss_dns* /lib/libdl* /lib/libanl* /lib/libBrokenLocale*"
+libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* ${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* ${base_libdir}/libutil* ${base_libdir}/libnsl* ${base_libdir}/libnss_files* ${base_libdir}/libnss_compat* ${base_libdir}/libnss_dns* ${base_libdir}/libdl* ${base_libdir}/libanl* ${base_libdir}/libBrokenLocale*"
 
-FILES_${PN} = "${sysconfdir} ${libc_baselibs} /sbin/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
+FILES_${PN} = "${sysconfdir} ${libc_baselibs} ${base_sbindir}/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
 FILES_ldd = "${bindir}/ldd"
-FILES_libsegfault = "/lib/libSegFault*"
-FILES_glibc-extra-nss = "/lib/libnss*"
-FILES_sln = "/sbin/sln"
+FILES_libsegfault = "${base_libdir}/libSegFault*"
+FILES_glibc-extra-nss = "${base_libdir}/libnss*"
+FILES_sln = "${base_sbindir}/sln"
 FILES_glibc-dev_append = " ${libdir}/*.o ${bindir}/rpcgen"
-FILES_nscd = "${sbindir}/nscd*"
+FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/nscd* ${sysconfdir}/init.d/nscd*"
 FILES_glibc-utils = "${bindir}/* ${sbindir}/*"
 FILES_glibc-gconv = "${libdir}/gconv/*"
 FILES_${PN}-dbg += " ${libdir}/gconv/.debug ${libexecdir}/*/.debug"
 FILES_catchsegv = "${bindir}/catchsegv"
 RDEPENDS_catchsegv = "libsegfault"
-FILES_glibc-pcprofile = "/lib/libpcprofile.so"
-FILES_glibc-thread-db = "/lib/libthread_db*"
+FILES_glibc-pcprofile = "${base_libdir}/libpcprofile.so"
+FILES_glibc-thread-db = "${base_libdir}/libthread_db*"
 FILES_localedef = "${bindir}/localedef"
 RPROVIDES_glibc-dev += "libc-dev"
 
@@ -61,6 +61,7 @@ def get_glibc_fpu_setting(bb, d):
     return ""
 
 EXTRA_OECONF += "${@get_glibc_fpu_setting(bb, d)}"
+EXTRA_OEMAKE += "rootsbindir=${base_sbindir}"
 
 OVERRIDES_append = ":${TARGET_ARCH}-${TARGET_OS}"
 
@@ -141,14 +142,14 @@ do_prep_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
 	rm -rf $treedir
 	mkdir -p $treedir/bin $treedir/lib $treedir/${datadir} $treedir/${libdir}/locale
-	cp -a ${D}${datadir}/i18n $treedir/${datadir}/i18n
+	cp -pPR ${D}${datadir}/i18n $treedir/${datadir}/i18n
 	# unzip to avoid parsing errors
 	for i in $treedir/${datadir}/i18n/charmaps/*gz; do 
 		gunzip $i
 	done
-	cp -a ${D}/lib/* $treedir/lib
+	cp -pPR ${D}${base_libdir}/* $treedir/lib
 	if [ -f ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* ]; then
-		cp -a ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* $treedir/lib
+		cp -pPR ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* $treedir/lib
 	fi
 	install -m 0755 ${D}${bindir}/localedef $treedir/bin
 }
@@ -157,7 +158,7 @@ do_collect_bins_from_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
 
 	mkdir -p ${D}${libdir}
-	cp -a $treedir/${libdir}/locale ${D}${libdir}
+	cp -pPR $treedir/${libdir}/locale ${D}${libdir}
 }
 
 python package_do_split_gconvs () {
