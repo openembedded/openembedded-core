@@ -3,34 +3,11 @@
 # Patch managed by http://www.holgerschurig.de/patcher.html
 #
 
---- gcc-4.1.1/gcc/config/arm/lib1funcs.asm~gcc
-+++ gcc-4.1.1/gcc/config/arm/lib1funcs.asm
-@@ -995,10 +995,24 @@
- 	.code	32
- 	FUNC_START div0
- 
-+#if ! defined __thumb__
- 	stmfd	sp!, {r1, lr}
- 	mov	r0, #SIGFPE
- 	bl	SYM(raise) __PLT__
- 	RETLDM	r1
-+#else
-+       push    {r1, lr}
-+	mov	r0, #SIGFPE
-+	bl	SYM(raise) __PLT__
-+#if __ARM_ARCH__ > 4
-+       pop     {r1, pc}
-+#else
-+       @ on 4T that won't work
-+       pop     {r1}
-+       pop     {r3}
-+       bx      r3
-+#endif
-+#endif
- 
- 	FUNC_END div0
- 	
-@@ -1141,11 +1155,12 @@
+Index: gcc-4.3.1/gcc/config/arm/lib1funcs.asm
+===================================================================
+--- gcc-4.3.1.orig/gcc/config/arm/lib1funcs.asm	2007-05-30 12:04:09.000000000 -0700
++++ gcc-4.3.1/gcc/config/arm/lib1funcs.asm	2008-08-28 21:51:17.000000000 -0700
+@@ -1225,11 +1225,12 @@
     code here switches to the correct mode before executing the function.  */
  	
  	.text
@@ -44,7 +21,7 @@
  
  	bx	\register
  	nop
-@@ -1242,6 +1257,7 @@
+@@ -1330,6 +1331,7 @@
  	.code	16
  
  	THUMB_FUNC_START _interwork_call_via_\register
@@ -52,9 +29,11 @@
  
  	bx	pc
  	nop
---- gcc-4.1.1/gcc/config/arm/t-linux~gcc
-+++ gcc-4.1.1/gcc/config/arm/t-linux
-@@ -7,6 +7,7 @@
+Index: gcc-4.3.1/gcc/config/arm/t-linux
+===================================================================
+--- gcc-4.3.1.orig/gcc/config/arm/t-linux	2008-08-28 21:25:24.000000000 -0700
++++ gcc-4.3.1/gcc/config/arm/t-linux	2008-08-28 21:51:17.000000000 -0700
+@@ -6,6 +6,7 @@
  LIB1ASMFUNCS = _udivsi3 _divsi3 _umodsi3 _modsi3 _dvmd_lnx \
      _negdf2 _addsubdf3 _muldivdf3 _cmpdf2 _unorddf2 _fixdfsi _fixunsdfsi \
      _truncdfsf2 _negsf2 _addsubsf3 _muldivsf3 _cmpsf2 _unordsf2 \
