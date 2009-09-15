@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 PV = "0.0+git${SRCPV}"
 PR = "r1"
 
-DEPENDS = "gconnman nbtk"
+DEPENDS = "gconnman nbtk mutter-moblin"
 RDEPENDS = "connman gconnman"
 
 S = "${WORKDIR}/git"
