@@ -75,21 +75,25 @@ python __anonymous () {
     pn = bb.data.getVar("PN", d, True)
     depends = bb.data.getVar("DEPENDS", d, True)
     deps = bb.utils.explode_deps(depends)
-    if "sdk" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
+    newdeps = []
+    if "nativesdk" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
         autoextend = True
     else:
         autoextend = False
     for dep in deps:
         if dep.endswith("-native") or dep.endswith("-cross"):
-            continue
-        if not dep.endswith("-nativesdk"):
+            newdeps.append(dep)
+        elif not dep.endswith("-nativesdk"):
             if autoextend:
-                depends = depends.replace(dep, dep + "-nativesdk")
+                newdeps.append(dep + "-nativesdk")
             elif pn == 'gcc-cross-nativesdk':
-                continue
+                newdeps.append(dep)
             else:
+                newdeps.append(dep)
                 bb.note("%s has depends %s which doesn't end in -nativesdk?" % (pn, dep))
-    bb.data.setVar("DEPENDS", depends, d)
+        else:
+            newdeps.append(dep)
+    bb.data.setVar("DEPENDS", " ".join(newdeps), d)
     provides = bb.data.getVar("PROVIDES", d, True)
     for prov in provides.split():
         if prov.find(pn) != -1:
