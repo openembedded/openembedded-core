@@ -1,8 +1,6 @@
 SRCREV_pn-libccss ?= "62697eb84fe190f9b8c65fcbaae10ec3d9edfffd"
 SRCREV_pn-clutter-gtk ?= "5dfc07761adf3ab3d1c9ee97b92bc4a65473db36"
 SRCREV_pn-clutter-gst ?= "24c84abf0cdd24b6f4696c5a920673a55218cfd4"
-SRCREV_pn-nbtk ?= "fbd2279bfd686c95df5b9180239224249dadd884"
-SRCREV_pn-carrick ?= "89ba1b83d77aaeb5e1e965cf9c56428c6d045b3c"
 
 SRCREV_pn-ashford ?= "${AUTOREV}"
 SRCREV_pn-anerley ?= "${AUTOREV}"
