@@ -25,9 +25,10 @@ do_install () {
                 :
         elif [ -f ${D}${prefix}/lib/libgcc_s.so.? ]; then
                 mv -f ${D}${prefix}/lib/libgcc_s.so* ${D}${target_base_libdir} || true
-
         elif [  -f ${D}${prefix}/*/lib/nof/libgcc_s.so.? ]; then
                 mv -f ${D}${prefix}/*/lib/nof/libgcc_s.so* ${D}${target_base_libdir}
+        elif [  -f ${D}${prefix}/*/lib64/libgcc_s.so.? ]; then
+                mv -f ${D}${prefix}/*/lib64/libgcc_s.so* ${D}${target_base_libdir} || true 
         else
                 mv -f ${D}${prefix}/*/lib/libgcc_s.so* ${D}${target_base_libdir} || true 
         fi
@@ -43,15 +44,17 @@ do_install () {
            mv -f ${D}${prefix}/*/lib/nof/libg2c.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/nof/libgfortran*.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/nof/libssp*.so* ${D}${target_libdir} || true 	
-
+        elif [ -f ${D}${prefix}/*/lib64/libstdc++.so ]; then
+           mv -f ${D}${prefix}/*/lib64/libstdc++.so* ${D}${target_libdir} || true
+           mv -f ${D}${prefix}/*/lib64/libg2c.so* ${D}${target_libdir} || true
+           mv -f ${D}${prefix}/*/lib64/libgfortran*.so* ${D}${target_libdir} || true
+           mv -f ${D}${prefix}/*/lib64/libssp*.so* ${D}${target_libdir} || true
         else
            mv -f ${D}${prefix}/*/lib/libstdc++.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/libg2c.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/libgfortran*.so* ${D}${target_libdir} || true
            mv -f ${D}${prefix}/*/lib/libssp*.so* ${D}${target_libdir} || true
         fi
-
-
 
        # Manually run the target stripper since we won't get it run by
        # the packaging.
