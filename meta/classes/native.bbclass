@@ -51,8 +51,8 @@ export STRIP = "${HOST_PREFIX}strip"
 
 # Path prefixes
 base_prefix = "${STAGING_DIR_NATIVE}"
-prefix = "${STAGING_DIR_NATIVE}/usr"
-exec_prefix = "${STAGING_DIR_NATIVE}/usr"
+prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
+exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 
 # Since we actually install these into situ there is no staging prefix
 STAGING_DIR_HOST = ""
