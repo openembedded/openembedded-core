@@ -4,4 +4,4 @@ CONFLICTS = "randrext"
 PR = "r1"
 PE = "1"
 
-BBCLASSEXTEND = "sdk"
+BBCLASSEXTEND = "nativesdk"

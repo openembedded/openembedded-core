@@ -1,6 +1,6 @@
 DESCRIPTION = "Qemu helper scripts from Poky"
 LICENSE = "GPL"
-RDEPENDS = "qemu-sdk"
+RDEPENDS = "qemu-nativesdk"
 PR = "r7"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
@@ -11,10 +11,10 @@ SRC_URI = "file://${OEROOT}/scripts/poky-qemu \
            file://${OEROOT}/scripts/poky-qemu-ifup \
            file://${OEROOT}/scripts/poky-qemu-ifdown \
 	   file://raw2flash.c"
-		      
+
 S = "${WORKDIR}"
-		      
-inherit sdk
+
+inherit nativesdk
 
 do_compile() {
 	${CC} raw2flash.c -o raw2flash.spitz

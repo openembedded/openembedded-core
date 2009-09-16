@@ -6,7 +6,7 @@ EXCLUDE_FROM_WORLD = "1"
 OLD_MULTIMACH_ARCH := "${MULTIMACH_ARCH}"
 # Save PACKAGE_ARCH
 OLD_PACKAGE_ARCH := ${PACKAGE_ARCH}
-PACKAGE_ARCH = "${BUILD_ARCH}-${OLD_PACKAGE_ARCH}-sdk"
+PACKAGE_ARCH = "${BUILD_ARCH}-${OLD_PACKAGE_ARCH}-nativesdk"
 # Also save BASE_PACKAGE_ARCH since HOST_ARCH can influence it
 OLD_BASE_PACKAGE_ARCH := "${BASE_PACKAGE_ARCH}"
 BASE_PACKAGE_ARCH = "${OLD_BASE_PACKAGE_ARCH}"
@@ -82,21 +82,21 @@ python __anonymous () {
     for dep in deps:
         if dep.endswith("-native") or dep.endswith("-cross"):
             continue
-        if not dep.endswith("-sdk"):
+        if not dep.endswith("-nativesdk"):
             if autoextend:
-                depends = depends.replace(dep, dep + "-sdk")
-            elif pn == 'gcc-cross-sdk':
+                depends = depends.replace(dep, dep + "-nativesdk")
+            elif pn == 'gcc-cross-nativesdk':
                 continue
             else:
-                bb.note("%s has depends %s which doesn't end in -sdk?" % (pn, dep))
+                bb.note("%s has depends %s which doesn't end in -nativesdk?" % (pn, dep))
     bb.data.setVar("DEPENDS", depends, d)
     provides = bb.data.getVar("PROVIDES", d, True)
     for prov in provides.split():
         if prov.find(pn) != -1:
             continue
-        if not prov.endswith("-sdk"):
+        if not prov.endswith("-nativesdk"):
             if autoextend:
-                provides = provides.replace(prov, prov + "-sdk")
+                provides = provides.replace(prov, prov + "-nativesdk")
             #else:
             #    bb.note("%s has rouge PROVIDES of %s which doesn't end in -sdk?" % (pn, prov))
     bb.data.setVar("PROVIDES", provides, d)

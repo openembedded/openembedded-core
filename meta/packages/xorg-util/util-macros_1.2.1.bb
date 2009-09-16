@@ -11,4 +11,4 @@ SRC_URI += "file://unbreak_cross_compile.patch;patch=1 \
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPV})"
 
-BBCLASSEXTEND = "native sdk"
+BBCLASSEXTEND = "native nativesdk"

@@ -7,24 +7,24 @@ PR = "r7"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
-inherit sdk
+inherit nativesdk
 
 PACKAGES = "${PN}"
 
 RDEPENDS_${PN} = "\
-    binutils-cross-sdk \
-    gcc-cross-sdk \
-    gdb-cross-sdk \
-    pkgconfig-sdk \
-    qemu-sdk \
-    qemu-helper-sdk \
-    opkg-sdk \
+    binutils-cross-nativesdk \
+    gcc-cross-nativesdk \
+    gdb-cross-nativesdk \
+    pkgconfig-nativesdk \
+    qemu-nativesdk \
+    qemu-helper-nativesdk \
+    opkg-nativesdk \
     "
 
 RDEPENDS_${PN}_darwin8 = "\
-    odcctools-cross-sdk \
-    llvm-cross-sdk \
-    pkgconfig-sdk \
-    opkg-sdk \
-    libtool-sdk \
+    odcctools-cross-nativesdk \
+    llvm-cross-nativesdk \
+    pkgconfig-nativesdk \
+    opkg-nativesdk \
+    libtool-nativesdk \
     "

@@ -14,7 +14,7 @@ PACKAGES_DYNAMIC = "glibc-gconv-*"
 INHIBIT_DEFAULT_DEPS = "1"
 PR = "r1"
 
-inherit sdk
+inherit nativesdk
 
 do_stage() {
 	if [ ! -e  ${prefix}/environment-setup ]; then

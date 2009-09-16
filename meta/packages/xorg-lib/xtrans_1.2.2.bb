@@ -7,4 +7,4 @@ PR = "r0"
 
 RDEPENDS_${PN}-dev = ""
 
-BBCLASSEXTEND = "native sdk"
+BBCLASSEXTEND = "native nativesdk"

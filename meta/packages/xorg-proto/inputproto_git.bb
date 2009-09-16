@@ -9,4 +9,4 @@ S = "${WORKDIR}/git"
 
 DEPENDS += "util-macros"
 
-BBCLASSEXTEND = "native sdk"
+BBCLASSEXTEND = "native nativesdk"

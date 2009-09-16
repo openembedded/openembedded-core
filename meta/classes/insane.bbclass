@@ -289,7 +289,7 @@ def package_qa_check_arch(path,name,d):
     target_arch = bb.data.getVar('TARGET_ARCH', d, True)
 
     # FIXME: Cross package confuse this check, so just skip them
-    if bb.data.inherits_class('cross', d) or bb.data.inherits_class('sdk', d):
+    if bb.data.inherits_class('cross', d) or bb.data.inherits_class('nativesdk', d):
         return True
 
     # avoid following links to /usr/bin (e.g. on udev builds)

@@ -7,4 +7,4 @@ PE = "1"
 
 XORG_PN = "libXau"
 
-BBCLASSEXTEND = "native sdk"
+BBCLASSEXTEND = "native nativesdk"

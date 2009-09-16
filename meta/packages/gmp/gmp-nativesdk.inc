@@ -1,6 +1,5 @@
 require gmp_${PV}.bb
-inherit sdk
-
+inherit nativesdk
 
 oe_runconf () {
 	if [ -x ${S}/configure ] ; then

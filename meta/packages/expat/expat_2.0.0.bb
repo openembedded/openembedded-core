@@ -10,4 +10,4 @@ do_configure_prepend () {
 	touch ${S}/conftools/libtool.m4
 }
 
-BBCLASSEXTEND = "native sdk"
+BBCLASSEXTEND = "native nativesdk"

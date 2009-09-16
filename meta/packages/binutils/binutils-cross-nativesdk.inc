@@ -1,4 +1,4 @@
-inherit sdk
+inherit nativesdk
 DEPENDS += "flex-native bison-native"
 EXTRA_OECONF = "--with-sysroot=${prefix}/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"

@@ -14,4 +14,4 @@ DEPENDS = "libtool-cross"
 
 inherit autotools_stage
 
-BBCLASSEXTEND = "native sdk"
+BBCLASSEXTEND = "native nativesdk"

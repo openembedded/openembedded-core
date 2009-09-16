@@ -8,4 +8,4 @@ PE = "1"
 
 XORG_PN = "libXrandr"
 
-BBCLASSEXTEND = "sdk"
+BBCLASSEXTEND = "nativesdk"

@@ -5,4 +5,4 @@ PE = "1"
 
 DEPENDS += "util-macros"
 
-BBCLASSEXTEND = "native sdk"
+BBCLASSEXTEND = "native nativesdk"

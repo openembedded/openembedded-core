@@ -4,7 +4,7 @@ require libtool_${PV}.bb
 PR = "r0"
 SRC_URI_append = " file://cross_compile.patch;patch=1"
 
-inherit sdk
+inherit nativesdk
 
 do_install () {
 	install -d ${D}${bindir}/

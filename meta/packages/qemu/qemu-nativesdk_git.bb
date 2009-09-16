@@ -1,5 +1,5 @@
 require qemu_git.bb
-require qemu-sdk.inc
+require qemu-nativesdk.inc
 
 PR = "r2"
 

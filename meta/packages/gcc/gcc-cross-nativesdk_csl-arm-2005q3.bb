@@ -1,6 +1,6 @@
 PR = "r3"
 
-inherit sdk
+inherit nativesdk
 
 require gcc-${PV}.inc
 require gcc-cross-sdk.inc

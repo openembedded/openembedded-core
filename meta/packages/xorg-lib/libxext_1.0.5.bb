@@ -7,4 +7,4 @@ PE = "1"
 
 XORG_PN = "libXext"
 
-BBCLASSEXTEND = "sdk"
+BBCLASSEXTEND = "nativesdk"

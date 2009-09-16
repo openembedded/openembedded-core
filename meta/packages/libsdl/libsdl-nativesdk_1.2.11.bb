@@ -2,8 +2,8 @@ DESCRIPTION = "Simple DirectMedia Layer - native Edition"
 HOMEPAGE = "http://www.libsdl.org"
 SECTION = "libs"
 LICENSE = "LGPL"
-DEPENDS = "libx11-sdk libxext-sdk libxrandr-sdk libxrender-sdk"
-RDEPENDS = "libx11-sdk libxrandr-sdk libxrender-sdk libxext-sdk"
+DEPENDS = "libx11-nativesdk libxext-nativesdk libxrandr-nativesdk libxrender-nativesdk"
+RDEPENDS = "libx11-nativesdk libxrandr-nativesdk libxrender-nativesdk libxext-nativesdk"
 PR = "r4"
 
 SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
@@ -12,7 +12,7 @@ SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
 	   file://kernel-asm-page.patch;patch=1 "
 S = "${WORKDIR}/SDL-${PV}"
 
-inherit autotools_stage binconfig pkgconfig sdk
+inherit autotools_stage binconfig pkgconfig nativesdk
 
 EXTRA_OECONF = "--disable-static --disable-debug --disable-cdrom --enable-threads --enable-timers --enable-endian \
                 --enable-file --disable-oss --disable-alsa --disable-esd --disable-arts \

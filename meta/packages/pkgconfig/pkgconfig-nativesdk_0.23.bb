@@ -1,3 +1,3 @@
 require pkgconfig.inc
-inherit sdk
+inherit nativesdk
 DEPENDS = ""
