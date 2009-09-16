@@ -25,3 +25,5 @@ pkg_postinst_${PN} () {
     rm -f $D${libdir}/libGL.so.1.2
     ln -s libGL-qemu.so.1.2 $D${libdir}/libGL.so.1.2
 }
+
+BBCLASSEXTEND = "nativesdk"

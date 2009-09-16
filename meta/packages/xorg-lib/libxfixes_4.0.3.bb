@@ -6,3 +6,5 @@ DEPENDS += "virtual/libx11 xproto fixesproto xextproto"
 PE = "1"
 
 XORG_PN = "libXfixes"
+
+BBCLASSEXTEND = "nativesdk"

@@ -57,3 +57,5 @@ do_stage () {
 	cp -pfLR ${STAGE_TEMP}${includedir}/asm ${STAGING_INCDIR}/
 	cp -pfLR ${STAGE_TEMP}${includedir}/asm-generic ${STAGING_INCDIR}/
 }
+
+BBCLASSEXTEND = "nativesdk"

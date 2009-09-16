@@ -156,3 +156,5 @@ do_compile () {
 require glibc-stage.inc
 
 require glibc-package.bbclass
+
+BBCLASSEXTEND = "nativesdk"
