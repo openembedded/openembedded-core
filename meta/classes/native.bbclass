@@ -50,32 +50,15 @@ export RANLIB = "${HOST_PREFIX}ranlib"
 export STRIP = "${HOST_PREFIX}strip"
 
 # Path prefixes
-export base_prefix = "${STAGING_DIR_NATIVE}"
-export prefix = "${STAGING_DIR_NATIVE}${layout_prefix}"
-export exec_prefix = "${STAGING_DIR_NATIVE}${layout_exec_prefix}"
+base_prefix = "${STAGING_DIR_NATIVE}"
+prefix = "${STAGING_DIR_NATIVE}/usr"
+exec_prefix = "${STAGING_DIR_NATIVE}/usr"
 
-# Base paths
-export base_bindir = "${STAGING_DIR_NATIVE}${layout_base_bindir}"
-export base_sbindir = "${STAGING_DIR_NATIVE}${layout_base_sbindir}"
-export base_libdir = "${STAGING_DIR_NATIVE}${layout_base_libdir}"
-
-# Architecture independent paths
-export datadir = "${STAGING_DIR_NATIVE}${layout_datadir}"
-export sysconfdir = "${STAGING_DIR_NATIVE}${layout_sysconfdir}"
-export sharedstatedir = "${STAGING_DIR_NATIVE}${layout_sharedstatedir}"
-export localstatedir = "${STAGING_DIR_NATIVE}${layout_localstatedir}"
-export infodir = "${STAGING_DIR_NATIVE}${layout_infodir}"
-export mandir = "${STAGING_DIR_NATIVE}${layout_mandir}"
-export docdir = "${STAGING_DIR_NATIVE}${layout_docdir}"
-export servicedir = "${STAGING_DIR_NATIVE}${layout_servicedir}"
-
-# Architecture dependent paths
-export bindir = "${STAGING_DIR_NATIVE}${layout_bindir}"
-export sbindir = "${STAGING_DIR_NATIVE}${layout_sbindir}"
-export libexecdir = "${STAGING_DIR_NATIVE}${layout_libexecdir}"
-export libdir = "${STAGING_DIR_NATIVE}${layout_libdir}"
-export includedir = "${STAGING_DIR_NATIVE}${layout_includedir}"
-export oldincludedir = "${STAGING_DIR_NATIVE}${layout_includedir}"
+# Since we actually install these into situ there is no staging prefix
+STAGING_DIR_HOST = ""
+STAGING_DIR_TARGET = ""
+SHLIBSDIR = "${STAGING_DIR_NATIVE}/shlibs"
+PKG_CONFIG_DIR = "${libdir}/pkgconfig"
 
 #
 # If changing this function, please make sure packaged-staging.bbclass is

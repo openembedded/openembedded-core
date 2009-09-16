@@ -24,8 +24,8 @@ do_populate_sdk() {
 	rm -rf ${SDK_OUTPUT}
 	rm -rf ${SDK_OUTPUT2}
 	mkdir -p ${SDK_OUTPUT}
-	mkdir -p ${SDK_OUTPUT}${layout_libdir}/opkg/
-	mkdir -p ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}${layout_libdir}/opkg/
+	mkdir -p ${SDK_OUTPUT}${libdir}/opkg/
+	mkdir -p ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}${libdir}/opkg/
 
 	rm -f ${IPKGCONF_TARGET}
 	touch ${IPKGCONF_TARGET}
@@ -49,8 +49,8 @@ do_populate_sdk() {
 	mv ${SDK_OUTPUT}/usr/lib/opkg/* ${SDK_OUTPUT}/${SDKPATH}/usr/lib/opkg/
 	rm -Rf ${SDK_OUTPUT}/usr/lib
 
-	install -d ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}/${layout_sysconfdir}
-	install -m 0644 ${IPKGCONF_TARGET} ${IPKGCONF_SDK} ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}/${layout_sysconfdir}/
+	install -d ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}/${sysconfdir}
+	install -m 0644 ${IPKGCONF_TARGET} ${IPKGCONF_SDK} ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}/${sysconfdir}/
 
 	install -d ${SDK_OUTPUT}/${SDKPATH}/${sysconfdir}
 	install -m 0644 ${IPKGCONF_SDK} ${SDK_OUTPUT}/${SDKPATH}/${sysconfdir}/
@@ -87,10 +87,10 @@ do_populate_sdk() {
 
 	# Fix or remove broken .la files
 	for i in `find ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS} -name \*.la`; do
-		sed -i 	-e "/^dependency_libs=/s,\([[:space:]']\)${layout_base_libdir},\1${SDKPATH}/${TARGET_SYS}${layout_base_libdir},g" \
-			-e "/^dependency_libs=/s,\([[:space:]']\)${layout_libdir},\1${SDKPATH}/${TARGET_SYS}${layout_libdir},g" \
-			-e "/^dependency_libs=/s,\-\([LR]\)${layout_base_libdir},-\1${SDKPATH}/${TARGET_SYS}${layout_base_libdir},g" \
-			-e "/^dependency_libs=/s,\-\([LR]\)${layout_libdir},-\1${SDKPATH}/${TARGET_SYS}${layout_libdir},g" \
+		sed -i 	-e "/^dependency_libs=/s,\([[:space:]']\)${base_libdir},\1${SDKPATH}/${TARGET_SYS}${base_libdir},g" \
+			-e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${SDKPATH}/${TARGET_SYS}${libdir},g" \
+			-e "/^dependency_libs=/s,\-\([LR]\)${base_libdir},-\1${SDKPATH}/${TARGET_SYS}${base_libdir},g" \
+			-e "/^dependency_libs=/s,\-\([LR]\)${libdir},-\1${SDKPATH}/${TARGET_SYS}${libdir},g" \
 			-e 's/^installed=yes$/installed=no/' $i
 	done
 	rm -f ${SDK_OUTPUT}/${SDKPATH}/lib/*.la
@@ -107,19 +107,19 @@ do_populate_sdk() {
 	touch $script
 	echo 'export PATH=${SDKPATH}/bin:$PATH' >> $script
 	echo 'export PKG_CONFIG_SYSROOT_DIR=${SDKPATH}/${TARGET_SYS}' >> $script
-	echo 'export PKG_CONFIG_PATH=${SDKPATH}/${TARGET_SYS}${layout_libdir}/pkgconfig' >> $script
+	echo 'export PKG_CONFIG_PATH=${SDKPATH}/${TARGET_SYS}${libdir}/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${SDKPATH}/site-config' >> $script
 	echo 'export CC=${TARGET_PREFIX}gcc' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${BUILD_SYS}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
-		echo 'export TARGET_CFLAGS="-I${SDKPATH}/${TARGET_SYS}${layout_includedir}"' >> $script
-		echo 'export TARGET_LDFLAGS="-L${SDKPATH}/${TARGET_SYS}${layout_libdir}"' >> $script
+		echo 'export TARGET_CFLAGS="-I${SDKPATH}/${TARGET_SYS}${includedir}"' >> $script
+		echo 'export TARGET_LDFLAGS="-L${SDKPATH}/${TARGET_SYS}${libdir}"' >> $script
 		# Workaround darwin toolchain sysroot path problems
 		cd ${SDK_OUTPUT}${SDKPATH}/${TARGET_SYS}/usr
 		ln -s /usr/local local
 	fi
 	echo "alias opkg='LD_LIBRARY_PATH=${SDKPATH}/lib ${SDKPATH}/bin/opkg-cl -f ${SDKPATH}/${sysconfdir}/opkg-sdk.conf -o ${SDKPATH}'" >> $script
-	echo "alias opkg-target='LD_LIBRARY_PATH=${SDKPATH}/lib ${SDKPATH}/bin/opkg-cl -f ${SDKPATH}/${TARGET_SYS}${layout_sysconfdir}/opkg.conf -o ${SDKPATH}/${TARGET_SYS}'" >> $script
+	echo "alias opkg-target='LD_LIBRARY_PATH=${SDKPATH}/lib ${SDKPATH}/bin/opkg-cl -f ${SDKPATH}/${TARGET_SYS}${sysconfdir}/opkg.conf -o ${SDKPATH}/${TARGET_SYS}'" >> $script
 
 	# Add version information
 	versionfile=${SDK_OUTPUT}/${SDKPATH}/version

@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 inherit autotools_stage pkgconfig
 
 EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
-                --with-expat=${STAGING_DIR_HOST}${layout_prefix} \
+                --with-expat=${STAGING_DIR_HOST}${prefix} \
                 --with-dbus-sys=${sysconfdir}/dbus-1/system.d \
                 --with-hotplug=${sysconfdir}/hotplug.d \
                 --disable-docbook-docs \

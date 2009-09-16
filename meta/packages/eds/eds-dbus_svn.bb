@@ -23,7 +23,7 @@ do_configure_append () {
 }
 
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \
-                --with-soup --with-libdb=${STAGING_DIR_HOST}${layout_prefix} \
+                --with-soup --with-libdb=${STAGING_DIR_HOST}${prefix} \
                 --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
 
 

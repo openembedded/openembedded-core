@@ -66,7 +66,7 @@ UCLIBC_LOCALE_URI_arm = "http://openembedded.org/dl/uclibc-locale/${UCLIBC_LOCAL
 SRC_URI = "${@['${UCLIBC_LOCALE_URI}', ''][bb.data.getVar('USE_NLS', d, 1) != 'yes']} \
 	   file://uClibc.config"
 
-UCLIBC_STAGE_PREFIX = "${STAGING_DIR_HOST}${layout_prefix}"
+UCLIBC_STAGE_PREFIX = "${STAGING_DIR_HOST}${prefix}"
 
 # do_stage barfs on a CC with whitepspace, therefore put the 'HOST_CC_ARCH' in
 # the CFLAGS (for when building the utils).

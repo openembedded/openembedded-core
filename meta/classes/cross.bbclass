@@ -26,34 +26,11 @@ LDFLAGS_build-darwin = "-L${STAGING_LIBDIR_NATIVE}"
 TOOLCHAIN_OPTIONS = ""
 
 # Overrides for paths
-
-# Path prefixes
-base_prefix = "${exec_prefix}"
 prefix = "${CROSS_DIR}"
+base_prefix = "${prefix}"
 exec_prefix = "${prefix}"
-
-# Base paths
-base_bindir = "${base_prefix}/bin"
 base_sbindir = "${base_prefix}/bin"
-base_libdir = "${base_prefix}/lib"
-
-# Architecture independent paths
-datadir = "${prefix}/share"
-sysconfdir = "${prefix}/etc"
-sharedstatedir = "${prefix}/com"
-localstatedir = "${prefix}/var"
-infodir = "${datadir}/info"
-mandir = "${datadir}/man"
-docdir = "${datadir}/doc"
-servicedir = "${prefix}/srv"
-
-# Architecture dependent paths
-bindir = "${exec_prefix}/bin"
 sbindir = "${exec_prefix}/bin"
-libexecdir = "${exec_prefix}/libexec"
-libdir = "${exec_prefix}/lib"
-includedir = "${exec_prefix}/include"
-oldincludedir = "${exec_prefix}/include"
 
 do_stage () {
 	oe_runmake install

@@ -4,8 +4,8 @@ require gcc-configure-common.inc
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibcgnueabi", "no", "", d )}'
 
-EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${layout_prefix} \
-                      --with-gxx-include-dir=${prefix}/${TARGET_SYS}${layout_includedir}/c++/${BINV}/ \
+EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
+                      --with-gxx-include-dir=${prefix}/${TARGET_SYS}${target_includedir}/c++/${BINV}/ \
                       --with-sysroot=${prefix}/${TARGET_SYS} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 

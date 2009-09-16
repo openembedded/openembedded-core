@@ -38,7 +38,7 @@ do_stage() {
 	install -d ${STAGING_LIBDIR}
 	cp -a ${S}/arm-none-linux-gnueabi/libc/usr/lib/* ${STAGING_LIBDIR}
 
-	install -d ${STAGING_DIR_TARGET}${layout_base_libdir}
+	install -d ${STAGING_DIR_TARGET}${base_libdir}
 	cp -a ${S}/arm-none-linux-gnueabi/libc/lib/* ${STAGING_DIR_TARGET}${base_libdir}
 }
 

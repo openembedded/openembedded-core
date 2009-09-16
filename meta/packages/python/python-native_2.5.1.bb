@@ -22,9 +22,6 @@ S = "${WORKDIR}/Python-${PV}"
 
 inherit autotools native
 
-prefix = "${STAGING_DIR_NATIVE}/${layout_prefix}"
-exec_prefix = "${STAGING_DIR_NATIVE}/${layout_exec_prefix}"
-
 EXTRA_OECONF = "--with-threads --with-pymalloc --with-cyclic-gc \
                 --without-cxx --with-signal-module --with-wctype-functions"
 EXTRA_OEMAKE = 'BUILD_SYS="" HOST_SYS="" STAGING_LIBDIR=${STAGING_LIBDIR} \

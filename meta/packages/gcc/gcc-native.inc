@@ -5,7 +5,7 @@ PROVIDES = "gcc-native-${PV}"
 inherit native
 
 # This is intended to be a -very- basic config
-EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${layout_prefix} \
+EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${prefix} \
 		--with-newlib \
 		--disable-shared \
 		--disable-threads \

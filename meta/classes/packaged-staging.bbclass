@@ -174,11 +174,11 @@ staging_helper () {
 		done
 		echo "dest root /" >> $conffile
 	fi
-	if [ ! -e ${TMPDIR}${layout_libdir}/opkg/info/ ]; then
-		mkdir -p ${TMPDIR}${layout_libdir}/opkg/info/
+	if [ ! -e ${TMPDIR}${libdir}/opkg/info/ ]; then
+		mkdir -p ${TMPDIR}${libdir}/opkg/info/
 	fi
- 	if [ ! -e ${TMPDIR}${layout_libdir}/ipkg/ ]; then
-		cd ${TMPDIR}${layout_libdir}/
+ 	if [ ! -e ${TMPDIR}${libdir}/ipkg/ ]; then
+		cd ${TMPDIR}${libdir}/
 		ln -sf opkg/ ipkg || true
 	fi
 }
@@ -210,7 +210,7 @@ python packagestage_scenefunc () {
         #
         # Install the staging package somewhere temporarily so we can extract the stamp files
         #
-        bb.mkdirhier(bb.data.expand("${WORKDIR}/tstage/${layout_libdir}/opkg/info/ ", d))
+        bb.mkdirhier(bb.data.expand("${WORKDIR}/tstage/${libdir}/opkg/info/ ", d))
         cmd = bb.data.expand("${PSTAGE_PKGMANAGER} -f ${PSTAGE_MACHCONFIG} -force-depends -o ${WORKDIR}/tstage install", d)
         ret = os.system("PATH=\"%s\" %s %s" % (path, cmd, stagepkg))
         if ret != 0:
@@ -379,20 +379,20 @@ staging_packager () {
 staging_package_installer () {
 	#${PSTAGE_INSTALL_CMD} ${PSTAGE_PKG}
 
-	STATUSFILE=${TMPDIR}${layout_libdir}/opkg/status
+	STATUSFILE=${TMPDIR}${libdir}/opkg/status
 	echo "Package: ${PSTAGE_PKGPN}"        >> $STATUSFILE
 	echo "Version: ${PSTAGE_PKGVERSION}"   >> $STATUSFILE
 	echo "Status: install user installed"  >> $STATUSFILE
 	echo "Architecture: ${PSTAGE_PKGARCH}" >> $STATUSFILE
 	echo "" >> $STATUSFILE
 
-	CTRLFILE=${TMPDIR}${layout_libdir}/opkg/info/${PSTAGE_PKGPN}.control
+	CTRLFILE=${TMPDIR}${libdir}/opkg/info/${PSTAGE_PKGPN}.control
 	echo "Package: ${PSTAGE_PKGPN}"        > $CTRLFILE
 	echo "Version: ${PSTAGE_PKGVERSION}"   >> $CTRLFILE
 	echo "Architecture: ${PSTAGE_PKGARCH}" >> $CTRLFILE
 
 	cd ${PSTAGE_TMPDIR_STAGE}
-	find -type f | grep -v ./CONTROL | sed -e 's/^\.//' > ${TMPDIR}${layout_libdir}/opkg/info/${PSTAGE_PKGPN}.list
+	find -type f | grep -v ./CONTROL | sed -e 's/^\.//' > ${TMPDIR}${libdir}/opkg/info/${PSTAGE_PKGPN}.list
 }
 
 staging_package_libtoolhack () {

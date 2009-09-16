@@ -11,7 +11,7 @@ DEPENDS += "gmp-sdk mpfr-sdk"
 
 EXTRA_OECONF += "--disable-libunwind-exceptions --disable-libssp \
 		--disable-libgomp --disable-libmudflap \
-		--with-mpfr=${STAGING_DIR_NATIVE}${layout_exec_prefix}"
+		--with-mpfr=${STAGING_DIR_NATIVE}${prefix_native}"
 
 # to find libmpfr
 export LD_LIBRARY_PATH = "${STAGING_LIBDIR}"

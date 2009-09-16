@@ -2,7 +2,7 @@ inherit distutils-base
 
 DISTUTILS_BUILD_ARGS ?= ""
 DISTUTILS_STAGE_HEADERS_ARGS ?= "--install-dir=${STAGING_INCDIR}/${PYTHON_DIR}"
-DISTUTILS_STAGE_ALL_ARGS ?= "--prefix=${STAGING_DIR_HOST}${layout_prefix} \
+DISTUTILS_STAGE_ALL_ARGS ?= "--prefix=${STAGING_DIR_HOST}${prefix} \
     --install-data=${STAGING_DATADIR}"
 DISTUTILS_INSTALL_ARGS ?= "--prefix=${D}/${prefix} \
     --install-data=${D}/${datadir}"
@@ -16,7 +16,7 @@ distutils_do_compile() {
 }
 
 distutils_stage_headers() {
-        install -d ${STAGING_DIR_HOST}${layout_libdir}/${PYTHON_DIR}/site-packages
+        install -d ${STAGING_DIR_HOST}${libdir}/${PYTHON_DIR}/site-packages
         STAGING_INCDIR=${STAGING_INCDIR} \
         STAGING_LIBDIR=${STAGING_LIBDIR} \
         BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
@@ -25,10 +25,10 @@ distutils_stage_headers() {
 }
 
 distutils_stage_all() {
-        install -d ${STAGING_DIR_HOST}${layout_prefix}/${PYTHON_DIR}/site-packages
+        install -d ${STAGING_DIR_HOST}${prefix}/${PYTHON_DIR}/site-packages
         STAGING_INCDIR=${STAGING_INCDIR} \
         STAGING_LIBDIR=${STAGING_LIBDIR} \
-        PYTHONPATH=${STAGING_DIR_HOST}${layout_prefix}/${PYTHON_DIR}/site-packages \
+        PYTHONPATH=${STAGING_DIR_HOST}${prefix}/${PYTHON_DIR}/site-packages \
         BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
         ${STAGING_BINDIR_NATIVE}/python setup.py install ${DISTUTILS_STAGE_ALL_ARGS} || \
         oefatal "python setup.py install (stage) execution failed."

@@ -4,7 +4,7 @@ PR = "r8"
 
 # the -isystem in bitbake.conf screws up glibc do_stage
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
-TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${layout_includedir}"
+TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${includedir}"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/glibc-2.4"
 

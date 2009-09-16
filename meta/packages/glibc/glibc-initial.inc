@@ -12,7 +12,7 @@ do_configure () {
 	find ${S} -name "configure" | xargs touch
 	${S}/configure --host=${TARGET_SYS} --build=${BUILD_SYS} \
 		--without-cvs --disable-sanity-checks \
-		--with-headers=${STAGING_DIR_TARGET}${layout_includedir} \
+		--with-headers=${STAGING_DIR_TARGET}${includedir} \
 		--enable-hacker-mode
 	if grep -q GLIBC_2.3 ${S}/ChangeLog; then
 		# glibc-2.3.x passes cross options to $(CC) when generating errlist-compat.c, which fails without a real cross-compiler.
@@ -32,7 +32,7 @@ do_compile () {
 
 do_stage () {
 	oe_runmake cross-compiling=yes install_root=${STAGING_DIR_HOST} \
-	includedir='${layout_includedir}' prefix='${layout_prefix}' \
+	includedir='${includedir}' prefix='${prefix}' \
 	install-bootstrap-headers=yes install-headers
 
 	oe_runmake csu/subdir_lib
@@ -46,10 +46,10 @@ do_stage () {
 	if [ -e ${B}/bits/stdio_lim.h ]; then
 		cp ${B}/bits/stdio_lim.h  ${STAGING_INCDIR}/bits/
 	fi
-	mkdir -p ${STAGING_DIR_TARGET}${layout_libdir}
-	install -m 644 csu/crt[1in].o ${STAGING_DIR_TARGET}${layout_libdir}
+	mkdir -p ${STAGING_DIR_TARGET}${libdir}
+	install -m 644 csu/crt[1in].o ${STAGING_DIR_TARGET}${libdir}
 	${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
-		-o ${STAGING_DIR_TARGET}${layout_libdir}/libc.so
+		-o ${STAGING_DIR_TARGET}${libdir}/libc.so
 }
 
 do_install () {

@@ -206,11 +206,11 @@ autotools_stage_all() {
 	oe_runmake DESTDIR="${STAGE_TEMP}" install
 	autotools_stage_dir ${STAGE_TEMP}/${includedir} ${STAGING_INCDIR}
 	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
-		autotools_stage_dir ${STAGE_TEMP}/${bindir} ${STAGING_DIR_HOST}${layout_bindir}
-		autotools_stage_dir ${STAGE_TEMP}/${sbindir} ${STAGING_DIR_HOST}${layout_sbindir}
-		autotools_stage_dir ${STAGE_TEMP}/${base_bindir} ${STAGING_DIR_HOST}${layout_base_bindir}
-		autotools_stage_dir ${STAGE_TEMP}/${base_sbindir} ${STAGING_DIR_HOST}${layout_base_sbindir}
-		autotools_stage_dir ${STAGE_TEMP}/${libexecdir} ${STAGING_DIR_HOST}${layout_libexecdir}
+		autotools_stage_dir ${STAGE_TEMP}/${bindir} ${STAGING_DIR_HOST}${bindir}
+		autotools_stage_dir ${STAGE_TEMP}/${sbindir} ${STAGING_DIR_HOST}${sbindir}
+		autotools_stage_dir ${STAGE_TEMP}/${base_bindir} ${STAGING_DIR_HOST}${base_bindir}
+		autotools_stage_dir ${STAGE_TEMP}/${base_sbindir} ${STAGING_DIR_HOST}${base_sbindir}
+		autotools_stage_dir ${STAGE_TEMP}/${libexecdir} ${STAGING_DIR_HOST}${libexecdir}
 	fi
 	if [ -d ${STAGE_TEMP}/${libdir} ]
 	then
@@ -218,7 +218,7 @@ autotools_stage_all() {
 	fi
 	if [ -d ${STAGE_TEMP}/${base_libdir} ]
 	then
-		autotools_stage_libdir ${STAGE_TEMP}/${base_libdir} ${STAGING_DIR_HOST}${layout_base_libdir}
+		autotools_stage_libdir ${STAGE_TEMP}/${base_libdir} ${STAGING_DIR_HOST}${base_libdir}
 	fi
 	rm -rf ${STAGE_TEMP}/${mandir} || true
 	rm -rf ${STAGE_TEMP}/${infodir} || true

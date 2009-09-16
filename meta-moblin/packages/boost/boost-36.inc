@@ -35,7 +35,7 @@ BOOST_LIBS = "\
 # To enable python, uncomment the following:
 #BOOST_LIBS += "python"
 #DEPENDS += "python"
-#PYTHON_ROOT = "${STAGING_DIR_HOST}/${layout_prefix}"
+#PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
 #PYTHON_VERSION = "2.5"
 
 S = "${WORKDIR}/${BOOST_P}"

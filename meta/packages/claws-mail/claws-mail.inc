@@ -15,7 +15,7 @@ SRC_URI = "\
 FILES_${PN} = "${bindir} ${datadir}/pixmaps ${datadir}/applications"
 
 #EXTRA_OECONF = "--disable-aspell-test \
-# --disable-dillo-viewer-plugin --with-aspell-prefix=${STAGING_DIR_HOST}${layout_prefix} \
+# --disable-dillo-viewer-plugin --with-aspell-prefix=${STAGING_DIR_HOST}${prefix} \
 # --enable-aspell"
 
 EXTRA_OECONF = "--disable-aspell-test 		\

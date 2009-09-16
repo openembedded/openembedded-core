@@ -35,7 +35,7 @@ EXTRA_OECONF = "--enable-menubar --enable-xim \
 		--enable-text-blink --enable-rxvt-scroll \
 		--enable-combining --enable-shared \
 		--enable-xgetdefault \
-		--with-x=${STAGING_DIR_HOST}${layout_prefix}"
+		--with-x=${STAGING_DIR_HOST}${prefix}"
 EXTRA_OEMAKE = "'XINC=-I${STAGING_INCDIR}' \
 		'XLIB=-L${STAGING_LIBDIR} -lX11'"
 
