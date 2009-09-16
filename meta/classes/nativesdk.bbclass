@@ -2,59 +2,51 @@
 # or indirectly via dependency.  No need to be in 'world'.
 EXCLUDE_FROM_WORLD = "1"
 
-# Save MULTIMACH_ARCH
-OLD_MULTIMACH_ARCH := "${MULTIMACH_ARCH}"
-# Save PACKAGE_ARCH
-OLD_PACKAGE_ARCH := ${PACKAGE_ARCH}
-PACKAGE_ARCH = "${BUILD_ARCH}-${OLD_PACKAGE_ARCH}-nativesdk"
-# Also save BASE_PACKAGE_ARCH since HOST_ARCH can influence it
-OLD_BASE_PACKAGE_ARCH := "${BASE_PACKAGE_ARCH}"
-BASE_PACKAGE_ARCH = "${OLD_BASE_PACKAGE_ARCH}"
+#
+# Update BASE_PACKAGE_ARCH and PACKAGE_ARCHS
+#
+OLD_PACKAGE_ARCH := ${BASE_PACKAGE_ARCH}
+BASE_PACKAGE_ARCH = "${HOST_ARCH}-${OLD_PACKAGE_ARCH}-nativesdk"
+python () {
+    barch = bb.data.getVar('HOST_ARCH', d, True)
+    archs = bb.data.getVar('PACKAGE_ARCHS', d, True).split()
+    sdkarchs = []
+    for arch in archs:
+        sdkarchs.append(barch + '-' + arch + '-nativesdk')
+    bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
+}
 
-STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_SYS}-sdk"
-STAGING_DIR_TARGET = "${STAGING_DIR}/${OLD_MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
+#STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_SYS}-nativesdk"
+#STAGING_DIR_TARGET = "${STAGING_DIR}/${BASEPKG_TARGET_SYS}-nativesdk"
 
-HOST_ARCH = "${BUILD_ARCH}"
-HOST_VENDOR = "${BUILD_VENDOR}"
-HOST_OS = "${BUILD_OS}"
-HOST_PREFIX = "${BUILD_PREFIX}"
-HOST_CC_ARCH = "${BUILD_CC_ARCH}"
+CROSS_DIR = "${TMPDIR}/cross/${HOST_ARCH}"
+
+TARGET_LDFLAGS += "-Wl,-dynamic-linker=${SDKPATH}/lib/ld-linux.so.2"
+
+HOST_ARCH = "${SDK_ARCH}"
+HOST_VENDOR = "${SDK_VENDOR}"
+HOST_OS = "${SDK_OS}"
+HOST_PREFIX = "${SDK_PREFIX}"
+HOST_CC_ARCH = "${SDK_CC_ARCH}"
 #HOST_SYS = "${HOST_ARCH}${TARGET_VENDOR}-${HOST_OS}"
+
+TARGET_ARCH = "${SDK_ARCH}"
+TARGET_VENDOR = "${SDK_VENDOR}"
+TARGET_OS = "${SDK_OS}"
+TARGET_PREFIX = "${SDK_PREFIX}"
+TARGET_CC_ARCH = "${SDK_CC_ARCH}"
 
 CPPFLAGS = "${BUILDSDK_CPPFLAGS}"
 CFLAGS = "${BUILDSDK_CFLAGS}"
 CXXFLAGS = "${BUILDSDK_CFLAGS}"
 LDFLAGS = "${BUILDSDK_LDFLAGS}"
 
-# Path prefixes
+# Change to place files in SDKPATH
 prefix = "${SDKPATH}"
-exec_prefix = "${prefix}"
-base_prefix = "${prefix}"
+exec_prefix = "${SDKPATH}"
+base_prefix = "${SDKPATH}"
 
-# Base paths
-export base_bindir = "${prefix}/bin"
-export base_sbindir = "${prefix}/bin"
-export base_libdir = "${prefix}/lib"
-
-# Architecture independent paths
-export datadir = "${prefix}/share"
-export sysconfdir = "${prefix}/etc"
-export sharedstatedir = "${datadir}/com"
-export localstatedir = "${prefix}/var"
-export infodir = "${datadir}/info"
-export mandir = "${datadir}/man"
-export docdir = "${datadir}/doc"
-export servicedir = "${prefix}/srv"
-
-# Architecture dependent paths
-export bindir = "${prefix}/bin"
-export sbindir = "${prefix}/bin"
-export libexecdir = "${prefix}/libexec"
-export libdir = "${prefix}/lib"
-export includedir = "${prefix}/include"
-export oldincludedir = "${prefix}/include"
-
-FILES_${PN} = "${prefix}"
+FILES_${PN} += "${prefix}"
 FILES_${PN}-dbg += "${prefix}/.debug \
                     ${prefix}/bin/.debug \
                    "
@@ -62,35 +54,18 @@ FILES_${PN}-dbg += "${prefix}/.debug \
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
-python () {
-    barch = bb.data.getVar('BUILD_ARCH', d, True)
-    archs = bb.data.getVar('PACKAGE_ARCHS', d, True).split()
-    sdkarchs = []
-    for arch in archs:
-        sdkarchs.append(barch + '-' + arch + '-sdk')
-    bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
-}
-
 python __anonymous () {
     pn = bb.data.getVar("PN", d, True)
     depends = bb.data.getVar("DEPENDS", d, True)
     deps = bb.utils.explode_deps(depends)
     newdeps = []
-    if "nativesdk" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
-        autoextend = True
-    else:
-        autoextend = False
     for dep in deps:
         if dep.endswith("-native") or dep.endswith("-cross"):
             newdeps.append(dep)
+        elif dep.endswith("-gcc-intermediate") or dep.endswith("-gcc-initial") or dep.endswith("-gcc"):
+            newdeps.append(dep + "-crosssdk")
         elif not dep.endswith("-nativesdk"):
-            if autoextend:
-                newdeps.append(dep + "-nativesdk")
-            elif pn == 'gcc-cross-nativesdk':
-                newdeps.append(dep)
-            else:
-                newdeps.append(dep)
-                bb.note("%s has depends %s which doesn't end in -nativesdk?" % (pn, dep))
+            newdeps.append(dep + "-nativesdk")
         else:
             newdeps.append(dep)
     bb.data.setVar("DEPENDS", " ".join(newdeps), d)
@@ -99,12 +74,8 @@ python __anonymous () {
         if prov.find(pn) != -1:
             continue
         if not prov.endswith("-nativesdk"):
-            if autoextend:
-                provides = provides.replace(prov, prov + "-nativesdk")
-            #else:
-            #    bb.note("%s has rouge PROVIDES of %s which doesn't end in -sdk?" % (pn, prov))
+            provides = provides.replace(prov, prov + "-nativesdk")
     bb.data.setVar("PROVIDES", provides, d)
-
 }
 
 
