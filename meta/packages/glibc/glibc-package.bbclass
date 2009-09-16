@@ -26,7 +26,7 @@ ENABLE_BINARY_LOCALE_GENERATION ?= "0"
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
 BINARY_LOCALE_ARCHES ?= "arm.*"
 
-PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
+PACKAGES = "${PN}-dbg ${PN} catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
 PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base-* glibc-binary-localedata-*"
 
 libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* ${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* ${base_libdir}/libutil* ${base_libdir}/libnsl* ${base_libdir}/libnss_files* ${base_libdir}/libnss_compat* ${base_libdir}/libnss_dns* ${base_libdir}/libdl* ${base_libdir}/libanl* ${base_libdir}/libBrokenLocale*"
