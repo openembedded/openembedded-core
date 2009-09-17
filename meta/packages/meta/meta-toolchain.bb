@@ -49,6 +49,9 @@ do_populate_sdk() {
 	mv ${SDK_OUTPUT}/usr/lib/opkg/* ${SDK_OUTPUT}/${SDKPATH}/usr/lib/opkg/
 	rm -Rf ${SDK_OUTPUT}/usr/lib
 
+	# Don't ship any libGL in the SDK
+	rm -rf ${SDK_OUTPUT}/${SDKPATH}/usr/lib/libGL*
+
 	install -d ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}/${sysconfdir}
 	install -m 0644 ${IPKGCONF_TARGET} ${IPKGCONF_SDK} ${SDK_OUTPUT}/${SDKPATH}/${TARGET_SYS}/${sysconfdir}/
 
