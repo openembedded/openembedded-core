@@ -47,8 +47,8 @@ CPPFLAGS = ""
 ARCH_FLAGS_FOR_TARGET = "${TARGET_CC_ARCH}"
 EXTRA_OEMAKE += "ARCH_FLAGS_FOR_TARGET='${ARCH_FLAGS_FOR_TARGET}'"
 
-SYSTEMHEADERS = "${includedir}"
-SYSTEMLIBS1 = "${libdir}/"
+SYSTEMHEADERS = "${target_includedir}"
+SYSTEMLIBS1 = "${target_libdir}/"
 
 do_configure () {
 	# Setup these vars for cross building only
