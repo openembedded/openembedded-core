@@ -1,3 +1,4 @@
+require glibc.inc
 PR = "r6"
 
 ARM_INSTRUCTION_SET = "arm"
