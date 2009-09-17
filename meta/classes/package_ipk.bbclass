@@ -37,7 +37,7 @@ python package_ipk_install () {
 			bb.error("PACKAGE_ARCHS missing")
 			raise FuncFailed
 		ipkg_archs = ipkg_archs.split()
-		arch_priority = 1
+		arch_priority = 1na
 
 		f = open(conffile,"w")
 		for arch in ipkg_archs:
@@ -75,8 +75,11 @@ package_update_index_ipk () {
 
 	packagedirs="${DEPLOY_DIR_IPK}"
 	for arch in $ipkgarchs; do
-		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/${SDK_ARCH}-$arch-nativesdk"
+		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
+		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/$sdkarch-nativesdk"
 	done
+
+	packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/${SDK_ARCH}-${TARGET_ARCH}-canadian"
 
 	for pkgdir in $packagedirs; do
 		if [ -e $pkgdir/ ]; then
@@ -100,20 +103,26 @@ package_generate_ipkg_conf () {
 		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
 		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
 		fi
-		if [ -e ${DEPLOY_DIR_IPK}/${SDK_ARCH}-$arch-nativesdk/Packages ] ; then
-		        echo "src oe-${SDK_ARCH}-$arch-nativesdk file:${DEPLOY_DIR_IPK}/${SDK_ARCH}-$arch-nativesdk" >> ${IPKGCONF_SDK}
+		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
+		if [ -e ${DEPLOY_DIR_IPK}/$sdkarch-nativesdk/Packages ] ; then
+		        echo "src oe-$sdkarch-nativesdk file:${DEPLOY_DIR_IPK}/$sdkarch-nativesdk" >> ${IPKGCONF_SDK}
 		fi
 	done
+	if [ -e ${DEPLOY_DIR_IPK}/${SDK_ARCH}-${TARGET_ARCH}-canadian/Packages ] ; then
+	        echo "src oe-${SDK_ARCH}-${TARGET_ARCH}-canadian file:${DEPLOY_DIR_IPK}/${SDK_ARCH}-${TARGET_ARCH}-canadian" >> ${IPKGCONF_SDK}
+	fi
 }
 
 package_generate_archlist () {
 	ipkgarchs="${PACKAGE_ARCHS}"
 	priority=1
 	for arch in $ipkgarchs; do
+		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
 		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
-		echo "arch ${SDK_ARCH}-$arch-nativesdk $priority" >> ${IPKGCONF_SDK}
+		echo "arch $sdkarch-nativesdk $priority" >> ${IPKGCONF_SDK}
 		priority=$(expr $priority + 5)
 	done
+	echo "arch ${SDK_ARCH}-${TARGET_ARCH}-canadian $priority" >> ${IPKGCONF_SDK}
 }
 
 python do_package_ipk () {

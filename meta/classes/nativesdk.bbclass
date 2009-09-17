@@ -6,13 +6,12 @@ EXCLUDE_FROM_WORLD = "1"
 # Update BASE_PACKAGE_ARCH and PACKAGE_ARCHS
 #
 OLD_PACKAGE_ARCH := ${BASE_PACKAGE_ARCH}
-BASE_PACKAGE_ARCH = "${HOST_ARCH}-${OLD_PACKAGE_ARCH}-nativesdk"
+BASE_PACKAGE_ARCH = "${SDK_ARCH}-nativesdk"
 python () {
-    barch = bb.data.getVar('HOST_ARCH', d, True)
     archs = bb.data.getVar('PACKAGE_ARCHS', d, True).split()
     sdkarchs = []
     for arch in archs:
-        sdkarchs.append(barch + '-' + arch + '-nativesdk')
+        sdkarchs.append(arch + '-nativesdk')
     bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
 }
 
