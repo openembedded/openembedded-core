@@ -16,13 +16,15 @@ LANGUAGES ?= "c,c++${FORTRAN}${JAVA}"
 EXTRA_OECONF_BASE ?= ""
 EXTRA_OECONF_PATHS ?= ""
 
+GCCMULTILIB = "--enable-multilib"
+
 EXTRA_OECONF = "${@['--enable-clocale=generic', ''][bb.data.getVar('USE_NLS', d, 1) != 'no']} \
                 --with-gnu-ld \
                 --enable-shared \
                 --enable-target-optspace \
                 --enable-languages=${LANGUAGES} \
                 --enable-threads=posix \
-                --enable-multilib \
+                ${GCCMULTILIB} \
                 --enable-c99 \
                 --enable-long-long \
                 --enable-symvers=gnu \
