@@ -1,0 +1,13 @@
+Index: git/Makefile.target
+===================================================================
+--- git.orig/Makefile.target	2009-09-17 11:36:06.000000000 +0100
++++ git/Makefile.target	2009-09-17 11:36:12.000000000 +0100
+@@ -748,7 +748,7 @@
+ $(QEMU_PROG): LIBS += $(SDL_LIBS) $(COCOA_LIBS) $(CURSES_LIBS) $(BRLAPI_LIBS) $(VDE_LIBS)
+ 
+ $(QEMU_PROG): $(OBJS) ../libqemu_common.a libqemu.a
+-	$(LINK) -lGL -lGLU
++	$(LINK) -lGL
+ 
+ endif # !CONFIG_USER_ONLY
+ 
