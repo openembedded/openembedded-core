@@ -1,4 +1,3 @@
-require gmp_${PV}.bb
 inherit nativesdk
 
 oe_runconf () {
