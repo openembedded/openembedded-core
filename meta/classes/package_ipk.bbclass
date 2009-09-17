@@ -75,7 +75,7 @@ package_update_index_ipk () {
 
 	packagedirs="${DEPLOY_DIR_IPK}"
 	for arch in $ipkgarchs; do
-		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-nativesdk"
+		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/${SDK_ARCH}-$arch-nativesdk"
 	done
 
 	for pkgdir in $packagedirs; do
@@ -100,8 +100,8 @@ package_generate_ipkg_conf () {
 		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
 		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
 		fi
-		if [ -e ${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-nativesdk/Packages ] ; then
-		        echo "src oe-${BUILD_ARCH}-$arch-nativesdk file:${DEPLOY_DIR_IPK}/${BUILD_ARCH}-$arch-nativesdk" >> ${IPKGCONF_SDK}
+		if [ -e ${DEPLOY_DIR_IPK}/${SDK_ARCH}-$arch-nativesdk/Packages ] ; then
+		        echo "src oe-${SDK_ARCH}-$arch-nativesdk file:${DEPLOY_DIR_IPK}/${SDK_ARCH}-$arch-nativesdk" >> ${IPKGCONF_SDK}
 		fi
 	done
 }
@@ -111,7 +111,7 @@ package_generate_archlist () {
 	priority=1
 	for arch in $ipkgarchs; do
 		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
-		echo "arch ${BUILD_ARCH}-$arch-nativesdk $priority" >> ${IPKGCONF_SDK}
+		echo "arch ${SDK_ARCH}-$arch-nativesdk $priority" >> ${IPKGCONF_SDK}
 		priority=$(expr $priority + 5)
 	done
 }
