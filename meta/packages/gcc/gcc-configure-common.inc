@@ -47,6 +47,9 @@ CPPFLAGS = ""
 ARCH_FLAGS_FOR_TARGET = "${TARGET_CC_ARCH}"
 EXTRA_OEMAKE += "ARCH_FLAGS_FOR_TARGET='${ARCH_FLAGS_FOR_TARGET}'"
 
+SYSTEMHEADERS = "${includedir}"
+SYSTEMLIBS1 = "${libdir}/"
+
 do_configure () {
 	# Setup these vars for cross building only
 	# ... because foo_FOR_TARGET apparently gets misinterpreted inside the
@@ -72,6 +75,20 @@ do_configure () {
 	export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
 	export ARCH_FLAGS_FOR_TARGET="${ARCH_FLAGS_FOR_TARGET}"
 	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
+	
+	# splice our idea of where the headers live into gcc's world
+	echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${T}/t-oe
+	sed 's%^tmake_file=.*$%& ${T}/t-oe%' < ${S}/gcc/Makefile.in >${S}/gcc/Makefile.in.new
+	mv ${S}/gcc/Makefile.in.new ${S}/gcc/Makefile.in
+	cat ${S}/gcc/defaults.h | grep -v "\#endif.*GCC_DEFAULTS_H" > ${S}/gcc/defaults.h.new
+	echo "#ifndef STANDARD_INCLUDE_DIR" >> ${S}/gcc/defaults.h.new
+	echo "#define STANDARD_INCLUDE_DIR \"${SYSTEMHEADERS}\"" >> ${S}/gcc/defaults.h.new
+	echo "#endif" >> ${S}/gcc/defaults.h.new
+	echo "#ifndef STANDARD_STARTFILE_PREFIX_2" >> ${S}/gcc/defaults.h.new
+	echo "#define STANDARD_STARTFILE_PREFIX_2 \"${SYSTEMLIBS1}\"" >> ${S}/gcc/defaults.h.new
+	echo "#endif" >> ${S}/gcc/defaults.h.new
+	echo "#endif /* ! GCC_DEFAULTS_H */" >> ${S}/gcc/defaults.h.new
+	mv ${S}/gcc/defaults.h.new ${S}/gcc/defaults.h
 	oe_runconf
 }
 
