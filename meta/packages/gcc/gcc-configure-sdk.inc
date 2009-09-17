@@ -6,6 +6,7 @@ USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibcgnueabi", "no", "", d 
 
 EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
                       --with-gxx-include-dir=${prefix}/${TARGET_SYS}${target_includedir}/c++/${BINV}/ \
+                      --with-build-time-tools=${CROSS_DIR}/${TARGET_SYS}/bin \
                       --with-sysroot=${prefix}/${TARGET_SYS} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 
@@ -16,7 +17,9 @@ EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} 
 export AR_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/ar"
 export AS_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/as"
 export DLLTOOL_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/dlltool"
-export LD_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/ld"
+export CC_FOR_TARGET = "${TARGET_SYS}-gcc"
+export CXX_FOR_TARGET = "${TARGET_SYS}-g++"
+export LD_FOR_TARGET = "${TARGET_SYS}-ld"
 export LIPO_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/lipo"
 export NM_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/nm"
 export OBJDUMP_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/objdump"
@@ -41,11 +44,5 @@ do_configure () {
 }
 
 do_compile () {
-	export CC="${BUILD_CC}"
-	export AR_FOR_TARGET="${TARGET_SYS}-ar"
-	export RANLIB_FOR_TARGET="${TARGET_SYS}-ranlib"
-	export LD_FOR_TARGET="${TARGET_SYS}-ld"
-	export NM_FOR_TARGET="${TARGET_SYS}-nm"
-	export CC_FOR_TARGET="${CCACHE} ${TARGET_SYS}-gcc ${TARGET_CC_ARCH}"
-	base_do_compile
+	oe_runmake
 }
