@@ -11,10 +11,10 @@ inherit nativesdk
 
 PACKAGES = "${PN}"
 
+#    gdb-cross-canadian
 RDEPENDS_${PN} = "\
-    binutils-cross-nativesdk \
-    gcc-cross-nativesdk \
-    gdb-cross-nativesdk \
+    binutils-cross-canadian \
+    gcc-cross-canadian \
     pkgconfig-nativesdk \
     qemu-nativesdk \
     qemu-helper-nativesdk \
@@ -22,8 +22,8 @@ RDEPENDS_${PN} = "\
     "
 
 RDEPENDS_${PN}_darwin8 = "\
-    odcctools-cross-nativesdk \
-    llvm-cross-nativesdk \
+    odcctools-cross-canadian \
+    llvm-cross-canadian \
     pkgconfig-nativesdk \
     opkg-nativesdk \
     libtool-nativesdk \
