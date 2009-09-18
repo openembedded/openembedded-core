@@ -20,8 +20,6 @@ python () {
 
 CROSS_DIR = "${TMPDIR}/cross/${HOST_ARCH}"
 
-TARGET_LDFLAGS += "-Wl,-dynamic-linker=${SDKPATH}/lib/ld-linux.so.2"
-
 HOST_ARCH = "${SDK_ARCH}"
 HOST_VENDOR = "${SDK_VENDOR}"
 HOST_OS = "${SDK_OS}"
