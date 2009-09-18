@@ -18,7 +18,7 @@ index f33f762..d1eb876 100644
  cpu-exec.o: CFLAGS += $(HELPER_CFLAGS)
  
 +parse_gl_h: parse_gl_h.c
-+	$(CC) -g -o $@ $<
++	$(HOST_CC) -g -o $@ $<
 +server_stub.c: parse_gl_h
 +	./parse_gl_h
 +gl_func.h: parse_gl_h
