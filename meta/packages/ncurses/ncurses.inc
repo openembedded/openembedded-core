@@ -32,7 +32,9 @@ EXTRA_OECONF = "--with-shared \
 	        --enable-termcap \
 	        --without-cxx-binding \
 	        --with-terminfo-dirs=${sysconfdir}/terminfo:${datadir}/terminfo \
-	        --enable-overwrite"
+	        --enable-overwrite \
+	        --with-build-ldflags='' \
+	        --with-build-ccflags='' "
 export BUILD_CCFLAGS = "-I${S}/ncurses -I${S}/include ${BUILD_CFLAGS}"
 export BUILD_LDFLAGS = ""
 export EXTRA_OEMAKE = '"BUILD_LDFLAGS=" "BUILD_CCFLAGS=${BUILD_CCFLAGS}"'
