@@ -2,7 +2,7 @@ require gdb-cross.inc
 
 DEPENDS = "ncurses-nativesdk expat-nativesdk"
 
-inherit nativesdk
+inherit cross-canadian
 
 do_stage() {
 	:
