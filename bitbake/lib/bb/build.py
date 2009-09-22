@@ -225,6 +225,10 @@ def exec_func_shell(func, d, flags):
         so.close()
         se.close()
 
+        if os.path.getsize(logfile) == 0:
+            bb.msg.debug(2, bb.msg.domain.Build, "Zero size logfile %s, removing" % logfile)
+            os.remove(logfile)
+
         # close the backup fds
         os.close(osi[0])
         os.close(oso[0])
