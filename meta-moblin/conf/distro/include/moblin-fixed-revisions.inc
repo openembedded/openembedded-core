@@ -66,7 +66,6 @@ SRCREV_pn-nbtk ?= "635f9b4f1a2897aaa85ec1285e57dc5478517c2f"
 SRCREV_pn-mtpfs = "17"
 SRCREV_pn-qemugl ?= "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 SRCREV_pn-syncevolution ?= "29972357bf6582c318258b7bdf1feb13c0fef824"
-SRCREV_pn-tasks ?= "a3c6109973c2f39190f554b49dacda7ec5231ef4"
+SRCREV_pn-tasks ?= "ea52d46d691c5fce4473ea4e24a35411381f3a65"
 SRCREV_pn-twitter-glib ?= "9dfca7cf38e3dddbda6dc82d0164f65814b8783e"
-
 SRCREVMOZILLAHEADLESS ?= "1a622cb7c384"
