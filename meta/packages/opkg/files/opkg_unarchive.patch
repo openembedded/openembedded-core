@@ -1,0 +1,13 @@
+--- trunk/libbb/unarchive.c.orig	2009-02-11 22:14:58.000000000 +0100
++++ trunk/libbb/unarchive.c	2009-02-11 22:15:07.000000000 +0100
+@@ -606,6 +606,10 @@
+                 tar_entry->name = concat_path_file(tar.formated.prefix, tar.formated.name);
+         }
+ 
++	if (strlen(tar_entry->name) > 100) {
++		tar_entry->name[100] = 0;
++	}
++
+ 	// tar_entry->name = xstrdup(tar.formated.name);
+ 
+ /*

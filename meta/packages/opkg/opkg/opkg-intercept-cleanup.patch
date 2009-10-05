@@ -1,0 +1,47 @@
+---
+ libopkg/opkg_cmd.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+--- trunk.orig/libopkg/opkg_cmd.c
++++ trunk/libopkg/opkg_cmd.c
+@@ -19,6 +19,7 @@
+ #include "includes.h"
+ #include <dirent.h>
+ #include <glob.h>
++#include <unistd.h>
+ 
+ #include "opkg_conf.h"
+ #include "opkg_cmd.h"
+@@ -350,7 +351,6 @@ static opkg_intercept_t opkg_prep_interc
+ 
+ static int opkg_finalize_intercepts(opkg_intercept_t ctx)
+ {
+-    char *cmd;
+     DIR *dir;
+     int err = 0;
+ 
+@@ -376,6 +376,10 @@ static int opkg_finalize_intercepts(opkg
+ 		    err = errno;
+ 		    perror (de->d_name);
+ 		}
++		if (unlink (path)) {
++		    err = errno;
++		    perror (path);
++		}
+ 	    }
+ 	    free (path);
+ 	}
+@@ -383,9 +387,10 @@ static int opkg_finalize_intercepts(opkg
+     } else
+ 	perror (ctx->statedir);
+ 	
+-    sprintf_alloc (&cmd, "rm -rf %s", ctx->statedir);
+-    err = system (cmd);
+-    free (cmd);
++    if (rmdir (ctx->statedir)) {
++	err = errno;
++	perror (ctx->statedir);
++    }
+ 
+     free (ctx->statedir);
+     free (ctx);

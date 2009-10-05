@@ -6,7 +6,7 @@ RCONFLICTS_update-alternatives-cworth = "update-alternatives-dpkg"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PR = "r10"
+PR = "r3"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
@@ -28,7 +28,7 @@ EXTRACFLAGS_overo = "-Wno-array-bounds"
 
 TARGET_CFLAGS += "${EXTRACFLAGS}"
 
-pkg_postinst_opkg () {
+pkg_postinst_${PN} () {
 #!/bin/sh
 if [ "x$D" != "x" ]; then
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d
@@ -43,7 +43,7 @@ fi
 update-alternatives --install ${bindir}/opkg opkg ${bindir}/opkg-cl 100
 }
 
-pkg_postrm_opkg () {
+pkg_postrm_${PN} () {
 #!/bin/sh
 update-alternatives --remove opkg ${bindir}/opkg-cl
 }
