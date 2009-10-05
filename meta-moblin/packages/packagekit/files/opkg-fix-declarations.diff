@@ -1,0 +1,22 @@
+http://bugs.freedesktop.org/show_bug.cgi?id=20922
+
+--- /tmp/pk-backend-opkg.c	2009-03-28 12:32:28.000000000 +0100
++++ PackageKit-0.4.5/backends/opkg/pk-backend-opkg.c	2009-03-28 12:48:04.000000000 +0100
+@@ -47,7 +47,7 @@
+ } SearchParams;
+ 
+ static void
+-opkg_unknown_error (PkBackend *backend, gint error_code, gchar *failed_cmd)
++opkg_unknown_error (PkBackend *backend, gint error_code, const gchar *failed_cmd)
+ {
+ 	gchar *msg;
+ 
+@@ -105,7 +105,7 @@
+  *
+  * returns true if the tag is present
+  */
+-gboolean
++static gboolean
+ opkg_check_tag (opkg_package_t *pkg, gchar *tag)
+ {
+ 	if (pkg->tags && tag)
