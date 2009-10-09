@@ -2,14 +2,15 @@ DESCRIPTION = "PackageKit package management abstraction"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "GPL"
-DEPENDS = "gtk+ python policykit dbus (>= 1.1.1) dbus-glib glib-2.0 sqlite3 opkg intltool intltool-native (>= 0.37.1)"
+DEPENDS = "gtk+ python policykit dbus (>= 1.1.1) dbus-glib glib-2.0 sqlite3 opkg intltool intltool-native (>= 0.37.1) connman"
 RDEPENDS_${PN} = "opkg"
 
 inherit gnome autotools_stage
 
 SRC_URI = "http://www.packagekit.org/releases/PackageKit-${PV}.tar.gz \
-           file://no_validate.patch;patch=1"
-PR = "r2"
+           file://no_validate.patch;patch=1 \
+           file://no-nm.patch;patch=1"
+PR = "r3"
 PE = "1"
 
 S = "${WORKDIR}/PackageKit-${PV}"
