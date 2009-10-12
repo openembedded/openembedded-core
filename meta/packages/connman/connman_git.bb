@@ -13,11 +13,12 @@ EXTRA_OECONF += " \
     --enable-bluetooth=builtin --enable-udev --enable-loopback=builtin \
     --enable-dnsproxy=builtin --enable-threads --enable-resolvconf=builtin \
     --enable-client --enable-fake --with-dhclient=/sbin/dhclient \
+    --enable-test \
     ac_cv_path_WPASUPPLICANT=/usr/sbin/wpa_supplicant"
 
 SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git;protocol=git \
             file://connman-install-tests-d52de88aff4771283b2ebee4f48a7af15862d0ae.patch;patch=1;rev=d52de88aff4771283b2ebee4f48a7af15862d0ae \
-            file://connman-install-tests.patch;patch=1;notrev=d52de88aff4771283b2ebee4f48a7af15862d0ae \
+            file://connman-install-tests.patch;patch=1;rev=fd401dcd103a309e22c00d66f5c91375bfc9cce4 \
             file://dbusperms.patch;patch=1 \
             file://connman "
 
