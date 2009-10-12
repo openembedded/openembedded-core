@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 PV = "0.0+git${SRCPV}"
 PR = "r1"
 
-DEPENDS = "gconnman nbtk mutter-moblin"
+DEPENDS = "gconnman nbtk mutter-moblin librest libnotify"
 RDEPENDS = "connman gconnman"
 
 S = "${WORKDIR}/git"
