@@ -72,4 +72,4 @@ SRCREV_pn-dri2proto ?= "${AUTOREV}"
 SRCREV_pn-libx11-trim ?= "${AUTOREV}"
 
 # hg fetcher can't autoincrement (yet)
-SRCREVMOZILLAHEADLESS ?= "6d3e7080cbd3"
+SRCREVMOZILLAHEADLESS ?= "8bb2e8bf27c8"
