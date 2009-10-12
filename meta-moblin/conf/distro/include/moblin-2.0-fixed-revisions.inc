@@ -6,7 +6,6 @@ PREFERRED_VERSION_eds-dbus ?= "2.20.0"
 PREFERRED_VERSION_dbus ?= "1.2.14"
 PREFERRED_VERSION_dbus-native ?= "1.2.14"
 PREFERRED_VERSION_gtk+ ?= "2.16.4"
-PREFERRED_VERSION_pango = "1.26.0"
 PREFERRED_VERSION_udev ?= "145"
 
 PREFERRED_VERSION_mesa-dri ?= "7.5"
@@ -23,21 +22,36 @@ SRCREV_pn-libdrm ?= "3f3c5be6f908272199ccf53f108b1124bfe0a00e"
 SRCREV_pn-xf86-input-keyboard ?= "3e28d68b50d291938734e9684b8296ca864f3892"
 SRCREV_pn-dri2proto ?= "66c56ab10d917e3f47f93178d7eac6430970d3c4"
 
-SRCREV_pn-anerley ?= "20c6ceffda21595d8894293700006fe3a4cb33ba"
-SRCREV_pn-bickley ?= "3cbd5ef693c117ad5c094ddd1678a1a04d0feae3"
+SRCREV_pn-anerley ?= "0cb9ac6b82ff6658ae10d603bdfba04ef3df979e"
+SRCREV_pn-bickley ?= "761816f24e2aeb329d4f7270a2af324f85b7be8f"
 SRCREV_pn-bisho ?= "53cc5951be36cee818bef3beb5770f10aabdc7f1"
-SRCREV_pn-bognor-regis ?= "c52c7f7013b4b62d7c59d25fc809ce951a5556af"
-SRCREV_pn-carrick ?= "9bd8f987b27d95694b1e63efe198b2dffbd4c5b0"
-SRCREV_pn-clutter ?= "e860d939f9d9611dcf5b8c6e70272b6318a4ba94"
-SRCREV_pn-clutter-1.0 ?= "420ed353b53bd624331bd249d7df98d14714b504"
-SRCREV_pn-clutter-box2d ?= "2bcf5b836548dc4909e13b8ae7f60dc64c93d559"
-SRCREV_pn-clutter-gst ?= "db9bcf9d6f3a7d0f34747bed0f3ab28d7eb8f6ab"
-SRCREV_pn-clutter-gtk ?= "5dfc07761adf3ab3d1c9ee97b92bc4a65473db36"
-SRCREV_pn-clutter-imcontext ?= "2cb6f0ff153db639a489e58e36802e0e928b1968"
-SRCREV_pn-clutter-mozembed ?= "5a5329425aec7fe7749e97fd8c430457259f6165"
-SRCREV_pn-connman ?= "fd401dcd103a309e22c00d66f5c91375bfc9cce4"
-SRCREV_pn-connman-gnome ?= "4e38b3885654ee9256416e985b7fc615d18462b9"
+SRCREV_pn-bognor-regis ?= "6b6cce0cb90ea47a3cc4ac2804c8b5664530ca80"
+SRCREV_pn-carrick ?= "0451a081309f11dd5e9b6e41778ab878d862cbd0"
+
+
+SRCREV_pn-connman ?= "6af0b24817b8712c755ef24ed0ee4c5e84550657"
+SRCREV_pn-connman-gnome ?= "857b149c7febe9b0ffd9790050a288f018644eda"
 SRCREV_pn-contacts ?= "c8e6b16222d5bc9d8f60ae6594af4933613a4e25"
+
+
+# Still tosort:
+
+SRCREV_pn-clutter ?= "e860d939f9d9611dcf5b8c6e70272b6318a4ba94"
+1.0.0
+SRCREV_pn-clutter-1.0 ?= "420ed353b53bd624331bd249d7df98d14714b504"
+1.0.0
+SRCREV_pn-clutter-box2d ?= "2bcf5b836548dc4909e13b8ae7f60dc64c93d559"
+clutter-box2d-0.9~20090609
+SRCREV_pn-clutter-gst ?= "db9bcf9d6f3a7d0f34747bed0f3ab28d7eb8f6ab"
+gst-0.10~20090729
+SRCREV_pn-clutter-gtk ?= "5dfc07761adf3ab3d1c9ee97b92bc4a65473db36"
+0.10.2
+SRCREV_pn-clutter-imcontext ?= "2cb6f0ff153db639a489e58e36802e0e928b1968"
+0.1
+SRCREV_pn-clutter-mozembed ?= "5a5329425aec7fe7749e97fd8c430457259f6165"
+0.0~20090731
+
+
 SRCREV_pn-dalston ?= "b4d03283cb8aa2b76014eeb20e78cd13c14012ae"
 SRCREV_pn-dates ?= "966969063535da0786b7483c1bcd427df8a0d87d"
 SRCREV_pn-gconnman ?= "3d951640146d08249e0219cbae6a4c2da787a878"
@@ -46,8 +60,6 @@ SRCREV_pn-json-glib ?= "7411cadc0fdd9ffc2bd7004c9980913ac857a495"
 SRCREV_pn-libccss ?= "62697eb84fe190f9b8c65fcbaae10ec3d9edfffd"
 SRCREV_pn-librest ?= "ff4561e2a8c38f49127f6e3b2ce7c238a29e1571"
 SRCREV_pn-libsynthesis ?= "70f0065aa3b085bdf059830f95e5b5766eecb0bb"
-SRCREV_pn-mobile-broadband-provider-info ?= "35ef359c591cccd99380225fa431855b16a12edc"
-SRCREV_pn-moblin-app-installer ?= "7f7d50079c8bcc63874fd60a61f23d849e025445"
 SRCREV_pn-moblin-gtk-engine ?= "dff58e5f1b6c111a6c06e2385624e40d687ebf4f"
 SRCREV_pn-moblin-icon-theme ?= "36b7ac1e57ea6d95e6432779c4769c14fce24899"
 SRCREV_pn-moblin-menus ?= "1edfdab8234ec0b4bbc83fb706a15e08aa8a957a"
@@ -69,6 +81,7 @@ SRCREV_pn-nbtk ?= "635f9b4f1a2897aaa85ec1285e57dc5478517c2f"
 SRCREV_pn-mtpfs = "17"
 SRCREV_pn-qemugl ?= "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 SRCREV_pn-syncevolution ?= "29972357bf6582c318258b7bdf1feb13c0fef824"
-SRCREV_pn-tasks ?= "ea52d46d691c5fce4473ea4e24a35411381f3a65"
+SRCREV_pn-tasks ?= "a3c6109973c2f39190f554b49dacda7ec5231ef4"
 SRCREV_pn-twitter-glib ?= "9dfca7cf38e3dddbda6dc82d0164f65814b8783e"
+
 SRCREVMOZILLAHEADLESS ?= "1a622cb7c384"
