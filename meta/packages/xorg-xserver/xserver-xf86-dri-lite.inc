@@ -6,7 +6,7 @@ LIB_DEPS = "pixman virtual/libgl libxfont xtrans libxau libxext libxdmcp libdrm 
 
 DEPENDS = "${PROTO_DEPS} ${LIB_DEPS}"
 
-RDEPENDS = "hal xorg-minimal-fonts"
+RDEPENDS_${PN} += "hal xorg-minimal-fonts"
 
 FILES_${PN} += "${bindir}/Xorg "
 
