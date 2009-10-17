@@ -114,6 +114,8 @@ def finalise(fn, d):
     tasklist = data.getVar('__BBTASKS', d) or []
     bb.build.add_tasks(tasklist, d)
 
+    bb.event.fire(bb.event.RecipeParsed(fn, d))
+
 
 def handle(fn, d, include = 0):
     global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __infunc__, __body__, __residue__
@@ -159,12 +161,6 @@ def handle(fn, d, include = 0):
     else:
         f = open(fn,'r')
         abs_fn = fn
-
-    if ext != ".bbclass":
-        dname = os.path.dirname(abs_fn)
-        if dname not in bbpath:
-            bbpath.insert(0, dname)
-            data.setVar('BBPATH', ":".join(bbpath), d)
 
     if include:
         bb.parse.mark_dependency(d, abs_fn)
