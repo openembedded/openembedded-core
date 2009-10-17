@@ -25,7 +25,7 @@ This implementation is for svk. It is based on the svn implementation
 #
 # Based on functions from the base bb module, Copyright 2003 Holger Schurig
 
-import os, re
+import os
 import bb
 from   bb import data
 from   bb.fetch import Fetch
@@ -67,10 +67,10 @@ class Svk(Fetch):
 
         svkroot = ud.host + ud.path
 
-        svkcmd = "svk co -r {%s} %s/%s" % (date, svkroot, ud.module)
+        svkcmd = "svk co -r {%s} %s/%s" % (ud.date, svkroot, ud.module)
 
         if ud.revision:
-            svkcmd = "svk co -r %s/%s" % (ud.revision, svkroot, ud.module)
+            svkcmd = "svk co -r %s %s/%s" % (ud.revision, svkroot, ud.module)
 
         # create temp directory
         localdata = data.createCopy(d)
