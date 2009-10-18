@@ -1,7 +1,7 @@
 DESCRIPTION = "A Moblin specific plugin for the Mutter composite window manager"
 SECTION = "x11/wm"
 LICENSE = "GPLv2"
-DEPENDS = "clutter-1.0 nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed bickley"
+DEPENDS = "clutter-1.0 nbtk mutter gnome-menus mojito libjana anerley clutter-mozembed bickley bognor-regis"
 PV = "2.25.2+git${SRCPV}"
 PR = "r11"
 
