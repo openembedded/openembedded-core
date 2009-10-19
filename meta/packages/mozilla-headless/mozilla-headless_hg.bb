@@ -7,7 +7,7 @@ SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;module=offscreen \
            file://removebadrpath.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
-PV = "0.1+hg-1.0+${SRCPV}"
+PV = "0.2+hg-1.0+${SRCPV}"
 PR = "r5"
 
 S = "${WORKDIR}/offscreen"
