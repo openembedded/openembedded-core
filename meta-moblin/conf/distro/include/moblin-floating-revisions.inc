@@ -70,6 +70,3 @@ SRCREV_pn-libdrm ?= "${AUTOREV}"
 SRCREV_pn-xf86-input-keyboard ?= "${AUTOREV}"
 SRCREV_pn-dri2proto ?= "${AUTOREV}"
 SRCREV_pn-libx11-trim ?= "${AUTOREV}"
-
-# hg fetcher can't autoincrement (yet)
-SRCREVMOZILLAHEADLESS ?= "1aae96fea165"

@@ -1,13 +1,13 @@
 
 FIXEDREV = "${SRCREVMOZILLAHEADLESS}"
 #file://0001-Adds-initial-Gtk-clipboard-support-to-moz-headless.patch;patch=1 \
-SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;rev=${FIXEDREV};module=offscreen \
+SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;module=offscreen \
            file://configurefix.patch;patch=1 \
            file://mozilla-jemalloc.patch;patch=1 \
            file://removebadrpath.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
-PV = "0.1+hg-1.0+${FIXEDREV}"
+PV = "0.1+hg-1.0+${SRCPV}"
 PR = "r5"
 
 S = "${WORKDIR}/offscreen"
