@@ -240,6 +240,7 @@ SRCREV_pn-moblin-proto ?= "8f2cb524fe06555182c25b4ba3202d7b368ac0ce"
 SRCREV_pn-moblin-user-skel ?= "356851e174085b874adb909e664aca321a047bcb"
 SRCREV_pn-moblin-web-browser ?= "90b0dea9d8fa9fa02464f16909492f8d0de25aaa"
 SRCREV_pn-mojito ?= "74482d5759c2a5c0b316f1e2d2029b3f03d3323c"
+SRCREV_pn-mozilla-headless ?= "a3e7c6626661"
 SRCREV_pn-mozilla-headless-services ?= "39dbb764b969179c56fc361c88e8f168b99de7b6"
 SRCREV_pn-mutter ?= "e9e37f30181a32cbfac31e88a4b904d39f3bfa3e"
 SRCREV_pn-mutter-moblin ?= "f9b47f14f4a3c6fe1af21f64349372575dbd4507"
@@ -249,8 +250,6 @@ SRCREV_pn-mtpfs = "17"
 SRCREV_pn-qemugl ?= "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 SRCREV_pn-syncevolution ?= "8888e69c56a1dc77b81d0c95ec27a71d0d9732bf"
 SRCREV_pn-twitter-glib ?= "9dfca7cf38e3dddbda6dc82d0164f65814b8783e"
-
-SRCREVMOZILLAHEADLESS ?= "a3e7c6626661"
 
 # Preferred Versions:
 #
