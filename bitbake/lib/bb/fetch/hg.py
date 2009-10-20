@@ -158,16 +158,12 @@ class Hg(Fetch):
             raise t, v, tb
 
     def suppports_srcrev(self):
-        import bb
-        bb.error("here")
         return True
 
     def _latest_revision(self, url, ud, d):
         """
         Compute tip revision for the url
         """
-        import bb
-        bb.error(self._buildhgcommand(ud, d, "info"))
         output = runfetchcmd(self._buildhgcommand(ud, d, "info"), d)
         return output.strip()
 
