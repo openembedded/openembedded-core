@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r19"
+PR = "r20"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
