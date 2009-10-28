@@ -73,15 +73,18 @@ python () {
         stagefunc = bb.data.getVar('do_stage', d, 1).strip()
         if stagefunc == "autotools_stage_all":
             fastpath = True
+	elif stagefunc == "base_do_stage":
+            fastpath = True
         elif stagefunc == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
             fastpath = True
         if bb.data.getVar('PSTAGE_BROKEN_DESTDIR', d, 1) == "1":
             fastpath = False
         if fastpath:         
-            #bb.note("Can optimise " + bb.data.getVar('FILE', d, 1))
+            #bb.note("Optimised for staging: " + bb.data.getVar('FILE', d, 1))
             bb.data.setVar("PSTAGING_NEEDSTAMP", "0", d)
             bb.data.setVar("STAGE_TEMP_PREFIX", "${WORKDIR}/temp-staging-pstage", d)
         else:
+            #bb.note("Can optimise staging better: " + bb.data.getVar('FILE', d, 1))
             bb.data.setVar("PSTAGING_NEEDSTAMP", "1", d)
     else:
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
