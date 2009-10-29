@@ -4,7 +4,8 @@
 
 inherit packagedata
 
-PKGDEST = "${WORKDIR}/install"
+PKGD    = "${WORKDIR}/package"
+PKGDEST = "${WORKDIR}/packages-split"
 
 def legitimize_package_name(s):
 	"""
@@ -30,7 +31,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 	"""
 	import os, os.path, bb
 
-	dvar = bb.data.getVar('D', d, True)
+	dvar = bb.data.getVar('PKGD', d, True)
 
 	packages = bb.data.getVar('PACKAGES', d, True).split()
 
@@ -238,7 +239,7 @@ python package_do_split_locales() {
 		bb.note("datadir not defined")
 		return
 
-	dvar = bb.data.getVar('D', d, True)
+	dvar = bb.data.getVar('PKGD', d, True)
 	pn = bb.data.getVar('PN', d, True)
 
 	if pn + '-locale' in packages:
@@ -282,19 +283,29 @@ python package_do_split_locales() {
 	#bb.data.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep), d)
 }
 
+python perform_packagecopy () {
+	import os
+
+	dest = bb.data.getVar('D', d, True)
+	dvar = bb.data.getVar('PKGD', d, True)
+
+	bb.mkdirhier(dvar)
+
+	# Start by package population by taking a copy of the installed 
+	# files to operate on
+	os.system('cp -pPR %s/* %s/' % (dest, dvar))
+}
+
 python populate_packages () {
 	import os, glob, stat, errno, re
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
 	outdir = bb.data.getVar('DEPLOY_DIR', d, True)
-	dvar = bb.data.getVar('D', d, True)
+	dvar = bb.data.getVar('PKGD', d, True)
 	packages = bb.data.getVar('PACKAGES', d, True)
 	pn = bb.data.getVar('PN', d, True)
 
 	bb.mkdirhier(outdir)
-	bb.mkdirhier(dvar)
-
-
 	os.chdir(dvar)
 
 	def isexec(path):
@@ -592,7 +603,7 @@ python package_do_shlibs() {
 				if not combo in sonames:
 					sonames.append(combo)
 		if file.endswith('.dylib') or file.endswith('.so'):
-			lafile = fullpath.replace(os.path.join(pkgdest, pkg), bb.data.getVar('D', d, True))
+			lafile = fullpath.replace(os.path.join(pkgdest, pkg), bb.data.getVar('PKGD', d, True))
 			# Drop suffix
 			lafile = lafile.rsplit(".",1)[0]
 			lapath = os.path.dirname(lafile)
@@ -963,7 +974,8 @@ python package_depchains() {
 }
 
 
-PACKAGEFUNCS ?= "package_do_split_locales \
+PACKAGEFUNCS ?= "perform_packagecopy \
+		package_do_split_locales \
 		populate_packages \
 		package_do_shlibs \
 		package_do_pkgconfig \
@@ -979,11 +991,12 @@ python package_do_package () {
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
 	outdir = bb.data.getVar('DEPLOY_DIR', d, True)
-	dvar = bb.data.getVar('D', d, True)
+	dest = bb.data.getVar('D', d, True)
+	dvar = bb.data.getVar('PKGD', d, True)
 	pn = bb.data.getVar('PN', d, True)
 
-	if not workdir or not outdir or not dvar or not pn or not packages:
-		bb.error("WORKDIR, DEPLOY_DIR, D, and PN all must be defined, unable to package")
+	if not workdir or not outdir or not dest or not dvar or not pn or not packages:
+		bb.error("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
 		return
 
 	for f in (bb.data.getVar('PACKAGEFUNCS', d, True) or '').split():
