@@ -454,6 +454,7 @@ python emit_pkgdata() {
 		return
 
 	packages = bb.data.getVar('PACKAGES', d, True)
+	pkgdest = bb.data.getVar('PKGDEST', d, 1)
 	pkgdatadir = bb.data.getVar('PKGDATA_DIR', d, True)
 
 	pstageactive = bb.data.getVar('PSTAGING_ACTIVE', d, True)
@@ -497,7 +498,7 @@ python emit_pkgdata() {
 		allow_empty = bb.data.getVar('ALLOW_EMPTY_%s' % pkg, d, True)
 		if not allow_empty:
 			allow_empty = bb.data.getVar('ALLOW_EMPTY', d, True)
-		root = "%s/install/%s" % (workdir, pkg)
+		root = "%s/%s" % (pkgdest, pkg)
 		os.chdir(root)
 		g = glob('*')
 		if g or allow_empty == "1":
