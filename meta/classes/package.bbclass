@@ -31,9 +31,6 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 	import os, os.path, bb
 
 	dvar = bb.data.getVar('D', d, True)
-	if not dvar:
-		bb.error("D not defined")
-		return
 
 	packages = bb.data.getVar('PACKAGES', d, True).split()
 
@@ -242,14 +239,7 @@ python package_do_split_locales() {
 		return
 
 	dvar = bb.data.getVar('D', d, True)
-	if not dvar:
-		bb.error("D not defined")
-		return
-
 	pn = bb.data.getVar('PN', d, True)
-	if not pn:
-		bb.error("PN not defined")
-		return
 
 	if pn + '-locale' in packages:
 		packages.remove(pn + '-locale')
@@ -293,32 +283,17 @@ python package_do_split_locales() {
 }
 
 python populate_packages () {
-	import glob, stat, errno, re
+	import os, glob, stat, errno, re
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
-	if not workdir:
-		bb.error("WORKDIR not defined, unable to package")
-		return
-
-	import os # path manipulations
 	outdir = bb.data.getVar('DEPLOY_DIR', d, True)
-	if not outdir:
-		bb.error("DEPLOY_DIR not defined, unable to package")
-		return
-	bb.mkdirhier(outdir)
-
 	dvar = bb.data.getVar('D', d, True)
-	if not dvar:
-		bb.error("D not defined, unable to package")
-		return
+	packages = bb.data.getVar('PACKAGES', d, True)
+	pn = bb.data.getVar('PN', d, True)
+
+	bb.mkdirhier(outdir)
 	bb.mkdirhier(dvar)
 
-	packages = bb.data.getVar('PACKAGES', d, True)
-
-	pn = bb.data.getVar('PN', d, True)
-	if not pn:
-		bb.error("PN not defined")
-		return
 
 	os.chdir(dvar)
 
@@ -557,9 +532,6 @@ python package_do_shlibs() {
 	targetos = bb.data.getVar('TARGET_OS', d, True)
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
-	if not workdir:
-		bb.error("WORKDIR not defined")
-		return
 
 	ver = bb.data.getVar('PV', d, True)
 	if not ver:
@@ -765,12 +737,7 @@ python package_do_pkgconfig () {
 	import re, os
 
 	packages = bb.data.getVar('PACKAGES', d, True)
-
 	workdir = bb.data.getVar('WORKDIR', d, True)
-	if not workdir:
-		bb.error("WORKDIR not defined")
-		return
-
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
 
 	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, True)
@@ -1007,6 +974,15 @@ python package_do_package () {
 	packages = (bb.data.getVar('PACKAGES', d, True) or "").split()
 	if len(packages) < 1:
 		bb.debug(1, "No packages to build, skipping do_package")
+		return
+
+	workdir = bb.data.getVar('WORKDIR', d, True)
+	outdir = bb.data.getVar('DEPLOY_DIR', d, True)
+	dvar = bb.data.getVar('D', d, True)
+	pn = bb.data.getVar('PN', d, True)
+
+	if not workdir or not outdir or not dvar or not pn or not packages:
+		bb.error("WORKDIR, DEPLOY_DIR, D, and PN all must be defined, unable to package")
 		return
 
 	for f in (bb.data.getVar('PACKAGEFUNCS', d, True) or '').split():
