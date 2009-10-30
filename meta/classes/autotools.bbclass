@@ -140,8 +140,12 @@ autotools_do_configure() {
 
 autotools_do_install() {
 	oe_runmake 'DESTDIR=${D}' install
+}
 
-        for i in `find ${D} -name "*.la"` ; do \
+PACKAGE_PREPROCESS_FUNCS += "autotools_prepackage_lamangler"
+
+autotools_prepackage_lamangler () {
+        for i in `find ${PKGD} -name "*.la"` ; do \
             sed -i -e s:${STAGING_LIBDIR}:${libdir}:g $i
             sed -i -e s:${D}::g $i
             sed -i -e 's:-I${WORKDIR}\S*: :g' $i
