@@ -146,10 +146,11 @@ PACKAGE_PREPROCESS_FUNCS += "autotools_prepackage_lamangler"
 
 autotools_prepackage_lamangler () {
         for i in `find ${PKGD} -name "*.la"` ; do \
-            sed -i -e s:${STAGING_LIBDIR}:${libdir}:g $i
-            sed -i -e s:${D}::g $i
-            sed -i -e 's:-I${WORKDIR}\S*: :g' $i
-            sed -i -e 's:-L${WORKDIR}\S*: :g' $i
+            sed -i -e 's:${STAGING_LIBDIR}:${libdir}:g;' \
+                   -e 's:${D}::g;' \
+                   -e 's:-I${WORKDIR}\S*: :g;' \
+                   -e 's:-L${WORKDIR}\S*: :g;' \
+                   $i
 	done
 }
 
