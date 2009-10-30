@@ -22,20 +22,18 @@ def get_binconfig_mangle(d):
 
 BINCONFIG_GLOB ?= "*-config"
 
-do_install_append() {
+PACKAGE_PREPROCESS_FUNCS += "binconfig_package_preprocess"
 
-    #the 'if' protects native packages, since we can't easily check for bb.data.inherits_class('native', d) in shell 
-    if [ -e ${D}${bindir} ] ; then
-        for config in `find ${S} -name '${BINCONFIG_GLOB}'`; do
-                cat $config | sed \
-		-e 's:${STAGING_LIBDIR}:${libdir}:g;' \ 
-		-e 's:${STAGING_INCDIR}:${includedir}:g;' \
-		-e 's:${STAGING_DATADIR}:${datadir}:' \
-		-e 's:${STAGING_DIR_HOST}${prefix}:${prefix}:' > ${D}${bindir}/`basename $config`
-        done
-    fi	
-
-	for lafile in `find ${D} -name *.la` ; do
+binconfig_package_preprocess () {
+	for config in `find ${PKGD} -name '${BINCONFIG_GLOB}'`; do
+		sed -i \
+		    -e 's:${STAGING_LIBDIR}:${libdir}:g;' \ 
+		    -e 's:${STAGING_INCDIR}:${includedir}:g;' \
+		    -e 's:${STAGING_DATADIR}:${datadir}:' \
+		    -e 's:${STAGING_DIR_HOST}${prefix}:${prefix}:' \
+                    $config
+	done
+	for lafile in `find ${PKGD} -name "*.la"` ; do
 		sed -i \
 		    -e 's:${STAGING_LIBDIR}:${libdir}:g;' \
 		    -e 's:${STAGING_INCDIR}:${includedir}:g;' \
