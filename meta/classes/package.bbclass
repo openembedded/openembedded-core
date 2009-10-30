@@ -973,8 +973,9 @@ python package_depchains() {
 				pkg_addrrecs(pkg, base, suffix, func, rdeps, d)
 }
 
-
+PACKAGE_PREPROCESS_FUNCS ?= ""
 PACKAGEFUNCS ?= "perform_packagecopy \
+                ${PACKAGE_PREPROCESS_FUNCS} \
 		package_do_split_locales \
 		populate_packages \
 		package_do_shlibs \
