@@ -998,6 +998,7 @@ addtask populate_staging after do_install
 
 SYSROOT_PREPROCESS_FUNCS ?= ""
 SYSROOT_DESTDIR = "${WORKDIR}/sysroot-destdir/"
+SYSROOT_LOCK = "${STAGING_DIR}/staging.lock"
 
 python do_populate_staging () {
     #
