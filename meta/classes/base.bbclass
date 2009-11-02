@@ -996,6 +996,9 @@ do_populate_staging[dirs] = "${STAGING_DIR_TARGET}/${bindir} ${STAGING_DIR_TARGE
 # Could be compile but populate_staging and do_install shouldn't run at the same time
 addtask populate_staging after do_install
 
+SYSROOT_PREPROCESS_FUNCS ?= ""
+SYSROOT_DESTDIR = "${WORKDIR}/sysroot-destdir/"
+
 python do_populate_staging () {
     #
     # Only run do_stage if its not the empty default above
@@ -1003,6 +1006,8 @@ python do_populate_staging () {
     stagefunc = bb.data.getVar('do_stage', d, 1).strip()
     if stagefunc != "base_do_stage":
         bb.build.exec_func('do_stage', d)
+        for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
+            bb.build.exec_func(f, d)
 }
 
 addtask install after do_compile

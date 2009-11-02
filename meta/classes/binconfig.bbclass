@@ -43,11 +43,13 @@ binconfig_package_preprocess () {
 	done	    
 }
 
-do_stage_append() {
+SYSROOT_PREPROCESS_FUNCS += "binconfig_sysroot_preprocess"
+
+binconfig_sysroot_preprocess () {
 	for config in `find ${S} -name '${BINCONFIG_GLOB}'`; do
 		configname=`basename $config`
-		install -d ${STAGING_BINDIR_CROSS}
-		cat $config | sed ${@get_binconfig_mangle(d)} > ${STAGING_BINDIR_CROSS}/$configname
-		chmod u+x ${STAGING_BINDIR_CROSS}/$configname
+		install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}
+		cat $config | sed ${@get_binconfig_mangle(d)} > ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/$configname
+		chmod u+x ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/$configname
 	done
 }
