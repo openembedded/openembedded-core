@@ -63,29 +63,6 @@ python () {
            bb.data.setVarFlag('do_setscene', 'recrdeptask', deps, d)
 
         bb.data.setVar("PSTAGING_ACTIVE", "1", d)
-
-        #
-        # Here we notice if the staging function is one of our standard staging 
-        # routines. If it is, we can remvoe the need to lock staging and take 
-        # timestamps which gives a nice speedup
-        #
-        fastpath = False
-        stagefunc = bb.data.getVar('do_stage', d, 1).strip()
-        if stagefunc == "autotools_stage_all":
-            fastpath = True
-	elif stagefunc == "base_do_stage":
-            fastpath = True
-        elif stagefunc == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
-            fastpath = True
-        if bb.data.getVar('PSTAGE_BROKEN_DESTDIR', d, 1) == "1":
-            fastpath = False
-        if fastpath:         
-            #bb.note("Optimised for staging: " + bb.data.getVar('FILE', d, 1))
-            bb.data.setVar("PSTAGING_NEEDSTAMP", "0", d)
-            bb.data.setVar("STAGE_TEMP_PREFIX", "${WORKDIR}/temp-staging-pstage", d)
-        else:
-            #bb.note("Can optimise staging better: " + bb.data.getVar('FILE', d, 1))
-            bb.data.setVar("PSTAGING_NEEDSTAMP", "1", d)
     else:
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
 }
@@ -320,30 +297,22 @@ populate_staging_postamble () {
 	fi
 }
 
-autotools_staging_pstage () {
-	mkdir -p ${PSTAGE_TMPDIR_STAGE}/staging/
-	cp -fpPR ${WORKDIR}/temp-staging-pstage/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/staging/ || /bin/true
-	cp -fpPR ${WORKDIR}/temp-staging-pstage/${STAGING_DIR}/* ${STAGING_DIR}/ || /bin/true
+packagedstageing_fastpath () {
+	if [ "$PSTAGING_ACTIVE" = "1" ]; then
+		mkdir -p ${PSTAGE_TMPDIR_STAGE}/staging/
+		mkdir -p ${PSTAGE_TMPDIR_STAGE}/cross/
+		cp -fpPR ${SYSROOT_DESTDIR}/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/staging/ || /bin/true
+		cp -fpPR ${SYSROOT_DESTDIR}/${CROSS_DIR}/* ${PSTAGE_TMPDIR_STAGE}/cross/ || /bin/true
+	fi
 }
 
 do_populate_staging[dirs] =+ "${DEPLOY_DIR_PSTAGE}"
-python do_populate_staging_prepend() {
-    needstamp = bb.data.getVar("PSTAGING_NEEDSTAMP", d, 1)
-    pstageactive = bb.data.getVar("PSTAGING_ACTIVE", d, True)
-    lock = bb.data.expand("${SYSROOT_LOCK}", d)
-    if needstamp == "1":
-        stamplock = bb.utils.lockfile(lock)
-        bb.build.exec_func("populate_staging_preamble", d)
+python populate_staging_prehook() {
+    bb.build.exec_func("populate_staging_preamble", d)
 }
 
-python do_populate_staging_append() {
-    if needstamp == "1":
-        bb.build.exec_func("populate_staging_postamble", d)
-        bb.utils.unlockfile(stamplock)
-    elif pstageactive == "1":
-        stamplock = bb.utils.lockfile(lock)
-        bb.build.exec_func("autotools_staging_pstage", d)
-        bb.utils.unlockfile(stamplock)
+python populate_staging_posthook() {
+    bb.build.exec_func("populate_staging_postamble", d)
 }
 
 
