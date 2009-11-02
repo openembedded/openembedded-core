@@ -922,6 +922,66 @@ base_do_compile() {
 	fi
 }
 
+
+sysroot_stage_dir() {
+	src="$1"
+	dest="$2"
+	# This will remove empty directories so we can ignore them
+	rmdir "$src" 2> /dev/null || true
+	if [ -d "$src" ]; then
+		mkdir -p "$dest"
+		cp -fpPR "$src"/* "$dest"
+	fi
+}
+
+sysroot_stage_libdir() {
+	src="$1"
+	dest="$2"
+
+	olddir=`pwd`
+	cd $src
+	las=$(find . -name \*.la -type f)
+	cd $olddir
+	echo "Found la files: $las"		 
+	for i in $las
+	do
+		sed -e 's/^installed=yes$/installed=no/' \
+		    -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
+		    -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
+		    -i $src/$i
+	done
+	sysroot_stage_dir $src $dest
+}
+
+sysroot_stage_dirs() {
+	from="$1"
+	to="$2"
+
+	sysroot_stage_dir $from${includedir} $to${STAGING_INCDIR}
+	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
+		sysroot_stage_dir $from${bindir} $to${STAGING_DIR_HOST}${bindir}
+		sysroot_stage_dir $from${sbindir} $to${STAGING_DIR_HOST}${sbindir}
+		sysroot_stage_dir $from${base_bindir} $to${STAGING_DIR_HOST}${base_bindir}
+		sysroot_stage_dir $from${base_sbindir} $to${STAGING_DIR_HOST}${base_sbindir}
+		sysroot_stage_dir $from${libexecdir} $to${STAGING_DIR_HOST}${libexecdir}
+	fi
+	if [ -d $from${libdir} ]
+	then
+		sysroot_stage_libdir $from/${libdir} $to${STAGING_LIBDIR}
+	fi
+	if [ -d $from${base_libdir} ]
+	then
+		sysroot_stage_libdir $from${base_libdir} $to${STAGING_DIR_HOST}${base_libdir}
+	fi
+	sysroot_stage_dir $from${datadir} $to${STAGING_DATADIR}
+}
+
+
+sysroot_stage_all() {
+	sysroot_stage_dirs ${D} ${SYSROOT_DESTDIR}
+}
+
+
 base_do_stage () {
 	:
 }

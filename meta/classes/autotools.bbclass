@@ -170,34 +170,11 @@ autotools_stage_includes() {
 }
 
 autotools_stage_dir() {
-	from="$1"
-	to="$2"
-        prefix="${STAGE_TEMP_PREFIX}"
-	# This will remove empty directories so we can ignore them
-	rmdir "$from" 2> /dev/null || true
-	if [ -d "$from" ]; then
-		mkdir -p "$prefix$to"
-		cp -fpPR "$from"/* "$prefix$to"
-	fi
+	sysroot_stage_dir $1 ${STAGE_TEMP_PREFIX}$2
 }
 
 autotools_stage_libdir() {
-	from="$1"
-	to="$2"
-
-	olddir=`pwd`
-	cd $from
-	las=$(find . -name \*.la -type f)
-	cd $olddir
-	echo "Found la files: $las"		 
-	for i in $las
-	do
-		sed -e 's/^installed=yes$/installed=no/' \
-		    -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
-		    -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
-		    -i $from/$i
-	done
-	autotools_stage_dir $from $to
+	sysroot_stage_libdir $1 ${STAGE_TEMP_PREFIX}$2
 }
 
 
@@ -209,26 +186,8 @@ autotools_stage_all() {
 	rm -rf ${STAGE_TEMP}
 	mkdir -p ${STAGE_TEMP}
 	oe_runmake DESTDIR="${STAGE_TEMP}" install
-	autotools_stage_dir ${STAGE_TEMP}/${includedir} ${STAGING_INCDIR}
-	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
-		autotools_stage_dir ${STAGE_TEMP}/${bindir} ${STAGING_DIR_HOST}${bindir}
-		autotools_stage_dir ${STAGE_TEMP}/${sbindir} ${STAGING_DIR_HOST}${sbindir}
-		autotools_stage_dir ${STAGE_TEMP}/${base_bindir} ${STAGING_DIR_HOST}${base_bindir}
-		autotools_stage_dir ${STAGE_TEMP}/${base_sbindir} ${STAGING_DIR_HOST}${base_sbindir}
-		autotools_stage_dir ${STAGE_TEMP}/${libexecdir} ${STAGING_DIR_HOST}${libexecdir}
-	fi
-	if [ -d ${STAGE_TEMP}/${libdir} ]
-	then
-		autotools_stage_libdir ${STAGE_TEMP}/${libdir} ${STAGING_LIBDIR}
-	fi
-	if [ -d ${STAGE_TEMP}/${base_libdir} ]
-	then
-		autotools_stage_libdir ${STAGE_TEMP}/${base_libdir} ${STAGING_DIR_HOST}${base_libdir}
-	fi
-	rm -rf ${STAGE_TEMP}/${mandir} || true
-	rm -rf ${STAGE_TEMP}/${infodir} || true
-	autotools_stage_dir ${STAGE_TEMP}/${datadir} ${STAGING_DATADIR}
-	#rm -rf ${STAGE_TEMP}
+
+	sysroot_stage_dirs ${STAGE_TEMP} ${STAGE_TEMP_PREFIX}
 }
 
 EXPORT_FUNCTIONS do_configure do_install
