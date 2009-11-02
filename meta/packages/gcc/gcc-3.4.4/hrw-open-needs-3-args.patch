@@ -1,0 +1,13 @@
+Index: gcc-3.4.4/gcc/collect2.c
+===================================================================
+--- gcc-3.4.4.orig/gcc/collect2.c	2009-11-02 20:40:02.874934378 +0100
++++ gcc-3.4.4/gcc/collect2.c	2009-11-02 20:41:12.458939528 +0100
+@@ -1534,7 +1534,7 @@
+   if (redir)
+     {
+       /* Open response file.  */
+-      redir_handle = open (redir, O_WRONLY | O_TRUNC | O_CREAT);
++      redir_handle = open (redir, O_WRONLY | O_TRUNC | O_CREAT, 0666);
+ 
+       /* Duplicate the stdout and stderr file handles
+ 	 so they can be restored later.  */
