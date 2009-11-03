@@ -297,7 +297,7 @@ populate_staging_postamble () {
 	fi
 }
 
-packagedstageing_fastpath () {
+packagedstaging_fastpath () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/staging/
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/cross/

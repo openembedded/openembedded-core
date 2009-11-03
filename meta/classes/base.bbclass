@@ -626,14 +626,12 @@ base_do_buildall() {
 	:
 }
 
-
- 
 def subprocess_setup():
-       import signal
-       # Python installs a SIGPIPE handler by default. This is usually not what
-       # non-Python subprocesses expect.
-       # SIGPIPE errors are known issues with gzip/bash
-       signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+	import signal
+	# Python installs a SIGPIPE handler by default. This is usually not what
+	# non-Python subprocesses expect.
+	# SIGPIPE errors are known issues with gzip/bash
+	signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
 def oe_unpack_file(file, data, url = None):
 	import bb, os, subprocess
@@ -981,6 +979,7 @@ sysroot_stage_all() {
 }
 
 def is_legacy_staging(d):
+    import bb
     stagefunc = bb.data.getVar('do_stage', d, True)
     legacy = True
     if stagefunc is None:
@@ -1016,7 +1015,7 @@ python populate_staging_posthook () {
 	return
 }
 
-packagedstageing_fastpath () {
+packagedstaging_fastpath () {
 	:
 }
 
@@ -1052,10 +1051,10 @@ python do_populate_staging () {
         #os.system('cp -pPR %s/* %s/' % (dest, sysrootdest))
         for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
             bb.build.exec_func(f, d)
-        bb.build.exec_func("packagedstageing_fastpath", d)
+        bb.build.exec_func("packagedstaging_fastpath", d)
 
         lock = bb.utils.lockfile(lockfile)
-        os.system('cp -pPR %s/* /' % (sysrootdest))
+        os.system(bb.data.expand('cp -pPR ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}/* ${STAGING_DIR_TARGET}/', d))
         bb.utils.unlockfile(lock)
 }
 
