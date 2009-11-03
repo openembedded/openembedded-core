@@ -227,7 +227,7 @@ def exec_func_shell(func, d, flags):
         so.close()
         se.close()
 
-        if os.path.getsize(logfile) == 0:
+        if os.path.exists(logfile) and os.path.getsize(logfile) == 0:
             bb.msg.debug(2, bb.msg.domain.Build, "Zero size logfile %s, removing" % logfile)
             os.remove(logfile)
 
@@ -248,7 +248,7 @@ def exec_func_shell(func, d, flags):
             number_of_lines = data.getVar("BBINCLUDELOGS_LINES", d)
             if number_of_lines:
                 os.system('tail -n%s %s' % (number_of_lines, logfile))
-            else:
+            elif os.path.exists(logfile):
                 f = open(logfile, "r")
                 while True:
                     l = f.readline()
@@ -257,6 +257,8 @@ def exec_func_shell(func, d, flags):
                     l = l.rstrip()
                     print '| %s' % l
                 f.close()
+            else:
+                bb.msg.error(bb.msg.domain.Build, "There was no logfile output")
         else:
             bb.msg.error(bb.msg.domain.Build, "see log in %s" % logfile)
         raise FuncFailed( logfile )
