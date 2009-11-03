@@ -88,7 +88,7 @@ def finalise(fn, d):
     from bb import build
     try:
         t = data.getVar('T', d)
-        data.setVar('T', '${TMPDIR}/', d)
+        data.setVar('T', '${TMPDIR}/anonfunc/', d)
         anonfuncs = data.getVar('__BBANONFUNCS', d) or []
         code = ""
         for f in anonfuncs:
@@ -113,6 +113,8 @@ def finalise(fn, d):
 
     tasklist = data.getVar('__BBTASKS', d) or []
     bb.build.add_tasks(tasklist, d)
+
+    bb.event.fire(bb.event.RecipeParsed(fn, d))
 
 
 def handle(fn, d, include = 0):
