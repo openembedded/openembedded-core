@@ -37,3 +37,6 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove bunzip2 bunzip2.${PN}
 	update-alternatives --remove bzcat bzcat.${PN}
 }
+
+PROVIDES_append_virtclass-native = " bzip2-full-native"
+BBCLASSEXTEND = "native"
