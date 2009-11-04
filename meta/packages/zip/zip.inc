@@ -17,3 +17,6 @@ do_install() {
 		   BINDIR=${D}${bindir} MANDIR=${D}${mandir}/man1 \
 		   install
 }
+
+BBCLASSEXTEND = "native"
+NATIVE_INSTALL_WORKS = "1"
