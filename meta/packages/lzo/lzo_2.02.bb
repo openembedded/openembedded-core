@@ -16,3 +16,5 @@ EXTRA_OECONF = "--enable-shared"
 do_configure_prepend () {
 	cp ${WORKDIR}/acinclude.m4 ${S}/
 }
+
+BBCLASSEXTEND = "native"
