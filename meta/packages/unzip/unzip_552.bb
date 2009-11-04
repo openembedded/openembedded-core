@@ -7,6 +7,7 @@ SRC_URI = "http://ftp.info-zip.org/pub/infozip/src/unzip${PV}.tar.gz"
 S = "${WORKDIR}/unzip-5.52"
 
 export LD = "${CC}"
+LD_virtclass-native = "${CC}"
 
 do_compile() {
         oe_runmake -f unix/Makefile generic
@@ -18,4 +19,5 @@ do_install() {
 	mv ${D}${prefix}/man/* ${D}${mandir}
 }
 
-
+BBCLASSEXTEND = "native"
+NATIVE_INSTALL_WORKS = "1"
