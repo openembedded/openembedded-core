@@ -15,3 +15,7 @@ do_configure_prepend() {
 	cp ${WORKDIR}/dump ${S}/magic/Magdir/
 	cp ${WORKDIR}/filesystems ${S}/magic/Magdir/
 }
+
+DEPENDS_virtclass-native = ""
+SRC_URI_append_virtclass-native = " file://native-fix.diff;patch=1"
+BBCLASSEXTEND = "native"
