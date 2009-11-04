@@ -6,7 +6,7 @@ LICENSE = "MIT-X"
 PE = "1"
 PR = "r0"
 
-DEPENDS = "virtual/xserver-xf86 xproto randrproto"
+DEPENDS = "virtual/xserver-xf86 xproto randrproto util-macros"
 
 XORG_PN = "${PN}"
 SRC_URI = "${XORG_MIRROR}/individual/driver/${XORG_PN}-${PV}.tar.bz2"

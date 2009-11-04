@@ -2,7 +2,7 @@ DESCRIPTION = "X application"
 HOMEPAGE = "http://www.x.org/"
 SECTION = "x11/apps"
 LICENSE = "MIT-X"
-DEPENDS = "util-macros-native virtual/libx11"
+DEPENDS = "util-macros virtual/libx11"
 
 XORG_PN = "${BPN}"
 
