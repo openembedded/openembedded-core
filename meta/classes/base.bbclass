@@ -988,6 +988,8 @@ def is_legacy_staging(d):
         legacy = False
     elif stagefunc.strip() == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
         legacy = False
+    elif bb.data.getVar('NATIVE_INSTALL_WORKS', d, 1) == "1":
+        legacy = False
     if bb.data.getVar('PSTAGE_BROKEN_DESTDIR', d, 1) == "1":
         legacy = True
     return legacy
