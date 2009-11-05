@@ -10,3 +10,5 @@ do_stage() {
 	autotools_stage_all
 }
 
+DEPENDS_append_virtclass-native = " python-native"
+BBCLASSEXTEND = "native"
