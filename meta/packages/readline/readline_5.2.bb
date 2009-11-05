@@ -29,3 +29,5 @@ do_install () {
 	oe_libinstall -so -C shlib libhistory ${D}${libdir}
 	oe_libinstall -so -C shlib libreadline ${D}${libdir}
 }
+
+BBCLASSEXTEND = "native"
