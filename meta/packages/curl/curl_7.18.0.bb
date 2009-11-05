@@ -1,6 +1,8 @@
 DESCRIPTION = "Command line tool and library for client-side URL transfers."
 LICENSE = "MIT"
 DEPENDS = "zlib gnutls"
+DEPENDS_virtclass-native = "zlib-native"
+DEPENDS_virtclass-nativesdk = "zlib-nativesdk"
 SECTION = "console/network"
 PR = "r1"
 
@@ -44,3 +46,4 @@ FILES_lib${PN}-dev = "${includedir} \
 FILES_lib${PN}-doc = "${mandir}/man3 \
                       ${mandir}/man1/curl-config.1"
 
+BBCLASSEXTEND = "native nativesdk"
