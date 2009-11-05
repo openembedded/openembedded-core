@@ -13,3 +13,6 @@ do_install() {
 
 	oe_runmake 'INSTALLROOT=${D}' install
 }
+
+BBCLASSEXTEND = "native"
+NATIVE_INSTALL_WORKS = "1"
