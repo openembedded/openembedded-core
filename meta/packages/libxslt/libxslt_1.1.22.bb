@@ -17,3 +17,5 @@ PACKAGES = "${PN}-dbg ${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 
 FILES_${PN}-dev += "${bindir}/xslt-config"
 FILES_${PN}-utils += "${bindir}"
+
+BBCLASSEXTEND = "native"
