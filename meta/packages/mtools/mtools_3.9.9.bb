@@ -18,3 +18,5 @@ S = "${WORKDIR}/mtools-${PV}"
 inherit autotools
 
 EXTRA_OECONF = "--without-x"
+
+BBCLASSEXTEND = "native"
