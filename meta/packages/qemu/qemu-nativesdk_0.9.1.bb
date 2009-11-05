@@ -1,8 +1,0 @@
-require qemu_${PV}.bb
-require qemu-nativesdk.inc
-
-EXTRA_OECONF +="--target-list=arm-linux-user,arm-softmmu,i386-softmmu"
-
-DEPENDS += "gcc3-native"
-
-require qemu-gcc3-check.inc
