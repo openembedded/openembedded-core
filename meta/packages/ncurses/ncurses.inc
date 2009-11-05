@@ -3,6 +3,7 @@ HOMEPAGE = "http://www.gnu.org/software/ncurses/ncurses.html"
 LICENSE = "MIT"
 SECTION = "libs"
 DEPENDS = "ncurses-native"
+DEPENDS_virtclass-native = ""
 PACKAGES_prepend = "ncurses-tools "
 PACKAGES_append = " ncurses-terminfo"
 FILES_ncurses_append = " ${datadir}/tabset"
@@ -99,3 +100,5 @@ pkg_prerm_ncurses-tools () {
 		update-alternatives --remove reset reset.${PN}
 	fi
 }
+
+BBCLASSEXTEND = "native nativesdk"
