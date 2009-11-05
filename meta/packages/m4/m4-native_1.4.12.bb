@@ -10,7 +10,3 @@ do_configure()  {
 	oe_runconf
 }
 
-do_stage() {
-	install -m 0755 src/m4 ${STAGING_BINDIR}/
-}
-
