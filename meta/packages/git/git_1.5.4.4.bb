@@ -1,3 +1,3 @@
 require git.inc
-DEPENDS += "openssl curl zlib expat"
-PR = "r0"
+
+PR = "r2"
