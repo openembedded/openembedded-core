@@ -12,3 +12,5 @@ inherit autotools_stage pkgconfig binconfig
 
 FILES_${PN} = "${libdir}/*.so.*"
 FILES_${PN}-dev += " ${bindir}" 
+
+BBCLASSEXTEND = "native"
