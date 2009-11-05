@@ -11,3 +11,5 @@ DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto xproto-native"
 
 EXTRA_OECONF += "--without-xcb"
+
+BBCLASSEXTEND = "native nativesdk"

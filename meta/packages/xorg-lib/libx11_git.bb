@@ -6,3 +6,4 @@ DEPENDS = "xproto xextproto xcmiscproto xf86bigfontproto kbproto inputproto \
 
 DEFAULT_PREFERENCE = "-1"
 
+BBCLASSEXTEND = "nativesdk"
