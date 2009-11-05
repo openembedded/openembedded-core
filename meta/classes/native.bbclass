@@ -91,6 +91,9 @@ python __anonymous () {
     pn = bb.data.getVar("PN", d, True)
     depends = bb.data.getVar("DEPENDS", d, True)
     deps = bb.utils.explode_deps(depends)
+    depends = bb.data.getVar("DEPENDS", d, True)
+    deps = bb.utils.explode_deps(depends)
+    newdeps = []
     if "native" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
         autoextend = True
     else:
@@ -98,16 +101,19 @@ python __anonymous () {
     for dep in deps:
         if dep.endswith("-cross"):
             if autoextend:
-                depends = depends.replace(dep, dep.replace("-cross", "-native"))
+                newdeps.append(dep.replace("-cross", "-native"))
             else:
                 bb.note("%s has depends %s which ends in -cross?" % (pn, dep))
-
-        if not dep.endswith("-native"):
+                newdeps.append(dep)
+        elif not dep.endswith("-native"):
             if autoextend:
-                depends = depends.replace(dep, dep + "-native")
+                newdeps.append(dep + "-native")
             else:
                 bb.note("%s has depends %s which doesn't end in -native?" % (pn, dep))
-    bb.data.setVar("DEPENDS", depends, d)
+                newdeps.append(dep)
+        else:
+            newdeps.append(dep)
+    bb.data.setVar("DEPENDS", " ".join(newdeps), d)
     provides = bb.data.getVar("PROVIDES", d, True)
     for prov in provides.split():
         if prov.find(pn) != -1:
