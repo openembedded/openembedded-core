@@ -15,3 +15,5 @@ do_install() {
     oe_runmake DESTDIR=${D} install
 }
 
+BBCLASSEXTEND = "native"
+NATIVE_INSTALL_WORKS = "1"
