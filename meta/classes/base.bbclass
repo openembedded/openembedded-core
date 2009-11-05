@@ -1054,7 +1054,7 @@ python do_populate_staging () {
         bb.build.exec_func("packagedstaging_fastpath", d)
 
         lock = bb.utils.lockfile(lockfile)
-        os.system(bb.data.expand('cp -pPR ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}/* ${STAGING_DIR_TARGET}/', d))
+        os.system(bb.data.expand('cp -pPR ${SYSROOT_DESTDIR}${TMPDIR}/* ${TMPDIR}/', d))
         bb.utils.unlockfile(lock)
 }
 
