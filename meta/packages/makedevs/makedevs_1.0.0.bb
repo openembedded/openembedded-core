@@ -3,7 +3,7 @@ LICENSE = "GPL"
 SECTION = "base"
 PRIORITY = "required"
 SRC_URI = "file://makedevs.c"
-PR = "r5"
+PR = "r6"
 
 do_configure() {
 	install -m 0644 ${WORKDIR}/makedevs.c ${S}/
@@ -17,3 +17,6 @@ do_install() {
 	install -d ${D}${base_sbindir}
 	install -m 0755 ${S}/makedevs ${D}${base_sbindir}/makedevs
 }
+
+BBCLASSEXTEND = "native"
+NATIVE_INSTALL_WORKS = "1"
