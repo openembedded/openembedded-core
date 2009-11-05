@@ -10,7 +10,7 @@ PV = "2.16.0+svnr${SRCREV}"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http"
 
-inherit pkgconfig autotools 
+inherit pkgconfig autotools_stage
 S = "${WORKDIR}/trunk"
 
 PARALLEL_MAKE = ""
@@ -25,7 +25,5 @@ do_configure_prepend() {
         touch gtk-doc.make
 }
 
-do_stage() {
-        autotools_stage_all
-        install -m 0644 gconf-2.m4 ${STAGING_DATADIR}/aclocal/gconf-2.m4
-}
+BBCLASSEXTEND = "native"
+
