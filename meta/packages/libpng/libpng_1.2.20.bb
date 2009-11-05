@@ -4,21 +4,12 @@ LICENSE = "libpng"
 SECTION = "libs"
 DEPENDS = "zlib"
 PRIORITY = "required"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/libpng-${PV}.tar.bz2 \
            file://makefile_fix.patch;patch=1"
 
 inherit autotools binconfig pkgconfig pkgconfig_stage
-
-do_stage() {
-	cp libpng.pc libpng12.pc
-	install -m 644 png.h ${STAGING_INCDIR}/png.h
-	install -m 644 pngconf.h ${STAGING_INCDIR}/pngconf.h
-	oe_libinstall -so libpng ${STAGING_LIBDIR}/
-	oe_libinstall -so libpng12 ${STAGING_LIBDIR}/
-	ln -sf libpng12.so ${STAGING_LIBDIR}/libpng.so
-}
 
 do_install() {
 	install -d ${D}${bindir}
@@ -47,3 +38,5 @@ FILES_${PN} = "${libdir}/lib*${SOLIBS}"
 FILES_${PN}-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
         ${libdir}/*.a ${libdir}/pkgconfig \
         ${datadir}/aclocal ${bindir} ${sbindir}"
+
+BBCLASSEXTEND = "native"
