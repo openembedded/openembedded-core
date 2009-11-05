@@ -7,8 +7,17 @@ URLV="${@'.'.join(bb.data.getVar('PV',d,1).split('.')[0:2])}"
 SRC_URI = "${GNOME_MIRROR}/intltool/${URLV}/intltool-${PV}.tar.bz2"
 S = "${WORKDIR}/intltool-${PV}"
 
+PR = "r3"
+
+DEPENDS = "libxml-parser-perl-native"
+#RDEPENDS = "libxml-parser-perl"
+RRECOMMENDS = "perl-modules"
+
 inherit autotools  pkgconfig
 
 do_stage() {
 	install -m 0644 intltool.m4 ${STAGING_DATADIR}/aclocal/
 }
+
+export PERL_virtclass-native = "/usr/bin/env perl"
+BBCLASSEXTEND = "native"
