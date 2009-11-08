@@ -17,12 +17,16 @@ do_configure() {
 	libtoolize --force
 	gnu-configize --force
 	oe_runconf
-	for i in */Makefile */*.inc */*/Makefile */*/*.inc ; do
-		sed -i -e 's:$(INVOKE) $(BINDIR)/:$(INVOKE) :g' $i 
-		sed -i -e 's:$(BINDIR)/::g' $i 
-	done
-	sed -i -e 's:$(BINDIR)/::g' extra/uconv/pkgdata.inc || true
-	sed -i -e 's:$(BINDIR)/::g' extra/uconv/pkgdata.inc.in || true
+	if [ "${BUILD_ARCH}" != "${HOST_ARCH" ]; then
+		# In the non-native case we need to make substitutions to use
+		# the native versions of the tools
+		for i in */Makefile */*.inc */*/Makefile */*/*.inc ; do
+			sed -i -e 's:$(INVOKE) $(BINDIR)/:$(INVOKE) :g' $i 
+			sed -i -e 's:$(BINDIR)/::g' $i 
+		done
+		sed -i -e 's:$(BINDIR)/::g' extra/uconv/pkgdata.inc || true
+		sed -i -e 's:$(BINDIR)/::g' extra/uconv/pkgdata.inc.in || true
+	fi
 }
 
 do_compile() {
