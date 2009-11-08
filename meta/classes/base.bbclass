@@ -12,7 +12,7 @@ def base_path_join(a, *p):
 
 # for MD5/SHA handling
 def base_chk_load_parser(config_path):
-    import ConfigParser, os, bb
+    import ConfigParser
     parser = ConfigParser.ConfigParser()
     if not len(parser.read(config_path)) == 1:
         bb.note("Can not open the '%s' ini file" % config_path)
@@ -21,7 +21,6 @@ def base_chk_load_parser(config_path):
     return parser
 
 def base_chk_file(parser, pn, pv, src_uri, localpath, data):
-    import os, bb
     no_checksum = False
     # Try PN-PV-SRC_URI first and then try PN-SRC_URI
     # we rely on the get method to create errors
@@ -85,7 +84,6 @@ def base_chk_file(parser, pn, pv, src_uri, localpath, data):
 
 
 def base_dep_prepend(d):
-	import bb
 	#
 	# Ideally this will check a flag so we will operate properly in
 	# the case where host == build == target, for now we don't work in
@@ -115,7 +113,6 @@ def base_dep_prepend(d):
 	return deps
 
 def base_read_file(filename):
-	import bb
 	try:
 		f = file( filename, "r" )
 	except IOError, reason:
@@ -125,21 +122,18 @@ def base_read_file(filename):
 	return None
 
 def base_conditional(variable, checkvalue, truevalue, falsevalue, d):
-	import bb
 	if bb.data.getVar(variable,d,1) == checkvalue:
 		return truevalue
 	else:
 		return falsevalue
 
 def base_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
-	import bb
 	if float(bb.data.getVar(variable,d,1)) <= float(checkvalue):
 		return truevalue
 	else:
 		return falsevalue
 
 def base_version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
-    import bb
     result = bb.vercmp(bb.data.getVar(variable,d,True), checkvalue)
     if result <= 0:
         return truevalue
@@ -147,7 +141,6 @@ def base_version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
         return falsevalue
 
 def base_contains(variable, checkvalues, truevalue, falsevalue, d):
-	import bb
 	matches = 0
 	if type(checkvalues).__name__ == "str":
 		checkvalues = [checkvalues]
@@ -159,7 +152,6 @@ def base_contains(variable, checkvalues, truevalue, falsevalue, d):
 	return falsevalue
 
 def base_both_contain(variable1, variable2, checkvalue, d):
-       import bb
        if bb.data.getVar(variable1,d,1).find(checkvalue) != -1 and bb.data.getVar(variable2,d,1).find(checkvalue) != -1:
                return checkvalue
        else:
@@ -176,7 +168,6 @@ def base_prune_suffix(var, suffixes, d):
     return var
 
 def base_set_filespath(path, d):
-	import os, bb
 	filespath = []
 	# The ":" ensures we have an 'empty' override
 	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
@@ -399,7 +390,6 @@ oe_libinstall() {
 }
 
 def package_stagefile(file, d):
-    import bb, os
 
     if bb.data.getVar('PSTAGING_ACTIVE', d, True) == "1":
         destfile = file.replace(bb.data.getVar("TMPDIR", d, 1), bb.data.getVar("PSTAGE_TMPDIR_STAGE", d, 1))
@@ -475,7 +465,6 @@ python base_do_clean() {
 }
 
 addtask rebuild after do_${BB_DEFAULT_TASK}
-addtask rebuild
 do_rebuild[dirs] = "${TOPDIR}"
 do_rebuild[nostamp] = "1"
 python base_do_rebuild() {
@@ -634,7 +623,7 @@ def subprocess_setup():
 	signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
 def oe_unpack_file(file, data, url = None):
-	import bb, os, subprocess
+	import subprocess
 	if not url:
 		url = "file://%s" % file
 	dots = file.split(".")
@@ -709,7 +698,7 @@ def oe_unpack_file(file, data, url = None):
 addtask unpack after do_fetch
 do_unpack[dirs] = "${WORKDIR}"
 python base_do_unpack() {
-	import re, os
+	import re
 
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
@@ -730,7 +719,6 @@ python base_do_unpack() {
 }
 
 def base_get_scmbasepath(d):
-	import bb
 	path_to_bbfiles = bb.data.getVar( 'BBFILES', d, 1 ).split()
 	return path_to_bbfiles[0][:path_to_bbfiles[0].rindex( "packages" )]
 
@@ -765,7 +753,6 @@ def base_get_metadata_svn_revision(d):
 	return revision
 
 def base_get_metadata_git_branch(d):
-	import os
 	branch = os.popen('cd %s; git branch | grep "^* " | tr -d "* "' % base_get_scmbasepath(d)).read()
 
 	if len(branch) != 0:
@@ -773,7 +760,6 @@ def base_get_metadata_git_branch(d):
 	return "<unknown>"
 
 def base_get_metadata_git_revision(d):
-	import os
 	rev = os.popen("cd %s; git log -n 1 --pretty=oneline --" % base_get_scmbasepath(d)).read().split(" ")[0]
 	if len(rev) != 0:
 		return rev
@@ -808,8 +794,6 @@ METADATA_REVISION ?= "${@base_detect_revision(d)}"
 GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
 
 def generate_git_config(e):
-        import bb
-        import os
         from bb import data
 
         if data.getVar('GIT_CORE_CONFIG', e.data, True):
@@ -832,7 +816,6 @@ addhandler base_eventhandler
 python base_eventhandler() {
 	from bb import note, error, data
 	from bb.event import Handled, NotHandled, getName
-	import os
 
 	messages = {}
 	messages["Completed"] = "completed"
@@ -979,7 +962,6 @@ sysroot_stage_all() {
 }
 
 def is_legacy_staging(d):
-    import bb
     stagefunc = bb.data.getVar('do_stage', d, True)
     legacy = True
     if stagefunc is None:
@@ -1092,7 +1074,7 @@ DISTRO[unexport] = "1"
 
 
 def base_after_parse(d):
-    import bb, os, exceptions
+    import exceptions
 
     source_mirror_fetch = bb.data.getVar('SOURCE_MIRROR_FETCH', d, 0)
     if not source_mirror_fetch:
@@ -1199,7 +1181,7 @@ def base_after_parse(d):
 python () {
     base_after_parse(d)
     if is_legacy_staging(d):
-        bb.debug(1, "Legacy staging mode for %s" % bb.data.getVar("FILE", d, True))
+        bb.note("Legacy staging mode for %s" % bb.data.getVar("FILE", d, True))
 }
 
 def check_app_exists(app, d):
