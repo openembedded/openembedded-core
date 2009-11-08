@@ -11,7 +11,6 @@ update-alternatives --remove ${ALTERNATIVE_NAME} ${ALTERNATIVE_PATH}
 }
 
 def update_alternatives_after_parse(d):
-    import bb
     if bb.data.getVar('ALTERNATIVE_NAME', d) == None:
         raise bb.build.FuncFailed, "%s inherits update-alternatives but doesn't set ALTERNATIVE_NAME" % bb.data.getVar('FILE', d)
     if bb.data.getVar('ALTERNATIVE_PATH', d) == None:

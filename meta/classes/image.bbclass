@@ -26,8 +26,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 do_rootfs[depends] += "makedevs-native:do_populate_staging fakeroot-native:do_populate_staging ldconfig-native:do_populate_staging"
 
 python () {
-    import bb
-
     deps = bb.data.getVarFlag('do_rootfs', 'depends', d) or ""
     for type in (bb.data.getVar('IMAGE_FSTYPES', d, True) or "").split():
         for dep in ((bb.data.getVar('IMAGE_DEPENDS_%s' % type, d) or "").split() or []):
@@ -49,7 +47,6 @@ python () {
 # is searched for in the BBPATH (same as the old version.)
 #
 def get_devtable_list(d):
-    import bb
     devtable = bb.data.getVar('IMAGE_DEVICE_TABLE', d, 1)
     if devtable != None:
         return devtable
@@ -62,7 +59,6 @@ def get_devtable_list(d):
     return str
 
 def get_imagecmds(d):
-    import bb
     cmds = "\n"
     old_overrides = bb.data.getVar('OVERRIDES', d, 0)
     for type in bb.data.getVar('IMAGE_FSTYPES', d, True).split():

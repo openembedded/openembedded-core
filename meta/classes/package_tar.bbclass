@@ -3,15 +3,12 @@ inherit package
 IMAGE_PKGTYPE ?= "tar"
 
 python package_tar_fn () {
-	import os
-	from bb import data
 	fn = os.path.join(bb.data.getVar('DEPLOY_DIR_TAR', d), "%s-%s-%s.tar.gz" % (bb.data.getVar('PKG', d), bb.data.getVar('PV', d), bb.data.getVar('PR', d)))
 	fn = bb.data.expand(fn, d)
 	bb.data.setVar('PKGFN', fn, d)
 }
 
 python package_tar_install () {
-	import os, sys
 	pkg = bb.data.getVar('PKG', d, 1)
 	pkgfn = bb.data.getVar('PKGFN', d, 1)
 	rootfs = bb.data.getVar('IMAGE_ROOTFS', d, 1)
@@ -23,6 +20,7 @@ python package_tar_install () {
 		bb.mkdirhier(rootfs)
 		os.chdir(rootfs)
 	except OSError:
+		import sys
 		(type, value, traceback) = sys.exc_info()
 		print value
 		raise bb.build.FuncFailed
@@ -42,7 +40,6 @@ python do_package_tar () {
 		bb.error("WORKDIR not defined, unable to package")
 		return
 
-	import os # path manipulations
 	outdir = bb.data.getVar('DEPLOY_DIR_TAR', d, 1)
 	if not outdir:
 		bb.error("DEPLOY_DIR_TAR not defined, unable to package")
@@ -94,7 +91,6 @@ python do_package_tar () {
 }
 
 python () {
-    import bb
     if bb.data.getVar('PACKAGES', d, True) != '':
         deps = (bb.data.getVarFlag('do_package_write_tar', 'depends', d) or "").split()
         deps.append('tar-native:do_populate_staging')

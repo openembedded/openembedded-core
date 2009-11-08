@@ -16,8 +16,6 @@
 # If 'what' doesn't exist then an empty value is returned
 #
 def get_siteinfo_list(d):
-       import bb
-
        target = bb.data.getVar('HOST_ARCH', d, 1) + "-" + bb.data.getVar('HOST_OS', d, 1)
 
        targetinfo = {\
@@ -74,8 +72,6 @@ def get_siteinfo_list(d):
 # 2) ${FILE_DIRNAME}/site-${PV}         - app version specific
 #
 def siteinfo_get_files(d):
-       import bb, os
-
        sitefiles = ""
 
        # Determine which site files to look for

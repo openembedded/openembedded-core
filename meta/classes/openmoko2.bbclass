@@ -5,12 +5,10 @@ OPENMOKO_RELEASE ?= "OM-2007.2"
 OPENMOKO_MIRROR ?= "svn://svn.openmoko.org/trunk"
 
 def openmoko_two_get_license(d):
-    import bb
     openmoko, section = bb.data.getVar('SECTION', d, 1).split("/")
     return "LGPL GPL".split()[section != "libs"]
 
 def openmoko_two_get_subdir(d):
-    import bb
     openmoko, section = bb.data.getVar('SECTION', d, 1).split("/")
     if section == 'base': return ""
     elif section == 'libs': return "libraries"

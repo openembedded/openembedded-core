@@ -26,7 +26,6 @@ update-rc.d $D ${INITSCRIPT_NAME} remove
 
 
 def update_rc_after_parse(d):
-    import bb
     if bb.data.getVar('INITSCRIPT_PACKAGES', d) == None:
         if bb.data.getVar('INITSCRIPT_NAME', d) == None:
             raise bb.build.FuncFailed, "%s inherits update-rc.d but doesn't set INITSCRIPT_NAME" % bb.data.getVar('FILE', d)

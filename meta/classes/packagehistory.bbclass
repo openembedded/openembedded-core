@@ -61,8 +61,6 @@ python emit_pkghistory() {
 
 
 def check_pkghistory(pkg, pe, pv, pr, lastversion):
-	import bb
-
 	(last_pe, last_pv, last_pr) = lastversion
 
 	bb.debug(2, "Checking package history")
@@ -72,7 +70,6 @@ def check_pkghistory(pkg, pe, pv, pr, lastversion):
 
 
 def write_pkghistory(pkg, pe, pv, pr, d):
-	import bb, os
 	bb.debug(2, "Writing package history")
 
 	pkghistdir = bb.data.getVar('PKGHIST_DIR', d, True)
@@ -82,8 +79,6 @@ def write_pkghistory(pkg, pe, pv, pr, d):
 		os.makedirs(verpath)
 
 def write_latestlink(pkg, pe, pv, pr, d):
-	import bb, os
-
 	pkghistdir = bb.data.getVar('PKGHIST_DIR', d, True)
 
 	def rm_link(path):

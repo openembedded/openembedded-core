@@ -169,7 +169,6 @@ def package_qa_get_elf(path, bits32):
 
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
-    import bb
     return path.replace(bb.data.getVar('TMPDIR',d,True),"")
 
 def package_qa_make_fatal_error(error_class, name, path,d):
@@ -184,7 +183,6 @@ def package_qa_write_error(error_class, name, path, d):
     """
     Log the error
     """
-    import bb, os
 
     ERROR_NAMES =[
         "non dev contains .so",
@@ -214,7 +212,6 @@ def package_qa_write_error(error_class, name, path, d):
         f.close()
 
 def package_qa_handle_error(error_class, error_msg, name, path, d):
-    import bb
     fatal = package_qa_make_fatal_error(error_class, name, path, d)
     if fatal:
         bb.error("QA Issue: %s" % error_msg)
@@ -229,7 +226,6 @@ def package_qa_check_rpath(file,name,d):
     """
     Check for dangerous RPATHs
     """
-    import bb, os
     sane = True
     scanelf = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True),'scanelf')
     bad_dir = bb.data.getVar('TMPDIR', d, True) + "/work"
@@ -255,7 +251,6 @@ def package_qa_check_devdbg(path, name,d):
     non dev packages containing
     """
 
-    import bb, os
     sane = True
 
     if not "-dev" in name:
@@ -283,7 +278,6 @@ def package_qa_check_arch(path,name,d):
     """
     Check if archs are compatible
     """
-    import bb, os
     sane = True
     target_os   = bb.data.getVar('TARGET_OS',   d, True)
     target_arch = bb.data.getVar('TARGET_ARCH', d, True)
@@ -322,7 +316,6 @@ def package_qa_check_desktop(path, name, d):
     """
     Run all desktop files through desktop-file-validate.
     """
-    import bb, os
     sane = True
     if path.endswith(".desktop"):
         desktop_file_validate = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True),'desktop-file-validate')
@@ -337,7 +330,6 @@ def package_qa_check_buildpaths(path, name, d):
     """
     Check for build paths inside target files and error if not found in the whitelist
     """
-    import bb, os
     sane = True
 
     # Ignore .debug files, not interesting
@@ -364,7 +356,6 @@ def package_qa_check_staged(path,d):
         to find the one responsible for the errors easily even
         if we look at every .pc and .la file
     """
-    import os, bb
 
     sane = True
     tmpdir = bb.data.getVar('TMPDIR', d, True)
@@ -402,7 +393,6 @@ def package_qa_check_staged(path,d):
 
 # Walk over all files in a directory and call func
 def package_qa_walk(path, funcs, package,d):
-    import os
     sane = True
 
     for root, dirs, files in os.walk(path):
@@ -415,7 +405,6 @@ def package_qa_walk(path, funcs, package,d):
     return sane
 
 def package_qa_check_rdepends(pkg, workdir, d):
-    import bb
     sane = True
     if not "-dbg" in pkg and not "task-" in pkg and not "-image" in pkg:
         # Copied from package_ipk.bbclass
@@ -496,7 +485,6 @@ python do_qa_staging() {
 addtask qa_configure after do_configure before do_compile
 python do_qa_configure() {
     bb.note("Checking sanity of the config.log file")
-    import os
     for root, dirs, files in os.walk(bb.data.getVar('WORKDIR', d, True)):
         statement = "grep 'CROSS COMPILE Badness:' %s > /dev/null" % \
                     os.path.join(root,"config.log")

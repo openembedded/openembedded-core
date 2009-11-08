@@ -12,9 +12,6 @@ RPMOPTS="--rcfile=${WORKDIR}/rpmrc --target ${TARGET_SYS}"
 RPM="rpm ${RPMOPTS}"
 
 python write_specfile() {
-	from bb import data, build
-	import sys
-
 	version = bb.data.getVar('PV', d, 1)
 	version = version.replace('-', '+')
 	bb.data.setVar('RPMPV', version, d)
@@ -55,8 +52,7 @@ python write_specfile() {
 			pass
 
 	if not files and bb.data.getVar('ALLOW_EMPTY', d) != "1":
-		from bb import note
-		note("Not creating empty archive for %s-%s-%s" % (bb.data.getVar('PKG',d, 1), bb.data.getVar('PV', d, 1), bb.data.getVar('PR', d, 1)))
+		bb.note("Not creating empty archive for %s-%s-%s" % (bb.data.getVar('PKG',d, 1), bb.data.getVar('PV', d, 1), bb.data.getVar('PR', d, 1)))
 		return
 
 	# output .spec using this metadata store
@@ -159,7 +155,6 @@ python do_package_rpm () {
 		bb.error("WORKDIR not defined, unable to package")
 		return
 
-	import os # path manipulations
 	outdir = bb.data.getVar('DEPLOY_DIR_RPM', d, 1)
 	if not outdir:
 		bb.error("DEPLOY_DIR_RPM not defined, unable to package")
@@ -213,7 +208,6 @@ python do_package_rpm () {
 }
 
 python () {
-    import bb
     if bb.data.getVar('PACKAGES', d, True) != '':
         deps = (bb.data.getVarFlag('do_package_write_rpm', 'depends', d) or "").split()
         deps.append('rpm-native:do_populate_staging')

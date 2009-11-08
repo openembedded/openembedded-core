@@ -51,8 +51,7 @@ def tinder_format_http_post(d,status,log):
     for the tinderbox to be happy.
     """
 
-    from bb import data, build
-    import os,random
+    import random
 
     # the variables we will need to send on this form post
     variables =  {
@@ -125,7 +124,6 @@ def tinder_build_start(d):
     report = report[report.find(search)+len(search):]
     report = report[0:report.find("'")]
 
-    import bb
     bb.note("Machine ID assigned by tinderbox: %s" % report )
 
     # now we will need to save the machine number
@@ -165,7 +163,6 @@ def tinder_print_info(d):
     """
 
     from   bb import data
-    import os
     # get the local vars
 
     time    = tinder_time_string()
@@ -216,7 +213,6 @@ def tinder_print_env():
     Print the environment variables of this build
     """
     from bb import data
-    import os
 
     time_start = tinder_time_string()
     time_end   = tinder_time_string()
@@ -278,7 +274,7 @@ def tinder_do_tinder_report(event):
     """
     from bb.event import getName
     from bb import data, mkdirhier, build
-    import os, glob
+    import glob
 
     # variables
     name = getName(event)

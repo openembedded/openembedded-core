@@ -6,12 +6,10 @@ IPKGCONF_TARGET = "${WORKDIR}/opkg.conf"
 IPKGCONF_SDK =  "${WORKDIR}/opkg-sdk.conf"
 
 python package_ipk_fn () {
-	from bb import data
 	bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
 }
 
 python package_ipk_install () {
-	import os, sys
 	pkg = bb.data.getVar('PKG', d, 1)
 	pkgfn = bb.data.getVar('PKGFN', d, 1)
 	rootfs = bb.data.getVar('IMAGE_ROOTFS', d, 1)
@@ -25,6 +23,7 @@ python package_ipk_install () {
 		bb.mkdirhier(rootfs)
 		os.chdir(rootfs)
 	except OSError:
+		import sys
 		(type, value, traceback) = sys.exc_info()
 		print value
 		raise bb.build.FuncFailed
@@ -126,14 +125,13 @@ package_generate_archlist () {
 }
 
 python do_package_ipk () {
-	import sys, re, copy
+	import re, copy
 
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	if not workdir:
 		bb.error("WORKDIR not defined, unable to package")
 		return
 
-	import os # path manipulations
 	outdir = bb.data.getVar('DEPLOY_DIR_IPK', d, 1)
 	if not outdir:
 		bb.error("DEPLOY_DIR_IPK not defined, unable to package")
@@ -192,8 +190,7 @@ python do_package_ipk () {
 		except ValueError:
 			pass
 		if not g and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
-			from bb import note
-			note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, 1), bb.data.getVar('PR', localdata, 1)))
+			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, 1), bb.data.getVar('PR', localdata, 1)))
 			bb.utils.unlockfile(lf)
 			continue
 
@@ -234,6 +231,7 @@ python do_package_ipk () {
 						raise KeyError(f)
 				ctrlfile.write(c % tuple(pullData(fs, localdata)))
 		except KeyError:
+			import sys
 			(type, value, traceback) = sys.exc_info()
 			ctrlfile.close()
 			bb.utils.unlockfile(lf)
@@ -302,7 +300,6 @@ python do_package_ipk () {
 }
 
 python () {
-    import bb
     if bb.data.getVar('PACKAGES', d, True) != '':
         deps = (bb.data.getVarFlag('do_package_write_ipk', 'depends', d) or "").split()
         deps.append('opkg-utils-native:do_populate_staging')

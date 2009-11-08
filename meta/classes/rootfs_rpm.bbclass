@@ -234,7 +234,6 @@ install_all_locales() {
 }
 
 python () {
-    import bb
     if bb.data.getVar('BUILD_IMAGES_FROM_FEEDS', d, True):
         flags = bb.data.getVarFlag('do_rootfs', 'recrdeptask', d)
         flags = flags.replace("do_package_write_rpm", "")

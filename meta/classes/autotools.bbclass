@@ -2,8 +2,6 @@
 AUTOTOOLS_NATIVE_STAGE_INSTALL = "1"
 
 def autotools_dep_prepend(d):
-	import bb;
-
 	if bb.data.getVar('INHIBIT_AUTOTOOLS_DEPS', d, 1):
 		return ''
 
@@ -29,7 +27,6 @@ acpaths = "default"
 EXTRA_AUTORECONF = "--exclude=autopoint"
 
 def autotools_set_crosscompiling(d):
-	import bb
 	if not bb.data.inherits_class('native', d):
 		return " cross_compiling=yes"
 	return ""

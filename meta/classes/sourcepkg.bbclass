@@ -5,8 +5,6 @@ EXCLUDE_FROM ?= ".pc autom4te.cache"
 DISTRO ?= "openembedded"
 
 def get_src_tree(d):
-	import bb
-	import os, os.path
 
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	if not workdir:
@@ -56,8 +54,6 @@ sourcepkg_do_archive_bb() {
 }
 
 python sourcepkg_do_dumpdata() {
-	import os
-	import os.path
 
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	distro = bb.data.getVar('DISTRO', d, 1)

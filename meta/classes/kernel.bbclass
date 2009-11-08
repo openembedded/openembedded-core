@@ -9,9 +9,6 @@ INHIBIT_DEFAULT_DEPS = "1"
 KERNEL_IMAGETYPE ?= "zImage"
 
 python __anonymous () {
-
-    import bb
-    
     kerneltype = bb.data.getVar('KERNEL_IMAGETYPE', d, 1) or ''
     if kerneltype == 'uImage':
     	depends = bb.data.getVar("DEPENDS", d, 1)
@@ -271,7 +268,7 @@ module_conf_rfcomm = "alias bt-proto-3 rfcomm"
 
 python populate_packages_prepend () {
 	def extract_modinfo(file):
-		import os, re
+		import re
 		tmpfile = os.tmpnam()
 		cmd = "PATH=\"%s\" %sobjcopy -j .modinfo -O binary %s %s" % (bb.data.getVar("PATH", d, 1), bb.data.getVar("HOST_PREFIX", d, 1) or "", file, tmpfile)
 		os.system(cmd)
@@ -289,7 +286,7 @@ python populate_packages_prepend () {
 		return vals
 	
 	def parse_depmod():
-		import os, re
+		import re
 
 		dvar = bb.data.getVar('D', d, 1)
 		if not dvar:
@@ -343,7 +340,7 @@ python populate_packages_prepend () {
 		file = file.replace(bb.data.getVar('D', d, 1) or '', '', 1)
 
 		if module_deps.has_key(file):
-			import os.path, re
+			import re
 			dependencies = []
 			for i in module_deps[file]:
 				m = re.match(pattern, os.path.basename(i))
@@ -411,7 +408,7 @@ python populate_packages_prepend () {
 	postrm = bb.data.getVar('pkg_postrm_modules', d, 1)
 	do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='update-modules kernel-%s' % bb.data.getVar("KERNEL_VERSION", d, 1))
 
-	import re, os
+	import re
 	metapkg = "kernel-modules"
 	bb.data.setVar('ALLOW_EMPTY_' + metapkg, "1", d)
 	bb.data.setVar('FILES_' + metapkg, "", d)

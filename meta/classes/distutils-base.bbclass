@@ -3,7 +3,6 @@ DEPENDS  += "${@["python-native python", ""][(bb.data.getVar('PACKAGES', d, 1) =
 RDEPENDS += "python-core"
 
 def python_dir(d):
-	import os, bb
 	staging_incdir = bb.data.getVar( "STAGING_INCDIR", d, 1 )
 	if os.path.exists( "%s/python2.5" % staging_incdir ): return "python2.5"
 	if os.path.exists( "%s/python2.4" % staging_incdir ): return "python2.4"

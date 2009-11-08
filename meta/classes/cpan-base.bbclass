@@ -9,7 +9,7 @@ RDEPENDS  += "${@["perl", ""][(bb.data.inherits_class('native', d))]}"
 
 # Determine the staged version of perl from the perl configuration file
 def get_perl_version(d):
-	import os, bb, re
+	import re
     	cfg = bb.data.expand('${STAGING_DIR}/${HOST_SYS}/perl/config.sh', d)
 	try:
 		f = open(cfg, 'r')
@@ -33,7 +33,6 @@ def is_new_perl(d):
 
 # Determine where the library directories are
 def perl_get_libdirs(d):
-	import bb
 	libdir = bb.data.getVar('libdir', d, 1)
 	if is_new_perl(d) == "yes":
 		libdirs = libdir + '/perl5'
@@ -42,7 +41,6 @@ def perl_get_libdirs(d):
 	return libdirs
 
 def is_target(d):
-    import bb
     if not bb.data.inherits_class('native', d):
         return "yes"
     return "no"

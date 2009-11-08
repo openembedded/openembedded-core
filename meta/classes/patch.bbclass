@@ -4,8 +4,6 @@
 QUILTRCFILE ?= "${STAGING_BINDIR_NATIVE}/quiltrc"
 
 def patch_init(d):
-	import os, sys
-
 	class NotFoundError(Exception):
 		def __init__(self, path):
 			self.path = path
@@ -13,8 +11,6 @@ def patch_init(d):
 			return "Error: %s not found." % self.path
 
 	def md5sum(fname):
-		import sys
-
 		# when we move to Python 2.5 as minimal supported
 		# we can kill that try/except as hashlib is 2.5+
 		try:
@@ -75,8 +71,6 @@ def patch_init(d):
 
 		def __str__(self):
 			return "Patch Error: %s" % self.msg
-
-	import bb, bb.data, bb.fetch
 
 	class PatchSet(object):
 		defaults = {
@@ -251,6 +245,7 @@ def patch_init(d):
 				try:
 					output = runcmd(["quilt", "applied"], self.dir)
 				except CmdError:
+					import sys
 					if sys.exc_value.output.strip() == "No patches applied":
 						return
 					else:
@@ -364,6 +359,7 @@ def patch_init(d):
 			try:
 				self.patchset.Push()
 			except Exception:
+				import sys
 				os.chdir(olddir)
 				raise sys.exc_value
 
@@ -458,9 +454,6 @@ PATCHDEPENDENCY = "${PATCHTOOL}-native:do_populate_staging"
 do_patch[depends] = "${PATCHDEPENDENCY}"
 
 python patch_do_patch() {
-	import re
-	import bb.fetch
-
 	patch_init(d)
 
 	src_uri = (bb.data.getVar('SRC_URI', d, 1) or '').split()

@@ -33,7 +33,6 @@ def icc_determine_gcc_version(gcc):
 
     'i686-apple-darwin8-gcc-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)'
     """
-    import os
     return os.popen("%s --version" % gcc ).readline().split()[2]
 
 def create_cross_env(bb,d):
@@ -47,7 +46,7 @@ def create_cross_env(bb,d):
     if len(prefix) == 0:
         return ""
 
-    import tarfile, socket, time, os
+    import tarfile, socket, time
     ice_dir = bb.data.expand('${CROSS_DIR}', d)
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
     distro  = bb.data.expand('${DISTRO}', d)
@@ -96,7 +95,7 @@ def create_cross_env(bb,d):
 
 def create_native_env(bb,d):
 
-    import tarfile, socket, time, os
+    import tarfile, socket, time
     ice_dir = bb.data.expand('${CROSS_DIR}', d)
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
     distro  = bb.data.expand('${DISTRO}', d)
@@ -137,7 +136,7 @@ def create_native_env(bb,d):
 
 def create_cross_kernel_env(bb,d):
 
-    import tarfile, socket, time, os
+    import tarfile, socket, time
     ice_dir = bb.data.expand('${CROSS_DIR}', d)
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
     distro  = bb.data.expand('${DISTRO}', d)
@@ -204,8 +203,6 @@ def create_path(compilers, type, bb, d):
     """
     Create Symlinks for the icecc in the staging directory
     """
-    import os
-
     staging = os.path.join(bb.data.expand('${STAGING_DIR}', d), "ice", type)
 
     #check if the icecc path is set by the user

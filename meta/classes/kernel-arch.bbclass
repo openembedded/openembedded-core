@@ -15,7 +15,7 @@ valid_archs = "alpha cris ia64 \
 	       avr32 blackfin"
 
 def map_kernel_arch(a, d):
-	import bb, re
+	import re
 
 	valid_archs = bb.data.getVar('valid_archs', d, 1).split()
 

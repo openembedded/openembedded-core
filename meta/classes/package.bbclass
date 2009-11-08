@@ -29,7 +29,6 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 	Used in .bb files to split up dynamically generated subpackages of a 
 	given package, usually plugins or modules.
 	"""
-	import os, os.path, bb
 
 	dvar = bb.data.getVar('PKGD', d, True)
 
@@ -117,7 +116,6 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 PACKAGE_DEPENDS += "file-native"
 
 python () {
-    import bb
     if bb.data.getVar('PACKAGES', d, True) != '':
         deps = bb.data.getVarFlag('do_package', 'depends', d) or ""
         for dep in (bb.data.getVar('PACKAGE_DEPENDS', d, True) or "").split():
@@ -135,7 +133,7 @@ def runstrip(file, d):
     # A working 'file' (one which works on the target architecture)
     # is necessary for this stuff to work, hence the addition to do_package[depends]
 
-    import bb, os, commands, stat
+    import commands, stat
 
     pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
 
@@ -192,8 +190,6 @@ def runstrip(file, d):
 #
 
 def get_package_mapping (pkg, d):
-	import bb, os
-
 	data = read_subpkgdata(pkg, d)
 	key = "PKG_%s" % pkg
 
@@ -203,8 +199,6 @@ def get_package_mapping (pkg, d):
 	return pkg
 
 def runtime_mapping_rename (varname, d):
-	import bb, os
-
 	#bb.note("%s before: %s" % (varname, bb.data.getVar(varname, d, True)))	
 
 	new_depends = []
@@ -226,8 +220,6 @@ def runtime_mapping_rename (varname, d):
 #
 
 python package_do_split_locales() {
-	import os
-
 	if (bb.data.getVar('PACKAGE_NO_LOCALE', d, True) == '1'):
 		bb.debug(1, "package requested not splitting locales")
 		return
@@ -284,8 +276,6 @@ python package_do_split_locales() {
 }
 
 python perform_packagecopy () {
-	import os
-
 	dest = bb.data.getVar('D', d, True)
 	dvar = bb.data.getVar('PKGD', d, True)
 
@@ -297,7 +287,7 @@ python perform_packagecopy () {
 }
 
 python populate_packages () {
-	import os, glob, stat, errno, re
+	import glob, stat, errno, re
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
 	outdir = bb.data.getVar('DEPLOY_DIR', d, True)
@@ -530,7 +520,7 @@ fi
 SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
 
 python package_do_shlibs() {
-	import os, re, os.path
+	import re
 
 	exclude_shlibs = bb.data.getVar('EXCLUDE_FROM_SHLIBS', d, 0)
 	if exclude_shlibs:
@@ -746,7 +736,7 @@ python package_do_shlibs() {
 }
 
 python package_do_pkgconfig () {
-	import re, os
+	import re
 
 	packages = bb.data.getVar('PACKAGES', d, True)
 	workdir = bb.data.getVar('WORKDIR', d, True)

@@ -1,6 +1,5 @@
 # The namespaces can clash here hence the two step replace
 def get_binconfig_mangle(d):
-	import bb.data
 	s = "-e ''"
 	if not bb.data.inherits_class('native', d):
 		optional_quote = r"\(\"\?\)"

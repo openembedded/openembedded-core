@@ -3,7 +3,6 @@
 #
 
 def raise_sanity_error(msg):
-	import bb
 	bb.fatal(""" Poky's config sanity checker detected a potential misconfiguration.
 	Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
 	Following is the list of potential problems / advisories:
@@ -11,8 +10,6 @@ def raise_sanity_error(msg):
 	%s""" % msg)
 
 def check_conf_exists(fn, data):
-	import bb, os
-
 	bbpath = []
 	fn = bb.data.expand(fn, data)
 	vbbpath = bb.data.getVar("BBPATH", data)
@@ -26,12 +23,12 @@ def check_conf_exists(fn, data):
 
 def check_sanity(e):
 	from bb import note, error, data, __version__
-	from bb.event import Handled, NotHandled, getName
+
 	try:
 		from distutils.version import LooseVersion
 	except ImportError:
 		def LooseVersion(v): print "WARNING: sanity.bbclass can't compare versions without python-distutils"; return 1
-	import os, commands
+	import commands
 
 	# Check the bitbake version meets minimum requirements
 	minversion = data.getVar('BB_MIN_VERSION', e.data , True)
@@ -163,10 +160,8 @@ def check_sanity(e):
 
 addhandler check_sanity_eventhandler
 python check_sanity_eventhandler() {
-    from bb import note, error, data, __version__
-    from bb.event import getName
-
-    if getName(e) == "ConfigParsed":
+    from bb.event import Handled, NotHandled
+    if bb.event.getName(e) == "ConfigParsed":
         check_sanity(e)
 
     return NotHandled

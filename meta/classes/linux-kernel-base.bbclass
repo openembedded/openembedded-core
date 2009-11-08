@@ -1,6 +1,6 @@
 # parse kernel ABI version out of <linux/version.h>
 def get_kernelversion(p):
-    import re, os
+    import re
 
     fn = p + '/include/linux/utsrelease.h'
     if not os.path.isfile(fn):
@@ -30,7 +30,6 @@ def get_kernelmajorversion(p):
 	return None
 
 def linux_module_packages(s, d):
-	import bb, os.path
 	suffix = ""
 	return " ".join(map(lambda s: "kernel-module-%s%s" % (s.lower().replace('_', '-').replace('@', '+'), suffix), s.split()))
 
