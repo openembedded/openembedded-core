@@ -158,6 +158,8 @@ def base_both_contain(variable1, variable2, checkvalue, d):
                return ""
 
 DEPENDS_prepend="${@base_dep_prepend(d)} "
+DEPENDS_virtclass-native_prepend="${@base_dep_prepend(d)} "
+DEPENDS_virtclass-nativesdk_prepend="${@base_dep_prepend(d)} "
 
 def base_prune_suffix(var, suffixes, d):
     # See if var ends with any of the suffixes listed and 

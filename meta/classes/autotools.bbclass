@@ -22,7 +22,11 @@ def autotools_dep_prepend(d):
 	return deps + 'gnu-config-native '
 
 EXTRA_OEMAKE = ""
+
 DEPENDS_prepend = "${@autotools_dep_prepend(d)}"
+DEPENDS_virtclass-native_prepend = "${@autotools_dep_prepend(d)}"
+DEPENDS_virtclass-nativesdk_prepend = "${@autotools_dep_prepend(d)}"
+
 acpaths = "default"
 EXTRA_AUTORECONF = "--exclude=autopoint"
 

@@ -91,8 +91,6 @@ python __anonymous () {
     pn = bb.data.getVar("PN", d, True)
     depends = bb.data.getVar("DEPENDS", d, True)
     deps = bb.utils.explode_deps(depends)
-    depends = bb.data.getVar("DEPENDS", d, True)
-    deps = bb.utils.explode_deps(depends)
     newdeps = []
     if "native" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
         autoextend = True
