@@ -142,23 +142,23 @@ do_prep_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
 	rm -rf $treedir
 	mkdir -p $treedir/bin $treedir/lib $treedir/${datadir} $treedir/${libdir}/locale
-	cp -pPR ${D}${datadir}/i18n $treedir/${datadir}/i18n
+	cp -pPR ${PKGD}${datadir}/i18n $treedir/${datadir}/i18n
 	# unzip to avoid parsing errors
 	for i in $treedir/${datadir}/i18n/charmaps/*gz; do 
 		gunzip $i
 	done
-	cp -pPR ${D}${base_libdir}/* $treedir/lib
+	cp -pPR ${PKGD}${base_libdir}/* $treedir/lib
 	if [ -f ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* ]; then
 		cp -pPR ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* $treedir/lib
 	fi
-	install -m 0755 ${D}${bindir}/localedef $treedir/bin
+	install -m 0755 ${PKGD}${bindir}/localedef $treedir/bin
 }
 
 do_collect_bins_from_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
 
-	mkdir -p ${D}${libdir}
-	cp -pPR $treedir/${libdir}/locale ${D}${libdir}
+	mkdir -p ${PKGD}${libdir}
+	cp -pPR $treedir/${libdir}/locale ${PKGD}${libdir}
 }
 
 python package_do_split_gconvs () {
