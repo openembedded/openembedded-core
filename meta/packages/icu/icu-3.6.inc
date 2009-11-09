@@ -17,7 +17,7 @@ do_configure() {
 	libtoolize --force
 	gnu-configize --force
 	oe_runconf
-	if [ "${BUILD_ARCH}" != "${HOST_ARCH" ]; then
+	if [ "${BUILD_ARCH}" != "${HOST_ARCH}" ]; then
 		# In the non-native case we need to make substitutions to use
 		# the native versions of the tools
 		for i in */Makefile */*.inc */*/Makefile */*/*.inc ; do
