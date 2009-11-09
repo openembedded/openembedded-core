@@ -26,7 +26,7 @@ done
 }
 
 python populate_packages_append () {
-	import os.path, re
+	import re
 	packages = bb.data.getVar('PACKAGES', d, 1).split()
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	
