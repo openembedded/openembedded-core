@@ -1,4 +1,4 @@
-do_rootfs[depends] += "insserv-native:do_populate_staging"
+do_rootfs[depends] += "insserv-native:do_populate_sysroot"
 run_insserv () {
             insserv -p ${IMAGE_ROOTFS}/etc/init.d -c ${STAGING_ETCDIR_NATIVE}/insserv.conf
 }

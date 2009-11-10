@@ -6,10 +6,10 @@ ROOTFS_PKGMANAGE = "rpm yum"
 
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
-do_rootfs[depends] += "rpm-native:do_populate_staging yum-native:do_populate_staging createrepo-native:do_populate_staging fakechroot-native:do_populate_staging"
+do_rootfs[depends] += "rpm-native:do_populate_sysroot yum-native:do_populate_sysroot createrepo-native:do_populate_sysroot fakechroot-native:do_populate_sysroot"
 
 # Needed for update-alternatives
-do_rootfs[depends] += "opkg-native:do_populate_staging"
+do_rootfs[depends] += "opkg-native:do_populate_sysroot"
 
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
@@ -238,7 +238,7 @@ python () {
         flags = bb.data.getVarFlag('do_rootfs', 'recrdeptask', d)
         flags = flags.replace("do_package_write_rpm", "")
         flags = flags.replace("do_deploy", "")
-        flags = flags.replace("do_populate_staging", "")
+        flags = flags.replace("do_populate_sysroot", "")
         bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
         bb.data.setVar('RPM_PREPROCESS_COMMANDS', "rpm_insert_feed_uris", d)
         bb.data.setVar('RPM_POSTPROCESS_COMMANDS', '', d)

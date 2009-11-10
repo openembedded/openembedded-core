@@ -52,7 +52,7 @@ python () {
     # as inactive.
     if pstage_allowed:
         deps = bb.data.getVarFlag('do_setscene', 'depends', d) or ""
-        deps += " stagemanager-native:do_populate_staging"
+        deps += " stagemanager-native:do_populate_sysroot"
         bb.data.setVarFlag('do_setscene', 'depends', deps, d)
 
         policy = bb.data.getVar("BB_STAMP_POLICY", d, True)
@@ -157,7 +157,7 @@ staging_helper () {
 	fi
 }
 
-PSTAGE_TASKS_COVERED = "fetch unpack munge patch configure qa_configure rig_locales compile sizecheck install deploy package populate_staging package_write_deb package_write_ipk package_write package_stage qa_staging"
+PSTAGE_TASKS_COVERED = "fetch unpack munge patch configure qa_configure rig_locales compile sizecheck install deploy package populate_sysroot package_write_deb package_write_ipk package_write package_stage qa_staging"
 
 SCENEFUNCS += "packagestage_scenefunc"
 
@@ -259,21 +259,21 @@ python packagedstage_stampfixing_eventhandler() {
     return NotHandled
 }
 
-populate_staging_preamble () {
+populate_sysroot_preamble () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		stage-manager -p ${STAGING_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-staging -u || true
 		stage-manager -p ${CROSS_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-cross -u || true
 	fi
 }
 
-populate_staging_postamble () {
+populate_sysroot_postamble () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		# list the packages currently installed in staging
 		# ${PSTAGE_LIST_CMD} | awk '{print $1}' > ${DEPLOY_DIR_PSTAGE}/installed-list         
 
 		# exitcode == 5 is ok, it means the files change
 		set +e
-		stage-manager -p ${STAGING_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-staging -u -d ${PSTAGE_TMPDIR_STAGE}/staging
+		stage-manager -p ${STAGING_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-staging -u -d ${PSTAGE_TMPDIR_STAGE}/sysroots
 		exitcode=$?
 		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
 			exit $exitcode
@@ -288,20 +288,20 @@ populate_staging_postamble () {
 
 packagedstaging_fastpath () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
-		mkdir -p ${PSTAGE_TMPDIR_STAGE}/staging/
+		mkdir -p ${PSTAGE_TMPDIR_STAGE}/sysroots/
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/cross/
-		cp -fpPR ${SYSROOT_DESTDIR}/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/staging/ || /bin/true
+		cp -fpPR ${SYSROOT_DESTDIR}/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/sysroots/ || /bin/true
 		cp -fpPR ${SYSROOT_DESTDIR}/${CROSS_DIR}/* ${PSTAGE_TMPDIR_STAGE}/cross/ || /bin/true
 	fi
 }
 
-do_populate_staging[dirs] =+ "${DEPLOY_DIR_PSTAGE}"
-python populate_staging_prehook() {
-    bb.build.exec_func("populate_staging_preamble", d)
+do_populate_sysroot[dirs] =+ "${DEPLOY_DIR_PSTAGE}"
+python populate_sysroot_prehook() {
+    bb.build.exec_func("populate_sysroot_preamble", d)
 }
 
-python populate_staging_posthook() {
-    bb.build.exec_func("populate_staging_postamble", d)
+python populate_sysroot_posthook() {
+    bb.build.exec_func("populate_sysroot_postamble", d)
 }
 
 
@@ -444,9 +444,9 @@ python do_package_stage () {
 }
 
 #
-# Note an assumption here is that do_deploy runs before do_package_write/do_populate_staging
+# Note an assumption here is that do_deploy runs before do_package_write/do_populate_sysroot
 #
-addtask package_stage after do_package_write do_populate_staging before do_build
+addtask package_stage after do_package_write do_populate_sysroot before do_build
 
 do_package_stage_all () {
 	:

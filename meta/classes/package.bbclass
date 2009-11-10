@@ -119,7 +119,7 @@ python () {
     if bb.data.getVar('PACKAGES', d, True) != '':
         deps = bb.data.getVarFlag('do_package', 'depends', d) or ""
         for dep in (bb.data.getVar('PACKAGE_DEPENDS', d, True) or "").split():
-            deps += " %s:do_populate_staging" % dep
+            deps += " %s:do_populate_sysroot" % dep
         bb.data.setVarFlag('do_package', 'depends', deps, d)
 
         deps = (bb.data.getVarFlag('do_package', 'deptask', d) or "").split()

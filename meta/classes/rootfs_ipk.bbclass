@@ -9,7 +9,7 @@ EXTRAOPKGCONFIG ?= ""
 ROOTFS_PKGMANAGE = "opkg opkg-collateral ${EXTRAOPKGCONFIG}"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
-do_rootfs[depends] += "opkg-native:do_populate_staging opkg-utils-native:do_populate_staging"
+do_rootfs[depends] += "opkg-native:do_populate_sysroot opkg-utils-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_ipk"
 
 IPKG_ARGS = "-f ${IPKGCONF_TARGET} -o ${IMAGE_ROOTFS}"
@@ -164,7 +164,7 @@ python () {
         flags = bb.data.getVarFlag('do_rootfs', 'recrdeptask', d)
         flags = flags.replace("do_package_write_ipk", "")
         flags = flags.replace("do_deploy", "")
-        flags = flags.replace("do_populate_staging", "")
+        flags = flags.replace("do_populate_sysroot", "")
         bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
         bb.data.setVar('OPKG_PREPROCESS_COMMANDS', "package_generate_archlist\nipk_insert_feed_uris", d)
         bb.data.setVar('OPKG_POSTPROCESS_COMMANDS', '', d)

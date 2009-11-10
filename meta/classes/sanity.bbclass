@@ -147,6 +147,13 @@ def check_sanity(e):
 		if not abi.isdigit():
 			f = file(abifile, "w")
 			f.write(current_abi)
+		elif abi == "2" and current_abi == "3":
+			bb.note("Converting staging from layout version 2 to layout version 3")
+			os.system(bb.data.expand("mv ${TMPDIR}/staging ${TMPDIR}/sysroots", e.data))
+			os.system(bb.data.expand("ln -s sysroots ${TMPDIR}/staging", e.data))
+			os.system(bb.data.expand("cd ${TMPDIR}/stamps; for i in */*do_populate_staging; do new=`echo $i | sed -e 's/do_populate_staging/do_populate_sysroot/'`; mv $i $new; done", e.data))
+			f = file(abifile, "w")
+			f.write(current_abi)
 		elif (abi != current_abi):
 			# Code to convert from one ABI to another could go here if possible.
 			messages = messages + "Error, TMPDIR has changed ABI (%s to %s) and you need to either rebuild, revert or adjust it at your own risk.\n" % (abi, current_abi)

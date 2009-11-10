@@ -5,7 +5,7 @@
 ROOTFS_PKGMANAGE = "run-postinsts dpkg"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
-do_rootfs[depends] += "dpkg-native:do_populate_staging apt-native:do_populate_staging"
+do_rootfs[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_deb"
 
 fakeroot rootfs_deb_do_rootfs () {

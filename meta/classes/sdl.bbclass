@@ -34,7 +34,7 @@ EOF
 }
 
 EXPORT_FUNCTIONS do_sdl_install
-addtask sdl_install after do_compile before do_populate_staging
+addtask sdl_install after do_compile before do_populate_sysroot
 
 SECTION = "x11/games"
 SECTION_${PN}-opie = "opie/games"

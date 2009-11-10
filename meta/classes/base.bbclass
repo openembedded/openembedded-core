@@ -890,7 +890,7 @@ python base_eventhandler() {
 
 addtask configure after do_unpack do_patch
 do_configure[dirs] = "${S} ${B}"
-do_configure[deptask] = "do_populate_staging"
+do_configure[deptask] = "do_populate_sysroot"
 base_do_configure() {
 	:
 }
@@ -978,26 +978,26 @@ def is_legacy_staging(d):
         legacy = True
     return legacy
 
-do_populate_staging[dirs] = "${STAGING_DIR_TARGET}/${bindir} ${STAGING_DIR_TARGET}/${libdir} \
+do_populate_sysroot[dirs] = "${STAGING_DIR_TARGET}/${bindir} ${STAGING_DIR_TARGET}/${libdir} \
 			     ${STAGING_DIR_TARGET}/${includedir} \
 			     ${STAGING_BINDIR_NATIVE} ${STAGING_LIBDIR_NATIVE} \
 			     ${STAGING_INCDIR_NATIVE} \
 			     ${STAGING_DATADIR} \
 			     ${S} ${B}"
 
-# Could be compile but populate_staging and do_install shouldn't run at the same time
-addtask populate_staging after do_install
+# Could be compile but populate_sysroot and do_install shouldn't run at the same time
+addtask populate_sysroot after do_install
 
 PSTAGING_ACTIVE = "0"
 SYSROOT_PREPROCESS_FUNCS ?= ""
 SYSROOT_DESTDIR = "${WORKDIR}/sysroot-destdir/"
 SYSROOT_LOCK = "${STAGING_DIR}/staging.lock"
 
-python populate_staging_prehook () {
+python populate_sysroot_prehook () {
 	return
 }
 
-python populate_staging_posthook () {
+python populate_sysroot_posthook () {
 	return
 }
 
@@ -1005,7 +1005,7 @@ packagedstaging_fastpath () {
 	:
 }
 
-python do_populate_staging () {
+python do_populate_sysroot () {
     #
     # if do_stage exists, we're legacy. In that case run the do_stage,
     # modify the SYSROOT_DESTDIR variable and then run the staging preprocess
@@ -1023,10 +1023,10 @@ python do_populate_staging () {
         bb.note("Legacy staging mode for %s" % bb.data.getVar("FILE", d, True))
         lock = bb.utils.lockfile(lockfile)
         bb.build.exec_func('do_stage', d)
-        bb.build.exec_func('populate_staging_prehook', d)
+        bb.build.exec_func('populate_sysroot_prehook', d)
         for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
             bb.build.exec_func(f, d)
-        bb.build.exec_func('populate_staging_posthook', d)
+        bb.build.exec_func('populate_sysroot_posthook', d)
         bb.utils.unlockfile(lock)
     else:
         dest = bb.data.getVar('D', d, True)
@@ -1057,7 +1057,7 @@ base_do_package() {
 	:
 }
 
-addtask build after do_populate_staging
+addtask build after do_populate_sysroot
 do_build = ""
 do_build[func] = "1"
 
@@ -1109,19 +1109,19 @@ def base_after_parse(d):
     srcuri = bb.data.getVar('SRC_URI', d, 1)
     if "git://" in srcuri:
         depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
-        depends = depends + " git-native:do_populate_staging"
+        depends = depends + " git-native:do_populate_sysroot"
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     # Mercurial packages should DEPEND on mercurial-native
     elif "hg://" in srcuri:
         depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
-        depends = depends + " mercurial-native:do_populate_staging"
+        depends = depends + " mercurial-native:do_populate_sysroot"
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     # OSC packages should DEPEND on osc-native
     elif "osc://" in srcuri:
         depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
-        depends = depends + " osc-native:do_populate_staging"
+        depends = depends + " osc-native:do_populate_sysroot"
         bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     # bb.utils.sha256_file() will fail if hashlib isn't present, so we fallback
@@ -1131,7 +1131,7 @@ def base_after_parse(d):
             import hashlib
         except ImportError:
             depends = bb.data.getVarFlag('do_fetch', 'depends', d) or ""
-            depends = depends + " shasum-native:do_populate_staging"
+            depends = depends + " shasum-native:do_populate_sysroot"
             bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
     # 'multimachine' handling

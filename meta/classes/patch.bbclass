@@ -450,7 +450,7 @@ def patch_init(d):
 addtask patch after do_unpack
 do_patch[dirs] = "${WORKDIR}"
 
-PATCHDEPENDENCY = "${PATCHTOOL}-native:do_populate_staging"
+PATCHDEPENDENCY = "${PATCHTOOL}-native:do_populate_sysroot"
 do_patch[depends] = "${PATCHDEPENDENCY}"
 
 python patch_do_patch() {
