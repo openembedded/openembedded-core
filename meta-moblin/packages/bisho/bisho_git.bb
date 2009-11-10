@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
-DEPENDS = "gtk+ mojito mux"
+DEPENDS = "gtk+ mojito nbtk"
 
 S = "${WORKDIR}/git"
 

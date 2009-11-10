@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
-DEPENDS = "libsynthesis libsoup curl boost mux dbus-glib glib-2.0 libglade libunique"
+DEPENDS = "libsynthesis libsoup curl boost nbtk dbus-glib glib-2.0 libglade libunique"
 
 EXTRA_OECONF = "--enable-gui=moblin"
 
