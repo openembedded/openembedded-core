@@ -1,10 +1,6 @@
 require m4_${PV}.bb
 inherit native
 
-PR = "r1"
-
-SRC_URI_append = " file://ac_config_links.patch;patch=1"
-
 INHIBIT_AUTOTOOLS_DEPS = "1"
 DEPENDS += "gnu-config-native"
 
