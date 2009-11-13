@@ -968,6 +968,8 @@ def is_legacy_staging(d):
     legacy = True
     if stagefunc is None:
         legacy = False
+    elif stagefunc.strip() == "use_do_install_for_stage":
+        legacy = False
     elif stagefunc.strip() == "autotools_stage_all":
         legacy = False
     elif stagefunc.strip() == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
