@@ -8,29 +8,22 @@ EXTRA_OECONF = "--with-sysroot=${STAGING_DIR_TARGET} \
 		--enable-install-libbfd \
                 --disable-werror"
 
-do_stage () {
-	oe_runmake install
+do_install () {
+	oe_runmake 'DESTDIR=${D}' install
 
 	# We don't really need these, so we'll remove them...
-	rm -rf ${CROSS_DIR}/lib/ldscripts
-	rm -rf ${CROSS_DIR}/share/info
-	rm -rf ${CROSS_DIR}/share/locale
-	rm -rf ${CROSS_DIR}/share/man
-	rmdir ${CROSS_DIR}/share || :
-	rmdir ${CROSS_DIR}/${libdir}/gcc-lib || :
-	rmdir ${CROSS_DIR}/${libdir}64/gcc-lib || :
-	rmdir ${CROSS_DIR}/${libdir} || :
-	rmdir ${CROSS_DIR}/${libdir}64 || :
-	rmdir ${CROSS_DIR}/${prefix} || :
-
-	# We want to move this into the target specific location
-	mkdir -p ${STAGING_DIR_TARGET}/lib
-	mv -f ${CROSS_DIR}/lib/libiberty.a ${STAGING_DIR_TARGET}/lib/lib || \
-		mv -f ${CROSS_DIR}/lib64/libiberty.a ${STAGING_DIR_TARGET}/lib/lib
-	rmdir ${CROSS_DIR}/lib || :
-	rmdir ${CROSS_DIR}/lib64 || :
+	rm -rf ${D}${CROSS_DIR}/lib/ldscripts
+	rm -rf ${D}${CROSS_DIR}/share/info
+	rm -rf ${D}${CROSS_DIR}/share/locale
+	rm -rf ${D}${CROSS_DIR}/share/man
+	rmdir ${D}${CROSS_DIR}/share || :
+	rmdir ${D}${CROSS_DIR}/${libdir}/gcc-lib || :
+	rmdir ${D}${CROSS_DIR}/${libdir}64/gcc-lib || :
+	rmdir ${D}${CROSS_DIR}/${libdir} || :
+	rmdir ${D}${CROSS_DIR}/${libdir}64 || :
+	rmdir ${D}${CROSS_DIR}/${prefix} || :
 }
 
-do_install () {
-	:
+do_stage () {
+	use_do_install_for_stage
 }
