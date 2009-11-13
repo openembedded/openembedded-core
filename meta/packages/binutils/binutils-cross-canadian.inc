@@ -3,10 +3,6 @@ DEPENDS = "flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/l
 EXTRA_OECONF = "--with-sysroot=${prefix}/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"
 
-do_stage() {
-	:
-}
-
 do_install () {
         autotools_do_install
 
@@ -21,4 +17,8 @@ do_install () {
         install -d ${D}${includedir}
         install -m 644 ${S}/include/ansidecl.h ${D}${includedir}
         install -m 644 ${S}/include/libiberty.h ${D}${includedir}
+}
+
+do_stage () {
+    use_do_install_for_stage
 }
