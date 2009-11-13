@@ -1,13 +1,37 @@
-Index: dbus-0.94/bus/Makefile.am
+Index: dbus-1.2.14/bus/Makefile.am
 ===================================================================
---- dbus-0.94.orig/bus/Makefile.am	2006-10-01 17:36:18.000000000 +0200
-+++ dbus-0.94/bus/Makefile.am	2006-10-14 21:40:05.000000000 +0200
-@@ -110,7 +110,7 @@
- 		$(mkinstalldirs) $(DESTDIR)$(DBUS_DAEMONDIR); \
- 		chmod 755 $(DESTDIR)$(DBUS_DAEMONDIR); \
- 	fi
+--- dbus-1.2.14.orig/bus/Makefile.am	2009-04-17 20:45:29.000000000 +0100
++++ dbus-1.2.14/bus/Makefile.am	2009-11-13 09:47:24.000000000 +0000
+@@ -149,7 +149,7 @@
+ 
+ ## we use noinst_PROGRAMS not check_PROGRAMS so that we build 
+ ## even when not doing "make check"
+-noinst_PROGRAMS=$(TESTS) dbus-daemon dbus-daemon-launch-helper-test dbus-daemon-launch-helper
++noinst_PROGRAMS=$(TESTS) dbus-daemon-launch-helper-test dbus-daemon-launch-helper
+ 
+ bus_test_system_SOURCES=			\
+ 	$(XML_SOURCES)				\
+@@ -171,20 +171,17 @@
+ bus_test_LDADD=$(top_builddir)/dbus/libdbus-convenience.la $(DBUS_BUS_LIBS)
+ bus_test_LDFLAGS=@R_DYNAMIC_LDFLAG@
+ 
++dbusdaemondir = $(DBUS_DAEMONDIR)
++dbusdaemon_PROGRAMS = dbus-daemon
++
+ ## mop up the gcov files
+ clean-local:
+ 	/bin/rm *.bb *.bbg *.da *.gcov || true
+ 
+ uninstall-hook:
+-	rm -f $(DESTDIR)$(DBUS_DAEMONDIR)/dbus-daemon
+ 	rm -f $(DESTDIR)$(libexecdir)/dbus-daemon-launch-helper
+ 
+ install-data-hook:
+-	if test '!' -d $(DESTDIR)$(DBUS_DAEMONDIR); then \
+-		$(mkinstalldirs) $(DESTDIR)$(DBUS_DAEMONDIR); \
+-		chmod 755 $(DESTDIR)$(DBUS_DAEMONDIR); \
+-	fi
 -	$(INSTALL_PROGRAM) dbus-daemon $(DESTDIR)$(DBUS_DAEMONDIR)
-+	$(INSTALL_PROGRAM) .libs/dbus-daemon $(DESTDIR)$(DBUS_DAEMONDIR)
  	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/run/dbus
  	$(mkinstalldirs) $(DESTDIR)$(configdir)/system.d
- 	$(mkinstalldirs) $(DESTDIR)$(datadir)/dbus-1/services
+ 	$(mkinstalldirs) $(DESTDIR)$(configdir)/session.d

@@ -1,5 +1,5 @@
 include dbus.inc
 
-PR = "r1"
+PR = "r2"
 
 inherit update-rc.d
