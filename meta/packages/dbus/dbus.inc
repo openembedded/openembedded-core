@@ -59,6 +59,8 @@ grep -q netdev: /etc/group || addgroup netdev
 chmod u+s /usr/libexec/dbus-daemon-launch-helper
 }
 
+EXTRA_OECONF_X = "--with-x"
+
 EXTRA_OECONF = "\
   --disable-qt \
   --disable-qt3 \
@@ -67,8 +69,9 @@ EXTRA_OECONF = "\
   --disable-checks \
   --disable-xml-docs \
   --disable-doxygen-docs \
+  --disable-libaudit \
   --with-xml=expat \
-  --with-x \
+  ${EXTRA_OECONF_X} \
 "
 
 do_stage() {
