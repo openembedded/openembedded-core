@@ -39,3 +39,11 @@ do_stage () {
 do_install () {
 	:
 }
+
+#
+# Override the default sysroot staging copy since this won't look like a target system
+#
+sysroot_stage_all() {
+        sysroot_stage_dir ${D} ${SYSROOT_DESTDIR}
+}
+
