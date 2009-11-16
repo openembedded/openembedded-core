@@ -148,12 +148,11 @@ staging_helper () {
 		done
 		echo "dest root /" >> $conffile
 	fi
-	if [ ! -e ${TMPDIR}${libdir}/opkg/info/ ]; then
-		mkdir -p ${TMPDIR}${libdir}/opkg/info/
+	if [ ! -e ${TMPDIR}${libdir_native}/opkg/info/ ]; then
+		mkdir -p ${TMPDIR}${libdir_native}/opkg/info/
 	fi
- 	if [ ! -e ${TMPDIR}${libdir}/ipkg/ ]; then
-		cd ${TMPDIR}${libdir}/
-		ln -sf opkg/ ipkg || true
+ 	if [ ! -e ${TMPDIR}${libdir_native}/ipkg/ ]; then
+		ln -sf opkg/ ${TMPDIR}${libdir_native}/ipkg || true
 	fi
 }
 
@@ -339,20 +338,20 @@ staging_packager () {
 staging_package_installer () {
 	#${PSTAGE_INSTALL_CMD} ${PSTAGE_PKG}
 
-	STATUSFILE=${TMPDIR}${libdir}/opkg/status
+	STATUSFILE=${TMPDIR}${libdir_native}/opkg/status
 	echo "Package: ${PSTAGE_PKGPN}"        >> $STATUSFILE
 	echo "Version: ${PSTAGE_PKGVERSION}"   >> $STATUSFILE
 	echo "Status: install user installed"  >> $STATUSFILE
 	echo "Architecture: ${PSTAGE_PKGARCH}" >> $STATUSFILE
 	echo "" >> $STATUSFILE
 
-	CTRLFILE=${TMPDIR}${libdir}/opkg/info/${PSTAGE_PKGPN}.control
+	CTRLFILE=${TMPDIR}${libdir_native}/opkg/info/${PSTAGE_PKGPN}.control
 	echo "Package: ${PSTAGE_PKGPN}"        > $CTRLFILE
 	echo "Version: ${PSTAGE_PKGVERSION}"   >> $CTRLFILE
 	echo "Architecture: ${PSTAGE_PKGARCH}" >> $CTRLFILE
 
 	cd ${PSTAGE_TMPDIR_STAGE}
-	find -type f | grep -v ./CONTROL | sed -e 's/^\.//' > ${TMPDIR}${libdir}/opkg/info/${PSTAGE_PKGPN}.list
+	find -type f | grep -v ./CONTROL | sed -e 's/^\.//' > ${TMPDIR}${libdir_native}/opkg/info/${PSTAGE_PKGPN}.list
 }
 
 staging_package_libtoolhack () {
