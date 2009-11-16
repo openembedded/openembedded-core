@@ -13,13 +13,4 @@ SRC_URI = "http://projects.o-hand.com/matchbox/sources/optional-dependencies/Xse
 
 S = "${WORKDIR}/Xsettings-client-0.10"
 
-inherit autotools gettext
-
-do_stage () {
-        # TODO: replace with autotools_stage_all?
-        oe_libinstall -so libXsettings-client ${STAGING_LIBDIR}
-
-	for h in ${headers}; do
-		install -m 0644 ${S}/$h ${STAGING_INCDIR}/$h
-	done
-}
+inherit autotools_stage gettext
