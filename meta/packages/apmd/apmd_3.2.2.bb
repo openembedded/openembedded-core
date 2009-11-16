@@ -26,11 +26,6 @@ do_compile() {
 	oe_runmake "LIBTOOL=${STAGING_BINDIR_NATIVE}/${TARGET_PREFIX}libtool" apm apmd
 }
 
-do_stage() {
-	install -m 0644 apm.h ${STAGING_INCDIR}
-	oe_libinstall -so libapm ${STAGING_LIBDIR}
-}
-
 do_install() {
 	install -d ${D}${sysconfdir}
 	install -d ${D}${sysconfdir}/apm
