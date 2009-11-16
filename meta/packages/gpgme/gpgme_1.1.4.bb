@@ -7,19 +7,7 @@ PR = "r3"
 EXTRA_OECONF = "--with-pth=${STAGING_DIR}/${HOST_SYS} --without-pth-test \
                 --with-gpg=${bindir}/gpg --without-gpgsm"
 
-inherit autotools binconfig
-
-do_stage() {
-	autotools_stage_includes
-
-	install -d ${STAGING_LIBDIR}
-	oe_libinstall -C gpgme -so libgpgme ${STAGING_LIBDIR}
-	oe_libinstall -C gpgme -so libgpgme-pth ${STAGING_LIBDIR}
-	oe_libinstall -C gpgme -so libgpgme-pthread ${STAGING_LIBDIR}
-
-	install -d ${STAGING_DATADIR}/aclocal
-	install -m 0644 gpgme/gpgme.m4 ${STAGING_DATADIR}/aclocal/
-}
+inherit autotools_stage binconfig
 
 PACKAGES =+ "${PN}-pth ${PN}-pthread"
 FILES_${PN}-pth = "${libdir}/libgpgme-pth.so.*"
