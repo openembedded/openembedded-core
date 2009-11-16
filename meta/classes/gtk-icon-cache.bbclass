@@ -11,19 +11,28 @@ fi
 # Update the pixbuf loaders in case they haven't been registered yet
 gdk-pixbuf-query-loaders > /etc/gtk-2.0/gdk-pixbuf.loaders
 
-gtk-update-icon-cache -q /usr/share/icons/hicolor
+for icondir in /usr/share/icons/* ; do
+    if [ -d $icondir ] ; then
+        gtk-update-icon-cache -qt  $icondir
+    fi
+done
 }
 
 gtk_icon_cache_postrm() {
-gtk-update-icon-cache -q /usr/share/icons/hicolor
+for icondir in /usr/share/icons/* ; do
+    if [ -d $icondir ] ; then
+        gtk-update-icon-cache -qt  $icondir
+    fi
+done
 }
 
 python populate_packages_append () {
 	packages = bb.data.getVar('PACKAGES', d, 1).split()
+	pkgdest =  bb.data.getVar('PKGDEST', d, 1)
 	workdir = bb.data.getVar('WORKDIR', d, 1)
 	
 	for pkg in packages:
-		icon_dir = '%s/install/%s/%s/icons/hicolor' % (workdir, pkg, bb.data.getVar('datadir', d, 1))
+		icon_dir = '%s/%s/%s/%s/icons' % (workdir, pkgdest, pkg, bb.data.getVar('datadir', d, 1))
 		if not os.path.exists(icon_dir):
 			continue
 		
