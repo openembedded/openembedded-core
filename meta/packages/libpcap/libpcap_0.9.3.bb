@@ -7,7 +7,7 @@ PR = "r1"
 SRC_URI = "http://www.at.tcpdump.org/release/libpcap-${PV}.tar.gz \
            file://shared.patch;patch=1"
 
-inherit autotools
+inherit autotools_stage
 
 EXTRA_OECONF = "--with-pcap=linux"
 
@@ -21,12 +21,12 @@ do_configure_prepend () {
 	fi
 }
 
-do_stage () {
-	install -m 0644 pcap.h ${STAGING_INCDIR}/pcap.h
-	install -m 0644 pcap-namedb.h ${STAGING_INCDIR}/pcap-namedb.h
-	install -m 0644 pcap-bpf.h ${STAGING_INCDIR}/pcap-bpf.h
-	oe_libinstall -a -so libpcap ${STAGING_LIBDIR}
-	install -d ${STAGING_INCDIR}/net
-	ln -sf ${STAGING_INCDIR}/pcap-bpf.h ${STAGING_INCDIR}/net/bpf.h
-	install -m 0644 acinclude.m4 ${STAGING_DATADIR}/aclocal/libpcap.m4
-}
+# Does anything really need these things?
+#do_stage () {
+#	autotools_stage_all
+#
+#	install -d ${STAGING_INCDIR}/net
+#	ln -sf ${STAGING_INCDIR}/pcap-bpf.h ${STAGING_INCDIR}/net/bpf.h
+#	
+#	install -m 0644 acinclude.m4 ${STAGING_DATADIR}/aclocal/libpcap.m4
+#}
