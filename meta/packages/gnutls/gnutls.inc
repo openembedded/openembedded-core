@@ -6,20 +6,9 @@ LICENSE = "LGPL"
 
 SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2"
 
-inherit autotools binconfig pkgconfig pkgconfig_stage
+inherit autotools_stage binconfig pkgconfig pkgconfig
 
 EXTRA_OECONF="--with-included-opencdk --with-included-libtasn1 --with-included-libcfg --with-libz-prefix=${STAGING_DIR_HOST}${prefix} --with-lzo --disable-guile"
-
-do_stage() {
-    oe_libinstall -C lib/.libs -so -a libgnutls ${STAGING_LIBDIR}
-    oe_libinstall -C libextra/.libs -so -a libgnutls-extra ${STAGING_LIBDIR}
-    oe_libinstall -C libextra/.libs -so -a libgnutls-openssl ${STAGING_LIBDIR}
-    autotools_stage_includes
-
-    install -d ${STAGING_DATADIR}/aclocal
-    cp ${S}/lib/libgnutls.m4 ${STAGING_DATADIR}/aclocal/
-    cp ${S}/libextra/libgnutls-extra.m4 ${STAGING_DATADIR}/aclocal/
-}
 
 PACKAGES =+ "${PN}-openssl ${PN}-extra ${PN}-bin ${PN}-xx"
 
