@@ -9,6 +9,9 @@ inherit autotools_stage pkgconfig
 FILES_${PN} = "${libdir}/*.so.*"
 FILES_${PN}-dev += "${bindir}/gupnp-binding-tool"
 
-do_stage_append () {
-	install ${S}/tools/gupnp-binding-tool ${STAGING_BINDIR_NATIVE}
+SYSROOT_PREPROCESS_FUNCS += "gupnp_sysroot_preprocess"
+
+gupnp_sysroot_preprocess () {
+	install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
+	install -m 755 ${bindir}/gupnp-binding-tool ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
 }
