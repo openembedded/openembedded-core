@@ -28,8 +28,4 @@ do_configure_prepend () {
 	install -m 0644 ${WORKDIR}/glibconfig-sysdefs.h glib-1.2.10/
 }
 
-do_stage_prepend() {
-	install -d -m 0755 ${STAGING_LIBDIR}/pkgconfig
-}
-
 BBCLASSEXTEND = "native nativesdk"
