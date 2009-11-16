@@ -7,8 +7,7 @@ PR = "r0"
 
 SRC_URI += "file://run-with-tmp-session-bus.patch;patch=1"
 
-do_stage() {
-        autotools_stage_all
-        install -d ${STAGING_DATADIR}/dbus
-        install -m 0644 tools/dbus-glib-bindings.h ${STAGING_DATADIR}/dbus
+do_install_append() {
+        install -d ${D}${datadir}/dbus
+        install -m 0644 tools/dbus-glib-bindings.h ${D}${datadir}/dbus
 }
