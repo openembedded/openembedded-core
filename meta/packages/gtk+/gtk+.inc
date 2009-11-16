@@ -7,7 +7,7 @@ PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc-native libxrandr \
            libgcrypt libxdamage libxrender libxcomposite cairo"
 
-inherit autotools pkgconfig pkgconfig_stage
+inherit autotools pkgconfig
 
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
 	${bindir}/gtk-update-icon-cache \
@@ -42,28 +42,26 @@ RRECOMMENDS_${PN} = "${BASE_RRECOMMENDS}"
 RRECOMMENDS_${PN}_linux = "${GLIBC_RRECOMMENDS}"
 RRECOMMENDS_${PN}_linux-gnueabi = "${GLIBC_RRECOMMENDS}"
 
-do_stage () {
-	oe_libinstall -so -C gtk libgtk-x11-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gdk libgdk-x11-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C contrib/gdk-pixbuf-xlib libgdk_pixbuf_xlib-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gdk-pixbuf libgdk_pixbuf-2.0 ${STAGING_LIBDIR}
+do_install () {
+	autotools_do_install
 
-	autotools_stage_includes
+	install -d ${D}${sysconfdir}/gtk-2.0
 
-	mkdir -p ${STAGING_LIBDIR}/gtk-2.0/include
-	install -m 0644 gdk/gdkconfig.h ${STAGING_LIBDIR}/gtk-2.0/include/gdkconfig.h
+	mkdir -p ${D}${libdir}/gtk-2.0/include
+	install -m 0644 gdk/gdkconfig.h ${D}${libdir}/gtk-2.0/include/gdkconfig.h
 
-	install -m 0644 m4macros/gtk-2.0.m4 ${STAGING_DATADIR}/aclocal/
-
-	install -m 0644 gtk/gtkfilechooserprivate.h ${STAGING_INCDIR}/gtk-2.0/gtk/
-	install -m 0644 gtk/gtkfilechooserutils.h   ${STAGING_INCDIR}/gtk-2.0/gtk/
-	install -m 0644 gtk/gtkfilesystemmodel.h    ${STAGING_INCDIR}/gtk-2.0/gtk/
-
-	install -m 755 gtk/gtk-builder-convert ${STAGING_BINDIR_NATIVE}
+	install -m 0644 gtk/gtkfilechooserprivate.h ${D}${includedir}/gtk-2.0/gtk/
+	install -m 0644 gtk/gtkfilechooserutils.h   ${D}${includedir}/gtk-2.0/gtk/
+	install -m 0644 gtk/gtkfilesystemmodel.h    ${D}${includedir}/gtk-2.0/gtk/
 }
 
-do_install_append () {
-	install -d ${D}${sysconfdir}/gtk-2.0
+SYSROOT_PREPROCESS_FUNCS += "gtk_sysroot_preprocess"
+
+gtk_sysroot_preprocess () {
+	if [ -e ${D}${bindir}/gtk-builder-convert ]; then
+		install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
+		install -m 755 ${D}${bindir}/gtk-builder-convert ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
+	fi
 }
 
 postinst_prologue() {
