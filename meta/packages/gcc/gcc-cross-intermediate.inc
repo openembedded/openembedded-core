@@ -17,5 +17,5 @@ EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
 		${@get_gcc_fpu_setting(bb, d)}"
 
 do_install () {
-	:
+	oe_runmake 'DESTDIR=${D}' install
 }

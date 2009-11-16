@@ -4,11 +4,11 @@
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-${PV}"
 
 do_install () {
-	:
+	cd gcc
+	oe_runmake 'DESTDIR=${D}' install-common install-headers install-libgcc
+	install -m 0755 xgcc ${D}${CROSS_DIR}/bin/${TARGET_PREFIX}gcc-${PV}
 }
 
 do_stage () {
-	cd gcc
-	oe_runmake install-common install-headers install-libgcc
-	install -m 0755 xgcc ${CROSS_DIR}/bin/${TARGET_PREFIX}gcc-${PV}
+    use_do_install_for_stage
 }
