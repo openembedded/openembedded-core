@@ -16,7 +16,7 @@ do_package_write_rpm[rdeptask] = "do_package"
 python debian_package_name_hook () {
 	import glob, copy, stat, errno, re
 
-	workdir = bb.data.getVar('WORKDIR', d, 1)
+	pkgdest = bb.data.getVar('PKGDEST', d, 1)
 	packages = bb.data.getVar('PACKAGES', d, 1)
 
 	def socrunch(s):
@@ -45,7 +45,7 @@ python debian_package_name_hook () {
 		sonames = []
 		has_bins = 0
 		has_libs = 0
-		pkg_dir = os.path.join(workdir, "install", orig_pkg)
+		pkg_dir = os.path.join(pkgdest, orig_pkg)
 		for root, dirs, files in os.walk(pkg_dir):
 			if bin_re.match(root) and files:
 				has_bins = 1

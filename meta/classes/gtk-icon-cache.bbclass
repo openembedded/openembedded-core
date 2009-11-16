@@ -29,10 +29,9 @@ done
 python populate_packages_append () {
 	packages = bb.data.getVar('PACKAGES', d, 1).split()
 	pkgdest =  bb.data.getVar('PKGDEST', d, 1)
-	workdir = bb.data.getVar('WORKDIR', d, 1)
 	
 	for pkg in packages:
-		icon_dir = '%s/%s/%s/%s/icons' % (workdir, pkgdest, pkg, bb.data.getVar('datadir', d, 1))
+		icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, bb.data.getVar('datadir', d, 1))
 		if not os.path.exists(icon_dir):
 			continue
 		

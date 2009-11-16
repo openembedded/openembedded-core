@@ -288,7 +288,7 @@ python populate_packages_prepend () {
 	def parse_depmod():
 		import re
 
-		dvar = bb.data.getVar('D', d, 1)
+		dvar = bb.data.getVar('PKGD', d, 1)
 		if not dvar:
 			bb.error("D not defined")
 			return
@@ -337,7 +337,7 @@ python populate_packages_prepend () {
 		return deps
 	
 	def get_dependencies(file, pattern, format):
-		file = file.replace(bb.data.getVar('D', d, 1) or '', '', 1)
+		file = file.replace(bb.data.getVar('PKGD', d, 1) or '', '', 1)
 
 		if module_deps.has_key(file):
 			import re
@@ -356,7 +356,7 @@ python populate_packages_prepend () {
 		import re
 		vals = extract_modinfo(file)
 
-		dvar = bb.data.getVar('D', d, 1)
+		dvar = bb.data.getVar('PKGD', d, 1)
 
 		# If autoloading is requested, output /etc/modutils/<name> and append
 		# appropriate modprobe commands to the postinst
