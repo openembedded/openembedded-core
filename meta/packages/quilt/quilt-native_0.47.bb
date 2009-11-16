@@ -1,3 +1,4 @@
-PV = "0.47"
-PR = "r2"
+require quilt_${PV}.inc
 require quilt-native.inc
+
+PR = "r2"

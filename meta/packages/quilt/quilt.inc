@@ -5,5 +5,21 @@ LICENSE = "GPL"
 
 SRC_URI = "http://download.savannah.gnu.org/releases/quilt/quilt-${PV}.tar.gz "
 
-# quilt totally ignores DESTDIR
-PSTAGE_BROKEN_DESTDIR = "1"
+inherit autotools
+
+PACKAGES += "guards guards-doc"
+FILES_${PN} = "${sysconfdir} ${datadir}/quilt \
+	       ${bindir}/quilt ${libdir}/quilt"
+FILES_guards = "${bindir}/guards"
+FILES_${PN}-doc = "${mandir}/man1/quilt.1 ${docdir}/${P}"
+FILES_guards-doc = "${mandir}/man1/guards.1"
+
+# quilt ignores DESTDIR
+do_install () {
+	oe_runmake 'BUILD_ROOT=${D}' install
+	if [ "${BUILD_ARCH}" == "${HOST_ARCH}" ]; then
+		# Dummy quiltrc file for patch.bbclass
+		install -d ${D}${bindir}/
+		touch ${D}${bindir}/quiltrc
+	fi
+}
