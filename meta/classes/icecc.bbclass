@@ -39,7 +39,6 @@ def create_cross_env(bb,d):
     """
     Create a tar.bz2 of the current toolchain
     """
-
     # Constin native-native compilation no environment needed if
     # host prefix is empty (let us duplicate the query for ease)
     prefix = bb.data.expand('${HOST_PREFIX}', d)
@@ -54,7 +53,6 @@ def create_cross_env(bb,d):
     target_prefix = bb.data.expand('${TARGET_PREFIX}',  d)
     float   = bb.data.getVar('TARGET_FPU', d) or "hard"
     name    = socket.gethostname()
-  
 
     # Stupid check to determine if we have built a libc and a cross
     # compiler.
@@ -94,7 +92,6 @@ def create_cross_env(bb,d):
 
 
 def create_native_env(bb,d):
-
     import tarfile, socket, time
     ice_dir = bb.data.expand('${CROSS_DIR}', d)
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
@@ -103,8 +100,7 @@ def create_native_env(bb,d):
     target_prefix = bb.data.expand('${TARGET_PREFIX}',  d)
     float   = bb.data.getVar('TARGET_FPU', d) or "hard"
     name    = socket.gethostname()
-  
-    
+
     archive_name = "local-host-env" + "-" + name
     tar_file = os.path.join(ice_dir, 'ice', archive_name + '.tar.gz')
 
@@ -120,7 +116,6 @@ def create_native_env(bb,d):
             # directory already exists, continue
             pass
 
-
     #check if user has specified a specific icecc-create-env script
     #if not use the OE provided one
     cr_env_script = bb.data.getVar('ICECC_ENV_EXEC',  d) or  bb.data.expand('${STAGING_DIR}', d)+"/ice/icecc-create-env"
@@ -135,7 +130,6 @@ def create_native_env(bb,d):
 
 
 def create_cross_kernel_env(bb,d):
-
     import tarfile, socket, time
     ice_dir = bb.data.expand('${CROSS_DIR}', d)
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
@@ -146,7 +140,6 @@ def create_cross_kernel_env(bb,d):
     name    = socket.gethostname()
     kernel_cc = bb.data.expand('${KERNEL_CC}', d)
     kernel_cc = kernel_cc[:-1]
-  
 
     # Stupid check to determine if we have built a libc and a cross
     # compiler.
@@ -197,8 +190,8 @@ def create_env(bb,d):
           return create_native_env(bb,d)
         else:  
           return create_cross_env(bb,d)
-        
-       
+
+
 def create_path(compilers, type, bb, d):
     """
     Create Symlinks for the icecc in the staging directory
@@ -208,7 +201,6 @@ def create_path(compilers, type, bb, d):
     #check if the icecc path is set by the user
     icecc   = bb.data.getVar('ICECC_PATH', d) or os.popen("%s icecc" % "which").read()[:-1]
 
-    
     # Create the dir if necessary
     try:
         os.stat(staging)
@@ -225,28 +217,22 @@ def create_path(compilers, type, bb, d):
     return staging + ":"
 
 
-
-
-
 def use_icc_version(bb,d):
-
       icecc_ver = "yes"
       system_class_blacklist = [ "none" ] 
-      
+
       for black in system_class_blacklist:
            if bb.data.inherits_class(black, d):
               icecc_ver = "no"
 
-
       user_class_blacklist =  bb.data.getVar('ICECC_USER_CLASS_BL', d) or "none"
       user_class_blacklist = user_class_blacklist.split()
-      
+
       for black in user_class_blacklist:
            if bb.data.inherits_class(black, d):
               icecc_ver = "no"
- 
-      return icecc_ver
 
+      return icecc_ver
 
 
 def icc_path(bb,d,compile):
@@ -295,11 +281,11 @@ def icc_path(bb,d,compile):
 def icc_version(bb,d):
     return create_env(bb,d)
 
-def check_for_kernel(bb,d):     
-     if  bb.data.inherits_class("kernel", d):
-       return "yes"
 
-       return "no"
+def check_for_kernel(bb,d):     
+    if  bb.data.inherits_class("kernel", d):
+         return "yes"
+    return "no"
 
 
 def get_cross_kernel_ver(bb,d):
@@ -332,4 +318,3 @@ do_compile_prepend() {
         export ICECC_VERSION="NONE"
     fi
 }
-
