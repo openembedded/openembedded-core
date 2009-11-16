@@ -12,9 +12,9 @@ SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.tar.gz \
 	    
 inherit autotools_stage
 
-do_stage_append() {
-        install -d ${STAGING_INCDIR}/fakeroot
-        install -m 644 *.h ${STAGING_INCDIR}/fakeroot
+do_install_append() {
+	install -d ${D}${STAGING_INCDIR}/fakeroot/
+	install -m 644 *.h ${D}${STAGING_INCDIR}/fakeroot
 }
 
 # Compatability for the rare systems not using or having SYSV
