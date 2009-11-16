@@ -36,7 +36,7 @@ python package_ipk_install () {
 			bb.error("PACKAGE_ARCHS missing")
 			raise FuncFailed
 		ipkg_archs = ipkg_archs.split()
-		arch_priority = 1na
+		arch_priority = 1
 
 		f = open(conffile,"w")
 		for arch in ipkg_archs:
