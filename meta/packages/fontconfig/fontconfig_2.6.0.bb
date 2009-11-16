@@ -21,7 +21,7 @@ DEBIAN_NOAUTONAME_fontconfig-utils = "1"
 
 PARALLEL_MAKE = ""
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 export HASDOCBOOK="no"
 
@@ -38,14 +38,6 @@ fontconfig_do_unpack() {
 python do_unpack () {
        bb.build.exec_func('base_do_unpack', d)
        bb.build.exec_func('fontconfig_do_unpack', d)
-}
-
-do_stage () {
-	oe_libinstall -so -a -C src libfontconfig ${STAGING_LIBDIR}
-	install -d ${STAGING_INCDIR}/fontconfig
-	for i in ${S}/fontconfig/*.h; do install -m 0644 $i ${STAGING_INCDIR}/fontconfig/; done
-	install -d ${STAGING_LIBDIR}/pkgconfig/
-	install -m 0644 fontconfig.pc ${STAGING_LIBDIR}/pkgconfig/
 }
 
 BUILD_CFLAGS += " -I${STAGING_INCDIR}/freetype2"
@@ -78,10 +70,10 @@ do_install () {
 }
 
 do_install_append() {
-	install -d ${D}/etc/default/volatiles
-	install -m 0644 ${WORKDIR}/97_fontconfig ${D}/etc/default/volatiles
-	rmdir ${D}/var/cache/fontconfig
-	rmdir ${D}/var/cache/
+	install -d ${D}${sysconfdir}/default/volatiles
+	install -m 0644 ${WORKDIR}/97_fontconfig ${D}${sysconfdir}/default/volatiles
+	rmdir ${D}${localstatedir}/cache/fontconfig
+	rmdir ${D}${localstatedir}/cache/
 }
 
 pkg_postinst_hal () {
