@@ -976,8 +976,6 @@ def is_legacy_staging(d):
         legacy = False
     elif bb.data.getVar('NATIVE_INSTALL_WORKS', d, 1) == "1":
         legacy = False
-    if bb.data.getVar('PSTAGE_BROKEN_DESTDIR', d, 1) == "1":
-        legacy = True
     return legacy
 
 do_populate_sysroot[dirs] = "${STAGING_DIR_TARGET}/${bindir} ${STAGING_DIR_TARGET}/${libdir} \
@@ -1024,8 +1022,8 @@ python do_populate_sysroot () {
         bb.data.setVar("SYSROOT_DESTDIR", "", d)
         bb.note("Legacy staging mode for %s" % bb.data.getVar("FILE", d, True))
         lock = bb.utils.lockfile(lockfile)
-        bb.build.exec_func('do_stage', d)
         bb.build.exec_func('populate_sysroot_prehook', d)
+        bb.build.exec_func('do_stage', d)
         for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
             bb.build.exec_func(f, d)
         bb.build.exec_func('populate_sysroot_posthook', d)
