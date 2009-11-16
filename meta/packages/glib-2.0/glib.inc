@@ -17,7 +17,7 @@ EXTRA_OECONF = "--enable-included-printf=no"
 
 S = "${WORKDIR}/glib-${PV}"
 
-inherit autotools pkgconfig gettext
+inherit autotools_stage pkgconfig gettext
 
 require glib-2.0.inc
 
@@ -26,10 +26,9 @@ do_configure_prepend () {
 	install -m 0644 ${WORKDIR}/glibconfig-sysdefs.h .
 }
 
-do_stage () {
-	autotools_stage_all
-	install -d ${STAGING_INCDIR}/glib-2.0/glib
-	install -m 0755 ${S}/glibconfig.h ${STAGING_INCDIR}/glib-2.0/glibconfig.h
+do_install_append () {
+	install -d ${D}${includedir}/glib-2.0/glib
+	install -m 0755 ${S}/glibconfig.h ${D}${includedir}/glib-2.0/glibconfig.h
 }
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS}"

@@ -16,40 +16,14 @@ SRC_URI = "http://download.gnome.org/sources/glib/2.20/glib-${PV}.tar.bz2 \
 
 S = "${WORKDIR}/glib-${PV}"
 
-inherit autotools pkgconfig native gettext
+inherit autotools_stage pkgconfig native gettext
 
 acpaths = ""
 do_configure_prepend () {
 	install -m 0644 ${WORKDIR}/glibconfig-sysdefs.h .
 }
 
-do_stage () {
-	install -m 0755 gobject/glib-mkenums ${STAGING_BINDIR}/
-	install -m 0755 gobject/.libs/glib-genmarshal ${STAGING_BINDIR}/
-	install -m 0755 glib-gettextize ${STAGING_BINDIR}/
-	oe_libinstall -so -C glib libglib-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gmodule libgmodule-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gthread libgthread-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gobject libgobject-2.0 ${STAGING_LIBDIR}
-	oe_libinstall -so -C gio libgio-2.0 ${STAGING_LIBDIR}
-	autotools_stage_includes
-	install -d ${STAGING_INCDIR}/glib-2.0/glib
-	install -m 0755 ${S}/glibconfig.h ${STAGING_INCDIR}/glib-2.0/glibconfig.h
-	install -d ${STAGING_DATADIR}/aclocal
-	install -m 0644 ${S}/m4macros/glib-2.0.m4 ${STAGING_DATADIR}/aclocal/glib-2.0.m4
-	install -m 0644 ${S}/m4macros/glib-gettext.m4 ${STAGING_DATADIR}/aclocal/glib-gettext.m4
-	install -d ${STAGING_DATADIR}/glib-2.0/gettext/po
-	install -m 0755 mkinstalldirs ${STAGING_DATADIR}/glib-2.0/gettext/
-	install -m 0644 po/Makefile.in.in ${STAGING_DATADIR}/glib-2.0/gettext/po/
-	install -d ${STAGING_LIBDIR}/pkgconfig/
-	for i in glib-2.0 gmodule-2.0 gmodule-export-2.0 gmodule-no-export-2.0 gthread-2.0 gobject-2.0 gio-2.0 gio-unix-2.0; do
-		install -m 0644 $i.pc ${STAGING_LIBDIR}/pkgconfig/
-	done
-	
-
+do_install_append () {
+	install -d ${D}${includedir}/glib-2.0/glib
+	install -m 0755 ${S}/glibconfig.h ${D}${includedir}/glib-2.0/glibconfig.h
 }
-
-do_install () {
-	:
-}
-
