@@ -116,7 +116,7 @@ def pstage_cleanpackage(pkgname, d):
 			bb.note("Failure removing staging package")
 	else:
 		bb.note("No. Manually removing any installed files")
-		pstage_manualclean("staging", "STAGING_DIR", d)
+		pstage_manualclean("sysroots", "STAGING_DIR", d)
 		pstage_manualclean("cross", "CROSS_DIR", d)
 		pstage_manualclean("deploy", "DEPLOY_DIR", d)
 
