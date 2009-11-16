@@ -137,11 +137,10 @@ do_install() {
         fi
 }
 do_stage() {
-        install -d ${STAGING_DIR}/${HOST_SYS}/perl \
-                   ${STAGING_LIBDIR_NATIVE}/perl/${PV} \
+        install -d ${STAGING_LIBDIR_NATIVE}/perl/${PV} \
                    ${STAGING_LIBDIR}/perl/${PV}/CORE
         # target config, used by cpan.bbclass to extract version information
-        install config.sh ${STAGING_DIR}/${HOST_SYS}/perl/
+        install config.sh ${STAGING_LIBDIR}/perl/
         # target configuration, used by native perl when cross-compiling
         install lib/Config_heavy.pl ${STAGING_LIBDIR_NATIVE}/perl/${PV}/Config_heavy-target.pl
         # perl shared library headers

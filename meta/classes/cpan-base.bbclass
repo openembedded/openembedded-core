@@ -10,7 +10,7 @@ RDEPENDS  += "${@["perl", ""][(bb.data.inherits_class('native', d))]}"
 # Determine the staged version of perl from the perl configuration file
 def get_perl_version(d):
 	import re
-    	cfg = bb.data.expand('${STAGING_DIR}/${HOST_SYS}/perl/config.sh', d)
+    	cfg = bb.data.expand('${STAGING_LIBDIR}/perl/config.sh', d)
 	try:
 		f = open(cfg, 'r')
 	except IOError:

@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.perl.org/"
 SECTION = "libs"
 LICENSE = "Artistic|GPL"
 DEPENDS = "virtual/db-native gdbm-native"
-PR = "r13"
+PR = "r14"
 
 SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
            file://perl-5.8.8-gcc-4.2.patch;patch=1 \
@@ -61,8 +61,8 @@ do_stage_append() {
         # We need a hostperl link for building perl
         ln -sf ${STAGING_BINDIR_NATIVE}/perl${PV} ${STAGING_BINDIR_NATIVE}/hostperl
         # Store native config in non-versioned directory
-        install -d ${STAGING_DIR}/${HOST_SYS}/perl
-        install config.sh ${STAGING_DIR}/${HOST_SYS}/perl
+        install -d ${STAGING_LIBDIR}/perl
+        install config.sh ${STAGING_LIBDIR}/perl
 }
 
 PARALLEL_MAKE = ""
