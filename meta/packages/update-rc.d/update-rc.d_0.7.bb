@@ -13,11 +13,10 @@ PACKAGE_ARCH = "all"
 do_compile() {
 }
 
-do_stage() {
-	install -m 0755 ${S}/update-rc.d ${STAGING_BINDIR_NATIVE}/
-}
-
+NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${sbindir}
 	install -m 0755 ${S}/update-rc.d ${D}${sbindir}/update-rc.d
 }
+
+BBCLASSEXTEND = "native"
