@@ -14,7 +14,8 @@ do_compile () {
 	$CC ldconfig.c -std=gnu99 chroot_canon.c xmalloc.c xstrdup.c cache.c readlib.c  -I. dl-cache.c -o ldconfig
 }
 
-do_stage () {
-	install -d ${STAGING_BINDIR}/
-	install ldconfig ${STAGING_BINDIR}/
+NATIVE_INSTALL_WORKS = "1"
+do_install () {
+	install -d ${D}/${bindir}/
+	install ldconfig ${D}/${bindir}/
 }
