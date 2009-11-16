@@ -28,10 +28,6 @@ inherit autotools
 EXTRA_OEMAKE = "STRIPPROG=${STRIP} MANDIR=${D}${datadir}/man/man8 INCDIR=${D}/usr/include LIBDIR=${D}/usr/lib/pppd/${PV} BINDIR=${D}/usr/sbin"
 EXTRA_OECONF = "--disable-strip"
 
-do_stage () {
-         make INCDIR=${STAGING_INCDIR} install-devel
-}
-
 do_install_append () {
 	make install-etcppp ETCDIR=${D}/${sysconfdir}/ppp
 	mkdir -p ${D}${bindir}/ ${D}${sysconfdir}/init.d
