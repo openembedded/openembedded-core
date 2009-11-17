@@ -12,9 +12,4 @@ SRC_URI = "${GNU_MIRROR}/gdbm/gdbm-${PV}.tar.gz \
 
 inherit autotools
 
-do_stage () {
-	oe_libinstall -so -a libgdbm ${STAGING_LIBDIR}
-	install -m 0644 ${S}/gdbm.h ${STAGING_INCDIR}/
-}
-
 BBCLASSEXTEND = "native"
