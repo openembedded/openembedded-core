@@ -26,6 +26,7 @@ RDEPENDS_automake += "\
 
 SRC_URI += "file://path_prog_fixes.patch;patch=1"
 
+NATIVE_INSTALL_WORKS = "1"
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	install -d ${D}${datadir}
