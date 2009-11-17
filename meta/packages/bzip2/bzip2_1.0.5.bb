@@ -18,14 +18,11 @@ do_configure_prepend () {
 }
 
 do_install_append () {
-	mv ${D}${bindir}/bunzip2 ${D}${bindir}/bunzip2.${PN}
-	mv ${D}${bindir}/bzcat ${D}${bindir}/bzcat.${PN}
+	if [ "${BUILD_ARCH}" != "${HOST_ARCH}" ]; then
+		mv ${D}${bindir}/bunzip2 ${D}${bindir}/bunzip2.${PN}
+		mv ${D}${bindir}/bzcat ${D}${bindir}/bzcat.${PN}
+	fi
 }
-
-do_stage () {
-	install -m 0644 bzlib.h ${STAGING_INCDIR}/
-	oe_libinstall -a -so libbz2 ${STAGING_LIBDIR}
-}		
 
 pkg_postinst_${PN} () {
 	update-alternatives --install ${bindir}/bunzip2 bunzip2 bunzip2.${PN} 100
