@@ -13,11 +13,7 @@ DEPENDS = "libxml-parser-perl-native"
 #RDEPENDS = "libxml-parser-perl"
 RRECOMMENDS = "perl-modules"
 
-inherit autotools  pkgconfig
-
-do_stage() {
-	install -m 0644 intltool.m4 ${STAGING_DATADIR}/aclocal/
-}
+inherit autotools_stage pkgconfig
 
 export PERL_virtclass-native = "/usr/bin/env perl"
 BBCLASSEXTEND = "native"
