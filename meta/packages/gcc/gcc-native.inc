@@ -15,12 +15,10 @@ EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${prefix} \
 		--enable-target-optspace \
 		--program-prefix=${TARGET_PREFIX}"
 
+NATIVE_INSTALL_WORKS = "1"
 do_install () {
-	:
-}
-
-do_stage () {
 	cd gcc
-	oe_runmake install-common install-headers install-libgcc
-	install -m 0755 xgcc ${STAGING_BINDIR}/gcc-${PV}
+	oe_runmake 'DESTDIR=${D}' install-common install-headers install-libgcc
+	install -d ${D}${bindir}/
+	install -m 0755 xgcc ${D}${bindir}/gcc-${PV}
 }
