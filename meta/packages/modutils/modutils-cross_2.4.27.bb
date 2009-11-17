@@ -15,11 +15,6 @@ EXTRA_OECONF_append = " --program-prefix=${TARGET_PREFIX}"
 CFLAGS_prepend_mipsel = "-D__MIPSEL__"
 CFLAGS_prepend_mipseb = "-D__MIPSEB__"
 
-do_stage () {
-        oe_runmake install
-        mv ${bindir}/${TARGET_PREFIX}depmod ${bindir}/${TARGET_PREFIX}depmod-2.4
-}
-
-do_install () {
-        :
+do_install_append () {
+        mv ${D}${bindir}/${TARGET_PREFIX}depmod ${D}${bindir}/${TARGET_PREFIX}depmod-2.4
 }
