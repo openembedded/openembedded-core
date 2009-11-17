@@ -14,11 +14,3 @@ do_configure () {
 }
 
 inherit cross
-
-do_install () {
-	autotools_do_install
-}
-
-do_stage () {
-	autotools_stage_all
-}

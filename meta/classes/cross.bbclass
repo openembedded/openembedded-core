@@ -40,12 +40,12 @@ exec_prefix = "${prefix}"
 base_sbindir = "${base_prefix}/bin"
 sbindir = "${exec_prefix}/bin"
 
-do_stage () {
-	oe_runmake install
+do_install () {
+	oe_runmake 'DESTDIR=${D}' install
 }
 
-do_install () {
-	:
+do_stage () {
+	autotools_stage_all
 }
 
 #
