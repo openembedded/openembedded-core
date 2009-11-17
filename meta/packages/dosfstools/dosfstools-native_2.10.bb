@@ -17,8 +17,3 @@ SRC_URI = "ftp://ftp.uni-erlangen.de/pub/Linux/LOCAL/dosfstools/dosfstools-${PV}
 	file://2.6.20-syscall.patch;patch=1"
 
 inherit native
-
-do_stage() {
-	install -m 755 ${S}/mkdosfs/mkdosfs ${STAGING_BINDIR}/mkdosfs
-	install -m 755 ${S}/dosfsck/dosfsck ${STAGING_BINDIR}/dosfsck
-}

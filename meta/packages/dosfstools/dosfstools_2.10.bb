@@ -16,6 +16,7 @@ SRC_URI = "ftp://ftp.uni-erlangen.de/pub/Linux/LOCAL/dosfstools/dosfstools-${PV}
            file://msdos_fat12_undefined.patch;patch=1 \
 	   file://include-linux-types.patch;patch=1"
 
+NATIVE_INSTALL_WORKS = "1"
 do_install () {
 	oe_runmake "PREFIX=${D}" "SBINDIR=${D}${sbindir}" \
 		   "MANDIR=${D}${mandir}/man8" install
