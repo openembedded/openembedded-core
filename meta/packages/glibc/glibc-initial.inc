@@ -30,8 +30,8 @@ do_compile () {
 	:
 }
 
-do_stage () {
-	oe_runmake cross-compiling=yes install_root=${STAGING_DIR_HOST} \
+do_install () {
+	oe_runmake cross-compiling=yes install_root=${D} \
 	includedir='${includedir}' prefix='${prefix}' \
 	install-bootstrap-headers=yes install-headers
 
@@ -39,19 +39,15 @@ do_stage () {
 	# Two headers -- stubs.h and features.h -- aren't installed by install-headers,
 	# so do them by hand.  We can tolerate an empty stubs.h for the moment.
 	# See e.g. http://gcc.gnu.org/ml/gcc/2002-01/msg00900.html
-	mkdir -p ${STAGING_INCDIR}/gnu
-	touch ${STAGING_INCDIR}/gnu/stubs.h
-	cp ${S}/include/features.h ${STAGING_INCDIR}/features.h
+	mkdir -p ${D}${includedir}/gnu/
+	touch ${D}${includedir}/gnu/stubs.h
+	cp ${S}/include/features.h ${D}${includedir}/features.h
 
 	if [ -e ${B}/bits/stdio_lim.h ]; then
-		cp ${B}/bits/stdio_lim.h  ${STAGING_INCDIR}/bits/
+		cp ${B}/bits/stdio_lim.h  ${D}${includedir}/bits/
 	fi
-	mkdir -p ${STAGING_DIR_TARGET}${libdir}
-	install -m 644 csu/crt[1in].o ${STAGING_DIR_TARGET}${libdir}
+	mkdir -p ${D}${libdir}/
+	install -m 644 csu/crt[1in].o ${D}${libdir}
 	${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
-		-o ${STAGING_DIR_TARGET}${libdir}/libc.so
-}
-
-do_install () {
-	:
+		-o ${D}${libdir}/libc.so
 }
