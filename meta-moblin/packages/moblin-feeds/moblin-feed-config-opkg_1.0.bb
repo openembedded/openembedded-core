@@ -34,11 +34,6 @@ do_install () {
 	install -m 0644  ${S}/${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg/
 }
 
-do_stage () {
-	install -d ${STAGING_DIR}${sysconfdir}/opkg
-	install -m 0644  ${S}/${sysconfdir}/opkg/* ${STAGING_DIR}${sysconfdir}/opkg/
-}
-
 FILES_${PN} = "${sysconfdir}/opkg/ "
 
 CONFFILES_${PN} += "${sysconfdir}/opkg/base-feeds.conf \
