@@ -8,10 +8,10 @@ PE = "1"
 
 XORG_PN = "libXaw"
 
-do_stage_append () {
-	ln -sf libXaw6.so.6 ${STAGING_LIBDIR}/libXaw.so.6
-	ln -sf libXaw7.so.7 ${STAGING_LIBDIR}/libXaw.so.7
-	ln -sf libXaw7.so.7 ${STAGING_LIBDIR}/libXaw.so
+do_install_append () {
+	ln -sf libXaw6.so.6 ${D}${libdir}/libXaw.so.6
+	ln -sf libXaw7.so.7 ${D}${libdir}/libXaw.so.7
+	ln -sf libXaw7.so.7 ${D}${libdir}/libXaw.so
 }
 
 PACKAGES =+ "libxaw6 libxaw7 libxaw8"
