@@ -12,11 +12,13 @@ inherit native
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
 
 do_compile () {
- 	oe_runmake smdk2410_config
-        oe_runmake tools
+	oe_runmake smdk2410_config
+	oe_runmake tools
 }
 
-do_stage () {
-        install -m 0755 tools/mkimage ${STAGING_BINDIR_NATIVE}/uboot-mkimage
-        ln -sf ${STAGING_BINDIR_NATIVE}/uboot-mkimage ${STAGING_BINDIR_NATIVE}/mkimage
+NATIVE_INSTALL_WORKS = "1"
+do_install () {
+	install -d ${D}${bindir}/
+	install -m 0755 tools/mkimage ${D}${bindir}/uboot-mkimage
+	ln -sf uboot-mkimage ${D}${bindir}/mkimage
 }
