@@ -40,19 +40,14 @@ export BUILD_CCFLAGS = "-I${S}/ncurses -I${S}/include ${BUILD_CFLAGS}"
 export BUILD_LDFLAGS = ""
 export EXTRA_OEMAKE = '"BUILD_LDFLAGS=" "BUILD_CCFLAGS=${BUILD_CCFLAGS}"'
 
-do_stage() {
-	autotools_stage_all
-	ln -sf curses.h ${STAGING_INCDIR}/ncurses.h
-	ln -sf libncurses.so ${STAGING_LIBDIR}/libtermcap.so
-	ln -sf libncurses.a ${STAGING_LIBDIR}/libtermcap.a
-}
-
 # This is necessary so that the "tic" command executed during the install can
 # link with the correct libary in staging.
 export LD_LIBRARY_PATH = "${STAGING_LIBDIR_NATIVE}"
 
 do_install() {
 	autotools_do_install
+
+	ln -sf curses.h ${D}${includedir}/ncurses.h
 
 	# our ncurses has termcap support
 	ln -sf libncurses.so ${D}${libdir}/libtermcap.so
