@@ -52,11 +52,16 @@ do_compile() {
 	done
 }
 
-do_stage() {
-        install -m 0755 bin/moc ${STAGING_BINDIR}/moc4
-        install -m 0755 bin/uic ${STAGING_BINDIR}/uic4
-        install -m 0755 bin/uic3 ${STAGING_BINDIR}/uic34
-        install -m 0755 bin/rcc ${STAGING_BINDIR}/rcc4
-        install -d ${STAGING_DIR_NATIVE}/qt4/
-        install -m 0644 tools/porting/src/q3porting.xml ${STAGING_DIR_NATIVE}/qt4/
+do_install() {
+	install -d ${D}${bindir}/
+	install -m 0755 bin/moc ${D}${bindir}//moc4
+	install -m 0755 bin/uic ${D}${bindir}/uic4
+	install -m 0755 bin/uic3 ${D}${bindir}/uic34
+	install -m 0755 bin/rcc $${D}${bindir}/rcc4
+	install -d ${D}/qt4/
+	install -m 0644 tools/porting/src/q3porting.xml ${D}/qt4/
+}
+
+sysroot_stage_all_append() {
+	sysroot_stage_dir ${D}/qt4 ${SYSROOT_DESTDIR}/${STAGING_DIR_TARGET}/qt4
 }
