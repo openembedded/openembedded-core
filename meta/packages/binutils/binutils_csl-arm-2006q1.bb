@@ -99,18 +99,6 @@ do_configure () {
 	oe_runconf
 }
 
-do_stage () {
-	oe_libinstall -so -a -C opcodes libopcodes ${STAGING_LIBDIR}/
-	oe_libinstall -a -C libiberty libiberty ${STAGING_LIBDIR}/
-	oe_libinstall -so -a -C bfd libbfd ${STAGING_LIBDIR}/
-	install -m 0644 ${S}/include/dis-asm.h ${STAGING_INCDIR}/
-	install -m 0644 ${S}/include/symcat.h ${STAGING_INCDIR}/
-	install -m 0644 ${S}/include/libiberty.h ${STAGING_INCDIR}/
-	install -m 0644 ${S}/include/ansidecl.h ${STAGING_INCDIR}/
-	install -m 0644 ${S}/include/bfdlink.h ${STAGING_INCDIR}/
-	install -m 0644 bfd/bfd.h ${STAGING_INCDIR}/
-}
-
 do_install () {
 	autotools_do_install
 
