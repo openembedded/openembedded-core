@@ -24,7 +24,3 @@ do_install() {
 	install -d ${D}${datadir}/${PN}/
 	install -m 0644 ${WORKDIR}/run-postinsts.awk ${D}${datadir}/${PN}/
 }
-
-do_stage () {
-	:
-}

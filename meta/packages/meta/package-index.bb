@@ -17,8 +17,6 @@ do_compile() {
 }
 do_install() {
 }
-do_stage() {
-}
 
 do_build[nostamp] = "1"
 do_build[dirs] = "${DEPLOY_DIR_IPK}"
