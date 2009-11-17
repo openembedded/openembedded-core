@@ -63,8 +63,3 @@ do_install () {
 	install -m 0755 ${WORKDIR}/mount.sh ${D}${sysconfdir}/udev/scripts/mount.sh
 	install -m 0755 ${WORKDIR}/network.sh ${D}${sysconfdir}/udev/scripts
 }
-
-do_stage () {
-	install -m 0644 ${S}/extras/volume_id/lib/libvolume_id.h ${STAGING_INCDIR}
-	oe_libinstall -C extras/volume_id/lib -so libvolume_id ${STAGING_LIBDIR}
-}
