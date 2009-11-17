@@ -18,12 +18,6 @@ include lirc-config.inc
 
 EXTRA_OEMAKE = 'SUBDIRS="daemons tools"'
 
-do_stage() {
-        oe_libinstall -so -C tools liblirc_client ${STAGING_LIBDIR}
-	install -d ${STAGING_INCDIR}/lirc/
-	install -m 0644 tools/lirc_client.h ${STAGING_INCDIR}/lirc/
-}
-
 do_install_append() {
 	install -d ${D}${sysconfdir}/init.d
 	install ${WORKDIR}/lircd.init ${D}${sysconfdir}/init.d/lircd
