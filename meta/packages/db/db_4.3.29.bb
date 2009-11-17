@@ -78,19 +78,6 @@ do_configure() {
 	oe_runconf
 }
 
-do_stage() {
-	# The .h files get installed read-only, the autostage
-	# function just uses cp -pPR, so do this by hand
-	rm -rf ${STAGE_TEMP}
-	mkdir -p ${STAGE_TEMP}
-	oe_runmake DESTDIR="${STAGE_TEMP}" install_include
-	cp -pPRf ${STAGE_TEMP}/${includedir}/* ${STAGING_INCDIR}/.
-	rm -rf ${STAGE_TEMP}
-	oe_libinstall -so -C .libs libdb-4.3 ${STAGING_LIBDIR}
-	ln -sf libdb-4.3.so ${STAGING_LIBDIR}/libdb.so
-	ln -sf libdb-4.3.a ${STAGING_LIBDIR}/libdb.a
-}
-
 do_install_append() {
 	# The docs end up in /usr/docs - not right.
 	if test -d "${D}/${prefix}/docs"
