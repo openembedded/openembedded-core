@@ -22,9 +22,3 @@ FILES_${PN}-dev += "${libdir}/matchbox-desktop \
 		    ${datadir}/matchbox/desktop/modules/*a"
 
 FILES_${PN}-dbg += "${libdir}/matchbox/desktop/.debug/"
-
-do_stage() {
-		install -d ${STAGING_INCDIR}/matchbox-desktop/
-		install -m 0644 ${S}/src/*.h ${STAGING_INCDIR}/matchbox-desktop/
-
-}
