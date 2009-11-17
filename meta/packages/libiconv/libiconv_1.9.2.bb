@@ -11,18 +11,11 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/libiconv/libiconv-${PV}.tar.gz"
 
 S = "${WORKDIR}/libiconv-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools_stage pkgconfig
 
 EXTRA_OECONF += "--enable-shared --enable-static"
 
 do_configure () {
 	rm -f m4/libtool.m4 libcharset/m4/libtool.m4
 	autotools_do_configure
-}
-
-do_stage () {
-	oe_libinstall -so -a -C lib libiconv ${STAGING_LIBDIR}
-	oe_libinstall -so -C lib libiconv_plug_linux ${STAGING_LIBDIR}
-	oe_libinstall -so -a -C libcharset/lib libcharset ${STAGING_LIBDIR}
-	autotools_stage_includes
 }
