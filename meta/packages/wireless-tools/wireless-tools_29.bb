@@ -23,12 +23,6 @@ do_compile() {
 	oe_runmake all libiw.a
 }
 
-do_stage() {
-	install -m 0644 wireless.h ${STAGING_INCDIR}/
-	install -m 0644 iwlib.h ${STAGING_INCDIR}/
-	oe_libinstall -a -so libiw ${STAGING_LIBDIR}/
-}
-
 do_install() {
 	oe_runmake PREFIX=${D} install-iwmulticall install-dynamic install-man install-hdr
 	install -d ${D}${sbindir}
