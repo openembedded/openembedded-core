@@ -31,11 +31,3 @@ do_configure () {
         CPPFLAGS="" oe_runconf
 }
 
-do_install () {
-	make -C bfd/doc chew LDFLAGS= CFLAGS=-O2
-	oe_runmake DESTDIR='${D}' install
-	install -d ${D}${bindir}
-	install -m 0755 gdb/gdbserver/gdbserver ${D}${bindir}
-}
-
-

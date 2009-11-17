@@ -13,6 +13,12 @@ do_configure () {
 	oe_runconf
 }
 
+inherit cross
+
+do_install () {
+	autotools_do_install
+}
+
 do_stage () {
-	oe_runmake install
+	autotools_stage_all
 }
