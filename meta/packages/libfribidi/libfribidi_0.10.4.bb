@@ -21,9 +21,3 @@ do_configure_prepend () {
 	rm aclocal.m4
 	rm acinclude.m4
 }
-
-do_stage () {
-	oe_libinstall -a -so -C .libs libfribidi ${STAGING_LIBDIR}
-	autotools_stage_includes
-}
-
