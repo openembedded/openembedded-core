@@ -29,7 +29,3 @@ PARALLEL_MAKE = ""
 do_configure_prepend() {
 	cp ${WORKDIR}/acinclude.m4 ${S}/acinclude.m4
 }
-
-do_stage_append() {
-	install -m 0644 ${S}/build/libSDLmain.a ${STAGING_LIBDIR}
-}
