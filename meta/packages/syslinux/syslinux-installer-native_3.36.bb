@@ -16,11 +16,12 @@ do_compile() {
 	oe_runmake installer
 }
 
-do_stage() {
+NATIVE_INSTALL_WORKS = "1"
+do_install() {
 	install -d ${STAGE_TEMP}
 	oe_runmake install INSTALLROOT="${STAGE_TEMP}"
 
-	install -d ${STAGING_BINDIR}
-	install -m 755 ${STAGE_TEMP}/usr/bin/syslinux ${STAGING_BINDIR}
-	install -m 755 ${STAGE_TEMP}/sbin/extlinux ${STAGING_BINDIR}
+	install -d ${D}${bindir}/
+	install -m 755 ${STAGE_TEMP}/usr/bin/syslinux ${D}${bindir}/
+	install -m 755 ${STAGE_TEMP}/sbin/extlinux ${D}${bindir}/
 }

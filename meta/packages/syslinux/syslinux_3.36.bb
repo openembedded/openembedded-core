@@ -18,7 +18,7 @@ STAGE_TEMP = "${WORKDIR}/stage_temp"
 
 COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
 
-do_stage() {
+do_install() {
 	install -d ${STAGE_TEMP}
 	oe_runmake install INSTALLROOT="${STAGE_TEMP}"
 	
@@ -26,8 +26,8 @@ do_stage() {
 	# as the DOS data files, so we copy those into a special location
 	# for usage during a image build stage
 	    
-	install -d ${STAGING_DATADIR}/syslinux
-	install -m 0644 ${STAGE_TEMP}/usr/lib/syslinux/isolinux.bin ${STAGING_DATADIR}/syslinux/isolinux.bin
-	install -m 644 ${S}/ldlinux.sys ${STAGING_DATADIR}/syslinux/ldlinux.sys
-	install -m 644 ${S}/ldlinux.bss ${STAGING_DATADIR}/syslinux/ldlinux.bss
+	install -d ${D}${datadir}/syslinux/
+	install -m 0644 ${STAGE_TEMP}/usr/lib/syslinux/isolinux.bin ${D}${datadir}/syslinux/isolinux.bin
+	install -m 644 ${S}/ldlinux.sys ${D}${datadir}/syslinux/ldlinux.sys
+	install -m 644 ${S}/ldlinux.bss ${D}${datadir}/syslinux/ldlinux.bss
 }
