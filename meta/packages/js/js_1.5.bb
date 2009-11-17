@@ -30,9 +30,3 @@ do_install() {
 	oe_libinstall -so -C Linux_All_DBG.OBJ libjs ${D}${libdir}
 	install -m 0644 ${S}/*.h ${D}${includedir}/js
 }
-
-do_stage() {
-	install -d ${STAGING_INCDIR}/js
-	install -m 0644 ${S}/*.h ${STAGING_INCDIR}/js/
-	oe_libinstall -so -C Linux_All_DBG.OBJ libjs ${STAGING_LIBDIR}
-}
