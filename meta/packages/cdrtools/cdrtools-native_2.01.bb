@@ -13,12 +13,13 @@ SRC_URI="ftp://ftp.berlios.de/pub/cdrecord/cdrtools-${PV}.tar.bz2 \
 
 inherit native
 
-STAGE_TEMP="${WORKDIR}/stage_temp"
+STAGE_TEMP="${WORKDIR}/image-temp"
 
-do_stage() {
+NATIVE_INSTALL_WORKS = "1"
+do_install() {
 	install -d ${STAGE_TEMP}
 	make install INS_BASE=${STAGE_TEMP}
 
-	install -d ${STAGING_BINDIR}
-	install ${STAGE_TEMP}/bin/* ${STAGING_BINDIR}
+	install -d ${D}${bindir}/
+	install ${STAGE_TEMP}/bin/* ${D}${bindir}/
 }
