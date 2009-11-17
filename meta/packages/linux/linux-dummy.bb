@@ -24,7 +24,3 @@ do_compile () {
 do_install() {
         :
 }
-
-do_stage () {
-	:
-}
