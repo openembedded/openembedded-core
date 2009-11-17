@@ -7,7 +7,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/lame/lame-${PV}.tar.gz \
 	file://no-gtk1.patch;patch=1 \
 	file://Makefile-lm.patch;patch=1"
 
-inherit autotools
+inherit autotools_stage
 
 PACKAGES += "libmp3lame libmp3lame-dev"
 FILES_${PN} = "${bindir}/lame"
@@ -22,11 +22,4 @@ do_configure() {
 	libtoolize --force
 	gnu-configize --force
 	oe_runconf
-}
-
-do_stage() {
-	install -d ${STAGING_LIBDIR}
-	oe_libinstall -C libmp3lame -so -a libmp3lame ${STAGING_LIBDIR}
-	install -d ${STAGING_INCDIR}/lame
-	install -m 0644 include/lame.h ${STAGING_INCDIR}/lame/
 }
