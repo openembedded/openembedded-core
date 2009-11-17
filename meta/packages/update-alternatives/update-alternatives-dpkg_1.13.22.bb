@@ -2,12 +2,6 @@ require update-alternatives-dpkg.inc
 
 PROVIDES += "virtual/update-alternatives"
 RPROVIDES_${PN} += "update-alternatives"
-RDEPENDS_${PN} += "perl dpkg"
-
-do_install () {
-    install -d ${D}${sbindir} \
-               ${D}${localstatedir}/dpkg/alternatives \
-               ${D}${sysconfdir}/alternatives
-
-    install -m 0755 scripts/update-alternatives ${D}${sbindir}/update-alternatives
-}
+EXTRA_RDEPENDS = "perl dpkg"
+EXTRA_RDEPENDS_virtclass-native = ""
+RDEPENDS_${PN} += "${EXTRA_RDEPENDS}"

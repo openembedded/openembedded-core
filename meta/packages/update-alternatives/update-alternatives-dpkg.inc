@@ -3,7 +3,7 @@ SECTION = "base"
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz"
 S = "${WORKDIR}/dpkg-${PV}"
 PACKAGE_ARCH = "all"
-PR = "r1"
+PR = "r2"
 
 do_patch () {
     cat ${S}/scripts/update-alternatives.pl | \
@@ -18,3 +18,14 @@ do_patch () {
     s,^\$altdir=.*$,$altdir="$D${sysconfdir}/alternatives"\;,;
     p;' > ${S}/scripts/update-alternatives
 }
+
+NATIVE_INSTALL_WORKS = "1"
+do_install () {
+    install -d ${D}${sbindir} \
+               ${D}${localstatedir}/dpkg/alternatives \
+               ${D}${sysconfdir}/alternatives
+
+    install -m 0755 scripts/update-alternatives ${D}${sbindir}/update-alternatives
+}
+
+BBCLASSEXTEND = "native"
