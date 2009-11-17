@@ -52,6 +52,7 @@ do_compile() {
 	done
 }
 
+NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${bindir}/
 	install -m 0755 bin/moc ${D}${bindir}//moc4
