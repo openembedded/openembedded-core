@@ -30,11 +30,5 @@ do_compile_prepend() {
 	${BUILD_CC} -o objs/apinames src/tools/apinames.c
 }
 
-do_stage() {
-     export LIBTOOL='${LIBTOOL}'
-	 autotools_stage_all
-	 oe_libinstall -so -a -C objs libfreetype ${STAGING_LIBDIR}
-}
-
 FILES_${PN} = "${libdir}/lib*${SOLIBS}"
 FILES_${PN}-dev += "${bindir}"
