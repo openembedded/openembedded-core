@@ -31,17 +31,6 @@ do_install() {
     cp -a ${S}/arm-none-linux-gnueabi/libc/usr/*  ${D}/usr
 }
 
-do_stage() {
-	install -d ${STAGING_INCDIR}
-	cp -a ${S}/arm-none-linux-gnueabi/libc/usr/include/* ${STAGING_INCDIR}
-
-	install -d ${STAGING_LIBDIR}
-	cp -a ${S}/arm-none-linux-gnueabi/libc/usr/lib/* ${STAGING_LIBDIR}
-
-	install -d ${STAGING_DIR_TARGET}${base_libdir}
-	cp -a ${S}/arm-none-linux-gnueabi/libc/lib/* ${STAGING_DIR_TARGET}${base_libdir}
-}
-
 PACKAGES = "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers"
 FILES_libgcc = "${base_libdir}/libgcc_s.so.1"
 FILES_libgcc-dev = "${base_libdir}/libgcc_s.so"

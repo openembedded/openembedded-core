@@ -27,30 +27,12 @@ do_install() {
 	install -d ${D}${base_libdir} ${D}${base_sbindir} ${D}${datadir}
 
 	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/lib/*  ${D}${base_libdir}
-						      cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/etc/*  ${D}${sysconfdir}
-						      cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/sbin/* ${D}${base_sbindir}
-						      cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/usr/*  ${D}/usr
-						      }
+	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/etc/*  ${D}${sysconfdir}
+	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/sbin/* ${D}${base_sbindir}
+	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/usr/*  ${D}/usr
 
-do_stage() {
-	install -d ${STAGING_INCDIR}
-	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/usr/include/* ${STAGING_INCDIR}
-
-	install -d ${STAGING_LIBDIR}
-	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/usr/lib/* ${STAGING_LIBDIR}
-
-	install -d ${STAGING_DIR_TARGET}${base_libdir}
-	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/lib/* ${STAGING_DIR_TARGET}${base_libdir}
-
-	sed -e "s# /lib# ../../lib#g" \
-	-e "s# /usr/lib# .#g" \
-	${STAGING_LIBDIR}/libc.so > ${STAGING_LIBDIR}/temp
-	mv ${STAGING_LIBDIR}/temp ${STAGING_LIBDIR}/libc.so
-
-	sed -e "s# /lib# ../../lib#" \
-	-e "s# /usr/lib# .#g" \
-	${STAGING_LIBDIR}/libpthread.so > ${STAGING_LIBDIR}/temp
-	mv ${STAGING_LIBDIR}/temp ${STAGING_LIBDIR}/libpthread.so
+	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
+	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
 }
 
 PACKAGES = "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers"
