@@ -1,0 +1,291 @@
+Index: uClibc/libpthread/linuxthreads/descr.h
+===================================================================
+--- uClibc.orig/libpthread/linuxthreads/descr.h	2008-08-27 23:59:46.171809044 +0200
++++ uClibc/libpthread/linuxthreads/descr.h	2008-08-28 00:00:35.435134759 +0200
+@@ -123,9 +123,9 @@
+       union dtv *dtvp;
+       pthread_descr self;	/* Pointer to this structure */
+       int multiple_threads;
+-# ifdef NEED_DL_SYSINFO
+       uintptr_t sysinfo;
+-# endif
++      uintptr_t stack_guard;
++      uintptr_t pointer_guard;
+     } data;
+     void *__padding[16];
+   } p_header;
+@@ -193,6 +193,13 @@
+   size_t p_alloca_cutoff;	/* Maximum size which should be allocated
+ 				   using alloca() instead of malloc().  */
+   /* New elements must be added at the end.  */
++
++  /* This member must be last.  */
++  char end_padding[];
++
++#define PTHREAD_STRUCT_END_PADDING \
++  (sizeof (struct _pthread_descr_struct)			      \
++   - offsetof (struct _pthread_descr_struct, end_padding))
+ } __attribute__ ((aligned(32))); /* We need to align the structure so that
+ 				    doubles are aligned properly.  This is 8
+ 				    bytes on MIPS and 16 bytes on MIPS64.
+Index: uClibc/libpthread/linuxthreads/manager.c
+===================================================================
+--- uClibc.orig/libpthread/linuxthreads/manager.c	2008-08-27 23:59:54.185140485 +0200
++++ uClibc/libpthread/linuxthreads/manager.c	2008-08-28 00:00:35.435134759 +0200
+@@ -679,6 +679,17 @@
+   new_thread->p_inheritsched = attr ? attr->__inheritsched : 0;
+   new_thread->p_alloca_cutoff = stksize / 4 > __MAX_ALLOCA_CUTOFF
+ 				 ? __MAX_ALLOCA_CUTOFF : stksize / 4;
++
++  /* Copy the stack guard canary.  */
++#ifdef THREAD_COPY_STACK_GUARD
++  THREAD_COPY_STACK_GUARD (new_thread);
++#endif
++
++  /* Copy the pointer guard value.  */
++#ifdef THREAD_COPY_POINTER_GUARD
++  THREAD_COPY_POINTER_GUARD (new_thread);
++#endif
++
+   /* Initialize the thread handle */
+   __pthread_init_lock(&__pthread_handles[sseg].h_lock);
+   __pthread_handles[sseg].h_descr = new_thread;
+@@ -742,15 +753,15 @@
+ 	  pid = __clone2(pthread_start_thread_event,
+   		 (void **)new_thread_bottom,
+ 			 (char *)stack_addr - new_thread_bottom,
+-			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
++			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM |
+ 			 __pthread_sig_cancel, new_thread);
+ #elif _STACK_GROWS_UP
+ 	  pid = __clone(pthread_start_thread_event, (void *) new_thread_bottom,
+-			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
++			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM |
+ 			__pthread_sig_cancel, new_thread);
+ #else
+ 	  pid = __clone(pthread_start_thread_event, stack_addr,
+-			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
++			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM |
+ 			__pthread_sig_cancel, new_thread);
+ #endif
+ 	  saved_errno = errno;
+@@ -783,15 +794,15 @@
+       pid = __clone2(pthread_start_thread,
+ 		     (void **)new_thread_bottom,
+                      (char *)stack_addr - new_thread_bottom,
+-		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
++		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM |
+ 		     __pthread_sig_cancel, new_thread);
+ #elif _STACK_GROWS_UP
+       pid = __clone(pthread_start_thread, (void *) new_thread_bottom,
+-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
++		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM |
+ 		    __pthread_sig_cancel, new_thread);
+ #else
+       pid = __clone(pthread_start_thread, stack_addr,
+-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
++		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM |
+ 		    __pthread_sig_cancel, new_thread);
+ #endif /* !NEED_SEPARATE_REGISTER_STACK */
+       saved_errno = errno;
+@@ -892,10 +903,11 @@
+ #ifdef _STACK_GROWS_UP
+ # ifdef USE_TLS
+       size_t stacksize = guardaddr - th->p_stackaddr;
++      guardaddr = th->p_stackaddr;
+ # else
+       size_t stacksize = guardaddr - (char *)th;
+-# endif
+       guardaddr = (char *)th;
++# endif
+ #else
+       /* Guardaddr is always set, even if guardsize is 0.  This allows
+ 	 us to compute everything else.  */
+Index: uClibc/libpthread/linuxthreads/pthread.c
+===================================================================
+--- uClibc.orig/libpthread/linuxthreads/pthread.c	2008-08-28 00:00:00.825141935 +0200
++++ uClibc/libpthread/linuxthreads/pthread.c	2008-08-28 00:00:35.438472147 +0200
+@@ -698,6 +698,16 @@
+   mgr = &__pthread_manager_thread;
+ #endif
+ 
++  /* Copy the stack guard canary.  */
++#ifdef THREAD_COPY_STACK_GUARD
++  THREAD_COPY_STACK_GUARD (mgr);
++#endif
++
++  /* Copy the pointer guard value.  */
++#ifdef THREAD_COPY_POINTER_GUARD
++  THREAD_COPY_POINTER_GUARD (mgr);
++#endif
++
+   __pthread_manager_request = manager_pipe[1]; /* writing end */
+   __pthread_manager_reader = manager_pipe[0]; /* reading end */
+ 
+@@ -738,17 +748,17 @@
+ 	  pid = __clone2(__pthread_manager_event,
+ 			 (void **) __pthread_manager_thread_bos,
+ 			 THREAD_MANAGER_STACK_SIZE,
+-			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
++			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM,
+ 			 mgr);
+ #elif _STACK_GROWS_UP
+ 	  pid = __clone(__pthread_manager_event,
+ 			(void **) __pthread_manager_thread_bos,
+-			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
++			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM,
+ 			mgr);
+ #else
+ 	  pid = __clone(__pthread_manager_event,
+ 			(void **) __pthread_manager_thread_tos,
+-			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
++			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM,
+ 			mgr);
+ #endif
+ 
+@@ -778,13 +788,13 @@
+ #ifdef NEED_SEPARATE_REGISTER_STACK
+       pid = __clone2(__pthread_manager, (void **) __pthread_manager_thread_bos,
+ 		     THREAD_MANAGER_STACK_SIZE,
+-		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, mgr);
++		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM, mgr);
+ #elif _STACK_GROWS_UP
+       pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_bos,
+-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, mgr);
++		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM, mgr);
+ #else
+       pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
+-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, mgr);
++		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_SYSVSEM, mgr);
+ #endif
+     }
+   if (__builtin_expect (pid, 0) == -1) {
+@@ -971,6 +981,10 @@
+     struct pthread_request request;
+     pthread_descr self = thread_self();
+ 
++    /* Make sure we come back here after suspend(), in case we entered
++       from a signal handler.  */
++    THREAD_SETMEM(self, p_signal_jmp, NULL);
++
+     request.req_thread = self;
+     request.req_kind = REQ_PROCESS_EXIT;
+     request.req_args.exit.code = retcode;
+@@ -1198,13 +1212,13 @@
+ 
+ void __pthread_restart_old(pthread_descr th)
+ {
+-  if (atomic_increment(&th->p_resume_count) == -1)
++  if (pthread_atomic_increment(&th->p_resume_count) == -1)
+     kill(th->p_pid, __pthread_sig_restart);
+ }
+ 
+ void __pthread_suspend_old(pthread_descr self)
+ {
+-  if (atomic_decrement(&self->p_resume_count) <= 0)
++  if (pthread_atomic_decrement(&self->p_resume_count) <= 0)
+     __pthread_wait_for_restart_signal(self);
+ }
+ 
+@@ -1215,7 +1229,7 @@
+   int was_signalled = 0;
+   sigjmp_buf jmpbuf;
+ 
+-  if (atomic_decrement(&self->p_resume_count) == 0) {
++  if (pthread_atomic_decrement(&self->p_resume_count) == 0) {
+     /* Set up a longjmp handler for the restart signal, unblock
+        the signal and sleep. */
+ 
+@@ -1272,9 +1286,9 @@
+      being delivered. */
+ 
+   if (!was_signalled) {
+-    if (atomic_increment(&self->p_resume_count) != -1) {
++    if (pthread_atomic_increment(&self->p_resume_count) != -1) {
+       __pthread_wait_for_restart_signal(self);
+-      atomic_decrement(&self->p_resume_count); /* should be zero now! */
++      pthread_atomic_decrement(&self->p_resume_count); /* should be zero now! */
+       /* woke spontaneously and consumed restart signal */
+       return 1;
+     }
+Index: uClibc/libpthread/linuxthreads/specific.c
+===================================================================
+--- uClibc.orig/libpthread/linuxthreads/specific.c	2008-08-28 00:00:07.595139286 +0200
++++ uClibc/libpthread/linuxthreads/specific.c	2008-08-28 00:00:35.438472147 +0200
+@@ -104,13 +104,14 @@
+      that if the key is reallocated later by pthread_key_create, its
+      associated values will be NULL in all threads.
+ 
+-     If no threads have been created yet, clear it just in the
+-     current thread.  */
++     If no threads have been created yet, or if we are exiting, clear
++     it just in the current thread.  */
+ 
+   struct pthread_key_delete_helper_args args;
+   args.idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
+   args.idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
+-  if (__pthread_manager_request != -1)
++  if (__pthread_manager_request != -1
++      && !(__builtin_expect (__pthread_exit_requested, 0)))
+     {
+       struct pthread_request request;
+ 
+@@ -203,8 +204,9 @@
+   __pthread_lock(THREAD_GETMEM(self, p_lock), self);
+   for (i = 0; i < PTHREAD_KEY_1STLEVEL_SIZE; i++) {
+     if (THREAD_GETMEM_NC(self, p_specific[i]) != NULL) {
+-      free(THREAD_GETMEM_NC(self, p_specific[i]));
++      void *p = THREAD_GETMEM_NC(self, p_specific[i]);
+       THREAD_SETMEM_NC(self, p_specific[i], NULL);
++      free(p);
+     }
+   }
+   __pthread_unlock(THREAD_GETMEM(self, p_lock));
+Index: uClibc/libpthread/linuxthreads/spinlock.c
+===================================================================
+--- uClibc.orig/libpthread/linuxthreads/spinlock.c	2008-08-28 00:00:17.805140454 +0200
++++ uClibc/libpthread/linuxthreads/spinlock.c	2008-08-28 00:00:35.438472147 +0200
+@@ -637,8 +637,20 @@
+ #if defined HAS_COMPARE_AND_SWAP
+ 	wait_node_dequeue(pp_head, pp_max_prio, p_max_prio);
+ #endif
++
++      /* Release the spinlock before restarting.  */
++#if defined TEST_FOR_COMPARE_AND_SWAP
++      if (!__pthread_has_cas)
++#endif
++#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
++	{
++	  __pthread_release(&lock->__spinlock);
++	}
++#endif
++
+       restart(p_max_prio->thr);
+-      break;
++
++      return;
+     }
+   }
+ 
+Index: uClibc/libpthread/linuxthreads/spinlock.h
+===================================================================
+--- uClibc.orig/libpthread/linuxthreads/spinlock.h	2008-08-28 00:00:24.768471655 +0200
++++ uClibc/libpthread/linuxthreads/spinlock.h	2008-08-28 00:02:42.971786951 +0200
+@@ -172,7 +172,7 @@
+ 
+ /* Operations on pthread_atomic, which is defined in internals.h */
+ 
+-static __inline__ long atomic_increment(struct pthread_atomic *pa)
++static __inline__ long pthread_atomic_increment(struct pthread_atomic *pa)
+ {
+     long oldval;
+ 
+@@ -184,7 +184,7 @@
+ }
+ 
+ 
+-static __inline__ long atomic_decrement(struct pthread_atomic *pa)
++static __inline__ long pthread_atomic_decrement(struct pthread_atomic *pa)
+ {
+     long oldval;
+ 

@@ -6,39 +6,28 @@
 # UCLIBC_BASE can be set in a distro file, but whether this works depends
 # on whether the base patches apply to the selected (SRCDATE) svn release.
 #
-UCLIBC_BASE ?= "0.9.29"
-PR = "r9"
+UCLIBC_BASE ?= "0.9.30.1"
 
 require uclibc.inc
+PR = "r0"
 
 PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
-DEPENDS += "ncurses-native"
-
 SRC_URI += "file://uClibc.machine file://uClibc.distro \
-	    file://errno_values.h.patch;patch=1 \
-	    file://termios.h.patch;patch=1 \
-            file://uClibc-0.9.29-001-fix-mmap.patch;patch=1 \
-	    file://uClibc-0.9.29-conditional-sched_affinity.patch;patch=1 \
-	    file://uClibc-0.9.29-fix-gethostent_r-failure-retval.patch;patch=1 \
-	    file://uClibc-0.9.29-fix-internal_function-definition.patch;patch=1 \
-	    file://uClibc-0.9.29-rm-whitespace.patch;patch=1 \
-	    file://arm_fix_alignment.patch;patch=1 \
-	    "
-
-# mmap-unsigned-shift_bugid1303.patch
-# http://uclibc.org/lists/uclibc-cvs/2007-May/011360.html;patch=1"
-
+            file://arm-linuxthreads.patch;patch=1 \
+            file://linuxthreads-changes.patch;patch=1 \
+	    file://pthread_atfork.patch;patch=1 \
+	    file://uclibc_ldso_use_O0.patch;patch=1 \
+	    file://ldso_use_arm_dl_linux_resolve_in_thumb_mode.patch;patch=1 \
+	    file://gcc-4.4-fixlet.patch;patch=1 \
+	    file://uclibc-c99-ldbl-math.patch;patch=1 \
+	    file://Use-__always_inline-instead-of-__inline__.patch;patch=1 \
+	   "
 #recent versions uclibc require real kernel headers
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 #as stated above, uclibc needs real kernel-headers
 #however: we can't depend on virtual/kernel when nptl hits due to depends deadlocking ....
-KERNEL_SOURCE = "${CROSS_DIR}/${TARGET_SYS}"
-
-SRC_URI += "http://www.uclibc.org/downloads/uClibc-${PV}.tar.bz2"
+KERNEL_SOURCE = "${STAGING_DIR_HOST}/${exec_prefix}"
 
 S = "${WORKDIR}/uClibc-${UCLIBC_BASE}"
-
-LEAD_SONAME = "libc.so"
-
