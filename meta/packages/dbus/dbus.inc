@@ -13,7 +13,7 @@ SRC_URI = "\
   file://99_dbus \
 "
 
-inherit autotools pkgconfig gettext pkgconfig_stage
+inherit autotools pkgconfig gettext
 
 INITSCRIPT_NAME = "dbus-1"
 INITSCRIPT_PARAMS = "start 02 5 2 . stop 20 0 1 6 ."
@@ -73,15 +73,6 @@ EXTRA_OECONF = "\
   --with-xml=expat \
   ${EXTRA_OECONF_X} \
 "
-
-do_stage() {
-	oe_libinstall -so -C dbus libdbus-1 ${STAGING_LIBDIR}
-
-	autotools_stage_includes
-
-	mkdir -p ${STAGING_LIBDIR}/dbus-1.0/include/dbus/
-	install -m 0644 dbus/dbus-arch-deps.h ${STAGING_LIBDIR}/dbus-1.0/include/dbus/
-}
 
 do_install() {
 	autotools_do_install
