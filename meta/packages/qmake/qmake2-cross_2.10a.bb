@@ -54,16 +54,19 @@ do_compile() {
 	:
 }
 
-do_stage() {
-	install -d ${CROSS_BINDIR}/
-	install -m 0755 bin/qmake ${CROSS_BINDIR}/qmake2
-	install -m 0755 bin/qmake ${CROSS_BINDIR}/qmake-qt4
-	install -d ${STAGING_DIR}/${CROSS_SYS}/qt4/
-	cp -PfR mkspecs ${STAGING_DIR}/${CROSS_SYS}/qt4/
-	install -d ${STAGING_DIR}/${HOST_SYS}/qt4/
-	cp -PfR mkspecs ${STAGING_DIR}/${HOST_SYS}/qt4/
+do_install() {
+	install -d ${D}${CROSS_BINDIR}/
+	install -m 0755 bin/qmake ${D}${CROSS_BINDIR}/qmake2
+	install -m 0755 bin/qmake ${D}${CROSS_BINDIR}/qmake-qt4
+	install -d ${D}${STAGING_DIR}/${CROSS_SYS}/qt4/
+	cp -PfR mkspecs ${D}${STAGING_DIR}/${CROSS_SYS}/qt4/
+	install -d ${D}${STAGING_DIR}/${HOST_SYS}/qt4/
+	cp -PfR mkspecs ${D}${STAGING_DIR}/${HOST_SYS}/qt4/
 }
 
-do_install() {
-        :
+sysroot_stage_all_append() {
+	sysroot_stage_dir ${D}/${STAGING_DIR_NATIVE}/qt4 ${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}/qt4
+	sysroot_stage_dir ${D}/${STAGING_DIR_TARGET}/qt4 ${SYSROOT_DESTDIR}/${STAGING_DIR_TARGET}/qt4
 }
+
+
