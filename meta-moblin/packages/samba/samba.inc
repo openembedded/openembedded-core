@@ -79,14 +79,3 @@ do_install_append() {
 	install -d ${D}/var/log/samba
 	install -d ${D}/var/spool/samba
 }
-
-do_stage() {
-	install -m 0644 include/libsmbclient.h ${STAGING_INCDIR}
-	oe_libinstall -C bin -a -so libsmbclient ${STAGING_LIBDIR}
-	oe_libinstall -C bin -a -so libtdb ${STAGING_LIBDIR}
-	oe_libinstall -C bin -a -so libtalloc ${STAGING_LIBDIR}
-	oe_libinstall -C bin -so libwbclient ${STAGING_LIBDIR}
-	install -d ${STAGING_LIBDIR}/pkgconfig/
-	install -m 0644 ${WORKDIR}/tdb.pc ${STAGING_LIBDIR}/pkgconfig/
-	install -m 0644 ${S}/lib/tdb/include/*.h ${STAGING_INCDIR}/
-}
