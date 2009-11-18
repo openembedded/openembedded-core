@@ -1,0 +1,34 @@
+Index: xercesc/Makefile.incl
+===================================================================
+--- xercesc.orig/Makefile.incl	2009-11-18 00:31:14.000000000 +0000
++++ xercesc/Makefile.incl	2009-11-18 00:31:58.000000000 +0000
+@@ -519,23 +519,23 @@
+ 
+     ifeq (${BITSTOBUILD}, 64)
+       ifeq (${TRANSCODER}, ICU)
+-        ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
++        ALLLIBS = ${LIBS} -licuuc -licudata
+       else
+-        ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
++        ALLLIBS = ${LIBS} 
+       endif
+ 
+       ifeq (${MESSAGELOADER}, ICU)
+-        ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lXercesMessages
++        ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages
+       endif
+     else
+       ifeq (${TRANSCODER}, ICU)
+-        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
++        ALLLIBS = ${LIBS} -licuuc -licudata
+       else
+-        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
++        ALLLIBS = ${LIBS} 
+       endif
+ 
+       ifeq (${MESSAGELOADER}, ICU)
+-        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lXercesMessages
++        ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages
+       endif
+     endif
+ 
