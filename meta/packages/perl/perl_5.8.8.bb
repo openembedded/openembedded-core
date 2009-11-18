@@ -29,6 +29,7 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
         file://62_debian_cpan_definstalldirs.patch;patch=1 \
         file://64_debian_enc2xs_inc.patch;patch=1 \
         file://asm-pageh-fix.patch;patch=1 \
+        file://native-perlinc.patch;patch=1 \
         file://config.sh \
         file://config.sh-32 \
         file://config.sh-32-le \
@@ -74,23 +75,28 @@ do_configure() {
         fi
 
         # Update some paths in the configuration
-        sed -i -e 's,@DESTDIR@,${D},g' \
+        sed -i -e 's,@LIBDIR@,${libdir},g' \
+               -e 's,@BINDIR@,${bindir},g' \
+               -e 's,@MANDIR@,${mandir},g' \
+               -e 's,@PREFIX@,${prefix},g' \
+               -e 's,@DATADIR@,${datadir},g' \
                -e 's,@ARCH@,${TARGET_ARCH}-${TARGET_OS},g' \
                -e "s%/usr/include/%${STAGING_INCDIR}/%g" \
+	       -e 's,/usr/,${exec_prefix}/,g' \
             config.sh-${TARGET_ARCH}-${TARGET_OS}
 
-        if test "${MACHINE}" != "native"; then
-            # These are strewn all over the source tree
-            for foo in `grep -I -m1 \/usr\/include\/.*\\.h ${WORKDIR}/* -r | cut -f 1 -d ":"` ; do
-                echo Fixing: $foo
-                sed -e "s%/usr/include/%${STAGING_INCDIR}/%g" -i $foo
-            done
-        fi
+
+         # These are strewn all over the source tree
+        for foo in `grep -I -m1 \/usr\/include\/.*\\.h ${WORKDIR}/* -r | cut -f 1 -d ":"` ; do
+            echo Fixing: $foo
+            sed -e "s%/usr/include/%${STAGING_INCDIR}/%g" -i $foo
+        done
 
         rm -f config
         echo "ARCH = ${TARGET_ARCH}" > config
         echo "OS = ${TARGET_OS}" >> config
 }
+
 do_compile() {
         if test "${MACHINE}" != "native"; then
             sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
@@ -98,11 +104,12 @@ do_compile() {
         cd Cross
         oe_runmake perl LD="${TARGET_SYS}-gcc"
 }
+
 do_install() {
-        oe_runmake install
+	oe_runmake 'DESTDIR=${D}' install
 
         # Add perl pointing at current version
-        ln -sf perl${PV} ${D}/usr/bin/perl
+        ln -sf perl${PV} ${D}${bindir}/perl
 
         # Fix up versioned directories
         mv ${D}/${libdir}/perl/${PVM} ${D}/${libdir}/perl/${PV}
@@ -117,44 +124,33 @@ do_install() {
         mv -f ${D}/${libdir}/perl/${PV}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
         ln -sf libperl.so.${PV} ${D}/${libdir}/libperl.so.5
 
+        # target config, used by cpan.bbclass to extract version information
+        install config.sh ${D}${libdir}/perl/
+
+        install -d ${D}${datadir}/perl/${PV}/ExtUtils
+	install lib/ExtUtils/typemap ${D}${datadir}/perl/${PV}/ExtUtils/
+}
+
+PACKAGE_PREPROCESS_FUNCS += "perl_package_preprocess"
+
+perl_package_preprocess () {
         # Fix up installed configuration
-        if test "${MACHINE}" != "native"; then
-            sed -i -e "s,${D},,g" \
+        sed -i -e "s,${D},,g" \
                    -e "s,-isystem${STAGING_INCDIR} ,,g" \
                    -e "s,${STAGING_LIBDIR},${libdir},g" \
                    -e "s,${STAGING_BINDIR},${bindir},g" \
                    -e "s,${STAGING_INCDIR},${includedir},g" \
                    -e "s,${CROSS_DIR}${base_bindir}/,,g" \
-                ${D}${bindir}/h2xs \
-                ${D}${bindir}/h2ph \
-                ${D}${datadir}/perl/${PV}/pod/*.pod \
-                ${D}${datadir}/perl/${PV}/cacheout.pl \
-                ${D}${datadir}/perl/${PV}/FileCache.pm \
-                ${D}${libdir}/perl/${PV}/Config.pm \
-                ${D}${libdir}/perl/${PV}/Config_heavy.pl \
-                ${D}${libdir}/perl/${PV}/CORE/perl.h \
-                ${D}${libdir}/perl/${PV}/CORE/pp.h
-        fi
-}
-do_stage() {
-        install -d ${STAGING_LIBDIR_NATIVE}/perl/${PV} \
-                   ${STAGING_LIBDIR}/perl/${PV}/CORE
-        # target config, used by cpan.bbclass to extract version information
-        install config.sh ${STAGING_LIBDIR}/perl/
-        # target configuration, used by native perl when cross-compiling
-        install lib/Config_heavy.pl ${STAGING_LIBDIR_NATIVE}/perl/${PV}/Config_heavy-target.pl
-        # perl shared library headers
-        for i in av.h embed.h gv.h keywords.h op.h perlio.h pp.h regexp.h \
-                 uconfig.h XSUB.h cc_runtime.h embedvar.h handy.h opnames.h \
-                 perliol.h pp_proto.h regnodes.h unixish.h config.h EXTERN.h \
-                 hv.h malloc_ctl.h pad.h perlsdio.h proto.h scope.h utf8.h \
-                 cop.h fakesdio.h INTERN.h mg.h patchlevel.h perlsfio.h \
-                 reentr.h sv.h utfebcdic.h cv.h fakethr.h intrpvar.h \
-                 nostdio.h perlapi.h perlvars.h reentr.inc thrdvar.h util.h \
-                 dosish.h form.h iperlsys.h opcode.h perl.h perly.h regcomp.h \
-                 thread.h warnings.h; do
-            install $i ${STAGING_LIBDIR}/perl/${PV}/CORE
-        done
+                ${PKGD}${bindir}/h2xs \
+                ${PKGD}${bindir}/h2ph \
+                ${PKGD}${datadir}/perl/${PV}/pod/*.pod \
+                ${PKGD}${datadir}/perl/${PV}/cacheout.pl \
+                ${PKGD}${datadir}/perl/${PV}/FileCache.pm \
+                ${PKGD}${libdir}/perl/config.sh \
+                ${PKGD}${libdir}/perl/${PV}/Config.pm \
+                ${PKGD}${libdir}/perl/${PV}/Config_heavy.pl \
+                ${PKGD}${libdir}/perl/${PV}/CORE/perl.h \
+                ${PKGD}${libdir}/perl/${PV}/CORE/pp.h
 }
 
 PACKAGES = "perl-dbg perl perl-misc perl-lib perl-dev perl-pod perl-doc"

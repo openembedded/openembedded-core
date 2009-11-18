@@ -1,5 +1,5 @@
 Fix for compiling with ssp enabled gcc:
-See http://bugs.openembedded.org/show_bug.cgi?id=1980
+See http://bugs.openembedded.net/show_bug.cgi?id=1980
 
 diff -Naur perl-5.8.7.orig/cflags.SH perl-5.8.7/cflags.SH
 --- perl-5.8.7.orig/cflags.SH	2002-09-30 10:59:07.000000000 +0000

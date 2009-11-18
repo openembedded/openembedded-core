@@ -62,7 +62,7 @@ Index: perl-5.8.8/Makefile.SH
 +#	@echo " ";
 +#	@echo "	Everything is up to date. Type '$(MAKE) test' to run test suite."
 +
-+all: $(FIRSTMAKEFILE) miniperl$(EXE_EXT)
++all: $(FIRSTMAKEFILE) miniperl$(EXE_EXT) $(unidatafiles)
 +
 +more: extra.pods $(private) $(public)
 +
@@ -208,7 +208,7 @@ Index: perl-5.8.8/Makefile.SH
 -
 -install.man:	all installman
 -	$(LDLIBPTH) ./perl installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
-+	./hostperl -Ifake_config_library -Ilib -MConfig installperl $(INSTALLFLAGS) $(STRIPFLAGS)
++	./hostperl -Ifake_config_library -Ilib -MConfig installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
  
  # XXX Experimental. Hardwired values, but useful for testing.
  # Eventually Configure could ask for some of these values.

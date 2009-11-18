@@ -14,54 +14,26 @@ export PERL_LIB = "${STAGING_DATADIR}/perl/${@get_perl_version(d)}"
 export PERL_ARCHLIB = "${STAGING_LIBDIR}/perl/${@get_perl_version(d)}"
 
 cpan_do_configure () {
+	export PERL5LIB="${PERL_ARCHLIB}"
 	yes '' | perl Makefile.PL ${EXTRA_CPANFLAGS}
 	if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
 		. ${STAGING_LIBDIR}/perl/config.sh
-		if [ "${IS_NEW_PERL}" = "yes" ]; then
-			sed -i -e "s:\(SITELIBEXP = \).*:\1${sitelibexp}:" \
-				-e "s:\(SITEARCHEXP = \).*:\1${sitearchexp}:" \
-				-e "s:\(INSTALLVENDORLIB = \).*:\1${D}${datadir}/perl5:" \
-				-e "s:\(INSTALLVENDORARCH = \).*:\1${D}${libdir}/perl5:" \
-				-e "s:\(LDDLFLAGS.*\)${STAGING_LIBDIR_NATIVE}:\1${STAGING_LIBDIR}:" \
-				Makefile
-		else
-			sed -i -e "s:\(SITELIBEXP = \).*:\1${sitelibexp}:" \
-				-e "s:\(SITEARCHEXP = \).*:\1${sitearchexp}:" \
-				-e "s:\(INSTALLVENDORLIB = \).*:\1${D}${libdir}/perl5/site_perl/${version}:" \
-				-e "s:\(INSTALLVENDORARCH = \).*:\1${D}${libdir}/perl5/site_perl/${version}:" \
-				-e "s:\(LDDLFLAGS.*\)${STAGING_LIBDIR_NATIVE}:\1${STAGING_LIBDIR}:" \
-				Makefile
-		fi
+		# Use find since there can be a Makefile generated for each Makefile.PL
+		for f in `find -name Makefile.PL`; do
+			f2=`echo $f | sed -e 's/.PL//'`
+			sed -i -e "s:\(PERL_ARCHLIB = \).*:\1${PERL_ARCHLIB}:" \
+			$f2
+		done
 	fi
 }
 
 cpan_do_compile () {
-	if [ "${IS_NEW_PERL}" = "yes" ]; then
-		oe_runmake PASTHRU_INC="${CFLAGS}" CCFLAGS="${CFLAGS}" LD="${CCLD}"
-	else
-		# You must use gcc to link on sh
-		OPTIONS=""
-		if test ${TARGET_ARCH} = "sh3" -o ${TARGET_ARCH} = "sh4"; then
-			OPTIONS="LD=${TARGET_ARCH}-${TARGET_OS}-gcc"
-		fi
-		if test ${TARGET_ARCH} = "powerpc" ; then
-			OPTIONS="LD=${TARGET_ARCH}-${TARGET_OS}-gcc"
-		fi
-		oe_runmake PASTHRU_INC="${CFLAGS}" CCFLAGS="${CFLAGS}" $OPTIONS
-	fi
+	oe_runmake PASTHRU_INC="${CFLAGS}" CCFLAGS="${CFLAGS}" LD="${CCLD}"
 }
 
+NATIVE_INSTALL_WORKS = "1"
 cpan_do_install () {
-	if [ ${@is_target(d)} = "yes" ]; then
-		oe_runmake install_vendor
-	fi
+	oe_runmake DESTDIR="${D}" install_vendor
 }
-
-cpan_do_stage () {
-	if [ ${@is_target(d)} = "no" ]; then
-		oe_runmake install_vendor
-	fi
-}
-								
 
 EXPORT_FUNCTIONS do_configure do_compile do_install do_stage

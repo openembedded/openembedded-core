@@ -24,20 +24,10 @@ def get_perl_version(d):
 			return m.group(1)
 	return None
 
-# Only 5.8.7 and 5.8.4 existed at the time we moved to the new layout
-def is_new_perl(d):
-    	ver = get_perl_version(d)
-	if ver == "5.8.4" or ver == "5.8.7":
-		return "no"
-	return "yes"
-
 # Determine where the library directories are
 def perl_get_libdirs(d):
 	libdir = bb.data.getVar('libdir', d, 1)
-	if is_new_perl(d) == "yes":
-		libdirs = libdir + '/perl5'
-	else:
-		libdirs = libdir + '/*/*/perl5'
+	libdirs = libdir + '/*/*/perl5'
 	return libdirs
 
 def is_target(d):
@@ -45,7 +35,6 @@ def is_target(d):
         return "yes"
     return "no"
 
-IS_NEW_PERL = "${@is_new_perl(d)}"
 PERLLIBDIRS = "${@perl_get_libdirs(d)}"
 
 FILES_${PN}-dbg += "${PERLLIBDIRS}/auto/*/.debug \

@@ -20,49 +20,75 @@ S = "${WORKDIR}/perl-${PV}"
 inherit native
 
 do_configure () {
-    ./Configure \
-        -Dcc="${CC}" \
-        -Dcflags="${CFLAGS}" \
-        -Dldflags="${LDFLAGS}" \
-        -Dcf_by="Open Embedded" \
-        -Dprefix=${prefix} \
-        -Dvendorprefix=${prefix} \
-        -Dvendorprefix=${prefix} \
-        -Dsiteprefix=${prefix} \
-        \
-        -Dprivlib=${STAGING_LIBDIR}/perl/${PV} \
-        -Darchlib=${STAGING_LIBDIR}/perl/${PV} \
-        -Dvendorlib=${STAGING_LIBDIR}/perl/${PV} \
-        -Dvendorarch=${STAGING_LIBDIR}/perl/${PV} \
-        -Dsitelib=${STAGING_LIBDIR}/perl/${PV} \
-        -Dsitearch=${STAGING_LIBDIR}/perl/${PV} \
-        \
-        -Duseshrplib \
-        -Dusethreads \
-        -Duseithreads \
-        -Duselargefiles \
-        -Ud_dosuid \
-        -Ui_db \
-        -Ui_ndbm \
-        -Ui_gdbm \
-        -Di_shadow \
-        -Di_syslog \
-        -Duseperlio \
-        -Dman3ext=3pm \
-        -Uafs \
-        -Ud_csh \
-        -Uusesfio \
-        -Uusenm -des
-    sed 's!${STAGING_DIR}/bin!${STAGING_BINDIR}!;
-         s!${STAGING_DIR}/lib!${STAGING_LIBDIR}!' < config.sh > config.sh.new
-    mv config.sh.new config.sh
+	./Configure \
+		-Dcc="${CC}" \
+		-Dcflags="${CFLAGS}" \
+		-Dldflags="${LDFLAGS}" \
+		-Dcf_by="Open Embedded" \
+		-Dprefix=${prefix} \
+		-Dvendorprefix=${prefix} \
+		-Dvendorprefix=${prefix} \
+		-Dsiteprefix=${prefix} \
+		\
+		-Dprivlib=${STAGING_LIBDIR}/perl/${PV} \
+		-Darchlib=${STAGING_LIBDIR}/perl/${PV} \
+		-Dvendorlib=${STAGING_LIBDIR}/perl/${PV} \
+		-Dvendorarch=${STAGING_LIBDIR}/perl/${PV} \
+		-Dsitelib=${STAGING_LIBDIR}/perl/${PV} \
+		-Dsitearch=${STAGING_LIBDIR}/perl/${PV} \
+		\
+		-Duseshrplib \
+		-Dusethreads \
+		-Duseithreads \
+		-Duselargefiles \
+		-Dnoextensions=ODBM_File \
+		-Ud_dosuid \
+		-Ui_db \
+		-Ui_ndbm \
+		-Ui_gdbm \
+		-Di_shadow \
+		-Di_syslog \
+		-Duseperlio \
+		-Dman3ext=3pm \
+		-Uafs \
+		-Ud_csh \
+		-Uusesfio \
+		-Uusenm -des
 }
-do_stage_append() {
-        # We need a hostperl link for building perl
-        ln -sf ${STAGING_BINDIR_NATIVE}/perl${PV} ${STAGING_BINDIR_NATIVE}/hostperl
-        # Store native config in non-versioned directory
-        install -d ${STAGING_LIBDIR}/perl
-        install config.sh ${STAGING_LIBDIR}/perl
+
+NATIVE_INSTALL_WORKS = "1"
+do_install () {
+	oe_runmake 'DESTDIR=${D}' install
+
+	# We need a hostperl link for building perl
+	ln -sf perl${PV} ${D}${bindir}/hostperl
+
+	install -d ${D}${libdir}/perl/${PV}/CORE \
+	           ${D}${datadir}/perl/${PV}/ExtUtils
+
+	# Save native config 
+	install config.sh ${D}${libdir}/perl
+	install lib/Config.pm ${D}${libdir}/perl/${PV}/
+	install lib/ExtUtils/typemap ${D}${datadir}/perl/${PV}/ExtUtils/
+
+	# perl shared library headers
+	for i in av.h embed.h gv.h keywords.h op.h perlio.h pp.h regexp.h \
+	         uconfig.h XSUB.h cc_runtime.h embedvar.h handy.h opnames.h \
+	         perliol.h pp_proto.h regnodes.h unixish.h config.h EXTERN.h \
+	         hv.h malloc_ctl.h pad.h perlsdio.h proto.h scope.h utf8.h \
+	         cop.h fakesdio.h INTERN.h mg.h patchlevel.h perlsfio.h \
+	         reentr.h sv.h utfebcdic.h cv.h fakethr.h intrpvar.h \
+	         nostdio.h perlapi.h perlvars.h reentr.inc thrdvar.h util.h \
+	         dosish.h form.h iperlsys.h opcode.h perl.h perly.h regcomp.h \
+	         thread.h warnings.h; do
+		install $i ${D}${libdir}/perl/${PV}/CORE
+	done
+}
+do_install_append_nylon() {
+	# get rid of definitions not supported by the gcc version we use for nylon...
+	for i in ${D}${libdir}/perl/${PV}/Config_heavy.pl ${D}${libdir}/perl/config.sh; do
+		perl -pi -e 's/-Wdeclaration-after-statement //g' ${i}
+	done
 }
 
 PARALLEL_MAKE = ""

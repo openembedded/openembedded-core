@@ -1,4 +1,4 @@
-See http://bugs.openembedded.org/show_bug.cgi?id=2168
+See http://bugs.openembedded.net/show_bug.cgi?id=2168
 Fix for gcc 4.2
 
 --- perl-5.8.8/makedepend.SH.ark	2006-11-01 16:32:05.000000000 +0100

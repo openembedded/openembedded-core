@@ -23,7 +23,7 @@ cpan_build_do_configure () {
 	if [ ${@is_target(d)} == "yes" ]; then
 		# build for target
 		. ${STAGING_LIBDIR}/perl/config.sh
-		if [ "${IS_NEW_PERL}" = "yes" ]; then
+
 			perl Build.PL --installdirs vendor \
 				--destdir ${D} \
 				--install_path lib="${datadir}/perl5" \
@@ -32,19 +32,9 @@ cpan_build_do_configure () {
 				--install_path bin=${bindir} \
 				--install_path bindoc=${mandir}/man1 \
 				--install_path libdoc=${mandir}/man3
-		else
-			perl Build.PL --installdirs vendor \
-				--destdir ${D} \
-				--install_path lib="${libdir}/perl5/site_perl/${version}" \
-				--install_path arch="${libdir}/perl5/site_perl/${version}/${TARGET_SYS}" \
-				--install_path script=${bindir} \
-				--install_path bin=${bindir} \
-				--install_path bindoc=${mandir}/man1 \
-				--install_path libdoc=${mandir}/man3
-		fi
 	else
 		# build for host
-		perl Build.PL --installdirs site
+		perl Build.PL --installdirs site --destdir ${D}
 	fi
 }
 
@@ -52,16 +42,9 @@ cpan_build_do_compile () {
         perl Build
 }
 
+NATIVE_INSTALL_WORKS = "1"
 cpan_build_do_install () {
-	if [ ${@is_target(d)} == "yes" ]; then
-		perl Build install
-	fi
-}
-
-do_stage () {
-	if [ ${@is_target(d)} == "no" ]; then
-		perl Build install
-	fi
+	perl Build install
 }
 
 EXPORT_FUNCTIONS do_configure do_compile do_install
