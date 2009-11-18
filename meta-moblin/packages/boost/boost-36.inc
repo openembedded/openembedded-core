@@ -139,14 +139,6 @@ do_compile() {
 		--includedir=${includedir}
 }
 
-do_stage() {
-	set -ex
-	bjam ${BJAM_OPTS} \
-		--libdir=${STAGING_LIBDIR} \
-		--includedir=${STAGING_INCDIR} \
-		install
-}
-
 do_install() {
 	set -ex
 	bjam ${BJAM_OPTS} \
