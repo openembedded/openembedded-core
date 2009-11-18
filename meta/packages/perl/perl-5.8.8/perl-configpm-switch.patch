@@ -18,7 +18,7 @@ values would be valid for the host only.
  
      return $self->fetch_string($key);
  }
-@@ -530,7 +530,12 @@
+@@ -530,7 +530,21 @@
  sub DESTROY { }
  
  sub AUTOLOAD {
@@ -28,7 +28,16 @@ values would be valid for the host only.
 +    {
 +        $cfgfile = 'Config_heavy-target.pl';
 +    }
-+    require $cfgfile;
++    if (defined $ENV{PERL_ARCHLIB})
++    {
++        push @INC, $ENV{PERL_ARCHLIB};
++        require $cfgfile;
++        pop @INC;
++    }
++    else
++    {
++        require $cfgfile;
++    }
      goto \&launcher unless $Config::AUTOLOAD =~ /launcher$/;
      die "&Config::AUTOLOAD failed on $Config::AUTOLOAD";
  }

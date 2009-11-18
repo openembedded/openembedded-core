@@ -129,6 +129,8 @@ do_install() {
 
         install -d ${D}${datadir}/perl/${PV}/ExtUtils
 	install lib/ExtUtils/typemap ${D}${datadir}/perl/${PV}/ExtUtils/
+	
+	ln -s Config_heavy.pl ${D}${libdir}/perl/${PV}/Config_heavy-target.pl
 }
 
 PACKAGE_PREPROCESS_FUNCS += "perl_package_preprocess"
