@@ -25,12 +25,6 @@ do_compile() {
 	${MAKE}
 }
 
-do_stage () {
-    oe_libinstall -C ${XERCESCROOT}/lib libxerces-c ${STAGING_LIBDIR}
-    oe_libinstall -C ${XERCESCROOT}/lib libxerces-depdom ${STAGING_LIBDIR}
-    cp -pPR ${XERCESCROOT}/include/xercesc ${STAGING_INCDIR}
-}
-
 do_install () {
 	${MAKE} install
 }
