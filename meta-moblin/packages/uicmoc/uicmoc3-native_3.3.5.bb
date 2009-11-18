@@ -36,16 +36,21 @@ do_compile() {
     oe_runmake sub-tools || die "Building tools failed"
 }
 
-do_stage() {
-	install -d ${OE_QMAKE_INCDIR_QT}
-	install -d ${OE_QMAKE_LIBDIR_QT}
+do_install() {
+	install -d ${D}${bindir}/
+	install -d ${D}/qte3/lib/
+	install -d ${D}/qte3/include
 
-	install -m 0755 bin/moc ${OE_QMAKE_MOC}
-	install -m 0755 bin/uic ${OE_QMAKE_UIC}
-	install -m 0655 lib/*.a ${OE_QMAKE_LIBDIR_QT}
+	install -m 0755 bin/moc ${D}${bindir}/
+	install -m 0755 bin/uic ${D}${bindir}/
+	install -m 0655 lib/*.a ${D}/qte3/lib/
 
 	for f in include/*.h
 	do
-		install -m 0644 $f ${OE_QMAKE_INCDIR_QT}/
+		install -m 0644 $f ${D}/qte3/include/
 	done
+}
+
+sysroot_stage_all_append() {
+	sysroot_stage_dir ${D}/qte3 ${SYSROOT_DESTDIR}/${QTEDIR}/
 }
