@@ -35,12 +35,13 @@ do_compile() {
 	:
 }
 
-do_stage() {
-	install -m 0755 bin/qmake ${STAGING_BINDIR}
-	install -d ${QMAKE_MKSPEC_PATH}
-	cp -fPR mkspecs/* ${QMAKE_MKSPEC_PATH}
+do_install() {
+	install -m 0755 bin/qmake ${D}${bindir}
+	install -d ${D}/qmake/
+	${QMAKE_MKSPEC_PATH}
+	cp -fPR mkspecs/* ${D}/qmake/
 }
 
-do_install() {
-        :
+sysroot_stage_all_append() {
+	sysroot_stage_dir ${D}/qmake ${SYSROOT_DESTDIR}/${QMAKE_MKSPEC_PATH}
 }
