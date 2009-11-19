@@ -202,12 +202,12 @@ def runtime_mapping_rename (varname, d):
 	#bb.note("%s before: %s" % (varname, bb.data.getVar(varname, d, True)))	
 
 	new_depends = []
-	for depend in bb.utils.explode_deps(bb.data.getVar(varname, d, True) or ""):
+	deps = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
+	for depend in deps:
 		# Have to be careful with any version component of the depend
-		split_depend = depend.split(' (')
-		new_depend = get_package_mapping(split_depend[0].strip(), d)
-		if len(split_depend) > 1:
-			new_depends.append("%s (%s" % (new_depend, split_depend[1]))
+		new_depend = get_package_mapping(depend, d)
+		if deps[depend]:
+			new_depends.append("%s (%s)" % (new_depend, deps[depend]))
 		else:
 			new_depends.append(new_depend)
 
