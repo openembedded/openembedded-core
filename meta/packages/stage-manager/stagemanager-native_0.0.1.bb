@@ -17,6 +17,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 PSTAGING_DISABLED = "1"
 
+NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${STAGING_BINDIR}
 	install -m 0755 ${WORKDIR}/stage-manager ${STAGING_BINDIR}
