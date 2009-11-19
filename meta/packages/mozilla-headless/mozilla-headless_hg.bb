@@ -58,13 +58,18 @@ EXTRA_OECONF =+ "--enable-application=xulrunner --enable-default-toolkit=cairo-h
 
 export LIBXUL_DIST="${S}/dist"
 
-do_stage_append () {
-	autotools_stage_dir ${STAGE_TEMP}/${libdir}/xulrunner-1.9.2a1pre ${STAGING_DIR_HOST}${libdir}/xulrunner-1.9.2a1pre/
-	autotools_stage_dir ${STAGE_TEMP}/${libdir}/xulrunner-devel-1.9.2a1pre ${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/
-	ln -fs ${STAGING_DIR_HOST}${libdir}/xulrunner-1.9.2a1pre/ ${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/bin
-	ln -fs ${STAGING_DIR_HOST}${datadir}/xulrunner-1.9.2a1pre/unstable/ ${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/idl
-	ln -fs ${STAGING_DIR_HOST}${includedir}/xulrunner-1.9.2a1pre/unstable/ ${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/include
-	ln -fs ${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/ ${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/lib
-	install -m 755 ${S}/dist/host/bin/host_xpidl ${STAGING_BINDIR_NATIVE}/xpidl
+SYSROOT_PREPROCESS_FUNCS += "mozilla_sysroot_preprocess"
+
+mozilla_sysroot_preprocess () {
+	autotools_stage_dir ${D}/${libdir}/xulrunner-1.9.2a1pre ${SYSROOT_DESTDIR}${STAGING_DIR_HOST}${libdir}/xulrunner-1.9.2a1pre/
+	autotools_stage_dir ${D}/${libdir}/xulrunner-devel-1.9.2a1pre ${SYSROOT_DESTDIR}${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/
+
+	ln -fs ${STAGING_DIR_HOST}${libdir}/xulrunner-1.9.2a1pre/ ${SYSROOT_DESTDIR}${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/bin
+	ln -fs ${STAGING_DIR_HOST}${datadir}/xulrunner-1.9.2a1pre/unstable/ ${SYSROOT_DESTDIR}${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/idl
+	ln -fs ${STAGING_DIR_HOST}${includedir}/xulrunner-1.9.2a1pre/unstable/ ${SYSROOT_DESTDIR}${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/include
+	ln -fs ${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/ ${SYSROOT_DESTDIR}${STAGING_DIR_HOST}${libdir}/xulrunner-devel-1.9.2a1pre/lib
+
+	install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}
+	install -m 755 ${S}/dist/host/bin/host_xpidl ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/xpidl
 }
 
