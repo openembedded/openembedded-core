@@ -15,13 +15,11 @@ PACKAGE_DEPENDS = " "
 PATCHDEPENDENCY = ""
 INHIBIT_DEFAULT_DEPS = "1"
 
+PSTAGING_DISABLED = "1"
+
 do_install() {
 	install -d ${STAGING_BINDIR}
 	install -m 0755 ${WORKDIR}/stage-manager ${STAGING_BINDIR}
 	install -m 0755 ${WORKDIR}/stage-manager-ipkg ${STAGING_BINDIR}
 	install -m 0755 ${WORKDIR}/stage-manager-ipkg-build ${STAGING_BINDIR}
-}
-
-do_stage() {
-:
 }
