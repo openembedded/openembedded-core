@@ -98,4 +98,7 @@ do_install () {
 	install -d ${D}${localstatedir}/cache/apt/archives/partial
 	install -d ${D}${docdir}/apt/examples
 	install -m 0644 doc/examples/* ${D}${docdir}/apt/examples/
+
+	install -d ${D}${includedir}/apt-pkg/
+	install -m 0644 include/apt-pkg/*.h ${D}${includedir}/apt-pkg/
 }
