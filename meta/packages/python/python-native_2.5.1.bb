@@ -27,6 +27,8 @@ EXTRA_OECONF = "--with-threads --with-pymalloc --with-cyclic-gc \
 EXTRA_OEMAKE = 'BUILD_SYS="" HOST_SYS="" STAGING_LIBDIR=${STAGING_LIBDIR} \
 		STAGING_INCDIR=${STAGING_INCDIR}'
 
-do_stage_append() {
-	install -m 0755 Parser/pgen ${STAGING_BINDIR_NATIVE}/
+do_install() {
+	oe_runmake 'DESTDIR=${D}' install
+	install -d ${D}${bindir}/
+	install -m 0755 Parser/pgen ${D}${bindir}/
 }
