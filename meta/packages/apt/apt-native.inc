@@ -7,12 +7,12 @@ USE_NLS = "yes"
 
 SRC_URI += "file://db_linking_hack.patch;patch=1"
 
-python do_stage () {
-	bb.build.exec_func('do_stage_base', d)
-	bb.build.exec_func('do_stage_config', d)
+python do_install () {
+	bb.build.exec_func('do_install_base', d)
+	bb.build.exec_func('do_install_config', d)
 }
 
-python do_stage_config () {
+python do_install_config () {
 	indir = os.path.dirname(bb.data.getVar('FILE',d,1))
 	infile = file(os.path.join(indir, 'files', 'apt.conf'), 'r')
 	data = infile.read()
@@ -20,7 +20,7 @@ python do_stage_config () {
 
 	data = bb.data.expand(data, d)
 
-	outdir = os.path.join(bb.data.getVar('sysconfdir', d, 1), 'apt')
+	outdir = os.path.join(bb.data.getVar('D', d, 1), bb.data.getVar('sysconfdir', d, 1), 'apt')
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
 	outpath = os.path.join(outdir, 'apt.conf.sample')
@@ -30,34 +30,34 @@ python do_stage_config () {
 	outfile.close()
 }
 
-do_stage_base () {
-	install -d ${bindir}
-	install -m 0755 bin/apt-cdrom ${bindir}/
-	install -m 0755 bin/apt-get ${bindir}/
-	install -m 0755 bin/apt-config ${bindir}/
-	install -m 0755 bin/apt-cache ${bindir}/
-	install -m 0755 bin/apt-sortpkgs ${bindir}/
-	install -m 0755 bin/apt-extracttemplates ${bindir}/
+do_install_base () {
+	install -d ${D}${bindir}
+	install -m 0755 bin/apt-cdrom ${D}${bindir}/
+	install -m 0755 bin/apt-get ${D}${bindir}/
+	install -m 0755 bin/apt-config ${D}${bindir}/
+	install -m 0755 bin/apt-cache ${D}${bindir}/
+	install -m 0755 bin/apt-sortpkgs ${D}${bindir}/
+	install -m 0755 bin/apt-extracttemplates ${D}${bindir}/
 
 	eval `cat environment.mak | grep ^GLIBC_VER | sed -e's, = ,=,'`
-	oe_libinstall -so -C bin libapt-pkg$GLIBC_VER-6 ${libdir}/
-	ln -sf libapt-pkg$GLIBC_VER-6.so ${libdir}/libapt-pkg.so
-	oe_libinstall -so -C bin libapt-inst$GLIBC_VER-6 ${libdir}/
-	ln -sf libapt-inst$GLIBC_VER-6.so ${libdir}/libapt-inst.so
+	oe_libinstall -so -C bin libapt-pkg$GLIBC_VER-6 ${D}${libdir}/
+	ln -sf libapt-pkg$GLIBC_VER-6.so ${D}${libdir}/libapt-pkg.so
+	oe_libinstall -so -C bin libapt-inst$GLIBC_VER-6 ${D}${libdir}/
+	ln -sf libapt-inst$GLIBC_VER-6.so ${D}${libdir}/libapt-inst.so
 
-	install -d ${libdir}/apt/methods
-	install -m 0755 bin/methods/* ${libdir}/apt/methods/
+	install -d ${D}${libdir}/apt/methods
+	install -m 0755 bin/methods/* ${D}${libdir}/apt/methods/
 
-	install -d ${libdir}/dpkg/methods/apt
-	install -m 0644 dselect/desc.apt ${libdir}/dpkg/methods/apt/ 
-	install -m 0644 dselect/names ${libdir}/dpkg/methods/apt/ 
-	install -m 0755 dselect/install ${libdir}/dpkg/methods/apt/ 
-	install -m 0755 dselect/setup ${libdir}/dpkg/methods/apt/ 
-	install -m 0755 dselect/update ${libdir}/dpkg/methods/apt/ 
+	install -d ${D}${libdir}/dpkg/methods/apt
+	install -m 0644 dselect/desc.apt ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0644 dselect/names ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0755 dselect/install ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0755 dselect/setup ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0755 dselect/update ${D}${libdir}/dpkg/methods/apt/ 
 
-	install -d ${sysconfdir}/apt
-	install -d ${localstatedir}/lib/apt/lists/partial
-	install -d ${localstatedir}/cache/apt/archives/partial
+	install -d ${D}${sysconfdir}/apt
+	install -d ${D}${localstatedir}/lib/apt/lists/partial
+	install -d ${D}${localstatedir}/cache/apt/archives/partial
 
-	install -d ${localstatedir}/log/apt/
+	install -d ${D}${localstatedir}/log/apt/
 }
