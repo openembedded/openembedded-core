@@ -49,13 +49,3 @@ FILES_${PN}-dev += "\
   ${bindir}/pygtk-* \
   ${datadir}/pygtk/2.0"
 
-do_stage() {
-	autotools_stage_includes
-	sed -i s:/usr/share:${STAGING_DATADIR}: codegen/pygtk-codegen-2.0
-	install -m 0755 codegen/pygtk-codegen-2.0 ${STAGING_BINDIR_NATIVE}/
-	install -d ${STAGING_DATADIR}/pygtk/2.0/codegen
-	install -d ${STAGING_DATADIR}/pygtk/2.0/defs/
-	cp -pPr codegen/*.py* ${STAGING_DATADIR}/pygtk/2.0/codegen/
-	cp -pPr *.defs ${STAGING_DATADIR}/pygtk/2.0/defs/
-	cp -pPr gtk/*.defs ${STAGING_DATADIR}/pygtk/2.0/defs/
-}

@@ -5,8 +5,4 @@ RDEPENDS = ""
 
 #BUILD_CFLAGS += "-I${STAGING_LIBDIR}/glib-2.0"
 
-do_stage() {
-	BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
-	STAGING_LIBDIR=${STAGING_LIBDIR} STAGING_INCDIR=${STAGING_INCDIR} \
-        ${STAGING_BINDIR}/python setup.py install --prefix=${STAGING_BINDIR}/.. --install-data=${STAGING_DATADIR}
-}
+NATIVE_INSTALL_WORKS = "1"

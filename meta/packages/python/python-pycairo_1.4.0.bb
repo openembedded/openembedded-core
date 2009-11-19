@@ -10,10 +10,3 @@ S = "${WORKDIR}/pycairo-${PV}"
 
 inherit distutils pkgconfig
 
-do_stage() {
-	install -d ${STAGING_INCDIR}
-	install -m 0644 cairo/pycairo.h ${STAGING_INCDIR}
-
-    # nasty pkgconfig fix necessary here
-    sed -i -e s,${STAGING_DIR_NATIVE},, pycairo.pc
-}

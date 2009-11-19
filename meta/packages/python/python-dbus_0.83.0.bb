@@ -16,10 +16,6 @@ export HOST_SYS
 export STAGING_LIBDIR
 export STAGING_INCDIR
 
-do_stage() {
-	autotools_stage_all
-}
-
 RDEPENDS = "python-io python-logging python-stringold python-threading python-xml"
 
 FILES_${PN}-dev += "${libdir}/pkgconfig 

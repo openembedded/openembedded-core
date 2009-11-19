@@ -22,14 +22,6 @@ export HOST_SYS
 export STAGING_INCDIR
 export STAGING_LIBDIR
 
-do_stage() {
-	autotools_stage_all
-	install -d ${STAGING_LIBDIR}/../share/pygobject/
-	cp -dpfR docs/* ${STAGING_LIBDIR}/../share/pygobject/
-	install -d ${STAGING_LIBDIR}/../share/gtk-doc/html/pygobject/
-	cp docs/style.css ${STAGING_LIBDIR}/../share/gtk-doc/html/pygobject/
-}
-
 PACKAGES += "${PN}-lib"
 
 RDEPENDS_${PN} += "python-textutils"
