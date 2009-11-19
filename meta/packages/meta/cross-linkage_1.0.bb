@@ -17,10 +17,6 @@ do_compile () {
 }
 
 do_install() {
-	:
-}
-
-do_stage () {
 	install -d ${CROSS_DIR}/${TARGET_SYS}/
 	if [ -e ${CROSS_DIR}/${TARGET_SYS}/include ]; then
 		cp -pPRr ${CROSS_DIR}/${TARGET_SYS}/include/* ${STAGING_INCDIR}

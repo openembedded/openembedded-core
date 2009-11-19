@@ -16,11 +16,7 @@ do_compile () {
 	:
 }
 
-do_install() {
-	:
-}
-
-do_stage () {
+do_install () {
 	if [ -e ${STAGING_DIR_HOST}${base_libdir} ]; then
 		cp -pPRr ${STAGING_DIR_HOST}${base_libdir}/* ${STAGING_LIBDIR}
 		mv ${STAGING_DIR_HOST}${base_libdir}/ ${STAGING_DIR_HOST}${libdir}-oldbackup
