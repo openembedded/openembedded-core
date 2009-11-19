@@ -1,6 +1,6 @@
 require genext2fs.inc
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/g/genext2fs/genext2fs_${PV}.orig.tar.gz \
 	   file://misc.patch;patch=1"
@@ -12,7 +12,10 @@ do_compile () {
 
 NATIVE_INSTALL_WORKS = "1"
 do_install () {
-	oe_runmake 'DESTDIR=${D}' install
+	install -d ${D}${bindir}/
+	install -m 755 genext2fs ${D}${bindir}/
+	install -d ${D}${mandir}/man8/
+	install -m 644 genext2fs.8 ${D}${mandir}/man8/
 }
 
 BBCLASSEXTEND = "native"
