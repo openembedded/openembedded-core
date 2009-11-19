@@ -14,9 +14,7 @@ PACKAGES_DYNAMIC = "glibc-gconv-*"
 INHIBIT_DEFAULT_DEPS = "1"
 PR = "r1"
 
-#inherit nativesdk
-
-do_stage() {
+do_install() {
 	if [ ! -e  ${prefix}/environment-setup ]; then
 		echo "The Poky toolchain could not be found in ${prefix}!"
 		exit 1
