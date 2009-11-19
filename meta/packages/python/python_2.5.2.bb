@@ -60,11 +60,6 @@ do_compile() {
 		OPT="${CFLAGS}"
 }
 
-do_stage() {
-	install -m 0644 Include/*.h ${STAGING_INCDIR}/python${PYTHON_MAJMIN}/
-	oe_libinstall -a -so libpython${PYTHON_MAJMIN} ${STAGING_LIBDIR}
-}
-
 do_install() {
 	install -m 0644 Makefile.orig Makefile
 
