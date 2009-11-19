@@ -48,6 +48,9 @@ python () {
     if bb.data.inherits_class('image', d):
         pstage_allowed = False
 
+    if bb.data.getVar('PSTAGING_DISABLED', d, True) == "1":
+        pstage_allowed = False
+
     # Add task dependencies if we're active, otherwise mark packaged staging
     # as inactive.
     if pstage_allowed:

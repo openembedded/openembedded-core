@@ -16,6 +16,8 @@ do_compile () {
 	:
 }
 
+PSTAGING_DISABLED = "1"
+
 do_install () {
 	if [ -e ${STAGING_DIR_HOST}${base_libdir} ]; then
 		cp -pPRr ${STAGING_DIR_HOST}${base_libdir}/* ${STAGING_LIBDIR}

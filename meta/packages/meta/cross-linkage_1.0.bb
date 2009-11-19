@@ -16,6 +16,8 @@ do_compile () {
 	:
 }
 
+PSTAGING_DISABLED = "1"
+
 do_install() {
 	install -d ${CROSS_DIR}/${TARGET_SYS}/
 	if [ -e ${CROSS_DIR}/${TARGET_SYS}/include ]; then

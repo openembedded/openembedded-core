@@ -14,6 +14,8 @@ PACKAGES_DYNAMIC = "glibc-gconv-*"
 INHIBIT_DEFAULT_DEPS = "1"
 PR = "r1"
 
+PSTAGING_DISABLED = "1"
+
 do_install() {
 	if [ ! -e  ${prefix}/environment-setup ]; then
 		echo "The Poky toolchain could not be found in ${prefix}!"
