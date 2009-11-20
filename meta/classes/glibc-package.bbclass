@@ -14,20 +14,31 @@ PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base
 
 libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* ${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* ${base_libdir}/libutil* ${base_libdir}/libnsl* ${base_libdir}/libnss_files* ${base_libdir}/libnss_compat* ${base_libdir}/libnss_dns* ${base_libdir}/libdl* ${base_libdir}/libanl* ${base_libdir}/libBrokenLocale*"
 
-FILES_glibc = "${sysconfdir} ${libc_baselibs} ${base_sbindir}/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
+
+# The problem is that if PN = "glibc", FILES_${PN} will overwrite FILES_glibc
+# Solution: Make them both the same thing, then it doesn't matter
+
+glibcfiles = "${sysconfdir} ${libc_baselibs} ${base_sbindir}/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
+glibcdbgfiles = "${bindir}/.debug ${sbindir}/.debug ${libdir}/.debug \
+                  ${base_bindir}/.debug ${base_sbindir}/.debug ${base_libdir}/.debug \
+                  ${libdir}/gconv/.debug ${libexecdir}/*/.debug"
+glibcdevfiles = "${bindir}/rpcgen ${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
+                ${libdir}/*.a ${libdir}/*.o ${libdir}/pkgconfig \
+                ${base_libdir}/*.a ${base_libdir}/*.o ${datadir}/aclocal"
+
+FILES_glibc = "${glibcfiles}"
+FILES_${PN} = "${glibcfiles}"
 FILES_ldd = "${bindir}/ldd"
 FILES_libsegfault = "${base_libdir}/libSegFault*"
 FILES_glibc-extra-nss = "${base_libdir}/libnss*"
 FILES_sln = "${base_sbindir}/sln"
-FILES_glibc-dev = "${bindir}/rpcgen ${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
-                ${libdir}/*.a ${libdir}/*.o ${libdir}/pkgconfig \
-                ${base_libdir}/*.a ${base_libdir}/*.o ${datadir}/aclocal"
+FILES_glibc-dev = "${glibcdevfiles}"
+FILES_${PN}-dev = "${glibcdevfiles}"
+FILES_glibc-dbg = "${glibcdbgfiles}"
+FILES_${PN}-dbg = "${glibcdbgfiles}"
 FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/nscd* ${sysconfdir}/init.d/nscd*"
 FILES_glibc-utils = "${bindir}/* ${sbindir}/*"
 FILES_glibc-gconv = "${libdir}/gconv/*"
-FILES_glibc-dbg = "${bindir}/.debug ${sbindir}/.debug ${libdir}/.debug \
-                  ${base_bindir}/.debug ${base_sbindir}/.debug ${base_libdir}/.debug \
-                  ${libdir}/gconv/.debug ${libexecdir}/*/.debug"
 FILES_catchsegv = "${bindir}/catchsegv"
 RDEPENDS_catchsegv = "libsegfault"
 FILES_glibc-pcprofile = "${base_libdir}/libpcprofile.so"
