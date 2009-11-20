@@ -19,7 +19,9 @@ FILES_ldd = "${bindir}/ldd"
 FILES_libsegfault = "${base_libdir}/libSegFault*"
 FILES_glibc-extra-nss = "${base_libdir}/libnss*"
 FILES_sln = "${base_sbindir}/sln"
-FILES_glibc-dev_append = " ${libdir}/*.o ${bindir}/rpcgen"
+FILES_glibc-dev = "${bindir}/rpcgen ${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
+                ${libdir}/*.a ${libdir}/*.o ${libdir}/pkgconfig \
+                ${base_libdir}/*.a ${base_libdir}/*.o ${datadir}/aclocal"
 FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/nscd* ${sysconfdir}/init.d/nscd*"
 FILES_glibc-utils = "${bindir}/* ${sbindir}/*"
 FILES_glibc-gconv = "${libdir}/gconv/*"
@@ -141,11 +143,23 @@ python package_do_split_gconvs () {
 	do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern='glibc-localedata-%s', description='locale definition for %s', hook=calc_locale_deps, extra_depends='')
 	bb.data.setVar('PACKAGES', bb.data.getVar('PACKAGES', d) + ' glibc-gconv', d)
 
-	f = open(os.path.join(bb.data.getVar('WORKDIR', d, 1), "SUPPORTED"), "r")
-	supported = f.readlines()
-	f.close()
+	use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
 
 	dot_re = re.compile("(.*)\.(.*)")
+
+	if use_bin != "precompiled":
+		f = open(os.path.join(bb.data.getVar('WORKDIR', d, 1), "SUPPORTED"), "r")
+		supported = f.readlines()
+		f.close()
+	else:
+		supported = []
+		full_bin_path = bb.data.getVar('PKGD', d, True) + binary_locales_dir
+		for dir in os.listdir(full_bin_path):
+			dbase = dir.split(".")
+			d2 = "  "
+			if len(dbase) > 1:
+				d2 = "." + dbase[1].upper() + "  "
+			supported.append(dbase[0] + d2)
 
 	# Collate the locales by base and encoding
 	utf8_only = int(bb.data.getVar('LOCALE_UTF8_ONLY', d, 1) or 0)
@@ -162,42 +176,25 @@ python package_do_split_gconvs () {
 			encodings[locale] = []
 		encodings[locale].append(charset)
 
-	def output_locale_source(name, locale, encoding):
-		pkgname = 'locale-base-' + legitimize_package_name(name)
-
+	def output_locale_source(name, pkgname, locale, encoding):
 		bb.data.setVar('RDEPENDS_%s' % pkgname, 'localedef glibc-localedata-%s glibc-charmap-%s' % (legitimize_package_name(locale), legitimize_package_name(encoding)), d)
-		rprovides = 'virtual-locale-%s' % legitimize_package_name(name)
-		m = re.match("(.*)_(.*)", name)
-		if m:
-			rprovides += ' virtual-locale-%s' % m.group(1)
-		bb.data.setVar('RPROVIDES_%s' % pkgname, rprovides, d)
-		bb.data.setVar('PACKAGES', '%s %s' % (pkgname, bb.data.getVar('PACKAGES', d, 1)), d)
-		bb.data.setVar('ALLOW_EMPTY_%s' % pkgname, '1', d)
 		bb.data.setVar('pkg_postinst_%s' % pkgname, bb.data.getVar('locale_base_postinst', d, 1) % (locale, encoding, locale), d)
 		bb.data.setVar('pkg_postrm_%s' % pkgname, bb.data.getVar('locale_base_postrm', d, 1) % (locale, encoding, locale), d)
 
-	def output_locale_binary(name, locale, encoding):
-		target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
-		qemu = "qemu-%s" % target_arch
-		pkgname = 'locale-base-' + legitimize_package_name(name)
+	def output_locale_binary_rdepends(name, pkgname, locale, encoding):
 		m = re.match("(.*)\.(.*)", name)
 		if m:
 			glibc_name = "%s.%s" % (m.group(1), m.group(2).lower().replace("-",""))
 		else:
 			glibc_name = name
 		bb.data.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('glibc-binary-localedata-%s' % glibc_name), d)
-		rprovides = 'virtual-locale-%s' % legitimize_package_name(name)
-		m = re.match("(.*)_(.*)", name)
-		if m:
-			rprovides += ' virtual-locale-%s' % m.group(1)
-		bb.data.setVar('RPROVIDES_%s' % pkgname, rprovides, d)
-		bb.data.setVar('ALLOW_EMPTY_%s' % pkgname, '1', d)
-		bb.data.setVar('PACKAGES', '%s %s' % (pkgname, bb.data.getVar('PACKAGES', d, 1)), d)
 
+	def output_locale_binary(name, pkgname, locale, encoding):
 		treedir = base_path_join(bb.data.getVar("WORKDIR", d, 1), "locale-tree")
 		path = bb.data.getVar("PATH", d, 1)
 		i18npath = base_path_join(treedir, datadir, "i18n")
-
+		target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
+		qemu = "qemu-%s" % target_arch
 		localedef_opts = "--force --old-style --no-archive --prefix=%s --inputfile=%s/i18n/locales/%s --charmap=%s %s" % (treedir, datadir, locale, encoding, name)
 
 		qemu_options = bb.data.getVar("QEMU_OPTIONS_%s" % bb.data.getVar('PACKAGE_ARCH', d, 1), d, 1)
@@ -210,13 +207,22 @@ python package_do_split_gconvs () {
 			raise bb.build.FuncFailed("localedef returned an error (command was %s)." % cmd)
 
 	def output_locale(name, locale, encoding):
-		use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
+		pkgname = 'locale-base-' + legitimize_package_name(name)
+		bb.data.setVar('ALLOW_EMPTY_%s' % pkgname, '1', d)
+		bb.data.setVar('PACKAGES', '%s %s' % (pkgname, bb.data.getVar('PACKAGES', d, 1)), d)
+		rprovides = 'virtual-locale-%s' % legitimize_package_name(name)
+		m = re.match("(.*)_(.*)", name)
+		if m:
+			rprovides += ' virtual-locale-%s' % m.group(1)
+		bb.data.setVar('RPROVIDES_%s' % pkgname, rprovides, d)
 		if use_bin == "compile":
-			output_locale_binary(name, locale, encoding)
+			output_locale_binary_rdepends(name, pkgname, locale, encoding)
+			output_locale_binary(name, pkgname, locale, encoding)
+		elif use_bin == "precompiled":
+			output_locale_binary_rdepends(name, pkgname, locale, encoding)
 		else:
-			output_locale_source(name, locale, encoding)
+			output_locale_source(name, pkgname, locale, encoding)
 
-	use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
 	if use_bin == "compile":
 		bb.note("preparing tree for binary locale generation")
 		bb.build.exec_func("do_prep_locale_tree", d)
@@ -237,14 +243,15 @@ python package_do_split_gconvs () {
 			for e in encodings[l]:
 				output_locale('%s.%s' % (l, e), l, e)
 
-	if non_utf8 != []:
+	if non_utf8 != [] and use_bin != "precompiled":
 		bb.note("the following locales are supported only in legacy encodings:")
 		bb.note("  " + " ".join(non_utf8))
 
-	use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
 	if use_bin == "compile":
 		bb.note("collecting binary locales from locale tree")
 		bb.build.exec_func("do_collect_bins_from_locale_tree", d)
+		do_split_packages(d, binary_locales_dir, file_regex='(.*)', output_pattern='glibc-binary-localedata-%s', description='binary locale definition for %s', extra_depends='', allow_dirs=True)
+	elif use_bin == "precompiled":
 		do_split_packages(d, binary_locales_dir, file_regex='(.*)', output_pattern='glibc-binary-localedata-%s', description='binary locale definition for %s', extra_depends='', allow_dirs=True)
 	else:
 		bb.note("generation of binary locales disabled. this may break i18n!")
