@@ -1,0 +1,130 @@
+From 2ca2078e287174522e3a6229618947d3d285b8c0 Mon Sep 17 00:00:00 2001
+From: François Revol <revol@free.fr>
+Date: Tue, 25 Aug 2009 09:14:10 +0000
+Subject: Fixed wacom emulation
+
+- for absolute mode, scale coordinates to the real device maximum values,
+since some drivers (on Haiku and Linux at least) need them as such,
+and the HID descriptor is boggus on some models anyway,
+- keep the coordinates even when no button is pressed, on real tablet
+the pen is sensed on the surface even without direct contact,
+and drivers expect this,
+- map left button to pressure according to what the Haiku driver wants,
+- map the right button to the pen button,
+- map the middle button to the eraser,
+- use asynchronous reporting as the hid code does, stops the Haiku driver
+(and probably others) from spending 50% cpu polling for changes.
+
+Signed-off-by: François Revol <revol@free.fr>
+Signed-off-by: Anthony Liguori <aliguori@us.ibm.com>
+---
+Index: git/hw/usb-wacom.c
+===================================================================
+--- git.orig/hw/usb-wacom.c	2009-11-24 14:10:15.000000000 +0000
++++ git/hw/usb-wacom.c	2009-11-24 16:39:26.000000000 +0000
+@@ -50,6 +50,8 @@
+         WACOM_MODE_HID = 1,
+         WACOM_MODE_WACOM = 2,
+     } mode;
++    uint8_t idle;
++    int changed;
+ } USBWacomState;
+ 
+ static const uint8_t qemu_wacom_dev_descriptor[] = {
+@@ -125,6 +127,7 @@
+     s->dy += dy1;
+     s->dz += dz1;
+     s->buttons_state = buttons_state;
++    s->changed = 1;
+ }
+ 
+ static void usb_wacom_event(void *opaque,
+@@ -132,10 +135,12 @@
+ {
+     USBWacomState *s = opaque;
+ 
+-    s->x = x;
+-    s->y = y;
++    /* scale to Penpartner resolution */
++    s->x = (x * 5040 / 0x7FFF);
++    s->y = (y * 3780 / 0x7FFF);
+     s->dz += dz;
+     s->buttons_state = buttons_state;
++    s->changed = 1;
+ }
+ 
+ static inline int int_clamp(int val, int vmin, int vmax)
+@@ -199,26 +204,22 @@
+     if (s->buttons_state & MOUSE_EVENT_LBUTTON)
+         b |= 0x01;
+     if (s->buttons_state & MOUSE_EVENT_RBUTTON)
+-        b |= 0x02;
++        b |= 0x40;
+     if (s->buttons_state & MOUSE_EVENT_MBUTTON)
+-        b |= 0x04;
++        b |= 0x20; /* eraser */
+ 
+     if (len < 7)
+         return 0;
+ 
+     buf[0] = s->mode;
+-    buf[5] = 0x00;
+-    if (b) {
+-        buf[1] = s->x & 0xff;
+-        buf[2] = s->x >> 8;
+-        buf[3] = s->y & 0xff;
+-        buf[4] = s->y >> 8;
++    buf[5] = 0x00 | (b & 0xf0);
++    buf[1] = s->x & 0xff;
++    buf[2] = s->x >> 8;
++    buf[3] = s->y & 0xff;
++    buf[4] = s->y >> 8;
++    if (b & 0x3f) {
+         buf[6] = 0;
+     } else {
+-        buf[1] = 0;
+-        buf[2] = 0;
+-        buf[3] = 0;
+-        buf[4] = 0;
+         buf[6] = (unsigned char) -127;
+     }
+ 
+@@ -350,7 +351,12 @@
+         else if (s->mode == WACOM_MODE_WACOM)
+             ret = usb_wacom_poll(s, data, length);
+         break;
++    case HID_GET_IDLE:
++        ret = 1;
++        data[0] = s->idle;
++        break;
+     case HID_SET_IDLE:
++        s->idle = (uint8_t) (value >> 8);
+         ret = 0;
+         break;
+     default:
+@@ -369,6 +375,9 @@
+     switch (p->pid) {
+     case USB_TOKEN_IN:
+         if (p->devep == 1) {
++            if (!(s->changed || s->idle))
++                return USB_RET_NAK;
++            s->changed = 0;
+             if (s->mode == WACOM_MODE_HID)
+                 ret = usb_mouse_poll(s, p->data, p->len);
+             else if (s->mode == WACOM_MODE_WACOM)
+@@ -399,7 +408,6 @@
+     s = qemu_mallocz(sizeof(USBWacomState));
+     s->dev.speed = USB_SPEED_FULL;
+     s->dev.handle_packet = usb_generic_handle_packet;
+-
+     s->dev.handle_reset = usb_wacom_handle_reset;
+     s->dev.handle_control = usb_wacom_handle_control;
+     s->dev.handle_data = usb_wacom_handle_data;
+@@ -407,6 +415,7 @@
+ 
+     pstrcpy(s->dev.devname, sizeof(s->dev.devname),
+             "QEMU PenPartner Tablet");
++    s->changed = 1;
+ 
+     return (USBDevice *) s;
+ }
