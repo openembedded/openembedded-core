@@ -144,6 +144,6 @@ if [ ! -e $CROSSPATH/cc ]; then
    ln -s $CROSSPATH/gcc $CROSSPATH/cc
 fi
 
-CROSSPATH=$BUILDDIR/tmp/staging/$BUILD_SYS/usr/bin:$CROSSPATH:$BUILDDIR/tmp/cross/bin
+CROSSPATH=$BUILDDIR/tmp/sysroots/$BUILD_SYS/usr/bin:$CROSSPATH:$BUILDDIR/tmp/cross/bin
 
 . $INTERNAL_SCRIPT
