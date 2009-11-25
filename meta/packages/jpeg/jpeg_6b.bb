@@ -17,7 +17,7 @@ SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
 inherit autotools 
 
 EXTRA_OECONF="--enable-static --enable-shared"
-EXTRA_OEMAKE='"LIBTOOL=${STAGING_BINDIR_NATIVE}/${HOST_SYS}-libtool"'
+EXTRA_OEMAKE='"LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool"'
 
 CFLAGS_append = " -D_REENTRANT"
 
