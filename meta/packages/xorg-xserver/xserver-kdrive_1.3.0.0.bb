@@ -22,6 +22,7 @@ SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://xcalibrate_coords.patch;patch=1 \
 	file://fbdev_xrandr_ioctl.patch;patch=1 \
 	file://scheduler.patch;patch=1 \
-	file://fix-newer-xorg-headers.patch;patch=1"
+	file://fix-newer-xorg-headers.patch;patch=1 \
+	file://report-correct-randr12.patch;patch=1 "
 
 S = "${WORKDIR}/xorg-server-${PV}"
