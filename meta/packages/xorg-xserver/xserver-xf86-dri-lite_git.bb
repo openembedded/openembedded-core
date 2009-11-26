@@ -17,7 +17,7 @@ RDEPENDS_${PN} += "xkeyboard-config"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git;branch=server-1.6-branch \
            file://nodolt.patch;patch=1 \
-           file://fix-macros.patch;patch=1 \
+           file://fix_macros.patch;patch=1 \
            file://libdri-xinerama-symbol.patch;patch=1"
 
 # Misc build failure for master HEAD
