@@ -21,7 +21,6 @@
 
 if test x"$0" = x"./poky-init-build-env"; then
    echo "Error: Run via '. ./poky-init-build-env'"
-   return
 else
    . ./scripts/poky-env-internal
 fi
