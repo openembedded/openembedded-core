@@ -90,7 +90,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
     QEMU=qemu-system-arm
     if [ "$TYPE" = "ext3" ]; then
         KERNCMDLINE="root=/dev/sda console=ttyAMA0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet -no-reboot"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet -no-reboot -force-pointer -show-cursor"
     fi
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
@@ -101,7 +101,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -usb -usbdevice wacom-tablet -no-reboot"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -usb -usbdevice wacom-tablet -no-reboot -force-pointer -show-cursor"
     fi
 	if [ "$MACHINE" = "qemuarmv6" ]; then
 		QEMUOPTIONS="$QEMUOPTIONS -cpu arm1136"
@@ -126,7 +126,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="-vga std $QEMU_NETWORK_CMD"
+        QEMUOPTIONS="-vga vmware $QEMU_NETWORK_CMD -enable-gl"
     fi
 fi
 
