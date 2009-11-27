@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r15"
+PR = "r16"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}a.tar.gz \
            file://dolt.m4"
@@ -23,5 +23,7 @@ EXTRA_AUTORECONF = "--exclude=libtoolize"
 SYSROOT_PREPROCESS_FUNCS += "libtool_sysroot_preprocess"
 
 libtool_sysroot_preprocess () {
-	rm -rf ${SYSROOT_DESTDIR}/*
+	rm -rf ${SYSROOT_DESTDIR}/${bindir}/*
+	rm -rf ${SYSROOT_DESTDIR}/${datadir}/aclocal/*
+	rm -rf ${SYSROOT_DESTDIR}/${datadir}/libtool/config/*
 }
