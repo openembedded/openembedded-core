@@ -5,10 +5,13 @@ RP - 26/11/09
 
 Index: git/xorg-server.m4
 ===================================================================
---- git.orig/xorg-server.m4	2009-11-26 23:11:03.000000000 +0000
-+++ git/xorg-server.m4	2009-11-26 23:12:28.000000000 +0000
-@@ -30,7 +30,7 @@
+--- git.orig/xorg-server.m4	2009-11-10 12:04:34.000000000 +0000
++++ git/xorg-server.m4	2009-11-27 00:05:02.000000000 +0000
+@@ -28,9 +28,10 @@
+ # Checks for the $1 define in xorg-server.h (from the sdk).  If it
+ # is defined, then add $1 to $REQUIRED_MODULES.
  
++m4_pattern_allow([^PKG_CONFIG_SYSROOT_DIR$])
  AC_DEFUN([XORG_DRIVER_CHECK_EXT],[
  	SAVE_CFLAGS="$CFLAGS"
 -	CFLAGS="$CFLAGS -I`pkg-config --variable=sdkdir xorg-server`"
