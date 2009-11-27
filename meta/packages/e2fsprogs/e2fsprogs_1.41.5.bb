@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r14"
+PR = "r15"
 
 SRC_URI += "file://no-hardlinks.patch;patch=1"
 
@@ -21,7 +21,7 @@ do_install () {
 	# We use blkid from util-linux now so remove from here
 	rm -f ${D}${libdir}/libblkid*
 	rm -rf ${D}${includedir}/blkid
-	rm -f ${D}${libdir}/pkgconfig/blkid.oc
+	rm -f ${D}${libdir}/pkgconfig/blkid.pc
 }
 
 # blkid used to be part of e2fsprogs but is useful outside, add it
