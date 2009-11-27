@@ -27,7 +27,7 @@ do_install () {
 	# In the native case we want the system perl as perl-native can't have built yet
 	if [ "${BUILD_ARCH}" != "${TARGET_ARCH}" ]; then
 		cat ${WORKDIR}/gnu-configize.in | \
-			    -e 's,/usr/bin/perl,${bindir}/perl,g' > ${D}${bindir}/gnu-configize
+			sed -e 's,/usr/bin/perl,${bindir}/perl,g' > ${D}${bindir}/gnu-configize
 	fi
 	chmod 755 ${D}${bindir}/gnu-configize
 	install -m 0644 config.guess config.sub ${D}${datadir}/gnu-config/
