@@ -1,0 +1,21 @@
+Index: rpm-4.4.2.3/configure.ac
+===================================================================
+--- rpm-4.4.2.3.orig/configure.ac	2009-11-30 17:23:22.000000000 +0000
++++ rpm-4.4.2.3/configure.ac	2009-11-30 17:23:52.000000000 +0000
+@@ -448,16 +448,6 @@
+ 
+ WITH_LIBDWARF_INCLUDE=
+ WITH_LIBDWARF_DEBUGEDIT=
+-AC_CHECK_HEADER([dwarf.h], [
+-  AC_DEFINE(HAVE_DWARF_H, 1, [Define to 1 if you have the <dwarf.h> header file.])
+-  WITH_LIBDWARF_DEBUGEDIT="debugedit"
+-],[
+-  if test -d elfutils/libdwarf ; then
+-    AC_DEFINE(HAVE_DWARF_H, 1, [Define to 1 if you have the <dwarf.h> header file.])
+-    WITH_LIBDWARF_INCLUDE="-I\${top_srcdir}/${WITH_ELFUTILS_SUBDIR}/libdwarf"
+-    WITH_LIBDWARF_DEBUGEDIT="debugedit"
+-  fi
+-])
+ AC_SUBST(WITH_LIBDWARF_INCLUDE)
+ AC_SUBST(WITH_LIBDWARF_DEBUGEDIT)
+ 

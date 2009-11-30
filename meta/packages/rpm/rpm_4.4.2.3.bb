@@ -2,7 +2,7 @@ DESCRIPTION = "The RPM Package Manager."
 HOMEPAGE = "http://rpm.org/"
 LICENSE = "LGPL GPL"
 DEPENDS = "zlib beecrypt file popt python"
-PR = "r12"
+PR = "r14"
 
 SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
            file://external-tools.patch;patch=1 \
@@ -10,7 +10,8 @@ SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
 	   file://weakdeps.patch;patch=1;pnum=0 \
 	   file://tagsbackport.patch;patch=1;pnum=0 \
 	   file://missingok.patch;patch=1;pnum=0 \
-	   file://extcond.patch;patch=1;pnum=0"
+	   file://extcond.patch;patch=1;pnum=0 \
+	   file://disabledwarf.patch;patch=1"
 
 inherit autotools gettext
 
