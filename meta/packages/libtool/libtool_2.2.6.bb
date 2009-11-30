@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r16"
+PR = "r17"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}a.tar.gz \
            file://dolt.m4"
@@ -15,15 +15,15 @@ inherit autotools_stage
 
 EXTRA_AUTORECONF = "--exclude=libtoolize"
 
-
-
 #
 # We want the results of libtool-cross preserved - don't stage anything ourselves.
 #
 SYSROOT_PREPROCESS_FUNCS += "libtool_sysroot_preprocess"
 
 libtool_sysroot_preprocess () {
-	rm -rf ${SYSROOT_DESTDIR}/${bindir}/*
-	rm -rf ${SYSROOT_DESTDIR}/${datadir}/aclocal/*
-	rm -rf ${SYSROOT_DESTDIR}/${datadir}/libtool/config/*
+	if [ "${PN}" == "libtool" ]; then
+		rm -rf ${SYSROOT_DESTDIR}/${bindir}/*
+		rm -rf ${SYSROOT_DESTDIR}/${datadir}/aclocal/*
+		rm -rf ${SYSROOT_DESTDIR}/${datadir}/libtool/config/*
+	fi
 }
