@@ -947,6 +947,7 @@ sysroot_stage_dirs() {
 		sysroot_stage_dir $from${base_bindir} $to${STAGING_DIR_HOST}${base_bindir}
 		sysroot_stage_dir $from${base_sbindir} $to${STAGING_DIR_HOST}${base_sbindir}
 		sysroot_stage_dir $from${libexecdir} $to${STAGING_DIR_HOST}${libexecdir}
+		sysroot_stage_dir $from${sysconfdir} $to${STAGING_DIR_HOST}${sysconfdir}
 	fi
 	if [ -d $from${libdir} ]
 	then
