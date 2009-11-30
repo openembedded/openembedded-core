@@ -1,10 +1,10 @@
 DESCRIPTION = "gvfs is a userspace virtual filesystem"
 LICENSE = "LGPL"
-DEPENDS = "glib-2.0 fuse"
-PR = "r0"
+DEPENDS = "glib-2.0 fuse gnome-keyring"
+PR = "r1"
 
 inherit gnome
-EXTRA_OECONF = "--disable-samba"
+EXTRA_OECONF = "--disable-samba --disable-archive"
 
 PACKAGES =+ "gvfsd-ftp gvfsd-sftp gvfsd-trash"
 
