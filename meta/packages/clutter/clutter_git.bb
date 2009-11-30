@@ -10,3 +10,7 @@ S = "${WORKDIR}/git"
 
 BASE_CONF += "--disable-introspection"
 
+do_configure_prepend () {
+	# Disable DOLT
+	sed -i -e 's/^DOLT//' ${S}/configure.ac
+}
