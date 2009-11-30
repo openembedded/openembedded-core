@@ -7,6 +7,7 @@ _SNAPSHOT = "22102008"
 _TARBALL_SERVER = "http://git.moblin.org/repos/users/rusty"
 
 PV="r0"
+PR = "r1"
 
 SRC_URI = "${_TARBALL_SERVER}/ribosome-${_SNAPSHOT}.tar.bz2 \
            ${_TARBALL_SERVER}/client-bif-${_SNAPSHOT}.tar.bz2 \
@@ -36,4 +37,7 @@ do_install() {
 
 	# Install our own custom BIF
 	install -m 0644 ribosome/*.bif ${D}${libdir}/ribosome/bif-cvs/helix/client/build/BIF/
+	
+	# The [ and ] characters break packaging, remove for now
+	rm -rf ${D}${libdir}/ribosome/test/data/utils/[client-restricted]
 }
