@@ -120,6 +120,10 @@ autotools_do_configure() {
 			    oenote Executing glib-gettextize --force --copy
 			    echo "no" | glib-gettextize --force --copy
 			  fi
+			else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
+			  cp ${STAGING_DATADIR}/gettext/config.rpath ${S}/
+			fi
+
 			fi
 			mkdir -p m4
 			if grep "^[[:space:]]*[AI][CT]_PROG_INTLTOOL" $CONFIGURE_AC >/dev/null; then
