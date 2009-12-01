@@ -1,7 +1,7 @@
 DESCRIPTION = "Util-linux is a suite of essential utilities for any Linux system."
 SECTION = "base"
 LICENSE = "GPL"
-DEPENDS = "zlib-native ncurses-native"
+DEPENDS = "zlib-native ncurses-native gexttext-native"
 
 inherit autotools native
 

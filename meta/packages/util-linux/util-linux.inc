@@ -1,7 +1,7 @@
 DESCRIPTION = "Util-linux is a suite of essential utilities for any Linux system."
 SECTION = "base"
 LICENSE = "GPL"
-DEPENDS = "udev zlib ncurses virtual/libintl"
+DEPENDS = "udev zlib ncurses virtual/libintl gettext"
 
 inherit autotools_stage
 
