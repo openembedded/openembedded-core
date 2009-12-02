@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r17"
+PR = "r18"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}a.tar.gz \
            file://dolt.m4"
@@ -22,8 +22,8 @@ SYSROOT_PREPROCESS_FUNCS += "libtool_sysroot_preprocess"
 
 libtool_sysroot_preprocess () {
 	if [ "${PN}" == "libtool" ]; then
-		rm -rf ${SYSROOT_DESTDIR}/${bindir}/*
-		rm -rf ${SYSROOT_DESTDIR}/${datadir}/aclocal/*
-		rm -rf ${SYSROOT_DESTDIR}/${datadir}/libtool/config/*
+		rm -rf ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${bindir}/*
+		rm -rf ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${datadir}/aclocal/*
+		rm -rf ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${datadir}/libtool/config/*
 	fi
 }
