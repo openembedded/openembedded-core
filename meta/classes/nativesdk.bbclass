@@ -57,7 +57,6 @@ DEPENDS_virtclass-nativesdk ?= "${ORIG_DEPENDS}"
 python __anonymous () {
     pn = bb.data.getVar("PN", d, True)
     depends = bb.data.getVar("DEPENDS_virtclass-nativesdk", d, True)
-    bb.note(depends)
     deps = bb.utils.explode_deps(depends)
     newdeps = []
     for dep in deps:
@@ -69,7 +68,6 @@ python __anonymous () {
             newdeps.append(dep + "-nativesdk")
         else:
             newdeps.append(dep)
-    bb.note(" ".join(newdeps))
     bb.data.setVar("DEPENDS_virtclass-nativesdk", " ".join(newdeps), d)
     provides = bb.data.getVar("PROVIDES", d, True)
     for prov in provides.split():
