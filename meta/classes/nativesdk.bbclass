@@ -51,9 +51,13 @@ FILES_${PN}-dbg += "${prefix}/.debug \
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
+ORIG_DEPENDS := "${DEPENDS}"
+DEPENDS_virtclass-nativesdk ?= "${ORIG_DEPENDS}"
+
 python __anonymous () {
     pn = bb.data.getVar("PN", d, True)
-    depends = bb.data.getVar("DEPENDS", d, True)
+    depends = bb.data.getVar("DEPENDS_virtclass-nativesdk", d, True)
+    bb.note(depends)
     deps = bb.utils.explode_deps(depends)
     newdeps = []
     for dep in deps:
@@ -65,7 +69,8 @@ python __anonymous () {
             newdeps.append(dep + "-nativesdk")
         else:
             newdeps.append(dep)
-    bb.data.setVar("DEPENDS", " ".join(newdeps), d)
+    bb.note(" ".join(newdeps))
+    bb.data.setVar("DEPENDS_virtclass-nativesdk", " ".join(newdeps), d)
     provides = bb.data.getVar("PROVIDES", d, True)
     for prov in provides.split():
         if prov.find(pn) != -1:
@@ -73,6 +78,7 @@ python __anonymous () {
         if not prov.endswith("-nativesdk"):
             provides = provides.replace(prov, prov + "-nativesdk")
     bb.data.setVar("PROVIDES", provides, d)
+    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", d, False) + ":virtclass-nativesdk", d)
 }
 
 
