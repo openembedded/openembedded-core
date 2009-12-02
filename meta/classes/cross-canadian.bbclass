@@ -19,6 +19,7 @@ STAGING_DIR_TARGET = "${STAGING_DIR}/${BASEPKG_TARGET_SYS}"
 
 PATH_append = ":${TMPDIR}/cross/${HOST_ARCH}/${bindir_cross}"
 PKGDATA_DIR = "${TMPDIR}/pkgdata/${HOST_ARCH}-nativesdk${HOST_VENDOR}-${HOST_OS}"
+PKGHIST_DIR = "${TMPDIR}/pkghistory/${HOST_ARCH}-nativesdk${HOST_VENDOR}-${HOST_OS}/"
 
 HOST_ARCH = "${SDK_ARCH}"
 HOST_VENDOR = "${SDK_VENDOR}"
