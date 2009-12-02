@@ -3,6 +3,7 @@ HOMEPAGE = "http://www.gnu.org/software/gdb/"
 LICENSE="GPLv3+"
 SECTION = "devel"
 PRIORITY = "optional"
+DEPENDS = "ncurses readline"
 
 inherit autotools
 
@@ -17,4 +18,24 @@ export CXXFLAGS_FOR_BUILD = "${BUILD_CXXFLAGS}"
 export CPPFLAGS_FOR_BUILD = "${BUILD_CPPFLAGS}"
 
 B = "${WORKDIR}/build-${TARGET_SYS}"
+
+EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
+
+EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
+                --with-curses --disable-multilib --with-readline --disable-sim \
+                ${GDBPROPREFIX}"
+GDBPROPREFIX = "--program-prefix=''"
+
+do_configure () {
+	# override this function to avoid the autoconf/automake/aclocal/autoheader
+	# calls for now
+	(cd ${S} && gnu-configize) || die "failure in running gnu-configize"
+        oe_runconf
+}
+
+PACKAGES =+ "gdbserver"
+FILES_gdbserver = "${bindir}/gdbserver"
+
+RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
+RRECOMMENDS_gdb_append_linux-gnueabi = " glibc-thread-db "
 
