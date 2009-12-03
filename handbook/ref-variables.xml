@@ -586,7 +586,7 @@
                     output packages there would usually be an override attached 
                     to this variable like RDEPENDS_${PN}-dev. Names in this field 
                     should be as they are in <link linkend='var-PACKAGES'>PACKAGES
-                    </link> namespave before any renaming of the output package
+                    </link> namespace before any renaming of the output package
                     by classes like debian.bbclass.
                 </para>
             </glossdef>
