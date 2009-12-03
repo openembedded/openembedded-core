@@ -196,6 +196,7 @@ SRCREV_pn-qemugl-nativesdk = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 SRCREV_pn-gobject-introspection = "efa7266bcf78478ce62e8dd778a4f0417bfd4d15"
 #c54f10f4caef35b42229c48951ee647ef05ab557"
 SRCREV_pn-gobject-introspection-native = "efa7266bcf78478ce62e8dd778a4f0417bfd4d15"
+SRCREV_pn-ofono = "14544d5996836f628613c2ce544380ee6fc8f514"
 
 SRCREVMOZILLAHEADLESS ?= "f4348fd85697"
 

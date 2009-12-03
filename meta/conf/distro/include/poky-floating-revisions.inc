@@ -57,6 +57,7 @@ SRCREV_pn-libmatchbox ?= "${AUTOREV}"
 SRCREV_pn-tasks ?= "${AUTOREV}"
 SRCREV_pn-libjana = "${AUTOREV}"
 SRCREV_pn-mutter = "${AUTOREV}"
+SRCREV_pn-ofono = "${AUTOREV}"
 
 SRCREV_pn-dri2proto = "${AUTOREV}"
 #PREFERRED_VERSION_dri2proto ?= "1.99.1+git${SRCREV}"
