@@ -4,6 +4,7 @@ reviewing large, complex patch files."
 HOMEPAGE = "http://invisible-island.net/diffstat/"
 PRIORITY = "optional"
 SECTION = "devel"
+DEPENDS = "gettext"
 
 # NOTE: The upstream maintainer has a single 'diffstat.tar.gz' for the
 # latest version of the package.  It could easily change out from under us.
