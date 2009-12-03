@@ -4,8 +4,8 @@ LICENSE = "GPLv2"
 PV = "0.0+git${SRCPV}"
 PR = "r1"
 
-DEPENDS = "gconnman nbtk mutter-moblin librest libnotify mobile-broadband-provider-info"
-RDEPENDS = "connman gconnman"
+DEPENDS = "nbtk mutter-moblin librest libnotify mobile-broadband-provider-info"
+RDEPENDS = "connman"
 
 S = "${WORKDIR}/git"
 
