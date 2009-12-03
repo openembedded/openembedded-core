@@ -266,3 +266,9 @@ ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
 
 #libpciaccess
 have_mtrr_h=yes
+
+#mozilla
+moz_cv_size_of_JS_BYTES_PER_WORD=4
+moz_cv_align_of_JS_ALIGN_OF_POINTER=4
+moz_cv_size_of_JS_BYTES_PER_DOUBLE=8
+
