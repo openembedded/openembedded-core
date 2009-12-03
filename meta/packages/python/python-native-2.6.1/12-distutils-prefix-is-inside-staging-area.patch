@@ -1,0 +1,60 @@
+# The proper prefix is inside our staging area.
+# Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>
+
+Index: Python-2.6.1/Lib/distutils/sysconfig.py
+===================================================================
+--- Python-2.6.1.orig/Lib/distutils/sysconfig.py
++++ Python-2.6.1/Lib/distutils/sysconfig.py
+@@ -19,8 +19,8 @@ import sys
+ from distutils.errors import DistutilsPlatformError
+ 
+ # These are needed in a couple of spots, so just compute them once.
+-PREFIX = os.path.normpath(sys.prefix)
+-EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
++PREFIX = os.path.normpath(sys.prefix).replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
++EXEC_PREFIX = os.path.normpath(sys.exec_prefix).replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
+ 
+ # Path to the base directory of the project. On Windows the binary may
+ # live in project/PCBuild9.  If we're dealing with an x64 Windows build,
+@@ -70,7 +70,10 @@ def get_python_inc(plat_specific=0, pref
+     sys.exec_prefix -- i.e., ignore 'plat_specific'.
+     """
+     if prefix is None:
+-        prefix = plat_specific and EXEC_PREFIX or PREFIX
++        if plat_specific:
++            prefix = plat_specific and os.environ['STAGING_INCDIR'].rstrip('include')
++        else:
++            prefix = plat_specific and EXEC_PREFIX or PREFIX
+     if os.name == "posix":
+         if python_build:
+             base = os.path.dirname(os.path.abspath(sys.executable))
+@@ -112,7 +115,10 @@ def get_python_lib(plat_specific=0, stan
+     sys.exec_prefix -- i.e., ignore 'plat_specific'.
+     """
+     if prefix is None:
+-        prefix = plat_specific and EXEC_PREFIX or PREFIX
++        if plat_specific:
++            prefix = plat_specific and os.environ['STAGING_LIBDIR'].rstrip('lib')
++        else:
++            prefix = plat_specific and EXEC_PREFIX or PREFIX
+ 
+     if os.name == "posix":
+         libpython = os.path.join(prefix,
+@@ -218,7 +218,7 @@ def get_config_h_filename():
+     else:
+         # The name of the config.h file changed in 2.2
+         config_h = 'pyconfig.h'
+-    return os.path.join(inc_dir, config_h)
++    return os.path.join(inc_dir, config_h).replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
+ 
+ 
+ def get_makefile_filename():
+@@ -226,7 +226,7 @@ def get_makefile_filename():
+     if python_build:
+         return os.path.join(os.path.dirname(sys.executable), "Makefile")
+     lib_dir = get_python_lib(plat_specific=1, standard_lib=1)
+-    return os.path.join(lib_dir, "config", "Makefile")
++    return os.path.join(lib_dir, "config", "Makefile").replace( os.getenv("BUILD_SYS"), os.getenv("HOST_SYS") )
+ 
+ 
+ def parse_config_h(fp, g=None):

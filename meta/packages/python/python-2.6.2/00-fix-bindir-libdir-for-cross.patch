@@ -1,0 +1,20 @@
+# $(exec_prefix) points to the wrong directory, when installing
+# a cross-build. @bindir@ and @libdir@ works better and doesn't
+# affect the native build.
+# Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>
+
+Index: Python-2.6.1/Makefile.pre.in
+===================================================================
+--- Python-2.6.1.orig/Makefile.pre.in
++++ Python-2.6.1/Makefile.pre.in
+@@ -86,8 +86,8 @@ exec_prefix=	@exec_prefix@
+ datarootdir=    @datarootdir@
+ 
+ # Expanded directories
+-BINDIR=		$(exec_prefix)/bin
+-LIBDIR=		$(exec_prefix)/lib
++BINDIR=		@bindir@
++LIBDIR=		@libdir@
+ MANDIR=		@mandir@
+ INCLUDEDIR=	@includedir@
+ CONFINCLUDEDIR=	$(exec_prefix)/include
