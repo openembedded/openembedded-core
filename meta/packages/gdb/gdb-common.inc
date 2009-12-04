@@ -33,9 +33,6 @@ do_configure () {
         oe_runconf
 }
 
-PACKAGES =+ "gdbserver"
-FILES_gdbserver = "${bindir}/gdbserver"
-
 RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
 RRECOMMENDS_gdb_append_linux-gnueabi = " glibc-thread-db "
 
