@@ -25,10 +25,10 @@ distutils_stage_headers() {
 }
 
 distutils_stage_all() {
-        install -d ${STAGING_DIR_HOST}${prefix}/${PYTHON_DIR}/site-packages
         STAGING_INCDIR=${STAGING_INCDIR} \
         STAGING_LIBDIR=${STAGING_LIBDIR} \
-        PYTHONPATH=${STAGING_DIR_HOST}${prefix}/${PYTHON_DIR}/site-packages \
+        install -d ${STAGING_DIR_HOST}${libdir}/${PYTHON_DIR}/site-packages
+        PYTHONPATH=${STAGING_DIR_HOST}${libdir}/${PYTHON_DIR}/site-packages \
         BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
         ${STAGING_BINDIR_NATIVE}/python setup.py install ${DISTUTILS_STAGE_ALL_ARGS} || \
         oefatal "python setup.py install (stage) execution failed."
@@ -60,7 +60,14 @@ distutils_do_install() {
         fi
 
         rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/easy-install.pth
-        
+
+        #
+        # FIXME: Bandaid against wrong datadir computation
+        #
+        if test -e ${D}${datadir}/share; then
+            mv -f ${D}${datadir}/share/* ${D}${datadir}/
+        fi
+      
         find ${D}${libdir}/${PYTHON_DIR}/site-packages -iname '*.pyo' -exec rm {} \;
 }
 
