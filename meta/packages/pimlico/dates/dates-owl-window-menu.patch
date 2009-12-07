@@ -1,23 +1,9 @@
 ---
- src/Makefile.am      |    2 +-
  src/dates_gtk.c      |    5 -----
  src/dates_main.c     |    5 +++++
  src/dates_platform.h |    2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-Index: git/src/Makefile.am
-===================================================================
---- git.orig/src/Makefile.am	2009-08-18 12:44:56.000000000 +0100
-+++ git/src/Makefile.am	2009-09-03 22:28:50.000000000 +0100
-@@ -35,7 +35,7 @@
- 	gconf-bridge.h		\
- 	gconf-bridge.c
- 
--dates_LDADD = $(DATES_LIBS) libgtkdatesview.la
-+dates_LDADD = $(DATES_LIBS) libgtkdatesview.la -lowl
- 
- if USE_OWL
- dates_LDADD += $(top_builddir)/libowl/libowl.la
 Index: git/src/dates_gtk.c
 ===================================================================
 --- git.orig/src/dates_gtk.c	2009-08-18 12:44:56.000000000 +0100

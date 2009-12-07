@@ -1,12 +1,16 @@
 DESCRIPTION = "Address-book application."
 LICENSE = "LGPL"
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ eds-dbus libowl"
+DEPENDS = "glib-2.0 gtk+ eds-dbus"
+DEPENDS_append_poky = " libowl"
 RDEPENDS = "libedata-book"
 
 inherit autotools_stage pkgconfig
 
-EXTRA_OECONF += "--disable-gnome-vfs"
+OWL = "--disable-owl"
+OWL_poky = "--enable-owl"
+
+EXTRA_OECONF += "--disable-gnome-vfs ${OWL}"
 EXTRA_OEMAKE += "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1"
 
 do_install_append () {

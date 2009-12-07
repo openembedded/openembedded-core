@@ -115,7 +115,7 @@ SRCREV_pn-networkmanager ?= "2984"
 SRCREV_pn-table ?= "4b267533ce16656cba4104fc39dc12709c1bdddf"
 SRCREV_pn-ubootchart ?= "10"
 
-SRCREV_pn-dates ?= "966969063535da0786b7483c1bcd427df8a0d87d"
+SRCREV_pn-dates ?= "8a79a9fc52c73bf256decfedd0fe7d399553e7aa"
 SRCREV_pn-tasks ?= "ea52d46d691c5fce4473ea4e24a35411381f3a65"
 SRCREV_pn-contacts ?= "c8e6b16222d5bc9d8f60ae6594af4933613a4e25"
 SRCREV_pn-dfu-util-native ?= "3139"

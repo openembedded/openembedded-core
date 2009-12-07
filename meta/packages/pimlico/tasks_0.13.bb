@@ -5,4 +5,4 @@ SRC_URI = "http://pimlico-project.org/sources/${PN}/${PN}-${PV}.tar.gz \
 
 SRC_URI_append_poky = " file://tasks-owl.diff;patch=1 "
 
-PR = "r2"
+PR = "r3"
