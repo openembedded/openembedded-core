@@ -9,4 +9,4 @@ inherit autotools_stage pkgconfig gtk-icon-cache
 OWL = "--disable-owl"
 OWL_poky = "--enable-owl"
 
-EXTRA_OECONF += "${OWL}
+EXTRA_OECONF += "${OWL}"
