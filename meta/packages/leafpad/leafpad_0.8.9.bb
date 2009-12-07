@@ -1,8 +1,9 @@
 LICENSE = "GPLv2"
-DEPENDS = "gtk+ intltool-native libowl"
+DEPENDS = "gtk+ intltool-native"
+DEPENDS_append_poky = " libowl"
 SRC_URI = "http://savannah.nongnu.org/download/${PN}/${PN}-${PV}.tar.gz \
 	   file://leafpad.desktop"
-PR = "r9"
+PR = "r10"
 
 SRC_URI_append_poky += " file://owl-menu.patch;patch=1 "
 

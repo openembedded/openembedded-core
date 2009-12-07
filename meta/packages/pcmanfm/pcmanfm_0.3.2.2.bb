@@ -2,9 +2,10 @@ LICENSE = "GPL"
 DESCRIPTION = "procfs tools"
 SECTION = "x11"
 PRIORITY = "optional"
-DEPENDS = "gtk+ libowl startup-notification"
+DEPENDS = "gtk+ startup-notification"
+DEPENDS_append_poky = " libowl"
 
-PR="r3"
+PR = "r4"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-fs-directory.png \
@@ -12,8 +13,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-mime-text-plain.png \
 	   file://emblem-symbolic-link.png \
 	   file://desktop.patch;patch=1 \
-	   file://no-warnings.patch;patch=1 \
-	   file://owl-window-menu.patch;patch=1"
+	   file://no-warnings.patch;patch=1"
+
+SRC_URI_append_poky = " file://owl-window-menu.patch;patch=1"
 
 EXTRA_OECONF = "--enable-inotify --disable-hal"
 
@@ -27,4 +29,3 @@ do_install_append () {
 }
 
 FILES_${PN} += "${datadir}/pixmaps/*.png"
-

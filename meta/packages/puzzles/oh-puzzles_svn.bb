@@ -1,18 +1,19 @@
 DESCRIPTION = "Portable Puzzle Collection"
 LICENSE = "MIT"
 SECTION = "x11"
-DEPENDS = "gtk+ gconf intltool-native librsvg libowl"
+DEPENDS = "gtk+ gconf intltool-native librsvg"
+DEPENDS_append_poky = " libowl"
 
 PV = "0.1+svnr${SRCREV}"
-PR = "r9"
+PR = "r10"
 
 bindir = "/usr/games"
 
 inherit autotools pkgconfig
 
 SRC_URI = "svn://svn.o-hand.com/repos/;module=oh-puzzles;proto=http"
-
 SRC_URI_append_poky = " file://oh-puzzles-owl-menu.patch;patch=1;pnum=0 "
+
 S = "${WORKDIR}/${PN}"
 
 EXTRA_OEMAKE += "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1"
