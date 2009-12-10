@@ -1,0 +1,21 @@
+Index: gtk+-2.18.5/gtk/Makefile.am
+===================================================================
+--- gtk+-2.18.5.orig/gtk/Makefile.am	2009-12-08 15:12:46.000000000 +0000
++++ gtk+-2.18.5/gtk/Makefile.am	2009-12-10 17:31:46.000000000 +0000
+@@ -1300,11 +1300,11 @@
+ 	   ./gtk-update-icon-cache
+ endif
+ 
+-gtkbuiltincache.h: @REBUILD@ stamp-icons
+-	$(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache$(EXEEXT) $(GTK_UPDATE_ICON_CACHE_MANIFEST)
+-	$(gtk_update_icon_cache_program) --force --ignore-theme-index		\
+-	   --source builtin_icons stock-icons > gtkbuiltincache.h.tmp &&        \
+-	mv gtkbuiltincache.h.tmp gtkbuiltincache.h
++#gtkbuiltincache.h: @REBUILD@ stamp-icons
++#	$(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache$(EXEEXT) $(GTK_UPDATE_ICON_CACHE_MANIFEST)
++#	$(gtk_update_icon_cache_program) --force --ignore-theme-index		\
++#	   --source builtin_icons stock-icons > gtkbuiltincache.h.tmp &&        \
++#	mv gtkbuiltincache.h.tmp gtkbuiltincache.h
+ 
+ EXTRA_DIST +=                   \
+ 	$(STOCK_ICONS)		\
