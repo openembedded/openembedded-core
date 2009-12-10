@@ -1,20 +1,20 @@
 Index: git/configure.ac
 ===================================================================
---- git.orig/configure.ac	2009-10-05 17:05:14.000000000 +0100
-+++ git/configure.ac	2009-10-05 21:02:48.000000000 +0100
+--- git.orig/configure.ac	2009-12-10 21:37:39.000000000 +0000
++++ git/configure.ac	2009-12-10 21:39:05.000000000 +0000
 @@ -34,7 +34,7 @@
+   clutter-1.0
+   clutter-gtk-0.10
    gtk+-2.0
-   packagekit-glib >= 0.4
-   packagekit-glib < 0.5
 -  rpm >= 4.6'
 +  libopkg'
  
  AC_MSG_CHECKING([for available nbtk version])
  PKG_CHECK_EXISTS(nbtk-1.2,
-Index: git/src/mai-package.c
+Index: git/src/pk-glib/mai-package.c
 ===================================================================
---- git.orig/src/mai-package.c	2009-10-05 17:05:06.000000000 +0100
-+++ git/src/mai-package.c	2009-10-05 21:01:57.000000000 +0100
+--- git.orig/src/pk-glib/mai-package.c	2009-12-10 21:42:24.000000000 +0000
++++ git/src/pk-glib/mai-package.c	2009-12-10 21:43:48.000000000 +0000
 @@ -23,7 +23,7 @@
  #include <gtk/gtk.h>
  
@@ -24,7 +24,7 @@ Index: git/src/mai-package.c
  
  #include "mai-model-priv.h"
  #include "mai-package.h"
-@@ -191,7 +191,7 @@
+@@ -230,7 +230,7 @@
  
    if (priv->package_id &&
        priv->version &&
@@ -33,7 +33,7 @@ Index: git/src/mai-package.c
    {
      g_debug ("    skipping '%s'", version);
      return;
-@@ -955,7 +955,7 @@
+@@ -998,7 +998,7 @@
      return -1;
  
    /* FIXME support deb. */
@@ -42,3 +42,34 @@ Index: git/src/mai-package.c
  }
  
  gboolean
+Index: git/src/pk-glib2/mai-package.c
+===================================================================
+--- git.orig/src/pk-glib2/mai-package.c	2009-12-10 21:41:01.000000000 +0000
++++ git/src/pk-glib2/mai-package.c	2009-12-10 21:42:08.000000000 +0000
+@@ -23,7 +23,7 @@
+ #include <gtk/gtk.h>
+ 
+ /* FIXME make conditional. */
+-#include <rpm/rpmlib.h>
++#include <libopkg/opkg.h>
+ 
+ #include "mai-model-priv.h"
+ #include "mai-package.h"
+@@ -737,7 +737,7 @@
+     return -1;
+ 
+   /* FIXME support deb. */
+-  return rpmvercmp (priv->version, version);
++  return opkg_compare_versions (priv->version, version);
+ }
+ 
+ static void
+@@ -820,7 +820,7 @@
+       gchar **id = pk_package_id_split (package_id);
+ 
+       if (!priv->version ||
+-          rpmvercmp (id[PK_PACKAGE_ID_VERSION], priv->version) > 0)
++          opkg_compare_versions (id[PK_PACKAGE_ID_VERSION], priv->version) > 0)
+       {
+         PkInfoEnum package_info;
+ 
