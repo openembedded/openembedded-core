@@ -2,7 +2,7 @@ DESCRIPTION = "The RPM Package Manager."
 HOMEPAGE = "http://rpm.org/"
 LICENSE = "LGPL GPL"
 DEPENDS = "zlib beecrypt file popt python"
-PR = "r15"
+PR = "r16"
 
 SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
            file://external-tools.patch;patch=1 \
@@ -102,6 +102,7 @@ do_install_append () {
 def rpm_python_version(d):
 	import os, bb
 	staging_incdir = bb.data.getVar( "STAGING_INCDIR", d, 1 )
+	if os.path.exists( "%s/python2.6" % staging_incdir ): return "2.6"
 	if os.path.exists( "%s/python2.5" % staging_incdir ): return "2.5"
 	if os.path.exists( "%s/python2.4" % staging_incdir ): return "2.4"
 	if os.path.exists( "%s/python2.3" % staging_incdir ): return "2.3"
