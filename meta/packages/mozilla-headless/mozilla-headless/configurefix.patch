@@ -1,8 +1,8 @@
 Index: offscreen/configure.in
 ===================================================================
---- offscreen.orig/configure.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/configure.in	2009-06-12 14:15:55.000000000 +0100
-@@ -62,7 +62,6 @@
+--- offscreen.orig/configure.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/configure.in	2009-12-09 13:38:51.000000000 +0000
+@@ -64,7 +64,6 @@
  
  AC_PREREQ(2.13)
  AC_INIT(config/config.mk)
@@ -10,7 +10,7 @@ Index: offscreen/configure.in
  AC_CANONICAL_SYSTEM
  TARGET_CPU="${target_cpu}"
  TARGET_VENDOR="${target_vendor}"
-@@ -103,7 +102,6 @@
+@@ -106,7 +105,6 @@
  _SUBDIR_HOST_CFLAGS="$HOST_CFLAGS"
  _SUBDIR_HOST_CXXFLAGS="$HOST_CXXFLAGS"
  _SUBDIR_HOST_LDFLAGS="$HOST_LDFLAGS"
@@ -18,7 +18,7 @@ Index: offscreen/configure.in
  
  dnl Set the version number of the libs included with mozilla
  dnl ========================================================
-@@ -135,6 +133,9 @@
+@@ -139,6 +137,9 @@
  
  MSMANIFEST_TOOL=
  
@@ -28,7 +28,7 @@ Index: offscreen/configure.in
  dnl Set various checks
  dnl ========================================================
  MISSING_X=
-@@ -285,7 +286,7 @@
+@@ -308,7 +309,7 @@
      ;;
  esac
  
@@ -37,7 +37,7 @@ Index: offscreen/configure.in
      echo "cross compiling from $host to $target"
      cross_compiling=yes
  
-@@ -323,7 +324,7 @@
+@@ -346,7 +347,7 @@
  
      AC_MSG_CHECKING([whether the host c compiler ($HOST_CC $HOST_CFLAGS $HOST_LDFLAGS) works])
      AC_TRY_COMPILE([], [return(0);], 
@@ -46,7 +46,7 @@ Index: offscreen/configure.in
  	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CC cannot create executables.]) )
  
      CC="$HOST_CXX"
-@@ -331,7 +332,7 @@
+@@ -354,7 +355,7 @@
  
      AC_MSG_CHECKING([whether the host c++ compiler ($HOST_CXX $HOST_CXXFLAGS $HOST_LDFLAGS) works])
      AC_TRY_COMPILE([], [return(0);], 
@@ -55,7 +55,7 @@ Index: offscreen/configure.in
  	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CXX cannot create executables.]) )
      
      CC=$_SAVE_CC
-@@ -352,7 +353,7 @@
+@@ -375,7 +376,7 @@
          ;;
      esac
  
@@ -64,7 +64,7 @@ Index: offscreen/configure.in
      unset ac_cv_prog_CC
      AC_PROG_CC
      AC_CHECK_PROGS(CXX, $CXX "${target_alias}-g++" "${target}-g++", :)
-@@ -376,37 +377,6 @@
+@@ -399,37 +400,6 @@
      AC_CHECK_PROGS(STRIP, $STRIP "${target_alias}-strip" "${target}-strip", :)
      AC_CHECK_PROGS(WINDRES, $WINDRES "${target_alias}-windres" "${target}-windres", :)
      AC_DEFINE(CROSS_COMPILE)
@@ -102,7 +102,7 @@ Index: offscreen/configure.in
  
  GNU_AS=
  GNU_LD=
-@@ -1606,6 +1576,7 @@
+@@ -1586,6 +1556,7 @@
  '
  
  dnl test that the macros actually work:
@@ -110,7 +110,7 @@ Index: offscreen/configure.in
  AC_MSG_CHECKING(that static assertion macros used in autoconf tests work)
  AC_CACHE_VAL(ac_cv_static_assertion_macros_work,
   [AC_LANG_SAVE
-@@ -2767,9 +2738,13 @@
+@@ -2770,9 +2741,13 @@
  AC_LANG_C
  AC_HEADER_STDC
  AC_C_CONST
@@ -124,7 +124,7 @@ Index: offscreen/configure.in
  AC_TYPE_SIZE_T
  AC_STRUCT_ST_BLKSIZE
  AC_MSG_CHECKING(for siginfo_t)
-@@ -3152,19 +3127,9 @@
+@@ -3174,21 +3149,9 @@
  dnl We don't want to link against libm or libpthread on Darwin since
  dnl they both are just symlinks to libSystem and explicitly linking
  dnl against libSystem causes issues when debugging (see bug 299601).
@@ -132,6 +132,8 @@ Index: offscreen/configure.in
 -*-darwin*)
 -    ;;
 -*-beos*)
+-    ;;
+-*-os2*)
 -    ;;
 -*)
      AC_CHECK_LIB(m, atan)
@@ -145,7 +147,7 @@ Index: offscreen/configure.in
  
  _SAVE_CFLAGS="$CFLAGS"
  CFLAGS="$CFLAGS -D_GNU_SOURCE"
-@@ -7007,18 +6972,13 @@
+@@ -6889,18 +6852,13 @@
  
  # Demangle only for debug or trace-malloc builds
  MOZ_DEMANGLE_SYMBOLS=
@@ -166,7 +168,7 @@ Index: offscreen/configure.in
  
  dnl ========================================================
  dnl =
-@@ -7530,10 +7490,7 @@
+@@ -7420,10 +7378,7 @@
      dnl if no gtk/libIDL1 or gtk2/libIDL2 combination was found, fall back
      dnl to either libIDL1 or libIDL2.
      if test -z "$_LIBIDL_FOUND"; then
@@ -177,7 +179,7 @@ Index: offscreen/configure.in
      fi
      dnl
      dnl If we don't have a libIDL config program & not cross-compiling, 
-@@ -7605,13 +7562,7 @@
+@@ -7495,13 +7450,7 @@
  fi
  
  if test -z "$SKIP_PATH_CHECKS"; then
@@ -191,7 +193,7 @@ Index: offscreen/configure.in
  fi
  
  if test -z "${GLIB_GMODULE_LIBS}" -a -n "${GLIB_CONFIG}"; then
-@@ -8457,10 +8408,7 @@
+@@ -8278,10 +8227,7 @@
  HAVE_WCRTOMB
  "
  
@@ -203,7 +205,7 @@ Index: offscreen/configure.in
  )
  
  # Save the defines header file before autoconf removes it.
-@@ -8519,31 +8467,11 @@
+@@ -8340,31 +8286,11 @@
  dnl   To add new Makefiles, edit allmakefiles.sh.
  dnl   allmakefiles.sh sets the variable, MAKEFILES.
  . ${srcdir}/allmakefiles.sh
@@ -235,7 +237,7 @@ Index: offscreen/configure.in
  dnl Prevent the regeneration of cairo-features.h forcing rebuilds of gfx stuff
  if test "$CAIRO_FEATURES_H"; then
    if cmp -s $CAIRO_FEATURES_H "$CAIRO_FEATURES_H".orig; then
-@@ -8569,14 +8497,14 @@
+@@ -8390,14 +8316,14 @@
  HOST_LDFLAGS="$_SUBDIR_HOST_LDFLAGS"
  RC=
  
@@ -253,7 +255,7 @@ Index: offscreen/configure.in
      if test -z "$MOZ_DEBUG"; then
          ac_configure_args="$ac_configure_args --disable-debug"
      fi
-@@ -8592,8 +8520,7 @@
+@@ -8413,8 +8339,7 @@
      if test -n "$USE_ARM_KUSER"; then
          ac_configure_args="$ac_configure_args --with-arm-kuser"
      fi
@@ -263,7 +265,7 @@ Index: offscreen/configure.in
  fi
  
  if test -z "$MOZ_NATIVE_NSPR"; then
-@@ -8610,7 +8537,6 @@
+@@ -8431,7 +8356,6 @@
  
  # Run the SpiderMonkey 'configure' script.
  dist=$MOZ_BUILD_ROOT/dist
@@ -271,7 +273,7 @@ Index: offscreen/configure.in
  ac_configure_args="$ac_configure_args --enable-threadsafe"
  if test -z "$MOZ_NATIVE_NSPR"; then
      ac_configure_args="$ac_configure_args --with-nspr-cflags='$NSPR_CFLAGS'"
-@@ -8627,11 +8553,14 @@
+@@ -8448,8 +8372,7 @@
       export MOZ_MEMORY_LDFLAGS
     fi
  fi
@@ -279,19 +281,38 @@ Index: offscreen/configure.in
 -ac_configure_args="$_SUBDIR_CONFIG_ARGS"
 +AC_CONFIG_SUBDIRS(js/src)
  
- fi # COMPILE_ENVIRONMENT && !LIBXUL_SDK_DIR
+ # Build jsctypes on the platforms we can.
+ if test "$BUILD_CTYPES"; then
+@@ -8465,20 +8388,14 @@
+     if test -n "$CROSS_COMPILE"; then
+       ac_configure_args="$ac_configure_args --build=$build --host=$target"
+     fi
+-    if test "$SOLARIS_SUNPRO_CC"; then
+-      # Always use gcc for libffi on Solaris
+-      old_cache_file=$cache_file
+-      cache_file=js/ctypes/libffi/config.cache
+-      ac_configure_args="$ac_configure_args CC=gcc"
+-      AC_OUTPUT_SUBDIRS(js/ctypes/libffi)
+-      cache_file=$old_cache_file
+-    else
+-      AC_OUTPUT_SUBDIRS(js/ctypes/libffi)
+-    fi
+-    ac_configure_args="$_SUBDIR_CONFIG_ARGS"
++    AC_CONFIG_SUBDIRS(js/ctypes/libffi)
+   fi
+ fi
  
 +m4_pattern_allow(AS_BIN)
 +
 +AC_OUTPUT($MAKEFILES)
 +
+ fi # COMPILE_ENVIRONMENT && !LIBXUL_SDK_DIR
+ 
  dnl Prevent the regeneration of autoconf.mk forcing rebuilds of the world
- dnl Needs to be at the end to respect possible changes from NSPR configure
- if cmp -s config/autoconf.mk config/autoconf.mk.orig; then
 Index: offscreen/js/src/configure.in
 ===================================================================
---- offscreen.orig/js/src/configure.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/js/src/configure.in	2009-06-12 14:15:55.000000000 +0100
+--- offscreen.orig/js/src/configure.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/js/src/configure.in	2009-12-09 13:38:51.000000000 +0000
 @@ -62,7 +62,6 @@
  
  AC_PREREQ(2.13)
@@ -319,7 +340,7 @@ Index: offscreen/js/src/configure.in
  dnl Set various checks
  dnl ========================================================
  MISSING_X=
-@@ -198,7 +202,7 @@
+@@ -212,7 +216,7 @@
  
  if test "$COMPILE_ENVIRONMENT"; then
  
@@ -328,7 +349,7 @@ Index: offscreen/js/src/configure.in
      echo "cross compiling from $host to $target"
  
      _SAVE_CC="$CC"
-@@ -235,7 +239,7 @@
+@@ -249,7 +253,7 @@
  
      AC_MSG_CHECKING([whether the host c compiler ($HOST_CC $HOST_CFLAGS $HOST_LDFLAGS) works])
      AC_TRY_COMPILE([], [return(0);], 
@@ -337,7 +358,7 @@ Index: offscreen/js/src/configure.in
  	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CC cannot create executables.]) )
  
      CC="$HOST_CXX"
-@@ -243,7 +247,7 @@
+@@ -257,7 +261,7 @@
  
      AC_MSG_CHECKING([whether the host c++ compiler ($HOST_CXX $HOST_CXXFLAGS $HOST_LDFLAGS) works])
      AC_TRY_COMPILE([], [return(0);], 
@@ -346,7 +367,7 @@ Index: offscreen/js/src/configure.in
  	AC_MSG_ERROR([installation or configuration problem: host compiler $HOST_CXX cannot create executables.]) )
      
      CC=$_SAVE_CC
-@@ -298,7 +302,7 @@
+@@ -312,7 +316,7 @@
          ;;
      esac
  
@@ -355,7 +376,7 @@ Index: offscreen/js/src/configure.in
      unset ac_cv_prog_CC
      AC_PROG_CC
      AC_CHECK_PROGS(CXX, $CXX "${target_alias}-g++" "${target}-g++", :)
-@@ -328,37 +332,6 @@
+@@ -342,37 +346,6 @@
      dnl able to run ppc code in a translated environment, making a cross
      dnl compiler appear native.  So we override that here.
      cross_compiling=yes
@@ -393,7 +414,7 @@ Index: offscreen/js/src/configure.in
  
  GNU_AS=
  GNU_LD=
-@@ -1424,6 +1397,8 @@
+@@ -1370,6 +1343,8 @@
  fi # GNU_CC
  fi # COMPILE_ENVIRONMENT
  
@@ -402,7 +423,7 @@ Index: offscreen/js/src/configure.in
  dnl =================================================================
  dnl Set up and test static assertion macros used to avoid AC_TRY_RUN,
  dnl which is bad when cross compiling.
-@@ -2579,9 +2554,13 @@
+@@ -2557,9 +2532,13 @@
  AC_LANG_C
  AC_HEADER_STDC
  AC_C_CONST
@@ -416,7 +437,7 @@ Index: offscreen/js/src/configure.in
  AC_TYPE_SIZE_T
  AC_STRUCT_ST_BLKSIZE
  AC_MSG_CHECKING(for siginfo_t)
-@@ -2606,7 +2585,8 @@
+@@ -2584,7 +2563,8 @@
  
  AC_CHECK_HEADER(stdint.h)
  if test "$ac_cv_header_stdint_h" = yes; then
@@ -426,7 +447,7 @@ Index: offscreen/js/src/configure.in
  else
      dnl We'll figure them out for ourselves.  List more likely types
      dnl earlier.  If we ever really encounter a size for which none of
-@@ -3004,10 +2984,7 @@
+@@ -2938,10 +2918,7 @@
      ;;
  *)
      AC_CHECK_LIB(m, atan)
@@ -438,7 +459,7 @@ Index: offscreen/js/src/configure.in
      ;;
  esac
  
-@@ -3903,6 +3880,7 @@
+@@ -3847,6 +3824,7 @@
  [  --with-nspr-libs=LIBS   Pass LIBS to LD when linking code that uses NSPR.
                            See --with-nspr-cflags for more details.],
      NSPR_LIBS=$withval)
@@ -446,7 +467,7 @@ Index: offscreen/js/src/configure.in
  AC_SUBST(NSPR_CFLAGS)
  AC_SUBST(NSPR_LIBS)
  
-@@ -4512,18 +4490,11 @@
+@@ -4386,18 +4364,11 @@
  
  # Demangle only for debug or trace-malloc builds
  MOZ_DEMANGLE_SYMBOLS=
@@ -465,24 +486,24 @@ Index: offscreen/js/src/configure.in
  
  dnl ========================================================
  dnl =
-@@ -5231,6 +5202,8 @@
- done
- AC_SUBST(LIBS_PATH)
+@@ -5097,6 +5068,8 @@
+ 
+ AC_HAVE_FUNCS(setlocale)
  
 +
 +
  dnl ========================================================
- dnl JavaScript shell
+ dnl Use cygwin wrapper for win32 builds, except MSYS/MinGW
  dnl ========================================================
-@@ -5371,3 +5344,4 @@
+@@ -5234,3 +5207,4 @@
  # 'js-config' in Makefile.in.
  AC_MSG_RESULT(invoking make to create js-config script)
  $MAKE js-config
 +
 Index: offscreen/nsprpub/configure.in
 ===================================================================
---- offscreen.orig/nsprpub/configure.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/nsprpub/configure.in	2009-06-12 14:15:55.000000000 +0100
+--- offscreen.orig/nsprpub/configure.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/nsprpub/configure.in	2009-12-09 13:10:12.000000000 +0000
 @@ -42,7 +42,6 @@
  AC_PREREQ(2.12)
  AC_INIT(config/libc_r.h)
@@ -562,8 +583,8 @@ Index: offscreen/nsprpub/configure.in
  
  dnl ========================================================
  dnl Check for gcc -pipe support
-@@ -2283,10 +2255,7 @@
- *-darwin*|*-beos*)
+@@ -2286,10 +2258,7 @@
+ *-darwin*|*-beos*|*-os2*)
      ;;
  *)
 -    AC_CHECK_LIB(dl, dlopen,
@@ -574,7 +595,7 @@ Index: offscreen/nsprpub/configure.in
  esac
  
  
-@@ -2904,6 +2873,8 @@
+@@ -2907,6 +2876,8 @@
  dnl pr/tests/w16gui/Makefile
  dnl tools/Makefile
  
@@ -583,7 +604,7 @@ Index: offscreen/nsprpub/configure.in
  if test -z "$USE_PTHREADS" && test -z "$USE_BTHREADS"; then
      MAKEFILES="$MAKEFILES pr/src/threads/combined/Makefile"
  elif test -n "$USE_PTHREADS"; then
-@@ -2919,3 +2890,5 @@
+@@ -2922,3 +2893,5 @@
  echo $MAKEFILES > unallmakefiles
  
  AC_OUTPUT([$MAKEFILES], [chmod +x config/nspr-config])
@@ -591,9 +612,9 @@ Index: offscreen/nsprpub/configure.in
 +
 Index: offscreen/js/src/Makefile.in
 ===================================================================
---- offscreen.orig/js/src/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/js/src/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-@@ -514,20 +514,8 @@
+--- offscreen.orig/js/src/Makefile.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/js/src/Makefile.in	2009-12-09 13:10:12.000000000 +0000
+@@ -513,20 +513,8 @@
  
  export:: jsautocfg.h
  
@@ -614,7 +635,7 @@ Index: offscreen/js/src/Makefile.in
  
  # jscpucfg is a strange target
  # Needs to be built with the host compiler but needs to include
-@@ -557,7 +545,7 @@
+@@ -556,7 +544,7 @@
  	echo no need to build jscpucfg $<
  else
  jscpucfg$(HOST_BIN_SUFFIX): jscpucfg.cpp Makefile.in
@@ -625,8 +646,8 @@ Index: offscreen/js/src/Makefile.in
  
 Index: offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp
 ===================================================================
---- offscreen.orig/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-06-12 14:15:55.000000000 +0100
+--- offscreen.orig/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2009-12-09 13:10:12.000000000 +0000
 @@ -47,6 +47,8 @@
  
  #include <stdarg.h>
@@ -638,8 +659,8 @@ Index: offscreen/js/src/xpconnect/loader/mozJSComponentLoader.cpp
  #include "nsCOMPtr.h"
 Index: offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp
 ===================================================================
---- offscreen.orig/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-06-12 14:15:55.000000000 +0100
+--- offscreen.orig/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp	2009-12-09 13:10:12.000000000 +0000
 @@ -39,6 +39,8 @@
   *
   * ***** END LICENSE BLOCK ***** */
@@ -649,24 +670,11 @@ Index: offscreen/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp
  #if !defined(XPCONNECT_STANDALONE) && !defined(NO_SUBSCRIPT_LOADER)
  
  #include "mozJSSubScriptLoader.h"
-Index: offscreen/modules/lcms/include/icc34.h
-===================================================================
---- offscreen.orig/modules/lcms/include/icc34.h	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/modules/lcms/include/icc34.h	2009-06-12 14:15:55.000000000 +0100
-@@ -144,7 +144,7 @@
-  */
- 
- 
--#ifdef PACKAGE_NAME
-+#if 0 
- /*
-   June 9, 2003, Adapted for use with configure by Bob Friesenhahn
-   Added the stupid check for autoconf by Marti Maria. 
 Index: offscreen/toolkit/mozapps/update/src/updater/Makefile.in
 ===================================================================
---- offscreen.orig/toolkit/mozapps/update/src/updater/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/toolkit/mozapps/update/src/updater/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-@@ -60,7 +60,7 @@
+--- offscreen.orig/toolkit/mozapps/update/src/updater/Makefile.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/toolkit/mozapps/update/src/updater/Makefile.in	2009-12-09 13:10:12.000000000 +0000
+@@ -56,7 +56,7 @@
  
  LIBS += \
  	$(DEPTH)/modules/libmar/src/$(LIB_PREFIX)mar.$(LIB_SUFFIX) \
@@ -677,8 +685,8 @@ Index: offscreen/toolkit/mozapps/update/src/updater/Makefile.in
  ifeq ($(OS_ARCH),WINNT)
 Index: offscreen/xpcom/sample/program/Makefile.in
 ===================================================================
---- offscreen.orig/xpcom/sample/program/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/xpcom/sample/program/Makefile.in	2009-06-12 14:15:55.000000000 +0100
+--- offscreen.orig/xpcom/sample/program/Makefile.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/xpcom/sample/program/Makefile.in	2009-12-09 13:10:12.000000000 +0000
 @@ -57,7 +57,7 @@
  # that the application be linked against the XPCOM dynamic library or the NSPR
  # dynamic libraries.
@@ -690,8 +698,8 @@ Index: offscreen/xpcom/sample/program/Makefile.in
  # Need to link with CoreFoundation on Mac
 Index: offscreen/xpcom/tools/registry/Makefile.in
 ===================================================================
---- offscreen.orig/xpcom/tools/registry/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/xpcom/tools/registry/Makefile.in	2009-06-12 14:15:55.000000000 +0100
+--- offscreen.orig/xpcom/tools/registry/Makefile.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/xpcom/tools/registry/Makefile.in	2009-12-09 13:10:12.000000000 +0000
 @@ -54,7 +54,7 @@
  SIMPLE_PROGRAMS	= $(CPPSRCS:.cpp=$(BIN_SUFFIX))
  
@@ -703,9 +711,9 @@ Index: offscreen/xpcom/tools/registry/Makefile.in
  # Need to link with CoreFoundation on Mac
 Index: offscreen/xulrunner/app/Makefile.in
 ===================================================================
---- offscreen.orig/xulrunner/app/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/xulrunner/app/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-@@ -184,7 +184,7 @@
+--- offscreen.orig/xulrunner/app/Makefile.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/xulrunner/app/Makefile.in	2009-12-09 13:10:12.000000000 +0000
+@@ -173,7 +173,7 @@
  RCFLAGS += -DXULRUNNER_ICO=\"$(DIST)/branding/xulrunner.ico\" -DDOCUMENT_ICO=\"$(DIST)/branding/document.ico\"
  endif
  
@@ -716,9 +724,9 @@ Index: offscreen/xulrunner/app/Makefile.in
  
 Index: offscreen/xulrunner/stub/Makefile.in
 ===================================================================
---- offscreen.orig/xulrunner/stub/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/xulrunner/stub/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-@@ -101,7 +101,7 @@
+--- offscreen.orig/xulrunner/stub/Makefile.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/xulrunner/stub/Makefile.in	2009-12-09 13:10:12.000000000 +0000
+@@ -100,7 +100,7 @@
  endif
  endif
  
@@ -729,9 +737,9 @@ Index: offscreen/xulrunner/stub/Makefile.in
  
 Index: offscreen/modules/plugin/test/testplugin/Makefile.in
 ===================================================================
---- offscreen.orig/modules/plugin/test/testplugin/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/modules/plugin/test/testplugin/Makefile.in	2009-06-12 14:15:55.000000000 +0100
-@@ -63,9 +63,7 @@
+--- offscreen.orig/modules/plugin/test/testplugin/Makefile.in	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/modules/plugin/test/testplugin/Makefile.in	2009-12-09 13:10:12.000000000 +0000
+@@ -60,9 +60,7 @@
  CMMSRCS = nptest_macosx.mm
  endif
  
@@ -743,18 +751,20 @@ Index: offscreen/modules/plugin/test/testplugin/Makefile.in
  CPPSRCS += nptest_os2.cpp
 Index: offscreen/js/src/aclocal.m4
 ===================================================================
---- offscreen.orig/js/src/aclocal.m4	2009-06-12 14:15:55.000000000 +0100
-+++ offscreen/js/src/aclocal.m4	2009-06-12 14:15:55.000000000 +0100
-@@ -9,4 +9,3 @@
+--- offscreen.orig/js/src/aclocal.m4	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/js/src/aclocal.m4	2009-12-09 13:39:01.000000000 +0000
+@@ -8,6 +8,4 @@
+ builtin(include, build/autoconf/altoptions.m4)dnl
  builtin(include, build/autoconf/moznbytetype.m4)dnl
  builtin(include, build/autoconf/mozprog.m4)dnl
+-builtin(include, build/autoconf/acwinpaths.m4)dnl
  
 -MOZ_PROG_CHECKMSYS()
 Index: offscreen/toolkit/toolkit-makefiles.sh
 ===================================================================
---- offscreen.orig/toolkit/toolkit-makefiles.sh	2009-06-12 14:19:59.000000000 +0100
-+++ offscreen/toolkit/toolkit-makefiles.sh	2009-06-12 14:20:09.000000000 +0100
-@@ -342,7 +342,6 @@
+--- offscreen.orig/toolkit/toolkit-makefiles.sh	2009-12-09 13:10:12.000000000 +0000
++++ offscreen/toolkit/toolkit-makefiles.sh	2009-12-09 13:10:12.000000000 +0000
+@@ -369,7 +369,6 @@
    modules/plugin/sdk/samples/Makefile
    modules/plugin/sdk/samples/common/Makefile
    modules/plugin/sdk/samples/basic/windows/Makefile
