@@ -1,10 +1,10 @@
 Index: git/configure.ac
 ===================================================================
---- git.orig/configure.ac	2009-08-12 15:12:47.000000000 +0100
-+++ git/configure.ac	2009-08-12 15:13:47.000000000 +0100
-@@ -54,6 +54,13 @@
- PKG_CHECK_MODULES(CLUTTER_MOZEMBED, clutter-mozembed-0.10)
- PKG_CHECK_MODULES(GTK, gtk+-2.0)
+--- git.orig/configure.ac	2009-12-10 17:14:58.000000000 +0000
++++ git/configure.ac	2009-12-10 17:15:01.000000000 +0000
+@@ -63,6 +63,13 @@
+ NBTKDATADIR=`${PKG_CONFIG} --variable=prefix nbtk-1.2`"/share/nbtk"
+ AC_SUBST(NBTKDATADIR)
  
 +IDLPREFIX=
 +AC_ARG_WITH(idl-prefix, AC_HELP_STRING([--with-idl-prefix=DIR],[prefix to add to access to the idl files]), with_idl_prefix=${withval})
@@ -18,18 +18,18 @@ Index: git/configure.ac
           clutter-1.0
 Index: git/libmwbpages/Makefile.am
 ===================================================================
---- git.orig/libmwbpages/Makefile.am	2009-08-12 15:12:47.000000000 +0100
-+++ git/libmwbpages/Makefile.am	2009-08-12 15:12:47.000000000 +0100
-@@ -31,10 +31,10 @@
- mwb-gettext.lo : MwbIGettext.h
+--- git.orig/libmwbpages/Makefile.am	2009-12-10 17:15:08.000000000 +0000
++++ git/libmwbpages/Makefile.am	2009-12-10 17:15:15.000000000 +0000
+@@ -28,10 +28,10 @@
+ mwb-pages-service.lo : MwbIPagesService.h
  
  .idl.h :
--	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m header $<
-+	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m header $<
+-	$(AM_V_GEN)$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m header $<
++	xpidl -I $(MOZIDLDIR) -m header $<
  
  .idl.xpt :
--	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m typelib $<
-+	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m typelib $<
+-	$(AM_V_GEN)$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m typelib $<
++	xpidl -I $(MOZIDLDIR) -m typelib $<
  
- dist_xpt_DATA = MwbISettings.xpt MwbIStartPage.xpt MwbIGettext.xpt
+ xpt_DATA = MwbIPagesService.xpt
  xptdir = $(pkgdatadir)/components
