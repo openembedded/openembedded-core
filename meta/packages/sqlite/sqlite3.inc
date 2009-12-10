@@ -1,7 +1,7 @@
 DESCRIPTION = "An Embeddable SQL Database Engine"
 SECTION = "libs"
 PRIORITY = "optional"
-DEPENDS = "readline ncurses"
+DEPENDS = "readline ncurses tcl-native"
 LICENSE = "PD"
 
 SRC_URI = "http://www.sqlite.org/sqlite-${PV}.tar.gz \
