@@ -62,10 +62,10 @@ class BBCooker:
 
         bb.data.inheritFromOS(self.configuration.data)
 
-        for f in self.configuration.file:
-            self.parseConfigurationFile( f )
+        # Add conf/bitbake.conf to the list of configuration files to read
+        self.configuration.file.append( os.path.join( "conf", "bitbake.conf" ) )
 
-        self.parseConfigurationFile( os.path.join( "conf", "bitbake.conf" ) )
+        self.parseConfigurationFile(self.configuration.file)
 
         if not self.configuration.cmd:
             self.configuration.cmd = bb.data.getVar("BB_DEFAULT_TASK", self.configuration.data) or "build"
@@ -385,9 +385,10 @@ class BBCooker:
             shell.start( self )
             sys.exit( 0 )
 
-    def parseConfigurationFile( self, afile ):
+    def parseConfigurationFile( self, afiles ):
         try:
-            self.configuration.data = bb.parse.handle( afile, self.configuration.data )
+            for afile in afiles:
+                self.configuration.data = bb.parse.handle( afile, self.configuration.data )
 
             # Handle any INHERITs and inherit the base class
             inherits  = ["base"] + (bb.data.getVar('INHERIT', self.configuration.data, True ) or "").split()
