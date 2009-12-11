@@ -11,7 +11,7 @@ SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;module=offscreen \
            file://jsautocfg.h \
 	   file://mozconfig"
 PV = "0.2+hg-1.0+${SRCPV}"
-PR = "r7"
+PR = "r8"
 
 S = "${WORKDIR}/offscreen"
 
@@ -20,6 +20,12 @@ DEPENDS = "gconf gnome-vfs pango dbus-glib alsa-lib libidl-native sqlite3 libidl
 FILES_${PN} += "${libdir}/xulrunner-1.9.2a1pre ${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/*.so"
 FILES_${PN}-dev += "${libdir}/xulrunner-devel-1.9.2a1pre"
 FILES_${PN}-dbg += "${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/.debug"
+
+# Mozilla's build rules search for -L paths to find libraries. Its
+# not clever enough to know where the sysroot is and hence finds host 
+# object files which is bad. We therefore tell pkg-config not to hide 
+# paths. See config/rules.mk and the LIBS_DEPS and _LIBDIRS variables.
+export PKG_CONFIG_ALLOW_SYSTEM_LIBS = "1"
 
 TARGET_CC_ARCH = ""
 
