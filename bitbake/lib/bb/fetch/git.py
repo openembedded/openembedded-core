@@ -77,13 +77,13 @@ class Git(Fetch):
         else:
             username = ""
 
-        repofile = os.path.join(data.getVar("DL_DIR", d, 1), ud.mirrortarbal)
+        repofile = os.path.join(data.getVar("DL_DIR", d, 1), ud.mirrortarball)
 
         coname = '%s' % (ud.tag)
         codir = os.path.join(ud.clonedir, coname)
 
         if not os.path.exists(ud.clonedir):
-            if Fetch.try_mirror(d, ud.mirrortarbal):    
+            if Fetch.try_mirror(d, ud.mirrortarball):    
                 bb.mkdirhier(ud.clonedir)
                 os.chdir(ud.clonedir)
                 runfetchcmd("tar -xzf %s" % (repofile), d)
