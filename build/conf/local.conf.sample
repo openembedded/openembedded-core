@@ -155,4 +155,5 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # The architecture to build SDK items for, by setting this you can build SDK
 # packages for architectures other than the host i.e. building i586 packages
 # on an x86_64 host.
-#SDK_ARCH="i586"
+# Supported values are i586 and x86_64
+#SDKMACHINE="i586"
