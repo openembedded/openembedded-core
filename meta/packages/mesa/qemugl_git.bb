@@ -12,16 +12,27 @@ SRC_URI = "git://git.o-hand.com/qemugl.git;protocol=git \
 S = "${WORKDIR}/git"
 
 PV = "0.0+git${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 DEFAULT_PREFERENCE = "-1"
 
 NATIVE_INSTALL_WORKS = "1"
 do_install () {
 	install -d ${D}${libdir}/
-	install -m 0755 ${S}/libGL.so.1.2 ${D}${libdir}/libGL.so.1.2
-	ln -s libGL.so.1.2 ${D}${libdir}/libGL.so.1
-	ln -s libGL.so.1 ${D}${libdir}/libGL.so
+    if [ "${PN}" != "qemugl-nativesdk" ]; then
+        install -m 0755 ${S}/libGL.so.1.2 ${D}${libdir}/libGL-qemu.so.1.2
+    else
+	    install -m 0755 ${S}/libGL.so.1.2 ${D}${libdir}/libGL.so.1.2
+	    ln -s libGL.so.1.2 ${D}${libdir}/libGL.so.1
+	    ln -s libGL.so.1 ${D}${libdir}/libGL.so
+    fi
+}
+
+pkg_postinst_${PN} () {
+    if [ "${PN}" != "qemugl-nativesdk" ]; then
+        rm -f $D${libdir}/libGL.so.1.2
+        ln -s libGL-qemu.so.1.2 $D${libdir}/libGL.so.1.2
+    fi
 }
 
 BBCLASSEXTEND = "nativesdk"
