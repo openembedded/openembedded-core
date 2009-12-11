@@ -178,12 +178,12 @@ provided by the principal developer and maintainer of Poky, <ulink url="http://o
 
         <para>
             <literallayout class='monospaced'>
-$ wget http://pokylinux.org/releases/pinky-3.1.tar.gz
-$ tar zxvf pinky-3.1.tar.gz
-$ cd pinky-3.1/
+$ wget http://pokylinux.org/releases/purple-3.2.tar.gz
+$ tar zxvf purple-3.2.tar.gz
+$ cd purple-3.2/
 $ source poky-init-build-env
 $ bitbake poky-image-sato
-$ runqemu qemuarm
+$ runqemu qemux86
 </literallayout>
         </para>
 
