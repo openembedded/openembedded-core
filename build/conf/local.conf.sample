@@ -151,3 +151,8 @@ SRC_TARBALL_STASH = "http://pokylinux.org/sources/"
 #ASSUME_PROVIDED += "gtk+-native libglade-native"
 
 ENABLE_BINARY_LOCALE_GENERATION = "1"
+
+# The architecture to build SDK items for, by setting this you can build SDK
+# packages for architectures other than the host i.e. building i586 packages
+# on an x86_64 host.
+#SDK_ARCH="i586"
