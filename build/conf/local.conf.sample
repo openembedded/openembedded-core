@@ -19,11 +19,11 @@ BBFILE_PRIORITY_moblin = "5"
 # PARALLEL_MAKE = "-j 4"
 
 # The machine to target
-MACHINE ?= "netbook"
+MACHINE ?= "qemux86"
 
 # Other supported machines
-#MACHINE ?= "qemux86"
 #MACHINE ?= "qemuarm"
+#MACHINE ?= "netbook"
 #MACHINE ?= "c7x0"
 #MACHINE ?= "akita"
 #MACHINE ?= "spitz"
