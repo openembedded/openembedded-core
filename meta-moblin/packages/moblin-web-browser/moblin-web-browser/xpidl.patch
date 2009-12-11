@@ -25,11 +25,11 @@ Index: git/libmwbpages/Makefile.am
  
  .idl.h :
 -	$(AM_V_GEN)$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m header $<
-+	xpidl -I $(MOZIDLDIR) -m header $<
++	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m header $<
  
  .idl.xpt :
 -	$(AM_V_GEN)$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m typelib $<
-+	xpidl -I $(MOZIDLDIR) -m typelib $<
++	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m typelib $<
  
  xpt_DATA = MwbIPagesService.xpt
  xptdir = $(pkgdatadir)/components
