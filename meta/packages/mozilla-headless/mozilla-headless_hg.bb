@@ -11,15 +11,15 @@ SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;module=offscreen \
            file://jsautocfg.h \
 	   file://mozconfig"
 PV = "0.2+hg-1.0+${SRCPV}"
-PR = "r8"
+PR = "r9"
 
 S = "${WORKDIR}/offscreen"
 
 DEPENDS = "gconf gnome-vfs pango dbus-glib alsa-lib libidl-native sqlite3 libidl"
 
-FILES_${PN} += "${libdir}/xulrunner-1.9.2a1pre ${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/*.so"
-FILES_${PN}-dev += "${libdir}/xulrunner-devel-1.9.2a1pre"
-FILES_${PN}-dbg += "${libdir}/xulrunner-devel-1.9.2a1pre/sdk/lib/.debug"
+FILES_${PN} += "${libdir}/xulrunner-${XULVERSION} ${libdir}/xulrunner-devel-${XULVERSION}/sdk/lib/*.so"
+FILES_${PN}-dev += "${libdir}/xulrunner-devel-${XULVERSION}"
+FILES_${PN}-dbg += "${libdir}/xulrunner-devel-${XULVERSION}/sdk/lib/.debug"
 
 # Mozilla's build rules search for -L paths to find libraries. Its
 # not clever enough to know where the sysroot is and hence finds host 
@@ -33,7 +33,7 @@ CFLAGS = "${TARGET_CFLAGS}"
 TARGET_CFLAGS = "-Os -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse -fasynchronous-unwind-tables"
 
 LDFLAGS = "${TARGET_LDFLAGS}"
-TARGET_LDFLAGS = "-Wl,-rpath,${libdir}/xulrunner-1.9.2a1pre"
+TARGET_LDFLAGS = "-Wl,-rpath,${libdir}/xulrunner-${XULVERSION}"
 
 export target_alias=${TARGET_PREFIX}
 
