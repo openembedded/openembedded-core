@@ -43,7 +43,7 @@ KERNEL_CC = "${CCACHE}${HOST_PREFIX}gcc${KERNEL_CCSUFFIX} ${HOST_CC_KERNEL_ARCH}
 KERNEL_LD = "${LD}${KERNEL_LDSUFFIX} ${HOST_LD_KERNEL_ARCH}"
 
 # Where built kernel lies in the kernel tree
-KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
+KERNEL_OUTPUT ?= "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_IMAGEDEST = "boot"
 
 #
@@ -62,6 +62,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 # U-Boot support
 UBOOT_ENTRYPOINT ?= "20008000"
 UBOOT_LOADADDRESS ?= "${UBOOT_ENTRYPOINT}"
+
+# For the kernel, we don't want the '-e MAKEFLAGS=' in EXTRA_OEMAKE.
+# We don't want to override kernel Makefile variables from the environment
+EXTRA_OEMAKE = ""
 
 kernel_do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
@@ -91,6 +95,7 @@ kernel_do_install() {
 	install -m 0644 System.map ${D}/boot/System.map-${KERNEL_VERSION}
 	install -m 0644 .config ${D}/boot/config-${KERNEL_VERSION}
 	install -m 0644 vmlinux ${D}/boot/vmlinux-${KERNEL_VERSION}
+	[ -e Module.symvers ] && install -m 0644 Module.symvers ${D}/boot/Module.symvers-${KERNEL_VERSION}
 	install -d ${D}/etc/modutils
 	if [ "${KERNEL_MAJOR_VERSION}" = "2.6" ]; then
 		install -d ${D}/etc/modprobe.d
@@ -106,7 +111,20 @@ kernel_do_install() {
 
 	mkdir -p $kerneldir/include/$ASMDIR
 	cp -fR include/$ASMDIR/* $kerneldir/include/$ASMDIR/
-	rm -f $ASMDIR $kerneldir/include/asm
+	# Kernel 2.6.27 moved headers from includes/asm-${ARCH} to arch/${ARCH}/include/asm	
+	if [ -e arch/${ARCH}/include/asm/ ] ; then 
+		cp -fR arch/${ARCH}/include/asm/* $kerneldir/include/$ASMDIR/
+		install -d $kerneldir/arch/${ARCH}/include
+		cp -fR arch/${ARCH}/* $kerneldir/arch/${ARCH}/	
+
+	# Check for arch/x86 on i386
+	elif [ -d arch/x86/include/asm/ ]; then
+		cp -fR arch/x86/include/asm/* $kerneldir/include/asm-x86/
+		install -d $kerneldir/arch/x86/include
+		cp -fR arch/x86/* $kerneldir/arch/x86/
+	fi
+
+	rm -f $kerneldir/include/asm
 	ln -sf $ASMDIR $kerneldir/include/asm
 
 	mkdir -p $kerneldir/include/asm-generic
@@ -121,7 +139,7 @@ kernel_do_install() {
 	mkdir -p $kerneldir/include/pcmcia
 	cp -fR include/pcmcia/* $kerneldir/include/pcmcia/
 
-	for entry in drivers/crypto include/media include/acpi include/sound include/video; do
+	for entry in drivers/crypto drivers/media include/media include/acpi include/sound include/video include/scsi include/trace; do
 		if [ -d $entry ]; then
 			mkdir -p $kerneldir/$entry
 			cp -fR $entry/* $kerneldir/$entry/
@@ -201,7 +219,7 @@ EXPORT_FUNCTIONS do_compile do_install do_configure
 PACKAGES = "kernel kernel-base kernel-image kernel-dev kernel-vmlinux"
 FILES = ""
 FILES_kernel-image = "/boot/${KERNEL_IMAGETYPE}*"
-FILES_kernel-dev = "/boot/System.map* /boot/config*"
+FILES_kernel-dev = "/boot/System.map* /boot/Module.symvers* /boot/config*"
 FILES_kernel-vmlinux = "/boot/vmlinux*"
 RDEPENDS_kernel = "kernel-base"
 # Allow machines to override this dependency if kernel image files are 
