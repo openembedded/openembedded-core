@@ -2,7 +2,7 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${PV}.tar.bz2 \
            file://procinfo.h \
@@ -41,10 +41,11 @@ do_compile () {
 
 do_install() {
 	set_arch
-	oe_runmake headers_install INSTALL_HDR_PATH=${D}/usr ARCH=$ARCH
+	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
 }
 
 do_install_append_arm() {
 	cp ${WORKDIR}/procinfo.h ${D}${includedir}/asm/
 }
 
+BBCLASSEXTEND = "nativesdk"
