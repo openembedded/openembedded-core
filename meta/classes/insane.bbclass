@@ -439,6 +439,19 @@ def package_qa_check_rdepends(pkg, workdir, d):
 
     return sane
 
+def configure_qa_check_gettext(d):
+    # Check to see if gettext is required and if so whether it's in DEPENDS
+    # Returning False means we need gettext but don't have it in DEPENDS
+    deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
+    if "gettext" in deps:
+       return True
+
+    check = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" $CONFIGURE_AC >/dev/null"
+    if os.system(check) == 0:
+       return True
+    else:
+        return False
+
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
     bb.note("DO PACKAGE QA")
@@ -481,9 +494,14 @@ python do_qa_staging() {
         bb.fatal("QA staging was broken by the package built above")
 }
 
-# Check broken config.log files
+# Check broken config.log files & for packages requiring Gettext which don't
+# have it in DEPENDS
 addtask qa_configure after do_configure before do_compile
 python do_qa_configure() {
+    bb.note("Checking for gettext requirement")
+    if not configure_qa_check_gettext(d):
+       bb.fatal("Gettext required by configure but not in DEPENDS")
+
     bb.note("Checking sanity of the config.log file")
     for root, dirs, files in os.walk(bb.data.getVar('WORKDIR', d, True)):
         statement = "grep 'CROSS COMPILE Badness:' %s > /dev/null" % \
