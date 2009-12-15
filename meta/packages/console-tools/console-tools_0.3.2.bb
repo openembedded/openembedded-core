@@ -1,6 +1,7 @@
 SECTION = "base"
 LICENSE = "GPL"
 DESCRIPTION = "Allows you to set-up and manipulate the Linux console."
+DEPENDS = "gettext"
 PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lct/console-tools-${PV}.tar.gz \
