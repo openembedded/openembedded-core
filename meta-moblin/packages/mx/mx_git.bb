@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
-DEPENDS = "clutter-1.0 clutter-imcontext"
+DEPENDS = "clutter-1.0 clutter-imcontext gettext"
 
 EXTRA_OECONF = "--disable-introspection"
 
