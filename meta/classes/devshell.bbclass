@@ -4,7 +4,8 @@ do_devshell[dirs] = "${S}"
 do_devshell[nostamp] = "1"
 
 export DISPLAY
-export XAUTHORITY
+export DBUS_SESSION_BUS_ADDRESS
+export XAUTHORITY ?= "${HOME}/.Xauthority"
 
 devshell_do_devshell() {
 	export TERMWINDOWTITLE="Bitbake Developer Shell"
