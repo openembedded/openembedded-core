@@ -268,8 +268,8 @@ PREFERRED_VERSION_gtk+ ?= "2.14.2"
 
 PREFERRED_VERSION_dbus ?= "1.2.4"
 PREFERRED_VERSION_dbus-native ?= "1.2.4"
-PREFERRED_VERSION_dbus-glib ?= "0.78"
-PREFERRED_VERSION_dbus-glib-native ?= "0.78"
+PREFERRED_VERSION_dbus-glib ?= "0.82"
+PREFERRED_VERSION_dbus-glib-native ?= "0.82"
 PREFERRED_VERSION_gnome-vfs ?= "2.22.0"
 PREFERRED_VERSION_libgnomecanvas ?= "2.20.0"
 
