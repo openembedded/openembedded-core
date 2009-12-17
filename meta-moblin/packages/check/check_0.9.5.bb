@@ -3,7 +3,9 @@ LICENSE = "LGPL"
 PRIORITY = "optional"
 SECTION = "devel"
 
-PR = "r1"
+PR = "r2"
+
+DEPENDS = "gettext"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/check/check-${PV}.tar.gz \
            file://configure_fix.patch;patch=1"
