@@ -442,8 +442,12 @@ def package_qa_check_rdepends(pkg, workdir, d):
 def configure_qa_check_gettext(d):
     # Check to see if gettext is required and if so whether it's in DEPENDS
     # Returning False means we need gettext but don't have it in DEPENDS
+    if bb.data.inherits_class('native', d):
+       gt = "gettext-native"
+    else:
+       gt = "gettext"
     deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
-    if "gettext" in deps:
+    if gt in deps:
        return True
 
     check = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" $CONFIGURE_AC >/dev/null"
