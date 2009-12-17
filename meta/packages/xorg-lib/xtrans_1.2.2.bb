@@ -6,5 +6,6 @@ PE = "1"
 PR = "r0"
 
 RDEPENDS_${PN}-dev = ""
+DEPENDS += "gettext"
 
 BBCLASSEXTEND = "native nativesdk"

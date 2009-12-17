@@ -1,7 +1,7 @@
 require xorg-lib-common.inc
 
 DESCRIPTION = "A Sample Authorization Protocol for X"
-DEPENDS += " xproto"
+DEPENDS += " xproto gettext"
 PROVIDES = "xau"
 PE = "1"
 
