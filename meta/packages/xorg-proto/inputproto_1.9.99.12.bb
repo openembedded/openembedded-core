@@ -1,8 +1,8 @@
 require xorg-proto-common.inc
 
-PR = "r1"
+PR = "r2"
 PE = "1"
 
-DEPENDS += "util-macros"
+DEPENDS += "util-macros gettext"
 
 BBCLASSEXTEND = "native nativesdk"
