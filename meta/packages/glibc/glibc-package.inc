@@ -53,7 +53,7 @@ do_install() {
 		grep -v $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
 		mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
 	done
-	rm -f ${D}/etc/rpc
+	rm -f ${D}{sysconfdir}/rpc
 	rm -f ${D}${includedir}/scsi/sg.h
 	rm -f ${D}${includedir}/scsi/scsi_ioctl.h
 	rm -f ${D}${includedir}/scsi/scsi.h
