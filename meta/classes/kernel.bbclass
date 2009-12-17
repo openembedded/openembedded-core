@@ -51,7 +51,7 @@ KERNEL_IMAGEDEST = "boot"
 #
 export CMDLINE_CONSOLE = "console=${@bb.data.getVar("KERNEL_CONSOLE",d,1) or "ttyS0"}"
 
-KERNEL_VERSION = "${@get_kernelversion('${S}')}"
+KERNEL_VERSION = "${@get_kernelversion('${B}')}"
 KERNEL_MAJOR_VERSION = "${@get_kernelmajorversion('${KERNEL_VERSION}')}"
 
 KERNEL_LOCALVERSION ?= ""
