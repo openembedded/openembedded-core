@@ -4,6 +4,8 @@ LICENSE  = "GPL"
 
 inherit autotools_stage pkgconfig update-rc.d
 
+DEPENDS  = "dbus glib-2.0 gettext"
+
 INITSCRIPT_NAME = "ofono"
 INITSCRIPT_PARAMS = "defaults 22"
 
