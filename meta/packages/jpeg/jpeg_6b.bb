@@ -3,10 +3,10 @@ LICENSE ="jpeg"
 SECTION = "libs"
 PRIORITY = "required"
 
-DEPENDS = "libtool-cross"
-DEPENDS_virtclass-native = "libtool-native"
+DEPENDS = "libtool-cross gettext"
+DEPENDS_virtclass-native = "libtool-native gettext-native"
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
 	   file://debian.patch;patch=1 \
