@@ -791,8 +791,8 @@ def base_get_metadata_git_branch(path, d):
 		return branch
 	return "<unknown>"
 
-def base_get_metadata_git_revision(d):
-	rev = os.popen("cd %s; git log -n 1 --pretty=oneline --" % base_get_scmbasepath(d)).read().split(" ")[0]
+def base_get_metadata_git_revision(path, d):
+	rev = os.popen("cd %s; git log -n 1 --pretty=oneline --" % path).read().split(" ")[0]
 	if len(rev) != 0:
 		return rev
 	return "<unknown>"
