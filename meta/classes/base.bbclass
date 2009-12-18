@@ -724,7 +724,7 @@ METADATA_BRANCH ?= "${@base_detect_branch(d)}"
 METADATA_REVISION ?= "${@base_detect_revision(d)}"
 
 def base_detect_revision(d):
-    path = base_get_scmbasepath(d)
+	path = base_get_scmbasepath(d)
 
 	scms = [base_get_metadata_git_revision, \
 			base_get_metadata_svn_revision]
@@ -737,7 +737,7 @@ def base_detect_revision(d):
 	return "<unknown>"	
 
 def base_detect_branch(d):
-    path = base_get_scmbasepath(d)
+	path = base_get_scmbasepath(d)
 
 	scms = [base_get_metadata_git_branch]
 
