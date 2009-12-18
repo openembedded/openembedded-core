@@ -1,9 +1,10 @@
 DESCRIPTION = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
+DEPENDS = "gettext-native"
 
 PR = "r0"
 
 SRC_URI = "ftp://elsie.nci.nih.gov/pub/tzcode${PV}.tar.gz \
-           ftp://elsie.nci.nih.gov/pub/tzdata${PV}.tar.gz"
+           ftp://elsie.nci.nih.gov/pub/tzdata2009s.tar.gz"
 
 S = "${WORKDIR}"
 
