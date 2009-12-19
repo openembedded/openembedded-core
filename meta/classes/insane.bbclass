@@ -439,23 +439,6 @@ def package_qa_check_rdepends(pkg, workdir, d):
 
     return sane
 
-def configure_qa_check_gettext(d):
-    # Check to see if gettext is required and if so whether it's in DEPENDS
-    # Returning False means we need gettext but don't have it in DEPENDS
-    if bb.data.inherits_class('native', d):
-       gt = "gettext-native"
-    else:
-       gt = "gettext"
-    deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
-    if gt in deps:
-       return True
-
-    check = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" $CONFIGURE_AC >/dev/null"
-    if os.system(check) == 0:
-       return True
-    else:
-        return False
-
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
     bb.note("DO PACKAGE QA")
@@ -502,11 +485,8 @@ python do_qa_staging() {
 # have it in DEPENDS
 addtask qa_configure after do_configure before do_compile
 python do_qa_configure() {
-    bb.note("Checking for gettext requirement")
-    if not configure_qa_check_gettext(d):
-       bb.fatal("Gettext required by configure but not in DEPENDS")
-
-    bb.note("Checking sanity of the config.log file")
+    configs = []
+    bb.note("Checking autotools environment for common misconfiguration")
     for root, dirs, files in os.walk(bb.data.getVar('WORKDIR', d, True)):
         statement = "grep 'CROSS COMPILE Badness:' %s > /dev/null" % \
                     os.path.join(root,"config.log")
@@ -514,4 +494,20 @@ python do_qa_configure() {
             if os.system(statement) == 0:
                 bb.fatal("""This autoconf log indicates errors, it looked at host includes.
 Rerun configure task after fixing this. The path was '%s'""" % root)
+
+        if "configure.ac" in files:
+            configs.append(os.path.join(root,"configure.ac"))
+        if "configure.in" in files:
+            configs.append(os.path.join(root, "configure.in"))
+
+    if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
+       gt = "gettext-native"
+    else:
+       gt = "gettext"
+    deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
+    if gt not in deps:
+       for config in configs:
+           gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
+           if os.system(gnu) == 0:
+              bb.fatal("Gettext required but not in DEPENDS for file %s" % config)
 }
