@@ -2,7 +2,7 @@ HOMEPAGE = "http://www.moblin.org/projects/projects_connman.php"
 SUMMARY  = "Moblin Connection Manager"
 LICENSE  = "GPL"
 
-DEPENDS  = "libgdbus dbus glib-2.0 hal gettext"
+DEPENDS  = "libgdbus dbus glib-2.0 hal"
 RDEPENDS_${PN} = "dhcp-client wpa-supplicant resolvconf"
 
 EXTRA_OECONF += " \
