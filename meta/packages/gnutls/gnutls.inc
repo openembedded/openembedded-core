@@ -1,6 +1,6 @@
 DESCRIPTION = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
-DEPENDS = "zlib libgcrypt lzo"
+DEPENDS = "zlib libgcrypt lzo gettext"
 
 LICENSE = "LGPL"
 
