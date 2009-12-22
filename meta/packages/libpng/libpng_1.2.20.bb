@@ -2,9 +2,9 @@ DESCRIPTION = "PNG Library"
 HOMEPAGE = "http://www.libpng.org/"
 LICENSE = "libpng"
 SECTION = "libs"
-DEPENDS = "zlib gettext"
+DEPENDS = "zlib"
 PRIORITY = "required"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/libpng-${PV}.tar.bz2 \
            file://makefile_fix.patch;patch=1"
