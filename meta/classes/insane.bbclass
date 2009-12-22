@@ -500,14 +500,15 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
         if "configure.in" in files:
             configs.append(os.path.join(root, "configure.in"))
 
-    if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
-       gt = "gettext-native"
-    else:
-       gt = "gettext"
-    deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
-    if gt not in deps:
-       for config in configs:
-           gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
-           if os.system(gnu) == 0:
-              bb.fatal("Gettext required but not in DEPENDS for file %s" % config)
+    if "gettext" not in bb.data.getVar('P', d, True):
+       if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
+          gt = "gettext-native"
+       else:
+          gt = "gettext"
+       deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
+       if gt not in deps:
+          for config in configs:
+              gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
+              if os.system(gnu) == 0:
+                 bb.fatal("Gettext required but not in DEPENDS for file %s" % config)
 }
