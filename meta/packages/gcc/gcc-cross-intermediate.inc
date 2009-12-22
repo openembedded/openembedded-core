@@ -1,5 +1,5 @@
 DEPENDS = "virtual/${TARGET_PREFIX}binutils"
-DEPENDS += "virtual/${TARGET_PREFIX}libc-initial"
+DEPENDS += "virtual/${TARGET_PREFIX}libc-initial gettext-native"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-intermediate"
 PACKAGES = ""
 

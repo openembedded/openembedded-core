@@ -1,3 +1,3 @@
 require gcc-cross.inc
 
-DEPENDS += "gmp-native mpfr-native"
+DEPENDS += "gmp-native mpfr-native gettext-native"

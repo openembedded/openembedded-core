@@ -1,6 +1,8 @@
 require gcc-cross_${PV}.bb
 require gcc-cross-initial.inc
 
+PR = "r1"
+
 DEPENDS += "gmp-native mpfr-native"
 
 EXTRA_OECONF += " --disable-libmudflap \
