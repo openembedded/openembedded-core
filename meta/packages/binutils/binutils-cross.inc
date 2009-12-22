@@ -1,6 +1,6 @@
 SECTION = "devel"
 inherit cross
-DEPENDS += "flex-native bison-native"
+DEPENDS += "flex-native bison-native gettext-native"
 PROVIDES = "virtual/${TARGET_PREFIX}binutils"
 PACKAGES = ""
 EXTRA_OECONF = "--with-sysroot=${STAGING_DIR_TARGET} \

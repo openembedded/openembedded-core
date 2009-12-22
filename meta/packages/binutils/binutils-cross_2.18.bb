@@ -1,3 +1,3 @@
 require binutils_${PV}.bb
 require binutils-cross.inc
-PR = "r1"
+PR = "r2"

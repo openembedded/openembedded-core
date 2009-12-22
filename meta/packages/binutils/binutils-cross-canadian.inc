@@ -1,5 +1,5 @@
 inherit cross-canadian
-DEPENDS = "flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/libc-nativesdk zlib-nativesdk"
+DEPENDS = "flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/libc-nativesdk zlib-nativesdk gettext-native"
 EXTRA_OECONF = "--with-sysroot=${prefix}/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"
 
