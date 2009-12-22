@@ -1,7 +1,9 @@
 LICENSE = "GPL"
 SECTION = "console/utils"
 DESCRIPTION = "sed is a Stream EDitor."
-PR = "r1"
+PR = "r2"
+
+DEPENDS = "gettext"
 
 SRC_URI = "${GNU_MIRROR}/sed/sed-${PV}.tar.gz"
 
