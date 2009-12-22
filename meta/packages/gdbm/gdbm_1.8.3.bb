@@ -3,8 +3,7 @@ HOMEPAGE = "http://www.gnu.org/software/gdbm/gdbm.html"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "GPL"
-DEPENDS = "gettext"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${GNU_MIRROR}/gdbm/gdbm-${PV}.tar.gz \
 	   file://makefile.patch;patch=1 \
