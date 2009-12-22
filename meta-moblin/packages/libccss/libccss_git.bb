@@ -1,9 +1,7 @@
 SRC_URI = "git://anongit.freedesktop.org/git/ccss.git;protocol=git"
 PV = "0.1+git${SRCPV}"
-PR = "r1"
-
-DEPENDS = "glib-2.0 cairo librsvg libsoup-2.4 gettext"
-
+PR = "r2"
+DEPENDS = "glib-2.0 cairo librsvg libsoup-2.4"
 S = "${WORKDIR}/git"
 
 inherit autotools_stage
