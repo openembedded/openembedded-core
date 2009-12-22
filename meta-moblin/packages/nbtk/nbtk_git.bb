@@ -3,8 +3,7 @@ SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git"
 LICENSE = "LGPLv2.1"
 PV = "1.2.3+git${SRCPV}"
 PR = "r4"
-
-DEPENDS = "clutter-1.0 libccss clutter-imcontext gettext"
+DEPENDS = "clutter-1.0 libccss clutter-imcontext"
 
 EXTRA_OECONF = "--disable-introspection"
 
