@@ -1,5 +1,4 @@
 DESCRIPTION = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
-DEPENDS = "gettext-native"
 
 PR = "r0"
 

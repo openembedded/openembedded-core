@@ -1,7 +1,7 @@
 DESCRIPTION = "Timezone data"
 SECTION = "base"
 PRIORITY = "optional"
-DEPENDS = "tzcode-native gettext"
+DEPENDS = "tzcode-native"
 
 PR = "r0"
 
