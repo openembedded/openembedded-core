@@ -25,6 +25,8 @@ LDFLAGS_build-darwin = "-L${STAGING_LIBDIR_NATIVE}"
 
 TOOLCHAIN_OPTIONS = ""
 
+DEPENDS_GETTEXT = "gettext-native"
+
 # Path mangling needed by the cross packaging
 # Note that we use := here to ensure that libdir and includedir are
 # target paths, not CROSS_DIR paths.

@@ -11,5 +11,7 @@ python () {
     gettext_after_parse(d)
 }
 
-DEPENDS =+ "gettext-native"
+DEPENDS_GETTEXT = "gettext gettext-native"
+
+DEPENDS =+ "${DEPENDS_GETTEXT}"
 EXTRA_OECONF += "--enable-nls"

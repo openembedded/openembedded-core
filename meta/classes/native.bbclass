@@ -35,6 +35,8 @@ LDFLAGS_build-darwin = "-L${STAGING_LIBDIR_NATIVE} "
 STAGING_BINDIR = "${STAGING_BINDIR_NATIVE}"
 STAGING_BINDIR_CROSS = "${STAGING_BINDIR_NATIVE}"
 
+DEPENDS_GETTEXT = "gettext-native"
+
 # Don't use site files for native builds
 export CONFIG_SITE = ""
 
