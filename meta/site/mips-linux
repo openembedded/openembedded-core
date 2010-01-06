@@ -113,3 +113,7 @@ ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}
 cv_mono_sizeof_sunpath=108
 mono_cv_sizeof_sunpath=108
 mono_cv_uscore=${mono_cv_uscore=no}
+
+# popt
+ac_cv_va_copy=${ac_cv_va_copy=yes}
+ac_cv___va_copy=${ac_cv___va_copy=yes}
