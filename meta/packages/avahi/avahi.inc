@@ -13,7 +13,7 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
         file://99avahi-autoipd \
         file://initscript.patch;patch=1"
 
-inherit autotools_stage pkgconfig update-rc.d
+inherit autotools_stage pkgconfig update-rc.d gettext
 
 EXTRA_OECONF = "--with-distro=debian \
              --with-avahi-priv-access-group=adm \
