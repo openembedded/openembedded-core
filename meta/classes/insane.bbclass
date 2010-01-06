@@ -510,6 +510,6 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
           for config in configs:
               gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
               if os.system(gnu) == 0:
-                 bb.fatal("Gettext required but not in DEPENDS for file %s.
-Missing inherit gettext?" % config)
+                 bb.fatal("""Gettext required but not in DEPENDS for file %s.
+Missing inherit gettext?""" % config)
 }
