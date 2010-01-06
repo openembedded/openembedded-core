@@ -1,5 +1,5 @@
 HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-1.0.2.tar.bz2 \
            file://disable_crossbinary.patch;patch=1 "
@@ -12,7 +12,7 @@ CFLAGS_append = " -fPIC "
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig gettext
 
 FILES_${PN}-dbg += "${base_libdir}/security/.debug"
 FILES_${PN}-dbg += "${base_libdir}/security/pam_filter/.debug"
