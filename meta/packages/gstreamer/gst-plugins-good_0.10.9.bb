@@ -1,4 +1,7 @@
 require gst-plugins.inc
+
+inherit gettext
+
 DEPENDS += "gst-plugins-base gconf cairo jpeg libpng gtk+ zlib libid3tag flac \
 	    speex"
 PR = "r4"

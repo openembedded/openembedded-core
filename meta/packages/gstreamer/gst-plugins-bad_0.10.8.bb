@@ -1,4 +1,7 @@
 require gst-plugins.inc
+
+inherit gettext
+
 DEPENDS += "gst-plugins-base libmusicbrainz tremor"
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio \

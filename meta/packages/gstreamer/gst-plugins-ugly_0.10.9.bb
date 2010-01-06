@@ -1,4 +1,7 @@
 require gst-plugins.inc
+
+inherit gettext
+
 DEPENDS += "gst-plugins-base libid3tag libmad mpeg2dec liba52 lame"
 PR = "r0"
 
