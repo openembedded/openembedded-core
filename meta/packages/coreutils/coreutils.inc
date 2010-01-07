@@ -4,4 +4,4 @@ SECTION = "base"
 RREPLACES = "textutils shellutils fileutils"
 RPROVIDES = "textutils shellutils fileutils"
 
-inherit autotools
+inherit autotools gettext
