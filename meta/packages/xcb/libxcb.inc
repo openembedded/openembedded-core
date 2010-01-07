@@ -4,7 +4,7 @@ LICENSE = "MIT-X"
 HOMEPAGE = "http://xcb.freedesktop.org"
 
 PARALLEL_MAKE = ""
-DEPENDS = "xcb-proto xproto libxau libxslt-native"
+DEPENDS = "xcb-proto xproto libxau libxslt-native xcb-proto-native"
 # DEPENDS += "xsltproc-native gperf-native"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2"
@@ -40,7 +40,7 @@ FILES_libxcb-xtest = "${libdir}/libxcb-xtest.so.*"
 FILES_libxcb-xv = "${libdir}/libxcb-xv.so.*"
 FILES_libxcb-xvmc = "${libdir}/libxcb-xvmc.so.*"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 # XCBPROTO_XCBINCLUDEDIR is setup based on `pkg-config --variable=xcbincludedir xcb-proto`
 # but the xcbincludedir variable doesn't point into the staging area, so it needs some
