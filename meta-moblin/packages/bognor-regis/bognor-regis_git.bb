@@ -6,7 +6,7 @@ PR = "r0"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "glib-2.0 dbus-glib gtk+ libnotify"
+DEPENDS = "glib-2.0 dbus-glib gtk+ libnotify gupnp gupnp-av"
 
 FILES_${PN} += "${datadir}/dbus-1/services"
 
