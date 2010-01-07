@@ -3,7 +3,7 @@ DEFAULT_PREFERENCE = "-99"
 
 require gcc-common.inc
 
-DEPENDS = "mpfr gmp"
+DEPENDS =+ "mpfr gmp"
 
 SRC_URI = "ftp://ftp.gnu.org/pub/gnu/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	file://fedora/gcc43-c++-builtin-redecl.patch;patch=1;pnum=0 \

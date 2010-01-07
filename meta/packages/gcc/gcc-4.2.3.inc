@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-DEPENDS = "mpfr gmp"
+DEPENDS =+ "mpfr gmp"
 
 SRC_URI = "ftp://ftp.gnu.org/pub/gnu/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	file://100-uclibc-conf.patch;patch=1 \
