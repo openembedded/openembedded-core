@@ -39,7 +39,7 @@ EXTRA_OECONF = "--disable-aspell-test 		\
 
 CFLAGS += "-D_GNU_SOURCE"
 
-inherit autotools_stage pkgconfig
+inherit autotools_stage pkgconfig gettext
 
 do_install_append() {
 	install -d ${D}${datadir}/applications
