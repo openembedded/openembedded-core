@@ -1,6 +1,6 @@
 DESCRIPTION = "Common X11 Keyboard layouts"
 LICENSE = "MIT"
-DEPENDS = "intltool xkbcomp-native"
+DEPENDS = "intltool xkbcomp-native glib-2.0"
 RDEPENDS = "xkbcomp"
 PR = "r2"
 
