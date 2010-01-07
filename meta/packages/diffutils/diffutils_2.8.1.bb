@@ -7,7 +7,7 @@ PR = "r3"
 
 SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.gz"
 
-inherit autotools update-alternatives
+inherit autotools update-alternatives gettext
 
 # diffutils assumes non-glibc compilation with uclibc and
 # this causes it to generate its own implementations of
