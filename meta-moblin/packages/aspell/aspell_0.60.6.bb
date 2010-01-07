@@ -12,4 +12,4 @@ FILES_${PN} = "${bindir}/aspell"
 FILES_libpspell = "${libdir}/libpspell.so.*"
 FILES_libpspell-dev = "${libdir}/libpspell* ${bindir}/pspell-config ${includedir}/pspell"
 
-inherit autotools_stage
+inherit autotools_stage gettext
