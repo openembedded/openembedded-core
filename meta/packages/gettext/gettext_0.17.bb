@@ -51,4 +51,4 @@ PACKAGES =+ "libgettextlib libgettextsrc"
 FILES_libgettextlib = "${libdir}/libgettextlib-*.so*"
 FILES_libgettextsrc = "${libdir}/libgettextsrc-*.so*"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
