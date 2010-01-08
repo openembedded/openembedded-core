@@ -6,7 +6,7 @@ PR = "r1"
 
 SRC_URI = "http://www.claws-mail.org/downloads/plugins/rssyl-${PV}.tar.gz"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig gettext
 
 S = "${WORKDIR}/rssyl-${PV}"
 
