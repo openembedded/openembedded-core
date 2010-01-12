@@ -20,6 +20,7 @@ PREFERRED_VERSION_libdrm ?= ""
 PREFERRED_VERSION_xf86-input-keyboard ?= ""
 PREFERRED_VERSION_dri2proto ?= ""
 PREFERRED_VERSION_carrick ?= "1.1.13"
+PREFERRED_VERSION_nbtk ?= "1.2.3"
 
 
 SRCREV_pn-libdrm ?= "3f3c5be6f908272199ccf53f108b1124bfe0a00e"

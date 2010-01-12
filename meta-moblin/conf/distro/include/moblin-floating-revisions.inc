@@ -48,6 +48,7 @@ SRCREV_pn-mutter ?= "${AUTOREV}"
 SRCREV_pn-mutter-moblin ?= "${AUTOREV}"
 SRCREV_pn-mux ?= "${AUTOREV}"
 SRCREV_pn-nbtk ?= "${AUTOREV}"
+PREFERRED_VERSION_nbtk ?= "1.2.3+git%
 SRCREV_pn-mx ?= "${AUTOREV}"
 SRCREV_pn-qemugl ?= "${AUTOREV}"
 SRCREV_pn-sample-media ?= "${AUTOREV}"
