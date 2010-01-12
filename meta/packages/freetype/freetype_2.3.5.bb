@@ -14,6 +14,7 @@ inherit autotools pkgconfig binconfig
 
 LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
+EXTRA_OEMAKE_virtclass-native = ""
 EXTRA_OECONF = "--without-zlib"
 
 do_configure() {
@@ -26,9 +27,17 @@ do_configure() {
 	oe_runconf
 }
 
+do_configure_virtclass-native() {
+	(cd builds/unix && gnu-configize) || die "failure running gnu-configize"
+	oe_runconf
+}
+
 do_compile_prepend() {
 	${BUILD_CC} -o objs/apinames src/tools/apinames.c
 }
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS}"
 FILES_${PN}-dev += "${bindir}"
+
+BBCLASSEXTEND = "native"
+
