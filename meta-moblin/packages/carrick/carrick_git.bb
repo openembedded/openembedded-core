@@ -1,18 +1,5 @@
-DESCIPTION = "Connection Management Panel Applet"
+include carrick.inc
+
 SRC_URI = "git://git.moblin.org/${PN}-ng.git;protocol=git"
-LICENSE = "GPLv2"
-PV = "0.0+git${SRCPV}"
-PR = "r1"
-
-DEPENDS = "nbtk mutter-moblin librest libnotify mobile-broadband-provider-info"
-RDEPENDS = "connman"
-
+PV = "1.2.0+git${SRCPV}"
 S = "${WORKDIR}/git"
-
-FILES_${PN} += "${datadir}/icons/hicolor"
-
-inherit autotools_stage
-
-do_configure_prepend () {
-	mkdir -p ${S}/build/autotools
-}

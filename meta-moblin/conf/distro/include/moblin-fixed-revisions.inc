@@ -19,6 +19,9 @@ PREFERRED_VERSION_libx11-trim ?= "1.2.1"
 PREFERRED_VERSION_libdrm ?= ""
 PREFERRED_VERSION_xf86-input-keyboard ?= ""
 PREFERRED_VERSION_dri2proto ?= ""
+PREFERRED_VERSION_carrick ?= "1.1.13"
+
+
 SRCREV_pn-libdrm ?= "3f3c5be6f908272199ccf53f108b1124bfe0a00e"
 SRCREV_pn-xf86-input-keyboard ?= "3e28d68b50d291938734e9684b8296ca864f3892"
 SRCREV_pn-dri2proto ?= "66c56ab10d917e3f47f93178d7eac6430970d3c4"
