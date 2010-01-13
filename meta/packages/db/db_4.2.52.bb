@@ -12,8 +12,11 @@ SECTION = "libs"
 DESCRIPTION = "Berkeley DB v4."
 HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "BSD Sleepycat"
-VIRTUAL_NAME ?= "virtual/db"
+VIRTUAL_NAME = "virtual/db"
+VIRTUAL_NAME_virtclass-native = "virtual/db-native"
+
 CONFLICTS = "db3"
+CONFLICTS_virtclass-native = "db3-native"
 PR = "r8"
 
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz \
@@ -90,3 +93,5 @@ do_install_append() {
 
 # The db package contains symlinks that trip up insane
 INSANE_SKIP_db = "1"
+
+BBCLASSEXTEND = "native"
