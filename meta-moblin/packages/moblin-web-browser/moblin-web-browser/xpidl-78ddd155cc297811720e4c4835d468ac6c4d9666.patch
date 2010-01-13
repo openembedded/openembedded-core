@@ -1,0 +1,35 @@
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac	2010-01-13 14:57:52.000000000 +0000
++++ git/configure.ac	2010-01-13 15:01:35.000000000 +0000
+@@ -57,6 +57,13 @@
+ NBTKDATADIR=`${PKG_CONFIG} --variable=prefix nbtk-1.2`"/share/nbtk"
+ AC_SUBST(NBTKDATADIR)
+ 
++IDLPREFIX=
++AC_ARG_WITH(idl-prefix, AC_HELP_STRING([--with-idl-prefix=DIR],[prefix to add to access to the idl files]), with_idl_prefix=${withval})
++if test x"${with_idl_prefix}" != x ; then
++   IDLPREFIX=${with_idl_prefix}
++fi
++AC_SUBST([IDLPREFIX])
++
+ if test "x$build_browser" = "xyes"; then
+    PKG_CHECK_MODULES(MWB,
+          clutter-1.0
+Index: git/libmwbpages/Makefile.am
+===================================================================
+--- git.orig/libmwbpages/Makefile.am	2010-01-13 14:57:52.000000000 +0000
++++ git/libmwbpages/Makefile.am	2010-01-13 15:02:20.000000000 +0000
+@@ -26,10 +26,10 @@
+ mwb-pages-service.lo : MwbIPagesService.h
+ 
+ .idl.h :
+-	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m header $<
++	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m header $<
+ 
+ .idl.xpt :
+-	$(MOZHOME)/xpidl -I $(MOZIDLDIR) -m typelib $<
++	xpidl -I $(IDLPREFIX)$(MOZIDLDIR) -m typelib $<
+ 
+ xpt_DATA = MwbIPagesService.xpt
+ xptdir = $(pkgdatadir)/components

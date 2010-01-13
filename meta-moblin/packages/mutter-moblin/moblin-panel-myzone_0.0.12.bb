@@ -1,0 +1,1 @@
+require moblin-panel-myzone.inc

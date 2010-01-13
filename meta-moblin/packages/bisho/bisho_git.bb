@@ -1,13 +1,5 @@
-DESCRIPTION = "Web Services Settings"
+require bisho.inc
+
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git"
-LICENSE = "GPLv2"
-PV = "0.0+git${SRCPV}"
-PR = "r0"
-
-DEPENDS = "gtk+ mojito nbtk"
-
+PV = "0.17.1+git${SRCPV}"
 S = "${WORKDIR}/git"
-
-inherit autotools_stage
-
-FILES_${PN} += "${datadir}/icons/"
