@@ -6,6 +6,6 @@ SYSTEMLIBS1 = "${SDKPATH}/lib/"
 
 PR = "r1"
 
-DEPENDS = "virtual/${TARGET_PREFIX}binutils-crosssdk"
+DEPENDS = "virtual/${TARGET_PREFIX}binutils-crosssdk gettext-native"
 DEPENDS += "virtual/${TARGET_PREFIX}libc-initial-nativesdk"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-intermediate-crosssdk"
