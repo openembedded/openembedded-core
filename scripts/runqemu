@@ -30,7 +30,7 @@ if [ "x$1" = "x" ]; then
     echo "Run as $0 MACHINE IMAGETYPE ZIMAGE IMAGEFILE"
     echo "where:"
     echo "  MACHINE - the machine to emulate (qemuarm, qemux86)"
-    echo "  IMAGETYPE - the type of image to run (ext2, nfs) (default: ext2)"
+    echo "  IMAGETYPE - the type of image to run (ext3, nfs) (default: ext3)"
     echo "  ZIMAGE - the kernel to use (optional)"
     echo "  IMAGEFILE - the image file/location to use (optional)"
     exit 1
@@ -134,7 +134,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$BUILDDIR/tmp/deploy/images
-            findimage $T qemux86 ext3 "molbin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
+            findimage $T qemux86 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
         fi
     fi
     CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
