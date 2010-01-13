@@ -1,4 +1,4 @@
-PV = "1.2.1+gitr${SRCPV}"
+PV = "1.2.1+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libX11;protocol=git"
 S = "${WORKDIR}/git"
