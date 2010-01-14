@@ -103,8 +103,12 @@ package_generate_ipkg_conf () {
 		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
 		fi
 		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
-		if [ -e ${DEPLOY_DIR_IPK}/$sdkarch-nativesdk/Packages ] ; then
-		        echo "src oe-$sdkarch-nativesdk file:${DEPLOY_DIR_IPK}/$sdkarch-nativesdk" >> ${IPKGCONF_SDK}
+		extension=-nativesdk
+		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
+		    extension=""
+		fi
+		if [ -e ${DEPLOY_DIR_IPK}/$sdkarch$extension/Packages ] ; then
+		        echo "src oe-$sdkarch$extension file:${DEPLOY_DIR_IPK}/$sdkarch$extension" >> ${IPKGCONF_SDK}
 		fi
 	done
 	if [ -e ${DEPLOY_DIR_IPK}/${SDK_ARCH}-${TARGET_ARCH}-canadian/Packages ] ; then
