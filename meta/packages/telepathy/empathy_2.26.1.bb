@@ -4,10 +4,13 @@ LICENSE = "GPL"
 DEPENDS = "libcanberra telepathy-farsight gnome-doc-utils python-native telepathy-python telepathy-mission-control libtelepathy telepathy-glib gtk+ gconf libglade eds-dbus"
 RDEPENDS = "telepathy-mission-control"
 RRECOMMENDS = "telepathy-gabble"
+PR = "r1"
 
 inherit gnome
 
 PARALLEL_MAKE = ""
+
+EXTRA_OECONF = "--disable-scrollkeeper"
 
 PACKAGES =+ "empathy-scrollkeeper-junk"
 FILES_empathy-scrollkeeper-junk = "/var/lib/scrollkeeper"
