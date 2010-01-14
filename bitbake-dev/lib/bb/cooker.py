@@ -25,7 +25,8 @@
 import sys, os, getopt, glob, copy, os.path, re, time
 import bb
 from bb import utils, data, parse, event, cache, providers, taskdata, runqueue
-from bb import xmlrpcserver, command
+from bb import command
+import bb.server.xmlrpc
 import itertools, sre_constants
 
 class MultipleMatches(Exception):
@@ -62,14 +63,13 @@ class BBCooker:
     Manages one bitbake build run
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration, server):
         self.status = None
 
         self.cache = None
         self.bb_cache = None
 
-        self.server = bb.xmlrpcserver.BitBakeXMLRPCServer(self)
-        #self.server.register_function(self.showEnvironment)
+        self.server = server.BitBakeServer(self)
 
         self.configuration = configuration
 
@@ -680,7 +680,7 @@ class BBCooker:
                 retval = False
             if not retval:
                 self.command.finishAsyncCommand()
-                bb.event.fire(bb.event.BuildCompleted(buildname, targets, self.configuration.event_data, failures))
+                bb.event.fire(bb.event.BuildCompleted(buildname, item, self.configuration.event_data, failures))
                 return False
             return 0.5
 

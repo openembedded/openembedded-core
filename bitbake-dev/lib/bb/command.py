@@ -57,7 +57,6 @@ class Command:
             async_cmds[command] = (method)
 
     def runCommand(self, commandline):
-        bb.debug("Running command %s" % commandline)
         try:
             command = commandline.pop(0)
             if command in CommandsSync.__dict__:
