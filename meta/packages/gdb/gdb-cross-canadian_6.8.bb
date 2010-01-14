@@ -1,6 +1,6 @@
 require gdb-common.inc
 
-DEPENDS = "ncurses-nativesdk expat-nativesdk"
+DEPENDS = "ncurses-nativesdk expat-nativesdk gettext-nativesdk"
 
 inherit cross-canadian
 
