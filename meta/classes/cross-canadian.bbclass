@@ -32,6 +32,8 @@ CFLAGS = "${BUILDSDK_CFLAGS}"
 CXXFLAGS = "${BUILDSDK_CFLAGS}"
 LDFLAGS = "${BUILDSDK_LDFLAGS}"
 
+DEPENDS_GETTEXT = "gettext-native gettext-nativesdk"
+
 # Change to place files in SDKPATH
 prefix = "${SDKPATH}"
 exec_prefix = "${SDKPATH}"

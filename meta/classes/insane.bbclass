@@ -503,6 +503,8 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
     if "gettext" not in bb.data.getVar('P', d, True):
        if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
           gt = "gettext-native"
+       else if bb.data.inherits_class('cross-canadian', d):
+          gt = "gettext-nativesdk"
        else:
           gt = "gettext"
        deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
