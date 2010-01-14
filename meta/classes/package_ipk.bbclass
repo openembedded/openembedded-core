@@ -122,7 +122,11 @@ package_generate_archlist () {
 	for arch in $ipkgarchs; do
 		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
 		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
-		echo "arch $sdkarch-nativesdk $priority" >> ${IPKGCONF_SDK}
+		extension=-nativesdk
+		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
+		    extension=""
+		fi
+		echo "arch $sdkarch$extension $priority" >> ${IPKGCONF_SDK}
 		priority=$(expr $priority + 5)
 	done
 	echo "arch ${SDK_ARCH}-${TARGET_ARCH}-canadian $priority" >> ${IPKGCONF_SDK}
