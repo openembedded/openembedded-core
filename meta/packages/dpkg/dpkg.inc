@@ -8,7 +8,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz \
            file://noupdalt.patch;patch=1"
 
 DEPENDS = "zlib bzip2"
-DEPENDS_virtclass-native = "bzip2-native zlib-native virtual/update-alternatives-native"
+DEPENDS_virtclass-native = "bzip2-native zlib-native virtual/update-alternatives-native gettext-native"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
 
 S = "${WORKDIR}/${BPN}-${PV}"
