@@ -7,6 +7,7 @@ DEPENDS = "virtual/kernel zlib"
 
 inherit autotools
 
+COMPATIBLE_HOST = '(x86_64|i.86.*|arm.*)-(linux|freebsd.*)'
 
 SRC_URI = "http://www.xmission.com/~ebiederm/files/kexec/kexec-tools-${PV}.tar.gz \
            file://kexec-tools-arm.patch;patch=1 \
