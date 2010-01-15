@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
 PV = "0.10.6+git${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-git/"
 
@@ -18,7 +18,7 @@ SRC_URI = "\
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu --disable-gfx-check"
+EXTRA_OECONF = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu,mips-linux-user,mips-softmmu --disable-gfx-check"
 #EXTRA_OECONF += "--disable-sdl"
 
 inherit autotools
@@ -31,6 +31,6 @@ do_configure() {
 SRC_URI_append_virtclass-nativesdk = " file://glflags.patch;patch=1"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk libsdl-nativesdk qemugl-nativesdk"
 RDEPENDS_virtclass-nativesdk = "libsdl-nativesdk"
-EXTRA_OECONF_virtclass-nativesdk = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu --disable-vnc-tls --cc=${HOST_PREFIX}gcc"
+EXTRA_OECONF_virtclass-nativesdk = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu,mips-linux-user,mips-softmmu --disable-vnc-tls --cc=${HOST_PREFIX}gcc"
 
 BBCLASSEXTEND = "native nativesdk"
