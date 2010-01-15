@@ -5,7 +5,9 @@ PRIORITY = "optional"
 DEPENDS = "gtk+ startup-notification"
 DEPENDS_append_poky = " libowl"
 
-PR = "r4"
+PR = "r5"
+
+COMPATIBLE_HOST = '(x86_64|i.86.*|arm.*)-(linux|freebsd.*)'
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-fs-directory.png \
