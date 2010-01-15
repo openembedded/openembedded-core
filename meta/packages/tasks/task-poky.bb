@@ -28,6 +28,10 @@ ALLOW_EMPTY = "1"
 
 SPLASH ?= "psplash"
 
+# pcmanfm doesn't work on mips
+FILEMANAGER ?= "pcmanfm"
+FILEMANAGER_mips ?= ""
+
 RDEPENDS_task-poky-apps-console = "\
     avahi-daemon \
     dropbear \
@@ -58,7 +62,7 @@ RDEPENDS_task-poky-x11-base = "\
 
 RDEPENDS_task-poky-apps-x11-core = "\
     leafpad \
-    pcmanfm \
+    ${FILEMANAGER} \
     matchbox-terminal \
     screenshot"
 
