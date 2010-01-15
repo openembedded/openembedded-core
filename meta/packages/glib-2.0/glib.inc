@@ -7,7 +7,7 @@ LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0-native gtk-doc-native virtual/libiconv virtual/libintl"
-DEPENDS_virtclass-native = "gtk-doc-native"
+DEPENDS_virtclass-native = "gtk-doc-native pkgconfig-native gettext-native"
 PACKAGES =+ "glib-2.0-utils "
 
 LEAD_SONAME = "libglib-2.0.*"
