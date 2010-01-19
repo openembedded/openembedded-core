@@ -21,6 +21,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
 
+# kexec-tools doesn't work on Mips
+KEXECTOOLS ?= "kexec-tools"
+KEXECTOOLS_mips ?= ""
+
 RDEPENDS_task-poky-tools-debug = "\
     gdb \
     gdbserver \
@@ -47,7 +51,7 @@ RDEPENDS_task-poky-tools-testapps = "\
     tslib-calibrate \
     tslib-tests \
     lrzsz \
-    kexec-tools \
+    ${KEXECTOOLS} \
     alsa-utils-amixer \
     alsa-utils-aplay \
     owl-video \
