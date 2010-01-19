@@ -25,6 +25,19 @@ Task data collection and handling
 
 import bb
 
+def re_match_strings(target, strings):
+    """
+    Whether or not the string 'target' matches
+    any one string of the strings which can be regular expression string
+    """
+    import re
+
+    for name in strings:
+        if (name==target or
+                re.search(name,target)!=None):
+            return True
+    return False
+
 class TaskData:
     """
     BitBake Task Data implementation
@@ -261,7 +274,7 @@ class TaskData:
         """
         unresolved = []
         for target in self.build_names_index:
-            if target in dataCache.ignored_dependencies:
+            if re_match_strings(target, dataCache.ignored_dependencies):
                 continue
             if self.build_names_index.index(target) in self.failed_deps:
                 continue
@@ -276,7 +289,7 @@ class TaskData:
         """
         unresolved = []
         for target in self.run_names_index:
-            if target in dataCache.ignored_dependencies:
+            if re_match_strings(target, dataCache.ignored_dependencies):
                 continue
             if self.run_names_index.index(target) in self.failed_rdeps:
                 continue
@@ -356,7 +369,7 @@ class TaskData:
         added internally during dependency resolution
         """
 
-        if item in dataCache.ignored_dependencies:
+        if re_match_strings(item, dataCache.ignored_dependencies):
             return
 
         if not item in dataCache.providers:
@@ -364,7 +377,7 @@ class TaskData:
                 bb.msg.note(2, bb.msg.domain.Provider, "Nothing PROVIDES '%s' (but '%s' DEPENDS on or otherwise requires it)" % (item, self.get_dependees_str(item)))
             else:
                 bb.msg.note(2, bb.msg.domain.Provider, "Nothing PROVIDES '%s'" % (item))
-            bb.event.fire(bb.event.NoProvider(item, cfgData))
+            bb.event.fire(bb.event.NoProvider(item), cfgData)
             raise bb.providers.NoProvider(item)
 
         if self.have_build_target(item):
@@ -377,7 +390,7 @@ class TaskData:
 
         if not eligible:
             bb.msg.note(2, bb.msg.domain.Provider, "No buildable provider PROVIDES '%s' but '%s' DEPENDS on or otherwise requires it. Enable debugging and see earlier logs to find unbuildable providers." % (item, self.get_dependees_str(item)))
-            bb.event.fire(bb.event.NoProvider(item, cfgData))
+            bb.event.fire(bb.event.NoProvider(item), cfgData)
             raise bb.providers.NoProvider(item)
 
         if len(eligible) > 1 and foundUnique == False:
@@ -387,7 +400,7 @@ class TaskData:
                     providers_list.append(dataCache.pkg_fn[fn])
                 bb.msg.note(1, bb.msg.domain.Provider, "multiple providers are available for %s (%s);" % (item, ", ".join(providers_list)))
                 bb.msg.note(1, bb.msg.domain.Provider, "consider defining PREFERRED_PROVIDER_%s" % item)
-                bb.event.fire(bb.event.MultipleProviders(item, providers_list, cfgData))
+                bb.event.fire(bb.event.MultipleProviders(item, providers_list), cfgData)
             self.consider_msgs_cache.append(item)
 
         for fn in eligible:
@@ -407,7 +420,7 @@ class TaskData:
         (takes item names from RDEPENDS/PACKAGES namespace)
         """
 
-        if item in dataCache.ignored_dependencies:
+        if re_match_strings(item, dataCache.ignored_dependencies):
             return
 
         if self.have_runtime_target(item):
@@ -417,7 +430,7 @@ class TaskData:
 
         if not all_p:
             bb.msg.error(bb.msg.domain.Provider, "'%s' RDEPENDS/RRECOMMENDS or otherwise requires the runtime entity '%s' but it wasn't found in any PACKAGE or RPROVIDES variables" % (self.get_rdependees_str(item), item))
-            bb.event.fire(bb.event.NoProvider(item, cfgData, runtime=True))
+            bb.event.fire(bb.event.NoProvider(item, runtime=True), cfgData)
             raise bb.providers.NoRProvider(item)
 
         eligible, numberPreferred = bb.providers.filterProvidersRunTime(all_p, item, cfgData, dataCache)
@@ -425,7 +438,7 @@ class TaskData:
 
         if not eligible:
             bb.msg.error(bb.msg.domain.Provider, "'%s' RDEPENDS/RRECOMMENDS or otherwise requires the runtime entity '%s' but it wasn't found in any PACKAGE or RPROVIDES variables of any buildable targets.\nEnable debugging and see earlier logs to find unbuildable targets." % (self.get_rdependees_str(item), item))
-            bb.event.fire(bb.event.NoProvider(item, cfgData, runtime=True))
+            bb.event.fire(bb.event.NoProvider(item, runtime=True), cfgData)
             raise bb.providers.NoRProvider(item)
 
         if len(eligible) > 1 and numberPreferred == 0:
@@ -435,7 +448,7 @@ class TaskData:
                     providers_list.append(dataCache.pkg_fn[fn])
                 bb.msg.note(2, bb.msg.domain.Provider, "multiple providers are available for runtime %s (%s);" % (item, ", ".join(providers_list)))
                 bb.msg.note(2, bb.msg.domain.Provider, "consider defining a PREFERRED_PROVIDER entry to match runtime %s" % item)
-                bb.event.fire(bb.event.MultipleProviders(item,providers_list, cfgData, runtime=True))
+                bb.event.fire(bb.event.MultipleProviders(item,providers_list, runtime=True), cfgData)
             self.consider_msgs_cache.append(item)
 
         if numberPreferred > 1:
@@ -445,7 +458,7 @@ class TaskData:
                     providers_list.append(dataCache.pkg_fn[fn])
                 bb.msg.note(2, bb.msg.domain.Provider, "multiple providers are available for runtime %s (top %s entries preferred) (%s);" % (item, numberPreferred, ", ".join(providers_list)))
                 bb.msg.note(2, bb.msg.domain.Provider, "consider defining only one PREFERRED_PROVIDER entry to match runtime %s" % item)
-                bb.event.fire(bb.event.MultipleProviders(item,providers_list, cfgData, runtime=True))
+                bb.event.fire(bb.event.MultipleProviders(item,providers_list, runtime=True), cfgData)
             self.consider_msgs_cache.append(item)
 
         # run through the list until we find one that we can build

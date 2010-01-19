@@ -33,6 +33,8 @@
 
 import bb
 import xmlrpclib
+from bb import daemonize
+from bb.ui import uievent
 
 DEBUG = False
 
@@ -114,26 +116,34 @@ class BitBakeServer(SimpleXMLRPCServer):
         Serve Requests. Overloaded to honor a quit command
         """
         self.quit = False
+        self.timeout = 0 # Run Idle calls for our first callback
         while not self.quit:
             #print "Idle queue length %s" % len(self._idlefuns)
-            if len(self._idlefuns) == 0:
-                self.timeout = None
-            else:
-                self.timeout = 0
             self.handle_request()
             #print "Idle timeout, running idle functions"
+            nextsleep = None
             for function, data in self._idlefuns.items():
                 try:
                     retval = function(self, data, False)
-                    if not retval:
+                    if retval is False:
                         del self._idlefuns[function]
+                    elif retval is True:
+                        nextsleep = 0
+                    elif nextsleep is 0:
+                        continue
+                    elif nextsleep is None:
+                        nextsleep = retval
+                    elif retval < nextsleep:
+                        nextsleep = retval
                 except SystemExit:
                     raise
                 except:
                     import traceback
                     traceback.print_exc()
                     pass
-
+            if nextsleep is None and len(self._idlefuns) > 0:
+                nextsleep = 0  
+            self.timeout = nextsleep
         # Tell idle functions we're exiting
         for function, data in self._idlefuns.items():
             try:
@@ -143,3 +153,31 @@ class BitBakeServer(SimpleXMLRPCServer):
 
         self.server_close()
         return
+
+class BitbakeServerInfo():
+    def __init__(self, server):
+        self.host = server.host
+        self.port = server.port
+
+class BitBakeServerFork():
+    def __init__(self, serverinfo, command, logfile):
+        daemonize.createDaemon(command, logfile)
+
+class BitBakeServerConnection():
+    def __init__(self, serverinfo):
+        self.connection = xmlrpclib.Server("http://%s:%s" % (serverinfo.host, serverinfo.port),  allow_none=True)
+        self.events = uievent.BBUIEventQueue(self.connection)
+
+    def terminate(self):
+        # Don't wait for server indefinitely
+        import socket
+        socket.setdefaulttimeout(2) 
+        try:
+            self.events.system_quit()
+        except:
+            pass
+        try:
+            self.connection.terminateServer()
+        except:
+            pass
+
