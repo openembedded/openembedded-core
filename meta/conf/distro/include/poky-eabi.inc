@@ -32,6 +32,34 @@ PREFERRED_VERSION_glibc-initial ?= "2.6.1"
 PREFERRED_VERSION_glibc-initial_mips ?= "2.9"
 PREFERRED_VERSION_elfutils ?= "0.131"
 
+# Temporary preferred versions for PPC
+POWERPC_GCCVERSION ?= "4.2.3"
+POWERPC_BINUVERSION = "2.19"
+POWERPC_GLIBCVERSION ?= "2.6.1"
+POWERPC_LINUXLIBCVERSION ?= "2.6.20"
+
+PREFERRED_VERSION_gcc_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_gcc-cross_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_gcc-cross-initial_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_gcc-cross-intermediate_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_gcc-crosssdk_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_gcc-crosssdk-initial_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_gcc-crosssdk-intermediate_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_gcc-cross-canadian_powerpc ?= "${POWERPC_GCCVERSION}"
+PREFERRED_VERSION_binutils_powerpc ?= "${POWERPC_BINUVERSION}"
+PREFERRED_VERSION_binutils-cross_powerpc ?= "${POWERPC_BINUVERSION}"
+PREFERRED_VERSION_binutils-crosssdk_powerpc ?= "${POWERPC_BINUVERSION}"
+PREFERRED_VERSION_binutils-cross-canadian_powerpc ?= "${POWERPC_BINUVERSION}"
+PREFERRED_VERSION_linux-libc-headers_powerpc ?= "${POWERPC_LINUXLIBCVERSION}"
+PREFERRED_VERSION_linux-libc-headers-nativesdk_powerpc ?= "${POWERPC_LINUXLIBCVERSION}"
+PREFERRED_VERSION_glibc_powerpc ?= "${POWERPC_GLIBCVERSION}"
+PREFERRED_VERSION_glibc-initial_powerpc ?= "${POWERPC_GLIBCVERSION}"
+PREFERRED_VERSION_glibc-nativesdk_powerpc ?= "${POWERPC_GLIBCVERSION}"
+PREFERRED_VERSION_glibc-initial-nativesdk_powerpc ?= "${POWERPC_GLIBCVERSION}"
+PREFERRED_VERSION_elfutils_powerpc ?= "0.131"
+PREFERRED_VERSION_u-boot-mkimage-native_powerpc ?= "2009.08"
+PREFERRED_VERSION_udev_powerpc ?= "124"
+
 require conf/distro/include/as-needed.inc
 
 
