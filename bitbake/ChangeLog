@@ -1,8 +1,99 @@
-Changes in BitBake 1.8.x:
-	- Add bb.utils.prune_suffix function
- 
-Changes in BitBake 1.8.12:
-	- Fix -f (force) in conjunction with -b
+Changes in Bitbake 1.9.x:
+	- Add PE (Package Epoch) support from Philipp Zabel (pH5)
+	- Treat python functions the same as shell functions for logging
+	- Use TMPDIR/anonfunc as a __anonfunc temp directory (T)
+	- Catch truncated cache file errors
+	- Allow operations other than assignment on flag variables
+	- Add code to handle inter-task dependencies
+	- Fix cache errors when generation dotGraphs
+	- Make sure __inherit_cache is updated before calling include() (from Michael Krelin)
+	- Fix bug when target was in ASSUME_PROVIDED (#2236)
+	- Raise ParseError for filenames with multiple underscores instead of infinitely looping (#2062)
+	- Fix invalid regexp in BBMASK error handling (missing import) (#1124)
+	- Promote certain warnings from debug to note 2 level
+	- Update manual
+	- Correctly redirect stdin when forking
+	- If parsing errors are found, exit, too many users miss the errors
+	- Remove supriours PREFERRED_PROVIDER warnings
+	- svn fetcher: Add _buildsvncommand function
+	- Improve certain error messages
+	- Rewrite svn fetcher to make adding extra operations easier 
+	  as part of future SRCDATE="now" fixes
+	  (requires new FETCHCMD_svn definition in bitbake.conf)
+	- Change SVNDIR layout to be more unique (fixes #2644 and #2624)
+	- Add ConfigParsed Event after configuration parsing is complete
+	- Add SRCREV support for svn fetcher
+	- data.emit_var() - only call getVar if we need the variable
+	- Stop generating the A variable (seems to be legacy code)
+	- Make sure intertask depends get processed correcting in recursive depends
+	- Add pn-PN to overrides when evaluating PREFERRED_VERSION
+	- Improve the progress indicator by skipping tasks that have 
+	  already run before starting the build rather than during it
+	- Add profiling option (-P)
+	- Add BB_SRCREV_POLICY variable (clear or cache) to control SRCREV cache
+	- Add SRCREV_FORMAT support
+	- Fix local fetcher's localpath return values
+	- Apply OVERRIDES before performing immediate expansions
+	- Allow the -b -e option combination to take regular expressions
+	- Fix handling of variables with expansion in the name using _append/_prepend
+	  e.g. RRECOMMENDS_${PN}_append_xyz = "abc"
+	- Add plain message function to bb.msg
+	- Sort the list of providers before processing so dependency problems are 
+	  reproducible rather than effectively random
+	- Fix/improve bitbake -s output
+	- Add locking for fetchers so only one tries to fetch a given file at a given time
+	- Fix int(0)/None confusion in runqueue.py which causes random gaps in dependency chains	  
+	- Expand data in addtasks
+	- Print the list of missing DEPENDS,RDEPENDS for the "No buildable providers available for required...."
+	  error message.
+	- Rework add_task to be more efficient (6% speedup, 7% number of function calls reduction)
+	- Sort digraph output to make builds more reproducible
+	- Split expandKeys into two for loops to benefit from the expand_cache (12% speedup)
+	- runqueue.py: Fix idepends handling to avoid dependency errors
+	- Clear the terminal TOSTOP flag if set (and warn the user)
+	- Fix regression from r653 and make SRCDATE/CVSDATE work for packages again
+	- Fix a bug in bb.decodeurl where http://some.where.com/somefile.tgz decoded to host="" (#1530)
+	- Warn about malformed PREFERRED_PROVIDERS (#1072)
+	- Add support for BB_NICE_LEVEL option (#1627)
+	- Psyco is used only on x86 as there is no support for other architectures.
+	- Sort initial providers list by default preference (#1145, #2024)
+	- Improve provider sorting so prefered versions have preference over latest versions (#768)
+	- Detect builds of tasks with overlapping providers and warn (will become a fatal error) (#1359)
+	- Add MULTI_PROVIDER_WHITELIST variable to allow known safe multiple providers to be listed
+	- Handle paths in svn fetcher module parameter
+	- Support the syntax "export VARIABLE"
+	- Add bzr fetcher
+	- Add support for cleaning directories before a task in the form:
+	  do_taskname[cleandirs] = "dir"
+	- bzr fetcher tweaks from Robert Schuster (#2913)
+	- Add mercurial (hg) fetcher from Robert Schuster (#2913)
+	- Don't add duplicates to BBPATH
+	- Fix preferred_version return values (providers.py)
+	- Fix 'depends' flag splitting
+	- Fix unexport handling (#3135)
+	- Add bb.copyfile function similar to bb.movefile (and improve movefile error reporting)
+	- Allow multiple options for deptask flag
+	- Use git-fetch instead of git-pull removing any need for merges when 
+	  fetching (we don't care about the index). Fixes fetch errors.
+	- Add BB_GENERATE_MIRROR_TARBALLS option, set to 0 to make git fetches 
+	  faster at the expense of not creating mirror tarballs.
+	- SRCREV handling updates, improvements and fixes from Poky
+	- Add bb.utils.lockfile() and bb.utils.unlockfile() from Poky
+	- Add support for task selfstamp and lockfiles flags
+	- Disable task number acceleration since it can allow the tasks to run 
+	  out of sequence
+	- Improve runqueue code comments
+	- Add task scheduler abstraction and some example schedulers
+	- Improve circular dependency chain debugging code and user feedback
+	- Don't give a stacktrace for invalid tasks, have a user friendly message (#3431)
+	- Add support for "-e target" (#3432)
+	- Fix shell showdata command (#3259)
+	- Fix shell data updating problems (#1880)
+	- Properly raise errors for invalid source URI protocols
+	- Change the wget fetcher failure handling to avoid lockfile problems
+	- Add support for branches in git fetcher (Otavio Salvador, Michael Lauer)
+	- Make taskdata and runqueue errors more user friendly
+	- Add norecurse and fullpath options to cvs fetcher
 	- Fix exit code for build failures in --continue mode
 	- Fix git branch tags fetching
 	- Change parseConfigurationFile so it works on real data, not a copy
@@ -27,8 +118,10 @@ Changes in BitBake 1.8.12:
 	  how extensively stamps are looked at for validity
 	- When handling build target failures make sure idepends are checked and
 	  failed where needed. Fixes --continue mode crashes.
+	- Fix -f (force) in conjunction with -b
 	- Fix problems with recrdeptask handling where some idepends weren't handled
 	  correctly.
+	- Handle exit codes correctly (from pH5)
 	- Work around refs/HEAD issues with git over http (#3410)
 	- Add proxy support to the CVS fetcher (from Cyril Chemparathy)
 	- Improve runfetchcmd so errors are seen and various GIT variables are exported
@@ -44,7 +137,6 @@ Changes in BitBake 1.8.12:
 	- Add PERSISTENT_DIR to store the PersistData in a persistent
 	  directory != the cache dir.
 	- Add md5 and sha256 checksum generation functions to utils.py
-	- Make sure Build Completed events are generated even when tasks fail
 	- Correctly handle '-' characters in class names (#2958)
 	- Make sure expandKeys has been called on the data dictonary before running tasks
 	- Correctly add a task override in the form task-TASKNAME.
@@ -63,6 +155,7 @@ Changes in BitBake 1.8.12:
 	  used instead of the internal bitbake one. Alternatively, BB_ENV_EXTRAWHITE can be used
 	  to extend the internal whitelist.
 	- Perforce fetcher fix to use commandline options instead of being overriden by the environment
+	- bb.utils.prunedir can cope with symlinks to directoriees without exceptions
 	- use @rev when doing a svn checkout
 	- Add osc fetcher (from Joshua Lock in Poky)
 	- When SRCREV autorevisioning for a recipe is in use, don't cache the recipe
@@ -76,109 +169,15 @@ Changes in BitBake 1.8.12:
 	  proxies to work better. (from Poky)
 	- Also allow user and pswd options in SRC_URIs globally (from Poky)
 	- Improve proxy handling when using mirrors (from Poky)
-
-Changes in BitBake 1.8.10:
-	- Psyco is available only for x86 - do not use it on other architectures.
-	- Fix a bug in bb.decodeurl where http://some.where.com/somefile.tgz decoded to host="" (#1530)
-	- Warn about malformed PREFERRED_PROVIDERS (#1072)
-	- Add support for BB_NICE_LEVEL option (#1627)
-	- Sort initial providers list by default preference (#1145, #2024)
-	- Improve provider sorting so prefered versions have preference over latest versions (#768)
-	- Detect builds of tasks with overlapping providers and warn (will become a fatal error) (#1359)
-	- Add MULTI_PROVIDER_WHITELIST variable to allow known safe multiple providers to be listed
-	- Handle paths in svn fetcher module parameter
-	- Support the syntax "export VARIABLE"
-	- Add bzr fetcher
-	- Add support for cleaning directories before a task in the form:
-	  do_taskname[cleandirs] = "dir"
-	- bzr fetcher tweaks from Robert Schuster (#2913)
-	- Add mercurial (hg) fetcher from Robert Schuster (#2913)
-	- Fix bogus preferred_version return values
-	- Fix 'depends' flag splitting
-	- Fix unexport handling (#3135)
-	- Add bb.copyfile function similar to bb.movefile (and improve movefile error reporting)
-	- Allow multiple options for deptask flag
-	- Use git-fetch instead of git-pull removing any need for merges when 
-	  fetching (we don't care about the index). Fixes fetch errors.
-	- Add BB_GENERATE_MIRROR_TARBALLS option, set to 0 to make git fetches 
-	  faster at the expense of not creating mirror tarballs.
-	- SRCREV handling updates, improvements and fixes from Poky
-	- Add bb.utils.lockfile() and bb.utils.unlockfile() from Poky
-	- Add support for task selfstamp and lockfiles flags
-	- Disable task number acceleration since it can allow the tasks to run 
-	  out of sequence
-	- Improve runqueue code comments
-	- Add task scheduler abstraction and some example schedulers
-	- Improve circular dependency chain debugging code and user feedback
-	- Don't give a stacktrace for invalid tasks, have a user friendly message (#3431)
-	- Add support for "-e target" (#3432)
-	- Fix shell showdata command (#3259)
-	- Fix shell data updating problems (#1880)
-	- Properly raise errors for invalid source URI protocols
-	- Change the wget fetcher failure handling to avoid lockfile problems
-	- Add git branch support
-	- Add support for branches in git fetcher (Otavio Salvador, Michael Lauer)
-	- Make taskdata and runqueue errors more user friendly
-	- Add norecurse and fullpath options to cvs fetcher
-	- bb.utils.prunedir can cope with symlinks to directories without exceptions
-
-Changes in Bitbake 1.8.8:
-	- Rewrite svn fetcher to make adding extra operations easier 
-	  as part of future SRCDATE="now" fixes
-	  (requires new FETCHCMD_svn definition in bitbake.conf)
-	- Change SVNDIR layout to be more unique (fixes #2644 and #2624)
-	- Import persistent data store from trunk
-	- Sync fetcher code with that in trunk, adding SRCREV support for svn
-	- Add ConfigParsed Event after configuration parsing is complete
-	- data.emit_var() - only call getVar if we need the variable
-	- Stop generating the A variable (seems to be legacy code)
-	- Make sure intertask depends get processed correcting in recursive depends
-	- Add pn-PN to overrides when evaluating PREFERRED_VERSION
-	- Improve the progress indicator by skipping tasks that have 
-	  already run before starting the build rather than during it
-	- Add profiling option (-P)
-	- Add BB_SRCREV_POLICY variable (clear or cache) to control SRCREV cache
-	- Add SRCREV_FORMAT support
-	- Fix local fetcher's localpath return values
-	- Apply OVERRIDES before performing immediate expansions
-	- Allow the -b -e option combination to take regular expressions
-	- Add plain message function to bb.msg
-	- Sort the list of providers before processing so dependency problems are 
-	  reproducible rather than effectively random
-	- Add locking for fetchers so only one tries to fetch a given file at a given time
-	- Fix int(0)/None confusion in runqueue.py which causes random gaps in dependency chains
-	- Fix handling of variables with expansion in the name using _append/_prepend
-	  e.g. RRECOMMENDS_${PN}_append_xyz = "abc"
-	- Expand data in addtasks
- 	- Print the list of missing DEPENDS,RDEPENDS for the "No buildable providers available for required...."
- 	  error message.
-	- Rework add_task to be more efficient (6% speedup, 7% number of function calls reduction)
-	- Sort digraph output to make builds more reproducible
-	- Split expandKeys into two for loops to benefit from the expand_cache (12% speedup)
-	- runqueue.py: Fix idepends handling to avoid dependency errors
-	- Clear the terminal TOSTOP flag if set (and warn the user)
-	- Fix regression from r653 and make SRCDATE/CVSDATE work for packages again
-
-Changes in Bitbake 1.8.6:
-	- Correctly redirect stdin when forking
-	- If parsing errors are found, exit, too many users miss the errors
-	- Remove supriours PREFERRED_PROVIDER warnings
-
-Changes in Bitbake 1.8.4:
-	- Make sure __inherit_cache is updated before calling include() (from Michael Krelin)
-	- Fix bug when target was in ASSUME_PROVIDED (#2236)
-	- Raise ParseError for filenames with multiple underscores instead of infinitely looping (#2062)
-	- Fix invalid regexp in BBMASK error handling (missing import) (#1124)
-	- Don't run build sanity checks on incomplete builds
-	- Promote certain warnings from debug to note 2 level
-	- Update manual
-
-Changes in Bitbake 1.8.2:
-	- Catch truncated cache file errors
-	- Add PE (Package Epoch) support from Philipp Zabel (pH5)
-	- Add code to handle inter-task dependencies
-	- Allow operations other than assignment on flag variables
-	- Fix cache errors when generation dotGraphs
+	- Add bb.utils.prune_suffix function
+	- Fix hg checkouts of specific revisions (from Poky)
+	- Fix wget fetching of urls with parameters specified (from Poky)
+	- Add username handling to git fetcher (from Poky)
+	- Set HOME environmental variable when running fetcher commands (from Poky)
+	- Make sure allowed variables inherited from the environment are exported again (from Poky)
+	- When running a stage task in bbshell, run populate_staging, not the stage task (from Poky)
+	- Fix + character escaping from PACKAGES_DYNAMIC (thanks Otavio Salvador)
+	- Addition of BBCLASSEXTEND support for allowing one recipe to provide multiple targets (from Poky)
 
 Changes in Bitbake 1.8.0:
 	- Release 1.7.x as a stable series

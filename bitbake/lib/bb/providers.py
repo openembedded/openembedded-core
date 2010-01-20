@@ -21,7 +21,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import os, re
+import re
 from bb import data, utils
 import bb
 
@@ -203,7 +203,7 @@ def _filterProviders(providers, item, cfgData, dataCache):
             eligible.append(preferred_versions[pn][1])
 
     # Now add latest verisons
-    for pn in pkg_pn.keys():
+    for pn in sortpkg_pn.keys():
         if pn in preferred_versions and preferred_versions[pn][1]:
             continue
         preferred_versions[pn] = findLatestProvider(pn, cfgData, dataCache, sortpkg_pn[pn][0])

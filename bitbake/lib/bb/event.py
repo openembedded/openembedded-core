@@ -24,21 +24,18 @@ BitBake build tools.
 
 import os, re
 import bb.utils
+import pickle
+
+# This is the pid for which we should generate the event. This is set when
+# the runqueue forks off.
+worker_pid = 0
+worker_pipe = None
 
 class Event:
     """Base class for events"""
-    type = "Event"
 
-    def __init__(self, d):
-        self._data = d
-
-    def getData(self):
-        return self._data
-
-    def setData(self, data):
-        self._data = data
-
-    data = property(getData, setData, None, "data property")
+    def __init__(self):
+        self.pid = worker_pid
 
 NotHandled = 0
 Handled = 1
@@ -47,75 +44,83 @@ Registered        = 10
 AlreadyRegistered = 14
 
 # Internal
-_handlers = []
-_handlers_dict = {}
+_handlers = {}
+_ui_handlers = {}
+_ui_handler_seq = 0
 
-def tmpHandler(event):
-    """Default handler for code events"""
-    return NotHandled
-
-def defaultTmpHandler():
-    tmp = "def tmpHandler(e):\n\t\"\"\"heh\"\"\"\n\treturn NotHandled"
-    comp = bb.utils.better_compile(tmp, "tmpHandler(e)", "bb.event.defaultTmpHandler")
-    return comp
-
-def fire(event):
+def fire(event, d):
     """Fire off an Event"""
-    for h in _handlers:
+
+    if worker_pid != 0:
+        worker_fire(event, d)
+        return
+
+    for handler in _handlers:
+        h = _handlers[handler]
+        event.data = d
         if type(h).__name__ == "code":
             exec(h)
-            if tmpHandler(event) == Handled:
-                return Handled
+            tmpHandler(event)
         else:
-            if h(event) == Handled:
-                return Handled
-    return NotHandled
+            h(event)
+        del event.data
+
+    errors = []
+    for h in _ui_handlers:
+        #print "Sending event %s" % event
+        try:
+             # We use pickle here since it better handles object instances
+             # which xmlrpc's marshaller does not. Events *must* be serializable
+             # by pickle.
+            _ui_handlers[h].event.send((pickle.dumps(event)))
+        except:
+            errors.append(h)
+    for h in errors:
+        del _ui_handlers[h]
+
+def worker_fire(event, d):
+    data = "<event>" + pickle.dumps(event) + "</event>"
+    if os.write(worker_pipe, data) != len (data):
+        print "Error sending event to server (short write)"
+
+def fire_from_worker(event, d):
+    if not event.startswith("<event>") or not event.endswith("</event>"):
+        print "Error, not an event"
+        return
+    event = pickle.loads(event[7:-8])
+    bb.event.fire(event, d)
 
 def register(name, handler):
     """Register an Event handler"""
 
     # already registered
-    if name in _handlers_dict:
+    if name in _handlers:
         return AlreadyRegistered
 
     if handler is not None:
-#       handle string containing python code
+        # handle string containing python code
         if type(handler).__name__ == "str":
-            _registerCode(handler)
+            tmp = "def tmpHandler(e):\n%s" % handler
+            comp = bb.utils.better_compile(tmp, "tmpHandler(e)", "bb.event._registerCode")
+            _handlers[name] = comp
         else:
-            _handlers.append(handler)
+            _handlers[name] = handler
 
-        _handlers_dict[name] = 1
         return Registered
-
-def _registerCode(handlerStr):
-    """Register a 'code' Event.
-       Deprecated interface; call register instead.
-
-       Expects to be passed python code as a string, which will
-       be passed in turn to compile() and then exec().  Note that
-       the code will be within a function, so should have had
-       appropriate tabbing put in place."""
-    tmp = "def tmpHandler(e):\n%s" % handlerStr
-    comp = bb.utils.better_compile(tmp, "tmpHandler(e)", "bb.event._registerCode")
-#   prevent duplicate registration
-    _handlers.append(comp)
 
 def remove(name, handler):
     """Remove an Event handler"""
+    _handlers.pop(name)
 
-    _handlers_dict.pop(name)
-    if type(handler).__name__ == "str":
-        return _removeCode(handler)
-    else:
-        _handlers.remove(handler)
+def register_UIHhandler(handler):
+    bb.event._ui_handler_seq = bb.event._ui_handler_seq + 1
+    _ui_handlers[_ui_handler_seq] = handler
+    return _ui_handler_seq
 
-def _removeCode(handlerStr):
-    """Remove a 'code' Event handler
-       Deprecated interface; call remove instead."""
-    tmp = "def tmpHandler(e):\n%s" % handlerStr
-    comp = bb.utils.better_compile(tmp, "tmpHandler(e)", "bb.event._removeCode")
-    _handlers.remove(comp)
+def unregister_UIHhandler(handlerNum):
+    if handlerNum in _ui_handlers:
+        del _ui_handlers[handlerNum]
+    return
 
 def getName(e):
     """Returns the name of a class or class instance"""
@@ -130,17 +135,17 @@ class ConfigParsed(Event):
 class RecipeParsed(Event):
     """ Recipe Parsing Complete """
 
-    def __init__(self, fn, d):
+    def __init__(self, fn):
         self.fn = fn
-        Event.__init__(self, d)
+        Event.__init__(self)
 
 class StampUpdate(Event):
     """Trigger for any adjustment of the stamp files to happen"""
 
-    def __init__(self, targets, stampfns, d):
+    def __init__(self, targets, stampfns):
         self._targets = targets
         self._stampfns = stampfns
-        Event.__init__(self, d)
+        Event.__init__(self)
 
     def getStampPrefix(self):
         return self._stampfns
@@ -151,29 +156,13 @@ class StampUpdate(Event):
     stampPrefix = property(getStampPrefix)
     targets = property(getTargets)
 
-class PkgBase(Event):
-    """Base class for package events"""
-
-    def __init__(self, t, d):
-        self._pkg = t
-        Event.__init__(self, d)
-
-    def getPkg(self):
-        return self._pkg
-
-    def setPkg(self, pkg):
-        self._pkg = pkg
-
-    pkg = property(getPkg, setPkg, None, "pkg property")
-
-
 class BuildBase(Event):
     """Base class for bbmake run events"""
 
-    def __init__(self, n, p, c, failures = 0):
+    def __init__(self, n, p, failures = 0):
         self._name = n
         self._pkgs = p
-        Event.__init__(self, c)
+        Event.__init__(self)
         self._failures = failures
 
     def getPkgs(self):
@@ -205,32 +194,7 @@ class BuildBase(Event):
     cfg = property(getCfg, setCfg, None, "cfg property")
 
 
-class DepBase(PkgBase):
-    """Base class for dependency events"""
 
-    def __init__(self, t, data, d):
-        self._dep = d
-        PkgBase.__init__(self, t, data)
-
-    def getDep(self):
-        return self._dep
-
-    def setDep(self, dep):
-        self._dep = dep
-
-    dep = property(getDep, setDep, None, "dep property")
-
-
-class PkgStarted(PkgBase):
-    """Package build started"""
-
-
-class PkgFailed(PkgBase):
-    """Package build failed"""
-
-
-class PkgSucceeded(PkgBase):
-    """Package build completed"""
 
 
 class BuildStarted(BuildBase):
@@ -241,18 +205,13 @@ class BuildCompleted(BuildBase):
     """bbmake build run completed"""
 
 
-class UnsatisfiedDep(DepBase):
-    """Unsatisfied Dependency"""
 
-
-class RecursiveDep(DepBase):
-    """Recursive Dependency"""
 
 class NoProvider(Event):
     """No Provider for an Event"""
 
-    def __init__(self, item, data,runtime=False):
-        Event.__init__(self, data)
+    def __init__(self, item, runtime=False):
+        Event.__init__(self)
         self._item = item
         self._runtime = runtime
 
@@ -265,8 +224,8 @@ class NoProvider(Event):
 class MultipleProviders(Event):
     """Multiple Providers"""
 
-    def  __init__(self, item, candidates, data, runtime = False):
-        Event.__init__(self, data)
+    def  __init__(self, item, candidates, runtime = False):
+        Event.__init__(self)
         self._item = item
         self._candidates = candidates
         self._is_runtime = runtime
@@ -288,3 +247,29 @@ class MultipleProviders(Event):
         Get the possible Candidates for a PROVIDER.
         """
         return self._candidates
+
+class ParseProgress(Event):
+    """
+    Parsing Progress Event
+    """
+
+    def __init__(self, cached, parsed, skipped, masked, virtuals, errors, total):
+        Event.__init__(self)
+        self.cached = cached
+        self.parsed = parsed
+        self.skipped = skipped
+        self.virtuals = virtuals
+        self.masked = masked
+        self.errors = errors
+        self.sofar = cached + parsed
+        self.total = total
+
+class DepTreeGenerated(Event):
+    """
+    Event when a dependency tree has been generated
+    """
+
+    def __init__(self, depgraph):
+        Event.__init__(self)
+        self._depgraph = depgraph
+

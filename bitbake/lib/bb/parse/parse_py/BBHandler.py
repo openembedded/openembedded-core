@@ -94,7 +94,7 @@ def finalise(fn, d):
         for f in anonfuncs:
             code = code + "    %s(d)\n" % f
         data.setVar("__anonfunc", code, d)        
-        build.exec_func_python("__anonfunc", d)
+        build.exec_func("__anonfunc", d)
         data.delVar('T', d)
         if t:
             data.setVar('T', t, d)
@@ -114,7 +114,7 @@ def finalise(fn, d):
     tasklist = data.getVar('__BBTASKS', d) or []
     bb.build.add_tasks(tasklist, d)
 
-    bb.event.fire(bb.event.RecipeParsed(fn, d))
+    bb.event.fire(bb.event.RecipeParsed(fn), d)
 
 
 def handle(fn, d, include = 0):
@@ -185,18 +185,26 @@ def handle(fn, d, include = 0):
             multi = data.getVar('BBCLASSEXTEND', d, 1)
             if multi:
                 based = bb.data.createCopy(d)
-                finalise(fn, based)
-                darray = {"": based}
-                for cls in multi.split():
-                    pn = data.getVar('PN', d, True)
-                    based = bb.data.createCopy(d)
-                    data.setVar('PN', pn + '-' + cls, based)
-                    inherit([cls], based)
-                    finalise(fn, based)
-                    darray[cls] = based
-                return darray
             else:
-                finalise(fn, d)
+                based = d
+            try:
+                finalise(fn, based)
+            except bb.parse.SkipPackage:
+                bb.data.setVar("__SKIPPED", True, based)
+            darray = {"": based}
+
+            for cls in (multi or "").split():
+                pn = data.getVar('PN', d, True)
+                based = bb.data.createCopy(d)
+                data.setVar('PN', pn + '-' + cls, based)
+                inherit([cls], based)
+                try:
+                    finalise(fn, based)
+                except bb.parse.SkipPackage:
+                    bb.data.setVar("__SKIPPED", True, based)
+                darray[cls] = based
+            return darray
+   
         bbpath.pop(0)
     if oldfile:
         bb.data.setVar("FILE", oldfile, d)

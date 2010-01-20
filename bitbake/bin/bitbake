@@ -22,12 +22,18 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import sys, os, getopt, re, time, optparse
+import sys, os, getopt, re, time, optparse, xmlrpclib
 sys.path.insert(0,os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
 import bb
 from bb import cooker
+from bb import ui
 
-__version__ = "1.8.13"
+
+__version__ = "1.9.0"
+
+if sys.hexversion < 0x020500F0:
+    print "Sorry, python 2.5 or later is required for this version of bitbake"
+    sys.exit(1)
 
 #============================================================================#
 # BBOptions
@@ -41,11 +47,28 @@ class BBConfiguration( object ):
             setattr( self, key, val )
 
 
+def print_exception(exc, value, tb):
+    """
+    Print the exception to stderr, only showing the traceback if bitbake
+    debugging is enabled.
+    """
+    if not bb.msg.debug_level['default']:
+        tb = None
+
+    sys.__excepthook__(exc, value, tb)
+
+
 #============================================================================#
 # main
 #============================================================================#
 
 def main():
+    return_value = 0
+    pythonver = sys.version_info
+    if pythonver[0] < 2 or (pythonver[0] == 2 and pythonver[1] < 5):
+        print "Sorry, bitbake needs python 2.5 or later."
+        sys.exit(1)
+
     parser = optparse.OptionParser( version = "BitBake Build Tool Core version %s, %%prog version %s" % ( bb.__version__, __version__ ),
     usage = """%prog [options] [package ...]
 
@@ -99,14 +122,17 @@ Default BBFILES are the .bb files in the current directory.""" )
     parser.add_option( "-g", "--graphviz", help = "emit the dependency trees of the specified packages in the dot syntax",
                 action = "store_true", dest = "dot_graph", default = False )
 
-    parser.add_option( "-I", "--ignore-deps", help = """Stop processing at the given list of dependencies when generating dependency graphs. This can help to make the graph more appealing""",
-                action = "append", dest = "ignored_dot_deps", default = [] )
+    parser.add_option( "-I", "--ignore-deps", help = """Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""",
+                action = "append", dest = "extra_assume_provided", default = [] )
 
     parser.add_option( "-l", "--log-domains", help = """Show debug logging for the specified logging domains""",
                 action = "append", dest = "debug_domains", default = [] )
 
     parser.add_option( "-P", "--profile", help = "profile the command and print a report",
                action = "store_true", dest = "profile", default = False )
+
+    parser.add_option( "-u", "--ui", help = "userinterface to use",
+               action = "store", dest = "ui")
 
     parser.add_option( "", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not",
                action = "store_true", dest = "revisions_changed", default = False )
@@ -117,30 +143,53 @@ Default BBFILES are the .bb files in the current directory.""" )
     configuration.pkgs_to_build = []
     configuration.pkgs_to_build.extend(args[1:])
 
-    cooker = bb.cooker.BBCooker(configuration)
+    #server = bb.server.xmlrpc
+    server = bb.server.none
+
+    # Save a logfile for cooker into the current working directory. When the
+    # server is daemonized this logfile will be truncated.
+    cooker_logfile = os.path.join (os.getcwd(), "cooker.log")
+
+    cooker = bb.cooker.BBCooker(configuration, server)
 
     # Clear away any spurious environment variables. But don't wipe the
-    # environment totally.
+    # environment totally. This is necessary to ensure the correct operation
+    # of the UIs (e.g. for DISPLAY, etc.)
     bb.utils.clean_environment()
 
-    cooker.parseConfiguration()
+    cooker.parseCommandLine()
 
-    if configuration.profile:
-        try:
-            import cProfile as profile
-        except:
-            import profile
+    serverinfo = server.BitbakeServerInfo(cooker.server)
 
-        profile.runctx("cooker.cook()", globals(), locals(), "profile.log")
-        import pstats
-        p = pstats.Stats('profile.log')
-        p.sort_stats('time')
-        p.print_stats()
-        p.print_callers()
-        p.sort_stats('cumulative')
-        p.print_stats()
+    server.BitBakeServerFork(serverinfo, cooker.serve, cooker_logfile)
+    del cooker
+
+    sys.excepthook = print_exception
+
+    # Setup a connection to the server (cooker)
+    serverConnection = server.BitBakeServerConnection(serverinfo)
+
+    # Launch the UI
+    if configuration.ui:
+        ui = configuration.ui
     else:
-        cooker.cook()
+        ui = "knotty"
+
+    try:
+            # Dynamically load the UI based on the ui name. Although we
+            # suggest a fixed set this allows you to have flexibility in which
+            # ones are available.
+            exec "from bb.ui import " + ui
+            exec "return_value = " + ui + ".init(serverConnection.connection, serverConnection.events)"
+    except ImportError:
+        print "FATAL: Invalid user interface '%s' specified. " % ui
+        print "Valid interfaces are 'ncurses', 'depexp' or the default, 'knotty'."
+    except Exception, e:
+        print "FATAL: Unable to start to '%s' UI: %s." % (configuration.ui, e.message)
+    finally:
+        serverConnection.terminate()
+        return return_value
 
 if __name__ == "__main__":
-    main()
+    ret = main()
+    sys.exit(ret)
