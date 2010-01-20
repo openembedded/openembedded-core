@@ -34,6 +34,14 @@ LDFLAGS = "${BUILDSDK_LDFLAGS}"
 
 DEPENDS_GETTEXT = "gettext-native gettext-nativesdk"
 
+# Path mangling needed by the cross packaging
+# Note that we use := here to ensure that libdir and includedir are
+# target paths, not CROSS_DIR paths.
+target_libdir := "${libdir}"
+target_includedir := "${includedir}"
+target_base_libdir := "${base_libdir}"
+target_prefix := "${prefix}"
+
 # Change to place files in SDKPATH
 prefix = "${SDKPATH}"
 exec_prefix = "${SDKPATH}"
