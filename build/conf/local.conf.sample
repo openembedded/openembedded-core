@@ -1,5 +1,7 @@
 # Where to cache the files Poky downloads
 DL_DIR ?= "${OEROOT}/sources"
+# Where to cache Poky's built staging output
+PSTAGE_DIR ?= "${OEROOT}/pstage"
 BBFILES += "\
     ${OEROOT}/meta/packages/*/*.bb \
     ${OEROOT}/meta-moblin/packages/*/*.bb"

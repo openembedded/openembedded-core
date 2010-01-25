@@ -17,7 +17,8 @@ PSTAGE_EXTRAPATH  ?= ""
 PSTAGE_PKGPATH    = "${DISTRO}/${OELAYOUT_ABI}${PSTAGE_EXTRAPATH}"
 PSTAGE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
 PSTAGE_PKGNAME    = "${PSTAGE_PKGPN}_${PSTAGE_PKGVERSION}_${PSTAGE_PKGARCH}.ipk"
-PSTAGE_PKG        = "${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}/${PSTAGE_PKGNAME}"
+PSTAGE_PKG        = "${PSTAGE_DIR}/${PSTAGE_PKGPATH}/${PSTAGE_PKGNAME}"
+PSTAGE_WORKDIR   = "${TMPDIR}/pstage"
 
 PSTAGE_NATIVEDEPENDS = "\
     shasum-native \
@@ -69,8 +70,7 @@ python () {
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
 }
 
-DEPLOY_DIR_PSTAGE   ?= "${DEPLOY_DIR}/pstage"
-PSTAGE_MACHCONFIG   = "${DEPLOY_DIR_PSTAGE}/opkg.conf"
+PSTAGE_MACHCONFIG   = "${PSTAGE_WORKDIR}/opkg.conf"
 
 PSTAGE_PKGMANAGER = "stage-manager-ipkg"
 
@@ -141,7 +141,7 @@ do_clean_prepend() {
 staging_helper () {
 	# Assemble appropriate opkg.conf
 	conffile=${PSTAGE_MACHCONFIG}
-	mkdir -p ${DEPLOY_DIR_PSTAGE}/pstaging_lists
+	mkdir -p ${PSTAGE_WORKDIR}/pstaging_lists
 	if [ ! -e $conffile ]; then
 		ipkgarchs="${BUILD_SYS}"
 		priority=1
@@ -263,24 +263,24 @@ python packagedstage_stampfixing_eventhandler() {
 
 populate_sysroot_preamble () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
-		stage-manager -p ${STAGING_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-staging -u || true
-		stage-manager -p ${CROSS_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-cross -u || true
+		stage-manager -p ${STAGING_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-staging -u || true
+		stage-manager -p ${CROSS_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-cross -u || true
 	fi
 }
 
 populate_sysroot_postamble () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		# list the packages currently installed in staging
-		# ${PSTAGE_LIST_CMD} | awk '{print $1}' > ${DEPLOY_DIR_PSTAGE}/installed-list         
+		# ${PSTAGE_LIST_CMD} | awk '{print $1}' > ${PSTAGE_WORKDIR}/installed-list
 
 		# exitcode == 5 is ok, it means the files change
 		set +e
-		stage-manager -p ${STAGING_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-staging -u -d ${PSTAGE_TMPDIR_STAGE}/sysroots
+		stage-manager -p ${STAGING_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-staging -u -d ${PSTAGE_TMPDIR_STAGE}/sysroots
 		exitcode=$?
 		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
 			exit $exitcode
 		fi
-		stage-manager -p ${CROSS_DIR} -c ${DEPLOY_DIR_PSTAGE}/stamp-cache-cross -u -d ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}
+		stage-manager -p ${CROSS_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-cross -u -d ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}
 		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
 			exit $exitcode
 		fi
@@ -297,7 +297,7 @@ packagedstaging_fastpath () {
 	fi
 }
 
-do_populate_sysroot[dirs] =+ "${DEPLOY_DIR_PSTAGE}"
+do_populate_sysroot[dirs] =+ "${PSTAGE_DIR}"
 python populate_sysroot_prehook() {
     bb.build.exec_func("populate_sysroot_preamble", d)
 }
@@ -310,7 +310,7 @@ python populate_sysroot_posthook() {
 staging_packager () {
 
 	mkdir -p ${PSTAGE_TMPDIR_STAGE}/CONTROL
-	mkdir -p ${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}
+	mkdir -p ${PSTAGE_DIR}/${PSTAGE_PKGPATH}
 
 	echo "Package: ${PSTAGE_PKGPN}"         >  ${PSTAGE_TMPDIR_STAGE}/CONTROL/control
 	echo "Version: ${PSTAGE_PKGVERSION}"    >> ${PSTAGE_TMPDIR_STAGE}/CONTROL/control
@@ -335,7 +335,7 @@ staging_packager () {
             sed -i -e s:${STAGING_DIR}:FIXMESTAGINGDIR:g $i
         done
         
-	${PSTAGE_BUILD_CMD} ${PSTAGE_TMPDIR_STAGE} ${DEPLOY_DIR_PSTAGE}/${PSTAGE_PKGPATH}
+	${PSTAGE_BUILD_CMD} ${PSTAGE_TMPDIR_STAGE} ${PSTAGE_DIR}/${PSTAGE_PKGPATH}
 }
 
 staging_package_installer () {
