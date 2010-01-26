@@ -12,7 +12,7 @@ RDEPENDS = "python-rpm python-core python-iniparse python-urlgrabber \
             python-shell python-re python-logging python-pickle \
 	    python-netserver python-compression \
 	    python-unixadmin python-xml python-sqlite3 \
-	    python-textutils python-fcntl python-email python-shlex \
+	    python-textutils python-fcntl python-email \
 	    yum-metadata-parser"
 
 S = "${WORKDIR}/yum-${PV}"
