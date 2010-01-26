@@ -11,7 +11,7 @@ SRC_URI = "http://linux.duke.edu/projects/yum/download/3.2/yum-${PV}.tar.gz \
 RDEPENDS = "python-rpm python-core python-iniparse python-urlgrabber \
             python-shell python-re python-logging python-pickle \
 	    python-netserver python-compression \
-	    python-bzip2 python-unixadmin python-xml python-sqlite3 \
+	    python-unixadmin python-xml python-sqlite3 \
 	    python-textutils python-fcntl python-email python-shlex \
 	    yum-metadata-parser"
 
