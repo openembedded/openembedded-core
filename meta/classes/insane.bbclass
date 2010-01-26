@@ -477,7 +477,7 @@ addtask qa_staging after do_populate_sysroot before do_build
 python do_qa_staging() {
     bb.note("QA checking staging")
 
-    if not package_qa_check_staged(bb.data.getVar('STAGING_LIBDIR',d,True), d):
+    if not package_qa_check_staged(bb.data.expand('${SYSROOT_DESTDIR}/${STAGING_LIBDIR}',d), d):
         bb.fatal("QA staging was broken by the package built above")
 }
 
