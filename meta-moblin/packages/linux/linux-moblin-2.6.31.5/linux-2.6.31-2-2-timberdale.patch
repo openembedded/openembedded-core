@@ -1,0 +1,44 @@
+From 9de5f61c79361bf6e9394d2f77a2b436d53deee5 Mon Sep 17 00:00:00 2001
+From: Yong Wang <yong.y.wang@intel.com>
+Date: Tue, 30 Jun 2009 14:17:19 +0800
+Subject: [PATCH] Revert "net: num_dma_maps is not used"
+
+This reverts commit eae3f29cc73f83cc3f1891d3ad40021b5172c630.
+
+The IVI driver is a user of num_dma_maps.
+
+Signed-off-by: Yong Wang <yong.y.wang@intel.com>
+---
+ include/linux/skbuff.h |    3 +++
+ net/core/skb_dma_map.c |    1 +
+ 2 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index b47b3f0..468bc21 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -198,6 +198,9 @@ struct skb_shared_info {
+ 	unsigned short  gso_type;
+ 	__be32          ip6_frag_id;
+ 	union skb_shared_tx tx_flags;
++#ifdef CONFIG_HAS_DMA
++	unsigned int	num_dma_maps;
++#endif
+ 	struct sk_buff	*frag_list;
+ 	struct skb_shared_hwtstamps hwtstamps;
+ 	skb_frag_t	frags[MAX_SKB_FRAGS];
+diff --git a/net/core/skb_dma_map.c b/net/core/skb_dma_map.c
+index 79687df..07d4ac5 100644
+--- a/net/core/skb_dma_map.c
++++ b/net/core/skb_dma_map.c
+@@ -30,6 +30,7 @@ int skb_dma_map(struct device *dev, struct sk_buff *skb,
+ 			goto unwind;
+ 		sp->dma_maps[i] = map;
+ 	}
++	sp->num_dma_maps = i + 1;
+ 
+ 	return 0;
+ 
+-- 
+1.6.0.6
+

@@ -1,0 +1,140 @@
+From 5deab387f5b9ec79a6bf7edc52b0653c2a6d44b5 Mon Sep 17 00:00:00 2001
+From: Alan Olsen <alan.r.olsen@intel.com>
+Date: Fri, 11 Sep 2009 15:57:46 -0700
+Subject: [PATCH] linux-2.6.31-drm-mem-info.patch
+
+Signed-off-by: Alan Olsen <alan.r.olsen@intel.com>
+---
+ drivers/gpu/drm/Makefile   |    4 +++
+ drivers/gpu/drm/drm_info.c |   58 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/drm_proc.c |    2 +
+ include/drm/drmP.h         |    2 +
+ 4 files changed, 66 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index fe23f29..d76f167 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -4,6 +4,10 @@
+ 
+ ccflags-y := -Iinclude/drm
+ 
++ifeq ($(CONFIG_DRM_PSB),y)
++	ccflags-y += -Idrivers/gpu/drm/psb
++endif
++
+ drm-y       :=	drm_auth.o drm_bufs.o drm_cache.o \
+ 		drm_context.o drm_dma.o drm_drawable.o \
+ 		drm_drv.o drm_fops.o drm_gem.o drm_ioctl.o drm_irq.o \
+diff --git a/drivers/gpu/drm/drm_info.c b/drivers/gpu/drm/drm_info.c
+index f0f6c6b..0ecc778 100644
+--- a/drivers/gpu/drm/drm_info.c
++++ b/drivers/gpu/drm/drm_info.c
+@@ -36,6 +36,10 @@
+ #include <linux/seq_file.h>
+ #include "drmP.h"
+ 
++#ifdef CONFIG_DRM_PSB
++#include "psb/psb_drv.h"
++#endif
++
+ /**
+  * Called when "/proc/dri/.../name" is read.
+  *
+@@ -211,6 +215,33 @@ int drm_vblank_info(struct seq_file *m, void *data)
+ 	return 0;
+ }
+ 
++int drm_gem_object_mem_info(int id, void *ptr, void *data)
++{
++	struct drm_gem_object *obj = ptr;
++	struct seq_file *m = data;
++
++	seq_printf(m, "object 0x%p    name %2d    memory %8zd\n", 
++		   obj, obj->name, obj->size);
++
++	return 0;
++}
++
++int drm_gem_clients_info(struct seq_file *m, void *data)
++{
++	struct drm_info_node *node = (struct drm_info_node *) m->private;
++	struct drm_device *dev = node->minor->dev;
++	struct drm_file *priv;
++
++	mutex_lock(&dev->struct_mutex);
++	list_for_each_entry(priv, &dev->filelist, lhead) {
++		seq_printf(m, "pid %5d \n", priv->pid);
++		idr_for_each(&priv->object_idr, &drm_gem_object_mem_info, m);
++		seq_printf(m, "\n");
++	}
++	mutex_unlock(&dev->struct_mutex);
++	return 0;
++}
++
+ /**
+  * Called when "/proc/dri/.../clients" is read.
+  *
+@@ -273,6 +304,33 @@ int drm_gem_object_info(struct seq_file *m, void* data)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_DRM_PSB
++int drm_ttm_mem_info(struct seq_file *m, void* data)
++{
++	struct drm_info_node *node = (struct drm_info_node *) m->private;
++	struct drm_device *dev = node->minor->dev;
++
++	if (!strncmp("psb", dev->devname, 3)) {
++		struct ttm_bo_device *bdev = &psb_priv(dev)->bdev;
++		struct ttm_mem_global *glob = bdev->mem_glob;
++
++		spin_lock(&glob->lock);
++		seq_printf(m, "used memory %llu \n", glob->used_memory);
++		seq_printf(m, "used total memory %llu \n", glob->used_total_memory);
++		spin_unlock(&glob->lock);
++	} else {
++		seq_printf(m, "This is not a PSB device, no ttm mem info available\n");
++	}
++	return 0;
++}
++#else
++int drm_ttm_mem_info(struct seq_file *m, void* data)
++{
++	seq_printf(m, "ttm is not used\n");
++	return 0;
++}
++#endif
++
+ #if DRM_DEBUG_CODE
+ 
+ int drm_vma_info(struct seq_file *m, void *data)
+diff --git a/drivers/gpu/drm/drm_proc.c b/drivers/gpu/drm/drm_proc.c
+index bbd4b3d..26e64ec 100644
+--- a/drivers/gpu/drm/drm_proc.c
++++ b/drivers/gpu/drm/drm_proc.c
+@@ -55,6 +55,8 @@ static struct drm_info_list drm_proc_list[] = {
+ 	{"bufs", drm_bufs_info, 0},
+ 	{"gem_names", drm_gem_name_info, DRIVER_GEM},
+ 	{"gem_objects", drm_gem_object_info, DRIVER_GEM},
++	{"gem_clients", drm_gem_clients_info, DRIVER_GEM},
++	{"ttm_meminfo", drm_ttm_mem_info, 0},
+ #if DRM_DEBUG_CODE
+ 	{"vma", drm_vma_info, 0},
+ #endif
+diff --git a/include/drm/drmP.h b/include/drm/drmP.h
+index dbd40f1..5575b9a 100644
+--- a/include/drm/drmP.h
++++ b/include/drm/drmP.h
+@@ -1355,6 +1355,8 @@ extern int drm_vblank_info(struct seq_file *m, void *data);
+ extern int drm_clients_info(struct seq_file *m, void* data);
+ extern int drm_gem_name_info(struct seq_file *m, void *data);
+ extern int drm_gem_object_info(struct seq_file *m, void* data);
++extern int drm_gem_clients_info(struct seq_file *m, void *data);
++extern int drm_ttm_mem_info(struct seq_file *m, void* data);
+ 
+ #if DRM_DEBUG_CODE
+ extern int drm_vma_info(struct seq_file *m, void *data);
+-- 
+1.6.0.6
+

@@ -1,0 +1,275 @@
+From 524a1da3c45683cec77480acc6cab1d33ae8d5cb Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Sat, 26 Sep 2009 12:36:21 +0200
+Subject: [PATCH] x86: Use __builtin_object_size to validate the buffer size for copy_from_user
+
+gcc (4.x) supports the __builtin_object_size() builtin, which reports the
+size of an object that a pointer point to, when known at compile time.
+If the buffer size is not known at compile time, a constant -1 is returned.
+
+This patch uses this feature to add a sanity check to copy_from_user();
+if the target buffer is known to be smaller than the copy size, the copy
+is aborted and a WARNing is emitted in memory debug mode.
+
+These extra checks compile away when the object size is not known,
+or if both the buffer size and the copy length are constants.
+
+Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
+Reviewed-by: Ingo Molnar <mingo@elte.hu>
+---
+ arch/x86/include/asm/uaccess_32.h |   19 ++++++++++++++++++-
+ arch/x86/include/asm/uaccess_64.h |   19 ++++++++++++++++++-
+ arch/x86/kernel/x8664_ksyms_64.c  |    2 +-
+ arch/x86/lib/copy_user_64.S       |    4 ++--
+ arch/x86/lib/usercopy_32.c        |    4 ++--
+ include/linux/compiler-gcc4.h     |    2 ++
+ include/linux/compiler.h          |    4 ++++
+ 7 files changed, 47 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/include/asm/uaccess_32.h b/arch/x86/include/asm/uaccess_32.h
+index 632fb44..582d6ae 100644
+--- a/arch/x86/include/asm/uaccess_32.h
++++ b/arch/x86/include/asm/uaccess_32.h
+@@ -187,9 +187,26 @@ __copy_from_user_inatomic_nocache(void *to, const void __user *from,
+ 
+ unsigned long __must_check copy_to_user(void __user *to,
+ 					const void *from, unsigned long n);
+-unsigned long __must_check copy_from_user(void *to,
++unsigned long __must_check _copy_from_user(void *to,
+ 					  const void __user *from,
+ 					  unsigned long n);
++
++static inline unsigned long __must_check copy_from_user(void *to,
++					  const void __user *from,
++					  unsigned long n)
++{
++	int sz = __compiletime_object_size(to);
++	int ret = -EFAULT;
++
++	if (likely(sz == -1 || sz >= n))
++		ret = _copy_from_user(to, from, n);
++#ifdef CONFIG_DEBUG_VM
++	else
++		WARN(1, "Buffer overflow detected!\n");
++#endif
++	return ret;
++}
++
+ long __must_check strncpy_from_user(char *dst, const char __user *src,
+ 				    long count);
+ long __must_check __strncpy_from_user(char *dst,
+diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
+index db24b21..ce6fec7 100644
+--- a/arch/x86/include/asm/uaccess_64.h
++++ b/arch/x86/include/asm/uaccess_64.h
+@@ -21,10 +21,27 @@ copy_user_generic(void *to, const void *from, unsigned len);
+ __must_check unsigned long
+ copy_to_user(void __user *to, const void *from, unsigned len);
+ __must_check unsigned long
+-copy_from_user(void *to, const void __user *from, unsigned len);
++_copy_from_user(void *to, const void __user *from, unsigned len);
+ __must_check unsigned long
+ copy_in_user(void __user *to, const void __user *from, unsigned len);
+ 
++static inline unsigned long __must_check copy_from_user(void *to,
++					  const void __user *from,
++					  unsigned long n)
++{
++	int sz = __compiletime_object_size(to);
++	int ret = -EFAULT;
++
++	if (likely(sz == -1 || sz >= n))
++		ret = _copy_from_user(to, from, n);
++#ifdef CONFIG_DEBUG_VM
++	else
++		WARN(1, "Buffer overflow detected!\n");
++#endif
++	return ret;
++}
++
++
+ static __always_inline __must_check
+ int __copy_from_user(void *dst, const void __user *src, unsigned size)
+ {
+diff --git a/arch/x86/kernel/x8664_ksyms_64.c b/arch/x86/kernel/x8664_ksyms_64.c
+index 3909e3b..a0cdd8c 100644
+--- a/arch/x86/kernel/x8664_ksyms_64.c
++++ b/arch/x86/kernel/x8664_ksyms_64.c
+@@ -30,7 +30,7 @@ EXPORT_SYMBOL(__put_user_8);
+ 
+ EXPORT_SYMBOL(copy_user_generic);
+ EXPORT_SYMBOL(__copy_user_nocache);
+-EXPORT_SYMBOL(copy_from_user);
++EXPORT_SYMBOL(_copy_from_user);
+ EXPORT_SYMBOL(copy_to_user);
+ EXPORT_SYMBOL(__copy_from_user_inatomic);
+ 
+diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
+index 6ba0f7b..4be3c41 100644
+--- a/arch/x86/lib/copy_user_64.S
++++ b/arch/x86/lib/copy_user_64.S
+@@ -78,7 +78,7 @@ ENTRY(copy_to_user)
+ ENDPROC(copy_to_user)
+ 
+ /* Standard copy_from_user with segment limit checking */
+-ENTRY(copy_from_user)
++ENTRY(_copy_from_user)
+ 	CFI_STARTPROC
+ 	GET_THREAD_INFO(%rax)
+ 	movq %rsi,%rcx
+@@ -88,7 +88,7 @@ ENTRY(copy_from_user)
+ 	jae bad_from_user
+ 	ALTERNATIVE_JUMP X86_FEATURE_REP_GOOD,copy_user_generic_unrolled,copy_user_generic_string
+ 	CFI_ENDPROC
+-ENDPROC(copy_from_user)
++ENDPROC(_copy_from_user)
+ 
+ ENTRY(copy_user_generic)
+ 	CFI_STARTPROC
+diff --git a/arch/x86/lib/usercopy_32.c b/arch/x86/lib/usercopy_32.c
+index 1f118d4..8498684 100644
+--- a/arch/x86/lib/usercopy_32.c
++++ b/arch/x86/lib/usercopy_32.c
+@@ -874,7 +874,7 @@ EXPORT_SYMBOL(copy_to_user);
+  * data to the requested size using zero bytes.
+  */
+ unsigned long
+-copy_from_user(void *to, const void __user *from, unsigned long n)
++_copy_from_user(void *to, const void __user *from, unsigned long n)
+ {
+ 	if (access_ok(VERIFY_READ, from, n))
+ 		n = __copy_from_user(to, from, n);
+@@ -882,4 +882,4 @@ copy_from_user(void *to, const void __user *from, unsigned long n)
+ 		memset(to, 0, n);
+ 	return n;
+ }
+-EXPORT_SYMBOL(copy_from_user);
++EXPORT_SYMBOL(_copy_from_user);
+diff --git a/include/linux/compiler-gcc4.h b/include/linux/compiler-gcc4.h
+index 450fa59..a3aef5d 100644
+--- a/include/linux/compiler-gcc4.h
++++ b/include/linux/compiler-gcc4.h
+@@ -37,3 +37,5 @@
+ #define __cold			__attribute__((__cold__))
+ 
+ #endif
++
++#define __compiletime_object_size(obj) __builtin_object_size(obj, 0)
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 9d4c4b0..9c42853 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -185,6 +185,10 @@ extern void __chk_io_ptr(const volatile void __iomem *);
+ # define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+ #endif
+ 
++/* Compile time object size, -1 for unknown */
++#ifndef __compiletime_object_size
++# define __compiletime_object_size(obj) -1
++#endif
+ /*
+  * Prevent the compiler from merging or refetching accesses.  The compiler
+  * is also forbidden from reordering successive instances of ACCESS_ONCE(),
+-- 
+1.6.0.6
+
+From 350cf3cd513e6759ae6852946532a47249f25600 Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Wed, 30 Sep 2009 12:57:46 +0200
+Subject: [PATCH] x86: Turn the copy_from_user check into an (optional) compile time warning
+
+A previous patch added the buffer size check to copy_from_user().
+
+One of the things learned from analyzing the result of the previous patch
+is that in general, gcc is really good at proving that the code contains
+sufficient security checks to not need to do a runtime check. But that
+for those cases where gcc could not prove this, there was a relatively
+high percentage of real security issues.
+
+This patch turns the case of "gcc cannot prove" into a compile time
+warning, as long as a sufficiently new gcc is in use.
+The objective is that these warnings will trigger developers checking
+new cases out before a security hole enters a linux kernel release.
+
+Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
+---
+ arch/x86/include/asm/uaccess_32.h |   12 +++++++++---
+ arch/x86/lib/usercopy_32.c        |    6 ++++++
+ include/linux/compiler-gcc4.h     |    3 +++
+ include/linux/compiler.h          |    4 ++++
+ 4 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/uaccess_32.h b/arch/x86/include/asm/uaccess_32.h
+index 582d6ae..7826639 100644
+--- a/arch/x86/include/asm/uaccess_32.h
++++ b/arch/x86/include/asm/uaccess_32.h
+@@ -191,6 +191,13 @@ unsigned long __must_check _copy_from_user(void *to,
+ 					  const void __user *from,
+ 					  unsigned long n);
+ 
++
++extern void copy_from_user_overflow(void)
++#ifdef CONFIG_DEBUG_STACKOVERFLOW
++	__compiletime_warning("copy_from_user buffer size is not provably correct")
++#endif
++;
++
+ static inline unsigned long __must_check copy_from_user(void *to,
+ 					  const void __user *from,
+ 					  unsigned long n)
+@@ -200,10 +207,9 @@ static inline unsigned long __must_check copy_from_user(void *to,
+ 
+ 	if (likely(sz == -1 || sz >= n))
+ 		ret = _copy_from_user(to, from, n);
+-#ifdef CONFIG_DEBUG_VM
+ 	else
+-		WARN(1, "Buffer overflow detected!\n");
+-#endif
++		copy_from_user_overflow();
++
+ 	return ret;
+ }
+ 
+diff --git a/arch/x86/lib/usercopy_32.c b/arch/x86/lib/usercopy_32.c
+index 8498684..e218d5d 100644
+--- a/arch/x86/lib/usercopy_32.c
++++ b/arch/x86/lib/usercopy_32.c
+@@ -883,3 +883,9 @@ _copy_from_user(void *to, const void __user *from, unsigned long n)
+ 	return n;
+ }
+ EXPORT_SYMBOL(_copy_from_user);
++
++void copy_from_user_overflow(void)
++{
++	WARN(1, "Buffer overflow detected!\n");
++}
++EXPORT_SYMBOL(copy_from_user_overflow);
+diff --git a/include/linux/compiler-gcc4.h b/include/linux/compiler-gcc4.h
+index a3aef5d..f1709c1 100644
+--- a/include/linux/compiler-gcc4.h
++++ b/include/linux/compiler-gcc4.h
+@@ -39,3 +39,6 @@
+ #endif
+ 
+ #define __compiletime_object_size(obj) __builtin_object_size(obj, 0)
++#if __GNUC_MINOR__ >= 4
++#define __compiletime_warning(message) __attribute__((warning(message)))
++#endif
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 9c42853..241dfd8 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -189,6 +189,10 @@ extern void __chk_io_ptr(const volatile void __iomem *);
+ #ifndef __compiletime_object_size
+ # define __compiletime_object_size(obj) -1
+ #endif
++#ifndef __compiletime_warning
++# define __compiletime_warning(message)
++#endif
++
+ /*
+  * Prevent the compiler from merging or refetching accesses.  The compiler
+  * is also forbidden from reordering successive instances of ACCESS_ONCE(),
+-- 
+1.6.2.5
+

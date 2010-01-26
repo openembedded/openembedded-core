@@ -1,0 +1,26 @@
+diff --git a/drivers/gpu/drm/drm_irq.c b/drivers/gpu/drm/drm_irq.c
+index f85aaf2..2e5841e 100644
+--- a/drivers/gpu/drm/drm_irq.c
++++ b/drivers/gpu/drm/drm_irq.c
+@@ -412,6 +412,9 @@ int drm_vblank_get(struct drm_device *dev, int crtc)
+ 			dev->vblank_enabled[crtc] = 1;
+ 			drm_update_vblank_count(dev, crtc);
+ 		}
++	} else if (atomic_read(&dev->vblank_refcount[crtc]) > 1) {
++		atomic_dec(&dev->vblank_refcount[crtc]);
++		ret = -EINVAL;
+ 	}
+ 	spin_unlock_irqrestore(&dev->vbl_lock, irqflags);
+ 
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index 748ed50..9cb07a5 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -1549,6 +1549,7 @@ static void i9xx_crtc_dpms(struct drm_crtc *crtc, int mode)
+ 
+ 		/* Wait for vblank for the disable to take effect. */
+ 		intel_wait_for_vblank(dev);
++		dev->vblank_enabled[pipe] = 0;
+ 
+ 		temp = I915_READ(dpll_reg);
+ 		if ((temp & DPLL_VCO_ENABLE) != 0) {
