@@ -11,8 +11,8 @@ PE = "1"
 
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
 	file://opkg_unarchive.patch;patch=1;maxrev=201 \
-	file://opkg-intercept-cleanup.patch;patch=1 \
-	file://add_vercmp.patch;patch=1"
+	file://add_vercmp.patch;patch=1 \
+	file://logfix.patch;patch=1 "
 
 S = "${WORKDIR}/trunk"
 
@@ -26,7 +26,7 @@ do_configure_prepend() {
 inherit autotools_stage pkgconfig
 
 target_libdir := "${libdir}"
-EXTRA_OECONF_virtclass-native = "--with-opkglibdir=${target_libdir} --disable-gpg"
+EXTRA_OECONF_virtclass-native = "--with-opkglibdir=${target_libdir} --disable-gpg --disable-curl"
 EXTRA_OECONF_virtclass-nativesdk = "--with-opkglibdir=${target_libdir} --disable-gpg"
 
 #PROVIDES_append_virtclass-native = "virtual/update-alternatives-native"
