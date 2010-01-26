@@ -7,8 +7,8 @@ S = ${WORKDIR}/git
 
 DEPENDS = "libpthread-stubs"
 
-PV = "2.4.7+git${SRCREV}"
-PR = "r1"
+PV = "2.4.15+git${SRCREV}"
+PR = "r0"
 
 LEAD_SONAME = "libdrm.so"
 
