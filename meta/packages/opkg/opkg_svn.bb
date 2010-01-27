@@ -6,7 +6,7 @@ RCONFLICTS_update-alternatives-cworth = "update-alternatives-dpkg"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PR = "r8"
+PR = "r9"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
