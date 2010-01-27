@@ -26,8 +26,8 @@ do_configure_prepend() {
 inherit autotools_stage pkgconfig
 
 target_libdir := "${libdir}"
-EXTRA_OECONF_virtclass-native = "--with-opkglibdir=${target_libdir} --disable-gpg --disable-curl"
-EXTRA_OECONF_virtclass-nativesdk = "--with-opkglibdir=${target_libdir} --disable-gpg"
+EXTRA_OECONF_virtclass-native = "--with-opkglibdir=${target_libdir} --disable-gpg --disable-curl --disable-openssl"
+EXTRA_OECONF_virtclass-nativesdk = "--with-opkglibdir=${target_libdir} --disable-gpg --disable-curl --disable-openssl"
 
 #PROVIDES_append_virtclass-native = "virtual/update-alternatives-native"
 #RPROVIDES_${PN} += "update-alternatives-native"
