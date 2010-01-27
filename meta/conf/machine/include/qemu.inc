@@ -1,5 +1,5 @@
 PCMCIA_MANAGER = "pcmciautils"
-PREFERRED_PROVIDER_xserver = "xserver-kdrive"
+PREFERRED_PROVIDER_virtual/xserver = "xserver-kdrive"
 GUI_MACHINE_CLASS = "bigscreen"
 GPE_EXTRA_INSTALL += "gaim sylpheed"
 
