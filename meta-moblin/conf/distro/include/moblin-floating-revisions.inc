@@ -74,7 +74,7 @@ SRCREV_pn-twitter-glib ?= "${AUTOREV}"
 SRCREV_pn-xf86-video-gma500 ?= "${AUTOREV}"
 
 SRCREV_pn-libdrm ?= "${AUTOREV}"
-PREFERRED_VERSION_libdrm ?= "2.4.7+git%"
+PREFERRED_VERSION_libdrm ?= "2.4.15+git%"
 SRCREV_pn-mesa-dri ?= "${AUTOREV}"
 PREFERRED_VERSION_mesa-dri ?= "7.5+git%"
 SRCREV_pn-xf86-video-intel ?= "${AUTOREV}"
