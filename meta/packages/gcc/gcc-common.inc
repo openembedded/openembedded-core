@@ -33,3 +33,7 @@ BINV = "${PV}"
 S = "${WORKDIR}/gcc-${PV}"
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
+target_includedir ?= "${includedir}"
+target_libdir ?= "${libdir}"
+target_base_libdir ?= "${base_libdir}"
+target_prefix ?= "${prefix}"
