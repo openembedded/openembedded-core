@@ -12,6 +12,7 @@ PE = "1"
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
 	file://opkg_unarchive.patch;patch=1;maxrev=201 \
 	file://add_vercmp.patch;patch=1 \
+	file://headerfix.patch;patch=1 \
 	file://logfix.patch;patch=1 "
 
 S = "${WORKDIR}/trunk"

@@ -8,7 +8,7 @@ RDEPENDS_${PN}_virtclass-native = ""
 RDEPENDS_${PN}_virtclass-nativesdk = ""
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PR = "r10"
+PR = "r11"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
