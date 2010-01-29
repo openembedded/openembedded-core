@@ -24,6 +24,7 @@ ALLOW_EMPTY = "1"
 # kexec-tools doesn't work on Mips
 KEXECTOOLS ?= "kexec-tools"
 KEXECTOOLS_mips ?= ""
+KEXECTOOLS_mipsel ?= ""
 
 RDEPENDS_task-poky-tools-debug = "\
     gdb \
