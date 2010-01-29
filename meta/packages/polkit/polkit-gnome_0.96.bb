@@ -1,15 +1,14 @@
 HOMEPAGE = "http://www.packagekit.org/"
-DEPENDS = "policykit dbus-glib gconf gtk+"
+DEPENDS = "polkit dbus-glib gconf gtk+"
 
-SRC_URI = "http://hal.freedesktop.org/releases/PolicyKit-gnome-${PV}.tar.bz2 \
+SRC_URI = "http://hal.freedesktop.org/releases/polkit-gnome-${PV}.tar.bz2 \
           "
 
 EXTRA_OECONF = " --disable-scrollkeeper \
                  --disable-man-pages \
                  --disable-examples \
-                 --disable-gtk-doc"
-
-S = "${WORKDIR}/PolicyKit-gnome-${PV}"
+                 --disable-gtk-doc \
+                 --disable-introspection "
 
 inherit autotools_stage pkgconfig
 
