@@ -1,6 +1,6 @@
 DESCRIPTION = "Moblin feed configuration files (Online package repositories)"
 
-PR = "r1"
+PR = "r2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 FEEDNAMEPREFIX ?= "INVALID"
@@ -9,15 +9,7 @@ FEEDURIPREFIX ?= "INVALID"
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg/
 
-	archconf=${S}/${sysconfdir}/opkg/arch.conf
-
-	rm -f $archconf
 	ipkgarchs="${PACKAGE_ARCHS}"
-	priority=1
-	for arch in $ipkgarchs; do 
-		echo "arch $arch $priority" >> $archconf
-		priority=$(expr $priority + 5)
-	done
 
 	basefeedconf=${S}/${sysconfdir}/opkg/base-feeds.conf
 
@@ -36,6 +28,4 @@ do_install () {
 
 FILES_${PN} = "${sysconfdir}/opkg/ "
 
-CONFFILES_${PN} += "${sysconfdir}/opkg/base-feeds.conf \
-                    ${sysconfdir}/opkg/arch.conf"
-
+CONFFILES_${PN} += "${sysconfdir}/opkg/base-feeds.conf"

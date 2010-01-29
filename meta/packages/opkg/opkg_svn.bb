@@ -3,12 +3,12 @@ require opkg.inc
 PROVIDES += "virtual/update-alternatives"
 RPROVIDES_update-alternatives-cworth += "update-alternatives"
 RCONFLICTS_update-alternatives-cworth = "update-alternatives-dpkg"
-RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-config-base"
 RDEPENDS_${PN}_virtclass-native = ""
 RDEPENDS_${PN}_virtclass-nativesdk = ""
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PR = "r11"
+PR = "r12"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
