@@ -4,8 +4,8 @@ DESCRIPTION = "X.Org X server -- Intel i8xx, i9xx display driver"
 DEPENDS += "virtual/libx11 libxvmc drm dri2proto glproto \
 	    virtual/libgl xineramaproto libpciaccess"
 
-PR = "r3"
-PV = "2.7.1+git${SRCPV}"
+PV = "2.10.0+git${SRCPV}"
+PR = "r0"
 
 EXTRA_OECONF += "--disable-xvmc --enable-dri --disable-static"
 
