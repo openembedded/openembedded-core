@@ -8,10 +8,9 @@ RDEPENDS_${PN} = "opkg"
 inherit gnome autotools_stage
 
 SRC_URI = "http://www.packagekit.org/releases/PackageKit-${PV}.tar.gz \
-           file://no_validate.patch;patch=1 \
-           file://no-nm.patch;patch=1"
-PR = "r3"
-PE = "1"
+           file://configurefix.patch;patch=1 \
+           file://opkgfixes.patch;patch=1"
+PR = "r1"
 
 S = "${WORKDIR}/PackageKit-${PV}"
 
@@ -22,14 +21,13 @@ EXTRA_OECONF = "--with-security-framework=dummy \
                 --disable-qt \
                 --disable-gstreamer-plugin \
                 --disable-local  \
+                --disable-networkmanager \
                 ac_cv_path_XMLTO=no \
                 "
-
 
 do_configure_prepend() {
 	mkdir -p m4
 	echo "EXTRA_DIST=" > gtk-doc.make
-	sed -i -e s:0\.1\.5:0\.1\.6:g -e /Werror/d configure.ac
 }
 
 do_configure_append() {
