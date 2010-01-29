@@ -1,3 +1,5 @@
+require mutter-moblin.inc
+
 PV = "0.43.8+git${SRCPV}"
 PR = "r11"
 
