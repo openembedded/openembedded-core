@@ -3,9 +3,10 @@ DESCRIPTION = "udev is a daemon which dynamically creates and removes device nod
 the hotplug package and requires a kernel not older than 2.6.12."
 RPROVIDES_${PN} = "hotplug"
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
+           file://enable-gudev.patch;patch=1 \
 	   file://run.rules \
 	   "
 
@@ -20,7 +21,7 @@ FILES_${PN} += "${base_libdir}/udev/*"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug"
 UDEV_EXTRAS = "extras/firmware/ extras/scsi_id/ extras/volume_id/"
 
-EXTRA_OECONF = "--with-udev-prefix= --disable-extras"
+EXTRA_OECONF = "--with-udev-prefix= --disable-extras --disable-introspection"
 
 do_install () {
 	install -d ${D}${usrsbindir} \
