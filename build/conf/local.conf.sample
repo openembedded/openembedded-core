@@ -159,3 +159,7 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # on an x86_64 host.
 # Supported values are i586 and x86_64
 #SDKMACHINE="i586"
+
+# Poky can try and fetch packaged-staging packages from a http, https or ftp
+# mirror. Set this variable to the root of a pstage directory on a server.
+#PSTAGE_MIRROR ?= "http://someserver.tld/share/pstage"

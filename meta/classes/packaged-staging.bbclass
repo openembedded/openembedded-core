@@ -135,7 +135,9 @@ do_clean_prepend() {
 
 	stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
 	bb.note("Removing staging package %s" % stagepkg)
-	os.system('rm -rf ' + stagepkg)
+        # Add a wildcard to the end of stagepkg to also get its md5
+        # if it's a fetched package
+	os.system('rm -rf ' + stagepkg + '*')
 }
 
 staging_helper () {
@@ -159,6 +161,27 @@ staging_helper () {
 	fi
 }
 
+def staging_fetch(stagepkg, d):
+    import bb.fetch
+
+    # only try and fetch if the user has configured a mirror
+    if bb.data.getVar('PSTAGE_MIRROR', d) != "":
+        # Copy the data object and override DL_DIR and SRC_URI
+        pd = d.createCopy()
+        dldir = bb.data.expand("${PSTAGE_DIR}/${PSTAGE_PKGPATH}", pd)
+        mirror = bb.data.expand("${PSTAGE_MIRROR}/${PSTAGE_PKGPATH}/", pd)
+        srcuri = mirror + os.path.basename(stagepkg)
+        bb.data.setVar('DL_DIR', dldir, pd)
+        bb.data.setVar('SRC_URI', srcuri, pd)
+
+        # Try a fetch from the pstage mirror, if it fails just return and
+        # we will build the package
+        try:
+            bb.fetch.init([srcuri], pd)
+            bb.fetch.go(pd, [srcuri])
+        except:
+            return
+
 PSTAGE_TASKS_COVERED = "fetch unpack munge patch configure qa_configure rig_locales compile sizecheck install deploy package populate_sysroot package_write_deb package_write_ipk package_write package_stage qa_staging"
 
 SCENEFUNCS += "packagestage_scenefunc"
@@ -174,6 +197,8 @@ python packagestage_scenefunc () {
     pstage_cleanpackage(removepkg, d)
 
     stagepkg = bb.data.expand("${PSTAGE_PKG}", d)
+    if not os.path.exists(stagepkg):
+        staging_fetch(stagepkg, d)
 
     if os.path.exists(stagepkg):
         path = bb.data.getVar("PATH", d, 1)
