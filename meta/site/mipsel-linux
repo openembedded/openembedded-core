@@ -49,6 +49,14 @@ glib_cv_uscore=${glib_cv_uscore=no}
 glib_cv_va_copy=${glib_cv_va_copy=yes}
 glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
 
+# glib-2.0
+glib_cv_stack_grows=${glib_cv_stack_grows=no}
+utils_cv_sys_open_max=${utils_cv_sys_open_max=1015}
+ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
+glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
+ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
+
+
 # libpcap
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
 ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
