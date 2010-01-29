@@ -1,0 +1,13 @@
+--- pcmanfm-0.3.2.2-org/src/inotify/inotify-syscalls.h	2010-01-07 14:53:56.938000062 +0800
++++ pcmanfm-0.3.2.2/src/inotify/inotify-syscalls.h	2010-01-07 14:54:57.830000065 +0800
+@@ -39,6 +39,10 @@
+ # define __NR_inotify_init	290
+ # define __NR_inotify_add_watch	291
+ # define __NR_inotify_rm_watch	292
++#elif defined (__mips__)
++# define __NR_inotify_init	284
++# define __NR_inotify_add_watch	285
++# define __NR_inotify_rm_watch	286
+ #else
+ # error "Unsupported architecture!"
+ #endif

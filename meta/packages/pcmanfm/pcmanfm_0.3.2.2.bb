@@ -7,7 +7,7 @@ DEPENDS_append_poky = " libowl"
 
 PR = "r5"
 
-COMPATIBLE_HOST = '(x86_64|i.86.*|arm.*)-(linux|freebsd.*)'
+COMPATIBLE_HOST = '(x86_64|i.86.*|arm.*|mips.*)-(linux|freebsd.*)'
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-fs-directory.png \
@@ -15,7 +15,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-mime-text-plain.png \
 	   file://emblem-symbolic-link.png \
 	   file://desktop.patch;patch=1 \
-	   file://no-warnings.patch;patch=1"
+	   file://no-warnings.patch;patch=1 \
+	   file://pcmanfm-mips-fix.patch;patch=1"
 
 SRC_URI_append_poky = " file://owl-window-menu.patch;patch=1"
 
