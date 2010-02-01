@@ -21,7 +21,7 @@ bzip2recover_SOURCES = bzip2recover.c
 bzip2recover_LDADD = libbz2.la
 bzip2recover_DEPENDENCIES = libbz2.la
 
-bin_SCRIPTS = bzgrep bzgrep bzmore bzdiff
+bin_SCRIPTS = bzgrep bzmore bzdiff
 
 man_MANS = bzip2.1 bzgrep.1 bzmore.1 bzdiff.1
 EXTRA_DIST = $(man_MANS)
