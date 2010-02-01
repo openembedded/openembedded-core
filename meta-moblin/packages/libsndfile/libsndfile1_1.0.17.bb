@@ -4,9 +4,10 @@ AUTHOR = "Erik de Castro Lopo"
 DEPENDS = "sqlite3"
 SECTION = "libs/multimedia"
 LICENSE = "LGPL"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.mega-nerd.com/libsndfile/libsndfile-${PV}.tar.gz \
+           file://acincludefix.patch;patch=1 \
            file://add-cxx.patch;patch=1"
 
 S = "${WORKDIR}/libsndfile-${PV}"
