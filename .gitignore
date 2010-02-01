@@ -11,3 +11,4 @@ poky-autobuilder*
 *.swp
 *.orig
 *.rej
+*~
