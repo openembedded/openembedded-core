@@ -23,6 +23,8 @@ UDEV_EXTRAS = "extras/firmware/ extras/scsi_id/ extras/volume_id/"
 
 EXTRA_OECONF = "--with-udev-prefix= --disable-extras --disable-introspection"
 
+DEPENDS += "glib-2.0"
+
 do_install () {
 	install -d ${D}${usrsbindir} \
 		   ${D}${sbindir}
