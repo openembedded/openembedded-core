@@ -1,0 +1,17 @@
+This double definition breaks recent autoconf+automake.
+
+RP 1/2/10
+
+Index: libxslt-1.1.22/libexslt/Makefile.am
+===================================================================
+--- libxslt-1.1.22.orig/libexslt/Makefile.am	2010-02-01 10:55:59.337788365 +0000
++++ libxslt-1.1.22/libexslt/Makefile.am	2010-02-01 10:56:08.239068767 +0000
+@@ -11,8 +11,6 @@
+ exsltinc_HEADERS =                      \
+ 	exslt.h				\
+ 	exsltconfig.h			\
+-	exslt.h				\
+-	exsltconfig.h			\
+ 	exsltexports.h
+ 
+ libexslt_la_SOURCES =                   \
