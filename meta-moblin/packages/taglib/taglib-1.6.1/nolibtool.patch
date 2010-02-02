@@ -1,8 +1,8 @@
-Index: taglib-1.5/acinclude.m4
+Index: taglib-1.6.1/acinclude.m4
 ===================================================================
---- taglib-1.5.orig/acinclude.m4	2008-02-12 23:53:04.000000000 +0000
-+++ taglib-1.5/acinclude.m4	2008-12-16 18:25:54.000000000 +0000
-@@ -5995,5894 +5995,3 @@
+--- taglib-1.6.1.orig/acinclude.m4	2009-10-31 10:04:35.000000000 +0000
++++ taglib-1.6.1/acinclude.m4	2010-02-01 15:25:38.887788993 +0000
+@@ -5997,5894 +5997,3 @@
      KDE_USE_PIE="-pie"
    fi
  ])
@@ -5897,3 +5897,18 @@ Index: taglib-1.5/acinclude.m4
 -SED=$lt_cv_path_SED
 -AC_MSG_RESULT([$SED])
 -])
+Index: taglib-1.6.1/Makefile.am
+===================================================================
+--- taglib-1.6.1.orig/Makefile.am	2010-02-01 16:47:11.687791360 +0000
++++ taglib-1.6.1/Makefile.am	2010-02-01 16:47:33.217875703 +0000
+@@ -8,8 +8,8 @@
+ $(top_srcdir)/subdirs:
+ 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common subdirs
+ 
+-$(top_srcdir)/acinclude.m4: $(top_srcdir)/admin/acinclude.m4.in $(top_srcdir)/admin/libtool.m4.in
+-	@cd $(top_srcdir) && cat admin/acinclude.m4.in admin/libtool.m4.in > acinclude.m4
++$(top_srcdir)/acinclude.m4: $(top_srcdir)/admin/acinclude.m4.in
++	@cd $(top_srcdir) && cat admin/acinclude.m4.in > acinclude.m4
+ 
+ MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 configure.files
+ 
