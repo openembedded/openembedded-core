@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 
 SRC_URI = "http://download.moblin.org/sources/hornsey/1.0/hornsey-1.0_20091116.tar.bz2"
 
-DEPENDS = "clutter-1.0 clutter-gtk clutter-gst bickley bognor-regis nbtk startup-notification libunique"
+DEPENDS = "clutter-1.0 clutter-gtk clutter-gst bickley bognor-regis nbtk startup-notification libunique xtst"
 
 EXTRA_OECONF = "--disable-shave"
 
