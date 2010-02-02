@@ -2,20 +2,20 @@
  libparted/arch/linux.c |   13 +++++++++++++
  1 file changed, 13 insertions(+)
 
-Index: parted-1.8.8/libparted/arch/linux.c
+Index: parted-1.9.0/libparted/arch/linux.c
 ===================================================================
---- parted-1.8.8.orig/libparted/arch/linux.c	2007-08-09 20:47:57.000000000 +0200
-+++ parted-1.8.8/libparted/arch/linux.c	2008-10-06 13:49:17.000000000 +0200
-@@ -18,6 +18,8 @@
+--- parted-1.9.0.orig/libparted/arch/linux.c	2009-07-23 18:52:08.000000000 +0100
++++ parted-1.9.0/libparted/arch/linux.c	2010-02-02 14:14:16.523904768 +0000
+@@ -17,6 +17,8 @@
  
  #define PROC_DEVICES_BUFSIZ 16384
  
 +#include <linux/version.h>
 +
  #include <config.h>
+ #include <arch/linux.h>
  
- #include <parted/parted.h>
-@@ -1361,12 +1363,14 @@ linux_refresh_close (PedDevice* dev)
+@@ -1477,12 +1479,14 @@
  
  #if SIZEOF_OFF_T < 8
  
@@ -30,7 +30,7 @@ Index: parted-1.8.8/libparted/arch/linux.c
  
  loff_t
  llseek (unsigned int fd, loff_t offset, unsigned int whence)
-@@ -1374,11 +1378,20 @@ llseek (unsigned int fd, loff_t offset, 
+@@ -1490,11 +1494,20 @@
          loff_t result;
          int retval;
  
