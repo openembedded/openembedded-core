@@ -1,0 +1,45 @@
+Index: kexec-tools-1.101/configure.ac
+===================================================================
+--- kexec-tools-1.101.orig/configure.ac	2010-02-02 15:14:43.173906722 +0000
++++ kexec-tools-1.101/configure.ac	2010-02-02 15:15:07.623910565 +0000
+@@ -100,23 +100,23 @@
+ BUILD_CFLAGS='-O2 -Wall $(CPPFLAGS)'
+ 
+ dnl ---Sanity checks
+-if test "$CC"      = "no"; then AC_MSG_ERROR([cc not found]) fi
+-if test "$CPP"     = "no"; then AC_MSG_ERROR([cpp not found]) fi
+-if test "$LD"      = "no"; then AC_MSG_ERROR([ld not found]) fi
+-if test "$AS"      = "no"; then AC_MSG_ERROR([as not found]) fi
+-if test "$OBJCOPY" = "no"; then	AC_MSG_ERROR([objcopy not found]) fi
+-if test "$AR"      = "no"; then	AC_MSG_ERROR([ar not found]) fi
+-
+-if test "$MKDIR"   = "no"; then AC_MSG_ERROR([ mkdir not found]) fi 
+-if test "$RM"      = "no"; then AC_MSG_ERROR([ rm not found]) fi    
+-if test "$CP"      = "no"; then AC_MSG_ERROR([ cp not found]) fi    
+-if test "$LN"      = "no"; then AC_MSG_ERROR([ ln not found]) fi    
+-if test "$TAR"     = "no"; then AC_MSG_ERROR([ tar not found]) fi   
+-if test "$RPM"     = "no"; then AC_MSG_ERROR([ rpm not found]) fi   
+-if test "$SED"     = "no"; then AC_MSG_ERROR([ sed not found]) fi   
+-if test "$FIND"    = "no"; then AC_MSG_ERROR([ find not found]) fi  
+-if test "$XARGS"   = "no"; then AC_MSG_ERROR([ xargs not found]) fi 
+-if test "$DIRNAME" = "no"; then AC_MSG_ERROR([ dirname not found]) fi 
++if test "$CC"      = "no"; then AC_MSG_ERROR([cc not found]); fi
++if test "$CPP"     = "no"; then AC_MSG_ERROR([cpp not found]); fi
++if test "$LD"      = "no"; then AC_MSG_ERROR([ld not found]); fi
++if test "$AS"      = "no"; then AC_MSG_ERROR([as not found]); fi
++if test "$OBJCOPY" = "no"; then	AC_MSG_ERROR([objcopy not found]); fi
++if test "$AR"      = "no"; then	AC_MSG_ERROR([ar not found]); fi
++
++if test "$MKDIR"   = "no"; then AC_MSG_ERROR([ mkdir not found]); fi 
++if test "$RM"      = "no"; then AC_MSG_ERROR([ rm not found]); fi    
++if test "$CP"      = "no"; then AC_MSG_ERROR([ cp not found]); fi    
++if test "$LN"      = "no"; then AC_MSG_ERROR([ ln not found]); fi    
++if test "$TAR"     = "no"; then AC_MSG_ERROR([ tar not found]); fi   
++if test "$RPM"     = "no"; then AC_MSG_ERROR([ rpm not found]); fi   
++if test "$SED"     = "no"; then AC_MSG_ERROR([ sed not found]); fi   
++if test "$FIND"    = "no"; then AC_MSG_ERROR([ find not found]); fi  
++if test "$XARGS"   = "no"; then AC_MSG_ERROR([ xargs not found]); fi 
++if test "$DIRNAME" = "no"; then AC_MSG_ERROR([ dirname not found]); fi 
+ 
+ dnl ---Output variables...
+ 
