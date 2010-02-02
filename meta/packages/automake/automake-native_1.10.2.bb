@@ -1,1 +1,0 @@
-require automake-native.inc

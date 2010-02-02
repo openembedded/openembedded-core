@@ -37,14 +37,6 @@ NATIVE_INSTALL_WORKS = "1"
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	install -d ${D}${datadir}
-	if [ ! -e ${D}${datadir}/aclocal ]; then
-		ln -sf aclocal-1.10 ${D}${datadir}/aclocal
-	fi
-	if [ ! -e ${D}${datadir}/automake ]; then
-		ln -sf automake-1.10 ${D}${datadir}/automake
-	fi
 }
 
 BBCLASSEXTEND = "native"
-
-DEFAULT_PREFERENCE = "-1"
