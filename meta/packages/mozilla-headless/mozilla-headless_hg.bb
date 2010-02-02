@@ -12,7 +12,7 @@ SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;module=offscreen \
            file://jsautocfg.h \
 	   file://mozconfig"
 PV = "0.2+hg-1.0+${SRCPV}"
-PR = "r9"
+PR = "r10"
 
 S = "${WORKDIR}/offscreen"
 
