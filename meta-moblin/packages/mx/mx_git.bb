@@ -8,7 +8,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools_stage
 
-EXTRA_OECONF = "--disable-introspection"
+EXTRA_OECONF = "--disable-introspection --without-clutter-gesture"
 
 do_configure_prepend () {
 	echo "EXTRA_DIST=" > ${S}/gtk-doc.make
