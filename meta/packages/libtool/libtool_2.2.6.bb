@@ -1,8 +1,9 @@
 require libtool.inc
 
-PR = "r18"
+PR = "r20"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}a.tar.gz \
+           file://trailingslash.patch;patch=1 \
            file://dolt.m4"
 
 PACKAGES =+ "libltdl libltdl-dev libltdl-dbg"

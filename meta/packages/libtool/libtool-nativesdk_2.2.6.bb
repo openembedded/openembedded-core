@@ -1,6 +1,6 @@
 require libtool_${PV}.bb
 
-PR = "r1"
+PR = "r3"
 SRC_URI_append = " file://cross_compile.patch;patch=1"
 
 inherit nativesdk
