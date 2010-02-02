@@ -8,6 +8,7 @@ SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;module=offscreen \
            file://removebadrpath-1a622cb7c384.patch;patch=1;rev=1a622cb7c384 \
            file://removebadrpath.patch;patch=1;notrev=1a622cb7c384 \
            file://buildfixhack.patch;patch=1;notrev=1a622cb7c384 \
+           file://autoconffix.patch;patch=1 \
            file://jsautocfg.h \
 	   file://mozconfig"
 PV = "0.2+hg-1.0+${SRCPV}"

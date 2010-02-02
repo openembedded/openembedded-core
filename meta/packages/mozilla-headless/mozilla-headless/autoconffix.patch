@@ -1,0 +1,33 @@
+Fixes to enable building with latest autoconf and automake
+
+RP 2/2/10
+
+Index: offscreen/js/ctypes/libffi/configure.ac
+===================================================================
+--- offscreen.orig/js/ctypes/libffi/configure.ac	2010-02-01 14:25:48.859064666 +0000
++++ offscreen/js/ctypes/libffi/configure.ac	2010-02-01 14:26:54.097792073 +0000
+@@ -17,10 +17,10 @@
+ # the wrong, non-multilib-adjusted value will be used in multilibs.
+ # As a side effect, we have to subst CFLAGS ourselves.
+ 
+-m4_rename([_AC_ARG_VAR_PRECIOUS],[real_PRECIOUS])
++m4_rename_force([_AC_ARG_VAR_PRECIOUS],[real_PRECIOUS])
+ m4_define([_AC_ARG_VAR_PRECIOUS],[])
+ AC_PROG_CC
+-m4_rename([real_PRECIOUS],[_AC_ARG_VAR_PRECIOUS])
++m4_rename_force([real_PRECIOUS],[_AC_ARG_VAR_PRECIOUS])
+ 
+ AC_SUBST(CFLAGS)
+ 
+Index: offscreen/modules/libpr0n/build/Makefile.in
+===================================================================
+--- offscreen.orig/modules/libpr0n/build/Makefile.in	2010-01-14 12:06:49.000000000 +0000
++++ offscreen/modules/libpr0n/build/Makefile.in	2010-02-02 16:58:01.177764887 +0000
+@@ -92,6 +92,7 @@
+ 
+ export::
+ 	@{ \
++	\
+ 	$(foreach d,$(filter-out icon,$(MOZ_IMG_DECODERS)), \
+ 		echo "#define IMG_BUILD_DECODER_${d}";) \
+ 	$(foreach d,$(MOZ_IMG_ENCODERS), \
