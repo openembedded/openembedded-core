@@ -1,0 +1,42 @@
+A command like /bin/sh ../../i586-poky-linux-libtool   --mode=install /usr/bin/install -c   gck-roots-store-standalone.la '/media/data1/builds/poky1/tmp/work/core2-poky-linux/gnome-keyring-2.26.1-r1/image/usr/lib/gnome-keyring/standalone/' fails (e.g. gnome-keyring or pulseaudio)
+
+This is because libdir has a trailing slash which breaks the comparision.
+
+RP 2/1/10
+
+Index: libtool-2.2.6/libltdl/config/ltmain.sh
+===================================================================
+--- libtool-2.2.6.orig/libltdl/config/ltmain.sh	2008-09-07 18:56:33.000000000 +0100
++++ libtool-2.2.6/libltdl/config/ltmain.sh	2010-02-02 15:36:17.083936911 +0000
+@@ -2009,8 +2009,12 @@
+ 	dir="$dir$objdir"
+ 
+ 	if test -n "$relink_command"; then
++          # Strip any trailing slash from the destination.
++          func_stripname '' '/' "$libdir"
++          destlibdir=$func_stripname_result
++
+ 	  # Determine the prefix the user has applied to our future dir.
+-	  inst_prefix_dir=`$ECHO "X$destdir" | $Xsed -e "s%$libdir\$%%"`
++	  inst_prefix_dir=`$ECHO "X$destdir" | $Xsed -e "s%$destlibdir\$%%"`
+ 
+ 	  # Don't allow the user to place us outside of our expected
+ 	  # location b/c this prevents finding dependent libraries that
+Index: libtool-2.2.6/libltdl/config/ltmain.m4sh
+===================================================================
+--- libtool-2.2.6.orig/libltdl/config/ltmain.m4sh	2010-02-02 16:06:29.793905001 +0000
++++ libtool-2.2.6/libltdl/config/ltmain.m4sh	2010-02-02 16:06:59.415155959 +0000
+@@ -1567,8 +1567,12 @@
+ 	dir="$dir$objdir"
+ 
+ 	if test -n "$relink_command"; then
++          # Strip any trailing slash from the destination.
++          func_stripname '' '/' "$libdir"
++          destlibdir=$func_stripname_result
++
+ 	  # Determine the prefix the user has applied to our future dir.
+-	  inst_prefix_dir=`$ECHO "X$destdir" | $Xsed -e "s%$libdir\$%%"`
++	  inst_prefix_dir=`$ECHO "X$destdir" | $Xsed -e "s%$destlibdir\$%%"`
+ 
+ 	  # Don't allow the user to place us outside of our expected
+ 	  # location b/c this prevents finding dependent libraries that
