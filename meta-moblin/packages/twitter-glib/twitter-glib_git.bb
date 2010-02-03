@@ -1,6 +1,5 @@
 HOMEPAGE = "http://live.gnome.org/TwitterGlib"
 SRC_URI = "git://github.com/ebassi/${PN}.git;protocol=git \
-           file://missingcomma.patch;patch=1 \
            file://nodolt.patch;patch=1"
 PV = "0.1+git${SRCPV}"
 PR = "r1"
