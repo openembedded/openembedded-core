@@ -3,6 +3,6 @@ require xorg-proto-common.inc
 PR = "r4"
 PE = "1"
 
-DEPENDS += "util-macros gettext"
+inherit gettext
 
 BBCLASSEXTEND = "native nativesdk"
