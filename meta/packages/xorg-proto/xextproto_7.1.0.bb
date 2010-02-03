@@ -1,6 +1,6 @@
 require xorg-proto-common.inc
 
-PR = "r3"
+PR = "r4"
 PE = "1"
 
 DEPENDS += "util-macros gettext"

@@ -10,13 +10,13 @@ PREFERRED_VERSION_pango = "1.26.0"
 PREFERRED_VERSION_udev ?= "145"
 
 PREFERRED_VERSION_mesa-dri ?= "7.7"
-PREFERRED_VERSION_xf86-video-intel ?= "2.7.1"
-PREFERRED_VERSION_xserver-xf86-dri-lite ?= "1.6.0"
+PREFERRED_VERSION_xf86-video-intel ?= "2.10.0"
+PREFERRED_VERSION_xserver-xf86-dri-lite ?= "1.7.99.2"
 PREFERRED_VERSION_libxcb ?= "1.3"
 PREFERRED_VERSION_xcb-proto ?= "1.5"
-PREFERRED_VERSION_libx11-trim ?= "1.2.1"
+PREFERRED_VERSION_libx11-trim ?= "1.3"
 
-PREFERRED_VERSION_libdrm ?= "2.4.15"
+PREFERRED_VERSION_libdrm ?= "2.4.16"
 PREFERRED_VERSION_xf86-input-keyboard ?= ""
 PREFERRED_VERSION_dri2proto ?= ""
 
