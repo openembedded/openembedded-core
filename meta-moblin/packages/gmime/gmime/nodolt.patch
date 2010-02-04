@@ -1,0 +1,12 @@
+Index: gmime-2.4.10/configure.in
+===================================================================
+--- gmime-2.4.10.orig/configure.in
++++ gmime-2.4.10/configure.in
+@@ -80,7 +80,6 @@ AC_PATH_PROG(TAR, tar, /bin/tar)
+ 
+ AC_EXEEXT
+ AC_PROG_LIBTOOL
+-DOLT
+ 
+ AM_MAINTAINER_MODE
+ 
