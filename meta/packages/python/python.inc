@@ -21,3 +21,5 @@ EXTRA_OECONF = "\
   --with-wctype-functions \
   --enable-shared \
 "
+
+PARALLEL_MAKE = ""
