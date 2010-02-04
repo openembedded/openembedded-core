@@ -1,9 +1,9 @@
 #
-# Copyright (C) 2008 Intel Corporation.
+# Copyright (C) 2008-2010 Intel Corporation.
 #
 
 DESCRIPTION = "Target packages for the standalone Moblin SDK"
-PR = "r5"
+PR = "r6"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -31,8 +31,8 @@ RDEPENDS_${PN} = "\
     nbtk-dev \
     mutter-dev \
     mutter-moblin-dev \
-    clutter-gst-dev \
-    clutter-gtk-dev \
+    clutter-gst-0.10-dev \
+    clutter-gtk-0.10-dev \
     clutter-imcontext \
     libccss \
     "
