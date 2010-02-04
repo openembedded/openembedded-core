@@ -1,13 +1,12 @@
 DESCRIPTION = "O-Hand Jana Library"
-DEPENDS = "libmokojournal2"
-DEPENDS = "gtk+ eds-dbus gconf" 
-PV = "0.1.0+svnr${SRCREV}"
-PR = "r5"
+DEPENDS = "gtk+ eds-dbus gconf"
+PV = "0.4.4+git${SRCPV}"
+PR = "r0"
 
 inherit autotools_stage pkgconfig lib_package
 
-SRC_URI = "svn://svn.gnome.org/svn/jana/;module=trunk;proto=http"
-S = "${WORKDIR}/trunk/"
+SRC_URI = "git://git.gnome.org/jana;protocol=git"
+S = "${WORKDIR}/git/"
 
 EXTRA_OECONF = "--enable-examples "
 
