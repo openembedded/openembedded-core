@@ -1,9 +1,9 @@
 DESCRIPTION = "Tracker is a tool designed to extract information and metadata about your personal data so that it can be searched easily and quickly."
 LICENSE = "GPLv2"
-DEPENDS = "file gtk+ gstreamer gamin gmime dbus poppler libexif libgsf libgnomecanvas gettext"
-HOMEPAGE="http://www.tracker-project.org/"
+DEPENDS = "file gtk+ gstreamer gamin dbus poppler libexif libgsf libgnomecanvas gmime"
+HOMEPAGE = "http://www.tracker-project.org/"
 
-inherit autotools_stage pkgconfig gnome
+inherit autotools_stage pkgconfig gnome gettext
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/tracker/0.6/tracker-${PV}.tar.bz2 \
            file://munge-configure.ac-cross-compile.patch;patch=1 \
