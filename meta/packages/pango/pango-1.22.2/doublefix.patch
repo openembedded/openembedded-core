@@ -1,0 +1,17 @@
+Fix double header inclusion for bug with recent autoconf/automake
+
+RP 4/2/10
+
+Index: pango-1.22.2/pango/Makefile.am
+===================================================================
+--- pango-1.22.2.orig/pango/Makefile.am	2010-02-04 12:05:30.000000000 +0000
++++ pango-1.22.2/pango/Makefile.am	2010-02-04 12:07:21.000000000 +0000
+@@ -233,7 +233,7 @@
+ # ------------------- libpangoxft -------------------
+ 
+ if HAVE_XFT
+-pangoinclude_HEADERS += pangoxft.h pangoxft-render.h pango-ot.h
++pangoinclude_HEADERS += pangoxft.h pangoxft-render.h
+ lib_LTLIBRARIES += libpangoxft-1.0.la
+ endif
+ 
