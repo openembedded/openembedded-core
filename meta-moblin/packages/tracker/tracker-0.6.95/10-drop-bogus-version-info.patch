@@ -1,0 +1,73 @@
+Index: tracker-0.6.95/src/libstemmer/Makefile.am
+===================================================================
+--- tracker-0.6.95.orig/src/libstemmer/Makefile.am	2009-09-30 20:33:48.964218706 +0200
++++ tracker-0.6.95/src/libstemmer/Makefile.am	2009-09-30 20:34:29.120883357 +0200
+@@ -51,5 +51,5 @@
+ 
+ libstemmer_la_LIBADD = $(GCOV_LIBS)
+ libstemmer_la_LDFLAGS = 		\
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++	-version-info 0:0:0
+ 
+Index: tracker-0.6.95/src/libtracker-common/Makefile.am
+===================================================================
+--- tracker-0.6.95.orig/src/libtracker-common/Makefile.am	2009-09-30 20:33:49.094218792 +0200
++++ tracker-0.6.95/src/libtracker-common/Makefile.am	2009-09-30 20:34:29.120883357 +0200
+@@ -77,7 +77,7 @@
+ 	tracker-utils.h
+ 
+ libtracker_common_la_LDFLAGS = 				\
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++	-version-info 0:0:0
+ 
+ libtracker_common_la_LIBADD = 				\
+ 	$(top_builddir)/src/libstemmer/libstemmer.la	\
+Index: tracker-0.6.95/src/libtracker-data/Makefile.am
+===================================================================
+--- tracker-0.6.95.orig/src/libtracker-data/Makefile.am	2009-09-30 20:33:49.020885421 +0200
++++ tracker-0.6.95/src/libtracker-data/Makefile.am	2009-09-30 20:34:29.120883357 +0200
+@@ -41,7 +41,7 @@
+ 	tracker-turtle.h						
+ 
+ libtracker_data_la_LDFLAGS =						\
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++	-version-info 0:0:0
+ 
+ libtracker_data_la_LIBADD = 						\
+ 	$(top_builddir)/src/libtracker-common/libtracker-common.la	\
+Index: tracker-0.6.95/src/libtracker-db/Makefile.am
+===================================================================
+--- tracker-0.6.95.orig/src/libtracker-db/Makefile.am	2009-09-30 20:33:49.140887873 +0200
++++ tracker-0.6.95/src/libtracker-db/Makefile.am	2009-09-30 20:34:29.120883357 +0200
+@@ -38,7 +38,7 @@
+ 	tracker-db-manager.h 
+ 
+ libtracker_db_la_LDFLAGS =						\
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++	-version-info 0:0:0
+ 
+ libtracker_db_la_LIBADD = 						\
+ 	$(top_builddir)/src/libtracker-common/libtracker-common.la	\
+Index: tracker-0.6.95/src/libtracker-gtk/Makefile.am
+===================================================================
+--- tracker-0.6.95.orig/src/libtracker-gtk/Makefile.am	2009-09-30 20:33:49.074220431 +0200
++++ tracker-0.6.95/src/libtracker-gtk/Makefile.am	2009-09-30 20:34:29.120883357 +0200
+@@ -31,4 +31,4 @@
+ 	$(GCOV_LIBS)
+ 
+ libtracker_gtk_la_LDFLAGS = 					\
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++	-version-info 0:0:0
+Index: tracker-0.6.95/src/libtracker/Makefile.am
+===================================================================
+--- tracker-0.6.95.orig/src/libtracker/Makefile.am	2009-09-30 20:33:49.164217943 +0200
++++ tracker-0.6.95/src/libtracker/Makefile.am	2009-09-30 20:34:29.120883357 +0200
+@@ -14,7 +14,7 @@
+ libtrackerclient_la_SOURCES = tracker.c
+ 
+ libtrackerclient_la_LDFLAGS = 			\
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++	-version-info 0:0:0
+ 
+ libtrackerclient_la_LIBADD = 			\
+ 	$(GLIB2_LIBS) 				\

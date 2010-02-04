@@ -1,0 +1,64 @@
+From ae32c3902a1afe2f900ec5e42a1070c8c7fce83b Mon Sep 17 00:00:00 2001
+From: John Carr <john.carr@unrouted.co.uk>
+Date: Tue, 3 Nov 2009 01:18:26 +0000
+Subject: [PATCH 1/2] Add AC_CACHE_CHECK magic around ioprio checking.
+
+Having the cache check allows the end user to set whether ioprio
+is available or not. Without this cross-compilation is not
+possible as there is no way to run the test program.
+---
+ configure.ac |   24 +++++++++++-------------
+ 1 files changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 441b4b8..fca54b9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1164,17 +1164,15 @@ AM_CONDITIONAL(HAVE_LIBVORBIS, test "x$have_libvorbis" = "xyes")
+ # Check ioprio support
+ ####################################################################
+ 
+-AC_MSG_CHECKING([[ioprio support]])
+-have_ioprio=no
+-
+-AC_RUN_IFELSE(
+-[AC_LANG_PROGRAM([[
++AC_CACHE_CHECK([if we have ioprio],[tracker_cv_have_ioprio],
++  [AC_RUN_IFELSE(
++    [AC_LANG_PROGRAM([[
+ 	#include <stdlib.h>
+ 	#include <errno.h>
+ 	#include <sys/syscall.h>
+ 	#include <unistd.h>
+-]], 
+-[[
++      ]], 
++      [[
+         inline int ioprio_get (int which, int who) 
+ 	{
+ 	       return syscall (__NR_ioprio_get, which, who);
+@@ -1184,16 +1182,16 @@ AC_RUN_IFELSE(
+ 	{
+ 	       return ioprio_get (1, 0);
+ 	}
+-]]
+-)],
+-[have_ioprio=yes],[])
++      ]])],
++    [tracker_cv_have_ioprio=yes],
++    [tracker_cv_have_ioprio=no],
++    [AC_MSG_ERROR([cross-compiling: please set 'tracker_cv_have_ioprio'])])
++  ])
+ 
+-if test "$have_ioprio" = "yes" ; then
++if test "x$tracker_cv_have_ioprio" = "xyes" ; then
+    AC_DEFINE(HAVE_IOPRIO, 1, [Define if we have ioprio])
+ fi
+ 
+-AC_MSG_RESULT([$have_ioprio])
+-
+ ##################################################################
+ # Check for exempi
+ ##################################################################
+-- 
+1.6.3.3

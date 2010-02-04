@@ -1,0 +1,435 @@
+# Patch pulled from http://cvs.fedoraproject.org/viewvc/rpms/tracker/devel/
+# based on the patch in https://bugzilla.gnome.org/show_bug.cgi?id=564640
+Index: tracker/configure.ac
+===================================================================
+--- tracker.orig/configure.ac	2009-06-09 23:42:44.000000000 +0200
++++ tracker/configure.ac	2009-09-30 22:53:51.000000000 +0200
+@@ -132,7 +132,7 @@
+ GTK_REQUIRED=2.16.0
+ GLADE_REQUIRED=2.5
+ QDBM_REQUIRED=1.8
+-GMIME_REQUIRED=2.1.0
++GMIME_REQUIRED=2.4.0
+ LIBXML2_REQUIRED=0.6
+ LIBNOTIFY_REQUIRED=0.4.3
+ HAL_REQUIRED=0.5
+@@ -182,7 +182,7 @@
+ AC_SUBST(PANGO_LIBS)
+ 
+ # Check for GMime
+-PKG_CHECK_MODULES(GMIME, [gmime-2.0 >= $GMIME_REQUIRED])
++PKG_CHECK_MODULES(GMIME, [gmime-2.4 >= $GMIME_REQUIRED])
+ AC_SUBST(GMIME_CFLAGS)
+ AC_SUBST(GMIME_LIBS)
+ 
+Index: tracker/src/tracker-indexer/modules/evolution-common.c
+===================================================================
+--- tracker.orig/src/tracker-indexer/modules/evolution-common.c	2009-05-22 23:31:58.000000000 +0200
++++ tracker/src/tracker-indexer/modules/evolution-common.c	2009-09-30 22:53:51.000000000 +0200
+@@ -89,41 +89,3 @@
+ 	return metadata;
+ }
+ 
+-gchar *
+-evolution_common_get_object_encoding (GMimeObject *object)
+-{
+-        const gchar *start_encoding, *end_encoding;
+-        const gchar *content_type = NULL;
+-
+-        if (GMIME_IS_MESSAGE (object)) {
+-                content_type = g_mime_message_get_header (GMIME_MESSAGE (object), "Content-Type");
+-        } else if (GMIME_IS_PART (object)) {
+-                content_type = g_mime_part_get_content_header (GMIME_PART (object), "Content-Type");
+-        }
+-
+-        if (!content_type) {
+-                return NULL;
+-        }
+-
+-        start_encoding = strstr (content_type, "charset=");
+-
+-        if (!start_encoding) {
+-                return NULL;
+-        }
+-
+-        start_encoding += strlen ("charset=");
+-
+-        if (start_encoding[0] == '"') {
+-                /* encoding is quoted */
+-                start_encoding++;
+-                end_encoding = strstr (start_encoding, "\"");
+-        } else {
+-                end_encoding = strstr (start_encoding, ";");
+-        }
+-
+-        if (end_encoding) {
+-                return g_strndup (start_encoding, end_encoding - start_encoding);
+-        } else {
+-                return g_strdup (start_encoding);
+-        }
+-}
+Index: tracker/src/tracker-indexer/modules/evolution-common.h
+===================================================================
+--- tracker.orig/src/tracker-indexer/modules/evolution-common.h	2009-05-22 23:31:58.000000000 +0200
++++ tracker/src/tracker-indexer/modules/evolution-common.h	2009-09-30 22:53:51.000000000 +0200
+@@ -55,7 +55,6 @@
+ 							       gint              flags,
+ 							       off_t             start);
+ TrackerModuleMetadata * evolution_common_get_wrapper_metadata (GMimeDataWrapper *wrapper);
+-gchar *                 evolution_common_get_object_encoding  (GMimeObject      *object);
+ 
+ G_END_DECLS
+ 
+Index: tracker/src/tracker-indexer/modules/evolution-imap.c
+===================================================================
+--- tracker.orig/src/tracker-indexer/modules/evolution-imap.c	2009-06-09 23:42:49.000000000 +0200
++++ tracker/src/tracker-indexer/modules/evolution-imap.c	2009-09-30 22:53:51.000000000 +0200
+@@ -557,7 +557,7 @@
+ static gboolean
+ get_attachment_info (const gchar            *mime_file,
+                      gchar                 **name,
+-                     GMimePartEncodingType  *encoding)
++                     GMimeContentEncoding   *encoding)
+ {
+ 	GMimeContentType *mime;
+ 	gchar *tmp, *mime_content;
+@@ -568,7 +568,7 @@
+ 	}
+ 
+ 	if (encoding) {
+-		*encoding = GMIME_PART_ENCODING_DEFAULT;
++		*encoding = GMIME_CONTENT_ENCODING_DEFAULT;
+ 	}
+ 
+ 	if (!g_file_get_contents (mime_file, &tmp, NULL, NULL)) {
+@@ -615,7 +615,7 @@
+ 			*name = g_strdup (g_mime_content_type_get_parameter (mime, "name"));
+ 		}
+ 
+-		g_mime_content_type_destroy (mime);
++		g_object_unref (mime);
+ 	}
+ 
+ 	if (name && !*name) {
+@@ -637,17 +637,17 @@
+ 		gchar *encoding_str = g_strndup (pos_encoding, pos_end_encoding - pos_encoding);
+ 
+ 		if (strcmp (encoding_str, "7bit") == 0) {
+-			*encoding = GMIME_PART_ENCODING_7BIT;
++			*encoding = GMIME_CONTENT_ENCODING_7BIT;
+ 		} else if (strcmp (encoding_str, "8bit") == 0) {
+-			*encoding = GMIME_PART_ENCODING_7BIT;
++			*encoding = GMIME_CONTENT_ENCODING_8BIT;
+ 		} else if (strcmp (encoding_str, "binary") == 0) {
+-			*encoding = GMIME_PART_ENCODING_BINARY;
++			*encoding = GMIME_CONTENT_ENCODING_BINARY;
+ 		} else if (strcmp (encoding_str, "base64") == 0) {
+-			*encoding = GMIME_PART_ENCODING_BASE64;
++			*encoding = GMIME_CONTENT_ENCODING_BASE64;
+ 		} else if (strcmp (encoding_str, "quoted-printable") == 0) {
+-			*encoding = GMIME_PART_ENCODING_QUOTEDPRINTABLE;
++			*encoding = GMIME_CONTENT_ENCODING_QUOTEDPRINTABLE;
+ 		} else if (strcmp (encoding_str, "x-uuencode") == 0) {
+-			*encoding = GMIME_PART_ENCODING_UUENCODE;
++			*encoding = GMIME_CONTENT_ENCODING_UUENCODE;
+ 		}
+ 
+ 		g_free (encoding_str);
+@@ -734,14 +734,17 @@
+ }
+ 
+ static void
+-extract_message_text (GMimeObject *object,
++extract_message_text (GMimeObject *parent, 
++                      GMimeObject *object,
+                       gpointer     user_data)
+ {
+         GString *body = (GString *) user_data;
+-        GMimePartEncodingType part_encoding;
++        GMimeContentEncoding part_encoding;
+         GMimePart *part;
+-        const gchar *content, *disposition, *filename;
+-        gchar *encoding, *part_body;
++	GMimeStream *stream;
++	GMimeDataWrapper *data;
++        const gchar *disposition, *filename, *encoding;
++        gchar *part_body, buffer[1024];
+         gsize len;
+ 
+         if (GMIME_IS_MESSAGE_PART (object)) {
+@@ -750,7 +753,7 @@
+ 		message = g_mime_message_part_get_message (GMIME_MESSAGE_PART (object));
+ 
+ 		if (message) {
+-			g_mime_message_foreach_part (message, extract_message_text, user_data);
++			g_mime_message_foreach (message, extract_message_text, user_data);
+ 			g_object_unref (message);
+ 		}
+ 
+@@ -762,12 +765,12 @@
+ 
+ 	part = GMIME_PART (object);
+         filename = g_mime_part_get_filename (part);
+-	disposition = g_mime_part_get_content_disposition (part);
+-        part_encoding = g_mime_part_get_encoding (part);
++	disposition = g_mime_object_get_disposition (GMIME_OBJECT (part));
++        part_encoding = g_mime_part_get_content_encoding (part);
+ 
+-        if (part_encoding == GMIME_PART_ENCODING_BINARY ||
+-            part_encoding == GMIME_PART_ENCODING_BASE64 ||
+-            part_encoding == GMIME_PART_ENCODING_UUENCODE) {
++        if (part_encoding == GMIME_CONTENT_ENCODING_BINARY ||
++            part_encoding == GMIME_CONTENT_ENCODING_BASE64 ||
++            part_encoding == GMIME_CONTENT_ENCODING_UUENCODE) {
+                 return;
+         }
+ 
+@@ -782,31 +785,34 @@
+                 return;
+         }
+ 
+-        content = g_mime_part_get_content (GMIME_PART (object), &len);
++	data = g_mime_part_get_content_object (GMIME_PART (object));
+ 
+-        if (!content) {
+-                return;
+-        }
++	if (!data)
++		return;
+ 
+-        if (g_utf8_validate (content, len, NULL)) {
+-                g_string_append_len (body, content, (gssize) len);
+-                return;
+-        }
++	stream = g_mime_data_wrapper_get_stream (data);
+ 
+-        encoding = evolution_common_get_object_encoding (object);
++	if (!stream) {
++		g_object_unref (data);
++		return;
++	}
+ 
+-        if (!encoding) {
+-                /* FIXME: This will break for non-utf8 text without
+-                 * the proper content type set
+-                 */
+-                g_string_append_len (body, content, (gssize) len);
+-        } else {
+-                part_body = g_convert (content, (gssize) len, "utf8", encoding, NULL, NULL, NULL);
+-                g_string_append (body, part_body);
++	encoding = g_mime_object_get_content_disposition_parameter (GMIME_OBJECT (part), "charset");
+ 
+-                g_free (part_body);
+-                g_free (encoding);
+-        }
++	while (!g_mime_stream_eos (stream)) {
++		len = g_mime_stream_read (stream, buffer, 1024);
++		if (len > 0 && g_utf8_validate (buffer, len, NULL)) {
++			if (!encoding)
++				g_string_append_len (body, buffer, (gssize) len);
++			else {
++ 				part_body = g_convert (buffer, (gssize) len, "utf8", encoding, NULL, NULL, NULL);
++				g_string_append (body, part_body);
++				g_free (part_body);
++			}
++		}
++	}
++
++	g_object_unref (stream);
+ }
+ 
+ static gchar *
+@@ -846,7 +852,7 @@
+ 
+         if (message) {
+                 body = g_string_new (NULL);
+-                g_mime_message_foreach_part (message, extract_message_text, body);
++                g_mime_message_foreach (message, extract_message_text, body);
+                 g_object_unref (message);
+         }
+ 
+@@ -1030,7 +1036,7 @@
+ 	TrackerModuleMetadata *metadata;
+ 	GMimeStream *stream;
+ 	GMimeDataWrapper *wrapper;
+-	GMimePartEncodingType encoding;
++	GMimeContentEncoding encoding;
+ 	gchar *path, *name;
+ 
+ 	if (!get_attachment_info (mime_file, &name, &encoding)) {
+Index: tracker/src/tracker-indexer/modules/evolution-pop.c
+===================================================================
+--- tracker.orig/src/tracker-indexer/modules/evolution-pop.c	2009-05-22 23:31:58.000000000 +0200
++++ tracker/src/tracker-indexer/modules/evolution-pop.c	2009-09-30 22:53:51.000000000 +0200
+@@ -175,7 +175,7 @@
+ 	gchar *number;
+ 	gint id;
+ 
+-	header = g_mime_message_get_header (message, "X-Evolution");
++	header = g_mime_object_get_header (GMIME_OBJECT (message), "X-Evolution");
+ 
+         if (!header) {
+                 return -1;
+@@ -253,8 +253,12 @@
+ tracker_evolution_pop_file_get_text (TrackerModuleFile *file)
+ {
+         TrackerEvolutionPopFile *self;
+-        gchar *text, *encoding, *utf8_text;
+-        gboolean is_html;
++	const gchar *encoding;
++	gchar buffer[1024];
++	guint len;
++	GString *body;
++	GMimeStream *stream;
++	GMimeDataWrapper *data;
+ 
+         self = TRACKER_EVOLUTION_POP_FILE (file);
+ 
+@@ -263,27 +267,38 @@
+ 		return NULL;
+ 	}
+ 
+-        text = g_mime_message_get_body (self->message, TRUE, &is_html);
++	data = g_mime_part_get_content_object (GMIME_PART (self->message));
+ 
+-        if (!text) {
+-                return NULL;
+-        }
++	if (!data)
++		return NULL;
+ 
+-        encoding = evolution_common_get_object_encoding (GMIME_OBJECT (self->message));
++	stream = g_mime_data_wrapper_get_stream (data);
+ 
+-        if (!encoding) {
+-                /* FIXME: could still puke on non-utf8
+-                 * messages without proper content type
+-                 */
+-                return text;
+-        }
++	if (!stream) {
++		g_object_unref (data);
++		return NULL;
++	}
+ 
+-        utf8_text = g_convert (text, -1, "utf8", encoding, NULL, NULL, NULL);
++	body = g_string_new ("");
+ 
+-        g_free (encoding);
+-        g_free (text);
++	encoding = g_mime_object_get_content_disposition_parameter (GMIME_OBJECT (self->message), "charset");
+ 
+-        return utf8_text;
++	while (!g_mime_stream_eos (stream)) {
++		len = g_mime_stream_read (stream, buffer, 1024);
++		if (len > 0 && g_utf8_validate (buffer, len, NULL)) {
++			if (!encoding)
++				g_string_append_len (body, buffer, (gssize) len);
++			else {
++ 				gchar *part_body = g_convert (buffer, (gssize) len, "utf8", encoding, NULL, NULL, NULL);
++				g_string_append (body, part_body);
++				g_free (part_body);
++			}
++		}
++	}
++
++	g_object_unref (stream);
++
++	return g_string_free (body, FALSE);
+ }
+ 
+ static guint
+@@ -291,7 +306,7 @@
+ {
+ 	const gchar *header, *pos;
+ 
+-	header = g_mime_message_get_header (message, "X-Evolution");
++	header = g_mime_object_get_header (GMIME_OBJECT (message), "X-Evolution");
+ 
+ 	if (!header) {
+ 		return 0;
+@@ -304,34 +319,24 @@
+ 
+ static GList *
+ get_message_recipients (GMimeMessage *message,
+-                        const gchar  *type)
++                        GMimeRecipientType type)
+ {
+ 	GList *list = NULL;
+-	const InternetAddressList *addresses;
++	InternetAddressList *addresses;
++	guint len, i;
+ 
+ 	addresses = g_mime_message_get_recipients (message, type);
+ 
+-	while (addresses) {
++	len = internet_address_list_length (addresses);
++	
++	while (i < len) {
+ 		InternetAddress *address;
+-		gchar *str;
+ 
+-		address = addresses->address;
++		address = internet_address_list_get_address (addresses, i);
+ 
+-		if (address->name && address->value.addr) {
+-			str = g_strdup_printf ("%s %s", address->name, address->value.addr);
+-		} else if (address->value.addr) {
+-			str = g_strdup (address->value.addr);
+-		} else if (address->name) {
+-			str = g_strdup (address->name);
+-		} else {
+-			str = NULL;
+-		}
+-
+-		if (str) {
+-			list = g_list_prepend (list, str);
+-		}
++		list = g_list_prepend (list, internet_address_to_string (address, TRUE));
+ 
+-		addresses = addresses->next;
++		i++;
+ 	}
+ 
+ 	return g_list_reverse (list);
+@@ -427,7 +432,8 @@
+ }
+ 
+ static void
+-extract_mime_parts (GMimeObject *object,
++extract_mime_parts (GMimeObject *parent, 
++                    GMimeObject *object,
+                     gpointer     user_data)
+ {
+ 	GList **list = (GList **) user_data;
+@@ -440,7 +446,7 @@
+ 		message = g_mime_message_part_get_message (GMIME_MESSAGE_PART (object));
+ 
+ 		if (message) {
+-			g_mime_message_foreach_part (message, extract_mime_parts, user_data);
++			g_mime_message_foreach (message, extract_mime_parts, user_data);
+ 			g_object_unref (message);
+ 		}
+ 
+@@ -451,7 +457,7 @@
+ 	}
+ 
+ 	part = GMIME_PART (object);
+-	disposition = g_mime_part_get_content_disposition (part);
++	disposition = g_mime_object_get_disposition (GMIME_OBJECT (part));
+ 
+ 	if (!disposition ||
+ 	    (strcmp (disposition, GMIME_DISPOSITION_ATTACHMENT) != 0 &&
+@@ -484,9 +490,9 @@
+         if (self->message) {
+                 /* Iterate through mime parts, if any */
+                 if (!self->mime_parts) {
+-                        g_mime_message_foreach_part (self->message,
+-                                                     extract_mime_parts,
+-                                                     &self->mime_parts);
++                        g_mime_message_foreach (self->message,
++                                                extract_mime_parts,
++                                                &self->mime_parts);
+                         self->current_mime_part = self->mime_parts;
+                 } else {
+                         self->current_mime_part = self->current_mime_part->next;
