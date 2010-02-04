@@ -10,6 +10,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz \
 DEPENDS = "zlib bzip2"
 DEPENDS_virtclass-native = "bzip2-native zlib-native virtual/update-alternatives-native gettext-native"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
+RDEPENDS_${PN}_virtclass-native = ""
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
