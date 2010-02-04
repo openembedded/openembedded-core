@@ -1,8 +1,8 @@
-Index: tracker-0.6.95/configure.ac
+Index: tracker-0.7.18/configure.ac
 ===================================================================
---- tracker-0.6.95.orig/configure.ac	2009-11-03 19:36:02.854851277 +0000
-+++ tracker-0.6.95/configure.ac	2009-11-03 19:38:23.757362563 +0000
-@@ -1332,34 +1332,6 @@
+--- tracker-0.7.18.orig/configure.ac	2010-01-28 18:16:36.000000000 +0000
++++ tracker-0.7.18/configure.ac	2010-02-04 16:40:52.000000000 +0000
+@@ -1542,34 +1542,6 @@
  old_exec_message=""
  old_data_message=""
  
@@ -14,10 +14,10 @@ Index: tracker-0.6.95/configure.ac
 -AC_CHECK_FILE("${prefix}/share/tracker/tracker-introspect.xml", old_data_dbus_xml=yes,,)
 -AC_CHECK_FILE("${prefix}/share/tracker/sqlite-service-stored-procs.sql", old_data_stored_procs=yes,,)
 -
--if test "x$old_exec_trackerd" == "xyes" -o \
--        "x$old_exec_tracker_indexer" == "xyes" -o \
--        "x$old_exec_tracker_extract" == "xyes" -o \
--        "x$old_exec_tracker_thumbnailer" == "xyes"; then
+-if test "x$old_exec_trackerd" = "xyes" -o \
+-        "x$old_exec_tracker_indexer" = "xyes" -o \
+-        "x$old_exec_tracker_extract" = "xyes" -o \
+-        "x$old_exec_tracker_thumbnailer" = "xyes"; then
 -   old_exec_message="
 -        Old Tracker executable files were found in your path.
 -        (trackerd, tracker-indexer, tracker-thumbnailer, tracker-extract)"
@@ -25,9 +25,9 @@ Index: tracker-0.6.95/configure.ac
 -	** These files will be removed as part of the installation **"
 -fi
 -
--if test "x$old_data_dbus_service" == "xyes" -o \
--        "x$old_data_dbus_xml" == "xyes" -o \
--        "x$old_data_stored_procs" == "xyes"; then
+-if test "x$old_data_dbus_service" = "xyes" -o \
+-        "x$old_data_dbus_xml" = "xyes" -o \
+-        "x$old_data_stored_procs" = "xyes"; then
 -   old_data_message="
 -        Old Tracker data files were found in the prefix you are installing to."
 -   old_file_action="

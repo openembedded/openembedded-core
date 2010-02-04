@@ -1,0 +1,13 @@
+Index: tracker-0.7.18/src/tracker-miner-fs/tracker-config.c
+===================================================================
+--- tracker-0.7.18.orig/src/tracker-miner-fs/tracker-config.c	2010-01-26 14:57:20.000000000 +0000
++++ tracker-0.7.18/src/tracker-miner-fs/tracker-config.c	2010-02-04 16:47:46.000000000 +0000
+@@ -42,7 +42,7 @@
+ #define DEFAULT_VERBOSITY                        0
+ #define DEFAULT_INITIAL_SLEEP                    15       /* 0->1000 */
+ #define DEFAULT_ENABLE_MONITORS                          TRUE
+-#define DEFAULT_THROTTLE                         0        /* 0->20 */
++#define DEFAULT_THROTTLE                         10        /* 0->20 */
+ #define DEFAULT_SCAN_TIMEOUT                     0        /* 0->1000 */
+ #define DEFAULT_CACHE_TIMEOUT                    60       /* 0->1000 */
+ #define DEFAULT_INDEX_MOUNTED_DIRECTORIES        TRUE
