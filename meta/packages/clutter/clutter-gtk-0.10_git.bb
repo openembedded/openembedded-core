@@ -1,9 +1,9 @@
 require clutter-gtk.inc
 
-PV = "0.9.0+git${SRCPV}"
+PV = "0.10.3+git${SRCPV}"
 PR = "r1"
 
-SRC_URI = "git://git.clutter-project.org/clutter-gtk.git;protocol=git"
+SRC_URI = "git://git.clutter-project.org/clutter-gtk.git;protocol=git;branch=clutter-gtk-0.10"
 
 S = "${WORKDIR}/git"
 

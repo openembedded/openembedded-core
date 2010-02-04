@@ -7,7 +7,7 @@ LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
 PR = "r11"
 
-DEPENDS = "clutter-1.0 clutter-mozembed clutter-gtk libunique mozilla-headless-services libccss nbtk mozilla-headless mutter-moblin"
+DEPENDS = "clutter-1.0 clutter-mozembed clutter-gtk-0.10 libunique mozilla-headless-services libccss nbtk mozilla-headless mutter-moblin"
 
 S = "${WORKDIR}/git"
 
