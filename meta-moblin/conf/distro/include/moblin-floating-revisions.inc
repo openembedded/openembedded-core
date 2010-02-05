@@ -93,3 +93,5 @@ PREFERRED_VERSION_libx11-trim ?= "1.2.1+git%"
 
 PREFERRED_VERSION_libxcb ?= "1.3"
 PREFERRED_VERSION_xcb-proto ?= "1.5"
+
+MOBLINBROWSERBRANCH = "mx"
