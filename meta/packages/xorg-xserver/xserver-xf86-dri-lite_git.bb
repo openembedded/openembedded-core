@@ -1,10 +1,12 @@
 require xserver-xf86-dri-lite.inc
 
 PE = "1"
-PR = "r11"
-PV = "1.6.0+git${SRCPV}"
+PR = "r0"
+PV = "1.7.99+git${SRCPV}"
 
 PROTO_DEPS += "xf86driproto dri2proto"
+
+DEPENDS += "font-util"
 
 RDEPENDS_${PN} += "xkeyboard-config"
 
@@ -15,10 +17,11 @@ RDEPENDS_${PN} += "xkeyboard-config"
 #           file://xserver-DRI2Swapbuffer.patch;patch=1"
 
 
-SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git;branch=server-1.6-branch \
+SRC_URI = "git://anongit.freedesktop.org/git/xorg/xserver;protocol=git;branch=master \
            file://nodolt.patch;patch=1 \
-           file://fix_macros.patch;patch=1 \
-           file://libdri-xinerama-symbol.patch;patch=1"
+           file://crosscompile.patch;patch=1 \
+           file://fix_macros1.patch;patch=1"
+#           file://libdri-xinerama-symbol.patch;patch=1"
 
 # Misc build failure for master HEAD
 SRC_URI += "file://fix_open_max_preprocessor_error.patch;patch=1"
