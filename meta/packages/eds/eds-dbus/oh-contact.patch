@@ -1,7 +1,7 @@
 Index: addressbook/libedata-book/ximian-vcard.h
 ===================================================================
---- addressbook/libedata-book/ximian-vcard.h	(revision 578)
-+++ addressbook/libedata-book/ximian-vcard.h	(working copy)
+--- addressbook/libedata-book/ximian-vcard.h.orig	2010-02-05 14:57:14.000000000 +0000
++++ addressbook/libedata-book/ximian-vcard.h	2010-02-05 14:58:14.000000000 +0000
 @@ -1,80 +1,40 @@
  #define XIMIAN_VCARD \
  "BEGIN:VCARD\n" \
@@ -122,10 +122,12 @@ Index: addressbook/libedata-book/ximian-vcard.h
  "END:VCARD"
 Index: addressbook/backends/file/Makefile.am
 ===================================================================
---- addressbook/backends/file/Makefile.am	(revision 578)
-+++ addressbook/backends/file/Makefile.am	(working copy)
-@@ -1,4 +1,5 @@
- INCLUDES =						\
+--- addressbook/backends/file/Makefile.am.orig	2010-02-05 14:57:14.000000000 +0000
++++ addressbook/backends/file/Makefile.am	2010-02-05 14:59:10.000000000 +0000
+@@ -2,6 +2,7 @@
+ 
+ libebookbackendfile_la_CPPFLAGS = \
+ 	$(AM_CPPFLAGS)					\
 +	-DCREATE_DEFAULT_VCARD \
  	-DG_LOG_DOMAIN=\"libebookbackend\"		\
  	-I$(top_srcdir)					\

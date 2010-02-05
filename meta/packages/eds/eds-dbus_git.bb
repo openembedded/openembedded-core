@@ -1,22 +1,25 @@
 DESCRIPTION = "Evolution database backend server"
-HOMEPAGE = "http://projects.o-hand.com/eds"
 LICENSE = "LGPL"
-DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade"
+DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade libical"
 
-PV = "1.4.0+svnr${SRCREV}"
-PR = "r6"
+PV = "2.29+git${SRCPV}"
+PR = "r2"
 
-SRC_URI = "svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
+SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
            file://oh-contact.patch;patch=1;pnum=0 \
-           file://no_iconv_test.patch;patch=1 \
+           file://nossl.patch;patch=1 \
            file://iconv-detect.h"
 
-S = "${WORKDIR}/trunk"
+S = "${WORKDIR}/git"
 
 inherit autotools_stage pkgconfig
 
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"
+
+do_configure_prepend () {
+        echo "EXTRA_DIST = " > ${S}/gtk-doc.make
+}
 
 do_configure_append () {
         cp ${WORKDIR}/iconv-detect.h ${S}
@@ -24,7 +27,7 @@ do_configure_append () {
 
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \
                 --with-soup --with-libdb=${STAGING_DIR_HOST}${prefix} \
-                --disable-smime --disable-nss --disable-nntp --disable-gtk-doc"
+                --disable-smime --disable-ssl --disable-nntp --disable-gtk-doc --without-weather"
 
 
 PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev \
