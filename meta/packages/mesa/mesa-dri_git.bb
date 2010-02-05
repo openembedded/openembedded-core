@@ -1,6 +1,6 @@
 include mesa-common.inc
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git;branch=mesa_7_5_branch \
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
            file://cross2.patch;patch=1 \
            file://matypes.h"
 #           file://mesa-DRI2Swapbuffer.patch;patch=1 "
