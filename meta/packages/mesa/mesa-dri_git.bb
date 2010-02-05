@@ -11,8 +11,8 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
-PV = "7.5+git${SRCPV}"
-PR = "r14"
+PV = "7.7+git${SRCPV}"
+PR = "r0"
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
@@ -33,6 +33,14 @@ EXTRA_OECONF += "--with-driver=dri --disable-egl --disable-gallium"
 do_configure_prepend () {
     cp ${WORKDIR}/matypes.h ${S}/src/mesa/x86
     touch ${S}/src/mesa/x86/matypes.h
+}
+
+do_compile () {
+	oe_runmake clean
+	oe_runmake -C src/glsl CC='${BUILD_CC}' CFLAGS=""
+	mv ${S}/src/glsl/apps/compile ${S}/host_compile
+	oe_runmake clean
+	oe_runmake GLSL_CL="${S}/host_compile"
 }
 
 do_install_append () {
