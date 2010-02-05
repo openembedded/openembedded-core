@@ -95,3 +95,5 @@ PREFERRED_VERSION_libxcb ?= "1.3"
 PREFERRED_VERSION_xcb-proto ?= "1.5"
 
 MOBLINBROWSERBRANCH = "mx"
+# Set to no browser in images for now to allow image builds
+MOBLINBROWSER = ""
