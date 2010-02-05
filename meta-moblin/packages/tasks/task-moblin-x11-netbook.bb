@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Netbook GUI Tasks for Moblin"
-PR = "r20"
+PR = "r21"
 
 PACKAGES = "\
     task-moblin-x11-netbook \
@@ -17,6 +17,8 @@ ALLOW_EMPTY = "1"
 
 #    matchbox-config-gtk \
 #    xcursor-transparent-theme \
+
+MOBLINBROWSER ?= "moblin-web-browser"
 
 EXTRA_MOBLIN_PACKAGES ?= ""
 RDEPENDS_task-moblin-x11-netbook = "\
@@ -39,7 +41,7 @@ RDEPENDS_task-moblin-x11-netbook = "\
     moblin-menus \
     moblin-user-skel \
     bisho \
-    moblin-web-browser \
+    ${MOBLINBROWSER} \
     dalston \
     hornsey \
     anerley \
