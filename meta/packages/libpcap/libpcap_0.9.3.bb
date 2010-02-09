@@ -2,7 +2,7 @@ DESCRIPTION = "Network Packet Capture Library"
 HOMEPAGE = "http://www.tcpdump.org/"
 LICENSE = "BSD"
 SECTION = "libs/network"
-PR = "2"
+PR = "r2"
 
 SRC_URI = "http://www.at.tcpdump.org/release/libpcap-${PV}.tar.gz \
            file://shared.patch;patch=1 \
