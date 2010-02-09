@@ -1,0 +1,16 @@
+Fixes to enable building with latest autoconf and automake
+
+JL 09/02/10
+
+Index: libpcap-0.9.3/configure.in
+===================================================================
+--- libpcap-0.9.3.orig/configure.in	2005-07-07 07:56:03.000000000 +0100
++++ libpcap-0.9.3/configure.in	2010-02-09 15:19:40.529662003 +0000
+@@ -11,6 +11,7 @@
+ AC_INIT(pcap.c)
+ 
+ AC_CANONICAL_SYSTEM
++AC_PROG_CC
+ 
+ AC_LBL_C_INIT(V_CCOPT, V_INCLS, V_LIBS)
+ AC_LBL_C_INLINE

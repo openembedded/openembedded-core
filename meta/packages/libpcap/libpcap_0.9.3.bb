@@ -2,12 +2,13 @@ DESCRIPTION = "Network Packet Capture Library"
 HOMEPAGE = "http://www.tcpdump.org/"
 LICENSE = "BSD"
 SECTION = "libs/network"
-PR = "r1"
+PR = "2"
 
 SRC_URI = "http://www.at.tcpdump.org/release/libpcap-${PV}.tar.gz \
-           file://shared.patch;patch=1"
+           file://shared.patch;patch=1 \
+           file://config-fixes.patch;patch=1"
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF = "--with-pcap=linux"
 
