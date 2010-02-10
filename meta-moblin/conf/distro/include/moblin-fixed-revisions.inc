@@ -16,7 +16,7 @@ PREFERRED_VERSION_libxcb ?= "1.3"
 PREFERRED_VERSION_xcb-proto ?= "1.5"
 PREFERRED_VERSION_libx11-trim ?= "1.3"
 
-PREFERRED_VERSION_libdrm ?= "2.4.16"
+PREFERRED_VERSION_libdrm ?= "2.4.17"
 PREFERRED_VERSION_xf86-input-keyboard ?= ""
 PREFERRED_VERSION_dri2proto ?= ""
 
