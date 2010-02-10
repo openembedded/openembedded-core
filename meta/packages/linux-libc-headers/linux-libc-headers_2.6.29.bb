@@ -42,3 +42,4 @@ do_install() {
 	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
 }
 
+BBCLASSEXTEND = "nativesdk"
