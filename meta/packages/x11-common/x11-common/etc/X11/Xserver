@@ -30,12 +30,9 @@ ARGS=" -br -pn"
 
 if [ "$XSERVER" != "/usr/bin/Xorg" ]; then
 
-	. /etc/formfactor/config
+        . /etc/formfactor/config
 
-        # use ucb 1x00 touchscreen if present
-        if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then
-          ARGS="$ARGS -mouse /dev/touchscreen/ucb1x00"
-        fi
+        ARGS="$ARGS -keybd keyboard"
 
         # use usb mouse if present
         if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ]; then
@@ -78,4 +75,3 @@ fi
 DISPLAY=':0'
 
 exec xinit /etc/X11/Xsession -- $XSERVER $DISPLAY $ARGS $*
-

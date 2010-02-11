@@ -2,7 +2,7 @@ DESCRIPTION = "Simple Xserver Init Script (no dm)"
 LICENSE = "GPL"
 SECTION = "x11"
 PRIORITY = "optional"
-PR = "r21"
+PR = "r22"
 RDEPENDS_${PN} = "dbus-wait sudo"
 
 SRC_URI = "file://xserver-nodm"
@@ -14,7 +14,7 @@ do_install() {
     install -d ${D}/etc
     install -d ${D}/etc/init.d
     install xserver-nodm ${D}/etc/init.d
-}    
+}
 
 inherit update-rc.d
 
