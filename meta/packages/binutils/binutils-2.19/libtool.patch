@@ -1,0 +1,69 @@
+A command like /bin/sh ../../i586-poky-linux-libtool   --mode=install /usr/bin/install -c   gck-roots-store-standalone.la '/media/data1/builds/poky1/tmp/work/core2-poky-linux/gnome-keyring-2.26.1-r1/image/usr/lib/gnome-keyring/standalone/' fails (e.g. gnome-keyring or pulseaudio)
+
+This is because libdir has a trailing slash which breaks the comparision.
+
+RP 2/1/10
+
+Index: binutils-2.19/ltmain.sh
+===================================================================
+--- binutils-2.19.orig/ltmain.sh	2007-05-25 20:56:24.000000000 +0100
++++ binutils-2.19/ltmain.sh	2010-02-10 22:49:07.191629027 +0000
+@@ -2320,8 +2320,12 @@
+ 	dir="$dir$objdir"
+ 
+ 	if test -n "$relink_command"; then
++          # Strip any trailing slash from the destination.
++          func_stripname '' '/' "$libdir"
++          destlibdir=$func_stripname_result
++
+ 	  # Determine the prefix the user has applied to our future dir.
+-	  inst_prefix_dir=`$ECHO "X$destdir" | $Xsed -e "s%$libdir\$%%"`
++	  inst_prefix_dir=`$ECHO "X$destdir" | $Xsed -e "s%$destlibdir\$%%"`
+ 
+ 	  # Don't allow the user to place us outside of our expected
+ 	  # location b/c this prevents finding dependent libraries that
+@@ -3958,8 +3962,14 @@
+ 	    absdir="$abs_ladir"
+ 	    libdir="$abs_ladir"
+ 	  else
+-	    dir="$libdir"
+-	    absdir="$libdir"
++	    # Adding 'libdir' from the .la file to our library search paths
++	    # breaks crosscompilation horribly.  We cheat here and don't add
++	    # it, instead adding the path where we found the .la.  -CL
++	    dir="$abs_ladir"
++	    absdir="$abs_ladir"
++	    libdir="$abs_ladir"
++	    #dir="$libdir"
++	    #absdir="$libdir"
+ 	  fi
+ 	  test "X$hardcode_automatic" = Xyes && avoidtemprpath=yes
+ 	else
+@@ -4329,8 +4339,6 @@
+ 		add="$libdir/$linklib"
+ 	      fi
+ 	    else
+-	      # We cannot seem to hardcode it, guess we'll fake it.
+-	      add_dir="-L$libdir"
+ 	      # Try looking first in the location we're being installed to.
+ 	      if test -n "$inst_prefix_dir"; then
+ 		case $libdir in
+@@ -4478,7 +4486,17 @@
+ 		  fi
+ 		  ;;
+ 		*)
+-		  path="-L$absdir/$objdir"
++                  # OE sets installed=no in staging. We need to look in $objdir and $absdir, 
++                  # preferring $objdir. RP 31/04/2008
++                  if test -f "$absdir/$objdir/$depdepl" ; then
++		    depdepl="$absdir/$objdir/$depdepl"
++		    path="-L$absdir/$objdir"
++                  elif test -f "$absdir/$depdepl" ; then
++		    depdepl="$absdir/$depdepl"
++		    path="-L$absdir"
++                  else
++		    path="-L$absdir/$objdir"
++                  fi
+ 		  ;;
+ 		esac
+ 		else

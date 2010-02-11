@@ -1,4 +1,4 @@
-PR = "r0"
+PR = "r1"
 
 require binutils.inc
 
@@ -11,6 +11,7 @@ SRC_URI = "\
      file://binutils-uclibc-300-006_better_file_error.patch;patch=1 \
      file://binutils-uclibc-300-012_check_ldrunpath_length.patch;patch=1 \
      file://binutils-uclibc-gas-needs-libm.patch;patch=1 \
+     file://libtool.patch;patch=1 \
      "
 
 # powerpc patches
