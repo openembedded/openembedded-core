@@ -1,9 +1,9 @@
 DESCRIPTION = "Keyboard map"
 SECTION = "base"
-RDEPENDS = "initscripts console-tools"
+RDEPENDS_${PN} = "initscripts console-tools"
 LICENSE = "GPL"
 PACKAGE_ARCH = "${MACHINE}"
-PR = "r16"
+PR = "r17"
 
 inherit update-rc.d
 
