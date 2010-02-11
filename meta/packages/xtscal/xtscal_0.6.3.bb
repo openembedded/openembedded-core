@@ -4,11 +4,11 @@ SECTION = "x11/base"
 
 DEPENDS = "virtual/libx11 libxft libxcalibrate"
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "${GPE_MIRROR}/xtscal-${PV}.tar.bz2 \
            file://change-cross.patch;patch=1 \
-	   file://cleanup.patch;patch=1 \
+           file://cleanup.patch;patch=1 \
            file://30xTs_Calibrate.sh"
 
 inherit autotools

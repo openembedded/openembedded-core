@@ -4,7 +4,7 @@ DESCRIPTION = "	Touchscreen calibration client library"
 LICENSE = "BSD-X"
 DEPENDS = "virtual/libx11 calibrateproto libxext"
 PV = "0.0+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libXCalibrate;protocol=git \
            file://fix-xcb.patch;patch=1"
