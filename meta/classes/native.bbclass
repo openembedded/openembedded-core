@@ -1,3 +1,6 @@
+# We want native packages to be relocatable
+inherit relocatable
+
 # Native packages are built indirectly via dependency,
 # no need for them to be a direct target of 'world'
 EXCLUDE_FROM_WORLD = "1"
