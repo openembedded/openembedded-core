@@ -46,6 +46,7 @@ DESCRIPTION_xserver-kdrive-vesa = "X server from freedesktop.org, supporting any
 DESCRIPTION_xserver-kdrive-via = "X server from freedesktop.org, supporting VIA chipsets"
 
 FILES_${PN} += "${libdir}/xserver/SecurityPolicy"
+ALLOW_EMPTY_${PN} = "1"
 
 FILES_xserver-kdrive-fbdev = "${bindir}/Xfbdev"
 FILES_xserver-kdrive-fake = "${bindir}/Xfake"
