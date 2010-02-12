@@ -6,7 +6,6 @@ def rpath_replace (path, d):
     import subprocess as sub
 
     cmd = bb.data.expand('${CHRPATH_BIN}', d)
-    tmpdir = bb.data.expand('${base_prefix}', d)
 
     for root, dirs, files in os.walk(path):
         for file in files:
@@ -22,7 +21,7 @@ def rpath_replace (path, d):
                     rpaths = curr_rpath.split(":")
                     new_rpaths = []
                     for rpath in rpaths:
-                        depth = fpath.partition(tmpdir)[2].strip().count('/')
+                        depth = fpath.partition(path)[2].count('/')
                         if depth == 3:
                             # / is two levels up
                             root = "$ORIGIN/../.."
@@ -30,11 +29,11 @@ def rpath_replace (path, d):
                             root = "$ORIGIN/.."
 
                         # kill everything up to "/"
-                        new_rpaths.append("%s%s" % (root, rpath.partition(tmpdir)[2].strip()))
+                        new_rpaths.append("%s%s" % (root, rpath.partition(path)[2].strip()))
                     args = ":".join(new_rpaths)
                     #bb.note("Setting rpath to " + args)
                     sub.call([cmd, '-r', args, fpath])
 
 python relocatable_binaries_preprocess() {
-    rpath_replace(bb.data.expand("${SYSROOT_DESTDIR}${TMPDIR}/sysroots/${TARGET_ARCH}-${TARGET_OS}", d), d)
+    rpath_replace(bb.data.getVar('base_prefix', d, True), d)
 }
