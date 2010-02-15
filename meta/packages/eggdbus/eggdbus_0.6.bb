@@ -2,8 +2,8 @@ DESCRIPTION = "gobject dbus binding"
 HOMEPAGE = "http://cgit.freedesktop.org/~david/eggdbus"
 LICENSE = "GPLv2"
 
-DEPENDS = "dbus glib-2.0 eggdbus-native"
-DEPENDS_virtclass-native = "dbus-native glib-2.0-native"
+DEPENDS = "dbus glib-2.0 dbus-glib eggdbus-native"
+DEPENDS_virtclass-native = "dbus-native glib-2.0-native dbus-glib-native"
 
 BASE_SRC_URI = "http://cgit.freedesktop.org/~david/${BPN}/snapshot/${BPN}-${PV}.tar.bz2 \
           file://gtk-doc.patch;patch=1 \
