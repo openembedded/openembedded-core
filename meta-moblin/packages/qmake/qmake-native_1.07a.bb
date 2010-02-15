@@ -36,10 +36,10 @@ do_compile() {
 }
 
 do_install() {
-	install -m 0755 bin/qmake ${D}${bindir}
+	install -d ${D}${bindir}/
+	install -m 0755 ${S}/bin/qmake ${D}${bindir}/
 	install -d ${D}/qmake/
-	${QMAKE_MKSPEC_PATH}
-	cp -fPR mkspecs/* ${D}/qmake/
+	cp -fPR ${S}/mkspecs/* ${D}/qmake/
 }
 
 sysroot_stage_all_append() {
