@@ -1,16 +1,24 @@
 SYSROOT_PREPROCESS_FUNCS += "relocatable_binaries_preprocess"
 
 CHRPATH_BIN ?= "chrpath"
+PREPROCESS_RELOCATE_DIRS ?= ""
 
 def rpath_replace (path, d):
     import subprocess as sub
 
     cmd = bb.data.expand('${CHRPATH_BIN}', d)
 
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            fpath = root + '/' + file
-            if '/bin/' in fpath:
+    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
+    tmpdir = bb.data.getVar('TMPDIR', d)
+    basedir = bb.data.expand('${base_prefix}', d)
+
+    for d in bindirs:
+        dir = path + "/" + d
+        bb.note("Checking %s for binaries to process" % dir)
+        if os.path.exists(dir):
+            for file in os.listdir(dir):
+                fpath = dir + "/" + file
+                #bb.note("Testing %s for relocatability" % fpath)
                 p = sub.Popen([cmd, '-l', fpath],stdout=sub.PIPE,stderr=sub.PIPE)
                 err, out = p.communicate()
                 # If returned succesfully, process stderr for results
@@ -21,19 +29,34 @@ def rpath_replace (path, d):
                     rpaths = curr_rpath.split(":")
                     new_rpaths = []
                     for rpath in rpaths:
-                        depth = fpath.partition(path)[2].count('/')
-                        if depth == 3:
-                            # / is two levels up
-                            root = "$ORIGIN/../.."
+                        # If rpath is already dynamic continue
+                        if rpath.find("$ORIGIN") != -1:
+                            continue
+                        # If the rpath shares a root with base_prefix determine a new dynamic rpath from the
+                        # base_prefix shared root
+                        if rpath.find(basedir) != -1:
+                            depth = fpath.partition(basedir)[2].count('/')
+                            libpath = rpath.partition(basedir)[2].strip()
+                        # otherwise (i.e. cross packages) determine a shared root based on the TMPDIR
+                        # NOTE: This will not work reliably for cross packages, particularly in the case
+                        # where your TMPDIR is a short path (i.e. /usr/poky) as chrpath cannot insert an
+                        # rpath longer than that which is already set.
                         else:
-                            root = "$ORIGIN/.."
+                            depth = fpath.rpartition(tmpdir)[2].count('/')
+                            libpath = rpath.partition(tmpdir)[2].strip()
 
-                        # kill everything up to "/"
-                        new_rpaths.append("%s%s" % (root, rpath.partition(path)[2].strip()))
-                    args = ":".join(new_rpaths)
-                    #bb.note("Setting rpath to " + args)
-                    sub.call([cmd, '-r', args, fpath])
+                        base = "$ORIGIN"
+                        while depth > 1:
+                            base += "/.."
+                            depth-=1
+                        new_rpaths.append("%s%s" % (base, libpath))
+
+                    # if we have modified some rpaths call chrpath to update the binary
+                    if len(new_rpaths):
+                        args = ":".join(new_rpaths)
+                        #bb.note("Setting rpath to " + args)
+                        sub.call([cmd, '-r', args, fpath])
 
 python relocatable_binaries_preprocess() {
-    rpath_replace(bb.data.getVar('base_prefix', d, True), d)
+    rpath_replace(bb.data.expand('${SYSROOT_DESTDIR}', d), d)
 }
