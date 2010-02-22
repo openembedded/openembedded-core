@@ -14,10 +14,15 @@ def rpath_replace (path, d):
 
     for d in bindirs:
         dir = path + "/" + d
-        bb.note("Checking %s for binaries to process" % dir)
+        bb.debug("Checking %s for binaries to process" % dir)
         if os.path.exists(dir):
             for file in os.listdir(dir):
                 fpath = dir + "/" + file
+                if os.path.islink(fpath):
+                    fpath = os.readlink(fpath)
+                    if not os.path.isabs(fpath):
+                        fpath = os.path.normpath(os.path.join(dir, fpath))
+               
                 #bb.note("Testing %s for relocatability" % fpath)
                 p = sub.Popen([cmd, '-l', fpath],stdout=sub.PIPE,stderr=sub.PIPE)
                 err, out = p.communicate()
