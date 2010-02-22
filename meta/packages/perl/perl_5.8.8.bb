@@ -46,7 +46,7 @@ export PERLHOSTLIB = "${STAGING_LIBDIR_NATIVE}/perl/${PV}/"
 
 do_configure() {
         # Make hostperl in build directory be the native perl
-        cp -f ${HOSTPERL} hostperl
+        ln -s ${HOSTPERL} hostperl
 
         # Do our work in the cross subdir
         cd Cross
