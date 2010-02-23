@@ -64,6 +64,7 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
 	   file://tls_i486.patch;patch=1 \
 	   file://rulesfix.patch;patch=1 \
 	   file://glibc-2.9-use-_begin.patch;patch=1 \
+	   file://glibc-2.9-enable-binutils-2.2.patch;patch=1 \
            "
 
 # Build fails on sh3 and sh4 without additional patches
