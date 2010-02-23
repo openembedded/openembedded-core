@@ -5,6 +5,8 @@ PR = "r5"
 COMPATIBLE_MACHINE = "omap-3430ldp|omap-3430sdp"
 DEFAULT_PREFERENCE = "1"
 
+KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
+
 #
 # Patch extracted from:
 # http://omapzoom.org/gf/download/frsrelease/110/425/linux-ldp-v1.4.tar
