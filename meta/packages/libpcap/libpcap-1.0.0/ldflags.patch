@@ -1,0 +1,12 @@
+diff -urN libpcap-1.0.0.orig/Makefile.in libpcap-1.0.0/Makefile.in
+--- libpcap-1.0.0.orig/Makefile.in	2008-10-28 01:26:13.000000000 +0000
++++ libpcap-1.0.0/Makefile.in	2009-04-02 13:54:20.000000000 +0000
+@@ -326,7 +326,7 @@
+ #
+ libpcap.so: $(OBJ)
+ 	@rm -f $@
+-	$(CC) -shared -Wl,-soname,$@.1 -o $@.`cat $(srcdir)/VERSION` $(OBJ) $(DAGLIBS)
++	$(CC) $(LDFLAGS) -shared -Wl,-soname,$@.1 -o $@.`cat $(srcdir)/VERSION` $(OBJ) $(DAGLIBS)
+ 
+ #
+ # The following rule succeeds, but the result is untested.

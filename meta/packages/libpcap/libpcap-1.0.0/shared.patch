@@ -1,7 +1,4 @@
-
-#
-# Patch managed by http://www.holgerschurig.de/patcher.html
-#
+Patch currently not applied but would be better or worse than customised do_install?
 
 --- libpcap-0.9.3/Makefile.in~shared
 +++ libpcap-0.9.3/Makefile.in
