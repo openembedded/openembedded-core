@@ -12,13 +12,13 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "gcc-cross"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
 
 GCCVERSION ?= "4.3.3"
-BINUVERSION ?= "2.19"
+BINUVERSION ?= "2.20"
 GLIBCVERSION ?= "2.9"
 LINUXLIBCVERSION ?= "2.6.29"
 
 # Temporary preferred version overrides for PPC
 GCCVERSION_powerpc ?= "4.2.3"
-BINUVERSION_powerpc ?= "2.19"
+BINUVERSION_powerpc ?= "2.20"
 GLIBCVERSION_powerpc ?= "2.6.1"
 LINUXLIBCVERSION_powerpc ?= "2.6.20"
 PREFERRED_VERSION_u-boot-mkimage-native_powerpc ?= "2009.08"
