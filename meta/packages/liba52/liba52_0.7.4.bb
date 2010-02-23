@@ -2,11 +2,12 @@ DESCRIPTION = "Library for reading some sort of media format."
 LICENSE = "GPL"
 SECTION = "libs"
 PRIORITY = "optional"
-PR = "r1"
+PR = "r2"
 
 inherit autotools
 
-SRC_URI = "http://liba52.sourceforge.net/files/a52dec-${PV}.tar.gz"
+SRC_URI = "http://liba52.sourceforge.net/files/a52dec-${PV}.tar.gz \
+           file://buildcleanup.patch;patch=1"
 S = "${WORKDIR}/a52dec-${PV}"
 
 EXTRA_OECONF = " --enable-shared "
