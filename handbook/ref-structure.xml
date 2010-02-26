@@ -216,11 +216,11 @@
         </para>
     </section>
 
-    <section id='structure-build-tmp-staging'>
-        <title><filename class="directory">build/tmp/staging/</filename></title>
+    <section id='structure-build-tmp-sysroots>
+        <title><filename class="directory">build/tmp/sysroots/</filename></title>
 
         <para>
-            Any package needing to share output with other packages does so within staging.
+            Any package needing to share output with other packages does so within sysroots.
             This means it contains any shared header files and any shared libraries amongst
             other data. It is subdivided by architecture so multiple builds can run within
             the one build directory.

@@ -179,8 +179,8 @@ autotools_stage_all
 
     <para>
         During staging Bitbake installs such scripts into the <filename 
-        class="directory">staging/</filename> directory. It also changes all 
-        paths to point into the <filename class="directory">staging/</filename>
+        class="directory">sysroots/</filename> directory. It also changes all
+        paths to point into the <filename class="directory">sysroots/</filename>
         directory so all builds which use the script will use the correct 
         directories for the cross compiling layout.
     </para>
@@ -206,7 +206,7 @@ autotools_stage_all
 
     <para>
         During staging Bitbake installs pkg-config data into the <filename 
-        class="directory">staging/</filename> directory. By making use of 
+        class="directory">sysroots/</filename> directory. By making use of
         sysroot functionality within pkgconfig this class no longer has to 
         manipulate the files.
     </para>

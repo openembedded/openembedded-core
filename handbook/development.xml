@@ -532,17 +532,17 @@ $ bitbake matchbox-desktop -c devshell
                 Firstly you want to install the <emphasis>foo</emphasis> package to tmp/rootfs 
                 by doing:
                 </para>
-                <programlisting>tmp/staging/i686-linux/usr/bin/opkg-cl -f \
+                <programlisting>tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
 tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf -o \
 tmp/rootfs/ update</programlisting>
                <para>
                 then,
                 </para>
-                <programlisting>tmp/staging/i686-linux/usr/bin/opkg-cl -f \
+                <programlisting>tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
 tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 -o tmp/rootfs install foo
 
-tmp/staging/i686-linux/usr/bin/opkg-cl -f \
+tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
 tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 -o tmp/rootfs install foo-dbg</programlisting>
              <para>
