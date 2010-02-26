@@ -7,3 +7,4 @@ DEPENDS = "ncurses-native"
 GDBPROPREFIX = ""
 
 inherit cross
+inherit gettext
