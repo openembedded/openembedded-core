@@ -19,6 +19,7 @@ PSTAGE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_
 PSTAGE_PKGNAME    = "${PSTAGE_PKGPN}_${PSTAGE_PKGVERSION}_${PSTAGE_PKGARCH}.ipk"
 PSTAGE_PKG        = "${PSTAGE_DIR}/${PSTAGE_PKGPATH}/${PSTAGE_PKGNAME}"
 PSTAGE_WORKDIR   = "${TMPDIR}/pstage"
+PSTAGE_SCAN_CMD ?= "find ${PSTAGE_TMPDIR_STAGE} -name "*.la" -type f"
 
 PSTAGE_NATIVEDEPENDS = "\
     shasum-native \
@@ -36,6 +37,8 @@ python () {
         path = bb.data.getVar('PSTAGE_PKGPATH', d, 1)
         path = path + bb.data.getVar('TMPDIR', d, 1).replace('/', '-')
         bb.data.setVar('PSTAGE_PKGPATH', path, d)
+        scan_cmd = "qrep -Irl ${STAGING_DIR} ${PSTAGE_TMDPDIR_STAGE}"
+        bb.data.setVar('PSTAGE_SCAN_CMD', scan_cmd, d)
 
     # PSTAGE_NATIVEDEPENDS lists the packages we need before we can use packaged 
     # staging. There will always be some packages we depend on.
@@ -356,8 +359,9 @@ staging_packager () {
 	# Need to remove hardcoded paths and fix these when we install the
 	# staging packages.
 	# Could someone please add sysroot support to libtool!
-        for i in `find ${PSTAGE_TMPDIR_STAGE} -name "*.la" -type f` ; do \
-            sed -i -e s:${STAGING_DIR}:FIXMESTAGINGDIR:g $i
+        for i in `${PSTAGE_SCAN_CMD}` ; do \
+                sed -i -e s:${STAGING_DIR}:FIXMESTAGINGDIR:g $i
+                echo $i | sed -e 's:${PSTAGE_TMPDIR_STAGE}/::' >> ${PSTAGE_TMPDIR_STAGE}/sysroots/fixmepath
         done
         
 	${PSTAGE_BUILD_CMD} ${PSTAGE_TMPDIR_STAGE} ${PSTAGE_DIR}/${PSTAGE_PKGPATH}
@@ -382,12 +386,21 @@ staging_package_installer () {
 	find -type f | grep -v ./CONTROL | sed -e 's/^\.//' > ${TMPDIR}${libdir_native}/opkg/info/${PSTAGE_PKGPN}.list
 }
 
-staging_package_libtoolhack () {
+python staging_package_libtoolhack () {
 	# Deal with libtool not supporting sysroots and add our new
 	# staging location
-        for i in `find ${STAGING_DIR} -name "*.la" -type f` ; do \
-            sed -i -e s:FIXMESTAGINGDIR:${STAGING_DIR}:g $i
-        done
+        tmpdir = bb.data.getVar('TMPDIR', d, True)
+        staging = bb.data.getVar('STAGING_DIR', d, True)
+        fixmefn =  staging + "/fixmepath"
+        try:
+            fixmefd = open(fixmefn,"r")
+            fixmefiles = fixmefd.readlines()
+            fixmefd.close()
+            os.system('rm -f ' + fixmefn)
+            for file in fixmefiles:
+                os.system("sed -i -e s:FIXMESTAGINGDIR:%s:g %s" % (staging, tmpdir + '/' + file))
+        except IOError:
+            pass
 }
 
 python do_package_stage () {
