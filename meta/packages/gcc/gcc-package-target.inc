@@ -21,6 +21,7 @@ FILES_${PN} = "\
   ${gcclibdir}/${TARGET_SYS}/${BINV}/specs \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/lib* \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include \
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed \
 "
 FILES_${PN}-symlinks = "\
   ${bindir}/cc \
