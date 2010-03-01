@@ -6,7 +6,7 @@ DEPENDS_append_poky = " libowl"
 
 inherit autotools_stage pkgconfig gtk-icon-cache
 
-OWL = "--disable-owl"
-OWL_poky = "--enable-owl"
+OWL ?= "--disable-owl"
+OWL_poky ?= "--enable-owl"
 
 EXTRA_OECONF += "${OWL}"
