@@ -12,13 +12,15 @@ RDEPENDS_${PN} += "hal xorg-minimal-fonts"
 
 FILES_${PN} += "${bindir}/Xorg "
 
-EXTRA_OECONF += "--disable-cfb \
-                 --disable-afb \
-                 --disable-mfb \
+EXTRA_OECONF += "--disable-static \
+                 --disable-acfb \
+                 --disable-ccfb \
+                 --disable-mcfb \
                  --disable-dga \
                  --disable-xinerama \
                  --disable-xf86misc \
                  --disable-xorgcfg \
+                 --disable-record \
                  --disable-dmx \
                  --disable-xnest \
                  --disable-xvfb \
