@@ -10,7 +10,7 @@
 
 #
 # bitbake.conf set PSTAGING_ACTIVE = "0", this class sets to "1" if we're active
-# 
+#
 PSTAGE_PKGVERSION = "${PV}-${PR}"
 PSTAGE_PKGARCH    = "${BUILD_SYS}"
 PSTAGE_EXTRAPATH  ?= ""
@@ -37,7 +37,7 @@ python () {
         path = bb.data.getVar('PSTAGE_PKGPATH', d, 1)
         path = path + bb.data.getVar('TMPDIR', d, 1).replace('/', '-')
         bb.data.setVar('PSTAGE_PKGPATH', path, d)
-        scan_cmd = "qrep -Irl ${STAGING_DIR} ${PSTAGE_TMDPDIR_STAGE}"
+        scan_cmd = "grep -Irl ${STAGING_DIR} ${PSTAGE_TMDPDIR_STAGE}"
         bb.data.setVar('PSTAGE_SCAN_CMD', scan_cmd, d)
 
     # PSTAGE_NATIVEDEPENDS lists the packages we need before we can use packaged 
