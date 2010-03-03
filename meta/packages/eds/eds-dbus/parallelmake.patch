@@ -1,0 +1,21 @@
+Index: git/git.mk
+===================================================================
+--- git.orig/git.mk	2010-02-05 14:57:15.000000000 +0000
++++ git/git.mk	2010-03-03 09:31:43.000000000 +0000
+@@ -166,11 +166,11 @@
+ 
+ all: $(srcdir)/.gitignore gitignore-recurse
+ gitignore-recurse:
+-	@if test "x$(SUBDIRS)" = "x$(DIST_SUBDIRS)"; then :; else \
+-		list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+-		  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) .gitignore); \
+-		done; \
+-	fi;
++	#@if test "x$(SUBDIRS)" = "x$(DIST_SUBDIRS)"; then :; else \
++	#	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
++	#	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) .gitignore); \
++	#	done; \
++	#fi;
+ maintainer-clean: gitignore-clean
+ gitignore-clean:
+ 	-rm -f $(srcdir)/.gitignore

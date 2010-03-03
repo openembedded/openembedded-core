@@ -3,11 +3,12 @@ LICENSE = "LGPL"
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup-2.4 libglade libical gnome-keyring"
 
 PV = "2.29+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
            file://oh-contact.patch;patch=1;pnum=0 \
            file://nossl.patch;patch=1 \
+           file://parallelmake.patch;patch=1 \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/git"
