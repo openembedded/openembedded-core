@@ -321,9 +321,7 @@ packagedstaging_fastpath () {
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/sysroots/
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/cross/
 		cp -fpPR ${SYSROOT_DESTDIR}/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/sysroots/ || /bin/true
-                # CROSS_DIR is just the HOST_ARCH specific stuff and a sub
-                # directory of cross so copy it *and* its contents
-		cp -fpPR ${SYSROOT_DESTDIR}/${CROSS_DIR} ${PSTAGE_TMPDIR_STAGE}/cross/ || /bin/true
+		cp -fpPR ${SYSROOT_DESTDIR}/${CROSS_DIR}/* ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}/ || /bin/true
 	fi
 }
 
