@@ -232,7 +232,7 @@ def checkstatus(d):
                 ret = try_mirrors (d, u, mirrors, True)
 
         if not ret:
-            bb.msg.fatal(bb.msg.domain.Fetcher, "URL %s doesn't work" % u)
+            bb.msg.error(bb.msg.domain.Fetcher, "URL %s doesn't work" % u)
 
 def localpaths(d):
     """
