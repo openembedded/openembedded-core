@@ -2,9 +2,9 @@ DESCRIPTION = "Synthesis SyncML Engine"
 SRC_URI = "git://git.moblin.org/${PN}.git;protocol=git;branch=syncevolution-0-9-x"
 LICENSE = "LGPLv2.1"
 PV = "0.0+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
-DEPENDS = "libpcre"
+DEPENDS = "libpcre sqlite3 zlib"
 
 S = "${WORKDIR}/git"
 
