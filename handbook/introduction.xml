@@ -177,9 +177,9 @@
 
         <para>
             <literallayout class='monospaced'>
-$ wget http://pokylinux.org/releases/purple-3.2.tar.gz
-$ tar zxvf purple-3.2.tar.gz
-$ cd purple-3.2/
+$ wget http://pokylinux.org/releases/purple-3.2.1.tar.gz
+$ tar zxvf purple-3.2.1.tar.gz
+$ cd purple-3.2.1/
 $ source poky-init-build-env
 $ bitbake poky-image-sato
 $ runqemu qemux86
