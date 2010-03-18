@@ -711,6 +711,19 @@ BBFILE_PRIORITY_extras = "5"</literallayout>
                 circumstances.
             </para>
         </section>
+
+        <section id='usingpoky-changes-updatingimages'>
+            <title>Updating Existing Images</title>
+
+            <para>
+                Often, rather than reflashing a new image you might wish to install updated 
+                packages into an existing running system. This can be done by sharing the <filename class="directory">tmp/deploy/ipk/</filename> directory through a web server and then on the device, changing <filename>/etc/opkg/base-feeds.conf</filename> to point at this server, for example by adding:
+            </para>
+            <literallayout class='monospaced'>
+src/gz all http://www.mysite.com/somedir/deploy/ipk/all
+src/gz armv7a http://www.mysite.com/somedir/deploy/ipk/armv7a
+src/gz beagleboard http://www.mysite.com/somedir/deploy/ipk/beagleboard</literallayout>
+        </section>
     </section>
 
     <section id='usingpoky-modifing-packages'>
