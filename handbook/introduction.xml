@@ -172,7 +172,7 @@
         <para>
             If you want to try Poky, you can do so in a few commands. The example below
             checks out the Poky source code, sets up a build environment, builds an
-            image and then runs that image under the QEMU emulator in ARM system emulation mode:
+            image and then runs that image under the QEMU emulator in x86 system emulation mode:
         </para>
 
         <para>
