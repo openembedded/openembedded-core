@@ -1,7 +1,7 @@
 poky-doc-tools
 ==============
 
-Simple tools to wrap fop to create oh branded PDF's from docbook sources.
+Simple tools to wrap fop to create Poky branded PDF's from docbook sources.
 (based on OH doc tools)
 
 Dependencies
@@ -9,15 +9,10 @@ Dependencies
 
 Sun Java, make sure the java in your path is the *sun* java.
 
-xlstproc, nwalsh style sheets.
+xlstproc, nwalsh style sheets, fop
 
 FOP, installed - see http://www.sagehill.net/docbookxsl/InstallingAnFO.html.
-Also a 'fop' binary, eg I have;
-
-% cat ~/bin/fop
-#!/bin/sh
-java org.apache.fop.apps.Fop "$@"
-
+Updated to work with (fop > 0.95)
 
 
 

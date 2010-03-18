@@ -54,7 +54,7 @@
  
   <!-- general settings -->
 
-  <xsl:param name="fop.extensions" select="1"></xsl:param>
+  <xsl:param name="fop1.extensions" select="1"></xsl:param>
   <xsl:param name="paper.type" select="'A4'"></xsl:param>
   <xsl:param name="section.autolabel" select="1"></xsl:param>
   <xsl:param name="body.font.family" select="'verasans'"></xsl:param>
