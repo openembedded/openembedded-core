@@ -1,4 +1,4 @@
-all: html pdf
+all: html pdf tarball
 
 pdf:
 
@@ -23,3 +23,9 @@ tarball: html
 
 validate:
 	xmllint --postvalid --xinclude --noout poky-handbook.xml
+
+OUTPUTS = poky-handbook.tgz poky-handbook.html poky-handbook.pdf
+SOURCES = *.png *.xml *.css *.svg
+
+publish:
+	scp -r $(OUTPUTS) $(SOURCES) o-hand.com:/srv/www/pokylinux.org/doc/
