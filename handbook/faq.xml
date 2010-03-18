@@ -138,6 +138,17 @@
     <qandaentry>
         <question>
             <para>
+                I see the error 'chmod: XXXXX new permissions are r-xrwxrwx, not r-xr-xr-x'. What's wrong?
+            </para>
+        </question>
+        <answer>
+            <para>
+                You're probably running the build on an NTFS filesystem. Use a sane one like ext2/3/4 instead!
+            </para>
+        </answer>
+    <qandaentry>
+        <question>
+            <para>
                 How do I make Poky work in RHEL/CentOS?
             </para>
         </question>
