@@ -69,8 +69,7 @@
 
     <para>
 
-    Poky has a growing open source community backed up by commercial support
-provided by the principal developer and maintainer of Poky, <ulink url="http://o-hand.com/">OpenedHand Ltd</ulink>.
+    Poky has a growing open source community and is also backed up by commercial organisations including <ulink url="http://www.intel.com/">Intel Corporation</ulink>.
 
     </para>
 </section>
@@ -154,8 +153,8 @@ provided by the principal developer and maintainer of Poky, <ulink url="http://o
         <ulink url='http://debian.o-hand.com'/>
         for instructions on doing this) and then run <command>
         "apt-get install qemu poky-depends poky-scripts"</command> which will
-        automatically install all these dependencies. OpenedHand can also provide
-        VMware images with Poky and all dependencies pre-installed if required.
+        automatically install all these dependencies. Virtualisation images with 
+        Poky and all dependencies can also easily be built if required.
     </para>
 
     <para>

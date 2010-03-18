@@ -22,47 +22,39 @@
             <author>
                 <firstname>Richard</firstname> <surname>Purdie</surname>
                 <affiliation>
-                    <orgname>OpenedHand Ltd</orgname>
+                    <orgname>Intel Corporation</orgname>
                 </affiliation>
-                <email>richard@openedhand.com</email>
+                <email>richard@linux.intel.com</email>
             </author>
 
             <author>
                 <firstname>Tomas</firstname> <surname>Frydrych</surname>
                 <affiliation>
-                    <orgname>OpenedHand Ltd</orgname>
+                    <orgname>Intel Corporation</orgname>
                 </affiliation>
-                <email>tf@openedhand.com</email>
             </author>
 
             <author>
                 <firstname>Marcin</firstname> <surname>Juszkiewicz</surname>
-                <affiliation>
-                    <orgname>OpenedHand Ltd</orgname>
-                </affiliation>
-                <email>hrw@openedhand.com</email>
             </author>
             <author>
                 <firstname>Dodji</firstname> <surname>Seketeli</surname>
-                <affiliation>
-                    <orgname>OpenedHand Ltd</orgname>
-                </affiliation>
-                <email>dodji@openedhand.com</email>
             </author>
         </authorgroup>
 
         <revhistory>
             <revision>
-                <revnumber>3.1</revnumber>
-                <date>15 February 2008</date>
-                <revremark>Poky 3.1 (Pinky) Documentation Release</revremark>
+                <revnumber>3.2+git</revnumber>
+                <date>18 March 2010</date>
+                <revremark>Poky Master Documentation</revremark>
             </revision>
         </revhistory>
 
     <copyright>
-      <year>2007</year>
+      <year>2007-2010</year>
       <year>2008</year>
-      <holder>OpenedHand Limited</holder>
+      <year>2008</year>
+      <holder>Intel Corporation</holder>
     </copyright>
 
     <legalnotice>

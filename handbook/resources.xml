@@ -58,8 +58,13 @@ poky+subscribe &lt;at&gt; openedhand &lt;dot&gt; com
         </para></listitem>
         <listitem><para>
             <ulink url='http://www.openedhand.com/'>OpenedHand</ulink> - The
-            company behind Poky.
+            original company behind Poky.
         </para></listitem>
+        <listitem><para>
+            <ulink url='http://www.intel.com/'>Intel Corporation</ulink> - The
+            company who acquired OpenedHand in 2008.
+        </para></listitem>
+
         <listitem><para>
             <ulink url='http://www.openembedded.org/'>OpenEmbedded</ulink>
             - The upstream generic embedded distribution Poky derives
