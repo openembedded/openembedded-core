@@ -11,7 +11,7 @@
             <imageobject>
                 <imagedata fileref='common/poky-handbook.png' 
                     format='SVG' 
-                    align='center'/>
+                    align='center' scalefit='1' width='100%'/>
             </imageobject>    
         </mediaobject>
 

@@ -2,7 +2,7 @@ all: html pdf
 
 pdf:
 
-	poky-docbook-to-pdf poky-handbook.xml
+	./poky-doc-tools/poky-docbook-to-pdf poky-handbook.xml
 #       -- old way --
 #	dblatex poky-handbook.xml
 

@@ -216,7 +216,7 @@
         </para>
     </section>
 
-    <section id='structure-build-tmp-sysroots>
+    <section id='structure-build-tmp-sysroots'>
         <title><filename class="directory">build/tmp/sysroots/</filename></title>
 
         <para>

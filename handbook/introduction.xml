@@ -58,7 +58,7 @@
     <screenshot>
     <mediaobject>
         <imageobject>
-            <imagedata fileref="screenshots/ss-sato.png" format="PNG"/>
+            <imagedata fileref="screenshots/ss-sato.png" format="PNG" align='center' scalefit='1' width="100%" contentdepth="100%"/>
         </imageobject>
         <caption>
             <para>The Sato Desktop - A screenshot from a machine running a Poky built image</para>
