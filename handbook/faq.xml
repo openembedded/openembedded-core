@@ -146,6 +146,7 @@
                 You're probably running the build on an NTFS filesystem. Use a sane one like ext2/3/4 instead!
             </para>
         </answer>
+    </qandaentry>
     <qandaentry>
         <question>
             <para>
