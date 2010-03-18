@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
-PR = "r32"
+PR = "r33"
 
 PACKAGES = "\
     task-poky-apps-console \
@@ -31,7 +31,6 @@ SPLASH ?= "psplash"
 # pcmanfm doesn't work on mips/powerpc
 FILEMANAGER ?= "pcmanfm"
 FILEMANAGER_mips ?= ""
-FILEMANAGER_powerpc ?= ""
 
 RDEPENDS_task-poky-apps-console = "\
     avahi-daemon \
