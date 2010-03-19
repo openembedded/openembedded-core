@@ -1211,10 +1211,6 @@ def check_gcc3(data):
 # Patch handling
 inherit patch
 
-# Configuration data from site files
-# Move to autotools.bbclass?
-inherit siteinfo
-
 EXPORT_FUNCTIONS do_setscene do_clean do_fetch do_unpack do_configure do_compile do_install do_package do_populate_pkgs do_rebuild do_fetchall
 
 MIRRORS[func] = "0"
