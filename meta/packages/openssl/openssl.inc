@@ -20,7 +20,7 @@ export AS = "${CC} -c"
 
 PARALLEL_MAKE = ""
 
-inherit pkgconfig
+inherit pkgconfig siteinfo
 
 PACKAGES =+ "libcrypto libssl"
 FILES_libcrypto = "${libdir}/libcrypto.so.*"

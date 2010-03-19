@@ -100,14 +100,6 @@ def siteinfo_get_files(d):
        bb.debug(1, "SITE files " + sitefiles);
        return sitefiles
 
-#
-# Export CONFIG_SITE to the enviroment. The autotools will make use
-# of this to determine where to load in variables from. This is a
-# space seperate list of shell scripts processed in the order listed.
-#
-export CONFIG_SITE = "${@siteinfo_get_files(d)}"
-
-
 def siteinfo_get_endianess(d):
        info = get_siteinfo_list(d)
        if 'endian-little' in info:

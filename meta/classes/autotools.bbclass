@@ -27,6 +27,12 @@ DEPENDS_prepend = "${@autotools_dep_prepend(d)}"
 DEPENDS_virtclass-native_prepend = "${@autotools_dep_prepend(d)}"
 DEPENDS_virtclass-nativesdk_prepend = "${@autotools_dep_prepend(d)}"
 
+inherit siteinfo
+
+# Space separated list of shell scripts with variables defined to supply test
+# results for autoconf tests we cannot run at build time.
+export CONFIG_SITE = "${@siteinfo_get_files(d)}"
+
 acpaths = "default"
 EXTRA_AUTORECONF = "--exclude=autopoint"
 
