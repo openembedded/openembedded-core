@@ -3,13 +3,14 @@ DESCRIPTION = "Mail user agent"
 #DEPENDS = "gtk+ gpgme libetpan libgnomeprint aspell openssl"
 DEPENDS = "gtk+ libetpan openssl libowl"
 LICENSE = "GPL"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "\
 	${SOURCEFORGE_MIRROR}/sylpheed-claws/claws-mail-${PV}.tar.bz2	\
 	file://desktop.patch;patch=1				\
 	file://streamline-ui.patch;patch=1				\
 	file://owl-window-menu.patch;patch=1				\
+  file://fix-build.patch;patch=1    \
 	"
 
 FILES_${PN} = "${bindir} ${datadir}/pixmaps ${datadir}/applications"
@@ -35,11 +36,12 @@ EXTRA_OECONF = "--disable-aspell-test 		\
 #		--disable-libetpan		\
 		--disable-gnomeprint		\
 		--disable-valgrind		\
+    --disable-static    \
 		"
 
 CFLAGS += "-D_GNU_SOURCE"
 
-inherit autotools_stage pkgconfig gettext
+inherit autotools pkgconfig gettext
 
 do_install_append() {
 	install -d ${D}${datadir}/applications
