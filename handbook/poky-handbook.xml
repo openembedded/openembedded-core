@@ -90,8 +90,6 @@
 
     <xi:include href="resources.xml"/>
 
-    <xi:include href="contactus.xml"/>
-
     <index id='index'>
       <title>Index</title>
     </index>
