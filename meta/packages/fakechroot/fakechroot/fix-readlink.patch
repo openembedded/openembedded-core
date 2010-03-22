@@ -2,11 +2,11 @@
  src/libfakechroot.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- fakechroot-2.5.orig/src/libfakechroot.c
-+++ fakechroot-2.5/src/libfakechroot.c
-@@ -596,11 +596,11 @@ void fakechroot_init (void)
-     nextsym(open64, "open64");
- #if !defined(HAVE___OPENDIR2)
+Index: fakechroot-2.9/src/libfakechroot.c
+===================================================================
+--- fakechroot-2.9.orig/src/libfakechroot.c	2009-03-31 11:20:41.000000000 +0100
++++ fakechroot-2.9/src/libfakechroot.c	2010-03-22 17:40:17.386783375 +0000
+@@ -775,7 +775,7 @@
      nextsym(opendir, "opendir");
  #endif
      nextsym(pathconf, "pathconf");
@@ -15,18 +15,12 @@
      nextsym(realpath, "realpath");
      nextsym(remove, "remove");
  #ifdef HAVE_REMOVEXATTR
-     nextsym(removexattr, "removexattr");
- #endif
-@@ -1864,11 +1864,11 @@ long pathconf (const char *path, int nam
-     return next_pathconf(path, name);
- }
+@@ -2492,7 +2492,7 @@
  
  
  /* #include <unistd.h> */
--int readlink (const char *path, char *buf, READLINK_TYPE_ARG3)
-+int own_readlink (const char *path, char *buf, READLINK_TYPE_ARG3)
+-READLINK_TYPE_RETURN readlink (const char *path, char *buf, READLINK_TYPE_ARG3)
++READLINK_TYPE_RETURN own_readlink (const char *path, char *buf, READLINK_TYPE_ARG3)
  {
      int status;
      char tmp[FAKECHROOT_MAXPATH], *tmpptr;
-     char *fakechroot_path, *fakechroot_ptr, fakechroot_buf[FAKECHROOT_MAXPATH];
- 
