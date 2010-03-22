@@ -2,16 +2,6 @@
 DL_DIR ?= "${OEROOT}/sources"
 # Where to cache Poky's built staging output
 PSTAGE_DIR ?= "${OEROOT}/pstage"
-BBFILES += "\
-    ${OEROOT}/meta/packages/*/*.bb \
-    ${OEROOT}/meta-moblin/packages/*/*.bb"
-
-BBFILE_COLLECTIONS = "normal moblin"
-BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
-BBFILE_PATTERN_moblin = "^${OEROOT}/meta-moblin/"
-
-BBFILE_PRIORITY_normal = "5"
-BBFILE_PRIORITY_moblin = "5"
 
 # Uncomment and set to allow bitbake to execute multiple tasks at once.
 # For a quadcore, BB_NUMBER_THREADS = "4", PARALLEL_MAKE = "-j 4" would

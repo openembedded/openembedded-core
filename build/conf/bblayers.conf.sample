@@ -1,0 +1,5 @@
+BBFILES ?= ""
+BBLAYERS = " \
+  ${OEROOT}/meta \
+  ${OEROOT}/meta-moblin \
+  "
