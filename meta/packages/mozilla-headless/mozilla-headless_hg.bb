@@ -1,5 +1,4 @@
 
-FIXEDREV = "${SRCREVMOZILLAHEADLESS}"
 #file://0001-Adds-initial-Gtk-clipboard-support-to-moz-headless.patch;patch=1 \
 SRC_URI = "hg://hg.mozilla.org/incubator;protocol=http;module=offscreen \
            file://configurefix-1a622cb7c384.patch;patch=1;rev=1a622cb7c384 \
