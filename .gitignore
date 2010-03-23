@@ -1,6 +1,7 @@
 *.pyc
 *.pyo
 build/conf/local.conf
+build/conf/bblayers.conf
 build/tmp/
 scripts/poky-git-proxy-socks
 sources/
