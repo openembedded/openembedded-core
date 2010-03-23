@@ -14,3 +14,5 @@ do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 encdec-updater ${D}${bindir}/
 }
+
+BBCLASSEXTEND = "native"
