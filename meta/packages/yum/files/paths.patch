@@ -4,11 +4,11 @@
  etc/Makefile  |   20 ++++++++++----------
  3 files changed, 25 insertions(+), 25 deletions(-)
 
---- yum-3.2.18.orig/Makefile
-+++ yum-3.2.18/Makefile
-@@ -16,23 +16,23 @@ clean:
- 
- subdirs:
+Index: yum-3.2.27/Makefile
+===================================================================
+--- yum-3.2.27.orig/Makefile	2010-03-04 01:10:20.000000000 +0000
++++ yum-3.2.27/Makefile	2010-03-23 13:49:50.663912930 +0000
+@@ -22,19 +22,19 @@
  	for d in $(SUBDIRS); do make PYTHON=$(PYTHON) -C $$d; [ $$? = 0 ] || exit 1 ; done
  
  install:
@@ -37,33 +37,39 @@
  
  	for d in $(SUBDIRS); do make PYTHON=$(PYTHON) DESTDIR=`cd $(DESTDIR); pwd` -C $$d install; [ $$? = 0 ] || exit 1; done
  
- .PHONY: docs test
- 
---- yum-3.2.18.orig/docs/Makefile
-+++ yum-3.2.18/docs/Makefile
-@@ -4,11 +4,11 @@ all:
- clean:
- 	rm -f *.pyc *.pyo *~
+Index: yum-3.2.27/docs/Makefile
+===================================================================
+--- yum-3.2.27.orig/docs/Makefile	2009-04-07 14:57:06.000000000 +0100
++++ yum-3.2.27/docs/Makefile	2010-03-23 13:52:30.086667913 +0000
+@@ -6,10 +6,10 @@
  	rm -fr epydoc
  
  install:
--	mkdir -p $(DESTDIR)/usr/share/man/man{5,8}
+-	mkdir -p $(DESTDIR)/usr/share/man/man5
+-	mkdir -p $(DESTDIR)/usr/share/man/man8
 -	install -m 644 yum.8 $(DESTDIR)/usr/share/man/man8/yum.8
 -	install -m 644 yum-shell.8 $(DESTDIR)/usr/share/man/man8/yum-shell.8
 -	install -m 644 yum.conf.5 $(DESTDIR)/usr/share/man/man5/yum.conf.5
 -	install -m 644 yum-updatesd.8 $(DESTDIR)/usr/share/man/man8/yum-updatesd.8
 -	install -m 644 yum-updatesd.conf.5 $(DESTDIR)/usr/share/man/man5/yum-updatesd.conf.5
-+	mkdir -p $(DESTDIR)$(mandir)/man{5,8}
++	mkdir -p $(DESTDIR)$(mandir)/man5
++	mkdir -p $(DESTDIR)$(mandir)/man8
 +	install -m 644 yum.8 $(DESTDIR)$(mandir)/man8/yum.8
 +	install -m 644 yum-shell.8 $(DESTDIR)$(mandir)/man8/yum-shell.8
 +	install -m 644 yum.conf.5 $(DESTDIR)$(mandir)/man5/yum.conf.5
 +	install -m 644 yum-updatesd.8 $(DESTDIR)$(mandir)/man8/yum-updatesd.8
 +	install -m 644 yum-updatesd.conf.5 $(DESTDIR)$(mandir)/man5/yum-updatesd.conf.5
---- yum-3.2.18.orig/etc/Makefile
-+++ yum-3.2.18/etc/Makefile
-@@ -3,22 +3,22 @@ all:
+Index: yum-3.2.27/etc/Makefile
+===================================================================
+--- yum-3.2.27.orig/etc/Makefile	2009-10-26 18:56:06.000000000 +0000
++++ yum-3.2.27/etc/Makefile	2010-03-23 13:54:40.421912460 +0000
+@@ -1,4 +1,4 @@
+-YUMETC=$(DESTDIR)/etc/yum
++YUMETC=$(DESTDIR)$(sysconfdir)/yum
  
- clean:
+ all:
+ 	echo "Nothing to do"
+@@ -7,23 +7,23 @@
  	rm -f *.pyc *.pyo *~
  
  install:
@@ -72,8 +78,9 @@
 +	mkdir -p $(DESTDIR)$(sysconfdir)/yum/
 +	mkdir -p $(DESTDIR)$(sysconfdir)/yum/repos.d
  
--	install -m 644 yum.conf $(DESTDIR)/etc/yum/yum.conf
-+	install -m 644 yum.conf $(DESTDIR)$(sysconfdir)/yum/yum.conf
+ 	install -m 644 yum.conf $(YUMETC)/yum.conf
+ 
+ 	install -m 644 version-groups.conf $(YUMETC)/version-groups.conf
  
 -	mkdir -p $(DESTDIR)/etc/logrotate.d
 -	install -m 644 yum.logrotate $(DESTDIR)/etc/logrotate.d/yum
@@ -93,4 +100,7 @@
 -	install -m 755 yum-updatesd.conf $(DESTDIR)/etc/yum/yum-updatesd.conf
 +	install -m 755 yum-updatesd.conf $(DESTDIR)$(sysconfdir)/yum/yum-updatesd.conf
  
- 
+-	mkdir -p $(DESTDIR)/etc/bash_completion.d
+-	install -m 644 yum.bash $(DESTDIR)/etc/bash_completion.d
++	mkdir -p $(DESTDIR)$(sysconfdir)/bash_completion.d
++	install -m 644 yum.bash $(DESTDIR)$(sysconfdir)/bash_completion.d

@@ -39,3 +39,5 @@ pkg_postinst_yum () {
 }
 
 FILES_${PN} += "${libdir}/python* ${datadir}/yum-cli"
+
+BBCLASSEXTEND = "native"
