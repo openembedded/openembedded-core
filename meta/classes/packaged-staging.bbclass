@@ -13,7 +13,7 @@
 #
 PSTAGE_PKGVERSION = "${PV}-${PR}"
 PSTAGE_PKGARCH    = "${BUILD_SYS}"
-PSTAGE_EXTRAPATH  ?= ""
+PSTAGE_EXTRAPAcTH  ?= ""
 PSTAGE_PKGPATH    = "${DISTRO}/${OELAYOUT_ABI}${PSTAGE_EXTRAPATH}"
 PSTAGE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
 PSTAGE_PKGNAME    = "${PSTAGE_PKGPN}_${PSTAGE_PKGVERSION}_${PSTAGE_PKGARCH}.ipk"
@@ -319,7 +319,7 @@ populate_sysroot_postamble () {
 packagedstaging_fastpath () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/sysroots/
-		mkdir -p ${PSTAGE_TMPDIR_STAGE}/cross/
+		mkdir -p ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}/
 		cp -fpPR ${SYSROOT_DESTDIR}/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/sysroots/ || /bin/true
 		cp -fpPR ${SYSROOT_DESTDIR}/${CROSS_DIR}/* ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}/ || /bin/true
 	fi
