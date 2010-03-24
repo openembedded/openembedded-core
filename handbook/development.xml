@@ -59,13 +59,16 @@
          </screenshot>
 -->
         <para>
-            To use the plugin, a toolchain and SDK built by Poky is required along with Anjuta and the Anjuta 
-            plugin. The Poky Anjuta plugin is available from the OpenedHand SVN repository located at
-            http://svn.o-hand.com/repos/anjuta-poky/trunk/anjuta-plugin-sdk/; a web interface
-            to the repository can be accessed at <ulink url='http://svn.o-hand.com/view/anjuta-poky/'/>.
-            See the README file contained in the project for more information
-            about the dependencies and how to get them along with details of
-            the prebuilt packages.
+            To use the plugin, a toolchain and SDK built by Poky is required along with Anjuta it's development
+            headers and the Anjuta plugin. The Poky Anjuta plugin is available to download as a tarball at the
+            <ulink url='http://labs.o-hand.com/sources/anjuta-plugin-sdk/'>OpenedHand labs</ulink> page or
+            directly from the Poky Git repository located at git://git.pokylinux.org/anjuta-poky; a web interface
+            to the repository can be accessed at <ulink url='http://git.pokylinux.org/cgit.cgi/anjuta-poky/'/>.
+        </para>
+        <para>
+            See the README file contained in the project for more information on dependencies and building
+            the plugin. It's recommended you enable the experimental gdb integration by passing configure the
+            --enable-gdb-integration switch.
         </para>
 
         <section id="platdev-appdev-external-anjuta-setup">
