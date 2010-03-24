@@ -4,10 +4,10 @@ LICENSE = "GPL"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/f/fakechroot/fakechroot_${PV}.orig.tar.gz \
            file://fix-readlink.patch;patch=1 \
-           ${DEBIAN_MIRROR}/main/f/fakechroot/fakechroot_2.9-1.1.diff.gz"
+           ${DEBIAN_MIRROR}/main/f/fakechroot/fakechroot_2.9-1.1.diff.gz;patch=1"
 
 inherit autotools
 
-PR = "r2"
+PR = "r3"
 
 BBCLASSEXTEND = "native"
