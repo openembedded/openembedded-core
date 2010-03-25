@@ -8,7 +8,9 @@ PR = "r3"
 SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
            file://no_check.patch;patch=1 \
            file://syscalls.patch;patch=1 "
-           
+
 EXTRA_OECONF = "--disable-Werror --disable-device-mapper"
 
 inherit autotools_stage pkgconfig gettext
+
+BBCLASSEXTEND = "native"
