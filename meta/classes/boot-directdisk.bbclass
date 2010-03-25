@@ -20,8 +20,10 @@
 # ${ROOTFS} - the rootfs image to incorporate
 
 do_bootdirectdisk[depends] += "dosfstools-native:do_populate_sysroot \
-                       syslinux:do_populate_sysroot \
-                       syslinux-installer-native:do_populate_sysroot"
+                               syslinux:do_populate_sysroot \
+                               syslinux-native:do_populate_sysroot \
+                               parted-native:do_populate_sysroot \
+                               mtools-native:do_populate_sysroot "
 
 PACKAGES = " "
 EXCLUDE_FROM_WORLD = "1"
@@ -48,7 +50,7 @@ build_boot_dd() {
 
 	install -d ${HDDDIR}
 	install -m 0644 ${STAGING_DIR}/${MACHINE}${HOST_VENDOR}-${HOST_OS}/kernel/bzImage ${HDDDIR}/vmlinuz
-	install -m 444 ${STAGING_DATADIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
+	install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
 
 	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
 	SIZE=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
@@ -74,7 +76,7 @@ build_boot_dd() {
 	parted $IMAGE print
 
 	OFFSET=`expr $END2 / 512`
-	dd if=/tmp/mbr.bin of=$IMAGE conv=notrunc
+	dd if=${STAGING_LIBDIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
 	dd if=${HDDIMG} of=$IMAGE conv=notrunc seek=1 bs=512
 	dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512
 

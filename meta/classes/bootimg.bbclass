@@ -60,8 +60,7 @@ build_boot_bin() {
     		install -m 0644 ${ROOTFS} ${HDDDIR}/rootfs.img
 	fi
 
-	install -m 444 ${STAGING_DATADIR}/syslinux/ldlinux.sys \
-	${HDDDIR}/ldlinux.sys
+	install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
 
 	# Do a little math, bash style
 	#BLOCKS=`du -s ${HDDDIR} | cut -f 1`
@@ -102,8 +101,7 @@ build_boot_bin() {
 		fi
 
 		# And install the syslinux stuff 
-		cp ${STAGING_DATADIR}/syslinux/isolinux.bin \
-		${ISODIR}
+		cp ${STAGING_LIBDIR}/syslinux/isolinux.bin ${ISODIR}
 
 		mkisofs -V ${BOOTIMG_VOLUME_ID} \
 		-o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
