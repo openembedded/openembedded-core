@@ -1,0 +1,28 @@
+diff -up urlgrabber-3.0.0/urlgrabber/grabber.py.cleanup urlgrabber-3.0.0/urlgrabber/grabber.py
+--- urlgrabber-3.0.0/urlgrabber/grabber.py.cleanup	2007-11-29 10:25:13.000000000 +0000
++++ urlgrabber-3.0.0/urlgrabber/grabber.py	2007-11-29 10:26:15.000000000 +0000
+@@ -1204,16 +1204,18 @@ class URLGrabberFileObject:
+         bs = 1024*8
+         size = 0
+ 
+-        if amount is not None: bs = min(bs, amount - size)
+-        block = self.read(bs)
+-        size = size + len(block)
+-        while block:
+-            new_fo.write(block)
++        try:
+             if amount is not None: bs = min(bs, amount - size)
+             block = self.read(bs)
+             size = size + len(block)
++            while block:
++                new_fo.write(block)
++                if amount is not None: bs = min(bs, amount - size)
++                block = self.read(bs)
++                size = size + len(block)
++        finally:
++            new_fo.close()
+ 
+-        new_fo.close()
+         try:
+             modified_tuple  = self.hdr.getdate_tz('last-modified')
+             modified_stamp  = rfc822.mktime_tz(modified_tuple)

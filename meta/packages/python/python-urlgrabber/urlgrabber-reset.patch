@@ -1,0 +1,15 @@
+--- a/urlgrabber/grabber.py	2010-02-19 14:50:45.000000000 -0500
++++ b/urlgrabber/grabber.py	2010-02-19 14:51:28.000000000 -0500
+@@ -1626,6 +1626,12 @@
+         
+ _curl_cache = pycurl.Curl() # make one and reuse it over and over and over
+ 
++def reset_curl_obj():
++    """To make sure curl has reread the network/dns info we force a reload"""
++    global _curl_cache
++    _curl_cache.close()
++    _curl_cache = pycurl.Curl()
++
+ 
+ #####################################################################
+ # DEPRECATED FUNCTIONS

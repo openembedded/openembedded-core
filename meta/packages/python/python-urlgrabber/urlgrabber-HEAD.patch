@@ -1,0 +1,142 @@
+diff --git a/urlgrabber/grabber.py b/urlgrabber/grabber.py
+index e090e90..a26880c 100644
+--- a/urlgrabber/grabber.py
++++ b/urlgrabber/grabber.py
+@@ -439,6 +439,12 @@ try:
+ except:
+     __version__ = '???'
+ 
++try:
++    # this part isn't going to do much - need to talk to gettext
++    from i18n import _
++except ImportError, msg:
++    def _(st): return st
++    
+ ########################################################################
+ # functions for debugging output.  These functions are here because they
+ # are also part of the module initialization.
+@@ -1052,7 +1058,8 @@ class PyCurlFileObject():
+         self._reget_length = 0
+         self._prog_running = False
+         self._error = (None, None)
+-        self.size = None
++        self.size = 0
++        self._hdr_ended = False
+         self._do_open()
+         
+         
+@@ -1085,9 +1092,14 @@ class PyCurlFileObject():
+             return -1
+             
+     def _hdr_retrieve(self, buf):
++        if self._hdr_ended:
++            self._hdr_dump = ''
++            self.size = 0
++            self._hdr_ended = False
++
+         if self._over_max_size(cur=len(self._hdr_dump), 
+                                max_size=self.opts.max_header_size):
+-            return -1            
++            return -1
+         try:
+             self._hdr_dump += buf
+             # we have to get the size before we do the progress obj start
+@@ -1104,7 +1116,17 @@ class PyCurlFileObject():
+                     s = parse150(buf)
+                 if s:
+                     self.size = int(s)
+-            
++                    
++            if buf.lower().find('location') != -1:
++                location = ':'.join(buf.split(':')[1:])
++                location = location.strip()
++                self.scheme = urlparse.urlsplit(location)[0]
++                self.url = location
++                
++            if len(self._hdr_dump) != 0 and buf == '\r\n':
++                self._hdr_ended = True
++                if DEBUG: DEBUG.info('header ended:')
++                
+             return len(buf)
+         except KeyboardInterrupt:
+             return pycurl.READFUNC_ABORT
+@@ -1136,6 +1158,7 @@ class PyCurlFileObject():
+         self.curl_obj.setopt(pycurl.PROGRESSFUNCTION, self._progress_update)
+         self.curl_obj.setopt(pycurl.FAILONERROR, True)
+         self.curl_obj.setopt(pycurl.OPT_FILETIME, True)
++        self.curl_obj.setopt(pycurl.FOLLOWLOCATION, True)
+         
+         if DEBUG:
+             self.curl_obj.setopt(pycurl.VERBOSE, True)
+@@ -1291,7 +1314,12 @@ class PyCurlFileObject():
+                 raise err
+                     
+             elif str(e.args[1]) == '' and self.http_code != 0: # fake it until you make it
+-                msg = 'HTTP Error %s : %s ' % (self.http_code, self.url)
++                if self.scheme in ['http', 'https']:
++                    msg = 'HTTP Error %s : %s ' % (self.http_code, self.url)
++                elif self.scheme in ['ftp']:
++                    msg = 'FTP Error %s : %s ' % (self.http_code, self.url)
++                else:
++                    msg = "Unknown Error: URL=%s , scheme=%s" % (self.url, self.scheme)
+             else:
+                 msg = 'PYCURL ERROR %s - "%s"' % (errcode, str(e.args[1]))
+                 code = errcode
+@@ -1299,6 +1327,12 @@ class PyCurlFileObject():
+             err.code = code
+             err.exception = e
+             raise err
++        else:
++            if self._error[1]:
++                msg = self._error[1]
++                err = URLGRabError(14, msg)
++                err.url = self.url
++                raise err
+ 
+     def _do_open(self):
+         self.curl_obj = _curl_cache
+@@ -1532,11 +1566,14 @@ class PyCurlFileObject():
+     def _over_max_size(self, cur, max_size=None):
+ 
+         if not max_size:
+-            max_size = self.size
+-        if self.opts.size: # if we set an opts size use that, no matter what
+-            max_size = self.opts.size
++            if not self.opts.size:
++                max_size = self.size
++            else:
++                max_size = self.opts.size
++
+         if not max_size: return False # if we have None for all of the Max then this is dumb
+-        if cur > max_size + max_size*.10:
++
++        if cur > int(float(max_size) * 1.10):
+ 
+             msg = _("Downloaded more than max size for %s: %s > %s") \
+                         % (self.url, cur, max_size)
+@@ -1582,7 +1619,11 @@ class PyCurlFileObject():
+             self.opts.progress_obj.end(self._amount_read)
+         self.fo.close()
+         
+-
++    def geturl(self):
++        """ Provide the geturl() method, used to be got from
++            urllib.addinfourl, via. urllib.URLopener.* """
++        return self.url
++        
+ _curl_cache = pycurl.Curl() # make one and reuse it over and over and over
+ 
+ 
+diff --git a/urlgrabber/progress.py b/urlgrabber/progress.py
+index dd07c6a..45eb248 100644
+--- a/urlgrabber/progress.py
++++ b/urlgrabber/progress.py
+@@ -658,6 +658,8 @@ def format_time(seconds, use_hours=0):
+     if seconds is None or seconds < 0:
+         if use_hours: return '--:--:--'
+         else:         return '--:--'
++    elif seconds == float('inf'):
++        return 'Infinite'
+     else:
+         seconds = int(seconds)
+         minutes = seconds / 60
