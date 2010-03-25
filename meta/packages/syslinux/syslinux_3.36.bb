@@ -2,32 +2,29 @@ DESCRIPTION = "A multi-purpose linux bootloader"
 HOMEPAGE = "http://syslinux.zytor.com/"
 LICENSE = "GPL"
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/boot/syslinux/syslinux-${PV}.tar.bz2"
-PR = "r1"
+PR = "r3"
 
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
 DEPENDS = "nasm-native"
 
-S = "${WORKDIR}/syslinux-${PV}"
-
 do_configure() {
 	sed -i ${S}/Makefile ${S}/*/Makefile -e 's/\(CC[\t ]*\)=/\1?=/'
 }
 
-STAGE_TEMP = "${WORKDIR}/stage_temp"
-
 COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
 
-do_install() {
-	install -d ${STAGE_TEMP}
-	oe_runmake install INSTALLROOT="${STAGE_TEMP}"
-	
-	# When building media, the syslinux binary isn't nearly as useful
-	# as the DOS data files, so we copy those into a special location
-	# for usage during a image build stage
-	    
-	install -d ${D}${datadir}/syslinux/
-	install -m 0644 ${STAGE_TEMP}/usr/lib/syslinux/isolinux.bin ${D}${datadir}/syslinux/isolinux.bin
-	install -m 644 ${S}/ldlinux.sys ${D}${datadir}/syslinux/ldlinux.sys
-	install -m 644 ${S}/ldlinux.bss ${D}${datadir}/syslinux/ldlinux.bss
+do_compile_virtclass-native () {
+	oe_runmake installer
 }
+
+NATIVE_INSTALL_WORKS = "1"
+do_install() {
+	oe_runmake install INSTALLROOT="${D}"
+
+	install -d ${D}${libdir}/syslinux/
+	install -m 644 ${S}/ldlinux.sys ${D}${libdir}/syslinux/
+	install -m 644 ${S}/ldlinux.bss ${D}${libdir}/syslinux/
+}
+
+BBCLASSEXTEND = "native"
