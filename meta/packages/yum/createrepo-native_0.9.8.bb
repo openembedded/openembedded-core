@@ -1,8 +1,9 @@
-DEPENDS = "python-native"
+DEPENDS = "python-native libxml2-native"
+RDEPENDS = "yum-native"
 
 SRC_URI = "http://createrepo.baseurl.org/download/createrepo-${PV}.tar.gz \
            file://pathfix.patch;patch=1 "
-PR = "r1"
+PR = "r2"
 
 inherit autotools native
 
