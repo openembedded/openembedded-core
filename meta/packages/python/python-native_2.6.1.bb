@@ -1,6 +1,6 @@
 require python.inc
-DEPENDS = "openssl-native bzip2-full-native zlib-native readline-native"
-PR = "${INC_PR}.2"
+DEPENDS = "openssl-native bzip2-full-native zlib-native readline-native sqlite3-native"
+PR = "${INC_PR}.3"
 
 SRC_URI = "\
   http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
