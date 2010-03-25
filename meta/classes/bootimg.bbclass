@@ -1,12 +1,25 @@
-# bootimg.oeclass
 # Copyright (C) 2004, Advanced Micro Devices, Inc.  All Rights Reserved
 # Released under the MIT license (see packages/COPYING)
 
-# This creates a bootable image using syslinux, your kernel and an optional
+# Creates a bootable image using syslinux, your kernel and an optional
 # initrd
 
-# External variables needed
+#
+# End result is two things:
+#
+# 1. A .hddimage file which is an msdos filesystem containing syslinux, a kernel, 
+# an initrd and a rootfs image. These can be written to harddisks directly and 
+# also booted on USB flash disks (write them there with dd).
+#
+# 2. A CD .iso image
+
+# Boot process is that the initrd will boot and process which label was selected 
+# in syslinux. Actions based on the label are then performed (e.g. installing to 
+# an hdd)
+
+# External variables
 # ${INITRD} - indicates a filesystem image to use as an initrd (optional)
+# ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
 # ${AUTO_SYSLINUXCFG} - set this to 1 to enable creating an automatic config
 # ${LABELS} - a list of targets for the automatic config
 # ${APPEND} - an override list of append strings for each label
@@ -19,11 +32,12 @@ do_bootimg[depends] += "dosfstools-native:do_populate_sysroot \
 		       cdrtools-native:do_populate_sysroot"
 
 PACKAGES = " "
+EXCLUDE_FROM_WORLD = "1"
 
 HDDDIR = "${S}/hdd/boot"
 ISODIR = "${S}/cd/isolinux"
 
-BOOTIMG_VOLUME_ID   ?= "oe"
+BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
 
 # Get the build_syslinux_cfg() function from the syslinux class
