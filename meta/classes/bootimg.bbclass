@@ -27,7 +27,7 @@
 
 do_bootimg[depends] += "dosfstools-native:do_populate_sysroot \
                        syslinux:do_populate_sysroot \
-                       syslinux-installer-native:do_populate_sysroot \
+                       syslinux-native:do_populate_sysroot \
 		       mtools-native:do_populate_sysroot \
 		       cdrtools-native:do_populate_sysroot"
 
