@@ -3,6 +3,7 @@
 build/conf/local.conf
 build/conf/bblayers.conf
 build/tmp/
+pstage/
 scripts/poky-git-proxy-socks
 sources/
 meta-darwin
