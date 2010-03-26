@@ -6,7 +6,7 @@ ROOTFS_PKGMANAGE = "rpm yum"
 
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
-do_rootfs[depends] += "rpm-native:do_populate_sysroot yum-native:do_populate_sysroot createrepo-native:do_populate_sysroot fakechroot-native:do_populate_sysroot"
+do_rootfs[depends] += "rpm-native:do_populate_sysroot python-urlgrabber-native:do_populate_sysroot yum-metadata-parser-native:do_populate_sysroot yum-native:do_populate_sysroot createrepo-native:do_populate_sysroot fakechroot-native:do_populate_sysroot"
 
 # Needed for update-alternatives
 do_rootfs[depends] += "opkg-native:do_populate_sysroot"
