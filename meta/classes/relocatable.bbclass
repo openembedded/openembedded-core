@@ -8,7 +8,7 @@ def rpath_replace (path, d):
 
     cmd = bb.data.expand('${CHRPATH_BIN}', d)
 
-    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
+    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
     tmpdir = bb.data.getVar('TMPDIR', d)
     basedir = bb.data.expand('${base_prefix}', d)
 
