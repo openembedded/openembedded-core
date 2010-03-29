@@ -62,7 +62,7 @@ python __anonymous () {
     for dep in deps:
         if dep.endswith("-native") or dep.endswith("-cross"):
             newdeps.append(dep)
-        elif dep.endswith("-gcc-intermediate") or dep.endswith("-gcc-initial") or dep.endswith("-gcc"):
+        elif dep.endswith("-gcc-intermediate") or dep.endswith("-gcc-initial") or dep.endswith("-gcc") or dep.endswith("-g++"):
             newdeps.append(dep + "-crosssdk")
         elif not dep.endswith("-nativesdk"):
             newdeps.append(dep + "-nativesdk")
