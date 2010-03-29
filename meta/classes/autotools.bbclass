@@ -43,26 +43,28 @@ def autotools_set_crosscompiling(d):
 
 # EXTRA_OECONF_append = "${@autotools_set_crosscompiling(d)}"
 
+CONFIGUREOPTS = " --build=${BUILD_SYS} \
+		  --host=${HOST_SYS} \
+		  --target=${TARGET_SYS} \
+		  --prefix=${prefix} \
+		  --exec_prefix=${exec_prefix} \
+		  --bindir=${bindir} \
+		  --sbindir=${sbindir} \
+		  --libexecdir=${libexecdir} \
+		  --datadir=${datadir} \
+		  --sysconfdir=${sysconfdir} \
+		  --sharedstatedir=${sharedstatedir} \
+		  --localstatedir=${localstatedir} \
+		  --libdir=${libdir} \
+		  --includedir=${includedir} \
+		  --oldincludedir=${oldincludedir} \
+		  --infodir=${infodir} \
+		  --mandir=${mandir}"
+
 oe_runconf () {
 	if [ -x ${S}/configure ] ; then
 		cfgcmd="${S}/configure \
-		    --build=${BUILD_SYS} \
-		    --host=${HOST_SYS} \
-		    --target=${TARGET_SYS} \
-		    --prefix=${prefix} \
-		    --exec_prefix=${exec_prefix} \
-		    --bindir=${bindir} \
-		    --sbindir=${sbindir} \
-		    --libexecdir=${libexecdir} \
-		    --datadir=${datadir} \
-		    --sysconfdir=${sysconfdir} \
-		    --sharedstatedir=${sharedstatedir} \
-		    --localstatedir=${localstatedir} \
-		    --libdir=${libdir} \
-		    --includedir=${includedir} \
-		    --oldincludedir=${oldincludedir} \
-		    --infodir=${infodir} \
-		    --mandir=${mandir} \
+		        ${CONFIGUREOPTS} \
 			${EXTRA_OECONF} \
 		    $@"
 		oenote "Running $cfgcmd..."
