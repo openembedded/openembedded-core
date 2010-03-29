@@ -17,3 +17,7 @@ EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
 		--with-sysroot=${STAGING_DIR_TARGET} \
 		--with-build-sysroot=${STAGING_DIR_TARGET} \
 		${@get_gcc_fpu_setting(bb, d)}"
+
+do_compile () {
+    oe_runmake
+}

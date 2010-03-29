@@ -1,5 +1,3 @@
-INHIBIT_PACKAGE_STRIP ?= ""
-OLD_INHIBIT_PACKAGE_STRIP := "${INHIBIT_PACKAGE_STRIP}"
 INHIBIT_PACKAGE_STRIP = "1"
 
 # Having anything auto depending on gcc-cross-sdk is a really bad idea...
@@ -30,7 +28,7 @@ FILES_${PN}-doc = "\
     "
 
 do_install () {
-	oe_runmake 'DESTDIR=${D}' install
+	oe_runmake 'DESTDIR=${D}' install-host
 
 	# Cleanup some of the ${libdir}{,exec}/gcc stuff ...
 	rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
@@ -52,13 +50,5 @@ do_install () {
 		ln -sf "${bindir}/`basename $l`" "${D}${prefix}/${TARGET_SYS}/bin/`basename $l | sed -e 's,${TARGET_PREFIX},,'`"
 	done
 	ln -sf "${bindir}/${TARGET_PREFIX}gcc" "${D}${prefix}/${TARGET_SYS}/bin/cc"
-
-	# Manually run the target stripper since we won't get it run by
-	# the packaging.
-	if [ "x${OLD_INHIBIT_PACKAGE_STRIP}" != "x1" ]; then
-		${TARGET_PREFIX}strip ${D}${prefix}/${TARGET_SYS}/lib/libstdc++.so.*
-		${TARGET_PREFIX}strip ${D}${prefix}/${TARGET_SYS}/lib/libg2c.so.* || true
-		${TARGET_PREFIX}strip ${D}${prefix}/${TARGET_SYS}/lib/libgcc_s.so.*
-	fi
 }
 

@@ -1,0 +1,70 @@
+PACKAGES = "\
+  libgcc \
+  libgcc-dev \
+  libstdc++ \
+  libstdc++-precompile-dev \
+  libstdc++-dev \
+  libg2c \
+  libg2c-dev \
+  libssp \
+  libssp-dev \
+  libgfortran \
+  libgfortran-dev \
+  libmudflap \
+  libmudflap-dev \
+"
+
+FILES_libgcc = "${base_libdir}/libgcc*.so.*"
+FILES_libgcc-dev = " \
+  ${base_libdir}/libgcc*.so \
+  ${libdir}/gcc/${TARGET_SYS}/${BINV}/crt* \
+  ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgcc*"
+
+FILES_libg2c = "${target_libdir}/libg2c.so.*"
+FILES_libg2c-dev = "\
+  ${libdir}/libg2c.so \
+  ${libdir}/libg2c.a \
+  ${libdir}/libfrtbegin.a"
+
+FILES_libstdc++ = "${libdir}/libstdc++.so.*"
+FILES_libstdc++-dev = "\
+  ${includedir}/c++/${BINV} \
+  ${libdir}/libstdc++.so \
+  ${libdir}/libstdc++.la \
+  ${libdir}/libstdc++.a \
+  ${libdir}/libsupc++.la \
+  ${libdir}/libsupc++.a"
+
+FILES_libstdc++-precompile-dev = "${includedir}/c++/${BINV}/${TARGET_SYS}/bits/*.gch"
+
+FILES_libssp = "${libdir}/libssp.so.*"
+FILES_libssp-dev = " \
+  ${libdir}/libssp*.so \
+  ${libdir}/libssp*.a \
+  ${libdir}/libssp*.la \
+  ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/ssp"
+
+FILES_libgfortran = "${libdir}/libgfortran.so.*"
+FILES_libgfortran-dev = " \
+  ${libdir}/libgfortran.a \
+  ${libdir}/libgfortran.so \
+  ${libdir}/libgfortranbegin.a"
+
+FILES_libmudflap = "${libdir}/libmudflap*.so.*"
+FILES_libmudflap-dev = "\
+  ${libdir}/libmudflap*.so \
+  ${libdir}/libmudflap*.a \
+  ${libdir}/libmudflap*.la"
+
+
+do_install () {
+	oe_runmake 'DESTDIR=${D}' install-target
+
+	# Move libgcc_s into /lib
+	mkdir -p ${D}${base_libdir}
+	if [ -f ${D}${libdir}/nof/libgcc_s.so ]; then
+		mv ${D}${libdir}/nof/libgcc* ${D}${base_libdir}
+	else
+		mv ${D}${libdir}/libgcc* ${D}${base_libdir} || true
+	fi
+}
