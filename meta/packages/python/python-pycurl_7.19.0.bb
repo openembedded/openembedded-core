@@ -2,7 +2,7 @@ DESCRIPTION = "libcurl Python Bindings"
 SECTION = "devel/python"
 PRIORITY = "optional"
 LICENSE = "LGPL"
-DEPENDS = "curl"
+DEPENDS = "curl python"
 SRCNAME = "pycurl"
 PR = "r0"
 
@@ -17,6 +17,8 @@ inherit distutils
 # need to export these variables for python-config to work
 export BUILD_SYS
 export HOST_SYS
+export STAGING_INCDIR
+export STAGING_LIBDIR
 
 RDEPENDS = "python-core curl"
 
