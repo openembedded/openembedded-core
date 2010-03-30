@@ -2,10 +2,14 @@
 # This kernel compiler is required by the Nokia tablets
 # Please talk to Rod Whitby and Richard Purdie before considering removing this file.
 
-DEFAULT_PREFERENCE = "-1"
-
-require gcc-cross-initial_csl-arm-2005q3.bb
+require gcc-csl-arm-2005q3.inc
+require gcc-cross.inc
+require gcc-configure-cross.inc
+require gcc-package-cross.inc
+require gcc-cross-initial.inc
 require gcc-cross-kernel.inc
+
+DEFAULT_PREFERENCE = "-1"
 
 PR = "r1"
 
