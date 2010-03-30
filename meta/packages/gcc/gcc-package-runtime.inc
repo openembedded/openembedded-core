@@ -28,7 +28,7 @@ FILES_libg2c-dev = "\
 
 FILES_libstdc++ = "${libdir}/libstdc++.so.*"
 FILES_libstdc++-dev = "\
-  ${includedir}/c++/${BINV} \
+  ${includedir}/c++/ \
   ${libdir}/libstdc++.so \
   ${libdir}/libstdc++.la \
   ${libdir}/libstdc++.a \
