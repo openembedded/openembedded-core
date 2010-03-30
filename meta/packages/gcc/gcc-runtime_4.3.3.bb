@@ -21,7 +21,7 @@ do_configure () {
 		mkdir -p ${B}/$d/
 		cd ${B}/$d/
 		chmod a+x ${S}/$d/configure
-		${S}/$d/configure ${CONFIGUREOPTS}
+		${S}/$d/configure ${CONFIGUREOPTS} ${EXTRA_OECONF_PATHS}
 	done
 }
 
