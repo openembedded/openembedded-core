@@ -95,6 +95,5 @@ do_install () {
 	ln -sf gfortran f95 || true
 	ln -sf g++ c++
 	ln -sf gcc cc
-	ln -sf ${bindir}/${TARGET_SYS}-cpp ${D}${base_libdir}/cpp
 	ln -sf ${bindir}/${TARGET_SYS}-cpp ${D}${bindir}/cpp
 }
