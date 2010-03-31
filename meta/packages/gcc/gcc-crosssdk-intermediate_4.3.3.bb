@@ -1,11 +1,3 @@
 require gcc-cross-intermediate_${PV}.bb
-inherit crosssdk
-
-SYSTEMHEADERS = "${SDKPATH}/include"
-SYSTEMLIBS1 = "${SDKPATH}/lib/"
-
+require gcc-crosssdk-intermediate.inc
 PR = "r1"
-
-DEPENDS = "virtual/${TARGET_PREFIX}binutils-crosssdk gettext-native"
-DEPENDS += "virtual/${TARGET_PREFIX}libc-initial-nativesdk"
-PROVIDES = "virtual/${TARGET_PREFIX}gcc-intermediate-crosssdk"
