@@ -35,7 +35,7 @@ FILES_libstdc++-dev = "\
   ${libdir}/libsupc++.la \
   ${libdir}/libsupc++.a"
 
-FILES_libstdc++-precompile-dev = "${includedir}/c++/${BINV}/${TARGET_SYS}/bits/*.gch"
+FILES_libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
 
 FILES_libssp = "${libdir}/libssp.so.*"
 FILES_libssp-dev = " \
@@ -56,15 +56,3 @@ FILES_libmudflap-dev = "\
   ${libdir}/libmudflap*.a \
   ${libdir}/libmudflap*.la"
 
-
-do_install () {
-	oe_runmake 'DESTDIR=${D}' install-target
-
-	# Move libgcc_s into /lib
-	mkdir -p ${D}${base_libdir}
-	if [ -f ${D}${libdir}/nof/libgcc_s.so ]; then
-		mv ${D}${libdir}/nof/libgcc* ${D}${base_libdir}
-	else
-		mv ${D}${libdir}/libgcc* ${D}${base_libdir} || true
-	fi
-}
