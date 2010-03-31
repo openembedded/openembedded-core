@@ -2,7 +2,7 @@ require gcc-common.inc
 LICENSE = "GPLv3"
 
 DEPENDS =+ "mpfr gmp"
-NATIVEDEPS = "mpfr-native gmp-native"
+NATIVEDEPS = "mpfr-native gmp-native gettext-native"
 
 SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	file://fedora/gcc43-c++-builtin-redecl.patch;patch=1;pnum=0 \

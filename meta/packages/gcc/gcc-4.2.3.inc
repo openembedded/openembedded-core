@@ -1,7 +1,7 @@
 require gcc-common.inc
 
 DEPENDS =+ "mpfr gmp"
-NATIVEDEPS = "mpfr-native gmp-native"
+NATIVEDEPS = "mpfr-native gmp-native gettext-native"
 
 SRC_URI = "ftp://ftp.gnu.org/pub/gnu/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	file://100-uclibc-conf.patch;patch=1 \
