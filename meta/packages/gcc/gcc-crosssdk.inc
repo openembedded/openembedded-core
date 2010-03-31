@@ -1,4 +1,3 @@
-require gcc-cross_${PV}.bb
 inherit crosssdk
 
 SYSTEMHEADERS = "${SDKPATH}/include"
