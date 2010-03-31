@@ -20,6 +20,8 @@ export HOST_SYS
 export STAGING_INCDIR
 export STAGING_LIBDIR
 
+NATIVE_INSTALL_WORKS = "1"
+
 RDEPENDS = "python-core curl"
 
 BBCLASSEXTEND = "native"
