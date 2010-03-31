@@ -45,6 +45,9 @@ FORTRAN = ""
 #JAVA = ",java"
 
 EXTRA_OECONF_BASE = "--enable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap"
+EXTRA_OECONF_INITIAL = "--disable-libmudflap --disable-libgomp --disable-libssp --disable-bootstrap"
+EXTRA_OECONF_INTERMEDIATE = "--disable-libmudflap --disable-libgomp --disable-libssp --disable-bootstrap"
+
 ARM_INSTRUCTION_SET = "arm"
 
 addtask unpack2 after do_unpack before do_patch
