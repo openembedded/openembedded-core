@@ -9,3 +9,8 @@ do_stage () {
 
 require gcc-configure-cross.inc
 require gcc-package-cross.inc
+
+do_compile () {
+	oe_runmake all-host
+}
+
