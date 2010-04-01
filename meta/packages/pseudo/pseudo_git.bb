@@ -17,6 +17,10 @@ do_configure () {
 	${S}/configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=${SITEINFO_BITS}
 }
 
+do_install() {
+	oe_runmake 'DESTDIR=${D}' install
+}
+
 NATIVE_INSTALL_WORKS = "1"
 
 BBCLASSEXTEND = "native"
