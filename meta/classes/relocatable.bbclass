@@ -3,27 +3,28 @@ SYSROOT_PREPROCESS_FUNCS += "relocatable_binaries_preprocess"
 CHRPATH_BIN ?= "chrpath"
 PREPROCESS_RELOCATE_DIRS ?= ""
 
-def rpath_replace (path, d):
+def process_dir (directory, d):
     import subprocess as sub
 
     cmd = bb.data.expand('${CHRPATH_BIN}', d)
-
-    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
     tmpdir = bb.data.getVar('TMPDIR', d)
     basedir = bb.data.expand('${base_prefix}', d)
 
-    for d in bindirs:
-        dir = path + "/" + d
-        bb.debug("Checking %s for binaries to process" % dir)
-        if not os.path.exists(dir):
-            continue
-        for file in os.listdir(dir):
-            fpath = dir + "/" + file
-            if os.path.islink(fpath):
-                fpath = os.readlink(fpath)
-                if not os.path.isabs(fpath):
-                    fpath = os.path.normpath(os.path.join(dir, fpath))
-               
+    bb.debug("Checking %s for binaries to process" % directory)
+    if not os.path.exists(directory):
+        return
+
+    dirs = os.listdir(directory)
+    for file in dirs:
+        fpath = directory + "/" + file
+        if os.path.islink(fpath):
+            fpath = os.readlink(fpath)
+            if not os.path.isabs(fpath):
+                fpath = os.path.normpath(os.path.join(directory, fpath))
+
+        if os.path.isdir(fpath):
+            process_dir(fpath, d)
+        else:
             #bb.note("Testing %s for relocatability" % fpath)
             p = sub.Popen([cmd, '-l', fpath],stdout=sub.PIPE,stderr=sub.PIPE)
             err, out = p.communicate()
@@ -64,6 +65,14 @@ def rpath_replace (path, d):
                 args = ":".join(new_rpaths)
                 #bb.note("Setting rpath to " + args)
                 sub.call([cmd, '-r', args, fpath])
+
+def rpath_replace (path, d):
+    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
+
+    for bindir in bindirs:
+        bb.note ("Processing directory " + bindir)
+        directory = path + "/" + bindir
+        process_dir (directory, d)
 
 python relocatable_binaries_preprocess() {
     rpath_replace(bb.data.expand('${SYSROOT_DESTDIR}', d), d)
