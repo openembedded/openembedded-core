@@ -10,7 +10,16 @@ RP 18/3/10
 Index: git/Makefile.in
 ===================================================================
 --- git.orig/Makefile.in	2010-03-17 16:05:17.000000000 +0000
-+++ git/Makefile.in	2010-03-18 18:49:37.000000000 +0000
++++ git/Makefile.in	2010-04-06 15:25:39.000000000 +0100
+@@ -25,7 +25,7 @@
+ MARK64=@MARK64@
+ VERSION=0.2
+ 
+-LIBDIR=$(PREFIX)/lib$(MARK64)
++LIBDIR=$(PREFIX)/lib
+ BINDIR=$(PREFIX)/bin
+ DATADIR=$(PREFIX)/var/pseudo
+ 
 @@ -34,7 +34,7 @@
  CFLAGS_DEFS=-DPSEUDO_PREFIX='"$(PREFIX)"' -DPSEUDO_SUFFIX='"$(SUFFIX)"' -DPSEUDO_VERSION='"$(VERSION)"'
  CFLAGS_DEBUG=-O2 -g
