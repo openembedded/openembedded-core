@@ -3,7 +3,7 @@ require linux.inc
 DESCRIPTION = "Linux kernel for OMAP processors"
 KERNEL_IMAGETYPE = "uImage"
 
-COMPATIBLE_MACHINE = "igep0020b"
+COMPATIBLE_MACHINE = "igep0020"
 
 DEFAULT_PREFERENCE_igep0020 = "1"
 
