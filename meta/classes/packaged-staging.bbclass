@@ -19,7 +19,7 @@ PSTAGE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_
 PSTAGE_PKGNAME    = "${PSTAGE_PKGPN}_${PSTAGE_PKGVERSION}_${PSTAGE_PKGARCH}.ipk"
 PSTAGE_PKG        = "${PSTAGE_DIR}/${PSTAGE_PKGPATH}/${PSTAGE_PKGNAME}"
 PSTAGE_WORKDIR   = "${TMPDIR}/pstage"
-PSTAGE_SCAN_CMD ?= "find ${PSTAGE_TMPDIR_STAGE} -name "*.la" -type f"
+PSTAGE_SCAN_CMD ?= "find ${PSTAGE_TMPDIR_STAGE} \( -name "*.la" -o -name "*-config" \) -type f"
 
 PSTAGE_NATIVEDEPENDS = "\
     shasum-native \
