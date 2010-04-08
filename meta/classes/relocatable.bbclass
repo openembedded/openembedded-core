@@ -21,7 +21,8 @@ def process_dir (directory, d):
         if os.path.islink(fpath):
             fpath = os.readlink(fpath)
             if not os.path.isabs(fpath):
-                fpath = os.path.normpath(os.path.join(directory, fpath))
+                # Skip symlinks
+                continue
 
         if os.path.isdir(fpath):
             process_dir(fpath, d)
