@@ -5,12 +5,13 @@ PREPROCESS_RELOCATE_DIRS ?= ""
 
 def process_dir (directory, d):
     import subprocess as sub
+    import stat
 
     cmd = bb.data.expand('${CHRPATH_BIN}', d)
     tmpdir = bb.data.getVar('TMPDIR', d)
     basedir = bb.data.expand('${base_prefix}', d)
 
-    bb.debug("Checking %s for binaries to process" % directory)
+    #bb.debug("Checking %s for binaries to process" % directory)
     if not os.path.exists(directory):
         return
 
@@ -26,6 +27,17 @@ def process_dir (directory, d):
             process_dir(fpath, d)
         else:
             #bb.note("Testing %s for relocatability" % fpath)
+
+            # We need read and write permissions for chrpath, if we don't have
+            # them then set them temporarily. Take a copy of the files
+            # permissions so that we can restore them afterwards.
+            perms = os.stat(fpath)[stat.ST_MODE]
+            if os.access(fpath, os.W_OK|os.R_OK):
+                perms = None
+            else:
+                # Temporarily make the file writeable so we can chrpath it
+                os.chmod(fpath, perms|stat.S_IRWXU)
+
             p = sub.Popen([cmd, '-l', fpath],stdout=sub.PIPE,stderr=sub.PIPE)
             err, out = p.communicate()
             # If returned succesfully, process stderr for results
@@ -63,8 +75,11 @@ def process_dir (directory, d):
             # if we have modified some rpaths call chrpath to update the binary
             if len(new_rpaths):
                 args = ":".join(new_rpaths)
-                #bb.note("Setting rpath to " + args)
+                #bb.note("Setting rpath for %s to %s" %(fpath, args))
                 sub.call([cmd, '-r', args, fpath])
+
+            if perms:
+                os.chmod(fpath, perms)
 
 def rpath_replace (path, d):
     bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
