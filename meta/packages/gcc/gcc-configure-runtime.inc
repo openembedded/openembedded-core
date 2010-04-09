@@ -2,7 +2,9 @@ require gcc-configure-common.inc
 
 EXTRA_OECONF_PATHS = " \
     --with-local-prefix=${STAGING_DIR_TARGET}${prefix} \
-    --with-gxx-include-dir=${includedir}/c++/"
+    --with-gxx-include-dir=${includedir}/c++/ \
+    --with-sysroot=${STAGING_DIR_TARGET} \
+    --with-build-sysroot=${STAGING_DIR_TARGET}"
 
 RUNTIMETARGET = "libgcc libssp libstdc++-v3"
 #  ?
