@@ -19,10 +19,8 @@ def process_dir (directory, d):
     for file in dirs:
         fpath = directory + "/" + file
         if os.path.islink(fpath):
-            fpath = os.readlink(fpath)
-            if not os.path.isabs(fpath):
-                # Skip symlinks
-                continue
+            # Skip symlinks
+            continue
 
         if os.path.isdir(fpath):
             process_dir(fpath, d)
