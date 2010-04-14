@@ -12,7 +12,7 @@
 # bitbake.conf set PSTAGING_ACTIVE = "0", this class sets to "1" if we're active
 #
 PSTAGE_PKGVERSION = "${PV}-${PR}"
-PSTAGE_PKGARCH    = "${BUILD_SYS}"
+PSTAGE_PKGARCH    = "${TARGET_ARCH}"
 PSTAGE_EXTRAPATH  ?= ""
 PSTAGE_PKGPATH    = "${DISTRO}/${OELAYOUT_ABI}${PSTAGE_EXTRAPATH}"
 PSTAGE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
@@ -29,6 +29,11 @@ PSTAGE_NATIVEDEPENDS = "\
 BB_STAMP_WHITELIST = "${PSTAGE_NATIVEDEPENDS}"
 
 python () {
+    if bb.data.inherits_class('native', d):
+            bb.data.setVar('PSTAGE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
+    elif bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d):
+            bb.data.setVar('PSTAGE_PKGARCH', bb.data.expand("${BUILD_ARCH}_${TARGET_ARCH}", d), d)
+
     pstage_allowed = True
 
     # These classes encode staging paths into the binary data so can only be
