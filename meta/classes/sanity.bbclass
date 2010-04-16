@@ -154,6 +154,14 @@ def check_sanity(e):
 			os.system(bb.data.expand("cd ${TMPDIR}/stamps; for i in */*do_populate_staging; do new=`echo $i | sed -e 's/do_populate_staging/do_populate_sysroot/'`; mv $i $new; done", e.data))
 			f = file(abifile, "w")
 			f.write(current_abi)
+		elif abi == "3" and current_abi == "4":
+                        bb.note("Converting staging layout from version 3 to layout version 4")
+                        if os.path.exists(bb.data.expand("${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS}", e.data)):
+                            os.system(bb.data.expand("mv ${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS} ${STAGING_BINDIR_CROSS}", e.data))
+                            os.system(bb.data.expand("ln -s ${STAGING_BINDIR_CROSS} ${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS}", e.data))
+
+                        f = file(abifile, "w")
+                        f.write(current_abi)
 		elif (abi != current_abi):
 			# Code to convert from one ABI to another could go here if possible.
 			messages = messages + "Error, TMPDIR has changed ABI (%s to %s) and you need to either rebuild, revert or adjust it at your own risk.\n" % (abi, current_abi)
