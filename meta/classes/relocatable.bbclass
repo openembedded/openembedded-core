@@ -18,6 +18,7 @@ def process_dir (directory, d):
     dirs = os.listdir(directory)
     for file in dirs:
         fpath = directory + "/" + file
+        fpath = os.path.normpath(fpath)
         if os.path.islink(fpath):
             # Skip symlinks
             continue
