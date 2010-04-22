@@ -96,8 +96,8 @@ do_prep_locale_tree() {
 		gunzip $i
 	done
 	cp -pPR ${PKGD}${base_libdir}/* $treedir/lib
-	if [ -f ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* ]; then
-		cp -pPR ${CROSS_DIR}/${TARGET_SYS}/lib/libgcc_s.* $treedir/lib
+	if [ -f ${STAGING_DIR_NATIVE}${prefix_native}/lib/libgcc_s.* ]; then
+		cp -pPR ${STAGING_DIR_NATIVE}/${prefix_native}/lib/libgcc_s.* $treedir/lib
 	fi
 	install -m 0755 ${PKGD}${bindir}/localedef $treedir/bin
 }

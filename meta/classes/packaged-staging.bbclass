@@ -128,7 +128,6 @@ def pstage_cleanpackage(pkgname, d):
 	else:
 		bb.note("No. Manually removing any installed files")
 		pstage_manualclean("sysroots", "STAGING_DIR", d)
-		pstage_manualclean("cross", "CROSS_DIR", d)
 		pstage_manualclean("deploy", "DEPLOY_DIR", d)
 
 	bb.utils.unlockfile(lf)
@@ -297,7 +296,6 @@ python packagedstage_stampfixing_eventhandler() {
 populate_sysroot_preamble () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		stage-manager -p ${STAGING_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-staging -u || true
-		stage-manager -p ${CROSS_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-cross -u || true
 	fi
 }
 
@@ -313,7 +311,6 @@ populate_sysroot_postamble () {
 		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
 			exit $exitcode
 		fi
-		stage-manager -p ${CROSS_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-cross -u -d ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}
 		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
 			exit $exitcode
 		fi
@@ -324,9 +321,7 @@ populate_sysroot_postamble () {
 packagedstaging_fastpath () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/sysroots/
-		mkdir -p ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}/
 		cp -fpPR ${SYSROOT_DESTDIR}/${STAGING_DIR}/* ${PSTAGE_TMPDIR_STAGE}/sysroots/ || /bin/true
-		cp -fpPR ${SYSROOT_DESTDIR}/${CROSS_DIR}/* ${PSTAGE_TMPDIR_STAGE}/cross/${BASE_PACKAGE_ARCH}/ || /bin/true
 	fi
 }
 

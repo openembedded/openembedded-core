@@ -46,8 +46,8 @@ def create_cross_env(bb,d):
         return ""
 
     import tarfile, socket, time
-    ice_dir = bb.data.expand('${CROSS_DIR}', d)
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
+    ice_dir = bb.data.expand("${STAGING_DIR_NATIVE}${prefix_native}")
     distro  = bb.data.expand('${DISTRO}', d)
     target_sys = bb.data.expand('${TARGET_SYS}',  d)
     target_prefix = bb.data.expand('${TARGET_PREFIX}',  d)
@@ -93,7 +93,7 @@ def create_cross_env(bb,d):
 
 def create_native_env(bb,d):
     import tarfile, socket, time
-    ice_dir = bb.data.expand('${CROSS_DIR}', d)
+    ice_dir = bb.data.expand("${STAGING_DIR_NATIVE}${prefix_native}")
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
     distro  = bb.data.expand('${DISTRO}', d)
     target_sys = bb.data.expand('${TARGET_SYS}',  d)
@@ -131,7 +131,7 @@ def create_native_env(bb,d):
 
 def create_cross_kernel_env(bb,d):
     import tarfile, socket, time
-    ice_dir = bb.data.expand('${CROSS_DIR}', d)
+    ice_dir = bb.data.expand("${STAGING_DIR_NATIVE}${prefix_native}")
     prefix  = bb.data.expand('${HOST_PREFIX}' , d)
     distro  = bb.data.expand('${DISTRO}', d)
     target_sys = bb.data.expand('${TARGET_SYS}',  d)

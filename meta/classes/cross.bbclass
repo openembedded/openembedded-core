@@ -40,9 +40,9 @@ target_base_libdir := "${base_libdir}"
 target_prefix := "${prefix}"
 
 # Overrides for paths
-prefix = "${CROSS_DIR}"
-base_prefix = "${prefix}"
-exec_prefix = "${prefix}"
+prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
+base_prefix = "${STAGING_DIR_NATIVE}"
+exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 base_sbindir = "${base_prefix}/bin"
 sbindir = "${exec_prefix}/bin"
 
