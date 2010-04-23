@@ -19,7 +19,7 @@ LINUXLIBCVERSION ?= "2.6.29"
 
 # Temporary preferred version overrides for PPC
 GCCVERSION_powerpc ?= "4.2.3"
-BINUVERSION_powerpc ?= "2.20"
+BINUVERSION_powerpc ?= "2.19"
 GLIBCVERSION_powerpc ?= "2.6.1"
 LINUXLIBCVERSION_powerpc ?= "2.6.20"
 PREFERRED_VERSION_u-boot-mkimage-native_powerpc ?= "2009.08"
