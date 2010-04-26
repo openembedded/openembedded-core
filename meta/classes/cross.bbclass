@@ -1,5 +1,4 @@
-# Disabled for now since the relocation paths are too long
-#inherit relocatable
+inherit relocatable
 
 # Cross packages are built indirectly via dependency,
 # no need for them to be a direct target of 'world'
