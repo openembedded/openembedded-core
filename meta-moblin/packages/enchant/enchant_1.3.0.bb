@@ -4,7 +4,7 @@ LICENSE     = "LGPL"
 DEPENDS     = "aspell"
 RDEPENDS    = "aspell"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 PR = "r1"
 

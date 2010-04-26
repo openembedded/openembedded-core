@@ -4,4 +4,4 @@ LICENSE = "GPL"
 
 DEPENDS = "clutter-0.6 libxml2 gtk+ neon"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

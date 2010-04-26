@@ -7,7 +7,7 @@ PR = "r3"
 SRC_URI = "${SOURCEFORGE_MIRROR}/wvware/wv-${PV}.tar.gz \
            file://pkgconfig.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 S = "${WORKDIR}/${PN}-${PV}"
 

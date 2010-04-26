@@ -12,6 +12,6 @@ SRC_URI = "http://www.zlib.net/zlib-1.2.3.tar.bz2 \
 
 DEPENDS = "libtool-cross"
 
-inherit autotools_stage
+inherit autotools
 
 BBCLASSEXTEND = "native nativesdk"

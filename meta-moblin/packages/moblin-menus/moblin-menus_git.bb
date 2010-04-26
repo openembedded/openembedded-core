@@ -10,4 +10,4 @@ S = "${WORKDIR}/git"
 
 FILES_${PN} += "${datadir}/desktop-directories/*"
 
-inherit autotools_stage
+inherit autotools

@@ -8,6 +8,6 @@ DEPENDS = "gtk+ enchant libxml2"
 SRC_URI = "http://releases.chipx86.com/libsexy/${PN}/${PN}-${PV}.tar.gz \
            file://libsexy-pkgconfig-fixes.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 

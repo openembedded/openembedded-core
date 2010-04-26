@@ -7,7 +7,7 @@ DEPENDS = "libgpg-error"
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${PV}.tar.gz \
            file://add-pkgconfig-support.patch;patch=1"
 
-inherit autotools_stage binconfig pkgconfig pkgconfig_stage
+inherit autotools binconfig pkgconfig pkgconfig_stage
 
 EXTRA_OECONF = "--without-pth --disable-asm --with-capabilities"
 

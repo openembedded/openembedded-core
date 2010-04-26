@@ -16,7 +16,7 @@ PR = "r4"
 
 S = "${WORKDIR}/git"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
                 --with-expat=${STAGING_DIR_HOST}${prefix} \

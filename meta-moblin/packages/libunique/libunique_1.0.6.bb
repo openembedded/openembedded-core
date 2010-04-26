@@ -5,4 +5,4 @@ DEPENDS = "glib-2.0 gtk+ dbus"
 
 S = "${WORKDIR}/unique-${PV}"
 
-inherit autotools_stage
+inherit autotools

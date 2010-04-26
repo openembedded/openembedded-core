@@ -10,4 +10,4 @@ EXTRA_OECONF = "--disable-shave"
 
 FILES_${PN} += "${datadir}/icons"
 
-inherit autotools_stage
+inherit autotools

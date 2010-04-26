@@ -3,7 +3,7 @@ SECTION = "x11/gnome"
 
 PR = "r1"
 
-inherit autotools_stage gnome pkgconfig
+inherit autotools gnome pkgconfig
 
 DEPENDS = "gtk+ libgcrypt libtasn1 libtasn1-native"
 

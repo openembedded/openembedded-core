@@ -9,4 +9,4 @@ PR = "r1"
 SRC_URI = "http://repository.maemo.org/pool/maemo/ossw/source/x/xsp/${PN}_${PV}.tar.gz"
 S = "${WORKDIR}/Xsp"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

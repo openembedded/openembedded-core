@@ -6,7 +6,7 @@ PR = "r2"
 
 PR = "r1"
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OEMAKE += "'infodir=${infodir}'"
 

@@ -7,7 +7,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/lame/lame-${PV}.tar.gz \
 	file://no-gtk1.patch;patch=1 \
 	file://Makefile-lm.patch;patch=1"
 
-inherit autotools_stage
+inherit autotools
 
 PACKAGES += "libmp3lame libmp3lame-dev"
 FILES_${PN} = "${bindir}/lame"

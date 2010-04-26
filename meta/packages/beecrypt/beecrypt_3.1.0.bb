@@ -9,7 +9,7 @@ SRC_URI="${SOURCEFORGE_MIRROR}/beecrypt/beecrypt-${PV}.tar.gz \
 
 PR = "r1"
 
-inherit autotools_stage
+inherit autotools
 acpaths=""
 
 EXTRA_OECONF="--with-arch=${TARGET_ARCH} --enable-shared --enable-static"

@@ -24,7 +24,7 @@ EXTRA_OECONF = " \
 
 S = "${WORKDIR}/trunk"
 
-inherit autotools_stage pkgconfig update-rc.d
+inherit autotools pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "NetworkManager"
 INITSCRIPT_PARAMS = "defaults 22"

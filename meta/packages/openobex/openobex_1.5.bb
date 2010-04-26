@@ -11,7 +11,7 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/bluetooth/openobex-${PV}.tar.gz \
            file://disable-cable-test.patch;patch=1 \
 	   file://libusb_crosscompile_check.patch;patch=1"
 
-inherit autotools_stage binconfig pkgconfig
+inherit autotools binconfig pkgconfig
 
 EXTRA_OECONF = "--enable-apps --enable-syslog --enable-dump \
                 --with-usb=${STAGING_LIBDIR}/.. --with-bluez=${STAGING_LIBDIR}/.."

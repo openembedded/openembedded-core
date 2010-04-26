@@ -6,7 +6,7 @@ PR = "r3"
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
-inherit autotools_stage pkgconfig gnome
+inherit autotools pkgconfig gnome
 
 PACKAGES =+ "librsvg-gtk librsvg-gtk-dbg librsvg-gtk-dev rsvg"
 FILES_${PN} = "${libdir}/*.so.*"

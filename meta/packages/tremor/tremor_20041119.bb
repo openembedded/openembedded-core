@@ -10,7 +10,7 @@ SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=4573;proto=http"
 
 S = "${WORKDIR}/Tremor"
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF=" --enable-shared --disable-rpath  "
 

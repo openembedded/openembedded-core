@@ -11,7 +11,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz \
 
 S = "${WORKDIR}/libmad-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "-enable-speed --enable-shared"
 # The ASO's don't take any account of thumb...

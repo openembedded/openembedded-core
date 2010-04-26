@@ -11,7 +11,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.tar.gz \
            file://configure-libtool.patch;patch=1 \
            file://absolutepaths.patch;patch=1 "
 	    
-inherit autotools_stage
+inherit autotools
 
 do_install_append() {
 	install -d ${D}${STAGING_INCDIR}/fakeroot/

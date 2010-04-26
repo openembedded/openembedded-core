@@ -12,7 +12,7 @@ SRC_URI = "http://www.mega-nerd.com/libsndfile/libsndfile-${PV}.tar.gz \
 
 S = "${WORKDIR}/libsndfile-${PV}"
 
-inherit autotools_stage lib_package pkgconfig
+inherit autotools lib_package pkgconfig
 
 do_configure_prepend_arm() {
 	export ac_cv_sys_largefile_source=1

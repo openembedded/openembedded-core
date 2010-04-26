@@ -11,7 +11,7 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/libiconv/libiconv-${PV}.tar.gz"
 
 S = "${WORKDIR}/libiconv-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF += "--enable-shared --enable-static"
 

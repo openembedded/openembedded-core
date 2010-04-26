@@ -17,7 +17,7 @@ EXTRA_OECONF = "--with-neon=${STAGING_EXECPREFIXDIR} \
                 --without-swig --with-apr=${STAGING_BINDIR_CROSS} \
                 --with-apr-util=${STAGING_BINDIR_CROSS}"
 
-inherit autotools_stage
+inherit autotools
 
 export LDFLAGS += " -L${STAGING_LIBDIR} "
 

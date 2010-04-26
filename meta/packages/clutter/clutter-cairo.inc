@@ -9,5 +9,5 @@ FILESPATH = "${FILE_DIRNAME}/clutter-cairo"
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${bindir}/flowers ${bindir}/clock"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 

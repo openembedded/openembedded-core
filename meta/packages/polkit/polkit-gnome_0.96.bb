@@ -10,7 +10,7 @@ EXTRA_OECONF = " --disable-scrollkeeper \
                  --disable-gtk-doc \
                  --disable-introspection "
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 FILES_${PN} += " ${datadir}/dbus-1 \
                  ${datadir}/PolicyKit \

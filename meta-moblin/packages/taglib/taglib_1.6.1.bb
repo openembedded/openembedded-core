@@ -10,7 +10,7 @@ SRC_URI = "http://developer.kde.org/~wheeler/files/src/taglib-${PV}.tar.gz \
 
 S = "${WORKDIR}/taglib-${PV}"
 
-inherit autotools_stage pkgconfig binconfig
+inherit autotools pkgconfig binconfig
 
 PACKAGES =+ "${PN}-c"
 FILES_${PN}-dbg += "${bindir}/taglib-config"

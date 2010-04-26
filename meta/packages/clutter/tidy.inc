@@ -8,7 +8,7 @@ BASE_CONF = "--disable-gtk-doc"
 DEPENDS = "${STDDEPENDS}"
 EXTRA_OECONF = "${BASE_CONF}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 PACKAGES =+ "tidy-examples"
 FILES_tidy-examples = "${bindir}/test-*"

@@ -11,7 +11,7 @@ S = "${WORKDIR}/${PN}-1.2beta3"
 
 PARALLEL_MAKE = ""
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = " --enable-fixed-point --with-ogg-libraries=${STAGING_LIBDIR} \
 		 --disable-float-api --disable-vbr \

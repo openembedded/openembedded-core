@@ -9,7 +9,7 @@ SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz \
            file://asneededfix.patch;patch=1"
 S = "${WORKDIR}/libproxy-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--without-kde --with-gnome --without-webkit --without-python --without-mozjs --without-networkmanager"
 

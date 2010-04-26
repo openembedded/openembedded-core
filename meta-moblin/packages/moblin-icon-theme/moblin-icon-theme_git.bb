@@ -9,4 +9,4 @@ BROKEN = "1"
 
 S = "${WORKDIR}/git"
 
-inherit autotools_stage
+inherit autotools

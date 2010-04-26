@@ -11,7 +11,7 @@ EXTRA_OECONF = "--with-xkb-rules-symlink=xorg"
 RDEPENDS_${PN} += "xkbcomp"
 FILES_${PN} += "${datadir}/X11/xkb"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 do_install_append () {
     install -d ${D}/usr/share/X11/xkb/compiled

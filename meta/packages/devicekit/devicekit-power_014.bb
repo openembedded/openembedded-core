@@ -5,7 +5,7 @@ DEPENDS = "devicekit glib-2.0 dbus-glib polkit"
 SRC_URI = "http://hal.freedesktop.org/releases/DeviceKit-power-${PV}.tar.gz"
 S = "${WORKDIR}/DeviceKit-power-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 do_configure_prepend() {
 	sed -i -e s:-nonet:\:g ${S}/doc/man/Makefile.am

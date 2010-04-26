@@ -5,4 +5,4 @@ LICENSE = "LGPL / MPL"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freeassociation/${P}.tar.gz"
 
-inherit autotools_stage
+inherit autotools

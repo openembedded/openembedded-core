@@ -7,4 +7,4 @@ PR = "r3"
 SRC_URI = "http://www.mega-nerd.com/SRC/libsamplerate-${PV}.tar.gz"
 S = "${WORKDIR}/libsamplerate-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

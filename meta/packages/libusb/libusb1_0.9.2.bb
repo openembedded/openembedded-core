@@ -12,7 +12,7 @@ SRC_URI = "\
 "
 S = "${WORKDIR}/libusb-${PV}"
 
-inherit autotools_stage pkgconfig binconfig lib_package
+inherit autotools pkgconfig binconfig lib_package
 
 PARALLEL_MAKE = ""
 EXTRA_OECONF = "--disable-build-docs"

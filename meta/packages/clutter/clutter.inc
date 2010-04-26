@@ -45,7 +45,7 @@ PACKAGE_ARCH_menlow = "${MACHINE_ARCH}"
 
 FILESPATH = "${FILE_DIRNAME}/clutter"
 
-inherit autotools_stage pkgconfig gtk-doc
+inherit autotools pkgconfig gtk-doc
 
 #check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points
 require clutter-fpu.inc

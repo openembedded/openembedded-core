@@ -13,7 +13,7 @@ S = "${WORKDIR}/git"
 DEPENDS = "libffi python-native gobject-introspection-native"
 DEPENDS_virtclass-native = "libffi-native python-native"
 
-inherit autotools_stage
+inherit autotools
 
 TARGET_CFLAGS += "-I${STAGING_INCDIR_NATIVE}/python2.5"
 

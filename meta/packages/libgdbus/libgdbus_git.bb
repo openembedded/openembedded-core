@@ -7,4 +7,4 @@ S        = "${WORKDIR}/git"
 
 SRC_URI  = "git://git.kernel.org/pub/scm/bluetooth/libgdbus.git;protocol=git"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

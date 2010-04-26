@@ -24,7 +24,7 @@ do_configure_prepend() {
     sed -i -e s:-Werror::g ${S}/libopkg/Makefile.am
 }
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 target_libdir := "${libdir}"
 EXTRA_OECONF_virtclass-native = "--with-opkglibdir=${target_libdir} --disable-gpg --disable-curl --disable-openssl"

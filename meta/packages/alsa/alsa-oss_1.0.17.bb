@@ -5,7 +5,7 @@ DEPENDS = "alsa-lib"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/oss-lib/alsa-oss-${PV}.tar.bz2"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure_prepend () {
 	touch NEWS README AUTHORS ChangeLog

@@ -7,7 +7,7 @@ HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "glib-2.0 gettext libxml2 bison-native flex-native"
 PR = "r1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz2 \
            file://check_fix.patch;patch=1 \

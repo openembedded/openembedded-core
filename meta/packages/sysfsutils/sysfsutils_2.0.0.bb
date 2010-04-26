@@ -6,7 +6,7 @@ PR = "r3"
 SRC_URI = "${SOURCEFORGE_MIRROR}/linux-diag/sysfsutils-${PV}.tar.gz"
 S = "${WORKDIR}/sysfsutils-${PV}"
 
-inherit autotools_stage
+inherit autotools
 
 PACKAGES_prepend = "libsysfs libsysfs-dbg libsysfs-dev "
 FILES_libsysfs = "${libdir}/*.so.*"

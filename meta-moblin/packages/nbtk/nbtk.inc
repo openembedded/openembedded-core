@@ -7,7 +7,7 @@ DEPENDS = "clutter-1.0 libccss clutter-imcontext"
 
 EXTRA_OECONF = "--disable-introspection"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure_prepend () {
 	echo "EXTRA_DIST=" > ${S}/gtk-doc.make

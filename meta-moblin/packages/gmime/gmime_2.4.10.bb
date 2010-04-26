@@ -4,7 +4,7 @@ SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 zlib"
 
-inherit gnome autotools_stage lib_package binconfig
+inherit gnome autotools lib_package binconfig
 
 SRC_URI += "file://iconv-detect.h \
             file://nodolt.patch;patch=1"

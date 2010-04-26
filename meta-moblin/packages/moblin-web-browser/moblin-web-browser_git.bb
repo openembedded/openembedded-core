@@ -21,4 +21,4 @@ FILES_${PN}-dbg += "${datadir}/moblin-web-browser/components/.debug/* ${libdir}/
 
 
 
-inherit autotools_stage
+inherit autotools

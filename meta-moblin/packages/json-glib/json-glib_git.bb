@@ -7,7 +7,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "glib-2.0"
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF = "--disable-introspection"
 

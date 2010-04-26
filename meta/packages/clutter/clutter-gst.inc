@@ -9,5 +9,5 @@ FILESPATH = "${FILE_DIRNAME}/clutter-gst"
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${bindir}/video-player ${bindir}/video-sink ${bindir}/audio"
 
-inherit autotools_stage pkgconfig gtk-doc
+inherit autotools pkgconfig gtk-doc
 

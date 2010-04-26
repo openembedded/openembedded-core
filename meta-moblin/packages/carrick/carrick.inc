@@ -7,7 +7,7 @@ RDEPENDS = "connman"
 
 FILES_${PN} += "${datadir}/icons/hicolor"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure_prepend () {
 	mkdir -p ${S}/build/autotools

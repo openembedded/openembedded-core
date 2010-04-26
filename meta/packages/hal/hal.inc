@@ -7,7 +7,7 @@ SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz"
 
 S = "${WORKDIR}/hal-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 DEPENDS = "virtual/kernel dbus-glib udev intltool intltool-native expat libusb gperf-native"
 RDEPENDS += "udev hal-info"

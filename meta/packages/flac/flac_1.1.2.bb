@@ -10,7 +10,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/flac/flac-${PV}.tar.gz \
 
 S = "${WORKDIR}/flac-${PV}"
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF = "--disable-oggtest --disable-id3libtest \
 		--with-ogg-libraries=${STAGING_LIBDIR} \

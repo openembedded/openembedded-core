@@ -6,7 +6,7 @@ PR = "r3"
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
-inherit autotools_stage pkgconfig gnome
+inherit autotools pkgconfig gnome
 
 SRC_URI = "svn://svn.gnome.org/svn/${PN};module=trunk"
 PV = "2.22.3+svnr${SRCREV}"

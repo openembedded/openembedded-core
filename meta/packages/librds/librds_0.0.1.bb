@@ -8,4 +8,4 @@ PR = "r1"
 
 SRC_URI = "http://download.berlios.de/rdsd/librds-${PV}.tar.gz"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

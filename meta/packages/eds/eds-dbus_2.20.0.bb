@@ -11,7 +11,7 @@ SRC_URI = "http://ftp.gnome.org/pub/GNOME/mobile/2.23/2.23.92/sources/evolution-
 
 S = "${WORKDIR}/evolution-data-server-dbus-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"

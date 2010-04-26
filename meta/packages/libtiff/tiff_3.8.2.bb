@@ -7,7 +7,7 @@ PR = "r2"
 SRC_URI = "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${PV}.tar.gz \
            file://libtool2.patch;patch=1"
 
-inherit autotools_stage
+inherit autotools
 
 PACKAGES =+ "tiffxx tiffxx-dbg tiffxx-dev tiff-utils tiff-utils-dbg"
 FILES_tiffxx = "${libdir}/libtiffxx.so.*"

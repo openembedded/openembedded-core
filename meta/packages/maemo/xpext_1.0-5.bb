@@ -13,7 +13,7 @@ S = "${WORKDIR}/xpext-1.0"
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPV})"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 do_configure_prepend () {
   cd ${S}

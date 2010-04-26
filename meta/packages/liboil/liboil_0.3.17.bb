@@ -7,6 +7,6 @@ PR = "r2"
 SRC_URI = "http://liboil.freedesktop.org/download/${P}.tar.gz \
            file://no-tests.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 ARM_INSTRUCTION_SET = "arm"

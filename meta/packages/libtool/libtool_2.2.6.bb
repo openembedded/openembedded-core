@@ -12,7 +12,7 @@ FILES_libltdl = "${libdir}/libltdl.so.*"
 FILES_libltdl-dev = "${libdir}/libltdl.* ${includedir}/ltdl.h"
 FILES_libltdl-dbg = "${libdir}/.debug/"
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_AUTORECONF = "--exclude=libtoolize"
 

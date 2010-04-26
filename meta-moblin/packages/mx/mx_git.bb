@@ -6,7 +6,7 @@ PR = "r1"
 DEPENDS = "clutter-1.0 clutter-imcontext"
 S = "${WORKDIR}/git"
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF = "--disable-introspection --without-clutter-gesture"
 

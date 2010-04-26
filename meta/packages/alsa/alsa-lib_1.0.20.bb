@@ -13,7 +13,7 @@ ARM_INSTRUCTION_SET = "arm"
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://fix-tstamp-declaration.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 require alsa-fpu.inc
 EXTRA_OECONF += "${@get_alsa_fpu_setting(bb, d)} "

@@ -37,7 +37,7 @@ TARGET_LDFLAGS = "-Wl,-rpath,${libdir}/xulrunner-${XULVERSION}"
 
 export target_alias=${TARGET_PREFIX}
 
-inherit autotools_stage mozilla
+inherit autotools mozilla
 
 acpaths = "-I ${S}/build/autoconf "
 

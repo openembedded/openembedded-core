@@ -5,7 +5,7 @@ PR = "r1"
 
 SRC_URI = "http://poppler.freedesktop.org/${PN}-${PV}.tar.gz"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = " --enable-xpdf-headers \
 		 --disable-gtk-test \

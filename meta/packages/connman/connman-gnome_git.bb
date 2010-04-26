@@ -6,4 +6,4 @@ PR = "r0"
 
 S = "${WORKDIR}/git"
 
-inherit autotools_stage
+inherit autotools

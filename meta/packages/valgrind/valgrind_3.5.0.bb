@@ -11,7 +11,7 @@ S = "${WORKDIR}/valgrind-${PV}"
 
 COMPATIBLE_HOST = 'i.86.*-linux'
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF = "--enable-tls"
 

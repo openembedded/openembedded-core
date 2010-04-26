@@ -6,4 +6,4 @@ RDEPENDS = "xdg-user-dirs"
 
 FILES_${PN} =+ "${datadir}/dbus-1/services/"
 
-inherit autotools_stage
+inherit autotools

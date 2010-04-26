@@ -6,5 +6,5 @@ SRC_URI = "http://download.moblin.org/sources/moblin-panel-pasteboard/0.0/moblin
 
 FILES_${PN} += "${datadir}/dbus-1/services"
 
-inherit autotools_stage
+inherit autotools
 

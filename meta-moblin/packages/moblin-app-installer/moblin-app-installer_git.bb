@@ -9,4 +9,4 @@ PR = "r0"
 S = "${WORKDIR}/git"
 DEPENDS = "clutter-1.0 glib-2.0 nbtk libxml2 gtk+ gnome-packagekit opkg"
 
-inherit autotools_stage
+inherit autotools

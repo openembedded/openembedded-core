@@ -15,6 +15,6 @@ SRC_URI = "svn://anonymous@svn.gnome.org/svn/gtkhtml2/;module=trunk \
 
 S = "${WORKDIR}/trunk"
 
-inherit pkgconfig autotools_stage
+inherit pkgconfig autotools
 
 EXTRA_OECONF = " --disable-accessibility"

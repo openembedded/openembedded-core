@@ -11,7 +11,7 @@ PACKAGES =+ "${PN}-gnome ${PN}-gnome-dev "
 FILES_${PN}-gnome = "${libdir}/libgsf-gnome-1.so.*"
 FILES_${PN}-gnome-dev = "${libdir}/libgsf-gnome-1.* ${includedir}/libgsf-1/gsf-gnome"
 
-inherit autotools_stage pkgconfig gnome gconf
+inherit autotools pkgconfig gnome gconf
 
 EXTRA_OECONF = "\
 		--without-python \

@@ -10,7 +10,7 @@ S = "${WORKDIR}/Mesa-${PV}"
 
 PROVIDES = "virtual/libgl"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-glu \
                 --disable-glw \

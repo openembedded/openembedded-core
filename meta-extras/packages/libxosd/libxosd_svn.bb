@@ -11,7 +11,7 @@ SRC_URI = "svn://libxosd.svn.sourceforge.net/svnroot/libxosd/source;module=curre
 
 S = "${WORKDIR}/current"
 
-inherit autotools_stage binconfig
+inherit autotools binconfig
 
 PACKAGES =+ "${PN}-examples-dbg ${PN}-examples"
 FILES_${PN}-examples = "${bindir}/osd_cat"

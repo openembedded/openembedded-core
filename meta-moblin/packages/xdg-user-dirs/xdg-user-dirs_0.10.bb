@@ -4,7 +4,7 @@ SRC_URI = "http://user-dirs.freedesktop.org/releases/xdg-user-dirs-0.10.tar.gz \
 DEPENDS = "gettext"
 PR = "r1"
 
-inherit autotools_stage
+inherit autotools
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/skel/.config/

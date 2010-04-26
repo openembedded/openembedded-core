@@ -10,7 +10,7 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--disable-shave --disable-introspection --disable-maintainer-flags"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure_prepend () {
 	 echo "EXTRA_DIST=" > ${S}/gtk-doc.make

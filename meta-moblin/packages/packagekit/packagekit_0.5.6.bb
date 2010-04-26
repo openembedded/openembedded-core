@@ -5,7 +5,7 @@ LICENSE = "GPL"
 DEPENDS = "gtk+ python polkit dbus (>= 1.1.1) dbus-glib glib-2.0 sqlite3 opkg intltool intltool-native (>= 0.37.1) connman"
 RDEPENDS_${PN} = "opkg"
 
-inherit gnome autotools_stage
+inherit gnome autotools
 
 SRC_URI = "http://www.packagekit.org/releases/PackageKit-${PV}.tar.gz \
            file://configurefix.patch;patch=1 \

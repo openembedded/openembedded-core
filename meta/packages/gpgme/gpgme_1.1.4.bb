@@ -7,7 +7,7 @@ PR = "r4"
 EXTRA_OECONF = "--with-pth=${STAGING_DIR_HOST} --without-pth-test \
                 --with-gpg=${bindir}/gpg --without-gpgsm"
 
-inherit autotools_stage binconfig
+inherit autotools binconfig
 
 PACKAGES =+ "${PN}-pth ${PN}-pthread"
 FILES_${PN}-pth = "${libdir}/libgpgme-pth.so.*"

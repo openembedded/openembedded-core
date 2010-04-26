@@ -21,7 +21,7 @@ DEBIAN_NOAUTONAME_fontconfig-utils = "1"
 
 PARALLEL_MAKE = ""
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 export HASDOCBOOK="no"
 

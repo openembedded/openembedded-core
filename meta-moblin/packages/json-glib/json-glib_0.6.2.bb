@@ -4,4 +4,4 @@ PR = "r0"
 
 DEPENDS = "glib-2.0"
 
-inherit autotools_stage
+inherit autotools

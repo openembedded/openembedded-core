@@ -9,4 +9,4 @@ FILES_libdrm-tests = "${bindir}/dr* ${bindir}/mode*"
 
 LEAD_SONAME = "libdrm.so"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

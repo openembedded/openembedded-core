@@ -6,7 +6,7 @@ PR = "r1"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-glib/${P}.tar.gz"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 FILES_${PN} += "${datadir}/telepathy \
 		${datadir}/dbus-1"

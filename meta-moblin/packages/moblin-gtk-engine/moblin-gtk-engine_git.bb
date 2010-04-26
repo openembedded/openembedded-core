@@ -8,7 +8,7 @@ DEPENDS = "gtk+"
 
 S = "${WORKDIR}/git"
 
-inherit autotools_stage
+inherit autotools
 
 FILES_${PN} = "${libdir}/gtk-2.0/*/engines/*.so ${datadir}/icons ${datadir}/themes"
 FILES_${PN}-dev = "${libdir}/gtk-2.0/*/engines/*"

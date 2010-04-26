@@ -11,6 +11,6 @@ do_configure_prepend() {
 	sed -i -e s:-nonet:\:g ${S}/doc/man/Makefile.am
 }	
 
-inherit autotools_stage
+inherit autotools
 
 FILES_${PN} += "${datadir}/dbus-1/"

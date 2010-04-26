@@ -9,7 +9,7 @@ PR = "r5"
 SRC_URI = "http://www.vorbis.com/files/${PV}/unix/libvorbis-${PV}.tar.gz \
            file://m4.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 # vorbisfile.c reveals a problem in the gcc register spilling for the
 # thumb instruction set...

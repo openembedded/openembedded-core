@@ -9,4 +9,4 @@ SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
 
 S = "${WORKDIR}/${PN}"
 
-inherit autotools_stage pkgconfig gettext
+inherit autotools pkgconfig gettext

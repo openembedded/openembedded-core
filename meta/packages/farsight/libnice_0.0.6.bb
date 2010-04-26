@@ -5,7 +5,7 @@ SRC_URI = "http://nice.freedesktop.org/releases/libnice-${PV}.tar.gz"
 LICENSE = "LGPL/MPL"
 DEPENDS = "glib-2.0 gstreamer"
 
-inherit autotools_stage
+inherit autotools
 AUTOTOOLS_STAGE_PKGCONFIG = "1"
 
 FILES_${PN} += "${libdir}/gstreamer-0.10/*.so"

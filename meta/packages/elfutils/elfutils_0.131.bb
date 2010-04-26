@@ -8,7 +8,7 @@ SRC_URI = "http://distro.ibiblio.org/pub/linux/distributions/gentoo/distfiles/el
 	   file://gcc-4.3_support.diff;patch=1 \
 	   file://gnu_inline.diff;patch=1"
 
-inherit autotools_stage
+inherit autotools
 
 # Package binaries that overlap with binutils separately
 PACKAGES =+ "${PN}-binutils"

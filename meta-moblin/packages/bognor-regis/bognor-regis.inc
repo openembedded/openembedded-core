@@ -6,4 +6,4 @@ DEPENDS = "glib-2.0 dbus-glib gtk+ libnotify gupnp gupnp-av bickley"
 
 FILES_${PN} += "${datadir}/dbus-1/services"
 
-inherit autotools_stage
+inherit autotools

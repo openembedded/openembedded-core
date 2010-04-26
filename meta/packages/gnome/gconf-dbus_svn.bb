@@ -10,7 +10,7 @@ PV = "2.16.0+svnr${SRCREV}"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http"
 
-inherit pkgconfig autotools_stage
+inherit pkgconfig autotools
 S = "${WORKDIR}/trunk"
 
 PARALLEL_MAKE = ""

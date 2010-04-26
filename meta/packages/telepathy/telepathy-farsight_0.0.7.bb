@@ -6,7 +6,7 @@ LICENSE = "LGPLv2"
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-farsight/${P}.tar.gz \
 "
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF = "--disable-python"
 

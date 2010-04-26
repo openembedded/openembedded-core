@@ -17,7 +17,7 @@ EXTRA_OECONF = "--with-apr=${STAGING_BINDIR_CROSS}/apr-1-config \
 		--with-expat=${STAGING_DIR_HOST}${prefix}"
 
 
-inherit autotools_stage lib_package binconfig
+inherit autotools lib_package binconfig
 
 OE_BINCONFIG_EXTRA_MANGLE = " -e 's:location=source:location=installed:'"
 

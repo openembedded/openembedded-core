@@ -20,7 +20,7 @@ SRC_URI_append_linux-uclibcgnueabi = " file://gettext-error_print_progname.patch
 
 PARALLEL_MAKE = ""
 
-inherit autotools_stage
+inherit autotools
 
 EXTRA_OECONF += "--without-lispdir \
 		 --disable-csharp \

@@ -1,6 +1,6 @@
 LICENSE = "GPL"
 inherit gnome
-inherit autotools_stage
+inherit autotools
 PR = "r2"
 
 SRC_URI += "file://pkgconfig.patch;patch=1"

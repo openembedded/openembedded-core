@@ -7,5 +7,5 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.gz \
 	  "
 export LTCC = "${CC}"
 
-inherit autotools_stage
+inherit autotools
 

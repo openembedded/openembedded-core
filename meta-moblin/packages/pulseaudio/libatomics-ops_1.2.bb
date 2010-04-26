@@ -11,4 +11,4 @@ S = "${WORKDIR}/libatomic_ops-${PV}"
 
 ALLOW_EMPTY_${PN} = "1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

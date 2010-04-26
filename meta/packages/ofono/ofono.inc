@@ -2,7 +2,7 @@ HOMEPAGE = "http://www.ofono.org"
 SUMMARY  = "open source telephony"
 LICENSE  = "GPL"
 
-inherit autotools_stage pkgconfig update-rc.d
+inherit autotools pkgconfig update-rc.d
 
 DEPENDS  = "dbus glib-2.0"
 

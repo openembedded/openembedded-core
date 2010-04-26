@@ -13,4 +13,4 @@ FILES_${PN} += "${base_libdir}/libproc-*.so"
 SRC_URI = "http://procps.sourceforge.net/procps-${PV}.tar.gz \
            file://install.patch;patch=1"
 
-inherit autotools_stage
+inherit autotools

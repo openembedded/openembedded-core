@@ -17,7 +17,7 @@ EXTRA_OECONF = "--enable-included-printf=no"
 
 S = "${WORKDIR}/glib-${PV}"
 
-inherit autotools_stage pkgconfig gettext
+inherit autotools pkgconfig gettext
 
 require glib-2.0.inc
 

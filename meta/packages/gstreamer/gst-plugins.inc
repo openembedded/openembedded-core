@@ -3,7 +3,7 @@ SECTION = "multimedia"
 PRIORITY = "optional"
 DEPENDS = "gstreamer"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2"
 

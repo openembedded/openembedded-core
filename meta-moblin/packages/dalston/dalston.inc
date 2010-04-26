@@ -4,4 +4,4 @@ LICENSE = "LGPLv2.1"
 
 DEPENDS = "glib-2.0 gtk+ pulseaudio libcanberra libnotify nbtk mutter-moblin"
 
-inherit autotools_stage
+inherit autotools

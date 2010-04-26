@@ -10,7 +10,7 @@ SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/libart_lgpl/2.3/libart_lgpl-${
        file://${ART_CONFIG} \
        file://Makefile.am.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 DEPENDS = ""
 

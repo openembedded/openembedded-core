@@ -10,7 +10,7 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxslt-${PV}.tar.gz \
            file://doublefix.patch;patch=1"
 S = "${WORKDIR}/libxslt-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--without-python --without-debug --without-mem-debug --without-crypto"
 

@@ -8,5 +8,5 @@ PR = "r2"
 SRC_URI = "${SOURCEFORGE_MIRROR}/gswitchit/libxklavier-${PV}.tar.bz2 \
            file://pkgconfigfix.patch;patch=1"
 
-inherit autotools_stage
+inherit autotools
 

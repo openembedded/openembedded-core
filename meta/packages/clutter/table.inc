@@ -4,7 +4,7 @@ LICENSE = "LGPL"
 
 DEPENDS = "clutter-gst-0.6 gnome-vfs"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 do_install() {
 	install -d ${D}${bindir}

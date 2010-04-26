@@ -3,7 +3,7 @@ DEPENDS = "gtk+ eds-dbus gconf"
 PV = "0.4.4+git${SRCPV}"
 PR = "r0"
 
-inherit autotools_stage pkgconfig lib_package
+inherit autotools pkgconfig lib_package
 
 SRC_URI = "git://git.gnome.org/jana;protocol=git"
 S = "${WORKDIR}/git/"

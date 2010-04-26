@@ -8,7 +8,7 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz
            file://fix_asneeded.patch;patch=1 \
            file://no-examples.patch;patch=1"
 
-inherit autotools_stage pkgconfig gettext
+inherit autotools pkgconfig gettext
 
 EXTRA_OECONF = "--with-introspect-xml=${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml"
 

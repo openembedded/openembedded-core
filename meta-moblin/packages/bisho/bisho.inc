@@ -4,6 +4,6 @@ LICENSE = "GPLv2"
 
 DEPENDS = "gtk+ mojito nbtk"
 
-inherit autotools_stage
+inherit autotools
 
 FILES_${PN} += "${datadir}/icons/"

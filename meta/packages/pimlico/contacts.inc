@@ -5,7 +5,7 @@ DEPENDS = "glib-2.0 gtk+ eds-dbus"
 DEPENDS_append_poky = " libowl"
 RDEPENDS = "libedata-book"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 OWL = "--disable-owl"
 OWL_poky = "--enable-owl"

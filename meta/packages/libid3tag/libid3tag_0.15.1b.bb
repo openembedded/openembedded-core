@@ -10,6 +10,6 @@ SRC_URI = "ftp://ftp.mars.org/pub/mpeg/libid3tag-${PV}.tar.gz \
 
 S = "${WORKDIR}/libid3tag-${PV}"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "-enable-speed"

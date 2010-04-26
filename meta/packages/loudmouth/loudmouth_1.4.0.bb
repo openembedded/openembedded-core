@@ -6,4 +6,4 @@ PR = "r2"
 
 SRC_URI = "http://ftp.imendio.com/pub/imendio/${PN}/src/${PN}-${PV}.tar.bz2"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

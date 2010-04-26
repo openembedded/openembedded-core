@@ -7,7 +7,7 @@ DEPENDS = "glib-2.0 gnutls libxml2"
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${PN}/2.2/${PN}-${PV}.tar.bz2"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_${PN}-dev = "${includedir}/ ${libdir}/"

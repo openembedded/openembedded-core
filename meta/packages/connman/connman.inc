@@ -16,7 +16,7 @@ EXTRA_OECONF += " \
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 . stop 22 0 1 6 ."
 
-inherit autotools_stage pkgconfig update-rc.d
+inherit autotools pkgconfig update-rc.d
 
 do_install_append() {
     install -d ${D}${sysconfdir}/init.d/

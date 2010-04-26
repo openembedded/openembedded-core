@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 DEPENDS = "file gtk+ gstreamer gamin dbus poppler libexif libgsf libgnomecanvas"
 HOMEPAGE = "http://www.tracker-project.org/"
 
-inherit autotools_stage pkgconfig gnome gettext
+inherit autotools pkgconfig gnome gettext
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/tracker/0.7/tracker-${PV}.tar.bz2 \
            file://munge-configure.ac-cross-compile.patch;patch=1 \

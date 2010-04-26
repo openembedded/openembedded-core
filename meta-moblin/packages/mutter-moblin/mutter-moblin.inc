@@ -23,7 +23,7 @@ ASNEEDED = ""
 
 EXTRA_OECONF = "--enable-ahoghill --enable-netpanel --enable-people"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure_prepend () {
 	rm -f ${S}/build/autotools/gtk-doc.m4

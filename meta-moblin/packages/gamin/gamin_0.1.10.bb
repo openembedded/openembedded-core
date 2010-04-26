@@ -6,4 +6,4 @@ SRC_URI = "http://www.gnome.org/~veillard/gamin/sources/gamin-${PV}.tar.gz \
 
 EXTRA_OECONF = " --without-python " 
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

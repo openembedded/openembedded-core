@@ -3,7 +3,7 @@ SECTION = "base"
 LICENSE = "GPL"
 DEPENDS = "udev zlib ncurses virtual/libintl gettext"
 
-inherit autotools_stage
+inherit autotools
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v2.15/util-linux-ng-${PV}.tar.bz2 \
            file://MCONFIG \

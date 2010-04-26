@@ -12,7 +12,7 @@ SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
 	   file://kernel-asm-page.patch;patch=1 "
 S = "${WORKDIR}/SDL-${PV}"
 
-inherit autotools_stage binconfig pkgconfig nativesdk
+inherit autotools binconfig pkgconfig nativesdk
 
 EXTRA_OECONF = "--disable-static --disable-debug --disable-cdrom --enable-threads --enable-timers --enable-endian \
                 --enable-file --disable-oss --disable-alsa --disable-esd --disable-arts \

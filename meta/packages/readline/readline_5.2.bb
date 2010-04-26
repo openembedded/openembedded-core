@@ -16,7 +16,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/readline/readline-${PV}.tar.gz \
 
 S = "${WORKDIR}/readline-${PV}"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure () {
 	install -m 0644 ${WORKDIR}/acinclude.m4 ${S}/

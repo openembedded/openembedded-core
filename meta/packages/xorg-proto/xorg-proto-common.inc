@@ -11,7 +11,7 @@ S = "${WORKDIR}/${XORG_PN}-${PV}"
 
 DEPENDS = "util-macros"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
 RDEPENDS_${PN}-dev = ""

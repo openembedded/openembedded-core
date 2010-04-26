@@ -11,6 +11,6 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
 
 EXTRA_OECONF = "--disable-Werror --disable-device-mapper"
 
-inherit autotools_stage pkgconfig gettext
+inherit autotools pkgconfig gettext
 
 BBCLASSEXTEND = "native"

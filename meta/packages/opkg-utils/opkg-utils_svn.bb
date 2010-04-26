@@ -9,7 +9,7 @@ PR = "r6"
 SRC_URI = "svn://svn.openmoko.org/trunk/src/host/;module=opkg-utils;proto=http \
            file://index-ignore-filenotfound.patch;patch=1"
 
-inherit autotools_stage
+inherit autotools
 
 S = "${WORKDIR}/opkg-utils"
 

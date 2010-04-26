@@ -24,4 +24,4 @@ FILES_${PN} += "${libdir}/matchbox-panel/*.so \
                 ${datadir}/matchbox-panel/startup/*.png "
 FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

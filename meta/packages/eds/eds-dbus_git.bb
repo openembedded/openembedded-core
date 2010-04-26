@@ -13,7 +13,7 @@ SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
 
 S = "${WORKDIR}/git"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"

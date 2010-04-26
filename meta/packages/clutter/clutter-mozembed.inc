@@ -10,5 +10,5 @@ FILES_${PN} =+ "${datadir}/cluttermozembed/chrome/"
 
 EXTRA_OECONF = "--enable-plugins"
 
-inherit autotools_stage pkgconfig gtk-doc
+inherit autotools pkgconfig gtk-doc
 

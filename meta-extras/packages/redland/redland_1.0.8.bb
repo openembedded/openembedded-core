@@ -6,4 +6,4 @@ PR = "r3"
 
 EXTRA_OECONF = "--with-bdb-lib=${STAGING_LIBDIR} --with-bdb-include=${STAGING_INCDIR} --with-sqlite=no"
 
-inherit autotools_stage
+inherit autotools

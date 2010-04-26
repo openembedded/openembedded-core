@@ -13,4 +13,4 @@ SRC_URI = "http://projects.o-hand.com/matchbox/sources/optional-dependencies/Xse
 
 S = "${WORKDIR}/Xsettings-client-0.10"
 
-inherit autotools_stage gettext
+inherit autotools gettext

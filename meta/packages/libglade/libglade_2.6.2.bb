@@ -4,7 +4,7 @@ SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "gtk+ gtk-doc-native"
 
-inherit autotools_stage pkgconfig gnome
+inherit autotools pkgconfig gnome
 
 SRC_URI += "file://glade-cruft.patch;patch=1 file://no-xml2.patch;patch=1"
 

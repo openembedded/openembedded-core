@@ -10,7 +10,7 @@ DEPENDS = "virtual/libx11"
 SRC_URI = "http://libmpeg2.sourceforge.net/files/mpeg2dec-${PV}.tar.gz"
 S = "${WORKDIR}/mpeg2dec-0.4.0"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--enable-shared --disable-sdl --with-x"
 

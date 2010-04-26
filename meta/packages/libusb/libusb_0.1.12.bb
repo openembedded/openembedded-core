@@ -8,7 +8,7 @@ PR = "r5"
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.gz \
            file://configure_fix.patch;patch=1"
 
-inherit autotools_stage pkgconfig binconfig lib_package
+inherit autotools pkgconfig binconfig lib_package
 
 PARALLEL_MAKE = ""
 EXTRA_OECONF = "--disable-build-docs"

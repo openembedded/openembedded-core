@@ -4,7 +4,7 @@ LICENSE = "LGPL"
 HOMEPAGE = "http://people.suug.ch/~tgr/libnl/"
 PRIORITY = "optional"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 PR = "r1"
 

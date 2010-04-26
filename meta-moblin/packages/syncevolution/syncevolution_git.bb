@@ -10,7 +10,7 @@ EXTRA_OECONF = "--enable-gui=moblin"
 
 S = "${WORKDIR}/git"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure_prepend () {
     ${S}/gen-autotools.sh

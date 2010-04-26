@@ -8,4 +8,4 @@ PR = "r4"
 SRC_URI = "http://www.vorbis.com/files/1.0.1/unix/libogg-${PV}.tar.gz \
 file://m4.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig

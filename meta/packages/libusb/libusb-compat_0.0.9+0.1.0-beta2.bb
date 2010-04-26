@@ -15,7 +15,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-0.1.0-beta2.tar.bz2 \
 
 S = "${WORKDIR}/libusb-compat-0.1.0-beta2"
 
-inherit autotools_stage pkgconfig binconfig lib_package
+inherit autotools pkgconfig binconfig lib_package
 
 PARALLEL_MAKE = ""
 EXTRA_OECONF = "--disable-build-docs"

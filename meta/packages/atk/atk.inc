@@ -5,6 +5,6 @@ LICENSE = "LGPL"
 
 DEPENDS = "glib-2.0 gtk-doc-native"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-glibtest"

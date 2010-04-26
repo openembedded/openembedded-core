@@ -11,7 +11,7 @@ S = "${WORKDIR}/icu/source"
 PARALLEL_MAKE = ""
 FULL_OPTIMIZATION_arm = "-Os"
 
-inherit autotools_stage pkgconfig binconfig
+inherit autotools pkgconfig binconfig
 
 do_configure() {
 	libtoolize --force

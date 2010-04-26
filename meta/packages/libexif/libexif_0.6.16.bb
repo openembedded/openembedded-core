@@ -6,7 +6,7 @@ DEPENDS = "gettext"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libexif/libexif-${PV}.tar.bz2"
 
-inherit autotools_stage
+inherit autotools
 
 do_configure_append() {
 	sed -i s:doc\ binary:binary:g Makefile

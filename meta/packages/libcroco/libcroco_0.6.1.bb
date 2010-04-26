@@ -4,6 +4,6 @@ DEPENDS = "glib-2.0 libxml2 zlib"
 LICENSE = "LGPL"
 PR = "r3"
 
-inherit autotools_stage pkgconfig gnome
+inherit autotools pkgconfig gnome
 
 SRC_URI_append = " file://croco.patch;patch=1 "

@@ -8,7 +8,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gst-python/gst-python-${PV}.tar.
            file://python-path.patch;patch=1"
 S = "${WORKDIR}/gst-python-${PV}"
 
-inherit autotools_stage distutils-base pkgconfig
+inherit autotools distutils-base pkgconfig
 
 EXTRA_OECONF += "--with-python-includes=${STAGING_INCDIR}/../"
 

@@ -8,7 +8,7 @@ SRC_URI = "http://ftp.musicbrainz.org/pub/musicbrainz/libmusicbrainz-2.1.3.tar.g
            file://gcc43_fix.patch;patch=1 \
            file://autofoo.patch;patch=1"
 
-inherit autotools_stage pkgconfig
+inherit autotools pkgconfig
 
 
 

@@ -11,7 +11,7 @@ SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-mana
 
 S = "${WORKDIR}/matchbox-window-manager-2"
 
-inherit autotools_stage pkgconfig update-alternatives
+inherit autotools pkgconfig update-alternatives
 
 # Change this to x-session-manager->matchbox-session and put in
 # matchbox-session, then change this to x-window-manager to
