@@ -22,5 +22,8 @@ do_install () {
 		for f in *.h *.c libgcc.mvars; do
 			cp ${B}/gcc/$f ${D}${includedir}/gcc-build-internal/
 		done
+		if [ -f libgcc.mvars]; then
+			cp ${B}/gcc/libgcc.mvars ${D}${includedir}/gcc-build-internal/
+		fi
 	fi
 }
