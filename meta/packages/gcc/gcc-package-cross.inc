@@ -13,7 +13,7 @@ do_install () {
 
 	# Remove things we don't need but keep share/java
 	for d in info man share/doc share/locale share/man share/info; do
-		rm -rf ${D}${CROSS_DIR}/$d
+		rm -rf ${D}${STAGING_DIR_NATIVE}${prefix_native}/$d
 	done
 
 	# gcc-runtime requires some headers, we stash them here

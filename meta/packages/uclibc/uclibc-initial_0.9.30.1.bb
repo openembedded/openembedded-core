@@ -9,7 +9,7 @@ do_install() {
 	# Install initial headers into the cross dir
 	make V=1 CC="${CC}" PREFIX=${D} DEVEL_PREFIX=${prefix}/ RUNTIME_PREFIX=/ \
 		install_headers
-	#ln -sf include ${CROSS_DIR}/${TARGET_SYS}/sys-include
+	#ln -sf include ${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/sys-include
 
 	# This conflicts with the c++ version of this header
 	rm -f ${D}${includedir}/bits/atomicity.h

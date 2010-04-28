@@ -9,8 +9,8 @@ do_strip_modules () {
 					if ! [ -d "$module"  ] ; then
 						${STRIP} -v -g $module
 					fi
-				done	
-#				NM="${CROSS_DIR}/bin/${HOST_PREFIX}nm" OBJCOPY="${CROSS_DIR}/bin/${HOST_PREFIX}objcopy" strip_module $modules
+				done
+#				NM="${STAGING_BINDIR_NATIVE}/${HOST_PREFIX}nm" OBJCOPY="${STAGING_BINDIR_NATIVE}/${HOST_PREFIX}objcopy" strip_module $modules
 			fi
 		fi
 	done

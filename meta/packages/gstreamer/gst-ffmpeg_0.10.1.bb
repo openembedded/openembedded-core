@@ -24,7 +24,7 @@ EXTRA_OECONF = "--disable-sdltest --disable-ffplay --disable-freetypetest \
 
 # We do this because the install program is called with -s which causes it to
 # call "strip" and it then mangles cross compiled stuff..
-PATH_prepend="${CROSS_DIR}/${TARGET_SYS}/bin:"
+PATH_prepend="${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin:"
 
 # Hack to get STAGING_LIBDIR into the linker path when building ffmpeg
 CC = "${CCACHE} ${HOST_PREFIX}gcc -L${STAGING_LIBDIR}"

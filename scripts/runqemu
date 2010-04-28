@@ -69,7 +69,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o 
     if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-$MACHINE.bin
     fi
-    CROSSPATH=$BUILDDIR/tmp/cross/arm-poky-linux-gnueabi/bin
+    CROSSPATH=$BUILDDIR/sysroots/$BUILD_SYS/arm-poky-linux-gnueabi/bin
 fi
 
 function findimage {
@@ -137,7 +137,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             findimage $T qemux86 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
         fi
     fi
-    CROSSPATH=$BUILDDIR/tmp/cross/i586-poky-linux/bin
+    CROSSPATH=$BUILDDIR/sysroots/$BUILD_SYS/i586-poky-linux/bin
 fi
 
 if [ ! -e $CROSSPATH/cc ]; then

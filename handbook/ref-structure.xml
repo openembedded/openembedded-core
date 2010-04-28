@@ -166,15 +166,6 @@
         </para>
     </section>
 
-    <section id='structure-build-tmp-cross'>
-        <title><filename class="directory">build/tmp/cross/</filename></title>
-
-        <para>
-            The cross compiler when generated is placed into this directory and those
-            beneath it.
-        </para>
-    </section>
-
     <section id='structure-build-tmp-deploy'>
         <title><filename class="directory">build/tmp/deploy/</filename></title>
 

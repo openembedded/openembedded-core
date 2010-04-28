@@ -499,7 +499,7 @@ $ bitbake matchbox-desktop -c devshell
                 the gdb-cross package so for example you would run:
                 <programlisting>bitbake gdb-cross</programlisting>
                 Once built, the cross gdb binary can be found at
-                <programlisting>tmp/cross/bin/&lt;target-abi&gt;-gdb </programlisting>
+                <programlisting>tmp/sysroots/&lt;host-arch&lt;/usr/bin/&lt;target-abi&gt;-gdb </programlisting>
             </para>
 
         </section>

@@ -144,7 +144,7 @@ perl_package_preprocess () {
                    -e "s,${STAGING_LIBDIR},${libdir},g" \
                    -e "s,${STAGING_BINDIR},${bindir},g" \
                    -e "s,${STAGING_INCDIR},${includedir},g" \
-                   -e "s,${CROSS_DIR}${base_bindir}/,,g" \
+                   -e "s,${STAGING_BINDIR_NATIVE}/,,g" \
                 ${PKGD}${bindir}/h2xs \
                 ${PKGD}${bindir}/h2ph \
                 ${PKGD}${datadir}/perl/${PV}/pod/*.pod \

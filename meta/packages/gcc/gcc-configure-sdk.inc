@@ -6,7 +6,7 @@ USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibcgnueabi", "no", "", d 
 
 EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
                       --with-gxx-include-dir=${prefix}/${TARGET_SYS}${target_includedir}/c++/${BINV}/ \
-                      --with-build-time-tools=${CROSS_DIR}/${TARGET_SYS}/bin \
+                      --with-build-time-tools=${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin \
                       --with-sysroot=${prefix}/${TARGET_SYS} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 
@@ -14,18 +14,18 @@ EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} 
 # gcc-cross looks and finds these in ${exec_prefix} but we're not so lucky
 # for the sdk. Hardcoding the paths ensures the build doesn't go canadian or worse.
 #
-export AR_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/ar"
-export AS_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/as"
-export DLLTOOL_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/dlltool"
+export AR_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/ar"
+export AS_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/as"
+export DLLTOOL_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/dlltool"
 export CC_FOR_TARGET = "${TARGET_SYS}-gcc"
 export CXX_FOR_TARGET = "${TARGET_SYS}-g++"
 export LD_FOR_TARGET = "${TARGET_SYS}-ld"
-export LIPO_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/lipo"
-export NM_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/nm"
-export OBJDUMP_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/objdump"
-export RANLIB_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/ranlib"
-export STRIP_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/strip"
-export WINDRES_FOR_TARGET = "${CROSS_DIR}/${TARGET_SYS}/bin/windres"
+export LIPO_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/lipo"
+export NM_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/nm"
+export OBJDUMP_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/objdump"
+export RANLIB_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/ranlib"
+export STRIP_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/strip"
+export WINDRES_FOR_TARGET = "${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/windres"
 
 #
 # We need to override this and make sure the compiler can find staging

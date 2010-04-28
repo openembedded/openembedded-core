@@ -16,9 +16,9 @@ LDFLAGS = ""
 
 # staging-linkage and cross-linkage recipes don't work anymore, so do it by hand for this backwards CSL toolchain
 do_compile_prepend() {
-	ln -sf ${STAGING_DIR_TARGET}${target_libdir}/crt*.o ${CROSS_DIR}/${TARGET_SYS}/lib/
-	ln -sf ${STAGING_DIR_TARGET}${target_libdir}/ld-* ${CROSS_DIR}/${TARGET_SYS}/lib/
-	ln -sf ${STAGING_DIR_TARGET}/lib/libc* ${CROSS_DIR}/${TARGET_SYS}/lib/ 
+	ln -sf ${STAGING_DIR_TARGET}${target_libdir}/crt*.o ${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/lib/
+	ln -sf ${STAGING_DIR_TARGET}${target_libdir}/ld-* ${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/lib/
+	ln -sf ${STAGING_DIR_TARGET}/lib/libc* ${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/lib/ 
 	sed -i -e 's:gcc_no_link=yes:gcc_no_link=no:' ${S}/libstdc++-v3/configure
 
 }
