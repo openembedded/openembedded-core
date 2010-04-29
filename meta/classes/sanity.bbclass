@@ -54,6 +54,13 @@ def check_sanity(e):
 	if data.getVar('TARGET_OS', e.data, True) == 'INVALID':
 		messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
 
+        # Check we are using a valid conf setup
+        current_conf = data.getVar('CONF_VERSION', e.data, True)
+        conf_version = data.getVar('POKY_CONF_VERSION', e.data, True)
+
+        if current_conf != conf_version:
+                messages = messages + "Poky has noticed your version of local.conf was generated from an older version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf conf/local.conf.sample\" is a good way to visualise the changes")
+
 	assume_provided = data.getVar('ASSUME_PROVIDED', e.data , True).split()
 	# Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
 	if "diffstat-native" not in assume_provided:
