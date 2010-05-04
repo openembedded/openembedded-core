@@ -22,6 +22,10 @@ do_install () {
 		for f in *.h *.c libgcc.mvars; do
 			cp ${B}/gcc/$f ${D}${includedir}/gcc-build-internal/
 		done
+		# Special for PowerPC (and possibly others)
+		if [ -f ${B}/gcc/tramp.S ]; then
+			cp ${B}/gcc/*.S ${D}${includedir}/gcc-build-internal/
+		fi
 		if [ -f libgcc.mvars]; then
 			cp ${B}/gcc/libgcc.mvars ${D}${includedir}/gcc-build-internal/
 		fi
