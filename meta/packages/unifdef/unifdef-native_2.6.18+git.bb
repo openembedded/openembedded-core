@@ -13,6 +13,6 @@ do_compile() {
 NATIVE_INSTALL_WORKS = "1"
 
 do_install() {
-	install -m 0755 unifdef ${STAGING_BINDIR}
+	install -m 0755 unifdef ${D}${bindir}
 }
 
