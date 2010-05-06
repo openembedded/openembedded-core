@@ -9,7 +9,7 @@ LICENSE = "LGPLv2"
 DEPENDS += "startup-notification"
 
 XFCE_VERSION = ${PV}
-SRC_URI = "http://www.us.xfce.org/archive/xfce-${XFCE_VERSION}/src/${PN}-${PV}.tar.bz2"
+SRC_URI = "http://www.us.xfce.org/archive/xfce/${XFCE_VERSION}/src/${PN}-${PV}.tar.bz2"
 
 inherit autotools
 
