@@ -1,53 +1,12 @@
 BB_DEFAULT_TASK ?= "build"
 
+inherit patch
+inherit staging
+
+inherit mirrors
 inherit utils
-
-def base_dep_prepend(d):
-	#
-	# Ideally this will check a flag so we will operate properly in
-	# the case where host == build == target, for now we don't work in
-	# that case though.
-	#
-
-	deps = ""
-    
-	# bb.utils.sha256_file() will return None on Python 2.4 because hashlib
-	# isn't present.  In this case we use a shasum-native to checksum, so if
-	# hashlib isn't present then add shasum-native to the dependencies.
-	try:
-		import hashlib
-	except ImportError:
-		# Adding shasum-native as a dependency of shasum-native would be
-		# stupid, so don't do that.
-		if bb.data.getVar('PN', d, True) != "shasum-native":
-			deps = "shasum-native "
-            
-	# INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
-	# we need that built is the responsibility of the patch function / class, not
-	# the application.
-	if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d):
-		if (bb.data.getVar('HOST_SYS', d, 1) !=
-	     	    bb.data.getVar('BUILD_SYS', d, 1)):
-			deps += " virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc "
-	return deps
-
-
-DEPENDS_prepend="${@base_dep_prepend(d)} "
-DEPENDS_virtclass-native_prepend="${@base_dep_prepend(d)} "
-DEPENDS_virtclass-nativesdk_prepend="${@base_dep_prepend(d)} "
-
-
-def base_set_filespath(path, d):
-	filespath = []
-	# The ":" ensures we have an 'empty' override
-	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
-	for p in path:
-		for o in overrides.split(":"):
-			filespath.append(os.path.join(p, o))
-	return ":".join(filespath)
-
-FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/${BP}", "${FILE_DIRNAME}/${BPN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
-
+inherit utility-tasks
+inherit metadata_scm
 
 die() {
 	oefatal "$*"
@@ -103,10 +62,59 @@ package_stagefile_shell() {
 	fi
 }
 
-inherit utility-tasks
+def base_dep_prepend(d):
+	#
+	# Ideally this will check a flag so we will operate properly in
+	# the case where host == build == target, for now we don't work in
+	# that case though.
+	#
+
+	deps = ""
+    
+	# bb.utils.sha256_file() will return None on Python 2.4 because hashlib
+	# isn't present.  In this case we use a shasum-native to checksum, so if
+	# hashlib isn't present then add shasum-native to the dependencies.
+	try:
+		import hashlib
+	except ImportError:
+		# Adding shasum-native as a dependency of shasum-native would be
+		# stupid, so don't do that.
+		if bb.data.getVar('PN', d, True) != "shasum-native":
+			deps = "shasum-native "
+            
+	# INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
+	# we need that built is the responsibility of the patch function / class, not
+	# the application.
+	if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d):
+		if (bb.data.getVar('HOST_SYS', d, 1) !=
+	     	    bb.data.getVar('BUILD_SYS', d, 1)):
+			deps += " virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc "
+	return deps
+
+DEPENDS_prepend="${@base_dep_prepend(d)} "
+DEPENDS_virtclass-native_prepend="${@base_dep_prepend(d)} "
+DEPENDS_virtclass-nativesdk_prepend="${@base_dep_prepend(d)} "
+
+
+def base_set_filespath(path, d):
+	filespath = []
+	# The ":" ensures we have an 'empty' override
+	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
+	for p in path:
+		for o in overrides.split(":"):
+			filespath.append(os.path.join(p, o))
+	return ":".join(filespath)
+
+FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/${BP}", "${FILE_DIRNAME}/${BPN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
 
 SCENEFUNCS += "base_scenefunction"
-											
+	
+python base_scenefunction () {
+	stamp = bb.data.getVar('STAMP', d, 1) + ".needclean"
+	if os.path.exists(stamp):
+	        bb.build.exec_func("do_clean", d)
+}
+
 python base_do_setscene () {
         for f in (bb.data.getVar('SCENEFUNCS', d, 1) or '').split():
                 bb.build.exec_func(f, d)
@@ -115,13 +123,6 @@ python base_do_setscene () {
 }
 do_setscene[selfstamp] = "1"
 addtask setscene before do_fetch
-
-python base_scenefunction () {
-	stamp = bb.data.getVar('STAMP', d, 1) + ".needclean"
-	if os.path.exists(stamp):
-	        bb.build.exec_func("do_clean", d)
-}
-
 
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
@@ -140,6 +141,9 @@ python base_do_fetch() {
 	except bb.fetch.NoMethodError:
 		(type, value, traceback) = sys.exc_info()
 		raise bb.build.FuncFailed("No method: %s" % value)
+	except bb.MalformedUrl:
+		(type, value, traceback) = sys.exc_info()
+		raise bb.build.FuncFailed("Malformed URL: %s" % value)
 
 	try:
 		bb.fetch.go(localdata)
@@ -213,6 +217,10 @@ def oe_unpack_file(file, data, url = None):
 		cmd = 'gzip -dc %s > %s' % (file, efile)
 	elif file.endswith('.bz2'):
 		cmd = 'bzip2 -dc %s > %s' % (file, efile)
+	elif file.endswith('.tar.xz'):
+		cmd = 'xz -dc %s | tar x --no-same-owner -f -' % file
+	elif file.endswith('.xz'):
+		cmd = 'xz -dc %s > %s' % (file, efile)
 	elif file.endswith('.zip') or file.endswith('.jar'):
 		cmd = 'unzip -q -o'
 		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
@@ -277,7 +285,6 @@ python base_do_unpack() {
 	src_uri = bb.data.getVar('SRC_URI', localdata, True)
 	if not src_uri:
 		return
-
 	for url in src_uri.split():
 		try:
 			local = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
@@ -288,8 +295,6 @@ python base_do_unpack() {
 		if not ret:
 			raise bb.build.FuncFailed()
 }
-
-inherit metadata_scm
 
 GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
 
@@ -315,7 +320,7 @@ def generate_git_config(e):
 addhandler base_eventhandler
 python base_eventhandler() {
 	from bb import note, error, data
-	from bb.event import Handled, NotHandled, getName
+	from bb.event import getName
 
 	messages = {}
 	messages["Completed"] = "completed"
@@ -364,7 +369,7 @@ python base_eventhandler() {
 	#
 	if name.startswith("StampUpdate"):
 		for (fn, task) in e.targets:
-			#print "%s %s" % (task, fn)         
+			#print "%s %s" % (task, fn)
 			if task == "do_rebuild":
 				dir = "%s.*" % e.stampPrefix[fn]
 				bb.note("Removing stamps: " + dir)
@@ -375,15 +380,13 @@ python base_eventhandler() {
                 generate_git_config(e)
 
 	if not data in e.__dict__:
-		return NotHandled
+		return
 
 	log = data.getVar("EVENTLOG", e.data, 1)
 	if log:
 		logfile = file(log, "a")
 		logfile.write("%s\n" % msg)
 		logfile.close()
-
-	return NotHandled
 }
 
 addtask configure after do_unpack do_patch
@@ -403,8 +406,6 @@ base_do_compile() {
 	fi
 }
 
-inherit staging
-
 addtask install after do_compile
 do_install[dirs] = "${D} ${S} ${B}"
 # Remove and re-create ${D} so that is it guaranteed to be empty
@@ -422,8 +423,7 @@ addtask build after do_populate_sysroot
 do_build = ""
 do_build[func] = "1"
 
-
-def base_after_parse(d):
+python () {
     import exceptions
 
     source_mirror_fetch = bb.data.getVar('SOURCE_MIRROR_FETCH', d, 0)
@@ -527,9 +527,6 @@ def base_after_parse(d):
             break
 
     bb.data.setVar('MULTIMACH_ARCH', multiarch, d)
-
-python () {
-    base_after_parse(d)
 }
 
 def check_app_exists(app, d):
@@ -549,10 +546,4 @@ def check_gcc3(data):
 	
 	return False
 
-# Patch handling
-inherit patch
-
 EXPORT_FUNCTIONS do_setscene do_fetch do_unpack do_configure do_compile do_install do_package
-
-inherit mirrors
-
