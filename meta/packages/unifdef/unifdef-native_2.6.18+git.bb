@@ -13,6 +13,7 @@ do_compile() {
 NATIVE_INSTALL_WORKS = "1"
 
 do_install() {
+	install -d ${D}${bindir}
 	install -m 0755 unifdef ${D}${bindir}
 }
 
