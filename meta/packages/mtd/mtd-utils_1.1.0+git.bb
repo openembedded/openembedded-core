@@ -15,7 +15,7 @@ S = "${WORKDIR}/git/"
 EXTRA_OEMAKE = "'CC=${CC}' 'CFLAGS=${CFLAGS} -I${S}/include -DWITHOUT_XATTR'"
 
 do_install () {
-	oe_runmake install DESTDIR=${D}
+	oe_runmake install DESTDIR=${D} SBINDIR=${sbindir} MANDIR=${mandir} INCLUDEDIR=${includedir}
 	install -d ${D}${includedir}/mtd/
 	for f in ${S}/include/mtd/*.h; do
 		install -m 0644 $f ${D}${includedir}/mtd/
