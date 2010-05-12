@@ -53,7 +53,7 @@ do
     if [ -e $OEROOT/$repo/poky-extra-environment ]; then
 	. $OEROOT/$repo/poky-extra-environment
     fi
-    BBPATH=" $BBPATH $OEROOT/$repo"
+    #BBPATH=" $BBPATH $OEROOT/$repo"
 done
 
 BBPATH="$BBPATH $HOME/.oe $HOME/.poky $BUILDDIR"
