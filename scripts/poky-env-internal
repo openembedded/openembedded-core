@@ -104,6 +104,10 @@ if ! (test -r "$BUILDDIR/conf/bblayers.conf"); then
     cp -f $POKYLAYERCONF $BUILDDIR/conf/bblayers.conf
 fi
 
+# Prevent disturbing a new GIT clone in same console
+unset POKYLOCALCONF
+unset POKYLAYERCONF
+
 export BBPATH OEROOT BUILD_SYS BUILDDIR
 
 # Kill off the TERMINFO variable, as glibc will grab its contents in its 'make
