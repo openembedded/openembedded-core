@@ -1,10 +1,11 @@
 require linux-mx31.inc
 
-PR = "r7"
+PR = "r8"
 
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.19.2.tar.bz2 \
+           file://sumversion-fix.patch;patch=1 \
            file://defconfig-mx31litekit \
            file://defconfig-mx31ads \
            file://defconfig-mx31phy \

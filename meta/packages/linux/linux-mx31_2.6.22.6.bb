@@ -1,10 +1,11 @@
 require linux-mx31.inc
-PR = "r4"
+PR = "r5"
 
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = " \
           ${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.22.6.tar.bz2 \
+          file://1300-fix-gcc-4.3-false-modulo-optimization.patch.patch;patch=1 \
           file://defconfig-mx31ads \
           file://defconfig-mx31phy \
           "

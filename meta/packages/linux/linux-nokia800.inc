@@ -2,7 +2,7 @@ SECTION = "kernel"
 DESCRIPTION = "Linux kernel for Nokia 770/800"
 LICENSE = "GPL"
 
-KERNEL_OUTPUT = "arch/${ARCH}/boot/compressed/${KERNEL_IMAGETYPE}"
+KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_CCSUFFIX = "-3.4.4+csl-arm-2005q3-2"
 
 inherit kernel
