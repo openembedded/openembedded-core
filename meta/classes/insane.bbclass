@@ -266,6 +266,68 @@ def package_qa_check_buildpaths(path, name, d):
         sane = package_qa_handle_error(9, error_msg, name, path, d)
     return sane
 
+def package_qa_check_license(workdir, d):
+    """
+    Check for changes in the license files 
+    """
+    import tempfile
+    sane = True
+
+    lic_files = bb.data.getVar('LIC_FILES_CHKSUM', d, True)
+
+    if not lic_files:
+        # just throw a warning now. Once licensing data in entered for enough of the recipes,
+        # this will be converted into error and False will be returned.
+        bb.warn(" Recipe (.bb) file does not have license file information (LIC_FILES_CHKSUM)")
+        return True
+
+    srcdir = bb.data.getVar('S', d, True)
+
+    for url in lic_files.split():
+        (type, host, path, user, pswd, parm) = bb.decodeurl(url)
+        srclicfile = os.path.join(srcdir, path)
+
+        if 'md5' not in parm:
+            bb.error("md5 checksum is not specified for ", url)
+            return False
+        beginline, endline = 0, 0
+        if 'beginline' in parm:
+            beginline = int(parm['beginline'])
+        if 'endline' in parm:
+            endline = int(parm['endline'])
+
+        if (not beginline) and (not endline):
+            md5chksum = bb.utils.md5_file(srclicfile)
+        else:
+            fi = open(srclicfile, 'r')
+            fo = tempfile.NamedTemporaryFile(mode='wb', prefix='poky.', suffix='.tmp', delete=False)
+            tmplicfile = fo.name;
+            lineno = 0
+            linesout = 0
+            for line in fi:
+                lineno += 1
+                if (lineno >= beginline): 
+                    if ((lineno <= endline) or not endline):
+                        fo.write(line)
+                        linesout += 1
+                    else:
+                        break
+            fo.flush()
+            fo.close()
+            fi.close()
+            md5chksum = bb.utils.md5_file(tmplicfile)
+            os.unlink(tmplicfile)
+
+        if parm['md5'] == md5chksum:
+            bb.note ("md5 checksum matched for ", url)
+        else:
+            bb.error ("md5 data is not matching for ", url)
+            bb.note ("The new md5 checksum is ", md5chksum)
+            bb.note ("Check if the license information has changed, and if it has update the .bb file with correct license")
+            return False
+
+    return sane
+
 def package_qa_check_staged(path,d):
     """
     Check staged la and pc files for sanity
@@ -385,7 +447,8 @@ python do_package_qa () {
         if not package_qa_check_rdepends(package, workdir, d):
             rdepends_sane = False
 
-    if not walk_sane or not rdepends_sane:
+
+    if not walk_sane or not rdepends_sane or not package_qa_check_license(workdir, d):
         bb.fatal("QA run found fatal errors. Please consider fixing them.")
     bb.note("DONE with PACKAGE QA")
 }
