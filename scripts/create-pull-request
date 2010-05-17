@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# create a pull request for your branch
+#
+
+usage() {
+    echo "Error: Invalid arguments."
+    echo "Usage: "
+    echo "$ $0 <commit_id> <contrib_branch>"
+    echo "  <commit_id> is a commit identifier, like branch-name, HEAD, hex-commit-id"
+    echo "  <contrib_branch> is the branch-name in the git.pokylinux.org/poky-contrib tree"
+    exit 1
+}
+
+case $# in
+    2)
+    COMMIT=$1
+    CONTRIB_BRANCH=$2
+    shift
+    ;;
+    *)
+    usage
+    ;;
+esac
+
+if [ "$COMMIT" = "" ]; then
+    usage
+fi
+
+git --no-pager show $COMMIT > /dev/null
+if [ "$?" != "0" ]; then
+    echo "Invalid Commit."
+    usage
+fi
+
+git --no-pager diff master..${COMMIT} | diffstat -p1
+echo ""
+git --no-pager log --no-merges master..${COMMIT} | git --no-pager shortlog
+
+
+echo "Pull URL: http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=${CONTRIB_BRANCH}"
