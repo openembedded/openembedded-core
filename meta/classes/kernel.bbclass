@@ -107,44 +107,49 @@ kernel_do_install() {
         fi
 
 	kerneldir=${D}/kernel/
-	ASMDIR=`readlink include/asm`
 
-	mkdir -p $kerneldir/include/$ASMDIR
-	cp -fR include/$ASMDIR/* $kerneldir/include/$ASMDIR/
+	if [ -e include/asm ] ; then
+		# This link is generated only in kernel before 2.6.33-rc1, don't stage it for newer kernels
+		ASMDIR=`readlink include/asm`
+
+		mkdir -p $kerneldir/include/$ASMDIR
+		cp -fR include/$ASMDIR/* $kerneldir/include/$ASMDIR/
+	fi
+
 	# Kernel 2.6.27 moved headers from includes/asm-${ARCH} to arch/${ARCH}/include/asm	
 	if [ -e arch/${ARCH}/include/asm/ ] ; then 
-		cp -fR arch/${ARCH}/include/asm/* $kerneldir/include/$ASMDIR/
+		if [ -e include/asm ] ; then
+			cp -fR arch/${ARCH}/include/asm/* $kerneldir/include/$ASMDIR/
+		fi
 		install -d $kerneldir/arch/${ARCH}/include
 		cp -fR arch/${ARCH}/* $kerneldir/arch/${ARCH}/	
 
 	# Check for arch/x86 on i386
 	elif [ -d arch/x86/include/asm/ ]; then
+		mkdir -p $kerneldir/include/asm-x86/
 		cp -fR arch/x86/include/asm/* $kerneldir/include/asm-x86/
 		install -d $kerneldir/arch/x86/include
 		cp -fR arch/x86/* $kerneldir/arch/x86/
 	fi
 
-	rm -f $kerneldir/include/asm
-	ln -sf $ASMDIR $kerneldir/include/asm
+	if [ -e include/asm ] ; then
+		rm -f $kerneldir/include/asm
+		ln -sf $ASMDIR $kerneldir/include/asm
+	fi
 
 	mkdir -p $kerneldir/include/asm-generic
 	cp -fR include/asm-generic/* $kerneldir/include/asm-generic/
 
-	mkdir -p $kerneldir/include/linux
-	cp -fR include/linux/* $kerneldir/include/linux/
-
-	mkdir -p $kerneldir/include/net
-	cp -fR include/net/* $kerneldir/include/net/
-
-	mkdir -p $kerneldir/include/pcmcia
-	cp -fR include/pcmcia/* $kerneldir/include/pcmcia/
-
-	for entry in drivers/crypto drivers/media include/media include/acpi include/sound include/video include/scsi include/trace; do
+	for entry in drivers/crypto drivers/media include/generated include/linux include/net include/pcmcia include/media include/acpi include/sound include/video include/scsi include/trace include/mtd include/rdma include/drm include/xen; do
 		if [ -d $entry ]; then
 			mkdir -p $kerneldir/$entry
 			cp -fR $entry/* $kerneldir/$entry/
 		fi
 	done
+
+	if [ -f include/Kbuild ]; then
+		cp -fR include/Kbuild $kerneldir/include
+	fi
 
 	if [ -d drivers/sound ]; then
 		# 2.4 alsa needs some headers from this directory
@@ -309,7 +314,7 @@ python populate_packages_prepend () {
 
 		dvar = bb.data.getVar('PKGD', d, 1)
 		if not dvar:
-			bb.error("D not defined")
+			bb.error("PKGD not defined")
 			return
 
 		kernelver = bb.data.getVar('KERNEL_VERSION', d, 1)
