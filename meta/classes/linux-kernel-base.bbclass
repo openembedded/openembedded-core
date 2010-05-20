@@ -4,6 +4,9 @@ def get_kernelversion(p):
 
     fn = p + '/include/linux/utsrelease.h'
     if not os.path.isfile(fn):
+        # after 2.6.33-rc1
+        fn = p + '/include/generated/utsrelease.h'
+    if not os.path.isfile(fn):
         fn = p + '/include/linux/version.h'
 
     import re
