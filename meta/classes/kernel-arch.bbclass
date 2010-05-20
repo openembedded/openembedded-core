@@ -32,8 +32,10 @@ def map_kernel_arch(a, d):
 export ARCH = "${@map_kernel_arch(bb.data.getVar('TARGET_ARCH', d, 1), d)}"
 
 def map_uboot_arch(a, d):
-	if a == "powerpc":
-		return "ppc"
+	import re
+
+	if   re.match('powerpc$', a): return 'ppc'
+	elif re.match('i.86$', a): return 'x86'
 	return a
 
 export UBOOT_ARCH = "${@map_uboot_arch(bb.data.getVar('ARCH', d, 1), d)}"
