@@ -85,7 +85,7 @@ def rpath_replace (path, d):
     bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
 
     for bindir in bindirs:
-        bb.note ("Processing directory " + bindir)
+        #bb.note ("Processing directory " + bindir)
         directory = path + "/" + bindir
         process_dir (directory, d)
 
