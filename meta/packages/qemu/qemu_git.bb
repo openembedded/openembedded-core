@@ -1,7 +1,7 @@
 LICENSE = "GPL"
 DEPENDS = "zlib"
-PV = "0.10.6+git${SRCREV}"
-PR = "r3"
+PV = "0.12.0+git${SRCREV}"
+PR = "r4"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-git/"
 
@@ -12,13 +12,11 @@ SRC_URI = "\
     file://no-strip.patch;patch=1 \
     file://fix-dirent.patch;patch=1 \
     file://fix-nogl.patch;patch=1 \
-    file://zlibsearch.patch;patch=1 \
-    file://qemugl-allow-glxcontext-release.patch;patch=1 \
-    file://2ca2078e287174522e3a6229618947d3d285b8c0.patch;patch=1"
+    file://qemugl-allow-glxcontext-release.patch;patch=1"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu,mips-linux-user,mips-softmmu --disable-gfx-check"
+EXTRA_OECONF = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu,mips-linux-user,mips-softmmu --disable-werror --disable-vnc-tls"
 #EXTRA_OECONF += "--disable-sdl"
 
 inherit autotools

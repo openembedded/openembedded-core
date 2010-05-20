@@ -2,11 +2,11 @@
  linux-user/syscall.c |   10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
-Index: trunk/linux-user/syscall.c
+Index: qemu/linux-user/syscall.c
 ===================================================================
---- trunk.orig/linux-user/syscall.c	2009-01-05 12:47:06.000000000 +0000
-+++ trunk/linux-user/syscall.c	2009-01-05 12:48:04.000000000 +0000
-@@ -87,6 +87,15 @@
+--- qemu.orig/linux-user/syscall.c	2010-05-11 16:52:16.929785275 -0400
++++ qemu/linux-user/syscall.c	2010-05-11 16:52:25.174783517 -0400
+@@ -94,6 +94,15 @@
  #define CLONE_NPTL_FLAGS2 0
  #endif
  
@@ -21,4 +21,4 @@ Index: trunk/linux-user/syscall.c
 +
  //#define DEBUG
  
- #if defined(TARGET_I386) || defined(TARGET_ARM) || defined(TARGET_SPARC) \
+ //#include <linux/msdos_fs.h>

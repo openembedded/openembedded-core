@@ -10,11 +10,11 @@ committer Andrzej Zaborowski <andrew.zaborowski@intel.com> Tue, 16 Jun 2009 22:2
  target-i386/opengl_exec.c |   31 ++++++++++++++++---------------
  1 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/target-i386/opengl_exec.c b/target-i386/opengl_exec.c
-index 4a69b9b..3d6fb21 100644
---- a/target-i386/opengl_exec.c
-+++ b/target-i386/opengl_exec.c
-@@ -1600,10 +1600,9 @@ int do_function_call(int func_number, arg_t *args, char *ret_string)
+Index: qemu/target-i386/opengl_exec.c
+===================================================================
+--- qemu.orig/target-i386/opengl_exec.c	2010-05-10 18:46:43.175394992 -0400
++++ qemu/target-i386/opengl_exec.c	2010-05-10 18:46:43.218419933 -0400
+@@ -1600,10 +1600,9 @@ int do_function_call(int func_number, ar
                  fprintf(stderr, "client_drawable=%p fake_ctx=%d\n",
                          (void *) client_drawable, fake_ctxt);
  
@@ -27,7 +27,7 @@ index 4a69b9b..3d6fb21 100644
                                      get_association_fakepbuffer_pbuffer(
                                              process, client_drawable))) {
                  GLXContext ctxt = get_association_fakecontext_glxcontext(
-@@ -1651,19 +1650,21 @@ int do_function_call(int func_number, arg_t *args, char *ret_string)
+@@ -1651,19 +1650,21 @@ int do_function_call(int func_number, ar
              }
  
              if (ret_int) {
