@@ -126,8 +126,9 @@ kernel_do_install() {
 
 	# Check for arch/x86 on i386
 	elif [ -d arch/x86/include/asm/ ]; then
-		mkdir -p $kerneldir/include/asm-x86/
-		cp -fR arch/x86/include/asm/* $kerneldir/include/asm-x86/
+                if [ -e include/asm ] ; then
+                        cp -fR arch/x86/include/asm/* $kerneldir/include/$ASMDIR/
+                fi
 		install -d $kerneldir/arch/x86/include
 		cp -fR arch/x86/* $kerneldir/arch/x86/
 	fi
