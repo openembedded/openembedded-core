@@ -189,6 +189,12 @@ kernel_do_install() {
 	[ -e Module.symvers ] && install -m 0644 Module.symvers $kerneldir/
 
 	cp -fR scripts $kerneldir/
+
+	# Remove the following binaries which cause strip errors
+	# during do_package for cross-compiled platforms
+	for entry in bin2c conmakehash ihex2fw kallsyms pnmtologo basic/docproc basic/fixdep basic/hash genksyms/genksyms kconfig/conf mod/mk_elfconfig mod/modpost; do
+		rm -f $kerneldir/scripts/$entry
+	done
 }
 
 sysroot_stage_all_append() {
