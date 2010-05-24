@@ -83,13 +83,19 @@ kernel_do_compile() {
 }
 
 kernel_do_install() {
+	#
+	# First install the modules
+	#
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		oe_runmake DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
 	else
 		oenote "no modules to install"
 	fi
-	
+
+	#
+	# Install various kernel output (zImage, map file, config, module support files)
+	#	
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -d ${D}/boot
 	install -m 0644 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
@@ -101,23 +107,16 @@ kernel_do_install() {
 	if [ "${KERNEL_MAJOR_VERSION}" = "2.6" ]; then
 		install -d ${D}/etc/modprobe.d
 	fi
-	
-        # Check if scripts/genksyms exists and if so, build it
-        if [ -e scripts/genksyms/ ]; then
-                oe_runmake SUBDIRS="scripts/genksyms"
-        fi
 
+
+
+	#
+	# Support for external module building - create a minimal copy of the kernel source tree
+	#
 	kerneldir=${D}/kernel/
 
-	if [ -e include/asm ] ; then
-		# This link is generated only in kernel before 2.6.33-rc1, don't stage it for newer kernels
-		ASMDIR=`readlink include/asm`
-
-		mkdir -p $kerneldir/include/$ASMDIR
-		cp -fR include/$ASMDIR/* $kerneldir/include/$ASMDIR/
-	fi
-
-	# Kernel 2.6.27 moved headers from includes/asm-${ARCH} to arch/${ARCH}/include/asm	
+	# Take care of arch specific headers	
+	# Kernel 2.6.27 moved headers from includes/asm-${ARCH} to arch/${ARCH}/include/asm
 	if [ -e arch/${ARCH}/include/asm/ ] ; then 
 		if [ -e include/asm ] ; then
 			cp -fR arch/${ARCH}/include/asm/* $kerneldir/include/asm/
@@ -134,33 +133,13 @@ kernel_do_install() {
 		cp -fR arch/x86/* $kerneldir/arch/x86/
 	fi
 
-        # ASMDIR is not always set ...
-	if [ -e include/asm ] ; then
-		rm -f $kerneldir/include/asm
-                if [ -n $ASMDIR ] ; then
-                        ln -sf $ASMDIR $kerneldir/include/asm
-                fi
-	fi
-
-	mkdir -p $kerneldir/include/asm-generic
-	cp -fR include/asm-generic/* $kerneldir/include/asm-generic/
-
-	for entry in drivers/crypto drivers/media include/generated include/linux include/net include/pcmcia include/media include/acpi include/sound include/video include/scsi include/trace include/mtd include/rdma include/drm include/xen; do
+	# Take care of the rest of the main directories we need
+	for entry in drivers/crypto drivers/media include scripts; do
 		if [ -d $entry ]; then
 			mkdir -p $kerneldir/$entry
 			cp -fR $entry/* $kerneldir/$entry/
 		fi
 	done
-
-	if [ -f include/Kbuild ]; then
-		cp -fR include/Kbuild $kerneldir/include
-	fi
-
-	if [ -d drivers/sound ]; then
-		# 2.4 alsa needs some headers from this directory
-		mkdir -p $kerneldir/include/drivers/sound
-		cp -fR drivers/sound/*.h $kerneldir/include/drivers/sound/
-	fi
 
 	install -m 0644 .config $kerneldir/config-${KERNEL_VERSION}
 	ln -sf config-${KERNEL_VERSION} $kerneldir/.config
@@ -169,9 +148,14 @@ kernel_do_install() {
 	echo "${S}" >$kerneldir/kernel-source
 	echo "${KERNEL_CCSUFFIX}" >$kerneldir/kernel-ccsuffix
 	echo "${KERNEL_LDSUFFIX}" >$kerneldir/kernel-ldsuffix
+	[ -e vmlinux ] && install -m 0644 vmlinux $kerneldir/	
+	install -m 0644 ${KERNEL_OUTPUT} $kerneldir/${KERNEL_IMAGETYPE}
+	install -m 0644 System.map $kerneldir/System.map-${KERNEL_VERSION}
+	[ -e Module.symvers ] && install -m 0644 Module.symvers $kerneldir/
+
+	# Copy over the main Makefiles
 	[ -e Rules.make ] && install -m 0644 Rules.make $kerneldir/
 	[ -e Makefile ] && install -m 0644 Makefile $kerneldir/
-	
 	# Check if arch/${ARCH}/Makefile exists and install it
 	if [ -e arch/${ARCH}/Makefile ]; then
 		install -d $kerneldir/arch/${ARCH}
@@ -181,14 +165,6 @@ kernel_do_install() {
 		install -d $kerneldir/arch/x86
 		install -m 0644 arch/x86/Makefile* $kerneldir/arch/x86
 	fi
-	cp -fR include/config* $kerneldir/include/	
-	# Install kernel images and system.map to staging
-	[ -e vmlinux ] && install -m 0644 vmlinux $kerneldir/	
-	install -m 0644 ${KERNEL_OUTPUT} $kerneldir/${KERNEL_IMAGETYPE}
-	install -m 0644 System.map $kerneldir/System.map-${KERNEL_VERSION}
-	[ -e Module.symvers ] && install -m 0644 Module.symvers $kerneldir/
-
-	cp -fR scripts $kerneldir/
 
 	# Remove the following binaries which cause strip errors
 	# during do_package for cross-compiled platforms
