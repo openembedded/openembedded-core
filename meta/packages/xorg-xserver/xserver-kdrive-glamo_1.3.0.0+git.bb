@@ -9,10 +9,10 @@ DEPENDS += "libxkbfile libxcalibrate"
 RDEPENDS_${PN} = "xserver-kdrive"
 PROVIDES = "virtual/xserver"
 PE = "1"
-PR = "r7"
+PR = "r8"
 PV = "1.3.0.0+git${SRCREV}"
 
-SRC_URI = "git://people.freedesktop.org/~dodji/xglamo;protocol=git \
+SRC_URI = "git://git.openmoko.org/git/xglamo.git;protocol=git \
         file://kmode.patch;patch=1 \
         file://disable-apm.patch;patch=1 \
         file://no-serial-probing.patch;patch=1 \
