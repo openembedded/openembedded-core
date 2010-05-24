@@ -1,6 +1,7 @@
 DESCRIPTION = "gobject dbus binding"
 HOMEPAGE = "http://cgit.freedesktop.org/~david/eggdbus"
 LICENSE = "GPLv2"
+PR = "r1"
 
 DEPENDS = "dbus glib-2.0 dbus-glib eggdbus-native"
 DEPENDS_virtclass-native = "dbus-native glib-2.0-native dbus-glib-native"
@@ -21,3 +22,4 @@ EXTRA_OECONF = " --disable-man-pages --disable-gtk-doc-html "
 
 BBCLASSEXTEND = "native"
 
+PARALLEL_MAKE = ""
