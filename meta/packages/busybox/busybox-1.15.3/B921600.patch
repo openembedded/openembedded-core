@@ -1,0 +1,13 @@
+diff -upNr busybox-1.7.2/libbb/speed_table.c busybox-1.7.2-921600/libbb/speed_table.c
+--- busybox-1.7.2/libbb/speed_table.c	2007-09-03 13:48:41.000000000 +0200
++++ busybox-1.7.2-921600/libbb/speed_table.c	2008-10-09 16:23:26.269592899 +0200
+@@ -52,6 +52,9 @@ static const struct speed_map speeds[] =
+ #ifdef B460800
+ 	{B460800, 460800/256 + 0x8000U},
+ #endif
++#ifdef B921600
++	{B921600, 921600/256 + 0x8000U},
++#endif
+ };
+ 
+ enum { NUM_SPEEDS = ARRAY_SIZE(speeds) };

@@ -1,0 +1,12 @@
+diff --git a/networking/wget.c b/networking/wget.c
+index 9d813dc..09edd67 100644
+--- a/networking/wget.c
++++ b/networking/wget.c
+@@ -546,6 +546,7 @@ int wget_main(int argc UNUSED_PARAM, char **argv)
+ 		"passive-ftp\0"      No_argument       "\xff"
+ 		"header\0"           Required_argument "\xfe"
+ 		"post-data\0"        Required_argument "\xfd"
++		"no-check-certificate\0" No_argument   "\xfc"
+ 		;
+ #endif
+ 

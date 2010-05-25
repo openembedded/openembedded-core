@@ -1,0 +1,14 @@
+--- busybox/util-linux/mdev.c	2009/01/08 17:19:01	24725
++++ busybox/util-linux/mdev.c	2009/01/12 07:57:52	24785
+@@ -179,8 +179,9 @@
+ 			unsigned i, n;
+ #endif
+ 			char *a = val;
+-			s = strchr(val, ' ');
+-			val = (s && s[1]) ? s+1 : NULL;
++			s = strchrnul(val, ' ');
++			val = (s[0] && s[1]) ? s+1 : NULL;
++			s[0] = '\0';
+ #if ENABLE_FEATURE_MDEV_RENAME_REGEXP
+ 			/* substitute %1..9 with off[1..9], if any */
+ 			n = 0;

@@ -1,0 +1,15 @@
+Index: busybox-1.13.2/Makefile
+===================================================================
+--- busybox-1.13.2.orig/Makefile	2009-03-19 15:44:37.419270265 +0300
++++ busybox-1.13.2/Makefile	2009-03-19 15:45:57.737521296 +0300
+@@ -471,6 +471,10 @@
+ 		util-linux/ \
+ 		util-linux/volume_id/ \
+ 
++# Lib interdeps
++# libbb uses headers generated in applets
++libbb: applets
++
+ endif # KBUILD_EXTMOD
+ 
+ ifeq ($(dot-config),1)

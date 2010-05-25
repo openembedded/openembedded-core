@@ -1,0 +1,72 @@
+#!/bin/sh
+
+# udhcpc script edited by Tim Riker <Tim@Rikers.org>
+
+[ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
+
+RESOLV_CONF="/etc/resolv.conf"
+[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
+[ -n "$subnet" ] && NETMASK="netmask $subnet"
+
+# return 0 if root is mounted on a network filesystem
+root_is_nfs() {
+	grep -qe '^/dev/root.*\(nfs\|smbfs\|ncp\|coda\) .*' /proc/mounts
+}
+
+have_bin_ip=0
+if [ -x /bin/ip ]; then
+  have_bin_ip=1
+fi
+
+case "$1" in
+	deconfig)
+		if ! root_is_nfs ; then
+                        if [ $have_bin_ip -eq 1 ]; then
+                                ip addr flush dev $interface
+                                ip link set dev $interface up
+                        else
+                                /sbin/ifconfig $interface 0.0.0.0
+                        fi
+		fi
+		;;
+
+	renew|bound)
+                if [ $have_bin_ip -eq 1 ]; then
+                        ip addr add dev $interface local $ip/$mask $BROADCAST
+                else
+                        /sbin/ifconfig $interface $ip $BROADCAST $NETMASK
+                fi
+
+		if [ -n "$router" ] ; then
+			if ! root_is_nfs ; then
+                                if [ $have_bin_ip -eq 1 ]; then
+                                        while ip route del default 2>/dev/null ; do
+                                                :
+                                        done
+                                else
+                                        while route del default gw 0.0.0.0 dev $interface 2>/dev/null ; do
+                                                :
+                                        done
+                                fi
+			fi
+
+			metric=0
+			for i in $router ; do
+                                if [ $have_bin_ip -eq 1 ]; then
+                                        ip route add default via $i metric $((metric++))
+                                else
+                                        route add default gw $i dev $interface metric $((metric++)) 2>/dev/null
+                                fi
+			done
+		fi
+
+		echo -n > $RESOLV_CONF
+		[ -n "$domain" ] && echo search $domain >> $RESOLV_CONF
+		for i in $dns ; do
+			echo adding dns $i
+			echo nameserver $i >> $RESOLV_CONF
+		done
+		;;
+esac
+
+exit 0

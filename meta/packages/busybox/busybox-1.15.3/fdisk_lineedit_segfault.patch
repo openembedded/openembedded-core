@@ -1,0 +1,12 @@
+--- old/libbb/lineedit.c	2008/09/27 01:28:56	23530
++++ new/libbb/lineedit.c	2008/11/02 00:41:05	23898
+@@ -1412,7 +1412,8 @@
+ 	if ((state->flags & SAVE_HISTORY) && state->hist_file)
+ 		load_history(state->hist_file);
+ #endif
+-	state->cur_history = state->cnt_history;
++	if (state->flags & DO_HISTORY)
++		state->cur_history = state->cnt_history;
+ 
+ 	/* prepare before init handlers */
+ 	cmdedit_y = 0;  /* quasireal y, not true if line > xt*yt */

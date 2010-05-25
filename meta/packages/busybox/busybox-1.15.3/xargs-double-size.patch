@@ -1,0 +1,13 @@
+--- busybox-1.2.1/findutils/xargs.c.org	2006-09-19 18:18:17.084592997 +0200
++++ busybox-1.2.1/findutils/xargs.c	2006-09-19 18:18:09.820275793 +0200
+@@ -466,8 +466,8 @@
+ 		   have it at 1 meg).  Things will work fine with a large ARG_MAX but it
+ 		   will probably hurt the system more than it needs to; an array of this
+ 		   size is allocated.  */
+-		if (orig_arg_max > 20 * 1024)
+-			orig_arg_max = 20 * 1024;
++		if (orig_arg_max > 40 * 1024)
++			orig_arg_max = 40 * 1024;
+ 		n_max_chars = orig_arg_max;
+ 	}
+ 	max_chars = xmalloc(n_max_chars);

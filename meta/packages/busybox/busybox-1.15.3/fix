@@ -1,0 +1,31 @@
+---
+ util-linux/mdev.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- busybox-1.13.2.orig/util-linux/mdev.c
++++ busybox-1.13.2/util-linux/mdev.c
+@@ -107,11 +107,11 @@ static void make_device(char *path, int 
+ 
+ #if ENABLE_FEATURE_MDEV_CONF
+ 	parser = config_open2("/etc/mdev.conf", fopen_for_read);
+ 
+ 	/* If we have config file, look up user settings */
+-	while (config_read(parser, tokens, 4, 3, "# \t", PARSE_NORMAL)) {
++	while (config_read(parser, tokens, 5, 3, "# \t", PARSE_NORMAL)) {
+ 		regmatch_t off[1 + 9*ENABLE_FEATURE_MDEV_RENAME_REGEXP];
+ 		char *val;
+ 
+ 		/* Fields: regex uid:gid mode [alias] [cmd] */
+ 
+@@ -211,10 +211,11 @@ static void make_device(char *path, int 
+ 		}
+ #endif /* ENABLE_FEATURE_MDEV_RENAME */
+ 
+ #if ENABLE_FEATURE_MDEV_EXEC
+ 		/* The rest (opt): command to run */
++		val = tokens[4];
+ 		if (!val)
+ 			break;
+ 		{
+ 			const char *s = "@$*";
+ 			const char *s2 = strchr(s, *val);

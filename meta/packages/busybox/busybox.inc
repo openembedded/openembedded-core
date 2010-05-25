@@ -31,6 +31,11 @@ INITSCRIPT_PARAMS_${PN}_slugos = "start 20 ."
 
 inherit cml1 update-rc.d
 
+do_configure () {
+	install -m 0644 ${WORKDIR}/defconfig ${S}/.config
+	cml1_do_configure
+}
+
 do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	base_do_compile

@@ -1,0 +1,47 @@
+Index: busybox-1.15.1/examples/udhcp/simple.script
+===================================================================
+--- busybox-1.15.1.orig/examples/udhcp/simple.script	2009-09-16 22:52:09.000000000 +0200
++++ busybox-1.15.1/examples/udhcp/simple.script	2009-09-16 22:57:11.424608476 +0200
+@@ -10,10 +10,17 @@ NETMASK=""
+ BROADCAST="broadcast +"
+ [ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
+ 
++# return 0 if root is mounted on a network filesystem
++root_is_nfs() {
++	grep -qe '^/dev/root.*\(nfs\|smbfs\|ncp\|coda\) .*' /proc/mounts
++}
++
+ case "$1" in
+ 	deconfig)
++		if ! root_is_nfs ; then
+ 		echo "Setting IP address 0.0.0.0 on $interface"
+-		ifconfig $interface 0.0.0.0
++			ifconfig $interface 0.0.0.0
++		fi
+ 		;;
+ 
+ 	renew|bound)
+@@ -21,15 +28,18 @@ case "$1" in
+ 		ifconfig $interface $ip $NETMASK $BROADCAST
+ 
+ 		if [ -n "$router" ] ; then
+-			echo "Deleting routers"
+-			while route del default gw 0.0.0.0 dev $interface 2>/dev/null ; do
+-				:
+-			done
++			if ! root_is_nfs ; then
++				echo "Deleting routers"
++				while route del default gw 0.0.0.0 dev $interface 2>/dev/null ; do
++					:
++				done
++			:
++		done
+ 
+ 			metric=0
+ 			for i in $router ; do
+ 				echo "Adding router $i"
+-				route add default gw $i dev $interface metric $((metric++))
++				route add default gw $i dev $interface metric $((metric++)) 2>/dev/null
+ 			done
+ 		fi
+ 

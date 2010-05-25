@@ -1,0 +1,11 @@
+--- busybox-1.13.2/archival/libunarchive/get_header_tar.c.orig	2008-11-09 18:28:02.000000000 +0100
++++ busybox-1.13.2/archival/libunarchive/get_header_tar.c	2009-02-11 22:34:52.000000000 +0100
+@@ -252,6 +252,8 @@
+ 			file_header->name = concat_path_file(tar.prefix, tar.name);
+ 		} else
+ 			file_header->name = xstrdup(tar.name);
++		if (strlen(file_header->name) > 100) 
++			file_header->name[100] = 0;
+ 	}
+ 
+ 	/* Set bits 12-15 of the files mode */

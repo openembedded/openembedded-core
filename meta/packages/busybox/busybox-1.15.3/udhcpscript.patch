@@ -1,0 +1,13 @@
+Index: busybox-1.15.1/examples/udhcp/simple.script
+===================================================================
+--- busybox-1.15.1.orig/examples/udhcp/simple.script	2009-09-12 17:55:36.000000000 +0200
++++ busybox-1.15.1/examples/udhcp/simple.script	2009-09-16 22:51:06.599693412 +0200
+@@ -22,7 +22,7 @@ case "$1" in
+ 
+ 		if [ -n "$router" ] ; then
+ 			echo "Deleting routers"
+-			while route del default gw 0.0.0.0 dev $interface ; do
++			while route del default gw 0.0.0.0 dev $interface 2>/dev/null ; do
+ 				:
+ 			done
+ 

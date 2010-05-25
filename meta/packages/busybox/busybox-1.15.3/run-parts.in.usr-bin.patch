@@ -1,0 +1,12 @@
+diff -uNr busybox-1.15.3.orig//include/applets.h busybox-1.15.3/include/applets.h
+--- busybox-1.15.3.orig//include/applets.h	2009-12-12 22:13:28.000000000 +0100
++++ busybox-1.15.3/include/applets.h	2010-04-30 15:35:40.000000000 +0200
+@@ -323,7 +323,7 @@
+ IF_RPM(APPLET(rpm, _BB_DIR_BIN, _BB_SUID_DROP))
+ IF_RPM2CPIO(APPLET(rpm2cpio, _BB_DIR_USR_BIN, _BB_SUID_DROP))
+ IF_RTCWAKE(APPLET(rtcwake, _BB_DIR_USR_BIN, _BB_SUID_DROP))
+-IF_RUN_PARTS(APPLET_ODDNAME(run-parts, run_parts, _BB_DIR_BIN, _BB_SUID_DROP, run_parts))
++IF_RUN_PARTS(APPLET_ODDNAME(run-parts, run_parts, _BB_DIR_USR_BIN, _BB_SUID_DROP, run_parts))
+ IF_RUNCON(APPLET(runcon, _BB_DIR_USR_BIN, _BB_SUID_DROP))
+ IF_RUNLEVEL(APPLET(runlevel, _BB_DIR_SBIN, _BB_SUID_DROP))
+ IF_RUNSV(APPLET(runsv, _BB_DIR_USR_BIN, _BB_SUID_DROP))
