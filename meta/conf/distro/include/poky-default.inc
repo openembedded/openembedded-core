@@ -15,7 +15,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs = "gcc-runtime"
 GCCVERSION ?= "4.3.3"
 BINUVERSION ?= "2.20"
 GLIBCVERSION ?= "2.9"
-LINUXLIBCVERSION ?= "2.6.30"
+LINUXLIBCVERSION ?= "2.6.33"
 
 # Temporary preferred version overrides for PPC
 PREFERRED_VERSION_u-boot-mkimage-native_powerpc ?= "2009.08"
