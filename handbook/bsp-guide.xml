@@ -15,8 +15,7 @@
             </imageobject>    
         </mediaobject>
 
-        <title>Poky Handbook</title>
-        <subtitle>Hitchhiker's Guide to Poky</subtitle>
+        <title>Board Support Package (BSP) Developers Guide</title>
 
         <authorgroup>
             <author>
@@ -26,32 +25,18 @@
                 </affiliation>
                 <email>richard@linux.intel.com</email>
             </author>
-
-            <author>
-                <firstname>Tomas</firstname> <surname>Frydrych</surname>
-                <affiliation>
-                    <orgname>Intel Corporation</orgname>
-                </affiliation>
-            </author>
-
-            <author>
-                <firstname>Marcin</firstname> <surname>Juszkiewicz</surname>
-            </author>
-            <author>
-                <firstname>Dodji</firstname> <surname>Seketeli</surname>
-            </author>
         </authorgroup>
 
         <revhistory>
             <revision>
-                <revnumber>3.2+git</revnumber>
-                <date>18 March 2010</date>
-                <revremark>Poky Master Documentation</revremark>
+                <revnumber>0.4</revnumber>
+                <date>26 May 2010</date>
+                <revremark>Alpha Draft</revremark>
             </revision>
         </revhistory>
 
     <copyright>
-      <year>2007-2010</year>
+      <year>2010</year>
       <holder>Intel Corporation</holder>
     </copyright>
 
@@ -64,33 +49,7 @@
 
     </bookinfo>
 
-    <xi:include href="introduction.xml"/>
-
-    <xi:include href="usingpoky.xml"/>
-
-    <xi:include href="extendpoky.xml"/>
-
     <xi:include href="bsp.xml"/>
-
-    <xi:include href="development.xml"/>
-
-    <xi:include href="ref-structure.xml"/>
-
-    <xi:include href="ref-bitbake.xml"/>
-
-    <xi:include href="ref-classes.xml"/>
-
-    <xi:include href="ref-images.xml"/>
-
-    <xi:include href="ref-features.xml"/>
-
-    <xi:include href="ref-variables.xml"/>
-
-    <xi:include href="ref-varlocality.xml"/>
-
-    <xi:include href="faq.xml"/>
-
-    <xi:include href="resources.xml"/>
 
     <index id='index'>
       <title>Index</title>

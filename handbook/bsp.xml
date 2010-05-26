@@ -1,0 +1,287 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<chapter id='bsp'>
+
+        <title>Board Support Packages (BSP) - Developers Guide</title>
+
+        <para>
+            A Board Support Package (BSP) is a collection of information which together
+            defines how to support a particular hardware device, set of devices or 
+            hardware platform. It will include information about the hardware features 
+            present on the device, kernel configuration information along with any 
+            additional hardware drivers required and also any additional software 
+            components required in addition to a generic Linux software stack for both 
+            essential and optional platform features.
+        </para>
+
+        <para>
+            The intend of this document is to define a structure for these components
+            so that BSPs follow a commonly understood layout allowing them to be 
+            provided in a common way that everyone understands. It also allows end 
+            users to become familiar with one common format and encourages standardisation 
+            of software support of hardware.
+        </para>
+
+        <para>
+            The proposed format does have elements that are specific to the Poky and 
+            OpenEmbedded build systems. It is intended that this information can be 
+            used by other systems besides Poky/OpenEmbedded and that it will be simple
+            to extract information and convert to other formats if required. The format 
+            descriped can be directly accepted as a layer by Poky using its standard 
+            layers mechanism but its important to recognise that the BSP captures all 
+            the hardware specific details in one place in a standard format which is 
+            useful for any person wishing to use the hardware platform regardless of 
+            the build system in use.
+        </para>
+
+        <para>
+            The BSP specification does not include a build system or other tooling, 
+            it is concerned with the hardware specific components only. At the end 
+            distribution point the BSP may be shipped combined with a build system
+            and other tools but it is important to maintain the distinction that these
+            are separate components which may just be combined in certain end products.
+        </para>
+
+        <section id='bsp-filelayout'>
+            <title>Example Filesystem Layout</title>
+
+            <para>
+                The BSP consists of a file structure inside a base directory, meta-bsp in this example where "bsp" is a placeholder for the machine or platform name. Examples of some files that it could contain are:
+            </para>
+
+            <para>
+                <programlisting>
+meta-bsp/                                
+meta-bsp/binary/zImage
+meta-bsp/binary/poky-image-minimal.directdisk
+meta-bsp/conf/layer.conf 
+meta-bsp/conf/machine/*.conf             
+meta-bsp/conf/machine/include/tune-*.inc
+meta-bsp/packages/bootloader/bootloader_0.1.bb
+meta-bsp/packages/linux/linux-bsp-2.6.50/*.patch
+meta-bsp/packages/linux/linux-bsp-2.6.50/defconfig-bsp
+meta-bsp/packages/linux/linux-bsp_2.6.50.bb
+meta-bsp/packages/modem/modem-driver_0.1.bb
+meta-bsp/packages/modem/modem-daemon_0.1.bb
+meta-bsp/packages/image-creator/image-creator-native_0.1.bb
+meta-bsp/prebuilds/
+
+                </programlisting>
+            </para>
+
+            <para>
+                The following sections detail what these files and directories could contain.
+            </para>
+
+        </section>
+
+        <section id='bsp-filelayout-binary'>
+            <title>Prebuilt User Binaries (meta-bsp/binary/*)</title>
+
+            <para>
+                This optional area cotains useful prebuilt kernels and userspace filesystem 
+                images appropriate to the target system. Users could use these to get a system 
+                running and quickly get started on development tasks. The exact types of binaries
+                present will be highly hardware dependent but a README file should be present 
+                explaining how to use them with the target hardware. If prebuilt binaries are 
+                present, source code to meet licensing requirements must also be provided in 
+                some form.
+            </para>
+       
+        </section>
+
+        <section id='bsp-filelayout-layer'>
+            <title>Layer Configuration (meta-bsp/conf/layer.conf)</title>
+
+            <para>
+                This file identifies the structure as a Poky layer. This file identifies the 
+                contents of the layer and how contains information about how Poky should use 
+                it. In general it will most likely be a standard boilerplate file consisting of:
+            </para>
+
+            <para>
+               <programlisting>
+# We have a conf directory, add to BBPATH
+BBPATH := "${BBPATH}${LAYERDIR}"
+
+# We have a packages directory, add to BBFILES
+BBFILES := "${BBFILES} ${LAYERDIR}/packages/*/*.bb"
+
+BBFILE_COLLECTIONS += "meta-bsp"
+BBFILE_PATTERN_meta-bsp := "^${LAYERDIR}/"
+BBFILE_PRIORITY_meta-bsp = "5"
+                </programlisting>
+            </para>
+
+            <para>
+                which simply makes bitbake aware of the packages and conf directories.
+            </para>
+
+            <para>
+                This file is required for recognition of the BSP by Poky.
+            </para>
+
+        </section>
+
+        <section id='bsp-filelayout-machine'>
+            <title>Hardware Configuration Options (meta-bsp/conf/machine/*.conf)</title>
+
+            <para>
+                The machine files bind together all the information contained elsewhere
+                in the BSP into a format that Poky/OpenEmbedded can understand it in. If
+                the BSP supports multiple machines, multiple machine configuration files
+                can be present. These filenames correspond to the values users set the
+                MACHINE variable to.
+            </para>
+
+            <para>
+                These files would define things like which kernel package to use
+                (PREFERRED_PROVIDER of virtual/kernel), which hardware drivers to
+                include in different types of images, any special software components
+                that are needed, any bootloader information and also any special image
+                format requirements.
+            </para>
+
+            <para>
+                At least one machine file is required for a Poky BSP layer but more than one may be present.
+            </para>
+
+        </section>
+
+        <section id='bsp-filelayout-tune'>
+            <title>Hardware Optimisation Options (meta-bsp/conf/machine/include/tune-*.inc)</title>
+
+            <para>
+                These are shared hardware "tuning" definitions and are commonly used to
+                pass specific optimisation flags to the compiler. An example is
+                tune-atom.inc:
+            </para>
+            <para>
+               <programlisting>
+BASE_PACKAGE_ARCH = "core2"
+TARGET_CC_ARCH = "-m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse"
+               </programlisting>
+            </para>
+            <para>
+                which defines a new package architecture called "core2" and uses the
+                optimisation flags specified which are carefully chosen to give best
+                performance on atom cpus.
+            </para>
+            <para>
+                The tune file would be included by the machine definition and can be
+                contained in the BSP or reference one from the standard core set of
+                files included with Poky itself.
+            </para>
+            <para>
+                These files are optional for a Poky BSP layer.
+            </para>
+        </section>
+        <section id='bsp-filelayout-kernel'>
+            <title>Linux Kernel Configuration (meta-bsp/packages/linux/*)</title>
+
+            <para>
+                These files make up the definition of a kernel to use with this
+                hardware. In this case its a complete self contained kernel with its own
+                configuration and patches but kernels can be shared between many
+                machines as well. Taking some specific example files:
+            </para>
+            <para>
+               <programlisting>
+meta-bsp/packages/linux/linux-bsp_2.6.50.bb
+               </programlisting>
+            </para>
+            <para>
+                which is the core kernel recipe which firstly details where to get the kernel
+                source from. All standard source code locations are supported so this could 
+                be a release tarball, some git repository or source included in
+                the directory within the BSP itself. It then contains information about which 
+                patches to apply and how to configure and build it. It can reuse the main
+                Poky kernel build class meaning the definitions here can remain very simple.
+            </para>
+            <para>
+               <programlisting>
+linux-bsp-2.6.50/*.patch
+               </programlisting>
+            </para>
+            <para>
+                which are patches which may be applied against the base kernel, wherever
+                that may have been obtained from.
+            </para>
+            <para>
+               <programlisting>
+meta-bsp/packages/linux/linux-bsp-2.6.50/defconfig-bsp
+               </programlisting>
+            </para>
+            <para>
+                which is the configuration information to use to configure the kernel.
+            </para>
+            <para>
+                Examples of kernel recipes are available in Poky itself. These files are
+                optional since a kernel from Poky itself could be selected although it
+                would be unusual not to have a kernel configuration.
+            </para>
+        </section>
+
+        <section id='bsp-filelayout-packages'>
+            <title>Other Software (meta-bsp/packages/*)</title>
+
+            <para>
+                This area includes other pieces of software which the hardware may need for best
+                operation. These are just examples of the kind of things that may be
+                encountered. The are standard .bb file recipes in the usual Poky format
+                so for examples, see standard Poky recipes. The source can be included directly, 
+                referred to in source control systems or release tarballs of external software projects.
+            </para>
+            <para>
+               <programlisting>
+meta-bsp/packages/bootloader/bootloader_0.1.bb
+               </programlisting>
+            </para>
+            <para>
+                Some kind of bootloader recipe which may be used to generate a new
+                bootloader binary. Sometimes these are included in the final image
+                format and needed to reflash hardware.
+            </para>
+            <para>
+               <programlisting>
+meta-bsp/packages/modem/modem-driver_0.1.bb
+meta-bsp/packages/modem/modem-daemon_0.1.bb
+               </programlisting>
+            </para>
+            <para>
+                These are examples of a hardware driver and also a hardware daemon which
+                may need to be included in images to make the hardware useful. "modem"
+                is one example but there may be other components needed like firmware.
+            </para>
+            <para>
+               <programlisting>
+meta-bsp/packages/image-creator/image-creator-native_0.1.bb
+               </programlisting>
+            </para>
+            <para>
+                Sometimes the device will need an image in a very specific format for
+                its update mechanism to accept and reflash with it. Recipes to build the
+                tools needed to do this can be included with the BSP.
+            </para>
+            <para>
+                These files only need be provided if the platform requires them.
+            </para>
+        </section>
+
+        <section id='bsp-filelayout-prebuilds'>
+            <title>Prebuild Data (meta-bsp/prebuilds/*)</title>
+
+            <para>
+                The location can contains a precompiled representation of the source code 
+                contained elsewhere in the BSP layer. It can be processed and used by
+                Poky to provide much faster build times assuming a compatible configuration is used.
+            </para>
+
+            <para>
+                These files are optional.
+            </para>
+
+        </section>
+
+</chapter>
