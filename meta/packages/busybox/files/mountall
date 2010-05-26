@@ -1,1 +1,0 @@
-MOUNTALL="-t nonfs,nosmbfs,noncpfs"
