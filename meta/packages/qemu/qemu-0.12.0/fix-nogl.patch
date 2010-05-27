@@ -1,0 +1,68 @@
+Index: qemu/Makefile.target
+===================================================================
+--- qemu.orig/Makefile.target	2010-05-11 16:53:34.545811866 -0400
++++ qemu/Makefile.target	2010-05-11 16:53:37.743809704 -0400
+@@ -47,6 +47,9 @@ libobj-$(CONFIG_NOSOFTFLOAT) += fpu/soft
+ libobj-y += op_helper.o helper.o
+ libobj-$(CONFIG_NEED_MMU) += mmu.o
+ libobj-$(TARGET_I386) += helper_opengl.o opengl_exec.o
++libobj-$(TARGET_X86_64) += helper_opengl.o opengl_exec.o
++libobj-$(TARGET_ARM) += dummygl.o
++libobj-$(TARGET_MIPS) += dummygl.o
+ libobj-$(TARGET_ARM) += neon_helper.o iwmmxt_helper.o
+ libobj-$(TARGET_ALPHA) += alpha_palcode.o
+ 
+Index: qemu/target-arm/dummygl.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ qemu/target-arm/dummygl.c	2010-05-11 16:53:37.743809704 -0400
+@@ -0,0 +1,22 @@
++#include <string.h>
++#include <stdlib.h>
++#include <assert.h>
++#include <stdint.h>
++#include <X11/Xlib.h>
++#include <X11/Xutil.h>
++
++void opengl_exec_set_parent_window(Display* _dpy, Window _parent_window)
++{
++
++}
++
++void opengl_process_enable(void)
++{
++
++}
++
++
++void mem_opengl(uint64_t ptr)
++{
++
++}
+Index: qemu/target-mips/dummygl.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ qemu/target-mips/dummygl.c	2010-05-11 16:53:37.744811919 -0400
+@@ -0,0 +1,22 @@
++#include <string.h>
++#include <stdlib.h>
++#include <assert.h>
++#include <stdint.h>
++#include <X11/Xlib.h>
++#include <X11/Xutil.h>
++
++void opengl_exec_set_parent_window(Display* _dpy, Window _parent_window)
++{
++
++}
++
++void opengl_process_enable(void)
++{
++
++}
++
++
++void mem_opengl(uint64_t ptr)
++{
++
++}

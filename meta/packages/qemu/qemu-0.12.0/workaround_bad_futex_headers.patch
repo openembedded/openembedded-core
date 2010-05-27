@@ -4,13 +4,12 @@
 
 Index: qemu/linux-user/syscall.c
 ===================================================================
---- qemu.orig/linux-user/syscall.c	2007-08-09 20:28:06.000000000 +0100
-+++ qemu/linux-user/syscall.c	2007-08-09 20:28:41.000000000 +0100
-@@ -61,7 +61,15 @@
- #define tchars host_tchars /* same as target */
- #define ltchars host_ltchars /* same as target */
+--- qemu.orig/linux-user/syscall.c	2010-05-11 16:52:16.929785275 -0400
++++ qemu/linux-user/syscall.c	2010-05-11 16:52:25.174783517 -0400
+@@ -94,6 +94,15 @@
+ #define CLONE_NPTL_FLAGS2 0
+ #endif
  
--#include <linux/futex.h>
 +#define FUTEX_WAIT              0
 +#define FUTEX_WAKE              1
 +#define FUTEX_FD                2
@@ -20,6 +19,6 @@ Index: qemu/linux-user/syscall.c
 +#define FUTEX_LOCK_PI           6
 +#define FUTEX_UNLOCK_PI         7
 +
- #include <linux/termios.h>
- #include <linux/unistd.h>
- #include <linux/utsname.h>
+ //#define DEBUG
+ 
+ //#include <linux/msdos_fs.h>
