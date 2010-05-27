@@ -356,7 +356,7 @@ class UserResolver(Resolver):
             # Patch application failed
             patchcmd = self.patchset.Push(True, False, False)
 
-            t = bb.data.getVar('T', d, 1)
+            t = bb.data.getVar('T', self.patchset.d, 1)
             if not t:
                 bb.msg.fatal(bb.msg.domain.Build, "T not set")
             bb.mkdirhier(t)
@@ -368,16 +368,16 @@ class UserResolver(Resolver):
             f.write("echo 'Run \"quilt refresh\" when patch is corrected, press CTRL+D to exit.'\n")
             f.write("echo ''\n")
             f.write(" ".join(patchcmd) + "\n")
-            f.write("#" + bb.data.getVar('TERMCMDRUN', d, 1))
+            f.write("#" + bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
             f.close()
             os.chmod(rcfile, 0775)
 
             os.environ['TERMWINDOWTITLE'] = "Bitbake: Please fix patch rejects manually"
             os.environ['TERMRCFILE'] = rcfile
-            rc = os.system(bb.data.getVar('TERMCMDRUN', d, 1))
+            rc = os.system(bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
             if os.WIFEXITED(rc) and os.WEXITSTATUS(rc) != 0:
                 bb.msg.fatal(bb.msg.domain.Build, ("Cannot proceed with manual patch resolution - '%s' not found. " \
-                    + "Check TERMCMDRUN variable.") % bb.data.getVar('TERMCMDRUN', d, 1))
+                    + "Check TERMCMDRUN variable.") % bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
 
             # Construct a new PatchSet after the user's changes, compare the
             # sets, checking patches for modifications, and doing a remote
