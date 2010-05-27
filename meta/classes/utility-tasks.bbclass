@@ -95,3 +95,25 @@ do_buildall() {
 	:
 }
 
+addtask distro_check after do_distro_check
+do_distro_check[nostamp] = "1"
+python do_distro_check() {
+    """checks if the package is present in other public Linux distros"""
+    import oe.distro_check as dc
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
+
+    tmpdir = bb.data.getVar('TMPDIR', localdata, 1)
+    distro_check_dir = os.path.join(tmpdir, "distro_check")
+    datetime = bb.data.getVar('DATETIME', localdata, 1)
+
+    # if distro packages list data is old then rebuild it 
+    dc.update_distro_data(distro_check_dir, datetime)
+
+    # do the comparison
+    result = dc.compare_in_distro_packages_list(distro_check_dir, d)
+
+    # save the results
+    dc.save_distro_check_result(result, datetime, d)
+}
+
