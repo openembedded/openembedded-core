@@ -395,6 +395,19 @@
                 <para>List of package source licenses.</para>
             </glossdef>
         </glossentry>
+        <glossentry id='var-LIC_FILES_CHKSUM'><glossterm>LIC_FILES_CHKSUM</glossterm>
+            <glossdef>
+                <para>Checksums of the license text in the recipe source code.
+                </para>
+                <para>This variables tracks changes in license text of the source
+                code files. If the license text is changed it triggers the build
+                failure. Which gives developer an oppurtunity to review any 
+                license changes</para>
+                <para> This is an optional variable now. And the plan is to make
+                it a required variable in the future </para>
+                <para>See the "meta/package/zlib/zlib_${PV}.bb" file for an example</para>
+            </glossdef>
+        </glossentry>
 
     </glossdiv>
 

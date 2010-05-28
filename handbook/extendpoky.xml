@@ -56,6 +56,7 @@
 DESCRIPTION = "Simple helloworld application"
 SECTION = "examples"
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
 
 SRC_URI = "file://helloworld.c"
 
@@ -99,6 +100,7 @@ do_install() {
 DESCRIPTION = "GNU Helloworld application"
 SECTION = "examples"
 LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
 
 SRC_URI = "${GNU_MIRROR}/hello/hello-${PV}.tar.bz2"
 
@@ -139,6 +141,7 @@ SECTION = "base"
 DEPENDS = "zlib"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
 
 SRC_URI = "ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-${PV}.tar.gz"
 
@@ -174,6 +177,7 @@ require xorg-lib-common.inc
 
 DESCRIPTION = "X11 Pixmap library"
 LICENSE = "X-BSD"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
 DEPENDS += "libxext"
 
 XORG_PN = "libXpm"
@@ -820,7 +824,67 @@ SRC_URI += "file://NAME-OF-PATCH.patch;patch=1"
         </section>
 
     </section>
+    <section id='usingpoky-configuring-LIC_FILES_CHKSUM'>
+        <title>configuring the LIC_FILES_CHKSUM variable</title>
+        <para>
+        The changes in the license text inside source code files is tracked
+        using the LIC_FILES_CHKSUM metadata variable.
+        </para>
 
+        <section id='usingpoky-specifying-LIC_FILES_CHKSUM'>
+            <title>Specifying the LIC_FILES_CHKSUM variable </title>
+
+            <programlisting>
+LIC_FILES_CHKSUM = "file://COPYING; md5=xxxx \
+                    file://licfile1.txt; beginline=5; endline=29;md5=yyyy \
+                    file://licfile2.txt; endline=50;md5=zzzz \
+                    ..."
+            </programlisting>
+        </section>
+
+        <section id='usingpoky-LIC_FILES_CHKSUM-explanation-of-syntax'>
+            <title>Explanation of syntax</title>
+
+            <para>
+            This parameter lists all the important files containing the text 
+of licenses for the
+source code. It is also possible to specify on which line the license text
+starts and on which line it ends within that file using the "beginline" and
+"endline" parameters. If the "beginline" parameter is not specified then license
+text begins from the 1st line is assumed. Similarly if "endline" parameter is
+not specified then the license text ends at the last line in the file is
+assumed. So if a file contains only licensing information, then there is no need
+to specify "beginline" and "endline" parameters.
+            </para>
+            <para>
+The "md5" parameter stores the md5 checksum of the license text. So if
+the license text changes in any way from a file, then it's md5 sum will differ and will not
+match with the previously stored md5 checksum. This mismatch will trigger build
+failure, notifying developer about the license text md5 mismatch, and allowing
+the developer to review the license text changes. Also note that if md5 checksum
+is not matched while building, the correct md5 checksum is printed in the build
+log.
+            </para>
+            <para>
+There is no limit on how many files can be specified on this parameter. But generally every
+project would need specifying of just one or two files for license tracking.
+Many projects would have a "COPYING" file which will store all the
+license information for all the source code files. If the "COPYING" file
+is valid then tracking only that file would be enough.
+            </para>
+            <tip>
+                <para>
+1. If you specify empty or invalid "md5" parameter; then while building
+the package, bitbake will give md5 not matched error, and also show the correct
+"md5" parameter value in the build log
+                </para>
+                <para>
+2. If the whole file contains only license text, then there is no need to
+specify "beginline" and "endline" parameters. 
+                </para>
+            </tip>
+        </section>
+    </section>
 </chapter>
 <!-- 
 vim: expandtab tw=80 ts=4 

@@ -128,6 +128,9 @@
                 <para><glossterm><link linkend='var-LICENSE'>LICENSE</link></glossterm></para>
             </listitem>
             <listitem>
+                <para><glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm></para>
+            </listitem>
+            <listitem>
                 <para><glossterm><link linkend='var-SECTION'>SECTION</link></glossterm></para>
             </listitem>
             <listitem>
