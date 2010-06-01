@@ -18,6 +18,11 @@ inherit autotools pkgconfig
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"
 
+# Parallel make shows many issues with this source code.
+# Current problems seem to be duplicate execution of the calander/backends
+# directories by make resulting in truncated/corrupt .la files
+PARALLEL_MAKE = ""
+
 do_configure_prepend () {
         echo "EXTRA_DIST = " > ${S}/gtk-doc.make
 }
@@ -29,7 +34,6 @@ do_configure_append () {
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \
                 --with-soup --with-libdb=${STAGING_DIR_HOST}${prefix} \
                 --disable-smime --disable-ssl --disable-nntp --disable-gtk-doc --without-weather"
-
 
 PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev \
              libedata-book libedata-book-dev libedata-cal libedata-cal-dev \
