@@ -2,6 +2,7 @@ require xorg-app-common.inc
 
 DESCRIPTION = "user preference utility for X"
 LICENSE = "MIT"
+DISTRO_PN_ALIAS = "Fedora=xorg-x11-server-utils;Ubuntu=x11-xserver-utils;Debian=x11-xserver-utils;Opensuse=xorg-x11"
 DEPENDS += "libxext libxxf86misc libxfontcache libxmu libxp libxau"
 PE = "1"
 
