@@ -1,6 +1,6 @@
 require libtool.inc
 
-PR = "r20"
+PR = "r21"
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}a.tar.gz \
            file://trailingslash.patch;patch=1 \
@@ -15,6 +15,12 @@ FILES_libltdl-dbg = "${libdir}/.debug/"
 inherit autotools
 
 EXTRA_AUTORECONF = "--exclude=libtoolize"
+
+do_compile_prepend () {
+	# Sometimes this file doesn't get rebuilt, force the issue
+	rm -f ${S}/libltdl/config/ltmain.sh
+	make libltdl/config/ltmain.sh
+}
 
 #
 # We want the results of libtool-cross preserved - don't stage anything ourselves.

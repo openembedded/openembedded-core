@@ -1,6 +1,6 @@
 require libtool_${PV}.bb
 
-PR = "r29"
+PR = "r30"
 PACKAGES = ""
 SRC_URI_append = " file://cross_compile.patch;patch=1 \
                    file://prefix.patch;patch=1"
@@ -22,7 +22,9 @@ do_configure_prepend () {
 }
 
 do_compile () {
-	:
+       # Sometimes this file doesn't get rebuilt, force the issue
+       rm -f ${S}/libltdl/config/ltmain.sh
+       make libltdl/config/ltmain.sh
 }
 
 do_install () {
