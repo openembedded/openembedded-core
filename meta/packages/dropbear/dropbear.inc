@@ -7,11 +7,11 @@ PROVIDES = "ssh sshd"
 RPROVIDES = "ssh sshd"
 
 SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.gz \
-	   file://urandom-xauth-changes-to-options.h.patch;patch=1 \
-	   file://configure.patch;patch=1 \
-	   file://fix-2kb-keys.patch;patch=1 \
-	   file://allow-nopw.patch \
-	   file://init"
+	         file://urandom-xauth-changes-to-options.h.patch \
+	         file://configure.patch \
+	         file://fix-2kb-keys.patch \
+	         file://allow-nopw.patch;apply=no \
+	         file://init"
 
 inherit autotools update-rc.d
 
