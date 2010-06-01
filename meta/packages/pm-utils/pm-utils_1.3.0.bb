@@ -4,7 +4,7 @@ LICENSE="GPL"
 
 PR = "r0"
 
-SRC_URI = "http://git.fnordovax.org/pm-utils/snapshot/pm-utils-pm-utils-1.2.tar.gz"
+SRC_URI = "http://pm-utils.freedesktop.org/releases/pm-utils-${PV}.tar.gz"
 
 inherit pkgconfig autotools
 
@@ -14,5 +14,3 @@ FILES_${PN}-dbg += "${libdir}/pm-utils/bin/.debug \
 do_configure_prepend () {
 	autoreconf -f -i -s
 }
-
-S = "${WORKDIR}/pm-utils"
