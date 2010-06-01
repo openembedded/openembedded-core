@@ -825,7 +825,7 @@ SRC_URI += "file://NAME-OF-PATCH.patch;patch=1"
 
     </section>
     <section id='usingpoky-configuring-LIC_FILES_CHKSUM'>
-        <title>configuring the LIC_FILES_CHKSUM variable</title>
+        <title>Configuring the LIC_FILES_CHKSUM variable</title>
         <para>
         The changes in the license text inside source code files is tracked
         using the LIC_FILES_CHKSUM metadata variable.
@@ -885,7 +885,50 @@ specify "beginline" and "endline" parameters.
             </tip>
         </section>
     </section>
+    <section id='usingpoky-configuring-DISTRO_PN_ALIAS'>
+        <title>Configuring the DISTRO_PN_ALIAS variable</title>
+        <para>
+Sometimes the names of the same packages are different in different
+linux distributions; and that can becomes an issue for the distro_check
+task to check if the given recipe package exists in other linux distros.
+This issue is avoided by defining per distro recipe name alias:
+DISTRO_PN_ALIAS
+        </para>
+
+        <section id='usingpoky-specifying-DISTRO_PN_ALIAS'>
+            <title>Specifying the DISTRO_PN_ALIAS variable </title>
+
+            <programlisting>
+DISTRO_PN_ALIAS = "distro1=package_name_alias1; distro2=package_name_alias2 \
+                    distro3=package_name_alias3; \
+                    ..."
+            </programlisting>
+            <para>
+Look at the meta/packages/xorg-app/xset_1.0.4.bb recipe file for an example.
+            </para>
+            <tip>
+                <para>
+The current code can check if the src package for a recipe exists in the latest
+releases of these distributions automatically.
+                </para>
+                <programlisting>
+Fedora, OpenSuSE, Debian, Ubuntu, Mandriva
+                </programlisting>
+                <para>
+For example, this command will generate a report, listing which linux distros include the
+sources for each of the poky recipe.
+                </para>
+                <programlisting>
+bitbake world -f -c distro_check
+                </programlisting>
+                <para>
+The results will be stored in the build/tmp/log/distro_check-${DATETIME}.results file.
+                </para>
+            </tip>
+        </section>
+    </section>
 </chapter>
+
 <!-- 
 vim: expandtab tw=80 ts=4 
 -->
