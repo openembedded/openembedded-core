@@ -1,15 +1,20 @@
 require e2fsprogs.inc
 
-PR = "r16"
+PR = "r17"
 
-SRC_URI += "file://no-hardlinks.patch;patch=1 \
-            file://quotefix.patch;patch=1"
+SRC_URI += "file://quotefix.patch;patch=1 \
+            file://acinclude.m4"
+#file://no-hardlinks.patch;patch=1 \
 
 PARALLEL_MAKE = ""
 
-EXTRA_OECONF += " --sbindir=${base_sbindir} --enable-elf-shlibs"
+EXTRA_OECONF += " --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid"
 EXTRA_OECONF_darwin = "--enable-dynamic-e2fsck --sbindir=${base_sbindir} --enable-bsd-shlibs"
 EXTRA_OECONF_darwin8 = "--enable-dynamic-e2fsck --sbindir=${base_sbindir} --enable-bsd-shlibs"
+
+do_configure_prepend () {
+	cp ${WORKDIR}/acinclude.m4 ${S}/
+}
 
 do_compile_prepend () {
 	find ./ -print|xargs chmod u=rwX
