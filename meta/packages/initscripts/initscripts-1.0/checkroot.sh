@@ -18,13 +18,13 @@ test "$SULOGIN" = yes && sulogin -t 30 $CONSOLE
 #
 # Read /etc/fstab.
 #
-exec 9>&0 </etc/fstab
+exec 9< /etc/fstab
 rootmode=rw
 rootopts=rw
 rootcheck=no
 swap_on_md=no
 devfs=
-while read fs mnt type opts dump pass junk
+while read fs mnt type opts dump pass junk <&9
 do
 	case "$fs" in
 		""|\#*)
