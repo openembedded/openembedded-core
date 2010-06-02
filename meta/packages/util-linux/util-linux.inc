@@ -2,28 +2,26 @@ DESCRIPTION = "Util-linux is a suite of essential utilities for any Linux system
 SECTION = "base"
 LICENSE = "GPL"
 DEPENDS = "udev zlib ncurses virtual/libintl gettext"
+DEPENDS_virtclass-native = "zlib-native ncurses-native lzo-native gettext-native"
 
 inherit autotools
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v2.15/util-linux-ng-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v${PV}/util-linux-ng-${PV}.tar.bz2 \
            file://MCONFIG \
-           file://make_include \
            file://swapargs.h \
-	   file://fdiskbsdlabel_thumb.diff;patch=1 \
-	   file://umount.diff;patch=1 \
-	   file://fix-make-c.patch;patch=1 \
-	   file://optional-uuid.patch;patch=1 \
-	   file://uuid.patch;patch=1 \
-           file://defines.h"
-#           file://gcc34.patch;patch=1 \
+           file://defines.h \
+           file://make_include \
+           "
 
 PACKAGES_prepend = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-swaponoff util-linux-losetup util-linux-umount util-linux-mount util-linux-readprofile "
+
+PACKAGES_virtclass-native = ""
 
 S = "${WORKDIR}/util-linux-ng-${PV}"
 
 EXTRA_OECONF = "--disable-use-tty-group --disable-makeinstall-chown --enable-elvtune --enable-init --enable-kill --enable-last \
  --enable-mesg --enable-partx --enable-raw --enable-rdev --enable-reset \
-  --disable-login-utils --enable-write --enable-arch --enable-mount --with-fsprobe=builtin"
+  --disable-login-utils --enable-write --enable-arch --enable-mount --with-fsprobe=builtin --enable-libuuid --enable-libblkid --enable-fsck"
 
 FILES_${PN}-doc += "/usr/share/misc/getopt/getopt-*.*"
 
@@ -38,6 +36,9 @@ FILES_util-linux-readprofile = "/usr/sbin/readprofile"
 
 RRECOMMENDS_${PN} = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-mount util-linux-readprofile "
 RDEPENDS_${PN} = "util-linux-umount util-linux-swaponoff util-linux-losetup"
+
+RRECOMMENDS_${PN}_virtclass-native = ""
+RDEPENDS_${PN}_virtclass-native = ""
 
 do_compile () {
 	set -e
@@ -81,38 +82,48 @@ do_install () {
 		'OPT=${CFLAGS}' 'CC=${CC}' 'LD=${LD}' \
 		'LDFLAGS=${LDFLAGS}' 'DESTDIR=${D}' install
 
-	install -d ${D}${base_bindir}
-	install -d ${D}${base_sbindir}
-	test -f ${D}${sbindir}/pivot_root && \
-	mv ${D}${sbindir}/pivot_root ${D}${base_sbindir}/pivot_root.${PN}
-	mv ${D}${bindir}/dmesg ${D}${base_bindir}/dmesg.${PN}
-	mv ${D}${bindir}/kill ${D}${base_bindir}/kill.${PN}
-	mv ${D}${bindir}/more ${D}${base_bindir}/more.${PN}
-	mv ${D}${sbindir}/hwclock ${D}${base_sbindir}/hwclock.${PN}
-	mv ${D}${sbindir}/mkswap ${D}${base_sbindir}/mkswap.${PN}
-	mv ${D}${sbindir}/shutdown ${D}${base_sbindir}/shutdown.${PN}
-#	mv ${D}${sbindir}/sln ${D}${base_sbindir}/sln.${PN}
-	mv ${D}${sbindir}/mkfs.minix ${D}${base_sbindir}/mkfs.minix.${PN}
-	mv ${D}${sbindir}/fsck.minix ${D}${base_sbindir}/fsck.minix.${PN}
-	mv ${D}${bindir}/hexdump ${D}${bindir}/hexdump.${PN}
-	mv ${D}${bindir}/last ${D}${bindir}/last.${PN}
-	mv ${D}${bindir}/logger ${D}${bindir}/logger.${PN}
-	mv ${D}${bindir}/mesg ${D}${bindir}/mesg.${PN}
-	mv ${D}${bindir}/renice ${D}${bindir}/renice.${PN}
-	mv ${D}${bindir}/wall ${D}${bindir}/wall.${PN}
+	mkdir -p ${D}${base_bindir}
 
-	mv ${D}${sbindir}/losetup ${D}${base_sbindir}/losetup.${PN}
-	mv ${D}${sbindir}/swapon ${D}${base_sbindir}/swapon.${PN}
-	mv ${D}${bindir}/umount ${D}${base_bindir}/umount.${PN}
-	mv ${D}${bindir}/mount ${D}${base_bindir}/mount.${PN}
-	mv ${D}${sbindir}/fdisk ${D}${base_sbindir}/fdisk.${PN}
+        sbinprogs="agetty blockdev ctrlaltdel cfdisk vipw vigr"
+        sbinprogs_a="pivot_root hwclock mkswap shutdown mkfs.minix fsck.minix losetup swapon fdisk readprofile fsck blkid sln"
+        usrbinprogs_a="chfn chsh hexdump last logger mesg newgrp renice wall setsid chrt"
+        binprogs_a="dmesg kill more umount mount login reset"
 
-	mv ${D}${sbindir}/agetty ${D}${base_sbindir}/ 
-	mv ${D}${sbindir}/blockdev ${D}${base_sbindir}/
-	mv ${D}${sbindir}/cfdisk ${D}${base_sbindir}/
-	mv ${D}${sbindir}/ctrlaltdel ${D}${base_sbindir}/
+        if [ "${base_sbindir}" != "${sbindir}" ]; then
+        	mkdir -p ${D}${base_sbindir}
+                for p in $sbinprogs $sbinprogs_a; do
+                        if [ -f "${D}${sbindir}/$p" ]; then
+                                mv "${D}${sbindir}/$p" "${D}${base_sbindir}/$p"
+                        fi
+                done
+        fi
 
-	mv ${D}${sbindir}/readprofile ${D}${sbindir}/readprofile.${PN}
+        if [ "${base_bindir}" != "${bindir}" ]; then
+        	mkdir -p ${D}${base_bindir}
+                for p in $binprogs_a; do
+                        if [ -f "${D}${bindir}/$p" ]; then
+                                mv "${D}${bindir}/$p" "${D}${base_bindir}/$p"
+                        fi
+                done
+        fi
+
+        for p in $usrbinprogs_a; do
+                if [ -f "${D}${bindir}/$p" ]; then
+                        mv "${D}${bindir}/$p" "${D}${bindir}/$p.${PN}"
+                fi
+        done
+
+        for p in $binprogs_a; do
+                if [ -f "${D}${base_bindir}/$p" ]; then
+                        mv "${D}${base_bindir}/$p" "${D}${base_bindir}/$p.${PN}"
+                fi
+        done
+
+        for p in $sbinprogs_a; do
+                if [ -f "${D}${base_sbindir}/$p" ]; then
+                        mv "${D}${base_sbindir}/$p" "${D}${base_sbindir}/$p.${PN}"
+                fi
+        done
 	
 	install -d ${D}${sysconfdir}/default/
 	echo 'MOUNTALL="-t nonfs,nosmbfs,noncpfs"' > ${D}${sysconfdir}/default/mountall
@@ -212,3 +223,5 @@ pkg_prerm_util-linux-swaponoff () {
 	update-alternatives --remove swapoff swapoff.${PN}
 	update-alternatives --remove swapon swapon.${PN}
 }
+
+BBCLASSEXTEND = "native"
