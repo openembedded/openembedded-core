@@ -175,6 +175,12 @@ def check_sanity(e):
 		f.write(current_abi)
 	f.close()
 
+	oeroot = data.getVar('OEROOT', e.data)
+	if oeroot.find ('+') != -1:
+		messages = messages + "Error, you have an invalid character (+) in your OEROOT directory path. Please more Poky to a directory which doesn't include a +."
+	elif oeroot.find (' ') != -1:
+		messages = messages + "Error, you have a space in your OEROOT directory path. Please move Poky to a directory which doesn't include a space."
+
 	if messages != "":
 		raise_sanity_error(messages)
 
