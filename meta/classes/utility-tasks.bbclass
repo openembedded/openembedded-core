@@ -95,7 +95,7 @@ do_buildall() {
 	:
 }
 
-addtask distro_check after do_distro_check
+addtask distro_check
 do_distro_check[nostamp] = "1"
 python do_distro_check() {
     """checks if the package is present in other public Linux distros"""
