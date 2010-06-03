@@ -1,0 +1,21 @@
+Fix redirection of fd 0 in scripts sourced from interactive ash
+
+Based on Busybox git 08d8b3cee1329d390f91bce419e2b4dadf484952 by
+Denys Vlasenko <vda.linux@googlemail.com>.
+
+Can be removed when we bump to 1.16.1 + patches or later
+
+JL 03/06/10
+Index: busybox-1.15.3/shell/ash.c
+===================================================================
+--- busybox-1.15.3.orig/shell/ash.c	2009-12-12 21:16:38.000000000 +0000
++++ busybox-1.15.3/shell/ash.c	2010-06-03 09:44:59.484647637 +0100
+@@ -5071,7 +5071,7 @@
+ 		return 0;
+ 	pf = g_parsefile;
+ 	while (pf) {
+-		if (fd == pf->fd) {
++		if (pf->fd > 0 && fd == pf->fd) {
+ 			return 1;
+ 		}
+ 		pf = pf->prev;
