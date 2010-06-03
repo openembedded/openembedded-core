@@ -59,12 +59,12 @@ do_install () {
 }
 
 pkg_postinst_wpa-supplicant () {
-	/etc/init.d/populate-volatile.sh update
-
 	# can't do this offline
 	if [ "x$D" != "x" ]; then
 		exit 1
 	fi
+
+	/etc/init.d/populate-volatile.sh update
 
 	DBUSPID=`pidof dbus-daemon`
 
