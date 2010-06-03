@@ -1,6 +1,6 @@
 require libtool_${PV}.bb
 
-PR = "r30"
+PR = "r31"
 PACKAGES = ""
 SRC_URI_append = " file://cross_compile.patch;patch=1 \
                    file://prefix.patch;patch=1"
@@ -19,12 +19,6 @@ do_configure_prepend () {
 	# any upgrade
 	rm -f ${STAGING_DATADIR}/aclocal/libtool.m4
 	rm -f ${STAGING_DATADIR}/aclocal/lt*.m4
-}
-
-do_compile () {
-       # Sometimes this file doesn't get rebuilt, force the issue
-       rm -f ${S}/libltdl/config/ltmain.sh
-       make libltdl/config/ltmain.sh
 }
 
 do_install () {
