@@ -1,7 +1,7 @@
-Index: qemu/Makefile.target
+Index: qemu-0.12.4/Makefile.target
 ===================================================================
---- qemu.orig/Makefile.target	2010-05-11 18:05:22.955784896 -0400
-+++ qemu/Makefile.target	2010-05-14 13:34:07.721301429 -0400
+--- qemu-0.12.4.orig/Makefile.target
++++ qemu-0.12.4/Makefile.target
 @@ -46,6 +46,7 @@ libobj-$(CONFIG_SOFTFLOAT) += fpu/softfl
  libobj-$(CONFIG_NOSOFTFLOAT) += fpu/softfloat-native.o
  libobj-y += op_helper.o helper.o
@@ -52,10 +52,10 @@ Index: qemu/Makefile.target
  ARLIBS=../libqemu_common.a libqemu.a $(HWLIB)
  
  endif # CONFIG_SOFTMMU
-Index: qemu/hw/pixel_ops.h
+Index: qemu-0.12.4/hw/pixel_ops.h
 ===================================================================
---- qemu.orig/hw/pixel_ops.h	2010-05-11 18:05:22.959804376 -0400
-+++ qemu/hw/pixel_ops.h	2010-05-12 12:10:40.092908994 -0400
+--- qemu-0.12.4.orig/hw/pixel_ops.h
++++ qemu-0.12.4/hw/pixel_ops.h
 @@ -4,6 +4,12 @@ static inline unsigned int rgb_to_pixel8
      return ((r >> 5) << 5) | ((g >> 5) << 2) | (b >> 6);
  }
@@ -69,10 +69,10 @@ Index: qemu/hw/pixel_ops.h
  static inline unsigned int rgb_to_pixel15(unsigned int r, unsigned int g,
                                            unsigned int b)
  {
-Index: qemu/hw/vmware_vga.c
+Index: qemu-0.12.4/hw/vmware_vga.c
 ===================================================================
---- qemu.orig/hw/vmware_vga.c	2010-05-11 18:05:22.959804376 -0400
-+++ qemu/hw/vmware_vga.c	2010-05-12 12:10:40.124785891 -0400
+--- qemu-0.12.4.orig/hw/vmware_vga.c
++++ qemu-0.12.4/hw/vmware_vga.c
 @@ -489,6 +489,8 @@ static inline void vmsvga_cursor_define(
  
  #define CMD(f)	le32_to_cpu(s->cmd->f)
@@ -120,7 +120,7 @@ Index: qemu/hw/vmware_vga.c
          case SVGA_CMD_UPDATE:
          case SVGA_CMD_UPDATE_VERBOSE:
              x = vmsvga_fifo_read(s);
-@@ -617,7 +626,7 @@ static void vmsvga_fifo_run(struct vmsvg
+@@ -624,7 +633,7 @@ static void vmsvga_fifo_run(struct vmsvg
              while (args --)
                  vmsvga_fifo_read(s);
              printf("%s: Unknown command 0x%02x in SVGA command FIFO\n",
@@ -129,7 +129,7 @@ Index: qemu/hw/vmware_vga.c
              break;
          }
  
-@@ -1136,6 +1145,12 @@ static void vmsvga_init(struct vmsvga_st
+@@ -1143,6 +1152,12 @@ static void vmsvga_init(struct vmsvga_st
  
      vga_init_vbe(&s->vga);
  
@@ -142,11 +142,11 @@ Index: qemu/hw/vmware_vga.c
      rom_add_vga(VGABIOS_FILENAME);
  
      vmsvga_reset(s);
-Index: qemu/qemu-char.c
+Index: qemu-0.12.4/qemu-char.c
 ===================================================================
---- qemu.orig/qemu-char.c	2010-05-11 18:05:22.955784896 -0400
-+++ qemu/qemu-char.c	2010-05-12 17:20:54.280909040 -0400
-@@ -2232,6 +2232,69 @@ static CharDriverState *qemu_chr_open_so
+--- qemu-0.12.4.orig/qemu-char.c
++++ qemu-0.12.4/qemu-char.c
+@@ -2235,6 +2235,69 @@ static CharDriverState *qemu_chr_open_so
      return NULL;
  }
  
@@ -216,7 +216,7 @@ Index: qemu/qemu-char.c
  QemuOpts *qemu_chr_parse_compat(const char *label, const char *filename)
  {
      char host[65], port[33], width[8], height[8];
-@@ -2352,6 +2415,10 @@ QemuOpts *qemu_chr_parse_compat(const ch
+@@ -2353,6 +2416,10 @@ QemuOpts *qemu_chr_parse_compat(const ch
          qemu_opt_set(opts, "path", filename);
          return opts;
      }
@@ -226,7 +226,7 @@ Index: qemu/qemu-char.c
 +    }
  
  fail:
-     fprintf(stderr, "%s: fail on \"%s\"\n", __FUNCTION__, filename);
+     qemu_opts_del(opts);
 @@ -2368,6 +2435,7 @@ static const struct {
      { .name = "udp",       .open = qemu_chr_open_udp },
      { .name = "msmouse",   .open = qemu_chr_open_msmouse },
@@ -235,10 +235,10 @@ Index: qemu/qemu-char.c
  #ifdef _WIN32
      { .name = "file",      .open = qemu_chr_open_win_file_out },
      { .name = "pipe",      .open = qemu_chr_open_win_pipe },
-Index: qemu/sdl.c
+Index: qemu-0.12.4/sdl.c
 ===================================================================
---- qemu.orig/sdl.c	2010-05-11 18:05:22.959804376 -0400
-+++ qemu/sdl.c	2010-05-12 12:10:40.128783931 -0400
+--- qemu-0.12.4.orig/sdl.c
++++ qemu-0.12.4/sdl.c
 @@ -58,6 +58,8 @@ static uint8_t allocator;
  static SDL_PixelFormat host_format;
  static int scaling_active = 0;
@@ -302,7 +302,7 @@ Index: qemu/sdl.c
      } else if (absolute_enabled) {
  	sdl_show_cursor();
  	absolute_enabled = 0;
-@@ -760,7 +773,8 @@ static void sdl_mouse_warp(int x, int y,
+@@ -761,7 +774,8 @@ static void sdl_mouse_warp(int x, int y,
          if (!guest_cursor)
              sdl_show_cursor();
          if (gui_grab || kbd_mouse_is_absolute() || absolute_enabled) {
@@ -312,7 +312,7 @@ Index: qemu/sdl.c
              if (!kbd_mouse_is_absolute() && !absolute_enabled)
                  SDL_WarpMouse(x, y);
          }
-@@ -814,7 +828,7 @@ static void sdl_mouse_define(int width, 
+@@ -815,7 +829,7 @@ static void sdl_mouse_define(int width, 
      }
      guest_sprite = SDL_CreateCursor(sprite, mask, width, height, hot_x, hot_y);
  
@@ -321,7 +321,7 @@ Index: qemu/sdl.c
              (gui_grab || kbd_mouse_is_absolute() || absolute_enabled))
          SDL_SetCursor(guest_sprite);
  }
-@@ -831,6 +845,7 @@ void sdl_display_init(DisplayState *ds, 
+@@ -832,6 +846,7 @@ void sdl_display_init(DisplayState *ds, 
      int flags;
      uint8_t data = 0;
      DisplayAllocator *da;
@@ -329,7 +329,7 @@ Index: qemu/sdl.c
      const SDL_VideoInfo *vi;
  
  #if defined(__APPLE__)
-@@ -855,6 +870,12 @@ void sdl_display_init(DisplayState *ds, 
+@@ -856,6 +871,12 @@ void sdl_display_init(DisplayState *ds, 
      vi = SDL_GetVideoInfo();
      host_format = *(vi->vfmt);
  
@@ -342,7 +342,7 @@ Index: qemu/sdl.c
      dcl = qemu_mallocz(sizeof(DisplayChangeListener));
      dcl->dpy_update = sdl_update;
      dcl->dpy_resize = sdl_resize;
-@@ -890,4 +911,9 @@ void sdl_display_init(DisplayState *ds, 
+@@ -891,4 +912,9 @@ void sdl_display_init(DisplayState *ds, 
          gui_fullscreen_initial_grab = 1;
          sdl_grab_start();
      }
@@ -352,10 +352,10 @@ Index: qemu/sdl.c
 +        opengl_exec_set_parent_window(info.info.x11.display,
 +                        info.info.x11.window);
  }
-Index: qemu/slirp/udp.c
+Index: qemu-0.12.4/slirp/udp.c
 ===================================================================
---- qemu.orig/slirp/udp.c	2010-05-11 18:05:22.955784896 -0400
-+++ qemu/slirp/udp.c	2010-05-12 12:10:40.129784123 -0400
+--- qemu-0.12.4.orig/slirp/udp.c
++++ qemu-0.12.4/slirp/udp.c
 @@ -40,6 +40,7 @@
  
  #include <slirp.h>
@@ -376,10 +376,10 @@ Index: qemu/slirp/udp.c
          if (slirp->restricted) {
              goto bad;
          }
-Index: qemu/sysemu.h
+Index: qemu-0.12.4/sysemu.h
 ===================================================================
---- qemu.orig/sysemu.h	2010-05-11 18:05:22.959804376 -0400
-+++ qemu/sysemu.h	2010-05-12 12:10:40.129784123 -0400
+--- qemu-0.12.4.orig/sysemu.h
++++ qemu-0.12.4/sysemu.h
 @@ -141,6 +141,7 @@ extern int semihosting_enabled;
  extern int old_param;
  extern int boot_menu;
@@ -388,10 +388,10 @@ Index: qemu/sysemu.h
  
  #define MAX_NODES 64
  extern int nb_numa_nodes;
-Index: qemu/target-i386/beginend_funcs.sh
+Index: qemu-0.12.4/target-i386/beginend_funcs.sh
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/beginend_funcs.sh	2010-05-12 12:10:40.129784123 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/beginend_funcs.sh
 @@ -0,0 +1,23 @@
 +#! /bin/sh
 +# Copyright 2008 (C) Intel Corporation
@@ -416,10 +416,10 @@ Index: qemu/target-i386/beginend_funcs.sh
 +echo -e MAGIC_MACRO\(glCallList\)\\n
 +echo -e MAGIC_MACRO\(glCallLists\)\\n
 +echo -e MAGIC_MACRO\(glEdgeFlag{,v}\)\\n
-Index: qemu/target-i386/ghash.c
+Index: qemu-0.12.4/target-i386/ghash.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/ghash.c	2010-05-12 12:10:40.130781590 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/ghash.c
 @@ -0,0 +1,347 @@
 +/* This is a modified and simplified version of original ghash.c */
 +
@@ -768,10 +768,10 @@ Index: qemu/target-i386/ghash.c
 +    hash_node = next;
 +  }
 +}
-Index: qemu/target-i386/ghash.h
+Index: qemu-0.12.4/target-i386/ghash.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/ghash.h	2010-05-12 12:10:40.130781590 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/ghash.h
 @@ -0,0 +1,59 @@
 +/* This is a modified and simplified version of original ghash.h  */
 +
@@ -832,10 +832,10 @@ Index: qemu/target-i386/ghash.h
 +
 +#endif /* __SIMPLE_HASH_H__ */
 +
-Index: qemu/target-i386/gl_func_perso.h
+Index: qemu-0.12.4/target-i386/gl_func_perso.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/gl_func_perso.h	2010-05-12 12:10:40.130781590 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/gl_func_perso.h
 @@ -0,0 +1,135 @@
 +/*
 + *  Hand-implemented GL/GLX API
@@ -972,11 +972,11 @@ Index: qemu/target-i386/gl_func_perso.h
 +MAGIC_MACRO(_glGetSelectBuffer_fake),
 +MAGIC_MACRO(_glFeedbackBuffer_fake),
 +MAGIC_MACRO(_glGetFeedbackBuffer_fake),
-Index: qemu/target-i386/helper.c
+Index: qemu-0.12.4/target-i386/helper.c
 ===================================================================
---- qemu.orig/target-i386/helper.c	2010-05-11 18:05:22.955784896 -0400
-+++ qemu/target-i386/helper.c	2010-05-12 12:10:40.131781711 -0400
-@@ -1433,7 +1433,7 @@ target_phys_addr_t cpu_get_phys_page_deb
+--- qemu-0.12.4.orig/target-i386/helper.c
++++ qemu-0.12.4/target-i386/helper.c
+@@ -1435,7 +1435,7 @@ target_phys_addr_t cpu_get_phys_page_deb
      }
  
      page_offset = (addr & TARGET_PAGE_MASK) & (page_size - 1);
@@ -985,10 +985,10 @@ Index: qemu/target-i386/helper.c
      return paddr;
  }
  
-Index: qemu/target-i386/helper.h
+Index: qemu-0.12.4/target-i386/helper.h
 ===================================================================
---- qemu.orig/target-i386/helper.h	2010-05-11 18:05:22.956804503 -0400
-+++ qemu/target-i386/helper.h	2010-05-12 12:10:40.131781711 -0400
+--- qemu-0.12.4.orig/target-i386/helper.h
++++ qemu-0.12.4/target-i386/helper.h
 @@ -217,4 +217,6 @@ DEF_HELPER_2(rclq, tl, tl, tl)
  DEF_HELPER_2(rcrq, tl, tl, tl)
  #endif
@@ -996,10 +996,10 @@ Index: qemu/target-i386/helper.h
 +DEF_HELPER_0(opengl, void)
 +
  #include "def-helper.h"
-Index: qemu/target-i386/helper_opengl.c
+Index: qemu-0.12.4/target-i386/helper_opengl.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/helper_opengl.c	2010-05-12 12:10:40.132781622 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/helper_opengl.c
 @@ -0,0 +1,1207 @@
 +/*
 + *  Host-side implementation of GL/GLX API
@@ -2208,11 +2208,11 @@ Index: qemu/target-i386/helper_opengl.c
 +    io_register();
 +}
 +#endif
-Index: qemu/target-i386/kvm.c
+Index: qemu-0.12.4/target-i386/kvm.c
 ===================================================================
---- qemu.orig/target-i386/kvm.c	2010-05-11 18:05:22.956804503 -0400
-+++ qemu/target-i386/kvm.c	2010-05-12 12:10:40.132781622 -0400
-@@ -528,7 +528,7 @@ static int kvm_get_fpu(CPUState *env)
+--- qemu-0.12.4.orig/target-i386/kvm.c
++++ qemu-0.12.4/target-i386/kvm.c
+@@ -529,7 +529,7 @@ static int kvm_get_fpu(CPUState *env)
      return 0;
  }
  
@@ -2221,10 +2221,10 @@ Index: qemu/target-i386/kvm.c
  {
      struct kvm_sregs sregs;
      uint32_t hflags;
-Index: qemu/target-i386/mesa_enums.c
+Index: qemu-0.12.4/target-i386/mesa_enums.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_enums.c	2010-05-12 12:10:40.163783695 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_enums.c
 @@ -0,0 +1,4890 @@
 +/* DO NOT EDIT - This file generated automatically by gl_enums.py (from Mesa) script */
 +
@@ -7116,10 +7116,10 @@ Index: qemu/target-i386/mesa_enums.c
 +}
 +
 +
-Index: qemu/target-i386/mesa_get.c
+Index: qemu-0.12.4/target-i386/mesa_get.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_get.c	2010-05-12 12:10:40.171781452 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_get.c
 @@ -0,0 +1,5563 @@
 +
 +/***
@@ -12684,10 +12684,10 @@ Index: qemu/target-i386/mesa_get.c
 +      params[i] = (GLdouble) values[i];
 +}
 +
-Index: qemu/target-i386/mesa_gl.h
+Index: qemu-0.12.4/target-i386/mesa_gl.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_gl.h	2010-05-12 12:10:40.173780926 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_gl.h
 @@ -0,0 +1,2251 @@
 +/*
 + * Mesa 3-D graphics library
@@ -14940,10 +14940,10 @@ Index: qemu/target-i386/mesa_gl.h
 +#endif
 +
 +#endif /* __gl_h_ */
-Index: qemu/target-i386/mesa_glext.h
+Index: qemu-0.12.4/target-i386/mesa_glext.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_glext.h	2010-05-12 12:10:40.180780867 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_glext.h
 @@ -0,0 +1,7279 @@
 +#ifndef __glext_h_
 +#define __glext_h_
@@ -22224,10 +22224,10 @@ Index: qemu/target-i386/mesa_glext.h
 +
 +/* ERO */
 +GLAPI void GLAPIENTRY fake_gluBuild2DMipmaps (GLenum target, GLint internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *data);
-Index: qemu/target-i386/mesa_glu.h
+Index: qemu-0.12.4/target-i386/mesa_glu.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_glu.h	2010-05-12 12:10:40.181781686 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_glu.h
 @@ -0,0 +1,354 @@
 +/*
 +** License Applicability. Except to the extent portions of this file are
@@ -22583,10 +22583,10 @@ Index: qemu/target-i386/mesa_glu.h
 +#endif
 +
 +#endif /* __glu_h__ */
-Index: qemu/target-i386/mesa_glx.h
+Index: qemu-0.12.4/target-i386/mesa_glx.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_glx.h	2010-05-12 12:10:40.181781686 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_glx.h
 @@ -0,0 +1,510 @@
 +/*
 + * Mesa 3-D graphics library
@@ -23098,10 +23098,10 @@ Index: qemu/target-i386/mesa_glx.h
 +#endif
 +
 +#endif
-Index: qemu/target-i386/mesa_glxext.h
+Index: qemu-0.12.4/target-i386/mesa_glxext.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_glxext.h	2010-05-12 12:10:40.182781668 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_glxext.h
 @@ -0,0 +1,785 @@
 +#ifndef __glxext_h_
 +#define __glxext_h_
@@ -23888,10 +23888,10 @@ Index: qemu/target-i386/mesa_glxext.h
 +#endif
 +
 +#endif
-Index: qemu/target-i386/mesa_mipmap.c
+Index: qemu-0.12.4/target-i386/mesa_mipmap.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/mesa_mipmap.c	2010-05-12 12:10:40.183781579 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/mesa_mipmap.c
 @@ -0,0 +1,824 @@
 +
 +/*
@@ -24717,10 +24717,10 @@ Index: qemu/target-i386/mesa_mipmap.c
 +
 +   return retval;
 +}
-Index: qemu/target-i386/opengl_exec.c
+Index: qemu-0.12.4/target-i386/opengl_exec.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/opengl_exec.c	2010-05-14 13:34:05.506295624 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/opengl_exec.c
 @@ -0,0 +1,3931 @@
 +/*
 + *  Host-side implementation of GL/GLX API
@@ -28653,10 +28653,10 @@ Index: qemu/target-i386/opengl_exec.c
 +
 +    return ret_int;
 +}
-Index: qemu/target-i386/opengl_func.h
+Index: qemu-0.12.4/target-i386/opengl_func.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/opengl_func.h	2010-05-12 12:10:40.187781086 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/opengl_func.h
 @@ -0,0 +1,1108 @@
 +/*
 + *  Main header for both host and guest sides
@@ -29766,10 +29766,10 @@ Index: qemu/target-i386/opengl_func.h
 +#error Unsupported ABI
 +#endif
 +#endif
-Index: qemu/target-i386/opengl_player.c
+Index: qemu-0.12.4/target-i386/opengl_player.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/opengl_player.c	2010-05-12 12:10:40.188781627 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/opengl_player.c
 @@ -0,0 +1,1461 @@
 +/*
 + *  Plays a sequence of OpenGL calls recorded either under qemu or with opengl_server
@@ -31232,10 +31232,10 @@ Index: qemu/target-i386/opengl_player.c
 +    }
 +    return 0;
 +}
-Index: qemu/target-i386/opengl_server.c
+Index: qemu-0.12.4/target-i386/opengl_server.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/opengl_server.c	2010-05-12 12:10:40.188781627 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/opengl_server.c
 @@ -0,0 +1,826 @@
 +/*
 + *  TCP/IP OpenGL server
@@ -32063,10 +32063,10 @@ Index: qemu/target-i386/opengl_server.c
 +
 +  return 0;
 +}
-Index: qemu/target-i386/opengl_utils.h
+Index: qemu-0.12.4/target-i386/opengl_utils.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/opengl_utils.h	2010-05-12 12:10:40.189781608 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/opengl_utils.h
 @@ -0,0 +1,453 @@
 +/*
 + *  Functions used by host & client sides
@@ -32521,10 +32521,10 @@ Index: qemu/target-i386/opengl_utils.h
 +}
 +
 +#endif
-Index: qemu/target-i386/parse_gl_h.c
+Index: qemu-0.12.4/target-i386/parse_gl_h.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/parse_gl_h.c	2010-05-12 12:10:40.190781520 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/parse_gl_h.c
 @@ -0,0 +1,1496 @@
 +/*
 + *  Parse gl.h et glx.h to auto-generate source code
@@ -34022,10 +34022,10 @@ Index: qemu/target-i386/parse_gl_h.c
 +
 +  return 0;
 +}
-Index: qemu/target-i386/parse_mesa_get_c.c
+Index: qemu-0.12.4/target-i386/parse_mesa_get_c.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu/target-i386/parse_mesa_get_c.c	2010-05-12 12:10:40.190781520 -0400
+--- /dev/null
++++ qemu-0.12.4/target-i386/parse_mesa_get_c.c
 @@ -0,0 +1,225 @@
 +/*
 + *  Parse the "get.c" from mesa source tree to generate "glgetv_cst.h"
@@ -34252,10 +34252,10 @@ Index: qemu/target-i386/parse_mesa_get_c.c
 +  fclose(outf);
 +  return 0;
 +}
-Index: qemu/target-i386/translate.c
+Index: qemu-0.12.4/target-i386/translate.c
 ===================================================================
---- qemu.orig/target-i386/translate.c	2010-05-11 18:05:22.957804134 -0400
-+++ qemu/target-i386/translate.c	2010-05-12 12:10:40.192781553 -0400
+--- qemu-0.12.4.orig/target-i386/translate.c
++++ qemu-0.12.4/target-i386/translate.c
 @@ -743,6 +743,8 @@ static void gen_check_io(DisasContext *s
      int state_saved;
      target_ulong next_eip;
@@ -34284,10 +34284,10 @@ Index: qemu/target-i386/translate.c
      if (s->cc_op != CC_OP_DYNAMIC)
          gen_op_set_cc_op(s->cc_op);
      gen_jmp_im(cur_eip);
-Index: qemu/vl.c
+Index: qemu-0.12.4/vl.c
 ===================================================================
---- qemu.orig/vl.c	2010-05-11 18:05:22.959804376 -0400
-+++ qemu/vl.c	2010-05-12 17:10:46.174909450 -0400
+--- qemu-0.12.4.orig/vl.c
++++ qemu-0.12.4/vl.c
 @@ -238,6 +238,7 @@ int semihosting_enabled = 0;
  #ifdef TARGET_ARM
  int old_param = 0;
@@ -34304,7 +34304,7 @@ Index: qemu/vl.c
  
  int nb_numa_nodes;
  uint64_t node_mem[MAX_NODES];
-@@ -4418,6 +4420,8 @@ static void select_vgahw (const char *p)
+@@ -4432,6 +4434,8 @@ static void select_vgahw (const char *p)
      } else if (strstart(p, "xenfb", &opts)) {
          vga_interface_type = VGA_XENFB;
      } else if (!strstart(p, "none", &opts)) {
@@ -34313,7 +34313,7 @@ Index: qemu/vl.c
      invalid_vga:
          fprintf(stderr, "Unknown vga type: %s\n", p);
          exit(1);
-@@ -5540,6 +5544,9 @@ int main(int argc, char **argv, char **e
+@@ -5563,6 +5567,9 @@ int main(int argc, char **argv, char **e
                  old_param = 1;
                  break;
  #endif
@@ -34323,7 +34323,7 @@ Index: qemu/vl.c
              case QEMU_OPTION_clock:
                  configure_alarms(optarg);
                  break;
-@@ -5554,6 +5561,12 @@ int main(int argc, char **argv, char **e
+@@ -5577,6 +5584,12 @@ int main(int argc, char **argv, char **e
                  }
                  configure_rtc(opts);
                  break;
@@ -34336,7 +34336,7 @@ Index: qemu/vl.c
              case QEMU_OPTION_tb_size:
                  tb_size = strtol(optarg, NULL, 0);
                  if (tb_size < 0)
-@@ -5907,6 +5920,14 @@ int main(int argc, char **argv, char **e
+@@ -5933,6 +5946,14 @@ int main(int argc, char **argv, char **e
              }
          }
      }
@@ -34351,11 +34351,11 @@ Index: qemu/vl.c
  
      if (foreach_device_config(DEV_SERIAL, serial_parse) < 0)
          exit(1);
-Index: qemu/qemu-options.hx
+Index: qemu-0.12.4/qemu-options.hx
 ===================================================================
---- qemu.orig/qemu-options.hx	2010-05-11 18:05:22.959804376 -0400
-+++ qemu/qemu-options.hx	2010-05-12 17:18:10.420907903 -0400
-@@ -1783,6 +1783,18 @@ many timer interrupts were not processed
+--- qemu-0.12.4.orig/qemu-options.hx
++++ qemu-0.12.4/qemu-options.hx
+@@ -1789,6 +1789,18 @@ many timer interrupts were not processed
  re-inject them.
  ETEXI
  

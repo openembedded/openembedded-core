@@ -1,6 +1,6 @@
 require qemu.inc
 
-PR = "r10"
+PR = "r13"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
