@@ -286,6 +286,8 @@ def package_qa_check_license(workdir, d):
     for url in lic_files.split():
         (type, host, path, user, pswd, parm) = bb.decodeurl(url)
         srclicfile = os.path.join(srcdir, path)
+        if not os.path.isfile(srclicfile):
+            raise bb.build.FuncFailed( "LIC_FILES_CHKSUM points to invalid file: " + path)
 
         if 'md5' not in parm:
             bb.error("md5 checksum is not specified for ", url)
