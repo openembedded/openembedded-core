@@ -48,6 +48,7 @@ KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
 QEMU_TAP_CMD="-net tap,vlan=0,ifname=tap0,script=$QEMUIFUP,downscript=$QEMUIFDOWN"
 QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
 KERNCMDLINE="mem=$QEMU_MEMORY"
+QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
 
 SERIALOPTS=""
 if [ "x$SERIAL_LOGFILE" != "x" ]; then
@@ -81,9 +82,10 @@ fi
 
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarmv7" ]; then
     QEMU=qemu-system-arm
+    # QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -force-pointer"
     if [ "$TYPE" = "ext3" ]; then
         KERNCMDLINE="root=/dev/sda console=ttyAMA0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -usb -usbdevice wacom-tablet -no-reboot -force-pointer -show-cursor"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -no-reboot $QEMU_UI_OPTIONS"
     fi
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
@@ -94,7 +96,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -usb -usbdevice wacom-tablet -no-reboot -force-pointer -show-cursor"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb --no-reboot $QEMU_UI_OPTIONS"
     fi
 	if [ "$MACHINE" = "qemuarmv6" ]; then
 		QEMUOPTIONS="$QEMUOPTIONS -cpu arm1136"
@@ -106,9 +108,10 @@ fi
 
 if [ "$MACHINE" = "qemux86" ]; then
     QEMU=qemu
+    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga vmware -enable-gl"
     if [ "$TYPE" = "ext3" ]; then
         KERNCMDLINE="vga=0 root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
-        QEMUOPTIONS="-vga vmware -show-cursor $QEMU_NETWORK_CMD -hda $HDIMAGE -enable-gl"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -hda $HDIMAGE $QEMU_UI_OPTIONS"
     fi
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
@@ -119,7 +122,7 @@ if [ "$MACHINE" = "qemux86" ]; then
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
-        QEMUOPTIONS="-vga vmware -show-cursor $QEMU_NETWORK_CMD -enable-gl"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD $QEMU_UI_OPTIONS"
     fi
 fi
 
