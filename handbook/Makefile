@@ -1,7 +1,6 @@
 all: html pdf tarball
 
 pdf:
-
 	./poky-doc-tools/poky-docbook-to-pdf poky-handbook.xml
 	./poky-doc-tools/poky-docbook-to-pdf bsp-guide.xml
 #       -- old way --
@@ -11,12 +10,17 @@ XSLTOPTS = --stringparam html.stylesheet style.css \
            --stringparam  chapter.autolabel 1 \
            --stringparam  appendix.autolabel 1 \
            --stringparam  section.autolabel 1
-XSLTOPTS2 = --xinclude /usr/share/xml/docbook/stylesheet/nwalsh/html/docbook.xsl
+
+##
+# These URI should be rewritten by your distribution's xml catalog to
+# match your localy installed XSL stylesheets.
+XSL_BASE_URI  = http://docbook.sourceforge.net/release/xsl/current
+XSL_XHTML_URI = $(XSL_BASE_URI)/xhtml/docbook.xsl
 
 html:
 #       See http://www.sagehill.net/docbookxsl/HtmlOutput.html 
-	xsltproc $(XSLTOPTS) -o poky-handbook.html $(XSLTOPTS2) poky-handbook.xml
-	xsltproc $(XSLTOPTS) -o bsp-guide.html $(XSLTOPTS2) bsp-guide.xml
+	xsltproc $(XSLTOPTS) -o poky-handbook.html $(XSL_XHTML_URI) poky-handbook.xml
+	xsltproc $(XSLTOPTS) -o bsp-guide.html $(XSL_XHTML_URI) bsp-guide.xml
 #       -- old way --
 #	xmlto xhtml-nochunks poky-handbook.xml
 
