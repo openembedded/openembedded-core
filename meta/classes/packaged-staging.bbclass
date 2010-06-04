@@ -152,7 +152,7 @@ staging_helper () {
 	conffile=${PSTAGE_MACHCONFIG}
 	mkdir -p ${PSTAGE_WORKDIR}/pstaging_lists
 	if [ ! -e $conffile ]; then
-		ipkgarchs="${BUILD_SYS}"
+		ipkgarchs="${BUILD_ARCH} ${BUILD_ARCH}_${TARGET_ARCH}"
 		priority=1
 		for arch in $ipkgarchs; do
 			echo "arch $arch $priority" >> $conffile
