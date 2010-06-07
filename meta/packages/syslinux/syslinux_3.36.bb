@@ -2,7 +2,7 @@ DESCRIPTION = "A multi-purpose linux bootloader"
 HOMEPAGE = "http://syslinux.zytor.com/"
 LICENSE = "GPL"
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/boot/syslinux/syslinux-${PV}.tar.bz2"
-PR = "r3"
+PR = "r4"
 
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
@@ -13,6 +13,11 @@ do_configure() {
 }
 
 COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
+
+export BINDIR = "${bindir}"
+export SBINDIR = "${sbindir}"
+export LIBDIR = "${libdir}"
+export INCDIR = "${includedir}"
 
 do_compile_virtclass-native () {
 	oe_runmake installer
