@@ -269,8 +269,8 @@ def oe_unpack_file(file, data, url = None):
 		if not 'patch' in parm:
 			# The "destdir" handling was specifically done for FILESPATH
 			# items.  So, only do so for file:// entries.
-			if type == "file":
-				destdir = bb.decodeurl(url)[1] or "."
+			if type == "file" and path.find("/") != -1:
+				destdir = path.rsplit("/", 1)[0]
 			else:
 				destdir = "."
 			bb.mkdirhier("%s/%s" % (os.getcwd(), destdir))
