@@ -20,14 +20,14 @@ do_install () {
 	if [ "${PN}" == "gcc-cross" -o "${PN}" == "gcc-crosssdk" ]; then
 		install -d ${D}${includedir}/gcc-build-internal
 		for f in *.h *.c libgcc.mvars; do
-			cp ${B}/gcc/$f ${D}${includedir}/gcc-build-internal/
+			cp ${B}/gcc/$f ${D}${includedir}/gcc-build-internal-${TARGET_SYS}/
 		done
 		# Special for PowerPC (and possibly others)
 		if [ -f ${B}/gcc/tramp.S ]; then
-			cp ${B}/gcc/*.S ${D}${includedir}/gcc-build-internal/
+			cp ${B}/gcc/*.S ${D}${includedir}/gcc-build-internal-${TARGET_SYS}/
 		fi
 		if [ -f libgcc.mvars]; then
-			cp ${B}/gcc/libgcc.mvars ${D}${includedir}/gcc-build-internal/
+			cp ${B}/gcc/libgcc.mvars ${D}${includedir}/gcc-build-internal-${TARGET_SYS}/
 		fi
 	fi
 }

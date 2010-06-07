@@ -13,7 +13,7 @@ RUNTIMETARGET = "libgcc libssp libstdc++-v3"
 # libgfortran
 
 do_configure () {
-	cp ${STAGING_DIR_NATIVE}${prefix_native}/include/gcc-build-internal/* ${S}/gcc
+	cp ${STAGING_DIR_NATIVE}${prefix_native}/include/gcc-build-internal-${TARGET_SYS}/* ${S}/gcc
 	for d in ${RUNTIMETARGET}; do
 		echo "Configuring $d"
 		mkdir -p ${B}/$d/
