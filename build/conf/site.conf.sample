@@ -2,6 +2,9 @@
 # local.conf covers user settings, site.conf covers site specific information
 # such as proxy server addresses and optionally any shared download location
 #
+# SITE_CONF_VERSION is increased each time build/conf/site.conf
+# changes incompatibly
+SCONF_VERSION = "1"
 
 # Uncomment to cause CVS to use the proxy host specified
 #CVS_PROXY_HOST = "proxy.example.com"
