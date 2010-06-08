@@ -27,3 +27,80 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+e2fsprogs = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn+e2fsprogs = "05/2010"
 RECIPE_COMMENTS_pn+e2fsprogs = ""
 
+RECIPE_STATUS_pn+binutils="yellow" # custom do_configure for autotools recipe in the binutils.inc file
+RECIPE_LATEST_VERSION_pn+binutils="2.20.1"
+RECIPE_NO_OF_PATCHES_pn+binutils="8"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+binutils="1 months"
+RECIPE_LATEST_RELEASE_DATE_pn+binutils="2010/05/28"
+
+RECIPE_STATUS_pn+gcc="red" # recipe building is failing
+RECIPE_LATEST_VERSION_pn+gcc="4.5.0"
+RECIPE_NO_OF_PATCHES_pn+gcc="8"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+gcc="5 months"
+RECIPE_LATEST_RELEASE_DATE_pn+gcc="2010/03/03"
+
+RECIPE_STATUS_pn+autoconf="green" # no update needed
+RECIPE_LATEST_VERSION_pn+autoconf="2.65"
+RECIPE_NO_OF_PATCHES_pn+autoconf="10"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+autoconf="4 months"
+RECIPE_LATEST_RELEASE_DATE_pn+autoconf="2009/11/21"
+
+RECIPE_STATUS_pn+automake="green" # no update needed
+RECIPE_LATEST_VERSION_pn+automake="1.11.1"
+RECIPE_NO_OF_PATCHES_pn+automake="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+automake="7 months"
+RECIPE_LATEST_RELEASE_DATE_pn+automake="2009/12/08"
+
+RECIPE_STATUS_pn+bison="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+bison="2.4.2"
+RECIPE_NO_OF_PATCHES_pn+bison="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+bison="15 months"
+RECIPE_LATEST_RELEASE_DATE_pn+bison="2010/03/20"
+
+RECIPE_STATUS_pn+diffstat="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+diffstat="1.51"
+RECIPE_NO_OF_PATCHES_pn+diffstat="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+diffstat="1 months"
+RECIPE_LATEST_RELEASE_DATE_pn+diffstat="2009/11/07"
+
+RECIPE_STATUS_pn+distcc="green" # no update needed
+RECIPE_LATEST_VERSION_pn+distcc="2.18.3"
+RECIPE_NO_OF_PATCHES_pn+distcc="2"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+distcc="1 months"
+RECIPE_LATEST_RELEASE_DATE_pn+distcc="2004/11/30"
+
+RECIPE_STATUS_pn+exmap-console="green" # no update needed
+RECIPE_LATEST_VERSION_pn+exmap-console="0.4.1"
+RECIPE_NO_OF_PATCHES_pn+exmap-console="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+exmap-console="2 months"
+RECIPE_LATEST_RELEASE_DATE_pn+exmap-console="2007/02/26"
+
+RECIPE_STATUS_pn+flex="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+flex="2.5.35"
+RECIPE_NO_OF_PATCHES_pn+flex="3"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+flex="2 months"
+RECIPE_LATEST_RELEASE_DATE_pn+flex="2008/02/26"
+
+RECIPE_STATUS_pn+gdb="red" # depricating to meta-extra
+RECIPE_LATEST_VERSION_pn+fstests="???"
+RECIPE_NO_OF_PATCHES_pn+fstests="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+fstests="???"
+RECIPE_LATEST_RELEASE_DATE_pn+fstests="???"
+
+RECIPE_STATUS_pn+gdb="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+gdb="7.1"
+RECIPE_NO_OF_PATCHES_pn+gdb="8"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+gdb="3 months"
+RECIPE_LATEST_RELEASE_DATE_pn+gdb="2010/03/18"
+
+RECIPE_STATUS_pn+gtk-theme-torturer="green" # no update needed git tree
+RECIPE_LATEST_VERSION_pn+gtk-theme-torturer="???"
+RECIPE_NO_OF_PATCHES_pn+gtk-theme-torturer="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+gtk-theme-torturer="???"
+RECIPE_LATEST_RELEASE_DATE_pn+gtk-theme-torturer="???"
+
+RECIPE_STATUS_pn+intltool="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+intltool="0.40.6"
+RECIPE_NO_OF_PATCHES_pn+intltool="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+intltool="5 months"
+RECIPE_LATEST_RELEASE_DATE_pn+intltool="2009/03/14"
