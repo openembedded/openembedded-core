@@ -104,3 +104,35 @@ RECIPE_LATEST_VERSION_pn+intltool="0.40.6"
 RECIPE_NO_OF_PATCHES_pn+intltool="1"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+intltool="5 months"
 RECIPE_LATEST_RELEASE_DATE_pn+intltool="2009/03/14"
+
+RECIPE_STATUS_pn+libtool="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+libtool="2.2.8"
+RECIPE_NO_OF_PATCHES_pn+libtool="5"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+libtool="7 months"
+RECIPE_LATEST_RELEASE_DATE_pn+libtool="2010/06/04"
+
+RECIPE_STATUS_pn+linux-libc-headers="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+linux-libc-headers="2.6.34"
+RECIPE_NO_OF_PATCHES_pn+linux-libc-headers="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+linux-libc-headers="3 months"
+RECIPE_LATEST_RELEASE_DATE_pn+linux-libc-headers="2010/05/16"
+
+RECIPE_STATUS_pn+lsof="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+lsof="4.83"
+RECIPE_NO_OF_PATCHES_pn+lsof="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+lsof="10 months"
+RECIPE_LATEST_RELEASE_DATE_pn+lsof="2010/01/18"
+
+RECIPE_STATUS_pn+lttng-control="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+lttng-control="0.86"
+RECIPE_NO_OF_PATCHES_pn+lttng-control="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+lttng-control="0 days"
+RECIPE_LATEST_RELEASE_DATE_pn+lttng-control="2010/05/19"
+
+RECIPE_STATUS_pn+lttng-viewer="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+lttng-viewer="0.8.84"
+RECIPE_NO_OF_PATCHES_pn+lttng-viewer="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+lttng-viewer="2 months"
+RECIPE_LATEST_RELEASE_DATE_pn+lttng-viewer="2007/08/12"
+
+
