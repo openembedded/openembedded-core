@@ -582,12 +582,17 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 As can be seen, the layers recipes are added to BBFILES. The
                 BBFILE_COLLECTIONS variable is then appended to with the
                 layer name. The BBFILE_PATTERN variable is immediately expanded
-                with a regular expression used to match files from BBFILES into a
-                particular layer, in this case by using the base pathname.
+                with a regular expression used to match files from BBFILES into
+                a particular layer, in this case by using the base pathname.
                 The BBFILE_PRIORITY variable then assigns different
                 priorities to the files in different layers. This is useful
                 in situations where the same package might appear in multiple
                 layers and allows you to choose which layer should 'win'.
+                Note the use of LAYERDIR with the immediate expansion operator.
+                LAYERDIR expands to the directory of the current layer and
+                requires use of the immediate expansion operator so that Bitbake
+                does not lazily expand the variable when it's parsing a
+                different directory.
             </para>
 
             <para>

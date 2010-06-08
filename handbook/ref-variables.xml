@@ -403,6 +403,15 @@
 
     <glossdiv id='var-glossary-l'><title>L</title>
 
+        <glossentry id='var-LAYERDIR'><glossterm>LAYERDIR</glossterm>
+            <glossdef>
+                <para>When used inside a layer.conf gives the path of the
+                current layer. This variable requires immediate expansion
+                (see the Bitbake manual) as lazy expansion can result in
+                the expansion happening in the wrong directory and therefore
+                giving the wrong value.</para>
+            </glossdef>
+        </glossentry>
         <glossentry id='var-LICENSE'><glossterm>LICENSE</glossterm>
             <glossdef>
                 <para>List of package source licenses.</para>
