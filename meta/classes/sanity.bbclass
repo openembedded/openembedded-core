@@ -43,6 +43,12 @@ def check_sanity(e):
 
 	messages = ""
 
+	# Check the Python version, we now use Python 2.6 features in
+	# various classes
+	import sys
+	if sys.hexversion < 0x020600F0:
+		messages = messages + 'Poky requires at least Python 2.6 to run. Please update your Python interpreter.\n'
+
 	if (LooseVersion(__version__) < LooseVersion(minversion)):
 		messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, __version__)
 
