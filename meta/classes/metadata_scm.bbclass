@@ -63,14 +63,14 @@ def base_get_metadata_svn_revision(path, d):
 	return revision
 
 def base_get_metadata_git_branch(path, d):
-	branch = os.popen('cd %s; git branch | grep "^* " | tr -d "* "' % path).read()
+	branch = os.popen('cd %s; git branch 2>&1 | grep "^* " | tr -d "* "' % path).read()
 
 	if len(branch) != 0:
 		return branch
 	return "<unknown>"
 
 def base_get_metadata_git_revision(path, d):
-	rev = os.popen("cd %s; git log -n 1 --pretty=oneline --" % path).read().split(" ")[0]
+	rev = os.popen("cd %s; git log -n 1 --pretty=oneline -- 2>&1" % path).read().split(" ")[0]
 	if len(rev) != 0:
 		return rev
 	return "<unknown>"
