@@ -41,6 +41,7 @@ target_libdir := "${libdir}"
 target_includedir := "${includedir}"
 target_base_libdir := "${base_libdir}"
 target_prefix := "${prefix}"
+target_exec_prefix := "${exec_prefix}"
 
 # Change to place files in SDKPATH
 prefix = "${SDKPATH}"

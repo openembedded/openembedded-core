@@ -37,6 +37,7 @@ target_libdir := "${libdir}"
 target_includedir := "${includedir}"
 target_base_libdir := "${base_libdir}"
 target_prefix := "${prefix}"
+target_exec_prefix := "${exec_prefix}"
 
 # Overrides for paths
 prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
