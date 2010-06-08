@@ -27,7 +27,7 @@
         and configuration data for machines, policy decisions, etc., which acts as
         a glue and binds everything together. Bitbake knows how to combine multiple
         data sources together, each data source being referred to as a <link
-            linkend='usingpoky-changes-collections'>'collection'</link>.
+            linkend='usingpoky-changes-layers'>'layer'</link>.
     </para>
 
     <para>
