@@ -117,7 +117,7 @@
             <para>build-essential</para>
         </listitem>
         <listitem>
-            <para>python</para>
+            <para>python (version 2.6 or later)</para>
         </listitem>
         <listitem>
             <para>diffstat</para>

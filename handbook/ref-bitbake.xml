@@ -81,9 +81,10 @@
             default this specifies the <filename class="directory">meta/packages/
             </filename> directory within Poky, but other directories such as
             <filename class="directory">meta-extras/</filename> can be included 
-            too. If multiple directories are specified a system referred to as 
-            <link linkend='usingpoky-changes-collections'>"collections"</link> is used to 
-            determine which files have priority.
+            too. Adding extra content to
+            <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm> is best
+            acheived through the use of Bitbake
+            <link linkend='usingpoky-changes-layers'>"layers"</link>.
         </para>
 
         <para>

@@ -518,85 +518,93 @@ bitbake poky-image-sato
         </para>
         <para>
             Poky supports the idea of <link
-                linkend='usingpoky-changes-collections'>"collections"</link> which when used
+                linkend='usingpoky-changes-layers'>"layers"</link> which when used
             properly can massively ease future upgrades and allow segregation
             between the Poky core and a given developer's changes. Some other advice on 
             managing changes to Poky is also given in the following section.
         </para>
 
-        <section id="usingpoky-changes-collections">
-            <title>Bitbake Collections</title>
+        <section id="usingpoky-changes-layers">
+          <title>Bitbake Layers</title>
 
-            <para>
+          <para>
                 Often, people want to extend Poky either through adding packages
                 or overriding files contained within Poky to add their own
                 functionality. Bitbake has a powerful mechanism called
-                collections which provide a way to handle this which is fully
-                supported and actively encouraged within Poky.
-            </para>
-            <para>
-                In the standard tree, meta-extras is an example of how you can
-                do this. As standard the data in meta-extras is not used on a
-                Poky build but local.conf.sample shows how to enable it:
-            </para>
-            <para>
-                <literallayout class='monospaced'>
-BBFILES := "${OEROOT}/meta/packages/*/*.bb ${OEROOT}/meta-extras/packages/*/*.bb"
-BBFILE_COLLECTIONS = "normal extras"
-BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
-BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
-BBFILE_PRIORITY_normal = "5"
-BBFILE_PRIORITY_extras = "5"</literallayout>
-            </para>
-            <para>
-                As can be seen, the extra recipes are added to BBFILES. The
-                BBFILE_COLLECTIONS variable is then set to contain a list of
-                collection names. The BBFILE_PATTERN variables are regular
-                expressions used to match files from BBFILES into a particular
-                collection in this case by using the base pathname. 
-                The BBFILE_PRIORITY variable then assigns the different
-                priorities to the files in different collections. This is useful
-                in situations where the same package might appear in both
-                repositories and allows you to choose which collection should
-                'win'.
-            </para>
-            <para>
-                This works well for recipes. For bbclasses and configuration
-                files, you can use the BBPATH environment variable. In this
-                case, the first file with the matching name found in BBPATH is
-                the one that is used, just like the PATH variable for binaries.
-            </para>
-        </section>
+                layers which provides a way to handle this extension in a fully
+                supported and non-invasive fashion.
+           </para>
 
-        <section id="usingpoky-changes-supplement">
-            <title>Supplementry Metadata Repositories</title>
+          <para>
+               The Poky tree includes two additional layers which demonstrate
+               this functionality, meta-moblin and meta-extras.
+               The meta-extras repostory is not enabled by default but enabling
+               it is as easy as adding the layers path to the BBLAYERS variable in
+               your bblayers.conf, this is how all layers are enabled in Poky builds:
+          </para>
+          <para>
+               <literallayout class='monospaced'>LCONF_VERSION = "1"
+
+BBFILES ?= ""
+BBLAYERS = " \
+  ${OEROOT}/meta \
+  ${OEROOT}/meta-moblin \
+  ${OEROOT}/meta-extras \
+  "
+</literallayout>
+          </para>
+
+          <para>
+               Bitbake parses the conf/layer.conf of each of the layers in BBLAYERS
+               to add the layers packages, classes and configuration to Poky.
+               To create your own layer, independent of the main Poky repository,
+               you need only create a directory with a conf/layer.conf file and
+               add the directory to your bblayers.conf.
+          </para>
+
+          <para>
+               The meta-extras layer.conf demonstrates the required syntax:
+               <literallayout class='monospaced'># We have a conf and classes directory, add to BBPATH
+BBPATH := "${BBPATH}${LAYERDIR}"
+
+# We have a packages directory, add to BBFILES
+BBFILES := "${BBFILES} ${LAYERDIR}/packages/*/*.bb"
+
+BBFILE_COLLECTIONS += "extras"
+BBFILE_PATTERN_extras := "^${LAYERDIR}/"
+BBFILE_PRIORITY_extras = "5"
+
+require conf/distro/include/poky-extras-src-revisions.inc
+               </literallayout>
+          </para>
+
+          <para>
+                As can be seen, the layers recipes are added to BBFILES. The
+                BBFILE_COLLECTIONS variable is then appended to with the
+                layer name. The BBFILE_PATTERN variable is immediately expanded
+                with a regular expression used to match files from BBFILES into a
+                particular layer, in this case by using the base pathname.
+                The BBFILE_PRIORITY variable then assigns different
+                priorities to the files in different layers. This is useful
+                in situations where the same package might appear in multiple
+                layers and allows you to choose which layer should 'win'.
+            </para>
 
             <para>
-                Often when developing a project based on Poky there will be components 
-                that are not ready for public consumption for whatever reason. By making
-                use of the collections mechanism and other functionality within Poky, it
-                is possible to have a public repository which is supplemented by a private 
-                one just containing the pieces that need to be kept private. 
+                Extra bbclasses and configuration are added to the BBPATH
+                environment variable. In this case, the first file with the
+                matching name found in BBPATH is the one that is used, just
+                like the PATH variable for binaries. It is therefore recommended
+                that you use unique bbclass and configuration file names in your
+                custom layer.
             </para>
+
             <para>
-                The usual approach with these is to create a separate git repository called 
-                "meta-prvt-XXX" which is checked out alongside the other meta-* 
-                directories included in Poky. Under this directory there can be several 
-                different directories such as classes, conf and packages which all 
-                function as per the usual Poky directory structure. 
-            </para>
-            <para>
-                If extra meta-* directories are found, Poky will automatically add them 
-                into the BBPATH variable so the conf and class files contained there 
-                are found. If a file called poky-extra-environment is found within the 
-                meta-* directory, this will be sourced as the environment is setup, 
-                allowing certain configuration to be overridden such as the location of the 
-                local.conf.sample file that is used.
-            </para>
-            <para>
-                Note that at present, BBFILES is not automatically changed and this needs 
-                to be adjusted to find files in the packages/ directory. Usually a custom 
-                local.conf.sample file will be used to handle this instead.
+                The recommended approach for custom layers is to store them in a
+                git repository of the format meta-prvt-XXXX and have this repository
+                cloned alongside the other meta directories in the Poky tree.
+                This way you can keep your Poky tree and it's configuration entirely
+                inside OEROOT.
             </para>
         </section>
 
