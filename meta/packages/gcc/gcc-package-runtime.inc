@@ -17,8 +17,8 @@ PACKAGES = "\
 FILES_libgcc = "${base_libdir}/libgcc*.so.*"
 FILES_libgcc-dev = " \
   ${base_libdir}/libgcc*.so \
-  ${libdir}/gcc/${TARGET_SYS}/${BINV}/crt* \
-  ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgcc*"
+  ${libdir}/${TARGET_SYS}/${BINV}/crt* \
+  ${libdir}/${TARGET_SYS}/${BINV}/libgcc*"
 
 FILES_libg2c = "${target_libdir}/libg2c.so.*"
 FILES_libg2c-dev = "\

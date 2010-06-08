@@ -11,6 +11,6 @@ require gcc-configure-cross.inc
 require gcc-package-cross.inc
 
 do_compile () {
-	oe_runmake all-host
+	oe_runmake all-host all-target-libgcc
 }
 

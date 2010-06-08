@@ -6,20 +6,20 @@ EXTRA_OECONF_PATHS = " \
     --with-sysroot=${STAGING_DIR_TARGET} \
     --with-build-sysroot=${STAGING_DIR_TARGET}"
 
-RUNTIMETARGET = "libgcc libssp libstdc++-v3"
+RUNTIMETARGET = "libssp libstdc++-v3"
 #  ?
 # libiberty
 # libmudflap
 # libgfortran
 
 do_configure () {
-	cp ${STAGING_DIR_NATIVE}${prefix_native}/include/gcc-build-internal-${TARGET_SYS}/* ${S}/gcc
+	export CXX="${CXX} -nostdinc++"
 	for d in ${RUNTIMETARGET}; do
 		echo "Configuring $d"
 		mkdir -p ${B}/$d/
 		cd ${B}/$d/
 		chmod a+x ${S}/$d/configure
-		${S}/$d/configure ${CONFIGUREOPTS} ${EXTRA_OECONF_PATHS}
+		${S}/$d/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
 	done
 }
 
@@ -31,6 +31,10 @@ do_compile () {
 }
 
 do_install () {
+	# Install libgcc from our gcc-cross saved data
+	install -d ${D}${base_libdir} ${D}${libdir}
+	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-${TARGET_SYS}/* ${D}
+
 	for d in ${RUNTIMETARGET}; do
 		cd ${B}/$d/
 		oe_runmake 'DESTDIR=${D}' install

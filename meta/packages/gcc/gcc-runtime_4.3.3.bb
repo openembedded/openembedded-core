@@ -1,4 +1,4 @@
-PR = "r10"
+PR = "r12"
 
 require gcc-${PV}.inc
 require gcc-configure-runtime.inc
@@ -8,3 +8,4 @@ SRC_URI_append = "file://fortran-cross-compile-hack.patch;patch=1"
 
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_INCDIR}"
 
+EXTRA_OECONF += "--disable-libunwind-exceptions"
