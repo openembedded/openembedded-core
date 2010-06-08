@@ -135,4 +135,46 @@ RECIPE_NO_OF_PATCHES_pn+lttng-viewer="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+lttng-viewer="2 months"
 RECIPE_LATEST_RELEASE_DATE_pn+lttng-viewer="2007/08/12"
 
+RECIPE_STATUS_pn+make="green" # already at the latest version
+RECIPE_LATEST_VERSION_pn+make="3.81"
+RECIPE_NO_OF_PATCHES_pn+make="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+make="42 months"
+RECIPE_LATEST_RELEASE_DATE_pn+make="2006/04/01"
+
+RECIPE_STATUS_pn+run-postinsts="green" # all local code
+RECIPE_LATEST_VERSION_pn+make="1.0"
+RECIPE_NO_OF_PATCHES_pn+make="2"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+make="6 months"
+RECIPE_LATEST_RELEASE_DATE_pn+make="2008/05/20"
+
+RECIPE_STATUS_pn+staging-linkage="green" # no code
+RECIPE_LATEST_VERSION_pn+staging-linkage="1.0"
+RECIPE_NO_OF_PATCHES_pn+staging-linkage="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+staging-linkage="2 months"
+RECIPE_LATEST_RELEASE_DATE_pn+staging-linkage="2009/11/19"
+
+RECIPE_STATUS_pn+nasm="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+nasm="2.07"
+RECIPE_NO_OF_PATCHES_pn+nasm="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+nasm="1 months"
+RECIPE_LATEST_RELEASE_DATE_pn+nasm="2009/07/21"
+
+RECIPE_STATUS_pn+oprofile="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+oprofile="0.9.6"
+RECIPE_NO_OF_PATCHES_pn+oprofile="2"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+oprofile="4 months"
+RECIPE_LATEST_RELEASE_DATE_pn+oprofile="2009/11/24"
+
+RECIPE_STATUS_pn+perl="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+perl="5.13.1"
+RECIPE_NO_OF_PATCHES_pn+perl="33"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+perl="3 days"
+RECIPE_LATEST_RELEASE_DATE_pn+perl="2010/05/20"
+
+RECIPE_STATUS_pn+prelink="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn+prelink="20090925"
+RECIPE_NO_OF_PATCHES_pn+prelink="3"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+prelink="6 months"
+RECIPE_LATEST_RELEASE_DATE_pn+prelink="2009/09/25"
+
 
