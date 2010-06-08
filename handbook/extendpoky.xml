@@ -814,7 +814,7 @@ quilt refresh
                 Poky metadata and added into <glossterm><link
                         linkend='var-SRC_URI'>SRC_URI</link></glossterm> of a recipe:
                 <programlisting>
-SRC_URI += "file://NAME-OF-PATCH.patch;patch=1"
+SRC_URI += "file://NAME-OF-PATCH.patch"
                 </programlisting>
 
                 This also requires a bump of <glossterm><link
