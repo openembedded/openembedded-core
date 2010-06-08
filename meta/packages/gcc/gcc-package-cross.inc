@@ -18,7 +18,7 @@ do_install () {
 
 	# gcc-runtime requires some headers, we stash them here
 	if [ "${PN}" == "gcc-cross" -o "${PN}" == "gcc-crosssdk" ]; then
-		install -d ${D}${includedir}/gcc-build-internal
+		install -d ${D}${includedir}/gcc-build-internal-${TARGET_SYS}
 		for f in *.h *.c libgcc.mvars; do
 			cp ${B}/gcc/$f ${D}${includedir}/gcc-build-internal-${TARGET_SYS}/
 		done
