@@ -4,38 +4,83 @@
 #
 
 usage() {
-    echo "Error: Invalid arguments."
     echo "Usage: "
-    echo "$ $0 <commit_id> <contrib_branch>"
+    echo "$ $0 [-r <relative_to>] [-i <commit_id>] -b <contrib_branch>"
+    echo "  <relative_to> is a commit identifier, like branch-name, HEAD, hex-commit-id"
     echo "  <commit_id> is a commit identifier, like branch-name, HEAD, hex-commit-id"
     echo "  <contrib_branch> is the branch-name in the git.pokylinux.org/poky-contrib tree"
+    echo "  If <relative_to> is not specified then relative to master is assumed"
+    echo "  If <commit_id> is not specified then it is assumed as HEAD"
+    echo " For Example:"
+    echo "   $0 -r master -i misc -b nitin/misc "
+    echo "   $0 -b nitin/misc "
+    echo "   $0 -r distro/master -i nitin/distro -b nitin/distro "
     exit 1
 }
 
-case $# in
-    2)
-    COMMIT=$1
-    CONTRIB_BRANCH=$2
-    shift
-    ;;
+while [ $# -ne 0 ] # loop over arguments
+do
+
+    case $1 in
+    -r )
+        shift
+        RELATIVE_TO=$1
+        shift
+        ;;
+    -i )
+        shift
+        COMMIT_ID=$1
+        shift
+        ;;
+    -b )
+        shift
+        CONTRIB_BRANCH=$1
+        shift
+        ;;
     *)
-    usage
-    ;;
-esac
+        usage
+        ;;
+    esac
+done
 
-if [ "$COMMIT" = "" ]; then
+if [ "${COMMIT_ID}" = "" ]; then
+    COMMIT_ID=HEAD
+    echo "Note: <commit_id> parameter assumed as 'HEAD'"
+fi
+
+if [ "${RELATIVE_TO}" = "" ]; then
+    RELATIVE_TO=master
+    echo "Note: <relative_to> parameter assumed as 'master'"
+fi
+
+if [ "${CONTRIB_BRANCH}" = "" ]; then
+    echo: "Error: Parameter <contrib_branch> not specified"
     usage
 fi
 
-git --no-pager show $COMMIT > /dev/null
+git --no-pager show ${COMMIT_ID} > /dev/null
 if [ "$?" != "0" ]; then
-    echo "Invalid Commit."
+    echo "Error: Invalid <commit_id> parameter specified"
     usage
 fi
 
-git --no-pager diff master..${COMMIT} | diffstat -p1
+git --no-pager show ${RELATIVE_TO} > /dev/null
+if [ "$?" != "0" ]; then
+    echo "Error: Invalid <relative_to> parameter specified: ${RELATIVE_TO}" 
+    usage
+fi
+
 echo ""
-git --no-pager log --no-merges master..${COMMIT} | git --no-pager shortlog
+git --no-pager diff ${RELATIVE_TO}..${COMMIT_ID} | diffstat -p1
+echo ""
+git --no-pager log --no-merges ${RELATIVE_TO}..${COMMIT_ID} | git --no-pager shortlog
 
+PULL_URL="http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=${CONTRIB_BRANCH}"
 
-echo "Pull URL: http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=${CONTRIB_BRANCH}"
+echo "Pull URL: ${PULL_URL}"
+
+wget -q ${PULL_URL} -O - | grep -q "Invalid branch:\ ${CONTRIB_BRANCH}"
+if [ "$?" == "0" ]; then
+    echo "Warning: Branch named '${CONTRIB_BRANCH}' was not found on contrib git tree"
+    echo "Check your <contrib-branch> parameter"
+fi
