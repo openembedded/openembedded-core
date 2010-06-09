@@ -47,3 +47,9 @@ ac_cv_func___va_copy=${ac_cv_func___va_copy=yes}
 ac_cv_epoll_works=${ac_cv_epoll_works=yes}
 
 ac_cv_check_sjlj=ssjlj
+
+# m4
+gt_cv_locale_fr=${gt_cv_locale_fr=fr_FR}
+gl_cv_func_btowc_eof=${gl_cv_func_btowc_eof=yes}
+gl_cv_func_wcrtomb_retval=${gl_cv_func_wcrtomb_retval=yes}
+gl_cv_func_wctob_works=${gl_cv_func_wctob_works=yes}
