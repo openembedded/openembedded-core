@@ -1,5 +1,5 @@
 require busybox.inc
-PR = "3"
+PR = "4"
 
 SRC_URI = "\
   http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
