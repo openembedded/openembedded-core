@@ -273,3 +273,57 @@ RECIPE_LATEST_VERSION_pn-python-pygtk="2.17.0"
 RECIPE_NO_OF_PATCHES_pn-python-pygtk="4"
 RECIPE_LATEST_RELEASE_DATE_pn-python-pygtk="2009/12/26"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pygtk="4 months"
+
+RECIPE_STATUS_pn-python-pyrex="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn-python-pyrex="0.9.9"
+RECIPE_NO_OF_PATCHES_pn-python-pyrex="1"
+RECIPE_LATEST_RELEASE_DATE_pn-python-pyrex="2010/04/12"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pyrex="23 months"
+
+RECIPE_STATUS_pn-python-scons="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn-python-scons="1.3.0.d20100606"
+RECIPE_NO_OF_PATCHES_pn-python-scons="0"
+RECIPE_LATEST_RELEASE_DATE_pn-python-scons="2010/06/06"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-scons="3 months"
+
+RECIPE_STATUS_pn-python-urlgrabber="green" # already @ the latest version
+RECIPE_LATEST_VERSION_pn-python-urlgrabber="3.9.1"
+RECIPE_NO_OF_PATCHES_pn-python-urlgrabber="2"
+RECIPE_LATEST_RELEASE_DATE_pn-python-urlgrabber="2009/09/25"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-urlgrabber="2 months"
+
+RECIPE_STATUS_pn-python="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn-python="2.6.5"
+RECIPE_NO_OF_PATCHES_pn-python="8"
+RECIPE_LATEST_RELEASE_DATE_pn-python="2010/03/18"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python="5 months"
+
+RECIPE_STATUS_pn-yum-metadata-parser="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn-yum-metadata-parser="1.1.4"
+RECIPE_NO_OF_PATCHES_pn-yum-metadata-parser="0"
+RECIPE_LATEST_RELEASE_DATE_pn-yum-metadata-parser="2010/01/07"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-yum-metadata-parser="5 months"
+
+RECIPE_STATUS_pn-quilt="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn-quilt="0.48"
+RECIPE_NO_OF_PATCHES_pn-quilt="3"
+RECIPE_LATEST_RELEASE_DATE_pn-quilt="2008/11/29"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-quilt="3 months"
+
+RECIPE_STATUS_pn-tcl="red" # upgrade needed
+RECIPE_LATEST_VERSION_pn-tcl="8.5.8"
+RECIPE_NO_OF_PATCHES_pn-tcl="2"
+RECIPE_LATEST_RELEASE_DATE_pn-tcl="2008/11/29"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-tcl="3 months"
+
+RECIPE_STATUS_pn-unifdef="green" # poky local source files
+RECIPE_LATEST_VERSION_pn-unifdef="2.6.18"
+RECIPE_NO_OF_PATCHES_pn-unifdef="1"
+RECIPE_LATEST_RELEASE_DATE_pn-unifdef="2009/06/03"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-unifdef="27 months"
+
+RECIPE_STATUS_pn-qmake2-cross="red" # src tar gz has changed to qt-everywhere-opensource-src 
+RECIPE_LATEST_VERSION_pn-qmake2-cross="2.10a"
+RECIPE_NO_OF_PATCHES_pn-qmake2-cross="1"
+RECIPE_LATEST_RELEASE_DATE_pn-qmake2-cross="2010/06/02"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qmake2-cross="4 months"
