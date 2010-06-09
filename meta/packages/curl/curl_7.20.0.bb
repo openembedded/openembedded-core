@@ -4,9 +4,10 @@ DEPENDS = "zlib gnutls"
 DEPENDS_virtclass-native = "zlib-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk"
 SECTION = "console/network"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
+           file://noldlibpath.patch;patch=1 \
            file://pkgconfig_fix.patch;patch=1"
 
 inherit autotools pkgconfig binconfig
