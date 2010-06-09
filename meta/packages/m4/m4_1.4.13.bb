@@ -4,12 +4,6 @@ SRC_URI = "${GNU_MIRROR}/m4/m4-${PV}.tar.gz \
            file://ac_config_links.patch;patch=1"
 PR = "r2"
 
-PR = "r1"
-
 inherit autotools
 
 EXTRA_OEMAKE += "'infodir=${infodir}'"
-
-do_configure() {
-	oe_runconf
-}
