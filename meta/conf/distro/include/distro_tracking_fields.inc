@@ -106,10 +106,10 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-intltool="5 months"
 RECIPE_LATEST_RELEASE_DATE_pn-intltool="2009/03/14"
 
 RECIPE_STATUS_pn-libtool="red" # upgrade needed
-RECIPE_LATEST_VERSION_pn-libtool="2.2.8"
+RECIPE_LATEST_VERSION_pn-libtool="2.2.10"
 RECIPE_NO_OF_PATCHES_pn-libtool="5"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libtool="7 months"
-RECIPE_LATEST_RELEASE_DATE_pn-libtool="2010/06/04"
+RECIPE_LATEST_RELEASE_DATE_pn-libtool="2010/06/09"
 
 RECIPE_STATUS_pn-linux-libc-headers="red" # upgrade needed
 RECIPE_LATEST_VERSION_pn-linux-libc-headers="2.6.34"
