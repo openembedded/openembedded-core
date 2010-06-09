@@ -16,7 +16,7 @@ if [ -f /etc/syslog.conf ]; then
 	LOG_REMOTE=0
 	for D in $DESTINATION; do
 		if [ "$D" = "buffer" ]; then
-			SYSLOG_ARGS="$SYSLOG_ARGS -C $BUFFERSIZE"
+			SYSLOG_ARGS="$SYSLOG_ARGS -C$BUFFERSIZE"
 			LOG_LOCAL=1
 		elif [ "$D" = "file" ]; then
 			if [ -n "$LOGFILE" ]; then
