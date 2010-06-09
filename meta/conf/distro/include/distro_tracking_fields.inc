@@ -327,3 +327,9 @@ RECIPE_LATEST_VERSION_pn-qmake2-cross="2.10a"
 RECIPE_NO_OF_PATCHES_pn-qmake2-cross="1"
 RECIPE_LATEST_RELEASE_DATE_pn-qmake2-cross="2010/06/02"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qmake2-cross="4 months"
+
+RECIPE_STATUS_pn-gnu-config="red" # cvs source tree. may need updating checkout date
+RECIPE_LATEST_VERSION_pn-gnu-config="20080123"
+RECIPE_NO_OF_PATCHES_pn-gnu-config="4"
+RECIPE_LATEST_RELEASE_DATE_pn-gnu-config="2008/01/23"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gnu-config="??? cvs tree"
