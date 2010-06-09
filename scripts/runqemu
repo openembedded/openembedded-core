@@ -137,11 +137,21 @@ if [ "$MACHINE" = "qemux86" ]; then
             findimage $T qemux86 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
         fi
     fi
-    CROSSPATH=$BUILDDIR/sysroots/$BUILD_SYS/i586-poky-linux/bin
+    CROSSPATH=$BUILDDIR/tmp/sysroots/$BUILD_SYS/usr
 fi
 
-if [ ! -e $CROSSPATH/cc ]; then
-   ln -s $CROSSPATH/gcc $CROSSPATH/cc
+if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" -o "$MACHINE" = "nokia800" ]; then
+    TARGET_SYS="arm-poky-linux"
+elif [ "$MACHINE" = "qemux86" ]; then
+    TARGET_SYS="i586-poky-linux"
+fi
+
+if [ ! -e $CROSSPATH/$TARGET_SYS/bin/cc ]; then
+   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/$TARGET_SYS/bin/cc
+fi
+
+if [ ! -e $CROSSPATH/$TARGET_SYS/bin/gcc ]; then
+   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/$TARGET_SYS/bin/gcc
 fi
 
 CROSSPATH=$BUILDDIR/tmp/sysroots/$BUILD_SYS/usr/bin:$CROSSPATH:$BUILDDIR/tmp/cross/bin
