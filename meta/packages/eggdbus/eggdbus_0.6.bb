@@ -1,17 +1,19 @@
-DESCRIPTION = "gobject dbus binding"
+DESCRIPTION = "An alternative to dbus-glib. It is designed specifically to make it comfortable to work with very large and potentially complex D-Bus services like e.g. DeviceKit-disks"
 HOMEPAGE = "http://cgit.freedesktop.org/~david/eggdbus"
-LICENSE = "GPLv2"
+LICENSE = "LGPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=155db86cdbafa7532b41f390409283eb \
+                    file://src/eggdbus/eggdbus.h;md5=6b312aef57ed8d738b3f131ad037d6c2"
 PR = "r1"
 
 DEPENDS = "dbus glib-2.0 dbus-glib eggdbus-native"
 DEPENDS_virtclass-native = "dbus-native glib-2.0-native dbus-glib-native"
 
 BASE_SRC_URI = "http://cgit.freedesktop.org/~david/${BPN}/snapshot/${BPN}-${PV}.tar.bz2 \
-          file://gtk-doc.patch;patch=1 \
+          file://gtk-doc.patch;apply=yes \
           "
 
 SRC_URI = "${BASE_SRC_URI} \
-           file://marshal.patch;patch=1 \
+           file://marshal.patch;apply=yes \
           "
 
 SRC_URI_virtclass-native = "${BASE_SRC_URI}"
