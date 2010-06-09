@@ -23,6 +23,9 @@ export MANDIR = "${D}${mandir}"
 
 LDFLAGS += "-lz"
 
+# The configure script breaks if the HOST variable is set
+HOST[unexport] = "1"
+
 do_install () {
 	oe_runmake install
 }
