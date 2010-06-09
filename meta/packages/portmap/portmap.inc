@@ -1,6 +1,9 @@
 DESCRIPTION = "RPC program number mapper."
+HOMEPAGE = "http://neil.brown.name/portmap/"
 SECTION = "console/network"
-LICENSE = "GPL"
+LICENSE = "BSD"
+LIC_FILES_CHKSUM = "file://portmap.c;beginline=2;endline=31;md5=51ff67e66ec84b2009b017b1f94afbf4 \
+                    file://from_local.c;beginline=9;endline=35;md5=1bec938a2268b8b423c58801ace3adc1"
 DEPENDS = "fakeroot-native"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/p/portmap/portmap_5.orig.tar.gz \
