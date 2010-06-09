@@ -1,0 +1,15 @@
+Index: xorg-server-1.1.99.3/configure.ac
+===================================================================
+--- xorg-server-1.1.99.3.orig/configure.ac	2010-06-09 12:52:26.000000000 +0100
++++ xorg-server-1.1.99.3/configure.ac	2010-06-09 12:52:51.000000000 +0100
+@@ -1731,7 +1731,9 @@
+ DIX_CFLAGS="-DHAVE_DIX_CONFIG_H"
+ AC_SUBST([DIX_CFLAGS])
+ 
+-AC_SUBST([libdir exec_prefix prefix])
++AC_SUBST([libdir])
++AC_SUBST([exec_prefix])
++AC_SUBST([prefix])
+ 
+ # Man page sections - used in config utils & generating man pages
+ XORG_MANPAGE_SECTIONS

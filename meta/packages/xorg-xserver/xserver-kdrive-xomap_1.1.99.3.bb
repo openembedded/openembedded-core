@@ -24,6 +24,7 @@ SRC_URI = "http://repository.maemo.org/pool/maemo3.1/free/source/xorg-server_1.1
 	file://button_only.patch;patch=1 \
 	file://calibrateext.patch;patch=1 \
 	file://disable-xkb.patch;patch=1 \
+	file://configfix.patch;patch=1 \
 	file://xcalibrate_coords.patch;patch=1"
 #	file://kdrive-evdev.patch;patch=1  \
 #	file://kdrive-use-evdev.patch;patch=1  \
