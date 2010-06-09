@@ -118,17 +118,15 @@ kernel_do_install() {
 	# Take care of arch specific headers	
 	# Kernel 2.6.27 moved headers from includes/asm-${ARCH} to arch/${ARCH}/include/asm
 	if [ -e arch/${ARCH}/include/asm/ ] ; then 
-		if [ -e include/asm ] ; then
-			cp -fR arch/${ARCH}/include/asm/* $kerneldir/include/asm/
-		fi
-		install -d $kerneldir/arch/${ARCH}/include
-		cp -fR arch/${ARCH}/* $kerneldir/arch/${ARCH}/	
+		install -d $kerneldir/arch/${ARCH}/
+		cp -fR arch/${ARCH}/* $kerneldir/arch/${ARCH}/
 
 	# Check for arch/x86 on i386
 	elif [ -d arch/x86/include/asm/ ]; then
-                if [ -e include/asm ] ; then
-                        cp -fR arch/x86/include/asm/* $kerneldir/include/asm/
-                fi
+		if [ -e include/asm ] ; then
+			install -d $kerneldir/include/asm/
+			cp -fR arch/x86/include/asm/* $kerneldir/include/asm/
+		fi
 		install -d $kerneldir/arch/x86/include
 		cp -fR arch/x86/* $kerneldir/arch/x86/
 	fi
