@@ -53,7 +53,6 @@ kill_udevd > "/dev/null" 2>&1
 		else
 			/sbin/udevadm trigger
 			/sbin/udevadm settle
-			(cd /; tar cf /etc/dev.tar /dev)
 		fi
 
 echo

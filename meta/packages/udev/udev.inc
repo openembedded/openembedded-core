@@ -10,20 +10,25 @@ SRC_URI += " \
 	   file://mount.sh \
 	   file://network.sh \
 	   file://local.rules \
+       file://udev-cache \
            file://init"
 
 UDEV_DEVFS_RULES ?= "0"
 
-PACKAGES =+ "udev-utils libvolume-id"
+PACKAGES =+ "udev-utils libvolume-id udev-cache"
 FILES_udev-utils = "${usrbindir}/udevinfo ${usrbindir}/udevtest"
 FILES_libvolume-id = "${base_libdir}/libvolume_id.so.*"
+FILES_udev-cache = "${sysconfdir}/init.d/udev-cache"
 
-RRECOMMENDS_${PN} = "udev-extraconf"
+RRECOMMENDS_${PN} += "udev-extraconf udev-cache"
 
 inherit update-rc.d autotools pkgconfig
 
-INITSCRIPT_NAME = "udev"
-INITSCRIPT_PARAMS = "start 04 S ."
+INITSCRIPT_PACKAGES = "udev udev-cache"
+INITSCRIPT_NAME_udev = "udev"
+INITSCRIPT_PARAMS_udev = "start 04 S ."
+INITSCRIPT_NAME_udev-cache = "udev-cache"
+INITSCRIPT_PARAMS_udev-cache = "start 36 S ."
 
 export CROSS = "${TARGET_PREFIX}"
 export HOSTCC = "${BUILD_CC}"
@@ -48,6 +53,7 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' INSTALL=install install
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/udev
+	install -m 0755 ${WORKDIR}/udev-cache ${D}${sysconfdir}/init.d/udev-cache
 
 	install -d ${D}${sysconfdir}/udev/rules.d/
 

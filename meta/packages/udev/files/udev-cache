@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+### BEGIN INIT INFO
+# Provides:          udev-cache
+# Required-Start:    mountall
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: cache /dev to speedup the udev next boot
+### END INIT INFO
+
+[ -d /sys/class ] || exit 1
+[ -r /proc/mounts ] || exit 1
+[ -x /sbin/udevd ] || exit 1
+
+if [ ! -e /etc/dev.tar ]; then
+	(cd /; tar cf /etc/dev.tar /dev)
+fi
+
+exit 0

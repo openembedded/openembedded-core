@@ -42,7 +42,6 @@ kill_udevd > "/dev/null" 2>&1
 		else
 			/sbin/udevtrigger
 			/sbin/udevsettle
-			(cd /; tar cf /etc/dev.tar /dev)
 		fi
 
 echo
