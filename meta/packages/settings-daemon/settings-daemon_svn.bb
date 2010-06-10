@@ -1,5 +1,9 @@
 DESCRIPTION = "Settings-daemon provides a bridge between gconf and xsettings"
-LICENSE = "GPL"
+HOMEPAGE = "http://svn.o-hand.com/view/matchbox/trunk/settings-daemon/"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+LICENSE = "MIT-style"
+LIC_FILES_CHKSUM = "file://xsettings-manager.h;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \
+                    file://xsettings-common.h;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b"
 DEPENDS = "gconf glib-2.0 gtk+"
 SECTION = "x11"
 PV = "0.0+svnr${SRCREV}"
@@ -7,7 +11,7 @@ PV = "0.0+svnr${SRCREV}"
 PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
-           file://addsoundkeys.patch;patch=1 \
+           file://addsoundkeys.patch;apply=yes \
            file://70settings-daemon.sh"
 
 S = "${WORKDIR}/${PN}"
