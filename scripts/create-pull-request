@@ -54,7 +54,7 @@ if [ "${RELATIVE_TO}" = "" ]; then
 fi
 
 if [ "${CONTRIB_BRANCH}" = "" ]; then
-    echo: "Error: Parameter <contrib_branch> not specified"
+    echo "Error: Parameter <contrib_branch> not specified"
     usage
 fi
 
