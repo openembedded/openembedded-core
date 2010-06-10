@@ -8,13 +8,18 @@ RDEPENDS_${PN}_virtclass-native = ""
 RDEPENDS_${PN}_virtclass-nativesdk = ""
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-PR = "r12"
+PR = "r13"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
 FILES_update-alternatives-cworth = "${bindir}/update-alternatives"
 FILES_libopkg-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so"
-FILES_libopkg = "${libdir}/*.so.*"
+FILES_libopkg = "${libdir}/*.so.* ${libdir}/opkg/"
+
+# We need to create the lock directory
+do_install_append() {
+    install -d ${D}${libdir}/opkg
+}
 
 # Define a variable to allow distros to run configure earlier.
 # (for example, to enable loading of ethernet kernel modules before networking starts)
