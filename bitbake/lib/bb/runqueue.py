@@ -24,11 +24,14 @@ Handles preparation and execution of a queue of tasks
 
 import bb, os, sys
 import subprocess
-from bb import msg, data, event
 import signal
 import stat
 import fcntl
 import copy
+import logging
+from bb import msg, data, event
+
+bblogger = logging.getLogger("BitBake")
 
 try:
     import cPickle as pickle
@@ -1126,6 +1129,11 @@ class RunQueueExecute:
             bb.event.worker_pid = os.getpid()
             bb.event.worker_pipe = pipeout
             bb.event.useStdout = False
+
+            # Child processes should send their messages to the UI
+            # process via the server process, not print them
+            # themselves
+            bblogger.handlers = [bb.event.LogHandler()]
 
             self.rq.state = runQueueChildProcess
             # Make the child the process group leader
