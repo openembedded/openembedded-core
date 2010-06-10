@@ -21,10 +21,13 @@ BitBake Utility Functions
 
 import re, fcntl, os, string, stat, shutil, time
 import sys
-import bb
 import errno
+import logging
+import bb
 import bb.msg
 from commands import getstatusoutput
+
+logger = logging.getLogger("BitBake.Util")
 
 # Version comparison
 separators = ".-"
@@ -307,9 +310,9 @@ def _print_trace(body, line):
     max_line = min(line + 4, len(body))
     for i in range(min_line, max_line + 1):
         if line == i:
-            bb.msg.error(bb.msg.domain.Util, " *** %.4d:%s" % (i, body[i-1]) )
+            logger.error(" *** %.4d:%s" % (i, body[i-1]) )
         else:
-            bb.msg.error(bb.msg.domain.Util, "     %.4d:%s" % (i, body[i-1]) )
+            logger.error("     %.4d:%s" % (i, body[i-1]) )
 
 
 def better_compile(text, file, realfile, mode = "exec"):
@@ -322,16 +325,16 @@ def better_compile(text, file, realfile, mode = "exec"):
     except Exception as e:
         # split the text into lines again
         body = text.split('\n')
-        bb.msg.error(bb.msg.domain.Util, "Error in compiling python function in: %s" % (realfile))
-        bb.msg.error(bb.msg.domain.Util, str(e))
+        logger.error("Error in compiling python function in: %s" % (realfile))
+        logger.error(str(e))
         if e.lineno:
-            bb.msg.error(bb.msg.domain.Util, "The lines leading to this error were:")
-            bb.msg.error(bb.msg.domain.Util, "\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
+            logger.error("The lines leading to this error were:")
+            logger.error("\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
             _print_trace(body, e.lineno)
         else:
-            bb.msg.error(bb.msg.domain.Util, "The function causing this error was:")
+            logger.error("The function causing this error was:")
             for line in body:
-                bb.msg.error(bb.msg.domain.Util, line)
+                logger.error(line)
         raise
 
 def better_exec(code, context, text, realfile = "<code>"):
@@ -351,9 +354,11 @@ def better_exec(code, context, text, realfile = "<code>"):
         if t in [bb.parse.SkipPackage, bb.build.FuncFailed]:
             raise
 
+        logger.exception("Error executing python function in '%s'", code.co_filename)
+
         # print the Header of the Error Message
-        bb.msg.error(bb.msg.domain.Util, "There was an error when executing a python function in: %s" % code.co_filename)
-        bb.msg.error(bb.msg.domain.Util, "Exception:%s Message:%s" % (t, value))
+        logger.error("There was an error when executing a python function in: %s" % code.co_filename)
+        logger.error("Exception:%s Message:%s" % (t, value))
 
         # Strip 'us' from the stack (better_exec call)
         tb = tb.tb_next
@@ -364,13 +369,13 @@ def better_exec(code, context, text, realfile = "<code>"):
 
         tbextract = traceback.extract_tb(tb)
         tbformat = "\n".join(traceback.format_list(tbextract))
-        bb.msg.error(bb.msg.domain.Util, "The stack trace of python calls that resulted in thie exception/failure was:")
+        logger.error("The stack trace of python calls that resulted in thie exception/failure was:")
         for line in tbformat.split('\n'):
-            bb.msg.error(bb.msg.domain.Util, line)
+            logger.error(line)
 
-        bb.msg.error(bb.msg.domain.Util, "The code that was being executed was:")
+        logger.error("The code that was being executed was:")
         _print_trace(textarray, linefailed)
-        bb.msg.error(bb.msg.domain.Util, "(file: '%s', lineno: %s, function: %s)" % (tbextract[0][0], tbextract[0][1], tbextract[0][2]))
+        logger.error("(file: '%s', lineno: %s, function: %s)" % (tbextract[0][0], tbextract[0][1], tbextract[0][2]))
 
         # See if this is a function we constructed and has calls back into other functions in 
         # "text". If so, try and improve the context of the error by diving down the trace
@@ -379,7 +384,7 @@ def better_exec(code, context, text, realfile = "<code>"):
         while nexttb is not None:
             if tbextract[level][0] == tbextract[level+1][0] and tbextract[level+1][2] == tbextract[level][0]:
                 _print_trace(textarray, tbextract[level+1][1])
-                bb.msg.error(bb.msg.domain.Util, "(file: '%s', lineno: %s, function: %s)" % (tbextract[level+1][0], tbextract[level+1][1], tbextract[level+1][2]))
+                logger.error("(file: '%s', lineno: %s, function: %s)" % (tbextract[level+1][0], tbextract[level+1][1], tbextract[level+1][2]))
             else:
                  break
             nexttb = tb.tb_next
@@ -400,11 +405,11 @@ def lockfile(name):
     """
     path = os.path.dirname(name)
     if not os.path.isdir(path):
-        bb.msg.error(bb.msg.domain.Util, "Error, lockfile path does not exist!: %s" % path)
+        logger.error("Lockfile path '%s' does not exist", path)
         sys.exit(1)
 
     if not os.access(path, os.W_OK):
-        bb.msg.error(bb.msg.domain.Util, "Error, lockfile path is not writable!: %s" % path)
+        logger.error("Error, lockfile path is not writable!: %s" % path)
         sys.exit(1)
 
     while True:
@@ -534,7 +539,7 @@ def filter_environment(good_vars):
         del os.environ[key]
 
     if len(removed_vars):
-        bb.msg.debug(1, bb.msg.domain.Util, "Removed the following variables from the environment: %s" % (", ".join(removed_vars)))
+        logger.debug(1, "Removed the following variables from the environment: %s", ", ".join(removed_vars))
 
     return removed_vars
 
@@ -604,10 +609,10 @@ def mkdirhier(dir):
     directory already exists like os.makedirs
     """
 
-    bb.msg.debug(3, bb.msg.domain.Util, "mkdirhier(%s)" % dir)
+    logger.debug(3, "mkdirhier(%s)", dir)
     try:
         os.makedirs(dir)
-        bb.msg.debug(2, bb.msg.domain.Util, "created " + dir)
+        logger.debug(2, "created " + dir)
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise e

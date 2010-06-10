@@ -22,22 +22,25 @@ Handles preparation and execution of a queue of tasks
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import bb, os, sys
+import os
+import sys
 import subprocess
 import signal
 import stat
 import fcntl
 import copy
 import logging
+import bb
 from bb import msg, data, event
 
 bblogger = logging.getLogger("BitBake")
+logger = logging.getLogger("BitBake.RunQueue")
 
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
-    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
+    logger.info("Importing cPickle failed. Falling back to a very slow implementation.")
 
 class RunQueueStats:
     """
@@ -363,14 +366,14 @@ class RunQueueData:
         for task in range(numTasks):
             if task_done[task] is False or deps_left[task] != 0:
                 problem_tasks.append(task)
-                bb.msg.debug(2, bb.msg.domain.RunQueue, "Task %s (%s) is not buildable\n" % (task, self.get_user_idstring(task)))
-                bb.msg.debug(2, bb.msg.domain.RunQueue, "(Complete marker was %s and the remaining dependency count was %s)\n\n" % (task_done[task], deps_left[task]))
+                logger.debug(2, "Task %s (%s) is not buildable\n", task, self.get_user_idstring(task))
+                logger.debug(2, "(Complete marker was %s and the remaining dependency count was %s)\n\n", task_done[task], deps_left[task])
 
         if problem_tasks:
             message = "Unbuildable tasks were found.\n"
             message = message + "These are usually caused by circular dependencies and any circular dependency chains found will be printed below. Increase the debug level to see a list of unbuildable tasks.\n\n"
             message = message + "Identifying dependency loops (this may take a short while)...\n"
-            bb.msg.error(bb.msg.domain.RunQueue, message)
+            logger.error(message)
 
             msgs = self.circular_depchains_handler(problem_tasks)
 
@@ -398,7 +401,7 @@ class RunQueueData:
             # Nothing to do
             return 0
 
-        bb.msg.note(1, bb.msg.domain.RunQueue, "Preparing runqueue")
+        logger.info("Preparing runqueue")
 
         # Step A - Work out a list of tasks to run
         #
@@ -445,7 +448,7 @@ class RunQueueData:
             fn = taskData.fn_index[fnid]
             task_deps = self.dataCache.task_deps[fn]
 
-            bb.msg.debug(2, bb.msg.domain.RunQueue, "Processing %s:%s" %(fn, taskData.tasks_name[task]))
+            logger.debug(2, "Processing %s:%s", fn, taskData.tasks_name[task])
 
             if fnid not in taskData.failed_fnids:
 
@@ -505,7 +508,7 @@ class RunQueueData:
                 # Rmove all self references
                 if task in depends:
                     newdep = []
-                    bb.msg.debug(2, bb.msg.domain.RunQueue, "Task %s (%s %s) contains self reference! %s" % (task, taskData.fn_index[taskData.tasks_fnid[task]], taskData.tasks_name[task], depends))
+                    logger.debug(2, "Task %s (%s %s) contains self reference! %s", task, taskData.fn_index[taskData.tasks_fnid[task]], taskData.tasks_name[task], depends)
                     for dep in depends:
                         if task != dep:
                             newdep.append(dep)
@@ -567,7 +570,7 @@ class RunQueueData:
         # as active too. If the task is to be 'forced', clear its stamp. Once
         # all active tasks are marked, prune the ones we don't need.
 
-        bb.msg.note(2, bb.msg.domain.RunQueue, "Marking Active Tasks")
+        logger.verbose("Marking Active Tasks")
 
         def mark_active(listid, depth):
             """
@@ -600,7 +603,7 @@ class RunQueueData:
 
             # Remove stamps for targets if force mode active
             if self.cooker.configuration.force:
-                bb.msg.note(2, bb.msg.domain.RunQueue, "Remove stamp %s, %s" % (target[1], fn))
+                logger.verbose("Remove stamp %s, %s", target[1], fn)
                 bb.build.del_stamp(target[1], self.dataCache, fn)
 
             if fnid in taskData.failed_fnids:
@@ -643,7 +646,7 @@ class RunQueueData:
             else:
                 bb.msg.fatal(bb.msg.domain.RunQueue, "No active tasks and not in --continue mode?! Please report this bug.")
 
-        bb.msg.note(2, bb.msg.domain.RunQueue, "Pruned %s inactive tasks, %s left" % (delcount, len(self.runq_fnid)))
+        logger.verbose("Pruned %s inactive tasks, %s left", delcount, len(self.runq_fnid))
 
         # Remap the dependencies to account for the deleted tasks
         # Check we didn't delete a task we depend on
@@ -656,7 +659,7 @@ class RunQueueData:
                 newdeps.append(maps[origdep])
             self.runq_depends[listid] = set(newdeps)
 
-        bb.msg.note(2, bb.msg.domain.RunQueue, "Assign Weightings")
+        logger.verbose("Assign Weightings")
 
         # Generate a list of reverse dependencies to ease future calculations
         for listid in range(len(self.runq_fnid)):
@@ -675,7 +678,7 @@ class RunQueueData:
                     #self.dump_data(taskData)
                     bb.msg.fatal(bb.msg.domain.RunQueue, "Task %s (%s) has circular dependency on %s (%s)" % (taskData.fn_index[self.runq_fnid[dep]], self.runq_task[dep], taskData.fn_index[self.runq_fnid[listid]], self.runq_task[listid]))
 
-        bb.msg.note(2, bb.msg.domain.RunQueue, "Compute totals (have %s endpoint(s))" % len(endpoints))
+        logger.verbose("Compute totals (have %s endpoint(s))", len(endpoints))
 
         # Calculate task weights
         # Check of higher length circular dependencies
@@ -698,9 +701,7 @@ class RunQueueData:
         for prov in prov_list:
             if len(prov_list[prov]) > 1 and prov not in self.multi_provider_whitelist:
                 error = True
-                bb.msg.error(bb.msg.domain.RunQueue, "Multiple .bb files are due to be built which each provide %s (%s).\n This usually means one provides something the other doesn't and should." % (prov, " ".join(prov_list[prov])))
-        #if error:
-        #    bb.msg.fatal(bb.msg.domain.RunQueue, "Corrupted metadata configuration detected, aborting...")
+                logger.error("Multiple .bb files are due to be built which each provide %s (%s).\n This usually means one provides something the other doesn't and should.", prov, " ".join(prov_list[prov]))
 
 
         # Create a whitelist usable by the stamp checks
@@ -762,20 +763,20 @@ class RunQueueData:
         """
         Dump some debug information on the internal data structures
         """
-        bb.msg.debug(3, bb.msg.domain.RunQueue, "run_tasks:")
+        logger.debug(3, "run_tasks:")
         for task in range(len(self.rqdata.runq_task)):
-            bb.msg.debug(3, bb.msg.domain.RunQueue, " (%s)%s - %s: %s   Deps %s RevDeps %s" % (task,
+            logger.debug(3, " (%s)%s - %s: %s   Deps %s RevDeps %s" % (task,
                 taskQueue.fn_index[self.rqdata.runq_fnid[task]],
                 self.rqdata.runq_task[task],
                 self.rqdata.runq_weight[task],
                 self.rqdata.runq_depends[task],
                 self.rqdata.runq_revdeps[task]))
 
-        bb.msg.debug(3, bb.msg.domain.RunQueue, "sorted_tasks:")
+        logger.debug(3, "sorted_tasks:")
         for task1 in range(len(self.rqdata.runq_task)):
             if task1 in self.prio_map:
                 task = self.prio_map[task1]
-                bb.msg.debug(3, bb.msg.domain.RunQueue, " (%s)%s - %s: %s   Deps %s RevDeps %s" % (task,
+                logger.debug(3, " (%s)%s - %s: %s   Deps %s RevDeps %s" % (task,
                     taskQueue.fn_index[self.rqdata.runq_fnid[task]],
                     self.rqdata.runq_task[task],
                     self.rqdata.runq_weight[task],
@@ -913,12 +914,12 @@ class RunQueue:
 
         # If the stamp is missing its not current
         if not os.access(stampfile, os.F_OK):
-            bb.msg.debug(2, bb.msg.domain.RunQueue, "Stampfile %s not available\n" % stampfile)
+            logger.debug(2, "Stampfile %s not available\n" % stampfile)
             return False
         # If its a 'nostamp' task, it's not current
         taskdep = self.rqdata.dataCache.task_deps[fn]
         if 'nostamp' in taskdep and taskname in taskdep['nostamp']:
-            bb.msg.debug(2, bb.msg.domain.RunQueue, "%s.%s is nostamp\n" % (fn, taskname))
+            logger.debug(2, "%s.%s is nostamp\n" % (fn, taskname))
             return False
 
         if taskname.endswith("_setscene"):
@@ -938,10 +939,10 @@ class RunQueue:
                    continue
                 if fn == fn2 or (fulldeptree and fn2 not in stampwhitelist):
                     if not t2:
-                        bb.msg.debug(2, bb.msg.domain.RunQueue, "Stampfile %s does not exist" % (stampfile2))
+                        logger.debug(2, "Stampfile %s does not exist" % (stampfile2))
                         iscurrent = False
                     if t1 < t2:
-                        bb.msg.debug(2, bb.msg.domain.RunQueue, "Stampfile %s < %s" % (stampfile, stampfile2))
+                        logger.debug(2, "Stampfile %s < %s" % (stampfile, stampfile2))
                         iscurrent = False
 
         return iscurrent
@@ -972,7 +973,7 @@ class RunQueue:
             retval = self.rqexe.execute()
 
         if self.state is runQueueRunInit:
-            bb.msg.note(1, bb.msg.domain.RunQueue, "Executing RunQueue Tasks")
+            logger.info("Executing RunQueue Tasks")
             self.rqexe = RunQueueExecuteTasks(self)
             self.state = runQueueRunning
 
@@ -991,7 +992,7 @@ class RunQueue:
 
         if self.state is runQueueComplete:
             # All done
-            bb.msg.note(1, bb.msg.domain.RunQueue, "Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed." % (self.rqexe.stats.completed, self.rqexe.stats.skipped, self.rqexe.stats.failed))
+            logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed." % (self.rqexe.stats.completed, self.rqexe.stats.skipped, self.rqexe.stats.failed))
             return False
 
         if self.state is runQueueChildProcess:
@@ -1059,7 +1060,7 @@ class RunQueueExecute:
 
     def finish_now(self):
         if self.stats.active:
-            bb.msg.note(1, bb.msg.domain.RunQueue, "Sending SIGTERM to remaining %s tasks" % self.stats.active)
+            logger.info("Sending SIGTERM to remaining %s tasks", self.stats.active)
             for k, v in self.build_pids.iteritems():
                 try:
                     os.kill(-k, signal.SIGTERM)
@@ -1101,7 +1102,7 @@ class RunQueueExecute:
             fakedirs = (the_data.getVar("FAKEROOTDIRS", True) or "").split()
             for p in fakedirs:
                 bb.mkdirhier(p)
-            bb.msg.debug(2, bb.msg.domain.RunQueue, "Running %s:%s under fakeroot, state dir is %s" % (fn, taskname, fakedirs))
+            logger.debug(2, "Running %s:%s under fakeroot, state dir is %s" % (fn, taskname, fakedirs))
 
         env['PATH'] = self.cooker.configuration.initial_path
 
@@ -1220,7 +1221,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
         for scheduler in self.rqdata.schedulers:
             if self.scheduler == scheduler.name:
                 self.sched = scheduler(self, self.rqdata)
-                bb.msg.debug(1, bb.msg.domain.RunQueue, "Using runqueue scheduler '%s'" % scheduler.name)
+                logger.debug(1, "Using runqueue scheduler '%s'" % scheduler.name)
                 break
         else:
             bb.fatal("Invalid scheduler '%s'. Available schedulers: %s" %
@@ -1246,7 +1247,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 self.runq_buildable[revdep] = 1
                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[revdep]]
                 taskname = self.rqdata.runq_task[revdep]
-                bb.msg.debug(1, bb.msg.domain.RunQueue, "Marking task %s (%s, %s) as buildable" % (revdep, fn, taskname))
+                logger.debug(1, "Marking task %s (%s, %s) as buildable" % (revdep, fn, taskname))
 
     def task_complete(self, task):
         self.stats.taskCompleted()
@@ -1258,7 +1259,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
         Called when a task has failed
         Updates the state engine with the failure
         """
-        bb.msg.error(bb.msg.domain.RunQueue, "Task %s (%s) failed with %s" % (task, self.rqdata.get_user_idstring(task), exitcode))
+        logger.error("Task %s (%s) failed with %s" % (task, self.rqdata.get_user_idstring(task), exitcode))
         self.stats.taskFailed()
         fnid = self.rqdata.runq_fnid[task]
         self.failed_fnids.append(fnid)
@@ -1287,7 +1288,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
 
             taskname = self.rqdata.runq_task[task]
             if self.rq.check_stamp_task(task, taskname):
-                bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.rqdata.get_user_idstring(task)))
+                logger.debug(2, "Stamp current task %s (%s)" % (task, self.rqdata.get_user_idstring(task)))
                 self.task_skip(task)
                 return True
 
@@ -1295,8 +1296,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
 
             taskdep = self.rqdata.dataCache.task_deps[fn]
             if 'noexec' in taskdep and taskname in taskdep['noexec']:
-                bb.msg.note(1, bb.msg.domain.RunQueue,
-                        "Noexec task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
+                logger.info("Noexec task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
                                                                 self.stats.total,
                                                                 task,
                                                                 self.rqdata.get_user_idstring(task)))
@@ -1306,8 +1306,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 self.task_complete(task)
                 return True
 
-            bb.msg.note(1, bb.msg.domain.RunQueue,
-                        "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
+            logger.info("Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
                                                                 self.stats.total,
                                                                 task,
                                                                 self.rqdata.get_user_idstring(task)))
@@ -1334,11 +1333,11 @@ class RunQueueExecuteTasks(RunQueueExecute):
         # Sanity Checks
         for task in range(self.stats.total):
             if self.runq_buildable[task] == 0:
-                bb.msg.error(bb.msg.domain.RunQueue, "Task %s never buildable!" % task)
+                logger.error("Task %s never buildable!" % task)
             if self.runq_running[task] == 0:
-                bb.msg.error(bb.msg.domain.RunQueue, "Task %s never ran!" % task)
+                logger.error("Task %s never ran!" % task)
             if self.runq_complete[task] == 0:
-                bb.msg.error(bb.msg.domain.RunQueue, "Task %s never completed!" % task)
+                logger.error("Task %s never completed!" % task)
         self.rq.state = runQueueComplete
         return True
 
@@ -1461,12 +1460,12 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
             for task in range(len(self.sq_revdeps)):
                 if task not in valid_new and task not in noexec:
-                    bb.msg.debug(2, bb.msg.domain.RunQueue, "No package found so skipping setscene task %s" % (self.rqdata.get_user_idstring(self.rqdata.runq_setscene[task])))
+                    logger.debug(2, "No package found so skipping setscene task %s" % (self.rqdata.get_user_idstring(self.rqdata.runq_setscene[task])))
                     self.task_failoutright(task)
 
             #print(str(valid))
 
-        bb.msg.note(1, bb.msg.domain.RunQueue, "Executing SetScene Tasks")
+        logger.info("Executing SetScene Tasks")
 
         self.rq.state = runQueueSceneRun
 
@@ -1484,7 +1483,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         """
 
         index = self.rqdata.runq_setscene[task]
-        bb.msg.debug(1, bb.msg.domain.RunQueue, "Found task %s could be accelerated" % self.rqdata.get_user_idstring(index))
+        logger.debug(1, "Found task %s could be accelerated" % self.rqdata.get_user_idstring(index))
 
         self.scenequeue_covered.add(task)
         self.scenequeue_updatecounters(task)
@@ -1539,7 +1538,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
             taskname = self.rqdata.runq_task[realtask] + "_setscene"
             if self.rq.check_stamp_task(realtask, self.rqdata.runq_task[realtask]):
-                bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp for underlying task %s (%s) is current so skipping setscene varient" % (task, self.rqdata.get_user_idstring(task)))
+                logger.debug(2, "Stamp for underlying task %s (%s) is current so skipping setscene varient" % (task, self.rqdata.get_user_idstring(task)))
                 self.task_failoutright(task)
                 return True
 
@@ -1550,12 +1549,11 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                         return True
 
             if self.rq.check_stamp_task(realtask, taskname):
-                bb.msg.debug(2, bb.msg.domain.RunQueue, "Setscene stamp current task %s (%s) so skip it and its dependencies" % (task, self.rqdata.get_user_idstring(realtask)))
+                logger.debug(2, "Setscene stamp current task %s (%s) so skip it and its dependencies" % (task, self.rqdata.get_user_idstring(realtask)))
                 self.task_skip(task)
                 return True
 
-            bb.msg.note(1, bb.msg.domain.RunQueue,
-                        "Running setscene task %d of %d (%s:%s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
+            logger.info("Running setscene task %d of %d (%s:%s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
                                                                          self.stats.total, fn, taskname))
 
             pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)

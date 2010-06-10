@@ -26,8 +26,13 @@
 #Based on functions from the base bb module, Copyright 2003 Holger Schurig
 
 from bb import data, event, mkdirhier, utils
-import bb, os, sys
+import os
+import sys
+import logging
+import bb
 import bb.utils
+
+logger = logging.getLogger("BitBake.Build")
 
 # When we execute a python function we'd like certain things
 # in all namespaces, hence we add them to __builtins__
@@ -193,7 +198,8 @@ def exec_func_shell(func, d, runfile, logfile, flags):
 
     f = open(runfile, "w")
     f.write("#!/bin/sh -e\n")
-    if bb.msg.debug_level['default'] > 0: f.write("set -x\n")
+    if logger.getEffectiveLevel() <= logging.DEBUG:
+        f.write("set -x\n")
     data.emit_func(func, f, d)
 
     f.write("cd %s\n" % os.getcwd())
@@ -226,7 +232,7 @@ def exec_task(fn, task, d):
     # Check whther this is a valid task
     if not data.getVarFlag(task, 'task', d):
         event.fire(TaskInvalid(task, d), d)
-        bb.msg.error(bb.msg.domain.Build, "No such task: %s" % task)
+        logger.error("No such task: %s" % task)
         return 1
 
     quieterr = False
@@ -234,7 +240,7 @@ def exec_task(fn, task, d):
          quieterr = True
 
     try:
-        bb.msg.debug(1, bb.msg.domain.Build, "Executing task %s" % task)
+        logger.debug(1, "Executing task %s", task)
         old_overrides = data.getVar('OVERRIDES', d, 0)
         localdata = data.createCopy(d)
         data.setVar('OVERRIDES', 'task-%s:%s' % (task[3:], old_overrides), localdata)
@@ -269,8 +275,8 @@ def exec_task(fn, task, d):
         si = file('/dev/null', 'r')
         try:
             so = file(logfile, 'w')
-        except OSError as e:
-            bb.msg.error(bb.msg.domain.Build, "opening log file: %s" % e)
+        except OSError:
+            logger.exception("Opening log file '%s'", logfile)
             pass
         se = so
 
@@ -312,7 +318,7 @@ def exec_task(fn, task, d):
             logfile = None
             msg = message
         if not quieterr:
-            bb.msg.error(bb.msg.domain.Build, "Task failed: %s" % message )
+            logger.error("Task failed: %s" % message )
             failedevent = TaskFailed(msg, logfile, task, d)
             event.fire(failedevent, d)
         return 1
@@ -320,8 +326,8 @@ def exec_task(fn, task, d):
     except Exception:
         from traceback import format_exc
         if not quieterr:
-            bb.msg.error(bb.msg.domain.Build, "Build of %s failed" % (task))
-            bb.msg.error(bb.msg.domain.Build, format_exc())
+            logger.error("Build of %s failed" % (task))
+            logger.error(format_exc())
             failedevent = TaskFailed("Task Failed", None, task, d)
             event.fire(failedevent, d)
         return 1
@@ -342,7 +348,7 @@ def exec_task(fn, task, d):
         se.close()
 
         if logfile and os.path.exists(logfile) and os.path.getsize(logfile) == 0:
-            bb.msg.debug(2, bb.msg.domain.Build, "Zero size logfile %s, removing" % logfile)
+            logger.debug(2, "Zero size logfile %s, removing", logfile)
             os.remove(logfile)
             try:
                os.remove(loglink)

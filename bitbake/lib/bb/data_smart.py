@@ -30,10 +30,12 @@ BitBake build tools.
 
 import copy, re, sys
 from collections import MutableMapping
+import logging
 import bb
 from bb   import utils
 from bb.COW  import COWDictBase
 
+logger = logging.getLogger("BitBake.Data")
 
 __setvar_keyword__ = ["_append", "_prepend"]
 __setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?')
@@ -101,10 +103,8 @@ class DataSmart(MutableMapping):
                 s = __expand_python_regexp__.sub(varparse.python_sub, s)
                 if s == olds:
                     break
-            except KeyboardInterrupt:
-                raise
-            except:
-                bb.msg.note(1, bb.msg.domain.Data, "%s:%s while evaluating:\n%s" % (sys.exc_info()[0], sys.exc_info()[1], s))
+            except Exception:
+                logger.exception("Error evaluating '%s'", s)
                 raise
 
         varparse.value = s
@@ -152,7 +152,7 @@ class DataSmart(MutableMapping):
                 try:
                     self[name] = self[var]
                 except Exception:
-                    bb.msg.note(1, bb.msg.domain.Data, "Untracked delVar")
+                    logger.info("Untracked delVar")
 
         # now on to the appends and prepends
         for op in __setvar_keyword__:
