@@ -116,6 +116,8 @@ rootfs_ipk_write_manifest() {
 
 remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}/usr/lib/opkg/
+        # We need the directory for the package manager lock
+        mkdir ${IMAGE_ROOTFS}/usr/lib/opkg
 }
 
 install_all_locales() {
