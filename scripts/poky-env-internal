@@ -135,7 +135,7 @@ unset GCONF_SCHEMA_INSTALL_SOURCE
 echo
 echo "### Shell environment set up for Poky builds. ###"
 echo
-echo "You can now run 'bitbake <target>"
+echo "You can now run 'bitbake <target>'"
 echo
 echo "Common targets are poky-image-minimal, poky-image-sato, meta-toolchain or meta-toolchain-sdk"
 echo
