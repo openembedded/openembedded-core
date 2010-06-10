@@ -78,7 +78,7 @@ python () {
         bb.data.setVar("PSTAGING_ACTIVE", "0", d)
 }
 
-PSTAGE_MACHCONFIG   = "${PSTAGE_WORKDIR}/opkg.conf"
+PSTAGE_MACHCONFIG   = "${PSTAGE_WORKDIR}/${TARGET_ARCH}-opkg.conf"
 
 PSTAGE_PKGMANAGER = "stage-manager-ipkg"
 
@@ -148,11 +148,11 @@ do_clean_prepend() {
 }
 
 staging_helper () {
-	# Assemble appropriate opkg.conf
+	# Assemble appropriate opkg.conf for the target arch
 	conffile=${PSTAGE_MACHCONFIG}
 	mkdir -p ${PSTAGE_WORKDIR}/pstaging_lists
 	if [ ! -e $conffile ]; then
-		ipkgarchs="${BUILD_ARCH} ${BUILD_ARCH}_${TARGET_ARCH}"
+		ipkgarchs="${TARGET_ARCH} ${BUILD_ARCH} ${BUILD_ARCH}_${TARGET_ARCH}"
 		priority=1
 		for arch in $ipkgarchs; do
 			echo "arch $arch $priority" >> $conffile
