@@ -53,3 +53,9 @@ gt_cv_locale_fr=${gt_cv_locale_fr=fr_FR}
 gl_cv_func_btowc_eof=${gl_cv_func_btowc_eof=yes}
 gl_cv_func_wcrtomb_retval=${gl_cv_func_wcrtomb_retval=yes}
 gl_cv_func_wctob_works=${gl_cv_func_wctob_works=yes}
+gl_cv_func_mbrtowc_incomplete_state=${gl_cv_func_mbrtowc_incomplete_state=yes}
+gl_cv_func_mbrtowc_sanitycheck=${gl_cv_func_mbrtowc_sanitycheck=yes}
+gl_cv_func_mbrtowc_null_arg=${gl_cv_func_mbrtowc_null_arg=yes}
+gl_cv_func_mbrtowc_retval=${gl_cv_func_mbrtowc_retval=yes}
+gl_cv_func_mbrtowc_nul_retval=${gl_cv_func_mbrtowc_nul_retval=yes}
+
