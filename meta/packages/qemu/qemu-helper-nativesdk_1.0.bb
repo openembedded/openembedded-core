@@ -23,7 +23,7 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 poky-* ${D}${bindir}/
+	install -m 0755 ${WORKDIR}${OEROOT}/scripts/poky-* ${D}${bindir}/
 	install raw2flash.spitz ${D}${bindir}/
 	install flash2raw.spitz ${D}${bindir}/
 	ln -fs raw2flash.spitz ${D}${bindir}/raw2flash.akita
