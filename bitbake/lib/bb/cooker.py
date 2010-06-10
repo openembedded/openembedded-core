@@ -708,8 +708,8 @@ class BBCooker:
             failures = 0
             try:
                 retval = rq.execute_runqueue()
-            except runqueue.TaskFailure, fnids:
-                for fnid in fnids:
+            except runqueue.TaskFailure as exc:
+                for fnid in exc.args:
                     bb.msg.error(bb.msg.domain.Build, "'%s' failed" % taskdata.fn_index[fnid])
                     failures = failures + 1
                 retval = False
@@ -744,8 +744,8 @@ class BBCooker:
             failures = 0
             try:
                 retval = rq.execute_runqueue()
-            except runqueue.TaskFailure, fnids:
-                for fnid in fnids:
+            except runqueue.TaskFailure as exc:
+                for fnid in exc.args:
                     bb.msg.error(bb.msg.domain.Build, "'%s' failed" % taskdata.fn_index[fnid])
                     failures = failures + 1
                 retval = False
