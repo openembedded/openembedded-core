@@ -1,6 +1,7 @@
 
 SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-src.tgz \
            file://gccfix.patch;patch=1 \
+           file://noldlibpath.patch;patch=1 \
            file://use-g++-for-linking.patch;patch=1"
 LICENSE = "ICU"
 DEPENDS = "icu-native"
