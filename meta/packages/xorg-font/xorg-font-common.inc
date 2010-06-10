@@ -1,4 +1,6 @@
 HOMEPAGE = "http://www.x.org"
+BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xorg"
+
 SECTION = "x11/fonts"
 LICENSE = "MIT-X"
 
