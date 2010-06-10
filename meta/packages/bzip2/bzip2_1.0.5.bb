@@ -3,9 +3,9 @@ HOMEPAGE = "http://www.bzip.org/"
 SECTION = "console/utils"
 LICENSE = "bzip2"
 LIC_FILES_CHKSUM = "file://LICENSE;beginline=8;endline=37;md5=40d9d1eb05736d1bfc86cfdd9106e6b2"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "http://www.bzip.org/${PV}/${PN}-${PV}.tar.gz \
+SRC_URI = "http://www.bzip.org/${BPV}/${PN}-${PV}.tar.gz \
            file://configure.ac \
 	   file://Makefile.am"
 
