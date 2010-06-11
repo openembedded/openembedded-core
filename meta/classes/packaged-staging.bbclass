@@ -42,7 +42,7 @@ python () {
         path = bb.data.getVar('PSTAGE_PKGPATH', d, 1)
         path = path + bb.data.getVar('TMPDIR', d, 1).replace('/', '-')
         bb.data.setVar('PSTAGE_PKGPATH', path, d)
-        scan_cmd = "grep -Irl ${STAGING_DIR} ${PSTAGE_TMDPDIR_STAGE}"
+        scan_cmd = "grep -Irl ${STAGING_DIR} ${PSTAGE_TMPDIR_STAGE}"
         bb.data.setVar('PSTAGE_SCAN_CMD', scan_cmd, d)
 
     # PSTAGE_NATIVEDEPENDS lists the packages we need before we can use packaged 
