@@ -9,7 +9,8 @@ pdf:
 XSLTOPTS = --stringparam html.stylesheet style.css \
            --stringparam  chapter.autolabel 1 \
            --stringparam  appendix.autolabel 1 \
-           --stringparam  section.autolabel 1
+           --stringparam  section.autolabel 1 \
+	   --xinclude
 
 ##
 # These URI should be rewritten by your distribution's xml catalog to
