@@ -1,8 +1,11 @@
 
-SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-src.tgz \
+BASE_SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-src.tgz \
            file://gccfix.patch;patch=1 \
-           file://noldlibpath.patch;patch=1 \
            file://use-g++-for-linking.patch;patch=1"
+SRC_URI = "${BASE_SRC_URI} \
+           file://noldlibpath.patch;patch=1"
+SRC_URI_virtclass-native = "${BASE_SRC_URI}"
+
 LICENSE = "ICU"
 DEPENDS = "icu-native"
 DEPENDS_virtclass-native = ""
