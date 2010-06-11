@@ -1,6 +1,6 @@
 require linux-moblin.inc
 
-PR = "r0"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_netbook = "1"
