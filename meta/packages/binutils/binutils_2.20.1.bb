@@ -1,5 +1,4 @@
 require binutils.inc
-LICENSE = "GPLv2 & LGPLv2 & LGPLv2.1 & GPLv3 & LGPLv3"
 
 PR = "r1"
 
