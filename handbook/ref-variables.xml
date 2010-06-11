@@ -84,6 +84,13 @@
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-BPN'><glossterm>BPN</glossterm>
+            <glossdef>
+                <para>Bare name of package with any suffixes like -cross -native
+                removed.  </para>
+            </glossdef>
+        </glossentry>
+
     </glossdiv>
 
     <glossdiv id='var-glossary-c'><title>C</title>
