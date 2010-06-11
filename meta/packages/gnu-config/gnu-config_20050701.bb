@@ -1,5 +1,5 @@
 DESCRIPTION = "gnu-configize"
-SECTION = "base"
+SECTION = "devel"
 LICENSE = "GPL"
 DEPENDS = ""
 INHIBIT_DEFAULT_DEPS = "1"

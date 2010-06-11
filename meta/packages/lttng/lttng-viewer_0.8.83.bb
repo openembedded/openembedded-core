@@ -8,7 +8,7 @@ DEPENDS = "gtk+ pango popt"
 
 ALTNAME = "LinuxTraceToolkitViewer-${PV}-13062007"
 
-SRC_URI = "http://ltt.polymtl.ca/packages/${ALTNAME}.tar.gz"
+SRC_URI = "http://lttng.org/files/packages/${ALTNAME}.tar.gz"
 S = "${WORKDIR}/${ALTNAME}"
 
 inherit autotools
