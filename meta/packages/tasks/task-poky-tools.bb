@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Tools tasks for Poky"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -25,6 +25,7 @@ ALLOW_EMPTY = "1"
 KEXECTOOLS ?= "kexec-tools"
 KEXECTOOLS_mips ?= ""
 KEXECTOOLS_mipsel ?= ""
+KEXECTOOLS_powerpc ?= ""
 
 RDEPENDS_task-poky-tools-debug = "\
     gdb \
