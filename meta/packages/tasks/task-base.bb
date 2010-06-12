@@ -1,4 +1,5 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
+LICENSE = "MIT"
 PR = "r69"
 
 inherit task
