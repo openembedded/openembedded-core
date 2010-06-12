@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
+LICENSE = "MIT"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS = "virtual/kernel"
 ALLOW_EMPTY = "1"
