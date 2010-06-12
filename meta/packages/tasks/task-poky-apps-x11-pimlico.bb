@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "X11 Pimlico Appications List"
+LICENSE = "MIT"
 PR = "r27"
 
 PACKAGES = "\
