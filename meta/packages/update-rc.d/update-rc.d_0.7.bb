@@ -1,14 +1,18 @@
+DESCRIPTION = "manage symlinks in /etc/rcN.d."
 SECTION = "base"
 PRIORITY = "standard"
-DESCRIPTION = "Manage symlinks in /etc/rcN.d"
-LICENSE = "GPL"
-S = "${WORKDIR}/update-rc.d"
+PACKAGE_ARCH = "all"
+
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://update-rc.d;beginline=5;endline=15;md5=148a48321b10eb37c1fa3ee02b940a75"
+
 PR = "r3"
 
 SRC_URI = "${HANDHELDS_CVS};module=apps/update-rc.d;tag=r0_7 \
-           file://add-verbose.patch;patch=1"
+           file://add-verbose.patch;apply=yes"
 
-PACKAGE_ARCH = "all"
+S = "${WORKDIR}/update-rc.d"
+
 
 do_compile() {
 }
