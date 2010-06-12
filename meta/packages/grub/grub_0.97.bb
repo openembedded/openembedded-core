@@ -1,12 +1,17 @@
-DESCRIPTION = "GRUB is the GRand Unified Bootloader"
-HOMEPAGE = "http://www.gnu.org/software/grub"
+DESCRIPTION = "GRUB is the GRand Unified Bootloader."
+HOMEPAGE = "http://www.gnu.org/software/grub/"
 SECTION = "bootloaders"
 PRIORITY = "optional"
+
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b \
+                    file://grub/main.c;beginline=3;endline=9;md5=22a5f28d2130fff9f2a17ed54be90ed6"
+
 RDEPENDS = "diffutils"
 PR = "r2"
 
 SRC_URI = "ftp://alpha.gnu.org/gnu/grub/grub-${PV}.tar.gz; \
-	   file://autohell.patch;patch=1 "
+	   file://autohell.patch;apply=yes "
 
 inherit autotools
 
