@@ -1,6 +1,6 @@
 DESCRIPTION = "Network suspend/resume scripts"
 SECTION = "base"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 PV = "1.1"
 PR = "r2"
 
