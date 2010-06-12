@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 DEPENDS = "makedevs"
 RDEPENDS = "makedevs"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 PR = "r121"
 
 SRC_URI = "file://functions \
