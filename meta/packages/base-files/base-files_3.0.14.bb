@@ -2,7 +2,7 @@ DESCRIPTION = "Miscellaneous files for the base system."
 SECTION = "base"
 PRIORITY = "required"
 PR = "r64"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 
 SRC_URI = " \
            file://rotation \
