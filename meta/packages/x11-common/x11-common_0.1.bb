@@ -1,5 +1,5 @@
 DESCRIPTION = "Common X11 scripts"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 SECTION = "x11"
 RDEPENDS_${PN} = "xmodmap xdpyinfo xtscal xinit formfactor"
 PR = "r38"
