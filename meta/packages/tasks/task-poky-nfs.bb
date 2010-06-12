@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "NFS tasks for Poky"
+LICENSE = "MIT"
 PR = "r0"
 
 PACKAGES = "\
