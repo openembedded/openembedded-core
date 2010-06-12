@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "Sato Tasks for Poky"
+LICENSE = "MIT"
 PR = "r29"
 
 PACKAGES = "\
