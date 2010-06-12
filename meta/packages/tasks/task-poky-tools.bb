@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "Tools tasks for Poky"
+LICENSE = "MIT"
 PR = "r3"
 
 PACKAGES = "\
