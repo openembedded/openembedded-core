@@ -1,4 +1,5 @@
-DESCRIPTION = "Poky exampl feed configuration"
+DESCRIPTION = "Poky example feed configuration"
+LICENSE = "MIT"
 
 PR = "r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

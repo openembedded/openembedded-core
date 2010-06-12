@@ -1,4 +1,5 @@
 DESCRIPTION = "Base configuration files for opkg"
+LICENSE = "MIT"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
