@@ -1,4 +1,5 @@
 DESCRIPTION = "Gstreamer package groups"
+LICENSE = "MIT"
 DEPENDS = "gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly"
 PR = "r3"
 
