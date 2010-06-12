@@ -1,9 +1,13 @@
 DESCRIPTION = "The Ext2 Filesystem Utilities (e2fsprogs) contain all of the standard utilities for creating, fixing, configuring , and debugging ext2 filesystems."
 HOMEPAGE = "http://e2fsprogs.sourceforge.net/"
+
 LICENSE = "GPLv2 & LGPLv2 & BSD & MIT"
-LICENSE_lib/ext2fs = "LGPLv2"
-LICENSE_lib/uuid = "BSD"
-LICENSE_lib/et = "MIT"
+LICENSE_e2fsprogs-blkid = "LGPLv2"
+LICENSE_e2fsprogs-e2fsck = "GPLv2"
+LICENSE_e2fsprogs-mke2fs = "GPLv2"
+LICENSE_e2fsprogs-fsck = "GPLv2"
+LICENSE_e2fsprogs-tune2fs = "GPLv2"
+LICENSE_e2fsprogs-badblocks = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b48f21d765b875bd10400975d12c1ca2 \
                       file://lib/ext2fs/ext2fs.h;beginline=1;endline=9;md5=596a8dedcb4e731c6b21c7a46fba6bef \
                       file://lib/e2p/e2p.h;beginline=1;endline=7;md5=8a74ade8f9d65095d70ef2d4bf48e36a \
@@ -15,7 +19,7 @@ SECTION = "base"
 DEPENDS = "gettext util-linux"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/e2fsprogs/e2fsprogs-${PV}.tar.gz \
-           file://mkdir.patch;patch=1"
+           file://mkdir.patch;apply=yes"
 
 inherit autotools
 
