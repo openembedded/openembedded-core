@@ -1,4 +1,5 @@
 DESCRIPTON = "A live image init script"
+LICENSE = "MIT"
 
 SRC_URI = "file://init-install.sh"
 
