@@ -2,9 +2,13 @@ require xorg-proto-common.inc
 
 DESCRIPTION = "Touchscreen calibration protocol"
 
+LICENSE = "MIT-style"
+LIC_FILES_CHKSUM = "file://xcalibratewire.h;endline=23;md5=7f86ef7b03cce6c4c9ebd59d20ca485f \
+                    file://xcalibrateproto.h;endline=23;md5=e4490491edcc171ca24f98569ee580db"
+
 PV = "0.0+git${SRCPV}"
 PR = "r2"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/proto/calibrateproto;protocol=git \
-           file://fix.patch;patch=1"
+           file://fix.patch;apply=yes"
 S = "${WORKDIR}/git"
