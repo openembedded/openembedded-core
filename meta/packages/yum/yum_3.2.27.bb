@@ -1,12 +1,10 @@
-HOMEPAGE = "http://linux.duke.edu/projects/yum/"
-PR = "r8"
+DESCRIPTION = "yum package manger is an automatic updater for rpm."
+HOMEPAGE = "http://yum.baseurl.org/"
+BUGTRACKER = "http://yum.baseurl.org/report"
 
-SRC_URI = "http://linux.duke.edu/projects/yum/download/3.2/yum-${PV}.tar.gz \
-           file://paths.patch;patch=1 \
-           file://paths2.patch;patch=1 \
-	   file://yum-install-recommends.py \
-	   file://extract-postinst.awk \
-	   file://98_yum"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760 \
+                    file://yum/sqlutils.py;beginline=2;endline=14;md5=d704ae6a9d69ce90768ab9188236b992"
 
 RDEPENDS = "python-rpm python-core python-iniparse python-urlgrabber \
             python-shell python-re python-logging python-pickle \
@@ -14,6 +12,15 @@ RDEPENDS = "python-rpm python-core python-iniparse python-urlgrabber \
 	    python-unixadmin python-xml python-sqlite3 \
 	    python-textutils python-fcntl python-email \
 	    yum-metadata-parser"
+
+PR = "r8"
+
+SRC_URI = "http://yum.baseurl.org/download/3.2/yum-${PV}.tar.gz \
+           file://paths.patch;apply=yes \
+           file://paths2.patch;apply=yes \
+	   file://yum-install-recommends.py \
+	   file://extract-postinst.awk \
+	   file://98_yum"
 
 S = "${WORKDIR}/yum-${PV}"
 
