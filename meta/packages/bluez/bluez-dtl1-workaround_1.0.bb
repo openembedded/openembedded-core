@@ -1,7 +1,7 @@
 DESCRIPTION = "A nasty hack for for dtl1-cs driver to workaround suspend/resume."
+LICENSE = "GPLv2"
 SECTION = "console" 
 PRIORITY = "optional" 
-LICENSE = "GPL" 
 PR = "r1"
  
 SRC_URI = "file://02dtl1_cs.sh"
