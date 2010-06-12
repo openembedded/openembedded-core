@@ -1,14 +1,15 @@
 require portmap.inc
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "http://www.sourcefiles.org/Networking/Tools/Miscellanenous/portmap-6.0.tgz \
-           file://destdir-no-strip.patch;patch=1 \
-	   file://no-tcpd-support.patch;patch=1 \
-           file://no-libwrap.patch;patch=1;pnum=0 \
-           file://portmap.init "
+           file://destdir-no-strip.patch;apply=yes \
+           file://no-tcpd-support.patch;apply=yes \
+           file://portmap.init"
 
 S = "${WORKDIR}/${PN}_${PV}/"
+
+EXTRA_OEMAKE_append = " NO_TCP_WRAPPER=1 "
 
 CPPFLAGS += "-DFACILITY=LOG_DAEMON -DENABLE_DNS"
 CFLAGS += "-Wall -Wstrict-prototypes -fPIC"
