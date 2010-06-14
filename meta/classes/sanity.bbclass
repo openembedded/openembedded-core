@@ -140,7 +140,7 @@ def check_sanity(e):
 	if not oes_bb_conf:
 		messages = messages + 'You do not include OpenEmbeddeds version of conf/bitbake.conf. This means your environment is misconfigured, in particular check BBPATH.\n'
 
-	if data.getVar('SDKMACHINE', e.data, True) is 'i686':
+	if data.getVar('SDKMACHINE', e.data, True) == 'i686':
 		messages = messages + '"Please set SDKMACHINE to i586 as its currently set to i686 and this is known to have issues (see local.conf).\n'
 
 	#
