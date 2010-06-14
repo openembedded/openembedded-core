@@ -64,8 +64,8 @@ h1 {
 }
 
 h2.subtitle {
-  margin: 0.10em 0 3.0em 0;
-  padding: 0 0 0 0;
+  margin: 0.10em 0em 3.0em 0em;
+  padding: 0em 0em 0em 0em;
   font-size: 1.8em;
   padding-left: 20%;
   font-weight: normal;
@@ -83,7 +83,7 @@ h3.subtitle {
   margin: 0em 0em 1em 0em;
   padding: 0em 0em 0em 0em;
   font-size: 142.14%;
-  text-align : right;
+  text-align: right;
 }
 
 h3 {
@@ -117,7 +117,7 @@ h6 {
 .authorgroup {
   background-color: transparent;
   background-repeat: no-repeat;
-  padding-top: 256;
+  padding-top: 256px;
   background-image: url("poky-beaver.png");
   background-position: right top;
   float: right; 
@@ -129,8 +129,8 @@ h6 {
 }
 
 h3.author {
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  margin: 0em 0me 0em 0em;
+  padding: 0em 0em 0em 0em;
   font-weight: normal;
   font-size: 100%;
   clear: both;
@@ -141,7 +141,7 @@ h3.author {
 }
 
 .titlepage hr {
-  width: 0;
+  width: 0em;
   clear: both;
 }
 
@@ -161,9 +161,9 @@ h3.author {
 .list-of-tables p,
 .list-of-figures p,
 .list-of-examples p {
-  padding: 0 0 0 0;
+  padding: 0em 0em 0em 0em;
   padding: 0em 0em 0.3em;
-  margin: 1.5em 0 0 0;
+  margin: 1.5em 0em 0em 0em;
 }
 
 .toc p b,
@@ -178,18 +178,18 @@ h3.author {
 .list-of-tables dl,
 .list-of-figures dl,
 .list-of-examples dl {
-  margin: 0 0 0.5em 0;
-  padding: 0 0 0 0;
+  margin: 0em 0em 0.5em 0em;
+  padding: 0em 0em 0em 0em;
 }
 
 .toc dt {
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  margin: 0em 0em 0em 0em;
+  padding: 0em 0em 0em 0em;
 }
 
 .toc dd {
   margin: 0em 0em 0em 2.6em;
-  padding: 0 0 0 0;
+  padding: 0em 0em 0em 0em;
 }
 
 div.glossary dl,
@@ -222,8 +222,8 @@ div.variablelist dl {
 
 
 div.calloutlist table td {
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
+  padding: 0em 0em 0em 0em;
+  margin: 0em 0em 0em 0em;
 }
 
 div.calloutlist table td p {
@@ -236,12 +236,12 @@ div p.copyright {
 }
 
 div.legalnotice p.legalnotice-title {
-  margin-bottom: 0;
+  margin-bottom: 0em;
 }
 
 p {
   line-height: 1.5em;
-  margin-top: 0;
+  margin-top: 0em;
   
 }
 
@@ -264,11 +264,11 @@ img {
 }
 
 ul {
-  padding: 0 0 0 1.5em;
+  padding: 0em 0em 0em 1.5em;
 }
 
 ul li {
-  padding: 0 0 0 0;
+  padding: 0em 0em 0em 0em;
 }
 
 ul li p {
@@ -292,8 +292,8 @@ td {
 }
 
 p a[id] {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
   display: inline;
   background-image: none;
 } 
@@ -304,7 +304,7 @@ a {
 }
 
 pre {
-    overflow : auto;
+    overflow: auto;
 }
 
 a:hover {
@@ -331,8 +331,8 @@ div.informaltable p.title b,
 div.figure p.title b,
 div.example p.title b,
 div.table p.title b{
-    padding-top: 0;
-    margin-top: 0;
+    padding-top: 0em;
+    margin-top: 0em;
     font-size: 100%;
     font-weight: normal;
 }
@@ -398,7 +398,7 @@ span.application {
 .caution table th,
 .note table th {
   padding: 0.8em 0.0em 0.0em 0.0em;
-  margin : 0 0 0 0;
+  margin : 0em 0em 0em 0em;
 }
 
 .tip p,
@@ -418,7 +418,7 @@ span.application {
 b.keycap,
 .keycap {
   padding: 0.09em 0.3em;
-  margin: 0;
+  margin: 0em;
 }
 
 .itemizedlist li {
@@ -433,8 +433,8 @@ b.keycap,
 
 div.navheader, div.heading{
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0em;
+  top: 0em;
   width: 100%;
   background-color: #cdf;
   width: 100%;
@@ -461,16 +461,16 @@ div.navheader table th {
 }
 
 div.navheader table {
-  border-left: 0;
-  border-right: 0;
-  border-top: 0;
+  border-left: 0em;
+  border-right: 0em;
+  border-top: 0em;
   width: 100%;
 }
 
 div.navfooter table {
-  border-left: 0;
-  border-right: 0;
-  border-bottom: 0;
+  border-left: 0em;
+  border-right: 0em;
+  border-bottom: 0em;
   width: 100%;
 }
 
@@ -506,13 +506,13 @@ div.navfooter hr {
 
 
 .qandaset tr.question td p {
-  margin: 0 0 1em 0;
-  padding: 0 0 0 0;
+  margin: 0em 0em 1em 0em;
+  padding: 0em 0em 0em 0em;
 }
 
 .qandaset tr.answer td p {
-  margin: 0 0 1em 0;
-  padding: 0 0 0 0;
+  margin: 0em 0em 1em 0em;
+  padding: 0em 0em 0em 0em;
 }
 .answer td {
   padding-bottom: 1.5em;
@@ -572,7 +572,7 @@ div.informalfigure,
 div.informaltable,
 div.informalexample,
 div.example {
-  border         : 1px solid;
+  border: 1px solid;
 }
 
 
@@ -581,14 +581,14 @@ div.example {
 .warning,
 .caution,
 .note {
-  border    : 1px solid;
+  border: 1px solid;
 }
 
 .tip table th,
 .warning table th,
 .caution table th,
 .note table th {
-  border-bottom  : 1px solid;
+  border-bottom: 1px solid;
 }
 
 .question td {
@@ -640,7 +640,7 @@ h5,
 h6,
 h7,
 h8 {
-  background-color   : transparent;
+  background-color: transparent;
 }
 
 hr {
@@ -649,7 +649,7 @@ hr {
 
 
 .tip, .warning, .caution, .note {
-  border-color    : #aaa;
+  border-color: #aaa;
 }
 
 
@@ -784,7 +784,7 @@ h1.title {
   background-color: transparent;
   background-image: url("poky-handbook.png");
   background-repeat: no-repeat;
-  height: 256;
+  height: 256px;
   text-indent: -9000px;
   overflow:hidden;
 }
@@ -793,7 +793,7 @@ h2.subtitle {
   background-color: transparent;
   text-indent: -9000px;
   overflow:hidden;
-  width: 0;
+  width: 0px;
   display: none;
 }
 
@@ -864,7 +864,7 @@ body {
 / ****************************************/
 /*
 div.navfooter, div.footing{
-  -moz-opacity: 0.8;
+  -moz-opacity: 0.8em;
 }
 
 div.figure,
@@ -896,11 +896,11 @@ hr {
 }
 
 table {
-  border: 0;
+  border: 0em;
 }
 
  .photo {
-  float:right;
+  float: right;
   margin-left:   1.5em;
   margin-bottom: 1.5em;
   margin-top: 0em;
@@ -911,7 +911,7 @@ table {
 }
  .seperator {
    padding-top: 2em;
-   clear      :both;
+   clear: both;
   }
 
   #validators {
@@ -939,8 +939,8 @@ table {
 
 .tip h3,
 .note h3 {
-   padding: 0;
-   margin: 0;
+   padding: 0em;
+   margin: 0em;
    font-size: 2em;
    font-weight: bold;
    color: #fff;   
