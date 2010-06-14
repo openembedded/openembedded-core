@@ -178,7 +178,7 @@
         <para>
             <literallayout class='monospaced'>
 $ wget http://pokylinux.org/releases/poky-green-3.3.tar.bz2
-$ tar zjvf poky-green-3.3.tar.bz2
+$ tar xjvf poky-green-3.3.tar.bz2
 $ cd green-3.3/
 $ source poky-init-build-env
 $ bitbake poky-image-sato
