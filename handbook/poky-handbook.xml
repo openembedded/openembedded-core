@@ -44,8 +44,8 @@
 
         <revhistory>
             <revision>
-                <revnumber>3.2+git</revnumber>
-                <date>18 March 2010</date>
+                <revnumber>3.3</revnumber>
+                <date>11 June 2010</date>
                 <revremark>Poky Master Documentation</revremark>
             </revision>
         </revhistory>
