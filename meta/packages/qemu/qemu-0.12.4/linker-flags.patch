@@ -1,0 +1,22 @@
+Fedora 13 switched the default behaviour of the linker to no longer
+indirectly link to required libraries (i.e. dependencies of a library
+already linked to). Therefore we need to explicitly pass the depended on
+libraries into the linker for building to work on Fedora 13.
+
+More information is available on the Fedora Wiki:
+https://fedoraproject.org/wiki/UnderstandingDSOLinkChange
+
+JL - 15/06/10
+Index: qemu-0.12.4/Makefile.target
+===================================================================
+--- qemu-0.12.4.orig/Makefile.target	2010-06-15 11:21:52.000000000 +0100
++++ qemu-0.12.4/Makefile.target	2010-06-15 11:25:27.212852910 +0100
+@@ -178,7 +178,7 @@
+ obj-y += virtio-blk.o virtio-balloon.o virtio-net.o virtio-console.o virtio-pci.o
+ obj-$(CONFIG_KVM) += kvm.o kvm-all.o
+ obj-$(CONFIG_ISA_MMIO) += isa_mmio.o
+-LIBS+=-lz
++LIBS+=-lz -lX11 -ldl
+ 
+ sound-obj-y =
+ sound-obj-$(CONFIG_SB16) += sb16.o

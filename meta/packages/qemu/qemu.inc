@@ -3,7 +3,7 @@ HOMEPAGE = "http://qemu.org"
 LICENSE = "GPL"
 DEPENDS = "zlib"
 
-EXTRA_OECONF = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu,mips-linux-user,mips-softmmu --disable-werror --disable-vnc-tls --extra-ldflags=-ldl"
+EXTRA_OECONF = "--target-list=arm-linux-user,arm-softmmu,i386-softmmu,x86_64-softmmu,mips-linux-user,mips-softmmu --disable-werror --disable-vnc-tls"
 #EXTRA_OECONF += "--disable-sdl"
 
 inherit autotools
