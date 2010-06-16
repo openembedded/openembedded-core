@@ -1,0 +1,25 @@
+# 2.6.33 deleted the Hayes esp driver, so the ioctls to get and set its
+# configuration are no longer needed, and they break setserial by making it
+# believe that it should compile in the code that supports this modem.
+
+Index: linux-2.6.33/include/asm-generic/ioctls.h
+===================================================================
+--- linux-2.6.33.orig/include/asm-generic/ioctls.h
++++ linux-2.6.33/include/asm-generic/ioctls.h
+@@ -86,16 +86,6 @@
+ #define TIOCMIWAIT	0x545C	/* wait for a change on serial input line(s) */
+ #define TIOCGICOUNT	0x545D	/* read serial port inline interrupt counts */
+ 
+-/*
+- * some architectures define FIOQSIZE as 0x545E, which is used for
+- * TIOCGHAYESESP on others
+- */
+-#ifndef FIOQSIZE
+-# define TIOCGHAYESESP	0x545E  /* Get Hayes ESP configuration */
+-# define TIOCSHAYESESP	0x545F  /* Set Hayes ESP configuration */
+-# define FIOQSIZE	0x5460
+-#endif
+-
+ /* Used for packet mode */
+ #define TIOCPKT_DATA		 0
+ #define TIOCPKT_FLUSHREAD	 1
