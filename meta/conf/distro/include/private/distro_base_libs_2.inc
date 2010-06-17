@@ -1,0 +1,45 @@
+RECIPE_STATUS_pn-gdbm = "green"
+DEPENDENCY_CHECK_pn-gdbm = "not done"
+RECIPE_LATEST_VERSION_pn-gdbm = "1.8.3"
+RECIPE_PATCH_pn-gdbm+makefile = "use oe generic DESTDIR instead of package specific INSTALL_ROOT"
+RECIPE_PATCH_pn-gdbm+libtool-mode = "explict specify install mode in libtool"
+RECIPE_INTEL_SECTION_pn-gdbm = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gdbm = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-gdbm = "10/2002"
+RECIPE_COMMENTS_pn-gdbm = ""
+
+RECIPE_STATUS_pn-pth = "yellow"    # custom do_configure
+DEPENDENCY_CHECK_pn-pth = "not done"
+RECIPE_LATEST_VERSION_pn-pth = "2.0.7"
+RECIPE_INTEL_SECTION_pn-pth = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pth = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-pth = "06/2006"
+RECIPE_COMMENTS_pn-pth = ""
+
+RECIPE_STATUS_pn-python-pycurl = "yellow"  # several exports to work with python
+DEPENDENCY_CHECK_pn-python-pycurl = "not done"
+RECIPE_LATEST_VERSION_pn-python-pycurl = "7.19.0"
+RECIPE_PATCH_pn-python-pycurl+no-static-link = "no static libraries"
+RECIPE_INTEL_SECTION_pn-python-pycurl = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pycurl = "2 months"
+RECIPE_LATEST_RELEASE_DATE_pn-python-pycurl = "09/2008"
+RECIPE_COMMENTS_pn-python-pycurl = "the so called MIT/X here is actually ISC license, depends on libcurl (> 7.19.0)"
+
+RECIPE_STATUS_pn-libusb = "yellow"    # conflict with other packages
+DEPENDENCY_CHECK_pn-libusb = "not done"
+RECIPE_LATEST_VERSION_pn-libusb = "0.1.2"
+RECIPE_PATCH_pn-libusb+configure-fix = "fix AC_LANG_CPLUSPLUS for libtool 2.2.2"
+RECIPE_INTEL_SECTION_pn-libusb = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libusb = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-libusb = "04/2006"
+RECIPE_COMMENTS_pn-libusb = "libusbpp from multiple packages, and should rconflict: libusb-compat-0.1"
+
+RECIPE_STATUS_pn-libnl = "yellow"    # still need to update to git
+DEPENDENCY_CHECK_pn-libnl = "not done"
+RECIPE_LATEST_VERSION_pn-libnl = "1.1"
+RECIPE_PATCH_pn-libnl+local-includes = "fix compilation in Makefile"
+RECIPE_PATCH_pn-libnl+compilefix = "fix compilation"
+RECIPE_INTEL_SECTION_pn-libnl = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libnl = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-libnl = "01/2008"
+RECIPE_COMMENTS_pn-libnl = "git is active and ~150 commits ahead of 1.1"
