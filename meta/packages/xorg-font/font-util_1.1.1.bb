@@ -2,7 +2,7 @@ DESCRIPTION = "X.Org font package creation/installation utilities"
 
 require xorg-font-common.inc
 
-LICENSE = "BSD & ICU & OpenGroup-style"
+LICENSE = "BSD & MIT-style & Unicode"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0b73d82c5f21398b013c07e8b4012376 \
                     file://ucs2any.c;endline=28;md5=8357dc567fc628bd12696f15b2a33bcb \
                     file://bdftruncate.c;endline=26;md5=4f82ffc101a1b165eae9c6998abff937 \
