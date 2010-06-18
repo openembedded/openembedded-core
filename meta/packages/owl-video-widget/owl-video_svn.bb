@@ -1,10 +1,15 @@
 DESCRIPTION = "OpenedHand Widget Library video widget"
-LICENSE = "LGPL"
+HOMEPAGE = "http://o-hand.com/"
+BUGTRACKER = "http://bugzilla.o-hand.com/"
+LICENSE = "LGPLv2.1 & GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ac14b7ca45afea5af040da54db270eb0 \
+                    file://src/video.c;endline=22;md5=e8e9f23c3691c11af7d8fc03264ca9da \
+                    file://src/bacon-volume.c;endline=20;md5=798804562b24e30bac482ba91c45e46d"
 SECTION = "x11"
 DEPENDS = "libowl-av"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/video"
 
