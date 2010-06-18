@@ -1,5 +1,10 @@
 DESCRIPTION = "Custom MB session files for poky"
+HOMEPAGE = "http://www.matchbox-project.org/"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
 LICENSE = "GPL"
+LIC_FILES_CHKSUM = "file://matchbox-session;endline=20;md5=180f1c169a15d059a56c30094f6fb5ea"
+
 SECTION = "x11"
 RCONFLICTS = "matchbox-common"
 
