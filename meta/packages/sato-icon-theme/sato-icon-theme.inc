@@ -1,9 +1,12 @@
-SECTION = "x11"
 DESCRIPTION = "Sato Icon Theme"
-LICENSE = "CC-BY-SA3"
-DEPENDS = ""
+HOMEPAGE = "http://www.o-hand.com"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
 
-SRC_URI = "http://pokylinux.org/releases/sato/sato-icon-theme-0.1.tar.gz"
+LICENSE = "CCPL"
+LIC_FILES_CHKSUM = "file://COPYING;md5=56a830bbe6e4697fe6cbbae01bb7c2b2"
+
+SECTION = "x11"
+DEPENDS = ""
 
 inherit autotools pkgconfig
 
