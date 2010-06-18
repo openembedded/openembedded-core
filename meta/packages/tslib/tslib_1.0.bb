@@ -1,12 +1,14 @@
 DESCRIPTION = "tslib is a plugin-based flexible touchscreen access library."
 HOMEPAGE = "http://tslib.berlios.de/"
+
 AUTHOR = "Russell King w/ plugins by Chris Larson et. al."
 SECTION = "base"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f30a9716ef3762e3467a2f62bf790f0a"
 
-PR = "r14"
+PR = "r15"
 
-SRC_URI = "http://download.berlios.de/tslib/tslib-1.0.tar.bz2 \
+SRC_URI = "http://download.berlios.de/tslib/tslib-${PV}.tar.bz2 \
            file://fix_version.patch;patch=1 \
            file://ts.conf \
            file://ts.conf-simpad-2.4 \
