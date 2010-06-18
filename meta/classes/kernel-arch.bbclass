@@ -19,7 +19,7 @@ def map_kernel_arch(a, d):
 
 	valid_archs = bb.data.getVar('valid_archs', d, 1).split()
 
-	if   re.match('(i.86|athlon)$', a):	return 'i386'
+	if   re.match('(i.86|athlon)$', a):	return 'x86'
 	elif re.match('arm26$', a):		return 'arm26'
 	elif re.match('armeb$', a):		return 'arm'
 	elif re.match('mipsel$', a):		return 'mips'
