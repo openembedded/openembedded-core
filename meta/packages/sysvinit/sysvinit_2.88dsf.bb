@@ -1,8 +1,10 @@
 DESCRIPTION = "System-V like init."
+HOMEPAGE = "http://savannah.nongnu.org/projects/sysvinit/"
 SECTION = "base"
-LICENSE = "GPL"
-HOMEPAGE = "http://freshmeat.net/projects/sysvinit/"
-PR = "r32"
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
+                    file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
+PR = "r0"
 
 # USE_VT and SERIAL_CONSOLE are generally defined by the MACHINE .conf.
 # Set PACKAGE_ARCH appropriately.
@@ -18,8 +20,8 @@ CONFFILES_${PN}-inittab = "${sysconfdir}/inittab"
 USE_VT ?= "1"
 SYSVINIT_ENABLED_GETTYS ?= "1"
 
-SRC_URI = "ftp://ftp.cistron.nl/pub/people/miquels/sysvinit/sysvinit-${PV}.tar.gz \
-	   file://install.patch;patch=1 \
+SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/sysvinit/sysvinit-${PV}.tar.bz2 \
+	   file://install.patch \
            file://need \
            file://provide \
            file://inittab \
@@ -45,11 +47,11 @@ FILES_sysvinit-sulogin = "${base_sbindir}/sulogin"
 
 CFLAGS_prepend = "-D_GNU_SOURCE "
 export LCRYPT = "-lcrypt"
-EXTRA_OEMAKE += "'INSTALL=install' \
-		 'bindir=${base_bindir}' \
-		 'sbindir=${base_sbindir}' \
-		 'usrbindir=${bindir}' \
-		 'usrsbindir=${sbindir}' \
+EXTRA_OEMAKE += "'base_bindir=${base_bindir}' \
+		 'base_sbindir=${base_sbindir}' \
+		 'bindir=${bindir}' \
+		 'sbindir=${sbindir}' \
+		 'sysconfdir=${sysconfdir}' \
 		 'includedir=${includedir}' \
 		 'mandir=${mandir}'"
 
