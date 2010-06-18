@@ -1,13 +1,20 @@
 DESCRIPTION = "GNOME XML Parser library"
+HOMEPAGE = "http://www.xmlsoft.org/"
+BUGTRACKER = "http://bugzilla.gnome.org/buglist.cgi?product=libxml2"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "MIT"
-
-SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
-           file://libxml-64bit.patch;patch=1 \
-	   file://libxml-nanohttp.patch;patch=1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=bb90c48926316d9af6e2d70ca7013ade \
+                    file://hash.c;beginline=6;endline=15;md5=ce702952bfddd7aee22639a2d6b54136 \
+                    file://list.c;beginline=4;endline=13;md5=cdbfa3dee51c099edb04e39f762ee907 \
+                    file://trio.c;beginline=5;endline=14;md5=6c025753c86d958722ec76e94cae932e"
 
 DEPENDS_virtclass-native = "python-native"
+DEPENDS =+ "zlib"
+
+SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
+           file://libxml-64bit.patch"
+
 
 inherit autotools pkgconfig binconfig
 
@@ -24,7 +31,7 @@ python populate_packages_prepend () {
 
 PACKAGES = "${PN}-dbg ${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
 
-FILES_${PN}-dev += "${bindir}/*-config"
+FILES_${PN}-dev += "${bindir}/*-config ${libdir}/xml2Conf.sh"
 FILES_${PN}-utils += "${bindir}/*"
 
 BBCLASSEXTEND = "native"
