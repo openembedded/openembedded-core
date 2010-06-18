@@ -1,5 +1,10 @@
 DESCRIPTION = "Matchbox window manager Sato themes"
-LICENSE = "CC-BY-SA3"
+HOMEPAGE = "http://www.matchbox-project.org/"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "CCPL"
+LIC_FILES_CHKSUM = "file://COPYING;md5=aae86bb34b0a83716ca09f4e783d6ba4"
+
 DEPENDS = "matchbox-wm"
 SECTION = "x11/wm"
 
