@@ -1,6 +1,6 @@
 require libmatchbox.inc
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://projects.o-hand.com/matchbox/sources/${PN}/${PV}/${PN}-${PV}.tar.gz \
            file://16bppfixes.patch;patch=1 \
