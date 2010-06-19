@@ -33,6 +33,8 @@ MACHINE ?= "qemux86"
 #MACHINE ?= "mx31litekit"
 #MACHINE ?= "mx31phy"
 #MACHINE ?= "zylonite"
+#MACHINE ?= "igep0020"
+#MACHINE ?= "igep0030"
 
 DISTRO ?= "poky"
 # For bleeding edge / experimental / unstable package versions
