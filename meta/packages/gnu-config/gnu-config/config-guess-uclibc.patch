@@ -1,12 +1,13 @@
 Patch courtesy gentoo-portage/sys-devel/gnuconfig/files/automake-1.8.5-config-guess-uclibc.patch.
 
 updated to 20050516 by Marcin 'Hrw' Juszkiewicz (by hand)
+updated to 20080123 by Nitin A Kamble (by hand)
 
 Index: config/config.guess
 ===================================================================
---- config.guess.original	2005-05-16 13:43:19 +0200
-+++ config.guess	2005-05-16 13:45:26 +0200
-@@ -138,6 +138,19 @@
+--- config.orig/config.guess
++++ config/config.guess
+@@ -139,6 +139,19 @@ UNAME_RELEASE=`(uname -r) 2>/dev/null` |
  UNAME_SYSTEM=`(uname -s) 2>/dev/null`  || UNAME_SYSTEM=unknown
  UNAME_VERSION=`(uname -v) 2>/dev/null` || UNAME_VERSION=unknown
  
@@ -26,16 +27,23 @@ Index: config/config.guess
  # Note: order is significant - the case branches are not exclusive.
  
  case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
-@@ -847,7 +860,7 @@
- 	echo ${UNAME_MACHINE}-pc-minix
+@@ -840,13 +853,13 @@ EOF
+ 	if echo __ARM_EABI__ | $CC_FOR_BUILD -E - 2>/dev/null \
+ 	    | grep -q __ARM_EABI__
+ 	then
+-	    echo ${UNAME_MACHINE}-unknown-linux-gnu
++	    echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+ 	else
+ 	    echo ${UNAME_MACHINE}-unknown-linux-gnueabi
+ 	fi
  	exit ;;
-     arm*:Linux:*:*)
+     avr32*:Linux:*:*)
 -	echo ${UNAME_MACHINE}-unknown-linux-gnu
 +	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
  	exit ;;
      cris:Linux:*:*)
  	echo cris-axis-linux-gnu
-@@ -856,16 +869,16 @@
+@@ -855,16 +868,16 @@ EOF
  	echo crisv32-axis-linux-gnu
  	exit ;;
      frv:Linux:*:*)
@@ -56,22 +64,26 @@ Index: config/config.guess
  	exit ;;
      mips:Linux:*:*)
  	eval $set_cc_for_build
-@@ -884,7 +897,7 @@
- 	#endif
- EOF
- 	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
+@@ -887,7 +900,7 @@ EOF
+ 		s: ::g
+ 		p
+ 	    }'`"
 -	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 +	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-${LIBC}"; exit; }
  	;;
      mips64:Linux:*:*)
  	eval $set_cc_for_build
-@@ -903,13 +916,13 @@
- 	#endif
- EOF
- 	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
+@@ -910,16 +923,16 @@ EOF
+ 		s: ::g
+ 		p
+ 	    }'`"
 -	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 +	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-${LIBC}"; exit; }
  	;;
+     or32:Linux:*:*)
+-	echo or32-unknown-linux-gnu
++	echo or32-unknown-linux-${LIBC}
+ 	exit ;;
      ppc:Linux:*:*)
 -	echo powerpc-unknown-linux-gnu
 +	echo powerpc-unknown-linux-${LIBC}
@@ -82,7 +94,7 @@ Index: config/config.guess
  	exit ;;
      alpha:Linux:*:*)
  	case `sed -n '/^cpu model/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo` in
-@@ -922,34 +935,34 @@
+@@ -932,40 +945,40 @@ EOF
  	  EV68*) UNAME_MACHINE=alphaev68 ;;
          esac
  	objdump --private-headers /bin/sh | grep ld.so.1 >/dev/null
@@ -121,13 +133,20 @@ Index: config/config.guess
 -	echo ${UNAME_MACHINE}-unknown-linux-gnu
 +	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
  	exit ;;
+     vax:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-dec-linux-gnu
+ 	exit ;;
      x86_64:Linux:*:*)
 -	echo x86_64-unknown-linux-gnu
 +	echo x86_64-unknown-linux-${LIBC}
  	exit ;;
+     xtensa*:Linux:*:*)
+-    	echo ${UNAME_MACHINE}-unknown-linux-gnu
++    	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+ 	exit ;;
      i*86:Linux:*:*)
  	# The BFD linker knows what the default object file format is, so
-@@ -964,20 +977,21 @@
+@@ -980,20 +993,21 @@ EOF
  				    p'`
          case "$ld_supported_targets" in
  	  elf32-i386)
