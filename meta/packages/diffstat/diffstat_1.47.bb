@@ -6,12 +6,14 @@ PRIORITY = "optional"
 SECTION = "devel"
 DEPENDS = "gettext"
 
+PR = "r0"
+
 # NOTE: The upstream maintainer has a single 'diffstat.tar.gz' for the
 # latest version of the package.  It could easily change out from under us.
 # I'd rather rely on debian, and possible have the sources vanish, than risk
 # the sources _changing_ underneith us. -CL
 SRC_URI = "${DEBIAN_MIRROR}/main/d/diffstat/diffstat_${PV}.orig.tar.gz \
-	   ${DEBIAN_MIRROR}/main/d/diffstat/diffstat_${PV}-1.diff.gz;patch=1"
+	   ${DEBIAN_MIRROR}/main/d/diffstat/diffstat_${PV}-1.diff.gz;apply=yes"
 S = "${WORKDIR}/diffstat-${PV}"
 
 inherit autotools
