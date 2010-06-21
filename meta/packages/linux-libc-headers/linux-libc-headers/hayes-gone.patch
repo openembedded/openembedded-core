@@ -2,10 +2,13 @@
 # configuration are no longer needed, and they break setserial by making it
 # believe that it should compile in the code that supports this modem.
 
-Index: linux-2.6.33/include/asm-generic/ioctls.h
+2010/06/16
+Created-by: Jeff Dike <jdike@linux.intel.com>
+
+Index: linux-2.6.34/include/asm-generic/ioctls.h
 ===================================================================
---- linux-2.6.33.orig/include/asm-generic/ioctls.h
-+++ linux-2.6.33/include/asm-generic/ioctls.h
+--- linux-2.6.34.orig/include/asm-generic/ioctls.h
++++ linux-2.6.34/include/asm-generic/ioctls.h
 @@ -86,16 +86,6 @@
  #define TIOCMIWAIT	0x545C	/* wait for a change on serial input line(s) */
  #define TIOCGICOUNT	0x545D	/* read serial port inline interrupt counts */

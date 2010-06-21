@@ -2,9 +2,10 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
-PR = "r2"
+PR = "r0"
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${PV}.tar.bz2 "
+SRC_URI += "file://hayes-gone.patch \
+           file://ppc_glibc_build_fix.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
@@ -24,8 +25,8 @@ set_arch() {
 		sparc64*) ARCH=sparc64 ;;
 		sparc*)   ARCH=sparc ;;
 		x86_64*)  ARCH=x86_64 ;;
-	        avr32*)   ARCH=avr32 ;;
-                bfin*)    ARCH=blackfin ;;
+		avr32*)   ARCH=avr32 ;;
+		bfin*)    ARCH=blackfin ;;
 	esac
 }
 
@@ -40,6 +41,8 @@ do_compile () {
 do_install() {
 	set_arch
 	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
+	# Kernel should not be exporting this header
+	rm -f ${D}${exec_prefix}/include/scsi/scsi.h
 }
 
 BBCLASSEXTEND = "nativesdk"
