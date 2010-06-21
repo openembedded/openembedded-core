@@ -3,16 +3,18 @@ Its name stands for LiSt Open Files, and it does just that."
 SECTION = "devel"
 LICENSE = "BSD"
 
+PR = "r0"
+
 SRC_URI = "ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/lsof_${PV}.tar.bz2"
 LOCALSRC = "file://${WORKDIR}/lsof_${PV}/lsof_${PV}_src.tar"
 S = "${WORKDIR}/lsof_${PV}_src"
 
 python do_unpack () {
-	bb.build.exec_func('base_do_unpack', d)
-	src_uri = bb.data.getVar('SRC_URI', d)
-	bb.data.setVar('SRC_URI', '${LOCALSRC}', d)
-	bb.build.exec_func('base_do_unpack', d)
-	bb.data.setVar('SRC_URI', src_uri, d)
+    bb.build.exec_func('base_do_unpack', d)
+    src_uri = bb.data.getVar('SRC_URI', d)
+    bb.data.setVar('SRC_URI', '${LOCALSRC}', d)
+    bb.build.exec_func('base_do_unpack', d)
+    bb.data.setVar('SRC_URI', src_uri, d)
 }
 
 export LSOF_OS = "${TARGET_OS}"
