@@ -1,15 +1,14 @@
 require libtool_${PV}.bb
 
-PR = "r31"
+PR = "r0"
 PACKAGES = ""
-SRC_URI_append = " file://cross_compile.patch;patch=1 \
-                   file://prefix.patch;patch=1"
+SRC_URI_append = " file://cross_compile.patch "
 
 DEPENDS += "libtool-native"
 
 DOLT_PATCH = ""
-DOLT_PATCH_arm = " file://add_dolt.patch;patch=1"
-DOLT_PATCH_i586 = " file://add_dolt.patch;patch=1"
+DOLT_PATCH_arm = " file://add_dolt.patch"
+DOLT_PATCH_i586 = " file://add_dolt.patch"
 
 #SRC_URI_append_linux = "${DOLT_PATCH}"
 #SRC_URI_append_linux-gnueabi = "${DOLT_PATCH}"

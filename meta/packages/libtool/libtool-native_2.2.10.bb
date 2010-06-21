@@ -1,8 +1,9 @@
 require libtool_${PV}.bb
 
-PR = "r23"
-SRC_URI_append = " file://cross_compile.patch;patch=1 \
-                   file://prefix.patch;patch=1"
+DEPENDS = ""
+
+PR = "r0"
+SRC_URI_append = " file://cross_compile.patch "
 
 inherit native
 

@@ -1,22 +1,31 @@
 Renames "libtool" -> "${TARGET_PREFIX}libtool" which makes sure
 it can't be confused with the host libtool.
 
-Index: libtool-2.2.2/libltdl/m4/libtool.m4
+
+After discussions with RP Changed host_alias to build_alias 
+at one place as it was causing man page building issue while 
+cross compiling for different architectures.
+
+Date: 2010/06/28
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+
+
+Index: libtool-2.2.10/libltdl/m4/libtool.m4
 ===================================================================
---- libtool-2.2.2.orig/libltdl/m4/libtool.m4	2008-04-13 22:43:05.000000000 +0100
-+++ libtool-2.2.2/libltdl/m4/libtool.m4	2008-04-13 22:43:05.000000000 +0100
-@@ -89,7 +89,8 @@
+--- libtool-2.2.10.orig/libltdl/m4/libtool.m4
++++ libtool-2.2.10/libltdl/m4/libtool.m4
+@@ -94,7 +94,8 @@ _LT_SET_OPTIONS([$0], [$1])
  LIBTOOL_DEPS="$ltmain"
  
  # Always use our own libtool.
 -LIBTOOL='$(SHELL) $(top_builddir)/libtool'
 +LIBTOOL='$(SHELL) $(top_builddir)'
-+LIBTOOL="$LIBTOOL/$host_alias-libtool"
++LIBTOOL="$LIBTOOL/${host_alias}-libtool"
  AC_SUBST(LIBTOOL)dnl
  
  _LT_SETUP
-@@ -211,7 +212,7 @@
- no_glob_subst='s/\*/\\\*/g'
+@@ -201,7 +202,7 @@ aix3*)
+ esac
  
  # Global variables:
 -ofile=libtool
@@ -24,20 +33,20 @@ Index: libtool-2.2.2/libltdl/m4/libtool.m4
  can_build_shared=yes
  
  # All known linkers require a `.a' archive for static linking (except MSVC,
-Index: libtool-2.2.2/Makefile.am
+Index: libtool-2.2.10/Makefile.am
 ===================================================================
---- libtool-2.2.2.orig/Makefile.am	2008-04-01 19:06:08.000000000 +0100
-+++ libtool-2.2.2/Makefile.am	2008-04-13 22:49:17.000000000 +0100
-@@ -31,7 +31,7 @@
+--- libtool-2.2.10.orig/Makefile.am
++++ libtool-2.2.10/Makefile.am
+@@ -31,7 +31,7 @@ AM_LDFLAGS		=
  DIST_SUBDIRS		= .
  EXTRA_DIST		=
  
--BUILT_SOURCES		= libtool
-+BUILT_SOURCES		= $(host_alias)-libtool
+-BUILT_SOURCES		= libtool libtoolize
++BUILT_SOURCES		= $(host_alias)-libtool libtoolize
  
  CLEANFILES		=
  MOSTLYCLEANFILES	=
-@@ -64,7 +64,7 @@
+@@ -65,7 +65,7 @@ rebuild = rebuild=:; $(timestamp); corre
  ## ---------------- ##
  
  # The libtool distributor and the standalone libtool script.
@@ -46,7 +55,7 @@ Index: libtool-2.2.2/Makefile.am
  
  libtoolize: $(srcdir)/libtoolize.in $(top_builddir)/config.status
  	rm -f libtoolize.tmp libtoolize
-@@ -90,8 +90,8 @@
+@@ -91,8 +91,8 @@ $(srcdir)/libtoolize.in: $(sh_files) lib
  # We used to do this with a 'stamp-vcl' file, but non-gmake builds
  # would rerun configure on every invocation, so now we manually
  # check the version numbers from the build rule when necessary.
@@ -57,7 +66,7 @@ Index: libtool-2.2.2/Makefile.am
  	if test -f "$$target"; then \
  	  set dummy `./$$target --version | sed 1q`; actualver="$$5"; \
  	  test "$$actualver" = "$$correctver" && rebuild=false; \
-@@ -100,8 +100,8 @@
+@@ -101,8 +101,8 @@ libtool: $(top_builddir)/config.status $
  	  case $$prereq in *ChangeLog);; *) rebuild=:;; esac; \
  	done; \
  	if $$rebuild; then \
@@ -68,16 +77,25 @@ Index: libtool-2.2.2/Makefile.am
  	fi
  
  .PHONY: configure-subdirs
-@@ -145,7 +145,7 @@
- 		  ChangeLog.1999 ChangeLog.2000 ChangeLog.2001 \
+@@ -147,7 +147,7 @@ EXTRA_DIST     += bootstrap $(srcdir)/li
  		  ChangeLog.2002 ChangeLog.2003 ChangeLog.2004 \
- 		  ChangeLog.2005 ChangeLog.2006 ChangeLog.2007
+ 		  ChangeLog.2005 ChangeLog.2006 ChangeLog.2007 \
+ 		  ChangeLog.2008 ChangeLog.2009
 -CLEANFILES     += libtool libtoolize libtoolize.tmp \
 +CLEANFILES     += $(host_alias)-libtool libtoolize libtoolize.tmp \
  		  $(auxdir)/ltmain.tmp $(m4dir)/ltversion.tmp
  
  ## We build ltversion.m4 here, instead of from config.status,
-@@ -483,12 +483,12 @@
+@@ -337,7 +337,7 @@ update_mans = \
+   PATH=.$(PATH_SEPARATOR)$$PATH; export PATH; \
+   $(HELP2MAN) --output=$@
+ $(srcdir)/doc/libtool.1: $(srcdir)/$(auxdir)/ltmain.sh
+-	$(update_mans) --help-option=--help-all libtool
++	$(update_mans) --help-option=--help-all ${build_alias}-libtool
+ $(srcdir)/doc/libtoolize.1: $(srcdir)/libtoolize.in
+ 	$(update_mans) libtoolize
+ 
+@@ -523,12 +523,12 @@ TESTS_ENVIRONMENT = MAKE="$(MAKE)" CC="$
  
  BUILDCHECK_ENVIRONMENT = _lt_pkgdatadir="$(abs_top_srcdir)" \
  	LIBTOOLIZE="$(abs_top_builddir)/libtoolize" \
@@ -92,7 +110,7 @@ Index: libtool-2.2.2/Makefile.am
  	LTDLINCL="-I$(includedir)" \
  	LIBLTDL="$(libdir)/libltdl.la" \
  	tst_aclocaldir="$(aclocaldir)"
-@@ -620,7 +620,7 @@
+@@ -679,7 +679,7 @@ if HAVE_FC
  TESTS += $(FC_TESTS)
  endif
  

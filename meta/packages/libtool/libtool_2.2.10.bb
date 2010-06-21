@@ -1,10 +1,7 @@
 require libtool.inc
+DEPENDS = "libtool-native"
 
-PR = "r21"
-
-SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}a.tar.gz \
-           file://trailingslash.patch;patch=1 \
-           file://dolt.m4"
+PR = "r0"
 
 PACKAGES =+ "libltdl libltdl-dev libltdl-dbg"
 FILES_${PN} += "${datadir}/aclocal*"

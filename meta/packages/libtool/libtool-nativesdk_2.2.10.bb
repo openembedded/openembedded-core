@@ -1,9 +1,16 @@
 require libtool_${PV}.bb
 
-PR = "r4"
-SRC_URI_append = " file://cross_compile.patch;patch=1"
+PR = "r0"
+SRC_URI_append = " file://cross_compile.patch"
 
 inherit nativesdk
+
+do_configure_prepend () {
+	# Remove any existing libtool m4 since old stale versions would break
+	# any upgrade
+	rm -f ${STAGING_DATADIR}/aclocal/libtool.m4
+	rm -f ${STAGING_DATADIR}/aclocal/lt*.m4
+}
 
 do_install () {
 	autotools_do_install

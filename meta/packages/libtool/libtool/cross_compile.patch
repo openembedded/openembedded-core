@@ -4,11 +4,11 @@ Not upstreable in this form.
 
 RP - 01/05/2008
 
-Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
+Index: libtool-2.2.10/libltdl/config/ltmain.m4sh
 ===================================================================
---- libtool-2.2.2.orig/libltdl/config/ltmain.m4sh	2008-05-01 21:48:42.000000000 +0100
-+++ libtool-2.2.2/libltdl/config/ltmain.m4sh	2008-05-01 21:51:41.000000000 +0100
-@@ -4454,8 +4454,14 @@
+--- libtool-2.2.10.orig/libltdl/config/ltmain.m4sh
++++ libtool-2.2.10/libltdl/config/ltmain.m4sh
+@@ -5147,8 +5147,14 @@ func_mode_link ()
  	    absdir="$abs_ladir"
  	    libdir="$abs_ladir"
  	  else
@@ -25,7 +25,7 @@ Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
  	  fi
  	  test "X$hardcode_automatic" = Xyes && avoidtemprpath=yes
  	else
-@@ -4825,8 +4831,6 @@
+@@ -5519,8 +5525,6 @@ func_mode_link ()
  		add="$libdir/$linklib"
  	      fi
  	    else
@@ -34,7 +34,7 @@ Index: libtool-2.2.2/libltdl/config/ltmain.m4sh
  	      # Try looking first in the location we're being installed to.
  	      if test -n "$inst_prefix_dir"; then
  		case $libdir in
-@@ -4972,7 +4976,17 @@
+@@ -5667,7 +5671,17 @@ func_mode_link ()
  		  fi
  		  ;;
  		*)
