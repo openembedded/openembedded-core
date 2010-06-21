@@ -4,11 +4,11 @@ extract program execution details from the Linux operating system and  \
 interpret them."
 LICENSE = "GPL"
 
-LTTDATE = "05032009"
+RP = "r0"
+
+LTTDATE = "09062010"
 
 SRC_URI = "http://ltt.polymtl.ca/files/lttng/ltt-control-${PV}-${LTTDATE}.tar.gz"
-#           file://build_fix.patch;patch=1 \
-#           file://dynticks.patch;patch=1
 
 S = "${WORKDIR}/ltt-control-${PV}-${LTTDATE}"
 
