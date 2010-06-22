@@ -1,4 +1,7 @@
-
+# this could be pushed upstream to allowing conditional strip. Now it's not applied.
+# we use sed in recipe for same purpose. Keep here as reminder for upstream
+#
+# comment added by Kevin Tian <kevin.tian@intel.com>, 07/01/2010
 #
 # Patch managed by http://www.holgerschurig.de/patcher.html
 #
