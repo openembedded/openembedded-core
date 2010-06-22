@@ -2,11 +2,19 @@ DESCRIPTION = "Tool Command Language"
 LICENSE = "tcl"
 SECTION = "devel/tcltk"
 HOMEPAGE = "http://tcl.sourceforge.net"
-PR = "r3"
+LIC_CHKSUM_FILES = "file://../license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
+    file://../compat/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
+    file://../library/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
+    file://../macosx/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
+    file://../tests/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
+    file://../win/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
+    "
+
+PR = "r0"
 
 SRC_URI = "\
   ${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
-  file://tcl-add-soname.patch;patch=1;pnum=2"
+  file://tcl-add-soname.patch"
 
 S = "${WORKDIR}/tcl${PV}/unix"
 
@@ -25,8 +33,8 @@ do_compile_prepend() {
 
 do_install() {
 	autotools_do_install
-	oe_libinstall -so libtcl8.4 ${STAGING_LIBDIR}
-	ln -sf ./tclsh8.4 ${D}${bindir}/tclsh
+	oe_libinstall -so libtcl8.5 ${STAGING_LIBDIR}
+	ln -sf ./tclsh8.5 ${D}${bindir}/tclsh
 	sed -i "s+${WORKDIR}+${STAGING_INCDIR}+g" tclConfig.sh
 	sed -i "s,-L${libdir},," tclConfig.sh
 	install -d ${STAGING_BINDIR_CROSS}/
@@ -40,8 +48,8 @@ do_install() {
 }
 
 PACKAGES =+ "${PN}-lib"
-FILES_${PN}-lib = "${libdir}/libtcl8.4.so.*"
-FILES_${PN} += "${libdir}/tcl8.4"
+FILES_${PN}-lib = "${libdir}/libtcl8.5.so.*"
+FILES_${PN} += "${libdir}/tcl8.5"
 FILES_${PN}-dev += "${libdir}/tclConfig.sh"
 
 BBCLASSEXTEND = "native"
