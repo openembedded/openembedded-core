@@ -8,7 +8,7 @@ RRECOMMENDS = "kernel-vmlinux"
 PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
-           file://opstart.patch;patch=1 \
+           file://opstart.patch \
            file://acinclude.m4"
 S = "${WORKDIR}/oprofile-${PV}"
 
