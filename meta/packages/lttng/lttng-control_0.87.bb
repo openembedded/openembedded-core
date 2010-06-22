@@ -4,7 +4,7 @@ extract program execution details from the Linux operating system and  \
 interpret them."
 LICENSE = "GPL"
 
-RP = "r0"
+PR = "r0"
 
 LTTDATE = "09062010"
 

@@ -3,10 +3,10 @@ DESCRIPTION = "The Linux trace toolkit is a suite of tools designed to \
 extract program execution details from the Linux operating system and  \
 interpret them."
 LICENSE = "GPL"
-PR = "r2"
+PR = "r0"
 DEPENDS = "gtk+ pango popt"
 
-ALTNAME = "LinuxTraceToolkitViewer-${PV}-13062007"
+ALTNAME = "LinuxTraceToolkitViewer-${PV}-12082007"
 
 SRC_URI = "http://lttng.org/files/packages/${ALTNAME}.tar.gz"
 S = "${WORKDIR}/${ALTNAME}"
