@@ -144,6 +144,24 @@
             <para>help2man</para>
         </listitem>
         <listitem>
+            <para>chrpath</para>
+        </listitem>
+        <listitem>
+            <para>mercurial</para>
+        </listitem>
+    </itemizedlist>
+    <para>Furthermore if you wish to run an emulated Poky image using <ulink url='http://qemu.org'>QEMU</ulink> (as in the quickstart below) you will need the following packages installed:</para>
+    <itemizedlist>
+        <listitem>
+            <para>libgl1-mesa-dev</para>
+        </listitem>
+        <listitem>
+            <para>libglu1-mesa-dev</para>
+        </listitem>
+        <listitem>
+            <para>libsdl1.2-dev</para>
+        </listitem>
+        <listitem>
             <para>bochsbios (only to run qemux86 images)</para>
         </listitem>
     </itemizedlist>
