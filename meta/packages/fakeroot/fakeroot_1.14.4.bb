@@ -6,6 +6,7 @@ LICENSE = "GPLv2"
 RDEPENDS = "util-linux"
 RDEPENDS_virtclass-native = "util-linux-native"
 PR = "r0"
+PROVIDES += "virtual/fakeroot"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.orig.tar.bz2 \
            file://absolutepaths.patch"

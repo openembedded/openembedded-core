@@ -1,6 +1,6 @@
 DESCRIPTION = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
-DEPENDS = "opkg-native opkg-utils-native fakeroot-native sed-native"
+DEPENDS = "opkg-native opkg-utils-native virtual/fakeroot-native sed-native"
 
 inherit meta
 
@@ -109,7 +109,7 @@ do_populate_sdk() {
 	# Package it up
 	mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}
-	fakeroot tar cfj ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
+	${FAKEROOT} tar cfj ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
 }
 
 do_populate_sdk[nostamp] = "1"

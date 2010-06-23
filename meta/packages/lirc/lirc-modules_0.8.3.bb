@@ -2,7 +2,7 @@ DESCRIPTION = "LIRC is a package that allows you to decode and send infra-red si
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
-DEPENDS = "virtual/kernel fakeroot-native"
+DEPENDS = "virtual/kernel virtual/fakeroot-native"
 PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lirc/lirc-${PV}.tar.gz \

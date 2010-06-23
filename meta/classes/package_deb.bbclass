@@ -240,7 +240,7 @@ python do_package_deb () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = os.system("PATH=\"%s\" fakeroot dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, True), root, pkgoutdir))
+        ret = os.system("PATH=\"%s\" %s dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, True), bb.data.getVar("FAKEROOT", localdata, True) or "fakeroot", root, pkgoutdir))
         if ret != 0:
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("dpkg-deb execution failed")
@@ -253,7 +253,7 @@ python () {
     if bb.data.getVar('PACKAGES', d, True) != '':
         deps = (bb.data.getVarFlag('do_package_write_deb', 'depends', d) or "").split()
         deps.append('dpkg-native:do_populate_sysroot')
-        deps.append('fakeroot-native:do_populate_sysroot')
+        deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_deb', 'depends', " ".join(deps), d)
 }
 
