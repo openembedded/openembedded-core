@@ -14,5 +14,6 @@ SRC_URI = "\
     file://fix-nogl.patch \
     file://qemugl-allow-glxcontext-release.patch \
     file://linker-flags.patch"
+    file://init-info.patch;patch=1"
 
 S = "${WORKDIR}/qemu-${PV}"
