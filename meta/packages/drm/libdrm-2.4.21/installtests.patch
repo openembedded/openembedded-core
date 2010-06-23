@@ -2,15 +2,19 @@ Index: libdrm-2.4.7/tests/Makefile.am
 ===================================================================
 --- libdrm-2.4.7.orig/tests/Makefile.am	2009-04-09 20:16:35.000000000 +0100
 +++ libdrm-2.4.7/tests/Makefile.am	2009-04-17 12:35:14.000000000 +0100
-@@ -4,7 +4,7 @@
- 
- LDADD = $(top_builddir)/libdrm/libdrm.la
- 
--noinst_PROGRAMS = \
+@@ -6,10 +6,11 @@
+
+ LDADD = $(top_builddir)/libdrm.la
+
+-check_PROGRAMS = \
 +bin_PROGRAMS = \
  	dristat \
  	drmstat
- 
+
++check_PROGRAMS =
+ SUBDIRS =
+
+ if HAVE_LIBKMS
 Index: libdrm-2.4.7/tests/modeprint/Makefile.am
 ===================================================================
 --- libdrm-2.4.7.orig/tests/modeprint/Makefile.am	2009-02-17 19:52:37.000000000 +0000
@@ -18,11 +22,11 @@ Index: libdrm-2.4.7/tests/modeprint/Makefile.am
 @@ -3,7 +3,7 @@
  	-I$(top_srcdir)/libdrm/intel/ \
  	-I$(top_srcdir)/libdrm
- 
+
 -noinst_PROGRAMS = \
 +bin_PROGRAMS = \
  	modeprint
- 
+
  modeprint_SOURCES = \
 Index: libdrm-2.4.7/tests/modetest/Makefile.am
 ===================================================================
@@ -31,9 +35,9 @@ Index: libdrm-2.4.7/tests/modetest/Makefile.am
 @@ -4,7 +4,7 @@
  	-I$(top_srcdir)/libdrm \
  	$(CAIRO_CFLAGS)
- 
+
 -noinst_PROGRAMS = \
 +bin_PROGRAMS = \
  	modetest
- 
+
  modetest_SOURCES = \
