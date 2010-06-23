@@ -108,8 +108,8 @@ Index: gnutls-1.6.0/libextra/gnutls_openssl.c
  
 Index: gnutls-1.6.0/includes/gnutls/openssl.h
 ===================================================================
---- gnutls-1.6.0.orig/includes/gnutls/openssl.h	2006-03-08 11:44:58.000000000 +0100
-+++ gnutls-1.6.0/includes/gnutls/openssl.h	2006-12-12 15:07:26.032227000 +0100
+--- gnutls-1.6.0.orig/libextra/includes/gnutls/openssl.h	2006-03-08 11:44:58.000000000 +0100
++++ gnutls-1.6.0/libextra/includes/gnutls/openssl.h	2006-12-12 15:07:26.032227000 +0100
 @@ -164,6 +164,11 @@
  
      gnutls_transport_ptr_t rfd;

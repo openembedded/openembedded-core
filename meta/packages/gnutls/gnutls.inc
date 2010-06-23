@@ -1,14 +1,32 @@
 DESCRIPTION = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
-DEPENDS = "zlib libgcrypt lzo gettext"
+BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
+DEPENDS = "zlib lzo gettext libtasn1 libgcrypt (>= 1.4.2)"
 
-LICENSE = "LGPL"
+LICENSE = "GPLv3+ & LGPLv2.1+"
+LICENSE_${PN} = "LGPLv2.1+"
+LICENSE_${PN}-xx = "GPLv2.1+"
+LICENSE_${PN}-bin = "GPLv3+"
+LICENSE_${PN}-extra = "GPLv3+"
+LICENSE_${PN}-openssl = "GPLv3+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
+                    file://lib/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
+                    file://libextra/COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2"
 
-inherit autotools binconfig pkgconfig pkgconfig
+inherit autotools binconfig pkgconfig
 
-EXTRA_OECONF="--with-included-opencdk --with-included-libtasn1 --with-included-libcfg --with-libz-prefix=${STAGING_DIR_HOST}${prefix} --with-lzo --disable-guile"
+EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
+              --with-libtasn1-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libgcrypt-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libz-prefix=${STAGING_DIR_HOST}${prefix} --with-lzo --disable-guile"
+
+do_configure_prepend() {
+	for dir in . lib libextra; do
+		rm ${dir}/aclocal.m4 ${dir}/m4/libtool.m4 ${dir}/m4/lt*.m4
+	done
+}
 
 PACKAGES =+ "${PN}-openssl ${PN}-extra ${PN}-bin ${PN}-xx"
 
