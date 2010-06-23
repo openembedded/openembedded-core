@@ -1,11 +1,18 @@
 DESCRIPTION = "General-purpose x86 assembler"
 SECTION = "devel"
-LICENSE = "GPL"
+LICENSE = "simplifiedBSD"
+LIC_CHKSUM_FILES = "file://LICENSE;md5=d89d124974e487e5d64da6f1cd8acfbb"
 COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/nasm/nasm-${PV}.tar.bz2"
+PR = "r0"
+
+SRC_URI = "${SOURCEFORGE_MIRROR}/nasm/nasm-${PV}.tar.bz2 "
 
 inherit autotools
+
+do_configure_prepend () {
+	mv aclocal.m4 acinclude.m4
+}
 
 do_install() {
 	install -d ${D}${bindir}
