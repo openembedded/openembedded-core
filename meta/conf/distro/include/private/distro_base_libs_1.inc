@@ -18,4 +18,11 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-eggdbus = "4 months"
 RECIPE_LATEST_RELEASE_DATE_pn-eggdbus = "11/2009"
 RECIPE_COMMENTS_pn-eggdbus = "http://mail.gnome.org/archives/gtk-devel-list/2008-December/msg00059.html contains more detail introduction"
 
+RECIPE_STATUS_pn+libdaemon = "green"
+DEPENDENCY_CHECK_pn+libdaemon = "not done"
+RECIPE_LATEST_VERSION_pn+libdaemon = "0.14"
+RECIPE_INTEL_SECTION_pn+libdaemon = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn+libdaemon = "15 months"
+RECIPE_LATEST_RELEASE_DATE_pn+libdaemon = "11/2009"
+RECIPE_COMMENTS_pn+libdaemon = ""
 
