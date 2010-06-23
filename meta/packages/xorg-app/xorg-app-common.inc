@@ -1,5 +1,6 @@
 DESCRIPTION = "X application"
 HOMEPAGE = "http://www.x.org/"
+BUGTRACKER = "https://bugs.freedesktop.org"
 SECTION = "x11/apps"
 LICENSE = "MIT-X"
 DEPENDS = "util-macros virtual/libx11"
