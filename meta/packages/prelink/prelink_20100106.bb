@@ -4,18 +4,17 @@ DESCRIPTION = " The prelink package contains a utility which modifies ELF shared
 and executables, so that far fewer relocations need to be resolved at \
 runtime and thus programs come up faster."
 LICENSE = "GPL"
-PR = "r9"
+PR = "r0"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/p/prelink/prelink_0.0.${PV}.orig.tar.gz \
+SRC_URI = "http://people.redhat.com/jakub/prelink/prelink-${PV}.tar.bz2 \
            file://prelink.conf \
            file://prelink.cron.daily \
            file://prelink.default"
 
 TARGET_OS_ORIG := "${TARGET_OS}"
 OVERRIDES_append = ":${TARGET_OS_ORIG}"
-SRC_URI_append_linux-gnueabi = " file://arm_eabi.patch;patch=1"
 
-S = "${WORKDIR}/prelink-0.0.${PV}"
+S = "${WORKDIR}/prelink"
 
 EXTRA_OECONF = "--disable-64bit"
 
