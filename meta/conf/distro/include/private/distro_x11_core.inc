@@ -50,3 +50,23 @@ RECIPE_NO_OF_PATCHES_pn-xf86-input-vmmouse="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-input-vmmouse="1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-xf86-input-vmmouse="2010/04/08"
 RECIPE_INTEL_SECTION_pn-xf86-input-vmmouse="graphic core"
+
+RECIPE_STATUS_pn-libdrm="green" # no update needed
+RECIPE_LATEST_VERSION_pn-libdrm="2.4.21"
+RECIPE_NO_OF_PATCHES_pn-libdrm="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libdrm="1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-libdrm="2010/06/10"
+RECIPE_INTEL_SECTION_pn-libdrm="graphic core"
+
+RECIPE_STATUS_pn-python-pycairo="red" # upgrade needed. src file name changed to py2cairo
+RECIPE_LATEST_VERSION_pn-python-pycairo="1.8.10"
+RECIPE_NO_OF_PATCHES_pn-python-pycairo="0"
+RECIPE_LATEST_RELEASE_DATE_pn-python-pycairo="2010/05/20"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pycairo="9 months"
+
+RECIPE_STATUS_pn-libxfontcache="green" # no update neededd
+RECIPE_LATEST_VERSION_pn-libxfontcache="1.0.5"
+RECIPE_NO_OF_PATCHES_pn-libxfontcache="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libxfontcache="3 years"
+RECIPE_LATEST_RELEASE_DATE_pn-libxfontcache="2009/10/08"
+RECIPE_INTEL_SECTION_pn-libxfontcache="graphic core"

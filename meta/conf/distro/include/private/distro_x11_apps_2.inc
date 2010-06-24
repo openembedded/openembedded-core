@@ -15,3 +15,66 @@ RECIPE_NO_OF_PATCHES_pn-mkfontscale="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-mkfontscale="10 monthes"
 RECIPE_LATEST_RELEASE_DATE_pn-mkfontscale="2009/10/11"
 RECIPE_INTEL_SECTION_pn-mkfontscale="graphic apps"
+
+RECIPE_STATUS_pn-xauth="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xauth="1.0.4"
+RECIPE_NO_OF_PATCHES_pn-xauth="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xauth="1 year"
+RECIPE_LATEST_RELEASE_DATE_pn-xauth="2009/09/21"
+RECIPE_INTEL_SECTION_pn-xauth="graphic app"
+
+RECIPE_STATUS_pn-xdpyinfo="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xdpyinfo="1.1.0"
+RECIPE_NO_OF_PATCHES_pn-xdpyinfo="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xdpyinfo="1 year"
+RECIPE_LATEST_RELEASE_DATE_pn-xdpyinfo="2009/10/16"
+RECIPE_INTEL_SECTION_pn-xdpyinfo="graphic app"
+
+RECIPE_STATUS_pn-xhost="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xhost="1.0.3"
+RECIPE_NO_OF_PATCHES_pn-xhost="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xhost="2 years"
+RECIPE_LATEST_RELEASE_DATE_pn-xhost="2009/10/14"
+RECIPE_INTEL_SECTION_pn-xhost="graphic app"
+
+RECIPE_STATUS_pn-xinit="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xinit="1.2.1"
+RECIPE_NO_OF_PATCHES_pn-xinit="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xinit="4 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-xinit="2010/03/16"
+RECIPE_INTEL_SECTION_pn-xinit="graphic app"
+
+RECIPE_STATUS_pn-xkbcomp="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xkbcomp="1.1.1"
+RECIPE_NO_OF_PATCHES_pn-xkbcomp="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xkbcomp="2 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-xkbcomp="2009/10/03"
+RECIPE_INTEL_SECTION_pn-xkbcomp="graphic app"
+
+RECIPE_STATUS_pn-xmodmap="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xmodmap="1.0.4"
+RECIPE_NO_OF_PATCHES_pn-xmodmap="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xmodmap="2 years"
+RECIPE_LATEST_RELEASE_DATE_pn-xmodmap="2009/10/06"
+RECIPE_INTEL_SECTION_pn-xmodmap="graphic app"
+
+RECIPE_STATUS_pn-xprop="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xprop="1.1.0"
+RECIPE_NO_OF_PATCHES_pn-xprop="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xprop="1 year"
+RECIPE_LATEST_RELEASE_DATE_pn-xprop="2009/10/12"
+RECIPE_INTEL_SECTION_pn-xprop="graphic app"
+
+RECIPE_STATUS_pn-xset="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xset="1.1.0"
+RECIPE_NO_OF_PATCHES_pn-xset="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xset="1 year"
+RECIPE_LATEST_RELEASE_DATE_pn-xset="2009/09/21"
+RECIPE_INTEL_SECTION_pn-xset="graphic app"
+
+RECIPE_STATUS_pn-xwininfo="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xwininfo="1.0.5"
+RECIPE_NO_OF_PATCHES_pn-xwininfo="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xwininfo="1 year"
+RECIPE_LATEST_RELEASE_DATE_pn-xwininfo="2009/10/12"
+RECIPE_INTEL_SECTION_pn-xwininfo="graphic app"
