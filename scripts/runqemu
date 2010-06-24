@@ -104,7 +104,7 @@ fi
 
 if [ "$MACHINE" = "qemumips" ]; then
     if [ "x$ZIMAGE" = "x" ]; then
-        ZIMAGE=$BUILDDIR/tmp/deploy/images/vmlinux.bin-$MACHINE.bin
+        ZIMAGE=$BUILDDIR/tmp/deploy/images/vmlinux-$MACHINE.bin
     fi
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then

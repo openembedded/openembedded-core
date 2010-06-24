@@ -63,10 +63,8 @@ do_wrlinux_configcheck() {
 }
 
 do_wrlinux_link_vmlinux() {
-        if [ -n "${KERNEL_IMAGETYPE_LINK}" ]; then
-	        cd ${B}/arch/${ARCH}/boot
-	        ln -sf ../../../${KERNEL_IMAGETYPE_LINK}
-        fi
+	cd ${B}/arch/${ARCH}/boot
+	ln -sf ../../../vmlinux
 }
 
 do_wrlinux_configme[depends] = "kern-tools-native:do_populate_sysroot"
