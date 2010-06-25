@@ -56,3 +56,5 @@ FILES_${PN}-dbg += "${prefix}/.debug \
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${layout_libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
+# Cross-canadian packages need to pull in nativesdk so's, sorry for ugliness
+SHLIBSDIR = "${STAGING_DIR}/${SDK_ARCH}-nativesdk-pokysdk-${BUILD_OS}/shlibs"
