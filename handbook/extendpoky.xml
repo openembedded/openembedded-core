@@ -650,7 +650,9 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 </glossterm> variable needs to be increased (commonly referred to 
                 as 'bumped') as part of that commit. Only integer values are used
                 and <glossterm><link linkend='var-PR'>PR</link></glossterm> = 
-                "r0" should not be added into new recipes as this is default value.
+                "r0" should be added into new recipes as, while this is the
+                default value, not having the variable defined in a recipe makes
+                it easy to miss incrementing it when updating the recipe.
                 When upgrading the version of a package (<glossterm><link 
                 linkend='var-PV'>PV</link></glossterm>), the <glossterm><link 
                 linkend='var-PR'>PR</link></glossterm> variable should be removed.
