@@ -1,5 +1,8 @@
 DESCRIPTION = "Address-book application."
-LICENSE = "LGPL"
+HOMEPAGE = "http://pimlico-project.org/contacts.html"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "GPLv2 & GPLv2+ & GPLv3+ "
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ eds-dbus"
 DEPENDS_append_poky = " libowl"
@@ -25,4 +28,4 @@ FILES_${PN} += "${datadir}/pixmaps/stock_contact.png \
 SRC_URI = "file://stock_contact.png \
            file://stock_person.png"
 
-SRC_URI_append_poky = " file://contacts-owl-window-menu.patch;patch=1 "
+SRC_URI_append_poky = " file://contacts-owl-window-menu.patch;apply=yes "
