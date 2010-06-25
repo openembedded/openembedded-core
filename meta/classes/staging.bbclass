@@ -13,10 +13,17 @@ packagedstaging_fastpath () {
 sysroot_stage_dir() {
 	src="$1"
 	dest="$2"
-	# This will remove empty directories so we can ignore them
+	# if the src doesn't exist don't do anything
+	if [ ! -d "$src" ]; then
+		 return
+	fi
+
+	# We only want to stage the contents of $src if it's non-empty so first rmdir $src
+	# then if it still exists (rmdir on non-empty dir fails) we can copy its contents
 	rmdir "$src" 2> /dev/null || true
+	# However we always want to stage a $src itself, even if it's empty
+	mkdir -p "$dest"
 	if [ -d "$src" ]; then
-		mkdir -p "$dest"
 		cp -fpPR "$src"/* "$dest"
 	fi
 }
@@ -52,6 +59,7 @@ sysroot_stage_dirs() {
 		sysroot_stage_dir $from${base_sbindir} $to${STAGING_DIR_HOST}${base_sbindir}
 		sysroot_stage_dir $from${libexecdir} $to${STAGING_DIR_HOST}${libexecdir}
 		sysroot_stage_dir $from${sysconfdir} $to${STAGING_DIR_HOST}${sysconfdir}
+		sysroot_stage_dir $from${localstatedir} $to${STAGING_DIR_HOST}${localstatedir}
 	fi
 	if [ -d $from${libdir} ]
 	then
