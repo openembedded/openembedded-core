@@ -1,0 +1,12 @@
+Index: openssl-0.9.8k/crypto/sha/sha.h
+===================================================================
+--- openssl-0.9.8k.orig/crypto/sha/sha.h	2008-09-16 12:47:28.000000000 +0200
++++ openssl-0.9.8k/crypto/sha/sha.h	2009-07-19 11:36:28.000000000 +0200
+@@ -59,6 +59,7 @@
+ #ifndef HEADER_SHA_H
+ #define HEADER_SHA_H
+ 
++#include <stddef.h>
+ #include <openssl/e_os2.h>
+ #include <stddef.h>
+ 
