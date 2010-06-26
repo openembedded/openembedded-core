@@ -1,3 +1,6 @@
+# Fix crash with gst-inspect
+# Chris Lord <chris@openedhand.com>
+
 --- gstreamer-0.10.9/tools/gst-inspect.c.old	2006-09-12 11:56:53.000000000 +0100
 +++ gstreamer-0.10.9/tools/gst-inspect.c	2006-09-12 11:57:27.000000000 +0100
 @@ -1123,7 +1123,7 @@
