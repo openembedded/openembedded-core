@@ -1,27 +1,36 @@
-Index: alsa-utils-1.0.20/configure.in
-===================================================================
---- alsa-utils-1.0.20.orig/configure.in	2009-05-23 23:37:02.000000000 +0100
-+++ alsa-utils-1.0.20/configure.in	2009-05-23 23:37:24.000000000 +0100
-@@ -106,28 +106,12 @@
-     curseslib="$withval",
-     curseslib="auto")
-   if test "$curseslib" = "ncursesw"; then
+# alsa-utils: Fix ncurses build failures
+# Richard Purdie <rpurdie@linux.intel.com>
+# Rebased to 1.0.23, Dongxiao Xu <dongxiao.xu@intel.com>
+
+diff -ruN alsa-utils-1.0.23-orig/configure.in alsa-utils-1.0.23/configure.in
+--- alsa-utils-1.0.23-orig/configure.in	2010-04-16 19:19:12.000000000 +0800
++++ alsa-utils-1.0.23/configure.in	2010-06-22 15:22:06.731202478 +0800
+@@ -109,34 +109,16 @@
+   NCURSESLIBSUFFIX=""
+   CURSES_NLS="no"
+   if test "$curseslib" = "ncursesw" -o \( "$curseslib" = "auto" -a "$USE_NLS" = "yes" \); then
 -    AC_CHECK_PROG([ncursesw5_config], [ncursesw5-config], [yes])
 -    if test "$ncursesw5_config" = "yes"; then
 -      CURSESINC="<ncurses.h>"
 -      CURSESLIB=`ncursesw5-config --libs`
+-      CURSESLIBDIR=`ncursesw5-config --libdir`
 -      CURSES_CFLAGS=`ncursesw5-config --cflags`
 -      curseslib="ncursesw"
 -    else
        AC_CHECK_LIB(ncursesw, initscr, 
                   [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncursesw'; curseslib="ncursesw"])
 -    fi
+     if test -n "$CURSESINC"; then
+       NCURSESLIBSUFFIX="w"
+       CURSES_NLS="yes"
+     fi
    fi
    if test "$curseslib" = "ncurses" -o "$curseslib" = "auto"; then
 -    AC_CHECK_PROG([ncurses5_config], [ncurses5-config], [yes])
 -    if test "$ncurses5_config" = "yes"; then
 -      CURSESINC="<ncurses.h>"
 -      CURSESLIB=`ncurses5-config --libs`
+-      CURSESLIBDIR=`ncurses5-config --libdir`
 -      CURSES_CFLAGS=`ncurses5-config --cflags`
 -      curseslib="ncurses"
 -    else
