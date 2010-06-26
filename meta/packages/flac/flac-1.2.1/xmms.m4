@@ -1,5 +1,6 @@
 # CFLAGS and library paths for XMMS
 # written 15 December 1999 by Ben Gertzfield <che@debian.org>
+# Acquired from OpenEmbedded
 
 dnl Usage:
 dnl AM_PATH_XMMS([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
