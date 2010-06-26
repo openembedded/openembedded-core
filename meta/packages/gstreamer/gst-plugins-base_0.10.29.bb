@@ -7,6 +7,8 @@ RDEPENDS += "gnome-vfs-plugin-file gnome-vfs-plugin-http gnome-vfs-plugin-ftp \
              gnome-vfs-plugin-sftp"
 PROVIDES_${PN} += "gst-plugins"
 
+PR = "r0"
+
 EXTRA_OECONF += "--disable-freetypetest --disable-pango --disable-theora"
 
 do_configure_prepend() {
