@@ -1,9 +1,13 @@
 DESCRIPTION = "Linux Bluetooth Stack Userland V4"
+HOMEPAGE = "http://www.bluez.org"
 SECTION = "libs"
 PRIORITY = "optional"
-DEPENDS = "gst-plugins-base alsa-lib libusb-compat dbus-glib"
-HOMEPAGE = "http://www.bluez.org"
-LICENSE = "GPL"
+LICENSE = "GPLv2+ & LGPLv2.1+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
+                    file://COPYING.LIB;md5=fb504b67c50331fc78734fed90fb0e09 \
+                    file://src/main.c;beginline=1;endline=24;md5=9bc54b93cd7e17bf03f52513f39f926e \
+                    file://sbc/sbc.c;beginline=1;endline=25;md5=1a40781ed30d50d8639323a184aeb191"
+DEPENDS = "gst-plugins-base alsa-lib libusb-compat dbus-glib libnl"
 
 # For angstrom we want this to replace at least bluez-libs
 PROVIDES_append_angstrom = " bluez-utils bluez-libs"
@@ -44,11 +48,11 @@ EXTRA_OECONF = "\
 "
 
 do_install_append() {
-        install -m 0644 ${S}/audio/audio.conf ${D}/${sysconfdir}/bluetooth/
-        install -m 0644 ${S}/network/network.conf ${D}/${sysconfdir}/bluetooth/
-        install -m 0644 ${S}/input/input.conf ${D}/${sysconfdir}/bluetooth/
-        # at_console doesn't really work with the current state of OE, so punch some more holes so people can actually use BT
-        install -m 0644 ${WORKDIR}/bluetooth.conf ${D}/${sysconfdir}/dbus-1/system.d/
+	install -m 0644 ${S}/audio/audio.conf ${D}/${sysconfdir}/bluetooth/
+	install -m 0644 ${S}/network/network.conf ${D}/${sysconfdir}/bluetooth/
+	install -m 0644 ${S}/input/input.conf ${D}/${sysconfdir}/bluetooth/
+	# at_console doesn't really work with the current state of OE, so punch some more holes so people can actually use BT
+	install -m 0644 ${WORKDIR}/bluetooth.conf ${D}/${sysconfdir}/dbus-1/system.d/
 }
 
 PACKAGES =+ "gst-plugin-bluez libasound-module-bluez"
