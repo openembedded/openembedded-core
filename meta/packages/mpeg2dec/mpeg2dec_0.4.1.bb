@@ -3,12 +3,12 @@ HOMEPAGE = "http://libmpeg2.sourceforge.net/"
 LICENSE = "GPL"
 PRIORITY = "optional"
 SECTION = "libs"
-PR = "r1"
+PR = "r0"
 
 DEPENDS = "virtual/libx11"
 
 SRC_URI = "http://libmpeg2.sourceforge.net/files/mpeg2dec-${PV}.tar.gz"
-S = "${WORKDIR}/mpeg2dec-0.4.0"
+S = "${WORKDIR}/mpeg2dec-0.4.1"
 
 inherit autotools pkgconfig
 
