@@ -1,14 +1,18 @@
 DESCRIPTION = "Alsa sound library"
 HOMEPAGE = "http://www.alsa-project.org"
+BUGTRACKER = "https://bugtrack.alsa-project.org/alsa-bug/login_page.php"
 SECTION = "libs/multimedia"
-LICENSE = "GPL"
-PR = "r0"
+LICENSE = "LGPLv2.1 & GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
+                    file://src/socket.c;beginline=1;endline=26;md5=11ff89a8a7a4a690a5c78effe8159545"
 
 # configure.in sets -D__arm__ on the command line for any arm system
 # (not just those with the ARM instruction set), this should be removed,
 # (or replaced by a permitted #define).
 #FIXME: remove the following
 ARM_INSTRUCTION_SET = "arm"
+
+PR = "r0"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://fix-tstamp-declaration.patch;patch=1"
