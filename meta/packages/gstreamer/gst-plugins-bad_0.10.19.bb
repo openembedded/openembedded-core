@@ -4,8 +4,10 @@ inherit gettext
 
 DEPENDS += "gst-plugins-base libmusicbrainz tremor"
 
+PR = "r0"
+
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio \
-		--with-plugins=musicbrainz,wavpack,ivorbis"
+		--with-plugins=musicbrainz,wavpack,ivorbis, --disable-vdpau"
 
 ARM_INSTRUCTION_SET = "arm"
 
