@@ -14,7 +14,7 @@ RRECOMMENDS = "gst-plugin-mad \
             gst-plugin-ogg"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r1"
+PR = "r0"
 
 S = "${WORKDIR}/${PN}"
 
