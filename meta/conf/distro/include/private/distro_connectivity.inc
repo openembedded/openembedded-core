@@ -16,4 +16,15 @@ RECIPE_NO_OF_PATCHES_pn-bluez-dtl1-workaround="0"
 RECIPE_LATEST_RELEASE_DATE_pn-bluez-dtl1-workaround="n/a"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-bluez-dtl1-workaround="n/a"
 
+RECIPE_STATUS_pn-irda-utils="green"
+RECIPE_LATEST_VERSION_pn-irda-utils="0.9.18"
+RECIPE_NO_OF_PATCHES_pn-irda-utils="0"
+RECIPE_LATEST_RELEASE_DATE_pn-irda-utils="2006/07/10"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-irda-utils="4 months"
+
+RECIPE_STATUS_pn-bluez4="green"
+RECIPE_LATEST_VERSION_pn-bluez4="4.66"
+RECIPE_NO_OF_PATCHES_pn-bluez4="2"
+RECIPE_LATEST_RELEASE_DATE_pn-bluez4="2010/05/24"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-bluez4="1 month"
 
