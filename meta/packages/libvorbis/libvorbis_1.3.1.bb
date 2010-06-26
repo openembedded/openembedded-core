@@ -4,10 +4,9 @@ DESCRIPTION = "Ogg Vorbis is a high-quality lossy audio codec \
 that is free of intellectual property restrictions. libvorbis \
 is the main vorbis codec library."
 LICENSE = "BSD"
-PR = "r5"
+PR = "r0"
 
-SRC_URI = "http://www.vorbis.com/files/${PV}/unix/libvorbis-${PV}.tar.gz \
-           file://m4.patch;patch=1"
+SRC_URI = "http://downloads.xiph.org/releases/vorbis/libvorbis-${PV}.tar.gz"
 
 inherit autotools pkgconfig
 
