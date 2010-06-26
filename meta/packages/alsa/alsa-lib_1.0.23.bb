@@ -2,7 +2,7 @@ DESCRIPTION = "Alsa sound library"
 HOMEPAGE = "http://www.alsa-project.org"
 SECTION = "libs/multimedia"
 LICENSE = "GPL"
-PR = "r1"
+PR = "r0"
 
 # configure.in sets -D__arm__ on the command line for any arm system
 # (not just those with the ARM instruction set), this should be removed,
