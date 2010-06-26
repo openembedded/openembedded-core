@@ -10,6 +10,8 @@ PROVIDES_append_angstrom = " bluez-utils bluez-libs"
 
 ASNEEDED = ""
 
+PR = "r0"
+
 SRC_URI = "\
   http://www.kernel.org/pub/linux/bluetooth/bluez-${PV}.tar.gz \
   file://fix-dfutool-usb-declaration-mismatch.patch;patch=1 \

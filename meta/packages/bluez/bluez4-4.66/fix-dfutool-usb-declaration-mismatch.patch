@@ -1,3 +1,9 @@
+# bluez4: add compile patch fixing some usb declaration mismatch
+# Author: Michael 'Mickey' Lauer <mickey@vanille-media.de>
+# Date:   Thu Jan 29 16:52:21 2009 +0000
+#
+# Acquired from OpenEmbedded
+
 Index: bluez-4.27/tools/dfutool.c
 ===================================================================
 --- bluez-4.27.orig/tools/dfutool.c
