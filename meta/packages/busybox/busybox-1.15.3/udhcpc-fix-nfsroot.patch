@@ -1,8 +1,8 @@
-Index: busybox-1.15.1/examples/udhcp/simple.script
+Index: busybox-1.15.3/examples/udhcp/simple.script
 ===================================================================
---- busybox-1.15.1.orig/examples/udhcp/simple.script	2009-09-16 22:52:09.000000000 +0200
-+++ busybox-1.15.1/examples/udhcp/simple.script	2009-09-16 22:57:11.424608476 +0200
-@@ -10,10 +10,17 @@ NETMASK=""
+--- busybox-1.15.3.orig/examples/udhcp/simple.script	2010-06-27 12:17:14.116876946 +0200
++++ busybox-1.15.3/examples/udhcp/simple.script	2010-06-27 12:18:38.607868533 +0200
+@@ -10,10 +10,17 @@
  BROADCAST="broadcast +"
  [ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
  
@@ -21,7 +21,7 @@ Index: busybox-1.15.1/examples/udhcp/simple.script
  		;;
  
  	renew|bound)
-@@ -21,15 +28,18 @@ case "$1" in
+@@ -21,15 +28,17 @@
  		ifconfig $interface $ip $NETMASK $BROADCAST
  
  		if [ -n "$router" ] ; then
@@ -34,8 +34,7 @@ Index: busybox-1.15.1/examples/udhcp/simple.script
 +				while route del default gw 0.0.0.0 dev $interface 2>/dev/null ; do
 +					:
 +				done
-+			:
-+		done
++			fi
  
  			metric=0
  			for i in $router ; do
