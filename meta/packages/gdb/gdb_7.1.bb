@@ -1,3 +1,3 @@
 require gdb.inc
 
-PR = "r7"
+PR = "r0"

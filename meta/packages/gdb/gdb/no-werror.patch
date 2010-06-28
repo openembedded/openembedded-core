@@ -5,11 +5,11 @@
  gdb/configure.ac |    8 ++------
  4 files changed, 6 insertions(+), 10 deletions(-)
 
---- gdb-6.8.orig/bfd/warning.m4
-+++ gdb-6.8/bfd/warning.m4
-@@ -21,11 +21,11 @@ case "${host}" in
-   *) ;;
- esac
+Index: gdb-7.1/bfd/warning.m4
+===================================================================
+--- gdb-7.1.orig/bfd/warning.m4
++++ gdb-7.1/bfd/warning.m4
+@@ -23,7 +23,7 @@ esac
  
  # Enable -Werror by default when using gcc
  if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" ; then
@@ -18,13 +18,11 @@
  fi
  
  NO_WERROR=
- if test "${ERROR_ON_WARNING}" = yes ; then
-     GCC_WARN_CFLAGS="$GCC_WARN_CFLAGS -Werror"
---- gdb-6.8.orig/configure.ac
-+++ gdb-6.8/configure.ac
-@@ -2739,11 +2739,11 @@ AC_SUBST(stage1_checking)
- 
- # Enable -Werror in bootstrap stage2 and later.
+Index: gdb-7.1/configure.ac
+===================================================================
+--- gdb-7.1.orig/configure.ac
++++ gdb-7.1/configure.ac
+@@ -3371,7 +3371,7 @@ AC_SUBST(stage1_checking)
  AC_ARG_ENABLE(werror,
  [  --enable-werror         enable -Werror in bootstrap stage2 and later], [],
  [if test -d ${srcdir}/gcc && test x"`cat $srcdir/gcc/DEV-PHASE`" = xexperimental; then
@@ -33,13 +31,11 @@
  else
    enable_werror=no
  fi])
- case ${enable_werror} in
-   yes) stage2_werror_flag="--enable-werror-always" ;;
---- gdb-6.8.orig/gdb/Makefile.in
-+++ gdb-6.8/gdb/Makefile.in
-@@ -140,13 +140,13 @@ READLINE_CFLAGS = @READLINE_CFLAGS@
- 
- # Where is expat?  This will be empty if expat was not available.
+Index: gdb-7.1/gdb/Makefile.in
+===================================================================
+--- gdb-7.1.orig/gdb/Makefile.in
++++ gdb-7.1/gdb/Makefile.in
+@@ -151,9 +151,9 @@ READLINE_CFLAGS = @READLINE_CFLAGS@
  LIBEXPAT = @LIBEXPAT@
  
  WARN_CFLAGS = @WARN_CFLAGS@
@@ -51,27 +47,19 @@
  
  GDB_WARN_CFLAGS_NO_FORMAT = `echo " $(GDB_WARN_CFLAGS) " | sed "s/ -Wformat-nonliteral / /g"`
  
- # Where is the INTL library?  Typically in ../intl.
- INTL = @LIBINTL@
---- gdb-6.8.orig/gdb/configure.ac
-+++ gdb-6.8/gdb/configure.ac
-@@ -1292,24 +1292,21 @@ AC_SUBST(TARGET_SYSTEM_ROOT)
- AC_SUBST(TARGET_SYSTEM_ROOT_DEFINE)
- 
+Index: gdb-7.1/gdb/configure.ac
+===================================================================
+--- gdb-7.1.orig/gdb/configure.ac
++++ gdb-7.1/gdb/configure.ac
+@@ -1525,15 +1525,12 @@ GDB_AC_WITH_DIR(SYSTEM_GDBINIT, system-g
  AC_ARG_ENABLE(werror,
-   [  --enable-werror    treat compile warnings as errors],
+   AS_HELP_STRING([--enable-werror], [treat compile warnings as errors]),
    [case "${enableval}" in
 -     yes | y) ERROR_ON_WARNING="yes" ;;
 +     yes | y) ERROR_ON_WARNING="no" ;;
       no | n)  ERROR_ON_WARNING="no" ;;
       *) AC_MSG_ERROR(bad value ${enableval} for --enable-werror) ;;
     esac])
- 
- # Enable -Werror by default when using gcc
- if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" ; then
--    ERROR_ON_WARNING=yes
-+    ERROR_ON_WARNING=no
- fi
  
  WERROR_CFLAGS=""
 -if test "${ERROR_ON_WARNING}" = yes ; then
@@ -80,11 +68,7 @@
  
  # The entries after -Wno-pointer-sign are disabled warnings which may
  # be enabled in the future, which can not currently be used to build
- # GDB.
- # NOTE: If you change this list, remember to update
-@@ -1352,11 +1349,10 @@ then
-     AC_MSG_CHECKING(compiler warning flags)
-     # Separate out the -Werror flag as some files just cannot be
+@@ -1587,7 +1584,6 @@ then
      # compiled with it enabled.
      for w in ${build_warnings}; do
  	case $w in
@@ -92,5 +76,3 @@
  	*) # Check that GCC accepts it
  	    saved_CFLAGS="$CFLAGS"
  	    CFLAGS="$CFLAGS $w"
- 	    AC_TRY_COMPILE([],[],WARN_CFLAGS="${WARN_CFLAGS} $w",)
- 	    CFLAGS="$saved_CFLAGS"
