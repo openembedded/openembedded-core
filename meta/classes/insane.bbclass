@@ -326,7 +326,7 @@ def package_qa_check_license(workdir, d):
             bb.error ("md5 data is not matching for ", url)
             bb.note ("The new md5 checksum is ", md5chksum)
             bb.note ("Check if the license information has changed, and if it has update the .bb file with correct license")
-            return False
+            sane = False
 
     return sane
 
