@@ -1,7 +1,7 @@
-DESCRIPTION = "This package provides the necessary \
-infrastructure for basic TCP/IP based networking."
+DESCRIPTION = "This package provides the necessary infrastructure for basic TCP/IP based networking"
+HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 PR = "r23"
 
 inherit update-rc.d
