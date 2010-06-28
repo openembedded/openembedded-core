@@ -1,4 +1,4 @@
-PR = "r12"
+PR = "r14"
 
 require gcc-${PV}.inc
 require gcc-configure-runtime.inc

@@ -13,7 +13,7 @@ RUNTIMETARGET = "libssp libstdc++-v3"
 # libgfortran
 
 do_configure () {
-	export CXX="${CXX} -nostdinc++"
+	export CXX="${CXX} -nostdinc++ -nostdlib++"
 	for d in ${RUNTIMETARGET}; do
 		echo "Configuring $d"
 		mkdir -p ${B}/$d/
