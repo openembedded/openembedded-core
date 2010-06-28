@@ -1,14 +1,18 @@
 DESCRIPTION = "Command line tool and library for client-side URL transfers."
+HOMEPAGE = "http://curl.haxx.se/"
+BUGTRACKER = "http://curl.haxx.se/mail/list.cgi?list=curl-tracker"
+SECTION = "console/network"
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e664ac"
+
 DEPENDS = "zlib gnutls"
 DEPENDS_virtclass-native = "zlib-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk"
-SECTION = "console/network"
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
-           file://noldlibpath.patch;patch=1 \
-           file://pkgconfig_fix.patch;patch=1"
+           file://noldlibpath.patch \
+           file://pkgconfig_fix.patch"
 
 inherit autotools pkgconfig binconfig
 
