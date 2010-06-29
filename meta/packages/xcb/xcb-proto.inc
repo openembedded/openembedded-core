@@ -1,7 +1,9 @@
 DESCRIPTION = "XCB: an X protocol C binding"
+HOMEPAGE = "http://xcb.freedesktop.org"
+BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=XCB"
+
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
-HOMEPAGE = "http://xcb.freedesktop.org"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/xcb-proto-${PV}.tar.bz2"
 
