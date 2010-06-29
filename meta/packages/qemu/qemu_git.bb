@@ -1,7 +1,7 @@
 require qemu.inc
 
 PV = "0.12.4"
-PR = "r8"
+PR = "r9"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-git/"
 FILESDIR = "${WORKDIR}"
@@ -14,7 +14,8 @@ SRC_URI = "\
     file://fix-dirent.patch \
     file://fix-nogl.patch \
     file://qemugl-allow-glxcontext-release.patch \
-    file://linker-flags.patch"
+    file://linker-flags.patch \
+    file://qemu-vmware-vga-depth.patch"
 
 S = "${WORKDIR}/git"
 

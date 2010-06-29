@@ -1,6 +1,6 @@
 require qemu.inc
 
-PR = "r15"
+PR = "r16"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
@@ -14,6 +14,7 @@ SRC_URI = "\
     file://fix-nogl.patch \
     file://qemugl-allow-glxcontext-release.patch \
     file://linker-flags.patch \
-    file://init-info.patch"
+    file://init-info.patch \
+    file://qemu-vmware-vga-depth.patch"
 
 S = "${WORKDIR}/qemu-${PV}"
