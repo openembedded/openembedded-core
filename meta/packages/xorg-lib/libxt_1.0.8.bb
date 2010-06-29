@@ -1,9 +1,15 @@
+DESCRIPTION = "X11 toolkit intrinsics library"
+
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 toolkit intrinsics library"
+LICENSE = "MIT & MIT-style"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0629f81eb944a4317bc6fe134614769f"
+
+
 DEPENDS += "libsm virtual/libx11 kbproto libxdmcp"
 PROVIDES = "xt"
-PR = "r1"
+
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXt"
