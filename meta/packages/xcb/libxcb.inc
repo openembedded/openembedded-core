@@ -1,7 +1,9 @@
 DESCRIPTION = "XCB: an X protocol C binding"
+HOMEPAGE = "http://xcb.freedesktop.org"
+BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=XCB"
+
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
-HOMEPAGE = "http://xcb.freedesktop.org"
 
 PARALLEL_MAKE = ""
 DEPENDS = "xcb-proto xproto libxau libxslt-native xcb-proto-native"
