@@ -1,9 +1,14 @@
+DESCRIPTION = "FreeType-based font drawing library for X"
+
 require xorg-lib-common.inc
 
-DESCRIPTION = "FreeType-based font drawing library for X"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://COPYING;md5=90b90b60eb30f65fc9c2673d7cf59e24"
+
 DEPENDS += "libxrender freetype fontconfig"
 PROVIDES = "xft"
-PR = "r1"
+
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXft"
