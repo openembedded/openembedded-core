@@ -1,9 +1,14 @@
+DESCRIPTION = "X11 miscellaneous utility library"
+
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 miscellaneous utility library"
+LICENSE = "MIT & MIT-style"
+LIC_FILES_CHKSUM = "file://COPYING;md5=bb8d1df693806ad17c7268086f1d5394"
+
 DEPENDS += "libxt libxext"
 PROVIDES = "xmu"
-PR = "r1"
+
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXmu"
