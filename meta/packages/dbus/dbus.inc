@@ -1,14 +1,14 @@
-DESCRIPTION = "Message bus system for applications to talk to one another"
+DESCRIPTION = "D-Bus is a message bus system, a simple way for applications to talk to one another. In addition to interprocess communication, D-Bus helps coordinate process lifecycle; it makes it simple and reliable to code a \"single instance\" application or daemon, and to launch applications and daemons on demand when their services are needed"
 HOMEPAGE = "http://dbus.freedesktop.org"
 SECTION = "base"
-LICENSE = "GPL"
+LICENSE = "AFL2.1 | GPLv2+"
 DEPENDS = "expat glib-2.0 virtual/libintl virtual/libx11 libsm"
 
 SRC_URI = "\
   http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
-  file://cross.patch;patch=1 \
-  file://tmpdir.patch;patch=1 \
-  file://fix-install-daemon.patch;patch=1 \
+  file://cross.patch; \
+  file://tmpdir.patch; \
+  file://fix-install-daemon.patch; \
   file://dbus-1.init \
   file://99_dbus \
 "
