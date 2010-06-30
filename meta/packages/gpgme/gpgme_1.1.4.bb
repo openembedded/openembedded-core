@@ -1,5 +1,7 @@
-DESCRIPTION = "GPGME - GnuPG Made Easy"
-LICENSE = "GPL"
+DESCRIPTION = "GnuPG Made Easy (GPGME) is a library designed to make access to GnuPG easier for applications. It provides a High-Level Crypto API for encryption, decryption, signing, signature verification and key management"
+HOMEPAGE = "http://www.gnupg.org/gpgme.html"
+LICENSE = "GPLv2+ & LGPLv2.1+"
+
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2"
 DEPENDS = "libgpg-error pth"
 PR = "r4"
