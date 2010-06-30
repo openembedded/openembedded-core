@@ -196,22 +196,22 @@ python do_package_deb () {
         rdepends = [dep for dep in rdepends if not '*' in dep]
         rrecommends = bb.utils.explode_deps(unicode(bb.data.getVar("RRECOMMENDS", localdata, 1) or ""))
         rrecommends = [rec for rec in rrecommends if not '*' in rec]
-        rsuggests = (unicode(bb.data.getVar("RSUGGESTS", localdata, 1) or "")).split()
-        rprovides = (unicode(bb.data.getVar("RPROVIDES", localdata, 1) or "")).split()
-        rreplaces = (unicode(bb.data.getVar("RREPLACES", localdata, 1) or "")).split()
-        rconflicts = (unicode(bb.data.getVar("RCONFLICTS", localdata, 1) or "")).split()
+        rsuggests = bb.utils.explode_deps(unicode(bb.data.getVar("RSUGGESTS", localdata, 1) or ""))
+        rprovides = bb.utils.explode_deps(unicode(bb.data.getVar("RPROVIDES", localdata, 1) or ""))
+        rreplaces = bb.utils.explode_deps(unicode(bb.data.getVar("RREPLACES", localdata, 1) or ""))
+        rconflicts = bb.utils.explode_deps(unicode(bb.data.getVar("RCONFLICTS", localdata, 1) or ""))
         if rdepends:
-            ctrlfile.write(u"Depends: %s\n" % ", ".join(rdepends))
+            ctrlfile.write(u"Depends: %s\n" %  bb.utils.join_deps(rdepends))
         if rsuggests:
-            ctrlfile.write(u"Suggests: %s\n" % ", ".join(rsuggests))
+            ctrlfile.write(u"Suggests: %s\n" %  bb.utils.join_deps(rsuggests))
         if rrecommends:
-            ctrlfile.write(u"Recommends: %s\n" % ", ".join(rrecommends))
+            ctrlfile.write(u"Recommends: %s\n" %  bb.utils.join_deps(rrecommends))
         if rprovides:
-            ctrlfile.write(u"Provides: %s\n" % ", ".join(rprovides))
+            ctrlfile.write(u"Provides: %s\n" %  bb.utils.join_deps(rprovides))
         if rreplaces:
-            ctrlfile.write(u"Replaces: %s\n" % ", ".join(rreplaces))
+            ctrlfile.write(u"Replaces: %s\n" %  bb.utils.join_deps(rreplaces))
         if rconflicts:
-            ctrlfile.write(u"Conflicts: %s\n" % ", ".join(rconflicts))
+            ctrlfile.write(u"Conflicts: %s\n" %  bb.utils.join_deps(rconflicts))
         ctrlfile.close()
 
         for script in ["preinst", "postinst", "prerm", "postrm"]:

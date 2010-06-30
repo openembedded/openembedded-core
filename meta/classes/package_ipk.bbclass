@@ -248,24 +248,25 @@ python do_package_ipk () {
 
 		bb.build.exec_func("mapping_rename_hook", localdata)
 
-		rdepends = bb.utils.explode_deps(bb.data.getVar("RDEPENDS", localdata, 1) or "")
-		rrecommends = bb.utils.explode_deps(bb.data.getVar("RRECOMMENDS", localdata, 1) or "")
-		rsuggests = (bb.data.getVar("RSUGGESTS", localdata, 1) or "").split()
-		rprovides = (bb.data.getVar("RPROVIDES", localdata, 1) or "").split()
-		rreplaces = (bb.data.getVar("RREPLACES", localdata, 1) or "").split()
-		rconflicts = (bb.data.getVar("RCONFLICTS", localdata, 1) or "").split()
+		rdepends = bb.utils.explode_dep_versions(bb.data.getVar("RDEPENDS", localdata, 1) or "")
+		rrecommends = bb.utils.explode_dep_versions(bb.data.getVar("RRECOMMENDS", localdata, 1) or "")
+		rsuggests = bb.utils.explode_dep_versions(bb.data.getVar("RSUGGESTS", localdata, 1) or "")
+		rprovides = bb.utils.explode_dep_versions(bb.data.getVar("RPROVIDES", localdata, 1) or "")
+		rreplaces = bb.utils.explode_dep_versions(bb.data.getVar("RREPLACES", localdata, 1) or "")
+		rconflicts = bb.utils.explode_dep_versions(bb.data.getVar("RCONFLICTS", localdata, 1) or "")
+
 		if rdepends:
-			ctrlfile.write("Depends: %s\n" % ", ".join(rdepends))
+			ctrlfile.write("Depends: %s\n" % bb.utils.join_deps(rdepends))
 		if rsuggests:
-			ctrlfile.write("Suggests: %s\n" % ", ".join(rsuggests))
+			ctrlfile.write("Suggests: %s\n" % bb.utils.join_deps(rsuggests))
 		if rrecommends:
-			ctrlfile.write("Recommends: %s\n" % ", ".join(rrecommends))
+			ctrlfile.write("Recommends: %s\n" % bb.utils.join_deps(rrecommends))
 		if rprovides:
-			ctrlfile.write("Provides: %s\n" % ", ".join(rprovides))
+			ctrlfile.write("Provides: %s\n" % bb.utils.join_deps(rprovides))
 		if rreplaces:
-			ctrlfile.write("Replaces: %s\n" % ", ".join(rreplaces))
+			ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
 		if rconflicts:
-			ctrlfile.write("Conflicts: %s\n" % ", ".join(rconflicts))
+			ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
 		src_uri = bb.data.getVar("SRC_URI", localdata, 1)
 		if src_uri:
 			src_uri = re.sub("\s+", " ", src_uri)
