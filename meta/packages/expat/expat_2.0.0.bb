@@ -1,7 +1,7 @@
 require expat.inc
 PR = "r3"
 
-SRC_URI += "file://autotools.patch;patch=1"
+SRC_URI += "file://autotools.patch;"
 
 inherit lib_package
 
