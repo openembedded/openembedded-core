@@ -1,16 +1,34 @@
-diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
---- libpcap-0.9.7.orig/aclocal.m4	2007-09-16 01:19:51.000000000 +0200
-+++ libpcap-0.9.7/aclocal.m4	2007-09-16 02:45:52.000000000 +0200
-@@ -42,7 +42,7 @@
+diff -ruN libpcap-1.1.1-orig/aclocal.m4 libpcap-1.1.1/aclocal.m4
+--- libpcap-1.1.1-orig/aclocal.m4	2010-06-29 10:46:32.815117569 +0800
++++ libpcap-1.1.1/aclocal.m4	2010-06-29 10:49:17.150149949 +0800
+@@ -37,7 +37,7 @@
+ dnl AC_LBL_C_INIT.  Now, we run AC_LBL_C_INIT_BEFORE_CC, AC_PROG_CC,
+ dnl and AC_LBL_C_INIT at the top level.
+ dnl
+-AC_DEFUN(AC_LBL_C_INIT_BEFORE_CC,
++AC_DEFUN([AC_LBL_C_INIT_BEFORE_CC],
+     [AC_PREREQ(2.50)
+     AC_BEFORE([$0], [AC_LBL_C_INIT])
+     AC_BEFORE([$0], [AC_PROG_CC])
+@@ -90,7 +90,7 @@
  dnl	ac_cv_lbl_gcc_vers
  dnl	LBL_CFLAGS
  dnl
 -AC_DEFUN(AC_LBL_C_INIT,
 +AC_DEFUN([AC_LBL_C_INIT],
-     [AC_PREREQ(2.12)
-     AC_BEFORE([$0], [AC_PROG_CC])
+     [AC_PREREQ(2.50)
      AC_BEFORE([$0], [AC_LBL_FIXINCLUDES])
-@@ -169,7 +169,7 @@
+     AC_BEFORE([$0], [AC_LBL_DEVEL])
+@@ -217,7 +217,7 @@
+ dnl	V_SONAME_OPT
+ dnl	V_RPATH_OPT
+ dnl
+-AC_DEFUN(AC_LBL_SHLIBS_INIT,
++AC_DEFUN([AC_LBL_SHLIBS_INIT],
+     [AC_PREREQ(2.50)
+     if test "$GCC" = yes ; then
+ 	    #
+@@ -361,7 +361,7 @@
  # Make sure we use the V_CCOPT flags, because some of those might
  # disable inlining.
  #
@@ -19,25 +37,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [AC_MSG_CHECKING(for inline)
      save_CFLAGS="$CFLAGS"
      CFLAGS="$V_CCOPT"
-@@ -225,7 +225,7 @@
- dnl	LIBS
- dnl	LBL_LIBS
- dnl
--AC_DEFUN(AC_LBL_LIBPCAP,
-+AC_DEFUN([AC_LBL_LIBPCAP],
-     [AC_REQUIRE([AC_LBL_LIBRARY_NET])
-     dnl
-     dnl save a copy before locating libpcap.a
-@@ -293,7 +293,7 @@
- dnl	RETSIGTYPE (defined)
- dnl	RETSIGVAL (defined)
- dnl
--AC_DEFUN(AC_LBL_TYPE_SIGNAL,
-+AC_DEFUN([AC_LBL_TYPE_SIGNAL],
-     [AC_BEFORE([$0], [AC_LBL_LIBPCAP])
-     AC_TYPE_SIGNAL
-     if test "$ac_cv_type_signal" = void ; then
-@@ -323,7 +323,7 @@
+@@ -407,7 +407,7 @@
  dnl
  dnl	AC_LBL_FIXINCLUDES
  dnl
@@ -46,7 +46,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [if test "$GCC" = yes ; then
  	    AC_MSG_CHECKING(for ANSI ioctl definitions)
  	    AC_CACHE_VAL(ac_cv_lbl_gcc_fixincludes,
-@@ -369,7 +369,7 @@
+@@ -453,7 +453,7 @@
  dnl	$2 (yacc appended)
  dnl	$3 (optional flex and bison -P prefix)
  dnl
@@ -55,7 +55,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [AC_ARG_WITH(flex, [  --without-flex          don't use flex])
      AC_ARG_WITH(bison, [  --without-bison         don't use bison])
      if test "$with_flex" = no ; then
-@@ -422,7 +422,7 @@
+@@ -506,7 +506,7 @@
  dnl
  dnl	DECLWAITSTATUS (defined)
  dnl
@@ -64,16 +64,16 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [AC_MSG_CHECKING(if union wait is used)
      AC_CACHE_VAL(ac_cv_lbl_union_wait,
  	AC_TRY_COMPILE([
-@@ -451,7 +451,7 @@
+@@ -535,7 +535,7 @@
  dnl
  dnl	HAVE_SOCKADDR_SA_LEN (defined)
  dnl
 -AC_DEFUN(AC_LBL_SOCKADDR_SA_LEN,
 +AC_DEFUN([AC_LBL_SOCKADDR_SA_LEN],
-     [AC_MSG_CHECKING(if sockaddr struct has sa_len member)
+     [AC_MSG_CHECKING(if sockaddr struct has the sa_len member)
      AC_CACHE_VAL(ac_cv_lbl_sockaddr_has_sa_len,
  	AC_TRY_COMPILE([
-@@ -476,7 +476,7 @@
+@@ -560,7 +560,7 @@
  dnl
  dnl	HAVE_SOCKADDR_STORAGE (defined)
  dnl
@@ -82,7 +82,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [AC_MSG_CHECKING(if sockaddr_storage struct exists)
      AC_CACHE_VAL(ac_cv_lbl_has_sockaddr_storage,
  	AC_TRY_COMPILE([
-@@ -509,7 +509,7 @@
+@@ -593,7 +593,7 @@
  dnl won't be using code that would use that member, or we wouldn't
  dnl compile in any case).
  dnl
@@ -91,7 +91,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [AC_MSG_CHECKING(if dl_hp_ppa_info_t struct has dl_module_id_1 member)
      AC_CACHE_VAL(ac_cv_lbl_dl_hp_ppa_info_t_has_dl_module_id_1,
  	AC_TRY_COMPILE([
-@@ -535,7 +535,7 @@
+@@ -619,7 +619,7 @@
  dnl
  dnl	ac_cv_lbl_have_run_path (yes or no)
  dnl
@@ -100,16 +100,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [AC_MSG_CHECKING(for ${CC-cc} -R)
      AC_CACHE_VAL(ac_cv_lbl_have_run_path,
  	[echo 'main(){}' > conftest.c
-@@ -561,7 +561,7 @@
- dnl	int32_t (defined)
- dnl	u_int32_t (defined)
- dnl
--AC_DEFUN(AC_LBL_CHECK_TYPE,
-+AC_DEFUN([AC_LBL_CHECK_TYPE],
-     [AC_MSG_CHECKING(for $1 using $CC)
-     AC_CACHE_VAL(ac_cv_lbl_have_$1,
- 	AC_TRY_COMPILE([
-@@ -590,7 +590,7 @@
+@@ -644,7 +644,7 @@
  dnl
  dnl	LBL_ALIGN (DEFINED)
  dnl
@@ -118,7 +109,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [AC_MSG_CHECKING(if unaligned accesses fail)
      AC_CACHE_VAL(ac_cv_lbl_unaligned_fail,
  	[case "$host_cpu" in
-@@ -695,7 +695,7 @@
+@@ -749,7 +749,7 @@
  dnl	HAVE_OS_PROTO_H (defined)
  dnl	os-proto.h (symlinked)
  dnl
@@ -127,7 +118,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      [rm -f os-proto.h
      if test "${LBL_CFLAGS+set}" = set; then
  	    $1="$$1 ${LBL_CFLAGS}"
-@@ -825,7 +825,7 @@
+@@ -886,7 +886,7 @@
  dnl statically and happen to have a libresolv.a lying around (and no
  dnl libnsl.a).
  dnl
@@ -136,7 +127,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
      # Most operating systems have gethostbyname() in the default searched
      # libraries (i.e. libc):
      # Some OSes (eg. Solaris) place it in libnsl
-@@ -848,7 +848,7 @@
+@@ -909,7 +909,7 @@
  dnl Test for __attribute__
  dnl
  
@@ -145,7 +136,7 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
  AC_MSG_CHECKING(for __attribute__)
  AC_CACHE_VAL(ac_cv___attribute__, [
  AC_COMPILE_IFELSE(
-@@ -886,7 +886,7 @@
+@@ -947,7 +947,7 @@
  dnl
  dnl -Scott Barron
  dnl
@@ -154,3 +145,21 @@ diff -Naru libpcap-0.9.7.orig/aclocal.m4 libpcap-0.9.7/acinclude.m4
     [AC_MSG_CHECKING(if if_packet.h has tpacket_stats defined)
     AC_CACHE_VAL(ac_cv_lbl_tpacket_stats,
     AC_TRY_COMPILE([
+@@ -976,7 +976,7 @@
+ dnl doesn't have that member (which is OK, as either we won't be using
+ dnl code that would use that member, or we wouldn't compile in any case).
+ dnl
+-AC_DEFUN(AC_LBL_LINUX_TPACKET_AUXDATA_TP_VLAN_TCI,
++AC_DEFUN([AC_LBL_LINUX_TPACKET_AUXDATA_TP_VLAN_TCI],
+     [AC_MSG_CHECKING(if tpacket_auxdata struct has tp_vlan_tci member)
+     AC_CACHE_VAL(ac_cv_lbl_dl_hp_ppa_info_t_has_dl_module_id_1,
+ 	AC_TRY_COMPILE([
+@@ -1003,7 +1003,7 @@
+ dnl 
+ dnl 	HAVE_DLPI_PASSIVE (defined)
+ dnl
+-AC_DEFUN(AC_LBL_DL_PASSIVE_REQ_T,
++AC_DEFUN([AC_LBL_DL_PASSIVE_REQ_T],
+         [AC_MSG_CHECKING(if dl_passive_req_t struct exists)
+        AC_CACHE_VAL(ac_cv_lbl_has_dl_passive_req_t,
+                 AC_TRY_COMPILE([

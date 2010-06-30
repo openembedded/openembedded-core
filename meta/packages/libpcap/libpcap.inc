@@ -1,7 +1,10 @@
-DESCRIPTION = "Network Packet Capture Library"
+DESCRIPTION = "Libpcap is a tool to capture network packages on Unix/Linux platform"
 HOMEPAGE = "http://www.tcpdump.org/"
+BUGTRACKER = "http://sourceforge.net/tracker/?group_id=53067&atid=469577"
 SECTION = "libs/network"
 LICENSE = "BSD"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=1d4b0366557951c84a94fabe3529f867 \
+                    file://pcap.h;beginline=1;endline=34;md5=8d6cf7e17d5745010d633e30bc529ea9"
 DEPENDS = "flex-native bison-native"
 
 SRC_URI = "http://www.tcpdump.org/release/libpcap-${PV}.tar.gz"
@@ -15,7 +18,7 @@ CFLAGS_prepend = "-I${S} "
 CXXFLAGS_prepend = "-I${S} "
 
 do_configure_prepend () {
-	if [ ! -e acinclude.m4 ]; then
-		cat aclocal.m4 > acinclude.m4
-	fi
+    if [ ! -e acinclude.m4 ]; then
+        cat aclocal.m4 > acinclude.m4
+    fi
 }
