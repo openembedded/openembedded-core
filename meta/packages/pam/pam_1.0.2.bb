@@ -1,8 +1,12 @@
+DESCRIPTION = "Linux-PAM (Pluggable Authentication Modules for Linux), Basically, it is a flexible mechanism for authenticating users"
 HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
+BUGTRACKER = "http://sourceforge.net/projects/pam/support"
+# PAM allows dual licensed under GPL and BSD
+LICENSE = "GPLv2+ | BSD"
 PR = "r8"
 
 SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-1.0.2.tar.bz2 \
-           file://disable_crossbinary.patch;patch=1 "
+           file://disable_crossbinary.patch"
 
 EXTRA_OECONF = "--with-db-uniquename=_pam \
                  --includedir=${includedir}/security \
