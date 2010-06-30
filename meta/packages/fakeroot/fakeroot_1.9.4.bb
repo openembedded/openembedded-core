@@ -1,15 +1,15 @@
-DESCRIPTION = "Gives a fake root environment"
+DESCRIPTION = "Provides a fake \"root environment\" by means of LD_PRELOAD and SYSV IPC or TCP trickery"
 HOMEPAGE = "http://fakeroot.alioth.debian.org/"
 SECTION = "base"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 # fakeroot needs getopt which is provided by the util-linux package
 RDEPENDS = "util-linux"
 RDEPENDS_virtclass-native = "util-linux-native"
 PR = "r3"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.tar.gz \
-           file://configure-libtool.patch;patch=1 \
-           file://absolutepaths.patch;patch=1 "
+           file://configure-libtool.patch; \
+           file://absolutepaths.patch;"
 	    
 inherit autotools
 
