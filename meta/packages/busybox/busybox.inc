@@ -1,13 +1,8 @@
-DESCRIPTION = "BusyBox combines tiny versions of many common UNIX utilities into a single \
-small executable. It provides minimalist replacements for most of the \
-utilities you usually find in GNU fileutils, shellutils, etc. The utilities \
-in BusyBox generally have fewer options than their full-featured GNU \
-cousins; however, the options that are included provide the expected \
-functionality and behave very much like their GNU counterparts. BusyBox \
-provides a fairly complete POSIX environment for any small or embedded \
-system."
+DESCRIPTION = "BusyBox combines tiny versions of many common UNIX utilities into a single small executable. It provides minimalist replacements for most of the utilities you usually find in GNU fileutils, shellutils, etc. The utilities in BusyBox generally have fewer options than their full-featured GNU cousins; however, the options that are included provide the expected functionality and behave very much like their GNU counterparts. BusyBox provides a fairly complete POSIX environment for any small or embedded system."
 HOMEPAGE = "http://www.busybox.net"
-LICENSE = "GPL"
+BUGTRACKER = "https://bugs.busybox.net/"
+# bzip2 applet in busybox is based on lightly-modified bzip2 source
+LICENSE = "GPLv2+ & bzip2"
 SECTION = "base"
 PRIORITY = "required"
 
