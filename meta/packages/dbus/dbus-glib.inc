@@ -1,12 +1,12 @@
-SECTION = "base"
+DESCRIPTION = "high level language (glib) binding for dbus"
 HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
-DESCRIPTION = "message bus system for applications to talk to one another"
-LICENSE = "GPL"
+LICENSE = "AFL2.1 | GPLv2+"
+SECTION = "base"
 DEPENDS = "expat glib-2.0 virtual/libintl dbus-glib-native dbus"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz \
-           file://fix_asneeded.patch;patch=1 \
-           file://no-examples.patch;patch=1"
+           file://fix_asneeded.patch \
+           file://no-examples.patch"
 
 inherit autotools pkgconfig gettext
 
