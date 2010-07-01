@@ -1,5 +1,9 @@
-LICENSE = "GPL"
-DESCRIPTION = "procfs tools"
+DESCRIPTION = "Fast lightweight tabbed filemanager"
+HOMEPAGE = "http://pcmanfm.sourceforge.net/"
+BUGTRACKER = ""
+
+LICENSE = "GPLv2 & GPLv2+ & LGPLv2.1+"
+
 SECTION = "x11"
 PRIORITY = "optional"
 DEPENDS = "gtk+ startup-notification"
