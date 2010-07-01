@@ -1,3 +1,9 @@
+DESCRIPTION = "WebKitGTK+ is the port of the portable web rendering engine WebKitK to the GTK+ platform."
+HOMEPAGE = "http://www.webkitgtk.org/"
+BUGTRACKER = "http://bugs.webkit.org/"
+
+LICENSE = "BSD & LGPLv2+"
+
 DEPENDS = "curl icu libxml2 cairo libxslt libidn gnutls gtk+ gstreamer gst-plugins-base gnome-vfs flex-native gperf-native perl-native sqlite3"
 DEPENDS_darwin8 = "curl icu libxml2 cairo libxslt libidn gnutls gtk+ gstreamer flex-native gperf-native perl-native sqlite3"
 
