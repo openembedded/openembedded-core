@@ -1,8 +1,9 @@
 DESCRIPTION = "This library provides weak aliases for pthread functions \
 not provided in libc or otherwise available by default."
-SECTION = "x11/libs"
-LICENSE = "MIT-X"
 HOMEPAGE = "http://xcb.freedesktop.org"
+BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=XCB"
+SECTION = "x11/libs"
+LICENSE = "MIT"
 PR = "r1"
 
 PARALLEL_MAKE = ""
