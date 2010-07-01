@@ -1,4 +1,9 @@
-LICENSE = "GPL"
+DESCRIPTION = "Password and keyring managing daemon"
+HOMEPAGE = "http://www.gnome.org/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "GPLv2+ & LGPLv2+ & LGPLv2.1+"
+
 SECTION = "x11/gnome"
 
 PR = "r1"
