@@ -1,4 +1,5 @@
 DESCRIPTION = "A (de)compression library for the ZIP format"
+HOMEPAGE = "http://www.info-zip.org"
 SECTION = "console/utils"
 LICENSE = "Info-ZIP"
 PR = "r1"
