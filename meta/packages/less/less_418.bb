@@ -3,7 +3,10 @@ based program for viewing text files and the output from other \
 programs. Less offers many features beyond those that more does."
 HOMEPAGE = "http://www.greenwoodsoftware.com/"
 SECTION = "console/utils"
-LICENSE = "BSD"
+
+# (GPLv2+ (<< 418), GPLv3+ (>= 418)) | less
+# less is a 2-clause BSD-like permissive license
+LICENSE = "GPLv3+ | less"
 DEPENDS = "ncurses"
 
 SRC_URI = "${GNU_MIRROR}/less/less-${PV}.tar.gz"
