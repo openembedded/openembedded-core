@@ -1,6 +1,10 @@
 DESCRIPTION = "find, locate, and xargs binaries."
+HOMEPAGE = "http://www.gnu.org/software/findutils/"
+BUGTRACKER = "http://savannah.gnu.org/bugs/?group=findutils"
 SECTION = "console/utils"
-LICENSE = "GPL"
+
+# GPLv2+ (<< 4.2.32), GPLv3+ (>= 4.2.32)
+LICENSE = "GPLv3+"
 
 SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz \
            file://mkdir.patch;patch=1"

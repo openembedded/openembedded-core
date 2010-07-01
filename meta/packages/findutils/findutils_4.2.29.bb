@@ -1,5 +1,6 @@
 require findutils.inc
 
+LICENSE = "GPLv2+"
 PR = "r2"
 
 do_install_append () {
