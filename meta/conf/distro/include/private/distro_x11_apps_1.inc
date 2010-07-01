@@ -29,3 +29,12 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xrestop = "18 months"
 RECIPE_LATEST_RELEASE_DATE_pn-xrestop = "03/2006"
 RECIPE_COMMENTS_pn-xrestop = ""
 
+RECIPE_STATUS_pn-pcmanfm = "yellow" # update needed
+DEPENDENCY_CHECK_pn-pcmanfm = "not done"
+RECIPE_LATEST_VERSION_pn-pcmanfm = "0.9.7"
+RECIPE_NO_OF_PATCHES_pn-pcmanfm = "4"
+RECIPE_INTEL_SECTION_pn-pcmanfm = "graphic apps"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pcmanfm = "4 months"
+RECIPE_LATEST_RELEASE_DATE_pn-pcmanfm = "05/2010"
+RECIPE_COMMENTS_pn-pcmanfm = ""
+

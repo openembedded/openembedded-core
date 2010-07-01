@@ -182,3 +182,156 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-atk = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-atk = "03/2010"
 RECIPE_COMMENTS_pn-atk = ""
 
+RECIPE_STATUS_pn-gtk+ = "yellow" # update needed
+DEPENDENCY_CHECK_pn-gtk+ = "not done"
+RECIPE_LATEST_VERSION_pn-gtk+ = "2.20.1"
+RECIPE_NO_OF_PATCHES_pn-gtk+ = "0"
+RECIPE_INTEL_SECTION_pn-gtk+ = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gtk+ = "2 months"
+RECIPE_LATEST_RELEASE_DATE_pn-gtk+ = "05/2010"
+RECIPE_COMMENTS_pn-gtk+ = ""
+
+RECIPE_STATUS_pn-gnome-common = "yellow" # update needed
+DEPENDENCY_CHECK_pn-gnome-common = "not done"
+RECIPE_LATEST_VERSION_pn-gnome-common = "2.28.0"
+RECIPE_NO_OF_PATCHES_pn-gnome-common = "0"
+RECIPE_INTEL_SECTION_pn-gnome-common = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gnome-common = "6 months"
+RECIPE_LATEST_RELEASE_DATE_pn-gnome-common = "09/2009"
+RECIPE_COMMENTS_pn-gnome-common = ""
+
+RECIPE_STATUS_pn-webkit-gtk = "yellow" # update needed
+DEPENDENCY_CHECK_pn-webkit-gtk = "not done"
+RECIPE_LATEST_VERSION_pn-webkit-gtk = "1.2.1"
+RECIPE_NO_OF_PATCHES_pn-webkit-gtk = "0"
+RECIPE_INTEL_SECTION_pn-webkit-gtk = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-webkit-gtk = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-webkit-gtk = "06/2010"
+RECIPE_COMMENTS_pn-webkit-gtk = ""
+
+RECIPE_STATUS_pn-eds-dbus = "yellow" # update needed; custome configure
+DEPENDENCY_CHECK_pn-eds-dbus = "not done"
+RECIPE_LATEST_VERSION_pn-eds-dbus = "2.31.4"
+RECIPE_NO_OF_PATCHES_pn-eds-dbus = "0"
+RECIPE_INTEL_SECTION_pn-eds-dbus = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-eds-dbus = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-eds-dbus = "06/2010"
+RECIPE_COMMENTS_pn-eds-dbus = ""
+
+RECIPE_STATUS_pn-gnome-keyring = "yellow" # update needed
+DEPENDENCY_CHECK_pn-gnome-keyring = "not done"
+RECIPE_LATEST_VERSION_pn-gnome-keyring = "2.31.4"
+RECIPE_NO_OF_PATCHES_pn-gnome-keyring = "0"
+RECIPE_INTEL_SECTION_pn-gnome-keyring = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gnome-keyring = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-gnome-keyring = "06/2010"
+RECIPE_COMMENTS_pn-gnome-keyring = ""
+
+RECIPE_STATUS_pn-gtk-sato-engine = "yellow" # update needed
+DEPENDENCY_CHECK_pn-gtk-sato-engine = "not done"
+RECIPE_LATEST_VERSION_pn-gtk-sato-engine = "0.3.2"
+RECIPE_NO_OF_PATCHES_pn-gtk-sato-engine = "0"
+RECIPE_INTEL_SECTION_pn-gtk-sato-engine = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gtk-sato-engine = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-gtk-sato-engine = "02/2008"
+RECIPE_COMMENTS_pn-gtk-sato-engine = ""
+
+RECIPE_STATUS_pn-hicolor-icon-theme = "yellow" # update needed
+DEPENDENCY_CHECK_pn-hicolor-icon-theme = "not done"
+RECIPE_LATEST_VERSION_pn-hicolor-icon-theme = "0.12"
+RECIPE_NO_OF_PATCHES_pn-hicolor-icon-theme = "0"
+RECIPE_INTEL_SECTION_pn-hicolor-icon-theme = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-hicolor-icon-theme = "4 months"
+RECIPE_LATEST_RELEASE_DATE_pn-hicolor-icon-theme = "09/2009"
+RECIPE_COMMENTS_pn-hicolor-icon-theme = ""
+
+RECIPE_STATUS_pn-jpeg = "yellow" # update needed
+DEPENDENCY_CHECK_pn-jpeg = "not done"
+RECIPE_LATEST_VERSION_pn-jpeg = "8b"
+RECIPE_NO_OF_PATCHES_pn-jpeg = "0"
+RECIPE_INTEL_SECTION_pn-jpeg = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-jpeg = "12 months"
+RECIPE_LATEST_RELEASE_DATE_pn-jpeg = "05/2010"
+RECIPE_COMMENTS_pn-jpeg = ""
+
+RECIPE_STATUS_pn-libfakekey = "green" # no update needed
+DEPENDENCY_CHECK_pn-libfakekey = "not done"
+RECIPE_LATEST_VERSION_pn-libfakekey = "0.2"
+RECIPE_NO_OF_PATCHES_pn-libfakekey = "0"
+RECIPE_INTEL_SECTION_pn-libfakekey = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libfakekey = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-libfakekey = "07/2006"
+RECIPE_COMMENTS_pn-libfakekey = ""
+
+RECIPE_STATUS_pn-libglade = "yellow" # update needed
+DEPENDENCY_CHECK_pn-libglade = "not done"
+RECIPE_LATEST_VERSION_pn-libglade = "2.6.4"
+RECIPE_NO_OF_PATCHES_pn-libglade = "0"
+RECIPE_INTEL_SECTION_pn-libglade = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libglade = "7 months"
+RECIPE_LATEST_RELEASE_DATE_pn-libglade = "03/2009"
+RECIPE_COMMENTS_pn-libglade = ""
+
+RECIPE_STATUS_pn-libsoup-2.4 = "yellow" # update needed
+DEPENDENCY_CHECK_pn-libsoup-2.4 = "not done"
+RECIPE_LATEST_VERSION_pn-libsoup-2.4 = "2.31.2"
+RECIPE_NO_OF_PATCHES_pn-libsoup-2.4 = "0"
+RECIPE_INTEL_SECTION_pn-libsoup-2.4 = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libsoup-2.4 = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-libsoup-2.4 = "05/2010"
+RECIPE_COMMENTS_pn-libsoup-2.4 = ""
+
+RECIPE_STATUS_pn-libxslt = "yellow" # update needed
+DEPENDENCY_CHECK_pn-libxslt = "not done"
+RECIPE_LATEST_VERSION_pn-libxslt = "1.1.26"
+RECIPE_NO_OF_PATCHES_pn-libxslt = "0"
+RECIPE_INTEL_SECTION_pn-libxslt = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libxslt = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-libxslt = "09/2009"
+RECIPE_COMMENTS_pn-libxslt = ""
+
+RECIPE_STATUS_pn-matchbox-config-gtk = "yellow" # update needed
+DEPENDENCY_CHECK_pn-matchbox-config-gtk = "not done"
+RECIPE_LATEST_VERSION_pn-matchbox-config-gtk = "2081"
+RECIPE_NO_OF_PATCHES_pn-matchbox-config-gtk = "0"
+RECIPE_INTEL_SECTION_pn-matchbox-config-gtk = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-config-gtk = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-matchbox-config-gtk = "09/2008"
+RECIPE_COMMENTS_pn-matchbox-config-gtk = ""
+
+RECIPE_STATUS_pn-matchbox-keyboard = "yellow" # update needed
+DEPENDENCY_CHECK_pn-matchbox-keyboard = "not done"
+RECIPE_LATEST_VERSION_pn-matchbox-keyboard = "2075"
+RECIPE_NO_OF_PATCHES_pn-matchbox-keyboard = "0"
+RECIPE_INTEL_SECTION_pn-matchbox-keyboard = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-keyboard = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-matchbox-keyboard = "09/2008"
+RECIPE_COMMENTS_pn-matchbox-keyboard = ""
+
+RECIPE_STATUS_pn-matchbox-panel-2 = "yellow" # update needed
+DEPENDENCY_CHECK_pn-matchbox-panel-2 = "not done"
+RECIPE_LATEST_VERSION_pn-matchbox-panel-2 = "2109"
+RECIPE_NO_OF_PATCHES_pn-matchbox-panel-2 = "0"
+RECIPE_INTEL_SECTION_pn-matchbox-panel-2 = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-panel-2 = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-matchbox-panel-2 = "04/2010"
+RECIPE_COMMENTS_pn-matchbox-panel-2 = ""
+
+RECIPE_STATUS_pn-matchbox-stroke = "yellow" # update needed
+DEPENDENCY_CHECK_pn-matchbox-stroke = "not done"
+RECIPE_LATEST_VERSION_pn-matchbox-stroke = "1820"
+RECIPE_NO_OF_PATCHES_pn-matchbox-stroke = "0"
+RECIPE_INTEL_SECTION_pn-matchbox-stroke = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-stroke = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-matchbox-stroke = "11/2007"
+RECIPE_COMMENTS_pn-matchbox-stroke = ""
+
+RECIPE_STATUS_pn-matchbox-wm = "yellow" # update needed
+DEPENDENCY_CHECK_pn-matchbox-wm = "not done"
+RECIPE_LATEST_VERSION_pn-matchbox-wm = "1819"
+RECIPE_NO_OF_PATCHES_pn-matchbox-wm = "0"
+RECIPE_INTEL_SECTION_pn-matchbox-wm = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-wm = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-matchbox-wm = "11/2007"
+RECIPE_COMMENTS_pn-matchbox-wm = ""
+
