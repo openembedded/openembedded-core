@@ -1,7 +1,8 @@
 DESCRIPTION = "userspace utilities for kernel nfs"
-PRIORITY = "optional"
+HOMEPAGE = "http://nfs.sourceforge.net/"
 SECTION = "console/network"
-LICENSE = "GPL"
+PRIORITY = "optional"
+LICENSE = "GPLv2+"
 PR = "r14"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.gz \
