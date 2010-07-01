@@ -1,9 +1,10 @@
 DESCRIPTION = "Linux Kernel 2.6 Userland Utilities for the PCMCIA Subsystem"
-DEPENDS = "sysfsutils flex-native"
-RDEPENDS = "udev module-init-tools"
 HOMEPAGE = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html"
 SECTION = "kernel/userland"
 PRIORITY = "optional"
+LICENSE = "GPLv2"
+DEPENDS = "sysfsutils flex-native"
+RDEPENDS = "udev module-init-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2"
 
