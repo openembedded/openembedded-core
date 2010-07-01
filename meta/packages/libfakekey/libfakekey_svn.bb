@@ -1,5 +1,9 @@
 DESCRIPTION = "Matchbox keyboard"
-LICENSE = "GPL"
+HOMEPAGE = "http://matchbox-project.org/"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "LGPLv2+"
+
 DEPENDS = "libxtst"
 SECTION = "x11/wm"
 PV = "0.0+svnr${SRCREV}"
