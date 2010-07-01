@@ -137,3 +137,60 @@ RECIPE_INTEL_SECTION_pn-openssl = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-openssl = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-openssl = "06/2010"
 RECIPE_COMMENTS_pn-openssl = "0.9.8o is actually used for stability concerns"
+
+RECIPE_STATUS_pn-libnss-mdns = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-libnss-mdns = "not done"
+RECIPE_LATEST_VERSION_pn-libnss-mdns = "0.10"
+RECIPE_INTEL_SECTION_pn-libnss-mdns = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libnss-mdns = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-libnss-mdns = "05/2007"
+RECIPE_COMMENTS_pn-libnss-mdns = ""
+
+RECIPE_STATUS_pn-ncurses = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-ncurses = "not done"
+RECIPE_LATEST_VERSION_pn-ncurses = "5.7"
+RECIPE_INTEL_SECTION_pn-ncurses = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-ncurses = "23 months"
+RECIPE_LATEST_RELEASE_DATE_pn-ncurses = "11/2008"
+RECIPE_COMMENTS_pn-ncurses = ""
+
+RECIPE_STATUS_pn-popt = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-popt = "not done"
+RECIPE_LATEST_VERSION_pn-popt = "1.16"
+RECIPE_INTEL_SECTION_pn-popt = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-popt = "13 months"
+RECIPE_LATEST_RELEASE_DATE_pn-popt = "05/2010"
+RECIPE_COMMENTS_pn-popt = ""
+
+RECIPE_STATUS_pn-sqlite3 = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-sqlite3 = "not done"
+RECIPE_LATEST_VERSION_pn-sqlite3 = "3.6.23.1"
+RECIPE_INTEL_SECTION_pn-sqlite3 = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-sqlite3 = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-sqlite3 = "03/2010"
+RECIPE_COMMENTS_pn-sqlite3 = ""
+
+RECIPE_STATUS_pn-startup-notification = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-startup-notification = "not done"
+RECIPE_LATEST_VERSION_pn-startup-notification = "0.10"
+RECIPE_INTEL_SECTION_pn-startup-notification = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-startup-notification = "25 months"
+RECIPE_LATEST_RELEASE_DATE_pn-startup-notification = "04/2009"
+RECIPE_COMMENTS_pn-startup-notification = ""
+
+RECIPE_STATUS_pn-libpthread-stubs = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-libpthread-stubs = "not done"
+RECIPE_LATEST_VERSION_pn-libpthread-stubs = "0.3"
+RECIPE_INTEL_SECTION_pn-libpthread-stubs = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libpthread-stubs = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-libpthread-stubs = "10/2009"
+RECIPE_COMMENTS_pn-libpthread-stubs = "0.1: 11/2006, 0.2: 09/2009, 0.3: 10/2009"
+
+RECIPE_STATUS_pn-libusb-compat = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-libusb-compat = "not done"
+RECIPE_LATEST_VERSION_pn-libusb-compat = "0.1.3"
+RECIPE_INTEL_SECTION_pn-libusb-compat = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libusb-compat = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-libusb-compat = "07/2009"
+RECIPE_COMMENTS_pn-libusb-compat = "possibly conflicts with libusb"
+

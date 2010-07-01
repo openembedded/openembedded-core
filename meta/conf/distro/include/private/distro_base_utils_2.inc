@@ -121,3 +121,204 @@ RECIPE_INTEL_SECTION_pn-curl = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-curl = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-curl = "06/2010"
 RECIPE_COMMENTS_pn-curl = ""
+
+RECIPE_STATUS_pn-gconf-dbus = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-gconf-dbus = "not done"
+RECIPE_LATEST_VERSION_pn-gconf-dbus = "2.16.0"
+RECIPE_INTEL_SECTION_pn-gconf-dbus = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gconf-dbus = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-gconf-dbus = "n/a"
+RECIPE_COMMENTS_pn-gconf-dbus = "difficult to identify official site and current status"
+
+RECIPE_STATUS_pn-pkgconfig = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-pkgconfig = "not done"
+RECIPE_LATEST_VERSION_pn-pkgconfig = "0.25"
+RECIPE_INTEL_SECTION_pn-pkgconfig = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pkgconfig = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-pkgconfig = "05/2010"
+RECIPE_COMMENTS_pn-pkgconfig = "git as candidate, 0.23: 01/2008, 0.24: 05/2010, 0.25: 05/2010"
+
+RECIPE_STATUS_pn-less = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-less = "not done"
+RECIPE_LATEST_VERSION_pn-less = "436"
+RECIPE_INTEL_SECTION_pn-less = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-less = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-less = "07/2009"
+RECIPE_COMMENTS_pn-less = "also licensed under less, which is a 2-clause BSD-like permissive license"
+
+RECIPE_STATUS_pn-genext2fs = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-genext2fs = "not done"
+RECIPE_LATEST_VERSION_pn-genext2fs = "1.4.1"
+RECIPE_INTEL_SECTION_pn-genext2fs = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-genext2fs = "3 months"
+RECIPE_LATEST_RELEASE_DATE_pn-genext2fs = "04/2007"
+RECIPE_COMMENTS_pn-genext2fs = ""
+
+RECIPE_STATUS_pn-findutils = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-findutils = "not done"
+RECIPE_LATEST_VERSION_pn-findutils = "4.4.2"
+RECIPE_INTEL_SECTION_pn-findutils = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-findutils = "2 months"
+RECIPE_LATEST_RELEASE_DATE_pn-findutils = "06/2009"
+RECIPE_COMMENTS_pn-findutils = ""
+
+RECIPE_STATUS_pn-file = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-file = "not done"
+RECIPE_LATEST_VERSION_pn-file = "5.04"
+RECIPE_INTEL_SECTION_pn-file = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-file = "8 months"
+RECIPE_LATEST_RELEASE_DATE_pn-file = "01/2010"
+RECIPE_COMMENTS_pn-file = "2-clause BSD"
+
+RECIPE_STATUS_pn-rsync = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-rsync = "not done"
+RECIPE_LATEST_VERSION_pn-rsync = "3.0.7"
+RECIPE_INTEL_SECTION_pn-rsync = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-rsync = "7 months"
+RECIPE_LATEST_RELEASE_DATE_pn-rsync = "12/2009"
+RECIPE_COMMENTS_pn-rsync = ""
+
+RECIPE_STATUS_pn-nfs-utils = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-nfs-utils = "not done"
+RECIPE_LATEST_VERSION_pn-nfs-utils = "1.2.2"
+RECIPE_INTEL_SECTION_pn-nfs-utils = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-nfs-utils = "3 months"
+RECIPE_LATEST_RELEASE_DATE_pn-nfs-utils = "02/2010"
+RECIPE_COMMENTS_pn-nfs-utils = ""
+
+RECIPE_STATUS_pn-dropbear = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-dropbear = "not done"
+RECIPE_LATEST_VERSION_pn-dropbear = "0.52"
+RECIPE_INTEL_SECTION_pn-dropbear = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-dropbear = "8 months"
+RECIPE_LATEST_RELEASE_DATE_pn-dropbear = "11/2008"
+RECIPE_COMMENTS_pn-dropbear = ""
+
+RECIPE_STATUS_pn-hal = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-hal = "not done"
+RECIPE_LATEST_VERSION_pn-hal = "0.5.14"
+RECIPE_INTEL_SECTION_pn-hal = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-hal = "4 months"
+RECIPE_LATEST_RELEASE_DATE_pn-hal = "11/2009"
+RECIPE_COMMENTS_pn-hal = "The licensing is very complicated, Most files are GPLv2+ | AFL \
+with some borrowed code under LGPLv2.1, AFL itself is incompatible with GPL/LGPL"
+
+RECIPE_STATUS_pn-hal-info = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-hal-info = "not done"
+RECIPE_LATEST_VERSION_pn-hal-info = "20091130"
+RECIPE_INTEL_SECTION_pn-hal-info = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-hal-info = "4 months"
+RECIPE_LATEST_RELEASE_DATE_pn-hal-info = "11/2009"
+RECIPE_COMMENTS_pn-hal-info = ""
+
+RECIPE_STATUS_pn-avahi = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-avahi = "not done"
+RECIPE_LATEST_VERSION_pn-avahi = "0.6.25"
+RECIPE_INTEL_SECTION_pn-avahi = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-avahi = "4 months"
+RECIPE_LATEST_RELEASE_DATE_pn-avahi = "04/2009"
+RECIPE_COMMENTS_pn-avahi = ""
+
+RECIPE_STATUS_pn-js = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-js = "not done"
+RECIPE_LATEST_VERSION_pn-js = "1.7.0"
+RECIPE_INTEL_SECTION_pn-js = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-js = "11 months"
+RECIPE_LATEST_RELEASE_DATE_pn-js = "10/2007"
+RECIPE_COMMENTS_pn-js = "1.8.0-rc1 is out in 03/2009, alternative java based packaged called Rhino"
+
+RECIPE_STATUS_pn-pcmciautils = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-pcmciautils = "not done"
+RECIPE_LATEST_VERSION_pn-pcmciautils = "017"
+RECIPE_INTEL_SECTION_pn-pcmciautils = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pcmciautils = "3 months"
+RECIPE_LATEST_RELEASE_DATE_pn-pcmciautils = "01/2010"
+RECIPE_COMMENTS_pn-pcmciautils = ""
+
+RECIPE_STATUS_pn-unzip = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-unzip = "not done"
+RECIPE_LATEST_VERSION_pn-unzip = "6.0"
+RECIPE_INTEL_SECTION_pn-unzip = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-unzip = "49 months"
+RECIPE_LATEST_RELEASE_DATE_pn-unzip = "04/2009"
+RECIPE_COMMENTS_pn-unzip = "5.52 has a race condition vulnerability for Unix version"
+
+RECIPE_STATUS_pn-strace = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-strace = "not done"
+RECIPE_LATEST_VERSION_pn-strace = "4.5.20"
+RECIPE_INTEL_SECTION_pn-strace = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-strace = "6 months"
+RECIPE_LATEST_RELEASE_DATE_pn-strace = "04/2010"
+RECIPE_COMMENTS_pn-strace = "3-clause BSD"
+
+RECIPE_STATUS_pn-dhcp = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-dhcp = "not done"
+RECIPE_LATEST_VERSION_pn-dhcp = "4.1.1-P1"
+RECIPE_INTEL_SECTION_pn-dhcp = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-dhcp = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-dhcp = "06/2010"
+RECIPE_COMMENTS_pn-dhcp = "several major release, others are 3.1.3, 4.0.2-P1, need to identify"
+
+RECIPE_STATUS_pn-vte = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-vte = "not done"
+RECIPE_LATEST_VERSION_pn-vte = "0.24.1"
+RECIPE_INTEL_SECTION_pn-vte = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-vte = "12 months"
+RECIPE_LATEST_RELEASE_DATE_pn-vte = "04/2010"
+RECIPE_COMMENTS_pn-vte = "part of the source under GPLv2+"
+
+RECIPE_STATUS_pn-v86d = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-v86d = "not done"
+RECIPE_LATEST_VERSION_pn-v86d = "0.1.9"
+RECIPE_INTEL_SECTION_pn-v86d = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-v86d = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-v86d = "10/2008"
+RECIPE_COMMENTS_pn-v86d = "contains code under other licenses"
+
+RECIPE_STATUS_pn-udev = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-udev = "not done"
+RECIPE_LATEST_VERSION_pn-udev = "157"
+RECIPE_INTEL_SECTION_pn-udev = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-udev = "<1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-udev = "06/2010"
+RECIPE_COMMENTS_pn-udev = "may need different versions for different kernels"
+
+RECIPE_STATUS_pn-tzdata = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-tzdata = "not done"
+RECIPE_LATEST_VERSION_pn-tzdata = "2010j"
+RECIPE_INTEL_SECTION_pn-tzdata = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-tzdata = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-tzdata = "05/2010"
+RECIPE_COMMENTS_pn-tzdata = ""
+
+RECIPE_STATUS_pn-tinylogin = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-tinylogin = "not done"
+RECIPE_LATEST_VERSION_pn-tinylogin = "n/a"
+RECIPE_INTEL_SECTION_pn-tinylogin = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-tinylogin = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-tinylogin = "n/a"
+RECIPE_COMMENTS_pn-tinylogin = "merged into busybox"
+
+RECIPE_STATUS_pn-spectrum-fw = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-spectrum-fw = "not done"
+RECIPE_LATEST_VERSION_pn-spectrum-fw = "n/a"
+RECIPE_INTEL_SECTION_pn-spectrum-fw = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-spectrum-fw = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-spectrum-fw = "n/a"
+RECIPE_COMMENTS_pn-spectrum-fw = "difficult to identify official site and current status"
+
+RECIPE_STATUS_pn-rpm = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-rpm = "not done"
+RECIPE_LATEST_VERSION_pn-rpm = "4.8.0"
+RECIPE_INTEL_SECTION_pn-rpm = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-rpm = "2 months"
+RECIPE_LATEST_RELEASE_DATE_pn-rpm = "01/2010"
+RECIPE_COMMENTS_pn-rpm = "the library alone is under dual license"
+
+RECIPE_STATUS_pn-shared-mime-info = "red"   # need upgrade
+DEPENDENCY_CHECK_pn-shared-mime-info = "not done"
+RECIPE_LATEST_VERSION_pn-shared-mime-info = "0.71"
+RECIPE_INTEL_SECTION_pn-shared-mime-info = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-shared-mime-info = "5 months"
+RECIPE_LATEST_RELEASE_DATE_pn-shared-mime-info = "02/2010"
+RECIPE_COMMENTS_pn-shared-mime-info = ""
