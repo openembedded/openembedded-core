@@ -1,5 +1,10 @@
+DESCRIPTION = "default icon theme that all icon themes automatically inherit from."
+HOMEPAGE = "http://icon-theme.freedesktop.org/wiki/HicolorTheme"
+BUGTRACKER = "https://bugs.freedesktop.org/"
+
+LICENSE = "GPLv2"
+
 SECTION = "unknown"
-LICENSE = "GPL"
 inherit gnome
 
 PR = "r3"
