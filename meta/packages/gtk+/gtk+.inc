@@ -1,8 +1,11 @@
 DESCRIPTION = "GTK+ is a multi-platform toolkit for creating graphical user interfaces. Offering a complete \
 set of widgets, GTK+ is suitable for projects ranging from small one-off projects to complete application suites."
 HOMEPAGE = "http://www.gtk.org"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "LGPLv2 & LGPLv2+ & LGPLv2.1+"
+
 SECTION = "libs"
-LICENSE = "LGPL"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc-native libxrandr \
            libgcrypt libxdamage libxrender libxcomposite cairo"
