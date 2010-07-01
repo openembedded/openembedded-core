@@ -1,7 +1,9 @@
 DESCRIPTION = "Hardware Abstraction Layer device information"
 HOMEPAGE = "http://freedesktop.org/Software/hal"
+BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=hal"
 SECTION = "unknown"
-LICENSE = "GPL AFL"
+
+LICENSE = "GPLv2 | AFL"
 
 PV = "${SRCDATE}+git"
 PR = "r2"
