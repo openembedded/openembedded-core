@@ -1,5 +1,9 @@
 DESCRIPTION = "Matchbox virtual keyboard for X11"
-LICENSE = "GPL"
+HOMEPAGE = "http://matchbox-project.org"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "GPLv2+"
+
 DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
 RDEPENDS = "formfactor dbus-wait"
 SECTION = "x11"
