@@ -1,6 +1,10 @@
-SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
-LICENSE = "GPL"
+HOMEPAGE = "http://matchbox-project.org"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "GPLv2+"
+
+SECTION = "x11/wm"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat gconf"
 
 PV = "1.2+svnr${SRCREV}"
