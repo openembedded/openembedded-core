@@ -1,12 +1,15 @@
-LICENSE = "GPL"
-DESCRIPTION = "A JavaScript engine"
+DESCRIPTION = "Spidermonkey: a javascript engine written in C"
+HOMEPAGE = "http://www.mozilla.org/js/spidermonkey/"
 SECTION = "libs"
+
+# the package is licensed under either of the following
+LICENSE = "MPL1.1 | GPLv2+ | LGPLv2.1+"
 DEPENDS = "readline"
+PR = "r1"
 SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/older-packages/js-1.5.tar.gz \
            file://link_with_gcc.patch;patch=1 \
            file://usepic.patch;patch=1 \
            file://jsautocfg.h"
-PR = "r1"
 
 S = "${WORKDIR}/js/src"
 
