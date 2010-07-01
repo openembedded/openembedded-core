@@ -1,4 +1,9 @@
-LICENSE = "GPLv2"
+DESCRIPTION = "A simple GTK+ based panel for handheld devices."
+HOMEPAGE = "http://matchbox-project.org"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "GPLv2+"
+
 PRIORITY = "optional"
 DEPENDS = "gtk+ startup-notification dbus dbus-glib"
 DEPENDS += " ${@base_contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
