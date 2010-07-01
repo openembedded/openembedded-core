@@ -192,7 +192,7 @@ python do_package_rpm () {
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
 		overrides = bb.data.expand(overrides, localdata)
-		bb.data.setVar('OVERRIDES', overrides + ':' + pkg, localdata)
+		bb.data.setVar('OVERRIDES', pkg + ':' + overrides, localdata)
 
 		bb.data.update_data(localdata)
 		basedir = os.path.join(os.path.dirname(root))

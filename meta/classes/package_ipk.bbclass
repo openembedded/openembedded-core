@@ -182,7 +182,7 @@ python do_package_ipk () {
 		overrides = bb.data.getVar('OVERRIDES', localdata, True)
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
-		bb.data.setVar('OVERRIDES', overrides + ':' + pkg, localdata)
+		bb.data.setVar('OVERRIDES', pkg + ':' + overrides, localdata)
 
 		bb.data.update_data(localdata)
 		basedir = os.path.join(os.path.dirname(root))
