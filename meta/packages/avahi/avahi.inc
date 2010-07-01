@@ -1,9 +1,14 @@
 DESCRIPTION = "Avahi implements the DNS-SD over Multicast DNS"
 AUTHOR = "Lennart Poettering <lennart@poettering.net>"
 HOMEPAGE = "http://avahi.org"
+BUGTRACKER = "http://avahi.org/report"
 SECTION = "network"
 PRIORITY = "optional"
-LICENSE = "GPL"
+
+# major part is under LGPLv2.1+, but several .dtd, .xsl, initscripts and
+# python scripts are under GPLv2+
+LICENSE = "GPLv2+ & LGPLv2.1+"
+
 DEPENDS = "expat libdaemon dbus glib-2.0 gtk+ libglade"
 RRECOMMENDS = "libnss-mdns"
 RRECOMMENDS_avahi-daemon = "libnss-mdns"
