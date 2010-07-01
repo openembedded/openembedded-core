@@ -1,8 +1,12 @@
 DESCRIPTION = "GNOME XSLT library"
+HOMEPAGE = "http://xmlsoft.org/XSLT/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "MIT"
+
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "libxml2 (>=2.6.27)"
-LICENSE = "MIT"
 PR = "r3"
 
 SRC_URI = "ftp://xmlsoft.org/libxml2/libxslt-${PV}.tar.gz \
