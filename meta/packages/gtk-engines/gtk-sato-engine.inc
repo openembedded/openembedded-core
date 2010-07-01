@@ -1,6 +1,10 @@
 DESCRIPTION = "Sato theme engine for GTK"
+HOMEPAGE = "http://www.o-hand.com"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "LGPLv2+"
+
 SECTION = "x11/base"
-LICENSE = "LGPL"
 DEPENDS = "gtk+"
 RDEPENDS_gtk-theme-sato = "gtk-sato-engine"
 
