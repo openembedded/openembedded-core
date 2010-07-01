@@ -1,10 +1,9 @@
+The patch comes from OpenEmbedded
+Rebased for ppp-2.4.5. Dongxiao Xu <dongxiao.xu@intel.com>
 
-#
-# Patch managed by http://www.holgerschurig.de/patcher.html
-#
-
---- ppp-2.4.3/pppd/ipcp.c~pppd-resolv-varrun.patch
-+++ ppp-2.4.3/pppd/ipcp.c
+diff -ruN ppp-2.4.5-orig/pppd/ipcp.c ppp-2.4.5/pppd/ipcp.c
+--- ppp-2.4.5-orig/pppd/ipcp.c	2010-06-30 15:51:12.050166398 +0800
++++ ppp-2.4.5/pppd/ipcp.c	2010-06-30 17:02:33.930393283 +0800
 @@ -55,6 +55,8 @@
  #include <sys/socket.h>
  #include <netinet/in.h>
@@ -14,7 +13,7 @@
  
  #include "pppd.h"
  #include "fsm.h"
-@@ -2032,6 +2034,14 @@
+@@ -2095,6 +2097,14 @@
      u_int32_t peerdns1, peerdns2;
  {
      FILE *f;
@@ -29,9 +28,10 @@
  
      f = fopen(_PATH_RESOLV, "w");
      if (f == NULL) {
---- ppp-2.4.3/pppd/pathnames.h~pppd-resolv-varrun.patch
-+++ ppp-2.4.3/pppd/pathnames.h
-@@ -29,7 +29,8 @@
+diff -ruN ppp-2.4.5-orig/pppd/pathnames.h ppp-2.4.5/pppd/pathnames.h
+--- ppp-2.4.5-orig/pppd/pathnames.h	2010-06-30 15:51:12.043682063 +0800
++++ ppp-2.4.5/pppd/pathnames.h	2010-06-30 17:03:20.594371055 +0800
+@@ -30,7 +30,8 @@
  #define _PATH_TTYOPT	 _ROOT_PATH "/etc/ppp/options."
  #define _PATH_CONNERRS	 _ROOT_PATH "/etc/ppp/connect-errors"
  #define _PATH_PEERFILES	 _ROOT_PATH "/etc/ppp/peers/"
