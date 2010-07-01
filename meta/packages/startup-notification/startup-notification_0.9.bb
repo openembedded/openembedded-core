@@ -1,7 +1,12 @@
 DESCRIPTION = "Startup notification support"
-LICENSE = "LGPL"
+HOMEPAGE = "http://www.freedesktop.org/wiki/software/startup-notification/"
 SECTION = "libs"
 PRIORITY = "optional"
+
+# most files are under MIT, but libsn/sn-utils.c is under LGPL, the
+# effective license is LGPL
+LICENSE = "LGPLv2+"
+
 DEPENDS = "virtual/libx11 libsm"
 
 inherit autotools pkgconfig
