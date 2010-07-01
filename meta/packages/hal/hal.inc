@@ -1,21 +1,23 @@
 DESCRIPTION = "Hardware Abstraction Layer"
 HOMEPAGE = "http://freedesktop.org/Software/hal"
+BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=hal"
 SECTION = "unknown"
-LICENSE = "GPL LGPL AFL"
 
-SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz"
-
-S = "${WORKDIR}/hal-${PV}"
-
-inherit autotools pkgconfig
+LICENSE = "GPLv2+ | AFL"
 
 DEPENDS = "virtual/kernel dbus-glib udev intltool intltool-native expat libusb gperf-native"
 RDEPENDS += "udev hal-info"
 RRECOMMENDS = "udev-utils"
 
+SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz"
 SRC_URI += "file://99_hal \
             file://20hal \
 	   "
+
+S = "${WORKDIR}/hal-${PV}"
+
+inherit autotools pkgconfig
+
 
 LEAD_SONAME = "libhal.so"
 

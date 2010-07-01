@@ -1,18 +1,20 @@
 DESCRIPTION = "Hardware Abstraction Layer"
 HOMEPAGE = "http://freedesktop.org/Software/hal"
+BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=hal"
 SECTION = "unknown"
-LICENSE = "GPL LGPL AFL"
+
+LICENSE = "GPLv2+ | AFL"
 
 DEPENDS = "virtual/kernel dbus-glib udev intltool-native expat libusb"
 RDEPENDS_${PN} += "udev hal-info"
 RRECOMMENDS_${PN} += "udev-utils"
 
+PV = "0.5.9.1+git${SRCDATE}"
+PR = "r4"
+
 SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
         file://20hal \
         file://99_hal"
-
-PV = "0.5.9.1+git${SRCDATE}"
-PR = "r4"
 
 S = "${WORKDIR}/git"
 
