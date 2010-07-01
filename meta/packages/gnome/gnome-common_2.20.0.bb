@@ -1,7 +1,11 @@
-LICENSE = "GPL"
+DESCRIPTION = "Common macros for building GNOME applications"
+HOMEPAGE = "http://www.gnome.org/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "GPLv3"
+
 SECTION = "x11/gnome"
 PR = "r1"
-DESCRIPTION = "Common macros for building GNOME applications"
 inherit gnome
 
 # all isn't appropriate since STAGING_DATADIR is target specific
