@@ -1,5 +1,9 @@
-LICENSE = "LGPL"
 DESCRIPTION = "Runtime support for GTK interface builder"
+HOMEPAGE = "http://library.gnome.org/devel/libglade/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "LGPLv2 & LGPLv2+"
+
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "gtk+ gtk-doc-native"
