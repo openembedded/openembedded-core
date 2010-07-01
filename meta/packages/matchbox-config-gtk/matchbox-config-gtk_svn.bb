@@ -1,5 +1,9 @@
 DESCRIPTION = "Matchbox GTK+ theme configuration application."
-LICENSE = "GPL"
+HOMEPAGE = "http://matchbox-project.org"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "GPLv2+"
+
 DEPENDS = "gconf gtk+"
 RDEPENDS = "settings-daemon"
 
