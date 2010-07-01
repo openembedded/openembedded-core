@@ -1,5 +1,9 @@
 DESCRIPTION = "An HTTP library implementation in C"
-LICENSE = "GPL"
+HOMEPAGE = "http://www.gnome.org/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "LGPLv2"
+
 SECTION = "x11/gnome/libs"
 
 DEPENDS = "glib-2.0 gnutls libxml2 libproxy sqlite3"
