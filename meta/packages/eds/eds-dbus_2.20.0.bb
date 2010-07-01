@@ -1,5 +1,9 @@
 DESCRIPTION = "Evolution database backend server"
-LICENSE = "LGPL"
+HOMEPAGE = "http://www.gnome.org/projects/evolution/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "LGPLv2 & LGPLv2+"
+
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade"
 
 PR = "r1"
