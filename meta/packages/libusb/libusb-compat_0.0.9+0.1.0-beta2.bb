@@ -1,13 +1,14 @@
 DESCRIPTION = "libusb is a library to provide userspace \
 access to USB devices."
-HOMEPAGE = "http://libusb.sf.net"
+HOMEPAGE = "http://www.libusb.org/"
+BUGTRACKER = "http://www.libusb.org/report"
 SECTION = "libs"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2.1+"
+DEPENDS = "libusb1"
 
 PE = "1"
 PR = "r0"
 
-DEPENDS = "libusb1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-0.1.0-beta2.tar.bz2 \
 					file://0.1.0-beta1-gcc3.4-fix.patch;patch=1 \
