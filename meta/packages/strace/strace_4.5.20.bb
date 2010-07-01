@@ -1,6 +1,7 @@
 DESCRIPTION = "strace is a system call tracing tool."
+HOMEPAGE = "http://sourceforge.net/projects/strace/"
 SECTION = "console/utils"
-LICENSE = "GPL"
+LICENSE = "BSD"
 PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.bz2"
