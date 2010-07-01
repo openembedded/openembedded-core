@@ -1,12 +1,18 @@
 DESCRIPTION = "File attempts to classify files depending \
 on their contents and prints a description if a match is found."
+HOMEPAGE = "http://www.darwinsys.com/file/"
 SECTION = "console/utils"
-LICENSE = "BSD-ADV"
+
+# two clause BSD
+LICENSE = "BSD"
+
 DEPENDS = "file-native"
+DEPENDS_virtclass-native = ""
 
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://dump \
            file://filesystems"
+SRC_URI_append_virtclass-native = " file://native-fix.diff;patch=1"
 
 inherit autotools
 
@@ -16,6 +22,4 @@ do_configure_prepend() {
 	cp ${WORKDIR}/filesystems ${S}/magic/Magdir/
 }
 
-DEPENDS_virtclass-native = ""
-SRC_URI_append_virtclass-native = " file://native-fix.diff;patch=1"
 BBCLASSEXTEND = "native"
