@@ -1,5 +1,9 @@
 DESCRIPTION = "libjpeg is a library for handling the JPEG (JFIF) image format."
+HOMEPAGE = "http://www.ijg.org/"
+BUGTRACKER = ""
+
 LICENSE ="jpeg"
+
 SECTION = "libs"
 PRIORITY = "required"
 
