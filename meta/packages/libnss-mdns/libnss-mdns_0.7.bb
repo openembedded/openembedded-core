@@ -1,8 +1,9 @@
 DESCRIPTION = "NSS module for Multicast DNS name resolution"
 HOMEPAGE = "http://0pointer.de/lennart/projects/nss-mdns/"
-LICENSE = "GPL"
 SECTION = "libs"
 PRIORITY = "optional"
+
+LICENSE = "LGPLv2.1+"
 
 PR = "r0"
 
