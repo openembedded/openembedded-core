@@ -1,5 +1,9 @@
 DESCRIPTION = "Matchbox stroke recogniser"
-LICENSE = "GPL"
+HOMEPAGE = "http://matchbox-project.org"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "GPLv2"
+
 DEPENDS = "libfakekey expat libxft"
 SECTION = "x11/wm"
 PV = "0.0+svnr${SRCREV}"
