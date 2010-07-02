@@ -1,5 +1,7 @@
 DESCRIPTION = "GTK+ applet for NetworkManager" 
-LICENSE = "GPL"
+HOMEPAGE = "http://projects.gnome.org/NetworkManager/"
+BUGTRACKER = "https://bugzilla.gnome.org/buglist.cgi?query_format=specific&order=relevance+desc&bug_status=__open__&product=NetworkManager&content="
+LICENSE = "GPLv2+ & LGPLv2.1+"
 DEPENDS = "networkmanager dbus-glib libglade gconf gnome-keyring"
 #TODO DEPENDS libnotify
 RDEPENDS = "networkmanager dbus-wait"
@@ -19,9 +21,8 @@ PV = "0.0+svnr${SRCREV}"
 S = "${WORKDIR}/trunk"
 
 FILES_${PN} += "${datadir}/nm-applet/ \
-        ${datadir}/gnome-vpn-properties/ \
-        ${datadir}/gnome/autostart/ \
-        "
+                ${datadir}/gnome-vpn-properties/ \
+                ${datadir}/gnome/autostart/"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/X11/Xsession.d/
