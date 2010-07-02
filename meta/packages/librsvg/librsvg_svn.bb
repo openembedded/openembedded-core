@@ -1,7 +1,10 @@
 DESCRIPTION = "Library for rendering SVG files"
+HOMEPAGE = "http://ftp.gnome.org/pub/GNOME/sources/librsvg/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2+"
 PR = "r3"
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
