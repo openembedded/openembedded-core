@@ -1,13 +1,13 @@
 DESCRIPTION = "PNG Library"
 HOMEPAGE = "http://www.libpng.org/"
-LICENSE = "libpng"
 SECTION = "libs"
+LICENSE = "libpng"
 DEPENDS = "zlib"
 PRIORITY = "required"
 PR = "r9"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/libpng-${PV}.tar.bz2 \
-           file://makefile_fix.patch;patch=1"
+           file://makefile_fix.patch"
 
 inherit autotools binconfig pkgconfig pkgconfig_stage
 
@@ -24,9 +24,9 @@ do_install() {
 }
 
 python do_package() {
-        if bb.data.getVar('DEBIAN_NAMES', d, 1):
-            bb.data.setVar('PKG_${PN}', 'libpng12', d)
-        bb.build.exec_func('package_do_package', d)
+    if bb.data.getVar('DEBIAN_NAMES', d, 1):
+        bb.data.setVar('PKG_${PN}', 'libpng12', d)
+    bb.build.exec_func('package_do_package', d)
 }
 
 PACKAGES =+ "${PN}12-dbg ${PN}12 ${PN}12-dev"
