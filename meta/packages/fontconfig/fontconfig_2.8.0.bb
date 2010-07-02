@@ -1,12 +1,20 @@
-SECTION = "libs"
-LICENSE = "BSD"
 DESCRIPTION = "A library for configuring and customizing font access."
+HOMEPAGE = "http://www.fontconfig.org"
+BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
+
+LICENSE = "MIT-style & MIT & Public Domain"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f3ad4145dea6ca7efa2f1bee8165a7a1 \
+                    file://src/fcfreetype.c;endline=45;md5=bc3dd139e2f7245a02fde5545b203a6f \
+                    file://src/fccache.c;beginline=1020;endline=1035;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
+
+SECTION = "libs"
+
 DEPENDS = "expat freetype zlib"
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
-           file://fix-pkgconfig.patch;patch=1 \
+           file://fix-pkgconfig.patch \
            file://97_fontconfig"
 
 PACKAGES =+ "fontconfig-utils-dbg fontconfig-utils "
