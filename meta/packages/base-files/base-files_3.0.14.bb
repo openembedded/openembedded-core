@@ -4,8 +4,7 @@ PRIORITY = "required"
 PR = "r64"
 LICENSE = "GPLv2"
 
-SRC_URI = " \
-           file://rotation \
+SRC_URI = "file://rotation \
            file://nsswitch.conf \
            file://motd \
            file://inputrc \
@@ -27,32 +26,32 @@ SRC_URI = " \
            file://licenses/LGPL-2.1 \
            file://licenses/LGPL-3 \
            file://licenses/GFDL-1.2 \
-           file://licenses/Artistic "
+           file://licenses/Artistic"
 S = "${WORKDIR}"
 
 docdir_append = "/${P}"
 dirs1777 = "/tmp ${localstatedir}/volatile/lock ${localstatedir}/volatile/tmp"
 dirs2775 = "/home ${prefix}/src ${localstatedir}/local"
 dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
-	   ${sysconfdir}/skel /lib /mnt /proc /home/root /sbin \
-	   ${prefix} ${bindir} ${docdir} /usr/games ${includedir} \
-	   ${libdir} ${sbindir} ${datadir} \
-	   ${datadir}/common-licenses ${datadir}/dict ${infodir} \
-	   ${mandir} ${datadir}/misc ${localstatedir} \
-	   ${localstatedir}/backups ${localstatedir}/lib \
-	   /sys ${localstatedir}/lib/misc ${localstatedir}/spool \
-	   ${localstatedir}/volatile ${localstatedir}/volatile/cache \
-	   ${localstatedir}/volatile/lock/subsys \
-	   ${localstatedir}/volatile/log \
-	   ${localstatedir}/volatile/run \
-	   /mnt /media /media/card /media/cf /media/net /media/ram \
-	   /media/union /media/realroot /media/hdd \
-	   /media/mmc1"
+           ${sysconfdir}/skel /lib /mnt /proc /home/root /sbin \
+           ${prefix} ${bindir} ${docdir} /usr/games ${includedir} \
+           ${libdir} ${sbindir} ${datadir} \
+           ${datadir}/common-licenses ${datadir}/dict ${infodir} \
+           ${mandir} ${datadir}/misc ${localstatedir} \
+           ${localstatedir}/backups ${localstatedir}/lib \
+           /sys ${localstatedir}/lib/misc ${localstatedir}/spool \
+           ${localstatedir}/volatile ${localstatedir}/volatile/cache \
+           ${localstatedir}/volatile/lock/subsys \
+           ${localstatedir}/volatile/log \
+           ${localstatedir}/volatile/run \
+           /mnt /media /media/card /media/cf /media/net /media/ram \
+           /media/union /media/realroot /media/hdd \
+           /media/mmc1"
 volatiles = "cache run log lock tmp"
 conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
-	     ${sysconfdir}/inputrc ${sysconfdir}/issue /${sysconfdir}/issue.net \
-	     ${sysconfdir}/nsswitch.conf ${sysconfdir}/profile \
-	     ${sysconfdir}/default"
+             ${sysconfdir}/inputrc ${sysconfdir}/issue /${sysconfdir}/issue.net \
+             ${sysconfdir}/nsswitch.conf ${sysconfdir}/profile \
+             ${sysconfdir}/default"
 
 #
 # set standard hostname, might be a candidate for a DISTRO variable? :M:
