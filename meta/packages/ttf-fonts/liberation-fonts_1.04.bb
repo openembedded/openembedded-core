@@ -1,4 +1,7 @@
-DESCRIPTION = "The  fonts - TTF Edition"
+DESCRIPTION = "The Liberation(tm) Fonts is a font family originally created by Ascender(c) which aims metric compatibility as usage of Arial, Times New Roman, Courier New"
+HOMEPAGE = "https://fedorahosted.org/liberation-fonts/"
+BUGTRACKER = "https://bugzilla.redhat.com/"
+
 SECTION = "x11/fonts"
 PRIORITY = "optional"
 LICENSE = "GPLv2"
@@ -9,18 +12,18 @@ PE = "1"
 SRC_URI = "https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-${PV}.tar.gz \
            file://30-liberation-aliases.conf"
 
-do_install () { 
-        install -d ${D}${datadir}/fonts/ttf/ 
-        for i in *.ttf; do 
-                install -m 0644 $i ${D}${prefix}/share/fonts/ttf/${i} 
-        done 
+do_install () {
+	install -d ${D}${datadir}/fonts/ttf/
+	for i in *.ttf; do
+		install -m 0644 $i ${D}${prefix}/share/fonts/ttf/${i}
+	done
 
 	install -d ${D}${sysconfdir}/fonts/conf.d/
 	install -m 0644 ${WORKDIR}/30-liberation-aliases.conf ${D}${sysconfdir}/fonts/conf.d/
 
-        install -d ${D}${prefix}/share/doc/${PN}/ 
+	install -d ${D}${prefix}/share/doc/${PN}/
 	install -m 0644 License.txt ${D}${datadir}/doc/${PN}/
-} 
+}
 
 pkg_postinst () {
 #!/bin/sh
