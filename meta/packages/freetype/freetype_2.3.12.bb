@@ -1,12 +1,18 @@
 DESCRIPTION = "Freetype font rendering library"
+HOMEPAGE = "http://www.freetype.org/"
+BUGTRACKER = "https://savannah.nongnu.org/bugs/?group=freetype"
+
+LICENSE = "FreeTypeLicense | GPLv2+"
+LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=8bc1a580aeb518100d00a2dd29e68edf \
+                    file://docs/FTL.TXT;md5=d479e83797f699fe873b38dadd0fcd4c \
+                    file://docs/GPL.TXT;md5=8ef380476f642c20ebf40fecb0add2ec"
+
 SECTION = "libs"
-LICENSE = "freetype"
-PR = "r3"
+
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
-           file://fix-x86_64-build.patch;patch=1 \
-           file://no-hardcode.patch;patch=1 \
-	  "
+           file://no-hardcode.patch"
 
 S = "${WORKDIR}/freetype-${PV}"
 
