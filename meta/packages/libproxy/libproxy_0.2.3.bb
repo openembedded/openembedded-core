@@ -1,6 +1,8 @@
 DESCRIPTION = "A library that provides automatic proxy configuration management"
 HOMEPAGE = "http://code.google.com/p/libproxy/"
-LICENSE = "LGPL"
+BUGTRACKER = "http://code.google.com/p/libproxy/issues/list"
+LICENSE = "LGPLv2.1+"
+
 SECTION = "libs"
 
 DEPENDS = "virtual/libx11 xmu gconf-dbus"
