@@ -45,3 +45,21 @@ RECIPE_LATEST_VERSION_pn-ppp="2.4.5"
 RECIPE_NO_OF_PATCHES_pn-ppp="5"
 RECIPE_LATEST_RELEASE_DATE_pn-ppp="2009/11/17"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-ppp="4 years"
+
+RECIPE_STATUS_pn-libproxy="red" # Need upgrade
+RECIPE_LATEST_VERSION_pn-libproxy="0.4.4"
+RECIPE_NO_OF_PATCHES_pn-libproxy="1"
+RECIPE_LATEST_RELEASE_DATE_pn-libproxy="2010/05/19"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libproxy="3 months"
+
+RECIPE_STATUS_pn-networkmanager="red" # Need upgrade
+RECIPE_LATEST_VERSION_pn-networkmanager="0.8"
+RECIPE_NO_OF_PATCHES_pn-networkmanager="4"
+RECIPE_LATEST_RELEASE_DATE_pn-networkmanager="2010/04/18"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-networkmanager="3 months"
+
+RECIPE_STATUS_pn-networkmanager-applet="red" # Need upgrade
+RECIPE_LATEST_VERSION_pn-networkmanager-applet="n/a"
+RECIPE_NO_OF_PATCHES_pn-networkmanager-applet="4"
+RECIPE_LATEST_RELEASE_DATE_pn-networkmanager-applet="n/a"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-networkmanager-applet="n/a"
