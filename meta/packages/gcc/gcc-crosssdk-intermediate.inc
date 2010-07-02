@@ -1,7 +1,7 @@
 inherit crosssdk
 
-SYSTEMHEADERS = "${SDKPATH}/include"
-SYSTEMLIBS1 = "${SDKPATH}/lib/"
+SYSTEMHEADERS = "${SDKPATHNATIVE}${prefix_nativesdk}/include"
+SYSTEMLIBS1 = "${SDKPATHNATIVE}${libdir_nativesdk}/"
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils-crosssdk gettext-native"
 DEPENDS += "virtual/${TARGET_PREFIX}libc-initial-nativesdk"

@@ -37,9 +37,9 @@ CXXFLAGS = "${BUILDSDK_CFLAGS}"
 LDFLAGS = "${BUILDSDK_LDFLAGS}"
 
 # Change to place files in SDKPATH
-prefix = "${SDKPATH}"
-exec_prefix = "${SDKPATH}"
-base_prefix = "${SDKPATH}"
+base_prefix = "${SDKPATHNATIVE}"
+prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
+exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 
 FILES_${PN} += "${prefix}"
 FILES_${PN}-dbg += "${prefix}/.debug \

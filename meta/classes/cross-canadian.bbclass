@@ -44,9 +44,9 @@ target_prefix := "${prefix}"
 target_exec_prefix := "${exec_prefix}"
 
 # Change to place files in SDKPATH
-prefix = "${SDKPATH}"
-exec_prefix = "${SDKPATH}"
-base_prefix = "${SDKPATH}"
+base_prefix = "${SDKPATHNATIVE}"
+prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
+exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 
 FILES_${PN} = "${prefix}"
 FILES_${PN}-dbg += "${prefix}/.debug \
@@ -56,5 +56,5 @@ FILES_${PN}-dbg += "${prefix}/.debug \
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${layout_libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
-# Cross-canadian packages need to pull in nativesdk so's, sorry for ugliness
+# Cross-canadian packages need to pull in nativesdk dynamic libs
 SHLIBSDIR = "${STAGING_DIR}/${SDK_ARCH}-nativesdk-pokysdk-${BUILD_OS}/shlibs"
