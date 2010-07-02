@@ -1,6 +1,10 @@
 DESCRIPTION = "The RPM Package Manager."
 HOMEPAGE = "http://rpm.org/"
-LICENSE = "LGPL GPL"
+BUGTRACKER = "http://rpm.org/report"
+
+# library is covered under dual license of GPL | LGPL
+LICENSE = "(LGPLv2+ | GPLv2+) & GPLv2+"
+
 DEPENDS = "zlib beecrypt file popt python"
 PR = "r16"
 
@@ -13,9 +17,9 @@ SRC_URI = "http://www.rpm.org/releases/rpm-4.4.x/rpm-4.4.2.3.tar.gz \
 	   file://extcond.patch;patch=1;pnum=0 \
 	   file://disabledwarf.patch;patch=1"
 
-inherit autotools gettext
-
 S = "${WORKDIR}/rpm-${PV}"
+
+inherit autotools gettext
 
 acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 
