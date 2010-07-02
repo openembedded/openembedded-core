@@ -1,3 +1,9 @@
+kexec-tools: Fix synatx error with recent autoconf+automake
+
+Signed-off-by: Richard Purdie <rpurdie@linux.intel.com>
+
+Move it to kexec-tools-2.0.1 directory. Dongxiao Xu <dongxiao.xu@intel.com>
+
 Index: kexec-tools-1.101/configure.ac
 ===================================================================
 --- kexec-tools-1.101.orig/configure.ac	2010-02-02 15:14:43.173906722 +0000
