@@ -4,14 +4,12 @@ SECTION = "base"
 LICENSE = "AFL2.1 | GPLv2+"
 DEPENDS = "expat glib-2.0 virtual/libintl virtual/libx11 libsm"
 
-SRC_URI = "\
-  http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
-  file://cross.patch; \
-  file://tmpdir.patch; \
-  file://fix-install-daemon.patch; \
-  file://dbus-1.init \
-  file://99_dbus \
-"
+SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
+           file://cross.patch; \
+           file://tmpdir.patch; \
+           file://fix-install-daemon.patch; \
+           file://dbus-1.init \
+           file://99_dbus"
 
 inherit autotools pkgconfig gettext
 
