@@ -1,6 +1,6 @@
-require xorg-font-common.inc
-
 DESCRIPTION = "X font aliases."
+
+require xorg-font-common.inc
 
 DEPENDS = "virtual/xserver font-util"
 RDEPENDS = "encodings font-util"
