@@ -1,11 +1,13 @@
+DESCRIPTION = "shared MIME database and spec"
+HOMEPAGE = "http://freedesktop.org/wiki/Software/shared-mime-info"
 SECTION = "base"
-LICENSE = "GPL"
+LICENSE = "GPLv2+"
 
-SRC_URI = "http://freedesktop.org/~hadess/shared-mime-info-${PV}.tar.bz2"
 DEPENDS = "libxml2 intltool-native glib-2.0 shared-mime-info-native"
 DEPENDS_virtclass-native = "libxml2-native intltool-native glib-2.0-native"
-
 PR = "r2"
+
+SRC_URI = "http://freedesktop.org/~hadess/shared-mime-info-${PV}.tar.bz2"
 
 inherit autotools pkgconfig gettext
 
