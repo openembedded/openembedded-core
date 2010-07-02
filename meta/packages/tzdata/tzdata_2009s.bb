@@ -1,6 +1,8 @@
 DESCRIPTION = "Timezone data"
+HOMEPAGE = "ftp://elsie.nci.nih.gov/pub/"
 SECTION = "base"
 PRIORITY = "optional"
+LICENSE = "PD"
 DEPENDS = "tzcode-native"
 
 PR = "r0"
