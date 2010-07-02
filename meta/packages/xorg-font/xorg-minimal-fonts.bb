@@ -1,4 +1,7 @@
+DESCRIPTION = "Xorg minimal fonts data"
 HOMEPAGE = "http://www.x.org"
+BUGTRACKER = "n/a"
+
 SECTION = "x11/fonts"
 LICENSE = "MIT-X"
 
