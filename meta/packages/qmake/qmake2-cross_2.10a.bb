@@ -3,9 +3,9 @@ PRIORITY = "optional"
 HOMEPAGE = "http://www.trolltech.com"
 SECTION = "devel"
 LICENSE = "GPL"
-PR = "r1"
+PR = "r2"
 
-QTVER = "qtopia-core-opensource-src-4.3.2"
+QTVER = "qt-embedded-linux-opensource-src-4.5.3"
 
 SRC_URI = "ftp://ftp.trolltech.com/pub/qt/source/${QTVER}.tar.gz \
            file://0001-fix-mkspecs.patch;patch=1 \
@@ -20,6 +20,7 @@ inherit autotools cross
 
 export QTDIR = "${S}"
 EXTRA_OEMAKE = "-e"
+EXTRA_OECONF = "-opensource"
 
 do_configure() {
         # Install the OE build templates
@@ -41,6 +42,7 @@ do_configure() {
 	export OE_QMAKE_LDFLAGS="${LDFLAGS}"
 	export OE_QMAKE_LINK="${CCLD}"
 	export OE_QMAKE_AR="${AR}"
+	export OE_QMAKE_OBJCOPY="${OBJCOPY}"
 	export OE_QMAKE_STRIP="${STRIP}"
 	export OE_QMAKE_UIC="${STAGING_BINDIR_NATIVE}/uic"
 	export OE_QMAKE_MOC="${STAGING_BINDIR_NATIVE}/moc"
