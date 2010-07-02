@@ -1,9 +1,12 @@
+DESCRIPTION = "X autotools macros"
+
 require xorg-util-common.inc
 
-DESCRIPTION = "X autotools macros"
-PE = "1"
+LICENSE = "MIT & MIT-style"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b8b2965be9997891cf7ddccdfb242ca8"
 
-SRC_URI += "file://unbreak_cross_compile.patch;patch=1"
+PE = "1"
+PR = "r0"
 
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
 DEPENDS = "gettext"
