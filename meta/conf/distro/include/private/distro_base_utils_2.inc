@@ -154,8 +154,11 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-genext2fs = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-genext2fs = "04/2007"
 RECIPE_COMMENTS_pn-genext2fs = ""
 
-RECIPE_STATUS_pn-findutils = "red"   # need upgrade
+RECIPE_STATUS_pn-findutils = "green"
 DEPENDENCY_CHECK_pn-findutils = "not done"
+RECIPE_PATCH_pn-findutils_01-27017 = "upstream patch"
+RECIPE_PATCH_pn-findutils_01-28824 = "upstream patch"
+RECIPE_PATCH_pn-findutils_01-28872 = "upstream patch"
 RECIPE_LATEST_VERSION_pn-findutils = "4.4.2"
 RECIPE_INTEL_SECTION_pn-findutils = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-findutils = "2 months"
