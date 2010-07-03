@@ -1,18 +1,20 @@
 DESCRIPTION = "The goal of the Pango project is to provide an \
 Open Source framework for the layout and rendering of \
 internationalized text."
-LICENSE = "LGPL"
-
-inherit gnome
-EXTRA_AUTORECONF = ""
-
+HOMEPAGE = "http://www.pango.org/"
+BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "x11/libs"
+LICENSE = "LGPL"
 
 DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv virtual/libx11 libxft gtk-doc-native cairo"
 
 PACKAGES_DYNAMIC = "pango-module-*"
 
 RRECOMMENDS_${PN} = "pango-module-basic-x pango-module-basic-fc" 
+
+inherit gnome
+
+EXTRA_AUTORECONF = ""
 
 # seems to go wrong with default cflags
 FULL_OPTIMIZATION_arm = "-O2"
@@ -23,10 +25,6 @@ EXTRA_OECONF = "--disable-glibtest \
 
 LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.6.0"
-
-FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*${SOLIBS}"
-FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
-FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
 do_stage () {
 	autotools_stage_all
@@ -46,3 +44,7 @@ python populate_packages_prepend () {
 
 	do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + 'pango-querymodules > /etc/pango/pango.modules')
 }
+
+FILES_${PN} = "/etc ${bindir}/* ${libdir}/libpango*${SOLIBS}"
+FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
+FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
