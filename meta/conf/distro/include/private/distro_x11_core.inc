@@ -58,7 +58,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libdrm="1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-libdrm="2010/06/10"
 RECIPE_INTEL_SECTION_pn-libdrm="graphic core"
 
-RECIPE_STATUS_pn-python-pycairo="red" # upgrade needed. src file name changed to py2cairo
+RECIPE_STATUS_pn-python-pycairo="green" # no upgrade needed
 RECIPE_LATEST_VERSION_pn-python-pycairo="1.8.10"
 RECIPE_NO_OF_PATCHES_pn-python-pycairo="0"
 RECIPE_LATEST_RELEASE_DATE_pn-python-pycairo="2010/05/20"
@@ -70,3 +70,45 @@ RECIPE_NO_OF_PATCHES_pn-libxfontcache="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libxfontcache="3 years"
 RECIPE_LATEST_RELEASE_DATE_pn-libxfontcache="2009/10/08"
 RECIPE_INTEL_SECTION_pn-libxfontcache="graphic core"
+
+RECIPE_STATUS_pn-xf86-input-evdev="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xf86-input-evdev="2.4.0"
+RECIPE_NO_OF_PATCHES_pn-xf86-input-evdev="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-input-evdev="1 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-xf86-input-evdev="2010/04/06"
+RECIPE_INTEL_SECTION_pn-xf86-input-evdev="graphic core"
+
+RECIPE_STATUS_pn-xf86-video-vmware="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xf86-video-vmware="11.0.1"
+RECIPE_NO_OF_PATCHES_pn-xf86-video-vmware="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-video-vmware="2 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-xf86-video-vmware="2010/03/18"
+RECIPE_INTEL_SECTION_pn-xf86-video-vmware="graphic core"
+
+RECIPE_STATUS_pn-cairo="green" # no update needed
+RECIPE_LATEST_VERSION_pn-cairo="1.9.10"
+RECIPE_NO_OF_PATCHES_pn-cairo="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-cairo="1 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-cairo="2010/02/20"
+RECIPE_INTEL_SECTION_pn-cairo="graphic core"
+
+RECIPE_STATUS_pn-xserver-nodm-init="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xserver-nodm-init="0" # local patch
+RECIPE_NO_OF_PATCHES_pn-xserver-nodm-init="0"
+#RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xserver-nodm-init=""
+#RECIPE_LATEST_RELEASE_DATE_pn-xserver-nodm-init=""
+RECIPE_INTEL_SECTION_pn-xserver-nodm-init="graphic core"
+
+RECIPE_STATUS_pn-xserver-xf86-config="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xserver-xf86-config="0.1" # local patch
+RECIPE_NO_OF_PATCHES_pn-xserver-xf86-config="0"
+#RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xserver-xf86-config=""
+#RECIPE_LATEST_RELEASE_DATE_pn-xserver-xf86-config=""
+RECIPE_INTEL_SECTION_pn-xserver-xf86-config="graphic core"
+
+RECIPE_STATUS_pn-pango="green" # no update needed
+RECIPE_LATEST_VERSION_pn-pango="1.28.0"
+RECIPE_NO_OF_PATCHES_pn-pango="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pango="1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-pango="2010/03/10"
+RECIPE_INTEL_SECTION_pn-pango="graphic core"

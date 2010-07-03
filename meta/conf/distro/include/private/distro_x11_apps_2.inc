@@ -78,3 +78,10 @@ RECIPE_NO_OF_PATCHES_pn-xwininfo="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xwininfo="1 year"
 RECIPE_LATEST_RELEASE_DATE_pn-xwininfo="2009/10/12"
 RECIPE_INTEL_SECTION_pn-xwininfo="graphic app"
+
+RECIPE_STATUS_pn-xrandr="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xrandr="1.3.2"
+RECIPE_NO_OF_PATCHES_pn-xrandr="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xrandr="1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-xrandr="2009/09/10"
+RECIPE_INTEL_SECTION_pn-xrandr="graphic app"
