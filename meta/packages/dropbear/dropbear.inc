@@ -1,7 +1,12 @@
 DESCRIPTION = "Dropbear is a lightweight SSH and SCP Implementation"
 HOMEPAGE = "http://matt.ucc.asn.au/dropbear/dropbear.html"
 SECTION = "console/network"
+
+# some files are from other projects and have others license terms:
+#   public domain, OpenSSH 3.5p1, OpenSSH3.6.1p2, PuTTY
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=3a5b0c2f0d0c49dfde9558ae2036683c"
+
 DEPENDS = "zlib"
 PROVIDES = "ssh sshd"
 RPROVIDES = "ssh sshd"

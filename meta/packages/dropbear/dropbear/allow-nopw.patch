@@ -1,33 +1,34 @@
-diff -Nurd dropbear-0.45/svr-auth.c dropbear-0.45.patched/svr-auth.c
---- dropbear-0.45/svr-auth.c	2005-03-06 20:27:02.000000000 -0800
-+++ dropbear-0.45.patched/svr-auth.c	2005-03-08 15:22:43.998592744 -0800
-@@ -237,6 +237,7 @@
+diff --git a/svr-auth.c b/svr-auth.c
+index 5da0aa7..4de4964 100644
+--- a/svr-auth.c
++++ b/svr-auth.c
+@@ -249,6 +249,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
  	}
  
  	/* check for an empty password */
 +#ifdef DISALLOW_EMPTY_PW
- 	if (ses.authstate.pw->pw_passwd[0] == '\0') {
+ 	if (ses.authstate.pw_passwd[0] == '\0') {
  		TRACE(("leave checkusername: empty pword"))
  		dropbear_log(LOG_WARNING, "user '%s' has blank password, rejected",
-@@ -244,7 +245,7 @@
+@@ -256,6 +257,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
  		send_msg_userauth_failure(0, 1);
  		return DROPBEAR_FAILURE;
  	}
--
 +#endif
- 	TRACE(("shell is %s", ses.authstate.pw->pw_shell))
  
- 	/* check that the shell is set */
-diff -Nurd dropbear-0.45/svr-authpasswd.c dropbear-0.45.patched/svr-authpasswd.c
---- dropbear-0.45/svr-authpasswd.c	2005-03-06 20:27:02.000000000 -0800
-+++ dropbear-0.45.patched/svr-authpasswd.c	2005-03-08 15:22:44.010591023 -0800
-@@ -64,9 +64,13 @@
+ 	TRACE(("shell is %s", ses.authstate.pw_shell))
+ 
+diff --git a/svr-authpasswd.c b/svr-authpasswd.c
+index 53550a2..7b896bd 100644
+--- a/svr-authpasswd.c
++++ b/svr-authpasswd.c
+@@ -64,9 +64,13 @@ void svr_auth_password() {
  	 * since the shadow password may differ to that tested
  	 * in auth.c */
  	if (passwdcrypt[0] == '\0') {
 +#ifdef DISALLOW_EMPTY_PASSWD
  		dropbear_log(LOG_WARNING, "user '%s' has blank password, rejected",
- 				ses.authstate.printableuser);
+ 				ses.authstate.pw_name);
  		send_msg_userauth_failure(0, 1);
 +#else
 +		send_msg_userauth_success();
