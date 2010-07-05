@@ -2,7 +2,7 @@ DESCRIPTION = "This package provides the necessary infrastructure for basic TCP/
 HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPLv2"
-PR = "r23"
+PR = "r0"
 
 inherit update-rc.d
 
@@ -32,8 +32,6 @@ do_install () {
 	install -m 0644 etc-rpc ${D}${sysconfdir}/rpc
 	install -m 0644 etc-protocols ${D}${sysconfdir}/protocols
 	install -m 0644 etc-services ${D}${sysconfdir}/services
-	install -m 0755 update-inetd ${D}${sbindir}/
-	install -m 0644 update-inetd.8 ${D}${mandir}/man8/
 	install -m 0644 ${WORKDIR}/interfaces ${D}${sysconfdir}/network/interfaces
 
 	# Disable network manager on machines that commonly do NFS booting
