@@ -49,4 +49,6 @@
 
 #define JS_STACK_GROWTH_DIRECTION (-1)
 
+#define JS_HAVE_LONG_LONG
+
 #endif /* js_cpucfg___ */
