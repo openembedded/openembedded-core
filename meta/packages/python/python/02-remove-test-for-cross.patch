@@ -5,16 +5,16 @@
 # Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>
 Index: Python-2.6.1/configure.in
 ===================================================================
---- Python-2.6.1.orig/configure.in
-+++ Python-2.6.1/configure.in
-@@ -2556,38 +2556,6 @@ AC_CHECK_LIB(c, inet_aton, [$ac_cv_prog_
+--- Python-2.6.5.orig/configure.in	2010-07-06 04:37:09.000000000 -0700
++++ Python-2.6.5/configure.in	2010-07-06 04:40:18.000000000 -0700
+@@ -2697,50 +2697,6 @@
    AC_CHECK_LIB(resolv, inet_aton)
  )
  
 -# On Tru64, chflags seems to be present, but calling it will
 -# exit Python
--AC_MSG_CHECKING(for chflags)
--AC_TRY_RUN([
+-AC_CACHE_CHECK([for chflags], [ac_cv_have_chflags], [dnl
+-AC_TRY_RUN([[
 -#include <sys/stat.h>
 -#include <unistd.h>
 -int main(int argc, char*argv[])
@@ -23,13 +23,19 @@ Index: Python-2.6.1/configure.in
 -    return 1;
 -  return 0;
 -}
--],AC_DEFINE(HAVE_CHFLAGS, 1, Define to 1 if you have the `chflags' function.)
--  AC_MSG_RESULT(yes),
--  AC_MSG_RESULT(no)
--)
+-]], ac_cv_have_chflags=yes,
+-   ac_cv_have_chflags=no,
+-   ac_cv_have_chflags=cross)
+-])
+-if test "$ac_cv_have_chflags" = cross ; then
+-  AC_CHECK_FUNC([chflags], [ac_cv_have_chflags="yes"], [ac_cv_have_chflags="no"])
+-fi
+-if test "$ac_cv_have_chflags" = yes ; then
+-  AC_DEFINE(HAVE_CHFLAGS, 1, Define to 1 if you have the `chflags' function.)
+-fi
 -
--AC_MSG_CHECKING(for lchflags)
--AC_TRY_RUN([
+-AC_CACHE_CHECK([for lchflags], [ac_cv_have_lchflags], [dnl
+-AC_TRY_RUN([[
 -#include <sys/stat.h>
 -#include <unistd.h>
 -int main(int argc, char*argv[])
@@ -38,15 +44,21 @@ Index: Python-2.6.1/configure.in
 -    return 1;
 -  return 0;
 -}
--],AC_DEFINE(HAVE_LCHFLAGS, 1, Define to 1 if you have the `lchflags' function.)
--  AC_MSG_RESULT(yes),
--  AC_MSG_RESULT(no)
--)
+-]], ac_cv_have_lchflags=yes,
+-   ac_cv_have_lchflags=no,
+-   ac_cv_have_lchflags=cross)
+-])
+-if test "$ac_cv_have_lchflags" = cross ; then
+-  AC_CHECK_FUNC([lchflags], [ac_cv_have_lchflags="yes"], [ac_cv_have_lchflags="no"])
+-fi
+-if test "$ac_cv_have_lchflags" = yes ; then
+-  AC_DEFINE(HAVE_LCHFLAGS, 1, Define to 1 if you have the `lchflags' function.)
+-fi
 -
  dnl Check if system zlib has *Copy() functions
  dnl
  dnl On MacOSX the linker will search for dylibs on the entire linker path
-@@ -3649,45 +3617,6 @@ else
+@@ -3844,45 +3800,6 @@
    AC_MSG_RESULT(no)
  fi
  
