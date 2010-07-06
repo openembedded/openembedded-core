@@ -1,11 +1,14 @@
 DESCRIPTION = "User support binary for the uvesafb kernel module"
+HOMEPAGE = "http://dev.gentoo.org/~spock/projects/uvesafb/"
+
+LICENSE = "GPLv2"
+
+DEPENDS = "virtual/kernel"
+RRECOMMENDS_${PN} = "kernel-module-uvesafb"
+PR = "r0"
+
 SRC_URI = "http://dev.gentoo.org/~spock/projects/uvesafb/archive/v86d-${PV}.tar.bz2 \
            file://fbsetup"
-DEPENDS = "virtual/kernel"
-LICENSE = "GPLv2"
-PR = "r3"
-
-RRECOMMENDS_${PN} = "kernel-module-uvesafb"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 COMPATIBLE_MACHINE = "(qemux86|bootcdx86)"
