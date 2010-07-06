@@ -1,8 +1,0 @@
---- base-passwd/group.master.orig	2005-07-08 06:36:07.717990112 +0200
-+++ base-passwd/group.master	2005-07-08 06:36:32.000000000 +0200
-@@ -36,4 +36,5 @@
- staff:*:50:
- games:*:60:
- users:*:100:
-+mysql:*:64001:
- nogroup:*:65534:
