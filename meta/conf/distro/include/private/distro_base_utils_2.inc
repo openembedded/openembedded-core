@@ -138,8 +138,8 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pkgconfig = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-pkgconfig = "05/2010"
 RECIPE_COMMENTS_pn-pkgconfig = "git as candidate, 0.23: 01/2008, 0.24: 05/2010, 0.25: 05/2010"
 
-RECIPE_STATUS_pn-less = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-less = "not done"
+RECIPE_STATUS_pn-less = "green"
+DEPENDENCY_CHECK_pn-less = "done"
 RECIPE_LATEST_VERSION_pn-less = "436"
 RECIPE_INTEL_SECTION_pn-less = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-less = "1 month"
@@ -162,17 +162,21 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-findutils = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-findutils = "06/2009"
 RECIPE_COMMENTS_pn-findutils = ""
 
-RECIPE_STATUS_pn-file = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-file = "not done"
+RECIPE_STATUS_pn-file = "green"
+DEPENDENCY_CHECK_pn-file = "done"
 RECIPE_LATEST_VERSION_pn-file = "5.04"
+RECIPE_PATCH_pn-file+dump = "some new magic data"
+RECIPE_PATCH_pn-file+filesystems = "some other new magic data"
 RECIPE_INTEL_SECTION_pn-file = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-file = "8 months"
 RECIPE_LATEST_RELEASE_DATE_pn-file = "01/2010"
 RECIPE_COMMENTS_pn-file = "2-clause BSD"
 
-RECIPE_STATUS_pn-rsync = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-rsync = "not done"
+RECIPE_STATUS_pn-rsync = "yellow"   # missing dependencies
+DEPENDENCY_CHECK_pn-rsync = "done"  # can also add acl and attr as dependencies
 RECIPE_LATEST_VERSION_pn-rsync = "3.0.7"
+RECIPE_PATCH_pn-rsync+rsyncd.conf = "init script"
+RECIPE_PATCH_pn-rsync+acinclude.m4 = "custom m4 macros"
 RECIPE_INTEL_SECTION_pn-rsync = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-rsync = "7 months"
 RECIPE_LATEST_RELEASE_DATE_pn-rsync = "12/2009"
@@ -186,9 +190,14 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-nfs-utils = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-nfs-utils = "02/2010"
 RECIPE_COMMENTS_pn-nfs-utils = ""
 
-RECIPE_STATUS_pn-dropbear = "red"   # need upgrade
+RECIPE_STATUS_pn-dropbear = "green"
 DEPENDENCY_CHECK_pn-dropbear = "not done"
 RECIPE_LATEST_VERSION_pn-dropbear = "0.52"
+RECIPE_PATCH_pn-dropbear+urandom-xauth-changes-to-options.h = "xauth path change"
+RECIPE_PATCH_pn-dropbear+configure = "use configure cache value for cross compiling"
+RECIPE_PATCH_pn-dropbear+fix-skb-keys = "enlarge key buffer size"
+RECIPE_PATCH_pn-dropbear+allow-nopw = "allow login with no password, applied on in occasions"
+RECIPE_PATCH_pn-dropbear+init = "init script"
 RECIPE_INTEL_SECTION_pn-dropbear = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-dropbear = "8 months"
 RECIPE_LATEST_RELEASE_DATE_pn-dropbear = "11/2008"
@@ -219,13 +228,16 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-avahi = "4 months"
 RECIPE_LATEST_RELEASE_DATE_pn-avahi = "04/2009"
 RECIPE_COMMENTS_pn-avahi = ""
 
-RECIPE_STATUS_pn-js = "red"   # need upgrade
+RECIPE_STATUS_pn-js = "yellow"    # may not work for platforms other than 32bit x86
 DEPENDENCY_CHECK_pn-js = "not done"
-RECIPE_LATEST_VERSION_pn-js = "1.7.0"
+RECIPE_LATEST_VERSION_pn-js = "1.8.0~rc1"
+RECIPE_PATCH_pn-js+usepic = "get around broken PIC test for cross compiling"
+RECIPE_PATCH_pn-js+link-with-gcc = "use $(CC) instead of $(LD) to link"
+RECIPE_PATCH_pn-js+jsautocfg.h = "architecture specified configurations"
 RECIPE_INTEL_SECTION_pn-js = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-js = "11 months"
-RECIPE_LATEST_RELEASE_DATE_pn-js = "10/2007"
-RECIPE_COMMENTS_pn-js = "1.8.0-rc1 is out in 03/2009, alternative java based packaged called Rhino"
+RECIPE_LATEST_RELEASE_DATE_pn-js = "03/2009"
+RECIPE_COMMENTS_pn-js = "1.7.0 is 10/2007, alternative java based packaged called Rhino"
 
 RECIPE_STATUS_pn-pcmciautils = "red"   # need upgrade
 DEPENDENCY_CHECK_pn-pcmciautils = "not done"
@@ -235,7 +247,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pcmciautils = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-pcmciautils = "01/2010"
 RECIPE_COMMENTS_pn-pcmciautils = ""
 
-RECIPE_STATUS_pn-unzip = "red"   # need upgrade
+RECIPE_STATUS_pn-unzip = "green"
 DEPENDENCY_CHECK_pn-unzip = "not done"
 RECIPE_LATEST_VERSION_pn-unzip = "6.0"
 RECIPE_INTEL_SECTION_pn-unzip = "base utils"
@@ -243,7 +255,15 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-unzip = "49 months"
 RECIPE_LATEST_RELEASE_DATE_pn-unzip = "04/2009"
 RECIPE_COMMENTS_pn-unzip = "5.52 has a race condition vulnerability for Unix version"
 
-RECIPE_STATUS_pn-strace = "red"   # need upgrade
+RECIPE_STATUS_pn-zip = "green"
+DEPENDENCY_CHECK_pn-zip = "not done"
+RECIPE_LATEST_VERSION_pn-zip = "3.0"
+RECIPE_INTEL_SECTION_pn-zip = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-zip = "21 months"
+RECIPE_LATEST_RELEASE_DATE_pn-zip = "09/2009"
+RECIPE_COMMENTS_pn-zip = ""
+
+RECIPE_STATUS_pn-strace = "green"
 DEPENDENCY_CHECK_pn-strace = "not done"
 RECIPE_LATEST_VERSION_pn-strace = "4.5.20"
 RECIPE_INTEL_SECTION_pn-strace = "base utils"
@@ -259,17 +279,10 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-dhcp = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-dhcp = "06/2010"
 RECIPE_COMMENTS_pn-dhcp = "several major release, others are 3.1.3, 4.0.2-P1, need to identify"
 
-RECIPE_STATUS_pn-vte = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-vte = "not done"
-RECIPE_LATEST_VERSION_pn-vte = "0.24.1"
-RECIPE_INTEL_SECTION_pn-vte = "base utils"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-vte = "12 months"
-RECIPE_LATEST_RELEASE_DATE_pn-vte = "04/2010"
-RECIPE_COMMENTS_pn-vte = "part of the source under GPLv2+"
-
-RECIPE_STATUS_pn-v86d = "red"   # need upgrade
+RECIPE_STATUS_pn-v86d = "yellow"   # self written configure
 DEPENDENCY_CHECK_pn-v86d = "not done"
 RECIPE_LATEST_VERSION_pn-v86d = "0.1.9"
+RECIPE_PATCH_pn-v86d+fbsetup = "init script"
 RECIPE_INTEL_SECTION_pn-v86d = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-v86d = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-v86d = "10/2008"
@@ -283,7 +296,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-udev = "<1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-udev = "06/2010"
 RECIPE_COMMENTS_pn-udev = "may need different versions for different kernels"
 
-RECIPE_STATUS_pn-tzdata = "red"   # need upgrade
+RECIPE_STATUS_pn-tzdata = "green"
 DEPENDENCY_CHECK_pn-tzdata = "not done"
 RECIPE_LATEST_VERSION_pn-tzdata = "2010j"
 RECIPE_INTEL_SECTION_pn-tzdata = "base utils"
@@ -291,7 +304,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-tzdata = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-tzdata = "05/2010"
 RECIPE_COMMENTS_pn-tzdata = ""
 
-RECIPE_STATUS_pn-tinylogin = "red"   # need upgrade
+RECIPE_STATUS_pn-tinylogin = "yellow"    # replaced, place holder for tracking
 DEPENDENCY_CHECK_pn-tinylogin = "not done"
 RECIPE_LATEST_VERSION_pn-tinylogin = "n/a"
 RECIPE_INTEL_SECTION_pn-tinylogin = "base utils"

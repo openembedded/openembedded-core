@@ -154,8 +154,8 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-ncurses = "23 months"
 RECIPE_LATEST_RELEASE_DATE_pn-ncurses = "11/2008"
 RECIPE_COMMENTS_pn-ncurses = ""
 
-RECIPE_STATUS_pn-popt = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-popt = "not done"
+RECIPE_STATUS_pn-popt = "green"
+DEPENDENCY_CHECK_pn-popt = "done"
 RECIPE_LATEST_VERSION_pn-popt = "1.16"
 RECIPE_INTEL_SECTION_pn-popt = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-popt = "13 months"
@@ -178,8 +178,8 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-startup-notification = "25 months"
 RECIPE_LATEST_RELEASE_DATE_pn-startup-notification = "04/2009"
 RECIPE_COMMENTS_pn-startup-notification = ""
 
-RECIPE_STATUS_pn-libpthread-stubs = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-libpthread-stubs = "not done"
+RECIPE_STATUS_pn-libpthread-stubs = "green"
+DEPENDENCY_CHECK_pn-libpthread-stubs = "done"
 RECIPE_LATEST_VERSION_pn-libpthread-stubs = "0.3"
 RECIPE_INTEL_SECTION_pn-libpthread-stubs = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libpthread-stubs = "n/a"
