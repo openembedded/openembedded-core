@@ -6,7 +6,6 @@
 # Preferred Versions:
 #
 PREFERRED_VERSION_libmatchbox ?= "1.9"
-PREFERRED_VERSION_gtk-sato-engine ?= "0.3.1"
 PREFERRED_VERSION_matchbox-theme-sato ?= "0.1"
 
 PREFERRED_VERSION_glib-2.0 ?= "2.24.1"
