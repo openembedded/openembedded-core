@@ -1,3 +1,12 @@
+# copy commit message from OE as the patch comment
+#   commit c9bb6478a873d6de4c8a0e712435ac9a658a345d
+#   Author: Holger Schurig <schurig@mn-solutions.de>
+#   Date:   Wed Sep 29 08:29:58 2004 +0000
+#
+#   udhcpscript: fixes the "deleting routers" error message in case of no existing default routes
+#
+# Above comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
+
 Index: busybox-1.15.1/examples/udhcp/simple.script
 ===================================================================
 --- busybox-1.15.1.orig/examples/udhcp/simple.script	2009-09-12 17:55:36.000000000 +0200

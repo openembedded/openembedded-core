@@ -7,7 +7,6 @@ SECTION = "base"
 PRIORITY = "required"
 
 export EXTRA_CFLAGS = "${CFLAGS}"
-EXTRA_OEMAKE_append = " CROSS=${HOST_PREFIX}"
 PACKAGES =+ "${PN}-httpd ${PN}-udhcpd"
 
 FILES_${PN}-httpd = "${sysconfdir}/init.d/busybox-httpd /srv/www"
@@ -70,7 +69,7 @@ do_install () {
 		install -m 0755 ${WORKDIR}/busybox-httpd ${D}${sysconfdir}/init.d/
 		install -d ${D}/srv/www
 	fi
-	if grep "CONFIG_APP_UDHCPD=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_UDHCPD=y" ${WORKDIR}/defconfig; then
 		# Move udhcpd back to /usr/sbin/udhcpd
 		install -d ${D}${sbindir}
 		mv ${D}/busybox${sbindir}/udhcpd ${D}${sbindir}/
@@ -84,7 +83,7 @@ do_install () {
 
 		install -m 0755 ${WORKDIR}/hwclock.sh ${D}${sysconfdir}/init.d/
 	fi
-	if grep "CONFIG_APP_UDHCPC=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_UDHCPC=y" ${WORKDIR}/defconfig; then
 		# Move dhcpc back to /usr/sbin/udhcpc
 		install -d ${D}${base_sbindir}
 		mv ${D}/busybox${base_sbindir}/udhcpc ${D}${base_sbindir}/

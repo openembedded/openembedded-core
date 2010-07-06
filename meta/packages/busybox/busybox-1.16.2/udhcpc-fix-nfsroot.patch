@@ -1,3 +1,11 @@
+# copy commit message from OE as the patch comment:
+#    commit ec4da6df3ad5b8b03446d0dda9c50a2439ae325a
+#    Author: Denys Dmytriyenko <denis@denix.org>
+#    Date:   Wed Feb 4 11:43:18 2009 -0500
+#
+#    busybox: fix nfsroot issues with resetting IP and deleting routes
+#
+# above comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
 Index: busybox-1.15.3/examples/udhcp/simple.script
 ===================================================================
 --- busybox-1.15.3.orig/examples/udhcp/simple.script	2010-06-27 12:17:14.116876946 +0200

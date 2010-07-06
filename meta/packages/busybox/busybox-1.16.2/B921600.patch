@@ -1,3 +1,12 @@
+# copy commit message from OE as the patch comment:
+#    commit 5b1ed09b1ab1a60a28a76e4658bc9957cd361b5d
+#    Author: Valentin Longchamp <valentin.longchamp@epfl.ch>
+#    Date:   Mon Dec 8 14:43:23 2008 +0100
+
+#    busybox: added support for 921600 speed of serial line
+#
+# above comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
+
 diff -upNr busybox-1.7.2/libbb/speed_table.c busybox-1.7.2-921600/libbb/speed_table.c
 --- busybox-1.7.2/libbb/speed_table.c	2007-09-03 13:48:41.000000000 +0200
 +++ busybox-1.7.2-921600/libbb/speed_table.c	2008-10-09 16:23:26.269592899 +0200

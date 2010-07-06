@@ -1,3 +1,18 @@
+# copy commit message from OE as the patch comment:
+#    commit f1b326c83be0d95571b991d8d2ee239982380b6b
+#    Author: Martin Jansa <Martin.Jansa@gmail.com>
+#    Date:   Fri Apr 30 15:37:38 2010 +0200
+#
+#    busybox: add patch for installing run-parts to /usr/bin/ instead of /bin
+#    
+#    * otherwise debianutils install will fail with
+#      update-alternatives: Error: cannot register alternative run-parts to /usr/bin/run-parts since it is 
+#    
+#    Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+#
+# Poky doesn't have debianutils, but let's keep it for safety
+# above comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
+
 diff -uNr busybox-1.15.3.orig//include/applets.h busybox-1.15.3/include/applets.h
 --- busybox-1.15.3.orig//include/applets.h	2009-12-12 22:13:28.000000000 +0100
 +++ busybox-1.15.3/include/applets.h	2010-04-30 15:35:40.000000000 +0200
