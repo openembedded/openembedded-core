@@ -7,9 +7,13 @@ SECTION = "console/utils"
 # (GPLv2+ (<< 418), GPLv3+ (>= 418)) | less
 # less is a 2-clause BSD-like permissive license
 LICENSE = "GPLv3+ | less"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
+                    file://LICENSE;md5=fd5ccf3de28f72a0254fa8768ec8180c"
 DEPENDS = "ncurses"
+PR = "r0"
 
-SRC_URI = "${GNU_MIRROR}/less/less-${PV}.tar.gz"
+SRC_URI = "http://www.greenwoodsoftware.com/${PN}/${PN}-${PV}.tar.gz"
+
 
 inherit autotools update-alternatives
 
