@@ -1,5 +1,0 @@
-
-/* This defines the location of the NFS state files
- * Warning: these must match definitions in config.mk!
- */
-#define NFS_STATEDIR            "/var/lib/nfs"
