@@ -3,13 +3,16 @@ HOMEPAGE = "http://pcmanfm.sourceforge.net/"
 BUGTRACKER = ""
 
 LICENSE = "GPLv2 & GPLv2+ & LGPLv2.1+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
+                    file://src/pcmanfm.h;endline=22;md5=0fa9129ee918f493e573154f6ec43fb7 \
+                    file://src/find-files.c;endline=26;md5=9a92e8f329c97de94e90976a37dde5a5"
 
 SECTION = "x11"
 PRIORITY = "optional"
 DEPENDS = "gtk+ startup-notification"
 DEPENDS_append_poky = " libowl"
 
-PR = "r5"
+PR = "r0"
 
 COMPATIBLE_HOST = '(x86_64|i.86.*|arm.*|mips.*|powerpc.*)-(linux|freebsd.*)'
 
