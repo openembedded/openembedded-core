@@ -15,6 +15,13 @@ SRC_URI = "\
     file://qemugl-allow-glxcontext-release.patch \
     file://linker-flags.patch \
     file://init-info.patch \
-    file://qemu-vmware-vga-depth.patch"
+    file://qemu-vmware-vga-depth.patch \
+    file://qemu-ppc-hack.patch \
+    file://powerpc_rom.bin"
+
+do_install_append () {
+        install -d ${D}${datadir}/qemu
+        install -m 0755 ${WORKDIR}/powerpc_rom.bin ${D}${datadir}/qemu
+}
 
 S = "${WORKDIR}/qemu-${PV}"
