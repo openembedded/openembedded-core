@@ -1,5 +1,8 @@
 inherit rootfs_${IMAGE_PKGTYPE}
 
+IMAGETEST ?= "dummy"
+inherit imagetest-${IMAGETEST}
+
 LICENSE = "MIT"
 PACKAGES = ""
 RDEPENDS += "${IMAGE_INSTALL}"

@@ -153,3 +153,11 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # Poky can try and fetch packaged-staging packages from a http, https or ftp
 # mirror. Set this variable to the root of a pstage directory on a server.
 #PSTAGE_MIRROR ?= "http://someserver.tld/share/pstage"
+
+# Set IMAGETEST to qemu if you want to build testcases and start 
+# testing in qemu after do_rootfs.
+#IMAGETEST="qemu"
+
+# By default testing will run the sanitytest suite. If you want to run other tests
+# (e.g. bat), list them here
+#TEST_SCEN="sanitytest bat"

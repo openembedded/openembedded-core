@@ -1,0 +1,202 @@
+#!/bin/bash
+# Common function for test
+# Expect should be installed for SSH Testing
+# To execute `runqemu`, NOPASSWD needs to be set in /etc/sudoers for user
+# For example, for user "builder", /etc/sudoers can be like following:
+# #########
+# #Members of the admin group may gain root privileges
+# %builder ALL=(ALL) NOPASSWD: NOPASSWD: ALL
+# #########
+#
+# Author: Jiajun Xu <jiajun.xu@intel.com>
+#
+# This file is licensed under the GNU General Public License,
+# Version 2.
+#
+
+TYPE="ext3"
+
+# common function for information print
+Test_Error()
+{
+	echo -e "\tTest_Error: $*"
+}
+
+Test_Info()
+{
+	echo -e "\tTest_Info: $*"
+}
+
+# function to run command in $ip_addr via ssh
+Test_SSH()
+{
+	local ip_addr=$1
+	shift
+	local command=$@
+	local tmpfile=`mktemp`
+	local timeout=60
+	local ret=0
+	local exp_cmd=`cat << EOF
+eval spawn ssh -o UserKnownHostsFile=$tmpfile root@$ip_addr "$command"
+set timeout $time_out
+expect {
+    "*assword:" { send "\r"; exp_continue}
+    "*(yes/no)?" { send "yes\r"; exp_continue }
+    eof          { exit [ lindex [wait] 3 ] }
+}
+EOF`
+	expect -c "$exp_cmd"
+	ret=$?
+	rm -rf $tmpfile
+	return $ret
+}
+
+# function to check if ssh is up in $ip_addr
+Test_SSH_UP()
+{
+	local ip_addr=$1
+	local timeout=$2
+	local interval=0
+
+	while [ ${interval} -lt ${timeout} ]
+	do
+		Test_SSH ${ip_addr} "hostname"
+		if [ $? -ne 0 ]; then
+			interval=`expr $interval + 10`
+			sleep 10
+		else
+			Test_Info "We can ssh on ${ip_addr} now"
+			return 0
+		fi
+
+	done
+
+	Test_Info "We can not ssh on ${ip_addr} in ${timeout}"
+	return 1
+}
+
+# function to record test result in $TEST_RESULT/testresult.log
+Test_Print_Result()
+{
+	local PASS=0
+	local FAIL=0
+	local NORESULT=0
+	if [ $2 -eq 0 ]; then
+		PASS=1
+	elif [ $2 -eq 1 ]; then
+		FAIL=1
+	else
+		NORESULT=1
+	fi
+
+	echo -e "\t$1\t\t$PASS\t$FAIL\t$NORESULT" >> $TEST_RESULT/testresult.log
+}
+
+# function to kill qemu
+Test_Kill_Qemu()
+{
+	sudo pkill -9 qemu
+	return $?
+}
+
+# function to check if there is any qemu process
+Test_Check_Qemu_UP()
+{
+	local count=`ps -ef | grep -c qemu`
+	if [ ${count} -lt 2 ]; then
+		Test_Info "There is no Qemu process"
+		return 1
+	else
+		Test_Info "There is at least Qemu process running"
+		return 0
+	fi
+}
+
+# function to check if network is up
+Test_Check_IP_UP()
+{
+	ping -c1 $1
+	if [ $? -ne 0 ]; then
+		Test_Info "IP $1 is not up"
+		return 1
+	else
+		Test_Info "IP $1 is up"
+		return 0
+	fi
+}
+
+# function to check if qemu and its network
+Test_Create_Qemu()
+{
+	local ret=1
+	local up_time=0
+	local ip_addr=$1
+	local timeout=$2
+	local kernel=""
+	local rootfs=""
+
+	which poky-qemu
+	if [ $? -eq 0 ]; then
+		RUNQEMU=`which poky-qemu`
+	else
+		Test_Error "Can not find poky-qemu in \$PATH, return fail"
+		exit 1
+	fi
+	
+	if [ "$QEMUARCH" = "qemux86" ]; then
+		KERNEL=${DEPLOY_DIR}/images/bzImage-${QEMUARCH}.bin
+	elif [ "$QEMUARCH" = "qemuarm" -o "$QEMUARCH" = "spitz" -o "$QEMUARCH" = "borzoi" -o "$QEMUARCH" = "akita" -o "$QEMUARCH" = "nokia800" ]; then
+		KERNEL=${DEPLOY_DIR}/images/zImage-${QEMUARCH}.bin
+	fi
+	
+	ROOTFS_IMAGE=`readlink -f ${DEPLOY_DIR}/images/${QEMUTARGET}-${QEMUARCH}.ext3`
+	TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-test.ext3"
+	
+	CP=`which cp`
+	if [ -e "$TEST_ROOTFS_IMAGE" ]; then
+		rm -rf $TEST_ROOTFS_IMAGE
+	fi
+	$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
+
+	export MACHINE=$QEMUARCH
+	# Create Qemu in localhost VNC Port 1
+
+    	xterm -display ${DISPLAY} -e "${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}" &
+
+	sleep 5
+	
+	while [ ${up_time} -lt ${timeout} ]
+	do
+		Test_Check_Qemu_UP
+		if [ $? -ne 0 ]; then
+			Test_Info "Wait for qemu up..."
+			up_time=`expr $up_time + 5`
+			sleep 5
+		else
+			Test_Info "Begin to check if qemu network is up"
+			break
+		fi
+	done
+
+	while [ ${up_time} -lt ${timeout} ]
+	do
+		Test_Check_IP_UP ${ip_addr}
+		if [ $? -eq 0 ]; then
+			Test_Info "Qemu Network is up, ping with ${ip_addr} is OK"
+			ret=0
+			break
+		else
+			Test_Info "Wait for Qemu Network up"
+			up_time=`expr $up_time + 5`
+			sleep 5
+		fi
+	done
+
+	if [ $ret -eq 0 ]; then
+		Test_Info "Qemu and its network is up"
+		return $ret
+	else
+		Test_Info "Qemu or its network is not up in ${timeout}"
+		return $ret
+	fi
+}
