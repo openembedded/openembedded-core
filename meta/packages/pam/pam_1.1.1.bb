@@ -3,14 +3,14 @@ HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
 BUGTRACKER = "http://sourceforge.net/projects/pam/support"
 # PAM allows dual licensed under GPL and BSD
 LICENSE = "GPLv2+ | BSD"
-PR = "r8"
+PR = "r0"
 
-SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-1.0.2.tar.bz2 \
+SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-${PV}.tar.bz2 \
            file://disable_crossbinary.patch"
 
 EXTRA_OECONF = "--with-db-uniquename=_pam \
-                 --includedir=${includedir}/security \
-		 --libdir=/lib"
+                --includedir=${includedir}/security \
+                --libdir=/lib"
 DEPENDS = "bison flex"
 CFLAGS_append = " -fPIC "
 
