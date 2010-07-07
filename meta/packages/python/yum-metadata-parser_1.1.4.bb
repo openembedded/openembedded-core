@@ -5,6 +5,8 @@ PRIORITY = "optional"
 DEPENDS = "python sqlite3 glib-2.0 libxml2"
 LICENSE = "GPL"
 
+PR = "r1"
+
 SRC_URI = "http://linux.duke.edu/projects/yum/download/yum-metadata-parser/yum-metadata-parser-${PV}.tar.gz"
 S = "${WORKDIR}/yum-metadata-parser-${PV}"
 
