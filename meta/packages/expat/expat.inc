@@ -3,9 +3,7 @@ HOMEPAGE = "http://expat.sourceforge.net/"
 SECTION = "libs"
 LICENSE = "MIT"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.gz \
-	  "
-export LTCC = "${CC}"
+SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.gz"
 
 inherit autotools
 
