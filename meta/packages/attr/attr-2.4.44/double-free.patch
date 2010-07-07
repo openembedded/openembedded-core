@@ -1,0 +1,18 @@
+commit 5b28eb3b0e0430ce6af28edc9100ca23299d1218
+Author: Kamil Dudka <kdudka@redhat.com>
+Date:   Thu Jun 3 15:29:54 2010 +0200
+
+    attr_parse_attr_conf: eliminate a double free
+
+diff --git a/libattr/attr_copy_action.c b/libattr/attr_copy_action.c
+index 030bbf5..2697328 100644
+--- a/libattr/attr_copy_action.c
++++ b/libattr/attr_copy_action.c
+@@ -81,6 +81,7 @@ repeat:
+ 		fclose(file);
+ 		file = NULL;
+ 		free(text);
++		text = NULL;
+ 		size_guess *= 2;
+ 		goto repeat;
+ 	}

@@ -1,0 +1,50 @@
+commit 972b42a67393f762936e74d3ce929914181f5f28
+Author: Brandon Philips <brandon@ifup.org>
+Date:   Thu Dec 17 17:15:57 2009 -0800
+
+    libattr: fix memory leak in attr_copy_action()
+    
+    stanse found that attr_copy_action returns before freeing the memory
+    allocated for text.
+    
+    Move fopen() above the malloc so this is not a problem.
+    
+    Fixes this bug:
+     https://bugzilla.novell.com/show_bug.cgi?id=564735
+    
+    Signed-off-by: Brandon Philips <bphilips@suse.de>
+
+diff --git a/libattr/attr_copy_action.c b/libattr/attr_copy_action.c
+index 0d7aca5..dc94224 100644
+--- a/libattr/attr_copy_action.c
++++ b/libattr/attr_copy_action.c
+@@ -53,7 +53,7 @@ free_attr_actions(void)
+ static int
+ attr_parse_attr_conf(struct error_context *ctx)
+ {
+-	char *text, *t;
++	char *text = NULL, *t;
+ 	size_t size_guess = 4096, len;
+ 	FILE *file;
+ 	char *pattern = NULL;
+@@ -64,15 +64,16 @@ attr_parse_attr_conf(struct error_context *ctx)
+ 		return 0;
+ 
+ repeat:
+-	text = malloc(size_guess + 1);
+-	if (!text)
+-		goto fail;
+-
+ 	if ((file = fopen(ATTR_CONF, "r")) == NULL) {
+ 		if (errno == ENOENT)
+ 			return 0;
+ 		goto fail;
+ 	}
++
++	text = malloc(size_guess + 1);
++	if (!text)
++		goto fail;
++
+ 	len = fread(text, 1, size_guess, file);
+ 	if (ferror(file))
+ 		goto fail;

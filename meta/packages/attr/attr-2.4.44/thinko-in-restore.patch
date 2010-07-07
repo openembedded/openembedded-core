@@ -1,0 +1,19 @@
+commit e8d568c696692eed5c92d5a35498e1c26e13d6b3
+Author: Kamil Dudka <kdudka@redhat.com>
+Date:   Thu Jun 3 15:30:19 2010 +0200
+
+    setfattr.c: fix thinko in restore()
+
+diff --git a/setfattr/setfattr.c b/setfattr/setfattr.c
+index 491c25a..0a14cfa 100644
+--- a/setfattr/setfattr.c
++++ b/setfattr/setfattr.c
+@@ -120,7 +120,7 @@ int restore(const char *filename)
+ 			break;
+ 		line++;
+ 		if (strncmp(l, "# file: ", 8) != 0) {
+-			if (filename) {
++			if (file != stdin) {
+ 				fprintf(stderr, _("%s: %s: No filename found "
+ 				                  "in line %d, aborting\n"),
+ 					progname, filename, backup_line);

@@ -1,0 +1,18 @@
+commit 42f50a130d144ffbc01738f15da9d4f1b57505bd
+Author: Kamil Dudka <kdudka@redhat.com>
+Date:   Thu Jun 3 15:23:04 2010 +0200
+
+    attr_parse_attr_conf: eliminate a memory leak
+
+diff --git a/libattr/attr_copy_action.c b/libattr/attr_copy_action.c
+index dc94224..030bbf5 100644
+--- a/libattr/attr_copy_action.c
++++ b/libattr/attr_copy_action.c
+@@ -129,6 +129,7 @@ repeat:
+ 
+ 		t += strcspn(t, "\n");
+ 	}
++	free(text);
+ 	return 0;
+ 
+ parse_error:

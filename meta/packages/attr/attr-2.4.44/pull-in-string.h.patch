@@ -1,0 +1,21 @@
+commit 235cdd2af498d288f1af1142e7a23fbd16dff907
+Author: Mike Frysinger <vapier@gentoo.org>
+Date:   Fri Jan 8 21:53:19 2010 -0500
+
+    quote: pull in string.h for strchr prototype
+    
+    Signed-off-by: Mike Frysinger <vapier@gentoo.org>
+    Signed-off-by: Brandon Philips <brandon@ifup.org>
+
+diff --git a/libmisc/quote.c b/libmisc/quote.c
+index f98c887..bf8f9eb 100644
+--- a/libmisc/quote.c
++++ b/libmisc/quote.c
+@@ -20,6 +20,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <ctype.h>
++#include <string.h>
+ #include "misc.h"
+ 
+ const char *quote(const char *str, const char *quote_chars)
