@@ -2,14 +2,14 @@ inherit package
 
 #IMAGE_PKGTYPE ?= "rpm"
 
-RPMBUILD="rpmbuild --short-circuit ${RPMOPTS}"
 IMAGE_PKGTYPE ?= "rpm"
 
 RPMBUILDPATH="${WORKDIR}/rpm"
 
-RPMOPTS="--rcfile=${WORKDIR}/rpmrc"
-RPMOPTS="--rcfile=${WORKDIR}/rpmrc --target ${TARGET_SYS}"
-RPM="rpm ${RPMOPTS}"
+RPMOPTS=""
+RPMBUILDOPTS="--target ${TARGET_SYS} --define '_topdir ${RPMBUILDPATH}' --buildroot ${ROOT}"
+RPM="${BUILD_ARCH}-${BUILD_OS}-rpm ${RPMOPTS}"
+RPMBUILD="${BUILD_ARCH}-${BUILD_OS}-rpmbuild --short-circuit ${RPMBUILDOPTS}"
 
 python write_specfile() {
 	version = bb.data.getVar('PV', d, 1)
@@ -21,7 +21,6 @@ python write_specfile() {
 		"RPMPV": "Version",
 		"PR": "Release",
 		"DESCRIPTION": "%description",
-		"ROOT": "BuildRoot",
 		"LICENSE": "License",
 		"SECTION": "Group",
 		"pkg_postinst": "%post",
@@ -91,7 +90,9 @@ python write_specfile() {
 		bb.data.setVar(varname, " ".join(newdeps), d)
 
 	fix_dep_versions('RDEPENDS')
-	fix_dep_versions('RRECOMMENDS')
+
+# Recommends is not supported by rpm at this time
+#	fix_dep_versions('RRECOMMENDS')
 
 	bb.build.exec_func("mapping_rename_hook", d)
 
@@ -105,7 +106,7 @@ python write_specfile() {
 				fd.write("%s: %s\n" % (outstring, dep))
 
 	write_dep_field('RDEPENDS', 'Requires')
-	write_dep_field('RRECOMMENDS', 'Recommends')
+#	write_dep_field('RRECOMMENDS', 'Recommends')
 
 	fd.write("Summary\t: .\n")
 
@@ -139,14 +140,10 @@ python write_specfile() {
 	bb.movefile(rpm, outrpm)
 }
 
-
 rpm_prep() {
-	if [ ! -e ${WORKDIR}/rpmrc ]; then
-		mkdir -p ${RPMBUILDPATH}/{SPECS,RPMS/{i386,i586,i686,noarch,ppc,mips,mipsel,arm},SRPMS,SOURCES,BUILD}
-		echo 'macrofiles:${STAGING_DIR_NATIVE}/usr/lib/rpm/macros:${WORKDIR}/macros' > ${WORKDIR}/rpmrc
-		echo '%_topdir ${RPMBUILDPATH}' > ${WORKDIR}/macros
-		echo '%_repackage_dir ${WORKDIR}' >> ${WORKDIR}/macros
-	fi
+       if [ ! -e ${WORKDIR}/rpmrc ]; then
+               mkdir -p ${RPMBUILDPATH}/{SPECS,RPMS,SRPMS,SOURCES,BUILD}
+       fi
 }
 
 python do_package_rpm () {
