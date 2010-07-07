@@ -185,9 +185,11 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-rsync = "7 months"
 RECIPE_LATEST_RELEASE_DATE_pn-rsync = "12/2009"
 RECIPE_COMMENTS_pn-rsync = ""
 
-RECIPE_STATUS_pn-nfs-utils = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-nfs-utils = "not done"
+RECIPE_STATUS_pn-nfs-utils = "yellow"   # no auto stage
+DEPENDENCY_CHECK_pn-nfs-utils = "done"  # still missing libwrap, libgss, libtirpc
 RECIPE_LATEST_VERSION_pn-nfs-utils = "1.2.2"
+RECIPE_PATCH_pn-nfs-utils+nfs-utils-1.0.6-uclibc.patch = "uclibc missing some functions"
+RECIPE_PATCH_pn-nfs-utils+nfsserver = "init script"
 RECIPE_INTEL_SECTION_pn-nfs-utils = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-nfs-utils = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-nfs-utils = "02/2010"
