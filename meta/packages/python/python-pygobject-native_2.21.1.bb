@@ -1,7 +1,7 @@
 require python-pygobject_${PV}.bb
 
 DEPENDS = "python-native glib-2.0-native"
-PR = "r1"
+PR = "r0"
 
 PARALLEL_MAKE = ""
 
@@ -9,10 +9,7 @@ inherit native
 
 NATIVE_INSTALL_WORKS = "1"
 
-SRC_URI = "\
-  ftp://ftp.gnome.org/pub/GNOME/sources/pygobject/${MAJ_VER}/pygobject-${PV}.tar.bz2 \
-#  file://python-path.patch;patch=1 \
-"
+SRC_URI = "ftp://ftp.gnome.org/pub/GNOME/sources/pygobject/${MAJ_VER}/pygobject-${PV}.tar.bz2"
 
 do_install_append() {
 	install -d ${D}${bindir}
