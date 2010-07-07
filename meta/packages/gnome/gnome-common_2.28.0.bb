@@ -3,9 +3,10 @@ HOMEPAGE = "http://www.gnome.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 
 LICENSE = "GPLv3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SECTION = "x11/gnome"
-PR = "r1"
+PR = "r0"
 inherit gnome
 
 # all isn't appropriate since STAGING_DATADIR is target specific
