@@ -5,13 +5,18 @@ LICENSE = "GPLv2"
 # fakeroot needs getopt which is provided by the util-linux package
 RDEPENDS = "util-linux"
 RDEPENDS_virtclass-native = "util-linux-native"
-PR = "r3"
+PR = "r0"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.tar.gz \
-           file://configure-libtool.patch; \
-           file://absolutepaths.patch;"
+SRC_URI = "${DEBIAN_MIRROR}/main/f/fakeroot/fakeroot_${PV}.orig.tar.bz2 \
+           file://absolutepaths.patch"
 	    
 inherit autotools
+
+do_configure_prepend() {
+	# fakeroot's own bootstrap includes other autoreconf stuff we don't need here
+	# so manually create the aux directory
+	mkdir -p ${S}/build-aux
+}
 
 do_install_append() {
 	install -d ${D}${STAGING_INCDIR}/fakeroot/
