@@ -112,3 +112,24 @@ RECIPE_NO_OF_PATCHES_pn-pango="1"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pango="1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-pango="2010/03/10"
 RECIPE_INTEL_SECTION_pn-pango="graphic core"
+
+RECIPE_STATUS_pn-mesa-dri="green" # no update needed
+RECIPE_LATEST_VERSION_pn-mesa-dri="7.8.2"
+RECIPE_NO_OF_PATCHES_pn-mesa-dri="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-mesa-dri="2 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-mesa-dri="2010/06/17"
+RECIPE_INTEL_SECTION_pn-mesa-dri="graphic core"
+
+RECIPE_STATUS_pn-mesa-xlib="green" # no update needed
+RECIPE_LATEST_VERSION_pn-mesa-xlib="7.8.2"
+RECIPE_NO_OF_PATCHES_pn-mesa-xlib="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-mesa-xlib="2 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-mesa-xlib="2010/06/17"
+RECIPE_INTEL_SECTION_pn-mesa-xlib="graphic core"
+
+RECIPE_STATUS_pn-xserver-xf86-dri-lite="green" # no update needed
+RECIPE_LATEST_VERSION_pn-xserver-xf86-dri-lite="1.8.99.904"
+RECIPE_NO_OF_PATCHES_pn-xserver-xf86-dri-lite="2"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xserver-xf86-dri-lite="2 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-xserver-xf86-dri-lite="2010/07/01"
+RECIPE_INTEL_SECTION_pn-xserver-xf86-dri-lite="graphic core"
