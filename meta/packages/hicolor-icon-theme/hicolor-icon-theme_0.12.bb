@@ -3,11 +3,12 @@ HOMEPAGE = "http://icon-theme.freedesktop.org/wiki/HicolorTheme"
 BUGTRACKER = "https://bugs.freedesktop.org/"
 
 LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f08a446809913fc9b3c718f0eaea0426"
 
 SECTION = "unknown"
 inherit gnome
 
-PR = "r3"
+PR = "r0"
 
 SRC_URI = "http://icon-theme.freedesktop.org/releases/${P}.tar.gz \
         file://index.theme"
