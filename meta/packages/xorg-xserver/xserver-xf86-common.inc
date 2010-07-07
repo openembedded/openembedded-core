@@ -30,7 +30,7 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
 		    ${libdir}/xorg/modules/*/*/.debug \
 		    "
 
-SRC_URI += "file://macro_tweak.patch;patch=1"
+SRC_URI += "file://macro_tweak.patch"
 
 do_install_append () {
 	install -d ${D}/${libdir}/X11/fonts/
