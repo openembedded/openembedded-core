@@ -1,7 +1,7 @@
-Index: gtk+-2.18.5/docs/faq/Makefile.am
+Index: gtk+-2.21.2/docs/faq/Makefile.am
 ===================================================================
---- gtk+-2.18.5.orig/docs/faq/Makefile.am	2009-12-10 17:38:18.000000000 +0000
-+++ gtk+-2.18.5/docs/faq/Makefile.am	2009-12-10 17:39:27.000000000 +0000
+--- gtk+-2.21.2.orig/docs/faq/Makefile.am	2010-04-09 10:29:53.000000000 +0800
++++ gtk+-2.21.2/docs/faq/Makefile.am	2010-06-22 17:39:24.000000000 +0800
 @@ -3,34 +3,36 @@
  EXTRA_DIST += 			\
  	gtk-faq.sgml
@@ -50,10 +50,10 @@ Index: gtk+-2.18.5/docs/faq/Makefile.am
  	echo "***"
  	echo "*** Warning: FAQ not built"
  	echo "*** DISTRIBUTION IS INCOMPLETE"
-Index: gtk+-2.18.5/gtk-doc.make
+Index: gtk+-2.21.2/gtk-doc.make
 ===================================================================
---- gtk+-2.18.5.orig/gtk-doc.make	2009-12-10 17:47:54.000000000 +0000
-+++ gtk+-2.18.5/gtk-doc.make	2009-12-10 17:48:01.000000000 +0000
+--- gtk+-2.21.2.orig/gtk-doc.make	2010-05-28 00:01:48.000000000 +0800
++++ gtk+-2.21.2/gtk-doc.make	2010-06-22 17:39:24.000000000 +0800
 @@ -23,7 +23,7 @@
  
  TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
@@ -63,11 +63,11 @@ Index: gtk+-2.18.5/gtk-doc.make
  	$(content_files)		\
  	$(HTML_IMAGES)			\
  	$(DOC_MAIN_SGML_FILE)		\
-Index: gtk+-2.18.5/gtk/tests/Makefile.am
+Index: gtk+-2.21.2/gtk/tests/Makefile.am
 ===================================================================
---- gtk+-2.18.5.orig/gtk/tests/Makefile.am	2009-12-10 17:43:16.000000000 +0000
-+++ gtk+-2.18.5/gtk/tests/Makefile.am	2009-12-10 18:11:40.000000000 +0000
-@@ -57,13 +57,13 @@
+--- gtk+-2.21.2.orig/gtk/tests/Makefile.am	2010-06-10 20:53:46.000000000 +0800
++++ gtk+-2.21.2/gtk/tests/Makefile.am	2010-06-22 17:39:24.000000000 +0800
+@@ -58,13 +58,13 @@
  # this doesn't work in make distcheck, since running
  # on a naked X server creates slightly different event
  # sequences than running on a normal desktop
@@ -83,16 +83,3 @@ Index: gtk+-2.18.5/gtk/tests/Makefile.am
  filechooser_SOURCES		 = filechooser.c pixbuf-init.c
  filechooser_LDADD		 = $(progs_ldadd)
  
-Index: gtk+-2.18.5/tests/Makefile.am
-===================================================================
---- gtk+-2.18.5.orig/tests/Makefile.am	2009-12-10 17:41:49.000000000 +0000
-+++ gtk+-2.18.5/tests/Makefile.am	2009-12-10 17:45:33.000000000 +0000
-@@ -339,7 +339,7 @@
- 	gtkoffscreenbox.h	\
- 	testoffscreen.c
- 
--testwindow_SOURCES = 	\
-+testwindows_SOURCES = 	\
- 	testwindows.c
- 
- EXTRA_DIST += 			\

@@ -1,11 +1,8 @@
 Index: gtk/gtkcellrenderer.c
 ===================================================================
-RCS file: /cvs/gnome/gtk+/gtk/gtkcellrenderer.c,v
-retrieving revision 1.55
-diff -u -r1.55 gtkcellrenderer.c
---- gtk/gtkcellrenderer.c	14 May 2006 04:25:28 -0000	1.55
-+++ gtk/gtkcellrenderer.c	30 Jun 2006 10:57:43 -0000
-@@ -551,6 +551,7 @@
+--- gtk/gtkcellrenderer.c.orig	2010-06-22 17:21:22.000000000 +0800
++++ gtk/gtkcellrenderer.c	2010-06-22 17:21:25.000000000 +0800
+@@ -566,6 +566,7 @@
  
    if (cell->cell_background_set && !selected)
      {
@@ -13,7 +10,7 @@ diff -u -r1.55 gtkcellrenderer.c
        cairo_t *cr = gdk_cairo_create (window);
  
        gdk_cairo_rectangle (cr, background_area);
-@@ -558,6 +559,16 @@
+@@ -573,6 +574,16 @@
        cairo_fill (cr);
        
        cairo_destroy (cr);

@@ -1,7 +1,7 @@
 Index: gtk/gtkcellrenderertoggle.c
 ===================================================================
---- gtk/gtkcellrenderertoggle.c	(revision 18523)
-+++ gtk/gtkcellrenderertoggle.c	(working copy)
+--- gtk/gtkcellrenderertoggle.c.orig	2010-06-22 18:11:33.000000000 +0800
++++ gtk/gtkcellrenderertoggle.c	2010-06-22 18:11:43.000000000 +0800
 @@ -71,6 +71,8 @@
    PROP_INDICATOR_SIZE
  };

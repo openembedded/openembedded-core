@@ -13,11 +13,11 @@ since the internal value is returned without being duplicated.
  gtk/gtkrecentmanager.c |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/gtk/gtkrecentmanager.c b/gtk/gtkrecentmanager.c
-index 317b3d5..d062572 100644
---- a/gtk/gtkrecentmanager.c
-+++ b/gtk/gtkrecentmanager.c
-@@ -1764,7 +1764,7 @@ gtk_recent_info_get_application_info (GtkRecentInfo  *info,
+Index: gtk+-2.21.2/gtk/gtkrecentmanager.c
+===================================================================
+--- gtk+-2.21.2.orig/gtk/gtkrecentmanager.c	2010-06-22 18:11:30.000000000 +0800
++++ gtk+-2.21.2/gtk/gtkrecentmanager.c	2010-06-22 18:11:53.000000000 +0800
+@@ -1766,7 +1766,7 @@
      }
    
    if (app_exec)
@@ -26,6 +26,3 @@ index 317b3d5..d062572 100644
    
    if (count)
      *count = ai->count;
--- 
-1.6.3.1
-

@@ -1,6 +1,8 @@
---- gtk+-2.4.4/gdk/x11/gdkevents-x11.c.old	Sun Aug 22 17:14:00 2004
-+++ gtk+-2.4.4/gdk/x11/gdkevents-x11.c	Sun Aug 22 17:14:00 2004
-@@ -2827,10 +2827,9 @@
+Index: gtk+-2.21.2/gdk/x11/gdkevents-x11.c
+===================================================================
+--- gtk+-2.21.2.orig/gdk/x11/gdkevents-x11.c	2010-06-22 17:28:04.000000000 +0800
++++ gtk+-2.21.2/gdk/x11/gdkevents-x11.c	2010-06-22 17:28:06.000000000 +0800
+@@ -3062,10 +3062,9 @@
  {
    GdkScreenX11 *screen = data;
    
@@ -13,4 +15,4 @@
 +  return GDK_FILTER_CONTINUE;
  }
  
- static void 
+ static Bool

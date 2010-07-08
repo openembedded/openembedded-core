@@ -1,8 +1,8 @@
-Index: gtk+-2.14.2/configure.in
+Index: gtk+-2.21.2/configure.in
 ===================================================================
---- gtk+-2.14.2.orig/configure.in	2008-09-23 16:32:42.000000000 +0100
-+++ gtk+-2.14.2/configure.in	2008-09-23 16:37:13.000000000 +0100
-@@ -1025,48 +1025,50 @@
+--- gtk+-2.21.2.orig/configure.in	2010-06-22 18:14:40.000000000 +0800
++++ gtk+-2.21.2/configure.in	2010-06-22 18:14:58.000000000 +0800
+@@ -1072,48 +1072,50 @@
  # check one of the variables here
  AM_CONDITIONAL(INCLUDE_GDIPLUS, [test x"$INCLUDE_gdip_ico" = xyes])
  
