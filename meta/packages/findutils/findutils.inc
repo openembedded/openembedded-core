@@ -5,9 +5,9 @@ SECTION = "console/utils"
 
 # GPLv2+ (<< 4.2.32), GPLv3+ (>= 4.2.32)
 LICENSE = "GPLv3+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949"
 
-SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz \
-           file://mkdir.patch;patch=1"
+SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz"
 
 inherit autotools gettext
 
