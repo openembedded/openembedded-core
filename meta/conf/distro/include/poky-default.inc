@@ -14,7 +14,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs = "gcc-runtime"
 
 GCCVERSION ?= "4.3.3"
 BINUVERSION ?= "2.20.1"
-GLIBCVERSION ?= "2.9"
+GLIBCVERSION ?= "2.10.1"
 LINUXLIBCVERSION ?= "2.6.34"
 
 # Temporary preferred version overrides for PPC
