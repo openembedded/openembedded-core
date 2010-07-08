@@ -2,19 +2,17 @@ DESCRIPTION = "Library for rendering SVG files"
 HOMEPAGE = "http://ftp.gnome.org/pub/GNOME/sources/librsvg/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 
+LICENSE = "LGPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+                    file://rsvg.h;beginline=3;endline=24;md5=20b4113c4909bbf0d67e006778302bc6"
+
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
-LICENSE = "LGPLv2+"
-PR = "r3"
+PR = "r0"
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
 inherit autotools pkgconfig gnome
-
-SRC_URI = "svn://svn.gnome.org/svn/${PN};module=trunk"
-PV = "2.22.3+svnr${SRCREV}"
-
-S = "${WORKDIR}/trunk"
 
 do_configure_prepend () {
 	echo "CLEANFILES=" > gtk-doc.make
