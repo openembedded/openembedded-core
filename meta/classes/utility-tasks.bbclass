@@ -276,7 +276,6 @@ python do_checkpkg() {
 
 	"""generate package information from .bb file"""
 	pname = bb.data.getVar('PN', d, 1)
-	pcurver = bb.data.getVar('PV', d, 1)
 	pdesc = bb.data.getVar('DESCRIPTION', d, 1)
 	pgrp = bb.data.getVar('SECTION', d, 1)
 
@@ -295,6 +294,11 @@ python do_checkpkg() {
 	pstatus = "ErrUnknown"
 
 	(type, host, path, user, pswd, parm) = bb.decodeurl(uri)
+	if type in ['http', 'https', 'ftp']:
+		pcurver = bb.data.getVar('PV', d, 1)
+	else:
+		pcurver = bb.data.getVar("SRCREV", d, 1)
+
 	if type in ['http', 'https', 'ftp']:
 		newver = pcurver
 		altpath = path
@@ -342,12 +346,52 @@ python do_checkpkg() {
 		if re.match("Err", newver):
 			pstatus = newver + ":" + altpath + ":" + dirver + ":" + curname
 	elif type == 'git':
-		"""N.B. Now hardcode UPDATE for git/svn/cvs."""
-		pupver = "master"
-		pstatus = "UPDATE"
+		if user:
+			gituser = user + '@'
+		else:
+			gituser = ""
+
+		if 'protocol' in parm:
+			gitproto = parm['protocol']
+		else:
+			gitproto = "rsync"
+
+		gitcmd = "git ls-remote %s://%s%s%s HEAD 2>&1" % (gitproto, gituser, host, path)
+		print gitcmd
+		ver = os.popen(gitcmd).read()
+		if ver and re.search("HEAD", ver):
+			pupver = ver.split("\t")[0]
+			if pcurver == pupver:
+				pstatus = "MATCH"
+			else:
+				pstatus = "UPDATE"
+		else:
+			pstatus = "ErrGitAccess"
 	elif type == 'svn':
-		pupver = "HEAD"
-		pstatus = "UPDATE"
+		options = []
+		if user:
+			options.append("--username %s" % user)
+		if pswd:
+			options.append("--password %s" % pswd)
+		svnproto = 'svn'
+		if 'proto' in parm:
+			svnproto = parm['proto']
+		if 'rev' in parm:
+			pcurver = parm['rev']
+
+		svncmd = "svn info %s %s://%s%s/%s/ 2>&1" % (" ".join(options), svnproto, host, path, parm["module"])
+		print svncmd
+		svninfo = os.popen(svncmd).read()
+		for line in svninfo.split("\n"):
+			if re.search("^Last Changed Rev:", line):
+				pupver = line.split(" ")[-1]
+				if pcurver == pupver:
+					pstatus = "MATCH"
+				else:
+					pstatus = "UPDATE"
+
+		if re.match("Err", pstatus):
+			pstatus = "ErrSvnAccess"
 	elif type == 'cvs':
 		pupver = "HEAD"
 		pstatus = "UPDATE"
@@ -360,10 +404,22 @@ python do_checkpkg() {
 
 	if re.match("Err", pstatus):
 		pstatus += ":%s%s" % (host, path)
+
+	"""Read from manual distro tracking fields as alternative"""
+	pmver = bb.data.getVar("RECIPE_LATEST_VERSION", d, 1)
+	if not pmver:
+		pmver = "N/A"
+		pmstatus = "ErrNoRecipeData"
+	else:
+		if pmver == pcurver:
+			pmstatus = "MATCH"
+		else:
+			pmstatus = "UPDATE"
+	
 	lf = bb.utils.lockfile(logfile + ".lock")
 	f = open(logfile, "a")
-	f.write("\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
-		  (pname, pgrp, pproto, pcurver, pupver, pstatus, pdesc))
+	f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
+		  (pname, pgrp, pproto, pcurver, pmver, pupver, pmstatus, pstatus, pdesc))
 	f.close()
 	bb.utils.unlockfile(lf)
 }

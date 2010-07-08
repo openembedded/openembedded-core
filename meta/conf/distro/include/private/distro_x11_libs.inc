@@ -426,7 +426,7 @@ RECIPE_COMMENTS_pn-libxau = ""
 
 RECIPE_STATUS_pn-libxcalibrate = "yellow"
 DEPENDENCY_CHECK_pn-libxcalibrate = "not done"
-RECIPE_LATEST_VERSION_pn-libxcalibrate = "0.0+git0+209d83af61ed38a002c8096377deac292b3e396c"
+RECIPE_LATEST_VERSION_pn-libxcalibrate = "209d83af61ed38a002c8096377deac292b3e396c"
 RECIPE_NO_OF_PATCHES_pn-libxcalibrate = "1"
 RECIPE_PATCH_pn-libxcalibrate+fix-xcb = "There is no extra reply data and if we say not to disgard it, xcb throws fatal asserts. RP - 26/11/09"
 RECIPE_INTEL_SECTION_pn-libxcalibrate = "x11/libs"
