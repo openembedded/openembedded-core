@@ -112,6 +112,7 @@ def package_qa_make_fatal_error(error_class, name, path,d):
 
     TODO: Load a whitelist of known errors
     """
+    return False
     return not error_class in [0, 5, 7, 8, 9]
 
 def package_qa_write_error(error_class, name, path, d):
