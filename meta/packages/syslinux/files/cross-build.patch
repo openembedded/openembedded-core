@@ -5,6 +5,11 @@ because of the Makefile changes.
 against 3.86
 
 06/28/2010 - qhe
+
+also AUXDIR stays in $(LIBDIR)/syslinux rather than $(DATADIR)/syslinux
+
+07/08/2010 - qhe
+
 ---
 diff --git a/MCONFIG b/MCONFIG
 index e9c16d3..4d49f33 100644
@@ -18,13 +23,14 @@ index e9c16d3..4d49f33 100644
 -SBINDIR  = /sbin
 -LIBDIR   = /usr/lib
 -DATADIR  = /usr/share
+-AUXDIR   = $(DATADIR)/syslinux
+-MANDIR	 = /usr/man
+-INCDIR   = /usr/include
 +BINDIR   ?= /usr/bin
 +SBINDIR  ?= /sbin
 +LIBDIR   ?= /usr/lib
 +DATADIR  ?= /usr/share
- AUXDIR   = $(DATADIR)/syslinux
--MANDIR	 = /usr/man
--INCDIR   = /usr/include
++AUXDIR   = $(LIBDIR)/syslinux
 +MANDIR	 ?= /usr/man
 +INCDIR   ?= /usr/include
  TFTPBOOT = /tftpboot
