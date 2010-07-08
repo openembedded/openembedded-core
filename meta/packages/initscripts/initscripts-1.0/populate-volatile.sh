@@ -168,7 +168,20 @@ apply_cfgfile() {
 
   }
 
-if test -e /etc/volatile.cache -a "$VOLATILE_ENABLE_CACHE" = "yes" -a "x$1" != "xupdate"
+clearcache=0
+exec 9</proc/cmdline
+while read line <&9
+do
+	case "$line" in
+		*clearcache*)  clearcache=1
+			       ;;
+		*)	       continue
+			       ;;
+	esac
+done
+exec 9>&-
+
+if test -e /etc/volatile.cache -a "$VOLATILE_ENABLE_CACHE" = "yes" -a "x$1" != "xupdate" -a "x$clearcache" = "x0"
 then
 	sh /etc/volatile.cache
 else	

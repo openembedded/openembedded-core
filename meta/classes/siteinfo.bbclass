@@ -76,7 +76,6 @@ def siteinfo_get_files(d):
 
        # Determine which site files to look for
        sites = get_siteinfo_list(d)
-       sites.append("common");
 
        # Check along bbpath for site files and append in reverse order so
        # the application specific sites files are last and system site
