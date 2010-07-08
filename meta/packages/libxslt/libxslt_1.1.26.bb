@@ -3,15 +3,15 @@ HOMEPAGE = "http://xmlsoft.org/XSLT/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0cd9a07afbeb24026c9b03aecfeba458"
 
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "libxml2 (>=2.6.27)"
-PR = "r3"
+PR = "r0"
 
-SRC_URI = "ftp://xmlsoft.org/libxml2/libxslt-${PV}.tar.gz \
-           file://pkgconfig_fix.patch;patch=1 \
-           file://doublefix.patch;patch=1"
+SRC_URI = "ftp://xmlsoft.org/libxslt//libxslt-${PV}.tar.gz \
+           file://pkgconfig_fix.patch;patch=1"
 S = "${WORKDIR}/libxslt-${PV}"
 
 inherit autotools pkgconfig
