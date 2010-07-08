@@ -31,6 +31,9 @@ PACKAGEFUNCS += " do_package_qa "
 #           TARGET_OS  TARGET_ARCH   MACHINE, OSABI, ABIVERSION, Little Endian, 32bit?
 def package_qa_get_machine_dict():
     return {
+            "darwin9" : { 
+                        "arm" :       (40,     0,    0,          True,          True),
+                      },
             "linux" : { 
                         "arm" :       (40,    97,    0,          True,          True),
                         "armeb":      (40,    97,    0,          False,         True),
@@ -58,8 +61,12 @@ def package_qa_get_machine_dict():
                         "i486":       (   3,     0,    0,          True,          True),
                         "i586":       (   3,     0,    0,          True,          True),
                         "i686":       (   3,     0,    0,          True,          True),
+                        "x86_64":     (  62,     0,    0,          True,          False),
+                        "mips":       (   8,     0,    0,          False,         True),
                         "mipsel":     (   8,     0,    0,          True,          True),
                         "avr32":      (6317,     0,    0,          False,         True),
+			"sh4":        (42,	 0,    0,          True,          True),
+
                       },
             "uclinux-uclibc" : {
                         "bfin":       ( 106,     0,    0,          True,         True),
@@ -72,8 +79,15 @@ def package_qa_get_machine_dict():
                         "arm" :       (40,     0,    0,          True,          True),
                         "armeb" :     (40,     0,    0,          False,         True),
                       },
+            "linux-gnuspe" : {
+                        "powerpc":    (20,     0,    0,          False,         True),
+                      },
+            "linux-uclibcspe" : {
+                        "powerpc":    (20,     0,    0,          False,         True),
+                      },
 
        }
+
 
 # Known Error classes
 # 0 - non dev contains .so
@@ -85,6 +99,8 @@ def package_qa_get_machine_dict():
 # 6 - .pc contains reference to /usr/include or workdir
 # 7 - the desktop file is not valid
 # 8 - .la contains reference to the workdir
+# 9 - LDFLAGS ignored
+# 10 - Build paths in binaries
 
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
@@ -113,6 +129,7 @@ def package_qa_write_error(error_class, name, path, d):
         "evil hides inside the .pc",
         "the desktop file is not valid",
         ".la contains reference to the workdir",
+        "LDFLAGS ignored",
         "package contains reference to tmpdir paths",
     ]
 
@@ -141,69 +158,84 @@ def package_qa_handle_error(error_class, error_msg, name, path, d):
 
     return not fatal
 
-def package_qa_check_rpath(file,name,d):
+def package_qa_check_rpath(file,name,d, elf):
     """
     Check for dangerous RPATHs
     """
+    if not elf:
+        return True
+
     sane = True
     scanelf = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True),'scanelf')
-    bad_dir = bb.data.getVar('TMPDIR', d, True) + "/work"
+    bad_dirs = [bb.data.getVar('TMPDIR', d, True) + "/work", bb.data.getVar('STAGING_DIR_TARGET', d, True)]
     bad_dir_test = bb.data.getVar('TMPDIR', d, True)
     if not os.path.exists(scanelf):
         bb.fatal("Can not check RPATH, scanelf (part of pax-utils-native) not found")
 
-    if not bad_dir in bb.data.getVar('WORKDIR', d, True):
+    if not bad_dirs[0] in bb.data.getVar('WORKDIR', d, True):
         bb.fatal("This class assumed that WORKDIR is ${TMPDIR}/work... Not doing any check")
 
     output = os.popen("%s -B -F%%r#F '%s'" % (scanelf,file))
     txt    = output.readline().split()
     for line in txt:
-        if bad_dir in line:
-            error_msg = "package %s contains bad RPATH %s in file %s" % (name, line, file)
-            sane = package_qa_handle_error(1, error_msg, name, file, d)
+        for dir in bad_dirs:
+            if dir in line:
+                error_msg = "package %s contains bad RPATH %s in file %s" % (name, line, file)
+                sane = sane + package_qa_handle_error(1, error_msg, name, file, d)
 
     return sane
 
-def package_qa_check_devdbg(path, name,d):
+def package_qa_check_dev(path, name,d, elf):
     """
-    Check for debug remains inside the binary or
-    non dev packages containing
+    Check for ".so" library symlinks in non-dev packages
     """
 
     sane = True
 
-    if not "-dev" in name:
-        if path[-3:] == ".so" and os.path.islink(path):
-            error_msg = "non -dev package contains symlink .so: %s path '%s'" % \
-                     (name, package_qa_clean_path(path,d))
-            sane = package_qa_handle_error(0, error_msg, name, path, d)
+    if not name.endswith("-dev") and path.endswith(".so") and os.path.islink(path):
+        error_msg = "non -dev package contains symlink .so: %s path '%s'" % \
+                 (name, package_qa_clean_path(path,d))
+        sane = package_qa_handle_error(0, error_msg, name, path, d)
+
+    return sane
+
+def package_qa_check_dbg(path, name,d, elf):
+    """
+    Check for ".debug" files or directories outside of the dbg package
+    """
+
+    sane = True
 
     if not "-dbg" in name:
-        if '.debug' in path:
+        if '.debug' in path.split(os.path.sep):
             error_msg = "non debug package contains .debug directory: %s path %s" % \
                      (name, package_qa_clean_path(path,d))
             sane = package_qa_handle_error(3, error_msg, name, path, d)
 
     return sane
 
-def package_qa_check_perm(path,name,d):
+def package_qa_check_perm(path,name,d, elf):
     """
     Check the permission of files
     """
     sane = True
     return sane
 
-def package_qa_check_arch(path,name,d):
+def package_qa_check_arch(path,name,d, elf):
     """
     Check if archs are compatible
     """
+    if not elf:
+        return True
+
     sane = True
     target_os   = bb.data.getVar('TARGET_OS',   d, True)
     target_arch = bb.data.getVar('TARGET_ARCH', d, True)
 
     # FIXME: Cross package confuse this check, so just skip them
-    if bb.data.inherits_class('cross', d) or bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('cross-canadian', d):
-        return True
+    for s in ['cross', 'nativesdk', 'cross-canadian']:
+        if bb.data.inherits_class(s, d):
+            return True
 
     # avoid following links to /usr/bin (e.g. on udev builds)
     # we will check the files pointed to anyway...
@@ -213,11 +245,6 @@ def package_qa_check_arch(path,name,d):
     #if this will throw an exception, then fix the dict above
     (machine, osabi, abiversion, littleendian, bits32) \
         = package_qa_get_machine_dict()[target_os][target_arch]
-    elf = package_qa_get_elf(path, bits32)
-    try:
-        elf.open()
-    except:
-        return True
 
     # Check the architecture and endiannes of the binary
     if not machine == elf.machine():
@@ -231,7 +258,7 @@ def package_qa_check_arch(path,name,d):
 
     return sane
 
-def package_qa_check_desktop(path, name, d):
+def package_qa_check_desktop(path, name, d, elf):
     """
     Run all desktop files through desktop-file-validate.
     """
@@ -245,7 +272,48 @@ def package_qa_check_desktop(path, name, d):
 
     return sane
 
-def package_qa_check_buildpaths(path, name, d):
+def package_qa_hash_style(path, name, d, elf):
+    """
+    Check if the binary has the right hash style...
+    """
+
+    if not elf:
+        return True
+
+    if os.path.islink(path):
+        return True
+
+    gnu_hash = "--hash-style=gnu" in bb.data.getVar('LDFLAGS', d, True)
+    if not gnu_hash:
+        gnu_hash = "--hash-style=both" in bb.data.getVar('LDFLAGS', d, True)
+    if not gnu_hash:
+        return True
+
+    objdump = bb.data.getVar('OBJDUMP', d, True)
+    env_path = bb.data.getVar('PATH', d, True)
+
+    sane = True
+    elf = False
+    # A bit hacky. We do not know if path is an elf binary or not
+    # we will search for 'NEEDED' or 'INIT' as this should be printed...
+    # and come before the HASH section (guess!!!) and works on split out
+    # debug symbols too
+    for line in os.popen("LC_ALL=C PATH=%s %s -p '%s' 2> /dev/null" % (env_path, objdump, path), "r"):
+        if "NEEDED" in line or "INIT" in line:
+            sane = False
+            elf = True
+        if "GNU_HASH" in line:
+            sane = True
+        if "[mips32]" in line or "[mips64]" in line:
+	    sane = True
+
+    if elf and not sane:
+        error_msg = "No GNU_HASH in the elf binary: '%s'" % path
+        return package_qa_handle_error(9, error_msg, name, path, d)
+
+    return True
+
+def package_qa_check_buildpaths(path, name, d, elf):
     """
     Check for build paths inside target files and error if not found in the whitelist
     """
@@ -263,7 +331,7 @@ def package_qa_check_buildpaths(path, name, d):
     file_content = open(path).read()
     if tmpdir in file_content:
         error_msg = "File %s in package contained reference to tmpdir" % package_qa_clean_path(path,d)
-        sane = package_qa_handle_error(9, error_msg, name, path, d)
+        sane = package_qa_handle_error(10, error_msg, name, path, d)
     return sane
 
 def package_qa_check_license(workdir, d):
@@ -356,7 +424,7 @@ def package_qa_check_staged(path,d):
     for root, dirs, files in os.walk(path):
         for file in files:
             path = os.path.join(root,file)
-            if file[-2:] == "la":
+            if file.endswith(".la"):
                 file_content = open(path).read()
                 # Don't check installed status for native/cross packages
                 if not bb.data.inherits_class("native", d) and not bb.data.inherits_class("cross", d):
@@ -366,7 +434,7 @@ def package_qa_check_staged(path,d):
                 if workdir in file_content:
                     error_msg = "%s failed sanity test (workdir) in path %s" % (file,root)
                     sane = package_qa_handle_error(8, error_msg, "staging", path, d)
-            elif file[-2:] == "pc":
+            elif file.endswith(".pc"):
                 file_content = open(path).read()
                 if pkgconfigcheck in file_content:
                     error_msg = "%s failed sanity test (tmpdir) in path %s" % (file,root)
@@ -376,24 +444,36 @@ def package_qa_check_staged(path,d):
 
 # Walk over all files in a directory and call func
 def package_qa_walk(path, funcs, package,d):
-    sane = True
+    import oe.qa
 
+    #if this will throw an exception, then fix the dict above
+    target_os   = bb.data.getVar('TARGET_OS',   d, True)
+    target_arch = bb.data.getVar('TARGET_ARCH', d, True)
+    (machine, osabi, abiversion, littleendian, bits32) \
+        = package_qa_get_machine_dict()[target_os][target_arch]
+
+    sane = True
     for root, dirs, files in os.walk(path):
         for file in files:
             path = os.path.join(root,file)
+            elf = oe.qa.ELFFile(path, bits32)
+            try:
+                elf.open()
+            except:
+                elf = None
             for func in funcs:
-                if not func(path, package,d):
+                if not func(path, package,d, elf):
                     sane = False
 
     return sane
 
-def package_qa_check_rdepends(pkg, workdir, d):
+def package_qa_check_rdepends(pkg, pkgdest, d):
     sane = True
     if not "-dbg" in pkg and not "task-" in pkg and not "-image" in pkg:
         # Copied from package_ipk.bbclass
         # boiler plate to update the data
         localdata = bb.data.createCopy(d)
-        root = "%s/install/%s" % (workdir, pkg)
+        root = "%s/%s" % (pkgdest, pkg)
 
         bb.data.setVar('ROOT', '', localdata) 
         bb.data.setVar('ROOT_%s' % pkg, root, localdata)
@@ -425,6 +505,7 @@ def package_qa_check_rdepends(pkg, workdir, d):
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
     bb.note("DO PACKAGE QA")
+    pkgdest = bb.data.getVar('PKGDEST', d, True)
     workdir = bb.data.getVar('WORKDIR', d, True)
     packages = bb.data.getVar('PACKAGES',d, True)
 
@@ -432,9 +513,11 @@ python do_package_qa () {
     if not packages:
         return
 
-    checks = [package_qa_check_rpath, package_qa_check_devdbg,
+    checks = [package_qa_check_rpath, package_qa_check_dev,
               package_qa_check_perm, package_qa_check_arch,
-              package_qa_check_desktop, package_qa_check_buildpaths]
+              package_qa_check_desktop, 
+              package_qa_check_dbg]
+    #         package_qa_check_buildpaths, package_qa_hash_style
     walk_sane = True
     rdepends_sane = True
     for package in packages.split():
@@ -443,10 +526,10 @@ python do_package_qa () {
             continue
 
         bb.note("Checking Package: %s" % package)
-        path = "%s/install/%s" % (workdir, package)
+        path = "%s/%s" % (pkgdest, package)
         if not package_qa_walk(path, checks, package, d):
             walk_sane  = False
-        if not package_qa_check_rdepends(package, workdir, d):
+        if not package_qa_check_rdepends(package, pkgdest, d):
             rdepends_sane = False
 
 
