@@ -1,11 +1,14 @@
 require libx11.inc
 
-PE = "1"
-PR = "r2"
+LICENSE = "MIT & MIT-style & BSD"
+LIC_FILES_CHKSUM = "file://COPYING;md5=bf75bfe4d05068311b5e6862d4b5f2c5"
 
-SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \
-            file://nodolt.patch;patch=1 \
-            file://include_fix.patch;patch=1"
+PE = "1"
+PR = "r0"
+
+SRC_URI += "file://x11_disable_makekeys.patch \
+            file://nodolt.patch \
+            file://include_fix.patch"
 
 DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto xproto-native gettext"

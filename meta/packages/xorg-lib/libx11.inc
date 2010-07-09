@@ -1,6 +1,7 @@
+DESCRIPTION = "X11 protocol and utility library"
+
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 protocol and utility library"
 PROVIDES = "virtual/libx11"
 
 XORG_PN = "libX11"
