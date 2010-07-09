@@ -1,13 +1,10 @@
 Renames "libtool" -> "${TARGET_PREFIX}libtool" which makes sure
 it can't be confused with the host libtool.
 
+Originally by: RP
 
-After discussions with RP Changed host_alias to build_alias 
-at one place as it was causing man page building issue while 
-cross compiling for different architectures.
-
-Date: 2010/06/28
-Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+Updated: Date: 2010/06/28
+Nitin A Kamble <nitin.a.kamble@intel.com>
 
 
 Index: libtool-2.2.10/libltdl/m4/libtool.m4
@@ -86,15 +83,6 @@ Index: libtool-2.2.10/Makefile.am
  		  $(auxdir)/ltmain.tmp $(m4dir)/ltversion.tmp
  
  ## We build ltversion.m4 here, instead of from config.status,
-@@ -337,7 +337,7 @@ update_mans = \
-   PATH=.$(PATH_SEPARATOR)$$PATH; export PATH; \
-   $(HELP2MAN) --output=$@
- $(srcdir)/doc/libtool.1: $(srcdir)/$(auxdir)/ltmain.sh
--	$(update_mans) --help-option=--help-all libtool
-+	$(update_mans) --help-option=--help-all ${build_alias}-libtool
- $(srcdir)/doc/libtoolize.1: $(srcdir)/libtoolize.in
- 	$(update_mans) libtoolize
- 
 @@ -523,12 +523,12 @@ TESTS_ENVIRONMENT = MAKE="$(MAKE)" CC="$
  
  BUILDCHECK_ENVIRONMENT = _lt_pkgdatadir="$(abs_top_srcdir)" \
