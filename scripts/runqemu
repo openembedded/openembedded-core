@@ -102,6 +102,32 @@ if [ "$MACHINE" = "qemuarm" ]; then
     fi
 fi
 
+if [ "$MACHINE" = "qemumips" ]; then
+    if [ "x$ZIMAGE" = "x" ]; then
+        ZIMAGE=$BUILDDIR/tmp/deploy/images/vmlinux.bin-$MACHINE.bin
+    fi
+    if [ "$TYPE" = "ext3" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+            T=$BUILDDIR/tmp/deploy/images
+            findimage $T $MACHINE ext3 "poky-image-sdk poky-image-sato poky-image-minimal"
+        fi
+    fi
+    CROSSPATH=$BUILDDIR/tmp/sysroots/$BUILD_SYS/usr
+fi
+
+if [ "$MACHINE" = "qemuppc" ]; then
+    if [ "x$ZIMAGE" = "x" ]; then
+        ZIMAGE=$BUILDDIR/tmp/deploy/images/zImage-$MACHINE.bin
+    fi
+    if [ "$TYPE" = "ext3" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+            T=$BUILDDIR/tmp/deploy/images
+            findimage $T $MACHINE ext3 "poky-image-sdk poky-image-sato poky-image-minimal"
+        fi
+    fi
+    CROSSPATH=$BUILDDIR/tmp/sysroots/$BUILD_SYS/usr
+fi
+
 if [ "$MACHINE" = "spitz" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
@@ -144,6 +170,8 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o 
     TARGET_SYS="arm-poky-linux"
 elif [ "$MACHINE" = "qemux86" ]; then
     TARGET_SYS="i586-poky-linux"
+elif [ "$MACHINE" = "qemumips" ]; then
+    TARGET_SYS="mips-poky-linux"
 fi
 
 if [ ! -e $CROSSPATH/$TARGET_SYS/bin/cc ]; then

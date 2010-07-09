@@ -57,6 +57,8 @@ fi
 
 case "$MACHINE" in
 	"qemuarm") ;;
+	"qemumips") ;;
+	"qemuppc") ;;
 	"qemuarmv6") ;;
 	"qemuarmv7") ;;
 	"qemux86") ;;
@@ -82,9 +84,11 @@ fi
 
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarmv7" ]; then
     QEMU=qemu-system-arm
+    MACHINE_SUBTYPE=versatilepb
+    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
     # QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -force-pointer"
     if [ "$TYPE" = "ext3" ]; then
-        KERNCMDLINE="root=/dev/sda console=ttyAMA0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/sda console=ttyAMA0,115200 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY highres=off"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -no-reboot $QEMU_UI_OPTIONS"
     fi
     if [ "$TYPE" = "nfs" ]; then
@@ -137,6 +141,29 @@ if [ "$MACHINE" = "spitz" ]; then
             poky-addptable2image $HDIMAGE $HDIMAGE.qemudisk
         fi
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M spitz -hda $HDIMAGE.qemudisk -portrait"
+    fi
+fi
+
+if [ "$MACHINE" = "qemumips" ]; then
+    QEMU=qemu-system-mips
+    MACHINE_SUBTYPE=malta
+    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga cirrus"
+    if [ "$TYPE" = "ext3" ]; then
+        #KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -hda $HDIMAGE -no-reboot $QEMU_UI_OPTIONS"
+    fi
+fi
+
+if [ "$MACHINE" = "qemuppc" ]; then
+    QEMU=qemu-system-ppc
+    MACHINE_SUBTYPE=prep
+    CPU_SUBTYPE=603e
+    BIOS=powerpc_rom.bin
+    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -nographic"
+    if [ "$TYPE" = "ext3" ]; then
+        KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE -M $MACHINE_SUBTYPE -bios $BIOS -hda $HDIMAGE -no-reboot $QEMU_UI_OPTIONS"
     fi
 fi
 
