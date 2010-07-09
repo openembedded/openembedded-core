@@ -4,6 +4,7 @@ DEPENDS = ""
 
 PR = "r0"
 SRC_URI_append = " file://cross_compile.patch "
+SRC_URI_append = " file://prefix.patch "
 
 inherit native
 

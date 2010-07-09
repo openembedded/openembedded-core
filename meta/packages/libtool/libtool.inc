@@ -12,6 +12,5 @@ LIC_FILES_CHKSUM = " \
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://trailingslash.patch \
-           file://prefix.patch \
            file://dolt.m4 "
 

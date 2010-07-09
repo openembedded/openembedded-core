@@ -3,6 +3,7 @@ require libtool_${PV}.bb
 PR = "r0"
 PACKAGES = ""
 SRC_URI_append = " file://cross_compile.patch "
+SRC_URI_append = " file://prefix.patch "
 
 DEPENDS += "libtool-native"
 
