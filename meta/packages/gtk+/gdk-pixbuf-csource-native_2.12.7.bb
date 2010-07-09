@@ -20,6 +20,8 @@ EXTRA_OECONF = "\
   --x-libraries=${STAGING_LIBDIR} \
 "
 
+PACKAGES_DYNAMIC = ""
+
 do_compile() {
 	cd gdk-pixbuf && oe_runmake
 }
