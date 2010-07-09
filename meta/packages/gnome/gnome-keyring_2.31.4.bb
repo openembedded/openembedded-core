@@ -16,6 +16,7 @@ PR = "r0"
 inherit autotools gnome pkgconfig
 
 DEPENDS = "gtk+ libgcrypt libtasn1 libtasn1-native gconf"
+RDEPENDS = "libgnome-keyring"
 
 EXTRA_OECONF = "--disable-gtk-doc"
 
