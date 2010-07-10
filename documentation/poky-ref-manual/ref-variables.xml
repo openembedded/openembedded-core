@@ -563,6 +563,12 @@ recipes-graphics/xorg-font/fiont-alias_1.0.2.bb:PR - "$(INC_PR).0"
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-PACKAGE_DESCRIPTION'><glossterm>PACKAGE_DESCRIPTION</glossterm>
+            <glossdef>
+                <para>Long form description of binary package for packaging sytems such as ipkg, rpm or debian, inherits DESCRIPTION by default</para>
+            </glossdef>
+        </glossentry>
+
         <glossentry id='var-PACKAGE_EXTRA_ARCHS'><glossterm>PACKAGE_EXTRA_ARCHS</glossterm>
             <glossdef>
                 <para>List of architectures compatible with device
@@ -571,6 +577,13 @@ recipes-graphics/xorg-font/fiont-alias_1.0.2.bb:PR - "$(INC_PR).0"
                     ARM926-EJS)</para>
             </glossdef>
         </glossentry>
+
+        <glossentry id='var-PACKAGE_SUMMARY'><glossterm>PACKAGE_SUMMARY</glossterm>
+            <glossdef>
+                <para>Short (72 char suggested) Summary of binary package for packaging sytems such as ipkg, rpm or debian, inherits DESCRIPTION by default</para>
+            </glossdef>
+        </glossentry>
+
 
         <glossentry id='var-PACKAGES'><glossterm>PACKAGES</glossterm>
             <glossdef>
