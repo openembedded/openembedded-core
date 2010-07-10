@@ -1,3 +1,7 @@
+# avoid to check tmp dir at build time. instead uses hard coded /tmp here
+#
+# comment added by Kevin Tian <kevin.tian@intel.com>
+
 --- dbus-0.22/configure.in.orig	2004-08-13 00:57:16.000000000 +0200
 +++ dbus-0.22/configure.in	2004-12-30 21:15:57.000000000 +0100
 @@ -1047,15 +1048,18 @@
