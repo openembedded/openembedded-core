@@ -13,39 +13,39 @@ ALLOW_EMPTY = "1"
 
 RDEPENDS_gst-meta-base = "\
     gstreamer \
-    gst-plugin-playbin \
-    gst-plugin-decodebin \
-    gst-plugin-gnomevfs \
-    gst-plugin-alsa \
-    gst-plugin-volume \
-    gst-plugin-ximagesink \
-    gst-plugin-audioconvert \
-    gst-plugin-audioresample \
-    gst-plugin-typefindfunctions \
-    gst-plugin-videoscale \
-    gst-plugin-ffmpegcolorspace \
-    gst-plugin-autodetect"
+    gst-plugins-base-playbin \
+    gst-plugins-base-decodebin \
+    gst-plugins-base-gnomevfs \
+    gst-plugins-base-alsa \
+    gst-plugins-base-volume \
+    gst-plugins-base-ximagesink \
+    gst-plugins-base-audioconvert \
+    gst-plugins-base-audioresample \
+    gst-plugins-base-typefindfunctions \
+    gst-plugins-base-videoscale \
+    gst-plugins-base-ffmpegcolorspace \
+    gst-plugins-good-autodetect"
 
 
 RDEPENDS_gst-meta-audio = "\
     gst-meta-base \
-    gst-plugin-ivorbis \
-    gst-plugin-ogg \
-    gst-plugin-mad"
+    gst-plugins-base-ivorbis \
+    gst-plugins-base-ogg \
+    gst-plugins-ugly-mad"
 
 
 RDEPENDS_gst-meta-debug = "\
     gst-meta-base \
-    gst-plugin-debug \
-    gst-plugin-audiotestsrc \
-    gst-plugin-videotestsrc"
+    gst-plugins-good-debug \
+    gst-plugins-base-audiotestsrc \
+    gst-plugins-base-videotestsrc"
 
 
 RDEPENDS_gst-meta-video = "\
     gst-meta-base \
-    gst-plugin-avi \
-    gst-plugin-matroska \
-    gst-plugin-mpeg2dec"
+    gst-plugins-good-avi \
+    gst-plugins-good-matroska \
+    gst-plugins-ugly-mpeg2dec"
 
 RRECOMMENDS_gst-meta-video = "\
     gst-meta-audio"
