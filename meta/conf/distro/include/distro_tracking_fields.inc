@@ -12,3 +12,4 @@ require conf/distro/include/private/distro_connectivity.inc
 require conf/distro/include/private/distro_misc.inc
 require conf/distro/include/private/distro_kernel.inc
 require conf/distro/include/private/distro_toolchain_devel.inc
+require conf/distro/include/private/distro_fix.inc
