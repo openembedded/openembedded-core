@@ -13,6 +13,6 @@ PR = "r0"
 
 inherit gnome
 
-RDEPENDS = "dbus eggdbus"
+DEPENDS = "dbus eggdbus"
 
 EXTRA_OECONF = "--disable-gtk-doc"
