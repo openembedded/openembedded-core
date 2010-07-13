@@ -1,0 +1,10 @@
+[Desktop Entry]
+Categories=Viewer;Office;GTK;
+Comment=Lightweight PDF document viewer
+Exec=epdfview %f
+GenericName=PDF Viewer
+Icon=accessories-text-editor
+Name=PDF Viewer
+MimeType=application/pdf;
+Terminal=false
+Type=Application

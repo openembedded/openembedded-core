@@ -1,0 +1,57 @@
+<ui>
+  <menubar name="MenuBar">
+    <menu name="TopMenu" action="Top">
+      <menu action="FileMenu">
+        <menuitem name="OpenFile" action="OpenFile"/>
+        <menuitem name="ReloadFile" action="ReloadFile"/>
+        <menuitem name="SaveFile" action="SaveFile"/>
+        <placeholder name="PrintPlaceHolder"/>
+        <separator/>
+        <menuitem name="Quit" action="Quit"/>
+      </menu>
+      <menu action="EditMenu">
+        <menuitem name="Find" action="Find"/>
+        <separator />
+        <menuitem name="Preferences" action="Preferences"/>
+      </menu>
+      <menu action="ViewMenu">
+        <menuitem name="ShowToolBar" action="ShowToolBar"/>
+        <menuitem name="ShowStatusBar" action="ShowStatusBar"/>
+        <menuitem name="ShowIndex" action="ShowIndex"/>
+        <separator/>
+        <menuitem name="ZoomIn" action="ZoomIn"/>
+        <menuitem name="ZoomOut" action="ZoomOut"/>
+        <menuitem name="ZoomFit" action="ZoomFit"/>
+        <menuitem name="ZoomWidth" action="ZoomWidth"/>
+        <separator />
+        <menuitem name="FullScreen" action="FullScreen"/>
+        <separator />
+        <menuitem name="RotateRight" action="RotateRight"/>
+        <menuitem name="RotateLeft" action="RotateLeft"/>
+      </menu>
+      <menu action="GoMenu">
+        <menuitem name="GoToFirstPage" action="GoToFirstPage"/>
+        <menuitem name="GoToPreviousPage" action="GoToPreviousPage"/>
+        <menuitem name="GoToNextPage" action="GoToNextPage"/>
+        <menuitem name="GoToLastPage" action="GoToLastPage"/>
+      </menu>
+      <menu action="HelpMenu">
+        <menuitem name="About" action="About"/>
+      </menu>
+    </menu>
+  </menubar>
+    
+  <toolbar name="ToolBar">
+    <toolitem name="OpenFile" action="OpenFile"/>
+    <separator/>
+    <toolitem name="GoToPreviousPage" action="GoToPreviousPage"/>
+    <toolitem name="GoToNextPage" action="GoToNextPage"/>
+    <separator/>
+    <toolitem name="ZoomIn" action="ZoomIn"/>
+    <toolitem name="ZoomOut" action="ZoomOut"/>
+    <toolitem name="ZoomFit" action="ZoomFit"/>
+    <toolitem name="ZoomWidth" action="ZoomWidth"/>
+  </toolbar>
+
+  <accelerator name="SlashAccelerator" action="Slash"/>
+</ui>

@@ -1,0 +1,12 @@
+<ui>
+  <menubar name="MenuBar">
+    <menu name="TopMenu" action="Top">
+      <menu action="FileMenu">
+        <placeholder name="PrintPlaceHolder">
+          <separator/>
+          <menuitem name="Print" action="Print"/>
+        </placeholder>
+      </menu>
+    </menu>
+  </menubar>
+</ui>
