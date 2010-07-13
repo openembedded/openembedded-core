@@ -1,7 +1,7 @@
 require libtool.inc
 DEPENDS = "libtool-native"
 
-PR = "r0"
+PR = "r1"
 
 PACKAGES =+ "libltdl libltdl-dev libltdl-dbg"
 FILES_${PN} += "${datadir}/aclocal*"

@@ -4,11 +4,16 @@ This is because libdir has a trailing slash which breaks the comparision.
 
 RP 2/1/10
 
+Merged a patch received from Gary Thomas <gary@mlbassoc.com>
+
+Date: 2010/07/12
+Nitin A Kamble <nitin.a.kamble@intel.com>
+
 Index: libtool-2.2.10/libltdl/config/ltmain.m4sh
 ===================================================================
 --- libtool-2.2.10.orig/libltdl/config/ltmain.m4sh
 +++ libtool-2.2.10/libltdl/config/ltmain.m4sh
-@@ -1634,8 +1634,12 @@ func_mode_install ()
+@@ -1634,8 +1634,15 @@ func_mode_install ()
  	dir="$dir$objdir"
  
  	if test -n "$relink_command"; then
@@ -16,9 +21,12 @@ Index: libtool-2.2.10/libltdl/config/ltmain.m4sh
 +      func_stripname '' '/' "$libdir"
 +      destlibdir=$func_stripname_result
 +
++      func_stripname '' '/' "$destdir"
++      s_destdir=$func_stripname_result
++
  	  # Determine the prefix the user has applied to our future dir.
 -	  inst_prefix_dir=`$ECHO "$destdir" | $SED -e "s%$libdir\$%%"`
-+	  inst_prefix_dir=`$ECHO "X$destdir" | $Xsed -e "s%$destlibdir\$%%"`
++	  inst_prefix_dir=`$ECHO "X$s_destdir" | $Xsed -e "s%$destlibdir\$%%"`
  
  	  # Don't allow the user to place us outside of our expected
  	  # location b/c this prevents finding dependent libraries that

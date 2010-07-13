@@ -1,18 +1,11 @@
 require libtool_${PV}.bb
 
-PR = "r0"
+PR = "r1"
 PACKAGES = ""
 SRC_URI_append = " file://cross_compile.patch \
 		   file://prefix.patch "
 
 DEPENDS += "libtool-native"
-
-DOLT_PATCH = ""
-DOLT_PATCH_arm = " file://add_dolt.patch"
-DOLT_PATCH_i586 = " file://add_dolt.patch"
-
-#SRC_URI_append_linux = "${DOLT_PATCH}"
-#SRC_URI_append_linux-gnueabi = "${DOLT_PATCH}"
 
 do_configure_prepend () {
 	# Remove any existing libtool m4 since old stale versions would break
@@ -31,7 +24,6 @@ do_install () {
 	install -c -m 0644 ${S}/libltdl/config/ltmain.sh ${D}${datadir}/libtool/
 	install -c -m 0644 ${S}/libltdl/m4/libtool.m4 ${D}${datadir}/aclocal/
 	install -c -m 0644 ${S}/libltdl/m4/ltdl.m4 ${D}${datadir}/aclocal/
-	install -c -m 0644 ${WORKDIR}/dolt.m4 ${D}${datadir}/aclocal/
 }
 
 SYSROOT_PREPROCESS_FUNCS += "libtoolcross_sysroot_preprocess"

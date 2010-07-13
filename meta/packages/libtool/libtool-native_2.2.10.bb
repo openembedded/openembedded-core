@@ -2,7 +2,7 @@ require libtool_${PV}.bb
 
 DEPENDS = ""
 
-PR = "r0"
+PR = "r1"
 SRC_URI_append = " file://cross_compile.patch \
 		   file://prefix.patch "
 
