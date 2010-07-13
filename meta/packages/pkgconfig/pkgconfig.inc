@@ -7,15 +7,14 @@ BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=pkg-config"
 SECTION = "console/utils"
 
 LICENSE = "GPLv2+"
-PR = "r8"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-DEPENDS = "glib-2.0"
+DEPENDS = "glib-2.0 popt"
 DEPENDS_virtclass-native = ""
 DEPENDS_virtclass-nativesdk = ""
 
 SRC_URI = "http://pkgconfig.freedesktop.org/releases/pkg-config-${PV}.tar.gz \
            file://autofoo.patch \
-           file://sysrootfix.patch \
            file://glibconfig-sysdefs.h \
            file://disable-legacy.patch"
 
@@ -23,7 +22,7 @@ S = "${WORKDIR}/pkg-config-${PV}/"
 
 inherit autotools
 
-EXTRA_OECONF = "--with-installed-glib --disable-legacy-scripts"
+EXTRA_OECONF = "--with-installed-glib --with-installed-popt --disable-legacy-scripts"
 EXTRA_OECONF_virtclass-native = "--disable-legacy-scripts"
 EXTRA_OECONF_virtclass-nativesdk = "--disable-legacy-scripts"
 
