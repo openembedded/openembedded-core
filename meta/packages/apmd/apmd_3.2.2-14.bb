@@ -2,20 +2,20 @@ DESCRIPTION = "Set of tools for managing notebook power consumption."
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+                   file://apm.h;firstline=6;endline=18;md5=c9a1f79036ab14aa157e15ed75ffd769"
 DEPENDS = "libtool-cross"
-PR = "r13"
+PR = "r0"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/a/apmd/apmd_${PV}.orig.tar.gz \
-           file://debian.patch \
-           file://workaround.patch \
+SRC_URI = "${DEBIAN_MIRROR}/main/a/apmd/apmd_3.2.2.orig.tar.gz \
+           ${DEBIAN_MIRROR}/main/a/apmd/apmd_${PV}.diff.gz \
            file://unlinux.patch \
-           file://libtool.patch \
            file://init \
            file://default \
            file://apmd_proxy \
            file://apmd_proxy.conf"
 
-S = "${WORKDIR}/apmd-${PV}.orig"
+S = "${WORKDIR}/apmd-3.2.2.orig"
 
 inherit update-rc.d
 
@@ -23,6 +23,7 @@ INITSCRIPT_NAME = "apmd"
 INITSCRIPT_PARAMS = "defaults"
 
 do_compile() {
+	# apmd doesn't use whole autotools. Just libtool for installation
 	oe_runmake "LIBTOOL=${STAGING_BINDIR_CROSS}/${TARGET_PREFIX}libtool" apm apmd
 }
 

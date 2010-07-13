@@ -1,4 +1,8 @@
-
+# this workaround is there in OE since 2003. It looks to provide a workaround
+# allowing others sending SIGUSR1 to cause an apm suspend event. Disable it for
+# now.
+#
+# comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-13
 #
 # Patch managed by http://www.holgerschurig.de/patcher.html
 #
