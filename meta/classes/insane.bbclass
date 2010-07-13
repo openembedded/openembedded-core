@@ -343,11 +343,12 @@ def package_qa_check_license(workdir, d):
     sane = True
 
     lic_files = bb.data.getVar('LIC_FILES_CHKSUM', d, True)
+    pn = bb.data.getVar('PN', d, True)
 
     if not lic_files:
         # just throw a warning now. Once licensing data in entered for enough of the recipes,
         # this will be converted into error and False will be returned.
-        bb.warn(" Recipe (.bb) file does not have license file information (LIC_FILES_CHKSUM)")
+        bb.warn(pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)")
         return True
 
     srcdir = bb.data.getVar('S', d, True)
