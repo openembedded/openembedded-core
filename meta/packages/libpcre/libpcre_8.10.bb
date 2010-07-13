@@ -49,3 +49,5 @@ python populate_packages_prepend () {
 
 FILES_${PN} = "${libdir}/libpcre.so.*"
 FILES_${PN}-dev += "${bindir}/*"
+
+BBCLASSEXTEND = "native"
