@@ -182,7 +182,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-atk = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-atk = "03/2010"
 RECIPE_COMMENTS_pn-atk = ""
 
-RECIPE_STATUS_pn-gtk+ = "yellow" # update needed
+RECIPE_STATUS_pn-gtk+ = "green"
 DEPENDENCY_CHECK_pn-gtk+ = "not done"
 RECIPE_LATEST_VERSION_pn-gtk+ = "2.20.1"
 RECIPE_NO_OF_PATCHES_pn-gtk+ = "0"
@@ -191,7 +191,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gtk+ = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-gtk+ = "05/2010"
 RECIPE_COMMENTS_pn-gtk+ = ""
 
-RECIPE_STATUS_pn-gnome-common = "yellow" # update needed
+RECIPE_STATUS_pn-gnome-common = "green"
 DEPENDENCY_CHECK_pn-gnome-common = "not done"
 RECIPE_LATEST_VERSION_pn-gnome-common = "2.28.0"
 RECIPE_NO_OF_PATCHES_pn-gnome-common = "0"
@@ -218,7 +218,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-eds-dbus = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-eds-dbus = "06/2010"
 RECIPE_COMMENTS_pn-eds-dbus = ""
 
-RECIPE_STATUS_pn-gnome-keyring = "yellow" # update needed
+RECIPE_STATUS_pn-gnome-keyring = "green"
 DEPENDENCY_CHECK_pn-gnome-keyring = "not done"
 RECIPE_LATEST_VERSION_pn-gnome-keyring = "2.31.4"
 RECIPE_NO_OF_PATCHES_pn-gnome-keyring = "0"
@@ -227,7 +227,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gnome-keyring = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-gnome-keyring = "06/2010"
 RECIPE_COMMENTS_pn-gnome-keyring = ""
 
-RECIPE_STATUS_pn-gtk-sato-engine = "yellow" # update needed
+RECIPE_STATUS_pn-gtk-sato-engine = "green"
 DEPENDENCY_CHECK_pn-gtk-sato-engine = "not done"
 RECIPE_LATEST_VERSION_pn-gtk-sato-engine = "0.3.2"
 RECIPE_NO_OF_PATCHES_pn-gtk-sato-engine = "0"
@@ -236,7 +236,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gtk-sato-engine = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-gtk-sato-engine = "02/2008"
 RECIPE_COMMENTS_pn-gtk-sato-engine = ""
 
-RECIPE_STATUS_pn-hicolor-icon-theme = "yellow" # update needed
+RECIPE_STATUS_pn-hicolor-icon-theme = "green"
 DEPENDENCY_CHECK_pn-hicolor-icon-theme = "not done"
 RECIPE_LATEST_VERSION_pn-hicolor-icon-theme = "0.12"
 RECIPE_NO_OF_PATCHES_pn-hicolor-icon-theme = "0"
@@ -263,7 +263,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libfakekey = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-libfakekey = "07/2006"
 RECIPE_COMMENTS_pn-libfakekey = ""
 
-RECIPE_STATUS_pn-libglade = "yellow" # update needed
+RECIPE_STATUS_pn-libglade = "green"
 DEPENDENCY_CHECK_pn-libglade = "not done"
 RECIPE_LATEST_VERSION_pn-libglade = "2.6.4"
 RECIPE_NO_OF_PATCHES_pn-libglade = "0"
@@ -272,7 +272,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libglade = "7 months"
 RECIPE_LATEST_RELEASE_DATE_pn-libglade = "03/2009"
 RECIPE_COMMENTS_pn-libglade = ""
 
-RECIPE_STATUS_pn-libsoup-2.4 = "yellow" # update needed
+RECIPE_STATUS_pn-libsoup-2.4 = "green"
 DEPENDENCY_CHECK_pn-libsoup-2.4 = "not done"
 RECIPE_LATEST_VERSION_pn-libsoup-2.4 = "2.31.2"
 RECIPE_NO_OF_PATCHES_pn-libsoup-2.4 = "0"
@@ -281,7 +281,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libsoup-2.4 = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-libsoup-2.4 = "05/2010"
 RECIPE_COMMENTS_pn-libsoup-2.4 = ""
 
-RECIPE_STATUS_pn-libxslt = "yellow" # update needed
+RECIPE_STATUS_pn-libxslt = "green"
 DEPENDENCY_CHECK_pn-libxslt = "not done"
 RECIPE_LATEST_VERSION_pn-libxslt = "1.1.26"
 RECIPE_NO_OF_PATCHES_pn-libxslt = "0"
@@ -290,7 +290,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libxslt = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-libxslt = "09/2009"
 RECIPE_COMMENTS_pn-libxslt = ""
 
-RECIPE_STATUS_pn-matchbox-config-gtk = "yellow" # update needed
+RECIPE_STATUS_pn-matchbox-config-gtk = "green"
 DEPENDENCY_CHECK_pn-matchbox-config-gtk = "not done"
 RECIPE_LATEST_VERSION_pn-matchbox-config-gtk = "2081"
 RECIPE_NO_OF_PATCHES_pn-matchbox-config-gtk = "0"
@@ -299,7 +299,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-config-gtk = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-matchbox-config-gtk = "09/2008"
 RECIPE_COMMENTS_pn-matchbox-config-gtk = ""
 
-RECIPE_STATUS_pn-matchbox-keyboard = "yellow" # update needed
+RECIPE_STATUS_pn-matchbox-keyboard = "green"
 DEPENDENCY_CHECK_pn-matchbox-keyboard = "not done"
 RECIPE_LATEST_VERSION_pn-matchbox-keyboard = "2075"
 RECIPE_NO_OF_PATCHES_pn-matchbox-keyboard = "0"
@@ -308,7 +308,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-keyboard = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-matchbox-keyboard = "09/2008"
 RECIPE_COMMENTS_pn-matchbox-keyboard = ""
 
-RECIPE_STATUS_pn-matchbox-panel-2 = "yellow" # update needed
+RECIPE_STATUS_pn-matchbox-panel-2 = "green"
 DEPENDENCY_CHECK_pn-matchbox-panel-2 = "not done"
 RECIPE_LATEST_VERSION_pn-matchbox-panel-2 = "2109"
 RECIPE_NO_OF_PATCHES_pn-matchbox-panel-2 = "0"
@@ -317,7 +317,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-panel-2 = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-matchbox-panel-2 = "04/2010"
 RECIPE_COMMENTS_pn-matchbox-panel-2 = ""
 
-RECIPE_STATUS_pn-matchbox-stroke = "yellow" # update needed
+RECIPE_STATUS_pn-matchbox-stroke = "green"
 DEPENDENCY_CHECK_pn-matchbox-stroke = "not done"
 RECIPE_LATEST_VERSION_pn-matchbox-stroke = "1820"
 RECIPE_NO_OF_PATCHES_pn-matchbox-stroke = "0"
@@ -326,7 +326,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-stroke = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-matchbox-stroke = "11/2007"
 RECIPE_COMMENTS_pn-matchbox-stroke = ""
 
-RECIPE_STATUS_pn-matchbox-wm = "yellow" # update needed
+RECIPE_STATUS_pn-matchbox-wm = "green"
 DEPENDENCY_CHECK_pn-matchbox-wm = "not done"
 RECIPE_LATEST_VERSION_pn-matchbox-wm = "1819"
 RECIPE_NO_OF_PATCHES_pn-matchbox-wm = "0"
@@ -334,4 +334,31 @@ RECIPE_INTEL_SECTION_pn-matchbox-wm = "graphic UX"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-matchbox-wm = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-matchbox-wm = "11/2007"
 RECIPE_COMMENTS_pn-matchbox-wm = ""
+
+RECIPE_STATUS_pn-pointercal = "green"
+DEPENDENCY_CHECK_pn-pointercal = "not done"
+RECIPE_LATEST_VERSION_pn-pointercal = "0.0"
+RECIPE_NO_OF_PATCHES_pn-pointercal = "0"
+RECIPE_INTEL_SECTION_pn-pointercal = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pointercal = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-pointercal = "n/a"
+RECIPE_COMMENTS_pn-pointercal = "Just a data file"
+
+RECIPE_STATUS_pn-libgnome-keyring = "green"
+DEPENDENCY_CHECK_pn-libgnome-keyring = "not done"
+RECIPE_LATEST_VERSION_pn-libgnome-keyring = "2.30.1"
+RECIPE_NO_OF_PATCHES_pn-libgnome-keyring = "0"
+RECIPE_INTEL_SECTION_pn-libgnome-keyring = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libgnome-keyring = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-libgnome-keyring = "04/2010"
+RECIPE_COMMENTS_pn-libgnome-keyring = "New recipe separated from gnome-keyring"
+
+RECIPE_STATUS_pn-web-webkit = "yellow" #update needed
+DEPENDENCY_CHECK_pn-web-webkit = "not done"
+RECIPE_LATEST_VERSION_pn-web-webkit = "110"
+RECIPE_NO_OF_PATCHES_pn-web-webkit = "1"
+RECIPE_INTEL_SECTION_pn-web-webkit = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-web-webkit = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-web-webkit = "08/2008"
+RECIPE_COMMENTS_pn-web-webkit = ""
 
