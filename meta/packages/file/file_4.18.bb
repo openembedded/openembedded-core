@@ -5,23 +5,21 @@ SECTION = "console/utils"
 
 # two clause BSD
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=6a7382872edb68d33e1a9398b6e03188"
 
-DEPENDS = "zlib file-native"
-DEPENDS_virtclass-native = "zlib-native"
-PR = "r0"
+DEPENDS = "file-native"
+DEPENDS_virtclass-native = ""
 
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://dump \
            file://filesystems"
+SRC_URI_append_virtclass-native = " file://native-fix.diff;patch=1"
 
 inherit autotools
 
 do_configure_prepend() {
+	sed -i -e 's,$(top_builddir)/src/file,file,' ${S}/magic/Makefile.am
 	cp ${WORKDIR}/dump ${S}/magic/Magdir/
 	cp ${WORKDIR}/filesystems ${S}/magic/Magdir/
 }
-
-FILES_${PN} += "${datadir}/misc/*.mgc"
 
 BBCLASSEXTEND = "native"

@@ -1,0 +1,13 @@
+Index: file-4.16/magic/Makefile.am
+===================================================================
+--- file-4.16.orig/magic/Makefile.am	2005-08-18 17:20:49.000000000 +0200
++++ file-4.16/magic/Makefile.am	2006-03-08 17:01:13.000000000 +0100
+@@ -18,7 +18,7 @@
+ if IS_CROSS_COMPILE
+ FILE_COMPILE = file
+ else
+-FILE_COMPILE = $(top_builddir)/src/file
++FILE_COMPILE = ../src/file
+ endif
+ 
+ magic.mgc: magic
