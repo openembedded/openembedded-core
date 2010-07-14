@@ -74,6 +74,9 @@ SRC_URI_append_powerpc= " file://powerpc-sqrt-hack.diff"
 S = "${WORKDIR}/glibc-${PV}"
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
+# We need this for nativesdk
+export libc_cv_slibdir = "${base_libdir}"
+
 EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --without-cvs --disable-profile --disable-debug --without-gd \
                 --enable-clocale=gnu \
