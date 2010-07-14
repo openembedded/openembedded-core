@@ -1,5 +1,9 @@
 DESCRIPTION = "Multi-platform web browsing application."
-LICENSE = "GPL"
+HOMEPAGE = "http://o-hand.com/"
+BUGTRACKER = "http://bugzilla.openedhand.com/"
+
+LICENSE = "GPLv2"
+
 SECTION = "x11"
 DEPENDS = "libxml2 glib-2.0 gtk+ libglade webkit-gtk curl gconf js libowl"
 
