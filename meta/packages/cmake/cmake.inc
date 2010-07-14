@@ -3,8 +3,9 @@
 
 DESCRIPTION = "A cross-platform, open-source make system"
 HOMEPAGE = "http://www.cmake.org/"
-LICENSE = "Berkely-style license"
+BUGTRACKER = "http://public.kitware.com/Bug/my_view_page.php"
 SECTION = "console/utils"
+LICENSE = "BSD"
 
 SRC_URI = "http://www.cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz"
 
