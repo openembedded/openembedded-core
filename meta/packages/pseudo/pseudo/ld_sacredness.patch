@@ -1,0 +1,68 @@
+Image creation runs under a pseudo context and calls a script which refers 
+to the build systems's python. This loads but can find a libpython from staging
+if these are incompatible, anything can break. These scripts should *not* be
+changing LD_LIBRARY_PATH, just adding an LD_PRELOAD with an absolute path. The
+dyanmic linker can figure out anything else with rpaths.
+
+Inspired by RP's patch of a similar intent for fakeroot
+
+JL 15/07/10
+
+Index: git/pseudo_util.c
+===================================================================
+--- git.orig/pseudo_util.c	2010-03-25 17:57:24.000000000 +0000
++++ git/pseudo_util.c	2010-07-15 16:13:09.431459640 +0100
+@@ -362,40 +362,25 @@
+  */
+ void
+ pseudo_setupenv(char *opts) {
+-	char *ld_env;
+ 	char *newenv;
+ 	size_t len;
+ 	char debugvalue[64];
+ 
+-	newenv = "libpseudo.so";
++  /* need to set LD_PRELOAD to the absolute library path, as tweaking
++   * LD_LIBRARY_PATH makes the Beaver sad.
++   * Fortunately we can hack this as we know we don't use lib64 :-)
++   */
++
++  char *libname = "libpseudo.so";
++  char *prefix = pseudo_prefix_path("lib");
++  len = strlen(prefix) + strlen(libname) + 2;
++  newenv = malloc(len);
++
++  snprintf(newenv, len, "%s/%s", prefix, libname);
++
+ 	setenv("LD_PRELOAD", newenv, 1);
+ 
+-	ld_env = getenv("LD_LIBRARY_PATH");
+-	if (ld_env) {
+-		char *prefix = pseudo_prefix_path(NULL);
+-		if (!strstr(ld_env, prefix)) {
+-			char *e1, *e2;
+-			e1 = pseudo_prefix_path("lib");
+-			e2 = pseudo_prefix_path("lib64");
+-			len = strlen(ld_env) + strlen(e1) + strlen(e2) + 3;
+-			newenv = malloc(len);
+-			snprintf(newenv, len, "%s:%s:%s", ld_env, e1, e2);
+-			free(e1);
+-			free(e2);
+-			setenv("LD_LIBRARY_PATH", newenv, 1);
+-			free(newenv);
+-		}
+-		free(prefix);
+-	} else {
+-		char *e1, *e2;
+-		e1 = pseudo_prefix_path("lib");
+-		e2 = pseudo_prefix_path("lib64");
+-		len = strlen(e1) + strlen(e2) + 2;
+-		newenv = malloc(len);
+-		snprintf(newenv, len, "%s:%s", e1, e2);
+-		setenv("LD_LIBRARY_PATH", newenv, 1);
+-		free(newenv);
+-	}
++  free(newenv);
+ 
+ 	if (max_debug_level) {
+ 		sprintf(debugvalue, "%d", max_debug_level);

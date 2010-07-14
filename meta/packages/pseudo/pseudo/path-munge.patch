@@ -1,0 +1,161 @@
+Pseudo defaults to storing state files in ${prefix}/var/pseudo, we want them in
+$(localstatedir) so this quick hack makes pseudo use a data directory specified
+with --data, and defaults to pseudo's way if it's not set.
+
+JL 14/07/10
+
+Index: git/Makefile.in
+===================================================================
+--- git.orig/Makefile.in	2010-07-14 16:50:45.772094105 +0100
++++ git/Makefile.in	2010-07-14 16:50:45.897400059 +0100
+@@ -20,6 +20,7 @@
+ # configuration flags
+ PREFIX=@PREFIX@
+ SUFFIX=@SUFFIX@
++DATA=@DATA@
+ SQLITE=@SQLITE@
+ BITS=@BITS@
+ MARK64=@MARK64@
+@@ -27,11 +28,15 @@
+ 
+ LIBDIR=$(PREFIX)/lib
+ BINDIR=$(PREFIX)/bin
++ifndef DATA
+ DATADIR=$(PREFIX)/var/pseudo
++else
++DATADIR=$(DATA)/pseudo
++endif
+ 
+ CFLAGS_BASE=-pipe -std=gnu99 -Wall
+ CFLAGS_CODE=-fPIC -D_LARGEFILE64_SOURCE -D_ATFILE_SOURCE -m$(BITS)
+-CFLAGS_DEFS=-DPSEUDO_PREFIX='"$(PREFIX)"' -DPSEUDO_SUFFIX='"$(SUFFIX)"' -DPSEUDO_VERSION='"$(VERSION)"'
++CFLAGS_DEFS=-DPSEUDO_PREFIX='"$(PREFIX)"' -DPSEUDO_SUFFIX='"$(SUFFIX)"' -DPSEUDO_VERSION='"$(VERSION)"' -DPSEUDO_DATA='"$(DATADIR)"'
+ CFLAGS_DEBUG=-O2 -g
+ CFLAGS_SQL=-L$(SQLITE)/lib -I$(SQLITE)/include
+ EXTRA_CFLAGS=$(CFLAGS_BASE) $(CFLAGS_CODE) $(CFLAGS_DEFS) \
+Index: git/configure
+===================================================================
+--- git.orig/configure	2010-03-25 17:57:24.000000000 +0000
++++ git/configure	2010-07-14 16:50:45.897400059 +0100
+@@ -20,13 +20,14 @@
+ # not a real configure script...
+ opt_prefix=
+ opt_suffix=
++opt_data=
+ opt_bits=32
+ opt_sqlite=/usr
+ 
+ usage()
+ {
+ 	echo >&2 "usage:"
+-	echo >&2 "  configure --prefix=... [--suffix=...] [--with-sqlite=...] [--bits=32|64]"
++	echo >&2 "  configure --prefix=... [--suffix=...] [--data=...] [--with-sqlite=...] [--bits=32|64]"
+ 	exit 1
+ }
+ 
+@@ -43,6 +44,9 @@
+ 	--suffix=*)
+ 		opt_suffix=${arg#--suffix=}
+ 		;;
++	--data=*)
++		opt_data=${arg#--data=}
++		;;
+ 	--bits=*)
+ 		opt_bits=${arg#--bits=}
+ 		case $opt_bits in
+@@ -65,6 +69,7 @@
+ sed -e '
+   s,@PREFIX@,'"$opt_prefix"',g
+   s,@SUFFIX@,'"$opt_suffix"',g
++  s,@DATA@,'"$opt_data"',g
+   s,@SQLITE@,'"$opt_sqlite"',g
+   s,@MARK64@,'"$opt_mark64"',g
+   s,@BITS@,'"$opt_bits"',g
+Index: git/pseudo.c
+===================================================================
+--- git.orig/pseudo.c	2010-03-25 17:57:24.000000000 +0000
++++ git/pseudo.c	2010-07-14 16:50:45.898400595 +0100
+@@ -191,7 +191,7 @@
+ 	pseudo_new_pid();
+ 
+ 	pseudo_debug(3, "opening lock.\n");
+-	lockname = pseudo_prefix_path(PSEUDO_LOCKFILE);
++	lockname = strdup(PSEUDO_LOCKFILE);
+ 	if (!lockname) {
+ 		pseudo_diag("Couldn't allocate a file path.\n");
+ 		exit(1);
+Index: git/pseudo.h
+===================================================================
+--- git.orig/pseudo.h	2010-03-25 17:57:24.000000000 +0000
++++ git/pseudo.h	2010-07-14 16:50:45.899360463 +0100
+@@ -121,8 +121,7 @@
+ 
+ extern char *pseudo_version;
+ 
+-#define PSEUDO_DATA "var/pseudo/"
+-#define PSEUDO_LOCKFILE PSEUDO_DATA "pseudo.lock"
+-#define PSEUDO_LOGFILE PSEUDO_DATA "pseudo.log"
+-#define PSEUDO_PIDFILE PSEUDO_DATA "pseudo.pid"
+-#define PSEUDO_SOCKET PSEUDO_DATA "pseudo.socket"
++#define PSEUDO_LOCKFILE PSEUDO_DATA "/pseudo.lock"
++#define PSEUDO_LOGFILE PSEUDO_DATA "/pseudo.log"
++#define PSEUDO_PIDFILE PSEUDO_DATA "/pseudo.pid"
++#define PSEUDO_SOCKET PSEUDO_DATA "/pseudo.socket"
+Index: git/pseudo_db.c
+===================================================================
+--- git.orig/pseudo_db.c	2010-03-25 17:57:24.000000000 +0000
++++ git/pseudo_db.c	2010-07-14 16:51:07.506464213 +0100
+@@ -458,11 +458,11 @@
+ 	if (*db)
+ 		return 0;
+ 	if (db == &file_db) {
+-		dbfile = pseudo_prefix_path(PSEUDO_DATA "files.db");
++		dbfile = strdup(PSEUDO_DATA "/files.db");
+ 		rc = sqlite3_open(dbfile, db);
+ 		free(dbfile);
+ 	} else {
+-		dbfile = pseudo_prefix_path(PSEUDO_DATA "logs.db");
++		dbfile = strdup(PSEUDO_DATA "/logs.db");
+ 		rc = sqlite3_open(dbfile, db);
+ 		free(dbfile);
+ 	}
+Index: git/pseudo_server.c
+===================================================================
+--- git.orig/pseudo_server.c	2010-03-25 17:57:24.000000000 +0000
++++ git/pseudo_server.c	2010-07-14 16:50:45.901462874 +0100
+@@ -101,9 +101,9 @@
+ 	}
+ 
+ 	/* cd to the data directory */
+-	pseudo_path = pseudo_prefix_path(PSEUDO_DATA);
++	pseudo_path = strdup(PSEUDO_DATA);
+ 	if (!pseudo_path) {
+-		pseudo_diag("can't find prefix/%s directory.\n", PSEUDO_DATA);
++		pseudo_diag("can't find %s directory.\n", PSEUDO_DATA);
+ 		return 1;
+ 	}
+ 	if (chdir(pseudo_path) == -1) {
+@@ -132,9 +132,9 @@
+ 		return 0;
+ 	}
+ 	setsid();
+-	pseudo_path = pseudo_prefix_path(PSEUDO_PIDFILE);
++	pseudo_path = strdup(PSEUDO_PIDFILE);
+ 	if (!pseudo_path) {
+-		pseudo_diag("Couldn't get path for prefix/%s\n", PSEUDO_PIDFILE);
++		pseudo_diag("Couldn't get path for %s\n", PSEUDO_PIDFILE);
+ 		return 1;
+ 	}
+ 	fp = fopen(pseudo_path, "w");
+@@ -152,9 +152,9 @@
+ 		pseudo_new_pid();
+ 		fclose(stdin);
+ 		fclose(stdout);
+-		pseudo_path = pseudo_prefix_path(PSEUDO_LOGFILE);
++		pseudo_path = strdup(PSEUDO_LOGFILE);
+ 		if (!pseudo_path) {
+-			pseudo_diag("can't get path for prefix/%s\n", PSEUDO_LOGFILE);
++			pseudo_diag("can't get path for %s\n", PSEUDO_LOGFILE);
+ 			return 1;
+ 		}
+ 		fd = open(pseudo_path, O_WRONLY | O_APPEND | O_CREAT, 0644);
