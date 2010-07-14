@@ -4,7 +4,7 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
-PR = "r0"
+PR = "r1"
 
 # USE_VT and SERIAL_CONSOLE are generally defined by the MACHINE .conf.
 # Set PACKAGE_ARCH appropriately.
@@ -22,6 +22,7 @@ SYSVINIT_ENABLED_GETTYS ?= "1"
 
 SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/sysvinit/sysvinit-${PV}.tar.bz2 \
 	   file://install.patch \
+	   file://crypt-lib.patch \
            file://need \
            file://provide \
            file://inittab \
