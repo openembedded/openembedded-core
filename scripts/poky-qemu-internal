@@ -32,7 +32,13 @@
 
 if [ -z "$QEMU_MEMORY" ]; then
 	case "$MACHINE" in
-		"qemux86") 
+		"qemux86")
+			QEMU_MEMORY="128M"
+			;;
+		"qemumips")
+			QEMU_MEMORY="128M"
+			;;
+		"qemuppc")
 			QEMU_MEMORY="128M"
 			;;
 		*)
