@@ -93,7 +93,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-cairo="2010/02/20"
 RECIPE_INTEL_SECTION_pn-cairo="graphic core"
 
 RECIPE_STATUS_pn-xserver-nodm-init="green" # no update needed
-RECIPE_LATEST_VERSION_pn-xserver-nodm-init="0" # local patch
+RECIPE_LATEST_VERSION_pn-xserver-nodm-init="0"
 RECIPE_NO_OF_PATCHES_pn-xserver-nodm-init="0"
 #RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xserver-nodm-init=""
 #RECIPE_LATEST_RELEASE_DATE_pn-xserver-nodm-init=""
