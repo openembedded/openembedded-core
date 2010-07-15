@@ -24,6 +24,7 @@ SRC_URI = "\
      file://binutils-uclibc-300-012_check_ldrunpath_length.patch \
      file://binutils-uclibc-gas-needs-libm.patch \
      file://binutils-x86_64_i386_biarch.patch \
+     file://binutils-mips-pie.patch \
      "
 
 # powerpc patches
