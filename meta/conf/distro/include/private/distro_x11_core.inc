@@ -100,7 +100,7 @@ RECIPE_NO_OF_PATCHES_pn-xserver-nodm-init="0"
 RECIPE_INTEL_SECTION_pn-xserver-nodm-init="graphic core"
 
 RECIPE_STATUS_pn-xserver-xf86-config="green" # no update needed
-RECIPE_LATEST_VERSION_pn-xserver-xf86-config="0.1" # local patch
+RECIPE_LATEST_VERSION_pn-xserver-xf86-config="0.1"
 RECIPE_NO_OF_PATCHES_pn-xserver-xf86-config="0"
 #RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xserver-xf86-config=""
 #RECIPE_LATEST_RELEASE_DATE_pn-xserver-xf86-config=""
