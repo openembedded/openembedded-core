@@ -50,6 +50,7 @@ ARCH_FLAGS_FOR_TARGET = "${TARGET_CC_ARCH}"
 EXTRA_OEMAKE += "ARCH_FLAGS_FOR_TARGET='${ARCH_FLAGS_FOR_TARGET}'"
 
 SYSTEMHEADERS = "${target_includedir}"
+SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
 
 do_configure () {
@@ -85,6 +86,9 @@ do_configure () {
 	cat ${S}/gcc/defaults.h | grep -v "\#endif.*GCC_DEFAULTS_H" > ${S}/gcc/defaults.h.new
 	echo "#ifndef STANDARD_INCLUDE_DIR" >> ${S}/gcc/defaults.h.new
 	echo "#define STANDARD_INCLUDE_DIR \"${SYSTEMHEADERS}\"" >> ${S}/gcc/defaults.h.new
+	echo "#endif" >> ${S}/gcc/defaults.h.new
+	echo "#ifndef STANDARD_STARTFILE_PREFIX_1" >> ${S}/gcc/defaults.h.new
+	echo "#define STANDARD_STARTFILE_PREFIX_1 \"${SYSTEMLIBS}\"" >> ${S}/gcc/defaults.h.new
 	echo "#endif" >> ${S}/gcc/defaults.h.new
 	echo "#ifndef STANDARD_STARTFILE_PREFIX_2" >> ${S}/gcc/defaults.h.new
 	echo "#define STANDARD_STARTFILE_PREFIX_2 \"${SYSTEMLIBS1}\"" >> ${S}/gcc/defaults.h.new

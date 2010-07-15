@@ -11,6 +11,7 @@ DEPENDS += "gmp-nativesdk mpfr-nativesdk"
 RDEPENDS_${PN} += "mpfr-nativesdk"
 
 SYSTEMHEADERS = "/usr/include"
+SYSTEMLIBS = "/lib/"
 SYSTEMLIBS1 = "/usr/lib/"
 
 EXTRA_OECONF += "--disable-libunwind-exceptions --disable-libssp \

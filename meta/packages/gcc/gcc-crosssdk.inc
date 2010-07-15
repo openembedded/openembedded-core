@@ -1,6 +1,7 @@
 inherit crosssdk
 
 SYSTEMHEADERS = "${SDKPATHNATIVE}${prefix_nativesdk}/include"
+SYSTEMLIBS = "${SDKPATHNATIVE}${base_libdir_nativesdk}/"
 SYSTEMLIBS1 = "${SDKPATHNATIVE}${libdir_nativesdk}/"
 
 GCCMULTILIB = "--disable-multilib"
@@ -10,6 +11,6 @@ PROVIDES = "virtual/${TARGET_PREFIX}gcc-crosssdk virtual/${TARGET_PREFIX}g++-cro
 
 do_configure_prepend () {
 	# Change the default dynamic linker path to the one in the SDK
-	sed -i ${S}/gcc/config/*/linux*.h -e 's#\(GLIBC_DYNAMIC_LINKER.*\)/lib/#\1${SYSTEMLIBS1}#'
-	sed -i ${S}/gcc/config/*/linux*.h -e 's#\(GLIBC_DYNAMIC_LINKER.*\)/lib64/#\1${SYSTEMLIBS1}#'
+	sed -i ${S}/gcc/config/*/linux*.h -e 's#\(GLIBC_DYNAMIC_LINKER.*\)/lib/#\1${SYSTEMLIBS}#'
+	sed -i ${S}/gcc/config/*/linux*.h -e 's#\(GLIBC_DYNAMIC_LINKER.*\)/lib64/#\1${SYSTEMLIBS}#'
 }
