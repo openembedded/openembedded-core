@@ -12,4 +12,9 @@ TARGET_OS = "${SDK_OS}"
 TARGET_PREFIX = "${SDK_PREFIX}"
 TARGET_CC_ARCH = "${SDK_CC_ARCH}"
 
+target_libdir = "${SDKPATHNATIVE}${libdir_nativesdk}"
+target_includedir = "${SDKPATHNATIVE}${includedir_nativesdk}"
+target_base_libdir = "${SDKPATHNATIVE}${base_libdir_nativesdk}"
+target_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
+target_exec_prefix = "${SDKPATHNATIVE}${exec_prefix_nativesdk}"
 
