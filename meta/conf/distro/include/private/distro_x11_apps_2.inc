@@ -85,3 +85,17 @@ RECIPE_NO_OF_PATCHES_pn-xrandr="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xrandr="1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-xrandr="2009/09/10"
 RECIPE_INTEL_SECTION_pn-xrandr="graphic app"
+
+RECIPE_STATUS_pn-vte="green" # no update needed
+RECIPE_LATEST_VERSION_pn-vte="0.24.2"
+RECIPE_NO_OF_PATCHES_pn-vte="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-vte="3 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-vte="2010/06/21"
+RECIPE_INTEL_SECTION_pn-vte="graphic app"
+
+RECIPE_STATUS_pn-qemugl="green" # no update needed
+RECIPE_LATEST_VERSION_pn-qemugl="0.0+git0+d888bbc723c00d197d34a39b5b7448660ec1b1c0"
+RECIPE_NO_OF_PATCHES_pn-qemugl="1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qemugl="n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-qemugl="2009/05/30"
+RECIPE_INTEL_SECTION_pn-qemugl="graphic app"
