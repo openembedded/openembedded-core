@@ -118,3 +118,11 @@ RECIPE_INTEL_SECTION_pn-libidn = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libidn = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-libidn = "05/2010"
 RECIPE_COMMENTS_pn-libidn = ""
+
+RECIPE_STATUS_pn-glibc = "green" # OK
+DEPENDENCY_CHECK_pn-glibc = "not done"
+RECIPE_LATEST_VERSION_pn-glibc = "2.11.2"
+RECIPE_INTEL_SECTION_pn-glibc = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-glibc = "5 months"
+RECIPE_LATEST_RELEASE_DATE_pn-glibc = "05/2010"
+RECIPE_COMMENTS_pn-glibc = ""
