@@ -507,7 +507,6 @@ def package_qa_check_rdepends(pkg, pkgdest, d):
 python do_package_qa () {
     bb.note("DO PACKAGE QA")
     pkgdest = bb.data.getVar('PKGDEST', d, True)
-    workdir = bb.data.getVar('WORKDIR', d, True)
     packages = bb.data.getVar('PACKAGES',d, True)
 
     # no packages should be scanned
@@ -534,7 +533,7 @@ python do_package_qa () {
             rdepends_sane = False
 
 
-    if not walk_sane or not rdepends_sane or not package_qa_check_license(workdir, d):
+    if not walk_sane or not rdepends_sane:
         bb.fatal("QA run found fatal errors. Please consider fixing them.")
     bb.note("DONE with PACKAGE QA")
 }
@@ -549,13 +548,14 @@ python do_qa_staging() {
         bb.fatal("QA staging was broken by the package built above")
 }
 
-# Check broken config.log files & for packages requiring Gettext which don't
-# have it in DEPENDS
+# Check broken config.log files, for packages requiring Gettext which don't
+# have it in DEPENDS and for correct LIC_FILES_CHKSUM
 addtask qa_configure after do_configure before do_compile
 python do_qa_configure() {
     configs = []
+    workdir = bb.data.getVar('WORKDIR', d, True)
     bb.note("Checking autotools environment for common misconfiguration")
-    for root, dirs, files in os.walk(bb.data.getVar('WORKDIR', d, True)):
+    for root, dirs, files in os.walk(workdir):
         statement = "grep 'CROSS COMPILE Badness:' %s > /dev/null" % \
                     os.path.join(root,"config.log")
         if "config.log" in files:
@@ -582,4 +582,7 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
               if os.system(gnu) == 0:
                  bb.fatal("""Gettext required but not in DEPENDS for file %s.
 Missing inherit gettext?""" % config)
+
+    if not package_qa_check_license(workdir, d):
+        bb.fatal("Licensing warning: LIC_FILES_CHKSUM does not match, please fix")
 }
