@@ -17,7 +17,7 @@ def get_perl_version(d):
 		return None
 	l = f.readlines();
 	f.close();
-	r = re.compile("version='(\d\.\d\.\d)'")
+	r = re.compile("^version='(\d*\.\d*\.\d*)'")
 	for s in l:
 		m = r.match(s)
 		if m:
