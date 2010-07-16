@@ -1,7 +1,7 @@
 DESCRIPTION = "Gstreamer package groups"
 LICENSE = "MIT"
 DEPENDS = "gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly"
-PR = "r3"
+PR = "r4"
 
 PACKAGES = "\
     gst-meta-base \
@@ -29,7 +29,7 @@ RDEPENDS_gst-meta-base = "\
 
 RDEPENDS_gst-meta-audio = "\
     gst-meta-base \
-    gst-plugins-base-ivorbis \
+    gst-plugins-base-ivorbisdec \
     gst-plugins-base-ogg \
     gst-plugins-ugly-mad"
 
