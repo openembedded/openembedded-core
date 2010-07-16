@@ -1,6 +1,8 @@
 DESCRIPTION = "high level language (glib) binding for dbus"
 HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
 LICENSE = "AFL2.1 | GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=cf5b3a2f7083750d504333114e738656 \
+                    file://dbus/dbus-glib.h;firstline=7;endline=21;md5=833ef01806b4c524fb3678a16300536f"
 SECTION = "base"
 DEPENDS = "expat glib-2.0 virtual/libintl dbus-glib-native dbus"
 DEPENDS_virtclass-native = "glib-2.0-native dbus-native"
