@@ -1,5 +1,6 @@
 DESCRIPTION = "Device formfactor information"
 SECTION = "base"
+LICENSE = "MIT"
 PR = "r18"
 
 SRC_URI = "file://config file://machconfig"
