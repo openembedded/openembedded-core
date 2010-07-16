@@ -1,5 +1,5 @@
 DESCRIPTION = "A tool to make device nodes"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 SECTION = "base"
 PRIORITY = "required"
 SRC_URI = "file://makedevs.c"
