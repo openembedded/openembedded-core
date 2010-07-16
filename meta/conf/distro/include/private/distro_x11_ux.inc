@@ -200,23 +200,23 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gnome-common = "6 months"
 RECIPE_LATEST_RELEASE_DATE_pn-gnome-common = "09/2009"
 RECIPE_COMMENTS_pn-gnome-common = ""
 
-RECIPE_STATUS_pn-webkit-gtk = "yellow" # update needed
+RECIPE_STATUS_pn-webkit-gtk = "green"
 DEPENDENCY_CHECK_pn-webkit-gtk = "not done"
-RECIPE_LATEST_VERSION_pn-webkit-gtk = "1.2.1"
+RECIPE_LATEST_VERSION_pn-webkit-gtk = "1.3.2"
 RECIPE_NO_OF_PATCHES_pn-webkit-gtk = "0"
 RECIPE_INTEL_SECTION_pn-webkit-gtk = "graphic UX"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-webkit-gtk = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-webkit-gtk = "06/2010"
 RECIPE_COMMENTS_pn-webkit-gtk = ""
 
-RECIPE_STATUS_pn-eds-dbus = "yellow" # update needed; custome configure
+RECIPE_STATUS_pn-eds-dbus = "green"
 DEPENDENCY_CHECK_pn-eds-dbus = "not done"
 RECIPE_LATEST_VERSION_pn-eds-dbus = "2.31.4"
 RECIPE_NO_OF_PATCHES_pn-eds-dbus = "0"
 RECIPE_INTEL_SECTION_pn-eds-dbus = "graphic UX"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-eds-dbus = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-eds-dbus = "06/2010"
-RECIPE_COMMENTS_pn-eds-dbus = ""
+RECIPE_COMMENTS_pn-eds-dbus = "Update to 2.30.2 because of stability and dependency"
 
 RECIPE_STATUS_pn-gnome-keyring = "green"
 DEPENDENCY_CHECK_pn-gnome-keyring = "not done"
@@ -245,7 +245,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-hicolor-icon-theme = "4 months"
 RECIPE_LATEST_RELEASE_DATE_pn-hicolor-icon-theme = "09/2009"
 RECIPE_COMMENTS_pn-hicolor-icon-theme = ""
 
-RECIPE_STATUS_pn-jpeg = "yellow" # update needed
+RECIPE_STATUS_pn-jpeg = "green"
 DEPENDENCY_CHECK_pn-jpeg = "not done"
 RECIPE_LATEST_VERSION_pn-jpeg = "8b"
 RECIPE_NO_OF_PATCHES_pn-jpeg = "0"
@@ -353,7 +353,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libgnome-keyring = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-libgnome-keyring = "04/2010"
 RECIPE_COMMENTS_pn-libgnome-keyring = "New recipe separated from gnome-keyring"
 
-RECIPE_STATUS_pn-web-webkit = "yellow" #update needed
+RECIPE_STATUS_pn-web-webkit = "green"
 DEPENDENCY_CHECK_pn-web-webkit = "not done"
 RECIPE_LATEST_VERSION_pn-web-webkit = "110"
 RECIPE_NO_OF_PATCHES_pn-web-webkit = "1"
