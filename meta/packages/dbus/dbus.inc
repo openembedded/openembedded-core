@@ -2,6 +2,8 @@ DESCRIPTION = "D-Bus is a message bus system, a simple way for applications to t
 HOMEPAGE = "http://dbus.freedesktop.org"
 SECTION = "base"
 LICENSE = "AFL2.1 | GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
+                    file://dbus/dbus.h;firstline=6;endline=20;md5=6eea2e0c7750dd8e620dcb1437312fa5"
 DEPENDS = "expat glib-2.0 virtual/libintl virtual/libx11 libsm"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
