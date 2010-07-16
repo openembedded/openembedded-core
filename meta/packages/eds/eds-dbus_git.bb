@@ -3,16 +3,20 @@ HOMEPAGE = "http://www.gnome.org/projects/evolution/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 
 LICENSE = "LGPLv2 & LGPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6a6e689d19255cf0557f3fe7d7068212 \
+                    file://camel/camel.h;endline=24;md5=b02175c88f821224746b347a89731a2b \
+                    file://libedataserver/e-data-server-util.h;endline=23;md5=9df8127bd8cfdc5469e938fc710d1f40 \
+                    file://calendar/libecal/e-cal.h;endline=24;md5=5d496b9b6fd2a4fdbbfc31ef9455c9d0"
 
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup-2.4 libglade libical gnome-keyring"
 
-PV = "2.29+git${SRCPV}"
-PR = "r5"
+PV = "2.30+git${SRCPV}"
+PR = "r0"
 
 SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
            file://oh-contact.patch;patch=1;pnum=0 \
            file://nossl.patch;patch=1 \
-           file://parallelmake.patch;patch=1 \
+           file://optional_imapx_provider.patch;patch=1 \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/git"
