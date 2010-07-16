@@ -21,7 +21,7 @@ PREFERRED_VERSION_binutils-cross ?= "${BINUVERSION}"
 PREFERRED_VERSION_linux-libc-headers ?= "2.6.33"
 PREFERRED_VERSION_glibc ?= "2.9"
 PREFERRED_VERSION_glibc-initial ?= "2.9"
-PREFERRED_VERSION_elfutils ?= "0.131"
+PREFERRED_VERSION_elfutils ?= "0.148"
 
 require conf/distro/include/as-needed.inc
 

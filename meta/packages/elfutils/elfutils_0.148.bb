@@ -1,0 +1,58 @@
+DESCRIPTION = "A collection of utilities and DSOs to handle compiled objects."
+HOMEPAGE = "https://fedorahosted.org/elfutils"
+SECTION = "base"
+LICENSE = "GPLv2 with exceptions"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3\
+                    file://EXCEPTION;md5=570adcb0c1218ab57f2249c67d0ce417"
+DEPENDS = "libtool"
+
+PR = "r0"
+
+SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/elfutils-${PV}.tar.bz2"
+
+# pick the patch from debian
+# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.148-1.debian.tar.gz
+
+SRC_URI += "\
+        file://redhat-portability.diff \
+        file://redhat-robustify.diff \
+        file://hppa_backend.diff \
+        file://arm_backend.diff \
+        file://mips_backend.diff \
+        file://m68k_backend.diff \
+        file://do-autoreconf.diff \
+        file://testsuite-ignore-elflint.diff \
+        file://elf_additions.diff \
+"
+
+# The buildsystem wants to generate 2 .h files from source using a binary it just built,
+# which can not pass the cross compiling, so let's work around it by adding 2 .h files
+# along with the do_configure_prepend()
+
+SRC_URI += "\
+        file://i386_dis.h \
+        file://x86_64_dis.h \
+"
+
+inherit autotools
+
+do_configure_prepend() {
+	sed -i 's:./i386_gendis:echo\ \#:g' ${S}/libcpu/Makefile.am
+
+	cp ${WORKDIR}/*dis.h ${S}/libcpu
+}
+
+# Package binaries that overlap with binutils separately
+PACKAGES =+ "${PN}-binutils"
+FILES_${PN}-binutils = "\
+    ${bindir}/addr2line \
+    ${bindir}/ld \
+    ${bindir}/nm \
+    ${bindir}/readelf \
+    ${bindir}/size \
+    ${bindir}/strip"
+# Fix library issues
+FILES_${PN} =+ "${libdir}/*-${PV}.so"
+
+# The elfutils package contains symlinks that trip up insane
+INSANE_SKIP_elfutils = "1"

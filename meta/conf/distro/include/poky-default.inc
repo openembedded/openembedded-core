@@ -41,7 +41,7 @@ PREFERRED_VERSION_glibc ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_glibc-nativesdk ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_glibc-initial ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_glibc-initial-nativesdk ?= "${GLIBCVERSION}"
-PREFERRED_VERSION_elfutils ?= "0.131"
+PREFERRED_VERSION_elfutils ?= "0.148"
 
 require conf/distro/include/as-needed.inc
 
