@@ -790,6 +790,12 @@
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-SUMMARY'><glossterm>SUMMARY</glossterm>
+            <glossdef>
+                <para>Short (72 char suggested) Summary of binary package for packaging sytems such as ipkg, rpm or debian, inherits DESCRIPTION by default</para>
+            </glossdef>
+        </glossentry>
+
     </glossdiv>
 
     <glossdiv id='var-glossary-t'><title>T</title>
