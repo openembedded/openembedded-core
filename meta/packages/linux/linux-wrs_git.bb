@@ -22,7 +22,6 @@ WRMACHINE_qemuarm  = "arm_versatile_926ejs"
 LINUX_VERSION=v2.6.34
 LINUX_VERSION_EXTENSION="-wr-${LINUX_KERNEL_TYPE}"
 PR = r1
-PV = "2.6.34+${PR}+git${SRCREV}"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
