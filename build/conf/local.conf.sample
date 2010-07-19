@@ -1,10 +1,12 @@
 # CONF_VERSION is increased each time build/conf/ changes incompatibly
 CONF_VERSION = "1"
 
-# Where to cache the files Poky downloads
-DL_DIR ?= "${OEROOT}/sources"
-# Where to cache Poky's built staging output
-PSTAGE_DIR ?= "${OEROOT}/pstage"
+# Uncomment and change to cache the files Poky downloads in an alternative
+# location, default it ${TOPDIR}/sources
+#DL_DIR ?= "${TOPDIR}/sources"
+# Uncomment and change to cache Poky's built staging output in an alternative
+# location, default ${TOPDIR}/pstage
+#PSTAGE_DIR ?= "${TOPDIR}/pstage"
 
 # Uncomment and set to allow bitbake to execute multiple tasks at once.
 # For a quadcore, BB_NUMBER_THREADS = "4", PARALLEL_MAKE = "-j 4" would
