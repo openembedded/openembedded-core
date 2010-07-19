@@ -15,6 +15,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/dropbear
 NAME=dropbear
 DESC="Dropbear SSH server"
+PIDFILE=/var/run/dropbear.pid
 
 DROPBEAR_PORT=22
 DROPBEAR_EXTRA_ARGS=
@@ -80,24 +81,24 @@ case "$1" in
 	KEY_ARGS=""
 	test -f $DROPBEAR_DSSKEY && KEY_ARGS="$KEY_ARGS -d $DROPBEAR_DSSKEY"
 	test -f $DROPBEAR_RSAKEY && KEY_ARGS="$KEY_ARGS -r $DROPBEAR_RSAKEY"
-	start-stop-daemon -S \
+	start-stop-daemon -S -p $PIDFILE \
 	  -x "$DAEMON" -- $KEY_ARGS \
 	    -p "$DROPBEAR_PORT" $DROPBEAR_EXTRA_ARGS
 	echo "$NAME."
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	start-stop-daemon -K -x "$DAEMON"
+	start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
 	echo "$NAME."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
-	start-stop-daemon -K -x "$DAEMON"
+	start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
 	sleep 1
 	KEY_ARGS=""
 	test -f $DROPBEAR_DSSKEY && KEY_ARGS="$KEY_ARGS -d $DROPBEAR_DSSKEY"
 	test -f $DROPBEAR_RSAKEY && KEY_ARGS="$KEY_ARGS -r $DROPBEAR_RSAKEY"
-	start-stop-daemon -S \
+	start-stop-daemon -S -p $PIDFILE \
 	  -x "$DAEMON" -- $KEY_ARGS \
 	    -p "$DROPBEAR_PORT" $DROPBEAR_EXTRA_ARGS
 	echo "$NAME."
