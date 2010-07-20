@@ -3,7 +3,7 @@ DEPENDS += " unzip-native "
 LICENSE = "unknown"
 PR = "r2"
 
-SRC_URI = "ftp://symstore.longisland.com/Symstore/services_download/wirless_prod/MC&DriverOnlyInstallers.zip \
+SRC_URI = "http://ftp.osuosl.org/pub/nslu2/sources/MC&DriverOnlyInstallers.zip \
            file://get_symbol_fw \
            file://parse_symbol_fw"
 S = "${WORKDIR}"
