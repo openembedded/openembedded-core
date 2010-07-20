@@ -44,7 +44,7 @@ RDEPENDS_task-poky-tools-profile = "\
 #    exmap-server
 
 
-RDEPENDS_task-poky-tools-profile_qemux86 += "valgrind"
+RDEPENDS_append_task-poky-tools-profile_qemux86 = "valgrind"
 
 RRECOMMENDS_task-poky-tools-profile = "\
     kernel-module-oprofile"
