@@ -37,6 +37,7 @@ RDEPENDS_task-poky-tools-profile = "\
     oprofile \
     oprofileui-server \
     powertop \
+    latencytop \
     lttng-control \
     lttng-viewer"
 
