@@ -1,11 +1,12 @@
 DESCRIPTION = "An Embeddable SQL Database Engine"
+HOMEPAGE = "http://www.sqlite.org"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "readline ncurses tcl-native"
 LICENSE = "PD"
 
 SRC_URI = "http://www.sqlite.org/sqlite-${PV}.tar.gz \
-	   file://libtool.patch;patch=1"
+	   file://libtool.patch"
 
 S = "${WORKDIR}/sqlite-${PV}"
 
