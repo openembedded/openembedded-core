@@ -1,7 +1,7 @@
 require oprofileui.inc
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r1"
+PR = "r0"
 
 S = "${WORKDIR}/trunk"
 
