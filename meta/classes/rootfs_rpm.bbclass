@@ -2,130 +2,103 @@
 # Creates a root filesystem out of rpm packages
 #
 
-ROOTFS_PKGMANAGE = "rpm yum" 
-
+ROOTFS_PKGMANAGE = "rpm" 
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
-do_rootfs[depends] += "rpm-native:do_populate_sysroot python-urlgrabber-native:do_populate_sysroot yum-metadata-parser-native:do_populate_sysroot yum-native:do_populate_sysroot createrepo-native:do_populate_sysroot fakechroot-native:do_populate_sysroot"
+RPMOPTS="--dbpath /var/lib/rpm --define='_openall_before_chroot 1'"
+RPM="${BUILD_ARCH}-${BUILD_OS}-rpm ${RPMOPTS}"
+
+do_rootfs[depends] += "rpm-native:do_populate_sysroot"
 
 # Needed for update-alternatives
 do_rootfs[depends] += "opkg-native:do_populate_sysroot"
 
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
-YUMCONF = "${IMAGE_ROOTFS}/etc/yum.conf"
-YUMARGS = "--disablerepo=* --enablerepo=poky-feed-* --installroot ${IMAGE_ROOTFS}"
-export YUM_ARCH_FORCE = "${TARGET_ARCH}"
-
-AWKPOSTINSTSCRIPT = "${STAGING_BINDIR_NATIVE}/extract-postinst.awk"
+AWKPOSTINSTSCRIPT = "${POKYBASE}/scripts/rootfs_rpm-extract-postinst.awk"
 
 RPM_PREPROCESS_COMMANDS = ""
-RPM_POSTPROCESS_COMMANDS = "rpm_insert_feeds_uris"
-
-rpm_insert_feeds_uris () {
-
-        echo "Building from feeds activated!"
-
-	mkdir -p ${IMAGE_ROOTFS}/etc/yum/repos.d/
-        for line in ${RPM_FEED_URIS}
-        do
-                # strip leading and trailing spaces/tabs, then split into name and uri
-                line_clean="`echo "$line"|sed 's/^[ \t]*//;s/[ \t]*$//'`"
-                feed_name="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\1/p'`"
-                feed_uri="`echo "$line_clean" | sed -n 's/\(.*\)##\(.*\)/\2/p'`"
-
-                echo "Added $feed_name feed with URL $feed_uri"
-
-		FEED_FILE=${IMAGE_ROOTFS}/etc/yum/repos.d/$feed_name
-
-		echo "[poky-feed-$feed_name]" >> $FEED_FILE
-		echo "name = $feed_name" >> $FEED_FILE
-		echo "baseurl = $feed_uri" >> $FEED_FILE
-		echo "gpgcheck = 0" >> $FEED_FILE
-        done
-}
+RPM_POSTPROCESS_COMMANDS = ""
 
 fakeroot rootfs_rpm_do_rootfs () {
 	set -x
 	
 	${RPM_PREPROCESS_COMMANDS}
 
+	# Setup base system configuration
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
 	echo "${TARGET_ARCH}-linux" >${IMAGE_ROOTFS}/etc/rpm/platform
 
-	# Generate an apprpriate yum.conf
-	rm -rf ${YUMCONF}
-	cat > ${YUMCONF} << EOF
-[main]
-cachedir=/var/cache2/yum
-keepcache=1
-debuglevel=10
-logfile=/var/log2/yum.log
-exactarch=0
-obsoletes=1
-tolerant=1
+  # Instantiate the dep solver database
+	mkdir -p ${IMAGE_ROOTFS}/var/lib/rpm_solver
 
-EOF
-
-	#priority=1
-	mkdir -p ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}
-
+	# Generate dep_solver manifest
+	cat /dev/null > ${IMAGE_ROOTFS}/var/lib/rpm_solver/dep_solver.manifest
+	echo "# Dynamically generated install manifest -- avoid small file bug" >> ${IMAGE_ROOTFS}/var/lib/rpm_solver/dep_solver.manifest
 	for arch in ${PACKAGE_ARCHS}; do
-		if [ ! -d ${DEPLOY_DIR_RPM}/$arch ]; then
-			continue;
-		fi
-		createrepo ${DEPLOY_DIR_RPM}/$arch
-
-		echo "[poky-feed-$arch]" >> ${YUMCONF}
-		echo "name = Poky RPM $arch Feed" >> ${YUMCONF}
-		echo "baseurl=file://${DEPLOY_DIR_RPM}/$arch" >> ${YUMCONF}
-		echo "gpgcheck=0" >> ${YUMCONF}
-		echo "" >> ${YUMCONF}
-		#priority=$(expr $priority + 5)
-		
-		# Copy the packages into the target image
-		# Ugly ugly ugly but rpm is braindead and can't see outside the chroot 
-		# when installing :(
-		cp -r ${DEPLOY_DIR_RPM}/$arch ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
+		[ -d ${DEPLOY_DIR_RPM}/$arch ] && find ${DEPLOY_DIR_RPM}/$arch -type f >> ${IMAGE_ROOTFS}/var/lib/rpm_solver/dep_solver.manifest
 	done
+	
+	${RPM} --root ${IMAGE_ROOTFS} --dbpath /var/lib/rpm_solver --initdb
+	${RPM} --root ${IMAGE_ROOTFS} --dbpath /var/lib/rpm_solver -Uhv ${IMAGE_ROOTFS}/var/lib/rpm_solver/dep_solver.manifest --justdb --nodeps --noparentdirs --nolinktos
 
-
-	#mkdir -p ${IMAGE_ROOTFS}/var/lib/rpm
-	#rpm --root ${IMAGE_ROOTFS} --initdb
-	#rpm --root ${IMAGE_ROOTFS} --dbpath ${IMAGE_ROOTFS}/var/lib/rpm -ihv --nodeps --ignoreos  
-	#rpm -ihv --root ${IMAGE_ROOTFS} ${PACKAGE_INSTALL}
-
-	#package_update_index_rpm
-	#package_generate_ipkg_conf
-
-	# Uclibc builds don't provide this stuff...
+  # Resolve Dependencies and Install
 	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then 
 		if [ ! -z "${LINGUAS_INSTALL}" ]; then
 			for i in ${LINGUAS_INSTALL}; do
-				fakechroot yum ${YUMARGS} -y install $i 
+: # Do not support locales yet
 			done
 		fi
 	fi
+
 	if [ ! -z "${PACKAGE_INSTALL}" ]; then
-		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL}
+		# Create the install manifest, starting with the PACKAGE_INSTALL packages
+		touch ${IMAGE_ROOTFS}/install.manifest
+		for each in ${PACKAGE_INSTALL} ; do
+			# Map package name to filename
+			pkg_name=$(${RPM} --root ${IMAGE_ROOTFS} --dbpath /var/lib/rpm_solver -q --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}" $each)
+			echo Processing "$each $pkg_name"
+			# Map filename to full path
+			[ -n "$pkg_name" ] && grep "/"$pkg_name ${IMAGE_ROOTFS}/var/lib/rpm_solver/dep_solver.manifest >> ${IMAGE_ROOTFS}/install.manifest
+		done
 	fi
 
+	# Attempt to resolve dependencies and add missing packages to the install.manifest
+	# Loop over the resolution until there is nothing else to resolve...
+	# We log the solver.logs so we can track the dep solver process for debugging...
+	resolver=1
+	while [ $resolver -gt 0 ]; do
+	  (${RPM} --root ${IMAGE_ROOTFS} \
+		--define '_solve_dbpath /var/lib/rpm_solver' --define '_solve_name_fmt add:%{___NVRA}.rpm' --aid \
+		-Uhv --noparentdirs --nolinktos --test ${IMAGE_ROOTFS}/install.manifest > ${IMAGE_ROOTFS}/solver.log.$resolver 2>&1 || :)
+
+	  resolve_continue=false
+	  for each in `cat ${IMAGE_ROOTFS}/solver.log.$resolver | grep "add:" | cut -d : -f 2` ; do
+		pkg_name=$each
+		echo Processing "$each $pkg_name"
+		# Map filename to full path
+		[ -n "$pkg_name" ] && grep "/"$pkg_name ${IMAGE_ROOTFS}/var/lib/rpm_solver/dep_solver.manifest >> ${IMAGE_ROOTFS}/install.manifest
+		resolve_continue=true
+	  done
+	  if [ "$resolve_continue" == "true" ]; then
+		resolver=$(expr $resolver + 1)
+	  else
+		resolver=0
+	  fi
+        done
+
+	# Attempt install
+	${RPM} --root ${IMAGE_ROOTFS} \
+		--define '_solve_dbpath /var/lib/rpm_solver' --define '_solve_name_fmt add:%{___NVRA}.rpm' --aid \
+		-Uhv --noparentdirs --nolinktos --noscripts ${IMAGE_ROOTFS}/install.manifest
+
 	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
-		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL_ATTEMPTONLY} > ${WORKDIR}/temp/log.do_rootfs-attemptonly.${PID} || true
+: #		fakechroot yum ${YUMARGS} -y install ${PACKAGE_INSTALL_ATTEMPTONLY} > ${WORKDIR}/temp/log.do_rootfs-attemptonly.${PID} || true
 	fi
 
 	# Add any recommended packages to the image
 	# (added as an extra script since yum itself doesn't support this)
-	yum-install-recommends.py ${IMAGE_ROOTFS} "fakechroot yum ${YUMARGS} -y install"
-
-	# Symlinks created under fakeroot are wrong, now we have to fix them...
-	cd ${IMAGE_ROOTFS}
-	for f in `find . -type l -print`
-	do
-		link=`readlink $f | sed -e 's#${IMAGE_ROOTFS}##'`
-		rm $f
-		ln -s $link $f
-	done
+: #	yum-install-recommends.py ${IMAGE_ROOTFS} "fakechroot yum ${YUMARGS} -y install"
 
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
@@ -138,7 +111,7 @@ EOF
 	${ROOTFS_POSTINSTALL_COMMAND}
 
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm-postinsts/
-	rpm --root ${IMAGE_ROOTFS} -aq --queryformat 'Name: %{NAME}\n' --scripts > ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
+	${RPM} --root ${IMAGE_ROOTFS} -qa --queryformat 'Name: %{NAME}\n' --scripts > ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
 	awk -f ${AWKPOSTINSTSCRIPT} < ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
 	rm ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined	
 
@@ -176,13 +149,16 @@ EOF
 	rm -rf ${IMAGE_ROOTFS}/var/cache2/
 	rm -rf ${IMAGE_ROOTFS}/var/run2/
 	rm -rf ${IMAGE_ROOTFS}/var/log2/
-	rm -rf ${IMAGE_ROOTFS}${DEPLOY_DIR_RPM}/
 
 	# remove lock files
 	rm -f ${IMAGE_ROOTFS}/var/lib/rpm/__db.*
 
-	# remove no longer used yum.conf
-	rm -f ${IMAGE_ROOTFS}/etc/yum.conf
+	# remove resolver files and manifests
+	rm -f ${IMAGE_ROOTFS}/install.manifest
+	rm -f ${IMAGE_ROOTFS}/solver.log.*
+
+	# Remove resolver DB
+	rm -rf ${IMAGE_ROOTFS}/var/lib/rpm_solver
 
 	log_check rootfs
 }
