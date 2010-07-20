@@ -4,17 +4,14 @@ BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=hal"
 SECTION = "unknown"
 
 LICENSE = "GPLv2+ | AFL"
+LIC_FILES_CHKSUM = "file://COPYING;md5=5b5ffd59fbb7c2fff6de76c94177af31"
 
-DEPENDS = "virtual/kernel dbus-glib udev intltool intltool-native expat libusb gperf-native"
+DEPENDS = "virtual/kernel dbus-glib udev util-linux intltool intltool-native expat libusb gperf-native"
 RDEPENDS += "udev hal-info"
-RRECOMMENDS = "udev-utils"
 
-SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz"
-SRC_URI += "file://99_hal \
-            file://20hal \
-	   "
-
-S = "${WORKDIR}/hal-${PV}"
+SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz \
+           file://99_hal \
+           file://20hal"
 
 inherit autotools pkgconfig
 
