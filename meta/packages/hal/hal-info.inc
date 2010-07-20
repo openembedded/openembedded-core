@@ -4,9 +4,9 @@ BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=hal"
 SECTION = "unknown"
 
 LICENSE = "GPLv2 | AFL"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ae484909bad0cf11c8e2071cee6bd4dc"
 
 SRC_URI = "http://hal.freedesktop.org/releases/${PN}-${PV}.tar.gz"
-S = "${WORKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig
 
