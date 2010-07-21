@@ -104,12 +104,12 @@ RECIPE_COMMENTS_pn-neon = ""
 
 RECIPE_STATUS_pn-libpng = "green"
 DEPENDENCY_CHECK_pn-libpng = "not done"
-RECIPE_LATEST_VERSION_pn-libpng = "1.4.3"
+RECIPE_LATEST_VERSION_pn-libpng = "1.4.3" # OK
 RECIPE_PATCH_pn-libpng+makefile = "by RP; 2008; to define ECHO explicitly for lbitool 2.2.2. need check whether it's still valide for new libtool. candidate for upstream"
 RECIPE_INTEL_SECTION_pn-libpng = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libpng = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-libpng = "06/2010"
-RECIPE_COMMENTS_pn-libpng = ""
+RECIPE_COMMENTS_pn-libpng = "1.4.3 has API compatibility issue. choose 1.2.44 instead"
 
 RECIPE_STATUS_pn-libidn = "green"
 DEPENDENCY_CHECK_pn-libidn = "not done"
