@@ -14,9 +14,15 @@ DEPENDS = "libgpg-error"
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${PV}.tar.gz \
            file://add-pkgconfig-support.patch"
 
-inherit autotools binconfig pkgconfig pkgconfig_stage
+inherit autotools binconfig pkgconfig
 
 EXTRA_OECONF = "--without-pth --disable-asm --with-capabilities"
+
+# libgcrypt.pc is added locally and thus installed here
+do_install_append() {
+	install -d ${D}/${libdir}/pkgconfig
+	install -m 0644 ${S}/src/libgcrypt.pc ${D}/${libdir}/pkgconfig/
+}
 
 ARM_INSTRUCTION_SET = "arm"
 
