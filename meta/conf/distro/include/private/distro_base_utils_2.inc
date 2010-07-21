@@ -122,13 +122,21 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-curl = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-curl = "06/2010"
 RECIPE_COMMENTS_pn-curl = ""
 
-RECIPE_STATUS_pn-gconf-dbus = "red"   # need upgrade
+RECIPE_STATUS_pn-gconf-dbus = "green"
 DEPENDENCY_CHECK_pn-gconf-dbus = "not done"
 RECIPE_LATEST_VERSION_pn-gconf-dbus = "2.16.0"
 RECIPE_INTEL_SECTION_pn-gconf-dbus = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gconf-dbus = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-gconf-dbus = "n/a"
 RECIPE_COMMENTS_pn-gconf-dbus = "difficult to identify official site and current status"
+
+RECIPE_STATUS_pn-elfutils="green" # no update needed
+DEPENDENCY_CHECK_pn-gconf-dbus = "not done"
+RECIPE_LATEST_VERSION_pn-elfutils="0.148"
+RECIPE_INTEL_SECTION_pn-gconf-dbus = "base utils"
+RECIPE_NO_OF_PATCHES_pn-elfutils="9"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-elfutils="1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-elfutils="06/2010"
 
 RECIPE_STATUS_pn-pkgconfig = "green"
 DEPENDENCY_CHECK_pn-pkgconfig = "not done"
@@ -319,7 +327,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-tinylogin = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-tinylogin = "n/a"
 RECIPE_COMMENTS_pn-tinylogin = "merged into busybox"
 
-RECIPE_STATUS_pn-spectrum-fw = "red"   # need upgrade
+RECIPE_STATUS_pn-spectrum-fw = "green"   # need upgrade
 DEPENDENCY_CHECK_pn-spectrum-fw = "not done"
 RECIPE_LATEST_VERSION_pn-spectrum-fw = "n/a"
 RECIPE_INTEL_SECTION_pn-spectrum-fw = "base utils"

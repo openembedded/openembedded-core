@@ -172,7 +172,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-popt = "13 months"
 RECIPE_LATEST_RELEASE_DATE_pn-popt = "05/2010"
 RECIPE_COMMENTS_pn-popt = ""
 
-RECIPE_STATUS_pn-sqlite3 = "red"   # need upgrade
+RECIPE_STATUS_pn-sqlite3 = "green"   # need upgrade
 DEPENDENCY_CHECK_pn-sqlite3 = "not done"
 RECIPE_LATEST_VERSION_pn-sqlite3 = "3.6.23.1"
 RECIPE_INTEL_SECTION_pn-sqlite3 = "base libs"
