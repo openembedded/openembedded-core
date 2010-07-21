@@ -20,7 +20,7 @@ SCONF_VERSION = "1"
 # although this only works for http
 #GIT_PROXY_HOST = "proxy.example.com"
 #GIT_PROXY_PORT = "81"
-#export GIT_PROXY_COMMAND = "${OEROOT}/scripts/poky-git-proxy-command"
+#export GIT_PROXY_COMMAND = "${POKYBASE}/scripts/poky-git-proxy-command"
 
 # GIT_PROXY_IGNORE_* lines define hosts which do not require a proxy to access
 #GIT_CORE_CONFIG = "Yes"
@@ -32,7 +32,7 @@ SCONF_VERSION = "1"
 # and then share that binary somewhere in PATH, then use the following settings
 #GIT_PROXY_HOST = "proxy.example.com"
 #GIT_PROXY_PORT = "81"
-#export GIT_PROXY_COMMAND = "${OEROOT}/scripts/poky-git-proxy-socks-command"
+#export GIT_PROXY_COMMAND = "${POKYBASE}/scripts/poky-git-proxy-socks-command"
 
 
 # Uncomment this to use a shared download directory

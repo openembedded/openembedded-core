@@ -21,7 +21,9 @@
 
 if test x"$0" = x"./poky-init-build-env"; then
    echo "Error: Run via '. ./poky-init-build-env'"
+elif test x"$BASH_SOURCE" = x; then
+   echo "Error: you are not running a Bash shell, please use Bash or add support for your shell to the init scripts"
 else
-   . ./scripts/poky-env-internal
+   . `dirname $BASH_SOURCE`/scripts/poky-env-internal
 fi
 

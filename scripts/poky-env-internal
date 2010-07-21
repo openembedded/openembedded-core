@@ -19,19 +19,30 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-# Change this to the location of this file.
-# Also update the locations at the top of conf/local.conf
+# scripts/ is a sub-directory of OEROOT, we use readlink to get the full path
+SCRIPTPATH=`readlink -f "$BASH_SOURCE"`
+OEROOT="`dirname $SCRIPTPATH`/../"
 
-OEROOT=`pwd`
 if [ "x$BDIR" = "x" ]; then
-	if [ "x$1" = "x" ]; then
-		BDIR="build"
-	else
-		BDIR="$1"
-	fi
+	  if [ "x$1" = "x" ]; then
+        BDIR="build"
+	  else
+		    BDIR=`readlink -f "$1"`
+	  fi
 fi
-BUILDDIR="$OEROOT/$BDIR/"
+if [[ "$BDIR" = /* ]] ; then
+    BUILDDIR="$BDIR"
+else
+    BUILDDIR="`pwd`/$BDIR"
+fi
 unset BDIR
+
+mkdir -p $BUILDDIR/conf
+if ! (test -w "$BUILDDIR"); then
+    echo >&2 "Error: Cannot write to $BUILDDIR, perhaps try sourcing with a writable path? i.e. . poky-init-build-env ~/my-build"
+    return
+fi
+
 BITBAKEDIR="$OEROOT/bitbake$BBEXTRA/"
 PKGDIR="$OEROOT/meta/"
 BBPATH="$BITBAKEDIR $PKGDIR"
@@ -51,9 +62,8 @@ do
         continue
     fi
     if [ -e $OEROOT/$repo/poky-extra-environment ]; then
-	. $OEROOT/$repo/poky-extra-environment
+	      . $OEROOT/$repo/poky-extra-environment
     fi
-    BBPATH=" $BBPATH $OEROOT/$repo"
 done
 
 BBPATH="$BBPATH $HOME/.oe $HOME/.poky $BUILDDIR"
@@ -78,12 +88,13 @@ BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
 
 PATH="$BITBAKEDIR/bin/:$OEROOT/scripts:$PATH"
 
-cd "$BUILDDIR"
-
 # Remove any symlinks from paths
 BITBAKEDIR=`readlink -f "$BITBAKEDIR"`
 PKGDIR=`readlink -f "$PKGDIR"`
 BUILDDIR=`readlink -f "$BUILDDIR"`
+OEROOT=`readlink -f "$OEROOT"`
+
+cd "$BUILDDIR"
 
 if ! (test -d "$BITBAKEDIR" && test -d "$PKGDIR" && test -d "$BUILDDIR"); then
     echo >&2 "Error: Not all directories exist! Did you run this script in poky directory?"
@@ -91,7 +102,7 @@ if ! (test -d "$BITBAKEDIR" && test -d "$PKGDIR" && test -d "$BUILDDIR"); then
 fi
 
 if [ "x" = "x$POKYLOCALCONF" ]; then
-    POKYLOCALCONF="$BUILDDIR/conf/local.conf.sample"
+    POKYLOCALCONF="$OEROOT/build/conf/local.conf.sample"
 fi
 if ! (test -r "$BUILDDIR/conf/local.conf"); then
     echo "You had no conf/local.conf file. Poky has created this configuration file for you"
@@ -105,17 +116,19 @@ if ! (test -r "$BUILDDIR/conf/local.conf"); then
 fi
 
 if [ "x" = "x$POKYLAYERCONF" ]; then
-    POKYLAYERCONF="$BUILDDIR/conf/bblayers.conf.sample"
+    POKYLAYERCONF="$OEROOT/build/conf/bblayers.conf.sample"
 fi
 if ! (test -r "$BUILDDIR/conf/bblayers.conf"); then
-    cp -f $POKYLAYERCONF $BUILDDIR/conf/bblayers.conf
+    # Put the abosolute path to the layers in bblayers.conf so we can run
+    # bitbake without the init script after the first run
+    sed "s|##POKYBASE##|$OEROOT|g" $POKYLAYERCONF > $BUILDDIR/conf/bblayers.conf
 fi
 
 # Prevent disturbing a new GIT clone in same console
 unset POKYLOCALCONF
 unset POKYLAYERCONF
 
-export BBPATH OEROOT BUILD_SYS BUILDDIR
+export BBPATH BUILD_SYS BUILDDIR
 
 # Kill off the TERMINFO variable, as glibc will grab its contents in its 'make
 # install' if set
@@ -141,4 +154,4 @@ echo "Common targets are poky-image-minimal, poky-image-sato, meta-toolchain or 
 echo
 echo "You can also run generated qemu images with a command like 'runqemu qemux86'"
 
-export BB_ENV_EXTRAWHITE="MACHINE DISTRO POKYMODE POKYLIBC OEROOT http_proxy ftp_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY SDKMACHINE BB_NUMBER_THREADS"
+export BB_ENV_EXTRAWHITE="MACHINE DISTRO POKYMODE POKYLIBC http_proxy ftp_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY SDKMACHINE BB_NUMBER_THREADS"

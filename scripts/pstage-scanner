@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ##
-## This script will scan all of the packages in ${OEROOT}/pstage (or argv[1])
+## This script will scan all of the packages in PSTAGE_DIR (or argv[1])
 ## in search of packages which install files outside of their native sysroot
 ##
 
@@ -16,15 +16,24 @@ def main():
     """Generate a list of pstage packages and scan them for badness"""
     package_list = []
 
-    ## First we walk the pstage directory, let's assume we're running from
-    ## a sibling of pstage (i.e. scripts) if no path defined
     try:
         path = sysv.arg[1]
     except:
-        path = os.path.join(os.environ.get("OEROOT"), "pstage")
+        # Assume pstage is a child of tmp, Poky's default
+        tmpdir = None
+        sub.Popen(["bitbake", "-e"], stdout=sub.PIPE,stderr=sub.PIPE)
+        err, out = p.communicate()
+        if (!out):
+            print("bitbake not in your environment, try pstage-scanner /some/path/to/pstage")
+            exit
+        for line in out:
+            if line.find("PSTAGE_DIR=") != -1:
+                tmpdir = line.partition("=")[2].strip("\"")
+                break
 
     if len(path) < 1 or not os.path.exists(path):
-        path = os.path.join(os.environ.get("OEROOT"), "pstage")
+        print ("No path defined and bitbake not in your environment, try pstage-scanner /some/path/to/pstage")
+        exit
     
     global logf
     try:

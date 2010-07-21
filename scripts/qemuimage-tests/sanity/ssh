@@ -9,7 +9,7 @@
 # Version 2.
 #
 
-. $OEROOT/scripts/qemuimage-testlib
+. $POKYBASE/scripts/qemuimage-testlib
 
 TIMEOUT=360
 QEMU_IPADDR="192.168.7.2"

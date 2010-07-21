@@ -42,24 +42,6 @@ DISTRO ?= "poky"
 # For bleeding edge / experimental / unstable package versions
 # DISTRO ?= "poky-bleeding"
 
-# Poky has various extra metadata collections (openmoko, extras).
-# To enable these, uncomment all (or some of) the following lines:
-# BBFILES = "\
-#    ${OEROOT}/meta/packages/*/*.bb \
-#    ${OEROOT}/meta-extras/packages/*/*.bb \
-#    ${OEROOT}/meta-openmoko/packages/*/*.bb \
-#    ${OEROOT}/meta-moblin/packages/*/*.bb \
-#    "
-# BBFILE_COLLECTIONS = "normal extras openmoko moblin"
-# BBFILE_PATTERN_normal = "^${OEROOT}/meta/"
-# BBFILE_PATTERN_extras = "^${OEROOT}/meta-extras/"
-# BBFILE_PATTERN_openmoko = "^${OEROOT}/meta-openmoko/"
-# BBFILE_PATTERN_moblin = "^${OEROOT}/meta-moblin/"
-# BBFILE_PRIORITY_normal = "5"
-# BBFILE_PRIORITY_extras = "5"
-# BBFILE_PRIORITY_openmoko = "5"
-# BBFILE_PRIORITY_moblin = "5"
-
 BBMASK = ""
 
 # EXTRA_IMAGE_FEATURES allows extra packages to be added to the generated images 
@@ -109,7 +91,7 @@ PACKAGE_CLASSES ?= "package_ipk"
 # Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
 # disk space, so make sure to free enough space. The default TMPDIR is
 # <build directory>/tmp
-TMPDIR = "${OEROOT}/build/tmp"
+#TMPDIR = "${POKYBASE}/build/tmp"
 
 
 # Uncomment this if you are using the Openedhand provided qemu deb - see README

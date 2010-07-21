@@ -535,7 +535,7 @@ bitbake poky-image-sato
                 supported and non-invasive fashion.
            </para>
 
-          <para>
+           <para>
                The Poky tree includes two additional layers which demonstrate
                this functionality, meta-moblin and meta-extras.
                The meta-extras repostory is not enabled by default but enabling
@@ -547,12 +547,12 @@ bitbake poky-image-sato
 
 BBFILES ?= ""
 BBLAYERS = " \
-  ${OEROOT}/meta \
-  ${OEROOT}/meta-moblin \
-  ${OEROOT}/meta-extras \
+  /path/to/poky/meta \
+  /path/to/poky/meta-moblin \
+  /path/to/poky/meta-extras \
   "
 </literallayout>
-          </para>
+           </para>
 
           <para>
                Bitbake parses the conf/layer.conf of each of the layers in BBLAYERS
@@ -609,7 +609,7 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 git repository of the format meta-prvt-XXXX and have this repository
                 cloned alongside the other meta directories in the Poky tree.
                 This way you can keep your Poky tree and it's configuration entirely
-                inside OEROOT.
+                inside POKYBASE.
             </para>
         </section>
 

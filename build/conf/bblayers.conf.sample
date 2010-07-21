@@ -4,6 +4,6 @@ LCONF_VERSION = "1"
 
 BBFILES ?= ""
 BBLAYERS = " \
-  ${OEROOT}/meta \
-  ${OEROOT}/meta-moblin \
+  ##POKYBASE##/meta \
+  ##POKYBASE##/meta-moblin \
   "

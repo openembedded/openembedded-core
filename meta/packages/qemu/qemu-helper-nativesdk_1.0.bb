@@ -5,11 +5,11 @@ PR = "r7"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 
-SRC_URI = "file://${OEROOT}/scripts/poky-qemu \
-           file://${OEROOT}/scripts/poky-qemu-internal \
-           file://${OEROOT}/scripts/poky-addptable2image \
-           file://${OEROOT}/scripts/poky-qemu-ifup \
-           file://${OEROOT}/scripts/poky-qemu-ifdown \
+SRC_URI = "file://${POKYBASE}/scripts/poky-qemu \
+           file://${POKYBASE}/scripts/poky-qemu-internal \
+           file://${POKYBASE}/scripts/poky-addptable2image \
+           file://${POKYBASE}/scripts/poky-qemu-ifup \
+           file://${POKYBASE}/scripts/poky-qemu-ifdown \
 	   file://raw2flash.c"
 
 S = "${WORKDIR}"
@@ -23,7 +23,7 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}${OEROOT}/scripts/poky-* ${D}${bindir}/
+	install -m 0755 ${WORKDIR}${POKYBASE}/scripts/poky-* ${D}${bindir}/
 	install raw2flash.spitz ${D}${bindir}/
 	install flash2raw.spitz ${D}${bindir}/
 	ln -fs raw2flash.spitz ${D}${bindir}/raw2flash.akita
