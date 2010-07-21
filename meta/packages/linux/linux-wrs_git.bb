@@ -19,6 +19,8 @@ WRMACHINE_qemuppc  = "qemu_ppc32"
 WRMACHINE_qemumips = "mti_malta32_be"
 WRMACHINE_qemuarm  = "arm_versatile_926ejs"
 
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips)"
+
 LINUX_VERSION=v2.6.34
 LINUX_VERSION_EXTENSION="-wr-${LINUX_KERNEL_TYPE}"
 PR = r1
