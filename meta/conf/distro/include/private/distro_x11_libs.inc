@@ -726,3 +726,12 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-latencytop = "1 year"
 RECIPE_LATEST_RELEASE_DATE_pn-latencytop = "04/2009"
 RECIPE_COMMENTS_pn-latencytop = ""
 
+RECIPE_STATUS_pn-gnome-vfs = "green"
+DEPENDENCY_CHECK_pn-gnome-vfs = "not done"
+RECIPE_LATEST_VERSION_pn-gnome-vfs = "2.24.3"
+RECIPE_NO_OF_PATCHES_pn-gnome-vfs = "2"
+RECIPE_INTEL_SECTION_pn-gnome-vfs = "graphic lib"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gnome-vfs = "5 months"
+RECIPE_LATEST_RELEASE_DATE_pn-gnome-vfs = "03/2010"
+RECIPE_COMMENTS_pn-gnome-vfs = ""
+

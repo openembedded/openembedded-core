@@ -225,12 +225,12 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-hal-info = "4 months"
 RECIPE_LATEST_RELEASE_DATE_pn-hal-info = "11/2009"
 RECIPE_COMMENTS_pn-hal-info = ""
 
-RECIPE_STATUS_pn-avahi = "red"   # need upgrade
+RECIPE_STATUS_pn-avahi = "green"
 DEPENDENCY_CHECK_pn-avahi = "not done"
-RECIPE_LATEST_VERSION_pn-avahi = "0.6.25"
+RECIPE_LATEST_VERSION_pn-avahi = "0.6.27"
 RECIPE_INTEL_SECTION_pn-avahi = "base utils"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-avahi = "4 months"
-RECIPE_LATEST_RELEASE_DATE_pn-avahi = "04/2009"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-avahi = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-avahi = "07/2010"
 RECIPE_COMMENTS_pn-avahi = ""
 
 RECIPE_STATUS_pn-js = "yellow"    # may not work for platforms other than 32bit x86

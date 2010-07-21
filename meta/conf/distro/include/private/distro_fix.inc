@@ -166,9 +166,6 @@ RECIPE_LATEST_VERSION_pn-consolekit ?= "0.4.1"
 RECIPE_STATUS_pn-msynctool ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-msynctool ?= "0.38"
 
-RECIPE_STATUS_pn-libassuan ?= "red" # not audited
-RECIPE_LATEST_VERSION_pn-libassuan ?= "2.0.0"
-
 RECIPE_STATUS_pn-pm-utils ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-pm-utils ?= "1.3.0"
 
@@ -183,12 +180,6 @@ RECIPE_LATEST_VERSION_pn-mpfr ?= "2.4.2"
 
 RECIPE_STATUS_pn-util-linux ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-util-linux ?= "2.18"
-
-RECIPE_STATUS_pn-liboil ?= "red" # not audited
-RECIPE_LATEST_VERSION_pn-liboil ?= "0.3.17"
-
-RECIPE_STATUS_pn-gnome-vfs ?= "red" # not audited
-RECIPE_LATEST_VERSION_pn-gnome-vfs ?= "2.24.3"
 
 RECIPE_STATUS_pn-formfactor ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-formfactor ?= "0.0"
