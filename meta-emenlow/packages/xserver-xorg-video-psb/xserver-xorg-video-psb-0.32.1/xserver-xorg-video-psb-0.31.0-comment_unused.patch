@@ -1,0 +1,75 @@
+diff -p -up xserver-xorg-video-psb-0.31.0/libmm/mm_drm.c.comment_unused xserver-xorg-video-psb-0.31.0/libmm/mm_drm.c
+--- xserver-xorg-video-psb-0.31.0/libmm/mm_drm.c.comment_unused	2009-04-17 20:22:26.000000000 +0200
++++ xserver-xorg-video-psb-0.31.0/libmm/mm_drm.c	2010-04-26 13:40:50.000000000 +0200
+@@ -277,6 +277,7 @@ createFence(struct _MMManager *mm,
+     return &dFence->mf;
+ }
+ 
++/*
+ static void
+ fenceDestroy(struct _MMFence *mf)
+ {
+@@ -288,6 +289,7 @@ fenceDestroy(struct _MMFence *mf)
+     assert(ret == 0);
+     free(dFence);
+ }
++*/
+ 
+ static int
+ fenceEmit(struct _MMFence *mf, unsigned fence_class,
+@@ -369,7 +371,7 @@ mmCreateDRM(int drmFD)
+     mm->fenceSignaled = fenceSignaled;
+     mm->fenceWait = fenceWait;
+     mm->fenceError = NULL;
+-    mm->fenceDestroy = fenceDestroy;
++    /* mm->fenceDestroy = fenceDestroy; */
+     mm->destroy = destroy;
+     return mm;
+ 
+diff -p -up xserver-xorg-video-psb-0.31.0/libmm/mm_interface.h.comment_unused xserver-xorg-video-psb-0.31.0/libmm/mm_interface.h
+--- xserver-xorg-video-psb-0.31.0/libmm/mm_interface.h.comment_unused	2009-04-17 20:22:26.000000000 +0200
++++ xserver-xorg-video-psb-0.31.0/libmm/mm_interface.h	2010-04-26 13:45:22.000000000 +0200
+@@ -141,7 +141,7 @@ typedef struct _MMManager
+     int (*fenceWait) (struct _MMFence * mf, unsigned flushMask,
+ 		      unsigned flags);
+     unsigned (*fenceError) (struct _MMFence * mf);
+-    void (*fenceDestroy) (struct _MMFence * mf);
++    /* void (*fenceDestroy) (struct _MMFence * mf); */
+ } MMManager;
+ 
+ /*
+@@ -204,6 +204,7 @@ mmFenceEmit(struct _MMFence *mf, unsigne
+     return mf->man->fenceEmit(mf, class, type, flags);
+ }
+ 
++/*
+ static inline void
+ mmFenceUnReference(struct _MMFence **mfP)
+ {
+@@ -214,6 +215,7 @@ mmFenceUnReference(struct _MMFence **mfP
+     }
+     *mfP = NULL;
+ }
++*/
+ 
+ static inline struct _MMFence *
+ mmFenceReference(struct _MMFence *mf)
+diff -p -up xserver-xorg-video-psb-0.31.0/libmm/mm_user.c.comment_unused xserver-xorg-video-psb-0.31.0/libmm/mm_user.c
+--- xserver-xorg-video-psb-0.31.0/libmm/mm_user.c.comment_unused	2009-04-17 20:22:26.000000000 +0200
++++ xserver-xorg-video-psb-0.31.0/libmm/mm_user.c	2010-04-26 13:05:15.000000000 +0200
+@@ -77,6 +77,7 @@ typedef struct _UserSignal
+     UserManager *man;
+ } UserSignal;
+ 
++/*
+ void
+ mmFenceSignal(struct _MMSignal *signal, unsigned class,
+ 	      unsigned type, unsigned sequence, unsigned error,
+@@ -148,6 +149,7 @@ mmFenceSignal(struct _MMSignal *signal,
+ 	type |= fence->signalPrevious;
+     }
+ }
++*/
+ 
+ static int
+ fenceEmit(struct _MMFence *mf, unsigned class, unsigned type, unsigned flags)

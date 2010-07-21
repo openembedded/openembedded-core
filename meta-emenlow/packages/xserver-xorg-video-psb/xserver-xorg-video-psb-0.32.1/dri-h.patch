@@ -1,0 +1,20 @@
+Index: xserver-xorg-video-psb-0.32.1/configure.ac
+===================================================================
+--- xserver-xorg-video-psb-0.32.1.orig/configure.ac
++++ xserver-xorg-video-psb-0.32.1/configure.ac
+@@ -75,12 +75,9 @@ AM_CONDITIONAL(BUILD_EXA, [test "$build_
+ AC_HEADER_STDC
+ 
+ if test "$DRI" != no; then
+-        AC_CHECK_FILE([${sdkdir}/dri.h],
+-                      [have_dri_h="yes"], [have_dri_h="no"])
+-        AC_CHECK_FILE([${sdkdir}/sarea.h],
+-                      [have_sarea_h="yes"], [have_sarea_h="no"])
+-        AC_CHECK_FILE([${sdkdir}/dristruct.h],
+-                      [have_dristruct_h="yes"], [have_dristruct_h="no"])
++        have_dri_h="yes"
++        have_sarea_h="yes"
++        have_dristruct_h="yes"
+ fi
+ 
+ AC_MSG_CHECKING([whether to include DRI support])

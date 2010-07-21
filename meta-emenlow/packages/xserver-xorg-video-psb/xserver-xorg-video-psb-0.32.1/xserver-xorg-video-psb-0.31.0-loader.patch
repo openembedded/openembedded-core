@@ -1,0 +1,84 @@
+diff -p -up xserver-xorg-video-psb-0.31.0/src/psb_dri.c.loader xserver-xorg-video-psb-0.31.0/src/psb_dri.c
+--- xserver-xorg-video-psb-0.31.0/src/psb_dri.c.loader	2009-04-17 20:22:24.000000000 +0200
++++ xserver-xorg-video-psb-0.31.0/src/psb_dri.c	2010-03-12 15:03:33.000000000 +0100
+@@ -548,8 +548,6 @@ psbDRIScreenInit(ScreenPtr pScreen)
+ 
+     PSB_DEBUG(pScrn->scrnIndex, 3, "psbDRIScreenInit\n");
+ 
+-    xf86LoaderReqSymLists(driReqSymbols, NULL);
+-
+     pPsb->pDRIInfo = NULL;
+ 
+     /*
+diff -p -up xserver-xorg-video-psb-0.31.0/src/psb_driver.c.loader xserver-xorg-video-psb-0.31.0/src/psb_driver.c
+--- xserver-xorg-video-psb-0.31.0/src/psb_driver.c.loader	2010-03-12 13:48:52.000000000 +0100
++++ xserver-xorg-video-psb-0.31.0/src/psb_driver.c	2010-03-12 15:03:26.000000000 +0100
+@@ -329,12 +329,6 @@ psbSetup(pointer Module, pointer Options
+     if (!Initialised) {
+ 	Initialised = TRUE;
+ 	xf86AddDriver(&psb, Module, 0);
+-	LoaderRefSymLists(fbSymbols, ddcSymbols, shadowSymbols,
+-			  psbvgahwSymbols,
+-#ifdef XF86DRI
+-			  psbDRMSymbols, psbDRISymbols,
+-#endif
+-			  NULL);
+ 	return (pointer) TRUE;
+     }
+ 
+@@ -639,7 +633,6 @@ psbPreInitDRI(ScrnInfoPtr pScrn)
+     if (!xf86LoadSubModule(pScrn, "dri"))
+ 	return FALSE;
+ 
+-    xf86LoaderReqSymLists(psbDRISymbols, psbDRMSymbols, NULL);
+     return TRUE;
+ }
+ 
+@@ -660,7 +653,6 @@ psbPreInitXpsb(ScrnInfoPtr pScrn)
+ 
+     pPsb->xpsb = TRUE;
+ 
+-    xf86LoaderReqSymLists(psbXpsbSymbols, NULL);
+     return TRUE;
+ }
+ #endif
+@@ -680,7 +672,6 @@ psbPreInitAccel(ScrnInfoPtr pScrn)
+ 	if (!xf86LoadSubModule(pScrn, "exa"))
+ 	    return FALSE;
+ 
+-	xf86LoaderReqSymLists(exaSymbols, NULL);
+     }
+ 
+     xf86DrvMsg(pScrn->scrnIndex, from, "Acceleration %sabled\n",
+@@ -720,7 +711,6 @@ psbPreInitShadowFB(ScrnInfoPtr pScrn)
+ 	if (!xf86LoadSubModule(pScrn, "shadow"))
+ 	    return FALSE;
+ 
+-	xf86LoaderReqSymLists(shadowSymbols, NULL);
+     }
+ 
+     xf86DrvMsg(pScrn->scrnIndex, from, "Shadow framebuffer %sabled\n",
+@@ -854,7 +844,6 @@ psbPreInit(ScrnInfoPtr pScrn, int flags)
+ 
+     if (!xf86LoadSubModule(pScrn, "vbe"))
+ 	return FALSE;
+-    xf86LoaderReqSymLists(vbeSymbols, NULL);
+ 
+     /*
+      * Parse options and load required modules here.
+@@ -874,7 +863,6 @@ psbPreInit(ScrnInfoPtr pScrn, int flags)
+ 
+     if (!xf86LoadSubModule(pScrn, "fb"))
+ 	return (FALSE);
+-    xf86LoaderReqSymLists(fbSymbols, NULL);
+ 
+     pScrn->chipset = "Intel GMA500";
+     pScrn->monitor = pScrn->confScreen->monitor;
+@@ -1033,7 +1021,6 @@ psbDeviceInit(PsbDevicePtr pDevice, int
+ 
+     if (!xf86LoadSubModule(pDevice->pScrns[0], "vgahw"))
+ 	return FALSE;
+-    xf86LoaderReqSymLists(psbvgahwSymbols, NULL);
+ 
+     if (!vgaHWGetHWRec(pDevice->pScrns[0]))
+ 	return FALSE;

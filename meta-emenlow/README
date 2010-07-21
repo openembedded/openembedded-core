@@ -1,0 +1,16 @@
+To use this layer, you will need to add ${OEROOT}/meta-emenlow to the
+BBLAYERS variable in build/conf/bblayers.conf, like this:
+
+	BBLAYERS = " \
+	  ${OEROOT}/meta-emenlow \ 
+	  ${OEROOT}/meta \
+	  "
+
+Also, per the comment, increment LCONF_VERSION in
+build/conf/bblayers.conf and build/conf/bblayers.conf.sample, and
+LAYER_CONF_VERSION in meta/conf/sanity.conf so that they all match.
+
+In conf/local.conf, set MACHINE to "emenlow".
+
+Then build the image of your choice (this was tested with sato), copy
+it to your device, and boot it.

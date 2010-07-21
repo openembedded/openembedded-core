@@ -1,0 +1,11 @@
+--- xserver-xorg-video-psb-0.31.0/src/psb_driver.c	2009-04-17 11:22:26.000000000 -0700
++++ xserver-xorg-video-psb-0.31.0/src/psb_driver.c.new	2009-08-14 15:41:35.047596131 -0700
+@@ -909,7 +909,7 @@
+     xf86DrvMsg(pScrn->scrnIndex, from, "Use %s cursor.\n",
+ 	       pPsb->sWCursor ? "software" : "hardware");
+ 
+-    pPsb->ignoreACPI = FALSE;
++    pPsb->ignoreACPI = TRUE;
+     from =
+ 	xf86GetOptValBool(pPsb->options, OPTION_IGNORE_ACPI,
+ 			  &pPsb->ignoreACPI)

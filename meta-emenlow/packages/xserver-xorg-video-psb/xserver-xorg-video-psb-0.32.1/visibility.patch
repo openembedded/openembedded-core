@@ -1,0 +1,12 @@
+Index: xserver-xorg-video-psb-0.32.1/configure.ac
+===================================================================
+--- xserver-xorg-video-psb-0.32.1.orig/configure.ac
++++ xserver-xorg-video-psb-0.32.1/configure.ac
+@@ -107,6 +107,7 @@ AC_DEFINE(INTEL_PSB_DRIVER, 1, [Compatib
+ 
+ AC_SUBST([DRI_CFLAGS])
+ AC_SUBST([XORG_CFLAGS])
++XORG_CFLAGS = `echo $XORG_CFLAGS | sed 's/hidden/default/'`
+ AC_SUBST([moduledir])
+ 
+ DRIVER_NAME=psb

@@ -1,0 +1,24 @@
+commit 11e626a3610daf0fce253ef48ab8736bce6178f9
+Author: Gwenole Beauchesne <gbeauchesne@splitted-desktop.com>
+Date:   Tue Sep 22 12:29:56 2009 +0000
+
+    Fix vainfo dependencies (Konstantin Pavlov).
+
+diff --git a/test/Makefile.am b/test/Makefile.am
+index 58e1677..ee78d34 100644
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -31,10 +31,10 @@ AM_CFLAGS = -I$(top_srcdir)/../../include/external/ -I$(top_srcdir)/src -I$(top_
+ 
+ TESTS = $(check_PROGRAMS)
+ 
+-TEST_LIBS = $(top_srcdir)/src/$(libvabackendlib)
++TEST_LIBS = $(top_srcdir)/src/libva.la $(top_srcdir)/src/$(libvabackendlib)
+ 
+-vainfo_LDADD = $(top_srcdir)/src/$(libvabackendlib)
+-vainfo_DEPENDENCIES = $(top_srcdir)/src/$(libvabackendlib)
++vainfo_LDADD = $(top_srcdir)/src/libva.la $(top_srcdir)/src/$(libvabackendlib)
++vainfo_DEPENDENCIES = $(top_srcdir)/src/libva.la $(top_srcdir)/src/$(libvabackendlib)
+ vainfo_SOURCES = vainfo.c
+ 
+ test_01_LDADD = $(TEST_LIBS)

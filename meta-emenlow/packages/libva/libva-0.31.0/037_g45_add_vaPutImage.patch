@@ -1,0 +1,111 @@
+From 000807cfbd8bcbc9cd4bf28a066087fee43396b4 Mon Sep 17 00:00:00 2001
+From: Gwenole Beauchesne <gbeauchesne@splitted-desktop.com>
+Date: Wed, 4 Nov 2009 13:36:39 +0000
+Subject: [PATCH] =?utf-8?q?[G45]=C2=A0Implement=20vaPutImage()=20for=20full-sized=20surface=20uploads.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+---
+ i965_drv_video/i965_drv_video.c |   78 +++++++++++++++++++++++++++++++--------
+ 1 files changed, 62 insertions(+), 16 deletions(-)
+
+diff --git a/i965_drv_video/i965_drv_video.c b/i965_drv_video/i965_drv_video.c
+index d8a7bd1..e8f638c 100644
+--- a/i965_drv_video/i965_drv_video.c
++++ b/i965_drv_video/i965_drv_video.c
+@@ -443,22 +443,6 @@ i965_QueryImageFormats(VADriverContextP ctx,
+ }
+ 
+ VAStatus 
+-i965_PutImage(VADriverContextP ctx,
+-               VASurfaceID surface,
+-               VAImageID image,
+-               int src_x,
+-               int src_y,
+-               unsigned int src_width,
+-               unsigned int src_height,
+-               int dest_x,
+-               int dest_y,
+-               unsigned int dest_width,
+-               unsigned int dest_height)
+-{
+-    return VA_STATUS_SUCCESS;
+-}
+-
+-VAStatus 
+ i965_QuerySubpictureFormats(VADriverContextP ctx,
+                             VAImageFormat *format_list,         /* out */
+                             unsigned int *flags,                /* out */
+@@ -1439,6 +1423,68 @@ i965_GetImage(VADriverContextP ctx,
+ }
+ 
+ VAStatus 
++i965_PutImage(VADriverContextP ctx,
++               VASurfaceID surface,
++               VAImageID image,
++               int src_x,
++               int src_y,
++               unsigned int src_width,
++               unsigned int src_height,
++               int dest_x,
++               int dest_y,
++               unsigned int dest_width,
++               unsigned int dest_height)
++{
++    struct i965_driver_data *i965 = i965_driver_data(ctx);
++
++    struct object_surface *obj_surface = SURFACE(surface);
++    if (!obj_surface)
++        return VA_STATUS_ERROR_INVALID_SURFACE;
++
++    struct object_image *obj_image = IMAGE(image);
++    if (!obj_image)
++        return VA_STATUS_ERROR_INVALID_IMAGE;
++
++    /* XXX: we don't support partial video surface updates */
++    if (src_x != 0 ||
++        src_y != 0 ||
++        src_width != obj_image->image.width ||
++        src_height != obj_image->image.height)
++        return VA_STATUS_ERROR_OPERATION_FAILED;
++    if (dest_x != 0 ||
++        dest_y != 0 ||
++        dest_width != obj_surface->width ||
++        dest_height != obj_surface->height)
++        return VA_STATUS_ERROR_OPERATION_FAILED;
++    if (src_width != dest_width ||
++        src_height != dest_height)
++        return VA_STATUS_ERROR_OPERATION_FAILED;
++
++    VAStatus va_status;
++    void *image_data = NULL;
++
++    va_status = i965_MapBuffer(ctx, obj_image->image.buf, &image_data);
++    if (va_status != VA_STATUS_SUCCESS)
++        return va_status;
++
++    dri_bo_map(obj_surface->bo, 1);
++
++    switch (obj_image->image.format.fourcc) {
++    case VA_FOURCC('Y','V','1','2'): /* YV12 is native format here */
++        memcpy(obj_surface->bo->virtual, image_data, obj_surface->bo->size);
++        break;
++    default:
++        va_status = VA_STATUS_ERROR_OPERATION_FAILED;
++        break;
++    }
++
++    dri_bo_unmap(obj_surface->bo);
++
++    i965_UnmapBuffer(ctx, obj_image->image.buf);
++    return va_status;
++}
++
++VAStatus 
+ i965_PutSurface(VADriverContextP ctx,
+                 VASurfaceID surface,
+                 Drawable draw, /* X Drawable */
+-- 
+1.5.4.3
+

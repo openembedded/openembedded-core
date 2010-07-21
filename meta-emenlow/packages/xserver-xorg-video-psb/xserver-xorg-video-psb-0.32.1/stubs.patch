@@ -1,0 +1,23 @@
+diff -p -up xserver-xorg-video-psb-0.31.0/src/psb_driver.c.orig xserver-xorg-video-psb-0.31.0/src/psb_driver.c
+--- xserver-xorg-video-psb-0.31.0/src/psb_driver.c.orig	2010-04-30 08:58:06.798598457 +0200
++++ xserver-xorg-video-psb-0.31.0/src/psb_driver.c	2010-04-30 09:03:04.186597975 +0200
+@@ -643,6 +643,19 @@ psbPreInitDRI(ScrnInfoPtr pScrn)
+     return TRUE;
+ }
+ 
++/* removed in Xserver 1.7, add it again so that proprietary Xpsb can be loaded */
++void
++xf86AddModuleInfo(pointer info, pointer module)
++{
++}
++
++/* removed in mesa, add it again so that proprietary Xpsb can be loaded */
++typedef void (*_glapi_warning_func)(void *ctx, const char *str, ...);
++void
++_glapi_set_warning_func( _glapi_warning_func func )
++{
++}
++
+ static Bool
+ psbPreInitXpsb(ScrnInfoPtr pScrn)
+ {

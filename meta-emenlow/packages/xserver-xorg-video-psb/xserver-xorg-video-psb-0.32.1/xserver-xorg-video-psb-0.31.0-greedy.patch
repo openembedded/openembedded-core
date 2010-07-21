@@ -1,0 +1,19 @@
+diff -p -up xserver-xorg-video-psb-0.31.0/src/psb_accel.c.greedy xserver-xorg-video-psb-0.31.0/src/psb_accel.c
+--- xserver-xorg-video-psb-0.31.0/src/psb_accel.c.greedy	2009-04-17 20:22:24.000000000 +0200
++++ xserver-xorg-video-psb-0.31.0/src/psb_accel.c	2010-04-23 14:52:47.000000000 +0200
+@@ -1331,6 +1331,15 @@ psbExaInit(ScrnInfoPtr pScrn)
+     pExa->FinishAccess = psbExaFinishAccess;
+     pExa->UploadToScreen = psbExaUploadToScreen;
+ 
++    if (!xf86FindOptionValue(pScrn->options, "MigrationHeuristic")) {
++      const char *default_migration = "greedy";
++      xf86DrvMsg(pScrn->scrnIndex, X_INFO,
++		 "Using default MigrationHeuristic: %s\n",
++		 default_migration);
++      xf86ReplaceStrOption(pScrn->options, "MigrationHeuristic", default_migration);
++    }
++
++
+     if (!exaDriverInit(pScrn->pScreen, pExa)) {
+ 	goto out_err;
+     }
