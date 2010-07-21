@@ -17,4 +17,6 @@ S = "${WORKDIR}/opkg-utils"
 # Avoid circular dependencies from package_ipk.bbclass
 PACKAGES_virtclass-native = ""
 
+NATIVE_INSTALL_WORKS = "1"
+
 BBCLASSEXTEND = "native"
