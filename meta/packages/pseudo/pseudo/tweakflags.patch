@@ -6,14 +6,13 @@ until "make install" time when DESTDIR is set. Change the first target
 to "all" for this reason.
 
 RP 18/3/10
+(updated 20/7/2010 - MGH)
 
-Index: git/Makefile.in
-===================================================================
---- git.orig/Makefile.in	2010-03-17 16:05:17.000000000 +0000
-+++ git/Makefile.in	2010-04-06 15:25:39.000000000 +0100
+--- git.orig/Makefile.in	2010-07-20 15:34:41.000000000 -0700
++++ git/Makefile.in	2010-07-20 15:40:42.000000000 -0700
 @@ -25,7 +25,7 @@
  MARK64=@MARK64@
- VERSION=0.2
+ VERSION=0.3
  
 -LIBDIR=$(PREFIX)/lib$(MARK64)
 +LIBDIR=$(PREFIX)/lib
@@ -46,15 +45,15 @@ Index: git/Makefile.in
 @@ -66,26 +66,29 @@
  install: all install-lib install-bin install-data
  
- pseudo: pseudo.o $(SHOBJS) $(DBOBJS) pseudo_server.o pseudo_ipc.o
+ pseudo: pseudo.o $(SHOBJS) $(DBOBJS) pseudo_client.o pseudo_server.o pseudo_ipc.o
 -	$(CC) $(CFLAGS) -o pseudo \
 +	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -o pseudo \
  		pseudo.o pseudo_server.o pseudo_client.o pseudo_ipc.o \
  		$(DBOBJS) $(SHOBJS) $(DBLDFLAGS)
  
- pseudolog: pseudolog.o $(SHOBJS) $(DBOBJS)
--	$(CC) $(CFLAGS) -o pseudolog pseudolog.o \
-+	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -o pseudolog pseudolog.o \
+ pseudolog: pseudolog.o $(SHOBJS) $(DBOBJS) pseudo_client.o pseudo_ipc.o
+-	$(CC) $(CFLAGS) -o pseudolog pseudolog.o pseudo_client.o pseudo_ipc.o \
++	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -o pseudolog pseudolog.o pseudo_client.o pseudo_ipc.o \
  		$(DBOBJS) $(SHOBJS) $(DBLDFLAGS)
  
  pseudodb: pseudodb.o $(SHOBJS) $(DBOBJS) pseudo_ipc.o
@@ -77,10 +76,10 @@ Index: git/Makefile.in
  pseudo_client.o pseudo_server.o pseudo_ipc.o: pseudo_ipc.h
  
  pseudo_client.o: pseudo_client.h
-@@ -103,7 +106,7 @@
+@@ -101,7 +104,7 @@
  
  # no-strict-aliasing is needed for the function pointer trickery.
- pseudo_wrappers.o: pseudo_wrappers.c
+ pseudo_wrappers.o: $(GUTS) pseudo_wrappers.c pseudo_wrapfuncs.c pseudo_wrapfuncs.h
 -	$(CC) -fno-strict-aliasing $(CFLAGS) -D_GNU_SOURCE -c -o pseudo_wrappers.o pseudo_wrappers.c
 +	$(CC) -fno-strict-aliasing $(CFLAGS) $(EXTRA_CFLAGS) -D_GNU_SOURCE -c -o pseudo_wrappers.o pseudo_wrappers.c
  

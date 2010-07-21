@@ -7,62 +7,70 @@ dyanmic linker can figure out anything else with rpaths.
 Inspired by RP's patch of a similar intent for fakeroot
 
 JL 15/07/10
+(updated 20/7/2010 - MGH)
 
-Index: git/pseudo_util.c
-===================================================================
---- git.orig/pseudo_util.c	2010-03-25 17:57:24.000000000 +0000
-+++ git/pseudo_util.c	2010-07-15 16:13:09.431459640 +0100
-@@ -362,40 +362,25 @@
+--- git.orig/pseudo_util.c	2010-07-20 15:34:41.000000000 -0700
++++ git/pseudo_util.c	2010-07-20 16:00:35.000000000 -0700
+diff -ur git.orig/pseudo_util.c git/pseudo_util.c
+--- git.orig/pseudo_util.c	2010-07-20 17:02:13.000000000 -0700
++++ git/pseudo_util.c	2010-07-20 17:03:26.000000000 -0700
+@@ -65,7 +65,7 @@
+  * the end of the string or a space after it.
   */
- void
- pseudo_setupenv(char *opts) {
--	char *ld_env;
- 	char *newenv;
- 	size_t len;
- 	char debugvalue[64];
+ static char *libpseudo_name = "libpseudo.so";
+-static char *libpseudo_pattern = "(=| )libpseudo[^ ]*\\.so($| )";
++static char *libpseudo_pattern = "(=| )[^ ]*libpseudo[^ ]*\\.so($| )";
+ static regex_t libpseudo_regex;
+ static int libpseudo_regex_compiled = 0;
  
--	newenv = "libpseudo.so";
-+  /* need to set LD_PRELOAD to the absolute library path, as tweaking
-+   * LD_LIBRARY_PATH makes the Beaver sad.
-+   * Fortunately we can hack this as we know we don't use lib64 :-)
-+   */
-+
-+  char *libname = "libpseudo.so";
-+  char *prefix = pseudo_prefix_path("lib");
-+  len = strlen(prefix) + strlen(libname) + 2;
-+  newenv = malloc(len);
-+
-+  snprintf(newenv, len, "%s/%s", prefix, libname);
-+
- 	setenv("LD_PRELOAD", newenv, 1);
- 
--	ld_env = getenv("LD_LIBRARY_PATH");
--	if (ld_env) {
--		char *prefix = pseudo_prefix_path(NULL);
--		if (!strstr(ld_env, prefix)) {
--			char *e1, *e2;
--			e1 = pseudo_prefix_path("lib");
--			e2 = pseudo_prefix_path("lib64");
--			len = strlen(ld_env) + strlen(e1) + strlen(e2) + 3;
--			newenv = malloc(len);
--			snprintf(newenv, len, "%s:%s:%s", ld_env, e1, e2);
--			free(e1);
--			free(e2);
--			setenv("LD_LIBRARY_PATH", newenv, 1);
--			free(newenv);
--		}
--		free(prefix);
--	} else {
--		char *e1, *e2;
--		e1 = pseudo_prefix_path("lib");
--		e2 = pseudo_prefix_path("lib64");
--		len = strlen(e1) + strlen(e2) + 2;
--		newenv = malloc(len);
--		snprintf(newenv, len, "%s:%s", e1, e2);
--		setenv("LD_LIBRARY_PATH", newenv, 1);
--		free(newenv);
--	}
-+  free(newenv);
- 
- 	if (max_debug_level) {
- 		sprintf(debugvalue, "%d", max_debug_level);
+@@ -499,8 +499,10 @@
+ 			found_opts = 1;
+ 		if (!memcmp(environ[i], "PSEUDO_DEBUG=", 13))
+ 			found_debug = 1;
++#if 0
+ 		if (!memcmp(environ[i], "LD_LIBRARY_PATH=", 16))
+ 			found_libpath = 1;
++#endif
+ 		++env_count;
+ 	}
+ 	env_count += 4 - (found_preload + found_libpath + found_debug + found_opts);
+@@ -520,6 +522,7 @@
+ 				return NULL;
+ 			}
+ 			new_environ[j++] = newenv;
++#if 0
+ 		} else if (!memcmp(environ[i], "LD_LIBRARY_PATH=", 16)) {
+ 			if (!strstr(environ[i], PSEUDO_PREFIX)) {
+ 				char *e1, *e2;
+@@ -537,10 +540,12 @@
+ 			} else {
+ 				new_environ[j++] = environ[i];
+ 			}
++#endif
+ 		} else {
+ 			new_environ[j++] = environ[i];
+ 		}
+ 	}
++#if 0
+ 	if (!found_libpath) {
+ 		char *e1, *e2;
+ 		e1 = pseudo_prefix_path("lib");
+@@ -553,8 +558,18 @@
+ 		snprintf(newenv, len, "LD_LIBRARY_PATH=%s:%s", e1, e2);
+ 		new_environ[j++] = newenv;
+ 	}
++#endif
+ 	if (!found_preload) {
++#if 0
+ 		new_environ[j++] = "LD_PRELOAD=libpseudo.so";
++#else
++		char *libname = "libpseudo.so";
++		char *prefix = pseudo_prefix_path("lib");
++		len = 11 + strlen(prefix) + strlen(libname) + 2;
++		newenv = malloc(len);
++		snprintf(newenv, len, "LD_PRELOAD=%s/%s", prefix, libname);
++		new_environ[j++] = newenv;
++#endif
+ 	}
+ 	if (!found_debug && max_debug_level > 0) {
+ 		len = 16;
