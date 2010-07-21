@@ -17,6 +17,12 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+USER=$1
+
+TUNCTL=`which tunctl`
+[ "$TUNCTL" = "" ] && TUNCTL=/usr/sbin/tunctl
+
+TAP=`$TUNCTL -b -u $USER`
 
 IFCONFIG=`which ifconfig`
 if [ "x$IFCONFIG" = "x" ]; then
@@ -24,7 +30,7 @@ if [ "x$IFCONFIG" = "x" ]; then
     IFCONFIG=/sbin/ifconfig
 fi
 
-$IFCONFIG tap0 192.168.7.1
+$IFCONFIG $TAP 192.168.7.1
 
 # setup NAT for tap0 interface to have internet access in QEMU
 IPTABLES=`which iptables`
@@ -35,3 +41,5 @@ fi
 $IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.0/24
 echo 1 > /proc/sys/net/ipv4/ip_forward
 $IPTABLES -P FORWARD ACCEPT
+
+echo $TAP

@@ -17,11 +17,9 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+TAP=$1
 
-IFCONFIG=`which ifconfig`
-if [ "x$IFCONFIG" = "x" ]; then
-    # better than nothing...
-    IFCONFIG=/sbin/ifconfig
-fi
+TUNCTL=`which tunctl`
+[ "$TUNCTL" = "" ] && TUNCTL=/usr/sbin/tunctl
 
-$IFCONFIG tap0 down
+$TUNCTL -d $TAP
