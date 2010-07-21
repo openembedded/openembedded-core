@@ -8,16 +8,12 @@ RDEPENDS_${PN}_virtclass-native = ""
 RDEPENDS_${PN}_virtclass-nativesdk = ""
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
-SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
+SRC_URI = "http://opkg.googlecode.com/files/opkg-${PV}.tar.gz \
            file://opkg_unarchive.patch \
            file://add_vercmp.patch \
-           file://headerfix.patch \
-           file://logfix.patch"
+           file://headerfix.patch"
 
-S = "${WORKDIR}/trunk"
-
-PV = "0.0+svnr${SRCREV}"
-PR = "r13"
+PR = "r0"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 

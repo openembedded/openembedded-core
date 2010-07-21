@@ -2,26 +2,22 @@ DESCRIPTION = "Open Package Manager"
 DESCRIPTION_libopkg = "Open Package Manager Library"
 DESCRIPTION_update-alternatives-cworth = "Update alternatives"
 SECTION = "base"
-LICENSE = "GPL"
+HOMEPAGE = "http://code.google.com/p/opkg/"
+BUGTRACKER = "http://code.google.com/p/opkg/issues/list"
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+                    file://src/opkg-cl.c;beginline=1;endline=20;md5=321f658c3f6b6c832e25c8850b5dffba"
 DEPENDS = "curl gpgme openssl"
 DEPENDS_virtclass-native = "curl-native"
 DEPENDS_virtclass-nativesdk = "curl-nativesdk"
-PV = "0.0+svnr${SRCREV}"
+
 PE = "1"
-
-SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
-	file://opkg_unarchive.patch;patch=1;maxrev=201 \
-	file://add_vercmp.patch;patch=1 \
-	file://headerfix.patch;patch=1 \
-	file://logfix.patch;patch=1 "
-
-S = "${WORKDIR}/trunk"
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/opkg"
 
 # Werror gives all kinds bounds issuses with gcc 4.3.3
 do_configure_prepend() {
-    sed -i -e s:-Werror::g ${S}/libopkg/Makefile.am
+	sed -i -e s:-Werror::g ${S}/libopkg/Makefile.am
 }
 
 inherit autotools pkgconfig
