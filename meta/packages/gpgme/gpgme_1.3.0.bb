@@ -1,10 +1,17 @@
 DESCRIPTION = "GnuPG Made Easy (GPGME) is a library designed to make access to GnuPG easier for applications. It provides a High-Level Crypto API for encryption, decryption, signing, signature verification and key management"
 HOMEPAGE = "http://www.gnupg.org/gpgme.html"
-LICENSE = "GPLv2+ & LGPLv2.1+"
+BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2"
-DEPENDS = "libgpg-error pth"
-PR = "r4"
+LICENSE = "GPLv2+ & LGPLv2.1+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+                    file://COPYING.LESSER;md5=bbb461211a33b134d42ed5ee802b37ff \
+                    file://src/gpgme.h;endline=23;md5=2775a99d3dd524c4f848ff1c59093038 \
+                    file://src/engine.h;endline=22;md5=e96acfaab1cff82dd8fbefddd2f5c436"
+
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2 \
+           file://disable_gpgconf_check.patch;patch=1;pnum=1"
+DEPENDS = "libgpg-error libassuan pth"
+PR = "r0"
 
 EXTRA_OECONF = "--with-pth=${STAGING_DIR_HOST} --without-pth-test \
                 --with-gpg=${bindir}/gpg --without-gpgsm"
