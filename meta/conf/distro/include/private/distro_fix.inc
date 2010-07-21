@@ -202,9 +202,6 @@ RECIPE_LATEST_VERSION_pn-valgrind ?= "3.5.0"
 RECIPE_STATUS_pn-qemu-config ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-qemu-config ?= "1.0"
 
-RECIPE_STATUS_pn-opkg ?= "red" # not audited
-RECIPE_LATEST_VERSION_pn-opkg ?= "0.0+svnr543"
-
 RECIPE_STATUS_pn-linux ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-linux ?= "2.6.34.1"
 
