@@ -1,12 +1,22 @@
 DESCRIPTION = "Util-linux is a suite of essential utilities for any Linux system."
 SECTION = "base"
-LICENSE = "GPL"
+
+# note that `lscpu' is under GPLv3+
+LICENSE = "GPLv2+ & LGPLv2.1+ & BSD"
+LICENSE_util-linux-lscpu = "GPLv3+"
+
+LIC_FILES_CHKSUM = "file://README.licensing;md5=1530e36fe1304d4535513de90a290df9 \
+                    file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
+                    file://licenses/COPYING.GPL;md5=8ca43cbc842c2336e835926c2166c28b \
+                    file://licenses/COPYING.UCB;md5=263860f8968d8bafa5392cab74285262 \
+                    file://getopt/COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
+
 DEPENDS = "udev zlib ncurses virtual/libintl gettext"
 DEPENDS_virtclass-native = "zlib-native ncurses-native lzo-native gettext-native"
 
 inherit autotools
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v${PV}/util-linux-ng-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v${MAJOR_VERSION}/util-linux-ng-${PV}.tar.bz2 \
            file://MCONFIG \
            file://swapargs.h \
            file://defines.h \
@@ -23,7 +33,7 @@ EXTRA_OECONF = "--disable-use-tty-group --disable-makeinstall-chown --enable-elv
  --enable-mesg --enable-partx --enable-raw --enable-rdev --enable-reset \
   --disable-login-utils --enable-write --enable-arch --enable-mount --with-fsprobe=builtin --enable-libuuid --enable-libblkid --enable-fsck"
 
-FILES_${PN}-doc += "/usr/share/misc/getopt/getopt-*.*"
+FILES_${PN}-doc += "/usr/share/getopt/getopt-*.*"
 
 FILES_util-linux-fdisk = "/sbin/fdisk.${PN}"
 FILES_util-linux-cfdisk = "/sbin/cfdisk"

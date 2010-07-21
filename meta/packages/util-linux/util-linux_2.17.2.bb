@@ -1,3 +1,4 @@
+MAJOR_VERSION = "2.17"
 require util-linux.inc
 PR="r0"
 
