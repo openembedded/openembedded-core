@@ -27,14 +27,15 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-encodings = "3 years"
 RECIPE_LATEST_RELEASE_DATE_pn-encodings = "10/2009"
 RECIPE_COMMENTS_pn-encodings = ""
 
-RECIPE_STATUS_pn-font-alias = "yellow" # need review the license
+RECIPE_STATUS_pn-font-alias = "green"
 DEPENDENCY_CHECK_pn-font-alias = "not done"
 RECIPE_LATEST_VERSION_pn-font-alias = "1.0.2"
-RECIPE_NO_OF_PATCHES_pn-font-alias = "0"
+RECIPE_NO_OF_PATCHES_pn-font-alias = "1"
+RECIPE_PATCH_pn-font-alias+fix_COPYING = "update the COPYING file"
 RECIPE_INTEL_SECTION_pn-font-alias = "x11/fonts"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-font-alias = "3 years"
 RECIPE_LATEST_RELEASE_DATE_pn-font-alias = "10/2009"
-RECIPE_COMMENTS_pn-font-alias = "COPYING contains no license info and ONLY cyrillic/fonts.alias has a known license header"
+RECIPE_COMMENTS_pn-font-alias = ""
 
 RECIPE_STATUS_pn-font-util = "green"
 DEPENDENCY_CHECK_pn-font-util = "not done"
@@ -372,12 +373,12 @@ RECIPE_COMMENTS_pn-xproto = ""
 
 RECIPE_STATUS_pn-liberation-fonts = "green"
 DEPENDENCY_CHECK_pn-liberation-fonts = "not done"
-RECIPE_LATEST_VERSION_pn-liberation-fonts = "1.05.2.20091019"
+RECIPE_LATEST_VERSION_pn-liberation-fonts = "1.05.2.20091019"    # OK
 RECIPE_NO_OF_PATCHES_pn-liberation-fonts = "0"
 RECIPE_INTEL_SECTION_pn-liberation-fonts = "x11/fonts"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-liberation-fonts = "5 months"
 RECIPE_LATEST_RELEASE_DATE_pn-liberation-fonts = "12/26/2009"
-RECIPE_COMMENTS_pn-liberation-fonts = "currently released open source under GPLv2 with exceptions; need install fontforge to build the package"
+RECIPE_COMMENTS_pn-liberation-fonts = "current version 1.04 released open source under GPLv2 with exceptions; need add native fontforge to upgrade to 1.05.2.20091019"
 
 RECIPE_STATUS_pn-libfontenc = "green"
 DEPENDENCY_CHECK_pn-libfontenc = "not done"
