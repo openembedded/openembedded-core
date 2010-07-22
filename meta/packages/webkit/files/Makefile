@@ -1,4 +1,4 @@
-MODULES = JavaScriptCore JavaScriptGlue WebCore WebKit WebKitTools
+MODULES = JavaScriptCore JavaScriptGlue WebCore WebKit WebKit2 WebKitTools 
 
 all:
 	@for dir in $(MODULES); do ${MAKE} $@ -C $$dir; exit_status=$$?; \
@@ -9,18 +9,6 @@ debug d development dev develop:
 	if [ $$exit_status -ne 0 ]; then exit $$exit_status; fi; done
 
 release r deployment dep deploy:
-	@for dir in $(MODULES); do ${MAKE} $@ -C $$dir; exit_status=$$?; \
-	if [ $$exit_status -ne 0 ]; then exit $$exit_status; fi; done
-
-universal u:
-	@for dir in $(MODULES); do ${MAKE} $@ -C $$dir; exit_status=$$?; \
-	if [ $$exit_status -ne 0 ]; then exit $$exit_status; fi; done
-
-64:
-	@for dir in $(MODULES); do ${MAKE} $@ -C $$dir; exit_status=$$?; \
-	if [ $$exit_status -ne 0 ]; then exit $$exit_status; fi; done
-
-64u:
 	@for dir in $(MODULES); do ${MAKE} $@ -C $$dir; exit_status=$$?; \
 	if [ $$exit_status -ne 0 ]; then exit $$exit_status; fi; done
 

@@ -8,6 +8,11 @@ test -z "$srcdir" && srcdir=.
 ORIGDIR=`pwd`
 cd $srcdir
 
+GTKDOCIZE_FLAGS="--copy"
+LIBTOOLIZE_FLAGS="--force --automake"
+ACLOCAL_FLAGS="-I autotools"
+AUTOMAKE_FLAGS="--foreign --add-missing"
+
 DIE=0
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
@@ -46,10 +51,11 @@ rm -rf $top_srcdir/autom4te.cache
 
 touch README INSTALL
 
-aclocal || exit $?
-$LIBTOOLIZE --force || exit $?
+gtkdocize $GTKDOCIZE_FLAGS > /dev/null 2>&1 || echo "Warning: not running gtk-docize."
+aclocal $ACLOCAL_FLAGS || exit $?
+$LIBTOOLIZE $LIBTOOLIZE_FLAGS || exit $?
 autoheader || exit $?
-automake --foreign --add-missing || exit $?
+automake $AUTOMAKE_FLAGS || exit $?
 autoconf || exit $?
 
 cd $ORIGDIR || exit 1
