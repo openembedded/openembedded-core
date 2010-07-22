@@ -53,13 +53,13 @@ RECIPE_LATEST_RELEASE_DATE_pn-libproxy="2010/05/19"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libproxy="3 months"
 
 RECIPE_STATUS_pn-networkmanager="red" # Need upgrade
-RECIPE_LATEST_VERSION_pn-networkmanager="0.8"
+RECIPE_LATEST_VERSION_pn-networkmanager="0.8" # OK
 RECIPE_NO_OF_PATCHES_pn-networkmanager="4"
 RECIPE_LATEST_RELEASE_DATE_pn-networkmanager="2010/04/18"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-networkmanager="3 months"
 
 RECIPE_STATUS_pn-networkmanager-applet="red" # Need upgrade
-RECIPE_LATEST_VERSION_pn-networkmanager-applet="n/a"
+RECIPE_LATEST_VERSION_pn-networkmanager-applet="n/a" # OK
 RECIPE_NO_OF_PATCHES_pn-networkmanager-applet="4"
 RECIPE_LATEST_RELEASE_DATE_pn-networkmanager-applet="n/a"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-networkmanager-applet="n/a"
