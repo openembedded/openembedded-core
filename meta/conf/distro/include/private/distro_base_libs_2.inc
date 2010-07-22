@@ -25,22 +25,22 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pycurl = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-python-pycurl = "09/2008"
 RECIPE_COMMENTS_pn-python-pycurl = "the so called MIT/X here is actually ISC license, depends on libcurl (> 7.19.0)"
 
-RECIPE_STATUS_pn-libusb = "yellow"    # conflict with other packages
-DEPENDENCY_CHECK_pn-libusb = "not done"
-RECIPE_LATEST_VERSION_pn-libusb = "0.1.12"
-RECIPE_PATCH_pn-libusb+configure-fix = "fix AC_LANG_CPLUSPLUS for libtool 2.2.2"
-RECIPE_INTEL_SECTION_pn-libusb = "base libs"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libusb = "n/a"
-RECIPE_LATEST_RELEASE_DATE_pn-libusb = "04/2006"
-RECIPE_COMMENTS_pn-libusb = "libusbpp from multiple packages, and should rconflict: libusb-compat-0.1"
-
-RECIPE_STATUS_pn-libusb1 = "red"    # need upgrade
+RECIPE_STATUS_pn-libusb1 = "green"
 DEPENDENCY_CHECK_pn-libusb1 = "not done"
 RECIPE_LATEST_VERSION_pn-libusb1 = "1.0.8"
 RECIPE_INTEL_SECTION_pn-libusb1 = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libusb1 = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-libusb = "05/2010"
-RECIPE_COMMENTS_pn-libusb1 = "libusbpp from multiple packages"
+RECIPE_COMMENTS_pn-libusb1 = ""
+
+RECIPE_STATUS_pn-libusb-compat = "green"
+DEPENDENCY_CHECK_pn-libusb-compat = "done"
+RECIPE_LATEST_VERSION_pn-libusb-compat = "0.1.3"
+RECIPE_INTEL_SECTION_pn-libusb-compat = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libusb-compat = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-libusb-compat = "07/2009"
+RECIPE_COMMENTS_pn-libusb-compat = "replaces libusb, but doesn't provides libusbpp"
+
 
 RECIPE_STATUS_pn-libnl = "yellow"    # still need to update to git
 DEPENDENCY_CHECK_pn-libnl = "not done"
@@ -187,14 +187,6 @@ RECIPE_INTEL_SECTION_pn-libpthread-stubs = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libpthread-stubs = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-libpthread-stubs = "10/2009"
 RECIPE_COMMENTS_pn-libpthread-stubs = "0.1: 11/2006, 0.2: 09/2009, 0.3: 10/2009"
-
-RECIPE_STATUS_pn-libusb-compat = "red"   # need upgrade
-DEPENDENCY_CHECK_pn-libusb-compat = "not done"
-RECIPE_LATEST_VERSION_pn-libusb-compat = "0.1.3"
-RECIPE_INTEL_SECTION_pn-libusb-compat = "base utils"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libusb-compat = "1 month"
-RECIPE_LATEST_RELEASE_DATE_pn-libusb-compat = "07/2009"
-RECIPE_COMMENTS_pn-libusb-compat = "possibly conflicts with libusb"
 
 RECIPE_STATUS_pn-attr = "yellow"   # the recipe is quite hacky
 DEPENDENCY_CHECK_pn-attr = "done"

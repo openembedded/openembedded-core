@@ -216,7 +216,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-dropbear = "8 months"
 RECIPE_LATEST_RELEASE_DATE_pn-dropbear = "11/2008"
 RECIPE_COMMENTS_pn-dropbear = ""
 
-RECIPE_STATUS_pn-hal = "red"   # need upgrade
+RECIPE_STATUS_pn-hal = "green"
 DEPENDENCY_CHECK_pn-hal = "not done"
 RECIPE_LATEST_VERSION_pn-hal = "0.5.14"
 RECIPE_INTEL_SECTION_pn-hal = "base utils"
@@ -225,7 +225,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-hal = "11/2009"
 RECIPE_COMMENTS_pn-hal = "The licensing is very complicated, Most files are GPLv2+ | AFL \
 with some borrowed code under LGPLv2.1, AFL itself is incompatible with GPL/LGPL"
 
-RECIPE_STATUS_pn-hal-info = "red"   # need upgrade
+RECIPE_STATUS_pn-hal-info = "green"
 DEPENDENCY_CHECK_pn-hal-info = "not done"
 RECIPE_LATEST_VERSION_pn-hal-info = "20091130"
 RECIPE_INTEL_SECTION_pn-hal-info = "base utils"
@@ -286,7 +286,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-strace = "6 months"
 RECIPE_LATEST_RELEASE_DATE_pn-strace = "04/2010"
 RECIPE_COMMENTS_pn-strace = "3-clause BSD"
 
-RECIPE_STATUS_pn-dhcp = "red"   # need upgrade
+RECIPE_STATUS_pn-dhcp = "green"
 DEPENDENCY_CHECK_pn-dhcp = "not done"
 RECIPE_LATEST_VERSION_pn-dhcp = "4.1.1-P1"
 RECIPE_INTEL_SECTION_pn-dhcp = "base utils"
@@ -303,9 +303,9 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-v86d = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-v86d = "10/2008"
 RECIPE_COMMENTS_pn-v86d = "contains code under other licenses"
 
-RECIPE_STATUS_pn-udev = "red"   # need upgrade
+RECIPE_STATUS_pn-udev = "yellow"   # needs to add extras and delete old versions
 DEPENDENCY_CHECK_pn-udev = "not done"
-RECIPE_LATEST_VERSION_pn-udev = "157"
+RECIPE_LATEST_VERSION_pn-udev = "158"
 RECIPE_INTEL_SECTION_pn-udev = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-udev = "<1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-udev = "06/2010"
@@ -353,8 +353,8 @@ RECIPE_COMMENTS_pn-shared-mime-info = ""
 
 RECIPE_STATUS_pn-util-linux = "green"
 DEPENDENCY_CHECK_pn-util-linux = "note done"
-RECIPE_LATEST_VERSION_pn-util-linux = "2.17"
+RECIPE_LATEST_VERSION_pn-util-linux = "2.17.2"
 RECIPE_INTEL_SECTION_pn-util-linux = "base utils"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-util-linux = "4 months"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-util-linux = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-util-linux = "03/2010"
 RECIPE_COMMENTS_pn-util-linux = ""
