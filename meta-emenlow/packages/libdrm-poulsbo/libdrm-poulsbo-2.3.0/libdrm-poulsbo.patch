@@ -1,0 +1,36 @@
+# Make this package produce libdrm-poulsbo instead of libdrm so that the 
+# emenlow libdrm can coexist with the normal libdrm.
+# jdike@linux.intel.com
+
+Index: libdrm-poulsbo-2.3.0/configure.ac
+===================================================================
+--- libdrm-poulsbo-2.3.0.orig/configure.ac
++++ libdrm-poulsbo-2.3.0/configure.ac
+@@ -19,7 +19,7 @@
+ #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ 
+ AC_PREREQ(2.57)
+-AC_INIT([libdrm], 2.3.1, [dri-devel@lists.sourceforge.net], libdrm)
++AC_INIT([libdrm-poulsbo], 2.3.1, [dri-devel@lists.sourceforge.net], libdrm-poulsbo)
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AM_INIT_AUTOMAKE([dist-bzip2])
+ 
+@@ -35,4 +35,4 @@ AC_SYS_LARGEFILE
+ pkgconfigdir=${libdir}/pkgconfig
+ AC_SUBST(pkgconfigdir)
+ 
+-AC_OUTPUT([Makefile libdrm/Makefile shared-core/Makefile libdrm.pc])
++AC_OUTPUT([Makefile libdrm/Makefile shared-core/Makefile libdrm-poulsbo.pc])
+Index: libdrm-poulsbo-2.3.0/Makefile.am
+===================================================================
+--- libdrm-poulsbo-2.3.0.orig/Makefile.am
++++ libdrm-poulsbo-2.3.0/Makefile.am
+@@ -25,6 +25,6 @@ AUTOMAKE_OPTIONS = foreign
+ SUBDIRS = libdrm shared-core
+ 
+ pkgconfigdir = @pkgconfigdir@
+-pkgconfig_DATA = libdrm.pc
++pkgconfig_DATA = libdrm-poulsbo.pc
+ 
+-EXTRA_DIST = libdrm.pc.in
++EXTRA_DIST = libdrm-poulsbo.pc.in
