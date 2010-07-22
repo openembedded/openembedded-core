@@ -31,7 +31,7 @@ RECIPE_COMMENTS_pn-xrestop = ""
 
 RECIPE_STATUS_pn-pcmanfm = "green"
 DEPENDENCY_CHECK_pn-pcmanfm = "not done"
-RECIPE_LATEST_VERSION_pn-pcmanfm = "0.9.7"
+RECIPE_LATEST_VERSION_pn-pcmanfm = "0.9.7" # OK
 RECIPE_NO_OF_PATCHES_pn-pcmanfm = "4"
 RECIPE_INTEL_SECTION_pn-pcmanfm = "graphic apps"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pcmanfm = "4 months"
@@ -40,7 +40,7 @@ RECIPE_COMMENTS_pn-pcmanfm = "0.9.7 need a new recipe for libfm, so update to 0.
 
 RECIPE_STATUS_pn-oh-puzzles = "green" # no update needed
 DEPENDENCY_CHECK_pn-oh-puzzles = "not done"
-RECIPE_LATEST_VERSION_pn-oh-puzzles = "0.1"
+RECIPE_LATEST_VERSION_pn-oh-puzzles = "0.1+svnr23"
 RECIPE_NO_OF_PATCHES_pn-oh-puzzles = "1"
 RECIPE_INTEL_SECTION_pn-oh-puzzles = "graphic apps"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-oh-puzzles = "n/a"
