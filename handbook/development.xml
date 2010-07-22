@@ -19,9 +19,9 @@
             The meta-toolchain and meta-toolchain-sdk targets (<link linkend='ref-images'>see
             the images section</link>) build tarballs which contain toolchains and 
             libraries suitable for application development outside Poky. These unpack into the 
-            <filename class="directory">/usr/local/poky</filename> directory and contain
+            <filename class="directory">/opt/poky</filename> directory and contain
             a setup script, e.g. 
-            <filename>/usr/local/poky/eabi-glibc/arm/environment-setup</filename> which
+            <filename>/opt/poky/environment-setup-i586-poky-linux</filename> which
             can be sourced to initialise a suitable environment. After sourcing this, the 
             compiler, QEMU scripts, QEMU binary, a special version of pkgconfig and other 
             useful utilities are added to the PATH. Variables to assist pkgconfig and 
@@ -76,7 +76,7 @@
 
             <para>Extract the tarball for the toolchain into / as root. The
               toolchain will be installed into
-              <filename class="directory">/usr/local/poky</filename>.</para>
+              <filename class="directory">/opt/poky</filename>.</para>
 
             <para>To use the plugin, first open or create an existing
               project. If creating a new project the "C GTK+" project type
@@ -101,16 +101,16 @@
 
           <itemizedlist>
             
-            <listitem><para><guilabel>SDK root</guilabel>: this is the root directory of the SDK
-                for an ARM EABI SDK this will be <filename
-                  class="directory">/usr/local/poky/eabi-glibc/arm</filename>.
+            <listitem><para><guilabel>SDK root</guilabel>: this is the root directory of the SDK's sysroot
+                for an i586 SDK this will be <filename
+                  class="directory">/opt/poky/sysroots/i586-poky-linux</filename>.
                 This directory will contain directories named like "bin",
                 "include", "var", etc. With the file chooser it is important
-                to enter into the "arm" subdirectory for this
+                to enter into the "i586-poky-linux" subdirectory for this
                 example.</para></listitem>
 
             <listitem><para><guilabel>Toolchain triplet</guilabel>: this is the cross compile
-                triplet, e.g. "arm-poky-linux-gnueabi".</para></listitem>
+                triplet, e.g. "i586-poky-linux".</para></listitem>
 
             <listitem><para><guilabel>Kernel</guilabel>: use the file chooser to select the kernel
                 to use with QEMU</para></listitem>
@@ -225,7 +225,7 @@
             be used from within qemu simply by calling distcc 
             (<command>export CC="distcc"</command> can be set in the enviroment).
             Alterntatively, if a suitable SDK/toolchain is present in 
-            <filename class="directory">/usr/local/poky</filename> it will also
+            <filename class="directory">/opt/poky</filename> it will also
             automatically be used.
         </para>
 
