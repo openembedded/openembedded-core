@@ -1,0 +1,45 @@
+commit 1f8141a5e3b585dfccc748400b05c9c24b41e767
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Oct 18 20:34:33 2009 -0400
+
+    INSTALL, NEWS, README COPYING or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    COPYING may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+diff --git a/AUTHORS b/AUTHORS
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/COPYING b/COPYING
+index 7f33cbf..e917f4b 100644
+--- a/COPYING
++++ b/COPYING
+@@ -1,12 +1,9 @@
+-This is a stub file.  This package has not yet had its complete licensing
+-information compiled.  Please see the individual source files for details on
+-your rights to use and modify this software.
++Copyright (C) 1994-95 Cronyx Ltd.
++Author: Serge Vakulenko, <vak@cronyx.ru>
+ 
+-Please submit updated COPYING files to the Xorg bugzilla:
++This software may be used, modified, copied, distributed, and sold,
++in both source and binary form provided that the above copyright
++and these terms are retained. Under no circumstances is the author
++responsible for the proper functioning of this software, nor does
++the author assume any responsibility for damages incurred with its use.
+ 
+-https://bugs.freedesktop.org/enter_bug.cgi?product=xorg
+-
+-All licensing questions regarding this software should be directed at the
+-Xorg mailing list:
+-
+-http://lists.freedesktop.org/mailman/listinfo/xorg
+diff --git a/INSTALL b/INSTALL
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/NEWS b/NEWS
+deleted file mode 100644
+index e69de29..0000000
