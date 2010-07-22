@@ -3,10 +3,6 @@
 # from Poky (or to lock down SCM based packages):
 #
 PREFERRED_VERSION_eds-dbus ?= "2.20.0"
-PREFERRED_VERSION_dbus ?= "1.2.14"
-PREFERRED_VERSION_dbus-native ?= "1.2.14"
-PREFERRED_VERSION_gtk+ ?= "2.18.5"
-PREFERRED_VERSION_pango = "1.26.0"
 PREFERRED_VERSION_udev ?= "145"
 
 PREFERRED_VERSION_mesa-dri ?= "7.8.2"
