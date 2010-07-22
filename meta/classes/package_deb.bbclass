@@ -242,6 +242,7 @@ python do_package_deb () {
         os.chdir(basedir)
         ret = os.system("PATH=\"%s\" %s dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, True), bb.data.getVar("FAKEROOT", localdata, True) or "fakeroot", root, pkgoutdir))
         if ret != 0:
+            bb.utils.prunedir(controldir)
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("dpkg-deb execution failed")
 
