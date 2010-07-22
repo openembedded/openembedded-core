@@ -4,7 +4,7 @@ DESCRIPTION = "X11 drivers for Poulsbo (psb) 3D acceleration"
 # not Intel proprietary, but it has no obvious license attached to it.
 LICENSE = "Intel-binary-only"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=02c597a2f082b4581596065bb5a521a8"
-PR = "r1"
+PR = "r3"
 
 inherit autotools
 
@@ -31,7 +31,7 @@ S = "${WORKDIR}/${PN}-${PV}/mesa"
 
 EXTRA_OEMAKE = "linux-dri-x86"
 
-DEPENDS += "libdrm-poulsbo libxxf86vm dri2proto libxmu libxi glproto"
+DEPENDS += "libdrm-poulsbo libxxf86vm dri2proto libxmu libxi glproto makedepend-native"
 
 FILES_${PN} = "${libdir}/* ${libdir}/xorg/modules/dri/* \
 	    ${libdir}/xorg/modules/drivers/*"
