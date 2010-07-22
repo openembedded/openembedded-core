@@ -17,7 +17,6 @@ S = "${WORKDIR}/update-rc.d"
 do_compile() {
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${sbindir}
 	install -m 0755 ${S}/update-rc.d ${D}${sbindir}/update-rc.d

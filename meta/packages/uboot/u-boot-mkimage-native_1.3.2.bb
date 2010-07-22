@@ -16,7 +16,6 @@ do_compile () {
 	oe_runmake tools
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install () {
 	install -d ${D}${bindir}/
 	install -m 0755 tools/mkimage ${D}${bindir}/uboot-mkimage

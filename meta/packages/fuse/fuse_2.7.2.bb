@@ -20,8 +20,3 @@ FILES_fuse-utils-dbg = "${bindir}/.debug ${base_sbindir}/.debug"
 DEBIAN_NOAUTONAME_fuse-utils = "1"
 DEBIAN_NOAUTONAME_fuse-utils-dbg = "1"
 
-fakeroot do_stage() {
-        autotools_stage_all
-}
-
-

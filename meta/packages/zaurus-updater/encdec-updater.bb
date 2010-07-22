@@ -10,7 +10,6 @@ do_compile() {
 	${CC} -o encdec-updater ${WORKDIR}/encdec-updater.c
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 encdec-updater ${D}${bindir}/

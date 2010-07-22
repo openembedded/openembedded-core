@@ -35,7 +35,6 @@ do_compile() {
 	oe_runmake CC="${CC}" installer
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	oe_runmake install INSTALLROOT="${D}"
 

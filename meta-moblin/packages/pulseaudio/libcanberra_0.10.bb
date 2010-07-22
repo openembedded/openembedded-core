@@ -20,10 +20,3 @@ FILES_${PN}-dbg += "${libdir}/gtk-2.0/modules/.debug"
 
 AUTOTOOLS_STAGE_PKGCONFIG = "1"
 
-do_stage() {
-        autotools_stage_all
-}
-
-
-
-

@@ -36,7 +36,6 @@ do_compile() {
     oe_runmake sub-tools || die "Building tools failed"
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${bindir}/
 	install -d ${D}/qte3/lib/

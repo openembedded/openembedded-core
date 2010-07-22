@@ -16,7 +16,6 @@ PR = "r6"
 
 DEFAULT_PREFERENCE = "-1"
 
-NATIVE_INSTALL_WORKS = "1"
 do_install () {
 	install -d ${D}${libdir}/
     if [ "${PN}" != "qemugl-nativesdk" ]; then

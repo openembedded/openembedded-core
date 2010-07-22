@@ -23,6 +23,3 @@ FILES_${PN} += " ${libdir}/opensync*/formats/*.so \
 FILES_${PN}-dbg += " ${libdir}/opensync*/formats/.debug/*.so \
 	             ${libdir}/opensync*/.debug/osplugin "
 
-do_stage() {
-    autotools_stage_all
-}

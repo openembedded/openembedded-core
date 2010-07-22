@@ -9,7 +9,3 @@ S = "${WORKDIR}/vala-${PV}"
 
 inherit autotools lib_package
 
-do_stage() {
-	autotools_stage_all
-}
-

@@ -17,7 +17,6 @@ do_compile() {
 	$CC $CFLAGS $CPPFLAGS -o oe_sha256sum main.c sha256.c
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${bindir}/
 	install ${S}/oe_sha256sum ${D}${bindir}/

@@ -5,5 +5,3 @@ RDEPENDS = ""
 PR = "r0"
 
 #BUILD_CFLAGS += "-I${STAGING_LIBDIR}/glib-2.0"
-
-NATIVE_INSTALL_WORKS = "1"

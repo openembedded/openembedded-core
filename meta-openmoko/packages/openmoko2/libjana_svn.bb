@@ -14,10 +14,6 @@ do_configure_prepend() {
 	touch gtk-doc.make
 }
 
-do_stage() {
-	autotools_stage_all
-}
-
 PACKAGES =+ "libjana-ecal libjana-ecal-dbg \
              libjana-gtk libjana-gtk-dbg \ 
             "

@@ -63,6 +63,3 @@ do_install_append_h2200() {
 	install -m 0644 ${WORKDIR}/50-hostap_cs.rules         ${D}${sysconfdir}/udev/rules.d/50-hostap_cs.rules
 }
 
-do_stage () {
-	autotools_stage_all
-}

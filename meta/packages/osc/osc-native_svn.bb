@@ -12,7 +12,6 @@ S = "${WORKDIR}/osc"
 
 inherit native
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
         BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
         STAGING_LIBDIR=${STAGING_LIBDIR} STAGING_INCDIR=${STAGING_INCDIR} \

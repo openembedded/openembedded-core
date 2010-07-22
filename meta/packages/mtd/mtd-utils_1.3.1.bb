@@ -24,4 +24,3 @@ do_install () {
 PARALLEL_MAKE = ""
 
 BBCLASSEXTEND = "native"
-NATIVE_INSTALL_WORKS = "1"

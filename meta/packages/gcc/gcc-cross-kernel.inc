@@ -8,7 +8,3 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' install-common install-headers install-libgcc
 	install -m 0755 xgcc ${D}${STAGING_DIR_NATIVE}${prefix_native}/bin/${TARGET_PREFIX}gcc-${PV}
 }
-
-do_stage () {
-    use_do_install_for_stage
-}

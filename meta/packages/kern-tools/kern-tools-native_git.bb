@@ -7,9 +7,6 @@ DEPENDS = "git-native"
 PR = r4
 PV = "0.1+git${SRCPV}"
 
-# needed until the native do_stage goes away
-NATIVE_INSTALL_WORKS=1
-
 inherit native
 
 SRC_URI = "git://git.pokylinux.org/wr-kernel-tools.git;protocol=git"

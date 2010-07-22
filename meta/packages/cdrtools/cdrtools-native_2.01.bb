@@ -15,7 +15,6 @@ inherit native
 
 STAGE_TEMP="${WORKDIR}/image-temp"
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${STAGE_TEMP}
 	make install INS_BASE=${STAGE_TEMP}

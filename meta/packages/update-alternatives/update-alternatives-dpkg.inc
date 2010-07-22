@@ -19,7 +19,6 @@ do_patch () {
     p;' > ${S}/scripts/update-alternatives
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install () {
     install -d ${D}${sbindir} \
                ${D}${localstatedir}/dpkg/alternatives \

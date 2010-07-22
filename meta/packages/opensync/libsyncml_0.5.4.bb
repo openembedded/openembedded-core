@@ -9,10 +9,6 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libsyncml/0.5.4/libsyncml-0.5.4.tar.bz2 \
 
 inherit cmake pkgconfig
 
-do_stage() {
-        autotools_stage_all
-}
-
 PACKAGES += "${PN}-tools"
 
 FILES_${PN}-tools = "${bindir}"

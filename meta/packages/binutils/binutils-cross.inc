@@ -23,7 +23,3 @@ do_install () {
 	rmdir ${D}${STAGING_DIR_NATIVE}${prefix_native}/${libdir}64 || :
 	rmdir ${D}${STAGING_DIR_NATIVE}${prefix_native}/${prefix} || :
 }
-
-do_stage () {
-	use_do_install_for_stage
-}

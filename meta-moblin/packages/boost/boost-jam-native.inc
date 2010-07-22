@@ -21,7 +21,6 @@ do_compile() {
 	./build.sh gcc
 }
 
-NATIVE_INSTALL_WORKS = "1"
 # This is too terrible - the build script doesn't give any good
 # way I can see to find out where the binaries are placed, so
 # rely on only one bin.foo directory being created.

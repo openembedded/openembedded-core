@@ -1,6 +1,3 @@
-# use autotools_stage_all for native packages
-AUTOTOOLS_NATIVE_STAGE_INSTALL = "1"
-
 def autotools_dep_prepend(d):
 	if bb.data.getVar('INHIBIT_AUTOTOOLS_DEPS', d, 1):
 		return ''
@@ -202,10 +199,6 @@ autotools_stage_all() {
 	rm -rf ${STAGE_TEMP}/${infodir} || true
 	sysroot_stage_dirs ${STAGE_TEMP} ${STAGE_TEMP_PREFIX}
 	rm -rf ${STAGE_TEMP}
-}
-
-do_stage () {
-	autotools_stage_all
 }
 
 EXPORT_FUNCTIONS do_configure do_install

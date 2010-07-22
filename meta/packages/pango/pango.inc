@@ -26,10 +26,6 @@ EXTRA_OECONF = "--disable-glibtest \
 LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.6.0"
 
-do_stage () {
-	autotools_stage_all
-}
-
 postinst_prologue() {
 if [ "x$D" != "x" ]; then
   exit 1

@@ -21,5 +21,4 @@ do_install() {
 	oe_runmake PREFIX=${prefix} DESTDIR=${D} install
 }
 
-NATIVE_INSTALL_WORKS = "1"
 BBCLASSEXTEND = "native"

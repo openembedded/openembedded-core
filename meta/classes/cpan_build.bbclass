@@ -42,7 +42,6 @@ cpan_build_do_compile () {
         perl Build
 }
 
-NATIVE_INSTALL_WORKS = "1"
 cpan_build_do_install () {
 	perl Build install
 }

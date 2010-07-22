@@ -50,10 +50,6 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 }
 
-do_stage () {
-	autotools_stage_all
-}
-
 #
 # Override the default sysroot staging copy since this won't look like a target system
 #

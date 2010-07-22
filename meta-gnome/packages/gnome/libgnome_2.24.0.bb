@@ -14,6 +14,3 @@ FILES_${PN} += "${libdir}/bonobo/servers ${libdir}/bonobo/monikers/*.so \
 FILES_${PN}-dev += "${libdir}/bonobo/monikers/*a"
 FILES_${PN}-dbg += "${libdir}/bonobo/monikers/.debug"
 
-do_stage() {
-	autotools_stage_all
-}

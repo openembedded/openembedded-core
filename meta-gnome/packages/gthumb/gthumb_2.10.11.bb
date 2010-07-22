@@ -7,9 +7,5 @@ DEPENDS = "glib-2.0 gtk+ libbonobo libgnome libgnomeui gnome-vfs libxml2 libglad
 
 inherit gnome pkgconfig
 
-do_stage () {
-	autotools_stage_all
-}
-
 FILES_${PN} += "${datadir}/icons"
 FILES_${PN}-dbg += "${libdir}/gthumb/modules/.debug"

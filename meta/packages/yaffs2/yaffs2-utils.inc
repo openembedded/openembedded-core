@@ -17,7 +17,6 @@ do_compile() {
 	cd utils && oe_runmake
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${sbindir}/
 	for i in mkyaffsimage mkyaffs2image; do

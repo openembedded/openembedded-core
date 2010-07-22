@@ -91,7 +91,6 @@ do_compile () {
 	oe_runmake
 }
 
-NATIVE_INSTALL_WORKS = "1"
 do_install () {
 	install -m 0755 -d ${D}${libdir}/pkgconfig
 	oe_runmake INSTALL_PREFIX="${D}" install

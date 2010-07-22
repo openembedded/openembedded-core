@@ -7,8 +7,6 @@ PARALLEL_MAKE = ""
 
 inherit native
 
-NATIVE_INSTALL_WORKS = "1"
-
 SRC_URI = "ftp://ftp.gnome.org/pub/GNOME/sources/pygobject/${MAJ_VER}/pygobject-${PV}.tar.bz2"
 
 do_install_append() {

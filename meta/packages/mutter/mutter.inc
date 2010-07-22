@@ -28,10 +28,6 @@ do_configure_prepend () {
         echo "EXTRA_DIST=" > ${S}/gnome-doc-utils.make
 }		
 
-do_stage () {
-	 autotools_stage_all
-}
-
 pkg_postinst_${PN} () {
 #!/bin/sh -e
 if [ "x$D" != "x" ]; then

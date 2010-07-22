@@ -36,4 +36,3 @@ PACKAGES = "${PN}"
 FILES_${PN} = "${bindir} ${datadir}/gnu-config"
 
 BBCLASSEXTEND = "native"
-NATIVE_INSTALL_WORKS = "1"

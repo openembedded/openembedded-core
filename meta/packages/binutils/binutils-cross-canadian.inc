@@ -18,7 +18,3 @@ do_install () {
         install -m 644 ${S}/include/ansidecl.h ${D}${includedir}
         install -m 644 ${S}/include/libiberty.h ${D}${includedir}
 }
-
-do_stage () {
-    use_do_install_for_stage
-}

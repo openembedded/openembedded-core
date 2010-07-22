@@ -31,9 +31,8 @@ cpan_do_compile () {
 	oe_runmake PASTHRU_INC="${CFLAGS}" CCFLAGS="${CFLAGS}" LD="${CCLD}"
 }
 
-NATIVE_INSTALL_WORKS = "1"
 cpan_do_install () {
 	oe_runmake DESTDIR="${D}" install_vendor
 }
 
-EXPORT_FUNCTIONS do_configure do_compile do_install do_stage
+EXPORT_FUNCTIONS do_configure do_compile do_install

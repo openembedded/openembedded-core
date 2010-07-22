@@ -76,21 +76,6 @@ sysroot_stage_all() {
 	sysroot_stage_dirs ${D} ${SYSROOT_DESTDIR}
 }
 
-def is_legacy_staging(d):
-    stagefunc = bb.data.getVar('do_stage', d, True)
-    legacy = True
-    if stagefunc is None:
-        legacy = False
-    elif stagefunc.strip() == "use_do_install_for_stage":
-        legacy = False
-    elif stagefunc.strip() == "autotools_stage_all":
-        legacy = False
-    elif stagefunc.strip() == "do_stage_native" and bb.data.getVar('AUTOTOOLS_NATIVE_STAGE_INSTALL', d, 1) == "1":
-        legacy = False
-    elif bb.data.getVar('NATIVE_INSTALL_WORKS', d, 1) == "1":
-        legacy = False
-    return legacy
-
 do_populate_sysroot[dirs] = "${STAGING_DIR_TARGET}/${bindir} ${STAGING_DIR_TARGET}/${libdir} \
 			     ${STAGING_DIR_TARGET}/${includedir} \
 			     ${STAGING_BINDIR_NATIVE} ${STAGING_LIBDIR_NATIVE} \
@@ -119,36 +104,31 @@ python do_populate_sysroot () {
     pstageactive = (bb.data.getVar("PSTAGING_ACTIVE", d, True) == "1")
     lockfile = bb.data.getVar("SYSROOT_LOCK", d, True)
     stagefunc = bb.data.getVar('do_stage', d, True)
-    legacy = is_legacy_staging(d)
-    if legacy:
-        bb.data.setVar("SYSROOT_DESTDIR", "", d)
-        bb.note("Legacy staging mode for %s" % bb.data.getVar("FILE", d, True))
-        lock = bb.utils.lockfile(lockfile)
-        bb.build.exec_func('populate_sysroot_prehook', d)
-        bb.build.exec_func('do_stage', d)
-        for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
-            bb.build.exec_func(f, d)
-        bb.build.exec_func('populate_sysroot_posthook', d)
-        bb.utils.unlockfile(lock)
-    else:
-        dest = bb.data.getVar('D', d, True)
-        sysrootdest = bb.data.expand('${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}', d)
-        bb.mkdirhier(sysrootdest)
 
-        bb.build.exec_func("sysroot_stage_all", d)
-        #os.system('cp -pPR %s/* %s/' % (dest, sysrootdest))
-        for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
-            bb.build.exec_func(f, d)
-        bb.build.exec_func("packagedstaging_fastpath", d)
+    dest = bb.data.getVar('D', d, True)
+    sysrootdest = bb.data.expand('${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}', d)
+    bb.mkdirhier(sysrootdest)
 
-        lock = bb.utils.lockfile(lockfile)
-        os.system(bb.data.expand('cp -pPR ${SYSROOT_DESTDIR}${TMPDIR}/* ${TMPDIR}/', d))
-        bb.utils.unlockfile(lock)
+    bb.build.exec_func("sysroot_stage_all", d)
+    #os.system('cp -pPR %s/* %s/' % (dest, sysrootdest))
+    for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
+        bb.build.exec_func(f, d)
+    bb.build.exec_func("packagedstaging_fastpath", d)
+
+    lock = bb.utils.lockfile(lockfile)
+    os.system(bb.data.expand('cp -pPR ${SYSROOT_DESTDIR}${TMPDIR}/* ${TMPDIR}/', d))
+    bb.utils.unlockfile(lock)
 }
+
+def is_legacy_staging(d):
+    stagefunc = bb.data.getVar('do_stage', d, True)
+    if stagefunc is None:
+        return False
+    return True
 
 python () {
     if is_legacy_staging(d):
-        bb.note("Legacy staging mode for %s" % bb.data.getVar("FILE", d, True))
+        bb.fatal("Legacy staging found for %s as it has a do_stage function. This will need conversion to a do_install or often simply removal to work with Poky" % bb.data.getVar("FILE", d, True))
 }
 
 

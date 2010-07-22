@@ -8,10 +8,6 @@ SRC_URI = "http://people.freedesktop.org/~mccann/dist/ConsoleKit-${PV}.tar.bz2 \
            file://nopolkit.patch;patch=1"
 S = "${WORKDIR}/ConsoleKit-${PV}"
 
-do_stage () {
-	autotools_stage_all
-}
-
 FILES_${PN} += "${libdir}/ConsoleKit ${datadir}/dbus-1 ${datadir}/PolicyKit"
 
 
