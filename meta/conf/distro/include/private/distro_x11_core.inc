@@ -86,14 +86,14 @@ RECIPE_LATEST_RELEASE_DATE_pn-xf86-video-vmware="2010/03/18"
 RECIPE_INTEL_SECTION_pn-xf86-video-vmware="graphic core"
 
 RECIPE_STATUS_pn-cairo="green" # no update needed
-RECIPE_LATEST_VERSION_pn-cairo="1.9.10"
+RECIPE_LATEST_VERSION_pn-cairo="1.9.10" # OK
 RECIPE_NO_OF_PATCHES_pn-cairo="1"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-cairo="1 monthes"
 RECIPE_LATEST_RELEASE_DATE_pn-cairo="2010/02/20"
 RECIPE_INTEL_SECTION_pn-cairo="graphic core"
 
 RECIPE_STATUS_pn-xserver-nodm-init="green" # no update needed
-RECIPE_LATEST_VERSION_pn-xserver-nodm-init="0"
+RECIPE_LATEST_VERSION_pn-xserver-nodm-init="1"
 RECIPE_NO_OF_PATCHES_pn-xserver-nodm-init="0"
 #RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xserver-nodm-init=""
 #RECIPE_LATEST_RELEASE_DATE_pn-xserver-nodm-init=""

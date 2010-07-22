@@ -124,7 +124,7 @@ RECIPE_COMMENTS_pn-curl = ""
 
 RECIPE_STATUS_pn-gconf-dbus = "green"
 DEPENDENCY_CHECK_pn-gconf-dbus = "not done"
-RECIPE_LATEST_VERSION_pn-gconf-dbus = "2.16.0"
+RECIPE_LATEST_VERSION_pn-gconf-dbus = "2.16.0+svnr705"
 RECIPE_INTEL_SECTION_pn-gconf-dbus = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gconf-dbus = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-gconf-dbus = "n/a"
@@ -329,7 +329,7 @@ RECIPE_COMMENTS_pn-tinylogin = "merged into busybox"
 
 RECIPE_STATUS_pn-spectrum-fw = "green"   # need upgrade
 DEPENDENCY_CHECK_pn-spectrum-fw = "not done"
-RECIPE_LATEST_VERSION_pn-spectrum-fw = "n/a"
+RECIPE_LATEST_VERSION_pn-spectrum-fw = "1"
 RECIPE_INTEL_SECTION_pn-spectrum-fw = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-spectrum-fw = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-spectrum-fw = "n/a"
