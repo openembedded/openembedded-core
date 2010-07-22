@@ -128,7 +128,7 @@ fi
 unset POKYLOCALCONF
 unset POKYLAYERCONF
 
-export BBPATH BUILD_SYS BUILDDIR
+export BBPATH OEROOT BUILD_SYS BUILDDIR
 
 # Kill off the TERMINFO variable, as glibc will grab its contents in its 'make
 # install' if set
