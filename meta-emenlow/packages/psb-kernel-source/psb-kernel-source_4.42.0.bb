@@ -20,3 +20,5 @@ do_install () {
 FILES_${PN} += "${base_libdir}/modules/${KERNEL_VERSION}/extra/*.ko"
 
 DEPENDS += "virtual/kernel"
+
+COMPATIBLE_MACHINE = "emenlow"

@@ -29,3 +29,5 @@ FILES_${PN} += "${libdir}/xorg/modules/drivers/libmm.so \
 	     ${libdir}/xorg/modules/drivers/psb_drv.so"
 
 DEPENDS += "virtual/libgl virtual/xserver"
+
+COMPATIBLE_MACHINE = "emenlow"

@@ -38,3 +38,5 @@ FILES_${PN} = "${libdir}/* ${libdir}/xorg/modules/dri/* \
 
 # Multiple virtual/gl providers being built breaks staging
 EXCLUDE_FROM_WORLD = "1"
+
+COMPATIBLE_MACHINE = "emenlow"

@@ -33,3 +33,6 @@ export LDFLAGS="-Wl,-z,defs"
 EXTRA_OECONF = "--disable-i965-driver"
 
 FILES_${PN} += "${libdir}/va/drivers/*"
+
+COMAPTIBLE_MACHINE = "emenlow"
+PACKAGE_ARCH = "${MACHINE_ARCH}"

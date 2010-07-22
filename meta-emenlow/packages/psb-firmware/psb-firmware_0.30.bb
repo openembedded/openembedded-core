@@ -11,3 +11,5 @@ do_install() {
 }
 
 FILES_${PN} += "${base_libdir}/firmware/msvdx_fw.bin"
+
+COMPATIBLE_MACHINE = "emenlow"
