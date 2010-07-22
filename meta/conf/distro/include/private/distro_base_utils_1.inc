@@ -131,7 +131,7 @@ RECIPE_COMMENTS_pn-polkit = ""
 
 RECIPE_STATUS_pn-psplash = "not done"
 DEPENDENCY_CHECK_pn-psplash = "not done"
-RECIPE_LATEST_VERSION_pn-psplash = "422"
+RECIPE_LATEST_VERSION_pn-psplash = "0.0+svnr424"
 RECIPE_PATCH_pn-psplash+psplash-init = "local scripts"
 RECIPE_INTEL_SECTION_pn-psplash = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-psplash = "6 months"

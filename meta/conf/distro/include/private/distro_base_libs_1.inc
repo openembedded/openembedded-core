@@ -1,6 +1,6 @@
 RECIPE_STATUS_pn-icu = "yellow" #do_configure for autotool;icu-3.6.inc
 DEPENDENCY_CHECK_pn-icu = "not done"
-RECIPE_LATEST_VERSION_pn-icu = "3_6"
+RECIPE_LATEST_VERSION_pn-icu = "3.6"
 RECIPE_PATCH_pn-icu+gccfix = "to be pushed upstream"
 RECIPE_PATCH_pn-icu+use-g++-for-linking = "Unclear"
 RECIPE_INTEL_SECTION_pn-icu = "base libs"
