@@ -36,7 +36,7 @@ RECIPE_NO_OF_PATCHES_pn-pcmanfm = "4"
 RECIPE_INTEL_SECTION_pn-pcmanfm = "graphic apps"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pcmanfm = "4 months"
 RECIPE_LATEST_RELEASE_DATE_pn-pcmanfm = "05/2010"
-RECIPE_COMMENTS_pn-pcmanfm = "0.9.7 need a new recipe for libfm, so update to 0.5.2 without this extra efforts"
+RECIPE_COMMENTS_pn-pcmanfm = ""
 
 RECIPE_STATUS_pn-oh-puzzles = "green" # no update needed
 DEPENDENCY_CHECK_pn-oh-puzzles = "not done"
