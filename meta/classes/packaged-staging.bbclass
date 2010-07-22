@@ -23,7 +23,6 @@ PSTAGE_SCAN_CMD ?= "find ${PSTAGE_TMPDIR_STAGE} \( -name "*.la" -o -name "*-conf
 
 PSTAGE_NATIVEDEPENDS = "\
     shasum-native \
-    stagemanager-native \
     "
 
 BB_STAMP_WHITELIST = "${PSTAGE_NATIVEDEPENDS}"
@@ -63,10 +62,6 @@ python () {
     # Add task dependencies if we're active, otherwise mark packaged staging
     # as inactive.
     if pstage_allowed:
-        deps = bb.data.getVarFlag('do_setscene', 'depends', d) or ""
-        deps += " stagemanager-native:do_populate_sysroot"
-        bb.data.setVarFlag('do_setscene', 'depends', deps, d)
-
         policy = bb.data.getVar("BB_STAMP_POLICY", d, True)
         if policy == "whitelist" or policy == "full":
            deps = bb.data.getVarFlag('do_setscene', 'recrdeptask', d) or ""
