@@ -44,55 +44,17 @@ if ! (test -w "$BUILDDIR"); then
 fi
 
 BITBAKEDIR="$OEROOT/bitbake$BBEXTRA/"
-PKGDIR="$OEROOT/meta/"
-BBPATH="$BITBAKEDIR $PKGDIR"
-
-#
-# Add in any extra meta-* repositories to BBPATH
-#
-METAREPOS=`cd $OEROOT; find . -maxdepth 1 -name 'meta-*' -type d| sed -e 's#./##g'`
-for repo in $METAREPOS
-do
-    # meta-openmoko is disabled by default - see local.conf.sample to enable it
-    if [ $repo = "meta-openmoko" ]; then
-        continue
-    fi
-    # meta-extras is disabled by default - see local.conf.sample to enable it
-    if [ $repo = "meta-extras" ]; then
-        continue
-    fi
-    if [ -e $OEROOT/$repo/poky-extra-environment ]; then
-	      . $OEROOT/$repo/poky-extra-environment
-    fi
-done
-
-BBPATH="$BBPATH $HOME/.oe $HOME/.poky $BUILDDIR"
-
-#
-# Remove any symlinks from BBPATH
-#
-NEWPATH=""
-for p in $BBPATH
-do
-    p2=`readlink -f "$p"`
-    NEWPATH="$p2:$NEWPATH"
-done
-BBPATH="$NEWPATH"
-
-
-MSG=''
 
 PATH="$BITBAKEDIR/bin/:$OEROOT/scripts:$PATH"
 
 # Remove any symlinks from paths
 BITBAKEDIR=`readlink -f "$BITBAKEDIR"`
-PKGDIR=`readlink -f "$PKGDIR"`
 BUILDDIR=`readlink -f "$BUILDDIR"`
 OEROOT=`readlink -f "$OEROOT"`
 
 cd "$BUILDDIR"
 
-if ! (test -d "$BITBAKEDIR" && test -d "$PKGDIR" && test -d "$BUILDDIR"); then
+if ! (test -d "$BITBAKEDIR" && test -d "$BUILDDIR"); then
     echo >&2 "Error: Not all directories exist! Did you run this script in poky directory?"
     return
 fi
@@ -124,7 +86,7 @@ fi
 unset POKYLOCALCONF
 unset POKYLAYERCONF
 
-export BBPATH OEROOT BUILDDIR
+export OEROOT BUILDDIR
 
 # Kill off the TERMINFO variable, as glibc will grab its contents in its 'make
 # install' if set
