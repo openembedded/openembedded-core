@@ -82,10 +82,6 @@ BBPATH="$NEWPATH"
 
 MSG=''
 
-BUILD_ARCH=`uname -m`
-BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
-BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
-
 PATH="$BITBAKEDIR/bin/:$OEROOT/scripts:$PATH"
 
 # Remove any symlinks from paths
@@ -128,7 +124,7 @@ fi
 unset POKYLOCALCONF
 unset POKYLAYERCONF
 
-export BBPATH OEROOT BUILD_SYS BUILDDIR
+export BBPATH OEROOT BUILDDIR
 
 # Kill off the TERMINFO variable, as glibc will grab its contents in its 'make
 # install' if set

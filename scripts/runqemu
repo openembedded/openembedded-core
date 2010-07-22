@@ -23,9 +23,13 @@ if [ "x$BUILDDIR" = "x" ]; then
     type -P bitbake &>/dev/null || {
         echo "You either need bitbake in your PATH or to source poky-init-build-env before running this script" >&2; exit 1; }
 
-    # we have bitbake in PATH, get TMPDIR from the environment
+    # we have bitbake in PATH, get TMPDIR and BUILD_SYS from the environment
     TMPDIR=`bitbake -e | grep TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
+    BUILD_SYS=`bitbake -e | grep BUILD_SYS=\" | cut -d '=' -f2 | cut -d '"' -f2`
 else
+    BUILD_ARCH=`uname -m`
+    BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
+    BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
     TMPDIR=$BUILDDIR/tmp
 fi
 
