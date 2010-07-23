@@ -4,6 +4,8 @@ BUGTRACKER = "http://sourceware.org/bugzilla/"
 SECTION = "devel"
 LICENSE = "GPLv2"
 
+DEPENDS = "flex-native bison-native zlib"
+
 inherit autotools gettext
 
 PACKAGES += "${PN}-symlinks"
