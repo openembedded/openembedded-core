@@ -23,4 +23,6 @@ do_compile () {
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
+	install -d ${D}${target_base_libdir}/
+	mv ${D}${exec_prefix}/${TARGET_SYS}/lib/* ${D}${target_base_libdir}/
 }
