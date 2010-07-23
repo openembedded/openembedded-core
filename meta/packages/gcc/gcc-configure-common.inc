@@ -18,7 +18,7 @@ EXTRA_OECONF_PATHS ?= ""
 EXTRA_OECONF_INITIAL ?= ""
 EXTRA_OECONF_INTERMEDIATE ?= ""
 
-GCCMULTILIB = "--enable-multilib"
+GCCMULTILIB = "--disable-multilib"
 
 EXTRA_OECONF = "${@['--enable-clocale=generic', ''][bb.data.getVar('USE_NLS', d, 1) != 'no']} \
                 --with-gnu-ld \
