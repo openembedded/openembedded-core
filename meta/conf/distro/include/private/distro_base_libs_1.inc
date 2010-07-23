@@ -147,7 +147,7 @@ RECIPE_COMMENTS_pn-libassuan = ""
 
 RECIPE_STATUS_pn-db = "green"
 DEPENDENCY_CHECK_pn-db = "not done"
-RECIPE_LATEST_VERSION_pn-db = "5.0.26"
+RECIPE_LATEST_VERSION_pn-db = "5.0.26" # OK
 RECIPE_INTEL_SECTION_pn-db = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-db = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-db = "n/a"
