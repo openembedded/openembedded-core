@@ -11,13 +11,13 @@ RDEPENDS = "gst-plugins-base-audioconvert \
 
 RRECOMMENDS = "gst-plugins-ugly-mad \
                gst-plugins-good-id3demux \
-               gst-plugins-base-ivorbisdec \
+               gst-plugins-base-vorbis \
                gst-plugins-base-alsa \
                gst-plugins-base-ogg"
 
 PV = "0.0+svnr${SRCREV}"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http"
 
