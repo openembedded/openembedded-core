@@ -3,9 +3,10 @@ RDEPENDS = "dpkg"
 
 require apt.inc
 
-PR = "r2"
+PR = "r3"
 
-SRC_URI += "file://nodoc.patch;patch=1"
+SRC_URI += "file://nodoc.patch \
+	    file://includes-fix.patch"
 
 require apt-package.inc
 

@@ -5,7 +5,7 @@ DEPENDS += "dpkg-native gettext-native"
 PACKAGES = ""
 USE_NLS = "yes"
 
-SRC_URI += "file://db_linking_hack.patch;patch=1"
+SRC_URI += "file://db_linking_hack.patch"
 
 python do_install () {
 	bb.build.exec_func('do_install_base', d)
