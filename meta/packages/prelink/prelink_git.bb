@@ -1,12 +1,14 @@
 SECTION = "devel"
-DEPENDS = "elfutils"
+# Need binutils for libiberty.a
+DEPENDS = "elfutils binutils"
 DESCRIPTION = " The prelink package contains a utility which modifies ELF shared libraries \
 and executables, so that far fewer relocations need to be resolved at \
 runtime and thus programs come up faster."
-LICENSE = "GPL"
+LICENSE = "GPLv2"
+PV = "1.0+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "http://people.redhat.com/jakub/prelink/prelink-${PV}.tar.bz2 \
+SRC_URI = "git://git.pokylinux.org/prelink-cross.git;protocol=git \
            file://prelink.conf \
            file://prelink.cron.daily \
            file://prelink.default"
@@ -14,11 +16,14 @@ SRC_URI = "http://people.redhat.com/jakub/prelink/prelink-${PV}.tar.bz2 \
 TARGET_OS_ORIG := "${TARGET_OS}"
 OVERRIDES_append = ":${TARGET_OS_ORIG}"
 
-S = "${WORKDIR}/prelink"
-
-EXTRA_OECONF = "--disable-64bit"
+S = "${WORKDIR}/git/trunk"
 
 inherit autotools 
+
+BBCLASSEXTEND = "native"
+
+EXTRA_OECONF = "--disable-selinux --with-pkgversion=${PV}-${PR} \
+	--with-bugurl=http://bugzilla.pokylinux.org/"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/cron.daily ${D}${sysconfdir}/default
