@@ -31,6 +31,7 @@ KEXECTOOLS_powerpc ?= ""
 RDEPENDS_task-poky-tools-debug = "\
     gdb \
     gdbserver \
+    tcf-agent \
     strace"
 
 RDEPENDS_task-poky-tools-profile = "\
