@@ -43,8 +43,12 @@ target_exec_prefix := "${exec_prefix}"
 prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 base_prefix = "${STAGING_DIR_NATIVE}"
 exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
-base_sbindir = "${base_prefix}/bin"
-sbindir = "${exec_prefix}/bin"
+bindir = "${exec_prefix}/bin/${MULTIMACH_TARGET_SYS}"
+sbindir = "${bindir}"
+base_bindir = "${bindir}"
+base_sbindir = "${bindir}"
+libdir = "${exec_prefix}/lib/${MULTIMACH_TARGET_SYS}"
+libexecdir = "${exec_prefix}/libexec/${MULTIMACH_TARGET_SYS}"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
