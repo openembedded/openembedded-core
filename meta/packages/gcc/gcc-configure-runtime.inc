@@ -33,7 +33,7 @@ do_compile () {
 do_install () {
 	# Install libgcc from our gcc-cross saved data
 	install -d ${D}${base_libdir} ${D}${libdir}
-	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-${TARGET_SYS}/* ${D}
+	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-${MULTIMACH_TARGET_SYS}/* ${D}
 
 	for d in ${RUNTIMETARGET}; do
 		cd ${B}/$d/

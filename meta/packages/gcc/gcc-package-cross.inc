@@ -18,7 +18,7 @@ do_install () {
 
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	if [ "${PN}" == "gcc-cross" -o "${PN}" == "gcc-crosssdk" ]; then
-		dest=${D}/${includedir}/gcc-build-internal-${TARGET_SYS}
+		dest=${D}/${includedir}/gcc-build-internal-${MULTIMACH_TARGET_SYS}
 		oe_runmake "DESTDIR=$dest" libdir=${target_libdir} base_libdir=${target_base_libdir} prefix=${target_prefix} exec_prefix=${target_exec_prefix} install-target-libgcc
 
 		# Ideally here we'd override the libgcc Makefile's idea of slibdir but
