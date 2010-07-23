@@ -1,0 +1,114 @@
+We observed the pseudo database becoming large and corrupted when undergoing
+significant use (generating multiple output package types).
+
+This patch checks for the existence of an PSEUDO_DATADIR environment variable
+and, when it exists, uses the directory specified there to store the pseudo
+database. This should enable us to use a different database for each run of
+pseudo.
+
+JL (23/07/10)
+Index: git/pseudo.h
+===================================================================
+--- git.orig/pseudo.h	2010-07-23 12:12:21.000000000 +0100
++++ git/pseudo.h	2010-07-23 13:35:29.044856965 +0100
+@@ -123,6 +123,7 @@
+ extern char *pseudo_fix_path(const char *, const char *, size_t, size_t, size_t *, int);
+ extern char **pseudo_dropenv(char * const *);
+ extern char **pseudo_setupenv(char * const *, char *);
++extern char *pseudo_data_path(char *);
+ extern char *pseudo_prefix_path(char *);
+ extern char *pseudo_get_prefix(char *);
+ extern int pseudo_logfile(char *defname);
+Index: git/pseudo_db.c
+===================================================================
+--- git.orig/pseudo_db.c	2010-07-23 12:12:21.000000000 +0100
++++ git/pseudo_db.c	2010-07-23 13:40:21.614745308 +0100
+@@ -465,17 +465,18 @@
+ 	char *errmsg;
+ 	static int registered_cleanup = 0;
+ 	char *dbfile;
++	char *data_dir;
+ 
+ 	if (!db)
+ 		return 1;
+ 	if (*db)
+ 		return 0;
+ 	if (db == &file_db) {
+-		dbfile = strdup(PSEUDO_DATA "/files.db");
++		dbfile = pseudo_data_path("files.db");
+ 		rc = sqlite3_open(dbfile, db);
+ 		free(dbfile);
+ 	} else {
+-		dbfile = strdup(PSEUDO_DATA "/logs.db");
++		dbfile = pseudo_data_path("logs.db");
+ 		rc = sqlite3_open(dbfile, db);
+ 		free(dbfile);
+ 	}
+Index: git/pseudo_server.c
+===================================================================
+--- git.orig/pseudo_server.c	2010-07-23 12:12:21.000000000 +0100
++++ git/pseudo_server.c	2010-07-23 13:36:09.340857158 +0100
+@@ -107,7 +107,7 @@
+ 	}
+ 
+ 	/* cd to the data directory */
+-	pseudo_path = strdup(PSEUDO_DATA);
++	pseudo_path = pseudo_data_path(NULL);
+ 	if (!pseudo_path) {
+ 		pseudo_diag("can't find %s directory.\n", PSEUDO_DATA);
+ 		return 1;
+Index: git/pseudo_util.c
+===================================================================
+--- git.orig/pseudo_util.c	2010-07-23 12:12:21.000000000 +0100
++++ git/pseudo_util.c	2010-07-23 13:41:11.062734484 +0100
+@@ -593,6 +593,50 @@
+ 	return new_environ;
+ }
+ 
++/* get the full path to the datadir for this run of pseudo
++ * file parameter is optional and returns the datadir path
++ * with the file name appended.
++ */
++char *
++pseudo_data_path(char *file) {
++	static char *datadir = NULL;
++	static size_t datadir_len;
++	char *path;
++
++	if (!datadir) {
++		datadir = getenv("PSEUDO_DATADIR");
++		if (!datadir) {
++			datadir = strdup(PSEUDO_DATA);
++		}
++		datadir_len = strlen(datadir);
++	}
++
++	if (!file) {
++		return strdup(datadir);
++	} else {
++		size_t len = datadir_len + strlen(file) + 2;
++		path = malloc(len);
++		if (path) {
++			char *endptr;
++			int  rc;
++      
++			rc = snprintf(path, len, "%s", datadir);
++			/* this certainly SHOULD be impossible */
++			if ((size_t) rc >= len)
++				rc = len - 1;
++			endptr = path + rc;
++			/* strip extra slashes.
++			 * This probably has no real effect, but I don't like
++			 * seeing "	//" in paths.
++			 */
++			while ((endptr > path) && (endptr[-1] == '/'))
++				--endptr;
++			snprintf(endptr, len - (endptr - path), "/%s", file);
++		}
++		return path;
++	}
++}
++
+ /* get the full path to a file under $PSEUDO_PREFIX.  Other ways of
+  * setting the prefix all set it in the environment.
+  */

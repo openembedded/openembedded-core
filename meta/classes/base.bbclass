@@ -148,6 +148,7 @@ python base_do_setscene () {
 		bb.build.make_stamp("do_setscene", d)
 }
 do_setscene[selfstamp] = "1"
+do_setscene[dirs] = "${PSEUDO_DATADIR}"
 addtask setscene before do_fetch
 
 addtask fetch
