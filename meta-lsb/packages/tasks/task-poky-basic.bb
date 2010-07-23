@@ -112,7 +112,7 @@ RDEPENDS_task-poky-extended-libs = "\
 
 RDEPENDS_task-poky-extended-utils = "\
 #    acl \
-#    at \
+    at \
     attr \
 #    bc \
     binutils \
@@ -128,6 +128,7 @@ RDEPENDS_task-poky-extended-utils = "\
 #    mailx \
 #    man \
 #    sendmail \
+    tar \
     tcl \
     "   
 
