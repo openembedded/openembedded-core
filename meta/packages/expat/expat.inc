@@ -3,7 +3,17 @@ HOMEPAGE = "http://expat.sourceforge.net/"
 SECTION = "libs"
 LICENSE = "MIT"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.gz \
+           file://autotools.patch"
 
-inherit autotools
+inherit autotools lib_package
 
+# This package uses an archive format known to have issue with some
+# versions of gzip
+do_unpack[depends] += "gzip-native:do_populate_sysroot"
+
+do_configure_prepend () {
+	rm -f ${S}/conftools/libtool.m4
+}
+
+BBCLASSEXTEND = "native nativesdk"

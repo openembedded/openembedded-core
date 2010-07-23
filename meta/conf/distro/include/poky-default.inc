@@ -42,6 +42,9 @@ PREFERRED_VERSION_glibc-nativesdk ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_glibc-initial ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_glibc-initial-nativesdk ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_elfutils ?= "0.148"
+# don't use version earlier than 1.4 for gzip-native, as it's necessary for
+# some packages using an archive format incompatible with earlier gzip
+PREFERRED_VERSION_gzip-native ?= "1.4"
 
 require conf/distro/include/as-needed.inc
 
