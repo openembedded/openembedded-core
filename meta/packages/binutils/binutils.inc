@@ -40,7 +40,7 @@ EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
 		--enable-shared"
 
 # This is necessary due to a bug in the binutils Makefiles
-EXTRA_OEMAKE = "configure-build-libiberty all"
+# EXTRA_OEMAKE = "configure-build-libiberty all"
 
 export AR = "${HOST_PREFIX}ar"
 export AS = "${HOST_PREFIX}as"
