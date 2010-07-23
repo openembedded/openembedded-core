@@ -25,9 +25,9 @@ python populate_packages_prepend () {
 	postinst = bb.data.getVar('plugin_postinst', d, 1)
 
 #	Can't package separate debug packages yet
-#	do_split_packages(d, gst_libdir, '\.debug/libgst(.*)\.so$', '${PN}-%s-dbg', 'GStreamer plugin for %s (with debugging symbols)', recursive=True, extra_depends=bb.data.expand('${PN}-dbg', d), match_path=True)
-	do_split_packages(d, gst_libdir, 'libgst(.*)\.so$', '${PN}-%s', 'GStreamer plugin for %s', postinst=postinst, extra_depends=bb.data.expand('${PN}',d))
-	do_split_packages(d, gst_libdir, 'libgst(.*)\.l?a$', '${PN}-%s-dev', 'GStreamer plugin for %s (development files)', extra_depends=bb.data.expand('${PN}-dev',d))
+#	do_split_packages(d, gst_libdir, '\.debug/libgst(.*)\.so$', bb.data.expand('${PN}-%s-dbg', d), 'GStreamer plugin for %s (with debugging symbols)', recursive=True, extra_depends=bb.data.expand('${PN}-dbg', d), match_path=True)
+	do_split_packages(d, gst_libdir, 'libgst(.*)\.so$', bb.data.expand('${PN}-%s', d), 'GStreamer plugin for %s', postinst=postinst, extra_depends=bb.data.expand('${PN}',d))
+	do_split_packages(d, gst_libdir, 'libgst(.*)\.l?a$', bb.data.expand('${PN}-%s-dev', d), 'GStreamer plugin for %s (development files)', extra_depends=bb.data.expand('${PN}-dev',d))
 }
 
 ALLOW_EMPTY = "1"
