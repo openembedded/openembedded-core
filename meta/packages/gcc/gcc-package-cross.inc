@@ -9,7 +9,15 @@ do_install () {
 	# Link gfortran to g77 to satisfy not-so-smart configure or hard coded g77
 	# gfortran is fully backwards compatible. This is a safe and practical solution. 
 	ln -sf ${STAGING_DIR_NATIVE}${prefix_native}/bin/${TARGET_PREFIX}gfortran ${STAGING_DIR_NATIVE}${prefix_native}/bin/${TARGET_PREFIX}g77 || true
-	ln -sf ${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin/gfortran ${STAGING_DIR_NATIVE}/${prefix_native}/${TARGET_SYS}/bin/g77 || true
+
+	
+	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
+	# found.
+	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
+	install -d $dest
+	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
+		ln -sf ${STAGING_DIR_NATIVE}${prefix_native}/bin/${MULTIMACH_TARGET_SYS}/${TARGET_PREFIX}$t $dest$t
+	done
 
 	# Remove things we don't need but keep share/java
 	for d in info man share/doc share/locale share/man share/info; do
