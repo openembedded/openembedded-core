@@ -36,21 +36,25 @@ SRC_URI += "\
 
 inherit autotools
 
+EXTRA_OECONF = "--program-prefix=eu-"
+
 do_configure_prepend() {
 	sed -i 's:./i386_gendis:echo\ \#:g' ${S}/libcpu/Makefile.am
 
 	cp ${WORKDIR}/*dis.h ${S}/libcpu
 }
 
-# Package binaries that overlap with binutils separately
+BBCLASSEXTEND = "native"
+
+# Package utilities separately
 PACKAGES =+ "${PN}-binutils"
 FILES_${PN}-binutils = "\
-    ${bindir}/addr2line \
-    ${bindir}/ld \
-    ${bindir}/nm \
-    ${bindir}/readelf \
-    ${bindir}/size \
-    ${bindir}/strip"
+    ${bindir}/eu-addr2line \
+    ${bindir}/eu-ld \
+    ${bindir}/eu-nm \
+    ${bindir}/eu-readelf \
+    ${bindir}/eu-size \
+    ${bindir}/eu-strip"
 # Fix library issues
 FILES_${PN} =+ "${libdir}/*-${PV}.so"
 
