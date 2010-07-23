@@ -96,12 +96,13 @@ class RunQueueScheduler(object):
         """
         Return the id of the first task we find that is buildable
         """
-        for task1 in range(len(self.rqdata.runq_fnid)):
-            task = self.prio_map[task1]
-            if self.rq.runq_running[task] == 1:
-                continue
-            if self.rq.runq_buildable[task] == 1:
-                return task
+        if self.rq.stats.active < self.rq.number_tasks:
+            for task1 in range(len(self.rqdata.runq_fnid)):
+                task = self.prio_map[task1]
+                if self.rq.runq_running[task] == 1:
+                    continue
+                if self.rq.runq_buildable[task] == 1:
+                    return task
 
 class RunQueueSchedulerSpeed(RunQueueScheduler):
     """
@@ -1267,10 +1268,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
             # nothing to do
             self.rq.state = runQueueCleanUp
 
-        task = None
-        if self.stats.active < self.number_tasks:
-            task = self.sched.next()
-        if task is not None:
+        for task in iter(self.sched.next, None):
             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
 
             taskname = self.rqdata.runq_task[task]
@@ -1306,8 +1304,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
             self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
             self.runq_running[task] = 1
             self.stats.taskActive()
-            if self.stats.active < self.number_tasks:
-                return True
 
         for pipe in self.build_pipes:
             self.build_pipes[pipe].read()
