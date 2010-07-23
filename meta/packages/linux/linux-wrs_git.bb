@@ -24,13 +24,34 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips)"
 
 LINUX_VERSION = "v2.6.34"
 LINUX_VERSION_EXTENSION = "-wr-${LINUX_KERNEL_TYPE}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
 
 do_patch() {
-    echo "[INFO] Patching is currently not supported"
+	cd ${S}
+	if [ -f ${WORKDIR}/defconfig ]; then
+	    defconfig=${WORKDIR}/defconfig
+	fi
+
+	createme ${TARGET_ARCH} ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${defconfig}
+	if [ $? -ne 0 ]; then
+		echo "ERROR. Could not create ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
+		exit 1
+	fi
+
+	updateme ${WORKDIR}
+	if [ $? -ne 0 ]; then
+		echo "ERROR. Could not update ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
+		exit 1
+	fi
+
+	patchme ${WRMACHINE}-${LINUX_KERNEL_TYPE}
+	if [ $? -ne 0 ]; then
+		echo "ERROR. Could not modify ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
+		exit 1
+	fi
 }
 
 do_wrlinux_checkout() {
@@ -50,9 +71,14 @@ addtask wrlinux_checkout before do_patch after do_unpack
 
 do_wrlinux_configme() {
 	echo "Doing wrlinux configme"
-	rm -rf ${B}
+
 	cd ${S}
-	configme
+	configme --reconfig
+	if [ $? -ne 0 ]; then
+		echo "ERROR. Could not configure ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
+		exit 1
+	fi
+
 	echo "# CONFIG_WRNOTE is not set" >> ${B}/.config
 	echo "# Global settings from linux recipe" >> ${B}/.config
 	echo "CONFIG_LOCALVERSION="\"${LINUX_VERSION_EXTENSION}\" >> ${B}/.config
@@ -72,9 +98,7 @@ do_wrlinux_link_vmlinux() {
 do_wrlinux_configme[depends] = "kern-tools-native:do_populate_sysroot"
 addtask wrlinux_configme before do_configure after do_patch
 addtask wrlinux_link_vmlinux after do_compile before do_install
-
-# XXX 
-#addtask wrlinux_configcheck after do_configure before do_compile
+addtask wrlinux_configcheck after do_configure before do_compile
 
 inherit kernel
 
