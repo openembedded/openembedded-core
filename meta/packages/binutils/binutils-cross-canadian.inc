@@ -13,8 +13,10 @@ do_install () {
 		ln -sf "${bindir}/`basename $l`" "${D}${prefix}/${TARGET_SYS}/bin/`basename $l | sed -e 's,${TARGET_PREFIX},,'`"
 	done
 
-        # Install the libiberty header
-        install -d ${D}${includedir}
-        install -m 644 ${S}/include/ansidecl.h ${D}${includedir}
-        install -m 644 ${S}/include/libiberty.h ${D}${includedir}
+	# We're not interested in the libs or headers, these would come from the 
+	# nativesdk or target version of the binutils recipe
+	rm -f ${D}${libdir}/libbfd*
+	rm -f ${D}${libdir}/libiberty*
+	rm -f ${D}${libdir}/libopcodes*
+	rm -f ${D}${includedir}/*.h
 }

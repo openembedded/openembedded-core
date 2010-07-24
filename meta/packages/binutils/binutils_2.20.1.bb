@@ -31,3 +31,5 @@ SRC_URI = "\
 SRC_URI += "\
      file://binutils-2.16.1-e300c2c3.patch \
      "
+
+BBCLASSEXTEND = "native"
