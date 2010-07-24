@@ -31,9 +31,11 @@ do_compile () {
 }
 
 do_install () {
+	target=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-nativesdk##`
+
 	# Install libgcc from our gcc-cross saved data
 	install -d ${D}${base_libdir} ${D}${libdir}
-	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-${MULTIMACH_TARGET_SYS}/* ${D}
+	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$target/* ${D}
 
 	for d in ${RUNTIMETARGET}; do
 		cd ${B}/$d/
