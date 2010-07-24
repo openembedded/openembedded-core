@@ -7,10 +7,14 @@ database. This should enable us to use a different database for each run of
 pseudo.
 
 JL (23/07/10)
+
+Updates to include lock/log/socket/pid files
+
+RP (24/07/10)
 Index: git/pseudo.h
 ===================================================================
---- git.orig/pseudo.h	2010-07-23 12:12:21.000000000 +0100
-+++ git/pseudo.h	2010-07-23 13:35:29.044856965 +0100
+--- git.orig/pseudo.h	2010-07-24 00:28:35.762423800 +0100
++++ git/pseudo.h	2010-07-24 10:34:33.902335659 +0100
 @@ -123,6 +123,7 @@
  extern char *pseudo_fix_path(const char *, const char *, size_t, size_t, size_t *, int);
  extern char **pseudo_dropenv(char * const *);
@@ -19,10 +23,31 @@ Index: git/pseudo.h
  extern char *pseudo_prefix_path(char *);
  extern char *pseudo_get_prefix(char *);
  extern int pseudo_logfile(char *defname);
+@@ -134,10 +135,16 @@
+ 
+ extern char *pseudo_version;
+ 
+-#define PSEUDO_LOCKFILE PSEUDO_DATA "/pseudo.lock"
+-#define PSEUDO_LOGFILE PSEUDO_DATA "/pseudo.log"
+-#define PSEUDO_PIDFILE PSEUDO_DATA "/pseudo.pid"
+-#define PSEUDO_SOCKET PSEUDO_DATA "/pseudo.socket"
++#define PSEUDO_LOCKFILE "/pseudo.lock"
++#define PSEUDO_LOGFILE "/pseudo.log"
++#define PSEUDO_PIDFILE "/pseudo.pid"
++#define PSEUDO_SOCKET "/pseudo.socket"
++
++extern char *pseudo_get_pid();
++extern char *pseudo_get_lockfile();
++extern char *pseudo_get_logfile();
++extern char *pseudo_get_socketfile();
++
+ 
+ /* some systems might not have *at().  We like to define operations in
+  * terms of each other, and for instance, open(...) is the same as
 Index: git/pseudo_db.c
 ===================================================================
---- git.orig/pseudo_db.c	2010-07-23 12:12:21.000000000 +0100
-+++ git/pseudo_db.c	2010-07-23 13:40:21.614745308 +0100
+--- git.orig/pseudo_db.c	2010-07-24 00:28:35.762423800 +0100
++++ git/pseudo_db.c	2010-07-24 00:28:36.282335730 +0100
 @@ -465,17 +465,18 @@
  	char *errmsg;
  	static int registered_cleanup = 0;
@@ -46,8 +71,8 @@ Index: git/pseudo_db.c
  	}
 Index: git/pseudo_server.c
 ===================================================================
---- git.orig/pseudo_server.c	2010-07-23 12:12:21.000000000 +0100
-+++ git/pseudo_server.c	2010-07-23 13:36:09.340857158 +0100
+--- git.orig/pseudo_server.c	2010-07-24 00:28:35.762423800 +0100
++++ git/pseudo_server.c	2010-07-24 10:27:59.242335869 +0100
 @@ -107,7 +107,7 @@
  	}
  
@@ -57,10 +82,31 @@ Index: git/pseudo_server.c
  	if (!pseudo_path) {
  		pseudo_diag("can't find %s directory.\n", PSEUDO_DATA);
  		return 1;
+@@ -138,9 +138,9 @@
+ 		return 0;
+ 	}
+ 	setsid();
+-	pseudo_path = strdup(PSEUDO_PIDFILE);
++	pseudo_path = pseudo_get_pid();
+ 	if (!pseudo_path) {
+-		pseudo_diag("Couldn't get path for %s\n", PSEUDO_PIDFILE);
++		pseudo_diag("Couldn't get pid path\n");
+ 		return 1;
+ 	}
+ 	fp = fopen(pseudo_path, "w");
+@@ -156,7 +156,7 @@
+ 		pseudo_new_pid();
+ 		fclose(stdin);
+ 		fclose(stdout);
+-		if (!pseudo_logfile(PSEUDO_LOGFILE))
++		if (!pseudo_logfile(pseudo_get_logfile()))
+ 			fclose(stderr);
+ 	}
+ 	signal(SIGHUP, quit_now);
 Index: git/pseudo_util.c
 ===================================================================
---- git.orig/pseudo_util.c	2010-07-23 12:12:21.000000000 +0100
-+++ git/pseudo_util.c	2010-07-23 13:41:11.062734484 +0100
+--- git.orig/pseudo_util.c	2010-07-24 00:28:35.962336149 +0100
++++ git/pseudo_util.c	2010-07-24 10:50:48.062336358 +0100
 @@ -593,6 +593,50 @@
  	return new_environ;
  }
@@ -112,3 +158,171 @@ Index: git/pseudo_util.c
  /* get the full path to a file under $PSEUDO_PREFIX.  Other ways of
   * setting the prefix all set it in the environment.
   */
+@@ -691,6 +735,26 @@
+ 	return s;
+ }
+ 
++char *
++pseudo_get_pid() {
++	return pseudo_data_path(PSEUDO_PIDFILE);
++}
++
++char *
++pseudo_get_lockfile() {
++	return pseudo_data_path(PSEUDO_LOCKFILE);
++}
++
++char *
++pseudo_get_logfile() {
++	return pseudo_data_path(PSEUDO_LOGFILE);
++}
++
++char *
++pseudo_get_socketfile() {
++	return pseudo_data_path(PSEUDO_SOCKET);
++}
++
+ /* these functions define the sizes pseudo will try to use
+  * when trying to allocate space, or guess how much space
+  * other people will have allocated; see the GNU man page
+@@ -844,20 +908,14 @@
+ 
+ /* set up a log file */
+ int
+-pseudo_logfile(char *defname) {
+-	char *pseudo_path;
++pseudo_logfile(char *pseudo_path) {
+ 	char *filename, *s;
+ 	extern char *program_invocation_short_name; /* glibcism */
+ 	int fd;
+ 
+ 	if ((filename = getenv("PSEUDO_DEBUG_FILE")) == NULL) {
+-		if (!defname) {
+-			pseudo_debug(3, "no special log file requested, using stderr.\n");
+-			return -1;
+-		}
+-		pseudo_path = strdup(defname);
+ 		if (!pseudo_path) {
+-			pseudo_diag("can't get path for prefix/%s\n", PSEUDO_LOGFILE);
++			pseudo_debug(3, "no special log file requested or unable to malloc space, using stderr.\n");
+ 			return -1;
+ 		}
+ 	} else {
+@@ -903,6 +961,7 @@
+ 			len += 8;
+ 		if (prog)
+ 			len += strlen(program_invocation_short_name);
++		free(pseudo_path);
+ 		pseudo_path = malloc(len);
+ 		if (!pseudo_path) {
+ 			pseudo_diag("can't allocate space for debug file name.\n");
+Index: git/pseudo.c
+===================================================================
+--- git.orig/pseudo.c	2010-07-24 10:22:10.053594896 +0100
++++ git/pseudo.c	2010-07-24 10:23:20.883585467 +0100
+@@ -272,7 +272,7 @@
+ 	pseudo_new_pid();
+ 
+ 	pseudo_debug(3, "opening lock.\n");
+-	lockname = strdup(PSEUDO_LOCKFILE);
++	lockname = pseudo_get_lockfile();
+ 	if (!lockname) {
+ 		pseudo_diag("Couldn't allocate a file path.\n");
+ 		exit(EXIT_FAILURE);
+Index: git/pseudo_client.c
+===================================================================
+--- git.orig/pseudo_client.c	2010-07-24 10:03:51.933588401 +0100
++++ git/pseudo_client.c	2010-07-24 10:49:22.922336916 +0100
+@@ -359,6 +359,7 @@
+ 	FILE *fp;
+ 	extern char **environ;
+ 	int cwd_fd;
++	char *pidpath;
+ 
+ 	if ((server_pid = fork()) != 0) {
+ 		if (server_pid == -1) {
+@@ -383,7 +384,12 @@
+ 			pseudo_diag("Couldn't change to server dir [%d]: %s\n",
+ 				pseudo_dir_fd, strerror(errno));
+ 		}
+-		fp = fopen(PSEUDO_PIDFILE, "r");
++		pidpath = pseudo_get_pid();
++		if (!pidpath) {
++			pseudo_diag("Couldn't get pid path\n");
++			return 1;
++		}
++		fp = fopen(pidpath, "r");
+ 		if (fchdir(cwd_fd) == -1) {
+ 			pseudo_diag("return to previous directory failed: %s\n",
+ 				strerror(errno));
+@@ -396,8 +402,9 @@
+ 			fclose(fp);
+ 		} else {
+ 			pseudo_diag("no pid file (%s): %s\n",
+-				PSEUDO_PIDFILE, strerror(errno));
++				pidpath, strerror(errno));
+ 		}
++		free(pidpath);
+ 		pseudo_debug(2, "read new pid file: %d\n", server_pid);
+ 		/* at this point, we should have a new server_pid */
+ 		return 0;
+@@ -535,10 +542,19 @@
+ 
+ static int
+ client_connect(void) {
++	char *socketfile = pseudo_get_socketfile();
+ 	/* we have a server pid, is it responsive? */
+-	struct sockaddr_un sun = { AF_UNIX, PSEUDO_SOCKET };
++	struct sockaddr_un sun = { AF_UNIX, "" };
+ 	int cwd_fd;
+ 
++	if (!socketfile) {
++		pseudo_diag("Couldn't malloc socketfile");
++
++		return 1;
++	}
++
++	strncpy(sun.sun_path, socketfile, sizeof(sun.sun_path) - 1);
++
+ 	connect_fd = socket(PF_UNIX, SOCK_STREAM, 0);
+ 	connect_fd = pseudo_fd(connect_fd, MOVE_FD);
+ 	if (connect_fd == -1) {
+@@ -564,7 +580,7 @@
+ 		return 1;
+ 	}
+ 	if (connect(connect_fd, (struct sockaddr *) &sun, sizeof(sun)) == -1) {
+-		pseudo_debug(3, "can't connect socket to pseudo.socket: (%s)\n", strerror(errno));
++		pseudo_debug(3, "can't connect socket to %s: (%s)\n", sun.sun_path, strerror(errno));
+ 		close(connect_fd);
+ 		if (fchdir(cwd_fd) == -1) {
+ 			pseudo_diag("return to previous directory failed: %s\n",
+@@ -588,6 +604,7 @@
+ 	FILE *fp;
+ 	server_pid = 0;
+ 	int cwd_fd;
++	char *pidpath;
+ 
+ 	/* avoid descriptor leak, I hope */
+ 	if (connect_fd >= 0) {
+@@ -604,7 +621,12 @@
+ 		return 1;
+ 	}
+ 	if (fchdir(pseudo_dir_fd) != 1) {
+-		fp = fopen(PSEUDO_PIDFILE, "r");
++		pidpath = pseudo_get_pid();
++		if (!pidpath) {
++			pseudo_diag("Couldn't get pid path\n");
++			return 1;
++		}
++		fp = fopen(pidpath, "r");
+ 		if (fchdir(cwd_fd) == -1) {
+ 			pseudo_diag("return to previous directory failed: %s\n",
+ 				strerror(errno));
+@@ -619,6 +641,7 @@
+ 			pseudo_debug(1, "Opened server PID file, but didn't get a pid.\n");
+ 		}
+ 		fclose(fp);
++		free(pidpath);
+ 	}
+ 	if (server_pid) {
+ 		if (kill(server_pid, 0) == -1) {

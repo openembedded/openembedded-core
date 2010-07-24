@@ -6,7 +6,7 @@ LICENSE = "LGPL2.1"
 DEPENDS = "sqlite3"
 
 PV = "0.0+git${SRCPV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
            file://tweakflags.patch \
