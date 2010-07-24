@@ -11,6 +11,7 @@ JL (23/07/10)
 Updates to include lock/log/socket/pid files
 
 RP (24/07/10)
+
 Index: git/pseudo.h
 ===================================================================
 --- git.orig/pseudo.h	2010-07-24 00:28:35.762423800 +0100
@@ -232,7 +233,7 @@ Index: git/pseudo.c
 Index: git/pseudo_client.c
 ===================================================================
 --- git.orig/pseudo_client.c	2010-07-24 10:03:51.933588401 +0100
-+++ git/pseudo_client.c	2010-07-24 10:49:22.922336916 +0100
++++ git/pseudo_client.c	2010-07-25 00:30:29.152364992 +0100
 @@ -359,6 +359,7 @@
  	FILE *fp;
  	extern char **environ;
@@ -266,14 +267,47 @@ Index: git/pseudo_client.c
  		pseudo_debug(2, "read new pid file: %d\n", server_pid);
  		/* at this point, we should have a new server_pid */
  		return 0;
-@@ -535,10 +542,19 @@
+@@ -407,6 +414,8 @@
+ 		char **new_environ;
+ 		int args;
+ 		int fd;
++		int pseudo_prefix_fd;
++		char *pseudo_path;
+ 
+ 		pseudo_new_pid();
+ 		base_args[0] = "bin/pseudo";
+@@ -439,9 +448,21 @@
+ 		} else {
+ 			argv = base_args;
+ 		}
+-		if (fchdir(pseudo_dir_fd)) {
++
++
++		pseudo_path = pseudo_prefix_path(NULL);
++		if (pseudo_path) {
++			pseudo_prefix_fd = open(pseudo_path, O_RDONLY);
++			pseudo_prefix_fd = pseudo_fd(pseudo_prefix_fd, MOVE_FD);
++			free(pseudo_path);
++		} else {
++			pseudo_diag("No prefix available to to find server.\n");
++			exit(1);
++		}
++
++		if (fchdir(pseudo_prefix_fd)) {
+ 			pseudo_diag("Couldn't change to server dir [%d]: %s\n",
+-				pseudo_dir_fd, strerror(errno));
++				pseudo_prefix_fd, strerror(errno));
+ 		}
+ 		/* close any higher-numbered fds which might be open,
+ 		 * such as sockets.  We don't have to worry about 0 and 1;
+@@ -535,10 +556,17 @@
  
  static int
  client_connect(void) {
 +	char *socketfile = pseudo_get_socketfile();
  	/* we have a server pid, is it responsive? */
 -	struct sockaddr_un sun = { AF_UNIX, PSEUDO_SOCKET };
-+	struct sockaddr_un sun = { AF_UNIX, "" };
++	struct sockaddr_un sun = { AF_UNIX, "pseudo.socket" };
  	int cwd_fd;
  
 +	if (!socketfile) {
@@ -282,12 +316,10 @@ Index: git/pseudo_client.c
 +		return 1;
 +	}
 +
-+	strncpy(sun.sun_path, socketfile, sizeof(sun.sun_path) - 1);
-+
  	connect_fd = socket(PF_UNIX, SOCK_STREAM, 0);
  	connect_fd = pseudo_fd(connect_fd, MOVE_FD);
  	if (connect_fd == -1) {
-@@ -564,7 +580,7 @@
+@@ -564,7 +592,7 @@
  		return 1;
  	}
  	if (connect(connect_fd, (struct sockaddr *) &sun, sizeof(sun)) == -1) {
@@ -296,7 +328,7 @@ Index: git/pseudo_client.c
  		close(connect_fd);
  		if (fchdir(cwd_fd) == -1) {
  			pseudo_diag("return to previous directory failed: %s\n",
-@@ -588,6 +604,7 @@
+@@ -588,6 +616,7 @@
  	FILE *fp;
  	server_pid = 0;
  	int cwd_fd;
@@ -304,7 +336,7 @@ Index: git/pseudo_client.c
  
  	/* avoid descriptor leak, I hope */
  	if (connect_fd >= 0) {
-@@ -604,7 +621,12 @@
+@@ -604,7 +633,12 @@
  		return 1;
  	}
  	if (fchdir(pseudo_dir_fd) != 1) {
@@ -318,7 +350,7 @@ Index: git/pseudo_client.c
  		if (fchdir(cwd_fd) == -1) {
  			pseudo_diag("return to previous directory failed: %s\n",
  				strerror(errno));
-@@ -619,6 +641,7 @@
+@@ -619,6 +653,7 @@
  			pseudo_debug(1, "Opened server PID file, but didn't get a pid.\n");
  		}
  		fclose(fp);
@@ -326,3 +358,25 @@ Index: git/pseudo_client.c
  	}
  	if (server_pid) {
  		if (kill(server_pid, 0) == -1) {
+@@ -710,7 +745,7 @@
+ 	pseudo_msg_t *ack;
+ 	char *pseudo_path;
+ 
+-	pseudo_path = pseudo_prefix_path(NULL);
++	pseudo_path = pseudo_data_path(NULL);
+ 	if (pseudo_dir_fd == -1) {
+ 		if (pseudo_path) {
+ 			pseudo_dir_fd = open(pseudo_path, O_RDONLY);
+Index: git/pseudo_wrappers.c
+===================================================================
+--- git.orig/pseudo_wrappers.c	2010-07-25 00:21:35.263587003 +0100
++++ git/pseudo_wrappers.c	2010-07-25 00:29:03.052345996 +0100
+@@ -180,7 +180,7 @@
+ 	 * value for cwd.
+ 	 */
+ 	pseudo_client_reset();
+-	pseudo_path = pseudo_prefix_path(NULL);
++	pseudo_path = pseudo_data_path(NULL);
+ 	if (pseudo_dir_fd == -1) {
+ 		if (pseudo_path) {
+ 			pseudo_dir_fd = open(pseudo_path, O_RDONLY);
