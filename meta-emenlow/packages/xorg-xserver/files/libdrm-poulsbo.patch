@@ -11,7 +11,7 @@ Index: xorg-server-1.7.99.2/configure.ac
  LIBDMX="dmx >= 1.0.99.1"
  LIBDRI="dri >= 7.1.0"
 -LIBDRM="libdrm >= 2.3.0"
-+LIBDRM="libdrm-poulsbo >= 2.3.0"
++LIBDRM="libdrm_poulsbo >= 2.3.0"
  LIBGL="gl >= 7.1.0"
  LIBXEXT="xext >= 1.0.99.4"
  LIBXI="xi >= 1.2.99.1"
@@ -20,7 +20,7 @@ Index: xorg-server-1.7.99.2/configure.ac
      fi
      if test "x$DRI" = xyes && test "x$GLX" = xyes; then
 -        XEPHYR_REQUIRED_LIBS="$XEPHYR_REQUIRED_LIBS $LIBGL libdrm"
-+        XEPHYR_REQUIRED_LIBS="$XEPHYR_REQUIRED_LIBS $LIBGL libdrm-poulsbo"
++        XEPHYR_REQUIRED_LIBS="$XEPHYR_REQUIRED_LIBS $LIBGL libdrm_poulsbo"
      fi
  
      PKG_CHECK_MODULES(XEPHYR, $XEPHYR_REQUIRED_LIBS, [xephyr="yes"], [xephyr="no"])
