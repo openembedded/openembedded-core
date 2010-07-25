@@ -55,6 +55,7 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	file://pr35942.patch;patch=1 \
 	file://optional_libstdc.patch;patch=1 \
 	file://sparseset_rule.patch;patch=1 \
+	file://64bithack.patch;patch=1 \
 "
 
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
