@@ -4,14 +4,15 @@ DESCRIPTION = "X11 drivers for Poulsbo (psb) 3D acceleration"
 # not Intel proprietary, but it has no obvious license attached to it.
 LICENSE = "Intel-binary-only"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=02c597a2f082b4581596065bb5a521a8"
-PR = "r3"
+PR = "r6"
 
 inherit autotools
 
 PROVIDES = "virtual/libgl mesa-dri"
 
 SRC_URI="https://launchpad.net/~gma500/+archive/ppa/+files/xpsb-glx_0.18-0ubuntu1netbook2~1004um1ubuntu1.tar.gz \
-	file://cross-compile.patch;patch=1"
+	file://cross-compile.patch;patch=1 \
+	file://libdrmname.patch;patch=1"
 
 do_configure () {
 	chmod +x autogen.sh && ./autogen.sh && make realclean
