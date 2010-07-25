@@ -1,0 +1,15 @@
+Index: pcmanfm-0.5/pcmanfm.desktop.in
+===================================================================
+--- pcmanfm-0.5.orig/pcmanfm.desktop.in
++++ pcmanfm-0.5/pcmanfm.desktop.in
+@@ -1,8 +1,7 @@
+ [Desktop Entry]
+ Version=1.0
+-Encoding=UTF-8
+-Name=PCMan File Manager
+-Categories=Application;System;Utility;Core;GTK;
++Name=File Manager
++Categories=System;Utility;Core;GTK;
+ Name[zh_TW]=檔案總管
+ Exec=pcmanfm %F
+ Icon=pcmanfm

@@ -1,0 +1,60 @@
+Index: pcmanfm-0.5/src/main.c
+===================================================================
+--- pcmanfm-0.5.orig/src/main.c
++++ pcmanfm-0.5/src/main.c
+@@ -118,7 +118,7 @@
+ 
+ static void init_folder();
+ static void init_daemon_or_desktop();
+-static void check_icon_theme();
++/*static void check_icon_theme();*/
+ 
+ static gboolean handle_parsed_commandline_args();
+ 
+@@ -322,7 +322,7 @@
+     gtk_widget_show ( GTK_WIDGET( main_window ) );
+     return main_window;
+ }
+-
++#if 0
+ void check_icon_theme()
+ {
+     GtkSettings * settings;
+@@ -361,7 +361,7 @@
+     }
+     g_free( theme );
+ }
+-
++#endif
+ #ifdef _DEBUG_THREAD
+ 
+ G_LOCK_DEFINE(gdk_lock);
+@@ -405,7 +405,7 @@
+     vfs_file_info_set_thumbnail_size( app_settings.big_icon_size,
+                                       app_settings.small_icon_size );
+ 
+-    check_icon_theme();
++/*    check_icon_theme();*/
+     folder_initialized = TRUE;
+ }
+ 
+Index: pcmanfm-0.5/src/main-window.c
+===================================================================
+--- pcmanfm-0.5.orig/src/main-window.c
++++ pcmanfm-0.5/src/main-window.c
+@@ -633,6 +633,7 @@
+     gtk_widget_grab_focus ( GTK_WIDGET( main_window->address_bar ) );
+ 
+ #ifdef SUPER_USER_CHECKS
++#if 0
+     /* Create warning bar for super user */
+     if ( geteuid() == 0 )                 /* Run as super user! */
+     {
+@@ -648,6 +649,7 @@
+                              main_window->status_bar, FALSE, FALSE, 2 );
+     }
+ #endif
++#endif
+ 
+     /* Create client area */
+     main_window->notebook = gtk_notebook_new();
