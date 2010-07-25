@@ -2,6 +2,8 @@
 # or indirectly via dependency.  No need to be in 'world'.
 EXCLUDE_FROM_WORLD = "1"
 
+STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}"
+
 # Save MULTIMACH_ARCH
 OLD_MULTIMACH_ARCH := "${MULTIMACH_ARCH}"
 # Save PACKAGE_ARCH
