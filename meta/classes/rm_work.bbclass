@@ -15,7 +15,7 @@ do_rm_work () {
     do
         if [ `basename ${S}` = $dir ]; then
             rm -rf $dir
-        elif [ $dir != 'temp' ]; then
+        elif [ $dir != 'temp' -a $dir != 'pseudo' ]; then
             rm -rf $dir
         fi
     done
