@@ -217,6 +217,9 @@ python do_checkpkg() {
 	Return new version if success, or else error in "Errxxxx" style
 	"""
 	def check_new_version(url, curname, d):
+		"""possible to have no version in pkg name, such as spectrum-fw"""
+		if not re.search("\d+", curname):
+			return pcurver
 		pn = bb.data.getVar('PN', d, 1)
 		f = tempfile.NamedTemporaryFile(delete=False, prefix="%s-2-" % pn)
 		status = internal_fetch_wget(url, d, f)

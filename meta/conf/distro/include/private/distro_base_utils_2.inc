@@ -329,7 +329,7 @@ RECIPE_COMMENTS_pn-tinylogin = "merged into busybox"
 
 RECIPE_STATUS_pn-spectrum-fw = "green"   # need upgrade
 DEPENDENCY_CHECK_pn-spectrum-fw = "not done"
-RECIPE_LATEST_VERSION_pn-spectrum-fw = "1"
+RECIPE_LATEST_VERSION_pn-spectrum-fw = "1.0"
 RECIPE_INTEL_SECTION_pn-spectrum-fw = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-spectrum-fw = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-spectrum-fw = "n/a"
