@@ -3,14 +3,16 @@ HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
 BUGTRACKER = "http://sourceforge.net/projects/pam/support"
 # PAM allows dual licensed under GPL and BSD
 LICENSE = "GPLv2+ | BSD"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-${PV}.tar.bz2 \
-           file://disable_crossbinary.patch"
+           file://disable_crossbinary.patch \
+           file://99_pam"
 
 EXTRA_OECONF = "--with-db-uniquename=_pam \
                 --includedir=${includedir}/security \
-                --libdir=/lib"
+                --libdir=${base_libdir} \
+                --disable-regenerate-docu"
 DEPENDS = "bison flex"
 CFLAGS_append = " -fPIC "
 
@@ -26,3 +28,16 @@ FILES_${PN} += "${base_libdir}/security/*.so"
 FILES_${PN}-dev += "${base_libdir}/security/*.la"
 FILES_${PN}-dev += "${base_libdir}/*.la"
 FILES_${PN} += "${base_libdir}/*.so*"
+
+do_install() {
+	autotools_do_install
+
+	# don't install /var/run when populating rootfs. Do it through volatile
+	rm -rf ${D}/var
+	install -d ${D}/etc/default/volatiles
+	install -m 0644 ${WORKDIR}/99_pam ${D}/etc/default/volatiles
+}
+
+pkg_postinst_${PN} () {
+        /etc/init.d/populate-volatile.sh update
+}
