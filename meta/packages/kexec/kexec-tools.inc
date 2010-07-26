@@ -12,4 +12,4 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools//kexe
 
 inherit autotools
 
-COMPATIBLE_HOST = '(x86_64|i.86.*|arm.*)-(linux|freebsd.*)'
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*)-(linux|freebsd.*)'

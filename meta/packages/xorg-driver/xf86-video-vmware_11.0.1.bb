@@ -9,4 +9,4 @@ DEPENDS += "virtual/libx11 libxvmc drm glproto \
 
 PR = "r1"
 
-COMPATIBLE_HOST = '(i.86.*-linux)'
+COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
