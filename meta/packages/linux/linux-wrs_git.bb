@@ -15,6 +15,7 @@ SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclon
 
 WRMACHINE = "${MACHINE}"
 WRMACHINE_qemux86  = "common_pc"
+WRMACHINE_qemux86-64  = "common_pc_64"
 WRMACHINE_qemuppc  = "qemu_ppc32"
 WRMACHINE_qemumips = "mti_malta32_be"
 WRMACHINE_qemuarm  = "arm_versatile_926ejs"
