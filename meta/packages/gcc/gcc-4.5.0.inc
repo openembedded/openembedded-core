@@ -4,8 +4,6 @@ LICENSE = "GPLv3"
 DEPENDS =+ "mpfr gmp libmpc elfutils"
 NATIVEDEPS = "mpfr-native gmp-native gettext-native libmpc-native elfutils-native"
 
-PR = "r0"
-
 SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://gcc-4.5.0_to_svn_162398.patch.bz2 \
 	   file://gcc_revert_base_version_to_4.5.0.patch \
@@ -46,6 +44,7 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
            file://zecke-xgcc-cpp.patch \
            file://gcc-poison-system-directories.patch \
            file://gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch \
+	   file://64bithack.patch;patch=1 \
 	  "
 	
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
