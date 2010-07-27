@@ -64,6 +64,15 @@ INITSCRIPT_PARAMS_avahi-daemon = "defaults 21 19"
 INITSCRIPT_NAME_avahi-dnsconfd = "avahi-dnsconfd"
 INITSCRIPT_PARAMS_avahi-dnsconfd = "defaults 22 19"
 
+do_install() {
+	autotools_do_install
+
+	# don't install /var/run when populating rootfs. Do it through volatile
+	# /var/run of current version is empty, so just remove it.
+	# if /var/run become non-empty in the future, need to install it via volatile
+	rm -rf ${D}/var/run
+}
+
 # At the time the postinst runs, dbus might not be setup so only restart if running
 
 pkg_postinst_avahi-daemon () {
