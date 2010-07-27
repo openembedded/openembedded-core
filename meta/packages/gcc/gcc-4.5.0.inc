@@ -14,6 +14,7 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://gcc-flags-for-build.patch \
 	   file://libstdc++-emit-__cxa_end_cleanup-in-text.patch \
 	   file://arm-bswapsi2.patch \
+	   file://gcc-pr43698-arm-rev-instr.patch \
 		\
            file://fedora/gcc43-c++-builtin-redecl.patch;striplevel=0 \
            file://fedora/gcc43-ia64-libunwind.patch;striplevel=0 \
