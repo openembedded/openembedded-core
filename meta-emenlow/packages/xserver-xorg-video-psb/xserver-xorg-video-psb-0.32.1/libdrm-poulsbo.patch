@@ -1,0 +1,13 @@
+Index: xserver-xorg-video-psb-0.32.1/configure.ac
+===================================================================
+--- xserver-xorg-video-psb-0.32.1.orig/configure.ac
++++ xserver-xorg-video-psb-0.32.1/configure.ac
+@@ -94,7 +94,7 @@ AC_MSG_RESULT([$DRI])
+ 
+ AM_CONDITIONAL(DRI, test x$DRI = xyes)
+ if test "$DRI" = yes; then
+-        PKG_CHECK_MODULES(DRI, [libdrm-poulsbo >= 2.0 xf86driproto])
++        PKG_CHECK_MODULES(DRI, [libdrm_poulsbo >= 2.0 xf86driproto])
+         AC_DEFINE(XF86DRI,1,[Enable DRI driver support])
+         AC_DEFINE(XF86DRI_DEVEL,1,[Enable developmental DRI driver support])
+ fi

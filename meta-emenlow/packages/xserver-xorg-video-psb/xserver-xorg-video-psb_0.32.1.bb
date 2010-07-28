@@ -1,7 +1,7 @@
 DESCRIPTION = "2D graphics driver for Poulsbo"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://MIT_License.txt;md5=732825ecdcf420261531d935fcd914a7"
-PR = "r1"
+PR = "r2"
 
 inherit autotools
 
@@ -16,7 +16,8 @@ SRC_URI = "https://launchpad.net/~gma500/+archive/ppa/+files/xserver-xorg-video-
 	file://01_disable_lid_timer.patch;patch=1 \
 	file://psb_xvtempfix.patch;patch=1 \
 	file://psb_mixed.patch;patch=1 \
-	file://dri-h.patch"
+	file://dri-h.patch \
+	file://libdrm-poulsbo.patch"
 
 export DRI_CFLAGS="-I${STAGING_INCDIR}/psb -I${STAGING_INCDIR}/psb/drm \
 	-I${STAGING_INCDIR}/X11/dri"

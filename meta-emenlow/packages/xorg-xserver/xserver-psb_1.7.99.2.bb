@@ -1,6 +1,6 @@
 require ../meta/packages/xorg-xserver/xserver-xf86-dri-lite.inc
 
-PR = "r2"
+PR = "r3"
 
 PROTO_DEPS += "xf86driproto dri2proto"
 
@@ -15,6 +15,7 @@ SRC_URI += "file://fix_open_max_preprocessor_error.patch"
 
 EXTRA_OECONF += "--enable-dri --enable-dri2 --enable-dga --enable-glx"
 
-DEPENDS += "psb-firmware xpsb-glx psb-kernel-source libdrm-poulsbo libva"
+RDEPENDS_${PN} += "xserver-xorg-video-psb psb-firmware xpsb-glx \
+	       psb-kernel-source libdrm-poulsbo libva"
 
 COMPATIBLE_MACHINE = "emenlow"
