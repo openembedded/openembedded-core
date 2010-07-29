@@ -25,6 +25,7 @@ SRC_URI = "\
      file://binutils-uclibc-gas-needs-libm.patch \
      file://binutils-x86_64_i386_biarch.patch \
      file://binutils-mips-pie.patch \
+     file://binutils-libtool.patch \
      "
 
 # powerpc patches
