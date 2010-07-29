@@ -1,6 +1,6 @@
 require attr.inc
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI += "file://memory-leak-in-copy.patch \
             file://memory-leak2.patch \
