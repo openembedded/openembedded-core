@@ -288,31 +288,6 @@ python packagedstage_stampfixing_eventhandler() {
     return NotHandled
 }
 
-populate_sysroot_preamble () {
-	if [ "$PSTAGING_ACTIVE" = "1" ]; then
-		stage-manager -p ${STAGING_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-staging -u || true
-	fi
-}
-
-populate_sysroot_postamble () {
-	if [ "$PSTAGING_ACTIVE" = "1" ]; then
-		# list the packages currently installed in staging
-		# ${PSTAGE_LIST_CMD} | awk '{print $1}' > ${PSTAGE_WORKDIR}/installed-list
-
-		# exitcode == 5 is ok, it means the files change
-		set +e
-		stage-manager -p ${STAGING_DIR} -c ${PSTAGE_WORKDIR}/stamp-cache-staging -u -d ${PSTAGE_TMPDIR_STAGE}/sysroots
-		exitcode=$?
-		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
-			exit $exitcode
-		fi
-		if [ "$exitcode" != "5" -a "$exitcode" != "0" ]; then
-			exit $exitcode
-		fi
-		set -e
-	fi
-}
-
 packagedstaging_fastpath () {
 	if [ "$PSTAGING_ACTIVE" = "1" ]; then
 		mkdir -p ${PSTAGE_TMPDIR_STAGE}/sysroots/
@@ -321,14 +296,6 @@ packagedstaging_fastpath () {
 }
 
 do_populate_sysroot[dirs] =+ "${PSTAGE_DIR}"
-python populate_sysroot_prehook() {
-    bb.build.exec_func("populate_sysroot_preamble", d)
-}
-
-python populate_sysroot_posthook() {
-    bb.build.exec_func("populate_sysroot_postamble", d)
-}
-
 
 staging_packager () {
 
