@@ -8,11 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "libid3tag"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz \
-           file://no-force-mem.patch;patch=1 \
-           file://add-pkgconfig.patch;patch=1"
+           file://no-force-mem.patch \
+           file://add-pkgconfig.patch \
+           file://fix_for_mips_with_gcc-4.5.0.patch"
 
 S = "${WORKDIR}/libmad-${PV}"
 
