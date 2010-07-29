@@ -1,7 +1,7 @@
 CONFIG_X86_32=y
 CONFIG_PRINTK=y
 
-# Basic hardware support for the box - network, USB, PCI
+# Basic hardware support for the box - network, USB, PCI, sound
 CONFIG_NETDEVICES=y
 CONFIG_NETDEV_1000=y
 CONFIG_ATA=y
@@ -22,6 +22,9 @@ CONFIG_NET=y
 CONFIG_USB_UHCI_HCD=y
 CONFIG_BLK_DEV_SD=y
 CONFIG_CHR_DEV_SG=y
+CONFIG_SOUND=y
+CONFIG_SND=y
+CONFIG_SND_HDA_INTEL=y
 
 # Make sure these are on, otherwise the bootup won't be fun
 CONFIG_EXT3_FS=y
