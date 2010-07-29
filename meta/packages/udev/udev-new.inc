@@ -5,15 +5,15 @@ HOMEPAGE = "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LICENSE_${PN} = "GPLv2+"
 LICENSE_libudev = "LGPLv2.1+"
-#LICENSE_libgudev = "LGPLv2.1+"
+LICENSE_libgudev = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://libudev/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                     file://extras/gudev/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343"
 
-# the following dependency is needed for udev-extras
-#DEPENDS = "libacl glib-2.0 libusb usbutils pciutils linux-libc-headers gperf-native"
+DEPENDS = "acl glib-2.0 libusb usbutils pciutils linux-libc-headers gperf-native libxslt-native"
 RPROVIDES_${PN} = "hotplug"
-RRECOMMENDS_${PN} += "udev-extraconf udev-cache"
+RRECOMMENDS_${PN} += "udev-extraconf udev-cache usbutils-ids pciutils-ids"
+RDEPENDS_libudev = "${PN} (= ${EXTENDPV})"
 
 SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://run.rules \
@@ -34,9 +34,11 @@ inherit autotools pkgconfig update-rc.d
 # udevd/udevadm -> /sbin/, libudev.so.* -> /lib/
 sbindir = "${base_sbindir}"
 libexecdir = "${base_libdir}/udev"
-EXTRA_OECONF = "--disable-extras --disable-introspection --with-rootlibdir=${base_libdir}"
+EXTRA_OECONF = "--disable-introspection --with-rootlibdir=${base_libdir} \
+                --with-pci-ids-path=${datadir}/pci.ids"
 
 PACKAGES =+ "udev-cache libudev libudev-dev libudev-dbg"
+PACKAGES =+ "libgudev libgudev-dev libgudev-dbg"
 PACKAGE_ARCH_h2200 = "h2200"
 
 INITSCRIPT_PACKAGES = "udev udev-cache"
@@ -45,15 +47,18 @@ INITSCRIPT_PARAMS_udev = "start 04 S ."
 INITSCRIPT_NAME_udev-cache = "udev-cache"
 INITSCRIPT_PARAMS_udev-cache = "start 36 S ."
 
-FILES_${PN} += "${libexecdir} ${datadir}/pkgconfig/udev.pc"
+FILES_${PN} += "${libexecdir} ${datadir}/pkgconfig/udev.pc ${libdir}/ConsoleKit"
 FILES_${PN}-dbg += "${libexecdir}/.debug"
 FILES_${PN}-dev = ""
 FILES_libudev = "${base_libdir}/libudev.so.*"
 FILES_libudev-dbg = "${base_libdir}/.debug/libudev.so.*"
 FILES_libudev-dev = "${includedir}/libudev.h ${libdir}/libudev.so ${libdir}/libudev.la \
                      ${libdir}/libudev.a ${libdir}/pkgconfig/libudev.pc"
+FILES_libgudev = "${libdir}/libgudev*.so.*"
+FILES_libgudev-dbg = "${libdir}/.debug/libgudev*.so.*"
+FILES_libgudev-dev = "${includedir}/gudev* ${libdir}/libgudev*.so ${libdir}/libgudev*.la \
+                     ${libdir}/libgudev*.a ${libdir}/pkgconfig/gudev*.pc"
 FILES_udev-cache = "${sysconfdir}/init.d/udev-cache"
-
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
