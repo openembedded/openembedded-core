@@ -132,7 +132,7 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # packages for architectures other than the host i.e. building i586 packages
 # on an x86_64 host.
 # Supported values are i586 and x86_64
-#SDKMACHINE="i586"
+#SDKMACHINE ?= "i586"
 
 # Poky can try and fetch packaged-staging packages from a http, https or ftp
 # mirror. Set this variable to the root of a pstage directory on a server.
@@ -140,8 +140,8 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 
 # Set IMAGETEST to qemu if you want to build testcases and start 
 # testing in qemu after do_rootfs.
-#IMAGETEST="qemu"
+#IMAGETEST = "qemu"
 
 # By default testing will run the sanitytest suite. If you want to run other tests
 # (e.g. bat), list them here
-#TEST_SCEN="sanitytest bat"
+#TEST_SCEN = "sanitytest bat"
