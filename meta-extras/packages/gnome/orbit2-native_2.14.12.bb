@@ -9,7 +9,6 @@ SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/ORBit2/2.14/ORBit2-${PV}.tar.b
 DEPENDS = "libidl-native popt-native gtk-doc"
 
 S = "${WORKDIR}/ORBit2-${PV}"
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/orbit2"
 
 PARALLEL_MAKE = ""
 inherit autotools native pkgconfig
