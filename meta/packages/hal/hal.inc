@@ -34,6 +34,7 @@ EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
 MY_ARCH := "${PACKAGE_ARCH}"
 PACKAGE_ARCH = "${@base_contains('MACHINE_FEATURES', 'acpi', '${MACHINE_ARCH}', '${MY_ARCH}',d)}"
 PACKAGE_ARCH = "${@base_contains('MACHINE_FEATURES', 'pci', '${MACHINE_ARCH}', '${MY_ARCH}',d)}"
+PACKAGE_ARCH_emenlow := "${PACKAGE_ARCH}"
 
 do_install_append() {
 	install -d ${D}/etc/default/volatiles
