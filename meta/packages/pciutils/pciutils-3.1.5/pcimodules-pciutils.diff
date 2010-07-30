@@ -1,8 +1,9 @@
-Index: pciutils-3.0.3/Makefile
-===================================================================
---- pciutils-3.0.3.orig/Makefile	2008-11-09 20:28:18.000000000 +0000
-+++ pciutils-3.0.3/Makefile	2008-12-31 00:46:45.000000000 +0000
-@@ -52,7 +52,7 @@
+7/30/2010 - rebased to 3.1.5 by Qing He <qing.he@intel.com>
+
+diff -uNr pciutils-3.1.5.orig/Makefile pciutils-3.1.5/Makefile
+--- pciutils-3.1.5.orig/Makefile	2010-07-30 14:02:15.000000000 +0800
++++ pciutils-3.1.5/Makefile	2010-07-30 14:02:55.000000000 +0800
+@@ -51,7 +51,7 @@
  
  export
  
@@ -11,19 +12,19 @@ Index: pciutils-3.0.3/Makefile
  
  lib/$(PCILIB): $(PCIINC) force
  	$(MAKE) -C lib all
-@@ -62,9 +62,11 @@
+@@ -61,9 +61,11 @@
  lib/config.h lib/config.mk:
  	cd lib && ./configure
  
 +pcimodules: pcimodules.o common.o lib/$(PCILIB)
- lspci: lspci.o common.o lib/$(PCILIB)
+ lspci: lspci.o ls-vpd.o ls-caps.o ls-ecaps.o ls-kernel.o ls-tree.o ls-map.o common.o lib/$(PCILIB)
  setpci: setpci.o common.o lib/$(PCILIB)
  
 +pcimodules.o: pcimodules.c pciutils.h
- lspci.o: lspci.c pciutils.h $(PCIINC)
- setpci.o: setpci.c pciutils.h $(PCIINC)
- common.o: common.c pciutils.h $(PCIINC)
-@@ -93,10 +95,10 @@
+ LSPCIINC=lspci.h pciutils.h $(PCIINC)
+ lspci.o: lspci.c $(LSPCIINC)
+ ls-vpd.o: ls-vpd.c $(LSPCIINC)
+@@ -100,10 +102,10 @@
  install: all
  # -c is ignored on Linux, but required on FreeBSD
  	$(DIRINSTALL) -m 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(IDSDIR) $(DESTDIR)$(MANDIR)/man8 $(DESTDIR)$(MANDIR)/man7
@@ -36,7 +37,7 @@ Index: pciutils-3.0.3/Makefile
  	$(INSTALL) -c -m 644 pcilib.7 $(DESTDIR)$(MANDIR)/man7
  ifeq ($(SHARED),yes)
  	$(DIRINSTALL) -m 755 $(DESTDIR)$(LIBDIR)
-@@ -114,9 +116,9 @@
+@@ -121,9 +123,9 @@
  endif
  
  uninstall: all
