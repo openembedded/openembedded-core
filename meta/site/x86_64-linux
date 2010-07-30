@@ -97,3 +97,8 @@ ac_cv_alignof_CORBA_struct=1
 ac_cv_alignof_CORBA_wchar=2
 
 ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
+
+sudo_cv_uid_t=${sudo_cv_uid_t_len=10}
+ac_cv_func_realloc_0_nonnull=${ac_cv_func_realloc_0_nonnull=yes}
+lf_cv_sane_realloc=yes
+as_cv_unaligned_access=${as_cv_unaligned_access=yes}
