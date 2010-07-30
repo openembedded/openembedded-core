@@ -358,3 +358,19 @@ RECIPE_INTEL_SECTION_pn-util-linux = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-util-linux = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-util-linux = "03/2010"
 RECIPE_COMMENTS_pn-util-linux = ""
+
+RECIPE_STATUS_pn-mktemp="red"
+RECIPE_MAINTAINER_pn-mktemp="Yu Ke <ke.yu@intel.com>"
+RECIPE_LATEST_VERSION_pn-mktemp="1.7"
+
+RECIPE_STATUS_pn-iputils="red"
+RECIPE_MAINTAINER_pn-iputils="Yu Ke <ke.yu@intel.com>"
+RECIPE_LATEST_VERSION_pn-iputils="s20100418"
+
+RECIPE_STATUS_pn-xinetd="red"
+RECIPE_MAINTAINER_pn-xinetd="Yu Ke <ke.yu@intel.com>"
+RECIPE_LATEST_VERSION_pn-xinetd="2.3.14"
+
+RECIPE_STATUS_pn-cracklib="red"
+RECIPE_MAINTAINER_pn-cracklib="Yu Ke <ke.yu@intel.com>"
+RECIPE_LATEST_VERSION_pn-cracklib="2.8.16"
