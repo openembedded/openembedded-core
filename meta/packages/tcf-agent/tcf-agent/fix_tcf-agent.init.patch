@@ -35,7 +35,7 @@
 +case "$1" in
 +    start)
 +        echo -n "Starting $DAEMON_NAME: "
-+        $DAEMON_PATH -d -L- -l0 -s SSL:
++        $DAEMON_PATH -d -L- -l0
 +        RETVAL=$?
 +        if [ $RETVAL -eq 0 ] ; then
 +            echo "OK"
