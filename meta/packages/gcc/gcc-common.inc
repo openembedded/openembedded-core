@@ -14,6 +14,11 @@ def get_gcc_fpu_setting(bb, d):
         return "--with-float=soft"
     return ""
 
+def get_gcc_mips_plt_setting(bb, d):
+    if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'mips', 'mipsel' ] and 'mplt' in bb.data.getVar('DISTRO_FEATURES',d,1).split() :
+        return "--with-mips-plt"
+    return ""
+
 # We really need HOST_SYS here for some packages and TARGET_SYS for others.
 # For now, libgcc is most important so we fix for that - RP.
 SHLIBSDIR = "${STAGING_DIR_TARGET}/shlibs"
