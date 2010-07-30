@@ -5,7 +5,7 @@ DEPENDS =+ "mpfr gmp libmpc elfutils"
 NATIVEDEPS = "mpfr-native gmp-native gettext-native libmpc-native elfutils-native"
 
 SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
-	   file://gcc-4.5.0_to_svn_162398.patch.bz2 \
+	   file://gcc-4.5.0_to_svn_162697.patch.bz2 \
 	   file://gcc_revert_base_version_to_4.5.0.patch \
 	   file://gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
 	   file://100-uclibc-conf.patch \
