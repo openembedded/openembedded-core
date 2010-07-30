@@ -291,3 +291,64 @@ RECIPE_INTEL_SECTION_pn-makedevs = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-makedevs = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-makedevs = "n/a"
 RECIPE_COMMENTS_pn-makedevs = ""
+
+RECIPE_STATUS_pn-gzip = "green"
+RECIPE_MAINTAINER_pn-gzip = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_LATEST_VERSION_pn-gzip = "1.4"
+
+RECIPE_STATUS_pn-iptables = "green"
+RECIPE_MAINTAINER_pn-iptables = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_LATEST_VERSION_pn-iptables = "1.4.8"
+
+RECIPE_STATUS_pn-ethtool = "red"
+RECIPE_MAINTAINER_pn-ethtool = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_LATEST_VERSION_pn-ethtool = "2.6.34"
+
+RECIPE_STATUS_pn-net-tools = "red"
+RECIPE_MAINTAINER_pn-net-tools = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_LATEST_VERSION_pn-net-tools = "1.60-23"
+
+RECIPE_STATUS_pn-shadow = "red"
+RECIPE_MAINTAINER_pn-shadow = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_LATEST_VERSION_pn-shadow = "4.1.4.2-1"
+
+RECIPE_STATUS_pn-coreutils = "red"
+RECIPE_MAINTAINER_pn-coreutils = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_LATEST_VERSION_pn-coreutils = "8.5"
+
+
+
+
+RECIPE_STATUS_pn-libuser = "red"
+RECIPE_MAINTAINER_pn-libuser = "Edwin Zhai <edwin.zhai@intel.com>"
+RECIPE_LATEST_VERSION_pn-libuser = "0.56.16"
+
+RECIPE_STATUS_pn-bc = "red"
+RECIPE_MAINTAINER_pn-bc = "Edwin Zhai <edwin.zhai@intel.com>"
+RECIPE_LATEST_VERSION_pn-bc = "1.06.95-2"
+
+RECIPE_STATUS_pn-ed = "red"
+RECIPE_MAINTAINER_pn-ed = "Edwin Zhai <edwin.zhai@intel.com>"
+RECIPE_LATEST_VERSION_pn-ed = "1.4-1"
+
+RECIPE_STATUS_pn-pax = "red"
+RECIPE_MAINTAINER_pn-pax = "Edwin Zhai <edwin.zhai@intel.com>"
+RECIPE_LATEST_VERSION_pn-pax = "20090728-1"
+
+
+
+
+RECIPE_STATUS_pn-quota = "red"
+RECIPE_MAINTAINER_pn-quota = "Dongxiao Xu <dongxiao.xu@intel.com>"
+RECIPE_LATEST_VERSION_pn-quota = "4.00~pre1-4"
+
+RECIPE_STATUS_pn-which = "red"
+RECIPE_MAINTAINER_pn-which = "Dongxiao Xu <dongxiao.xu@intel.com>"
+RECIPE_LATEST_VERSION_pn-which = "n/a"
+
+
+
+
+RECIPE_STATUS_pn-watchdog = "red"
+RECIPE_MAINTAINER_pn-watchdog = "Dexuan Cui <dexuan.cui@intel.com>"
+RECIPE_LATEST_VERSION_pn-watchdog = "5.9"
