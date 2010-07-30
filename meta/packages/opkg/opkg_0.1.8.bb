@@ -9,11 +9,11 @@ RDEPENDS_${PN}_virtclass-nativesdk = ""
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
 SRC_URI = "http://opkg.googlecode.com/files/opkg-${PV}.tar.gz \
-           file://opkg_unarchive.patch \
            file://add_vercmp.patch \
-           file://headerfix.patch"
+           file://headerfix.patch \
+"
 
-PR = "r0"
+PR = "r1"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
