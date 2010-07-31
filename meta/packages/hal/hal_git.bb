@@ -1,7 +1,7 @@
 require hal.inc
 
 PV = "0.5.9.1+git${SRCDATE}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://anongit.freedesktop.org/hal/;protocol=git \
         file://20hal \
