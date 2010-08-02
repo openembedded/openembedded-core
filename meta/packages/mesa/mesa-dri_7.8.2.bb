@@ -5,9 +5,9 @@ LIC_FILES_CHKSUM = "file://docs/license.html;md5=7a3373c039b6b925c427755a4f779c1
 PROTO_DEPS = "xf86driproto glproto dri2proto"
 LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
-DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
+DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS} mesa-dri-glsl-native"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI += "file://crossfix.patch"
 
@@ -21,9 +21,14 @@ LEAD_SONAME = "libGL.so.1"
 
 EXTRA_OECONF += "--with-driver=dri --disable-egl --disable-gallium"
 
+# We need glsl-compile built for buildhost arch instead of target (is provided by mesa-dri-glsl-native)"
+do_configure_prepend() {
+	sed -i "s#^GLSL_CL = .*\$#GLSL_CL = ${STAGING_BINDIR_NATIVE}/glsl-compile#g" ${S}/src/mesa/shader/slang/library/Makefile
+}
+
 do_install_append () {
-    install -d ${D}/usr/bin
-    install -m 0755 ${S}/progs/xdemos/{glxdemo,glxgears,glxheads,glxinfo} ${D}/usr/bin/
+	install -d ${D}/usr/bin
+	install -m 0755 ${S}/progs/xdemos/{glxdemo,glxgears,glxheads,glxinfo} ${D}/usr/bin/
 }
 
 python populate_packages_prepend() {
