@@ -35,6 +35,9 @@ if [ -z "$QEMU_MEMORY" ]; then
 		"qemux86")
 			QEMU_MEMORY="128M"
 			;;
+		"qemux86-64")
+			QEMU_MEMORY="128M"
+			;;
 		"qemumips")
 			QEMU_MEMORY="128M"
 			;;
@@ -68,6 +71,7 @@ case "$MACHINE" in
 	"qemuarmv6") ;;
 	"qemuarmv7") ;;
 	"qemux86") ;;
+        "qemux86-64") ;;
 	"akita") ;;
 	"spitz") ;;
 	"nokia800") ;;
@@ -126,6 +130,26 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "$TYPE" = "nfs" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             HDIMAGE=/srv/nfs/qemux86
+        fi
+        if [ ! -d "$HDIMAGE" ]; then
+            echo "Error: NFS mount point $HDIMAGE doesn't exist."
+            return
+        fi
+        KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD $QEMU_UI_OPTIONS"
+    fi
+fi
+
+if [ "$MACHINE" = "qemux86-64" ]; then
+    QEMU=qemu-system-x86_64
+    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga vmware -enable-gl"
+    if [ "$TYPE" = "ext3" ]; then
+        KERNCMDLINE="vga=0 root=/dev/hda mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -hda $HDIMAGE $QEMU_UI_OPTIONS"
+    fi
+    if [ "$TYPE" = "nfs" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+            HDIMAGE=/srv/nfs/qemux86-64
         fi
         if [ ! -d "$HDIMAGE" ]; then
             echo "Error: NFS mount point $HDIMAGE doesn't exist."
@@ -231,14 +255,19 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return
 fi
 
-SDKDIR="/usr/local/poky/eabi-glibc"
+SDKDIR="/opt/poky/sysroots"
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" -o "$MACHINE" = "nokia800" ]; then
-    SDKPATH="$SDKDIR/arm/arm-poky-linux-gnueabi/bin:$SDKDIR/arm/bin"
+    SDKPATH="$SDKDIR/arm-poky-linux-gnueabi/bin"
 fi
 
 if [ "$MACHINE" = "qemux86" ]; then
-    SDKPATH="$SDKDIR/i586/i586-poky-linux/bin:$SDKDIR/i586/bin"
+    SDKPATH="$SDKDIR/i586-poky-linux/bin"
 fi
+
+if [ "$MACHINE" = "qemux86-64" ]; then
+    SDKPATH="$SDKDIR/x86_64-poky-linux/bin"
+fi
+
 PATH=$CROSSPATH:$SDKPATH:$PATH
 
 QEMUBIN=`which $QEMU`

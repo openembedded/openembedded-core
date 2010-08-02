@@ -85,7 +85,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o 
     if [ "x$ZIMAGE" = "x" ]; then
         ZIMAGE=$TMPDIR/deploy/images/zImage-$MACHINE.bin
     fi
-    CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/arm-poky-linux-gnueabi/bin
+    CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/bin
 fi
 
 function findimage {
@@ -182,22 +182,37 @@ if [ "$MACHINE" = "qemux86" ]; then
     CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr
 fi
 
+if [ "$MACHINE" = "qemux86-64" ]; then
+    if [ "x$ZIMAGE" = "x" ]; then
+        ZIMAGE=$TMPDIR/deploy/images/bzImage-$MACHINE.bin
+    fi
+    if [ "$TYPE" = "ext3" ]; then
+        if [ "x$HDIMAGE" = "x" ]; then
+            T=$TMPDIR/deploy/images
+            findimage $T qemux86-64 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
+        fi
+    fi
+    CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr
+fi
+
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" -o "$MACHINE" = "nokia800" ]; then
     TARGET_SYS="arm-poky-linux"
 elif [ "$MACHINE" = "qemux86" ]; then
     TARGET_SYS="i586-poky-linux"
+elif [ "$MACHINE" = "qemux86-64" ]; then
+    TARGET_SYS="x86_64-poky-linux"
 elif [ "$MACHINE" = "qemumips" ]; then
     TARGET_SYS="mips-poky-linux"
 fi
 
-if [ ! -e $CROSSPATH/$TARGET_SYS/bin/cc ]; then
-   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/$TARGET_SYS/bin/cc
+if [ ! -e $CROSSPATH/bin/cc ]; then
+   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/bin/cc
 fi
 
-if [ ! -e $CROSSPATH/$TARGET_SYS/bin/gcc ]; then
-   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/$TARGET_SYS/bin/gcc
+if [ ! -e $CROSSPATH/bin/gcc ]; then
+   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/bin/gcc
 fi
 
-CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr/bin:$CROSSPATH:$TMPDIR/cross/bin
+CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr/bin:$CROSSPATH
 
 . $INTERNAL_SCRIPT
