@@ -46,7 +46,7 @@ class VariableParse:
         self.value = val
 
         self.references = set()
-        self.funcrefs = set()
+        self.execs = set()
 
     def var_sub(self, match):
             key = match.group()[2:-1]
@@ -64,10 +64,10 @@ class VariableParse:
             code = match.group()[3:-1]
             codeobj = compile(code.strip(), self.varname or "<expansion>", "eval")
 
-            parser = bb.rptest.PythonParser()
+            parser = bb.codeparser.PythonParser()
             parser.parse_python(code)
             self.references |= parser.references
-            self.funcrefs |= parser.execs
+            self.execs |= parser.execs
 
             value = utils.better_eval(codeobj, {"d": self.d})
             return str(value)
