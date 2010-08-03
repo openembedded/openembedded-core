@@ -1,5 +1,5 @@
 DESCRIPTION = "Target packages for the standalone SDK"
-PR = "r5"
+PR = "r6"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -10,33 +10,5 @@ RDEPENDS_${PN} = "\
     libgcc-dev \
     libstdc++ \
     libstdc++-dev \
+    ${LIBC_DEPENDENCIES} \
     "
-
-GLIBC_DEPENDENCIES = "\
-    libsegfault \
-    glibc \
-    glibc-dbg \
-    glibc-dev \
-    glibc-utils \
-    glibc-thread-db \
-    glibc-localedata-i18n \
-    glibc-gconv-ibm850 \
-    glibc-gconv-cp1252 \
-    glibc-gconv-iso8859-1 \
-    glibc-gconv-iso8859-15 \
-    locale-base-en-gb \
-    "
-
-RDEPENDS_${PN}_append_linux = "${GLIBC_DEPENDENCIES}"
-RDEPENDS_${PN}_append_linux-gnueabi = "${GLIBC_DEPENDENCIES}"
-
-UCLIBC_DEPENDENCIES = "\
-    uclibc \
-    uclibc-dbg \
-    uclibc-dev \
-    uclibc-thread-db \
-    "
-
-RDEPENDS_${PN}_append_linux-uclibc = "${UCLIBC_DEPENDENCIES}"
-RDEPENDS_${PN}_append_linux-uclibcgnueabi = "${UCLIBC_DEPENDENCIES}"
-

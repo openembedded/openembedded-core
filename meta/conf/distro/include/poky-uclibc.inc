@@ -18,3 +18,10 @@ IMAGE_LINGUAS = ""
 
 DEPLOY_DIR = "${TMPDIR}/deploy-uclibc"
 DEPLOY_DIR_IMAGE = "${TMPDIR}/deploy/images"
+
+LIBC_DEPENDENCIES = "\
+    uclibc \
+    uclibc-dbg \
+    uclibc-dev \
+    uclibc-thread-db \
+    "
