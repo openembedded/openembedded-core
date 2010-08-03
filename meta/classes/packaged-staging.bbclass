@@ -127,7 +127,7 @@ def pstage_cleanpackage(pkgname, d):
 
 	bb.utils.unlockfile(lf)
 
-do_clean_prepend() {
+python do_clean_prepend() {
 	"""
 	Clear the build and temp directories
 	"""
