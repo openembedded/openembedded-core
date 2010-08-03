@@ -15,7 +15,7 @@ S = "${WORKDIR}"
 kern_tools_LIST = kgit kgit-init kgit-meta \
                   kgit-checkpoint kgit-clean \
                   generate_cfg kconf_check configme \
-		  createme modifyme get_defconfig
+		  createme updateme patchme get_defconfig
 
 do_compile() { 
 	:
