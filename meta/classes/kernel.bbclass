@@ -168,13 +168,13 @@ kernel_do_install() {
 
 	# Remove the following binaries which cause strip errors
 	# during do_package for cross-compiled platforms
-	bin_files=(arch/powerpc/boot/addnote arch/powerpc/boot/hack-coff
-		arch/powerpc/boot/mktree scripts/bin2c scripts/conmakehash
-		scripts/ihex2fw scripts/kallsyms scripts/pnmtologo scripts/basic/docproc
-		scripts/basic/fixdep scripts/basic/hash scripts/dtc/dtc
-		scripts/genksyms/genksyms scripts/kconfig/conf scripts/mod/mk_elfconfig
-		scripts/mod/modpost)
-	for entry in "${bin_files[@]}"; do
+	bin_files="arch/powerpc/boot/addnote arch/powerpc/boot/hack-coff \
+		arch/powerpc/boot/mktree scripts/bin2c scripts/conmakehash \
+		scripts/ihex2fw scripts/kallsyms scripts/pnmtologo scripts/basic/docproc \
+		scripts/basic/fixdep scripts/basic/hash scripts/dtc/dtc \
+		scripts/genksyms/genksyms scripts/kconfig/conf scripts/mod/mk_elfconfig \
+		scripts/mod/modpost"
+	for entry in $bin_files; do
 		rm -f $kerneldir/$entry
 	done	
 }
