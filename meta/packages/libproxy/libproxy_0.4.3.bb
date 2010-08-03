@@ -11,7 +11,7 @@ DEPENDS = "virtual/libx11 xmu gconf-dbus"
 
 SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz"
 
-PR = "r1"
+PR = "r0"
 
 inherit cmake pkgconfig
 
