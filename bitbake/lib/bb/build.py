@@ -246,7 +246,7 @@ def exec_func_shell(func, d, runfile, logfile, flags):
     f = open(runfile, "w")
     f.write("#!/bin/sh -e\n")
     if bb.msg.debug_level['default'] > 0: f.write("set -x\n")
-    data.emit_env(f, d)
+    data.emit_func(func, f, d)
 
     f.write("cd %s\n" % os.getcwd())
     if func: f.write("%s\n" % func)
