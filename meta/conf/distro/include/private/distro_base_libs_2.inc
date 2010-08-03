@@ -224,3 +224,11 @@ RECIPE_INTEL_SECTION_pn-libnfsidmap = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libnfsidmap = "4 months"
 RECIPE_LATEST_RELEASE_DATE_pn-libnfsidmap = "12/2009"
 RECIPE_COMMENTS_pn-libnfsidmap = ""
+
+RECIPE_STATUS_pn-acl = "yellow"   # hacky as attr
+DEPENDENCY_CHECK_pn-acl = "done"
+RECIPE_LATEST_VERSION_pn-acl = "2.2.49"
+RECIPE_INTEL_SECTION_pn-acl = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-acl = "4 months"
+RECIPE_LATEST_RELEASE_DATE_pn-acl = "11/2009"
+RECIPE_COMMENTS_pn-acl = ""

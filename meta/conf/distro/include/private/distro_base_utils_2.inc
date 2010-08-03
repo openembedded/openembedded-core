@@ -183,8 +183,8 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-file = "8 months"
 RECIPE_LATEST_RELEASE_DATE_pn-file = "01/2010"
 RECIPE_COMMENTS_pn-file = "2-clause BSD"
 
-RECIPE_STATUS_pn-rsync = "yellow"   # missing dependencies
-DEPENDENCY_CHECK_pn-rsync = "done"  # can also add acl and attr as dependencies
+RECIPE_STATUS_pn-rsync = "green"
+DEPENDENCY_CHECK_pn-rsync = "done"
 RECIPE_LATEST_VERSION_pn-rsync = "3.0.7"
 RECIPE_PATCH_pn-rsync+rsyncd.conf = "init script"
 RECIPE_PATCH_pn-rsync+acinclude.m4 = "custom m4 macros"
@@ -243,7 +243,7 @@ RECIPE_COMMENTS_pn-avahi = ""
 
 RECIPE_STATUS_pn-js = "yellow"    # may not work for platforms other than 32bit x86
 DEPENDENCY_CHECK_pn-js = "not done"
-RECIPE_LATEST_VERSION_pn-js = "1.8.0~rc1"
+RECIPE_LATEST_VERSION_pn-js = "1.7.0+1.8.0rc1"
 RECIPE_PATCH_pn-js+usepic = "get around broken PIC test for cross compiling"
 RECIPE_PATCH_pn-js+link-with-gcc = "use $(CC) instead of $(LD) to link"
 RECIPE_PATCH_pn-js+jsautocfg.h = "architecture specified configurations"
@@ -303,7 +303,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-v86d = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-v86d = "10/2008"
 RECIPE_COMMENTS_pn-v86d = "contains code under other licenses"
 
-RECIPE_STATUS_pn-udev = "yellow"   # needs to add extras and delete old versions
+RECIPE_STATUS_pn-udev = "yellow"   # needs to delete old versions
 DEPENDENCY_CHECK_pn-udev = "not done"
 RECIPE_LATEST_VERSION_pn-udev = "158"
 RECIPE_INTEL_SECTION_pn-udev = "base utils"
@@ -358,6 +358,26 @@ RECIPE_INTEL_SECTION_pn-util-linux = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-util-linux = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-util-linux = "03/2010"
 RECIPE_COMMENTS_pn-util-linux = ""
+
+RECIPE_STATUS_pn-usbutils = "green"
+DEPENDENCY_CHECK_pn-usbutils = "done"
+RECIPE_LATEST_VERSION_pn-usbutils = "0.86"
+RECIPE_INTEL_SECTION_pn-usbutils = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-usbutils = "2 months"
+RECIPE_LATEST_RELEASE_DATE_pn-usbutils = "08/2009"
+RECIPE_COMMENTS_pn-usbutils = ""
+
+RECIPE_STATUS_pn-pciutils = "yellow"    # custom build system, several hacks
+DEPENDENCY_CHECK_pn-pciutils = "done"
+RECIPE_LATEST_VERSION_pn-pciutils = "3.1.5"
+RECIPE_PATCH_pn-pciutils+configure = "fix for a handwritten config"
+RECIPE_PATCH_pn-pciutils+guess-fix = "fix arch guess algorithm"
+RECIPE_PATCH_pn-pciutils+pcimodules-pciutils = "add pcimodules util"
+RECIPE_PATCH_pn-pciutils+lib-build-fix = "fix shared library build"
+RECIPE_INTEL_SECTION_pn-pciutils = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pciutils = "5 months"
+RECIPE_LATEST_RELEASE_DATE_pn-pciutils = "01/2010"
+RECIPE_COMMENTS_pn-pciutils = ""
 
 RECIPE_STATUS_pn-mktemp="red"
 RECIPE_MAINTAINER_pn-mktemp="Yu Ke <ke.yu@intel.com>"
