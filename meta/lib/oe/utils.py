@@ -67,3 +67,14 @@ def str_filter(f, str, d):
 def str_filter_out(f, str, d):
     from re import match
     return " ".join(filter(lambda x: not match(f, x, 0), str.split()))
+
+def param_bool(cfg, field, dflt = None):
+    """Lookup <field> in <cfg> map and convert it to a boolean; take
+    <dflt> when this <field> does not exist"""
+    value = cfg.get(field, dflt)
+    strvalue = str(value).lower()
+    if strvalue in ('yes', 'y', 'true', 't', '1'):
+        return True
+    elif strvalue in ('no', 'n', 'false', 'f', '0'):
+        return False
+    raise ValueError("invalid value for boolean parameter '%s': '%s'" % (field, value))

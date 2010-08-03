@@ -42,3 +42,25 @@ def format_display(path, metadata):
         return path
     else:
         return rel
+
+def remove(path):
+    """Equivalent to rm -f or rm -rf"""
+    import os, errno, shutil
+    try:
+        os.unlink(path)
+    except OSError, exc:
+        if exc.errno == errno.EISDIR:
+            shutil.rmtree(path)
+        elif exc.errno != errno.ENOENT:
+            raise
+
+def symlink(source, destination, force=False):
+    """Create a symbolic link"""
+    import os, errno
+    try:
+        if force:
+            remove(destination)
+        os.symlink(source, destination)
+    except OSError, e:
+        if e.errno != errno.EEXIST or os.readlink(destination) != source:
+            raise
