@@ -29,18 +29,19 @@ BB_STAMP_WHITELIST = "${PSTAGE_NATIVEDEPENDS}"
 
 python () {
     if bb.data.inherits_class('native', d):
-            bb.data.setVar('PSTAGE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
+        bb.data.setVar('PSTAGE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
     elif bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d):
-            bb.data.setVar('PSTAGE_PKGARCH', bb.data.expand("${BUILD_ARCH}_${TARGET_ARCH}", d), d)
+        bb.data.setVar('PSTAGE_PKGARCH', bb.data.expand("${BUILD_ARCH}_${TARGET_ARCH}", d), d)
+    elif bb.data.inherits_class('nativesdk', d):
+        bb.data.setVar('PSTAGE_PKGARCH', bb.data.expand("${SDK_ARCH}", d), d)
+    elif bb.data.inherits_class('cross-canadian', d):
+        bb.data.setVar('PSTAGE_PKGARCH', bb.data.expand("${SDK_ARCH}_${TARGET_ARCH}", d), d)
 
     pstage_allowed = True
 
-    # These classes encode staging paths into the binary data so can only be
-    # reused if the path doesn't change/
+    # These classes encode staging paths into their scripts data so can only be
+    # reused if we manipulate the paths
     if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('sdk', d) or bb.data.inherits_class('crosssdk', d):
-        path = bb.data.getVar('PSTAGE_PKGPATH', d, 1)
-        path = path + bb.data.getVar('TMPDIR', d, 1).replace('/', '-')
-        bb.data.setVar('PSTAGE_PKGPATH', path, d)
         scan_cmd = "grep -Irl ${STAGING_DIR} ${PSTAGE_TMPDIR_STAGE}"
         bb.data.setVar('PSTAGE_SCAN_CMD', scan_cmd, d)
 
