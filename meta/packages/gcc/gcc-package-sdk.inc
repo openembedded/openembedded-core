@@ -7,10 +7,7 @@ PACKAGES = "${PN} ${PN}-doc"
 
 FILES_${PN} = "\
     ${bindir}/* \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc1 \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/collect2 \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/f771 \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc1plus \
+    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/* \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/*.o \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/specs \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/lib* \
@@ -44,11 +41,12 @@ do_install () {
 	rm -f ${D}${prefix}/${TARGET_SYS}/lib/libiberty.a
 	rm -f ${D}${libdir}/libiberty.a
 
-	# Create the ${prefix}/${TARGET_SYS}/bin/* symlinks
-	install -d ${D}${prefix}/${TARGET_SYS}/bin/
-	for l in ${D}${bindir}/*; do
-		ln -sf "${bindir}/`basename $l`" "${D}${prefix}/${TARGET_SYS}/bin/`basename $l | sed -e 's,${TARGET_PREFIX},,'`"
+	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
+	# found.
+	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
+	install -d $dest
+	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
+		ln -sf ${bindir}/${TARGET_PREFIX}$t $dest$t
 	done
-	ln -sf "${bindir}/${TARGET_PREFIX}gcc" "${D}${prefix}/${TARGET_SYS}/bin/cc"
 }
 
