@@ -308,7 +308,7 @@ def exec_task(task, d):
 
 def extract_stamp(d, fn):
     """
-    Extracts stamp format which is either a data dictonary (fn unset)
+    Extracts stamp format which is either a data dictionary (fn unset)
     or a dataCache entry (fn set).
     """
     if fn:
