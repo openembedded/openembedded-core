@@ -379,6 +379,22 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pciutils = "5 months"
 RECIPE_LATEST_RELEASE_DATE_pn-pciutils = "01/2010"
 RECIPE_COMMENTS_pn-pciutils = ""
 
+RECIPE_STATUS_pn-fam = "red"    # need upgrade
+RECIPE_MAINTAINER_pn-fam = "Qing He <qing.he@intel.com>"
+RECIPE_LATEST_VERSION_pn-fam = "2.7.0"
+
+RECIPE_STATUS_pn-sysstat = "red"    # need upgrade
+RECIPE_MAINTAINER_pn-sysstat = "Qing He <qing.he@intel.com>"
+RECIPE_LATEST_VERSION_pn-sysstat = "9.0.6.1"
+
+RECIPE_STATUS_pn-sysklogd = "red"    # need upgrade
+RECIPE_MAINTAINER_pn-sysklogd = "Qing He <qing.he@intel.com>"
+RECIPE_LATEST_VERSION_pn-sysklogd = "1.5"
+
+RECIPE_STATUS_pn-gawk = "red"    # need upgrade
+RECIPE_MAINTAINER_pn-gawk = "Qing He <qing.he@intel.com>"
+RECIPE_LATEST_VERSION_pn-gawk = "3.1.7"
+
 RECIPE_STATUS_pn-mktemp="red"
 RECIPE_MAINTAINER_pn-mktemp="Yu Ke <ke.yu@intel.com>"
 RECIPE_LATEST_VERSION_pn-mktemp="1.7"
