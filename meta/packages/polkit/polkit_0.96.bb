@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=155db86cdbafa7532b41f390409283eb \
                     file://docs/polkit/html/license.html;md5=4c17ef1587e0f096c82157160d4e340e"
 
 SRC_URI = "http://hal.freedesktop.org/releases/polkit-${PV}.tar.gz"
-PR="r1"
-DEPENDS = "pam expat dbus-glib eggdbus intltool"
-RDEPENDS = "pam"
+PR = "r2"
+DEPENDS = "libpam expat dbus-glib eggdbus intltool"
+RDEPENDS = "libpam"
 EXTRA_OECONF = "--with-authfw=pam --with-os-type=moblin --disable-man-pages --disable-gtk-doc --disable-introspection"
 
 inherit autotools pkgconfig

@@ -5,8 +5,7 @@ HOMEPAGE = "http://sites.google.com/site/fullycapable/"
 LICENSE = "BSD | GPL"
 LIC_FILES_CHKSUM = "file://License;md5=731de803c1ccbcb05a9b3523279c8d7f"
 
-DEPENDS = "pam attr perl-native"
-PR = "r0"
+DEPENDS = "libpam attr perl-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/libs/security/linux-privs/libcap2/${BPN}-${PV}.tar.bz2"
 
