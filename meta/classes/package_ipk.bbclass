@@ -135,39 +135,31 @@ package_generate_archlist () {
 python do_package_ipk () {
 	import re, copy
 
-	workdir = bb.data.getVar('WORKDIR', d, 1)
-	if not workdir:
-		bb.error("WORKDIR not defined, unable to package")
+	workdir = bb.data.getVar('WORKDIR', d, True)
+	outdir = bb.data.getVar('PKGWRITEDIRIPK', d, True)
+	dvar = bb.data.getVar('D', d, True)
+	tmpdir = bb.data.getVar('TMPDIR', d, True)
+	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	if not workdir or not outdir or not dvar or not tmpdir:
+		bb.error("Variables incorrectly set, unable to package")
 		return
 
-	outdir = bb.data.getVar('DEPLOY_DIR_IPK', d, 1)
-	if not outdir:
-		bb.error("DEPLOY_DIR_IPK not defined, unable to package")
+	if not os.path.exists(dvar):
+		bb.debug(1, "Nothing installed, nothing to do")
 		return
 
-	dvar = bb.data.getVar('D', d, 1)
-	if not dvar:
-		bb.error("D not defined, unable to package")
-		return
-	bb.mkdirhier(dvar)
-
-	packages = bb.data.getVar('PACKAGES', d, 1)
-	if not packages:
-		bb.debug(1, "PACKAGES not defined, nothing to package")
-		return
-
-	tmpdir = bb.data.getVar('TMPDIR', d, 1)
-
-	if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
-		os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
-
-	if packages == []:
+	packages = bb.data.getVar('PACKAGES', d, True)
+	if not packages or packages == '':
 		bb.debug(1, "No packages; nothing to do")
 		return
 
+	# We're about to add new packages so the index needs to be checked
+        # so remove the appropriate stamp file.
+	if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
+		os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
+
 	for pkg in packages.split():
 		localdata = bb.data.createCopy(d)
-		pkgdest = bb.data.getVar('PKGDEST', d, 1)
 		root = "%s/%s" % (pkgdest, pkg)
 
 		lf = bb.utils.lockfile(root + ".lock")
