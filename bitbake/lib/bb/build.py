@@ -282,7 +282,13 @@ def exec_task(task, d):
         data.update_data(localdata)
         data.expandKeys(localdata)
         event.fire(TaskStarted(task, localdata), localdata)
+        prefuncs = (data.getVarFlag(task, 'prefuncs', localdata) or "").split()
+        for func in prefuncs:
+            exec_func(func, localdata)
         exec_func(task, localdata)
+        postfuncs = (data.getVarFlag(task, 'postfuncs', localdata) or "").split()
+        for func in postfuncs:
+            exec_func(func, localdata)
         event.fire(TaskSucceeded(task, localdata), localdata)
     except FuncFailed as message:
         # Try to extract the optional logfile
