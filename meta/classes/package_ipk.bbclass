@@ -136,7 +136,7 @@ python do_package_ipk () {
 	import re, copy
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
-	outdir = bb.data.getVar('PKGWRITEDIRIPK', d, True)
+	outdir = bb.data.getVar('DEPLOY_DIR_IPK', d, True)
 	dvar = bb.data.getVar('D', d, True)
 	tmpdir = bb.data.getVar('TMPDIR', d, True)
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
