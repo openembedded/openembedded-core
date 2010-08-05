@@ -11,18 +11,16 @@ python do_listtasks() {
 }
 
 addtask clean
-do_clean[dirs] = "${TOPDIR}"
 do_clean[nostamp] = "1"
 python do_clean() {
 	"""clear the build and temp directories"""
 	dir = bb.data.expand("${WORKDIR}", d)
-	if dir == '//': raise bb.build.FuncFailed("wrong DATADIR")
-	bb.note("removing " + dir)
-	os.system('rm -rf ' + dir)
+	bb.note("Removing " + dir)
+	oe.path.remove(dir)
 
 	dir = "%s.*" % bb.data.expand(bb.data.getVar('STAMP', d), d)
-	bb.note("removing " + dir)
-	os.system('rm -f '+ dir)
+	bb.note("Removing " + dir)
+	oe.path.remove(dir)
 }
 
 addtask rebuild after do_${BB_DEFAULT_TASK}
