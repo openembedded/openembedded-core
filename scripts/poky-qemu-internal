@@ -92,6 +92,16 @@ if [ "$TYPE" != "nfs" -a ! -f "$HDIMAGE" ]; then
     return
 fi
 
+if [ "$TYPE" = "nfs" ]; then
+    NFS_SERVER=`echo $HDIMAGE | sed 's/^\([^:]*\):.*/\1/'`
+    NFS_DIR=`echo $HDIMAGE | sed 's/^[^:]*:\(.*\)/\1/'`
+fi
+
+if [ "$NFS_SERVER" = "" ]; then
+    NFS_SERVER="192.168.7.1"
+    NFS_DIR=$HDIMAGE
+fi
+
 if [ ! -f "$ZIMAGE" ]; then
     echo "Error: Kernel image file $ZIMAGE doesn't exist"
     return
@@ -107,14 +117,11 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb -hda $HDIMAGE -no-reboot $QEMU_UI_OPTIONS"
     fi
     if [ "$TYPE" = "nfs" ]; then
-        if [ "x$HDIMAGE" = "x" ]; then
-            HDIMAGE=/srv/nfs/qemuarm
-        fi
-        if [ ! -d "$HDIMAGE" ]; then
+        if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $HDIMAGE doesn't exist"
             return
         fi
-        KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb --no-reboot $QEMU_UI_OPTIONS"
     fi
 	if [ "$MACHINE" = "qemuarmv6" ]; then
@@ -133,14 +140,11 @@ if [ "$MACHINE" = "qemux86" ]; then
         QEMUOPTIONS="$QEMU_NETWORK_CMD -hda $HDIMAGE $QEMU_UI_OPTIONS"
     fi
     if [ "$TYPE" = "nfs" ]; then
-        if [ "x$HDIMAGE" = "x" ]; then
-            HDIMAGE=/srv/nfs/qemux86
-        fi
-        if [ ! -d "$HDIMAGE" ]; then
+        if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $HDIMAGE doesn't exist."
             return
         fi
-        KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD $QEMU_UI_OPTIONS"
     fi
 fi
