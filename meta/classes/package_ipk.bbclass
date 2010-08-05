@@ -5,6 +5,8 @@ IMAGE_PKGTYPE ?= "ipk"
 IPKGCONF_TARGET = "${WORKDIR}/opkg.conf"
 IPKGCONF_SDK =  "${WORKDIR}/opkg-sdk.conf"
 
+PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
+
 python package_ipk_fn () {
 	bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
 }
@@ -136,7 +138,7 @@ python do_package_ipk () {
 	import re, copy
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
-	outdir = bb.data.getVar('DEPLOY_DIR_IPK', d, True)
+	outdir = bb.data.getVar('PKGWRITEDIRIPK', d, True)
 	dvar = bb.data.getVar('D', d, True)
 	tmpdir = bb.data.getVar('TMPDIR', d, True)
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
@@ -295,7 +297,18 @@ python do_package_ipk () {
 
 		bb.utils.prunedir(controldir)
 		bb.utils.unlockfile(lf)
+
 }
+
+SSTATETASKS += "do_package_write_ipk"
+do_package_write_ipk[sstate-name] = "deploy-ipk"
+do_package_write_ipk[sstate-inputdirs] = "${PKGWRITEDIRIPK}"
+do_package_write_ipk[sstate-outputdirs] = "${DEPLOY_DIR_IPK}"
+
+python do_package_write_ipk_setscene () {
+	sstate_setscene(d)
+}
+addtask do_package_write_ipk_setscene
 
 python () {
     if bb.data.getVar('PACKAGES', d, True) != '':
@@ -309,5 +322,5 @@ python do_package_write_ipk () {
 	bb.build.exec_func("read_subpackage_metadata", d)
 	bb.build.exec_func("do_package_ipk", d)
 }
-do_package_write_ipk[dirs] = "${D}"
+do_package_write_ipk[dirs] = "${PKGWRITEDIRIPK}"
 addtask package_write_ipk before do_package_write after do_package
