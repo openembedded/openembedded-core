@@ -100,13 +100,18 @@ python do_populate_sysroot () {
     bb.build.exec_func("sysroot_stage_all", d)
     for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
         bb.build.exec_func(f, d)
-    bb.build.exec_func("packagedstaging_fastpath", d)
-
-    lockfile = bb.data.getVar("SYSROOT_LOCK", d, True)
-    lock = bb.utils.lockfile(lockfile)
-    os.system(bb.data.expand('cp -pPR ${SYSROOT_DESTDIR}${TMPDIR}/* ${TMPDIR}/', d))
-    bb.utils.unlockfile(lock)
 }
+
+SSTATETASKS += "do_populate_sysroot"
+do_populate_sysroot[sstate-name] = "populate-sysroot"
+do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR}"
+do_populate_sysroot[sstate-outputdirs] = "${TMPDIR}/sysroots"
+
+python do_populate_sysroot_setscene () {
+	sstate_setscene(d)
+}
+addtask do_populate_sysroot_setscene
+
 
 python () {
     if bb.data.getVar('do_stage', d, True) is not None:
