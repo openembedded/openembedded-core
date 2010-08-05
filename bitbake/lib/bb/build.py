@@ -90,6 +90,7 @@ def exec_func(func, d, dirs = None):
 
     body = data.getVar(func, d)
     if not body:
+        bb.warn("Function %s doesn't exist" % func)
         return
 
     flags = data.getVarFlags(func, d)
