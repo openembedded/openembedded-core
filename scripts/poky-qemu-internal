@@ -54,9 +54,28 @@ fi
 QEMUIFUP=`which poky-qemu-ifup`
 QEMUIFDOWN=`which poky-qemu-ifdown`
 
-USER=`id -u`
-echo 'Setting up tap interface under sudo'
-TAP=`sudo $QEMUIFUP $USER`
+LOCKDIR="/tmp/qemu-tap-locks"
+[ ! -d "$LOCKDIR" ] && mkdir $LOCKDIR
+
+POSSIBLE=`ifconfig -a | grep '^tap' | awk '{print $1}'`
+TAP=""
+LOCKFILE=""
+for tap in $POSSIBLE; do
+    LOCKFILE="$LOCKDIR/$tap"
+    if lockfile $LOCKFILE; then
+	TAP=$tap
+	break;
+    fi
+done
+
+if [ "$TAP" = "" ]; then
+    USER=`id -u`
+    echo 'Setting up tap interface under sudo'
+    TAP=`sudo $QEMUIFUP $USER`
+    LOCKFILE=""
+else
+    echo "Using preconfigured tap device '$TAP'"
+fi
 
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
 QEMU_TAP_CMD="-net tap,vlan=0,ifname=$TAP,script=no,downscript=no"
@@ -313,7 +332,12 @@ echo "Running $QEMU..."
 echo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE"
 $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE" || /bin/true
 
-$QEMUIFDOWN $TAP
+if [ "$LOCKFILE" = "" ]; then
+    $QEMUIFDOWN $TAP
+else
+    echo "Releasing preconfigured tap device '$TAP'"
+    rm -f $LOCKFILE
+fi
 
 trap - INT TERM QUIT
 return
