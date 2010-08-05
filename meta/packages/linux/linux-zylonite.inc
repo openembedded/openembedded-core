@@ -5,7 +5,7 @@ LICENSE = "GPL"
 KERNEL_IMAGETYPE = "zImage"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/compressed/${KERNEL_IMAGETYPE}"
 
-inherit kernel
+inherit kernel deploy
 
 RPROVIDES_kernel-image = "hostap-modules"
 
@@ -33,13 +33,10 @@ do_configure_prepend() {
 }
 
 do_deploy() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin
-	rm -f ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${MACHINE}.bin
-	ln -s ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${MACHINE}.bin
-	#tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_RELEASE}-${MACHINE}.tgz -C ${D} lib	
+	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOYDIR}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin
+	rm -f ${DEPLOYDIR}/${KERNEL_IMAGETYPE}-${MACHINE}.bin
+	ln -s ${DEPLOYDIR}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin ${DEPLOYDIR}/${KERNEL_IMAGETYPE}-${MACHINE}.bin
+	#tar -cvzf ${DEPLOYDIR}/modules-${KERNEL_RELEASE}-${MACHINE}.tgz -C ${D} lib
 }
-
-do_deploy[dirs] = "${S}"
 
 addtask deploy before do_build after do_install

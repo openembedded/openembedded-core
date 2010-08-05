@@ -5,7 +5,7 @@ LICENSE = "GPL"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_CCSUFFIX = "-3.4.4+csl-arm-2005q3-2"
 
-inherit kernel
+inherit kernel deploy
 
 RPROVIDES_kernel-image = "hostap-modules"
 
@@ -34,13 +34,10 @@ do_configure_prepend() {
 }
 
 do_deploy() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin
-	cd ${DEPLOY_DIR_IMAGE}
+	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOYDIR}/${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin
+	cd ${DEPLOYDIR}
 	ln -sf ${KERNEL_IMAGETYPE}-${PV}-${MACHINE}-${DATETIME}.bin ${KERNEL_IMAGETYPE}-${MACHINE}.bin
-	tar -cvzf ${DEPLOY_DIR_IMAGE}/modules-${KERNEL_RELEASE}-${MACHINE}.tgz -C ${D} lib	
+	tar -cvzf ${DEPLOYDIR}/modules-${KERNEL_RELEASE}-${MACHINE}.tgz -C ${D} lib
 }
-
-do_deploy[dirs] = "${S}"
 
 addtask deploy before do_populate_sysroot after do_install

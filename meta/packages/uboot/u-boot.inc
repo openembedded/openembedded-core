@@ -5,6 +5,8 @@ PRIORITY = "optional"
 LICENSE = "GPL"
 PROVIDES = "virtual/bootloader"
 
+inherit deploy
+
 PARALLEL_MAKE=""
 
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
@@ -22,16 +24,12 @@ do_compile () {
 }
 
 do_deploy () {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install ${S}/u-boot.bin ${DEPLOY_DIR_IMAGE}/${UBOOT_IMAGE}
-	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${UBOOT_IMAGE}
+	install ${S}/u-boot.bin ${DEPLOYDIR}/${UBOOT_IMAGE}
 
-	cd ${DEPLOY_DIR_IMAGE}
+	cd ${DEPLOYDIR}
 	rm -f ${UBOOT_SYMLINK}
 	ln -sf ${UBOOT_IMAGE} ${UBOOT_SYMLINK}
-	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${UBOOT_SYMLINK}
 }
-do_deploy[dirs] = "${S}"
 addtask deploy before do_build after do_compile
 
 do_install() {

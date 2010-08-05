@@ -3,6 +3,8 @@ SECTION = "bootloaders"
 PRIORITY = "optional"
 LICENSE = "GPL"
 
+inherit deploy
+
 DEPENDS = "signgp-native"
 
 PARALLEL_MAKE=""
@@ -27,20 +29,14 @@ do_compile () {
 
 do_deploy () {
 	signGP ${S}/x-load.bin
-	install -d ${DEPLOY_DIR_IMAGE}
-	install ${S}/x-load.bin.ift ${DEPLOY_DIR_IMAGE}/${XLOAD_IMAGE}
-	install ${S}/x-load.bin.ift ${DEPLOY_DIR_IMAGE}/${MLO_IMAGE}
-	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${XLOAD_IMAGE}
-	package_stagefile_shell	${DEPLOY_DIR_IMAGE}/${MLO_IMAGE}
+	install ${S}/x-load.bin.ift ${DEPLOYDIR}/${XLOAD_IMAGE}
+	install ${S}/x-load.bin.ift ${DEPLOYDIR}/${MLO_IMAGE}
 
-	cd ${DEPLOY_DIR_IMAGE}
+	cd ${DEPLOYDIR}
 	rm -f ${XLOAD_SYMLINK}
 	ln -sf ${XLOAD_IMAGE} ${XLOAD_SYMLINK}
 	rm -f ${MLO_SYMLINK}
 	ln -sf ${MLO_IMAGE} ${MLO_SYMLINK}
-	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${XLOAD_SYMLINK}
-	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${MLO_SYMLINK}
 }
-do_deploy[dirs] = "${S}"
 addtask deploy before do_build after do_compile
 

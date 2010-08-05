@@ -11,6 +11,8 @@ SRC_URI = "file://updater.sh \
            file://gnu-tar.gz"
 S = "${WORKDIR}"
 
+inherit deploy
+
 do_configure() {
 	sed -i "s/ZAURUS_UPDATER_VERSION/${PR}/" "${S}/updater.sh"
 }
@@ -20,12 +22,11 @@ do_compile() {
 }
 
 do_deploy() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 updater.sh ${DEPLOY_DIR_IMAGE}/updater.sh.${MACHINE}
+	install -m 0755 updater.sh ${DEPLOYDIR}/updater.sh.${MACHINE}
 
 	case ${MACHINE} in
 		spitz )
-			install -m 0755 gnu-tar ${DEPLOY_DIR_IMAGE}/gnu-tar
+			install -m 0755 gnu-tar ${DEPLOYDIR}/gnu-tar
 			;;
         	*)
 			;;
