@@ -1,8 +1,8 @@
-#!/bin/sh
-
-# QEMU network interface configuration script
+#!/bin/bash
 #
-# Copyright (C) 2006-2007 OpenedHand Ltd.
+# QEMU network interface configuration script.
+#
+# Copyright (c) 2006-2010 Intel Corp.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -10,16 +10,36 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-TAP=$1
+usage() {
+	echo "$0 <tap-dev> <native-sysroot-basedir>"
+}
 
-TUNCTL=`which tunctl`
-[ "$TUNCTL" = "" ] && TUNCTL=/usr/sbin/tunctl
+if [ $# -ne 2 ]; then
+	usage
+	exit 1
+fi
+
+TAP=$1
+NATIVE_SYSROOT_DIR=$2
+
+TUNCTL=$NATIVE_SYSROOT_DIR/usr/bin/tunctl
+if [ ! -e "$TUNCTL" ]; then
+	echo "Error: Unable to find tunctl binary in '$NATIVE_SYSROOT_DIR/usr/bin'"
+
+	if [[ "$NATIVE_SYSROOT_DIR" =~ ^\/opt\/poky ]]; then
+		echo "This shouldn't happen - something is wrong with your toolchain installation"
+	else
+		echo "Have you run 'bitbake qemu-helper-native'?"
+	fi
+
+	exit 1
+fi
 
 $TUNCTL -d $TAP

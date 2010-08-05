@@ -1,8 +1,21 @@
-#!/bin/sh
-
-# QEMU network interface configuration script
+#!/bin/bash
 #
-# Copyright (C) 2006-2007 OpenedHand Ltd.
+# QEMU network interface configuration script. This utility needs to
+# be run as root, and will use the tunctl binary from a Poky sysroot.
+# Note: many Linux distros these days still use an older version of
+# tunctl which does not support the group permissions option, hence
+# the need to use Poky's version.
+#
+# If this script is being run standalone in order to set up a bank of tap
+# devices for later qemu use, then a group id must be the first argument.
+# The resulting tap device will be group-owned by this group, and qemu
+# users must be members of this group.
+#
+# If the kernel is too old to support TUNSETGROUP, then a user must be passed
+# in as the second argument, the tap device will be owned by that user, and
+# only that user will be able to use it.
+#
+# Copyright (c) 2006-2010 Intel Corp.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -10,24 +23,73 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-USER=$1
+usage() {
+	echo "$0 <gid> {uid} <native-sysroot-basedir>"
+	echo "Where uid is *only* included if this script complains when it's missing"
+}
 
-TUNCTL=`which tunctl`
-[ "$TUNCTL" = "" ] && TUNCTL=/usr/sbin/tunctl
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+	usage
+	exit 1
+fi
 
-TAP=`$TUNCTL -b -u $USER`
+USER=""
+GROUP="-g $1"
+if [ $# -eq 2 ]; then
+	NATIVE_SYSROOT_DIR=$2
+else
+	USER=$2
+	NATIVE_SYSROOT_DIR=$3
+fi
+
+TUNCTL=$NATIVE_SYSROOT_DIR/usr/bin/tunctl
+if [ ! -e "$TUNCTL" ]; then
+	echo "Error: Unable to find tunctl binary in '$NATIVE_SYSROOT_DIR/usr/bin'"
+
+	if [[ "$NATIVE_SYSROOT_DIR" =~ ^\/opt\/poky ]]; then
+		echo "This shouldn't happen - something is wrong with your toolchain installation"
+	else
+		echo "Have you run 'bitbake qemu-helper-native'?"
+	fi
+	
+	exit 1
+fi
+
+TAP=`$TUNCTL -b $GROUP 2>&1`
+STATUS=$?
+if [[ "$TAP" =~ "TUNSETGROUP" ]]; then
+	# TUNSETGROUP failed because of permissions or the kernel being too old
+	# Retry, falling back to a specific user
+	if [ "$USER" = "" ]; then
+	echo "TUNSETGROUP failed - add a username to the command line in order"
+	echo "to have the tap device owned by that user"
+	exit 1
+	fi
+	TAP=`$TUNCTL -b -u $USER 2>&1`
+	STATUS=$?
+	# Force this to appear on stderr in order that the user sees it if this
+	# is running from poky-qemu-internal and in order to avoid having this
+	# output confuse it.
+	echo "Only user $USER will be able to use $TAP - upgrade the kernel to " 1>&2
+	echo "2.6.23 or later in order to allow group access to tap devices" 1>&2
+fi
+if [ $STATUS -ne 0 ]; then
+	echo "tunctl failed:"
+	echo $TAP
+	exit 1
+fi
 
 IFCONFIG=`which ifconfig`
 if [ "x$IFCONFIG" = "x" ]; then
-    # better than nothing...
-    IFCONFIG=/sbin/ifconfig
+	# better than nothing...
+	IFCONFIG=/sbin/ifconfig
 fi
 
 n=$[ `echo $TAP | sed 's/tap//'` + 1 ]
@@ -36,7 +98,7 @@ $IFCONFIG $TAP 192.168.7.$n
 # setup NAT for tap0 interface to have internet access in QEMU
 IPTABLES=`which iptables`
 if [ "x$IPTABLES" = "x" ]; then
-    IPTABLES=/sbin/iptables
+	IPTABLES=/sbin/iptables
 fi
 
 $IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.0/24
