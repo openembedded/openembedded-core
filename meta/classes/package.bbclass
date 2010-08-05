@@ -466,6 +466,8 @@ python populate_packages () {
 }
 populate_packages[dirs] = "${D}"
 
+PKGDESTWORK = "${WORKDIR}/pkgdata"
+
 python emit_pkgdata() {
 	from glob import glob
 
@@ -486,17 +488,14 @@ python emit_pkgdata() {
 
 	packages = bb.data.getVar('PACKAGES', d, True)
 	pkgdest = bb.data.getVar('PKGDEST', d, 1)
-	pkgdatadir = bb.data.getVar('PKGDATA_DIR', d, True)
+	pkgdatadir = bb.data.getVar('PKGDESTWORK', d, True)
 
-	pstageactive = bb.data.getVar('PSTAGING_ACTIVE', d, True)
-	if pstageactive == "1":
-		lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
+	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
 
 	data_file = pkgdatadir + bb.data.expand("/${PN}" , d)
 	f = open(data_file, 'w')
 	f.write("PACKAGES: %s\n" % packages)
 	f.close()
-	package_stagefile(data_file, d)
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
 
@@ -522,9 +521,6 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'pkg_prerm')
 		sf.close()
 
-		package_stagefile(subdata_file, d)
-		#if pkgdatadir2:
-		#	bb.copyfile(subdata_file, pkgdatadir2 + "/runtime/%s" % pkg)
 
 		allow_empty = bb.data.getVar('ALLOW_EMPTY_%s' % pkg, d, True)
 		if not allow_empty:
@@ -535,11 +531,10 @@ python emit_pkgdata() {
 		if g or allow_empty == "1":
 			packagedfile = pkgdatadir + '/runtime/%s.packaged' % pkg
 			file(packagedfile, 'w').close()
-			package_stagefile(packagedfile, d)
-	if pstageactive == "1":
-		bb.utils.unlockfile(lf)
+
+	bb.utils.unlockfile(lf)
 }
-emit_pkgdata[dirs] = "${PKGDATA_DIR}/runtime"
+emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime"
 
 ldconfig_postinst_fragment() {
 if [ x"$D" = "x" ]; then
@@ -548,6 +543,7 @@ fi
 }
 
 SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
+SHLIBSWORKDIR = "${WORKDIR}/shlibs"
 
 python package_do_shlibs() {
 	import re
@@ -573,11 +569,9 @@ python package_do_shlibs() {
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
 
 	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, True)
-	bb.mkdirhier(shlibs_dir)
+	shlibswork_dir = bb.data.getVar('SHLIBSWORKDIR', d, True)
 
-	pstageactive = bb.data.getVar('PSTAGING_ACTIVE', d, True)
-	if pstageactive == "1":
-		lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
+	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
 
 	def linux_so(root, path, file):
 		cmd = bb.data.getVar('OBJDUMP', d, True) + " -p " + os.path.join(root, file) + " 2>/dev/null"
@@ -676,22 +670,16 @@ python package_do_shlibs() {
 					darwin_so(root, dirs, file)
 				elif os.access(path, os.X_OK) or lib_re.match(file):
 					linux_so(root, dirs, file)
-		shlibs_file = os.path.join(shlibs_dir, pkg + ".list")
-		if os.path.exists(shlibs_file):
-			os.remove(shlibs_file)
-		shver_file = os.path.join(shlibs_dir, pkg + ".ver")
-		if os.path.exists(shver_file):
-			os.remove(shver_file)
+		shlibs_file = os.path.join(shlibswork_dir, pkg + ".list")
+		shver_file = os.path.join(shlibswork_dir, pkg + ".ver")
 		if len(sonames):
 			fd = open(shlibs_file, 'w')
 			for s in sonames:
 				fd.write(s + '\n')
 			fd.close()
-			package_stagefile(shlibs_file, d)
 			fd = open(shver_file, 'w')
 			fd.write(ver + '\n')
 			fd.close()
-			package_stagefile(shver_file, d)
 		if needs_ldconfig:
 			bb.debug(1, 'adding ldconfig call to postinst for %s' % pkg)
 			postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, True) or bb.data.getVar('pkg_postinst', d, True)
@@ -700,8 +688,7 @@ python package_do_shlibs() {
 			postinst += bb.data.getVar('ldconfig_postinst_fragment', d, True)
 			bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
 
-	if pstageactive == "1":
-		bb.utils.unlockfile(lf)
+	bb.utils.unlockfile(lf)
 
 	shlib_provider = {}
 	list_re = re.compile('^(.*)\.list$')
@@ -773,7 +760,7 @@ python package_do_pkgconfig () {
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
 
 	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, True)
-	bb.mkdirhier(shlibs_dir)
+	shlibswork_dir = bb.data.getVar('SHLIBSWORKDIR', d, True)
 
 	pc_re = re.compile('(.*)\.pc$')
 	var_re = re.compile('(.*)=(.*)')
@@ -812,20 +799,15 @@ python package_do_pkgconfig () {
 							if hdr == 'Requires':
 								pkgconfig_needed[pkg] += exp.replace(',', ' ').split()
 
-	pstageactive = bb.data.getVar('PSTAGING_ACTIVE', d, True)
-	if pstageactive == "1":
-		lf = bb.utils.lockfile(bb.data.expand("${STAGING_DIR}/staging.lock", d))
+	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
 
 	for pkg in packages.split():
-		pkgs_file = os.path.join(shlibs_dir, pkg + ".pclist")
-		if os.path.exists(pkgs_file):
-			os.remove(pkgs_file)
+		pkgs_file = os.path.join(shlibswork_dir, pkg + ".pclist")
 		if pkgconfig_provided[pkg] != []:
 			f = open(pkgs_file, 'w')
 			for p in pkgconfig_provided[pkg]:
 				f.write('%s\n' % p)
 			f.close()
-			package_stagefile(pkgs_file, d)
 
 	for dir in [shlibs_dir]:
 		if not os.path.exists(dir):
@@ -853,17 +835,13 @@ python package_do_pkgconfig () {
 			if found == False:
 				bb.note("couldn't find pkgconfig module '%s' in any package" % n)
 		deps_file = os.path.join(pkgdest, pkg + ".pcdeps")
-		if os.path.exists(deps_file):
-			os.remove(deps_file)
 		if len(deps):
 			fd = open(deps_file, 'w')
 			for dep in deps:
 				fd.write(dep + '\n')
 			fd.close()
-			package_stagefile(deps_file, d)
 
-	if pstageactive == "1":
-		bb.utils.unlockfile(lf)
+	bb.utils.unlockfile(lf)
 }
 
 python read_shlibdeps () {
@@ -1023,8 +1001,21 @@ python package_do_package () {
 	for f in (bb.data.getVar('PACKAGEFUNCS', d, True) or '').split():
 		bb.build.exec_func(f, d)
 }
-do_package[dirs] = "${D}"
+do_package[dirs] = "${SHLIBSWORKDIR} ${PKGDESTWORK} ${D}"
 addtask package before do_build after do_install
+
+PACKAGELOCK = "${STAGING_DIR}/package-output.lock"
+SSTATETASKS += "do_package"
+do_package[sstate-name] = "package"
+do_package[sstate-plaindirs] = "${PKGD} ${PKGDEST}"
+do_package[sstate-inputdirs] = "${PKGDESTWORK} ${SHLIBSWORKDIR}"
+do_package[sstate-outputdirs] = "${PKGDATA_DIR} ${SHLIBSDIR}"
+do_package[sstate-lockfile] = "${PACKAGELOCK}"
+
+python do_package_setscene () {
+	sstate_setscene(d)
+}
+addtask do_package_setscene
 
 # Dummy task to mark when all packaging is complete
 do_package_write () {
