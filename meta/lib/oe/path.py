@@ -45,14 +45,15 @@ def format_display(path, metadata):
 
 def remove(path):
     """Equivalent to rm -f or rm -rf"""
-    import os, errno, shutil
-    try:
-        os.unlink(path)
-    except OSError, exc:
-        if exc.errno == errno.EISDIR:
-            shutil.rmtree(path)
-        elif exc.errno != errno.ENOENT:
-            raise
+    import os, errno, shutil, glob
+    for name in glob.glob(path):
+        try:
+            os.unlink(name)
+        except OSError, exc:
+            if exc.errno == errno.EISDIR:
+                shutil.rmtree(path)
+            elif exc.errno != errno.ENOENT:
+                raise
 
 def symlink(source, destination, force=False):
     """Create a symbolic link"""
