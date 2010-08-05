@@ -1,7 +1,5 @@
 inherit package
 
-#IMAGE_PKGTYPE ?= "rpm"
-
 IMAGE_PKGTYPE ?= "rpm"
 
 RPMBUILDPATH="${WORKDIR}/rpm"
@@ -10,6 +8,8 @@ RPMOPTS=""
 RPMBUILDOPTS="--target ${TARGET_SYS} --define '_topdir ${RPMBUILDPATH}' --buildroot ${ROOT}"
 RPM="${BUILD_ARCH}-${BUILD_OS}-rpm ${RPMOPTS}"
 RPMBUILD="${BUILD_ARCH}-${BUILD_OS}-rpmbuild --short-circuit ${RPMBUILDOPTS}"
+
+PKGWRITEDIRRPM = ${WORKDIR}/deploy-rpms"
 
 python write_specfile() {
 	version = bb.data.getVar('PV', d, 1)
@@ -136,7 +136,7 @@ python write_specfile() {
 
 	# move the rpm into the pkgoutdir
 	rpm = bb.data.expand('${RPMBUILDPATH}/RPMS/${TARGET_ARCH}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
-	outrpm = bb.data.expand('${DEPLOY_DIR_RPM}/${PACKAGE_ARCH}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
+	outrpm = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
 	bb.movefile(rpm, outrpm)
 }
 
@@ -152,9 +152,9 @@ python do_package_rpm () {
 		bb.error("WORKDIR not defined, unable to package")
 		return
 
-	outdir = bb.data.getVar('DEPLOY_DIR_RPM', d, 1)
+	outdir = bb.data.getVar('PKGWRITEDIRRPM', d, 1)
 	if not outdir:
-		bb.error("DEPLOY_DIR_RPM not defined, unable to package")
+		bb.error("PKGWRITEDIRRPM not defined, unable to package")
 		return
 	bb.mkdirhier(outdir)
 
@@ -208,13 +208,21 @@ python () {
         bb.data.setVarFlag('do_package_write_rpm', 'depends', " ".join(deps), d)
 }
 
+SSTATETASKS += "do_package_write_rpm"
+do_package_write_rpm[sstate-name] = "deploy-rpm"
+do_package_write_rpm[sstate-inputdirs] = "${PKGWRITEDIRRPM}"
+do_package_write_rpm[sstate-outputdirs] = "${DEPLOY_DIR_RPM}"
+
+python do_package_write_rpm_setscene () {
+    sstate_setscene(d)
+}
+addtask do_package_write_rpm_setscene
 
 python do_package_write_rpm () {
 	bb.build.exec_func("read_subpackage_metadata", d)
 	bb.build.exec_func("rpm_prep", d)
 	bb.build.exec_func("do_package_rpm", d)
 }
-
-do_package_write_rpm[dirs] = "${D}"
+do_package_write_rpm[dirs] = "${PKGWRITEDIRRPM}"
 addtask package_write_rpm before do_package_write after do_package
 

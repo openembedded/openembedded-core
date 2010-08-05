@@ -14,6 +14,8 @@ DPKG_ARCH_i586 ?= "i386"
 DPKG_ARCH_i686 ?= "i386"
 DPKG_ARCH_pentium ?= "i386"
 
+PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
+
 python package_deb_fn () {
     bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
 }
@@ -73,9 +75,9 @@ python do_package_deb () {
         bb.error("WORKDIR not defined, unable to package")
         return
 
-    outdir = bb.data.getVar('DEPLOY_DIR_DEB', d, True)
+    outdir = bb.data.getVar('PKGWRITEDIRDEB', d, True)
     if not outdir:
-        bb.error("DEPLOY_DIR_DEB not defined, unable to package")
+        bb.error("PKGWRITEDIRDEB not defined, unable to package")
         return
 
     dvar = bb.data.getVar('D', d, True)
@@ -250,6 +252,16 @@ python do_package_deb () {
         bb.utils.unlockfile(lf)
 }
 
+SSTATETASKS += "do_package_write_deb"
+do_package_write_deb[sstate-name] = "deploy-deb"
+do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"
+do_package_write_deb[sstate-outputdirs] = "${DEPLOY_DIR_DEB}"
+
+python do_package_write_deb_setscene () {
+    sstate_setscene(d)
+}
+addtask do_package_write_deb_setscene
+
 python () {
     if bb.data.getVar('PACKAGES', d, True) != '':
         deps = (bb.data.getVarFlag('do_package_write_deb', 'depends', d) or "").split()
@@ -262,6 +274,6 @@ python do_package_write_deb () {
 	bb.build.exec_func("read_subpackage_metadata", d)
 	bb.build.exec_func("do_package_deb", d)
 }
-do_package_write_deb[dirs] = "${D}"
+do_package_write_deb[dirs] = "${PKGWRITEDIRDEB}"
 addtask package_write_deb before do_package_write after do_package
 
