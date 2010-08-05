@@ -95,6 +95,14 @@ do_wrlinux_link_vmlinux() {
 	ln -sf ../../../vmlinux
 }
 
+do_compile_perf() {
+	oe_runmake -C ${S}/tools/perf CC="${KERNEL_CC}" LD="${KERNEL_LD}" prefix=${prefix}
+}
+
+do_install_perf() {
+	oe_runmake -C ${S}/tools/perf CC="${KERNEL_CC}" LD="${KERNEL_LD}" prefix=${prefix} DESTDIR=${D} install
+}
+
 do_wrlinux_configme[depends] = "kern-tools-native:do_populate_sysroot"
 addtask wrlinux_configme before do_configure after do_patch
 addtask wrlinux_link_vmlinux after do_compile before do_install
@@ -104,3 +112,20 @@ inherit kernel
 
 # object files are in B, not S, so we need to override this
 do_deploy[dirs] = "${B}"
+
+# perf subpackage variables
+PROVIDES += perf
+
+PACKAGES =+ "perf"
+FILES_perf = "${bindir}/* \
+              ${libexecdir}"
+
+
+# perf tasks
+addtask compile_perf after do_compile before do_install
+addtask install_perf after do_install before do_deploy
+
+do_compile_perf[depends] =  "glibc:do_populate_sysroot"
+do_compile_perf[depends] =+ "elfutils:do_populate_sysroot"
+do_compile_perf[depends] =+ "perl:do_populate_sysroot"
+do_compile_perf[depends] =+ "python:do_populate_sysroot"
