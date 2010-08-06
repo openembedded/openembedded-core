@@ -75,6 +75,10 @@ EXTRA_IMAGE_FEATURES_mx31ads = "tools-testapps debug-tweaks"
 #PACKAGE_CLASSES ?= "package_deb package_ipk"
 PACKAGE_CLASSES ?= "package_ipk"
 
+# A list of additional classes to use when building the system
+# include 'image-prelink' in order to prelink the filesystem image
+USER_CLASSES ?= "image-prelink"
+
 # POKYMODE controls the characteristics of the generated packages/images by
 # telling poky which type of toolchain to use.
 #
