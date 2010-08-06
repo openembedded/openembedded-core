@@ -1,5 +1,5 @@
 #
-# This class knows how to package up glibc. Its shared since prebuild binary toolchains
+# This class knows how to package up [e]glibc. Its shared since prebuild binary toolchains
 # may need packaging and its pointless to duplicate this code.
 #
 # Caller should set GLIBC_INTERNAL_USE_BINARY_LOCALE to one of:
@@ -9,57 +9,27 @@
 
 GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "ondevice"
 
-PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
-PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base-* glibc-binary-localedata-*"
+inherit qemu
 
-libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* ${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* ${base_libdir}/libutil* ${base_libdir}/libnsl* ${base_libdir}/libnss_files* ${base_libdir}/libnss_compat* ${base_libdir}/libnss_dns* ${base_libdir}/libdl* ${base_libdir}/libanl* ${base_libdir}/libBrokenLocale*"
+def get_libc_fpu_setting(bb, d):
+    if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
+        return "--without-fp"
+    return ""
+
+OVERRIDES_append = ":${TARGET_ARCH}-${TARGET_OS}"
+
+do_configure_prepend() {
+        sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
+}
 
 
-# The problem is that if PN = "glibc", FILES_${PN} will overwrite FILES_glibc
-# Solution: Make them both the same thing, then it doesn't matter
 
-glibcfiles = "${sysconfdir} ${libc_baselibs} ${base_sbindir}/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
-glibcdbgfiles = "${bindir}/.debug ${sbindir}/.debug ${libdir}/.debug \
-                  ${base_bindir}/.debug ${base_sbindir}/.debug ${base_libdir}/.debug \
-                  ${libdir}/gconv/.debug ${libexecdir}/*/.debug"
-glibcdevfiles = "${bindir}/rpcgen ${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
-                ${libdir}/*.a ${libdir}/*.o ${libdir}/pkgconfig \
-                ${base_libdir}/*.a ${base_libdir}/*.o ${datadir}/aclocal"
-
-FILES_glibc = "${glibcfiles}"
-FILES_${PN} = "${glibcfiles}"
-FILES_ldd = "${bindir}/ldd"
-FILES_libsegfault = "${base_libdir}/libSegFault*"
-FILES_glibc-extra-nss = "${base_libdir}/libnss*"
-FILES_sln = "${base_sbindir}/sln"
-FILES_glibc-dev = "${glibcdevfiles}"
-FILES_${PN}-dev = "${glibcdevfiles}"
-FILES_glibc-dbg = "${glibcdbgfiles}"
-FILES_${PN}-dbg = "${glibcdbgfiles}"
-FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/nscd* ${sysconfdir}/init.d/nscd*"
-FILES_glibc-utils = "${bindir}/* ${sbindir}/*"
-FILES_glibc-gconv = "${libdir}/gconv/*"
-FILES_catchsegv = "${bindir}/catchsegv"
-RDEPENDS_catchsegv = "libsegfault"
-FILES_glibc-pcprofile = "${base_libdir}/libpcprofile.so"
-FILES_glibc-thread-db = "${base_libdir}/libthread_db*"
-FILES_localedef = "${bindir}/localedef"
-RPROVIDES_glibc-dev += "libc-dev"
-
-DESCRIPTION_sln = "glibc: create symbolic links between files"
-DESCRIPTION_nscd = "glibc: name service cache daemon for passwd, group, and hosts"
-DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services"
-DESCRIPTION_ldd = "glibc: print shared library dependencies"
-DESCRIPTION_localedef = "glibc: compile locale definition files"
-DESCRIPTION_glibc-utils = "glibc: misc utilities like iconf, local, gencat, tzselect, rpcinfo, ..."
-
-TMP_LOCALE="/tmp/locale${libdir}/locale"
-
+# indentation removed on purpose
 locale_base_postinst() {
 #!/bin/sh
 
 if [ "x$D" != "x" ]; then
-  exit 1
+	exit 1
 fi
 
 rm -rf ${TMP_LOCALE}
@@ -73,6 +43,7 @@ mv ${TMP_LOCALE}/locale-archive ${libdir}/locale/
 rm -rf ${TMP_LOCALE}
 }
 
+# indentation removed on purpose
 locale_base_postrm() {
 #!/bin/sh
 
@@ -85,6 +56,31 @@ localedef --delete-from-archive --inputfile=${datadir}/locales/%s --charmap=%s -
 mv ${TMP_LOCALE}/locale-archive ${libdir}/locale/
 rm -rf ${TMP_LOCALE}
 }
+
+
+do_install() {
+	oe_runmake install_root=${D} install
+	for r in ${rpcsvc}; do
+		h=`echo $r|sed -e's,\.x$,.h,'`
+		install -m 0644 ${S}/sunrpc/rpcsvc/$h ${D}/${includedir}/rpcsvc/
+	done
+	install -m 0644 ${WORKDIR}/etc/ld.so.conf ${D}/${sysconfdir}/
+	install -d ${D}${libdir}/locale
+	make -f ${WORKDIR}/generate-supported.mk IN="${S}/localedata/SUPPORTED" OUT="${WORKDIR}/SUPPORTED"
+	# get rid of some broken files...
+	for i in ${GLIBC_BROKEN_LOCALES}; do
+		grep -v $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
+		mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
+	done
+	rm -f ${D}{sysconfdir}/rpc
+	rm -f ${D}${includedir}/scsi/sg.h
+	rm -f ${D}${includedir}/scsi/scsi_ioctl.h
+	rm -f ${D}${includedir}/scsi/scsi.h
+	rm -rf ${D}${datadir}/zoneinfo
+	rm -rf ${D}${libexecdir}/getconf
+}
+
+TMP_LOCALE="/tmp/locale${libdir}/locale"
 
 do_prep_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
@@ -118,6 +114,7 @@ python package_do_split_gconvs () {
 	if not bb.data.getVar('PACKAGES', d, 1):
 		return
 
+	bpn = bb.data.getVar('BPN', d, 1)
 	libdir = bb.data.getVar('libdir', d, 1)
 	if not libdir:
 		bb.error("libdir not defined")
@@ -132,9 +129,46 @@ python package_do_split_gconvs () {
 	locales_dir = base_path_join(datadir, "i18n", "locales")
 	binary_locales_dir = base_path_join(libdir, "locale")
 
-	do_split_packages(d, gconv_libdir, file_regex='^(.*)\.so$', output_pattern='glibc-gconv-%s', description='gconv module for character set %s', extra_depends='glibc-gconv')
+	def calc_gconv_deps(fn, pkg, file_regex, output_pattern, group):
+		deps = []
+		f = open(fn, "r")
+		c_re = re.compile('^copy "(.*)"')
+		i_re = re.compile('^include "(\w+)".*')
+		for l in f.readlines():
+			m = c_re.match(l) or i_re.match(l)
+			if m:
+				dp = legitimize_package_name('%s-gconv-%s' % (bpn, m.group(1)))
+				if not dp in deps:
+					deps.append(dp)
+		f.close()
+		if deps != []:
+			bb.data.setVar('RDEPENDS_%s' % pkg, " ".join(deps), d)
+		if bpn != 'glibc':
+			bb.data.setVar('RPROVIDES_%s' % pkg, pkg.replace(bpn, 'glibc'), d)
 
-	do_split_packages(d, charmap_dir, file_regex='^(.*)\.gz$', output_pattern='glibc-charmap-%s', description='character map for %s encoding', extra_depends='')
+	do_split_packages(d, gconv_libdir, file_regex='^(.*)\.so$', output_pattern=bpn+'-gconv-%s', \
+		description='gconv module for character set %s', hook=calc_gconv_deps, \
+		extra_depends=bpn+'-gconv')
+
+	def calc_charmap_deps(fn, pkg, file_regex, output_pattern, group):
+		deps = []
+		f = open(fn, "r")
+		c_re = re.compile('^copy "(.*)"')
+		i_re = re.compile('^include "(\w+)".*')
+		for l in f.readlines():
+			m = c_re.match(l) or i_re.match(l)
+			if m:
+				dp = legitimize_package_name('%s-charmap-%s' % (bpn, m.group(1)))
+				if not dp in deps:
+					deps.append(dp)
+		f.close()
+		if deps != []:
+			bb.data.setVar('RDEPENDS_%s' % pkg, " ".join(deps), d)
+		if bpn != 'glibc':
+			bb.data.setVar('RPROVIDES_%s' % pkg, pkg.replace(bpn, 'glibc'), d)
+
+	do_split_packages(d, charmap_dir, file_regex='^(.*)\.gz$', output_pattern=bpn+'-charmap-%s', \
+		description='character map for %s encoding', hook=calc_charmap_deps, extra_depends='')
 
 	def calc_locale_deps(fn, pkg, file_regex, output_pattern, group):
 		deps = []
@@ -144,24 +178,33 @@ python package_do_split_gconvs () {
 		for l in f.readlines():
 			m = c_re.match(l) or i_re.match(l)
 			if m:
-				dp = legitimize_package_name('glibc-localedata-%s' % m.group(1))
+				dp = legitimize_package_name(bpn+'-localedata-%s' % m.group(1))
 				if not dp in deps:
 					deps.append(dp)
 		f.close()
 		if deps != []:
 			bb.data.setVar('RDEPENDS_%s' % pkg, " ".join(deps), d)
+		if bpn != 'glibc':
+			bb.data.setVar('RPROVIDES_%s' % pkg, pkg.replace(bpn, 'glibc'), d)
 
-	do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern='glibc-localedata-%s', description='locale definition for %s', hook=calc_locale_deps, extra_depends='')
-	bb.data.setVar('PACKAGES', bb.data.getVar('PACKAGES', d) + ' glibc-gconv', d)
+	do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern=bpn+'-localedata-%s', \
+		description='locale definition for %s', hook=calc_locale_deps, extra_depends='')
+	bb.data.setVar('PACKAGES', bb.data.getVar('PACKAGES', d) + ' ' + bpn + '-gconv', d)
 
 	use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
 
 	dot_re = re.compile("(.*)\.(.*)")
 
+#GLIBC_GENERATE_LOCALES var specifies which locales to be supported, empty or "all" means all locales 
 	if use_bin != "precompiled":
-		f = open(os.path.join(bb.data.getVar('WORKDIR', d, 1), "SUPPORTED"), "r")
-		supported = f.readlines()
-		f.close()
+		supported = bb.data.getVar('GLIBC_GENERATE_LOCALES', d, 1)
+		if not supported or supported == "all":
+			f = open(base_path_join(bb.data.getVar('WORKDIR', d, 1), "SUPPORTED"), "r")
+			supported = f.readlines()
+			f.close()
+		else:
+			supported = supported.split()
+			supported = map(lambda s:s.replace(".", " ") + "\n", supported)
 	else:
 		supported = []
 		full_bin_path = bb.data.getVar('PKGD', d, True) + binary_locales_dir
@@ -188,44 +231,66 @@ python package_do_split_gconvs () {
 		encodings[locale].append(charset)
 
 	def output_locale_source(name, pkgname, locale, encoding):
-		bb.data.setVar('RDEPENDS_%s' % pkgname, 'localedef glibc-localedata-%s glibc-charmap-%s' % (legitimize_package_name(locale), legitimize_package_name(encoding)), d)
-		bb.data.setVar('pkg_postinst_%s' % pkgname, bb.data.getVar('locale_base_postinst', d, 1) % (locale, encoding, locale), d)
-		bb.data.setVar('pkg_postrm_%s' % pkgname, bb.data.getVar('locale_base_postrm', d, 1) % (locale, encoding, locale), d)
+		bb.data.setVar('RDEPENDS_%s' % pkgname, 'localedef %s-localedata-%s %s-charmap-%s' % \
+		(bpn, legitimize_package_name(locale), bpn, legitimize_package_name(encoding)), d)
+		bb.data.setVar('pkg_postinst_%s' % pkgname, bb.data.getVar('locale_base_postinst', d, 1) \
+		% (locale, encoding, locale), d)
+		bb.data.setVar('pkg_postrm_%s' % pkgname, bb.data.getVar('locale_base_postrm', d, 1) % \
+		(locale, encoding, locale), d)
 
 	def output_locale_binary_rdepends(name, pkgname, locale, encoding):
-		m = re.match("(.*)\.(.*)", name)
+		m = re.match("(.*)_(.*)", name)
 		if m:
-			glibc_name = "%s.%s" % (m.group(1), m.group(2).lower().replace("-",""))
+			libc_name = "%s.%s" % (m.group(1), m.group(2).lower().replace("-",""))
 		else:
-			glibc_name = name
-		bb.data.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('glibc-binary-localedata-%s' % glibc_name), d)
+			libc_name = name
+		bb.data.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('%s-binary-localedata-%s' \
+			% (bpn, libc_name)), d)
+		rprovides = (bb.data.getVar('RPROVIDES_%s' % pkgname, d, True) or "").split()
+		rprovides.append(legitimize_package_name('%s-binary-localedata-%s' % (bpn, libc_name)))
+		bb.data.setVar('RPROVIDES_%s' % pkgname, " ".join(rprovides), d)
 
 	def output_locale_binary(name, pkgname, locale, encoding):
+		qemu = qemu_target_binary(d) 
+
 		treedir = base_path_join(bb.data.getVar("WORKDIR", d, 1), "locale-tree")
+		ldlibdir = "%s/lib" % treedir
 		path = bb.data.getVar("PATH", d, 1)
 		i18npath = base_path_join(treedir, datadir, "i18n")
-		target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
-		qemu = "qemu-%s" % target_arch
-		localedef_opts = "--force --old-style --no-archive --prefix=%s --inputfile=%s/i18n/locales/%s --charmap=%s %s" % (treedir, datadir, locale, encoding, name)
+
+		localedef_opts = "--force --old-style --no-archive --prefix=%s \
+			--inputfile=%s/i18n/locales/%s --charmap=%s %s" \
+			% (treedir, datadir, locale, encoding, name)
 
 		qemu_options = bb.data.getVar("QEMU_OPTIONS_%s" % bb.data.getVar('PACKAGE_ARCH', d, 1), d, 1)
 		if not qemu_options:
 			qemu_options = bb.data.getVar('QEMU_OPTIONS', d, 1)
-		
-		cmd = "PATH=\"%s\" I18NPATH=\"%s\" %s -L %s %s %s/bin/localedef %s" % (path, i18npath, qemu, treedir, qemu_options, treedir, localedef_opts)
+
+		cmd = "PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
+			-E LD_LIBRARY_PATH=%s %s %s/bin/localedef %s" % \
+			(path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
 		bb.note("generating locale %s (%s)" % (locale, encoding))
-		if os.system(cmd):
-			raise bb.build.FuncFailed("localedef returned an error (command was %s)." % cmd)
+		import subprocess
+		process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		if process.wait() != 0:
+			bb.note("cmd:")
+			bb.note(cmd)
+			bb.note("stdout:")
+			bb.note(process.stdout.read())
+			bb.note("stderr:")
+			bb.note(process.stderr.read())
+			raise bb.build.FuncFailed("localedef returned an error")
 
 	def output_locale(name, locale, encoding):
 		pkgname = 'locale-base-' + legitimize_package_name(name)
 		bb.data.setVar('ALLOW_EMPTY_%s' % pkgname, '1', d)
 		bb.data.setVar('PACKAGES', '%s %s' % (pkgname, bb.data.getVar('PACKAGES', d, 1)), d)
-		rprovides = 'virtual-locale-%s' % legitimize_package_name(name)
+		rprovides = ' virtual-locale-%s' % legitimize_package_name(name)
 		m = re.match("(.*)_(.*)", name)
 		if m:
 			rprovides += ' virtual-locale-%s' % m.group(1)
 		bb.data.setVar('RPROVIDES_%s' % pkgname, rprovides, d)
+
 		if use_bin == "compile":
 			output_locale_binary_rdepends(name, pkgname, locale, encoding)
 			output_locale_binary(name, pkgname, locale, encoding)
@@ -261,9 +326,13 @@ python package_do_split_gconvs () {
 	if use_bin == "compile":
 		bb.note("collecting binary locales from locale tree")
 		bb.build.exec_func("do_collect_bins_from_locale_tree", d)
-		do_split_packages(d, binary_locales_dir, file_regex='(.*)', output_pattern='glibc-binary-localedata-%s', description='binary locale definition for %s', extra_depends='', allow_dirs=True)
+		do_split_packages(d, binary_locales_dir, file_regex='(.*)', \
+			output_pattern=bpn+'-binary-localedata-%s', \
+			description='binary locale definition for %s', extra_depends='', allow_dirs=True)
 	elif use_bin == "precompiled":
-		do_split_packages(d, binary_locales_dir, file_regex='(.*)', output_pattern='glibc-binary-localedata-%s', description='binary locale definition for %s', extra_depends='', allow_dirs=True)
+		do_split_packages(d, binary_locales_dir, file_regex='(.*)', \
+			output_pattern=bpn+'-binary-localedata-%s', \
+			description='binary locale definition for %s', extra_depends='', allow_dirs=True)
 	else:
 		bb.note("generation of binary locales disabled. this may break i18n!")
 
@@ -273,7 +342,8 @@ python package_do_split_gconvs () {
 # from the called function even though we're prepending
 python populate_packages_prepend () {
 	if bb.data.getVar('DEBIAN_NAMES', d, 1):
-		bb.data.setVar('PKG_glibc', 'libc6', d)
-		bb.data.setVar('PKG_glibc-dev', 'libc6-dev', d)
+		bpn = bb.data.getVar('BPN', d, 1)
+		bb.data.setVar('PKG_'+bpn, 'libc6', d)
+		bb.data.setVar('PKG_'+bpn+'-dev', 'libc6-dev', d)
 	bb.build.exec_func('package_do_split_gconvs', d)
 }

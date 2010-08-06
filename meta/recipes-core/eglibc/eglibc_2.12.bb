@@ -2,7 +2,7 @@ require eglibc.inc
 
 DEPENDS += "gperf-native"
 FILESPATHPKG =. "eglibc-svn:"
-PR = "r0"
+PR = "r2"
 SRCREV="10809"
 EGLIBC_BRANCH="eglibc-2_12"
 SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http \
@@ -50,7 +50,7 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --without-selinux \
                 ${GLIBC_EXTRA_OECONF}"
 
-EXTRA_OECONF += "${@get_eglibc_fpu_setting(bb, d)}"
+EXTRA_OECONF += "${@get_libc_fpu_setting(bb, d)}"
 
 do_unpack_append() {
 	bb.build.exec_func('do_move_ports', d)
@@ -94,4 +94,4 @@ do_compile () {
 	)
 }
 
-require eglibc-package.bbclass
+require eglibc-package.inc

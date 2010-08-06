@@ -24,41 +24,53 @@ python __anonymous () {
 ENABLE_BINARY_LOCALE_GENERATION ?= "0"
 
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
-BINARY_LOCALE_ARCHES ?= "arm.*"
+BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
+
+PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
+PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base-* glibc-binary-localedata-*"
+
+libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* ${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* ${base_libdir}/libutil* ${base_libdir}/libnsl* ${base_libdir}/libnss_files* ${base_libdir}/libnss_compat* ${base_libdir}/libnss_dns* ${base_libdir}/libdl* ${base_libdir}/libanl* ${base_libdir}/libBrokenLocale*"
+
+# The problem is that if PN = "glibc", FILES_${PN} will overwrite FILES_glibc
+# Solution: Make them both the same thing, then it doesn't matter
+
+glibcfiles = "${sysconfdir} ${libc_baselibs} ${base_sbindir}/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
+glibcdbgfiles = "${bindir}/.debug ${sbindir}/.debug ${libdir}/.debug \
+                  ${base_bindir}/.debug ${base_sbindir}/.debug ${base_libdir}/.debug \
+                  ${libdir}/gconv/.debug ${libexecdir}/*/.debug"
+glibcdevfiles = "${bindir}/rpcgen ${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la \
+                ${libdir}/*.a ${libdir}/*.o ${libdir}/pkgconfig \
+                ${base_libdir}/*.a ${base_libdir}/*.o ${datadir}/aclocal"
+
+FILES_glibc = "${glibcfiles}"
+FILES_${PN} = "${glibcfiles}"
+FILES_ldd = "${bindir}/ldd"
+FILES_libsegfault = "${base_libdir}/libSegFault*"
+FILES_glibc-extra-nss = "${base_libdir}/libnss*"
+FILES_sln = "${base_sbindir}/sln"
+FILES_glibc-dev = "${glibcdevfiles}"
+FILES_${PN}-dev = "${glibcdevfiles}"
+FILES_glibc-dbg = "${glibcdbgfiles}"
+FILES_${PN}-dbg = "${glibcdbgfiles}"
+FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/nscd* ${sysconfdir}/init.d/nscd*"
+FILES_glibc-utils = "${bindir}/* ${sbindir}/*"
+FILES_glibc-gconv = "${libdir}/gconv/*"
+FILES_catchsegv = "${bindir}/catchsegv"
+RDEPENDS_catchsegv = "libsegfault"
+FILES_glibc-pcprofile = "${base_libdir}/libpcprofile.so"
+FILES_glibc-thread-db = "${base_libdir}/libthread_db*"
+FILES_localedef = "${bindir}/localedef"
+RPROVIDES_glibc-dev += "libc-dev"
+
+DESCRIPTION_sln = "glibc: create symbolic links between files"
+DESCRIPTION_nscd = "glibc: name service cache daemon for passwd, group, and hosts"
+DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services"
+DESCRIPTION_ldd = "glibc: print shared library dependencies"
+DESCRIPTION_localedef = "glibc: compile locale definition files"
+DESCRIPTION_glibc-utils = "glibc: misc utilities like iconf, local, gencat, tzselect, rpcinfo, ..."
 
 
-inherit glibc-package
-
-def get_glibc_fpu_setting(bb, d):
-    if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
-        return "--without-fp"
-    return ""
-
-EXTRA_OECONF += "${@get_glibc_fpu_setting(bb, d)}"
 EXTRA_OEMAKE += "rootsbindir=${base_sbindir}"
-
-OVERRIDES_append = ":${TARGET_ARCH}-${TARGET_OS}"
-
-do_install() {
-	oe_runmake install_root=${D} install
-	for r in ${rpcsvc}; do
-		h=`echo $r|sed -e's,\.x$,.h,'`
-		install -m 0644 ${S}/sunrpc/rpcsvc/$h ${D}/${includedir}/rpcsvc/
-	done
-	install -m 0644 ${WORKDIR}/etc/ld.so.conf ${D}/${sysconfdir}/
-	install -d ${D}${libdir}/locale
-	make -f ${WORKDIR}/generate-supported.mk IN="${S}/localedata/SUPPORTED" OUT="${WORKDIR}/SUPPORTED"
-	# get rid of some broken files...
-	for i in ${GLIBC_BROKEN_LOCALES}; do
-		grep -v $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
-		mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
-	done
-	rm -f ${D}{sysconfdir}/rpc
-	rm -f ${D}${includedir}/scsi/sg.h
-	rm -f ${D}${includedir}/scsi/scsi_ioctl.h
-	rm -f ${D}${includedir}/scsi/scsi.h
-}
-
 
 python __anonymous () {
     enabled = bb.data.getVar("ENABLE_BINARY_LOCALE_GENERATION", d, 1)
@@ -80,5 +92,4 @@ python __anonymous () {
                 break
 }
 
-
-
+inherit libc-package

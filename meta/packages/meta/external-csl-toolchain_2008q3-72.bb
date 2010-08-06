@@ -37,7 +37,7 @@ do_install() {
 
 GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "compile"
 
-inherit glibc-package
+inherit libc-package
 
 PACKAGES += "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers"
 FILES_libgcc = "${base_libdir}/libgcc_s.so.1"
