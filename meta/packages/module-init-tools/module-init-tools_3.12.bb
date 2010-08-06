@@ -1,5 +1,5 @@
 require module-init-tools.inc
-PR = "r0"
+PR = "r1"
 
 # autotools set prefix to /usr, however we want them in /bin and /sbin
 bindir = "/bin"
