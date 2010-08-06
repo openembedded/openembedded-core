@@ -1,3 +1,5 @@
+import shutil
+
 def join(*paths):
     """Like os.path.join but doesn't treat absolute RHS specially"""
     import os.path
@@ -42,6 +44,45 @@ def format_display(path, metadata):
         return path
     else:
         return rel
+
+
+class Error(EnvironmentError):
+    pass
+
+# Based on shutil.copytree but with features removed and 
+# No fatal error is dst already exists
+# Handle symlinks that already exist
+def copytree(src, dst):
+    names = os.listdir(src)
+
+    bb.mkdirhier(dst)
+
+    errors = []
+    for name in names:
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        try:
+            if os.path.islink(srcname):
+                linkto = os.readlink(srcname)
+                if os.path.lexists(dstname):
+                    os.unlink(dstname)
+                os.symlink(linkto, dstname)
+            elif os.path.isdir(srcname):
+                copytree(srcname, dstname)
+            else:
+                shutil.copy2(srcname, dstname)
+        except (IOError, os.error), why:
+            errors.append((srcname, dstname, str(why)))
+        # catch the Error from the recursive copytree so that we can
+        # continue with other files
+        except Error, err:
+            errors.extend(err.args[0])
+    try:
+        shutil.copystat(src, dst)
+    except OSError, why:
+        errors.extend((src, dst, str(why)))
+    if errors:
+        raise Error, errors
 
 def remove(path):
     """Equivalent to rm -f or rm -rf"""
