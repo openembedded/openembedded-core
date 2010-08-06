@@ -143,6 +143,11 @@ def check_sanity(e):
 	if data.getVar('SDK_ARCH', e.data, True) == 'i686':
 		messages = messages + '"Please set SDKMACHINE to i586. It is currently defaulting to the build machine architecture of i686 and this is known to have issues (see local.conf).\n'
 
+	nolibs = data.getVar('NO32LIBS', e.data, True)
+	if not nolibs:
+		if os.path.exists('/lib/libc.so.6') and not os.path.exists('/usr/include/gnu/stubs-32.h'):
+			messages = messages + "You have a 32-bit libc, but no 32-bit headers.  You must install the 32-bit libc headers.\n"
+
 	#
 	# Check that TMPDIR hasn't changed location since the last time we were run
 	#
