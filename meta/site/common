@@ -7,3 +7,11 @@ ac_cv_file__dev_random=${ac_cv_file__dev_random=yes}
 # Avoid sudo to assume void for unsetenv in cross environment, or else it conflicts with
 # target stdlib.h prototype which follows POSIX compiliance. Mark for upstream.
 sudo_cv_func_unsetenv_void=no
+
+# shadow dir info, to avoid searching build system
+shadow_cv_maildir=${localstatedir}/spool/mail
+shadow_cv_mailfile=Mailbox
+shadow_cv_utmpdir=${localstatedir}/run
+shadow_cv_logdir=${localstatedir}/log
+shadow_cv_passwd_dir=${bindir}
+
