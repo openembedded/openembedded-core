@@ -1,0 +1,43 @@
+http://lists.gnu.org/archive/html/bug-ed/2008-12/msg00001.html
+
+2007-04-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* Do not set CC/CXX/CPPFLAGS/LDFLAGS to "" so that user can
+	  override if they so choose.
+	* Only set CFLAGS/CXXFLAGS if user did not specify any.
+
+ed had already taken GPLv3 when this patch out, so it should be GPLv3.
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+Index: ed-1.4/configure
+===================================================================
+--- ed-1.4.orig/configure	2009-07-10 19:54:33.000000000 +0800
++++ ed-1.4/configure	2010-08-05 17:41:51.000000000 +0800
+@@ -26,12 +26,6 @@
+ mandir='$(datadir)/man'
+ sysconfdir='$(prefix)/etc'
+ program_prefix=
+-CC=
+-CXX=
+-CPPFLAGS=
+-CFLAGS='-Wall -W -O2'
+-CXXFLAGS='-Wall -W -O2'
+-LDFLAGS=
+ 
+ # Loop over all args
+ while [ x"$1" != x ] ; do
+@@ -111,6 +105,14 @@
+ 	esac
+ done
+ 
++# Defaults if the user did not select any
++if [ x"${CFLAGS+set}" != xset ] ; then
++	CFLAGS='-Wall -W -O2'
++fi
++if [ x"${CXXFLAGS+set}" != xset ] ; then
++	CXXFLAGS='-Wall -W -O2'
++fi
++
+ # Find the source files, if location was not specified.
+ srcdirtext=
+ if [ x"${srcdir}" = x ] ; then
