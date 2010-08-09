@@ -23,12 +23,12 @@ do_configure () {
 }
 
 do_compile () {
-	if [ "${SITEINFO_BITS}" == "64" ]; then
-	  # We need the 32-bit libpseudo on a 64-bit machine...
-	  ./configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32
-	  oe_runmake 'CFLAGS=-m32' 'LIB=lib/pseudo/lib'
-          # prevent it from removing the lib, but keep everything else
-	  make 'LIB=foo' distclean 
+	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" ]; then
+		# We need the 32-bit libpseudo on a 64-bit machine...
+		./configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32
+		oe_runmake 'CFLAGS=-m32' 'LIB=lib/pseudo/lib'
+		# prevent it from removing the lib, but keep everything else
+		make 'LIB=foo' distclean 
 	fi
 	${S}/configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=${SITEINFO_BITS}
 	oe_runmake 'LIB=lib/pseudo/lib$(MARK64)'
@@ -36,9 +36,9 @@ do_compile () {
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' 'LIB=lib/pseudo/lib$(MARK64)' install
-	if [ "${SITEINFO_BITS}" == "64" ]; then
-	  mkdir -p ${D}${prefix}/lib/pseudo/lib
-	  cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
+	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" ]; then
+		mkdir -p ${D}${prefix}/lib/pseudo/lib
+		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
 	fi
 }
 
