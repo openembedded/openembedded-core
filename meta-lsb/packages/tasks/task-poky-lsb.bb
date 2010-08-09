@@ -3,117 +3,78 @@
 #
 
 DESCRIPTION = "Create Small Image Tasks"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "\
-    task-poky-small \
-    task-poky-basic-libs \
-    task-poky-basic-libs-dbg \
-    task-poky-basic-libs-dev \
-    task-poky-basic-utils \
-    task-poky-basic-utils-dbg \
-    task-poky-basic-utils-dev \
-    task-poky-extended-libs \
-    task-poky-extended-libs-dbg \
-    task-poky-extended-libs-dev \
-    task-poky-extended-utils \
-    task-poky-extended-utils-dbg \
-    task-poky-extended-utils-dev \
-    task-poky-network-services \
-    task-poky-network-services-dbg \
-    task-poky-network-services-dev \
+    task-poky-lsb \
+    task-poky-sys-extended \
+    task-poky-sys-extended-dbg \
+    task-poky-sys-extended-dev \
+    task-poky-db \
+    task-poky-db-dbg \
+    task-poky-db-dev \
+    task-poky-misc \
+    task-poky-misc-dbg \
+    task-poky-misc-dev \
+    task-poky-perl \
+    task-poky-perl-dbg \
+    task-poky-perl-dev \
+    task-poky-python \
+    task-poky-python-dbg \
+    task-poky-python-dev \
+    task-poky-tcl \
+    task-poky-tcl-dbg \
+    task-poky-tcl-dev \
     "
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-poky-network-services = "\
-#    iproute \
-#    iputils \
-#    iptables \
-    nfs-utils \
+RDEPENDS_task-poky-lsb = "\
+    task-poky-sys-extended \
+    task-poky-db \
+    task-poky-misc \
+    task-poky-perl \
+    task-poky-python \
+    task-poky-tcl \
     "
 
-RDEPENDS_task-poky-shells = "\
-    bash \
-    mktemp \
-    
-
-RDEPENDS_task-poky-misc = "\
-    strace \
-    lsof \
-    elfutils \
-    usbutils \
-    zlib \
-    libusb \
-    libstdcxx \
-    bluez4 \
-    "
-
-RDEPENDS_task-poky-basic-libs = "\
-#    libssh2 \
-    dbus-glib \
-#    nfs-utils-lib \
-    "
-
-RDEPENDS_task-poky-basic-utils = "\
-#    openssh \
-    openssl \
-    pam \
-    sudo \
-    beecrypt \
+#
+# GPLv2 Should List
+RDEPENDS_task-poky-sys-extended = "\
     curl \
-    elfutils \
+    diffutils \
+    gamin \
+    hdparm \
+#    libaio \
+    libxml2 \
+    lrzsz \
+    lzo \
+#    mdadm \
+    minicom \
     neon \
-#    mktemp \
-    rpm \
-    bzip2 \
-#    crontabs \
-    dbus \
-    python-dbus \
-    e2fsprogs \
-    gdbm \
-    hal \
-    less \
-    popt \
-    portmap \
-    readline \
-#    cron \
-#    yaffs2 \
+    parted \
+    pth \
+    quota \
+#    screen \
+    setserial \
+#    sysstat \
+    unzip \
+#    watchdog \
+    which \
+    zip \
     "
 
-RDEPENDS_task-poky-extended-libs = "\
-#    cracklib \
-    glib-2.0 \
-    libcap \
-    libevent \
-    "
-
-RDEPENDS_task-poky-extended-utils = "\
-#    acl \
-#    at \
-    attr \
-#    bc \
-    binutils \
-#    cpio \
-#    cracklib \
-#    logrotate \
-#    pax \
-#    shadow \
+RDEPENDS_task-poky-db = "\
+    db \
     sqlite3 \
-#    syslog \
-#    ed \
-#    lsb \
-#    mailx \
-#    man \
-#    sendmail \
-    tcl \
-    "   
+    "
 
-RDEPENDS_task-poky-python = "\
+RDEPENDS_task-poky-perl = "\
     gdbm \
     perl \
     zlib \
     "
+
 
 RDEPENDS_task-poky-python = "\
     expat \
@@ -123,5 +84,21 @@ RDEPENDS_task-poky-python = "\
     openssl \
     python \
     readline \
+    zip \
+    "
+
+RDEPENDS_task-poky-tcl = "\
+    tcl \
+    "
+
+RDEPENDS_task-poky-misc = "\
+    elfutils \
+    gettext \
+    lsof \
+    ncurses \
+    strace \
+#    libstdcxx \
+    libusb1 \
+    usbutils \
     zlib \
     "

@@ -2,149 +2,157 @@
 # Copyright (C) 2010 Intel Corporation
 #
 
-DESCRIPTION = "Create Small Image Tasks"
-PR = "r0"
+DESCRIPTION = "Create Basic Image Tasks"
+PR = "r1"
 
 PACKAGES = "\
-    task-poky-small \
+    task-poky-basic \
+    task-poky-base-utils \
+    task-poky-base-utils-dbg \
+    task-poky-base-utils-dev \
     task-poky-basic-libs \
     task-poky-basic-libs-dbg \
     task-poky-basic-libs-dev \
     task-poky-basic-utils \
     task-poky-basic-utils-dbg \
     task-poky-basic-utils-dev \
-    task-poky-minimal-extras \
-    task-poky-minimal-extras-dbg \
-    task-poky-minimal-extras-dev \
-    task-poky-pkg-managment-opkg \
-    task-poky-pkg-managment-opkg-dbg \
-    task-poky-pkg-managment-opkg-dev \
-    task-poky-network-services \
-    task-poky-network-services-dbg \
-    task-poky-network-services-dev \
+    task-poky-basic-extended \
+    task-poky-basic-extended-dbg \
+    task-poky-basic-extended-dev \
+    task-poky-dev-utils \
+    task-poky-dev-utils-dbg \
+    task-poky-dev-utils-dev \
+    task-poky-multiuser \
+    task-poky-multiuser-dbg \
+    task-poky-multiuser-dev \
+    task-poky-initscripts \
+    task-poky-initscripts-dbg \
+    task-poky-initscripts-dev \
+    task-poky-rpm \
+    task-poky-rpm-dbg \
+    task-poky-rpm-dev \
+    task-poky-sys-services \
+    task-poky-sys-services-dbg \
+    task-poky-sys-services-dev \
     "
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-poky-minimal-extras = "\
-     makedevs \
-     ncurses \
-     zlib \
-     udev \
-     udev-extraconf \
-     expat \
-     "
-
-RDEPENDS_task-poky-pkg-managment-opkg = "\
-     curl \
-     gnutls \
-     gpgme \
-     libgcrypt \
-     libgpg-error \
-     lzo \
-     opkg-config-base \
-     opkg-collateral \
-     opkg \
-     pth \
-     "
-
-RDEPENDS_task-poky-network-services = "\
-#    iproute \
-#    iputils \
-#    iptables \
-    nfs-utils \
+RDEPENDS_task-poky-basic = "\
+    task-poky-base-utils \
+    task-poky-basic-libs \
+    task-poky-basic-utils \
+    task-poky-basic-extended \
+    task-poky-dev-utils \
+    task-poky-multiuser \
+    task-poky-initscripts \
+    task-poky-rpm \
+    task-poky-sys-services \
     "
 
-RDEPENDS_task-poky-shells = "\
-    bash \
-    mktemp \
-    
-
-RDEPENDS_task-poky-misc = "\
-    strace \
-    lsof \
-    elfutils \
-    usbutils \
-    zlib \
-    libusb \
-    libstdcxx \
-    bluez4 \
+RDEPENDS_task-poky-base-utils = "\
+    busybox \
+    dropbear \
     "
 
 RDEPENDS_task-poky-basic-libs = "\
-#    libssh2 \
-    dbus-glib \
-#    nfs-utils-lib \
+    glib-2.0 \
     "
 
 RDEPENDS_task-poky-basic-utils = "\
+    bash \
+#    acl \
+    attr \
+    bc \
+    coreutils \
+#    cpio \
+    e2fsprogs \
+    ed \
+    file \
+    findutils \
+#    gawk \
+    gmp \
+#    grep \
+    makedevs \
+#    mktemp \
+    ncurses \
+#    net-tools \
+#    pax \
+    popt \
+    procps \
+    psmisc \
+    sed \
+    tar \
+    time \
+    udev \
+    util-linux \
+    zlib \
+    "
+
+RDEPENDS_task-poky-basic-extended = "\
+#    iproute \
+#    iputils \
+    iptables \
+    module-init-tools \
 #    openssh \
     openssl \
-    pam \
+    "
+
+RDEPENDS_task-poky-dev-utils = "\
+    byacc \
+    diffutils \
+    m4 \
+    make \
+    patch \
+    binutils \
+    "
+
+RDEPENDS_task-poky-initscripts = "\
+    initscripts \
+    sysvinit \
+#    ethtool \
+#    mingetty \
+#    sysklogd \
+    "
+
+RDEPENDS_task-poky-multiuser = "\
+#    cracklib \
+    gzip \
+#    libuser \
+    libpam \
+#    passwd \
+    shadow \
     sudo \
+    "
+
+RDEPENDS_task-poky-rpm = "\
     beecrypt \
-    curl \
-    elfutils \
-    neon \
-#    mktemp \
     rpm \
+    "
+
+RDEPENDS_task-poky-sys-services = "\
+    at \
     bzip2 \
+#    cronie \
 #    crontabs \
     dbus \
+    dbus-glib \
     python-dbus \
-    e2fsprogs \
-    gdbm \
+    elfutils \
+    gzip \
     hal \
     less \
-    popt \
-    portmap \
-    readline \
-#    cron \
-#    yaffs2 \
-    "
-
-RDEPENDS_task-poky-extended-libs = "\
-#    cracklib \
-    glib-2.0 \
     libcap \
     libevent \
-    "
-
-RDEPENDS_task-poky-extended-utils = "\
-#    acl \
-    at \
-    attr \
-#    bc \
-    binutils \
-#    cpio \
-#    cracklib \
 #    logrotate \
-#    pax \
-#    shadow \
-    sqlite3 \
-#    syslog \
-#    ed \
-#    lsb \
-#    mailx \
-#    man \
-#    sendmail \
-    tar \
-    tcl \
-    "   
-
-RDEPENDS_task-poky-python = "\
-    gdbm \
-    perl \
-    zlib \
+    nfs-utils \
+    pciutils \
+    libpcre \
+#    perl-XML-Parser \
+    portmap \
+#    rpcbind \
+    sysfsutils \
+    tcp-wrappers \
+    tzdata \
     "
 
-RDEPENDS_task-poky-python = "\
-    expat \
-    gdbm \
-    gmp \
-    ncurses \
-    openssl \
-    python \
-    readline \
-    zlib \
-    "
