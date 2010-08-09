@@ -123,7 +123,7 @@ FILES_perf = "${bindir}/* \
 
 # perf tasks
 addtask compile_perf after do_compile before do_install
-addtask install_perf after do_install before do_deploy
+addtask install_perf after do_install before do_package do_deploy
 
 do_compile_perf[depends] =  "glibc:do_populate_sysroot"
 do_compile_perf[depends] =+ "elfutils:do_populate_sysroot"
