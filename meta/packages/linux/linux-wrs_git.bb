@@ -125,7 +125,7 @@ FILES_perf = "${bindir}/* \
 addtask compile_perf after do_compile before do_install
 addtask install_perf after do_install before do_package do_deploy
 
-do_compile_perf[depends] =  "glibc:do_populate_sysroot"
+do_compile_perf[depends] =  "virtual/libc:do_populate_sysroot"
 do_compile_perf[depends] =+ "elfutils:do_populate_sysroot"
 do_compile_perf[depends] =+ "perl:do_populate_sysroot"
 do_compile_perf[depends] =+ "python:do_populate_sysroot"
