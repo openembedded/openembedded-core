@@ -5,8 +5,8 @@ RP 25/7/10
 
 Index: gcc-4.5.0/gcc/config/i386/t-linux64
 ===================================================================
---- gcc-4.5.0.orig/gcc/config/i386/t-linux64	2009-04-21 20:03:23.000000000 +0100
-+++ gcc-4.5.0/gcc/config/i386/t-linux64	2010-08-03 14:53:26.471180113 +0100
+--- gcc-4.5.0.orig/gcc/config/i386/t-linux64	2010-08-10 15:47:42.000000000 +0100
++++ gcc-4.5.0/gcc/config/i386/t-linux64	2010-08-10 15:47:47.000000000 +0100
 @@ -24,8 +24,8 @@
  # MULTILIB_OSDIRNAMES according to what is found on the target.
  
@@ -20,11 +20,11 @@ Index: gcc-4.5.0/gcc/config/i386/t-linux64
  INSTALL_LIBGCC = install-multilib
 Index: gcc-4.5.0/gcc/config/i386/linux64.h
 ===================================================================
---- gcc-4.5.0.orig/gcc/config/i386/linux64.h	2010-03-24 20:44:48.000000000 +0000
-+++ gcc-4.5.0/gcc/config/i386/linux64.h	2010-08-03 14:54:24.737056070 +0100
-@@ -59,1 +59,1 @@
+--- gcc-4.5.0.orig/gcc/config/i386/linux64.h	2010-08-10 15:49:06.000000000 +0100
++++ gcc-4.5.0/gcc/config/i386/linux64.h	2010-08-10 15:49:16.000000000 +0100
+@@ -59,7 +59,7 @@
     done.  */
-
+ 
  #define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
 -#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
 +#define GLIBC_DYNAMIC_LINKER64 "/lib/ld-linux-x86-64.so.2"
