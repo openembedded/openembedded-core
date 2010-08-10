@@ -1,0 +1,12 @@
+guilt: force removal when uninstalling
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+
+--- a/uninstall.orig
++++ b/uninstall
+@@ -12,4 +12,4 @@
+ 
+ shift
+ 
+-(cd $PRE; rm "$@")
++(cd $PRE; rm -f "$@")
