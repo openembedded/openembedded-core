@@ -265,3 +265,14 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gmp="1 month"
 RECIPE_STATUS_pn-libmpc="green" # upgraded
 RECIPE_LATEST_VERSION_pn-libmpc="0.8.2"
 
+RECIPE_STATUS_pn-byacc="green" 
+RECIPE_LATEST_VERSION_pn-byacc="20100610"
+
+RECIPE_STATUS_pn-libconvert-asn1-perl="red" # 0.22 version does not build, so created a recipe for version 0.21
+RECIPE_LATEST_VERSION_pn-libconvert-asn1-perl="0.22"
+
+RECIPE_STATUS_pn-libtimedate-perl="green" 
+RECIPE_LATEST_VERSION_pn-libtimedate-perl="1.20"
+
+RECIPE_STATUS_pn-libxml-parser-perl="green" 
+RECIPE_LATEST_VERSION_pn-libxml-parser-perl="2.36"
