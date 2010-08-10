@@ -35,6 +35,7 @@ sysroot_stage_libdir() {
 		sed -e 's/^installed=yes$/installed=no/' \
 		    -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
 		    -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
+		    -e "/^dependency_libs=/s,\([[:space:]']\)${base_libdir},\1${STAGING_DIR_HOST}${base_libdir},g" \
 		    -i $src/$i
 	done
 	sysroot_stage_dir $src $dest
