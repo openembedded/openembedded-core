@@ -174,6 +174,10 @@ kernel_do_install() {
 		scripts/basic/fixdep scripts/basic/hash scripts/dtc/dtc \
 		scripts/genksyms/genksyms scripts/kconfig/conf scripts/mod/mk_elfconfig \
 		scripts/mod/modpost"
+	rm -rf $kerneldir/scripts/*.o
+	rm -rf $kerneldir/scripts/basic/*.o
+	rm -rf $kerneldir/scripts/kconfig/*.o
+	rm -rf $kerneldir/scripts/mod/*.o
 	for entry in $bin_files; do
 		rm -f $kerneldir/$entry
 	done	
@@ -214,11 +218,15 @@ EXPORT_FUNCTIONS do_compile do_install do_configure
 
 # kernel-base becomes kernel-${KERNEL_VERSION}
 # kernel-image becomes kernel-image-${KERNEL_VERISON}
-PACKAGES = "kernel kernel-base kernel-image kernel-dev kernel-vmlinux"
+PACKAGES = "kernel kernel-base kernel-image kernel-dev kernel-vmlinux kernel-misc kernel-dbg"
 FILES = ""
 FILES_kernel-image = "/boot/${KERNEL_IMAGETYPE}*"
 FILES_kernel-dev = "/boot/System.map* /boot/Module.symvers* /boot/config*"
 FILES_kernel-vmlinux = "/boot/vmlinux*"
+# misc is a package to contain files we need in staging
+FILES_kernel-misc = "/kernel/include/config /kernel/scripts /kernel/drivers/crypto /kernel/drivers/media"
+# We don't care about dbg files for the kernel but split them out here to keep the packaging clean
+FILES_kernel-dbg = "/lib/modules/${KERNEL_VERSION}/kernel/*/*/.debug /lib/modules/${KERNEL_VERSION}/kernel/*/.debug /lib/modules/${KERNEL_VERSION}/kernel/*/*/*/.debug"
 RDEPENDS_kernel = "kernel-base"
 # Allow machines to override this dependency if kernel image files are 
 # not wanted in images as standard
