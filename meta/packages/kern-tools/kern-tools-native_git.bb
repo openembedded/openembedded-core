@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=e2bf4415f3d8
 
 DEPENDS = "git-native"
 
-PR = r4
+PR = r5
 PV = "0.1+git${SRCPV}"
 
 inherit native
@@ -15,7 +15,7 @@ S = "${WORKDIR}"
 kern_tools_LIST = kgit kgit-init kgit-meta \
                   kgit-checkpoint kgit-clean \
                   generate_cfg kconf_check configme \
-		  createme updateme patchme get_defconfig
+		  createme updateme patchme get_defconfig scc
 
 do_compile() { 
 	:
