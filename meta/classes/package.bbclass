@@ -157,7 +157,7 @@ def runstrip(file, d):
 
     # Handle kernel modules specifically - .debug directories here are pointless
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
-        return os.system("%s'%s' -g --remove-section=.comment --remove-section=.note '%s'" % (pathprefix, strip, file))
+        return os.system("%s'%s' --strip-debug --remove-section=.comment --remove-section=.note --preserve-dates '%s'" % (pathprefix, strip, file))
 
     newmode = None
     if not os.access(file, os.W_OK):
