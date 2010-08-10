@@ -178,6 +178,7 @@ kernel_do_install() {
 	rm -rf $kerneldir/scripts/basic/*.o
 	rm -rf $kerneldir/scripts/kconfig/*.o
 	rm -rf $kerneldir/scripts/mod/*.o
+	rm -rf $kerneldir/scripts/dtc/*.o
 	for entry in $bin_files; do
 		rm -f $kerneldir/$entry
 	done	
