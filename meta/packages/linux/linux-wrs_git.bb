@@ -24,7 +24,7 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips)"
 
 LINUX_VERSION = "v2.6.34"
 LINUX_VERSION_EXTENSION = "-wr-${LINUX_KERNEL_TYPE}"
-PR = "r4"
+PR = "r5"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"

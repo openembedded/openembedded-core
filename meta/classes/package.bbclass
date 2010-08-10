@@ -155,6 +155,10 @@ def runstrip(file, d):
     strip = bb.data.getVar("STRIP", d, True)
     objcopy = bb.data.getVar("OBJCOPY", d, True)
 
+    # Handle kernel modules specifically - .debug directories here are pointless
+    if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
+        return os.system("%s'%s' -g --remove-section=.comment --remove-section=.note '%s'" % (pathprefix, strip, file))
+
     newmode = None
     if not os.access(file, os.W_OK):
         origmode = os.stat(file)[stat.ST_MODE]
