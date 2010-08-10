@@ -664,6 +664,9 @@ class BBCooker:
         buildname = bb.data.getVar("BUILDNAME", self.configuration.data)
         bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.configuration.event_data)
 
+        # Clear locks
+        bb.fetch.persistent_database_connection = {}
+
         # Execute the runqueue
         runlist = [[item, "do_%s" % task]]
 
@@ -741,6 +744,9 @@ class BBCooker:
             taskdata.add_provider(localdata, self.status, k)
             runlist.append([k, "do_%s" % task])
         taskdata.add_unresolved(localdata, self.status)
+
+        # Clear locks
+        bb.fetch.persistent_database_connection = {}
 
         rq = bb.runqueue.RunQueue(self, self.configuration.data, self.status, taskdata, runlist)
 
