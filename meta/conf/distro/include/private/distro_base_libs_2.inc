@@ -233,9 +233,14 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-acl = "4 months"
 RECIPE_LATEST_RELEASE_DATE_pn-acl = "11/2009"
 RECIPE_COMMENTS_pn-acl = ""
 
-RECIPE_STATUS_pn-tcp_wrappers = "red"    # need upgrade
-RECIPE_MAINTAINER_pn-tcp_wrappers = "Qing He <qing.he@intel.com>"
-RECIPE_LATEST_VERSION_pn-tcp_wrappers = "7.6.q"
+RECIPE_STATUS_pn-tcp-wrappers = "yellow"    # custom build system
+DEPENDENCY_CHECK_pn-tcp-wrappers = "done"
+RECIPE_MAINTAINER_pn-tcp-wrappers = "Qing He <qing.he@intel.com>"
+RECIPE_LATEST_VERSION_pn-tcp-wrappers = "7.6"
+RECIPE_INTEL_SECTION_pn-tcp-wrappers = "base libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-tcp-wrappers = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-tcp-wrappers = "n/a"
+RECIPE_COMMENTS_pn-tcp-wrappers = ""
 
 RECIPE_STATUS_pn-libaio = "red"    # need upgrade
 RECIPE_MAINTAINER_pn-libaio = "Qing He <qing.he@intel.com>"
