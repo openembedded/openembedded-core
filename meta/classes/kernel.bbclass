@@ -500,6 +500,6 @@ do_deploy() {
 	package_stagefile_shell ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_SYMLINK_NAME}.bin
 }
 
-do_deploy[dirs] = "${S}"
+do_deploy[dirs] = "${B}"
 
 addtask deploy before do_package after do_install

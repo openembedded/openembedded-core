@@ -110,9 +110,6 @@ addtask wrlinux_configcheck after do_configure before do_compile
 
 inherit kernel
 
-# object files are in B, not S, so we need to override this
-do_deploy[dirs] = "${B}"
-
 # perf subpackage variables
 PROVIDES += perf
 
