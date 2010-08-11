@@ -7,17 +7,15 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
 # util-linux for libblkid
-DEPENDS = "libcap libnfsidmap libevent util-linux"
+DEPENDS = "libcap libnfsidmap libevent util-linux tcp-wrappers"
 RDEPENDS = "portmap"
 RRECOMMENDS = "kernel-module-nfsd"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.bz2 \
            file://nfs-utils-1.0.6-uclibc.patch \
            file://nfsserver"
-
-S = "${WORKDIR}/nfs-utils-${PV}/"
 
 PARALLEL_MAKE = ""
 
@@ -38,7 +36,6 @@ EXTRA_OECONF = "--with-statduser=nobody \
                 --enable-uuid \
                 --disable-gss \
                 --disable-tirpc \
-                --without-tcp-wrappers \
                 --with-statedir=/var/lib/nfs"
 
 INHIBIT_AUTO_STAGE = "1"
