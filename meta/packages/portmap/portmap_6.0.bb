@@ -1,17 +1,16 @@
 require portmap.inc
 
-PR = "r6"
+DEPENDS += "tcp-wrappers"
+PR = "r7"
 
 SRC_URI = "http://www.sourcefiles.org/Networking/Tools/Miscellanenous/portmap-6.0.tgz \
-           file://destdir-no-strip.patch;apply=yes \
-           file://no-tcpd-support.patch;apply=yes \
+           file://destdir-no-strip.patch \
+           file://tcpd-config.patch \
            file://portmap.init"
 
-S = "${WORKDIR}/${PN}_${PV}/"
+S = "${WORKDIR}/${BPN}_${PV}/"
 
-EXTRA_OEMAKE_append = " NO_TCP_WRAPPER=1 "
-
-CPPFLAGS += "-DFACILITY=LOG_DAEMON -DENABLE_DNS"
+CPPFLAGS += "-DFACILITY=LOG_DAEMON -DENABLE_DNS -DHOSTS_ACCESS"
 CFLAGS += "-Wall -Wstrict-prototypes -fPIC"
 
 fakeroot do_install() {
