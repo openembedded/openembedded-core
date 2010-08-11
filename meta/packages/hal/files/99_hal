@@ -1,2 +1,0 @@
-d root root 0700 /var/run/hald none
-d haldaemon haldaemon 0755 /var/cache/hald none

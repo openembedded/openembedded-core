@@ -5,7 +5,7 @@ SRC_URI = "git://anongit.freedesktop.org/DeviceKit/DeviceKit;protocol=git \
         file://volatile"
 
 PV = "002+git${SRCREV}"
-PR = "r1"
+PR = "r2"
 SRCREV = "014d168ba4bf40c9bae487bacff8bf2aa054b5f6"
 
 S = "${WORKDIR}/git"
@@ -24,8 +24,6 @@ pkg_postinst_devicekit () {
 	if [ "x$D" != "x" ]; then
 		exit 1
 	fi
-
-	/etc/init.d/populate-volatile.sh update
 
 	DBUSPID=`pidof dbus-daemon`
 

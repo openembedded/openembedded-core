@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
 BUGTRACKER = "http://sourceforge.net/projects/pam/support"
 # PAM allows dual licensed under GPL and BSD
 LICENSE = "GPLv2+ | BSD"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-${PV}.tar.bz2 \
            file://disable_crossbinary.patch \
@@ -36,8 +36,4 @@ do_install() {
 	rm -rf ${D}/var
 	install -d ${D}/etc/default/volatiles
 	install -m 0644 ${WORKDIR}/99_pam ${D}/etc/default/volatiles
-}
-
-pkg_postinst_${PN} () {
-        /etc/init.d/populate-volatile.sh update
 }

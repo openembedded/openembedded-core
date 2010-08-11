@@ -9,8 +9,7 @@ DEPENDS = "expat glib-2.0 virtual/libintl virtual/libx11 libsm"
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
            file://fix-install-daemon.patch; \
-           file://dbus-1.init \
-           file://99_dbus"
+           file://dbus-1.init"
 
 inherit autotools pkgconfig gettext update-rc.d
 
@@ -54,6 +53,10 @@ pkg_postinst_dbus() {
 
 	grep -q netdev: /etc/group || addgroup netdev
 	chmod u+s /usr/libexec/dbus-daemon-launch-helper
+
+	# add volatile after new user/grp are created
+	echo "d messagebus messagebus 0755 /var/run/dbus none" > /etc/default/volatiles/99_dbus
+	/etc/init.d/populate-volatile.sh update
 }
 
 EXTRA_OECONF_X = "--with-x"
@@ -69,9 +72,6 @@ EXTRA_OECONF = "--disable-tests \
 
 do_install() {
 	autotools_do_install
-
-	install -d ${D}/etc/default/volatiles
-	install -m 0644 ${WORKDIR}/99_dbus ${D}/etc/default/volatiles/
 
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/dbus-1.init ${D}${sysconfdir}/init.d/dbus-1

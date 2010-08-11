@@ -8,7 +8,7 @@ DEPENDS = "libnl dbus dbus-glib hal gconf-dbus wireless-tools ppp gnome-common p
 RDEPENDS = "hal wpa-supplicant iproute2 dhcp-client"
 
 PV = "0.7+svnr${SRCREV}"
-PR = "r9"
+PR = "r10"
 
 SRC_URI="svn://svn.gnome.org/svn/NetworkManager/;module=trunk;proto=http \
          file://no-restarts.diff;patch=1;pnum=0 \
@@ -36,13 +36,6 @@ do_install_append () {
 	install -m 0755 ${WORKDIR}/NetworkManager ${D}/etc/init.d/
 	rmdir ${D}/var/run/NetworkManager
 	rmdir ${D}/var/run
-}
-
-pkg_postinst_${PN} () {
-        if [ "x$D" != "x" ]; then
-                exit 1
-        fi
-        /etc/init.d/populate-volatile.sh update
 }
 
 PACKAGES =+ "libnmutil libnmglib"

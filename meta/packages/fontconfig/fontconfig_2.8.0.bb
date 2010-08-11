@@ -11,7 +11,7 @@ SECTION = "libs"
 
 DEPENDS = "expat freetype zlib"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://fix-pkgconfig.patch \
@@ -73,17 +73,9 @@ do_configure_append () {
 
 }
 
-do_install () {
-	autotools_do_install
-}
-
 do_install_append() {
 	install -d ${D}${sysconfdir}/default/volatiles
 	install -m 0644 ${WORKDIR}/97_fontconfig ${D}${sysconfdir}/default/volatiles
 	rmdir ${D}${localstatedir}/cache/fontconfig
 	rmdir ${D}${localstatedir}/cache/
-}
-
-pkg_postinst_hal () {
-	/etc/init.d/populate-volatile.sh update
 }

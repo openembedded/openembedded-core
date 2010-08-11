@@ -13,7 +13,7 @@ RDEPENDS = "python-rpm python-core python-iniparse python-urlgrabber \
 	    python-textutils python-fcntl python-email \
 	    yum-metadata-parser"
 
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "http://yum.baseurl.org/download/3.2/yum-${PV}.tar.gz \
            file://paths.patch;apply=yes \
@@ -39,10 +39,6 @@ do_install_append () {
 	rmdir ${D}${localstatedir}/cache
 	install -d ${D}/etc/default/volatiles
 	install -m 0644 ${WORKDIR}/98_yum ${D}/etc/default/volatiles
-}
-
-pkg_postinst_yum () {
-	/etc/init.d/populate-volatile.sh update
 }
 
 FILES_${PN} += "${libdir}/python* ${datadir}/yum-cli"

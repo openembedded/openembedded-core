@@ -10,7 +10,6 @@ DEPENDS = "virtual/kernel dbus-glib udev util-linux intltool intltool-native exp
 RDEPENDS += "udev hal-info"
 
 SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz \
-           file://99_hal \
            file://20hal"
 
 inherit autotools pkgconfig
@@ -37,8 +36,6 @@ PACKAGE_ARCH = "${@base_contains('MACHINE_FEATURES', 'pci', '${MACHINE_ARCH}', '
 PACKAGE_ARCH_emenlow := "${PACKAGE_ARCH}"
 
 do_install_append() {
-	install -d ${D}/etc/default/volatiles
-	install -m 0644 ${WORKDIR}/99_hal ${D}/etc/default/volatiles
         install -d ${D}/etc/dbus-1/event.d
         install -m 0755 ${WORKDIR}/20hal ${D}/etc/dbus-1/event.d
 }
@@ -53,6 +50,9 @@ pkg_postinst_hal () {
 	grep haldaemon /etc/group || addgroup haldaemon
 	grep haldaemon /etc/passwd || adduser --disabled-password --system --home /var/run/hald --no-create-home haldaemon --ingroup haldaemon -g HAL
 
+	# add volatile after new user/grp are created
+	echo "d root root 0700 /var/run/hald none" > /etc/default/volatiles/99_hal
+	echo "d haldaemon haldaemon 0755 /var/cache/hald none" >> /etc/default/volatiles/99_hal
 	/etc/init.d/populate-volatile.sh update
 
 	DBUSPID=`pidof dbus-daemon`

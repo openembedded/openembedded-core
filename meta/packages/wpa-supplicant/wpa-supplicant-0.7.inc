@@ -67,8 +67,6 @@ pkg_postinst_wpa-supplicant () {
 		exit 1
 	fi
 
-	/etc/init.d/populate-volatile.sh update
-
 	DBUSPID=`pidof dbus-daemon`
 
 	if [ "x$DBUSPID" != "x" ]; then
