@@ -21,9 +21,11 @@ B = "${WORKDIR}/build-${TARGET_SYS}"
 
 EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
 
+EXPAT = "--without-expat"
+
 EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
                 --with-curses --disable-multilib --with-readline --disable-sim \
-                ${GDBPROPREFIX} --with-libelf=${STAGING_DIR_TARGET}"
+                ${GDBPROPREFIX} --with-libelf=${STAGING_DIR_TARGET} ${EXPAT}"
 GDBPROPREFIX = "--program-prefix=''"
 
 do_configure () {

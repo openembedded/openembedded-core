@@ -7,3 +7,4 @@ inherit cross-canadian
 PR = "r0"
 
 GDBPROPREFIX = "--program-prefix='${TARGET_PREFIX}'"
+EXPAT = "--with-expat"
