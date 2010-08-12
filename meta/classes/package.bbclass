@@ -1,6 +1,31 @@
 #
-# General packaging help functions
+# Packaging process
 #
+# Executive summary: This class iterates over the functions listed in PACKAGEFUNCS
+# Taking D and spliting it up into the packages listed in PACKAGES, placing the 
+# resulting output in PKGDEST.
+#
+# There are the following default steps but PACKAGEFUNCS can be extended:
+#
+# a) perform_packagecopy - Copy D into PKGD
+#
+# b) package_do_split_locales - Split out the locale files, updates FILES and PACKAGES
+#
+# c) populate_packages - Split the files in PKGD into separate packages in PKGDEST/<pkgname>
+#    Also triggers the binary stripping code to put files in -dbg packages.
+#
+# d) package_do_shlibs - Look at the shared libraries generated and autotmatically add any 
+#    depenedencies found. Also stores the package name so anyone else using this library 
+#    knows which package to depend on.
+#
+# e) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
+#
+# f) read_shlibdeps - Reads the stored shlibs information into the metadata
+#
+# g) package_depchains - Adds automatic dependencies to -dbg and -dev packages
+#
+# h) emit_pkgdata - saves the packaging data into PKGDATA_DIR for use in later 
+#    packaging steps
 
 inherit packagedata
 
