@@ -324,6 +324,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-makedevs = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-makedevs = "n/a"
 RECIPE_COMMENTS_pn-makedevs = ""
 RECIPE_MAINTAINER_pn-makedevs = "Dongxiao Xu <dongxiao.xu@intel.com>"
+<<<<<<< HEAD:meta/conf/distro/include/private/distro_base_utils_1.inc
 
 RECIPE_STATUS_pn-cwautomacros = "green"
 DEPENDENCY_CHECK_pn-cwautomacros = "not done"
