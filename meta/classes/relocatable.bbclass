@@ -82,7 +82,7 @@ def process_dir (directory, d):
                 os.chmod(fpath, perms)
 
 def rpath_replace (path, d):
-    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
+    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${libexecdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
 
     for bindir in bindirs:
         #bb.note ("Processing directory " + bindir)
