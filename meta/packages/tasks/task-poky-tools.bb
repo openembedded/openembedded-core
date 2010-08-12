@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Tools tasks for Poky"
 LICENSE = "MIT"
-PR = "r3"
+PR = "r4"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -45,8 +45,16 @@ RDEPENDS_task-poky-tools-profile = "\
 #    exmap-console
 #    exmap-server
 
-
-RDEPENDS_append_task-poky-tools-profile_qemux86 = "valgrind"
+# At present we only build lttng-ust on
+# qemux86/qemux86-64/qemuppc/qemumips/emenlow/netbook since upstream liburcu
+# (which is required by lttng-ust) may not build on other platforms, like
+# qemu ARMv5te that poky uses now.
+RDEPENDS_task-poky-tools-profile_append_qemux86 = " valgrind lttng-ust"
+RDEPENDS_task-poky-tools-profile_append_qemux86-64 = " lttng-ust"
+RDEPENDS_task-poky-tools-profile_append_qemuppc = " lttng-ust"
+RDEPENDS_task-poky-tools-profile_append_qemumips = " lttng-ust"
+RDEPENDS_task-poky-tools-profile_append_emenlow = " lttng-ust"
+RDEPENDS_task-poky-tools-profile_append_netbook = " lttng-ust"
 
 RRECOMMENDS_task-poky-tools-profile = "\
     kernel-module-oprofile"
