@@ -1,5 +1,8 @@
 INHIBIT_PACKAGE_STRIP = "1"
 
+# Compute how to get from libexecdir to bindir in python (easier than shell)
+BINRELPATH = "${@oe.path.relative(bb.data.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}", d), bb.data.expand("${STAGING_DIR_NATIVE}${prefix_native}/bin/${MULTIMACH_TARGET_SYS}", d))}"
+
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install-host
 
@@ -12,11 +15,11 @@ do_install () {
 
 	
 	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
-	# found.
+	# found. These need to be relative paths so they work in different locations.
 	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
 	install -d $dest
 	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
-		ln -sf ${STAGING_DIR_NATIVE}${prefix_native}/bin/${MULTIMACH_TARGET_SYS}/${TARGET_PREFIX}$t $dest$t
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
 	done
 
 	# Remove things we don't need but keep share/java
