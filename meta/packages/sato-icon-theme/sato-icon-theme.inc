@@ -14,6 +14,8 @@ FILES_${PN} += "${datadir}"
 
 PACKAGE_ARCH = "all"
 
+EXTRA_OECONF += "--with-iconmap=${STAGING_LIBDIR_NATIVE}/../libexec/icon-name-mapping"
+
 pkg_postinst_${PN} () {
         if [ "x$D" != "x" ]; then
                 exit 1
