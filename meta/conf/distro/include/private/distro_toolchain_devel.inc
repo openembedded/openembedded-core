@@ -94,18 +94,6 @@ RECIPE_NO_OF_PATCHES_pn-lsof="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-lsof="10 months"
 RECIPE_LATEST_RELEASE_DATE_pn-lsof="2010/01/18"
 
-RECIPE_STATUS_pn-lttng-control="green" # upgraded
-RECIPE_LATEST_VERSION_pn-lttng-control="0.87"
-RECIPE_NO_OF_PATCHES_pn-lttng-control="0"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-lttng-control="1 month"
-RECIPE_LATEST_RELEASE_DATE_pn-lttng-control="2010/09/06"
-
-RECIPE_STATUS_pn-lttng-viewer="green" # upgraded
-RECIPE_LATEST_VERSION_pn-lttng-viewer="0.8.84"
-RECIPE_NO_OF_PATCHES_pn-lttng-viewer="0"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-lttng-viewer="2 months"
-RECIPE_LATEST_RELEASE_DATE_pn-lttng-viewer="2007/08/12"
-
 RECIPE_STATUS_pn-make="green" # already at the latest version
 RECIPE_LATEST_VERSION_pn-make="3.81"
 RECIPE_NO_OF_PATCHES_pn-make="1"
