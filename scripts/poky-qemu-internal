@@ -69,13 +69,22 @@ for tap in $POSSIBLE; do
 done
 
 if [ "$TAP" = "" ]; then
-    USER=`id -u`
+    GROUPID=`id -g`
     echo 'Setting up tap interface under sudo'
-    TAP=`sudo $QEMUIFUP $USER`
+    TAP=`sudo $QEMUIFUP $GROUPID`
     LOCKFILE=""
 else
     echo "Using preconfigured tap device '$TAP'"
 fi
+
+release_lock() {
+    if [ "$LOCKFILE" = "" ]; then
+        $QEMUIFDOWN $TAP
+    else
+        echo "Releasing lockfile of preconfigured tap device '$TAP'"
+        rm -f $LOCKFILE
+    fi
+}
 
 KERNEL_NETWORK_CMD="ip=192.168.7.2::192.168.7.1:255.255.255.0"
 QEMU_TAP_CMD="-net tap,vlan=0,ifname=$TAP,script=no,downscript=no"
@@ -108,12 +117,14 @@ esac
 
 if [ "$TYPE" != "nfs" -a ! -f "$HDIMAGE" ]; then
     echo "Error: Image file $HDIMAGE doesn't exist"
+    release_lock
     return
 fi
 
 if [ "$TYPE" = "nfs" ]; then
-    NFS_SERVER=`echo $HDIMAGE | sed 's/^\([^:]*\):.*/\1/'`
+    NFS_SERVER="192.168.7.1"
     NFS_DIR=`echo $HDIMAGE | sed 's/^[^:]*:\(.*\)/\1/'`
+    UNFS_OPTS="nfsvers=2,mountprog=21111,nfsprog=11111,udp"
 fi
 
 if [ "$NFS_SERVER" = "" ]; then
@@ -123,6 +134,7 @@ fi
 
 if [ ! -f "$ZIMAGE" ]; then
     echo "Error: Kernel image file $ZIMAGE doesn't exist"
+    release_lock
     return
 fi
 
@@ -138,9 +150,10 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
     if [ "$TYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $HDIMAGE doesn't exist"
+            release_lock
             return
         fi
-        KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb --no-reboot $QEMU_UI_OPTIONS"
     fi
 	if [ "$MACHINE" = "qemuarmv6" ]; then
@@ -161,9 +174,10 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "$TYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $HDIMAGE doesn't exist."
+            release_lock
             return
         fi
-        KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD $QEMU_UI_OPTIONS"
     fi
 fi
@@ -181,9 +195,10 @@ if [ "$MACHINE" = "qemux86-64" ]; then
         fi
         if [ ! -d "$HDIMAGE" ]; then
             echo "Error: NFS mount point $HDIMAGE doesn't exist."
+            release_lock
             return
         fi
-        KERNCMDLINE="root=/dev/nfs nfsroot=192.168.7.1:$HDIMAGE rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD $QEMU_UI_OPTIONS"
     fi
 fi
@@ -258,11 +273,13 @@ if [ "$MACHINE" = "nokia800-maemo" ]; then
         if [ ! -e "$HDIMAGE.qemuflash" ]; then
             if [ ! -e "$HDIMAGE.initfs" ]; then
                 echo "Error, $HDIMAGE.initfs must exist!"
+                release_lock
                 return
             fi
             if [ ! -e "$HDIMAGE.config" ]; then
                 echo "Error, $HDIMAGE.config must exist!"
                 echo "To generate it, take an n800 and cat /dev/mtdblock1 > $HDIMAGE.config"
+                release_lock
                 return
             fi
             echo "'Flashing' config partition, please wait..."
@@ -280,6 +297,7 @@ fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Error: Unable to support this combination of options"
+    release_lock
     return
 fi
 
@@ -302,6 +320,7 @@ QEMUBIN=`which $QEMU`
 
 if [ ! -x "$QEMUBIN" ]; then
     echo "Error: No QEMU binary '$QEMU' could be found."
+    release_lock
     return
 fi
 
@@ -310,6 +329,7 @@ function _quit() {
         #echo kill `cat $PIDFILE`
         kill `cat $PIDFILE`
     fi
+    release_lock
     return
 }
 
@@ -326,18 +346,11 @@ else
     echo "Warning: distccd not present, no distcc support loaded."
 fi
 
-
-
 echo "Running $QEMU..."
 echo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE"
 $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE" || /bin/true
 
-if [ "$LOCKFILE" = "" ]; then
-    $QEMUIFDOWN $TAP
-else
-    echo "Releasing preconfigured tap device '$TAP'"
-    rm -f $LOCKFILE
-fi
+release_lock
 
 trap - INT TERM QUIT
 return
