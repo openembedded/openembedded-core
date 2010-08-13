@@ -110,7 +110,7 @@ RDEPENDS_task-poky-dev-utils = "\
 RDEPENDS_task-poky-initscripts = "\
     initscripts \
     sysvinit \
-#    ethtool \
+    ethtool \
 #    mingetty \
 #    sysklogd \
     "
