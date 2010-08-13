@@ -105,7 +105,7 @@ class Git(Fetch):
 
         os.chdir(ud.clonedir)
         # Remove all but the .git directory
-        if not self._contains_ref(ud.tag, d):
+        if not self._contains_ref(ud.tag, d) or 'fullclone' in ud.parm:
             runfetchcmd("rm * -Rf", d)
             runfetchcmd("%s fetch %s://%s%s%s %s" % (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.branch), d)
             runfetchcmd("%s fetch --tags %s://%s%s%s" % (ud.basecmd, ud.proto, username, ud.host, ud.path), d)
