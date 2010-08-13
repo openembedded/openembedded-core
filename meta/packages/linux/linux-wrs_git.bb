@@ -5,12 +5,14 @@ LICENSE = "GPL"
 # Set this to 'preempt_rt' in the local.conf if you want a real time kernel
 LINUX_KERNEL_TYPE ?= standard
 DEPENDS = "kern-tools-native"
+SRCREV_FORMAT = "meta_machine"
 PV = "2.6.34+git${SRCPV}"
 
 # To use a staged, on-disk bare clone of a Wind River Kernel, use a 
 # variant of the below
 # SRC_URI = "git://///path/to/kernel/default_kernel.git;fullclone=1"
-SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${WRMACHINE}-${LINUX_KERNEL_TYPE}"
+SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${WRMACHINE}-${LINUX_KERNEL_TYPE};name=machine \
+           git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
 
 
 WRMACHINE = "${MACHINE}"
