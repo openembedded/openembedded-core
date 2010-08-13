@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# Find a native sysroot to use - either from an in-tree Poky build or
+# from a toolchain installation in /opt/poky. It then sets the variables
+# $NATIVE_SYSROOT_DIR to the sysroot's base directory, $PSEUDO to the
+# path of the pseudo binary, and $SYSROOT_MODE is set to "in-tree" or
+# "toolchain".
+#
+# This script is intended to be run within other scripts by source'ing
+# it, e.g:
+#
+# SYSROOT_SETUP_SCRIPT=`which poky-find-native-sysroot`
+# . $SYSROOT_SETUP_SCRIPT
+#
+# This script will terminate execution of your calling program unless
+# you set a variable $SKIP_STRICT_SYSROOT_CHECK to a non-empty string
+# beforehand.
+#
+# Copyright (c) 2010 Intel Corp.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+BITBAKE=`which bitbake`
+if [ -z "$BITBAKE" ]; then
+    SYSROOT_MODE="toolchain"
+    NATIVE_SYSROOT_DIR=`find /opt/poky -name "tunctl" | sed 's/\/usr\/bin\/tunctl//'`
+else
+    SYSROOT_MODE="in-tree"
+    if [ "$UID" = "0" ]; then
+        # Root cannot run bitbake unless sanity checking is disabled
+        if [ ! -d "./conf" ]; then
+            echo "Error: root cannot run bitbake by default, and I cannot find a ./conf directory to be able to disable sanity checking"
+            exit 1
+        fi
+        touch conf/sanity.conf
+        NATIVE_SYSROOT_DIR=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
+        rm -f conf/sanity.conf
+    else
+        NATIVE_SYSROOT_DIR=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
+    fi
+fi
+
+if [ -z "$NATIVE_SYSROOT_DIR" ]; then
+    echo "Error: Unable to locate your native sysroot."
+    echo "Did you forget to source the Poky environment script?"
+
+    if [ -z "$SKIP_STRICT_SYSROOT_CHECK" ]; then
+        exit 1
+    fi
+fi
+
+# Set up pseudo command
+if [ ! -e "$NATIVE_SYSROOT_DIR/usr/bin/pseudo" ]; then
+    echo "Error: Unable to find pseudo binary in $NATIVE_SYSROOT_DIR/usr/bin/"
+
+    if [ "$SYSROT_MODE" = "in-tree" ]; then
+        echo "Have you run 'bitbake pseudo-native'?"
+    else
+        echo "This shouldn't happen - something is wrong with your toolchain installation"
+    fi
+
+    if [ -z "$SKIP_STRICT_SYSROOT_CHECK" ]; then
+        exit 1
+    fi
+fi
+PSEUDO="$NATIVE_SYSROOT_DIR/usr/bin/pseudo"
