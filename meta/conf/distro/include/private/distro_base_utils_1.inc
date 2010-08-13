@@ -324,7 +324,6 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-makedevs = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-makedevs = "n/a"
 RECIPE_COMMENTS_pn-makedevs = ""
 RECIPE_MAINTAINER_pn-makedevs = "Dongxiao Xu <dongxiao.xu@intel.com>"
-<<<<<<< HEAD:meta/conf/distro/include/private/distro_base_utils_1.inc
 
 RECIPE_STATUS_pn-cwautomacros = "green"
 DEPENDENCY_CHECK_pn-cwautomacros = "not done"
@@ -333,6 +332,7 @@ RECIPE_INTEL_SECTION_pn-cwautomacros = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-cwautomacros = "6 months"
 RECIPE_LATEST_RELEASE_DATE_pn-cwautomacros = "06/2009"
 RECIPE_COMMENTS_pn-cwautomacros = ""
+RECIPE_MAINTAINER_pn-cwautomacros = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-which = "green"
 DEPENDENCY_CHECK_pn-which = "not done"
@@ -341,6 +341,7 @@ RECIPE_INTEL_SECTION_pn-which = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-which = "7 months"
 RECIPE_LATEST_RELEASE_DATE_pn-which = "08/2008"
 RECIPE_COMMENTS_pn-which = ""
+RECIPE_MAINTAINER_pn-which = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-quota = "green"
 DEPENDENCY_CHECK_pn-quota = "not done"
@@ -349,6 +350,7 @@ RECIPE_INTEL_SECTION_pn-quota = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-quota = "10 months"
 RECIPE_LATEST_RELEASE_DATE_pn-quota = "01/2009"
 RECIPE_COMMENTS_pn-quota = ""
+RECIPE_MAINTAINER_pn-quota = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gzip = "green"
 RECIPE_MAINTAINER_pn-gzip = "Kevin Tian <kevin.tian@intel.com>"
@@ -412,14 +414,6 @@ RECIPE_LATEST_VERSION_pn-pax = "20090728-1"
 
 
 
-
-RECIPE_STATUS_pn-quota = "red"
-RECIPE_MAINTAINER_pn-quota = "Dongxiao Xu <dongxiao.xu@intel.com>"
-RECIPE_LATEST_VERSION_pn-quota = "4.00~pre1-4"
-
-RECIPE_STATUS_pn-which = "red"
-RECIPE_MAINTAINER_pn-which = "Dongxiao Xu <dongxiao.xu@intel.com>"
-RECIPE_LATEST_VERSION_pn-which = "n/a"
 
 
 
