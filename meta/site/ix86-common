@@ -17,7 +17,10 @@ ac_cv_sizeof_void_p=${ac_cv_sizeof_void_p=4}
 ac_cv_sizeof_long_p=${ac_cv_sizeof_long_p=4}
 ac_cv_sizeof_float=${ac_cv_sizeof_float=4}
 ac_cv_sizeof_off_t=${ac_cv_sizeof_off_t=4}
-
+ac_cv_sizeof_uid_t=${ac_cv_sizeof_uid_t=4}
+ac_cv_sizeof_gid_t=${ac_cv_sizeof_gid_t=4}
+ac_cv_sizeof_ino_t=${ac_cv_sizeof_ino_t=4}
+ac_cv_sizeof_dev_t=${ac_cv_sizeof_dev_t=8}
 ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
 ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
 ac_cv_func_lstat_dereferences_slashed_symlink=${ac_cv_func_lstat_dereferences_slashed_symlink=yes}
@@ -274,3 +277,8 @@ moz_cv_size_of_JS_BYTES_PER_DOUBLE=8
 
 #ofono
 ac_cv_lib_c_signalfd=${ac_cv_lib_c_signalfd=yes}
+
+#unfs-server
+nfsd_cv_broken_setfsuid=${nfsd_cv_broken_setfsuid=0}
+nfsd_cv_func_statfs=${nfsd_cv_func_statfs=statfs2_bsize}
+nfsd_cv_bsd_signals=${nfsd_cv_bsd_signals=yes}

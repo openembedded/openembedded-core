@@ -18,6 +18,8 @@ RDEPENDS_${PN} = "\
     pkgconfig-nativesdk \
     qemu-nativesdk \
     qemu-helper-nativesdk \
+    pseudo-nativesdk \
+    unfs-server-nativesdk \
     opkg-nativesdk \
     "
 

@@ -32,4 +32,4 @@ do_install_append () {
 	oe_libinstall -so -C shlib libreadline ${D}${libdir}
 }
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

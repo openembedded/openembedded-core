@@ -1,0 +1,20 @@
+# Remove libwrap linkage
+# Patch origin: Wind River
+
+---
+ configure.in |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/configure.in
++++ b/configure.in
+@@ -86,8 +86,8 @@ AC_AUTHDES_GETUCRED
+ AC_BROKEN_SETFSUID
+ AC_MOUNTLIST
+ AC_FSUSAGE
+-AC_CHECK_LIB(wrap, main)
+-AC_LIBWRAP_BUG
++dnl AC_CHECK_LIB(wrap, main)
++dnl AC_LIBWRAP_BUG
+ AC_BSD_SIGNALS
+ 
+ dnl **************************************************************
