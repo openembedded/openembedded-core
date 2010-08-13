@@ -9,7 +9,6 @@ PV = "0.0+git${SRCPV}"
 PR = "r14"
 
 SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
-           file://constfix.patch \
            file://static_sqlite.patch"
 
 FILES_${PN} = "${libdir}/libpseudo.so ${bindir}/* ${localstatedir}/pseudo"
