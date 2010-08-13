@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Copyright (c) 2010 Intel Corp.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+function usage() {
+	echo "Usage: $0 {machine-type} <kernel> <rootfs-dir>"
+	echo "Where <rootfs-dir> is a rootfs directory that was created using the poky-extract-sdk utility"
+	echo "machine-type is optional if the kernel file is named according to Poky conventions"
+}
+
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+	usage
+	exit 1
+fi
+
+if [ $# -eq 3 ]; then
+	QEMUARCH=$1
+	ZIMAGE=$2
+	SDK_ROOTFS_DIR=$(cd "$3" && pwd)
+else
+	ZIMAGE=$1
+	SDK_ROOTFS_DIR=$(cd "$2" && pwd)
+
+	QEMUARCH=`basename $ZIMAGE | sed -r -e 's#.*-([a-z]+[0-9]*)-?[0-9]*..*#\1#'`
+	if [ -z "$QEMUARCH" ]; then
+		echo "Error: Unable to determine machinetype from filename '$ZIMAGE'"
+		usage
+		exit 1
+	fi
+fi
+
+if [ ! -e "$ZIMAGE" ]; then
+	echo "Error: kernel file '$ZIMAGE' does not exist"
+	usage
+	exit 1
+fi
+
+QEMU_INTERNAL_SCRIPT=`which poky-qemu-internal`
+if [ -z "$QEMU_INTERNAL_SCRIPT" ]; then
+	echo "Error: Unable to find the poky-qemu-internal script"
+	exit 1
+fi
+
+SYSROOT_SETUP_SCRIPT=`which poky-find-native-sysroot`
+if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
+	echo "Error: Unable to find the poky-find-native-sysroot script"
+	echo "Did you forget to source your Poky environment script?"
+	exit 1
+fi
+. $SYSROOT_SETUP_SCRIPT
+
+PSEUDO_LOCALSTATEDIR=~/.poky-sdk/pseudo
+export PSEUDO_LOCALSTATEDIR
+
+# Start the userspace NFS server
+echo "poky-export-rootfs restart $SDK_ROOTFS_DIR"
+poky-export-rootfs restart $SDK_ROOTFS_DIR
+if [ $? != 0 ]; then
+	exit 1
+fi
+
+# Run QEMU
+MACHINE=$QEMUARCH
+TYPE="nfs"
+HDIMAGE=$SDK_ROOTFS_DIR
+CROSSPATH=$NATIVE_SYSROOT_DIR/usr/bin
+. $QEMU_INTERNAL_SCRIPT
+
+# Cleanup
+echo "poky-export-rootfs stop $SDK_ROOTFS_DIR"
+poky-export-rootfs stop $SDK_ROOTFS_DIR
+
+exit 0
