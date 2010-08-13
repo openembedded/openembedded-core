@@ -13,6 +13,10 @@ PV = "2.6.34+git${SRCPV}"
 # SRC_URI = "git://///path/to/kernel/default_kernel.git;fullclone=1"
 SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${WRMACHINE}-${LINUX_KERNEL_TYPE};name=machine \
            git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
+           
+SRC_URI_append_qemux86-64 = "\
+                             file://connect-size.patch \
+                             file://qemux86-64.cfg"
 
 
 WRMACHINE = "${MACHINE}"
@@ -22,11 +26,11 @@ WRMACHINE_qemuppc  = "qemu_ppc32"
 WRMACHINE_qemumips = "mti_malta32_be"
 WRMACHINE_qemuarm  = "arm_versatile_926ejs"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips)"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
 
 LINUX_VERSION = "v2.6.34"
 LINUX_VERSION_EXTENSION = "-wr-${LINUX_KERNEL_TYPE}"
-PR = "r5"
+PR = "r6"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
