@@ -521,10 +521,11 @@ class FetchData(object):
                 # Horrible...
                 bb.data.delVar("ISHOULDNEVEREXIST", d)
 
-        # Note: These files should always be in DL_DIR whereas localpath may not be.
-        basepath = bb.data.expand("${DL_DIR}/%s" % os.path.basename(self.localpath), d)
-        self.md5 = basepath + '.md5'
-        self.lockfile = basepath + '.lock'
+        if self.localpath is not None:
+            # Note: These files should always be in DL_DIR whereas localpath may not be.
+            basepath = bb.data.expand("${DL_DIR}/%s" % os.path.basename(self.localpath), d)
+            self.md5 = basepath + '.md5'
+            self.lockfile = basepath + '.lock'
 
 
 class Fetch(object):

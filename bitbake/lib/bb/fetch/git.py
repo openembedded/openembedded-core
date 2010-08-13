@@ -79,6 +79,10 @@ class Git(Fetch):
 
         ud.basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
 
+        if 'noclone' in ud.parm:
+            ud.localfile = None
+            return None
+
         return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
 
     def go(self, loc, ud, d):
