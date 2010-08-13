@@ -1,10 +1,10 @@
-Index: git-1.5.2.3/configure.ac
+Index: git-1.7.2.1/configure.ac
 ===================================================================
---- git-1.5.2.3.orig/configure.ac	2007-07-02 10:11:39.000000000 +0200
-+++ git-1.5.2.3/configure.ac	2007-08-04 00:02:13.000000000 +0200
-@@ -235,7 +235,8 @@
+--- git-1.7.2.1.orig/configure.ac	2010-07-28 18:03:43.000000000 +0100
++++ git-1.7.2.1/configure.ac	2010-08-13 14:54:29.181971250 +0100
+@@ -697,7 +697,8 @@
  		else if (strcmp(buf, "12345"))
- 		  exit(2);]])],
+ 		  return 2;]])],
  	[ac_cv_c_c99_format=yes],
 -	[ac_cv_c_c99_format=no])
 +	[ac_cv_c_c99_format=no],
@@ -12,15 +12,3 @@ Index: git-1.5.2.3/configure.ac
  ])
  if test $ac_cv_c_c99_format = no; then
  	NO_C99_FORMAT=YesPlease
-Index: git-1.5.2.3/config.mak.in
-===================================================================
---- git-1.5.2.3.orig/config.mak.in	2007-07-02 10:11:39.000000000 +0200
-+++ git-1.5.2.3/config.mak.in	2007-08-04 00:07:04.000000000 +0200
-@@ -3,6 +3,7 @@
- 
- CC = @CC@
- CFLAGS = @CFLAGS@
-+LDFLAGS = @LDFLAGS@
- AR = @AR@
- TAR = @TAR@
- #INSTALL = @INSTALL@		# needs install-sh or install.sh in sources
