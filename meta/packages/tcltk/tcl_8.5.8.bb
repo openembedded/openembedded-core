@@ -2,6 +2,7 @@ DESCRIPTION = "Tool Command Language"
 LICENSE = "tcl"
 SECTION = "devel/tcltk"
 HOMEPAGE = "http://tcl.sourceforge.net"
+DEPENDS = "tcl-native"
 LIC_CHKSUM_FILES = "file://../license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
     file://../compat/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
     file://../library/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
@@ -10,15 +11,17 @@ LIC_CHKSUM_FILES = "file://../license.terms;md5=7b4d3c71b2d9a8c1b373609867975570
     file://../win/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
     "
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "\
-  ${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
-  file://tcl-add-soname.patch"
+SRC_URI = " ${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
+	  file://tcl-add-soname.patch \
+	  file://fix_non_native_build_issue.patch"
 
 S = "${WORKDIR}/tcl${PV}/unix"
 
 inherit autotools
+
+DEPENDS_virtclass-native = ""
 
 EXTRA_OECONF = "--enable-threads"
 
