@@ -1,8 +1,7 @@
 DESCRIPTION = "Meta package for ensuring the build directory contains all appropriate toolchain packages for using an IDE"
 LICENSE = "MIT"
-DEPENDS = "virtual/libc"
-RDEPENDS = "task-sdk-host"
-PR = "r0"
+DEPENDS = "virtual/libc gdb-cross"
+PR = "r1"
 
 inherit meta toolchain-scripts
 
