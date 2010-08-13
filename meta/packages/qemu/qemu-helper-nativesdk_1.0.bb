@@ -11,6 +11,7 @@ SRC_URI = "file://${POKYBASE}/scripts/poky-qemu \
            file://${POKYBASE}/scripts/poky-qemu-ifup \
            file://${POKYBASE}/scripts/poky-qemu-ifdown \
            file://${POKYBASE}/scripts/poky-find-native-sysroot \
+           file://${POKYBASE}/scripts/poky-extract-sdk \
            file://tunctl.c \
            file://raw2flash.c \
           "
