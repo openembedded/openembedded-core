@@ -5,7 +5,7 @@
 #
 
 valid_archs = "alpha cris ia64 \
-               x86_64 i386 x86 \
+               i386 x86 \
                m68knommu m68k ppc powerpc ppc64  \
 	       sparc sparc64 \
                arm  arm26 \
@@ -19,13 +19,13 @@ def map_kernel_arch(a, d):
 
 	valid_archs = bb.data.getVar('valid_archs', d, 1).split()
 
-	if   re.match('(i.86|athlon)$', a):	return 'x86'
-	elif re.match('arm26$', a):		return 'arm26'
-	elif re.match('armeb$', a):		return 'arm'
-	elif re.match('mipsel$', a):		return 'mips'
-	elif re.match('sh(3|4)$', a):		return 'sh'
-	elif re.match('bfin', a):               return 'blackfin'
-        elif a in valid_archs:			return a
+	if   re.match('(i.86|athlon|x86.64)$', a):	return 'x86'
+	elif re.match('arm26$', a):		        return 'arm26'
+	elif re.match('armeb$', a):		        return 'arm'
+	elif re.match('mipsel$', a):		        return 'mips'
+	elif re.match('sh(3|4)$', a):		        return 'sh'
+	elif re.match('bfin', a):                       return 'blackfin'
+        elif a in valid_archs:			        return a
 	else:
 		bb.error("cannot map '%s' to a linux kernel architecture" % a)
 

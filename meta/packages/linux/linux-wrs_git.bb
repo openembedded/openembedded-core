@@ -37,7 +37,7 @@ do_patch() {
 	    defconfig=${WORKDIR}/defconfig
 	fi
 
-	createme ${TARGET_ARCH} ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${defconfig}
+	createme ${ARCH} ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${defconfig}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not create ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
