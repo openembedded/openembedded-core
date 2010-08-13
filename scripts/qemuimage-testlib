@@ -125,6 +125,71 @@ Test_Check_IP_UP()
 	fi
 }
 
+# function to find kernel/rootfs image
+Test_Find_Image()
+{
+	where=""
+	kernel=""
+	arch=""
+	target=""
+	extension=""
+	rootfs=""
+
+	while getopts "l:k:a:t:" Option
+	do
+		case $Option in
+			l) where="$OPTARG"
+			   ;;
+			k) kernel="$OPTARG"
+			   extension="bin"
+			   ;;
+			a) arch="$OPTARG"
+			   ;;
+			t) target="$OPTARG"
+			   extension="ext3"
+			   ;;
+			*) echo "invalid option: -$Option" && return 1
+			   ;;
+		 esac
+	done
+
+	if [ ! -z $kernel ]; then
+		if [ -L ${where}/${kernel}-${arch}.${extension} ]; then
+			echo ${where}/${kernel}-${arch}.${extension}
+			return 0
+		else
+			for i in `dir ${where}`
+			do
+				echo $i | grep -q "${kernel}.*${arch}.*\.${extension}"
+				if [ $? -eq 0 ]; then
+					echo ${where}/${i}
+					return 0
+				fi
+			done
+			return 1
+		fi
+	fi
+
+	if [ ! -z $target ]; then
+		if [ -L ${where}/${target}-${arch}.${extension} ]; then
+			rootfs=`readlink -f ${where}/${target}-${arch}.${extension}`
+			echo ${rootfs}
+			return 0
+		else
+			for i in `dir ${where}`
+			do
+				echo $i | grep -q "${target}-${arch}.*\.${extension}"
+				if [ $? -eq 0 ]; then
+					echo ${where}/${i}
+					return 0
+				fi
+			done
+			return 1
+		fi
+	fi
+	return 1
+}
+
 # function to check if qemu and its network
 Test_Create_Qemu()
 {
@@ -132,8 +197,6 @@ Test_Create_Qemu()
 	local up_time=0
 	local ip_addr=$1
 	local timeout=$2
-	local kernel=""
-	local rootfs=""
 
 	which poky-qemu
 	if [ $? -eq 0 ]; then
@@ -143,13 +206,15 @@ Test_Create_Qemu()
 		exit 1
 	fi
 	
-	if [ "$QEMUARCH" = "qemux86" ]; then
-		KERNEL=${DEPLOY_DIR}/images/bzImage-${QEMUARCH}.bin
-	elif [ "$QEMUARCH" = "qemuarm" -o "$QEMUARCH" = "spitz" -o "$QEMUARCH" = "borzoi" -o "$QEMUARCH" = "akita" -o "$QEMUARCH" = "nokia800" ]; then
-		KERNEL=${DEPLOY_DIR}/images/zImage-${QEMUARCH}.bin
+	if [ "$QEMUARCH" = "qemux86" -o "$QEMUARCH" = "qemux86-64" ]; then
+		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k bzImage -a ${QEMUARCH})
+	elif [ "$QEMUARCH" = "qemuarm" -o "$QEMUARCH" = "spitz" -o "$QEMUARCH" = "borzoi" -o "$QEMUARCH" = "akita" -o "$QEMUARCH" = "nokia800" -o "$QEMUARCH" = "qemuppc" ]; then
+		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k zImage -a ${QEMUARCH})
+	elif [ "$QEMUARCH" = "qemumips" ]; then
+		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k vmlinux -a ${QEMUARCH})
 	fi
 	
-	ROOTFS_IMAGE=`readlink -f ${DEPLOY_DIR}/images/${QEMUTARGET}-${QEMUARCH}.ext3`
+	ROOTFS_IMAGE=$(Test_Find_Image -l ${DEPLOY_DIR}/images -t ${QEMUTARGET} -a ${QEMUARCH})
 	TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-test.ext3"
 	
 	CP=`which cp`
