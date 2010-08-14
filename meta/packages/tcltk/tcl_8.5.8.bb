@@ -11,11 +11,15 @@ LIC_CHKSUM_FILES = "file://../license.terms;md5=7b4d3c71b2d9a8c1b373609867975570
     file://../win/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
     "
 
-PR = "r1"
+PR = "r2"
 
-SRC_URI = " ${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
-	  file://tcl-add-soname.patch \
-	  file://fix_non_native_build_issue.patch"
+BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
+                file://tcl-add-soname.patch"
+
+SRC_URI = "${BASE_SRC_URI} \
+	   file://fix_non_native_build_issue.patch"
+
+SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 
 S = "${WORKDIR}/tcl${PV}/unix"
 
