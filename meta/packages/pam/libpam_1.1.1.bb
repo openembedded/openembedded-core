@@ -5,7 +5,7 @@ BUGTRACKER = "http://sourceforge.net/projects/pam/support"
 # /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time 
 # libpam-runtime-1.0.1 is GPLv2+), by openembedded
 LICENSE = "GPLv2+ | BSD"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "bison flex"
 RDEPENDS_${PN}-runtime = "libpam pam-plugin-deny pam-plugin-permit pam-plugin-warn pam-plugin-unix"
@@ -70,8 +70,4 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/pam.d/     
 	install -m 0644 ${WORKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
-}
-
-pkg_postinst_${PN} () {
-        /etc/init.d/populate-volatile.sh update
 }
