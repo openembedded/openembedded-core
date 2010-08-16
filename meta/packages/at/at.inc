@@ -6,8 +6,6 @@ RREPLACES_${PN} = "atd"
 
 inherit autotools
 
-export LIBS = "-L${STAGING_LIBDIR}"
-
 do_install () {
     oe_runmake "IROOT=${D}" install
 }
