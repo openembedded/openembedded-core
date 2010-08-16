@@ -14,7 +14,7 @@
 [ -x /sbin/udevd ] || exit 1
 
 if [ ! -e /etc/dev.tar ]; then
-	(cd /; tar cf /etc/dev.tar /dev)
+	(cd /; tar cf /etc/dev.tar dev)
 fi
 
 exit 0
