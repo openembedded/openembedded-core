@@ -437,6 +437,7 @@ do_build[func] = "1"
 python () {
     import exceptions
 
+    pn = bb.data.getVar('PN', d, 1)
     # If we're building a target package we need to use fakeroot (pseudo)
     # in order to capture permissions, owners, groups and special files
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
@@ -464,7 +465,18 @@ python () {
             if this_machine and not re.match(need_machine, this_machine):
                 raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
 
-    pn = bb.data.getVar('PN', d, 1)
+
+        dont_want_license = bb.data.getVar('INCOMPATIBLE_LICENSE', d, 1)
+        if dont_want_license and not pn.endswith("-native") and not pn.endswith("-cross") and not pn.endswith("-cross-initial") and not pn.endswith("-cross-intermediate"):
+            gplv3_hosttools_whitelist = (bb.data.getVar("GPLv3_HOSTTOOLS_WHITELIST", d, 1) or "").split()
+            gplv3_lgplv2_whitelist = (bb.data.getVar("GPLv3_LGPLv2_WHITELIST", d, 1) or "").split()
+            gplv3_whitelist = (bb.data.getVar("GPLv3_WHITELIST", d, 1) or "").split()
+            if pn not in gplv3_hosttools_whitelist and pn not in gplv3_lgplv2_whitelist and pn not in gplv3_whitelist:
+                import re
+                this_license = bb.data.getVar('LICENSE', d, 1)
+                if this_license and re.search(dont_want_license, this_license):
+                    bb.note("SKIPPING %s because it's %s" % (pn, this_license))
+                    raise bb.parse.SkipPackage("incompatible with license %s" % this_license)
 
     # OBSOLETE in bitbake 1.7.4
     srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
