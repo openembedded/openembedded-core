@@ -44,12 +44,6 @@ class FuncFailed(Exception):
     Second paramter is a logfile (optional)
     """
 
-class EventException(Exception):
-    """Exception which is associated with an Event."""
-
-    def __init__(self, msg, event):
-        self.args = msg, event
-
 class TaskBase(event.Event):
     """Base class for task events"""
 
@@ -80,7 +74,7 @@ class TaskFailed(TaskBase):
         self.msg = msg
         TaskBase.__init__(self, t, d)
 
-class InvalidTask(TaskBase):
+class TaskInvalid(TaskBase):
     """Invalid Task"""
 
 # functions
@@ -94,7 +88,7 @@ def exec_func(func, d, dirs = None):
         return
 
     flags = data.getVarFlags(func, d)
-    for item in ['deps', 'check', 'interactive', 'python', 'cleandirs', 'dirs', 'lockfiles', 'fakeroot']:
+    for item in ['deps', 'check', 'interactive', 'python', 'cleandirs', 'dirs', 'lockfiles', 'fakeroot', 'task']:
         if not item in flags:
             flags[item] = None
 
@@ -138,7 +132,7 @@ def exec_func(func, d, dirs = None):
     # Handle logfiles
     si = file('/dev/null', 'r')
     try:
-        if bb.msg.debug_level['default'] > 0 or ispython:
+        if bb.msg.debug_level['default'] > 0 and not ispython:
             so = os.popen("tee \"%s\"" % logfile, "w")
         else:
             so = file(logfile, 'w')
@@ -157,6 +151,8 @@ def exec_func(func, d, dirs = None):
     os.dup2(si.fileno(), osi[1])
     os.dup2(so.fileno(), oso[1])
     os.dup2(se.fileno(), ose[1])
+
+    bb.event.useStdout = True
 
     locks = []
     lockfiles = flags['lockfiles']
@@ -182,6 +178,8 @@ def exec_func(func, d, dirs = None):
         # Unlock any lockfiles
         for lock in locks:
             bb.utils.unlockfile(lock)
+
+        bb.event.useStdout = False
 
         # Restore the backup fds
         os.dup2(osi[0], osi[1])
@@ -221,6 +219,7 @@ def exec_func_python(func, d, runfile, logfile):
             raise
         raise FuncFailed("Function %s failed" % func, logfile)
 
+
 def exec_func_shell(func, d, runfile, logfile, flags):
     """Execute a shell BB 'function' Returns true if execution was successful.
 
@@ -251,12 +250,11 @@ def exec_func_shell(func, d, runfile, logfile, flags):
         raise FuncFailed("Function not specified for exec_func_shell")
 
     # execute function
-    if flags['fakeroot']:
-        maybe_fakeroot = "PATH=\"%s\" %s " % (bb.data.getVar("PATH", d, 1), bb.data.getVar("FAKEROOT", d, 1) or "fakeroot")
-    else:
-        maybe_fakeroot = ''
+    if flags['fakeroot'] and not flags['task']:
+        bb.fatal("Function %s specifies fakeroot but isn't a task?!" % func)
+
     lang_environment = "LC_ALL=C "
-    ret = os.system('%s%ssh -e %s' % (lang_environment, maybe_fakeroot, runfile))
+    ret = os.system('%ssh -e %s' % (lang_environment, runfile))
 
     if ret == 0:
         return
@@ -273,7 +271,13 @@ def exec_task(task, d):
 
     # Check whther this is a valid task
     if not data.getVarFlag(task, 'task', d):
-        raise EventException("No such task", InvalidTask(task, d))
+        event.fire(TaskInvalid(task, d), d)
+        bb.msg.error(bb.msg.domain.Build, "No such task: %s" % task)
+        return 1
+
+    quieterr = False
+    if d.getVarFlag(task, "quieterrors") is not None:
+         quieterr = True
 
     try:
         bb.msg.debug(1, bb.msg.domain.Build, "Executing task %s" % task)
@@ -292,6 +296,11 @@ def exec_task(task, d):
         for func in postfuncs:
             exec_func(func, localdata)
         event.fire(TaskSucceeded(task, localdata), localdata)
+
+        # make stamp, or cause event and raise exception
+        if not data.getVarFlag(task, 'nostamp', d) and not data.getVarFlag(task, 'selfstamp', d):
+            make_stamp(task, d)
+
     except FuncFailed as message:
         # Try to extract the optional logfile
         try:
@@ -299,14 +308,22 @@ def exec_task(task, d):
         except:
             logfile = None
             msg = message
-        bb.msg.note(1, bb.msg.domain.Build, "Task failed: %s" % message )
-        failedevent = TaskFailed(msg, logfile, task, d)
-        event.fire(failedevent, d)
-        raise EventException("Function failed in task: %s" % message, failedevent)
+        if not quieterr:
+            bb.msg.error(bb.msg.domain.Build, "Task failed: %s" % message )
+            failedevent = TaskFailed(msg, logfile, task, d)
+            event.fire(failedevent, d)
+        return 1
 
-    # make stamp, or cause event and raise exception
-    if not data.getVarFlag(task, 'nostamp', d) and not data.getVarFlag(task, 'selfstamp', d):
-        make_stamp(task, d)
+    except Exception:
+        from traceback import format_exc
+        if not quieterr:
+            bb.msg.error(bb.msg.domain.Build, "Build of %s failed" % (task))
+            bb.msg.error(bb.msg.domain.Build, format_exc())
+            failedevent = TaskFailed("Task Failed", None, task, d)
+            event.fire(failedevent, d)
+        return 1
+
+    return 0
 
 def extract_stamp(d, fn):
     """
@@ -380,6 +397,7 @@ def add_tasks(tasklist, d):
         getTask('rdeptask')
         getTask('recrdeptask')
         getTask('nostamp')
+        getTask('fakeroot')
         task_deps['parents'][task] = []
         for dep in flags['deps']:
             dep = data.expand(dep, d)

@@ -229,6 +229,15 @@ def emit_env(o=sys.__stdout__, d = init(), all=False):
         for key in keys:
             emit_var(key, o, d, all and not isfunc) and o.write('\n')
 
+def export_vars(d):
+    keys = (key for key in d.keys() if d.getVarFlag(key, "export"))
+    ret = {}
+    for k in keys:
+        v = d.getVar(k, True)
+        if v: 
+            ret[k] = v
+    return ret
+
 def update_data(d):
     """Performs final steps upon the datastore, including application of overrides"""
     d.finalize()

@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import warnings
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
+
+class BBConfiguration(object):
+    """
+    Manages build options and configurations for one run
+    """
+
+    def __init__(self):
+        setattr(self, "data", {})
+        setattr(self, "file", [])
+        setattr(self, "cmd", None)
+
+_warnings_showwarning = warnings.showwarning
+def _showwarning(message, category, filename, lineno, file=None, line=None):
+    """Display python warning messages using bb.msg"""
+    if file is not None:
+        if _warnings_showwarning is not None:
+            _warnings_showwarning(message, category, filename, lineno, file, line)
+    else:
+        s = warnings.formatwarning(message, category, filename, lineno)
+        s = s.split("\n")[0]
+        bb.msg.warn(None, s)
+
+warnings.showwarning = _showwarning
+warnings.simplefilter("ignore", DeprecationWarning)
+
+import bb.event
+
+# Need to map our I/O correctly. Currently stdout is a pipe to 
+# the server expecting events. We save this and map stdout to stderr.
+
+eventfd = os.dup(sys.stdout.fileno())
+bb.event.worker_pipe = os.fdopen(eventfd, 'w', 0)
+# Replace those fds with our own
+os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
+
+# Save out the PID so that the event can include it the
+# events
+bb.event.worker_pid = os.getpid()
+bb.event.usestdout = False
+
+
+import bb.cooker
+
+cooker = bb.cooker.BBCooker(BBConfiguration(), None)
+buildfile = sys.argv[1]
+taskname = sys.argv[2]
+
+cooker.parseConfiguration()
+
+cooker.bb_cache = bb.cache.init(cooker)
+cooker.status = bb.cache.CacheData()
+
+(fn, cls) = cooker.bb_cache.virtualfn2realfn(buildfile)
+buildfile = cooker.matchFile(fn)
+fn = cooker.bb_cache.realfn2virtual(buildfile, cls)
+
+cooker.buildSetVars()
+
+# Load data into the cache for fn and parse the loaded cache data
+the_data = cooker.bb_cache.loadDataFull(fn, cooker.get_file_appends(fn), cooker.configuration.data)
+cooker.bb_cache.setData(fn, buildfile, the_data)
+cooker.bb_cache.handle_data(fn, cooker.status)
+
+if taskname.endswith("_setscene"):
+    the_data.setVarFlag(taskname, "quieterrors", "1")
+
+ret = 0
+if sys.argv[3] != "True":
+    ret = bb.build.exec_task(taskname, the_data)
+sys.exit(ret)
+

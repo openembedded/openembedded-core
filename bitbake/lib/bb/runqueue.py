@@ -23,6 +23,7 @@ Handles preparation and execution of a queue of tasks
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import bb, os, sys
+import subprocess
 from bb import msg, data, event
 import signal
 import stat
@@ -937,6 +938,7 @@ class RunQueueExecute:
         self.runq_complete = []
         self.build_pids = {}
         self.build_pipes = {}
+        self.build_procs = {}
         self.failed_fnids = []
 
     def runqueue_process_waitpid(self):
@@ -944,19 +946,22 @@ class RunQueueExecute:
         Return none is there are no processes awaiting result collection, otherwise
         collect the process exit codes and close the information pipe.
         """
-        result = os.waitpid(-1, os.WNOHANG)
-        if result[0] is 0 and result[1] is 0:
-            return None
-        task = self.build_pids[result[0]]
-        del self.build_pids[result[0]]
-        self.build_pipes[result[0]].close()
-        del self.build_pipes[result[0]]
-        if result[1] != 0:
-            self.task_fail(task, result[1])
-        else:
-            self.task_complete(task)
-            self.stats.taskCompleted()
-            bb.event.fire(runQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
+        for pid in self.build_procs.keys():
+            proc = self.build_procs[pid]
+            proc.poll()
+            if proc.returncode is not None:
+                task = self.build_pids[pid]
+                del self.build_pids[pid]
+                self.build_pipes[pid].close()
+                del self.build_pipes[pid]
+                del self.build_procs[pid]
+                if proc.returncode != 0:
+                    self.task_fail(task, proc.returncode)
+                else:
+                    self.task_complete(task)
+                    self.stats.taskCompleted()
+                    bb.event.fire(runQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
+
 
     def finish_now(self):
         if self.stats.active:
@@ -990,31 +995,8 @@ class RunQueueExecute:
     def fork_off_task(self, fn, task, taskname):
         sys.stdout.flush()
         sys.stderr.flush()
+
         try:
-            pipein, pipeout = os.pipe()
-            pid = os.fork() 
-        except OSError as e: 
-            bb.msg.fatal(bb.msg.domain.RunQueue, "fork failed: %d (%s)" % (e.errno, e.strerror))
-        if pid == 0:
-            os.close(pipein)
-            # Save out the PID so that the event can include it the
-            # events
-            bb.event.worker_pid = os.getpid()
-            bb.event.worker_pipe = pipeout
-
-            self.rq.state = runQueueChildProcess
-            # Make the child the process group leader
-            os.setpgid(0, 0)
-            # No stdin
-            newsi = os.open('/dev/null', os.O_RDWR)
-            os.dup2(newsi, sys.stdin.fileno())
-            # Stdout to a logfile
-            #logout = data.expand("${TMPDIR}/log/stdout.%s" % os.getpid(), self.cfgData, True)
-            #mkdirhier(os.path.dirname(logout))
-            #newso = open(logout, 'w')
-            #os.dup2(newso.fileno(), sys.stdout.fileno())
-            #os.dup2(newso.fileno(), sys.stderr.fileno())
-
             bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
             bb.msg.note(1, bb.msg.domain.RunQueue,
                         "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
@@ -1022,26 +1004,25 @@ class RunQueueExecute:
                                                                 task,
                                                                 self.rqdata.get_user_idstring(task)))
 
-            bb.data.setVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", self, self.cooker.configuration.data)
-            bb.data.setVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY2", fn, self.cooker.configuration.data)
-            try:
-                the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
+            the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
 
-                if not self.cooker.configuration.dry_run:
-                    bb.build.exec_task(taskname, the_data)
-                os._exit(0)
+            env = bb.data.export_vars(the_data)
 
-            except bb.build.EventException as e:
-                event = e.args[1]
-                bb.msg.error(bb.msg.domain.Build, "%s event exception, aborting" % bb.event.getName(event))
-                os._exit(1)
-            except Exception:
-                from traceback import format_exc
-                bb.msg.error(bb.msg.domain.Build, "Build of %s %s failed" % (fn, taskname))
-                bb.msg.error(bb.msg.domain.Build, format_exc())
-                os._exit(1)
-            os._exit(0)
-        return pid, pipein, pipeout
+            taskdep = self.rqdata.dataCache.task_deps[fn]
+            if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
+                envvars = the_data.getVar("FAKEROOTENV", True).split()
+                for var in envvars:
+                    comps = var.split("=")
+                    env[comps[0]] = comps[1]
+
+            proc = subprocess.Popen(["bitbake-runtask", fn, taskname, str(self.cooker.configuration.dry_run)], env=env, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+            pipein = proc.stdout
+            pipeout = proc.stdin
+            pid = proc.pid
+        except OSError as e: 
+            bb.msg.fatal(bb.msg.domain.RunQueue, "fork failed: %d (%s)" % (e.errno, e.strerror))
+
+        return proc
 
 class RunQueueExecuteTasks(RunQueueExecute):
     def __init__(self, rq):
@@ -1153,10 +1134,11 @@ class RunQueueExecuteTasks(RunQueueExecute):
                     self.task_skip(task)
                     continue
 
-                pid, pipein, pipeout = self.fork_off_task(fn, task, taskname)
+                proc = self.fork_off_task(fn, task, taskname)
 
-                self.build_pids[pid] = task
-                self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
+                self.build_pids[proc.pid] = task
+                self.build_procs[proc.pid] = proc
+                self.build_pipes[proc.pid] = runQueuePipe(proc.stdout, proc.stdin, self.cfgData)
                 self.runq_running[task] = 1
                 self.stats.taskActive()
                 if self.stats.active < self.number_tasks:
@@ -1356,10 +1338,11 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                 self.task_skip(task)
                 return True
 
-            pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)
+            proc = self.fork_off_task(fn, realtask, taskname)
 
-            self.build_pids[pid] = task
-            self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
+            self.build_pids[proc.pid] = task
+            self.build_procs[proc.pid] = proc
+            self.build_pipes[proc.pid] = runQueuePipe(proc.stdout, proc.stdin, self.cfgData)
             self.runq_running[task] = 1
             self.stats.taskActive()
             if self.stats.active < self.number_tasks:
@@ -1383,7 +1366,6 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
         self.rq.state = runQueueRunInit
         return True
-
 
 class TaskFailure(Exception):
     """
@@ -1437,14 +1419,14 @@ class runQueueTaskCompleted(runQueueEvent):
         runQueueEvent.__init__(self, task, stats, rq)
         self.message = "Task %s completed (%s)" % (task, self.taskstring)
 
-def check_stamp_fn(fn, taskname, d):
-    rq = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", d)
-    fn = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY2", d)
-    fnid = rq.rqdata.taskData.getfn_id(fn)
-    taskid = rq.get_task_id(fnid, taskname)
-    if taskid is not None:
-        return rq.check_stamp_task(taskid)
-    return None
+#def check_stamp_fn(fn, taskname, d):
+#    rq = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", d)
+#    fn = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY2", d)
+#    fnid = rq.rqdata.taskData.getfn_id(fn)
+#    taskid = rq.get_task_id(fnid, taskname)
+#    if taskid is not None:
+#        return rq.check_stamp_task(taskid)
+#    return None
 
 class runQueuePipe():
     """
@@ -1452,7 +1434,7 @@ class runQueuePipe():
     """
     def __init__(self, pipein, pipeout, d):
         self.fd = pipein
-        os.close(pipeout)
+        pipeout.close()
         fcntl.fcntl(self.fd, fcntl.F_SETFL, fcntl.fcntl(self.fd, fcntl.F_GETFL) | os.O_NONBLOCK)
         self.queue = ""
         self.d = d
@@ -1460,8 +1442,8 @@ class runQueuePipe():
     def read(self):
         start = len(self.queue)
         try:
-            self.queue = self.queue + os.read(self.fd, 1024)
-        except OSError:
+            self.queue = self.queue + self.fd.read(1024)
+        except IOError:
             pass
         end = len(self.queue)
         index = self.queue.find("</event>")
@@ -1476,4 +1458,4 @@ class runQueuePipe():
             continue
         if len(self.queue) > 0:
             print("Warning, worker left partial message")
-        os.close(self.fd)
+        self.fd.close()

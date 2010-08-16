@@ -31,6 +31,7 @@ import pickle
 # the runqueue forks off.
 worker_pid = 0
 worker_pipe = None
+useStdout = True
 
 class Event:
     """Base class for events"""
@@ -102,15 +103,12 @@ def fire(event, d):
 
 def worker_fire(event, d):
     data = "<event>" + pickle.dumps(event) + "</event>"
-    try:
-        if os.write(worker_pipe, data) != len (data):
-            print("Error sending event to server (short write)")
-    except OSError:
-        sys.exit(1)
+    worker_pipe.write(data)
+    worker_pipe.flush()
 
 def fire_from_worker(event, d):
     if not event.startswith("<event>") or not event.endswith("</event>"):
-        print("Error, not an event")
+        print("Error, not an event %s" % event)
         return
     event = pickle.loads(event[7:-8])
     fire_ui_handlers(event, d)
@@ -140,6 +138,7 @@ def remove(name, handler):
 def register_UIHhandler(handler):
     bb.event._ui_handler_seq = bb.event._ui_handler_seq + 1
     _ui_handlers[_ui_handler_seq] = handler
+    bb.event.useStdout = False
     return _ui_handler_seq
 
 def unregister_UIHhandler(handlerNum):

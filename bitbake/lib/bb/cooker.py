@@ -70,11 +70,15 @@ class BBCooker:
         self.cache = None
         self.bb_cache = None
 
-        self.server = server.BitBakeServer(self)
+        if server:
+            self.server = server.BitBakeServer(self)
 
         self.configuration = configuration
 
         self.configuration.data = bb.data.init()
+
+        if not server:
+            bb.data.setVar("BB_WORKERCONTEXT", "1", self.configuration.data)
 
         bb.data.inheritFromOS(self.configuration.data)
 
@@ -543,7 +547,6 @@ class BBCooker:
             bb.fetch.fetcher_init(self.configuration.data)
 
             bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
-
 
         except IOError as e:
             bb.msg.fatal(bb.msg.domain.Parsing, "Error when parsing %s: %s" % (files, str(e)))
