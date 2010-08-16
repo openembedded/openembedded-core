@@ -61,23 +61,23 @@ RDEPENDS_task-poky-basic-libs = "\
 
 RDEPENDS_task-poky-basic-utils = "\
     bash \
-#    acl \
+    acl \
     attr \
     bc \
     coreutils \
-#    cpio \
+    cpio \
     e2fsprogs \
     ed \
     file \
     findutils \
-#    gawk \
+    gawk \
     gmp \
-#    grep \
+    grep \
     makedevs \
-#    mktemp \
+    mktemp \
     ncurses \
-#    net-tools \
-#    pax \
+    net-tools \
+    pax \
     popt \
     procps \
     psmisc \
@@ -90,8 +90,8 @@ RDEPENDS_task-poky-basic-utils = "\
     "
 
 RDEPENDS_task-poky-basic-extended = "\
-#    iproute \
-#    iputils \
+    iproute2 \
+    iputils \
     iptables \
     module-init-tools \
 #    openssh \
@@ -116,11 +116,10 @@ RDEPENDS_task-poky-initscripts = "\
     "
 
 RDEPENDS_task-poky-multiuser = "\
-#    cracklib \
+    cracklib \
     gzip \
-#    libuser \
+    libuser \
     libpam \
-#    passwd \
     shadow \
     sudo \
     "
@@ -131,7 +130,7 @@ RDEPENDS_task-poky-rpm = "\
     "
 
 RDEPENDS_task-poky-sys-services = "\
-    at \
+#    at \
     bzip2 \
 #    cronie \
 #    crontabs \
@@ -148,7 +147,6 @@ RDEPENDS_task-poky-sys-services = "\
     nfs-utils \
     pciutils \
     libpcre \
-#    perl-XML-Parser \
     portmap \
 #    rpcbind \
     sysfsutils \

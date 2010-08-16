@@ -57,7 +57,7 @@ RDEPENDS_task-poky-sys-extended = "\
     quota \
 #    screen \
     setserial \
-#    sysstat \
+    sysstat \
     unzip \
 #    watchdog \
     which \
@@ -97,7 +97,6 @@ RDEPENDS_task-poky-misc = "\
     lsof \
     ncurses \
     strace \
-#    libstdcxx \
     libusb1 \
     usbutils \
     zlib \
