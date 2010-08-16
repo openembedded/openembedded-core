@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f2e071ab72978431b294a0d696327421"
 DEPENDS = "cairo"
 PR = "ml0"
 
-SRC_URI = "http://cairographics.org/releases/pycairo-${PV}.tar.gz"
+SRC_URI = "http://cairographics.org/releases/py2cairo-${PV}.tar.gz"
 S = "${WORKDIR}/pycairo-${PV}"
 
 inherit distutils pkgconfig
