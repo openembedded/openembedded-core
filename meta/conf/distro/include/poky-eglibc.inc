@@ -27,20 +27,15 @@ OLDEST_KERNEL_linux-gnueabi ?= "2.6.16"
 OLDEST_KERNEL_sparc64 ?= "2.4.21"
 OLDEST_KERNEL_ppc64 ?= "2.4.21"
 
-LIBC_DEPENDENCIES = "\
-    libsegfault \
-    eglibc \
-    eglibc-dbg \
-    eglibc-dev \
-    eglibc-utils \
-    eglibc-thread-db \
-    eglibc-localedata-i18n \
-    eglibc-gconv-ibm850 \
-    eglibc-gconv-cp1252 \
-    eglibc-gconv-iso8859-1 \
-    eglibc-gconv-iso8859-15 \
-    eglibc-binary-localedata-en.gb \
-    locale-base-en-gb \
-    "
-
-
+LIBC_DEPENDENCIES = "libsegfault \
+		     eglibc \
+    		     eglibc-dbg \
+    		     eglibc-dev \
+    		     eglibc-utils \
+    		     eglibc-thread-db \
+    		     eglibc-localedata-i18n \
+    		     eglibc-gconv-ibm850 \
+    		     eglibc-gconv-cp1252 \
+    		     eglibc-gconv-iso8859-1 \
+    		     eglibc-gconv-iso8859-15 \
+    		     locale-base-en-gb "

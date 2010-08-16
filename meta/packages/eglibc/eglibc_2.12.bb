@@ -1,6 +1,5 @@
 require eglibc.inc
 
-DEFAULT_PREFERENCE = "-1"
 DEPENDS += "gperf-native"
 FILESPATHPKG =. "eglibc-svn:"
 PR = "r0"
