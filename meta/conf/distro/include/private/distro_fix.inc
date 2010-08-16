@@ -71,7 +71,7 @@ RECIPE_STATUS_pn-libomxil ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-libomxil ?= "0.9.2.1"
 
 RECIPE_STATUS_pn-libpcre ?= "red" # not audited
-RECIPE_LATEST_VERSION_pn-libpcre ?= "8.1"
+RECIPE_LATEST_VERSION_pn-libpcre ?= "8.10"
 
 RECIPE_STATUS_pn-powertop ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-powertop ?= "1.11"
@@ -170,7 +170,7 @@ RECIPE_STATUS_pn-pm-utils ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-pm-utils ?= "1.3.0"
 
 RECIPE_STATUS_pn-devicekit-power ?= "red" # not audited
-RECIPE_LATEST_VERSION_pn-devicekit-power ?= "14"
+RECIPE_LATEST_VERSION_pn-devicekit-power ?= "014"
 
 RECIPE_STATUS_pn-libsamplerate0 ?= "red" # not audited
 RECIPE_LATEST_VERSION_pn-libsamplerate0 ?= "0.1.7"
