@@ -206,6 +206,7 @@ python () {
         deps.append('rpm-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_rpm', 'depends', " ".join(deps), d)
+        bb.data.setVarFlag('do_package_write_ipk', 'fakeroot', "1", d)
 }
 
 SSTATETASKS += "do_package_write_rpm"
