@@ -107,7 +107,7 @@ RECIPE_INTEL_SECTION_pn-vte="graphic app"
 RECIPE_MAINTAINER_pn-vte="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-qemugl="green" # no update needed
-RECIPE_LATEST_VERSION_pn-qemugl="0.0+gitd888bbc723c00d197d34a39b5b7448660ec1b1c0"
+RECIPE_LATEST_VERSION_pn-qemugl="0.0+git0+d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 RECIPE_NO_OF_PATCHES_pn-qemugl="1"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qemugl="n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-qemugl="2009/05/30"
