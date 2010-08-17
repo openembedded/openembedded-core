@@ -60,3 +60,67 @@ RECIPE_NO_OF_PATCHES_pn-enchant="0"
 RECIPE_LATEST_RELEASE_DATE_pn-enchant="2010/04/01"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-enchant="10 months"
 RECIPE_MAINTAINER_pn-enchant = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-moblin = "red"
+RECIPE_LATEST_VERSION_pn-task-moblin = "1"
+RECIPE_MAINTAINER_pn-task-moblin = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-moblin-apps-x11-pimlico = "red"
+RECIPE_LATEST_VERSION_pn-task-moblin-apps-x11-pimlico = "1"
+RECIPE_MAINTAINER_pn-task-moblin-apps-x11-pimlico = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-moblin-boot = "red"
+RECIPE_LATEST_VERSION_pn-task-moblin-boot = "1"
+RECIPE_MAINTAINER_pn-task-moblin-boot = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-moblin-sdk = "red"
+RECIPE_LATEST_VERSION_pn-task-moblin-sdk = "1"
+RECIPE_MAINTAINER_pn-task-moblin-sdk = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-moblin-standalone-sdk-target = "red"
+RECIPE_LATEST_VERSION_pn-task-moblin-standalone-sdk-target = "1"
+RECIPE_MAINTAINER_pn-task-moblin-standalone-sdk-target = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-moblin-tools = "red"
+RECIPE_LATEST_VERSION_pn-task-moblin-tools = "1"
+RECIPE_MAINTAINER_pn-task-moblin-tools = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-moblin-x11-netbook = "red"
+RECIPE_LATEST_VERSION_pn-task-moblin-x11-netbook = "1"
+RECIPE_MAINTAINER_pn-task-moblin-x11-netbook = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-poky-sdk = "red"
+RECIPE_LATEST_VERSION_pn-task-poky-sdk = "1"
+RECIPE_MAINTAINER_pn-task-poky-sdk = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-poky-sdk-gmae = "red"
+RECIPE_LATEST_VERSION_pn-task-poky-sdk-gmae = "1"
+RECIPE_MAINTAINER_pn-task-poky-sdk-gmae = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-poky-standalone-gmae-sdk-target = "red"
+RECIPE_LATEST_VERSION_pn-task-poky-standalone-gmae-sdk-target = "1"
+RECIPE_MAINTAINER_pn-task-poky-standalone-gmae-sdk-target = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-poky-standalone-sdk-target = "red"
+RECIPE_LATEST_VERSION_pn-task-poky-standalone-sdk-target = "1"
+RECIPE_MAINTAINER_pn-task-poky-standalone-sdk-target = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-poky-x11-netbook = "red"
+RECIPE_LATEST_VERSION_pn-task-poky-x11-netbook = "1"
+RECIPE_MAINTAINER_pn-task-poky-x11-netbook = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-xerces-c = "red"
+RECIPE_LATEST_VERSION_pn-xerces-c = "3.1.1"
+RECIPE_MAINTAINER_pn-xerces-c = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-xournal = "red"
+RECIPE_LATEST_VERSION_pn-xournal = "0.4.5"
+RECIPE_MAINTAINER_pn-xournal = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-carrick = "red"
+RECIPE_LATEST_VERSION_pn-carrick = "1"
+RECIPE_MAINTAINER_pn-carrick = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-wv = "red"
+RECIPE_LATEST_VERSION_pn-wv = "1.2.1"
+RECIPE_MAINTAINER_pn-wv = "Dongxiao Xu <dongxiao.xu@intel.com>"

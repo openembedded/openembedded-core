@@ -423,3 +423,231 @@ RECIPE_LATEST_RELEASE_DATE_pn-menu-cache = "02/2010"
 RECIPE_COMMENTS_pn-menu-cache = "Add as required when adding libfm"
 RECIPE_MAINTAINER_pn-menu-cache = "Zhai Edwin <edwin.zhai@intel.com>"
 
+
+RECIPE_STATUS_pn-gtk-engines = "red"
+RECIPE_LATEST_VERSION_pn-gtk-engines = "2.18"
+RECIPE_MAINTAINER_pn-gtk-engines = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-imcontext = "red"
+RECIPE_LATEST_VERSION_pn-clutter-imcontext = "0.1.6"
+RECIPE_MAINTAINER_pn-clutter-imcontext = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-box2d = "red"
+RECIPE_LATEST_VERSION_pn-clutter-box2d = "0.10.0"
+RECIPE_MAINTAINER_pn-clutter-box2d = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gtk-0.10 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gtk-0.10 = "0.10.4"
+RECIPE_MAINTAINER_pn-clutter-gtk-0.10 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gtk-1.0 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gtk-1.0 = "0.10.4"
+RECIPE_MAINTAINER_pn-clutter-gtk-1.0 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-mozembed = "red"
+RECIPE_LATEST_VERSION_pn-clutter-mozembed = "0.10.5"
+RECIPE_MAINTAINER_pn-clutter-mozembed = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-tidy = "red"
+RECIPE_LATEST_VERSION_pn-tidy = "0.1.0"
+RECIPE_MAINTAINER_pn-tidy = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-libcanberra = "red"
+RECIPE_LATEST_VERSION_pn-libcanberra = "0.24"
+RECIPE_MAINTAINER_pn-libcanberra = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-libgalago = "red"
+RECIPE_LATEST_VERSION_pn-libgalago = "0.5.2"
+RECIPE_MAINTAINER_pn-libgalago = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-cairo-0.6 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-cairo-0.6 = "0.6"
+RECIPE_MAINTAINER_pn-clutter-cairo-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-0.6 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-0.6 = "0.6.0"
+RECIPE_MAINTAINER_pn-clutter-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gtk-0.6 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gtk-0.6 = "0.6.0"
+RECIPE_MAINTAINER_pn-clutter-gtk-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-cairo-0.8 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-cairo-0.8 = "0.8.2"
+RECIPE_MAINTAINER_pn-clutter-cairo-0.8 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gtk-0.8 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gtk-0.8 = "0.8.3"
+RECIPE_MAINTAINER_pn-clutter-gtk-0.8 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-0.8 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-0.8 = "0.8.9"
+RECIPE_MAINTAINER_pn-clutter-0.8 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter-1.0 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-1.0 = "1.0.10"
+RECIPE_MAINTAINER_pn-clutter-1.0 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clutter = "red"
+RECIPE_LATEST_VERSION_pn-clutter = "1.2.8"
+RECIPE_MAINTAINER_pn-clutter = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gnome-menus = "red"
+RECIPE_LATEST_VERSION_pn-gnome-menus = "2.30.0"
+RECIPE_MAINTAINER_pn-gnome-menus = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gnome-packagekit = "red"
+RECIPE_LATEST_VERSION_pn-gnome-packagekit = "2.30.2"
+RECIPE_MAINTAINER_pn-gnome-packagekit = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-libgnomekbd = "red"
+RECIPE_LATEST_VERSION_pn-libgnomekbd = "2.31.1"
+RECIPE_MAINTAINER_pn-libgnomekbd = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-mx = "red"
+RECIPE_LATEST_VERSION_pn-mx = "1.0.2"
+RECIPE_MAINTAINER_pn-mx = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-clipboard-manager = "red"
+RECIPE_LATEST_VERSION_pn-clipboard-manager = "0.6.8"
+RECIPE_MAINTAINER_pn-clipboard-manager = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gnome-desktop = "red"
+RECIPE_LATEST_VERSION_pn-gnome-desktop = "2.31.2"
+RECIPE_MAINTAINER_pn-gnome-desktop = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gnome-icon-theme = "red"
+RECIPE_LATEST_VERSION_pn-gnome-icon-theme = "2.30.2"
+RECIPE_MAINTAINER_pn-gnome-icon-theme = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gtk-doc = "red"
+RECIPE_LATEST_VERSION_pn-gtk-doc = "1.15"
+RECIPE_MAINTAINER_pn-gtk-doc = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gtkhtml2 = "red"
+RECIPE_LATEST_VERSION_pn-gtkhtml2 = "2.11.1"
+RECIPE_MAINTAINER_pn-gtkhtml2 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gtk-theme-darkilouche = "red"
+RECIPE_LATEST_VERSION_pn-gtk-theme-darkilouche = "1"
+RECIPE_MAINTAINER_pn-gtk-theme-darkilouche = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-libgnomecanvas = "red"
+RECIPE_LATEST_VERSION_pn-libgnomecanvas = "2.30.1"
+RECIPE_MAINTAINER_pn-libgnomecanvas = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-libgtkstylus = "red"
+RECIPE_LATEST_VERSION_pn-libgtkstylus = "0.5"
+RECIPE_MAINTAINER_pn-libgtkstylus = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-libidl = "red"
+RECIPE_LATEST_VERSION_pn-libidl = "0.8.14"
+RECIPE_MAINTAINER_pn-libidl = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-libsexy = "red"
+RECIPE_LATEST_VERSION_pn-libsexy = "0.1.11"
+RECIPE_MAINTAINER_pn-libsexy = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-matchbox-session-netbook = "red"
+RECIPE_LATEST_VERSION_pn-matchbox-session-netbook = "0.1"
+RECIPE_MAINTAINER_pn-matchbox-session-netbook = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-matchbox-theme-sato-2 = "red"
+RECIPE_LATEST_VERSION_pn-matchbox-theme-sato-2 = "0.1 + svnr164"
+RECIPE_MAINTAINER_pn-matchbox-theme-sato-2 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-matchbox-themes-extra = "red"
+RECIPE_LATEST_VERSION_pn-matchbox-themes-extra = "0.3+svnr1247"
+RECIPE_MAINTAINER_pn-matchbox-themes-extra = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-matchbox-themes-gtk = "red"
+RECIPE_LATEST_VERSION_pn-matchbox-themes-gtk = "1"
+RECIPE_MAINTAINER_pn-matchbox-themes-gtk = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-matchbox-wm-2 = "red"
+RECIPE_LATEST_VERSION_pn-matchbox-wm-2 = "0.0+svnr2106"
+RECIPE_MAINTAINER_pn-matchbox-wm-2 = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-metacity = "red"
+RECIPE_LATEST_VERSION_pn-metacity = "2.30.1"
+RECIPE_MAINTAINER_pn-metacity = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-cursor-theme = "red"
+RECIPE_LATEST_VERSION_pn-moblin-cursor-theme = "0.3"
+RECIPE_MAINTAINER_pn-moblin-cursor-theme = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-gtk-engine = "red"
+RECIPE_LATEST_VERSION_pn-moblin-gtk-engine = "1.2.3"
+RECIPE_MAINTAINER_pn-moblin-gtk-engine = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-icon-theme = "red"
+RECIPE_LATEST_VERSION_pn-moblin-icon-theme = "0.10"
+RECIPE_MAINTAINER_pn-moblin-icon-theme = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-menus = "red"
+RECIPE_LATEST_VERSION_pn-moblin-menus = "0.1.6"
+RECIPE_MAINTAINER_pn-moblin-menus = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-user-skel = "red"
+RECIPE_LATEST_VERSION_pn-moblin-user-skel = "0.18"
+RECIPE_MAINTAINER_pn-moblin-user-skel = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-web-browser = "red"
+RECIPE_LATEST_VERSION_pn-moblin-web-browser = "2.1.2"
+RECIPE_MAINTAINER_pn-moblin-web-browser = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-nautilus = "red"
+RECIPE_LATEST_VERSION_pn-nautilus = "2.31.2"
+RECIPE_MAINTAINER_pn-nautilus = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-polkit-gnome = "red"
+RECIPE_LATEST_VERSION_pn-polkit-gnome = "0.96"
+RECIPE_MAINTAINER_pn-polkit-gnome = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-pong-clock = "red"
+RECIPE_LATEST_VERSION_pn-pong-clock = "1"
+RECIPE_MAINTAINER_pn-pong-clock = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-twm = "red"
+RECIPE_LATEST_VERSION_pn-twm = "1.0.4"
+RECIPE_MAINTAINER_pn-twm = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-anerley  = "red"
+RECIPE_LATEST_VERSION_pn-anerley  = "0.2.13"
+RECIPE_MAINTAINER_pn-anerley  = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-nbtk = "red"
+RECIPE_LATEST_VERSION_pn-nbtk = "n/a"
+RECIPE_MAINTAINER_pn-nbtk = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-panel-applications = "red"
+RECIPE_LATEST_VERSION_pn-moblin-panel-applications = "0.1.28"
+RECIPE_MAINTAINER_pn-moblin-panel-applications = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-panel-media = "red"
+RECIPE_LATEST_VERSION_pn-moblin-panel-media = "0.0.18"
+RECIPE_MAINTAINER_pn-moblin-panel-media = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-panel-myzone = "red"
+RECIPE_LATEST_VERSION_pn-moblin-panel-myzone = "0.1.32"
+RECIPE_MAINTAINER_pn-moblin-panel-myzone = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-panel-pasteboard = "red"
+RECIPE_LATEST_VERSION_pn-moblin-panel-pasteboard = "0.0.6"
+RECIPE_MAINTAINER_pn-moblin-panel-pasteboard = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-panel-people = "red"
+RECIPE_LATEST_VERSION_pn-moblin-panel-people = "0.1.12"
+RECIPE_MAINTAINER_pn-moblin-panel-people = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-moblin-panel-status = "red"
+RECIPE_LATEST_VERSION_pn-moblin-panel-status = "0.1.21"
+RECIPE_MAINTAINER_pn-moblin-panel-status = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-mutter = "red"
+RECIPE_LATEST_VERSION_pn-mutter = "2.29.1_0.4"
+RECIPE_MAINTAINER_pn-mutter = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-mutter-moblin = "red"
+RECIPE_LATEST_VERSION_pn-mutter-moblin = "0.75.13"
+RECIPE_MAINTAINER_pn-mutter-moblin = "Edwin Zhai <edwin.zhai@intel.com>"

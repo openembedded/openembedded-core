@@ -11,3 +11,11 @@ RECIPE_NO_OF_PATCHES_pn-kexec-tools="1"
 RECIPE_LATEST_RELEASE_DATE_pn-kexec-tools="2009/08/12"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-kexec-tools="1 year"
 RECIPE_MAINTAINER_pn-kexec-tools = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-hostap-conf = "red"
+RECIPE_LATEST_VERSION_pn-hostap-conf = "1"
+RECIPE_MAINTAINER_pn-hostap-conf = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-orinoco-conf = "red"
+RECIPE_LATEST_VERSION_pn-orinoco-conf = "1"
+RECIPE_MAINTAINER_pn-orinoco-conf = "Dongxiao Xu <dongxiao.xu@intel.com>"

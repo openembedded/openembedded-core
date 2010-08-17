@@ -137,3 +137,83 @@ RECIPE_NO_OF_PATCHES_pn-libmusicbrainz="0"
 RECIPE_LATEST_RELEASE_DATE_pn-libmusicbrainz="2008/09/13"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libmusicbrainz="14 months"
 RECIPE_MAINTAINER_pn-libmusicbrainz = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gst-0.10 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gst-0.10 = "1.0.0"
+RECIPE_MAINTAINER_pn-clutter-gst-0.10 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gst-0.6 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gst-0.6 = "0.6"
+RECIPE_MAINTAINER_pn-clutter-gst-0.6 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gst-0.8 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gst-0.8 = "0.8"
+RECIPE_MAINTAINER_pn-clutter-gst-0.8 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-clutter-gst-1.0 = "red"
+RECIPE_LATEST_VERSION_pn-clutter-gst-1.0 = "1.0"
+RECIPE_MAINTAINER_pn-clutter-gst-1.0 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-farsight2 = "red"
+RECIPE_LATEST_VERSION_pn-farsight2 = "0.0.20"
+RECIPE_MAINTAINER_pn-farsight2 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-gst-openmax = "red"
+RECIPE_LATEST_VERSION_pn-gst-openmax = "0.10.0.5"
+RECIPE_MAINTAINER_pn-gst-openmax = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-gst-ffmpeg = "red"
+RECIPE_LATEST_VERSION_pn-gst-ffmpeg = "0.10.10"
+RECIPE_MAINTAINER_pn-gst-ffmpeg = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-moblin-sound-theme = "red"
+RECIPE_LATEST_VERSION_pn-moblin-sound-theme = "0.3"
+RECIPE_MAINTAINER_pn-moblin-sound-theme = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-librds = "red"
+RECIPE_LATEST_VERSION_pn-librds = "0.0.1"
+RECIPE_MAINTAINER_pn-librds = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-alsa-oss = "red"
+RECIPE_LATEST_VERSION_pn-alsa-oss = "1.0.17"
+RECIPE_MAINTAINER_pn-alsa-oss = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-libsndfile1 = "red"
+RECIPE_LATEST_VERSION_pn-libsndfile1 = "1.0.21 "
+RECIPE_MAINTAINER_pn-libsndfile1 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-pulseaudio = "red"
+RECIPE_LATEST_VERSION_pn-pulseaudio = "0.9.21"
+RECIPE_MAINTAINER_pn-pulseaudio = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-taglib = "red"
+RECIPE_LATEST_VERSION_pn-taglib = "1.6.3"
+RECIPE_MAINTAINER_pn-taglib = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-libnice = "red"
+RECIPE_LATEST_VERSION_pn-libnice = "0.0.12"
+RECIPE_MAINTAINER_pn-libnice = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-bognor-regis = "red"
+RECIPE_LATEST_VERSION_pn-bognor-regis = "0.5.2-2"
+RECIPE_MAINTAINER_pn-bognor-regis = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-gst-fluendo-mp3 = "red"
+RECIPE_LATEST_VERSION_pn-gst-fluendo-mp3 = "0.10.10"
+RECIPE_MAINTAINER_pn-gst-fluendo-mp3 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-gst-fluendo-mpegdemux = "red"
+RECIPE_LATEST_VERSION_pn-gst-fluendo-mpegdemux = "0.10.23"
+RECIPE_MAINTAINER_pn-gst-fluendo-mpegdemux = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-hornsey = "red"
+RECIPE_LATEST_VERSION_pn-hornsey = "1.5.1"
+RECIPE_MAINTAINER_pn-hornsey = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-libomxil = "red"
+RECIPE_LATEST_VERSION_pn-libomxil = "0.9.2.1"
+RECIPE_MAINTAINER_pn-libomxil = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-libsamplerate0 = "red"
+RECIPE_LATEST_VERSION_pn-libsamplerate0 = "0.1.7"
+RECIPE_MAINTAINER_pn-libsamplerate0 = "Dongxiao Xu <dongxiao.xu@intel.com>"

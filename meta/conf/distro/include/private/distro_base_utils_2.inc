@@ -458,3 +458,95 @@ RECIPE_LATEST_VERSION_pn-xinetd="2.3.14"
 RECIPE_STATUS_pn-cracklib="red"
 RECIPE_MAINTAINER_pn-cracklib="Yu Ke <ke.yu@intel.com>"
 RECIPE_LATEST_VERSION_pn-cracklib="2.8.16"
+
+RECIPE_STATUS_pn-openobex = "red"
+RECIPE_LATEST_VERSION_pn-openobex = "1.5"
+RECIPE_MAINTAINER_pn-openobex = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-sessreg = "red"
+RECIPE_LATEST_VERSION_pn-sessreg = "1.0.5"
+RECIPE_MAINTAINER_pn-sessreg = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-packagekit = "red"
+RECIPE_LATEST_VERSION_pn-packagekit = "0.6.3"
+RECIPE_MAINTAINER_pn-packagekit = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-sed = "red"
+RECIPE_LATEST_VERSION_pn-sed = "4.2.1"
+RECIPE_MAINTAINER_pn-sed = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-aspell = "red"
+RECIPE_LATEST_VERSION_pn-aspell = "0.60.6"
+RECIPE_MAINTAINER_pn-aspell = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-parted = "red"
+RECIPE_LATEST_VERSION_pn-parted = "2.3"
+RECIPE_MAINTAINER_pn-parted = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-resolvconf = "red"
+RECIPE_LATEST_VERSION_pn-resolvconf = "1.45"
+RECIPE_MAINTAINER_pn-resolvconf = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-openswan = "red"
+RECIPE_LATEST_VERSION_pn-openswan = "2.6.26"
+RECIPE_MAINTAINER_pn-openswan = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-u-boot-mkimage = "red"
+RECIPE_LATEST_VERSION_pn-u-boot-mkimage = "2010.03"
+RECIPE_MAINTAINER_pn-u-boot-mkimage = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-zaurusd = "red"
+RECIPE_LATEST_VERSION_pn-zaurusd = "n/a"
+RECIPE_MAINTAINER_pn-zaurusd = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-yaffs2-utils = "red"
+RECIPE_LATEST_VERSION_pn-yaffs2-utils = ""
+RECIPE_MAINTAINER_pn-yaffs2-utils = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-usbinit = "red"
+RECIPE_LATEST_VERSION_pn-usbinit = "n/a"
+RECIPE_MAINTAINER_pn-usbinit = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-ubootchart = "red"
+RECIPE_LATEST_VERSION_pn-ubootchart = "0.0+r12"
+RECIPE_MAINTAINER_pn-ubootchart = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-tracker = "red"
+RECIPE_LATEST_VERSION_pn-tracker = "0.9.6"
+RECIPE_MAINTAINER_pn-tracker = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-tiff = "red"
+RECIPE_LATEST_VERSION_pn-tiff = "3.9.2"
+RECIPE_MAINTAINER_pn-tiff = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-syncevolution = "red"
+RECIPE_LATEST_VERSION_pn-syncevolution = "0.9.1"
+RECIPE_MAINTAINER_pn-syncevolution = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-libexif = "red"
+RECIPE_LATEST_VERSION_pn-libexif = "0.6.19"
+RECIPE_MAINTAINER_pn-libexif = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-setserial = "red"
+RECIPE_LATEST_VERSION_pn-setserial = "2.17"
+RECIPE_MAINTAINER_pn-setserial = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-hdparm = "red"
+RECIPE_LATEST_VERSION_pn-hdparm = "9.28"
+RECIPE_MAINTAINER_pn-hdparm = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-wbxml2 = "red"
+RECIPE_LATEST_VERSION_pn-wbxml2 = "0.10.8"
+RECIPE_MAINTAINER_pn-wbxml2 = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-sreadahead = "red"
+RECIPE_LATEST_VERSION_pn-sreadahead = "1.0"
+RECIPE_MAINTAINER_pn-sreadahead = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-smart = "red"
+RECIPE_LATEST_VERSION_pn-smart = "1.3"
+RECIPE_MAINTAINER_pn-smart = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-qemu-config = "red"
+RECIPE_LATEST_VERSION_pn-qemu-config = "n/a"
+RECIPE_MAINTAINER_pn-qemu-config = "Qing He <qing.he@intel.com>"

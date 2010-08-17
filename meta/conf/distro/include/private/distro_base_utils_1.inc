@@ -421,3 +421,163 @@ RECIPE_LATEST_VERSION_pn-pax = "20090728-1"
 RECIPE_STATUS_pn-watchdog = "red"
 RECIPE_MAINTAINER_pn-watchdog = "Dexuan Cui <dexuan.cui@intel.com>"
 RECIPE_LATEST_VERSION_pn-watchdog = "5.9"
+
+RECIPE_STATUS_pn-json-glib  = "red"
+RECIPE_LATEST_VERSION_pn-json-glib  = "0.7.6+d5922b42604c09ba7ebcb0adc1566d0a33a99808"
+RECIPE_MAINTAINER_pn-json-glib  = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libatomics-ops = "red"
+RECIPE_LATEST_VERSION_pn-libatomics-ops = "7.2alpha4"
+RECIPE_MAINTAINER_pn-libatomics-ops = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libffi  = "red"
+RECIPE_LATEST_VERSION_pn-libffi  = "3.0.9"
+RECIPE_MAINTAINER_pn-libffi  = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libgdbus  = "red"
+RECIPE_LATEST_VERSION_pn-libgdbus  = "Release-0.2"
+RECIPE_MAINTAINER_pn-libgdbus  = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libjana = "red"
+RECIPE_LATEST_VERSION_pn-libjana = "acd72f232c72f8692dcacdd885eea756778042c2"
+RECIPE_MAINTAINER_pn-libjana = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-apr = "red"
+RECIPE_LATEST_VERSION_pn-apr = "1.4.2"
+RECIPE_MAINTAINER_pn-apr = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-apr-util = "red"
+RECIPE_LATEST_VERSION_pn-apr-util = "1.3.9"
+RECIPE_MAINTAINER_pn-apr-util = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-apt = "red"
+RECIPE_LATEST_VERSION_pn-apt = "0.7.25.3"
+RECIPE_MAINTAINER_pn-apt = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-chrpath = "red"
+RECIPE_LATEST_VERSION_pn-chrpath = "0.13-2"
+RECIPE_MAINTAINER_pn-chrpath = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-dosfstools = "red"
+RECIPE_LATEST_VERSION_pn-dosfstools = "2.11"
+RECIPE_MAINTAINER_pn-dosfstools = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-eee-acpi-scripts = "red"
+RECIPE_LATEST_VERSION_pn-eee-acpi-scripts = "1.1.10+eaaa266e8c3b91b19d8ac861334b41ce7530e8c5"
+RECIPE_MAINTAINER_pn-eee-acpi-scripts = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-gssdp = "red"
+RECIPE_LATEST_VERSION_pn-gssdp = "0.7.2"
+RECIPE_MAINTAINER_pn-gssdp = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-insserv = "red"
+RECIPE_LATEST_VERSION_pn-insserv = "1.14.0"
+RECIPE_MAINTAINER_pn-insserv = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-moblin-app-installer = "red"
+RECIPE_LATEST_VERSION_pn-moblin-app-installer = "n/a"
+RECIPE_MAINTAINER_pn-moblin-app-installer = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-modutils-collateral = "red"
+RECIPE_LATEST_VERSION_pn-modutils-collateral = "1"
+RECIPE_MAINTAINER_pn-modutils-collateral = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-monit = "red"
+RECIPE_LATEST_VERSION_pn-monit = "5.1.1"
+RECIPE_MAINTAINER_pn-monit = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-mozilla-headless-services = "red"
+RECIPE_LATEST_VERSION_pn-mozilla-headless-services = "0.1+git0+c679b95dd8c2807b70186d233b3833861a499315"
+RECIPE_MAINTAINER_pn-mozilla-headless-services = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-mtd-utils = "red"
+RECIPE_LATEST_VERSION_pn-mtd-utils = "1.3.1+a67747b7a314e685085b62e8239442ea54959dbc"
+RECIPE_MAINTAINER_pn-mtd-utils = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-ohm = "red"
+RECIPE_LATEST_VERSION_pn-ohm = "3cb3496846508929b9f2d05683ec93523de7947c"
+RECIPE_MAINTAINER_pn-ohm = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-pam = "red"
+RECIPE_LATEST_VERSION_pn-pam = "1.1.1"
+RECIPE_MAINTAINER_pn-pam = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-procps = "red"
+RECIPE_LATEST_VERSION_pn-procps = "3.2.8"
+RECIPE_MAINTAINER_pn-procps = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-gmime = "red"
+RECIPE_LATEST_VERSION_pn-gmime = "2.5.3"
+RECIPE_MAINTAINER_pn-gmime = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-iso-codes = "red"
+RECIPE_LATEST_VERSION_pn-iso-codes = "3.16"
+RECIPE_MAINTAINER_pn-iso-codes = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libgsf = "red"
+RECIPE_LATEST_VERSION_pn-libgsf = "1.14.18"
+RECIPE_MAINTAINER_pn-libgsf = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libnotify = "red"
+RECIPE_LATEST_VERSION_pn-libnotify = "0.4.5"
+RECIPE_MAINTAINER_pn-libnotify = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-beecrypt = "red"
+RECIPE_LATEST_VERSION_pn-beecrypt = "4.2.1"
+RECIPE_MAINTAINER_pn-beecrypt = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libacpi = "red"
+RECIPE_LATEST_VERSION_pn-libacpi = "0.2"
+RECIPE_MAINTAINER_pn-libacpi = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-acpid = "red"
+RECIPE_LATEST_VERSION_pn-acpid = "1.0.10"
+RECIPE_MAINTAINER_pn-acpid = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-consolekit = "red"
+RECIPE_LATEST_VERSION_pn-consolekit = "0.4.1"
+RECIPE_MAINTAINER_pn-consolekit = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-console-tools = "red"
+RECIPE_LATEST_VERSION_pn-console-tools = "0.3.2"
+RECIPE_MAINTAINER_pn-console-tools = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-dalston = "red"
+RECIPE_LATEST_VERSION_pn-dalston = "?"
+RECIPE_MAINTAINER_pn-dalston = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-devicekit = "red"
+RECIPE_LATEST_VERSION_pn-devicekit = "3"
+RECIPE_MAINTAINER_pn-devicekit = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-devicekit-power = "red"
+RECIPE_LATEST_VERSION_pn-devicekit-power = "n/a"
+RECIPE_MAINTAINER_pn-devicekit-power = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-fuse = "red"
+RECIPE_LATEST_VERSION_pn-fuse = "2.8.4"
+RECIPE_MAINTAINER_pn-fuse = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-msynctool = "red"
+RECIPE_LATEST_VERSION_pn-msynctool = "0.38"
+RECIPE_MAINTAINER_pn-msynctool = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-mtools = "red"
+RECIPE_LATEST_VERSION_pn-mtools = "4.0.13"
+RECIPE_MAINTAINER_pn-mtools = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-pm-utils = "red"
+RECIPE_LATEST_VERSION_pn-pm-utils = "1.3.0"
+RECIPE_MAINTAINER_pn-pm-utils = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-psmisc = "red"
+RECIPE_LATEST_VERSION_pn-psmisc = "22.11"
+RECIPE_MAINTAINER_pn-psmisc = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-boost = "red"
+RECIPE_LATEST_VERSION_pn-boost = "1.43.0"
+RECIPE_MAINTAINER_pn-boost = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-libfribidi = "red"
+RECIPE_LATEST_VERSION_pn-libfribidi = "0.19.2"
+RECIPE_MAINTAINER_pn-libfribidi = "Kevin Tian <kevin.tian@intel.com>"

@@ -804,3 +804,119 @@ RECIPE_LATEST_RELEASE_DATE_pn-startup-notification = "04/13/2009"
 RECIPE_COMMENTS_pn-startup-notification = "in recipe, SECTION is libs but to be more accurate it should be x11/libs"
 RECIPE_MAINTAINER_pn-startup-notification = "Dexuan Cui <dexuan.cui@intel.com>"
 
+
+RECIPE_STATUS_pn-galago-daemon = "red"
+RECIPE_LATEST_VERSION_pn-galago-daemon = "0.5.1"
+RECIPE_MAINTAINER_pn-galago-daemon = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-gnome-doc-utils = "red"
+RECIPE_LATEST_VERSION_pn-gnome-doc-utils = "0.20.1"
+RECIPE_MAINTAINER_pn-gnome-doc-utils = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-gnome-settings-daemon = "red"
+RECIPE_LATEST_VERSION_pn-gnome-settings-daemon = "2.31.2"
+RECIPE_MAINTAINER_pn-gnome-settings-daemon = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libunique = "red"
+RECIPE_LATEST_VERSION_pn-libunique = "1.1.6"
+RECIPE_MAINTAINER_pn-libunique = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-ttf-bitstream-vera = "red"
+RECIPE_LATEST_VERSION_pn-ttf-bitstream-vera = "1.10"
+RECIPE_MAINTAINER_pn-ttf-bitstream-vera = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-gvfs = "red"
+RECIPE_LATEST_VERSION_pn-gvfs = "n/a"
+RECIPE_MAINTAINER_pn-gvfs = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libart-lgpl = "red"
+RECIPE_LATEST_VERSION_pn-libart-lgpl = "2.3.21"
+RECIPE_MAINTAINER_pn-libart-lgpl = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-applewmproto = "red"
+RECIPE_LATEST_VERSION_pn-applewmproto = "1.4.1"
+RECIPE_MAINTAINER_pn-applewmproto = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libapplewm = "red"
+RECIPE_LATEST_VERSION_pn-libapplewm = "1.4.0"
+RECIPE_MAINTAINER_pn-libapplewm = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libfs = "red"
+RECIPE_LATEST_VERSION_pn-libfs = "1.0.2"
+RECIPE_MAINTAINER_pn-libfs = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-poppler = "red"
+RECIPE_LATEST_VERSION_pn-poppler = "0.12.4"
+RECIPE_MAINTAINER_pn-poppler = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-poppler-data = "red"
+RECIPE_LATEST_VERSION_pn-poppler-data = "0.4.2"
+RECIPE_MAINTAINER_pn-poppler-data = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-liblbxutil = "red"
+RECIPE_LATEST_VERSION_pn-liblbxutil = "1.1.0"
+RECIPE_MAINTAINER_pn-liblbxutil = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-liboldx = "red"
+RECIPE_LATEST_VERSION_pn-liboldx = "1.0.1"
+RECIPE_MAINTAINER_pn-liboldx = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libwindowswm = "red"
+RECIPE_LATEST_VERSION_pn-libwindowswm = "1.0.1"
+RECIPE_MAINTAINER_pn-libwindowswm = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxaw = "red"
+RECIPE_LATEST_VERSION_pn-libxaw = "1.0.7"
+RECIPE_MAINTAINER_pn-libxaw = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxevie = "red"
+RECIPE_LATEST_VERSION_pn-libxevie = "1.0.2"
+RECIPE_MAINTAINER_pn-libxevie = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxkbui = "red"
+RECIPE_LATEST_VERSION_pn-libxkbui = "1.0.2"
+RECIPE_MAINTAINER_pn-libxkbui = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxpm = "red"
+RECIPE_LATEST_VERSION_pn-libxpm = "3.5.8"
+RECIPE_MAINTAINER_pn-libxpm = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxprintapputil = "red"
+RECIPE_LATEST_VERSION_pn-libxprintapputil = "1.0.1"
+RECIPE_MAINTAINER_pn-libxprintapputil = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxprintutil = "red"
+RECIPE_LATEST_VERSION_pn-libxprintutil = "1.0.1"
+RECIPE_MAINTAINER_pn-libxprintutil = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxscrnsaver = "red"
+RECIPE_LATEST_VERSION_pn-libxscrnsaver = "1.2.0"
+RECIPE_MAINTAINER_pn-libxscrnsaver = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxtrap = "red"
+RECIPE_LATEST_VERSION_pn-libxtrap = "1.0.0"
+RECIPE_MAINTAINER_pn-libxtrap = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-windowswmproto = "red"
+RECIPE_LATEST_VERSION_pn-windowswmproto = "1.0.4"
+RECIPE_MAINTAINER_pn-windowswmproto = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-xpext = "red"
+RECIPE_LATEST_VERSION_pn-xpext = "1.0-5"
+RECIPE_MAINTAINER_pn-xpext = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-xproxymanagementprotocol = "red"
+RECIPE_LATEST_VERSION_pn-xproxymanagementprotocol = "1.0.3"
+RECIPE_MAINTAINER_pn-xproxymanagementprotocol = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-xsp = "red"
+RECIPE_LATEST_VERSION_pn-xsp = "1.0.0-8"
+RECIPE_MAINTAINER_pn-xsp = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-droid-fonts = "red"
+RECIPE_LATEST_VERSION_pn-droid-fonts = "git:e3ea6e3d4c8a8c2dc71f608a74ed9f6137afe63d;latest_tag:android-2.1_r2.1s???"
+RECIPE_MAINTAINER_pn-droid-fonts = "Dexuan Cui <dexuan.cui@intel.com>"
+
+RECIPE_STATUS_pn-libxklavier = "red"
+RECIPE_LATEST_VERSION_pn-libxklavier = "5.0"
+RECIPE_MAINTAINER_pn-libxklavier = "Dexuan Cui <dexuan.cui@intel.com>"
