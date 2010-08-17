@@ -59,7 +59,7 @@ if ! (test -d "$BITBAKEDIR" && test -d "$BUILDDIR"); then
 fi
 
 if [ "x" = "x$POKYLOCALCONF" ]; then
-    POKYLOCALCONF="$OEROOT/build/conf/local.conf.sample"
+    POKYLOCALCONF="$OEROOT/meta/conf/local.conf.sample"
 fi
 if ! (test -r "$BUILDDIR/conf/local.conf"); then
     echo "You had no conf/local.conf file. Poky has created this configuration file for you"
@@ -73,7 +73,7 @@ if ! (test -r "$BUILDDIR/conf/local.conf"); then
 fi
 
 if [ "x" = "x$POKYLAYERCONF" ]; then
-    POKYLAYERCONF="$OEROOT/build/conf/bblayers.conf.sample"
+    POKYLAYERCONF="$OEROOT/meta/conf/bblayers.conf.sample"
 fi
 if ! (test -r "$BUILDDIR/conf/bblayers.conf"); then
     echo "You had no conf/bblayers.conf file. Poky has created this configuration file for you"
