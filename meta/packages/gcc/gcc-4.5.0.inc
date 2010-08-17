@@ -45,7 +45,8 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
            file://zecke-xgcc-cpp.patch \
            file://gcc-poison-system-directories.patch \
            file://gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch \
-	   file://64bithack.patch;patch=1 \
+	   file://64bithack.patch \
+	   file://optional_libstdc.patch \
 	  "
 	
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
