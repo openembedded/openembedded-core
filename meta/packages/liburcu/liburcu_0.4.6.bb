@@ -17,7 +17,8 @@ inherit autotools
 
 # liburcu, which is only used by lttng-ust, may not build on other
 # platforms, e.g., on ARM, liburcu is only supported on ARMv7l while poky
-# only supports armv4/armv4t/armv5te.
-# So here let us first suppport x86/mips/powerpc platforms now.
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|mips.*|powerpc.*)-linux'
+# only supports armv4/armv4t/armv5te. 1 more example: liburcu doesn't support
+# MIPS now.
+# So here let us first suppport x86/powerpc platforms now.
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|powerpc.*)-linux'
 

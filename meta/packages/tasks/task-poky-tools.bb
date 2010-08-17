@@ -46,13 +46,12 @@ RDEPENDS_task-poky-tools-profile = "\
 #    exmap-server
 
 # At present we only build lttng-ust on
-# qemux86/qemux86-64/qemuppc/qemumips/emenlow/netbook since upstream liburcu
+# qemux86/qemux86-64/qemuppc/emenlow/netbook since upstream liburcu
 # (which is required by lttng-ust) may not build on other platforms, like
-# qemu ARMv5te that poky uses now.
+# MIPS and qemu ARMv5te that poky uses now.
 RDEPENDS_task-poky-tools-profile_append_qemux86 = " valgrind lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_qemux86-64 = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_qemuppc = " lttng-ust"
-RDEPENDS_task-poky-tools-profile_append_qemumips = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_emenlow = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_netbook = " lttng-ust"
 
