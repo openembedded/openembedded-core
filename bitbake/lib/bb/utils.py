@@ -253,7 +253,7 @@ def explode_dep_versions(s):
     and return a dictionary of dependencies and versions.
     """
     r = {}
-    l = s.split()
+    l = s.replace(",", "").split()
     lastdep = None
     lastver = ""
     inversion = False
