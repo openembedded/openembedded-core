@@ -62,13 +62,17 @@ if [ "x" = "x$POKYLOCALCONF" ]; then
     POKYLOCALCONF="$OEROOT/meta/conf/local.conf.sample"
 fi
 if ! (test -r "$BUILDDIR/conf/local.conf"); then
-    echo "You had no conf/local.conf file. Poky has created this configuration file for you"
-    echo "with some default values. You may wish to edit it to use a different MACHINE (target"
-    echo "hardware) or enable parallel build options to take advantage of multiple cores for"
-    echo "example. See the file for more information as common configuration options are commented."
-    echo
-    echo "Also, for more information see the Poky handbook: http://pokylinux.org/doc/poky-handbook.html"
-    echo
+cat <<EOM
+You had no conf/local.conf file. Poky has created this configuration file for
+you with some default values. You may wish to edit it to use a different MACHINE
+(target hardware) or enable parallel build options to take advantage of multiple
+cores for example. See the file for more information as common configuration
+options are commented.
+
+Also, for more information see the Poky handbook:
+http://pokylinux.org/doc/poky-handbook.html
+
+EOM
     cp -f $POKYLOCALCONF $BUILDDIR/conf/local.conf
 fi
 
@@ -76,12 +80,15 @@ if [ "x" = "x$POKYLAYERCONF" ]; then
     POKYLAYERCONF="$OEROOT/meta/conf/bblayers.conf.sample"
 fi
 if ! (test -r "$BUILDDIR/conf/bblayers.conf"); then
-    echo "You had no conf/bblayers.conf file. Poky has created this configuration file for you"
-    echo "with some default values. To add additional metadata layers into your configuration please"
-    echo "add entries to this file."
-    echo
-    echo "For more information see the Poky handbook: http://pokylinux.org/doc/poky-handbook.html"
-    echo
+cat <<EOM
+You had no conf/bblayers.conf file. Poky has created this configuration file for
+you with some default values. To add additional metadata layers into your
+configuration please add entries to this file.
+
+For more information see the Poky handbook:
+    http://pokylinux.org/doc/poky-handbook.html
+
+EOM
 
     # Put the abosolute path to the layers in bblayers.conf so we can run
     # bitbake without the init script after the first run
@@ -109,13 +116,20 @@ unset PYTHONPATH
 # Don't allow custom GConf schema paths to get into the system
 unset GCONF_SCHEMA_INSTALL_SOURCE
 
-echo
-echo "### Shell environment set up for Poky builds. ###"
-echo
-echo "You can now run 'bitbake <target>'"
-echo
-echo "Common targets are poky-image-minimal, poky-image-sato, meta-toolchain or meta-toolchain-sdk"
-echo
-echo "You can also run generated qemu images with a command like 'runqemu qemux86'"
+cat <<EOM
+
+### Shell environment set up for Poky builds. ###
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    poky-image-minimal
+    poky-image-sato
+    meta-toolchain
+    meta-toolchain-sdk
+
+You can also run generated qemu images with a command like 'runqemu qemux86'
+
+EOM
 
 export BB_ENV_EXTRAWHITE="MACHINE DISTRO POKYMODE POKYLIBC OEROOT http_proxy ftp_proxy https_proxy no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY SDKMACHINE BB_NUMBER_THREADS GIT_PROXY_COMMAND"
