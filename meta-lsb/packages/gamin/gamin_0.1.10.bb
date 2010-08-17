@@ -5,8 +5,9 @@ HOMEPAGE = "http://people.gnome.org/~veillard/gamin/"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=412a9be54757a155d0b997b52b519f62"
 
+DEPENDS = "glib-2.0"
 PROVIDES = "fam"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.gnome.org/~veillard/gamin/sources/gamin-${PV}.tar.gz \
            file://no-abstract-sockets.patch"
