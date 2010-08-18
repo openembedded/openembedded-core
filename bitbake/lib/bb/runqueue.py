@@ -1084,6 +1084,13 @@ class RunQueueExecuteTasks(RunQueueExecute):
         if self.rqdata.taskData.abort:
             self.rq.state = runQueueCleanUp
 
+    def task_skip(self, task):
+        self.runq_running[task] = 1
+        self.runq_buildable[task] = 1
+        self.task_complete(task)
+        self.stats.taskCompleted()
+        self.stats.taskSkipped()
+
     def execute(self):
         """
         Run the tasks in a queue prepared by rqdata.prepare()
@@ -1103,11 +1110,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 taskname = self.rqdata.runq_task[task]
                 if self.rq.check_stamp_task(task, taskname):
                     bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.rqdata.get_user_idstring(task)))
-                    self.runq_running[task] = 1
-                    self.runq_buildable[task] = 1
-                    self.task_complete(task)
-                    self.stats.taskCompleted()
-                    self.stats.taskSkipped()
+                    self.task_skip(task)
                     continue
 
                 pid, pipein, pipeout = self.fork_off_task(fn, task, taskname)
