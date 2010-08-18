@@ -690,6 +690,8 @@ class BBCooker:
                 bb.event.fire(bb.event.BuildCompleted(buildname, item, failures), self.configuration.event_data)
                 self.command.finishAsyncCommand()
                 return False
+            if retval is True:
+                return True
             return 0.5
 
         self.server.register_idle_function(buildFileIdle, rq)
@@ -709,7 +711,6 @@ class BBCooker:
         targets = self.checkPackages(targets)
 
         def buildTargetsIdle(server, rq, abort):
-
             if abort or self.cookerAction == cookerStop:
                 rq.finish_runqueue(True)
             elif self.cookerAction == cookerShutdown:
@@ -726,6 +727,8 @@ class BBCooker:
                 bb.event.fire(bb.event.BuildCompleted(buildname, targets, failures), self.configuration.event_data)
                 self.command.finishAsyncCommand()
                 return None
+            if retval is True:
+                return True
             return 0.5
 
         self.buildSetVars()

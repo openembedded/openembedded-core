@@ -854,6 +854,8 @@ class RunQueue:
         (if the abort on failure configuration option isn't set)
         """
 
+        retval = 0.5
+
         if self.state is runQueuePrepare:
             self.rqdata.prepare()
             self.state = runQueueRunInit
@@ -885,7 +887,7 @@ class RunQueue:
             return False
 
         # Loop
-        return True
+        return retval
 
     def execute_runqueue_initVars(self):
 
