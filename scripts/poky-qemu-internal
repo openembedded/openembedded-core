@@ -71,7 +71,12 @@ done
 if [ "$TAP" = "" ]; then
     GROUPID=`id -g`
     echo 'Setting up tap interface under sudo'
-    TAP=`sudo $QEMUIFUP $GROUPID`
+    TAP=`sudo $QEMUIFUP $GROUPID $NATIVE_SYSROOT_DIR`
+    if [ $? -ne 0 ]; then
+        # Re-run standalone to see verbose errors
+        sudo $QEMUIFUP $GROUPID $NATIVE_SYSROOT_DIR
+        return
+    fi
     LOCKFILE=""
 else
     echo "Using preconfigured tap device '$TAP'"
@@ -79,7 +84,7 @@ fi
 
 release_lock() {
     if [ "$LOCKFILE" = "" ]; then
-        $QEMUIFDOWN $TAP
+        $QEMUIFDOWN $TAP $NATIVE_SYSROOT_DIR
     else
         echo "Releasing lockfile of preconfigured tap device '$TAP'"
         rm -f $LOCKFILE

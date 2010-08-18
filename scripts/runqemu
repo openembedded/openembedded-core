@@ -215,4 +215,12 @@ fi
 
 CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr/bin:$CROSSPATH
 
+SYSROOT_SETUP_SCRIPT=`which poky-find-native-sysroot`
+if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
+    echo "Error: Unable to find the poky-find-native-sysroot script"
+    echo "Did you forget to source your Poky environment script?"
+    exit 1
+fi
+. $SYSROOT_SETUP_SCRIPT
+
 . $INTERNAL_SCRIPT
