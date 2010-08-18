@@ -4,7 +4,6 @@ LICENSE = "GPL"
 
 # Set this to 'preempt_rt' in the local.conf if you want a real time kernel
 LINUX_KERNEL_TYPE ?= standard
-DEPENDS = "kern-tools-native"
 SRCREV_FORMAT = "meta_machine"
 PV = "2.6.34+git${SRCPV}"
 
@@ -109,7 +108,7 @@ do_install_perf() {
 	oe_runmake -C ${S}/tools/perf CC="${KERNEL_CC}" LD="${KERNEL_LD}" prefix=${prefix} DESTDIR=${D} install
 }
 
-do_wrlinux_configme[depends] = "kern-tools-native:do_populate_sysroot"
+do_patch[depends] = "kern-tools-native:do_populate_sysroot"
 addtask wrlinux_configme before do_configure after do_patch
 addtask wrlinux_link_vmlinux after do_compile before do_install
 addtask wrlinux_configcheck after do_configure before do_compile
