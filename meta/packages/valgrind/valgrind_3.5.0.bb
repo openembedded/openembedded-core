@@ -13,7 +13,7 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
 	   file://valgrind_3.5.0-svn_r11264.patch.bz2 \
 	   file://fix_issue_caused_by_ccache.patch " 
 
-COMPATIBLE_HOST = 'i.86.*-linux'
+COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 inherit autotools
 

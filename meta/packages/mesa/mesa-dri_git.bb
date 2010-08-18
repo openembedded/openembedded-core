@@ -56,4 +56,4 @@ python populate_packages_prepend() {
 	do_split_packages(d, dri_drivers_root, '^(.*)_dri\.so$', 'mesa-dri-driver-%s', 'Mesa %s DRI driver', extra_depends='')
 }
 
-COMPATIBLE_HOST = '(i.86.*-linux)'
+COMPATIBLE_HOST = '(i.86|x86_64).*-linux'

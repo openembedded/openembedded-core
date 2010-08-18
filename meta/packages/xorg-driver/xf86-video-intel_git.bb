@@ -13,6 +13,4 @@ SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-video-intel;protoc
 
 S = "${WORKDIR}/git"
 
-COMPATIBLE_HOST = '(i.86.*-linux)'
-
-
+COMPATIBLE_HOST = '(i.86|x86_4).*-linux'
