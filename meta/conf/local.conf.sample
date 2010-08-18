@@ -146,6 +146,7 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # testing in qemu after do_rootfs.
 #IMAGETEST = "qemu"
 
-# By default testing will run the sanitytest suite. If you want to run other tests
-# (e.g. bat), list them here
-#TEST_SCEN = "sanitytest bat"
+# By default test cases in sanity suite will be ran. If you want to run other 
+# test suite or specific test case(e.g. bat or boot test case under sanity suite), 
+# list them like following.
+#TEST_SCEN = "sanity bat sanity:boot"

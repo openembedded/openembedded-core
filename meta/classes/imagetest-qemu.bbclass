@@ -8,7 +8,6 @@ do_qemuimagetest[depends] += "qemu-native:do_populate_sysroot"
 TEST_DIR ?= "${WORKDIR}/qemuimagetest"
 TEST_LOG ?= "${LOG_DIR}/qemuimagetests"
 TEST_RESULT ?= "${TEST_DIR}/result"
-TEST_LIST ?= "${TEST_DIR}/list"
 TEST_TMP ?= "${TEST_DIR}/tmp"
 TEST_SCEN ?= "sanity"
 
@@ -21,15 +20,14 @@ python do_qemuimagetest() {
     Test Controller for Poky Testing.
     """
     
-    casestr = re.compile(r'(?P<scen>\w+\b)\s*(?P<case>\w+$)')
+    casestr = re.compile(r'(?P<scen>\w+\b):(?P<case>\w+$)')
     resultstr = re.compile(r'\s*(?P<case>\w+)\s*(?P<pass>\d+)\s*(?P<fail>\d+)\s*(?P<noresult>\d+)')
+    machine = bb.data.getVar('MACHINE', d, 1)
+    pname = bb.data.getVar('PN', d, 1)
     
     """funtion to run each case under scenario"""
     def runtest(scen, case, fulltestpath):
         resultpath = bb.data.getVar('TEST_RESULT', d, 1)
-        machine = bb.data.getVar('MACHINE', d, 1)
-        pname = bb.data.getVar('PN', d, 1)
-
         testpath = bb.data.getVar('TEST_DIR', d, 1)
 
         """initialize log file for testcase"""
@@ -54,31 +52,39 @@ python do_qemuimagetest() {
         os.system("%s | tee -a %s" % (fulltestpath, caselog))
     
     """Generate testcase list in runtime"""
-    def generate_list(testfile, testlist):
+    def generate_list(testlist):
         list = []
         if len(testlist) == 0:
             raise bb.build.FuncFailed("No testcase defined in TEST_SCEN")
 
-        """remove old testcase list file"""
-        if os.path.exists(testfile):
-            os.remove(testfile)
-        os.system("touch %s" % testfile)
-
-        """check testcase folder and add case to TEST_LIST"""
+        """check testcase folder and add case list according to TEST_SCEN"""
         for item in testlist.split(" "):
-            found = False
-            for dir in bb.data.getVar("QEMUIMAGETESTS", d, True).split():
-                casepath = os.path.join(dir, item)
-                if not os.path.isdir(casepath):
-                    continue
-                files = os.listdir(casepath)
-                for casefile in files:
-                    fulltestcase = "%s/%s" % (casepath, casefile)
-                    if os.path.isfile(fulltestcase):
-                        list.append((item, casefile, fulltestcase))
-                    found = True
-            if not found:
-                raise bb.build.FuncFailed("Testcase folder not found for test %s" % item)
+            n = casestr.match(item)
+            if n:
+                item = n.group('scen')
+                casefile = n.group('case')
+                for dir in bb.data.getVar("QEMUIMAGETESTS", d, True).split():
+                    fulltestcase = os.path.join(dir, item, casefile)
+                    if not os.path.isfile(fulltestcase):
+                        raise bb.build.FuncFailed("Testcase %s not found" % fulltestcase)
+                    list.append((item, casefile, fulltestcase))
+            else:
+                for dir in bb.data.getVar("QEMUIMAGETESTS", d, True).split():
+                    scenlist = os.path.join(dir, "scenario", machine, pname)
+                    if not os.path.isfile(scenlist):
+                        raise bb.build.FuncFailed("No scenario list file named %s found" % scenlist)
+
+                    f = open(scenlist, "r")
+                    for line in f:
+                       if item != line.split()[0]:
+                           continue
+                       else:
+                           casefile = line.split()[1]
+
+                       fulltestcase = os.path.join(dir, item, casefile)
+                       if not os.path.isfile(fulltestcase):
+                            raise bb.build.FuncFailed("Testcase %s not found" % fulltestcase)
+                       list.append((item, casefile, fulltestcase))
         return list
 
     """check testcase folder and create test log folder"""
@@ -109,9 +115,8 @@ python do_qemuimagetest() {
     f.close()
     
     """generate pre-defined testcase list"""
-    testfile = bb.data.getVar('TEST_LIST', d, 1)
     testlist = bb.data.getVar('TEST_SCEN', d, 1)
-    fulllist = generate_list(testfile, testlist)
+    fulllist = generate_list(testlist)
 
     """Begin testing"""
     for test in fulllist:
