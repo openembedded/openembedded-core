@@ -310,13 +310,16 @@ def better_compile(text, file, realfile, mode = "exec"):
         # split the text into lines again
         body = text.split('\n')
         bb.msg.error(bb.msg.domain.Util, "Error in compiling python function in: %s" % (realfile))
-        bb.msg.error(bb.msg.domain.Util, "The lines leading to this error were:")
-        bb.msg.error(bb.msg.domain.Util, "\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
-
-        _print_trace(body, e.lineno)
-
-        # exit now
-        sys.exit(1)
+        bb.msg.error(bb.msg.domain.Util, str(e))
+        if e.lineno:
+            bb.msg.error(bb.msg.domain.Util, "The lines leading to this error were:")
+            bb.msg.error(bb.msg.domain.Util, "\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
+            _print_trace(body, e.lineno)
+        else:
+            bb.msg.error(bb.msg.domain.Util, "The function causing this error was:")
+            for line in body:
+                bb.msg.error(bb.msg.domain.Util, line)
+        raise
 
 def better_exec(code, context, text, realfile):
     """
