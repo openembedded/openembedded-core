@@ -439,10 +439,7 @@ python () {
 
     # If we're building a target package we need to use fakeroot (pseudo)
     # in order to capture permissions, owners, groups and special files
-    
-    # Disabled by RP 17/8/10 until we fix pseudo under python based tasks
-
-    if False and not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
+    if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
         deps = (bb.data.getVarFlag('do_install', 'depends', d) or "").split()
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_install', 'depends', " ".join(deps),d)
