@@ -990,9 +990,6 @@ class RunQueueExecute:
         return
 
     def fork_off_task(self, fn, task, taskname):
-        sys.stdout.flush()
-        sys.stderr.flush()
-
         try:
             the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
 
@@ -1004,6 +1001,9 @@ class RunQueueExecute:
                 for var in envvars:
                     comps = var.split("=")
                     env[comps[0]] = comps[1]
+
+            sys.stdout.flush()
+            sys.stderr.flush()
 
             proc = subprocess.Popen(["bitbake-runtask", fn, taskname, str(self.cooker.configuration.dry_run)], env=env, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
             pipein = proc.stdout
