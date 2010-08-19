@@ -52,16 +52,16 @@ python __anonymous () {
             extras.append("--with-%s" % lib)
             packages.append(pkg)
             if not bb.data.getVar("FILES_%s" % pkg, d, 1):
-                    bb.data.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so*" % lib, d)
+                    bb.data.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib, d)
     bb.data.setVar("BOOST_PACKAGES", " ".join(packages), d)
     bb.data.setVar("BJAM_EXTRA", " ".join(extras), d)
 }
 
 # Override the contents of specific packages
-FILES_boost-serialization = "${libdir}/libboost_serialization*.so* \
-	${libdir}/libboost_wserialization*.so*"
-FILES_boost-test = "${libdir}/libboost_prg_exec_monitor*.so \
-	${libdir}/libboost_unit_test_framework*.so*"
+FILES_boost-serialization = "${libdir}/libboost_serialization*.so.* \
+	${libdir}/libboost_wserialization*.so.*"
+FILES_boost-test = "${libdir}/libboost_prg_exec_monitor*.so.* \
+	${libdir}/libboost_unit_test_framework*.so.*"
 
 # -dev last to pick up the remaining stuff
 PACKAGES += "${PN}-dev"
@@ -70,6 +70,7 @@ FILES_${PN}-dev = "${includedir} ${libdir}/libboost_*.so ${libdir}/libboost_*.a"
 # "boost" is a metapackage which pulls in all boost librabries
 PACKAGES += "${PN}"
 RRECOMMENDS_${PN} += "${BOOST_PACKAGES}"
+ALLOW_EMPTY_${PN} = "1"
 
 # to avoid GNU_HASH QA errors added LDFLAGS to ARCH; a little bit dirty but at least it works
 TARGET_CC_ARCH += " ${LDFLAGS}" 
