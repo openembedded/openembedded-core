@@ -683,7 +683,7 @@ class RunQueueData:
             setscene = taskData.gettask_id(self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task] + "_setscene", False)
             if not setscene:
                 continue
-            bb.note("Found setscene for %s %s" % (self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task]))
+            #bb.note("Found setscene for %s %s" % (self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task]))
             self.runq_setscene.append(task)
 
     def dump_data(self, taskQueue):
@@ -898,8 +898,8 @@ class RunQueue:
 
         if self.state is runQueueFailed:
             if not self.rqdata.taskData.tryaltconfigs:
-                raise bb.runqueue.TaskFailure(self.failed_fnids)
-            for fnid in self.failed_fnids:
+                raise bb.runqueue.TaskFailure(self.rqexe.failed_fnids)
+            for fnid in self.rqexe.failed_fnids:
                 self.rqdata.taskData.fail_fnid(fnid)
             self.rqdata.reset()
 
@@ -959,9 +959,6 @@ class RunQueueExecute:
                     self.task_fail(task, proc.returncode)
                 else:
                     self.task_complete(task)
-                    self.stats.taskCompleted()
-                    bb.event.fire(runQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
-
 
     def finish_now(self):
         if self.stats.active:
@@ -997,13 +994,6 @@ class RunQueueExecute:
         sys.stderr.flush()
 
         try:
-            bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
-            bb.msg.note(1, bb.msg.domain.RunQueue,
-                        "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
-                                                                self.stats.total,
-                                                                task,
-                                                                self.rqdata.get_user_idstring(task)))
-
             the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
 
             env = bb.data.export_vars(the_data)
@@ -1070,7 +1060,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
             self.sched = RunQueueSchedulerSpeed(self, self.rqdata)
 
 
-    def task_complete(self, task):
+    def task_completeoutright(self, task):
         """
         Mark a task as completed
         Look at the reverse dependencies and mark any task with
@@ -1092,6 +1082,11 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 taskname = self.rqdata.runq_task[revdep]
                 bb.msg.debug(1, bb.msg.domain.RunQueue, "Marking task %s (%s, %s) as buildable" % (revdep, fn, taskname))
 
+    def task_complete(self, task):
+        self.stats.taskCompleted()
+        bb.event.fire(runQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
+        self.task_completeoutright(task)
+
     def task_fail(self, task, exitcode):
         """
         Called when a task has failed
@@ -1108,7 +1103,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
     def task_skip(self, task):
         self.runq_running[task] = 1
         self.runq_buildable[task] = 1
-        self.task_complete(task)
+        self.task_completeoutright(task)
         self.stats.taskCompleted()
         self.stats.taskSkipped()
 
@@ -1133,6 +1128,13 @@ class RunQueueExecuteTasks(RunQueueExecute):
                     bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.rqdata.get_user_idstring(task)))
                     self.task_skip(task)
                     continue
+
+                bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
+                bb.msg.note(1, bb.msg.domain.RunQueue,
+                            "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
+                                                                    self.stats.total,
+                                                                    task,
+                                                                    self.rqdata.get_user_idstring(task)))
 
                 proc = self.fork_off_task(fn, task, taskname)
 
@@ -1264,7 +1266,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
             if len(self.sq_revdeps2[dep]) == 0:
                 self.runq_buildable[dep] = 1
 
-    def task_complete(self, task):
+    def task_completeoutright(self, task):
         """
         Mark a task as completed
         Look at the reverse dependencies and mark any task with
@@ -1276,6 +1278,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
         self.scenequeue_covered.add(task)
         self.scenequeue_updatecounters(task)
+
+    def task_complete(self, task):
+        self.stats.taskCompleted()
+        self.task_completeoutright(task)
 
     def task_fail(self, task, result):
         self.stats.taskFailed()
@@ -1296,7 +1302,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
     def task_skip(self, task):
         self.runq_running[task] = 1
         self.runq_buildable[task] = 1
-        self.task_complete(task)
+        self.task_completeoutright(task)
         self.stats.taskCompleted()
         self.stats.taskSkipped()
 
@@ -1337,6 +1343,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                 bb.msg.debug(2, bb.msg.domain.RunQueue, "Setscene stamp current task %s (%s) so skip it and its dependencies" % (task, self.rqdata.get_user_idstring(realtask)))
                 self.task_skip(task)
                 return True
+
+            bb.msg.note(1, bb.msg.domain.RunQueue,
+                        "Running setscene task %d of %d (%s:%s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
+                                                                         self.stats.total, fn, taskname))
 
             proc = self.fork_off_task(fn, realtask, taskname)
 
