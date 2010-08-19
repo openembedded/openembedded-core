@@ -352,7 +352,7 @@ else
 fi
 
 echo "Running $QEMU..."
-echo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE"
+echo $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append '"'$KERNCMDLINE'"'
 $QEMUBIN -kernel $ZIMAGE $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE" || /bin/true
 
 release_lock
