@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Tools tasks for Poky"
 LICENSE = "MIT"
-PR = "r4"
+PR = "r5"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -41,6 +41,9 @@ RDEPENDS_task-poky-tools-profile = "\
     latencytop \
     lttng-control \
     lttng-viewer"
+
+RRECOMMENDS_task-poky-tools-profile = "\
+    perf"
 
 #    exmap-console
 #    exmap-server
