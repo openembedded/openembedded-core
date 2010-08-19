@@ -29,8 +29,6 @@ do_configure() {
 	oe_runconf
 }
 
-INHIBIT_AUTO_STAGE = "1"
-
 do_install() {
 	# Same here, the Makefile does some really stupid things,
 	# but since we only want two files why not override
