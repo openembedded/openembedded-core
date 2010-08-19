@@ -260,7 +260,7 @@ do_package_write_deb[sstate-outputdirs] = "${DEPLOY_DIR_DEB}"
 python do_package_write_deb_setscene () {
     sstate_setscene(d)
 }
-addtask do_package_write_deb_setscene
+#addtask do_package_write_deb_setscene
 
 python () {
     if bb.data.getVar('PACKAGES', d, True) != '':

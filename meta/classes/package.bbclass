@@ -1015,7 +1015,7 @@ do_package[sstate-lockfile] = "${PACKAGELOCK}"
 python do_package_setscene () {
 	sstate_setscene(d)
 }
-addtask do_package_setscene
+#addtask do_package_setscene
 
 # Dummy task to mark when all packaging is complete
 do_package_write () {

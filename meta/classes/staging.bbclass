@@ -110,7 +110,7 @@ do_populate_sysroot[sstate-outputdirs] = "${TMPDIR}/sysroots"
 python do_populate_sysroot_setscene () {
 	sstate_setscene(d)
 }
-addtask do_populate_sysroot_setscene
+#addtask do_populate_sysroot_setscene
 
 
 python () {
