@@ -65,8 +65,23 @@ do_wrlinux_checkout() {
 		rm -rf ${S}
 		mkdir ${S}
 		mv ${WORKDIR}/.git ${S}
-		mv ${S}/.git/refs/remotes/origin/* ${S}/.git/refs/heads
-		rmdir ${S}/.git/refs/remotes/origin
+	
+		if [ -e ${S}/.git/packed-refs ]; then
+			cd ${S}
+			rm -f .git/refs/remotes/origin/HEAD
+IFS='
+';
+
+			for r in `git show-ref | grep remotes`; do
+				ref=`echo $r | cut -d' ' -f1`; 
+				b=`echo $r | cut -d'/' -f4`;
+				echo $ref > .git/refs/heads/$b
+			done
+			cd ..
+		else
+			mv ${S}/.git/refs/remotes/origin/* ${S}/.git/refs/heads
+			rmdir ${S}/.git/refs/remotes/origin
+		fi
 	fi
 	cd ${S}
 	git checkout -f ${WRMACHINE}-${LINUX_KERNEL_TYPE}
