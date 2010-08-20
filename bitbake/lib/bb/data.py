@@ -233,9 +233,14 @@ def export_vars(d):
     keys = (key for key in d.keys() if d.getVarFlag(key, "export"))
     ret = {}
     for k in keys:
-        v = d.getVar(k, True)
-        if v: 
-            ret[k] = v
+        try:
+            v = d.getVar(k, True)
+            if v: 
+                ret[k] = v
+        except (KeyboardInterrupt, bb.build.FuncFailed):
+            raise
+        except Exception, exc:
+            pass
     return ret
 
 def update_data(d):
