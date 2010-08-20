@@ -1467,5 +1467,5 @@ class runQueuePipe():
         while self.read():
             continue
         if len(self.queue) > 0:
-            print("Warning, worker left partial message")
+            print("Warning, worker left partial message: %s" % self.queue)
         self.fd.close()

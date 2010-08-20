@@ -133,7 +133,9 @@ def error(msgdomain, msg, fn = None):
 
 def fatal(msgdomain, msg, fn = None):
     bb.event.fire(MsgFatal(msg), None)
-    print('FATAL: %s' % (msg))
+
+    if bb.event.useStdout:
+        print('FATAL: %s' % (msg))
     sys.exit(1)
 
 def plain(msg, fn = None):

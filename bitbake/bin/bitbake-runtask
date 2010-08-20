@@ -31,19 +31,26 @@ warnings.simplefilter("ignore", DeprecationWarning)
 
 import bb.event
 
-# Need to map our I/O correctly. Currently stdout is a pipe to 
-# the server expecting events. We save this and map stdout to stderr.
+# Need to map our I/O correctly. stdout is a pipe to the server expecting 
+# events. We save this and then map stdout to stderr.
 
 eventfd = os.dup(sys.stdout.fileno())
 bb.event.worker_pipe = os.fdopen(eventfd, 'w', 0)
-# Replace those fds with our own
+
+# map stdout to stderr
 os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
+
+# Replace those fds with our own
+#logout = data.expand("${TMPDIR}/log/stdout.%s" % os.getpid(), self.cfgData, True)
+#mkdirhier(os.path.dirname(logout))
+#newso = open("/tmp/stdout.%s" % os.getpid(), 'w')
+#os.dup2(newso.fileno(), sys.stdout.fileno())
+#os.dup2(newso.fileno(), sys.stderr.fileno())
 
 # Save out the PID so that the event can include it the
 # events
 bb.event.worker_pid = os.getpid()
-bb.event.usestdout = False
-
+bb.event.useStdout = False
 
 import bb.cooker
 

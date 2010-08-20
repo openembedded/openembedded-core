@@ -152,6 +152,9 @@ def exec_func(func, d, dirs = None):
     os.dup2(so.fileno(), oso[1])
     os.dup2(se.fileno(), ose[1])
 
+    # Since we've remapped stdout and stderr, its safe for log messages to be printed there now
+    # exec_func can nest so we have to save state
+    origstdout = bb.event.useStdout
     bb.event.useStdout = True
 
     locks = []
@@ -179,7 +182,10 @@ def exec_func(func, d, dirs = None):
         for lock in locks:
             bb.utils.unlockfile(lock)
 
-        bb.event.useStdout = False
+        sys.stdout.flush()
+        sys.stderr.flush()
+
+        bb.event.useStdout = origstdout
 
         # Restore the backup fds
         os.dup2(osi[0], osi[1])
