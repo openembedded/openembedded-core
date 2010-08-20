@@ -47,9 +47,9 @@ INITSCRIPT_PARAMS_udev = "start 04 S ."
 INITSCRIPT_NAME_udev-cache = "udev-cache"
 INITSCRIPT_PARAMS_udev-cache = "start 36 S ."
 
-FILES_${PN} += "${libexecdir} ${datadir}/pkgconfig/udev.pc ${libdir}/ConsoleKit"
+FILES_${PN} += "${libexecdir} ${libdir}/ConsoleKit"
 FILES_${PN}-dbg += "${libexecdir}/.debug"
-FILES_${PN}-dev = ""
+FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc"
 FILES_libudev = "${base_libdir}/libudev.so.*"
 FILES_libudev-dbg = "${base_libdir}/.debug/libudev.so.*"
 FILES_libudev-dev = "${includedir}/libudev.h ${libdir}/libudev.so ${libdir}/libudev.la \
