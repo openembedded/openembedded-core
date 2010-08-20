@@ -544,7 +544,8 @@ class BBCooker:
             for var in bb.data.getVar('__BBHANDLERS', self.configuration.data) or []:
                 bb.event.register(var, bb.data.getVar(var, self.configuration.data))
 
-            bb.fetch.fetcher_init(self.configuration.data)
+            if bb.data.getVar("BB_WORKERCONTEXT", self.configuration.data) is None:
+                bb.fetch.fetcher_init(self.configuration.data)
 
             bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
 
