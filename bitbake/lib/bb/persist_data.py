@@ -67,20 +67,20 @@ class PersistData:
         Should be called before any domain is used
         Creates it if it doesn't exist.
         """
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS %s(key TEXT, value TEXT);" % domain)
+        self._execute("CREATE TABLE IF NOT EXISTS %s(key TEXT, value TEXT);" % domain)
 
     def delDomain(self, domain):
         """
         Removes a domain and all the data it contains
         """
-        self.cursor.execute("DROP TABLE IF EXISTS %s;" % domain)
+        self._execute("DROP TABLE IF EXISTS %s;" % domain)
 
     def getKeyValues(self, domain):
         """
         Return a list of key + value pairs for a domain
         """
         ret = {}
-        data = self.cursor.execute("SELECT key, value from %s;" % domain)
+        data = self._execute("SELECT key, value from %s;" % domain)
         for row in data:
             ret[str(row[0])] = str(row[1])
 
@@ -90,7 +90,7 @@ class PersistData:
         """
         Return the value of a key for a domain
         """
-        data = self.cursor.execute("SELECT * from %s where key=?;" % domain, [key])
+        data = self._execute("SELECT * from %s where key=?;" % domain, [key])
         for row in data:
             return row[1]
 
@@ -98,7 +98,7 @@ class PersistData:
         """
         Sets the value of a key for a domain
         """
-        data = self.cursor.execute("SELECT * from %s where key=?;" % domain, [key])
+        data = self._execute("SELECT * from %s where key=?;" % domain, [key])
         rows = 0
         for row in data:
             rows = rows + 1
@@ -113,12 +113,21 @@ class PersistData:
         """
         self._execute("DELETE from %s where key=?;" % domain, [key])
 
+    #
+    # We wrap the sqlite execute calls as on contended machines or single threaded 
+    # systems we can have multiple processes trying to access the DB at once and it seems
+    # sqlite sometimes doesn't wait for the timeout. We therefore loop but put in an 
+    # emergency brake too
+    #
     def _execute(self, *query):
+        count = 0
         while True:
             try:
-                self.cursor.execute(*query)
-                return
+                ret = self.cursor.execute(*query)
+                #print "Had to retry %s times" % count
+                return ret
             except sqlite3.OperationalError as e:
-                if 'database is locked' in str(e):
+                if 'database is locked' in str(e) and count < 500:
+                    count = count + 1
                     continue
                 raise
