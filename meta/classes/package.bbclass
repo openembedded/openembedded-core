@@ -14,23 +14,30 @@
 # c) populate_packages - Split the files in PKGD into separate packages in PKGDEST/<pkgname>
 #    Also triggers the binary stripping code to put files in -dbg packages.
 #
-# d) package_do_shlibs - Look at the shared libraries generated and autotmatically add any 
+# d) package_do_filedeps - Collect perfile run-time dependency metadata
+#    The data is stores in FILER{PROVIDES,DEPENDS}_file_pkg variables with
+#    a list of affected files in FILER{PROVIDES,DEPENDS}FLIST_pkg
+#
+# e) package_do_shlibs - Look at the shared libraries generated and autotmatically add any 
 #    depenedencies found. Also stores the package name so anyone else using this library 
 #    knows which package to depend on.
 #
-# e) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
+# f) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
 #
-# f) read_shlibdeps - Reads the stored shlibs information into the metadata
+# g) read_shlibdeps - Reads the stored shlibs information into the metadata
 #
-# g) package_depchains - Adds automatic dependencies to -dbg and -dev packages
+# h) package_depchains - Adds automatic dependencies to -dbg and -dev packages
 #
-# h) emit_pkgdata - saves the packaging data into PKGDATA_DIR for use in later 
+# i) emit_pkgdata - saves the packaging data into PKGDATA_DIR for use in later 
 #    packaging steps
 
 inherit packagedata
 
 PKGD    = "${WORKDIR}/package"
 PKGDEST = "${WORKDIR}/packages-split"
+
+# rpm is used for the per-file dependency identification
+PACKAGE_DEPENDS += "rpm-native"
 
 def legitimize_package_name(s):
 	"""
@@ -519,6 +526,14 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'pkg_postrm')
 		write_if_exists(sf, pkg, 'pkg_preinst')
 		write_if_exists(sf, pkg, 'pkg_prerm')
+		write_if_exists(sf, pkg, 'FILERPROVIDESFLIST')
+		for dfile in (bb.data.getVar('FILERPROVIDESFLIST_' + pkg, d, True) or "").split():
+			write_if_exists(sf, pkg, 'FILERPROVIDES_' + dfile)
+
+		write_if_exists(sf, pkg, 'FILERDEPENDSFLIST')
+		for dfile in (bb.data.getVar('FILERDEPENDSFLIST_' + pkg, d, True) or "").split():
+			write_if_exists(sf, pkg, 'FILERDEPENDS_' + dfile)
+
 		sf.close()
 
 
@@ -544,6 +559,62 @@ fi
 
 SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
 SHLIBSWORKDIR = "${WORKDIR}/shlibs"
+
+RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/${BUILD_ARCH}-${BUILD_OS}-rpmdeps"
+
+# Collect perfile run-time dependency metadata
+# Output:
+#  FILERPROVIDESFLIST_pkg - list of all files w/ deps
+#  FILERPROVIDES_filepath_pkg - per file dep
+#
+#  FILERDEPENDSFLIST_pkg - list of all files w/ deps
+#  FILERDEPENDS_filepath_pkg - per file dep
+
+python package_do_filedeps() {
+	import os
+
+	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	packages = bb.data.getVar('PACKAGES', d, True)
+
+	cmd = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/perfile_rpmdeps.sh", d)
+	rpmdeps = bb.data.expand("${RPMDEPS}", d)
+
+	# Quick routine to process the results of the rpmdeps call...
+	def process_deps(pipe, pkg, varname):
+		dep_files = ""
+		for line in pipe:
+			key = "";
+			value = "";
+			# We expect two items on each line
+			# 1 - filepath
+			# 2 - dep list
+			line_list = line.split(None,1);
+			if len(line_list) <= 0 or len(line_list) > 2:
+				bb.error("deps list length error! " + len(line_list));
+			if len(line_list) == 2:
+				file = line_list[0];
+				value = line_list[1]
+				file = file.replace(pkgdest + "/" + pkg, "")
+				dep_files = dep_files + " " + file
+				key = "FILE" + varname + "_" + file + "_" + pkg
+				bb.data.setVar(key, value, d)
+		bb.data.setVar("FILE" + varname + "_" + pkg, dep_files, d)
+
+	# Determine dependencies
+	for pkg in packages.split():
+		if pkg.endswith('-dbg'):
+			continue
+
+		# Process provides
+		dep_pipe = os.popen(cmd + " --rpmdeps " + rpmdeps + " --provides " + pkgdest + "/" + pkg)
+
+		process_deps(dep_pipe, pkg, 'RPROVIDES')
+
+		# Process requirements
+		dep_pipe = os.popen(cmd + " --rpmdeps " + rpmdeps + " --requires " + pkgdest + "/" + pkg)
+
+		process_deps(dep_pipe, pkg, 'RDEPENDS')
+}
 
 python package_do_shlibs() {
 	import re
@@ -976,6 +1047,7 @@ PACKAGEFUNCS ?= "perform_packagecopy \
                 ${PACKAGE_PREPROCESS_FUNCS} \
 		package_do_split_locales \
 		populate_packages \
+		package_do_filedeps \
 		package_do_shlibs \
 		package_do_pkgconfig \
 		read_shlibdeps \
