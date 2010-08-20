@@ -408,14 +408,15 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-ed = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-ed = "07/2009"
 RECIPE_COMMENTS_pn-ed = "GPLv3 was used since ed 0.6"
 
-RECIPE_STATUS_pn-pax = "red"
+RECIPE_STATUS_pn-pax = "green"
 RECIPE_MAINTAINER_pn-pax = "Edwin Zhai <edwin.zhai@intel.com>"
-RECIPE_LATEST_VERSION_pn-pax = "20090728-1"
-
-
-
-
-
+DEPENDENCY_CHECK_pn-pax = "not done"
+RECIPE_LATEST_VERSION_pn-pax = "3.4"
+RECIPE_NO_OF_PATCHES_pn-pax = "0"
+RECIPE_INTEL_SECTION_pn-pax = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pax = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-pax = "08/2005"
+RECIPE_COMMENTS_pn-pax = ""
 
 
 RECIPE_STATUS_pn-watchdog = "red"
