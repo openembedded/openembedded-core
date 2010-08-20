@@ -1,0 +1,25 @@
+diff -Nurd ../glibc-initial-2.5-r4/glibc-2.5/sysdeps/powerpc/fpu/e_sqrt.c glibc-2.5/sysdeps/powerpc/fpu/e_sqrt.c
+--- ../glibc-initial-2.5-r4/glibc-2.5/sysdeps/powerpc/fpu/e_sqrt.c	2006-04-14 07:44:30.000000000 +0200
++++ glibc-2.5/sysdeps/powerpc/fpu/e_sqrt.c	2006-12-08 12:53:32.202227000 +0100
+@@ -25,6 +25,9 @@
+ #include <sysdep.h>
+ #include <ldsodefs.h>
+ 
++#define __CPU_HAS_FSQRT ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
++
++
+ static const double almost_half = 0.5000000000000001;	/* 0.5 + 2^-53 */
+ static const ieee_float_shape_type a_nan = {.word = 0x7fc00000 };
+ static const ieee_float_shape_type a_inf = {.word = 0x7f800000 };
+diff -Nurd ../glibc-initial-2.5-r4/glibc-2.5/sysdeps/powerpc/fpu/e_sqrtf.c glibc-2.5/sysdeps/powerpc/fpu/e_sqrtf.c
+--- ../glibc-initial-2.5-r4/glibc-2.5/sysdeps/powerpc/fpu/e_sqrtf.c	2006-04-14 07:44:30.000000000 +0200
++++ glibc-2.5/sysdeps/powerpc/fpu/e_sqrtf.c	2006-12-08 12:53:36.992227000 +0100
+@@ -25,6 +25,8 @@
+ #include <sysdep.h>
+ #include <ldsodefs.h>
+ 
++#define __CPU_HAS_FSQRT ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
++
+ static const float almost_half = 0.50000006;	/* 0.5 + 2^-24 */
+ static const ieee_float_shape_type a_nan = {.word = 0x7fc00000 };
+ static const ieee_float_shape_type a_inf = {.word = 0x7f800000 };
