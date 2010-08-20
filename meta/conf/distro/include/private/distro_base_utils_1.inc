@@ -419,9 +419,15 @@ RECIPE_LATEST_RELEASE_DATE_pn-pax = "08/2005"
 RECIPE_COMMENTS_pn-pax = ""
 
 
-RECIPE_STATUS_pn-watchdog = "red"
+RECIPE_STATUS_pn-watchdog = "green"
 RECIPE_MAINTAINER_pn-watchdog = "Dexuan Cui <dexuan.cui@intel.com>"
+DEPENDENCY_CHECK_pn-watchdog = "not done"
 RECIPE_LATEST_VERSION_pn-watchdog = "5.9"
+RECIPE_NO_OF_PATCHES_pn-watchdog = "0"
+RECIPE_INTEL_SECTION_pn-watchdog = "base utils"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-watchdog = "3 months"
+RECIPE_LATEST_RELEASE_DATE_pn-watchdog = "06/2010"
+RECIPE_COMMENTS_pn-watchdog = ""
 
 RECIPE_STATUS_pn-json-glib  = "red"
 RECIPE_LATEST_VERSION_pn-json-glib  = "0.7.6+d5922b42604c09ba7ebcb0adc1566d0a33a99808"
