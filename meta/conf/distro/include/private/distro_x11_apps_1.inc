@@ -4,7 +4,7 @@
 
 RECIPE_STATUS_pn-owl-video = "green" # no update needed
 DEPENDENCY_CHECK_pn-owl-video = "not done"
-RECIPE_LATEST_VERSION_pn-owl-video = "394"
+RECIPE_LATEST_VERSION_pn-owl-video = "0.0+svnr394"
 RECIPE_NO_OF_PATCHES_pn-owl-video = "0"
 RECIPE_INTEL_SECTION_pn-owl-video = "graphic apps"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-owl-video = "n/a"
