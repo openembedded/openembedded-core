@@ -91,7 +91,7 @@ def init(server, eventHandler):
             if isinstance(event, bb.msg.MsgFatal):
                 return_value = 1
                 print('FATAL: ' + event._message)
-                break
+                continue
             if isinstance(event, bb.build.TaskFailed):
                 return_value = 1
                 logfile = event.logfile
