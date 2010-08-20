@@ -2,178 +2,113 @@ inherit package
 
 IMAGE_PKGTYPE ?= "rpm"
 
-RPMBUILDPATH="${WORKDIR}/rpm"
+RPM="${BUILD_ARCH}-${BUILD_OS}-rpm"
+RPMBUILD="${BUILD_ARCH}-${BUILD_OS}-rpmbuild"
 
-RPMOPTS=""
-RPMBUILDOPTS="--target ${TARGET_SYS} --define '_topdir ${RPMBUILDPATH}' --buildroot ${ROOT}"
-RPM="${BUILD_ARCH}-${BUILD_OS}-rpm ${RPMOPTS}"
-RPMBUILD="${BUILD_ARCH}-${BUILD_OS}-rpmbuild --short-circuit ${RPMBUILDOPTS}"
+PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
 
-PKGWRITEDIRRPM = ${WORKDIR}/deploy-rpms"
-
-python write_specfile() {
-	version = bb.data.getVar('PV', d, 1)
-	version = version.replace('-', '+')
-	bb.data.setVar('RPMPV', version, d)
-
-	out_vartranslate = {
-		"PKG": "Name",
-		"RPMPV": "Version",
-		"PR": "Release",
-		"DESCRIPTION": "%description",
-		"LICENSE": "License",
-		"SECTION": "Group",
-		"pkg_postinst": "%post",
-		"pkg_preinst": "%pre",
-	}
-
-	root = bb.data.getVar('ROOT', d)
-
-	# get %files
-	filesvar = bb.data.expand(bb.data.getVar('FILES', d), d) or ""
-	from glob import glob
-	files = filesvar.split()
-	todelete = []
-	for file in files:
-		if file[0] == '.':
-			newfile = file[1:]
-			files[files.index(file)] = newfile
-			file = newfile
-		else:
-			newfile = file
-		realfile = os.path.join(root, './'+file)
-		if not glob(realfile):
-			todelete.append(files[files.index(newfile)])
-	for r in todelete:
-		try:
-			del files[files.index(r)]
-		except ValueError:
-			pass
-
-	if not files and bb.data.getVar('ALLOW_EMPTY', d) != "1":
-		bb.note("Not creating empty archive for %s-%s-%s" % (bb.data.getVar('PKG',d, 1), bb.data.getVar('PV', d, 1), bb.data.getVar('PR', d, 1)))
-		return
-
-	# output .spec using this metadata store
-	try:
-		from __builtin__ import file
-		if not bb.data.getVar('OUTSPECFILE', d):
-			raise OSError('eek!')
-		specfile = file(bb.data.getVar('OUTSPECFILE', d), 'w')
-	except OSError:
-		raise bb.build.FuncFailed("unable to open spec file for writing.")
-
-	fd = specfile
-	for var in out_vartranslate.keys():
-		if out_vartranslate[var][0] == "%":
-			continue
-		val = bb.data.getVar(var, d, 1)
-		if val:
-			fd.write("%s\t: %s\n" % (out_vartranslate[var], val))
-
-	fd.write("AutoReqProv: no\n")
-
-	def fix_dep_versions(varname):
-		depends = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
-		newdeps = []
-		for dep in depends:
-			ver = depends[dep]
-			if dep and ver:
-				if '-' in ver:
-					subd = read_subpkgdata_dict(dep, d)
-					pv = subd['PV']
-					reppv = pv.replace('-', '+')
-					ver = ver.replace(pv, reppv)
-				newdeps.append("%s (%s)" % (dep, ver))
-			elif dep:
-				newdeps.append(dep)
-		bb.data.setVar(varname, " ".join(newdeps), d)
-
-	fix_dep_versions('RDEPENDS')
-
-# Recommends is not supported by rpm at this time
-#	fix_dep_versions('RRECOMMENDS')
-
-	bb.build.exec_func("mapping_rename_hook", d)
-
-	def write_dep_field(varname, outstring):
-		depends = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
-		for dep in depends:
-			ver = depends[dep]
-			if dep and ver:
-				fd.write("%s: %s %s\n" % (outstring, dep, ver))
-			elif dep:
-				fd.write("%s: %s\n" % (outstring, dep))
-
-	write_dep_field('RDEPENDS', 'Requires')
-#	write_dep_field('RRECOMMENDS', 'Recommends')
-
-	fd.write("Summary\t: .\n")
-
-	for var in out_vartranslate.keys():
-		if out_vartranslate[var][0] != "%":
-			continue
-		val = bb.data.getVar(var, d)
-		if val:
-			fd.write(out_vartranslate[var] + "\n")
-			fd.write(val + "\n\n")
-
-	fd.write("%files\n")
-	for file in files:
-		if file[0] != '/':
-			fd.write('/')
-		fd.write("%s\n" % file)
-
-	fd.close()
-
-	# call out rpm -bb on the .spec, thereby creating an rpm
-
-	bb.note(bb.data.expand("${RPMBUILD} -bb ${OUTSPECFILE}", d))
-
-	bb.data.setVar('BUILDSPEC', "${RPMBUILD} -bb ${OUTSPECFILE}\n", d)
-	bb.data.setVarFlag('BUILDSPEC', 'func', '1', d)
-	bb.build.exec_func('BUILDSPEC', d)
-
-	# move the rpm into the pkgoutdir
-	rpm = bb.data.expand('${RPMBUILDPATH}/RPMS/${TARGET_ARCH}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
-	outrpm = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH}/${PKG}-${RPMPV}-${PR}.${TARGET_ARCH}.rpm', d)
-	bb.movefile(rpm, outrpm)
+python package_rpm_fn () {
+	bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
 }
 
-rpm_prep() {
-       if [ ! -e ${WORKDIR}/rpmrc ]; then
-               mkdir -p ${RPMBUILDPATH}/{SPECS,RPMS,SRPMS,SOURCES,BUILD}
-       fi
+python package_rpm_install () {
+	bb.fatal("package_rpm_install not implemented!")
 }
 
-python do_package_rpm () {
-	workdir = bb.data.getVar('WORKDIR', d, 1)
-	if not workdir:
-		bb.error("WORKDIR not defined, unable to package")
-		return
+python write_specfile () {
+	# We need to change '-' in a version field to '+'
+	# This needs to be done BEFORE the mapping_rename_hook
+	def translate_vers(varname, d):
+		depends = bb.data.getVar(varname, d, True)
+		if depends:
+			depends_dict = bb.utils.explode_dep_versions(depends)
+			newdeps_dict = {}
+			for dep in depends_dict:
+				ver = depends_dict[dep]
+				if dep and ver:
+					if '-' in ver:
+						subd = read_subpkgdata_dict(dep, d)
+						pv = subd['PV']
+						reppv = pv.replace('-', '+')
+						ver = ver.replace(pv, reppv)
+				newdeps_dict[dep] = ver
+			depends = bb.utils.join_deps(newdeps_dict)
+			bb.data.setVar(varname, depends.strip(), d)
 
-	outdir = bb.data.getVar('PKGWRITEDIRRPM', d, 1)
-	if not outdir:
-		bb.error("PKGWRITEDIRRPM not defined, unable to package")
-		return
-	bb.mkdirhier(outdir)
+	# We need to change the style the dependency from BB to RPM
+	# This needs to happen AFTER the mapping_rename_hook
+	def translate_deps(varname, d):
+		depends = bb.data.getVar('RPM' + varname, d, True) or bb.data.getVar(varname, d, True) or ""
+		depends = depends.replace('(', '')
+		depends = depends.replace(')', '')
+		bb.data.setVar('RPM' + varname, depends, d)
 
-	packages = bb.data.getVar('PACKAGES', d, 1)
-	if not packages:
-		bb.debug(1, "PACKAGES not defined, nothing to package")
-		return
+	def walk_files(walkpath, target, conffiles):
+		import os
+		for rootpath, dirs, files in os.walk(walkpath):
+			path = rootpath.replace(walkpath, "")
+			#for dir in dirs:
+			#	target.append("%dir " + path + "/" + dir)
+			for file in files:
+				if conffiles.count(path + "/" + file):
+					target.append("%config " + path + "/" + file)
+				else:
+					target.append(path + "/" + file)
 
-	if packages == []:
+	packages = bb.data.getVar('PACKAGES', d, True)
+	if not packages or packages == '':
 		bb.debug(1, "No packages; nothing to do")
 		return
 
-	# If "rpm" comes into overrides the presence of this function causes problems.
-	# Since we don't need it, remove it for now - hacky.
-	bb.data.delVar("do_package_write_rpm", d)
+	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	if not pkgdest:
+		bb.fatal("No PKGDEST")
+		return
+
+	outspecfile = bb.data.getVar('OUTSPECFILE', d, True)
+	if not outspecfile:
+		bb.fatal("No OUTSPECFILE")
+		return
+
+	# Construct the SPEC file...
+	srcname    = bb.data.getVar('PN', d, True)
+	srcsummary = (bb.data.getVar('SUMMARY', d, True) or ".")
+	srcversion = bb.data.getVar('PV', d, True).replace('-', '+')
+	srcrelease = bb.data.getVar('PR', d, True)
+	srcepoch   = (bb.data.getVar('PE', d, True) or "")
+	srclicense = bb.data.getVar('LICENSE', d, True)
+	srcsection = bb.data.getVar('SECTION', d, True)
+	srcmaintainer  = bb.data.getVar('MAINTAINER', d, True)
+	srchomepage    = bb.data.getVar('HOMEPAGE', d, True)
+	srcdescription = bb.data.getVar('DESCRIPTION', d, True)
+
+	translate_deps('DEPENDS', d)
+	srcdepends     = bb.data.getVar('RPMDEPENDS', d, True)
+	srcrdepends    = []
+	srcrrecommends = []
+	srcrsuggests   = []
+	srcrprovides   = []
+	srcrreplaces   = []
+	srcrconflicts  = []
+	srcrobsoletes  = []
+
+	srcpreinst  = []
+	srcpostinst = []
+	srcprerm    = []
+	srcpostrm   = []
+
+	spec_preamble_top = []
+	spec_preamble_bottom = []
+
+	spec_scriptlets_top = []
+	spec_scriptlets_bottom = []
+
+	spec_files_top = []
+	spec_files_bottom = []
 
 	for pkg in packages.split():
 		localdata = bb.data.createCopy(d)
-		pkgdest = bb.data.getVar('PKGDEST', d, 1)
+
 		root = "%s/%s" % (pkgdest, pkg)
 
 		lf = bb.utils.lockfile(root + ".lock")
@@ -188,16 +123,289 @@ python do_package_rpm () {
 		bb.data.setVar('OVERRIDES', pkg, localdata)
 
 		bb.data.update_data(localdata)
-		basedir = os.path.join(os.path.dirname(root))
-	        pkgoutdir = os.path.join(outdir, bb.data.getVar('PACKAGE_ARCH', localdata, 1))
-		bb.mkdirhier(pkgoutdir)
-		bb.data.setVar('OUTSPECFILE', os.path.join(workdir, "%s.spec" % pkg), localdata)
-		# Save the value of RPMBUILD expanded into the new dictonary so any 
-		# changes in the compoents that make up workdir don't break packaging
-		bb.data.setVar('RPMBUILD', bb.data.getVar("RPMBUILD", d, True), localdata)
-		bb.data.setVar('RPMBUILDPATH', bb.data.getVar("RPMBUILDPATH", d, True), localdata)
-		bb.build.exec_func('write_specfile', localdata)
+
+		conffiles = (bb.data.getVar('CONFFILES', localdata, True) or "").split()
+
+		splitname    = pkgname
+
+		splitsummary = (bb.data.getVar('SUMMARY', d, True) or ".")
+		splitversion = (bb.data.getVar('PV', localdata, True) or "").replace('-', '+')
+		splitrelease = (bb.data.getVar('PR', localdata, True) or "")
+		splitepoch   = (bb.data.getVar('PE', localdata, True) or "")
+		splitlicense = (bb.data.getVar('LICENSE', localdata, True) or "")
+		splitsection = (bb.data.getVar('SECTION', localdata, True) or "")
+		splitdescription = (bb.data.getVar('DESCRIPTION', localdata, True) or "")
+
+		translate_vers('RDEPENDS', localdata)
+		translate_vers('RRECOMMENDS', localdata)
+		translate_vers('RSUGGESTS', localdata)
+		translate_vers('RPROVIDES', localdata)
+		translate_vers('RREPLACES', localdata)
+		translate_vers('RCONFLICTS', localdata)
+
+		# Map the dependencies into their final form
+		bb.build.exec_func("mapping_rename_hook", localdata)
+
+		translate_deps('RDEPENDS', localdata)
+		translate_deps('RRECOMMENDS', localdata)
+		translate_deps('RSUGGESTS', localdata)
+		translate_deps('RPROVIDES', localdata)
+		translate_deps('RREPLACES', localdata)
+		translate_deps('RCONFLICTS', localdata)
+
+		splitrdepends    = bb.data.getVar('RPMRDEPENDS', localdata, True)
+		splitrrecommends = bb.data.getVar('RPMRRECOMMENDS', localdata, True)
+		splitrsuggests   = bb.data.getVar('RPMRSUGGESTS', localdata, True)
+		splitrprovides   = bb.data.getVar('RPMRPROVIDES', localdata, True)
+		splitrreplaces   = bb.data.getVar('RPMRREPLACES', localdata, True)
+		splitrconflicts  = bb.data.getVar('RPMRCONFLICTS', localdata, True)
+		splitrobsoletes  = []
+
+		# Gather special src/first package data
+		if srcname == splitname:
+			srcrdepends    = splitrdepends
+			srcrrecommends = splitrrecommends
+			srcrsuggests   = splitrsuggests
+			srcrprovides   = splitrprovides
+			srcrreplaces   = splitrreplaces
+			srcrconflicts  = splitrconflicts
+
+			srcpreinst  = bb.data.getVar('pkg_preinst', localdata, True)
+			srcpostinst = bb.data.getVar('pkg_postinst', localdata, True)
+			srcprerm    = bb.data.getVar('pkg_prerm', localdata, True)
+			srcpostrm   = bb.data.getVar('pkg_postrm', localdata, True)
+
+			file_list = []
+			walk_files(root, file_list, conffiles)
+			if not file_list and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
+				bb.note("Not creating empty RPM package for %s" % splitname)
+			else:
+				bb.note("Creating RPM package for %s" % splitname)
+				spec_files_top.append('%files')
+				if file_list:
+					spec_files_top.extend(file_list)
+				spec_files_top.append('')
+
+			bb.utils.unlockfile(lf)
+			continue
+
+		# Process subpackage data
+		spec_preamble_bottom.append('%%package -n %s' % splitname)
+		spec_preamble_bottom.append('Summary: %s' % splitsummary)
+		if srcversion != splitversion:
+			spec_preamble_bottom.append('Version: %s' % splitversion)
+		if srcrelease != splitrelease:
+			spec_preamble_bottom.append('Release: %s' % splitrelease)
+		if srcepoch != splitepoch:
+			spec_preamble_bottom.append('Epoch: %s' % splitepoch)
+		if srclicense != splitlicense:
+			spec_preamble_bottom.append('License: %s' % splitlicense)
+		spec_preamble_bottom.append('Group: %s' % splitsection)
+
+		# Replaces == Obsoletes && Provides
+		if splitrreplaces and splitrreplaces.strip() != "":
+			for dep in splitrreplaces.split(','):
+				if splitrprovides:
+					splitrprovides = splitrprovides + ", " + dep
+				else:
+					splitrprovides = dep
+				if splitrobsoletes:
+					splitrobsoletes = splitrobsoletes + ", " + dep
+				else:
+					splitrobsoletes = dep
+
+		if splitrdepends and splitrdepends.strip() != "":
+			spec_preamble_bottom.append('Requires: %s' % splitrdepends)
+		#if splitrrecommends and splitrrecommends.strip() != "":
+		#	spec_preamble_bottom.append('#Recommends: %s' % splitrrecommends)
+		#if splitrsuggests and splitrsuggests.strip() != "":
+		#	spec_preamble_bottom.append('#Suggests: %s' % splitrsuggests)
+		if splitrprovides and splitrprovides.strip() != "":
+			spec_preamble_bottom.append('Provides: %s' % splitrprovides)
+		if splitrobsoletes and splitrobsoletes.strip() != "":
+			spec_preamble_bottom.append('Obsoletes: %s' % splitrobsoletes)
+		if splitrconflicts and splitrconflicts.strip() != "":
+			for dep in splitrconflicts.split(','):
+				# A conflict can NOT be in the provide or an internal conflict happens!
+				if dep not in splitrprovides:
+					spec_preamble_bottom.append('Conflicts: %s' % dep)
+
+		spec_preamble_bottom.append('')
+
+		spec_preamble_bottom.append('%%description -n %s' % splitname)
+		spec_preamble_bottom.append('%s' % splitdescription)
+
+		spec_preamble_bottom.append('')
+
+		# Now process scriptlets
+		for script in ["preinst", "postinst", "prerm", "postrm"]:
+			scriptvar = bb.data.getVar('pkg_%s' % script, localdata, True)
+			if not scriptvar:
+				continue
+			if script == 'preinst':
+				spec_scriptlets_bottom.append('%%pre -n %s' % splitname)
+			elif script == 'postinst':
+				spec_scriptlets_bottom.append('%%post -n %s' % splitname)
+			elif script == 'prerm':
+				spec_scriptlets_bottom.append('%%preun -n %s' % splitname)
+			elif script == 'postrm':
+				spec_scriptlets_bottom.append('%%postun -n %s' % splitname)
+			spec_scriptlets_bottom.append(scriptvar)
+			spec_scriptlets_bottom.append('')
+
+		# Now process files
+		file_list = []
+		walk_files(root, file_list, conffiles)
+		if not file_list and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
+			bb.note("Not creating empty RPM package for %s" % splitname)
+		else:
+			bb.note("Creating RPM package for %s" % splitname)
+			spec_files_bottom.append('%%files -n %s' % splitname)
+			if file_list:
+				spec_files_bottom.extend(file_list)
+			spec_files_bottom.append('')
+
+		del localdata
 		bb.utils.unlockfile(lf)
+
+	spec_preamble_top.append('Summary: %s' % srcsummary)
+	spec_preamble_top.append('Name: %s' % srcname)
+	spec_preamble_top.append('Version: %s' % srcversion)
+	spec_preamble_top.append('Release: %s' % srcrelease)
+	if srcepoch and srcepoch.strip() != "":
+		spec_preamble_top.append('Epoch: %s' % srcepoch)
+	spec_preamble_top.append('License: %s' % srclicense)
+	spec_preamble_top.append('Group: %s' % srcsection)
+	spec_preamble_top.append('Packager: %s' % srcmaintainer)
+	spec_preamble_top.append('URL: %s' % srchomepage)
+
+	# Replaces == Obsoletes && Provides
+	if srcrreplaces and srcrreplaces.strip() != "":
+		for dep in srcrreplaces.split(','):
+			if srcrprovides:
+				srcrprovides = srcrprovides + ", " + dep
+			else:
+				srcrprovides = dep
+			if srcrobsoletes:
+				srcrobsoletes = srcrobsoletes + ", " + dep
+			else:
+				srcrobsoletes = dep
+	if srcdepends and srcdepends.strip() != "":
+		spec_preamble_top.append('BuildRequires: %s' % srcdepends)
+	if srcrdepends and srcrdepends.strip() != "":
+		spec_preamble_top.append('Requires: %s' % srcrdepends)
+	#if srcrrecommends and srcrrecommends.strip() != "":
+	#	spec_preamble_top.append('#Recommends: %s' % srcrrecommends)
+	#if srcrsuggests and srcrsuggests.strip() != "":
+	#	spec_preamble_top.append('#Suggests: %s' % srcrsuggests)
+	if srcrprovides and srcrprovides.strip() != "":
+		spec_preamble_top.append('Provides: %s' % srcrprovides)
+	if srcrobsoletes and srcrobsoletes.strip() != "":
+		spec_preamble_top.append('Obsoletes: %s' % srcrobsoletes)
+	if srcrconflicts and srcrconflicts.strip() != "":
+		for dep in srcrconflicts.split(','):
+			# A conflict can NOT be in the provide or an internal conflict happens!
+			if dep not in srcrprovides:
+				spec_preamble_bottom.append('Conflicts: %s' % dep)
+
+	spec_preamble_top.append('')
+
+	spec_preamble_top.append('%description')
+	spec_preamble_top.append('%s' % srcdescription)
+
+	spec_preamble_top.append('')
+
+	if srcpreinst:
+		spec_scriptlets_top.append('%pre')
+		spec_scriptlets_top.append(srcpreinst)
+		spec_scriptlets_top.append('')
+	if srcpostinst:
+		spec_scriptlets_top.append('%post')
+		spec_scriptlets_top.append(srcpostinst)
+		spec_scriptlets_top.append('')
+	if srcprerm:
+		spec_scriptlets_top.append('%preun')
+		spec_scriptlets_top.append(srcprerm)
+		spec_scriptlets_top.append('')
+	if srcpostrm:
+		spec_scriptlets_top.append('%postun')
+		spec_scriptlets_top.append(srcpostrm)
+		spec_scriptlets_top.append('')
+
+	# Write the SPEC file
+	try:
+		from __builtin__ import file
+		specfile = file(outspecfile, 'w')
+	except OSError:
+		raise bb.build.FuncFailed("unable to open spec file for writing.")
+
+	for line in spec_preamble_top:
+		specfile.write(line + "\n")
+
+	for line in spec_preamble_bottom:
+		specfile.write(line + "\n")
+
+	for line in spec_scriptlets_top:
+		specfile.write(line + "\n")
+
+	for line in spec_scriptlets_bottom:
+		specfile.write(line + "\n")
+
+	for line in spec_files_top:
+		specfile.write(line + "\n")
+
+	for line in spec_files_bottom:
+		specfile.write(line + "\n")
+
+	specfile.close()
+}
+
+python do_package_rpm () {
+	import os
+
+	workdir = bb.data.getVar('WORKDIR', d, True)
+	outdir = bb.data.getVar('DEPLOY_DIR_IPK', d, True)
+	dvar = bb.data.getVar('D', d, True)
+	tmpdir = bb.data.getVar('TMPDIR', d, True)
+	pkgd = bb.data.getVar('PKGD', d, True)
+	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	if not workdir or not outdir or not dvar or not tmpdir:
+		bb.error("Variables incorrectly set, unable to package")
+		return
+
+	if not os.path.exists(dvar):
+		bb.debug(1, "Nothing installed, nothing to do")
+		return
+
+	packages = bb.data.getVar('PACKAGES', d, True)
+	if not packages or packages == '':
+		bb.debug(1, "No packages; nothing to do")
+		return
+
+	# Construct the spec file...
+	srcname    = bb.data.getVar('PN', d, True)
+	outspecfile = workdir + "/" + srcname + ".spec"
+	bb.data.setVar('OUTSPECFILE', outspecfile, d)
+	bb.build.exec_func('write_specfile', d)
+
+	# Setup the rpmbuild arguments...
+	rpmbuild = bb.data.getVar('RPMBUILD', d, True)
+	targetsys = bb.data.getVar('TARGET_SYS', d, True)
+	pkgwritedir = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH}', d)
+	pkgarch = bb.data.expand('${PACKAGE_ARCH}', d)
+        bb.mkdirhier(pkgwritedir)
+        os.chmod(pkgwritedir, 0755)
+
+	cmd = rpmbuild
+        cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + " --buildroot " + pkgd
+        cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
+	cmd = cmd + " --define '_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'"
+	cmd = cmd + " -bb " + outspecfile
+
+	# Build the spec file!
+	bb.data.setVar('BUILDSPEC', cmd + "\n", d)
+	bb.data.setVarFlag('BUILDSPEC', 'func', '1', d)
+	bb.build.exec_func('BUILDSPEC', d)
 }
 
 python () {
@@ -206,7 +414,7 @@ python () {
         deps.append('rpm-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_rpm', 'depends', " ".join(deps), d)
-        bb.data.setVarFlag('do_package_write_ipk', 'fakeroot', "1", d)
+        bb.data.setVarFlag('do_package_write_rpm', 'fakeroot', 1, d)
 }
 
 SSTATETASKS += "do_package_write_rpm"
@@ -215,15 +423,15 @@ do_package_write_rpm[sstate-inputdirs] = "${PKGWRITEDIRRPM}"
 do_package_write_rpm[sstate-outputdirs] = "${DEPLOY_DIR_RPM}"
 
 python do_package_write_rpm_setscene () {
-    sstate_setscene(d)
+	sstate_setscene(d)
 }
 #addtask do_package_write_rpm_setscene
 
 python do_package_write_rpm () {
 	bb.build.exec_func("read_subpackage_metadata", d)
-	bb.build.exec_func("rpm_prep", d)
 	bb.build.exec_func("do_package_rpm", d)
 }
+
 do_package_write_rpm[dirs] = "${PKGWRITEDIRRPM}"
 addtask package_write_rpm before do_package_write after do_package
 
