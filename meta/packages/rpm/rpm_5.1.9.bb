@@ -1,11 +1,14 @@
 DESCRIPTION = "The RPM Package Manager - relaunched"
+DESCRIPTION_rpm-build = "The RPM Package Manager rpmbuild and related commands."
 HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPL 2.1"
-DEPENDS = "zlib perl popt beecrypt python libpcre"
-PR = "r0"
+DEPENDS = "zlib perl popt beecrypt python libpcre elfutils"
+PR = "r2"
 
 SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/${BPN}-${PV}.tar.gz \
 	   file://remove-compiled-tests.patch;apply=no \
+	   file://perfile_rpmdeps.sh \
+	   file://no_parentdir_ordering.patch \
 	  "
 inherit autotools gettext
 
@@ -19,6 +22,8 @@ EXTRA_OECONF = "--with-python=$PYTHONVER \
 		--with-python-lib-dir=${libdir}/python$PYTHONVER \
 		--with-db=internal \
 		--with-db-tools-integrated \
+		--with-libelf \
+		--with-file=internal \
 		--without-apidocs \
 		--without-selinux \
 		--without-lua \
@@ -26,12 +31,32 @@ EXTRA_OECONF = "--with-python=$PYTHONVER \
 		--without-efence \
 		--without-neon \
 		--with-pcre=${libdir} \
-		--with-path-macros=${rpm_macros}"
+		--with-path-macros=${rpm_macros} \
+		--with-bugreport=http://bugzilla.pokylinux.org"
 
 CFLAGS_append = " -DRPM_VENDOR_WINDRIVER"
 
-PACKAGES += "python-rpm"
-FILES_python-rpm = "${libdir}/python*/site-packages/rpm/_*"
+PACKAGES =+ "rpm-build python-rpm python-rpm-dbg"
+
+SOLIBS = "5.0.so"
+
+FILES_rpm-build = "${bindir}/*-rpmbuild \
+		${bindir}/*-gendiff \
+		${bindir}/*-rpmspecdump \
+		${libdir}/rpm/helpers/* \
+		${libdir}/rpm/*brp* \
+		${libdir}/rpm/*check-files \
+		${libdir}/rpm/*cross-build \
+		${libdir}/rpm/*debugedit \
+		${libdir}/rpm/*dep* \
+		${libdir}/rpm/*prov* \
+		${libdir}/rpm/*req* \
+		${libdir}/rpm/*find* \
+		${libdir}/rpm/qf/* \
+		"
+
+FILES_python-rpm = "${libdir}/python*/rpm/_*"
+FILES_python-rpm-dbg = "${libdir}/python*/rpm/.debug/_*"
 
 # The mutex needs to be POSIX/pthreads/library or we can't
 # share a database between host and target environments
@@ -78,6 +103,18 @@ INSTALL_ACTIONS_virtclass-native="sed -i -e 's,rpm,${HOST_SYS}-rpm,' ${D}/${libd
 do_install_append() {
         ${INSTALL_ACTIONS}
 	sed -i -e 's,%__check_files,#%%__check_files,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,pythondeps.sh,${HOST_SYS}-pythondeps.sh,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,phpdeps.sh,${HOST_SYS}-phpdeps.sh,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,javadeps.sh,${HOST_SYS}-javadeps.sh,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,libtooldeps.sh,${HOST_SYS}-libtooldeps.sh,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,pkgconfigdeps.sh,${HOST_SYS}-pkgconfigdeps.sh,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,executabledeps.sh,${HOST_SYS}-executabledeps.sh,' ${D}/${libdir}/rpm/macros
+
+	install -m 0755 ${WORKDIR}/perfile_rpmdeps.sh ${D}/${libdir}/rpm/perfile_rpmdeps.sh
+
+	mv ${D}/${libdir}/python$PYTHONVER/rpm/${HOST_SYS}-__init__.py \
+		${D}/${libdir}/python$PYTHONVER/rpm/__init__.py
+
 }
 
 def rpm_python_version(d):
