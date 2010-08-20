@@ -24,7 +24,7 @@ EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
 EXPAT = "--without-expat"
 
 EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
-                --with-curses --disable-multilib --with-readline --disable-sim \
+                --with-curses --disable-multilib --with-system-readline --disable-sim \
                 ${GDBPROPREFIX} --with-libelf=${STAGING_DIR_TARGET} ${EXPAT}"
 GDBPROPREFIX = "--program-prefix=''"
 
@@ -33,6 +33,14 @@ do_configure () {
 	# calls for now
 	(cd ${S} && gnu-configize) || die "failure in running gnu-configize"
 	oe_runconf
+}
+
+# we don't want gdb to provide bfd/iberty/opcodes, which instead will override the
+# right bits installed by binutils.
+do_install_append() {
+	rm -rf ${D}${libdir}
+	rm -rf ${D}${includedir}
+	rm -rf ${D}${datadir}/locale
 }
 
 RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
