@@ -686,11 +686,14 @@ def copyfile(src, dest, newmtime = None, sstat = None):
             return False
 
     if stat.S_ISREG(sstat[stat.ST_MODE]):
+        os.chmod(src, stat.S_IRUSR) # Make sure we can read it
         try: # For safety copy then move it over.
             shutil.copyfile(src, dest + "#new")
             os.rename(dest + "#new", dest)
         except Exception as e:
             print('copyfile: copy', src, '->', dest, 'failed.', e)
+            os.chmod(src, stat.S_IMODE(sstat[stat.ST_MODE]))
+            os.utime(src, (sstat[stat.ST_ATIME], sstat[stat.ST_MTIME]))
             return False
     else:
         #we don't yet handle special, so we need to fall back to /bin/mv
