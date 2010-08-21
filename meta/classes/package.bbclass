@@ -557,9 +557,6 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
-SHLIBSWORKDIR = "${WORKDIR}/shlibs"
-
 RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/${BUILD_ARCH}-${BUILD_OS}-rpmdeps"
 
 # Collect perfile run-time dependency metadata
@@ -615,6 +612,9 @@ python package_do_filedeps() {
 
 		process_deps(dep_pipe, pkg, 'RDEPENDS')
 }
+
+SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
+SHLIBSWORKDIR = "${WORKDIR}/shlibs"
 
 python package_do_shlibs() {
 	import re
@@ -723,6 +723,7 @@ python package_do_shlibs() {
 								needed[pkg].append(name)
 								#bb.note("Adding %s for %s" % (name, pkg))
 	needed = {}
+	shlib_provider = {}
 	private_libs = bb.data.getVar('PRIVATE_LIBS', d, True)
 	for pkg in packages.split():
 		needs_ldconfig = False
@@ -747,6 +748,7 @@ python package_do_shlibs() {
 			fd = open(shlibs_file, 'w')
 			for s in sonames:
 				fd.write(s + '\n')
+				shlib_provider[s] = (pkg, ver)
 			fd.close()
 			fd = open(shver_file, 'w')
 			fd.write(ver + '\n')
@@ -761,7 +763,6 @@ python package_do_shlibs() {
 
 	bb.utils.unlockfile(lf)
 
-	shlib_provider = {}
 	list_re = re.compile('^(.*)\.list$')
 	for dir in [shlibs_dir]: 
 		if not os.path.exists(dir):
