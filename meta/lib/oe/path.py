@@ -70,7 +70,7 @@ def copytree(src, dst):
             elif os.path.isdir(srcname):
                 copytree(srcname, dstname)
             else:
-                shutil.copy2(srcname, dstname)
+                bb.utils.copyfile(srcname, dstname)
         except (IOError, os.error), why:
             errors.append((srcname, dstname, str(why)))
         # catch the Error from the recursive copytree so that we can
