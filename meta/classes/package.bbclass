@@ -192,9 +192,9 @@ def runstrip(file, d):
         return os.system("%s'%s' --strip-debug --remove-section=.comment --remove-section=.note --preserve-dates '%s'" % (pathprefix, strip, file))
 
     newmode = None
-    if not os.access(file, os.W_OK):
+    if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
         origmode = os.stat(file)[stat.ST_MODE]
-        newmode = origmode | stat.S_IWRITE
+        newmode = origmode | stat.S_IWRITE | stat.S_IREAD
         os.chmod(file, newmode)
 
     extraflags = ""
