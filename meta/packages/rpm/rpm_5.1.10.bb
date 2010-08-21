@@ -5,10 +5,9 @@ LICENSE = "LGPL 2.1"
 DEPENDS = "zlib perl popt beecrypt python libpcre elfutils"
 PR = "r2"
 
-SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/${BPN}-${PV}.tar.gz \
+SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/SNAPSHOT/${BPN}-${PV}.tar.gz \
 	   file://remove-compiled-tests.patch;apply=no \
 	   file://perfile_rpmdeps.sh \
-	   file://no_parentdir_ordering.patch \
 	  "
 inherit autotools gettext
 
