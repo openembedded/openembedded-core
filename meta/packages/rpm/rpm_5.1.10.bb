@@ -102,12 +102,17 @@ INSTALL_ACTIONS_virtclass-native="sed -i -e 's,rpm,${HOST_SYS}-rpm,' ${D}/${libd
 do_install_append() {
         ${INSTALL_ACTIONS}
 	sed -i -e 's,%__check_files,#%%__check_files,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,%__scriptlet_requires,#%%__scriptlet_requires,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,%__perl_provides,#%%__perl_provides,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,%__perl_requires,#%%__perl_requires,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,pythondeps.sh,${HOST_SYS}-pythondeps.sh,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,phpdeps.sh,${HOST_SYS}-phpdeps.sh,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,javadeps.sh,${HOST_SYS}-javadeps.sh,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,libtooldeps.sh,${HOST_SYS}-libtooldeps.sh,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,pkgconfigdeps.sh,${HOST_SYS}-pkgconfigdeps.sh,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,executabledeps.sh,${HOST_SYS}-executabledeps.sh,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,perl.prov,${HOST_SYS}-perl.prov,' ${D}/${libdir}/rpm/macros
+	sed -i -e 's,perl.req,${HOST_SYS}-perl.req,' ${D}/${libdir}/rpm/macros
 
 	install -m 0755 ${WORKDIR}/perfile_rpmdeps.sh ${D}/${libdir}/rpm/perfile_rpmdeps.sh
 
