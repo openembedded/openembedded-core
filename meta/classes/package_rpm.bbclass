@@ -15,6 +15,57 @@ python package_rpm_install () {
 	bb.fatal("package_rpm_install not implemented!")
 }
 
+#
+# Update the Packages depsolver db in ${DEPLOY_DIR_RPM}
+#
+package_update_index_rpm () {
+	rpmarchs="${PACKAGE_ARCHS}"
+
+	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
+		return
+	fi
+
+	packagedirs=""
+	for arch in $rpmarchs ; do
+		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
+		packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/$arch ${DEPLOY_DIR_RPM}/$sdkarch-nativesdk"
+	done
+
+	packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/${SDK_ARCH}-${TARGET_ARCH}-canadian"
+
+	cat /dev/null > ${DEPLOY_DIR_RPM}/solvedb.conf
+	for pkgdir in $packagedirs; do
+		if [ -e $pkgdir/ ]; then
+			rm -rf $pkgdir/solvedb
+			mkdir -p $pkgdir/solvedb
+			echo "# Dynamically generated solve manifest" >> $pkgdir/solvedb/manifest
+			find $pkgdir -maxdepth 1 -type f >> $pkgdir/solvedb/manifest
+			${RPM} -i --replacepkgs --replacefiles --oldpackage \
+				-D "_dbpath $pkgdir/solvedb" --justdb \
+				--noaid --nodeps --noorder --noscripts --notriggers --noparentdirs --nolinktos --stats \
+				$pkgdir/solvedb/manifest
+			echo $pkgdir/solvedb >> ${DEPLOY_DIR_RPM}/solvedb.conf
+		fi
+	done
+}
+
+#
+# Generate an rpm configuration suitable for use against the
+# generated depsolver db's...
+#
+package_generate_rpm_conf () {
+	printf "_solve_dbpath " > ${DEPLOY_DIR_RPM}/solvedb.macro
+	colon=false
+	for each in `cat ${DEPLOY_DIR_RPM}/solvedb.conf` ; do
+		if [ "$colon" == true ]; then
+			printf ":" >> ${DEPLOY_DIR_RPM}/solvedb.macro
+		fi
+		printf "%s" $each >> ${DEPLOY_DIR_RPM}/solvedb.macro
+		colon=true
+	done
+	printf "\n" >> ${DEPLOY_DIR_RPM}/solvedb.macro
+}
+
 python write_specfile () {
 	# We need to change '-' in a version field to '+'
 	# This needs to be done BEFORE the mapping_rename_hook
