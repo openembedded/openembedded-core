@@ -6,6 +6,7 @@ do_devshell[nostamp] = "1"
 export DISPLAY
 export DBUS_SESSION_BUS_ADDRESS
 export XAUTHORITY ?= "${HOME}/.Xauthority"
+export FAKEROOTENV
 
 devshell_do_devshell() {
 	export TERMWINDOWTITLE="Bitbake Developer Shell"
