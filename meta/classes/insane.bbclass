@@ -484,11 +484,7 @@ def package_qa_check_rdepends(pkg, pkgdest, d):
             pkgname = pkg
         bb.data.setVar('PKG', pkgname, localdata)
 
-        overrides = bb.data.getVar('OVERRIDES', localdata)
-        if not overrides:
-            raise bb.build.FuncFailed('OVERRIDES not defined')
-        overrides = bb.data.expand(overrides, localdata)
-        bb.data.setVar('OVERRIDES', overrides + ':' + pkg, localdata)
+        bb.data.setVar('OVERRIDES', pkg, localdata)
 
         bb.data.update_data(localdata)
 
