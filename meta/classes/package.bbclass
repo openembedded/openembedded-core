@@ -508,6 +508,7 @@ python emit_pkgdata() {
 
 	for pkg in packages.split():
 		subdata_file = pkgdatadir + "/runtime/%s" % pkg
+
 		sf = open(subdata_file, 'w')
 		write_if_exists(sf, pkg, 'PN')
 		write_if_exists(sf, pkg, 'PV')
@@ -580,22 +581,26 @@ python package_do_filedeps() {
 	def process_deps(pipe, pkg, varname):
 		dep_files = ""
 		for line in pipe:
-			key = "";
-			value = "";
+			key = ""
+			value = ""
 			# We expect two items on each line
 			# 1 - filepath
 			# 2 - dep list
-			line_list = line.split(None,1);
+			line_list = line.rstrip().split(None,1);
 			if len(line_list) <= 0 or len(line_list) > 2:
 				bb.error("deps list length error! " + len(line_list));
 			if len(line_list) == 2:
 				file = line_list[0];
 				value = line_list[1]
 				file = file.replace(pkgdest + "/" + pkg, "")
+				file = file.replace("@", "@at@")
+				file = file.replace("[", "@openbrace@")
+				file = file.replace("]", "@closebrace@")
+				file = file.replace("_", "@underscore@")
 				dep_files = dep_files + " " + file
 				key = "FILE" + varname + "_" + file + "_" + pkg
 				bb.data.setVar(key, value, d)
-		bb.data.setVar("FILE" + varname + "_" + pkg, dep_files, d)
+		bb.data.setVar("FILE" + varname + "FLIST_" + pkg, dep_files, d)
 
 	# Determine dependencies
 	for pkg in packages.split():
