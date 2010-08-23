@@ -761,8 +761,6 @@ python package_do_shlibs() {
 			postinst += bb.data.getVar('ldconfig_postinst_fragment', d, True)
 			bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
 
-	bb.utils.unlockfile(lf)
-
 	list_re = re.compile('^(.*)\.list$')
 	for dir in [shlibs_dir]: 
 		if not os.path.exists(dir):
@@ -782,6 +780,8 @@ python package_do_shlibs() {
 					fd.close()
 				for l in lines:
 					shlib_provider[l.rstrip()] = (dep_pkg, lib_ver)
+
+	bb.utils.unlockfile(lf)
 
 	assumed_libs = bb.data.getVar('ASSUME_SHLIBS', d, True)
 	if assumed_libs:
