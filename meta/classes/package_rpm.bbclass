@@ -187,6 +187,24 @@ python write_specfile () {
 		splitsection = (bb.data.getVar('SECTION', localdata, True) or "")
 		splitdescription = (bb.data.getVar('DESCRIPTION', localdata, True) or "")
 
+		# Roll up the per file dependencies into package level dependencies
+		def roll_filerdeps(varname, d):
+			depends = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
+			dependsflist_key = 'FILE' + varname + 'FLIST'
+			dependsflist = (bb.data.getVar(dependsflist_key, d, True) or "")
+			for dfile in dependsflist.split():
+				key = "FILE" + varname + "_" + dfile
+				filedepends = bb.utils.explode_dep_versions(bb.data.getVar(key, d, True) or "")
+				bb.utils.extend_deps(depends, filedepends)
+			bb.data.setVar(varname, bb.utils.join_deps(depends), d)
+
+		roll_filerdeps('RDEPENDS', localdata)
+		roll_filerdeps('RRECOMMENDS', localdata)
+		roll_filerdeps('RSUGGESTS', localdata)
+		roll_filerdeps('RPROVIDES', localdata)
+		roll_filerdeps('RREPLACES', localdata)
+		roll_filerdeps('RCONFLICTS', localdata)
+
 		translate_vers('RDEPENDS', localdata)
 		translate_vers('RRECOMMENDS', localdata)
 		translate_vers('RSUGGESTS', localdata)
