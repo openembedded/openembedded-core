@@ -16,3 +16,5 @@ RDEPENDS_kernel-base = ""
 
 # Use a common kernel recipe for all QEMU machines
 PREFERRED_PROVIDER_virtual/kernel = "linux-wrs"
+
+EXTRA_IMAGEDEPENDS += "qemu-native qemu-helper-native"
