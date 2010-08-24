@@ -360,7 +360,7 @@ class RunQueueData:
 
         if len(taskData.tasks_name) == 0:
             # Nothing to do
-            return
+            return 0
 
         bb.msg.note(1, bb.msg.domain.RunQueue, "Preparing runqueue")
 
@@ -686,6 +686,8 @@ class RunQueueData:
             #bb.note("Found setscene for %s %s" % (self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task]))
             self.runq_setscene.append(task)
 
+        return len(self.runq_fnid)
+
     def dump_data(self, taskQueue):
         """
         Dump some debug information on the internal data structures
@@ -876,8 +878,11 @@ class RunQueue:
         retval = 0.5
 
         if self.state is runQueuePrepare:
-            self.rqdata.prepare()
-            self.state = runQueueSceneInit
+            self.rqexe = RunQueueExecuteDummy(self)
+            if self.rqdata.prepare() is 0:
+                self.state = runQueueComplete
+            else:
+                self.state = runQueueSceneInit
 
         if self.state is runQueueSceneInit:
             self.rqexe = RunQueueExecuteScenequeue(self)
@@ -1013,6 +1018,14 @@ class RunQueueExecute:
             bb.msg.fatal(bb.msg.domain.RunQueue, "fork failed: %d (%s)" % (e.errno, e.strerror))
 
         return proc
+
+class RunQueueExecuteDummy(RunQueueExecute):
+    def __init__(self, rq):
+        self.rq = rq
+        self.stats = RunQueueStats(0)
+    def finish(self):
+        self.rq.state = runQueueComplete
+        return    
 
 class RunQueueExecuteTasks(RunQueueExecute):
     def __init__(self, rq):
