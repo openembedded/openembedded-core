@@ -57,6 +57,18 @@ else
     shift
 fi
 
+# We can't run without a libGL.so
+libgl='no'
+
+test -e /usr/lib/libGL.so -a -e /usr/lib/libGLU.so && libgl='yes'
+test -e /usr/lib64/libGL.so -a -e /usr/lib64/libGLU.so && libgl='yes'
+
+if [ "$libgl" != 'yes' ]; then
+    echo "You need libGL.so and libGLU.so to exist in your library path to run the QEMU emulator.
+    Ubuntu package names are: libgl1-mesa-dev and libglu1-mesa-dev."
+    exit 1;
+fi
+
 INTERNAL_SCRIPT=`which poky-qemu-internal`
 
 . $INTERNAL_SCRIPT
