@@ -17,17 +17,17 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
 S = "${WORKDIR}/trunk"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r13"
+PR = "r14"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
 FILES_update-alternatives-cworth = "${bindir}/update-alternatives"
 FILES_libopkg-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so"
-FILES_libopkg = "${libdir}/*.so.* ${libdir}/opkg/"
+FILES_libopkg = "${libdir}/*.so.* ${localstatedir}/lib/opkg/"
 
 # We need to create the lock directory
 do_install_append() {
-	install -d ${D}${libdir}/opkg
+	install -d ${D}${localstatedir}/lib/opkg
 }
 
 # Define a variable to allow distros to run configure earlier.

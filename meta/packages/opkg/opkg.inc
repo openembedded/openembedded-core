@@ -23,6 +23,7 @@ do_configure_prepend() {
 inherit autotools pkgconfig
 
 target_libdir := "${libdir}"
+EXTRA_OECONF = "--with-opkglibdir=${localstatedir}/lib"
 EXTRA_OECONF_virtclass-native = "--with-opkglibdir=${target_libdir} --disable-gpg --disable-curl --disable-openssl"
 EXTRA_OECONF_virtclass-nativesdk = "--with-opkglibdir=${target_libdir} --disable-gpg --disable-curl --disable-openssl"
 
