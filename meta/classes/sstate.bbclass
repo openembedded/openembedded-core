@@ -2,7 +2,7 @@ PSTAGE2_MANIFESTS = "${TMPDIR}/pstagelogs"
 PSTAGE2_MANFILEPREFIX = "${PSTAGE2_MANIFESTS}/manifest-${PSTAGE2_PKGARCH}-${PN}"
 
 
-PSTAGE2_PKGARCH    = "${TARGET_ARCH}"
+PSTAGE2_PKGARCH    = "${BASE_PACKAGE_ARCH}"
 PSTAGE2_PKGVERSION = "${PV}-${PR}"
 PSTAGE2_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
 
@@ -17,11 +17,11 @@ python () {
     if bb.data.inherits_class('native', d):
         bb.data.setVar('PSTAGE2_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
     elif bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d):
-        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${BUILD_ARCH}_${TARGET_ARCH}", d), d)
+        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${BUILD_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
     elif bb.data.inherits_class('nativesdk', d):
         bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${SDK_ARCH}", d), d)
     elif bb.data.inherits_class('cross-canadian', d):
-        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${SDK_ARCH}_${TARGET_ARCH}", d), d)
+        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${SDK_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
 
     # These classes encode staging paths into their scripts data so can only be
     # reused if we manipulate the paths
