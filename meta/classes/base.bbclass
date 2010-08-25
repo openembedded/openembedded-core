@@ -516,6 +516,13 @@ python () {
             depends = depends + " shasum-native:do_populate_sysroot"
             bb.data.setVarFlag('do_fetch', 'depends', depends, d)
 
+    # *.xz should depends on xz-native for unpacking
+    # Not endswith because of "*.patch.xz;patch=1". Need bb.decodeurl in future
+    if '.xz' in srcuri:
+        depends = bb.data.getVarFlag('do_unpack', 'depends', d) or ""
+        depends = depends + " xz-native:do_populate_sysroot"
+        bb.data.setVarFlag('do_unpack', 'depends', depends, d)
+
     # 'multimachine' handling
     mach_arch = bb.data.getVar('MACHINE_ARCH', d, 1)
     pkg_arch = bb.data.getVar('PACKAGE_ARCH', d, 1)
