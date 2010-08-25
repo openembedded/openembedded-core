@@ -120,12 +120,12 @@ SCENEFUNCS += "base_scenefunction"
 python base_scenefunction () {
 	stamp = bb.data.getVar('STAMP', d, 1) + ".needclean"
 	if os.path.exists(stamp):
-	        bb.build.exec_func("do_clean", d)
+		bb.build.exec_func("do_clean", d)
 }
 
 python base_do_setscene () {
-        for f in (bb.data.getVar('SCENEFUNCS', d, 1) or '').split():
-                bb.build.exec_func(f, d)
+	for f in (bb.data.getVar('SCENEFUNCS', d, 1) or '').split():
+		bb.build.exec_func(f, d)
 	if not os.path.exists(bb.data.getVar('STAMP', d, 1) + ".do_setscene"):
 		bb.build.make_stamp("do_setscene", d)
 }
@@ -299,8 +299,8 @@ python base_do_unpack() {
 			local = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
 		except bb.MalformedUrl, e:
 			raise FuncFailed('Unable to generate local path for malformed uri: %s' % e)
-                if local is None:
-                    continue
+		if local is None:
+			continue
 		local = os.path.realpath(local)
 		ret = oe_unpack_file(local, localdata, url)
 		if not ret:

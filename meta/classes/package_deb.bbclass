@@ -160,8 +160,8 @@ python do_package_deb () {
         fields.append(["OE: %s\n", ['PN']])
         fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
-#        Package, Version, Maintainer, Description - mandatory
-#        Section, Priority, Essential, Architecture, Source, Depends, Pre-Depends, Recommends, Suggests, Conflicts, Replaces, Provides - Optional
+        # Package, Version, Maintainer, Description - mandatory
+        # Section, Priority, Essential, Architecture, Source, Depends, Pre-Depends, Recommends, Suggests, Conflicts, Replaces, Provides - Optional
 
 
         def pullData(l, d):
@@ -170,7 +170,7 @@ python do_package_deb () {
                 data = bb.data.getVar(i, d, True)
                 if data is None:
                     raise KeyError(f)
-		if i == 'DPKG_ARCH' and bb.data.getVar('PACKAGE_ARCH', d, True) == 'all':
+                if i == 'DPKG_ARCH' and bb.data.getVar('PACKAGE_ARCH', d, True) == 'all':
                     data = 'all'
                 l2.append(data)
             return l2
@@ -191,13 +191,13 @@ python do_package_deb () {
         bb.build.exec_func("mapping_rename_hook", localdata)
 
         rdepends = bb.utils.explode_dep_versions(bb.data.getVar("RDEPENDS", localdata, True) or "")
-	for dep in rdepends:
-		if '*' in dep:
-			del rdepends[dep]
+        for dep in rdepends:
+                if '*' in dep:
+                        del rdepends[dep]
         rrecommends = bb.utils.explode_dep_versions(bb.data.getVar("RRECOMMENDS", localdata, True) or "")
-	for dep in rrecommends:
-		if '*' in dep:
-			del rrecommends[dep]
+        for dep in rrecommends:
+                if '*' in dep:
+                        del rrecommends[dep]
         rsuggests = bb.utils.explode_dep_versions(bb.data.getVar("RSUGGESTS", localdata, True) or "")
         rprovides = bb.utils.explode_dep_versions(bb.data.getVar("RPROVIDES", localdata, True) or "")
         rreplaces = bb.utils.explode_dep_versions(bb.data.getVar("RREPLACES", localdata, True) or "")

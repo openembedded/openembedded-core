@@ -462,12 +462,12 @@ python do_package_rpm () {
 	targetsys = bb.data.getVar('TARGET_SYS', d, True)
 	pkgwritedir = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH}', d)
 	pkgarch = bb.data.expand('${PACKAGE_ARCH}', d)
-        bb.mkdirhier(pkgwritedir)
-        os.chmod(pkgwritedir, 0755)
+	bb.mkdirhier(pkgwritedir)
+	os.chmod(pkgwritedir, 0755)
 
 	cmd = rpmbuild
-        cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + " --buildroot " + pkgd
-        cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
+	cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + " --buildroot " + pkgd
+	cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
 	cmd = cmd + " --define '_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'"
 	cmd = cmd + " -bb " + outspecfile
 
