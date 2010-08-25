@@ -7,4 +7,4 @@ EXTRA_OECONF += "--disable-xvmc"
 DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
 	    virtual/libgl xineramaproto xf86driproto libpciaccess"
 
-COMPATIBLE_HOST = '(i.86|x86_64).*-linux
+COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
