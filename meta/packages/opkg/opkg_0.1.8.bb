@@ -13,7 +13,7 @@ SRC_URI = "http://opkg.googlecode.com/files/opkg-${PV}.tar.gz \
            file://headerfix.patch \
 "
 
-PR = "r2"
+PR = "r3"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 

@@ -18,6 +18,8 @@ OPKG_PREPROCESS_COMMANDS = "package_update_index_ipk; package_generate_ipkg_conf
 
 OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris"
 
+opkglibdir = "${localstatedir}/lib/opkg"
+
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
 
@@ -27,7 +29,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${OPKG_PREPROCESS_COMMANDS}
 
 	mkdir -p ${T}/
-	mkdir -p ${IMAGE_ROOTFS}/usr/lib/opkg/
+	mkdir -p ${IMAGE_ROOTFS}${opkglibdir}
 
 	opkg-cl ${IPKG_ARGS} update
 
@@ -59,12 +61,12 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${OPKG_POSTPROCESS_COMMANDS}
 	${ROOTFS_POSTINSTALL_COMMAND}
 	
-	for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.preinst; do
+	for i in ${IMAGE_ROOTFS}${opkglibdir}/info/*.preinst; do
 		if [ -f $i ] && ! sh $i; then
 			opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .preinst`
 		fi
 	done
-	for i in ${IMAGE_ROOTFS}${libdir}/opkg/info/*.postinst; do
+	for i in ${IMAGE_ROOTFS}${opkglibdir}/info/*.postinst; do
 		if [ -f $i ] && ! sh $i configure; then
 			opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .postinst`
 		fi
@@ -75,7 +77,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 
 	${ROOTFS_POSTPROCESS_COMMAND}
 	
-	rm -f ${IMAGE_ROOTFS}${libdir}/opkg/lists/*
+	rm -f ${IMAGE_ROOTFS}${opkglibdir}/lists/*
 
 	log_check rootfs 	
 }
@@ -102,7 +104,7 @@ rootfs_ipk_log_check() {
 
 rootfs_ipk_write_manifest() {
 	manifest=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.manifest
-	cp ${IMAGE_ROOTFS}/usr/lib/opkg/status $manifest
+	cp ${IMAGE_ROOTFS}${opkglibdir}/status $manifest
 
 	sed '/Depends/d' -i $manifest
 	sed '/Status/d' -i $manifest
@@ -115,16 +117,16 @@ rootfs_ipk_write_manifest() {
 }
 
 remove_packaging_data_files() {
-	rm -rf ${IMAGE_ROOTFS}/usr/lib/opkg/
+	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
         # We need the directory for the package manager lock
-        mkdir ${IMAGE_ROOTFS}/usr/lib/opkg
+        mkdir ${IMAGE_ROOTFS}${opkglibdir}
 }
 
 install_all_locales() {
 
     PACKAGES_TO_INSTALL=""
 
-    INSTALLED_PACKAGES=`grep ^Package: ${IMAGE_ROOTFS}${libdir}/opkg/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+    INSTALLED_PACKAGES=`grep ^Package: ${IMAGE_ROOTFS}${opkglibdir}/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
 
     for pkg in $INSTALLED_PACKAGES
     do

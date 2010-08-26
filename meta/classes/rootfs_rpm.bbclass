@@ -20,6 +20,8 @@ AWKPOSTINSTSCRIPT = "${POKYBASE}/scripts/rootfs_rpm-extract-postinst.awk"
 RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; package_generate_rpm_conf"
 RPM_POSTPROCESS_COMMANDS = ""
 
+opkglibdir = "${localstatedir}/lib/opkg"
+
 fakeroot rootfs_rpm_do_rootfs () {
 	set +x
 
@@ -164,7 +166,7 @@ rootfs_rpm_log_check() {
 
 remove_packaging_data_files() {
 	exit 1
-	rm -rf ${IMAGE_ROOTFS}/usr/lib/opkg/
+	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
 }
 
 install_all_locales() {
@@ -172,7 +174,7 @@ install_all_locales() {
 
     PACKAGES_TO_INSTALL=""
 
-	INSTALLED_PACKAGES=`grep ^Package: ${IMAGE_ROOTFS}${libdir}/opkg/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+	INSTALLED_PACKAGES=`grep ^Package: ${IMAGE_ROOTFS}${opkglibdir}/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
 
     for pkg in $INSTALLED_PACKAGES
     do
