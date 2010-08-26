@@ -46,7 +46,7 @@ do_populate_sdk() {
 	${IPKG_TARGET} install ${TOOLCHAIN_TARGET_TASK}
 
 	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${localstatedir_nativesdk}/lib/opkg
-	mv ${SDK_OUTPUT}/usr/lib/opkg/* ${SDK_OUTPUT}/${SDKPATHNATIVE}${localstatedir_nativesdk}/lib/opkg/
+	mv ${SDK_OUTPUT}/var/lib/opkg/* ${SDK_OUTPUT}/${SDKPATHNATIVE}${localstatedir_nativesdk}/lib/opkg/
 	rm -Rf ${SDK_OUTPUT}/usr
 
 	# Don't ship any libGL in the SDK
