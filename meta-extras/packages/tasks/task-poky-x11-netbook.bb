@@ -15,7 +15,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
 
-NETWORK_MANAGER ?= "networkmanager-applet"
+NETWORK_MANAGER ?= "connman-gnome"
 RDEPENDS_task-poky-x11-netbook = "\
     mutter \
     matchbox-desktop \

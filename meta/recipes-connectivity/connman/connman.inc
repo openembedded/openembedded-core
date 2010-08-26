@@ -1,17 +1,13 @@
-HOMEPAGE = "http://www.moblin.org/projects/projects_connman.php"
-SUMMARY  = "Moblin Connection Manager"
-LICENSE  = "GPL"
+DESCRIPTION  = "The ConnMan project provides a daemon for managing \
+internet connections within embedded devices running the Linux operating system"
+HOMEPAGE = "http://connman.net/"
+BUGTRACKER = "http://bugs.meego.com/buglist.cgi?quicksearch=connman"
+LICENSE  = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
+                    file://src/main.c;beginline=1;endline=20;md5=4b55b550fa6b33cc2055ef30dd262b3e"
 
 DEPENDS  = "libgdbus dbus glib-2.0 hal"
-RDEPENDS_${PN} = "dhcp-client wpa-supplicant resolvconf"
-
-EXTRA_OECONF += " \
-    --enable-ethernet=builtin --enable-wifi=builtin --enable-dhclient=builtin \
-    --enable-bluetooth=builtin --enable-udev --enable-loopback=builtin \
-    --enable-dnsproxy=builtin --enable-threads --enable-resolvconf=builtin \
-    --enable-client --enable-fake --with-dhclient=/sbin/dhclient \
-    --enable-test \
-    ac_cv_path_WPASUPPLICANT=/usr/sbin/wpa_supplicant"
+RDEPENDS_${PN} = "wpa-supplicant resolvconf"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 . stop 22 0 1 6 ."
@@ -39,5 +35,5 @@ FILES_${PN}-dbg += "${libdir}/connman/plugins/.debug \
 python populate_packages_prepend() {
 	plugin_dir = bb.data.expand('${libdir}/connman/plugins/', d)
 	plugin_name = bb.data.expand('${PN}-plugin-%s', d)
-	do_split_packages(d, plugin_dir, '^lib(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='' )
+	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='' )
 }

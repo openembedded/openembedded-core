@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Sato Tasks for Poky"
 LICENSE = "MIT"
-PR = "r29"
+PR = "r30"
 
 PACKAGES = "\
     task-poky-x11-sato \
@@ -16,7 +16,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
 
-NETWORK_MANAGER ?= "networkmanager-applet"
+NETWORK_MANAGER ?= "connman-gnome"
 RDEPENDS_task-poky-x11-sato = "\
     matchbox-desktop \
     matchbox-session-sato \
