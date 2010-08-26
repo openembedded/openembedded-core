@@ -42,6 +42,7 @@ RECIPE_MAINTAINER_pn-libpcap = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-wpa-supplicant="green"
 RECIPE_LATEST_VERSION_pn-wpa-supplicant="0.7.2"
+RECIPE_NO_UPDATE_REASON_pn-wpa-supplicant="0.7.2 is development version, and latest stable version is 0.6.10"
 RECIPE_NO_OF_PATCHES_pn-wpa-supplicant="0"
 RECIPE_LATEST_RELEASE_DATE_pn-wpa-supplicant="2010/04/18"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-wpa-supplicant="3 months"
@@ -54,33 +55,42 @@ RECIPE_LATEST_RELEASE_DATE_pn-ppp="2009/11/17"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-ppp="4 years"
 RECIPE_MAINTAINER_pn-ppp = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
-RECIPE_STATUS_pn-libproxy="red" # Need upgrade
-RECIPE_LATEST_VERSION_pn-libproxy="0.4.4" # OK
+RECIPE_STATUS_pn-libproxy="green"
+RECIPE_LATEST_VERSION_pn-libproxy="0.4.4"
+RECIPE_NO_UPDATE_REASON_pn-libproxy="There are some issues in 0.4.4, and the fix is not pushed in yet"
 RECIPE_NO_OF_PATCHES_pn-libproxy="1"
 RECIPE_LATEST_RELEASE_DATE_pn-libproxy="2010/05/19"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libproxy="3 months"
 RECIPE_MAINTAINER_pn-libproxy = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
-RECIPE_STATUS_pn-networkmanager="red" # Need upgrade
-RECIPE_LATEST_VERSION_pn-networkmanager="0.8" # OK
+RECIPE_STATUS_pn-networkmanager="red"
+RECIPE_LATEST_VERSION_pn-networkmanager="0.8"
+RECIPE_NO_UPDATE_REASON_pn-networkmanager="poky will use connman instead"
 RECIPE_NO_OF_PATCHES_pn-networkmanager="4"
 RECIPE_LATEST_RELEASE_DATE_pn-networkmanager="2010/04/18"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-networkmanager="3 months"
 RECIPE_MAINTAINER_pn-networkmanager = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
-RECIPE_STATUS_pn-networkmanager-applet="red" # Need upgrade
-RECIPE_LATEST_VERSION_pn-networkmanager-applet="n/a" # OK
+RECIPE_STATUS_pn-networkmanager-applet="red"
+RECIPE_LATEST_VERSION_pn-networkmanager-applet="n/a"
+RECIPE_NO_UPDATE_REASON_pn-networkmanager-applet="poky will use connman instead"
 RECIPE_NO_OF_PATCHES_pn-networkmanager-applet="4"
 RECIPE_LATEST_RELEASE_DATE_pn-networkmanager-applet="n/a"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-networkmanager-applet="n/a"
 RECIPE_MAINTAINER_pn-networkmanager-applet = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
-RECIPE_STATUS_pn-connman = "red"
-RECIPE_LATEST_VERSION_pn-connman = "0.53"
+RECIPE_STATUS_pn-connman = "green"
+RECIPE_LATEST_VERSION_pn-connman = "0.56"
+RECIPE_NO_OF_PATCHES_pn-connman="0"
+RECIPE_LATEST_RELEASE_DATE_pn-connman="2010/08/05"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-connman="10 days"
 RECIPE_MAINTAINER_pn-connman = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
-RECIPE_STATUS_pn-connman-gnome = "red"
+RECIPE_STATUS_pn-connman-gnome = "green"
 RECIPE_LATEST_VERSION_pn-connman-gnome = "0.5"
+RECIPE_NO_OF_PATCHES_pn-connman-gnome="1"
+RECIPE_LATEST_RELEASE_DATE_pn-connman-gnome="n/a"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-connman-gnome="n/a"
 RECIPE_MAINTAINER_pn-connman-gnome = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-empathy = "red"
