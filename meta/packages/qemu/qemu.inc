@@ -16,7 +16,8 @@ do_configure_prepend_virtclass-native() {
     test -e /usr/lib/libGL.so -a -e /usr/lib/libGLU.so && libgl='yes'
     test -e /usr/lib64/libGL.so -a -e /usr/lib64/libGLU.so && libgl='yes'
 
-    test -e /usr/lib/pkgconfig/sdl.pc -o -e /usr/lib64/pkgconfig/sdl.pc && libsdl='yes'
+    test -e /usr/lib/pkgconfig/sdl.pc -o -e /usr/lib64/pkgconfig/sdl.pc -o -e /usr/include/SDL/SDL.h && libsdl='yes'
+
 
     if [ "$libsdl" != 'yes' -o "$libgl" != 'yes' ]; then
        echo "You need libGL.so and libGLU.so to exist in your library path and the development headers for SDL installed to build qemu-native.
