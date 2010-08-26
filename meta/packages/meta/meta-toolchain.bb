@@ -24,8 +24,8 @@ EXCLUDE_FROM_WORLD = "1"
 do_populate_sdk() {
 	rm -rf ${SDK_OUTPUT}
 	mkdir -p ${SDK_OUTPUT}
-	mkdir -p ${SDK_OUTPUT}${libdir}/opkg/
-	mkdir -p ${SDK_OUTPUT}/${SDKTARGETSYSROOT}${libdir}/opkg/
+	mkdir -p ${SDK_OUTPUT}${localstatedir}/lib/opkg/
+	mkdir -p ${SDK_OUTPUT}/${SDKTARGETSYSROOT}${localstatedir}/lib/opkg/
 
 	rm -f ${IPKGCONF_TARGET}
 	touch ${IPKGCONF_TARGET}
@@ -45,8 +45,8 @@ do_populate_sdk() {
 	${IPKG_TARGET} update
 	${IPKG_TARGET} install ${TOOLCHAIN_TARGET_TASK}
 
-	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/opkg
-	mv ${SDK_OUTPUT}/usr/lib/opkg/* ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/opkg/
+	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${localstatedir_nativesdk}/lib/opkg
+	mv ${SDK_OUTPUT}/usr/lib/opkg/* ${SDK_OUTPUT}/${SDKPATHNATIVE}${localstatedir_nativesdk}/lib/opkg/
 	rm -Rf ${SDK_OUTPUT}/usr
 
 	# Don't ship any libGL in the SDK
@@ -59,7 +59,7 @@ do_populate_sdk() {
 	install -m 0644 ${IPKGCONF_SDK} ${SDK_OUTPUT}/${SDKPATHNATIVE}/${sysconfdir}/
 
 	# Can copy pstage files here
-	# target_pkgs=`cat ${SDK_OUTPUT}/${SDKTARGETSYSROOT}/usr/lib/opkg/status | grep Package: | cut -f 2 -d ' '`
+	# target_pkgs=`cat ${SDK_OUTPUT}/${SDKTARGETSYSROOT}/var/lib/opkg/status | grep Package: | cut -f 2 -d ' '`
 
 	# Fix or remove broken .la files
 	for i in `find ${SDK_OUTPUT}/${SDKTARGETSYSROOT} -name \*.la`; do
