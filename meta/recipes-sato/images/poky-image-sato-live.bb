@@ -1,6 +1,6 @@
 DESCRIPTION = "Sato Bootable Live Image"
 
-require poky-image-live.inc
+require recipes-core/images/poky-image-live.inc
 
 LABELS += "boot install"
 

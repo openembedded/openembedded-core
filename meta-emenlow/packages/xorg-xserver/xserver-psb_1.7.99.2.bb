@@ -1,4 +1,4 @@
-require ../meta/packages/xorg-xserver/xserver-xf86-dri-lite.inc
+require recipes-graphics/xorg-xserver/xserver-xf86-dri-lite.inc
 
 PR = "r3"
 

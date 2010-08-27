@@ -1,4 +1,4 @@
-require poky-image-directdisk.inc
+require recipes-core/images/poky-image-directdisk.inc
 
 DESCRIPTION = "Sato Direct Disk Image"
 

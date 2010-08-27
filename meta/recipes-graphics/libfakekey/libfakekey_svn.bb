@@ -1,4 +1,4 @@
-DESCRIPTION = "Matchbox keyboard"
+DESCRIPTION = "libfakekey"
 HOMEPAGE = "http://matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.openedhand.com/"
 
