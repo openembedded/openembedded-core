@@ -1,6 +1,27 @@
 
 require conf/distro/include/distro_tracking_fields.inc
 
+addhandler distro_eventhandler
+python distro_eventhandler() {
+    from bb.event import Handled, NotHandled
+    # if bb.event.getName(e) == "TaskStarted":
+
+    if bb.event.getName(e) == "BuildStarted":
+	"""initialize log files."""
+	logpath = bb.data.getVar('LOG_DIR', e.data, 1)
+	bb.utils.mkdirhier(logpath)
+	logfile = os.path.join(logpath, "distrodata.%s.csv" % bb.data.getVar('DATETIME', e.data, 1))
+	if not os.path.exists(logfile):
+		slogfile = os.path.join(logpath, "distrodata.csv")
+		if os.path.exists(slogfile):
+			os.remove(slogfile)
+		os.system("touch %s" % logfile)
+		os.symlink(logfile, slogfile)
+		bb.data.setVar('LOG_FILE', logfile, e.data)
+
+    return NotHandled
+}
+
 addtask distrodata_np
 do_distrodata_np[nostamp] = "1"
 python do_distrodata_np() {
@@ -71,16 +92,11 @@ python do_distrodata_np() {
 addtask distrodata
 do_distrodata[nostamp] = "1"
 python do_distrodata() {
-	"""initialize log files."""
+
 	logpath = bb.data.getVar('LOG_DIR', d, 1)
 	bb.utils.mkdirhier(logpath)
-	logfile = os.path.join(logpath, "distrodata.%s.csv" % bb.data.getVar('DATETIME', d, 1))
-	if not os.path.exists(logfile):
-		slogfile = os.path.join(logpath, "distrodata.csv")
-		if os.path.exists(slogfile):
-			os.remove(slogfile)
-		os.system("touch %s" % logfile)
-		os.symlink(logfile, slogfile)
+	logfile = os.path.join(logpath, "distrodata.csv")
+        bb.note("LOG_FILE: %s\n" % logfile)
 
 	localdata = bb.data.createCopy(d)
         pn = bb.data.getVar("PN", d, True)
