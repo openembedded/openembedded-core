@@ -9,12 +9,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS += "gst-plugins-base libmusicbrainz tremor"
 
-PR = "r1"
+PR = "r2"
 
 inherit gettext
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio \
-                 --with-plugins=musicbrainz,wavpack,ivorbis, --disable-vdpau --disable-apexsink"
+                 --with-plugins=musicbrainz,wavpack,ivorbis,mpegvideoparse --disable-vdpau --disable-apexsink"
 
 ARM_INSTRUCTION_SET = "arm"
 
