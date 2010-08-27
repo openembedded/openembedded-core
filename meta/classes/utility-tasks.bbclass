@@ -488,6 +488,31 @@ do_buildall() {
 	:
 }
 
+addhandler check_eventhandler
+python check_eventhandler() {
+    from bb.event import Handled, NotHandled
+    # if bb.event.getName(e) == "TaskStarted":
+
+    if bb.event.getName(e) == "BuildStarted":
+        import oe.distro_check as dc
+        tmpdir = bb.data.getVar('TMPDIR', e.data, 1)
+        distro_check_dir = os.path.join(tmpdir, "distro_check")
+        datetime = bb.data.getVar('DATETIME', e.data, 1)
+        """initialize log files."""
+        logpath = bb.data.getVar('LOG_DIR', e.data, 1)
+        bb.utils.mkdirhier(logpath)
+        logfile = os.path.join(logpath, "distrocheck.%s.csv" % bb.data.getVar('DATETIME', e.data, 1))
+        if not os.path.exists(logfile):
+                slogfile = os.path.join(logpath, "distrocheck.csv")
+                if os.path.exists(slogfile):
+                        os.remove(slogfile)
+                os.system("touch %s" % logfile)
+                os.symlink(logfile, slogfile)
+                bb.data.setVar('LOG_FILE', logfile, e.data)
+
+    return NotHandled
+}
+
 addtask distro_check
 do_distro_check[nostamp] = "1"
 python do_distro_check() {
@@ -495,12 +520,9 @@ python do_distro_check() {
     import oe.distro_check as dc
     localdata = bb.data.createCopy(d)
     bb.data.update_data(localdata)
-
-    tmpdir = bb.data.getVar('TMPDIR', localdata, 1)
+    tmpdir = bb.data.getVar('TMPDIR', d, 1)
     distro_check_dir = os.path.join(tmpdir, "distro_check")
     datetime = bb.data.getVar('DATETIME', localdata, 1)
-
-    # if distro packages list data is old then rebuild it 
     dc.update_distro_data(distro_check_dir, datetime)
 
     # do the comparison
@@ -508,5 +530,12 @@ python do_distro_check() {
 
     # save the results
     dc.save_distro_check_result(result, datetime, d)
+}
+
+addtask distro_checkall after do_distro_check
+do_distro_checkall[recrdeptask] = "do_distro_check"
+do_distro_checkall[nostamp] = "1"
+do_distro_checkall() {
+	:
 }
 

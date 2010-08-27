@@ -230,7 +230,7 @@ def update_distro_data(distro_check_dir, datetime):
         f = open(datetime_file, "r+b")
         fcntl.lockf(f, fcntl.LOCK_EX)
         saved_datetime = f.read()
-        if saved_datetime != datetime:
+        if saved_datetime[0:8] != datetime[0:8]:
             bb.note("The build datetime did not match: saved:%s current:%s" % (saved_datetime, datetime))
             bb.note("Regenerating distro package lists")
             create_distro_packages_list(distro_check_dir)
@@ -247,10 +247,33 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     if not os.path.isdir(distro_check_dir):
         raise Exception("compare_in_distro_packages_list: invalid distro_check_dir passed")
         
+    localdata = bb.data.createCopy(d)
     pkglst_dir = os.path.join(distro_check_dir, "package_lists")
     matching_distros = []
+    pn = bb.data.getVar('PN', d, True)
     recipe_name = bb.data.getVar('PN', d, True)
-    tmp = bb.data.getVar('DISTRO_PN_ALIAS', d, True)
+    bb.note("Checking: %s" % pn)
+
+    if pn.find("-native") != -1:
+        pnstripped = pn.split("-native")
+        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+        bb.data.update_data(localdata)
+        recipe_name = pnstripped[0]
+
+    if pn.find("-cross") != -1:
+        pnstripped = pn.split("-cross")
+        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+        bb.data.update_data(localdata)
+        recipe_name = pnstripped[0]
+
+    if pn.find("-initial") != -1:
+        pnstripped = pn.split("-initial")
+        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+        bb.data.update_data(localdata)
+        recipe_name = pnstripped[0]
+
+    bb.note("Recipe: %s" % recipe_name)
+    tmp = bb.data.getVar('DISTRO_PN_ALIAS', localdata, True)
     distro_pn_aliases = {}
     if tmp:
         list = tmp.split(' ')
@@ -271,6 +294,8 @@ def compare_in_distro_packages_list(distro_check_dir, d):
                 f.close()
                 break
         f.close()
+
+    bb.note("Matching: %s" % matching_distros)
     return matching_distros
 
 def save_distro_check_result(result, datetime, d):
@@ -281,8 +306,8 @@ def save_distro_check_result(result, datetime, d):
         return
     if not os.path.isdir(logdir):
         os.makedirs(logdir)
-    result_file = os.path.join(logdir, "distro_check-" + datetime + ".results")
-    line = pn + " : "
+    result_file = os.path.join(logdir, "distrocheck.csv")
+    line = pn + ", "
     for i in result:
         line = line + i + ", "
     if result:
