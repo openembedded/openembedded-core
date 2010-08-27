@@ -441,12 +441,13 @@ RECIPE_MAINTAINER_pn-xproto = "Dexuan Cui <dexuan.cui@intel.com>"
 
 RECIPE_STATUS_pn-liberation-fonts = "green"
 DEPENDENCY_CHECK_pn-liberation-fonts = "not done"
-RECIPE_LATEST_VERSION_pn-liberation-fonts = "1.05.2.20091019"    # OK
+RECIPE_LATEST_VERSION_pn-liberation-fonts = "1.05.2.20091019"
+RECIPE_NO_UPDATE_REASON_pn-liberation-fonts = "1.05.2.20091019 doesn't have big differences from current version 1.04; 1.05.2.20091019 needs adding new native packages like libungif_4.1.3, libspiro and fontforge that have stability concerns"
 RECIPE_NO_OF_PATCHES_pn-liberation-fonts = "0"
 RECIPE_INTEL_SECTION_pn-liberation-fonts = "x11/fonts"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-liberation-fonts = "5 months"
 RECIPE_LATEST_RELEASE_DATE_pn-liberation-fonts = "12/26/2009"
-RECIPE_COMMENTS_pn-liberation-fonts = "current version 1.04 released open source under GPLv2 with exceptions; need add native fontforge to upgrade to 1.05.2.20091019"
+RECIPE_COMMENTS_pn-liberation-fonts = "current version 1.04 released open source under GPLv2 with exceptions"
 RECIPE_MAINTAINER_pn-liberation-fonts = "Dexuan Cui <dexuan.cui@intel.com>"
 
 RECIPE_STATUS_pn-libfontenc = "green"
