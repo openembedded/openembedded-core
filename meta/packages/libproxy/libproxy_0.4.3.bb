@@ -11,12 +11,12 @@ DEPENDS = "virtual/libx11 xmu gconf-dbus"
 
 SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz"
 
-PR = "r0"
+PR = "r1"
 
 inherit cmake pkgconfig
 
 EXTRA_OECMAKE = "-DWITH_WEBKIT=no -DWITH_GNOME=yes -DWITH_KDE4=no \
-	      -DWITH_PYTHON=no -DWITH_MOZJS=no -DWITH_NM=no"
+	      -DWITH_PYTHON=no -DWITH_PERL=no -DWITH_MOZJS=no -DWITH_NM=no"
 
 FILES_${PN}-dbg += "${libdir}/libproxy/0.4.2/plugins/"
 
