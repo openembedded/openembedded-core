@@ -127,10 +127,11 @@ RDEPENDS_task-poky-multiuser = "\
 RDEPENDS_task-poky-rpm = "\
     beecrypt \
     rpm \
+#    zypper \
     "
 
 RDEPENDS_task-poky-sys-services = "\
-#    at \
+    at \
     bzip2 \
 #    cronie \
 #    crontabs \
