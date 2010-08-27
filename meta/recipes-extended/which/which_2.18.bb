@@ -8,14 +8,14 @@ BUGTRACKER = "n/a"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.xs4all.nl/~carlo17/which/which-${PV}.tar.gz \
            file://fix_name_conflict_group_member.patch"
 
 DEPENDS = "cwautomacros-native"
 
-inherit autotools
+inherit autotools update-alternatives
 
 do_configure_prepend() {
 	OLD="@ACLOCAL_CWFLAGS@"
@@ -26,15 +26,7 @@ do_install_append() {
 	mv ${D}/${bindir}/which ${D}/${bindir}/which.${PN}
 }
 
-pkg_postinst_${PN}() {
-	if [ "${PN}" = "${BPN}" ] ; then
-		update-alternatives --install ${bindir}/which which which.${PN} 100
-	fi
-}
-
-pkg_prerm_${PN}() {
-	if [ "${PN}" = "${BPN}" ] ; then
-		update-alternatives --remove which which.${PN}
-	fi
-}
+ALTERNATIVE_NAME = "which"
+ALTERNATIVE_PATH = "which.${PN}"
+ALTERNATIVE_PRIORITY = "100"
 
