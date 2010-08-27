@@ -258,7 +258,7 @@ def go(d, urls = None):
 
         # First try fetching uri, u, from PREMIRRORS
         mirrors = [ i.split() for i in (bb.data.getVar('PREMIRRORS', d, 1) or "").split('\n') if i ]
-        localpath = try_mirrors(d, u, mirrors)
+        localpath = try_mirrors(d, u, mirrors, False, m.forcefetch(u, ud, d))
         if not localpath:
             # Next try fetching from the original uri, u
             try:
@@ -430,7 +430,7 @@ def runfetchcmd(cmd, d, quiet = False):
 
     return output
 
-def try_mirrors(d, uri, mirrors, check = False):
+def try_mirrors(d, uri, mirrors, check = False, force = False):
     """
     Try to use a mirrored version of the sources.
     This method will be automatically called before the fetchers go.
@@ -440,7 +440,7 @@ def try_mirrors(d, uri, mirrors, check = False):
     mirrors is the list of mirrors we're going to try
     """
     fpath = os.path.join(data.getVar("DL_DIR", d, 1), os.path.basename(uri))
-    if not check and os.access(fpath, os.R_OK):
+    if not check and os.access(fpath, os.R_OK) and not force:
         bb.msg.debug(1, bb.msg.domain.Fetcher, "%s already exists, skipping checkout." % fpath)
         return fpath
 
