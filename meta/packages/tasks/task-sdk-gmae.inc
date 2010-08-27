@@ -11,7 +11,7 @@ SDK-GMAE = " \
     libecal-dev \
     libebook-dev \
     libxi-dev \
-    libsqlite-dev \
+    libsqlite3-dev \
     "
 
 # TODO: gvfs-dev, mission-control

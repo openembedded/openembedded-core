@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Target packages for the standalone Moblin SDK"
-PR = "r6"
+PR = "r7"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -26,7 +26,7 @@ RDEPENDS_${PN} = "\
     libebook-dev \
     libglade-dev \
     libxi-dev \
-    libsqlite-dev \
+    libsqlite3-dev \
     clutter-1.0-dev \
     nbtk-dev \
     mutter-dev \

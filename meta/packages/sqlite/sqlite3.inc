@@ -22,12 +22,12 @@ export config_TARGET_LINK = "${CCLD}"
 export config_TARGET_CFLAGS = "${CFLAGS}"
 export config_TARGET_LFLAGS = "${LDFLAGS}"
 
-PACKAGES = "libsqlite libsqlite-dev libsqlite-doc sqlite3 sqlite3-dbg"
-FILES_sqlite3 = "${bindir}/*"
-FILES_libsqlite = "${libdir}/*.so.*"
-FILES_libsqlite-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so \
+PACKAGES = "lib${PN} lib${PN}-dev lib${PN}-doc ${PN} ${PN}-dbg"
+FILES_${PN} = "${bindir}/*"
+FILES_lib${PN} = "${libdir}/*.so.*"
+FILES_lib${PN}-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so \
 		       ${libdir}/pkgconfig ${includedir}"
-FILES_libsqlite-doc = "${docdir} ${mandir} ${infodir}"
-AUTO_LIBNAME_PKGS = "libsqlite"
+FILES_lib${PN}-doc = "${docdir} ${mandir} ${infodir}"
+AUTO_LIBNAME_PKGS = "lib${PN}"
 
 BBCLASSEXTEND = "native nativesdk"
