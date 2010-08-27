@@ -1,12 +1,19 @@
-SECTION = "devel"
 DESCRIPTION = "The Linux trace toolkit is a suite of tools designed to \
 extract program execution details from the Linux operating system and  \
 interpret them."
-LICENSE = "GPL"
+HOMEPAGE = "http://lttng.org/content/download"
+BUGTRACKER = "n/a"
+
+LICENSE = "GPLv2 & LGPLv2.1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+                    file://ltt/ltt.h;beginline=2;endline=18;md5=8b7da9190028c50396d97fc85bad0da9 \
+                    file://lttv/lttv/traceset.c;beginline=2;endline=17;md5=bcab42863b64b41d153bf81bbe2490a6"
 PR = "r0"
 DEPENDS = "gtk+ pango popt"
 
-ALTNAME = "LinuxTraceToolkitViewer-${PV}-12082007"
+SECTION = "devel"
+
+ALTNAME = "lttv-${PV}-pre13-27052008"
 
 SRC_URI = "http://lttng.org/files/packages/${ALTNAME}.tar.gz"
 S = "${WORKDIR}/${ALTNAME}"
@@ -20,3 +27,4 @@ FILES_${PN} += "\
     ${datadir}/LinuxTraceToolkitViewer/facilities/* \
     ${datadir}/LinuxTraceToolkitViewer/pixmaps/* "
 FILES_${PN}-dbg += "${libdir}/lttv/plugins/.debug/"
+
