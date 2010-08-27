@@ -188,22 +188,23 @@ def sstate_clean(ss, d):
         bb.utils.unlockfile(lock)
 
 SCENEFUNCS += "sstate_cleanall"
+CLEANFUNCS += "sstate_cleanall"
 
 python sstate_cleanall() {
     import fnmatch
 
-    bb.note("Removing %s from staging" % bb.data.getVar('PN', d, True))
+    bb.note("Removing shared state for package %s" % bb.data.getVar('PN', d, True))
 
     manifest_dir = bb.data.getVar('PSTAGE2_MANIFESTS', d, True)
     manifest_pattern = bb.data.expand("manifest-${PN}.*", d)
+
+    if not os.path.exists(manifest_dir):
+        return
 
     for manifest in (os.listdir(manifest_dir)):
         if fnmatch.fnmatch(manifest, manifest_pattern):
              sstate_clean_manifest(manifest_dir + "/" + manifest, d)
 }
-
-do_clean[postfuncs] += "sstate_cleanall"
-do_clean[dirs] += "${PSTAGE2_MANIFESTS}"
 
 def sstate_package(ss, d):
     import oe.path

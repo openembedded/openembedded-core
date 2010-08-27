@@ -10,6 +10,8 @@ python do_listtasks() {
 			sys.__stdout__.write("%s\n" % e)
 }
 
+CLEANFUNCS ?= ""
+
 addtask clean
 do_clean[nostamp] = "1"
 python do_clean() {
@@ -21,6 +23,9 @@ python do_clean() {
 	dir = "%s.*" % bb.data.expand(bb.data.getVar('STAMP', d), d)
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
+
+	for f in (bb.data.getVar('CLEANFUNCS', d, 1) or '').split():
+		bb.build.exec_func(f, d)
 }
 
 addtask rebuild after do_${BB_DEFAULT_TASK}
