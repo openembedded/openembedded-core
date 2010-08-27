@@ -12,7 +12,8 @@ REPENDS_${PN} = "pciutils"
 
 PR = "r0"
 
-SRC_URI = "http://www.lesswatts.org/projects/powertop/download/powertop-${PV}.tar.gz"
+SRC_URI = "http://www.lesswatts.org/projects/powertop/download/powertop-${PV}.tar.gz \
+           file://stub_out_the_ncurses_calls_in_dump_mode.patch"
 
 CFLAGS += "${LDFLAGS}"
 EXTRA_OEMAKE = "VERSION=\"${PV}\""
