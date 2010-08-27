@@ -187,6 +187,8 @@ def sstate_clean(ss, d):
     for lock in locks:
         bb.utils.unlockfile(lock)
 
+SCENEFUNCS += "sstate_cleanall"
+
 python sstate_cleanall() {
     import fnmatch
 
