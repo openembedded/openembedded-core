@@ -85,6 +85,11 @@ class Git(Fetch):
 
         return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
 
+    def forcefetch(self, url, ud, d):
+        if not self._contains_ref(ud.tag, d) or 'fullclone' in ud.parm:
+            return True
+        return False
+
     def go(self, loc, ud, d):
         """Fetch url"""
 
@@ -108,8 +113,8 @@ class Git(Fetch):
                 runfetchcmd("%s clone -n %s://%s%s%s %s" % (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.clonedir), d)
 
         os.chdir(ud.clonedir)
-        # Remove all but the .git directory
         if not self._contains_ref(ud.tag, d) or 'fullclone' in ud.parm:
+            # Remove all but the .git directory
             runfetchcmd("rm * -Rf", d)
             runfetchcmd("%s fetch %s://%s%s%s %s" % (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.branch), d)
             runfetchcmd("%s fetch --tags %s://%s%s%s" % (ud.basecmd, ud.proto, username, ud.host, ud.path), d)
