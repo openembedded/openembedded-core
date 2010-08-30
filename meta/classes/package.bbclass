@@ -594,6 +594,8 @@ python package_do_filedeps() {
 				value = line_list[1]
 				file = file.replace(pkgdest + "/" + pkg, "")
 				file = file.replace("@", "@at@")
+				file = file.replace(" ", "@space@")
+				file = file.replace("\t", "@tab@")
 				file = file.replace("[", "@openbrace@")
 				file = file.replace("]", "@closebrace@")
 				file = file.replace("_", "@underscore@")

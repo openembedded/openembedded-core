@@ -187,24 +187,6 @@ python write_specfile () {
 		splitsection = (bb.data.getVar('SECTION', localdata, True) or "")
 		splitdescription = (bb.data.getVar('DESCRIPTION', localdata, True) or "")
 
-		# Roll up the per file dependencies into package level dependencies
-		def roll_filerdeps(varname, d):
-			depends = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
-			dependsflist_key = 'FILE' + varname + 'FLIST'
-			dependsflist = (bb.data.getVar(dependsflist_key, d, True) or "")
-			for dfile in dependsflist.split():
-				key = "FILE" + varname + "_" + dfile
-				filedepends = bb.utils.explode_dep_versions(bb.data.getVar(key, d, True) or "")
-				bb.utils.extend_deps(depends, filedepends)
-			bb.data.setVar(varname, bb.utils.join_deps(depends), d)
-
-		roll_filerdeps('RDEPENDS', localdata)
-		roll_filerdeps('RRECOMMENDS', localdata)
-		roll_filerdeps('RSUGGESTS', localdata)
-		roll_filerdeps('RPROVIDES', localdata)
-		roll_filerdeps('RREPLACES', localdata)
-		roll_filerdeps('RCONFLICTS', localdata)
-
 		translate_vers('RDEPENDS', localdata)
 		translate_vers('RRECOMMENDS', localdata)
 		translate_vers('RSUGGESTS', localdata)
@@ -457,6 +439,66 @@ python do_package_rpm () {
 	bb.data.setVar('OUTSPECFILE', outspecfile, d)
 	bb.build.exec_func('write_specfile', d)
 
+	# Construct per file dependencies file
+	def dump_filerdeps(varname, outfile, d):
+		outfile.write("#!/bin/sh\n")
+		outfile.write("\n# Dependency table\n")
+		for pkg in packages.split():
+			dependsflist_key = 'FILE' + varname + 'FLIST' + "_" + pkg
+			dependsflist = (bb.data.getVar(dependsflist_key, d, True) or "")
+			for dfile in dependsflist.split():
+				key = "FILE" + varname + "_" + dfile + "_" + pkg
+				depends_dict = bb.utils.explode_dep_versions(bb.data.getVar(key, d, True) or "")
+				file = dfile.replace("@underscore@", "_")
+				file = file.replace("@closebrace@", "]")
+				file = file.replace("@openbrace@", "[")
+				file = file.replace("@tab@", "\t")
+				file = file.replace("@space@", " ")
+				file = file.replace("@at@", "@")
+				outfile.write("#" + pkgd + file + "\t")
+				for dep in depends_dict:
+					ver = depends_dict[dep]
+					if dep and ver:
+						ver = ver.replace("(","")
+						ver = ver.replace(")","")
+						outfile.write(dep + " " + ver + " ")
+					else:
+						outfile.write(dep + " ")
+				outfile.write("\n")
+		outfile.write("\n\nwhile read file_name ; do\n")
+		outfile.write("\tlength=$(echo \"#${file_name}\t\" | wc -c )\n")
+		outfile.write("\tline=$(grep \"^#${file_name}\t\" $0 | cut -c ${length}- )\n")
+		outfile.write("\tprintf \"%s\\n\" ${line}\n")
+		outfile.write("done\n")
+
+	# Poky dependencies a.k.a. RPM requires
+	outdepends = workdir + "/" + srcname + ".requires"
+
+	try:
+		from __builtin__ import file
+		dependsfile = file(outdepends, 'w')
+	except OSError:
+		raise bb.build.FuncFailed("unable to open spec file for writing.")
+
+	dump_filerdeps('RDEPENDS', dependsfile, d)
+
+	dependsfile.close()
+	os.chmod(outdepends, 0755)
+
+	# Poky / RPM Provides
+	outprovides = workdir + "/" + srcname + ".requires"
+
+	try:
+		from __builtin__ import file
+		providesfile = file(outprovides, 'w')
+	except OSError:
+		raise bb.build.FuncFailed("unable to open spec file for writing.")
+
+	dump_filerdeps('RPROVIDES', providesfile, d)
+
+	providesfile.close()
+	os.chmod(outprovides, 0755)
+
 	# Setup the rpmbuild arguments...
 	rpmbuild = bb.data.getVar('RPMBUILD', d, True)
 	targetsys = bb.data.getVar('TARGET_SYS', d, True)
@@ -469,6 +511,9 @@ python do_package_rpm () {
 	cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + " --buildroot " + pkgd
 	cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
 	cmd = cmd + " --define '_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'"
+	cmd = cmd + " --define '_use_internal_dependency_generator 0'"
+	cmd = cmd + " --define '__find_requires " + outdepends + "'"
+	cmd = cmd + " --define '__find_provides " + outprovides + "'"
 	cmd = cmd + " -bb " + outspecfile
 
 	# Build the spec file!
