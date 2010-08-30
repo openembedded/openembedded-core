@@ -96,10 +96,12 @@ def sstate_install(ss, d):
                 bb.debug(2, "Staging %s to %s" % (srcpath, dstpath))
                 sharedfiles.append(dstpath)
             for dir in dirs:
-                dir = os.path.join(state[2], dir)
-                if not dir.endswith("/"):
-                    dir = dir + "/"
-                shareddirs.append(dir)
+                srcdir = os.path.join(walkroot, dir)
+                dstdir = srcdir.replace(state[1], state[2])
+                bb.debug(2, "Staging %s to %s" % (srcdir, dstdir))
+                if not dstdir.endswith("/"):
+                    dstdir = dstdir + "/"
+                shareddirs.append(dstdir)
     f = open(manifest, "w")
     for file in sharedfiles:
         f.write(file + "\n")
@@ -166,6 +168,7 @@ def sstate_clean_manifest(manifest, d):
 
     for entry in entries:
         entry = entry.strip()
+        bb.debug(2, "Removing manifest: %s" % entry)
         if entry.endswith("/"):
            if os.path.exists(entry) and len(os.listdir(entry)) == 0:
               os.rmdir(entry)
