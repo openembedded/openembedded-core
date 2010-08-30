@@ -196,7 +196,8 @@ python sstate_cleanall() {
     bb.note("Removing shared state for package %s" % bb.data.getVar('PN', d, True))
 
     manifest_dir = bb.data.getVar('PSTAGE2_MANIFESTS', d, True)
-    manifest_pattern = bb.data.expand("manifest-${PN}.*", d)
+    manifest_prefix = bb.data.getVar("PSTAGE2_MANFILEPREFIX", d, True)
+    manifest_pattern = os.path.basename(manifest_prefix) + ".*"
 
     if not os.path.exists(manifest_dir):
         return
