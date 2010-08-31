@@ -546,6 +546,7 @@ class BBCooker:
 
             if bb.data.getVar("BB_WORKERCONTEXT", self.configuration.data) is None:
                 bb.fetch.fetcher_init(self.configuration.data)
+            bb.codeparser.parser_cache_init(self.configuration.data)
 
             bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
 
@@ -1011,6 +1012,7 @@ class CookerParser:
 
         if self.pointer >= self.total:
             cooker.bb_cache.sync()
+            bb.codeparser.parser_cache_save(cooker.configuration.data)
             if self.error > 0:
                 raise ParsingErrorsFound
             return False

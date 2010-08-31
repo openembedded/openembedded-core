@@ -4,6 +4,14 @@ from bb import msg, utils
 import ast
 import codegen
 
+PARSERCACHE_VERSION = 1
+
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
+
 def check_indent(codestr):
     """If the code is indented, add a top level piece of code to 'remove' the indentation"""
 
@@ -13,6 +21,43 @@ def check_indent(codestr):
     return codestr
 
 pythonparsecache = {}
+shellparsecache = {}
+
+def parser_cachefile(d):
+    cachedir = bb.data.getVar("PERSISTENT_DIR", d, True) or bb.data.getVar("CACHE", d, True)
+    if cachedir in [None, '']:
+        return None
+    bb.utils.mkdirhier(cachedir)
+    cachefile = os.path.join(cachedir, "bb_codeparser.dat")
+    bb.msg.debug(1, bb.msg.domain.Cache, "Using cache in '%s' for codeparser cache" % cachefile)
+    return cachefile
+
+def parser_cache_init(d):
+
+    cachefile = parser_cachefile(d)
+    if not cachefile:
+        return
+
+    try:
+        p = pickle.Unpickler(file(cachefile, "rb"))
+        data, version = p.load()
+    except:
+        return
+
+    if version != PARSERCACHE_VERSION:
+        return
+
+    bb.codeparser.pythonparsecache = data[0]
+    bb.codeparser.shellparsecache = data[1]
+
+def parser_cache_save(d):
+
+    cachefile = parser_cachefile(d)
+    if not cachefile:
+        return
+
+    p = pickle.Pickler(file(cachefile, "wb"), -1)
+    p.dump([[bb.codeparser.pythonparsecache, bb.codeparser.shellparsecache], PARSERCACHE_VERSION])
 
 class PythonParser():
     class ValueVisitor():
@@ -125,9 +170,11 @@ class PythonParser():
 
     def parse_python(self, node):
 
-        if node in pythonparsecache:
-            self.references = pythonparsecache[node].references
-            self.execs = pythonparsecache[node].execs
+        h = hash(node)
+
+        if h in pythonparsecache:
+            self.references = pythonparsecache[h].references
+            self.execs = pythonparsecache[h].execs
             return
 
         code = compile(check_indent(str(node)), "<string>", "exec", 
@@ -142,10 +189,7 @@ class PythonParser():
         self.references.update(visitor.var_execs)
         self.execs = visitor.direct_func_calls
 
-        pythonparsecache[node] = self
-
-
-shellparsecache = {}
+        pythonparsecache[h] = self
 
 class ShellParser():
     def __init__(self):
@@ -158,8 +202,10 @@ class ShellParser():
         commands it executes.
         """
 
-        if value in pythonparsecache:
-            self.execs = shellparsecache[value].execs
+        h = hash(value)
+
+        if h in shellparsecache:
+            self.execs = shellparsecache[h].execs
             return
 
         try:
@@ -171,7 +217,7 @@ class ShellParser():
             self.process_tokens(token)
         self.execs = set(cmd for cmd in self.allexecs if cmd not in self.funcdefs)
 
-        shellparsecache[value] = self
+        shellparsecache[h] = self
 
         return self.execs
 
