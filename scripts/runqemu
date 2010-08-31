@@ -113,7 +113,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$TMPDIR/deploy/images
-            findimage $T qemuarm ext3 "poky-image-sdk poky-image-sato poky-image-minimal"
+            findimage $T qemuarm ext3 "poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
         fi
     fi
 fi
@@ -125,7 +125,7 @@ if [ "$MACHINE" = "qemumips" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$TMPDIR/deploy/images
-            findimage $T $MACHINE ext3 "poky-image-sdk poky-image-sato poky-image-minimal"
+            findimage $T $MACHINE ext3 "poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
         fi
     fi
     CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr
@@ -138,7 +138,7 @@ if [ "$MACHINE" = "qemuppc" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$TMPDIR/deploy/images
-            findimage $T $MACHINE ext3 "poky-image-sdk poky-image-sato poky-image-minimal"
+            findimage $T $MACHINE ext3 "poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
         fi
     fi
     CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr
@@ -176,7 +176,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$TMPDIR/deploy/images
-            findimage $T qemux86 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
+            findimage $T qemux86 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
         fi
     fi
     CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr
@@ -189,7 +189,7 @@ if [ "$MACHINE" = "qemux86-64" ]; then
     if [ "$TYPE" = "ext3" ]; then
         if [ "x$HDIMAGE" = "x" ]; then
             T=$TMPDIR/deploy/images
-            findimage $T qemux86-64 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-minimal"
+            findimage $T qemux86-64 ext3 "moblin-image-sdk moblin-image-netbook poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
         fi
     fi
     CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr
