@@ -163,6 +163,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-openssl = "06/2010"
 RECIPE_COMMENTS_pn-openssl = "0.9.8o is actually used for stability concerns"
 
 RECIPE_STATUS_pn-libnss-mdns = "green"
+DISTRO_PN_ALIAS_pn-libnss-mdns = "Meego=nss-mdns OpenSuSE=nss-mdns Ubuntu=nss-mdns Mandriva=nss_mdns Debian=nss-mdns"
 RECIPE_MAINTAINER_pn-libnss-mdns = "Qing He <qing.he@intel.com>"
 DEPENDENCY_CHECK_pn-libnss-mdns = "done"
 RECIPE_LATEST_VERSION_pn-libnss-mdns = "0.10"

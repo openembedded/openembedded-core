@@ -3,6 +3,7 @@
 #
 
 RECIPE_STATUS_pn-bigreqsproto="green" # no update needed
+DISTRO_PN_ALIAS_pn-bigreqsproto = "Meego=xorg-x11-proto-bigreqsproto"
 RECIPE_LATEST_VERSION_pn-bigreqsproto="1.1.0"
 RECIPE_NO_OF_PATCHES_pn-bigreqsproto="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-bigreqsproto="3 years"
@@ -11,6 +12,7 @@ RECIPE_INTEL_SECTION_pn-bigreqsproto="graphic core"
 RECIPE_MAINTAINER_pn-bigreqsproto="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-evieext="green" # no update needed
+DISTRO_PN_ALIAS_pn-evieext = "Meego=xorg-x11-proto-evieext Debian=x11proto-evie"
 RECIPE_LATEST_VERSION_pn-evieext="1.1.0"
 RECIPE_NO_OF_PATCHES_pn-evieext="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-evieext="3 years"
@@ -35,6 +37,7 @@ RECIPE_INTEL_SECTION_pn-x11-common="graphic core"
 RECIPE_MAINTAINER_pn-x11-common="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-input-keyboard="green" # no update needed
+DISTRO_PN_ALIAS_pn-xf86-input-keyboard = "Meego=xorg-x11-drv-keyboard Fedora=xorg-x11-drv-keyboard Mandriva=x11-driver-input-keyboard Debian=xserver-xorg-input-keyboard"
 RECIPE_LATEST_VERSION_pn-xf86-input-keyboard="1.4.0"
 RECIPE_NO_OF_PATCHES_pn-xf86-input-keyboard="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-input-keyboard="9 monthes"
@@ -43,6 +46,7 @@ RECIPE_INTEL_SECTION_pn-xf86-input-keyboard="graphic core"
 RECIPE_MAINTAINER_pn-xf86-input-keyboard="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-input-mouse="green" # no update needed
+DISTRO_PN_ALIAS_pn-xf86-input-mouse = "Ubuntu=xserver-xorg-input-mouse Mandriva=x11-driver-input-mouse Debian=xserver-xorg-input-mouse"
 RECIPE_LATEST_VERSION_pn-xf86-input-mouse="1.5.0"
 RECIPE_NO_OF_PATCHES_pn-xf86-input-mouse="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-input-mouse="9 monthes"
@@ -51,6 +55,7 @@ RECIPE_INTEL_SECTION_pn-xf86-input-mouse="graphic core"
 RECIPE_MAINTAINER_pn-xf86-input-mouse="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-input-vmmouse="red" # update needed
+DISTRO_PN_ALIAS_pn-xf86-input-vmmouse = "Fedora=xorg-x11-drv-vmmouse Ubuntu=xserver-xorg-input-vmmouse Mandriva=x11-driver-input-vmmouse Debian=xserver-xorg-input-vmmouse"
 RECIPE_LATEST_VERSION_pn-xf86-input-vmmouse="12.6.9"
 RECIPE_NO_OF_PATCHES_pn-xf86-input-vmmouse="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-input-vmmouse="1 month"
@@ -67,6 +72,7 @@ RECIPE_INTEL_SECTION_pn-libdrm="graphic core"
 RECIPE_MAINTAINER_pn-libdrm="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-python-pycairo="green" # no upgrade needed
+DISTRO_PN_ALIAS_pn-python-pycairo = "Meego=pycairo Fedora=pycairo Ubuntu=pycairo Debian=pycairo"
 RECIPE_LATEST_VERSION_pn-python-pycairo="1.8.10"
 RECIPE_NO_OF_PATCHES_pn-python-pycairo="0"
 RECIPE_LATEST_RELEASE_DATE_pn-python-pycairo="2010/05/20"
@@ -83,6 +89,7 @@ RECIPE_INTEL_SECTION_pn-libxfontcache="graphic core"
 RECIPE_MAINTAINER_pn-libxfontcache="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-input-evdev="green" # no update needed
+DISTRO_PN_ALIAS_pn-xf86-input-evdev = "Ubuntu=xserver-xorg-input-evdev Mandriva=x11-driver-input-evdev Debian=xserver-xorg-input-evdev Fedora=xorg-x11-drv-evdev Meego=xorg-x11-drv-evdev
 RECIPE_LATEST_VERSION_pn-xf86-input-evdev="2.4.0"
 RECIPE_NO_OF_PATCHES_pn-xf86-input-evdev="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-input-evdev="1 monthes"
@@ -159,6 +166,7 @@ RECIPE_LATEST_VERSION_pn-xbitmaps = "1.1.0"
 RECIPE_MAINTAINER_pn-xbitmaps = "Ke Yu <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-input-synaptics = "red"
+DISTRO_PN_ALIAS_pn-xf86-input-synaptics = "Meego=xorg-x11-drv-synaptics Fedora=xorg-x11-drv-synaptics Ubuntu=xserver-xorg-input-synaptics Mandriva=x11-driver-input-synaptics Debian=xfree86-driver-synaptics"
 RECIPE_LATEST_VERSION_pn-xf86-input-synaptics = "1.2.2"
 RECIPE_MAINTAINER_pn-xf86-input-synaptics = "Ke Yu <ke.yu@intel.com>"
 

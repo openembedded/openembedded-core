@@ -136,6 +136,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-curl = "06/2010"
 RECIPE_COMMENTS_pn-curl = ""
 
 RECIPE_STATUS_pn-gconf-dbus = "green"
+DISTRO_PN_ALIAS_pn-gconf-dbus = "Meego=GConf-dbus"
 RECIPE_MAINTAINER_pn-gconf-dbus = "Ke Yu <ke.yu@intel.com>"
 DEPENDENCY_CHECK_pn-gconf-dbus = "not done"
 RECIPE_LATEST_VERSION_pn-gconf-dbus = "2.16.0+svnr705"
@@ -492,6 +493,7 @@ RECIPE_LATEST_VERSION_pn-openswan = "2.6.26"
 RECIPE_MAINTAINER_pn-openswan = "Qing He <qing.he@intel.com>"
 
 RECIPE_STATUS_pn-u-boot-mkimage = "red"
+DISTRO_PN_ALIAS_pn-u-boot-mkimage = "Ubuntu=uboot-mkimage Debian=uboot-mkimage"
 RECIPE_LATEST_VERSION_pn-u-boot-mkimage = "2010.03"
 RECIPE_MAINTAINER_pn-u-boot-mkimage = "Qing He <qing.he@intel.com>"
 

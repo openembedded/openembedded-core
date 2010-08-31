@@ -1,4 +1,5 @@
 RECIPE_STATUS_pn-liba52="yellow" # patch investigation needed
+DISTRO_PN_ALIAS_pn-liba52 = "Mandriva=a52dec Debian=a52dec"
 RECIPE_LATEST_VERSION_pn-liba52="0.7.4"
 RECIPE_NO_OF_PATCHES_pn-liba52="1"
 RECIPE_LATEST_RELEASE_DATE_pn-liba52="2002/07/27"
@@ -62,6 +63,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gstreamer="1 month"
 RECIPE_MAINTAINER_pn-gstreamer = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gst-plugins-base="green"
+DISTRO_PN_ALIAS_pn-gst-plugins-base = "Meego=gst-plugins-base Fedora=gstreamer-plugins-base OpenSuSE=gstreamer-plugins-base Ubuntu=gst-plugins-base0.10 Mandriva=gstreamer0.10-plugins-base Debian=gst-plugins-base0.10"
 RECIPE_LATEST_VERSION_pn-gst-plugins-base="0.10.29"
 RECIPE_NO_OF_PATCHES_pn-gst-plugins-base="0"
 RECIPE_LATEST_RELEASE_DATE_pn-gst-plugins-base="2010/04/27"
@@ -69,6 +71,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gst-plugins-base="2 months"
 RECIPE_MAINTAINER_pn-gst-plugins-base = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gst-plugins-good="green"
+DISTRO_PN_ALIAS_pn-gst-plugins-good = "Meego=gst-plugins-good Fedora=gstreamer-plugins-good OpenSuSE=gstreamer-plugins-good Ubuntu=gst-plugins-good0.10 Mandriva=gstreamer0.10-plugins-good Debian=gst-plugins-good0.10"
 RECIPE_LATEST_VERSION_pn-gst-plugins-good="0.10.23"
 RECIPE_NO_OF_PATCHES_pn-gst-plugins-good="0"
 RECIPE_LATEST_RELEASE_DATE_pn-gst-plugins-good="2010/05/30"
@@ -76,6 +79,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gst-plugins-good="1 month"
 RECIPE_MAINTAINER_pn-gst-plugins-good = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gst-plugins-ugly="green"
+DISTRO_PN_ALIAS_pn-gst-plugins-ugly = "OpenSuSE=gstreamer-plugins-ugly Mandriva=gstreamer0.10-plugins-ugly Debian=gst-plugins-ugly0.10"
 RECIPE_LATEST_VERSION_pn-gst-plugins-ugly="0.10.15"
 RECIPE_NO_OF_PATCHES_pn-gst-plugins-ugly="0"
 RECIPE_LATEST_RELEASE_DATE_pn-gst-plugins-ugly="2010/05/30"
@@ -83,6 +87,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gst-plugins-ugly="3 months"
 RECIPE_MAINTAINER_pn-gst-plugins-ugly = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gst-plugins-bad="green"
+DISTRO_PN_ALIAS_pn-gst-plugins-bad = "Fedora=gstreamer-plugins-bad-free OpenSuSE=gstreamer-plugins-bad Debian=gst-plugins-bad0.10"
 RECIPE_LATEST_VERSION_pn-gst-plugins-bad="0.10.19"
 RECIPE_NO_OF_PATCHES_pn-gst-plugins-bad="0"
 RECIPE_LATEST_RELEASE_DATE_pn-gst-plugins-bad="2010/05/30"
@@ -139,18 +144,22 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libmusicbrainz="14 months"
 RECIPE_MAINTAINER_pn-libmusicbrainz = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-clutter-gst-0.10 = "red"
+DISTRO_PN_ALIAS_pn-clutter-gst-0.10 = "OpenSuSE=clutter-gst Debian=clutter-gst"
 RECIPE_LATEST_VERSION_pn-clutter-gst-0.10 = "1.0.0"
 RECIPE_MAINTAINER_pn-clutter-gst-0.10 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-clutter-gst-0.6 = "red"
+DISTRO_PN_ALIAS_pn-clutter-gst-0.6 = "OpenSuSE=clutter-gst Debian=clutter-gst"
 RECIPE_LATEST_VERSION_pn-clutter-gst-0.6 = "0.6"
 RECIPE_MAINTAINER_pn-clutter-gst-0.6 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-clutter-gst-0.8 = "red"
+DISTRO_PN_ALIAS_pn-clutter-gst-0.8 = "OpenSuSE=clutter-gst Debian=clutter-gst"
 RECIPE_LATEST_VERSION_pn-clutter-gst-0.8 = "0.8"
 RECIPE_MAINTAINER_pn-clutter-gst-0.8 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-clutter-gst-1.0 = "red"
+DISTRO_PN_ALIAS_pn-clutter-gst-1.0 = "OpenSuSE=clutter-gst Debian=clutter-gst"
 RECIPE_LATEST_VERSION_pn-clutter-gst-1.0 = "1.0"
 RECIPE_MAINTAINER_pn-clutter-gst-1.0 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
@@ -163,6 +172,7 @@ RECIPE_LATEST_VERSION_pn-gst-openmax = "0.10.0.5"
 RECIPE_MAINTAINER_pn-gst-openmax = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gst-ffmpeg = "red"
+DISTRO_PN_ALIAS_pn-gst-ffmpeg = "Mandriva=gstreamer0.10-ffmpeg Debian=gstreamer0.10-ffmpeg"
 RECIPE_LATEST_VERSION_pn-gst-ffmpeg = "0.10.10"
 RECIPE_MAINTAINER_pn-gst-ffmpeg = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
@@ -179,6 +189,7 @@ RECIPE_LATEST_VERSION_pn-alsa-oss = "1.0.17"
 RECIPE_MAINTAINER_pn-alsa-oss = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-libsndfile1 = "red"
+DISTRO_PN_ALIAS_pn-libsndfile1 = "Meego=libsndfile Fedora=libsndfile OpenSuSE=libsndfile Ubuntu=libsndfile Mandriva=libsndfile Debian=libsndfile"
 RECIPE_LATEST_VERSION_pn-libsndfile1 = "1.0.21 "
 RECIPE_MAINTAINER_pn-libsndfile1 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
@@ -215,5 +226,6 @@ RECIPE_LATEST_VERSION_pn-libomxil = "0.9.2.1"
 RECIPE_MAINTAINER_pn-libomxil = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-libsamplerate0 = "red"
+DISTRO_PN_ALIAS_pn-libsamplerate0 = "Meego=libsamplerate Fedora=libsamplerate OpenSuSE=libsamplerate Ubuntu=libsamplerate Mandriva=libsamplerate Debian=libsamplerate"
 RECIPE_LATEST_VERSION_pn-libsamplerate0 = "0.1.7"
 RECIPE_MAINTAINER_pn-libsamplerate0 = "Dongxiao Xu <dongxiao.xu@intel.com>"

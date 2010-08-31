@@ -434,6 +434,7 @@ RECIPE_LATEST_VERSION_pn-json-glib  = "0.7.6+d5922b42604c09ba7ebcb0adc1566d0a33a
 RECIPE_MAINTAINER_pn-json-glib  = "Kevin Tian <kevin.tian@intel.com>"
 
 RECIPE_STATUS_pn-libatomics-ops = "red"
+DISTRO_PN_ALIAS_pn-libatomics-ops = "Meego=libatomic-ops Debian=libatomic-ops Ubuntu=libatomic-ops OpenSuSE=libatomic-ops Mandriva=libatomic-ops"
 RECIPE_LATEST_VERSION_pn-libatomics-ops = "7.2alpha4"
 RECIPE_MAINTAINER_pn-libatomics-ops = "Kevin Tian <kevin.tian@intel.com>"
 
@@ -446,6 +447,7 @@ RECIPE_LATEST_VERSION_pn-libgdbus  = "Release-0.2"
 RECIPE_MAINTAINER_pn-libgdbus  = "Kevin Tian <kevin.tian@intel.com>"
 
 RECIPE_STATUS_pn-libjana = "red"
+DISTRO_PN_ALIAS_pn-libjana = "Fedora=jana OpenSuSE=jana"
 RECIPE_LATEST_VERSION_pn-libjana = "acd72f232c72f8692dcacdd885eea756778042c2"
 RECIPE_MAINTAINER_pn-libjana = "Kevin Tian <kevin.tian@intel.com>"
 
@@ -554,6 +556,7 @@ RECIPE_LATEST_VERSION_pn-dalston = "?"
 RECIPE_MAINTAINER_pn-dalston = "Kevin Tian <kevin.tian@intel.com>"
 
 RECIPE_STATUS_pn-devicekit = "red"
+DISTRO_PN_ALIAS_pn-devicekit = "Meego=DeviceKit-disks Mandriva=devicekit-disks"
 RECIPE_LATEST_VERSION_pn-devicekit = "3"
 RECIPE_MAINTAINER_pn-devicekit = "Kevin Tian <kevin.tian@intel.com>"
 
@@ -586,5 +589,6 @@ RECIPE_LATEST_VERSION_pn-boost = "1.43.0"
 RECIPE_MAINTAINER_pn-boost = "Kevin Tian <kevin.tian@intel.com>"
 
 RECIPE_STATUS_pn-libfribidi = "red"
+DISTRO_PN_ALIAS_pn-libfribidi = "OpenSuSE=fribidi Ubuntu=fribidi Mandriva=fribidi Debian=fribidi"
 RECIPE_LATEST_VERSION_pn-libfribidi = "0.19.2"
 RECIPE_MAINTAINER_pn-libfribidi = "Kevin Tian <kevin.tian@intel.com>"

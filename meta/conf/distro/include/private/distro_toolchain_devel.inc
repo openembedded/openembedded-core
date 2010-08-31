@@ -164,6 +164,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-python-dbus="2010/02/18"
 RECIPE_MAINTAINER_pn-python-dbus = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python-gst="green" # upgraded
+DISTRO_PN_ALIAS_pn-python-gst = "OpenSuSE=python-gstreamer Ubuntu=gst0.10-python Debian=gst0.10-python"
 RECIPE_LATEST_VERSION_pn-python-gst="0.10.18"
 RECIPE_NO_OF_PATCHES_pn-python-gst="1"
 RECIPE_LATEST_RELEASE_DATE_pn-python-gst="2010/02/11"
@@ -192,6 +193,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pycurl="3 months"
 RECIPE_MAINTAINER_pn-python-pycurl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python-pygobject="green" # upgraded
+DISTRO_PN_ALIAS_pn-python-pygobject = "Meego=pygobject2 Fedora=pygobject2 Ubuntu=pygobject Debian=pygobject"
 RECIPE_LATEST_VERSION_pn-python-pygobject="2.21.1"
 RECIPE_NO_OF_PATCHES_pn-python-pygobject="1"
 RECIPE_LATEST_RELEASE_DATE_pn-python-pygobject="2010/01/03"
@@ -199,6 +201,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pygobject="1 months"
 RECIPE_MAINTAINER_pn-python-pygobject = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python-pygtk="green" # upgraded
+DISTRO_PN_ALIAS_pn-python-pygtk = "OpenSuSE=python-gtk"
 RECIPE_LATEST_VERSION_pn-python-pygtk="2.17.0"
 RECIPE_NO_OF_PATCHES_pn-python-pygtk="4"
 RECIPE_LATEST_RELEASE_DATE_pn-python-pygtk="2009/12/26"
@@ -213,6 +216,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-pyrex="23 months"
 RECIPE_MAINTAINER_pn-python-pyrex = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python-scons="green" # upgraded
+DISTRO_PN_ALIAS_pn-python-scons = "Fedora=scons OpenSuSE=scons Ubuntu=scons Mandriva=scons Debian=scons"
 RECIPE_LATEST_VERSION_pn-python-scons="1.3.0.d20100606"
 RECIPE_NO_OF_PATCHES_pn-python-scons="0"
 RECIPE_LATEST_RELEASE_DATE_pn-python-scons="2010/06/06"
@@ -227,6 +231,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-urlgrabber="2 months"
 RECIPE_MAINTAINER_pn-python-urlgrabber = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python="green" # upgraded
+DISTRO_PN_ALIAS_pn-python-gst = "OpenSuSE=python-gstreamer Ubuntu=gst0.10-python Debian=gst0.10-python"
 RECIPE_LATEST_VERSION_pn-python="2.6.5"
 RECIPE_NO_OF_PATCHES_pn-python="8"
 RECIPE_LATEST_RELEASE_DATE_pn-python="2010/03/18"

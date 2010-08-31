@@ -218,18 +218,22 @@ RECIPE_LATEST_VERSION_pn-xwud = "1.0.2"
 RECIPE_MAINTAINER_pn-xwud = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-claws-plugin-gtkhtml2-viewer = "red"
+DISTRO_PN_ALIAS_pn-claws-plugin-gtkhtml2-viewer = "Fedora=claws-mail-plugins OpenSuSE=claws-mail-extra-plugins Debian=claws-mail-extra-plugins"
 RECIPE_LATEST_VERSION_pn-claws-plugin-gtkhtml2-viewer = "0.27"
 RECIPE_MAINTAINER_pn-claws-plugin-gtkhtml2-viewer = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-claws-plugin-maildir = "red"
+DISTRO_PN_ALIAS_pn-claws-plugin-maildir = "Fedora=claws-mail-plugins OpenSuSE=claws-mail-extra-plugins Debian=claws-mail-extra-plugins"
 RECIPE_LATEST_VERSION_pn-claws-plugin-maildir = "0.24.4"
 RECIPE_MAINTAINER_pn-claws-plugin-maildir = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-claws-plugin-mailmbox = "red"
+DISTRO_PN_ALIAS_pn-claws-plugin-mailmbox = "Fedora=claws-mail-plugins OpenSuSE=claws-mail-extra-plugins Debian=claws-mail-extra-plugins"
 RECIPE_LATEST_VERSION_pn-claws-plugin-mailmbox = "1.14.4"
 RECIPE_MAINTAINER_pn-claws-plugin-mailmbox = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-claws-plugin-rssyl = "red"
+DISTRO_PN_ALIAS_pn-claws-plugin-rssyl = "Fedora=claws-mail-plugins OpenSuSE=claws-mail-extra-plugins Debian=claws-mail-extra-plugins"
 RECIPE_LATEST_VERSION_pn-claws-plugin-rssyl = "0.27"
 RECIPE_MAINTAINER_pn-claws-plugin-rssyl = "Edwin Zhai <edwin.zhai@intel.com>"
 

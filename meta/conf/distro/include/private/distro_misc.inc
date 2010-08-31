@@ -34,6 +34,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-task-poky-tools="n/a"
 RECIPE_MAINTAINER_pn-task-poky-tools = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gst-meta-base="green"
+DISTRO_PN_ALIAS_pn-gst-meta-base = "Meego=gstreamer Fedora=gstreamer OpenSuSE=gstreamer Ubuntu=gstreamer0.10 Mandriva=gstreamer0.10 Debian=gstreamer0.10"
 RECIPE_LATEST_VERSION_pn-gst-meta-base="0.10"
 RECIPE_NO_OF_PATCHES_pn-gst-meta-base="0"
 RECIPE_LATEST_RELEASE_DATE_pn-gst-meta-base="n/a"

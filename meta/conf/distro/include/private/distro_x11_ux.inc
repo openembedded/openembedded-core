@@ -23,6 +23,7 @@ RECIPE_COMMENTS_pn-libmatchbox = ""
 RECIPE_MAINTAINER_pn-libmatchbox = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-libowl = "green" # no update needed
+DISTRO_PN_ALIAS_pn-libowl = "Debian=owl"
 DEPENDENCY_CHECK_pn-libowl = "not done"
 RECIPE_LATEST_VERSION_pn-libowl = "0.0+svnr408"
 RECIPE_NO_OF_PATCHES_pn-libowl = "0"
@@ -203,6 +204,7 @@ RECIPE_COMMENTS_pn-atk = ""
 RECIPE_MAINTAINER_pn-atk = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-gtk+ = "green"
+DISTRO_PN_ALIAS_pn-gtk+ = "Meego=gtk2 Fedora=gtk2 OpenSuSE=gtk2 Ubuntu=gtk+2.0 Mandriva=gtk+2.0 Debian=gtk+2.0"
 DEPENDENCY_CHECK_pn-gtk+ = "not done"
 RECIPE_LATEST_VERSION_pn-gtk+ = "2.20.1"
 RECIPE_NO_OF_PATCHES_pn-gtk+ = "0"
@@ -223,6 +225,7 @@ RECIPE_COMMENTS_pn-gnome-common = ""
 RECIPE_MAINTAINER_pn-gnome-common = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-webkit-gtk = "green"
+DISTRO_PN_ALIAS_pn-webkit-gtk = "Fedora=webkitgtk"
 DEPENDENCY_CHECK_pn-webkit-gtk = "not done"
 RECIPE_LATEST_VERSION_pn-webkit-gtk = "1.3.2+svnr62027"
 RECIPE_NO_OF_PATCHES_pn-webkit-gtk = "0"
@@ -294,6 +297,7 @@ RECIPE_COMMENTS_pn-libfakekey = ""
 RECIPE_MAINTAINER_pn-libfakekey = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-libglade = "green"
+DISTRO_PN_ALIAS_pn-libglade = "Meego=libglade2 Fedora=libglade2 OpenSuSE=libglade2 Ubuntu=libglade2 Mandriva=libglade2.0 Debian=libglade2"
 DEPENDENCY_CHECK_pn-libglade = "not done"
 RECIPE_LATEST_VERSION_pn-libglade = "2.6.4"
 RECIPE_NO_OF_PATCHES_pn-libglade = "0"
@@ -304,6 +308,7 @@ RECIPE_COMMENTS_pn-libglade = ""
 RECIPE_MAINTAINER_pn-libglade = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-libsoup-2.4 = "green"
+DISTRO_PN_ALIAS_pn-libsoup-2.4 = "Meego=libsoup Fedora=libsoup OpenSuSE=libsoup Ubuntu=libsoup2.4 Mandriva=libsoup Debian=libsoup2.4"
 DEPENDENCY_CHECK_pn-libsoup-2.4 = "not done"
 RECIPE_LATEST_VERSION_pn-libsoup-2.4 = "2.31.2"
 RECIPE_NO_OF_PATCHES_pn-libsoup-2.4 = "0"
@@ -344,6 +349,7 @@ RECIPE_COMMENTS_pn-matchbox-keyboard = ""
 RECIPE_MAINTAINER_pn-matchbox-keyboard = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-matchbox-panel-2 = "green"
+DISTRO_PN_ALIAS_pn-matchbox-panel-2 = "Debian=matchbox-panel"
 DEPENDENCY_CHECK_pn-matchbox-panel-2 = "not done"
 RECIPE_LATEST_VERSION_pn-matchbox-panel-2 = "0.0+svnr2109"
 RECIPE_NO_OF_PATCHES_pn-matchbox-panel-2 = "0"
@@ -364,6 +370,7 @@ RECIPE_COMMENTS_pn-matchbox-stroke = ""
 RECIPE_MAINTAINER_pn-matchbox-stroke = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-matchbox-wm = "green"
+DISTRO_PN_ALIAS_pn-matchbox-wm-2 = "Mandriva=matchbox-window-manager Debian=matchbox-window-manager"
 DEPENDENCY_CHECK_pn-matchbox-wm = "not done"
 RECIPE_LATEST_VERSION_pn-matchbox-wm = "1.2+svnr1819"
 RECIPE_NO_OF_PATCHES_pn-matchbox-wm = "0"
@@ -425,6 +432,7 @@ RECIPE_MAINTAINER_pn-menu-cache = "Zhai Edwin <edwin.zhai@intel.com>"
 
 
 RECIPE_STATUS_pn-gtk-engines = "red"
+DISTRO_PN_ALIAS_pn-gtk-engines = "Fedora=gtk2-engines OpenSuSE=gtk2-engines Ubuntu=gtk2-engines Mandriva=gtk-engines2 Debian=gtk2-engines"
 RECIPE_LATEST_VERSION_pn-gtk-engines = "2.18"
 RECIPE_MAINTAINER_pn-gtk-engines = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -441,6 +449,7 @@ RECIPE_LATEST_VERSION_pn-clutter-gtk-0.10 = "0.10.4"
 RECIPE_MAINTAINER_pn-clutter-gtk-0.10 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter-gtk-1.0 = "red"
+DISTRO_PN_ALIAS_pn-clutter-gtk-1.0 = "Fedora=clutter-gtk OpenSuSE=clutter-gtk Ubuntu=clutter-gtk-0.10 Mandriva=clutter-gtk Debian=clutter-gtk"
 RECIPE_LATEST_VERSION_pn-clutter-gtk-1.0 = "0.10.4"
 RECIPE_MAINTAINER_pn-clutter-gtk-1.0 = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -461,6 +470,7 @@ RECIPE_LATEST_VERSION_pn-libgalago = "0.5.2"
 RECIPE_MAINTAINER_pn-libgalago = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter-cairo-0.6 = "red"
+DISTRO_PN_ALIAS_pn-clutter-cairo-0.6 = "Debian=clutter-cairo"
 RECIPE_LATEST_VERSION_pn-clutter-cairo-0.6 = "0.6"
 RECIPE_MAINTAINER_pn-clutter-cairo-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -469,18 +479,22 @@ RECIPE_LATEST_VERSION_pn-clutter-0.6 = "0.6.0"
 RECIPE_MAINTAINER_pn-clutter-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter-gtk-0.6 = "red"
+DISTRO_PN_ALIAS_pn-clutter-gtk-0.6 = "Fedora=clutter-gtk OpenSuSE=clutter-gtk Ubuntu=clutter-gtk-0.10 Mandriva=clutter-gtk Debian=clutter-gtk"
 RECIPE_LATEST_VERSION_pn-clutter-gtk-0.6 = "0.6.0"
 RECIPE_MAINTAINER_pn-clutter-gtk-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter-cairo-0.8 = "red"
+DISTRO_PN_ALIAS_pn-clutter-cairo-0.8 = "Debian=clutter-cairo"
 RECIPE_LATEST_VERSION_pn-clutter-cairo-0.8 = "0.8.2"
 RECIPE_MAINTAINER_pn-clutter-cairo-0.8 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter-gtk-0.8 = "red"
+DISTRO_PN_ALIAS_pn-clutter-gtk-0.8 = "Fedora=clutter-gtk OpenSuSE=clutter-gtk Ubuntu=clutter-gtk-0.10 Mandriva=clutter-gtk Debian=clutter-gtk"
 RECIPE_LATEST_VERSION_pn-clutter-gtk-0.8 = "0.8.3"
 RECIPE_MAINTAINER_pn-clutter-gtk-0.8 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter-0.8 = "red"
+DISTRO_PN_ALIAS_pn-clutter-0.8 = "Fedora=clutter OpenSuSE=clutter Ubuntu=clutter-1.0 Mandriva=clutter Debian=clutter"
 RECIPE_LATEST_VERSION_pn-clutter-0.8 = "0.8.9"
 RECIPE_MAINTAINER_pn-clutter-0.8 = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -489,6 +503,7 @@ RECIPE_LATEST_VERSION_pn-clutter-1.0 = "1.0.10"
 RECIPE_MAINTAINER_pn-clutter-1.0 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter = "red"
+DISTRO_PN_ALIAS_pn-clutter-gtk-1.0 = "Fedora=clutter-gtk OpenSuSE=clutter-gtk Ubuntu=clutter-gtk-0.10 Mandriva=clutter-gtk Debian=clutter-gtk"
 RECIPE_LATEST_VERSION_pn-clutter = "1.2.8"
 RECIPE_MAINTAINER_pn-clutter = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -565,6 +580,7 @@ RECIPE_LATEST_VERSION_pn-matchbox-themes-gtk = "1"
 RECIPE_MAINTAINER_pn-matchbox-themes-gtk = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-matchbox-wm-2 = "red"
+DISTRO_PN_ALIAS_pn-matchbox-wm-2 = "Mandriva=matchbox-window-manager Debian=matchbox-window-manager"
 RECIPE_LATEST_VERSION_pn-matchbox-wm-2 = "0.0+svnr2106"
 RECIPE_MAINTAINER_pn-matchbox-wm-2 = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -651,3 +667,8 @@ RECIPE_MAINTAINER_pn-mutter = "Edwin Zhai <edwin.zhai@intel.com>"
 RECIPE_STATUS_pn-mutter-moblin = "red"
 RECIPE_LATEST_VERSION_pn-mutter-moblin = "0.75.13"
 RECIPE_MAINTAINER_pn-mutter-moblin = "Edwin Zhai <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-qt4-x11-free = "green"
+DISTRO_PN_ALIAS_pn-qt4-x11-free = "Ubuntu=qt-x11-free Debian=qt-x11-free"
+RECIPE_LATEST_VERSION_pn-qt4-x11-free = "4.6.3"
+RECIPE_MAINTAINER_pn-qt4-x11-free = "Ke Yu <ke.yu@intel.com>"
