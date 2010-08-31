@@ -1,6 +1,6 @@
 require qemu.inc
 
-PR = "r16"
+PR = "r17"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
@@ -17,6 +17,7 @@ SRC_URI = "\
     file://init-info.patch \
     file://qemu-vmware-vga-depth.patch \
     file://qemu-ppc-hack.patch \
+    file://enable-i386-linux-user.patch \
     file://powerpc_rom.bin"
 
 do_install_append () {
