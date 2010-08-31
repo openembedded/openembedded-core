@@ -253,7 +253,7 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     tmp = bb.data.getVar('DISTRO_PN_ALIAS', d, True)
     distro_pn_aliases = {}
     if tmp:
-        list = tmp.split(';')
+        list = tmp.split(' ')
         for str in list:
             (dist, pn_alias) = str.split('=')
             distro_pn_aliases[dist.strip().lower()] = pn_alias.strip()
