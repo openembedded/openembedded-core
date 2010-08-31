@@ -49,7 +49,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 		for pkg in ${PACKAGE_INSTALL} ; do
 			echo "Processing $pkg..."
 			for solve in `cat ${DEPLOY_DIR_RPM}/solvedb.conf`; do
-				pkg_name=$(${RPM} -D "_dbpath $solve" -q --yaml $pkg | grep -i 'Packageorigin' | cut -d : -f 2)
+				pkg_name=$(${RPM} -D "_dbpath $solve" -D "_dbi_tags_3 Packages:Name:Basenames:Providename:Nvra" -D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync" -q --yaml $pkg | grep -i 'Packageorigin' | cut -d : -f 2)
 				if [ -n "$pkg_name" ]; then
 					break;
 				fi

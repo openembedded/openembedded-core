@@ -36,6 +36,7 @@ package_update_index_rpm () {
 	cat /dev/null > ${DEPLOY_DIR_RPM}/solvedb.conf
 	for pkgdir in $packagedirs; do
 		if [ -e $pkgdir/ ]; then
+			echo "Generating solve db for $pkgdir..."
 			rm -rf $pkgdir/solvedb
 			mkdir -p $pkgdir/solvedb
 			echo "# Dynamically generated solve manifest" >> $pkgdir/solvedb/manifest
@@ -43,6 +44,9 @@ package_update_index_rpm () {
 			${RPM} -i --replacepkgs --replacefiles --oldpackage \
 				-D "_dbpath $pkgdir/solvedb" --justdb \
 				--noaid --nodeps --noorder --noscripts --notriggers --noparentdirs --nolinktos --stats \
+				--ignoresize --nosignature --nodigest \
+				-D "_dbi_tags_3 Packages:Name:Basenames:Providename:Nvra" \
+				-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync" \
 				$pkgdir/solvedb/manifest
 			echo $pkgdir/solvedb >> ${DEPLOY_DIR_RPM}/solvedb.conf
 		fi
