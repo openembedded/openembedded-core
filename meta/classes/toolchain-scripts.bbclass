@@ -1,3 +1,5 @@
+inherit siteinfo
+
 # This function creates an environment-setup-script for use in a deployable SDK
 toolchain_create_sdk_env_script () {
 	# Create environment setup script
