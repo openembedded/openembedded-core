@@ -45,21 +45,21 @@ RDEPENDS_task-poky-sys-extended = "\
     diffutils \
     gamin \
     hdparm \
-#    libaio \
+    libaio \
     libxml2 \
     lrzsz \
     lzo \
-#    mdadm \
+    mdadm \
     minicom \
     neon \
     parted \
     pth \
     quota \
-#    screen \
+    screen \
     setserial \
     sysstat \
     unzip \
-#    watchdog \
+    watchdog \
     which \
     zip \
     "
