@@ -38,7 +38,7 @@ except ImportError:
     import pickle
     bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
 
-__cache_version__ = "131"
+__cache_version__ = "132"
 
 class Cache:
     """
@@ -377,6 +377,10 @@ class Cache:
 
         cacheData.stamp[file_name] = self.getVar('STAMP', file_name, True)
 
+        cacheData.tasks[file_name] = self.getVar('__BBTASKS', file_name, True)
+        for t in cacheData.tasks[file_name]:
+            cacheData.basetaskhash[file_name + "." + t] = self.getVar("BB_BASEHASH_task-%s" % t, file_name, True)
+
         # build FileName to PackageName lookup table
         cacheData.pkg_fn[file_name] = pn
         cacheData.pkg_pepvpr[file_name] = (pe, pv, pr)
@@ -539,6 +543,8 @@ class CacheData:
         self.task_deps = {}
         self.stamp = {}
         self.preferred = {}
+        self.tasks = {}
+        self.basetaskhash = {}
 
         """
         Indirect Cache variables

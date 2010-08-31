@@ -496,6 +496,8 @@ class BBCooker:
     def parseConfigurationFiles(self, files):
         try:
             data = self.configuration.data
+
+            bb.parse.init_parser(data)
             for f in files:
                 data = bb.parse.handle(f, data)
 
@@ -547,6 +549,8 @@ class BBCooker:
             if bb.data.getVar("BB_WORKERCONTEXT", self.configuration.data) is None:
                 bb.fetch.fetcher_init(self.configuration.data)
             bb.codeparser.parser_cache_init(self.configuration.data)
+
+            bb.parse.init_parser(data)
 
             bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
 

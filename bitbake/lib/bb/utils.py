@@ -452,6 +452,7 @@ def preserved_envvars_list():
         'BB_PRESERVE_ENV',
         'BB_ENV_WHITELIST',
         'BB_ENV_EXTRAWHITE',
+        'BB_TASKHASH',
         'COLORTERM',
         'DBUS_SESSION_BUS_ADDRESS',
         'DESKTOP_SESSION',
