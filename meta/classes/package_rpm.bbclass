@@ -109,8 +109,9 @@ python write_specfile () {
 		import os
 		for rootpath, dirs, files in os.walk(walkpath):
 			path = rootpath.replace(walkpath, "")
-			#for dir in dirs:
-			#	target.append("%dir " + path + "/" + dir)
+			for dir in dirs:
+				# All packages own the directories their files are in...
+				target.append("%dir " + path + "/" + dir)
 			for file in files:
 				if conffiles.count(path + "/" + file):
 					target.append("%config " + path + "/" + file)
