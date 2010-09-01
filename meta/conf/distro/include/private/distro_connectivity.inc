@@ -32,6 +32,7 @@ RECIPE_LATEST_VERSION_pn-bluez4="4.66"
 RECIPE_NO_OF_PATCHES_pn-bluez4="2"
 RECIPE_LATEST_RELEASE_DATE_pn-bluez4="2010/05/24"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-bluez4="1 month"
+DISTRO_PN_ALIAS_pn-bluez4= "Fedora=bluez Ubuntu=bluez Debian=bluez-utils Opensuse=bluez"
 RECIPE_MAINTAINER_pn-bluez4 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-libpcap="green"
@@ -171,6 +172,7 @@ RECIPE_MAINTAINER_pn-samba = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-libgsmd = "red"
 RECIPE_LATEST_VERSION_pn-libgsmd = "n/a"
+DISTRO_PN_ALIAS_pn-libgsmd = "Fedora=gsm Ubuntu=libgsm Debian=libgsm Opensuse=libgsm"
 RECIPE_MAINTAINER_pn-libgsmd = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gnet = "red"
@@ -179,6 +181,7 @@ RECIPE_MAINTAINER_pn-gnet = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-zeroconf = "red"
 RECIPE_LATEST_VERSION_pn-zeroconf = "0.9"
+DISTRO_PN_ALIAS_pn-libgsmd = "Mandriva=mono-zeroconf Debian=mono-zeroconf Opensuse=mono-zeroconf"
 RECIPE_MAINTAINER_pn-zeroconf = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gypsy = "red"
