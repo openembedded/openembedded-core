@@ -16,6 +16,9 @@
 
 TYPE="ext3"
 
+# Global variable for process id
+PID=0
+
 # common function for information print
 Test_Error()
 {
@@ -92,11 +95,50 @@ Test_Print_Result()
 	echo -e "\t$1\t\t$PASS\t$FAIL\t$NORESULT" >> $TEST_RESULT/testresult.log
 }
 
-# function to kill qemu
+# Test_Kill_Qemu to kill child pid with parent pid given
+# $1 is qemu process id, which needs to be killed
 Test_Kill_Qemu()
 {
-	sudo pkill -9 qemu
-	return $?
+	local ret=0
+	local ppid=0
+	local i=0
+	declare local pid
+
+	# Check if $1 pid exists and is a qemu process
+	ps -fp $PID | grep -iq "qemu"
+
+	# Find all children pid of the pid $1
+	if [ $? -eq 0 ]; then
+
+		# Check if there is any child pid of the pid $PID
+		ppid=$PID
+		ps -f --ppid $ppid
+		ret=$?
+
+		while [ $ret -eq 0 ]
+		do
+			# If yes, get the child pid and check if the child pid has other child pid
+			# Continue the while loop until there is no child pid found
+			pid[$i]=`ps -f --ppid $ppid | awk '{if ($2 != "PID") print $2}'`
+			ppid=${pid[$i]}
+			i=$((i+1))
+			ps -f --ppid $ppid
+			ret=$?
+		done
+
+		# Kill these children pids from the last one
+		while [ $i -ne 0 ]
+		do
+			i=$((i-1))
+			kill ${pid[$i]}
+			sleep 2
+		done
+
+		# Kill the parent id
+		kill $PID
+	fi
+
+	return
 }
 
 # function to check if there is any qemu process
@@ -224,9 +266,12 @@ Test_Create_Qemu()
 	$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
 
 	export MACHINE=$QEMUARCH
-	# Create Qemu in localhost VNC Port 1
 
+	# Create Qemu in localhost VNC Port 1
     	xterm -display ${DISPLAY} -e "${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}" &
+
+	# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
+	PID=$!
 
 	sleep 5
 	
