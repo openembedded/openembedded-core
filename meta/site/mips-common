@@ -25,3 +25,7 @@ ac_cv_alignof_CORBA_double=8
 ac_cv_alignof_CORBA_long_double=8
 ac_cv_alignof_CORBA_pointer=4
 ac_cv_alignof_CORBA_struct=1
+
+# dpkg
+dpkg_cv_va_copy=${ac_cv_va_copy=yes}
+dpkg_cv___va_copy=${ac_cv___va_copy=yes}
