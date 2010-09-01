@@ -98,6 +98,7 @@ RECIPE_INTEL_SECTION_pn-xf86-input-evdev="graphic core"
 RECIPE_MAINTAINER_pn-xf86-input-evdev="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-video-vmware="green" # no update needed
+DISTRO_PN_ALIAS_pn-xf86-video-vmware = "Debian=xserver-xorg-video-vmware Fedora=xorg-x11-drv-vmware Mandriva=x11-driver-video-vmware Ubuntu=xserver-xorg-video-vmware"
 RECIPE_LATEST_VERSION_pn-xf86-video-vmware="11.0.1"
 RECIPE_NO_OF_PATCHES_pn-xf86-video-vmware="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-video-vmware="2 monthes"
@@ -171,13 +172,16 @@ RECIPE_LATEST_VERSION_pn-xf86-input-synaptics = "1.2.2"
 RECIPE_MAINTAINER_pn-xf86-input-synaptics = "Ke Yu <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-video-intel = "red"
+DISTRO_PN_ALIAS_pn-xf86-video-intel = "Debian=xserver-xorg-video-intel Fedora=xorg-x11-drv-intel Mandriva=x11-driver-video-intel Meego=xorg-x11-drv-intel Ubuntu=xserver-xorg-video-intel"
 RECIPE_LATEST_VERSION_pn-xf86-video-intel = "2.11.0"
 RECIPE_MAINTAINER_pn-xf86-video-intel = "Ke Yu <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-video-omapfb = "red"
+DISTRO_PN_ALIAS_pn-xf86-video-omapfb = ""
 RECIPE_LATEST_VERSION_pn-xf86-video-omapfb = "0.1.1+git_db636c8436265c3d86"
 RECIPE_MAINTAINER_pn-xf86-video-omapfb = "Ke Yu <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xorg-cf-files = "red"
+DISTRO_PN_ALIAS_pn-xorg-cf-files = ""
 RECIPE_LATEST_VERSION_pn-xorg-cf-files = "1.0.3"
 RECIPE_MAINTAINER_pn-xorg-cf-files = "Ke Yu <ke.yu@intel.com>"

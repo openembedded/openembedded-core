@@ -365,6 +365,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-tinylogin = "n/a"
 RECIPE_COMMENTS_pn-tinylogin = "merged into busybox"
 
 RECIPE_STATUS_pn-spectrum-fw = "green"   # need upgrade
+DISTRO_PN_ALIAS_pn-spectrum-fw = ""
 RECIPE_MAINTAINER_pn-spectrum-fw = "Ke Yu <ke.yu@intel.com>"
 DEPENDENCY_CHECK_pn-spectrum-fw = "not done"
 RECIPE_LATEST_VERSION_pn-spectrum-fw = "1.0"
