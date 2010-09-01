@@ -270,8 +270,10 @@ python write_specfile () {
 					splitrobsoletes = dep
 
 		print_deps(splitrdepends,	"Requires", spec_preamble_bottom, d)
-		print_deps(splitrrecommends,	"Recommends", spec_preamble_bottom, d)
-		print_deps(splitrsuggests, 	"Suggests", spec_preamble_bottom, d)
+		# Suggests in RPM are like recommends in Poky!
+		print_deps(splitrrecommends,	"Suggests", spec_preamble_bottom, d)
+		# While there is no analog for suggests... (So call them recommends for now)
+		print_deps(splitrsuggests, 	"Recommends", spec_preamble_bottom, d)
 		print_deps(splitrprovides, 	"Provides", spec_preamble_bottom, d)
 		print_deps(splitrobsoletes, 	"Obsoletes", spec_preamble_bottom, d)
 
@@ -352,8 +354,10 @@ python write_specfile () {
 
 	print_deps(srcdepends,		"BuildRequires", spec_preamble_top, d)
 	print_deps(srcrdepends,		"Requires", spec_preamble_top, d)
-	print_deps(srcrrecommends,	"Recommends", spec_preamble_top, d)
-	print_deps(srcrsuggests, 	"Suggests", spec_preamble_top, d)
+	# Suggests in RPM are like recommends in Poky!
+	print_deps(srcrrecommends,	"Suggests", spec_preamble_top, d)
+	# While there is no analog for suggests... (So call them recommends for now)
+	print_deps(srcrsuggests, 	"Recommends", spec_preamble_top, d)
 	print_deps(srcrprovides, 	"Provides", spec_preamble_top, d)
 	print_deps(srcrobsoletes, 	"Obsoletes", spec_preamble_top, d)
 
