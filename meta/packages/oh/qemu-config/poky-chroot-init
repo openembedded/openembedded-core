@@ -1,7 +1,0 @@
-#!/bin/bash
-
-export USER=root
-export HOME=/home/root
-export PATH=/sbin:/bin:/usr/sbin:/usr/bin
-
-fakeroot ipkg configure

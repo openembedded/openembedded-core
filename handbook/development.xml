@@ -241,48 +241,6 @@
         </para>
     </section>              
 
-    <section id="platdev-appdev-chroot">
-        <title>Developing externally in a chroot</title>
-        <para>
-            If you have a system that matches the architecture of the Poky machine you're using,
-            such as qemux86, you can run binaries directly from the image on the host system
-            using a chroot combined with tools like <ulink url='http://projects.o-hand.com/xephyr'>Xephyr</ulink>.
-        </para>
-        <para>
-            Poky has some scripts to make using its qemux86 images within a chroot easier. To use
-            these you need to install the poky-scripts package or otherwise obtain the 
-            <filename>poky-chroot-setup</filename> and <filename>poky-chroot-run</filename> scripts.
-            You also need Xephyr and chrootuid binaries available. To initialize a system use the setup script:
-        </para>
-        <para>
-            <literallayout class='monospaced'>
-# poky-chroot-setup &lt;qemux86-rootfs.tgz&gt; &lt;target-directory&gt;
-</literallayout>
-        </para>
-        <para>
-            which will unpack the specified qemux86 rootfs tarball into the target-directory. 
-            You can then start the system with:
-        </para>
-        <para>
-            <literallayout class='monospaced'>
-# poky-chroot-run &lt;target-directory&gt; &lt;command&gt;
-</literallayout>
-        </para>
-        <para>
-            where the target-directory is the place the rootfs was unpacked to and command is 
-            an optional command to run. If no command is specified, the system will drop you 
-            within a bash shell. A Xephyr window will be displayed containing the emulated 
-            system and you may be asked for a password since some of the commands used for 
-            bind mounting directories need to be run using sudo.
-        </para>
-        <para>
-            There are limits as to how far the the realism of the chroot environment extends.
-            It is useful for simple development work or quick tests but full system emulation 
-            with QEMU offers a much more realistic environment for more complex development 
-            tasks. Note that chroot support within Poky is still experimental.
-        </para>
-    </section>  
-
     <section id="platdev-appdev-insitu">
         <title>Developing in Poky directly</title>
         <para>
