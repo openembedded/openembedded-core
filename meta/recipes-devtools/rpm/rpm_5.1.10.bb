@@ -116,6 +116,9 @@ do_install_append() {
 	sed -i -e 's,perl.prov,${HOST_SYS}-perl.prov,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,perl.req,${HOST_SYS}-perl.req,' ${D}/${libdir}/rpm/macros
 
+	# Enable Debian style arbitrary tags...
+	sed -i -e 's,%_arbitrary_tags[^_].*,%_arbitrary_tags %{_arbitrary_tags_debian},' ${D}/${libdir}/rpm/macros
+
 	install -m 0755 ${WORKDIR}/perfile_rpmdeps.sh ${D}/${libdir}/rpm/perfile_rpmdeps.sh
 
 	mv ${D}/${libdir}/python$PYTHONVER/rpm/${HOST_SYS}-__init__.py \

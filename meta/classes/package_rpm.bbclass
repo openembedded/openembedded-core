@@ -92,11 +92,18 @@ python write_specfile () {
 
 	# We need to change the style the dependency from BB to RPM
 	# This needs to happen AFTER the mapping_rename_hook
-	def translate_deps(varname, d):
-		depends = bb.data.getVar('RPM' + varname, d, True) or bb.data.getVar(varname, d, True) or ""
-		depends = depends.replace('(', '')
-		depends = depends.replace(')', '')
-		bb.data.setVar('RPM' + varname, depends, d)
+	def print_deps(variable, tag, array, d):
+		depends = variable
+		if depends:
+			depends_dict = bb.utils.explode_dep_versions(depends)
+			for dep in depends_dict:
+				ver = depends_dict[dep]
+				if dep and ver:
+					ver = ver.replace('(', '')
+					ver = ver.replace(')', '')
+					array.append("%s: %s %s" % (tag, dep, ver))
+				else:
+					array.append("%s: %s" % (tag, dep))
 
 	def walk_files(walkpath, target, conffiles):
 		import os
@@ -137,8 +144,7 @@ python write_specfile () {
 	srchomepage    = bb.data.getVar('HOMEPAGE', d, True)
 	srcdescription = bb.data.getVar('DESCRIPTION', d, True)
 
-	translate_deps('DEPENDS', d)
-	srcdepends     = bb.data.getVar('RPMDEPENDS', d, True)
+	srcdepends     = bb.data.getVar('DEPENDS', d, True)
 	srcrdepends    = []
 	srcrrecommends = []
 	srcrsuggests   = []
@@ -201,19 +207,12 @@ python write_specfile () {
 		# Map the dependencies into their final form
 		bb.build.exec_func("mapping_rename_hook", localdata)
 
-		translate_deps('RDEPENDS', localdata)
-		translate_deps('RRECOMMENDS', localdata)
-		translate_deps('RSUGGESTS', localdata)
-		translate_deps('RPROVIDES', localdata)
-		translate_deps('RREPLACES', localdata)
-		translate_deps('RCONFLICTS', localdata)
-
-		splitrdepends    = bb.data.getVar('RPMRDEPENDS', localdata, True)
-		splitrrecommends = bb.data.getVar('RPMRRECOMMENDS', localdata, True)
-		splitrsuggests   = bb.data.getVar('RPMRSUGGESTS', localdata, True)
-		splitrprovides   = bb.data.getVar('RPMRPROVIDES', localdata, True)
-		splitrreplaces   = bb.data.getVar('RPMRREPLACES', localdata, True)
-		splitrconflicts  = bb.data.getVar('RPMRCONFLICTS', localdata, True)
+		splitrdepends    = bb.data.getVar('RDEPENDS', localdata, True) or ""
+		splitrrecommends = bb.data.getVar('RRECOMMENDS', localdata, True) or ""
+		splitrsuggests   = bb.data.getVar('RSUGGESTS', localdata, True) or ""
+		splitrprovides   = bb.data.getVar('RPROVIDES', localdata, True) or ""
+		splitrreplaces   = bb.data.getVar('RREPLACES', localdata, True) or ""
+		splitrconflicts  = bb.data.getVar('RCONFLICTS', localdata, True) or ""
 		splitrobsoletes  = []
 
 		# Gather special src/first package data
@@ -269,21 +268,25 @@ python write_specfile () {
 				else:
 					splitrobsoletes = dep
 
-		if splitrdepends and splitrdepends.strip() != "":
-			spec_preamble_bottom.append('Requires: %s' % splitrdepends)
-		#if splitrrecommends and splitrrecommends.strip() != "":
-		#	spec_preamble_bottom.append('#Recommends: %s' % splitrrecommends)
-		#if splitrsuggests and splitrsuggests.strip() != "":
-		#	spec_preamble_bottom.append('#Suggests: %s' % splitrsuggests)
-		if splitrprovides and splitrprovides.strip() != "":
-			spec_preamble_bottom.append('Provides: %s' % splitrprovides)
-		if splitrobsoletes and splitrobsoletes.strip() != "":
-			spec_preamble_bottom.append('Obsoletes: %s' % splitrobsoletes)
-		if splitrconflicts and splitrconflicts.strip() != "":
-			for dep in splitrconflicts.split(','):
-				# A conflict can NOT be in the provide or an internal conflict happens!
+		print_deps(splitrdepends,	"Requires", spec_preamble_bottom, d)
+		print_deps(splitrrecommends,	"Recommends", spec_preamble_bottom, d)
+		print_deps(splitrsuggests, 	"Suggests", spec_preamble_bottom, d)
+		print_deps(splitrprovides, 	"Provides", spec_preamble_bottom, d)
+		print_deps(splitrobsoletes, 	"Obsoletes", spec_preamble_bottom, d)
+
+		# conflicts can not be in a provide!  We will need to filter it.
+		if splitrconflicts:
+			depends_dict = bb.utils.explode_dep_versions(splitrconflicts)
+			newdeps_dict = {}
+			for dep in depends_dict:
 				if dep not in splitrprovides:
-					spec_preamble_bottom.append('Conflicts: %s' % dep)
+					newdeps_dict[dep] = depends_dict[dep]
+			if newdeps_dict:
+				splitrconflicts = bb.utils.join_deps(newdeps_dict)
+			else:
+				splitrconflicts = ""
+
+		print_deps(splitrconflicts, 	"Conflicts", spec_preamble_bottom, d)
 
 		spec_preamble_bottom.append('')
 
@@ -345,23 +348,27 @@ python write_specfile () {
 				srcrobsoletes = srcrobsoletes + ", " + dep
 			else:
 				srcrobsoletes = dep
-	if srcdepends and srcdepends.strip() != "":
-		spec_preamble_top.append('BuildRequires: %s' % srcdepends)
-	if srcrdepends and srcrdepends.strip() != "":
-		spec_preamble_top.append('Requires: %s' % srcrdepends)
-	#if srcrrecommends and srcrrecommends.strip() != "":
-	#	spec_preamble_top.append('#Recommends: %s' % srcrrecommends)
-	#if srcrsuggests and srcrsuggests.strip() != "":
-	#	spec_preamble_top.append('#Suggests: %s' % srcrsuggests)
-	if srcrprovides and srcrprovides.strip() != "":
-		spec_preamble_top.append('Provides: %s' % srcrprovides)
-	if srcrobsoletes and srcrobsoletes.strip() != "":
-		spec_preamble_top.append('Obsoletes: %s' % srcrobsoletes)
-	if srcrconflicts and srcrconflicts.strip() != "":
-		for dep in srcrconflicts.split(','):
-			# A conflict can NOT be in the provide or an internal conflict happens!
+
+	print_deps(srcdepends,		"BuildRequires", spec_preamble_top, d)
+	print_deps(srcrdepends,		"Requires", spec_preamble_top, d)
+	print_deps(srcrrecommends,	"Recommends", spec_preamble_top, d)
+	print_deps(srcrsuggests, 	"Suggests", spec_preamble_top, d)
+	print_deps(srcrprovides, 	"Provides", spec_preamble_top, d)
+	print_deps(srcrobsoletes, 	"Obsoletes", spec_preamble_top, d)
+
+	# conflicts can not be in a provide!  We will need to filter it.
+	if srcrconflicts:
+		depends_dict = bb.utils.explode_dep_versions(srcrconflicts)
+		newdeps_dict = {}
+		for dep in depends_dict:
 			if dep not in srcrprovides:
-				spec_preamble_bottom.append('Conflicts: %s' % dep)
+				newdeps_dict[dep] = depends_dict[dep]
+		if newdeps_dict:
+			srcrconflicts = bb.utils.join_deps(newdeps_dict)
+		else:
+			srcrconflicts = ""
+
+	print_deps(srcrconflicts, 	"Conflicts", spec_preamble_top, d)
 
 	spec_preamble_top.append('')
 
