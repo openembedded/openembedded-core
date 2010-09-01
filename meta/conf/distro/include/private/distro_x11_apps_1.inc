@@ -13,6 +13,7 @@ RECIPE_COMMENTS_pn-owl-video = ""
 RECIPE_MAINTAINER_pn-owl-video = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-xtscal = "green" # no update needed
+DISTRO_PN_ALIAS_pn-xtscal = ""
 DEPENDENCY_CHECK_pn-xtscal = "not done"
 RECIPE_LATEST_VERSION_pn-xtscal = "0.6.3"
 RECIPE_NO_OF_PATCHES_pn-xtscal = "2"
@@ -58,6 +59,7 @@ RECIPE_LATEST_VERSION_pn-gnome-terminal = "2.31.3"
 RECIPE_MAINTAINER_pn-gnome-terminal = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-puzzles = "red"
+DISTRO_PN_ALIAS_pn-puzzles = "Debian=sgt-puzzles"
 RECIPE_LATEST_VERSION_pn-puzzles = "svn_8956"
 RECIPE_MAINTAINER_pn-puzzles = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -242,6 +244,7 @@ RECIPE_LATEST_VERSION_pn-lndir = "n/a"
 RECIPE_MAINTAINER_pn-lndir = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-mozilla-headless = "red"
+DISTRO_PN_ALIAS_pn-mozilla-headless = ""
 RECIPE_LATEST_VERSION_pn-mozilla-headless = "tip_hg_555cbc23"
 RECIPE_MAINTAINER_pn-mozilla-headless = "Edwin Zhai <edwin.zhai@intel.com>"
 

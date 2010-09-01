@@ -236,6 +236,7 @@ RECIPE_COMMENTS_pn-webkit-gtk = ""
 RECIPE_MAINTAINER_pn-webkit-gtk = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-eds-dbus = "green"
+DISTRO_PN_ALIAS_pn-eds-dbus = "Debian=evolution-data-server Fedora=evolution-data-server Mandriva=evolution-data-server OpenSuSE=evolution-data-server Ubuntu=evolution-data-server"
 DEPENDENCY_CHECK_pn-eds-dbus = "not done"
 RECIPE_LATEST_VERSION_pn-eds-dbus = "2.31.4"
 RECIPE_NO_UPDATE_REASON_pn-eds-dbus = "2.30.2 is latest stable release, while 2.31 branch acts as development branch."
@@ -475,6 +476,7 @@ RECIPE_LATEST_VERSION_pn-clutter-cairo-0.6 = "0.6"
 RECIPE_MAINTAINER_pn-clutter-cairo-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clutter-0.6 = "red"
+DISTRO_PN_ALIAS_pn-clutter-0.6 = "Debian=clutter Fedora=clutter Mandriva=clutter Meego=clutter-0.6 OpenSuSE=clutter Ubuntu=clutter"
 RECIPE_LATEST_VERSION_pn-clutter-0.6 = "0.6.0"
 RECIPE_MAINTAINER_pn-clutter-0.6 = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -524,6 +526,7 @@ RECIPE_LATEST_VERSION_pn-mx = "1.0.2"
 RECIPE_MAINTAINER_pn-mx = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-clipboard-manager = "red"
+DISTRO_PN_ALIAS_pn-clipboard-manager = ""
 RECIPE_LATEST_VERSION_pn-clipboard-manager = "0.6.8"
 RECIPE_MAINTAINER_pn-clipboard-manager = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -544,6 +547,7 @@ RECIPE_LATEST_VERSION_pn-gtkhtml2 = "2.11.1"
 RECIPE_MAINTAINER_pn-gtkhtml2 = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-gtk-theme-darkilouche = "red"
+DISTRO_PN_ALIAS_pn-gtk-theme-darkilouche = ""
 RECIPE_LATEST_VERSION_pn-gtk-theme-darkilouche = "1"
 RECIPE_MAINTAINER_pn-gtk-theme-darkilouche = "Edwin Zhai <edwin.zhai@intel.com>"
 
@@ -621,6 +625,7 @@ RECIPE_LATEST_VERSION_pn-polkit-gnome = "0.96"
 RECIPE_MAINTAINER_pn-polkit-gnome = "Edwin Zhai <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-pong-clock = "red"
+DISTRO_PN_ALIAS_pn-pong-clock = ""
 RECIPE_LATEST_VERSION_pn-pong-clock = "1"
 RECIPE_MAINTAINER_pn-pong-clock = "Edwin Zhai <edwin.zhai@intel.com>"
 
