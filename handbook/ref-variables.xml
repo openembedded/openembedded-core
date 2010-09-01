@@ -226,7 +226,6 @@
         <glossentry id='var-DISTRO_PN_ALIAS'><glossterm>DISTRO_PN_ALIAS</glossterm>
             <glossdef>
                 <para>Alias names of the recipe in various Linux distributions.  </para>
-                <para>See the "meta/package/xorg-app/xset_1.0.4.bb" file for an example</para>
                 <para>More information in 
                     <link
                         linkend='usingpoky-configuring-DISTRO_PN_ALIAS'>

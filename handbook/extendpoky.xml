@@ -914,12 +914,12 @@ DISTRO_PN_ALIAS
             <title>Specifying the DISTRO_PN_ALIAS variable </title>
 
             <programlisting>
-DISTRO_PN_ALIAS = "distro1=package_name_alias1; distro2=package_name_alias2 \
-                    distro3=package_name_alias3; \
-                    ..."
+DISTRO_PN_ALIAS_pn = "distro1=package_name_alias1 distro2=package_name_alias2 \
+                           distro3=package_name_alias3 \
+                           ..."
             </programlisting>
             <para>
-Look at the meta/packages/xorg-app/xset_1.0.4.bb recipe file for an example.
+Use space as the delimiter if there're multiple distro aliases
             </para>
             <tip>
                 <para>

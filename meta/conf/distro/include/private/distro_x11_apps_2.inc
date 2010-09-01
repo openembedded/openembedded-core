@@ -75,6 +75,7 @@ RECIPE_INTEL_SECTION_pn-xprop="graphic app"
 RECIPE_MAINTAINER_pn-xprop="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xset="green" # no update needed
+DISTRO_PN_ALIAS_pn-xset = "Fedora=xorg-x11-server-utils Ubuntu=x11-xserver-utils Debian=x11-xserver-utils Opensuse=xorg-x11"
 RECIPE_LATEST_VERSION_pn-xset="1.1.0"
 RECIPE_NO_OF_PATCHES_pn-xset="1"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xset="1 year"
