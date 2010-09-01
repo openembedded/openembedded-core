@@ -69,6 +69,11 @@ RECIPE_LATEST_RELEASE_DATE_pn-keymaps = "n/a"
 RECIPE_COMMENTS_pn-keymaps = "local scripts follow Poky's MIT license, however it contains a GPL notation"
 RECIPE_MAINTAINER_pn-keymaps = "Kevin Tian <kevin.tian@intel.com>"
 
+RECIPE_STATUS_pn-modutils = "red"
+DEPENDENCY_CHECK_pn-modutils-initscripts = "not done"
+RECIPE_LATEST_VERSION_pn-modutils = "2.4.27"
+RECIPE_MAINTAINER_pn-modutils = "Kevin Tian <kevin.tian@intel.com>"
+
 RECIPE_STATUS_pn-modutils-initscripts = "green"
 DEPENDENCY_CHECK_pn-modutils-initscripts = "not done"
 RECIPE_LATEST_VERSION_pn-modutils-initscripts = "1.0"
@@ -592,3 +597,15 @@ RECIPE_STATUS_pn-libfribidi = "red"
 DISTRO_PN_ALIAS_pn-libfribidi = "OpenSuSE=fribidi Ubuntu=fribidi Mandriva=fribidi Debian=fribidi"
 RECIPE_LATEST_VERSION_pn-libfribidi = "0.19.2"
 RECIPE_MAINTAINER_pn-libfribidi = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-cdrtools = "red"
+RECIPE_LATEST_VERSION_pn-cdrtools = "2.01"
+RECIPE_MAINTAINER_pn-libfribidi = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-shasum = "red"
+RECIPE_LATEST_VERSION_pn-shasum = "1.0"
+RECIPE_MAINTAINER_pn-shasum = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-tzcode = "red"
+RECIPE_LATEST_VERSION_pn-tzcode = "2009r"
+RECIPE_MAINTAINER_pn-tzcode = "Kevin Tian <kevin.tian@intel.com>"
