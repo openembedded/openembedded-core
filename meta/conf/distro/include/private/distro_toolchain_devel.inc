@@ -61,11 +61,10 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-flex="2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-flex="2008/02/26"
 RECIPE_MAINTAINER_pn-flex = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-fstests="red" # depricating to meta-extra
-RECIPE_LATEST_VERSION_pn-fstests="???"
+RECIPE_STATUS_pn-fstests="yellow"  
+RECIPE_NO_UPDATE_REASON_pn-fstest="svnr266 is poky default"
+RECIPE_LATEST_VERSION_pn-fstests="0.0+svnr426"
 RECIPE_NO_OF_PATCHES_pn-fstests="0"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-fstests="???"
-RECIPE_LATEST_RELEASE_DATE_pn-fstests="???"
 RECIPE_MAINTAINER_pn-fstests = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-gdb="green" # upgraded
@@ -78,8 +77,6 @@ RECIPE_MAINTAINER_pn-gdb = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 RECIPE_STATUS_pn-gtk-theme-torturer="green" # no update needed git tree
 RECIPE_LATEST_VERSION_pn-gtk-theme-torturer="???"
 RECIPE_NO_OF_PATCHES_pn-gtk-theme-torturer="0"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gtk-theme-torturer="???"
-RECIPE_LATEST_RELEASE_DATE_pn-gtk-theme-torturer="???"
 RECIPE_MAINTAINER_pn-gtk-theme-tourturer = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-intltool="green" # upgraded
@@ -152,7 +149,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-perl="2010/05/16"
 RECIPE_MAINTAINER_pn-perl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-prelink="green" # upgraded
-RECIPE_LATEST_VERSION_pn-prelink="git:0x909470ee441237563d6236c505cb2d02ddc48704"
+RECIPE_LATEST_VERSION_pn-prelink="1.0+git0+0x909470ee441237563d6236c505cb2d02ddc48704"
 RECIPE_NO_OF_PATCHES_pn-prelink="3"
 RECIPE_MAINTAINER_pn-prelink = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
@@ -217,7 +214,7 @@ RECIPE_MAINTAINER_pn-python-pyrex = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python-scons="green" # upgraded
 DISTRO_PN_ALIAS_pn-python-scons = "Fedora=scons OpenSuSE=scons Ubuntu=scons Mandriva=scons Debian=scons"
-RECIPE_LATEST_VERSION_pn-python-scons="1.3.0.d20100606"
+RECIPE_LATEST_VERSION_pn-python-scons="1.3.0"
 RECIPE_NO_OF_PATCHES_pn-python-scons="0"
 RECIPE_LATEST_RELEASE_DATE_pn-python-scons="2010/06/06"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python-scons="3 months"
@@ -260,7 +257,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-tcl="3 months"
 RECIPE_MAINTAINER_pn-tcl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-unifdef="green" # poky local source files
-RECIPE_LATEST_VERSION_pn-unifdef="2.6.18"
+RECIPE_LATEST_VERSION_pn-unifdef="2.6.18+git"
 RECIPE_NO_OF_PATCHES_pn-unifdef="1"
 RECIPE_LATEST_RELEASE_DATE_pn-unifdef="2009/06/03"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-unifdef="27 months"
@@ -274,17 +271,15 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qmake2-cross="4 months"
 RECIPE_MAINTAINER_pn-qmake2-cross = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-gnu-config="green" # upgraded
-RECIPE_LATEST_VERSION_pn-gnu-config="20080123"
+RECIPE_LATEST_VERSION_pn-gnu-config="0.1+cvs20080123"
 RECIPE_NO_OF_PATCHES_pn-gnu-config="4"
 RECIPE_LATEST_RELEASE_DATE_pn-gnu-config="2008/01/23"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gnu-config="??? cvs tree"
 RECIPE_MAINTAINER_pn-gnu-config = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-mpfr="green" # upgraded
 RECIPE_LATEST_VERSION_pn-mpfr="3.0.0"
 RECIPE_NO_OF_PATCHES_pn-mpfr="0"
 RECIPE_LATEST_RELEASE_DATE_pn-mpfr="2010/06/10"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-mpfr="???"
 RECIPE_MAINTAINER_pn-mpfr = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-gmp="green" # upgraded
