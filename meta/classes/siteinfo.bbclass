@@ -96,6 +96,13 @@ def siteinfo_get_files(d):
                if os.path.exists(fname):
                        sitefiles += fname + " "
 
+       # Now check for siteconfig cache files
+       path_siteconfig = os.path.join(bb.data.getVar('STAGING_DATADIR', d, 1), bb.data.getVar('TARGET_SYS', d, 1) + "_config_site.d")
+       if os.path.isdir(path_siteconfig):
+               for i in os.listdir(path_siteconfig):
+                       fname = os.path.join(path_siteconfig, i)
+                       sitefiles += fname + " "
+
        bb.debug(1, "SITE files " + sitefiles);
        return sitefiles
 
