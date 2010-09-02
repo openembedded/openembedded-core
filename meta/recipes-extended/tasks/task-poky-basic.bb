@@ -111,7 +111,7 @@ RDEPENDS_task-poky-initscripts = "\
     initscripts \
     sysvinit \
     ethtool \
-#    mingetty \
+    mingetty \
     sysklogd \
     "
 
@@ -133,7 +133,7 @@ RDEPENDS_task-poky-rpm = "\
 RDEPENDS_task-poky-sys-services = "\
     at \
     bzip2 \
-#    cronie \
+    cronie \
 #    crontabs \
     dbus \
     dbus-glib \
@@ -144,7 +144,7 @@ RDEPENDS_task-poky-sys-services = "\
     less \
     libcap \
     libevent \
-#    logrotate \
+    logrotate \
     nfs-utils \
     pciutils \
     libpcre \
