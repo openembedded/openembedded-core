@@ -42,3 +42,7 @@ do_install () {
        ${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
                -o ${D}${libdir}/libc.so
 }
+
+do_siteconfig () {
+	:
+}

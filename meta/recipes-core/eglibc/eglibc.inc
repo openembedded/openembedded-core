@@ -23,4 +23,4 @@ ARM_INSTRUCTION_SET = "arm"
 
 PACKAGES = "glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
 
-
+inherit siteconfig
