@@ -1,7 +1,7 @@
 require qemu.inc
 
 PV = "0.12.4"
-PR = "r11"
+PR = "r12"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-git/"
 FILESDIR = "${WORKDIR}"
