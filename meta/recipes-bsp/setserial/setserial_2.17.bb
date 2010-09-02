@@ -3,11 +3,13 @@ HOMEPAGE = "http://setserial.sourceforge.net"
 AUTHOR = "Theodore Ts'o <tytso@mit.edu>"
 SECTION = "console/utils"
 LICENSE = "GPL"
-PR = "r2"
+PR = "r3"
 
 inherit autotools
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/setserial/${PN}-${PV}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/setserial/${PN}-${PV}.tar.gz \
+           file://add_stdlib.patch \
+          "
 
 do_install() {
     install -d ${D}${bindir}
