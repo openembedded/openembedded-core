@@ -14,8 +14,13 @@ do_rootfs[recrdeptask] += "do_package_write_rpm"
 
 AWKPOSTINSTSCRIPT = "${POKYBASE}/scripts/rootfs_rpm-extract-postinst.awk"
 
-RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; package_generate_rpm_conf"
+RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; package_generate_rpm_conf; "
 RPM_POSTPROCESS_COMMANDS = ""
+
+# To test the install_all_locales.. enable the following...
+#RPM_POSTPROCESS_COMMANDS = "install_all_locales; "
+#
+#IMAGE_LOCALES="en-gb"
 
 rpmlibdir = "/var/lib/rpm"
 opkglibdir = "${localstatedir}/lib/opkg"
@@ -42,7 +47,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 			for pkg in ${LINGUAS_INSTALL}; do
 				echo "Processing $pkg..."
 				pkg_name=$(resolve_package $pkg)
-				if [ -z '$pkg_name' ]; then
+				if [ -z "$pkg_name" ]; then
 					echo "Unable to find package $pkg!"
 					exit 1
 				fi
@@ -55,7 +60,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 		for pkg in ${PACKAGE_INSTALL} ; do
 			echo "Processing $pkg..."
 			pkg_name=$(resolve_package $pkg)
-			if [ -z '$pkg_name' ]; then
+			if [ -z "$pkg_name" ]; then
 				echo "Unable to find package $pkg!"
 				exit 1
 			fi
@@ -75,7 +80,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 		for pkg in ${PACKAGE_INSTALL_ATTEMPTONLY} ; do
 			echo "Processing $pkg..."
 			pkg_name=$(resolve_package $pkg)
-			if [ -z '$pkg_name' ]; then
+			if [ -z "$pkg_name" ]; then
 				echo "Unable to find package $pkg!"
 				exit 1
 			fi
@@ -109,7 +114,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 			# Ohh there was a new one, we'll need to loop again...
 			loop=1
 			echo "Processing $pkg..."
-			pkg_name=$(resolve_package $pkg || true)
+			pkg_name=$(resolve_package $pkg)
 			if [ -z "$pkg_name" ]; then
 				echo "Unable to find package $pkg." >> "${WORKDIR}/temp/log.do_rootfs_recommend.${PID}"
 				continue
@@ -223,41 +228,39 @@ remove_packaging_data_files() {
 # Resolve package names to filepaths
 resolve_package() {
 	pkg="$1"
+	pkg_name=""
 	for solve in `cat ${DEPLOY_DIR_RPM}/solvedb.conf`; do
 		pkg_name=$(${RPM} -D "_dbpath $solve" -D "_dbi_tags_3 Packages:Name:Basenames:Providename:Nvra" -D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync" -q --yaml $pkg | grep -i 'Packageorigin' | cut -d : -f 2)
 		if [ -n "$pkg_name" ]; then
 			break;
 		fi
 	done
-	if [ -z "$pkg_name" ]; then
-		return 1
-	fi
 	echo $pkg_name
-	return 0
 }	
 
 install_all_locales() {
-	echo "install_all_locales: not yet implemented!"
-	exit 1
+	PACKAGES_TO_INSTALL=""
 
-    PACKAGES_TO_INSTALL=""
+	# Generate list of installed packages...
+	INSTALLED_PACKAGES=$( \
+		${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
+		-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
+		-qa --qf "[%{NAME}\n]" | egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)" \
+	)
 
-	INSTALLED_PACKAGES=`grep ^Package: ${IMAGE_ROOTFS}${opkglibdir}/status |sed "s/^Package: //"|egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
-
-    for pkg in $INSTALLED_PACKAGES
-    do
-        for lang in ${IMAGE_LOCALES}
-        do
-            if [ `opkg-cl ${IPKG_ARGS} info $pkg-locale-$lang | wc -l` -gt 2 ]
-            then
-                    PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $pkg-locale-$lang"
-            fi
-        done
-    done
-    if [ "$PACKAGES_TO_INSTALL" != "" ]
-    then
-        opkg-cl ${IPKG_ARGS} install $PACKAGES_TO_INSTALL
-    fi
+	# This would likely be faster if we did it in one transaction
+	# but this should be good enough for the few users of this function...
+	for pkg in $INSTALLED_PACKAGES; do
+		for lang in ${IMAGE_LOCALES}; do
+			pkg_name=$(resolve_package $pkg-locale-$lang)
+			if [ -n "$pkg_name" ]; then
+				${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
+					--noscripts --notriggers --noparentdirs --nolinktos \
+					-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
+					-Uhv $pkg_name || true
+			fi
+		done
+	done
 }
 
 python () {
