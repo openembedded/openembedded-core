@@ -2,7 +2,7 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
-PR = "r0"
+PR = "r1"
 
 SRC_URI += "file://hayes-gone.patch \
            file://ppc_glibc_build_fix.patch"
