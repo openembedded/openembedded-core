@@ -181,3 +181,4 @@ do_install() {
 	chmod +x ${D}/${base_libdir}/*
 }
 
+inherit siteconfig

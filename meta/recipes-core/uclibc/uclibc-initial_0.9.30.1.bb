@@ -25,3 +25,7 @@ do_compile () {
 	${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
 		-o lib/libc.so
 }
+
+do_siteconfig () {
+	:
+}
