@@ -147,12 +147,12 @@ class PythonMethodNode(AstNode):
         # Note we will add root to parsedmethods after having parse
         # 'this' file. This means we will not parse methods from
         # bb classes twice
+        text = '\n'.join(self.body)
         if not bb.methodpool.parsed_module(self.root):
-            text = '\n'.join(self.body)
             bb.methodpool.insert_method(self.root, text, self.fn)
-            bb.data.setVarFlag(self.func_name, "func", 1, data)
-            bb.data.setVarFlag(self.func_name, "python", 1, data)
-            bb.data.setVar(self.func_name, text, data)
+        bb.data.setVarFlag(self.func_name, "func", 1, data)
+        bb.data.setVarFlag(self.func_name, "python", 1, data)
+        bb.data.setVar(self.func_name, text, data)
 
 class MethodFlagsNode(AstNode):
     def __init__(self, key, m):
