@@ -97,7 +97,7 @@ def siteinfo_get_files(d):
                        sitefiles += fname + " "
 
        # Now check for siteconfig cache files
-       path_siteconfig = os.path.join(bb.data.getVar('STAGING_DATADIR', d, 1), bb.data.getVar('TARGET_SYS', d, 1) + "_config_site.d")
+       path_siteconfig = bb.data.getVar('SITECONFIG_SYSROOTCACHE', d, 1)
        if os.path.isdir(path_siteconfig):
                for i in os.listdir(path_siteconfig):
                        fname = os.path.join(path_siteconfig, i)
@@ -127,5 +127,5 @@ def siteinfo_get_bits(d):
 #
 SITEINFO_ENDIANESS  = "${@siteinfo_get_endianess(d)}"
 SITEINFO_BITS       = "${@siteinfo_get_bits(d)}"
-
+SITECONFIG_SYSROOTCACHE = "${STAGING_DATADIR}/${TARGET_SYS}_config_site.d"
 
