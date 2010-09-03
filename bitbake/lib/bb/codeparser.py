@@ -206,7 +206,7 @@ class ShellParser():
 
         if h in shellparsecache:
             self.execs = shellparsecache[h].execs
-            return
+            return self.execs
 
         try:
             tokens, _ = pyshyacc.parse(value, eof=True, debug=False)
