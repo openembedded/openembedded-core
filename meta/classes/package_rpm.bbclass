@@ -2,8 +2,8 @@ inherit package
 
 IMAGE_PKGTYPE ?= "rpm"
 
-RPM="${BUILD_ARCH}-${BUILD_OS}-rpm"
-RPMBUILD="${BUILD_ARCH}-${BUILD_OS}-rpmbuild"
+RPM="rpm"
+RPMBUILD="rpmbuild"
 
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
 

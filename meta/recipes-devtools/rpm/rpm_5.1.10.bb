@@ -3,12 +3,13 @@ DESCRIPTION_rpm-build = "The RPM Package Manager rpmbuild and related commands."
 HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPL 2.1"
 DEPENDS = "zlib perl popt beecrypt python libpcre elfutils"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/SNAPSHOT/${BPN}-${PV}.tar.gz \
            file://hdraddorappend.patch \
            file://export-rpmbag-h.patch \
 	   file://rpm-nrescan.patch \
+	   file://rpm-autoconf.patch \
 	   file://remove-compiled-tests.patch;apply=no \
 	   file://perfile_rpmdeps.sh \
 	  "
@@ -67,64 +68,95 @@ FILES_python-rpm-dbg = "${libdir}/python*/rpm/.debug/_*"
 EXTRA_OECONF += "--with-mutex=POSIX/pthreads/library"
 
 do_configure() {
-	rm ${S}/db/dist/configure.in -f
-	for i in `find ${S} -name *.ac`; do
-		j=`echo $i | sed 's/.ac/.m4/g'`
-		mv $i $j
-	done
+	# Manually run through the steps of the autogen.sh
+	( cd pcre
+	  libtoolize --quiet --copy --force --install
+	  aclocal
+	  autoheader
+	  automake -Wall -Wno-override -a -c
+	  autoconf
+	)
+
+	( cd xz
+	  autopoint -f
+	  rm -f \
+	        codeset.m4 \
+	        glibc2.m4 \
+	        glibc21.m4 \
+	        intdiv0.m4 \
+	        intl.m4 \
+	        intldir.m4 \
+	        intmax.m4 \
+	        inttypes-pri.m4 \
+	        inttypes_h.m4 \
+	        lcmessage.m4 \
+	        lock.m4 \
+	        longdouble.m4 \
+	        longlong.m4 \
+	        printf-posix.m4 \
+	        size_max.m4 \
+	        stdint_h.m4 \
+	        uintmax_t.m4 \
+	        ulonglong.m4 \
+	        visibility.m4 \
+	        wchar_t.m4 \
+	        wint_t.m4 \
+	        xsize.m4
+	  libtoolize -c -f || glibtoolize -c -f
+	  aclocal -I m4
+	  autoconf
+	  autoheader
+	  automake -acf --foreign
+	)
+
+	( cd file
+	  libtoolize --quiet --copy --force --install
+	  aclocal
+	  autoheader
+	  automake -Wall -Wno-override -a -c
+	  autoconf
+	)
+
+	(cd syck
+	  libtoolize --quiet --copy --force --install
+	  aclocal
+	  autoheader
+	  automake -Wall -Wno-override -a -c
+	  autoconf
+	)
+
+	(cd xar
+	  libtoolize --quiet --copy --force --install
+	  aclocal
+	  autoheader
+	  automake -Wall -Wno-override -a -c
+	  autoconf
+	)
+
+	rm -rf autom4te.cache || true
+	libtoolize --quiet --copy --force --install
+	autopoint --force
+	rm -f aclocal.m4
+	aclocal -I m4
+	autoheader -I m4
+	automake -Wall -Wno-override -a -c
+	autoconf -I m4
+	# end of autogen.sh steps
+
 	export ac_cv_va_copy=C99
-	autotools_do_configure
-	cd ${S}/db3
-	${S}/db3/configure \
-		    --build=${BUILD_SYS} \
-		    --host=${HOST_SYS} \
-		    --target=${TARGET_SYS} \
-		    --prefix=${prefix} \
-		    --exec_prefix=${exec_prefix} \
-		    --bindir=${bindir} \
-		    --sbindir=${sbindir} \
-		    --libexecdir=${libexecdir} \
-		    --datadir=${datadir} \
-		    --sysconfdir=${sysconfdir} \
-		    --sharedstatedir=${sharedstatedir} \
-		    --localstatedir=${localstatedir} \
-		    --libdir=${libdir} \
-		    --includedir=${includedir} \
-		    --oldincludedir=${oldincludedir} \
-		    --infodir=${infodir} \
-		    --mandir=${mandir} \
-		    ${EXTRA_OECONF}
+	oe_runconf
 }
 
-INSTALL_ACTIONS=""
-
-# When installing the native version, the rpm components are renamed with a
-# naming transform.  We need to adjust the rpmpopt file with the same transform
-INSTALL_ACTIONS_virtclass-native="sed -i -e 's,rpm,${HOST_SYS}-rpm,' ${D}/${libdir}/rpm/rpmpopt"
-
 do_install_append() {
-        ${INSTALL_ACTIONS}
 	sed -i -e 's,%__check_files,#%%__check_files,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__scriptlet_requires,#%%__scriptlet_requires,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__perl_provides,#%%__perl_provides,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__perl_requires,#%%__perl_requires,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,pythondeps.sh,${HOST_SYS}-pythondeps.sh,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,phpdeps.sh,${HOST_SYS}-phpdeps.sh,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,javadeps.sh,${HOST_SYS}-javadeps.sh,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,libtooldeps.sh,${HOST_SYS}-libtooldeps.sh,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,pkgconfigdeps.sh,${HOST_SYS}-pkgconfigdeps.sh,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,executabledeps.sh,${HOST_SYS}-executabledeps.sh,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,perl.prov,${HOST_SYS}-perl.prov,' ${D}/${libdir}/rpm/macros
-	sed -i -e 's,perl.req,${HOST_SYS}-perl.req,' ${D}/${libdir}/rpm/macros
 
 	# Enable Debian style arbitrary tags...
 	sed -i -e 's,%_arbitrary_tags[^_].*,%_arbitrary_tags %{_arbitrary_tags_debian},' ${D}/${libdir}/rpm/macros
 
 	install -m 0755 ${WORKDIR}/perfile_rpmdeps.sh ${D}/${libdir}/rpm/perfile_rpmdeps.sh
-
-	mv ${D}/${libdir}/python${PYTHON_BASEVERSION}/rpm/${HOST_SYS}-__init__.py \
-		${D}/${libdir}/python${PYTHON_BASEVERSION}/rpm/__init__.py
-
 }
 
 BBCLASSEXTEND = "native"

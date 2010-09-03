@@ -26,7 +26,7 @@ rpmlibdir = "/var/lib/rpm"
 opkglibdir = "${localstatedir}/lib/opkg"
 
 RPMOPTS="--dbpath ${rpmlibdir} --define='_openall_before_chroot 1'"
-RPM="${BUILD_ARCH}-${BUILD_OS}-rpm ${RPMOPTS}"
+RPM="rpm ${RPMOPTS}"
 
 fakeroot rootfs_rpm_do_rootfs () {
 	set +x

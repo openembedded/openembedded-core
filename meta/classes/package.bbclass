@@ -558,7 +558,7 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/${BUILD_ARCH}-${BUILD_OS}-rpmdeps"
+RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/rpmdeps"
 
 # Collect perfile run-time dependency metadata
 # Output:
