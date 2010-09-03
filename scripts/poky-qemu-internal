@@ -71,10 +71,10 @@ done
 if [ "$TAP" = "" ]; then
     GROUPID=`id -g`
     echo 'Setting up tap interface under sudo'
-    TAP=`sudo $QEMUIFUP $GROUPID $NATIVE_SYSROOT_DIR`
+    TAP=`sudo $QEMUIFUP $GROUPID $POKY_NATIVE_SYSROOT`
     if [ $? -ne 0 ]; then
         # Re-run standalone to see verbose errors
-        sudo $QEMUIFUP $GROUPID $NATIVE_SYSROOT_DIR
+        sudo $QEMUIFUP $GROUPID $POKY_NATIVE_SYSROOT
         return
     fi
     LOCKFILE=""
