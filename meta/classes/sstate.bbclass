@@ -170,8 +170,10 @@ def sstate_clean_manifest(manifest, d):
         entry = entry.strip()
         bb.debug(2, "Removing manifest: %s" % entry)
         if entry.endswith("/"):
-           if os.path.exists(entry) and len(os.listdir(entry)) == 0:
-              os.rmdir(entry)
+           if os.path.islink(entry[:-1]):
+              os.remove(entry[:-1])
+           elif os.path.exists(entry) and len(os.listdir(entry)) == 0:
+              os.rmdir(entry[:-1])
         else:
            oe.path.remove(entry)
 
