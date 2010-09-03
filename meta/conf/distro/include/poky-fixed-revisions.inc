@@ -29,6 +29,11 @@ PREFERRED_VERSION_hal-info ?= "20091130"
 PREFERRED_VERSION_udev ?= "158"
 PREFERRED_VERSION_wpa-supplicant ?= "0.6.10"
 
+# Force the python versions in one place
+PYTHON_BASEVERSION ?= "2.6"
+PREFERRED_VERSION_python ?= "2.6.5"
+PREFERRED_VERSION_python-native ?= "2.6.5"
+
 
 #
 # meta-moblin package PREFERRED_VERSIONS

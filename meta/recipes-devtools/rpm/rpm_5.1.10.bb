@@ -19,9 +19,9 @@ acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 # Specify the default rpm macros in terms of adjustable variables
 rpm_macros = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:~/.oerpmmacros"
 
-EXTRA_OECONF = "--with-python=$PYTHONVER \
-		--with-python-inc-dir=${STAGING_INCDIR}/python$PYTHONVER \
-		--with-python-lib-dir=${libdir}/python$PYTHONVER \
+EXTRA_OECONF = "--with-python=${PYTHON_BASEVERSION} \
+		--with-python-inc-dir=${STAGING_INCDIR}/python${PYTHON_BASEVERSION} \
+		--with-python-lib-dir=${libdir}/python${PYTHON_BASEVERSION} \
 		--with-db=internal \
 		--with-db-tools-integrated \
 		--with-libelf \
@@ -122,22 +122,9 @@ do_install_append() {
 
 	install -m 0755 ${WORKDIR}/perfile_rpmdeps.sh ${D}/${libdir}/rpm/perfile_rpmdeps.sh
 
-	mv ${D}/${libdir}/python$PYTHONVER/rpm/${HOST_SYS}-__init__.py \
-		${D}/${libdir}/python$PYTHONVER/rpm/__init__.py
+	mv ${D}/${libdir}/python${PYTHON_BASEVERSION}/rpm/${HOST_SYS}-__init__.py \
+		${D}/${libdir}/python${PYTHON_BASEVERSION}/rpm/__init__.py
 
 }
-
-def rpm_python_version(d):
-	import os, bb
-	staging_incdir = bb.data.getVar( "STAGING_INCDIR", d, 1 )
-	if os.path.exists( "%s/python2.6" % staging_incdir ): return "2.6"
-	if os.path.exists( "%s/python2.5" % staging_incdir ): return "2.5"
-	if os.path.exists( "%s/python2.4" % staging_incdir ): return "2.4"
-	if os.path.exists( "%s/python2.3" % staging_incdir ): return "2.3"
-	raise "No Python in STAGING_INCDIR. Forgot to build python/python-native?"
-
-# Use a shell variable here since otherwise gettext trys to expand this at 
-# parse time when it manipulates EXTRA_OECONF which fails
-export PYTHONVER = "${@rpm_python_version(d)}"
 
 BBCLASSEXTEND = "native"
