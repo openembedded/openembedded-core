@@ -65,6 +65,23 @@ fi
 PSEUDO_LOCALSTATEDIR=~/.poky-sdk/pseudo
 export PSEUDO_LOCALSTATEDIR
 
+RPC=`which rpcbind`
+if [ "x$RPC" = "x" ]; then
+    RPC=`which portmap`
+    if [ "x$RPC" = "x" ]; then
+	echo "You need rpcbind or portmap installed and running to run the"
+	echo "userspace NFS server."
+	exit 1
+    fi
+fi
+
+rpcbind_running=`ps ax | grep rpcbind | wc -l`
+portmap_running=`ps ax | grep portbind | wc -l`
+if [ rpcbind_running == 1 -a portmap_running == 1 ]; then
+    echo "You need to be running either rpcbind or portmap to continue"
+    exit 1
+fi
+
 # Start the userspace NFS server
 echo "poky-export-rootfs restart $SDK_ROOTFS_DIR"
 poky-export-rootfs restart $SDK_ROOTFS_DIR
