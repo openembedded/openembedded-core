@@ -9,7 +9,7 @@ require gcc-cross-kernel.inc
 
 DEFAULT_PREFERENCE = "-1"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "file://gcc-3.4.4-makefile-fix.patch;patch=1"
 

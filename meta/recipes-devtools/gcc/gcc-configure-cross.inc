@@ -2,6 +2,8 @@ require gcc-configure-common.inc
 
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
 
+EXTRA_OECONF += " --enable-poison-system-directories "
+
 EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${target_exec_prefix} \
 		      --with-gxx-include-dir=${STAGING_DIR_TARGET}/${target_includedir}/c++ \
                       --with-sysroot=${STAGING_DIR_TARGET} \
