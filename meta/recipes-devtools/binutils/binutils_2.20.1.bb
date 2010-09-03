@@ -1,6 +1,6 @@
 require binutils.inc
 
-PR = "r2"
+PR = "r3"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -27,6 +27,7 @@ SRC_URI = "\
      file://binutils-mips-pie.patch \
      file://binutils-libtool.patch \
      file://libiberty_path_fix.patch \
+     file://binutils-poison.patch \
      "
 
 # powerpc patches
