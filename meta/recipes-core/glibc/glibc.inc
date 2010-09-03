@@ -40,5 +40,3 @@ do_rig_locales() {
 addtask rig_locales before do_compile after do_configure
 
 ARM_INSTRUCTION_SET = "arm"
-
-inherit siteconfig

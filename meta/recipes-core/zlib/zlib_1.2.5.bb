@@ -19,6 +19,4 @@ do_configure_prepend () {
 	cp ${WORKDIR}/Makefile.am ${S}/
 }
 
-inherit siteconfig
-
 BBCLASSEXTEND = "native nativesdk"

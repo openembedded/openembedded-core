@@ -180,5 +180,3 @@ do_install() {
 	# oe_runstrip needs +x on files	
 	chmod +x ${D}/${base_libdir}/*
 }
-
-inherit siteconfig

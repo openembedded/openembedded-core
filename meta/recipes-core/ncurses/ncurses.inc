@@ -97,5 +97,3 @@ pkg_prerm_ncurses-tools () {
 }
 
 BBCLASSEXTEND = "native nativesdk"
-
-inherit siteconfig
