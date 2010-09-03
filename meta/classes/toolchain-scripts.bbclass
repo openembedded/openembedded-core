@@ -24,10 +24,12 @@ toolchain_create_sdk_env_script () {
 	echo 'export CXXFLAGS="${TARGET_CC_ARCH}"' >> $script
 	echo "alias opkg='LD_LIBRARY_PATH=${SDKPATHNATIVE}${libdir_nativesdk} ${SDKPATHNATIVE}${bindir_nativesdk}/opkg-cl -f ${SDKPATHNATIVE}/${sysconfdir}/opkg-sdk.conf -o ${SDKPATHNATIVE}'" >> $script
 	echo "alias opkg-target='LD_LIBRARY_PATH=${SDKPATHNATIVE}${libdir_nativesdk} ${SDKPATHNATIVE}${bindir_nativesdk}/opkg-cl -f ${SDKTARGETSYSROOT}${sysconfdir}/opkg.conf -o ${SDKTARGETSYSROOT}'" >> $script
+	echo 'export POKY_NATIVE_SYSROOT="${SDKPATHNATIVE}"' >> $script
+	echo 'export POKY_DISTRO_VERSION="${DISTRO_VERSION}"' >> $script
 }
 
-# This function creates an environment-setup-script in the TMPDIR which enables a Poky IDE to integrate with the
-# build tree
+# This function creates an environment-setup-script in the TMPDIR which enables
+# a Poky IDE to integrate with the build tree
 toolchain_create_tree_env_script () {
 	script=${TMPDIR}/environment-setup-${MULTIMACH_TARGET_SYS}
 	rm -f $script
@@ -50,4 +52,5 @@ toolchain_create_tree_env_script () {
 	fi
 	echo 'export CFLAGS="${TARGET_CC_ARCH}"' >> $script
 	echo 'export CXXFLAGS="${TARGET_CC_ARCH}"' >> $script
+	echo 'export POKY_NATIVE_SYSROOT="${STAGING_DIR_NATIVE}"' >> $script
 }
