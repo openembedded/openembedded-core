@@ -71,7 +71,7 @@ then
 	read TIMESTAMP < /etc/timestamp2
         NEEDUPDATE=`expr \( $TIMESTAMP \> $SYSTEMDATE + 10000 \)`
         if [ $NEEDUPDATE -eq 1 ]; then 
-		date $TIMESTAMP
+		date -s $TIMESTAMP
 		/etc/init.d/hwclock.sh stop
 	fi
 fi
