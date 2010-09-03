@@ -21,6 +21,7 @@ python __anonymous () {
 
 # default to disabled until qemu works for everyone
 ENABLE_BINARY_LOCALE_GENERATION ?= "0"
+ENABLE_BINARY_LOCALE_GENERATION_pn-eglibc-nativesdk = "0"
 
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
 BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
