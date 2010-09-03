@@ -95,3 +95,5 @@ do_compile () {
 }
 
 require eglibc-package.inc
+
+BBCLASSEXTEND = "nativesdk"
