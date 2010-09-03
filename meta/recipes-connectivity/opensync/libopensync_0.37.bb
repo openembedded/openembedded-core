@@ -1,7 +1,7 @@
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.opensync.org/"
 
-DEPENDS = "sqlite3 libxml2 glib-2.0 check zlib libxslt"
+DEPENDS = "sqlite3 libxml2 glib-2.0 libcheck zlib libxslt"
 
 PR = "r1"
 
