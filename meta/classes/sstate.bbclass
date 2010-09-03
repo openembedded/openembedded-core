@@ -57,6 +57,7 @@ def sstate_state_fromvars(d):
     outputs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-outputdirs', d) or "", d)).split()
     plaindirs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-plaindirs', d) or "", d)).split()
     lockfiles = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-lockfile', d) or "", d)).split()
+    interceptfuncs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-interceptfuncs', d) or "", d)).split()
     if not name or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
 
@@ -65,6 +66,7 @@ def sstate_state_fromvars(d):
         sstate_add(ss, inputs[i], outputs[i], d)
     ss['lockfiles'] = lockfiles
     ss['plaindirs'] = plaindirs
+    ss['interceptfuncs'] = interceptfuncs
     return ss
 
 def sstate_add(ss, source, dest, d):
@@ -276,6 +278,8 @@ python sstate_task_prefunc () {
 python sstate_task_postfunc () {
     shared_state = sstate_state_fromvars(d)
     sstate_install(shared_state, d)
+    for intercept in shared_state['interceptfuncs']:
+        bb.build.exec_func(intercept, d)
     sstate_package(shared_state, d)
 }
   
