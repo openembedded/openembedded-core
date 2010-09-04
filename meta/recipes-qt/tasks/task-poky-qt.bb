@@ -14,7 +14,8 @@ PACKAGES = "\
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-poky-qt-demos = "\
-    fotowall \
-    quicky \
-    "
+QTDEMOS ?= "fotowall quicky"
+QTDEMOS_mips ?= ""
+QTDEMOS_mipsel ?= ""
+
+RDEPENDS_task-poky-qt-demos = "${QTDEMOS}"
