@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Qt Tasks for Poky"
 LICENSE = "MIT"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "\
     task-poky-qt-demos \
