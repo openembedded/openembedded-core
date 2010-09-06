@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Tools tasks for Poky"
 LICENSE = "MIT"
-PR = "r5"
+PR = "r6"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -43,7 +43,8 @@ RDEPENDS_task-poky-tools-profile = "\
     lttng-viewer"
 
 RRECOMMENDS_task-poky-tools-profile = "\
-    perf"
+    perf \
+    kernel-module-oprofile"
 
 #    exmap-console
 #    exmap-server
@@ -57,9 +58,6 @@ RDEPENDS_task-poky-tools-profile_append_qemux86-64 = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_qemuppc = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_emenlow = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_netbook = " lttng-ust"
-
-RRECOMMENDS_task-poky-tools-profile = "\
-    kernel-module-oprofile"
 
 RDEPENDS_task-poky-tools-testapps = "\
     blktool \
