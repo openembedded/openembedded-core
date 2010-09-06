@@ -9,11 +9,9 @@ PR = "r0"
 
 inherit cmake
 
-SRCREV = "9eb0e248e06c8d20ad054be2439149d9ede37531"
-
 SRC_URI = "git://gitorious.org/opensuse/zypper.git;protocol=git \
            file://cmake.patch \
           "
-S	 = "${WORKDIR}/git"
+S = "${WORKDIR}/git"
 
-PV	 = "1.4.7-git${SRCPV}"
+PV = "1.4.7-git${SRCPV}"

@@ -8,11 +8,9 @@ inherit cmake
 
 DEPENDS  = "rpm boost gettext curl libxml2 zlib sat-solver expat openssl udev"
 
-S	 = "${WORKDIR}/git"
-PV	 = "0.0-git${SRCPV}"
+S = "${WORKDIR}/git"
+PV = "0.0-git${SRCPV}"
 PR = "r0"
-
-SRCREV = "4494797d5b0369365b1af63921de45b197ead64f"
 
 SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
            file://no-doc.patch \

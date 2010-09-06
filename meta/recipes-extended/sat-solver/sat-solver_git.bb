@@ -9,8 +9,6 @@ DEPENDS = "libcheck rpm zlib expat"
 PV = "0.0-git${SRCPV}"
 PR = "r0"
 
-SRCREV = "aa799f7bae0ec055e0e527203635001bb7346dbc"
-
 SRC_URI = "git://gitorious.org/opensuse/sat-solver.git;protocol=git \
            file://cmake.patch \
            file://rpm5.patch"
