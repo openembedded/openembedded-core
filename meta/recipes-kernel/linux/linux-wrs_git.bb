@@ -81,6 +81,7 @@ IFS='
 	cd ${S}
 	git checkout -f ${WRMACHINE}-${LINUX_KERNEL_TYPE}
 }
+do_wrlinux_checkout[dirs] = "${S}"
 
 addtask wrlinux_checkout before do_patch after do_unpack
 
