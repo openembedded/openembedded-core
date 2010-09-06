@@ -499,6 +499,7 @@ class FetchData(object):
         if "localpath" in self.parm:
             # if user sets localpath for file, use it instead.
             self.localpath = self.parm["localpath"]
+            self.basename = os.path.basename(self.localpath)
         else:
             premirrors = bb.data.getVar('PREMIRRORS', d, True)
             local = ""
