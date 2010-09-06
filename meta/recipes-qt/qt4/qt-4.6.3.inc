@@ -16,6 +16,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://g++.conf \
            file://linux.conf \
            file://hack-out-pg_config.patch \
+           file://mips-relocate.patch \
            "
 
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
