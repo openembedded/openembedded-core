@@ -25,7 +25,6 @@ LINUXLIBCVERSION ?= "2.6.34"
 
 # Temporary preferred version overrides for PPC
 PREFERRED_VERSION_u-boot-mkimage-native_powerpc ?= "2009.08"
-PREFERRED_VERSION_udev_powerpc ?= "124"
 
 PREFERRED_VERSION_gcc ?= "${GCCVERSION}"
 PREFERRED_VERSION_gcc-cross ?= "${GCCVERSION}"
