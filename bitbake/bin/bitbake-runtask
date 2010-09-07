@@ -47,6 +47,13 @@ os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
 #os.dup2(newso.fileno(), sys.stdout.fileno())
 #os.dup2(newso.fileno(), sys.stderr.fileno())
 
+# Don't read from stdin from the parent
+si = file("/dev/null", 'r')
+os.dup2(si.fileno( ), sys.stdin.fileno( ))
+
+# We don't want to see signals to our parent, e.g. Ctrl+C
+os.setpgrp()
+
 # Save out the PID so that the event can include it the
 # events
 bb.event.worker_pid = os.getpid()
