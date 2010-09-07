@@ -34,14 +34,14 @@ CMDLINE_cm-x270 = "console=${CMX270_CONSOLE_SERIAL_PORT},38400 monitor=8 bpp=16 
 
 FILES_kernel-image_cm-x270 = ""
 
-python do_compulab_image() {
+python compulab_image() {
 	import os
 	import os.path
 	import struct
 
 	machine = bb.data.getVar('MACHINE', d, 1)
 	if machine == "cm-x270":
-	    deploy_dir = bb.data.getVar('DEPLOY_DIR_IMAGE', d, 1)
+	    deploy_dir = bb.data.getVar('DEPLOYDIR', d, 1)
 	    kernel_file = os.path.join(deploy_dir, bb.data.expand('${KERNEL_IMAGE_BASE_NAME}', d) + '.bin')
 	    img_file = os.path.join(deploy_dir, bb.data.expand('${KERNEL_IMAGE_BASE_NAME}', d) + '.cmx270')
 
@@ -68,8 +68,7 @@ python do_compulab_image() {
 		pass
 	    os.symlink(img_file, link_file)
 }
-
-addtask compulab_image after do_deploy before do_package
+do_deploy[postfuncs] += "compulab_image"
 
 do_kernel_image() {
 	
