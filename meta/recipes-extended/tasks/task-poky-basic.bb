@@ -131,7 +131,7 @@ RDEPENDS_task-poky-rpm = "\
     "
 
 RDEPENDS_task-poky-sys-services = "\
-#    at \
+    at \
     bzip2 \
     cronie \
     dbus \

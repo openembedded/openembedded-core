@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4325afd396febcb659c36b49533135d4"
 DEPENDS = "flex libpam initscripts"
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://configure.patch \
@@ -37,3 +37,5 @@ do_install () {
 	install -m 0755    ${WORKDIR}/S99at		${D}${sysconfdir}/init.d/at
 	ln -sf		../init.d/at		${D}${sysconfdir}/rcS.d/S99at
 }
+
+PARALLEL_MAKE = ""
