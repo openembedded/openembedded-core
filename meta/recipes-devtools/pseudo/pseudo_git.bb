@@ -6,7 +6,7 @@ LICENSE = "LGPL2.1"
 DEPENDS = "sqlite3"
 
 PV = "0.0+git${SRCPV}"
-PR = "r14"
+PR = "r15"
 
 SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
            file://static_sqlite.patch"
@@ -22,8 +22,10 @@ do_configure () {
 	:
 }
 
+NO32LIBS ??= "0"
+
 do_compile () {
-	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" ]; then
+	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		# We need the 32-bit libpseudo on a 64-bit machine...
 		./configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32
 		oe_runmake 'CFLAGS=-m32' 'LIB=lib/pseudo/lib' libpseudo
@@ -36,7 +38,7 @@ do_compile () {
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' 'LIB=lib/pseudo/lib$(MARK64)' install
-	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" ]; then
+	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		mkdir -p ${D}${prefix}/lib/pseudo/lib
 		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
 	fi
