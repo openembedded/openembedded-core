@@ -3,6 +3,7 @@
 #
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
+LICENSE = "MIT"
 PR = "r7"
 
 ALLOW_EMPTY = "1"

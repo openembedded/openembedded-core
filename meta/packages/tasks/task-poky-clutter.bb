@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "Clutter Tasks for OpenedHand Poky"
+LICENSE = "MIT"
 PR = "r3"
 
 PACKAGES = "\

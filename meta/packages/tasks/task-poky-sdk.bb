@@ -3,6 +3,7 @@
 #
 
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
+LICENSE = "MIT"
 DEPENDS = "task-poky"
 PR = "r5"
 

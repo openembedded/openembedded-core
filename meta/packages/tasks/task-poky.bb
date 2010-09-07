@@ -3,6 +3,7 @@
 #
 
 DESCRIPTION = "Tasks for OpenedHand Poky"
+LICENSE = "MIT"
 PR = "r33"
 
 PACKAGES = "\
