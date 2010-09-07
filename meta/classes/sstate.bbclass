@@ -34,7 +34,7 @@ python () {
         funcs = "sstate_task_prefunc " + funcs
         bb.data.setVarFlag(task, 'prefuncs', funcs, d)
         funcs = bb.data.getVarFlag(task, 'postfuncs', d) or ""
-        funcs = "sstate_task_postfunc " + funcs
+        funcs = funcs + " sstate_task_postfunc"
         bb.data.setVarFlag(task, 'postfuncs', funcs, d)
 }
 
