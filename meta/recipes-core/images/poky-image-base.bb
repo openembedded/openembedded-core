@@ -4,4 +4,6 @@
 
 IMAGE_FEATURES += "apps-console-core"
 
+LICENSE = "MIT"
+
 inherit poky-image

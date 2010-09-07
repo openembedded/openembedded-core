@@ -5,4 +5,6 @@ IMAGE_INSTALL = "initramfs-live-boot initramfs-live-install busybox udev base-pa
 export IMAGE_BASENAME = "poky-image-minimal-initramfs"
 IMAGE_LINGUAS = ""
 
+LICENSE = "MIT"
+
 inherit poky-image

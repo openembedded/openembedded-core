@@ -5,6 +5,8 @@ IMAGE_INSTALL = "task-poky-boot ${ROOTFS_PKGMANAGE}"
 
 IMAGE_LINGUAS = " "
 
+LICENSE = "MIT"
+
 inherit poky-image
 
 # remove not needed ipkg informations
