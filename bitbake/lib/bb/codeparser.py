@@ -15,7 +15,14 @@ except ImportError:
 def check_indent(codestr):
     """If the code is indented, add a top level piece of code to 'remove' the indentation"""
 
-    if codestr[0] is "	" or codestr[0] is " ":
+    i = 0
+    while codestr[i] in ["\n", "	", " "]:
+        i = i + 1
+
+    if i == 0:
+        return codestr
+
+    if codestr[i-1] is "	" or codestr[i-1] is " ":
         return "if 1:\n" + codestr        
 
     return codestr
