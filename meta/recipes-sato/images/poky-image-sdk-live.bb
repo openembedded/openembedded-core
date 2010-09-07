@@ -6,4 +6,6 @@ LABELS += "boot install"
 
 ROOTFS = "${DEPLOY_DIR_IMAGE}/poky-image-sdk-${MACHINE}.ext3"
 
+LICENSE = "MIT"
+
 do_bootimg[depends] += "poky-image-sdk:do_rootfs"
