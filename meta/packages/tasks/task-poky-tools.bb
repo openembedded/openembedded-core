@@ -44,6 +44,7 @@ RDEPENDS_task-poky-tools-profile = "\
 
 RRECOMMENDS_task-poky-tools-profile = "\
     perf \
+    trace-cmd \
     kernel-module-oprofile"
 
 #    exmap-console
