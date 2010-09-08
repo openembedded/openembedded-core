@@ -157,6 +157,7 @@ Default BBFILES are the .bb files in the current directory.""")
 
     configuration = BBConfiguration(options)
     configuration.pkgs_to_build.extend(args[1:])
+    configuration.initial_path = os.environ['PATH']
 
     #server = bb.server.xmlrpc
     server = bb.server.none

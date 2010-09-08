@@ -1042,6 +1042,7 @@ class RunQueueExecute:
                     env[comps[0]] = comps[1]
 
             env['BB_TASKHASH'] = self.rqdata.runq_hash[task]
+            env['PATH'] = self.cooker.configuration.initial_path
 
             sys.stdout.flush()
             sys.stderr.flush()
