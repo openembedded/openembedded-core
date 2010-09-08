@@ -95,6 +95,7 @@ RDEPENDS_task-poky-misc = "\
     elfutils \
     gettext \
     lsof \
+    man-pages \
     ncurses \
     strace \
     libusb1 \
