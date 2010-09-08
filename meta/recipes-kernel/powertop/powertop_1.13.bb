@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "virtual/libintl ncurses"
 
 # powertop 1.13 needs lspci
-REPENDS_${PN} = "pciutils"
+RDEPENDS_${PN} = "pciutils"
 
 PR = "r0"
 
