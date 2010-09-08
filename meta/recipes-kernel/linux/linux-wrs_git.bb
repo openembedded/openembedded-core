@@ -126,14 +126,6 @@ addtask wrlinux_configcheck after do_configure before do_compile
 
 inherit kernel
 
-# perf subpackage variables
-PROVIDES += perf
-
-PACKAGES =+ "perf"
-FILES_perf = "${bindir}/* \
-              ${libexecdir}"
-
-
 # perf tasks
 addtask compile_perf after do_compile before do_install
 addtask install_perf after do_install before do_package do_deploy

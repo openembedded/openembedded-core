@@ -501,3 +501,8 @@ do_deploy() {
 do_deploy[dirs] = "${DEPLOYDIR} ${B}"
 
 addtask deploy before do_package after do_install
+
+# perf must be enabled in individual kernel recipes
+PACKAGES =+ "perf"
+FILES_perf = "${bindir}/* \
+              ${libexecdir}"
