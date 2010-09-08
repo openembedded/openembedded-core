@@ -222,18 +222,6 @@ def init(urls, d, setup = True):
     urldata_cache[fn] = urldata
     return urldata
 
-def try_premirror(u, ud, d):
-    """
-    Should we try premirrors for this url, u?
-    We should if forcefetch is set or the localfile and md5 don't exist
-    """
-    if ud.method.forcefetch(u, ud, d):
-        return True
-    elif os.path.exists(ud.md5) and os.path.exists(ud.localfile):
-        return False
-    else:
-        return True
-
 def go(d, urls = None):
     """
     Fetch all urls
@@ -589,6 +577,17 @@ class Fetch(object):
         Assumes localpath was called first
         """
         raise NoMethodError("Missing implementation for url")
+
+    def try_premirror(self, url, urldata, d):
+        """
+        Should premirrors be used?
+        """
+        if urldata.method.forcefetch(url, urldata, d):
+            return True
+        elif os.path.exists(urldata.md5) and os.path.exists(urldata.localfile):
+            return False
+        else:
+            return True
 
     def checkstatus(self, url, urldata, d):
         """
