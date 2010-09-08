@@ -27,15 +27,28 @@ ENABLE_BINARY_LOCALE_GENERATION_pn-glibc-nativesdk = "0"
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
 BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
 
-PACKAGES = "glibc-dbg glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
-PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base-* glibc-binary-localedata-*"
+PKGSUFFIX = ""
+PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
-libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* ${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* ${base_libdir}/libutil* ${base_libdir}/libnsl* ${base_libdir}/libnss_files* ${base_libdir}/libnss_compat* ${base_libdir}/libnss_dns* ${base_libdir}/libdl* ${base_libdir}/libanl* ${base_libdir}/libBrokenLocale*"
+PACKAGES = "${PN}-dbg ${PN} catchsegv${PKGSUFFIX} sln${PKGSUFFIX} nscd${PKGSUFFIX} \
+	ldd${PKGSUFFIX} localedef${PKGSUFFIX} ${PN}-utils ${PN}-dev ${PN}-doc \
+	${PN}-locale libsegfault${PKGSUFFIX} ${PN}-extra-nss ${PN}-thread-db \
+	${PN}-pcprofile"
+
+PACKAGES_DYNAMIC = "glibc-gconv-* glibc-charmap-* glibc-localedata-* locale-base-* \
+	glibc-binary-localedata-*"
+
+libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* \
+	${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* \
+	${base_libdir}/libutil* ${base_libdir}/libnsl* ${base_libdir}/libnss_files* \
+	${base_libdir}/libnss_compat* ${base_libdir}/libnss_dns* ${base_libdir}/libdl* \
+	${base_libdir}/libanl* ${base_libdir}/libBrokenLocale*"
 
 # The problem is that if PN = "glibc", FILES_${PN} will overwrite FILES_glibc
 # Solution: Make them both the same thing, then it doesn't matter
 
-glibcfiles = "${sysconfdir} ${libc_baselibs} ${base_sbindir}/ldconfig ${libexecdir}/* ${datadir}/zoneinfo"
+glibcfiles = "${sysconfdir} ${libc_baselibs} ${base_sbindir}/ldconfig \
+	${libexecdir}/* ${datadir}/zoneinfo"
 glibcdbgfiles = "${bindir}/.debug ${sbindir}/.debug ${libdir}/.debug \
                   ${base_bindir}/.debug ${base_sbindir}/.debug ${base_libdir}/.debug \
                   ${libdir}/gconv/.debug ${libexecdir}/*/.debug"
@@ -45,22 +58,22 @@ glibcdevfiles = "${bindir}/rpcgen ${includedir} ${libdir}/lib*${SOLIBSDEV} ${lib
 
 FILES_glibc = "${glibcfiles}"
 FILES_${PN} = "${glibcfiles}"
-FILES_ldd = "${bindir}/ldd"
-FILES_libsegfault = "${base_libdir}/libSegFault*"
+FILES_ldd${PKGSUFFIX} = "${bindir}/ldd"
+FILES_libsegfault${PKGSUFFIX} = "${base_libdir}/libSegFault*"
 FILES_glibc-extra-nss = "${base_libdir}/libnss*"
 FILES_sln = "${base_sbindir}/sln"
 FILES_glibc-dev = "${glibcdevfiles}"
 FILES_${PN}-dev = "${glibcdevfiles}"
 FILES_glibc-dbg = "${glibcdbgfiles}"
 FILES_${PN}-dbg = "${glibcdbgfiles}"
-FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/nscd* ${sysconfdir}/init.d/nscd*"
+FILES_nscd${PKGSUFFIX} = "${sbindir}/nscd* ${sysconfdir}/nscd* ${sysconfdir}/init.d/nscd*"
 FILES_glibc-utils = "${bindir}/* ${sbindir}/*"
 FILES_glibc-gconv = "${libdir}/gconv/*"
-FILES_catchsegv = "${bindir}/catchsegv"
-RDEPENDS_catchsegv = "libsegfault"
+FILES_catchsegv${PKGSUFFIX} = "${bindir}/catchsegv"
+RDEPENDS_catchsegv${PKGSUFFIX} = "libsegfault"
 FILES_glibc-pcprofile = "${base_libdir}/libpcprofile.so"
 FILES_glibc-thread-db = "${base_libdir}/libthread_db*"
-FILES_localedef = "${bindir}/localedef"
+FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
 RPROVIDES_glibc-dev += "libc-dev"
 
 DESCRIPTION_sln = "glibc: create symbolic links between files"
