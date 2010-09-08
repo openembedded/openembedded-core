@@ -1101,6 +1101,7 @@ python do_package_setscene () {
 do_package_write () {
 	:
 }
+do_build[recrdeptask] += "do_package_write"
 addtask package_write before do_build after do_package
 
 EXPORT_FUNCTIONS do_package do_package_write
