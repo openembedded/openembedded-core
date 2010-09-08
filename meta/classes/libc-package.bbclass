@@ -266,7 +266,7 @@ python package_do_split_gconvs () {
 		if not qemu_options:
 			qemu_options = bb.data.getVar('QEMU_OPTIONS', d, 1)
 
-		cmd = "PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
+		cmd = "PSEUDO_RELOADED=YES PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
 			-E LD_LIBRARY_PATH=%s %s %s/bin/localedef %s" % \
 			(path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
 		bb.note("generating locale %s (%s)" % (locale, encoding))
