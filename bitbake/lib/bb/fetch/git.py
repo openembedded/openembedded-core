@@ -90,6 +90,12 @@ class Git(Fetch):
             return True
         return False
 
+    def try_premirror(self, d, ud):
+        if os.path.exists(ud.clonedir):
+            return False
+
+        return True
+
     def go(self, loc, ud, d):
         """Fetch url"""
 
