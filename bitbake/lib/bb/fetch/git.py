@@ -90,7 +90,7 @@ class Git(Fetch):
             return True
         return False
 
-    def try_premirror(self, d, ud):
+    def try_premirror(self, u, ud, d):
         if os.path.exists(ud.clonedir):
             return False
 
