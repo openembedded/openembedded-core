@@ -118,8 +118,15 @@
     </para>
     <para>
         <literallayout class='monospaced'>
-$ source poky-init-build-env
+$ source poky-init-build-env [build_dir]
 </literallayout>
+    </para>
+    <para>
+        The build_dir is the dir containing all the building object files. The default 
+        build dir is poky-dir/build. Multiple build_dir can be used for different targets. 
+        For example, ~/build/x86 for qemux86 target, and ~/build/arm for qemuarm target.
+        Please refer to <link linkend="structure-core-script">poky-init-build-env</link>
+        for detail info
     </para>
     <para>
         Once the Poky build environment is set up, a target can now be built using:
@@ -127,6 +134,7 @@ $ source poky-init-build-env
     <para>
         <literallayout class='monospaced'>
 $ bitbake &lt;target&gt;
+$ bitbake qemu-native
 </literallayout>
     </para>
     <para>
@@ -135,6 +143,8 @@ $ bitbake &lt;target&gt;
         or the name of a recipe for a specific piece of software like 
         <application>busybox</application>. More details about the standard images 
         are available in the <link linkend='ref-images'>image reference section</link>.
+        The qemu-native target will build the poky customized qemu, and will be used
+        by runqemu script later.
     </para>
 </section>
 
@@ -301,7 +311,7 @@ route add default gw 192.168.0.202 usb0
         <para>
             You can view a list of tasks in a given package by running
             the listtasks task e.g. <command>bitbake matchbox-desktop -c
-            listtasks</command>.
+            listtasks</command>, and the result is in file ${WORKDIR}/temp/log.do_listtasks.pid.
         </para>
     </section>
 
@@ -317,6 +327,8 @@ route add default gw 192.168.0.202 usb0
             directory. They show
             which packages and tasks depend on which other packages and
             tasks and are useful for debugging purposes.
+            <command>"bitbake -g -u depexp targetname"</command> will show result
+            in more human-readable GUI style.
         </para>
     </section>
 

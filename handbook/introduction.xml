@@ -30,7 +30,7 @@
             <para>Create a focused, stable, subset of OpenEmbedded that can be easily and reliably built and developed upon.</para>
         </listitem>
         <listitem>
-            <para>Fully support a wide range of x86 and ARM hardware and device virtulisation</para>
+            <para>Fully support a wide range of x86, ARM, MIPS, PowerPC hardware and device virtulisation</para>
         </listitem>
     </itemizedlist>
 
@@ -39,7 +39,7 @@
         based on open source software such as the Kdrive X server, the Matchbox
         window manager, the GTK+ toolkit and the D-Bus message bus system. Images
         for many kinds of devices can be generated, however the standard example
-        machines target QEMU full system emulation (both x86 and ARM) and the ARM based
+        machines target QEMU full system emulation(x86, ARM, MIPS and PowerPC) and the ARM based
         Sharp Zaurus series of devices. Poky's ability to boot inside a QEMU
         emulator makes it particularly suitable as a test platform for development
         of embedded software.
@@ -83,7 +83,11 @@
         of the components that make up Poky followed by information about using and
         debugging the Poky build system. The <link linkend='extendpoky'>'Extending Poky' section</link> 
         gives information about how to extend and customise Poky along with advice 
-        on how to manage these changes. The <link linkend='platdev'>'Platform Development with Poky' 
+        on how to manage these changes.
+        The <link linkend='bsp'>'Board Support Packages (BSP) - Developers Guide' section</link>
+        gives information about how to develop BSP such as the common layout, the
+        software hardware configuration options etc.
+        The <link linkend='platdev'>'Platform Development with Poky' 
         section</link> gives information about interaction between Poky and target
         hardware for common platform development tasks such as software development, 
         debugging and profiling. The rest of the manual
@@ -92,7 +96,7 @@
     </para>
 
     <para>
-        This manual applies to Poky Release 3.1 (Pinky).
+        This manual applies to Poky Release 3.3 (Green).
     </para>
 
 </section>
@@ -200,13 +204,14 @@ $ tar xjvf poky-green-3.3.tar.bz2
 $ cd green-3.3/
 $ source poky-init-build-env
 $ bitbake poky-image-sato
+$ bitbake qemu-native
 $ runqemu qemux86
 </literallayout>
         </para>
 
         <note>
         <para>
-            This process will need Internet access, about 3 GB of disk space
+            This process will need Internet access, about 20 GB of disk space
             available, and you should expect the build to take about 4 - 5 hours since
             it is building an entire Linux system from source including the toolchain!
         </para>
@@ -266,8 +271,8 @@ $ apt-get install qemu poky-scripts
                     Download a Poky QEMU release kernel (*zImage*qemu*.bin) and compressed
                     filesystem image (poky-image-*-qemu*.ext2.bz2) which
                     you'll need to decompress with 'bzip2 -d'. These are available from the
-                    <ulink url='http://pokylinux.org/releases/blinky-3.0/'>last release</ulink>
-                    or from the <ulink url='http://pokylinux.org/autobuild/poky/'>autobuilder</ulink>.
+                    <ulink url='http://pokylinux.org/releases/green-3.3/'>last release</ulink>
+                    or from the <ulink url='http://autobuilder.pokylinux.org/'>autobuilder</ulink>.
                 </para>
             </listitem>
             <listitem>
@@ -306,7 +311,7 @@ $ poky-qemu &lt;kernel&gt; &lt;image&gt;
         <para>
             We make nightly builds of Poky for testing purposes and to make the
             latest developments available. The output from these builds is available
-            at <ulink url='http://pokylinux.org/autobuild/'/>
+            at <ulink url='http://autobuilder.pokylinux.org/'/>
             where the numbers increase for each subsequent build and can be used to reference it.
         </para>
 
@@ -316,7 +321,7 @@ $ poky-qemu &lt;kernel&gt; &lt;image&gt;
             be used either as external standalone toolchains or can be combined with Poky as a
             prebuilt toolchain to reduce build time. Using the external toolchains is simply a
             case of untarring the tarball into the root of your system (it only creates files in
-            <filename class="directory">/usr/local/poky</filename>) and then enabling the option 
+            <filename class="directory">/opt/poky</filename>) and then enabling the option 
             in <filename>local.conf</filename>.
         </para>
 
