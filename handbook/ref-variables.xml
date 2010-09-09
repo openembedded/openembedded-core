@@ -107,29 +107,20 @@
         <glossentry id='var-COMPATIBLE_MACHINE'><glossterm>COMPATIBLE_MACHINE</glossterm>
             <glossdef>
                 <para>A regular expression which evalutates to match the machines the recipe 
-                works with. It stops recipes being run on machines they're incompatible with 
-                which is partciuarly useful with kernels. It also helps to to increase parsing 
-                speed as if its found the current machine is not compatible, further parsing 
-                of the recipe is skipped.</para>
+                works with. It stops recipes being run on machines they're incompatible with, 
+                which is partciuarly useful with kernels. It also helps to increase parsing 
+                speed that, further parsing of the recipe is skipped as if it found the current
+                machine is not compatible.</para>
             </glossdef>
         </glossentry>
 
         <glossentry id='var-CONFIG_SITE'><glossterm>CONFIG_SITE</glossterm>
             <glossdef>
                 <para>
-                    Contains a list of files which containing autoconf test results relevant 
+                    A list of files which contains autoconf test results relevant 
                     to the current build. This variable is used by the autotools utilities 
                     when running configure.
                 </para>
-            </glossdef>
-        </glossentry>
-
-
-        <glossentry id='var-CVS_TARBALL_STASH'><glossterm>CVS_TARBALL_STASH</glossterm>
-            <glossdef>
-                <para>Location to search for
-                pre-generated tarballs when fetching from remote SCM
-                repositories (CVS/SVN/GIT)</para>
             </glossdef>
         </glossentry>
 
@@ -256,6 +247,12 @@
                 <para>Variable which control which locales for glibc are
                 to be generated during build (useful if target device
                 has 64M RAM or less)</para>
+            </glossdef>
+        </glossentry>
+
+        <glossentry id='var-EXTRA_OECMAKE'><glossterm>EXTRA_OECMAKE</glossterm>
+            <glossdef>
+                <para>Additional cmake options</para>
             </glossdef>
         </glossentry>
 
@@ -427,13 +424,13 @@
             <glossdef>
                 <para>Checksums of the license text in the recipe source code.
                 </para>
-                <para>This variables tracks changes in license text of the source
-                code files. If the license text is changed it triggers the build
-                failure. Which gives developer an oppurtunity to review any 
-                license changes</para>
-                <para> This is an optional variable now. And the plan is to make
+                <para>This variable tracks changes in license text of the source
+                code files. If the license text is changed, it will trigger the build
+                failure, which gives developer an opportunity to review any 
+                license change</para>
+                <para> This is an optional variable now, and the plan is to make
                 it a required variable in the future </para>
-                <para>See the "meta/package/zlib/zlib_${PV}.bb" file for an example</para>
+                <para>See "meta/package/zlib/zlib_${PV}.bb" file for an example</para>
 
                 <para>More information in <link
                     linkend='usingpoky-configuring-LIC_FILES_CHKSUM'>
@@ -594,7 +591,7 @@
 
         <glossentry id='var-POKYLIBC'><glossterm>POKYLIBC</glossterm>
             <glossdef>
-                <para>Libc implementation selector - glibc or uclibc can be selected.</para>
+                <para>Libc implementation selector - glibc, eglibc, or uclibc can be selected.</para>
             </glossdef>
         </glossentry>
 
@@ -615,9 +612,9 @@
 
         <glossentry id='var-RCONFLICTS'><glossterm>RCONFLICTS</glossterm>
             <glossdef>
-                <para>List of packages which which conflict with this
-                    one. Package will not be installed if they will not
-                    be removed first.</para>
+                <para>List of packages which conflict with this
+                    one. Package will not be installed if they are not
+                    removed first.</para>
             </glossdef>
         </glossentry>
 
@@ -645,7 +642,7 @@
 
         <glossentry id='var-RRECOMMENDS'><glossterm>RRECOMMENDS</glossterm>
             <glossdef>
-                <para>List of packages which extend usability of
+                <para>List of packages which extend usability of the
                     package. Those packages will be automatically
                     installed but can be removed by user.</para>
             </glossdef>
@@ -702,16 +699,7 @@
             <glossdef>
                 <para>
                     A list of commands to run within the a shell, used by <glossterm><link
-                    linkend='var-TERMCMDRUN'>TERMCMDRUN</link></glossterm>. It defaults to  
-                    <glossterm><link linkend='var-SHELLRCCMD'>SHELLRCCMD</link></glossterm>.
-                </para>
-            </glossdef>
-        </glossentry>
-
-        <glossentry id='var-SHELLRCCMD'><glossterm>SHELLRCCMD</glossterm>
-            <glossdef>
-                <para>
-                    How to launch a shell, defaults to bash.
+                    linkend='var-TERMCMDRUN'>TERMCMDRUN</link></glossterm>.
                 </para>
             </glossdef>
         </glossentry>

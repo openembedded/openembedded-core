@@ -109,9 +109,6 @@
                 <para><glossterm linkend='var-BBINCLUDELOGS'><link linkend='var-BBINCLUDELOGS'>BBINCLUDELOGS</link></glossterm></para>
             </listitem>
             <listitem>
-                <para><glossterm linkend='var-CVS_TARBALL_STASH'><link linkend='var-CVS_TARBALL_STASH'>CVS_TARBALL_STASH</link></glossterm></para>
-            </listitem>
-            <listitem>
                 <para><glossterm linkend='var-ENABLE_BINARY_LOCALE_GENERATION'><link linkend='var-ENABLE_BINARY_LOCALE_GENERATION'>ENABLE_BINARY_LOCALE_GENERATION</link></glossterm></para>
             </listitem>
         </itemizedlist>
@@ -190,6 +187,9 @@
             <listitem>
                 <para><glossterm><link
                 linkend='var-DISTRO_PN_ALIAS'>DISTRO_PN_ALIAS</link></glossterm></para>
+            </listitem>
+            <listitem>
+                <para><glossterm><link linkend='var-EXTRA_OECMAKE'>EXTRA_OECMAKE</link></glossterm></para>
             </listitem>
             <listitem>
                 <para><glossterm><link linkend='var-EXTRA_OECONF'>EXTRA_OECONF</link></glossterm></para>
