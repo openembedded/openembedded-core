@@ -7,7 +7,7 @@
 
 <para>
     Poky consists of several components and understanding what these are 
-    and where they're located is one of the keys to using it. This section walks 
+    and where they're located is one of the keys to use it. This section walks 
     through the Poky directory structure giving information about the various 
     files and directories.
 </para>
@@ -40,7 +40,10 @@
 
         <para>
             This directory contains user configuration files and the output 
-            from Poky.
+            from Poky. It's now deprecated to be a sub-directory in Poky source tree,
+            though it's still supported. The desired way is to use <link 
+            linkend='structure-core-script'>seperate output directory</link> for build
+            outside of Poky source tree.
         </para>
     </section>
 
@@ -61,6 +64,15 @@
             This directory is similar to <filename class="directory">meta/</filename>, 
             and contains some extra metadata not included in standard Poky.  These are 
             disabled by default, and are not supported as part of Poky.
+        </para>
+    </section>
+
+    <section id='structure-core-meta-***'>
+        <title><filename class="directory">meta-***/</filename></title>
+
+        <para>
+            These directories are optional layers to be added to core metadata, which
+            are enabled by adding them to conf/bblayers.conf.
         </para>
     </section>
 
@@ -108,6 +120,14 @@
 
     </section>
 
+    <section id='handbook'>
+        <title><filename class="directory">handbook</filename></title>
+
+        <para>
+            This is the location where this handbook is generated
+        </para>
+    </section>
+
     <section id='structure-core-script'>
         <title><filename>poky-init-build-env</filename></title>
 
@@ -116,7 +136,18 @@
             a shell makes changes to PATH and sets other core BitBake variables based on the
             current working directory. You need to use this before running Poky commands.
             Internally it uses scripts within the <filename class="directory">scripts/ 
-            </filename> directory to do the bulk of the work.
+            </filename> directory to do the bulk of the work. Now this script supports
+            specifying any directory as the build output:
+        </para>
+
+        <programlisting>
+source POKY_SRC/poky-init-build-env [BUILDDIR]
+        </programlisting>
+
+        <para>
+            Above command can be typed from any directory, as long as POKY_SRC points to
+            the desired Poky source tree. The optional BUILDDIR could be any directory you'd
+            like to contain output contents.
         </para>
     </section>
 </section>
@@ -142,6 +173,16 @@
             Edit this file to set the <glossterm><link linkend='var-MACHINE'>MACHINE</link></glossterm> for which you want to build, which package types you
             wish to use (PACKAGE_CLASSES) or where downloaded files should go 
             (<glossterm><link linkend='var-DL_DIR'>DL_DIR</link></glossterm>).
+        </para>
+    </section>
+
+    <section id='structure-build-conf-bblayers.conf'>
+        <title><filename>build/conf/bblayers.conf</filename></title>
+
+        <para>
+            This file defines layers walked by bitbake. If there's no <filename>
+            bblayers.conf</filename> present, it is created from <filename>bblayers.conf.sample
+            </filename>.
         </para>
     </section>
 
@@ -181,6 +222,15 @@
         </para>
     </section>
 
+    <section id='structure-build-tmp-deploy-rpm'>
+        <title><filename class="directory">build/tmp/deploy/rpm/</filename></title>
+
+        <para>
+            Any .rpm packages emitted by Poky are placed here, sorted into feeds for 
+            different architecture types.
+        </para>
+    </section>
+
     <section id='structure-build-tmp-deploy-images'>
         <title><filename class="directory">build/tmp/deploy/images/</filename></title>
 
@@ -194,17 +244,6 @@
         <title><filename class="directory">build/tmp/deploy/ipk/</filename></title>
 
         <para>Any resulting .ipk packages emitted by Poky are placed here.</para>
-    </section>
-
-    <section id='structure-build-tmp-rootfs'>
-        <title><filename class="directory">build/tmp/rootfs/</filename></title>
-
-        <para>
-            This is a temporary scratch area used when creating filesystem images. It is run
-            under fakeroot and is not useful once that fakeroot session has ended as 
-            information is lost. It is left around since it is still useful in debugging 
-            image creation problems.
-        </para>
     </section>
 
     <section id='structure-build-tmp-sysroots'>
@@ -224,7 +263,38 @@
         <para>
             This is used by BitBake for accounting purposes to keep track of which tasks 
             have been run and when. It is also subdivided by architecture. The files are 
-            empty and the important information is the filenames and timestamps.</para>
+            empty and the important information is the filenames and timestamps.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-log'>
+        <title><filename class="directory">build/tmp/log/</filename></title>
+
+        <para>
+            This contains some general logs if not placing in a package's
+            <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>, such as
+            the log output from check_pkg or distro_check tasks.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-pkgdata'>
+        <title><filename class="directory">build/tmp/pkgdata/</filename></title>
+
+        <para>
+            This is an intermediate place for saving packaging data, which will be used
+            in later packaging process. For detail please refer to <link linkend='ref-classes-package'>
+            package.bbclass</link>.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-pstagelogs'>
+        <title><filename class="directory">build/tmp/pstagelogs/</filename></title>
+
+        <para>
+            This directory contains manifest for task based prebuilt. Each manifest is basically
+            a file list for installed files from a given task, which would be useful for later 
+            packaging or cleanup process.
+        </para>
     </section>
 
     <section id='structure-build-tmp-work'>
@@ -258,7 +328,8 @@
             linkend='var-WORKDIR'>WORKDIR</link></glossterm><filename 
             class="directory">/image/</filename> directory is where <command>make 
             install</command> places its output which is then split into subpackages 
-            within <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm><filename class="directory">/install/</filename>.
+            within <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>
+            <filename class="directory">/packages-split/</filename>.
         </para>
     </section>
 </section>
@@ -327,15 +398,102 @@
         </para>
     </section>
 
+    <section id='structure-meta-recipes-bsp'>
+        <title><filename class="directory">meta/recipes-bsp/</filename></title>
+
+        <para>
+            Anything linking to specific hardware or hardware configuration information
+            are placed here, such as uboot, grub, etc.
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-connectivity'>
+        <title><filename class="directory">meta/recipes-connectivity/</filename></title>
+
+        <para>
+            Libraries and applications related to communication with other devices
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-core'>
+        <title><filename class="directory">meta/recipes-core/</filename></title>
+
+        <para>
+            What's needed to build a basic working Linux image including commonly used dependencies
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-devtools'>
+        <title><filename class="directory">meta/recipes-devtools/</filename></title>
+
+        <para>
+            Tools primarily used by the build system (but can also be used on targets)
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-extended'>
+        <title><filename class="directory">meta/recipes-extended/</filename></title>
+
+        <para>
+            Applications which whilst not essential add features compared to the alternatives in 
+            core. May be needed for full tool functionality or LSB compliance.
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-gnome'>
+        <title><filename class="directory">meta/recipes-gnome/</filename></title>
+
+        <para>
+            All things related to the GTK+ application framework
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-graphics'>
+        <title><filename class="directory">meta/recipes-graphics/</filename></title>
+
+        <para>
+            X and other graphically related system libraries
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-kernel'>
+        <title><filename class="directory">meta/recipes-kernel/</filename></title>
+
+        <para>
+            The kernel and generic applications/libraries with strong kernel dependencies
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-multimedia'>
+        <title><filename class="directory">meta/recipes-multimedia/</filename></title>
+
+        <para>
+            Codecs and support utilties for audio, images and video
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-qt'>
+        <title><filename class="directory">meta/recipes-qt/</filename></title>
+
+        <para>
+            All things related to the QT application framework
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-sato'>
+        <title><filename class="directory">meta/recipes-sato/</filename></title>
+
+        <para>
+            The Sato demo/reference UI/UX, its associated apps and configuration
+        </para>
+    </section>
+
     <section id='structure-meta-packages'>
         <title><filename class="directory">meta/packages/</filename></title>
 
         <para>
-            Each application (package) Poky can build has an associated .bb file which are 
-            all stored under this directory. Poky finds them through the BBFILES variable 
-            which defaults to packages/*/*.bb. Adding a new piece of software to Poky 
-            consists of adding the appropriate .bb file. The .bb files from OpenEmbedded
-            upstream are usually compatible although they are not supported.
+            this is a catch-all place for the rest which not fits into above
+            recipes-***. Images and tasks are also placed here.
         </para>
     </section>
 

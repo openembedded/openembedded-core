@@ -6,9 +6,12 @@
 
     <para>
         Poky has several standard images covering most people's standard needs. A full 
-        list of image targets can be found by looking in the <filename class="directory">
-        meta/packages/images/</filename> directory. The standard images are listed below 
-        along with details of what they contain:
+        list of image targets can be found by looking in the directories 
+        <filename class="directory">  meta/recipes-core/images/</filename>, 
+        <filename class="directory">  meta/packages/images/</filename>, 
+        <filename class="directory">  meta/recipes-sato/images/</filename> and 
+        <filename class="directory">  meta/packages/meta/</filename>. The standard 
+        images are listed below along with details of what they contain:
     </para>
 
     <itemizedlist>
