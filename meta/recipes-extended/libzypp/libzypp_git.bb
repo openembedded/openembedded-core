@@ -10,7 +10,7 @@ DEPENDS  = "rpm boost gettext curl libxml2 zlib sat-solver expat openssl udev"
 
 S = "${WORKDIR}/git"
 PV = "0.0-git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
            file://no-doc.patch \
@@ -20,3 +20,5 @@ SRC_URI_append_mips = " file://mips-workaround-gcc-tribool-error.patch"
 
 FILES_${PN} += "${libdir}/zypp ${datadir}/zypp ${datadir}/icons"
 FILES_${PN}-dev += "${datadir}/cmake"
+
+EXTRA_OECMAKE += "-DLIB=lib"
