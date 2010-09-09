@@ -27,7 +27,7 @@
 
         <para>
             Before writing a recipe from scratch it is often useful to check
-            someone else hasn't written one already. OpenEmbedded is a good place 
+            whether someone else has written one already. OpenEmbedded is a good place 
             to look as it has a wider scope and hence a wider range of packages.
             Poky aims to be compatible with OpenEmbedded so most recipes should
             just work in Poky.
@@ -43,8 +43,8 @@
             <title>Single .c File Package (Hello World!)</title>
 
             <para>
-                To build an application from a single file stored locally requires a
-                recipe which has the file listed in the <glossterm><link
+                To build an application from a single file stored locally (e.g. under "files/")
+                requires a recipe which has the file listed in the <glossterm><link
                 linkend='var-SRC_URI'>SRC_URI</link></glossterm> variable. In addition 
                 the <function>do_compile</function> and <function>do_install</function> 
                 tasks need to be manually written. The <glossterm><link linkend='var-S'>
@@ -56,7 +56,7 @@
 DESCRIPTION = "Simple helloworld application"
 SECTION = "examples"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
+PR = "r0"
 
 SRC_URI = "file://helloworld.c"
 
@@ -73,8 +73,9 @@ do_install() {
             </programlisting>
 
             <para>
-                As a result of the build process "helloworld" and "helloworld-dbg"
-                packages will be built.
+                As a result of the build process "helloworld", "helloworld-dbg" and "hellworld-dev"
+                packages will be built by default. You can <link linkend='usingpoky-extend-addpkg-files'>
+                    control package process</link> yourself.
             </para>
         </section>
 
@@ -93,19 +94,27 @@ do_install() {
                 The result of the build will be automatically packaged and if
                 the application uses NLS to localise then packages with
                 locale information will be generated (one package per
-                language).
+                language). Below is one example (hello_2.2.bb)
             </para>
 
             <programlisting>
 DESCRIPTION = "GNU Helloworld application"
 SECTION = "examples"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
+PR = "r0"
 
-SRC_URI = "${GNU_MIRROR}/hello/hello-${PV}.tar.bz2"
+SRC_URI = "${GNU_MIRROR}/hello/hello-${PV}.tar.gz"
 
-inherit autotools
+inherit autotools gettext
             </programlisting>
+
+            <para>
+            <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link>
+            </glossterm> is used to <link linkend='usingpoky-configuring-LIC_FILES_CHKSUM'>
+                track source license change</link>. Autotool based recipe can be quickly
+            created this way like above example.
+            </para>
 
         </section>
 
@@ -132,23 +141,38 @@ inherit autotools
                 Some applications may require extra parameters to be passed to
                 the compiler, for example an additional header path. This can
                 be done buy adding to the <glossterm><link
-                        linkend='var-CFLAGS'>CFLAGS</link></glossterm> variable, as in the example below.
+                        linkend='var-CFLAGS'>CFLAGS</link></glossterm> variable, as in the example below:
+            </para>
+
+            <programlisting>
+CFLAGS_prepend = "-I ${S}/include "
+            </programlisting>
+
+            <para>
+            mtd-utils is an example as Makefile-based:
             </para>
 
             <programlisting>
 DESCRIPTION = "Tools for managing memory technology devices."
 SECTION = "base"
-DEPENDS = "zlib"
+DEPENDS = "zlib lzo e2fsprogs util-linux"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
 
-SRC_URI = "ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-${PV}.tar.gz"
+SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=v${PV}"
 
-CFLAGS_prepend = "-I ${S}/include "
+S = "${WORKDIR}/git/"
 
-do_install() {
-	oe_runmake install DESTDIR=${D}
+EXTRA_OEMAKE = "'CC=${CC}' 'CFLAGS=${CFLAGS} -I${S}/include -DWITHOUT_XATTR' \
+                'BUILDDIR=${S}'"
+
+do_install () {
+        oe_runmake install DESTDIR=${D} SBINDIR=${sbindir} MANDIR=${mandir} \
+                           INCLUDEDIR=${includedir}
+        install -d ${D}${includedir}/mtd/
+        for f in ${S}/include/mtd/*.h; do
+                install -m 0644 $f ${D}${includedir}/mtd/
+        done
 }
             </programlisting>
 
@@ -165,7 +189,7 @@ do_install() {
             </para>
 
             <para>
-                Below the "libXpm" recipe is used as an example. By
+                Below the "libXpm" recipe (libxpm_3.5.7.bb) is used as an example. By
                 default the "libXpm" recipe generates one package 
                 which contains the library
                 and also a few binaries. The recipe can be adapted to 
@@ -177,8 +201,9 @@ require xorg-lib-common.inc
 
 DESCRIPTION = "X11 Pixmap library"
 LICENSE = "X-BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ae764cfda68da96df20af9fbf9fe49bd"
-DEPENDS += "libxext"
+DEPENDS += "libxext libsm libxt"
+PR = "r3"
+PE = "1"
 
 XORG_PN = "libXpm"
 
@@ -194,9 +219,12 @@ FILES_sxpm = "${bindir}/sxpm"
                 package as standard we prepend the <glossterm><link
                 linkend='var-PACKAGES'>PACKAGES</link></glossterm> variable so
                 additional package names are added to the start of list. The 
-                extra <glossterm><link linkend='var-PN'>FILES</link></glossterm>_*
+                extra <glossterm><link linkend='var-FILES'>FILES</link></glossterm>_*
                 variables then contain information to specify which files and
-                directories goes into which package. 
+                directories goes into which package. Files included by earlier
+                package are skipped by latter packages, and thus main <glossterm>
+                <link linkend='var-PN'>PN</link></glossterm> will not include 
+                above listed files
             </para>
         </section>
 
@@ -208,12 +236,15 @@ FILES_sxpm = "${bindir}/sxpm"
                 a <function>pkg_postinst_PACKAGENAME()</function> 
                 function to the .bb file
                 where PACKAGENAME is the name of the package to attach
-                the postinst script to. A post-installation function has the following structure:
+                the postinst script to. Normally <glossterm><link
+                linkend='var-PN'>PN</link></glossterm> can be used which expands
+                to PACKAGENAME automatically. A post-installation function has the 
+                following structure:
             </para>
             <programlisting>
 pkg_postinst_PACKAGENAME () {
-#!/bin/sh -e
-# Commands to carry out
+	#!/bin/sh -e
+	# Commands to carry out
 }
             </programlisting>
             <para>
@@ -234,12 +265,12 @@ pkg_postinst_PACKAGENAME () {
             
             <programlisting>
 pkg_postinst_PACKAGENAME () {
-#!/bin/sh -e
-if [ x"$D" = "x" ]; then
-# Actions to carry out on the device go here
-else
-exit 1
-fi
+	#!/bin/sh -e
+	if [ x"$D" = "x" ]; then
+		# Actions to carry out on the device go here
+	else
+		exit 1
+	fi
 }
             </programlisting>
             
@@ -349,7 +380,7 @@ RRECOMMENDS_task-custom-tools = "\
             </para>
 
             <para>
-                In this example, two tasks packages are created, task-custom-apps and 
+                In this example, two task packages are created, task-custom-apps and 
                 task-custom-tools with the dependencies and recommended package dependencies 
                 listed. To build an image using these task packages, you would then add 
                 "task-custom-apps" and/or "task-custom-tools" to <glossterm><link 
@@ -367,8 +398,9 @@ RRECOMMENDS_task-custom-tools = "\
                 variable. To create these, the best reference is <filename>meta/classes/poky-image.bbclass</filename>
                 which illustrates how poky achieves this. In summary, the file looks at the contents of the 
                 <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
-                variable and based on this generates the <glossterm><link linkend='var-IMAGE_INSTALL'>
-                IMAGE_INSTALL</link></glossterm> variable automatically. Extra features can be added by 
+                variable and then map into a set of tasks or packages. Based on this then the 
+                <glossterm><link linkend='var-IMAGE_INSTALL'> IMAGE_INSTALL</link></glossterm> 
+                variable is generated automatically. Extra features can be added by 
                 extending the class or creating a custom class for use with specialised image .bb files.
             </para>
         </section>
@@ -397,11 +429,11 @@ DISTRO_EXTRA_RDEPENDS += "strace"
                 DISTRO_EXTRA_RDEPENDS</link></glossterm> variable is for
                 distribution maintainers this method does not make
                 adding packages as simple as a custom .bb file. Using
-                this method, a few packages will need to be recreated
-                and the the image built.
+                this method, a few packages will need to be recreated if they have been
+                created before and then the image is rebuilt.
             </para>
             <programlisting>
-bitbake -cclean task-boot task-base task-poky
+bitbake -c clean task-boot task-base task-poky
 bitbake poky-image-sato
             </programlisting>
 
@@ -410,7 +442,7 @@ bitbake poky-image-sato
                 <glossterm><link linkend='var-DISTRO_EXTRA_RDEPENDS'>
                 DISTRO_EXTRA_RDEPENDS</link></glossterm> variable. There is no need to
                 build them by hand as Poky images depend on the packages they contain so
-                dependencies will be built automatically. For this reason we don't use the
+                dependencies will be built automatically when building the image. For this reason we don't use the
                 "rebuild" task in this case since "rebuild" does not care about
                 dependencies - it only rebuilds the specified package.
             </para>
@@ -451,7 +483,8 @@ bitbake poky-image-sato
             </glossterm> (e.g. "zImage") and <glossterm><link linkend='var-IMAGE_FSTYPES'>
             IMAGE_FSTYPES</link></glossterm> (e.g. "tar.gz jffs2") might also be 
             needed. Full details on what these variables do and the meaning of
-            their contents is available through the links.
+            their contents is available through the links. There're lots of existing
+            machine .conf files which can be easily leveraged from meta/conf/machine/.
         </para>
     </section>
 
@@ -461,10 +494,10 @@ bitbake poky-image-sato
              Poky needs to be able to build a kernel for the machine. You need 
              to either create a new kernel recipe for this machine or extend an 
              existing recipe. There are plenty of kernel examples in the 
-             packages/linux directory which can be used as references.
+             meta/recipes-kernel/linux directory which can be used as references.
         </para>
         <para>
-             If creating a new recipe  the "normal" recipe writing rules apply 
+             If creating a new recipe the "normal" recipe writing rules apply 
              for setting up a <glossterm><link linkend='var-SRC_URI'>SRC_URI
              </link></glossterm> including any patches and setting <glossterm>
              <link linkend='var-S'>S</link></glossterm> to point at the source 
@@ -481,8 +514,11 @@ bitbake poky-image-sato
             machine's defconfig files in a given kernel, possibly listing it in
             the SRC_URI and adding the machine to the expression in <glossterm>
             <link linkend='var-COMPATIBLE_MACHINE'>COMPATIBLE_MACHINE</link>
-            </glossterm>.
+            </glossterm>:
         </para>
+        <programlisting>
+COMPATIBLE_MACHINE = '(qemux86|qemumips)'
+        </programlisting>
     </section>
 
     <section id="platdev-newmachine-formfactor">
@@ -502,8 +538,21 @@ bitbake poky-image-sato
             under <filename>meta/packages/formfactor/files/MACHINENAME/</filename>
             where <literal>MACHINENAME</literal> is the name for which this infomation
             applies. For information about the settings available and the defaults, please see 
-            <filename>meta/packages/formfactor/files/config</filename>.
+            <filename>meta/packages/formfactor/files/config</filename>. Below is one
+            example for qemuarm:
         </para>
+        <programlisting>
+HAVE_TOUCHSCREEN=1
+HAVE_KEYBOARD=1
+
+DISPLAY_CAN_ROTATE=0
+DISPLAY_ORIENTATION=0
+#DISPLAY_WIDTH_PIXELS=640
+#DISPLAY_HEIGHT_PIXELS=480
+#DISPLAY_BPP=16
+DISPLAY_DPI=150
+DISPLAY_SUBPIXEL_ORDER=vrgb
+        </programlisting>
     </section>
 </section>
 
@@ -536,11 +585,13 @@ bitbake poky-image-sato
            </para>
 
            <para>
-               The Poky tree includes two additional layers which demonstrate
-               this functionality, meta-moblin and meta-extras.
-               The meta-extras repostory is not enabled by default but enabling
-               it is as easy as adding the layers path to the BBLAYERS variable in
-               your bblayers.conf, this is how all layers are enabled in Poky builds:
+               The Poky tree includes several additional layers which demonstrate
+               this functionality, such as meta-moblin, meta-emenlow, meta-extras.
+               Default layers enabled are meta-moblin and meta-emenlow, which may
+               suffer from future changes. The meta-extras repostory is not enabled 
+               by default but enabling any layer is as easy as adding the layers path 
+               to the BBLAYERS variable in your bblayers.conf. this is how meta-extras
+               are enabled in Poky builds:
           </para>
           <para>
                <literallayout class='monospaced'>LCONF_VERSION = "1"
@@ -549,6 +600,7 @@ BBFILES ?= ""
 BBLAYERS = " \
   /path/to/poky/meta \
   /path/to/poky/meta-moblin \
+  /path/to/poky/meta-emenlow \
   /path/to/poky/meta-extras \
   "
 </literallayout>
@@ -563,23 +615,23 @@ BBLAYERS = " \
           </para>
 
           <para>
-               The meta-extras layer.conf demonstrates the required syntax:
+               The meta-emenlow/conf/layer.conf demonstrates the required syntax:
                <literallayout class='monospaced'># We have a conf and classes directory, add to BBPATH
-BBPATH := "${BBPATH}${LAYERDIR}"
+BBPATH := "${BBPATH}:${LAYERDIR}"
 
 # We have a packages directory, add to BBFILES
-BBFILES := "${BBFILES} ${LAYERDIR}/packages/*/*.bb"
+BBFILES := "${BBFILES} ${LAYERDIR}/packages/*/*.bb \
+        ${LAYERDIR}/packages/*/*.bbappend"
 
-BBFILE_COLLECTIONS += "extras"
-BBFILE_PATTERN_extras := "^${LAYERDIR}/"
-BBFILE_PRIORITY_extras = "5"
-
-require conf/distro/include/poky-extras-src-revisions.inc
+BBFILE_COLLECTIONS += "emenlow"
+BBFILE_PATTERN_emenlow := "^${LAYERDIR}/"
+BBFILE_PRIORITY_emenlow = "6"
                </literallayout>
           </para>
 
           <para>
-                As can be seen, the layers recipes are added to BBFILES. The
+                As can be seen, the layers recipes are added to 
+                <glossterm> <link linkend='var-BBFILES'>BBFILES</link></glossterm>. The
                 BBFILE_COLLECTIONS variable is then appended to with the
                 layer name. The BBFILE_PATTERN variable is immediately expanded
                 with a regular expression used to match files from BBFILES into
@@ -588,15 +640,17 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 priorities to the files in different layers. This is useful
                 in situations where the same package might appear in multiple
                 layers and allows you to choose which layer should 'win'.
-                Note the use of LAYERDIR with the immediate expansion operator.
-                LAYERDIR expands to the directory of the current layer and
+                Note the use of <glossterm><link linkend='var-LAYERDIR'>
+                LAYERDIR</link></glossterm> with the immediate expansion operator.
+                <glossterm><link linkend='var-LAYERDIR'>LAYERDIR</link></glossterm>
+                expands to the directory of the current layer and
                 requires use of the immediate expansion operator so that Bitbake
                 does not lazily expand the variable when it's parsing a
                 different directory.
             </para>
 
             <para>
-                Extra bbclasses and configuration are added to the BBPATH
+                Emenlow bbclasses and configuration are added to the BBPATH
                 environment variable. In this case, the first file with the
                 matching name found in BBPATH is the one that is used, just
                 like the PATH variable for binaries. It is therefore recommended
@@ -630,8 +684,18 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 summarises the change and starts with the name of any package affected
                 work well. Not all changes are to specific packages so the prefix could 
                 also be a machine name or class name instead. If a change needs a longer 
-                description this should follow the summary.
+                description this should follow the summary:
             </para>
+
+            <literallayout class='monospaced'>
+    bitbake/data.py: Add emit_func() and generate_dependencies() functions
+    
+    These functions allow generation of dependency data between funcitons and
+    variables allowing moves to be made towards generating checksums and allowing
+    use of the dependency information in other parts of bitbake.
+    
+    Signed-off-by: Richard Purdie rpurdie@linux.intel.com
+            </literallayout>
 
             <para>
                 Any commit should be self contained in that it should leave the 
@@ -655,7 +719,7 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 it easy to miss incrementing it when updating the recipe.
                 When upgrading the version of a package (<glossterm><link 
                 linkend='var-PV'>PV</link></glossterm>), the <glossterm><link 
-                linkend='var-PR'>PR</link></glossterm> variable should be removed.
+                linkend='var-PR'>PR</link></glossterm> variable should be reset to "r0".
             </para>
 
             <para>
@@ -675,7 +739,7 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 the repository and don't have to remember to rebuild any sections.
                 The second is to ensure that target users are able to upgrade their
                 devices via their package manager such as with the <command>
-                opkg update;opkg upgrade</command> commands (or similar for 
+                opkg upgrade</command> commands (or similar for 
                 dpkg/apt or rpm based systems). The aim is to ensure Poky has 
                 upgradable packages in all cases.
             </para>
@@ -708,6 +772,8 @@ require conf/distro/include/poky-extras-src-revisions.inc
                 are builds that build everything from the ground up and test everything. 
                 They usually happen at preset times such as at night when the machine 
                 load isn't high from the incremental builds.
+                <ulink url='http://autobuilder.pokylinux.org:8010'>poky autobuilder</ulink>
+                is an example implementation with buildrot.
             </para>
 
             <para>
@@ -783,11 +849,14 @@ src/gz beagleboard http://www.mysite.com/somedir/deploy/ipk/beagleboard</literal
         </para>
 
         <programlisting>
-bitbake --cmd compile --force NAME_OF_PACKAGE
+bitbake -c compile -f NAME_OF_PACKAGE
         </programlisting>
 
         <para>
-            Other tasks may also be called this way.
+            "-f" or "--force" is used to force re-execution of the specified task.
+            Other tasks may also be called this way. But note that all the modifications
+            in <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>
+            are gone once you executes "-c clean" for a pacakge.
         </para>
 
         <section id='usingpoky-modifying-packages-quilt'>
@@ -840,10 +909,11 @@ SRC_URI += "file://NAME-OF-PATCH.patch"
 
     </section>
     <section id='usingpoky-configuring-LIC_FILES_CHKSUM'>
-        <title>Configuring the LIC_FILES_CHKSUM variable</title>
+        <title>Track license change</title>
         <para>
-        The changes in the license text inside source code files is tracked
-        using the LIC_FILES_CHKSUM metadata variable.
+        The license of one upstream project may change in the future, and Poky provides
+        one mechanism to track such license change - <glossterm>
+        <link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm> variable.
         </para>
 
         <section id='usingpoky-specifying-LIC_FILES_CHKSUM'>
@@ -855,6 +925,26 @@ LIC_FILES_CHKSUM = "file://COPYING; md5=xxxx \
                     file://licfile2.txt; endline=50;md5=zzzz \
                     ..."
             </programlisting>
+
+            <para>
+            <glossterm><link linkend='var-S'>S</link></glossterm> is the default directory
+            for searching files listed in <glossterm><link linkend='var-LIC_FILES_CHKSUM'>
+            LIC_FILES_CHKSUM</link></glossterm>. Relative path could be used too:
+            </para>
+
+            <programlisting>
+LIC_FILES_CHKSUM = "file://src/ls.c;startline=5;endline=16;\
+                                    md5=bb14ed3c4cda583abc85401304b5cd4e"
+LIC_FILES_CHKSUM = "file://../license.html;md5=5c94767cedb5d6987c902ac850ded2c6"
+            </programlisting>
+
+            <para>
+            The first line locates a file in <glossterm><link linkend='var-S'>
+            S</link></glossterm>/src/ls.c, and the second line refers to a file in 
+            <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>, which is the parent
+            of <glossterm><link linkend='var-S'>S</link></glossterm>
+            </para>
+
         </section>
 
         <section id='usingpoky-LIC_FILES_CHKSUM-explanation-of-syntax'>
@@ -873,12 +963,12 @@ to specify "beginline" and "endline" parameters.
             </para>
             <para>
 The "md5" parameter stores the md5 checksum of the license text. So if
-the license text changes in any way from a file, then it's md5 sum will differ and will not
+the license text changes in any way from a file, then its md5 sum will differ and will not
 match with the previously stored md5 checksum. This mismatch will trigger build
 failure, notifying developer about the license text md5 mismatch, and allowing
 the developer to review the license text changes. Also note that if md5 checksum
 is not matched while building, the correct md5 checksum is printed in the build
-log.
+log which can be easily copied to .bb file.
             </para>
             <para>
 There is no limit on how many files can be specified on this parameter. But generally every
@@ -891,7 +981,7 @@ is valid then tracking only that file would be enough.
                 <para>
 1. If you specify empty or invalid "md5" parameter; then while building
 the package, bitbake will give md5 not matched error, and also show the correct
-"md5" parameter value in the build log
+"md5" parameter value both on the screen and in the build log 
                 </para>
                 <para>
 2. If the whole file contains only license text, then there is no need to
@@ -901,22 +991,23 @@ specify "beginline" and "endline" parameters.
         </section>
     </section>
     <section id='usingpoky-configuring-DISTRO_PN_ALIAS'>
-        <title>Configuring the DISTRO_PN_ALIAS variable</title>
+        <title>Handle package name alias</title>
         <para>
-Sometimes the names of the same packages are different in different
-linux distributions; and that can becomes an issue for the distro_check
-task to check if the given recipe package exists in other linux distros.
-This issue is avoided by defining per distro recipe name alias:
-DISTRO_PN_ALIAS
+Poky implements a distro_check task which automatically connects to major distributions
+and checks whether they contains same package. Sometimes the same package has different 
+names in different distributions, which results in a mismatch from distro_check task
+This can be solved by defining per distro recipe name alias - 
+<glossterm><link linkend='var-DISTRO_PN_ALIAS'>DISTRO_PN_ALIAS</link></glossterm>
         </para>
 
         <section id='usingpoky-specifying-DISTRO_PN_ALIAS'>
             <title>Specifying the DISTRO_PN_ALIAS variable </title>
 
             <programlisting>
-DISTRO_PN_ALIAS_pn = "distro1=package_name_alias1 distro2=package_name_alias2 \
-                           distro3=package_name_alias3 \
-                           ..."
+DISTRO_PN_ALIAS_pn-PACKAGENAME = "distro1=package_name_alias1 \
+                                  distro2=package_name_alias2 \
+                                  distro3=package_name_alias3 \
+                                  ..."
             </programlisting>
             <para>
 Use space as the delimiter if there're multiple distro aliases
