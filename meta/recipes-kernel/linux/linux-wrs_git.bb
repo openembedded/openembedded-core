@@ -29,6 +29,9 @@ PR = "r6"
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
 
+# functionality flags
+force_revisions = "t"
+
 do_patch() {
 	cd ${S}
 	if [ -f ${WORKDIR}/defconfig ]; then
@@ -51,6 +54,29 @@ do_patch() {
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not modify ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
+	fi
+}
+
+validate_branches() {
+	branch_head=`git show-ref -s --heads ${WRMACHINE}-${LINUX_KERNEL_TYPE}`
+	meta_head=`git show-ref -s --heads wrs_meta`
+	target_branch_head="${SRCREV_pn-linux-wrs_machine}"
+	target_meta_head="${SRCREV_pn-linux-wrs_meta}"
+
+	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ]; then
+		if [ -n "${force_revisions}" ]; then
+			echo "Forcing branch ${WRMACHINE}-${LINUX_KERNEL_TYPE} to ${target_branch_head}"
+			git branch -m ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${WRMACHINE}-${LINUX_KERNEL_TYPE}-orig
+			git checkout -b ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${target_branch_head}
+		fi
+	fi
+
+	if [ "$meta_head" != "$target_meta_head" ]; then
+		if [ -n "${force_revisions}" ]; then
+			echo "Forcing branch wrs_meta to ${target_meta_head}"
+			git branch -m wrs_meta wrs_meta-orig
+			git checkout -b wrs_meta ${target_meta_head}
+		fi
 	fi
 }
 
@@ -79,6 +105,15 @@ IFS='
 		fi
 	fi
 	cd ${S}
+
+	# checkout and clobber and unimportant files
+	git checkout -f ${WRMACHINE}-${LINUX_KERNEL_TYPE}
+
+	validate_branches
+
+	# this second checkout is intentional, we want to leave ourselves
+	# on the branch to be built, but validate_branches could have changed
+	# our initial checkout. So we do it a second time to be sure
 	git checkout -f ${WRMACHINE}-${LINUX_KERNEL_TYPE}
 }
 do_wrlinux_checkout[dirs] = "${S}"
