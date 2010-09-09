@@ -43,7 +43,7 @@
                 </listitem>
                 <listitem>
                     <para>
-                        We have a Buildbot which provides continuous build and integration tests
+                        We have an autobuilder which provides continuous build and integration tests
                     </para>
                 </listitem>
             </itemizedlist>
@@ -207,7 +207,7 @@
     <qandaentry>
         <question>
             <para>
-                I see lots of 404 responses for files on http://folks.o-hand.com/~richard/poky/sources/*. Is something wrong?
+                I see lots of 404 responses for files on http://pokylinux.org/sources/*. Is something wrong?
             </para>
         </question>
         <answer>
@@ -278,7 +278,7 @@
         </question>
         <answer>
             <para>
-                The *-native targets are designed to run on the system the buil is running on. These are usually tools that are needed to assist the build in some way such as quilt-native which is used to apply patches. The non-native version is the one that would run on the target device.
+                The *-native targets are designed to run on the system the build is running on. These are usually tools that are needed to assist the build in some way such as quilt-native which is used to apply patches. The non-native version is the one that would run on the target device.
             </para>
         </answer>
     </qandaentry>

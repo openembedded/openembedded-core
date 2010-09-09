@@ -11,9 +11,9 @@
     file. Class files are identified by the extension 
     <filename class="extension">.bbclass</filename> and are usually placed 
     in a <filename class="directory">classes/</filename> directory beneath the 
-    <filename class="directory">meta/</filename> directory or the <filename 
-    class="directory">build/</filename> directory in the same way as <filename 
-    class="extension">.conf</filename> files in the <filename 
+    <filename class="directory">meta*/</filename> directory or the directory pointed
+    by BUILDDIR (e.g. <filename class="directory">build/</filename>)in the same way as
+    <filename class="extension">.conf</filename> files in the <filename 
     class="directory">conf</filename> directory. Class files are searched for 
     in BBPATH in the same was as <filename class="extension">.conf</filename> files too.
 </para>
@@ -34,10 +34,8 @@
         (runs any Makefile present), installing (empty by default) and packaging 
         (empty by default). These are often overridden or extended by other classes 
         such as <filename>autotools.bbclass</filename> or 
-        <filename>package.bbclass</filename>. The class contains some commonly
-        some commonly used functions such as <function>oe_libinstall</function>
-        and <function>oe_runmake</function>. The end of the class file has a 
-        list of standard mirrors for software projects for use by the fetcher code.
+        <filename>package.bbclass</filename>. The class also contains some commonly
+        used functions such as <function>oe_runmake</function>.
     </para>
 </section>
 
@@ -55,14 +53,14 @@
     </para>
 
     <para>
-        Its useful to have some idea of the tasks this class defines work and
-        what they do behind the scenes.
+        It's useful to have some idea on how the tasks defined by this class work
+        and what they do behind the scenes.
     </para>
 
     <itemizedlist>
       <listitem>
         <para>
-            'do_configure' regenearates the configure script and
+            'do_configure' regenearates the configure script and (using autoreconf)
             then launches it with a standard set of arguments used during
             cross-compilation. Additional parameters can be passed to 
             <command>configure</command> through the <glossterm><link 
@@ -86,16 +84,6 @@
       </listitem>
     </itemizedlist>
 
-    <para>
-        By default the class does not stage headers and libraries so
-        the recipe author needs to add their own <function>do_stage()</function>
-        task. For typical recipes the following example code will usually be
-        enough:
-       <programlisting>
-do_stage() {
-autotools_stage_all
-}</programlisting>
-    </para>
 </section>
 
 <section id='ref-classes-update-alternatives'>
@@ -150,6 +138,10 @@ autotools_stage_all
     </listitem>
     </varlistentry>
     </variablelist>
+
+    <para>
+	Currently, only one binary per package is supported.
+    </para>
 </section>
 
 <section id='ref-classes-update-rc.d'>
@@ -171,7 +163,7 @@ autotools_stage_all
     <title>Binary config scripts - <filename>binconfig.bbclass</filename></title>
 
     <para>
-        Before pkg-config became widespread, libraries shipped shell
+        Before pkg-config had become widespread, libraries shipped shell
         scripts to give information about the libraries and include paths needed 
         to build software (usually named 'LIBNAME-config'). This class assists
         any recipe using such scripts.
@@ -305,8 +297,8 @@ autotools_stage_all
         output. The core generic functionality is in
         <filename>package.bbclass</filename>, code specific to particular package
         types is contained in various sub classes such as
-        <filename>package_deb.bbclass</filename> and <filename>package_ipk.bbclass</filename>.
-        Most users will
+        <filename>package_deb.bbclass</filename>, <filename>package_ipk.bbclass</filename>
+        and <filename>package_rpm.bbclass</filename>. Most users will
         want one or more of these classes and this is controlled by the <glossterm>
         <link linkend='var-PACKAGE_CLASSES'>PACKAGE_CLASSES</link></glossterm> 
         variable. The first class listed in this  variable will be used for image 
@@ -326,10 +318,10 @@ autotools_stage_all
         directory to allow building of out-of-tree modules using <filename>module.bbclass</filename>.
     </para>
     <para>
-        The means that each kerel module built is packaged separately and inter-module dependencies are
+        This means that each kernel module built is packaged separately and inter-module dependencies are
         created by parsing the <command>modinfo</command> output. If all modules are
         required then installing the "kernel-modules" package will install all
-        packages with modules and various other kernel packages such as "kernel-vmlinux" are also generated.
+        packages with modules and various other kernel packages such as "kernel-vmlinux".
     </para>
 
     <para>
@@ -362,11 +354,11 @@ autotools_stage_all
     <title>Host System sanity checks - <filename>sanity.bbclass</filename></title>
 
     <para>
-        This class checks prerequisite software is present to try and identify
-        and notify the user of problems which will affect their build. It also
-        performs basic checks of the users configuration from local.conf to
-        prevent common mistakes and resulting build failures. Its usually up to 
-        distribution policy to include this class (Poky does).
+        This class checks prerequisite software is present to
+        notify the users problems that will affect their build. It also
+        performs basic checks of the user configuration from local.conf to
+        prevent common mistakes resulting in build failures. It's usually up to
+        distribution policy whether to include this class (Poky does).
     </para>
 </section>
 
@@ -376,10 +368,9 @@ autotools_stage_all
     <para>
         This class adds a step to package generation which sanity checks the
         packages generated by Poky. There are an ever increasing range of checks
-        this makes, checking for common problems which break builds/packages/images,
-        see the bbclass file for more information. Its usually up to distribution
-        policy to include this class (Poky does).
-        to soon).
+        it performs, checking for common problems which break builds/packages/images,
+        see the bbclass file for more information. It's usually up to distribution
+        policy whether to include this class (Poky does).
     </para>
 </section>
 
@@ -421,6 +412,7 @@ autotools_stage_all
         bootimg.bbclass
         ccache.inc
         ccdv.bbclass
+        cmake.bbclass
         cml1.bbclass
         cross.bbclass
         flow-lossage.bbclass
@@ -430,6 +422,7 @@ autotools_stage_all
         gtk-icon-cache.bbclass
         icecc.bbclass
         lib_package.bbclass
+        mirrors.bbclass
         mozilla.bbclass
         multimachine.bbclass
         native.bbclass
@@ -450,6 +443,7 @@ autotools_stage_all
         syslinux.bbclass
         tinderclient.bbclass
         tmake.bbclass
+        utils.bbclass
         xfce.bbclass
         xlibs.bbclass
 -->

@@ -19,7 +19,7 @@
 
     <para>
         Problems with Poky should be reported in the 
-        <ulink url='http://bugzilla.o-hand.com/'>bug tracker</ulink>.
+        <ulink url='http://bugzilla.pokylinux.org/'>bug tracker</ulink>.
     </para>
 </section>
 
@@ -127,10 +127,10 @@ poky+subscribe &lt;at&gt; openedhand &lt;dot&gt; com
 </programlisting>
 
     <para>
-        A Poky contributions tree (poky-contrib) exists for people to stage 
-        contributions in, for regular contributors. If people desire such 
-        access, please ask on the mailing list. Usually access will be given
-        to anyone with a proven track record of good patches.
+        A Poky contributions tree (poky-contrib, git://git.pokylinux.org/poky-contrib.git)
+        exists for people to stage contributions in, for regular contributors.
+        If people desire such access, please ask on the mailing list. Usually
+        access will be given to anyone with a proven track record of good patches.
     </para>
 
 </section>
