@@ -28,18 +28,18 @@
             OpenEmbedded build systems. It is intended that this information can be 
             used by other systems besides Poky/OpenEmbedded and that it will be simple
             to extract information and convert to other formats if required. The format 
-            descriped can be directly accepted as a layer by Poky using its standard 
-            layers mechanism but its important to recognise that the BSP captures all 
-            the hardware specific details in one place in a standard format which is 
+            described can be directly accepted as a layer by Poky using its standard 
+            layers mechanism, but it is important to recognise that the BSP captures all 
+            the hardware specific details in one place in a standard format, which is 
             useful for any person wishing to use the hardware platform regardless of 
             the build system in use.
         </para>
 
         <para>
-            The BSP specification does not include a build system or other tooling, 
+            The BSP specification does not include a build system or other tools, 
             it is concerned with the hardware specific components only. At the end 
             distribution point the BSP may be shipped combined with a build system
-            and other tools but it is important to maintain the distinction that these
+            and other tools, but it is important to maintain the distinction that these
             are separate components which may just be combined in certain end products.
         </para>
 
@@ -47,7 +47,7 @@
             <title>Example Filesystem Layout</title>
 
             <para>
-                The BSP consists of a file structure inside a base directory, meta-bsp in this example where "bsp" is a placeholder for the machine or platform name. Examples of some files that it could contain are:
+                The BSP consists of a file structure inside a base directory, meta-bsp in this example, where "bsp" is a placeholder for the machine or platform name. Examples of some files that it could contain are:
             </para>
 
             <para>
@@ -108,9 +108,9 @@ BBPATH := "${BBPATH}${LAYERDIR}"
 # We have a packages directory, add to BBFILES
 BBFILES := "${BBFILES} ${LAYERDIR}/packages/*/*.bb"
 
-BBFILE_COLLECTIONS += "meta-bsp"
-BBFILE_PATTERN_meta-bsp := "^${LAYERDIR}/"
-BBFILE_PRIORITY_meta-bsp = "5"
+BBFILE_COLLECTIONS += "bsp"
+BBFILE_PATTERN_bsp := "^${LAYERDIR}/"
+BBFILE_PRIORITY_bsp = "5"
                 </programlisting>
             </para>
 
@@ -129,7 +129,7 @@ BBFILE_PRIORITY_meta-bsp = "5"
 
             <para>
                 The machine files bind together all the information contained elsewhere
-                in the BSP into a format that Poky/OpenEmbedded can understand it in. If
+                in the BSP into a format that Poky/OpenEmbedded can understand. If
                 the BSP supports multiple machines, multiple machine configuration files
                 can be present. These filenames correspond to the values users set the
                 MACHINE variable to.
@@ -139,7 +139,7 @@ BBFILE_PRIORITY_meta-bsp = "5"
                 These files would define things like which kernel package to use
                 (PREFERRED_PROVIDER of virtual/kernel), which hardware drivers to
                 include in different types of images, any special software components
-                that are needed, any bootloader information and also any special image
+                that are needed, any bootloader information, and also any special image
                 format requirements.
             </para>
 
@@ -165,7 +165,7 @@ TARGET_CC_ARCH = "-m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse"
             </para>
             <para>
                 which defines a new package architecture called "core2" and uses the
-                optimisation flags specified which are carefully chosen to give best
+                optimization flags specified, which are carefully chosen to give best
                 performance on atom cpus.
             </para>
             <para>
@@ -182,7 +182,7 @@ TARGET_CC_ARCH = "-m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse"
 
             <para>
                 These files make up the definition of a kernel to use with this
-                hardware. In this case its a complete self contained kernel with its own
+                hardware. In this case it is a complete self contained kernel with its own
                 configuration and patches but kernels can be shared between many
                 machines as well. Taking some specific example files:
             </para>
@@ -197,7 +197,7 @@ meta-bsp/packages/linux/linux-bsp_2.6.50.bb
                 be a release tarball, some git repository or source included in
                 the directory within the BSP itself. It then contains information about which 
                 patches to apply and how to configure and build it. It can reuse the main
-                Poky kernel build class meaning the definitions here can remain very simple.
+                Poky kernel build class, so the definitions here can remain very simple.
             </para>
             <para>
                <programlisting>
@@ -229,7 +229,7 @@ meta-bsp/packages/linux/linux-bsp-2.6.50/defconfig-bsp
             <para>
                 This area includes other pieces of software which the hardware may need for best
                 operation. These are just examples of the kind of things that may be
-                encountered. The are standard .bb file recipes in the usual Poky format
+                encountered. The are standard .bb file recipes in the usual Poky format,
                 so for examples, see standard Poky recipes. The source can be included directly, 
                 referred to in source control systems or release tarballs of external software projects.
             </para>
@@ -266,6 +266,36 @@ meta-bsp/packages/image-creator/image-creator-native_0.1.bb
             </para>
             <para>
                 These files only need be provided if the platform requires them.
+            </para>
+        </section>
+
+        <section id='bs-filelayout-bbappend'>
+            <title>Append BSP specific information to existing recipes</title>
+
+            <para>
+            Say you have a recipe like pointercal which has machine specific information in it,
+            and then you have your new bsp code in a layer. Before .bbappend extension is
+            introduced, you have to copy the whole pointercal recipe and files into your layer,
+            and then add the single file for your machine which is ugly.
+
+            .bbappend makes above work much easier, to allow bsp specific information merged
+            with original recipe easily. When bitbake finds any X.bbappend files, they will be
+            included after bitbake loads X.bb but before finalise and any anonymous methods run.
+            This allows bsp layer to poke around and do whatever it might want to customise
+            the original recipe.
+
+            .bbappend is expected to include below two lines in the head (which may be changed
+            in the future):
+            </para>
+
+            <programlisting>
+THISDIR := "${@os.path.dirname(bb.data.getVar('FILE', d, True))}"
+FILESPATH =. "${@base_set_filespath(["${THISDIR}/${PN}"], d)}:"
+            </programlisting>
+
+            <para>
+            Then bsp could add machine specific config files in layer directory, which will be
+            added by bitbake. You could look at meta-emenlow/packages/formfactor as example
             </para>
         </section>
 
