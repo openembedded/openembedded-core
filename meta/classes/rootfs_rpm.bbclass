@@ -200,8 +200,9 @@ EOF
 	log_check rootfs
 
 	# Workaround so the parser knows we need the resolve_package function!
-	exit 0
-	resolve_package foo || true
+	if false ; then
+		resolve_package foo || true
+	fi
 }
 
 rootfs_rpm_log_check() {
