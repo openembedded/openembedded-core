@@ -60,8 +60,8 @@ do_patch() {
 validate_branches() {
 	branch_head=`git show-ref -s --heads ${WRMACHINE}-${LINUX_KERNEL_TYPE}`
 	meta_head=`git show-ref -s --heads wrs_meta`
-	target_branch_head="${SRCREV_pn-linux-wrs_machine}"
-	target_meta_head="${SRCREV_pn-linux-wrs_meta}"
+	target_branch_head="${SRCREV_machine}"
+	target_meta_head="${SRCREV_meta}"
 
 	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ]; then
 		if [ -n "${force_revisions}" ]; then
