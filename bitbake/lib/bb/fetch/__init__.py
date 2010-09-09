@@ -234,8 +234,12 @@ def go(d, urls = None):
     for u in urls:
         ud = urldata[u]
         m = ud.method
+        premirror_fetch = True
+        localpath = ""
+
         if ud.localfile:
             if not m.try_premirror(u, ud, d):
+                premirror_fetch = False
                 # File already present along with md5 stamp file
                 # Touch md5 file to show activity
                 try:
@@ -243,9 +247,10 @@ def go(d, urls = None):
                 except:
                     # Errors aren't fatal here
                     pass
-                continue
+
             lf = bb.utils.lockfile(ud.lockfile)
             if not m.try_premirror(u, ud, d):
+                premirror_fetch = False
                 # If someone else fetched this before we got the lock,
                 # notice and don't try again
                 try:
@@ -253,12 +258,11 @@ def go(d, urls = None):
                 except:
                     # Errors aren't fatal here
                     pass
-                bb.utils.unlockfile(lf)
-                continue
 
-        # First try fetching uri, u, from PREMIRRORS
-        mirrors = [ i.split() for i in (bb.data.getVar('PREMIRRORS', d, 1) or "").split('\n') if i ]
-        localpath = try_mirrors(d, u, mirrors, False, m.forcefetch(u, ud, d))
+        if premirror_fetch:
+            # First try fetching uri, u, from PREMIRRORS
+            mirrors = [ i.split() for i in (bb.data.getVar('PREMIRRORS', d, 1) or "").split('\n') if i ]
+            localpath = try_mirrors(d, u, mirrors, False, m.forcefetch(u, ud, d))
 
         # Need to re-test forcefetch() which will return true if our copy is too old
         if m.forcefetch(u, ud, d) or not localpath:
