@@ -61,14 +61,14 @@
         <para>
             To use the plugin, a toolchain and SDK built by Poky is required along with Anjuta it's development
             headers and the Anjuta plugin. The Poky Anjuta plugin is available to download as a tarball at the
-            <ulink url='http://labs.o-hand.com/sources/anjuta-plugin-sdk/'>OpenedHand labs</ulink> page or
+            <ulink url='http://labs.o-hand.com/anjuta-poky-sdk-plugin/'>OpenedHand labs</ulink> page or
             directly from the Poky Git repository located at git://git.pokylinux.org/anjuta-poky; a web interface
-            to the repository can be accessed at <ulink url='http://git.pokylinux.org/cgit.cgi/anjuta-poky/'/>.
+            to the repository can be accessed at <ulink url='http://git.pokylinux.org/?p=anjuta-poky.git;a=summary'/>.
         </para>
         <para>
             See the README file contained in the project for more information on dependencies and building
-            the plugin. It's recommended you enable the experimental gdb integration by passing configure the
-            --enable-gdb-integration switch.
+            the plugin. If you want to disable remote gdb debugging, please pass --diable-gdb-integration
+            switch when doing configure.
         </para>
 
         <section id="platdev-appdev-external-anjuta-setup">
@@ -101,23 +101,33 @@
 
           <itemizedlist>
             
-            <listitem><para><guilabel>SDK root</guilabel>: this is the root directory of the SDK's sysroot
-                for an i586 SDK this will be <filename
-                  class="directory">/opt/poky/sysroots/i586-poky-linux</filename>.
+            <listitem><para><guilabel>SDK root</guilabel>: If we use external toolchain, we need to set SDK root.
+                this is the root directory of the SDK's sysroot. For an i586 SDK this will be <filename
+                  class="directory">/opt/poky/</filename>.
                 This directory will contain directories named like "bin",
-                "include", "var", etc. With the file chooser it is important
-                to enter into the "i586-poky-linux" subdirectory for this
-                example.</para></listitem>
+                "include", "var", etc. under your selected target architecture subdirectory<filename class="directory">
+                /opt/poky/sysroot/i586-poky-linux/</filename>. Needed cross compile tools are under
+                <filename class ="directory">/opt/poky/sysroot/i586-pokysdk-linux/</filename>
+                </para></listitem>
 
-            <listitem><para><guilabel>Toolchain triplet</guilabel>: this is the cross compile
-                triplet, e.g. "i586-poky-linux".</para></listitem>
+            <listitem><para><guilabel>Poky root</guilabel>: If we have local poky build tree, we need to set the Poky root.
+                this is the root directory of the poky build tree, if you build your i586 target architecture
+                under the subdirectory of build_x86 within your poky tree, the Poky root directory should be 
+                <filename class="directory">${Poky_tree}/build_x86/</filename>.
+               </para></listitem>
+
+            <listitem><para><guilabel>Target Architecture</guilabel>: this is the cross compile
+                triplet, e.g. "i586-poky-linux". This target triplet is the prefix extracted from
+                the set up script file name. For examle, "i586-poky-linux" is extracted from set up script file
+                <filename>/opt/poky/environment-setup-i586-poky-linux</filename>
+               </para></listitem>
 
             <listitem><para><guilabel>Kernel</guilabel>: use the file chooser to select the kernel
                 to use with QEMU</para></listitem>
 
             <listitem><para><guilabel>Root filesystem</guilabel>: use the file chooser to select
-                the root filesystem image, this should be an image (not a
-                tarball)</para></listitem>
+                the root filesystem directory, this is the directory where you use "poky-extract-sdk" command to 
+                extract the poky-image-sdk tarball.</para></listitem>
           </itemizedlist>
 <!-- DISBALED, TOO BIG!
         <screenshot>
@@ -448,8 +458,8 @@ $ bitbake matchbox-desktop -c devshell
                 A suitable gdb cross binary is required which runs on your host computer but
                 knows about the the ABI of the remote target. This can be obtained from
                 the the Poky toolchain, e.g. 
-                <filename>/usr/local/poky/eabi-glibc/arm/bin/arm-poky-linux-gnueabi-gdb</filename> 
-                which "arm" is the target architecture and "linux-gnueabi" the target ABI.
+                <filename>/opt/poky/sysroots/x86_64-pokysdk-linux/usr/bin/armv5te-poky-linux-gnueabi/arm-poky-linux-gnueabi-gdb</filename> 
+                which "x86_64" is the host architecture, "arm" is the target architecture and "linux-gnueabi" the target ABI.
             </para>
 
             <para>
@@ -457,7 +467,8 @@ $ bitbake matchbox-desktop -c devshell
                 the gdb-cross package so for example you would run:
                 <programlisting>bitbake gdb-cross</programlisting>
                 Once built, the cross gdb binary can be found at
-                <programlisting>tmp/sysroots/&lt;host-arch&lt;/usr/bin/&lt;target-abi&gt;-gdb </programlisting>
+                <programlisting>tmp/sysroots/&lt;host-arch&gt;/usr/bin/\
+&lt;target-arch&gt;-poky-&lt;target-abi&gt;/&lt;target-arch&gt;-poky-&lt;target-abi&gt;-gdb </programlisting>
             </para>
 
         </section>
@@ -494,17 +505,17 @@ $ bitbake matchbox-desktop -c devshell
                 by doing:
                 </para>
                 <programlisting>tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf -o \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/opkg.conf -o \
 tmp/rootfs/ update</programlisting>
                <para>
                 then,
                 </para>
                 <programlisting>tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/opkg.conf \
 -o tmp/rootfs install foo
 
 tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/opkg.conf \
 -o tmp/rootfs install foo-dbg</programlisting>
              <para>
                 which installs the debugging information too.
@@ -517,7 +528,7 @@ tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
             <para>
                 To launch the host GDB, run the cross gdb binary identified above with
                 the inferior binary specified on the commandline:
-                <programlisting>&lt;target-abi&gt;-gdb rootfs/usr/bin/foo</programlisting>
+                <programlisting>&lt;target-arch&gt;-poky-&lt;target-abi&gt;-gdb rootfs/usr/bin/foo</programlisting>
                 This loads the binary of program <emphasis>foo</emphasis>
                 as well as its debugging information. Once the gdb prompt
                 appears, you must instruct GDB to load all the libraries
