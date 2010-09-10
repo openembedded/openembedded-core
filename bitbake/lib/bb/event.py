@@ -34,7 +34,7 @@ worker_pid = 0
 worker_pipe = None
 useStdout = True
 
-class Event:
+class Event(object):
     """Base class for events"""
 
     def __init__(self):
