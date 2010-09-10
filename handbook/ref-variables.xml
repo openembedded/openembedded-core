@@ -109,7 +109,7 @@
                 <para>A regular expression which evalutates to match the machines the recipe 
                 works with. It stops recipes being run on machines they're incompatible with, 
                 which is partciuarly useful with kernels. It also helps to increase parsing 
-                speed that, further parsing of the recipe is skipped as if it found the current
+                speed as further parsing of the recipe is skipped as if it found the current
                 machine is not compatible.</para>
             </glossdef>
         </glossentry>

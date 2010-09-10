@@ -74,8 +74,8 @@ do_install() {
 
             <para>
                 As a result of the build process "helloworld", "helloworld-dbg" and "hellworld-dev"
-                packages will be built by default. You can <link linkend='usingpoky-extend-addpkg-files'>
-                    control package process</link> yourself.
+                packages will be built by default. It is possible to<link linkend='usingpoky-extend-addpkg-files'>
+                customise the packaging process</link>.
             </para>
         </section>
 
@@ -243,8 +243,8 @@ FILES_sxpm = "${bindir}/sxpm"
             </para>
             <programlisting>
 pkg_postinst_PACKAGENAME () {
-	#!/bin/sh -e
-	# Commands to carry out
+#!/bin/sh -e
+# Commands to carry out
 }
             </programlisting>
             <para>
@@ -265,12 +265,12 @@ pkg_postinst_PACKAGENAME () {
             
             <programlisting>
 pkg_postinst_PACKAGENAME () {
-	#!/bin/sh -e
-	if [ x"$D" = "x" ]; then
-		# Actions to carry out on the device go here
-	else
-		exit 1
-	fi
+#!/bin/sh -e
+if [ x"$D" = "x" ]; then
+	# Actions to carry out on the device go here
+else
+	exit 1
+fi
 }
             </programlisting>
             
@@ -398,7 +398,7 @@ RRECOMMENDS_task-custom-tools = "\
                 variable. To create these, the best reference is <filename>meta/classes/poky-image.bbclass</filename>
                 which illustrates how poky achieves this. In summary, the file looks at the contents of the 
                 <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
-                variable and then map into a set of tasks or packages. Based on this then the 
+                variable and then maps this into a set of tasks or packages. Based on this then the 
                 <glossterm><link linkend='var-IMAGE_INSTALL'> IMAGE_INSTALL</link></glossterm> 
                 variable is generated automatically. Extra features can be added by 
                 extending the class or creating a custom class for use with specialised image .bb files.
@@ -586,12 +586,11 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
 
            <para>
                The Poky tree includes several additional layers which demonstrate
-               this functionality, such as meta-moblin, meta-emenlow, meta-extras.
-               Default layers enabled are meta-moblin and meta-emenlow, which may
-               suffer from future changes. The meta-extras repostory is not enabled 
-               by default but enabling any layer is as easy as adding the layers path 
-               to the BBLAYERS variable in your bblayers.conf. this is how meta-extras
-               are enabled in Poky builds:
+               this functionality, such as meta-emenlow and meta-extras.
+               The meta-emenlow layer is an example layer enabled by default. The meta-extras 
+               repostory is not enabled by default but enabling any layer is as easy as adding
+               the layers path to the BBLAYERS variable in your bblayers.conf. this is how 
+               meta-extras are enabled in Poky builds:
           </para>
           <para>
                <literallayout class='monospaced'>LCONF_VERSION = "1"
@@ -650,7 +649,8 @@ BBFILE_PRIORITY_emenlow = "6"
             </para>
 
             <para>
-                Emenlow bbclasses and configuration are added to the BBPATH
+                Additional bbclass and configuration files can be locationed by 
+                bitbake through the addition to the BBPATH
                 environment variable. In this case, the first file with the
                 matching name found in BBPATH is the one that is used, just
                 like the PATH variable for binaries. It is therefore recommended
@@ -773,7 +773,7 @@ BBFILE_PRIORITY_emenlow = "6"
                 They usually happen at preset times such as at night when the machine 
                 load isn't high from the incremental builds.
                 <ulink url='http://autobuilder.pokylinux.org:8010'>poky autobuilder</ulink>
-                is an example implementation with buildrot.
+                is an example implementation with buildbot.
             </para>
 
             <para>
@@ -856,7 +856,7 @@ bitbake -c compile -f NAME_OF_PACKAGE
             "-f" or "--force" is used to force re-execution of the specified task.
             Other tasks may also be called this way. But note that all the modifications
             in <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>
-            are gone once you executes "-c clean" for a pacakge.
+            are gone once you executes "-c clean" for a package.
         </para>
 
         <section id='usingpoky-modifying-packages-quilt'>

@@ -60,7 +60,7 @@
     <itemizedlist>
       <listitem>
         <para>
-            'do_configure' regenearates the configure script and (using autoreconf)
+            'do_configure' regenearates the configure script (using autoreconf) and
             then launches it with a standard set of arguments used during
             cross-compilation. Additional parameters can be passed to 
             <command>configure</command> through the <glossterm><link 
