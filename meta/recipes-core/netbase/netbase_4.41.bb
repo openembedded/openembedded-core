@@ -2,7 +2,7 @@ DESCRIPTION = "This package provides the necessary infrastructure for basic TCP/
 HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPLv2"
-PR = "r0"
+PR = "r1"
 
 inherit update-rc.d
 
