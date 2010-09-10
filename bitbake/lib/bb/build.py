@@ -41,13 +41,17 @@ logger = logging.getLogger("BitBake.Build")
 __builtins__['bb'] = bb
 __builtins__['os'] = os
 
-# events
 class FuncFailed(Exception):
-    """
-    Executed function failed
-    First parameter a message
-    Second paramter is a logfile (optional)
-    """
+    def __init__(self, name, metadata, logfile = None):
+        self.name = name
+        self.metadata = metadata
+        self.logfile = logfile
+
+    def __str__(self):
+        msg = "Function '%s' failed" % self.name
+        if self.logfile:
+            msg += " (see %s for further information)" % self.logfile
+        return msg
 
 class TaskBase(event.Event):
     """Base class for task events"""
@@ -74,13 +78,16 @@ class TaskSucceeded(TaskBase):
 
 class TaskFailed(TaskBase):
     """Task execution failed"""
-    def __init__(self, msg, logfile, t, d ):
+
+    def __init__(self, task, logfile, metadata):
         self.logfile = logfile
-        self.msg = msg
-        TaskBase.__init__(self, t, d)
+        super(TaskFailed, self).__init__(task, metadata)
 
 class TaskInvalid(TaskBase):
-    """Invalid Task"""
+
+    def __init__(self, task, metadata):
+        super(TaskInvalid, self).__init__(task, metadata)
+        self._message = "No such task '%s'" % task
 
 # functions
 
@@ -171,12 +178,11 @@ def exec_func_python(func, d, runfile, logfile):
     comp = utils.better_compile(tmp, func, bbfile)
     try:
         utils.better_exec(comp, {"d": d}, tmp, bbfile)
-    except:
-        (t, value, tb) = sys.exc_info()
-
-        if t in [bb.parse.SkipPackage, bb.build.FuncFailed]:
+    except Exception as exc:
+        if isinstance(exc, (bb.parse.SkipPackage, bb.build.FuncFailed)):
             raise
-        raise FuncFailed("Function %s failed" % func, logfile)
+
+        raise FuncFailed(func, d, logfile)
 
 
 def exec_func_shell(func, d, runfile, logfile, flags):
@@ -207,7 +213,7 @@ def exec_func_shell(func, d, runfile, logfile, flags):
     f.close()
     os.chmod(runfile, 0775)
     if not func:
-        raise FuncFailed("Function not specified for exec_func_shell")
+        raise TypeError("Function argument must be a string")
 
     # execute function
     if flags['fakeroot'] and not flags['task']:
@@ -219,7 +225,7 @@ def exec_func_shell(func, d, runfile, logfile, flags):
     if ret == 0:
         return
 
-    raise FuncFailed("function %s failed" % func, logfile)
+    raise FuncFailed(func, d, logfile)
 
 
 def exec_task(fn, task, d):
@@ -310,16 +316,10 @@ def exec_task(fn, task, d):
         if not data.getVarFlag(task, 'nostamp', d) and not data.getVarFlag(task, 'selfstamp', d):
             make_stamp(task, d)
 
-    except FuncFailed as message:
-        # Try to extract the optional logfile
-        try:
-            (msg, logfile) = message
-        except:
-            logfile = None
-            msg = message
+    except FuncFailed as exc:
         if not quieterr:
-            logger.error("Task failed: %s" % message )
-            failedevent = TaskFailed(msg, logfile, task, d)
+            logger.error(str(exc))
+            failedevent = TaskFailed(exc.name, exc.logfile, task, d)
             event.fire(failedevent, d)
         return 1
 
