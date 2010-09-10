@@ -348,7 +348,7 @@ def better_exec(code, context, text, realfile = "<code>"):
         code = better_compile(code, realfile, realfile)
     try:
         exec(code, _context, context)
-    except:
+    except Exception:
         (t, value, tb) = sys.exc_info()
 
         if t in [bb.parse.SkipPackage, bb.build.FuncFailed]:
