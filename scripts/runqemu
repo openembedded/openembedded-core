@@ -205,14 +205,6 @@ elif [ "$MACHINE" = "qemumips" ]; then
     TARGET_SYS="mips-poky-linux"
 fi
 
-if [ ! -e $CROSSPATH/bin/cc ]; then
-   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/bin/cc
-fi
-
-if [ ! -e $CROSSPATH/bin/gcc ]; then
-   ln -s $CROSSPATH/bin/$TARGET_SYS-gcc $CROSSPATH/bin/gcc
-fi
-
 CROSSPATH=$TMPDIR/sysroots/$BUILD_SYS/usr/bin:$CROSSPATH
 
 SYSROOT_SETUP_SCRIPT=`which poky-find-native-sysroot`
