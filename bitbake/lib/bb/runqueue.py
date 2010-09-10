@@ -1054,7 +1054,7 @@ class RunQueueExecute:
         self.build_pipes[result[0]].close()
         del self.build_pipes[result[0]]
         if result[1] != 0:
-            self.task_fail(task, result[1])
+            self.task_fail(task, result[1]>>8)
         else:
             self.task_complete(task)
 
@@ -1259,7 +1259,9 @@ class RunQueueExecuteTasks(RunQueueExecute):
         Called when a task has failed
         Updates the state engine with the failure
         """
-        logger.error("Task %s (%s) failed with %s" % (task, self.rqdata.get_user_idstring(task), exitcode))
+        logger.error("Task %s (%s) failed with exit code '%s'", task,
+                     self.rqdata.get_user_idstring(task), exitcode)
+
         self.stats.taskFailed()
         fnid = self.rqdata.runq_fnid[task]
         self.failed_fnids.append(fnid)
