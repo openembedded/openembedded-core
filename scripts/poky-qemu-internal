@@ -84,7 +84,7 @@ fi
 
 release_lock() {
     if [ "$LOCKFILE" = "" ]; then
-        $QEMUIFDOWN $TAP $NATIVE_SYSROOT_DIR
+        $QEMUIFDOWN $TAP $POKY_NATIVE_SYSROOT
     else
         echo "Releasing lockfile of preconfigured tap device '$TAP'"
         rm -f $LOCKFILE
