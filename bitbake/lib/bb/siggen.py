@@ -109,10 +109,13 @@ class SignatureGeneratorBasic(SignatureGenerator):
 
     def dump_sigtask(self, fn, task, stampbase, runtime):
         k = fn + "." + task
-        if runtime:
+        if runtime == "customfile":
+            sigfile = stampbase
+        elif runtime:
             sigfile = stampbase + "." + task + ".sigdata" + "." + self.taskhash[k]
         else:
             sigfile = stampbase + "." + task + ".sigbasedata" + "." + self.basehash[k]
+
         data = {}
         data['basewhitelist'] = self.basewhitelist
         data['taskwhitelist'] = self.taskwhitelist
@@ -125,7 +128,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
             data['gendeps'][dep] = self.gendeps[fn][dep]
             data['varvals'][dep] = self.lookupcache[fn][dep]
 
-        if runtime:
+        if runtime and runtime != "customfile":
             data['runtaskdeps'] = self.runtaskdeps[k]
             data['runtaskhashes'] = {}
             for dep in data['runtaskdeps']:
@@ -144,6 +147,11 @@ class SignatureGeneratorBasic(SignatureGenerator):
                     bb.error("Bitbake's cached basehash does not match the one we just generated!")
                     bb.error("The mismatched hashes were %s and %s" % (dataCache.basetaskhash[k], self.basehash[k]))
                 self.dump_sigtask(fn, task, dataCache.stamp[fn], True)
+
+def dump_this_task(outfile, d):
+    fn = d.getVar("BB_FILENAME", True)
+    task = "do_" + d.getVar("BB_CURRENTTASK", True)
+    bb.parse.siggen.dump_sigtask(fn, task, outfile, "customfile")
 
 def compare_sigfiles(a, b):
     p1 = pickle.Unpickler(file(a, "rb"))
