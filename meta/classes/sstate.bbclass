@@ -240,6 +240,8 @@ def sstate_package(ss, d):
     bb.data.setVar('PSTAGE2_BUILDDIR', pstagebuild, d)
     bb.data.setVar('PSTAGE2_PKG', pstagepkg, d)
     bb.build.exec_func('sstate_create_package', d)
+    
+    bb.siggen.dump_this_task(pstagepkg + ".siginfo", d)
 
     return
 
