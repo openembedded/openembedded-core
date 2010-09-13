@@ -1166,58 +1166,57 @@ class RunQueueExecuteTasks(RunQueueExecute):
             # nothing to do
             self.rq.state = runQueueCleanUp
 
-        while True:
-            task = None
+        task = None
+        if self.stats.active < self.number_tasks:
+            task = self.sched.next()
+        if task is not None:
+            fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+
+            taskname = self.rqdata.runq_task[task]
+            if self.rq.check_stamp_task(task, taskname):
+                bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.rqdata.get_user_idstring(task)))
+                self.task_skip(task)
+                return True
+
+            bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
+            bb.msg.note(1, bb.msg.domain.RunQueue,
+                        "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
+                                                                self.stats.total,
+                                                                task,
+                                                                self.rqdata.get_user_idstring(task)))
+
+            proc = self.fork_off_task(fn, task, taskname)
+
+            self.build_pids[proc.pid] = task
+            self.build_procs[proc.pid] = proc
+            self.build_pipes[proc.pid] = runQueuePipe(proc.stdout, proc.stdin, self.cfgData)
+            self.runq_running[task] = 1
+            self.stats.taskActive()
             if self.stats.active < self.number_tasks:
-                task = self.sched.next()
-            if task is not None:
-                fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
-
-                taskname = self.rqdata.runq_task[task]
-                if self.rq.check_stamp_task(task, taskname):
-                    bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.rqdata.get_user_idstring(task)))
-                    self.task_skip(task)
-                    return True
-
-                bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
-                bb.msg.note(1, bb.msg.domain.RunQueue,
-                            "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
-                                                                    self.stats.total,
-                                                                    task,
-                                                                    self.rqdata.get_user_idstring(task)))
-
-                proc = self.fork_off_task(fn, task, taskname)
-
-                self.build_pids[proc.pid] = task
-                self.build_procs[proc.pid] = proc
-                self.build_pipes[proc.pid] = runQueuePipe(proc.stdout, proc.stdin, self.cfgData)
-                self.runq_running[task] = 1
-                self.stats.taskActive()
-                if self.stats.active < self.number_tasks:
-                    return True
-
-            for pipe in self.build_pipes:
-                self.build_pipes[pipe].read()
-
-            if self.stats.active > 0:
-                if self.runqueue_process_waitpid() is None:
-                    return 0.5
                 return True
 
-            if len(self.failed_fnids) != 0:
-                self.rq.state = runQueueFailed
-                return True
+        for pipe in self.build_pipes:
+            self.build_pipes[pipe].read()
 
-            # Sanity Checks
-            for task in range(self.stats.total):
-                if self.runq_buildable[task] == 0:
-                    bb.msg.error(bb.msg.domain.RunQueue, "Task %s never buildable!" % task)
-                if self.runq_running[task] == 0:
-                    bb.msg.error(bb.msg.domain.RunQueue, "Task %s never ran!" % task)
-                if self.runq_complete[task] == 0:
-                    bb.msg.error(bb.msg.domain.RunQueue, "Task %s never completed!" % task)
-            self.rq.state = runQueueComplete
+        if self.stats.active > 0:
+            if self.runqueue_process_waitpid() is None:
+                return 0.5
             return True
+
+        if len(self.failed_fnids) != 0:
+            self.rq.state = runQueueFailed
+            return True
+
+        # Sanity Checks
+        for task in range(self.stats.total):
+            if self.runq_buildable[task] == 0:
+                bb.msg.error(bb.msg.domain.RunQueue, "Task %s never buildable!" % task)
+            if self.runq_running[task] == 0:
+                bb.msg.error(bb.msg.domain.RunQueue, "Task %s never ran!" % task)
+            if self.runq_complete[task] == 0:
+                bb.msg.error(bb.msg.domain.RunQueue, "Task %s never completed!" % task)
+        self.rq.state = runQueueComplete
+        return True
 
 class RunQueueExecuteScenequeue(RunQueueExecute):
     def __init__(self, rq):
