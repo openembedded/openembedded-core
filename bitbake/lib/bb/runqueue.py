@@ -908,7 +908,7 @@ class RunQueue:
                 self.rqexe = RunQueueExecuteScenequeue(self)
 
         if self.state is runQueueSceneRun:
-            self.rqexe.execute()
+            retval = self.rqexe.execute()
 
         if self.state is runQueueRunInit:
             bb.msg.note(1, bb.msg.domain.RunQueue, "Executing runqueue")
@@ -916,7 +916,7 @@ class RunQueue:
             self.state = runQueueRunning
 
         if self.state is runQueueRunning:
-            self.rqexe.execute()
+            retval = self.rqexe.execute()
 
         if self.state is runQueueCleanUp:
            self.rqexe.finish()
@@ -1177,7 +1177,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 if self.rq.check_stamp_task(task, taskname):
                     bb.msg.debug(2, bb.msg.domain.RunQueue, "Stamp current task %s (%s)" % (task, self.rqdata.get_user_idstring(task)))
                     self.task_skip(task)
-                    continue
+                    return True
 
                 bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
                 bb.msg.note(1, bb.msg.domain.RunQueue,
@@ -1194,19 +1194,19 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 self.runq_running[task] = 1
                 self.stats.taskActive()
                 if self.stats.active < self.number_tasks:
-                    continue
+                    return True
 
             for pipe in self.build_pipes:
                 self.build_pipes[pipe].read()
 
             if self.stats.active > 0:
                 if self.runqueue_process_waitpid() is None:
-                    return
-                continue
+                    return 0.5
+                return True
 
             if len(self.failed_fnids) != 0:
                 self.rq.state = runQueueFailed
-                return
+                return True
 
             # Sanity Checks
             for task in range(self.stats.total):
@@ -1217,7 +1217,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 if self.runq_complete[task] == 0:
                     bb.msg.error(bb.msg.domain.RunQueue, "Task %s never completed!" % task)
             self.rq.state = runQueueComplete
-            return
+            return True
 
 class RunQueueExecuteScenequeue(RunQueueExecute):
     def __init__(self, rq):
@@ -1413,7 +1413,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
         if self.stats.active > 0:
             if self.runqueue_process_waitpid() is None:
-                return True
+                return 0.5
             return True
 
         # Convert scenequeue_covered task numbers into full taskgraph ids
