@@ -167,4 +167,4 @@ addtask install_perf after do_install before do_package do_deploy
 
 do_compile_perf[depends] =  "virtual/libc:do_populate_sysroot"
 do_compile_perf[depends] =+ "elfutils:do_populate_sysroot"
-RDEPENDS_perf += "python perl"
+RDEPENDS_perf += "python perl elfutils"
