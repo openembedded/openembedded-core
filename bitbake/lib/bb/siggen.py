@@ -115,6 +115,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
             sigfile = stampbase + "." + task + ".sigbasedata" + "." + self.basehash[k]
         data = {}
         data['basewhitelist'] = self.basewhitelist
+        data['taskwhitelist'] = self.taskwhitelist
         data['taskdeps'] = self.taskdeps[fn][task]
         data['basehash'] = self.basehash[k]
         data['gendeps'] = {}
@@ -166,12 +167,11 @@ def compare_sigfiles(a, b):
         removed = sb - sa
         return changed, added, removed 
 
-    if a_data['basewhitelist'] != b_data['basewhitelist']:
+    if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
         print "basewhitelist changed from %s to %s" % (a_data['basewhitelist'], b_data['basewhitelist'])
 
-    if a_data['taskwhitelist'] != b_data['taskwhitelist']:
+    if 'taskwhitelist' in a_data and a_data['taskwhitelist'] != b_data['taskwhitelist']:
         print "taskwhitelist changed from %s to %s" % (a_data['taskwhitelist'], b_data['taskwhitelist'])
-
 
     if a_data['taskdeps'] != b_data['taskdeps']:
         print "Task dependencies changed from %s to %s" % (sorted(a_data['taskdeps']), sorted(b_data['taskdeps']))
@@ -183,10 +183,12 @@ def compare_sigfiles(a, b):
     if changed:
         for dep in changed:
             print "List of dependencies for variable %s changed from %s to %s" % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep])
-    #if added:
-    #    print "Dependency on variable %s was added (value %s)" % (dep, b_data['gendeps'][dep])
-    #if removed:
-    #    print "Dependency on Variable %s was removed (value %s)" % (dep, a_data['gendeps'][dep])
+    if added:
+        for dep in added:
+            print "Dependency on variable %s was added" % (dep)
+    if removed:
+        for dep in removed:
+            print "Dependency on Variable %s was removed" % (dep)
 
 
     changed, added, removed = dict_diff(a_data['varvals'], b_data['varvals'])
