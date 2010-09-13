@@ -268,7 +268,7 @@ def exec_func_shell(func, d, runfile, logfile, flags):
     raise FuncFailed("function %s failed" % func, logfile)
 
 
-def exec_task(task, d):
+def exec_task(fn, task, d):
     """Execute an BB 'task'
 
        The primary difference between executing a task versus executing
@@ -292,6 +292,7 @@ def exec_task(task, d):
         data.setVar('OVERRIDES', 'task-%s:%s' % (task[3:], old_overrides), localdata)
         data.update_data(localdata)
         data.expandKeys(localdata)
+        data.setVar('BB_FILENAME', fn, d)
         data.setVar('BB_CURRENTTASK', task[3:], d)
         event.fire(TaskStarted(task, localdata), localdata)
         prefuncs = (data.getVarFlag(task, 'prefuncs', localdata) or "").split()

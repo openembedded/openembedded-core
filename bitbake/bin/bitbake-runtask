@@ -86,6 +86,6 @@ if taskname.endswith("_setscene"):
 
 ret = 0
 if sys.argv[3] != "True":
-    ret = bb.build.exec_task(taskname, the_data)
+    ret = bb.build.exec_task(fn, taskname, the_data)
 sys.exit(ret)
 
