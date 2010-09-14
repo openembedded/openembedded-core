@@ -106,6 +106,14 @@ RECIPE_LATEST_RELEASE_DATE_pn-xf86-video-vmware="2010/03/18"
 RECIPE_INTEL_SECTION_pn-xf86-video-vmware="graphic core"
 RECIPE_MAINTAINER_pn-xf86-video-vmware="Yu Ke <ke.yu@intel.com>"
 
+RECIPE_STATUS_pn-xf86-video-vesa = "green" # no update needed
+RECIPE_LATEST_VERSION_pn-xf86-video-vesa = "2.3.0"
+RECIPE_NO_OF_PATCHES_pn-xf86-video-vesa = "0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-video-vesa = "6 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-xf86-video-vesa = "2010/01/04"
+RECIPE_INTEL_SECTION_pn-xf86-video-vesa = "graphic core"
+RECIPE_MAINTAINER_pn-xf86-video-vesa = "Yu Ke <ke.yu@intel.com>"
+
 RECIPE_STATUS_pn-cairo="green" # no update needed
 RECIPE_LATEST_VERSION_pn-cairo="1.9.10"
 ECIPE_NO_UPDATE_REASON_cairo="latest version is not stable release"
@@ -147,6 +155,14 @@ RECIPE_LATEST_RELEASE_DATE_pn-mesa-dri="2010/06/17"
 RECIPE_INTEL_SECTION_pn-mesa-dri="graphic core"
 RECIPE_MAINTAINER_pn-mesa-dri="Yu Ke <ke.yu@intel.com>"
 
+RECIPE_STATUS_pn-mesa-dri-glsl-native="green" # no update needed
+RECIPE_LATEST_VERSION_pn-mesa-dri-glsl-native="7.8.2"
+RECIPE_NO_OF_PATCHES_pn-mesa-dri-glsl-native="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-mesa-dri-glsl-native="2 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-mesa-dri-glsl-native="2010/06/17"
+RECIPE_INTEL_SECTION_pn-mesa-dri-glsl-native="graphic core"
+RECIPE_MAINTAINER_pn-mesa-dri-glsl-native = "Yu Ke <ke.yu@intel.com>"
+
 RECIPE_STATUS_pn-mesa-xlib="green" # no update needed
 RECIPE_LATEST_VERSION_pn-mesa-xlib="7.8.2"
 RECIPE_NO_OF_PATCHES_pn-mesa-xlib="0"
@@ -186,3 +202,11 @@ RECIPE_STATUS_pn-xorg-cf-files = "red"
 DISTRO_PN_ALIAS_pn-xorg-cf-files = ""
 RECIPE_LATEST_VERSION_pn-xorg-cf-files = "1.0.3"
 RECIPE_MAINTAINER_pn-xorg-cf-files = "Ke Yu <ke.yu@intel.com>"
+
+RECIPE_STATUS_pn-libdrm-poulsbo = "green" # no update needed
+RECIPE_LATEST_VERSION_pn-libdrm-poulsbo = "2.3.0"
+RECIPE_NO_OF_PATCHES_pn-libdrm-poulsbo = "1"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libdrm-poulsbo = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-libdrm-poulsbo = "n/a"
+RECIPE_INTEL_SECTION_pn-libdrm-poulsbo = "graphic core"
+RECIPE_MAINTAINER_pn-libdrm-poulsbo = "Yu Ke <ke.yu@intel.com>"

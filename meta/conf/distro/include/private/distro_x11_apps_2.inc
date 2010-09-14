@@ -114,3 +114,36 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qemugl="n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-qemugl="2009/05/30"
 RECIPE_INTEL_SECTION_pn-qemugl="graphic app"
 RECIPE_MAINTAINER_pn-qemugl="Yu Ke <ke.yu@intel.com>"
+
+RECIPE_STATUS_pn-fotowall="green" # no update needed
+RECIPE_LATEST_VERSION_pn-fotowall="0.9"
+RECIPE_NO_OF_PATCHES_pn-fotowall="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-fotowall="2 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-fotowall="2009/12/08"
+RECIPE_INTEL_SECTION_pn-fotowall="graphic app"
+RECIPE_LATEST_VERSION_pn-fotowall=""
+RECIPE_MAINTAINER_pn-fotowall="Yu Ke <ke.yu@intel.com>"
+
+RECIPE_STATUS_pn-imake = "red"
+RECIPE_LATEST_VERSION_pn-imake = "1.0.3"
+RECIPE_NO_OF_PATCHES_pn-imake = "0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-imake = "1 month"
+RECIPE_LATEST_RELEASE_DATE_pn-imake = "2010/04/16"
+RECIPE_INTEL_SECTION_pn-imake = "graphic app"
+RECIPE_MAINTAINER_pn-imake = "Yu Ke <ke.yu@intel.com>"
+
+RECIPE_STATUS_pn-qt4-tools-native = "green" # no update needed
+RECIPE_LATEST_VERSION_pn-qt4-tools-native = "4.6.3"
+RECIPE_NO_OF_PATCHES_pn-qt4-tools-native = "3"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qt4-tools-native = "4 monthes"
+RECIPE_LATEST_RELEASE_DATE_pn-qt4-tools-native = "2010/06/02"
+RECIPE_INTEL_SECTION_pn-qt4-tools-native = "graphic app"
+RECIPE_MAINTAINER_pn-qt4-tools-native = "Yu Ke <ke.yu@intel.com>"
+
+ECIPE_STATUS_pn-quicky = "green" # no update needed
+RECIPE_LATEST_VERSION_pn-quicky = "0.4"
+RECIPE_NO_OF_PATCHES_pn-quicky = "0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-quicky = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-quicky = "2008/06/18"
+RECIPE_INTEL_SECTION_pn-quicky = "graphic app"
+RECIPE_MAINTAINER_pn-quicky = "Yu Ke <ke.yu@intel.com>"
