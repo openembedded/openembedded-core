@@ -9,7 +9,7 @@ PRIORITY = "optional"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-DEPENDS = "expat libdaemon dbus glib-2.0 gtk+ libglade"
+DEPENDS = "expat libcap libdaemon dbus glib-2.0 gtk+ libglade"
 RRECOMMENDS = "libnss-mdns"
 RRECOMMENDS_avahi-daemon = "libnss-mdns"
 
