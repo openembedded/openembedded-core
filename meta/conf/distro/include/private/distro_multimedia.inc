@@ -123,7 +123,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gaku="n/a"
 RECIPE_MAINTAINER_pn-gaku = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-xvideo-tests="green"
-RECIPE_LATEST_VERSION_pn-xvideo-tests="270"
+RECIPE_LATEST_VERSION_pn-xvideo-tests="0.0_svnr270"
 RECIPE_NO_OF_PATCHES_pn-xvideo-tests="0"
 RECIPE_LATEST_RELEASE_DATE_pn-xvideo-tests="2007/06/22"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xvideo-tests="n/a"

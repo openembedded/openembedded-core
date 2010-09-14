@@ -145,8 +145,8 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gconf-dbus = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-gconf-dbus = "n/a"
 RECIPE_COMMENTS_pn-gconf-dbus = "difficult to identify official site and current status"
 
-RECIPE_STATUS_pn-elfutils="green" # no update needed
-RECIPE_MAINTAINER_pn-elfutils="green" = "Qing He <qing.he@intel.com>"
+RECIPE_STATUS_pn-elfutils ="green" # no update needed
+RECIPE_MAINTAINER_pn-elfutils = "Qing He <qing.he@intel.com>"
 DEPENDENCY_CHECK_pn-gconf-dbus = "not done"
 RECIPE_LATEST_VERSION_pn-elfutils="0.148"
 RECIPE_INTEL_SECTION_pn-gconf-dbus = "base utils"
@@ -556,5 +556,5 @@ RECIPE_LATEST_VERSION_pn-smart = "1.3"
 RECIPE_MAINTAINER_pn-smart = "Qing He <qing.he@intel.com>"
 
 RECIPE_STATUS_pn-qemu-config = "red"
-RECIPE_LATEST_VERSION_pn-qemu-config = "n/a"
+RECIPE_LATEST_VERSION_pn-qemu-config = "1"
 RECIPE_MAINTAINER_pn-qemu-config = "Qing He <qing.he@intel.com>"

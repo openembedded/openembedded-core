@@ -25,7 +25,6 @@ python distro_eventhandler() {
 addtask distrodata_np
 do_distrodata_np[nostamp] = "1"
 python do_distrodata_np() {
-
 	localdata = bb.data.createCopy(d)
         pn = bb.data.getVar("PN", d, True)
         bb.note("Package Name: %s" % pn)
@@ -92,7 +91,6 @@ python do_distrodata_np() {
 addtask distrodata
 do_distrodata[nostamp] = "1"
 python do_distrodata() {
-
 	logpath = bb.data.getVar('LOG_DIR', d, 1)
 	bb.utils.mkdirhier(logpath)
 	logfile = os.path.join(logpath, "distrodata.csv")

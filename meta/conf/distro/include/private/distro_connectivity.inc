@@ -197,7 +197,7 @@ RECIPE_LATEST_VERSION_pn-libopensync-plugin-file = "0.39"
 RECIPE_MAINTAINER_pn-libopensync-plugin-file = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-libopensync-plugin-vformat = "red"
-RECIPE_LATEST_VERSION_pn-libopensync-plugin-vformat = ""0.39"
+RECIPE_LATEST_VERSION_pn-libopensync-plugin-vformat = "0.39"
 RECIPE_MAINTAINER_pn-libopensync-plugin-vformat = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-libsynthesis = "red"
