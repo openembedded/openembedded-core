@@ -433,6 +433,13 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gamin = "16 months"
 RECIPE_LATEST_RELEASE_DATE_pn-gamin = "11/2008"
 RECIPE_COMMENTS_pn-gamin = ""
 
+RECIPE_STATUS_pn-zypper = "green"
+DEPENDENCY_CHECK_pn-zypper = "not done"
+RECIPE_MAINTAINER_pn-zypper = "Qing He <qing.he@intel.com>"
+RECIPE_LATEST_VERSION_pn-zypper = "git"
+RECIPE_INTEL_SECTION_pn-zypper = "base utils"
+RECIPE_COMMENTS_pn-zypper = ""
+
 RECIPE_STATUS_pn-sysstat = "red"    # need upgrade
 RECIPE_MAINTAINER_pn-sysstat = "Qing He <qing.he@intel.com>"
 RECIPE_LATEST_VERSION_pn-sysstat = "9.0.6.1"
