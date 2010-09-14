@@ -214,6 +214,26 @@ RECIPE_LATEST_RELEASE_DATE_pn-gtk+ = "05/2010"
 RECIPE_COMMENTS_pn-gtk+ = ""
 RECIPE_MAINTAINER_pn-gtk+ = "Zhai Edwin <edwin.zhai@intel.com>"
 
+RECIPE_STATUS_pn-gdk-pixbuf-csource-native = "red" # update needed
+DEPENDENCY_CHECK_pn-gdk-pixbuf-csource-native = "not done"
+RECIPE_LATEST_VERSION_pn-gdk-pixbuf-csource-native = "2.20.1"
+RECIPE_NO_OF_PATCHES_pn-gdk-pixbuf-csource-native = "1"
+RECIPE_INTEL_SECTION_pn-gdk-pixbuf-csource-native = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gdk-pixbuf-csource-native = "2 months"
+RECIPE_LATEST_RELEASE_DATE_pn-gdk-pixbuf-csource-native = "05/2010"
+RECIPE_COMMENTS_pn-gdk-pixbuf-csource-native = "It is sub-package of gtk+"
+RECIPE_MAINTAINER_pn-gdk-pixbuf-csource-native = "Zhai Edwin <edwin.zhai@intel.com>"
+
+RECIPE_STATUS_pn-gobject-introspection = "red" # update needed
+DEPENDENCY_CHECK_pn-gobject-introspection = "not done"
+RECIPE_LATEST_VERSION_pn-gobject-introspection = "0.9.5"
+RECIPE_NO_OF_PATCHES_pn-gobject-introspection = "3"
+RECIPE_INTEL_SECTION_pn-gobject-introspection = "graphic UX"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gobject-introspection = "1 months"
+RECIPE_LATEST_RELEASE_DATE_pn-gobject-introspection = "09/2010"
+RECIPE_COMMENTS_pn-gobject-introspection = ""
+RECIPE_MAINTAINER_pn-gnome-common = "Zhai Edwin <edwin.zhai@intel.com>"
+
 RECIPE_STATUS_pn-gnome-common = "green"
 DEPENDENCY_CHECK_pn-gnome-common = "not done"
 RECIPE_LATEST_VERSION_pn-gnome-common = "2.28.0"

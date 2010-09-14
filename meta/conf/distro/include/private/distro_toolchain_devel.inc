@@ -75,8 +75,10 @@ RECIPE_LATEST_RELEASE_DATE_pn-gdb="2010/03/18"
 RECIPE_MAINTAINER_pn-gdb = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-gtk-theme-torturer="green" # no update needed git tree
-RECIPE_LATEST_VERSION_pn-gtk-theme-torturer="???"
+RECIPE_LATEST_VERSION_pn-gtk-theme-torturer="0.0.0+git0+99962ae39bb5aadb31929b25c58e1a053f9c9545"
 RECIPE_NO_OF_PATCHES_pn-gtk-theme-torturer="0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gdb="n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-gdb="2006/08/21"
 RECIPE_MAINTAINER_pn-gtk-theme-tourturer = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-intltool="green" # upgraded
