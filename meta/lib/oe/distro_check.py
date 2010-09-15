@@ -274,6 +274,10 @@ def compare_in_distro_packages_list(distro_check_dir, d):
 
     bb.note("Recipe: %s" % recipe_name)
     tmp = bb.data.getVar('DISTRO_PN_ALIAS', localdata, True)
+    if tmp == "Poky" or  tmp == "OpenedHand" or tmp == "Intel" or tmp == "Upstream":
+        matching_distros.append(tmp)
+        tmp = None
+
     distro_pn_aliases = {}
     if tmp:
         list = tmp.split(' ')

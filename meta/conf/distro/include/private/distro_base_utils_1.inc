@@ -131,6 +131,10 @@ RECIPE_LATEST_RELEASE_DATE_pn-opkg = "02/2010"
 RECIPE_COMMENTS_pn-opkg = ""
 RECIPE_MAINTAINER_pn-opkg = "Dongxiao Xu <dongxiao.xu@intel.com"
 
+RECIPE_STATUS_pn-dpkg = "red"
+RECIPE_LATEST_VERSION_pn-dpkg = "check"
+RECIPE_MAINTAINER_pn-dpkg = "Dongxiao Xu <dongxiao.xu@intel.com"
+
 RECIPE_STATUS_pn-opkg-utils = "green"
 DEPENDENCY_CHECK_pn-opkg-utils = "not done"
 RECIPE_LATEST_VERSION_pn-opkg-utils = "0.1.8+svnr4747"
@@ -267,7 +271,7 @@ RECIPE_INTEL_SECTION_pn-base-files = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-base-files = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-base-files = "n/a"
 RECIPE_COMMENTS_pn-base-files = "licenses are pacakges here; all local files. RP said that the version 3.0.14 may come from debian. no need to upgrade it now"
-RECIPE_MAINTAINER_pn-pn-base-files = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_MAINTAINER_pn-base-files = "Kevin Tian <kevin.tian@intel.com>"
 
 RECIPE_STATUS_pn-base-passwd = "green"
 DEPENDENCY_CHECK_pn-base-passwd = "not done"
@@ -627,7 +631,11 @@ RECIPE_MAINTAINER_pn-psmisc = "Kevin Tian <kevin.tian@intel.com>"
 
 RECIPE_STATUS_pn-boost = "red"
 RECIPE_LATEST_VERSION_pn-boost = "1.43.0"
-RECIPE_MAINTAINER_pn-boost = "Kevin Tian <kevin.tian@intel.com>"
+RECIPE_MAINTAINER_pn-boost = "Qing He <qing.he@intel.com>"
+
+RECIPE_STATUS_pn-boost-jam-native = "red"
+RECIPE_LATEST_VERSION_pn-boost-jam-native = "3.1.18"
+RECIPE_MAINTAINER_pn-boost-jam-native = "Qing He <qing.he@intel.com>"
 
 RECIPE_STATUS_pn-libfribidi = "red"
 DISTRO_PN_ALIAS_pn-libfribidi = "OpenSuSE=fribidi Ubuntu=fribidi Mandriva=fribidi Debian=fribidi"
