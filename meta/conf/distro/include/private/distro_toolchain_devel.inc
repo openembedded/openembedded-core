@@ -137,12 +137,6 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-nasm="1 months"
 RECIPE_LATEST_RELEASE_DATE_pn-nasm="2009/07/21"
 RECIPE_MAINTAINER_pn-nasm = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-oprofile="green" # upgraded
-RECIPE_LATEST_VERSION_pn-oprofile="0.9.6"
-RECIPE_NO_OF_PATCHES_pn-oprofile="2"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-oprofile="4 months"
-RECIPE_LATEST_RELEASE_DATE_pn-oprofile="2009/11/24"
-
 RECIPE_STATUS_pn-perl="red" # upgrade needed
 RECIPE_LATEST_VERSION_pn-perl="5.12.1"
 RECIPE_NO_OF_PATCHES_pn-perl="33"

@@ -227,6 +227,18 @@ RECIPE_LATEST_RELEASE_DATE_pn-libxtst = "10/2009"
 RECIPE_COMMENTS_pn-libxtst = ""
 RECIPE_MAINTAINER_pn-libxtst = "Dexuan Cui <dexuan.cui@intel.com>"
 
+RECIPE_STATUS_pn-libsdl = "red" # update needed
+DEPENDENCY_CHECK_pn-libsdl = "not done"
+RECIPE_LATEST_VERSION_pn-libsdl = "1.2.14"
+RECIPE_NO_OF_PATCHES_pn-libsdl = "2"
+RECIPE_PATCH_pn-libsdl+configure_tweak = "fix configure.in"
+RECIPE_PATCH_pn-libsdl+kernel-asm-page = "a small fix: include the proper header file"
+RECIPE_INTEL_SECTION_pn-libsdl = "x11/libs"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libsdl = "2 years"
+RECIPE_LATEST_RELEASE_DATE_pn-libsdl = "Oct 20, 2009"
+RECIPE_COMMENTS_pn-libsdl = "Version 1.3 is under construction and is likely unstable."
+RECIPE_MAINTAINER_pn-libsdl = "Dexuan Cui <dexuan.cui@intel.com>"
+
 RECIPE_STATUS_pn-printproto = "green"
 DISTRO_PN_ALIAS_pn-printproto = "Debian=x11proto-print-dev"
 DEPENDENCY_CHECK_pn-printproto = "not done"
