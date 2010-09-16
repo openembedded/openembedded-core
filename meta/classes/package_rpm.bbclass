@@ -555,7 +555,7 @@ do_package_write_rpm[sstate-outputdirs] = "${DEPLOY_DIR_RPM}"
 python do_package_write_rpm_setscene () {
 	sstate_setscene(d)
 }
-#addtask do_package_write_rpm_setscene
+addtask do_package_write_rpm_setscene
 
 python do_package_write_rpm () {
 	bb.build.exec_func("read_subpackage_metadata", d)

@@ -307,7 +307,7 @@ do_package_write_ipk[sstate-outputdirs] = "${DEPLOY_DIR_IPK}"
 python do_package_write_ipk_setscene () {
 	sstate_setscene(d)
 }
-#addtask do_package_write_ipk_setscene
+addtask do_package_write_ipk_setscene
 
 python () {
     if bb.data.getVar('PACKAGES', d, True) != '':
