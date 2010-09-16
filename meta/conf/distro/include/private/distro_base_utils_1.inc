@@ -656,6 +656,10 @@ RECIPE_STATUS_pn-tzcode = "red"
 RECIPE_LATEST_VERSION_pn-tzcode = "2009r"
 RECIPE_MAINTAINER_pn-tzcode = "Kevin Tian <kevin.tian@intel.com>"
 
+RECIPE_STATUS_pn-dpkg = "red"
+RECIPE_LATEST_VERSION_pn-dpkg = "1.15.8.5"
+RECIPE_MAINTAINER_pn-dpkg = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
 RECIPE_STATUS_pn-rpcbind = "green"
 DEPENDENCY_CHECK_pn-rpcbind = "not done"
 RECIPE_LATEST_VERSION_pn-rpcbind = "0.2.0"

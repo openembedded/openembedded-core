@@ -46,17 +46,9 @@ RECIPE_STATUS_pn-loudmouth = "red"
 RECIPE_LATEST_VERIONS_pn-loudmouth = "check"
 RECIPE_MAINTAINER_pn-loudmouth = "Dongxiao Xu <dongxiao.xu@intel.com"
 
-RECIPE_STATUS_pn-m4 = "red"
-RECIPE_LATEST_VERIONS_pn-m4 = "check"
-RECIPE_MAINTAINER_pn-m4 = "Nitin A Kamble <nitin.a.kamble@intel.com>"
-
 RECIPE_STATUS_pn-makedepend = "red"
 RECIPE_LATEST_VERIONS_pn-makedepend = "check"
 RECIPE_MAINTAINER_pn-makedepend = "Nitin A Kamble <nitin.a.kamble@intel.com>"
-
-RECIPE_STATUS_pn-mdadm = "red"
-RECIPE_LATEST_VERIONS_pn-mdadm = "check"
-RECIPE_MAINTAINER_pn-mdadm = "Xiaofeng.Yan <xiaofeng@windriver.com>"
 
 RECIPE_STATUS_pn-meta-ide-support = "red"
 RECIPE_LATEST_VERIONS_pn-meta-ide-support = "check"
@@ -89,10 +81,6 @@ RECIPE_MAINTAINER_pn-python-imaging = "Nitin A Kamble <nitin.a.kamble@intel.com>
 RECIPE_STATUS_pn-run-postinsts = "red"
 RECIPE_LATEST_VERIONS_pn-run-postinsts = "check"
 RECIPE_MAINTAINER_pn-run-postinsts = "Dongxiao Xu <dongxiao.xu@intel.com"
-
-RECIPE_STATUS_pn-screen = "red"
-RECIPE_LATEST_VERIONS_pn-screen = "check"
-RECIPE_MAINTAINER_pn-screen = "Qing He <qing.he@intel.com>"
 
 RECIPE_STATUS_pn-subversion = "red"
 RECIPE_LATEST_VERIONS_pn-subversion = "check"
@@ -973,7 +961,8 @@ RECIPE_NO_OF_PATCHES_pn-mdadm = "0"
 RECIPE_INTEL_SECTION_pn-mdadm = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-mdadm = "25 days"
 RECIPE_LATEST_RELEASE_DATE_pn-mdadm = "Aug 31, 2010"
-RECIPE_COMMENTS_pn-mdadm = "Dexuan Cui <dexuan.cui@intel.com>"
+RECIPE_COMMENTS_pn-mdadm = ""
+RECIPE_MAINTAINER_pn-mdadm = "Dexuan Cui <dexuan.cui@intel.com>"
 
 RECIPE_STATUS_pn-screen = "green"
 DEPENDENCY_CHECK_pn-screen = "not done"
@@ -984,7 +973,8 @@ RECIPE_PATCH_pn-screen+configure = "fix configure.in to make the build pass"
 RECIPE_INTEL_SECTION_pn-screen = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-screen = "4 years"
 RECIPE_LATEST_RELEASE_DATE_pn-screen = "Aug 7, 2008"
-RECIPE_COMMENTS_pn-screen = "Dexuan Cui <dexuan.cui@intel.com>"
+RECIPE_COMMENTS_pn-screen = ""
+RECIPE_MAINTAINER_pn-screen = "Dexuan Cui <dexuan.cui@intel.com>"
 
 RECIPE_STATUS_pn-gzip = "green"
 RECIPE_MAINTAINER_pn-gzip = "Kevin Tian <kevin.tian@intel.com>"
@@ -1258,6 +1248,10 @@ RECIPE_MAINTAINER_pn-shasum = "Kevin Tian <kevin.tian@intel.com>"
 RECIPE_STATUS_pn-tzcode = "red"
 RECIPE_LATEST_VERSION_pn-tzcode = "2009r"
 RECIPE_MAINTAINER_pn-tzcode = "Kevin Tian <kevin.tian@intel.com>"
+
+RECIPE_STATUS_pn-dpkg = "red"
+RECIPE_LATEST_VERSION_pn-dpkg = "1.15.8.5"
+RECIPE_MAINTAINER_pn-dpkg = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-rpcbind = "green"
 DEPENDENCY_CHECK_pn-rpcbind = "not done"
@@ -3054,6 +3048,20 @@ RECIPE_MAINTAINER_pn-ilibtimedate-perl = "Nitin A Kamble <nitin.a.kamble@intel.c
 RECIPE_STATUS_pn-libxml-parser-perl="green" 
 RECIPE_LATEST_VERSION_pn-libxml-parser-perl="2.36"
 RECIPE_MAINTAINER_pn-libxml-parser-perl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+
+RECIPE_STATUS_pn-cmake-native="green" 
+RECIPE_LATEST_VERSION_pn-cmake-native="2.8.2"
+RECIPE_LATEST_RELEASE_DATE_pn-cmake-native="2010/06/28"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-cmake-native="1 month"
+RECIPE_MAINTAINER_pn-cmake-native = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-m4="green" 
+RECIPE_LATEST_VERSION_pn-m4="1.4.15"
+RECIPE_LATEST_RELEASE_DATE_pn-m4="2010/08/31"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-m4="6 month"
+RECIPE_MAINTAINER_pn-m4="Nitin A Kamble <nitin.a.kamble@intel.com>"
+RECIPE_COMMENTS_pn-m4= "Dongxiao Xu <dongxiao.xu@intel.com> will own GPLv2 m4"
+
 #
 # distro tracking fields for X11 apps(high level)
 #

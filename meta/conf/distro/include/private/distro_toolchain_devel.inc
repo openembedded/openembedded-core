@@ -304,3 +304,17 @@ RECIPE_MAINTAINER_pn-ilibtimedate-perl = "Nitin A Kamble <nitin.a.kamble@intel.c
 RECIPE_STATUS_pn-libxml-parser-perl="green" 
 RECIPE_LATEST_VERSION_pn-libxml-parser-perl="2.36"
 RECIPE_MAINTAINER_pn-libxml-parser-perl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+
+RECIPE_STATUS_pn-cmake-native="green" 
+RECIPE_LATEST_VERSION_pn-cmake-native="2.8.2"
+RECIPE_LATEST_RELEASE_DATE_pn-cmake-native="2010/06/28"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-cmake-native="1 month"
+RECIPE_MAINTAINER_pn-cmake-native = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-m4="green" 
+RECIPE_LATEST_VERSION_pn-m4="1.4.15"
+RECIPE_LATEST_RELEASE_DATE_pn-m4="2010/08/31"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-m4="6 month"
+RECIPE_MAINTAINER_pn-m4="Nitin A Kamble <nitin.a.kamble@intel.com>"
+RECIPE_COMMENTS_pn-m4= "Dongxiao Xu <dongxiao.xu@intel.com> will own GPLv2 m4"
+
