@@ -8,9 +8,12 @@ inherit cmake
 
 DEPENDS  = "rpm boost gettext curl libxml2 zlib sat-solver expat openssl udev"
 
+# rpmdb2solv from sat-solver is run from libzypp
+RDEPENDS = "sat-solver"
+
 S = "${WORKDIR}/git"
 PV = "0.0-git${SRCPV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
            file://no-doc.patch \
