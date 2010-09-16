@@ -16,7 +16,6 @@ PREFERRED_PROVIDER_virtual/${SDK_PREFIX}libc-for-gcc-nativesdk ?= "${POKYLIBC}-n
 
 
 GCCVERSION ?= "4.5.0"
-GCCVERSION_powerpc ?= "4.3.3"
 GCCVERSION_mips ?= "4.3.3"
 SDKGCCVERSION ?= "4.5.0"
 BINUVERSION ?= "2.20.1"

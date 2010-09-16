@@ -8,9 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 DEPENDS = "virtual/libx11"
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "http://libmpeg2.sourceforge.net/files/mpeg2dec-${PV}.tar.gz"
+SRC_URI = "http://libmpeg2.sourceforge.net/files/mpeg2dec-${PV}.tar.gz \
+           file://altivec_h_needed.patch"
 
 inherit autotools pkgconfig
 

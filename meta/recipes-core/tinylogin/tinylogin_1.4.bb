@@ -5,13 +5,14 @@ changing passwords, and otherwise maintaining users \
 and groups on an embedded system."
 HOMEPAGE = "http://tinylogin.busybox.net/"
 LICENSE = "GPL"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://tinylogin.busybox.net/downloads/tinylogin-${PV}.tar.bz2 \
 	file://cvs-20040608.patch;patch=1;pnum=1 \
 	file://add-system.patch;patch=1;pnum=1 \
 	file://adduser-empty_pwd.patch;patch=1 \
-	file://remove-index.patch;patch=1"
+	file://remove-index.patch;patch=1 \
+	file://use_O2_option.patch"
 
 EXTRA_OEMAKE = ""
 
