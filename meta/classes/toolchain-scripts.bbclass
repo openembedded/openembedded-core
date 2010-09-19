@@ -38,8 +38,8 @@ toolchain_create_tree_env_script () {
 	rm -f $script
 	touch $script
 	echo 'export PATH=${PATH}' >> $script
-	echo 'export PKG_CONFIG_SYSROOT_DIR=${STAGING_DIR}/${TARGET_SYS}' >> $script
-	echo 'export PKG_CONFIG_PATH=${STAGING_DIR}/${TARGET_SYS}${libdir}/pkgconfig' >> $script
+	echo 'export PKG_CONFIG_SYSROOT_DIR=${PKG_CONFIG_SYSROOT_DIR}' >> $script
+	echo 'export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}' >> $script
 
 	echo 'export CONFIG_SITE="${@siteinfo_get_files(d)}"' >> $script
 
