@@ -3,7 +3,7 @@
 
 /* AUTOMATICALLY GENERATED - DO NOT EDIT */
 
-#include "../conf.h"
+#include "conf.h"
 
 #ifdef WORDS_BIGENDIAN
 # undef  IS_LITTLE_ENDIAN
