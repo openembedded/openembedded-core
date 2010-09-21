@@ -35,7 +35,7 @@ PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 PACKAGES = "${PN}-dbg ${PN} catchsegv${PKGSUFFIX} sln${PKGSUFFIX} nscd${PKGSUFFIX} ldd${PKGSUFFIX} localedef${PKGSUFFIX} ${PN}-utils ${PN}-pic ${PN}-dev eglibc-doc eglibc-locale libcidn libmemusage libsegfault${PKGSUFFIX} eglibc-extra-nss eglibc-thread-db eglibc-pcprofile"
 
 PACKAGES_DYNAMIC = " \
-		    glibc-gconv-* glibc-charmap-* glibc-localedata-* glibc-binary-localedata-* \
+		    glibc-gconv-*${PKGSUFFIX} glibc-charmap-* glibc-localedata-* glibc-binary-localedata-* \
 		    eglibc-gconv-* eglibc-charmap-* eglibc-localedata-* eglibc-binary-localedata-* \
 		    locale-base-*"
 
