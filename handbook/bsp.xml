@@ -7,19 +7,19 @@
 
         <para>
             A Board Support Package (BSP) is a collection of information which together
-            defines how to support a particular hardware device, set of devices or 
+            defines how to support a particular hardware device, set of devices, or 
             hardware platform. It will include information about the hardware features 
-            present on the device, kernel configuration information along with any 
-            additional hardware drivers required and also any additional software 
+            present on the device and kernel configuration information along with any 
+            additional hardware drivers required. It will also list any additional software 
             components required in addition to a generic Linux software stack for both 
             essential and optional platform features.
         </para>
 
         <para>
-            The intend of this document is to define a structure for these components
-            so that BSPs follow a commonly understood layout allowing them to be 
-            provided in a common way that everyone understands. It also allows end 
-            users to become familiar with one common format and encourages standardisation 
+            The intent of this document is to define a structure for these components
+            so that BSPs follow a commonly understood layout, allowing them to be 
+            provided in a common form that everyone understands. It also allows end-users
+            to become familiar with one common format and encourages standardisation 
             of software support of hardware.
         </para>
 
@@ -36,7 +36,7 @@
         </para>
 
         <para>
-            The BSP specification does not include a build system or other tools, 
+            The BSP specification does not include a build system or other tools -
             it is concerned with the hardware specific components only. At the end 
             distribution point the BSP may be shipped combined with a build system
             and other tools, but it is important to maintain the distinction that these
@@ -80,10 +80,10 @@ meta-bsp/prebuilds/
             <title>Prebuilt User Binaries (meta-bsp/binary/*)</title>
 
             <para>
-                This optional area cotains useful prebuilt kernels and userspace filesystem 
+                This optional area contains useful prebuilt kernels and userspace filesystem 
                 images appropriate to the target system. Users could use these to get a system 
                 running and quickly get started on development tasks. The exact types of binaries
-                present will be highly hardware dependent but a README file should be present 
+                present will be highly hardware-dependent but a README file should be present 
                 explaining how to use them with the target hardware. If prebuilt binaries are 
                 present, source code to meet licensing requirements must also be provided in 
                 some form.
@@ -96,7 +96,7 @@ meta-bsp/prebuilds/
 
             <para>
                 This file identifies the structure as a Poky layer. This file identifies the 
-                contents of the layer and how contains information about how Poky should use 
+                contents of the layer and contains information about how Poky should use 
                 it. In general it will most likely be a standard boilerplate file consisting of:
             </para>
 
@@ -182,7 +182,7 @@ TARGET_CC_ARCH = "-m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse"
 
             <para>
                 These files make up the definition of a kernel to use with this
-                hardware. In this case it is a complete self contained kernel with its own
+                hardware. In this case it is a complete self-contained kernel with its own
                 configuration and patches but kernels can be shared between many
                 machines as well. Taking some specific example files:
             </para>
@@ -194,7 +194,7 @@ meta-bsp/packages/linux/linux-bsp_2.6.50.bb
             <para>
                 which is the core kernel recipe which firstly details where to get the kernel
                 source from. All standard source code locations are supported so this could 
-                be a release tarball, some git repository or source included in
+                be a release tarball, some git repository, or source included in
                 the directory within the BSP itself. It then contains information about which 
                 patches to apply and how to configure and build it. It can reuse the main
                 Poky kernel build class, so the definitions here can remain very simple.
@@ -206,7 +206,7 @@ linux-bsp-2.6.50/*.patch
             </para>
             <para>
                 which are patches which may be applied against the base kernel, wherever
-                that may have been obtained from.
+                they may have been obtained from.
             </para>
             <para>
                <programlisting>
@@ -218,7 +218,7 @@ meta-bsp/packages/linux/linux-bsp-2.6.50/defconfig-bsp
             </para>
             <para>
                 Examples of kernel recipes are available in Poky itself. These files are
-                optional since a kernel from Poky itself could be selected although it
+                optional since a kernel from Poky itself could be selected, although it
                 would be unusual not to have a kernel configuration.
             </para>
         </section>
@@ -229,7 +229,7 @@ meta-bsp/packages/linux/linux-bsp-2.6.50/defconfig-bsp
             <para>
                 This area includes other pieces of software which the hardware may need for best
                 operation. These are just examples of the kind of things that may be
-                encountered. The are standard .bb file recipes in the usual Poky format,
+                encountered. These are standard .bb file recipes in the usual Poky format,
                 so for examples, see standard Poky recipes. The source can be included directly, 
                 referred to in source control systems or release tarballs of external software projects.
             </para>
@@ -273,18 +273,18 @@ meta-bsp/packages/image-creator/image-creator-native_0.1.bb
             <title>Append BSP specific information to existing recipes</title>
 
             <para>
-            Say you have a recipe like pointercal which has machine specific information in it,
-            and then you have your new bsp code in a layer. Before .bbappend extension is
-            introduced, you have to copy the whole pointercal recipe and files into your layer,
-            and then add the single file for your machine which is ugly.
+            Say you have a recipe like pointercal which has machine-specific information in it,
+            and then you have your new BSP code in a layer. Before the .bbappend extension was
+            introduced, you'd have to copy the whole pointercal recipe and files into your layer,
+            and then add the single file for your machine, which is ugly.
 
-            .bbappend makes above work much easier, to allow bsp specific information merged
-            with original recipe easily. When bitbake finds any X.bbappend files, they will be
-            included after bitbake loads X.bb but before finalise and any anonymous methods run.
-            This allows bsp layer to poke around and do whatever it might want to customise
+            .bbappend makes the above work much easier, to allow BSP-specific information to be merged
+            with the original recipe easily. When bitbake finds any X.bbappend files, they will be
+            included after bitbake loads X.bb but before finalise or anonymous methods run.
+            This allows the BSP layer to poke around and do whatever it might want to customise
             the original recipe.
 
-            .bbappend is expected to include below two lines in the head (which may be changed
+            .bbappend is expected to include the below two lines in the head (which may be changed
             in the future):
             </para>
 
@@ -294,8 +294,8 @@ FILESPATH =. "${@base_set_filespath(["${THISDIR}/${PN}"], d)}:"
             </programlisting>
 
             <para>
-            Then bsp could add machine specific config files in layer directory, which will be
-            added by bitbake. You could look at meta-emenlow/packages/formfactor as example
+            Then the BSP could add machine-specific config files in layer directory, which will be
+            added by bitbake. You can look at meta-emenlow/packages/formfactor as an example.
             </para>
         </section>
 
@@ -303,9 +303,9 @@ FILESPATH =. "${@base_set_filespath(["${THISDIR}/${PN}"], d)}:"
             <title>Prebuild Data (meta-bsp/prebuilds/*)</title>
 
             <para>
-                The location can contains a precompiled representation of the source code 
+                The location can contain a precompiled representation of the source code 
                 contained elsewhere in the BSP layer. It can be processed and used by
-                Poky to provide much faster build times assuming a compatible configuration is used.
+                Poky to provide much faster build times, assuming a compatible configuration is used.
             </para>
 
             <para>
