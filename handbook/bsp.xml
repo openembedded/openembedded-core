@@ -314,4 +314,138 @@ FILESPATH =. "${@base_set_filespath(["${THISDIR}/${PN}"], d)}:"
 
         </section>
 
+        <section id='bsp-click-through-licensing'>
+            <title>BSP 'Click-through' Licensing Procedure</title>
+
+            <note><para> This section is here as a description of how
+		click-through licensing is expected to work, and is
+		not yet not impemented.
+            </para></note>
+
+            <para>
+	      In some cases, a BSP may contain separately licensed IP
+	      (Intellectual Property) for a component, which imposes
+	      upon the user a requirement to accept the terms of a
+	      'click-through' license.  Once the license is accepted
+	      (in whatever form that may be, see details below) the
+	      Poky build system can then build and include the
+	      corresponding component in the final BSP image.  Some
+	      affected components may be essential to the normal
+	      functioning of the system and have no 'free' replacement
+	      i.e. the resulting system would be non-functional
+	      without them.  Other components may be simply
+	      'good-to-have' or purely elective, or if essential
+	      nonetheless have a 'free' (possibly less-capable)
+	      version which may substituted for in the BSP recipe.
+            </para>
+
+            <para>
+	      For the latter cases, where it is possible to do so from
+	      a functionality perspective, the Poky website will make
+	      available a 'de-featured' BSP completely free of
+	      encumbered IP, which can be used directly and without
+	      any further licensing requirements.  If present, this
+	      fully 'de-featured' BSP will be named meta-bsp (i.e. the
+	      normal default naming convention).  This is the simplest
+	      and therefore preferred option if available, assuming
+	      the resulting functionality meets requirements.
+            </para>
+
+            <para>
+	      If however, a non-encumbered version is unavailable or
+	      the 'free' version would provide unsuitable
+	      functionality or quality, an encumbered version can be
+	      used.  Encumbered versions of a BSP are given names of
+	      the form meta-bsp-nonfree.  There are several ways
+	      within the Poky build system to satisfy the licensing
+	      requirements for an encumbered BSP, in roughly the
+	      following order of preference:
+            </para>
+
+	    <itemizedlist>
+              <listitem>
+
+		<para>
+		  Get a license key (or keys) for the encumbered BSP
+		  by
+		  visiting <ulink url='https://pokylinux.org/bsp-keys.html'>https://pokylinux.org/bsp-keys.html</ulink>
+		  and give the web form there the name of the BSP
+		  and your e-mail address.
+		</para>
+
+		<programlisting>
+		  [screenshot of dialog box]
+		</programlisting>
+
+		<para>
+		  After agreeing to any applicable license terms, the
+		  BSP key(s) will be immediately sent to the address
+		  given and can be used by specifying BSPKEY_&lt;keydomain&gt;
+		  environment variables when building the image:
+		</para>
+
+		<programlisting>
+		  $ BSPKEY_&lt;keydomain&gt;=&lt;key&gt; bitbake poky-image-sato
+		</programlisting>
+
+		<para>
+		  This will allow the encumbered image to be built
+		  with no change at all to the normal build process.
+		</para>
+
+		<para>
+		  Equivalently and probably more conveniently, a line
+		  for each key can instead be put into the user's
+		  local.conf file.
+		</para>
+
+		<para>
+		  The &lt;keydomain&gt; component of the
+		  BSPKEY_&lt;keydomain&gt; is required because there
+		  may be multiple licenses in effect for a give BSP; a
+		  given &lt;keydomain&gt; in such cases corresponds to
+		  a particular license.  In order for an encumbered
+		  BSP encompassing multiple key domains to be built
+		  successfully, a &lt;keydomain&gt; entry for each
+		  applicable license must be present in local.conf or
+		  supplied on the command-line.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  Do nothing - build as you normally would, and follow
+		  any license prompts that originate from the
+		  encumbered BSP (the build will cleanly stop at this
+		  point).  These usually take the form of instructions
+		  needed to manually fetch the encumbered package(s)
+		  and md5 sums into e.g. the poky/build/downloads
+		  directory.  Once the manual package fetch has been
+		  completed, restarting the build will continue where
+		  it left off, this time without the prompt since the
+		  license requirements will have been satisfied.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  Get a full-featured BSP recipe rather than a key, by
+		  visiting
+		  <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
+		  Accepting the license agreement(s) presented will
+		  subsequently allow you to download a tarball
+		  containing a full-featured BSP legally cleared for
+		  your use by the just-given license agreement(s).
+		  This method will also allow the encumbered image to
+		  be built with no change at all to the normal build
+		  process.
+		</para>
+              </listitem>
+	    </itemizedlist>
+	    <para>
+	      Note that method 3 is also the only option available
+	      when downloading pre-compiled images generated from
+	      non-free BSPs.  Those images are likewise available at
+	      <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
+            </para>
+        </section>
+
 </chapter>
