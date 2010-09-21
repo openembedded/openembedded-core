@@ -36,7 +36,7 @@ if [ "$XSERVER" != "/usr/bin/Xorg" ]; then
 
         # use usb mouse if present
         if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ]; then
-          ARGS="$ARGS -mouse /dev/input/mice"
+          ARGS="$ARGS -mouse mouse,/dev/input/mice"
         fi
 
         # kdrive 1.4 onwards needs -mouse args
