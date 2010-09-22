@@ -55,6 +55,10 @@ RECIPE_LATEST_VERIONS_pn-makedepend = "check"
 RECIPE_MAINTAINER_pn-makedepend = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 DISTRO_PN_ALIAS_pn-makedepend = "Mandriva=makedepend Ubuntu=xutils-dev"
 
+RECIPE_STATUS_pn-mdadm = "red"
+RECIPE_LATEST_VERIONS_pn-mdadm = "check"
+RECIPE_MAINTAINER_pn-mdadm = "Xiaofeng.Yan <xiaofeng@windriver.com>"
+
 RECIPE_STATUS_pn-meta-ide-support = "red"
 RECIPE_LATEST_VERIONS_pn-meta-ide-support = "check"
 RECIPE_MAINTAINER_pn-meta-ide-support = "Joshua Lock <joshua.lock@intel.com>"
@@ -732,7 +736,7 @@ RECIPE_COMMENTS_pn-opkg = ""
 RECIPE_MAINTAINER_pn-opkg = "Dongxiao Xu <dongxiao.xu@intel.com"
 
 RECIPE_STATUS_pn-dpkg = "red"
-RECIPE_LATEST_VERSION_pn-dpkg = "check"
+RECIPE_LATEST_VERSION_pn-dpkg = "check: 1.15.8.5"
 RECIPE_MAINTAINER_pn-dpkg = "Dongxiao Xu <dongxiao.xu@intel.com"
 
 RECIPE_STATUS_pn-opkg-utils = "green"
@@ -1266,10 +1270,6 @@ RECIPE_STATUS_pn-tzcode = "red"
 RECIPE_LATEST_VERSION_pn-tzcode = "2009r"
 RECIPE_MAINTAINER_pn-tzcode = "Kevin Tian <kevin.tian@intel.com>"
 DISTRO_PN_ALIAS_pn-tzcode-native = "Ubuntu=libc-bin Debian=libc-bin Fedora=glibc-common"
-
-RECIPE_STATUS_pn-dpkg = "red"
-RECIPE_LATEST_VERSION_pn-dpkg = "1.15.8.5"
-RECIPE_MAINTAINER_pn-dpkg = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-rpcbind = "green"
 DEPENDENCY_CHECK_pn-rpcbind = "not done"
