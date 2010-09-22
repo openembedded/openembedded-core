@@ -198,6 +198,7 @@ class QuiltTree(PatchSet):
     def Clean(self):
         try:
             self._runcmd(["pop", "-a", "-f"])
+            oe.path.remove(os.path.join(self.dir, "patches","series"))
         except Exception:
             pass
         self.initialized = True
