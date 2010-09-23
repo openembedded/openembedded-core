@@ -6,7 +6,7 @@ LICENSE = "GPL"
 PR = "r0"
 
 LIC_FILES_CHKSUM = "file://README;md5=9dab010c5baa416669e5d17381799dd5"
-SRC_URI = "http://www.kernel.org/pub/linux/docs/man-pages/man-pages-3.25.tar.gz"
+SRC_URI = "http://www.kernel.org/pub/linux/docs/man-pages/Archive/${PN}-${PV}.tar.gz"
 
 RDEPENDS = "man"
 
