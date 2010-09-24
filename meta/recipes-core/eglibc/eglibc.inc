@@ -36,4 +36,10 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 ARM_INSTRUCTION_SET = "arm"
 
+# eglibc uses PARALLELMFLAGS variable to pass parallel build info so transfer
+# PARALLEL_MAKE into PARALLELMFLAGS and empty out PARALLEL_MAKE
+EGLIBCPARALLELISM := "PARALLELMFLAGS="${PARALLEL_MAKE}""
+EXTRA_OEMAKE += ${EGLIBCPARALLELISM}
+PARALLEL_MAKE = ""
+
 PACKAGES = "glibc catchsegv sln nscd ldd localedef glibc-utils glibc-dev glibc-doc glibc-locale libsegfault glibc-extra-nss glibc-thread-db glibc-pcprofile"
