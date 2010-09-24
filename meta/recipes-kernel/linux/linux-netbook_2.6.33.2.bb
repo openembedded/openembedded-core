@@ -1,4 +1,4 @@
-require linux-moblin.inc
+require linux-netbook.inc
 
 PR = "r1"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "2.6 Linux Development Kernel for moblin Atom based platforms"
+DESCRIPTION = "2.6 Linux Development Kernel for Atom based platforms"
 SECTION = "kernel"
 LICENSE = "GPL"
 
