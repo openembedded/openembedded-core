@@ -238,6 +238,15 @@ if [ "$MACHINE" = "qemumips" ]; then
         KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -hda $HDIMAGE -no-reboot $QEMU_UI_OPTIONS"
     fi
+    if [ "$TYPE" = "nfs" ]; then
+        if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
+            echo "Error: NFS mount point $HDIMAGE doesn't exist"
+            release_lock
+            return
+        fi
+        KERNCMDLINE="root=/dev/nfs console=ttyS0 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -no-reboot $QEMU_UI_OPTIONS"
+    fi
 fi
 
 if [ "$MACHINE" = "qemuppc" ]; then
@@ -249,6 +258,15 @@ if [ "$MACHINE" = "qemuppc" ]; then
     if [ "$TYPE" = "ext3" ]; then
         KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE -M $MACHINE_SUBTYPE -bios $BIOS -hda $HDIMAGE -no-reboot $QEMU_UI_OPTIONS"
+    fi
+    if [ "$TYPE" = "nfs" ]; then
+        if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
+            echo "Error: NFS mount point $HDIMAGE doesn't exist"
+            release_lock
+            return
+        fi
+        KERNCMDLINE="root=/dev/nfs console=ttyS0 console=tty0 nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE -M $MACHINE_SUBTYPE -bios $BIOS -no-reboot $QEMU_UI_OPTIONS"
     fi
 fi
 
