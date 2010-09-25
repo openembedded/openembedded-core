@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Tools tasks for Poky"
 LICENSE = "MIT"
-PR = "r6"
+PR = "r7"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -32,6 +32,7 @@ RDEPENDS_task-poky-tools-debug = "\
     gdb \
     gdbserver \
     tcf-agent \
+    rsync \
     strace"
 
 RDEPENDS_task-poky-tools-profile = "\
