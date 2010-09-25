@@ -1,0 +1,11 @@
+--- texinfo-4.13/install-info/install-info.c.mosdo-crash	2009-09-02 20:18:44.000000000 -0400
++++ texinfo-4.13/install-info/install-info.c	2009-09-02 20:19:53.000000000 -0400
+@@ -1765,7 +1765,7 @@
+             err = argz_add (&argz, &argz_len, opt);
+           free (opt); opt = NULL;
+ 
+-          opt = xmalloc (strlen (regex) + sizeof ("--section="));
++          opt = xmalloc (strlen (title) + sizeof ("--section="));
+           if (sprintf (opt, "--section=%s", title) == -1)
+             err = 1;
+           if (!err)

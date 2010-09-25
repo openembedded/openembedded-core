@@ -1,0 +1,23 @@
+diff -up texinfo-4.13/info/indices.c.orig texinfo-4.13/info/indices.c
+--- texinfo-4.13/info/indices.c.orig	2010-08-31 12:04:38.317462471 +0200
++++ texinfo-4.13/info/indices.c	2010-08-31 12:11:49.322624552 +0200
+@@ -192,6 +192,7 @@ do_info_index_search (WINDOW *window, in
+      index for, build and remember an index now. */
+   fb = file_buffer_of_window (window);
+   if (!initial_index_filename ||
++      !fb ||
+       (FILENAME_CMP (initial_index_filename, fb->filename) != 0))
+     {
+       info_free_references (index_index);
+@@ -287,8 +288,9 @@ index_entry_exists (WINDOW *window, char
+     return 0;
+ 
+   fb = file_buffer_of_window (window);
+-  if (!initial_index_filename
+-      || (FILENAME_CMP (initial_index_filename, fb->filename) != 0))
++  if (!initial_index_filename ||
++      !fb ||
++      (FILENAME_CMP (initial_index_filename, fb->filename) != 0))
+     {
+       info_free_references (index_index);
+       index_index = info_indices_of_file_buffer (fb);
