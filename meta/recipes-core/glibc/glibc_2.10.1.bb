@@ -5,7 +5,7 @@ ARM_INSTRUCTION_SET = "arm"
 PACKAGES_DYNAMIC = "libc6*"
 RPROVIDES_${PN}-dev = "libc6-dev virtual-libc-dev"
 
-PR = "r5"
+PR = "r6"
 
 # the -isystem in bitbake.conf screws up glibc do_stage
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
@@ -54,6 +54,7 @@ SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
            file://glibc-check_pf.patch;striplevel=0 \
            file://ldd-unbash.patch \
            file://glibc-arm-IO-acquire-lock-fix.diff \
+           file://mips-rld-map-check.patch \
            file://generic-bits_select.h \
            file://generic-bits_types.h \
            file://generic-bits_typesizes.h \
