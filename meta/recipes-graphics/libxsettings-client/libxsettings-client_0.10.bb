@@ -9,13 +9,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \
 PRIORITY = "optional"
 DEPENDS = "virtual/libx11"
 
-PR = "r3"
+PR = "r4"
 
 headers = "xsettings-common.h xsettings-client.h"
 
 SRC_URI = "http://projects.o-hand.com/matchbox/sources/optional-dependencies/Xsettings-client-0.10.tar.gz \
         file://MIT-style-license \
-        file://link-x11.patch;apply=yes"
+        file://link-x11.patch;apply=yes \
+        file://disable_Os_option.patch"
 
 S = "${WORKDIR}/Xsettings-client-0.10"
 

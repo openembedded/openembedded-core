@@ -1,0 +1,17 @@
+Do not set Os optimization in target APP CFLAGS, since it may have potential
+error if "--enable-target-optspace" is not set when configuring GCC.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+diff -ruN libproxy-0.4.3-orig/CMakeLists.txt libproxy-0.4.3/CMakeLists.txt
+--- libproxy-0.4.3-orig/CMakeLists.txt	2010-09-21 17:16:06.000000000 +0800
++++ libproxy-0.4.3/CMakeLists.txt	2010-09-21 17:16:40.000000000 +0800
+@@ -61,7 +61,7 @@
+   add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
+ else()
+   add_definitions(-D_POSIX_C_SOURCE=1)
+-  set(CMAKE_CXX_FLAGS "-g -Wall -Werror -fvisibility=hidden -Os ${CMAKE_CXX_FLAGS}")
++  set(CMAKE_CXX_FLAGS "-g -Wall -Werror -fvisibility=hidden -O2 ${CMAKE_CXX_FLAGS}")
+ endif()
+ 
+ ### Subdirectories

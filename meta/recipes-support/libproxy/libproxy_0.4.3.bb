@@ -9,16 +9,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7d7044444a7b1b116e8783edcdb44ff4 \
 
 DEPENDS = "virtual/libx11 xmu gconf-dbus"
 
-SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz"
+SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz \
+           file://disable_Os_option.patch"
 
-PR = "r1"
+PR = "r2"
 
 inherit cmake pkgconfig
 
 EXTRA_OECMAKE = "-DWITH_WEBKIT=no -DWITH_GNOME=yes -DWITH_KDE4=no \
 	      -DWITH_PYTHON=no -DWITH_PERL=no -DWITH_MOZJS=no -DWITH_NM=no"
 
-FILES_${PN}-dbg += "${libdir}/libproxy/0.4.2/plugins/"
+FILES_${PN}-dbg += "${libdir}/libproxy/${PV}/plugins/"
 
 do_configure_prepend() {
 	export HOST_SYS=${HOST_SYS}

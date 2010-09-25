@@ -17,7 +17,7 @@ LANGUAGES ?= "c,c++${FORTRAN}${JAVA}"
 # hidden symbols in libgcc.a which linker complains
 # when linking shared libraries further in the build like (gnutls)
 
-SPECIAL_ARCH_LIST = "powerpc arm"
+SPECIAL_ARCH_LIST = "powerpc"
 OPTSPACE = ${@base_contains("SPECIAL_ARCH_LIST", "${TARGET_ARCH}", "", "--enable-target-optspace",d)}
 
 EXTRA_OECONF_BASE ?= ""
