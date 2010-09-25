@@ -46,7 +46,7 @@ do_patch() {
 	fi
 
 	# updates or generates the target description
-	updateme ${WORKDIR}
+	updateme ${ARCH} ${WORKDIR}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
