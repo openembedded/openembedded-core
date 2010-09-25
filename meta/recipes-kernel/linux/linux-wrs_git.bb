@@ -38,18 +38,21 @@ do_patch() {
 	    defconfig=${WORKDIR}/defconfig
 	fi
 
+	# simply ensures that a branch of the right name has been created
 	createme ${ARCH} ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${defconfig}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not create ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
 	fi
 
+	# updates or generates the target description
 	updateme ${WORKDIR}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
 	fi
 
+	# executes and modifies the source tree as required
 	patchme ${WRMACHINE}-${LINUX_KERNEL_TYPE}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not modify ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
@@ -65,17 +68,31 @@ validate_branches() {
 
 	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ]; then
 		if [ -n "${force_revisions}" ]; then
-			echo "Forcing branch ${WRMACHINE}-${LINUX_KERNEL_TYPE} to ${target_branch_head}"
-			git branch -m ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${WRMACHINE}-${LINUX_KERNEL_TYPE}-orig
-			git checkout -b ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${target_branch_head}
+			git show ${target_branch_head} > /dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				echo "Forcing branch ${WRMACHINE}-${LINUX_KERNEL_TYPE} to ${target_branch_head}"
+				git branch -m ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${WRMACHINE}-${LINUX_KERNEL_TYPE}-orig
+				git checkout -b ${WRMACHINE}-${LINUX_KERNEL_TYPE} ${target_branch_head}
+			else
+				echo "ERROR ${target_branch_head} is not a valid commit ID."
+				echo "The kernel source tree may be out of sync"
+				exit 1
+			fi	       
 		fi
 	fi
 
 	if [ "$meta_head" != "$target_meta_head" ]; then
 		if [ -n "${force_revisions}" ]; then
-			echo "Forcing branch wrs_meta to ${target_meta_head}"
-			git branch -m wrs_meta wrs_meta-orig
-			git checkout -b wrs_meta ${target_meta_head}
+			git show ${target_meta_head} > /dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				echo "Forcing branch wrs_meta to ${target_meta_head}"
+				git branch -m wrs_meta wrs_meta-orig
+				git checkout -b wrs_meta ${target_meta_head}
+			else
+				echo "ERROR ${target_meta_head} is not a valid commit ID"
+				echo "The kernel source tree may be out of sync"
+				exit 1
+			fi	   
 		fi
 	fi
 }
