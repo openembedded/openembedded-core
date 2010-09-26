@@ -4,7 +4,7 @@ from bb import msg, utils
 import ast
 import codegen
 
-PARSERCACHE_VERSION = 1
+PARSERCACHE_VERSION = 2
 
 try:
     import cPickle as pickle
@@ -177,11 +177,11 @@ class PythonParser():
 
     def parse_python(self, node):
 
-        h = hash(node)
+        h = hash(str(node))
 
         if h in pythonparsecache:
-            self.references = pythonparsecache[h].references
-            self.execs = pythonparsecache[h].execs
+            self.references = pythonparsecache[h]["refs"]
+            self.execs = pythonparsecache[h]["execs"]
             return
 
         code = compile(check_indent(str(node)), "<string>", "exec", 
@@ -196,7 +196,9 @@ class PythonParser():
         self.references.update(visitor.var_execs)
         self.execs = visitor.direct_func_calls
 
-        pythonparsecache[h] = self
+        pythonparsecache[h] = {}
+        pythonparsecache[h]["refs"] = self.references
+        pythonparsecache[h]["execs"] = self.execs
 
 class ShellParser():
     def __init__(self):
@@ -209,10 +211,10 @@ class ShellParser():
         commands it executes.
         """
 
-        h = hash(value)
+        h = hash(str(value))
 
         if h in shellparsecache:
-            self.execs = shellparsecache[h].execs
+            self.execs = shellparsecache[h]["execs"]
             return self.execs
 
         try:
@@ -224,7 +226,8 @@ class ShellParser():
             self.process_tokens(token)
         self.execs = set(cmd for cmd in self.allexecs if cmd not in self.funcdefs)
 
-        shellparsecache[h] = self
+        shellparsecache[h] = {}
+        shellparsecache[h]["execs"] = self.execs
 
         return self.execs
 
