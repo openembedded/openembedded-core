@@ -1906,7 +1906,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-at = "13 months"
 RECIPE_LATEST_RELEASE_DATE_pn-at = "11/2009"
 RECIPE_MAINTAINER_pn-at = "Scott Garman <scott.a.garman@intel.com>"
 
-RECIPE_STATUS_pn-cpio = "red"
+RECIPE_STATUS_pn-cpio = "green"
 DEPENDENCY_CHECK_pn-cpio = "not done"
 RECIPE_LATEST_VERSION_pn-cpio = "2.11"
 RECIPE_INTEL_SECTION_pn-cpio = "base"
