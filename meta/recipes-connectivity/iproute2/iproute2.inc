@@ -25,3 +25,5 @@ ALTERNATIVE_NAME = "ip"
 ALTERNATIVE_PATH = "${base_sbindir}/ip.iproute2"
 ALTERNATIVE_LINK = "${base_bindir}/ip"
 ALTERNATIVE_PRIORITY = "100"
+
+PARALLEL_MAKE = ""
