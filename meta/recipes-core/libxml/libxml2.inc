@@ -1,4 +1,5 @@
-DESCRIPTION = "GNOME XML Parser library"
+SUMMARY = "XML C Parser Library and Toolkit"
+DESCRIPTION = "The XML Parser Library allows for manipulation of XML files.  Libxml2 exports Push and Pull type parser interfaces for both XML and HTML.  It can do DTD validation at parse time, on a parsed document instance or with an arbitrary DTD.  Libxml2 includes complete XPath, XPointer and Xinclude implementations.  It also has a SAX like interface, which is designed to be compatible with Expat."
 HOMEPAGE = "http://www.xmlsoft.org/"
 BUGTRACKER = "http://bugzilla.gnome.org/buglist.cgi?product=libxml2"
 SECTION = "libs"

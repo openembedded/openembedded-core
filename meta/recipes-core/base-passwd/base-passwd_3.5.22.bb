@@ -1,4 +1,5 @@
-DESCRIPTION = "Base system password/group files."
+SUMMARY = "Base system master password/group files."
+DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
 PR = "r0"
 LICENSE = "GPLv2+"

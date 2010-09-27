@@ -80,13 +80,17 @@ FILES_glibc-thread-db = "${base_libdir}/libthread_db*"
 FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
 RPROVIDES_glibc-dev += "libc-dev"
 
-DESCRIPTION_sln = "glibc: create symbolic links between files"
-DESCRIPTION_nscd = "glibc: name service cache daemon for passwd, group, and hosts"
-DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services"
-DESCRIPTION_ldd = "glibc: print shared library dependencies"
+SUMMARY_sln = "The static ln."
+DESCRIPTION_sln = "Similar to the 'ln' utility, but statically linked.  sln is useful to make symbolic links to dynamic libraries if the dynamic linking system, for some reason, is not functional."
+SUMMARY_nscd = "Name service cache daemon"
+DESCRIPTION_nscd = "nscd, name service cache daemon, caches name service lookups for the passwd, group and hosts information.  It can damatically improvide performance with remote, such as NIS or NIS+, name services."
+SUMMARY_glibc-extra-nss = "hesiod, NIS and NIS+ nss libraries"
+DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services.
+SUMMARY_ldd = "print shared library dependencies"
+DESCRIPTION_ldd = "/usr/bin/ldd prints shared library dependencies for each program or shared library specified on the command line."
 DESCRIPTION_localedef = "glibc: compile locale definition files"
-DESCRIPTION_glibc-utils = "glibc: misc utilities like iconf, local, gencat, tzselect, rpcinfo, ..."
-
+SUMMARY_glibc-utils = "Miscellaneous utilities provided by glibc"
+DESCRIPTION_glibc-utils = "Miscellaneous utilities including getconf, iconf, locale, gencat, tzselect, zic, rpcinfo, ..."
 
 EXTRA_OEMAKE += "rootsbindir=${base_sbindir}"
 

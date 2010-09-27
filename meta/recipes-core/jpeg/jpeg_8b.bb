@@ -1,4 +1,5 @@
-DESCRIPTION = "libjpeg is a library for handling the JPEG (JFIF) image format."
+SUMMARY = "libjpeg is a library for handling the JPEG (JFIF) image format."
+DESCRIPTION = "libjpeg contains a library for handling the JPEG (JFIF) image format, as well as related programs for accessing the libjpeg functions."
 HOMEPAGE = "http://www.ijg.org/"
 BUGTRACKER = ""
 
@@ -37,6 +38,7 @@ do_install() {
 }
 
 PACKAGES =+ 		"jpeg-tools "
+DESCRIPTION_jpeg-tools = "The jpeg-tools package includes the client programs for access libjpeg functionality.  These tools allow for the compression, decompression, transformation and display of JPEG files."
 FILES_jpeg-tools = 	"${bindir}/*"
 
 BBCLASSEXTEND = "native"

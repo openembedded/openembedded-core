@@ -1,4 +1,5 @@
-DESCRIPTION = "manage symlinks in /etc/rcN.d."
+SUMMARY = "manage symlinks in /etc/rcN.d."
+DESCRIPTION = "update-rc.d is a utilities that allows the management of symlinks to the initscripts in the /etc/rcN.d directory structure."
 SECTION = "base"
 PRIORITY = "standard"
 PACKAGE_ARCH = "all"

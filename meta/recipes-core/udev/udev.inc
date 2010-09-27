@@ -1,4 +1,5 @@
-DESCRIPTION ?= "udev is a program which dynamically creates and removes device nodes from \
+SUMMARY = "/dev/ and hotplug management daemon"
+DESCRIPTION = "udev is a program which dynamically creates and removes device nodes from \
 /dev/. It responds to /sbin/hotplug device events and requires a 2.6 kernel."
 LICENSE = "GPL"
 

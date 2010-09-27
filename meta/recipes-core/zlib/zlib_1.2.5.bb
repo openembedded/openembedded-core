@@ -1,4 +1,6 @@
-DESCRIPTION = "Zlib Compression Library"
+SUMMARY = "Zlib Compression Library"
+DESCRIPTION = "Zlib is a general-purpose, patent-free, lossless data compression \
+library which is used by many different programs."
 HOMEPAGE = "http://zlib.net/"
 SECTION = "libs"
 PRIORITY = "required"

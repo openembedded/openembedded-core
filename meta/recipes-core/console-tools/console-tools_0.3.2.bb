@@ -1,6 +1,7 @@
 SECTION = "base"
 LICENSE = "GPL"
-DESCRIPTION = "Allows you to set-up and manipulate the Linux console."
+SUMMARY = "Allows you to set-up and manipulate the Linux console."
+DESCRIPTION = "Provides tools that enable the set-up and manipulation of the linux console and console-font files."
 DEPENDS = "gettext"
 PR = "r2"
 

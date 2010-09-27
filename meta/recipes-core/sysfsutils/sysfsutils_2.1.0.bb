@@ -1,4 +1,5 @@
-DESCRIPTION = "system utilities based on sysfs."
+SUMMARY = "Tools for working with sysfs."
+DESCRIPTION = "Tools for working with the sysfs virtual filesystem.  The tool 'systool' can query devices by bus, class and topology."
 HOMEPAGE = "http://linux-diag.sourceforge.net/Sysfsutils.html"
 
 LICENSE = "GPLv2 & LGPLv2.1"

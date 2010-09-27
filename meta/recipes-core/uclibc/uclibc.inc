@@ -1,4 +1,13 @@
-DESCRIPTION = "C library for embedded systems"
+SUMMARY = "C library for embedded systems"
+DESCRIPTION = "The name uClibc is an abbreviation for 'the \ 
+microcontroller C library'. For simplicity, uClibc is pronounced \ 
+'yew-see-lib-see'.  The goal of uClibc is to provide as much \
+functionality as possible in a small amount of space, and it is intended \
+primarily for embedded use. It is also highly configurable in supported \
+features, at the cost of ABI differences for different configurations. \
+uClibc has been designed from the ground up to be a C library for \
+embedded Linux.  It is NOT compatible with binaries linked against glibc."
+
 LICENSE = "LGPL"
 SECTION = "libs"
 PRIORITY = "required"

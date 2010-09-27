@@ -1,4 +1,5 @@
-DESCRIPTION = "Extra machine specific configuration files"
+SUMMARY = "Extra machine specific configuration files"
+DESCRIPTION = "Extra machine specific configuration files for udev, specifically blacklist information."
 LICENSE = "GPLv2"
 
 PR = "r0"

@@ -1,4 +1,8 @@
-DESCRIPTION = "Util-linux is a suite of essential utilities for any Linux system."
+SUMMARY = "A suite of basic system administration utilities."
+DESCRIPTION = "Util-linux includes a suite of basic system administration utilities \
+commonly found on most Linux systems.  Some of the more important utilities include \
+disk partitioning, kernel message management, filesystem creation, and system login."
+
 SECTION = "base"
 
 # note that `lscpu' is under GPLv3+

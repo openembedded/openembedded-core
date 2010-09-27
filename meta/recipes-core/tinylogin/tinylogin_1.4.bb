@@ -1,4 +1,5 @@
 SECTION = "base"
+SUMMARY = "Tiny versions of many common login, authentication and related utilities."
 DESCRIPTION = "TinyLogin is a suite of tiny UNIX \
 utilities for handling logins, user authentication, \
 changing passwords, and otherwise maintaining users \

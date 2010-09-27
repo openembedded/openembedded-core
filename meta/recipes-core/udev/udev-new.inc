@@ -1,6 +1,6 @@
+SUMMARY = "/dev/ and hotplug management daemon"
 DESCRIPTION = "udev is a daemon which dynamically creates and removes device nodes from \
-/dev/, handles hotplug events and loads drivers at boot time. It replaces \
-the hotplug package and requires a kernel not older than 2.6.12."
+/dev/, handles hotplug events and loads drivers at boot time."
 HOMEPAGE = "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LICENSE_${PN} = "GPLv2+"

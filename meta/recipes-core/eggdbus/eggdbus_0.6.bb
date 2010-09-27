@@ -1,3 +1,4 @@
+SUMMARY = "An alternative to dbug-glib."
 DESCRIPTION = "An alternative to dbus-glib. It is designed specifically to make it comfortable to work with very large and potentially complex D-Bus services like e.g. DeviceKit-disks"
 HOMEPAGE = "http://cgit.freedesktop.org/~david/eggdbus"
 LICENSE = "LGPLv2+"
