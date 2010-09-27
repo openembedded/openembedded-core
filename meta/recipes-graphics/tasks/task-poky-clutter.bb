@@ -27,7 +27,6 @@ RDEPENDS_task-poky-clutter-core = "\
     clutter-gtk-0.8"
 
 RDEPENDS_task-poky-clutter-tests = "\
-    clutter-0.8-examples \
     clutter-cairo-0.8-examples \
     clutter-gst-0.8-examples \
     clutter-gtk-0.8-examples"
