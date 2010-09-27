@@ -70,18 +70,41 @@ def clean_package_list(package_list):
     return set.keys()
 
 
+def get_latest_released_meego_source_package_list():
+    "Returns list of all the name os packages in the latest meego distro"
+
+    
+    f = open("/tmp/Meego-1.0", "r")
+    package_names = []
+    for line in f:
+        package_names.append(line[:-1] + ":" + "main") # Also strip the '\n' at the end
+     
+    package_list=clean_package_list(package_names)
+    return "1.0", package_list
+
+def get_source_package_list_from_url(url, section):
+    "Return a sectioned list of package names from a URL list"
+
+    bb.note("Reading %s: %s" % (url, section))
+    links = get_links_from_url(url)
+    srpms = filter(is_src_rpm, links)
+    names_list = map(package_name_from_srpm, srpms)
+
+    new_pkgs = []
+    for pkgs in names_list:
+       new_pkgs.append(pkgs + ":" + section)
+
+    return new_pkgs
+
 def get_latest_released_fedora_source_package_list():
     "Returns list of all the name os packages in the latest fedora distro"
     latest = find_latest_numeric_release("http://download.fedora.redhat.com/pub/fedora/linux/releases/")
 
-    url = "http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Fedora/source/SRPMS/" % latest
-    links = get_links_from_url(url)
-    url = "http://download.fedora.redhat.com/pub/fedora/linux/updates/%s/SRPMS/" % latest
-    links += get_links_from_url(url)
+    package_names = get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Fedora/source/SRPMS/" % latest, "main")
 
-    srpms = filter(is_src_rpm, links)
+    package_names += get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Everything/source/SPRMS/" % latest, "everything")
+    package_names += get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/updates/%s/SRPMS/" % latest, "updates")
 
-    package_names = map(package_name_from_srpm, srpms)
     package_list=clean_package_list(package_names)
         
     return latest, package_list
@@ -90,27 +113,19 @@ def get_latest_released_opensuse_source_package_list():
     "Returns list of all the name os packages in the latest opensuse distro"
     latest = find_latest_numeric_release("http://download.opensuse.org/source/distribution/")
 
-    url = "http://download.opensuse.org/source/distribution/%s/repo/oss/suse/src/" % latest
-    links = get_links_from_url(url)
-    url = "http://download.opensuse.org/update/%s/rpm/src/" % latest
-    links += get_links_from_url(url)
-    srpms = filter(is_src_rpm, links)
+    package_names = get_source_package_list_from_url("http://download.opensuse.org/source/distribution/%s/repo/oss/suse/src/" % latest, "main")
+    package_names += get_source_package_list_from_url("http://download.opensuse.org/update/%s/rpm/src/" % latest, "updates")
 
-    package_names = map(package_name_from_srpm, srpms)
     package_list=clean_package_list(package_names)
     return latest, package_list
 
 def get_latest_released_mandriva_source_package_list():
     "Returns list of all the name os packages in the latest mandriva distro"
     latest = find_latest_numeric_release("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/")
-    url = "http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/release/" % latest
-    links = get_links_from_url(url)
-    url = "http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/updates/" % latest
-    links += get_links_from_url(url)
+    package_names = get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/release/" % latest, "main")
+    package_names += get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/contrib/release/" % latest, "contrib")
+    package_names += get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/updates/" % latest, "updates")
 
-    srpms = filter(is_src_rpm, links)
-
-    package_names = map(package_name_from_srpm, srpms)
     package_list=clean_package_list(package_names)
     return latest, package_list
 
@@ -128,7 +143,7 @@ def find_latest_debian_release(url):
     except:
         return "_NotFound_"
 
-def get_debian_style_source_package_list(url):
+def get_debian_style_source_package_list(url, section):
     "Return the list of package-names stored in the debian style Sources.gz file"
     import urllib
     sock = urllib.urlopen(url)
@@ -139,23 +154,26 @@ def get_debian_style_source_package_list(url):
     sock.close()
     tmpfile.close()
     import gzip
+    bb.note("Reading %s: %s" % (url, section))
 
     f = gzip.open(tmpfilename)
     package_names = []
     for line in f:
         if line[:9] == "Package: ":
-            package_names.append(line[9:-1]) # Also strip the '\n' at the end
+            package_names.append(line[9:-1] + ":" + section) # Also strip the '\n' at the end
     os.unlink(tmpfilename)
 
     return package_names
 
 def get_latest_released_debian_source_package_list():
     "Returns list of all the name os packages in the latest debian distro"
-    latest = find_latest_debian_release("ftp://ftp.debian.org/debian/dists/")
-    url = "ftp://ftp.debian.org/debian/dists/stable/main/source/Sources.gz" 
-    package_names = get_debian_style_source_package_list(url)
-    url = "ftp://ftp.debian.org/debian/dists/stable-proposed-updates/main/source/Sources.gz" 
-    package_names += get_debian_style_source_package_list(url)
+    latest = find_latest_debian_release("http://ftp.debian.org/debian/dists/")
+    url = "http://ftp.debian.org/debian/dists/stable/main/source/Sources.gz" 
+    package_names = get_debian_style_source_package_list(url, "main")
+    url = "http://ftp.debian.org/debian/dists/stable/contrib/source/Sources.gz" 
+    package_names += get_debian_style_source_package_list(url, "contrib")
+    url = "http://ftp.debian.org/debian/dists/stable-proposed-updates/main/source/Sources.gz" 
+    package_names += get_debian_style_source_package_list(url, "updates")
     package_list=clean_package_list(package_names)
     return latest, package_list
 
@@ -171,9 +189,13 @@ def get_latest_released_ubuntu_source_package_list():
     "Returns list of all the name os packages in the latest ubuntu distro"
     latest = find_latest_ubuntu_release("http://archive.ubuntu.com/ubuntu/dists/")
     url = "http://archive.ubuntu.com/ubuntu/dists/%s/main/source/Sources.gz" % latest
-    package_names = get_debian_style_source_package_list(url)
+    package_names = get_debian_style_source_package_list(url, "main")
+    url = "http://archive.ubuntu.com/ubuntu/dists/%s/multiverse/source/Sources.gz" % latest
+    package_names += get_debian_style_source_package_list(url, "multiverse")
+    url = "http://archive.ubuntu.com/ubuntu/dists/%s/universe/source/Sources.gz" % latest
+    package_names += get_debian_style_source_package_list(url, "universe")
     url = "http://archive.ubuntu.com/ubuntu/dists/%s-updates/main/source/Sources.gz" % latest
-    package_names += get_debian_style_source_package_list(url)
+    package_names += get_debian_style_source_package_list(url, "updates")
     package_list=clean_package_list(package_names)
     return latest, package_list
 
@@ -185,11 +207,14 @@ def create_distro_packages_list(distro_check_dir):
     for file in os.listdir(pkglst_dir):
         os.unlink(os.path.join(pkglst_dir, file))
  
-    per_distro_functions = [["Fedora", get_latest_released_fedora_source_package_list],
-                            ["OpenSuSE", get_latest_released_opensuse_source_package_list],
-                            ["Ubuntu", get_latest_released_ubuntu_source_package_list],
+    per_distro_functions = [
                             ["Debian", get_latest_released_debian_source_package_list],
-                            ["Mandriva", get_latest_released_mandriva_source_package_list]]
+                            ["Ubuntu", get_latest_released_ubuntu_source_package_list],
+                            ["Fedora", get_latest_released_fedora_source_package_list],
+                            ["OpenSuSE", get_latest_released_opensuse_source_package_list],
+                            ["Mandriva", get_latest_released_mandriva_source_package_list],
+                            ["Meego", get_latest_released_meego_source_package_list]
+                           ]
  
     from datetime import datetime
     begin = datetime.now()
@@ -254,6 +279,8 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     recipe_name = bb.data.getVar('PN', d, True)
     bb.note("Checking: %s" % pn)
 
+    trim_dict = dict({"-native":"-native", "-cross":"-cross", "-initial":"-initial"})
+
     if pn.find("-native") != -1:
         pnstripped = pn.split("-native")
         bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
@@ -274,30 +301,41 @@ def compare_in_distro_packages_list(distro_check_dir, d):
 
     bb.note("Recipe: %s" % recipe_name)
     tmp = bb.data.getVar('DISTRO_PN_ALIAS', localdata, True)
-    if tmp == "Poky" or  tmp == "OpenedHand" or tmp == "Intel" or tmp == "Upstream":
-        matching_distros.append(tmp)
-        tmp = None
+
+    distro_exceptions = dict({"Poky":'Poky', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "WindRiver":'Windriver'})
+
+    if tmp:
+        list = tmp.split(' ')
+        for str in list:
+            if str and str.find("=") == -1 and distro_exceptions[str]:
+                matching_distros.append(str)
 
     distro_pn_aliases = {}
     if tmp:
         list = tmp.split(' ')
         for str in list:
-            (dist, pn_alias) = str.split('=')
-            distro_pn_aliases[dist.strip().lower()] = pn_alias.strip()
+            if str.find("=") != -1:
+                (dist, pn_alias) = str.split('=')
+                distro_pn_aliases[dist.strip().lower()] = pn_alias.strip()
  
     for file in os.listdir(pkglst_dir):
         (distro, distro_release) = file.split("-")
         f = open(os.path.join(pkglst_dir, file), "rb")
-        for pkg in f:
+        for line in f:
+            (pkg, section) = line.split(":")
             if distro.lower() in distro_pn_aliases:
                 pn = distro_pn_aliases[distro.lower()]
             else:
                 pn = recipe_name
-            if pn == pkg[:-1]: # strip the \n at the end
-                matching_distros.append(distro)
+            if pn == pkg:
+                matching_distros.append(distro + "-" + section[:-1]) # strip the \n at the end
                 f.close()
                 break
         f.close()
+
+    
+    if tmp != None:
+         matching_distros.append(tmp)
 
     bb.note("Matching: %s" % matching_distros)
     return matching_distros
@@ -311,11 +349,9 @@ def save_distro_check_result(result, datetime, d):
     if not os.path.isdir(logdir):
         os.makedirs(logdir)
     result_file = os.path.join(logdir, "distrocheck.csv")
-    line = pn + ", "
+    line = pn
     for i in result:
-        line = line + i + ", "
-    if result:
-        line = line[:-2] # Take out the comma at the end of line
+        line = line + "," + i
     if not os.path.exists(result_file):
         open(result_file, 'w+b').close() # touch the file so that the next open won't fail
     f = open(result_file, "a+b")
