@@ -3,8 +3,11 @@
 . /etc/formfactor/config
 
 if [ "$HAVE_TOUCHSCREEN" = "1" ]; then
-	while [ ! -z $TSLIB_TSDEVICE ] && [ ! -f /etc/pointercal ]
+	n=1
+	while [ ! -z $TSLIB_TSDEVICE ] && [ ! -f /etc/pointercal ] && [ $n -le 5 ]
 	do
 	   /usr/bin/xtscal
+	   sleep 1
+	   let "n += 1"
 	done
 fi
