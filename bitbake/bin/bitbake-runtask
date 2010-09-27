@@ -5,6 +5,12 @@ import sys
 import warnings
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
 
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
+
 class BBConfiguration(object):
     """
     Manages build options and configurations for one run
@@ -62,8 +68,9 @@ bb.event.useStdout = False
 import bb.cooker
 
 cooker = bb.cooker.BBCooker(BBConfiguration(), None)
-buildfile = sys.argv[1]
-taskname = sys.argv[2]
+hashfile = sys.argv[1]
+buildfile = sys.argv[2]
+taskname = sys.argv[3]
 
 cooker.parseConfiguration()
 
@@ -84,8 +91,18 @@ cooker.bb_cache.handle_data(fn, cooker.status)
 if taskname.endswith("_setscene"):
     the_data.setVarFlag(taskname, "quieterrors", "1")
 
+p = pickle.Unpickler(file(hashfile, "rb"))
+hashdata = p.load()
+
+bb.parse.siggen.set_taskdata(hashdata["hashes"], hashdata["deps"])
+
+for h in hashdata["hashes"]:
+    bb.data.setVar("BBHASH_%s" % h, hashdata["hashes"][h], the_data)
+for h in hashdata["deps"]:
+    bb.data.setVar("BBHASHDEPS_%s" % h, hashdata["deps"][h], the_data)
+
 ret = 0
-if sys.argv[3] != "True":
+if sys.argv[4] != "True":
     ret = bb.build.exec_task(fn, taskname, the_data)
 sys.exit(ret)
 

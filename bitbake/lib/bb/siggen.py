@@ -107,6 +107,10 @@ class SignatureGeneratorBasic(SignatureGenerator):
         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
         return h
 
+    def set_taskdata(self, hashes, deps):
+        self.runtaskdeps = deps
+        self.taskhash = hashes
+
     def dump_sigtask(self, fn, task, stampbase, runtime):
         k = fn + "." + task
         if runtime == "customfile":
@@ -128,7 +132,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
             data['gendeps'][dep] = self.gendeps[fn][dep]
             data['varvals'][dep] = self.lookupcache[fn][dep]
 
-        if runtime and runtime != "customfile":
+        if runtime:
             data['runtaskdeps'] = self.runtaskdeps[k]
             data['runtaskhashes'] = {}
             for dep in data['runtaskdeps']:

@@ -30,6 +30,12 @@ import stat
 import fcntl
 import copy
 
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
+
 class RunQueueStats:
     """
     Holds statistics on the tasks handled by the associated runQueue
@@ -703,6 +709,21 @@ class RunQueueData:
                         procdep.append(self.taskData.fn_index[self.runq_fnid[dep]] + "." + self.runq_task[dep])
                     self.runq_hash[task] = bb.parse.siggen.get_taskhash(self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task], procdep, self.dataCache)
 
+        hashdata = {}
+        hashdata["hashes"] = {}
+        hashdata["deps"] = {}
+        for task in range(len(self.runq_fnid)):
+            hashdata["hashes"][self.taskData.fn_index[self.runq_fnid[task]] + "." + self.runq_task[task]] = self.runq_hash[task]
+            deps = []
+            for dep in self.runq_depends[task]:
+                deps.append(self.taskData.fn_index[self.runq_fnid[dep]] + "." + self.runq_task[dep])
+            hashdata["deps"][self.taskData.fn_index[self.runq_fnid[task]] + "." + self.runq_task[task]] = deps
+
+        # Write out the hashes into a file for use by the individual tasks
+        self.hashfile = bb.data.expand("${TMPDIR}/cache/hashdata.dat", self.cooker.configuration.data)
+        p = pickle.Pickler(file(self.hashfile, "wb"), -1)
+        p.dump(hashdata)
+
         return len(self.runq_fnid)
 
     def dump_data(self, taskQueue):
@@ -1047,7 +1068,7 @@ class RunQueueExecute:
             sys.stdout.flush()
             sys.stderr.flush()
 
-            proc = subprocess.Popen(["bitbake-runtask", fn, taskname, str(self.cooker.configuration.dry_run)], env=env, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+            proc = subprocess.Popen(["bitbake-runtask", self.rqdata.hashfile, fn, taskname, str(self.cooker.configuration.dry_run)], env=env, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
             pipein = proc.stdout
             pipeout = proc.stdin
             pid = proc.pid
