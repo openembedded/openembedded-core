@@ -5561,4 +5561,3 @@ RECIPE_STATUS_pn-unfs-server = "red"
 DISTRO_PN_ALIAS_pn-unfs-server = "Poky"
 RECIPE_STATUS_pn-update-rc.d = "red"
 DISTRO_PN_ALIAS_pn-update-rc.d = "Poky"
-
