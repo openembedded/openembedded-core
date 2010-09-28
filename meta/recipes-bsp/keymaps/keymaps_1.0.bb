@@ -1,4 +1,5 @@
-DESCRIPTION = "Keyboard map"
+SUMMARY = "Keyboard maps"
+DESCRIPTION = "Keymaps and initscript to set the keymap on bootup."
 SECTION = "base"
 RDEPENDS_${PN} = "initscripts console-tools"
 LICENSE = "GPL"

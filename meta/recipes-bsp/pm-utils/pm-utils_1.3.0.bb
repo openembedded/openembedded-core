@@ -1,5 +1,6 @@
 SECTION = "base"
-DESCRIPTION = "PM hooks"
+SUMMARY = "Utilities and scripts for power management"
+DESCRIPTION = "Simple shell command line toos to suspect and hibernate."
 LICENSE="GPL"
 
 PR = "r0"

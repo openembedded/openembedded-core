@@ -1,4 +1,7 @@
-DESCRIPTION = "Set of tools for managing notebook power consumption."
+SUMMARY = "Utilities for Advanced Power Management"
+DESCRIPTION = "The Advanced Power Management (APM) support provides access to \
+battery status information and a set of tools for managing notebook power \
+consumption."
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "GPLv2+"

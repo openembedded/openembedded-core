@@ -1,4 +1,7 @@
-DESCRIPTION = "GRUB is the GRand Unified Bootloader."
+SUMMARY = "GRUB is the GRand Unified Bootloader"
+DESCRIPTION = "GRUB is a GPLed bootloader intended to unify bootloading across x86 \
+operating systems. In addition to loading the Linux kernel, it implements the Multiboot \
+standard, which allows for flexible loading of multiple boot images."
 HOMEPAGE = "http://www.gnu.org/software/grub/"
 SECTION = "bootloaders"
 PRIORITY = "optional"

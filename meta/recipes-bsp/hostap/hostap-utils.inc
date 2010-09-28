@@ -1,4 +1,6 @@
-DESCRIPTION = "User mode helpers for the hostap driver"
+SUMMARY = "User mode helpers for the hostap driver"
+DESCRIPTION = "The hostap driver supports Host AP mode, it allows for IEEE 802.11 \
+management functions on the host computer and allows the system to act as an access point."
 HOMEPAGE = "http://hostap.epitest.fi"
 BUGTRACKER = "http://hostap.epitest.fi/bugz/"
 LICENSE = "GPLv2"

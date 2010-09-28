@@ -1,3 +1,4 @@
+SUMMARY = "Controls the configuration of serial ports"
 DESCRIPTION = "setserial is a program designed to set and/or report the configuration information associated with a serial port"
 HOMEPAGE = "http://setserial.sourceforge.net"
 AUTHOR = "Theodore Ts'o <tytso@mit.edu>"

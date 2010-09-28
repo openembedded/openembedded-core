@@ -1,4 +1,9 @@
-DESCRIPTION = "Tools for zmodem/xmodem/ymodem file transfer"
+SUMMARY = "Tools for zmodem/xmodem/ymodem file transfer"
+DESCRIPTION = "Lrzsz is a cosmetically modified zmodem/ymodem/xmodem package built from \
+the public-domain version of Chuck Forsberg's rzsz package. \
+These programs use error correcting protocols ({z,x,y}modem) to send (sz, sx, sb) and \
+receive (rz, rx, rb) files over a dial-in serial port from a variety of programs \
+running under various operating systems. "
 HOMEPAGE = "http://www.ohse.de/uwe/software/lrzsz.html"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
