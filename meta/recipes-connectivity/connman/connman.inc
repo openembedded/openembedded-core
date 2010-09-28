@@ -10,7 +10,7 @@ DEPENDS  = "libgdbus dbus glib-2.0 hal"
 RDEPENDS_${PN} = "wpa-supplicant resolvconf"
 
 INITSCRIPT_NAME = "connman"
-INITSCRIPT_PARAMS = "start 05 5 2 . stop 22 0 1 6 ."
+INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
 
 inherit autotools pkgconfig update-rc.d
 

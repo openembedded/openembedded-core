@@ -1,5 +1,5 @@
 require connman.inc
-PR = "r0"
+PR = "r1"
 
 EXTRA_OECONF += "\
   ac_cv_path_WPASUPPLICANT=/usr/sbin/wpa_supplicant \
@@ -16,10 +16,10 @@ EXTRA_OECONF += "\
   --disable-udev \
   --disable-polkit \
   --enable-client \
-  --enable-fake \
   --prefix=/usr --sysconfdir=/etc --localstatedir=/var"
 
 SRC_URI  = "\
   http://www.kernel.org/pub/linux/network/connman/connman-${PV}.tar.gz \
+  file://fix-shutdown-ap-disconnect.patch \
   file://connman \
 "
