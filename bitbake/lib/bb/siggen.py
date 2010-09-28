@@ -7,26 +7,26 @@ except ImportError:
     import pickle
     bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
 
-def init(d):
+def init(d, dumpsigs):
     siggens = [obj for obj in globals().itervalues()
                       if type(obj) is type and issubclass(obj, SignatureGenerator)]
 
     desired = bb.data.getVar("BB_SIGNATURE_HANDLER", d, True) or "noop"
     for sg in siggens:
         if desired == sg.name:
-            return sg(d)
+            return sg(d, dumpsigs)
             break
     else:
         bb.error("Invalid signature generator '%s', using default 'noop' generator" % desired)
         bb.error("Available generators: %s" % ", ".join(obj.name for obj in siggens))
-        return SignatureGenerator(d)
+        return SignatureGenerator(d, dumpsigs)
 
 class SignatureGenerator(object):
     """
     """
     name = "noop"
 
-    def __init__(self, data):
+    def __init__(self, data, dumpsigs):
         return
 
     def finalise(self, fn, d):
@@ -37,7 +37,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
     """
     name = "basic"
 
-    def __init__(self, data):
+    def __init__(self, data, dumpsigs):
         self.basehash = {}
         self.taskhash = {}
         self.taskdeps = {}
@@ -52,17 +52,19 @@ class SignatureGeneratorBasic(SignatureGenerator):
         else:
             self.twl = None
 
+        self.dumpsigs = dumpsigs
+
     def _build_data(self, fn, d):
 
-        self.taskdeps[fn], self.gendeps[fn] = bb.data.generate_dependencies(d)
+        taskdeps, gendeps = bb.data.generate_dependencies(d)
 
         basehash = {}
         lookupcache = {}
 
-        for task in self.taskdeps[fn]:
+        for task in taskdeps:
             data = d.getVar(task, False)
             lookupcache[task] = data
-            for dep in sorted(self.taskdeps[fn][task]):
+            for dep in sorted(taskdeps[task]):
                 if dep in self.basewhitelist:
                     continue
                 if dep in lookupcache:
@@ -75,20 +77,25 @@ class SignatureGeneratorBasic(SignatureGenerator):
             self.basehash[fn + "." + task] = hashlib.md5(data).hexdigest()
             #bb.note("Hash for %s is %s" % (task, tashhash[task]))
 
-        self.lookupcache[fn] = lookupcache
+        if self.dumpsigs:
+            self.taskdeps[fn] = taskdeps
+            self.gendeps[fn] = gendeps
+            self.lookupcache[fn] = lookupcache
+
+        return taskdeps
 
     def finalise(self, fn, d, variant):
 
         if variant:
             fn = "virtual:" + variant + ":" + fn
 
-        self._build_data(fn, d)
+        taskdeps = self._build_data(fn, d)
 
         #Slow but can be useful for debugging mismatched basehashes
         #for task in self.taskdeps[fn]:
         #    self.dump_sigtask(fn, task, d.getVar("STAMP", True), False)
 
-        for task in self.taskdeps[fn]:
+        for task in taskdeps:
             d.setVar("BB_BASEHASH_task-%s" % task, self.basehash[fn + "." + task])
 
     def get_taskhash(self, fn, task, deps, dataCache):

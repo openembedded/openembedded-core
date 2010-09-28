@@ -497,7 +497,7 @@ class BBCooker:
         try:
             data = self.configuration.data
 
-            bb.parse.init_parser(data)
+            bb.parse.init_parser(data, self.configuration.dump_signatures)
             for f in files:
                 data = bb.parse.handle(f, data)
 
@@ -550,7 +550,7 @@ class BBCooker:
                 bb.fetch.fetcher_init(self.configuration.data)
             bb.codeparser.parser_cache_init(self.configuration.data)
 
-            bb.parse.init_parser(data)
+            bb.parse.init_parser(data, self.configuration.dump_signatures)
 
             bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
 
