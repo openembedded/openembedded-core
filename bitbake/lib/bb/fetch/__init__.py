@@ -263,6 +263,8 @@ def go(d, urls = None):
             # First try fetching uri, u, from PREMIRRORS
             mirrors = [ i.split() for i in (bb.data.getVar('PREMIRRORS', d, 1) or "").split('\n') if i ]
             localpath = try_mirrors(d, u, mirrors, False, m.forcefetch(u, ud, d))
+        elif os.path.exists(ud.localfile):
+            localpath = ud.localfile
 
         # Need to re-test forcefetch() which will return true if our copy is too old
         if m.forcefetch(u, ud, d) or not localpath:
