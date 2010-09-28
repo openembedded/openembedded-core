@@ -73,8 +73,9 @@ EXTRA_IMAGE_FEATURES_mx31ads = "tools-testapps debug-tweaks"
 # The first package type listed will be used for rootfs generation
 # include 'package_deb' for debs
 # include 'package_ipk' for ipks
-#PACKAGE_CLASSES ?= "package_deb package_ipk"
-PACKAGE_CLASSES ?= "package_ipk"
+# include 'package_rpm' for rpms
+#PACKAGE_CLASSES ?= "package_rpm package_deb package_ipk"
+PACKAGE_CLASSES ?= "package_rpm"
 
 # A list of additional classes to use when building the system
 # include 'image-prelink' in order to prelink the filesystem image
