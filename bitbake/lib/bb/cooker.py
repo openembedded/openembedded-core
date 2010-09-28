@@ -494,69 +494,71 @@ class BBCooker:
             path, _ = os.path.split(path)
 
     def parseConfigurationFiles(self, files):
-        try:
-            data = self.configuration.data
+        def _parse(f, data):
+            try:
+                return bb.parse.handle(f, data)
+            except (IOError, bb.parse.ParseError) as exc:
+                parselog.critical("Unable to parse %s: %s" % (f, exc))
+                sys.exit(1)
+ 
+        data = self.configuration.data
 
-            bb.parse.init_parser(data, self.configuration.dump_signatures)
-            for f in files:
-                data = bb.parse.handle(f, data)
+        bb.parse.init_parser(data, self.configuration.dump_signatures)
+        for f in files:
+            data = _parse(f, data)
 
-            layerconf = self._findLayerConf()
-            if layerconf:
-                parselog.debug(2, "Found bblayers.conf (%s)", layerconf)
-                data = bb.parse.handle(layerconf, data)
+        layerconf = self._findLayerConf()
+        if layerconf:
+            parselog.debug(2, "Found bblayers.conf (%s)", layerconf)
+            data = _parse(layerconf, data)
 
-                layers = (bb.data.getVar('BBLAYERS', data, True) or "").split()
+            layers = (bb.data.getVar('BBLAYERS', data, True) or "").split()
 
-                data = bb.data.createCopy(data)
-                for layer in layers:
-                    parselog.debug(2, "Adding layer %s", layer)
-                    bb.data.setVar('LAYERDIR', layer, data)
-                    data = bb.parse.handle(os.path.join(layer, "conf", "layer.conf"), data)
+            data = bb.data.createCopy(data)
+            for layer in layers:
+                parselog.debug(2, "Adding layer %s", layer)
+                bb.data.setVar('LAYERDIR', layer, data)
+                data = _parse(os.path.join(layer, "conf", "layer.conf"), data)
 
-                    # XXX: Hack, relies on the local keys of the datasmart
-                    # instance being stored in the 'dict' attribute and makes
-                    # assumptions about how variable expansion works, but
-                    # there's no better way to force an expansion of a single
-                    # variable across the datastore today, and this at least
-                    # lets us reference LAYERDIR without having to immediately
-                    # eval all our variables that use it.
-                    for key in data.dict:
-                        if key != "_data":
-                            value = data.getVar(key, False)
-                            if value and "${LAYERDIR}" in value:
-                                data.setVar(key, value.replace("${LAYERDIR}", layer))
+                # XXX: Hack, relies on the local keys of the datasmart
+                # instance being stored in the 'dict' attribute and makes
+                # assumptions about how variable expansion works, but
+                # there's no better way to force an expansion of a single
+                # variable across the datastore today, and this at least
+                # lets us reference LAYERDIR without having to immediately
+                # eval all our variables that use it.
+                for key in data.dict:
+                    if key != "_data":
+                        value = data.getVar(key, False)
+                        if value and "${LAYERDIR}" in value:
+                            data.setVar(key, value.replace("${LAYERDIR}", layer))
 
-                bb.data.delVar('LAYERDIR', data)
+            bb.data.delVar('LAYERDIR', data)
 
-            if not data.getVar("BBPATH", True):
-                raise SystemExit("The BBPATH variable is not set")
+        if not data.getVar("BBPATH", True):
+            raise SystemExit("The BBPATH variable is not set")
 
-            data = bb.parse.handle(os.path.join("conf", "bitbake.conf"), data)
+        data = _parse(os.path.join("conf", "bitbake.conf"), data)
 
-            self.configuration.data = data
+        self.configuration.data = data
 
-            # Handle any INHERITs and inherit the base class
-            inherits  = ["base"] + (bb.data.getVar('INHERIT', self.configuration.data, True ) or "").split()
-            for inherit in inherits:
-                self.configuration.data = bb.parse.handle(os.path.join('classes', '%s.bbclass' % inherit), self.configuration.data, True )
+        # Handle any INHERITs and inherit the base class
+        inherits  = ["base"] + (bb.data.getVar('INHERIT', self.configuration.data, True ) or "").split()
+        for inherit in inherits:
+            self.configuration.data = _parse(os.path.join('classes', '%s.bbclass' % inherit), self.configuration.data, True )
 
-            # Nomally we only register event handlers at the end of parsing .bb files
-            # We register any handlers we've found so far here...
-            for var in bb.data.getVar('__BBHANDLERS', self.configuration.data) or []:
-                bb.event.register(var, bb.data.getVar(var, self.configuration.data))
+        # Nomally we only register event handlers at the end of parsing .bb files
+        # We register any handlers we've found so far here...
+        for var in bb.data.getVar('__BBHANDLERS', self.configuration.data) or []:
+            bb.event.register(var, bb.data.getVar(var, self.configuration.data))
 
-            if bb.data.getVar("BB_WORKERCONTEXT", self.configuration.data) is None:
-                bb.fetch.fetcher_init(self.configuration.data)
-            bb.codeparser.parser_cache_init(self.configuration.data)
+        if bb.data.getVar("BB_WORKERCONTEXT", self.configuration.data) is None:
+            bb.fetch.fetcher_init(self.configuration.data)
+        bb.codeparser.parser_cache_init(self.configuration.data)
 
-            bb.parse.init_parser(data, self.configuration.dump_signatures)
+        bb.parse.init_parser(data, self.configuration.dump_signatures)
 
-            bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
-
-        except (IOError, bb.parse.ParseError):
-            parselog.exception("Error when parsing %s", files)
-            sys.exit(1)
+        bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
 
     def handleCollections( self, collections ):
         """Handle collections"""
@@ -899,7 +901,7 @@ class BBCooker:
             if not base in self.appendlist:
                self.appendlist[base] = []
             self.appendlist[base].append(f)
- 
+
         return (bbfiles, masked)
 
     def get_file_appends(self, fn):
@@ -909,7 +911,7 @@ class BBCooker:
         """
         f = os.path.basename(fn)
         if f in self.appendlist:
-            return self.appendlist[f] 
+            return self.appendlist[f]
         return []
 
     def pre_serve(self):

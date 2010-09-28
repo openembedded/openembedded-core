@@ -243,6 +243,8 @@ class BitBakeServerConnection():
         t = BBTransport()
         self.connection = xmlrpclib.Server("http://%s:%s" % (serverinfo.host, serverinfo.port), transport=t, allow_none=True)
         self.events = uievent.BBUIEventQueue(self.connection)
+        for event in bb.event.ui_queue:
+            self.events.queue_event(event)
 
     def terminate(self):
         # Don't wait for server indefinitely
