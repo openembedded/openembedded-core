@@ -143,6 +143,7 @@ RDEPENDS_task-poky-sys-services = "\
     less \
     libcap \
     libevent \
+    lighttp \
     logrotate \
     nfs-utils \
     pciutils \
