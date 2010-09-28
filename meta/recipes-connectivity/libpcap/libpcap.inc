@@ -1,4 +1,7 @@
-DESCRIPTION = "Libpcap is a tool to capture network packages on Unix/Linux platform"
+SUMMARY = "Interface for user-level network packet capture"
+DESCRIPT = "Libpcap provides a portable framework for low-level network \
+monitoring.  Libpcap can provide network statistics collection, \
+security monitoring and network debugging."
 HOMEPAGE = "http://www.tcpdump.org/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=53067&atid=469577"
 SECTION = "libs/network"

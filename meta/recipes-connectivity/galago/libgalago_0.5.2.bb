@@ -1,3 +1,4 @@
+SUMMARY =       "Desktop presence framework"
 DESCRIPTION =	"Galago is a desktop presence framework, designed to transmit presence information between programs."
 HOMEPAGE =	"http://www.galago-project.org/"
 LICENSE =	"LGPL"

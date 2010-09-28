@@ -1,4 +1,10 @@
-DESCRIPTION = "Avahi implements the DNS-SD over Multicast DNS"
+SUMMARY = "Avahi IPv$LL network address configuration daemon"
+DESCRIPTION = "Avahi is a fully LGPL framework for Multicast DNS Service Discovery. It \
+allows programs to publish and discover services and hosts running on a local network \
+with no specific configuration. This tool implements IPv4LL, "Dynamic Configuration of \
+IPv4 Link-Local Addresses" (IETF RFC3927), a protocol for automatic IP address \
+configuration from the link-local 169.254.0.0/16 range without the need for a central \
+server."
 AUTHOR = "Lennart Poettering <lennart@poettering.net>"
 HOMEPAGE = "http://avahi.org"
 BUGTRACKER = "http://avahi.org/report"

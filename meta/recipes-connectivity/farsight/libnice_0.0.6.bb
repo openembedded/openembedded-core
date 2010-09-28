@@ -1,3 +1,4 @@
+SUMMARY = "IETF draft Interactice Connectivity Establishment standard"
 DESCRIPTION = "Libnice is an implementation of the IETF's draft Interactice Connectivity Establishment standard (ICE)."
 HOMEPAGE = "http://nice.freedesktop.org/wiki/"
 SRC_URI = "http://nice.freedesktop.org/releases/libnice-${PV}.tar.gz"

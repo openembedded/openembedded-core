@@ -1,6 +1,7 @@
 LICENSE = "LGPL"
 HOMEPAGE = "http://www.opensync.org/"
-
+SUMMARY = "Synchronization framwork"
+DESCRIPTION = "The OpenSync project is an ongoing effort to create a synchronization framework that will be a platform independent, general purpose synchronization engine utilizing modular plugins for content formats and different kind of connection types. OpenSync's modularity should allow it to be extended easily to new devices and purposes without radically changing the architecture itself, allowing it to support wide variety of devices used today and in the future."
 DEPENDS = "sqlite3 libxml2 glib-2.0 libcheck zlib libxslt"
 
 PR = "r1"

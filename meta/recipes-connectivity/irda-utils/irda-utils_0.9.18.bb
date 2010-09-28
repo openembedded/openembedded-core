@@ -1,3 +1,4 @@
+SUMMARY = "Common files for IrDA"
 DESCRIPTION = "Provides common files needed to use IrDA. \
 IrDA allows communication over Infrared with other devices \
 such as phones and laptops."

@@ -1,4 +1,5 @@
-DESCRIPTION = "Jabber/XMPP connection manager"
+SUMMARY = "Telepathy Jabber/XMPP connection manager"
+DESCRIPTION = "Telepathy implementation of the Jabber/XMPP protocols."
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
 DEPENDS = "glib-2.0 dbus loudmouth telepathy-glib dbus-glib"
 LICENSE = "LGPL"

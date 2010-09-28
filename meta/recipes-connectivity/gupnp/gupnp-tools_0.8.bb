@@ -1,3 +1,4 @@
+DESCRIPTION = "Tools for GUPnP"
 LICENSE = "GPL"
 DEPENDS = "gupnp gtk+ libglade gnome-icon-theme"
 

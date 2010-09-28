@@ -1,4 +1,12 @@
-DESCRIPTION = "IPv4 link-local address allocator"
+SUMMARY = "IPv4 link-local address allocator"
+DESCRIPTION = "Zeroconf is a program that is used to claim IPv4 \
+link-local addresses. IPv4 link-local addresses are useful when setting \
+up ad-hoc networking between devices without the involvement of a either \
+a DHCP server or network administrator. \
+These addresses are allocated from the 169.254.0.0/16 address range and \
+are normally attached to each Ethernet device in your computer. \
+Addresses are assigned randomly by each host and, in case of collision, \
+both hosts (are supposed to) renumber."
 AUTHOR = "Anand Kumria <wildfire@progsoc.uts.edu.au>"
 HOMEPAGE = "http://www.progsoc.org/~wildfire/zeroconf/"
 LICENSE = "GPL"

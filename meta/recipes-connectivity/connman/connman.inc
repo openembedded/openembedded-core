@@ -1,5 +1,12 @@
-DESCRIPTION  = "The ConnMan project provides a daemon for managing \
-internet connections within embedded devices running the Linux operating system"
+SUMMARY = "A daemon for managing internet connections within embedded devices"
+DESCRIPTION = "The ConnMan project provides a daemon for managing \ 
+internet connections within embedded devices running the Linux \
+operating system.  The Connection Manager is designed to be slim and \
+to use as few resources as possible, so it can be easily integrated. \
+It is a fully modular system that can be extended, through plug-ins, \
+to support all kinds of wired or wireless technologies. Also, \
+configuration methods, like DHCP and domain name resolving, are \
+implemented using plug-ins."
 HOMEPAGE = "http://connman.net/"
 BUGTRACKER = "http://bugs.meego.com/buglist.cgi?quicksearch=connman"
 LICENSE  = "GPLv2"

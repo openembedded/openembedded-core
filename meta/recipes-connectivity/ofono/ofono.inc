@@ -1,5 +1,6 @@
 HOMEPAGE = "http://www.ofono.org"
 SUMMARY  = "open source telephony"
+DESCRIPTION = "oFono is a stack for mobile telephony devices on Linux. oFono supports speaking to telephony devices through specific drivers, or with generic AT commands."
 LICENSE  = "GPL"
 
 inherit autotools pkgconfig update-rc.d

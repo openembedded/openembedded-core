@@ -1,3 +1,4 @@
+SUMMARY = "Library for communicating with mail and news services"
 DESCRIPTION = "libetpan is a library for communicating with mail and news servers. \
 It supports the protocols SMTP, POP3, IMAP and NNTP."
 HOMEPAGE = "http://www.etpan.org"

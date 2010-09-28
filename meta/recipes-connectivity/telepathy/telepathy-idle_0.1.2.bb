@@ -1,4 +1,5 @@
-DESCRIPTION = "IRC connection manager for Telepathy"
+SUMMARY = "Telepathy IRC connection manager"
+DESCRIPTION = "Telepathy implementation of the Internet Relay Chat protocols."
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
 DEPENDS = "glib-2.0 dbus telepathy-glib openssl"
 LICENSE = "LGPL"

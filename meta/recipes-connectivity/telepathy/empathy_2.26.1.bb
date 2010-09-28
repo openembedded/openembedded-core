@@ -1,4 +1,8 @@
-DESCRIPTION = "Empathy: a Telepathy based IM client"
+SUMMARY = "a Telepathy based IM client"
+DESCRIPTION = "Instant messaging program supporting text, voice, video, file \
+transfers and interapplication communication over many different protocols, \
+include: AIM, MSN, Google Talk (Jabber/XMPP), Facebook, Yahoo!, Salut, \
+Gadu-Gadu, Groupwise, ICQ and QQ."
 HOMEPAGE = "http://blogs.gnome.org/view/xclaesse/2007/04/26/0"
 LICENSE = "GPL"
 DEPENDS = "libcanberra telepathy-farsight gnome-doc-utils python-native telepathy-python telepathy-mission-control libtelepathy telepathy-glib gtk+ gconf libglade eds-dbus"

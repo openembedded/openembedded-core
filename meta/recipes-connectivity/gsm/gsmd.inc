@@ -1,3 +1,4 @@
+SUMMARY = "GSM libraries and daemons"
 DESCRIPTION = "GSM libraries and daemons implementing the 07.10 specification"
 HOMEPAGE = "http://www.openmoko.org"
 LICENSE = "GPL LGPL"

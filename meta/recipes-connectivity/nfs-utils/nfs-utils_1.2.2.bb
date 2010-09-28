@@ -1,4 +1,6 @@
-DESCRIPTION = "userspace utilities for kernel nfs"
+SUMMARY = "userspace utilities for kernel nfs"
+DESCRIPTION = "The nfs-utils package provides a daemon for the kernel \
+NFS server and related tools."
 HOMEPAGE = "http://nfs.sourceforge.net/"
 SECTION = "console/network"
 PRIORITY = "optional"

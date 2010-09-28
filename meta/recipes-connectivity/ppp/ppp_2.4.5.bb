@@ -1,3 +1,4 @@
+SUMMARY = "Point-to-Point Protocol (PPP) support"
 DESCRIPTION = "ppp (Paul's PPP Package) is an open source package which implements \
 the Point-to-Point Protocol (PPP) on Linux and Solaris systems."
 SECTION = "console/network"

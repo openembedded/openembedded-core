@@ -1,4 +1,8 @@
-DESCRIPTION = "Telepathy framework - GLib library"
+SUMMARY = "Telepathy framework"
+DESCRIPTION = "Telepathy is a D-Bus framework for unifying real time \
+communication, including instant messaging, voice calls and video calls.  It \
+abstracts differences between protocols to provide a unified interface for \
+applications."
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
 DEPENDS = "glib-2.0 dbus dbus-glib telepathy-glib"
 LICENSE = "LGPL"

@@ -1,3 +1,4 @@
+SUMMARY = "GObject-based sync library"
 DESCRIPTION = "LibSync is a GObject-based framework for more convenient use of \
 OpenSync in GLib applications."
 LICENSE = "LGPL"

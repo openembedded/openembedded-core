@@ -1,3 +1,4 @@
+SUMMARY = "name server information handler"
 DESCRIPTION = "Resolvconf is a framework for keeping track of the system's \
 information about currently available nameservers. It sets \
 itself up as the intermediary between programs that supply \

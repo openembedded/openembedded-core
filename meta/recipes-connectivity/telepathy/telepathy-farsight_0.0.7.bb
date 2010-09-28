@@ -1,4 +1,6 @@
-DESCRIPTION = "Telepathy fasrsight"
+SUMMARY = "Telepathy fasrsight"
+DESCRIPTION = "Glue library for telepathy media signalling and the media \
+streaming capabilities of Farsight2."
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
 DEPENDS = "glib-2.0 dbus telepathy-glib farsight2"
 LICENSE = "LGPLv2"

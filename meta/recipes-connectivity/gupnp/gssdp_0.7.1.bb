@@ -1,3 +1,5 @@
+SUMMARY = "Resource discovery and announcement over SSDP"
+DESCRIPTION = "GSSDP implements resource discovery and announcement over SSDP (Simpe Service Discovery Protocol)."
 LICENSE = "LGPL"
 DEPENDS = "glib-2.0 libsoup-2.4 libglade"
 

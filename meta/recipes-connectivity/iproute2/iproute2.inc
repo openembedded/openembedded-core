@@ -1,4 +1,8 @@
-DESCRIPTION = "kernel routing and traffic control utilities"
+SUMMARY = "TCP / IP networking and traffic control utilities"
+DESCRIPTION = "Iproute2 is a collection of utilities for controlling \
+TCP / IP networking and traffic control in Linux.  Of the utilities ip \
+and tc are the most important.  ip controls IPv4 and IPv6 \
+configuration and tc stands for traffic control."
 HOMEPAGE = "http://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2"
 SECTION = "base"
 LICENSE = "GPLv2+"

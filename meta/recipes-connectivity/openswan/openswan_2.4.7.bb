@@ -1,4 +1,5 @@
 SECTION = "console/network"
+SUMMARY = "IPsec implementation"
 DESCRIPTION = "Openswan is an Open Source implementation of IPsec for the \
 Linux operating system."
 HOMEPAGE = "http://www.openswan.org"
