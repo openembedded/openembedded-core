@@ -17,7 +17,7 @@ do_configure_prepend () {
 }
 
 do_compile_prepend () {
-	find ./ -print|xargs chmod u=rwX
+	find ./ -print | grep -v ./patches | xargs chmod u=rwX
 	( cd util; ${BUILD_CC} subst.c -o subst )
 }
 
