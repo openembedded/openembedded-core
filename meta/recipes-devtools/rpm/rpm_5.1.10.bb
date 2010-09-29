@@ -12,6 +12,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/SNAPSHOT/${BPN}-${PV}.tar.gz \
 	   file://rpm-autoconf.patch \
 	   file://remove-compiled-tests.patch;apply=no \
 	   file://perfile_rpmdeps.sh \
+	   file://rpm-no-loop.patch \
 	  "
 inherit autotools gettext
 
