@@ -20,6 +20,7 @@ class BBConfiguration(object):
         setattr(self, "data", {})
         setattr(self, "file", [])
         setattr(self, "cmd", None)
+        setattr(self, "dump_signatures", True)
 
 _warnings_showwarning = warnings.showwarning
 def _showwarning(message, category, filename, lineno, file=None, line=None):
