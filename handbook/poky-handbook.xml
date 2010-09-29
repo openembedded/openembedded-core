@@ -9,7 +9,7 @@
 
         <mediaobject>
             <imageobject>
-                <imagedata fileref='common/poky-handbook.png' 
+                <imagedata fileref='template/poky-handbook.png' 
                     format='SVG' 
                     align='center' scalefit='1' width='100%'/>
             </imageobject>    

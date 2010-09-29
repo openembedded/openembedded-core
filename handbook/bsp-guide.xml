@@ -9,7 +9,7 @@
 
         <mediaobject>
             <imageobject>
-                <imagedata fileref='common/poky-handbook.png' 
+                <imagedata fileref='template/poky-handbook.png' 
                     format='SVG' 
                     align='center' scalefit='1' width='100%'/>
             </imageobject>    
@@ -42,7 +42,7 @@
 
     <legalnotice>
       <para>
-        Permission is granted to copy, distribute and/or modify this document under 
+        Permission is granted to copy, distribute and/or modify pthis document under 
         the terms of the <ulink type="http" url="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/">Creative Commons Attribution-Non-Commercial-Share Alike 2.0 UK: England &amp; Wales</ulink> as published by Creative Commons.
       </para>
     </legalnotice>

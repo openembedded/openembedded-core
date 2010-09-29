@@ -1,10 +1,8 @@
 all: html pdf tarball
 
 pdf:
-	./poky-doc-tools/poky-docbook-to-pdf poky-handbook.xml
-	./poky-doc-tools/poky-docbook-to-pdf bsp-guide.xml
-#       -- old way --
-#	dblatex poky-handbook.xml
+	./tools/poky-docbook-to-pdf poky-handbook.xml ./template
+	./tools/poky-docbook-to-pdf bsp-guide.xml ./template
 
 XSLTOPTS = --stringparam html.stylesheet style.css \
            --stringparam  chapter.autolabel 1 \
@@ -22,8 +20,6 @@ html:
 #       See http://www.sagehill.net/docbookxsl/HtmlOutput.html 
 	xsltproc $(XSLTOPTS) -o poky-handbook.html $(XSL_XHTML_URI) poky-handbook.xml
 	xsltproc $(XSLTOPTS) -o bsp-guide.html $(XSL_XHTML_URI) bsp-guide.xml
-#       -- old way --
-#	xmlto xhtml-nochunks poky-handbook.xml
 
 tarball: html
 	tar -cvzf poky-handbook.tgz poky-handbook.html style.css screenshots/ss-sato.png poky-beaver.png poky-handbook.png
@@ -36,3 +32,6 @@ SOURCES = *.png *.xml *.css *.svg
 
 publish:
 	scp -r $(OUTPUTS) $(SOURCES) o-hand.com:/srv/www/pokylinux.org/doc/
+
+clean:
+	rm $(OUTPUTS)

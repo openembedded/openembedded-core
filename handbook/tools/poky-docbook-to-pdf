@@ -1,7 +1,7 @@
 #!/bin/sh
 	
-if [ -z "$1" ]; then
-   echo "usage: [-v] $0 <docbook file>"
+if [ -z "$1" -o -z "$2" ]; then
+   echo "usage: [-v] $0 <docbook file> <templatedir>"
    echo
    echo "*NOTE* you need xsltproc, fop and nwalsh docbook stylesheets" 
    echo "       installed for this to work!"
@@ -9,14 +9,10 @@ if [ -z "$1" ]; then
    exit 0
 fi
 
-if [ "$1" = "-v" ]; then
-   echo "Version @version@"
-   exit 1
-fi
-
 BASENAME=`basename $1 .xml` || exit 1
 FO="$BASENAME.fo" 
 PDF="$BASENAME.pdf"
+TEMPLATEDIR=$2
 
 ##
 # These URI should be rewritten by your distribution's xml catalog to
@@ -26,7 +22,7 @@ XSL_BASE_URI="http://docbook.sourceforge.net/release/xsl/current"
 xsltproc -o /tmp/titlepage.xsl                                           \
 	 --xinclude                                                      \
          $XSL_BASE_URI/template/titlepage.xsl \
-         @datadir@/common/titlepage.templates.xml || exit 1
+         $TEMPLATEDIR/titlepage.templates.xml || exit 1
 
 xsltproc --xinclude                    \
 	 --stringparam hyphenate false \
@@ -34,12 +30,12 @@ xsltproc --xinclude                    \
 	 --stringparam ulink.show 1 \
          --stringparam  body.font.master  9 \
          --stringparam  title.font.master  11 \
-         --stringparam draft.watermark.image "@datadir@/common/draft.png" \
+         --stringparam draft.watermark.image "$TEMPLATEDIR/draft.png" \
          --output $FO               \
-         @datadir@/common/poky-db-pdf.xsl    \
+         $TEMPLATEDIR/poky-db-pdf.xsl    \
 	 $1                 || exit 1
 
-fop -c @datadir@/common/fop-config.xml -fo $FO -pdf $PDF       || exit 1
+fop -c $TEMPLATEDIR/fop-config.xml -fo $FO -pdf $PDF       || exit 1
 
 rm -f $FO
 rm -f  /tmp/titlepage.xsl
