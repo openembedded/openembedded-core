@@ -34,7 +34,7 @@ Index: gcc-4.5.0/gcc/common.opt
  Warn when padding is required to align structure members
  
 +Wpoison-system-directories
-+Common Var(flag_poison_system_directories) Init(1)
++Common Var(flag_poison_system_directories) Init(1) Warning
 +Warn for -I and -L options using system directories if cross compiling
 +
  Wshadow
@@ -147,3 +147,55 @@ Index: gcc-4.5.0/gcc/incpath.c
  }
  
  /* Use given -I paths for #include "..." but not #include <...>, and
+diff -ur gcc-4.5.0.orig/gcc/Makefile.in gcc-4.5.0/gcc/Makefile.in
+--- gcc-4.5.0.orig/gcc/Makefile.in	2010-09-29 17:13:49.164088845 -0500
++++ gcc-4.5.0/gcc/Makefile.in	2010-09-29 18:48:19.300178501 -0500
+@@ -1965,7 +1965,7 @@
+ 
+ incpath.o: incpath.c incpath.h $(CONFIG_H) $(SYSTEM_H) $(CPPLIB_H) \
+ 		intl.h prefix.h coretypes.h $(TM_H) cppdefault.h $(TARGET_H) \
+-		$(MACHMODE_H)
++		$(MACHMODE_H) $(FLAGS_H) toplev.h
+ 
+ c-decl.o : c-decl.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) $(TREE_H) \
+     $(RTL_H) $(C_TREE_H) $(GGC_H) $(TARGET_H) $(FLAGS_H) $(FUNCTION_H) output.h \
+diff -ur gcc-4.5.0.orig/gcc/configure gcc-4.5.0/gcc/configure
+--- gcc-4.5.0.orig/gcc/configure	2010-09-29 14:58:31.702054881 -0500
++++ gcc-4.5.0/gcc/configure	2010-09-29 18:46:31.486068500 -0500
+@@ -913,6 +913,7 @@
+ enable_maintainer_mode
+ enable_version_specific_runtime_libs
+ with_slibdir
++enable_poison_system_directories
+ enable_plugin
+ enable_target_optspace
+ '
+@@ -1621,6 +1622,8 @@
+   --enable-version-specific-runtime-libs
+                           specify that runtime libraries should be
+                           installed in a compiler-specific directory
++  --enable-poison-system-directories
++                          warn for use of native system header directories
+   --enable-plugin         enable plugin support
+ 
+ Optional Packages:
+@@ -25339,6 +25377,19 @@
+ 
+ 
+ 
++# Check whether --enable-poison-system-directories was given.
++if test "${enable_poison_system_directories+set}" = set; then :
++  enableval=$enable_poison_system_directories;
++else
++  enable_poison_system_directories=no
++fi
++
++if test "x${enable_poison_system_directories}" = "xyes"; then
++
++$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
++
++fi
++
+ # Substitute configuration variables
+ 
+ 
