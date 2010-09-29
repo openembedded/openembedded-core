@@ -1,33 +1,33 @@
-PSTAGE2_MANIFESTS = "${TMPDIR}/pstagelogs"
-PSTAGE2_MANFILEPREFIX = "${PSTAGE2_MANIFESTS}/manifest-${PSTAGE2_PKGARCH}-${PN}"
+SSTATE_MANIFESTS = "${TMPDIR}/pstagelogs"
+SSTATE_MANFILEPREFIX = "${SSTATE_MANIFESTS}/manifest-${SSTATE_PKGARCH}-${PN}"
 
 
-PSTAGE2_PKGARCH    = "${BASE_PACKAGE_ARCH}"
-PSTAGE2_PKGVERSION = "${PV}-${PR}"
-PSTAGE2_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
+SSTATE_PKGARCH    = "${BASE_PACKAGE_ARCH}"
+SSTATE_PKGVERSION = "${PV}-${PR}"
+SSTATE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
 
-PSTAGE2_PKGNAME    = "${PSTAGE2_PKGPN}_${PSTAGE2_PKGVERSION}_${PSTAGE2_PKGARCH}"
-PSTAGE2_EXTRAPATH  ?= ""
-PSTAGE2_PKGPATH    = "${DISTRO}/${OELAYOUT_ABI}${PSTAGE2_EXTRAPATH}"
-PSTAGE2_PKG        = "${PSTAGE_DIR}2/${PSTAGE2_PKGPATH}/${PSTAGE2_PKGNAME}"
+SSTATE_PKGNAME    = "${SSTATE_PKGPN}_${SSTATE_PKGVERSION}_${SSTATE_PKGARCH}"
+SSTATE_EXTRAPATH  ?= ""
+SSTATE_PKGPATH    = "${DISTRO}/${OELAYOUT_ABI}${SSTATE_EXTRAPATH}"
+SSTATE_PKG        = "${PSTAGE_DIR}2/${SSTATE_PKGPATH}/${SSTATE_PKGNAME}"
 
-PSTAGE2_SCAN_CMD ?= "find ${PSTAGE2_BUILDDIR} \( -name "*.la" -o -name "*-config" \) -type f"
+SSTATE_SCAN_CMD ?= "find ${SSTATE_BUILDDIR} \( -name "*.la" -o -name "*-config" \) -type f"
 
 python () {
     if bb.data.inherits_class('native', d):
-        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
+        bb.data.setVar('SSTATE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
     elif bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d):
-        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${BUILD_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
+        bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${BUILD_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
     elif bb.data.inherits_class('nativesdk', d):
-        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${SDK_ARCH}", d), d)
+        bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${SDK_ARCH}", d), d)
     elif bb.data.inherits_class('cross-canadian', d):
-        bb.data.setVar('PSTAGE2_PKGARCH', bb.data.expand("${SDK_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
+        bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${SDK_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
 
     # These classes encode staging paths into their scripts data so can only be
     # reused if we manipulate the paths
     if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('sdk', d) or bb.data.inherits_class('crosssdk', d):
-        scan_cmd = "grep -Irl ${STAGING_DIR} ${PSTAGE2_BUILDDIR}"
-        bb.data.setVar('PSTAGE2_SCAN_CMD', scan_cmd, d)
+        scan_cmd = "grep -Irl ${STAGING_DIR} ${SSTATE_BUILDDIR}"
+        bb.data.setVar('SSTATE_SCAN_CMD', scan_cmd, d)
 
     for task in (bb.data.getVar('SSTATETASKS', d, True) or "").split():
         funcs = bb.data.getVarFlag(task, 'prefuncs', d) or ""
@@ -79,8 +79,8 @@ def sstate_install(ss, d):
 
     sharedfiles = []
     shareddirs = []
-    bb.mkdirhier(bb.data.expand("${PSTAGE2_MANIFESTS}", d))
-    manifest = bb.data.expand("${PSTAGE2_MANFILEPREFIX}.%s" % ss['name'], d)
+    bb.mkdirhier(bb.data.expand("${SSTATE_MANIFESTS}", d))
+    manifest = bb.data.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'], d)
 
     if os.access(manifest, os.R_OK):
         bb.fatal("Package already staged (%s)?!" % manifest)
@@ -121,7 +121,7 @@ def sstate_installpkg(ss, d):
     import oe.path
 
     pstageinst = bb.data.expand("${WORKDIR}/pstage-install-%s/" % ss['name'], d)
-    pstagepkg = bb.data.getVar('PSTAGE2_PKG', d, True) + '_' + ss['name'] + ".tgz"
+    pstagepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_' + ss['name'] + ".tgz"
 
     if not os.path.exists(pstagepkg):
        pstaging_fetch(pstagepkg, d)
@@ -132,8 +132,8 @@ def sstate_installpkg(ss, d):
 
     sstate_clean(ss, d)
 
-    bb.data.setVar('PSTAGE2_INSTDIR', pstageinst, d)
-    bb.data.setVar('PSTAGE2_PKG', pstagepkg, d)
+    bb.data.setVar('SSTATE_INSTDIR', pstageinst, d)
+    bb.data.setVar('SSTATE_PKG', pstagepkg, d)
     bb.build.exec_func('sstate_unpack_package', d)
 
     # Fixup hardcoded paths
@@ -183,7 +183,7 @@ def sstate_clean_manifest(manifest, d):
 
 def sstate_clean(ss, d):
 
-    manifest = bb.data.expand("${PSTAGE2_MANFILEPREFIX}.%s" % ss['name'], d)
+    manifest = bb.data.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'], d)
 
     locks = []
     for lock in ss['lockfiles']:
@@ -202,8 +202,8 @@ python sstate_cleanall() {
 
     bb.note("Removing shared state for package %s" % bb.data.getVar('PN', d, True))
 
-    manifest_dir = bb.data.getVar('PSTAGE2_MANIFESTS', d, True)
-    manifest_prefix = bb.data.getVar("PSTAGE2_MANFILEPREFIX", d, True)
+    manifest_dir = bb.data.getVar('SSTATE_MANIFESTS', d, True)
+    manifest_prefix = bb.data.getVar("SSTATE_MANFILEPREFIX", d, True)
     manifest_pattern = os.path.basename(manifest_prefix) + ".*"
 
     if not os.path.exists(manifest_dir):
@@ -218,7 +218,7 @@ def sstate_package(ss, d):
     import oe.path
 
     pstagebuild = bb.data.expand("${WORKDIR}/pstage-build-%s/" % ss['name'], d)
-    pstagepkg = bb.data.getVar('PSTAGE2_PKG', d, True) + '_'+ ss['name'] + ".tgz"
+    pstagepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_'+ ss['name'] + ".tgz"
     bb.mkdirhier(pstagebuild)
     bb.mkdirhier(os.path.dirname(pstagepkg))
     for state in ss['dirs']:
@@ -237,8 +237,8 @@ def sstate_package(ss, d):
         bb.mkdirhier(pdir)
         oe.path.copytree(plain, pdir)
 
-    bb.data.setVar('PSTAGE2_BUILDDIR', pstagebuild, d)
-    bb.data.setVar('PSTAGE2_PKG', pstagepkg, d)
+    bb.data.setVar('SSTATE_BUILDDIR', pstagebuild, d)
+    bb.data.setVar('SSTATE_PKG', pstagepkg, d)
     bb.build.exec_func('sstate_create_package', d)
     
     bb.siggen.dump_this_task(pstagepkg + ".siginfo", d)
@@ -288,25 +288,25 @@ python sstate_task_postfunc () {
 
 #
 # Shell function to generate a pstage package from a directory
-# set as PSTAGE2_BUILDDIR
+# set as SSTATE_BUILDDIR
 #
 sstate_create_package () {
 	# Need to remove hardcoded paths and fix these when we install the
 	# staging packages.
-	for i in `${PSTAGE2_SCAN_CMD}` ; do \
+	for i in `${SSTATE_SCAN_CMD}` ; do \
 		sed -i -e s:${STAGING_DIR}:FIXMESTAGINGDIR:g $i
-		echo $i | sed -e 's:${PSTAGE2_BUILDDIR}::' >> ${PSTAGE2_BUILDDIR}fixmepath
+		echo $i | sed -e 's:${SSTATE_BUILDDIR}::' >> ${SSTATE_BUILDDIR}fixmepath
 	done
 
-	cd ${PSTAGE2_BUILDDIR}
-	tar -cvzf ${PSTAGE2_PKG} *
+	cd ${SSTATE_BUILDDIR}
+	tar -cvzf ${SSTATE_PKG} *
 }
 
 #
 # Shell function to decompress and prepare a package for installation
 #
 sstate_unpack_package () {
-	mkdir -p ${PSTAGE2_INSTDIR}
-	cd ${PSTAGE2_INSTDIR}
-	tar -xvzf ${PSTAGE2_PKG}
+	mkdir -p ${SSTATE_INSTDIR}
+	cd ${SSTATE_INSTDIR}
+	tar -xvzf ${SSTATE_PKG}
 }
