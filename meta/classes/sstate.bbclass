@@ -106,8 +106,10 @@ def sstate_install(ss, d):
     # We want to ensure that directories appear at the end of the manifest
     # so that when we test to see if they should be deleted any contents
     # added by the task will have been removed first.
-    for dir in shareddirs:
-        f.write(dir + "\n")
+    dirs = sorted(shareddirs, key=len)
+    # Must remove children first, which will have a longer path than the parent
+    for di in reversed(dirs):
+        f.write(di + "\n")
     f.close()
 
     for lock in locks:
