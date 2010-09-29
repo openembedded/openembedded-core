@@ -37,6 +37,10 @@ fakeroot rootfs_rpm_do_rootfs () {
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
 	echo "${TARGET_ARCH}-linux" >${IMAGE_ROOTFS}/etc/rpm/platform
 
+	# Tell RPM that the "/" directory exist and is available
+	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/sysinfo
+	echo "/" >${IMAGE_ROOTFS}/etc/rpm/sysinfo/Dirnames
+
 	# Setup manifest of packages to install...
 	mkdir -p ${IMAGE_ROOTFS}/install
 	echo "# Install manifest" > ${IMAGE_ROOTFS}/install/install.manifest
