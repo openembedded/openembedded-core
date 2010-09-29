@@ -1,15 +1,11 @@
-SSTATE_MANIFESTS = "${TMPDIR}/pstagelogs"
+SSTATE_VERSION = "1"
+
+SSTATE_MANIFESTS = "${TMPDIR}/sstate-control"
 SSTATE_MANFILEPREFIX = "${SSTATE_MANIFESTS}/manifest-${SSTATE_PKGARCH}-${PN}"
 
-
 SSTATE_PKGARCH    = "${BASE_PACKAGE_ARCH}"
-SSTATE_PKGVERSION = "${PV}-${PR}"
-SSTATE_PKGPN      = "${@bb.data.expand('staging-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d).replace('_', '-')}"
-
-SSTATE_PKGNAME    = "${SSTATE_PKGPN}_${SSTATE_PKGVERSION}_${SSTATE_PKGARCH}"
-SSTATE_EXTRAPATH  ?= ""
-SSTATE_PKGPATH    = "${DISTRO}/${OELAYOUT_ABI}${SSTATE_EXTRAPATH}"
-SSTATE_PKG        = "${PSTAGE_DIR}2/${SSTATE_PKGPATH}/${SSTATE_PKGNAME}"
+SSTATE_PKGNAME    = "sstate-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}-${PV}-${PR}-${SSTATE_PKGARCH}-${SSTATE_VERSION}"
+SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
 
 SSTATE_SCAN_CMD ?= "find ${SSTATE_BUILDDIR} \( -name "*.la" -o -name "*-config" \) -type f"
 
@@ -249,11 +245,11 @@ def pstaging_fetch(sstatepkg, d):
     import bb.fetch
 
     # only try and fetch if the user has configured a mirror
-    if bb.data.getVar('PSTAGE_MIRROR', d) != "":
+    if bb.data.getVar('SSTATE_MIRROR', d) != "":
         # Copy the data object and override DL_DIR and SRC_URI
         pd = d.createCopy()
-        dldir = bb.data.expand("${PSTAGE_DIR}/${SSTATE_PKGPATH}", pd)
-        mirror = bb.data.expand("${PSTAGE_MIRROR}/${SSTATE_PKGPATH}/", pd)
+        dldir = bb.data.expand("${SSTATE_DIR}", pd)
+        mirror = bb.data.expand("${SSTATE_MIRROR}/", pd)
         srcuri = mirror + os.path.basename(sstatepkg)
         bb.data.setVar('DL_DIR', dldir, pd)
         bb.data.setVar('SRC_URI', srcuri, pd)
