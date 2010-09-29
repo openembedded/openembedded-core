@@ -120,41 +120,41 @@ def sstate_install(ss, d):
 def sstate_installpkg(ss, d):
     import oe.path
 
-    pstageinst = bb.data.expand("${WORKDIR}/pstage-install-%s/" % ss['name'], d)
-    pstagepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_' + ss['name'] + ".tgz"
+    sstateinst = bb.data.expand("${WORKDIR}/sstate-install-%s/" % ss['name'], d)
+    sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_' + ss['name'] + ".tgz"
 
-    if not os.path.exists(pstagepkg):
-       pstaging_fetch(pstagepkg, d)
+    if not os.path.exists(sstatepkg):
+       pstaging_fetch(sstatepkg, d)
 
-    if not os.path.isfile(pstagepkg):
-        bb.note("Staging package %s does not exist" % pstagepkg)
+    if not os.path.isfile(sstatepkg):
+        bb.note("Staging package %s does not exist" % sstatepkg)
         return False
 
     sstate_clean(ss, d)
 
-    bb.data.setVar('SSTATE_INSTDIR', pstageinst, d)
-    bb.data.setVar('SSTATE_PKG', pstagepkg, d)
+    bb.data.setVar('SSTATE_INSTDIR', sstateinst, d)
+    bb.data.setVar('SSTATE_PKG', sstatepkg, d)
     bb.build.exec_func('sstate_unpack_package', d)
 
     # Fixup hardcoded paths
-    fixmefn =  pstageinst + "fixmepath"
+    fixmefn =  sstateinst + "fixmepath"
     if os.path.isfile(fixmefn):
         staging = bb.data.getVar('STAGING_DIR', d, True)
         fixmefd = open(fixmefn, "r")
         fixmefiles = fixmefd.readlines()
         fixmefd.close()
         for file in fixmefiles:
-            os.system("sed -i -e s:FIXMESTAGINGDIR:%s:g %s" % (staging, pstageinst + file))
+            os.system("sed -i -e s:FIXMESTAGINGDIR:%s:g %s" % (staging, sstateinst + file))
 
     for state in ss['dirs']:
         if os.path.exists(state[1]):
             oe.path.remove(state[1])
-        oe.path.copytree(pstageinst + state[0], state[1])
+        oe.path.copytree(sstateinst + state[0], state[1])
     sstate_install(ss, d)
 
     for plain in ss['plaindirs']:
-        bb.mkdirhier(pstageinst + plain)
-        oe.path.copytree(pstageinst + plain, bb.data.getVar('WORKDIR', d, True) + plain)
+        bb.mkdirhier(sstateinst + plain)
+        oe.path.copytree(sstateinst + plain, bb.data.getVar('WORKDIR', d, True) + plain)
 
     return True
 
@@ -217,48 +217,48 @@ python sstate_cleanall() {
 def sstate_package(ss, d):
     import oe.path
 
-    pstagebuild = bb.data.expand("${WORKDIR}/pstage-build-%s/" % ss['name'], d)
-    pstagepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_'+ ss['name'] + ".tgz"
-    bb.mkdirhier(pstagebuild)
-    bb.mkdirhier(os.path.dirname(pstagepkg))
+    sstatebuild = bb.data.expand("${WORKDIR}/sstate-build-%s/" % ss['name'], d)
+    sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_'+ ss['name'] + ".tgz"
+    bb.mkdirhier(sstatebuild)
+    bb.mkdirhier(os.path.dirname(sstatepkg))
     for state in ss['dirs']:
         srcbase = state[0].rstrip("/").rsplit('/', 1)[0]
-        oe.path.copytree(state[1], pstagebuild + state[0])
+        oe.path.copytree(state[1], sstatebuild + state[0])
         for walkroot, dirs, files in os.walk(state[1]):
             for file in files:
                 srcpath = os.path.join(walkroot, file)
-                dstpath = srcpath.replace(state[1], pstagebuild + state[0])
+                dstpath = srcpath.replace(state[1], sstatebuild + state[0])
                 bb.debug(2, "Preparing %s for packaging at %s" % (srcpath, dstpath))
 
     workdir = bb.data.getVar('WORKDIR', d, True)
     for plain in ss['plaindirs']:
-        pdir = plain.replace(workdir, pstagebuild)
+        pdir = plain.replace(workdir, sstatebuild)
         bb.mkdirhier(plain)
         bb.mkdirhier(pdir)
         oe.path.copytree(plain, pdir)
 
-    bb.data.setVar('SSTATE_BUILDDIR', pstagebuild, d)
-    bb.data.setVar('SSTATE_PKG', pstagepkg, d)
+    bb.data.setVar('SSTATE_BUILDDIR', sstatebuild, d)
+    bb.data.setVar('SSTATE_PKG', sstatepkg, d)
     bb.build.exec_func('sstate_create_package', d)
     
-    bb.siggen.dump_this_task(pstagepkg + ".siginfo", d)
+    bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
 
     return
 
-def pstaging_fetch(pstagepkg, d):
+def pstaging_fetch(sstatepkg, d):
     import bb.fetch
 
     # only try and fetch if the user has configured a mirror
     if bb.data.getVar('PSTAGE_MIRROR', d) != "":
         # Copy the data object and override DL_DIR and SRC_URI
         pd = d.createCopy()
-        dldir = bb.data.expand("${PSTAGE_DIR}/${PSTAGE_PKGPATH}", pd)
-        mirror = bb.data.expand("${PSTAGE_MIRROR}/${PSTAGE_PKGPATH}/", pd)
-        srcuri = mirror + os.path.basename(pstagepkg)
+        dldir = bb.data.expand("${PSTAGE_DIR}/${SSTATE_PKGPATH}", pd)
+        mirror = bb.data.expand("${PSTAGE_MIRROR}/${SSTATE_PKGPATH}/", pd)
+        srcuri = mirror + os.path.basename(sstatepkg)
         bb.data.setVar('DL_DIR', dldir, pd)
         bb.data.setVar('SRC_URI', srcuri, pd)
 
-        # Try a fetch from the pstage mirror, if it fails just return and
+        # Try a fetch from the sstate mirror, if it fails just return and
         # we will build the package
         try:
             bb.fetch.init([srcuri], pd)
@@ -287,7 +287,7 @@ python sstate_task_postfunc () {
   
 
 #
-# Shell function to generate a pstage package from a directory
+# Shell function to generate a sstate package from a directory
 # set as SSTATE_BUILDDIR
 #
 sstate_create_package () {
