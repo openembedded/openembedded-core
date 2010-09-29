@@ -55,6 +55,13 @@ QEMUIFDOWN=`which poky-qemu-ifdown`
 
 NFSRUNNING="false"
 
+LOCKUTIL=`which lockfile-create`
+if [ -z "$LOCKUTIL" ]; then
+    echo "Error: Unable to find the lockfile-create utility"
+    echo "On Ubuntu systems this is included in the lockfile-progs package"
+    return
+fi
+
 LOCKDIR="/tmp/qemu-tap-locks"
 [ ! -d "$LOCKDIR" ] && mkdir $LOCKDIR
 
@@ -63,10 +70,14 @@ TAP=""
 LOCKFILE=""
 for tap in $POSSIBLE; do
     LOCKFILE="$LOCKDIR/$tap"
-    if lockfile -2 -r 1 $LOCKFILE; then
+    echo "Acquiring lockfile for $tap..."
+    if lockfile-create --use-pid -r 1 $LOCKFILE; then
+        # the --use-pid option to lockfile-create will give use
+        # the subshell's pid, so override it with the shell's pid:
+        echo $$ > $LOCKFILE.lock
         TAP=$tap
-        break;
-    fi 
+        break
+    fi
 done
 
 if [ "$TAP" = "" ]; then
@@ -79,7 +90,11 @@ if [ "$TAP" = "" ]; then
         return
     fi
     LOCKFILE="$LOCKDIR/$tap"
-    if lockfile $LOCKFILE; then
+    echo "Acquiring lockfile for $tap..."
+    if lockfile-create --use-pid -r 1 $LOCKFILE; then
+        # the --use-pid option to lockfile-create will give us
+        # the subshell's pid, so override it with the shell's pid:
+        echo $$ > $LOCKFILE.lock
         TAP=$tap
     fi 
 else
@@ -91,7 +106,7 @@ release_lock() {
         $QEMUIFDOWN $TAP $POKY_NATIVE_SYSROOT
     else
         echo "Releasing lockfile of preconfigured tap device '$TAP'"
-        rm -f $LOCKFILE
+        lockfile-remove $LOCKFILE
     fi
 
     if [ "$NFSRUNNING" = "true" ]; then
