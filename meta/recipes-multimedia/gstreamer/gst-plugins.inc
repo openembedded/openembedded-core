@@ -20,6 +20,14 @@ FILES_${PN}-dbg += "${libdir}/gstreamer-${LIBV}/.debug"
 
 PACKAGES_DYNAMIC = "${PN}-*"
 
+# orc.m4 calls pkg-config ----variable=orcc orc-0.4 to get the path to orcc,
+# resulting in /usr/bin/orcc. Force it to use the staged orcc.
+do_configure_append() {
+ 	for i in $(find ${S} -name "Makefile") ; do
+		sed -i -e s:${bindir}/orcc:${STAGING_BINDIR_NATIVE}/orcc:g $i
+ 	done
+}
+
 python populate_packages_prepend () {
 	gst_libdir = bb.data.expand('${libdir}/gstreamer-${LIBV}', d)
 	postinst = bb.data.getVar('plugin_postinst', d, 1)
