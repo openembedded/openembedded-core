@@ -3,9 +3,9 @@ DESCRIPTION_rpm-build = "The RPM Package Manager rpmbuild and related commands."
 HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPL 2.1"
 DEPENDS = "zlib perl popt beecrypt python libpcre elfutils"
-PR = "r5"
+PR = "r6"
 
-SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/SNAPSHOT/${BPN}-${PV}.tar.gz \
+SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/POKY/${BPN}-${PV}.tar.gz \
            file://hdraddorappend.patch \
            file://export-rpmbag-h.patch \
 	   file://rpm-nrescan.patch \
