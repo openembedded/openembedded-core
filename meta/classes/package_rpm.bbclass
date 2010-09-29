@@ -72,6 +72,8 @@ package_generate_rpm_conf () {
 }
 
 python write_specfile () {
+	import textwrap
+
 	# We need to change '-' in a version field to '+'
 	# This needs to be done BEFORE the mapping_rename_hook
 	def translate_vers(varname, d):
@@ -136,7 +138,7 @@ python write_specfile () {
 
 	# Construct the SPEC file...
 	srcname    = bb.data.getVar('PN', d, True)
-	srcsummary = (bb.data.getVar('SUMMARY', d, True) or ".")
+	srcsummary = (bb.data.getVar('SUMMARY', d, True) or bb.data.getVar('DESCRIPTION', d, True) or ".")
 	srcversion = bb.data.getVar('PV', d, True).replace('-', '+')
 	srcrelease = bb.data.getVar('PR', d, True)
 	srcepoch   = (bb.data.getVar('PE', d, True) or "")
@@ -144,7 +146,7 @@ python write_specfile () {
 	srcsection = bb.data.getVar('SECTION', d, True)
 	srcmaintainer  = bb.data.getVar('MAINTAINER', d, True)
 	srchomepage    = bb.data.getVar('HOMEPAGE', d, True)
-	srcdescription = bb.data.getVar('DESCRIPTION', d, True)
+	srcdescription = bb.data.getVar('DESCRIPTION', d, True) or "."
 
 	srcdepends     = bb.data.getVar('DEPENDS', d, True)
 	srcrdepends    = []
@@ -191,13 +193,13 @@ python write_specfile () {
 
 		splitname    = pkgname
 
-		splitsummary = (bb.data.getVar('SUMMARY', d, True) or ".")
+		splitsummary = (bb.data.getVar('SUMMARY', d, True) or bb.data.getVar('DESCRIPTION', d, True) or ".")
 		splitversion = (bb.data.getVar('PV', localdata, True) or "").replace('-', '+')
 		splitrelease = (bb.data.getVar('PR', localdata, True) or "")
 		splitepoch   = (bb.data.getVar('PE', localdata, True) or "")
 		splitlicense = (bb.data.getVar('LICENSE', localdata, True) or "")
 		splitsection = (bb.data.getVar('SECTION', localdata, True) or "")
-		splitdescription = (bb.data.getVar('DESCRIPTION', localdata, True) or "")
+		splitdescription = (bb.data.getVar('DESCRIPTION', localdata, True) or ".")
 
 		translate_vers('RDEPENDS', localdata)
 		translate_vers('RRECOMMENDS', localdata)
@@ -295,7 +297,8 @@ python write_specfile () {
 		spec_preamble_bottom.append('')
 
 		spec_preamble_bottom.append('%%description -n %s' % splitname)
-		spec_preamble_bottom.append('%s' % splitdescription)
+		dedent_text = textwrap.dedent(splitdescription).strip()
+		spec_preamble_bottom.append('%s' % textwrap.fill(dedent_text, width=75))
 
 		spec_preamble_bottom.append('')
 
@@ -379,7 +382,8 @@ python write_specfile () {
 	spec_preamble_top.append('')
 
 	spec_preamble_top.append('%description')
-	spec_preamble_top.append('%s' % srcdescription)
+	dedent_text = textwrap.dedent(srcdescription).strip()
+	spec_preamble_top.append('%s' % textwrap.fill(dedent_text, width=75))
 
 	spec_preamble_top.append('')
 

@@ -69,6 +69,7 @@ python do_package_deb_install () {
 
 python do_package_deb () {
     import re, copy
+    import textwrap
 
     workdir = bb.data.getVar('WORKDIR', d, True)
     if not workdir:
@@ -179,7 +180,18 @@ python do_package_deb () {
         # check for required fields
         try:
             for (c, fs) in fields:
-                ctrlfile.write(unicode(c % tuple(pullData(fs, localdata))))
+                for f in fs:
+                     if bb.data.getVar(f, localdata) is None:
+                         raise KeyError(f)
+                # Special behavior for description...
+                if 'DESCRIPTION' in fs:
+                     summary = bb.data.getVar('SUMMARY', localdata, True) or bb.data.getVar('DESCRIPTION', localdata, True) or "."
+                     description = bb.data.getVar('DESCRIPTION', localdata, True) or "."
+                     description = textwrap.dedent(description).strip()
+                     ctrlfile.write('Description: %s\n' % unicode(summary))
+                     ctrlfile.write('%s\n' % unicode(textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' ')))
+                else:
+                     ctrlfile.write(unicode(c % tuple(pullData(fs, localdata))))
         except KeyError:
             import sys
             (type, value, traceback) = sys.exc_info()

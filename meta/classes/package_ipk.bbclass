@@ -135,6 +135,7 @@ package_generate_archlist () {
 
 python do_package_ipk () {
 	import re, copy
+	import textwrap
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
 	outdir = bb.data.getVar('PKGWRITEDIRIPK', d, True)
@@ -227,7 +228,15 @@ python do_package_ipk () {
 				for f in fs:
 					if bb.data.getVar(f, localdata) is None:
 						raise KeyError(f)
-				ctrlfile.write(c % tuple(pullData(fs, localdata)))
+				# Special behavior for description...
+				if 'DESCRIPTION' in fs:
+					summary = bb.data.getVar('SUMMARY', localdata, True) or bb.data.getVar('DESCRIPTION', localdata, True) or "."
+					description = bb.data.getVar('DESCRIPTION', localdata, True) or "."
+					description = textwrap.dedent(description).strip()
+					ctrlfile.write('Description: %s\n' % summary)
+					ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
+				else:
+					ctrlfile.write(c % tuple(pullData(fs, localdata)))
 		except KeyError:
 			import sys
 			(type, value, traceback) = sys.exc_info()
