@@ -12,6 +12,9 @@ PV = "2.6.34+git${SRCPV}"
 # SRC_URI = "git://///path/to/kernel/default_kernel.git;fullclone=1"
 SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${WRMACHINE}-${LINUX_KERNEL_TYPE};name=machine \
            git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
+
+SRC_URI_append_atom-pc = "\
+           file://i915.cfg"
            
 WRMACHINE = "${MACHINE}"
 WRMACHINE_qemux86  = "common_pc"
@@ -19,12 +22,13 @@ WRMACHINE_qemux86-64  = "common_pc_64"
 WRMACHINE_qemuppc  = "qemu_ppc32"
 WRMACHINE_qemumips = "mti_malta32_be"
 WRMACHINE_qemuarm  = "arm_versatile_926ejs"
+WRMACHINE_atom-pc  = "common_pc"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc)"
 
 LINUX_VERSION = "v2.6.34"
 LINUX_VERSION_EXTENSION = "-wr-${LINUX_KERNEL_TYPE}"
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
