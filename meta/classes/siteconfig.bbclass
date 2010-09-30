@@ -11,7 +11,7 @@ python siteconfig_do_siteconfig () {
 }
 
 siteconfig_do_siteconfig_gencache () {
-	mkdir ${WORKDIR}/site_config
+	mkdir -p ${WORKDIR}/site_config
 	gen-site-config ${FILE_DIRNAME}/site_config \
 		>${WORKDIR}/site_config/configure.ac
 	cd ${WORKDIR}/site_config
