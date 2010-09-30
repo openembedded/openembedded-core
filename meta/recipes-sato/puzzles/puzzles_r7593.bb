@@ -3,6 +3,8 @@ DEPENDS = "gtk+ libxt"
 PR = "r8"
 MOD_PV = "${@bb.data.getVar('PV',d,1)[1:]}"
 
+LICENSE = "MIT"
+
 #SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
 SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV} \
            file://makedist_hack.patch;patch=1"
