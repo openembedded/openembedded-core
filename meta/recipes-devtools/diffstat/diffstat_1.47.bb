@@ -5,7 +5,7 @@ HOMEPAGE = "http://invisible-island.net/diffstat/"
 PRIORITY = "optional"
 SECTION = "devel"
 DEPENDS = "gettext"
-
+LICENSE = "MIT"
 PR = "r0"
 
 # NOTE: The upstream maintainer has a single 'diffstat.tar.gz' for the
