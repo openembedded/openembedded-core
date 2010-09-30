@@ -1,11 +1,11 @@
-LICENSE = "unknown"
+LICENSE = "BSD"
 DESCRIPTION = "Tool to sign omap3 x-loader images"
 
 inherit native
 SRC_URI = "file://signGP.c"
 
 do_compile() {
-	${CC} ${WORKDIR}/signGP.c -o signGP
+	${CC} ${CFLAGS} ${LDFLAGS} ${WORKDIR}/signGP.c -o signGP
 }
 
 do_install() {
