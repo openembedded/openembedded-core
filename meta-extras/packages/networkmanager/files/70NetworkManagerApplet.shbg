@@ -1,4 +1,0 @@
-#!/bin/sh
-# Wait for the desktop to say its finished loading
-dbus-wait org.matchbox_project.desktop Loaded
-exec /usr/bin/nm-applet

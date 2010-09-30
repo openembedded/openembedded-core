@@ -1,5 +1,0 @@
-#!/bin/sh
-
-export LIBGL_ALWAYS_INDIRECT=1
-export CLUTTER_DISABLE_MIPMAPPED_TEXT=1
-exec /usr/bin/mutter --mutter-plugins=moblin-netbook
