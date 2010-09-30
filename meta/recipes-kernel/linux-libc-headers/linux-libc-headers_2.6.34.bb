@@ -5,7 +5,8 @@ DEPENDS += "unifdef-native"
 PR = "r1"
 
 SRC_URI += "file://hayes-gone.patch \
-           file://ppc_glibc_build_fix.patch"
+           file://ppc_glibc_build_fix.patch \
+           file://connector-msg-size-fix.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
