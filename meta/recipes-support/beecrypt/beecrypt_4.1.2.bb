@@ -8,7 +8,7 @@ SRC_URI="${SOURCEFORGE_MIRROR}/beecrypt/beecrypt-${PV}.tar.gz \
 	 file://x64fix.patch \
 	 file://disable-icu-check.patch \
 	 file://fix-security.patch"
-
+LICENSE = "GPLv2"
 DEPENDS = "icu"
 
 PR = "r0"
