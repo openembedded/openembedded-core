@@ -1,6 +1,6 @@
 DESCRIPTION = "Firmware for Spectrum Wireless LAN cards"
 DEPENDS += " unzip-native "
-LICENSE = "unknown"
+LICENSE = "closed"
 PR = "r2"
 
 SRC_URI = "http://ftp.osuosl.org/pub/nslu2/sources/MC&DriverOnlyInstallers.zip \
