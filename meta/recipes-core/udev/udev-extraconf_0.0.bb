@@ -1,5 +1,5 @@
 DESCRIPTION = "Extra machine specific configuration files"
-LICENCE = "GPL"
+LICENSE = "GPLv2"
 
 PR = "r0"
 
