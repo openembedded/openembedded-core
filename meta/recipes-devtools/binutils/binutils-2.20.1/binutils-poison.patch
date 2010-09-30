@@ -211,3 +211,43 @@ Index: binutils-2.20.1/ld/lexsup.c
  	}
      }
  
+diff -ur binutils-2.20.1.orig/ld/configure binutils-2.20.1/ld/configure
+--- binutils-2.20.1.orig/ld/configure	2010-03-03 08:06:22.000000000 -0600
++++ binutils-2.20.1/ld/configure	2010-09-30 11:19:35.776990594 -0500
+@@ -901,6 +904,7 @@
+ enable_targets
+ enable_64_bit_bfd
+ with_sysroot
++enable_poison_system_directories
+ enable_got
+ enable_werror
+ enable_build_warnings
+@@ -1548,6 +1552,8 @@
+ 			  (and sometimes confusing) to the casual installer
+   --enable-targets        alternative target configurations
+   --enable-64-bit-bfd     64-bit support (on hosts with narrower word sizes)
++  --enable-poison-system-directories
++                          warn for use of native system library directories
+   --enable-got=<type>     GOT handling scheme (target, single, negative,
+                           multigot)
+   --enable-werror         treat compile warnings as errors
+@@ -4302,6 +4334,19 @@
+ 
+ 
+ 
++# Check whether --enable-poison-system-directories was given.
++if test "${enable_poison_system_directories+set}" = set; then :
++  enableval=$enable_poison_system_directories;
++else
++  enable_poison_system_directories=no
++fi
++
++if test "x${enable_poison_system_directories}" = "xyes"; then
++
++$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
++
++fi
++
+ # Check whether --enable-got was given.
+ if test "${enable_got+set}" = set; then :
+   enableval=$enable_got; case "${enableval}" in
