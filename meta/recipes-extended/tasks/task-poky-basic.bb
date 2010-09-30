@@ -4,6 +4,7 @@
 
 DESCRIPTION = "Create Basic Image Tasks"
 PR = "r2"
+LICENSE = "MIT"
 
 PACKAGES = "\
     task-poky-basic \

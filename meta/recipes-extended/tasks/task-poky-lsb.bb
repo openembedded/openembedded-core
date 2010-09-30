@@ -4,6 +4,7 @@
 
 DESCRIPTION = "Create Small Image Tasks"
 PR = "r1"
+LICENSE = "MIT"
 
 PACKAGES = "\
     task-poky-lsb \
