@@ -16,6 +16,9 @@ PR = "r1"
 
 PSTAGING_DISABLED = "1"
 
+# License applies to this recipe code, not the toolchain itself
+LICENSE = "MIT"
+
 do_install() {
 	if [ ! -e  ${prefix}/environment-setup ]; then
 		echo "The Poky toolchain could not be found in ${prefix}!"

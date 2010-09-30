@@ -1,5 +1,8 @@
 INHIBIT_DEFAULT_DEPS = "1"
 
+# License applies to this recipe code, not the toolchain itself
+LICENSE = "MIT"
+
 PROVIDES = "\
 	linux-libc-headers \
 	virtual/arm-none-linux-gnueabi-gcc \
