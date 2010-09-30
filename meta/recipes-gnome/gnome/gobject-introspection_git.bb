@@ -5,6 +5,8 @@ SRC_URI = "git://git.gnome.org/gobject-introspection;protocol=git \
 SRC_URI_virtclass-native = "git://git.gnome.org/gobject-introspection;protocol=git \
                             file://pathfix.patch;patch=1"
 
+LICENSE = "GPLv2+ & LGPLv2+"
+
 PV = "0.0+git${SRCREV}"
 PR = "r3"
 
