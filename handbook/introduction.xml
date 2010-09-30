@@ -107,7 +107,7 @@
 
     <para>
         We recommend Debian-based distributions, in particular a recent Ubuntu 
-        release (7.04 or newer), as the host system for Poky. Nothing in Poky is
+        release (10.04 or newer), as the host system for Poky. Nothing in Poky is
         distribution specific and
         other distributions will most likely work as long as the appropriate
         prerequisites are installed - we know of Poky being used successfully on Redhat,
