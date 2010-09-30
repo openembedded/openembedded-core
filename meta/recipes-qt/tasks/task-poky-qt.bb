@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Qt Tasks for Poky"
 LICENSE = "MIT"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "\
     task-poky-qt-demos \
@@ -14,7 +14,7 @@ PACKAGES = "\
 
 ALLOW_EMPTY = "1"
 
-QTDEMOS ?= "fotowall quicky"
+QTDEMOS ?= "fotowall quicky qmmp"
 QTDEMOS_mips ?= ""
 QTDEMOS_mipsel ?= ""
 

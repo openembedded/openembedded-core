@@ -3,7 +3,9 @@ HOMEPAGE = "http://qmmp.ylsoftware.com"
 LICENSE = "GPLv2"
 SECTION = "multimedia"
 
-DEPENDS = "qt4-x11-free"
+PR = "r1"
+
+DEPENDS = "qt4-x11-free taglib"
 RDEPENDS = "qt4-x11-free libmad libvorbis libogg taglib alsa-lib curl"
 
 SRC_URI = "http://qmmp.ylsoftware.com/files/qmmp-0.4.1.tar.bz2"
