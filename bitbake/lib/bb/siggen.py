@@ -229,6 +229,30 @@ def compare_sigfiles(a, b):
             if a_data['runtaskhashes'][dep] != b_data['runtaskhashes'][dep]:
                 print "Hash for dependent task %s changed from %s to %s" % (dep, a_data['runtaskhashes'][dep], b_data['runtaskhashes'][dep])
 
+def dump_sigfile(a):
+    p1 = pickle.Unpickler(file(a, "rb"))
+    a_data = p1.load()
+
+    print "basewhitelist: %s" % (a_data['basewhitelist'])
+
+    print "taskwhitelist: %s" % (a_data['taskwhitelist'])
+
+    print "Task dependencies: %s" % (sorted(a_data['taskdeps']))
+
+    print "basehash: %s" % (a_data['basehash'])
+
+    for dep in a_data['gendeps']:
+        print "List of dependencies for variable %s is %s" % (dep, a_data['gendeps'][dep])
+
+    for dep in a_data['varvals']:
+        print "Variable %s value is %s" % (dep, a_data['varvals'][dep])
+
+    if 'runtaskdeps' in a_data:
+        print "Tasks this task depends on: %s" % (a_data['runtaskdeps'])
+
+    if 'runtaskhashes' in a_data:
+        for dep in a_data['runtaskhashes']:
+            print "Hash for dependent task %s is %s" % (dep, a_data['runtaskhashes'][dep])
 
 
 
