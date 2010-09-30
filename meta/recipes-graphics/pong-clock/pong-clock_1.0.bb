@@ -1,5 +1,5 @@
 DESCRIPTION = "A clock combined with a game of pong"
-LICENCE = "GPLv2"
+LICENSE = "GPLv2+"
 DEPENDS = "virtual/libx11 xdmcp xau"
 
 SRC_URI = "file://pong-clock-no-flicker.c"
