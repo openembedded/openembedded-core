@@ -1,6 +1,6 @@
 require qemu.inc
 
-PR = "r21"
+PR = "r22"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
@@ -20,6 +20,7 @@ SRC_URI = "\
     file://enable-i386-linux-user.patch \
     file://arm-cp15-fix.patch \
     file://cursor-shadow-fix.patch \
+    file://vmware-vga-fifo-rewind.patch \
     file://powerpc_rom.bin"
 
 do_install_append () {
