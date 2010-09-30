@@ -1,5 +1,6 @@
 DEPENDS = "gstreamer"
 RDEPENDS = "libomxil"
+LICENSE = "LGPLv2"
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/gst-openmax/pre/gst-openmax-0.10.0.2.tar.bz2"
 
