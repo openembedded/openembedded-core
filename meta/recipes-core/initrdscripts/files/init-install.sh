@@ -21,7 +21,7 @@ for device in 'hda' 'hdb' 'sda' 'sdb'
 	  found="yes"
 
 	  while true; do
-	      echo "Found drive at /dev/${device}. Do you want to install moblin there ? [y/n]"
+	      echo "Found drive at /dev/${device}. Do you want to install poky there ? [y/n]"
 	      read answer
 	      if [ "$answer" = "y" ] ; then
 		  break
