@@ -136,6 +136,8 @@ class SignatureGeneratorBasic(SignatureGenerator):
         data['varvals'] = {}
         data['varvals'][task] = self.lookupcache[fn][task]
         for dep in self.taskdeps[fn][task]:
+            if dep in self.basewhitelist:
+                continue
             data['gendeps'][dep] = self.gendeps[fn][dep]
             data['varvals'][dep] = self.lookupcache[fn][dep]
 
