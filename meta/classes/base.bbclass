@@ -438,6 +438,10 @@ python () {
     import exceptions
 
     pn = bb.data.getVar('PN', d, 1)
+    license = bb.data.getVar('LICENSE', d, True)
+    if license == "INVALID":
+        bb.fatal('This recipe does not have the LICENSE field set (%s)' % pn)
+
     # If we're building a target package we need to use fakeroot (pseudo)
     # in order to capture permissions, owners, groups and special files
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
