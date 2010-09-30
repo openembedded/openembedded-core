@@ -503,6 +503,28 @@ def package_qa_check_rdepends(pkg, pkgdest, d):
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
     bb.note("DO PACKAGE QA")
+
+    logdir = bb.data.getVar('T', d, True)
+    pkg = bb.data.getVar('PN', d, True)
+
+    # Check the compile log for host contamination
+    compilelog = os.path.join(logdir,"log.do_compile")
+
+    statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % compilelog
+    if os.system(statement) == 0:
+        bb.warn("%s: The compile log indicates that host include and/or library paths were used.  Please check the log '%s' for more information." % \
+                (pkg, compilelog))
+
+
+    # Check the install log for host contamination
+    installlog = os.path.join(logdir,"log.do_install")
+
+    statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % installlog
+    if os.system(statement) == 0:
+        bb.warn("%s: The install log indicates that host include and/or library paths were used.  Please check the log '%s' for more information." % \
+                (pkg, installlog))
+
+    # Scan the packages...
     pkgdest = bb.data.getVar('PKGDEST', d, True)
     packages = bb.data.getVar('PACKAGES',d, True)
 
@@ -537,7 +559,8 @@ python do_package_qa () {
 
 
 # The Staging Func, to check all staging
-addtask qa_staging after do_populate_sysroot before do_build
+#addtask qa_staging after do_populate_sysroot before do_build
+do_populate_sysroot[postfunc] += "do_qa_staging"
 python do_qa_staging() {
     bb.note("QA checking staging")
 
@@ -547,13 +570,14 @@ python do_qa_staging() {
 
 # Check broken config.log files, for packages requiring Gettext which don't
 # have it in DEPENDS and for correct LIC_FILES_CHKSUM
-addtask qa_configure after do_configure before do_compile
+#addtask qa_configure after do_configure before do_compile
+do_configure[postfunc] += "do_qa_configure"
 python do_qa_configure() {
     configs = []
     workdir = bb.data.getVar('WORKDIR', d, True)
     bb.note("Checking autotools environment for common misconfiguration")
     for root, dirs, files in os.walk(workdir):
-        statement = "grep 'CROSS COMPILE Badness:' %s > /dev/null" % \
+        statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % \
                     os.path.join(root,"config.log")
         if "config.log" in files:
             if os.system(statement) == 0:
