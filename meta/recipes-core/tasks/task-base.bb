@@ -209,9 +209,10 @@ RRECOMMENDS_task-base-alsa = "\
 
 RDEPENDS_task-base-pcmcia = "\
     ${PCMCIA_MANAGER} \
-    ${@base_contains('DISTRO_FEATURES', 'wifi', 'prism-firmware', '',d)} \
-    ${@base_contains('DISTRO_FEATURES', 'wifi', 'spectrum-fw', '',d)} \
     "
+#${@base_contains('DISTRO_FEATURES', 'wifi', 'prism-firmware', '',d)}
+#${@base_contains('DISTRO_FEATURES', 'wifi', 'spectrum-fw', '',d)}
+
 
 RRECOMMENDS_task-base-pcmcia = "\
     ${@base_contains('MACHINE_FEATURES', 'kernel26', '${task-base-pcmcia26}', '${task-base-pcmcia24}',d)} \
