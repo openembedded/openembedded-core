@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Create a "bank" of tap network devices that can be used by the
+# poky-qemu script. This script needs to be run as root, and will
+# use the tunctl binary from a Poky sysroot. Note: many Linux distros
+# these days still use an older version of tunctl which does not
+# support the group permissions option, hence the need to use Poky's
+# version.
+#
+# Copyright (C) 2010 Intel Corp.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+usage() {
+	echo "Usage: sudo $0 <gid> <num> <native-sysroot-basedir>"
+	echo "Where <gid> is the numeric group id the tap devices will be owned by"
+	echo "<num> is the number of tap devices to create (0 to remove all)"
+	echo "<native-sysroot-basedir> is the path to Poky's native sysroot"
+	exit 1
+}
+
+if [ $EUID -ne 0 ]; then
+	echo "Error: This script must be run with root privileges"
+	exit
+fi
+
+if [ $# -ne 3 ]; then
+	echo "Error: Incorrect number of arguments"
+	usage
+fi
+
+GID=$1
+COUNT=$2
+SYSROOT=$3
+
+TUNCTL=$SYSROOT/usr/bin/tunctl
+if [[ ! -x "$TUNCTL" || -d "$TUNCTL" ]]; then
+	echo "Error: $TUNCTL is not an executable"
+	usage
+fi
+
+SCRIPT_DIR=`dirname $0`
+POKY_QEMU_IFUP="$SCRIPT_DIR/poky-qemu-ifup"
+if [ ! -x "$POKY_QEMU_IFUP" ]; then
+	echo "Error: Unable to find the poky-qemu-ifup script in $SCRIPT_DIR"
+	exit 1
+fi
+
+IFCONFIG=`which ifconfig`
+if [ -z "$IFCONFIG" ]; then
+	# Is it ever anywhere else?
+	IFCONFIG=/sbin/ifconfig
+fi
+
+# Ensure we start with a clean slate
+for tap in `$IFCONFIG | grep ^tap | awk '{ print \$1 }'`; do
+	echo "Note: Destroying pre-existing tap interface $tap..."
+	$TUNCTL -d $tap
+done
+
+echo "Creating $COUNT tap devices for GID $GID..."
+for ((index=0; index < $COUNT; index++)); do
+	echo "Creating tap$index"
+	ifup=`$POKY_QEMU_IFUP $GID $SYSROOT 2>&1`
+	if [ $? -ne 0 ]; then
+		echo "Error running tunctl: $ifup"
+		exit 1
+	fi
+done
+
+# The poky-qemu script will check for this file, and if it exists,
+# will use the existing bank of tap devices without creating
+# additional ones via sudo.
+touch /etc/poky-nosudo

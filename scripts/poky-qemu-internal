@@ -50,6 +50,10 @@ if [ -z "$QEMU_MEMORY" ]; then
 
 fi
 
+# This flag file is created when poky-gen-tapdevs creates a bank of
+# tap devices, indicating that the user does not have sudo privs.
+NOSUDO_FLAG="/etc/poky-nosudo"
+
 QEMUIFUP=`which poky-qemu-ifup`
 QEMUIFDOWN=`which poky-qemu-ifdown`
 
@@ -81,6 +85,13 @@ for tap in $POSSIBLE; do
 done
 
 if [ "$TAP" = "" ]; then
+    if [ -e "$NOSUDO_FLAG" ]; then
+        echo "Error: There are no available tap devices to use for networking,"
+        echo "and I see $NOSUDO_FLAG exists, so I am not going to try creating"
+        echo "a new one with sudo."
+        exit 1
+    fi
+
     GROUPID=`id -g`
     echo 'Setting up tap interface under sudo'
     tap=`sudo $QEMUIFUP $GROUPID $POKY_NATIVE_SYSROOT`
