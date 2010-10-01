@@ -152,3 +152,8 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # test suite or specific test case(e.g. bat or boot test case under sanity suite), 
 # list them like following.
 #TEST_SCEN = "sanity bat sanity:boot"
+
+# Set GLIBC_GENERATE_LOCALES to the locales you wish to generate should you not
+# wish to perform the time-consuming step of generating all LIBC locales.
+# WARNING: this may break localisation!
+#GLIBC_GENERATE_LOCALES = "en_GB.UTF-8 en_US.UTF-8"
