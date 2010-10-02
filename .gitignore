@@ -8,6 +8,8 @@ scripts/poky-git-proxy-socks
 sources/
 meta-darwin
 meta-maemo
+meta-extras
+meta-m2
 meta-prvt*
 poky-autobuilder*
 *.swp
