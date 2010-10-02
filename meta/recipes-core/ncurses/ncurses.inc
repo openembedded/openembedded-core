@@ -40,11 +40,11 @@ export BUILD_CCFLAGS = "-I${S}/ncurses -I${S}/include ${BUILD_CFLAGS}"
 export BUILD_LDFLAGS = ""
 export EXTRA_OEMAKE = '"BUILD_LDFLAGS=" "BUILD_CCFLAGS=${BUILD_CCFLAGS}"'
 
-# This is necessary so that the "tic" command executed during the install can
-# link with the correct libary in staging.
-export LD_LIBRARY_PATH = "${STAGING_LIBDIR_NATIVE}"
-
 do_install() {
+	# This is necessary so that the "tic" command executed during the install can
+	# link with the correct libary in staging.
+	export LD_LIBRARY_PATH = "${STAGING_LIBDIR_NATIVE}"
+
 	autotools_do_install
 
 	ln -sf curses.h ${D}${includedir}/ncurses.h
