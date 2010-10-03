@@ -43,7 +43,7 @@ export EXTRA_OEMAKE = '"BUILD_LDFLAGS=" "BUILD_CCFLAGS=${BUILD_CCFLAGS}"'
 do_install() {
 	# This is necessary so that the "tic" command executed during the install can
 	# link with the correct libary in staging.
-	export LD_LIBRARY_PATH = "${STAGING_LIBDIR_NATIVE}"
+	export LD_LIBRARY_PATH="${STAGING_LIBDIR_NATIVE}"
 
 	autotools_do_install
 
