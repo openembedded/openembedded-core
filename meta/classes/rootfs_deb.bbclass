@@ -36,7 +36,7 @@ fakeroot rootfs_deb_do_rootfs () {
 		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
 		(echo "Package: *"
 		echo "Pin: release l=$arch"
-		echo "Pin-Priority: $((800 + $priority))"
+		echo "Pin-Priority: $(expr 800 + $priority)"
 		echo) >> ${STAGING_ETCDIR_NATIVE}/apt/preferences
 		priority=$(expr $priority + 5)
 	done
