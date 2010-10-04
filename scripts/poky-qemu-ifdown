@@ -1,6 +1,15 @@
 #!/bin/bash
 #
-# QEMU network interface configuration script.
+# QEMU network configuration script to bring down tap devices. This
+# utility needs to be run as root, and will use the tunctl binary
+# from a Poky sysroot. 
+#
+# If you find yourself calling this script a lot, you can add the
+# the following to your /etc/sudoers file to be able to run this
+# command without entering your password each time:
+#
+# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifup
+# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifdown
 #
 # Copyright (c) 2006-2010 Intel Corp.
 #
@@ -18,8 +27,13 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 usage() {
-	echo "$0 <tap-dev> <native-sysroot-basedir>"
+	echo "sudo $0 <tap-dev> <native-sysroot-basedir>"
 }
+
+if [ $EUID -ne 0 ]; then
+	echo "Error: This script (poky-qemu-ifdown) must be run with root privileges"
+	exit 1
+fi
 
 if [ $# -ne 2 ]; then
 	usage

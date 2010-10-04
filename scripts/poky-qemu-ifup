@@ -6,14 +6,17 @@
 # tunctl which does not support the group permissions option, hence
 # the need to use Poky's version.
 #
-# If this script is being run standalone in order to set up a bank of tap
-# devices for later qemu use, then a group id must be the first argument.
-# The resulting tap device will be group-owned by this group, and qemu
-# users must be members of this group.
+# If you find yourself calling this script a lot, you can add the
+# the following to your /etc/sudoers file to be able to run this
+# command without entering your password each time:
 #
-# If the kernel is too old to support TUNSETGROUP, then a user must be passed
-# in as the second argument, the tap device will be owned by that user, and
-# only that user will be able to use it.
+# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifup
+# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifdown
+#
+# If you'd like to create a bank of tap devices at once, you should use
+# the poky-gen-tapdevs script instead. If tap devices are set up using
+# that script, the poky-qemu script will never end up calling this
+# script.
 #
 # Copyright (c) 2006-2010 Intel Corp.
 #
@@ -31,26 +34,24 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 usage() {
-	echo "$0 <gid> {uid} <native-sysroot-basedir>"
-	echo "Where uid is *only* included if this script complains when it's missing"
+	echo "sudo $0 <gid> <native-sysroot-basedir>"
 }
 
-if [[ $# -lt 2 || $# -gt 3 ]]; then
+if [ $EUID -ne 0 ]; then
+	echo "Error: This script (poky-qemu-ifup) must be run with root privileges"
+	exit 1
+fi
+
+if [ $# -ne 2 ]; then
 	usage
 	exit 1
 fi
 
-USER=""
 GROUP="-g $1"
-if [ $# -eq 2 ]; then
-	NATIVE_SYSROOT_DIR=$2
-else
-	USER=$2
-	NATIVE_SYSROOT_DIR=$3
-fi
+NATIVE_SYSROOT_DIR=$2
 
 TUNCTL=$NATIVE_SYSROOT_DIR/usr/bin/tunctl
-if [ ! -e "$TUNCTL" ]; then
+if [ ! -x "$TUNCTL" ]; then
 	echo "Error: Unable to find tunctl binary in '$NATIVE_SYSROOT_DIR/usr/bin'"
 
 	if [[ "$NATIVE_SYSROOT_DIR" =~ ^\/opt\/poky ]]; then
@@ -64,22 +65,6 @@ fi
 
 TAP=`$TUNCTL -b $GROUP 2>&1`
 STATUS=$?
-if [[ "$TAP" =~ "TUNSETGROUP" ]]; then
-	# TUNSETGROUP failed because of permissions or the kernel being too old
-	# Retry, falling back to a specific user
-	if [ "$USER" = "" ]; then
-	echo "TUNSETGROUP failed - add a username to the command line in order"
-	echo "to have the tap device owned by that user"
-	exit 1
-	fi
-	TAP=`$TUNCTL -b -u $USER 2>&1`
-	STATUS=$?
-	# Force this to appear on stderr in order that the user sees it if this
-	# is running from poky-qemu-internal and in order to avoid having this
-	# output confuse it.
-	echo "Only user $USER will be able to use $TAP - upgrade the kernel to " 1>&2
-	echo "2.6.23 or later in order to allow group access to tap devices" 1>&2
-fi
 if [ $STATUS -ne 0 ]; then
 	echo "tunctl failed:"
 	echo $TAP
