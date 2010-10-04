@@ -12,7 +12,7 @@ PACKAGES += "${PN}-bin"
 FILES_${PN} = "${libdir}/libacpi.so.*"
 FILES_${PN}-bin = "${bindir}"
 
-COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
+COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
 do_install() {
 	oe_runmake install DESTDIR=${D} PREFIX=${exec_prefix}
