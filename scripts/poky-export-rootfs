@@ -61,11 +61,11 @@ if [ ! -d ~/.poky-sdk ]; then
 	mkdir -p ~/.poky-sdk
 fi
 
-TARGET_VIRT_INSTANCE=${TARGET_VIRT_INSTANCE:=0}
-EXPORTS=~/.poky-sdk/exports$TARGET_VIRT_INSTANCE
-RMTAB=~/.poky-sdk/rmtab$TARGET_VIRT_INSTANCE
-NFSPID=~/.poky-sdk/nfs$TARGET_VIRT_INSTANCE.pid
-MOUNTPID=~/.poky-sdk/mount$TARGET_VIRT_INSTANCE.pid
+NFS_INSTANCE=${NFS_INSTANCE:=0}
+EXPORTS=~/.poky-sdk/exports$NFS_INSTANCE
+RMTAB=~/.poky-sdk/rmtab$NFS_INSTANCE
+NFSPID=~/.poky-sdk/nfs$NFS_INSTANCE.pid
+MOUNTPID=~/.poky-sdk/mount$NFS_INSTANCE.pid
 
 PSEUDO_OPTS="-P $POKY_NATIVE_SYSROOT/usr"
 PSEUDO_LOCALSTATEDIR="$NFS_EXPORT_DIR/var/pseudo"
@@ -78,15 +78,14 @@ if [ ! -d "$PSEUDO_LOCALSTATEDIR" ]; then
 fi
 
 # rpc.mountd RPC port
-NFS_MOUNTPROG="21111"
+NFS_MOUNTPROG=$[ 21111 + $NFS_INSTANCE ]
 # rpc.nfsd RPC port
-NFS_NFSPROG="11111"
+NFS_NFSPROG=$[ 11111 + $NFS_INSTANCE ]
 # NFS port number
-NFS_PORT="3049"
+NFS_PORT=$[ 3049 + $NFS_INSTANCE ]
 
 ## For debugging you would additionally add
 ## --debug all
-
 MOUNTD_OPTS="--allow-non-root --mount-pid $MOUNTPID -f $EXPORTS --rmtab $RMTAB --prog $NFS_MOUNTPROG -r"
 NFSD_OPTS="--allow-non-root --nfs-pid $NFSPID -f $EXPORTS --prog $NFS_NFSPROG -P $NFS_PORT -r"
 
@@ -102,7 +101,7 @@ case "$1" in
 	echo "Starting User Mode rpc.mountd"
 	echo "  $PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS"
 	$PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS
-	if [ ! $? = 0 ] ; then
+	if [ ! $? = 0 ]; then
 	    echo "====================="
 	    echo "Error starting MOUNTD"
 	    echo "====================="
@@ -125,26 +124,26 @@ case "$1" in
 	echo "Starting User Mode nfsd"
 	echo "  $PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS"
 	$PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS
-	if [ ! $? = 0 ] ; then
+	if [ ! $? = 0 ]; then
 	    echo "Error starting nfsd"
 	    exit 1
 	fi
 	# Check to make sure everything started ok.
-	if [ ! -f $MOUNTPID ] ; then
+	if [ ! -f $MOUNTPID ]; then
 	    echo "rpc.mountd did not start correctly"
 	    exit 1
 	fi
-	if [ ! -f $NFSPID ] ; then
+	if [ ! -f $NFSPID ]; then
 	    echo "rpc.nfsd did not start correctly"
 	    exit 1
 	fi
 	ps -fp `cat $MOUNTPID` > /dev/null 2> /dev/null
-	if [ ! $? = 0 ] ; then
+	if [ ! $? = 0 ]; then
 	    echo "rpc.mountd did not start correctly"
 	    exit 1
 	fi
 	ps -fp `cat $NFSPID` > /dev/null 2> /dev/null
-	if [ ! $? = 0 ] ; then
+	if [ ! $? = 0 ]; then
 	    echo "rpc.nfsd did not start correctly"
 	    exit 1
 	fi
@@ -153,25 +152,29 @@ case "$1" in
 	echo "nfsroot=IP_ADDRESS:$NFS_EXPORT_DIR,nfsvers=2,mountprog=$NFS_MOUNTPROG,nfsprog=$NFS_NFSPROG,udp"
 	;;
   stop)
-	if [ -f "$MOUNTPID" ] ; then
+	if [ -f "$MOUNTPID" ]; then
 	    echo "Stopping rpc.mountd"
 	    kill `cat $MOUNTPID`
 	    rm -f $MOUNTPID
 	else
 	    echo "No PID file, not stopping rpc.mountd"
 	fi
-	if [ -f "$NFSPID" ] ; then
+	if [ -f "$NFSPID" ]; then
 	    echo "Stopping rpc.nfsd"
 	    kill `cat $NFSPID`
 	    rm -f $NFSPID
 	else
 	    echo "No PID file, not stopping rpc.nfsd"
 	fi
+	if [ -f "$EXPORTS" ]; then
+        echo "Removing exports file"
+        rm -f $EXPORTS
+	fi
 	;;
   restart)
 	$0 stop $NFS_EXPORT_DIR
 	$0 start $NFS_EXPORT_DIR 
-	if [ ! $? = 0 ] ; then
+	if [ ! $? = 0 ]; then
 	    exit 1
 	fi
 	;;

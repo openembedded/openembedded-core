@@ -50,8 +50,9 @@ if [ -z "$QEMU_MEMORY" ]; then
 
 fi
 
-# This flag file is created when poky-gen-tapdevs creates a bank of
-# tap devices, indicating that the user does not have sudo privs.
+# This file is created when poky-gen-tapdevs creates a bank of tap
+# devices, indicating that the user should not bring up new ones using
+# sudo.
 NOSUDO_FLAG="/etc/poky-nosudo"
 
 QEMUIFUP=`which poky-qemu-ifup`
@@ -113,18 +114,17 @@ else
 fi
 
 release_lock() {
-    if [ "$LOCKFILE" = "" ]; then
+    if [ ! -e "$NOSUDO_FLAG" ]; then
         $QEMUIFDOWN $TAP $POKY_NATIVE_SYSROOT
-    else
-        echo "Releasing lockfile of preconfigured tap device '$TAP'"
-        lockfile-remove $LOCKFILE
     fi
+	echo "Releasing lockfile of preconfigured tap device '$TAP'"
+	lockfile-remove $LOCKFILE
 
-    if [ "$NFSRUNNING" = "true" ]; then
-        echo "Shutting down the userspace NFS server:"
-        echo "poky-export-rootfs stop $ROOTFS"
-        poky-export-rootfs stop $ROOTFS
-    fi
+	if [ "$NFSRUNNING" = "true" ]; then
+		echo "Shutting down the userspace NFS server..."
+		echo "poky-export-rootfs stop $ROOTFS"
+		poky-export-rootfs stop $ROOTFS
+	fi
 }
 
 n1=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
@@ -135,6 +135,9 @@ QEMU_TAP_CMD="-net tap,vlan=0,ifname=$TAP,script=no,downscript=no"
 QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
 KERNCMDLINE="mem=$QEMU_MEMORY"
 QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
+
+NFS_INSTANCE=`echo $TAP | sed 's/tap//'`
+export NFS_INSTANCE
 
 SERIALOPTS=""
 if [ "x$SERIAL_LOGFILE" != "x" ]; then
@@ -172,7 +175,9 @@ fi
 if [ "$FSTYPE" = "nfs" ]; then
     NFS_SERVER="192.168.7.1"
     NFS_DIR=`echo $ROOTFS | sed 's/^[^:]*:\(.*\)/\1/'`
-    UNFS_OPTS="nfsvers=2,mountprog=21111,nfsprog=11111,udp"
+    MOUNTD_PORT=$[ 21111 + $NFS_INSTANCE ]
+    NFSD_PORT=$[ 11111 + $NFS_INSTANCE ]
+    UNFS_OPTS="nfsvers=2,mountprog=$MOUNTD_PORT,nfsprog=$NFSD_PORT,udp"
 
     PSEUDO_LOCALSTATEDIR=~/.poky-sdk/pseudo
     export PSEUDO_LOCALSTATEDIR
