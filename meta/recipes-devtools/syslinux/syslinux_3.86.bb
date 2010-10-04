@@ -12,7 +12,7 @@ PR = "r1"
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/boot/syslinux/syslinux-${PV}.tar.bz2 \
            file://cross-build.patch"
 
-COMPATIBLE_HOST = '(x86_64|i.86.*)-(linux|freebsd.*)'
+COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
 EXTRA_OEMAKE = " \
 	BINDIR=${bindir} SBINDIR=${sbindir} LIBDIR=${libdir} \
