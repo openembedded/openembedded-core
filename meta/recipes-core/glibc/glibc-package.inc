@@ -27,6 +27,10 @@ ENABLE_BINARY_LOCALE_GENERATION_pn-glibc-nativesdk = "0"
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
 BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
 
+# set "1" to use cross-localedef for locale generation
+# set "0" for qemu emulation of native localedef for locale generation
+LOCALE_GENERATION_WITH_CROSS-LOCALEDEF = "1"
+
 PKGSUFFIX = ""
 PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
@@ -85,25 +89,5 @@ DESCRIPTION_glibc-utils = "glibc: misc utilities like iconf, local, gencat, tzse
 
 
 EXTRA_OEMAKE += "rootsbindir=${base_sbindir}"
-
-python __anonymous () {
-    enabled = bb.data.getVar("ENABLE_BINARY_LOCALE_GENERATION", d, 1)
-
-    if enabled and int(enabled):
-        import re
-
-        target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
-        binary_arches = bb.data.getVar("BINARY_LOCALE_ARCHES", d, 1) or ""
-
-        for regexp in binary_arches.split(" "):
-            r = re.compile(regexp)
-
-            if r.match(target_arch):
-                depends = bb.data.getVar("DEPENDS", d, 1)
-                depends = "%s qemu-native" % depends
-                bb.data.setVar("DEPENDS", depends, d)
-                bb.data.setVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", "compile", d)
-                break
-}
 
 inherit libc-package

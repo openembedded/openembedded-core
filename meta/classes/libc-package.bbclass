@@ -9,7 +9,29 @@
 
 GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "ondevice"
 
-inherit qemu
+python __anonymous () {
+    enabled = bb.data.getVar("ENABLE_BINARY_LOCALE_GENERATION", d, 1)
+
+    if enabled and int(enabled):
+        import re
+
+        target_arch = bb.data.getVar("TARGET_ARCH", d, 1)
+        binary_arches = bb.data.getVar("BINARY_LOCALE_ARCHES", d, 1) or ""
+        use_cross_localedef = bb.data.getVar("LOCALE_GENERATION_WITH_CROSS-LOCALEDEF", d, 1) or ""
+
+        for regexp in binary_arches.split(" "):
+            r = re.compile(regexp)
+
+            if r.match(target_arch):
+                depends = bb.data.getVar("DEPENDS", d, 1)
+		if use_cross_localedef == "1" :
+	                depends = "%s cross-localedef-native" % depends
+		else:
+	                depends = "%s qemu-native" % depends
+                bb.data.setVar("DEPENDS", depends, d)
+                bb.data.setVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", "compile", d)
+                break
+}
 
 def get_libc_fpu_setting(bb, d):
     if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
@@ -104,6 +126,8 @@ do_collect_bins_from_locale_tree() {
 	mkdir -p ${PKGD}${libdir}
 	cp -pPR $treedir/${libdir}/locale ${PKGD}${libdir}
 }
+
+inherit qemu
 
 python package_do_split_gconvs () {
 	import os, re
@@ -251,24 +275,49 @@ python package_do_split_gconvs () {
 		bb.data.setVar('RPROVIDES_%s' % pkgname, " ".join(rprovides), d)
 
 	def output_locale_binary(name, pkgname, locale, encoding):
-		qemu = qemu_target_binary(d) 
-
 		treedir = base_path_join(bb.data.getVar("WORKDIR", d, 1), "locale-tree")
 		ldlibdir = "%s/lib" % treedir
 		path = bb.data.getVar("PATH", d, 1)
 		i18npath = base_path_join(treedir, datadir, "i18n")
+		gconvpath = base_path_join(treedir, "iconvdata")
 
-		localedef_opts = "--force --old-style --no-archive --prefix=%s \
-			--inputfile=%s/i18n/locales/%s --charmap=%s %s" \
-			% (treedir, datadir, locale, encoding, name)
+		use_cross_localedef = bb.data.getVar("LOCALE_GENERATION_WITH_CROSS-LOCALEDEF", d, 1) or "0"
+		if use_cross_localedef == "1":
+	    		target_arch = bb.data.getVar('TARGET_ARCH', d, True)
+			locale_arch_options = { \
+				"arm":     " --uint32-align=4 --little-endian ", \
+				"powerpc": " --uint32-align=4 --big-endian ",    \
+				"mips":    " --uint32-align=4 --big-endian ",    \
+				"mipsel":  " --uint32-align=4 --little-endian ", \
+				"i586":    " --uint32-align=4 --little-endian ", \
+				"x86_64":  " --uint32-align=4 --little-endian "  }
 
-		qemu_options = bb.data.getVar("QEMU_OPTIONS_%s" % bb.data.getVar('PACKAGE_ARCH', d, 1), d, 1)
-		if not qemu_options:
-			qemu_options = bb.data.getVar('QEMU_OPTIONS', d, 1)
+			if target_arch in locale_arch_options:
+				localedef_opts = locale_arch_options[target_arch]
+			else:
+				bb.error("locale_arch_options not found for target_arch=" + target_arch)
+				raise bb.build.FuncFailed("unknown arch:" + target_arch + " for locale_arch_options")
 
-		cmd = "PSEUDO_RELOADED=YES PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
-			-E LD_LIBRARY_PATH=%s %s %s/bin/localedef %s" % \
-			(path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
+			localedef_opts += " --force --old-style --no-archive --prefix=%s \
+				--inputfile=%s/%s/i18n/locales/%s --charmap=%s %s/usr/lib/locale/%s" \
+				% (treedir, treedir, datadir, locale, encoding, treedir, name)
+
+			cmd = "PATH=\"%s\" I18NPATH=\"%s\" GCONV_PATH=\"%s\" cross-localedef %s" % \
+				(path, i18npath, gconvpath, localedef_opts)
+		else: # earlier slower qemu way 
+			qemu = qemu_target_binary(d) 
+			localedef_opts = "--force --old-style --no-archive --prefix=%s \
+				--inputfile=%s/i18n/locales/%s --charmap=%s %s" \
+				% (treedir, datadir, locale, encoding, name)
+
+			qemu_options = bb.data.getVar("QEMU_OPTIONS_%s" % bb.data.getVar('PACKAGE_ARCH', d, 1), d, 1)
+			if not qemu_options:
+				qemu_options = bb.data.getVar('QEMU_OPTIONS', d, 1)
+
+			cmd = "PSEUDO_RELOADED=YES PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
+				-E LD_LIBRARY_PATH=%s %s %s/bin/localedef %s" % \
+				(path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
+
 		bb.note("generating locale %s (%s)" % (locale, encoding))
 		import subprocess
 		process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
