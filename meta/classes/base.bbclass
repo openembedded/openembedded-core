@@ -440,7 +440,26 @@ do_build = ""
 do_build[func] = "1"
 
 python () {
-    import exceptions
+    import exceptions, string
+
+    # If PRINC is set, try and increase the PR value by the amount specified
+    princ = bb.data.getVar('PRINC', d, True)
+    if princ:
+        pr = bb.data.getVar('PR', d, True)
+        start = -1
+        end = -1
+        for i in range(len(pr)):
+            if pr[i] in string.digits:
+                if start == -1:
+                    start = i
+                else:
+                    end = i
+        if start == -1 or end == -1:
+            bb.error("Unable to analyse format of PR variable: %s" % pr)
+        prval = pr[start:end+1]
+        prval = int(prval) + int(princ)
+        pr = pr[0:start] + str(prval) + pr[end:len(pr)-1]
+        bb.data.setVar('PR', pr, d)
 
     pn = bb.data.getVar('PN', d, 1)
     license = bb.data.getVar('LICENSE', d, True)

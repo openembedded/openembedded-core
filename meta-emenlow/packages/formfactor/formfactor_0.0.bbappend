@@ -1,3 +1,3 @@
 FILESEXTRAPATHS := "${THISDIR}/${PN}"
  
-PR = "r26"
+PRINC = "1"
