@@ -106,6 +106,8 @@ DEPENDS_virtclass-nativesdk_prepend="${@base_dep_prepend(d)} "
 
 def base_set_filespath(path, d):
 	filespath = []
+	extrapaths = (bb.data.getVar("FILESEXTRAPATHS", d, True) or "").split()
+	path = extrapaths + path
 	# The ":" ensures we have an 'empty' override
 	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
 	for p in path:
@@ -114,6 +116,9 @@ def base_set_filespath(path, d):
 	return ":".join(filespath)
 
 FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/${BP}", "${FILE_DIRNAME}/${BPN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
+# THISDIR only works properly with imediate expansion as it has to run
+# in the context of the location its used (:=)
+THISDIR = "${@os.path.dirname(bb.data.getVar('FILE', d, True))}"
 
 SCENEFUNCS += "base_scenefunction"
 	
