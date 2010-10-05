@@ -128,7 +128,7 @@ Common targets are:
     meta-toolchain
     meta-toolchain-sdk
 
-You can also run generated qemu images with a command like 'runqemu qemux86'
+You can also run generated qemu images with a command like 'poky-qemu qemux86'
 
 EOM
 

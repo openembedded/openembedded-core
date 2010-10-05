@@ -1,8 +1,8 @@
 #!/bin/bash
-
+#
 # Handle running Poky images standalone with QEMU
 #
-# Copyright (C) 2006-2007 OpenedHand Ltd.
+# Copyright (C) 2006-2010 Intel Corp.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -17,47 +17,267 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-
-if [ "x$1" = "x" ]; then
+usage() {
     MYNAME=`basename $0`
-    echo "Run as MACHINE=xyz $MYNAME KERNEL ROOTFS [OPTIONS]"
-    echo "where:"
+    echo ""
+    echo "Usage: you can run this script with any valid combination"
+    echo "of the following options (in any order):"
+    echo "  QEMUARCH - the qemu machine architecture to use"
     echo "  KERNEL - the kernel image file to use"
     echo "  ROOTFS - the rootfs image file or nfsroot directory to use"
-#    echo "  (NFS booting assumed if ROOTFS not specified)"
     echo "  MACHINE=xyz - the machine name (optional, autodetected from KERNEL filename if unspecified)"
-    echo "  OPTIONS - extra options to pass to QEMU"
+    echo "  Additional QEMU command-line options can be passed with:"
+    echo "    serial - enables a serial console on /dev/ttyS0"
+    echo ""
+    echo "Examples:"
+    echo "  $0 qemuarm"
+    echo "  $0 qemux86-64 poky-image-sato ext3"
+    echo "  $0 path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial"
     exit 1
-else
-    KERNEL=$1
-    shift
-fi
-
-if [ "x$MACHINE" = "x" ]; then
-    MACHINE=`basename $KERNEL | sed -r -e 's#.*-([a-z]+[0-9\-]*)-?[0-9]*..*#\1#'`
-fi
+}
 
 if [ "x$1" = "x" ]; then
-    FSTYPE="nfs"
-    echo "Error: NFS booting without an explicit ROOTFS path is not yet supported"
-    exit 1
-else
-    ROOTFS=$1
-
-    if [ -d "$1" ]; then
-        echo "$ROOTFS is a directory, assuming nfsroot"
-        FSTYPE="nfs"
-    else
-        FSTYPE="ext3"
-        EXT=${ROOTFS##.*}
-        if [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" ||
-              "x$EXT" == "xjffs2" ]]; then
-            FSTYPE=$EXT
-        fi
-        echo "Using $FSTYPE as filesytem type for $ROOTFS"
-    fi
-    shift
+    usage
 fi
+
+MACHINE=${MACHINE:=""}
+KERNEL=""
+FSTYPE=""
+ROOTFS=""
+SCRIPT_QEMU_OPT=""
+SCRIPT_KERNEL_OPT=""
+
+TMPDIR=""
+
+# Parse command line args without requiring specific ordering. It's a
+# bit more complex, but offers a great user experience.
+i=1
+while [ $i -le $# ]; do
+    arg=${!i}
+    case $arg in
+        "qemux86" | "qemux86-64" | "qemuarm" | "qemumips" | "qemuppc")
+            if [ -z "$MACHINE" ]; then
+                MACHINE=$arg
+            else
+                echo "Error: conflicting MACHINE types [$MACHINE] and [$arg]"
+                usage
+            fi
+            ;;
+        "ext2" | "ext3" | "jffs2" | "nfs")
+            if [ -z "$FSTYPE" ]; then
+                FSTYPE=$arg
+            else
+                echo "Error: conflicting FSTYPE types [$FSTYPE] and [$arg]"
+                usage
+            fi
+            ;;
+        *-image-*)
+            if [ -z "$ROOTFS" ]; then
+                ROOTFS=$arg
+            else
+                echo "Error: conflicting ROOTFS args [$ROOTFS] and [$arg]"
+                usage
+            fi
+            ;;
+        "serial")
+            # Will need to append to these variables when we
+            # accept more values
+            SCRIPT_QEMU_OPT="-serial stdio"
+            SCRIPT_KERNEL_OPT="console=ttyS0"
+            ;;
+        *)
+            # A directory name is an nfs rootfs
+            if [ -d "$arg" ]; then
+                echo "Assuming $arg is an nfs rootfs"
+                if [[ -z "$FSTYPE" || "$FSTYPE" == "nfs" ]]; then
+                    FSTYPE=nfs
+                else
+                    echo "Error: conflicting FSTYPE types [$arg] and nfs"
+                    usage
+                fi
+
+                if [ -z "$ROOTFS" ]; then
+                    ROOTFS=$arg
+                else
+                    echo "Error: conflicting ROOTFS args [$ROOTFS] and [$arg]"
+                    usage
+                fi
+            elif [ -f "$arg" ]; then
+                # Extract the filename extension
+                EXT=`echo $arg | awk -F . '{ print \$NF }'`
+                # A file ending in .bin is a kernel
+                if [ "x$EXT" = "xbin" ]; then
+                    if [ -z "$KERNEL" ]; then
+                        KERNEL=$arg
+                    else
+                        echo "Error: conflicting KERNEL args [$KERNEL] and [$arg]"
+                        usage
+                    fi
+                elif [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" ||
+                        "x$EXT" == "xjffs2" ]]; then
+                     # A file ending in a supportted fs type is a rootfs image
+                     if [[ -z "$FSTYPE" || "$FSTYPE" == "$EXT" ]]; then
+                         FSTYPE=$EXT
+                         ROOTFS=$arg
+                     else
+                         echo "Error: conflicting FSTYPE types [$FSTYPE] and [$arg]"
+                         usage
+                     fi
+                else
+                    echo "Error: unknown file arg [$arg]"
+                    usage
+                fi
+            else
+                echo "Error: unable to classify arg [$arg]"
+                usage
+            fi
+            ;;
+    esac
+    i=$((i + 1))
+done
+
+# Report errors for missing combinations of options
+if [[ -z "$MACHINE" && -z "$KERNEL" ]]; then
+    echo "Error: you must specify at least a MACHINE or KERNEL argument"
+    usage
+fi
+if [[ "$FSTYPE" == "nfs" && -z "$ROOTFS" ]]; then
+    echo "Error: NFS booting without an explicit ROOTFS path is not yet supported"
+    usage
+fi
+
+if [ -z "$MACHINE" ]; then
+    MACHINE=`basename $KERNEL | sed -r -e 's#.*-([a-z]+[0-9\-]*)-?[0-9]*..*#\1#'`
+    if [ -z "$MACHINE" ]; then
+        echo "Error: Unable to set MACHINE from kernel filename [$KERNEL]"
+        usage
+    fi
+    echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
+fi
+machine2=`echo $MACHINE | tr 'a-z' 'A-Z' | sed 's/-/_/'`
+# MACHINE is now set for all cases
+
+# Defaults used when these vars need to be inferred
+QEMUX86_DEFAULT_KERNEL=bzImage-qemux86.bin
+QEMUX86_DEFAULT_FSTYPE=ext3
+QEMUX86_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+
+QEMUX86_64_DEFAULT_KERNEL=bzImage-qemux86-64.bin
+QEMUX86_64_DEFAULT_FSTYPE=ext3
+QEMUX86_64_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+
+QEMUARM_DEFAULT_KERNEL=zImage-qemuarm.bin
+QEMUARM_DEFAULT_FSTYPE=ext3
+QEMUARM_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+
+QEMUMIPS_DEFAULT_KERNEL=vmlinux-qemumips.bin
+QEMUMIPS_DEFAULT_FSTYPE=ext3
+QEMUMIPS_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+
+QEMUPPC_DEFAULT_KERNEL=zImage-qemuppc.bin
+QEMUPPC_DEFAULT_FSTYPE=ext3
+QEMUPPC_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+
+AKITA_DEFAULT_KERNEL=zImage-akita.bin
+AKITA_DEFAULT_FSTYPE=jffs2
+AKITA_DEFAULT_ROOTFS="poky-image-sato"
+
+SPITZ_DEFAULT_KERNEL=zImage-spitz.bin
+SPITZ_DEFAULT_FSTYPE=ext3
+SPITZ_DEFAULT_ROOTFS="poky-image-sato"
+
+setup_tmpdir() {
+    if [ -z "$TMPDIR" ]; then
+        if [ "x$BUILDDIR" = "x" ]; then
+            # BUILDDIR unset, try and get TMPDIR from bitbake
+            type -P bitbake &>/dev/null || {
+                echo "In order for this script to dynamically infer paths";
+                echo "to kernels or filesystem images, you either need";
+                echo "bitbake in your PATH or to source poky-init-build-env";
+                echo "before running this script" >&2;
+                exit 1; }
+
+            # We have bitbake in PATH, get TMPDIR and BUILD_SYS
+            # from the environment
+            TMPDIR=`bitbake -e | grep TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
+            BUILD_SYS=`bitbake -e | grep BUILD_SYS=\" | cut -d '=' -f2 | cut -d '"' -f2`
+        else
+            BUILD_ARCH=`uname -m`
+            BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
+            BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
+            TMPDIR=$BUILDDIR/tmp
+        fi
+        if [ -z "$POKY_NATIVE_SYSROOT" ]; then
+            POKY_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
+        fi
+        CROSSPATH=$POKY_NATIVE_SYSROOT/usr/bin
+    fi
+}
+
+# Locate a rootfs image based on defaults defined above
+findimage() {
+    where=$1
+    machine=$2
+    extension=$3
+    names=$4
+
+    for name in $names; do
+        fullname=$where/$name-$machine.$extension
+        if [ -e "$fullname" ]; then
+            ROOTFS=$fullname
+            return
+        fi
+    done
+
+    echo "Couldn't find image in $where. Attempted image names were:"
+    for name in $names; do
+        echo $name-$machine.$extension
+    done
+
+    exit 1
+}
+
+if [ -z "$KERNEL" ]; then
+    setup_tmpdir
+    eval kernel_file=\$${machine2}_DEFAULT_KERNEL
+    KERNEL=$TMPDIR/deploy/images/$kernel_file
+
+    if [ -z "$KERNEL" ]; then
+        echo "Error: Unable to determine default kernel for MACHINE [$MACHINE]"
+        usage
+    fi
+fi
+# KERNEL is now set for all cases
+
+if [ -z "$FSTYPE" ]; then
+    setup_tmpdir
+    eval FSTYPE=\$${machine2}_DEFAULT_FSTYPE
+
+    if [ -z "$FSTYPE" ]; then
+        echo "Error: Unable to determine default fstype for MACHINE [$MACHINE]"
+        usage
+    fi
+fi
+# FSTYPE is now set for all cases
+
+if [ -z "$ROOTFS" ]; then
+    setup_tmpdir
+    T=$TMPDIR/deploy/images
+    eval rootfs_list=\$${machine2}_DEFAULT_ROOTFS
+    findimage $T $MACHINE $FSTYPE "$rootfs_list"
+
+    if [ -z "$ROOTFS" ]; then
+        echo "Error: Unable to determine default rootfs for MACHINE [$MACHINE]"
+        usage
+    fi
+fi
+# ROOTFS is now set for all cases
+
+echo ""
+echo "Continuing with the following parameters:"
+echo "KERNEL: [$KERNEL]"
+echo "ROOTFS: [$ROOTFS]"
+echo "FSTYPE: [$FSTYPE]"
 
 # We can't run without a libGL.so
 libgl='no'

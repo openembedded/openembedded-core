@@ -115,16 +115,16 @@ fi
 
 release_lock() {
     if [ ! -e "$NOSUDO_FLAG" ]; then
-        $QEMUIFDOWN $TAP $POKY_NATIVE_SYSROOT
+        sudo $QEMUIFDOWN $TAP $POKY_NATIVE_SYSROOT
     fi
-	echo "Releasing lockfile of preconfigured tap device '$TAP'"
-	lockfile-remove $LOCKFILE
+    echo "Releasing lockfile of preconfigured tap device '$TAP'"
+    lockfile-remove $LOCKFILE
 
-	if [ "$NFSRUNNING" = "true" ]; then
-		echo "Shutting down the userspace NFS server..."
-		echo "poky-export-rootfs stop $ROOTFS"
-		poky-export-rootfs stop $ROOTFS
-	fi
+    if [ "$NFSRUNNING" = "true" ]; then
+        echo "Shutting down the userspace NFS server..."
+        echo "poky-export-rootfs stop $ROOTFS"
+        poky-export-rootfs stop $ROOTFS
+    fi
 }
 
 n1=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
@@ -209,7 +209,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
     if [ -e /proc/sys/vm/mmap_min_addr ]; then
         if [ `cat /proc/sys/vm/mmap_min_addr` != "0" ]; then
             echo "Error, please set /proc/sys/vm/mmap_min_addr to 0 since otherwise it can cause problems with QEMU"
-	          return
+            return
         fi
     fi
 
@@ -295,7 +295,7 @@ if [ "$MACHINE" = "qemumips" ]; then
     QEMU=qemu-system-mips
     MACHINE_SUBTYPE=malta
     QEMU_UI_OPTIONS="-vga cirrus"
-    if [ "$TYPE" = "ext3" ]; then
+    if [ "$FSTYPE" = "ext3" ]; then
         #KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -hda $ROOTFS -no-reboot $QEMU_UI_OPTIONS"
@@ -396,8 +396,8 @@ else
 fi
 
 echo "Running $QEMU..."
-echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS $* --append '"'$KERNCMDLINE'"'
-$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS $* --append "$KERNCMDLINE" || /bin/true
+echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS $SCRIPT_QEMU_CMDLINE_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
+$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS $SCRIPT_QEMU_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT" || /bin/true
 
 release_lock
 
