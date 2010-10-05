@@ -16,6 +16,6 @@ SRC_URI += "file://fix_open_max_preprocessor_error.patch"
 EXTRA_OECONF += "--enable-dri --enable-dri2 --enable-dga --enable-glx"
 
 RDEPENDS_${PN} += "xserver-xorg-video-psb psb-firmware xpsb-glx \
-	       psb-kernel-source libdrm-poulsbo libva"
+	       libdrm-poulsbo libva"
 
 COMPATIBLE_MACHINE = "emenlow"
