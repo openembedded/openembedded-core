@@ -9,6 +9,8 @@ SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
 
 SSTATE_SCAN_CMD ?= "find ${SSTATE_BUILDDIR} \( -name "*.la" -o -name "*-config" \) -type f"
 
+BB_HASHFILENAME = "${SSTATE_PKGNAME}"
+
 python () {
     if bb.data.inherits_class('native', d):
         bb.data.setVar('SSTATE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
@@ -313,3 +315,27 @@ sstate_unpack_package () {
 	cd ${SSTATE_INSTDIR}
 	tar -xvzf ${SSTATE_PKG}
 }
+
+BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
+
+def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
+    ret = []
+    # This needs to go away, FIXME
+    mapping = {
+        "do_populate_sysroot" : "populate-sysroot",
+        "do_package_write_ipk" : "deploy-ipk",
+        "do_package_write_deb" : "deploy-deb",
+        "do_package_write_rpm" : "deploy-rpm",
+        "do_package" : "package",
+        "do_deploy" : "deploy",
+    }
+
+    for task in range(len(sq_fn)):
+        sstatefile = bb.data.expand("${SSTATE_DIR}/" + sq_hashfn[task] + "_" + mapping[sq_task[task]] + ".tgz", d)
+        sstatefile= sstatefile.replace("${BB_TASKHASH}", sq_hash[task])
+        #print("Checking for %s" % sstatefile)
+        if os.path.exists(sstatefile):
+            ret.append(task)
+
+    return ret
+

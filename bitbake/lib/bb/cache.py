@@ -453,6 +453,8 @@ class Cache:
         if not self.getVar('BROKEN', file_name, True) and not self.getVar('EXCLUDE_FROM_WORLD', file_name, True):
             cacheData.possible_world.append(file_name)
 
+        cacheData.hashfn[file_name] = self.getVar('BB_HASHFILENAME', file_name, True)
+
         # Touch this to make sure its in the cache
         self.getVar('__BB_DONT_CACHE', file_name, True)
         self.getVar('__VARIANTS', file_name, True)
@@ -545,6 +547,7 @@ class CacheData:
         self.preferred = {}
         self.tasks = {}
         self.basetaskhash = {}
+        self.hashfn = {}
 
         """
         Indirect Cache variables

@@ -757,7 +757,8 @@ class RunQueue:
         self.cfgData = cfgData
         self.rqdata = RunQueueData(self, cooker, cfgData, dataCache, taskData, targets)
 
-        self.stamppolicy = bb.data.getVar("BB_STAMP_POLICY", cfgData, 1) or "perfile"
+        self.stamppolicy = bb.data.getVar("BB_STAMP_POLICY", cfgData, True) or "perfile"
+        self.hashvalidate = bb.data.getVar("BB_HASHCHECK_FUNCTION", cfgData, True) or None
 
         self.state = runQueuePrepare
 
@@ -1325,6 +1326,29 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         for task in range(len(self.sq_revdeps)):
             if len(self.sq_revdeps[task]) == 0:
                 self.runq_buildable[task] = 1
+
+        if self.rq.hashvalidate:
+            sq_hash = []
+            sq_hashfn = []
+            sq_fn = []
+            sq_task = []
+            for task in range(len(self.sq_revdeps)):
+                realtask = self.rqdata.runq_setscene[task]
+                fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
+                sq_fn.append(fn)
+                sq_hashfn.append(self.rqdata.dataCache.hashfn[fn])
+                sq_hash.append(self.rqdata.runq_hash[realtask])
+                sq_task.append(self.rqdata.runq_task[realtask])
+
+            call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
+            locs = { "sq_fn" : sq_fn, "sq_task" : sq_task, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.configuration.data }
+            valid = bb.utils.better_eval(call, locs)
+            for task in range(len(self.sq_revdeps)):
+                if task not in valid:
+                    bb.msg.debug(2, bb.msg.domain.RunQueue, "No package found so skipping setscene task %s" % (self.rqdata.get_user_idstring(task)))
+                    self.task_failoutright(task)
+
+            #print(str(valid))
 
         bb.msg.note(1, bb.msg.domain.RunQueue, "Executing setscene Tasks")
 
