@@ -454,7 +454,7 @@
             </glossdef>
          </glossentry>
 
-         <glossentry id='var-MACHINE_ESSENTIAL_RRECOMMENDS'><glossterm>MACHINE_ESSENTIAL_RRECOOMENDS</glossterm>
+         <glossentry id='var-MACHINE_ESSENTIAL_RRECOMMENDS'><glossterm>MACHINE_ESSENTIAL_RRECOMMENDS</glossterm>
             <glossdef>
                 <para>List of packages required to boot device (usually
                     additional kernel modules)</para>
