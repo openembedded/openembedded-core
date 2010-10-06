@@ -43,11 +43,8 @@ TOBUILD = "\
   src/tools/uic \
   src/tools/rcc \
   src/network \
-  src/gui \
-  src/tools/uic3 \
   tools/linguist/lrelease \
   tools/linguist/lupdate \
-  tools/qdbus \
 "
 
 do_compile() {
@@ -61,7 +58,7 @@ NATIVE_INSTALL_WORKS = "1"
 do_install() {
 	install -d ${D}${bindir}/
 	install -m 0755 bin/qmake ${D}${bindir}/qmake2
-	for i in moc uic uic3 rcc lrelease lupdate qdbuscpp2xml qdbusxml2cpp; do
+	for i in moc uic rcc lrelease lupdate; do
 		install -m 0755 bin/${i} ${D}${bindir}/${i}4
 	done
 
