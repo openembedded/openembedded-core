@@ -72,9 +72,22 @@ class VariableParse:
             self.references |= parser.references
             self.execs |= parser.execs
 
-            value = utils.better_eval(codeobj, {"d": self.d})
+            value = utils.better_eval(codeobj, DataDict(self.d))
             return str(value)
 
+
+class DataDict(dict):
+    def __init__(self, metadata, **kwargs):
+        self.metadata = metadata
+        dict.__init__(self, **kwargs)
+        self['d'] = metadata
+
+    def __missing__(self, key):
+        value = self.metadata.getVar(key, True)
+        if value is None or self.metadata.getVarFlag(key, 'func'):
+            raise KeyError(key)
+        else:
+            return value
 
 class DataSmart(MutableMapping):
     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
