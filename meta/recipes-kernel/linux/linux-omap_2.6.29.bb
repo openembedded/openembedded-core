@@ -9,8 +9,6 @@ DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_overo = "1"
 DEFAULT_PREFERENCE_beagleboard = "1"
 
-SRCREV = "58cf2f1425abfd3a449f9fe985e48be2d2555022"
-
 # The main PR is now using MACHINE_KERNEL_PR, for omap3 see conf/machine/include/omap3.inc
 PR_append = "+gitr${SRCREV}"
 

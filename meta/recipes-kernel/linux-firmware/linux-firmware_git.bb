@@ -5,8 +5,6 @@ LICENSE_${PN}-sd8686 = "Firmware:LICENSE.libertas"
 
 PROVIDES += "linux-firmware-sd8686"
 
-SRCREV = "85212bf6501da865e570f6b2f6fbd6f212850609"
-
 PV = "0.0+git${SRCREV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/dwmw2/linux-firmware.git;protocol=git"

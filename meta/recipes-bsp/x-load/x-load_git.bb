@@ -2,8 +2,6 @@ require x-load.inc
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/x-load-git/${MACHINE}"
 
-SRCREV = "65ed00323f3807197a83abc75d62ed2a8d3f60de"
-
 PV = "1.42+${PR}+git${SRCREV}"
 PR="r12"
 

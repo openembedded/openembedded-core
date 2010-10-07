@@ -6,8 +6,6 @@ inherit kernel
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/${PN}-git/${MACHINE}"
 
-SRCREV = "${AUTOREV}"
-
 PV = "2.6.31-rc7+pm+${PR}+git${SRCREV}"
 PR = "r3"
 

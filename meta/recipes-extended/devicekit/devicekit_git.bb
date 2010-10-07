@@ -6,7 +6,6 @@ SRC_URI = "git://anongit.freedesktop.org/DeviceKit/DeviceKit;protocol=git \
 
 PV = "002+git${SRCREV}"
 PR = "r2"
-SRCREV = "014d168ba4bf40c9bae487bacff8bf2aa054b5f6"
 
 S = "${WORKDIR}/git"
 

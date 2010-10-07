@@ -2,8 +2,6 @@ require linux-omap2.inc
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/linux-omap3-git/${MACHINE}"
 
-SRCREV = "de1121fdb899f762b9e717f44eaf3fae7c00cd3e"
-
 PV = "2.6.27-rc6+${PR}+git${SRCREV}"
 PR = "r30"
 
