@@ -1,19 +1,19 @@
 DESCRIPTION = "Qemu helper scripts from Poky"
 LICENSE = "GPL"
 RDEPENDS = "qemu-nativesdk"
-PR = "r7"
+PR = "r8"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 
 SRC_URI = "file://${POKYBASE}/scripts/poky-qemu \
            file://${POKYBASE}/scripts/poky-qemu-internal \
            file://${POKYBASE}/scripts/poky-addptable2image \
+           file://${POKYBASE}/scripts/poky-gen-tapdevs \
            file://${POKYBASE}/scripts/poky-qemu-ifup \
            file://${POKYBASE}/scripts/poky-qemu-ifdown \
            file://${POKYBASE}/scripts/poky-find-native-sysroot \
            file://${POKYBASE}/scripts/poky-extract-sdk \
            file://${POKYBASE}/scripts/poky-export-rootfs \
-           file://${POKYBASE}/scripts/runqemu-nfs \
            file://tunctl.c \
            file://raw2flash.c \
           "
@@ -31,7 +31,6 @@ do_compile() {
 do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 ${WORKDIR}${POKYBASE}/scripts/poky-* ${D}${bindir}/
-	install -m 0755 ${WORKDIR}${POKYBASE}/scripts/runqemu-nfs ${D}${bindir}/
 	install tunctl ${D}${bindir}/
 	install raw2flash.spitz ${D}${bindir}/
 	install flash2raw.spitz ${D}${bindir}/

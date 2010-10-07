@@ -57,7 +57,7 @@ if [ ! -x "$TUNCTL" ]; then
 	if [[ "$NATIVE_SYSROOT_DIR" =~ ^\/opt\/poky ]]; then
 		echo "This shouldn't happen - something is wrong with your toolchain installation"
 	else
-		echo "Have you run 'bitbake qemu-helper-native'?"
+		echo "Have you run 'bitbake meta-ide-support'?"
 	fi
 	
 	exit 1

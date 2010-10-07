@@ -3,7 +3,8 @@ SECTION = "console/network"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-PR = "r0"
+RDEPENDS = "pseudo"
+PR = "r1"
 
 SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir/nfs-server-${PV}.tar.gz \
            file://001-2.2b47-2.2b51.patch \

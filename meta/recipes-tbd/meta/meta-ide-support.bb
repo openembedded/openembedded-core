@@ -1,6 +1,6 @@
 DESCRIPTION = "Meta package for ensuring the build directory contains all appropriate toolchain packages for using an IDE"
 LICENSE = "MIT"
-DEPENDS = "virtual/libc gdb-cross"
+DEPENDS = "virtual/libc gdb-cross qemu-helper-native unfs-server-native"
 PR = "r1"
 
 inherit meta toolchain-scripts
