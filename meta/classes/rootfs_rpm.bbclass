@@ -28,6 +28,10 @@ opkglibdir = "${localstatedir}/lib/opkg"
 RPMOPTS="--dbpath ${rpmlibdir} --define='_openall_before_chroot 1'"
 RPM="rpm ${RPMOPTS}"
 
+# RPM doesn't work with multiple rootfs generation at once due to collisions in the use of files 
+# in ${DEPLOY_DIR_RPM}. This can be removed if package_update_index_rpm can be called concurrently
+do_rootfs[lockfiles] += "${DEPLOY_DIR_RPM}/rpm.lock"
+
 fakeroot rootfs_rpm_do_rootfs () {
 	set +x
 
