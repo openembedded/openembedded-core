@@ -4,6 +4,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
 RDEPENDS = "pseudo"
+RDEPENDS_virtclass-native = "pseudo-native"
+RDEPENDS_virtclass-nativesdk = "pseudo-nativesdk"
 PR = "r1"
 
 SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir/nfs-server-${PV}.tar.gz \
