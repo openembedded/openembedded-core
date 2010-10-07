@@ -75,7 +75,7 @@ EXTRA_IMAGE_FEATURES_mx31ads = "tools-testapps debug-tweaks"
 # include 'package_ipk' for ipks
 # include 'package_rpm' for rpms
 #PACKAGE_CLASSES ?= "package_rpm package_deb package_ipk"
-PACKAGE_CLASSES ?= "package_rpm"
+PACKAGE_CLASSES ?= "package_rpm package_ipk"
 
 # A list of additional classes to use when building the system
 # include 'image-prelink' in order to prelink the filesystem image
