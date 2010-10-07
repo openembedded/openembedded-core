@@ -494,10 +494,11 @@ python () {
 
         dont_want_license = bb.data.getVar('INCOMPATIBLE_LICENSE', d, 1)
         if dont_want_license and not pn.endswith("-native") and not pn.endswith("-cross") and not pn.endswith("-cross-initial") and not pn.endswith("-cross-intermediate"):
-            gplv3_hosttools_whitelist = (bb.data.getVar("GPLv3_HOSTTOOLS_WHITELIST", d, 1) or "").split()
-            gplv3_lgplv2_whitelist = (bb.data.getVar("GPLv3_LGPLv2_WHITELIST", d, 1) or "").split()
-            gplv3_whitelist = (bb.data.getVar("GPLv3_WHITELIST", d, 1) or "").split()
-            if pn not in gplv3_hosttools_whitelist and pn not in gplv3_lgplv2_whitelist and pn not in gplv3_whitelist:
+            hosttools_whitelist = (bb.data.getVar('HOSTTOOLS_WHITELIST_%s' % dont_want_license, d, 1) or "").split()
+            lgplv2_whitelist = (bb.data.getVar('LGPLv2_WHITELIST_%s' % dont_want_license, d, 1) or "").split()
+            dont_want_whitelist = (bb.data.getVar('WHITELIST_%s' % dont_want_license, d, 1) or "").split()
+            if pn not in hosttools_whitelist and pn not in lgplv2_whitelist and pn not in dont_want_whitelist:
+
                 import re
                 this_license = bb.data.getVar('LICENSE', d, 1)
                 if this_license and re.search(dont_want_license, this_license):
