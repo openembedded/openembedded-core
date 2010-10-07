@@ -222,6 +222,9 @@ def init(urls, d, setup = True):
     urldata_cache[fn] = urldata
     return urldata
 
+def mirror_from_string(data):
+    return [ i.split() for i in (data or "").replace('\\n','\n').split('\n') if i ]
+
 def go(d, urls = None):
     """
     Fetch all urls
@@ -261,7 +264,7 @@ def go(d, urls = None):
 
         if premirror_fetch:
             # First try fetching uri, u, from PREMIRRORS
-            mirrors = [ i.split() for i in (bb.data.getVar('PREMIRRORS', d, 1) or "").split('\n') if i ]
+            mirrors = mirror_from_string(bb.data.getVar('PREMIRRORS', d, True))
             localpath = try_mirrors(d, u, mirrors, False, m.forcefetch(u, ud, d))
         elif os.path.exists(ud.localfile):
             localpath = ud.localfile
@@ -274,7 +277,7 @@ def go(d, urls = None):
                 localpath = ud.localpath
             except FetchError:
                 # Finally, try fetching uri, u, from MIRRORS
-                mirrors = [ i.split() for i in (bb.data.getVar('MIRRORS', d, 1) or "").split('\n') if i ]
+                mirrors = mirror_from_string(bb.data.getVar('MIRRORS', d, True))
                 localpath = try_mirrors (d, u, mirrors)
                 if not localpath or not os.path.exists(localpath):
                     raise FetchError("Unable to fetch URL %s from any source." % u)
@@ -300,7 +303,7 @@ def checkstatus(d):
         m = ud.method
         bb.msg.note(1, bb.msg.domain.Fetcher, "Testing URL %s" % u)
         # First try checking uri, u, from PREMIRRORS
-        mirrors = [ i.split() for i in (bb.data.getVar('PREMIRRORS', d, 1) or "").split('\n') if i ]
+        mirrors = mirror_from_string(bb.data.getVar('PREMIRRORS', d, True))
         ret = try_mirrors(d, u, mirrors, True)
         if not ret:
             # Next try checking from the original uri, u
@@ -308,7 +311,7 @@ def checkstatus(d):
                 ret = m.checkstatus(u, ud, d)
             except:
                 # Finally, try checking uri, u, from MIRRORS
-                mirrors = [ i.split() for i in (bb.data.getVar('MIRRORS', d, 1) or "").split('\n') if i ]
+                mirrors = mirror_from_string(bb.data.getVar('MIRRORS', d, True))
                 ret = try_mirrors (d, u, mirrors, True)
 
         if not ret:
@@ -516,7 +519,7 @@ class FetchData(object):
             local = ""
             if premirrors and self.url:
                 aurl = self.url.split(";")[0]
-                mirrors = [ i.split() for i in (premirrors or "").split('\n') if i ]
+                mirrors = mirror_from_string(premirrors)
                 for (find, replace) in mirrors:
                     if replace.startswith("file://"):
                         path = aurl.split("://")[1]
