@@ -1,0 +1,13 @@
+Index: pulseaudio-0.9.15/configure.ac
+===================================================================
+--- pulseaudio-0.9.15.orig/configure.ac	2009-04-14 00:09:53.000000000 +0100
++++ pulseaudio-0.9.15/configure.ac	2009-05-22 11:32:50.000000000 +0100
+@@ -20,7 +20,7 @@
+ # along with PulseAudio; if not, write to the Free Software Foundation,
+ # Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ 
+-AC_PREREQ(2.63)
++AC_PREREQ(2.61)
+ 
+ m4_define(pa_major, [0])
+ m4_define(pa_minor, [9])
