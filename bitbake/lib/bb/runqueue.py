@@ -1428,7 +1428,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                 return True
 
             if self.cooker.configuration.force:
-                for target in self.target_pairs:
+                for target in self.rqdata.target_pairs:
                     if target[0] == fn and target[1] == self.rqdata.runq_task[realtask]:
                         self.task_failoutright(task)
                         return True
