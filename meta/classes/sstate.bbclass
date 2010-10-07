@@ -254,14 +254,18 @@ def pstaging_fetch(sstatepkg, d):
     import bb.fetch
 
     # only try and fetch if the user has configured a mirror
-    if bb.data.getVar('SSTATE_MIRROR', d) != "":
+
+    mirrors = bb.data.getVar('SSTATE_MIRRORS', d, True)
+    if mirrors:
         # Copy the data object and override DL_DIR and SRC_URI
-        pd = d.createCopy()
-        dldir = bb.data.expand("${SSTATE_DIR}", pd)
-        mirror = bb.data.expand("${SSTATE_MIRROR}/", pd)
-        srcuri = mirror + os.path.basename(sstatepkg)
-        bb.data.setVar('DL_DIR', dldir, pd)
-        bb.data.setVar('SRC_URI', srcuri, pd)
+        localdata = bb.data.createCopy(d)
+        bb.data.update_data(localdata)
+
+        dldir = bb.data.expand("${SSTATE_DIR}", localdata)
+        srcuri = "file://" + os.path.basename(sstatepkg)
+        bb.data.setVar('DL_DIR', dldir, localdata)
+        bb.data.setVar('PREMIRRORS', mirrors, localdata)
+        bb.data.setVar('SRC_URI', srcuri, localdata)
 
         # Try a fetch from the sstate mirror, if it fails just return and
         # we will build the package
@@ -269,7 +273,7 @@ def pstaging_fetch(sstatepkg, d):
             bb.fetch.init([srcuri], pd)
             bb.fetch.go(pd, [srcuri])
         except:
-            return
+            pass
 
 def sstate_setscene(d):
     shared_state = sstate_state_fromvars(d)
@@ -319,6 +323,7 @@ sstate_unpack_package () {
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
 
 def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
+
     ret = []
     # This needs to go away, FIXME
     mapping = {
@@ -332,10 +337,39 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
     for task in range(len(sq_fn)):
         sstatefile = bb.data.expand("${SSTATE_DIR}/" + sq_hashfn[task] + "_" + mapping[sq_task[task]] + ".tgz", d)
-        sstatefile= sstatefile.replace("${BB_TASKHASH}", sq_hash[task])
+        sstatefile = sstatefile.replace("${BB_TASKHASH}", sq_hash[task])
         #print("Checking for %s" % sstatefile)
         if os.path.exists(sstatefile):
             ret.append(task)
+            continue
+
+    mirrors = bb.data.getVar("SSTATE_MIRRORS", d, True)
+    if mirrors:
+        # Copy the data object and override DL_DIR and SRC_URI
+        localdata = bb.data.createCopy(d)
+        bb.data.update_data(localdata)
+
+        dldir = bb.data.expand("${SSTATE_DIR}", localdata)
+        bb.data.setVar('DL_DIR', dldir, localdata)
+        bb.data.setVar('PREMIRRORS', mirrors, localdata)
+
+        for task in range(len(sq_fn)):
+            if task in ret:
+                continue
+
+            sstatefile = bb.data.expand("${SSTATE_DIR}/" + sq_hashfn[task] + "_" + mapping[sq_task[task]] + ".tgz", d)
+            sstatefile = sstatefile.replace("${BB_TASKHASH}", sq_hash[task])
+
+            srcuri = "file://" + os.path.basename(sstatefile)
+            bb.data.setVar('SRC_URI', srcuri, localdata)
+            bb.note(str(srcuri))
+
+            try:
+                bb.fetch.init(srcuri.split(), d)
+                bb.fetch.checkstatus(localdata)
+                ret.append(task)
+            except:
+                pass     
 
     return ret
 
