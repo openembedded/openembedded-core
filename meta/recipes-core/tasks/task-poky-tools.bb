@@ -4,7 +4,7 @@
 
 DESCRIPTION = "Tools tasks for Poky"
 LICENSE = "MIT"
-PR = "r7"
+PR = "r8"
 
 PACKAGES = "\
     task-poky-tools-debug \
@@ -52,14 +52,14 @@ RRECOMMENDS_task-poky-tools-profile = "\
 #    exmap-server
 
 # At present we only build lttng-ust on
-# qemux86/qemux86-64/qemuppc/emenlow/netbook since upstream liburcu
+# qemux86/qemux86-64/qemuppc/emenlow/atom-pc since upstream liburcu
 # (which is required by lttng-ust) may not build on other platforms, like
 # MIPS and qemu ARMv5te that poky uses now.
 RDEPENDS_task-poky-tools-profile_append_qemux86 = " valgrind lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_qemux86-64 = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_qemuppc = " lttng-ust"
 RDEPENDS_task-poky-tools-profile_append_emenlow = " lttng-ust"
-RDEPENDS_task-poky-tools-profile_append_netbook = " lttng-ust"
+RDEPENDS_task-poky-tools-profile_append_atom-pc = " lttng-ust"
 
 RDEPENDS_task-poky-tools-testapps = "\
     blktool \

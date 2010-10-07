@@ -1,9 +1,9 @@
 require linux-netbook.inc
 
-PR = "r1"
+PR = "r2"
 
 DEFAULT_PREFERENCE = "-1"
-DEFAULT_PREFERENCE_netbook = "1"
+DEFAULT_PREFERENCE_atom-pc = "1"
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${PV}.tar.bz2 \
            file://linux-2.6.29-dont-wait-for-mouse.patch;patch=1 \
@@ -103,6 +103,6 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-${PV}.tar.bz2 \
            file://rtl8192_no_autoconnect.patch;patch=1 \
            file://rtl8192_no_WAP_unassoc.patch;patch=1 \
 #           file://defconfig-menlow \
-           file://defconfig-netbook"
+           file://defconfig-atom-pc"
            
 S = "${WORKDIR}/linux-${PV}"

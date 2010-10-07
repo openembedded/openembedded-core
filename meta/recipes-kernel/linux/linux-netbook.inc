@@ -14,4 +14,4 @@ do_configure() {
 
 }
 
-COMPATIBLE_MACHINE = "(netbook|menlow)"
+COMPATIBLE_MACHINE = "(atom-pc|menlow)"

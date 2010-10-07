@@ -21,7 +21,7 @@ MACHINE ?= "qemux86"
 # Other supported machines
 #MACHINE ?= "qemuarm"
 #MACHINE ?= "qemux86-64"
-#MACHINE ?= "netbook"
+#MACHINE ?= "atom-pc"
 #MACHINE ?= "c7x0"
 #MACHINE ?= "akita"
 #MACHINE ?= "spitz"
