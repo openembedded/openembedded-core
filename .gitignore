@@ -3,6 +3,8 @@
 build/conf/local.conf
 build/conf/bblayers.conf
 build/tmp/
+build/sstate-cache
+build/pyshtables.py
 pstage/
 scripts/poky-git-proxy-socks
 sources/
