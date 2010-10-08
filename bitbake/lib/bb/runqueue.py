@@ -1072,7 +1072,8 @@ class RunQueueExecute:
             sys.stdout.flush()
             sys.stderr.flush()
 
-            proc = subprocess.Popen(["bitbake-runtask", self.rqdata.hashfile, fn, taskname, str(self.cooker.configuration.dry_run)], env=env, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+            runtask = the_data.getVar("BB_RUNTASK", True) or "bitbake-runtask"
+            proc = subprocess.Popen([runtask, self.rqdata.hashfile, fn, taskname, str(self.cooker.configuration.dry_run)], env=env, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
             pipein = proc.stdout
             pipeout = proc.stdin
             pid = proc.pid
