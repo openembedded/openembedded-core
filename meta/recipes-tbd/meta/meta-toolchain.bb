@@ -47,7 +47,7 @@ do_populate_sdk() {
 
 	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${localstatedir_nativesdk}/lib/opkg
 	mv ${SDK_OUTPUT}/var/lib/opkg/* ${SDK_OUTPUT}/${SDKPATHNATIVE}${localstatedir_nativesdk}/lib/opkg/
-	rm -Rf ${SDK_OUTPUT}/usr
+	rm -Rf ${SDK_OUTPUT}/var
 
 	# Don't ship any libGL in the SDK
 	rm -rf ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/libGL*
@@ -71,6 +71,9 @@ do_populate_sdk() {
 	done
 	#rm -f ${SDK_OUTPUT}/${SDKPATHNATIVE}/lib/*.la
 	rm -f ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/*.la
+
+	# Link the ld.so.cache file into the hosts filesystem
+	ln -s /etc/ld.so.cache ${SDKPATHNATIVE}/etc/ld.so.cache
 
 	# Setup site file for external use
 	siteconfig=${SDK_OUTPUT}/${SDKPATH}/site-config-${MULTIMACH_TARGET_SYS}
