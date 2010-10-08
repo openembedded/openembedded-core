@@ -1,7 +1,8 @@
 DESCRIPTION = "Gstreamer package groups"
 LICENSE = "MIT"
-DEPENDS = "gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly"
-PR = "r6"
+DEPENDS = "gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad"
+
+PR = "r7"
 
 PACKAGES = "\
     gst-meta-base \
@@ -31,10 +32,9 @@ RDEPENDS_gst-meta-audio = "\
     gst-meta-base \
     gst-plugins-base-vorbis \
     gst-plugins-base-ogg \
-    gst-plugins-ugly-mad \
     gst-plugins-good-wavparse \
-    gst-plugins-ugly-mpegaudioparse \
-    gst-plugins-good-flac"
+    gst-plugins-good-flac \
+    ${COMMERCIAL_AUDIO_PLUGINS}"
 
 
 RDEPENDS_gst-meta-debug = "\
@@ -48,9 +48,7 @@ RDEPENDS_gst-meta-video = "\
     gst-meta-base \
     gst-plugins-good-avi \
     gst-plugins-good-matroska \
-    gst-plugins-ugly-mpeg2dec \
-    gst-plugins-ugly-mpegstream \
-    gst-plugins-bad-mpegvideoparse"
+    ${COMMERCIAL_VIDEO_PLUGINS}"
 
 RRECOMMENDS_gst-meta-video = "\
     gst-meta-audio"

@@ -9,11 +9,11 @@ RDEPENDS = "gst-plugins-base-audioconvert \
             gst-plugins-base-typefindfunctions \
             gst-plugins-base-playbin"
 
-RRECOMMENDS = "gst-plugins-ugly-mad \
-               gst-plugins-good-id3demux \
+RRECOMMENDS = "gst-plugins-good-id3demux \
                gst-plugins-base-vorbis \
                gst-plugins-base-alsa \
-               gst-plugins-base-ogg"
+               gst-plugins-base-ogg \
+               ${COMMERCIAL_AUDIO_PLUGINS}"
 
 PV = "0.0+svnr${SRCREV}"
 

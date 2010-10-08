@@ -14,7 +14,7 @@ PACKAGES = "\
 
 ALLOW_EMPTY = "1"
 
-QTDEMOS ?= "fotowall quicky qmmp"
+QTDEMOS ?= "fotowall quicky ${COMMERCIAL_QT}"
 QTDEMOS_mips ?= ""
 QTDEMOS_mipsel ?= ""
 
