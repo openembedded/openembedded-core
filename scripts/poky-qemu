@@ -44,6 +44,7 @@ MACHINE=${MACHINE:=""}
 KERNEL=""
 FSTYPE=""
 ROOTFS=""
+LAZY_ROOTFS=""
 SCRIPT_QEMU_OPT=""
 SCRIPT_KERNEL_OPT=""
 
@@ -74,6 +75,7 @@ while [ $i -le $# ]; do
         *-image-*)
             if [ -z "$ROOTFS" ]; then
                 ROOTFS=$arg
+                LAZY_ROOTFS="true"
             else
                 echo "Error: conflicting ROOTFS args [$ROOTFS] and [$arg]"
                 usage
@@ -259,6 +261,14 @@ if [ -z "$FSTYPE" ]; then
     fi
 fi
 # FSTYPE is now set for all cases
+
+# Handle cases where a ROOTFS type is given instead of a filename, e.g.
+# poky-image-sato
+if [ "$LAZY_ROOTFS" = "true" ]; then
+    setup_tmpdir
+    echo "Assuming $ROOTFS really means $TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE"
+    ROOTFS=$TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE
+fi
 
 if [ -z "$ROOTFS" ]; then
     setup_tmpdir
