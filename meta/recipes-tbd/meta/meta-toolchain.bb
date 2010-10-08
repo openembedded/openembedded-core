@@ -73,7 +73,7 @@ do_populate_sdk() {
 	rm -f ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/*.la
 
 	# Link the ld.so.cache file into the hosts filesystem
-	ln -s /etc/ld.so.cache ${SDKPATHNATIVE}/etc/ld.so.cache
+	ln -s /etc/ld.so.cache ${SDK_OUTPUT}/${SDKPATHNATIVE}/etc/ld.so.cache
 
 	# Setup site file for external use
 	siteconfig=${SDK_OUTPUT}/${SDKPATH}/site-config-${MULTIMACH_TARGET_SYS}
