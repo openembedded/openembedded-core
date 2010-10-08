@@ -60,12 +60,39 @@ QEMUIFDOWN=`which poky-qemu-ifdown`
 
 NFSRUNNING="false"
 
-LOCKUTIL=`which lockfile-create`
-if [ -z "$LOCKUTIL" ]; then
-    echo "Error: Unable to find the lockfile-create utility"
-    echo "On Ubuntu systems this is included in the lockfile-progs package"
-    return
-fi
+acquire_lock() {
+    lockfile=$1
+    if [ -z "$lockfile" ]; then
+        echo "Error: missing lockfile arg passed to acquire_lock()"
+        return 1
+    fi
+
+    if [ -e "$lockfile.lock" ]; then
+        # Check that the lockfile is not stale
+        ps=`ps -ewwo pid | grep $(cat $lockfile.lock)`
+        if [ -z "$ps" ]; then
+            echo "Warning: Stale lock file detected, deleting $lockfile.lock"
+            rm -f $lockfile.lock
+            echo $$ > $lockfile.lock
+        else
+            return 1
+        fi
+    else
+        echo $$ > $lockfile.lock
+    fi
+
+    return 0
+}
+
+release_lock() {
+    lockfile=$1
+    if [ -z "$lockfile" ]; then
+        echo "Error: missing lockfile arg passed to release_lock()"
+        return 1
+    fi
+
+    rm -f $lockfile.lock
+}
 
 LOCKDIR="/tmp/qemu-tap-locks"
 [ ! -d "$LOCKDIR" ] && mkdir $LOCKDIR
@@ -76,10 +103,8 @@ LOCKFILE=""
 for tap in $POSSIBLE; do
     LOCKFILE="$LOCKDIR/$tap"
     echo "Acquiring lockfile for $tap..."
-    if lockfile-create --use-pid -r 1 $LOCKFILE; then
-        # the --use-pid option to lockfile-create will give use
-        # the subshell's pid, so override it with the shell's pid:
-        echo $$ > $LOCKFILE.lock
+    acquire_lock $LOCKFILE
+    if [ $? -eq 0 ]; then
         TAP=$tap
         break
     fi
@@ -94,7 +119,7 @@ if [ "$TAP" = "" ]; then
     fi
 
     GROUPID=`id -g`
-    echo 'Setting up tap interface under sudo'
+    echo "Setting up tap interface under sudo"
     tap=`sudo $QEMUIFUP $GROUPID $POKY_NATIVE_SYSROOT`
     if [ $? -ne 0 ]; then
         # Re-run standalone to see verbose errors
@@ -103,22 +128,20 @@ if [ "$TAP" = "" ]; then
     fi
     LOCKFILE="$LOCKDIR/$tap"
     echo "Acquiring lockfile for $tap..."
-    if lockfile-create --use-pid -r 1 $LOCKFILE; then
-        # the --use-pid option to lockfile-create will give us
-        # the subshell's pid, so override it with the shell's pid:
-        echo $$ > $LOCKFILE.lock
+    acquire_lock $LOCKFILE
+    if [ $? -eq 0 ]; then
         TAP=$tap
     fi 
 else
     echo "Using preconfigured tap device '$TAP'"
 fi
 
-release_lock() {
+cleanup() {
     if [ ! -e "$NOSUDO_FLAG" ]; then
         sudo $QEMUIFDOWN $TAP $POKY_NATIVE_SYSROOT
     fi
     echo "Releasing lockfile of preconfigured tap device '$TAP'"
-    lockfile-remove $LOCKFILE
+    release_lock $LOCKFILE
 
     if [ "$NFSRUNNING" = "true" ]; then
         echo "Shutting down the userspace NFS server..."
@@ -162,13 +185,13 @@ esac
 
 if [ ! -f "$KERNEL" ]; then
     echo "Error: Kernel image file $KERNEL doesn't exist"
-    release_lock
+    cleanup
     return
 fi
 
 if [ "$FSTYPE" != "nfs" -a ! -f "$ROOTFS" ]; then
     echo "Error: Image file $ROOTFS doesn't exist"
-    release_lock
+    cleanup
     return
 fi
 
@@ -186,7 +209,7 @@ if [ "$FSTYPE" = "nfs" ]; then
     portmap_running=`ps ax | grep portmap | grep -v grep | wc -l`
     if [[ $rpcbind_running == 0 && $portmap_running == 0 ]]; then
         echo "You need to be running either rpcbind or portmap to continue"
-        release_lock
+        cleanup
         return
     fi
 
@@ -194,7 +217,7 @@ if [ "$FSTYPE" = "nfs" ]; then
     echo "poky-export-rootfs restart $ROOTFS"
     poky-export-rootfs restart $ROOTFS
     if [ $? != 0 ]; then
-        release_lock
+        cleanup
         return
     fi
     NFSRUNNING="true"
@@ -224,7 +247,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist"
-            release_lock
+            cleanup
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
@@ -248,7 +271,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist."
-            release_lock
+            cleanup
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
@@ -269,7 +292,7 @@ if [ "$MACHINE" = "qemux86-64" ]; then
         fi
         if [ ! -d "$ROOTFS" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist."
-            release_lock
+            cleanup
             return
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
@@ -303,7 +326,7 @@ if [ "$MACHINE" = "qemumips" ]; then
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist"
-            release_lock
+            cleanup
             return
         fi
         KERNCMDLINE="root=/dev/nfs console=ttyS0 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
@@ -324,7 +347,7 @@ if [ "$MACHINE" = "qemuppc" ]; then
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist"
-            release_lock
+            cleanup
             return
         fi
         KERNCMDLINE="root=/dev/nfs console=ttyS0 console=tty0 nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
@@ -346,7 +369,7 @@ fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Error: Unable to support this combination of options"
-    release_lock
+    cleanup
     return
 fi
 
@@ -369,7 +392,7 @@ QEMUBIN=`which $QEMU`
 
 if [ ! -x "$QEMUBIN" ]; then
     echo "Error: No QEMU binary '$QEMU' could be found."
-    release_lock
+    cleanup
     return
 fi
 
@@ -378,7 +401,7 @@ function _quit() {
         #echo kill `cat $PIDFILE`
         kill `cat $PIDFILE`
     fi
-    release_lock
+    cleanup
     return
 }
 
@@ -399,7 +422,7 @@ echo "Running $QEMU..."
 echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS $SCRIPT_QEMU_CMDLINE_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
 $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS $SCRIPT_QEMU_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT" || /bin/true
 
-release_lock
+cleanup
 
 trap - INT TERM QUIT
 return
