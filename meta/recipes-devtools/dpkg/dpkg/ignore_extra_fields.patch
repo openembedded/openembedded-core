@@ -1,11 +1,7 @@
- dpkg-deb/build.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- dpkg-1.14.19.orig/dpkg-deb/build.c
-+++ dpkg-1.14.19/dpkg-deb/build.c
-@@ -241,18 +241,18 @@ void do_build(const char *const *argv) {
-     if (checkedinfo->priority == pri_other) {
-       fprintf(stderr, _("warning, `%s' contains user-defined Priority value `%s'\n"),
+diff -ruN dpkg-1.15.8.5-orig/dpkg-deb/build.c dpkg-1.15.8.5/dpkg-deb/build.c
+--- dpkg-1.15.8.5-orig/dpkg-deb/build.c	2010-10-08 12:27:15.042083703 +0800
++++ dpkg-1.15.8.5/dpkg-deb/build.c	2010-10-08 12:31:53.822534277 +0800
+@@ -275,14 +275,14 @@
                controlfile, checkedinfo->otherpriority);
        warns++;
      }
@@ -14,13 +10,11 @@
        if (known_arbitrary_field(field))
          continue;
  
-       fprintf(stderr, _("warning, `%s' contains user-defined field `%s'\n"),
+       warning(_("'%s' contains user-defined field '%s'"),
                controlfile, field->name);
        warns++;
 -    }
 +    }*/
-     checkversion(checkedinfo->available.version.version,"(upstream) version",&errs);
-     checkversion(checkedinfo->available.version.revision,"Debian revision",&errs);
-     if (errs) ohshit(_("%d errors in control file"),errs);
  
      if (subdir) {
+       versionstring= versiondescribe(&checkedinfo->available.version,vdew_never);

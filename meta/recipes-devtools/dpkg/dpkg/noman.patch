@@ -1,16 +1,13 @@
----
- Makefile.am |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
---- dpkg-1.13.22.orig/Makefile.am
-+++ dpkg-1.13.22/Makefile.am
-@@ -15,8 +15,7 @@ SUBDIRS = \
+diff -ruN dpkg-1.15.8.5-orig/Makefile.am dpkg-1.15.8.5/Makefile.am
+--- dpkg-1.15.8.5-orig/Makefile.am	2010-10-08 12:27:15.042083703 +0800
++++ dpkg-1.15.8.5/Makefile.am	2010-10-08 12:27:27.755148228 +0800
+@@ -12,8 +12,7 @@
  	utils \
+ 	$(MAYBE_DSELECT) \
  	scripts \
- 	po \
--	origins \
+-	po \
 -	man
-+	origins
++	po
  
  ACLOCAL_AMFLAGS = -I m4
  

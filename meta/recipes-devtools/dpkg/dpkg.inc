@@ -1,11 +1,10 @@
 DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPL"
 SECTION = "base"
-PR = "r7"
+PR = "r0"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz \
-           file://ignore_extra_fields.patch;patch=1 \
-           file://noupdalt.patch;patch=1"
+SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2 \
+           file://ignore_extra_fields.patch;patch=1"
 
 DEPENDS = "zlib bzip2"
 DEPENDS_virtclass-native = "bzip2-native zlib-native virtual/update-alternatives-native gettext-native"
