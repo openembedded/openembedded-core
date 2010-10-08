@@ -88,6 +88,7 @@ SRCREV_machine_pn-linux-wrs_qemuppc ??= "9ac0daee43dd19d8bea828cf79450c9748ae0da
 SRCREV_machine_pn-linux-wrs_qemux86 ??= "0431115c9d720fee5bb105f6a7411efb4f851d26"
 SRCREV_machine_pn-linux-wrs_qemux86-64 ??= "0431115c9d720fee5bb105f6a7411efb4f851d26"
 SRCREV_machine_pn-linux-wrs_emenlow ??= "aae69fdf104b0a9d7b3710f808aac6ab303490f7"
+SRCREV_machine_pn-linux-wrs_atom-pc ??= "0431115c9d720fee5bb105f6a7411efb4f851d26"
 SRCREV_meta_pn-linux-wrs ??= "bfef596973ae436db9132065eaab2228c98f938b"
 SRCREV_pn-linux-libc-headers-wrs ??= "09a39c638dd65dc27c549c119abe1af2631b2ae0"
 SRCREV_pn-matchbox-config-gtk ??= "2081"
