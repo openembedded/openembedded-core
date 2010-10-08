@@ -466,6 +466,12 @@ python () {
     if license == "INVALID":
         bb.fatal('This recipe does not have the LICENSE field set (%s)' % pn)
 
+    commercial_license = bb.data.getVar('COMMERCIAL_LICENSE', d, 1)
+    import re
+    if commercial_license and re.search(pn, commercial_license):
+        bb.note("SKIPPING %s because it's Commerciallly Licensed" % pn)
+        raise bb.parse.SkipPackage("because it requires commercial license to ship product")
+
     # If we're building a target package we need to use fakeroot (pseudo)
     # in order to capture permissions, owners, groups and special files
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
