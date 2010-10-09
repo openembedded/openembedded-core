@@ -8,11 +8,12 @@ DEPENDS = "virtual/libx11 xproto glproto libxfixes"
 COMPATIBLE_HOST = '(x86_64.*|i.86.*)-(linux|freebsd.*)'
 
 SRC_URI = "git://git.o-hand.com/qemugl.git;protocol=git \
-           file://versionfix.patch"
+           file://versionfix.patch \
+           file://remove-x11r6-lib-dir.patch"
 S = "${WORKDIR}/git"
 
 PV = "0.0+git${SRCPV}"
-PR = "r6"
+PR = "r7"
 
 DEFAULT_PREFERENCE = "-1"
 
