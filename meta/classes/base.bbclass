@@ -10,7 +10,7 @@ inherit metadata_scm
 inherit buildstats
 inherit logging
 
-OE_IMPORTS += "os sys time oe.path oe.utils oe.data"
+OE_IMPORTS += "os sys time oe.path oe.utils oe.data oe.packagegroup"
 OE_IMPORTS[type] = "list"
 
 def oe_import(d):
