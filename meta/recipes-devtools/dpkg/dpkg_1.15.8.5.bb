@@ -1,7 +1,8 @@
 require dpkg.inc
 
 SRC_URI += "file://noman.patch;patch=1 \
-            file://check_snprintf.patch"
+            file://check_snprintf.patch \
+            file://check_version.patch"
 
 EXTRA_OECONF = "--without-static-progs \
 		--without-dselect \

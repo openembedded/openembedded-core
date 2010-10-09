@@ -1,0 +1,21 @@
+Adapt to linux-wrs kernel version, which has character '_' inside.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+diff -ruN dpkg-1.15.8.5-orig/lib/dpkg/parsehelp.c dpkg-1.15.8.5/lib/dpkg/parsehelp.c
+--- dpkg-1.15.8.5-orig/lib/dpkg/parsehelp.c	2010-10-08 12:27:15.058572774 +0800
++++ dpkg-1.15.8.5/lib/dpkg/parsehelp.c	2010-10-09 11:18:15.484190771 +0800
+@@ -268,11 +268,11 @@
+ 
+   /* XXX: Would be faster to use something like cisversion and cisrevision. */
+   for (ptr = rversion->version; *ptr; ptr++) {
+-    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~:", *ptr) == NULL)
++    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~:_", *ptr) == NULL)
+       return _("invalid character in version number");
+   }
+   for (ptr = rversion->revision; *ptr; ptr++) {
+-    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~", *ptr) == NULL)
++    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~_", *ptr) == NULL)
+       return _("invalid character in revision number");
+   }
+ 
