@@ -2,7 +2,8 @@
 
 DEPENDS =+ "gettext"
 
-SRC_URI += "file://relative-libdir.patch;striplevel=0"
+SRC_URI += "file://relative-libdir.patch;striplevel=0 \
+            file://no-fixed-prog-path.patch"
 
 inherit autotools
 
