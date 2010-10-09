@@ -16,6 +16,8 @@ SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclon
 SRC_URI_append_atom-pc = "\
            file://i915.cfg \
            file://8250.cfg"
+SRC_URI_append_qemux86 = " file://x86-wrs.cfg"
+SRC_URI_append_qemux86-64 = " file://x86-wrs.cfg"
            
 WRMACHINE = "${MACHINE}"
 WRMACHINE_qemux86  = "common_pc"
