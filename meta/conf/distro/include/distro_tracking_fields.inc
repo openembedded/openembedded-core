@@ -76,10 +76,6 @@ RECIPE_STATUS_pn-moblin-proto = "red"
 RECIPE_LATEST_VERIONS_pn-moblin-proto = "check"
 RECIPE_MAINTAINER_pn-moblin-proto = "Dexuan Cui <dexuan.cui@intel.com>"
 
-RECIPE_STATUS_pn-oprofile = "red"
-RECIPE_LATEST_VERIONS_pn-oprofile = "check"
-RECIPE_MAINTAINER_pn-oprofile = "Dexuan Cui <dexuan.cui@intel.com>"
-
 RECIPE_STATUS_pn-patch = "red"
 RECIPE_LATEST_VERIONS_pn-patch = "check"
 RECIPE_MAINTAINER_pn-patch = "Nitin A Kamble <nitin.a.kamble@intel.com>"
@@ -2683,6 +2679,7 @@ RECIPE_STATUS_pn-libsamplerate0 = "red"
 DISTRO_PN_ALIAS_pn-libsamplerate0 = "Meego=libsamplerate Fedora=libsamplerate OpenSuSE=libsamplerate Ubuntu=libsamplerate Mandriva=libsamplerate Debian=libsamplerate"
 RECIPE_LATEST_VERSION_pn-libsamplerate0 = "0.1.7"
 RECIPE_MAINTAINER_pn-libsamplerate0 = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
 RECIPE_STATUS_pn-oprofileui = "green"
 DISTRO_PN_ALIAS_pn-oprofileui = "Fedora=oprofileui Ubuntu=oprofile-gui Debian=oprofile-gui"
 DEPENDENCY_CHECK_pn-oprofileui = "not done"
