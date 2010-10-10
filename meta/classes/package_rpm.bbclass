@@ -316,6 +316,7 @@ package_install_internal_rpm () {
 
 python write_specfile () {
 	import textwrap
+	import oe.packagedata
 
 	# We need to change '-' in a version field to '+'
 	# This needs to be done BEFORE the mapping_rename_hook
@@ -328,7 +329,7 @@ python write_specfile () {
 				ver = depends_dict[dep]
 				if dep and ver:
 					if '-' in ver:
-						subd = read_subpkgdata_dict(dep, d)
+						subd = oe.packagedata.read_subpkgdata_dict(dep, d)
 						pv = subd['PV']
 						reppv = pv.replace('-', '+')
 						ver = ver.replace(pv, reppv)
