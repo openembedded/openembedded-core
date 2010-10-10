@@ -26,12 +26,13 @@ WRMACHINE_qemuppc  = "qemu_ppc32"
 WRMACHINE_qemumips = "mti_malta32_be"
 WRMACHINE_qemuarm  = "arm_versatile_926ejs"
 WRMACHINE_atom-pc  = "common_pc"
+WRMACHINE_routerstationpro = "routerstationpro"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc)"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro)"
 
 LINUX_VERSION = "v2.6.34"
 LINUX_VERSION_EXTENSION = "-wr-${LINUX_KERNEL_TYPE}"
-PR = "r7"
+PR = "r8"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
@@ -166,6 +167,9 @@ do_wrlinux_configcheck() {
 }
 
 do_wrlinux_link_vmlinux() {
+	if [ ! -d "${B}/arch/${ARCH}/boot" ]; then
+		mkdir ${B}/arch/${ARCH}/boot
+	fi
 	cd ${B}/arch/${ARCH}/boot
 	ln -sf ../../../vmlinux
 }
