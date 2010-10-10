@@ -28,8 +28,9 @@ WRMACHINE_qemuarm  = "arm_versatile_926ejs"
 WRMACHINE_atom-pc  = "common_pc"
 WRMACHINE_routerstationpro = "routerstationpro"
 WRMACHINE_mpc8315e-rdb = "fsl-mpc8315e-rdb"
+WRMACHINE_beagleboard = "beagleboard"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro|mpc8315e-rdb)"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro|mpc8315e-rdb|beagleboard)"
 
 LINUX_VERSION = "v2.6.34"
 LINUX_VERSION_EXTENSION = "-wr-${LINUX_KERNEL_TYPE}"
