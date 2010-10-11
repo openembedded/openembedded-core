@@ -719,6 +719,9 @@ class RunQueueData:
                 deps.append(self.taskData.fn_index[self.runq_fnid[dep]] + "." + self.runq_task[dep])
             hashdata["deps"][self.taskData.fn_index[self.runq_fnid[task]] + "." + self.runq_task[task]] = deps
 
+        hashdata["msg-debug"] = self.cooker.configuration.debug
+        hashdata["msg-debug-domains"] =  self.cooker.configuration.debug_domains
+
         # Write out the hashes into a file for use by the individual tasks
         self.hashfile = bb.data.expand("${TMPDIR}/cache/hashdata.dat", self.cooker.configuration.data)
         p = pickle.Pickler(file(self.hashfile, "wb"), -1)
