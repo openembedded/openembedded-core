@@ -1,0 +1,27 @@
+The poison directories patch has detected library path issue while 
+compiling the python in cross environment, as seen bellow.
+
+warning: library search path "/usr/lib/termcap" is unsafe for cross-compilation
+
+This Patch fixes this issue in the python build environment.
+11 Oct 2010
+Nitin A Kamble <nitin.a.kamble@intel.com>
+
+Index: Python-2.6.5/setup.py
+===================================================================
+--- Python-2.6.5.orig/setup.py
++++ Python-2.6.5/setup.py
+@@ -591,12 +591,10 @@ class PyBuildExt(build_ext):
+                 readline_libs.append('ncurses')
+             elif self.compiler.find_library_file(lib_dirs, 'curses'):
+                 readline_libs.append('curses')
+-            elif self.compiler.find_library_file(lib_dirs +
+-                                               ['/usr/lib/termcap'],
++            elif self.compiler.find_library_file(lib_dirs,
+                                                'termcap'):
+                 readline_libs.append('termcap')
+             exts.append( Extension('readline', ['readline.c'],
+-                                   library_dirs=['/usr/lib/termcap'],
+                                    extra_link_args=readline_extra_link_args,
+                                    libraries=readline_libs) )
+         else:
