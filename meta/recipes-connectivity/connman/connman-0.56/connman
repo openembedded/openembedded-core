@@ -10,8 +10,28 @@ fi
 
 set -e
 
+nfsroot=0
+
+exec 9<&0 < /proc/mounts
+while read dev mtpt fstype rest; do
+	if test $mtpt = "/" ; then
+		case $fstype in
+		    nfs | nfs4)
+			nfsroot=1
+			break
+			;;
+		    *)
+			;;
+		esac
+	fi
+done
+
 do_start() {
-	$DAEMON
+	EXTRA_PARAM=""
+	if test $nfsroot -eq 1 ; then
+		EXTRA_PARAM="-P ethernet"
+	fi
+	$DAEMON $EXTRA_PARAM
 }
 
 do_stop() {
