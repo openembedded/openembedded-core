@@ -28,10 +28,11 @@ package_update_index_rpm () {
 	packagedirs=""
 	for arch in $rpmarchs ; do
 		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
-		packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/$arch ${DEPLOY_DIR_RPM}/$sdkarch-nativesdk"
+		packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/$arch"
+		#packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/$sdkarch-nativesdk"
 	done
 
-	packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/${SDK_ARCH}-${TARGET_ARCH}-canadian"
+	#packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/${SDK_ARCH}-${TARGET_ARCH}-canadian"
 
 	cat /dev/null > ${DEPLOY_DIR_RPM}/solvedb.conf
 	for pkgdir in $packagedirs; do
