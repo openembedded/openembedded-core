@@ -117,58 +117,17 @@ def exec_func(func, d, dirs = None):
     except OSError:
         prevdir = data.getVar('TOPDIR', d, True)
 
-    # Setup logfiles
+    # Setup scriptfile
     t = data.getVar('T', d, 1)
     if not t:
         raise SystemExit("T variable not set, unable to build")
     bb.utils.mkdirhier(t)
-    loglink = "%s/log.%s" % (t, func)
-    logfile = "%s/log.%s.%s" % (t, func, str(os.getpid()))
     runfile = "%s/run.%s.%s" % (t, func, str(os.getpid()))
-
-    # Even though the log file has not yet been opened, lets create the link
-    if loglink:
-        try:
-           os.remove(loglink)
-        except OSError as e:
-           pass
-
-        try:
-           os.symlink(logfile, loglink)
-        except OSError as e:
-           pass
+    logfile = d.getVar("BB_LOGFILE", True)
 
     # Change to correct directory (if specified)
     if adir and os.access(adir, os.F_OK):
         os.chdir(adir)
-
-    # Handle logfiles
-    si = file('/dev/null', 'r')
-    try:
-        if bb.msg.debug_level['default'] > 0 and not ispython:
-            so = os.popen("tee \"%s\"" % logfile, "w")
-        else:
-            so = file(logfile, 'w')
-    except OSError as e:
-        bb.msg.error(bb.msg.domain.Build, "opening log file: %s" % e)
-        pass
-
-    se = so
-
-    # Dup the existing fds so we dont lose them
-    osi = [os.dup(sys.stdin.fileno()), sys.stdin.fileno()]
-    oso = [os.dup(sys.stdout.fileno()), sys.stdout.fileno()]
-    ose = [os.dup(sys.stderr.fileno()), sys.stderr.fileno()]
-
-    # Replace those fds with our own
-    os.dup2(si.fileno(), osi[1])
-    os.dup2(so.fileno(), oso[1])
-    os.dup2(se.fileno(), ose[1])
-
-    # Since we've remapped stdout and stderr, its safe for log messages to be printed there now
-    # exec_func can nest so we have to save state
-    origstdout = bb.event.useStdout
-    bb.event.useStdout = True
 
     locks = []
     lockfiles = flags['lockfiles']
@@ -194,34 +153,6 @@ def exec_func(func, d, dirs = None):
         # Unlock any lockfiles
         for lock in locks:
             bb.utils.unlockfile(lock)
-
-        sys.stdout.flush()
-        sys.stderr.flush()
-
-        bb.event.useStdout = origstdout
-
-        # Restore the backup fds
-        os.dup2(osi[0], osi[1])
-        os.dup2(oso[0], oso[1])
-        os.dup2(ose[0], ose[1])
-
-        # Close our logs
-        si.close()
-        so.close()
-        se.close()
-
-        if os.path.exists(logfile) and os.path.getsize(logfile) == 0:
-            bb.msg.debug(2, bb.msg.domain.Build, "Zero size logfile %s, removing" % logfile)
-            os.remove(logfile)
-            try:
-               os.remove(loglink)
-            except OSError as e:
-               pass
-
-        # Close the backup fds
-        os.close(osi[0])
-        os.close(oso[0])
-        os.close(ose[0])
 
 def exec_func_python(func, d, runfile, logfile):
     """Execute a python BB 'function'"""
@@ -312,6 +243,53 @@ def exec_task(fn, task, d):
         data.setVar('BB_FILENAME', fn, d)
         data.setVar('BB_CURRENTTASK', task[3:], d)
         event.fire(TaskStarted(task, localdata), localdata)
+
+        # Setup logfiles
+        t = data.getVar('T', d, 1)
+        if not t:
+            raise SystemExit("T variable not set, unable to build")
+        bb.utils.mkdirhier(t)
+        loglink = "%s/log.%s" % (t, task)
+        logfile = "%s/log.%s.%s" % (t, task, str(os.getpid()))
+        d.setVar("BB_LOGFILE", logfile)
+
+        # Even though the log file has not yet been opened, lets create the link
+        if loglink:
+            try:
+                os.remove(loglink)
+            except OSError as e:
+                pass
+
+            try:
+                os.symlink(logfile, loglink)
+            except OSError as e:
+                pass
+
+        # Handle logfiles
+        si = file('/dev/null', 'r')
+        try:
+            so = file(logfile, 'w')
+        except OSError as e:
+            bb.msg.error(bb.msg.domain.Build, "opening log file: %s" % e)
+            pass
+        se = so
+
+        # Dup the existing fds so we dont lose them
+        osi = [os.dup(sys.stdin.fileno()), sys.stdin.fileno()]
+        oso = [os.dup(sys.stdout.fileno()), sys.stdout.fileno()]
+        ose = [os.dup(sys.stderr.fileno()), sys.stderr.fileno()]
+
+        # Replace those fds with our own
+        os.dup2(si.fileno(), osi[1])
+        os.dup2(so.fileno(), oso[1])
+        os.dup2(se.fileno(), ose[1])
+
+        # Since we've remapped stdout and stderr, its safe for log messages to be printed there now
+        # exec_func can nest so we have to save state
+        origstdout = bb.event.useStdout
+        bb.event.useStdout = True
+
+
         prefuncs = (data.getVarFlag(task, 'prefuncs', localdata) or "").split()
         for func in prefuncs:
             exec_func(func, localdata)
@@ -319,6 +297,7 @@ def exec_task(fn, task, d):
         postfuncs = (data.getVarFlag(task, 'postfuncs', localdata) or "").split()
         for func in postfuncs:
             exec_func(func, localdata)
+
         event.fire(TaskSucceeded(task, localdata), localdata)
 
         # make stamp, or cause event and raise exception
@@ -346,6 +325,34 @@ def exec_task(fn, task, d):
             failedevent = TaskFailed("Task Failed", None, task, d)
             event.fire(failedevent, d)
         return 1
+    finally:
+        sys.stdout.flush()
+        sys.stderr.flush()
+
+        bb.event.useStdout = origstdout
+
+        # Restore the backup fds
+        os.dup2(osi[0], osi[1])
+        os.dup2(oso[0], oso[1])
+        os.dup2(ose[0], ose[1])
+
+        # Close our logs
+        si.close()
+        so.close()
+        se.close()
+
+        if logfile and os.path.exists(logfile) and os.path.getsize(logfile) == 0:
+            bb.msg.debug(2, bb.msg.domain.Build, "Zero size logfile %s, removing" % logfile)
+            os.remove(logfile)
+            try:
+               os.remove(loglink)
+            except OSError as e:
+               pass
+
+        # Close the backup fds
+        os.close(osi[0])
+        os.close(oso[0])
+        os.close(ose[0])
 
     return 0
 
