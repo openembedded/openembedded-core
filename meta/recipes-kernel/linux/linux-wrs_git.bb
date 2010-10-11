@@ -27,12 +27,13 @@ WRMACHINE_qemumips = "mti_malta32_be"
 WRMACHINE_qemuarm  = "arm_versatile_926ejs"
 WRMACHINE_atom-pc  = "common_pc"
 WRMACHINE_routerstationpro = "routerstationpro"
+WRMACHINE_mpc8315e-rdb = "fsl-mpc8315e-rdb"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro)"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro|mpc8315e-rdb)"
 
 LINUX_VERSION = "v2.6.34"
 LINUX_VERSION_EXTENSION = "-wr-${LINUX_KERNEL_TYPE}"
-PR = "r8"
+PR = "r9"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
