@@ -79,8 +79,11 @@ hashdata = p.load()
 
 debug = hashdata["msg-debug"]
 debug_domains = hashdata["msg-debug-domains"]
-cooker = bb.cooker.BBCooker(BBConfiguration(debug, debug_domains), None)
+verbose = hashdata["verbose"]
 
+bb.utils.init_logger(bb.msg, verbose, debug, debug_domains)
+
+cooker = bb.cooker.BBCooker(BBConfiguration(debug, debug_domains), None)
 cooker.parseConfiguration()
 
 cooker.bb_cache = bb.cache.init(cooker)

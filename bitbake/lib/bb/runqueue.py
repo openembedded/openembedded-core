@@ -721,6 +721,7 @@ class RunQueueData:
 
         hashdata["msg-debug"] = self.cooker.configuration.debug
         hashdata["msg-debug-domains"] =  self.cooker.configuration.debug_domains
+        hashdata["verbose"] = self.cooker.configuration.verbose
 
         # Write out the hashes into a file for use by the individual tasks
         self.hashfile = bb.data.expand("${TMPDIR}/cache/hashdata.dat", self.cooker.configuration.data)
