@@ -37,6 +37,9 @@ if [ -z "$QEMU_MEMORY" ]; then
         "qemux86-64")
             QEMU_MEMORY="128M"
             ;;
+        "qemuarm")
+            QEMU_MEMORY="128M"
+            ;;
         "qemumips")
             QEMU_MEMORY="128M"
             ;;
@@ -48,6 +51,16 @@ if [ -z "$QEMU_MEMORY" ]; then
             ;;
     esac
 
+fi
+
+# Bug 433: qemuarm cannot use > 128 MB RAM
+if [ "$MACHINE" = "qemuarm" ]; then
+    RAM=`echo $QEMU_MEMORY | sed 's/M$//'`
+    if [[ -z "$RAM" || $RAM -gt 128 ]]; then
+        echo "WARNING: qemuarm does not support > 128M of RAM."
+        echo "*** Changing QEMU_MEMORY to default of 128M ***"
+        QEMU_MEMORY="128M"
+    fi
 fi
 
 # This file is created when poky-gen-tapdevs creates a bank of tap
@@ -97,7 +110,12 @@ release_lock() {
 LOCKDIR="/tmp/qemu-tap-locks"
 [ ! -d "$LOCKDIR" ] && mkdir $LOCKDIR
 
-POSSIBLE=`ifconfig -a | grep '^tap' | awk '{print $1}'`
+IFCONFIG=`which ifconfig`
+if [ -z "$IFCONFIG" ]; then
+    IFCONFIG=/sbin/ifconfig
+fi
+
+POSSIBLE=`$IFCONFIG -a | grep '^tap' | awk '{print $1}'`
 TAP=""
 LOCKFILE=""
 for tap in $POSSIBLE; do
