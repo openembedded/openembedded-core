@@ -6,7 +6,7 @@ LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://asia;beginline=2;endline=3;md5=06468c0e84ef4d4c97045a4a29b08234"
 DEPENDS = "tzcode-native"
 
-PR = "r0"
+PR = "r1"
 
 RCONFLICTS= "timezones timezone-africa timezone-america timezone-antarctica \
              timezone-arctic timezone-asia timezone-atlantic \
@@ -36,6 +36,10 @@ do_compile () {
 do_install () {
         install -d ${D}/usr ${D}${datadir}/zoneinfo
         cp -pPR ${S}/usr ${D}/
+        # libc is removing zoneinfo files from package
+        cp -pP "${S}/zone.tab" ${D}${datadir}/zoneinfo
+        cp -pP "${S}/iso3166.tab" ${D}${datadir}/zoneinfo
+
 }
 
 # Packages primarily organized by directory with a major city
@@ -157,4 +161,6 @@ FILES_${PN} += "${datadir}/zoneinfo/Pacific/Honolulu     \
                 ${datadir}/zoneinfo/W-SU                 \
                 ${datadir}/zoneinfo/WET                  \
                 ${datadir}/zoneinfo/Zulu                 \
+                ${datadir}/zoneinfo/zone.tab             \
+                ${datadir}/zoneinfo/iso3166.tab          \
                 ${datadir}/zoneinfo/Etc/*"
