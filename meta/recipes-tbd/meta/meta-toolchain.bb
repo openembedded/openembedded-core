@@ -72,8 +72,15 @@ do_populate_sdk() {
 	#rm -f ${SDK_OUTPUT}/${SDKPATHNATIVE}/lib/*.la
 	rm -f ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/*.la
 
-	# Link the ld.so.cache file into the hosts filesystem
-	ln -s /etc/ld.so.cache ${SDK_OUTPUT}/${SDKPATHNATIVE}/etc/ld.so.cache
+	# Create an appropriate setup so the dynamic loader can find libs in 
+	# both the host system and the toolchain directories
+	echo ${SDKPATHNATIVE}${libdir} > ${SDK_OUTPUT}/${SDKPATHNATIVE}/etc/ld.so.conf
+	echo ${SDKPATHNATIVE}${base_libdir} >> ${SDK_OUTPUT}/${SDKPATHNATIVE}/etc/ld.so.conf
+	echo "include /etc/ld.so.conf" >> ${SDK_OUTPUT}/${SDKPATHNATIVE}/etc/ld.so.conf
+	echo "#!/bin/sh" > ${SDK_OUTPUT}/${SDKPATH}/postinstall
+	echo "ldconfig -f ${SDKPATHNATIVE}/etc/ld.so.conf -C /${SDKPATHNATIVE}/etc/ld.so.cache" >> ${SDK_OUTPUT}/${SDKPATH}/postinstall
+	chmod a+x ${SDK_OUTPUT}/${SDKPATH}/postinstall
+
 
 	# Setup site file for external use
 	siteconfig=${SDK_OUTPUT}/${SDKPATH}/site-config-${MULTIMACH_TARGET_SYS}
