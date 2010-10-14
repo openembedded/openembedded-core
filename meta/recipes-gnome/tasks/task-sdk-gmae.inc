@@ -15,3 +15,10 @@ SDK-GMAE = " \
     "
 
 # TODO: gvfs-dev, mission-control
+
+SDK-EXTRAS = ""
+SDK-EXTRAS_qemux86 = " valgrind lttng-ust"
+SDK-EXTRAS_qemux86-64 = " lttng-ust"
+SDK-EXTRAS_qemuppc = " lttng-ust"
+SDK-EXTRAS_emenlow = " lttng-ust"
+SDK-EXTRAS_atom-pc = " lttng-ust"

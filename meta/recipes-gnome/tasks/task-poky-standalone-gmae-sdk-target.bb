@@ -15,4 +15,5 @@ PACKAGES = "${PN} ${PN}-dbg"
 RDEPENDS = "\
     task-poky-standalone-sdk-target \
     libglade-dev \
-    ${SDK-GMAE}"
+    ${SDK-GMAE} \
+    ${SDK-EXTRAS}"
