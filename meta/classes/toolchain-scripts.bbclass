@@ -6,10 +6,6 @@ toolchain_create_sdk_env_script () {
 	script=${SDK_OUTPUT}/${SDKPATH}/environment-setup-${MULTIMACH_TARGET_SYS}
 	rm -f $script
 	touch $script
-	echo 'if [ ! -e ${SDKPATHNATIVE}/etc/ld.so.cache ]; then' >> $script
-	echo '    echo "Please run ${SDKPATH}/postinstall as root before using the toolchain"'  >> $script
-	echo '    exit 1' >> $script
-	echo 'fi' >> $script
 	echo 'export PATH=${SDKPATHNATIVE}${bindir_nativesdk}:${SDKPATHNATIVE}${bindir_nativesdk}/${MULTIMACH_TARGET_SYS}:$PATH' >> $script
 	echo 'export PKG_CONFIG_SYSROOT_DIR=${SDKTARGETSYSROOT}' >> $script
 	echo 'export PKG_CONFIG_PATH=${SDKTARGETSYSROOT}${libdir}/pkgconfig' >> $script
