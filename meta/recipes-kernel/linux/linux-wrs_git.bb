@@ -34,7 +34,7 @@ S = "${WORKDIR}/linux"
 B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
 
 # functionality flags
-force_revisions = "t"
+KERNEL_REVISION_CHECKING ?= "t"
 KERNEL_FEATURES=features/netfilter
 
 do_patch() {
@@ -75,7 +75,7 @@ validate_branches() {
 	target_meta_head="${SRCREV_meta}"
 
 	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ]; then
-		if [ -n "${force_revisions}" ]; then
+		if [ -n "${KERNEL_REVISION_CHECKING}" ]; then
 			git show ${target_branch_head} > /dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				echo "Forcing branch ${WRMACHINE}-${LINUX_KERNEL_TYPE} to ${target_branch_head}"
@@ -90,7 +90,7 @@ validate_branches() {
 	fi
 
 	if [ "$meta_head" != "$target_meta_head" ]; then
-		if [ -n "${force_revisions}" ]; then
+		if [ -n "${KERNEL_REVISION_CHECKING}" ]; then
 			git show ${target_meta_head} > /dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				echo "Forcing branch wrs_meta to ${target_meta_head}"
