@@ -27,6 +27,7 @@ usage() {
     echo "  ROOTFS - the rootfs image file or nfsroot directory to use"
     echo "  MACHINE=xyz - the machine name (optional, autodetected from KERNEL filename if unspecified)"
     echo "  Additional QEMU command-line options can be passed with:"
+    echo "    nographic - disables video console"
     echo "    serial - enables a serial console on /dev/ttyS0"
     echo ""
     echo "Examples:"
@@ -85,11 +86,12 @@ while [ $i -le $# ]; do
                 usage
             fi
             ;;
+        "nographic")
+            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -nographic"
+            ;;
         "serial")
-            # Will need to append to these variables when we
-            # accept more values
-            SCRIPT_QEMU_OPT="-serial stdio"
-            SCRIPT_KERNEL_OPT="console=ttyS0"
+            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -serial stdio"
+            SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT console=ttyS0"
             ;;
         *)
             # A directory name is an nfs rootfs
