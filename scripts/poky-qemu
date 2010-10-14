@@ -165,19 +165,6 @@ fi
 machine2=`echo $MACHINE | tr 'a-z' 'A-Z' | sed 's/-/_/'`
 # MACHINE is now set for all cases
 
-if [[ -e "$ROOTFS" && -z "$FSTYPE" ]]; then
-    # Extract the filename extension
-    EXT=`echo $ROOTFS | awk -F . '{ print \$NF }'`
-    if [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" || 
-          "x$EXT" == "xjffs2" ]]; then
-        FSTYPE=$EXT
-    else
-        echo "Note: Unable to determine filesystem extension for $ROOTFS"
-        echo "We will use the default FSTYPE for $MACHINE"
-        # ...which is done further below...
-    fi
-fi
-
 # Defaults used when these vars need to be inferred
 QEMUX86_DEFAULT_KERNEL=bzImage-qemux86.bin
 QEMUX86_DEFAULT_FSTYPE=ext3
@@ -257,6 +244,21 @@ findimage() {
 
     exit 1
 }
+
+if [[ -e "$ROOTFS" && -z "$FSTYPE" ]]; then
+    setup_tmpdir
+
+    # Extract the filename extension
+    EXT=`echo $ROOTFS | awk -F . '{ print \$NF }'`
+    if [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" || 
+          "x$EXT" == "xjffs2" ]]; then
+        FSTYPE=$EXT
+    else
+        echo "Note: Unable to determine filesystem extension for $ROOTFS"
+        echo "We will use the default FSTYPE for $MACHINE"
+        # ...which is done further below...
+    fi
+fi
 
 if [ -z "$KERNEL" ]; then
     setup_tmpdir

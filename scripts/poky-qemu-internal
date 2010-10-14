@@ -108,7 +108,10 @@ release_lock() {
 }
 
 LOCKDIR="/tmp/qemu-tap-locks"
-[ ! -d "$LOCKDIR" ] && mkdir $LOCKDIR
+if [ ! -d "$LOCKDIR" ]; then
+    mkdir $LOCKDIR
+    chmod 777 $LOCKDIR
+fi
 
 IFCONFIG=`which ifconfig`
 if [ -z "$IFCONFIG" ]; then
