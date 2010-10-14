@@ -171,9 +171,9 @@ startup() {
   fi
 
 #Uncomment to cause psplash to exit manually, otherwise it exits when it sees a VC switch
-#if [ "x$runlevel" != "xS" ]; then
-#    if type psplash-write >/dev/null 2>&1; then
-#        TMPDIR=/mnt/.psplash psplash-write "QUIT" || true
-#    	umount /mnt/.psplash
-#    fi
-#fi
+if [ "x$runlevel" != "xS" ] && [ ! -x /etc/init.d/xserver-nodm ]; then
+    if type psplash-write >/dev/null 2>&1; then
+        TMPDIR=/mnt/.psplash psplash-write "QUIT" || true
+    	umount /mnt/.psplash
+    fi
+fi
