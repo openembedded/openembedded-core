@@ -14,8 +14,7 @@ PACKAGES = "\
 
 ALLOW_EMPTY = "1"
 
-QTDEMOS ?= "fotowall quicky ${COMMERCIAL_QT}"
-QTDEMOS_mips ?= ""
-QTDEMOS_mipsel ?= ""
+QTDEMOS ?= "quicky ${COMMERCIAL_QT}"
+QTDEMOS_disabled = "fotowall"
 
 RDEPENDS_task-poky-qt-demos = "${QTDEMOS}"
