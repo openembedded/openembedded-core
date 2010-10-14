@@ -3,7 +3,7 @@ DESCRIPTION = "GUPnP is an elegant, object-oriented open source framework for cr
 LICENSE = "LGPL"
 DEPENDS = "e2fsprogs gssdp libsoup-2.4 libxml2"
 
-SRC_URI = "http://gupnp.org/sources/${PN}/${PN}-${PV}.tar.gz"
+SRC_URI = "http://gupnp.org/sites/all/files/sources/${PN}-${PV}.tar.gz"
 PR = "r1"
 
 inherit autotools pkgconfig
