@@ -9,11 +9,12 @@ SECTION = "x11"
 DEPENDS = "libowl-av"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/video"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=video;proto=http \
+           file://gtk_multithread_safe.patch \
            file://owl-video-widget.png \
            file://stock_media-play.png \
            file://stock_volume-0.png \
