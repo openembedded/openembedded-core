@@ -9,3 +9,5 @@ SRC_URI = "${GNU_MIRROR}/make/make-${PV}.tar.bz2 \
            file://SCCS.patch;patch=1"
 
 inherit autotools gettext
+
+BBCLASSEXTEND = "native"
