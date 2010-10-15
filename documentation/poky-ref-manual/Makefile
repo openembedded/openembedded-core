@@ -2,7 +2,7 @@ all: html pdf tarball
 
 pdf:
 	cd ..; ./tools/poky-docbook-to-pdf ./poky-ref-manual/poky-handbook.xml ./template
-	cd..; ./tools/poky-docbook-to-pdf ./poky-ref-manual/bsp-guide.xml ./template
+	cd ..; ./tools/poky-docbook-to-pdf ./poky-ref-manual/bsp-guide.xml ./template
 
 XSLTOPTS = --stringparam html.stylesheet style.css \
            --stringparam  chapter.autolabel 1 \
@@ -28,7 +28,7 @@ tarball: html
 validate:
 	xmllint --postvalid --xinclude --noout poky-handbook.xml
 
-OUTPUTS = poky-handbook.tgz poky-handbook.html poky-handbook.pdf bsp-guide.pdf
+OUTPUTS = poky-handbook.tgz poky-handbook.html poky-handbook.pdf bsp-guide.pdf bsp-guide.hml
 SOURCES = *.png *.xml *.css *.svg
 
 publish:
