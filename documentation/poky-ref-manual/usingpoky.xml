@@ -134,7 +134,6 @@ $ source poky-init-build-env [build_dir]
     <para>
         <literallayout class='monospaced'>
 $ bitbake &lt;target&gt;
-$ bitbake qemu-native
 </literallayout>
     </para>
     <para>
@@ -143,8 +142,6 @@ $ bitbake qemu-native
         or the name of a recipe for a specific piece of software like 
         <application>busybox</application>. More details about the standard images 
         are available in the <link linkend='ref-images'>image reference section</link>.
-        The qemu-native target will build the poky customized qemu, and will be used
-        by runqemu script later.
     </para>
 </section>
 
@@ -225,7 +222,7 @@ $ bitbake qemu-native
         <para>
             You can view a list of tasks in a given package by running
             the listtasks task e.g. <command>bitbake matchbox-desktop -c
-            listtasks</command>, and the result is in file ${WORKDIR}/temp/log.do_listtasks.pid.
+            listtasks</command>, and the result is in file ${WORKDIR}/temp/log.do_listtasks.
         </para>
     </section>
 

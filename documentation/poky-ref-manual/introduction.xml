@@ -324,7 +324,6 @@ $ poky-qemu &lt;kernel&gt; &lt;image&gt;
             <filename class="directory">/opt/poky</filename>) and then enabling the option 
             in <filename>local.conf</filename>.
         </para>
-
     </section>
 
     <section id='intro-getit-dev'>
@@ -343,9 +342,7 @@ $ poky-qemu &lt;kernel&gt; &lt;image&gt;
            if this is undesireable we recommend using one of the release branches.
         </para>
     </section>
-
 </section>
-
 </chapter>
 <!--
 vim: expandtab tw=80 ts=4

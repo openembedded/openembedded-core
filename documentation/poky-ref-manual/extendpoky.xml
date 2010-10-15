@@ -598,7 +598,6 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
 BBFILES ?= ""
 BBLAYERS = " \
   /path/to/poky/meta \
-  /path/to/poky/meta-moblin \
   /path/to/poky/meta-emenlow \
   /path/to/poky/meta-extras \
   "

@@ -7,7 +7,7 @@
 
 <para>
     Poky consists of several components and understanding what these are 
-    and where they're located is one of the keys to use it. This section walks 
+    and where they're located is one of the keys to using it. This section walks 
     through the Poky directory structure giving information about the various 
     files and directories.
 </para>
@@ -121,10 +121,10 @@
     </section>
 
     <section id='handbook'>
-        <title><filename class="directory">handbook</filename></title>
+        <title><filename class="directory">documentation</filename></title>
 
         <para>
-            This is the location where this handbook is generated
+            This is the location for documentaiton about poky including this handbook.
         </para>
     </section>
 
@@ -485,15 +485,6 @@ source POKY_SRC/poky-init-build-env [BUILDDIR]
 
         <para>
             The Sato demo/reference UI/UX, its associated apps and configuration
-        </para>
-    </section>
-
-    <section id='structure-meta-packages'>
-        <title><filename class="directory">meta/packages/</filename></title>
-
-        <para>
-            this is a catch-all place for the rest which not fits into above
-            recipes-***. Images and tasks are also placed here.
         </para>
     </section>
 

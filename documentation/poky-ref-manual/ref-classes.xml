@@ -53,7 +53,7 @@
     </para>
 
     <para>
-        It's useful to have some idea on how the tasks defined by this class work
+        It's useful to have some idea of how the tasks defined by this class work
         and what they do behind the scenes.
     </para>
 
@@ -355,8 +355,8 @@
 
     <para>
         This class checks prerequisite software is present to
-        notify the users problems that will affect their build. It also
-        performs basic checks of the user configuration from local.conf to
+        notify the users of potential problems that will affect their build. It
+        also performs basic checks of the user configuration from local.conf to
         prevent common mistakes resulting in build failures. It's usually up to
         distribution policy whether to include this class (Poky does).
     </para>

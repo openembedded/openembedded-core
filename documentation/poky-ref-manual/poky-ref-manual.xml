@@ -1,7 +1,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 
-<book id='poky-handbook' lang='en' 
+<book id='poky-ref-manual' lang='en' 
       xmlns:xi="http://www.w3.org/2003/XInclude"
       xmlns="http://docbook.org/ns/docbook"
       >
@@ -15,8 +15,8 @@
             </imageobject>    
         </mediaobject>
 
-        <title>Poky Handbook</title>
-        <subtitle>Hitchhiker's Guide to Poky</subtitle>
+        <title>Poky Reference Manual</title>
+        <subtitle>A Guide and Reference to Poky</subtitle>
 
         <authorgroup>
             <author>
@@ -45,7 +45,7 @@
         <revhistory>
             <revision>
                 <revnumber>3.3+git</revnumber>
-                <date>11 June 2010</date>
+                <date>20 Sept 2010</date>
                 <revremark>Poky Master Documentation</revremark>
             </revision>
         </revhistory>

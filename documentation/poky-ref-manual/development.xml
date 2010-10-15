@@ -7,33 +7,37 @@
 <section id="platdev-appdev">
     <title>Software development</title>
     <para>
-        Poky supports several methods of software development. These different
-        forms of development are explained below and can be switched
-        between as needed.
+        Poky supports several methods of software development. You can use the method that is 
+        best for you.  This chapter describes each development method.
     </para>
 
     <section id="platdev-appdev-external-sdk">
-        <title>Developing externally using the Poky SDK</title>
-
+        <title>External Development Using the Poky SDK</title>
         <para>
             The meta-toolchain and meta-toolchain-sdk targets (<link linkend='ref-images'>see
-            the images section</link>) build tarballs which contain toolchains and 
-            libraries suitable for application development outside Poky. These unpack into the 
+            the images section</link>) build tarballs that contain toolchains and 
+            libraries suitable for application development outside of Poky. These tarballs 
+            unpack into the 
             <filename class="directory">/opt/poky</filename> directory and contain
-            a setup script, e.g. 
-            <filename>/opt/poky/environment-setup-i586-poky-linux</filename> which
-            can be sourced to initialise a suitable environment. After sourcing this, the 
+            a setup script (e.g. 
+            <filename>/opt/poky/environment-setup-i586-poky-linux</filename>, which
+            you can source to initialize a suitable environment. Sourcing these adds the 
             compiler, QEMU scripts, QEMU binary, a special version of pkgconfig and other 
-            useful utilities are added to the PATH. Variables to assist pkgconfig and 
+            useful utilities to the PATH variable. Variables to assist pkgconfig and 
             autotools are also set so that, for example, configure can find pre-generated test 
-            results for tests which need target hardware to run.
+            results for tests that need target hardware on which to run.
         </para>
 
         <para>
-            Using the toolchain with autotool enabled packages is straightforward, just pass the 
-            appropriate host option to configure e.g. "./configure --host=arm-poky-linux-gnueabi".
-            For other projects it is usually a case of ensuring the cross tools are used e.g.
-            CC=arm-poky-linux-gnueabi-gcc and LD=arm-poky-linux-gnueabi-ld.
+            Using the toolchain with autotool-enabled packages is straightforward - just pass the 
+            appropriate host option to configure as in the following example:
+            <literallayout class='monospaced'>
+     $ ./configure --host=arm-poky-linux-gnueabi
+            </literallayout>
+            For other projects it is usually a case of ensuring the cross tools are used:
+            <literallayout class='monospaced'>
+     CC=arm-poky-linux-gnueabi-gcc and LD=arm-poky-linux-gnueabi-ld
+            </literallayout>
         </para>
     </section>
 
@@ -215,7 +219,6 @@
         </section>
     </section>
 
-
     <section id="platdev-appdev-qemu">
         <title>Developing externally in QEMU</title>
         <para>
@@ -249,9 +252,9 @@
             also contain an NFS server exporting the guest's root filesystem 
             allowing that to be made available to the host.
         </para>
-    </section>              
+        </section>              
 
-    <section id="platdev-appdev-insitu">
+        <section id="platdev-appdev-insitu">
         <title>Developing in Poky directly</title>
         <para>
             Working directly in Poky is a fast and effective development technique.
@@ -296,10 +299,9 @@ $ bitbake matchbox-desktop
             linkend="usingpoky-components-bitbake">2.1.1</link> and <link 
             linkend="usingpoky-debugging-taskrunning">2.4.2</link>.
         </para>
+        </section>
 
-    </section>
-
-    <section id="platdev-appdev-devshell">
+        <section id="platdev-appdev-devshell">
         <title>Developing with 'devshell'</title>
 
         <para>
@@ -346,7 +348,6 @@ $ bitbake matchbox-desktop -c devshell
             environmental variables such as CC to assist applications, such as make,
             find the correct tools.
         </para>
-
     </section>
 
     <section id="platdev-appdev-srcrev">
@@ -369,8 +370,7 @@ $ bitbake matchbox-desktop -c devshell
             revision updating.
         </para>
     </section>
-
-  </section>
+</section>
 
 <section id="platdev-gdb-remotedebug">
     <title>Debugging with GDB Remotely</title>
