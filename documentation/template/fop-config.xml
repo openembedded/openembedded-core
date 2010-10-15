@@ -10,8 +10,8 @@
     Set the baseDir so common/openedhand.svg references in plans still
     work ok. Note, relative file references to current dir should still work.
     -->	
-  <base>template</base>
-  <font-base>template</font-base>
+  <base>../template</base>
+  <font-base>../template</font-base>
  
   <!-- Source resolution in dpi (dots/pixels per inch) for determining the
        size of pixels in SVG and bitmap images, default: 72dpi -->

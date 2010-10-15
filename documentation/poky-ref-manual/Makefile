@@ -1,12 +1,12 @@
 all: html pdf tarball
 
 pdf:
-	cd ..; ./tools/poky-docbook-to-pdf ./poky-ref-manual/poky-handbook.xml ./template
-	cd ..; ./tools/poky-docbook-to-pdf ./poky-ref-manual/bsp-guide.xml ./template
+	../tools/poky-docbook-to-pdf poky-handbook.xml ../template
+	../tools/poky-docbook-to-pdf bsp-guide.xml ../template
 
 XSLTOPTS = --stringparam html.stylesheet style.css \
            --stringparam  chapter.autolabel 1 \
-           --stringparam  appendix.autolabel 1 \
+           --stringparam  appendix.autolabel A \
            --stringparam  section.autolabel 1 \
            --stringparam  section.label.includes.component.label 1 \
 	   --xinclude

@@ -30,11 +30,15 @@ xsltproc --xinclude                    \
          --stringparam  body.font.master  9 \
          --stringparam  title.font.master  11 \
          --stringparam draft.watermark.image "$TEMPLATEDIR/draft.png" \
+         --stringparam  chapter.autolabel 1 \
+         --stringparam  appendix.autolabel A \
+         --stringparam  section.autolabel 1 \
+         --stringparam  section.label.includes.component.label 1 \
          --output $FO               \
          $TEMPLATEDIR/poky-db-pdf.xsl    \
 	 $1                 || exit 1
 
-echo fop -c $TEMPLATEDIR/fop-config.xml -fo $FO -pdf $PDF       || exit 1
+
 fop -c $TEMPLATEDIR/fop-config.xml -fo $FO -pdf $PDF       || exit 1
 
 rm -f $FO
