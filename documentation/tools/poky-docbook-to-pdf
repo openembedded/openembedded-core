@@ -18,11 +18,13 @@ TEMPLATEDIR=$2
 # match your localy installed XSL stylesheets.
 XSL_BASE_URI="http://docbook.sourceforge.net/release/xsl/current"
 
+# Creates a temporary XSL stylesheet based on titlepage.xsl
 xsltproc -o /tmp/titlepage.xsl                                           \
 	 --xinclude                                                      \
          $XSL_BASE_URI/template/titlepage.xsl \
          $TEMPLATEDIR/titlepage.templates.xml || exit 1
 
+# Creates the file needed for FOP
 xsltproc --xinclude                    \
 	 --stringparam hyphenate false \
 	 --stringparam formal.title.placement "figure after" \
@@ -38,7 +40,7 @@ xsltproc --xinclude                    \
          $TEMPLATEDIR/poky-db-pdf.xsl    \
 	 $1                 || exit 1
 
-
+# Invokes the Java version of FOP.  Uses the additional configuration file common/fop-config.xml
 fop -c $TEMPLATEDIR/fop-config.xml -fo $FO -pdf $PDF       || exit 1
 
 rm -f $FO
