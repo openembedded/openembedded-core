@@ -102,7 +102,7 @@ def get_latest_released_fedora_source_package_list():
 
     package_names = get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Fedora/source/SRPMS/" % latest, "main")
 
-    package_names += get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Everything/source/SPRMS/" % latest, "everything")
+#    package_names += get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Everything/source/SPRMS/" % latest, "everything")
     package_names += get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/updates/%s/SRPMS/" % latest, "updates")
 
     package_list=clean_package_list(package_names)
@@ -123,7 +123,7 @@ def get_latest_released_mandriva_source_package_list():
     "Returns list of all the name os packages in the latest mandriva distro"
     latest = find_latest_numeric_release("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/")
     package_names = get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/release/" % latest, "main")
-    package_names += get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/contrib/release/" % latest, "contrib")
+#    package_names += get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/contrib/release/" % latest, "contrib")
     package_names += get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/updates/" % latest, "updates")
 
     package_list=clean_package_list(package_names)
@@ -170,8 +170,8 @@ def get_latest_released_debian_source_package_list():
     latest = find_latest_debian_release("http://ftp.debian.org/debian/dists/")
     url = "http://ftp.debian.org/debian/dists/stable/main/source/Sources.gz" 
     package_names = get_debian_style_source_package_list(url, "main")
-    url = "http://ftp.debian.org/debian/dists/stable/contrib/source/Sources.gz" 
-    package_names += get_debian_style_source_package_list(url, "contrib")
+#    url = "http://ftp.debian.org/debian/dists/stable/contrib/source/Sources.gz" 
+#    package_names += get_debian_style_source_package_list(url, "contrib")
     url = "http://ftp.debian.org/debian/dists/stable-proposed-updates/main/source/Sources.gz" 
     package_names += get_debian_style_source_package_list(url, "updates")
     package_list=clean_package_list(package_names)
@@ -190,10 +190,10 @@ def get_latest_released_ubuntu_source_package_list():
     latest = find_latest_ubuntu_release("http://archive.ubuntu.com/ubuntu/dists/")
     url = "http://archive.ubuntu.com/ubuntu/dists/%s/main/source/Sources.gz" % latest
     package_names = get_debian_style_source_package_list(url, "main")
-    url = "http://archive.ubuntu.com/ubuntu/dists/%s/multiverse/source/Sources.gz" % latest
-    package_names += get_debian_style_source_package_list(url, "multiverse")
-    url = "http://archive.ubuntu.com/ubuntu/dists/%s/universe/source/Sources.gz" % latest
-    package_names += get_debian_style_source_package_list(url, "universe")
+#    url = "http://archive.ubuntu.com/ubuntu/dists/%s/multiverse/source/Sources.gz" % latest
+#    package_names += get_debian_style_source_package_list(url, "multiverse")
+#    url = "http://archive.ubuntu.com/ubuntu/dists/%s/universe/source/Sources.gz" % latest
+#    package_names += get_debian_style_source_package_list(url, "universe")
     url = "http://archive.ubuntu.com/ubuntu/dists/%s-updates/main/source/Sources.gz" % latest
     package_names += get_debian_style_source_package_list(url, "updates")
     package_list=clean_package_list(package_names)
@@ -302,7 +302,7 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     bb.note("Recipe: %s" % recipe_name)
     tmp = bb.data.getVar('DISTRO_PN_ALIAS', localdata, True)
 
-    distro_exceptions = dict({"Poky":'Poky', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "WindRiver":'Windriver'})
+    distro_exceptions = dict({"Poky":'Poky', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "WindRiver":'Windriver', "OSPDT":'OSPDT Approved'})
 
     if tmp:
         list = tmp.split(' ')

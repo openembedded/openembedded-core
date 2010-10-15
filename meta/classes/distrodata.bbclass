@@ -19,6 +19,12 @@ python distro_eventhandler() {
 		os.symlink(logfile, slogfile)
 		bb.data.setVar('LOG_FILE', logfile, e.data)
 
+	lf = bb.utils.lockfile(logfile + ".lock")
+	f = open(logfile, "a")
+	f.write("Package,Description,Maintainer,License,ChkSum,Status,VerMatch,Version,Upsteam,Non-Update,Reason,Recipe Status\n")
+        f.close()
+        bb.utils.unlockfile(lf)
+
     return NotHandled
 }
 
@@ -29,6 +35,12 @@ python do_distrodata_np() {
         pn = bb.data.getVar("PN", d, True)
         bb.note("Package Name: %s" % pn)
 
+        import oe.distro_check as dist_check
+        tmpdir = bb.data.getVar('TMPDIR', d, 1)
+        distro_check_dir = os.path.join(tmpdir, "distro_check")
+        datetime = bb.data.getVar('DATETIME', localdata, 1)
+        dist_check.update_distro_data(distro_check_dir, datetime)
+
 	if pn.find("-native") != -1:
 	    pnstripped = pn.split("-native")
 	    bb.note("Native Split: %s" % pnstripped)
@@ -51,6 +63,10 @@ python do_distrodata_np() {
 	pname = bb.data.getVar('PN', localdata, True)
 	pcurver = bb.data.getVar('PV', localdata, True)
 	pdesc = bb.data.getVar('DESCRIPTION', localdata, True)
+        if pdesc is not None:
+                pdesc = pdesc.replace(',','')
+                pdesc = pdesc.replace('\n','')
+
 	pgrp = bb.data.getVar('SECTION', localdata, True)
 	plicense = bb.data.getVar('LICENSE', localdata, True).replace(',','_')
 	if bb.data.getVar('LIC_FILES_CHKSUM', localdata, True):
@@ -64,18 +80,20 @@ python do_distrodata_np() {
 		hasrstatus="0"
 
 	rstatus = bb.data.getVar('RECIPE_STATUS', localdata, True)
+        if rstatus is not None:
+                rstatus = rstatus.replace(',','')
 		
 	pupver = bb.data.getVar('RECIPE_LATEST_VERSION', localdata, True)
 	if pcurver == pupver:
 		vermatch="1"
 	else:
 		vermatch="0"
-
 	noupdate_reason = bb.data.getVar('RECIPE_NO_UPDATE_REASON', localdata, True)
 	if noupdate_reason is None:
 		noupdate="0"
 	else:
 		noupdate="1"
+                noupdate_reason = noupdate_reason.replace(',','')
 
 	ris = bb.data.getVar('RECIPE_INTEL_SECTION', localdata, True)
 	maintainer = bb.data.getVar('RECIPE_MAINTAINER', localdata, True)
@@ -83,9 +101,14 @@ python do_distrodata_np() {
 	rlrd = bb.data.getVar('RECIPE_LATEST_RELEASE_DATE', localdata, True)
 	dc = bb.data.getVar('DEPENDENCY_CHECK', localdata, True)
 	rc = bb.data.getVar('RECIPE_COMMENTS', localdata, True)
+        result = dist_check.compare_in_distro_packages_list(distro_check_dir, localdata)
 
-	bb.note("DISTRO: %s,%s,%s,%s,%s,%s,%s,%s, %s, %s, %s\n" % \
-		  (pname, maintainer, plicense, pchksum, hasrstatus, vermatch, pcurver, pupver, noupdate, noupdate_reason, rstatus))
+	bb.note("DISTRO: %s,%s,%s,%s,%s,%s,%s,%s,%s, %s, %s, %s\n" % \
+		  (pname, pdesc, maintainer, plicense, pchksum, hasrstatus, vermatch, pcurver, pupver, noupdate, noupdate_reason, rstatus))
+        line = pn
+        for i in result:
+            line = line + "," + i
+        bb.note("%s\n" % line)
 }
 
 addtask distrodata
@@ -94,9 +117,14 @@ python do_distrodata() {
 	logpath = bb.data.getVar('LOG_DIR', d, 1)
 	bb.utils.mkdirhier(logpath)
 	logfile = os.path.join(logpath, "distrodata.csv")
-        bb.note("LOG_FILE: %s\n" % logfile)
 
+        import oe.distro_check as dist_check
 	localdata = bb.data.createCopy(d)
+        tmpdir = bb.data.getVar('TMPDIR', d, 1)
+        distro_check_dir = os.path.join(tmpdir, "distro_check")
+        datetime = bb.data.getVar('DATETIME', localdata, 1)
+        dist_check.update_distro_data(distro_check_dir, datetime)
+
         pn = bb.data.getVar("PN", d, True)
         bb.note("Package Name: %s" % pn)
 
@@ -122,6 +150,10 @@ python do_distrodata() {
 	pname = bb.data.getVar('PN', localdata, True)
 	pcurver = bb.data.getVar('PV', localdata, True)
 	pdesc = bb.data.getVar('DESCRIPTION', localdata, True)
+        if pdesc is not None:
+                pdesc = pdesc.replace(',','')
+                pdesc = pdesc.replace('\n','')
+
 	pgrp = bb.data.getVar('SECTION', localdata, True)
 	plicense = bb.data.getVar('LICENSE', localdata, True).replace(',','_')
 	if bb.data.getVar('LIC_FILES_CHKSUM', localdata, True):
@@ -135,6 +167,8 @@ python do_distrodata() {
 		hasrstatus="0"
 
 	rstatus = bb.data.getVar('RECIPE_STATUS', localdata, True)
+        if rstatus is not None:
+                rstatus = rstatus.replace(',','')
 		
 	pupver = bb.data.getVar('RECIPE_LATEST_VERSION', localdata, True)
 	if pcurver == pupver:
@@ -147,6 +181,7 @@ python do_distrodata() {
 		noupdate="0"
 	else:
 		noupdate="1"
+                noupdate_reason = noupdate_reason.replace(',','')
 
 	ris = bb.data.getVar('RECIPE_INTEL_SECTION', localdata, True)
 	maintainer = bb.data.getVar('RECIPE_MAINTAINER', localdata, True)
@@ -154,13 +189,19 @@ python do_distrodata() {
 	rlrd = bb.data.getVar('RECIPE_LATEST_RELEASE_DATE', localdata, True)
 	dc = bb.data.getVar('DEPENDENCY_CHECK', localdata, True)
 	rc = bb.data.getVar('RECIPE_COMMENTS', localdata, True)
+        # do the comparison
+        result = dist_check.compare_in_distro_packages_list(distro_check_dir, localdata)
 
 	lf = bb.utils.lockfile(logfile + ".lock")
 	f = open(logfile, "a")
-	f.write("%s,%s,%s,%s,%s,%s,%s,%s, %s, %s, %s\n" % \
-		  (pname, maintainer, plicense, pchksum, hasrstatus, vermatch, pcurver, pupver, noupdate, noupdate_reason, rstatus))
-	f.close()
-	bb.utils.unlockfile(lf)
+	f.write("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s," % \
+		  (pname, pdesc, maintainer, plicense, pchksum, hasrstatus, vermatch, pcurver, pupver, noupdate, noupdate_reason, rstatus))
+        line = ""
+        for i in result:
+            line = line + "," + i
+        f.write(line + "\n")
+        f.close()
+        bb.utils.unlockfile(lf)
 }
 
 addtask distrodataall after do_distrodata

@@ -488,7 +488,7 @@ do_buildall() {
 	:
 }
 
-addhandler check_eventhandler
+#addhandler check_eventhandler
 python check_eventhandler() {
     from bb.event import Handled, NotHandled
     # if bb.event.getName(e) == "TaskStarted":
