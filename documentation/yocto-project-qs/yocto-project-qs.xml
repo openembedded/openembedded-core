@@ -1,0 +1,307 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<article id='intro'>
+   <imagedata fileref="figures/yocto-project-transp.png" width="6in" depth="1in" align="right" scale="25" />
+
+<section id='fake-title'>
+    <title>Yocto Project Quick Start</title>
+</section>
+
+<section id='welcome'>
+    <title>Welcome!</title>
+    <para>
+        Welcome to the Yocto Project!  
+        The Yocto Project is an open-source Linux development environment.  
+        This short document will give you some basic information about the environment as well as let you experience it in its simplest form.  
+        After reading this document you will have a basic understanding of what the Yocto Project is and how to work within it.  
+        This document also steps you through a simple example showing you how to build a small image and run it using the QEMU emulator.
+    </para>
+    <para>
+        For complete information on the Yocto Project you should check out the <ulink url='http://www.yoctolinux.org'>Public Yocto Website</ulink>.
+        You can find the latest builds, breaking news, full development documentation, and a rich Yocto Project Development Community into which you can tap.
+    </para>
+</section>
+
+<section id='yp-intro'>
+    <title>Introducing the Yocto Project Development Environment</title>
+
+    <para>
+        Yocto Project is an open source development environment that creates Linux-based images suitable for many types of devices (large or small) based on architectures such as x86, x86-64, Xeon, ARM, and MIPS as well as PowerPC and device emulation.
+        You can use Yocto Project to design, develop, build, debug, simulate, and test the complete software stack using Linux, the X Window System, GNOME Mobile-based application frameworks, and Qt frameworks.
+    </para>
+
+    <para></para>
+    <para></para>
+
+    <mediaobject>
+        <imageobject>
+            <imagedata fileref="figures/yocto-environment.png" format="PNG" align='center' scalefit='1'/>
+        </imageobject>
+        <caption>
+            <para>The Yocto Project Development Environment</para>
+        </caption>
+     </mediaobject>
+
+    <para>
+        Yocto Project:
+    </para>
+
+    <itemizedlist>
+        <listitem>
+            <para>Provides an open source Linux kernel along with a set of system commands and libraries suitable for the embedded environment.</para>
+        </listitem>
+        <listitem>
+            <para>Makes available system components such as X11, Matchbox, GTK+, Pimlico, Clutter, and Qt (among others) so you can create a richer user interface experience on devices that use displays or have a GUI.
+For devices that don't have a GUI or display you simply would not employ these components.</para>
+        </listitem>
+        <listitem>
+            <para>Creates a focused and stable subset of OpenEmbedded on which you can easily and reliably build and develop.</para>
+        </listitem>
+        <listitem>
+            <para>Fully supports a wide range of hardware and device emulation through the QEMU Emulator or other supported emulators.</para>
+        </listitem>
+    </itemizedlist>
+
+    <para>
+        Yocto Project generates file system images based on open source software such as the Kdrive X server, the Matchbox Window Manager, the GTK+ Toolkit and the D-Bus Message Bus System.  
+        Yocto Project can generate images for many kinds of devices.  
+        However, the standard example machines target QEMU full system emulation for x86, ARM, MIPS, and PPC based architectures as well as specific hardware such as the Intel Desktop Board DH55TC.  
+        Because an image developed with Yocto Project can boot inside a QEMU emulator, the development environment works nicely as a test platform for developing embedded software.
+    </para>
+
+    <para>
+        Another important Yocto Project feature is the Sato component.  
+        The optional Sato component, a GNOME mobile-based user interface environment well suited for devices with restricted screen sizes, sits neatly on top of any device using the GNOME Mobile Stack providing a well defined user experience.
+    </para>
+</section>
+
+<section id='resources'>
+    <title>What You Need and How You Get It</title>
+
+    <para>
+        You need these things to develop in the Yocto Project environment:
+    </para>
+
+    <itemizedlist>
+        <listitem>
+            <para>A host system running a supported Linux distribution.  
+                For information on distributions on which you can use Yocto Project refer to the information found at <ulink url='http://wiki.openembedded.net/index.php/OEandYourDistro'>http://wiki.openembedded.net/index.php/OEandYourDistro</ulink>.</para>
+        </listitem>
+        <listitem>
+            <para>The right packages.</para>
+        </listitem>
+        <listitem>
+            <para>A release of Yocto Project.</para>
+        </listitem>
+    </itemizedlist>
+
+    <section id='the-linux-distro'>
+        <title>The Linux Distribution</title>
+
+        <para>
+            While this document assumes a Debian-based host system you can develop in the Yocto Linux environment using many other Linux distributions.   
+            For Debian-based systems we recommend you use the Ubuntu Release 10.04 or later.
+        </para>
+    </section>
+
+    <section id='packages'>
+        <title>The Packages</title>
+
+        <para>
+            The packages you need for a Debian-based host are shown in the following command:
+        </para>
+
+            <literallayout class='monospaced'>
+     Sudo apt-get install sed wget cvs subversion git-core coreutils 
+     unzip texi2html texinfo libsdll.2-dev docbook-utils gawk 
+     python-pysqlite2 diffstat help2man make gcc build-essential 
+     g++ desktop-file-utils chrpath libgl1-mesa-dev libglu1-mesa-dev 
+     libsdl1.2-dev
+            </literallayout>
+
+        <para>
+            <emphasis>NOTE:</emphasis>  Packages vary in number and name for other Linux distributions.  
+            For package requirements on other Linux distributions refer to the information found at <ulink url='http://wiki.openembedded.net/index.php/OEandYourDistro'>http://wiki.openembedded.net/index.php/OEandYourDistro</ulink>.
+        </para>
+    </section>
+
+    <section id='releases'>
+        <title>Yocto Project Release</title>
+            
+        <para>
+            The latest releases for Yocto Project are kept at http://yoctoproject.org/releases.
+            Nightly and developmental builds are also maintained.  However, for this document a released version of Yocto Project is used.
+        </para>
+    </section>
+</section>
+
+<section id='test-run'>
+    <title>A Quick Test Run</title>
+
+    <para>
+        Now that you have your system requirements in order you can give Yocto Project a try.  
+        This section presents some steps that let you do the following:
+    </para>
+
+    <itemizedlist>
+        <listitem>
+            <para>Build an image and run it in the emulator</para>
+        </listitem>
+        <listitem>
+            <para>Or, use a pre-built image and run it in the emulator</para>
+        </listitem>
+    </itemizedlist>
+
+    <section id='building-image'>
+        <title>Building an Image</title>
+ 
+        <para>
+            In the development environment you will need to build an image whenever you change hardware support, add or change system libraries, or add or change services that have dependencies.
+        </para>
+
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="figures/building-an-image.png" format="PNG" align='center' scalefit='1'/>
+            </imageobject>
+            <caption>
+                <para>Building an Image</para>
+            </caption>
+         </mediaobject>
+
+         <para>
+             Use the following commands from a shell on your Debian-based host to build your image.  
+             The build creates an entire Linux system including the Toolchain from the source.
+         </para>
+
+         <para><emphasis>NOTE:</emphasis>  The build process using Sato currently consumes 50GB of disk space.
+             To allow for vbariations in the build process and for future package expansion we recommend 100GB of free disk space.
+         </para>
+
+         <para>
+             <literallayout class='monospaced'>
+     $ wget http://pokylinux.org/releases/poky-green-3.3.tar.bz2
+     $ tar xjvf poky-green-3.3.tar.bz2
+     $ cd green-3.3-build
+     $ source green-3.3/poky-init-build-env green-3.3-build
+     $ bitbake qemu-native
+     $ bitbake poky-image-sato
+     $ poky-qemu qemux86
+             </literallayout>
+         </para>
+
+         <para>
+             Here is some explanation for these commands:
+         </para>
+
+         <itemizedlist>
+             <listitem>
+                 <para>
+                     The first two commands extract the Yocto Project files from the release area and place them into your build area (green-3.3-build in this example).
+                 </para>
+             </listitem>
+             <listitem>
+                 <para>
+                     After changing to the build directory the source command sets up the Yocto Project build environment.  
+                     The build directory contains all the object files used during the build.   
+                     The default build directory is poky-dir/build.  
+                  </para>
+             </listitem>
+             <listitem>
+                 <para>
+                     The two bitbake commands build the OS image and the emulator for the target.  
+                     Here poky-image-sato is the name of the target.  The qemu-native target is the customized QEMU Emulator.</para>
+             </listitem>
+             <listitem>
+                 <para>
+                     Finally, the poky-qemu command launches the customized QEMU.
+                 </para>
+             </listitem>
+         </itemizedlist>
+    </section>
+
+    <section id='using-pre-built'>
+        <title>Using a Pre-Built Linux Kernel for QEMU</title>
+        <para>
+            If hardware, libraries and services are stable you can use a pre-built image of the kernel and just run it on the target using the emulator QEMU.  
+            This situation is perfect for developing application software.
+        </para>
+
+        <para></para>
+        <para></para>
+        <para></para>
+
+        <mediaobject>
+            <imageobject>
+            <imagedata fileref="figures/using-a-pre-built-image.png" format="PNG" align='center' scalefit='1'/>
+            </imageobject>
+            <caption>
+                <para>Using a Pre-Built Image</para>
+            </caption>
+         </mediaobject>
+
+         <para>
+             For this scenario you need to do three things:
+         </para>
+
+         <itemizedlist>
+             <listitem>
+                 <para>
+                     Install the Yocto Project Scripts
+                 </para>
+             </listitem>
+             <listitem>
+                 <para>
+                     Download the pre-built kernel that will run on QEMU.  
+                     You need to be sure to get the QEMU image that matches your target machine’s architecture (e.g. x86, ARM, etc.).
+                 </para>
+             </listitem>
+             <listitem>
+                 <para>
+                     Download and decompress the file image system.
+                 </para>
+             </listitem>
+         </itemizedlist>
+
+         <para>
+             Use this command to install the patched Yocto Project QEMU scripts:
+         </para>
+
+         <para>
+             <literallayout class='monospaced'>
+     $ apt-get install qemu poky-scripts
+             </literallayout>
+         </para>
+
+         <para>
+             You can download the pre-built Linux kernel and the file image system from <ulink url='http://pokylinux.org/releases/blinky-3.0'></ulink>.  
+             The kernel and file image system have the following forms, respectively:
+         </para>
+
+          <literallayout class='monospaced'>
+     *zImage*qemu*.bin
+     poky-image-*-qemu*.ext2.bz2
+          </literallayout>
+
+         <para>
+             You must decompress the file image system using the following command:
+         </para>
+
+         <literallayout class='monospaced'>
+     $ bzip2 -d
+         </literallayout>
+
+         <para>
+             You can now start the emulator using this command:
+         </para>
+
+         <literallayout class='monospaced'>
+     $ poky-qemu &lt;<emphasis>kernel</emphasis>&gt; &lt;<emphasis>image</emphasis>&gt;
+         </literallayout>
+    </section>
+</section>
+
+</article>
+<!--
+vim: expandtab tw=80 ts=4
+-->
