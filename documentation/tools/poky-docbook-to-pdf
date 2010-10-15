@@ -9,9 +9,8 @@ if [ -z "$1" -o -z "$2" ]; then
    exit 0
 fi
 
-BASENAME=`basename $1 .xml` || exit 1
-FO="$BASENAME.fo" 
-PDF="$BASENAME.pdf"
+FO=`echo $1 | sed s/.xml/.fo/` || exit 1
+PDF=`echo $1 | sed s/.xml/.pdf/` || exit 1
 TEMPLATEDIR=$2
 
 ##
@@ -35,6 +34,7 @@ xsltproc --xinclude                    \
          $TEMPLATEDIR/poky-db-pdf.xsl    \
 	 $1                 || exit 1
 
+echo fop -c $TEMPLATEDIR/fop-config.xml -fo $FO -pdf $PDF       || exit 1
 fop -c $TEMPLATEDIR/fop-config.xml -fo $FO -pdf $PDF       || exit 1
 
 rm -f $FO

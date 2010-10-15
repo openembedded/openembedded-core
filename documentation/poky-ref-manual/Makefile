@@ -1,8 +1,8 @@
 all: html pdf tarball
 
 pdf:
-	./tools/poky-docbook-to-pdf poky-handbook.xml ./template
-	./tools/poky-docbook-to-pdf bsp-guide.xml ./template
+	cd ..; ./tools/poky-docbook-to-pdf ./poky-ref-manual/poky-handbook.xml ./template
+	cd..; ./tools/poky-docbook-to-pdf ./poky-ref-manual/bsp-guide.xml ./template
 
 XSLTOPTS = --stringparam html.stylesheet style.css \
            --stringparam  chapter.autolabel 1 \
