@@ -4,43 +4,39 @@
 <chapter id='intro'>
 <title>Introduction</title>
 
-<section id='intro-what-is'>
+<section id='intro-welcome'>
+    <title>Welcome to Poky!</title>
+
+    <para>
+        Poky is the the build tool in Yocto Project.
+        It is at the heart of Yocto Project.
+        You use Poky within Yocto Project to build the images (kernel software) for targeted hardware.
+    </para>
+
+    <para>
+        Before jumping into Poky you should have an understanding of Yokto Project.
+        Be sure you are familiar with the information in the Yocto Project Quick Start.
+        You can find this documentation on the public <ulink rul='http://yoctoproject.org/'>Yocto Project Website</ulink>.
+    </para>
+</section>
+
+<section>
     <title>What is Poky?</title>
 
     <para>
-
-        Poky is an open source platform build tool. It is a complete
-        software development environment for the creation of Linux
-        devices. It aids the design, development, building, debugging,
-        simulation and testing of complete modern software stacks
-        using Linux, the X Window System and GNOME Mobile
-        based application frameworks. It is based on <ulink
-        url='http://openembedded.org/'>OpenEmbedded</ulink> but has
-        been customised with a particular focus.
-
+        Poky provides an open source Linux, X11, Matchbox, GTK+, Pimlico, Clutter, and other <ulink url='http://gnome.org/mobile'>GNOME Mobile</ulink> technologies based full platform build tool within Yocto Project.
+        It creates a focused, stable, subset of OpenEmbedded that can be easily and reliably built and developed upon.
+        Poky fully supports a wide range of x86 ARM, MIPS and PowerPC hardware and device virtulisation.
     </para>
-
-    <para> Poky was setup to:</para>
-
-    <itemizedlist>
-        <listitem>
-            <para>Provide an open source Linux, X11, Matchbox, GTK+, Pimlico, Clutter, and other <ulink url='http://gnome.org/mobile'>GNOME Mobile</ulink> technologies based full platform build and development tool.</para>
-        </listitem>
-        <listitem>
-            <para>Create a focused, stable, subset of OpenEmbedded that can be easily and reliably built and developed upon.</para>
-        </listitem>
-        <listitem>
-            <para>Fully support a wide range of x86, ARM, MIPS, PowerPC hardware and device virtulisation</para>
-        </listitem>
-    </itemizedlist>
 
     <para>
         Poky is primarily a platform builder which generates filesystem images
         based on open source software such as the Kdrive X server, the Matchbox
         window manager, the GTK+ toolkit and the D-Bus message bus system. Images
         for many kinds of devices can be generated, however the standard example
-        machines target QEMU full system emulation(x86, ARM, MIPS and PowerPC) and the ARM based
-        Sharp Zaurus series of devices. Poky's ability to boot inside a QEMU
+        machines target QEMU full system emulation(x86, ARM, MIPS and PowerPC) and
+        real reference boards for each of these architectures.
+        Poky's ability to boot inside a QEMU
         emulator makes it particularly suitable as a test platform for development
         of embedded software.
     </para>
@@ -76,222 +72,32 @@
 
 <section id='intro-manualoverview'>
     <title>Documentation Overview</title>
-
     <para>
-        The handbook is split into sections covering different aspects of Poky. 
-        The <link linkend='usingpoky'>'Using Poky' section</link> gives an overview 
-        of the components that make up Poky followed by information about using and
-        debugging the Poky build system. The <link linkend='extendpoky'>'Extending Poky' section</link> 
-        gives information about how to extend and customise Poky along with advice 
-        on how to manage these changes.
-        The <link linkend='bsp'>'Board Support Packages (BSP) - Developers Guide' section</link>
-        gives information about how to develop BSP such as the common layout, the
-        software hardware configuration options etc.
-        The <link linkend='platdev'>'Platform Development with Poky' 
-        section</link> gives information about interaction between Poky and target
-        hardware for common platform development tasks such as software development, 
-        debugging and profiling. The rest of the manual
-        consists of several reference sections each giving details on a specific
-        section of Poky functionality.
+        The Poky User Guide is split into sections covering different aspects of Poky. 
+        The <link linkend='usingpoky'>'Using Poky' section</link> gives an overview of the components that make up Poky followed by information about using Poky and debugging images created in Yocto Project. 
+        The <link linkend='extendpoky'>'Extending Poky' section</link> gives information about how to extend and customise Poky along with advice on how to manage these changes. 
+        The <link linkend='platdev'>'Platform Development with Poky' section</link> gives information about interaction between Poky and target hardware for common platform development tasks such as software development, debugging and profiling. 
+        The rest of the manual consists of several reference sections each giving details on a specific section of Poky functionality.
     </para>
 
     <para>
         This manual applies to Poky Release 3.3 (Green).
     </para>
-
 </section>
 
 
 <section id='intro-requirements'>
     <title>System Requirements</title>
-
     <para>
         We recommend Debian-based distributions, in particular a recent Ubuntu 
         release (10.04 or newer), as the host system for Poky. Nothing in Poky is
-        distribution specific and
-        other distributions will most likely work as long as the appropriate
-        prerequisites are installed - we know of Poky being used successfully on Redhat,
-        SUSE, Gentoo and Slackware host systems.
+        distribution specific and other distributions will most likely work as long 
+        as the appropriate prerequisites are installed - we know of Poky being used 
+        successfully on Redhat, SUSE, Gentoo and Slackware host systems.
+        For information on what you need to develop images using Yocto Project and Poky 
+        you should see the Yocto Project Quick Start on the public 
+        <ulink rul='http://yoctoproject.org/'>Yocto Project Website</ulink>.
     </para>
-
-    <para>On a Debian-based system, you need the following packages installed:</para>
-
-    <itemizedlist>
-        <listitem>
-            <para>build-essential</para>
-        </listitem>
-        <listitem>
-            <para>python (version 2.6 or later)</para>
-        </listitem>
-        <listitem>
-            <para>diffstat</para>
-        </listitem>
-        <listitem>
-            <para>texinfo</para>
-        </listitem>
-        <listitem>
-            <para>texi2html</para>
-        </listitem>
-        <listitem>
-            <para>cvs</para>
-        </listitem>
-        <listitem>
-            <para>subversion</para>
-        </listitem>
-        <listitem>
-            <para>wget</para>
-        </listitem>
-        <listitem>
-            <para>gawk</para>
-        </listitem>
-        <listitem>
-            <para>help2man</para>
-        </listitem>
-        <listitem>
-            <para>chrpath</para>
-        </listitem>
-        <listitem>
-            <para>mercurial</para>
-        </listitem>
-    </itemizedlist>
-    <para>Furthermore if you wish to run an emulated Poky image using <ulink url='http://qemu.org'>QEMU</ulink> (as in the quickstart below) you will need the following packages installed:</para>
-    <itemizedlist>
-        <listitem>
-            <para>libgl1-mesa-dev</para>
-        </listitem>
-        <listitem>
-            <para>libglu1-mesa-dev</para>
-        </listitem>
-        <listitem>
-            <para>libsdl1.2-dev</para>
-        </listitem>
-        <listitem>
-            <para>bochsbios (only to run qemux86 images)</para>
-        </listitem>
-    </itemizedlist>
-
-    <para>
-        Debian users can add debian.o-hand.com to their APT sources (See
-        <ulink url='http://debian.o-hand.com'/>
-        for instructions on doing this) and then run <command>
-        "apt-get install qemu poky-depends poky-scripts"</command> which will
-        automatically install all these dependencies. Virtualisation images with 
-        Poky and all dependencies can also easily be built if required.
-    </para>
-
-    <para>
-        Poky can use a system provided QEMU or build its own depending on how it's
-        configured. See the options in <filename>local.conf</filename> for more details.
-    </para>
-</section>
-
-<section id='intro-quickstart'>
-    <title>Quick Start</title>
-
-    <section id='intro-quickstart-build'>
-        <title>Building and Running an Image</title>
-
-        <para>
-            If you want to try Poky, you can do so in a few commands. The example below
-            checks out the Poky source code, sets up a build environment, builds an
-            image and then runs that image under the QEMU emulator in x86 system emulation mode:
-        </para>
-
-        <para>
-            <literallayout class='monospaced'>
-$ wget http://pokylinux.org/releases/poky-green-3.3.tar.bz2
-$ tar xjvf poky-green-3.3.tar.bz2
-$ cd green-3.3/
-$ source poky-init-build-env
-$ bitbake poky-image-sato
-$ bitbake qemu-native
-$ runqemu qemux86
-</literallayout>
-        </para>
-
-        <note>
-        <para>
-            This process will need Internet access, about 20 GB of disk space
-            available, and you should expect the build to take about 4 - 5 hours since
-            it is building an entire Linux system from source including the toolchain!
-        </para>
-        </note>
-
-        <para>
-            To build for other machines see the <glossterm><link
-                    linkend='var-MACHINE'>MACHINE</link></glossterm> variable in build/conf/local.conf.
-            This file contains other useful configuration information and the default version
-            has examples of common setup needs and is worth 
-            reading. To take advantage of multiple processor cores to speed up builds for example, set the 
-            <glossterm><link linkend='var-BB_NUMBER_THREADS'>BB_NUMBER_THREADS</link></glossterm>
-            and <glossterm><link linkend='var-PARALLEL_MAKE'>PARALLEL_MAKE</link></glossterm> variables.
-
-            The images/kernels built by Poky are placed in the <filename class="directory">tmp/deploy/images</filename>
-            directory.
-        </para>
-
-        <para>
-            You could also run <command>"poky-qemu zImage-qemuarm.bin poky-image-sato-qemuarm.ext2"
-            </command> within the images directory if you have the poky-scripts Debian package
-            installed from debian.o-hand.com. This allows the QEMU images to be used standalone
-            outside the Poky build environment.
-        </para>
-        <para>
-            To setup networking within QEMU see the <link linkend='usingpoky-install-qemu-networking'>
-            QEMU/USB networking with IP masquerading</link> section.
-        </para>
-
-    </section>
-    <section id='intro-quickstart-qemu'>
-        <title>Downloading and Using Prebuilt Images</title>
-
-        <para>
-            Prebuilt images from Poky are also available if you just want to run the system
-            under QEMU. To use these you need to:
-        </para>
-
-        <itemizedlist>
-            <listitem>
-                <para>
-                     Add debian.o-hand.com to your APT sources (See
-                    <ulink url='http://debian.o-hand.com'/> for instructions on doing this)
-                </para>
-            </listitem>
-            <listitem>
-                <para>Install patched QEMU and poky-scripts:</para>
-                <para>
-                    <literallayout class='monospaced'>
-$ apt-get install qemu poky-scripts
-</literallayout>
-                </para>
-            </listitem>
-
-            <listitem>
-                <para>
-                    Download a Poky QEMU release kernel (*zImage*qemu*.bin) and compressed
-                    filesystem image (poky-image-*-qemu*.ext2.bz2) which
-                    you'll need to decompress with 'bzip2 -d'. These are available from the
-                    <ulink url='http://pokylinux.org/releases/green-3.3/'>last release</ulink>
-                    or from the <ulink url='http://autobuilder.pokylinux.org/'>autobuilder</ulink>.
-                </para>
-            </listitem>
-            <listitem>
-                <para>Start the image:</para>
-                <para>
-                    <literallayout class='monospaced'>
-$ poky-qemu &lt;kernel&gt; &lt;image&gt;
-</literallayout>
-                </para>
-            </listitem>
-        </itemizedlist>
-
-        <note><para>
-            A patched version of QEMU is required at present. A suitable version is available from 
-            <ulink url='http://debian.o-hand.com'/>, it can be built 
-            by poky (bitbake qemu-native) or can be downloaded/built as part of the toolchain/SDK tarballs.
-        </para></note>
-
-    </section>
 </section>
 
 <section id='intro-getit'>

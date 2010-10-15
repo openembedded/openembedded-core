@@ -41,181 +41,253 @@
         </para>
     </section>
 
-    <section id="platdev-appdev-external-anjuta">
-        <title>Developing externally using the Anjuta plugin</title>
-
+    <section id="using-the-eclipse-and-anjuta-plug-ins">
+        <title>Using the Eclipse and Anjuta Plug-ins</title>
         <para>
-            An Anjuta IDE plugin exists to make developing software within the Poky framework
-            easier for the application developer. It presents a graphical IDE from which the 
-            developer can cross compile an application then deploy and execute the output in a QEMU 
-            emulation session. It also supports cross debugging and profiling.
-        </para>
-<!-- DISBALED, TOO BIG!
-        <screenshot>
-        <mediaobject>
-            <imageobject>
-                <imagedata fileref="screenshots/ss-anjuta-poky-1.png" format="PNG"/>
-            </imageobject>
-            <caption>
-                <para>The Anjuta Poky SDK plugin showing an active QEMU session running Sato</para>
-            </caption>
-         </mediaobject>
-         </screenshot>
--->
-        <para>
-            To use the plugin, a toolchain and SDK built by Poky is required along with Anjuta it's development
-            headers and the Anjuta plugin. The Poky Anjuta plugin is available to download as a tarball at the
-            <ulink url='http://labs.o-hand.com/anjuta-poky-sdk-plugin/'>OpenedHand labs</ulink> page or
-            directly from the Poky Git repository located at git://git.pokylinux.org/anjuta-poky; a web interface
-            to the repository can be accessed at <ulink url='http://git.pokylinux.org/?p=anjuta-poky.git;a=summary'/>.
-        </para>
-        <para>
-            See the README file contained in the project for more information on dependencies and building
-            the plugin. If you want to disable remote gdb debugging, please pass --diable-gdb-integration
-            switch when doing configure.
+            Yocto Project supports both Anjuta and Eclipse IDE plug-ins to make developing software
+            easier for the application developer. The plug-ins provide capability
+            extensions to the graphical IDE allowing for cross compilation, 
+            deployment and execution of the output in a QEMU emulation session. 
+            Support of these plug-ins also supports cross debugging and
+            profiling.  Additionally, the Eclipse plug-in provides a suite of tools 
+            that allows the developer to perform remote profiling, tracing, collection of 
+            power data, collection of latency data and collection of performance data.
         </para>
 
-        <section id="platdev-appdev-external-anjuta-setup">
-          <title>Setting up the Anjuta plugin</title>
+        <section id="the-eclipse-plug-in">
+            <title>The Eclipse Plug-in</title>
+            <para>
+                To use the Eclipse plug-in, a toolchain and SDK built by Poky is required along with 
+                the Eclipse Framework (Helios 3.6). 
+                To install the plug-in you need to be in the Eclipse IDE and select 
+                the following menu:
+                <literallayout class='monospaced'>
+     Help -> Install New Software
+                </literallayout>
+                Specify the target URL as http://yocto./download (real link needed).
+            </para>
+            <para>
+                If you want to download the source code for the plug-in you can find it in the Poky 
+                git repository, which has a web interface, and is located at
+                <ulink url="http://git.pokylinux.org/cgit.cgi/eclipse-poky"></ulink>.
+            </para>
+  
+            <section id="installing-and-setting-up-the-eclipse-ide">
+                <title>Installing and Setting up the Eclipse IDE</title>
+                <para>
+                    If you don't have the Eclipse IDE (Helios 3.6) on your system you need to 
+                    download and install it from <ulink url="http://www.eclipse.org/downloads"></ulink>.
+                    Choose the Eclipse Classic, which contains the Eclipse Platform, Java Development 
+                    Tools (JDT), and the Plug-in Development Environment.
+                </para>
+                <para>
+                    NOTE: Due to the Java Virtual Machine's garbage collection (GC) process the 
+                    permanent generation space (PermGen) is not cleaned up.  This space is used 
+                    to store meta-data descriptions of classes.  The default value is set too small
+                    and it could trigger an out of memory error like the following:
+                    <literallayout class='monospaced'>
+     Java.lang.OutOfMemoryError: PermGen space
+                    </literallayout>
+                    This error causes the applications to hang.  
+                </para>
+                <para>
+                    To fix this issue you can use the <command>-vmargs</command>
+                    option when you start Eclipse to increase the size of the permenant generation space:
+                    <literallayout class='monospaced'>
+     Eclipse -vmargs -XX:PermSize=256M
+                    </literallayout>
+                </para>
+                <para>
+                    The Eclipse plug-in depends several Eclipse projects plug-ins: 
+                    Eclipse C/C++ Development Tools (CDT), Autotools support for CDT (Incubation) and Target
+                    Management (RSE).
+                </para>
+                <para>
+                    After installing Eclipse and bringing up the IDE for the first
+                    time you need to be sure the following four sites are available by adding them.
+                </para>
+                <itemizedlist>
+                    <listitem>CDT - http://download.eclipse.org/tools/cdt/releases/helios</listitem>
+                    <listitem>Helios - http://download.eclipse.org/releases/helios</listitem>
+                    <listitem>Target Management 
+                              3.2 Updates - http://download.eclipse.org/dsdp/tm/updates/3.2</listitem>
+                    <listitem>The Eclipse Project Updates - 
+                              http://download.eclipse.org/eclipse/updates/3.6</listitem>
+                </itemizedlist>
+                <para>
+                    Once these sites are available do the following:
+                    <itemizedlist>
+                        <listitem>Use the "Work with:" drop down list and 
+                            select "All Available Sites--"</listitem>
+                        <listitem><emphasis>For CDT and Autotools support:</emphasis> Expand the
+                            "Programming Languages" list and select "Autotools support for CDT 
+                            (Incubation)" and "C/C++ Development Tools".  Click "Next" and complete 
+                            the update.</listitem>
+                        <listitem><emphasis>For RSE support:</emphasis> Select "TM and 
+                    RSE Main Features".  Click "Next" and complete the update.</listitem>
+                    </itemizedlist>
+                </para>
+            </section>
 
-            <para>Extract the tarball for the toolchain into / as root. The
-              toolchain will be installed into
-              <filename class="directory">/opt/poky</filename>.</para>
+            <section id="installing-the-yocto-plug-in">
+                <title>Installing the Yocto Plug-in</title>
+                    <para>
+                        Once you have the Eclipse IDE installed and configure you need to install the 
+                        Yocto plug-in.  You do this similar to installing the Eclipse plug-ins in the 
+                        previous section.
+                    </para>
+                    <para>
+                        Do the following to install the Yocto plug-in into the Eclipse IDE:
+                    <itemizedlist>
+                        <listitem>Select the "Help -> Install New Software" item.</listitem>
+                        <listitem>In the "Work with:" area click "Add..." and enter the URL for 
+                            the Yocto plug-in (we need to supply this URL).</listitem>
+                        <listitem>Finish out the installation of the update similar to any other
+                            Eclipse plug-in.</listitem>
+                    </itemizedlist>
+                    </para>
+            </section>
+         
+            <section id="configuring-yocto-eclipse-plug-in">
+                <title>Configuring Yocto Eclipse plug-in</title>
+                <para>
+                    To configure the Yocto Eclipse plug-in you need to select the mode and then the
+                    architecture with which you will be working.  Start by selecting "Preferences" 
+                    from the "Window" menu and then selecting "Yocto SDK".
+                </para>
+                <para>
+                    If you normally will use an installed Yocto 
+                    SDK (under /opt/poky) select “SDK Root Mode”.  Otherwise, if your crosstool chain 
+                    and sysroot are within your poky tree, select “Poky Tree Mode”.  
+                    If you are in SDK Root Mode you will need to provide your poky tree path, for
+                    example, $&lt;Poky_tree&gt;/build/. 
+                </para>
+                <para>
+                    Now you need to select the architecture. 
+                    Use the drop down list and select the architecture that you’ll be primarily 
+                    working against.
+                    For target option, select your typical target QEMU vs External HW.  If you 
+                    choose QEMU, you’ll need to specify your QEMU kernel file with full path and the 
+                    rootfs mount point.  Yocto QEMU boots off user mode NFS, Please refer to QEMU
+                    section for how to set it up. (Section TBD)
+                </para>
+                <para>
+                    Save all your settings and they become your defaults for every new Yocto project
+                    created using the Eclipse IDE.
+                </para>
+            </section>
 
-            <para>To use the plugin, first open or create an existing
-              project. If creating a new project the "C GTK+" project type
-              will allow itself to be cross-compiled.  However you should be
-              aware that this uses glade for the UI.</para>
+            <section id="using-the-yocto-eclipse-plug-in">
+                <title>Using the Yocto Eclipse Plug-in</title>
+                <para>
+                    As an example, this section shows you how to cross-compile a Yocto C autotools
+                    based project, deploy it into QEMU, and then run the debugger against it.
+                    You need to configure the project, trigger <command> autogen.sh</command>, build 
+                    the image, start QEMU, and then debug.
+                </para>
+                <orderedlist>
+                    <listitem>Creating a Yocto Autotools Based Project Using a Template:  
+                        Get to the Wizard selection by selecting the File -> New -> Project 
+                        menu.  Expand "C/C++" and select "C Project".  Click "Next" and select a template 
+                        to start with, for example "Hello World ANSI C Project".  Complete the steps
+                        to create a new Yocto autotools based project using this template.</listitem>
+                    <listitem>Specify Specific Toolchain Configurations:  By default the project 
+                        uses the Yocto preferences settings as defined using the procedure in 
+                        <link linkend="configuring-yocto-eclipse-plug-in"> the previous section</link>.
+                        If there are any specific setup requirements for the newly created project
+                        you need to reconfigure the Yocto plug-in through the menu selection
+                        Project -> Invoke Yocto Tools -> Reconfigure Yocto.  Use this dialogue
+                        to specify specific toolchain and QEMU setups for the project.</listitem>
+                    <listitem>Building the Project:  Trigger <command>autogen.sh</command> through 
+                        Project -> Reconfigure Project.  Then build the project using 
+                        Project -> Build.</listitem>
+                    <listitem>Starting QEMU:  Use the Run -> External Tools menu and see if there is 
+                        a QEMU instance for the desired target.  If there is click on the instance
+                        to start QEMU.  If your target is not there then click "External Tools
+                        Configuration".  You should find an instance of QEMU for your architecture
+                        under the entry under "Program".  After the boot completes you are ready to 
+                        deploy the image into QEMU.</listitem>
+                    <listitem>Debugging:  To bring up your remote debugging configuration in the 
+                        right-hand window highlight your project in “Project Explorer”, select 
+                        the Run -> Debug Configurations menu item and expand “C/C++ Remote Application”.
+                        Next, select projectname_ gdb_target-poky-linux.  
+                        You need to be sure that there is an
+                        entry for the remote target you want to deploy and cross debug with.  If there
+                        is no entry then click "New..." to bring up the wizard.  Using the wizard
+                        select TCF and enter the IP address of you remote target in the 
+                        “Host name:” field.  Back in the remote debug configure window, 
+                        you need to specify the absolute path for the program on the remote target 
+                        in the “Remote Absolute File Path for C/C++ Application” field.  By default, 
+                        the program deploys into the remote target.  If you don't want this then check
+                        “Skip download to target path”.  Finally, click "Debug” to start the remote
+                        debugging session.</listitem>
+                </orderedlist>
+            </section>
 
-            <para>To activate the plugin go to
-              <menuchoice><guimenu>Edit</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>,
-              then choose <guilabel>General</guilabel> from the left hand side. Choose the
-              Installed plugins tab, scroll down to <guilabel>Poky
-                SDK</guilabel> and check the
-              box. The plugin is now activated but first it must be
-              configured.</para> 
+            <section id="using-yocto-eclipse-plug-in-remote-tools-suite">
+                <title>Using Yocto Eclipse plug-in Remote Tools Suite</title>
+                <para>
+                    Remote tools let you do things like perform system profiling, kernel tracing, 
+                    examine power consumption, and so forth.  To see and access the remote tools use the 
+                    Window -> YoctoTools menu.
+                </para>
+                <para>
+                    Once you pick a tool you need to configure it for the remote target.  Every tool 
+                    needs to have the connection configured.  You have to select an existing TCF-based
+                    RSE connection to the remote target.  If one does not exist you need to create one
+                    by clicking "New"
+                </para>
+                <para>
+                    Here are some specifics about the remote tools:
+                <itemizedlist>
+                    <listitem>Oprofile:  Selecting this tool causes the oprofile-server on the remote
+                        target to launch on the local host machine.  To use the oprofile the oprofile-viewer
+                        must be installed on the local host machine and the oprofile-server must be
+                        installed on the remote target.</listitem>
+                    <listitem>lttng:  Selecting this tool runs ustrace on the remote target, transfers
+                        the output data back to the local host machine and uses lttv-gui to graphically
+                        display the output.  To use this tool the lttv-gui must be installed on the 
+                        local host machine.  See <ulink url="http://lttng.org/files/ust/manual/ust.html">
+                        </ulink> for information on how to use <command>lttng</command> to trace an 
+                        application.
+                        <para>
+                            For "Application" you must supply the absolute path name to the application to 
+                            be traced by user mode lttng.  For example, typing <command>/path/to/foo"
+                            </command> triggers <command>usttrace /path/to/foo</command> on the 
+                            remote target to trace the program <command>/path/to/foo</command>.
+                        </para>
+                        <para>
+                            "Argument" is passed to "usttrace" running on the remote target.
+                        </para>
+                    </listitem>  
+                    <listitem>powertop:  Selecting this tool runs <command>powertop</command> on the 
+                        remote target machine and displays the result in a new view called "powertop".
+                        <para>
+                            "Time to gather data(sec):" is the time passed in seconds before data is 
+                            gathered from the remote target for analysis.
+                        </para>
+                        <para>
+                            "show pids in wakeups list:" corresponds to the <command>-p</command>
+                            argument passed to <command>powertop</command>
+                        </para>
+                    </listitem>
+                    <listitem>latencytop and perf:  The <command>latencytop</command> identifies 
+                        system latency, while <command>perf</command> monitors the system's performance 
+                        counter registers.  Selecting either of these tools causes an RSE
+                        terminal view to appear in which you can run the tools.  Both tools refresh the 
+                        entire screen to display results while they run.</listitem>
+                </itemizedlist>
+                </para>
+            </section>
         </section>
 
-        <section id="platdev-appdev-external-anjuta-configuration">
-          <title>Configuring the Anjuta plugin</title>
-
-          <para>The configuration options for the SDK can be found by choosing
-            the <guilabel>Poky SDK</guilabel> icon from the left hand side. The following options
-            need to be set:</para>
-
-          <itemizedlist>
-            
-            <listitem><para><guilabel>SDK root</guilabel>: If we use external toolchain, we need to set SDK root.
-                this is the root directory of the SDK's sysroot. For an i586 SDK this will be <filename
-                  class="directory">/opt/poky/</filename>.
-                This directory will contain directories named like "bin",
-                "include", "var", etc. under your selected target architecture subdirectory<filename class="directory">
-                /opt/poky/sysroot/i586-poky-linux/</filename>. Needed cross compile tools are under
-                <filename class ="directory">/opt/poky/sysroot/i586-pokysdk-linux/</filename>
-                </para></listitem>
-
-            <listitem><para><guilabel>Poky root</guilabel>: If we have local poky build tree, we need to set the Poky root.
-                this is the root directory of the poky build tree, if you build your i586 target architecture
-                under the subdirectory of build_x86 within your poky tree, the Poky root directory should be 
-                <filename class="directory">${Poky_tree}/build_x86/</filename>.
-               </para></listitem>
-
-            <listitem><para><guilabel>Target Architecture</guilabel>: this is the cross compile
-                triplet, e.g. "i586-poky-linux". This target triplet is the prefix extracted from
-                the set up script file name. For examle, "i586-poky-linux" is extracted from set up script file
-                <filename>/opt/poky/environment-setup-i586-poky-linux</filename>
-               </para></listitem>
-
-            <listitem><para><guilabel>Kernel</guilabel>: use the file chooser to select the kernel
-                to use with QEMU</para></listitem>
-
-            <listitem><para><guilabel>Root filesystem</guilabel>: use the file chooser to select
-                the root filesystem directory, this is the directory where you use "poky-extract-sdk" command to 
-                extract the poky-image-sdk tarball.</para></listitem>
-          </itemizedlist>
-<!-- DISBALED, TOO BIG!
-        <screenshot>
-        <mediaobject>
-            <imageobject>
-                <imagedata fileref="screenshots/ss-anjuta-poky-2.png" format="PNG"/>
-            </imageobject>
-            <caption>
-                <para>Anjuta Preferences Dialog</para>
-            </caption>
-         </mediaobject>
-         </screenshot>
--->
-
-        </section>
-
-        <section id="platdev-appdev-external-anjuta-usage">
-            <title>Using the Anjuta plugin</title>
-
-            <para>As an example, cross-compiling a project, deploying it into
-              QEMU and running a debugger against it and then doing a system
-              wide profile.</para>
-
-            <para>Choose <menuchoice><guimenu>Build</guimenu><guimenuitem>Run
-                  Configure</guimenuitem></menuchoice> or
-              <menuchoice><guimenu>Build</guimenu><guimenuitem>Run
-                  Autogenerate</guimenuitem></menuchoice> to run "configure"
-              (or to run "autogen") for the project. This passes command line
-              arguments to instruct it to cross-compile.</para>
-
-            <para>Next do
-              <menuchoice><guimenu>Build</guimenu><guimenuitem>Build
-                  Project</guimenuitem></menuchoice> to build and compile the
-              project. If you have previously built the project in the same
-              tree without using the cross-compiler you may find that your
-              project fails to link. Simply do
-              <menuchoice><guimenu>Build</guimenu><guimenuitem>Clean
-                  Project</guimenuitem></menuchoice> to remove the old
-              binaries. You may then try building again.</para>
-
-            <para>Next start QEMU by using
-              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Start
-                  QEMU</guimenuitem></menuchoice>, this will start QEMU and
-              will show any error messages in the message view. Once Poky has
-              fully booted within QEMU you may now deploy into it.</para>
-
-            <para>Once built and QEMU is running, choose
-              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Deploy</guimenuitem></menuchoice>,
-              this will install the package into a temporary directory and
-              then copy using rsync over SSH into the target.  Progress and
-              messages will be shown in the message view.</para>
-
-            <para>To debug a program installed into onto the target choose
-              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Debug
-                  remote</guimenuitem></menuchoice>. This prompts for the
-              local binary to debug and also the command line to run on the
-              target. The command line to run should include the full path to
-              the to binary installed in the target. This will start a
-              gdbserver over SSH on the target and also an instance of a
-              cross-gdb in a local terminal. This will be preloaded to connect
-              to the server and use the <guilabel>SDK root</guilabel> to find
-              symbols. This gdb will connect to the target and load in
-              various libraries and the target program.  You should setup any
-              breakpoints or watchpoints now since you might not be able to
-              interrupt the execution later. You may stop
-              the debugger on the target using
-              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Stop
-                  debugger</guimenuitem></menuchoice>.</para>
-
-            <para>It is also possible to execute a command in the target over
-              SSH, the appropriate environment will be be set for the
-              execution. Choose
-              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Run
-                  remote</guimenuitem></menuchoice> to do this. This will open
-              a terminal with the SSH command inside.</para>
-
-            <para>To do a system wide profile against the system running in
-              QEMU choose
-              <menuchoice><guimenu>Tools</guimenu><guimenuitem>Profile
-                  remote</guimenuitem></menuchoice>. This will start up
-              OProfileUI with the appropriate parameters to connect to the
-              server running inside QEMU and will also supply the path to the
-              debug information necessary to get a useful profile.</para>
-
+        <section id="external-development-using-the-anjuta-plug-in">
+            <title>External Development Using the Anjuta Plug-in</title>
+            <para>
+                (Note: We will stop Anjuta plug-in support after Yocto project 0.9 release.   Its source 
+                code can be downloaded from git respository listed below, and free for the community to 
+                continue supporting it moving forward.)
+            </para>
         </section>
     </section>
 

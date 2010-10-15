@@ -118,14 +118,13 @@ h6 {
   background-color: transparent;
   background-repeat: no-repeat;
   padding-top: 256px;
-  background-image: url("poky-beaver.png");
-  background-position: right top;
-  float: right; 
+  background-image: url("white-on-black-50.png");
+  background-position: top;
   margin-top: -256px;
   padding-right: 50px;
   margin-left: 50px;
-  text-align: right;
-  width: 200px;
+  text-align: center;
+  width: 600px;
 }
 
 h3.author {

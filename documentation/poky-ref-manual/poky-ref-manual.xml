@@ -6,17 +6,10 @@
       xmlns="http://docbook.org/ns/docbook"
       >
     <bookinfo>
-
-        <mediaobject>
-            <imageobject>
-                <imagedata fileref='poky-ref-manual.png' 
-                    format='SVG' 
-                    align='center' scalefit='1' width='100%'/>
-            </imageobject>    
-        </mediaobject>
-
         <title>Poky Reference Manual</title>
-        <subtitle>A Guide and Reference to Poky</subtitle>
+        <subtitle>A Guide and Reference to Poky
+            <imagedata fileref="figures/yocto-project-transp.png" 
+                       width="6in" depth="2in" align="center" scale="50" /></subtitle>
 
         <authorgroup>
             <author>
