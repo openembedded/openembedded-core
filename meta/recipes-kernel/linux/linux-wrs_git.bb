@@ -49,8 +49,11 @@ do_patch() {
 		exit 1
 	fi
 
-	# updates or generates the target description
-	updateme ${ARCH} ${WORKDIR}
+        # updates or generates the target description
+	if [ -n "${KERNEL_FEATURES}" ]; then
+	       addon_features="--features ${KERNEL_FEATURES}"
+	fi
+	updateme ${addon_features} ${ARCH} ${WORKDIR}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${WRMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
