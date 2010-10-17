@@ -3,7 +3,7 @@ DESCRIPTION_rpm-build = "The RPM Package Manager rpmbuild and related commands."
 HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPL 2.1"
 DEPENDS = "zlib perl popt beecrypt python libpcre elfutils"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/POKY/${BPN}-${PV}.tar.gz \
            file://hdraddorappend.patch \
@@ -34,7 +34,7 @@ EXTRA_OECONF = "--with-python=${PYTHON_BASEVERSION} \
 		--without-dmalloc \
 		--without-efence \
 		--without-neon \
-		--with-pcre=${libdir} \
+		--with-pcre=internal \
 		--with-path-macros=${rpm_macros} \
 		--with-bugreport=http://bugzilla.pokylinux.org"
 
