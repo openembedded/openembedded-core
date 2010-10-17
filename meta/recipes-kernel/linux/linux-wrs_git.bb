@@ -35,6 +35,7 @@ B = "${WORKDIR}/linux-${WRMACHINE}-${LINUX_KERNEL_TYPE}-build"
 
 # functionality flags
 force_revisions = "t"
+KERNEL_FEATURES=features/netfilter
 
 do_patch() {
 	cd ${S}
