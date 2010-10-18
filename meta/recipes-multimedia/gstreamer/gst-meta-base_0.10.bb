@@ -2,7 +2,7 @@ DESCRIPTION = "Gstreamer package groups"
 LICENSE = "MIT"
 DEPENDS = "gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad"
 
-PR = "r7"
+PR = "r8"
 
 PACKAGES = "\
     gst-meta-base \
@@ -48,6 +48,7 @@ RDEPENDS_gst-meta-video = "\
     gst-meta-base \
     gst-plugins-good-avi \
     gst-plugins-good-matroska \
+    gst-plugins-base-theora \
     ${COMMERCIAL_VIDEO_PLUGINS}"
 
 RRECOMMENDS_gst-meta-video = "\
