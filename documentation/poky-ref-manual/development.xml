@@ -4,14 +4,14 @@
 <chapter id="platdev">
 <title>Platform Development with Poky</title>
 
-<section id="platdev-appdev">
+    <section id="platdev-appdev">
     <title>Software development</title>
     <para>
         Poky supports several methods of software development. You can use the method that is 
         best for you.  This chapter describes each development method.
     </para>
 
-    <section id="platdev-appdev-external-sdk">
+        <section id="platdev-appdev-external-sdk">
         <title>External Development Using the Poky SDK</title>
         <para>
             The meta-toolchain and meta-toolchain-sdk targets (<link linkend='ref-images'>see
@@ -27,7 +27,6 @@
             autotools are also set so that, for example, configure can find pre-generated test 
             results for tests that need target hardware on which to run.
         </para>
-
         <para>
             Using the toolchain with autotool-enabled packages is straightforward - just pass the 
             appropriate host option to configure as in the following example:
@@ -39,9 +38,9 @@
      CC=arm-poky-linux-gnueabi-gcc and LD=arm-poky-linux-gnueabi-ld
             </literallayout>
         </para>
-    </section>
+        </section>
 
-    <section id="using-the-eclipse-and-anjuta-plug-ins">
+        <section id="using-the-eclipse-and-anjuta-plug-ins">
         <title>Using the Eclipse and Anjuta Plug-ins</title>
         <para>
             Yocto Project supports both Anjuta and Eclipse IDE plug-ins to make developing software
@@ -54,7 +53,7 @@
             power data, collection of latency data and collection of performance data.
         </para>
 
-        <section id="the-eclipse-plug-in">
+            <section id="the-eclipse-plug-in">
             <title>The Eclipse Plug-in</title>
             <para>
                 To use the Eclipse plug-in, a toolchain and SDK built by Poky is required along with 
@@ -72,7 +71,7 @@
                 <ulink url="http://git.pokylinux.org/cgit.cgi/eclipse-poky"></ulink>.
             </para>
   
-            <section id="installing-and-setting-up-the-eclipse-ide">
+                <section id="installing-and-setting-up-the-eclipse-ide">
                 <title>Installing and Setting up the Eclipse IDE</title>
                 <para>
                     If you don't have the Eclipse IDE (Helios 3.6) on your system you need to 
@@ -127,9 +126,9 @@
                     RSE Main Features".  Click "Next" and complete the update.</listitem>
                     </itemizedlist>
                 </para>
-            </section>
+                </section>
 
-            <section id="installing-the-yocto-plug-in">
+                <section id="installing-the-yocto-plug-in">
                 <title>Installing the Yocto Plug-in</title>
                     <para>
                         Once you have the Eclipse IDE installed and configure you need to install the 
@@ -146,9 +145,9 @@
                             Eclipse plug-in.</listitem>
                     </itemizedlist>
                     </para>
-            </section>
+                </section>
          
-            <section id="configuring-yocto-eclipse-plug-in">
+                <section id="configuring-yocto-eclipse-plug-in">
                 <title>Configuring Yocto Eclipse plug-in</title>
                 <para>
                     To configure the Yocto Eclipse plug-in you need to select the mode and then the
@@ -175,9 +174,9 @@
                     Save all your settings and they become your defaults for every new Yocto project
                     created using the Eclipse IDE.
                 </para>
-            </section>
+                </section>
 
-            <section id="using-the-yocto-eclipse-plug-in">
+                <section id="using-the-yocto-eclipse-plug-in">
                 <title>Using the Yocto Eclipse Plug-in</title>
                 <para>
                     As an example, this section shows you how to cross-compile a Yocto C autotools
@@ -222,9 +221,9 @@
                         “Skip download to target path”.  Finally, click "Debug” to start the remote
                         debugging session.</listitem>
                 </orderedlist>
-            </section>
+                </section>
 
-            <section id="using-yocto-eclipse-plug-in-remote-tools-suite">
+                <section id="using-yocto-eclipse-plug-in-remote-tools-suite">
                 <title>Using Yocto Eclipse plug-in Remote Tools Suite</title>
                 <para>
                     Remote tools let you do things like perform system profiling, kernel tracing, 
@@ -278,20 +277,158 @@
                         entire screen to display results while they run.</listitem>
                 </itemizedlist>
                 </para>
+                </section>
+            </section>
+
+            <section id="the-anjuta-plug-in">
+            <title>The Anjuta Plug-in</title>
+            <para>
+                <emphasis>Note:</emphasis>  We will stop Anjuta plug-in support after 
+                Yocto project 0.9 release.  Its source 
+                code can be downloaded from git respository listed below, and free for the community to 
+                continue supporting it moving forward.
+            </para>
+            <para>
+                An Anjuta IDE plugin exists to make developing software within the Poky framework
+                easier for the application developer. 
+                It presents a graphical IDE with which you can cross compile an application 
+                then deploy and execute the output in a 
+                QEMU emulation session. 
+                It also supports cross debugging and profiling.
+            </para>
+            <para>
+                To use the plugin, a toolchain and SDK built by Poky is required,  
+                Anjuta, it's development headers and the Anjuta plugin. 
+                The Poky Anjuta plugin is available to download as a tarball at the
+                OpenedHand 
+                labs <ulink url="http://labs.o-hand.com/anjuta-poky-sdk-plugin/"></ulink> page or 
+                directly from the Poky Git repository located at 
+                <ulink url="git://git.pokylinux.org/anjuta-poky"></ulink>.
+                You can also access a web interface to the repository at
+                <ulink url="http://git.pokylinux.org/?p=anjuta-poky.git;a=summary"></ulink>.
+             </para>
+             <para>
+                See the README file contained in the project for more information on 
+                Anjuta dependencies and building the plugin. 
+                If you want to disable remote gdb debugging,
+                please pass the <command>--diable-gdb-integration</command> switch when doing 
+                configure.
+            </para>
+                <section id="setting-up-the-anjuta-plugin">
+                <title>Setting Up the Anjuta Plug-in</title>
+                <para>
+                    Follow these steps to set up the plug-in:
+                    <orderedlist>
+                        <listitem>Extract the tarball for the toolchain into / as root. 
+                        The toolchain will be installed into <command>/opt/poky</command>.</listitem>
+                        <listitem>To use the plug-in, first open or create an existing project. 
+                        If you are creating a new project, the "C GTK+"
+                        project type will allow itself to be cross-compiled. 
+                        However you should be aware that this uses glade for the UI.</listitem>
+                        <listitem>To activate the plug-in go to Edit -> Preferences, then choose
+                        General from the left hand side. 
+                        Choose the Installed plug-ins tab, scroll down to Poky SDK and 
+                        check the box.</listitem>
+                    </orderedlist>
+                    The plug-in is now activated but not configured.  
+                    See the next section to learn how to configure it.
+                </para>
+                </section>
+                <section id="configuring-the-anjuta-plugin">
+                <title>Configuring the Anjuta Plugin</title>
+                <para>
+                    You can find the configuration options for the SDK by choosing the Poky 
+                    SDK icon from the left hand side. 
+                    You need to set the following options:
+                    <itemizedlist>
+                        <listitem>SDK root: If you use an external toolchain you need to set 
+                        SDK root. This is the root directory of the
+                        SDK's sysroot. 
+                        For an i586 SDK this will be <command>/opt/poky/</command>. 
+                        This directory will contain <command>bin</command>, <command>include
+                        </command>, <command>var</command> and so forth under your 
+                        selected target architecture subdirectory 
+                        <command>/opt/poky/sysroot/i586-poky-linux/</command>. 
+                        The cross comple tools you need are in 
+                        <command>/opt/poky/sysroot/i586-pokysdk-linux/</command>.</listitem>
+                        <listitem>Poky root: If you have a local poky build tree, you need to 
+                        set the Poky root. 
+                        This is the root directory of the poky build tree.
+                        If you build your i586 target architecture under the subdirectory of 
+                        <command>build_x86</command> within your poky tree, the Poky root directory
+                        should be <command>$&lt;poky_tree&gt;/build_x86/</command>.</listitem>
+                        <listitem>Target Architecture: This is the cross compile triplet, 
+                        for example, "i586-poky-linux". 
+                        This target triplet is the prefix extracted from the set up script file 
+                        name. 
+                        For example, "i586-poky-linux" is extracted from the
+                        set up script file 
+                        <command>/opt/poky/environment-setup-i586-poky-linux</command>.</listitem>
+                        <listitem>Kernel: Use the file chooser to select the kernel to use 
+                        with QEMU.</listitem>
+                        <listitem>Root filesystem: Use the file chooser to select the root 
+                        filesystem directory.  This directory is where you use the 
+                        <command>poky-extract-sdk</command> to extract the poky-image-sdk 
+                        tarball.</listitem>
+                     </itemizedlist>
+                </para>
+                </section>
+                <section id="using-the-anjuta-plug-in">
+                <title>Using the Anjuta Plug-in</title>
+                <para>
+                    This section uses an example that cross-compiles a project, deploys it into
+                    QEMU, runs a debugger against it and then does a system wide profile.
+                <orderedlist>
+                    <listitem>Choose Build -> Run Configure or Build -> Run Autogenerate to run
+                    "configure" or autogen, respectively for the project. 
+                    Either command passes command-line arguments to instruct the 
+                    cross-compile.</listitem>
+                    <listitem>Select Build -> Build Project to build and compile the project. 
+                    If you have previously built the project in the same tree without using 
+                    the cross-compiler you might find that your project fails to link. 
+                    If this is the case, simply select Build -> Clean Project to remove the 
+                    old binaries. 
+                    After you clean the project you can then try building it again.</listitem>
+                    <listitem>Start QEMU by selecting Tools -> Start QEMU.  This menu selection
+                    starts QEMU and will show any error messages in the message view. 
+                    Once Poky has fully booted within QEMU you can now deploy the project 
+                    into it.</listitem>
+                    <listitem>Once the project is built and you have QEMU running choose 
+                    Tools -> Deploy.  
+                    This selection installs the package into a temporary
+                    directory and then copies using rsync over SSH into the target. 
+                    Progress and messages appear in the message view.</listitem>
+                    <listitem>To debug a program installed onto the target choose 
+                    Tools -> Debug remote. 
+                    This selection prompts you for the local binary to debug and also the 
+                    command line to run on the target. 
+                    The command line to run should include the full path to the to binary 
+                    installed in the target. 
+                    This will start a gdbserver over SSH on the target and also an instance 
+                    of a cross-gdb in a local terminal. 
+                    This will be preloaded to connect to the server and use the SDK root to 
+                    find symbols. 
+                    This gdb will connect to the target and load in various libraries and the 
+                    target program. 
+                    You should setup any breakpoints or watchpoints now since you might not 
+                    be able to interrupt the execution later. 
+                    You can stop the debugger on the target using Tools -> Stop debugger.</listitem>
+                    <listitem>It is also possible to execute a command in the target over SSH, 
+                    the appropriate environment will be be set for the execution. 
+                    Choose Tools -> Run remote to do this. 
+                    This selection opens a terminal with the SSH command inside.</listitem>
+                    <listitem>To do a system wide profile against the system running in QEMU choose 
+                    Tools -> Profile remote. 
+                    This selection starts up OProfileUI with the appropriate parameters to 
+                    connect to the server running inside QEMU and also supplies the path 
+                    to the debug information necessary to get a useful profile.</listitem>
+                </orderedlist>
+                </para>
+                </section>
             </section>
         </section>
 
-        <section id="external-development-using-the-anjuta-plug-in">
-            <title>External Development Using the Anjuta Plug-in</title>
-            <para>
-                (Note: We will stop Anjuta plug-in support after Yocto project 0.9 release.   Its source 
-                code can be downloaded from git respository listed below, and free for the community to 
-                continue supporting it moving forward.)
-            </para>
-        </section>
-    </section>
-
-    <section id="platdev-appdev-qemu">
+        <section id="platdev-appdev-qemu">
         <title>Developing externally in QEMU</title>
         <para>
             Running Poky QEMU images is covered in the <link 
@@ -420,9 +557,9 @@ $ bitbake matchbox-desktop -c devshell
             environmental variables such as CC to assist applications, such as make,
             find the correct tools.
         </para>
-    </section>
+        </section>
 
-    <section id="platdev-appdev-srcrev">
+        <section id="platdev-appdev-srcrev">
         <title>Developing within Poky with an external SCM based package</title>
 
         <para>
@@ -441,8 +578,8 @@ $ bitbake matchbox-desktop -c devshell
             is the name of the package for which you want to enable automatic source 
             revision updating.
         </para>
+        </section>
     </section>
-</section>
 
 <section id="platdev-gdb-remotedebug">
     <title>Debugging with GDB Remotely</title>
@@ -530,8 +667,8 @@ $ bitbake matchbox-desktop -c devshell
                 A suitable gdb cross binary is required which runs on your host computer but
                 knows about the the ABI of the remote target. This can be obtained from
                 the the Poky toolchain, e.g. 
-                <filename>/opt/poky/sysroots/x86_64-pokysdk-linux/usr/bin/armv5te-poky-linux-gnueabi/arm-poky-linux-gnueabi-gdb</filename> 
-                which "x86_64" is the host architecture, "arm" is the target architecture and "linux-gnueabi" the target ABI.
+                <filename>/usr/local/poky/eabi-glibc/arm/bin/arm-poky-linux-gnueabi-gdb</filename> 
+                which "arm" is the target architecture and "linux-gnueabi" the target ABI.
             </para>
 
             <para>
@@ -539,8 +676,7 @@ $ bitbake matchbox-desktop -c devshell
                 the gdb-cross package so for example you would run:
                 <programlisting>bitbake gdb-cross</programlisting>
                 Once built, the cross gdb binary can be found at
-                <programlisting>tmp/sysroots/&lt;host-arch&gt;/usr/bin/\
-&lt;target-arch&gt;-poky-&lt;target-abi&gt;/&lt;target-arch&gt;-poky-&lt;target-abi&gt;-gdb </programlisting>
+                <programlisting>tmp/sysroots/&lt;host-arch&lt;/usr/bin/&lt;target-abi&gt;-gdb </programlisting>
             </para>
 
         </section>
@@ -577,17 +713,17 @@ $ bitbake matchbox-desktop -c devshell
                 by doing:
                 </para>
                 <programlisting>tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/opkg.conf -o \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf -o \
 tmp/rootfs/ update</programlisting>
                <para>
                 then,
                 </para>
                 <programlisting>tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/opkg.conf \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 -o tmp/rootfs install foo
 
 tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
-tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/opkg.conf \
+tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 -o tmp/rootfs install foo-dbg</programlisting>
              <para>
                 which installs the debugging information too.
@@ -600,7 +736,7 @@ tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/opkg.conf \
             <para>
                 To launch the host GDB, run the cross gdb binary identified above with
                 the inferior binary specified on the commandline:
-                <programlisting>&lt;target-arch&gt;-poky-&lt;target-abi&gt;-gdb rootfs/usr/bin/foo</programlisting>
+                <programlisting>&lt;target-abi&gt;-gdb rootfs/usr/bin/foo</programlisting>
                 This loads the binary of program <emphasis>foo</emphasis>
                 as well as its debugging information. Once the gdb prompt
                 appears, you must instruct GDB to load all the libraries
@@ -890,6 +1026,8 @@ $ opreport -cl
         </section>
     </section>
 </section>
+
+
 
 </chapter> 
 <!-- 
