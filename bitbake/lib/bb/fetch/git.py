@@ -86,7 +86,11 @@ class Git(Fetch):
         return os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
 
     def forcefetch(self, url, ud, d):
-        if not self._contains_ref(ud.tag, d) or 'fullclone' in ud.parm:
+        if 'fullclone' in ud.parm:
+            return True
+        if os.path.exists(self.localpath(url, ud, d)):
+            return False
+        if not self._contains_ref(ud.tag, d):
             return True
         return False
 
