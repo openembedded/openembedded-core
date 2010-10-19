@@ -18,6 +18,7 @@ RDEPENDS_${PN}_append = " ${@base_conditional("ONLINE_PACKAGE_MANAGEMENT", "none
 SRC_URI = "http://www.infodrom.org/projects/sysklogd/download/sysklogd-${PV}.tar.gz \
            file://no-strip-install.patch \
            file://sysklogd \
+           file://syslog.conf \
            "
 
 INITSCRIPT_NAME = "syslog"
@@ -33,7 +34,7 @@ do_install () {
 	mv ${D}${base_sbindir}/syslogd ${D}${base_sbindir}/syslogd.${PN}
 	mv ${D}${base_sbindir}/klogd ${D}${base_sbindir}/klogd.${PN}
 	install -d ${D}${sysconfdir}
-	install -m 644 ${S}/syslog.conf ${D}${sysconfdir}/syslog.conf
+	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf
 	install -d ${D}${sysconfdir}/init.d
 	install -m 755 ${WORKDIR}/sysklogd ${D}${sysconfdir}/init.d/syslog.${PN}
 }

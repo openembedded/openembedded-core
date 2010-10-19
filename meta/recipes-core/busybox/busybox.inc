@@ -53,7 +53,7 @@ do_install () {
 	# Move back the sh symlink
 	test -h ${D}/busybox${base_bindir}/sh && mv ${D}/busybox${base_bindir}/sh ${D}${base_bindir}/
 
-	install -m 0755 ${WORKDIR}/syslog ${D}${sysconfdir}/init.d/
+	install -m 0755 ${WORKDIR}/syslog ${D}${sysconfdir}/init.d/syslog.${PN}
 	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/
 	if grep "CONFIG_CROND=y" ${WORKDIR}/defconfig; then
 		# Move crond back to /usr/sbin/crond
@@ -107,6 +107,8 @@ pkg_postinst_${PN} () {
 	
 	# This adds the links, remember that this has to work when building an image too, hence the $D
 	while read link; do case "$link" in /*/*/*) to="../../bin/busybox";; /bin/*) to="busybox";; /*/*) to="../bin/busybox";; esac; bn=`basename $link`; update-alternatives --install $link $bn $to 50; done <$D/etc/busybox.links
+
+	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${PN} 50
 }
 
 pkg_prerm_${PN} () {
@@ -138,4 +140,13 @@ pkg_prerm_${PN} () {
 		bn=`basename $link`
 		sh /usr/bin/update-alternatives --remove $bn $to
 	done </etc/busybox.links
+
+	# remove syslog
+	if test "x$D" = "x"; then
+		if test "$1" = "upgrade" -o "$1" = "remove"; then
+			/etc/init.d/syslog stop
+		fi
+	fi
+
+	update-alternatives --remove syslog-init syslog.${PN}
 }
