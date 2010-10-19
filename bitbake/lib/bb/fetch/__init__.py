@@ -237,32 +237,14 @@ def go(d, urls = None):
     for u in urls:
         ud = urldata[u]
         m = ud.method
-        premirror_fetch = True
         localpath = ""
 
-        if ud.localfile:
-            if not m.try_premirror(u, ud, d):
-                premirror_fetch = False
-                # File already present along with md5 stamp file
-                # Touch md5 file to show activity
-                try:
-                    os.utime(ud.md5, None)
-                except:
-                    # Errors aren't fatal here
-                    pass
+        if not ud.localfile:
+            continue
 
-            lf = bb.utils.lockfile(ud.lockfile)
-            if not m.try_premirror(u, ud, d):
-                premirror_fetch = False
-                # If someone else fetched this before we got the lock,
-                # notice and don't try again
-                try:
-                    os.utime(ud.md5, None)
-                except:
-                    # Errors aren't fatal here
-                    pass
+        lf = bb.utils.lockfile(ud.lockfile)
 
-        if premirror_fetch:
+        if m.try_premirror(u, ud, d):
             # First try fetching uri, u, from PREMIRRORS
             mirrors = mirror_from_string(bb.data.getVar('PREMIRRORS', d, True))
             localpath = try_mirrors(d, u, mirrors, False, m.forcefetch(u, ud, d))
@@ -282,14 +264,18 @@ def go(d, urls = None):
                 if not localpath or not os.path.exists(localpath):
                     raise FetchError("Unable to fetch URL %s from any source." % u)
 
-        if localpath:
-            ud.localpath = localpath
+        ud.localpath = localpath
+        if os.path.exists(ud.md5):
+            # Touch the md5 file to show active use of the download
+            try:
+                os.utime(ud.md5, None)
+            except:
+                # Errors aren't fatal here
+                pass
+        else:
+            Fetch.write_md5sum(u, ud, d)
 
-        if ud.localfile:
-            if not m.forcefetch(u, ud, d):
-                Fetch.write_md5sum(u, ud, d)
-            bb.utils.unlockfile(lf)
-
+        bb.utils.unlockfile(lf)
 
 def checkstatus(d):
     """

@@ -88,14 +88,20 @@ class Git(Fetch):
     def forcefetch(self, url, ud, d):
         if 'fullclone' in ud.parm:
             return True
-        if os.path.exists(self.localpath(url, ud, d)):
+        if 'noclone' in ud.parm:
+            return False
+        if os.path.exists(ud.localpath):
             return False
         if not self._contains_ref(ud.tag, d):
             return True
         return False
 
     def try_premirror(self, u, ud, d):
+        if 'noclone' in ud.parm:
+            return False
         if os.path.exists(ud.clonedir):
+            return False
+        if os.path.exists(ud.localpath):
             return False
 
         return True
@@ -113,16 +119,25 @@ class Git(Fetch):
         coname = '%s' % (ud.tag)
         codir = os.path.join(ud.clonedir, coname)
 
-        if not os.path.exists(ud.clonedir):
+        # If we have no existing clone and no mirror tarball, try and obtain one
+        if not os.path.exists(ud.clonedir) and not os.path.exists(repofile):
             try:
                 Fetch.try_mirrors(ud.mirrortarball)
-                bb.mkdirhier(ud.clonedir)
-                os.chdir(ud.clonedir)
-                runfetchcmd("tar -xzf %s" % (repofile), d)
             except:
-                runfetchcmd("%s clone -n %s://%s%s%s %s" % (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.clonedir), d)
+                pass
+
+        # If the checkout doesn't exist and the mirror tarball does, extract it
+        if not os.path.exists(ud.clonedir) and os.path.exists(repofile):
+            bb.mkdirhier(ud.clonedir)
+            os.chdir(ud.clonedir)
+            runfetchcmd("tar -xzf %s" % (repofile), d)
+
+        # If the repo still doesn't exist, fallback to cloning it
+        if not os.path.exists(ud.clonedir):
+            runfetchcmd("%s clone -n %s://%s%s%s %s" % (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.clonedir), d)
 
         os.chdir(ud.clonedir)
+        # Update the checkout if needed
         if not self._contains_ref(ud.tag, d) or 'fullclone' in ud.parm:
             # Remove all but the .git directory
             runfetchcmd("rm * -Rf", d)
@@ -131,6 +146,7 @@ class Git(Fetch):
             runfetchcmd("%s prune-packed" % ud.basecmd, d)
             runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d)
 
+        # Generate a mirror tarball if needed
         os.chdir(ud.clonedir)
         mirror_tarballs = data.getVar("BB_GENERATE_MIRROR_TARBALLS", d, True)
         if mirror_tarballs != "0" or 'fullclone' in ud.parm:
