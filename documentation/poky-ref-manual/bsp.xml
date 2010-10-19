@@ -105,8 +105,8 @@ meta-bsp/prebuilds/
 # We have a conf directory, add to BBPATH
 BBPATH := "${BBPATH}${LAYERDIR}"
 
-# We have a packages directory, add to BBFILES
-BBFILES := "${BBFILES} ${LAYERDIR}/packages/*/*.bb"
+# We have a recipes directory containing .bb and .bbappend files, add to BBFILES
+BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb ${LAYERDIR}/recipes/*/*.bbappend"
 
 BBFILE_COLLECTIONS += "bsp"
 BBFILE_PATTERN_bsp := "^${LAYERDIR}/"
@@ -115,7 +115,7 @@ BBFILE_PRIORITY_bsp = "5"
             </para>
 
             <para>
-                which simply makes bitbake aware of the packages and conf directories.
+                which simply makes bitbake aware of the recipes and conf directories.
             </para>
 
             <para>

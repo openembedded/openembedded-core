@@ -606,7 +606,7 @@ BBLAYERS = " \
 
           <para>
                Bitbake parses the conf/layer.conf of each of the layers in BBLAYERS
-               to add the layers packages, classes and configuration to Poky.
+               to add the recipes, classes and configuration contained within the layer to Poky.
                To create your own layer, independent of the main Poky repository,
                you need only create a directory with a conf/layer.conf file and
                add the directory to your bblayers.conf.
@@ -617,9 +617,9 @@ BBLAYERS = " \
                <literallayout class='monospaced'># We have a conf and classes directory, add to BBPATH
 BBPATH := "${BBPATH}:${LAYERDIR}"
 
-# We have a packages directory, add to BBFILES
-BBFILES := "${BBFILES} ${LAYERDIR}/packages/*/*.bb \
-        ${LAYERDIR}/packages/*/*.bbappend"
+# We have a recipes directory containing both .bb and .bbappend files, add to BBFILES
+BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb \
+        ${LAYERDIR}/recipes/*/*.bbappend"
 
 BBFILE_COLLECTIONS += "emenlow"
 BBFILE_PATTERN_emenlow := "^${LAYERDIR}/"
