@@ -141,7 +141,10 @@ class Git(Fetch):
         if not self._contains_ref(ud.tag, d) or 'fullclone' in ud.parm:
             # Remove all but the .git directory
             runfetchcmd("rm * -Rf", d)
-            runfetchcmd("%s fetch %s://%s%s%s %s" % (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.branch), d)
+            if 'fullclone' in ud.parm:
+                runfetchcmd("%s fetch --all" % (ud.basecmd), d)
+            else:
+                runfetchcmd("%s fetch %s://%s%s%s %s" % (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.branch), d)
             runfetchcmd("%s fetch --tags %s://%s%s%s" % (ud.basecmd, ud.proto, username, ud.host, ud.path), d)
             runfetchcmd("%s prune-packed" % ud.basecmd, d)
             runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d)
