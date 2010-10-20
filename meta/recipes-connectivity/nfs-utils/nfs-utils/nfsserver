@@ -20,9 +20,9 @@
 test -r /etc/default/nfsd && . /etc/default/nfsd
 #
 # Location of executables:
-test -x "$NFS_MOUNTD" || NFS_MOUNTD=/usr/sbin/mountd
-test -x "$NFS_NFSD" || NFS_NFSD=/usr/sbin/nfsd
-test -x "$NFS_STATD" || NFS_STATD=/usr/sbin/statd
+test -x "$NFS_MOUNTD" || NFS_MOUNTD=/usr/sbin/rpc.mountd
+test -x "$NFS_NFSD" || NFS_NFSD=/usr/sbin/rpc.nfsd
+test -x "$NFS_STATD" || NFS_STATD=/usr/sbin/rpc.statd
 #
 # The user mode program must also exist (it just starts the kernel
 # threads using the kernel module code).
