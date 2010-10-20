@@ -22,6 +22,7 @@ SRC_URI = "http://www.infodrom.org/projects/sysklogd/download/sysklogd-${PV}.tar
            "
 
 INITSCRIPT_NAME = "syslog"
+CONFFILES_${PN} = "${sysconfdir}/syslog.conf.${PN}"
 
 CFLAGS_append = " -DSYSV"
 
@@ -34,7 +35,7 @@ do_install () {
 	mv ${D}${base_sbindir}/syslogd ${D}${base_sbindir}/syslogd.${PN}
 	mv ${D}${base_sbindir}/klogd ${D}${base_sbindir}/klogd.${PN}
 	install -d ${D}${sysconfdir}
-	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf
+	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf.${PN}
 	install -d ${D}${sysconfdir}/init.d
 	install -m 755 ${WORKDIR}/sysklogd ${D}${sysconfdir}/init.d/syslog.${PN}
 }
@@ -55,6 +56,7 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${base_sbindir}/syslogd syslogd syslogd.${PN} 100
 	update-alternatives --install ${base_sbindir}/klogd klogd klogd.${PN} 100
 	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${PN} 100
+	update-alternatives --install ${sysconfdir}/syslog.conf syslog-conf syslog.conf.${PN} 100
 
 	if test "x$D" != "x"; then
 	OPT="-r $D"
@@ -74,6 +76,7 @@ pkg_prerm_${PN} () {
 	fi
 	fi
 	update-alternatives --remove syslog-init syslog.${PN}
+	update-alternatives --remove syslog-conf syslog.conf.${PN}
 }
 
 pkg_postrm_${PN} () {

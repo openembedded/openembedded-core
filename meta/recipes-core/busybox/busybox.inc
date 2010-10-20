@@ -19,7 +19,7 @@ INITSCRIPT_PACKAGES = "${PN} ${PN}-httpd ${PN}-udhcpd"
 INITSCRIPT_NAME_${PN}-httpd = "busybox-httpd"
 INITSCRIPT_NAME_${PN}-udhcpd = "busybox-udhcpd" 
 INITSCRIPT_NAME_${PN} = "syslog"
-CONFFILES_${PN} = "${sysconfdir}/syslog.conf"
+CONFFILES_${PN} = "${sysconfdir}/syslog.conf.${PN}"
 
 # This disables the syslog startup links in slugos (see slugos-init)
 INITSCRIPT_PARAMS_${PN}_slugos = "start 20 ."
@@ -54,7 +54,7 @@ do_install () {
 	test -h ${D}/busybox${base_bindir}/sh && mv ${D}/busybox${base_bindir}/sh ${D}${base_bindir}/
 
 	install -m 0755 ${WORKDIR}/syslog ${D}${sysconfdir}/init.d/syslog.${PN}
-	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/
+	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf.${PN}
 	if grep "CONFIG_CROND=y" ${WORKDIR}/defconfig; then
 		# Move crond back to /usr/sbin/crond
 		install -d ${D}${sbindir}
@@ -109,6 +109,7 @@ pkg_postinst_${PN} () {
 	while read link; do case "$link" in /*/*/*) to="../../bin/busybox";; /bin/*) to="busybox";; /*/*) to="../bin/busybox";; esac; bn=`basename $link`; update-alternatives --install $link $bn $to 50; done <$D/etc/busybox.links
 
 	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${PN} 50
+	update-alternatives --install ${sysconfdir}/syslog.conf syslog-conf syslog.conf.${PN} 50
 }
 
 pkg_prerm_${PN} () {
@@ -149,4 +150,6 @@ pkg_prerm_${PN} () {
 	fi
 
 	update-alternatives --remove syslog-init syslog.${PN}
+	update-alternatives --remove syslog-conf syslog.conf.${PN}
 }
+
