@@ -12,23 +12,35 @@
     <title>Welcome!</title>
     <para>
         Welcome to the Yocto Project!  
-        The Yocto Project is an open-source Linux development environment.  
-        This short document will give you some basic information about the environment as well as let you experience it in its simplest form.  
-        After reading this document you will have a basic understanding of what the Yocto Project is and how to work within it.  
-        This document also steps you through a simple example showing you how to build a small image and run it using the QEMU emulator.
+        The Yocto Project (YP) is an open-source collaboration project focused on embedded Linux
+        developers.
+        Amongst other things, YP uses the Poky build tool to construct complete Linux images.
     </para>
     <para>
-        For complete information on the Yocto Project you should check out the <ulink url='http://www.yoctolinux.org'>Public Yocto Website</ulink>.
-        You can find the latest builds, breaking news, full development documentation, and a rich Yocto Project Development Community into which you can tap.
+        This short document will give you some basic information about the environment as well 
+        as let you experience it in its simplest form.  
+        After reading this document you will have a basic understanding of what the Yocto Project is
+        and how to use some of its core components.  
+        This document steps you through a simple example showing you how to build a small image 
+        and run it using the QEMU emulator.
+    </para>
+    <para>
+        For complete information on the Yocto Project you should check out the 
+        <ulink url='http://www.yoctolinux.org'>Yocto Project Website</ulink>.
+        You can find the latest builds, breaking news, full development documentation, and a 
+        rich Yocto Project Development Community into which you can tap.
     </para>
 </section>
 
 <section id='yp-intro'>
     <title>Introducing the Yocto Project Development Environment</title>
-
     <para>
-        Yocto Project is an open source development environment that creates Linux-based images suitable for many types of devices (large or small) based on architectures such as x86, x86-64, Xeon, ARM, and MIPS as well as PowerPC and device emulation.
-        You can use Yocto Project to design, develop, build, debug, simulate, and test the complete software stack using Linux, the X Window System, GNOME Mobile-based application frameworks, and Qt frameworks.
+        The Yocto Project through the Poky build tool provides an open source development 
+        environment targeting the ARM, MIPS, PowerPC and x86 architectures for a variety of 
+        platforms including x86-64 and emulated ones.
+        You can use components from the the Yocto Project to design, develop, build, debug, simulate,
+        and test the complete software stack using Linux, the X Window System, GNOME Mobile-based
+        application frameworks, and Qt frameworks.
     </para>
 
     <para></para>
@@ -52,27 +64,38 @@
             <para>Provides an open source Linux kernel along with a set of system commands and libraries suitable for the embedded environment.</para>
         </listitem>
         <listitem>
-            <para>Makes available system components such as X11, Matchbox, GTK+, Pimlico, Clutter, and Qt (among others) so you can create a richer user interface experience on devices that use displays or have a GUI.
-For devices that don't have a GUI or display you simply would not employ these components.</para>
+            <para>Makes available system components such as X11, Matchbox, GTK+, Pimlico, Clutter,
+            GuPNP and Qt (among others) so you can create a richer user interface experience on 
+            devices that use displays or have a GUI.
+            For devices that don't have a GUI or display you simply would not employ these 
+            components.</para>
         </listitem>
         <listitem>
-            <para>Creates a focused and stable subset of OpenEmbedded on which you can easily and reliably build and develop.</para>
+            <para>Creates a focused and stable core compatible with the OpenEmbedded 
+            project with which you can easily and reliably build and develop.</para>
         </listitem>
         <listitem>
-            <para>Fully supports a wide range of hardware and device emulation through the QEMU Emulator or other supported emulators.</para>
+            <para>Fully supports a wide range of hardware and device emulation through the QEMU
+            Emulator.</para>
         </listitem>
     </itemizedlist>
 
     <para>
-        Yocto Project generates file system images based on open source software such as the Kdrive X server, the Matchbox Window Manager, the GTK+ Toolkit and the D-Bus Message Bus System.  
         Yocto Project can generate images for many kinds of devices.  
-        However, the standard example machines target QEMU full system emulation for x86, ARM, MIPS, and PPC based architectures as well as specific hardware such as the Intel Desktop Board DH55TC.  
-        Because an image developed with Yocto Project can boot inside a QEMU emulator, the development environment works nicely as a test platform for developing embedded software.
+        However, the standard example machines target QEMU full system emulation for x86, ARM, MIPS,
+        and PPC based architectures as well as specific hardware such as the Intel Desktop Board
+        DH55TC.  
+        Because an image developed with Yocto Project can boot inside a QEMU emulator, the 
+        development environment works nicely as a test platform for developing embedded software.
     </para>
 
     <para>
-        Another important Yocto Project feature is the Sato component.  
-        The optional Sato component, a GNOME mobile-based user interface environment well suited for devices with restricted screen sizes, sits neatly on top of any device using the GNOME Mobile Stack providing a well defined user experience.
+        Another important Yocto Project feature is the Sato reference User Interface. 
+        This optional GNOME mobile-based UI, which is intended for devices with
+        resolution but restricted size screens, sits neatly on top of a device using the 
+        GNOME Mobile Stack providing a well defined user experience. 
+        Implemented in its own layer, it makes it clear to developers how they can implement      ]
+        their own UIs on top of Yocto Linux.
     </para>
 </section>
 
@@ -113,7 +136,7 @@ For devices that don't have a GUI or display you simply would not employ these c
         </para>
 
             <literallayout class='monospaced'>
-     Sudo apt-get install sed wget cvs subversion git-core coreutils 
+     sudo apt-get install sed wget cvs subversion git-core coreutils 
      unzip texi2html texinfo libsdll.2-dev docbook-utils gawk 
      python-pysqlite2 diffstat help2man make gcc build-essential 
      g++ desktop-file-utils chrpath libgl1-mesa-dev libglu1-mesa-dev 
@@ -130,8 +153,10 @@ For devices that don't have a GUI or display you simply would not employ these c
         <title>Yocto Project Release</title>
             
         <para>
-            The latest releases for Yocto Project are kept at http://yoctoproject.org/releases.
-            Nightly and developmental builds are also maintained.  However, for this document a released version of Yocto Project is used.
+            The latest releases for Yocto Project are kept at 
+            <ulink url="http://yoctoproject.org/releases"></ulink>.
+            Nightly and developmental builds are also maintained.  However, for this 
+            document a released version of Yocto Project is used.
         </para>
     </section>
 </section>
@@ -182,9 +207,8 @@ For devices that don't have a GUI or display you simply would not employ these c
              <literallayout class='monospaced'>
      $ wget http://pokylinux.org/releases/poky-green-3.3.tar.bz2
      $ tar xjvf poky-green-3.3.tar.bz2
-     $ cd green-3.3-build
      $ source green-3.3/poky-init-build-env green-3.3-build
-     $ bitbake qemu-native
+     $ cd green-3.3-build
      $ bitbake poky-image-sato
      $ poky-qemu qemux86
              </literallayout>
@@ -202,15 +226,19 @@ For devices that don't have a GUI or display you simply would not employ these c
              </listitem>
              <listitem>
                  <para>
-                     After changing to the build directory the source command sets up the Yocto Project build environment.  
+                     The next two commands create the directory and place you there.  
                      The build directory contains all the object files used during the build.   
                      The default build directory is poky-dir/build.  
+                     Note that you can change the target architecture by editing the 
+                     <command>&lt;build_directory&gt;/conf/local.conf</command> file. 
+                     By default the target architecture is qemux86. 
                   </para>
              </listitem>
              <listitem>
                  <para>
-                     The two bitbake commands build the OS image and the emulator for the target.  
-                     Here poky-image-sato is the name of the target.  The qemu-native target is the customized QEMU Emulator.</para>
+                     The bitbake command builds the OS image for the target.  
+                     Here poky-image-sato is the name of the target.
+                 </para>
              </listitem>
              <listitem>
                  <para>
