@@ -14,7 +14,7 @@ PARALLEL_MAKE = ""
 bindir = "/bin"
 sbindir = "/sbin"
 
-EXTRA_OECONF = "--with-curses --enable-job-control"
+EXTRA_OECONF = "--enable-job-control"
 export CC_FOR_BUILD = "${BUILD_CC}"
 
 do_configure () {
