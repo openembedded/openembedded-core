@@ -858,10 +858,9 @@ $ opreport -cl
 
         <para>
             A graphical user interface for OProfile is also available. You can
-            either use prebuilt Debian packages from the <ulink
-                url='http://debian.o-hand.com/'>OpenedHand repository</ulink> or
-            download and build from svn at
-            http://svn.o-hand.com/repos/oprofileui/trunk/. If the
+            download and build it from svn at
+            <ulink url="http://svn.o-hand.com/repos/oprofileui/trunk/"></ulink>. 
+            If the
             "tools-profile" image feature is selected, all necessary binaries
             are installed onto the target device for OProfileUI interaction.
         </para>
