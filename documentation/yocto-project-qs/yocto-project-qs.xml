@@ -153,8 +153,8 @@
         <title>Yocto Project Release</title>
             
         <para>
-            The latest releases for Yocto Project are kept at 
-            <ulink url="http://yoctoproject.org/releases"></ulink>.
+            The latest release images for the Yocto Project are kept at 
+            <ulink url="http://yoctoproject.org/downloads/yoctolinux-0.9/"></ulink>.
             Nightly and developmental builds are also maintained.  However, for this 
             document a released version of Yocto Project is used.
         </para>
@@ -205,10 +205,10 @@
 
          <para>
              <literallayout class='monospaced'>
-     $ wget http://pokylinux.org/releases/poky-green-3.3.tar.bz2
-     $ tar xjf poky-green-3.3.tar.bz2
-     $ source green-3.3/poky-init-build-env green-3.3-build
-     $ cd green-3.3-build
+     $ wget http://www.yoctoproject.org/downloads/poky/poky-laverne-4.0.tar.bz2
+     $ tar xjf poky-laverne-4.0.tar.bz2
+     $ source poky-4.0/poky-init-build-env poky-4.0-build
+     $ cd poky-4.0-build
      $ bitbake poky-image-sato
      $ poky-qemu qemux86
              </literallayout>
@@ -302,7 +302,7 @@
          </para>
 
          <para>
-             You can download the pre-built Linux kernel and the file image system from <ulink url='http://pokylinux.org/releases/blinky-3.0'></ulink>.  
+             You can download the pre-built Linux kernel and the file image system from <ulink url='http://yoctoproject.org/downloads/yoctolinux-0.9/'></ulink>.  
              The kernel and file image system have the following forms, respectively:
          </para>
 
