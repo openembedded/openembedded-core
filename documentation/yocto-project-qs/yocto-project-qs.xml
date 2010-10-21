@@ -61,7 +61,7 @@
 
     <itemizedlist>
         <listitem>
-            <para>Provides an open source Linux kernel along with a set of system commands and libraries suitable for the embedded environment.</para>
+            <para>Provides a recent Linux kernel along with a set of system commands and libraries suitable for the embedded environment.</para>
         </listitem>
         <listitem>
             <para>Makes available system components such as X11, Matchbox, GTK+, Pimlico, Clutter,
@@ -136,10 +136,10 @@
         </para>
 
             <literallayout class='monospaced'>
-     sudo apt-get install sed wget cvs subversion git-core coreutils 
-     unzip texi2html texinfo libsdll.2-dev docbook-utils gawk 
-     python-pysqlite2 diffstat help2man make gcc build-essential 
-     g++ desktop-file-utils chrpath libgl1-mesa-dev libglu1-mesa-dev 
+     $ sudo apt-get install sed wget cvs subversion git-core coreutils \
+     unzip texi2html texinfo libsdll.2-dev docbook-utils gawk \
+     python-pysqlite2 diffstat help2man make gcc build-essential \
+     g++ desktop-file-utils chrpath libgl1-mesa-dev libglu1-mesa-dev \
      libsdl1.2-dev
             </literallayout>
 
@@ -200,13 +200,13 @@
          </para>
 
          <para><emphasis>NOTE:</emphasis>  The build process using Sato currently consumes 50GB of disk space.
-             To allow for vbariations in the build process and for future package expansion we recommend 100GB of free disk space.
+             To allow for variations in the build process and for future package expansion we recommend 100GB of free disk space.
          </para>
 
          <para>
              <literallayout class='monospaced'>
      $ wget http://pokylinux.org/releases/poky-green-3.3.tar.bz2
-     $ tar xjvf poky-green-3.3.tar.bz2
+     $ tar xjf poky-green-3.3.tar.bz2
      $ source green-3.3/poky-init-build-env green-3.3-build
      $ cd green-3.3-build
      $ bitbake poky-image-sato
@@ -228,7 +228,7 @@
                  <para>
                      The next two commands create the directory and place you there.  
                      The build directory contains all the object files used during the build.   
-                     The default build directory is poky-dir/build.  
+                     The default build directory is <command>poky-dir/build</command>.  
                      Note that you can change the target architecture by editing the 
                      <command>&lt;build_directory&gt;/conf/local.conf</command> file. 
                      By default the target architecture is qemux86. 
@@ -236,13 +236,13 @@
              </listitem>
              <listitem>
                  <para>
-                     The bitbake command builds the OS image for the target.  
+                     The <command>$bitbake</command> command builds the OS image for the target.  
                      Here poky-image-sato is the name of the target.
                  </para>
              </listitem>
              <listitem>
                  <para>
-                     Finally, the poky-qemu command launches the customized QEMU.
+                     Finally, the <command>$poky-qemu</command> command launches the customized QEMU.
                  </para>
              </listitem>
          </itemizedlist>
