@@ -108,8 +108,8 @@
 
     <itemizedlist>
         <listitem>
-            <para>A host system running a supported Linux distribution.  
-                For information on distributions on which you can use Yocto Project refer to the information found at <ulink url='http://wiki.openembedded.net/index.php/OEandYourDistro'>http://wiki.openembedded.net/index.php/OEandYourDistro</ulink>.</para>
+            <para>A host system running a supported Linux distribution (i.e. recent releases of
+                Fedora, OpenSUSE, Debian, and Ubuntu).</para>
         </listitem>
         <listitem>
             <para>The right packages.</para>
