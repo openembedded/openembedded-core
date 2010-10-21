@@ -94,7 +94,7 @@
         This optional GNOME mobile-based UI, which is intended for devices with
         resolution but restricted size screens, sits neatly on top of a device using the 
         GNOME Mobile Stack providing a well defined user experience. 
-        Implemented in its own layer, it makes it clear to developers how they can implement      ]
+        Implemented in its own layer, it makes it clear to developers how they can implement 
         their own UIs on top of Yocto Linux.
     </para>
 </section>
