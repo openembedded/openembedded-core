@@ -221,7 +221,7 @@
          <itemizedlist>
              <listitem>
                  <para>
-                     The first two commands extract the Yocto Project files from the release area and place them into your build area (green-3.3-build in this example).
+                     The first two commands extract the Yocto Project files from the release area and place them into your build area (<command>poky-4.0-build</command> in this example).
                  </para>
              </listitem>
              <listitem>
