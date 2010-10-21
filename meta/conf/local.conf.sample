@@ -159,3 +159,8 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # wish to perform the time-consuming step of generating all LIBC locales.
 # WARNING: this may break localisation!
 #GLIBC_GENERATE_LOCALES = "en_GB.UTF-8 en_US.UTF-8"
+
+# Default to not build 32 bit libs on 64 bit systems, comment this
+# out if that is desired
+NO32LIBS = "1"
+
