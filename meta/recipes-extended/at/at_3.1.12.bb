@@ -9,8 +9,8 @@ PR = "r3"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://configure.patch \
-    file://nonrootinstall.patch \
     file://use-ldflags.patch \
+    file://nonstripbinaries.patch \
     file://fix_parallel_build_error.patch \
     file://posixtm.c \
     file://posixtm.h \
