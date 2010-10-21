@@ -2,10 +2,10 @@
 #be handled.
 #This patch is to handle the stripping of the binaries.
 #Mei Lei<lei.mei@intel.com> make this change
-diff --git a/build/downloads/at-3.1.12/Makefile.in b/build/downloads/at-3.1.12/Makefile.in
+diff --git at-3.1.12.orig/Makefile.in at-3.1.12/Makefile.in
 index dae6b7d..71a5d89 100644
---- a/build/downloads/at-3.1.12/Makefile.in
-+++ b/build/downloads/at-3.1.12/Makefile.in
+--- at-3.1.12.orig/Makefile.in
++++ at-3.1.12/Makefile.in
 @@ -97,14 +97,14 @@ install: all
  	chmod 600 $(IROOT)$(LFILE)
  	chown $(DAEMON_USERNAME):$(DAEMON_GROUPNAME) $(IROOT)$(LFILE)
