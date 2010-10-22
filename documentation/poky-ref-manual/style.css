@@ -118,12 +118,12 @@ h6 {
   background-color: transparent;
   background-repeat: no-repeat;
   padding-top: 256px;
-  background-image: url("white-on-black-50.png");
-  background-position: top;
+  background-image: url("figures/poky-ref-manual.png");
+  background-position: left top;
   margin-top: -256px;
   padding-right: 50px;
   margin-left: 50px;
-  text-align: center;
+  text-align: right;
   width: 600px;
 }
 
