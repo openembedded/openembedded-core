@@ -11,12 +11,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6a6e689d19255cf0557f3fe7d7068212 \
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup-2.4 libglade libical gnome-keyring gperf-native"
 
 PV = "2.30+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
            file://oh-contact.patch;patch=1;pnum=0 \
            file://nossl.patch;patch=1 \
            file://optional_imapx_provider.patch;patch=1 \
+           file://new-contact-fix.patch;patch=1 \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/git"
