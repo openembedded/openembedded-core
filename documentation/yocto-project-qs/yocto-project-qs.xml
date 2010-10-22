@@ -124,8 +124,8 @@
         <title>The Linux Distribution</title>
 
         <para>
-            While this document assumes a Debian-based host system you can develop in the Yocto Linux environment using many other Linux distributions.   
-            For Debian-based systems we recommend you use the Ubuntu Release 10.04 or later.
+            This document assumes you are running a reasonably current Linux-based host system. 
+            The examples work for both Debian-based and RPM-based distributions.
         </para>
     </section>
 
@@ -145,8 +145,27 @@
             </literallayout>
 
         <para>
+            The packages you need for an RPM-based host like Fedora are shown in these commands:
+        </para>
+
+            <literallayout class='monospaced'>
+     $ sudo yum groupinstall "development tools"
+     $ sudo yum install python m4 make wget curl ftp hg tar bzip2 gzip \
+     unzip python-psyco perl texinfo texi2html diffstat openjade \
+     docbook-style-dsssl sed docbook-style-xsl docbook-dtds \
+     docbook-utils sed bc glibc-devel ccache pcre pcre-devel quilt \
+     groff linuxdoc-tools patch linuxdoc-tools cmake help2man \
+     perl-ExtUtils-MakeMaker tcl-devel gettext chrpath ncurses apr \
+     SDL-devel mesa-libGL-devel mesa-libGLU-devel
+            </literallayout>
+ 
+       <para>
             <emphasis>NOTE:</emphasis>  Packages vary in number and name for other Linux distributions.  
-            For package requirements on other Linux distributions refer to the information found at <ulink url='http://wiki.openembedded.net/index.php/OEandYourDistro'>http://wiki.openembedded.net/index.php/OEandYourDistro</ulink>.
+            The commands here should work.  We are interested, though, to learn what works for you.
+            You can find more information for package requirements on common Linux distributions 
+            at <ulink url="http://wiki.openembedded.net/index.php/OEandYourDistro"></ulink>.
+            However, you should be careful when using this information as the information applies
+            to old Linux distributions that are known to not work with a current Poky install.
         </para>
     </section>
 
