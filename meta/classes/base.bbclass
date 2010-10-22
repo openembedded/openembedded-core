@@ -621,4 +621,32 @@ def check_gcc3(data):
 	
 	return False
 
+addtask cleanall after do_clean
+python do_cleanall() {
+        sstate_clean_cachefiles(d)
+
+	localdata = bb.data.createCopy(d)
+	bb.data.update_data(localdata)
+
+	dl_dir = bb.data.getVar('DL_DIR', localdata, True)
+	dl_dir = os.path.realpath(dl_dir)
+
+	src_uri = bb.data.getVar('SRC_URI', localdata, True)
+	if not src_uri:
+		return
+	for url in src_uri.split():
+		try:
+			local = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
+		except bb.MalformedUrl, e:
+			raise FuncFailed('Unable to generate local path for malformed uri: %s' % e)
+		if local is None:
+			continue
+		local = os.path.realpath(local)
+                if local.startswith(dl_dir):
+			bb.note("Removing %s*" % local)
+			oe.path.remove(local + "*")
+}
+do_cleanall[nostamp] = "1"
+
+
 EXPORT_FUNCTIONS do_setscene do_fetch do_unpack do_configure do_compile do_install do_package

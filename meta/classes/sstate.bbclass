@@ -44,11 +44,12 @@ def sstate_init(name, d):
     ss['lockfiles'] = []
     return ss
 
-def sstate_state_fromvars(d):
-    task = bb.data.getVar('BB_CURRENTTASK', d, True)
-    if not task:
-        bb.fatal("sstate code running without task context?!")
-    task = task.replace("_setscene", "")
+def sstate_state_fromvars(d, task = None):
+    if task is None:
+        task = bb.data.getVar('BB_CURRENTTASK', d, True)
+        if not task:
+            bb.fatal("sstate code running without task context?!")
+        task = task.replace("_setscene", "")
 
     name = bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-name', d), d)
     inputs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-inputdirs', d) or "", d)).split()
@@ -157,6 +158,16 @@ def sstate_installpkg(ss, d):
         oe.path.copytree(sstateinst + plain, bb.data.getVar('WORKDIR', d, True) + plain)
 
     return True
+
+def sstate_clean_cachefile(ss, d):
+    sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_' + ss['name'] + ".tgz"
+    bb.note("Removing %s" % sstatepkg)
+    oe.path.remove(sstatepkg)
+
+def sstate_clean_cachefiles(d):
+    for task in (bb.data.getVar('SSTATETASKS', d, True) or "").split():
+        ss = sstate_state_fromvars(d, task[3:])
+        sstate_clean_cachefile(ss, d)
 
 def sstate_clean_manifest(manifest, d):
     import oe.path
