@@ -278,6 +278,9 @@ def pstaging_fetch(sstatepkg, d):
 
         dldir = bb.data.expand("${SSTATE_DIR}", localdata)
         srcuri = "file://" + os.path.basename(sstatepkg)
+
+        bb.mkdirhier(dldir)
+
         bb.data.setVar('DL_DIR', dldir, localdata)
         bb.data.setVar('PREMIRRORS', mirrors, localdata)
         bb.data.setVar('SRC_URI', srcuri, localdata)
@@ -285,8 +288,12 @@ def pstaging_fetch(sstatepkg, d):
         # Try a fetch from the sstate mirror, if it fails just return and
         # we will build the package
         try:
-            bb.fetch.init([srcuri], pd)
-            bb.fetch.go(pd, [srcuri])
+            bb.fetch.init([srcuri], localdata)
+            bb.fetch.go(localdata, [srcuri])
+            # Need to optimise this, if using file:// urls, the fetcher just changes the local path
+            # For now work around by symlinking
+            if bb.data.expand(bb.fetch.localpath(srcuri, localdata), localdata) != sstatepkg:
+                os.symlink(bb.data.expand(bb.fetch.localpath(srcuri, localdata), localdata), sstatepkg)
         except:
             pass
 
@@ -377,10 +384,10 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
             srcuri = "file://" + os.path.basename(sstatefile)
             bb.data.setVar('SRC_URI', srcuri, localdata)
-            bb.note(str(srcuri))
+            #bb.note(str(srcuri))
 
             try:
-                bb.fetch.init(srcuri.split(), d)
+                bb.fetch.init(srcuri.split(), localdata)
                 bb.fetch.checkstatus(localdata)
                 ret.append(task)
             except:
