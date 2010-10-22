@@ -284,13 +284,13 @@ meta-bsp/packages/image-creator/image-creator-native_0.1.bb
             This allows the BSP layer to poke around and do whatever it might want to customise
             the original recipe.
 
-            .bbappend is expected to include the below two lines in the head (which may be changed
-            in the future):
+            If your recipe needs to reference extra files it can use the FILESEXTRAPATH variable
+            to specify their location. The example below shows extra files contained in a folder
+            called ${PN} (the package name).
             </para>
 
             <programlisting>
-THISDIR := "${@os.path.dirname(bb.data.getVar('FILE', d, True))}"
-FILESPATH =. "${@base_set_filespath(["${THISDIR}/${PN}"], d)}:"
+FILESEXTRAPATHS := "${THISDIR}/${PN}"
             </programlisting>
 
             <para>
