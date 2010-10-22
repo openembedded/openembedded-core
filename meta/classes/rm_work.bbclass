@@ -11,7 +11,9 @@ BB_DEFAULT_TASK = "rm_work_all"
 
 do_rm_work () {
     # Ensure pseudo is no longer active
-    ${FAKEROOT} -S
+    if [ -d ${WORKDIR}/pseudo ]; then
+        ${FAKEROOT} -S
+    fi
     cd ${WORKDIR}
     for dir in *
     do
