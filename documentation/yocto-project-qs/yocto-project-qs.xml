@@ -48,7 +48,8 @@
 
     <mediaobject>
         <imageobject>
-            <imagedata fileref="figures/yocto-environment.png" format="PNG" align='center' scalefit='1'/>
+            <imagedata fileref="figures/yocto-environment.png" 
+                format="PNG" align='center' scalefit='1' width="100%"/>
         </imageobject>
         <caption>
             <para>The Yocto Project Development Environment</para>
@@ -199,8 +200,10 @@
              The build creates an entire Linux system including the Toolchain from the source.
          </para>
 
-         <para><emphasis>NOTE:</emphasis>  The build process using Sato currently consumes 50GB of disk space.
-             To allow for variations in the build process and for future package expansion we recommend 100GB of free disk space.
+         <para><emphasis>NOTE:</emphasis>  The build process using Sato currently consumes 
+             50GB of disk space.
+             To allow for variations in the build process and for future package expansion we 
+             recommend 100GB of free disk space.
          </para>
 
          <para>
@@ -208,44 +211,49 @@
      $ wget http://www.yoctoproject.org/downloads/poky/poky-laverne-4.0.tar.bz2
      $ tar xjf poky-laverne-4.0.tar.bz2
      $ source poky-4.0/poky-init-build-env poky-4.0-build
-     $ cd poky-4.0-build
-     $ bitbake poky-image-sato
-     $ poky-qemu qemux86
              </literallayout>
          </para>
-
-         <para>
-             Here is some explanation for these commands:
-         </para>
-
          <itemizedlist>
-             <listitem>
-                 <para>
-                     The first two commands extract the Yocto Project files from the release area and place them into your build area (<command>poky-4.0-build</command> in this example).
-                 </para>
-             </listitem>
-             <listitem>
-                 <para>
-                     The next two commands create the directory and place you there.  
-                     The build directory contains all the object files used during the build.   
-                     The default build directory is <command>poky-dir/build</command>.  
-                     Note that you can change the target architecture by editing the 
-                     <command>&lt;build_directory&gt;/conf/local.conf</command> file. 
-                     By default the target architecture is qemux86. 
-                  </para>
-             </listitem>
-             <listitem>
-                 <para>
-                     The <command>$bitbake</command> command builds the OS image for the target.  
-                     Here poky-image-sato is the name of the target.
-                 </para>
-             </listitem>
-             <listitem>
-                 <para>
-                     Finally, the <command>$poky-qemu</command> command launches the customized QEMU.
-                 </para>
-             </listitem>
+             <listitem><para>The first two commands extract the Yocto Project files from the 
+             release area and place them into a subdirectory of your current directory 
+             (<command>poky-4.0-build</command> in this example).</para></listitem>
+             <listitem><para>The <command>$ source</command> command creates the directory and places 
+             you there.  
+             The build directory contains all the object files used during the build.   
+             The default build directory is <command>poky-4.0-build</command>.  
+             Note that you can change the target architecture by editing the 
+             <command>&lt;build_directory&gt;/conf/local.conf</command> file. 
+             By default the target architecture is qemux86.</para></listitem>
          </itemizedlist>
+         <para>
+             Now might be a good time to edit the <command>conf/local.conf</command>
+             file.  
+             The defaults should all be fine.  However, you might want to look at the variables
+             BB_NUMBER_THREADS and PARALLEL_MAKE.
+             By default, these variables are commented out.
+         </para>
+         <para>
+             Continue with the following command to build the OS image for the target, which is 
+             poky-image-sato in this example.
+             <literallayout class='monospaced'>
+     $ bitbake poky-image-sato
+             </literallayout>
+             <emphasis>NOTE:</emphasis>  If you are running Fedora 14 or another distribution 
+             with GNU make 3.82 you might have to run the following two 
+             <command>$bitbake</command> commands instead:
+             <literallayout class='monospaced'>
+     $ bitbake make-native
+     $ bitbake poky-image-sato
+             </literallayout>
+             The final command runs the image:
+             <literallayout class='monospaced'>
+     $ poky-qemu qemux86
+             </literallayout>
+             The build process could take several hours the first time you run it. 
+             Depending on the number of processor and cores, the amount or RAM, the speed of your
+             internet connection and other factors.
+             After the initial build, subsequent builds run much faster.
+         </para>
     </section>
 
     <section id='using-pre-built'>
