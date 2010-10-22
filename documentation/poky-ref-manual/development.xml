@@ -96,36 +96,6 @@
      Eclipse -vmargs -XX:PermSize=256M
                     </literallayout>
                 </para>
-                <para>
-                    The Eclipse plug-in depends several Eclipse projects plug-ins: 
-                    Eclipse C/C++ Development Tools (CDT), Autotools support for CDT (Incubation) and Target
-                    Management (RSE).
-                </para>
-                <para>
-                    After installing Eclipse and bringing up the IDE for the first
-                    time you need to be sure the following four sites are available by adding them.
-                </para>
-                <itemizedlist>
-                    <listitem>CDT - http://download.eclipse.org/tools/cdt/releases/helios</listitem>
-                    <listitem>Helios - http://download.eclipse.org/releases/helios</listitem>
-                    <listitem>Target Management 
-                              3.2 Updates - http://download.eclipse.org/dsdp/tm/updates/3.2</listitem>
-                    <listitem>The Eclipse Project Updates - 
-                              http://download.eclipse.org/eclipse/updates/3.6</listitem>
-                </itemizedlist>
-                <para>
-                    Once these sites are available do the following:
-                    <itemizedlist>
-                        <listitem>Use the "Work with:" drop down list and 
-                            select "All Available Sites--"</listitem>
-                        <listitem><emphasis>For CDT and Autotools support:</emphasis> Expand the
-                            "Programming Languages" list and select "Autotools support for CDT 
-                            (Incubation)" and "C/C++ Development Tools".  Click "Next" and complete 
-                            the update.</listitem>
-                        <listitem><emphasis>For RSE support:</emphasis> Select "TM and 
-                    RSE Main Features".  Click "Next" and complete the update.</listitem>
-                    </itemizedlist>
-                </para>
                 </section>
 
                 <section id="installing-the-yocto-plug-in">
