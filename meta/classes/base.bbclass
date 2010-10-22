@@ -485,6 +485,7 @@ python () {
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package', 'depends', " ".join(deps),d)
         bb.data.setVarFlag('do_package', 'fakeroot', 1, d)
+        bb.data.setVarFlag('do_package_setscene', 'fakeroot', 1, d)
     source_mirror_fetch = bb.data.getVar('SOURCE_MIRROR_FETCH', d, 0)
     if not source_mirror_fetch:
         need_host = bb.data.getVar('COMPATIBLE_HOST', d, 1)

@@ -1096,8 +1096,6 @@ python do_package_setscene () {
 	sstate_setscene(d)
 }
 addtask do_package_setscene
-do_package_setscene[fakeroot] = "1"
-
 
 # Dummy task to mark when all packaging is complete
 do_package_write () {

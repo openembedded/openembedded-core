@@ -273,7 +273,6 @@ python do_package_write_deb_setscene () {
     sstate_setscene(d)
 }
 addtask do_package_write_deb_setscene
-do_package_write_deb_setscene[fakeroot] = "1"
 
 python () {
     if bb.data.getVar('PACKAGES', d, True) != '':
@@ -282,6 +281,7 @@ python () {
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_deb', 'depends', " ".join(deps), d)
         bb.data.setVarFlag('do_package_write_deb', 'fakeroot', "1", d)
+        bb.data.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1", d)
 }
 
 python do_package_write_deb () {

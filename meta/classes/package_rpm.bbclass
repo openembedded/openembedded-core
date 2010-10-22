@@ -545,6 +545,7 @@ python () {
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_rpm', 'depends', " ".join(deps), d)
         bb.data.setVarFlag('do_package_write_rpm', 'fakeroot', 1, d)
+        bb.data.setVarFlag('do_package_write_rpm_setscene', 'fakeroot', 1, d)
 }
 
 SSTATETASKS += "do_package_write_rpm"
@@ -556,7 +557,6 @@ python do_package_write_rpm_setscene () {
 	sstate_setscene(d)
 }
 addtask do_package_write_rpm_setscene
-do_package_write_rpm_setscene[fakeroot] = "1"
 
 python do_package_write_rpm () {
 	bb.build.exec_func("read_subpackage_metadata", d)
