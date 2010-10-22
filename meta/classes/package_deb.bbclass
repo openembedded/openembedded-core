@@ -273,6 +273,7 @@ python do_package_write_deb_setscene () {
     sstate_setscene(d)
 }
 addtask do_package_write_deb_setscene
+do_package_write_deb_setscene[fakeroot] = "1"
 
 python () {
     if bb.data.getVar('PACKAGES', d, True) != '':

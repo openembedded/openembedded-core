@@ -556,6 +556,7 @@ python do_package_write_rpm_setscene () {
 	sstate_setscene(d)
 }
 addtask do_package_write_rpm_setscene
+do_package_write_rpm_setscene[fakeroot] = "1"
 
 python do_package_write_rpm () {
 	bb.build.exec_func("read_subpackage_metadata", d)

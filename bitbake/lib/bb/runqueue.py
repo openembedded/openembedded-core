@@ -1066,6 +1066,10 @@ class RunQueueExecute:
                 for var in envvars:
                     comps = var.split("=")
                     env[comps[0]] = comps[1]
+                fakedirs = (the_data.getVar("FAKEROOTDIRS", True) or "").split()
+                for p in fakedirs:
+                    bb.mkdirhier(p)
+                bb.msg.debug(2, bb.msg.domain.RunQueue, "Running %s:%s under fakeroot, state dir is %s" % (fn, taskname, fakedirs))
 
             env['BB_TASKHASH'] = self.rqdata.runq_hash[task]
             env['PATH'] = self.cooker.configuration.initial_path
