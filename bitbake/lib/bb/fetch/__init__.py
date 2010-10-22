@@ -225,6 +225,12 @@ def init(urls, d, setup = True):
 def mirror_from_string(data):
     return [ i.split() for i in (data or "").replace('\\n','\n').split('\n') if i ]
 
+def removefile(f):
+    try:
+        os.remove(f)
+    except:
+        pass
+
 def go(d, urls = None):
     """
     Fetch all urls
@@ -258,6 +264,8 @@ def go(d, urls = None):
                 m.go(u, ud, d)
                 localpath = ud.localpath
             except FetchError:
+                # Remove any incomplete file
+                removefile(ud.localpath)
                 # Finally, try fetching uri, u, from MIRRORS
                 mirrors = mirror_from_string(bb.data.getVar('MIRRORS', d, True))
                 localpath = try_mirrors (d, u, mirrors)
@@ -470,6 +478,7 @@ def try_mirrors(d, uri, mirrors, check = False, force = False):
                 import sys
                 (type, value, traceback) = sys.exc_info()
                 bb.msg.debug(2, bb.msg.domain.Fetcher, "Mirror fetch failure: %s" % value)
+                removefile(ud.localpath)
                 continue
     return None
 
