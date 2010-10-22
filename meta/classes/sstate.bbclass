@@ -154,8 +154,12 @@ def sstate_installpkg(ss, d):
     sstate_install(ss, d)
 
     for plain in ss['plaindirs']:
-        bb.mkdirhier(sstateinst + plain)
-        oe.path.copytree(sstateinst + plain, bb.data.getVar('WORKDIR', d, True) + plain)
+        workdir = d.getVar('WORKDIR', True)
+        src = sstateinst + "/" + plain.replace(workdir, '')
+        dest = plain
+        bb.mkdirhier(src)
+        bb.mkdirhier(dest)
+        oe.path.copytree(src, dest)
 
     return True
 
