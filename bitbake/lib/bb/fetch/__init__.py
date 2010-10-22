@@ -287,7 +287,7 @@ def checkstatus(d):
     for u in urldata:
         ud = urldata[u]
         m = ud.method
-        bb.msg.note(1, bb.msg.domain.Fetcher, "Testing URL %s" % u)
+        bb.msg.debug(1, bb.msg.domain.Fetcher, "Testing URL %s" % u)
         # First try checking uri, u, from PREMIRRORS
         mirrors = mirror_from_string(bb.data.getVar('PREMIRRORS', d, True))
         ret = try_mirrors(d, u, mirrors, True)
