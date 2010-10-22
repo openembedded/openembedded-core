@@ -23,7 +23,7 @@ html:
 	xsltproc $(XSLTOPTS) -o bsp-guide.html $(XSL_XHTML_URI) bsp-guide.xml
 
 tarball: html
-	tar -cvzf poky-ref-manual.tgz poky-ref-manual.html style.css figures/yocto-project-transp.png
+	tar -cvzf poky-ref-manual.tgz poky-ref-manual.html style.css figures/yocto-project-transp.png figures/poky-ref-manual.png
 
 validate:
 	xmllint --postvalid --xinclude --noout poky-ref-manual.xml
