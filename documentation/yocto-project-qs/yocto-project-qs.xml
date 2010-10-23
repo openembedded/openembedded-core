@@ -276,9 +276,9 @@
     </section>
 
     <section id='using-pre-built'>
-        <title>Using a Pre-Built Linux Kernel for QEMU</title>
+        <title>Using a Pre-Built Binaries and QEMU</title>
         <para>
-            If hardware, libraries and services are stable you can use a pre-built image of the kernel and just run it on the target using the emulator QEMU.  
+            If hardware, libraries and services are stable you can use a pre-built image of the image, kernel and toolchain and just run it on the target using the emulator QEMU.  
             This situation is perfect for developing application software.
         </para>
 
@@ -302,7 +302,7 @@
          <itemizedlist>
              <listitem>
                  <para>
-                     Install the Yocto Project Scripts
+                     Install the standalone Yocto toolchain tarball
                  </para>
              </listitem>
              <listitem>
@@ -319,12 +319,14 @@
          </itemizedlist>
 
          <para>
-             Use this command to install the patched Yocto Project QEMU scripts:
+             You can download the pre-built toolchain which includes the poky-qemu script and support files from <ulink url='http://yoctoproject.org/downloads/yoctolinux-0.9/toolchain/'></ulink>.  These are available for i586 (32-bit) and x86_64 (64 bit) host machines, targeting each of the 5 supported target architectures. The tarballs are self contained and install into /opt/poky.
+             Use these commands to install the toolchain tarball (taking the 64 bit host, 32 bit i586 target as an example):
          </para>
 
          <para>
              <literallayout class='monospaced'>
-     $ apt-get install qemu poky-scripts
+     $ cd /
+     $ sudo tar -xvjf yoctolinux-eglibc-x86_64-i586-toolchain-sdk-0.9.tar.bz2
              </literallayout>
          </para>
 
@@ -347,10 +349,11 @@
          </literallayout>
 
          <para>
-             You can now start the emulator using this command:
+             You can now start the emulator using these commands (assuming an 32 bit i586 target):
          </para>
 
          <literallayout class='monospaced'>
+     $ source /opt/poky/environment-setup-i586-poky-linux 
      $ poky-qemu &lt;<emphasis>kernel</emphasis>&gt; &lt;<emphasis>image</emphasis>&gt;
          </literallayout>
     </section>
