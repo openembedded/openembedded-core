@@ -174,7 +174,7 @@
             
         <para>
             The latest release images for the Yocto Project are kept at 
-            <ulink url="http://yoctoproject.org/downloads/yoctolinux-0.9/"></ulink>.
+            <ulink url="http://yoctoproject.org/downloads/yocto-0.9/"></ulink>.
             Nightly and developmental builds are also maintained.  However, for this 
             document a released version of Yocto Project is used.
         </para>
@@ -319,19 +319,19 @@
          </itemizedlist>
 
          <para>
-             You can download the pre-built toolchain which includes the poky-qemu script and support files from <ulink url='http://yoctoproject.org/downloads/yoctolinux-0.9/toolchain/'></ulink>.  These are available for i586 (32-bit) and x86_64 (64 bit) host machines, targeting each of the 5 supported target architectures. The tarballs are self contained and install into /opt/poky.
+             You can download the pre-built toolchain which includes the poky-qemu script and support files from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/toolchain/'></ulink>.  These are available for i586 (32-bit) and x86_64 (64 bit) host machines, targeting each of the 5 supported target architectures. The tarballs are self contained and install into /opt/poky.
              Use these commands to install the toolchain tarball (taking the 64 bit host, 32 bit i586 target as an example):
          </para>
 
          <para>
              <literallayout class='monospaced'>
      $ cd /
-     $ sudo tar -xvjf yoctolinux-eglibc-x86_64-i586-toolchain-sdk-0.9.tar.bz2
+     $ sudo tar -xvjf yocto-eglibc-x86_64-i586-toolchain-sdk-0.9.tar.bz2
              </literallayout>
          </para>
 
          <para>
-             You can download the pre-built Linux kernel and the file image system from <ulink url='http://yoctoproject.org/downloads/yoctolinux-0.9/'></ulink>.  
+             You can download the pre-built Linux kernel and the file image system from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/'></ulink>.  
              The kernel and file image system have the following forms, respectively:
          </para>
 
