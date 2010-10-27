@@ -276,9 +276,9 @@
     </section>
 
     <section id='using-pre-built'>
-        <title>Using a Pre-Built Binaries and QEMU</title>
+        <title>Using Pre-Built Binaries and QEMU</title>
         <para>
-            If hardware, libraries and services are stable you can use a pre-built image of the image, kernel and toolchain and just run it on the target using the emulator QEMU.  
+            If hardware, libraries and services are stable you can use a pre-built binary of the image, kernel and toolchain and just run it on the target using the emulator QEMU.  
             This situation is perfect for developing application software.
         </para>
 
