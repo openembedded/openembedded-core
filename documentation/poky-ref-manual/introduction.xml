@@ -8,15 +8,17 @@
     <title>Welcome to Poky!</title>
 
     <para>
-        Poky is the the build tool in Yocto Project.
-        It is at the heart of Yocto Project.
-        You use Poky within Yocto Project to build the images (kernel software) for targeted hardware.
+        Poky is the build tool in Yocto Project.
+        Yocto Project uses Poky to build images (kernel, system, and application software) for 
+        targeted hardware.
     </para>
 
     <para>
-        Before jumping into Poky you should have an understanding of Yokto Project.
-        Be sure you are familiar with the information in the Yocto Project Quick Start.
-        You can find this documentation on the public <ulink rul='http://yoctoproject.org/'>Yocto Project Website</ulink>.
+        Before diving into Poky, it helps to have an understanding of the Yocto Project.
+        Especially useful for newcomers is the information in the Yocto Project Quick Start, which 
+        you can find on the <ulink url="http://www.yoctoproject.org">Yocto Project website</ulink>.
+        Specifically, the guide is
+        at <ulink url="http://www.yoctoproject.org/docs/yocto-quick-start/yocto-project-qs.html"></ulink>
     </para>
 </section>
 
@@ -24,31 +26,34 @@
     <title>What is Poky?</title>
 
     <para>
-        Poky provides an open source Linux, X11, Matchbox, GTK+, Pimlico, Clutter, and other <ulink url='http://gnome.org/mobile'>GNOME Mobile</ulink> technologies based full platform build tool within Yocto Project.
-        It creates a focused, stable, subset of OpenEmbedded that can be easily and reliably built and developed upon.
-        Poky fully supports a wide range of x86 ARM, MIPS and PowerPC hardware and device virtulisation.
+        Within the Yocto Project, Poky provides an open source, full-platform build tool based on 
+        Linux, X11, Matchbox, GTK+, Pimlico, Clutter, 
+        and other <ulink url='http://gnome.org/mobile'>GNOME Mobile</ulink> technologies.
+        It provides a focused and stable subset of OpenEmbedded upon which you can easily and 
+        reliably build and develop.
+        Poky fully supports a wide range of x86, ARM, MIPS and PowerPC hardware and device virtualization.
     </para>
 
     <para>
-        Poky is primarily a platform builder which generates filesystem images
+        Poky is primarily a platform builder that generates filesystem images
         based on open source software such as the Kdrive X server, the Matchbox
-        window manager, the GTK+ toolkit and the D-Bus message bus system. Images
-        for many kinds of devices can be generated, however the standard example
-        machines target QEMU full system emulation(x86, ARM, MIPS and PowerPC) and
+        window manager, the GTK+ toolkit and the D-Bus message bus system. While images
+        for many kinds of devices can be generated, the standard example
+        machines target QEMU full-system emulation (x86, ARM, MIPS and PowerPC) and
         real reference boards for each of these architectures.
         Poky's ability to boot inside a QEMU
-        emulator makes it particularly suitable as a test platform for development
-        of embedded software.
+        emulator makes it particularly suitable as a test platform for developing embedded software.
     </para>
 
     <para>
-        An important component integrated within Poky is Sato, a GNOME Mobile 
-        based user interface environment.
-        It is designed to work well with screens at very high DPI and restricted
-        size, such as those often found on smartphones and PDAs. It is coded with
-        focus on efficiency and speed so that it works smoothly on hand-held and
-        other embedded hardware. It will sit neatly on top of any device
-        using the GNOME Mobile stack, providing a well defined user experience.
+        An important component integrated within Poky is Sato, a GNOME Mobile-based
+        user interface environment.
+        It is designed to work well with screens that use very high DPI and have restricted
+        sizes, such as those often found on smartphones and PDAs. 
+        Because Sato is coded for speed and efficiency, it works smoothly on hand-held and
+        other embedded hardware. 
+        It sits nicely on top of any device that uses the GNOME Mobile stack and it results in
+        a well-defined user experience.
     </para>
 
     <screenshot>
@@ -62,26 +67,30 @@
      </mediaobject>
      </screenshot>
 
-
     <para>
-
-    Poky has a growing open source community and is also backed up by commercial organisations including <ulink url="http://www.intel.com/">Intel Corporation</ulink>.
-
+        Poky has a growing open source community and is also backed up by commercial organizations 
+        including <ulink url="http://www.intel.com/">Intel Corporation</ulink>.
     </para>
 </section>
 
 <section id='intro-manualoverview'>
     <title>Documentation Overview</title>
     <para>
-        The Poky User Guide is split into sections covering different aspects of Poky. 
-        The <link linkend='usingpoky'>'Using Poky' section</link> gives an overview of the components that make up Poky followed by information about using Poky and debugging images created in Yocto Project. 
-        The <link linkend='extendpoky'>'Extending Poky' section</link> gives information about how to extend and customise Poky along with advice on how to manage these changes. 
-        The <link linkend='platdev'>'Platform Development with Poky' section</link> gives information about interaction between Poky and target hardware for common platform development tasks such as software development, debugging and profiling. 
-        The rest of the manual consists of several reference sections each giving details on a specific section of Poky functionality.
+        The sections in this reference manual describe different aspects of Poky. 
+        The <link linkend='usingpoky'>'Using Poky' section</link> provides an overview of the components 
+        that make up Poky followed by information about using Poky and debugging images created in Yocto Project. 
+        The <link linkend='extendpoky'>'Extending Poky'</link> and 
+        <link linkend='bsp'>'Board Support Packages'</link> sections provide information 
+        about how to extend and customize Poky along with advice on how to manage these changes. 
+        The <link linkend='platdev'>'Platform Development with Poky' section</link> provides information about
+        interaction between Poky and target hardware for common platform development tasks such as software
+        development, debugging and profiling. 
+        The rest of the manual consists of several reference sections, each providing details on a specific
+        area of Poky functionality.
     </para>
 
     <para>
-        This manual applies to Poky Release 3.3 (Green).
+        This manual applies to Poky Release 4.0 (laverne).
     </para>
 </section>
 
@@ -89,14 +98,16 @@
 <section id='intro-requirements'>
     <title>System Requirements</title>
     <para>
-        We recommend Debian-based distributions, in particular a recent Ubuntu 
-        release (10.04 or newer), as the host system for Poky. Nothing in Poky is
-        distribution specific and other distributions will most likely work as long 
-        as the appropriate prerequisites are installed - we know of Poky being used 
+        Although we recommend Debian-based distributions 
+        (Ubuntu 10.04 or newer) as the host system for Poky, nothing in Poky is
+        distribution-specific.  Consequently, other distributions should work as long 
+        as the appropriate prerequisites are installed.  For example, we know of Poky being used 
         successfully on Redhat, SUSE, Gentoo and Slackware host systems.
-        For information on what you need to develop images using Yocto Project and Poky 
-        you should see the Yocto Project Quick Start on the public 
-        <ulink rul='http://yoctoproject.org/'>Yocto Project Website</ulink>.
+        For information on what you need to develop images using Yocto Project and Poky, 
+        you should see the Yocto Project Quick Start on the <ulink url="http://www.yoctoproject.org">
+        Yocto Project website</ulink>.
+        The direct link to the quick start is 
+        <ulink url='http://yoctoproject.org/docs/yocto-quick-start/yocto-project-qs.html'></ulink>.
     </para>
 </section>
 
@@ -106,9 +117,9 @@
     <section id='intro-getit-releases'>
         <title>Releases</title>
 
-        <para>Periodically, we make releases of Poky and these are available
+        <para>Periodically, we make releases of Poky available
             at <ulink url='http://pokylinux.org/releases/'/>.
-            These are more stable and tested than the nightly development images.</para>
+            These releases are more stable and more rigorously tested than the nightly development images.</para>
     </section>
 
     <section id='intro-getit-nightly'>
@@ -117,13 +128,16 @@
         <para>
             We make nightly builds of Poky for testing purposes and to make the
             latest developments available. The output from these builds is available
-            at <ulink url='http://autobuilder.pokylinux.org/'/>
-            where the numbers increase for each subsequent build and can be used to reference it.
+            at <ulink url='http://autobuilder.pokylinux.org/'/>.
+            The numbers used in the builds increase for each subsequent build and can be used to 
+            reference a specific build.
         </para>
 
         <para>
-            Automated builds are available for "standard" Poky and for Poky SDKs and toolchains as well 
-            as any testing versions we might have such as poky-bleeding. The toolchains can
+            Automated builds are available for "standard" Poky and for Poky SDKs and toolchains.
+            Additionally, testing versions such as poky-bleeding can be made available as 
+            'experimental' builds.
+            The toolchains can
             be used either as external standalone toolchains or can be combined with Poky as a
             prebuilt toolchain to reduce build time. Using the external toolchains is simply a
             case of untarring the tarball into the root of your system (it only creates files in
@@ -136,16 +150,16 @@
         <title>Development Checkouts</title>
 
         <para>
-            Poky is available from our GIT repository located at
+            Poky is available from our git repository located at
             git://git.pokylinux.org/poky.git; a web interface to the repository
             can be accessed at <ulink url='http://git.pokylinux.org/'/>.
         </para>
 
         <para>
            The 'master' is where the deveopment work takes place and you should use this if you're
-           after to work with the latest cutting edge developments. It is possible trunk
-           can suffer temporary periods of instability while new features are developed and
-           if this is undesireable we recommend using one of the release branches.
+           interested in working with the latest cutting-edge developments. It is possible for the trunk
+           to suffer temporary periods of instability while new features are developed.
+           If these periods of instability are undesireable, we recommend using one of the release branches.
         </para>
     </section>
 </section>
