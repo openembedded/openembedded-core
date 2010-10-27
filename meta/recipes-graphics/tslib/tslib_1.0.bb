@@ -6,7 +6,7 @@ SECTION = "base"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f30a9716ef3762e3467a2f62bf790f0a"
 
-PR = "r15"
+PR = "r16"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-${PV}.tar.bz2 \
            file://fix_version.patch;patch=1 \
@@ -16,6 +16,8 @@ SRC_URI = "http://download.berlios.de/tslib/tslib-${PV}.tar.bz2 \
            file://tslib.sh"
 SRC_URI_append_mnci += " file://devfs.patch;patch=1"
 SRC_URI_append_mnci += " file://event1.patch;patch=1"
+SRC_URI_append_qemumips += " file://32bitBE-support.patch;patch=1"
+
 
 inherit autotools pkgconfig
 
