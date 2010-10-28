@@ -229,7 +229,7 @@
              <literallayout class='monospaced'>
      $ wget http://www.yoctoproject.org/downloads/poky/poky-laverne-4.0.tar.bz2
      $ tar xjf poky-laverne-4.0.tar.bz2
-     $ source poky-4.0/poky-init-build-env poky-4.0-build
+     $ source poky-laverne-4.0/poky-init-build-env poky-4.0-build
              </literallayout>
          </para>
          <itemizedlist>
