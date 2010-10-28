@@ -205,7 +205,7 @@ $ bitbake &lt;target&gt;
     </section>
 
     <section id='usingpoky-debugging-taskrunning'>
-        <title>Running specific tasks</title>
+        <title>Running Specific Tasks</title>
 
         <para> Any given package consists of a set of tasks.  
             In most cases the series is: fetch, unpack, patch, configure,
@@ -287,24 +287,20 @@ $ bitbake matchbox-desktop -c
     </section>
 
     <section id='usingpoky-debugging-buildfile'>
-        <title>Building with no dependencies</title>
-
+        <title>Building with No Dependencies</title>
         <para>
-            If you really want to build a specific .bb file, you can use
-            the form <command>bitbake -b somepath/somefile.bb</command>. Note that this
-            will not check the dependencies so this option should only
-            be used when you know its dependencies already exist. You
-            can specify fragments of the filename and bitbake will see
-            if it can find a unique match.
+            If you really want to build a specific <filename>.bb</filename> file, you can use
+            the command form <filename>bitbake -b somepath/somefile.bb</filename>. 
+            This command form does not check for dependencies so you should use it
+            only when you know its dependencies already exist. 
+            You can also specify fragments of the filename and bitbake checks for a unique match.
         </para>
-
     </section>
 
     <section id='usingpoky-debugging-variables'>
         <title>Variables</title>
-
         <para>
-            The "-e" option will dump the resulting environment for
+            The "-e" option dumps the resulting environment for
             either the configuration (no package specified) or for a
             specific package when specified with the "-b" option.
         </para>
@@ -312,23 +308,23 @@ $ bitbake matchbox-desktop -c
     
     <section id='usingpoky-debugging-others'>
         <title>Other Tips</title>
-
         <tip>
-        <para>When adding new packages it is worth keeping an eye open for bad 
-            things creeping into compiler commandlines such as references to local 
-            system files (<filename>/usr/lib/</filename> or <filename>/usr/include/</filename> etc.).
+        <para>
+            When adding new packages it is worth watching for undesireable items making their way
+            into compiler command lines.
+            For example, you do not want references to local system files like 
+            <filename>/usr/lib/</filename> or <filename>/usr/include/</filename>.
         </para>
         </tip>
-        
         <tip>
         <para>
             If you want to remove the psplash boot splashscreen, add "psplash=false"
-            to  the kernel commandline and psplash won't load allowing you to see 
-            the console. It's also possible to switch out of the splashscreen by 
-            switching virtual console (Fn+Left or Fn+Right on a Zaurus).
+            to  the kernel command line.
+            Doing so prevents psplash from loading thus allowing you to see the console.
+            It is also possible to switch out of the splashscreen by 
+            switching the virtual console (e.g. Fn+Left or Fn+Right on a Zaurus).
         </para>
         </tip>
-
     </section>
 </section>
 

@@ -4,53 +4,50 @@
 <chapter id='extendpoky'>
 
 <title>Extending Poky</title>
-
     <para>
-        This section gives information about how to extend the functionality
-        already present in Poky, documenting standard tasks such as adding new
-        software packages, extending or customising images or porting poky to
-        new hardware (adding a new machine). It also contains advice about how
-        to manage the process of making changes to Poky to achieve best results.
+        This section provides information about how to extend the functionality
+        already present in Poky.
+        The section also documents standard tasks such as adding new
+        software packages, extending or customizing images or porting Poky to
+        new hardware (adding a new machine). 
+        Finally, the section contains advice about how
+        to make changes to Poky to achieve the best results.
     </para>
 
     <section id='usingpoky-extend-addpkg'>
         <title>Adding a Package</title>
-
         <para>
-            To add package into Poky you need to write a recipe for it. 
-            Writing a recipe means creating a .bb file which sets various
-            variables. The variables
-            useful for recipes are detailed in the <link linkend='ref-varlocality-recipe-required'>
-                recipe reference</link> section along with more detailed information 
-            about issues such as recipe naming.
+            To add a package into Poky you need to write a recipe for it. 
+            Writing a recipe means creating a <filename>.bb</filename> file that sets some
+            variables.
+            For information on variables that are useful for recipes and for information about recipe naming
+            issues, see <link linkend='ref-varlocality-recipe-required'>Recipe Variables - Required</link>
+            appendix.
         </para>
-
         <para>
             Before writing a recipe from scratch it is often useful to check
-            whether someone else has written one already. OpenEmbedded is a good place 
-            to look as it has a wider scope and hence a wider range of packages.
-            Poky aims to be compatible with OpenEmbedded so most recipes should
+            whether someone else has written one already. 
+            OpenEmbedded is a good place to look as it has a wider scope and range of packages.
+            Because Poky aims to be compatible with OpenEmbedded, most recipes should
             just work in Poky.
         </para>
-
         <para>
             For new packages, the simplest way to add a recipe is to base it on a similar
-            pre-existing recipe. There are some examples below of how to add 
-            standard types of packages:
+            pre-existing recipe. 
+            Following are some examples showing how to add standard types of packages:
         </para>
 
         <section id='usingpoky-extend-addpkg-singlec'>
             <title>Single .c File Package (Hello World!)</title>
-
             <para>
-                To build an application from a single file stored locally (e.g. under "files/")
-                requires a recipe which has the file listed in the <glossterm><link
-                linkend='var-SRC_URI'>SRC_URI</link></glossterm> variable. In addition 
-                the <function>do_compile</function> and <function>do_install</function> 
-                tasks need to be manually written. The <glossterm><link linkend='var-S'>
-                S</link></glossterm> variable defines the directory containing the source 
-                code which in this case is set equal to <glossterm><link linkend='var-WORKDIR'>
-                WORKDIR</link></glossterm>, the directory BitBake uses for the build.
+                Building an application from a single file that is stored locally (e.g. under 
+                <filename>files/</filename>) requires a recipe that has the file listed in 
+                the <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm> variable. 
+                Additionally, you need to manually write the <function>do_compile</function> and
+                <function>do_install</function> tasks.
+                The <glossterm><link linkend='var-S'>S</link></glossterm> variable defines the 
+                directory containing the source code, which is set to <glossterm><link linkend='var-WORKDIR'>
+                WORKDIR</link></glossterm> in this case - the directory BitBake uses for the build.
             </para>
             <programlisting>
 DESCRIPTION = "Simple helloworld application"
@@ -71,32 +68,28 @@ do_install() {
 	install -m 0755 helloworld ${D}${bindir}
 }
             </programlisting>
-
             <para>
-                As a result of the build process "helloworld", "helloworld-dbg" and "hellworld-dev"
-                packages will be built by default. It is possible to<link linkend='usingpoky-extend-addpkg-files'>
-                customise the packaging process</link>.
+                By default, the "helloworld", "helloworld-dbg" and "hellworld-dev"
+                packages are built. 
+                For information on how to customize the packaging process, see
+                <link linkend='usingpoky-extend-addpkg-files'>Controlling Package Content</link>.
             </para>
         </section>
 
         <section id='usingpoky-extend-addpkg-autotools'>
             <title>Autotooled Package</title>
-
             <para>
-                Applications which use autotools (autoconf, automake)
-                require a recipe which has a source archive listed in 
-                <glossterm><link
-                        linkend='var-SRC_URI'>SRC_URI</link></glossterm> and 
-                <command>inherit autotools</command> to instruct BitBake to use the
-                <filename>autotools.bbclass</filename> which has 
-                definitions of all the steps
+                Applications that use autotools such as <filename>autoconf</filename> and 
+                <filename>automake</filename> require a recipe that has a source archive listed in 
+                <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm> and 
+                <filename>also inherits autotools</filename>, which instructs BitBake to use the
+                <filename>autotools.bbclass</filename> containing the definitions of all the steps
                 needed to build an autotooled application.
-                The result of the build will be automatically packaged and if
-                the application uses NLS to localise then packages with
-                locale information will be generated (one package per
-                language). Below is one example (hello_2.2.bb)
+                The result of the build is automatically packaged. 
+                And, if the application uses NLS for localization, packages with local information are 
+                generated (one package per language). 
+                Following is one example (<filename>hello_2.2.bb</filename>)
             </para>
-
             <programlisting>
 DESCRIPTION = "GNU Helloworld application"
 SECTION = "examples"
@@ -108,50 +101,40 @@ SRC_URI = "${GNU_MIRROR}/hello/hello-${PV}.tar.gz"
 
 inherit autotools gettext
             </programlisting>
-
             <para>
-            <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link>
-            </glossterm> is used to <link linkend='usingpoky-configuring-LIC_FILES_CHKSUM'>
-                track source license change</link>. Autotool based recipe can be quickly
-            created this way like above example.
+                <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link>
+                </glossterm> is used to <link linkend='usingpoky-configuring-LIC_FILES_CHKSUM'>
+                track source license change</link>. 
+                You can quickly create autotool-based recipes in a manner similar to the previous example.
             </para>
 
         </section>
-
         <section id='usingpoky-extend-addpkg-makefile'>
             <title>Makefile-Based Package</title>
-
             <para>
-                Applications which use GNU make require a recipe which has
-                the source archive listed in <glossterm><link
-                        linkend='var-SRC_URI'>SRC_URI</link></glossterm>. 
-                Adding a <function>do_compile</function> step
-                is not needed as by default BitBake will start the "make"
-                command to compile the application. If there is a need for
-                additional options to make then they should be stored in the
-                <glossterm><link
-                        linkend='var-EXTRA_OEMAKE'>EXTRA_OEMAKE</link></glossterm> variable - BitBake 
-                will pass them into the GNU
-                make invocation. A <function>do_install</function> task is required
-                - otherwise BitBake will run an empty <function>do_install</function> 
-                task by default. 
+                Applications that use GNU <filename>make</filename> also require a recipe that has
+                the source archive listed in <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>. 
+                You do not need to add a <function>do_compile</function> step since by default BitBake 
+                starts the <filename>make</filename> command to compile the application. 
+                If you need additional <filename>make</filename> options you should store them in the 
+                <glossterm><link linkend='var-EXTRA_OEMAKE'>EXTRA_OEMAKE</link></glossterm> variable.
+                Bitbake passes these options into the <filename>make</filename> GNU invocation. 
+                Note that a <function>do_install</function> task is still required.
+                Otherwise BitBake runs an empty <function>do_install</function> task by default. 
             </para>
-
             <para>
-                Some applications may require extra parameters to be passed to
-                the compiler, for example an additional header path. This can
-                be done buy adding to the <glossterm><link
-                        linkend='var-CFLAGS'>CFLAGS</link></glossterm> variable, as in the example below:
+                Some applications might require extra parameters to be passed to the compiler.
+                For example the application might need an additional header path. 
+                You can accomplish this by adding to the <glossterm><link linkend='var-CFLAGS'>CFLAGS</link>
+                </glossterm> variable.
+                The following example shows this:
             </para>
-
             <programlisting>
 CFLAGS_prepend = "-I ${S}/include "
             </programlisting>
-
             <para>
-            mtd-utils is an example as Makefile-based:
+            In the following example <filename>mtd-utils</filename> is a Makefile-based package:
             </para>
-
             <programlisting>
 DESCRIPTION = "Tools for managing memory technology devices."
 SECTION = "base"
@@ -177,25 +160,19 @@ do_install () {
             </programlisting>
 
         </section>
-
         <section id='usingpoky-extend-addpkg-files'>
-            <title>Controlling packages content</title>
-
+            <title>Controlling Package Content</title>
             <para>                        
-                The variables <glossterm><link
-                        linkend='var-PACKAGES'>PACKAGES</link></glossterm> and 
-                <glossterm><link linkend='var-FILES'>FILES</link></glossterm> are used to split an
-                application into multiple packages.
+                You can use the variables <glossterm><link linkend='var-PACKAGES'>PACKAGES</link></glossterm> and 
+                <glossterm><link linkend='var-FILES'>FILES</link></glossterm> to split an application into 
+                multiple packages.
             </para>
-
             <para>
-                Below the "libXpm" recipe (libxpm_3.5.7.bb) is used as an example. By
-                default the "libXpm" recipe generates one package 
-                which contains the library
-                and also a few binaries. The recipe can be adapted to 
-                split the binaries into separate packages.
+                Following is an example that uses the "libXpm" recipe (<filename>libxpm_3.5.7.bb</filename>).
+                By default, the "libXpm" recipe generates a single package containing the library, along 
+                with a few binaries.  
+                You can modify the recipe to split the binaries into separate packages:
             </para>
-
             <programlisting>
 require xorg-lib-common.inc
 
@@ -211,20 +188,19 @@ PACKAGES =+ "sxpm cxpm"
 FILES_cxpm = "${bindir}/cxpm"
 FILES_sxpm = "${bindir}/sxpm"
             </programlisting>
-
             <para>
-                In this example we want to ship the "sxpm" and "cxpm" binaries 
-                in separate packages. Since "bindir" would be packaged into the 
-                main <glossterm><link linkend='var-PN'>PN</link></glossterm> 
-                package as standard we prepend the <glossterm><link
-                linkend='var-PACKAGES'>PACKAGES</link></glossterm> variable so
-                additional package names are added to the start of list. The 
-                extra <glossterm><link linkend='var-FILES'>FILES</link></glossterm>_*
-                variables then contain information to specify which files and
-                directories goes into which package. Files included by earlier
-                package are skipped by latter packages, and thus main <glossterm>
-                <link linkend='var-PN'>PN</link></glossterm> will not include 
-                above listed files
+                In the previous example we want to ship the "sxpm" and "cxpm" binaries 
+                in separate packages. 
+                Since "bindir" would be packaged into the main 
+                <glossterm><link linkend='var-PN'>PN</link></glossterm> 
+                package by default, we prepend the <glossterm><link linkend='var-PACKAGES'>PACKAGES</link>
+                </glossterm> variable so additional package names are added to the start of list. 
+                This results in the extra <glossterm><link linkend='var-FILES'>FILES</link></glossterm>_*
+                variables then containing information defining which files and
+                directories go into which package. 
+                Files included by earlier packages are skipped by latter packages.
+                Thus, the main <glossterm><link linkend='var-PN'>PN</link></glossterm> package does not include 
+                the above listed files.
             </para>
         </section>
 
@@ -232,14 +208,13 @@ FILES_sxpm = "${bindir}/sxpm"
             <title>Post Install Scripts</title>
 
             <para>
-                To add a post-installation script to a package, add
-                a <function>pkg_postinst_PACKAGENAME()</function> 
-                function to the .bb file
-                where PACKAGENAME is the name of the package to attach
-                the postinst script to. Normally <glossterm><link
-                linkend='var-PN'>PN</link></glossterm> can be used which expands
-                to PACKAGENAME automatically. A post-installation function has the 
-                following structure:
+                To add a post-installation script to a package, add a <function>pkg_postinst_PACKAGENAME()
+                </function> function to the <filename>.bb</filename> file and use 
+                <filename>PACKAGENAME</filename> as the name of the package you want to attach to the 
+                <filename>postinst</filename> script.
+                Normally <glossterm><link linkend='var-PN'>PN</link></glossterm> can be used, which 
+                automatically expands to PACKAGENAME.
+                A post-installation function has the following structure:
             </para>
             <programlisting>
 pkg_postinst_PACKAGENAME () {
@@ -248,21 +223,18 @@ pkg_postinst_PACKAGENAME () {
 }
             </programlisting>
             <para>
-                The script defined in the post installation function
-                gets called when the rootfs is made. If the script succeeds,
-                the package is marked as installed. If the script fails,
-                the package is marked as unpacked and the script will be
-                executed again on the first boot of the image.
+                The script defined in the post-installation function is called when the rootfs is made. 
+                If the script succeeds, the package is marked as installed. 
+                If the script fails, the package is marked as unpacked and the script is
+                executed when the image boots again.
             </para>
-
             <para>
-                Sometimes it is necessary that the execution of a post-installation
-                script is delayed until the first boot, because the script 
-                needs to be executed on the device itself.  To delay script execution
-                until boot time, the post-installation function should have the
-                following structure:
+                Sometimes it is necessary for the execution of a post-installation
+                script to be delayed until the first boot.  
+                For example, the script might need to be executed on the device itself. 
+                To delay script execution until boot time, use the following structure for the 
+                post-installation script:
             </para>
-            
             <programlisting>
 pkg_postinst_PACKAGENAME () {
 #!/bin/sh -e
@@ -273,83 +245,69 @@ else
 fi
 }
             </programlisting>
-            
             <para>
-                The structure above delays execution until first boot 
-                because the <glossterm><link
-                        linkend='var-D'>D</link></glossterm> variable points
-                to the 'image'
-                directory when the rootfs is being made at build time but
+                The previous example delays execution until the image boots again because the 
+                <glossterm><link linkend='var-D'>D</link></glossterm> variable points
+                to the 'image' directory when the rootfs is being made at build time but
                 is unset when executed on the first boot. 
             </para>
         </section>
-
     </section>
 
     <section id='usingpoky-extend-customimage'>
         <title>Customising Images</title>
-
         <para>
-        Poky images can be customised to satisfy 
-        particular requirements. Several methods are detailed below 
-        along with guidelines of when to use them.
+        You can customize Poky images to satisfy particular requirements. 
+        This section describes several methods and provides guidelines for each.
         </para>
 
         <section id='usingpoky-extend-customimage-custombb'>
-            <title>Customising Images through a custom image .bb files</title>
-
+            <title>Customising Images Using Custom .bb Files</title>
             <para>
-                One way to get additional software into an image is by creating a
-                custom image. The recipe will contain two lines:
+                One way to get additional software into an image is to create a custom image. 
+                The following example shows the form for the two lines you need:
             </para>
-
             <programlisting>
 IMAGE_INSTALL = "task-poky-x11-base package1 package2"
 
 inherit poky-image
             </programlisting>
-
             <para>
                 By creating a custom image, a developer has total control
-                over the contents of the image. It is important to use 
-                the correct names of packages in the <glossterm><link
-                linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm> variable. 
-                The names must be in 
-                the OpenEmbedded notation instead of Debian notation, for example
-                "glibc-dev" instead of "libc6-dev" etc.
+                over the contents of the image. 
+                It is important to use the correct names of packages in the 
+                <glossterm><link linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm> variable. 
+                You must use the OpenEmbedded notation and not the Debian notation for the names 
+                (e.g. "glibc-dev" instead of "libc6-dev").
             </para>
-
             <para>
-                The other method of creating a new image is by modifying
-                an existing image. For example if a developer wants to add
-                "strace" into "poky-image-sato" the following recipe can
-                be used:
+                The other method for creating a custom image is to modify an existing image. 
+                For example, if a developer wants to add "strace" into "poky-image-sato", they can use 
+                the following recipe:
             </para>
-
             <programlisting>
 require poky-image-sato.bb
 
 IMAGE_INSTALL += "strace"
             </programlisting>
-
         </section>
 
         <section id='usingpoky-extend-customimage-customtasks'>
-            <title>Customising Images through custom tasks</title>
-
+            <title>Customising Images Using Custom Tasks</title>
             <para>
-                For complex custom images, the best approach is to create a custom 
-                task package which is then used to build the image (or images). A good
-                example of a tasks package is <filename>meta/packages/tasks/task-poky.bb
-                </filename>. The <glossterm><link linkend='var-PACKAGES'>PACKAGES</link></glossterm> 
-                variable lists the task packages to build (along with the complementary
-                -dbg and -dev packages). For each package added,
-                <glossterm><link linkend='var-PACKAGES'>RDEPENDS</link></glossterm> and
-                <glossterm><link linkend='var-PACKAGES'>RRECOMMENDS</link></glossterm> 
-                entries can then be added each containing a list of packages the parent 
-                task package should contain. An example would be:
+                For complex custom images, the best approach is to create a custom task package
+                that is used to build the image or images. 
+                A good example of a tasks package is <filename>meta/recipes-sato/tasks/task-poky.bb
+                </filename>. 
+                The <glossterm><link linkend='var-PACKAGES'>PACKAGES</link></glossterm> 
+                variable lists the task packages to build along with the complementary
+                -dbg and -dev packages. 
+                For each package added, you can use 
+                <glossterm><link linkend='var-PACKAGES'>RDEPENDS</link></glossterm>
+                and <glossterm><link linkend='var-PACKAGES'>RRECOMMENDS</link></glossterm> 
+                entries to provide a list of packages the parent task package should contain. 
+                Following is an example:
             </para>
-
             <para>
             <programlisting>
 DESCRIPTION = "My Custom Tasks"
@@ -378,11 +336,11 @@ RRECOMMENDS_task-custom-tools = "\
     kernel-module-oprofile"
 </programlisting>
             </para>
-
             <para>
-                In this example, two task packages are created, task-custom-apps and 
-                task-custom-tools with the dependencies and recommended package dependencies 
-                listed. To build an image using these task packages, you would then add 
+                In the previous example, two task packages are created with their dependencies and their
+                recommended package dependencies listed: <filename>task-custom-apps</filename>, and 
+                <filename>task-custom-tools</filename>. 
+                To build an image using these task packages, you need to add 
                 "task-custom-apps" and/or "task-custom-tools" to <glossterm><link 
                 linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm> or other forms 
                 of image dependencies as described in other areas of this section.
@@ -390,131 +348,133 @@ RRECOMMENDS_task-custom-tools = "\
         </section>
 
         <section id='usingpoky-extend-customimage-imagefeatures'>
-            <title>Customising Images through custom <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm></title>
-
+            <title>Customising Images Using Custom <glossterm>
+                <link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm></title>
             <para>
-                Ultimately users may want to add extra image "features" as used by Poky with the 
+                Ultimately users might want to add extra image "features" as used by Poky with the 
                 <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
-                variable. To create these, the best reference is <filename>meta/classes/poky-image.bbclass</filename>
-                which illustrates how poky achieves this. In summary, the file looks at the contents of the 
+                variable. 
+                To create these features, the best reference is 
+                <filename>meta/classes/poky-image.bbclass</filename>, which shows how poky achieves this. 
+                In summary, the file looks at the contents of the 
                 <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
-                variable and then maps this into a set of tasks or packages. Based on this then the 
-                <glossterm><link linkend='var-IMAGE_INSTALL'> IMAGE_INSTALL</link></glossterm> 
-                variable is generated automatically. Extra features can be added by 
-                extending the class or creating a custom class for use with specialised image .bb files.
+                variable and then maps them into a set of tasks or packages. 
+                Based on this information the <glossterm><link linkend='var-IMAGE_INSTALL'> IMAGE_INSTALL</link>
+                </glossterm> variable is generated automatically. 
+                Users can add extra features by extending the class or creating a custom class for use 
+                with specialized image <filename>.bb</filename> files.
             </para>
         </section>
 
         <section id='usingpoky-extend-customimage-localconf'>
-            <title>Customising Images through local.conf</title>
-
+            <title>Customising Images Using local.conf</title>
             <para>
-                It is possible to customise image contents by abusing
-                variables used by distribution maintainers in local.conf.
-                This method only allows the addition of packages and 
-                is not recommended.
+                It is possible to customise image contents by abusing variables used by distribution 
+                maintainers in local.conf.
+                This method only allows the addition of packages and is not recommended.
             </para>
-
             <para>
-                To add an "strace" package into the image the following is 
-                added to local.conf:
+                For example, to add the "strace" package into the image the you would add this to the 
+                <filename>local.conf</filename> file:
             </para>
-
             <programlisting>
 DISTRO_EXTRA_RDEPENDS += "strace"
             </programlisting>
-
             <para>
                 However, since the <glossterm><link linkend='var-DISTRO_EXTRA_RDEPENDS'>
                 DISTRO_EXTRA_RDEPENDS</link></glossterm> variable is for
-                distribution maintainers this method does not make
-                adding packages as simple as a custom .bb file. Using
-                this method, a few packages will need to be recreated if they have been
-                created before and then the image is rebuilt.
+                distribution maintainers, adding packages using this method is not as simple as adding 
+                them using a custom <filename>.bb</filename> file. 
+                Using the <filename>local.conf</filename> file method could result in some packages 
+                requiring recreation.
+                For example, if packages were previously created and the image was rebuilt then the packages
+                would need to be recreated.
+            </para>
+            <para>
+                Cleaning task-* packages is required because they use the
+                <glossterm><link linkend='var-DISTRO_EXTRA_RDEPENDS'>
+                DISTRO_EXTRA_RDEPENDS</link></glossterm> variable. 
+                You do not have to build them by hand because Poky images depend on the packages they contain.
+                This means dependencies are automatically built when the image builds. 
+                For this reason we don't use the "rebuild" task.
+                In this case the "rebuild" task does does not care about
+                dependencies - it only rebuilds the specified package.
             </para>
             <programlisting>
 bitbake -c clean task-boot task-base task-poky
 bitbake poky-image-sato
             </programlisting>
-
-            <para>
-                Cleaning task-* packages is required because they use the
-                <glossterm><link linkend='var-DISTRO_EXTRA_RDEPENDS'>
-                DISTRO_EXTRA_RDEPENDS</link></glossterm> variable. There is no need to
-                build them by hand as Poky images depend on the packages they contain so
-                dependencies will be built automatically when building the image. For this reason we don't use the
-                "rebuild" task in this case since "rebuild" does not care about
-                dependencies - it only rebuilds the specified package.
-            </para>
-
         </section>
 
     </section>
 
 <section id="platdev-newmachine">
-    <title>Porting Poky to a new machine</title>
+    <title>Porting Poky to a New Machine</title>
     <para>
-        Adding a new machine to Poky is a straightforward process and
-        this section gives an idea of the changes that are needed. This guide is
-        meant to cover adding machines similar to those Poky already supports. 
-        Adding a totally new architecture might require gcc/glibc changes as 
-        well as updates to the site information and, whilst well within Poky's 
-        capabilities, is outside the scope of this section.
+        Adding a new machine to Poky is a straightforward process. 
+        This section provides information that gives you an idea of the changes you must make.
+        The information covers adding machines similar to those Poky already supports. 
+        Although well within the capabilities of Poky, adding a totally new architecture might require 
+        changes to <filename>gcc/glibc</filename> and to the site information.
+        Consequently, the information is beyond the scope of this manual.
     </para>
 
     <section id="platdev-newmachine-conffile">
-        <title>Adding the machine configuration file</title>
+        <title>Adding the Machine Configuration File</title>
         <para>
-            A .conf file needs to be added to conf/machine/ with details of the
-            device being added. The name of the file determines the name Poky will
-            use to reference this machine.
+            To add a machine configuration you need to add a <filename>.conf</filename> file
+            with details of the device being added to <filename>conf/machine/</filename>.
+            The name of the file determines the name Poky uses to reference the new machine.
         </para>
-
         <para>
             The most important variables to set in this file are <glossterm>
             <link linkend='var-TARGET_ARCH'>TARGET_ARCH</link></glossterm> 
             (e.g. "arm"), <glossterm><link linkend='var-PREFERRED_PROVIDER'>
             PREFERRED_PROVIDER</link></glossterm>_virtual/kernel (see below) and 
             <glossterm><link linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES
-            </link></glossterm> (e.g. "kernel26 apm screen wifi"). Other variables
-            like <glossterm><link linkend='var-SERIAL_CONSOLE'>SERIAL_CONSOLE
+            </link></glossterm> (e.g. "kernel26 apm screen wifi"). 
+            You might also need other variables like <glossterm><link linkend='var-SERIAL_CONSOLE'>SERIAL_CONSOLE
             </link></glossterm> (e.g. "115200 ttyS0"), <glossterm> 
             <link linkend='var-KERNEL_IMAGETYPE'>KERNEL_IMAGETYPE</link>
             </glossterm> (e.g. "zImage") and <glossterm><link linkend='var-IMAGE_FSTYPES'>
-            IMAGE_FSTYPES</link></glossterm> (e.g. "tar.gz jffs2") might also be 
-            needed. Full details on what these variables do and the meaning of
-            their contents is available through the links. There're lots of existing
-            machine .conf files which can be easily leveraged from meta/conf/machine/.
+            IMAGE_FSTYPES</link></glossterm> (e.g. "tar.gz jffs2"). 
+            You can find full details on these variables in the reference section. 
+            You can leverage many existing machine <filename>.conf</filename> files from 
+            <filename>meta/conf/machine/</filename>.
         </para>
     </section>
 
     <section id="platdev-newmachine-kernel">
-        <title>Adding a kernel for the machine</title>
+        <title>Adding a Kernel for the Machine</title>
         <para>
-             Poky needs to be able to build a kernel for the machine. You need 
-             to either create a new kernel recipe for this machine or extend an 
-             existing recipe. There are plenty of kernel examples in the 
-             meta/recipes-kernel/linux directory which can be used as references.
+            Poky needs to be able to build a kernel for the machine. 
+            You need to either create a new kernel recipe for this machine, or extend an 
+            existing recipe. 
+            You can find several kernel examples in the <filename>meta/recipes-kernel/linux</filename>
+            directory that can be used as references.
         </para>
         <para>
-             If creating a new recipe the "normal" recipe writing rules apply 
-             for setting up a <glossterm><link linkend='var-SRC_URI'>SRC_URI
-             </link></glossterm> including any patches and setting <glossterm>
-             <link linkend='var-S'>S</link></glossterm> to point at the source 
-             code. You will need to create a configure task which configures the 
-             unpacked kernel with a defconfig be that through a "make defconfig" 
-             command or more usually though copying in a suitable defconfig and 
-             running "make oldconfig". By making use of "inherit kernel" and also 
-             maybe some of the linux-*.inc files, most other functionality is 
-             centralised and the the defaults of the class normally work well.
+            If you are creating a new recipe, the "normal" recipe-writing rules apply for setting 
+            up a <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>. 
+            This means specifying any necessary patches and setting <glossterm>
+            <link linkend='var-S'>S</link></glossterm> to point at the source code. 
+            You need to create a "configure" task that configures the unpacked kernel with a defconfig.
+            You can do this by using a <filename>make defconfig</filename> command or
+            more commonly by copying in a suitable defconfig and and then running 
+            <filename>make oldconfig</filename>. 
+            By making use of "inherit kernel" and potentially some of the 
+            <filename>linux-*.inc</filename> files, most other functionality is 
+            centralized and the the defaults of the class normally work well.
         </para>
         <para>
-            If extending an existing kernel it is usually a case of adding a 
-            suitable defconfig file in a location similar to that used by other 
-            machine's defconfig files in a given kernel, possibly listing it in
-            the SRC_URI and adding the machine to the expression in <glossterm>
-            <link linkend='var-COMPATIBLE_MACHINE'>COMPATIBLE_MACHINE</link>
-            </glossterm>:
+            If you are extending an existing kernel, it is usually a matter of adding a 
+            suitable <filename>defconfig</filename> file.
+            The file needs to be added into a location similar to <filename>defconfig</filename> files
+            used for other machines in a given kernel. 
+            A possible way to do this is by listing the file in the 
+            <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>
+            and adding the machine to the expression in 
+            <glossterm><link linkend='var-COMPATIBLE_MACHINE'>COMPATIBLE_MACHINE</link></glossterm>:
         </para>
         <programlisting>
 COMPATIBLE_MACHINE = '(qemux86|qemumips)'
@@ -522,7 +482,7 @@ COMPATIBLE_MACHINE = '(qemux86|qemumips)'
     </section>
 
     <section id="platdev-newmachine-formfactor">
-        <title>Adding a formfactor configuration file</title>
+        <title>Adding a Formfactor Configuration File</title>
         <para>
             A formfactor configuration file provides information about the 
             target hardware on which Poky is running, and that Poky cannot 
