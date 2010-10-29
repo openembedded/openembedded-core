@@ -481,7 +481,9 @@ do_deploy() {
 	fi
 
 	if test "x${KERNEL_IMAGETYPE}" = "xuImage" ; then 
-		if test -e arch/${ARCH}/boot/compressed/vmlinux ; then
+		if test -e arch/${ARCH}/boot/uImage ; then
+			cp arch/${ARCH}/boot/uImage ${DEPLOYDIR}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
+		elif test -e arch/${ARCH}/boot/compressed/vmlinux ; then
 			${OBJCOPY} -O binary -R .note -R .comment -S arch/${ARCH}/boot/compressed/vmlinux linux.bin
 			uboot-mkimage -A ${ARCH} -O linux -T kernel -C none -a ${UBOOT_ENTRYPOINT} -e ${UBOOT_ENTRYPOINT} -n "${DISTRO_NAME}/${PV}/${MACHINE}" -d linux.bin ${DEPLOYDIR}/uImage-${PV}-${PR}-${MACHINE}-${DATETIME}.bin
 			rm -f linux.bin
