@@ -12,16 +12,15 @@
 . $POKYBASE/scripts/qemuimage-testlib
 
 TIMEOUT=360
-QEMU_IPADDR="192.168.7.2"
 RET=1
 
 # Start qemu and check its network
-Test_Create_Qemu ${QEMU_IPADDR} ${TIMEOUT}
+Test_Create_Qemu ${TIMEOUT}
 
 # If qemu network is up, check ssh service in qemu
 if [ $? -eq 0 ]; then
 	Test_Info "Begin to Test SSH Service in Qemu"
-	Test_SSH_UP ${QEMU_IPADDR} ${TIMEOUT}
+	Test_SSH_UP ${TARGET_IPADDR} ${TIMEOUT}
 	RET=$?
 else
 	RET=1

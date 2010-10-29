@@ -1,2 +1,3 @@
 sanity boot
 sanity ssh
+sanity dmesg

@@ -16,8 +16,17 @@
 
 TYPE="ext3"
 
+# The folder to hold all scripts running on targets
+TOOLS="$POKYBASE/scripts/qemuimage-tests/tools"
+
+# Test Directory on target for testing
+TARGET_TEST_DIR="/opt/test"
+
 # Global variable for process id
 PID=0
+
+# Global variable for target ip address
+TARGET_IPADDR=0
 
 # common function for information print
 Test_Error()
@@ -28,6 +37,35 @@ Test_Error()
 Test_Info()
 {
 	echo -e "\tTest_Info: $*"
+}
+
+# function to copy files from host into target
+# $1 is the ip address of target
+# $2 is the files, which need to be copied into target
+# $3 is the path on target, where files are copied into
+Test_SCP()
+{
+	local ip_addr=$1
+	local src=$2
+	local des=$3
+	local tmpfile=`mktemp`
+	local timeout=60
+	local ret=0
+
+	# We use expect to interactive with target by ssh
+	local exp_cmd=`cat << EOF
+eval spawn scp -o UserKnownHostsFile=$tmpfile "$src" root@$ip_addr:"$des"
+set timeout $time_out
+expect {
+    "*assword:" { send "\r"; exp_continue}
+    "*(yes/no)?" { send "yes\r"; exp_continue }
+    eof          { exit [ lindex [wait] 3 ] }
+}
+EOF`
+	expect -c "$exp_cmd"
+	ret=$?
+	rm -rf $tmpfile
+	return $ret
 }
 
 # function to run command in $ip_addr via ssh
@@ -75,6 +113,27 @@ Test_SSH_UP()
 	done
 
 	Test_Info "We can not ssh on ${ip_addr} in ${timeout}"
+	return 1
+}
+
+# function to prepare target test environment
+# $1 is the ip address of target system
+# $2 is the files, which needs to be copied into target
+Test_Target_Pre()
+{
+	local ip_addr=$1
+	local testscript=$2
+
+	# Create a pre-defined folder for test scripts
+	Test_SSH $ip_addr "mkdir -p $TARGET_TEST_DIR"
+	if [ $? -eq 0 ]; then
+		# Copy test scripts into target
+		Test_SCP $ip_addr $testscript $TARGET_TEST_DIR && return 0
+	else
+		Test_Error "Fail to create $TARGET_TEST_DIR on target"
+		return 1
+	fi
+
 	return 1
 }
 
@@ -232,13 +291,63 @@ Test_Find_Image()
 	return 1
 }
 
+# function to parse IP address of target
+# $1 is the pid of qemu startup process
+Test_Fetch_Target_IP()
+{
+	local opid=$1
+	local ppid=0
+	local ip_addr=0
+	local i=0
+	declare local pid
+
+	# Check if $1 pid exists and contains ipaddr of target
+	ps -fp $opid | grep -oq "192\.168\.7\.[0-9]*::"
+
+	# Find all children pid of the pid $1
+	# and check if they contain ipaddr of target
+	if [ $? -ne 0 ]; then
+		# Check if there is any child pid of the pid $1
+		ppid=$opid
+		ps -f --ppid $ppid > /dev/zero
+		ret=$?
+
+		while [ $ret -eq 0 ]
+		do
+			# If yes, get the child pid and check if the child pid has other child pid
+			# Continue the while loop until there is no child pid found
+			pid[$i]=`ps -f --ppid $ppid | awk '{if ($2 != "PID") print $2}'`
+			ppid=${pid[$i]}
+			i=$((i+1))
+			ps -f --ppid $ppid > /dev/zero
+			ret=$?
+		done
+
+		# Check these children pids, if they have ipaddr included in command line
+		while [ $i -ne 0 ]
+		do
+			i=$((i-1))
+			ps -fp ${pid[$i]} | grep -oq "192\.168\.7\.[0-9]*::"
+			if [ $? -eq 0 ]; then
+				ip_addr=`ps -fp ${pid[$i]} | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
+			fi
+			sleep 1
+		done
+	else
+		ip_addr=`ps -fp $opid | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
+	fi
+
+	echo $ip_addr
+
+	return
+}
+
 # function to check if qemu and its network
 Test_Create_Qemu()
 {
+	local timeout=$1
 	local ret=1
 	local up_time=0
-	local ip_addr=$1
-	local timeout=$2
 
 	which poky-qemu
 	if [ $? -eq 0 ]; then
@@ -288,11 +397,16 @@ Test_Create_Qemu()
 		fi
 	done
 
+	# Parse IP address of target from the qemu command line
+	if [ ${up_time} -lt ${timeout} ]; then
+		TARGET_IPADDR=`Test_Fetch_Target_IP $PID`
+	fi
+
 	while [ ${up_time} -lt ${timeout} ]
 	do
-		Test_Check_IP_UP ${ip_addr}
+		Test_Check_IP_UP ${TARGET_IPADDR}
 		if [ $? -eq 0 ]; then
-			Test_Info "Qemu Network is up, ping with ${ip_addr} is OK"
+			Test_Info "Qemu Network is up, ping with ${TARGET_IPADDR} is OK"
 			ret=0
 			break
 		else

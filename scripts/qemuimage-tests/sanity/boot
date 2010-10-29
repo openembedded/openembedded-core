@@ -12,10 +12,9 @@
 . $POKYBASE/scripts/qemuimage-testlib
 
 TIMEOUT=120
-QEMU_IPADDR="192.168.7.2"
 
 # Start qemu and check its network
-Test_Create_Qemu ${QEMU_IPADDR} ${TIMEOUT}
+Test_Create_Qemu ${TIMEOUT}
 
 if [ $? -eq 0 ]; then
 	Test_Info "Boot Test PASS"

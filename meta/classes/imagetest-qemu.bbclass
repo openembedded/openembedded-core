@@ -133,9 +133,11 @@ python do_qemuimagetest() {
                 ret = 1
             elif m.group('noresult') == "1":
                 ret = 2
-            print line,
+            line = line.strip('\n')
+            bb.note(line)
         else:
-            print line,
+            line = line.strip('\n')
+            bb.note(line)
     f.close()
 
     if ret != 0:
