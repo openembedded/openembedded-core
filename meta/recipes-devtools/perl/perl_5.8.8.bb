@@ -7,7 +7,8 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db perl-native grep-native"
-PR = "r20"
+DEPENDS += "gdbm"
+PR = "r21"
 
 # Major part of version
 PVM = "5.8"
@@ -32,6 +33,7 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
         file://64_debian_enc2xs_inc.patch;patch=1 \
         file://asm-pageh-fix.patch;patch=1 \
         file://native-perlinc.patch;patch=1 \
+	file://perl-enable-gdbm.patch;patch=1 \
         file://config.sh \
         file://config.sh-32 \
         file://config.sh-32-le \
