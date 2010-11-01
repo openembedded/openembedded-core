@@ -25,3 +25,5 @@ do_distall[recrdeptask] = "do_distribute_sources"
 base_do_distsrcall() {
 	:
 }
+
+EXPORT_FUNCTIONS do_distsrcall
