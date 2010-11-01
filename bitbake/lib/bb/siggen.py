@@ -29,7 +29,7 @@ class SignatureGenerator(object):
     def __init__(self, data, dumpsigs):
         return
 
-    def finalise(self, fn, d):
+    def finalise(self, fn, d, varient):
         return
 
 class SignatureGeneratorBasic(SignatureGenerator):
