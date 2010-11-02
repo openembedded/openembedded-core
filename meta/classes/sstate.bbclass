@@ -1,7 +1,9 @@
 SSTATE_VERSION = "1"
 
 SSTATE_MANIFESTS = "${TMPDIR}/sstate-control"
-SSTATE_MANFILEPREFIX = "${SSTATE_MANIFESTS}/manifest-${SSTATE_PKGARCH}-${PN}"
+SSTATE_MANFILEBASE = "${SSTATE_MANIFESTS}/manifest-${SSTATE_PKGARCH}-"
+SSTATE_MANFILEPREFIX = "${SSTATE_MANFILEBASE}${PN}"
+
 
 SSTATE_PKGARCH    = "${BASE_PACKAGE_ARCH}"
 SSTATE_PKGNAME    = "sstate-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}-${PV}-${PR}-${SSTATE_PKGARCH}-${SSTATE_VERSION}-${BB_TASKHASH}"
@@ -83,6 +85,30 @@ def sstate_install(ss, d):
 
     if os.access(manifest, os.R_OK):
         bb.fatal("Package already staged (%s)?!" % manifest)
+
+    def checkmanifest(pn, task):
+        return os.access(bb.data.expand("${SSTATE_MANFILEBASE}%s.%s" % (pn, task), d), os.R_OK)
+
+    skipinst = False
+    pn = d.getVar("PN", True)
+    if pn == "gcc-cross-initial":
+        if checkmanifest("gcc-cross", "populate-sysroot"):
+            skipinst = True
+        if checkmanifest("gcc-cross-intermediate", "populate-sysroot"):
+            skipinst = True
+    elif pn == "gcc-cross-intermediate":
+        if checkmanifest("gcc-cross", "populate-sysroot"):
+            skipinst = True
+    elif pn == "glibc-initial":
+        if checkmanifest("glibc", "populate-sysroot"):
+            skipinst = True
+    elif pn == "eglibc-initial":
+        if checkmanifest("eglibc", "populate-sysroot"):
+            skipinst = True
+
+    if skipinst:
+        bb.note("Not staging %s.%s as sysroot already contains better functionality" % (pn, ss['name']))
+        return
 
     locks = []
     for lock in ss['lockfiles']:
