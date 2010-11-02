@@ -116,9 +116,10 @@ do_install_basefilesissue () {
 		echo ${hostname} > ${D}${sysconfdir}/hostname
 	fi
 
+	install -m 644 ${WORKDIR}/issue*  ${D}${sysconfdir}  
         if [ -n "${DISTRO_NAME}" ]; then
-		echo -n "${DISTRO_NAME} " > ${D}${sysconfdir}/issue
-		echo -n "${DISTRO_NAME} " > ${D}${sysconfdir}/issue.net
+		echo -n "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue
+		echo -n "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue.net
 		if [ -n "${DISTRO_VERSION}" ]; then
 			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue
 			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue.net
@@ -127,9 +128,6 @@ do_install_basefilesissue () {
 		echo >> ${D}${sysconfdir}/issue
 		echo "%h"    >> ${D}${sysconfdir}/issue.net
 		echo >> ${D}${sysconfdir}/issue.net
-	else
- 	       install -m 0644 ${WORKDIR}/issue ${D}${sysconfdir}/issue
- 	       install -m 0644 ${WORKDIR}/issue.net ${D}${sysconfdir}/issue.net
  	fi
 }
 
