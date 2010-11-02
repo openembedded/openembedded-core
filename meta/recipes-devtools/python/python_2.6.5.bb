@@ -82,18 +82,18 @@ do_install() {
 require python-${PYTHON_MAJMIN}-manifest.inc
 
 # manual dependency additions
-RPROVIDES_python-core = "python"
-RRECOMMENDS_python-core = "python-readline"
-RRECOMMENDS_python-crypt = "openssl"
+RPROVIDES_${PN}-core = "python"
+RRECOMMENDS_${PN}-core = "python-readline"
+RRECOMMENDS_${PN}-crypt = "openssl"
 
 # add sitecustomize
-FILES_python-core += "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py"
+FILES_${PN}-core += "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py"
 # ship 2to3
-FILES_python-core += "${bindir}/2to3"
+FILES_${PN}-core += "${bindir}/2to3"
 
 # package libpython2
-PACKAGES =+ "libpython2"
-FILES_libpython2 = "${libdir}/libpython*.so*"
+PACKAGES =+ "lib${PN}2"
+FILES_lib${PN}2 = "${libdir}/libpython*.so*"
 
 # additional stuff -dev
 
@@ -111,12 +111,14 @@ FILES_${PN}-dev = "\
 "
 
 # catch debug extensions (isn't that already in python-core-dbg?)
-FILES_python-dbg += "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/.debug"
+FILES_${PN}-dbg += "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/.debug"
 
 # catch all the rest (unsorted)
-PACKAGES += "python-misc"
-FILES_python-misc = "${libdir}/python${PYTHON_MAJMIN}"
+PACKAGES += "${PN}-misc"
+FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 
 # catch manpage
-PACKAGES += "python-man"
-FILES_python-man = "${datadir}/man"
+PACKAGES += "${PN}-man"
+FILES_${PN}-man = "${datadir}/man"
+
+BBCLASSEXTEND = "nativesdk"
