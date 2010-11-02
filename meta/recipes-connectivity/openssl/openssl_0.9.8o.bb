@@ -25,4 +25,4 @@ SRC_URI += "file://debian/ca.patch \
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

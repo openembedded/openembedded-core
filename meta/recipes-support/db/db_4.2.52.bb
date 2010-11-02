@@ -94,4 +94,4 @@ do_install_append() {
 # The db package contains symlinks that trip up insane
 INSANE_SKIP_db = "1"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
