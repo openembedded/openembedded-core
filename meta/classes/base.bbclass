@@ -103,18 +103,6 @@ DEPENDS_prepend="${@base_dep_prepend(d)} "
 DEPENDS_virtclass-native_prepend="${@base_dep_prepend(d)} "
 DEPENDS_virtclass-nativesdk_prepend="${@base_dep_prepend(d)} "
 
-
-def base_set_filespath(path, d):
-	filespath = []
-	extrapaths = (bb.data.getVar("FILESEXTRAPATHS", d, True) or "").split()
-	path = extrapaths + path
-	# The ":" ensures we have an 'empty' override
-	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
-	for p in path:
-		for o in overrides.split(":"):
-			filespath.append(os.path.join(p, o))
-	return ":".join(filespath)
-
 FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/${BP}", "${FILE_DIRNAME}/${BPN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
 # THISDIR only works properly with imediate expansion as it has to run
 # in the context of the location its used (:=)
@@ -606,13 +594,6 @@ python () {
 
     bb.data.setVar('MULTIMACH_ARCH', multiarch, d)
 }
-
-def check_app_exists(app, d):
-	from bb import which, data
-
-	app = data.expand(app, d)
-	path = data.getVar('PATH', d, 1)
-	return len(which(path, app)) != 0
 
 def check_gcc3(data):
 

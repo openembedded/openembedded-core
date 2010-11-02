@@ -386,8 +386,9 @@ def explode_deps(s):
 	return bb.utils.explode_deps(s)
 
 def base_set_filespath(path, d):
-	bb.note("base_set_filespath usage is deprecated, %s should be fixed" % d.getVar("P", 1))
 	filespath = []
+	extrapaths = (bb.data.getVar("FILESEXTRAPATHS", d, True) or "").split()
+	path = extrapaths + path
 	# The ":" ensures we have an 'empty' override
 	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
 	for p in path:
