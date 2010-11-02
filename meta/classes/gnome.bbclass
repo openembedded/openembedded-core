@@ -12,6 +12,6 @@ FILES_${PN} += "${datadir}/application-registry \
     ${datadir}/mime-info \
     ${datadir}/gnome-2.0"
 
-inherit autotools_stage pkgconfig gconf
+inherit autotools pkgconfig gconf
 
 EXTRA_OEMAKE += "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1"
