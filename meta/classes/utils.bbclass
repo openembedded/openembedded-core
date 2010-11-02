@@ -38,13 +38,57 @@ def oe_filter(f, str, d):
 def oe_filter_out(f, str, d):
     return oe.utils.str_filter_out(f, str, d)
 
+def machine_paths(d):
+    """List any existing machine specific filespath directories"""
+    machine = d.getVar("MACHINE", True)
+    filespathpkg = d.getVar("FILESPATHPKG", True).split(":")
+    for basepath in d.getVar("FILESPATHBASE", True).split(":"):
+        for pkgpath in filespathpkg:
+            machinepath = os.path.join(basepath, pkgpath, machine)
+            if os.path.isdir(machinepath):
+                yield machinepath
+
+def is_machine_specific(d):
+    """Determine whether the current recipe is machine specific"""
+    machinepaths = set(machine_paths(d))
+    urldatadict = bb.fetch.init(d.getVar("SRC_URI", True).split(), d, True)
+    for urldata in (urldata for urldata in urldatadict.itervalues()
+                    if urldata.type == "file"):
+        if any(urldata.localpath.startswith(mp + "/") for mp in machinepaths):
+            return True
+
+def oe_popen_env(d):
+    env = d.getVar("__oe_popen_env", False)
+    if env is None:
+        env = {}
+        for v in d.keys():
+            if d.getVarFlag(v, "export"):
+                env[v] = d.getVar(v, True) or ""
+        d.setVar("__oe_popen_env", env)
+    return env
+
+def oe_run(d, cmd, **kwargs):
+    import oe.process
+    kwargs["env"] = oe_popen_env(d)
+    return oe.process.run(cmd, **kwargs)
+
+def oe_popen(d, cmd, **kwargs):
+    import oe.process
+    kwargs["env"] = oe_popen_env(d)
+    return oe.process.Popen(cmd, **kwargs)
+
+def oe_system(d, cmd, **kwargs):
+    """ Popen based version of os.system. """
+    if not "shell" in kwargs:
+        kwargs["shell"] = True
+    return oe_popen(d, cmd, **kwargs).wait()
+
 # for MD5/SHA handling
-def base_chk_load_parser(config_path):
+def base_chk_load_parser(config_paths):
     import ConfigParser
     parser = ConfigParser.ConfigParser()
-    if not len(parser.read(config_path)) == 1:
-        bb.note("Can not open the '%s' ini file" % config_path)
-        raise Exception("Can not open the '%s'" % config_path)
+    if len(parser.read(config_paths)) < 1:
+        raise ValueError("no ini files could be found")
 
     return parser
 
@@ -216,7 +260,7 @@ oe_libinstall() {
 		eval `cat $lafile|grep "^library_names="`
 		libtool=1
 	else
-		library_names="$libname.so* $libname.dll.a"
+		library_names="$libname.so* $libname.dll.a $libname.*.dylib"
 	fi
 
 	__runcmd install -d $destpath/
@@ -307,3 +351,46 @@ oe_machinstall() {
 		touch $4
 	fi
 }
+
+create_wrapper () {
+   # Create a wrapper script
+   #
+   # These are useful to work around relocation issues, by setting environment
+   # variables which point to paths in the filesystem.
+   #
+   # Usage: create_wrapper FILENAME [[VAR=VALUE]..]
+
+   cmd=$1
+   shift
+
+   # run echo via env to test syntactic validity of the variable arguments
+   env $@ echo "Generating wrapper script for $cmd"
+
+   mv $cmd $cmd.real
+   cmdname=`basename $cmd`.real
+   cat <<END >$cmd
+#!/bin/sh
+exec env $@ \`dirname \$0\`/$cmdname "\$@"
+END
+   chmod +x $cmd
+}
+
+def check_app_exists(app, d):
+	from bb import which, data
+
+	app = data.expand(app, d)
+	path = data.getVar('PATH', d, 1)
+	return bool(which(path, app))
+
+def explode_deps(s):
+	return bb.utils.explode_deps(s)
+
+def base_set_filespath(path, d):
+	bb.note("base_set_filespath usage is deprecated, %s should be fixed" % d.getVar("P", 1))
+	filespath = []
+	# The ":" ensures we have an 'empty' override
+	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
+	for p in path:
+		for o in overrides.split(":"):
+			filespath.append(os.path.join(p, o))
+	return ":".join(filespath)
