@@ -2,6 +2,7 @@
 *.pyo
 build/conf/local.conf
 build/conf/bblayers.conf
+build/downloads
 build/tmp/
 build/sstate-cache
 build/pyshtables.py
