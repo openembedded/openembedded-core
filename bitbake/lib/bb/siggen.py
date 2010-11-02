@@ -74,6 +74,8 @@ class SignatureGeneratorBasic(SignatureGenerator):
                     lookupcache[dep] = var
                 if var:
                     data = data + var
+            if data is None:
+                bb.error("Task %s from %s seems to be empty?!" % (task, fn))
             self.basehash[fn + "." + task] = hashlib.md5(data).hexdigest()
             #bb.note("Hash for %s is %s" % (task, tashhash[task]))
 
