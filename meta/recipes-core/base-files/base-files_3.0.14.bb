@@ -2,7 +2,7 @@ SUMMARY = "Miscellaneous files for the base system."
 DESCRIPTION = "The base-files package creates the basic system directory structure and provides a small set of key configuration files for the system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r64"
+PR = "r65"
 LICENSE = "GPLv2"
 
 SRC_URI = "file://rotation \
@@ -63,6 +63,8 @@ hostname_mnci = "MNCI"
 hostname_rt3000 = "MNRT"
 hostname_jlime = "JLime"
 
+BASEFILESISSUEINSTALL ?= "do_install_basefilesissue"
+
 do_install () {
 	for d in ${dirs755}; do
 		install -m 0755 -d ${D}$d
@@ -80,27 +82,7 @@ do_install () {
 		ln -sf /media/$d ${D}/mnt/$d
 	done
 
-	if [ -n "${MACHINE}" -a "${hostname}" = "openembedded" ]; then
-		echo ${MACHINE} > ${D}${sysconfdir}/hostname
-	else
-		echo ${hostname} > ${D}${sysconfdir}/hostname
-	fi
-
-        if [ -n "${DISTRO_NAME}" ]; then
-		echo -n "${DISTRO_NAME} " > ${D}${sysconfdir}/issue
-		echo -n "${DISTRO_NAME} " > ${D}${sysconfdir}/issue.net
-		if [ -n "${DISTRO_VERSION}" ]; then
-			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue
-			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue.net
-		fi
-		echo "\n \l" >> ${D}${sysconfdir}/issue
-		echo >> ${D}${sysconfdir}/issue
-		echo "%h"    >> ${D}${sysconfdir}/issue.net
-		echo >> ${D}${sysconfdir}/issue.net
-	else
- 	       install -m 0644 ${WORKDIR}/issue ${D}${sysconfdir}/issue
- 	       install -m 0644 ${WORKDIR}/issue.net ${D}${sysconfdir}/issue.net
- 	fi
+	${BASEFILESISSUEINSTALL}
 
 	rotation=`cat ${WORKDIR}/rotation`
 	if [ "$rotation" != "0" ]; then
@@ -127,6 +109,29 @@ do_install () {
 	ln -sf /proc/mounts ${D}${sysconfdir}/mtab
 }
 
+do_install_basefilesissue () {
+	if [ -n "${MACHINE}" -a "${hostname}" = "openembedded" ]; then
+		echo ${MACHINE} > ${D}${sysconfdir}/hostname
+	else
+		echo ${hostname} > ${D}${sysconfdir}/hostname
+	fi
+
+        if [ -n "${DISTRO_NAME}" ]; then
+		echo -n "${DISTRO_NAME} " > ${D}${sysconfdir}/issue
+		echo -n "${DISTRO_NAME} " > ${D}${sysconfdir}/issue.net
+		if [ -n "${DISTRO_VERSION}" ]; then
+			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue
+			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue.net
+		fi
+		echo "\n \l" >> ${D}${sysconfdir}/issue
+		echo >> ${D}${sysconfdir}/issue
+		echo "%h"    >> ${D}${sysconfdir}/issue.net
+		echo >> ${D}${sysconfdir}/issue.net
+	else
+ 	       install -m 0644 ${WORKDIR}/issue ${D}${sysconfdir}/issue
+ 	       install -m 0644 ${WORKDIR}/issue.net ${D}${sysconfdir}/issue.net
+ 	fi
+}
 
 do_install_append_mnci () {
 	rmdir ${D}/tmp
