@@ -29,7 +29,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     python-nativesdk-netserver \
     python-nativesdk-distutils"
 
-TOOLCHAIN_OUTPUTNAME ?= "python-nativesdk-standalone"
+TOOLCHAIN_OUTPUTNAME ?= "python-nativesdk-standalone-${SDKMACHINE}"
 
 RDEPENDS = "${TOOLCHAIN_HOST_TASK}"
 
