@@ -36,7 +36,7 @@ FILES_${PN} =+ " ${libdir}/ssl/*"
 
 do_configure () {
 	cd util
-	perl perlpath.pl ${bindir}
+	perl perlpath.pl ${STAGING_BINDIR_NATIVE}
 	cd ..
 	ln -sf apps/openssl.pod crypto/crypto.pod ssl/ssl.pod doc/
 
