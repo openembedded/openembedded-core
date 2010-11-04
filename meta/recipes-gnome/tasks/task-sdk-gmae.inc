@@ -16,9 +16,9 @@ SDK-GMAE = " \
 
 # TODO: gvfs-dev, mission-control
 
-SDK-EXTRAS = ""
-SDK-EXTRAS_qemux86 = " valgrind lttng-ust-dev"
-SDK-EXTRAS_qemux86-64 = " lttng-ust-dev"
-SDK-EXTRAS_qemuppc = " lttng-ust-dev"
-SDK-EXTRAS_emenlow = " lttng-ust-dev"
-SDK-EXTRAS_atom-pc = " lttng-ust-dev"
+SDK-EXTRAS ?= ""
+SDK-EXTRAS_qemux86 ?= " valgrind lttng-ust-dev"
+SDK-EXTRAS_qemux86-64 ?= " lttng-ust-dev"
+SDK-EXTRAS_qemuppc ?= " lttng-ust-dev"
+SDK-EXTRAS_emenlow ?= " lttng-ust-dev"
+SDK-EXTRAS_atom-pc ?= " lttng-ust-dev"

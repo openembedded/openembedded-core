@@ -4,7 +4,7 @@
 
 DESCRIPTON = "Gnome Mobile And Embedded Software Development Kit for OpenedHand Poky"
 LICENSE = "MIT"
-PR = "r8"
+PR = "r9"
 
 ALLOW_EMPTY = "1"
 
@@ -16,4 +16,4 @@ RDEPENDS = "\
     task-poky-sdk \
     libglade-dev \
     ${SDK-GMAE} \
-    ${SDK_EXTRAS}"
+    ${SDK-EXTRAS}"
