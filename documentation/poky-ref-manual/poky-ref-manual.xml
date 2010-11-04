@@ -91,9 +91,10 @@
 
     <xi:include href="resources.xml"/>
 
-    <index id='index'>
+<!--    <index id='index'>
       <title>Index</title>
-    </index>
+    </index> 
+-->
 
 </book>
 <!-- 
