@@ -109,6 +109,7 @@ inherit autotools gettext
             </para>
 
         </section>
+
         <section id='usingpoky-extend-addpkg-makefile'>
             <title>Makefile-Based Package</title>
             <para>
@@ -160,6 +161,7 @@ do_install () {
             </programlisting>
 
         </section>
+
         <section id='usingpoky-extend-addpkg-files'>
             <title>Controlling Package Content</title>
             <para>                        
@@ -348,8 +350,7 @@ RRECOMMENDS_task-custom-tools = "\
         </section>
 
         <section id='usingpoky-extend-customimage-imagefeatures'>
-            <title>Customising Images Using Custom <glossterm>
-                <link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm></title>
+            <title>Customising Images Using Custom IMAGE_FEATURES</title>
             <para>
                 Ultimately users might want to add extra image "features" as used by Poky with the 
                 <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
@@ -401,107 +402,108 @@ DISTRO_EXTRA_RDEPENDS += "strace"
                 dependencies - it only rebuilds the specified package.
             </para>
             <programlisting>
-bitbake -c clean task-boot task-base task-poky
-bitbake poky-image-sato
+$ bitbake -c clean task-boot task-base task-poky
+$ bitbake poky-image-sato
             </programlisting>
         </section>
 
     </section>
 
-<section id="platdev-newmachine">
-    <title>Porting Poky to a New Machine</title>
-    <para>
-        Adding a new machine to Poky is a straightforward process. 
-        This section provides information that gives you an idea of the changes you must make.
-        The information covers adding machines similar to those Poky already supports. 
-        Although well within the capabilities of Poky, adding a totally new architecture might require 
-        changes to <filename>gcc/glibc</filename> and to the site information.
-        Consequently, the information is beyond the scope of this manual.
-    </para>
+    <section id="platdev-newmachine">
+        <title>Porting Poky to a New Machine</title>
+        <para>
+            Adding a new machine to Poky is a straightforward process. 
+            This section provides information that gives you an idea of the changes you must make.
+            The information covers adding machines similar to those Poky already supports. 
+            Although well within the capabilities of Poky, adding a totally new architecture might require 
+            changes to <filename>gcc/glibc</filename> and to the site information.
+            Consequently, the information is beyond the scope of this manual.
+        </para>
 
-    <section id="platdev-newmachine-conffile">
-        <title>Adding the Machine Configuration File</title>
-        <para>
-            To add a machine configuration you need to add a <filename>.conf</filename> file
-            with details of the device being added to <filename>conf/machine/</filename>.
-            The name of the file determines the name Poky uses to reference the new machine.
-        </para>
-        <para>
-            The most important variables to set in this file are <glossterm>
-            <link linkend='var-TARGET_ARCH'>TARGET_ARCH</link></glossterm> 
-            (e.g. "arm"), <glossterm><link linkend='var-PREFERRED_PROVIDER'>
-            PREFERRED_PROVIDER</link></glossterm>_virtual/kernel (see below) and 
-            <glossterm><link linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES
-            </link></glossterm> (e.g. "kernel26 apm screen wifi"). 
-            You might also need other variables like <glossterm><link linkend='var-SERIAL_CONSOLE'>SERIAL_CONSOLE
-            </link></glossterm> (e.g. "115200 ttyS0"), <glossterm> 
-            <link linkend='var-KERNEL_IMAGETYPE'>KERNEL_IMAGETYPE</link>
-            </glossterm> (e.g. "zImage") and <glossterm><link linkend='var-IMAGE_FSTYPES'>
-            IMAGE_FSTYPES</link></glossterm> (e.g. "tar.gz jffs2"). 
-            You can find full details on these variables in the reference section. 
-            You can leverage many existing machine <filename>.conf</filename> files from 
-            <filename>meta/conf/machine/</filename>.
-        </para>
-    </section>
+        <section id="platdev-newmachine-conffile">
+            <title>Adding the Machine Configuration File</title>
+            <para>
+                To add a machine configuration you need to add a <filename>.conf</filename> file
+                with details of the device being added to <filename>conf/machine/</filename>.
+                The name of the file determines the name Poky uses to reference the new machine.
+            </para>
+            <para>
+                The most important variables to set in this file are <glossterm>
+                <link linkend='var-TARGET_ARCH'>TARGET_ARCH</link></glossterm> 
+                (e.g. "arm"), <glossterm><link linkend='var-PREFERRED_PROVIDER'>
+                PREFERRED_PROVIDER</link></glossterm>_virtual/kernel (see below) and 
+                <glossterm><link linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES
+                </link></glossterm> (e.g. "kernel26 apm screen wifi"). 
+                You might also need other variables like <glossterm><link linkend='var-SERIAL_CONSOLE'>SERIAL_CONSOLE
+                </link></glossterm> (e.g. "115200 ttyS0"), <glossterm> 
+                <link linkend='var-KERNEL_IMAGETYPE'>KERNEL_IMAGETYPE</link>
+                </glossterm> (e.g. "zImage") and <glossterm><link linkend='var-IMAGE_FSTYPES'>
+                IMAGE_FSTYPES</link></glossterm> (e.g. "tar.gz jffs2"). 
+                You can find full details on these variables in the reference section. 
+                You can leverage many existing machine <filename>.conf</filename> files from 
+                <filename>meta/conf/machine/</filename>.
+            </para>
+        </section>
 
-    <section id="platdev-newmachine-kernel">
-        <title>Adding a Kernel for the Machine</title>
-        <para>
-            Poky needs to be able to build a kernel for the machine. 
-            You need to either create a new kernel recipe for this machine, or extend an 
-            existing recipe. 
-            You can find several kernel examples in the <filename>meta/recipes-kernel/linux</filename>
-            directory that can be used as references.
-        </para>
-        <para>
-            If you are creating a new recipe, the "normal" recipe-writing rules apply for setting 
-            up a <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>. 
-            This means specifying any necessary patches and setting <glossterm>
-            <link linkend='var-S'>S</link></glossterm> to point at the source code. 
-            You need to create a "configure" task that configures the unpacked kernel with a defconfig.
-            You can do this by using a <filename>make defconfig</filename> command or
-            more commonly by copying in a suitable defconfig and and then running 
-            <filename>make oldconfig</filename>. 
-            By making use of "inherit kernel" and potentially some of the 
-            <filename>linux-*.inc</filename> files, most other functionality is 
-            centralized and the the defaults of the class normally work well.
-        </para>
-        <para>
-            If you are extending an existing kernel, it is usually a matter of adding a 
-            suitable <filename>defconfig</filename> file.
-            The file needs to be added into a location similar to <filename>defconfig</filename> files
-            used for other machines in a given kernel. 
-            A possible way to do this is by listing the file in the 
-            <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>
-            and adding the machine to the expression in 
-            <glossterm><link linkend='var-COMPATIBLE_MACHINE'>COMPATIBLE_MACHINE</link></glossterm>:
-        </para>
-        <programlisting>
+        <section id="platdev-newmachine-kernel">
+            <title>Adding a Kernel for the Machine</title>
+            <para>
+                Poky needs to be able to build a kernel for the machine. 
+                You need to either create a new kernel recipe for this machine, or extend an 
+                existing recipe. 
+                You can find several kernel examples in the <filename>meta/recipes-kernel/linux</filename>
+                directory that can be used as references.
+            </para>
+            <para>
+                If you are creating a new recipe, the "normal" recipe-writing rules apply for setting 
+                up a <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>. 
+                This means specifying any necessary patches and setting <glossterm>
+                <link linkend='var-S'>S</link></glossterm> to point at the source code. 
+                You need to create a "configure" task that configures the unpacked kernel with a defconfig.
+                You can do this by using a <filename>make defconfig</filename> command or
+                more commonly by copying in a suitable defconfig and and then running 
+                <filename>make oldconfig</filename>. 
+                By making use of "inherit kernel" and potentially some of the 
+                <filename>linux-*.inc</filename> files, most other functionality is 
+                centralized and the the defaults of the class normally work well.
+            </para>
+            <para>
+                If you are extending an existing kernel, it is usually a matter of adding a 
+                suitable <filename>defconfig</filename> file.
+                The file needs to be added into a location similar to <filename>defconfig</filename> files
+                used for other machines in a given kernel. 
+                A possible way to do this is by listing the file in the 
+                <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>
+                and adding the machine to the expression in 
+                <glossterm><link linkend='var-COMPATIBLE_MACHINE'>COMPATIBLE_MACHINE</link></glossterm>:
+            </para>
+            <programlisting>
 COMPATIBLE_MACHINE = '(qemux86|qemumips)'
-        </programlisting>
-    </section>
+            </programlisting>
+        </section>
 
-    <section id="platdev-newmachine-formfactor">
-        <title>Adding a Formfactor Configuration File</title>
-        <para>
-            A formfactor configuration file provides information about the 
-            target hardware on which Poky is running, and that Poky cannot 
-            obtain from other sources such as the kernel.  Some examples of 
-            information contained in a formfactor configuration file include 
-            framebuffer orientation, whether or not the system has a keyboard, 
-            the positioning of the keyboard in relation to the screen, and 
-            screen resolution.
-        </para>
-        <para>
-            Sane defaults should be used in most cases, but if customisation is 
-            necessary you need to create a <filename>machconfig</filename> file 
-            under <filename>meta/packages/formfactor/files/MACHINENAME/</filename>
-            where <literal>MACHINENAME</literal> is the name for which this infomation
-            applies. For information about the settings available and the defaults, please see 
-            <filename>meta/packages/formfactor/files/config</filename>. Below is one
-            example for qemuarm:
-        </para>
-        <programlisting>
+        <section id="platdev-newmachine-formfactor">
+            <title>Adding a Formfactor Configuration File</title>
+            <para>
+                A formfactor configuration file provides information about the 
+                target hardware on which Poky is running, and that Poky cannot 
+                obtain from other sources such as the kernel.  
+                Some examples of information contained in a formfactor configuration file include 
+                framebuffer orientation, whether or not the system has a keyboard, 
+                the positioning of the keyboard in relation to the screen, and 
+                screen resolution.
+            </para>
+            <para>
+                Reasonable defaults are used in most cases, but if customization is 
+                necessary you need to create a <filename>machconfig</filename> file 
+                under <filename>meta/packages/formfactor/files/MACHINENAME/</filename>,
+                where <literal>MACHINENAME</literal> is the name for which this infomation
+                applies. 
+                For information about the settings available and the defaults, see 
+                <filename>meta/packages/formfactor/files/config</filename>. 
+                Following is an example for qemuarm:
+            </para>
+            <programlisting>
 HAVE_TOUCHSCREEN=1
 HAVE_KEYBOARD=1
 
@@ -512,45 +514,44 @@ DISPLAY_ORIENTATION=0
 #DISPLAY_BPP=16
 DISPLAY_DPI=150
 DISPLAY_SUBPIXEL_ORDER=vrgb
-        </programlisting>
+            </programlisting>
+        </section>
     </section>
-</section>
 
-<section id='usingpoky-changes'>
+    <section id="usingpoky-changes">
         <title>Making and Maintaining Changes</title>
-
         <para>
-            We recognise that people will want to extend/configure/optimise Poky for
-            their specific uses, especially due to the extreme configurability and 
-            flexibility Poky offers. To ensure ease of keeping pace with future 
-            changes in Poky we recommend making changes to Poky in a controlled way.
+            Because Poky offers extreme configurability and fliexibility, we recognize that people will want 
+            to extend, configure or optimise Poky for their specific uses.
+            To best keep pace with future Poky changes we recommend you make controlled changes to Poky.
         </para>
         <para>
-            Poky supports the idea of <link
-                linkend='usingpoky-changes-layers'>"layers"</link> which when used
-            properly can massively ease future upgrades and allow segregation
-            between the Poky core and a given developer's changes. Some other advice on 
-            managing changes to Poky is also given in the following section.
+            Poky supports the idea of <link linkend='usingpoky-changes-layers'>"layers"</link>.
+            If you use layers properly you can ease future upgrades and allow segregation
+            between the Poky core and a given developer's changes. 
+            The following section provides more advice on managing changes to Poky.
         </para>
 
         <section id="usingpoky-changes-layers">
           <title>Bitbake Layers</title>
-
           <para>
-                Often, people want to extend Poky either through adding packages
-                or overriding files contained within Poky to add their own
-                functionality. Bitbake has a powerful mechanism called
-                layers which provides a way to handle this extension in a fully
+                Often, people want to extend Poky either by adding packages
+                or by overriding files contained within Poky to add their own
+                functionality. 
+                Bitbake has a powerful mechanism called
+                "layers", which provides a way to handle this extension in a fully
                 supported and non-invasive fashion.
            </para>
-
            <para>
-               The Poky tree includes several additional layers which demonstrate
-               this functionality, such as meta-emenlow and meta-extras.
-               The meta-emenlow layer is an example layer enabled by default. The meta-extras 
-               repostory is not enabled by default but enabling any layer is as easy as adding
-               the layers path to the BBLAYERS variable in your bblayers.conf. this is how 
-               meta-extras are enabled in Poky builds:
+               The Poky tree includes several additional layers such as meta-emenlow and meta-extras
+               that demonstrate this functionality.
+               The meta-emenlow layer is an example layer that by default is enabled. 
+               However, the meta-extras repostory is not enabled by default. 
+               It is easy though to enable any layer.
+               You simply add the layer's path to the 
+               <glossterm><link linkend='var-BBLAYERS'>BBLAYERS</link></glossterm> variable in your 
+               <filename>bblayers.conf</filename> file. 
+               The following example shows how to enable meta-extras in the Poky build:
           </para>
           <para>
                <literallayout class='monospaced'>LCONF_VERSION = "1"
@@ -565,15 +566,14 @@ BBLAYERS = " \
            </para>
 
           <para>
-               Bitbake parses the conf/layer.conf of each of the layers in BBLAYERS
-               to add the recipes, classes and configuration contained within the layer to Poky.
+               Bitbake parses each <filename>conf/layer.conf</filename> file for each layer in BBLAYERS
+               and adds the recipes, classes and configuration contained within the layer to Poky.
                To create your own layer, independent of the main Poky repository,
-               you need only create a directory with a conf/layer.conf file and
-               add the directory to your bblayers.conf.
+               simply create a directory with a <filename>conf/layer.conf</filename> file and
+               add the directory to your <filename>bblayers.conf</filename> file.
           </para>
-
           <para>
-               The meta-emenlow/conf/layer.conf demonstrates the required syntax:
+               The <filename>meta-emenlow/conf/layer.conf</filename> file demonstrates the required syntax:
                <literallayout class='monospaced'># We have a conf and classes directory, add to BBPATH
 BBPATH := "${BBPATH}:${LAYERDIR}"
 
@@ -586,66 +586,74 @@ BBFILE_PATTERN_emenlow := "^${LAYERDIR}/"
 BBFILE_PRIORITY_emenlow = "6"
                </literallayout>
           </para>
-
           <para>
-                As can be seen, the layers recipes are added to 
-                <glossterm> <link linkend='var-BBFILES'>BBFILES</link></glossterm>. The
-                BBFILE_COLLECTIONS variable is then appended to with the
-                layer name. The BBFILE_PATTERN variable is immediately expanded
-                with a regular expression used to match files from BBFILES into
+                In the previous example, the recipes for the layers are added to 
+                <glossterm> <link linkend='var-BBFILES'>BBFILES</link></glossterm>. 
+                The <glossterm><link linkend='var-BBFILE_COLLECTIONS'>BBFILE_COLLECTIONS</link></glossterm>
+                variable is then appended with the layer name. 
+                The <glossterm><link linkend='var-BBFILE_PATTERN'>BBFILE_PATTERN</link></glossterm> variable
+                immediately expands with a regular expression used to match files from BBFILES into
                 a particular layer, in this case by using the base pathname.
-                The BBFILE_PRIORITY variable then assigns different
-                priorities to the files in different layers. This is useful
-                in situations where the same package might appear in multiple
-                layers and allows you to choose which layer should 'win'.
-                Note the use of <glossterm><link linkend='var-LAYERDIR'>
-                LAYERDIR</link></glossterm> with the immediate expansion operator.
-                <glossterm><link linkend='var-LAYERDIR'>LAYERDIR</link></glossterm>
-                expands to the directory of the current layer and
-                requires use of the immediate expansion operator so that Bitbake
-                does not lazily expand the variable when it's parsing a
-                different directory.
+                The <glossterm><link linkend='var-BBFILE_PRIORITY'>BBFILE_PRIORITY</link></glossterm> variable 
+                then assigns different priorities to the files in different layers. 
+                This technique useful in situations where the same package might appear in multiple
+                layers and allows you to choose what layer should take precedence.
             </para>
-
             <para>
-                Additional bbclass and configuration files can be locationed by 
-                bitbake through the addition to the BBPATH
-                environment variable. In this case, the first file with the
-                matching name found in BBPATH is the one that is used, just
-                like the PATH variable for binaries. It is therefore recommended
-                that you use unique bbclass and configuration file names in your
+                Note the use of the <glossterm><link linkend='var-LAYERDIR'>LAYERDIR</link></glossterm> 
+                variable with the immediate expansion operator.
+                The LAYERDIR variable expands to the directory of the current layer and
+                requires the immediate expansion operator so that Bitbake does not wait to expand the variable 
+                when it's parsing a different directory.
+            </para>
+            <para>
+                Bitbake can locate where other bbclass and configuration files are applied through 
+                the <glossterm><link linkend='var-BBPATH'>BBPATH</link></glossterm>
+                environment variable. 
+                For these cases, Bitake uses the first file with the matching name found in BBPATH.
+                This is similar to the way the PATH variable is used for binaries. 
+                We recommend, therefore, that you use unique bbclass and configuration file names in your
                 custom layer.
             </para>
-
             <para>
-                The recommended approach for custom layers is to store them in a
-                git repository of the format meta-prvt-XXXX and have this repository
-                cloned alongside the other meta directories in the Poky tree.
-                This way you can keep your Poky tree and it's configuration entirely
+                We also recommend the following:
+                <itemizedlist>
+                    <listitem><para>Store custom layers in a git repository that uses the 
+                    meta-prvt-XXXX format.</para></listitem>
+                    <listitem><para>Clone the repository alongside other meta directories in the Poky 
+                    tree.</para></listitem>
+                </itemizedlist>
+                Following these recommendations keeps your Poky tree and its configuration entirely
                 inside POKYBASE.
             </para>
         </section>
 
-        <section id='usingpoky-changes-commits'>
+        <section id="usingpoky-changes-commits">
             <title>Committing Changes</title>
-
             <para>
                 Modifications to Poky are often managed under some kind of source
-                revision control system. The policy for committing to such systems
-                is important as some simple policy can significantly improve 
-                usability. The tips below are based on the policy followed for the 
-                Poky core.
+                revision control system. 
+                Because some simple practices can significantly improve usability, policy for committing changes
+                is important.
+                Following are suggestions for committing changes to the Poky core:
             </para>
-
             <para>
-                It helps to use a consistent style for commit messages when committing 
-                changes. We've found a style where the first line of a commit message 
-                summarises the change and starts with the name of any package affected
-                work well. Not all changes are to specific packages so the prefix could 
-                also be a machine name or class name instead. If a change needs a longer 
-                description this should follow the summary:
+                It helps to use a consistent documentation style when committing changes. 
+                We have found the following style works well.
+                <itemizedlist>
+                    <listitem><para>The first line of the commit summarizes the change and begins with the 
+                    name of the affected package or packages.
+                    However, not all changes apply to specific packages. 
+                    Consequently, the prefix could also be a machine name or class name for 
+                    example.</para></listitem>
+                    <listitem><para>The second part of the commit (if needed) is a longer more detailed 
+                    description of the changes.  Placing a blank line between the first and second parts
+                    helps with readability.</para></listitem>
+                </itemizedlist>
             </para>
-
+            <para>
+                Following is an example commit:
+            </para>
             <literallayout class='monospaced'>
     bitbake/data.py: Add emit_func() and generate_dependencies() functions
     
@@ -657,111 +665,121 @@ BBFILE_PRIORITY_emenlow = "6"
             </literallayout>
 
             <para>
-                Any commit should be self contained in that it should leave the 
-                metadata in a consistent state, buildable before and after the 
-                commit. This helps ensure the autobuilder test results are valid 
-                but is good practice regardless.
+                All commits should be self-contained such that they leave the 
+                metadata in a consistent state that builds both before and after the 
+                commit is made. 
+                Besides being a good policy to follow, this helps ensure the autobuilder test results
+                are valid.
             </para>
         </section>
 
-        <section id='usingpoky-changes-prbump'>
+        <section id="usingpoky-changes-prbump">
             <title>Package Revision Incrementing</title>
-
             <para>
-                If a committed change will result in changing the package output
+                If a committed change results in changing the package output
                 then the value of the <glossterm><link linkend='var-PR'>PR</link>
-                </glossterm> variable needs to be increased (commonly referred to 
-                as 'bumped') as part of that commit. Only integer values are used
-                and <glossterm><link linkend='var-PR'>PR</link></glossterm> = 
-                "r0" should be added into new recipes as, while this is the
-                default value, not having the variable defined in a recipe makes
-                it easy to miss incrementing it when updating the recipe.
-                When upgrading the version of a package (<glossterm><link 
-                linkend='var-PV'>PV</link></glossterm>), the <glossterm><link 
-                linkend='var-PR'>PR</link></glossterm> variable should be reset to "r0".
+                </glossterm> variable needs to be increased ('bumped') as part of that commit. 
+                This means that for new recipes you be sure to add the PR variable and set its initial value
+                equal to "r0".  
+                Not initially defining PR makes makes it easy to miss when you bump a package.
+                Note that you can only use integer values for the PR variable.
             </para>
-
-            <para>
-                The aim is that the package version will only ever increase. If 
-                for some reason <glossterm><link linkend='var-PV'>PV</link></glossterm> 
-                will change and but not increase, the <glossterm><link 
-                linkend='var-PE'>PE</link></glossterm> (Package Epoch) can 
-                be increased (it defaults to '0'). The version numbers aim to 
-                follow the <ulink url='http://www.debian.org/doc/debian-policy/ch-controlfields.html'>
-                Debian Version Field Policy Guidelines</ulink> which define how 
-                versions are compared and hence what "increasing" means.
+            <para> 
+                When upgrading the version of a package the (<glossterm><link 
+                linkend='var-PV'>PV</link></glossterm>) and PR variables should be reset to "r0".
             </para>
-
             <para>
-                There are two reasons for doing this, the first is to ensure that 
-                when a developer updates and rebuilds, they get all the changes to
+                Usually a package version only increases.
+                However, if for some reason PV changes but does not increase, you can increase the 
+                <glossterm><link linkend='var-PE'>PE</link></glossterm> variable (Package Epoch).
+                The PE variable defaults to '0'.
+            </para>
+            <para>
+                Version numbering strives to follow the 
+                <ulink url='http://www.debian.org/doc/debian-policy/ch-controlfields.html'>
+                Debian Version Field Policy Guidelines</ulink>.
+                These guidelines define how versions are compared and what "increasing" a version means.
+            </para>
+            <para>
+                There are two reasons for following these guidelines.
+                First, to ensure that when a developer updates and rebuilds, they get all the changes to
                 the repository and don't have to remember to rebuild any sections.
-                The second is to ensure that target users are able to upgrade their
-                devices via their package manager such as with the <command>
-                opkg upgrade</command> commands (or similar for 
-                dpkg/apt or rpm based systems). The aim is to ensure Poky has 
-                upgradable packages in all cases.
+                Second, to ensure that target users are able to upgrade their
+                devices using package manager commands such as <filename>
+                opkg upgrade</filename> (or similar commands for dpkg/apt or rpm-based systems). 
+            </para>
+            <para>
+                The goal is to ensure Poky has upgradable packages in all cases.
             </para>
         </section>
-        <section id='usingpoky-changes-collaborate'>
+
+        <section id="usingpoky-changes-collaborate">
             <title>Using Poky in a Team Environment</title>
-
             <para>
-                It may not be immediately clear how Poky can work in a team environment, 
-                or scale to a large team of developers. The specifics of any situation
-                will determine the best solution and poky offers immense flexibility in 
-                that aspect but there are some practises that experience has shown to work
-                well.
+                It may not be immediately clear how you can use Poky in a team environment, 
+                or scale it for a large team of developers. 
+                The specifics of any situation determine the best solution.
+                Granted that Poky offers immense flexibility regarding this, practices do exist 
+                that experience has shown work well.
             </para>
-
             <para>
                 The core component of any development effort with Poky is often an 
-                automated build testing framework and image generation process. This 
-                can be used to check that the metadata is buildable, highlight when 
-                commits break the builds and provide up to date images allowing people 
-                to test the end result and use them as a base platform for further 
-                development. Experience shows that buildbot is a good fit for this role 
-                and that it works well to configure it to make two types of build - 
-                incremental builds and 'from scratch'/full builds. The incremental builds 
-                can be tied to a commit hook which triggers them each time a commit is 
-                made to the metadata and are a useful acid test of whether a given commit 
-                breaks the build in some serious way. They catch lots of simple errors 
-                and whilst they won't catch 100% of failures, the tests are fast so 
-                developers can get feedback on their changes quickly. The full builds
-                are builds that build everything from the ground up and test everything. 
-                They usually happen at preset times such as at night when the machine 
-                load isn't high from the incremental builds.
-                <ulink url='http://autobuilder.pokylinux.org:8010'>poky autobuilder</ulink>
-                is an example implementation with buildbot.
-            </para>
-
-            <para>
-                Most teams have pieces of software undergoing active development. It is of
-                significant benefit to put these under control of a source control system 
-                compatible with Poky such as git or svn. The autobuilder can then be set to 
-                pull the latest revisions of these packages so the latest commits get tested 
-                by the builds allowing any issues to be highlighted quickly. Poky easily
-                supports configurations where there is both a stable known good revision 
-                and a floating revision to test. Poky can also only take changes from specific
-                source control branches giving another way it can be used to track/test only
-                specified changes.
+                automated build testing framework and an image generation process. 
+                You can use these core components to check that the metadata is buildable, 
+                highlight when commits break the builds, and provide up-to-date images that 
+                allow people to test the end result and use it as a base platform for further 
+                development. 
+                Experience shows that buildbot is a good fit for this role. 
+                What works well is to configure buildbot to make two types of builds:
+                incremental and full (from scratch).  
+                See <ulink url='http://autobuilder.pokylinux.org:8010'>poky autobuilder</ulink>
+                for an example implementation that uses buildbot.
             </para>
             <para>
-                Perhaps the hardest part of setting this up is the policy that surrounds 
-                the different source control systems, be them software projects or the Poky 
-                metadata itself. The circumstances will be different in each case but this is
-                one of Poky's advantages - the system itself doesn't force any particular policy
-                unlike a lot of build systems, allowing the best policy to be chosen for the 
-                circumstances.
+                You can tie incremental builds to a commit hook that triggers the build
+                each time a commit is made to the metadata.  
+                This practice results in useful acid tests that determine whether a given commit 
+                breaks the build in some serious way. 
+                Associating a build to a commit can catch a lot of simple errors.
+                Furthermore, the tests are fast so developers can get quick feedback on changes.
+            </para>
+            <para>
+                Full builds build and test everything from the ground up. 
+                They usually happen at preset times like during the night when the machine 
+                load is low.
+            </para>
+            <para>
+                Most teams have many pieces of software undergoing active development at any given time. 
+                You can derive large benefits by putting these pieces under the control of a source 
+                control system that is compatible with Poky (i.e. git or svn).
+                You can then set the autobuilder to pull the latest revisions of the packages 
+                and test the latest commits by the builds.
+                This practice quickly highlights issues. 
+                Poky easily supports testing configurations that use both a stable known good revision 
+                and a floating revision.
+                Poky can also take just the changes from specific source control branches.
+                This capability allows you to track and test specific changes.
+            </para>
+            <para>
+                Perhaps the hardest part of setting this up is defining the software project or 
+                Poky metadata policies that surround the different source control systems.
+                Of course circumstances will be different in each case.
+                However, this situation reveals one of Poky's advantages - the system itself does not
+                force any particular policy on users, unlike a lot of build systems. 
+                The system allows the best policy to be chosen for the given circumstances.
             </para>
         </section>
 
-        <section id='usingpoky-changes-updatingimages'>
+        <section id="usingpoky-changes-updatingimages">
             <title>Updating Existing Images</title>
-
             <para>
                 Often, rather than reflashing a new image you might wish to install updated 
-                packages into an existing running system. This can be done by sharing the <filename class="directory">tmp/deploy/ipk/</filename> directory through a web server and then on the device, changing <filename>/etc/opkg/base-feeds.conf</filename> to point at this server, for example by adding:
+                packages into an existing running system. 
+                You can do this by first sharing the 
+                <filename class="directory">tmp/deploy/ipk/</filename> directory
+                through a web server and then by changing <filename>/etc/opkg/base-feeds.conf</filename> 
+                to point at the shared server.
+                Following is an example:
             </para>
             <literallayout class='monospaced'>
 src/gz all http://www.mysite.com/somedir/deploy/ipk/all
@@ -770,41 +788,33 @@ src/gz beagleboard http://www.mysite.com/somedir/deploy/ipk/beagleboard</literal
         </section>
     </section>
 
-    <section id='usingpoky-modifing-packages'>
+    <section id="usingpoky-modifing-packages">
         <title>Modifying Package Source Code</title>
-
         <para>
-            Poky is usually used to build software rather than modifying
-            it. However, there are ways Poky can be used to modify software. 
+            Although Poky is usually used to build software, you can use it to modify software. 
         </para>
-
         <para>
-            During building, the sources are available in <glossterm><link
-                    linkend='var-WORKDIR'>WORKDIR</link></glossterm> directory.
-            Where exactly this is depends on the type of package and the
-            architecture of target device. For a standard recipe not
-            related to <glossterm><link
-                    linkend='var-MACHINE'>MACHINE</link></glossterm> it will be
+            During building, source is available in the 
+            <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm> directory.
+            The actual location depends on the type of package and the architecture of the target device. 
+            For a standard recipe not related to 
+            <glossterm><link linkend='var-MACHINE'>MACHINE</link></glossterm> the location is
             <filename>tmp/work/PACKAGE_ARCH-poky-TARGET_OS/PN-PV-PR/</filename>.
-            Target device dependent packages use <glossterm><link
-                    linkend='var-MACHINE'>MACHINE
-            </link></glossterm> 
-            instead of <glossterm><link linkend='var-PACKAGE_ARCH'>PACKAGE_ARCH
-            </link></glossterm> 
+            For target device-dependent packages you should use the MACHINE variable instead of 
+            <glossterm><link linkend='var-PACKAGE_ARCH'>PACKAGE_ARCH</link></glossterm> 
             in the directory name.
         </para>
-
         <tip>
             <para>
-                Check the package recipe sets the <glossterm><link
-                        linkend='var-S'>S</link></glossterm> variable to something
-            other than standard <filename>WORKDIR/PN-PV/</filename> value.
+                Be sure the package recipe sets the 
+                <glossterm><link linkend='var-S'>S</link></glossterm> variable to something
+                other than standard <filename>WORKDIR/PN-PV/</filename> value.
             </para>
         </tip>
         <para>
-            After building a package, a user can modify the package source code
-            without problem. The easiest way to test changes is by calling the
-            "compile" task:
+            After building a package, you can modify the package source code without problems. 
+            The easiest way to test your changes is by calling the "compile" task as shown in the 
+            following example:
         </para>
 
         <programlisting>
@@ -812,184 +822,179 @@ bitbake -c compile -f NAME_OF_PACKAGE
         </programlisting>
 
         <para>
-            "-f" or "--force" is used to force re-execution of the specified task.
-            Other tasks may also be called this way. But note that all the modifications
-            in <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>
-            are gone once you executes "-c clean" for a package.
+            The "-f" or "--force" option forces re-execution of the specified task.
+            You can call other tasks this way as well. 
+            But note that all the modifications in 
+            <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>
+            are gone once you execute "-c clean" for a package.
         </para>
 
-        <section id='usingpoky-modifying-packages-quilt'>
+        <section id="usingpoky-modifying-packages-quilt">
             <title>Modifying Package Source Code with quilt</title>
-
             <para>
-                By default Poky uses <ulink
-                    url='http://savannah.nongnu.org/projects/quilt'>quilt</ulink>
-                to manage patches in <function>do_patch</function> task. 
-                It is a powerful tool which can be used to track all
-                modifications done to package sources.
+                By default Poky uses <ulink url='http://savannah.nongnu.org/projects/quilt'>quilt</ulink>
+                to manage patches in the <filename>do_patch</filename> task. 
+                This is a powerful tool that you can use to track all modifications to package sources.
             </para>
-
             <para>
-                Before modifying source code it is important to
-                notify quilt so it will track changes into new patch
-                file:
+                Before modifying source code, it is important to notify quilt so it can track the changes 
+                into the new patch file:
+
                 <programlisting>
 quilt new NAME-OF-PATCH.patch
                 </programlisting>
 
-                Then add all files which will be modified into that
-                patch:
+                After notifying quilt, add all modified files into that patch:
                 <programlisting>
 quilt add file1 file2 file3
                 </programlisting>
 
-                Now start editing. At the end quilt needs to be used
-                to generate final patch which will contain all
-                modifications:
+                You can now start editing. 
+                Once you are done editing, you need to use quilt to generate the final patch that 
+                will contain all your modifications.
                 <programlisting>
 quilt refresh
                 </programlisting>
 
-                The resulting patch file can be found in the
+                You can find the resulting patch file in the
                 <filename class="directory">patches/</filename> subdirectory of the source 
-                (<glossterm><link linkend='var-S'>S</link></glossterm>) directory. For future builds it
-                should be copied into
-                Poky metadata and added into <glossterm><link
-                        linkend='var-SRC_URI'>SRC_URI</link></glossterm> of a recipe:
+                (<glossterm><link linkend='var-S'>S</link></glossterm>) directory. 
+                For future builds you should copy the patch into Poky metadata and add it into the 
+                <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm> of a recipe.  
+                Here is an example:
                 <programlisting>
 SRC_URI += "file://NAME-OF-PATCH.patch"
                 </programlisting>
-
-                This also requires a bump of <glossterm><link
-                        linkend='var-PR'>PR</link></glossterm> value in the same recipe as we changed resulting packages.
+                Finally, don't forget to 'bump' the 
+                <glossterm><link linkend='var-PR'>PR</link></glossterm> value in the same recipe.
+                The resulting packages have changed.
             </para>
-
         </section>
 
     </section>
-    <section id='usingpoky-configuring-LIC_FILES_CHKSUM'>
-        <title>Track license change</title>
+
+    <section id="usingpoky-configuring-LIC_FILES_CHKSUM">
+        <title>Track License Change</title>
         <para>
-        The license of one upstream project may change in the future, and Poky provides
-        one mechanism to track such license change - <glossterm>
-        <link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm> variable.
+        The license of an upstream project might change in the future.
+        To address this situation, Poky uses the 
+        <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm> variable
+        to track license changes.
         </para>
 
-        <section id='usingpoky-specifying-LIC_FILES_CHKSUM'>
-            <title>Specifying the LIC_FILES_CHKSUM variable </title>
-
+        <section id="usingpoky-specifying-LIC_FILES_CHKSUM">
+            <title>Specifying the LIC_FILES_CHKSUM Variable </title>
+            <para>
+                The <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm>
+                variable contains checksums of the license text in the recipe source code. 
+                Poky uses this to track changes in the license text of the source code files.
+                Following is an example of LIC_FILES_CHKSUM:
+            </para>
             <programlisting>
 LIC_FILES_CHKSUM = "file://COPYING; md5=xxxx \
                     file://licfile1.txt; beginline=5; endline=29;md5=yyyy \
                     file://licfile2.txt; endline=50;md5=zzzz \
                     ..."
             </programlisting>
-
             <para>
-            <glossterm><link linkend='var-S'>S</link></glossterm> is the default directory
-            for searching files listed in <glossterm><link linkend='var-LIC_FILES_CHKSUM'>
-            LIC_FILES_CHKSUM</link></glossterm>. Relative path could be used too:
+                Poky uses the <glossterm><link linkend='var-S'>S</link></glossterm> variable as the 
+                default directory used when searching files listed in LIC_FILES_CHKSUM.
+                The previous example employs the default directory.
             </para>
-
+            <para>
+                You can also use relative paths as shown in the following example: 
+            </para>
             <programlisting>
 LIC_FILES_CHKSUM = "file://src/ls.c;startline=5;endline=16;\
                                     md5=bb14ed3c4cda583abc85401304b5cd4e"
 LIC_FILES_CHKSUM = "file://../license.html;md5=5c94767cedb5d6987c902ac850ded2c6"
             </programlisting>
-
             <para>
-            The first line locates a file in <glossterm><link linkend='var-S'>
-            S</link></glossterm>/src/ls.c, and the second line refers to a file in 
-            <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>, which is the parent
-            of <glossterm><link linkend='var-S'>S</link></glossterm>
+                In this example the first line locates a file in 
+                <glossterm><link linkend='var-S'>S</link></glossterm><filename>/src/ls.c</filename>. 
+                The second line refers to a file in 
+                <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm>, which is the parent
+                of <glossterm><link linkend='var-S'>S</link></glossterm>.
             </para>
-
         </section>
 
-        <section id='usingpoky-LIC_FILES_CHKSUM-explanation-of-syntax'>
-            <title>Explanation of syntax</title>
-
+        <section id="usingpoky-LIC_FILES_CHKSUM-explanation-of-syntax">
+            <title>Explanation of Syntax</title>
             <para>
-            This parameter lists all the important files containing the text 
-of licenses for the
-source code. It is also possible to specify on which line the license text
-starts and on which line it ends within that file using the "beginline" and
-"endline" parameters. If the "beginline" parameter is not specified then license
-text begins from the 1st line is assumed. Similarly if "endline" parameter is
-not specified then the license text ends at the last line in the file is
-assumed. So if a file contains only licensing information, then there is no need
-to specify "beginline" and "endline" parameters.
+                As mentioned in the previous section the LIC_FILES_CHKSUM variable lists all the 
+                important files that contain the license text for the source code. 
+                Using this variable you can specify the line on which the license text starts and ends
+                by supplyiing "beginline" and "endline" parameters. 
+                If you do not use the "beginline" parameter then it is assumed that the text begins on the 
+                first line of the file. 
+                Similarly, if you do not use the "endline" parameter it is assumed that the license text 
+                ends as the last line of the file. 
             </para>
             <para>
-The "md5" parameter stores the md5 checksum of the license text. So if
-the license text changes in any way from a file, then its md5 sum will differ and will not
-match with the previously stored md5 checksum. This mismatch will trigger build
-failure, notifying developer about the license text md5 mismatch, and allowing
-the developer to review the license text changes. Also note that if md5 checksum
-is not matched while building, the correct md5 checksum is printed in the build
-log which can be easily copied to .bb file.
+                The "md5" parameter stores the md5 checksum of the license text. 
+                If the license text changes in any way as compared to this parameter
+                then a mis-match occurs. 
+                This mismatch triggers a build failure and notifies the developer.
+                Notification allows the developer to review and address the license text changes.
+                Also note that if a mis-match occurs during the build, the correct md5 
+                checksum is placed in the build log, which can be easily copied to a .bb file.
             </para>
             <para>
-There is no limit on how many files can be specified on this parameter. But generally every
-project would need specifying of just one or two files for license tracking.
-Many projects would have a "COPYING" file which will store all the
-license information for all the source code files. If the "COPYING" file
-is valid then tracking only that file would be enough.
+                There is no limit to how many files you can specify using the LIC_FILES_CHKSUM variable.
+                Generally, however, every project requires a few specifications for license tracking. 
+                Many projects have a "COPYING" file that stores the license information for all the source 
+                code files.
+                This practice allow you to just track the "COPYING" file as long as it is kept up to date. 
             </para>
             <tip>
-                <para>
-1. If you specify empty or invalid "md5" parameter; then while building
-the package, bitbake will give md5 not matched error, and also show the correct
-"md5" parameter value both on the screen and in the build log 
-                </para>
-                <para>
-2. If the whole file contains only license text, then there is no need to
-specify "beginline" and "endline" parameters. 
-                </para>
+                If you specify an empty or invalid "md5" parameter, bitback returns an md5 mis-match 
+                error and displays the correct "md5" parameter value during the build. The correct parameter
+                is also captured in the build log. 
+            </tip>
+            <tip>
+                If the whole file contains only license text, you do not need to use the "beginline" and 
+                "endline" parameters. 
             </tip>
         </section>
     </section>
-    <section id='usingpoky-configuring-DISTRO_PN_ALIAS'>
-        <title>Handle package name alias</title>
+
+    <section id="usingpoky-configuring-DISTRO_PN_ALIAS">
+        <title>Handling Package Name Alias</title>
         <para>
-Poky implements a distro_check task which automatically connects to major distributions
-and checks whether they contains same package. Sometimes the same package has different 
-names in different distributions, which results in a mismatch from distro_check task
-This can be solved by defining per distro recipe name alias - 
-<glossterm><link linkend='var-DISTRO_PN_ALIAS'>DISTRO_PN_ALIAS</link></glossterm>
+            Sometimes a package name you are using might exist under an alias or as a similarly named
+            package in a different distribution.
+            Poky implements a distro_check task that automatically connects to major distributions
+            and checks for these situations. 
+            If the package exists under a different name in a different distribution you get a 
+            distro_check mismatch.  
+            You can resolve this problem by defining a per-distro recipe name alias using the 
+            <glossterm><link linkend='var-DISTRO_PN_ALIAS'>DISTRO_PN_ALIAS</link></glossterm> variable.
         </para>
 
-        <section id='usingpoky-specifying-DISTRO_PN_ALIAS'>
-            <title>Specifying the DISTRO_PN_ALIAS variable </title>
-
+        <section id="usingpoky-specifying-DISTRO_PN_ALIAS">
+            <title>Specifying the DISTRO_PN_ALIAS Variable</title>
+            <para>
+                Following is an example that shows how you specify the DISTRO_PN_ALIAS variable:
             <programlisting>
 DISTRO_PN_ALIAS_pn-PACKAGENAME = "distro1=package_name_alias1 \
                                   distro2=package_name_alias2 \
                                   distro3=package_name_alias3 \
                                   ..."
             </programlisting>
-            <para>
-Use space as the delimiter if there're multiple distro aliases
             </para>
-            <tip>
-                <para>
-The current code can check if the src package for a recipe exists in the latest
-releases of these distributions automatically.
-                </para>
-                <programlisting>
-Fedora, OpenSuSE, Debian, Ubuntu, Mandriva
-                </programlisting>
-                <para>
-For example, this command will generate a report, listing which linux distros include the
-sources for each of the poky recipe.
-                </para>
-                <programlisting>
-bitbake world -f -c distro_check
-                </programlisting>
-                <para>
-The results will be stored in the build/tmp/log/distro_check-${DATETIME}.results file.
-                </para>
-            </tip>
+            <para>
+                If you have more than one distribution alias separate them with a space.
+                Note that Poky currently automatically checks the Fedora, OpenSuSE, Debian, Ubuntu, 
+                and Mandriva distributions for source package recipes without having to specify them 
+                using the DISTRO_PN_ALIAS variable.
+                For example, the following command generates a report that lists the Linux distributions
+                that include the sources for each of the Poky recipes.
+             <literallayout class='monospaced'>
+     $ bitbake world -f -c distro_check
+             </literallayout>
+             The results are stored in the <filename>build/tmp/log/distro_check-${DATETIME}.results</filename> 
+             file.
+            </para>
         </section>
     </section>
 </chapter>
