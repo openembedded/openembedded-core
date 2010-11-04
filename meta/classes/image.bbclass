@@ -182,10 +182,6 @@ zap_root_password () {
 	mv ${IMAGE_ROOTFS}/etc/passwd.new ${IMAGE_ROOTFS}/etc/passwd
 } 
 
-create_etc_timestamp() {
-	date +%2m%2d%2H%2M%Y >${IMAGE_ROOTFS}/etc/timestamp
-}
-
 # Turn any symbolic /sbin/init link into a file
 remove_init_link () {
 	if [ -h ${IMAGE_ROOTFS}/sbin/init ]; then
@@ -217,7 +213,7 @@ set_image_autologin () {
 # Can be use to create /etc/timestamp during image construction to give a reasonably 
 # sane default time setting
 rootfs_update_timestamp () {
-	date "+%m%d%H%M%Y" >${IMAGE_ROOTFS}/etc/timestamp
+	date -u +%2m%2d%2H%2M%4Y >${IMAGE_ROOTFS}/etc/timestamp
 }
 
 # Prevent X from being started
@@ -239,7 +235,7 @@ rootfs_trim_schemas () {
 }
 
 
-# export the zap_root_password, create_etc_timestamp and remote_init_link
-EXPORT_FUNCTIONS zap_root_password create_etc_timestamp remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
+# export the zap_root_password, and remote_init_link
+EXPORT_FUNCTIONS zap_root_password remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
 
 addtask rootfs before do_build after do_install
