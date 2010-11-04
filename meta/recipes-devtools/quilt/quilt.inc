@@ -5,7 +5,8 @@ LICENSE = "GPLv2"
 LIC_CHKSUM_FILES = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 SRC_URI = "http://download.savannah.gnu.org/releases/quilt/quilt-${PV}.tar.gz \
-        file://install.patch"
+        file://install.patch \
+        file://gnu_patch_test_fix.patch"
 
 inherit autotools
 
