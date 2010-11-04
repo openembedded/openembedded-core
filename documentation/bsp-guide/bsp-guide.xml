@@ -29,9 +29,9 @@
 
         <revhistory>
             <revision>
-                <revnumber>0.4</revnumber>
-                <date>26 May 2010</date>
-                <revremark>Alpha Draft</revremark>
+                <revnumber>0.9</revnumber>
+                <date>27 October 2010</date>
+                <revremark>Beta Draft</revremark>
             </revision>
         </revhistory>
 
@@ -51,9 +51,10 @@
 
     <xi:include href="bsp.xml"/>
 
-    <index id='index'>
+<!--    <index id='index'>
       <title>Index</title>
     </index>
+-->
 
 </book>
 <!-- 

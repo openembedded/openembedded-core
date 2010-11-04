@@ -1,0 +1,459 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<chapter id='bsp'>
+
+        <title>Board Support Packages (BSP) - Developers Guide</title>
+
+        <para>
+            A Board Support Package (BSP) is a collection of information that
+            defines how to support a particular hardware device, set of devices, or 
+            hardware platform. 
+            The BSP includes information about the hardware features 
+            present on the device and kernel configuration information along with any 
+            additional hardware drivers required.
+            The BSP also lists any additional software 
+            components required in addition to a generic Linux software stack for both 
+            essential and optional platform features.
+        </para>
+
+        <para>
+            The intent of this document is to define a structure for these components
+            so that BSPs follow a commonly understood layout.
+            Providing a common form allows end-users to understand and become familiar 
+            with the layout.  
+            A common form also encourages standardization 
+            of software support of hardware.
+        </para>
+
+        <para>
+            The proposed format does have elements that are specific to the Poky and 
+            OpenEmbedded build systems. 
+            It is intended that this information can be 
+            used by other systems besides Poky and OpenEmbedded and thatspecified it will be simple
+            to extract information and convert it to other formats if required.
+            Poky, through its standard slyers mechanism, can directly accept The format 
+            described as a layer.
+            The BSP captures all 
+            the hardware specific details in one place in a standard format, which is 
+            useful for any person wishing to use the hardware platform regardless of 
+            the build system being used.
+        </para>
+
+        <para>
+            The BSP specification does not include a build system or other tools -
+            it is concerned with the hardware-specific components only. 
+            At the end 
+            distribution point you can shipt the BSP combined with a build system
+            and other tools. 
+            However, it is important to maintain the distinction that these
+            are separate components that happen to be combined in certain end products.
+        </para>
+
+        <section id="bsp-filelayout">
+            <title>Example Filesystem Layout</title>
+
+            <para>
+                The BSP consists of a file structure inside a base directory, meta-bsp in this example, 
+                where "bsp" is a placeholder for the machine or platform name. 
+                Examples of some files that it could contain are:
+            </para>
+            <para>
+                <literallayout class='monospaced'>
+     meta-bsp/                                
+     meta-bsp/binary/zImage
+     meta-bsp/binary/poky-image-minimal.directdisk
+     meta-bsp/conf/layer.conf 
+     meta-bsp/conf/machine/*.conf             
+     meta-bsp/conf/machine/include/tune-*.inc
+     meta-bsp/packages/bootloader/bootloader_0.1.bb
+     meta-bsp/packages/linux/linux-bsp-2.6.50/*.patch
+     meta-bsp/packages/linux/linux-bsp-2.6.50/defconfig-bsp
+     meta-bsp/packages/linux/linux-bsp_2.6.50.bb
+     meta-bsp/packages/modem/modem-driver_0.1.bb
+     meta-bsp/packages/modem/modem-daemon_0.1.bb
+     meta-bsp/packages/image-creator/image-creator-native_0.1.bb
+     meta-bsp/prebuilds/
+                </literallayout>
+            </para>
+
+            <para>
+                The following sections detail what these files and directories could contain.
+            </para>
+
+        </section>
+
+        <section id="bsp-filelayout-binary">
+            <title>Prebuilt User Binaries (meta-bsp/binary/*)</title>
+
+            <para>
+                This optional area contains useful prebuilt kernels and userspace filesystem 
+                images appropriate to the target system. 
+                Users could use these to get a system 
+                running and quickly get started on development tasks. 
+                The exact types of binaries
+                present will be highly hardware-dependent but a README file should be present 
+                explaining how to use them with the target hardware. 
+                If prebuilt binaries are 
+                present, source code to meet licensing requirements must also be provided in 
+                some form.
+            </para>
+       
+        </section>
+
+        <section id='bsp-filelayout-layer'>
+            <title>Layer Configuration (meta-bsp/conf/layer.conf)</title>
+
+            <para>
+                This file identifies the structure as a Poky layer by identifying the  
+                contents of the layer and containing information about how Poky should use 
+                it. 
+                Generally, a standard boilerplate file consisting of the following works.
+            </para>
+
+            <para>
+               <literallayout class='monospaced'>
+     # We have a conf directory, add to BBPATH
+     BBPATH := "${BBPATH}${LAYERDIR}"
+
+     # We have a recipes directory containing .bb and .bbappend files, add to BBFILES
+     BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb \ ${LAYERDIR}/recipes/*/*.bbappend"
+
+     BBFILE_COLLECTIONS += "bsp"
+     BBFILE_PATTERN_bsp := "^${LAYERDIR}/"
+     BBFILE_PRIORITY_bsp = "5"
+                </literallayout>
+            </para>
+
+            <para>
+                This file simply makes bitbake aware of the recipes and conf directories and is required 
+                for recognition of the BSP by Poky.
+            </para>
+
+        </section>
+
+        <section id="bsp-filelayout-machine">
+            <title>Hardware Configuration Options (meta-bsp/conf/machine/*.conf)</title>
+
+            <para>
+                The machine files bind together all the information contained elsewhere
+                in the BSP into a format that Poky/OpenEmbedded can understand. 
+                If the BSP supports multiple machines, multiple machine configuration files
+                can be present. 
+                These filenames correspond to the values to which users have set the MACHINE variable.
+            </para>
+
+            <para>
+                These files define things such as what kernel package to use
+                (PREFERRED_PROVIDER of virtual/kernel), what hardware drivers to
+                include in different types of images, any special software components
+                that are needed, any bootloader information, and also any special image
+                format requirements.
+            </para>
+
+            <para>
+                At least one machine file is required for a Poky BSP layer.
+                However, you can supply more than one file.
+            </para>
+
+        </section>
+
+        <section id="bsp-filelayout-tune">
+            <title>Hardware Optimization Options (meta-bsp/conf/machine/include/tune-*.inc)</title>
+
+            <para>
+                These are shared hardware "tuning" definitions and are commonly used to
+                pass specific optimization flags to the compiler. 
+                An example is tune-atom.inc:
+            </para>
+            <para>
+               <literallayout class='monospaced'>
+     BASE_PACKAGE_ARCH = "core2"
+     TARGET_CC_ARCH = "-m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse"
+               </literallayout>
+            </para>
+            <para>
+                This example defines a new package architecture called "core2" and uses the
+                specified optimization flags, which are carefully chosen to give best
+                performance on atom processors.
+            </para>
+            <para>
+                The tune file would be included by the machine definition and can be
+                contained in the BSP or referenced from one of the standard core set of
+                files included with Poky itself.
+            </para>
+            <para>
+                Both the base package architecuture file and the tune file are optional for a Poky BSP layer.
+            </para>
+        </section>
+
+        <section id='bsp-filelayout-kernel'>
+            <title>Linux Kernel Configuration (meta-bsp/packages/linux/*)</title>
+
+            <para>
+                These files make up the definition of a kernel to use with this
+                hardware. 
+                In this case it is a complete self-contained kernel with its own
+                configuration and patches but kernels can be shared between many
+                machines as well.
+                Following is an example:
+               <literallayout class='monospaced'>
+     meta-bsp/packages/linux/linux-bsp_2.6.50.bb
+               </literallayout>
+                This example file is the core kernel recipe that details from where to get the kernel
+                source.
+                All standard source code locations are supported so this could 
+                be a release tarball, some git repository, or source included in
+                the directory within the BSP itself.
+            </para>
+            <para>
+                The file then contains information about what patches to apply and how to configure and build them.
+                It can reuse the main Poky kernel build class, so the definitions here can remain very simple.   
+            </para>
+            <para>
+               <literallayout class='monospaced'>
+     linux-bsp-2.6.50/*.patch
+               </literallayout>
+            </para>
+            <para>
+                The above example file contains patches you can apply against the base kernel, wherever
+                they may have been obtained from.
+            </para>
+            <para>
+               <literallayout class='monospaced'>
+     meta-bsp/packages/linux/linux-bsp-2.6.50/defconfig-bsp
+               </literallayout>
+            </para>
+            <para>
+                Finally, this last example file contains configuration information to use to configure the kernel.
+            </para>
+            <para>
+                Examples of kernel recipes are available in Poky itself. 
+                These files are optional since a kernel from Poky itself could be selected, although it
+                would be unusual not to have a kernel configuration.
+            </para>
+        </section>
+
+        <section id='bsp-filelayout-packages'>
+            <title>Other Software (meta-bsp/packages/*)</title>
+
+            <para>
+                This section describes other pieces of software that the hardware might need for best
+                operation. 
+                These are examples of the kinds of things that you could encounter.  
+                The examples used in this section are standard <filename>.bb</filename> file recipes in the 
+                usual Poky format.  
+                You can include the source directly by referring to it in the source control system or 
+                the released tarballs of external software projects.
+                You only need to provide these types of files if the platform requires them.
+            </para>
+            <para>
+                The following file is a bootloader recipe that can be used to generate a new
+                bootloader binary. 
+                Sometimes these files are included in the final image format and are needed to reflash hardware.
+            </para>
+            <para>
+               <literallayout class='monospaced'>
+     meta-bsp/packages/bootloader/bootloader_0.1.bb
+               </literallayout>
+            </para>
+            <para>
+                These next two files are examples of a hardware driver and a hardware daemon that might need
+                to be included in images to make the hardware useful. 
+                Although the example uses "modem" there may be other components needed, such as firmware.
+            </para>
+            <para>
+               <literallayout class='monospaced'>
+     meta-bsp/packages/modem/modem-driver_0.1.bb
+     meta-bsp/packages/modem/modem-daemon_0.1.bb
+               </literallayout>
+            </para>
+            <para>
+                Sometimes the device needs an image in a very specific format so that the update
+                mechanism can accept and reflash it. 
+                Recipes to build the tools needed to do this can be included with the BSP.
+                Following is an example.
+            </para>
+            <para>
+               <literallayout class='monospaced'>
+     meta-bsp/packages/image-creator/image-creator-native_0.1.bb
+               </literallayout>
+            </para>
+        </section>
+
+        <section id='bs-filelayout-bbappend'>
+            <title>Append BSP-Specific Information to Existing Recipes</title>
+            <para>
+                Suppose you have a recipe such as 'pointercal' that requires machine-specific information.
+                At the same time, you have your new BSP code nicely partitioned into a layer, which is where 
+                you would also like to specify any machine-specific information associated with your new machine. 
+                Before the <filename>.bbappend</filename> extension was introduced, you would have to copy the whole
+                pointercal recipe and files into your layer, and then add the single file for your machine.
+            </para>
+            <para>
+                With the <filename>.bbappend</filename> extension, however, your work becomes much easier.
+                It allows you to easily merge BSP-specific information with the original recipe.
+                Whenever bitbake finds any <filename>.bbappend</filename> files, they will be
+                included after bitbake loads the associated <filename>.bb</filename> but before any finalize 
+                or anonymous methods run.
+                This allows the BSP layer to do whatever it might want to do to customize the original recipe.
+            </para>
+            <para>
+                If your recipe needs to reference extra files it can use the FILESEXTRAPATH variable
+                to specify their location. 
+                The example below shows extra files contained in a folder called ${PN} (the package name).
+            </para>
+            <literallayout class='monospaced'>
+     FILESEXTRAPATHS := "${THISDIR}/${PN}"
+            </literallayout>
+            <para>
+            This technique allows the BSP to add machine-specific configuration files to the layer directory, 
+            which will be picked up by bitbake. 
+            For an example see <filename>meta-emenlow/packages/formfactor</filename>.
+            </para>
+        </section>
+
+        <section id="bsp-filelayout-prebuilds">
+            <title>Prebuild Data (meta-bsp/prebuilds/*)</title>
+            <para>
+                This location can contain precompiled representations of the source code 
+                contained elsewhere in the BSP layer. 
+                Assuming a compatible configuration is used, Poky can process and use these optional precompiled 
+                representations to provide much faster build times.
+            </para>
+        </section>
+
+        <section id='bsp-click-through-licensing'>
+            <title>BSP 'Click-Through' Licensing Procedure</title>
+
+            <note><para> This section is here as a description of how
+		click-through licensing is expected to work, and is
+		not yet not impemented.
+            </para></note>
+
+            <para>
+	      In some cases, a BSP may contain separately licensed IP
+	      (Intellectual Property) for a component, which imposes
+	      upon the user a requirement to accept the terms of a
+	      'click-through' license.  Once the license is accepted
+	      (in whatever form that may be, see details below) the
+	      Poky build system can then build and include the
+	      corresponding component in the final BSP image.  Some
+	      affected components may be essential to the normal
+	      functioning of the system and have no 'free' replacement
+	      i.e. the resulting system would be non-functional
+	      without them.  Other components may be simply
+	      'good-to-have' or purely elective, or if essential
+	      nonetheless have a 'free' (possibly less-capable)
+	      version which may substituted for in the BSP recipe.
+            </para>
+
+            <para>
+	      For the latter cases, where it is possible to do so from
+	      a functionality perspective, the Poky website will make
+	      available a 'de-featured' BSP completely free of
+	      encumbered IP, which can be used directly and without
+	      any further licensing requirements.  If present, this
+	      fully 'de-featured' BSP will be named meta-bsp (i.e. the
+	      normal default naming convention).  This is the simplest
+	      and therefore preferred option if available, assuming
+	      the resulting functionality meets requirements.
+            </para>
+
+            <para>
+	      If however, a non-encumbered version is unavailable or
+	      the 'free' version would provide unsuitable
+	      functionality or quality, an encumbered version can be
+	      used.  Encumbered versions of a BSP are given names of
+	      the form meta-bsp-nonfree.  There are several ways
+	      within the Poky build system to satisfy the licensing
+	      requirements for an encumbered BSP, in roughly the
+	      following order of preference:
+            </para>
+
+	    <itemizedlist>
+              <listitem>
+
+		<para>
+		  Get a license key (or keys) for the encumbered BSP
+		  by visiting 
+                  <ulink url='https://pokylinux.org/bsp-keys.html'>https://pokylinux.org/bsp-keys.html</ulink>
+		  and give the web form there the name of the BSP and your e-mail address.
+		</para>
+
+		<literallayout class='monospaced'>
+          [screenshot of dialog box]
+		</literallayout>
+
+		<para>
+		  After agreeing to any applicable license terms, the
+		  BSP key(s) will be immediately sent to the address
+		  given and can be used by specifying BSPKEY_&lt;keydomain&gt;
+		  environment variables when building the image:
+		</para>
+
+		<literallayout class='monospaced'>
+          $ BSPKEY_&lt;keydomain&gt;=&lt;key&gt; bitbake poky-image-sato
+		</literallayout>
+
+		<para>
+		  This will allow the encumbered image to be built
+		  with no change at all to the normal build process.
+		</para>
+
+		<para>
+		  Equivalently and probably more conveniently, a line
+		  for each key can instead be put into the user's
+		  local.conf file.
+		</para>
+
+		<para>
+		  The &lt;keydomain&gt; component of the
+		  BSPKEY_&lt;keydomain&gt; is required because there
+		  may be multiple licenses in effect for a give BSP; a
+		  given &lt;keydomain&gt; in such cases corresponds to
+		  a particular license.  In order for an encumbered
+		  BSP encompassing multiple key domains to be built
+		  successfully, a &lt;keydomain&gt; entry for each
+		  applicable license must be present in local.conf or
+		  supplied on the command-line.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  Do nothing - build as you normally would, and follow
+		  any license prompts that originate from the
+		  encumbered BSP (the build will cleanly stop at this
+		  point).  These usually take the form of instructions
+		  needed to manually fetch the encumbered package(s)
+		  and md5 sums into e.g. the poky/build/downloads
+		  directory.  Once the manual package fetch has been
+		  completed, restarting the build will continue where
+		  it left off, this time without the prompt since the
+		  license requirements will have been satisfied.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  Get a full-featured BSP recipe rather than a key, by
+		  visiting
+		  <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
+		  Accepting the license agreement(s) presented will
+		  subsequently allow you to download a tarball
+		  containing a full-featured BSP legally cleared for
+		  your use by the just-given license agreement(s).
+		  This method will also allow the encumbered image to
+		  be built with no change at all to the normal build
+		  process.
+		</para>
+              </listitem>
+	    </itemizedlist>
+	    <para>
+	      Note that method 3 is also the only option available
+	      when downloading pre-compiled images generated from
+	      non-free BSPs.  Those images are likewise available at
+	      <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
+            </para>
+        </section>
+
+</chapter>
