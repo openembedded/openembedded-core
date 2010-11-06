@@ -425,6 +425,7 @@ base_do_package() {
 addtask build after do_populate_sysroot
 do_build = ""
 do_build[func] = "1"
+do_build[noexec] = "1"
 do_build () {
 	:
 }
