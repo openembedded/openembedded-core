@@ -1212,6 +1212,18 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 self.task_skip(task)
                 return True
 
+            taskdep = self.rqdata.dataCache.task_deps[fn]
+            if 'noexec' in taskdep and taskname in taskdep['noexec']:
+                bb.msg.note(1, bb.msg.domain.RunQueue,
+                        "Noexec task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
+                                                                self.stats.total,
+                                                                task,
+                                                                self.rqdata.get_user_idstring(task)))
+                self.runq_running[task] = 1
+                self.runq_buildable[task] = 1
+                self.task_complete(task)
+                return True
+
             bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
             bb.msg.note(1, bb.msg.domain.RunQueue,
                         "Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
