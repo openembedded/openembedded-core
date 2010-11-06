@@ -1,0 +1,129 @@
+#!/bin/bash
+ODIR=pull-$$
+RELATIVE_TO="master"
+COMMIT_ID="HEAD"
+PULL_URL="git://git.pokylinux.org/poky-contrib.git"
+PREFIX="PATCH"
+
+usage() {
+CMD=$(basename $0)
+cat <<EOM
+Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to] [-i commit_id] -b contrib_branch
+  -h                  Display this help message
+  -o output_dir       Specify the output directory for the messages (default: pull-PID)
+  -m msg_body_file    The file containing a blurb to be inserted into the summary email
+  -r relative_to      Starting commit (default: master)
+  -i commit_id        Ending commit (default: HEAD)
+  -b contrib_branch   Branch-name in the git.pokylinux.org/poky-contrib tree
+  -s subject          The subject to be inserted into the summary email
+  -p prefix           Use [prefix N/M] instead of [PATCH N/M] as the subject prefix
+
+ Examples:
+   $CMD -b nitin/basic
+   $CMD -r distro/master -i nitin/distro -b nitin/distro
+   $CMD -r master -i misc -b nitin/misc -o pull-misc
+   $CMD -p "RFC PATCH" -b nitin/experimental
+EOM
+}
+
+# Parse and validate arguments
+while getopts "b:hi:m:o:r:s:p:" OPT; do
+    case $OPT in
+    b)
+        CONTRIB_BRANCH="$OPTARG"
+        ;;
+    h)
+        usage
+        exit 0
+        ;;
+    i)
+        COMMIT_ID="$OPTARG"
+        ;;
+    m)
+        BODY="$OPTARG"
+        if [ ! -e "$BODY" ]; then
+            echo "ERROR: Body file does not exist"
+            exit 1
+        fi
+        ;;
+    o)
+        ODIR="$OPTARG"
+        ;;
+    p)
+        PREFIX="$OPTARG"
+        ;;
+    r)
+        RELATIVE_TO="$OPTARG"
+        ;;
+    s)
+        SUBJECT="$OPTARG"
+        ;;
+    esac
+done
+
+if [ -z "$CONTRIB_BRANCH" ]; then
+    usage
+    exit 1
+fi
+
+
+# Perform a sanity test on the web URL. Issue a warning if it is not
+# accessible, but do not abort as users may want to run offline.
+WEB_URL="http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=$CONTRIB_BRANCH"
+wget -q $WEB_URL -O /dev/null
+if [ $? -ne 0 ]; then
+    echo "WARNING: Branch '$CONTRIB_BRANCH' was not found on the contrib git tree."
+    echo "         Please check your contrib-branch parameter before sending."
+    echo ""
+fi
+
+if [ -e $ODIR ]; then
+	echo "ERROR: output directory $ODIR exists."
+	exit 1
+fi
+mkdir $ODIR
+
+
+# Generate the patches and cover letter
+git format-patch -M --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --cover-letter $RELATIVE_TO..$COMMIT_ID > /dev/null
+
+
+# Customize the cover letter
+CL="$ODIR/0000-cover-letter.patch"
+(cat <<EOM
+
+Pull URL: $PULL_URL
+  Branch: $CONTRIB_BRANCH
+  Browse: $WEB_URL
+
+Thanks,
+    $(git config user.name) <$(git config user.email)>
+---
+
+EOM
+) | sed -i "/BLURB HERE/ r /dev/stdin" "$CL"
+
+# If the user specified a message body, insert it into the cover letter and
+# remove the BLURB token.
+if [ -n "$BODY" ]; then
+    sed -i "/BLURB HERE/ r $BODY" "$CL"
+    sed -i "/BLURB HERE/ d" "$CL"
+fi
+
+# If the user specified a subject, replace the SUBJECT token with it.
+if [ -n "$SUBJECT" ]; then
+    sed -i -e "s/\*\*\* SUBJECT HERE \*\*\*/$SUBJECT/" "$CL"
+fi
+
+
+# Generate report for user
+cat <<EOM
+The following patches have been prepared:
+$(for PATCH in $(ls $ODIR/*); do echo "    $PATCH"; done)
+
+Review their content, especially the summary mail:
+    $CL
+
+When you are satisfied, you can send them with:
+    send-pull-request -a -p $ODIR
+EOM
