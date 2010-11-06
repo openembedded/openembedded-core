@@ -880,7 +880,9 @@ class RunQueue:
         fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
         if taskname is None:
             taskname = self.rqdata.runq_task[task]
-        stampfile = "%s.%s" % (self.rqdata.dataCache.stamp[fn], taskname)
+        
+        stampfile = bb.parse.siggen.stampfile(self.rqdata.dataCache.stamp[fn], taskname, self.rqdata.runq_hash[task])
+
         # If the stamp is missing its not current
         if not os.access(stampfile, os.F_OK):
             bb.msg.debug(2, bb.msg.domain.RunQueue, "Stampfile %s not available\n" % stampfile)
@@ -900,9 +902,10 @@ class RunQueue:
             if iscurrent:
                 fn2 = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[dep]]
                 taskname2 = self.rqdata.runq_task[dep]
-                stampfile2 = "%s.%s" % (self.rqdata.dataCache.stamp[fn2], taskname2)
+                stampfile2 = bb.parse.siggen.stampfile(self.rqdata.dataCache.stamp[fn2], taskname2, self.rqdata.runq_hash[dep])
+                stampfile3 = bb.parse.siggen.stampfile(self.rqdata.dataCache.stamp[fn2], taskname2 + "_setscene", self.rqdata.runq_hash[dep])
                 t2 = get_timestamp(stampfile2)
-                t3 = get_timestamp(stampfile2 + "_setscene")
+                t3 = get_timestamp(stampfile3)
                 if t3 and t3 > t2:
                    continue
                 if fn == fn2 or (fulldeptree and fn2 not in stampwhitelist):

@@ -32,6 +32,9 @@ class SignatureGenerator(object):
     def finalise(self, fn, d, varient):
         return
 
+    def stampfile(self, stampbase, taskname, taskhash):
+        return "%s.%s" % (stampbase, taskname)
+
 class SignatureGeneratorBasic(SignatureGenerator):
     """
     """
