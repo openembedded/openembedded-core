@@ -1,0 +1,133 @@
+#!/bin/bash
+AUTO=0
+
+usage()
+{
+cat <<EOM
+Usage: $(basename $0) [-h] [-a] [[-t email]...] -p pull-dir 
+  -t email     Explicitly add email to the recipients
+  -a           Automatically harvest recipients from "*-by: email" lines
+               in the patches in the pull-dir
+  -p pull-dir  Directory containing summary and patch files
+EOM
+}
+
+# Collect To and CC addresses from the patch files if they exist
+# $1: Which header to add the recipients to, "TO" or "CC"
+# $2: The regex to match and strip from the line with email addresses
+harvest_recipients()
+{
+    TO_CC=$1
+    REGX=$2
+    export IFS=$',\n'
+    for PATCH in $PDIR/*.patch; do
+        # Grab To addresses
+        for EMAIL in $(sed '/^---$/q' $PATCH | grep -e "$REGX" | sed "s/$REGX//"); do
+            if [ "$TO_CC" == "TO" ] && [ "${TO/$EMAIL/}" == "$TO" ] && [ -n "$EMAIL" ]; then
+                if [ -z "$TO" ]; then TO=$EMAIL; else TO="$TO,$EMAIL"; fi
+            elif [ "$TO_CC" == "CC" ] && [ "${CC/$EMAIL/}" == "$CC" ] && [ -n "$EMAIL" ]; then
+                if [ -z "$CC" ]; then CC=$EMAIL; else CC="$CC,$EMAIL"; fi
+            fi
+        done
+    done
+    unset IFS
+}
+
+
+# Parse and verify arguments
+while getopts "ahp:t:" OPT; do
+    case $OPT in
+        a)
+            AUTO=1
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        p)
+            PDIR=${OPTARG%/}
+            if [ ! -d $PDIR ]; then
+                echo "ERROR: pull-dir \"$PDIR\" does not exist."
+                usage
+                exit 1
+            fi
+            ;;
+        t)
+            if [ -n "$TO" ]; then
+                TO="$TO,$OPTARG"
+            else
+                TO="$OPTARG"
+            fi
+            ;;
+    esac
+done
+
+if [ -z "$PDIR" ]; then
+    echo "ERROR: you must specify a pull-dir."
+    usage
+    exit 1
+fi
+
+
+# Verify the cover letter is complete and free of tokens
+CL="$PDIR/0000-cover-letter.patch"
+for TOKEN in SUBJECT BLURB; do
+    grep -q "*** $TOKEN HERE ***" "$CL"
+    if [ $? -eq 0 ]; then
+        echo "ERROR: Please edit $CL and try again (Look for '*** $TOKEN HERE ***')."
+        exit 1
+    fi
+done
+
+
+# Harvest emails from the generated patches and populate the TO and CC variables
+# In addition to To and CC headers/lines, the common Signed-off-by, Tested-by,
+# etc. (*-by) will be added to CC.
+if [ $AUTO -eq 1 ]; then
+    harvest_recipients TO "^[Tt][Oo]: *"
+    harvest_recipients CC "^[Cc][Cc]: *"
+    harvest_recipients CC "^.*-[Bb][Yy]: *"
+fi
+
+if [ -z "$TO" ] && [ -z "$CC" ]; then
+    echo "ERROR: you have not specified any recipients."
+    usage
+    exit 1
+fi
+
+
+# Generate report for the user and require confirmation before sending
+cat <<EOM
+The following patches:
+$(for PATCH in $PDIR/*.patch; do echo "    $PATCH"; done)
+
+will be sent to the following recipients:
+    To: $TO
+    CC: $CC
+
+EOM
+echo "Continue? [y/N] "
+read cont
+
+if [ "$cont" == "y" ] || [ "$cont" == "Y" ]; then
+    ERROR=0
+    for PATCH in $PDIR/*patch; do
+        # Insert To and CC headers via formail to keep them separate and
+        # appending them to the sendmail command as -- $TO $CC has proven
+        # to be an exercise in futility.
+        # 
+        # Use tail to remove the email envelope from git or formail as
+        # msmtp (sendmail) would choke on them.
+        cat $PATCH | formail -I "To: $TO" -I "CC: $CC" | tail -n +2 | sendmail -t
+        if [ $? -eq 1 ]; then
+            ERROR=1
+        fi
+    done
+    if [ $ERROR -eq 1 ]; then
+        echo "ERROR: sendmail failed to send one or more messages. Check your"
+        echo "       sendmail log for details."
+    fi
+else
+    echo "Send aborted."
+fi
+
