@@ -2,11 +2,9 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
-PR = "r1"
+PR = "r0"
 
-SRC_URI += "file://hayes-gone.patch \
-           file://ppc_glibc_build_fix.patch \
-           file://connector-msg-size-fix.patch"
+SRC_URI += " file://connector-msg-size-fix.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
