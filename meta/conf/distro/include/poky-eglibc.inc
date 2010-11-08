@@ -32,4 +32,5 @@ LIBC_DEPENDENCIES = "libsegfault \
     		     eglibc-gconv-cp1252 \
     		     eglibc-gconv-iso8859-1 \
     		     eglibc-gconv-iso8859-15 \
+    		     locale-base-en-us \
     		     locale-base-en-gb "
