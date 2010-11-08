@@ -338,7 +338,7 @@ fi
 if [ "$MACHINE" = "qemumips" ]; then
     QEMU=qemu-system-mips
     MACHINE_SUBTYPE=malta
-    QEMU_UI_OPTIONS="-vga cirrus"
+    QEMU_UI_OPTIONS="-vga cirrus $QEMU_UI_OPTIONS"
     if [ "$FSTYPE" = "ext3" ]; then
         #KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
