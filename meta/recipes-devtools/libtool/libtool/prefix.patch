@@ -7,10 +7,10 @@ Updated: Date: 2010/06/28
 Nitin A Kamble <nitin.a.kamble@intel.com>
 
 
-Index: libtool-2.2.10/libltdl/m4/libtool.m4
+Index: libtool-2.4/libltdl/m4/libtool.m4
 ===================================================================
---- libtool-2.2.10.orig/libltdl/m4/libtool.m4
-+++ libtool-2.2.10/libltdl/m4/libtool.m4
+--- libtool-2.4.orig/libltdl/m4/libtool.m4
++++ libtool-2.4/libltdl/m4/libtool.m4
 @@ -94,7 +94,8 @@ _LT_SET_OPTIONS([$0], [$1])
  LIBTOOL_DEPS="$ltmain"
  
@@ -21,7 +21,7 @@ Index: libtool-2.2.10/libltdl/m4/libtool.m4
  AC_SUBST(LIBTOOL)dnl
  
  _LT_SETUP
-@@ -201,7 +202,7 @@ aix3*)
+@@ -204,7 +205,7 @@ aix3*)
  esac
  
  # Global variables:
@@ -30,10 +30,10 @@ Index: libtool-2.2.10/libltdl/m4/libtool.m4
  can_build_shared=yes
  
  # All known linkers require a `.a' archive for static linking (except MSVC,
-Index: libtool-2.2.10/Makefile.am
+Index: libtool-2.4/Makefile.am
 ===================================================================
---- libtool-2.2.10.orig/Makefile.am
-+++ libtool-2.2.10/Makefile.am
+--- libtool-2.4.orig/Makefile.am
++++ libtool-2.4/Makefile.am
 @@ -31,7 +31,7 @@ AM_LDFLAGS		=
  DIST_SUBDIRS		= .
  EXTRA_DIST		=
@@ -52,7 +52,7 @@ Index: libtool-2.2.10/Makefile.am
  
  libtoolize: $(srcdir)/libtoolize.in $(top_builddir)/config.status
  	rm -f libtoolize.tmp libtoolize
-@@ -91,8 +91,8 @@ $(srcdir)/libtoolize.in: $(sh_files) lib
+@@ -90,8 +90,8 @@ $(srcdir)/libtoolize.in: $(sh_files) lib
  # We used to do this with a 'stamp-vcl' file, but non-gmake builds
  # would rerun configure on every invocation, so now we manually
  # check the version numbers from the build rule when necessary.
@@ -63,7 +63,7 @@ Index: libtool-2.2.10/Makefile.am
  	if test -f "$$target"; then \
  	  set dummy `./$$target --version | sed 1q`; actualver="$$5"; \
  	  test "$$actualver" = "$$correctver" && rebuild=false; \
-@@ -101,8 +101,8 @@ libtool: $(top_builddir)/config.status $
+@@ -100,8 +100,8 @@ libtool: $(top_builddir)/config.status $
  	  case $$prereq in *ChangeLog);; *) rebuild=:;; esac; \
  	done; \
  	if $$rebuild; then \
@@ -74,7 +74,7 @@ Index: libtool-2.2.10/Makefile.am
  	fi
  
  .PHONY: configure-subdirs
-@@ -147,7 +147,7 @@ EXTRA_DIST     += bootstrap $(srcdir)/li
+@@ -146,7 +146,7 @@ EXTRA_DIST     += bootstrap $(srcdir)/li
  		  ChangeLog.2002 ChangeLog.2003 ChangeLog.2004 \
  		  ChangeLog.2005 ChangeLog.2006 ChangeLog.2007 \
  		  ChangeLog.2008 ChangeLog.2009
@@ -83,7 +83,7 @@ Index: libtool-2.2.10/Makefile.am
  		  $(auxdir)/ltmain.tmp $(m4dir)/ltversion.tmp
  
  ## We build ltversion.m4 here, instead of from config.status,
-@@ -523,12 +523,12 @@ TESTS_ENVIRONMENT = MAKE="$(MAKE)" CC="$
+@@ -526,12 +526,12 @@ TESTS_ENVIRONMENT = MAKE="$(MAKE)" CC="$
  
  BUILDCHECK_ENVIRONMENT = _lt_pkgdatadir="$(abs_top_srcdir)" \
  	LIBTOOLIZE="$(abs_top_builddir)/libtoolize" \
@@ -98,12 +98,3 @@ Index: libtool-2.2.10/Makefile.am
  	LTDLINCL="-I$(includedir)" \
  	LIBLTDL="$(libdir)/libltdl.la" \
  	tst_aclocaldir="$(aclocaldir)"
-@@ -679,7 +679,7 @@ if HAVE_FC
- TESTS += $(FC_TESTS)
- endif
- 
--tests/demo-conf.test: libtool
-+tests/demo-conf.test: $(host_alias)-libtool
- 
- EXTRA_DIST     += $(srcdir)/tests/defs.in tests/defs.m4sh \
- 		  $(COMMON_TESTS) $(CXX_TESTS) $(F77_TESTS) $(FC_TESTS)

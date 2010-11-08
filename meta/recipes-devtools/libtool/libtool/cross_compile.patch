@@ -4,28 +4,11 @@ Not upstreable in this form.
 
 RP - 01/05/2008
 
-Index: libtool-2.2.10/libltdl/config/ltmain.m4sh
+Index: libtool-2.4/libltdl/config/ltmain.m4sh
 ===================================================================
---- libtool-2.2.10.orig/libltdl/config/ltmain.m4sh
-+++ libtool-2.2.10/libltdl/config/ltmain.m4sh
-@@ -5147,8 +5147,14 @@ func_mode_link ()
- 	    absdir="$abs_ladir"
- 	    libdir="$abs_ladir"
- 	  else
--	    dir="$libdir"
--	    absdir="$libdir"
-+	    # Adding 'libdir' from the .la file to our library search paths
-+	    # breaks crosscompilation horribly.  We cheat here and don't add
-+	    # it, instead adding the path where we found the .la.  -CL
-+	    dir="$abs_ladir"
-+	    absdir="$abs_ladir"
-+	    libdir="$abs_ladir"
-+	    #dir="$libdir"
-+	    #absdir="$libdir"
- 	  fi
- 	  test "X$hardcode_automatic" = Xyes && avoidtemprpath=yes
- 	else
-@@ -5519,8 +5525,6 @@ func_mode_link ()
+--- libtool-2.4.orig/libltdl/config/ltmain.m4sh
++++ libtool-2.4/libltdl/config/ltmain.m4sh
+@@ -6121,8 +6121,6 @@ func_mode_link ()
  		add="$libdir/$linklib"
  	      fi
  	    else
@@ -34,7 +17,7 @@ Index: libtool-2.2.10/libltdl/config/ltmain.m4sh
  	      # Try looking first in the location we're being installed to.
  	      if test -n "$inst_prefix_dir"; then
  		case $libdir in
-@@ -5667,7 +5671,17 @@ func_mode_link ()
+@@ -6277,7 +6275,17 @@ func_mode_link ()
  		  fi
  		  ;;
  		*)

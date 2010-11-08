@@ -1,6 +1,6 @@
 require libtool_${PV}.bb
 
-PR = "r1"
+PR = "r0"
 PACKAGES = ""
 SRC_URI_append = " file://cross_compile.patch \
 		   file://prefix.patch "

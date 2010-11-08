@@ -1,12 +1,10 @@
 require libtool_${PV}.bb
 
-DEPENDS = ""
-
-PR = "r1"
+PR = "r0"
 SRC_URI_append = " file://cross_compile.patch \
 		   file://prefix.patch "
 
-inherit native
+inherit nativesdk
 
 do_configure_prepend () {
 	# Remove any existing libtool m4 since old stale versions would break
@@ -18,5 +16,12 @@ do_configure_prepend () {
 do_install () {
 	autotools_do_install
 	install -d ${D}${bindir}/
-	install -m 0755 ${HOST_SYS}-libtool ${D}${bindir}/${HOST_SYS}-libtool
+	install -m 0755 ${HOST_SYS}-libtool ${D}${bindir}/
+}
+
+SYSROOT_PREPROCESS_FUNCS += "libtoolnativesdk_sysroot_preprocess"
+
+libtoolnativesdk_sysroot_preprocess () {
+	install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
+	install -m 755 ${D}${bindir}/${HOST_SYS}-libtool ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool
 }
