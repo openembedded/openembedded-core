@@ -7,14 +7,14 @@ This Patch fixes this issue in the python build environment.
 11 Oct 2010
 Nitin A Kamble <nitin.a.kamble@intel.com>
 
-Index: Python-2.6.5/setup.py
+Index: Python-2.6.6/setup.py
 ===================================================================
---- Python-2.6.5.orig/setup.py
-+++ Python-2.6.5/setup.py
-@@ -591,12 +591,10 @@ class PyBuildExt(build_ext):
-                 readline_libs.append('ncurses')
-             elif self.compiler.find_library_file(lib_dirs, 'curses'):
-                 readline_libs.append('curses')
+--- Python-2.6.6.orig/setup.py
++++ Python-2.6.6/setup.py
+@@ -665,12 +665,10 @@ class PyBuildExt(build_ext):
+                 pass # Issue 7384: Already linked against curses or tinfo.
+             elif curses_library:
+                 readline_libs.append(curses_library)
 -            elif self.compiler.find_library_file(lib_dirs +
 -                                               ['/usr/lib/termcap'],
 +            elif self.compiler.find_library_file(lib_dirs,

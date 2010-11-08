@@ -3,10 +3,10 @@
 # of opt-out.
 # Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>
 
-Index: Python-2.6.1/Python/compile.c
+Index: Python-2.6.6/Python/compile.c
 ===================================================================
---- Python-2.6.1.orig/Python/compile.c
-+++ Python-2.6.1/Python/compile.c
+--- Python-2.6.6.orig/Python/compile.c
++++ Python-2.6.6/Python/compile.c
 @@ -32,7 +32,7 @@
  #include "symtable.h"
  #include "opcode.h"
@@ -16,10 +16,10 @@ Index: Python-2.6.1/Python/compile.c
  
  #define DEFAULT_BLOCK_SIZE 16
  #define DEFAULT_BLOCKS 8
-Index: Python-2.6.1/Modules/main.c
+Index: Python-2.6.6/Modules/main.c
 ===================================================================
---- Python-2.6.1.orig/Modules/main.c
-+++ Python-2.6.1/Modules/main.c
+--- Python-2.6.6.orig/Modules/main.c
++++ Python-2.6.6/Modules/main.c
 @@ -40,7 +40,7 @@ static char **orig_argv;
  static int  orig_argc;
  
@@ -39,14 +39,14 @@ Index: Python-2.6.1/Modules/main.c
  -Q arg : division options: -Qold (default), -Qwarn, -Qwarnall, -Qnew\n\
  -s     : don't add user site directory to sys.path; also PYTHONNOUSERSITE\n\
  -S     : don't imply 'import site' on initialization\n\
-@@ -353,8 +352,8 @@ Py_Main(int argc, char **argv)
+@@ -328,8 +327,8 @@ Py_Main(int argc, char **argv)
  
- 		/* case 'J': reserved for Jython */
+         /* case 'J': reserved for Jython */
  
--		case 'O':
--			Py_OptimizeFlag++;
-+		case 'N':
-+			Py_OptimizeFlag=0;
- 			break;
+-        case 'O':
+-            Py_OptimizeFlag++;
++        case 'N':
++            Py_OptimizeFlag=0;
+             break;
  
- 		case 'B':
+         case 'B':

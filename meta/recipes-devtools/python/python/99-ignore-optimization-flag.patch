@@ -3,17 +3,17 @@
 #
 # Signed-off-by: Denys Dmytriyenko <denis@denix.org>
 
-Index: Python-2.6.1/Modules/main.c
+Index: Python-2.6.6/Modules/main.c
 ===================================================================
---- Python-2.6.1-orig/Modules/main.c
-+++ Python-2.6.1/Modules/main.c
-@@ -352,6 +352,9 @@ Py_Main(int argc, char **argv)
+--- Python-2.6.6.orig/Modules/main.c
++++ Python-2.6.6/Modules/main.c
+@@ -327,6 +327,9 @@ Py_Main(int argc, char **argv)
  
- 		/* case 'J': reserved for Jython */
+         /* case 'J': reserved for Jython */
  
-+		case 'O': /* ignore it */
-+			break;
++      	case 'O': /* ignore it */
++      		break;
 +
- 		case 'N':
- 			Py_OptimizeFlag=0;
- 			break;
+         case 'N':
+             Py_OptimizeFlag=0;
+             break;

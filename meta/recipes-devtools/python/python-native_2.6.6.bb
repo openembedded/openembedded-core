@@ -1,9 +1,9 @@
 require python.inc
 DEPENDS = "openssl-native bzip2-full-native zlib-native readline-native sqlite3-native"
-PR = "${INC_PR}.3"
+PR = "${INC_PR}.0"
+
 
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
-           file://00-fix-bindir-libdir-for-cross.patch \
            file://04-default-is-optimized.patch \
            file://05-enable-ctypes-cross-build.patch \
            file://10-distutils-fix-swig-parameter.patch \

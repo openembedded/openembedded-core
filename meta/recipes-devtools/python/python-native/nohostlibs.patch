@@ -1,8 +1,8 @@
-Index: Python-2.6.1/setup.py
+Index: Python-2.6.6/setup.py
 ===================================================================
---- Python-2.6.1.orig/setup.py	2009-11-13 16:20:47.000000000 +0000
-+++ Python-2.6.1/setup.py	2009-11-13 16:28:00.000000000 +0000
-@@ -310,8 +310,8 @@
+--- Python-2.6.6.orig/setup.py
++++ Python-2.6.6/setup.py
+@@ -356,8 +356,8 @@ class PyBuildExt(build_ext):
  
      def detect_modules(self):
          # Ensure that /usr/local is always used
@@ -13,7 +13,7 @@ Index: Python-2.6.1/setup.py
  
          # Add paths specified in the environment variables LDFLAGS and
          # CPPFLAGS for header and library files.
-@@ -347,10 +347,10 @@
+@@ -393,10 +393,10 @@ class PyBuildExt(build_ext):
                      for directory in reversed(options.dirs):
                          add_dir_to_list(dir_list, directory)
  
@@ -27,7 +27,7 @@ Index: Python-2.6.1/setup.py
                              sysconfig.get_config_var("INCLUDEDIR"))
  
          try:
-@@ -361,11 +361,8 @@
+@@ -407,11 +407,8 @@ class PyBuildExt(build_ext):
          # lib_dirs and inc_dirs are used to search for files;
          # if a file is found in one of those directories, it can
          # be assumed that no additional -I,-L directives are needed.
@@ -41,10 +41,10 @@ Index: Python-2.6.1/setup.py
          exts = []
          missing = []
  
-@@ -583,8 +580,7 @@
-                 readline_libs.append('ncurses')
-             elif self.compiler.find_library_file(lib_dirs, 'curses'):
-                 readline_libs.append('curses')
+@@ -661,8 +658,7 @@ class PyBuildExt(build_ext):
+                 pass # Issue 7384: Already linked against curses or tinfo.
+             elif curses_library:
+                 readline_libs.append(curses_library)
 -            elif self.compiler.find_library_file(lib_dirs +
 -                                               ['/usr/lib/termcap'],
 +            elif self.compiler.find_library_file(lib_dirs,
