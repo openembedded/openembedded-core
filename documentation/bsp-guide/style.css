@@ -118,13 +118,13 @@ h6 {
   background-color: transparent;
   background-repeat: no-repeat;
   padding-top: 256px;
-  background-image: url("figures/poky-ref-manual.png");
+  background-image: url("figures/bsp-title.png");
   background-position: left top;
   margin-top: -256px;
   padding-right: 50px;
-  margin-left: 50px;
+  margin-left: 0px;
   text-align: right;
-  width: 600px;
+  width: 700px;
 }
 
 h3.author {
