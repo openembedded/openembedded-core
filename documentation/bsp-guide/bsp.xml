@@ -366,7 +366,7 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
             </para>
 
             <para>
-	      If however, a non-encumbered version is unavailable or
+	      However, if a non-encumbered version is unavailable or
 	      the 'free' version would provide unsuitable
 	      functionality or quality, an encumbered version can be
 	      used.  
@@ -419,7 +419,7 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
 		<para>
 		  The &lt;keydomain&gt; component of the
 		  BSPKEY_&lt;keydomain&gt; is required because there
-		  might be multiple licenses in effect for a give BSP.
+		  might be multiple licenses in effect for a given BSP.
                   In such cases, a given &lt;keydomain&gt; corresponds to
 		  a particular license.  In order for an encumbered
 		  BSP that encompasses multiple key domains to be built
