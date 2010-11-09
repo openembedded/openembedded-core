@@ -1,8 +1,3 @@
-all: html pdf tarball
-
-pdf:
-	../tools/poky-docbook-to-pdf bsp-guide.xml ../template
-
 XSLTOPTS = --stringparam html.stylesheet style.css \
            --stringparam  chapter.autolabel 1 \
            --stringparam  section.autolabel 1 \
@@ -14,6 +9,11 @@ XSLTOPTS = --stringparam html.stylesheet style.css \
 # match your localy installed XSL stylesheets.
 XSL_BASE_URI  = http://docbook.sourceforge.net/release/xsl/current
 XSL_XHTML_URI = $(XSL_BASE_URI)/xhtml/docbook.xsl
+
+all: html pdf tarball
+
+pdf:
+	../tools/poky-docbook-to-pdf bsp-guide.xml ../template
 
 html:
 #       See http://www.sagehill.net/docbookxsl/HtmlOutput.html 
