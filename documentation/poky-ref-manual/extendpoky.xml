@@ -257,14 +257,14 @@ fi
     </section>
 
     <section id='usingpoky-extend-customimage'>
-        <title>Customising Images</title>
+        <title>Customizing Images</title>
         <para>
         You can customize Poky images to satisfy particular requirements. 
         This section describes several methods and provides guidelines for each.
         </para>
 
         <section id='usingpoky-extend-customimage-custombb'>
-            <title>Customising Images Using Custom .bb Files</title>
+            <title>Customizing Images Using Custom .bb Files</title>
             <para>
                 One way to get additional software into an image is to create a custom image. 
                 The following example shows the form for the two lines you need:
@@ -295,7 +295,7 @@ IMAGE_INSTALL += "strace"
         </section>
 
         <section id='usingpoky-extend-customimage-customtasks'>
-            <title>Customising Images Using Custom Tasks</title>
+            <title>Customizing Images Using Custom Tasks</title>
             <para>
                 For complex custom images, the best approach is to create a custom task package
                 that is used to build the image or images. 
@@ -350,7 +350,7 @@ RRECOMMENDS_task-custom-tools = "\
         </section>
 
         <section id='usingpoky-extend-customimage-imagefeatures'>
-            <title>Customising Images Using Custom IMAGE_FEATURES</title>
+            <title>Customizing Images Using Custom IMAGE_FEATURES</title>
             <para>
                 Ultimately users might want to add extra image "features" as used by Poky with the 
                 <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
@@ -368,9 +368,9 @@ RRECOMMENDS_task-custom-tools = "\
         </section>
 
         <section id='usingpoky-extend-customimage-localconf'>
-            <title>Customising Images Using local.conf</title>
+            <title>Customizing Images Using local.conf</title>
             <para>
-                It is possible to customise image contents by abusing variables used by distribution 
+                It is possible to customize image contents by abusing variables used by distribution 
                 maintainers in local.conf.
                 This method only allows the addition of packages and is not recommended.
             </para>
@@ -497,7 +497,7 @@ COMPATIBLE_MACHINE = '(qemux86|qemumips)'
                 Reasonable defaults are used in most cases, but if customization is 
                 necessary you need to create a <filename>machconfig</filename> file 
                 under <filename>meta/packages/formfactor/files/MACHINENAME/</filename>,
-                where <literal>MACHINENAME</literal> is the name for which this infomation
+                where <literal>MACHINENAME</literal> is the name for which this information
                 applies. 
                 For information about the settings available and the defaults, see 
                 <filename>meta/packages/formfactor/files/config</filename>. 
@@ -521,8 +521,8 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
     <section id="usingpoky-changes">
         <title>Making and Maintaining Changes</title>
         <para>
-            Because Poky offers extreme configurability and fliexibility, we recognize that people will want 
-            to extend, configure or optimise Poky for their specific uses.
+            Because Poky offers extreme configurability and flexibility, we recognize that people will want 
+            to extend, configure or optimize Poky for their specific uses.
             To best keep pace with future Poky changes we recommend you make controlled changes to Poky.
         </para>
         <para>
@@ -546,7 +546,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                The Poky tree includes several additional layers such as meta-emenlow and meta-extras
                that demonstrate this functionality.
                The meta-emenlow layer is an example layer that by default is enabled. 
-               However, the meta-extras repostory is not enabled by default. 
+               However, the meta-extras repository is not enabled by default. 
                It is easy though to enable any layer.
                You simply add the layer's path to the 
                <glossterm><link linkend='var-BBLAYERS'>BBLAYERS</link></glossterm> variable in your 
@@ -612,7 +612,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                 Bitbake can locate where other bbclass and configuration files are applied through 
                 the <glossterm><link linkend='var-BBPATH'>BBPATH</link></glossterm>
                 environment variable. 
-                For these cases, Bitake uses the first file with the matching name found in BBPATH.
+                For these cases, Bitbake uses the first file with the matching name found in BBPATH.
                 This is similar to the way the PATH variable is used for binaries. 
                 We recommend, therefore, that you use unique bbclass and configuration file names in your
                 custom layer.
@@ -659,7 +659,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
             <literallayout class='monospaced'>
     bitbake/data.py: Add emit_func() and generate_dependencies() functions
     
-    These functions allow generation of dependency data between funcitons and
+    These functions allow generation of dependency data between functions and
     variables allowing moves to be made towards generating checksums and allowing
     use of the dependency information in other parts of bitbake.
     
@@ -711,7 +711,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                 opkg upgrade</filename> (or similar commands for dpkg/apt or rpm-based systems). 
             </para>
             <para>
-                The goal is to ensure Poky has upgradable packages in all cases.
+                The goal is to ensure Poky has upgradeable packages in all cases.
             </para>
         </section>
 
@@ -775,7 +775,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
         <section id="usingpoky-changes-updatingimages">
             <title>Updating Existing Images</title>
             <para>
-                Often, rather than reflashing a new image you might wish to install updated 
+                Often, rather than re-flashing a new image you might wish to install updated 
                 packages into an existing running system. 
                 You can do this by first sharing the 
                 <filename class="directory">tmp/deploy/ipk/</filename> directory
@@ -927,7 +927,7 @@ LIC_FILES_CHKSUM = "file://../license.html;md5=5c94767cedb5d6987c902ac850ded2c6"
                 As mentioned in the previous section the LIC_FILES_CHKSUM variable lists all the 
                 important files that contain the license text for the source code. 
                 Using this variable you can specify the line on which the license text starts and ends
-                by supplyiing "beginline" and "endline" parameters. 
+                by supplying "beginline" and "endline" parameters. 
                 If you do not use the "beginline" parameter then it is assumed that the text begins on the 
                 first line of the file. 
                 Similarly, if you do not use the "endline" parameter it is assumed that the license text 
