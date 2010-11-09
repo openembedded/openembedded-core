@@ -554,14 +554,15 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                The following example shows how to enable meta-extras in the Poky build:
           </para>
           <para>
-               <literallayout class='monospaced'>LCONF_VERSION = "1"
+               <literallayout class='monospaced'>
+     LCONF_VERSION = "1"
 
-BBFILES ?= ""
-BBLAYERS = " \
-  /path/to/poky/meta \
-  /path/to/poky/meta-emenlow \
-  /path/to/poky/meta-extras \
-  "
+     BBFILES ?= ""
+     BBLAYERS = " \
+       /path/to/poky/meta \
+       /path/to/poky/meta-emenlow \
+       /path/to/poky/meta-extras \
+       "
                </literallayout>
            </para>
 
@@ -574,16 +575,17 @@ BBLAYERS = " \
           </para>
           <para>
                The <filename>meta-emenlow/conf/layer.conf</filename> file demonstrates the required syntax:
-               <literallayout class='monospaced'># We have a conf and classes directory, add to BBPATH
-BBPATH := "${BBPATH}:${LAYERDIR}"
+               <literallayout class='monospaced'>
+     # We have a conf and classes directory, add to BBPATH
+     BBPATH := "${BBPATH}:${LAYERDIR}"
 
-# We have a recipes directory containing both .bb and .bbappend files, add to BBFILES
-BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb \
-        ${LAYERDIR}/recipes/*/*.bbappend"
+     # We have a recipes directory containing both .bb and .bbappend files, add to BBFILES
+     BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb \
+             ${LAYERDIR}/recipes/*/*.bbappend"
 
-BBFILE_COLLECTIONS += "emenlow"
-BBFILE_PATTERN_emenlow := "^${LAYERDIR}/"
-BBFILE_PRIORITY_emenlow = "6"
+     BBFILE_COLLECTIONS += "emenlow"
+     BBFILE_PATTERN_emenlow := "^${LAYERDIR}/"
+     BBFILE_PRIORITY_emenlow = "6"
                </literallayout>
           </para>
           <para>
@@ -782,9 +784,9 @@ BBFILE_PRIORITY_emenlow = "6"
                 Following is an example:
             </para>
             <literallayout class='monospaced'>
-src/gz all http://www.mysite.com/somedir/deploy/ipk/all
-src/gz armv7a http://www.mysite.com/somedir/deploy/ipk/armv7a
-src/gz beagleboard http://www.mysite.com/somedir/deploy/ipk/beagleboard
+     src/gz all http://www.mysite.com/somedir/deploy/ipk/all
+     src/gz armv7a http://www.mysite.com/somedir/deploy/ipk/armv7a
+     src/gz beagleboard http://www.mysite.com/somedir/deploy/ipk/beagleboard
             </literallayout>
         </section>
     </section>
