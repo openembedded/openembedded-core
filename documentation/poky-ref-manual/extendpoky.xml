@@ -305,8 +305,8 @@ IMAGE_INSTALL += "strace"
                 variable lists the task packages to build along with the complementary
                 -dbg and -dev packages. 
                 For each package added, you can use 
-                <glossterm><link linkend='var-PACKAGES'>RDEPENDS</link></glossterm>
-                and <glossterm><link linkend='var-PACKAGES'>RRECOMMENDS</link></glossterm> 
+                <glossterm><link linkend='var-RDEPENDS'>RDEPENDS</link></glossterm>
+                and <glossterm><link linkend='var-RRECOMMENDS'>RRECOMMENDS</link></glossterm> 
                 entries to provide a list of packages the parent task package should contain. 
                 Following is an example:
             </para>
@@ -336,7 +336,7 @@ RDEPENDS_task-custom-tools = "\
 
 RRECOMMENDS_task-custom-tools = "\
     kernel-module-oprofile"
-</programlisting>
+            </programlisting>
             </para>
             <para>
                 In the previous example, two task packages are created with their dependencies and their
@@ -562,7 +562,7 @@ BBLAYERS = " \
   /path/to/poky/meta-emenlow \
   /path/to/poky/meta-extras \
   "
-</literallayout>
+               </literallayout>
            </para>
 
           <para>
@@ -588,7 +588,7 @@ BBFILE_PRIORITY_emenlow = "6"
           </para>
           <para>
                 In the previous example, the recipes for the layers are added to 
-                <glossterm> <link linkend='var-BBFILES'>BBFILES</link></glossterm>. 
+                <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm>. 
                 The <glossterm><link linkend='var-BBFILE_COLLECTIONS'>BBFILE_COLLECTIONS</link></glossterm>
                 variable is then appended with the layer name. 
                 The <glossterm><link linkend='var-BBFILE_PATTERN'>BBFILE_PATTERN</link></glossterm> variable
@@ -784,7 +784,8 @@ BBFILE_PRIORITY_emenlow = "6"
             <literallayout class='monospaced'>
 src/gz all http://www.mysite.com/somedir/deploy/ipk/all
 src/gz armv7a http://www.mysite.com/somedir/deploy/ipk/armv7a
-src/gz beagleboard http://www.mysite.com/somedir/deploy/ipk/beagleboard</literallayout>
+src/gz beagleboard http://www.mysite.com/somedir/deploy/ipk/beagleboard
+            </literallayout>
         </section>
     </section>
 
@@ -857,7 +858,7 @@ quilt refresh
                 </programlisting>
 
                 You can find the resulting patch file in the
-                <filename class="directory">patches/</filename> subdirectory of the source 
+                <filename>patches/</filename> subdirectory of the source 
                 (<glossterm><link linkend='var-S'>S</link></glossterm>) directory. 
                 For future builds you should copy the patch into Poky metadata and add it into the 
                 <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm> of a recipe.  
@@ -883,7 +884,7 @@ SRC_URI += "file://NAME-OF-PATCH.patch"
         </para>
 
         <section id="usingpoky-specifying-LIC_FILES_CHKSUM">
-            <title>Specifying the LIC_FILES_CHKSUM Variable </title>
+            <title>Specifying the LIC_FILES_CHKSUM Variable</title>
             <para>
                 The <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm>
                 variable contains checksums of the license text in the recipe source code. 
