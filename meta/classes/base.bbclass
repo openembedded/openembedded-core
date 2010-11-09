@@ -28,6 +28,7 @@ python sys_path_eh () {
 
         import oe.path
         import oe.utils
+        import oe.data
         inject("bb", bb)
         inject("sys", sys)
         inject("time", time)
