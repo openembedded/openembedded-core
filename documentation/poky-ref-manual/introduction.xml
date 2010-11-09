@@ -18,7 +18,7 @@
         Especially useful for newcomers is the information in the Yocto Project Quick Start, which 
         you can find on the <ulink url="http://www.yoctoproject.org">Yocto Project website</ulink>.
         Specifically, the guide is
-        at <ulink url="http://www.yoctoproject.org/docs/yocto-quick-start/yocto-project-qs.html"></ulink>
+        at <ulink url="http://www.yoctoproject.org/docs/yocto-quick-start/yocto-project-qs.html"/>.
     </para>
 </section>
 
@@ -77,12 +77,12 @@
     <title>Documentation Overview</title>
     <para>
         The sections in this reference manual describe different aspects of Poky. 
-        The <link linkend='usingpoky'>'Using Poky' section</link> provides an overview of the components 
+        The <link linkend='usingpoky'>'Using Poky'</link> section provides an overview of the components 
         that make up Poky followed by information about using Poky and debugging images created in Yocto Project. 
         The <link linkend='extendpoky'>'Extending Poky'</link> and 
         <link linkend='bsp'>'Board Support Packages'</link> sections provide information 
         about how to extend and customize Poky along with advice on how to manage these changes. 
-        The <link linkend='platdev'>'Platform Development with Poky' section</link> provides information about
+        The <link linkend='platdev'>'Platform Development with Poky'</link> section provides information about
         interaction between Poky and target hardware for common platform development tasks such as software
         development, debugging and profiling. 
         The rest of the manual consists of several reference sections, each providing details on a specific
