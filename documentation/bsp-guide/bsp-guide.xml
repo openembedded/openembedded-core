@@ -9,13 +9,13 @@
 
         <mediaobject>
             <imageobject>
-                <imagedata fileref='poky-ref-manual.png' 
+                <imagedata fileref='figures/bsp-title.png' 
                     format='SVG' 
                     align='center' scalefit='1' width='100%'/>
             </imageobject>    
         </mediaobject>
 
-        <title>Board Support Package (BSP) Developers Guide</title>
+        <title></title> 
 
         <authorgroup>
             <author>
