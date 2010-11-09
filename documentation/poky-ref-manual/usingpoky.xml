@@ -66,7 +66,7 @@
             Bitbake chooses the one selected by the distribution configuration.
             You can get more details about how bitbake chooses between different versions
             and providers in the <link linkend='ref-bitbake-providers'>
-            'Preferences and Providers' section</link>.
+            'Preferences and Providers'</link> section.
         </para>
         <para>
             Bitbake also tries to execute any dependent tasks first.
@@ -131,8 +131,8 @@
     </para>
     <para>
         <literallayout class='monospaced'>
-$ source poky-init-build-env [build_dir]
-</literallayout>
+     $ source poky-init-build-env [build_dir]
+        </literallayout>
     </para>
     <para>
         The build_dir is the dir containing all the build's object files. The default 
@@ -146,8 +146,8 @@ $ source poky-init-build-env [build_dir]
     </para>
     <para>
         <literallayout class='monospaced'>
-$ bitbake &lt;target&gt;
-</literallayout>
+     $ bitbake &lt;target&gt;
+        </literallayout>
     </para>
     <para>
         The target is the name of the recipe you want to build. 
@@ -169,7 +169,7 @@ $ bitbake &lt;target&gt;
         <filename class="directory">tmp/deploy/images</filename> directory. 
         Running qemux86 and qemuarm images is described in the
         'Using Pre-Built Binaries and QEMU' section of the Yocto Project Quick Start.
-        See <ulink url="http://www.yoctoproject.org//docs/yocto-quick-start/yocto-project-qs.html"></ulink>
+        See <ulink url="http://www.yoctoproject.org//docs/yocto-quick-start/yocto-project-qs.html"/>
         for the guide. 
         For information about how to install these images, see the documentation for your
         particular board/machine.
@@ -201,13 +201,16 @@ $ bitbake &lt;target&gt;
             <filename>run.do_taskname.pid </filename> file located in the same directory.
         </para>
 
-        <para>Presently, the output from python tasks is sent directly to the console.</para>
+        <para>
+            Presently, the output from python tasks is sent directly to the console.
+        </para>
     </section>
 
     <section id='usingpoky-debugging-taskrunning'>
         <title>Running Specific Tasks</title>
 
-        <para> Any given package consists of a set of tasks.  
+        <para>
+            Any given package consists of a set of tasks.  
             In most cases the series is: fetch, unpack, patch, configure,
             compile, install, package, package_write and build. 
             The default task is "build" and any tasks on which it depends build first - hence, 
@@ -216,7 +219,7 @@ $ bitbake &lt;target&gt;
             If you wish to run a task that is not part of the default build chain you can use the 
             "-c" option in bitbake as follows:
             <literallayout class='monospaced'>
-$ bitbake matchbox-desktop -c devshell
+     $ bitbake matchbox-desktop -c devshell
             </literallayout>
         </para>
 
@@ -228,10 +231,10 @@ $ bitbake matchbox-desktop -c devshell
 
         <para>
             <literallayout class='monospaced'>
-$ bitbake matchbox-desktop
-[make some changes to the source code in the WORKDIR]
-$ bitbake matchbox-desktop -c compile -f
-$ bitbake matchbox-desktop
+     $ bitbake matchbox-desktop
+     [make some changes to the source code in the WORKDIR]
+     $ bitbake matchbox-desktop -c compile -f
+     $ bitbake matchbox-desktop
             </literallayout>
         </para>
 
@@ -246,7 +249,7 @@ $ bitbake matchbox-desktop
             You can view a list of tasks in a given package by running the listtasks task.
             For example:
             <literallayout class='monospaced'>
-$ bitbake matchbox-desktop -c
+     $ bitbake matchbox-desktop -c
             </literallayout>
             The results are in the file <filename>${WORKDIR}/temp/log.do_listtasks</filename>.
         </para>
