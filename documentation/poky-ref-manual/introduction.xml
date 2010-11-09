@@ -22,7 +22,7 @@
     </para>
 </section>
 
-<section>
+<section id='what-is-poky'>
     <title>What is Poky?</title>
 
     <para>
@@ -107,7 +107,7 @@
         you should see the Yocto Project Quick Start on the <ulink url="http://www.yoctoproject.org">
         Yocto Project website</ulink>.
         The direct link to the quick start is 
-        <ulink url='http://yoctoproject.org/docs/yocto-quick-start/yocto-project-qs.html'></ulink>.
+        <ulink url='http://yoctoproject.org/docs/yocto-quick-start/yocto-project-qs.html'/>.
     </para>
 </section>
 
@@ -119,7 +119,8 @@
 
         <para>Periodically, we make releases of Poky available
             at <ulink url='http://pokylinux.org/releases/'/>.
-            These releases are more stable and more rigorously tested than the nightly development images.</para>
+            These releases are more stable and more rigorously tested than the nightly development images.
+        </para>
     </section>
 
     <section id='intro-getit-nightly'>
@@ -141,7 +142,7 @@
             be used either as external standalone toolchains or can be combined with Poky as a
             prebuilt toolchain to reduce build time. Using the external toolchains is simply a
             case of untarring the tarball into the root of your system (it only creates files in
-            <filename class="directory">/opt/poky</filename>) and then enabling the option 
+            <filename>/opt/poky</filename>) and then enabling the option 
             in <filename>local.conf</filename>.
         </para>
     </section>
