@@ -30,9 +30,9 @@
             The proposed format does have elements that are specific to the Poky and 
             OpenEmbedded build systems. 
             It is intended that this information can be 
-            used by other systems besides Poky and OpenEmbedded and thatspecified it will be simple
+            used by other systems besides Poky and OpenEmbedded and that it will be simple
             to extract information and convert it to other formats if required.
-            Poky, through its standard slyers mechanism, can directly accept The format 
+            Poky, through its standard layers mechanism, can directly accept The format 
             described as a layer.
             The BSP captures all 
             the hardware specific details in one place in a standard format, which is 
@@ -44,7 +44,7 @@
             The BSP specification does not include a build system or other tools -
             it is concerned with the hardware-specific components only. 
             At the end 
-            distribution point you can shipt the BSP combined with a build system
+            distribution point you can ship the BSP combined with a build system
             and other tools. 
             However, it is important to maintain the distinction that these
             are separate components that happen to be combined in certain end products.
@@ -193,7 +193,7 @@
             <para>
                 These files make up the definition of a kernel to use with this
                 hardware. 
-                In this case it is a complete self-contained kernel with its own
+                In this case, it is a complete self-contained kernel with its own
                 configuration and patches but kernels can be shared between many
                 machines as well.
                 Following is an example:
@@ -326,33 +326,32 @@
         <section id='bsp-click-through-licensing'>
             <title>BSP 'Click-Through' Licensing Procedure</title>
 
-            <note><para> This section is here as a description of how
-		click-through licensing is expected to work, and is
-		not yet not impemented.
+            <note><para> This section describes how
+		click-through licensing, which is not yet implemented, is expected to work.
             </para></note>
 
             <para>
-	      In some cases, a BSP may contain separately licensed IP
-	      (Intellectual Property) for a component, which imposes
+	      In some cases, a BSP might contain separately licensed IP
+	      (Intellectual Property) for a component that imposes
 	      upon the user a requirement to accept the terms of a
 	      'click-through' license.  Once the license is accepted
 	      (in whatever form that may be, see details below) the
 	      Poky build system can then build and include the
 	      corresponding component in the final BSP image.  Some
-	      affected components may be essential to the normal
+	      affected components might be essential to the normal
 	      functioning of the system and have no 'free' replacement
-	      i.e. the resulting system would be non-functional
-	      without them.  Other components may be simply
+	      (i.e. the resulting system would be non-functional
+	      without them).  Other components might be simply
 	      'good-to-have' or purely elective, or if essential
 	      nonetheless have a 'free' (possibly less-capable)
-	      version which may substituted for in the BSP recipe.
+	      version that can be substituted for in the BSP recipe.
             </para>
 
             <para>
 	      For the latter cases, where it is possible to do so from
 	      a functionality perspective, the Poky website will make
 	      available a 'de-featured' BSP completely free of
-	      encumbered IP, which can be used directly and without
+	      encumbered IP that can be used directly and without
 	      any further licensing requirements.  If present, this
 	      fully 'de-featured' BSP will be named meta-bsp (i.e. the
 	      normal default naming convention).  This is the simplest
@@ -361,7 +360,7 @@
             </para>
 
             <para>
-	      If however, a non-encumbered version is unavailable or
+	      However, if a non-encumbered version is unavailable or
 	      the 'free' version would provide unsuitable
 	      functionality or quality, an encumbered version can be
 	      used.  Encumbered versions of a BSP are given names of
@@ -410,12 +409,12 @@
 		<para>
 		  The &lt;keydomain&gt; component of the
 		  BSPKEY_&lt;keydomain&gt; is required because there
-		  may be multiple licenses in effect for a give BSP; a
+		  may be multiple licenses in effect for a given BSP; a
 		  given &lt;keydomain&gt; in such cases corresponds to
 		  a particular license.  In order for an encumbered
 		  BSP encompassing multiple key domains to be built
 		  successfully, a &lt;keydomain&gt; entry for each
-		  applicable license must be present in local.conf or
+		  applicable license must be present in <filename>local.conf</filename> or
 		  supplied on the command-line.
 		</para>
               </listitem>
@@ -426,8 +425,8 @@
 		  encumbered BSP (the build will cleanly stop at this
 		  point).  These usually take the form of instructions
 		  needed to manually fetch the encumbered package(s)
-		  and md5 sums into e.g. the poky/build/downloads
-		  directory.  Once the manual package fetch has been
+		  and md5 sums into the directory (e.g. the poky/build/downloads).
+		  Once the manual package fetch has been
 		  completed, restarting the build will continue where
 		  it left off, this time without the prompt since the
 		  license requirements will have been satisfied.
@@ -448,12 +447,14 @@
 		</para>
               </listitem>
 	    </itemizedlist>
-	    <para>
-	      Note that method 3 is also the only option available
-	      when downloading pre-compiled images generated from
-	      non-free BSPs.  Those images are likewise available at
-	      <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
-            </para>
+	    <note>
+              <para>
+	        Note that method 3 is also the only option available
+	        when downloading pre-compiled images generated from
+	        non-free BSPs.  Those images are likewise available at
+	        <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
+              </para>
+            </note>
         </section>
 
 </chapter>
