@@ -17,7 +17,7 @@ pdf:
 
 html:
 #       See http://www.sagehill.net/docbookxsl/HtmlOutput.html 
-	xsltproc $(XSLTOPTS) -o bsp-guide.html $(XSL_XHTML_URI) bsp-guide.xml
+	xsltproc $(XSLTOPTS) -o bsp-guide.html bsp-guide-customization.xsl bsp-guide.xml
 
 tarball: html
 	tar -cvzf bsp-guide.tgz style.css bsp-guide.html figures/bsp-title.png
