@@ -151,7 +151,8 @@ Test_Print_Result()
 		NORESULT=1
 	fi
 
-	echo -e "\t$1\t\t$PASS\t$FAIL\t$NORESULT" >> $TEST_RESULT/testresult.log
+	# Format the output of the test result
+	echo -e "$1 $PASS $FAIL $NORESULT" | awk '{printf("\t"); for(i=1;i<=NF;i++) printf("%-15s",$i); printf("\n");}' >> $TEST_RESULT/testresult.log
 }
 
 # Test_Kill_Qemu to kill child pid with parent pid given
@@ -399,6 +400,7 @@ Test_Create_Qemu()
 
 	# Parse IP address of target from the qemu command line
 	if [ ${up_time} -lt ${timeout} ]; then
+		sleep 5
 		TARGET_IPADDR=`Test_Fetch_Target_IP $PID`
 	fi
 

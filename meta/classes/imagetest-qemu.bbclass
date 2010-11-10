@@ -111,7 +111,7 @@ python do_qemuimagetest() {
     os.symlink(resultfile, sresultfile)
     f = open(sresultfile, "a")
     f.write("\tTest Result for %s\n" % machine)
-    f.write("\tTestcase\tPASS\tFAIL\tNORESULT\n")
+    f.write("\t%-15s%-15s%-15s%-15s\n" % ("Testcase", "PASS", "FAIL", "NORESULT"))
     f.close()
     
     """generate pre-defined testcase list"""
