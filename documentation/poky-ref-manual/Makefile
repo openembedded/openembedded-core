@@ -18,7 +18,7 @@ pdf:
 
 html:
 #       See http://www.sagehill.net/docbookxsl/HtmlOutput.html 
-	xsltproc $(XSLTOPTS) -o poky-ref-manual.html $(XSL_XHTML_URI) poky-ref-manual.xml
+	xsltproc $(XSLTOPTS) -o poky-ref-manual.html poky-ref-manual-customization.xsl poky-ref-manual.xml
 
 tarball: html
 	tar -cvzf poky-ref-manual.tgz poky-ref-manual.html style.css figures/yocto-project-transp.png figures/poky-ref-manual.png screenshots/ss-sato.png
