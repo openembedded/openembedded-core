@@ -77,6 +77,22 @@
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-BBFILE_PATTERN'><glossterm>BBFILE_PATTERN</glossterm>
+            <glossdef>
+                <para>Variable that expands to match files from BBFILES in a particular layer.  BBFILE_PATTERN 
+                    is used in the <filename>conf/layer.conf</filename> file and must contain the name of the 
+                    specific layer (e.g. BBFILE_PATTERN_emenlow).</para>
+            </glossdef>
+        </glossentry>
+
+        <glossentry id='var-BBFILE_PRIORITY'><glossterm>BBFILE_PRIORITY</glossterm>
+            <glossdef>
+                <para>Assigns different priorities to recipe files in different layers. 
+                    This variable is useful in situations where the same package might appear in multiple layers.
+                    It allows you to choose what takes precedence.</para>
+            </glossdef>
+        </glossentry>
+
         <glossentry id='var-BBFILES'><glossterm>BBFILES</glossterm>
             <glossdef>
                 <para>List of recipes used by BitBake to build software</para>
