@@ -70,6 +70,13 @@
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-BBFILE_COLLECTIONS'><glossterm>BBFILE_COLLECTIONS</glossterm>
+            <glossdef>
+                <para>Identifies layer-specific bbfiles, which contain recipes used by BitBake to build software.
+                    The Variable is appended with a layer name.</para>
+            </glossdef>
+        </glossentry>
+
         <glossentry id='var-BBFILES'><glossterm>BBFILES</glossterm>
             <glossdef>
                 <para>List of recipes used by BitBake to build software</para>
