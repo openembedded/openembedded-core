@@ -7,8 +7,8 @@ LICENSE = "LGPL"
 inherit native
 inherit autotools
 
-PR = "r0"
-SRCREV="10809"
+PR = "r1"
+SRCREV="11982"
 EGLIBC_BRANCH="eglibc-2_12"
 SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http "
 S = "${WORKDIR}/${EGLIBC_BRANCH}/localedef"
