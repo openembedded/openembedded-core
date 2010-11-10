@@ -61,8 +61,7 @@
                     <emphasis>meta-toolchain-sdk</emphasis> - This includes everything in 
                     meta-toolchain but also includes development headers and libraries
                     forming a complete standalone SDK. See the <link linkend='platdev-appdev-external-sdk'> 
-                    Developing using the Poky SDK</link> and <link linkend='platdev-appdev-external-anjuta'>
-                    Developing using the Anjuta Plugin</link> sections for more information.
+                    External Development Using the Poky SDK</link> section for more information.
                 </para>
             </listitem>
     </itemizedlist>

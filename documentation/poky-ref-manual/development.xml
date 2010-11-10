@@ -401,8 +401,9 @@
         <section id="platdev-appdev-qemu">
         <title>Developing externally in QEMU</title>
         <para>
-            Running Poky QEMU images is covered in the <link 
-            linkend='intro-quickstart-qemu'>Running an Image</link> section.
+            Running Poky QEMU images is covered in the 
+            <ulink url="http://www.yoctoproject.org/docs/yocto-quick-start/yocto-project-qs.html">
+            Yocto Project Quick Start</ulink> in the "A Quick Test Run" section.
         </para>
         <para>
             Poky's QEMU images contain a complete native toolchain. This means 
