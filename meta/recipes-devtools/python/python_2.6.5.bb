@@ -82,8 +82,8 @@ do_install() {
 require python-${PYTHON_MAJMIN}-manifest.inc
 
 # manual dependency additions
-RPROVIDES_${PN}-core = "python"
-RRECOMMENDS_${PN}-core = "python-readline"
+RPROVIDES_${PN}-core = "${PN}"
+RRECOMMENDS_${PN}-core = "${PN}-readline"
 RRECOMMENDS_${PN}-crypt = "openssl"
 
 # add sitecustomize
