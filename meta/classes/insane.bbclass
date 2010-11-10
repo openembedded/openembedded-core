@@ -560,7 +560,7 @@ python do_package_qa () {
 
 # The Staging Func, to check all staging
 #addtask qa_staging after do_populate_sysroot before do_build
-do_populate_sysroot[postfunc] += "do_qa_staging"
+do_populate_sysroot[postfuncs] += "do_qa_staging "
 python do_qa_staging() {
     bb.note("QA checking staging")
 
@@ -571,7 +571,7 @@ python do_qa_staging() {
 # Check broken config.log files, for packages requiring Gettext which don't
 # have it in DEPENDS and for correct LIC_FILES_CHKSUM
 #addtask qa_configure after do_configure before do_compile
-do_configure[postfunc] += "do_qa_configure"
+do_configure[postfuncs] += "do_qa_configure "
 python do_qa_configure() {
     configs = []
     workdir = bb.data.getVar('WORKDIR', d, True)
