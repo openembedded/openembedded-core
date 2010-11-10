@@ -1,6 +1,6 @@
 require procps.inc
 
-PR = "r10"
+PR = "r0"
 
 inherit update-rc.d update-alternatives
 
@@ -11,9 +11,9 @@ ALTERNATIVE_LINKS = "${bindir}/top ${bindir}/uptime ${bindir}/free ${bindir}/pki
                      ${base_bindir}/kill ${base_sbindir}/sysctl ${base_bindir}/ps"
 ALTERNATIVE_PRIORITY = "90"
 
-SRC_URI += "file://procmodule.patch;patch=1 \
-            file://psmodule.patch;patch=1 \
-	    file://linux-limits.patch;patch=1 \
+SRC_URI += "file://procmodule.patch \
+            file://psmodule.patch \
+	    file://linux-limits.patch \
 	    file://sysctl.conf \
 	    file://procps.init \
 	    file://procps-3.2.8+gmake-3.82.patch \
