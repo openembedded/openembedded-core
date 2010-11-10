@@ -84,6 +84,12 @@
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-BBLAYERS'><glossterm>BBLAYERS</glossterm>
+            <glossdef>
+                <para>Lists in the <filename>bblayers.conf</filename> file layers to enable in the Poky build.</para>
+            </glossdef>
+        </glossentry>
+
         <glossentry id='var-BPN'><glossterm>BPN</glossterm>
             <glossdef>
                 <para>Bare name of package with any suffixes like -cross -native
