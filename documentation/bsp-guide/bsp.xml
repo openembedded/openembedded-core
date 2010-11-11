@@ -366,7 +366,7 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
             </para>
 
             <para>
-	      However, if a non-encumbered version is unavailable or
+	      If however, a non-encumbered version is unavailable or
 	      the 'free' version would provide unsuitable
 	      functionality or quality, an encumbered version can be
 	      used.  
