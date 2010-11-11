@@ -195,7 +195,7 @@
         <title>Task Failures</title>
 
         <para>The log file for shell tasks is available in <filename>${WORKDIR}/temp/log.do_taskname.pid</filename>. 
-            For example, the compile task of busybox 1.01 on the ARM spitz machine might be 
+            For example, the "compile" task of busybox 1.01 on the ARM spitz machine might be 
             <filename>tmp/work/armv5te-poky-linux-gnueabi/busybox-1.01/temp/log.do_compile.1234</filename>.
             To see what bitbake runs to generate that log, look at the corresponding 
             <filename>run.do_taskname.pid </filename> file located in the same directory.
@@ -241,12 +241,12 @@
         <para>
             This sequence first builds <filename>matchbox-desktop</filename> and then recompiles it.
             The last command reruns all tasks, basically the packaging tasks, after the compile.
-            Bitbake recognizes that the compile task was rerun and therefore understands that the other
+            Bitbake recognizes that the "compile" task was rerun and therefore understands that the other
             tasks also need to be run again.
         </para>
 
         <para>
-            You can view a list of tasks in a given package by running the listtasks task.
+            You can view a list of tasks in a given package by running the "listtasks" task.
             For example:
             <literallayout class='monospaced'>
      $ bitbake matchbox-desktop -c
