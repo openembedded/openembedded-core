@@ -358,6 +358,9 @@ sstate_create_package () {
 
 	cd ${SSTATE_BUILDDIR}
 	tar -cvzf ${SSTATE_PKG} *
+
+	cd ${WORKDIR}
+	rm -rf ${SSTATE_BUILDDIR}
 }
 
 #
