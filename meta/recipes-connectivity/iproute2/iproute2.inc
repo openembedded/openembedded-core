@@ -7,7 +7,8 @@ HOMEPAGE = "http://www.linuxfoundation.org/collaborate/workgroups/networking/ipr
 SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
-                    file://ip/ip.c;md5=186731afa4b42e30b9b37efa4ec90b93"
+                    file://ip/ip.c;beginline=3;endline=8;md5=689d691d0410a4b64d3899f8d6e31817"
+
 DEPENDS = "flex-native bison-native"
 
 inherit update-alternatives
