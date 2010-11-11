@@ -5,13 +5,12 @@
 
 <title>Extending Poky</title>
     <para>
-        This section provides information about how to extend the functionality
+        This chapter provides information about how to extend the functionality
         already present in Poky.
-        The section also documents standard tasks such as adding new
+        The chapter also documents standard tasks such as adding new
         software packages, extending or customizing images or porting Poky to
         new hardware (adding a new machine). 
-        Finally, the section contains advice about how
-        to make changes to Poky to achieve the best results.
+        Finally, the chapter contains advice about how to make changes to Poky to achieve the best results.
     </para>
 
     <section id='usingpoky-extend-addpkg'>
@@ -21,7 +20,7 @@
             Writing a recipe means creating a <filename>.bb</filename> file that sets some
             variables.
             For information on variables that are useful for recipes and for information about recipe naming
-            issues, see <link linkend='ref-varlocality-recipe-required'>Recipe Variables - Required</link>
+            issues, see the <link linkend='ref-varlocality-recipe-required'>Recipe Variables - Required</link>
             appendix.
         </para>
         <para>
@@ -29,7 +28,7 @@
             whether someone else has written one already. 
             OpenEmbedded is a good place to look as it has a wider scope and range of packages.
             Because Poky aims to be compatible with OpenEmbedded, most recipes should
-            just work in Poky.
+            simply work in Poky.
         </para>
         <para>
             For new packages, the simplest way to add a recipe is to base it on a similar
@@ -43,11 +42,11 @@
                 Building an application from a single file that is stored locally (e.g. under 
                 <filename>files/</filename>) requires a recipe that has the file listed in 
                 the <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm> variable. 
-                Additionally, you need to manually write the <function>do_compile</function> and
-                <function>do_install</function> tasks.
+                Additionally, you need to manually write the "do_compile" and
+                "do_install" tasks.
                 The <glossterm><link linkend='var-S'>S</link></glossterm> variable defines the 
                 directory containing the source code, which is set to <glossterm><link linkend='var-WORKDIR'>
-                WORKDIR</link></glossterm> in this case - the directory BitBake uses for the build.
+                WORKDIR</link></glossterm> in this case - the directory Bitbake uses for the build.
             </para>
             <programlisting>
 DESCRIPTION = "Simple helloworld application"
@@ -82,13 +81,13 @@ do_install() {
                 Applications that use autotools such as <filename>autoconf</filename> and 
                 <filename>automake</filename> require a recipe that has a source archive listed in 
                 <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm> and 
-                <filename>also inherits autotools</filename>, which instructs BitBake to use the
-                <filename>autotools.bbclass</filename> containing the definitions of all the steps
+                <filename>also inherits autotools</filename>, which instructs Bitbake to use the
+                <filename>autotools.bbclass</filename> file, which contains the definitions of all the steps
                 needed to build an autotooled application.
                 The result of the build is automatically packaged. 
                 And, if the application uses NLS for localization, packages with local information are 
                 generated (one package per language). 
-                Following is one example (<filename>hello_2.2.bb</filename>)
+                Following is one example: (<filename>hello_2.2.bb</filename>)
             </para>
             <programlisting>
 DESCRIPTION = "GNU Helloworld application"
@@ -102,9 +101,9 @@ SRC_URI = "${GNU_MIRROR}/hello/hello-${PV}.tar.gz"
 inherit autotools gettext
             </programlisting>
             <para>
-                <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link>
+                The variable <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link>
                 </glossterm> is used to <link linkend='usingpoky-configuring-LIC_FILES_CHKSUM'>
-                track source license change</link>. 
+                track source license changes</link>. 
                 You can quickly create autotool-based recipes in a manner similar to the previous example.
             </para>
 
@@ -115,13 +114,13 @@ inherit autotools gettext
             <para>
                 Applications that use GNU <filename>make</filename> also require a recipe that has
                 the source archive listed in <glossterm><link linkend='var-SRC_URI'>SRC_URI</link></glossterm>. 
-                You do not need to add a <function>do_compile</function> step since by default BitBake 
+                You do not need to add a <function>do_compile</function> step since by default Bitbake 
                 starts the <filename>make</filename> command to compile the application. 
                 If you need additional <filename>make</filename> options you should store them in the 
                 <glossterm><link linkend='var-EXTRA_OEMAKE'>EXTRA_OEMAKE</link></glossterm> variable.
                 Bitbake passes these options into the <filename>make</filename> GNU invocation. 
-                Note that a <function>do_install</function> task is still required.
-                Otherwise BitBake runs an empty <function>do_install</function> task by default. 
+                Note that a "do_install" task is still required.
+                Otherwise Bitbake runs an empty "do_install" task by default. 
             </para>
             <para>
                 Some applications might require extra parameters to be passed to the compiler.
@@ -134,7 +133,7 @@ inherit autotools gettext
 CFLAGS_prepend = "-I ${S}/include "
             </programlisting>
             <para>
-            In the following example <filename>mtd-utils</filename> is a Makefile-based package:
+            In the following example <filename>mtd-utils</filename> is a makefile-based package:
             </para>
             <programlisting>
 DESCRIPTION = "Tools for managing memory technology devices."
@@ -171,7 +170,7 @@ do_install () {
             </para>
             <para>
                 Following is an example that uses the "libXpm" recipe (<filename>libxpm_3.5.7.bb</filename>).
-                By default, the "libXpm" recipe generates a single package containing the library, along 
+                By default, the "libXpm" recipe generates a single package that contains the library along 
                 with a few binaries.  
                 You can modify the recipe to split the binaries into separate packages:
             </para>
@@ -198,8 +197,8 @@ FILES_sxpm = "${bindir}/sxpm"
                 package by default, we prepend the <glossterm><link linkend='var-PACKAGES'>PACKAGES</link>
                 </glossterm> variable so additional package names are added to the start of list. 
                 This results in the extra <glossterm><link linkend='var-FILES'>FILES</link></glossterm>_*
-                variables then containing information defining which files and
-                directories go into which package. 
+                variables then containing information that define which files and
+                directories go into which packages. 
                 Files included by earlier packages are skipped by latter packages.
                 Thus, the main <glossterm><link linkend='var-PN'>PN</link></glossterm> package does not include 
                 the above listed files.
@@ -234,7 +233,7 @@ pkg_postinst_PACKAGENAME () {
                 Sometimes it is necessary for the execution of a post-installation
                 script to be delayed until the first boot.  
                 For example, the script might need to be executed on the device itself. 
-                To delay script execution until boot time, use the following structure for the 
+                To delay script execution until boot time, use the following structure in the 
                 post-installation script:
             </para>
             <programlisting>
@@ -259,8 +258,8 @@ fi
     <section id='usingpoky-extend-customimage'>
         <title>Customizing Images</title>
         <para>
-        You can customize Poky images to satisfy particular requirements. 
-        This section describes several methods and provides guidelines for each.
+            You can customize Poky images to satisfy particular requirements. 
+            This section describes several methods and provides guidelines for each.
         </para>
 
         <section id='usingpoky-extend-customimage-custombb'>
@@ -344,8 +343,8 @@ RRECOMMENDS_task-custom-tools = "\
                 <filename>task-custom-tools</filename>. 
                 To build an image using these task packages, you need to add 
                 "task-custom-apps" and/or "task-custom-tools" to <glossterm><link 
-                linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm> or other forms 
-                of image dependencies as described in other areas of this section.
+                linkend='var-IMAGE_INSTALL'>IMAGE_INSTALL</link></glossterm>.
+                For other forms of image dependencies see the other areas of this section.
             </para>
         </section>
 
@@ -359,7 +358,7 @@ RRECOMMENDS_task-custom-tools = "\
                 <filename>meta/classes/poky-image.bbclass</filename>, which shows how poky achieves this. 
                 In summary, the file looks at the contents of the 
                 <glossterm><link linkend='var-IMAGE_FEATURES'>IMAGE_FEATURES</link></glossterm>
-                variable and then maps them into a set of tasks or packages. 
+                variable and then maps that into a set of tasks or packages. 
                 Based on this information the <glossterm><link linkend='var-IMAGE_INSTALL'> IMAGE_INSTALL</link>
                 </glossterm> variable is generated automatically. 
                 Users can add extra features by extending the class or creating a custom class for use 
@@ -370,12 +369,12 @@ RRECOMMENDS_task-custom-tools = "\
         <section id='usingpoky-extend-customimage-localconf'>
             <title>Customizing Images Using local.conf</title>
             <para>
-                It is possible to customize image contents by abusing variables used by distribution 
-                maintainers in local.conf.
+                It is possible to customize image contents by using variables used by distribution 
+                maintainers in the <filename>local.conf</filename>.
                 This method only allows the addition of packages and is not recommended.
             </para>
             <para>
-                For example, to add the "strace" package into the image the you would add this to the 
+                For example, to add the "strace" package into the image you would add this package to the 
                 <filename>local.conf</filename> file:
             </para>
             <programlisting>
@@ -387,18 +386,18 @@ DISTRO_EXTRA_RDEPENDS += "strace"
                 distribution maintainers, adding packages using this method is not as simple as adding 
                 them using a custom <filename>.bb</filename> file. 
                 Using the <filename>local.conf</filename> file method could result in some packages 
-                requiring recreation.
+                needing to be recreated.
                 For example, if packages were previously created and the image was rebuilt then the packages
                 would need to be recreated.
             </para>
             <para>
-                Cleaning task-* packages is required because they use the
+                Cleaning task-* packages are required because they use the
                 <glossterm><link linkend='var-DISTRO_EXTRA_RDEPENDS'>
                 DISTRO_EXTRA_RDEPENDS</link></glossterm> variable. 
                 You do not have to build them by hand because Poky images depend on the packages they contain.
                 This means dependencies are automatically built when the image builds. 
                 For this reason we don't use the "rebuild" task.
-                In this case the "rebuild" task does does not care about
+                In this case the "rebuild" task does not care about
                 dependencies - it only rebuilds the specified package.
             </para>
             <programlisting>
@@ -416,24 +415,23 @@ $ bitbake poky-image-sato
             This section provides information that gives you an idea of the changes you must make.
             The information covers adding machines similar to those Poky already supports. 
             Although well within the capabilities of Poky, adding a totally new architecture might require 
-            changes to <filename>gcc/glibc</filename> and to the site information.
-            Consequently, the information is beyond the scope of this manual.
+            changes to <filename>gcc/glibc</filename> and to the site information, which is 
+            beyond the scope of this manual.
         </para>
 
         <section id="platdev-newmachine-conffile">
             <title>Adding the Machine Configuration File</title>
             <para>
                 To add a machine configuration you need to add a <filename>.conf</filename> file
-                with details of the device being added to <filename>conf/machine/</filename>.
+                with details of the device being added to the <filename>conf/machine/</filename> file.
                 The name of the file determines the name Poky uses to reference the new machine.
             </para>
             <para>
                 The most important variables to set in this file are <glossterm>
-                <link linkend='var-TARGET_ARCH'>TARGET_ARCH</link></glossterm> 
-                (e.g. "arm"), <glossterm><link linkend='var-PREFERRED_PROVIDER'>
-                PREFERRED_PROVIDER</link></glossterm>_virtual/kernel (see below) and 
-                <glossterm><link linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES
-                </link></glossterm> (e.g. "kernel26 apm screen wifi"). 
+                <link linkend='var-TARGET_ARCH'>TARGET_ARCH</link></glossterm> (e.g. "arm"), 
+                <glossterm><link linkend='var-PREFERRED_PROVIDER'>PREFERRED_PROVIDER</link></glossterm>_virtual/kernel 
+               (see below) and <glossterm><link linkend='var-MACHINE_FEATURES'>MACHINE_FEATURES</link></glossterm> 
+               (e.g. "kernel26 apm screen wifi"). 
                 You might also need other variables like <glossterm><link linkend='var-SERIAL_CONSOLE'>SERIAL_CONSOLE
                 </link></glossterm> (e.g. "115200 ttyS0"), <glossterm> 
                 <link linkend='var-KERNEL_IMAGETYPE'>KERNEL_IMAGETYPE</link>
@@ -461,7 +459,7 @@ $ bitbake poky-image-sato
                 <link linkend='var-S'>S</link></glossterm> to point at the source code. 
                 You need to create a "configure" task that configures the unpacked kernel with a defconfig.
                 You can do this by using a <filename>make defconfig</filename> command or
-                more commonly by copying in a suitable defconfig and and then running 
+                more commonly by copying in a suitable <filename>defconfig</filename> file and and then running 
                 <filename>make oldconfig</filename>. 
                 By making use of "inherit kernel" and potentially some of the 
                 <filename>linux-*.inc</filename> files, most other functionality is 
@@ -486,12 +484,12 @@ COMPATIBLE_MACHINE = '(qemux86|qemumips)'
             <title>Adding a Formfactor Configuration File</title>
             <para>
                 A formfactor configuration file provides information about the 
-                target hardware on which Poky is running, and that Poky cannot 
+                target hardware on which Poky is running, and information that Poky cannot 
                 obtain from other sources such as the kernel.  
                 Some examples of information contained in a formfactor configuration file include 
                 framebuffer orientation, whether or not the system has a keyboard, 
                 the positioning of the keyboard in relation to the screen, and 
-                screen resolution.
+                the screen resolution.
             </para>
             <para>
                 Reasonable defaults are used in most cases, but if customization is 
@@ -545,7 +543,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
            <para>
                The Poky tree includes several additional layers such as meta-emenlow and meta-extras
                that demonstrate this functionality.
-               The meta-emenlow layer is an example layer that by default is enabled. 
+               The meta-emenlow layer is an example layer that, by default, is enabled. 
                However, the meta-extras repository is not enabled by default. 
                It is easy though to enable any layer.
                You simply add the layer's path to the 
@@ -554,16 +552,16 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                The following example shows how to enable meta-extras in the Poky build:
           </para>
           <para>
-               <literallayout class='monospaced'>
-     LCONF_VERSION = "1"
+               <programlisting>
+LCONF_VERSION = "1"
 
-     BBFILES ?= ""
-     BBLAYERS = " \
-       /path/to/poky/meta \
-       /path/to/poky/meta-emenlow \
-       /path/to/poky/meta-extras \
-       "
-               </literallayout>
+BBFILES ?= ""
+BBLAYERS = " \
+  /path/to/poky/meta \
+  /path/to/poky/meta-emenlow \
+  /path/to/poky/meta-extras \
+  "
+               </programlisting>
            </para>
 
           <para>
@@ -575,18 +573,18 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
           </para>
           <para>
                The <filename>meta-emenlow/conf/layer.conf</filename> file demonstrates the required syntax:
-               <literallayout class='monospaced'>
-     # We have a conf and classes directory, add to BBPATH
-     BBPATH := "${BBPATH}:${LAYERDIR}"
+               <programlisting>
+# We have a conf and classes directory, add to BBPATH
+BBPATH := "${BBPATH}:${LAYERDIR}"
 
-     # We have a recipes directory containing both .bb and .bbappend files, add to BBFILES
-     BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb \
+# We have a recipes directory containing both .bb and .bbappend files, add to BBFILES
+BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb \
              ${LAYERDIR}/recipes/*/*.bbappend"
 
-     BBFILE_COLLECTIONS += "emenlow"
-     BBFILE_PATTERN_emenlow := "^${LAYERDIR}/"
-     BBFILE_PRIORITY_emenlow = "6"
-               </literallayout>
+BBFILE_COLLECTIONS += "emenlow"
+BBFILE_PATTERN_emenlow := "^${LAYERDIR}/"
+BBFILE_PRIORITY_emenlow = "6"
+               </programlisting>
           </para>
           <para>
                 In the previous example, the recipes for the layers are added to 
@@ -598,7 +596,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                 a particular layer, in this case by using the base pathname.
                 The <glossterm><link linkend='var-BBFILE_PRIORITY'>BBFILE_PRIORITY</link></glossterm> variable 
                 then assigns different priorities to the files in different layers. 
-                This technique useful in situations where the same package might appear in multiple
+                Applying priorities is useful in situations where the same package might appear in multiple
                 layers and allows you to choose what layer should take precedence.
             </para>
             <para>
@@ -637,11 +635,14 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                 revision control system. 
                 Because some simple practices can significantly improve usability, policy for committing changes
                 is important.
-                Following are suggestions for committing changes to the Poky core:
+                It helps to use a consistent documentation style when committing changes. 
+                We have found the following style works well. 
             </para>
             <para>
-                It helps to use a consistent documentation style when committing changes. 
-                We have found the following style works well.
+                Following are suggestions for committing changes to the Poky core:
+            </para>
+
+            <para>
                 <itemizedlist>
                     <listitem><para>The first line of the commit summarizes the change and begins with the 
                     name of the affected package or packages.
@@ -680,10 +681,10 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
             <para>
                 If a committed change results in changing the package output
                 then the value of the <glossterm><link linkend='var-PR'>PR</link>
-                </glossterm> variable needs to be increased ('bumped') as part of that commit. 
-                This means that for new recipes you be sure to add the PR variable and set its initial value
+                </glossterm> variable needs to be increased (or 'bumped') as part of that commit. 
+                This means that for new recipes you must be sure to add the PR variable and set its initial value
                 equal to "r0".  
-                Not initially defining PR makes makes it easy to miss when you bump a package.
+                Not initially defining PR makes it easy to miss when you bump a package.
                 Note that you can only use integer values for the PR variable.
             </para>
             <para> 
@@ -691,7 +692,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                 linkend='var-PV'>PV</link></glossterm>) and PR variables should be reset to "r0".
             </para>
             <para>
-                Usually a package version only increases.
+                Usually, version increases occur only to packages.
                 However, if for some reason PV changes but does not increase, you can increase the 
                 <glossterm><link linkend='var-PE'>PE</link></glossterm> variable (Package Epoch).
                 The PE variable defaults to '0'.
@@ -718,7 +719,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
         <section id="usingpoky-changes-collaborate">
             <title>Using Poky in a Team Environment</title>
             <para>
-                It may not be immediately clear how you can use Poky in a team environment, 
+                It might not be immediately clear how you can use Poky in a team environment, 
                 or scale it for a large team of developers. 
                 The specifics of any situation determine the best solution.
                 Granted that Poky offers immense flexibility regarding this, practices do exist 
@@ -728,7 +729,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                 The core component of any development effort with Poky is often an 
                 automated build testing framework and an image generation process. 
                 You can use these core components to check that the metadata is buildable, 
-                highlight when commits break the builds, and provide up-to-date images that 
+                highlight when commits break the build, and provide up-to-date images that 
                 allow people to test the end result and use it as a base platform for further 
                 development. 
                 Experience shows that buildbot is a good fit for this role. 
@@ -747,7 +748,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
             </para>
             <para>
                 Full builds build and test everything from the ground up. 
-                They usually happen at preset times like during the night when the machine 
+                They usually happen at predetermined times like during the night when the machine 
                 load is low.
             </para>
             <para>
@@ -768,7 +769,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
                 Of course circumstances will be different in each case.
                 However, this situation reveals one of Poky's advantages - the system itself does not
                 force any particular policy on users, unlike a lot of build systems. 
-                The system allows the best policy to be chosen for the given circumstances.
+                The system allows the best policies to be chosen for the given circumstances.
             </para>
         </section>
 
@@ -797,7 +798,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
             Although Poky is usually used to build software, you can use it to modify software. 
         </para>
         <para>
-            During building, source is available in the 
+            During a build, source is available in the 
             <glossterm><link linkend='var-WORKDIR'>WORKDIR</link></glossterm> directory.
             The actual location depends on the type of package and the architecture of the target device. 
             For a standard recipe not related to 
@@ -811,7 +812,7 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
             <para>
                 Be sure the package recipe sets the 
                 <glossterm><link linkend='var-S'>S</link></glossterm> variable to something
-                other than standard <filename>WORKDIR/PN-PV/</filename> value.
+                other than the standard <filename>WORKDIR/PN-PV/</filename> value.
             </para>
         </tip>
         <para>
@@ -820,9 +821,9 @@ DISPLAY_SUBPIXEL_ORDER=vrgb
             following example:
         </para>
 
-        <programlisting>
-bitbake -c compile -f NAME_OF_PACKAGE
-        </programlisting>
+        <literallayout class='monospaced'>
+     $ bitbake -c compile -f NAME_OF_PACKAGE
+        </literallayout>
 
         <para>
             The "-f" or "--force" option forces re-execution of the specified task.
@@ -836,28 +837,28 @@ bitbake -c compile -f NAME_OF_PACKAGE
             <title>Modifying Package Source Code with quilt</title>
             <para>
                 By default Poky uses <ulink url='http://savannah.nongnu.org/projects/quilt'>quilt</ulink>
-                to manage patches in the <filename>do_patch</filename> task. 
+                to manage patches in the "do_patch" task. 
                 This is a powerful tool that you can use to track all modifications to package sources.
             </para>
             <para>
                 Before modifying source code, it is important to notify quilt so it can track the changes 
                 into the new patch file:
 
-                <programlisting>
+                <literallayout class='monospaced'>
 quilt new NAME-OF-PATCH.patch
-                </programlisting>
+                </literallayout>
 
                 After notifying quilt, add all modified files into that patch:
-                <programlisting>
+                <literallayout class='monospaced'>
 quilt add file1 file2 file3
-                </programlisting>
+                </literallayout>
 
                 You can now start editing. 
                 Once you are done editing, you need to use quilt to generate the final patch that 
                 will contain all your modifications.
-                <programlisting>
+                <literallayout class='monospaced'>
 quilt refresh
-                </programlisting>
+                </literallayout>
 
                 You can find the resulting patch file in the
                 <filename>patches/</filename> subdirectory of the source 
@@ -869,8 +870,8 @@ quilt refresh
 SRC_URI += "file://NAME-OF-PATCH.patch"
                 </programlisting>
                 Finally, don't forget to 'bump' the 
-                <glossterm><link linkend='var-PR'>PR</link></glossterm> value in the same recipe.
-                The resulting packages have changed.
+                <glossterm><link linkend='var-PR'>PR</link></glossterm> value in the same recipe since 
+                the resulting packages have changed.
             </para>
         </section>
 
@@ -880,8 +881,7 @@ SRC_URI += "file://NAME-OF-PATCH.patch"
         <title>Track License Change</title>
         <para>
         The license of an upstream project might change in the future.
-        To address this situation, Poky uses the 
-        <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm> variable
+        Poky uses the <glossterm><link linkend='var-LIC_FILES_CHKSUM'>LIC_FILES_CHKSUM</link></glossterm> variable
         to track license changes.
         </para>
 
@@ -940,7 +940,7 @@ LIC_FILES_CHKSUM = "file://../license.html;md5=5c94767cedb5d6987c902ac850ded2c6"
                 This mismatch triggers a build failure and notifies the developer.
                 Notification allows the developer to review and address the license text changes.
                 Also note that if a mis-match occurs during the build, the correct md5 
-                checksum is placed in the build log, which can be easily copied to a .bb file.
+                checksum is placed in the build log and can be easily copied to a .bb file.
             </para>
             <para>
                 There is no limit to how many files you can specify using the LIC_FILES_CHKSUM variable.
@@ -950,7 +950,7 @@ LIC_FILES_CHKSUM = "file://../license.html;md5=5c94767cedb5d6987c902ac850ded2c6"
                 This practice allow you to just track the "COPYING" file as long as it is kept up to date. 
             </para>
             <tip>
-                If you specify an empty or invalid "md5" parameter, bitback returns an md5 mis-match 
+                If you specify an empty or invalid "md5" parameter, Bitbake returns an md5 mis-match 
                 error and displays the correct "md5" parameter value during the build. The correct parameter
                 is also captured in the build log. 
             </tip>
@@ -966,7 +966,7 @@ LIC_FILES_CHKSUM = "file://../license.html;md5=5c94767cedb5d6987c902ac850ded2c6"
         <para>
             Sometimes a package name you are using might exist under an alias or as a similarly named
             package in a different distribution.
-            Poky implements a distro_check task that automatically connects to major distributions
+            Poky implements a "distro_check" task that automatically connects to major distributions
             and checks for these situations. 
             If the package exists under a different name in a different distribution you get a 
             distro_check mismatch.  
@@ -986,7 +986,7 @@ DISTRO_PN_ALIAS_pn-PACKAGENAME = "distro1=package_name_alias1 \
             </programlisting>
             </para>
             <para>
-                If you have more than one distribution alias separate them with a space.
+                If you have more than one distribution alias, separate them with a space.
                 Note that Poky currently automatically checks the Fedora, OpenSuSE, Debian, Ubuntu, 
                 and Mandriva distributions for source package recipes without having to specify them 
                 using the DISTRO_PN_ALIAS variable.
