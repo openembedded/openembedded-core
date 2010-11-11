@@ -18,7 +18,8 @@
         </para>
 
         <para>
-            The intent of this document is to define a structure for these components
+            This section (or document if you are reading the BSP Developer's Guide) defines
+            a structure for these components
             so that BSPs follow a commonly understood layout.
             Providing a common form allows end-users to understand and become familiar 
             with the layout.  
