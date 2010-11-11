@@ -456,7 +456,7 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
 		  process.
 		</para>
               </listitem>
-	    </itemizedlist>
+	    </orderedlist>
 	    <para>
 	      Note that the third method is also the only option available
 	      when downloading pre-compiled images generated from
