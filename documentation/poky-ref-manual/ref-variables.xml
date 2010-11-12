@@ -99,7 +99,12 @@
             </glossdef>
         </glossentry>
 
-        <!-- BBPATH is not a usable variable in .bb files and should not be listed here -->
+        <glossentry id='var-BBPATH'><glossterm>BBPATH</glossterm>
+            <glossdef>
+                <para>Used by Bitbake to locate bbclass and configuration files.  This variable is analagous to 
+                    the PATH variable.</para>
+            </glossdef>
+        </glossentry>
 
         <glossentry id='var-BBINCLUDELOGS'><glossterm>BBINCLUDELOGS</glossterm>
             <glossdef>
