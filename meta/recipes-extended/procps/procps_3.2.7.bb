@@ -1,6 +1,6 @@
 require procps.inc
 
-PR = "r9"
+PR = "r10"
 
 inherit update-rc.d update-alternatives
 
@@ -16,6 +16,7 @@ SRC_URI += "file://procmodule.patch;patch=1 \
 	    file://linux-limits.patch;patch=1 \
 	    file://sysctl.conf \
 	    file://procps.init \
+	    file://procps-3.2.8+gmake-3.82.patch \
 	    "
 
 FILES = "${bindir}/top.${PN} ${base_bindir}/ps.${PN} ${bindir}/uptime.${PN} ${base_bindir}/kill.${PN} \
