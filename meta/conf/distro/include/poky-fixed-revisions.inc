@@ -10,8 +10,8 @@ PREFERRED_VERSION_wpa-supplicant ?= "0.6.10"
 
 # Force the python versions in one place
 PYTHON_BASEVERSION ?= "2.6"
-PREFERRED_VERSION_python ?= "2.6.5"
-PREFERRED_VERSION_python-native ?= "2.6.5"
+PREFERRED_VERSION_python ?= "2.6.6"
+PREFERRED_VERSION_python-native ?= "2.6.6"
 
 
 
