@@ -95,6 +95,7 @@ RDEPENDS_task-poky-tcl = "\
 RDEPENDS_task-poky-misc = "\
     elfutils \
     gettext \
+    lsb \
     lsof \
 #    man-pages \
     ncurses \
