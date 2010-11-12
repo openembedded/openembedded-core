@@ -5,7 +5,7 @@
 DESCRIPTON = "Software Development Tasks for OpenedHand Poky"
 LICENSE = "MIT"
 DEPENDS = "task-poky"
-PR = "r5"
+PR = "r6"
 
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -40,7 +40,8 @@ RDEPENDS_task-poky-sdk = "\
     findutils \
     quilt \
     less \
-    distcc"
+    distcc \
+    tcl"
 
 #python generate_sdk_pkgs () {
 #    poky_pkgs = read_pkgdata('task-poky', d)['PACKAGES']
