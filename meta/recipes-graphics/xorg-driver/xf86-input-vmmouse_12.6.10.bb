@@ -5,4 +5,4 @@ PR = "r0"
 
 RDEPENDS_${PN} += "xf86-input-mouse"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=d1f16420e5ed7ed2133768425dfdab50"
+LIC_FILES_CHKSUM = "file://COPYING;md5=622841c068a9d7625fbfe7acffb1a8fc"
