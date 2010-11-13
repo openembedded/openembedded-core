@@ -318,8 +318,9 @@ def pstaging_fetch(sstatepkg, d):
             bb.fetch.go(localdata, [srcuri])
             # Need to optimise this, if using file:// urls, the fetcher just changes the local path
             # For now work around by symlinking
-            if bb.data.expand(bb.fetch.localpath(srcuri, localdata), localdata) != sstatepkg:
-                os.symlink(bb.data.expand(bb.fetch.localpath(srcuri, localdata), localdata), sstatepkg)
+            localpath = bb.data.expand(bb.fetch.localpath(srcuri, localdata), localdata)
+            if localpath != sstatepkg and os.path.exists(localpath):
+                os.symlink(localpath, sstatepkg)
         except:
             pass
 
