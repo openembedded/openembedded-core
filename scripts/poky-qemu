@@ -51,6 +51,37 @@ SCRIPT_KERNEL_OPT=""
 
 TMPDIR=""
 
+# Determine whether the file is a kernel or QEMU image, and set the
+# appropriate variables
+process_filename() {
+    filename=$1
+
+    # Extract the filename extension
+    EXT=`echo $filename | awk -F . '{ print \$NF }'`
+    # A file ending in .bin is a kernel
+    if [ "x$EXT" = "xbin" ]; then
+        if [ -z "$KERNEL" ]; then
+            KERNEL=$filename
+        else
+            echo "Error: conflicting KERNEL args [$KERNEL] and [$filename]"
+            usage
+        fi
+    elif [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" ||
+            "x$EXT" == "xjffs2" ]]; then
+        # A file ending in a supportted fs type is a rootfs image
+        if [[ -z "$FSTYPE" || "$FSTYPE" == "$EXT" ]]; then
+            FSTYPE=$EXT
+            ROOTFS=$filename
+        else
+            echo "Error: conflicting FSTYPE types [$FSTYPE] and [$EXT]"
+            usage
+        fi
+    else
+       echo "Error: unknown file arg [$filename]"
+       usage
+    fi
+}
+
 # Parse command line args without requiring specific ordering. It's a
 # bit more complex, but offers a great user experience.
 i=1
@@ -66,7 +97,7 @@ while [ $i -le $# ]; do
             fi
             ;;
         "ext2" | "ext3" | "jffs2" | "nfs")
-            if [ -z "$FSTYPE" ]; then
+            if [[ -z "$FSTYPE" || "$FSTYPE" == "$arg" ]]; then
                 FSTYPE=$arg
             else
                 echo "Error: conflicting FSTYPE types [$FSTYPE] and [$arg]"
@@ -75,8 +106,8 @@ while [ $i -le $# ]; do
             ;;
         *-image-*)
             if [ -z "$ROOTFS" ]; then
-                if [ -e "$arg" ]; then
-                    ROOTFS=$arg
+                if [ -f "$arg" ]; then
+                    process_filename $arg
                 else
                     ROOTFS=$arg
                     LAZY_ROOTFS="true"
@@ -111,30 +142,7 @@ while [ $i -le $# ]; do
                     usage
                 fi
             elif [ -f "$arg" ]; then
-                # Extract the filename extension
-                EXT=`echo $arg | awk -F . '{ print \$NF }'`
-                # A file ending in .bin is a kernel
-                if [ "x$EXT" = "xbin" ]; then
-                    if [ -z "$KERNEL" ]; then
-                        KERNEL=$arg
-                    else
-                        echo "Error: conflicting KERNEL args [$KERNEL] and [$arg]"
-                        usage
-                    fi
-                elif [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" ||
-                        "x$EXT" == "xjffs2" ]]; then
-                     # A file ending in a supportted fs type is a rootfs image
-                     if [[ -z "$FSTYPE" || "$FSTYPE" == "$EXT" ]]; then
-                         FSTYPE=$EXT
-                         ROOTFS=$arg
-                     else
-                         echo "Error: conflicting FSTYPE types [$FSTYPE] and [$arg]"
-                         usage
-                     fi
-                else
-                    echo "Error: unknown file arg [$arg]"
-                    usage
-                fi
+                process_filename $arg
             else
                 echo "Error: unable to classify arg [$arg]"
                 usage
@@ -155,7 +163,7 @@ if [[ "$FSTYPE" == "nfs" && -z "$ROOTFS" ]]; then
 fi
 
 if [ -z "$MACHINE" ]; then
-    MACHINE=`basename $KERNEL | sed -r -e 's#.*-([a-z]+[0-9\-]*)-?[0-9]*..*#\1#'`
+    MACHINE=`basename $KERNEL | sed 's/.*-\(qemux86-64\|qemux86\|qemuarm\|qemumips\|qemuppc\).*/\1/'`
     if [ -z "$MACHINE" ]; then
         echo "Error: Unable to set MACHINE from kernel filename [$KERNEL]"
         usage
