@@ -468,10 +468,12 @@ def try_mirrors(d, uri, mirrors, check = False, force = False):
 
             try:
                 if check:
-                    ud.method.checkstatus(newuri, ud, ld)
+                    found = ud.method.checkstatus(newuri, ud, ld)
+                    if found:
+                        return found
                 else:
                     ud.method.go(newuri, ud, ld)
-                return ud.localpath
+                    return ud.localpath
             except (bb.fetch.MissingParameterError,
                     bb.fetch.FetchError,
                     bb.fetch.MD5SumError):
