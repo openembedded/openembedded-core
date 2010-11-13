@@ -51,7 +51,7 @@ class Local(Fetch):
                 newpath = bb.utils.which(filespath, path)
             if not newpath:
                  dlpath = os.path.join(data.getVar('DL_DIR', d, True), path)
-                 if os.path.exists(dlpath):
+                 if os.exists(dlpath):
                      newpath = dlpath
             if not newpath:
                 filesdir = data.getVar('FILESDIR', d, 1)
