@@ -87,7 +87,7 @@ class BitBakeServer(SimpleXMLRPCServer):
     # remove this when you're done with debugging
     # allow_reuse_address = True
 
-    def __init__(self, cooker, interface = ("localhost", 0)):
+    def __init__(self, cooker, pre_serve, post_serve, interface = ("localhost", 0)):
         """
         Constructor
         """
@@ -99,6 +99,9 @@ class BitBakeServer(SimpleXMLRPCServer):
         #self.register_introspection_functions()
         commands = BitBakeServerCommands(self, cooker)
         self.autoregister_all_functions(commands, "")
+        self.cooker = cooker
+        self.pre_serve = pre_serve
+        self.post_serve = post_serve
 
     def autoregister_all_functions(self, context, prefix):
         """
@@ -116,9 +119,14 @@ class BitBakeServer(SimpleXMLRPCServer):
         self._idlefuns[function] = data
 
     def serve_forever(self):
+        bb.cooker.server_main(self.cooker, self._serve_forever)
+
+    def _serve_forever(self):
         """
         Serve Requests. Overloaded to honor a quit command
         """
+        self.pre_serve()
+
         self.quit = False
         self.timeout = 0 # Run Idle calls for our first callback
         while not self.quit:
@@ -155,6 +163,7 @@ class BitBakeServer(SimpleXMLRPCServer):
             except:
                 pass
 
+        self.post_serve()
         self.server_close()
         return
 
@@ -164,8 +173,12 @@ class BitbakeServerInfo():
         self.port = server.port
 
 class BitBakeServerFork():
-    def __init__(self, serverinfo, command, logfile):
-        daemonize.createDaemon(command, logfile)
+    def __init__(self, cooker, server, serverinfo, logfile):
+        daemonize.createDaemon(server.serve_forever, logfile)
+
+class BitbakeUILauch():
+    def launch(self, serverinfo, uifunc, *args):
+        return uifunc(*args)
 
 class BitBakeServerConnection():
     def __init__(self, serverinfo):

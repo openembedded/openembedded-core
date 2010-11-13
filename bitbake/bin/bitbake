@@ -180,7 +180,7 @@ Default BBFILES are the .bb files in the current directory.""")
 
     serverinfo = server.BitbakeServerInfo(cooker.server)
 
-    server.BitBakeServerFork(serverinfo, cooker.serve, cooker_logfile)
+    server.BitBakeServerFork(cooker, cooker.server, serverinfo, cooker_logfile)
     del cooker
 
     # Setup a connection to the server (cooker)
@@ -203,7 +203,7 @@ Default BBFILES are the .bb files in the current directory.""")
         print("Valid interfaces are 'ncurses', 'depexp' or the default, 'knotty'.")
     else:
         try:
-            return_value = ui_init(serverConnection.connection, serverConnection.events)
+            return_value = server.BitbakeUILauch().launch(serverinfo, ui_init, serverConnection.connection, serverConnection.events)
         except Exception as e:
             print("FATAL: Unable to start to '%s' UI: %s" % (ui, e))
             raise
