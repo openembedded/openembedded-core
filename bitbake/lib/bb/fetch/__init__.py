@@ -285,14 +285,17 @@ def go(d, urls = None):
 
         bb.utils.unlockfile(lf)
 
-def checkstatus(d):
+def checkstatus(d, urls = None):
     """
     Check all urls exist upstream
     init must have previously been called
     """
     urldata = init([], d, True)
 
-    for u in urldata:
+    if not urls:
+        urls = urldata
+
+    for u in urls:
         ud = urldata[u]
         m = ud.method
         bb.msg.debug(1, bb.msg.domain.Fetcher, "Testing URL %s" % u)

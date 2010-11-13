@@ -415,7 +415,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
             try:
                 bb.fetch.init(srcuri.split(), localdata)
-                bb.fetch.checkstatus(localdata)
+                bb.fetch.checkstatus(localdata, srcuri.split())
                 ret.append(task)
             except:
                 pass     
