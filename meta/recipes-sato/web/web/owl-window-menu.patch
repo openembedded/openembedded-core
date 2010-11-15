@@ -1,7 +1,7 @@
 Index: trunk/src/web_main.c
 ===================================================================
---- trunk.orig/src/web_main.c	2007-04-19 15:41:44.000000000 +0100
-+++ trunk/src/web_main.c	2007-04-26 07:43:23.000000000 +0100
+--- trunk.orig/src/web_main.c	2007-12-18 15:04:13.000000000 -0800
++++ trunk/src/web_main.c	2010-11-15 11:40:44.762994000 -0800
 @@ -20,6 +20,8 @@
  #include "web_bookmarks.h"
  #include "web_request.h"
