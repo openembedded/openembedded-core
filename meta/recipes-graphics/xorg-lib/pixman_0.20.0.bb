@@ -13,3 +13,6 @@ DEPENDS = "virtual/libx11"
 PR="r0"
 
 EXTRA_OECONF="--disable-gtk"
+
+SRC_URI[md5sum] = "512ec766a911142b901157ba581f6e75"
+SRC_URI[sha256sum] = "4798a9961bf38a1b25cabef0a8a73fd7dcc6b98da187ce55b1420894360188b5"
