@@ -360,6 +360,26 @@
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-INC_PR'><glossterm>INC_PR</glossterm>
+            <glossdef>
+                <para>Defines the Package revision.  
+                    You manually combine values for INC_PR into the PR field of the parent recipe.
+                    When you change INC_PR you change the PR value for every person that includes the file.
+                </para>
+                <para>
+                    The following example shows how to use INC_PR given a common <filename>.inc</filename>
+                    that defines the variable.
+                    Once defined, the variable can be used to set the PR value:
+                </para>
+                <programlisting>
+recipes-graphics/xorg-font/font-util_1.1.1.bb:PR - "$(INC_PR).1"
+recipes-graphics/xorg-font/xorg-font-common.inc:INC_PR - "r1"
+recipes-graphics/xorg-font/encondings_1.0.3.bb:PR - "$(INC_PR).1"
+recipes-graphics/xorg-font/fiont-alias_1.0.2.bb:PR - "$(INC_PR).0"
+                </programlisting>
+            </glossdef>
+        </glossentry>
+
         <glossentry id='var-INHIBIT_PACKAGE_STRIP'><glossterm>INHIBIT_PACKAGE_STRIP</glossterm>
             <glossdef>
                 <para>

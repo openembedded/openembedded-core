@@ -684,8 +684,12 @@ BBFILE_PRIORITY_emenlow = "6"
                 </glossterm> variable needs to be increased (or 'bumped') as part of that commit. 
                 This means that for new recipes you must be sure to add the PR variable and set its initial value
                 equal to "r0".  
-                Not initially defining PR makes it easy to miss when you bump a package.
+                Failing to define PR makes it easy to miss when you bump a package.
                 Note that you can only use integer values for the PR variable.
+            </para>
+            <para>
+                You can also use the <glossterm><link linkend='var-INC_PR'>INC_PR</link></glossterm> variable
+                to keep up with package revisioning.
             </para>
             <para> 
                 When upgrading the version of a package the (<glossterm><link 
@@ -708,8 +712,8 @@ BBFILE_PRIORITY_emenlow = "6"
                 First, to ensure that when a developer updates and rebuilds, they get all the changes to
                 the repository and don't have to remember to rebuild any sections.
                 Second, to ensure that target users are able to upgrade their
-                devices using package manager commands such as <filename>
-                opkg upgrade</filename> (or similar commands for dpkg/apt or rpm-based systems). 
+                devices using package manager commands such as <filename>opkg upgrade</filename> 
+                (or similar commands for dpkg/apt or rpm-based systems). 
             </para>
             <para>
                 The goal is to ensure Poky has upgradeable packages in all cases.
