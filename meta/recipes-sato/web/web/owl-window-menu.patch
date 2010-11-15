@@ -81,3 +81,16 @@ Index: trunk/src/web_main.c
  	gtk_main ();
  	
  	g_module_close (module);
+Index: trunk/src/Makefile.am
+===================================================================
+--- trunk.orig/src/Makefile.am	2007-12-18 15:04:13.000000000 -0800
++++ trunk/src/Makefile.am	2010-11-15 11:41:15.754994000 -0800
+@@ -18,7 +18,7 @@
+ 	      web.h web_history.h web_bookmarks.h web_request.h \
+ 	      web_utils.h glibcurl.h
+ 
+-web_LDADD   = $(WEB_LIBS)
++web_LDADD   = $(WEB_LIBS) -lowl
+ 
+ MAINTAINERCLEANFILES = config.h.in Makefile.in
+ 
