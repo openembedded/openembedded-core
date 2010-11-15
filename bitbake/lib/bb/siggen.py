@@ -226,8 +226,8 @@ def compare_sigfiles(a, b):
     #if removed:
     #    print "Dependency on Variable %s was removed (value %s)" % (dep, a_data['gendeps'][dep])
 
-    if 'runtaskdeps' in a_data and 'runtaskdeps' in b_data and a_data['runtaskdeps'] != b_data['runtaskdeps']:
-        print "Tasks this task depends on changed from %s to %s" % (a_data['taskdeps'], b_data['taskdeps'])
+    if 'runtaskdeps' in a_data and 'runtaskdeps' in b_data and sorted(a_data['runtaskdeps']) != sorted(b_data['runtaskdeps']):
+        print "Tasks this task depends on changed from %s to %s" % (sorted(a_data['runtaskdeps']), sorted(b_data['runtaskdeps']))
 
     if 'runtaskhashes' in a_data:
         for dep in a_data['runtaskhashes']:
