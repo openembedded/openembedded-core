@@ -26,7 +26,7 @@ do_configure() {
 	oe_runmake allnoconfig ARCH=$ARCH
 }
 
-do_wrlinux_checkout() {
+do_kernel_checkout() {
 	if [ -d ${WORKDIR}/.git/refs/remotes/origin ]; then
 		rm -rf ${S}
 		mkdir ${S}
@@ -38,7 +38,7 @@ do_wrlinux_checkout() {
 	git checkout -f standard
 }
 
-addtask wrlinux_checkout before do_patch after do_unpack
+addtask kernel_checkout before do_patch after do_unpack
 
 do_compile () {
 }

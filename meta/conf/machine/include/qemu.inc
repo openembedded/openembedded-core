@@ -15,6 +15,6 @@ IMAGE_ROOTFS_SIZE_ext3 ?= "280000"
 RDEPENDS_kernel-base = ""
 
 # Use a common kernel recipe for all QEMU machines
-PREFERRED_PROVIDER_virtual/kernel = "linux-wrs"
+PREFERRED_PROVIDER_virtual/kernel = "linux-yocto"
 
 EXTRA_IMAGEDEPENDS += "qemu-native qemu-helper-native"
