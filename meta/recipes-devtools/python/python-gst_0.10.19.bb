@@ -1,6 +1,6 @@
 DESCRIPTION = "Python Gstreamer bindings"
 SECTION = "devel/python"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2.1"
 DEPENDS = "gstreamer gst-plugins-base python-pygobject"
 RDEPENDS += "python-pygtk"
 PR = "r0"
@@ -8,6 +8,8 @@ PR = "r0"
 SRC_URI = "http://gstreamer.freedesktop.org/src/gst-python/gst-python-${PV}.tar.bz2 \
            file://python-path.patch"
 S = "${WORKDIR}/gst-python-${PV}"
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=39ff67e932b7bdfa9b78bad67151690b"
 
 inherit autotools distutils-base pkgconfig
 
