@@ -74,7 +74,7 @@ do_generate_swabber_report () {
 
   if [ "$(ls -A ${HOST_DATA})" ]; then
     echo "Generating swabber report"
-    swabber -d ${HOST_DATA} -l ${SWABBER_LOGS} -o ${SWABBER_REPORT}/report-${REPORTSTAMP}.txt -r ${SWABBER_REPORT}/extra_report-${REPORTSTAMP}.txt -c all -p ${TOPDIR} ${POKYBASE} /tmp /dev /proc /usr/lib/python2.6 /usr/local/lib/python2.6 /usr/lib/pymodules /etc/ld.so.cache
+    swabber -d ${HOST_DATA} -l ${SWABBER_LOGS} -o ${SWABBER_REPORT}/report-${REPORTSTAMP}.txt -r ${SWABBER_REPORT}/extra_report-${REPORTSTAMP}.txt -c all -p ${TOPDIR} -f ${OEROOT}/meta/conf/swabber ${TOPDIR} ${OEROOT} ${CCACHE_DIR}
   else
     echo "No host data, cannot generate swabber report."
   fi
