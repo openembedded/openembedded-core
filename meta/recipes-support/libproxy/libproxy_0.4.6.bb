@@ -9,10 +9,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7d7044444a7b1b116e8783edcdb44ff4 \
 
 DEPENDS = "virtual/libx11 xmu gconf-dbus"
 
-SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz \
-           file://disable_Os_option.patch"
+SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz"
 
-PR = "r2"
+PR = "r0"
 
 inherit cmake pkgconfig
 
