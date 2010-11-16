@@ -5,6 +5,7 @@ LICENSE = "LGPLv2.1 | MPLv1.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=35da21efce2b9f0ca07524c9f844e6ed \
 			file://LICENSE;md5=35da21efce2b9f0ca07524c9f844e6ed"
 SECTION = "libs"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freeassociation/${P}.tar.gz"
 
