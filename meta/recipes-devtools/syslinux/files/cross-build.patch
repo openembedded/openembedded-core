@@ -10,6 +10,10 @@ also AUXDIR stays in $(LIBDIR)/syslinux rather than $(DATADIR)/syslinux
 
 07/08/2010 - qhe
 
+updated for 4.03
+
+11/16/2010 - Qing He <qing.he@intel.com>
+
 ---
 diff --git a/MCONFIG b/MCONFIG
 index e9c16d3..4d49f33 100644
@@ -43,7 +47,8 @@ index e9c16d3..4d49f33 100644
 -CC	 = gcc
 +CC	 ?= gcc
  gcc_ok   = $(shell tmpf=gcc_ok.$$$$.tmp; \
- 		   if $(CC) $(1) -c $(topdir)/dummy.c -o $$tmpf 2>/dev/null ; \
+ 		   if $(CC) $(GCCOPT) $(1) -c $(topdir)/dummy.c \
+ 			-o $$tmpf 2>/dev/null ; \
  		   then echo '$(1)'; else echo '$(2)'; fi; \
  		   rm -f $$tmpf)
  
