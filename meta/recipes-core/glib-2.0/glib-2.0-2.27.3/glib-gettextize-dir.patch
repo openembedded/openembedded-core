@@ -6,11 +6,14 @@
 # portable here. mark for upstream
 #
 # by Kevin Tian <kevin.tian@intel.com>, 06/25/2010
---- glib-2.10.3/glib-gettextize.in.old	2006-06-21 12:46:45.000000000 +0100
-+++ glib-2.10.3/glib-gettextize.in	2006-06-21 12:48:14.000000000 +0100
-@@ -49,7 +49,7 @@
-     ;;
- esac
+# Rebased by Dongxiao Xu <dongxiao.xu@intel.com>, 11/16/2010
+
+diff -ruN glib-2.27.3-orig/glib-gettextize.in glib-2.27.3/glib-gettextize.in
+--- glib-2.27.3-orig/glib-gettextize.in	2009-04-01 07:04:20.000000000 +0800
++++ glib-2.27.3/glib-gettextize.in	2010-11-16 12:55:06.874605916 +0800
+@@ -52,7 +52,7 @@
+ datadir=@datadir@
+ datarootdir=@datarootdir@
  
 -gettext_dir=$prefix/share/glib-2.0/gettext
 +gettext_dir=@datadir@/glib-2.0/gettext
