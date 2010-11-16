@@ -146,6 +146,6 @@ PREFERRED_VERSION_xf86-input-evdev ?= "2.5.0"
 PREFERRED_VERSION_xf86-input-mouse ?= "1.6.0"
 PREFERRED_VERSION_xf86-input-keyboard ?= "1.4.0"
 PREFERRED_VERSION_xf86-input-synaptics ?= "1.2.1"
-PREFERRED_VERSION_xf86-video-intel ?= "2.12.0"
+PREFERRED_VERSION_xf86-video-intel ?= "2.13.0"
 
 
