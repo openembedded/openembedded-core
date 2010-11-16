@@ -1,6 +1,6 @@
 DESCRIPTION = "Clutter GTK+"
 HOMEPAGE = "http://www.clutter-project.org/"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2"
 
 DEPENDS = "gtk+"
 
