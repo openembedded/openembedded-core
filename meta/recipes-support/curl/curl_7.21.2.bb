@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_virtclass-native = "zlib-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://noldlibpath.patch \
@@ -17,13 +17,16 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 inherit autotools pkgconfig binconfig
 
 EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
-                --with-gnutls=${STAGING_BINDIR_CROSS}/ \
                 --without-ssl \
                 --without-libssh2 \
 		--with-random=/dev/urandom \
 		--without-libidn \
 		--enable-crypto-auth \
 		"
+
+EXTRA_OECONF_append = " --with-gnutls=${STAGING_LIBDIR}/../"
+EXTRA_OECONF_virtclass-native_append = " --without-gnutls"
+EXTRA_OECONF_virtclass-nativesdk_append = " --without-gnutls"
 
 do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g configure.ac
