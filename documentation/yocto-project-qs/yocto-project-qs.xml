@@ -354,8 +354,16 @@
 
          <literallayout class='monospaced'>
      $ source /opt/poky/environment-setup-i586-poky-linux 
-     $ poky-qemu &lt;<emphasis>kernel</emphasis>&gt; &lt;<emphasis>image</emphasis>&gt;
+     $ poky-qemu &lt;<emphasis>qemuarch</emphasis>&gt; &lt;<emphasis>kernel</emphasis>&gt; &lt;<emphasis>image</emphasis>&gt; &lt;<emphasis>fstype</emphasis>&gt;
          </literallayout>
+         <para>
+             For example:
+         </para>
+         <literallayout class='monospaced'>
+     $ poky-qemu qemuppc zImage-2.6.34-qemuppc-0.9 \
+     yocto-image-minimal-qemuppc-0.9.rootfs.ext3 ext3
+         </literallayout>
+         
     </section>
 </section>
 
