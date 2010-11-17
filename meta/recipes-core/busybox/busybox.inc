@@ -2,8 +2,12 @@ SUMMARY = "Tiny versions of many common UNIX utilities in a single small executa
 DESCRIPTION = "BusyBox combines tiny versions of many common UNIX utilities into a single small executable. It provides minimalist replacements for most of the utilities you usually find in GNU fileutils, shellutils, etc. The utilities in BusyBox generally have fewer options than their full-featured GNU cousins; however, the options that are included provide the expected functionality and behave very much like their GNU counterparts. BusyBox provides a fairly complete POSIX environment for any small or embedded system."
 HOMEPAGE = "http://www.busybox.net"
 BUGTRACKER = "https://bugs.busybox.net/"
+
 # bzip2 applet in busybox is based on lightly-modified bzip2 source
-LICENSE = "GPLv2+ & bzip2"
+# the GPL is version 2 only
+LICENSE = "GPLv2 & bzip2"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=de10de48642ab74318e893a61105afbb"
+
 SECTION = "base"
 PRIORITY = "required"
 
@@ -96,6 +100,9 @@ do_install () {
 	fi
 
 	install -m 0644 ${S}/busybox.links ${D}${sysconfdir}
+
+	# remove the temp dir to suppress warning, we are done with it
+	rm -rf ${D}/busybox
 }
 
 pkg_postinst_${PN} () {
