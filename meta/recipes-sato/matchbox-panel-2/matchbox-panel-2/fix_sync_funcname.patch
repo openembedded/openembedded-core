@@ -1,0 +1,34 @@
+Rename function sync to sync_applet to avoid conflict.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+diff -ruN matchbox-panel-2-orig/applets/showdesktop/showdesktop.c matchbox-panel-2/applets/showdesktop/showdesktop.c
+--- matchbox-panel-2-orig/applets/showdesktop/showdesktop.c	2010-11-17 20:59:46.000000000 +0800
++++ matchbox-panel-2/applets/showdesktop/showdesktop.c	2010-11-17 21:00:11.000000000 +0800
+@@ -57,7 +57,7 @@
+ 
+ /* Sync @applet with the _NET_SHOWING_DESKTOP root window property */
+ static void
+-sync (ShowDesktopApplet *applet)
++sync_applet (ShowDesktopApplet *applet)
+ {
+         GdkDisplay *display;
+         Atom type;
+@@ -103,7 +103,7 @@
+         if (xev->type == PropertyNotify) {
+                 if (xev->xproperty.atom == applet->atom) {
+                         /* _NET_SHOWING_DESKTOP changed */
+-                        sync (applet);
++                        sync_applet (applet);
+                 }
+         }
+ 
+@@ -145,7 +145,7 @@
+                                applet);
+ 
+         /* Sync */
+-        sync (applet);
++        sync_applet (applet);
+ }
+ 
+ /* Button clicked */
