@@ -9,7 +9,6 @@ DEPENDS = "expat glib-2.0 virtual/libintl virtual/libx11 libsm"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
-           file://fix-install-daemon.patch; \
            file://dbus-1.init"
 
 inherit autotools pkgconfig gettext update-rc.d
