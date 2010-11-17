@@ -10,7 +10,9 @@ DEPENDS += "virtual/libx11 alsa-lib freetype gnome-vfs liboil libogg libvorbis l
 RDEPENDS += "gnome-vfs-plugin-file gnome-vfs-plugin-http gnome-vfs-plugin-ftp \
              gnome-vfs-plugin-sftp"
 
-PR = "r0"
+SRC_URI += " file://gst-plugins-base-tremor.patch"
+
+PR = "r1"
 
 inherit gettext
 
