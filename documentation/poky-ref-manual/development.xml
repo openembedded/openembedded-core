@@ -114,12 +114,12 @@
                     <para>
                         Do the following to install the Yocto plug-in into the Eclipse IDE:
                     <orderedlist>
-                        <listitem>Select the "Help -> Install New Software" item.</listitem>
-                        <listitem>In the "Work with:" area click "Add..." and enter the URL for 
+                        <listitem><para>Select the "Help -> Install New Software" item.</para></listitem>
+                        <listitem><para>In the "Work with:" area click "Add..." and enter the URL for 
                             the Yocto plug-in, which is 
-                            <ulink url='http://www.yoctoproject.org/downloads/eclipse-plugin/'></ulink></listitem>
-                        <listitem>Finish out the installation of the update similar to any other
-                            Eclipse plug-in.</listitem>
+                            <ulink url='http://www.yoctoproject.org/downloads/eclipse-plugin/'></ulink></para></listitem>
+                        <listitem><para>Finish out the installation of the update similar to any other
+                            Eclipse plug-in.</para></listitem>
                     </orderedlist>
                     </para>
                 </section>
@@ -166,11 +166,11 @@
                     The following steps show how to create a Yocto autotools-based project using a given template:
                 </para>
                 <orderedlist>
-                    <listitem>Select "File -> New -> Project" to start the wizard.</listitem>
-                    <listitem>Expand "C/C++" and select "C Project".</listitem>
-                    <listitem>Click "Next" and select a template (e.g. "Hello World ANSI C Project").</listitem>
-                    <listitem>Complete the steps to create the new Yocto autotools-based project using 
-                        your chosen template.</listitem>
+                    <listitem><para>Select "File -> New -> Project" to start the wizard.</para></listitem>
+                    <listitem><para>Expand "C/C++" and select "C Project".</para></listitem>
+                    <listitem><para>Click "Next" and select a template (e.g. "Hello World ANSI C Project").</para></listitem>
+                    <listitem><para>Complete the steps to create the new Yocto autotools-based project using 
+                        your chosen template.</para></listitem>
                 </orderedlist>
                 <para>
                     By default, the project uses the Yocto preferences settings as defined using the procedure in 
@@ -179,38 +179,38 @@
                     you need to reconfigure the Yocto plug-in through the menu selection by doing the following:
                 </para>
                 <orderedlist>
-                    <listitem>Select the "Project -> Invoke Yocto Tools -> Reconfigure Yocto" menu item.</listitem>
-                    <listitem>Complete the dialogue to specify the specific toolchain and QEMU setup information.</listitem>
+                    <listitem><para>Select the "Project -> Invoke Yocto Tools -> Reconfigure Yocto" menu item.</para></listitem>
+                    <listitem><para>Complete the dialogue to specify the specific toolchain and QEMU setup information.</para></listitem>
                 </orderedlist>
                 <para>
                     To build the project follow these steps:
                 </para>
                 <orderedlist>
-                    <listitem>Select "Project -> Reconfigure Project" to trigger the 
-                        <filename>autogen.sh</filename> command.</listitem>
-                    <listitem>Select "Project -> Build" to build the project.</listitem>
+                    <listitem><para>Select "Project -> Reconfigure Project" to trigger the 
+                        <filename>autogen.sh</filename> command.</para></listitem>
+                    <listitem><para>Select "Project -> Build" to build the project.</para></listitem>
                 </orderedlist>
                 <para>
                     To start QEMU follow these steps:
                 </para>
                 <orderedlist>
-                    <listitem>Select "Run -> External Tools" and see if there is 
+                    <listitem><para>Select "Run -> External Tools" and see if there is 
                         a QEMU instance for the desired target.  
                         If one exists, click on the instance to start QEMU.  
                         If your target does not exist, click "External Tools Configuration" and   
                         you should find an instance of QEMU for your architecture
-                        under the entry under "Program".</listitem>
-                    <listitem>Wait for the boot to complete.</listitem>
+                        under the entry under "Program".</para></listitem>
+                    <listitem><para>Wait for the boot to complete.</para></listitem>
                 </orderedlist>
                 <para>
                     To deploy your project and start debugging follow these steps:
                 </para>
                 <orderedlist>
-                    <listitem>Highlight your project in the project explorer.</listitem>
-                    <listitem>Select "Run -> Debug Configurations" to bring up your remote debugging configuration 
-                        in the right-hand window.</listitem>
-                    <listitem>Expand “C/C++ Remote Application”.</listitem>
-                    <listitem>Select "projectname_ gdb_target-poky-linux".  
+                    <listitem><para>Highlight your project in the project explorer.</para></listitem>
+                    <listitem><para>Select "Run -> Debug Configurations" to bring up your remote debugging configuration 
+                        in the right-hand window.</para></listitem>
+                    <listitem><para>Expand “C/C++ Remote Application”.</para></listitem>
+                    <listitem><para>Select "projectname_ gdb_target-poky-linux".  
                         You need to be sure there is an entry for the remote target.  
                         If no entry exists, click "New..." to bring up the wizard.  
                         Use the wizard to select TCF and enter the IP address of you remote target in the 
@@ -219,8 +219,8 @@
                         “Remote Absolute File Path for C/C++ Application” field the absolute path for the program on 
                         the remote target. 
                         By default, the program deploys into the remote target.  
-                        If you don't want this behavior then check “Skip download to target path”.</listitem>
-                    <listitem>Click "Debug” to start the remote debugging session.</listitem>
+                        If you don't want this behavior then check “Skip download to target path”.</para></listitem>
+                    <listitem><para>Click "Debug” to start the remote debugging session.</para></listitem>
                 </orderedlist>
                 </section>
 
@@ -239,11 +239,11 @@
                 <para>
                     Here are some specifics about the remote tools:
                 <itemizedlist>
-                    <listitem>OProfile:  Selecting this tool causes the oprofile-server on the remote
+                    <listitem><para>OProfile:  Selecting this tool causes the oprofile-server on the remote
                         target to launch on the local host machine.  The oprofile-viewer
                         must be installed on the local host machine and the oprofile-server must be
-                        installed on the remote target, respectively, in order to use .</listitem>
-                    <listitem>lttng:  Selecting this tool runs "usttrace" on the remote target, transfers
+                        installed on the remote target, respectively, in order to use .</para></listitem>
+                    <listitem><para>lttng:  Selecting this tool runs "usttrace" on the remote target, transfers
                         the output data back to the local host machine and uses "lttv-gui" to graphically
                         display the output.  The "lttv-gui" must be installed on the 
                         local host machine to use this tool.  
@@ -257,9 +257,9 @@
                         </para>
                         <para>
                             "Argument" is passed to "usttrace" running on the remote target.
-                        </para>
+                        </para></para>
                     </listitem>  
-                    <listitem>powertop:  Selecting this tool runs "powertop" on the 
+                    <listitem><para>powertop:  Selecting this tool runs "powertop" on the 
                         remote target machine and displays the results in a new view called "powertop".
                         <para>
                             "Time to gather data(sec):" is the time passed in seconds before data is 
@@ -268,13 +268,13 @@
                         <para>
                             "show pids in wakeups list:" corresponds to the <filename>-p</filename>
                             argument passed to "powertop".
-                        </para>
+                        </para></para>
                     </listitem>
-                    <listitem>latencytop and perf:  "latencytop" identifies 
+                    <listitem><para>latencytop and perf:  "latencytop" identifies 
                         system latency, while "perf" monitors the system's performance 
                         counter registers.  Selecting either of these tools causes an RSE
                         terminal view to appear from which you can run the tools.  Both tools refresh the 
-                        entire screen to display results while they run.</listitem>
+                        entire screen to display results while they run.</para></listitem>
                 </itemizedlist>
                 </para>
                 </section>
@@ -317,16 +317,16 @@
                 <para>
                     Follow these steps to set up the plug-in:
                     <orderedlist>
-                        <listitem>Extract the tarball for the toolchain into / as root. 
-                        The toolchain will be installed into <filename>/opt/poky</filename>.</listitem>
-                        <listitem>To use the plug-in, first open or create an existing project. 
+                        <listitem><para>Extract the tarball for the toolchain into / as root. 
+                        The toolchain will be installed into <filename>/opt/poky</filename>.</para></listitem>
+                        <listitem><para>To use the plug-in, first open or create an existing project. 
                         If you are creating a new project, the "C GTK+"
                         project type will allow itself to be cross-compiled. 
-                        However, you should be aware that this type uses "glade" for the UI.</listitem>
-                        <listitem>To activate the plug-in, select "Edit -> Preferences" and then choose
+                        However, you should be aware that this type uses "glade" for the UI.</para></listitem>
+                        <listitem><para>To activate the plug-in, select "Edit -> Preferences" and then choose
                         "General" from the left hand side. 
                         Choose the "Installed plug-ins" tab, scroll down to "Poky SDK" and 
-                        check the box.</listitem>
+                        check the box.</para></listitem>
                     </orderedlist>
                     The plug-in is now activated but not configured.  
                 </para>
@@ -338,29 +338,29 @@
                     SDK icon from the left hand side. 
                     You need to define the following options:
                     <itemizedlist>
-                        <listitem>SDK root: If you use an external toolchain you need to set 
+                        <listitem><para>SDK root: If you use an external toolchain you need to set 
                         SDK root, which is the root directory of the SDK's sysroot. 
                         For an i586 SDK directory is <filename>/opt/poky/</filename>. 
                         This directory will contain "bin", "include", "var" and so forth under your 
                         selected target architecture subdirectory 
                         <filename>/opt/poky/sysroot/i586-poky-linux/</filename>. 
                         The cross-compile tools you need are in 
-                        <filename>/opt/poky/sysroot/i586-pokysdk-linux/</filename>.</listitem>
-                        <listitem>Poky root: If you have a local Poky build tree, you need to 
+                        <filename>/opt/poky/sysroot/i586-pokysdk-linux/</filename>.</para></listitem>
+                        <listitem><para>Poky root: If you have a local Poky build tree, you need to 
                         set the Poky root, which is the root directory of the poky build tree.
                         If you build your i586 target architecture under the subdirectory of 
                         <filename>build_x86</filename> within your Poky tree, the Poky root directory
-                        should be <filename>$&lt;poky_tree&gt;/build_x86/</filename>.</listitem>
-                        <listitem>Target Architecture: This is the cross compile triplet, 
+                        should be <filename>$&lt;poky_tree&gt;/build_x86/</filename>.</para></listitem>
+                        <listitem><para>Target Architecture: This is the cross compile triplet, 
                         for example, "i586-poky-linux". 
                         This target triplet is the prefix extracted from the set up script file's name. 
                         For example, if the script file name is 
                         <filename>/opt/poky/environment-setup-i586-poky-linux</filename> then the extracted target 
-                        triplet is "i586-poky-linux".</listitem>
-                        <listitem>Kernel: Use the file chooser to select the kernel used with QEMU.</listitem>
-                        <listitem>Root filesystem: Use the file chooser to select the root 
+                        triplet is "i586-poky-linux".</para></listitem>
+                        <listitem><para>Kernel: Use the file chooser to select the kernel used with QEMU.</para></listitem>
+                        <listitem><para>Root filesystem: Use the file chooser to select the root 
                         filesystem directory.  This directory is where you use "poky-extract-sdk" to extract the 
-                        poky-image-sdk tarball.</listitem>
+                        poky-image-sdk tarball.</para></listitem>
                      </itemizedlist>
                 </para>
                 </section>
@@ -370,25 +370,25 @@
                     The steps in this section show how to cross-compile a project, deploy it into
                     QEMU, run a debugger against it and then perform a system-wide profile.
                 <orderedlist>
-                    <listitem>Choose "Build -> Run Configure" or "Build -> Run Autogenerate" to run
+                    <listitem><para>Choose "Build -> Run Configure" or "Build -> Run Autogenerate" to run
                     "configure" or "autogen", respectively for the project. 
                     Either command passes command-line arguments to instruct the 
-                    cross-compile.</listitem>
-                    <listitem>Choose "Build -> Build Project" to build and compile the project. 
+                    cross-compile.</para></listitem>
+                    <listitem><para>Choose "Build -> Build Project" to build and compile the project. 
                     If you have previously built the project in the same tree without using 
                     the cross-compiler you might find that your project fails to link. 
                     If this is the case, simply select "Build -> Clean Project" to remove the 
                     old binaries. 
-                    After you clean the project you can then try building it again.</listitem>
-                    <listitem>Choose "Tools -> Start QEMU" to start QEMU.  
+                    After you clean the project you can then try building it again.</para></listitem>
+                    <listitem><para>Choose "Tools -> Start QEMU" to start QEMU.  
                     After QEMU starts any error messages will appear in the message view. 
                     Once Poky has fully booted within QEMU you can deploy the project 
-                    into it.</listitem>
-                    <listitem>Once the project is built and you have QEMU running choose 
+                    into it.</para></listitem>
+                    <listitem><para>Once the project is built and you have QEMU running choose 
                     "Tools -> Deploy" to install the package into a temporary
                     directory and then copy it using "rsync" over SSH into the target. 
-                    A progress bar and appropriate messages appear in the message view.</listitem>
-                    <listitem>To debug a program installed onto the target choose 
+                    A progress bar and appropriate messages appear in the message view.</para></listitem>
+                    <listitem><para>To debug a program installed onto the target choose 
                     "Tools -> Debug remote". 
                     Choosing this menu item causes prompts to appear to define the local binary 
                     for debugging and also for the command line used to run on the target. 
@@ -402,16 +402,16 @@
                     target program. 
                     You should define any breakpoints or watchpoints at this point in the process since you might not 
                     be able to interrupt the execution later. 
-                    To stop the debugger on the target choose "Tools -> Stop debugger".</listitem>
-                    <listitem>It is also possible to execute a command in the target over SSH.
+                    To stop the debugger on the target choose "Tools -> Stop debugger".</para></listitem>
+                    <listitem><para>It is also possible to execute a command in the target over SSH.
                     Doing so causes the appropriate environment to be established for execution. 
                     To execute a command choose "Choose Tools -> Run remote". 
-                    This selection opens a terminal with the SSH command inside.</listitem>
-                    <listitem>To perform a system-wide profile against the system running in QEMU choose 
+                    This selection opens a terminal with the SSH command inside.</para></listitem>
+                    <listitem><para>To perform a system-wide profile against the system running in QEMU choose 
                     "Tools -> Profile remote". 
                     This choice starts up "OProfileUI" with the appropriate parameters to 
                     connect to the server running inside QEMU and also supplies the path 
-                    for debug information necessary to get a useful profile.</listitem>
+                    for debug information necessary to get a useful profile.</para></listitem>
                 </orderedlist>
                 </para>
                 </section>
@@ -521,9 +521,9 @@
             This command opens a terminal with a shell prompt within the Poky 
             environment. Consequently, the following occurs:
             <itemizedlist>
-                <listitem>The PATH variable includes the cross toolchain.</listitem>
-                <listitem>The pkgconfig variables find the correct <filename>.pc</filename> files.</listitem>
-                <listitem>"configure" finds the Poky site files as well as any other necessary files.</listitem>
+                <listitem><para>The PATH variable includes the cross toolchain.</para></listitem>
+                <listitem><para>The pkgconfig variables find the correct <filename>.pc</filename> files.</para></listitem>
+                <listitem><para>"configure" finds the Poky site files as well as any other necessary files.</para></listitem>
             </itemizedlist>
             Within this environment, you can run "configure" or "compile" commands as if they 
             were being run by Poky itself. 
@@ -732,14 +732,14 @@ tmp/sysroots/&lt;host-arch&lt;/usr/bin/&lt;target-abi&gt;-gdb
                 These steps show how to build the custom directory of files:
             </para>
             <orderedlist>
-                <listitem>Install the package (<filename>foo</filename> in this case) to 
+                <listitem><para>Install the package (<filename>foo</filename> in this case) to 
                 <filename>tmp/rootfs</filename>:
                 <programlisting>
 tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
 tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf -o \
 tmp/rootfs/ update
-                </programlisting></listitem>
-                <listitem>Install the debugging information:
+                </programlisting></para></listitem>
+                <listitem><para>Install the debugging information:
                 <programlisting>
 tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
 tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
@@ -748,7 +748,7 @@ tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 tmp/sysroots/i686-linux/usr/bin/opkg-cl -f \
 tmp/work/&lt;target-abi&gt;/poky-image-sato-1.0-r0/temp/opkg.conf \
 -o tmp/rootfs install foo-dbg
-                </programlisting></listitem>
+                </programlisting></para></listitem>
             </orderedlist>
 
         </section>
