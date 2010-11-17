@@ -339,7 +339,6 @@ RECIPE_LATEST_RELEASE_DATE_pn-libusb-compat = "07/2009"
 RECIPE_COMMENTS_pn-libusb-compat = "replaces libusb, but doesn't provides libusbpp"
 DISTRO_PN_ALIAS_pn-libusb-compat = "OSPDT"
 
-
 RECIPE_STATUS_pn-libnl = "yellow"    # still need to update to git
 RECIPE_MAINTAINER_pn-libnl = "Qing He <qing.he@intel.com>"
 DEPENDENCY_CHECK_pn-libnl = "not done"
@@ -2228,21 +2227,6 @@ RECIPE_LATEST_RELEASE_DATE_pn-libid3tag="2004/02/18"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libid3tag="8 months"
 RECIPE_MAINTAINER_pn-libid3tag = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
-RECIPE_STATUS_pn-libmad="yellow" # patch investigation needed
-RECIPE_LATEST_VERSION_pn-libmad="0.15.1b"
-RECIPE_NO_OF_PATCHES_pn-libmad="2"
-RECIPE_LATEST_RELEASE_DATE_pn-libmad="2004/02/18"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libmad="8 months"
-RECIPE_MAINTAINER_pn-libmad = "Dongxiao Xu <dongxiao.xu@intel.com>"
-
-RECIPE_STATUS_pn-lame="green"
-RECIPE_LATEST_VERSION_pn-lame="3.98.4"
-RECIPE_NO_OF_PATCHES_pn-lame="1"
-RECIPE_LATEST_RELEASE_DATE_pn-lame="2010/04/14"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-lame="20 months"
-RECIPE_MAINTAINER_pn-lame = "Dongxiao Xu <dongxiao.xu@intel.com>"
-DISTRO_PN_ALIAS_pn-lame="Ubuntu=lame OpenSuse=lame"
-
 RECIPE_STATUS_pn-flac="green"
 RECIPE_LATEST_VERSION_pn-flac="1.2.1"
 RECIPE_NO_OF_PATCHES_pn-flac="3"
@@ -2263,13 +2247,6 @@ RECIPE_NO_OF_PATCHES_pn-libogg="0"
 RECIPE_LATEST_RELEASE_DATE_pn-libogg="2010/11/02"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libogg="7 months"
 RECIPE_MAINTAINER_pn-libogg = "Dongxiao Xu <dongxiao.xu@intel.com>"
-
-RECIPE_STATUS_pn-mpeg2dec="green"
-RECIPE_LATEST_VERSION_pn-mpeg2dec="0.4.1"
-RECIPE_NO_OF_PATCHES_pn-mpeg2dec="0"
-RECIPE_LATEST_RELEASE_DATE_pn-mpeg2dec="2006/09/19"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-mpeg2dec="2 years"
-RECIPE_MAINTAINER_pn-mpeg2dec = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gstreamer="green"
 RECIPE_LATEST_VERSION_pn-gstreamer="0.10.30"
@@ -2684,6 +2661,10 @@ RECIPE_STATUS_pn-tcl="red"
 RECIPE_LATEST_VERSION_pn-tcl="8.5.9"
 RECIPE_MAINTAINER_pn-tcl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
+RECIPE_STATUS_pn-unifdef="green" # poky local source files
+RECIPE_LATEST_VERSION_pn-unifdef="2.6.18+git"
+RECIPE_MAINTAINER_pn-unifdef = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+
 RECIPE_STATUS_pn-gnu-config="green" # upgraded
 RECIPE_LATEST_VERSION_pn-gnu-config="0.1+cvs20080123"
 DISTRO_PN_ALIAS_pn-gnu-config = "OpenedHand"
@@ -3006,6 +2987,18 @@ RECIPE_LATEST_RELEASE_DATE_pn-qt4-tools-native = "2010/06/02"
 RECIPE_INTEL_SECTION_pn-qt4-tools-native = "graphic app"
 RECIPE_MAINTAINER_pn-qt4-tools-native = "Yu Ke <ke.yu@intel.com>"
 DISTRO_PN_ALIAS_pn-qt4-tools-native = "Mandriva=libqt4-devel Ubuntu=libqt4-dev"
+
+RECIPE_STATUS_pn-quicky = "green" # no update needed
+RECIPE_LATEST_VERSION_pn-quicky = "0.4"
+RECIPE_NO_OF_PATCHES_pn-quicky = "0"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-quicky = "n/a"
+RECIPE_LATEST_RELEASE_DATE_pn-quicky = "2008/06/18"
+RECIPE_INTEL_SECTION_pn-quicky = "graphic app"
+RECIPE_MAINTAINER_pn-quicky = "Yu Ke <ke.yu@intel.com>"
+DISTRO_PN_ALIAS_pn-quicky = "OSPDT"
+#
+# distro tracking filed for X core packages
+#
 
 RECIPE_STATUS_pn-bigreqsproto="green" # no update needed
 DISTRO_PN_ALIAS_pn-bigreqsproto = "Meego=xorg-x11-proto-bigreqsproto"
