@@ -5,14 +5,17 @@ RDEPENDS = "neon"
 LICENSE = "Apache BSD"
 HOMEPAGE = "http://subversion.tigris.org"
 
-PR = "r7"
+PR = "r0"
 
 SRC_URI = "http://subversion.tigris.org/downloads/${P}.tar.bz2 \
            file://disable-revision-install.patch;patch=1 \
 	   file://neon-detection.patch;patch=1 \
 	   file://libtool2.patch;patch=1"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=b592c67ecb801ccc95e236f186ec33fd"
+SRC_URI[md5sum] = "7ae1c827689f21cf975804005be30aeb"
+SRC_URI[sha256sum] = "3a30327bdb04109f369586196ee4a6993cdab2cfa85c3134549f02c229bf0d15"
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=2a69fef414e2cb907b4544298569300b"
 
 EXTRA_OECONF = "--with-neon=${STAGING_EXECPREFIXDIR} \
                 --without-berkeley-db --without-apxs --without-apache \
