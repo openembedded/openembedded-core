@@ -1,7 +1,10 @@
 SECTION = "base"
 SUMMARY = "Utilities and scripts for power management"
 DESCRIPTION = "Simple shell command line toos to suspect and hibernate."
-LICENSE="GPL"
+HOMEPAGE = "http://pm-utils.freedesktop.org/wiki/"
+LICENSE="GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+                    file://src/pm-pmu.c;beginline=1;endline=22;md5=3c1ddbc54e735fb4a0386e14c78a3147"
 
 PR = "r0"
 
@@ -15,3 +18,6 @@ FILES_${PN}-dbg += "${libdir}/pm-utils/bin/.debug \
 do_configure_prepend () {
 	autoreconf -f -i -s
 }
+
+SRC_URI[md5sum] = "1742a556089c36c3a89eb1b957da5a60"
+SRC_URI[sha256sum] = "8ed899032866d88b2933a1d34cc75e8ae42dcde20e1cc21836baaae3d4370c0b"
