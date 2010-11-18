@@ -4,7 +4,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
 PROVIDES = "linux-libc-headers"
 PV = "2.6.34+git-${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;fullclone=1"
 
@@ -45,7 +45,7 @@ do_compile () {
 
 do_install() {
 	set_arch
-	oe_runmake headers_install_all INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
+	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
 }
 
 BBCLASSEXTEND = "nativesdk"
