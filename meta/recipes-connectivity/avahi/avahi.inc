@@ -1,4 +1,4 @@
-SUMMARY = "Avahi IPv$LL network address configuration daemon"
+SUMMARY = "Avahi IPv4LL network address configuration daemon"
 DESCRIPTION = "Avahi is a fully LGPL framework for Multicast DNS Service Discovery. It \
 allows programs to publish and discover services and hosts running on a local network \
 with no specific configuration. This tool implements IPv4LL, "Dynamic Configuration of \
