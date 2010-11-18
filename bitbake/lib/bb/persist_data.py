@@ -127,9 +127,7 @@ class PersistData:
         count = 0
         while True:
             try:
-                ret = self.cursor.execute(*query)
-                #print "Had to retry %s times" % count
-                return ret
+                return self.cursor.execute(*query)
             except sqlite3.OperationalError as e:
                 if 'database is locked' in str(e) and count < 500:
                     count = count + 1
