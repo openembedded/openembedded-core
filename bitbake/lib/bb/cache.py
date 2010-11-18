@@ -45,7 +45,8 @@ except ImportError:
 
 __cache_version__ = "132"
 
-class Cache:
+
+class Cache(object):
     """
     BitBake Cache implementation
     """
@@ -502,11 +503,7 @@ def init(cooker):
     return Cache(cooker.configuration.data)
 
 
-
-#============================================================================#
-# CacheData
-#============================================================================#
-class CacheData:
+class CacheData(object):
     """
     The data structures we compile from the cached data
     """
