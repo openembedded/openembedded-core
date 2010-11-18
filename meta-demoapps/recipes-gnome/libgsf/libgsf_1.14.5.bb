@@ -1,3 +1,4 @@
+DESCRIPTION = "GNOME Structured File Library"
 LICENSE = "GPL"
 SECTION = "libs"
 PR = "r0"

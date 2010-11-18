@@ -1,3 +1,7 @@
+SUMMARY = "API documentation generation tool for GTK+ and GNOME"
+DESCRIPTION = "gtk-doc is a tool for generating API reference documentation. \
+It is used for generating the documentation for GTK+, GLib \
+and GNOME."
 SECTION = "x11/base"
 SRC_URI = "file://gtk-doc.m4"
 LICENSE = "LGPL"
