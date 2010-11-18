@@ -1,3 +1,4 @@
+SUMMARY = "A parallel build system"
 DESCRIPTION = "distcc is a parallel build system that distributes \
 compilation of C/C++/ObjC code across machines on a network."
 SECTION = "devel"

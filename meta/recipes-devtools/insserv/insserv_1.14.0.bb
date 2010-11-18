@@ -1,5 +1,6 @@
-SUMMARY = "Enable an installed system init script"
-DESCRIPTION = "Enable an installed system init script by reading the comment header of the script"
+SUMMARY = "Boot sequence organizer using LSB init.d dependencies"
+DESCRIPTION = "This utility reorders the init.d boot scripts based on dependencies given in scripts' LSB comment \
+headers, or in override files included in this package or added in /etc/insserv."
 # There is no known home page for insserv
 SECTION = "base"
 PRIORITY = "optional"

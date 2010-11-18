@@ -1,4 +1,7 @@
-DESCRIPTION = "Perl is a popular scripting language."
+SUMMARY = "Perl (Pathologically Eclectic Rubbish Lister)"
+DESCRIPTION = "Perl is a high-level, general-purpose, interpreted, dynamic programming language.  It was \
+originally written as a general-purpose scripting language to make report processing easier.  This makes perl \
+especially good at handling text."
 HOMEPAGE = "http://www.perl.org/"
 SECTION = "devel"
 LICENSE = "Artistic|GPL"

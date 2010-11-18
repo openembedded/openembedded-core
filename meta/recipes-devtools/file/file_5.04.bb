@@ -1,3 +1,4 @@
+SUMMARY = "File classification tool"
 DESCRIPTION = "File attempts to classify files depending \
 on their contents and prints a description if a match is found."
 HOMEPAGE = "http://www.darwinsys.com/file/"

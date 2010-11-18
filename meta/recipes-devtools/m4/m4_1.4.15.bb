@@ -1,4 +1,7 @@
-DESCRIPTION = "GNU m4 is an implementation of the traditional Unix macro processor."
+SUMMARY = "Traditional Unix macro processor"
+DESCRIPTION = "GNU m4 is an implementation of the traditional Unix macro processor.  It is mostly SVR4 \
+compatible although it has some extensions (for example, handling more than 9 positional parameters to macros). \
+GNU M4 also has built-in functions for including files, running shell commands, doing arithmetic, etc."
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
 	file://examples/COPYING;md5=380fd7d57d3fd009a5716e074a845d6d"

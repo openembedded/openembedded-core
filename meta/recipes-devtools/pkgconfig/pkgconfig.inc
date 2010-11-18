@@ -1,7 +1,6 @@
-DESCRIPTION = "pkg-config is a system for managing library \
-compile/link flags that works with automake and autoconf. \
-It replaces the ubiquitous *-config scripts you may have \
-seen with a single tool."
+SUMMARY = "Helper tool used when compiling"
+DESCRIPTION = "pkg-config is a helper tool used when compiling applications and libraries. It helps determined \
+the correct compiler/link options.  It is also language-agnostic."
 HOMEPAGE = "http://pkg-config.freedesktop.org/wiki/"
 BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=pkg-config"
 SECTION = "console/utils"

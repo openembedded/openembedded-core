@@ -1,3 +1,8 @@
+SUMMARY = "Manage alternatives"
+DESCRIPTION = "update-alternatives creates, removes, maintains and displays information about the symbolic links \
+comprising the Debian alternatives system. The Debian alternatives system attempts solve the problem of several \
+programs fulfilling the same or similar functions and how they can be installed onto a single system at the same \
+time."
 LICENSE = "GPL"
 SECTION = "base"
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz"
