@@ -1,4 +1,7 @@
 require linux-libc-headers.inc
+include recipes-kernel/linux/linux-yocto.inc
+
+B = "${S}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
@@ -8,7 +11,9 @@ PR = "r1"
 
 SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;fullclone=1"
 
-S = "${WORKDIR}/linux"
+SRCREV_FORMAT = "meta_machine"
+SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${KBRANCH};name=machine \
+           git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
 
 set_arch() {
 	case ${TARGET_ARCH} in
@@ -26,19 +31,11 @@ do_configure() {
 	oe_runmake allnoconfig ARCH=$ARCH
 }
 
-do_kernel_checkout() {
-	if [ -d ${WORKDIR}/.git/refs/remotes/origin ]; then
-		rm -rf ${S}
-		mkdir ${S}
-		mv ${WORKDIR}/.git ${S}
-		mv ${S}/.git/refs/remotes/origin/* ${S}/.git/refs/heads
-		rmdir ${S}/.git/refs/remotes/origin
-	fi
-	cd ${S}
-	git checkout -f standard
+do_kernel_configme() {
 }
 
-addtask kernel_checkout before do_patch after do_unpack
+do_patch () {
+}
 
 do_compile () {
 }
