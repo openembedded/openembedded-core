@@ -3,7 +3,8 @@ DESCRIPTION = "This package provides the necessary infrastructure for basic TCP/
 HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPLv2"
-PR = "r1"
+LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
+PR = "r0"
 
 inherit update-rc.d
 
@@ -55,3 +56,6 @@ PACKAGE_ARCH_omap-2430sdp = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemuarm = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86 = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86-64 = "${MACHINE_ARCH}"
+
+SRC_URI[md5sum] = "875d6db52cc8cef565a77ef898ed47cf"
+SRC_URI[sha256sum] = "5a6da788356776330b77eda97157285e1c426c2d3bd9136407373965365e9dbf"
