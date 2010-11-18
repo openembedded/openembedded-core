@@ -1,3 +1,4 @@
+SUMMARY = "System Log Daemons"
 DESCRIPTION = "The sysklogd package implements two system log daemons: syslogd, klogd"
 HOMEPAGE = "http://www.infodrom.org/projects/sysklogd/"
 SECTION = "base"

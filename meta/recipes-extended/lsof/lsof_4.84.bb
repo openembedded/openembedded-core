@@ -1,3 +1,4 @@
+SUMMARY = "LiSt Open Files tool"
 DESCRIPTION = "Lsof is a Unix-specific diagnostic tool. \
 Its name stands for LiSt Open Files, and it does just that."
 SECTION = "devel"

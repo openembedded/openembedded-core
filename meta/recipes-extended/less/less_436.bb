@@ -1,3 +1,4 @@
+SUMMARY = "Text file viewer similar to more"
 DESCRIPTION = "Less is a program similar to more, i.e. a terminal \
 based program for viewing text files and the output from other \
 programs. Less offers many features beyond those that more does."

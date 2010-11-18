@@ -1,3 +1,4 @@
+SUMMARY = "Displays the full path of executables that bash would execute"
 DESCRIPTION = "Which is a utility that prints out the full path of the \
 executables that bash(1) would execute when the passed \
 program names would have been entered on the shell prompt. \

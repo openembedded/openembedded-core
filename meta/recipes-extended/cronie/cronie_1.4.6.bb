@@ -1,3 +1,4 @@
+SUMMARY = "Cron daemon for executing programs at set times"
 DESCRIPTION = "Cronie contains the standard UNIX daemon crond that runs \
 specified programs at scheduled times and related tools. It is based on the \
 original cron and has security and configuration enhancements like the \

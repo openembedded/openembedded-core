@@ -1,3 +1,4 @@
+SUMMARY = "GNU file archiving program"
 DESCRIPTION = "GNU tar saves many files together into a single tape \
 or disk archive, and can restore individual files from the archive."
 HOMEPAGE = "http://www.gnu.org/software/tar/"

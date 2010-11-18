@@ -1,3 +1,4 @@
+SUMMARY = "tune low-level block device parameters"
 DESCRIPTION = "blktool is used for querying and/or changing settings of a block device. It is like hdparm but a more general tool, as it works on SCSI, IDE and SATA devices"
 HOMEPAGE = "http://packages.debian.org/unstable/admin/blktool"
 LICENSE = "GPLv2+"

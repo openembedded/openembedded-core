@@ -1,4 +1,6 @@
-DESCRIPTION = "iptables is the userspace command line program used to configure the Linux 2.4.x and 2.6.x IPv4 packet filtering ruleset"
+SUMMARY = "Tools for managing kernel packaet filtering capabilities"
+DESCRIPTION = "iptables is the userspace command line program used to configure and control network packet \
+filtering code in Linux."
 HOMEPAGE = "http://www.netfilter.org/"
 BUGTRACKER = "http://bugzilla.netfilter.org/"
 LICENSE = "GPLv2+"

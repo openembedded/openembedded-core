@@ -1,3 +1,4 @@
+SUMMARY = "Gamin the File Alteration Monitor"
 DESCRIPTION = "Gamin is a file and directory monitoring system defined to \
 be a subset of the FAM (File Alteration Monitor) system."
 HOMEPAGE = "http://people.gnome.org/~veillard/gamin/"

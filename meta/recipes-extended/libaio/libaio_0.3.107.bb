@@ -1,4 +1,5 @@
-DESCRIPTION="Asynchronous input/output library that uses the kernels native interface"
+SUMMARY = "Asynchronous I/O library"
+DESCRIPTION = "Asynchronous input/output library that uses the kernels native interface"
 HOMEPAGE = "http://lse.sourceforge.net/io/aio.html"
 
 LICENSE = "LGPLv2.1+"

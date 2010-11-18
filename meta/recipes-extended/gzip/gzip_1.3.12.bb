@@ -1,4 +1,6 @@
-DESCRIPTION = "Standard GNU compressor"
+SUMMARY = "Standard GNU compressor"
+DESCRIPTION = "GNU Gzip is a popular data compression program originally written by Jean-loup Gailly for the GNU \
+project. Mark Adler wrote the decompression part"
 HOMEPAGE = "http://www.gnu.org/software/gzip"
 SECTION = "base"
 

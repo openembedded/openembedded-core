@@ -1,3 +1,4 @@
+SUMMARY = "PolicyKit Authorization Framework"
 DESCRIPTION = "The polkit package is an application-level toolkit for defining and handling the policy that allows unprivileged processes to speak to privileged processes."
 HOMEPAGE = "http://code.google.com/p/polkit/"
 LICENSE = "LGPLv2+"

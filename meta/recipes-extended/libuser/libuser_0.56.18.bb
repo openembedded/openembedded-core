@@ -1,4 +1,6 @@
-DESCRIPTION = "The libuser library implements a standardized interface for manipulating and administering user and group accounts"
+SUMMARY = "user and group account administration library"
+DESCRIPTION = "The libuser library implements a standardized interface for manipulating and administering user \
+and group accounts"
 HOMEPAGE = "https://fedorahosted.org/libuser/"
 BUGTRACKER = "https://fedorahosted.org/libuser/newticket"
 

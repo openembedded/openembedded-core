@@ -1,3 +1,4 @@
+SUMMARY = "Portable Archive eXchange"
 DESCRIPTION = "pax (Portable Archive eXchange) is the POSIX standard archive tool"
 HOMEPAGE = "http://www.openbsd.org/cgi-bin/cvsweb/src/bin/pax/"
 BUGTRACKER = "http://www.openbsd.org/query-pr.html"

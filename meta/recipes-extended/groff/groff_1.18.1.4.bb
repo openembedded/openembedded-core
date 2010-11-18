@@ -1,4 +1,6 @@
-DESCRIPTION = "groff-a short reference for the GNU roff language "
+SUMMARY = "GNU Troff software"
+DESCRIPTION = "The groff (GNU troff) software is a typesetting package which reads plain text mixed with \
+formatting commands and produces formatted output."
 SECTION = "console/utils"
 PRIORITY = "required"
 HOMEPAGE = "ftp://ftp.gnu.org/gnu/groff/"

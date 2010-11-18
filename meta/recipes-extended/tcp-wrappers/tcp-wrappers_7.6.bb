@@ -1,3 +1,4 @@
+SUMMARY = "Security tool that is a wrapper for TCP daemons"
 DESCRIPTION = "Tools for monitoring and filtering incoming requests for tcp \
 	      services."
 PRIORITY = "optional"

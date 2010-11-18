@@ -1,4 +1,5 @@
-DESCRIPTION = "hdparm is a Linux shell utility for viewing \
+SUMMARY = "Utility for displaying and setting hard disk parameters"
+DESCRIPTION = "hdparm is a system utility for viewing \
 and manipulating various IDE drive and driver parameters."
 SECTION = "console/utils"
 PRIORITY = "optional"

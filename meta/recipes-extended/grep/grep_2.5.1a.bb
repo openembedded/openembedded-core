@@ -1,4 +1,6 @@
-DESCRIPTION = "grep GNU utility"
+SUMMARY = "Pattern matching utilities"
+DESCRIPTION = "The GNU versions of commonly used grep utilities.  The grep command searches one or more input \
+files for lines containing a match to a specified pattern."
 SECTION = "console/utils"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"

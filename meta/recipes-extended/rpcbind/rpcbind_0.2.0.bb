@@ -1,3 +1,4 @@
+SUMMARY = "Universal Addresses to RPC Program Number Mapper"
 DESCRIPTION = "The rpcbind utility is a server that converts RPC \
                program numbers into universal addresses."
 SECTION = "console/network"

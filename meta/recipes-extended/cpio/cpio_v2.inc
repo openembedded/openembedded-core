@@ -1,4 +1,6 @@
-DESCRIPTION = "GNU cpio is a program to manage archives of files"
+SUMMARY = "GNU cpio is a program to manage archives of files"
+DESCRIPTION = "GNU cpio is a tool for creating and extracting archives, or copying files from one place to \
+another. It handles a number of cpio formats as well as reading and writing tar files."
 HOMEPAGE = "http://www.gnu.org/software/cpio/"
 SECTION = "base"
 

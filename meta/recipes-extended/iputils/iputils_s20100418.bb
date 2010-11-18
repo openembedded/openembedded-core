@@ -1,3 +1,4 @@
+SUMMARY = "Network monitoring tools"
 DESCRIPTION = "Utilities for the IP protocol, including traceroute6, \
 tracepath, tracepath6, ping, ping6 and arping."
 HOMEPAGE = "http://www.skbuff.net/iputils"

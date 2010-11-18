@@ -1,7 +1,6 @@
-DESCRIPTION = "Procps is the package that has a bunch \
-of small useful utilities that give information \
-about processes using the /proc filesystem. The package \
-includes the programs ps, top, vmstat, w, kill, and skill."
+SUMMARY = "System and process monitoring utilities"
+DESCRIPTION = "Procps contains a set of system utilities that provide system information about processes using \
+the /proc filesystem. The package \ includes the programs ps, top, vmstat, w, kill, and skill."
 HOMEPAGE = "http://procps.sf.net"
 SECTION = "base"
 PRIORITY = "optional"
