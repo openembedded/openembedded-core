@@ -1015,7 +1015,7 @@ class RunQueue:
         for task in range(len(self.rqdata.runq_fnid)):
             if self.rqdata.runq_fnid[task] not in done:
                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]] 
-                the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
+                the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
                 done.add(self.rqdata.runq_fnid[task])
 
         bb.parse.siggen.dump_sigs(self.rqdata.dataCache)
@@ -1088,7 +1088,7 @@ class RunQueueExecute:
         return
 
     def fork_off_task(self, fn, task, taskname):
-        the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
+        the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
 
         env = bb.data.export_vars(the_data)
         env = bb.data.export_envvars(env, the_data)
