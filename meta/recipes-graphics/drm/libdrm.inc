@@ -1,3 +1,4 @@
+SUMMARY = "Direct Rendering Manager userspace library"
 DESCRIPTION = "userspace library for accessing the DRM(direct rendering manager)"
 HOMEPAGE = "http://dri.freedesktop.org"
 SECTION = "x11/base"

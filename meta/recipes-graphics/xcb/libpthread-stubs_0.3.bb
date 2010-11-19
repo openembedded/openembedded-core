@@ -1,3 +1,4 @@
+SUMMARY = "Library that provides weak aliases for pthread functions"
 DESCRIPTION = "This library provides weak aliases for pthread functions \
 not provided in libc or otherwise available by default."
 HOMEPAGE = "http://xcb.freedesktop.org"

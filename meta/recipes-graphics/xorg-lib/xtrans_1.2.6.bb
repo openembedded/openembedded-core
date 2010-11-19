@@ -1,3 +1,5 @@
+SUMMARY = "X transport library"
+
 DESCRIPTION = "network API translation layer to insulate X applications and \
 libraries from OS network vageries."
 

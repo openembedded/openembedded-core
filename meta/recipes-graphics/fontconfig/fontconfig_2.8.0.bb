@@ -1,3 +1,4 @@
+SUMMARY = "Font configuration and customization library"
 DESCRIPTION = "A library for configuring and customizing font access."
 HOMEPAGE = "http://www.fontconfig.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"

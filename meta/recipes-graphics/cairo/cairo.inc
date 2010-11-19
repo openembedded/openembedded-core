@@ -1,4 +1,7 @@
-DESCRIPTION = "Cairo graphics library"
+SUMMARY = "A 2D graphics library"
+DESCRIPTION = "Cairo is a 2D graphics library designed to provide high-quality display \
+and print output. Cairo is designed to produce consistent output on all output media while \
+taking advantage of display hardware acceleration when available."
 HOMEPAGE = "http://cairographics.org"
 BUGTRACKER = "http://bugs.freedesktop.org"
 SECTION = "libs"

@@ -1,4 +1,8 @@
-DESCRIPTION = "Common code for XSETTINGS"
+SUMMARY = "utility functions for the Xsettings protocol"
+DESCRIPTION = "Libraries used for applications making use of the Xsettings configuration \
+setting propagation protocol. Controls setting of double click timeout, drag-and-drop \
+threshold, and default foreground and background colors for all applications running within a \
+desktop."
 HOMEPAGE = "http://matchbox-project.org/sources/optional-dependencies/"
 BUGTRACKER = "http://bugzilla.openedhand.com/"
 SECTION = "x/libs"

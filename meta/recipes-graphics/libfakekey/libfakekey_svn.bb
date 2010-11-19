@@ -1,4 +1,6 @@
-DESCRIPTION = "libfakekey"
+SUMMARY = "Library for converting characters to X key-presses"
+DESCRIPTION = "libfakekey is a simple library for converting UTF-8 characters into 'fake' X \
+key-presses."
 HOMEPAGE = "http://matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.openedhand.com/"
 
