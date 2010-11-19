@@ -1088,7 +1088,9 @@ class CookerParser(object):
                 if info.skipped:
                     self.skipped += 1
         finally:
-            bb.event.fire(bb.event.ParseProgress(self.current), self.cfgdata)
+            # only fire events on percentage boundaries
+            if self.current % (self.total/100) == 0:
+                bb.event.fire(bb.event.ParseProgress(self.current), self.cfgdata)
 
         self.current += 1
         return True
