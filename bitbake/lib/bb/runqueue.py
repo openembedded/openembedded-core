@@ -233,7 +233,7 @@ class RunQueueData:
         return "%s, %s" % (fn, taskname)
 
     def get_task_id(self, fnid, taskname):
-        for listid in range(len(self.runq_fnid)):
+        for listid in xrange(len(self.runq_fnid)):
             if self.runq_fnid[listid] == fnid and self.runq_task[listid] == taskname:
                 return listid
         return None
@@ -255,7 +255,7 @@ class RunQueueData:
             """
             lowest = 0
             new_chain = []
-            for entry in range(len(chain)):
+            for entry in xrange(len(chain)):
                 if chain[entry] < chain[lowest]:
                     lowest = entry
             new_chain.extend(chain[lowest:])
@@ -268,7 +268,7 @@ class RunQueueData:
             """
             if len(chain1) != len(chain2):
                 return False
-            for index in range(len(chain1)):
+            for index in xrange(len(chain1)):
                 if chain1[index] != chain2[index]:
                     return False
             return True
@@ -339,7 +339,7 @@ class RunQueueData:
         deps_left = []
         task_done = []
 
-        for listid in range(numTasks):
+        for listid in xrange(numTasks):
             task_done.append(False)
             weight.append(0)
             deps_left.append(len(self.runq_revdeps[listid]))
@@ -363,7 +363,7 @@ class RunQueueData:
 
         # Circular dependency sanity check
         problem_tasks = []
-        for task in range(numTasks):
+        for task in xrange(numTasks):
             if task_done[task] is False or deps_left[task] != 0:
                 problem_tasks.append(task)
                 logger.debug(2, "Task %s (%s) is not buildable\n", task, self.get_user_idstring(task))
@@ -441,7 +441,7 @@ class RunQueueData:
                     if taskid is not None:
                         depends.append(taskid)
 
-        for task in range(len(taskData.tasks_name)):
+        for task in xrange(len(taskData.tasks_name)):
             depends = []
             recrdepends = []
             fnid = taskData.tasks_fnid[task]
@@ -532,7 +532,7 @@ class RunQueueData:
         # Algorithm is O(tasks) + O(tasks)*O(fnids)
         #
         reccumdepends = {}
-        for task in range(len(self.runq_fnid)):
+        for task in xrange(len(self.runq_fnid)):
             fnid = self.runq_fnid[task]
             if fnid not in reccumdepends:
                 if fnid in tdepends_fnid:
@@ -540,7 +540,7 @@ class RunQueueData:
                 else:
                     reccumdepends[fnid] = set()
             reccumdepends[fnid].update(self.runq_depends[task])
-        for task in range(len(self.runq_fnid)):
+        for task in xrange(len(self.runq_fnid)):
             taskfnid = self.runq_fnid[task]
             for fnid in reccumdepends:
                 if task in reccumdepends[fnid]:
@@ -553,7 +553,7 @@ class RunQueueData:
         #
         # e.g. do_sometask[recrdeptask] = "do_someothertask"
         # (makes sure sometask runs after someothertask of all DEPENDS, RDEPENDS and intertask dependencies, recursively)
-        for task in range(len(self.runq_fnid)):
+        for task in xrange(len(self.runq_fnid)):
             if len(runq_recrdepends[task]) > 0:
                 taskfnid = self.runq_fnid[task]
                 for dep in reccumdepends[taskfnid]:
@@ -622,7 +622,7 @@ class RunQueueData:
 
         maps = []
         delcount = 0
-        for listid in range(len(self.runq_fnid)):
+        for listid in xrange(len(self.runq_fnid)):
             if runq_build[listid-delcount] == 1:
                 maps.append(listid-delcount)
             else:
@@ -650,7 +650,7 @@ class RunQueueData:
 
         # Remap the dependencies to account for the deleted tasks
         # Check we didn't delete a task we depend on
-        for listid in range(len(self.runq_fnid)):
+        for listid in xrange(len(self.runq_fnid)):
             newdeps = []
             origdeps = self.runq_depends[listid]
             for origdep in origdeps:
@@ -662,14 +662,14 @@ class RunQueueData:
         logger.verbose("Assign Weightings")
 
         # Generate a list of reverse dependencies to ease future calculations
-        for listid in range(len(self.runq_fnid)):
+        for listid in xrange(len(self.runq_fnid)):
             for dep in self.runq_depends[listid]:
                 self.runq_revdeps[dep].add(listid)
 
         # Identify tasks at the end of dependency chains
         # Error on circular dependency loops (length two)
         endpoints = []
-        for listid in range(len(self.runq_fnid)):
+        for listid in xrange(len(self.runq_fnid)):
             revdeps = self.runq_revdeps[listid]
             if len(revdeps) == 0:
                 endpoints.append(listid)
@@ -687,7 +687,7 @@ class RunQueueData:
         # Sanity Check - Check for multiple tasks building the same provider
         prov_list = {}
         seen_fn = []
-        for task in range(len(self.runq_fnid)):
+        for task in xrange(len(self.runq_fnid)):
             fn = taskData.fn_index[self.runq_fnid[task]]
             if fn in seen_fn:
                 continue
@@ -1191,7 +1191,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
         self.stats = RunQueueStats(len(self.rqdata.runq_fnid))
 
         # Mark initial buildable tasks
-        for task in range(self.stats.total):
+        for task in xrange(self.stats.total):
             self.runq_running.append(0)
             self.runq_complete.append(0)
             if len(self.rqdata.runq_depends[task]) == 0:
@@ -1204,7 +1204,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
         found = True
         while found:
             found = False
-            for task in range(self.stats.total):
+            for task in xrange(self.stats.total):
                 if task in self.rq.scenequeue_covered:
                     continue
                 if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered):
@@ -1333,7 +1333,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
             return True
 
         # Sanity Checks
-        for task in range(self.stats.total):
+        for task in xrange(self.stats.total):
             if self.runq_buildable[task] == 0:
                 logger.error("Task %s never buildable!" % task)
             if self.runq_running[task] == 0:
@@ -1368,12 +1368,12 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         # therefore aims to collapse the huge runqueue dependency tree into a smaller one
         # only containing the setscene functions.
 
-        for task in range(self.stats.total):
+        for task in xrange(self.stats.total):
             self.runq_running.append(0)
             self.runq_complete.append(0)
             self.runq_buildable.append(0)
 
-        for task in range(len(self.rqdata.runq_fnid)):
+        for task in xrange(len(self.rqdata.runq_fnid)):
             sq_revdeps.append(copy.copy(self.rqdata.runq_revdeps[task]))
             sq_revdeps_new.append(set())
             if (len(self.rqdata.runq_revdeps[task]) == 0) and task not in self.rqdata.runq_setscene:
@@ -1404,7 +1404,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
         process_endpoints(endpoints)
 
-        for task in range(len(self.rqdata.runq_fnid)):
+        for task in xrange(len(self.rqdata.runq_fnid)):
             if task in self.rqdata.runq_setscene:
                 deps = set()
                 for dep in sq_revdeps_new[task]:
@@ -1413,20 +1413,20 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
             elif len(sq_revdeps_new[task]) != 0:
                 bb.msg.fatal(bb.msg.domain.RunQueue, "Something went badly wrong during scenequeue generation, aborting. Please report this problem.")
 
-        #for task in range(len(sq_revdeps_squash)):
+        #for task in xrange(len(sq_revdeps_squash)):
         #    print "Task %s: %s.%s is %s " % (task, self.taskData.fn_index[self.runq_fnid[self.runq_setscene[task]]], self.runq_task[self.runq_setscene[task]] + "_setscene", sq_revdeps_squash[task])
 
         self.sq_deps = []
         self.sq_revdeps = sq_revdeps_squash
         self.sq_revdeps2 = copy.deepcopy(self.sq_revdeps)
 
-        for task in range(len(self.sq_revdeps)):
+        for task in xrange(len(self.sq_revdeps)):
             self.sq_deps.append(set())
-        for task in range(len(self.sq_revdeps)):
+        for task in xrange(len(self.sq_revdeps)):
             for dep in self.sq_revdeps[task]:
                 self.sq_deps[dep].add(task)
 
-        for task in range(len(self.sq_revdeps)):
+        for task in xrange(len(self.sq_revdeps)):
             if len(self.sq_revdeps[task]) == 0:
                 self.runq_buildable[task] = 1
 
@@ -1437,7 +1437,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
             sq_taskname = []
             sq_task = []
             noexec = []
-            for task in range(len(self.sq_revdeps)):
+            for task in xrange(len(self.sq_revdeps)):
                 realtask = self.rqdata.runq_setscene[task]
                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
                 taskname = self.rqdata.runq_task[realtask]
@@ -1460,7 +1460,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
             for v in valid:
                 valid_new.append(sq_task[v])
 
-            for task in range(len(self.sq_revdeps)):
+            for task in xrange(len(self.sq_revdeps)):
                 if task not in valid_new and task not in noexec:
                     logger.debug(2, "No package found so skipping setscene task %s" % (self.rqdata.get_user_idstring(self.rqdata.runq_setscene[task])))
                     self.task_failoutright(task)
@@ -1525,7 +1525,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         task = None
         if self.stats.active < self.number_tasks:
             # Find the next setscene to run
-            for nexttask in range(self.stats.total):
+            for nexttask in xrange(self.stats.total):
                 if self.runq_buildable[nexttask] == 1 and self.runq_running[nexttask] != 1:
                     #bb.note("Comparing %s to %s" % (self.sq_revdeps[nexttask], self.scenequeue_covered))
                     #if len(self.sq_revdeps[nexttask]) > 0 and self.sq_revdeps[nexttask].issubset(self.scenequeue_covered):
