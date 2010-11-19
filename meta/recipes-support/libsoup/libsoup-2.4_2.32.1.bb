@@ -10,7 +10,7 @@ PR = "r0"
 
 DEPENDS = "glib-2.0 gnutls libxml2 libproxy sqlite3 libgnome-keyring"
 
-SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.31/libsoup-${PV}.tar.bz2"
+SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.32/libsoup-${PV}.tar.bz2"
 S = "${WORKDIR}/libsoup-${PV}"
 
 inherit autotools pkgconfig
