@@ -1,3 +1,4 @@
+SUMMARY = "Framework for layout and rendering of internationalized text"
 DESCRIPTION = "The goal of the Pango project is to provide an \
 Open Source framework for the layout and rendering of \
 internationalized text."
