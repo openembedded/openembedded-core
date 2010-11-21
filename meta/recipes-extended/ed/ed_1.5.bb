@@ -4,8 +4,8 @@ BUGTRACKER = ""
 
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
-                    file://ed.h;endline=20;md5=294d5da73d15cd444ca2260fa2538296 \
-                    file://main.c;endline=24;md5=122be7f2751ae819c803441972c7f45b"
+                    file://ed.h;endline=20;md5=238781cd8e436dabb0e9f18443400066 \
+                    file://main.c;endline=24;md5=177fe82d0649e545591a13fdce5733e8"
 
 SECTION = "base"
 PR = "r0"

@@ -9,24 +9,22 @@ http://lists.gnu.org/archive/html/bug-ed/2008-12/msg00001.html
 ed had already taken GPLv3 when this patch out, so it should be GPLv3.
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
-Index: ed-1.4/configure
+Index: ed-1.5/configure
 ===================================================================
---- ed-1.4.orig/configure	2009-07-10 19:54:33.000000000 +0800
-+++ ed-1.4/configure	2010-08-05 17:41:51.000000000 +0800
-@@ -26,12 +26,6 @@
+--- ed-1.5.orig/configure	2010-08-30 07:34:49.000000000 -0700
++++ ed-1.5/configure	2010-11-20 16:42:20.490645823 -0800
+@@ -26,10 +26,6 @@
  mandir='$(datadir)/man'
  sysconfdir='$(prefix)/etc'
  program_prefix=
 -CC=
--CXX=
 -CPPFLAGS=
 -CFLAGS='-Wall -W -O2'
--CXXFLAGS='-Wall -W -O2'
 -LDFLAGS=
  
  # Loop over all args
- while [ x"$1" != x ] ; do
-@@ -111,6 +105,14 @@
+ while [ -n "$1" ] ; do
+@@ -105,6 +101,14 @@
  	esac
  done
  
@@ -40,4 +38,4 @@ Index: ed-1.4/configure
 +
  # Find the source files, if location was not specified.
  srcdirtext=
- if [ x"${srcdir}" = x ] ; then
+ if [ -z "${srcdir}" ] ; then
