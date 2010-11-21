@@ -636,8 +636,6 @@ class BBCooker:
         if (task == None):
             task = self.configuration.cmd
 
-        self.status = bb.cache.CacheData()
-
         (fn, cls) = bb.cache.Cache.virtualfn2realfn(buildfile)
         buildfile = self.matchFile(fn)
         fn = bb.cache.Cache.realfn2virtual(buildfile, cls)
@@ -982,7 +980,6 @@ class CookerParser(object):
         self.filelist = filelist
         self.cooker = cooker
         self.cfgdata = cooker.configuration.data
-        self.bb_cache = bb.cache.Cache(self.cfgdata)
 
         # Accounting statistics
         self.parsed = 0
@@ -995,11 +992,12 @@ class CookerParser(object):
         self.total = len(filelist)
 
         self.current = 0
+        self.started = False
+        self.bb_cache = None
+        self.task_queue = None
         self.result_queue = None
         self.fromcache = None
         self.progress_chunk = self.total / 100
-
-        self.launch_processes()
 
     def launch_processes(self):
         self.task_queue = multiprocessing.Queue()
@@ -1045,13 +1043,6 @@ class CookerParser(object):
         if self.error > 0:
             raise ParsingErrorsFound()
 
-    def reparse(self, filename):
-        infos = self.bb_cache.parse(filename,
-                                    self.cooker.get_file_appends(filename),
-                                    self.cfgdata)
-        for vfn, info in infos:
-            self.cooker.status.add_from_recipeinfo(vfn, info)
-
     def parse_next(self):
         if self.current >= self.total:
             event = bb.event.ParseCompleted(self.cached, self.parsed,
@@ -1061,9 +1052,15 @@ class CookerParser(object):
             bb.event.fire(event, self.cfgdata)
             self.shutdown()
             return False
-        elif self.current == 0:
+        elif not self.started:
+            self.started = True
             bb.event.fire(bb.event.ParseStarted(self.total, self.skipped, self.masked),
                           self.cfgdata)
+            return True
+        elif not self.bb_cache:
+            self.bb_cache = bb.cache.Cache(self.cfgdata)
+            self.launch_processes()
+            return True
 
         try:
             if self.result_queue.empty() and self.fromcache:
@@ -1099,3 +1096,9 @@ class CookerParser(object):
         self.current += 1
         return True
 
+    def reparse(self, filename):
+        infos = self.bb_cache.parse(filename,
+                                    self.cooker.get_file_appends(filename),
+                                    self.cfgdata)
+        for vfn, info in infos:
+            self.cooker.status.add_from_recipeinfo(vfn, info)
