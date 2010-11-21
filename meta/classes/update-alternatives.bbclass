@@ -79,8 +79,8 @@ fi
 
 def update_alternatives_after_parse(d):
     if bb.data.getVar('ALTERNATIVE_LINKS', d) != None:
-        doinstall = bb.data.getVar('do_install', d, 1)
-        doinstall += bb.data.getVar('update_alternatives_batch_doinstall', d, 1)
+        doinstall = bb.data.getVar('do_install', d, 0)
+        doinstall += bb.data.getVar('update_alternatives_batch_doinstall', d, 0)
         bb.data.setVar('do_install', doinstall, d)
         return
 
