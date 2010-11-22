@@ -6,7 +6,8 @@ SSTATE_MANFILEPREFIX = "${SSTATE_MANFILEBASE}${PN}"
 
 
 SSTATE_PKGARCH    = "${BASE_PACKAGE_ARCH}"
-SSTATE_PKGNAME    = "sstate-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}-${PV}-${PR}-${SSTATE_PKGARCH}-${SSTATE_VERSION}-${BB_TASKHASH}"
+SSTATE_PKGSPEC    = "sstate-${PN}-${MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}-${PV}-${PR}-${SSTATE_PKGARCH}-${SSTATE_VERSION}-"
+SSTATE_PKGNAME    = "${SSTATE_PKGSPEC}${BB_TASKHASH}"
 SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
 
 SSTATE_SCAN_CMD ?= "find ${SSTATE_BUILDDIR} \( -name "*.la" -o -name "*-config" \) -type f"
@@ -190,9 +191,12 @@ def sstate_installpkg(ss, d):
     return True
 
 def sstate_clean_cachefile(ss, d):
-    sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_' + ss['name'] + ".tgz"
-    bb.note("Removing %s" % sstatepkg)
-    oe.path.remove(sstatepkg)
+    import oe.path
+
+    sstatepkgdir = bb.data.getVar('SSTATE_DIR', d, True)
+    sstatepkgfile = sstatepkgdir + '/' + bb.data.getVar('SSTATE_PKGSPEC', d, True) + "*_" + ss['name'] + ".tgz*"
+    bb.note("Removing %s" % sstatepkgfile)
+    oe.path.remove(sstatepkgfile)
 
 def sstate_clean_cachefiles(d):
     for task in (bb.data.getVar('SSTATETASKS', d, True) or "").split():
