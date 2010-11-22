@@ -106,7 +106,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
     def get_taskhash(self, fn, task, deps, dataCache):
         k = fn + "." + task
         data = dataCache.basetaskhash[k]
-        self.runtaskdeps[k] = deps
+        self.runtaskdeps[k] = []
         for dep in sorted(deps):
             if self.twl and self.twl.search(dataCache.pkg_fn[fn]):
                 #bb.note("Skipping %s" % dep)
@@ -114,6 +114,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
             if dep not in self.taskhash:
                  bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
             data = data + self.taskhash[dep]
+            self.runtaskdeps[k].append(dep)
         h = hashlib.md5(data).hexdigest()
         self.taskhash[k] = h
         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
@@ -258,8 +259,3 @@ def dump_sigfile(a):
     if 'runtaskhashes' in a_data:
         for dep in a_data['runtaskhashes']:
             print "Hash for dependent task %s is %s" % (dep, a_data['runtaskhashes'][dep])
-
-
-
-
-
