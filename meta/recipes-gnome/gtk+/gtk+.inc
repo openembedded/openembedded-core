@@ -11,12 +11,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc-native libxrandr \
-           libgcrypt libxdamage libxrender libxcomposite cairo"
+           libgcrypt libxdamage libxrender libxcomposite cairo gdk-pixbuf"
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
-	${bindir}/gtk-update-icon-cache \
+FILES_${PN} = "${bindir}/gtk-update-icon-cache \
 	${bindir}/gtk-query-immodules-2.0 \
 	${libdir}/lib*${SOLIBS} \
 	${datadir}/themes ${sysconfdir} \
@@ -28,7 +27,6 @@ FILES_${PN}-dev += " \
 	${libdir}/gtk-2.0/${LIBV}/loaders/*.la \
 	${libdir}/gtk-2.0/${LIBV}/immodules/*.la \
 	${libdir}/gtk-2.0/${LIBV}/engines/*.la \
-	${bindir}/gdk-pixbuf-csource \
 	${bindir}/gtk-builder-convert"
 
 FILES_${PN}-dbg += " \
@@ -74,14 +72,4 @@ if [ "x$D" != "x" ]; then
   exit 1
 fi
 
-}
-
-postinst_pixbufloader() {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
-gdk-pixbuf-query-loaders > ${sysconfdir}/gtk-2.0/gdk-pixbuf.loaders
-
-test -x ${bindir}/gtk-update-icon-cache && gtk-update-icon-cache  -q ${datadir}/icons/hicolor
 }
