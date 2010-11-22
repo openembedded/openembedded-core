@@ -108,11 +108,15 @@ class SignatureGeneratorBasic(SignatureGenerator):
         data = dataCache.basetaskhash[k]
         self.runtaskdeps[k] = []
         for dep in sorted(deps):
-            if self.twl and self.twl.search(dataCache.pkg_fn[fn]):
-                #bb.note("Skipping %s" % dep)
-                continue
+            # We only manipulate the dependencies for packages not in the whitelist
+            if self.twl and not self.twl.search(dataCache.pkg_fn[fn]):
+                # then process the actual dependencies
+                dep_fn = re.search("(?P<fn>.*)\..*", dep).group('fn')
+                if self.twl.search(dataCache.pkg_fn[dep_fn]):
+                    #bb.note("Skipping %s" % dep)
+                    continue
             if dep not in self.taskhash:
-                 bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
+                bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
             data = data + self.taskhash[dep]
             self.runtaskdeps[k].append(dep)
         h = hashlib.md5(data).hexdigest()
