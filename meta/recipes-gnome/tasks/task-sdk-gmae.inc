@@ -12,6 +12,21 @@ SDK-GMAE = " \
     libebook-dev \
     libxi-dev \
     libsqlite3-dev \
+    galago-daemon \
+    gnome-desktop \
+    gssdp \
+    gupnp \
+    gupnp-av \
+    gupnp-tools \
+    gypsy \
+    libart-lgpl \
+    libgalago \
+    libtelepathy \
+    pulseaudio \
+    telepathy-glib \
+    telepathy-idle \
+    telepathy-mission-control \
+    telepathy-python \
     "
 
 # TODO: gvfs-dev, mission-control

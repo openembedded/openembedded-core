@@ -2,7 +2,7 @@ DESCRIPTION = "Tidy library"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPL"
 
-STDDEPENDS = "clutter-0.8"
+STDDEPENDS = "clutter-1.0"
 BASE_CONF = "--disable-gtk-doc"
 
 DEPENDS = "${STDDEPENDS}"

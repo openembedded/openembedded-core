@@ -75,6 +75,7 @@ RDEPENDS_task-poky-basic-utils = "\
     gmp \
     grep \
     makedevs \
+    mc \
     mktemp \
     ncurses \
     net-tools \

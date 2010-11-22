@@ -27,4 +27,6 @@ RDEPENDS_task-poky-x11-sato = "\
     sato-icon-theme \
     settings-daemon \
     gtk-sato-engine \
+    gthumb \
+    x11vnc \
     ${NETWORK_MANAGER}"

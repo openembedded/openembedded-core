@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Small Image Tasks"
-PR = "r1"
+PR = "r2"
 LICENSE = "MIT"
 
 PACKAGES = "\
@@ -43,6 +43,7 @@ RDEPENDS_task-poky-lsb = "\
 # GPLv2 Should List
 RDEPENDS_task-poky-sys-extended = "\
     curl \
+    dhcp-client \
     diffutils \
     gamin \
     hdparm \
@@ -50,6 +51,7 @@ RDEPENDS_task-poky-sys-extended = "\
     libxml2 \
     lrzsz \
     lzo \
+    mc \
     mdadm \
     minicom \
     neon \
@@ -62,6 +64,7 @@ RDEPENDS_task-poky-sys-extended = "\
     unzip \
     watchdog \
     which \
+    xinetd \
     zip \
     "
 
@@ -95,9 +98,11 @@ RDEPENDS_task-poky-tcl = "\
 RDEPENDS_task-poky-misc = "\
     elfutils \
     gettext \
+    groff \
     lsb \
     lsof \
-#    man-pages \
+    man \
+    man-pages \
     ncurses \
     strace \
     libusb1 \

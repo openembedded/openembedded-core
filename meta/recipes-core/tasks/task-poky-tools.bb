@@ -63,6 +63,7 @@ RDEPENDS_task-poky-tools-profile_append_atom-pc = " lttng-ust"
 
 RDEPENDS_task-poky-tools-testapps = "\
     blktool \
+    fstests \
     tslib-calibrate \
     tslib-tests \
     lrzsz \
@@ -72,6 +73,7 @@ RDEPENDS_task-poky-tools-testapps = "\
     owl-video \
     gst-meta-video \
     gst-meta-audio \
+    x11perf \
     xrestop \
     xwininfo \
     xprop \
