@@ -1,6 +1,7 @@
 DESCRIPTION = "Library of functions for 2D graphics"
 SECTION = "x11/gnome"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 PR = "r1"
 
 ART_CONFIG = "${HOST_ARCH}/art_config.h"
