@@ -2,8 +2,8 @@ SECTION = "devel"
 DESCRIPTION = "The Linux trace toolkit is a suite of tools designed to \
 extract program execution details from the Linux operating system and  \
 interpret them."
-LICENSE = "GPL"
-
+LICENSE = "GPLv3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=id32239bcb673463ab874e80d47fae504"
 PR = "r0"
 
 LTTDATE = "09062010"
