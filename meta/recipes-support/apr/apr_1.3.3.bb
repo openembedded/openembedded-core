@@ -1,7 +1,7 @@
 DESCRIPTION = "Apache Portable Runtime (APR) library"
 SECTION = "libs"
 LICENSE = "Apache License, Version 2.0"
-
+LIC_FILES_CHKSUM = "file://LICENSE;md5=0c35ff3c4c83b89d2f076e315caac28b"
 PR = "r5"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${P}.tar.bz2 \
