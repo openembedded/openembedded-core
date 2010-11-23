@@ -1,3 +1,3 @@
 require expat.inc
-
+LIC_FILES_CHKSUM = "file://COPYING;md5=1b71f681713d1256e1c23b0890920874"
 PR = "r0"
