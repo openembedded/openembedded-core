@@ -4,6 +4,7 @@ Thermal zones, battery infomration, fan information and AC states are implemente
 SECTION = "base"
 HOMEPAGE = "http://www.ngolde.de/libacpi.html"
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=fec17f82f16630adf2dfb7d2a46f21c5"
 PR = "r1"
 
 SRC_URI = "http://www.ngolde.de/download/libacpi-${PV}.tar.gz \
