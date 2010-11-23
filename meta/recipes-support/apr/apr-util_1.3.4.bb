@@ -2,7 +2,7 @@ DESCRIPTION = "Apache Portable Runtime (APR) companion library"
 SECTION = "libs"
 DEPENDS = "apr expat gdbm"
 LICENSE = "Apache License, Version 2.0"
-
+LIC_FILES_CHKSUM = "file://LICENSE;md5=519e0a18e03f7c023070568c14b077bb"
 PR = "r5"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${P}.tar.gz \
