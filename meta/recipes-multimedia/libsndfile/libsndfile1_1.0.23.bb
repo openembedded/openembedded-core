@@ -6,9 +6,7 @@ SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
 PR = "r0"
 
-SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz \
-           file://acincludefix.patch;patch=1 \
-           file://add-cxx.patch;patch=1"
+SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e77fe93202736b47c07035910f47974a"
 
