@@ -1,6 +1,7 @@
 SECTION = "console/network"
 DEPENDS = "ncurses"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=420477abc567404debca0a2a1cb6b645"
 SRC_URI = "http://alioth.debian.org/frs/download.php/2332/minicom-${PV}.tar.gz \
 	file://rename-conflicting-functions.patch \
 	"
