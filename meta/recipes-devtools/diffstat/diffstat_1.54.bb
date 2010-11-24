@@ -6,6 +6,7 @@ PRIORITY = "optional"
 SECTION = "devel"
 DEPENDS = "gettext"
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://install-sh;endline=42;md5=b3549726c1022bee09c174c72a0ca4a5"
 PR = "r0"
 
 SRC_URI = "ftp://invisible-island.net/diffstat/diffstat-${PV}.tgz"
