@@ -332,7 +332,7 @@ kernel are:
     <listitem><para>the presentation of a seamless git repository that blends Yocto Project value with the kernel.org history and development</para></listitem>
 </itemizedlist>
 </para>
-<para>
+<!--<para>
 The tools that construct a kernel tree will be discussed later in this 
 document. The following tools form the foundation of the Yocto Project 
 kernel toolkit:
@@ -343,7 +343,7 @@ kernel toolkit:
     <listitem><para>kgit*: Yocto Project kernel tree creation and management tools</para></listitem>
     <listitem><para>scc  : series &amp; configuration compiler</para></listitem>
 </itemizedlist>
-</para>
+</para> -->
     </section> 
 </section>
 
@@ -367,18 +367,18 @@ kernel toolkit:
         <itemizedlist> 
             <listitem><para>Tree construction</para></listitem>
             <listitem><para>Build strategies</para></listitem>
-            <listitem><para>Series &amp; Configuration Compiler</para></listitem>
-            <listitem><para>kgit</para></listitem>
+<!--            <listitem><para>Series &amp; Configuration Compiler</para></listitem> 
+            <listitem><para>kgit</para></listitem> -->
             <listitem><para>Workflow examples</para></listitem>
             <listitem><para>Source Code Manager (SCM)</para></listitem>
-            <listitem><para>Board Support Package (BSP) template migration</para></listitem>
+<!--            <listitem><para>Board Support Package (BSP) template migration</para></listitem> -->
             <listitem><para>BSP creation</para></listitem>
             <listitem><para>Patching</para></listitem>
             <listitem><para>Updating BSP patches and configuration</para></listitem>
-            <listitem><para>guilt</para></listitem>
-            <listitem><para>scc file example</para></listitem>
+<!--            <listitem><para>guilt</para></listitem>
+            <listitem><para>scc file example</para></listitem> -->
             <listitem><para>"dirty" string</para></listitem>
-            <listitem><para>Transition kernel layer</para></listitem>
+<!--            <listitem><para>Transition kernel layer</para></listitem> -->
         </itemizedlist>
     </para>
 
@@ -404,7 +404,7 @@ following sections.
 </para>
 <para>
 As a reminder, it is envisioned that a ground up reconstruction of the
-complete kernel tree is an action only taken by Yocto Project staff during an
+complete kernel tree is an action only taken by Yocto Project team during an
 active development cycle.  When an end user creates a project, it takes
 advantage of this complete tree in order to efficiently place a git tree
 within their project.
@@ -420,8 +420,9 @@ The general flow of the project specific kernel tree construction is as follows:
       
        <itemizedlist>
             <listitem><para>the kernel-cache under linux/wrs/cfg/kernel-cache</para></listitem>
-            <listitem><para>kernel-*-cache directories in layers</para></listitem>
-            <listitem><para>configured and default templates</para></listitem>
+<!--            <listitem><para>kernel-*-cache directories in layers</para></listitem> -->
+            <listitem><para>recipe SRC_URIs</para></listitem>
+<!--            <listitem><para>configured and default templates</para></listitem> -->
         </itemizedlist>
 
      <para>In a typical build a feature description of the format:
@@ -433,8 +434,7 @@ The general flow of the project specific kernel tree construction is as follows:
      shipped kernel is located.</para></listitem>
 
      <listitem><para>extra features are appended to the top level feature description. Extra
-     features can come from the command line, the configure script or 
-     templates.</para></listitem>
+     features can come from the KERNEL_FEATURES variable in recipes.</para></listitem>
 
      <listitem><para>each extra feature is located, compiled and appended to the script from
      step #3</para></listitem>
@@ -444,7 +444,7 @@ The general flow of the project specific kernel tree construction is as follows:
      need to be applied to the base git repository to completely create the
      "bsp_name-kernel_type".</para></listitem>
 
-     <listitem><para>the base repository (normally kernel.org) is cloned, and the actions
+     <listitem><para>the base repository is cloned, and the actions
      listed in the meta-series are applied to the tree.</para></listitem>
 
      <listitem><para>the git repository is left with the desired branch checked out and any
@@ -470,7 +470,7 @@ history with additional deployment specific patches. Any additions to the
 kernel become an integrated part of the branches.
 </para>
 
-<note><para>It is key that feature descriptions indicate if any branches are
+<!-- <note><para>It is key that feature descriptions indicate if any branches are
       required, since the build system cannot automatically decide where a
       BSP should branch or if that branch point needs a name with
       significance. There is a single restriction enforced by the compilation
@@ -482,7 +482,7 @@ kernel become an integrated part of the branches.
       its branch from, with the right name, in its .scc files. The scc
       section describes the available branching commands in more detail.
     </para>
-</note>
+</note> -->
 
 <para>
 A summary of end user tree construction activities follow:
@@ -532,8 +532,7 @@ relevant values from the board template, and a kernel image is produced.
 The other thing that you will first see once you configure a kernel is that
 it will generate a build tree that is separate from your git source tree.
 This build dir will be called "linux-&lt;BSPname&gt;-&lt;kerntype&gt;-build" where
-kerntype is one of standard, cg``
-e, etc.  This functionality is done by making
+kerntype is one of standard kernel types.  This functionality is done by making
 use of the existing support that is within the kernel.org tree by default.
 </para>
 <para>
@@ -545,7 +544,7 @@ has their own separate build directory.
 </para>
     </section>
 
-    <section id='scc'>
+<!--    <section id='scc'>
         <title>Series &amp; Configuration Compiler (SCC)</title>
 <para>
 In early versions of the product, kernel patches were simply listed in a flat
@@ -672,9 +671,9 @@ Each feature description can use any of the following valid scc commands:
 </itemizedlist>
 
 </para>
-    </section>
+    </section> -->
 
-    <section id='kgit-tools'>
+<!--    <section id='kgit-tools'>
         <title>kgit Tools</title>
 <para>
 The kgit tools are responsible for constructing and maintaining the Wind
@@ -702,7 +701,7 @@ guilt is not required, but is provided as a convenience. Other utilities such
 as quilt, stgit, git or others can also be used to manipulate the git
 repository.
 </para>
-    </section>
+    </section> -->
 
     <section id='workflow-examples'>
         <title>Workflow Examples</title>
@@ -724,7 +723,7 @@ This section contains several workflow examples.
 A common question when working with a BSP/kernel is: "What changes have been applied to this tree?"
 </para>
 <para>
-In previous Yocto Project releases, there were a collection of directories that
+In some projects, where a collection of directories that
 contained patches to the kernel, those patches could be inspected, grep'd or
 otherwise used to get a general feeling for changes. This sort of patch
 inspection is not an efficient way to determine what has been done to the
@@ -981,10 +980,10 @@ preserved.  Note that new commit IDs will be generated upon reapplication,
 reflecting that the commit is now applied to an underlying commit with a
 different ID.
 </para>
-<para>
+<!--<para>
 See the "template patching" example for how to use the patches to
 automatically apply to a new kernel build.
-</para>
+</para> -->
                 </section>
 
                 <section id='export-internally-via-git'>
@@ -998,7 +997,7 @@ same change can then be pulled into a new kernel build at a later time using thi
 </literallayout>
 For example:
 <literallayout class='monospaced'>
-     &gt; push ssh://openlinux.windriver.com/pub/git/kernel-2.6.27 common_pc-standard:common_pc-standard
+     &gt; push ssh://git.mycompany.com/pub/git/kernel-2.6.27 common_pc-standard:common_pc-standard
 </literallayout>
 A pull request entails using "git request-pull" to compose an email to the
 maintainer requesting that a branch be pulled into the master repository, see
@@ -1136,14 +1135,15 @@ Once development has reached a suitable point in the second development
 environment, changes can either be exported as patches or imported into git
 directly (if a conversion/import mechanism is available for the SCM).
 </para>
-If changes are exported as patches, they can be placed in a template and
-automatically applied to the kernel during patching. See the template patch
-example for details.
 <para>
+If changes are exported as patches, they can be placed in a recipe and
+automatically applied to the kernel during patching.
 </para>
+<!--<para>
 If changes are imported directly into git, they must be propagated to the
 wrll-linux-2.6.27/git/default_kernel bare clone of each individual build
 to be present when the kernel is checked out.
+</para>
 <para>
 The following example illustrates one variant of this workflow:
 <literallayout class='monospaced'>
@@ -1161,11 +1161,11 @@ The following example illustrates one variant of this workflow:
      # will be checked out and built.
      &gt; make linux
 </literallayout>
-</para>
+</para> -->
             </section>
-        </section>
+      </section>
 
-        <section id='bsp-template-migration-from-2'>
+<!--        <section id='bsp-template-migration-from-2'>
             <title>BSP: Template Migration from 2.0</title>
 <para>
 The move to a git-backed kernel build system in 3.0 introduced a small new
@@ -1238,7 +1238,7 @@ That's it. Configure and build.
       if this naming convention isn't followed your feature description will
       not be located and a build error thrown.
 </para>
-        </section>
+        </section> -->
 
         <section id='bsp-creating-a-new-bsp'>
             <title>BSP: Creating a New BSP</title>
@@ -1326,7 +1326,7 @@ development.
 </para>
             </section> 
 
-            <section id='cloning-an-existing-bsp'>
+<!--            <section id='cloning-an-existing-bsp'>
                  <title>Cloning an Existing BSP</title>
 <para>
 Cloning an existing BSP from the shipped product is similar to the "from
@@ -1426,9 +1426,9 @@ In this technique the .scc file in the board template is slightly different
   This has the advantage of automatically picking up updates to the BSP
   and not duplicating any patches for a similar board.
 </para>
-            </section>     
+            </section>    --> 
 
-            <section id='bsp-bootstrapping'>
+  <!--          <section id='bsp-bootstrapping'>
                 <title>BSP: Bootstrapping</title>
 <para>
 The previous examples created the board templates and configured a build
@@ -1518,10 +1518,10 @@ Make changes, import patches, etc.
  the relevant branches and structures and the special build options are no
  longer required.
 </para>
-            </section>  
+            </section>  -->
         </section>
 
-        <section id='patching'>
+<!--        <section id='patching'>
              <title>Patching</title>
 <para>
 The most common way to apply patches to the kernel is via a template. 
@@ -1943,7 +1943,7 @@ This section shows an example of transforms:
 </literallayout>
 </para>
             </section>
-        </section>
+        </section> -->
 
         <section id='tip-dirty-string'>
             <title>"-dirty" String</title>
@@ -1995,7 +1995,7 @@ integrated and validated Yocto Project kernel.
 <para>
 The next few sections describe the process:
 </para>
-            <section id='creating-a-custom-kernel-layer'>
+   <!--         <section id='creating-a-custom-kernel-layer'>
                 <title>Creating a Custom Kernel Layer</title>
 <para>
 The custom kernel layer must have the following minimum
@@ -2015,9 +2015,9 @@ The kernel layer can optionally include an override to the base
 Yocto Project Linux BSP to inhibit the application of BSP specific
 patches. If a custom BSP is being used, this is not required.
 </para>
-            </section>
+            </section> -->
 
-            <section id='git-repo-of-the-transition-kernel'>
+     <!--       <section id='git-repo-of-the-transition-kernel'>
                 <title>git Repo of the Transition Kernel</title>
 <para>
 The kernel build system requires a base kernel repository to
@@ -2055,9 +2055,9 @@ place. Creating this repository is as simple as:
      &gt; git clone &dash;&dash;bare &lt;path to temp_kernel/temp_kernel default_kernel
 </literallayout>
 </para>
-            </section>
+            </section> -->
 
-            <section id='building-the-kernel'>
+      <!--      <section id='building-the-kernel'>
                 <title>Building the Kernel</title>
 <para>
 Once these prerequisites have been met, the kernel can be
@@ -2072,9 +2072,9 @@ indicated in the transition kernel's cache (or templates) applied.
 The kernel build will detect the non-Yocto Project base repo and 
 use the HEAD of the tree for the build.
 </para>
-            </section>
+            </section> -->
 
-            <section id='example'>
+       <!--     <section id='example'>
                 <title>Example</title>
 <para>
 This example creates a kernel layer to build the latest
@@ -2120,7 +2120,7 @@ non fatal warnings will be seen. They can be fixed by populating these
 files in the kernel-cache with valid hardware and non hardware config
 options.
 </para></note>
-            </section>
+            </section> -->
         </section>
     </section>
 
