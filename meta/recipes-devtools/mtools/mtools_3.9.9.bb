@@ -4,7 +4,8 @@
 
 DESCRIPTION="Mtools is a collection of utilities for accessing MS-DOS disks from Unix without mounting them."
 HOMEPAGE="http://mtools.linux.lu"
-LICENSE="GPL"
+LICENSE="GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=92b58ec77696788ce278b044d2a8e9d3"
 PR = "r4"
 
 #http://mtools.linux.lu/mtools-${PV}.tar.gz 
