@@ -24,6 +24,12 @@ if [ "x$0" = "x./poky-init-build-env" ]; then
 elif [ "x$BASH_SOURCE" = "x" ]; then
    echo "Error: You are not running a Bash shell. Please use Bash or add support for your shell to the init scripts"
 else
-   . `dirname $BASH_SOURCE`/scripts/poky-env-internal
+   OEROOT="`dirname $BASH_SOURCE`"
+   OEROOT=`readlink -f "$OEROOT"`
+   export OEROOT
+   . $OEROOT/scripts/poky-env-internal
+   $OEROOT/scripts/poky-setup-builddir
+   unset OEROOT
+   [ -n "$BUILDDIR" ] && cd $BUILDDIR
 fi
 

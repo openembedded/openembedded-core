@@ -1,0 +1,113 @@
+#!/bin/sh
+
+# Poky Build Enviroment Setup Script
+#
+# Copyright (C) 2006-2007 OpenedHand Ltd.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+if [ -z "$BUILDDIR" ]; then
+    echo >&2 "Error: The build directory (BUILDDIR) must be set!"
+    exit 1
+fi
+
+mkdir -p $BUILDDIR/conf
+
+if ! (test -d "$BUILDDIR"); then
+    echo >&2 "Error: The builddir ($BUILDDIR) does not exist!"
+    exit 1
+fi
+
+if ! (test -w "$BUILDDIR"); then
+    echo >&2 "Error: Cannot write to $BUILDDIR, perhaps try sourcing with a writable path? i.e. . poky-init-build-env ~/my-build"
+    exit 1
+fi
+
+cd "$BUILDDIR"
+
+# 
+# $POKYCONF can point to a directory for the template local.conf & bblayers.conf
+#
+if [ "x" != "x$POKYCONF" ]; then
+    if ! (test -d "$POKYCONF"); then
+	# Allow POKYCONF=meta-xyz/conf as a shortcut
+	if [ -d "$OEROOT/$POKYCONF" ]; then
+	    POKYCONF="$OEROOT/$POKYCONF"
+	fi
+	if ! (test -d "$POKYCONF"); then
+	    echo >&2 "Error: '$POKYCONF' must be a directory containing local.conf & bblayers.conf"
+	    return
+	fi
+    fi
+    POKYLAYERCONF="$POKYCONF/bblayers.conf"
+    POKYLOCALCONF="$POKYCONF/local.conf"
+fi
+
+if [ "x" = "x$POKYLOCALCONF" ]; then
+    POKYLOCALCONF="$OEROOT/meta/conf/local.conf.sample"
+fi
+if ! (test -r "$BUILDDIR/conf/local.conf"); then
+cat <<EOM
+You had no conf/local.conf file. Poky has created this configuration file for
+you with some default values. You may wish to edit it to use a different MACHINE
+(target hardware) or enable parallel build options to take advantage of multiple
+cores for example. See the file for more information as common configuration
+options are commented.
+
+Also, for more information see the Poky handbook:
+http://pokylinux.org/doc/poky-handbook.html
+
+EOM
+    cp -f $POKYLOCALCONF $BUILDDIR/conf/local.conf
+fi
+
+if [ "x" = "x$POKYLAYERCONF" ]; then
+    POKYLAYERCONF="$OEROOT/meta/conf/bblayers.conf.sample"
+fi
+if ! (test -r "$BUILDDIR/conf/bblayers.conf"); then
+cat <<EOM
+You had no conf/bblayers.conf file. Poky has created this configuration file for
+you with some default values. To add additional metadata layers into your
+configuration please add entries to this file.
+
+For more information see the Poky handbook:
+    http://pokylinux.org/doc/poky-handbook.html
+
+EOM
+
+    # Put the abosolute path to the layers in bblayers.conf so we can run
+    # bitbake without the init script after the first run
+    sed "s|##POKYBASE##|$OEROOT|g" $POKYLAYERCONF > $BUILDDIR/conf/bblayers.conf
+fi
+
+# Prevent disturbing a new GIT clone in same console
+unset POKYLOCALCONF
+unset POKYLAYERCONF
+
+cat <<EOM
+
+### Shell environment set up for Poky builds. ###
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    poky-image-minimal
+    poky-image-sato
+    meta-toolchain
+    meta-toolchain-sdk
+
+You can also run generated qemu images with a command like 'poky-qemu qemux86'
+
+EOM
