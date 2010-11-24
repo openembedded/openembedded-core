@@ -27,7 +27,7 @@ def get_perl_version(d):
 # Determine where the library directories are
 def perl_get_libdirs(d):
 	libdir = bb.data.getVar('libdir', d, 1)
-	libdirs = libdir + '/*/*/perl5'
+	libdirs = libdir + '/perl5'
 	return libdirs
 
 def is_target(d):
