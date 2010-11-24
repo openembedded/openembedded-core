@@ -10,6 +10,8 @@ SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 PR = "r0"
 
+SRC_URI += "file://doc_Makefile.patch"
+
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
 inherit autotools pkgconfig gnome
