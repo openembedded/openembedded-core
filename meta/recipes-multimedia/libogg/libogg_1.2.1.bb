@@ -1,3 +1,4 @@
+SUMMARY = "Ogg bitstream and framing libary"
 DESCRIPTION = "libogg is the bitstream and framing library \
 for the Ogg project. It provides functions which are \
 necessary to codec libraries like libvorbis."

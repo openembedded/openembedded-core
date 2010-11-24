@@ -1,3 +1,4 @@
+SUMMARY = "MusicBrainz Client"
 DESCRIPTION = "The MusicBrainz client is a library which can be built into other programs.  The library allows you to access the data held on the MusicBrainz server."
 HOMEPAGE = "http://musicbrainz.org"
 LICENSE = "LGPLv2.1+"

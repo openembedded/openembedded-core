@@ -1,3 +1,4 @@
+SUMMARY = "Free Lossless Audio Codec"
 DESCRIPTION = "FLAC stands for Free Lossless Audio Codec, an audio format similar to MP3, but lossless."
 HOMEPAGE = "http://flac.sourceforge.net/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=13478&atid=113478"

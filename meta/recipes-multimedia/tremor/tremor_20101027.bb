@@ -1,3 +1,4 @@
+SUMMARY = "Fixed-point decoder"
 DESCRIPTION = "tremor is a fixed point implementation of the vorbis codec."
 SECTION = "libs"
 PRIORITY = "optional"

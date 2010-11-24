@@ -1,3 +1,4 @@
+SUMMARY = "Theora Video Codec"
 DESCRIPTION = "The libtheora reference implementation provides the standard encoder and decoder under a BSD license."
 HOMEPAGE = "http://xiph.org/"
 BUGTRACKER = "https://trac.xiph.org/newticket"

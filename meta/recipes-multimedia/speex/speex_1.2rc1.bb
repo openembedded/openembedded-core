@@ -1,3 +1,4 @@
+SUMMARY = "Speech Audio Codec"
 DESCRIPTION = "Speex is an Open Source/Free Software patent-free audio compression format designed for speech."
 HOMEPAGE = "http://www.speex.org"
 SECTION = "libs"
