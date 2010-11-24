@@ -2,7 +2,7 @@ require xorg-lib-common.inc
 
 DESCRIPTION = "X11 Pixmap library"
 LICENSE = "X-BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=1e8b098093f3bb7a8fed64938e8e465e"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3e07763d16963c3af12db271a31abaa5"
 DEPENDS += "libxext libsm libxt"
 PR = "r3"
 PE = "1"
