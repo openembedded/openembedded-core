@@ -79,8 +79,9 @@ h2.subtitle {
 h2 {
   margin: 2em 0em 0.66em 0em;
   padding: 0.5em 0em 0em 0em;
-  font-size: 1.5em;
-  font-weight: normal;
+  font-size: 2em;
+  font-weight: bold;
+  color: black;
 }
 
 h3.subtitle {
@@ -93,29 +94,29 @@ h3.subtitle {
 h3 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 140%;
-  font-weight: normal;
+  font-size: 150%;
+  font-weight: bold;
+  color: black;
+  border-bottom: 2px solid black;
 }
 
 h4 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 120%;
-  font-weight: normal;
+  font-size: 130%;
+  border-bottom: 1px solid black;
 }
 
 h5 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 110.000%;
-  border-bottom: 1px solid black;
+  font-size: 120%;
 }
 
 h6 {
   margin: 1em 0em 0em 0em;
   padding: 1em 0em 0em 0em;
   font-size: 100%;
-  font-weight: bold;
 }
 
 .authorgroup {
