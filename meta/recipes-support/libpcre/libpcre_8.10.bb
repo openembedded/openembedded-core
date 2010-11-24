@@ -7,6 +7,7 @@ the POSIX-style functions is called pcreposix.h."
 SECTION = "devel"
 PR = "r4"
 LICENSE = "BSD"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=77f9b14fe707d0376d89bc162e6c54ff"
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcre/pcre-${PV}.tar.bz2 \
            file://pcre-cross.patch;patch=1"
 S = "${WORKDIR}/pcre-${PV}"
