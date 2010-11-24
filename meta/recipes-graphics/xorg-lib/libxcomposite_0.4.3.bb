@@ -3,7 +3,7 @@ DESCRIPTION = "X Composite extension library."
 require xorg-lib-common.inc
 
 LICENSE= "MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=90b90b60eb30f65fc9c2673d7cf59e24"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3f2907aad541f6f226fbc58cc1b3cdf1"
 
 DEPENDS += " compositeproto virtual/libx11 libxfixes libxext"
 PROVIDES = "xcomposite"

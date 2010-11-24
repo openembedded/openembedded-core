@@ -1,14 +1,16 @@
 This patch makes the build use its own Xcomposite.h over rather than an
 older Xcomposite.h that might already be installed in the staging dir.
 
---- libXcomposite-0.4.1/src/Makefile.am.orig	2010-06-27 15:50:05.000000000 +0800
-+++ libXcomposite-0.4.1/src/Makefile.am	2010-06-27 15:51:48.000000000 +0800
+Index: libXcomposite-0.4.3/src/Makefile.am
+===================================================================
+--- libXcomposite-0.4.3.orig/src/Makefile.am	2010-06-30 22:42:53.000000000 -0700
++++ libXcomposite-0.4.3/src/Makefile.am	2010-11-23 23:09:34.544322930 -0800
 @@ -19,7 +19,7 @@
  #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  #  PERFORMANCE OF THIS SOFTWARE.
  
--AM_CFLAGS = $(CWARNFLAGS) $(XCOMPOSITE_CFLAGS) $(X_CFLAGS)
-+AM_CFLAGS = -I$(top_srcdir)/include $(CWARNFLAGS) $(XCOMPOSITE_CFLAGS) $(X_CFLAGS)
+-AM_CFLAGS = $(CWARNFLAGS) $(XCOMPOSITE_CFLAGS) $(XFIXES_CFLAGS)
++AM_CFLAGS = -I$(top_srcdir)/include $(CWARNFLAGS) $(XCOMPOSITE_CFLAGS) $(XFIXES_CFLAGS)
  AM_CPPFLAGS = -I$(top_srcdir)/include
  
  lib_LTLIBRARIES = libXcomposite.la
