@@ -5,6 +5,8 @@ BUGTRACKER = "http://sourceforge.net/projects/pam/support"
 # /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time 
 # libpam-runtime-1.0.1 is GPLv2+), by openembedded
 LICENSE = "GPLv2+ | BSD"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ca0395de9a86191a078b8b79302e3083 \
+		    file://modules/pam_loginuid/pam_loginuid.c;endline=23;md5=db84479f04f9afb6dd4dd022a0143997"
 PR = "r1"
 
 DEPENDS = "bison flex"
