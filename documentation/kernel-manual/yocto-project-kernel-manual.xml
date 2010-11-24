@@ -360,7 +360,7 @@ kernel toolkit:
 </section> -->
 
 <section id='actions'>
-    <title>How to get things accomplished with the kernel</title>
+    <title>How to Get Things Accomplished with the Kernel</title>
     <para>
         This section describes how to accomplish tasks involving the kernel's tree structure. 
         The information covers the following:
@@ -1163,7 +1163,7 @@ The following example illustrates one variant of this workflow:
 </literallayout>
 </para> -->
             </section>
-      </section>
+        </section>
 
 <!--        <section id='bsp-template-migration-from-2'>
             <title>BSP: Template Migration from 2.0</title>
@@ -1240,7 +1240,140 @@ That's it. Configure and build.
 </para>
         </section> -->
 
-        <section id='bsp-creating-a-new-bsp'>
+
+
+        <section id='bsp-creating'>
+            <title>BSP: Creating</title>
+            <para>
+                This section provides an example for creating a BSP based on an existing, and hopefully, 
+                similar one.  
+                Follow these steps and keep in mind your particular situation and differences:
+            <orderedlist>
+                <listitem><para>Get a machine configuration file that matches your machine.</para>
+                <para>You can start with something in <filename>meta/conf/machine</filename>.  
+                Or, <filename>meta-emenlow/conf/machine</filename> has an example in its own layer.</para>
+                <para>The most up-to-date machines that are probably most similar to yours and that you might want 
+                to look at are <filename>meta/conf/machine/atom-pc.conf</filename> and 
+                <filename>meta-emenlow/conf/machine/emenlow.conf</filename>.  
+                Both of these were either just added or upgraded to use the Yocto Project kernel 
+                at <ulink url='http://git.pokylinux.org/cgit/cgit.cgi/linux-2.6-windriver/'></ulink>.
+                The main difference between them is that "emenlow" is in its own layer.
+                It is in its own layer because it needs extra machine-specific packages such as its 
+                own video driver and other supporting packages.  
+                The "atom-pc" is simpler and does not need any special packages - everything it needs can 
+                be specified in the configuration file.  
+                The "atom-pc" machine also supports all of Asus eee901, Acer Aspire One, Toshiba NB305, 
+                and the Intel&reg; Embedded Development Board 1-N450 with no changes.</para>
+                <para>If you want to make minor changes to support a slightly different machine, you can
+                create a new configuration file for it and add it alongside the others.
+                You might consider keeping the common stuff separate and including it.</para>
+                <para>Similarly, you can also use multiple configuration files for different machines even 
+                if you do it as a separate layer like meta-emenlow.</para>
+                <para>As an example consider this:
+                <itemizedlist>
+                    <listitem><para>Copy meta-emenlow</para></listitem>
+                    <listitem><para>Fix or remove anything you do not need.  
+                    For this example the only thing left was the kernel directory with a linux-yocto_git.bbappend
+                    file (linux-yocto is the kernel listed in 
+                    <filename>meta-crownbay/conf/machine/crownbay.conf</filename>.
+                    Finally, a new entry to the <filename>build/donf/bblayers.conf</filename> was added so the 
+                    new layer could be found by Bitbake.</para></listitem>
+                </itemizedlist>
+                </para></listitem>
+                <listitem><para>Get an image with a working kernel built.</para>
+                <para>For the kernel to compile successfully, you need to create a branch in the git repository
+                specifically named for your machine.  
+                So first create a bare clone of the Yocto Project git repository, and then create a 
+                local clone of that:
+                <literallayout class='monospaced'>
+     $ git clone &dash;&dash;bare git://git.pokylinux.org/linux-2.6-windriver.git
+     linux-2.6-windriver.git
+     $ git clone linux-2.6-windriver.git linux-2.6-windriver
+                </literallayout>
+                </para>
+                <para>Now create a branch in the local clone and push it to the bare clone:
+                <literallayout class='monospaced'>
+     $ git checkout -b crownbay-standard origin/standard $ git push origin crownbay-standard:crownbay-standard
+                </literallayout>
+                </para>
+                <para>At this point, your git tree should be set up well enough to compile.</para></listitem>
+                <listitem><para>Point the build at the new kernel git tree.</para>
+                <para>You can do this by commenting out the SRC_URI variable in 
+                <filename>meta/recipes-kernel/linux/linux-yocto_git.bb</filename> and using a SRC_URI 
+                that points to your new bare git tree.
+                You should also be able to do this in <filename>linux-yocto_git.bbappend</filename> in the layer:
+                <literallayout class='monospaced'>
+     # To use a staged, on-disk bare clone of a Wind River Kernel, use a variant of the 
+     # below SRC_URI = "git://///path/to/kernel/default_kernel.git;fullclone=1"
+     #
+     SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${KBRANCH};name=machine
+\
+     git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
+                </literallayout>
+                </para>
+                <para>After doing that, select the machine in <filename>build/conf/local.conf</filename>:
+                <literallayout class='monospaced'>
+      #
+      MACHINE ?= "crownbay"
+      #
+                </literallayout>
+                </para>
+                <para>You should now be able to build and boot an image with the new kernel:
+                <literallayout class='monospaced'>
+     $ bitbake poky-image-sato-live
+                </literallayout>
+                </para>
+                <para>Of course, that will give you a kernel with the default config, which is probably 
+                not what you want.
+                If you just want to set some kernel config options, you can do that by putting them in a files.
+                For example inserting the following into some <filename>.cfg</filename> file:
+                <literallayout class='monospaced'>
+     CONFIG_NETDEV_1000=y
+     CONFIG_E1000E=y
+                </literallayout>
+                </para>
+                <para>And, another <filename>.cfg</filename> file would contain:
+                <literallayout class='monospaced'>
+     CONFIG_LOG_BUF_SHIFT=18
+
+     http://git.pokylinux.org/cgit/cgit.cgi/linux-2.6-windriver/
+
+     SRC_URI_append_crownbay = " file://some.cfg \
+                                  file://other.cfg \
+                               "
+                </literallayout>
+                </para>
+                <para>You could also add these directly to the git repo's wrs_meta branch as well.
+                However, the former method is probably easier.</para></listitem>
+                <listitem><para>If you're also adding patches to the kernel, you can do the same thing.
+                Put your patches in the SRC_URI as well (plus .cfg for their kernel config options if needed).</para>
+                <para>Practically speaking, to generate the patches, you'd go to the source in the build tree:
+                <literallayout class='monospaced'>
+     build/tmp/work/crownbay-poky-linux/linux-yocto-2.6.34+git0+d1cd5c80ee97e81e130be8c3de3965b770f320d6_0+
+0431115c9d720fee5bb105f6a7411efb4f851d26-r13/linux
+                </literallayout>
+                </para>
+                <para>Then, modify the code there, using quilt to save the changes, and recompile 
+                (bitbake -c compile -f) 
+                until it works.</para></listitem>
+                <listitem><para>Once you have the final patch from quilt, copy it to the 
+                SRC_URI location, and it should be
+                applied the next time you do a clean build.  
+                Of course, since you have a branch for the BSP in git, it would be better to put it there instead.
+                For example, in this case, commit the patch to the crownbay-standard branch, and during the 
+                next build it will be applied from there.</para></listitem>
+            </orderedlist>
+            </para>
+        </section>
+
+
+
+
+
+
+
+
+<!--        <section id='bsp-creating-a-new-bsp'>
             <title>BSP: Creating a New BSP</title>
 <para>
 Although it is obvious that the structure of a new BSP uses the migrated
@@ -1260,7 +1393,7 @@ because the board template files are required to configure a project/build
 and create the necessary environment to begin working directly with the
 kernel. If it is desired to start immediately with kernel development and
 then add LDAT bindings, see the "bootstrapping a BSP" section.
-</para>
+</para> 
             <section id='creating-from-scratch'>
                 <title>Creating the BSP from Scratch</title>
 <para>
@@ -1324,7 +1457,7 @@ Now you can configure a kernel:
 You now have a kernel tree, which is branched and has no patches, ready for
 development.
 </para>
-            </section> 
+            </section>  -->
 
 <!--            <section id='cloning-an-existing-bsp'>
                  <title>Cloning an Existing BSP</title>
@@ -1518,8 +1651,8 @@ Make changes, import patches, etc.
  the relevant branches and structures and the special build options are no
  longer required.
 </para>
-            </section>  -->
-        </section>
+            </section>  
+        </section> -->
 
 <!--        <section id='patching'>
              <title>Patching</title>
@@ -1992,9 +2125,9 @@ This creates a transition kernel layer to evaluate functionality
 of some other kernel with the goal of easing transition to an
 integrated and validated Yocto Project kernel.
 </para>
-<para>
+<!--<para>
 The next few sections describe the process:
-</para>
+</para> -->
    <!--         <section id='creating-a-custom-kernel-layer'>
                 <title>Creating a Custom Kernel Layer</title>
 <para>
