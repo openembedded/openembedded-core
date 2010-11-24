@@ -6,7 +6,7 @@ BUGTRACKER = "n/a"
 # licensed as GPL v2, but the source codes of ustctl/libustcmd/ustd have a
 # LGPLv2.1+ header; the files in snprintf/ have a BSD header.
 LICENSE = "LGPV2.1+ & BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=7d50af17ae17a349e5a8b77852e6395b \
+LIC_FILES_CHKSUM = "file://COPYING;md5=e647752e045a8c45b6f583771bd561ef \
                     file://ustctl/ustctl.c;endline=16;md5=eceeaab8a5574f24d62f7950b9d1adf4 \
                     file://snprintf/various.h;endline=31;md5=89f2509b6b4682c4fc95255eec4abe44"
 
