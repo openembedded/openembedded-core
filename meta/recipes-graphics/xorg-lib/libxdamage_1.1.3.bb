@@ -3,7 +3,7 @@ DESCRIPTION = "X11 damaged region extension library"
 require xorg-lib-common.inc
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=10c8c88d1faea6d7c3a82d54c2b8fd2b"
+LIC_FILES_CHKSUM = "file://COPYING;md5=9fe101f30dd24134cf43146863241868"
 
 DEPENDS += "damageproto libxfixes"
 PROVIDES = "xdamage"
