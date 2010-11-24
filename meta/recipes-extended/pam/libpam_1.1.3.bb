@@ -1,22 +1,26 @@
+SUMMARY = "Linux-PAM (Pluggable Authentication Modules)"
 DESCRIPTION = "Linux-PAM (Pluggable Authentication Modules for Linux), Basically, it is a flexible mechanism for authenticating users"
 HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
 BUGTRACKER = "http://sourceforge.net/projects/pam/support"
-# PAM allows dual licensed under GPL and BSD.
+SECTION = "base"
+# PAM is dual licensed under GPL and BSD.
 # /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time 
 # libpam-runtime-1.0.1 is GPLv2+), by openembedded
 LICENSE = "GPLv2+ | BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ca0395de9a86191a078b8b79302e3083 \
-		    file://modules/pam_loginuid/pam_loginuid.c;endline=23;md5=db84479f04f9afb6dd4dd022a0143997"
-PR = "r1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ca0395de9a86191a078b8b79302e3083"
+
+PR = "r0"
 
 DEPENDS = "bison flex"
 RDEPENDS_${PN}-runtime = "libpam pam-plugin-deny pam-plugin-permit pam-plugin-warn pam-plugin-unix"
 RRECOMMENDS_${PN} = "libpam-runtime"
 
 SRC_URI = "http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-${PV}.tar.bz2 \
-           file://disable_crossbinary.patch \
            file://99_pam \
            file://pam.d/*"
+
+SRC_URI[md5sum] = "6db7fcb5db6253350e3a4648ceac40e7"
+SRC_URI[sha256sum] = "17b268789b935a76e736a1150210dd12f156972973e79347668f828d43632652"
 
 EXTRA_OECONF = "--with-db-uniquename=_pam \
                 --includedir=${includedir}/security \
