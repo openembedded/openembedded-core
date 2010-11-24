@@ -3,7 +3,7 @@ DESCRIPTION = "X11 toolkit intrinsics library"
 require xorg-lib-common.inc
 
 LICENSE = "MIT & MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0629f81eb944a4317bc6fe134614769f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=917881a51be1013bee30d7f3f5ba9f55"
 
 
 DEPENDS += "libsm virtual/libx11 kbproto libxdmcp"
