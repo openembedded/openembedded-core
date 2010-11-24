@@ -1,3 +1,4 @@
+SUMMARY = "System-Wide Profiler"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
 HOMEPAGE = "http://oprofile.sourceforge.net/news/"

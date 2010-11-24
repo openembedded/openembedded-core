@@ -1,3 +1,4 @@
+SUMMARY = "Device Tree Compiler"
 DESCRIPTION = "The Device Tree Compiler is a tool used to manipulate the Open-Firmware-like device tree used by PowerPC kernels."
 SECTION = "bootloader"
 PRIORITY = "optional"

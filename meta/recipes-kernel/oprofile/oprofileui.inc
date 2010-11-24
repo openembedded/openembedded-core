@@ -1,3 +1,4 @@
+SUMMARY = "User Interface for the System-Wide Profiler"
 DESCRIPTION = "User interface for the OProfile tool"
 HOMEPAGE = "http://labs.o-hand.com/oprofileui/"
 BUGTRACKER = "http://bugzilla.o-hand.com/"

@@ -1,4 +1,5 @@
 SECTION = "base"
+SUMMARY = "Kernel module utilities"
 DESCRIPTION = "These utilities are intended to make a Linux modular kernel \
 manageable for all users, administrators and distribution maintainers."
 LICENSE = "GPLv2"

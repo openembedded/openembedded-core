@@ -1,3 +1,4 @@
+SUMMARY = "Power usage tool"
 DESCRIPTION = "PowerTOP, a tool that helps you find what software is using the most power."
 HOMEPAGE = "http://www.lesswatts.org/"
 BUGTRACKER = "http://bugzilla.lesswatts.org/"

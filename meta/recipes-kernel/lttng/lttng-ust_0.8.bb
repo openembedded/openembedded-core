@@ -1,3 +1,4 @@
+SUMMARY = "Linux Trace Toolkit Userspace Tracer"
 DESCRIPTION = "The LTTng Userspace Tracer (UST) is a library accompanied by a set of tools to trace userspace code"
 HOMEPAGE = "http://lttng.org/ust"
 BUGTRACKER = "n/a"

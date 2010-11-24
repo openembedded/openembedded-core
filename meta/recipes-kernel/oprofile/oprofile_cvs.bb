@@ -1,6 +1,7 @@
 PV = "0.9.4+cvs${SRCDATE}"
 PR = "r0"
 SECTION = "devel"
+SUMMARY = "System-Wide Profiler"
 DESCRIPTION = "OProfile is a system-wide profiler for Linux systems, capable \
 of profiling all running code at low overhead."
 LICENSE = "GPL"

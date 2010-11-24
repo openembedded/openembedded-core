@@ -1,3 +1,4 @@
+SUMMARY = "Linux Trace Toolkit Viewer"
 DESCRIPTION = "The Linux trace toolkit is a suite of tools designed to \
 extract program execution details from the Linux operating system and  \
 interpret them."
