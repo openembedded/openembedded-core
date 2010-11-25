@@ -2,6 +2,8 @@ require xf86-video-common.inc
 
 DESCRIPTION = "X.Org X server -- Intel i8xx, i9xx display driver"
 
+LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
+
 EXTRA_OECONF += "--disable-xvmc"
 
 DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
