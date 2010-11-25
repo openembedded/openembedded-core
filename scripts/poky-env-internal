@@ -31,7 +31,7 @@ if [ "x$BDIR" = "x" ]; then
         BDIR=`readlink -f "$1"`
     fi
 fi
-if [[ "$BDIR" = /* ]] ; then
+if expr "$BDIR" : '/.*' > /dev/null ; then
     BUILDDIR="$BDIR"
 else
     BUILDDIR="`pwd`/$BDIR"

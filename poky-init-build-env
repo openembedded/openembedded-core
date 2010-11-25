@@ -18,13 +18,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
+#
+# Normally this is called as '. ./poky-init-buildenv builddir'
+#
+# This works in most shells (not dash), but not all of them pass arg1 when
+# being sourced.   To workaround the shell limitation use "set arg1" prior 
+# to sourcing this script.
+#
 if [ "x$0" = "x./poky-init-build-env" ]; then
    echo "Error: This script needs to be sourced. Please run as '. ./poky-init-build-env'"
-elif [ "x$BASH_SOURCE" = "x" ]; then
-   echo "Error: You are not running a Bash shell. Please use Bash or add support for your shell to the init scripts"
 else
-   OEROOT="`dirname $BASH_SOURCE`"
+   if [ -n "$BASH_SOURCE" ]; then
+      OEROOT="`dirname $BASH_SOURCE`"
+   else
+      OEROOT="`pwd`"
+   fi
    OEROOT=`readlink -f "$OEROOT"`
    export OEROOT
    . $OEROOT/scripts/poky-env-internal
