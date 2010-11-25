@@ -9,7 +9,7 @@ if [ "x$D" != "x" ]; then
 fi
 
 # Update the pixbuf loaders in case they haven't been registered yet
-gdk-pixbuf-query-loaders > /etc/gtk-2.0/gdk-pixbuf.loaders
+GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-loaders --update-cache
 
 for icondir in /usr/share/icons/* ; do
     if [ -d $icondir ] ; then
