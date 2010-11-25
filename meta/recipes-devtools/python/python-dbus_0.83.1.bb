@@ -2,6 +2,7 @@ DESCRIPTION = "Python bindings for DBus, a socket-based message bus system for i
 SECTION = "devel/python"
 HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f5612614133e9a2f2dad527d97554670"
 DEPENDS = "expat dbus dbus-glib virtual/libintl python-pyrex-native"
 PR = "ml0"
 
