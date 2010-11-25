@@ -1,12 +1,9 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 
-<article id='intro'>
-   <imagedata fileref="figures/yocto-project-transp.png" width="6in" depth="1in" align="right" scale="25" />
+<chapter id='kernel'>
 
-<section id='fake-title'>
-    <title>Yocto Project Kernel Architecture and Use Manual</title>
-</section>
+<title>Yocto Project Kernel Architecture and Use Manual</title>
 
 <section id='introduction'>
     <title>Introduction</title>
@@ -122,7 +119,7 @@
             The following figure represents the overall place the Yocto Project kernel fills.
         </para>
         <para>
-        <imagedata fileref="figures/kernel-big-picture.png" width="6in" depth="4in" align="center" scale="100" />
+        <imagedata fileref="figures/kernel-big-picture.png" width="6in" depth="6in" align="center" scale="100" />
         </para>
         <para>
             In the figure the ultimate source for the Yocto Project kernel is a released kernel 
@@ -209,7 +206,7 @@
                 The following illustration shows the conceptual Yocto Project kernel.
             </para>
             <para>
-                <imagedata fileref="figures/kernel-architecture-overview.png" width="6in" depth="4in" align="center" scale="100" />
+                <imagedata fileref="figures/kernel-architecture-overview.png" width="6in" depth="7in" align="center" scale="100" />
             </para>
             <para>
                 In the illustration, the "kernel.org Branch Point" marks the specific spot (or release) from 
@@ -2302,7 +2299,7 @@ options.
 
 </section>
 
-</article>
+</chapter>
 <!--
 vim: expandtab tw=80 ts=4
 -->
