@@ -60,12 +60,8 @@ python() {
 }
 
 do_generate_swabber_report () {
-  echo "Updating host data"
 
-  # Ensure we have the very latest host information
-  if [ "${NOSWABBERUPDATE}" != "1" ]; then
-     update_distro ${HOST_DATA}
-  fi
+  update_distro ${HOST_DATA}
 
   # Swabber can't create the directory for us
   mkdir -p ${SWABBER_REPORT}
