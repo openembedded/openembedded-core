@@ -1,6 +1,8 @@
 require xf86-driver-common.inc
 
 DESCRIPTION = "X.Org X server -- OMAP display driver"
+LICENSE = "MIT-X"
+LIC_FILES_CHKSUM = "file://src/omapfb-driver.c;beginline=1;endline=30;md5=a44c2a37e04d1c2c5f0313afb493f833"
 DEPENDS += "virtual/libx11"
 
 PE = "1"
