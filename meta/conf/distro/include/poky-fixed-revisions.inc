@@ -6,7 +6,7 @@ PREFERRED_VERSION_elfutils ?= "0.89"
 PREFERRED_VERSION_hal ?= "0.5.14"
 PREFERRED_VERSION_hal-info ?= "20091130"
 PREFERRED_VERSION_udev ?= "158"
-PREFERRED_VERSION_wpa-supplicant ?= "0.6.10"
+PREFERRED_VERSION_wpa-supplicant ?= "0.7.3"
 
 # Force the python versions in one place
 PYTHON_BASEVERSION ?= "2.6"
