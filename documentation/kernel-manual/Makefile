@@ -24,7 +24,7 @@ html:
 #       See http://www.sagehill.net/docbookxsl/HtmlOutput.html 
 
 #	xsltproc $(XSLTOPTS) -o yocto-project-qs.html $(XSL_XHTML_URI) yocto-project-qs.xml
-	xsltproc $(XSLTOPTS) -o yocto-project-kernel-manual.html yocto-project-kernel-manual-customization.xsl kernel-manual.xml
+	xsltproc $(XSLTOPTS) -o kernel-manual.html yocto-project-kernel-manual-customization.xsl kernel-manual.xml
 
 tarball: html
 	tar -cvzf yocto-project-kernel-manual.tgz yocto-project-kernel-manual.html style.css figures/kernel-title.png figures/kernel-big-picture.png figures/kernel-architecture-overview.png
@@ -32,7 +32,7 @@ tarball: html
 validate:
 	xmllint --postvalid --xinclude --noout yocto-project-kernel-manual.xml
 
-OUTPUTS = yocto-project-kernel-manual.tgz yocto-project-kernel-manual.html yocto-project-kernel-manual.pdf
+OUTPUTS = yocto-project-kernel-manual.tgz yocto-project-kernel-manual.html kernel-manual.pdf
 SOURCES = *.png *.xml *.css
 
 publish:
