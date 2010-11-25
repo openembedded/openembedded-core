@@ -1,7 +1,9 @@
 DESCRIPTION = "QEMU i386 OpenGL passtrough"
 HOMEPAGE = "http://savannah.nongnu.org/projects/qemugl"
 SECTION = "x11/drivers"
-LICENSE = "GPL"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://opengl_client.c;beginline=4;endline=23;md5=a7dbe915be5fb5df8fd496f348ed9a05 \
+                    file://parse_mesa_get_c.c;befinline=4;endline=23;md5=a55f258f32720c9565a425a3956bcb5e"
 
 DEPENDS = "virtual/libx11 xproto glproto libxfixes"
 
