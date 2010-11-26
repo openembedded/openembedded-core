@@ -1,7 +1,10 @@
-SECTION = "base"
 DESCRIPTION = "A daemon for delivering ACPI events."
-LICENSE="GPL"
+HOMEPAGE = "http://sourceforge.net/projects/acpid/"
+BUGTRACKER = "http://sourceforge.net/tracker/?group_id=33140&atid=407341"
 
+LICENSE="GPLv2+"
+
+SECTION = "base"
 SRC_URI = "${SOURCEFORGE_MIRROR}/acpid/acpid-${PV}.tar.gz \
            file://init"
 
