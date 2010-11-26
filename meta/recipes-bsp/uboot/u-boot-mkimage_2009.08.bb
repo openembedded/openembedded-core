@@ -1,5 +1,6 @@
 DESCRIPTION = "U-boot bootloader mkimage tool"
-LICENSE = "GPL"
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4c6cde5df68eff615d36789dc18edd3b"
 SECTION = "bootloader"
 
 PR = "r1"
