@@ -2,11 +2,11 @@ We are unable to run code at configure time in a cross environemnt, but as we
 control the build we can be fairly certain this dependency is met.
 
 JL 05/07/10
-Index: beecrypt-4.1.2/configure.ac
+Index: beecrypt-4.2.1/configure.ac
 ===================================================================
---- beecrypt-4.1.2.orig/configure.ac	2004-12-21 11:37:56.000000000 +0000
-+++ beecrypt-4.1.2/configure.ac	2010-07-05 16:09:50.390083494 +0100
-@@ -243,32 +243,6 @@
+--- beecrypt-4.2.1.orig/configure.ac	2010-11-26 17:12:25.000000000 +0800
++++ beecrypt-4.2.1/configure.ac	2010-11-26 17:12:30.000000000 +0800
+@@ -292,32 +292,6 @@
  # Predefines and checks for C++ API support
  AH_TEMPLATE([CPPGLUE],[Define to 1 if you want to include the C++ code])
  
@@ -36,6 +36,6 @@ Index: beecrypt-4.1.2/configure.ac
 -  AC_LANG_POP(C)
 -fi
 -
+ AM_CONDITIONAL([WITH_CPLUSPLUS],[test "$ac_with_cplusplus" = yes])
+ 
  if test "$ac_with_cplusplus" = yes ; then
-   AC_DEFINE([CPPGLUE],1)
- fi

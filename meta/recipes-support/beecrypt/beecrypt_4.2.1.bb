@@ -5,15 +5,16 @@
 DESCRIPTION="Beecrypt is a general-purpose cryptography library."
 HOMEPAGE="http://sourceforge.net/projects/beecrypt"
 SRC_URI="${SOURCEFORGE_MIRROR}/beecrypt/beecrypt-${PV}.tar.gz \
-	 file://x64fix.patch \
 	 file://disable-icu-check.patch \
 	 file://fix-security.patch"
 
-SRC_URI[md5sum] = "820d26437843ab0a6a8a5151a73a657c"
-SRC_URI[sha256sum] = "f29eb246947677a9e7870521e3d576fd0d91a7072210a4404ed137e40cfc18fd"
-LICENSE = "GPLv2&LGPLv2.1"
+SRC_URI[md5sum] = "8441c014170823f2dff97e33df55af1e"
+SRC_URI[sha256sum] = "286f1f56080d1a6b1d024003a5fa2158f4ff82cae0c6829d3c476a4b5898c55d"
+LICENSE = "GPLv2 & LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9894370afd5dfe7d02b8d14319e729a1 \
-	            file://COPYING.LIB;md5=dcf3c825659e82539645da41a7908589"
+                    file://COPYING.LIB;md5=dcf3c825659e82539645da41a7908589 \
+                    file://include/beecrypt/beecrypt.h;endline=20;md5=47a93eef539aac237eef86297a4d71c1"
+
 DEPENDS = "icu"
 
 PR = "r0"
@@ -21,6 +22,6 @@ PR = "r0"
 inherit autotools
 acpaths=""
 
-EXTRA_OECONF="--with-arch=${TARGET_ARCH} --without-python --enable-shared --enable-static"
+EXTRA_OECONF="--without-python --enable-shared --enable-static --disable-openmp"
 
 BBCLASSEXTEND = "native"
