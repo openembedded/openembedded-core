@@ -4,7 +4,7 @@ SECTION = "base"
 PRIORITY = "required"
 PR = "r65"
 LICENSE = "GPLv2"
-
+LIC_FILES_CHKSUM = "file://licenses/GPL-2;md5=94d55d512a9ba36caa9b7df079bae19f"
 SRC_URI = "file://rotation \
            file://nsswitch.conf \
            file://motd \
