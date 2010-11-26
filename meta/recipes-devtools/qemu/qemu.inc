@@ -1,6 +1,6 @@
 DESCRIPTION = "open source processor emulator"
 HOMEPAGE = "http://qemu.org"
-LICENSE = "GPL"
+LICENSE = "GPLv2 & LGPLv2.1"
 DEPENDS = "zlib"
 
 EXTRA_OECONF = "--target-list=arm-linux-user,arm-softmmu,i386-linux-user,i386-softmmu,x86_64-linux-user,x86_64-softmmu,mips-linux-user,mips-softmmu,ppc-linux-user,ppc-softmmu,mipsel-linux-user --disable-werror --disable-vnc-tls"
