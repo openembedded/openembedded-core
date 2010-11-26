@@ -1,6 +1,8 @@
 SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
-LICENSE = "GPL"
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://matchbox/core/mb-wm.h;endline=21;md5=1b1d328a527906350ea7ce7ab1bb7564"
+
 DEPENDS = "virtual/libx11 libxext libxrender startup-notification expat gconf pango libxdamage libxcomposite gtk+"
 
 PV = "0.0+svnr${SRCREV}"
