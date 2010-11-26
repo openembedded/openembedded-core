@@ -1,5 +1,8 @@
 require tidy.inc
 
+LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
+                    file://tidy/tidy.h;endline=21;md5=ac342e7aac55849bf0755d79967fa3e8"
+
 PV = "0.1.0+git${SRCPV}"
 PR = "r7"
 
