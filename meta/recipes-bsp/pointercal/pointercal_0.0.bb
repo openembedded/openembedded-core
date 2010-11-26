@@ -2,8 +2,11 @@ DESCRIPTION = "Touchscreen calibration data"
 SECTION = "base"
 PR = "r11"
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4b5fcfc87fb615860d398b5e38685edf"
 
-SRC_URI = "file://pointercal"
+SRC_URI = "file://pointercal \
+           file://COPYING"
+
 S = "${WORKDIR}"
 
 do_install() {
