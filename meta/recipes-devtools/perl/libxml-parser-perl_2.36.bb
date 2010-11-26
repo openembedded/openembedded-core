@@ -1,5 +1,6 @@
 SECTION = "libs"
 LICENSE = "Artistic"
+LIC_FILES_CHKSUM = "file://README;endline=6;md5=fa7bbbd54d37d6ecf4ef33b7c98b9cd7"
 DEPENDS += "expat expat-native"
 
 SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Parser-${PV}.tar.gz"
