@@ -170,3 +170,10 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # out if that is desired
 NO32LIBS = "1"
 
+# If you do not use (or have installed) gnome-terminal you will need to
+# uncomment these variables and set them to the terminal you wish to use
+# when resolving patches which cannot be applied
+# Supported shell prefixes for *_TERMCMD and *_TERMCMDRUN ARE:
+# GNOME, SCREEN, XTERM and KONSOLE
+#TERMCMD = "${KONSOLE_TERMCMD}"
+#TERMCMDRUN = "${KONSOLE_TERMCMDRUN}"

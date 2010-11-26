@@ -139,6 +139,12 @@ def check_sanity(e):
 		missing = missing.rstrip(',')
 		messages = messages + "Please install following missing utilities: %s\n" % missing
 
+	# Ensure we have the binary for TERMCMD, as when patch application fails the error is fairly intimidating
+	termcmd = data.getVar("TERMCMD", e.data, True)
+	term = termcmd.split()[0]
+	if not check_app_exists(term, e.data):
+	   messages = messages + "The console for use in patch error resolution is not available, please install %s or set TERMCMD and TERMCMDRUN (as documented in local.conf).\n" % term
+
 	if os.path.basename(os.readlink('/bin/sh')) == 'dash':
 		messages = messages + "Using dash as /bin/sh causes various subtle build problems, please use bash instead (e.g. 'dpkg-reconfigure dash' on an Ubuntu system.\n"
 
