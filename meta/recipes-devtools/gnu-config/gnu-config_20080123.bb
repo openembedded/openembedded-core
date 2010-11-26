@@ -1,6 +1,7 @@
 DESCRIPTION = "gnu-configize"
 SECTION = "devel"
-LICENSE = "GPL"
+LICENSE = "GPLv1+"
+LIC_FILES_CHKSUM = "file://config.guess;endline=39;md5=a089987af4a25cb0419d1c2fd6d495e3"
 DEPENDS = ""
 INHIBIT_DEFAULT_DEPS = "1"
 
