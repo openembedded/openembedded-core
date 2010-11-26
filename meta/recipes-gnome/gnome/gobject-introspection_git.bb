@@ -6,7 +6,8 @@ SRC_URI_virtclass-native = "git://git.gnome.org/gobject-introspection;protocol=g
                             file://pathfix.patch;patch=1"
 
 LICENSE = "GPLv2+ & LGPLv2+"
-
+LIC_FILES_CHKSUM = "file://COPYING.tools;md5=94d55d512a9ba36caa9b7df079bae19f \
+		    file://COPYING.lib;md5=3bf50002aefd002f49e7bb854063f7e7"
 PV = "0.0+git${SRCREV}"
 PR = "r3"
 
