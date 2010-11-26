@@ -1,5 +1,6 @@
 DESCRIPTION = "This software provides support for the Tag Image File Format (TIFF)"
 LICENSE = "${PN}"
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=34da3db46fab7501992f9615d7e158cf"
 HOMEPAGE = "http://www.remotesensing.org/libtiff/"
 DEPENDS = "zlib jpeg lzo"
 PR = "r2"
