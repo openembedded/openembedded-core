@@ -5,7 +5,8 @@ DEPENDS = "gtk+ libglade python-pycairo python-pygobject"
 RDEPENDS = "python-shell python-pycairo python-pygobject"
 PROVIDES = "python-pygtk2"
 SRCNAME = "pygtk"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2.1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
 PR = "ml8.3"
 
 SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.17/${SRCNAME}-${PV}.tar.bz2 \
