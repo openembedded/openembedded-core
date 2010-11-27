@@ -13,7 +13,7 @@ PROVIDES = "virtual/libgl"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--disable-glu \
+EXTRA_OECONF = "--enable-glu \
                 --disable-glw \
                 --disable-glut \
                 --enable-glx-tls"
@@ -21,4 +21,7 @@ EXTRA_OECONF = "--disable-glu \
 # Multiple virtual/gl providers being built breaks staging
 EXCLUDE_FROM_WORLD = "1"
 
+PACKAGES =+ "libglu libglu-dev"
 
+FILES_libglu = "${libdir}/libGLU.so.*"
+FILES_libglu-dev = "${libdir}/libGLU.* ${includedir}/GL/glu*.h"
