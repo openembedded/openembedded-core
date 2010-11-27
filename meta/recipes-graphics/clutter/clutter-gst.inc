@@ -1,6 +1,6 @@
 DESCRIPTION = "Clutter GStreamer"
 HOMEPAGE = "http://www.clutter-project.org/"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2+"
 
 DEPENDS = "clutter-1.0 gstreamer gst-plugins-base"
 
