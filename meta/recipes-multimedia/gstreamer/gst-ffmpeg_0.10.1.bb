@@ -1,7 +1,10 @@
 DESCRIPTION = "FFmpeg-based GStreamer plug-in"
 SECTION = "multimedia"
 PRIORITY = "optional"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2+ & GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+                    file://gst-libs/ext/ffmpeg/libavcodec/libpostproc/postprocess.h;beginline=1;endline=17;md5=a0c398349079dbd0ce70f03de8bc193a \
+                    file://gst-libs/ext/ffmpeg/ffserver.c;beginlin=1;endline=18;md5=49bde48d6d5c631f6f49d74ed491ea08"
 HOMEPAGE = "http://www.gstreamer.net/"
 DEPENDS = "gstreamer zlib gst-plugins-base"
 PR = "r4"
