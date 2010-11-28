@@ -1,15 +1,14 @@
-EXTRA_OEMAKE[export] = "1"
-
 do_devshell[dirs] = "${S}"
 do_devshell[nostamp] = "1"
 
-export DISPLAY
-export DBUS_SESSION_BUS_ADDRESS
-export XAUTHORITY ?= "${HOME}/.Xauthority"
-export FAKEROOTENV
+XAUTHORITY ?= "${HOME}/.Xauthority"
 
 devshell_do_devshell() {
+	export DISPLAY='${DISPLAY}'
+	export DBUS_SESSION_BUS_ADDRESS='${DBUS_SESSION_BUS_ADDRESS}'
+	export XAUTHORITY='${XAUTHORITY}'
 	export TERMWINDOWTITLE="Bitbake Developer Shell"
+	export EXTRA_OEMAKE='${EXTRA_OEMAKE}'
 	${TERMCMD}
 	if [ $? -ne 0 ]; then
 	    echo "Fatal: '${TERMCMD}' not found. Check TERMCMD variable."
