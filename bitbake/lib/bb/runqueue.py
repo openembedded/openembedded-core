@@ -1358,19 +1358,26 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
             sq_hashfn = []
             sq_fn = []
             sq_task = []
+            noexec = []
             for task in range(len(self.sq_revdeps)):
                 realtask = self.rqdata.runq_setscene[task]
                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
+                taskname = self.rqdata.runq_task[realtask]
+                taskdep = self.rqdata.dataCache.task_deps[fn]
+                if 'noexec' in taskdep and taskname in taskdep['noexec']:
+                    noexec.append(task)
+                    self.task_skip(task)
+                    continue
                 sq_fn.append(fn)
                 sq_hashfn.append(self.rqdata.dataCache.hashfn[fn])
                 sq_hash.append(self.rqdata.runq_hash[realtask])
-                sq_task.append(self.rqdata.runq_task[realtask])
+                sq_task.append(taskname)
 
             call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
             locs = { "sq_fn" : sq_fn, "sq_task" : sq_task, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.configuration.data }
             valid = bb.utils.better_eval(call, locs)
             for task in range(len(self.sq_revdeps)):
-                if task not in valid:
+                if task not in valid and task not in noexec:
                     bb.msg.debug(2, bb.msg.domain.RunQueue, "No package found so skipping setscene task %s" % (self.rqdata.get_user_idstring(task)))
                     self.task_failoutright(task)
 
