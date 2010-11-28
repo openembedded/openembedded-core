@@ -5,56 +5,54 @@
  actions/volume.sh     |    3 ---
  4 files changed, 12 deletions(-)
 
-Index: git/actions/hotkey.sh
+Index: git/eeepc-acpi-scripts/hotkey.sh
 ===================================================================
---- git.orig/actions/hotkey.sh	2008-09-25 11:00:58.000000000 +0200
-+++ git/actions/hotkey.sh	2008-09-25 11:01:04.000000000 +0200
-@@ -1,8 +1,5 @@
+--- git.orig/eeepc-acpi-scripts/hotkey.sh	2010-11-28 16:02:17.000000000 +0800
++++ git/eeepc-acpi-scripts/hotkey.sh	2010-11-28 16:02:44.000000000 +0800
+@@ -1,12 +1,10 @@
  #!/bin/sh
  
+ test -d /sys/bus/platform/devices/eeepc || exit 0
 -# do nothing if package is removed
--[ -d /usr/share/doc/eeepc-acpi-scripts ] || exit 0
--
- . /etc/default/eeepc-acpi-scripts
- . /usr/share/eeepc-acpi-scripts/functions.sh
- . /etc/acpi/lib/notify.sh
-Index: git/actions/suspend.sh
+ PKG=eeepc-acpi-scripts
+ PKG_DIR=/usr/share/acpi-support/$PKG
+ FUNC_LIB=$PKG_DIR/lib/functions.sh
+ DEFAULT=/etc/default/$PKG
+-[ -e "$FUNC_LIB" ] || exit 0
+ 
+ case $(runlevel) in
+     *0|*6)
+Index: git/eeepc-acpi-scripts/vga-toggle.sh
 ===================================================================
---- git.orig/actions/suspend.sh	2008-09-25 11:00:32.000000000 +0200
-+++ git/actions/suspend.sh	2008-09-25 11:00:37.000000000 +0200
-@@ -1,8 +1,5 @@
+--- git.orig/eeepc-acpi-scripts/vga-toggle.sh	2010-11-28 16:03:57.000000000 +0800
++++ git/eeepc-acpi-scripts/vga-toggle.sh	2010-11-28 16:04:03.000000000 +0800
+@@ -1,12 +1,10 @@
  #!/bin/sh
  
+ test -d /sys/bus/platform/devices/eeepc || exit 0
 -# do nothing if package is removed
--[ -d /usr/share/doc/eeepc-acpi-scripts ] || exit 0
--
- if (runlevel | grep -q [06]) || (pidof '/sbin/shutdown' > /dev/null); then
-     exit 0
- fi
-Index: git/actions/vga-toggle.sh
+ PKG=eeepc-acpi-scripts
+ PKG_DIR=/usr/share/acpi-support/$PKG
+ FUNC_LIB=$PKG_DIR/lib/functions.sh
+ DEFAULT=/etc/default/$PKG
+-[ -e "$FUNC_LIB" ] || exit 0
+ 
+ if [ -e "$DEFAULT" ]; then . "$DEFAULT"; fi
+ . $FUNC_LIB
+Index: git/eeepc-acpi-scripts/volume.sh
 ===================================================================
---- git.orig/actions/vga-toggle.sh	2008-09-25 11:02:00.000000000 +0200
-+++ git/actions/vga-toggle.sh	2008-09-25 11:02:06.000000000 +0200
-@@ -1,8 +1,5 @@
- #!/bin/sh
- 
--# do nothing if package is removed
--[ -d /usr/share/doc/eeepc-acpi-scripts ] || exit 0
--
- . /etc/default/eeepc-acpi-scripts
- 
- # return: 0 on disconnect, 1 on connected vga, 2 else
-Index: git/actions/volume.sh
-===================================================================
---- git.orig/actions/volume.sh	2008-09-25 11:02:13.000000000 +0200
-+++ git/actions/volume.sh	2008-09-25 11:02:19.000000000 +0200
-@@ -2,9 +2,6 @@
- 
+--- git.orig/eeepc-acpi-scripts/volume.sh	2010-11-28 16:04:34.000000000 +0800
++++ git/eeepc-acpi-scripts/volume.sh	2010-11-28 16:04:40.000000000 +0800
+@@ -3,12 +3,10 @@
+ test -d /sys/bus/platform/devices/eeepc || exit 0
  # Volume controls
  
 -# do nothing if package is removed
--[ -d /usr/share/doc/eeepc-acpi-scripts ] || exit 0
--
- . /etc/default/eeepc-acpi-scripts
- . /usr/share/eeepc-acpi-scripts/functions.sh
- . /etc/acpi/lib/notify.sh
+ PKG=eeepc-acpi-scripts
+ PKG_DIR=/usr/share/acpi-support/$PKG
+ FUNC_LIB=$PKG_DIR/lib/functions.sh
+ DEFAULT=/etc/default/$PKG
+-[ -e "$FUNC_LIB" ] || exit 0
+ 
+ . $FUNC_LIB
+ . $PKG_DIR/lib/sound.sh

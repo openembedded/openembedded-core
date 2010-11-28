@@ -1,8 +1,11 @@
-SECTION = "base"
 DESCRIPTION = "eeePC specific ACPI scripts"
-LICENSE="GPL"
+HOMEPAGE = "http://alioth.debian.org/projects/debian-eeepc/"
+SECTION = "base"
 
-PV = "0.0+git${SRCREV}"
+LICENSE="GPL"
+LIC_FILES_CHKSUM = "file://debian/copyright;md5=77ef83ab5f4af938a93edb61f7b74f2c"
+
+PV = "1.1.11+git${SRCREV}"
 PR = "r3"
 
 RDEPENDS = "pm-utils"
@@ -23,13 +26,13 @@ do_install () {
 	install -d ${D}${sysconfdir}/default/
 	install -d ${D}${sysconfdir}/acpi/actions/
 	install -d ${D}${sysconfdir}/acpi/events/
-	install -d ${D}${sysconfdir}/acpi/lib/
+	install -d ${D}${sysconfdir}/acpi/lib/udev/rules.d
 	install -d ${D}${datadir}/eeepc-acpi-scripts/
 	install -d ${D}${datadir}/acpi-support/
 	install -m 644 ${S}/events/* ${D}${sysconfdir}/acpi/events/
-	install -m 644 ${S}/lib/* ${D}${sysconfdir}/acpi/lib/
+	install -m 644 ${S}/lib/udev/rules.d/* ${D}${sysconfdir}/acpi/lib/udev/rules.d/
 	install ${S}/actions/* ${D}${sysconfdir}/acpi/actions/
-	install -m 0644 ${S}/functions.sh ${D}${datadir}/eeepc-acpi-scripts/
+	install -m 0644 ${S}/acpilib/functions.sh ${D}${datadir}/eeepc-acpi-scripts/
 	install -m 0644 ${WORKDIR}/policy-funcs ${D}${datadir}/acpi-support/
-	install -m 0644 ${S}/debian/eeepc-acpi-scripts.default ${D}${sysconfdir}/default/
+	install -m 0644 ${S}/debian/eeepc-acpi-scripts.default* ${D}${sysconfdir}/default/
 }
