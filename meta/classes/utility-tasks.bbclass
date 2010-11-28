@@ -7,7 +7,7 @@ python do_listtasks() {
 	# emit the metadata which isnt valid shell
 	for e in d.keys():
 		if bb.data.getVarFlag(e, 'task', d):
-			sys.__stdout__.write("%s\n" % e)
+			bb.plain("%s" % e)
 }
 
 CLEANFUNCS ?= ""
