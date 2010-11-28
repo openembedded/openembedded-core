@@ -22,11 +22,12 @@ EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
 		--with-random=/dev/urandom \
 		--without-libidn \
 		--enable-crypto-auth \
+                ${CURLGNUTLS} \
 		"
 
-EXTRA_OECONF_append = " --with-gnutls=${STAGING_LIBDIR}/../"
-EXTRA_OECONF_virtclass-native_append = " --without-gnutls"
-EXTRA_OECONF_virtclass-nativesdk_append = " --without-gnutls"
+CURLGNUTLS = " --with-gnutls=${STAGING_LIBDIR}/../"
+CURLGNUTLS_virtclass-native = "--without-gnutls"
+CURLGNUTLS_virtclass-nativesdk = "--without-gnutls"
 
 do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g configure.ac
