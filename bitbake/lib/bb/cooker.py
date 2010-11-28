@@ -70,7 +70,7 @@ class BBCooker:
         self.bb_cache = None
 
         if server:
-            self.server = server.BitBakeServer(self, self.pre_serve, self.post_serve)
+            self.server = server.BitBakeServer(self)
 
         self.configuration = configuration
 
@@ -925,6 +925,8 @@ class BBCooker:
 
 
 def server_main(cooker, func, *args):
+    cooker.pre_serve()
+
     if cooker.configuration.profile:
         try:
             import cProfile as profile
@@ -956,11 +958,12 @@ def server_main(cooker, func, *args):
 
         print("Raw profiling information saved to profile.log and processed statistics to profile.log.processed")
 
-        return ret
     else:
-        return func(*args)
+        ret = func(*args)
 
+    cooker.post_serve()
 
+    return ret
 
 class CookerExit(bb.event.Event):
     """

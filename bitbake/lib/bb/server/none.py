@@ -109,11 +109,9 @@ class BitBakeServer():
     # remove this when you're done with debugging
     # allow_reuse_address = True
 
-    def __init__(self, cooker, pre_serve, post_serve):
+    def __init__(self, cooker):
         self._idlefuns = {}
         self.commands = BitBakeServerCommands(self, cooker)
-        self.pre_serve = pre_serve
-        self.post_serve = post_serve
 
     def register_idle_function(self, function, data):
         """Register a function to be called while the server is idle"""
@@ -169,10 +167,7 @@ class BitBakeServerFork():
 
 class BitbakeUILauch():
     def launch(self, serverinfo, uifunc, *args):
-        serverinfo.server.pre_serve()
-        ret = bb.cooker.server_main(serverinfo.cooker, uifunc, *args)
-        serverinfo.server.post_serve()
-        return ret
+        return bb.cooker.server_main(serverinfo.cooker, uifunc, *args)
 
 class BitBakeServerConnection():
     def __init__(self, serverinfo):
