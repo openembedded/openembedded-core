@@ -71,8 +71,10 @@ PKG_CONFIG_PATH .= "${EXTRA_NATIVE_PKGCONFIG_PATH}"
 PKG_CONFIG_SYSROOT_DIR = ""
 
 ORIG_DEPENDS := "${DEPENDS}"
+ORIG_RDEPENDS := "${RDEPENDS}"
 
 DEPENDS_virtclass-native ?= "${ORIG_DEPENDS}"
+RDEPENDS_virtclass-native ?= "${ORIG_RDEPENDS}"
 
 python __anonymous () {
     if "native" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
@@ -84,11 +86,21 @@ python __anonymous () {
             if dep.endswith("-cross"):
                 newdeps.append(dep.replace("-cross", "-native"))
             elif not dep.endswith("-native"):
-     
                 newdeps.append(dep + "-native")
             else:
                 newdeps.append(dep)
         bb.data.setVar("DEPENDS_virtclass-native", " ".join(newdeps), d)
+        rdepends = bb.data.getVar("RDEPENDS_virtclass-native", d, True)
+        rdeps = bb.utils.explode_deps(rdepends)
+        newdeps = []
+        for dep in rdeps:
+            if dep.endswith("-cross"):
+                newdeps.append(dep.replace("-cross", "-native"))
+            elif not dep.endswith("-native"):
+                newdeps.append(dep + "-native")
+            else:
+                newdeps.append(dep)
+        bb.data.setVar("RDEPENDS_virtclass-native", " ".join(newdeps), d)
         provides = bb.data.getVar("PROVIDES", d, True)
         for prov in provides.split():
             if prov.find(pn) != -1:
