@@ -1,8 +1,3 @@
-addtask qemuimagetest before do_build
-# after do_rootfs
-do_qemuimagetest[nostamp] = "1"
-do_qemuimagetest[depends] += "qemu-native:do_populate_sysroot"
-
 # Test related variables
 # By default, TEST_DIR is created under WORKDIR
 TEST_DIR ?= "${WORKDIR}/qemuimagetest"
@@ -12,6 +7,20 @@ TEST_TMP ?= "${TEST_DIR}/tmp"
 TEST_SCEN ?= "sanity"
 
 python do_qemuimagetest() {
+    qemuimagetest_main(d)
+}
+addtask qemuimagetest before do_build after do_rootfs
+do_qemuimagetest[nostamp] = "1"
+do_qemuimagetest[depends] += "qemu-native:do_populate_sysroot"
+
+python do_qemuimagetest_standalone() {
+    qemuimagetest_main(d)
+}
+addtask qemuimagetest_standalone
+do_qemuimagetest_standalone[nostamp] = "1"
+do_qemuimagetest_standalone[depends] += "qemu-native:do_populate_sysroot"
+
+def qemuimagetest_main(d):
     import sys
     import re
     import os
@@ -142,4 +151,4 @@ python do_qemuimagetest() {
 
     if ret != 0:
         raise bb.build.FuncFailed("Some testcases fail, pls. check test result and test log!!!")
-}
+
