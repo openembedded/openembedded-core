@@ -13,6 +13,7 @@ PACKAGE_ARCH = "${BASE_PACKAGE_ARCH}"
 DEPENDS = "encodings util-macros"
 DEPENDS_virtclass-native = "util-macros-native"
 RDEPENDS = "mkfontdir mkfontscale encodings"
+RDEPENDS_virtclass-native = "mkfontdir-native mkfontscale-native"
 
 PR = "${INC_PR}.0"
 
