@@ -6,6 +6,10 @@
 # INHERIT += "rm_work"
 #
 
+# Use the completion scheulder by default when rm_work is active
+# to try and reduce disk usage
+BB_SCHEDULER ?= "completion"
+
 RMWORK_ORIG_TASK := "${BB_DEFAULT_TASK}"
 BB_DEFAULT_TASK = "rm_work_all"
 
