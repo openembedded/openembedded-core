@@ -1223,7 +1223,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                                                                 self.rqdata.get_user_idstring(task)))
                 self.runq_running[task] = 1
                 self.stats.taskActive()
-                bb.build.make_stamp(task, self.rqdata.dataCache, fn)
+                bb.build.make_stamp(taskname, self.rqdata.dataCache, fn)
                 self.task_complete(task)
                 return True
 
