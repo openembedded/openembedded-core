@@ -13,6 +13,7 @@ SRC_URI += "file://fix_COPYING_1f8141a5e3b585dfccc748400b05c9c24b41e767.patch"
 
 DEPENDS = "virtual/xserver font-util"
 RDEPENDS = "encodings font-util"
+RDEPENDS_virtclass-native = "font-util"
 
 PE = "1"
 PR = "${INC_PR}.0"
