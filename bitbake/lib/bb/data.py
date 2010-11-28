@@ -161,10 +161,12 @@ def expandKeys(alterdata, readdata = None):
 
 def inheritFromOS(d):
     """Inherit variables from the environment."""
+    exportlist = bb.utils.preserved_envvars_export_list()
     for s in os.environ.keys():
         try:
             setVar(s, os.environ[s], d)
-            setVarFlag(s, "export", True, d)
+            if s in exportlist:
+                setVarFlag(s, "export", True, d)
         except TypeError:
             pass
 
@@ -243,6 +245,12 @@ def export_vars(d):
         except Exception, exc:
             pass
     return ret
+
+def export_envvars(v, d):
+    for s in os.environ.keys():
+        if s not in v:
+            v[s] = os.environ[s]
+    return v
 
 def emit_func(func, o=sys.__stdout__, d = init()):
     """Emits all items in the data store in a format such that it can be sourced by a shell."""

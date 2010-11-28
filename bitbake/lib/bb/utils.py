@@ -465,13 +465,25 @@ def sha256_file(filename):
         s.update(line)
     return s.hexdigest()
 
-def preserved_envvars_list():
+# Variables which are preserved from the original environment *and* exported
+# into our worker context
+def preserved_envvars_export_list():
     return [
-        'BBPATH',
-        'BB_PRESERVE_ENV',
-        'BB_ENV_WHITELIST',
-        'BB_ENV_EXTRAWHITE',
         'BB_TASKHASH',
+        'HOME',
+        'LOGNAME',
+        'PATH',
+        'PWD',
+        'SHELL',
+        'TERM',
+        'USER',
+        'USERNAME',
+    ]
+
+# Variables which are preserved from the original environment *and* exported
+# into our worker context for interactive tasks (e.g. requiring X)
+def preserved_envvars_export_interactive_list():
+    return [
         'COLORTERM',
         'DBUS_SESSION_BUS_ADDRESS',
         'DESKTOP_SESSION',
@@ -481,22 +493,24 @@ def preserved_envvars_list():
         'GNOME_KEYRING_SOCKET',
         'GPG_AGENT_INFO',
         'GTK_RC_FILES',
-        'HOME',
-        'LANG',
-        'LOGNAME',
-        'PATH',
-        'PWD',
         'SESSION_MANAGER',
-        'SHELL',
         'SSH_AUTH_SOCK',
-        'TERM',
-        'USER',
-        'USERNAME',
-        '_',
         'XAUTHORITY',
         'XDG_DATA_DIRS',
         'XDG_SESSION_COOKIE',
     ]
+
+# Variables which are preserved from the original environment into the datastore
+def preserved_envvars_list():
+    v = [
+        'BBPATH',
+        'BB_PRESERVE_ENV',
+        'BB_ENV_WHITELIST',
+        'BB_ENV_EXTRAWHITE',
+        'LANG',
+        '_',
+    ]
+    return v + preserved_envvars_export_list() + preserved_envvars_export_interactive_list()
 
 def filter_environment(good_vars):
     """
@@ -517,6 +531,10 @@ def filter_environment(good_vars):
         bb.msg.debug(1, bb.msg.domain.Util, "Removed the following variables from the environment: %s" % (", ".join(removed_vars)))
 
     return removed_vars
+
+def create_intereactive_env(d):
+    for k in preserved_envvars_export_interactive_list():
+        os.setenv(k, bb.data.getVar(k, d, True))
 
 def clean_environment():
     """

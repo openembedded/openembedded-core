@@ -1062,6 +1062,7 @@ class RunQueueExecute:
             the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
 
             env = bb.data.export_vars(the_data)
+            env = bb.data.export_envvars(env, the_data)
 
             taskdep = self.rqdata.dataCache.task_deps[fn]
             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:

@@ -918,7 +918,8 @@ class BBCooker:
     def pre_serve(self):
         # Empty the environment. The environment will be populated as
         # necessary from the data store.
-        bb.utils.empty_environment()
+        #bb.utils.empty_environment()
+        return
 
     def post_serve(self):
         bb.event.fire(CookerExit(), self.configuration.event_data)
