@@ -8,13 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
-PR = "r0"
+PR = "r1"
 
-SRC_URI += "file://doc_Makefile.patch"
+inherit autotools pkgconfig gnome
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
-inherit autotools pkgconfig gnome
+SRC_URI += "file://doc_Makefile.patch"
 
 do_configure_prepend () {
 	echo "CLEANFILES=" > gtk-doc.make
