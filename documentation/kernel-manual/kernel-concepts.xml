@@ -78,6 +78,16 @@
             our baseline kernel version.
         </para>
         <para>
+            The ultimate source for the Yocto Project kernel is a released kernel 
+            from kernel.org.
+            In addition to a foundational kernel from kernel.org the commercially released 
+            Yocto Project kernel contains a mix of important new mainline
+            developments, non-mainline developments, Board Support Package (BSP) developments,
+            and custom features.
+            These additions result in a commercially released Yocto Project kernel that caters 
+            to specific embedded designer needs for targeted hardware.
+        </para>
+<!--        <para>
             The following figure represents the overall place the Yocto Project kernel fills.
         </para>
         <para>
@@ -92,7 +102,7 @@
             and custom features.
             These additions result in a commercially released Yocto Project kernel that caters 
             to specific embedded designer needs for targeted hardware. 
-        </para>
+        </para> -->
         <para>
             Once a Yocto Project kernel is officially released the Yocto Project team goes into 
             their next development cycle, or "uprev" cycle.
@@ -105,8 +115,8 @@
             possible kernel.org version.
             The team continually monitors community kernel
             development to look for significant features of interest.
-            The illustration depicts this by showing the team looking back to kernel.org for new features, 
-            BSP features, and significant bug fixes.
+<!--            The illustration depicts this by showing the team looking back to kernel.org for new features, 
+            BSP features, and significant bug fixes. -->
             The team does consider back-porting large features if they have a significant advantage. 
             User or community demand can also trigger a back-port or creation of new
             functionality in the Yocto Project baseline kernel during the uprev cycle. 
