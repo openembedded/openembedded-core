@@ -2626,10 +2626,6 @@ RECIPE_STATUS_pn-gdb="green"
 RECIPE_LATEST_VERSION_pn-gdb="7.2"
 RECIPE_MAINTAINER_pn-gdb = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-gtk-theme-torturer="red" 
-RECIPE_LATEST_VERSION_pn-gtk-theme-torturer="0.0.0+git0+99962ae39bb5aadb31929b25c58e1a053f9c9545"
-RECIPE_MAINTAINER_pn-gtk-theme-tourturer = "Nitin A Kamble <nitin.a.kamble@intel.com>"
-
 RECIPE_STATUS_pn-intltool="green" 
 RECIPE_LATEST_VERSION_pn-intltool="0.40.6"
 RECIPE_MAINTAINER_pn-intltool = "Nitin A Kamble <nitin.a.kamble@intel.com>"
