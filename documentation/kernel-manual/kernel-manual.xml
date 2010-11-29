@@ -49,7 +49,11 @@
 
     </bookinfo>
 
-    <xi:include href="yocto-project-kernel-manual.xml"/>
+    <xi:include href="kernel-doc-intro.xml"/>
+
+    <xi:include href="kernel-concepts.xml"/>
+
+    <xi:include href="kernel-how-to.xml"/>
 
 <!--    <index id='index'>
       <title>Index</title>
