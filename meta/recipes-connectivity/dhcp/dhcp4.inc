@@ -10,6 +10,8 @@ HOMEPAGE = "http://www.isc.org/"
 LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://LICENSE;beginline=4;md5=bb6fd41f5895b67088ebea61ad365e74"
 
+DEPENDS = "bind"
+
 SRC_URI = "ftp://ftp.isc.org/isc/dhcp/dhcp-${PV}.tar.gz \
            file://site.h \
 	   file://init-relay file://default-relay \
@@ -22,7 +24,9 @@ TARGET_CFLAGS += "-D_GNU_SOURCE"
 EXTRA_OECONF = "--with-srv-lease-file=${localstatedir}/lib/dhcp/dhcpd.leases \
                 --with-srv6-lease-file=${localstatedir}/lib/dhcp/dhcpd6.leases \
                 --with-cli-lease-file=${localstatedir}/lib/dhcp/dhclient.leases \
-                --with-cli6-lease-file=${localstatedir}/lib/dhcp/dhclient6.leases"
+                --with-cli6-lease-file=${localstatedir}/lib/dhcp/dhclient6.leases \
+                --with-libbind=${STAGING_LIBDIR}/.. \
+               "
 
 do_compile_prepend () {
 	cp -f ${WORKDIR}/site.h ${S}/includes
