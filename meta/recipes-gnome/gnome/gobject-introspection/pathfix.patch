@@ -1,20 +1,7 @@
-Index: git/gir/Makefile.am
-===================================================================
---- git.orig/gir/Makefile.am	2009-08-19 11:11:26.000000000 +0100
-+++ git/gir/Makefile.am	2009-08-19 11:12:45.000000000 +0100
-@@ -41,7 +41,7 @@
- 	    -I$(GLIB_LIBDIR)/glib-2.0/include \
- 	    -DGETTEXT_PACKAGE=Dummy \
- 	    -D__G_I18N_LIB_H__ \
--	    $(GLIB_LIBDIR)/glib-2.0/include/glibconfig.h \
-+	    $(GLIB_INCLUDEDIR)/glibconfig.h \
- 	    $(srcdir)/glib-2.0.c \
- 	    -DGLIB_COMPILATION \
- 	    $(GLIB_INCLUDEDIR)/glib/*.h
 Index: git/giscanner/dumper.py
 ===================================================================
---- git.orig/giscanner/dumper.py	2009-08-19 11:11:26.000000000 +0100
-+++ git/giscanner/dumper.py	2009-08-19 11:12:45.000000000 +0100
+--- git.orig/giscanner/dumper.py	2010-11-29 15:14:35.000000000 -0800
++++ git/giscanner/dumper.py	2010-11-29 15:14:57.115747154 -0800
 @@ -82,7 +82,7 @@
          self._tmpdir = tempfile.mkdtemp('', 'tmp-introspect', dir=os.getcwd())
  
@@ -26,8 +13,8 @@ Index: git/giscanner/dumper.py
          self._uninst_srcdir = os.environ.get(
 Index: git/giscanner/scannermain.py
 ===================================================================
---- git.orig/giscanner/scannermain.py	2009-08-19 11:11:26.000000000 +0100
-+++ git/giscanner/scannermain.py	2009-08-19 11:12:45.000000000 +0100
+--- git.orig/giscanner/scannermain.py	2010-11-29 15:14:35.000000000 -0800
++++ git/giscanner/scannermain.py	2010-11-29 15:14:57.120747321 -0800
 @@ -283,6 +283,7 @@
      shown_include_warning = False
      for include in options.includes:
