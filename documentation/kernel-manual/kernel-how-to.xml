@@ -17,15 +17,15 @@
 <!--            <listitem><para>Series &amp; Configuration Compiler</para></listitem> 
             <listitem><para>kgit</para></listitem> -->
             <listitem><para>Workflow examples</para></listitem>
-            <listitem><para>Source Code Manager (SCM)</para></listitem>
-<!--            <listitem><para>Board Support Package (BSP) template migration</para></listitem> -->
+<!--            <listitem><para>Source Code Manager (SCM)</para></listitem>
+            <listitem><para>Board Support Package (BSP) template migration</para></listitem> 
             <listitem><para>BSP creation</para></listitem>
             <listitem><para>Patching</para></listitem>
             <listitem><para>Updating BSP patches and configuration</para></listitem>
-<!--            <listitem><para>guilt</para></listitem>
-            <listitem><para>scc file example</para></listitem> -->
+            <listitem><para>guilt</para></listitem>
+            <listitem><para>scc file example</para></listitem> 
             <listitem><para>"dirty" string</para></listitem>
-<!--            <listitem><para>Transition kernel layer</para></listitem> -->
+            <listitem><para>Transition kernel layer</para></listitem> -->
         </itemizedlist>
     </para>
 </section>
@@ -33,90 +33,91 @@
     <section id='tree-construction'>
         <title>Tree Construction</title>
         <para>
-The Yocto Project kernel repository, as shipped with the product, is created by
-compiling and executing the set of feature descriptions for every BSP/feature
-in the product. Those feature descriptions list all necessary patches,
-configuration, branching, tagging and feature divisions found in the kernel.
-</para>
-<para>
-The files used to describe all the valid features and BSPs in the Yocto Project
-kernel can be found in any clone of the kernel git tree. The directory
-wrs/cfg/kernel-cache/ is a snapshot of all the kernel configuration and
-feature descriptions (.scc) that were used to build the kernel repository.
-It should however be noted, that browsing the snapshot of feature
-descriptions and patches is not an effective way to determine what is in a
-particular kernel branch. Using git directly to get insight into the changes
-in a branch is more efficient and a more flexible way to inspect changes to
-the kernel.  Examples of using git to inspect kernel commits are in the
-following sections.
-</para>
-<para>
-As a reminder, it is envisioned that a ground up reconstruction of the
-complete kernel tree is an action only taken by Yocto Project team during an
-active development cycle.  When an end user creates a project, it takes
-advantage of this complete tree in order to efficiently place a git tree
-within their project.
-</para>
-<para>
-The general flow of the project specific kernel tree construction is as follows:
-<orderedlist>
-    <listitem><para>a top level kernel feature is passed to the kernel build subsystem,
-     normally this is a BSP for a particular kernel type.</para></listitem>
+            The Yocto Project kernel repository, as shipped with the product, is created by
+            compiling and executing the set of feature descriptions for every BSP/feature
+            in the product. 
+            Those feature descriptions list all necessary patches,
+            configuration, branching, tagging and feature divisions found in the kernel.
+        </para>
+        <para>
+            You can find the files used to describe all the valid features and BSPs in the Yocto Project
+            kernel in any clone of the kernel git tree.  
+            The directory <filename>wrs/cfg/kernel-cache/</filename> is a snapshot of all the kernel
+            configuration and feature descriptions (.scc) used to build the kernel repository.
+            You should realize, however, that browsing the snapshot of feature
+            descriptions and patches is not an effective way to determine what is in a
+            particular kernel branch. 
+            Instead, you should use git directly to discover the changes
+            in a branch.
+            Using git is a efficient and flexible way to inspect changes to the kernel.  
+            For examples showing how to use git to inspect kernel commits, see the following sections
+            in this chapter.
+        </para>
+        <note><para>
+            Ground up reconstruction of the complete kernel tree is an action only taken by the 
+            Yocto Project team during an active development cycle.  
+            Creating a project takes advantage of this complete tree in order to 
+            place efficiently a git tree within the project.
+        </para></note>
+        <para>
+            The general flow for constructing a project-specific kernel tree is as follows:
+        <orderedlist>
+            <listitem><para>A top-level kernel feature is passed to the kernel build subsystem.
+            Normally, this is a BSP for a particular kernel type.</para></listitem>
 
-    <listitem><para>the file that describes the top level feature is located by searching
-     system directories:</para>
-      
-       <itemizedlist>
-            <listitem><para>the kernel-cache under linux/wrs/cfg/kernel-cache</para></listitem>
+            <listitem><para>The file that describes the top-level feature is located by searching
+            these system directories:</para>
+
+                <itemizedlist>
+                    <listitem><para>The kernel-cache under 
+                    <filename>linux/wrs/cfg/kernel-cache</filename></para></listitem>
 <!--            <listitem><para>kernel-*-cache directories in layers</para></listitem> -->
-            <listitem><para>recipe SRC_URIs</para></listitem>
+                    <listitem><para>Recipe SRC_URIs</para></listitem>
 <!--            <listitem><para>configured and default templates</para></listitem> -->
-        </itemizedlist>
+                </itemizedlist>
 
-     <para>In a typical build a feature description of the format:
-          &lt;bsp name&gt;-&lt;kernel type&gt;.scc is the target of the search.
-     </para></listitem>
+            <para>For a typical build a feature description of the format:
+            &lt;bsp name&gt;-&lt;kernel type&gt;.scc is the target of the search.
+            </para></listitem>
 
-     <listitem><para>once located, the feature description is compiled into a simple script
-     of actions, or an existing equivalent script which was part of the
-     shipped kernel is located.</para></listitem>
+            <listitem><para>Once located, the feature description is either compiled into a simple script
+            of actions, or an existing equivalent script that was part of the
+            shipped kernel is located.</para></listitem>
 
-     <listitem><para>extra features are appended to the top level feature description. Extra
-     features can come from the KERNEL_FEATURES variable in recipes.</para></listitem>
+            <listitem><para>Extra features are appended to the top-level feature description. 
+            These features can come from the KERNEL_FEATURES variable in recipes.</para></listitem>
 
-     <listitem><para>each extra feature is located, compiled and appended to the script from
-     step #3</para></listitem>
+            <listitem><para>Each extra feature is located, compiled and appended to the script from
+            step #3</para></listitem>
 
-     <listitem><para>the script is executed, and a meta-series is produced. The meta-series
-     is  a description of all the branches, tags, patches and configuration that
-     need to be applied to the base git repository to completely create the
-     "bsp_name-kernel_type".</para></listitem>
+            <listitem><para>The script is executed, and a meta-series is produced. 
+            The meta-series is a description of all the branches, tags, patches and configuration that
+            needs to be applied to the base git repository to completely create the
+            "bsp_name-kernel_type".</para></listitem>
 
-     <listitem><para>the base repository is cloned, and the actions
-     listed in the meta-series are applied to the tree.</para></listitem>
+            <listitem><para>The base repository is cloned, and the actions
+            listed in the meta-series are applied to the tree.</para></listitem>
 
-     <listitem><para>the git repository is left with the desired branch checked out and any
-     required branching, patching and tagging has been performed.</para></listitem>
-</orderedlist>
-</para>
+            <listitem><para>The git repository is left with the desired branch checked out and any
+            required branching, patching and tagging has been performed.</para></listitem>
+        </orderedlist>
+        </para>
 
-<para>
-The tree is now ready for configuration and compilation. Those two topics will
-be covered below.
-</para>
+        <para>
+            The tree is now ready for configuration and compilation. 
+        </para>
 
-<note><para>The end user generated meta-series adds to the kernel as shipped with
-      the Yocto Project release. Any add-ons and configuration data are applied
-      to the end of an existing branch. The full repository generation that
-      is found in the linux-2.6-windriver.git is the combination of all
-      supported boards and configurations.
-</para></note>
-
-<para>
-This technique is flexible and allows the seamless blending of an immutable
-history with additional deployment specific patches. Any additions to the
-kernel become an integrated part of the branches.
-</para>
+        <note><para>The end-user generated meta-series adds to the kernel as shipped with
+            the Yocto Project release. 
+            Any add-ons and configuration data are applied to the end of an existing branch. 
+            The full repository generation that is found in the 
+            <filename>linux-2.6-windriver.git</filename> is the combination of all
+            supported boards and configurations.</para>
+  
+            <para>This technique is flexible and allows the seamless blending of an immutable
+            history with additional deployment specific patches. 
+            Any additions to the kernel become an integrated part of the branches.
+        </para></note>
 
 <!-- <note><para>It is key that feature descriptions indicate if any branches are
       required, since the build system cannot automatically decide where a
@@ -132,7 +133,7 @@ kernel become an integrated part of the branches.
     </para>
 </note> -->
 
-<para>
+<!-- <para>
 A summary of end user tree construction activities follow:
 <itemizedlist>
     <listitem><para>compile and link a full top-down kernel description from feature descriptions</para></listitem>
@@ -142,54 +143,66 @@ A summary of end user tree construction activities follow:
     <listitem><para>migrate configuration fragments and configure the kernel</para></listitem>
     <listitem><para>checkout the BSP branch and build</para></listitem>
 </itemizedlist>
-</para>
+</para> -->
     </section>
 
     <section id='build-strategy'>
         <title>Build Strategy</title>
-<para>
-There are some prerequisites that must be met before starting the compilation
-phase of the kernel build system:
-</para>
-<itemizedlist>
-    <listitem><para>There must be a kernel git repository indicated in the SRC_URI.</para></listitem>
-    <listitem><para>There must be a branch &lt;bsp name&gt;-&lt;kernel type&gt;.</para></listitem>
-</itemizedlist>
+        <para>
+            There are some prerequisites that must be met before starting the compilation
+            phase of the kernel build system:
+        </para>
 
-<para>
-These are typically met by running tree construction/patching phase of the
-build system, but can be achieved by other means. Examples of alternate work
-flows such as bootstrapping a BSP are provided below.
-</para>
-<para>
-Before building a kernel it is configured by processing all of the
-configuration "fragments" specified by the scc feature descriptions. As the
-features are compiled, associated kernel configuration fragments are noted
-and recorded in the meta-series in their compilation order. The 
-fragments are migrated, pre-processed and passed to the Linux Kernel
-Configuration subsystem (lkc) as raw input in the form of a .config file.
-The lkc uses its own internal dependency constraints to do the final
-processing of that information and generates the final .config that will
-be used during compilation.
-</para>
-<para>
-Kernel compilation is started, using the board's architecture and other
-relevant values from the board template, and a kernel image is produced.
-</para>
-<para>
-The other thing that you will first see once you configure a kernel is that
-it will generate a build tree that is separate from your git source tree.
-This build dir will be called "linux-&lt;BSPname&gt;-&lt;kerntype&gt;-build" where
-kerntype is one of standard kernel types.  This functionality is done by making
-use of the existing support that is within the kernel.org tree by default.
-</para>
-<para>
-What this means, is that all the generated files (that includes the final
-".config" itself, all ".o" and ".a" etc) are now in this directory.  Since
-the git source tree can contain any number of BSPs, all on their own branch,
-you now can easily switch between builds of BSPs as well, since each one also
-has their own separate build directory.
-</para>
+        <itemizedlist>
+            <listitem><para>There must be a kernel git repository indicated in the SRC_URI.</para></listitem>
+            <listitem><para>There must be a branch &lt;bsp name&gt;-&lt;kernel type&gt;.</para></listitem>
+        </itemizedlist>
+
+        <para>
+            You can typically meet these prerequisites by running the tree construction/patching phase 
+            of the build system.
+            However, other means do exist.
+            For examples of alternate workflows such as bootstrapping a BSP, see 
+            the<link linkend='workflow-examples'> Workflow Examples</link> section in this manual.
+        </para>
+
+        <para>
+            Before building a kernel it is configured by processing all of the
+            configuration "fragments" specified by the scc feature descriptions. 
+            As the features are compiled, associated kernel configuration fragments are noted
+            and recorded in the meta-series in their compilation order. 
+            The fragments are migrated, pre-processed and passed to the Linux Kernel
+            Configuration subsystem (lkc) as raw input in the form of a <filename>.config</filename> file.
+            The lkc uses its own internal dependency constraints to do the final
+            processing of that information and generates the final <filename>.config</filename> file 
+            that is used during compilation.
+        </para>
+
+        <para>
+            Using the board's architecture and other relevant values from the board's template
+            the Kernel compilation is started and a kernel image is produced.
+        </para>
+
+        <para>The other thing that you will first see once you configure a kernel is that
+            it will generate a build tree that is separate from your git source tree.
+            This build tree has the name using the following form:
+        <literallayout class='monospaced'>
+     linux-&lt;BSPname&gt;-&lt;kerntype&gt;-build
+        </literallayout>
+        "kerntype" is one of the standard kernel types.
+        </para>
+
+        <para>
+            The existing support in the kernel.org tree achieves this default functionality.
+        </para>
+
+        <para>
+            What this means, is that all the generated files for a particular BSP are now in this directory.  
+            The files include the final <filename>.config</filename>, all the <filename>.o</filename>
+            files, the <filename>.a</filename> files, and so forth.
+            Since each BSP has its own separate build directory in its own separate branch
+            of the git tree you can easily switch between different BSP builds.
+        </para>
     </section>
 
 <!--    <section id='scc'>
@@ -355,51 +368,69 @@ repository.
         <title>Workflow Examples</title>
 
         <para>
-As previously noted, the Yocto Project kernel has built in git/guilt
-integration, but these utilities are not the only way to work with the kernel
-repository.  Yocto Project has not made changes to git, or other tools that
-invalidate alternate workflows. Additionally, the way the kernel repository
-is constructed uses only core git functionality allowing any number of tools
-or front ends to use the resulting tree.</para>
-<para>
-This section contains several workflow examples.
-</para>
+            As previously noted, the Yocto Project kernel has built in git/guilt
+            integration.
+            However, these utilities are not the only way to work with the kernel repository.
+            Yocto Project has not made changes to git or to other tools that
+            would invalidate alternate workflows. 
+            Additionally, the way the kernel repository is constructed results in using 
+            only core git functionality thus allowing any number of tools or front ends to use the 
+            resulting tree.
+        </para>
+
+        <para>
+            This section contains several workflow examples.
+        </para>
 
         <section id='change-inspection-kernel-changes-commits'>
             <title>Change Inspection: Kernel Changes/Commits</title>
-<para>
-A common question when working with a BSP/kernel is: "What changes have been applied to this tree?"
-</para>
-<para>
-In some projects, where a collection of directories that
-contained patches to the kernel, those patches could be inspected, grep'd or
-otherwise used to get a general feeling for changes. This sort of patch
-inspection is not an efficient way to determine what has been done to the
-kernel, since there are many optional patches that are selected based on the
-kernel type and feature description, not to mention patches that are actually
-in directories that are not being searched.
-</para>
-<para>
-A more effective way to determine what has changed in the kernel is to use
-git and inspect / search the kernel tree. This is a full view of not only the
-source code modifications, but the reasoning behind the changes.
-</para>
+
+            <para>
+                A common question when working with a BSP or kernel is: 
+                "What changes have been applied to this tree?"
+            </para>
+
+            <para>
+                In projects that have a collection of directories that
+                contain patches to the kernel it is possible to inspect or "grep" the contents 
+                of the directories to get a general feel for the changes. 
+                This sort of patch inspection is not an efficient way to determine what has been done to the
+                kernel.
+                The reason it is inefficient is because there are many optional patches that are 
+                selected based on the kernel type and the feature description.
+                Additionally, patches could exist in directories that are not included in the search.
+            </para>
+
+            <para>
+                A more efficient way to determine what has changed in the kernel is to use
+                git and inspect or search the kernel tree. 
+                This method gives you a full view of not only the source code modifications, 
+                but also provides the reasons for the changes.
+            </para>
+
             <section id='what-changed-in-a-bsp'>
                 <title>What Changed in a BSP?</title>
-<para>
-These examples could continue for some time, since the Yocto Project git
-repository doesn't break existing git functionality and there are nearly
-endless permutations of those commands. Also note that unless a commit range
-is given (&lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;), kernel.org history is blended
-with Yocto Project changes
-</para>
-<literallayout class='monospaced'>
+
+                <para>
+                    Following are a few examples that show how to use git to examine changes.
+                    Note that because the Yocto Project git repository does not break existing git
+                    functionality and because there exists many permutations of these types of 
+                    commands there are many more methods to discover changes.
+                </para>
+
+                <note><para>
+                    Unless you provide a commit range 
+                    (&lt;kernel-type&gt;..&lt;bsp&gt;-&lt;kernel-type&gt;), kernel.org history 
+                    is blended with Yocto Project changes.
+                </para></note>
+
+                <literallayout class='monospaced'>
      # full description of the changes
      &gt; git whatchanged &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
         &gt; eg: git whatchanged standard..common_pc-standard
 
      # summary of the changes
-     &gt; git log &dash;&dash;pretty=oneline &dash;&dash;abbrev-commit &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
+     &gt; git log --pretty=oneline --;abbrev-commit &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
 
      # source code changes (one combined diff)
      &gt; git diff &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
@@ -413,86 +444,105 @@ with Yocto Project changes
    
      # determine the commits which touch each line in a file
      &gt; git blame &lt;path to file&gt;
-</literallayout>
+                </literallayout>
             </section>
  
             <section id='show-a-particular-feature-or-branch-change'>
                 <title>Show a Particular Feature or Branch Change</title>
-<para>
-Significant features or branches are tagged in the Yocto Project tree to divide
-changes. Remember to first determine (or add) the tag of interest.  Note:
-there will be many tags, since each BSP branch is tagged, kernel.org tags and
-feature tags are all present.
-</para>
-<literallayout class='monospaced'>
+
+                <para>
+                    Significant features or branches are tagged in the Yocto Project tree to divide
+                    changes. 
+                    Remember to first determine (or add) the tag of interest.  
+                </para>
+               
+                <note><para>
+                    Because BSP branch, kernel.org, and feature tags are all present, there are many tags.
+                </para></note>
+
+                <literallayout class='monospaced'>
      # show the changes tagged by a feature
      &gt; git show &lt;tag&gt; 
         &gt; eg: git show yaffs2
 
      # determine which branches contain a feature
-     &gt; git branch &dash;&dash;contains &lt;tag&gt;
+     &gt; git branch --contains &lt;tag&gt;
 
      # show the changes in a kernel type
      &gt; git whatchanged wrs_base..&lt;kernel type&gt;
         &gt; eg: git whatchanged wrs_base..standard
-</literallayout>
-<para>
-Many other comparisons can be done to isolate BSP changes, such as comparing
-to kernel.org tags (v2.6.27.18, etc), per subsystem comparisons (git
-whatchanged mm) or many other types of checks.
-</para>
+                </literallayout>
+
+                <para>
+                    You can use many other comparisons to isolate BSP changes.
+                    For example, you can compare against kernel.org tags (e.g. v2.6.27.18, etc), or
+                    you can compare agains subsystems (e.g. git whatchanged mm).
+                </para>
             </section>
         </section>
 
         <section id='development-saving-kernel-modifications'>
             <title>Development: Saving Kernel Modifications</title>
-<para>
-Another common operation is to build a Yocto Project supplied BSP, make some
-changes, rebuild and test. Those local changes often need to be exported,
-shared or otherwise maintained.
-</para>
-<para>
-Since the Yocto Project kernel source tree is backed by git, this activity is
-greatly simplified and is much easier than in previous releases. git tracks
-file modifications, additions and deletions, which allows the developer to
-modify the code and later realize that the changes should be saved, and
-easily determine what was changed. It also provides many tools to commit,
-undo and export those modifications.
-</para>
-<para>
-There are many ways to perform this action, and the technique employed
-depends on the destination for the patches, which could be any of:
-<itemizedlist>
-    <listitem><para>bulk storage</para></listitem>
-    <listitem><para>internal sharing either through patches or using git</para></listitem>
-    <listitem><para>external submission</para></listitem>
-    <listitem><para>export for integration into another SCM</para></listitem>
-</itemizedlist>
-</para>
-<para>
-The destination of the patches also incluences the method of gathering them
-due to issues such as:
-<itemizedlist>
-    <listitem><para>bisectability</para></listitem>
-    <listitem><para>commit headers</para></listitem>
-    <listitem><para>division of subsystems for separate submission / review</para></listitem>
-</itemizedlist>
-</para>
+
+            <para>
+                Another common operation is to build a BSP supplied by Yocto Project, make some
+                changes, rebuild and then test. 
+                Those local changes often need to be exported, shared or otherwise maintained.
+            </para>
+
+            <para>
+                Since the Yocto Project kernel source tree is backed by git, this activity is
+                much easier as compared to with previous releases. 
+                Because git tracks file modifications, additions and deletions, it is easy 
+                to modify the code and later realize that the changes should be saved.
+                It is also easy to determine what has changed. 
+                This method also provides many tools to commit, undo and export those modifications.
+            </para>
+
+            <para>
+                There are many ways to save kernel modifications.
+                The technique employed
+                depends on the destination for the patches:
+   
+            <itemizedlist>
+                <listitem><para>Bulk storage</para></listitem>
+                <listitem><para>Internal sharing either through patches or by using git</para></listitem>
+                <listitem><para>External submissions</para></listitem>
+                <listitem><para>Exporting for integration into another SCM</para></listitem>
+            </itemizedlist>
+            </para>
+
+            <para>
+                Because of the following list of issues, the destination of the patches also influences 
+                the method for gathering them:
+
+            <itemizedlist>
+                <listitem><para>Bisectability</para></listitem>
+                <listitem><para>Commit headers</para></listitem>
+                <listitem><para>Division of subsystems for separate submission or review</para></listitem>
+            </itemizedlist>
+            </para>
 
             <section id='bulk-export'>
                 <title>Bulk Export</title>
-<para>
-If patches are simply being stored outside of the kernel source repository,
-either permanently or temporarily, then there are several methods that can be
-used.
-</para>
-<para>
-Note the "bulk" in this discussion, these techniques are not appropriate for
-full integration of upstream submission, since they do not properly divide
-changes or provide an avenue for per-change commit messages. This example
-assumes that changes have not been committed incrementally during development
-and simply must be gathered and exported.
-<literallayout class='monospaced'>
+
+                <para>
+                    This section describes how you can export in "bulk" changes that have not 
+                    been separated or divided. 
+                    This situation works well when you are simply storing patches outside of the kernel 
+                    source repository, either permanently or temporarily, and you are not committing 
+                    incremental changes during development.
+                </para>
+
+                <note><para>
+                    This technique is not appropriate for full integration of upstream submission
+                    because changes are not properly divided and do not provide an avenue for per-change
+                    commit messages.  
+                    Therefore, this example assumes that changes have not been committed incrementally 
+                    during development and that you simply must gather and export them.
+                </para></note>
+
+                <literallayout class='monospaced'>
      # bulk export of ALL modifications without separation or division
      # of the changes 
 
@@ -500,32 +550,39 @@ and simply must be gathered and exported.
      &gt; git commit -s -a -m &gt;commit message&lt; 
         or
      &gt; git commit -s -a # and interact with $EDITOR
-</literallayout>
-</para>
-<para>
-These operations have captured all the local changes in the project source
-tree in a single git commit, and that commit is also stored in the project's
-source tree.
-</para>
-<para>
-Once exported, those changes can then be restored manually, via a template or
-through integration with the default_kernel. Those topics are covered in
-future sections.
-</para>
+                </literallayout>
+
+                <para>
+                    The previous operations capture all the local changes in the project source
+                    tree in a single git commit.
+                    And, that commit is also stored in the project's source tree.
+                </para>
+
+                <para>
+                    Once the changes are exported, you can restore them manually using a template
+                    or through integration with the <filename>default_kernel</filename>.
+                </para>
+
             </section>
 
             <section id='incremental-planned-sharing'>
                 <title>Incremental/Planned Sharing</title>
-<para>
-Note: unlike the previous "bulk" section, the following examples assume that
-changes have been incrementally committed to the tree during development and
-now are being exported.
-</para>
-<para>
-During development the following commands will be of interest, but for full
-git documentation refer to the git man pages or an online resource such as
-http://github.com
-<literallayout class='monospaced'>
+
+                <para>
+                    This section describes how to save modifications when you are making incremental
+                    commits or practicing planned sharing.
+                    The examples in this section assume that changes have been incrementally committed 
+                    to the tree during development and now need to be exported.  The sections that follow
+                    describe how you can export your changes internally through either patches or by
+                    using git commands.
+                </para>
+
+                <para>
+                    During development the following commands are of interest.
+                    For full git documentation, refer to the git man pages or to an online resource such 
+                    as <ulink url='http://github.com'></ulink>.
+
+                <literallayout class='monospaced'>
      # edit a file
      &gt; vi &gt;path&lt;/file
      # stage the change
@@ -538,129 +595,169 @@ http://github.com
      &gt; git commit -s
 
      ... etc.
-</literallayout>
-</para>
-<para>
-Distributed development with git is possible by having a universally agreed
-upon unique commit identifier (set by the creator of the commit) mapping to a
-specific changeset with a specific parent.  This ID is created for you when
-you create a commit, and will be re-created when you amend/alter or re-apply
-a commit.  As an individual in isolation, this is of no interest, but if you
-intend to share your tree with normal git push/pull operations for
-distributed development, you should consider the ramifications of changing a
-commit that you've already shared with others.
-</para>
-<para>
-Assuming that the changes have *not* been pushed upstream, or pulled into
-another repository, both the commit content and commit messages associated
-with development can be update via:
-<literallayout class='monospaced'>
+                </literallayout>
+                </para>
+
+                <para>
+                    Distributed development with git is possible when you use a universally 
+                    agreed-upon unique commit identifier (set by the creator of the commit) that maps to a
+                    specific changeset with a specific parent.  
+                    This identifier is created for you when
+                    you create a commit, and is re-created when you amend, alter or re-apply
+                    a commit.  
+                    As an individual in isolation, this is of no interest.
+                    However, if you
+                    intend to share your tree with normal git push and pull operations for
+                    distributed development, you should consider the ramifications of changing a
+                    commit that you have already shared with others.
+                </para>
+
+                <para>
+                    Assuming that the changes have not been pushed upstream, or pulled into
+                    another repository, you can update both the commit content and commit messages 
+                    associated with development by using the following commands:
+
+                <literallayout class='monospaced'>
      &gt; git add &gt;path&lt;/file
-     &gt; git commit &dash;&dash;amend
+     &gt; git commit --amend
      &gt; git rebase or git rebase -i
-</literallayout>
-</para>
-<para>   
-Again, assuming that the changes have *not* been pushed upstream, and that
-there are no pending works in progress (use "git status" to check) then
-commits can be reverted (undone) via:
-<literallayout class='monospaced'>
+                </literallayout>
+                </para>
+
+                <para>   
+                    Again, assuming that the changes have not been pushed upstream, and that
+                    no pending works-in-progress exist (use "git status" to check) then
+                    you can revert (undo) commits by using the following commands:
+
+                <literallayout class='monospaced'>
      # remove the commit, update working tree and remove all
      # traces of the change
-     &gt; git reset &dash;&dash;hard HEAD^
+     &gt; git reset --hard HEAD^
      # remove the commit, but leave the files changed and staged for re-commit
-     &gt; git reset &dash;&dash;soft HEAD^
+     &gt; git reset --soft HEAD^
      # remove the commit, leave file change, but not staged for commit
-     &gt; git reset &dash;&dash;mixed HEAD^
-</literallayout>
-</para>
-<para>
-Branches can be created, changes cherry-picked or any number of git
-operations performed until the commits are in good order for pushing upstream
-or pull requests. After a push or pull, commits are normally considered
-'permanent' and should not be modified, only incrementally changed in new
-commits.  This is standard "git" workflow and Yocto Project recommends the
-kernel.org best practices.
-</para>
-<note><para>It is recommend to tag or branch before adding changes to a Yocto Project
-      BSP (or creating a new one), since the branch or tag provides a
-      reference point to facilitate locating and exporting local changes.
-</para></note>
+     &gt; git reset --mixed HEAD^
+                </literallayout>
+                </para>
+
+                <para>
+                    You can create branches, "cherry-pick" changes or perform any number of git
+                    operations until the commits are in good order for pushing upstream
+                    or for pull requests. 
+                    After a push or pull, commits are normally considered
+                    "permanent" and you should not modify them.
+                    If they need to be changed you can incrementally do so with new commits.
+                    These practices follow the standard "git" workflow and the kernel.org best 
+                    practices, which Yocto Project recommends.
+                </para>
+
+                <note><para>
+                    It is recommend to tag or branch before adding changes to a Yocto Project
+                    BSP or before creating a new one.
+                    The reason for this recommendation is because the branch or tag provides a
+                    reference point to facilitate locating and exporting local changes.
+                </para></note>
           
                 <section id='export-internally-via-patches'>
-                    <title>Export Internally Via Patches</title>
-<para>
-Committed changes can be extracted from a working directory by exporting them
-as patches.  Those patches can be used for upstream submission, placed in a
-Yocto Project template for automatic kernel patching or many other common uses.
+                    <title>Exporting Changes Internally by Using Patches</title>
 
-<literallayout class='monospaced'>
-     # &gt;first commit&gt; can be a tag if one was created before development
+                    <para>
+                        This section describes how you can extract committed changes from a working directory
+                        by exporting them as patches.
+                        Once extracted, you can use the patches for upstream submission, 
+                        place them in a Yocto Project template for automatic kernel patching,
+                        or apply them in many other common uses.
+                    </para>
+
+                    <para>
+                        This example shows how to create a directory with sequentially numbered patches.
+                        Once the directory is created, you can apply it to a repository using the 
+                        <filename>git am</filename> command to reproduce the original commit and all 
+                        the related information such as author, date, commit log, and so forth.
+                    </para>
+
+                    <note><para>
+                        The new commit identifiers (ID) will be generated upon re-application.  
+                        This action reflects that the commit is now applied to an underlying commit 
+                        with a different ID.
+                    </para></note>
+
+                    <para>
+                    <literallayout class='monospaced'>
+     # &lt;first-commit&gt; can be a tag if one was created before development
      # began. It can also be the parent branch if a branch was created
      # before development began.
 
      &gt; git format-patch -o &lt;dir&gt; &lt;first commit&gt;..&lt;last commit&gt;
-</literallayout>
-</para>
+                    </literallayout>
+                    </para>
 
-<para>
-  In other words:
-<literallayout class='monospaced'>
-     # identify commits of interest.
+                    <para>
+                        In other words:
+                    <literallayout class='monospaced'>
+     # Identify commits of interest.
 
-     # if the tree was tagged before development
+     # If the tree was tagged before development
      &gt; git format-patch -o &lt;save dir&gt; &lt;tag&gt;
 
-     # if no tags are available
+     # If no tags are available
      &gt; git format-patch -o &lt;save dir&gt; HEAD^  # last commit
      &gt; git format-patch -o &lt;save dir&gt; HEAD^^ # last 2 commits
      &gt; git whatchanged # identify last commit
      &gt; git format-patch -o &lt;save dir&gt; &lt;commit id&gt;
      &gt; git format-patch -o &lt;save dir&gt; &lt;rev-list&gt;
-</literallayout>
-</para> 
+                    </literallayout>
+                    </para> 
 
-<para>
-The result is a directory with sequentially numbered patches, that when
-applied to a repository using "git am", will reproduce the original commit
-and all related information (author, date, commit log, etc) will be
-preserved.  Note that new commit IDs will be generated upon reapplication,
-reflecting that the commit is now applied to an underlying commit with a
-different ID.
-</para>
-<!--<para>
-See the "template patching" example for how to use the patches to
-automatically apply to a new kernel build.
-</para> -->
-                </section>
+                    <!--<para>
+                        See the "template patching" example for how to use the patches to
+                        automatically apply to a new kernel build.
+                    </para>-->
+                </section> 
 
                 <section id='export-internally-via-git'>
-                    <title>Export Internally Via git</title>
-<para>
-Committed changes can also be exported from a working directory by pushing
-(or by making a pull request) the changes into a master repository. Those
-same change can then be pulled into a new kernel build at a later time using this command form:
-<literallayout class='monospaced'>
+                    <title>Exporting Changes Internally by Using git</title>
+
+                    <para>
+                        This section describes how you can export changes from a working directory 
+                        by pushing the changes into a master repository or by making a pull request.
+                        Once you have pushed the changes in the master repository you can then 
+                        pull those same changes into a new kernel build at a later time.
+                    </para>
+ 
+                    <para>
+                        Use this command form to push the changes:
+                    <literallayout class='monospaced'>
      git push ssh://&lt;master server&gt;/&lt;path to repo&gt; &lt;local branch&gt;:&lt;remote branch&gt;
-</literallayout>
-For example:
-<literallayout class='monospaced'>
+                    </literallayout>
+                    </para>
+
+                    <para>
+                        For example, the following command pushes the changes from your local branch
+                        <filename>common_pc-standard</filename> to the remote branch with the same name 
+                        in the master repository <filename>//git.mycompany.com/pub/git/kernel-2.6.27</filename>.
+                    <literallayout class='monospaced'>
      &gt; push ssh://git.mycompany.com/pub/git/kernel-2.6.27 common_pc-standard:common_pc-standard
-</literallayout>
-A pull request entails using "git request-pull" to compose an email to the
-maintainer requesting that a branch be pulled into the master repository, see
-http://github.com/guides/pull-requests for an example.
-</para>
-<para>
-Other commands such as 'git stash' or branching can also be used to save
-changes, but are not covered in this document.
-</para>
-<para>
-See the section "importing from another SCM" for how a git push to the
-default_kernel, can be used to automatically update the builds of all users
-of a central git repository.
-</para>
-                </section>
+                    </literallayout>
+                    </para>
+
+                    <para>
+                        A pull request entails using "git request-pull" to compose an email to the
+                        maintainer requesting that a branch be pulled into the master repository, see
+                        <ulink url='http://github.com/guides/pull-requests'></ulink> for an example.
+                    </para>
+
+                    <note><para>
+                        Other commands such as 'git stash' or branching can also be used to save
+                        changes, but are not covered in this document.
+                    </para></note>
+
+                    <!--<para>
+                        See the section "importing from another SCM" for how a git push to the
+                        default_kernel, can be used to automatically update the builds of all users
+                        of a central git repository.
+                    </para>-->
+                </section> 
             </section>
 
             <section id='export-for-external-upstream-submission'>
@@ -699,10 +796,10 @@ induced patch damage.
 An example of dumping patches for external submission follows:
 <literallayout class='monospaced'>
      # dump the last 4 commits 
-     &gt; git format-patch &dash;&dash;thread -n -o ~/rr/ HEAD^^^^
-     &gt; git send-email &dash;&dash;compose &dash;&dash;subject '[RFC 0/N] &lt;patch series summary&gt;' \
-      &dash;&dash;to foo@yoctoproject.org &dash;&dash;to bar@yoctoproject.org \
-      &dash;&dash;cc list@yoctoproject.org  ~/rr
+     &gt; git format-patch --thread -n -o ~/rr/ HEAD^^^^
+     &gt; git send-email --compose --subject '[RFC 0/N] &lt;patch series summary&gt;' \
+      --to foo@yoctoproject.org --to bar@yoctoproject.org \
+      --cc list@yoctoproject.org  ~/rr
      # the editor is invoked for the 0/N patch, and when complete the entire
      # series is sent via email for review
 </literallayout>
@@ -934,7 +1031,7 @@ That's it. Configure and build.
                 So first create a bare clone of the Yocto Project git repository, and then create a 
                 local clone of that:
                 <literallayout class='monospaced'>
-     $ git clone &dash;&dash;bare git://git.pokylinux.org/linux-2.6-windriver.git
+     $ git clone --bare git://git.pokylinux.org/linux-2.6-windriver.git
      linux-2.6-windriver.git
      $ git clone linux-2.6-windriver.git linux-2.6-windriver
                 </literallayout>
