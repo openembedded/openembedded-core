@@ -1,18 +1,20 @@
+DESCRIPTION="Simon Tatham's Portable Puzzle Collection"
+HOMEPAGE="http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
 DEPENDS = "gtk+ libxt"
-PR = "r8"
+PR = "r0"
 MOD_PV = "${@bb.data.getVar('PV',d,1)[1:]}"
 
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=9928b60f3b78be315b7ab699c1b03ff5"
 
-#SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
-SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV} \
-           file://makedist_hack.patch;patch=1"
+SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
+#SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV}"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/${PN}-${PV}"
 
 do_configure () {
-	./makedist.sh ${MOD_PV}
+	./mkfiles.pl
 }
 
 do_compile_prepend = " \
