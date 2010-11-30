@@ -10,7 +10,7 @@ SRC_URI = 	"svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
 		file://owl-window-menu.patch \
 		"
 
-LIB_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 S = "${WORKDIR}/trunk"
 
