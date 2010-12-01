@@ -54,6 +54,10 @@ poky+subscribe &lt;at&gt; openedhand &lt;dot&gt; com
 
     <itemizedlist>
         <listitem><para>
+            <ulink url='http://yoctoproject.org'>The Yocto Project website</ulink> - The home site
+            for Yocto Project.
+        </para></listitem>
+        <listitem><para>
             <ulink url='http://pokylinux.org'>The Poky website</ulink> 
         </para></listitem>
         <listitem><para>
