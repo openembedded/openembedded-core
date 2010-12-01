@@ -140,7 +140,7 @@
             'experimental' builds.
             The toolchains can
             be used either as external standalone toolchains or can be combined with Poky as a
-            prebuilt toolchain to reduce build time. Using the external toolchains is simply a
+            pre-built toolchain to reduce build time. Using the external toolchains is simply a
             case of untarring the tarball into the root of your system (it only creates files in
             <filename>/opt/poky</filename>) and then enabling the option 
             in <filename>local.conf</filename>.
@@ -157,10 +157,10 @@
         </para>
 
         <para>
-           The 'master' is where the deveopment work takes place and you should use this if you're
+           The 'master' is where the development work takes place and you should use this if you're
            interested in working with the latest cutting-edge developments. It is possible for the trunk
            to suffer temporary periods of instability while new features are developed.
-           If these periods of instability are undesireable, we recommend using one of the release branches.
+           If these periods of instability are undesirable, we recommend using one of the release branches.
         </para>
     </section>
 </section>
