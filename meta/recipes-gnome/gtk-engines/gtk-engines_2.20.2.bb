@@ -1,9 +1,14 @@
-LICENSE = "GPL"
-SECTION = "x11/base"
 DESCRIPTION = "GTK theme engines"
+HOMEPAGE = "http://www.gnome.org/"
+BUGTRACKER = "https://bugzilla.gnome.org/"
+
+LICENSE = "LGPLv2.1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
+
+SECTION = "x11/base"
 DEPENDS = "gtk+"
 
-PR = "r1"
+PR = "r0"
 
 PACKAGES_DYNAMIC = "gtk-engine-* gtk-theme-*"
 
