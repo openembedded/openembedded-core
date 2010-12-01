@@ -123,13 +123,13 @@ h6 {
   background-color: transparent;
   background-repeat: no-repeat;
   padding-top: 256px;
-  background-image: url("../figures/yocto-project-bw.png");
+  background-image: url("figures/kernel-title.png");
   background-position: top;
   margin-top: -256px;
   padding-right: 50px;
   margin-left: 50px;
-  text-align: center;
-  width: 600px;
+  text-align: right;
+  width: 700px;
 }
 
 h3.author {
