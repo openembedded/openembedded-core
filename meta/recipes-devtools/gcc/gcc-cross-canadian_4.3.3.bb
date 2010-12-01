@@ -5,7 +5,7 @@ require gcc-cross-canadian.inc
 require gcc-configure-sdk.inc
 require gcc-package-sdk.inc
 
-PR = "r19"
+PR = "r20"
 
 DEPENDS += "gmp-nativesdk mpfr-nativesdk"
 RDEPENDS_${PN} += "mpfr-nativesdk"

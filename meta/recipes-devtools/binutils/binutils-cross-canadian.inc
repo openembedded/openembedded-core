@@ -1,4 +1,10 @@
 inherit cross-canadian
+
+
+DESCRIPTION = "A GNU collection of cross-canadian binary utilities for ${TARGET_ARCH} target"
+PN = "binutils-cross-canadian-${TARGET_ARCH}"
+BPN = "binutils"
+
 DEPENDS = "flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/libc-nativesdk zlib-nativesdk gettext-nativesdk"
 EXTRA_OECONF = "--with-sysroot=${SDKPATH}/sysroots/${TARGET_SYS} \
 		--program-prefix=${TARGET_PREFIX}"

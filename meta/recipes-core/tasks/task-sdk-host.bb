@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Host packages for the standalone SDK or external toolchain"
-PR = "r8"
+PR = "r9"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -12,9 +12,6 @@ inherit nativesdk
 PACKAGES = "${PN}"
 
 RDEPENDS_${PN} = "\
-    binutils-cross-canadian \
-    gdb-cross-canadian \
-    gcc-cross-canadian \
     pkgconfig-nativesdk \
     qemu-nativesdk \
     qemu-helper-nativesdk \

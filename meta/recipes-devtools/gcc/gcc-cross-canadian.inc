@@ -1,4 +1,8 @@
 inherit cross-canadian
 
+DESCRIPTION = "The cross-canadian GNU cc and gcc C compilers for ${TARGET_ARCH} target."
+PN = "gcc-cross-canadian-${TARGET_ARCH}"
+BPN = "gcc"
+
 DEPENDS = "virtual/${HOST_PREFIX}binutils-crosssdk virtual/${TARGET_PREFIX}libc-for-gcc gettext-nativesdk"
 
