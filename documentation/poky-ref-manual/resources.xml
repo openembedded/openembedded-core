@@ -24,28 +24,45 @@
 </section>
 
 <section id='resources-mailinglist'>
-    <title>Mailing list</title>
+    <title>Mailing lists</title>
 
     <para>
-        To subscribe to the mailing list send mail to:
+        To subscribe to the mailing lists click on the following URLs and follow the instructions:
     </para>
-    <para>
-        <literallayout class='monospaced'>
-poky+subscribe &lt;at&gt; openedhand &lt;dot&gt; com
-        </literallayout>
-    </para>
-    <para>
-        Then follow the simple instructions in subsequent reply. Archives are
-        available <ulink
-            url="http://lists.o-hand.com/poky/">here</ulink>.
-    </para>
+
+    <itemizedlist>
+        <listitem><para>
+            <ulink url='http://lists.yoctoproject.org/listinfo/yocto'></ulink> for a Yocto Discussions
+            mailing list.
+        </para></listitem>
+
+        <listitem><para>
+            <ulink url='http://lists.yoctoproject.org/listinfo/poky'></ulink> for a Poky Discussions 
+            mailing list.
+        </para></listitem>
+
+        <listitem><para>
+            <ulink url='http://lists.yoctoproject.org/listinfo/yocto-announce'></ulink> for a mailing list
+            to receive offical Yocto Project announcements for developments and milestones.
+        </para></listitem>
+    </itemizedlist>
+
 </section>
 
 <section id='resources-irc'>
-    <title>IRC</title>
+    <title>Internet Relay Chat (IRC)</title>
 
-    <para> 
-        Join #poky on freenode.
+    <para>
+        Two IRC channels on freenode are available for Yocto Project and Poky discussions:
+    <itemizedlist>
+        <listitem><para>
+            #yocto
+        </para></listitem>
+
+        <listitem><para>
+            #poky
+        </para></listitem>
+    </itemizedlist>
     </para>
 </section>
 
