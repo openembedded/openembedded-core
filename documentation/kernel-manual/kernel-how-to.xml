@@ -761,40 +761,46 @@ repository.
             </section>
 
             <section id='export-for-external-upstream-submission'>
-                <title>Export for External (Upstream) Submission</title>
-<para>
-If patches are to be sent for external submission, they can be done via a
-pull request if the patch series is large or the maintainer prefers to pull
-changes. But commonly, patches are sent as email series for easy review and
-integration.
-</para>
-<note><para>
-Before sending patches for review ensure that you understand the
-standard of the community in question and follow their best practices.  For
-example, kernel patches should follow standards such as:
-<itemizedlist>
-    <listitem><para><ulink url='http://userweb.kernel.org/~akpm/stuff/tpp.txt'></ulink></para></listitem>
-    <listitem><para><ulink url='http://linux.yyz.us/patch-format.html'></ulink></para></listitem>
-    <listitem><para>Documentation/SubmittingPatches (in any linux kernel source tree)</para></listitem>
-</itemizedlist>
-</para></note>
-<para>
-The messages used to commit changes are a large part of these standards, so
-ensure that the headers for each commit have the required information. If the
-initial commits were not properly documented or don't meet those standards
-rebasing via git rebase -i offer an opportunity to manipulate the commits and
-get them into the required format. Other techniques such as branching and
-cherry picking commits are also viable options.
-</para>
-<para>
-Once complete, patches are sent via email to the maintainer(s) or lists that
-review and integrate changes. "git send-email" is commonly used to ensure
-that patches are properly formatted for easy application and avoid mailer
-induced patch damage.
-</para>
-<para>
-An example of dumping patches for external submission follows:
-<literallayout class='monospaced'>
+                <title>Exporting Changes for External (Upstream) Submission</title>
+
+                <para>
+                    This section describes how to export changes for external upstream submission.
+                    If the patch series is large or the maintainer prefers to pull
+                    changes, you can submit these changes by using a pull request.
+                    However, it is common to sent patches as an email series.
+                    This method allows easy review and integration of the changes.
+                </para>
+
+                <note><para>
+                    Before sending patches for review be sure you understand the
+                    community standards for submitting and documenting changes and follow their best practices.  
+                    For example, kernel patches should follow standards such as:
+                    <itemizedlist>
+                        <listitem><para><ulink url='http://userweb.kernel.org/~akpm/stuff/tpp.txt'></ulink></para></listitem>
+                        <listitem><para><ulink url='http://linux.yyz.us/patch-format.html'></ulink></para></listitem>
+                        <listitem><para>Documentation/SubmittingPatches (in any linux kernel source tree)</para></listitem>
+                    </itemizedlist>
+                </para></note>
+
+                <para>
+                    The messages used to commit changes are a large part of these standards.
+                    Consequently, be sure that the headers for each commit have the required information. 
+                    If the initial commits were not properly documented or do not meet those standards,
+                    you can re-base by using the "git rebase -i" command to manipulate the commits and
+                    get them into the required format. 
+                    Other techniques such as branching and cherry-picking commits are also viable options.
+                </para>
+
+                <para>
+                    Once you complete the commits, you can generate the email that sends the patches 
+                    to the maintainer(s) or lists that review and integrate changes. 
+                    The command "git send-email" is commonly used to ensure that patches are properly 
+                    formatted for easy application and avoid mailer-induced patch damage.
+                </para>
+
+                <para>
+                    The following is an example of dumping patches for external submission:
+                <literallayout class='monospaced'>
      # dump the last 4 commits 
      &gt; git format-patch --thread -n -o ~/rr/ HEAD^^^^
      &gt; git send-email --compose --subject '[RFC 0/N] &lt;patch series summary&gt;' \
@@ -802,88 +808,98 @@ An example of dumping patches for external submission follows:
       --cc list@yoctoproject.org  ~/rr
      # the editor is invoked for the 0/N patch, and when complete the entire
      # series is sent via email for review
-</literallayout>
-</para>
+                </literallayout>
+                </para>
             </section>
 
             <section id='export-for-import-into-other-scm'>
-                <title>Export for Import into Other SCM</title>
-<para>
-Using any one of the previously discussed techniques, commits can be exported
-as patches for import into another SCM. Note however, that if those patches
-are manually applied to a secondary tree and then that secondary tree is
-checked into the SCM, then it often results in lost information (like commit
-logs) and so it is not recommended.
-</para>
-<para>
-Many SCMs can directly import git commits, or can translate git patches to
-not lose information. Those facilities are SCM dependent and should be used
-whenever possible.
-</para>
+                <title>Exporting Changes for Import into Another SCM</title>
+
+                <para>
+                    When you want to export changes for import into another
+                    Source Code Manager (SCM) you can use any of the previously discussed 
+                    techniques.
+                    However, if the patches are manually applied to a secondary tree and then 
+                    that tree is checked into the SCM you can lose change information such as 
+                    commit logs.
+                    Yocto Project does not recommend this process.
+                </para>
+
+                <para>
+                    Many SCMs can directly import git commits, or can translate git patches so that
+                    information is not lost. 
+                    Those facilities are SCM-dependent and you should use them whenever possible.
+                </para>
             </section>
         </section>
 
         <section id='scm-working-with-the-yocto-project-kernel-in-another-scm'>
-            <title>SCM: Working with the Yocto Project Kernel in Another SCM</title>
-<para>
-This is not the same as the exporting of patches to another SCM, but instead
-is concerned with kernel development that is done completely in another
-environment, but built with the Yocto Project build system. In this scenario two
-things must happen:
-<itemizedlist>
-    <listitem><para>The delivered Yocto Project kernel must be exported into the second
-    SCM.</para></listitem>
-    <listitem><para>Development must be exported from that secondary SCM into a 
-    format that can be used by the Yocto Project build system.</para></listitem>
-</itemizedlist>
-</para>
+            <title>Working with the Yocto Project Kernel in Another SCM</title>
+
+            <para>
+                This section describes kernel development in another SCM, which is not the same
+                as exporting changes to another SCM.
+                For this scenario you use the Yocto Project build system to 
+                develop the kernel in a different SCM.
+                The following must be true for you to accomplish this:
+                <itemizedlist>
+                    <listitem><para>The delivered Yocto Project kernel must be exported into the second
+                    SCM.</para></listitem>
+                    <listitem><para>Development must be exported from that secondary SCM into a 
+                    format that can be used by the Yocto Project build system.</para></listitem>
+                </itemizedlist>
+            </para>
+
             <section id='exporting-delivered-kernel-to-scm'>
-                <title>Exporting Delivered Kernel to SCM</title>
-<para>
-Depending on the SCM it may be possible to export the entire Yocto Project
-kernel git repository, branches and all, into a new environment. This is the
-preferred method, since it has the most flexibility and potential to maintain
-the meta data associated with each commit.
-</para>
-<para>
-When a direct import mechanism is not available, it is still possible to
-export a branch (or series of branches) and check them into a new
-repository.
-</para>
-<para>
-The following commands illustrate some of the steps that could be used to
-import the common_pc-standard kernel into a secondary SCM
-<literallayout class='monospaced'>
+                <title>Exporting the Delivered Kernel to the SCM</title>
+
+                <para>
+                    Depending on the SCM it might be possible to export the entire Yocto Project
+                    kernel git repository, branches and all, into a new environment. 
+                    This method is preferred because it has the most flexibility and potential to maintain
+                    the meta data associated with each commit.
+                </para>
+
+                <para>
+                    When a direct import mechanism is not available, it is still possible to
+                    export a branch (or series of branches) and check them into a new repository.
+                </para>
+
+                <para>
+                    The following commands illustrate some of the steps you could use to
+                    import the common_pc-standard kernel into a secondary SCM:
+                <literallayout class='monospaced'>
      &gt; git checkout common_pc-standard
      &gt; cd .. ; echo linux/.git &gt; .cvsignore
      &gt; cvs import -m "initial import" linux MY_COMPANY start
-</literallayout>
-The CVS repo could now be relocated and used in a centralized manner. 
-</para>
-<para>
-The following commands illustrate how two BSPs could be condensed and merged
-into a second SCM:
-<literallayout class='monospaced'>
+                </literallayout>
+                </para>
+
+                <para>
+                    You could now relocate the CVS repository and use it in a centralized manner. 
+                </para>
+
+                <para>
+                    The following commands illustrate how you can condense and merge two BSPs into a second SCM:
+                <literallayout class='monospaced'>
      &gt; git checkout common_pc-standard
      &gt; git merge cav_ebt5800-standard
      # resolve any conflicts and commit them
      &gt; cd .. ; echo linux/.git &gt; .cvsignore
      &gt; cvs import -m "initial import" linux MY_COMPANY start
-</literallayout>
-</para>
+                </literallayout>
+                </para>
             </section>
 
             <section id='importing-changes-for-build'>
-                <title>Importing Changes for Build</title>
-<para>
-Once development has reached a suitable point in the second development
-environment, changes can either be exported as patches or imported into git
-directly (if a conversion/import mechanism is available for the SCM).
-</para>
-<para>
-If changes are exported as patches, they can be placed in a recipe and
-automatically applied to the kernel during patching.
-</para>
+                <title>Importing Changes for the Build</title>
+ 
+                <para>
+                    Once development has reached a suitable point in the second development
+                    environment, you need to export the changes as patches.
+                    To export them place the changes in a recipe and
+                    automatically apply them to the kernel during patching.
+                </para>
 <!--<para>
 If changes are imported directly into git, they must be propagated to the
 wrll-linux-2.6.27/git/default_kernel bare clone of each individual build
@@ -988,97 +1004,139 @@ That's it. Configure and build.
 
 
         <section id='bsp-creating'>
-            <title>BSP: Creating</title>
+            <title>Creating a BSP Based on an Existing Similar BSP</title>
+
             <para>
-                This section provides an example for creating a BSP based on an existing, and hopefully, 
+                This section provides an example for creating a BSP that is based on an existing, and hopefully, 
                 similar one.  
                 Follow these steps and keep in mind your particular situation and differences:
+
             <orderedlist>
-                <listitem><para>Get a machine configuration file that matches your machine.</para>
-                <para>You can start with something in <filename>meta/conf/machine</filename>.  
-                Or, <filename>meta-emenlow/conf/machine</filename> has an example in its own layer.</para>
-                <para>The most up-to-date machines that are probably most similar to yours and that you might want 
-                to look at are <filename>meta/conf/machine/atom-pc.conf</filename> and 
-                <filename>meta-emenlow/conf/machine/emenlow.conf</filename>.  
-                Both of these were either just added or upgraded to use the Yocto Project kernel 
-                at <ulink url='http://git.pokylinux.org/cgit/cgit.cgi/linux-2.6-windriver/'></ulink>.
-                The main difference between them is that "emenlow" is in its own layer.
-                It is in its own layer because it needs extra machine-specific packages such as its 
-                own video driver and other supporting packages.  
-                The "atom-pc" is simpler and does not need any special packages - everything it needs can 
-                be specified in the configuration file.  
-                The "atom-pc" machine also supports all of Asus eee901, Acer Aspire One, Toshiba NB305, 
-                and the Intel&reg; Embedded Development Board 1-N450 with no changes.</para>
-                <para>If you want to make minor changes to support a slightly different machine, you can
-                create a new configuration file for it and add it alongside the others.
-                You might consider keeping the common stuff separate and including it.</para>
-                <para>Similarly, you can also use multiple configuration files for different machines even 
-                if you do it as a separate layer like meta-emenlow.</para>
-                <para>As an example consider this:
-                <itemizedlist>
-                    <listitem><para>Copy meta-emenlow</para></listitem>
-                    <listitem><para>Fix or remove anything you do not need.  
-                    For this example the only thing left was the kernel directory with a linux-yocto_git.bbappend
-                    file (linux-yocto is the kernel listed in 
-                    <filename>meta-crownbay/conf/machine/crownbay.conf</filename>.
-                    Finally, a new entry to the <filename>build/donf/bblayers.conf</filename> was added so the 
-                    new layer could be found by Bitbake.</para></listitem>
-                </itemizedlist>
+                <listitem><para>
+                    Identify a machine configuration file that matches your machine.
+                </para>
+                
+                <para>
+                    You can start with something in <filename>meta/conf/machine</filename>.  
+                    Or, <filename>meta-emenlow/conf/machine</filename> has an example in its own layer.
+                </para>
+                
+                <para>
+                    The most up-to-date machines that are probably most similar to yours and that you might want 
+                    to look at are <filename>meta/conf/machine/atom-pc.conf</filename> and 
+                    <filename>meta-emenlow/conf/machine/emenlow.conf</filename>.  
+                    Both of these files were either just added or upgraded to use the Yocto Project kernel 
+                    at <ulink url='http://git.pokylinux.org/cgit/cgit.cgi/linux-2.6-windriver/'></ulink>.
+                    The main difference between the two is that "emenlow" is in its own layer.
+                    It is in its own layer because it needs extra machine-specific packages such as its 
+                    own video driver and other supporting packages.  
+                    The "atom-pc" is simpler and does not need any special packages - everything it needs can 
+                    be specified in the configuration file.  
+                    The "atom-pc" machine also supports all of Asus eee901, Acer Aspire One, Toshiba NB305, 
+                    and the Intel&reg; Embedded Development Board 1-N450 with no changes.
+                </para>
+  
+                <para>
+                    If you want to make minor changes to support a slightly different machine, you can
+                    create a new configuration file for it and add it alongside the others.
+                    You might consider keeping the common information separate and including it.
+                </para>
+                
+                <para>
+                    Similarly, you can also use multiple configuration files for different machines even 
+                    if you do it as a separate layer like meta-emenlow.
+                </para>
+ 
+                <para>
+                    As an example consider this:
+                    <itemizedlist>
+                        <listitem><para>Copy meta-emenlow</para></listitem>
+                        <listitem><para>Fix or remove anything you do not need.  
+                        For this example the only thing left was the kernel directory with a 
+                        <filename>linux-yocto_git.bbappend</filename> file (linux-yocto is the kernel listed in 
+                        <filename>meta-crownbay/conf/machine/crownbay.conf</filename></para></listitem>.
+                        <listitem><para>Add a new entry in the <filename>build/donf/bblayers.conf</filename> 
+                        so the new layer can be found by Bitbake.</para></listitem>
+                    </itemizedlist>
                 </para></listitem>
-                <listitem><para>Get an image with a working kernel built.</para>
-                <para>For the kernel to compile successfully, you need to create a branch in the git repository
-                specifically named for your machine.  
-                So first create a bare clone of the Yocto Project git repository, and then create a 
-                local clone of that:
-                <literallayout class='monospaced'>
+                
+                <listitem><para>
+                    Get an image with a working kernel built.
+                </para>
+
+                <para>
+                    For the kernel to compile successfully, you need to create a branch in the git repository
+                    specifically named for your machine.  
+                    To create this branch first create a bare clone of the Yocto Project git repository.
+                    Next, create a local clone of that:
+                    <literallayout class='monospaced'>
      $ git clone --bare git://git.pokylinux.org/linux-2.6-windriver.git
      linux-2.6-windriver.git
      $ git clone linux-2.6-windriver.git linux-2.6-windriver
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>Now create a branch in the local clone and push it to the bare clone:
-                <literallayout class='monospaced'>
+                
+                <para>
+                    Now create a branch in the local clone and push it to the bare clone:
+                    <literallayout class='monospaced'>
      $ git checkout -b crownbay-standard origin/standard $ git push origin crownbay-standard:crownbay-standard
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>At this point, your git tree should be set up well enough to compile.</para></listitem>
-                <listitem><para>Point the build at the new kernel git tree.</para>
-                <para>You can do this by commenting out the SRC_URI variable in 
-                <filename>meta/recipes-kernel/linux/linux-yocto_git.bb</filename> and using a SRC_URI 
-                that points to your new bare git tree.
-                You should also be able to do this in <filename>linux-yocto_git.bbappend</filename> in the layer:
-                <literallayout class='monospaced'>
+               
+                <para>
+                    At this point, your git tree should compile.
+                </para></listitem>
+                
+                <listitem><para>
+                    Point the build at the new kernel git tree.
+                </para>
+                
+                <para>
+                    You can do this by commenting out the SRC_URI variable in 
+                    <filename>meta/recipes-kernel/linux/linux-yocto_git.bb</filename> and using a SRC_URI 
+                    that points to your new bare git tree.
+                    You should also be able to do this in <filename>linux-yocto_git.bbappend</filename> in the layer:
+                    <literallayout class='monospaced'>
      # To use a staged, on-disk bare clone of a Wind River Kernel, use a variant of the 
      # below SRC_URI = "git://///path/to/kernel/default_kernel.git;fullclone=1"
      #
      SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${KBRANCH};name=machine
 \
      git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>After doing that, select the machine in <filename>build/conf/local.conf</filename>:
-                <literallayout class='monospaced'>
+                
+                <para>
+                    After doing that, select the machine in <filename>build/conf/local.conf</filename>:
+                    <literallayout class='monospaced'>
       #
       MACHINE ?= "crownbay"
       #
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>You should now be able to build and boot an image with the new kernel:
-                <literallayout class='monospaced'>
+               
+                <para>
+                    You should now be able to build and boot an image with the new kernel:
+                    <literallayout class='monospaced'>
      $ bitbake poky-image-sato-live
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>Of course, that will give you a kernel with the default config, which is probably 
-                not what you want.
-                If you just want to set some kernel config options, you can do that by putting them in a files.
-                For example inserting the following into some <filename>.cfg</filename> file:
-                <literallayout class='monospaced'>
+                
+                <para>
+                    Of course, that will give you a kernel with the default configuration file, which is probably 
+                    not what you want.
+                    If you just want to set some kernel configuration options, you can do that by 
+                    putting them in a file.
+                    For example, inserting the following into some <filename>.cfg</filename> file:
+                    <literallayout class='monospaced'>
      CONFIG_NETDEV_1000=y
      CONFIG_E1000E=y
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>And, another <filename>.cfg</filename> file would contain:
-                <literallayout class='monospaced'>
+                
+                <para>
+                    And, another <filename>.cfg</filename> file would contain:
+                    <literallayout class='monospaced'>
      CONFIG_LOG_BUF_SHIFT=18
 
      http://git.pokylinux.org/cgit/cgit.cgi/linux-2.6-windriver/
@@ -1086,36 +1144,48 @@ That's it. Configure and build.
      SRC_URI_append_crownbay = " file://some.cfg \
                                   file://other.cfg \
                                "
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>You could also add these directly to the git repo's wrs_meta branch as well.
-                However, the former method is probably easier.</para></listitem>
-                <listitem><para>If you're also adding patches to the kernel, you can do the same thing.
-                Put your patches in the SRC_URI as well (plus .cfg for their kernel config options if needed).</para>
-                <para>Practically speaking, to generate the patches, you'd go to the source in the build tree:
-                <literallayout class='monospaced'>
+                
+                <para>
+                    You could also add these directly to the git repository <filename>wrs_meta</filename>
+                    branch as well.
+                    However, the former method is probably easier.
+                </para></listitem>
+                
+                <listitem><para>
+                    If you're also adding patches to the kernel, you can do the same thing.
+                    Put your patches in the SRC_URI as well (plus <filename>.cfg</filename> for their kernel 
+                    configuration options if needed).
+                </para>
+                
+                <para>
+                    Practically speaking, to generate the patches, you'd go to the source in the build tree:
+                    <literallayout class='monospaced'>
      build/tmp/work/crownbay-poky-linux/linux-yocto-2.6.34+git0+d1cd5c80ee97e81e130be8c3de3965b770f320d6_0+
 0431115c9d720fee5bb105f6a7411efb4f851d26-r13/linux
-                </literallayout>
+                    </literallayout>
                 </para>
-                <para>Then, modify the code there, using quilt to save the changes, and recompile 
-                (bitbake -c compile -f) 
-                until it works.</para></listitem>
-                <listitem><para>Once you have the final patch from quilt, copy it to the 
-                SRC_URI location, and it should be
-                applied the next time you do a clean build.  
-                Of course, since you have a branch for the BSP in git, it would be better to put it there instead.
-                For example, in this case, commit the patch to the crownbay-standard branch, and during the 
-                next build it will be applied from there.</para></listitem>
+                
+                <para>
+                    Then, modify the code there, using quilt to save the changes, and recompile until 
+                    it works:
+                    <literallayout class='monospaced'>
+     $ bitbake -c compile -f
+                    </literallayout>
+                </para></listitem>
+                
+                <listitem><para>
+                    Once you have the final patch from quilt, copy it to the 
+                    SRC_URI location.
+                    The patch is applied the next time you do a clean build.
+                    Of course, since you have a branch for the BSP in git, it would be better to put it there instead.
+                    For example, in this case, commit the patch to the "crownbay-standard" branch, and during the 
+                    next build it is applied from there.
+                </para></listitem>
             </orderedlist>
             </para>
         </section>
-
-
-
-
-
-
 
 
 <!--        <section id='bsp-creating-a-new-bsp'>
@@ -1825,51 +1895,60 @@ This section shows an example of transforms:
 
         <section id='tip-dirty-string'>
             <title>"-dirty" String</title>
-<para>
-If kernel images are being built with -dirty on the end of the version
-string, this simply means that there are modification in the source
-directory that haven't been committed.
-<literallayout class='monospaced'>
+
+            <para>
+                If kernel images are being built with "-dirty" on the end of the version
+                string, this simply means that modifications in the source
+                directory have not been committed.
+                <literallayout class='monospaced'>
      &gt; git status
-</literallayout>
-</para>
-<para>
-The above git command will indicate modified, removed or added files. Those changes should
-be committed to the tree (even if they will never be saved, or exported
-for future use) and the kernel rebuilt.
-</para>
-<para>
-To brute force pickup and commit all such pending changes enter the following:
-<literallayout class='monospaced'>
+                </literallayout>
+            </para>
+
+            <para>
+                You can use the git command above to report modified, removed, or added files. 
+                You should commit those changes to the tree regardless of whether they will be saved, 
+                exported, or used.
+                Once you commit the changes you need to rebuild the kernel.
+            </para>
+
+            <para>
+                To brute force pickup and commit all such pending changes enter the following:
+                <literallayout class='monospaced'>
      &gt; git add .
      &gt; git commit -s -a -m "getting rid of -dirty"
-</literallayout>
-</para>
-<para>
-And then rebuild the kernel
-</para>
+                </literallayout>
+            </para>
+
+            <para>
+                Next, rebuild the kernel.
+            </para>
         </section>
 
         <section id='kernel-transition-kernel-layer'>
-            <title>Kernel: Transition Kernel Layer</title>
-<para>
-In order to temporarily use a different base kernel in Yocto Project
-Linux 3.0 you need to do the following:
-<orderedlist>
-    <listitem><para>Create a custom kernel layer.</para></listitem>
-    <listitem><para>Create a git repository of the transition kernel.</para></listitem>
-</orderedlist>
-</para>
-<para>
-Once those requirements are met multiple boards and kernels can
-be built. The cost of setup is only paid once and then additional
-BSPs and options can be added.
-</para>
-<para>
-This creates a transition kernel layer to evaluate functionality
-of some other kernel with the goal of easing transition to an
-integrated and validated Yocto Project kernel.
-</para>
+            <title>Creating a Transition Kernel Layer</title>
+
+            <para>
+                You can temporarily use a different base kernel in Yocto Project by doing the following:
+
+                <orderedlist>
+                    <listitem><para>Create a custom kernel layer.</para></listitem>
+                    <listitem><para>Create a git repository of the transition kernel.</para></listitem>
+                </orderedlist>
+            </para>
+            
+            <para>
+                Once you meet those requirements you can build multiple boards and kernels.
+                You pay the setup cost only once. 
+                You can then add additional BSPs and options.
+            </para>
+
+            <para>
+                Once you have the transition kernel layer in place you can evaluate
+                another kernel's functionality with the goal of easing transition to an integrated and validated
+                Yocto Project kernel.
+            </para>
+
 <!--<para>
 The next few sections describe the process:
 </para> -->
