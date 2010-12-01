@@ -156,7 +156,7 @@
      docbook-utils sed bc glibc-devel ccache pcre pcre-devel quilt \
      groff linuxdoc-tools patch linuxdoc-tools cmake help2man \
      perl-ExtUtils-MakeMaker tcl-devel gettext chrpath ncurses apr \
-     SDL-devel mesa-libGL-devel mesa-libGLU-devel
+     SDL-devel mesa-libGL-devel mesa-libGLU-devel gnome-doc-utils
             </literallayout>
  
        <para>
