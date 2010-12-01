@@ -2,62 +2,62 @@ Index: unix/Makefile.in
 ===================================================================
 --- unix.orig/Makefile.in
 +++ unix/Makefile.in
-@@ -622,20 +622,20 @@ ro-test: tcltest
- shell: tclsh
+@@ -619,20 +619,20 @@ ro-test: tcltest@EXEEXT@
+ shell: ${TCL_EXE}
  	@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
--	./tclsh $(SCRIPT)
-+	tclsh $(SCRIPT)
+-	./${TCL_EXE} $(SCRIPT)
++	${TCL_EXE} $(SCRIPT)
  
  # This target can be used to run tclsh inside either gdb or insight
- gdb: tclsh
+ gdb: ${TCL_EXE}
  	@echo "set env @LD_LIBRARY_PATH_VAR@=\"`pwd`:$${@LD_LIBRARY_PATH_VAR@}\"" > gdb.run
  	@echo "set env TCL_LIBRARY=${TCL_BUILDTIME_LIBRARY}" >> gdb.run
--	$(GDB) ./tclsh --command=gdb.run
-+	$(GDB) tclsh --command=gdb.run
+-	$(GDB) ./${TCL_EXE} --command=gdb.run
++	$(GDB) ${TCL_EXE} --command=gdb.run
  	rm gdb.run
  
  # This target can be used to run tclsh inside ddd
- ddd: tclsh
+ ddd: ${TCL_EXE}
  	@echo "set env @LD_LIBRARY_PATH_VAR@=\"`pwd`:$${@LD_LIBRARY_PATH_VAR@}\"" > gdb.run
  	@echo "set env TCL_LIBRARY=${TCL_BUILDTIME_LIBRARY}" >> gdb.run
--	$(DDD) -command=gdb.run ./tclsh
-+	$(DDD) -command=gdb.run tclsh
+-	$(DDD) -command=gdb.run ./${TCL_EXE}
++	$(DDD) -command=gdb.run ${TCL_EXE}
  	rm gdb.run
  
  VALGRINDARGS=--tool=memcheck --num-callers=8 --leak-resolution=high --leak-check=yes --show-reachable=yes -v
-@@ -648,7 +648,7 @@ valgrind: tclsh tcltest
- valgrindshell: tclsh
+@@ -645,7 +645,7 @@ valgrind: ${TCL_EXE} tcltest@EXEEXT@
+ valgrindshell: ${TCL_EXE}
  	@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
--	valgrind $(VALGRINDARGS) ./tclsh $(SCRIPT)
-+	valgrind $(VALGRINDARGS) tclsh $(SCRIPT)
+-	valgrind $(VALGRINDARGS) ./${TCL_EXE} $(SCRIPT)
++	valgrind $(VALGRINDARGS) ${TCL_EXE} $(SCRIPT)
  
  # The following target outputs the name of the top-level source directory for
  # Tcl (it is used by Tk's configure script, for example). The .NO_PARALLEL
-@@ -817,14 +817,14 @@ install-tzdata: tclsh
+@@ -809,14 +809,14 @@ install-tzdata: ${TCL_EXE}
  	@echo "Installing time zone data"
  	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
--	./tclsh $(TOOL_DIR)/installData.tcl \
-+	tclsh $(TOOL_DIR)/installData.tcl \
+-	./${TCL_EXE} $(TOOL_DIR)/installData.tcl \
++	${TCL_EXE} $(TOOL_DIR)/installData.tcl \
  	    $(TOP_DIR)/library/tzdata "$(SCRIPT_INSTALL_DIR)"/tzdata
  
- install-msgs: tclsh
+ install-msgs: ${TCL_EXE}
  	@echo "Installing message catalogs"
  	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
--	./tclsh $(TOOL_DIR)/installData.tcl \
-+	tclsh $(TOOL_DIR)/installData.tcl \
+-	./${TCL_EXE} $(TOOL_DIR)/installData.tcl \
++	${TCL_EXE} $(TOOL_DIR)/installData.tcl \
  	    $(TOP_DIR)/library/msgs "$(SCRIPT_INSTALL_DIR)"/msgs
  
  install-doc: doc
-@@ -1764,7 +1764,7 @@ html-tk: tclsh
+@@ -1756,7 +1756,7 @@ html-tk: ${TCL_EXE}
  BUILD_HTML = \
  	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
--	./tclsh $(TOOL_DIR)/tcltk-man2html.tcl --htmldir="$(HTML_INSTALL_DIR)" \
-+	tclsh $(TOOL_DIR)/tcltk-man2html.tcl --htmldir="$(HTML_INSTALL_DIR)" \
+-	./${TCL_EXE} $(TOOL_DIR)/tcltk-man2html.tcl --htmldir="$(HTML_INSTALL_DIR)" \
++	${TCL_EXE} $(TOOL_DIR)/tcltk-man2html.tcl --htmldir="$(HTML_INSTALL_DIR)" \
  		--srcdir=$(TOP_DIR)/.. $(BUILD_HTML_FLAGS)
  
  #
