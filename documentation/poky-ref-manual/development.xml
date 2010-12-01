@@ -284,10 +284,10 @@
             <title>The Anjuta Plug-in</title>
             <note>
                 <para>
-                    Support for the Anjuta plug-in ends after Yocto project 0.9 release.  
+                    Support for the Anjuta plug-in ends after Yocto project 0.9 Release.  
                     However, the source code can be downloaded from the git repository listed later in 
                     this section.
-                    The community is free to continue supporting it post 0.9 release.
+                    The community is free to continue supporting it post 0.9 Release.
                 </para>
             </note>
             <para>
@@ -297,7 +297,7 @@
                 profile, deploy, and execute an application.
             </para>
             <para>
-                To use the plug-in, a toolchain and SDK built by Poky, Anjuta, it's development headers and the Anjuta
+                To use the plug-in, a toolchain and SDK built by Poky, Anjuta, its development headers and the Anjuta
                 Plug-in are all required. 
                 The Poky Anjuta Plug-in is available to download as a tarball at the OpenedHand 
                 labs <ulink url="http://labs.o-hand.com/anjuta-poky-sdk-plugin/"></ulink> page or 
