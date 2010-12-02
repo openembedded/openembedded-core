@@ -3,10 +3,10 @@
 
 <appendix id='ref-bitbake'>
 
-    <title>Reference: Bitbake</title>
+    <title>Reference: BitBake</title>
 
     <para>
-        Bitbake is a program written in Python that interprets the metadata
+        BitBake is a program written in Python that interprets the metadata
         that makes up Poky. At some point, people wonder what actually happens 
         when you type <command>bitbake poky-image-sato</command>. This section 
         aims to give an overview of what happens behind the scenes from a
@@ -14,7 +14,7 @@
     </para>
 
     <para>
-        It is worth noting that bitbake aims to be a generic "task" executor 
+        It is worth noting that BitBake aims to be a generic "task" executor 
         capable of handling complex dependency relationships. As such it has no 
         real knowledge of what the tasks it is executing actually do. It just 
         considers a list of tasks with dependencies and handles metadata 
@@ -28,7 +28,7 @@
         <para>
             The first thing BitBake does is work out its configuration by 
             looking for a file called <filename>bitbake.conf</filename>.
-            Bitbake searches through the <varname>BBPATH</varname> environment 
+            BitBake searches through the <varname>BBPATH</varname> environment 
             variable looking for a <filename class="directory">conf/</filename> 
             directory containing a <filename>bitbake.conf</filename> file and 
             adds the first <filename>bitbake.conf</filename> file found in
@@ -83,12 +83,12 @@
             <filename class="directory">meta-extras/</filename> can be included 
             too. Adding extra content to
             <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm> is best
-            acheived through the use of Bitbake
+            acheived through the use of BitBake
             <link linkend='usingpoky-changes-layers'>"layers"</link>.
         </para>
 
         <para>
-            Bitbake parses each <filename class="extension">.bb</filename> file in 
+            BitBake parses each <filename class="extension">.bb</filename> file in 
             <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm> and 
             stores the values of various variables.  In summary, for each 
             <filename class="extension">.bb</filename> 
@@ -138,7 +138,7 @@
 
         <para>
             Understanding how providers are chosen is complicated by the fact
-            multiple versions might be present. Bitbake defaults to the highest 
+            multiple versions might be present. BitBake defaults to the highest 
             version of a provider by default. Version comparisons are made using 
             the same method as Debian. The <glossterm><link 
             linkend='var-PREFERRED_VERSION'>PREFERRED_VERSION</link></glossterm>
@@ -316,7 +316,7 @@ Options:
 
         <para>
             As well as the containing the parsing and task/dependency handling 
-            code, bitbake also contains a set of "fetcher" modules which allow 
+            code, BitBake also contains a set of "fetcher" modules which allow 
             fetching of source code from various types of sources. Example 
             sources might be from disk with the metadata, from websites, from 
             remote shell accounts or from SCM systems like cvs/subversion/git. 
