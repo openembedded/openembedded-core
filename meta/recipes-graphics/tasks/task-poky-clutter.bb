@@ -22,12 +22,10 @@ ALLOW_EMPTY = "1"
 
 RDEPENDS_task-poky-clutter-core = "\
     clutter-1.0 \
-    clutter-cairo-1.0 \
     clutter-gst-1.0 \
     clutter-gtk-1.0"
 
 RDEPENDS_task-poky-clutter-tests = "\
-    clutter-cairo-1.0-examples \
     clutter-gst-1.0-examples \
     clutter-gtk-1.0-examples"
 
