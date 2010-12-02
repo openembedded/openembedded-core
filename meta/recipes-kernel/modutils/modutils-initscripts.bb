@@ -1,7 +1,9 @@
 SECTION = "base"
 DESCRIPTION = "modutils configuration files"
 LICENSE = "PD"
-SRC_URI = "file://modutils.sh"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7bf87fc37976e93ec66ad84fac58c098"
+SRC_URI = "file://modutils.sh \
+	   file://PD.patch"
 PR = "r4"
 
 INITSCRIPT_NAME = "modutils.sh"
