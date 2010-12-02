@@ -6,21 +6,23 @@
     <title>Reference: BitBake</title>
 
     <para>
-        BitBake is a program written in Python that interprets the metadata
-        that makes up Poky. At some point, people wonder what actually happens 
-        when you type <command>bitbake poky-image-sato</command>. This section 
-        aims to give an overview of what happens behind the scenes from a
-        BitBake perspective.
+        BitBake is a program written in Python that interprets the metadata that makes up Poky. 
+        At some point, people wonder what actually happens when you enter:
+    <literallayout class='monospaced'>
+     $ bitbake poky-image-sato
+    </literallayout>
+    </para>
+   
+    <para>
+        This appendix provides an overview of what happens behind the scenes from BitBake's perspective.
     </para>
 
-    <para>
-        It is worth noting that BitBake aims to be a generic "task" executor 
-        capable of handling complex dependency relationships. As such it has no 
-        real knowledge of what the tasks it is executing actually do. It just 
-        considers a list of tasks with dependencies and handles metadata 
-        consisting of variables in a certain format which get passed to the 
-        tasks.
-    </para>
+    <note><para>
+        BitBake strives to be a generic "task" executor that is capable of handling complex dependency relationships. 
+        As such, it has no real knowledge of what the tasks being executed actually do. 
+        BitBake just considers a list of tasks with dependencies and handles metadata 
+        that consists of variables in a certain format that get passed to the tasks.
+    </para></note>
 
     <section id='ref-bitbake-parsing'>
         <title>Parsing</title>
@@ -28,10 +30,10 @@
         <para>
             The first thing BitBake does is work out its configuration by 
             looking for a file called <filename>bitbake.conf</filename>.
-            BitBake searches through the <varname>BBPATH</varname> environment 
+            BitBake examines the <varname>BBPATH</varname> environment 
             variable looking for a <filename class="directory">conf/</filename> 
-            directory containing a <filename>bitbake.conf</filename> file and 
-            adds the first <filename>bitbake.conf</filename> file found in
+            directory that contains a <filename>bitbake.conf</filename> file.
+            BitBake adds the first <filename>bitbake.conf</filename> file found in
             <varname>BBPATH</varname> (similar to the PATH environment variable). 
             For Poky, <filename>bitbake.conf</filename> is found in <filename 
             class="directory">meta/conf/</filename>. 
@@ -42,32 +44,32 @@
             files to include from a <filename class="directory">conf/</filename> 
             directory below the directories listed in <varname>BBPATH</varname>. 
             In general the most important configuration file from a user's perspective 
-            is <filename>local.conf</filename>, which contains a users customized 
-            settings for Poky. Other notable configuration files are the distribution 
+            is <filename>local.conf</filename>, which contains a user's customized 
+            settings for Poky. 
+            Other notable configuration files are the distribution 
             configuration file (set by the <glossterm><link linkend='var-DISTRO'>
             DISTRO</link></glossterm> variable) and the machine configuration file 
             (set by the <glossterm><link linkend='var-MACHINE'>MACHINE</link>
-            </glossterm> variable).  The <glossterm><link linkend='var-DISTRO'>
-            DISTRO</link></glossterm> and <glossterm><link linkend='var-MACHINE'>
-            MACHINE</link></glossterm> environment variables are both usually set in 
-            the <filename>local.conf</filename> file. Valid distribution 
+            </glossterm> variable).  
+            The DISTRO and MACHINE environment variables are both usually set in 
+            the <filename>local.conf</filename> file. 
+            Valid distribution 
             configuration files are available in the <filename class="directory">
             meta/conf/distro/</filename> directory and valid machine configuration 
             files in the <filename class="directory">meta/conf/machine/</filename> 
-            directory. Within the <filename class="directory">
-            meta/conf/machine/include/</filename> directory are various <filename>
-            tune-*.inc</filename> configuration files which provide common 
-            "tuning" settings specific to and shared between particular 
-            architectures and machines.
+            directory. 
+            Within the <filename class="directory">meta/conf/machine/include/</filename> 
+            directory are various <filename>tune-*.inc</filename> configuration files that provide common 
+            "tuning" settings specific to and shared between particular architectures and machines.
         </para>
 
         <para>
-            After the parsing of the configuration files some standard classes 
-            are included. In particular, <filename>base.bbclass</filename> is 
-            always included, as will any other classes 
-            specified in the configuration using the <glossterm><link
-                    linkend='var-INHERIT'>INHERIT</link></glossterm>
-            variable. Class files are searched for in a classes subdirectory 
+            After the parsing of the configuration files some standard classes are included. 
+            The <filename>base.bbclass</filename> file is always included.
+            Other classes that are specified in the configuration using the 
+            <glossterm><link linkend='var-INHERIT'>INHERIT</link></glossterm>
+            variable are also inculded. 
+            Class files are searched for in a classes subdirectory 
             under the paths in <varname>BBPATH</varname> in the same way as
             configuration files.
         </para>
@@ -77,21 +79,19 @@
             variable <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm> 
             is set, usually in
             <filename>local.conf</filename>, and defines the list of places to search for 
-            <filename class="extension">.bb</filename> files. By 
-            default this specifies the <filename class="directory">meta/packages/
+            <filename class="extension">.bb</filename> files. 
+            By default this specifies the <filename class="directory">meta/packages/
             </filename> directory within Poky, but other directories such as
             <filename class="directory">meta-extras/</filename> can be included 
-            too. Adding extra content to
-            <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm> is best
-            acheived through the use of BitBake
+            too. 
+            Adding extra content to BBFILES is best acheived through the use of BitBake
             <link linkend='usingpoky-changes-layers'>"layers"</link>.
         </para>
 
         <para>
-            BitBake parses each <filename class="extension">.bb</filename> file in 
-            <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm> and 
-            stores the values of various variables.  In summary, for each 
-            <filename class="extension">.bb</filename> 
+            BitBake parses each <filename class="extension">.bb</filename> file in BBFILES and 
+            stores the values of various variables.  
+            In summary, for each <filename class="extension">.bb</filename> 
             file the configuration + base class of variables are set, followed 
             by the data in the <filename class="extension">.bb</filename> file 
             itself, followed by any inherit commands that
