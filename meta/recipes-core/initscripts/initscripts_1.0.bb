@@ -5,6 +5,7 @@ PRIORITY = "required"
 DEPENDS = "makedevs"
 RDEPENDS = "makedevs"
 LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 PR = "r122"
 
 SRC_URI = "file://functions \
@@ -30,7 +31,8 @@ SRC_URI = "file://functions \
            file://device_table.txt \
            file://populate-volatile.sh \
            file://volatiles \
-           file://save-rtc.sh"
+           file://save-rtc.sh \
+	   file://GPLv2.patch"
 
 SRC_URI_append_arm = " file://alignment.sh"
 
