@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
-PR = "r1"
+PR = "r2"
 
 inherit autotools pkgconfig gnome
 
@@ -17,6 +17,7 @@ EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disabl
 SRC_URI += "file://doc_Makefile.patch"
 
 do_configure_prepend () {
+	export GDK_PIXBUF_QUERYLOADERS="${libdir}/gtk-2.0/version/loaders"
 	echo "CLEANFILES=" > gtk-doc.make
 }
 
