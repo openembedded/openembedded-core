@@ -6,6 +6,8 @@ DEPENDS = "glib-2.0 libsoup-2.4 libglade"
 
 SRC_URI = "http://gupnp.org/sites/all/files/sources/${PN}-${PV}.tar.gz"
 
+EXTRA_OECONF = "--disable-introspection"
+
 inherit autotools pkgconfig
 
 PACKAGES =+ "gssdp-tools"
