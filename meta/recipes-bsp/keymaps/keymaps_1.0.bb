@@ -2,13 +2,15 @@ SUMMARY = "Keyboard maps"
 DESCRIPTION = "Keymaps and initscript to set the keymap on bootup."
 SECTION = "base"
 RDEPENDS_${PN} = "initscripts console-tools"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 PACKAGE_ARCH = "${MACHINE}"
 PR = "r17"
 
 inherit update-rc.d
 
-SRC_URI = "file://keymap.sh"
+SRC_URI = "file://keymap.sh \
+	   file://GPLv2.patch"
 
 SRC_URI_append_c7x0         = " file://keymap-*.map"
 SRC_URI_append_tosa         = " file://keymap-*.map"
