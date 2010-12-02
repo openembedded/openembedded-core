@@ -101,7 +101,7 @@
 
         <glossentry id='var-BBPATH'><glossterm>BBPATH</glossterm>
             <glossdef>
-                <para>Used by Bitbake to locate bbclass and configuration files.  This variable is analagous to 
+                <para>Used by Bitbake to locate bbclass and configuration files.  This variable is analogous to 
                     the PATH variable.</para>
             </glossdef>
         </glossentry>
@@ -140,9 +140,9 @@
 
         <glossentry id='var-COMPATIBLE_MACHINE'><glossterm>COMPATIBLE_MACHINE</glossterm>
             <glossdef>
-                <para>A regular expression which evalutates to match the machines the recipe 
+                <para>A regular expression which evaluates to match the machines the recipe 
                 works with. It stops recipes being run on machines they're incompatible with, 
-                which is partciuarly useful with kernels. It also helps to increase parsing 
+                which is particularly useful with kernels. It also helps to increase parsing 
                 speed as further parsing of the recipe is skipped as if it found the current
                 machine is not compatible.</para>
             </glossdef>
@@ -833,7 +833,7 @@ recipes-graphics/xorg-font/fiont-alias_1.0.2.bb:PR - "$(INC_PR).0"
 
         <glossentry id='var-SUMMARY'><glossterm>SUMMARY</glossterm>
             <glossdef>
-                <para>Short (72 char suggested) Summary of binary package for packaging sytems such as ipkg, rpm or debian, inherits DESCRIPTION by default</para>
+                <para>Short (72 char suggested) Summary of binary package for packaging systems such as ipkg, rpm or debian, inherits DESCRIPTION by default</para>
             </glossdef>
         </glossentry>
 

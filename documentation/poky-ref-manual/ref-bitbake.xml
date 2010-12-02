@@ -84,7 +84,7 @@
             </filename> directory within Poky, but other directories such as
             <filename class="directory">meta-extras/</filename> can be included 
             too. 
-            Adding extra content to BBFILES is best acheived through the use of BitBake
+            Adding extra content to BBFILES is best achieved through the use of BitBake
             <link linkend='usingpoky-changes-layers'>"layers"</link>.
         </para>
 

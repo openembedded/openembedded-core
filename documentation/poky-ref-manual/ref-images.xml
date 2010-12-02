@@ -52,7 +52,7 @@
                     <emphasis>meta-toolchain</emphasis> - This generates a tarball containing
                     a standalone toolchain which can be used externally to Poky. It is self
                     contained and unpacks to the <filename class="directory">/opt/poky</filename>
-                    directory. It also contains a copy of QEMU and the scripts neccessary to run 
+                    directory. It also contains a copy of QEMU and the scripts necessary to run 
                     poky QEMU images.
                 </para>
             </listitem>

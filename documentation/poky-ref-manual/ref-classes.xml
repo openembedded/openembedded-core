@@ -45,7 +45,7 @@
     <para>
         Autotools (autoconf, automake, libtool) brings standardisation and this
         class aims to define a set of tasks (configure, compile etc.) that will
-        work for all autotooled packages.  It should usualy be enough to define
+        work for all autotooled packages.  It should usually be enough to define
         a few standard variables as documented in the <link
         linkend='usingpoky-extend-addpkg-autotools'>simple autotools
         example</link> section and then simply "inherit autotools". This class
@@ -60,7 +60,7 @@
     <itemizedlist>
       <listitem>
         <para>
-            'do_configure' regenearates the configure script (using autoreconf) and
+            'do_configure' regenerates the configure script (using autoreconf) and
             then launches it with a standard set of arguments used during
             cross-compilation. Additional parameters can be passed to 
             <command>configure</command> through the <glossterm><link 
