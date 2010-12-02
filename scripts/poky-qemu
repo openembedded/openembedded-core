@@ -84,6 +84,7 @@ process_filename() {
 
 # Parse command line args without requiring specific ordering. It's a
 # bit more complex, but offers a great user experience.
+KVM_ENABLED="no"
 i=1
 while [ $i -le $# ]; do
     arg=${!i}
@@ -124,6 +125,10 @@ while [ $i -le $# ]; do
             SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -serial stdio"
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT console=ttyS0"
             ;;
+        "kvm")
+            KVM_ENABLED="yes"
+            KVM_CAPABLE=`grep 'vmx\|smx' /proc/cpuinfo`
+            ;;
         *)
             # A directory name is an nfs rootfs
             if [ -d "$arg" ]; then
@@ -151,6 +156,13 @@ while [ $i -le $# ]; do
     esac
     i=$((i + 1))
 done
+
+# Detect KVM configuration
+if [[ "x$KVM_ENABLED" == "xyes" && ! -z "$KVM_CAPABLE" ]]; then
+    if [[ "x$MACHINE" == "xqemux86" || "x$MACHINE" == "xqemux86-64" ]]; then
+        SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm"
+    fi
+fi
 
 # Report errors for missing combinations of options
 if [[ -z "$MACHINE" && -z "$KERNEL" ]]; then
