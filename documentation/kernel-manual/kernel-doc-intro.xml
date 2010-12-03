@@ -8,7 +8,7 @@
 <section id='book-intro'>
     <title>Introduction</title>
     <para>
-        Yocto Project presents the kernel as a fully patched, history-clean git
+        The Yocto Project presents the kernel as a fully patched, history-clean git
         repository. 
         The git tree represents the selected features, board support,
         and configurations extensively tested by Yocto Project. 

@@ -42,7 +42,7 @@
         <para>
             You can find the files used to describe all the valid features and BSPs in the Yocto Project
             kernel in any clone of the kernel git tree.  
-            The directory <filename>wrs/cfg/kernel-cache/</filename> is a snapshot of all the kernel
+            The directory <filename>meta/cfg/kernel-cache/</filename> is a snapshot of all the kernel
             configuration and feature descriptions (.scc) used to build the kernel repository.
             You should realize, however, that browsing the snapshot of feature
             descriptions and patches is not an effective way to determine what is in a
@@ -56,8 +56,8 @@
         <note><para>
             Ground up reconstruction of the complete kernel tree is an action only taken by the 
             Yocto Project team during an active development cycle.  
-            Creating a project takes advantage of this complete tree in order to 
-            place efficiently a git tree within the project.
+            Creating a project simply clones this tree to make it efficiently available for building
+            and development.
         </para></note>
         <para>
             The general flow for constructing a project-specific kernel tree is as follows:
@@ -69,8 +69,7 @@
             these system directories:</para>
 
                 <itemizedlist>
-                    <listitem><para>The kernel-cache under 
-                    <filename>linux/wrs/cfg/kernel-cache</filename></para></listitem>
+                    <listitem><para>The in-tree kernel-cache directories</para></listitem>
 <!--            <listitem><para>kernel-*-cache directories in layers</para></listitem> -->
                     <listitem><para>Recipe SRC_URIs</para></listitem>
 <!--            <listitem><para>configured and default templates</para></listitem> -->
@@ -93,7 +92,7 @@
             <listitem><para>The script is executed, and a meta-series is produced. 
             The meta-series is a description of all the branches, tags, patches and configuration that
             needs to be applied to the base git repository to completely create the
-            "bsp_name-kernel_type".</para></listitem>
+            BSP source (build) branch.</para></listitem>
 
             <listitem><para>The base repository is cloned, and the actions
             listed in the meta-series are applied to the tree.</para></listitem>
@@ -111,7 +110,7 @@
             the Yocto Project release. 
             Any add-ons and configuration data are applied to the end of an existing branch. 
             The full repository generation that is found in the 
-            <filename>linux-2.6-windriver.git</filename> is the combination of all
+            official Yocto Project kernel repositories is the combination of all
             supported boards and configurations.</para>
   
             <para>This technique is flexible and allows the seamless blending of an immutable
@@ -155,7 +154,8 @@ A summary of end user tree construction activities follow:
 
         <itemizedlist>
             <listitem><para>There must be a kernel git repository indicated in the SRC_URI.</para></listitem>
-            <listitem><para>There must be a branch &lt;bsp name&gt;-&lt;kernel type&gt;.</para></listitem>
+            <listitem><para>There must be a BSP build branch - &lt;bsp name&gt;-&lt;kernel type&gt; in 0.9 or 
+            &lt;kernel type&gt;/&lt;bsp name&gt; in 1.0.</para></listitem>
         </itemizedlist>
 
         <para>
@@ -368,8 +368,7 @@ repository.
         <title>Workflow Examples</title>
 
         <para>
-            As previously noted, the Yocto Project kernel has built in git/guilt
-            integration.
+            As previously noted, the Yocto Project kernel has built in git integration.
             However, these utilities are not the only way to work with the kernel repository.
             Yocto Project has not made changes to git or to other tools that
             would invalidate alternate workflows. 
@@ -468,7 +467,7 @@ repository.
      # determine which branches contain a feature
      &gt; git branch --contains &lt;tag&gt;
 
-     # show the changes in a kernel type
+     # show the changes in a kernel type - (0.9 examples)
      &gt; git whatchanged wrs_base..&lt;kernel type&gt;
         &gt; eg: git whatchanged wrs_base..standard
                 </literallayout>
@@ -652,7 +651,7 @@ repository.
                 </para>
 
                 <note><para>
-                    It is recommend to tag or branch before adding changes to a Yocto Project
+                    It is recommended to tag or branch before adding changes to a Yocto Project
                     BSP or before creating a new one.
                     The reason for this recommendation is because the branch or tag provides a
                     reference point to facilitate locating and exporting local changes.
@@ -1150,7 +1149,7 @@ That's it. Configure and build.
                 <para>
                     You could also add these directly to the git repository <filename>wrs_meta</filename>
                     branch as well.
-                    However, the former method is probably easier.
+                    However, the former method is a simple starting point.
                 </para></listitem>
                 
                 <listitem><para>
@@ -1171,7 +1170,7 @@ That's it. Configure and build.
                     Then, modify the code there, using quilt to save the changes, and recompile until 
                     it works:
                     <literallayout class='monospaced'>
-     $ bitbake -c compile -f
+     $ bitbake -c compile -f linux-yocto
                     </literallayout>
                 </para></listitem>
                 
@@ -1925,7 +1924,7 @@ This section shows an example of transforms:
             </para>
         </section>
 
-        <section id='kernel-transition-kernel-layer'>
+<!--        <section id='kernel-transition-kernel-layer'>
             <title>Creating a Transition Kernel Layer</title>
 
             <para>
@@ -1947,7 +1946,7 @@ This section shows an example of transforms:
                 Once you have the transition kernel layer in place you can evaluate
                 another kernel's functionality with the goal of easing transition to an integrated and validated
                 Yocto Project kernel.
-            </para>
+            </para> -->
 
 <!--<para>
 The next few sections describe the process:
@@ -2078,7 +2077,7 @@ files in the kernel-cache with valid hardware and non hardware config
 options.
 </para></note>
             </section> -->
-        </section>
+<!--        </section> -->
     </section>
 
 

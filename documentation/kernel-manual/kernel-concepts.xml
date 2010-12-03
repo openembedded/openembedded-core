@@ -43,7 +43,7 @@
             <listitem><para>Provide mechanisms that support many different work flows, front-ends and 
             management techniques.</para></listitem>
             <listitem><para>Deliver the most up-to-date kernel possible while still ensuring that 
-            the baseline kernel is the the most stable official release.</para></listitem>
+            the baseline kernel is the most stable official release.</para></listitem>
             <listitem><para>Include major technological features as part of Yocto Project's up-rev 
             strategy.</para></listitem>
             <listitem><para>Present a git tree, that just like the upstream kernel.org tree, has a 
@@ -80,9 +80,10 @@
         <para>
             The ultimate source for the Yocto Project kernel is a released kernel 
             from kernel.org.
-            In addition to a foundational kernel from kernel.org the commercially released 
+            In addition to a foundational kernel from kernel.org the released 
             Yocto Project kernel contains a mix of important new mainline
-            developments, non-mainline developments, Board Support Package (BSP) developments,
+            developments, non-mainline developments (when there is no alternative),
+            Board Support Package (BSP) developments,
             and custom features.
             These additions result in a commercially released Yocto Project kernel that caters 
             to specific embedded designer needs for targeted hardware.
@@ -105,7 +106,8 @@
         </para> -->
         <para>
             Once a Yocto Project kernel is officially released the Yocto Project team goes into 
-            their next development cycle, or "uprev" cycle.
+            their next development cycle, or "uprev" cycle while continuing maintenance on the 
+            released kernel.
             It is important to note that the most sustainable and stable way
             to include feature development upstream is through a kernel uprev process.
             Back-porting of hundreds of individual fixes and minor features from various
@@ -143,8 +145,8 @@
             This kernel gives insight into new features and allows focused
             amounts of testing to be done on the kernel, which prevents
             surprises when selecting the next major uprev. 
-            The quality of these cutting edge kernels is evolving and the kernels are used in very special 
-            cases for BSP and feature development.
+            The quality of these cutting edge kernels is evolving and the kernels are used in leading edge 
+            feature and BSP development.
         </para>
     </section>
 
@@ -199,7 +201,8 @@
                 Each branch represents some unique functionality for the BSP or a real-time kernel.
             </para>
             <para>
-                The real-time kernel branch has common features for all real-time kernels and contains
+                In this example structure, the real-time kernel branch has common features for all 
+                real-time kernels and contains
                 more branches for individual BSP-specific real-time kernels.  
                 The illustration shows three branches as an example. 
                 Each branch points the way to specific, unique features for a respective real-time
@@ -226,6 +229,11 @@
                 Rather we store the unique differences required to apply the feature onto the kernel type 
                 in question.
             </para>
+            <note><para>
+                This practice is not typically encouraged.
+                However, during development cycles or when large features are merged the practice
+                can't be avoided.
+            </para></note>
             <para>
                 BSP-specific code additions are handled in a similar manner to kernel-specific additions. 
                 Some BSPs only make sense given certain kernel types.
@@ -238,13 +246,13 @@
                 the supported multiple kernels are uniquely stored.
             </para>
             <para>
-                While this strategy results in a tree with a significant number of branches, it is
-                important to realize that from the customer's point of view, there is a linear
+                While this strategy can result in a tree with a significant number of branches, it is
+                important to realize that from the user's point of view, there is a linear
                 path that travels from the baseline kernel.org, through a select group of features and
                 ends with their BSP-specific commits.
                 In other words, the divisions of the kernel are transparent and are not relevant 
                 to the developer on a day-to-day basis.  
-                From the customer's perspective, this is the "master" branch.
+                From the user's perspective, this is the "master" branch.
                 They do not need not be aware of the existence of any other branches at all.  
                 Of course there is value in the existence of these branches
                 in the tree, should a person decide to explore them. 
