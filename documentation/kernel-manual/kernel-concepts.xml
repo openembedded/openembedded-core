@@ -230,9 +230,11 @@
                 in question.
             </para>
             <note><para>
-                This practice is not typically encouraged.
-                However, during development cycles or when large features are merged the practice
-                can't be avoided.
+                The Yocto Project team strives to place features in the tree such that they can be 
+                shared by all boards and kernel types where possible.
+                However, during development cycles or when large features are merged this practice 
+                cannot always be followed. 
+                In those cases isolated branches are used for feature merging.
             </para></note>
             <para>
                 BSP-specific code additions are handled in a similar manner to kernel-specific additions. 
