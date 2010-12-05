@@ -21,5 +21,3 @@ do_configure_prepend () {
 FILES_${PN} += "${libdir}/gtk-2.0/modules/ ${datadir}/gnome"
 FILES_${PN}-dbg += "${libdir}/gtk-2.0/modules/.debug"
 
-AUTOTOOLS_STAGE_PKGCONFIG = "1"
-

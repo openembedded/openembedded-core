@@ -13,8 +13,6 @@ SRC_URI = "http://www.us.xfce.org/archive/xfce/${XFCE_VERSION}/src/${PN}-${PV}.t
 
 inherit autotools
 
-AUTOTOOLS_STAGE_PKGCONFIG = "1"
-
 EXTRA_OECONF += "--with-pluginsdir=${libdir}/xfce4/panel-plugins/"
 
 # FIXME:  Put icons in their own package too?

@@ -12,7 +12,5 @@ inherit autotools
 
 EXTRA_OECONF = "--disable-python"
 
-AUTOTOOLS_STAGE_PKGCONFIG = "1"
-
 FILES_${PN} += "${datadir}/telepathy \
 		${datadir}/dbus-1"

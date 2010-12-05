@@ -16,6 +16,4 @@ SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/libtasn1/libtasn1-${PV}.tar.gz"
 
 inherit autotools binconfig lib_package
 
-AUTOTOOLS_STAGE_PKGCONFIG = "1"
-
 BBCLASSEXTEND = "native"

@@ -27,7 +27,6 @@ SRC_URI = "\
 S = "${WORKDIR}/bluez-${PV}"
 
 inherit autotools
-AUTOTOOLS_STAGE_PKGCONFIG = "1"
 
 EXTRA_OECONF = "\
   --enable-gstreamer \

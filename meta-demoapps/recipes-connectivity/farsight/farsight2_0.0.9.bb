@@ -5,7 +5,6 @@ LICENSE = "GPLv2.1"
 DEPENDS = "libnice glib-2.0 libxml2 zlib dbus gstreamer gst-plugins-base"
 
 inherit autotools
-AUTOTOOLS_STAGE_PKGCONFIG = "1"
 
 PR = "r1"
 
