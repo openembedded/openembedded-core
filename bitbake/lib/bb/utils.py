@@ -304,9 +304,12 @@ def _print_trace(body, line):
     """
     # print the environment of the method
     min_line = max(1, line-4)
-    max_line = min(line + 4, len(body)-1)
+    max_line = min(line + 4, len(body))
     for i in range(min_line, max_line + 1):
-        bb.msg.error(bb.msg.domain.Util, "\t%.4d:%s" % (i, body[i-1]) )
+        if line == i:
+            bb.msg.error(bb.msg.domain.Util, " *** %.4d:%s" % (i, body[i-1]) )
+        else:
+            bb.msg.error(bb.msg.domain.Util, "     %.4d:%s" % (i, body[i-1]) )
 
 
 def better_compile(text, file, realfile, mode = "exec"):
