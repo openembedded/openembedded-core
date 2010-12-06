@@ -8,8 +8,8 @@ inherit cross-canadian
 PACKAGES = "${PN}"
 
 RDEPENDS_${PN} = "\
-    binutils-cross-canadian-${TARGET_ARCH} \
-    gdb-cross-canadian-${TARGET_ARCH} \
-    gcc-cross-canadian-${TARGET_ARCH} \
+    binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+    gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+    gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
     "
 

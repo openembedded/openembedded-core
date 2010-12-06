@@ -68,3 +68,6 @@ export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
 # Cross-canadian packages need to pull in nativesdk dynamic libs
 SHLIBSDIR = "${STAGING_DIR}/${SDK_ARCH}-nativesdk${SDK_VENDOR}-${BUILD_OS}/shlibs"
+
+# handle x86_64 TARGET_ARCH name
+TRANSLATED_TARGET_ARCH ?= ${TARGET_ARCH}
