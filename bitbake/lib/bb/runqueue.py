@@ -1259,13 +1259,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
         Called when a task has failed
         Updates the state engine with the failure
         """
-        logger.error("Task %s (%s) failed with exit code '%s'", task,
-                     self.rqdata.get_user_idstring(task), exitcode)
-
         self.stats.taskFailed()
         fnid = self.rqdata.runq_fnid[task]
         self.failed_fnids.append(fnid)
-        bb.event.fire(runQueueTaskFailed(task, self.stats, self.rq), self.cfgData)
+        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq), self.cfgData)
         if self.rqdata.taskData.abort:
             self.rq.state = runQueueCleanUp
 
@@ -1307,11 +1304,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 bb.build.make_stamp(taskname, self.rqdata.dataCache, fn)
                 self.task_complete(task)
                 return True
-
-            logger.info("Running task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
-                                                                self.stats.total,
-                                                                task,
-                                                                self.rqdata.get_user_idstring(task)))
 
             pid, pipein, pipeout = self.fork_off_task(fn, task, taskname)
 
@@ -1497,7 +1489,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
     def task_fail(self, task, result):
         self.stats.taskFailed()
         index = self.rqdata.runq_setscene[task]
-        bb.event.fire(runQueueTaskFailed(task, self.stats, self), self.cfgData)
+        bb.event.fire(runQueueTaskFailed(task, self.stats, result, self), self.cfgData)
         self.scenequeue_notcovered.add(task)
         self.scenequeue_updatecounters(task)
 
@@ -1626,8 +1618,9 @@ class runQueueTaskFailed(runQueueEvent):
     """
     Event notifing a task failed
     """
-    def __init__(self, task, stats, rq):
+    def __init__(self, task, stats, exitcode, rq):
         runQueueEvent.__init__(self, task, stats, rq)
+        self.exitcode = exitcode
         self.message = "Task %s failed (%s)" % (task, self.taskstring)
 
 class runQueueTaskCompleted(runQueueEvent):
