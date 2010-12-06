@@ -1,10 +1,13 @@
 DESCRIPTION = "Common X11 scripts"
 LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SECTION = "x11"
 RDEPENDS_${PN} = "xmodmap xdpyinfo xtscal xinit formfactor"
-PR = "r38"
+PR = "r39"
 
-SRC_URI = "file://etc"
+SRC_URI = "file://etc \
+           file://gplv2-license.patch"
+
 S = ${WORKDIR}
 
 PACKAGE_ARCH = "all"
