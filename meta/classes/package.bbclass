@@ -427,22 +427,13 @@ python populate_packages () {
 			fpath = os.path.join(root,file)
 			dpath = os.path.dirname(fpath)
 			bb.mkdirhier(dpath)
-
-			# Check if this is a hardlink to something... if it is
-			# attempt to preserve the link information, instead of copy.
 			if not os.path.islink(file):
-				s = os.stat(file)
-				if s.st_nlink > 1:
-					file_reference = "%d_%d" % (s.st_dev, s.st_ino)
-					if file_reference not in file_links:
-						# Save the reference for next time...
-						file_links[file_reference] = fpath
-					else:
-						os.link(file_links[file_reference], fpath)
-						continue
+				os.link(file, fpath)
+				continue
 			ret = bb.copyfile(file, fpath)
 			if ret is False or ret == 0:
 				raise bb.build.FuncFailed("File population failed")
+
 		del localdata
 	os.chdir(workdir)
 
