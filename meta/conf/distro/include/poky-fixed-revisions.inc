@@ -8,6 +8,10 @@ PREFERRED_VERSION_hal-info ?= "20091130"
 PREFERRED_VERSION_udev ?= "158"
 PREFERRED_VERSION_wpa-supplicant ?= "0.7.3"
 
+PULSEAUDIOVERSION ?= "0.9.21"
+PULSEAUDIOVERSION_arm ?= "0.9.15"
+PREFERRED_VERSION_pulseaudio ?= "${PULSEAUDIOVERSION}"
+
 # Force the python versions in one place
 PYTHON_BASEVERSION ?= "2.6"
 PREFERRED_VERSION_python ?= "2.6.6"
