@@ -20,4 +20,5 @@ EXTRA_OECONF = "--disable-hicolor-check --with-iconmap=${STAGING_LIBDIR_NATIVE}/
 
 inherit autotools
 
-PACKAGE_ARCH = "all"
+# We can't do this until the output is shared into all target sysroots
+#PACKAGE_ARCH = "all"
