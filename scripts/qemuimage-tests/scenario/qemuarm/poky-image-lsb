@@ -1,0 +1,5 @@
+sanity boot
+sanity ssh
+sanity scp
+sanity dmesg
+sanity shutdown
