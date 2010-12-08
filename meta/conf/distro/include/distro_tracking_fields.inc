@@ -2602,7 +2602,7 @@ RECIPE_STATUS_pn-gcc="green"
 RECIPE_LATEST_VERSION_pn-gcc="4.5.1"
 RECIPE_MAINTAINER_pn-gcc = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-autoconf="red" 
+RECIPE_STATUS_pn-autoconf="green" 
 RECIPE_LATEST_VERSION_pn-autoconf="2.68"
 RECIPE_MAINTAINER_pn-autoconf = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
@@ -2631,8 +2631,7 @@ RECIPE_STATUS_pn-flex="green"
 RECIPE_LATEST_VERSION_pn-flex="2.5.35"
 RECIPE_MAINTAINER_pn-flex = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-fstests="red"  
-RECIPE_NO_UPDATE_REASON_pn-fstests="svnr266 is poky default"
+RECIPE_STATUS_pn-fstests="green"  
 RECIPE_LATEST_VERSION_pn-fstests="0.0+svnr426"
 DISTRO_PN_ALIAS_pn-fstests = "OpenedHand"
 RECIPE_MAINTAINER_pn-fstests = "Nitin A Kamble <nitin.a.kamble@intel.com>"
@@ -2695,15 +2694,15 @@ RECIPE_STATUS_pn-python-pycurl="green"
 RECIPE_LATEST_VERSION_pn-python-pycurl="7.19.0"
 RECIPE_MAINTAINER_pn-python-pycurl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-python-pygobject="red"
+RECIPE_STATUS_pn-python-pygobject="green"
 DISTRO_PN_ALIAS_pn-python-pygobject = "Meego=pygobject2 Fedora=pygobject2 Ubuntu=pygobject Debian=pygobject"
-RECIPE_LATEST_VERSION_pn-python-pygobject="2.21.1"
+RECIPE_LATEST_VERSION_pn-python-pygobject="2.27.0"
 RECIPE_MAINTAINER_pn-python-pygobject = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python-pygtk="red"
 DISTRO_PN_ALIAS_pn-python-pygtk = "Debian=python-gtk2 Fedora=pygtk2 OpenSuSE=python-gtk"
 RECIPE_LATEST_VERSION_pn-python-pygtk="2.17.0"
-RECIPE_MAINTAINER_pn-python-pygtk = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+RECIPE_MAINTAINER_pn-python-pygtk = "Zhai Edwin <edwin.zhai@intel.com>"
 
 RECIPE_STATUS_pn-python-pyrex="green"
 RECIPE_LATEST_VERSION_pn-python-pyrex="0.9.9"
@@ -2734,8 +2733,8 @@ RECIPE_STATUS_pn-unifdef="green" # poky local source files
 RECIPE_LATEST_VERSION_pn-unifdef="2.6.18+git"
 RECIPE_MAINTAINER_pn-unifdef = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-gnu-config="red" 
-RECIPE_LATEST_VERSION_pn-gnu-config="0.1+cvs20080123"
+RECIPE_STATUS_pn-gnu-config="green" 
+RECIPE_LATEST_VERSION_pn-gnu-config="0.0+git3155524"
 DISTRO_PN_ALIAS_pn-gnu-config = "OpenedHand"
 RECIPE_MAINTAINER_pn-gnu-config = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
@@ -2756,11 +2755,11 @@ RECIPE_STATUS_pn-byacc="green"
 RECIPE_LATEST_VERSION_pn-byacc="20100610"
 RECIPE_MAINTAINER_pn-byacc = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-libconvert-asn1-perl="red" # 0.22 version does not build, so created a recipe for version 0.21
+RECIPE_STATUS_pn-libconvert-asn1-perl="green" # 0.22 version does not build, so created a recipe for version 0.21
 RECIPE_LATEST_VERSION_pn-libconvert-asn1-perl="0.22"
 RECIPE_MAINTAINER_pn-libconvert-asn1-perl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-libxml-parser-perl="red" 
+RECIPE_STATUS_pn-libxml-parser-perl="green" 
 RECIPE_LATEST_VERSION_pn-libxml-parser-perl="2.36"
 RECIPE_MAINTAINER_pn-libxml-parser-perl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
