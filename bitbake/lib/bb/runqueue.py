@@ -723,10 +723,7 @@ class RunQueueData:
         hashdata["msg-debug-domains"] =  self.cooker.configuration.debug_domains
         hashdata["verbose"] = self.cooker.configuration.verbose
 
-        # Write out the hashes into a file for use by the individual tasks
-        self.hashfile = bb.data.expand("${TMPDIR}/cache/hashdata.dat", self.cooker.configuration.data)
-        p = pickle.Pickler(file(self.hashfile, "wb"), -1)
-        p.dump(hashdata)
+        self.hashdata = hashdata
 
         return len(self.runq_fnid)
 
@@ -1010,7 +1007,6 @@ class RunQueueExecute:
         self.runq_complete = []
         self.build_pids = {}
         self.build_pipes = {}
-        self.build_procs = {}
         self.failed_fnids = []
 
     def runqueue_process_waitpid(self):
@@ -1018,19 +1014,17 @@ class RunQueueExecute:
         Return none is there are no processes awaiting result collection, otherwise
         collect the process exit codes and close the information pipe.
         """
-        for pid in self.build_procs.keys():
-            proc = self.build_procs[pid]
-            proc.poll()
-            if proc.returncode is not None:
-                task = self.build_pids[pid]
-                del self.build_pids[pid]
-                self.build_pipes[pid].close()
-                del self.build_pipes[pid]
-                del self.build_procs[pid]
-                if proc.returncode != 0:
-                    self.task_fail(task, proc.returncode)
-                else:
-                    self.task_complete(task)
+        result = os.waitpid(-1, os.WNOHANG)
+        if result[0] is 0 and result[1] is 0:
+            return None
+        task = self.build_pids[result[0]]
+        del self.build_pids[result[0]]
+        self.build_pipes[result[0]].close()
+        del self.build_pipes[result[0]]
+        if result[1] != 0:
+            self.task_fail(task, result[1])
+        else:
+            self.task_complete(task)
 
     def finish_now(self):
         if self.stats.active:
@@ -1062,38 +1056,81 @@ class RunQueueExecute:
         return
 
     def fork_off_task(self, fn, task, taskname):
+        the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
+
+        env = bb.data.export_vars(the_data)
+        env = bb.data.export_envvars(env, the_data)
+
+        taskdep = self.rqdata.dataCache.task_deps[fn]
+        if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
+            envvars = the_data.getVar("FAKEROOTENV", True).split()
+            for var in envvars:
+                comps = var.split("=")
+                env[comps[0]] = comps[1]
+            fakedirs = (the_data.getVar("FAKEROOTDIRS", True) or "").split()
+            for p in fakedirs:
+                bb.mkdirhier(p)
+            bb.msg.debug(2, bb.msg.domain.RunQueue, "Running %s:%s under fakeroot, state dir is %s" % (fn, taskname, fakedirs))
+
+        env['BB_TASKHASH'] = self.rqdata.runq_hash[task]
+        env['PATH'] = self.cooker.configuration.initial_path
+
+        envbackup = os.environ.copy()
+        os.environ = env
+
+        sys.stdout.flush()
+        sys.stderr.flush()
+
         try:
-            the_data = self.cooker.bb_cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
+            pipeinfd, pipeoutfd = os.pipe()
+            pipein = os.fdopen(pipeinfd, 'rb', 4096)
+            pipeout = os.fdopen(pipeoutfd, 'wb', 4096)
 
-            env = bb.data.export_vars(the_data)
-            env = bb.data.export_envvars(env, the_data)
-
-            taskdep = self.rqdata.dataCache.task_deps[fn]
-            if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
-                envvars = the_data.getVar("FAKEROOTENV", True).split()
-                for var in envvars:
-                    comps = var.split("=")
-                    env[comps[0]] = comps[1]
-                fakedirs = (the_data.getVar("FAKEROOTDIRS", True) or "").split()
-                for p in fakedirs:
-                    bb.mkdirhier(p)
-                bb.msg.debug(2, bb.msg.domain.RunQueue, "Running %s:%s under fakeroot, state dir is %s" % (fn, taskname, fakedirs))
-
-            env['BB_TASKHASH'] = self.rqdata.runq_hash[task]
-            env['PATH'] = self.cooker.configuration.initial_path
-
-            sys.stdout.flush()
-            sys.stderr.flush()
-
-            runtask = the_data.getVar("BB_RUNTASK", True) or "bitbake-runtask"
-            proc = subprocess.Popen([runtask, self.rqdata.hashfile, fn, taskname, str(self.cooker.configuration.dry_run)], env=env, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-            pipein = proc.stdout
-            pipeout = proc.stdin
-            pid = proc.pid
-        except OSError as e: 
+            pid = os.fork()
+        except OSError as e:
             bb.msg.fatal(bb.msg.domain.RunQueue, "fork failed: %d (%s)" % (e.errno, e.strerror))
+        if pid == 0:
+            pipein.close()
+            # Save out the PID so that the event can include it the
+            # events
+            bb.event.worker_pid = os.getpid()
+            bb.event.worker_pipe = pipeout
+            bb.event.useStdout = False
 
-        return proc
+            self.rq.state = runQueueChildProcess
+            # Make the child the process group leader
+            os.setpgid(0, 0)
+            # No stdin
+            newsi = os.open('/dev/null', os.O_RDWR)
+            os.dup2(newsi, sys.stdin.fileno())
+            # Stdout to a logfile
+            #logout = data.expand("${TMPDIR}/log/stdout.%s" % os.getpid(), self.cfgData, True)
+            #mkdirhier(os.path.dirname(logout))
+            #newso = open(logout, 'w')
+            #os.dup2(newso.fileno(), sys.stdout.fileno())
+            #os.dup2(newso.fileno(), sys.stderr.fileno())
+            if taskname.endswith("_setscene"):
+                the_data.setVarFlag(taskname, "quieterrors", "1")
+
+            bb.data.setVar("BB_WORKERCONTEXT", "1", the_data)
+            bb.parse.siggen.set_taskdata(self.rqdata.hashdata["hashes"], self.rqdata.hashdata["deps"])
+
+            for h in self.rqdata.hashdata["hashes"]:
+                bb.data.setVar("BBHASH_%s" % h, self.rqdata.hashdata["hashes"][h], the_data)
+            for h in self.rqdata.hashdata["deps"]:
+                bb.data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hashdata["deps"][h], the_data)
+
+            ret = 0
+            try:
+                if not self.cooker.configuration.dry_run:
+                    ret = bb.build.exec_task(fn, taskname, the_data)
+                os._exit(ret)
+            except:
+                os._exit(1)
+
+        os.environ = envbackup
+
+        return pid, pipein, pipeout
 
 class RunQueueExecuteDummy(RunQueueExecute):
     def __init__(self, rq):
@@ -1238,11 +1275,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
                                                                 task,
                                                                 self.rqdata.get_user_idstring(task)))
 
-            proc = self.fork_off_task(fn, task, taskname)
+            pid, pipein, pipeout = self.fork_off_task(fn, task, taskname)
 
-            self.build_pids[proc.pid] = task
-            self.build_procs[proc.pid] = proc
-            self.build_pipes[proc.pid] = runQueuePipe(proc.stdout, proc.stdin, self.cfgData)
+            self.build_pids[pid] = task
+            self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
             self.runq_running[task] = 1
             self.stats.taskActive()
             if self.stats.active < self.number_tasks:
@@ -1487,11 +1523,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                         "Running setscene task %d of %d (%s:%s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
                                                                          self.stats.total, fn, taskname))
 
-            proc = self.fork_off_task(fn, realtask, taskname)
+            pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)
 
-            self.build_pids[proc.pid] = task
-            self.build_procs[proc.pid] = proc
-            self.build_pipes[proc.pid] = runQueuePipe(proc.stdout, proc.stdin, self.cfgData)
+            self.build_pids[pid] = task
+            self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
             self.runq_running[task] = 1
             self.stats.taskActive()
             if self.stats.active < self.number_tasks:

@@ -55,8 +55,6 @@ class SignatureGeneratorBasic(SignatureGenerator):
         else:
             self.twl = None
 
-        self.dumpsigs = dumpsigs
-
     def _build_data(self, fn, d):
 
         taskdeps, gendeps = bb.data.generate_dependencies(d)
@@ -82,10 +80,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
             self.basehash[fn + "." + task] = hashlib.md5(data).hexdigest()
             #bb.note("Hash for %s is %s" % (task, tashhash[task]))
 
-        if self.dumpsigs:
-            self.taskdeps[fn] = taskdeps
-            self.gendeps[fn] = gendeps
-            self.lookupcache[fn] = lookupcache
+        self.taskdeps[fn] = taskdeps
+        self.gendeps[fn] = gendeps
+        self.lookupcache[fn] = lookupcache
 
         return taskdeps
 
