@@ -137,6 +137,8 @@ class SignatureGeneratorBasic(SignatureGenerator):
         else:
             sigfile = stampbase + "." + task + ".sigbasedata" + "." + self.basehash[k]
 
+        bb.utils.mkdirhier(os.path.dirname(sigfile))
+
         data = {}
         data['basewhitelist'] = self.basewhitelist
         data['taskwhitelist'] = self.taskwhitelist
