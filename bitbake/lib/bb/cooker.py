@@ -953,6 +953,12 @@ def server_main(cooker, func, *args):
 
     return ret
 
+    def shutdown(self):
+        self.state = state.shutdown
+
+    def stop(self):
+        self.state = state.stop
+
 class CookerExit(bb.event.Event):
     """
     Notify clients of the Cooker shutdown
