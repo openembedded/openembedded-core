@@ -58,6 +58,24 @@ if ! (test -d "$BITBAKEDIR" && test -d "$BUILDDIR"); then
     return
 fi
 
+# 
+# $POKYCONF can point to a directory for the template local.conf & bblayers.conf
+#
+if [ "x" != "x$POKYCONF" ]; then
+    if ! (test -d "$POKYCONF"); then
+	# Allow POKYCONF=meta-xyz/conf as a shortcut
+	if [ -d "$OEROOT/$POKYCONF" ]; then
+	    POKYCONF="$OEROOT/$POKYCONF"
+	fi
+	if ! (test -d "$POKYCONF"); then
+	    echo >&2 "Error: '$POKYCONF' must be a directory containing local.conf & bblayers.conf"
+	    return
+	fi
+    fi
+    POKYLAYERCONF="$POKYCONF/bblayers.conf"
+    POKYLOCALCONF="$POKYCONF/local.conf"
+fi
+
 if [ "x" = "x$POKYLOCALCONF" ]; then
     POKYLOCALCONF="$OEROOT/meta/conf/local.conf.sample"
 fi
