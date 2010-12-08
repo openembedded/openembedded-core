@@ -31,9 +31,9 @@ usage() {
     echo "    serial - enables a serial console on /dev/ttyS0"
     echo ""
     echo "Examples:"
-    echo "  $0 qemuarm"
-    echo "  $0 qemux86-64 poky-image-sato ext3"
-    echo "  $0 path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial"
+    echo "  $MYNAME qemuarm"
+    echo "  $MYNAME qemux86-64 poky-image-sato ext3"
+    echo "  $MYNAME path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial"
     exit 1
 }
 
@@ -213,21 +213,27 @@ setup_tmpdir() {
                 echo "before running this script" >&2;
                 exit 1; }
 
-            # We have bitbake in PATH, get TMPDIR and BUILD_SYS
-            # from the environment
+            # We have bitbake in PATH, get TMPDIR from bitbake
             TMPDIR=`bitbake -e | grep TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
-            BUILD_SYS=`bitbake -e | grep BUILD_SYS=\" | cut -d '=' -f2 | cut -d '"' -f2`
         else
-            BUILD_ARCH=`uname -m`
-            BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
-            BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
             TMPDIR=$BUILDDIR/tmp
         fi
-        if [ -z "$POKY_NATIVE_SYSROOT" ]; then
-            POKY_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
-        fi
-        CROSSPATH=$POKY_NATIVE_SYSROOT/usr/bin
     fi
+}
+
+setup_sysroot() {
+	# Toolchain installs set up $POKY_NATIVE_SYSROOT in their
+	# environment script. If that variable isn't set, we're
+	# either in an in-tree poky scenario or the environment
+	# script wasn't source'd.
+	if [ -z "$POKY_NATIVE_SYSROOT" ]; then
+		setup_tmpdir
+		BUILD_ARCH=`uname -m`
+		BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
+		BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
+
+		POKY_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
+	fi 
 }
 
 # Locate a rootfs image based on defaults defined above
@@ -254,8 +260,6 @@ findimage() {
 }
 
 if [[ -e "$ROOTFS" && -z "$FSTYPE" ]]; then
-    setup_tmpdir
-
     # Extract the filename extension
     EXT=`echo $ROOTFS | awk -F . '{ print \$NF }'`
     if [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" || 
@@ -281,7 +285,6 @@ fi
 # KERNEL is now set for all cases
 
 if [ -z "$FSTYPE" ]; then
-    setup_tmpdir
     eval FSTYPE=\$${machine2}_DEFAULT_FSTYPE
 
     if [ -z "$FSTYPE" ]; then
@@ -317,6 +320,9 @@ echo "Continuing with the following parameters:"
 echo "KERNEL: [$KERNEL]"
 echo "ROOTFS: [$ROOTFS]"
 echo "FSTYPE: [$FSTYPE]"
+
+setup_sysroot
+# POKY_NATIVE_SYSROOT is now set for all cases
 
 # We can't run without a libGL.so
 libgl='no'

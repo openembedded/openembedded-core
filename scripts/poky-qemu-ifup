@@ -34,7 +34,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 usage() {
-	echo "sudo $0 <gid> <native-sysroot-basedir>"
+	echo "sudo $(basename $0) <gid> <native-sysroot-basedir>"
 }
 
 if [ $EUID -ne 0 ]; then
@@ -53,13 +53,6 @@ NATIVE_SYSROOT_DIR=$2
 TUNCTL=$NATIVE_SYSROOT_DIR/usr/bin/tunctl
 if [ ! -x "$TUNCTL" ]; then
 	echo "Error: Unable to find tunctl binary in '$NATIVE_SYSROOT_DIR/usr/bin'"
-
-	if [[ "$NATIVE_SYSROOT_DIR" =~ ^\/opt\/poky ]]; then
-		echo "This shouldn't happen - something is wrong with your toolchain installation"
-	else
-		echo "Have you run 'bitbake meta-ide-support'?"
-	fi
-	
 	exit 1
 fi
 

@@ -394,23 +394,9 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return
 fi
 
-SDKDIR="/opt/poky/sysroots"
-if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "spitz" -o "$MACHINE" = "borzoi" -o "$MACHINE" = "akita" -o "$MACHINE" = "nokia800" ]; then
-    SDKPATH="$SDKDIR/arm-poky-linux-gnueabi/bin"
-fi
-
-if [ "$MACHINE" = "qemux86" ]; then
-    SDKPATH="$SDKDIR/i586-poky-linux/bin"
-fi
-
-if [ "$MACHINE" = "qemux86-64" ]; then
-    SDKPATH="$SDKDIR/x86_64-poky-linux/bin"
-fi
-
-PATH=$CROSSPATH:$SDKPATH:$PATH
+PATH=$CROSSPATH:$POKY_NATIVE_SYSROOT/usr/bin:$PATH
 
 QEMUBIN=`which $QEMU`
-
 if [ ! -x "$QEMUBIN" ]; then
     echo "Error: No QEMU binary '$QEMU' could be found."
     cleanup

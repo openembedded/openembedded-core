@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Find a native sysroot to use - either from an in-tree Poky build or
-# from a toolchain installation in /opt/poky. It then ensures the variable
+# from a toolchain installation. It then ensures the variable
 # $POKY_NATIVE_SYSROOT is set to the sysroot's base directory, and sets 
 # $PSEUDO to the path of the pseudo binary.
 #
