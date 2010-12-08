@@ -7,6 +7,9 @@ PR = "r1"
 
 SRC_URI = "ftp://ftp.denx.de/pub/u-boot/u-boot-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "cd4788ea1c6ac4f9b100b888a1063a6b"
+SRC_URI[sha256sum] = "858fd04efd5b98e99fd1a074998b1a8ac5fbd07b176de1d20d8eb148492d949d"
+
 S = "${WORKDIR}/u-boot-${PV}"
 
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"

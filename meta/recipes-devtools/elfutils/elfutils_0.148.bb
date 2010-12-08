@@ -10,6 +10,9 @@ PR = "r1"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/elfutils-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "a0bed1130135f17ad27533b0034dba8d"
+SRC_URI[sha256sum] = "8aebfa4a745db21cf5429c9541fe482729b62efc7e53e9110151b4169fe887da"
+
 # pick the patch from debian
 # http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.148-1.debian.tar.gz
 

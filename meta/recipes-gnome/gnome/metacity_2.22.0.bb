@@ -18,3 +18,6 @@ EXTRA_OECONF += "--disable-verbose \
 	         --disable-xinerama"
 
 FILES_${PN} += "${datadir}/themes"
+
+SRC_URI[archive.md5sum] = "8cb6d02cf66a1003532b4f5d2754d696"
+SRC_URI[archive.sha256sum] = "3c670b41a214311006dc05f9a005696b9d3fdcb5c80f1275367416600103b3bf"

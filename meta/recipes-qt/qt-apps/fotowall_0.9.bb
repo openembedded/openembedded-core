@@ -12,6 +12,9 @@ RDEPENDS = "qt4-x11-free"
 
 SRC_URI = "http://qt-apps.org/CONTENT/content-files/71316-Fotowall-0.9.tar.bz2"
 
+SRC_URI[md5sum] = "142ef697332e0777c6d22c5bc96cc438"
+SRC_URI[sha256sum] = "e4d0c005d2cb1d7c09438bfc3098eadebc08946e4fbc0655b7fc8b046de3810d"
+
 S = "${WORKDIR}/Fotowall-${PV}"
 
 inherit qmake2 pkgconfig

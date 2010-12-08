@@ -10,6 +10,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2 \
            file://disable_gpgconf_check.patch;patch=1;pnum=1"
+
+SRC_URI[md5sum] = "4784e3c6086c9c25e9a1b4d9f7c5aa96"
+SRC_URI[sha256sum] = "74e040fcd46061f6b0d8b621a2a2a48100a7ba5c9f69e7cf207259a6e2e3e6a1"
 DEPENDS = "libgpg-error libassuan pth"
 PR = "r0"
 

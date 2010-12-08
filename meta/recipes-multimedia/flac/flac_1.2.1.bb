@@ -20,6 +20,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/flac/flac-${PV}.tar.gz \
            file://flac-gcc43-fixes.patch;patch=1 \
            file://xmms.m4"
 
+SRC_URI[md5sum] = "153c8b15a54da428d1f0fadc756c22c7"
+SRC_URI[sha256sum] = "9635a44bceb478bbf2ee8a785cf6986fba525afb5fad1fd4bba73cf71f2d3edf"
+
 S = "${WORKDIR}/flac-${PV}"
 
 inherit autotools

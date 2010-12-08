@@ -15,6 +15,9 @@ PR = "r0"
 SRC_URI = "http://www.lesswatts.org/projects/powertop/download/powertop-${PV}.tar.gz \
            file://stub_out_the_ncurses_calls_in_dump_mode.patch"
 
+SRC_URI[md5sum] = "78aa17c8f55178004223bf236654298e"
+SRC_URI[sha256sum] = "2bc866089496877dd26d2d316ad5763ab8ecb5e28aefba44bc5d355dcdc58d98"
+
 CFLAGS += "${LDFLAGS}"
 EXTRA_OEMAKE = "VERSION=\"${PV}\""
 

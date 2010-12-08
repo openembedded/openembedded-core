@@ -10,3 +10,6 @@ PR = "r1"
 PE = "1"
 
 BBCLASSEXTEND = "native"
+
+SRC_URI[md5sum] = "11d3c292f05a90f6f67840a9e9c3d9b8"
+SRC_URI[sha256sum] = "348a1b0142f61afeaafc9497e997d6f10074affed8682e202d019f10170b9cbf"

@@ -14,6 +14,9 @@ SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.17/${SRCNAME}-${PV}.tar
            file://prevent_to_get_display_during_import.patch \
            file://nodocs.patch \
            file://acinclude.m4"
+
+SRC_URI[md5sum] = "43d704343d7ca04a6e4ddd4fa73a3c55"
+SRC_URI[sha256sum] = "6a61817a2e765c6209c72ecdf44389ec134c1ebed1d842408bf001c9321f1400"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 EXTRA_OECONF = "--disable-docs --with-python-includes=${STAGING_INCDIR}/../"

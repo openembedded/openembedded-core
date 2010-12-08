@@ -26,6 +26,9 @@ SRC_URI = "http://ppp.samba.org/ftp/ppp/ppp-${PV}.tar.gz \
            file://08setupdns \
            file://92removedns"
 
+SRC_URI[md5sum] = "4621bc56167b6953ec4071043fe0ec57"
+SRC_URI[sha256sum] = "43317afec9299f9920b96f840414c977f0385410202d48e56d2fdb8230003505"
+
 SRC_URI_append_nylon = " file://ppp-tdbread.patch;patch=1"
 
 inherit autotools

@@ -15,6 +15,9 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz
            file://check_fix.patch;patch=1 \
            file://gst-inspect-check-error.patch;patch=1"
 
+SRC_URI[md5sum] = "de01f73f71d97c5854badd363ca06509"
+SRC_URI[sha256sum] = "e8ef301be423797ff36a0bb3615930b112b4175634051d19fd655e0ed974532a"
+
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind --disable-debug"

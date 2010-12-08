@@ -30,6 +30,9 @@ SRC_URI = "\
      file://binutils-poison.patch \
      "
 
+SRC_URI[tarball.md5sum] = "9cdfb9d6ec0578c166d3beae5e15c4e5"
+SRC_URI[tarball.sha256sum] = "228b84722d87e88e7fdd36869e590e649ab523a0800a7d53df906498afe6f6f8"
+
 # powerpc patches
 SRC_URI += "\
      file://binutils-2.16.1-e300c2c3.patch \

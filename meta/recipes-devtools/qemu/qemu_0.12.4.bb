@@ -27,6 +27,9 @@ SRC_URI = "\
     file://fix-configure-checks.patch \
     file://powerpc_rom.bin"
 
+SRC_URI[md5sum] = "93e6b134dff89b2799f57b7d9e0e0fc5"
+SRC_URI[sha256sum] = "1a29a5b5151162d1de035c4926d1a1dbffee4a145ef61ee865d6b82aaea0602e"
+
 do_install_append () {
         install -d ${D}${datadir}/qemu
         install -m 0755 ${WORKDIR}/powerpc_rom.bin ${D}${datadir}/qemu

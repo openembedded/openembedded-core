@@ -16,3 +16,6 @@ PE = "1"
 XORG_PN = "libXfont"
 
 BBCLASSEXTEND = "native"
+
+SRC_URI[md5sum] = "6fb689cfe13d8d9460f4abb5bd88588d"
+SRC_URI[sha256sum] = "f79245652901d20092092e942155d32b8dde15527637db3c09a1adc83672e9cc"

@@ -37,6 +37,9 @@ SRC_URI = "http://primates.ximian.com/~flucifredi/man/man-1.6e.tar.gz \
            file://man-1.6e-lzma+xz-support.patch;striplevel=1 \
            file://man*"
 
+SRC_URI[md5sum] = "d8187cd756398baefc48ba7d60ff6a8a"
+SRC_URI[sha256sum] = "022faf23844eabb3662eabb105836925dd83bedda10271e2450a5bc5b61a5b5f"
+
 
 do_configure () {
         ${S}/configure -default -confdir ${D}/etc +sgid +fhs +lang all

@@ -12,3 +12,6 @@ PR = "r2"
 PE = "1"
 
 XORG_PN = "libXtst"
+
+SRC_URI[md5sum] = "7c592c72da6676f8b0aeec9133b81686"
+SRC_URI[sha256sum] = "7a2e0912b521f6bd8c392189874ba4a3b8168b0bba4c2143e073de53d8e85408"

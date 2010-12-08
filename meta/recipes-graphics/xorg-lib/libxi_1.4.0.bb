@@ -11,3 +11,6 @@ PE = "1"
 
 XORG_PN = "libXi"
 
+
+SRC_URI[md5sum] = "4ccdfe866f94c99b9190d16ffcfb3bdc"
+SRC_URI[sha256sum] = "42efe95a08c7bd28bc913bf8c34ed026abcc62504307626fc5150ca360b93283"

@@ -13,3 +13,6 @@ RDEPENDS_${PN}-dev = ""
 DEPENDS += "gettext"
 
 BBCLASSEXTEND = "native nativesdk"
+
+SRC_URI[md5sum] = "c66f9ffd2da4fb012220c6c40ebc7609"
+SRC_URI[sha256sum] = "c5f9a73705ddbb8c9b8f16c4fac33b4b9ba7661b8305474b4c1549e48d9ca5c6"

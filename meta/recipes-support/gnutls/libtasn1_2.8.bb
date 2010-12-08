@@ -14,6 +14,9 @@ PR = "r0"
 
 SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/libtasn1/libtasn1-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "53fd164f8670e55a9964666990fb358f"
+SRC_URI[sha256sum] = "2b7d74f4b10b18ae2f0291fcafabe30e42c9ededdea41add8c622302132d545a"
+
 inherit autotools binconfig lib_package
 
 BBCLASSEXTEND = "native"

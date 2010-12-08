@@ -22,6 +22,9 @@ SRC_URI += "file://debian/ca.patch \
             file://debian/version-script.patch \
             file://debian/perl-path.diff"
 
+SRC_URI[md5sum] = "7f24047f70364c9eabc94899e356ce39"
+SRC_URI[sha256sum] = "b2645e2a2af221fa230b5ef6aa2b9388a875801b74cbddbb16be557f80f45242"
+
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch"
 

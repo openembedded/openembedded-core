@@ -11,6 +11,9 @@ SECTION = "base"
 
 SRC_URI = "https://fedorahosted.org/releases/l/i/libuser/libuser-${PV}.tar.xz \
            file://disable-sgml-doc.patch;patch=1"
+
+SRC_URI[md5sum] = "de074409153f690821d9340cb33ee435"
+SRC_URI[sha256sum] = "fc23d744f6853c213adb619cfb5b22c49a9ea8a5a75a1e4121f71b28cffa3a74"
 PR = "r0"
 
 DEPENDS = "gettext libpam glib-2.0 xz-native"

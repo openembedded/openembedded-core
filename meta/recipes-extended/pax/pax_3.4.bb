@@ -13,4 +13,7 @@ PR = "r0"
 
 SRC_URI = "ftp://ftp.suse.com/pub/people/kukuk/pax/pax-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "fbd9023b590b45ac3ade95870702a0d6"
+SRC_URI[sha256sum] = "ac3c06048e02828077cf7757d3d142241429238893b91d529af29a2e8cc5623b"
+
 inherit autotools

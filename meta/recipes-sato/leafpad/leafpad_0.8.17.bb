@@ -11,6 +11,9 @@ DEPENDS = "gtk+ intltool-native"
 DEPENDS_append_poky = " libowl"
 SRC_URI = "http://savannah.nongnu.org/download/${PN}/${PN}-${PV}.tar.gz \
 	   file://leafpad.desktop"
+
+SRC_URI[md5sum] = "d39acdf4d31de309d484511bdc9f5924"
+SRC_URI[sha256sum] = "8df8de7aaea26148225b6120631b4fe6b89d36d2b52962e7c9cc0ce07bfdbd4c"
 PR = "r0"
 
 SRC_URI_append_poky += " file://owl-menu.patch;apply=yes "

@@ -13,6 +13,9 @@ PR = "r0"
 
 SRC_URI = "http://downloads.xiph.org/releases/vorbis/libvorbis-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "c870b9bd5858a0ecb5275c14486d9554"
+SRC_URI[sha256sum] = "eeb4dcada143846dfba760d982954a02f82e08845cbc33871f5dac547b8b6124"
+
 inherit autotools pkgconfig
 
 # vorbisfile.c reveals a problem in the gcc register spilling for the

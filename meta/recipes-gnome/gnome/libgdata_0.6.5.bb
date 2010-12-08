@@ -10,3 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24 \
 DEPENDS = "libxml2 glib-2.0 libsoup-2.4"
 
 inherit gnome pkgconfig autotools
+
+SRC_URI[archive.md5sum] = "e12f52a3d25c25016856c64ca0331221"
+SRC_URI[archive.sha256sum] = "dcb82f7162d69549512444376da2cdea65650ee4dae4d00eed7fbbd3387ddf2c"

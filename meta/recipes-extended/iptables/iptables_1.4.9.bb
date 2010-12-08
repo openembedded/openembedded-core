@@ -20,6 +20,9 @@ FILES_${PN}-dbg =+ "${libexecdir}/xtables/.debug"
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "db1312f7ce5a4c11dc981a2ac76b26e8"
+SRC_URI[sha256sum] = "1ac719d6265cf64220c80c0974ed9d35febdac2986bb96eeaa9c8c7959a1d306"
+
 inherit autotools
 
 EXTRA_OECONF = "--with-kernel=${STAGING_INCDIR} \

@@ -10,6 +10,9 @@ PR = "r0"
 
 SRC_URI = "http://downloads.sourceforge.net/project/linuxquota/quota-tools/${PV}/quota-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "ef9d66e8a968ecffd2d9df648fa8ada2"
+SRC_URI[sha256sum] = "181a9b90b10bbffaaf9a18e7fef96a5752ab20f7b72d81c472166ab32e415994"
+
 S = ${WORKDIR}/quota-tools
 
 inherit autotools

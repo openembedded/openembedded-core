@@ -9,6 +9,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/boost/${BOOST_P}.tar.bz2 \
            file://arm-intrinsics.patch \
           "
 
+SRC_URI[md5sum] = "f02578f5218f217a9f20e9c30e119c6a"
+SRC_URI[sha256sum] = "45c328029d97d1f1dc7ff8c9527cd0c5cc356636084a800bca2ee4bfab1978db"
+
 BJAM_OPTS    = '${BJAM_TOOLS} \
                 --builddir=${S}/${TARGET_SYS} \
                 ${BJAM_EXTRA}'

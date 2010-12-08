@@ -10,6 +10,9 @@ PR = "ml0"
 
 SRC_URI = "http://effbot.org/downloads/Imaging-${PV}.tar.gz \
            file://path.patch"
+
+SRC_URI[md5sum] = "fc14a54e1ce02a0225be8854bfba478e"
+SRC_URI[sha256sum] = "895bc7c2498c8e1f9b99938f1a40dc86b3f149741f105cf7c7bd2e0725405211"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils

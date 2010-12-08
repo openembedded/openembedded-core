@@ -13,6 +13,9 @@ PR = "r1"
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/raid/mdadm/${PN}-${PV}.tar.bz2 \
 	   file://fix-z-now.patch;striplevel=0"
 
+SRC_URI[md5sum] = "0e7dcb5cc4192ae3abd9956bac475576"
+SRC_URI[sha256sum] = "849ad0ad4ad3c1d2d8806a16b30e1f59ab2daf313cb103807207f7cba889ea63"
+
 CFLAGS += "-fno-strict-aliasing"
 
 inherit autotools

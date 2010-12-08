@@ -14,6 +14,9 @@ SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.2
            file://man.patch;apply=yes \
 	   file://wireless-tools.if-pre-up \
 	   file://zzz-wireless.if-pre-up"
+
+SRC_URI[md5sum] = "e06c222e186f7cc013fd272d023710cb"
+SRC_URI[sha256sum] = "6fb80935fe208538131ce2c4178221bab1078a1656306bce8909c19887e2e5a1"
 S = "${WORKDIR}/wireless_tools.29"
 
 CFLAGS =+ "-I${S}"

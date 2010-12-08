@@ -17,6 +17,9 @@ SRC_URI = "ftp://ftp.kernel.org/pub/software/utils/pciutils/pciutils-${PV}.tar.b
            file://lib-build-fix.patch \
            file://guess-fix.patch"
 
+SRC_URI[md5sum] = "35222edb86b50a6641352c66fe829b2e"
+SRC_URI[sha256sum] = "d8fe23b6966c1abf29b3b38b08b0cf33f731cd6e6a89d9b8d2b8d5e982c3f544"
+
 PARALLEL_MAKE = ""
 
 PCI_CONF_FLAG = "ZLIB=yes DNS=yes SHARED=yes"

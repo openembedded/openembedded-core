@@ -16,6 +16,9 @@ SRC_URI = "http://tinylogin.busybox.net/downloads/tinylogin-${PV}.tar.bz2 \
 	file://remove-index.patch;patch=1 \
 	file://use_O2_option.patch"
 
+SRC_URI[md5sum] = "44da0ff2b727455669890b24305e351d"
+SRC_URI[sha256sum] = "5e542e4b7825305a3678bf73136c392feb0d44b8bbf926e8eda5453eea7ddd6b"
+
 EXTRA_OEMAKE = ""
 
 do_compile () {

@@ -19,6 +19,9 @@ SRC_URI += "file://procmodule.patch \
 	    file://procps-3.2.8+gmake-3.82.patch \
 	    "
 
+SRC_URI[md5sum] = "9532714b6846013ca9898984ba4cd7e0"
+SRC_URI[sha256sum] = "11ed68d8a4433b91cd833deb714a3aa849c02aea738c42e6b4557982419c1535"
+
 FILES = "${bindir}/top.${PN} ${base_bindir}/ps.${PN} ${bindir}/uptime.${PN} ${base_bindir}/kill.${PN} \
 	 ${bindir}/free.${PN} ${bindir}/w ${bindir}/watch ${bindir}/pgrep ${bindir}/pmap ${bindir}/pwdx \
 	 ${bindir}/snice ${bindir}/vmstat ${bindir}/slabtop ${bindir}/pkill ${bindir}/skill ${bindir}/tload \

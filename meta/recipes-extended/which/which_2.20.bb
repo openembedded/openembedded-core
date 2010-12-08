@@ -13,6 +13,9 @@ PR = "r1"
 SRC_URI = "http://ftp.gnu.org/gnu/which/which-${PV}.tar.gz \
            file://remove-declaration.patch"
 
+SRC_URI[md5sum] = "95be0501a466e515422cde4af46b2744"
+SRC_URI[sha256sum] = "d417b65c650d88ad26a208293c1c6e3eb60d4b6d847f01ff8f66aca63e2857f8"
+
 do_configure_prepend() {
 	sed -i -e 's%@ACLOCAL_CWFLAGS@%-I ${STAGING_DIR_NATIVE}/usr/share/cwautomacros/m4%g' ${S}/Makefile.am ${S}/tilde/Makefile.am
 }

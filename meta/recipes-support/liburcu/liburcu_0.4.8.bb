@@ -11,6 +11,9 @@ PR = "r0"
 
 SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "408b67506808a1bff2313d83607dbcfe"
+SRC_URI[sha256sum] = "43783a298b5adcfe273878194b28b9dcb95cbe8948a918caaf492c7bcb8c2ff6"
+
 S = "${WORKDIR}/userspace-rcu-${PV}"
 
 inherit autotools

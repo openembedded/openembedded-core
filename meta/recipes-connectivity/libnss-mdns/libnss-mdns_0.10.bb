@@ -11,6 +11,9 @@ RDEPENDS = "avahi-daemon"
 PR = "r1"
 
 SRC_URI = "http://0pointer.de/lennart/projects/nss-mdns/nss-mdns-${PV}.tar.gz"
+
+SRC_URI[md5sum] = "03938f17646efbb50aa70ba5f99f51d7"
+SRC_URI[sha256sum] = "1e683c2e7c3921814706d62fbbd3e9cbf493a75fa00255e0e715508d8134fa6d"
 S = "${WORKDIR}/nss-mdns-${PV}"
 
 inherit autotools

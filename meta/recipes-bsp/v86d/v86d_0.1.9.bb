@@ -12,6 +12,9 @@ PR = "r0"
 SRC_URI = "http://dev.gentoo.org/~spock/projects/uvesafb/archive/v86d-${PV}.tar.bz2 \
            file://fbsetup"
 
+SRC_URI[md5sum] = "ebbbc8e7013c9544b6ba6981add43831"
+SRC_URI[sha256sum] = "8167dec4ff919cfd73f854bbd3244f05c2b867e014fa8298044ea7cfd66d18a8"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 COMPATIBLE_MACHINE = "(qemux86|bootcdx86)"
 

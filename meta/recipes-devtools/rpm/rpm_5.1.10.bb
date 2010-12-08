@@ -14,6 +14,9 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/POKY/${BPN}-${PV}.tar.gz \
 	   file://perfile_rpmdeps.sh \
 	   file://rpm-no-loop.patch \
 	  "
+
+SRC_URI[md5sum] = "a5deb83b451f11c04461c630937b1189"
+SRC_URI[sha256sum] = "701726a6ae8283fcabc308dae523ad9599388296a562db1b3d7d7c871641af7e"
 inherit autotools gettext
 
 acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"

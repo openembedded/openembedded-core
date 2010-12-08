@@ -8,6 +8,9 @@ PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/nasm/nasm-${PV}.tar.bz2 "
 
+SRC_URI[md5sum] = "d8934231e81874c29374ddef1fbdb1ed"
+SRC_URI[sha256sum] = "ac70ee451c73d742c9ff830502e5f8b1f648b2abffa8fd00944243283ba8e87c"
+
 inherit autotools
 
 do_configure_prepend () {

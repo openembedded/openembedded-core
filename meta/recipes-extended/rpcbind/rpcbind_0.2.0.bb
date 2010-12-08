@@ -13,6 +13,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://fix_host_path.patch \
           "
 
+SRC_URI[md5sum] = "1a77ddb1aaea8099ab19c351eeb26316"
+SRC_URI[sha256sum] = "c92f263e0353887f16379d7708ef1fb4c7eedcf20448bc1e4838f59497a00de3"
+
 PR = "r1"
 
 inherit autotools

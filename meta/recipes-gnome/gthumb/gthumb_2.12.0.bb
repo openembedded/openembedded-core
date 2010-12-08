@@ -11,3 +11,6 @@ inherit gnome pkgconfig
 
 FILES_${PN} += "${datadir}/icons"
 FILES_${PN}-dbg += "${libdir}/gthumb/modules/.debug"
+
+SRC_URI[archive.md5sum] = "2911cd9b875efdfd554547176c59e309"
+SRC_URI[archive.sha256sum] = "9bb32ee44647f3f934d41344e2c1dbbd1546bf4949824030b3b818545758118c"

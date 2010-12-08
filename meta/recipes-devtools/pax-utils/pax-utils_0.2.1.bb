@@ -4,6 +4,9 @@ LICENSE     = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 SRC_URI     = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "2bf53234580e02294453a40c864f5871"
+SRC_URI[sha256sum] = "6a5beefb686e425eb6829bc716d2b32b64c2e854287c212c9853bc2beb705c3a"
+
 PR = "r0"
 
 do_install() {

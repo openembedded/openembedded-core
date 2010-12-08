@@ -9,6 +9,9 @@ RDEPENDS = "qt4-x11-free"
 
 SRC_URI = "http://qt-apps.org/CONTENT/content-files/80325-quicky-0.4.tar.gz"
 
+SRC_URI[md5sum] = "824d9e477ee9c4994f73a3cb215161d9"
+SRC_URI[sha256sum] = "9c66376e0035d44547612bf629890769a6178c3e7eafbcf95f1c6207ac0f352a"
+
 inherit qmake2 pkgconfig
 
 do_install() {

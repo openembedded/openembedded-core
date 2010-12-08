@@ -24,6 +24,9 @@ SRC_URI = "\
   file://sbc-thumb.patch;patch=1 \
   file://bluetooth.conf \
 "
+
+SRC_URI[md5sum] = "b3afea97981c1c6be04438930c57d891"
+SRC_URI[sha256sum] = "1b486824e486e7a7a17ebcbce99a417e724f42ebb17f9fe574bc4737fda6b7db"
 S = "${WORKDIR}/bluez-${PV}"
 
 inherit autotools

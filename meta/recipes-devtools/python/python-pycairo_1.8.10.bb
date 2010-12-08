@@ -9,6 +9,9 @@ DEPENDS = "cairo"
 PR = "ml0"
 
 SRC_URI = "http://cairographics.org/releases/py2cairo-${PV}.tar.gz"
+
+SRC_URI[md5sum] = "87421a6a70304120555ba7ba238f3dc3"
+SRC_URI[sha256sum] = "b15f71019e42e06d86f7e8fe5587f07c3de5a59a6c3a071b25fe100796dbcd56"
 S = "${WORKDIR}/pycairo-${PV}"
 
 inherit distutils pkgconfig

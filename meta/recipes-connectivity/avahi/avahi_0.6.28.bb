@@ -14,3 +14,6 @@ EXTRA_OECONF += "--disable-gtk3"
 FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
                        ${sysconfdir}/avahi/avahi-autoipd.action \
 		       ${sysconfdir}/dhcp3/*/avahi-autoipd"
+
+SRC_URI[md5sum] = "d0143a5aa3265019072e53ab497818d0"
+SRC_URI[sha256sum] = "a0d80aac88212b9f9d5331c248091d3c9c9209f0e41985421636ebd14230fc91"

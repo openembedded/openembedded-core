@@ -19,6 +19,9 @@ PR = "r0"
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
 	   file://debian-libjpeg7_7-1.diff;patch=1"
 
+SRC_URI[md5sum] = "e022acbc5b36cd2cb70785f5b575661e"
+SRC_URI[sha256sum] = "36e6208edec591bae8f2fc370ea4f991447badb6377a125c211ffa7b503174a7"
+
 inherit autotools 
 
 EXTRA_OECONF="--enable-static --enable-shared"

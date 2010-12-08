@@ -12,6 +12,9 @@ PR = "r0"
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/boot/syslinux/syslinux-${PV}.tar.bz2 \
            file://cross-build.patch"
 
+SRC_URI[md5sum] = "a7ca38a0a5786b6efae8fb01a1ae8070"
+SRC_URI[sha256sum] = "c65567e324f9d1f7f794ae8f9578a0292bbd47d7b8d895a004d2f0152d0bda38"
+
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
 EXTRA_OEMAKE = " \

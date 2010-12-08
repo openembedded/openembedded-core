@@ -6,12 +6,18 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b \
                     file://ifconfig.c;startline=11;endline=15;md5=da4c7bb79a5d0798faa99ef869721f4a"
 PR = "r0"
 
-SRC_URI = "ftp://ftp.debian.org/debian/pool/main/n/net-tools/net-tools_1.60.orig.tar.gz \
-           ftp://ftp.debian.org/debian/pool/main/n/net-tools/${PN}_${PV}.diff.gz;apply=no \
+SRC_URI = "ftp://ftp.debian.org/debian/pool/main/n/net-tools/net-tools_1.60.orig.tar.gz;name=tarball \
+           ftp://ftp.debian.org/debian/pool/main/n/net-tools/${PN}_${PV}.diff.gz;apply=no;name=patch \
            file://net-tools-config.h \
            file://net-tools-config.make" 
 
 S = "${WORKDIR}/net-tools-1.60"
+
+SRC_URI[tarball.md5sum] = "ecaf37acb5b5daff4bdda77785fd916d"
+SRC_URI[tarball.sha256sum] = "ec67967cf7b1a3a3828a84762fbc013ac50ee5dc9aa3095d5c591f302c2de0f5"
+
+SRC_URI[patch.md5sum] = "2412e55c20308d5fbd28bfadd18c075f"
+SRC_URI[patch.sha256sum] = "d678b3ea97d6c7ca548918994642bfc6b5511ab02f3a5881dfcca00c88bfd73b"
 
 inherit gettext
 

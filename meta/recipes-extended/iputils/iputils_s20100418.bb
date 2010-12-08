@@ -23,6 +23,9 @@ SRC_URI = "http://www.skbuff.net/iputils/${PN}-${PV}.tar.bz2 \
            file://debian/CVE-2010-2529.diff \
           "
 
+SRC_URI[md5sum] = "df6b0062118cdc5c62e3c810f831e976"
+SRC_URI[sha256sum] = "d0e8cbe6ce6a484ffb81697425b3b933746882f6f1521ac71c5c88971cee7684"
+
 # man is not compiled here, since it requires docbook-utils-native
 # which is not available in poky
 

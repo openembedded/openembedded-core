@@ -11,6 +11,9 @@ SRC_URI = "ftp://ftp.mktemp.org/pub/mktemp/${P}.tar.gz \
         file://disable-strip.patch \
         "
 
+SRC_URI[md5sum] = "787bbed9fa2ee8e7645733c0e8e65172"
+SRC_URI[sha256sum] = "8e94b9e1edf866b2609545da65b627996ac5d158fda071e492bddb2f4a482675"
+
 inherit autotools update-alternatives
 
 EXTRA_OECONF = "--with-libc"

@@ -32,6 +32,9 @@ SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/sysvinit/sysvini
            file://rcS \
 	   file://bootlogd.init"
 
+SRC_URI[md5sum] = "6eda8a97b86e0a6f59dabbf25202aa6f"
+SRC_URI[sha256sum] = "60bbc8c1e1792056e23761d22960b30bb13eccc2cabff8c7310a01f4d5df1519"
+
 S = "${WORKDIR}/sysvinit-${PV}"
 B = "${S}/src"
 

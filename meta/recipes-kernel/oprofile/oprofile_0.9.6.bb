@@ -19,6 +19,9 @@ PR = "r0"
 SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
            file://opstart.patch \
            file://acinclude.m4"
+
+SRC_URI[md5sum] = "4e407093ac06200185d5a5e6437d7242"
+SRC_URI[sha256sum] = "3f0dd40a7749fc650d25d79d42ebbff8f3b6db310c36e7c3839696cc09077880"
 S = "${WORKDIR}/oprofile-${PV}"
 
 inherit autotools

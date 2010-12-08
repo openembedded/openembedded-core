@@ -9,6 +9,9 @@ PR = "r4"
 
 SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "71f9c5ae19b60608f6c7f162da86a428"
+SRC_URI[sha256sum] = "c5001748b069224dd98bf1bb9ee877321c7de8b332c8aad5af3e2a7372d23f5a"
+
 inherit autotools update-alternatives gettext
 
 # diffutils assumes non-glibc compilation with uclibc and

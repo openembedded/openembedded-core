@@ -10,4 +10,7 @@ PR = "r0"
 SRC_URI = "http://ftp.musicbrainz.org/pub/musicbrainz/${PN}-${PV}.tar.gz \
            file://fix_build_issue_for_gcc_4.5.0.patch"
 
+SRC_URI[md5sum] = "f4824d0a75bdeeef1e45cc88de7bb58a"
+SRC_URI[sha256sum] = "7fd459a9fd05be9faec60a9a21caa9a1e9fda03147d58d8c7c95f33582a738c5"
+
 inherit cmake pkgconfig

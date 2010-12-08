@@ -8,3 +8,6 @@ PR = "r0"
 DEPENDS += "libpthread-stubs xcb-proto-native"
 
 PACKAGES =+ "libxcb-xinerama"
+
+SRC_URI[md5sum] = "925699df361b99491165ebc12068056b"
+SRC_URI[sha256sum] = "e776dc35e2a66094e7308ce2e045fb4e27cf3ca30ab1813a8fc08538140724df"

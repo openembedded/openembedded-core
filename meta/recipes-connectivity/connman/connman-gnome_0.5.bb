@@ -14,6 +14,9 @@ SRC_URI = "http://www.kernel.org/pub/linux/network/connman/connman-gnome-${PV}.t
            file://connman-gnome.patch \
            file://connman-applet.desktop"
 
+SRC_URI[md5sum] = "0e1c4c25d19cad9b08a216848a320716"
+SRC_URI[sha256sum] = "4d5fe481b444fc3e64fd9caa149dbcd76de166a25733f18fd93da01d2abf5d1c"
+
 inherit autotools gtk-icon-cache
 
 do_install_append() {

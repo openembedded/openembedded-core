@@ -12,6 +12,9 @@ PR = "r1"
 SRC_URI = "http://www.latencytop.org/download/latencytop-${PV}.tar.gz \
             file://latencytop-makefile.patch"
 
+SRC_URI[md5sum] = "73bb3371c6ee0b0e68e25289027e865c"
+SRC_URI[sha256sum] = "9e7f72fbea7bd918e71212a1eabaad8488d2c602205d2e3c95d62cd57e9203ef"
+
 CFLAGS += "${LDFLAGS}"
 
 do_install() {

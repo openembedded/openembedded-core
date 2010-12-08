@@ -10,4 +10,7 @@ PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libtirpc/libtirpc-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "d77eb15f464bf9d6e66259eaf78b2a4e"
+SRC_URI[sha256sum] = "ea77cadd63941fc4edbee7863d2c7094e6a18263d2a2c8922319aee91352ff41"
+
 inherit autotools

@@ -13,6 +13,9 @@ PE = "1"
 SRC_URI = "https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-${PV}.tar.gz \
            file://30-liberation-aliases.conf"
 
+SRC_URI[md5sum] = "4846797ef0fc70b0cbaede2514677c58"
+SRC_URI[sha256sum] = "0e0d0957c85b758561a3d4aef4ebcd2c39959e5328429d96ae106249d83531a1"
+
 do_install () {
 	install -d ${D}${datadir}/fonts/ttf/
 	for i in *.ttf; do

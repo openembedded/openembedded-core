@@ -17,6 +17,9 @@ SRC_URI = "${BASE_SRC_URI} \
            file://marshal.patch;apply=yes \
           "
 
+SRC_URI[md5sum] = "0a111faa54dfba2cf432c2c8e8a76e06"
+SRC_URI[sha256sum] = "3ad26e271c1a879bafcd181e065fe0ed53b542299a773c3188c9edb25b895ed1"
+
 SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 
 inherit autotools

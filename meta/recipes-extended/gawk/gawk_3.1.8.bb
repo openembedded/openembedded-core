@@ -15,6 +15,9 @@ PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "35937a0f83f0efe7a8c2dee635624784"
+SRC_URI[sha256sum] = "2146b3cc7a2d2b16a9457e73f14a3cb51a4292575425ed8f16f7e0a5e4f1a50d"
+
 inherit autotools gettext update-alternatives
 
 PACKAGES += "gawk-common pgawk"

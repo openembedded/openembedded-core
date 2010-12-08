@@ -18,6 +18,9 @@ SRC_URI = "http://projects.o-hand.com/matchbox/sources/optional-dependencies/Xse
         file://link-x11.patch;apply=yes \
         file://disable_Os_option.patch"
 
+SRC_URI[md5sum] = "c14aa9db6c097e0306dac97fb7da1add"
+SRC_URI[sha256sum] = "f274a4bc969ae192994a856b7f786c6fce96bae77f96c1c2b71dd97599e06e43"
+
 S = "${WORKDIR}/Xsettings-client-0.10"
 
 inherit autotools gettext

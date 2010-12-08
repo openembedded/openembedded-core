@@ -37,3 +37,6 @@ pkg_postinst_module-init-tools-depmod() {
 pkg_prerm_module-init-tools-depmod() {
 	update-alternatives --remove depmod /sbin/depmod.26
 }
+
+SRC_URI[md5sum] = "8b2257ce9abef74c4a44d825d23140f3"
+SRC_URI[sha256sum] = "d012ab07ea26721467a85a775f34747c1c8897e37f16bec5317d8a72ef8b4f17"

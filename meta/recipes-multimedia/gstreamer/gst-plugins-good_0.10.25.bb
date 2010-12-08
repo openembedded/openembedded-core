@@ -17,3 +17,6 @@ do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
 	rm ${S}/m4/lib-link.m4 || true
 }
+
+SRC_URI[md5sum] = "d734bc866788d1d6fc74c4ff1318926c"
+SRC_URI[sha256sum] = "b5d5750c12412c47d85ba9391c842f6f02cad9511876695e48b15fb37e4699f6"

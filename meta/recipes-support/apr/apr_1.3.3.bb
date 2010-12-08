@@ -9,6 +9,9 @@ SRC_URI = "${APACHE_MIRROR}/apr/${P}.tar.bz2 \
 	   file://cleanup.patch;patch=1 \
            file://configfix.patch;patch=1"
 
+SRC_URI[md5sum] = "2090c21dee4f0eb1512604127dcd158f"
+SRC_URI[sha256sum] = "d95f3b78366c86317043304864bb08cb836312c87ea7d142a4c02154e7e0dd37"
+
 inherit autotools lib_package binconfig
 
 OE_BINCONFIG_EXTRA_MANGLE = " -e 's:location=source:location=installed:'"

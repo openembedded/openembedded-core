@@ -14,6 +14,9 @@ inherit autotools gettext
 
 SRC_URI = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.gz"
 
+SRC_URI[md5sum] = "c1ffe586d001e87d66cd80c4536ee823"
+SRC_URI[sha256sum] = "dd243e2ac7d0ed203b170ecfb8299643779e7501fec2b45ae1cea8a450fa8ca0"
+
 # [ gets a special treatment and is not included in this
 bindir_progs = "base64 basename chcon cksum comm csplit cut dir dircolors dirname du \
                 env expand expr factor fmt fold groups head hostid id install \

@@ -6,6 +6,9 @@ PR = "r0"
 
 SRC_URI = "http://search.cpan.org/CPAN/authors/id/G/GB/GBARR/Convert-ASN1-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "6f5c45724db1b09911e489275d19d0f5"
+SRC_URI[sha256sum] = "94e37fcb52148355cf9a0e96518c82bbb80b0b97adcce88bdb87766ca1cf9e45"
+
 S = "${WORKDIR}/Convert-ASN1-${PV}"
 
 inherit cpan

@@ -16,6 +16,9 @@ SRC_URI = "http://www.xinetd.org/xinetd-${PV}.tar.gz \
       file://xinetd-should-be-able-to-listen-on-IPv6-even-in-ine.patch \
       "
 
+SRC_URI[md5sum] = "567382d7972613090215c6c54f9b82d9"
+SRC_URI[sha256sum] = "760e0e617c609a0509ef63fc7e9580d2f1d88c6113bb6d63273de7de7cd0bc1f"
+
 inherit autotools update-rc.d
 
 INITSCRIPT_NAME = "xinetd"

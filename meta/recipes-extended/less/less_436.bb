@@ -14,6 +14,9 @@ PR = "r0"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${PN}/${PN}-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "817bf051953ad2dea825a1cdf460caa4"
+SRC_URI[sha256sum] = "57a16ff07431a9af45cf1cd5b374e1066d019304219f0d156e22bb8c4d6734d2"
+
 
 inherit autotools update-alternatives
 

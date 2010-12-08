@@ -15,4 +15,7 @@ PR = "r1"
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.gz \
            file://add_missing.patch"
 
+SRC_URI[md5sum] = "d55e51dced6bb9ef46665243b079761f"
+SRC_URI[sha256sum] = "e97bf3f9ed4f33b9f0be73e67d360b89337cccf816361faacd8422722269806b"
+
 inherit autotools pkgconfig

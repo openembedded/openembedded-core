@@ -15,6 +15,9 @@ SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
            file://makedepend-dash.patch;patch=1 \
            file://asm-pageh-fix.patch;patch=1"
 
+SRC_URI[md5sum] = "b8c118d4360846829beb30b02a6b91a7"
+SRC_URI[sha256sum] = "e15d499321e003d12ed183601e37ee7ba5f64b278d1de30149ce01bd4a3f234d"
+
 S = "${WORKDIR}/perl-${PV}"
 
 inherit native

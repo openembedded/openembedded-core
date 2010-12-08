@@ -28,6 +28,9 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.20/gtk+-${PV}.tar.bz2 \
             file://configurefix.patch;patch=1 \
 	  "
 
+SRC_URI[md5sum] = "53e6f3a93bd22934878fc4a4a34c68aa"
+SRC_URI[sha256sum] = "0e081731d21e34ff45c82199490c2889504fa8b3c7e117c043e82ababaec0f65"
+
 EXTRA_OECONF = "--without-libtiff --without-libjasper --disable-xkb --disable-glibtest --disable-cups"
 
 LIBV = "2.10.0"

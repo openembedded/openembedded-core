@@ -15,6 +15,9 @@ PR = "r1"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/resolvconf_${PV}.tar.gz"
 
+SRC_URI[md5sum] = "15faef2aba7b99782f3b0b8b5d30f80a"
+SRC_URI[sha256sum] = "17e1105cddd928adf7d47e050f9bb49557850687f800b3e24cbbf22933ff31ae"
+
 do_compile () {
 	:
 }

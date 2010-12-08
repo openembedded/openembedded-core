@@ -22,6 +22,9 @@ EXTRA_OECONF = "--disable-gtk-doc"
 
 SRC_URI += "file://org.gnome.keyring.service"
 
+SRC_URI[archive.md5sum] = "9a8aa74e03361676f29d6e73155786fc"
+SRC_URI[archive.sha256sum] = "31fecec1430a97f59a6159a5a2ea8d6a1b44287f1e9e595b3594df46bf7f18f9"
+
 do_install_append () {
 	install -d ${D}${datadir}/dbus-1/services
 	install -m 0644 ${WORKDIR}/org.gnome.keyring.service ${D}${datadir}/dbus-1/services

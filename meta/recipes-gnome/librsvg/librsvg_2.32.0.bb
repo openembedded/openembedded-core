@@ -16,6 +16,9 @@ EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disabl
 
 SRC_URI += "file://doc_Makefile.patch"
 
+SRC_URI[archive.md5sum] = "b015a9bd80143ec876af489d882dc28b"
+SRC_URI[archive.sha256sum] = "e0f6f936dab583de317cc0c36a48f80bdb9c93775225ee84140c7e5e3f841068"
+
 do_configure_prepend () {
 	export GDK_PIXBUF_QUERYLOADERS="${libdir}/gtk-2.0/version/loaders"
 	echo "CLEANFILES=" > gtk-doc.make

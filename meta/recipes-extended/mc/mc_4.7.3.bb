@@ -8,6 +8,9 @@ RDEPENDS = "ncurses-terminfo"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${PN}-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "42eb806d733b11d0d13ff7ee5fd1a03c"
+SRC_URI[sha256sum] = "4815184f28218a43080e4a425b5cd4e159277a10c56ff06d29bf441828fe5927"
+
 inherit autotools gettext
 
 EXTRA_OECONF = "--with-screen=ncurses --without-gpm-mouse --without-x --without-samba"

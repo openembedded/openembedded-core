@@ -9,6 +9,9 @@ SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.gz \
            file://nobash.patch \
            file://root-home.patch"
 
+SRC_URI[md5sum] = "47f22ab6b572d0133409ff6ad1fab402"
+SRC_URI[sha256sum] = "d34acb35a9f9f221e7e4f642b9ef4b22083dd77bb2fc7216756f445316d842fc"
+
 S = "${WORKDIR}/base-passwd"
 
 inherit autotools

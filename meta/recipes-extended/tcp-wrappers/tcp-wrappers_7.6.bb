@@ -42,6 +42,9 @@ SRC_URI = "ftp://ftp.porcupine.org/pub/security/tcp_wrappers_${PV}.tar.gz \
            file://try-from.8 \
            file://safe_finger.8"
 
+SRC_URI[md5sum] = "e6fa25f71226d090f34de3f6b122fb5a"
+SRC_URI[sha256sum] = "9543d7adedf78a6de0b221ccbbd1952e08b5138717f4ade814039bb489a4315d"
+
 S = "${WORKDIR}/tcp_wrappers_${PV}"
 
 PARALLEL_MAKE = ""

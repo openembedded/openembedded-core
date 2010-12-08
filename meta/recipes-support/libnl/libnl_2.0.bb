@@ -13,6 +13,9 @@ SRC_URI= "http://www.infradead.org/~tgr/libnl/files/${PN}-${PV}.tar.gz \
           file://fix-makefile.patch \
          "
 
+SRC_URI[md5sum] = "6aaf1e9802a17a7d702bb0638044ffa7"
+SRC_URI[sha256sum] = "5a40dc903d3ca1074da7424b908bec8ff16936484798c7e46e53e9db8bc87a9c"
+
 inherit autotools pkgconfig
 
 LEAD_SONAME = "libnl.so"

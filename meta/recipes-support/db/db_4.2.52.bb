@@ -21,6 +21,9 @@ PR = "r8"
 
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz \
            file://configure_fixes.patch;patch=1 "
+
+SRC_URI[md5sum] = "8b5cff6eb83972afdd8e0b821703c33c"
+SRC_URI[sha256sum] = "f4bddd8d1b4cde0daf5e13e3493ed62a25b736b0bf258e1d929e47bc6a82a28c"
 #SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"
 #TODO SRC_URI += "file://arm-thumb-mutex.patch;patch=1"
 

@@ -9,6 +9,9 @@ PR = "r0"
 
 SRC_URI = "http://rpm5.org/files/popt/popt-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "3743beefa3dd6247a73f8f7a32c14c33"
+SRC_URI[sha256sum] = "e728ed296fe9f069a0e005003c3d6b2dde3d9cad453422a10d6558616d304cc8"
+
 inherit autotools
 
 BBCLASSEXTEND = "native"

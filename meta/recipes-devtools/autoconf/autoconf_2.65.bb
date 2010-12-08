@@ -17,6 +17,9 @@ SRC_URI += "file://autoreconf-include.patch;patch=1 \
 	   ${@['file://path_prog_fixes.patch;patch=1', ''][bb.data.inherits_class('native', d)]} \
            file://config_site.patch;patch=1"
 
+SRC_URI[md5sum] = "a6de1cc6434cd64038b0a0ae4e252b33"
+SRC_URI[sha256sum] = "db11944057f3faf229ff5d6ce3fcd819f565455c152b72cec17ebc1cbb80136b"
+
 DEPENDS_virtclass-native = "m4-native gnu-config-native"
 RDEPENDS_${PN}_virtclass-native = "m4-native gnu-config-native"
 

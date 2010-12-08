@@ -12,6 +12,9 @@ SRC_URI = "\
   http://www.cosc.canterbury.ac.nz/greg.ewing/python/${SRCNAME}/${SRCNAME}-${PV}.tar.gz \
   file://pyrex-fix-optimized-mode.patch \
 "
+
+SRC_URI[md5sum] = "515dee67d15d4393841e2d60e8341947"
+SRC_URI[sha256sum] = "5f87df06831d0b3412eb4bc9d3fc2ee7bfae1b913d7da8c23ab2bf5699fb6b50"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils

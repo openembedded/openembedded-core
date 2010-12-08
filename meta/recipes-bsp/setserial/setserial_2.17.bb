@@ -15,6 +15,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/setserial/${PN}-${PV}.tar.gz \
            file://add_stdlib.patch \
           "
 
+SRC_URI[md5sum] = "c4867d72c41564318e0107745eb7a0f2"
+SRC_URI[sha256sum] = "7e4487d320ac31558563424189435d396ddf77953bb23111a17a3d1487b5794a"
+
 do_install() {
     install -d ${D}${bindir}
     install -d ${D}${mandir}/man8

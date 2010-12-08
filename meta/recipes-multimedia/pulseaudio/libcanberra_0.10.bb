@@ -12,6 +12,9 @@ SRC_URI = "http://0pointer.de/lennart/projects/libcanberra/libcanberra-${PV}.tar
            file://nofallbackfix.patch;patch=1 \
            file://autoconf_version.patch;patch=1"
 
+SRC_URI[md5sum] = "2623370bfcecaeecaeb85e5ec445f340"
+SRC_URI[sha256sum] = "b0e3cb59e605412a52352cf9cf36344b165463d4e65916c95deb73fc51838272"
+
 EXTRA_OECONF = " --disable-oss --disable-ltdl-install" 
 
 do_configure_prepend () {

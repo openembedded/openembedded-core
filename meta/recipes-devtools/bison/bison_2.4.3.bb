@@ -14,6 +14,9 @@ BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
 SRC_URI = "${BASE_SRC_URI} \
         file://fix_cross_manpage_building.patch "
 
+SRC_URI[md5sum] = "ea45c778b36bdc7a720096819e292a73"
+SRC_URI[sha256sum] = "6b17be5e63ff6667c83f6ef0423befe0ba23d4bc554c4c33b02ce5bb65179b16"
+
 DEPENDS_virtclass-native = "gettext-native"
 SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 

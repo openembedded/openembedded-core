@@ -10,6 +10,9 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
            file://no_check.patch;patch=1 \
            file://syscalls.patch;patch=1 "
 
+SRC_URI[md5sum] = "055305bc7bcf472ce38f9abf69a9d94d"
+SRC_URI[sha256sum] = "53231241ba24c104c207bd2920d70d31fda86df86a69c90e11f35144ffc55509"
+
 EXTRA_OECONF = "--disable-Werror --disable-device-mapper"
 
 inherit autotools pkgconfig gettext

@@ -9,4 +9,7 @@ PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freeassociation/${P}.tar.gz"
 
+SRC_URI[md5sum] = "9c08f88945bfd5d0791d102e4aa4125c"
+SRC_URI[sha256sum] = "000762efb81501421d94ec56343648a62b3bd2884e7cdf6f638e2c207dd8f6a1"
+
 inherit autotools

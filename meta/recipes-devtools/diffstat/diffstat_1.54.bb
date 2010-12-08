@@ -11,6 +11,9 @@ PR = "r0"
 
 SRC_URI = "ftp://invisible-island.net/diffstat/diffstat-${PV}.tgz"
 
+SRC_URI[md5sum] = "af08bef2eb37050ceb0c4fddedb2ee36"
+SRC_URI[sha256sum] = "d8e67660ec85be597f8548ecdd088926639dac34ec7184aaf9d09c1e6ecb83e5"
+
 S = "${WORKDIR}/diffstat-${PV}"
 
 inherit autotools

@@ -16,6 +16,9 @@ SRC_URI = "http://distcc.samba.org/ftp/distcc/distcc-${PV}.tar.bz2 \
 	   file://distccmon-gnome.desktop \
 	   file://distcc"
 
+SRC_URI[md5sum] = "0d6b80a1efc3a3d816c4f4175f63eaa2"
+SRC_URI[sha256sum] = "6500f1bc2a30b1f044ebed79c6ce15457d1712263e65f0db7d6046af262ba434"
+
 inherit autotools pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "distcc"

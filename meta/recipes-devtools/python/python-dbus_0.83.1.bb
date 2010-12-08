@@ -7,6 +7,9 @@ DEPENDS = "expat dbus dbus-glib virtual/libintl python-pyrex-native"
 PR = "ml0"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-python/dbus-python-${PV}.tar.gz"
+
+SRC_URI[md5sum] = "5fdf3970aa0c00020289de7ba8f3be18"
+SRC_URI[sha256sum] = "ce283806f1af4f2322e183a276528a880b503c74972932bd09f06bdb7fcc1b99"
 S = "${WORKDIR}/dbus-python-${PV}"
 
 inherit distutils-base autotools pkgconfig

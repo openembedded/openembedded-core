@@ -10,6 +10,9 @@ PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/libpng-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "e3ac7879d62ad166a6f0c7441390d12b"
+SRC_URI[sha256sum] = "b9ab20f1c2c3bf6c4448fd9bd8a4a8905b918114d5fada56c97bb758a17b7215"
+
 inherit autotools binconfig pkgconfig
 
 PACKAGES =+ "${PN}12-dbg ${PN}12 ${PN}12-dev"

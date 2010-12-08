@@ -18,6 +18,9 @@ PR = "r0"
 SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
            file://crond.init"
 
+SRC_URI[md5sum] = "968e3d3e7c8e1d0588d533883482d3fa"
+SRC_URI[sha256sum] = "4435484c28a4452ee37db27182675660cdebf16d8956771b28c8a6f2e9c8048b"
+
 inherit autotools update-rc.d
 
 INITSCRIPT_NAME = "crond"

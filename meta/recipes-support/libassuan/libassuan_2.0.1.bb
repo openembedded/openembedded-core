@@ -12,4 +12,7 @@ DEPENDS = "libgpg-error"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-${PV}.tar.bz2"
 
+SRC_URI[md5sum] = "53a7d4c22af909d7236d17d454ef935b"
+SRC_URI[sha256sum] = "1117be532ac41b13790b4756df7fa747d3d04264f7b4544aa9d7ff468a24b457"
+
 inherit autotools binconfig

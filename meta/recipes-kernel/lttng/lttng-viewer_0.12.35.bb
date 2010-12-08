@@ -16,6 +16,9 @@ SECTION = "devel"
 ALTNAME = "lttv-${PV}-20082010"
 
 SRC_URI = "http://lttng.org/files/packages/${ALTNAME}.tar.gz"
+
+SRC_URI[md5sum] = "ebcbc4e21184b4b0dcb0611b4977dad8"
+SRC_URI[sha256sum] = "d258b13cd76c37e4f8395c06159986dd45517bef312895ffa59722087a2879e7"
 S = "${WORKDIR}/${ALTNAME}"
 
 inherit autotools

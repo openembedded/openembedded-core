@@ -7,6 +7,9 @@ DEPENDS =       "gettext libgalago dbus glib-2.0"
 
 SRC_URI =       "http://www.galago-project.org/files/releases/source/${PN}/${P}.tar.gz "
 
+SRC_URI[md5sum] = "fdb81f938f86f380b127158ebb542279"
+SRC_URI[sha256sum] = "db42a0d1d0f8b069ea5ac1203207f9178f25ac1367f4910bd48547f5be1db4c2"
+
 EXTRA_OECONF =	"--disable-binreloc --disable-check --disable-tests"
 
 FILES_${PN} += "${datadir}/dbus-1/services/"

@@ -8,3 +8,6 @@ PR = "r0"
 PE = "1"
 
 BBCLASSEXTEND = "nativesdk"
+
+SRC_URI[md5sum] = "55edc5ff2efb734215c868f72f7cf27e"
+SRC_URI[sha256sum] = "48be7a9d190b600210e5ad08b4e8862a6b08e72dc52dbdf324716a888eb457de"

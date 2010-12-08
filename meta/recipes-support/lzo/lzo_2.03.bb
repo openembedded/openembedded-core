@@ -11,6 +11,9 @@ SRC_URI = "http://www.oberhumer.com/opensource/lzo/download/lzo-${PV}.tar.gz \
            file://autofoo.patch \
            file://acinclude.m4"
 
+SRC_URI[md5sum] = "0c3d078c2e8ea5a88971089a2f02a726"
+SRC_URI[sha256sum] = "8b1b0da8f757b9ac318e1c15a0eac8bdb56ca902a2dd25beda06c0f265f22591"
+
 inherit autotools
 
 EXTRA_OECONF = "--enable-shared"
