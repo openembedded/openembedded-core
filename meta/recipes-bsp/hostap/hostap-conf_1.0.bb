@@ -1,12 +1,14 @@
 DESCRIPTION = "PCMCIA-cs configuration files for wireless LAN cards based on Intersil's Prism2/2.5/3 chipset"
 SECTION = "kernel/modules"
 PRIORITY = "optional"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 RDEPENDS = "update-modules"
 PACKAGE_ARCH = "all"
-PR = "r10"
+PR = "r11"
 
-SRC_URI = "file://hostap_cs.modalias"
+SRC_URI = "file://hostap_cs.modalias \
+           file://COPYING.patch"
 
 do_compile() {
 }
