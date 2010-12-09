@@ -1,10 +1,12 @@
 DESCRIPTION = "A nasty hack for for dtl1-cs driver to workaround suspend/resume."
 LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 SECTION = "console" 
 PRIORITY = "optional" 
-PR = "r1"
+PR = "r2"
  
-SRC_URI = "file://02dtl1_cs.sh"
+SRC_URI = "file://02dtl1_cs.sh \
+           file://COPYING.patch"
 
 do_install() { 
         install -d ${D}${sysconfdir}/apm/event.d/ 
