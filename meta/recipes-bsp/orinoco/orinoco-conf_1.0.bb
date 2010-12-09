@@ -1,12 +1,14 @@
 DESCRIPTION = "PCMCIA-cs configuration files for Hermes (Orinoco) wireless LAN cards"
 SECTION = "kernel/modules"
 PRIORITY = "optional"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 RDEPENDS = "update-modules"
 PACKAGE_ARCH = "all"
-PR = "r4"
+PR = "r5"
 
-SRC_URI = "file://orinoco_cs.conf"
+SRC_URI = "file://orinoco_cs.conf \
+           file://COPYING.patch"
 
 do_install() {
         install -d ${D}${sysconfdir}/modutils
