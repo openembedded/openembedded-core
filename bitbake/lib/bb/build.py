@@ -25,13 +25,14 @@
 #
 #Based on functions from the base bb module, Copyright 2003 Holger Schurig
 
-from bb import data, event, mkdirhier, utils
 import os
 import sys
 import logging
 import bb
 import bb.utils
 import bb.process
+from contextlib import nested
+from bb import data, event, mkdirhier, utils
 
 logger = logging.getLogger("BitBake.Build")
 
@@ -142,25 +143,20 @@ def exec_func(func, d, dirs = None, logfile = NULL):
     if flags.get('fakeroot') and not flags.get('task'):
         bb.fatal("Function %s specifies fakeroot but isn't a task?!" % func)
 
+    lockflag = flags.get('lockfiles')
+    if lockflag:
+        lockfiles = [data.expand(f, d) for f in lockflag.split()]
+    else:
+        lockfiles = None
+
     tempdir = data.getVar('T', d, 1)
     runfile = os.path.join(tempdir, 'run.{0}.{1}'.format(func, os.getpid()))
 
-    locks = []
-    lockfiles = flags.get('lockfiles')
-    if lockfiles:
-        for lock in data.expand(lockfiles, d).split():
-            locks.append(bb.utils.lockfile(lock))
-
-    try:
+    with bb.utils.fileslocked(lockfiles):
         if ispython:
             exec_func_python(func, d, runfile, logfile, cwd=adir)
         else:
             exec_func_shell(func, d, runfile, logfile, cwd=adir)
-
-    finally:
-        # Unlock any lockfiles
-        for lock in locks:
-            bb.utils.unlockfile(lock)
 
 _functionfmt = """
 def {function}(d):
