@@ -1,0 +1,170 @@
+#!/bin/bash
+#
+# Copyright (c) 2005-2010 Wind River Systems, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+
+red='\E[31;40m'
+green='\E[32;40m'
+USER=`whoami`
+MACHINE=$1
+IMAGE_PATH=../build/tmp/deploy/images/
+
+
+ECHO()
+{
+    echo -e "${green}$@"
+    tput sgr0
+}
+
+exit_check()
+{
+    if [ ! $? -eq 0 ]; then
+        exit $?
+    fi
+}
+
+usage()
+{
+    ECHO "${red}usage:you should input one of the next commmands according to detailed target platform:"
+    ECHO "creat-lsb-image qemux86"
+    ECHO "creat-lsb-image qemux86-64"
+    ECHO "creat-lsb-image qemuppc"
+}
+
+#There should be a patameter to get machine type
+if [ $# -ne 1 ]; then
+    usage
+    exit 1
+fi
+
+#check lsb image
+if [ ! -d $IMAGE_PATH ];then
+    ECHO "${red}There isn't image directory"
+    exit 1
+fi
+ECHO "Enter directory $IMAGE_PATH"
+cd $IMAGE_PATH
+
+#get architecture
+case $MACHINE in
+    qemux86)
+        ARCH=ia32
+        PN=`find . -name poky-image-lsb-${MACHINE}\*.rootfs.tar.bz2 -type f | awk -F- 'BEGIN{ max=0;} {if( NR!=0 && $5>max ) max=$5 }END{ printf "%d" ,max ;}'`
+        if [ "XPN" == "X" ];then
+            ECHO "${red}Don't find lsb image on platform, Please run \"poky-image-lsb\" to generate lsb image"
+            exit 1
+        fi
+    ;;
+    qemux86-64)
+        ARCH=x86_64
+        PN=`find . -nam! e poky-image-lsb-${MACHINE}\*.rootfs.tar.bz2 -type f | awk -F- 'BEGIN{ max=0; } {if( NR!=0 && $6>max ) max=$6 }END{ printf "%d" ,max ;}'`
+        if [ "X${PN}" == "X" ];then
+            ECHO "${red}Don't find lsb image on platform, Please run \"poky-image-lsb\" to generate lsb image"
+            exit 1
+        fi
+    ;;
+    qemuppc)
+        ARCH=ppc32
+        PN=`find . -name poky-image-lsb-${MACHINE}\*.rootfs.tar.bz2 -type f | awk -F- 'BEGIN{ max=0;} {if( NR!=0 && $5>max ) max=$5 }END{ printf "%d" ,max ;}'`
+        if [ "XPN" == "X" ];then
+            ECHO "${red}Don't find lsb image on platform, Please run \"poky-image-lsb\" to generate lsb image"
+		fi
+    ;;
+    *)
+        ECHO "${red}Don't support lsb test for platform ${MACHINE}"
+        exit 1
+esac
+
+if [ $PN -eq 0 ];then
+	ECHO "${red}Can't ${MACHINE} rootfs.tar.gz,Please run poky-image-lsb to get lsb image"
+	exit 1
+fi
+
+#download lsb test suite
+if [ ! -f lsb-dist-testkit-4.0.2-1.${ARCH}.tar.gz ];then
+	ECHO "Download lsb test suite, it could take some time..."
+    wget -c -t 5  http://ftp.linuxfoundation.org/pub/lsb/bundles/released-4.0.0/dist-testkit/lsb-dist-testkit-4.0.2-1.${ARCH}.tar.gz
+    exit_check
+else
+	ECHO "Find lsb test suite for ${MACHINE}"
+fi
+
+#if [ -L poky-image-lsb-${MACHINE}.ext3 ];then
+#    /bin/rm poky-image-lsb-${MACHINE}.ext3
+#    exit_check
+#fi
+
+#creat lsb image
+if [ -f poky-image-lsb-${MACHINE}-test.ext3 ];then
+	if [ -d lsbtmp ];then
+    	sudo umount lsbtmp
+	fi
+	ECHO "Remove old lsb image..."
+	/bin/rm poky-image-lsb-${MACHINE}-test.ext3
+fi	
+ECHO "creat a big ext3 file for lsb image with 3G..."
+dd if=/dev/zero of=poky-image-lsb-${MACHINE}-test.ext3 bs=1M count=3000
+exit_check
+ECHO "Format ext3 image,please input \"y\""
+mkfs.ext3 poky-image-lsb-${MACHINE}-test.ext3
+tune2fs -j  poky-image-lsb-${MACHINE}-test.ext3
+
+
+ECHO "get a lsb image with lsb test suite"
+if [ ! -d lsbtmp ];then
+	mkdir lsbtmp
+fi
+
+
+#install file system and lsb test suite to lsb image
+sudo mount -o loop poky-image-lsb-${MACHINE}-test.ext3 lsbtmp
+exit_check
+
+ECHO "  ->Install file system..."
+sudo tar jxf poky-image-lsb-${MACHINE}-${PN}.rootfs.tar.bz2 -C lsbtmp
+exit_check
+
+ECHO "  ->Install lsb test suite..."
+sudo tar zxf lsb-dist-testkit-4.0.2-1.${ARCH}.tar.gz -C lsbtmp
+exit_check
+
+if [ -f modules-*-${MACHINE}.tgz ];then
+ECHO "  ->Install moules of driver..."	
+	sudo tar zxf modules-*-${MACHINE}.tgz -C lsbtmp/
+fi
+
+
+#mount lsbtmp
+sudo umount lsbtmp
+exit_check
+sudo rm -rf lsbtmp
+
+#change file attribute
+sudo chown ${USER}:${USER} poky-image-lsb-${MACHINE}-test.ext3 
+exit_check
+sudo chmod 755 poky-image-lsb-${MACHINE}-test.ext3
+exit_check
+
+#set up link
+if [ -L poky-image-lsb-${MACHINE}.ext3 ];then
+ECHO "Set up link"
+    /bin/rm poky-image-lsb-${MACHINE}.ext3
+    exit_check
+fi
+ln -s poky-image-lsb-${MACHINE}-test.ext3 poky-image-lsb-${MACHINE}.ext3
+
+ECHO "LSB test environment is set successfully, Please run \"poky-qemu ${MACHINE}\" to start up lsb-image"
+
