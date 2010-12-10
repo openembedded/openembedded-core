@@ -100,8 +100,8 @@ the_data = cooker.bb_cache.loadDataFull(fn, cooker.get_file_appends(fn), cooker.
 cooker.bb_cache.setData(fn, buildfile, the_data)
 cooker.bb_cache.handle_data(fn, cooker.status)
 
-exportlist = bb.utils.preserved_envvars_export_list()
-bb.utils.filter_environment(exportlist)
+#exportlist = bb.utils.preserved_envvars_export_list()
+#bb.utils.filter_environment(exportlist)
 
 if taskname.endswith("_setscene"):
     the_data.setVarFlag(taskname, "quieterrors", "1")
