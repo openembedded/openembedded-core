@@ -29,12 +29,14 @@ import os
 import sys
 import logging
 import bb
+import bb.msg
 import bb.utils
 import bb.process
 from contextlib import nested
 from bb import data, event, mkdirhier, utils
 
-logger = logging.getLogger("BitBake.Build")
+bblogger = logging.getLogger('BitBake')
+logger = logging.getLogger('BitBake.Build')
 
 NULL = open('/dev/null', 'r')
 
@@ -164,7 +166,7 @@ def {function}(d):
 
 {function}(d)
 """
-#logformatter = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+logformatter = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
 def exec_func_python(func, d, runfile, logfile, cwd=None):
     """Execute a python BB 'function'"""
 
@@ -181,9 +183,9 @@ def exec_func_python(func, d, runfile, logfile, cwd=None):
     if cwd:
         os.chdir(cwd)
 
-    #handler = logging.StreamHandler(logfile)
-    #handler.setFormatter(logformatter)
-    #bblogger.addHandler(handler)
+    handler = logging.StreamHandler(logfile)
+    handler.setFormatter(logformatter)
+    bblogger.addHandler(handler)
 
     try:
         comp = utils.better_compile(code, func, bbfile)
@@ -194,7 +196,7 @@ def exec_func_python(func, d, runfile, logfile, cwd=None):
 
         raise FuncFailed(func, None)
     finally:
-        #bblogger.removeHandler(handler)
+        bblogger.removeHandler(handler)
         if olddir:
             os.chdir(olddir)
 
