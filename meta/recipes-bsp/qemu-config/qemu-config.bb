@@ -1,5 +1,8 @@
 DESCRIPTION = "Adds scripts to use distcc on the host system under qemu"
+
 LICENSE = "GPL"
+LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
+
 RDEPENDS = "distcc task-poky-nfs-server oprofileui-server rsync bash"
 PR = "r17"
 
