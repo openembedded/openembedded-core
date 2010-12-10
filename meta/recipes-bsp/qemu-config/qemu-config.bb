@@ -1,16 +1,17 @@
 DESCRIPTION = "Adds scripts to use distcc on the host system under qemu"
 
 LICENSE = "GPL"
-LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
 RDEPENDS = "distcc task-poky-nfs-server oprofileui-server rsync bash"
-PR = "r17"
+PR = "r18"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
            file://exports \
            file://shutdown.desktop \
-           file://qemu-autostart"
+           file://qemu-autostart \
+           file://COPYING.GPL"
 
 S = "${WORKDIR}"
 
