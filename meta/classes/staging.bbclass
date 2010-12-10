@@ -81,7 +81,6 @@ do_populate_sysroot[dirs] = "${STAGING_DIR_TARGET}/${bindir} ${STAGING_DIR_TARGE
 # Could be compile but populate_sysroot and do_install shouldn't run at the same time
 addtask populate_sysroot after do_install
 
-PSTAGING_ACTIVE = "0"
 SYSROOT_PREPROCESS_FUNCS ?= ""
 SYSROOT_DESTDIR = "${WORKDIR}/sysroot-destdir/"
 SYSROOT_LOCK = "${STAGING_DIR}/staging.lock"
