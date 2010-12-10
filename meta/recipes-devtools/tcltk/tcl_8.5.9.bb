@@ -3,12 +3,12 @@ LICENSE = "tcl"
 SECTION = "devel/tcltk"
 HOMEPAGE = "http://tcl.sourceforge.net"
 DEPENDS = "tcl-native"
-LIC_CHKSUM_FILES = "file://../license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
-    file://../compat/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
-    file://../library/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
-    file://../macosx/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
-    file://../tests/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
-    file://../win/license.terms;md5=7b4d3c71b2d9a8c1b373609867975570 \
+LIC_FILES_CHKSUM = "file://../license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
+    file://../compat/license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
+    file://../library/license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
+    file://../macosx/license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
+    file://../tests/license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
+    file://../win/license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
     "
 
 PR = "r0"
