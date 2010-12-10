@@ -31,8 +31,12 @@ import sys
 import logging
 import bb
 import bb.utils
+import bb.process
 
 logger = logging.getLogger("BitBake.Build")
+
+NULL = open('/dev/null', 'r')
+
 
 # When we execute a python function we'd like certain things
 # in all namespaces, hence we add them to __builtins__
@@ -53,8 +57,8 @@ class FuncFailed(Exception):
 
     def __str__(self):
         if self.logfile and os.path.exists(self.logfile):
-            msg = "%s (see %s for further information)" % \
-                  (self.message, self.logfile)
+            msg = ("%s (see %s for further information)" %
+                   (self.message, self.logfile))
         else:
             msg = self.message
         return msg
@@ -95,30 +99,33 @@ class TaskInvalid(TaskBase):
         super(TaskInvalid, self).__init__(task, metadata)
         self._message = "No such task '%s'" % task
 
-# functions
 
-def exec_func(func, d, dirs = None):
+class tee(file):
+    def write(self, string):
+        logger.plain(string)
+        file.write(self, string)
+
+    def __repr__(self):
+        return "<open[tee] file '{0}'>".format(self.name)
+
+
+def exec_func(func, d, dirs = None, logfile = NULL):
     """Execute an BB 'function'"""
 
     body = data.getVar(func, d)
     if not body:
-        bb.warn("Function %s doesn't exist" % func)
+        if body is None:
+            logger.warn("Function %s doesn't exist", func)
         return
 
     flags = data.getVarFlags(func, d)
-    for item in ['deps', 'check', 'interactive', 'python', 'cleandirs', 'dirs', 'lockfiles', 'fakeroot', 'task']:
-        if not item in flags:
-            flags[item] = None
-
-    ispython = flags['python']
-
-    cleandirs = flags['cleandirs']
+    cleandirs = flags.get('cleandirs')
     if cleandirs:
         for cdir in data.expand(cleandirs, d).split():
-            os.system("rm -rf %s" % cdir)
+            bb.utils.remove(cdir, True)
 
     if dirs is None:
-        dirs = flags['dirs']
+        dirs = flags.get('dirs')
         if dirs:
             dirs = data.expand(dirs, d).split()
 
@@ -128,214 +135,185 @@ def exec_func(func, d, dirs = None):
         adir = dirs[-1]
     else:
         adir = data.getVar('B', d, 1)
+        if not os.path.exists(adir):
+            adir = None
 
-    # Save current directory
-    try:
-        prevdir = os.getcwd()
-    except OSError:
-        prevdir = data.getVar('TOPDIR', d, True)
+    ispython = flags.get('python')
+    if flags.get('fakeroot') and not flags.get('task'):
+        bb.fatal("Function %s specifies fakeroot but isn't a task?!" % func)
 
-    # Setup scriptfile
-    t = data.getVar('T', d, 1)
-    if not t:
-        raise SystemExit("T variable not set, unable to build")
-    bb.utils.mkdirhier(t)
-    runfile = "%s/run.%s.%s" % (t, func, str(os.getpid()))
-    logfile = d.getVar("BB_LOGFILE", True)
-
-    # Change to correct directory (if specified)
-    if adir and os.access(adir, os.F_OK):
-        os.chdir(adir)
+    tempdir = data.getVar('T', d, 1)
+    runfile = os.path.join(tempdir, 'run.{0}.{1}'.format(func, os.getpid()))
 
     locks = []
-    lockfiles = flags['lockfiles']
+    lockfiles = flags.get('lockfiles')
     if lockfiles:
         for lock in data.expand(lockfiles, d).split():
             locks.append(bb.utils.lockfile(lock))
 
     try:
-        # Run the function
         if ispython:
-            exec_func_python(func, d, runfile, logfile)
+            exec_func_python(func, d, runfile, logfile, cwd=adir)
         else:
-            exec_func_shell(func, d, runfile, logfile, flags)
-
-        # Restore original directory
-        try:
-            os.chdir(prevdir)
-        except:
-            pass
+            exec_func_shell(func, d, runfile, logfile, cwd=adir)
 
     finally:
-
         # Unlock any lockfiles
         for lock in locks:
             bb.utils.unlockfile(lock)
 
-def exec_func_python(func, d, runfile, logfile):
+_functionfmt = """
+def {function}(d):
+{body}
+
+{function}(d)
+"""
+#logformatter = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+def exec_func_python(func, d, runfile, logfile, cwd=None):
     """Execute a python BB 'function'"""
 
-    bbfile = bb.data.getVar('FILE', d, 1)
-    tmp  = "def " + func + "(d):\n%s" % data.getVar(func, d)
-    tmp += '\n' + func + '(d)'
-
-    f = open(runfile, "w")
-    f.write(tmp)
-    comp = utils.better_compile(tmp, func, bbfile)
+    bbfile = d.getVar('FILE', True)
     try:
-        utils.better_exec(comp, {"d": d}, tmp, bbfile)
+        olddir = os.getcwd()
+    except OSError:
+        olddir = None
+    code = _functionfmt.format(function=func, body=d.getVar(func, True))
+    bb.utils.mkdirhier(os.path.dirname(runfile))
+    with open(runfile, 'w') as script:
+        script.write(code)
+
+    if cwd:
+        os.chdir(cwd)
+
+    #handler = logging.StreamHandler(logfile)
+    #handler.setFormatter(logformatter)
+    #bblogger.addHandler(handler)
+
+    try:
+        comp = utils.better_compile(code, func, bbfile)
+        utils.better_exec(comp, {"d": d}, code, bbfile)
     except:
         if sys.exc_info()[0] in (bb.parse.SkipPackage, bb.build.FuncFailed):
             raise
 
-        raise FuncFailed(func, logfile)
+        raise FuncFailed(func, None)
+    finally:
+        #bblogger.removeHandler(handler)
+        if olddir:
+            os.chdir(olddir)
 
-
-def exec_func_shell(func, d, runfile, logfile, flags):
-    """Execute a shell BB 'function' Returns true if execution was successful.
-
-    For this, it creates a bash shell script in the tmp dectory, writes the local
-    data into it and finally executes. The output of the shell will end in a log file and stdout.
+def exec_func_shell(function, d, runfile, logfile, cwd=None):
+    """Execute a shell function from the metadata
 
     Note on directory behavior.  The 'dirs' varflag should contain a list
     of the directories you need created prior to execution.  The last
     item in the list is where we will chdir/cd to.
     """
 
-    deps = flags['deps']
-    check = flags['check']
-    if check in globals():
-        if globals()[check](func, deps):
-            return
+    # Don't let the emitted shell script override PWD
+    d.delVarFlag('PWD', 'export')
 
-    f = open(runfile, "w")
-    f.write("#!/bin/sh -e\n")
+    with open(runfile, 'w') as script:
+        script.write('#!/bin/sh -e\n')
+        if logger.getEffectiveLevel() <= logging.DEBUG:
+            script.write("set -x\n")
+        data.emit_func(function, script, d)
+
+        script.write("%s\n" % function)
+        os.fchmod(script.fileno(), 0775)
+
+    env = {
+        'PATH': d.getVar('PATH', True),
+        'LC_ALL': 'C',
+    }
+
+    cmd = runfile
+
     if logger.getEffectiveLevel() <= logging.DEBUG:
-        f.write("set -x\n")
-    data.emit_func(func, f, d)
+        logfile = LogTee(logger, logfile)
 
-    f.write("cd %s\n" % os.getcwd())
-    if func: f.write("%s\n" % func)
-    f.close()
-    os.chmod(runfile, 0775)
-    if not func:
-        raise TypeError("Function argument must be a string")
+    try:
+        bb.process.run(cmd, env=env, cwd=cwd, shell=False, stdin=NULL,
+                       log=logfile)
+    except bb.process.CmdError:
+        raise FuncFailed(function, logfile.name)
 
-    # execute function
-    if flags['fakeroot'] and not flags['task']:
-        bb.fatal("Function %s specifies fakeroot but isn't a task?!" % func)
+def _task_data(fn, task, d):
+    localdata = data.createCopy(d)
+    localdata.setVar('BB_FILENAME', fn)
+    localdata.setVar('BB_CURRENTTASK', task[3:])
+    localdata.setVar('OVERRIDES', 'task-%s:%s' %
+                     (task[3:], d.getVar('OVERRIDES', False)))
+    localdata.finalize()
+    data.expandKeys(localdata)
+    return localdata
 
-    lang_environment = "LC_ALL=C "
-    ret = os.system('%ssh -e %s' % (lang_environment, runfile))
+def _exec_task(fn, task, d, quieterr):
+    """Execute a BB 'task'
 
-    if ret == 0:
-        return
-
-    raise FuncFailed(func, logfile)
-
-
-def exec_task(fn, task, d):
-    """Execute an BB 'task'
-
-       The primary difference between executing a task versus executing
-       a function is that a task exists in the task digraph, and therefore
-       has dependencies amongst other tasks."""
-
-    # Check whther this is a valid task
+    Execution of a task involves a bit more setup than executing a function,
+    running it with its own local metadata, and with some useful variables set.
+    """
     if not data.getVarFlag(task, 'task', d):
         event.fire(TaskInvalid(task, d), d)
         logger.error("No such task: %s" % task)
         return 1
 
-    quieterr = False
-    if d.getVarFlag(task, "quieterrors") is not None:
-         quieterr = True
+    logger.debug(1, "Executing task %s", task)
 
-    try:
-        logger.debug(1, "Executing task %s", task)
-        old_overrides = data.getVar('OVERRIDES', d, 0)
-        localdata = data.createCopy(d)
-        data.setVar('OVERRIDES', 'task-%s:%s' % (task[3:], old_overrides), localdata)
-        data.update_data(localdata)
-        data.expandKeys(localdata)
-        data.setVar('BB_FILENAME', fn, d)
-        data.setVar('BB_CURRENTTASK', task[3:], d)
-        event.fire(TaskStarted(task, localdata), localdata)
+    localdata = _task_data(fn, task, d)
+    tempdir = localdata.getVar('T', True)
+    if not tempdir:
+        bb.fatal("T variable not set, unable to build")
 
-        # Setup logfiles
-        t = data.getVar('T', d, 1)
-        if not t:
-            raise SystemExit("T variable not set, unable to build")
-        bb.utils.mkdirhier(t)
-        loglink = "%s/log.%s" % (t, task)
-        logfile = "%s/log.%s.%s" % (t, task, str(os.getpid()))
-        d.setVar("BB_LOGFILE", logfile)
+    bb.utils.mkdirhier(tempdir)
+    loglink = os.path.join(tempdir, 'log.{0}'.format(task))
+    logfn = os.path.join(tempdir, 'log.{0}.{1}'.format(task, os.getpid()))
+    if loglink:
+        bb.utils.remove(loglink)
 
-        # Even though the log file has not yet been opened, lets create the link
-        if loglink:
-            try:
-                os.remove(loglink)
-            except OSError as e:
-                pass
-
-            try:
-                os.symlink(logfile, loglink)
-            except OSError as e:
-                pass
-
-        # Handle logfiles
-        si = file('/dev/null', 'r')
         try:
-            so = file(logfile, 'w')
+           os.symlink(logfn, loglink)
         except OSError:
-            logger.exception("Opening log file '%s'", logfile)
-            pass
-        se = so
+           pass
 
-        # Dup the existing fds so we dont lose them
-        osi = [os.dup(sys.stdin.fileno()), sys.stdin.fileno()]
-        oso = [os.dup(sys.stdout.fileno()), sys.stdout.fileno()]
-        ose = [os.dup(sys.stderr.fileno()), sys.stderr.fileno()]
+    prefuncs = localdata.getVarFlag(task, 'prefuncs', expand=True)
+    postfuncs = localdata.getVarFlag(task, 'postfuncs', expand=True)
 
-        # Replace those fds with our own
-        os.dup2(si.fileno(), osi[1])
-        os.dup2(so.fileno(), oso[1])
-        os.dup2(se.fileno(), ose[1])
+    # Handle logfiles
+    si = file('/dev/null', 'r')
+    try:
+        logfile = file(logfn, 'w')
+    except OSError:
+        logger.exception("Opening log file '%s'", logfn)
+        pass
 
-        # Since we've remapped stdout and stderr, its safe for log messages to be printed there now
-        # exec_func can nest so we have to save state
-        origstdout = bb.event.useStdout
-        bb.event.useStdout = True
+    # Dup the existing fds so we dont lose them
+    osi = [os.dup(sys.stdin.fileno()), sys.stdin.fileno()]
+    oso = [os.dup(sys.stdout.fileno()), sys.stdout.fileno()]
+    ose = [os.dup(sys.stderr.fileno()), sys.stderr.fileno()]
 
+    # Replace those fds with our own
+    os.dup2(si.fileno(), osi[1])
+    os.dup2(logfile.fileno(), oso[1])
+    os.dup2(logfile.fileno(), ose[1])
 
-        prefuncs = (data.getVarFlag(task, 'prefuncs', localdata) or "").split()
-        for func in prefuncs:
-            exec_func(func, localdata)
-        exec_func(task, localdata)
-        postfuncs = (data.getVarFlag(task, 'postfuncs', localdata) or "").split()
-        for func in postfuncs:
-            exec_func(func, localdata)
+    # Since we've remapped stdout and stderr, its safe for log messages to be printed there now
+    # exec_func can nest so we have to save state
+    origstdout = bb.event.useStdout
+    bb.event.useStdout = True
 
-        event.fire(TaskSucceeded(task, localdata), localdata)
-
-        # make stamp, or cause event and raise exception
-        if not data.getVarFlag(task, 'nostamp', d) and not data.getVarFlag(task, 'selfstamp', d):
-            make_stamp(task, d)
-
+    event.fire(TaskStarted(task, localdata), localdata)
+    try:
+        for func in (prefuncs or '').split():
+            exec_func(func, localdata, logfile=logfile)
+        exec_func(task, localdata, logfile=logfile)
+        for func in (postfuncs or '').split():
+            exec_func(func, localdata, logfile=logfile)
     except FuncFailed as exc:
         if not quieterr:
             logger.error(str(exc))
-            failedevent = TaskFailed(exc.name, exc.logfile, task, d)
-            event.fire(failedevent, d)
-        return 1
-
-    except Exception:
-        from traceback import format_exc
-        if not quieterr:
-            logger.error("Build of %s failed" % (task))
-            logger.error(format_exc())
-            failedevent = TaskFailed("Task Failed", None, task, d)
-            event.fire(failedevent, d)
+            event.fire(TaskFailed(exc.name, exc.logfile, localdata), localdata)
         return 1
     finally:
         sys.stdout.flush()
@@ -348,25 +326,39 @@ def exec_task(fn, task, d):
         os.dup2(oso[0], oso[1])
         os.dup2(ose[0], ose[1])
 
-        # Close our logs
-        si.close()
-        so.close()
-        se.close()
-
-        if logfile and os.path.exists(logfile) and os.path.getsize(logfile) == 0:
-            logger.debug(2, "Zero size logfile %s, removing", logfile)
-            os.remove(logfile)
-            try:
-               os.remove(loglink)
-            except OSError as e:
-               pass
-
         # Close the backup fds
         os.close(osi[0])
         os.close(oso[0])
         os.close(ose[0])
+        si.close()
+
+        logfile.close()
+        if os.path.exists(logfn) and os.path.getsize(logfn) == 0:
+            logger.debug(2, "Zero size logfn %s, removing", logfn)
+            bb.utils.remove(logfn)
+            bb.utils.remove(loglink)
+    event.fire(TaskSucceeded(task, localdata), localdata)
+
+    if not d.getVarFlag(task, 'nostamp') and not d.getVarFlag(task, 'selfstamp'):
+        make_stamp(task, d)
 
     return 0
+
+def exec_task(fn, task, d):
+    try: 
+        quieterr = False
+        if d.getVarFlag(task, "quieterrors") is not None:
+            quieterr = True
+
+        return _exec_task(fn, task, d, quieterr)
+    except Exception:
+        from traceback import format_exc
+        if not quieterr:
+            logger.error("Build of %s failed" % (task))
+            logger.error(format_exc())
+            failedevent = TaskFailed("Task Failed", None, task, d)
+            event.fire(failedevent, d)
+        return 1
 
 def extract_stamp(d, fn):
     """
