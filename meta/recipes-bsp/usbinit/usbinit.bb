@@ -1,5 +1,8 @@
 DESCRIPTION = "Initscript to manage gadget Ethernet"
+
 LICENSE = "GPL"
+LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
+
 PRIORITY = "optional"
 PR = "r1"
 
