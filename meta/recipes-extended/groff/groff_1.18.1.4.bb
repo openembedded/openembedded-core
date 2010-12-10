@@ -5,7 +5,7 @@ HOMEPAGE = "ftp://ftp.gnu.org/gnu/groff/"
 LICENSE = "GPLv2"
 PR = "r1"
 
-LIC_FILE_CHKSUM = "file://CORYING;md5=e43fc16fccd8519fba405f0a0ff6e8a3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=e43fc16fccd8519fba405f0a0ff6e8a3"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/groff/groff-${PV}.tar.gz \
           file://groff-1.18.1.4-remove-mom.patch;striplevel=1 \
