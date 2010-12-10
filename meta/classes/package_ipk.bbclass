@@ -79,8 +79,6 @@ package_update_index_ipk () {
 		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/$sdkarch-nativesdk"
 	done
 
-	packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/${SDK_ARCH}-${TARGET_ARCH}-canadian"
-
 	for pkgdir in $packagedirs; do
 		if [ -e $pkgdir/ ]; then
 			touch $pkgdir/Packages
@@ -112,9 +110,6 @@ package_generate_ipkg_conf () {
 		        echo "src oe-$sdkarch$extension file:${DEPLOY_DIR_IPK}/$sdkarch$extension" >> ${IPKGCONF_SDK}
 		fi
 	done
-	if [ -e ${DEPLOY_DIR_IPK}/${SDK_ARCH}-${TARGET_ARCH}-canadian/Packages ] ; then
-	        echo "src oe-${SDK_ARCH}-${TARGET_ARCH}-canadian file:${DEPLOY_DIR_IPK}/${SDK_ARCH}-${TARGET_ARCH}-canadian" >> ${IPKGCONF_SDK}
-	fi
 }
 
 package_generate_archlist () {
@@ -130,7 +125,6 @@ package_generate_archlist () {
 		echo "arch $sdkarch$extension $priority" >> ${IPKGCONF_SDK}
 		priority=$(expr $priority + 5)
 	done
-	echo "arch ${SDK_ARCH}-${TARGET_ARCH}-canadian $priority" >> ${IPKGCONF_SDK}
 }
 
 python do_package_ipk () {

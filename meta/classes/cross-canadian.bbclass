@@ -1,23 +1,35 @@
+#
+# NOTE - When using this class the user is repsonsible for ensuring that
+# TRANSLATED_TARGET_ARCH is added into PN. This ensures that if the TARGET_ARCH
+# is changed, another nativesdk xxx-canadian-cross can be installed
+#
+
+
 # SDK packages are built either explicitly by the user,
 # or indirectly via dependency.  No need to be in 'world'.
 EXCLUDE_FROM_WORLD = "1"
 
-STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${BASE_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
+STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${OLD_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
-# Save MULTIMACH_ARCH
+#
+# Update BASE_PACKAGE_ARCH and PACKAGE_ARCHS
+#
 OLD_MULTIMACH_ARCH := "${MULTIMACH_ARCH}"
-# Save PACKAGE_ARCH
-OLD_PACKAGE_ARCH := ${PACKAGE_ARCH}
-PACKAGE_ARCH = "${SDK_ARCH}-${TARGET_ARCH}-canadian"
-PACKAGE_ARCHS = "${PACKAGE_ARCH}"
-# Also save BASE_PACKAGE_ARCH since HOST_ARCH can influence it
-OLD_BASE_PACKAGE_ARCH := "${BASE_PACKAGE_ARCH}"
-BASE_PACKAGE_ARCH = "${OLD_BASE_PACKAGE_ARCH}"
+OLD_PACKAGE_ARCH := ${BASE_PACKAGE_ARCH}
+BASE_PACKAGE_ARCH = "${SDK_ARCH}-nativesdk"
+python () {
+    archs = bb.data.getVar('PACKAGE_ARCHS', d, True).split()
+    sdkarchs = []
+    for arch in archs:
+        sdkarchs.append(arch + '-nativesdk')
+    bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
+}
+MULTIMACH_TARGET_SYS = "${MULTIMACH_ARCH}${HOST_VENDOR}-${HOST_OS}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
 STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_SYS}-nativesdk"
-STAGING_DIR_TARGET = "${STAGING_DIR}/${BASEPKG_TARGET_SYS}"
+STAGING_DIR_TARGET = "${STAGING_DIR}/${OLD_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR}/${HOST_ARCH}-nativesdk${HOST_VENDOR}-${HOST_OS}"
 
@@ -69,5 +81,3 @@ export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 # Cross-canadian packages need to pull in nativesdk dynamic libs
 SHLIBSDIR = "${STAGING_DIR}/${SDK_ARCH}-nativesdk${SDK_VENDOR}-${BUILD_OS}/shlibs"
 
-# handle x86_64 TARGET_ARCH name
-TRANSLATED_TARGET_ARCH ?= ${TARGET_ARCH}
