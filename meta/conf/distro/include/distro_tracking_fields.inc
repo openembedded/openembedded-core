@@ -3152,7 +3152,7 @@ RECIPE_INTEL_SECTION_pn-libxfontcache="graphic core"
 RECIPE_MAINTAINER_pn-libxfontcache="Yu Ke <ke.yu@intel.com>"
 
 RECIPE_STATUS_pn-xf86-input-evdev="green" # no update needed
-DISTRO_PN_ALIAS_pn-xf86-input-evdev = "Ubuntu=xserver-xorg-input-evdev Mandriva=x11-driver-input-evdev Debian=xserver-xorg-input-evdev Fedora=xorg-x11-drv-evdev Meego=xorg-x11-drv-evdev
+DISTRO_PN_ALIAS_pn-xf86-input-evdev = "Ubuntu=xserver-xorg-input-evdev Mandriva=x11-driver-input-evdev Debian=xserver-xorg-input-evdev Fedora=xorg-x11-drv-evdev Meego=xorg-x11-drv-evdev"
 RECIPE_LATEST_VERSION_pn-xf86-input-evdev="2.5.0"
 RECIPE_NO_OF_PATCHES_pn-xf86-input-evdev="0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-xf86-input-evdev="1 monthes"
