@@ -297,6 +297,7 @@ def build_dependencies(key, keys, shelldeps, d):
             deps |= parser.references
             deps = deps | (keys & parser.execs)
         deps |= set((d.getVarFlag(key, "vardeps") or "").split())
+        deps -= set((d.getVarFlag(key, "vardepsexclude") or "").split())
     except:
         bb.note("Error expanding variable %s" % key) 
         raise
