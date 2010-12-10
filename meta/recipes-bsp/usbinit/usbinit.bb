@@ -1,12 +1,13 @@
 DESCRIPTION = "Initscript to manage gadget Ethernet"
 
 LICENSE = "GPL"
-LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
 PRIORITY = "optional"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "file://usb-gether"
+SRC_URI = "file://usb-gether \
+           file://COPYING.GPL"
 S = "${WORKDIR}"
 
 do_install() {
