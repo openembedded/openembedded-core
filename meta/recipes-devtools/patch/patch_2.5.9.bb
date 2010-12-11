@@ -1,5 +1,7 @@
 require patch.inc
 
+LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
+
 SRC_URI = "${GNU_MIRROR}/patch/patch-2.5.4.tar.gz \
 	   file://2.5.9.patch;patch=1 \
 	   file://debian.patch;patch=1 \
