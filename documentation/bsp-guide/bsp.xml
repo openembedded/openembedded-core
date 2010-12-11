@@ -117,7 +117,7 @@ meta-bsp/prebuilds/
             <para>
                <programlisting>
 # We have a conf directory, add to BBPATH
-BBPATH := "${BBPATH}${LAYERDIR}"
+BBPATH := "${BBPATH}:${LAYERDIR}"
 
 # We have a recipes directory containing .bb and .bbappend files, add to BBFILES
 BBFILES := "${BBFILES} ${LAYERDIR}/recipes/*/*.bb \ ${LAYERDIR}/recipes/*/*.bbappend"
