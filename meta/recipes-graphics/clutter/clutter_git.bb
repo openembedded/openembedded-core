@@ -1,6 +1,8 @@
 require clutter.inc
 require clutter-package.inc
 
+LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
+
 PV = "1.0.0+git${SRCPV}"
 PR = "r8"
 
