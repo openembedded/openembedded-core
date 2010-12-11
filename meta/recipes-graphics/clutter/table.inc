@@ -1,6 +1,6 @@
 DESCRIPTION = "Table Clutter Demo"
 HOMEPAGE = "http://www.clutter-project.org/"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2.1 & GPLv2"
 
 DEPENDS = "clutter-gst-1.0 gnome-vfs"
 

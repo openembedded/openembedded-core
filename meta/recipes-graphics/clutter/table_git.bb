@@ -1,5 +1,8 @@
 require table.inc
 
+LIC_FILES_CHKSUM = "file://fluttr/COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
+                    file://script-viewer/COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
+
 PV = "0.3.0+git${SRCPV}"
 PR = "r1"
 
