@@ -1,6 +1,6 @@
 DESCRIPTION = "Clutter Box2D"
 HOMEPAGE = "http://www.clutter-project.org/"
-LICENSE = "GPLv2"
+LICENSE = "Catto"
 
 DEPENDS = "clutter-1.0"
 
