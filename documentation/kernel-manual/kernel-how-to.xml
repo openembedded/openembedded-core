@@ -1078,7 +1078,8 @@ That's it. Configure and build.
                 <para>
                     Now create a branch in the local clone and push it to the bare clone:
                     <literallayout class='monospaced'>
-     $ git checkout -b crownbay-standard origin/standard $ git push origin crownbay-standard:crownbay-standard
+     $ git checkout -b crownbay-standard origin/standard 
+     $ git push origin crownbay-standard:crownbay-standard
                     </literallayout>
                 </para>
                
