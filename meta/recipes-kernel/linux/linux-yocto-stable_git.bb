@@ -17,6 +17,8 @@ PR = "r0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro|mpc8315e-rdb|beagleboard)"
+
 # this performs a fixup on the SRCREV for new/undefined BSPs
 python __anonymous () {
     import bb, re

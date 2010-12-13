@@ -7,8 +7,6 @@ LICENSE = "GPL"
 # and it can be specific to the machine or shared
 KMACHINE = "UNDEFINED"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro)"
-
 # Set this to 'preempt_rt' in the local.conf if you want a real time kernel
 LINUX_KERNEL_TYPE ?= standard
 
