@@ -429,7 +429,7 @@ repository.
         &gt; eg: git whatchanged standard..common_pc-standard
 
      # summary of the changes
-     &gt; git log --pretty=oneline --;abbrev-commit &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
+     &gt; git log --pretty=oneline --abbrev-commit &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
 
      # source code changes (one combined diff)
      &gt; git diff &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
