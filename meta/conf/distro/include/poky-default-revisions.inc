@@ -98,7 +98,7 @@ SRCREV_meta_pn-linux-yocto-stable ?= "d1cd5c80ee97e81e130be8c3de3965b770f320d6"
 # development SRCREVs
 SRCREV_machine_pn-linux-yocto_qemuarm = "87e00a2d47ba80b4ad1f9170cb3f6cf81f21d739"
 SRCREV_machine_pn-linux-yocto_qemumips = "7231e473dd981a28e3cea9f677ed60583e731550"
-SRCREV_machine_pn-linux-yocto_qemuppc = "3ab3559637130b65d8889fa74286fdb57935726f"
+SRCREV_machine_pn-linux-yocto_qemuppc = "e2b529d7d74a9b21e1d1715f0c4062a4fd92a3ed"
 SRCREV_machine_pn-linux-yocto_qemux86 = "87aacc373557f8849dde8618fbe1f7f8f2af6038"
 SRCREV_machine_pn-linux-yocto_qemux86-64 = "87aacc373557f8849dde8618fbe1f7f8f2af6038"
 SRCREV_machine_pn-linux-yocto_emenlow = "87aacc373557f8849dde8618fbe1f7f8f2af6038"
