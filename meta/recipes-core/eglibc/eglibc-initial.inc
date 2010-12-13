@@ -1,4 +1,5 @@
-SECTION = "libs"
+require eglibc-common.inc
+
 DEPENDS = "linux-libc-headers virtual/${TARGET_PREFIX}gcc-initial"
 PROVIDES = "virtual/${TARGET_PREFIX}libc-initial"
 
