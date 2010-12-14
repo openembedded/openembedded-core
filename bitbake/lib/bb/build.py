@@ -103,13 +103,27 @@ class TaskInvalid(TaskBase):
         self._message = "No such task '%s'" % task
 
 
-class tee(file):
+class LogTee(object):
+    def __init__(self, logger, *files):
+        self.files = files
+        self.logger = logger
+
     def write(self, string):
-        logger.plain(string)
-        file.write(self, string)
+        self.logger.plain(string)
+        for f in self.files:
+            f.write(string)
+
+    def __enter__(self):
+        for f in self.files:
+            f.__enter__()
+        return self
+
+    def __exit__(self, *excinfo):
+        for f in self.files:
+            f.__exit__(*excinfo)
 
     def __repr__(self):
-        return "<open[tee] file '{0}'>".format(self.name)
+        return '<LogTee {0}>'.format(', '.join(repr(f.name) for f in self.files))
 
 
 def exec_func(func, d, dirs = None, logfile = NULL):
