@@ -13,11 +13,12 @@ RDEPENDS = "gst-meta-base"
 RRECOMMENDS = "gst-meta-audio gst-meta-video"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r4"
+PR = "r5"
 
 S = "${WORKDIR}/${PN}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http \
-           file://gst_change_state.patch"
+           file://gst_change_state.patch \
+	   file://make-382.patch"
 
 inherit autotools pkgconfig
