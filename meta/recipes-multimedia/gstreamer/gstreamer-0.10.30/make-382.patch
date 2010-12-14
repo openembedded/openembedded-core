@@ -1,0 +1,32 @@
+The whitespaces instead of tabs here cause the new, stricter, parser in make
+3.82 to barf on the doc makefiles.
+
+This patch should no longer be required in more recent gstreamer version
+
+JL - 14/12/10
+
+Index: gstreamer-0.10.29/common/gtk-doc.mak
+===================================================================
+--- gstreamer-0.10.29.orig/common/gtk-doc.mak
++++ gstreamer-0.10.29/common/gtk-doc.mak
+@@ -232,6 +232,6 @@ dist-hook: dist-check-gtkdoc dist-hook-l
+ 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
+ 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+ 	cd $(distdir) && rm -f $(DISTCLEANFILES)
+-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
++	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
+ 
+ .PHONY : dist-hook-local docs
+Index: gstreamer-0.10.29/common/gtk-doc-plugins.mak
+===================================================================
+--- gstreamer-0.10.29.orig/common/gtk-doc-plugins.mak
++++ gstreamer-0.10.29/common/gtk-doc-plugins.mak
+@@ -352,7 +352,7 @@ dist-hook: dist-check-gtkdoc dist-hook-l
+ 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
+ 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+ 	cd $(distdir) && rm -f $(DISTCLEANFILES)
+-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
++	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
+ 
+ .PHONY : dist-hook-local docs
+ 
