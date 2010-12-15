@@ -1,15 +1,15 @@
 inherit kernel
 require linux-yocto.inc
 
-KMACHINE_qemux86  = "common_pc/base"
-KMACHINE_qemux86-64  = "common_pc_64"
-KMACHINE_qemuppc  = "qemu_ppc32"
-KMACHINE_qemumips = "mti_malta32_be"
-KMACHINE_qemuarm  = "arm_versatile_926ejs"
-KMACHINE_atom-pc  = "atom-pc"
-KMACHINE_routerstationpro = "routerstationpro"
-KMACHINE_mpc8315e-rdb = "fsl-mpc8315e-rdb"
-KMACHINE_beagleboard = "beagleboard"
+KMACHINE_qemux86  = "yocto/standard/common_pc/base"
+KMACHINE_qemux86-64  = "yocto/standard/common-pc-64"
+KMACHINE_qemuppc  = "yocto/standard/qemu-ppc32"
+KMACHINE_qemumips = "yocto/standard/mti-malta32-be"
+KMACHINE_qemuarm  = "yocto/standard/arm-versatile-926ejs"
+KMACHINE_atom-pc  = "yocto/standard/common-pc/atom-pc"
+KMACHINE_routerstationpro = "yocto/standard/routerstationpro"
+KMACHINE_mpc8315e-rdb = "yocto/standard/fsl-mpc8315e-rdb"
+KMACHINE_beagleboard = "yocto/standard/beagleboard"
 
 LINUX_VERSION ?= "2.6.37"
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"

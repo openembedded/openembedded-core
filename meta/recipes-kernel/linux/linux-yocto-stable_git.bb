@@ -12,8 +12,9 @@ KMACHINE_mpc8315e-rdb = "fsl-mpc8315e-rdb"
 KMACHINE_beagleboard = "beagleboard"
 
 LINUX_VERSION ?= "2.6.34"
-LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
-PR = "r0"
+LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE_EXTENSION}"
+
+PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
@@ -21,11 +22,14 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|route
 
 # this performs a fixup on the SRCREV for new/undefined BSPs
 python __anonymous () {
-    import bb, re
+    import bb, re, string
 
     rev = bb.data.getVar("SRCREV_machine", d, 1)
     if rev == "standard":
         bb.data.setVar("SRCREV_machine", "${SRCREV_meta}", d)
+
+    kerntype = string.replace(bb.data.expand("${LINUX_KERNEL_TYPE}", d), "_", "-")
+    bb.data.setVar("LINUX_KERNEL_TYPE_EXTENSION", kerntype, d)
 }
 
 SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${KBRANCH};name=machine \

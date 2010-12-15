@@ -10,7 +10,7 @@ S = "${WORKDIR}/linux"
 # and is used in the SRC_URI. The machine is then set back to ${MACHINE},
 # since futher processing will use that to create local branches
 python __anonymous () {
-    import bb, re
+    import bb, re, string
 
     version = bb.data.getVar("LINUX_VERSION", d, 1)
     # 2.6.34 signifies the old-style tree, so we need some temporary
@@ -29,12 +29,14 @@ python __anonymous () {
         # The branch for a build is:
         #    yocto/<kernel type>/${KMACHINE} or
         #    yocto/<kernel type>/${KMACHINE}/base
-        bb.data.setVar("KBRANCH", bb.data.expand("yocto/${LINUX_KERNEL_TYPE}/${KMACHINE}",d), d)
+        bb.data.setVar("KBRANCH", bb.data.expand("${KMACHINE}",d), d)
         bb.data.setVar("KMETA", "meta", d)
 
         mach = bb.data.getVar("KMACHINE", d, 1)
         # drop the "/base" if it was on the KMACHINE
         kmachine = mach.replace('/base','')
+        # drop everything but the last segment
+        kmachine = os.path.basename( kmachine )
         # and then write KMACHINE back
         bb.data.setVar('KMACHINE_' + bb.data.expand("${MACHINE}",d), kmachine, d)
 
@@ -51,11 +53,7 @@ do_patch() {
 	    defconfig=${WORKDIR}/defconfig
 	fi
 
-	if [ -n "${BOOTSTRAP}" ]; then
-	    kbranch="yocto/${LINUX_KERNEL_TYPE}/${KMACHINE}"
-	else
-	    kbranch=${KBRANCH}
-	fi
+	kbranch=${KBRANCH}
 
 	# simply ensures that a branch of the right name has been created
 	createme ${ARCH} ${kbranch} ${defconfig}
