@@ -118,6 +118,25 @@ meta-crownbay/recipes-kernel/linux/linux-wrs_git.bbappend
 
         </section>
 
+        <section id="bsp-filelayout-license">
+            <title>License Files</title>
+            <programlisting>
+meta-&lt;bsp_name&gt;/&lt;bsp_license_file&gt;
+            </programlisting>
+
+            <para>
+                These optional files satisfy licensing requirements for the BSP.
+                The type or types of files here can vary depending on the licensing requirements.
+                For example, in the crownbay BSP all licensing requirements are handled with the 
+                <filename>COPYING.MIT</filename> file.  
+            </para>
+
+            <para>
+                Licensing files can be MIT, BSD, GPLv*, and so forth.
+                These files are recommended for the BSP but are optional and totally up to the BSP developer.
+            </para>
+        </section>
+
         <section id="bsp-filelayout-binary">
             <title>Pre-built User Binaries (meta-&lt;bsp_name&gt;/binary/*)</title>
 
