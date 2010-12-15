@@ -114,9 +114,10 @@ def main(server, eventHandler):
                         print("%s: %s (pid %s)" % (tasknum, activetasks[task]["title"], task))
 
             if isinstance(event, logging.LogRecord):
-                if event.levelno is logging.CRITICAL or event.levelno is logging.ERROR:
+                if event.levelno >= logging.CRITICAL:
                     return_value = 1
-            if isinstance(event, logging.LogRecord):
+                if event.levelno is logging.ERROR:
+                    return_value = 1
                 logger.handle(event)
                 continue
 
