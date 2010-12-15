@@ -137,6 +137,25 @@ meta-&lt;bsp_name&gt;/&lt;bsp_license_file&gt;
             </para>
         </section>
 
+        <section id="bsp-filelayout-readme">
+            <title>README File</title>
+            <programlisting>
+meta-&lt;bsp_name&gt;/README
+            </programlisting>
+
+            <para>
+                This file provides information on how to boot the live images that are optionally 
+                included in the <filename>/binary</filename> directory.
+                The <filename>README</filename> file also provides special information needed for 
+                building the image.
+            </para>
+
+            <para>
+                Technically speaking a <filename>README</filename> is optional but it is highly 
+                recommended that every BSP has one.
+            </para>
+        </section>
+
         <section id="bsp-filelayout-binary">
             <title>Pre-built User Binaries (meta-&lt;bsp_name&gt;/binary/*)</title>
 
