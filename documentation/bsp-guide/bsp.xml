@@ -181,12 +181,14 @@ meta-&lt;bsp_name&gt;/binary/&lt;bootable_images&gt;
         </section>
 
         <section id='bsp-filelayout-layer'>
-            <title>Layer Configuration (meta-&lt;bsp_name&gt;/conf/layer.conf)</title>
+            <title>Layer Configuration File</title>
+            <programlisting>
+meta-&lt;bsp_name&gt;/conf/layer.conf 
+            </programlisting>
 
             <para>
                 This file identifies the structure as a Poky layer, identifies the  
-                contents of the layer, and contains information about how Poky should use 
-                it. 
+                contents of the layer, and contains information about how Poky should use it. 
                 Generally, a standard boilerplate file such as the following works:
             </para>
 
