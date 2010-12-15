@@ -19,4 +19,4 @@ S = "${WORKDIR}/chrpath-${PV}"
 # so must use the one we've just built
 CHRPATH_BIN_virtclass-native = "${S}/chrpath"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
