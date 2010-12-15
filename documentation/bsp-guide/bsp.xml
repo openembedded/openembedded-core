@@ -157,7 +157,10 @@ meta-&lt;bsp_name&gt;/README
         </section>
 
         <section id="bsp-filelayout-binary">
-            <title>Pre-built User Binaries (meta-&lt;bsp_name&gt;/binary/*)</title>
+            <title>Pre-built User Binaries</title>
+            <programlisting>
+meta-&lt;bsp_name&gt;/binary/&lt;bootable_images&gt;
+            </programlisting>
 
             <para>
                 This optional area contains useful pre-built kernels and userspace filesystem 
@@ -165,10 +168,13 @@ meta-&lt;bsp_name&gt;/README
                 This directory contains the Application Development Toolkit (ADT) and minimal
                 live images when the BSP is has been "tar-balled" and placed on the Yocto Project website. 
                 You can use these kernels and images to get a system running and quickly get started 
-                on development tasks. 
+                on development tasks.
+            </para>
+
+            <para> 
                 The exact types of binaries present are highly hardware-dependent.
-                However, a README file should be present that explains how to use the kernels and 
-                images with the target hardware. 
+                However, a README file should be present in the BSP file structure that explains how to use 
+                the kernels and images with the target hardware. 
                 If pre-built binaries are present, source code to meet licensing requirements must also 
                 be provided in some form.
             </para>
