@@ -89,6 +89,30 @@ meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-wrs_git.bbappend
             </para>
 
             <para>
+                Below is an example of the crownbay BSP:
+
+                <programlisting>
+meta-crownbay/COPYING.MIT
+meta-crownbay/README
+meta-crownbay/binary/.gitignore
+meta-crownbay/conf/layer.conf
+meta-crownbay/conf/machine/crownbay.conf
+meta-crownbay/recipes-bsp/formfactor/formfactor/crownbay/machconfig
+meta-crownbay/recipes-bsp/formfactor/formfactor_0.0.bbappend
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-config/crownbay/xcorg.conf
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-config_0.1.bbappend
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd-bin/.gitignore
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd-bin_1.7.99.2.bb
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd/crosscompile.patch
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd/fix_open_max_preprocessor_error.patch
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd/macro_tweak.patch
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd/nodolt.patch
+meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd_1.7.99.2.bb
+meta-crownbay/recipes-kernel/linux/linux-wrs_git.bbappend
+                </programlisting>
+            </para>
+
+            <para>
                 The following sections detail what these files and directories could contain.
             </para>
 
