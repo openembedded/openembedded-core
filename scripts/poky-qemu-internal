@@ -29,6 +29,23 @@
 #   ROOTFS - the disk image file to use
 #
 
+
+mem_size=-1
+
+#Get rid of <> and get the contents of extra qemu running params
+SCRIPT_QEMU_EXTRA_OPT=`echo $SCRIPT_QEMU_EXTRA_OPT | sed -e 's/<//' -e 's/>//'`
+#if user set qemu memory, eg: -m 256 in qemu extra params, we need to do some 
+# validation check
+mem_set=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-m[[:space:]] *[0-9]*\)'`
+if [ ! -z "$mem_set" ] ; then
+#Get memory setting size from user input
+  mem_size=`echo $mem_set | sed 's/-m[[:space:]] *//'`
+fi
+
+if [ $mem_size -gt 0 ]; then
+  QEMU_MEMORY="$mem_size"M
+fi
+
 if [ -z "$QEMU_MEMORY" ]; then
     case "$MACHINE" in
         "qemux86")
@@ -60,6 +77,7 @@ if [ "$MACHINE" = "qemuarm" ]; then
         echo "WARNING: qemuarm does not support > 128M of RAM."
         echo "*** Changing QEMU_MEMORY to default of 128M ***"
         QEMU_MEMORY="128M"
+        SCRIPT_QEMU_EXTRA_OPT=`echo $SCRIPT_QEMU_EXTRA_OPT | sed -e "s/$mem_set/-m 128/" `
     fi
 fi
 
@@ -427,8 +445,8 @@ fi
 
 echo "Running $QEMU..."
 # -no-reboot is a mandatory option - see bug #100
-echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_CMDLINE_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
-$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT" || /bin/true
+echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
+$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT" || /bin/true
 
 cleanup
 

@@ -29,11 +29,14 @@ usage() {
     echo "  Additional QEMU command-line options can be passed with:"
     echo "    nographic - disables video console"
     echo "    serial - enables a serial console on /dev/ttyS0"
+    echo "    kvm - enables kvm"
+    echo "    \"<extra-qemu-options>\" - enables extra qemu options, excluding serial and kvm"
     echo ""
     echo "Examples:"
     echo "  $MYNAME qemuarm"
     echo "  $MYNAME qemux86-64 poky-image-sato ext3"
     echo "  $MYNAME path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial"
+    echo "  $MYNAME qemux86 \"<-m 256>\""
     exit 1
 }
 
@@ -47,6 +50,7 @@ FSTYPE=""
 ROOTFS=""
 LAZY_ROOTFS=""
 SCRIPT_QEMU_OPT=""
+SCRIPT_QEMU_EXTRA_OPT=""
 SCRIPT_KERNEL_OPT=""
 
 TMPDIR=""
@@ -128,6 +132,16 @@ while [ $i -le $# ]; do
         "kvm")
             KVM_ENABLED="yes"
             KVM_CAPABLE=`grep 'vmx\|smx' /proc/cpuinfo`
+            ;;
+        \<*\>)
+            SCRIPT_QEMU_EXTRA_OPT=$arg 
+            serial_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-serial\)'`
+            kvm_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-enable-kvm\)'`
+            echo "$kvm_option"
+            if [[ ! -z "$serial_option" || ! -z "$kvm_option" ]]; then
+                echo "Error: Please use serial or kvm params instead!"
+                usage
+            fi
             ;;
         *)
             # A directory name is an nfs rootfs
