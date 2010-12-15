@@ -21,7 +21,7 @@ python distro_eventhandler() {
 
 	lf = bb.utils.lockfile(logfile + ".lock")
 	f = open(logfile, "a")
-	f.write("Package,Description,Maintainer,License,ChkSum,Status,VerMatch,Version,Upsteam,Non-Update,Reason,Recipe Status\n")
+	f.write("Package,Description,Owner,License,ChkSum,Status,VerMatch,Version,Upsteam,Non-Update,Reason,Recipe Status\n")
         f.close()
         bb.utils.unlockfile(lf)
 
@@ -209,6 +209,33 @@ do_distrodataall[recrdeptask] = "do_distrodata"
 do_distrodataall[nostamp] = "1"
 do_distrodataall() {
 	:
+}
+
+addhandler checkpkg_eventhandler
+python checkpkg_eventhandler() {
+    from bb.event import Handled, NotHandled
+    # if bb.event.getName(e) == "TaskStarted":
+
+    if bb.event.getName(e) == "BuildStarted":
+	"""initialize log files."""
+	logpath = bb.data.getVar('LOG_DIR', e.data, 1)
+	bb.utils.mkdirhier(logpath)
+	logfile = os.path.join(logpath, "checkpkg.%s.csv" % bb.data.getVar('DATETIME', e.data, 1))
+	if not os.path.exists(logfile):
+		slogfile = os.path.join(logpath, "checkpkg.csv")
+		if os.path.exists(slogfile):
+			os.remove(slogfile)
+		os.system("touch %s" % logfile)
+		os.symlink(logfile, slogfile)
+		bb.data.setVar('LOG_FILE', logfile, e.data)
+
+	lf = bb.utils.lockfile(logfile + ".lock")
+	f = open(logfile, "a")
+	f.write("Package\tOwner\tURI Type\tVersion\tTracking\tUpstream\tTMatch\tRMatch\n")
+        f.close()
+        bb.utils.unlockfile(lf)
+
+    return NotHandled
 }
 
 addtask checkpkg
@@ -436,13 +463,7 @@ python do_checkpkg() {
 	"""initialize log files."""
 	logpath = bb.data.getVar('LOG_DIR', d, 1)
 	bb.utils.mkdirhier(logpath)
-	logfile = os.path.join(logpath, "poky_pkg_info.log.%s" % bb.data.getVar('DATETIME', d, 1))
-	if not os.path.exists(logfile):
-		slogfile = os.path.join(logpath, "poky_pkg_info.log")
-		if os.path.exists(slogfile):
-			os.remove(slogfile)
-		os.system("touch %s" % logfile)
-		os.symlink(logfile, slogfile)
+	logfile = os.path.join(logpath, "checkpkg.csv")
 
 	"""generate package information from .bb file"""
 	pname = bb.data.getVar('PN', d, 1)
@@ -586,10 +607,11 @@ python do_checkpkg() {
 		else:
 			pmstatus = "UPDATE"
 	
+	maintainer = bb.data.getVar('RECIPE_MAINTAINER', d, True)
 	lf = bb.utils.lockfile(logfile + ".lock")
 	f = open(logfile, "a")
 	f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
-		  (pname, pgrp, pproto, pcurver, pmver, pupver, pmstatus, pstatus, pdesc))
+		  (pname, maintainer, pproto, pcurver, pmver, pupver, pmstatus, pstatus))
 	f.close()
 	bb.utils.unlockfile(lf)
 }
