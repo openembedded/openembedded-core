@@ -269,7 +269,7 @@
      $ poky-qemu qemux86
              </literallayout>
              The build process could take several hours the first time you run it. 
-             Depending on the number of processor and cores, the amount or RAM, the speed of your
+             Depending on the number of processors and cores, the amount or RAM, the speed of your
              internet connection and other factors.
              After the initial build, subsequent builds run much faster.
          </para>
