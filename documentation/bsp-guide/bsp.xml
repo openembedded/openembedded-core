@@ -355,7 +355,7 @@ meta-emenlow/recipes-kernel/linux/linux-bsp-2.6.50/defconfig-bsp
             </para>
         </section>
 
-        <section id='bsp-filelayout-packages'>
+<!--        <section id='bsp-filelayout-packages'>
             <title>Other Software (meta-&lt;bsp_name&gt;/recipes-kernel/*)</title>
 
             <para>
@@ -442,7 +442,7 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
                 Assuming a compatible configuration is used, Poky can process and use these optional pre-compiled 
                 representations to provide much faster build times.
             </para>
-        </section>
+        </section> -->
 
         <section id='bsp-click-through-licensing'>
             <title>BSP 'Click-Through' Licensing Procedure</title>
