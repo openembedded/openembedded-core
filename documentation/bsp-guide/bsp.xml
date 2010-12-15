@@ -213,7 +213,10 @@ BBFILE_PRIORITY_bsp = "5"
         </section>
 
         <section id="bsp-filelayout-machine">
-            <title>Hardware Configuration Options (meta-&lt;bsp_name&gt;/conf/machine/*.conf)</title>
+            <title>Hardware Configuration Options</title>
+            <programlisting>
+meta-&lt;bsp_name&gt;/conf/machine/*.conf
+            </programlisting>
 
             <para>
                 The machine files bind together all the information contained elsewhere
@@ -232,16 +235,12 @@ BBFILE_PRIORITY_bsp = "5"
             </para>
 
             <para>
-                At least one machine file is required for a Poky BSP layer.
+                At least one machine file is required for a BSP layer.
                 However, you can supply more than one file.
             </para>
-        </section>
-
-        <section id="bsp-filelayout-tune">
-            <title>Hardware Optimization Options (meta-&lt;bsp_name&gt;/conf/machine/include/tune-*.inc)</title>
 
             <para>
-                These files are shared hardware "tuning" definitions and are commonly used to
+                This directory could also contain shared hardware "tuning" definitions that are commonly used to
                 pass specific optimization flags to the compiler. 
                 An example is <filename>tune-atom.inc</filename>:
             </para>
