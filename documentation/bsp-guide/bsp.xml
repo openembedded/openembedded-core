@@ -41,11 +41,6 @@
             the build system they are using.
         </para>
 
-        <note><para>
-            The file structure shown below is only an example and actual structures for 
-            specific BSPs could differ.
-        </para></note>
-
         <para>
             The BSP specification does not include a build system or other tools -
             it is concerned with the hardware-specific components only. 
@@ -75,7 +70,10 @@
             </para>
 
             <para>
-                The file structure inside the base directory takes on the following form:
+                Below is the common form for the file structure inside a base directory.
+                While you can use this basic form for the standard, realize that the actual structures
+                for specific BSPs could differ. 
+
                 <programlisting>
 meta-&lt;bsp_name&gt;/                                
 meta-&lt;bsp_name&gt;/binary/zImage
