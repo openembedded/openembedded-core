@@ -307,7 +307,10 @@ meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd_1.7.99.2.bb
         </section>
 
         <section id='bsp-filelayout-kernel'>
-            <title>Linux Kernel Configuration (meta-&lt;bsp_name&gt;/recipes-kernel/linux/*)</title>
+            <title>Linux Kernel Configuration</title>
+            <programlisting>
+meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-wrs_git.bbappend
+            </programlisting>
 
             <para>
                 These files make up the definition of a kernel to use with this hardware. 
@@ -316,7 +319,7 @@ meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd_1.7.99.2.bb
                 However, kernels can be shared between many machines as well.
                 Following is an example:
                <programlisting>
-meta-Emenlow/recipes-kernel/linux/linux-bsp_2.6.50.bb
+meta-emenlow/recipes-kernel/linux/linux-bsp_2.6.50.bb
                </programlisting>
                 This example file is the core kernel recipe that details from where to get the kernel
                 source.
@@ -340,7 +343,7 @@ linux-bsp-2.6.50/*.patch
             </para>
             <para>
                 <programlisting>
-meta-Emenlow/recipes-kernel/linux/linux-bsp-2.6.50/defconfig-bsp
+meta-emenlow/recipes-kernel/linux/linux-bsp-2.6.50/defconfig-bsp
                 </programlisting>
             </para>
             <para>
