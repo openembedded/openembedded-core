@@ -216,7 +216,7 @@ SPITZ_DEFAULT_ROOTFS="poky-image-sato"
 
 setup_tmpdir() {
     if [ -z "$TMPDIR" ]; then
-        if [ "x$BUILDDIR" = "x" ]; then
+        if [ "x$BUILDDIR" = "x" -o ! -d "$BUILDDIR/tmp" ]; then
             # BUILDDIR unset, try and get TMPDIR from bitbake
             type -P bitbake &>/dev/null || {
                 echo "In order for this script to dynamically infer paths";
