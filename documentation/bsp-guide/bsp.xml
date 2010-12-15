@@ -41,6 +41,11 @@
             the build system they are using.
         </para>
 
+        <note><para>
+            The file structure shown below is only an example and actual structures for 
+            specific BSPs could differ.
+        </para></note>
+
         <para>
             The BSP specification does not include a build system or other tools -
             it is concerned with the hardware-specific components only. 
