@@ -33,7 +33,7 @@
             It is intended that this information can be 
             used by other systems besides Poky and OpenEmbedded and that it will be simple
             to extract information and convert it to other formats if required.
-            Poky, through its standard layers mechanism, can directly accept The format 
+            Poky, through its standard layers mechanism, can directly accept the format 
             described as a layer.
             The BSP captures all 
             the hardware-specific details in one place in a standard format, which is 
