@@ -68,9 +68,9 @@
                 "bsp_name" is a placeholder for the machine or platform name.
                 Here are some example base directory names:
                 <literallayout class='monospaced'>
-     meta-Emenlow
+     meta-emenlow
      meta-intel_n450
-     meta-oaktrail
+     meta-beagleboard
                 </literallayout>
             </para>
 
