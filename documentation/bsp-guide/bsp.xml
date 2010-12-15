@@ -416,7 +416,7 @@ SRC_URI += "file://defconfig \
             </para></note>
             </section>
 
-<!--            <section id='bsp-filelayout-packages'>
+<!--        <section id='bsp-filelayout-packages'>
             <title>Other Software (meta-&lt;bsp_name&gt;/recipes-kernel/*)</title>
 
             <para>
