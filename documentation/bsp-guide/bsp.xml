@@ -113,7 +113,7 @@ meta-crownbay/recipes-kernel/linux/linux-wrs_git.bbappend
             </para>
 
             <para>
-                The following sections detail what these files and directories could contain.
+                The following sections describe each part of the proposed BSP format.
             </para>
 
         </section>
