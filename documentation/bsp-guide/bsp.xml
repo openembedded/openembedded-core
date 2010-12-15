@@ -115,9 +115,7 @@ meta-crownbay/recipes-kernel/linux/linux-wrs_git.bbappend
                 The following sections describe each part of the proposed BSP format.
             </para>
 
-        </section>
-
-        <section id="bsp-filelayout-license">
+            <section id="bsp-filelayout-license">
             <title>License Files</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/&lt;bsp_license_file&gt;
@@ -134,9 +132,9 @@ meta-&lt;bsp_name&gt;/&lt;bsp_license_file&gt;
                 Licensing files can be MIT, BSD, GPLv*, and so forth.
                 These files are recommended for the BSP but are optional and totally up to the BSP developer.
             </para>
-        </section>
+            </section>
 
-        <section id="bsp-filelayout-readme">
+            <section id="bsp-filelayout-readme">
             <title>README File</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/README
@@ -153,9 +151,9 @@ meta-&lt;bsp_name&gt;/README
                 Technically speaking a <filename>README</filename> is optional but it is highly 
                 recommended that every BSP has one.
             </para>
-        </section>
+            </section>
 
-        <section id="bsp-filelayout-binary">
+            <section id="bsp-filelayout-binary">
             <title>Pre-built User Binaries</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/binary/&lt;bootable_images&gt;
@@ -177,9 +175,9 @@ meta-&lt;bsp_name&gt;/binary/&lt;bootable_images&gt;
                 If pre-built binaries are present, source code to meet licensing requirements must also 
                 be provided in some form.
             </para>
-        </section>
+            </section>
 
-        <section id='bsp-filelayout-layer'>
+            <section id='bsp-filelayout-layer'>
             <title>Layer Configuration File</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/conf/layer.conf 
@@ -209,9 +207,9 @@ BBFILE_PRIORITY_bsp = "5"
                 This file simply makes BitBake aware of the recipes and configuration directories.
                 This file must exist so that Poky can recognize the BSP.
             </para>
-        </section>
+            </section>
 
-        <section id="bsp-filelayout-machine">
+            <section id="bsp-filelayout-machine">
             <title>Hardware Configuration Options</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/conf/machine/*.conf
@@ -262,9 +260,9 @@ TARGET_CC_ARCH = "-m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse"
             <para>
                 Both the base package architecuture file and the tune file are optional for a Poky BSP layer.
             </para>
-        </section>
+            </section>
 
-        <section id='bsp-filelayout-misc-recipes'>
+            <section id='bsp-filelayout-misc-recipes'>
             <title>Miscellaneous Recipe Files</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/recipes-bsp/*
@@ -280,9 +278,9 @@ meta-crownbay/recipes-bsp/formfactor/formfactor/crownbay/machconfig
 meta-crownbay/recipes-bsp/formfactor/formfactor_0.0.bbappend
                 </programlisting>
             </para>
-        </section>
+            </section>
 
-        <section id='bsp-filelayout-recipes-graphics'>
+            <section id='bsp-filelayout-recipes-graphics'>
             <title>Display Support Files</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/recipes-graphics/*            
@@ -304,9 +302,9 @@ meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd/nodolt.patch
 meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd_1.7.99.2.bb
                 </programlisting>
             </para>
-        </section>
+            </section>
 
-        <section id='bsp-filelayout-kernel'>
+            <section id='bsp-filelayout-kernel'>
             <title>Linux Kernel Configuration</title>
             <programlisting>
 meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-wrs_git.bbappend
@@ -353,9 +351,9 @@ meta-emenlow/recipes-kernel/linux/linux-bsp-2.6.50/defconfig-bsp
                 Examples of kernel recipes are available in Poky itself, and thus, make these files optional.
                 However, it would be unusual not to have a kernel configuration.
             </para>
-        </section>
+            </section>
 
-<!--        <section id='bsp-filelayout-packages'>
+<!--            <section id='bsp-filelayout-packages'>
             <title>Other Software (meta-&lt;bsp_name&gt;/recipes-kernel/*)</title>
 
             <para>
@@ -400,9 +398,9 @@ meta-Emenlow/recipes-Emenlow/modem/modem-daemon_0.1.bb
 meta-Emenlow/recipes-Emenlow/image-creator/image-creator-native_0.1.bb
                </programlisting>
             </para>
-        </section>
+            </section>
 
-        <section id='bs-filelayout-bbappend'>
+            <section id='bs-filelayout-bbappend'>
             <title>Append BSP-Specific Information to Existing Recipes</title>
             <para>
                 Suppose you have a recipe such as "pointercal" that requires machine-specific information.
@@ -432,9 +430,9 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
             which will be picked up by BitBake. 
             For an example see <filename>meta-emenlow/packages/formfactor</filename>.
             </para>
-        </section>
+            </section>
 
-        <section id="bsp-filelayout-prebuilds">
+            <section id="bsp-filelayout-prebuilds">
             <title>Pre-build Data (meta-&lt;bsp_name&gt;/prebuilds/*)</title>
             <para>
                 This location can contain precompiled representations of the source code 
@@ -442,7 +440,8 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
                 Assuming a compatible configuration is used, Poky can process and use these optional pre-compiled 
                 representations to provide much faster build times.
             </para>
-        </section> -->
+            </section> -->
+        </section>
 
         <section id='bsp-click-through-licensing'>
             <title>BSP 'Click-Through' Licensing Procedure</title>
