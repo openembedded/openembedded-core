@@ -6,11 +6,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/contacts-gtk.c;endline=23;md5=e1ee9b9e72045f2d3aa44cf17313b46e"
 
 PV = "0.12+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/git"
 
-SRC_URI =+ "git://git.gnome.org/${PN};protocol=git"
+SRC_URI =+ "git://git.gnome.org/${PN};protocol=git \
+	    file://make-382.patch"
 
 S = "${WORKDIR}/git"
 
