@@ -105,7 +105,9 @@ meta-&lt;bsp_name&gt;/prebuilds/
 
             <para>
                 This optional area contains useful pre-built kernels and userspace filesystem 
-                images appropriate to the target system. 
+                images appropriate to the target system.
+                This directory contains the Application Development Toolkit (ADT) and minimal
+                live images when the BSP is has been "tar-balled" and placed on the Yocto Project website. 
                 You can use these kernels and images to get a system running and quickly get started 
                 on development tasks. 
                 The exact types of binaries present are highly hardware-dependent.
