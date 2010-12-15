@@ -8,10 +8,11 @@ SECTION = "x11"
 DEPENDS = "libxml2 glib-2.0 gtk+ libglade webkit-gtk curl gconf js libowl"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://svn.o-hand.com/repos/web/branches;module=webkit;proto=http \
-           file://link-with-g++.patch;patch=1"
+           file://link-with-g++.patch \
+	   file://make-382.patch"
 
 S = "${WORKDIR}/webkit"
 
