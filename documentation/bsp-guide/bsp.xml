@@ -82,9 +82,9 @@ meta-&lt;bsp_name&gt;/recipes-kernel/bootloader/bootloader_0.1.bb
 meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-bsp-2.6.50/*.patch
 meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-bsp-2.6.50/defconfig-bsp
 meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-bsp_2.6.50.bb
-meta-&lt;bsp_name&gt;/recipes-&lt;bsp_name&gt;/modem/modem-driver_0.1.bb
-meta-&lt;bsp_name&gt;/recipes-&lt;bsp_name&gt;/modem/modem-daemon_0.1.bb
-meta-&lt;bsp_name&gt;/recipes-&lt;bsp_name&gt;/image-creator/image-creator-native_0.1.bb
+meta-&lt;bsp_name&gt;/recipes-bsp/modem/modem-driver_0.1.bb
+meta-&lt;bsp_name&gt;/recipes-bsp/modem/modem-daemon_0.1.bb
+meta-&lt;bsp_name&gt;/recipes-bsp/image-creator/image-creator-native_0.1.bb
 meta-&lt;bsp_name&gt;/prebuilds/
                 </programlisting>
             </para>
