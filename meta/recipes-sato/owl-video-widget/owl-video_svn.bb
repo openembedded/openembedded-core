@@ -21,7 +21,8 @@ SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=video;proto=http \
            file://stock_volume-min.png \
            file://stock_volume-med.png \
            file://stock_volume-max.png \
-           file://owl-video-widget.desktop"
+           file://owl-video-widget.desktop \
+	   file://make-382.patch"
 
 inherit autotools pkgconfig
 
