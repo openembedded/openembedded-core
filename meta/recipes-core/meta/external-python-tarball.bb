@@ -27,7 +27,9 @@ TOOLCHAIN_HOST_TASK ?= "\
     python-nativesdk-xmlrpc \
     python-nativesdk-netclient \
     python-nativesdk-netserver \
-    python-nativesdk-distutils"
+    python-nativesdk-distutils \
+    chrpath-nativesdk \
+    "
 
 TOOLCHAIN_OUTPUTNAME ?= "python-nativesdk-standalone-${SDKMACHINE}"
 
