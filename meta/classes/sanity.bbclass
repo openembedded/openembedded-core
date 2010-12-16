@@ -21,6 +21,18 @@ def check_conf_exists(fn, data):
             return True
     return False
 
+def check_sanity_sstate_dir_change():
+    # Sanity checks to be done when the value of SSTATE_DIR changes
+    return ""
+
+def check_sanity_tmpdir_change():
+    # Sanity checks to be done when the value of TMPDIR changes
+    return ""
+        
+def check_sanity_version_change():
+    # Sanity checks to be done when SANITY_VERSION changes
+    return ""
+    
 def check_sanity(e):
     from bb import note, error, data, __version__
 
@@ -173,10 +185,44 @@ def check_sanity(e):
         if os.path.exists('%s/libc.so.6' % lib32path) and not os.path.exists('/usr/include/gnu/stubs-32.h'):
             messages = messages + "You have a 32-bit libc, but no 32-bit headers.  You must install the 32-bit libc headers.\n"
 
+    tmpdir = data.getVar('TMPDIR', e.data, True)
+    sstate_dir = data.getVar('SSTATE_DIR', e.data, True)
+
+    # Check saved sanity info
+    last_sanity_version = 0
+    last_tmpdir = ""
+    last_sstate_dir = ""
+    sanityverfile = 'conf/sanity_info'
+    if os.path.exists(sanityverfile):
+        f = file(sanityverfile, 'r')
+        for line in f:
+            if line.startswith('SANITY_VERSION'):
+                last_sanity_version = int(line.split()[1])
+            if line.startswith('TMPDIR'):
+                last_tmpdir = line.split()[1]
+            if line.startswith('SSTATE_DIR'):
+                last_sstate_dir = line.split()[1]
+    
+    sanity_version = int(data.getVar('SANITY_VERSION', e.data, True) or 1)
+    if last_sanity_version < sanity_version: 
+        messages = messages + check_sanity_version_change()
+        messages = messages + check_sanity_tmpdir_change()
+        messages = messages + check_sanity_sstate_dir_change()
+    else: 
+        if last_tmpdir != tmpdir:
+            messages = messages + check_sanity_tmpdir_change()
+        if last_sstate_dir != sstate_dir:
+            messages = messages + check_sanity_sstate_dir_change()
+
+    if os.path.exists("conf"):
+        f = file(sanityverfile, 'w')
+        f.write("SANITY_VERSION %s\n" % sanity_version) 
+        f.write("TMPDIR %s\n" % tmpdir) 
+        f.write("SSTATE_DIR %s\n" % sstate_dir) 
+
     #
     # Check that TMPDIR hasn't changed location since the last time we were run
     #
-    tmpdir = data.getVar('TMPDIR', e.data, True)
     checkfile = os.path.join(tmpdir, "saved_tmpdir")
     if os.path.exists(checkfile):
         f = file(checkfile, "r")
