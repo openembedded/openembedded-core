@@ -186,7 +186,9 @@ meta-&lt;bsp_name&gt;/conf/layer.conf
             <para>
                 This file identifies the structure as a Poky layer, identifies the  
                 contents of the layer, and contains information about how Poky should use it. 
-                Generally, a standard boilerplate file such as the following works:
+                Generally, a standard boilerplate file such as the following works.
+                In the following example you would replace "bsp" and "_bsp" with the actual name
+                of the BSP (i.e. &lt;bsp_name&gt; from the example template).
             </para>
 
             <para>
