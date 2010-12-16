@@ -433,4 +433,79 @@ following differences:
     $ cp ./tmp/deploy/images/gnu-tar /path/to/my-cf-card/gnu-tar
 
 
+Intel Atom based PCs and devices (atom-pc)
+==========================================
 
+The atom-pc MACHINE is tested on the following platforms:
+
+  o Asus eee901
+  o Acer Aspire One
+  o Toshiba NB305
+  o Intel Embedded Development Board 1-N450 (Black Sand)
+
+and is likely to work on many unlisted atom based devices. The MACHINE type
+supports ethernet, wifi, sound, and i915 graphics by default in addition to
+common PC input devices, busses, and so on.
+
+Depending on the device, it can boot from a traditional hard-disk, a USB device,
+or over the network. Writing poky generated images to physical media is
+straightforward with a caveat for USB devices. The following examples assume the
+target boot device is /dev/sdb, be sure to verify this and use the correct
+device as the following commands are run as root and are not reversable.
+
+Hard Disk:
+  1. Build a directdisk image format. This will generate proper partition tables
+     that will in turn be written to the physical media. For example:
+
+     $ bitbake poky-image-minimal-directdisk
+  
+  2. Use the "dd" utility to write the image to the raw block device. For example:
+
+     # dd if=poky-image-minimal-directdisk-atom-pc.hdddirect of=/dev/sdb
+
+USB Device:
+  1. Build an hddimg image format. This is a simple filesystem without partition
+     tables and is suitable for USB keys. For example:
+
+     $ bitbake poky-image-minimal-live
+
+  2. Use the "dd" utility to write the image to the raw block device. For
+     example:
+
+     # dd if=poky-image-minimal-live-atom-pc.hddimg of=/dev/sdb
+
+  If the device fails to boot with "Boot error" displayed, it is likely the BIOS
+  cannot understand the physical layout of the disk (or rather it expects a
+  particular layout and cannot handle anything else). There are two possible
+  solutions to this problem:
+
+  1. Change the BIOS USB Device setting to HDD mode. The label will vary by
+     device, but the idea is to force BIOS to read the Cylinder/Head/Sector
+     geometry from the device.
+
+  2. Without such an option, the BIOS generally boots the device in USB-ZIP
+     mode.
+
+     a. Configure the USB device for USB-ZIP mode:
+     
+     # mkdiskimage -4 /dev/sdb 0 63 62
+
+     Where 63 and 62 are the head and sector count as reported by fdisk.
+     Remove and reinsert the device to allow the kernel to detect the new
+     partition layout.
+
+     b. Copy the contents of the poky image to the USB-ZIP mode device:
+
+     # mount -o loop poky-image-minimal-live-atom-pc.hddimg  /tmp/image
+     # mount /dev/sdb4 /tmp/usbkey
+     # cp -rf /tmp/image/* /tmp/usbkey
+
+     c. Install the syslinux boot loader:
+
+     # syslinux /dev/sdb4
+
+  Install the boot device in the target board and configure the BIOS to boot
+  from it.
+
+  For more details on the USB-ZIP scenario, see the syslinux documentation:
+  http://git.kernel.org/?p=boot/syslinux/syslinux.git;a=blob_plain;f=doc/usbkey.txt;hb=HEAD
