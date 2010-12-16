@@ -610,7 +610,7 @@ python do_checkpkg() {
 	maintainer = bb.data.getVar('RECIPE_MAINTAINER', d, True)
 	lf = bb.utils.lockfile(logfile + ".lock")
 	f = open(logfile, "a")
-	f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
+	f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
 		  (pname, maintainer, pproto, pcurver, pmver, pupver, pmstatus, pstatus))
 	f.close()
 	bb.utils.unlockfile(lf)
