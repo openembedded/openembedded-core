@@ -474,7 +474,7 @@ addtask sizecheck before do_install after do_compile
 KERNEL_IMAGE_BASE_NAME ?= "${KERNEL_IMAGETYPE}-${PV}-${PR}-${MACHINE}-${DATETIME}"
 KERNEL_IMAGE_SYMLINK_NAME ?= "${KERNEL_IMAGETYPE}-${MACHINE}"
 
-do_deploy() {
+kernel_do_deploy() {
 	install -m 0644 arch/${ARCH}/boot/${KERNEL_IMAGETYPE} ${DEPLOYDIR}/${KERNEL_IMAGE_BASE_NAME}.bin
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		tar -cvzf ${DEPLOYDIR}/modules-${KERNEL_VERSION}-${PR}-${MACHINE}.tgz -C ${D} lib
@@ -503,6 +503,8 @@ do_deploy() {
 do_deploy[dirs] = "${DEPLOYDIR} ${B}"
 
 addtask deploy before do_package after do_install
+
+EXPORT_FUNCTIONS do_deploy
 
 # perf must be enabled in individual kernel recipes
 PACKAGES =+ "perf"
