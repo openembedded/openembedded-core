@@ -294,7 +294,8 @@ meta-&lt;bsp_name&gt;/recipes-graphics/*
             </programlisting>
 
             <para>
-                This directory contains graphics recipes for the BSP.
+                This optional directory contains recipes for the BSP if it has 
+                special requirements for graphics support.
                 All files that are needed for the BSP to support a display are kept here. 
                 For example, in the crownbay BSP several display support files exist:
                 <programlisting>
