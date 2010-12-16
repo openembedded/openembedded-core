@@ -271,8 +271,8 @@ meta-&lt;bsp_name&gt;/recipes-bsp/*
             </programlisting>
 
             <para>
-                This directory contains miscellaneous recipe files for the BSP.
-                Most notably would be the formactor files.
+                This optional directory contains miscellaneous recipe files for the BSP.
+                Most notably would be the formfactor files.
                 For example, in the crownbay BSP there is a <filename>machconfig</filename> file and a
                 <filename>formfactor_0.0.bbappend</filename> file:
                 <programlisting>
@@ -280,6 +280,11 @@ meta-crownbay/recipes-bsp/formfactor/formfactor/crownbay/machconfig
 meta-crownbay/recipes-bsp/formfactor/formfactor_0.0.bbappend
                 </programlisting>
             </para>
+
+            <note><para>
+                If a BSP does not have a formfactor entry, defaults are established according to
+                the configuration script.
+            </para></note>
             </section>
 
             <section id='bsp-filelayout-recipes-graphics'>
