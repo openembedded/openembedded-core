@@ -166,7 +166,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
                 if k not in self.taskhash:
                     continue
                 if dataCache.basetaskhash[k] != self.basehash[k]:
-                    bb.error("Bitbake's cached basehash does not match the one we just generated!")
+                    bb.error("Bitbake's cached basehash does not match the one we just generated (%s)!" % k)
                     bb.error("The mismatched hashes were %s and %s" % (dataCache.basetaskhash[k], self.basehash[k]))
                 self.dump_sigtask(fn, task, dataCache.stamp[fn], True)
 
