@@ -13,5 +13,6 @@ S=${WORKDIR}
 
 do_install() {
         # Only install file if it has a contents
+	install -d ${D}/usr/bin
         install -m 0644 ${S}/LSB_Setup.sh ${D}/usr/bin
 }
