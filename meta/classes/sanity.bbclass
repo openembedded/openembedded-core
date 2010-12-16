@@ -139,6 +139,10 @@ def check_sanity(e):
 		missing = missing.rstrip(',')
 		messages = messages + "Please install following missing utilities: %s\n" % missing
 
+	# Check if DISPLAY is set if IMAGETEST is set
+	if not data.getVar( 'DISPLAY', e.data, True ) and data.getVar( 'IMAGETEST', e.data, True ) == 'qemu':
+		messages = messages + 'qemuimagetest needs a X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n'
+
 	# Ensure we have the binary for TERMCMD, as when patch application fails the error is fairly intimidating
 	termcmd = data.getVar("TERMCMD", e.data, True)
 	term = termcmd.split()[0]
