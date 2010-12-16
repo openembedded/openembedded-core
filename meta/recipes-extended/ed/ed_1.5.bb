@@ -8,7 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
                     file://main.c;endline=24;md5=177fe82d0649e545591a13fdce5733e8"
 
 SECTION = "base"
-PR = "r0"
+PR = "r1"
+
+# LSB states that ed should be in /bin/
+bindir = "${base_bindir}"
 
 SRC_URI = "${GNU_MIRROR}/ed/ed-${PV}.tar.gz \
            file://ed-1.2-build.patch"
