@@ -21,18 +21,41 @@ def check_conf_exists(fn, data):
             return True
     return False
 
-def check_sanity_sstate_dir_change():
+def check_sanity_sstate_dir_change(sstate_dir):
     # Sanity checks to be done when the value of SSTATE_DIR changes
-    return ""
 
-def check_sanity_tmpdir_change():
+    # Check that SSTATE_DIR isn't on a filesystem with limited filename length (eg. eCryptFS)
+    testmsg = ""
+    if sstate_dir != "":
+        testmsg = check_create_long_filename(sstate_dir, "SSTATE_DIR")
+    return testmsg
+
+def check_sanity_tmpdir_change(tmpdir):
     # Sanity checks to be done when the value of TMPDIR changes
-    return ""
+
+    # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
+    testmsg = check_create_long_filename(tmpdir, "TMPDIR")
+    return testmsg
         
 def check_sanity_version_change():
     # Sanity checks to be done when SANITY_VERSION changes
     return ""
     
+def check_create_long_filename(filepath, pathname):
+    testfile = os.path.join(filepath, ''.join([`num`[-1] for num in xrange(1,200)]))
+    try:
+        if not os.path.exists(filepath):
+            bb.utils.mkdirhier(filepath)
+        f = file(testfile, "w")
+        f.close()
+        os.remove(testfile)
+    except IOError as (errno, strerror):
+        if errno == 36: # ENAMETOOLONG
+            return "Failed to create a file with a long name in %s. Please use a filesystem that does not unreasonably limit filename length.\n" % pathname
+        else:
+            return "Failed to create a file in %s: %s" % (pathname, strerror)
+    return ""
+
 def check_sanity(e):
     from bb import note, error, data, __version__
 
@@ -206,13 +229,13 @@ def check_sanity(e):
     sanity_version = int(data.getVar('SANITY_VERSION', e.data, True) or 1)
     if last_sanity_version < sanity_version: 
         messages = messages + check_sanity_version_change()
-        messages = messages + check_sanity_tmpdir_change()
-        messages = messages + check_sanity_sstate_dir_change()
+        messages = messages + check_sanity_tmpdir_change(tmpdir)
+        messages = messages + check_sanity_sstate_dir_change(sstate_dir)
     else: 
         if last_tmpdir != tmpdir:
-            messages = messages + check_sanity_tmpdir_change()
+            messages = messages + check_sanity_tmpdir_change(tmpdir)
         if last_sstate_dir != sstate_dir:
-            messages = messages + check_sanity_sstate_dir_change()
+            messages = messages + check_sanity_sstate_dir_change(sstate_dir)
 
     if os.path.exists("conf"):
         f = file(sanityverfile, 'w')
