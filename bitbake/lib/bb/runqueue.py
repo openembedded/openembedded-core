@@ -909,9 +909,13 @@ class RunQueue:
                 if t3 and t3 > t2:
                    continue
                 if fn == fn2 or (fulldeptree and fn2 not in stampwhitelist):
-                    if not t2 or t1 < t2:
-                        bb.msg.debug(2, bb.msg.domain.RunQueue, "Stampfile %s < %s (or does not exist)" % (stampfile, stampfile2))
+                    if not t2:
+                        bb.msg.debug(2, bb.msg.domain.RunQueue, "Stampfile %s does not exist" % (stampfile2))
                         iscurrent = False
+                    if t1 < t2:
+                        bb.msg.debug(2, bb.msg.domain.RunQueue, "Stampfile %s < %s" % (stampfile, stampfile2))
+                        iscurrent = False
+
         return iscurrent
 
     def execute_runqueue(self):
@@ -1368,7 +1372,6 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                 taskdep = self.rqdata.dataCache.task_deps[fn]
                 if 'noexec' in taskdep and taskname in taskdep['noexec']:
                     noexec.append(task)
-                    self.task_skip(task)
                     continue
                 sq_fn.append(fn)
                 sq_hashfn.append(self.rqdata.dataCache.hashfn[fn])
@@ -1384,7 +1387,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                 valid_new.append(sq_task[v])
 
             for task in range(len(self.sq_revdeps)):
-                if task not in valid_new and task not in noexec:
+                if task not in valid_new:
                     bb.msg.debug(2, bb.msg.domain.RunQueue, "No package found so skipping setscene task %s" % (self.rqdata.get_user_idstring(self.rqdata.runq_setscene[task])))
                     self.task_failoutright(task)
 
