@@ -44,7 +44,7 @@ fi
 
 BITBAKEDIR="$OEROOT/bitbake$BBEXTRA/"
 
-PATH="$BITBAKEDIR/bin/:$OEROOT/scripts:$PATH"
+PATH="${OEROOT}/scripts:$BITBAKEDIR/bin/:$PATH"
 
 # Remove any symlinks from paths
 BITBAKEDIR=`readlink -f "$BITBAKEDIR"`
