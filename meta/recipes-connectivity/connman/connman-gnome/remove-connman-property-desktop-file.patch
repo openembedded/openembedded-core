@@ -1,0 +1,42 @@
+diff -ruN connman-gnome-0.5-orig/po/POTFILES.in connman-gnome-0.5/po/POTFILES.in
+--- connman-gnome-0.5-orig/po/POTFILES.in	2010-12-16 16:03:29.000000000 +0800
++++ connman-gnome-0.5/po/POTFILES.in	2010-12-17 10:27:17.000000000 +0800
+@@ -4,4 +4,3 @@
+ properties/advanced.c
+ properties/ethernet.c
+ properties/wifi.c
+-properties/connman-properties.desktop.in
+diff -ruN connman-gnome-0.5-orig/properties/Makefile.am connman-gnome-0.5/properties/Makefile.am
+--- connman-gnome-0.5-orig/properties/Makefile.am	2010-12-16 16:03:29.000000000 +0800
++++ connman-gnome-0.5/properties/Makefile.am	2010-12-17 10:27:09.000000000 +0800
+@@ -17,16 +17,6 @@
+ 
+ INCLUDES = -I$(top_srcdir)/common
+ 
+-desktopdir = $(datadir)/applications
+-
+-desktop_in_files = connman-properties.desktop.in
+-
+-desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+-
+ @INTLTOOL_DESKTOP_RULE@
+ 
+-CLEANFILES = $(desktop_DATA)
+-
+-EXTRA_DIST = $(desktop_in_files)
+-
+ MAINTAINERCLEANFILES = Makefile.in
+diff -ruN connman-gnome-0.5-orig/properties/connman-properties.desktop.in connman-gnome-0.5/properties/connman-properties.desktop.in
+--- connman-gnome-0.5-orig/properties/connman-properties.desktop.in	2010-12-16 16:03:29.000000000 +0800
++++ connman-gnome-0.5/properties/connman-properties.desktop.in	1970-01-01 08:00:00.000000000 +0800
+@@ -1,10 +0,0 @@
+-[Desktop Entry]
+-Encoding=UTF-8
+-_Name=Connection Management
+-_Comment=Configure connection management
+-Icon=stock_internet
+-Exec=connman-properties
+-Terminal=false
+-Type=Application
+-Categories=Settings;
+-OnlyShowIn=GNOME;
