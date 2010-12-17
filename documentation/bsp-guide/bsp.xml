@@ -319,46 +319,57 @@ meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-wrs_git.bbappend
             </programlisting>
 
             <para>
-                These files make up the definition of a kernel to use with this hardware. 
-                In this case, it is a complete self-contained kernel with its own
-                configuration and patches.
-                However, kernels can be shared between many machines as well.
-                Following is an example:
-               <programlisting>
-meta-emenlow/recipes-kernel/linux/linux-bsp_2.6.50.bb
-               </programlisting>
-                This example file is the core kernel recipe that details from where to get the kernel
-                source.
-                All standard source code locations are supported.
-                Consequently, the source could be a release tarball, a git repository, or source included in
-                the directory within the BSP itself.
+                This file appends your specific changes to the kernel you are using.
             </para>
             <para>
-                The file then contains information about what patches to apply and how to configure and build them.
-                Because the file can reuse the main Poky kernel build class, the definitions here can 
-                remain very simple.   
+                For your BSP you typically want to use an existing Poky kernel found in the 
+                Poky repository at <filename class='directory'>meta/recipes-kernel/kernel</filename>.
+                You can append your specific changes to the kernel by using a 
+                <filename>.bbappend</filename> file, which is located in the 
+                <filename class='directory'>meta-&lt;bsp_name&gt;/recipes-kernel/linux</filename>
+                directory.
             </para>
             <para>
+                Consider a BSP that uses the <filename>linux-yocto-stable_git.bb</filename> kernel.
+                You would use the <filename>linux-yocto-stable_git.bbappend</filename> file to add 
+                specific BSP settings to the kernel, thus configuring the kernel for your particular BSP.
+            </para>
+            <para>
+                Consider an example for the existing "crownbay" BSP.
+                The <filename>.bbaappend</filename> file used for the "crownbay" BSP is:
                 <programlisting>
-linux-bsp-2.6.50/*.patch
+meta-crownbay/recipes-kernel/linux/linux-wrs_git.bbappend
                 </programlisting>
-            </para>
-            <para>
-                The above example file contains patches you can apply against the base kernel, from wherever
-                they may have been obtained.
-            </para>
-            <para>
+                The file contains the following:
                 <programlisting>
-meta-emenlow/recipes-kernel/linux/linux-bsp-2.6.50/defconfig-bsp
+FILESEXTRAPATHS := "${THISDIR}/${PN}"
+COMPATIBLE_MACHINE_crownbay = "cronwbay"
+KMACHINE_crownbay = "crownbay"
                 </programlisting>
+                This <filename>.bbappend</filename> file adds "crownbay" as a compatible machine,
+                and additionally sets a Yocto Kernel-specific variable that identifies the name of the 
+                BSP branch to use in the GIT repository to find configuration information.
+            </para>
+            <note><para>
+                For an established BSP the configuration information is incorporated directly into the 
+                git tree.
+                For a new BSP, however, the <filename>.bbappend</filename> file needs to 
+                include its own set of configuration options in a file called 
+                <filename>defconfig</filename> located in a directory that matches the recipe name.
+                <programlisting>
+SRC_URI += "file://defconfig"
+                </programlisting>
+                Once a BSP is committed, the Yocto kernel maintainer moves this configuration information
+                into the git tree so that the <filename>.bbappend</filename> file does not need to locate
+                its own configuration options.
+                Again, the initial configuration options using the SRC_URI are put into a 
+                directory named 
+                <filename class='directory'>meta-&lt;bsp_name&gt;/recipes/linux/linux-yocto-stable</filename>.
             </para>
             <para>
-                Finally, this last example file contains kernel configuration information.
-            </para>
-            <para>
-                Examples of kernel recipes are available in Poky itself, and thus, make these files optional.
-                However, it would be unusual not to have a kernel configuration.
-            </para>
+                 You can find more information about creating a BSP that is based on an existing similar
+                 BSP by reading the "Yocto Project Kernel Architecture and Use Manual."
+            </para></note>
             </section>
 
 <!--            <section id='bsp-filelayout-packages'>
