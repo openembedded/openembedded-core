@@ -1,7 +1,5 @@
 LICENSE = "GPL LGPL"
-DEPENDS = "libxml2 libxslt libxslt-native"
-
-PR = "r1"
+DEPENDS = "libxml2 libxslt libxslt-native gnome-doc-utils-native"
 
 inherit gnome
 
