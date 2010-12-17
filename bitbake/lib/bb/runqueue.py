@@ -944,7 +944,7 @@ class RunQueue:
             retval = self.rqexe.execute()
 
         if self.state is runQueueRunInit:
-            bb.msg.note(1, bb.msg.domain.RunQueue, "Executing runqueue")
+            bb.msg.note(1, bb.msg.domain.RunQueue, "Executing RunQueue Tasks")
             self.rqexe = RunQueueExecuteTasks(self)
             self.state = runQueueRunning
 
@@ -1130,7 +1130,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                     self.rq.scenequeue_covered.add(task)
                     found = True
 
-        bb.note("Full skip list %s" % self.rq.scenequeue_covered)
+        bb.debug("Full skip list %s" % self.rq.scenequeue_covered)
 
         for task in self.rq.scenequeue_covered:
             self.task_skip(task)
@@ -1393,7 +1393,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
             #print(str(valid))
 
-        bb.msg.note(1, bb.msg.domain.RunQueue, "Executing setscene Tasks")
+        bb.msg.note(1, bb.msg.domain.RunQueue, "Executing SetScene Tasks")
 
         self.rq.state = runQueueSceneRun
 
@@ -1411,7 +1411,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         """
 
         index = self.rqdata.runq_setscene[task]
-        bb.msg.note(1, bb.msg.domain.RunQueue, "Found task %s could be accelerated" % self.rqdata.get_user_idstring(index))
+        bb.msg.debug(1, bb.msg.domain.RunQueue, "Found task %s could be accelerated" % self.rqdata.get_user_idstring(index))
 
         self.scenequeue_covered.add(task)
         self.scenequeue_updatecounters(task)
@@ -1509,7 +1509,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         for task in oldcovered:
             self.rq.scenequeue_covered.add(self.rqdata.runq_setscene[task])
 
-        bb.note("We can skip tasks %s" % self.rq.scenequeue_covered)
+        bb.debug("We can skip tasks %s" % self.rq.scenequeue_covered)
 
         self.rq.state = runQueueRunInit
         return True
