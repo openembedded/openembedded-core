@@ -368,7 +368,9 @@ SRC_URI += "file://defconfig"
             </para>
             <para>
                  You can find more information about creating a BSP that is based on an existing similar
-                 BSP by reading the "Yocto Project Kernel Architecture and Use Manual."
+                 BSP by reading the "Creating a BSP Based on an Existing Similar BSP" section in the 
+                 "<ulink url="http://www.yoctoproject.org/community/documentation">Yocto Project
+                 Kernel Architecture and Use Manual</ulink>".
             </para></note>
             </section>
 
