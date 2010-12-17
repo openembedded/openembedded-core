@@ -6,10 +6,11 @@ LICENSE = "LGPL2.1"
 DEPENDS = "sqlite3"
 
 PV = "0.0+git${SRCPV}"
-PR = "r15"
+PR = "r16"
 
 SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
-           file://static_sqlite.patch"
+           file://static_sqlite.patch \
+           file://895fa7e359e8026a608fba052c2994e42901e45f.patch"
 
 FILES_${PN} = "${libdir}/libpseudo.so ${bindir}/* ${localstatedir}/pseudo"
 PROVIDES += "virtual/fakeroot"
