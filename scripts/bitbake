@@ -1,0 +1,25 @@
+#!/bin/sh
+OLDPATH=$PATH
+export PATH=`echo $PATH | sed s#[^:]*/scripts:##`
+if [ ! -e "$BUILDDIR/pseudodone" ]; then
+    echo "Pseudo has not been built, building this first before the main build"
+    bitbake pseudo-native
+    ret=$?
+    if [ "$ret" != "0" ]; then
+        exit 1
+    fi
+    PSEUDOBINDIR=`bitbake -e | grep STAGING_BINDIR_NATIVE=\" | cut -d '=' -f2 | cut -d '"' -f2`
+    ret=$?
+    if [ "$ret" != "0" ]; then
+        exit 1
+    fi
+    echo $PSEUDOBINDIR > $BUILDDIR/pseudodone
+    # This needs to exist in case pseudo has to log somewhere
+    mkdir -p $PSEUDOBINDIR/../../var/pseudo
+fi
+BITBAKE=`which bitbake`
+export PATH=$OLDPATH
+PSEUDOBINDIR=`cat $BUILDDIR/pseudodone`
+PSEUDO_BINDIR=$PSEUDOBINDIR PSEUDO_LIBDIR=$PSEUDOBINDIR/../lib/pseudo/lib PSEUDO_PREFIX=$PSEUDOBINDIR/../../ PSEUDO_DISABLED=1 $PSEUDOBINDIR/pseudo $BITBAKE $@
+ret=$?
+exit $ret
