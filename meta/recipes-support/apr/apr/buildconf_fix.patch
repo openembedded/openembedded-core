@@ -1,0 +1,25 @@
+Remove the new libtool detection method to avoid config failure. Poky's libtool
+has different format for "aclocaldir", and there is no elegant parsing method,
+so fall back to old detection.
+
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+Index: apr-1.4.2/buildconf
+===================================================================
+--- apr-1.4.2.orig/buildconf	2009-11-13 06:19:49.000000000 +0800
++++ apr-1.4.2/buildconf	2010-11-29 14:39:19.000000000 +0800
+@@ -50,14 +50,6 @@
+ 
+ if [ -f libtool.m4 ]; then 
+    ltfile=`pwd`/libtool.m4
+-elif grep all_pkgmacro_files $libtoolize > /dev/null; then
+-    # libtool 2.x
+-   aclocal_dir=`sed -n '/^aclocaldir=/{s/.*=//;p;q;}' < $libtoolize`
+-   ltfiles=`sed -n '/^all_pkgmacro_files=/{s/.*=//;;s/"//;p;q;}' < $libtoolize`
+-   for f in $ltfiles; do
+-       test -f "$aclocal_dir/$f" && cp "$aclocal_dir/$f" build
+-   done
+-   ltfile=$aclocal_dir/libtool.m4
+ else
+    ltfindcmd="`sed -n \"/=[^\\\`]/p;/libtool_m4=/{s/.*=/echo /p;q;}\" \
+                    < $libtoolize`"
