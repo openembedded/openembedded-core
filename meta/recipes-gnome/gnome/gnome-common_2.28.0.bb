@@ -25,3 +25,5 @@ DEPENDS = ""
 
 FILES_${PN} += "${datadir}/aclocal"
 FILES_${PN}-dev = ""
+
+BBCLASSEXTEND = "native"
