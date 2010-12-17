@@ -1372,6 +1372,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                 taskdep = self.rqdata.dataCache.task_deps[fn]
                 if 'noexec' in taskdep and taskname in taskdep['noexec']:
                     noexec.append(task)
+                    self.task_skip(task)
+                    bb.build.make_stamp(taskname + "_setscene", self.rqdata.dataCache, fn)
                     continue
                 sq_fn.append(fn)
                 sq_hashfn.append(self.rqdata.dataCache.hashfn[fn])
@@ -1387,7 +1389,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
                 valid_new.append(sq_task[v])
 
             for task in range(len(self.sq_revdeps)):
-                if task not in valid_new:
+                if task not in valid_new and task not in noexec:
                     bb.msg.debug(2, bb.msg.domain.RunQueue, "No package found so skipping setscene task %s" % (self.rqdata.get_user_idstring(self.rqdata.runq_setscene[task])))
                     self.task_failoutright(task)
 
