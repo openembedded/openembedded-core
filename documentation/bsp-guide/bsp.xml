@@ -83,7 +83,7 @@ meta-&lt;bsp_name&gt;/conf/layer.conf
 meta-&lt;bsp_name&gt;/conf/machine/*.conf
 meta-&lt;bsp_name&gt;/recipes-bsp/*
 meta-&lt;bsp_name&gt;/recipes-graphics/*            
-meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-wrs_git.bbappend
+meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-yocto-stable.bbappend
                 </programlisting>
             </para>
 
