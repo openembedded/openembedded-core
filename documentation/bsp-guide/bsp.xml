@@ -260,7 +260,7 @@ TARGET_CC_ARCH = "-m32 -march=core2 -msse3 -mtune=generic -mfpmath=sse"
                 files included with Poky itself.
             </para>
             <para>
-                Both the base package architecuture file and the tune file are optional for a Poky BSP layer.
+                Both the base package architecture file and the tune file are optional for a Poky BSP layer.
             </para>
             </section>
 
@@ -330,7 +330,7 @@ meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-yocto-stable.bbappend
                 directory.
             </para>
             <para>
-                Supppose you use a BSP that uses the <filename>linux-yocto-stable_git.bb</filename> kernel, 
+                Suppose you use a BSP that uses the <filename>linux-yocto-stable_git.bb</filename> kernel, 
                 which is the preferred kernel to use for developing a new BSP using the Yocto Project.
                 In other words, you have selected the kernel in your 
                 <filename>&lt;bsp_name&gt;.conf</filename> file by adding the following statement:
@@ -369,7 +369,7 @@ KMACHINE_crownbay = "crownbay"
             </para>
             <para>
                 For example, suppose you had a set of configuration options in a file called 
-                <filename>defonfig</filename>.  
+                <filename>defconfig</filename>.  
                 If you put that file inside a directory named 
                 <filename class='directory'>/linux-yocto-stable</filename> and then added 
                 a SRC_URI statement such as the following to the append file, those configuration
@@ -381,7 +381,7 @@ SRC_URI += "file://defconfig"
             <para>
                 As mentioned earlier, you can group related configurations into multiple files and 
                 name them all in the SRC_URI statement as well.
-                For example, you could group separate configurations specifically for ethernet and graphics
+                For example, you could group separate configurations specifically for Ethernet and graphics
                 into their own files and add those by using a SRC_URI statement like the 
                 following in your append file:
                 <programlisting>
@@ -409,7 +409,7 @@ SRC_URI += "file://defconfig \
                 In general, however, the Yocto Project maintainers take care of moving the SRC_URI-specified 
                 configuration options to the <filename class='directory'>wrs_meta</filename> branch.
                 Not only is it easier for BSP developers to not have to worry about putting those 
-                configurations in the branch, but having the manintainers do it allows them to apply 
+                configurations in the branch, but having the maintainers do it allows them to apply 
                 'global' knowledge about the kinds of common configuration options multiple BSPs in 
                 the tree are typically using.  
                 This allows for promotion of common configurations into common features.
