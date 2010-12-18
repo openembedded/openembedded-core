@@ -315,7 +315,7 @@ meta-crownbay/recipes-graphics/xorg-xserver/xserver-xf86-emgd_1.7.99.2.bb
             <section id='bsp-filelayout-kernel'>
             <title>Linux Kernel Configuration</title>
             <programlisting>
-meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-wrs_git.bbappend
+meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-yocto-stable.bbappend
             </programlisting>
 
             <para>
@@ -330,21 +330,26 @@ meta-&lt;bsp_name&gt;/recipes-kernel/linux/linux-wrs_git.bbappend
                 directory.
             </para>
             <para>
-                Consider a BSP that uses the <filename>linux-yocto-stable_git.bb</filename> kernel, 
+                Supppose you use a BSP that uses the <filename>linux-yocto-stable_git.bb</filename> kernel, 
                 which is the preferred kernel to use for developing a new BSP using the Yocto Project.
+                In other words, you have selected the kernel in your 
+                <filename>&lt;bsp_name&gt;.conf</filename> file by adding the following statement:
+                <programlisting>
+PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto-stable"
+                </programlisting>
                 You would use the <filename>linux-yocto-stable_git.bbappend</filename> file to append 
                 specific BSP settings to the kernel, thus configuring the kernel for your particular BSP.
             </para>
             <para>
-                Consider an example for the existing "crownbay" BSP.
-                The append file used for the "crownbay" BSP is:
+                Now take a look at the existing "crownbay" BSP.
+                The append file used is:
                 <programlisting>
 meta-crownbay/recipes-kernel/linux/linux-yocto-stable_git.bbappend
                 </programlisting>
                 The file contains the following:
                 <programlisting>
 FILESEXTRAPATHS := "${THISDIR}/${PN}"
-COMPATIBLE_MACHINE_crownbay = "cronwbay"
+COMPATIBLE_MACHINE_crownbay = "crownbay"
 KMACHINE_crownbay = "crownbay"
                 </programlisting>
                 This append file adds "crownbay" as a compatible machine,
@@ -366,7 +371,7 @@ KMACHINE_crownbay = "crownbay"
                 For example, suppose you had a set of configuration options in a file called 
                 <filename>defonfig</filename>.  
                 If you put that file inside a directory named 
-                <filename class='directory'>/linux-yocto-stable_git</filename> and then added 
+                <filename class='directory'>/linux-yocto-stable</filename> and then added 
                 a SRC_URI statement such as the following to the append file, those configuration
                 options will be picked up and applied when the kernel is built.
                 <programlisting>
