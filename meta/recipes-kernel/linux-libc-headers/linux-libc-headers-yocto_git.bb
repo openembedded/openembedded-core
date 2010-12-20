@@ -6,14 +6,12 @@ B = "${S}"
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
 PROVIDES = "linux-libc-headers"
-PV = "2.6.34+git-${SRCPV}"
-PR = "r1"
-
-SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;fullclone=1"
+PV = "2.6.37+git-${SRCPV}"
+PR = "r2"
 
 SRCREV_FORMAT = "meta_machine"
-SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${KBRANCH};name=machine \
-           git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
+SRC_URI = "git://git.pokylinux.org/linux-yocto-2.6.37;protocol=git;fullclone=1;branch=${KBRANCH};name=machine \
+           git://git.pokylinux.org/linux-yocto-2.6.37;protocol=git;noclone=1;branch=meta;name=meta"
 
 set_arch() {
 	case ${TARGET_ARCH} in
