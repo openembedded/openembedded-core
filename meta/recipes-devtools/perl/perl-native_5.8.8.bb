@@ -94,3 +94,8 @@ do_install_append_nylon() {
 }
 
 PARALLEL_MAKE = ""
+
+# Perl encodes the staging path into the perl binary so we have to depend on this
+# as part of the checksum for now
+HARDPATH := "${STAGING_BINDIR}"
+do_populate_sysroot[vardeps] += "HARDPATH"
