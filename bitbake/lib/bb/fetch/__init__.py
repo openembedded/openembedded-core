@@ -231,7 +231,7 @@ def removefile(f):
     except:
         pass
 
-def verify_checksum(d, ud):
+def verify_checksum(u, ud, d):
     """
     verify the MD5 and SHA256 checksum for downloaded src
 
@@ -245,7 +245,7 @@ def verify_checksum(d, ud):
     """
 
     if not ud.type in ["http", "https", "ftp", "ftps"]:
-        return True
+        return
 
     md5data = bb.utils.md5_file(ud.localpath)
     sha256data = bb.utils.sha256_file(ud.localpath)
@@ -255,17 +255,13 @@ def verify_checksum(d, ud):
                 "SRC_URI[%s] = \"%s\"\nSRC_URI[%s] = \"%s\"" \
                 % (ud.localpath, ud.md5_name, md5data, ud.sha256_name, sha256data))
         if bb.data.getVar("BB_STRICT_CHECKSUM", d, True) == "1":
-            return False
-        else:
-            return True
+            raise FetchError("No checksum specified for %s." % u)
 
     if (ud.md5_expected != md5data or ud.sha256_expected != sha256data):
         bb.error("The checksums for '%s' did not match." % ud.localpath)
         bb.error("Expected MD5: '%s' and Got: '%s'" % (ud.md5_expected, md5data))
         bb.error("Expected SHA256: '%s' and Got: '%s'" % (ud.sha256_expected, sha256data))
-        return False
-
-    return True
+        raise FetchError("%s checksum mismatch." % u)
 
 def go(d, urls = None):
     """
@@ -309,6 +305,9 @@ def go(d, urls = None):
                     raise FetchError("Unable to fetch URL %s from any source." % u)
 
         ud.localpath = localpath
+
+        verify_checksum(u, ud, d)
+
         if os.path.exists(ud.md5):
             # Touch the md5 file to show active use of the download
             try:
@@ -318,9 +317,6 @@ def go(d, urls = None):
                 pass
         else:
             Fetch.write_md5sum(u, ud, d)
-
-        if not verify_checksum(d, ud):
-            raise FetchError("%s checksum mismatch." % u)
 
         bb.utils.unlockfile(lf)
 
