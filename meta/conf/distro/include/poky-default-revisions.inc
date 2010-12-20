@@ -89,7 +89,6 @@ SRCREV_machine_pn-linux-yocto-stable_qemumips ?= "81f3cd467b9d51fa1dfa2d5939337c
 SRCREV_machine_pn-linux-yocto-stable_qemuppc ?= "9ac0daee43dd19d8bea828cf79450c9748ae0daa"
 SRCREV_machine_pn-linux-yocto-stable_qemux86 ?= "0431115c9d720fee5bb105f6a7411efb4f851d26"
 SRCREV_machine_pn-linux-yocto-stable_qemux86-64 ?= "0431115c9d720fee5bb105f6a7411efb4f851d26"
-SRCREV_machine_pn-linux-yocto-stable_emenlow ?= "aae69fdf104b0a9d7b3710f808aac6ab303490f7"
 SRCREV_machine_pn-linux-yocto-stable_atom-pc ?= "0431115c9d720fee5bb105f6a7411efb4f851d26"
 SRCREV_machine_pn-linux-yocto-stable_routerstationpro ?= "2ec2edaf256dd8500ee3d4763fee6ca3ecd6da4b"
 SRCREV_machine_pn-linux-yocto-stable_mpc8315e-rdb ?= "986e6eb66c26007cee7916d5d12f4756e6b5436f"
