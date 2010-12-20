@@ -80,7 +80,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 	# an actual package install!
 	${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${DEPLOY_DIR_RPM}/solvedb.macro`" \
 		-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync" \
-		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos \
+		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 		${IMAGE_ROOTFS}/install/install.manifest
 
 	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
@@ -95,7 +95,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_rootfs_attemptonly.${PID}"
 			${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${DEPLOY_DIR_RPM}/solvedb.macro`" \
 				-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
-				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos \
+				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 			$pkg_name >> "${WORKDIR}/temp/log.do_rootfs_attemptonly.${PID}" || true
 		done
 	fi
@@ -130,7 +130,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_rootfs_recommend.${PID}"
 			${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${DEPLOY_DIR_RPM}/solvedb.macro`" \
 				-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
-				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos \
+				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 				$pkg_name >> "${WORKDIR}/temp/log.do_rootfs_recommend.${PID}" 2>&1 || true
 		done
 		cat ${IMAGE_ROOTFS}/install/recommend.list ${IMAGE_ROOTFS}/install/recommend.new | sort -u > ${IMAGE_ROOTFS}/install/recommend.new.list
