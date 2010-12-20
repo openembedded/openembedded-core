@@ -1140,7 +1140,7 @@ class RunQueueExecute:
             # Make the child the process group leader
             os.setpgid(0, 0)
             # No stdin
-            newsi = os.open('/dev/null', os.O_RDWR)
+            newsi = os.open(os.devnull, os.O_RDWR)
             os.dup2(newsi, sys.stdin.fileno())
             # Stdout to a logfile
             #logout = data.expand("${TMPDIR}/log/stdout.%s" % os.getpid(), self.cfgData, True)

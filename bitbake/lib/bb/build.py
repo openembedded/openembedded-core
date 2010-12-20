@@ -38,8 +38,7 @@ from bb import data, event, mkdirhier, utils
 bblogger = logging.getLogger('BitBake')
 logger = logging.getLogger('BitBake.Build')
 
-NULL = open('/dev/null', 'r')
-
+NULL = open(os.devnull, 'r+')
 
 # When we execute a python function we'd like certain things
 # in all namespaces, hence we add them to __builtins__
