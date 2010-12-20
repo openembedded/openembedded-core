@@ -118,7 +118,11 @@ if [ "$cont" == "y" ] || [ "$cont" == "Y" ]; then
         # 
         # Use tail to remove the email envelope from git or formail as
         # msmtp (sendmail) would choke on them.
-        cat $PATCH | formail -I "To: $TO" -I "CC: $CC" | tail -n +2 | sendmail -t
+        #
+        # Modify the patch date for sequential delivery, but retain the
+        # original date as "Old-Date".
+        DATE=$(date +"%a, %d %b %Y %k:%M:%S %z")
+        cat $PATCH | formail -I "To: $TO" -I "CC: $CC" -i "Date: $DATE" | tail -n +2 | sendmail -t
         if [ $? -eq 1 ]; then
             ERROR=1
         fi
