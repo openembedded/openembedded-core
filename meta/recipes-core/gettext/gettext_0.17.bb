@@ -3,6 +3,8 @@ DESCRIPTION = "Gettext offers to programmers, translators, and even users, a wel
 HOMEPAGE = "http://www.gnu.org/software/gettext/gettext.html"
 SECTION = "libs"
 LICENSE = "GPLv3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+
 PR = "r5"
 DEPENDS = "gettext-native virtual/libiconv ncurses expat"
 DEPENDS_virtclass-native = ""
@@ -10,33 +12,36 @@ PROVIDES = "virtual/libintl"
 PROVIDES_virtclass-native = ""
 
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
-	   file://autotools.patch;patch=1 \
-	   file://wchar-uclibc.patch;patch=1 \
-	   file://use_open_properly.patch;patch=1 \
+           file://autotools.patch;patch=1 \
+           file://wchar-uclibc.patch;patch=1 \
+           file://use_open_properly.patch;patch=1 \
            file://m4fix.patch;patch=1 \
-	  "
+          "
 
 SRC_URI_append_linux-uclibc = " file://gettext-error_print_progname.patch;patch=1"
 SRC_URI_append_linux-uclibcgnueabi = " file://gettext-error_print_progname.patch;patch=1"
+
+SRC_URI[md5sum] = "58a2bc6d39c0ba57823034d55d65d606"
+SRC_URI[sha256sum] = "209638bb8e162f22c281145a34e220c66f1f6e9ff5e4c50c6f2ef2ded59537ba"
 
 PARALLEL_MAKE = ""
 
 inherit autotools
 
 EXTRA_OECONF += "--without-lispdir \
-		 --disable-csharp \
-		 --disable-libasprintf \
-		 --disable-java \
-		 --disable-native-java \
-		 --disable-openmp \
-		 --with-included-glib \
-		 --with-libncurses-prefix=${STAGING_LIBDIR}/.. \
-		 --without-emacs \
-	        "
+                 --disable-csharp \
+                 --disable-libasprintf \
+                 --disable-java \
+                 --disable-native-java \
+                 --disable-openmp \
+                 --with-included-glib \
+                 --with-libncurses-prefix=${STAGING_LIBDIR}/.. \
+                 --without-emacs \
+                "
 
 acpaths = '-I ${S}/autoconf-lib-link/m4/ \
-	   -I ${S}/gettext-runtime/m4 \
-	   -I ${S}/gettext-tools/m4'
+           -I ${S}/gettext-runtime/m4 \
+           -I ${S}/gettext-tools/m4'
 
 
 # these lack the .x behind the .so, but shouldn't be in the -dev package
