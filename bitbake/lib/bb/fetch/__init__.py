@@ -256,6 +256,7 @@ def verify_checksum(u, ud, d):
                 % (ud.localpath, ud.md5_name, md5data, ud.sha256_name, sha256data))
         if bb.data.getVar("BB_STRICT_CHECKSUM", d, True) == "1":
             raise FetchError("No checksum specified for %s." % u)
+        return
 
     if (ud.md5_expected != md5data or ud.sha256_expected != sha256data):
         bb.error("The checksums for '%s' did not match." % ud.localpath)
