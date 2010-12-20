@@ -78,18 +78,6 @@ def base_dep_prepend(d):
 	#
 
 	deps = ""
-    
-	# bb.utils.sha256_file() will return None on Python 2.4 because hashlib
-	# isn't present.  In this case we use a shasum-native to checksum, so if
-	# hashlib isn't present then add shasum-native to the dependencies.
-	try:
-		import hashlib
-	except ImportError:
-		# Adding shasum-native as a dependency of shasum-native would be
-		# stupid, so don't do that.
-		if bb.data.getVar('PN', d, True) != "shasum-native":
-			deps = "shasum-native "
-            
 	# INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
 	# we need that built is the responsibility of the patch function / class, not
 	# the application.
@@ -160,35 +148,6 @@ python base_do_fetch() {
 	except:
 		(type, value, traceback) = sys.exc_info()
 		raise bb.build.FuncFailed("Unknown fetch Error: %s" % value)
-
-
-	# Verify the SHA and MD5 sums we have in OE and check what do
-	# in
-	check_sum = bb.which(bb.data.getVar('BBPATH', d, True), "conf/checksums.ini")
-	if not check_sum:
-		bb.note("No conf/checksums.ini found, not checking checksums")
-		return
-
-	try:
-		parser = base_chk_load_parser(check_sum)
-	except:
-		bb.note("Creating the CheckSum parser failed")
-		return
-
-	pv = bb.data.getVar('PV', d, True)
-	pn = bb.data.getVar('PN', d, True)
-
-	# Check each URI
-	for url in src_uri.split():
-		localpath = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
-		(type,host,path,_,_,_) = bb.decodeurl(url)
-		uri = "%s://%s%s" % (type,host,path)
-		try:
-			if type == "http" or type == "https" or type == "ftp" or type == "ftps":
-				if not base_chk_file(parser, pn, pv,uri, localpath, d):
-					bb.note("%s-%s: %s has no entry in conf/checksums.ini, not checking URI" % (pn,pv,uri))
-		except Exception:
-			raise bb.build.FuncFailed("Checksum of '%s' failed" % uri)
 }
 
 def subprocess_setup():
