@@ -38,6 +38,12 @@ def autotools_set_crosscompiling(d):
 		return " cross_compiling=yes"
 	return ""
 
+def append_libtool_sysroot(d):
+	# Only supply libtool sysroot option for non-native packages
+	if not bb.data.inherits_class('native', d):
+		return '--with-libtool-sysroot=${STAGING_DIR_HOST}'
+	return ""
+
 # EXTRA_OECONF_append = "${@autotools_set_crosscompiling(d)}"
 
 CONFIGUREOPTS = " --build=${BUILD_SYS} \
@@ -56,14 +62,13 @@ CONFIGUREOPTS = " --build=${BUILD_SYS} \
 		  --includedir=${includedir} \
 		  --oldincludedir=${oldincludedir} \
 		  --infodir=${infodir} \
-		  --mandir=${mandir}"
+		  --mandir=${mandir} \
+		  ${@append_libtool_sysroot(d)}"
 
 oe_runconf () {
 	if [ -x ${S}/configure ] ; then
 		cfgcmd="${S}/configure \
-		        ${CONFIGUREOPTS} \
-			${EXTRA_OECONF} \
-		    $@"
+		${CONFIGUREOPTS} ${EXTRA_OECONF} $@"
 		oenote "Running $cfgcmd..."
 		$cfgcmd || oefatal "oe_runconf failed" 
 	else
@@ -150,18 +155,6 @@ autotools_do_configure() {
 
 autotools_do_install() {
 	oe_runmake 'DESTDIR=${D}' install
-}
-
-PACKAGE_PREPROCESS_FUNCS += "autotools_prepackage_lamangler"
-
-autotools_prepackage_lamangler () {
-        for i in `find ${PKGD} -name "*.la"` ; do \
-            sed -i -e 's:${STAGING_LIBDIR}:${libdir}:g;' \
-                   -e 's:${D}::g;' \
-                   -e 's:-I${WORKDIR}\S*: :g;' \
-                   -e 's:-L${WORKDIR}\S*: :g;' \
-                   $i
-	done
 }
 
 autotools_stage_dir() {
