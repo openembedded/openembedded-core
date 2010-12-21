@@ -2,11 +2,12 @@ require libtool-${PV}.inc
 
 DEPENDS = ""
 
-PR = "r0"
-SRC_URI_append = " file://cross_compile.patch \
-		   file://prefix.patch "
+PR = "r1"
+SRC_URI += "file://prefix.patch"
 
 inherit native
+
+EXTRA_OECONF = " --with-libtool-sysroot=${STAGING_DIR_NATIVE}"
 
 do_configure_prepend () {
 	# Remove any existing libtool m4 since old stale versions would break

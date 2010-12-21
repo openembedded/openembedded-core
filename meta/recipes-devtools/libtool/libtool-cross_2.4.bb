@@ -2,8 +2,7 @@ require libtool-${PV}.inc
 
 PR = "r1"
 PACKAGES = ""
-SRC_URI_append = " file://cross_compile.patch \
-		   file://prefix.patch "
+SRC_URI += "file://prefix.patch"
 
 do_configure_prepend () {
 	# Remove any existing libtool m4 since old stale versions would break

@@ -1,8 +1,7 @@
 require libtool-${PV}.inc
 
 PR = "r1"
-SRC_URI_append = " file://cross_compile.patch \
-		   file://prefix.patch "
+SRC_URI += "file://prefix.patch"
 
 inherit nativesdk
 

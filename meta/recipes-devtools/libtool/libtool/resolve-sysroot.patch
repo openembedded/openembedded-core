@@ -1,0 +1,40 @@
+Sometimes .las have =/a/b/c.la in dependency_libs. This should be
+resolved to sysroot.
+
+-Khem Raj <raj.khem@gmail.com>
+
+Index: libtool-2.4/libltdl/config/ltmain.m4sh
+===================================================================
+--- libtool-2.4.orig/libltdl/config/ltmain.m4sh
++++ libtool-2.4/libltdl/config/ltmain.m4sh
+@@ -8479,7 +8479,8 @@ EOF
+ 	      *.la)
+ 		func_basename "$deplib"
+ 		name="$func_basename_result"
+-		eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
++		func_resolve_sysroot "$deplib"
++		eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $func_resolve_sysroot_result`
+ 		test -z "$libdir" && \
+ 		  func_fatal_error "\`$deplib' is not a valid libtool archive"
+ 		func_append newdependency_libs " ${lt_sysroot:+=}$libdir/$name"
+@@ -8505,7 +8506,9 @@ EOF
+ 	      *.la)
+ 	        func_basename "$lib"
+ 		name="$func_basename_result"
+-		eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $lib`
++		func_resolve_sysroot "$lib"
++		eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $func_resolve_sysroot_result`
++
+ 		test -z "$libdir" && \
+ 		  func_fatal_error "\`$lib' is not a valid libtool archive"
+ 		func_append newdlfiles " ${lt_sysroot:+=}$libdir/$name"
+@@ -8524,7 +8527,8 @@ EOF
+ 		# the library:
+ 		func_basename "$lib"
+ 		name="$func_basename_result"
+-		eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $lib`
++		func_resolve_sysroot "$lib"
++		eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $func_resolve_sysroot_result`
+ 		test -z "$libdir" && \
+ 		  func_fatal_error "\`$lib' is not a valid libtool archive"
+ 		func_append newdlprefiles " ${lt_sysroot:+=}$libdir/$name"

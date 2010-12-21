@@ -10,7 +10,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
 
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://trailingslash.patch \
-           file://prefix-manpage-fix.patch "
+           file://prefix-manpage-fix.patch \
+           file://rename-with-sysroot.patch \
+           file://resolve-sysroot.patch \
+           file://use-sysroot-in-libpath.patch"
 
 do_compile_prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue
