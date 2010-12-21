@@ -78,7 +78,9 @@ class DepExplorer(gtk.Window):
 
         # Create the data models
         self.pkg_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.pkg_model.set_sort_column_id(COL_PKG_NAME, gtk.SORT_ASCENDING)
         self.depends_model = gtk.ListStore(gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.depends_model.set_sort_column_id(COL_DEP_PACKAGE, gtk.SORT_ASCENDING)
 
         pane = gtk.HPaned()
         pane.set_position(250)
