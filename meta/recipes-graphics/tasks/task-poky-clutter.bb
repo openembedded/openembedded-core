@@ -32,5 +32,5 @@ RDEPENDS_task-poky-clutter-tests = "\
     clutter-gst-1.0-examples \
     clutter-gtk-1.0-examples"
 
-RDEPENDS_task-poky-clutter-apps = "\
-    clutter-box2d "
+#RDEPENDS_task-poky-clutter-apps = "\
+#    clutter-box2d "
