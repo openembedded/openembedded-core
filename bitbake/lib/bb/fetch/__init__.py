@@ -247,9 +247,6 @@ def verify_checksum(u, ud, d):
     if not ud.type in ["http", "https", "ftp", "ftps"]:
         return
 
-    md5data = bb.utils.md5_file(ud.localpath)
-    sha256data = bb.utils.sha256_file(ud.localpath)
-
     if (ud.md5_expected == None or ud.sha256_expected == None):
         bb.warn("Missing SRC_URI checksum for %s, consider to add\n" \
                 "SRC_URI[%s] = \"%s\"\nSRC_URI[%s] = \"%s\"" \
@@ -257,6 +254,9 @@ def verify_checksum(u, ud, d):
         if bb.data.getVar("BB_STRICT_CHECKSUM", d, True) == "1":
             raise FetchError("No checksum specified for %s." % u)
         return
+
+    md5data = bb.utils.md5_file(ud.localpath)
+    sha256data = bb.utils.sha256_file(ud.localpath)
 
     if (ud.md5_expected != md5data or ud.sha256_expected != sha256data):
         bb.error("The checksums for '%s' did not match." % ud.localpath)
@@ -307,8 +307,6 @@ def go(d, urls = None):
 
         ud.localpath = localpath
 
-        verify_checksum(u, ud, d)
-
         if os.path.exists(ud.md5):
             # Touch the md5 file to show active use of the download
             try:
@@ -317,6 +315,8 @@ def go(d, urls = None):
                 # Errors aren't fatal here
                 pass
         else:
+            # Only check the checksums if we've not seen this item before
+            verify_checksum(u, ud, d)
             Fetch.write_md5sum(u, ud, d)
 
         bb.utils.unlockfile(lf)
