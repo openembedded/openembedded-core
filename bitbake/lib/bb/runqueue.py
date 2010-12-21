@@ -1072,7 +1072,6 @@ class RunQueueExecute:
                 bb.mkdirhier(p)
             bb.msg.debug(2, bb.msg.domain.RunQueue, "Running %s:%s under fakeroot, state dir is %s" % (fn, taskname, fakedirs))
 
-        env['BB_TASKHASH'] = self.rqdata.runq_hash[task]
         env['PATH'] = self.cooker.configuration.initial_path
 
         envbackup = os.environ.copy()
@@ -1122,6 +1121,8 @@ class RunQueueExecute:
                 bb.data.setVar("BBHASH_%s" % h, self.rqdata.hashdata["hashes"][h], the_data)
             for h in self.rqdata.hashdata["deps"]:
                 bb.data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hashdata["deps"][h], the_data)
+
+            bb.data.setVar("BB_TASKHASH", self.rqdata.runq_hash[task], the_data)
 
             ret = 0
             try:
