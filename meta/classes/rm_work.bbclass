@@ -14,10 +14,6 @@ RMWORK_ORIG_TASK := "${BB_DEFAULT_TASK}"
 BB_DEFAULT_TASK = "rm_work_all"
 
 do_rm_work () {
-    # Ensure pseudo is no longer active
-    if [ -d ${WORKDIR}/pseudo ]; then
-        ${FAKEROOT} -S
-    fi
     cd ${WORKDIR}
     for dir in *
     do
