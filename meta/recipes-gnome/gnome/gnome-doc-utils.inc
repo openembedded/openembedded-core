@@ -1,5 +1,6 @@
 LICENSE = "GPL LGPL"
 DEPENDS = "libxml2 libxslt libxslt-native gnome-doc-utils-native"
+DEPENDS_virtclass-native = "libxml2-native libxslt-native"
 
 inherit gnome
 
@@ -11,3 +12,5 @@ do_install_append() {
 }
 
 FILES_${PN} += "${datadir}/xml*"
+
+BBCLASSEXTEND = "native"
