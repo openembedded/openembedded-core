@@ -1076,7 +1076,10 @@ class RunQueueExecute:
         env['PATH'] = self.cooker.configuration.initial_path
 
         envbackup = os.environ.copy()
-        os.environ = env
+        for e in envbackup:
+            os.unsetenv(e)
+        for e in env:
+            os.putenv(e, env[e])
 
         sys.stdout.flush()
         sys.stderr.flush()
@@ -1128,7 +1131,10 @@ class RunQueueExecute:
             except:
                 os._exit(1)
 
-        os.environ = envbackup
+        for e in env:
+            os.unsetenv(e)
+        for e in envbackup:
+            os.putenv(e, envbackup[e])
 
         return pid, pipein, pipeout
 
