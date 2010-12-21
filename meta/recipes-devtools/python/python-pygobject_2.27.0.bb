@@ -10,8 +10,8 @@ MAJ_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1
 SRC_URI = "ftp://ftp.gnome.org/pub/GNOME/sources/pygobject/${MAJ_VER}/pygobject-${PV}.tar.bz2 \
 	   file://generate-constants.patch"
 
-SRC_URI[md5sum] = "c12eef0cd6725dc7245c3db78ef85d2d"
-SRC_URI[sha256sum] = "e6ae6c70966899d2040c82ae4e1590cf941ebf121a3ec61e80bf517ce8d9be0a"
+SRC_URI[md5sum] = "9e2496ffa4e55911f94232e29ee9f146"
+SRC_URI[sha256sum] = "7594bd86c5b92a4ba1f26927800f1b29e1ec5c246cad67aa085c279d6425b8a2"
 S = "${WORKDIR}/pygobject-${PV}"
 
 FILESPATH = "${FILE_DIRNAME}/python-pygobject:${FILE_DIRNAME}/files"
