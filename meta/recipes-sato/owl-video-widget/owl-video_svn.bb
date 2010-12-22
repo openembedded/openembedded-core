@@ -9,7 +9,7 @@ SECTION = "x11"
 DEPENDS = "libowl-av"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/video"
 
