@@ -225,7 +225,7 @@ def init(server, eventHandler):
                     print(("\nParsing finished. %d cached, %d parsed, %d skipped, %d masked, %d errors."
                         % ( event.cached, event.parsed, event.skipped, event.masked, event.errors)))
                     pbar.hide()
-                    return
+                    continue
                 gtk.gdk.threads_enter()
                 pbar.update(x, y)
                 gtk.gdk.threads_leave()
