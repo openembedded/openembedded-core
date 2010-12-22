@@ -344,16 +344,14 @@ def better_exec(code, context, text, realfile = "<code>"):
         if t in [bb.parse.SkipPackage, bb.build.FuncFailed]:
             raise
 
-        logger.exception("Error executing python function in '%s'", code.co_filename)
-
-        # print the Header of the Error Message
-        logger.error("There was an error when executing a python function in: %s" % code.co_filename)
-        logger.error("Exception:%s Message:%s" % (t, value))
+        import traceback
+        exception = traceback.format_exception_only(t, value)
+        logger.error('Error executing a python function in %s:\n%s',
+                     realfile, ''.join(exception))
 
         # Strip 'us' from the stack (better_exec call)
         tb = tb.tb_next
 
-        import traceback
         textarray = text.split('\n')
         linefailed = traceback.tb_lineno(tb)
 
