@@ -29,10 +29,13 @@ python __anonymous () {
         # The branch for a build is:
         #    yocto/<kernel type>/${KMACHINE} or
         #    yocto/<kernel type>/${KMACHINE}/base
-        bb.data.setVar("KBRANCH", bb.data.expand("${KMACHINE}",d), d)
+        mach = bb.data.getVar("KMACHINE_" + bb.data.expand("${MACHINE}",d), d, 1)
+        if mach == None:
+             mach = bb.data.getVar("KMACHINE", d, 1)
+
+        bb.data.setVar("KBRANCH", mach, d)
         bb.data.setVar("KMETA", "meta", d)
 
-        mach = bb.data.getVar("KMACHINE", d, 1)
         # drop the "/base" if it was on the KMACHINE
         kmachine = mach.replace('/base','')
         # drop everything but the last segment
