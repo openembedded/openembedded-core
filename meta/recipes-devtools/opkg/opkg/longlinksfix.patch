@@ -1,0 +1,92 @@
+If a tarball contains a long symlink (over 100 chars) in a longpath (over 100 
+chars) then the resulting link or path can be truncated to 100 chars.
+
+This is due to a bug where if both 'L' and 'K' entries are found in the tarball,
+only the first one takes affect due to get_header_tar recursively calling itself.
+To fix this, process longname and linkname at the end of the function rather 
+than the start after any subcalls have taken place.
+
+Richard Purdie
+22/12/2010
+
+Index: trunk/libbb/unarchive.c
+===================================================================
+--- trunk.orig/libbb/unarchive.c	2010-12-22 18:14:52.575074849 +0000
++++ trunk/libbb/unarchive.c	2010-12-22 18:16:01.845103832 +0000
+@@ -506,23 +506,7 @@
+ 	/* convert to type'ed variables */
+ 	tar_entry = xcalloc(1, sizeof(file_header_t));
+ 
+-#ifdef CONFIG_FEATURE_TAR_GNU_EXTENSIONS
+-        if (longname) {
+-                tar_entry->name = longname;
+-                longname = NULL;
+-        } else
+-#endif
+-        {
+-                tar_entry->name = xstrndup(tar.formated.name, 100);
+ 
+-                if (tar.formated.prefix[0]) {
+-                        char *temp = tar_entry->name;
+-                        char *prefixTemp = xstrndup(tar.formated.prefix, 155);
+-                        tar_entry->name = concat_path_file(prefixTemp, temp);
+-                        free(temp);
+-                        free(prefixTemp);
+-                }
+-        }
+ 
+ 	// tar_entry->name = xstrdup(tar.formated.name);
+ 
+@@ -535,16 +519,7 @@
+ 	tar_entry->gid   = strtol(tar.formated.gid, NULL, 8);
+ 	tar_entry->size  = strtol(tar.formated.size, NULL, 8);
+ 	tar_entry->mtime = strtol(tar.formated.mtime, NULL, 8);
+-#ifdef CONFIG_FEATURE_TAR_GNU_EXTENSIONS
+-	if (linkname) {
+-		tar_entry->link_name = linkname;
+-		linkname = NULL;
+-	} else
+-#endif
+-	{
+-		tar_entry->link_name = *tar.formated.linkname != '\0' ?
+-			xstrndup(tar.formated.linkname, 100) : NULL;
+-	}
++
+ 	tar_entry->device = (strtol(tar.formated.devmajor, NULL, 8) << 8) +
+ 		strtol(tar.formated.devminor, NULL, 8);
+ 
+@@ -611,6 +586,34 @@
+ 
+ 	}
+ 
++
++#ifdef CONFIG_FEATURE_TAR_GNU_EXTENSIONS
++        if (longname) {
++                tar_entry->name = longname;
++                longname = NULL;
++        } else
++#endif
++        {
++                tar_entry->name = xstrndup(tar.formated.name, 100);
++
++                if (tar.formated.prefix[0]) {
++                        char *temp = tar_entry->name;
++                        char *prefixTemp = xstrndup(tar.formated.prefix, 155);
++                        tar_entry->name = concat_path_file(prefixTemp, temp);
++                        free(temp);
++                        free(prefixTemp);
++                }
++        }
++
++	if (linkname) {
++		tar_entry->link_name = linkname;
++		linkname = NULL;
++	} else
++	{
++		tar_entry->link_name = *tar.formated.linkname != '\0' ?
++			xstrndup(tar.formated.linkname, 100) : NULL;
++	}
++
+ 	return(tar_entry);
+ }
+ 

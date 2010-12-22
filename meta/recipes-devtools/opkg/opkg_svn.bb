@@ -9,15 +9,15 @@ RDEPENDS_${PN}_virtclass-nativesdk = ""
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
-           file://opkg_unarchive.patch \
            file://add_vercmp.patch \
            file://headerfix.patch \
-           file://logfix.patch"
+           file://longlinksfix.patch \
+"
 
 S = "${WORKDIR}/trunk"
 
-PV = "0.0+svnr${SRCREV}"
-PR = "r15"
+PV = "0.1.8+svnr${SRCREV}"
+PR = "r1"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
 
