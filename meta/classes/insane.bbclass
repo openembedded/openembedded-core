@@ -348,7 +348,7 @@ def package_qa_check_license(workdir, d):
     if not lic_files:
         # just throw a warning now. Once licensing data in entered for enough of the recipes,
         # this will be converted into error and False will be returned.
-        bb.warn(pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)")
+        bb.error(pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)")
         return True
 
     srcdir = bb.data.getVar('S', d, True)
@@ -394,8 +394,8 @@ def package_qa_check_license(workdir, d):
             bb.note ("md5 checksum matched for ", url)
         else:
             bb.error ("md5 data is not matching for ", url)
-            bb.note ("The new md5 checksum is ", md5chksum)
-            bb.note ("Check if the license information has changed, and if it has update the .bb file with correct license")
+            bb.error ("The new md5 checksum is ", md5chksum)
+            bb.error ("Check if the license information has changed, and if it has update the .bb file with correct license")
             sane = False
 
     return sane
@@ -605,5 +605,5 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
 Missing inherit gettext?""" % config)
 
     if not package_qa_check_license(workdir, d):
-        bb.fatal("Licensing warning: LIC_FILES_CHKSUM does not match, please fix")
+        bb.error("Licensing warning: LIC_FILES_CHKSUM does not match, please fix")
 }
