@@ -2,10 +2,10 @@ inherit cross
 PROVIDES = "virtual/${TARGET_PREFIX}binutils"
 
 EXTRA_OECONF = "--with-sysroot=${STAGING_DIR_TARGET} \
-		--program-prefix=${TARGET_PREFIX} \
-		--disable-install-libbfd \
+                --program-prefix=${TARGET_PREFIX} \
+                --disable-install-libbfd \
                 --disable-werror \
-		--enable-poison-system-directories"
+                --enable-poison-system-directories"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install

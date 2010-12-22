@@ -1,9 +1,11 @@
 SUMMARY = "A GNU collection of binary utilities"
-DESCRIPTION = "The GNU Binutils are a collection of binary tools.  The main ones are ld (GNU Linker), and as \
-(GNU Assembler).  This package also includes addition tools such as addr2line (Converts addresses into filenames \
-and line numbers), ar (utility for creating, modifying and extracting archives), nm (list symbols in object \
-files), objcopy (copy and translate object files), objdump (Display object information), and other tools and \
-related libraries."
+DESCRIPTION = "The GNU Binutils are a collection of binary tools. \
+The main ones are ld (GNU Linker), and as (GNU Assembler). This \
+package also includes addition tools such as addr2line (Converts \
+addresses into filenames and line numbers), ar (utility for creating, \
+modifying and extracting archives), nm (list symbols in object \
+files), objcopy (copy and translate object files), objdump (Display \
+object information), and other tools and related libraries."
 HOMEPAGE = "http://www.gnu.org/software/binutils/"
 BUGTRACKER = "http://sourceware.org/bugzilla/"
 SECTION = "devel"
@@ -44,8 +46,8 @@ FILES_${PN}-symlinks = " \
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
 EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
-		--enable-install-libbfd \
-		--enable-shared"
+                --enable-install-libbfd \
+                --enable-shared"
 
 EXTRA_OECONF_virtclass-native = "--enable-target=all --enable-64-bit-bfd --enable-install-libbfd"
 
@@ -143,9 +145,7 @@ pkg_postinst_${PN}-symlinks () {
 	update-alternatives --install ${bindir}/strings strings ${TARGET_SYS}-strings 100
 }
 
-
 pkg_prerm_${PN}-symlinks () {
 	update-alternatives --remove ar ${TARGET_SYS}-ar
 	update-alternatives --remove strings ${TARGET_SYS}-strings
 }
-
