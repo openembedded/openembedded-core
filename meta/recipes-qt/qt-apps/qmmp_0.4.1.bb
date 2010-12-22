@@ -4,32 +4,40 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 SECTION = "multimedia"
 
-PR = "r1"
+PR = "r2"
 
-DEPENDS = "qt4-x11-free taglib"
-RDEPENDS = "qt4-x11-free libmad libvorbis libogg taglib alsa-lib curl"
+DEPENDS = "qt4-x11-free taglib libmad libvorbis libogg alsa-lib"
+RDEPENDS_${PN} += "taglib alsa-lib curl"
 
 SRC_URI = "http://qmmp.ylsoftware.com/files/qmmp-0.4.1.tar.bz2"
 
 PARALLEL_MAKE = ""
 
-inherit qmake2 pkgconfig
+inherit qmake2 cmake
 
-do_configure_prepend() {
-	# fix qt4 lrelease name
-	sed -i -e 's/lrelease-qt4/lrelease4/' ${S}/qmmp.pro
+export EXTRA_OECMAKE = "-DQT_QMAKE_EXECUTABLE=${OE_QMAKE_QMAKE} \
+                        -DQT_LRELEASE_EXECUTABLE=${OE_QMAKE_LRELEASE} \
+                        -DQT_MOC_EXECUTABLE=${OE_QMAKE_MOC} \
+                        -DQT_UIC_EXECUTABLE=${OE_QMAKE_UIC} \
+                        -DQT_RCC_EXECUTABLE=${OE_QMAKE_RCC} \
+                        -DQT_LIBRARY_DIR=${OE_QMAKE_LIBDIR_QT} \
+                        -DQT_HEADERS_DIR=${OE_QMAKE_INCDIR_QT} \
+                        -DQT_QTCORE_INCLUDE_DIR=${OE_QMAKE_INCDIR_QT}/QtCore \
+                        "
 
-	# disable the unsupported plugin
-	for plugin in sndfile wavpack ; do
-		sed -i -e "s/$plugin//" ${S}/src/plugins/Input/Input.pro
-	done
-	sed -i -e 's/mms//' ${S}/src/plugins/Transports/Transports.pro
-	sed -i -e 's/srconverter//' ${S}/src/plugins/Effect/Effect.pro
+FILES_${PN} = "${bindir}/qmmp ${libdir}/*.so* \ 
+               ${libdir}/qmmp/PlaylistFormats/*.so \
+               ${libdir}/qmmp/Output/libalsa.so \
+               ${libdir}/qmmp/Transports/libhttp.so \
+               ${libdir}/qmmp/Visual/libanalyzer.so \
+               ${datadir}/icons/* \
+               ${datadir}/qmmp/images/* \
+               ${datadir}/applications/qmmp.desktop \
+               "
 
-	sed -i -e 's/^CONFIG/#CONFIG/' ${S}/qmmp.pri
-	sed -i -e 's/CONFIG += WITH_ENCA/#CONFIG += WITH_ENCA/' ${S}/qmmp.pri
-}
+PACKAGES += "${PN}-plugin-input-mad ${PN}-plugin-input-vorbis"
 
-do_install() {
-	oe_runmake INSTALL_ROOT=${D} install
-}
+FILES_${PN}-plugin-input-mad = "${libdir}/qmmp/Input/libmad.so"
+RDEPENDS_${PN}-plugin-input-mad = "libmad"
+FILES_${PN}-plugin-input-vorbis = "${libdir}/qmmp/Input/libvorbis.so"
+RDEPENDS_${PN}-plugin-input-vorbis = "libvorbis libogg"
