@@ -10,6 +10,7 @@ SECTION = "x11/wm"
 PV = "0.0+svnr${SRCREV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
+           file://single-instance.patch;patch=1 \
            file://configure_fix.patch;patch=1;maxrev=1819 "
 
 S = "${WORKDIR}/${PN}"
