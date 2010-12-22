@@ -15,6 +15,7 @@ PR = "r4"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
            file://configure_fix.patch;patch=1;maxrev=1819 \
+           file://single-instance.patch;patch=1 \
 	   file://80matchboxkeyboard.shbg"
 
 S = "${WORKDIR}/${PN}"
