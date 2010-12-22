@@ -3,11 +3,11 @@
  configure.in       |    2 +-
  2 files changed, 4 insertions(+), 2 deletions(-)
 
+Index: apt-0.7.14/buildlib/sizetable
+===================================================================
 --- apt-0.7.14.orig/buildlib/sizetable
 +++ apt-0.7.14/buildlib/sizetable
-@@ -9,16 +9,19 @@
- #
- # This is used primarily for the MD5 algorithm.
+@@ -11,6 +11,9 @@
  # The format is:-
  # CPU endian sizeof: char, int, short, long
  i386    little  1 4 2 4
@@ -17,21 +17,19 @@
  armeb   big     1 4 2 4
  arm     little  1 4 2 4
  alpha   little  1 4 2 8
- mipsel  little  1 4 2 4
- sparc   big     1 4 2 4
- sparc64 big     1 4 2 8
- m68k    big     1 4 2 4
+@@ -21,4 +24,5 @@ m68k    big     1 4 2 4
  powerpc big     1 4 2 4
  mips    big     1 4 2 4
  hppa    big     1 4 2 4
 -m32r	big	1 4 2 4
 \ No newline at end of file
 +m32r	big	1 4 2 4
++x86_64	little	1 4 2 8
+Index: apt-0.7.14/configure.in
+===================================================================
 --- apt-0.7.14.orig/configure.in
 +++ apt-0.7.14/configure.in
-@@ -86,11 +86,11 @@ AC_SUBST(BDBLIB)
- dnl Converts the ARCH to be something singular for this general CPU family
- dnl This is often the dpkg architecture string.
+@@ -88,7 +88,7 @@ dnl This is often the dpkg architecture 
  dnl First check against the full canonical canoncial-system-type in $target
  dnl and if that fails, just look for the cpu
  AC_MSG_CHECKING(debian architecture)
@@ -40,5 +38,3 @@
  if test "x$archset" = "x"; then
     AC_MSG_ERROR([failed: use --host= or output from dpkg-architecture])
  fi
- AC_MSG_RESULT($archset)
- AC_DEFINE_UNQUOTED(COMMON_ARCH,"$archset")
