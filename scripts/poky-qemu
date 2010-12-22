@@ -29,7 +29,7 @@ usage() {
     echo "  Additional QEMU command-line options can be passed with:"
     echo "    nographic - disables video console"
     echo "    serial - enables a serial console on /dev/ttyS0"
-    echo "    kvm - enables kvm"
+    echo "    kvm - enables KVM when running qemux86/qemux86-64, VT capable CPU required"
     echo "    \"<extra-qemu-options>\" - enables extra qemu options, excluding serial and kvm"
     echo ""
     echo "Examples:"
@@ -171,10 +171,29 @@ while [ $i -le $# ]; do
     i=$((i + 1))
 done
 
+POKY_KVM_WIKI="https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qemu"
 # Detect KVM configuration
-if [[ "x$KVM_ENABLED" == "xyes" && ! -z "$KVM_CAPABLE" ]]; then
-    if [[ "x$MACHINE" == "xqemux86" || "x$MACHINE" == "xqemux86-64" ]]; then
+if [[ "x$KVM_ENABLED" == "xyes" ]]; then
+    if [[ -z "$KVM_CAPABLE" ]]; then
+        echo "You are tring to enable KVM on cpu without VT support. Remove kvm from the command-line, or refer";
+        echo "$POKY_KVM_WIKI";
+        exit 1;
+    fi
+    if [[ "x$MACHINE" != "xqemux86" && "x$MACHINE" != "xqemux86-64" ]]; then
+        echo "KVM only support x86 & x86-64. Remove kvm from the command-line";
+        exit 1;
+    fi
+    if [ ! -e /dev/kvm ]; then
+        echo "Missing KVM device. Have you inserted kvm modules? Pls. refer";
+        echo "$POKY_KVM_WIKI";
+        exit 1;
+    fi
+    if 9<>/dev/kvm ; then
         SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm"
+    else
+        echo "You have no rights on /dev/kvm. Pls. change the owndership as described at";
+        echo "$POKY_KVM_WIKI";
+        exit 1;
     fi
 fi
 
