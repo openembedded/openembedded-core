@@ -32,3 +32,5 @@ FILES_${PN} = "${libdir}/python*"
 FILES_${PN}-lib = "${libdir}/lib*.so.*"
 FILES_${PN}-dev += "${bindir} ${datadir}"
 FILES_${PN}-dbg += "${libdir}/.debug"
+
+BBCLASSEXTEND = "native"
