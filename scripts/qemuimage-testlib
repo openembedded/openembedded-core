@@ -365,8 +365,21 @@ Test_Create_Qemu()
 	elif [ "$QEMUARCH" = "qemumips" ]; then
 		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k vmlinux -a ${QEMUARCH})
 	fi
+
+	# If there is no kernel image found, return failed directly
+	if [ $? -eq 1 ]; then
+		Test_Info "No kernel image file found under ${DEPLOY_DIR}/images for ${QEMUARCH}, pls. have a check"
+		return $ret
+	fi
 	
 	ROOTFS_IMAGE=$(Test_Find_Image -l ${DEPLOY_DIR}/images -t ${QEMUTARGET} -a ${QEMUARCH})
+
+	# If there is no rootfs image found, return failed directly
+	if [ $? -eq 1 ]; then
+		Test_Info "No ${QEMUTARGET} rootfs image file found under ${DEPLOY_DIR}/images for ${QEMUARCH}, pls. have a check"
+		return $ret
+	fi
+
 	TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-test.ext3"
 	
 	CP=`which cp`
@@ -374,6 +387,11 @@ Test_Create_Qemu()
 		rm -rf $TEST_ROOTFS_IMAGE
 	fi
 	$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
+
+	if [ $? -ne 0 ]; then
+		Test_Info "Image ${ROOTFS_IMAGE} copy to ${TEST_ROOTFS_IMAGE} failed, return fail"
+		return $ret
+	fi
 
 	export MACHINE=$QEMUARCH
 
@@ -402,6 +420,11 @@ Test_Create_Qemu()
 	if [ ${up_time} -lt ${timeout} ]; then
 		sleep 5
 		TARGET_IPADDR=`Test_Fetch_Target_IP $PID`
+		# If IP address is 0, means there is no qemu process found
+		if [ ${TARGET_IPADDR} -eq 0 ]; then
+			Test_Info "There is no qemu process or qemu ip address found, return failed"
+			return $ret
+		fi
 	fi
 
 	while [ ${up_time} -lt ${timeout} ]
