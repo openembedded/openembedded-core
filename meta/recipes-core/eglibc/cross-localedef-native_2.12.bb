@@ -4,6 +4,13 @@ SECTION = "libs"
 PRIORITY = "required"
 LICENSE = "LGPL"
 
+LIC_DIR = "${WORKDIR}/${EGLIBC_BRANCH}/libc"
+LIC_FILES_CHKSUM = "file://${LIC_DIR}/LICENSES;md5=07a394b26e0902b9ffdec03765209770 \
+      file://${LIC_DIR}/COPYING;md5=393a5ca445f6965873eca0259a17f833 \
+      file://${LIC_DIR}/posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
+      file://${LIC_DIR}/COPYING.LIB;md5=bbb461211a33b134d42ed5ee802b37ff "
+
+
 inherit native
 inherit autotools
 
