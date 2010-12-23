@@ -1,7 +1,7 @@
 inherit kernel
 require linux-yocto.inc
 
-KMACHINE_qemux86  = "yocto/standard/common_pc/base"
+KMACHINE_qemux86  = "yocto/standard/common-pc/base"
 KMACHINE_qemux86-64  = "yocto/standard/common-pc-64"
 KMACHINE_qemuppc  = "yocto/standard/qemu-ppc32"
 KMACHINE_qemumips = "yocto/standard/mti-malta32-be"
