@@ -10,6 +10,8 @@ PRIORITY = "optional"
 LICENSE = "Boost Software License"
 PR = "r0"
 
+LIC_FILES_CHKSUM = "file://LICENSE_1_0.txt;md5=e4224ccaecb14d942c71d31bef20d78c"
+
 SRC_URI = "${SOURCEFORGE_MIRROR}/boost/boost-jam-${PV}.tgz"
 S = "${WORKDIR}/boost-jam-${PV}"
 
