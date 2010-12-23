@@ -2,6 +2,8 @@ DESCRIPTION = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
 LICENSE = "Public Domain"
 PR = "r0"
 
+LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=3ae8198f82258417ce29066d3b034035"
+
 SRC_URI = "ftp://elsie.nci.nih.gov/pub/tzcode${PV}.tar.gz \
            ftp://elsie.nci.nih.gov/pub/tzdata2009s.tar.gz"
 
