@@ -2,7 +2,7 @@ DESCRIPTION = "Kernel header preprocessor"
 SECTION = "devel"
 LICENSE = "GPL"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/unifdef.c;endline=32;md5="
+LIC_FILES_CHKSUM = "file://${WORKDIR}/unifdef.c;endline=32;md5=1a33f5c39aa718a89058721df61979bd"
 
 SRC_URI = "file://unifdef.c"
 
