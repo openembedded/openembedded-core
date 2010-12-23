@@ -685,15 +685,20 @@ BBFILE_PRIORITY_emenlow = "6"
                 This means that for new recipes you must be sure to add the PR variable and set its initial value
                 equal to "r0".  
                 Failing to define PR makes it easy to miss when you bump a package.
-                Note that you can only use integer values for the PR variable.
+                Note that you can only use integer values following the "r" in the PR variable.
             </para>
             <para>
-                You can also use the <glossterm><link linkend='var-INC_PR'>INC_PR</link></glossterm> variable
-                to keep up with package revisioning.
-            </para>
+                If you are sharing a common .inc file with multiple recipes, you can also use the 
+                <glossterm><link linkend='var-INC_PR'>INC_PR</link></glossterm> variable to ensure that 
+                the recipes sharing the .inc file are rebuilt when the .inc file itself is changed. The
+                .inc file must set INC_PR (initially to "r0"), and all recipes referring to it should set PR to 
+                "$(INC_PR).0" initially, incrementing the last number when the recipe is changed. If the
+                .inc file is changed then its INC_PR should be incremented.
+            </literallayout>
             <para> 
-                When upgrading the version of a package the (<glossterm><link 
-                linkend='var-PV'>PV</link></glossterm>) and PR variables should be reset to "r0".
+                When upgrading the version of a package, assuming the <glossterm><link 
+                linkend='var-PV'>PV</link></glossterm> changes, the PR variable should be reset to "r0"
+                (or "$(INC_PR).0" if you are using INC_PR).
             </para>
             <para>
                 Usually, version increases occur only to packages.
