@@ -2,6 +2,8 @@ DESCRIPTION = "Kernel header preprocessor"
 SECTION = "devel"
 LICENSE = "GPL"
 
+LIC_FILES_CHKSUM = "file://${WORKDIR}/unifdef.c;endline=32;md5="
+
 SRC_URI = "file://unifdef.c"
 
 inherit native
