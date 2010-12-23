@@ -55,6 +55,7 @@ def qemuimagetest_main(d):
         os.environ["QEMUTARGET"] = pname
         os.environ["DISPLAY"] = bb.data.getVar("DISPLAY", d, True)
         os.environ["POKYBASE"] = bb.data.getVar("POKYBASE", d, True)
+        os.environ["TOPDIR"] = bb.data.getVar("TOPDIR", d, True)
 
         """run Test Case"""
         bb.note("Run %s test in scenario %s" % (case, scen))

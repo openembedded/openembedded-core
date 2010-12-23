@@ -396,7 +396,8 @@ Test_Create_Qemu()
 	export MACHINE=$QEMUARCH
 
 	# Create Qemu in localhost VNC Port 1
-    	xterm -display ${DISPLAY} -e "${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}" &
+	echo "Running xterm -display ${DISPLAY} -e 'BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}' &"
+    	xterm -display ${DISPLAY} -e "BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}" &
 
 	# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 	PID=$!
