@@ -3,10 +3,10 @@ SECTION = "console/network"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-RDEPENDS = "pseudo"
-RDEPENDS_virtclass-native = "pseudo-native"
-RDEPENDS_virtclass-nativesdk = "pseudo-nativesdk"
-PR = "r1"
+RDEPENDS_${PN} = "pseudo"
+RDEPENDS_${PN}_virtclass-native = "pseudo-native"
+RDEPENDS_${PN}_virtclass-nativesdk = "pseudo-nativesdk"
+PR = "r2"
 
 SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir/nfs-server-${PV}.tar.gz \
            file://001-2.2b47-2.2b51.patch \

@@ -20,7 +20,7 @@ PAM_PLUGINS = "  libpam-runtime \
                  pam-plugin-rootok"
                  
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
-RDEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
+RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
 
 # since we deduce from ${SERIAL_CONSOLE}
 PACKAGE_ARCH = "${MACHINE_ARCH}"

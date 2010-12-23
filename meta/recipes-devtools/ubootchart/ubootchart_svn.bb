@@ -3,9 +3,9 @@ HOMEPAGE = "http://code.google.com/p/ubootchart/"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
 PV = "0.0+r${SRCREV}"
-PR = "r4"
+PR = "r5"
 
-#RRECOMMENDS = "acct"
+#RRECOMMENDS_${PN} = "acct"
 
 SRC_URI = "svn://ubootchart.googlecode.com/svn/;proto=http;module=trunk \
         file://sysvinit.patch;patch=1;pnum=0 \

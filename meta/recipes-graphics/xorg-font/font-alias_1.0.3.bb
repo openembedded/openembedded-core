@@ -10,11 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bf0158b89be493d523d69d9f29265038 \
                     file://100dpi/fonts.alias;md5=85bebd6ca213aa656c301a72eb4397cb"
 
 DEPENDS = "virtual/xserver font-util"
-RDEPENDS = "encodings font-util"
-RDEPENDS_virtclass-native = "font-util"
+RDEPENDS_${PN} = "encodings font-util"
+RDEPENDS_${PN}_virtclass-native = "font-util"
 
 PE = "1"
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 SRC_URI[md5sum] = "6d25f64796fef34b53b439c2e9efa562"
 SRC_URI[sha256sum] = "8b453b2aae1cfa8090009ca037037b8c5e333550651d5a158b7264ce1d472c9a"

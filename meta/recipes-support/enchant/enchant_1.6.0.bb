@@ -6,11 +6,11 @@ LICENSE     = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=dfcbabf9131dc9a95febef6753a2958b \
                     file://src/enchant.h;beginline=1;endline=29;md5=8d881caa1d37523567e1d8f726675a18"
 DEPENDS     = "aspell glib-2.0"
-RDEPENDS    = "aspell"
+RDEPENDS_${PN}    = "aspell"
 
 inherit autotools pkgconfig
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.abisource.com/downloads/enchant/${PV}/enchant-${PV}.tar.gz"
 

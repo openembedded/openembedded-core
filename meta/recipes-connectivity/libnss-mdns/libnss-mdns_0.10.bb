@@ -7,8 +7,8 @@ LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "avahi"
-RDEPENDS = "avahi-daemon"
-PR = "r1"
+RDEPENDS_${PN} = "avahi-daemon"
+PR = "r2"
 
 SRC_URI = "http://0pointer.de/lennart/projects/nss-mdns/nss-mdns-${PV}.tar.gz"
 

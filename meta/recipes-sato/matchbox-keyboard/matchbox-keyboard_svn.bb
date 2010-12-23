@@ -8,10 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://applet/applet.c;endline=20;md5=e9201b3efa0a81a160b88d6feb5cf75b"
 
 DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
-RDEPENDS = "formfactor dbus-wait"
+RDEPENDS_${PN} = "formfactor dbus-wait"
 SECTION = "x11"
 PV = "0.0+svnr${SRCREV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
            file://configure_fix.patch;patch=1;maxrev=1819 \

@@ -7,7 +7,7 @@ LICENSE = "GPLv2+ | AFL"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5b5ffd59fbb7c2fff6de76c94177af31"
 
 DEPENDS = "virtual/kernel dbus-glib udev util-linux intltool intltool-native expat libusb gperf-native"
-RDEPENDS += "udev hal-info"
+RDEPENDS_${PN} += "udev hal-info"
 
 SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz \
            file://20hal"

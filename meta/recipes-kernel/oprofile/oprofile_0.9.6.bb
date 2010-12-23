@@ -12,10 +12,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "devel"
 
 DEPENDS = "popt binutils"
-RDEPENDS = "binutils-symlinks"
-RRECOMMENDS = "kernel-vmlinux"
+RDEPENDS_${PN} = "binutils-symlinks"
+RRECOMMENDS_${PN} = "kernel-vmlinux"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
            file://opstart.patch \

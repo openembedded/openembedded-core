@@ -6,9 +6,9 @@ Gadu-Gadu, Groupwise, ICQ and QQ."
 HOMEPAGE = "http://blogs.gnome.org/view/xclaesse/2007/04/26/0"
 LICENSE = "GPL"
 DEPENDS = "libcanberra telepathy-farsight gnome-doc-utils python-native telepathy-python telepathy-mission-control libtelepathy telepathy-glib gtk+ gconf libglade eds-dbus"
-RDEPENDS = "telepathy-mission-control"
-RRECOMMENDS = "telepathy-gabble"
-PR = "r2"
+RDEPENDS_${PN} = "telepathy-mission-control"
+RRECOMMENDS_${PN} = "telepathy-gabble"
+PR = "r3"
 
 inherit gnome
 

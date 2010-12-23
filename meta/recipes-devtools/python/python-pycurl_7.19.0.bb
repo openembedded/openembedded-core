@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://README;endline=13;md5=fbfe545b1869617123a08c0983ef17b
                     file://COPYING2;md5=ffaa1e283b7f9bf5aafd8d45db6f7518"
 
 DEPENDS = "curl python"
-RDEPENDS = "python-core curl"
+RDEPENDS_${PN} = "python-core curl"
 SRCNAME = "pycurl"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "\
   http://${SRCNAME}.sourceforge.net/download/${SRCNAME}-${PV}.tar.gz;name=archive \

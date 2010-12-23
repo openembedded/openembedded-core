@@ -6,7 +6,7 @@ LICENSE = "GPLv2 & GPLv2+ & LGPLv2+"
 
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
-RDEPENDS = "libedata-cal"
+RDEPENDS_${PN} = "libedata-cal"
 
 inherit autotools pkgconfig gtk-icon-cache
 

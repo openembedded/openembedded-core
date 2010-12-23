@@ -1,10 +1,10 @@
 LICENSE = "GPLv2"
 SECTION = "x11"
 DEPENDS = "dbus-glib eds-dbus"
-RDEPENDS = "libedata-book"
+RDEPENDS_${PN} = "libedata-book"
 DESCRIPTION = "Test applications for EDS"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "bzr://burtonini.com/bzr/eds-tools;proto=http"
 

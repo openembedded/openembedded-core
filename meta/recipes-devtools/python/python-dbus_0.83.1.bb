@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f5612614133e9a2f2dad527d97554670"
 DEPENDS = "expat dbus dbus-glib virtual/libintl python-pyrex-native"
-PR = "ml0"
+PR = "ml1"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-python/dbus-python-${PV}.tar.gz"
 
@@ -20,6 +20,6 @@ export HOST_SYS
 export STAGING_LIBDIR
 export STAGING_INCDIR
 
-RDEPENDS = "python-io python-logging python-stringold python-threading python-xml"
+RDEPENDS_${PN} = "python-io python-logging python-stringold python-threading python-xml"
 
 FILES_${PN}-dev += "${libdir}/pkgconfig 

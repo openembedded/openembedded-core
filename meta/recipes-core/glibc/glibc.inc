@@ -13,7 +13,7 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc-intermediate linux-libc-headers"
 RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
 #this leads to circular deps, so lets not add it yet
 #RDEPENDS_ldd += " bash"
-#RDEPENDS += "${@['','libgcc']['nptl' in '${GLIBC_ADDONS}']}"
+#RDEPENDS_${PN} += "${@['','libgcc']['nptl' in '${GLIBC_ADDONS}']}"
 PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "virtual/libintl virtual/libiconv"
 

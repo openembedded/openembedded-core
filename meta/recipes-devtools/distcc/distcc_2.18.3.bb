@@ -4,10 +4,10 @@ compilation of C/C++/ObjC code across machines on a network."
 SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r5"
+PR = "r6"
 
 DEPENDS = "avahi gtk+"
-RRECOMMENDS = "avahi-daemon"
+RRECOMMENDS_${PN} = "avahi-daemon"
 
 # Upstream change this patch periodically so store locally
 # http://0pointer.de/public/distcc-avahi.patch

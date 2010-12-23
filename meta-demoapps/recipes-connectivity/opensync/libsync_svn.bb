@@ -4,10 +4,11 @@ OpenSync in GLib applications."
 LICENSE = "LGPL"
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ libglade libopensync avahi"
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = "\
 	libopensync-plugin-file \
 	"
 PV = "0.0+svnr${SRCREV}"
+PR = "r1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/sync/trunk;module=sync;proto=http"
 

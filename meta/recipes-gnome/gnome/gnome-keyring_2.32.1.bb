@@ -11,12 +11,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/gnome"
 
-PR = "r0"
+PR = "r1"
 
 inherit autotools gnome pkgconfig
 
 DEPENDS = "gtk+ libgcrypt libtasn1 libtasn1-native gconf"
-RDEPENDS = "libgnome-keyring"
+RDEPENDS_${PN} = "libgnome-keyring"
 
 EXTRA_OECONF = "--disable-gtk-doc"
 

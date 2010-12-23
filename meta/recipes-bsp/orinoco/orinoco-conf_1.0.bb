@@ -3,9 +3,9 @@ SECTION = "kernel/modules"
 PRIORITY = "optional"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
-RDEPENDS = "update-modules"
+RDEPENDS_${PN} = "update-modules"
 PACKAGE_ARCH = "all"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "file://orinoco_cs.conf \
            file://COPYING.patch"

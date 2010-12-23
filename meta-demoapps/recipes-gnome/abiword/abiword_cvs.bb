@@ -1,7 +1,7 @@
 require abiword.inc
 
 PV="2.5.0+cvs${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${CVSURI}"
 

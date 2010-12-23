@@ -4,6 +4,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://version.h;endline=19;md5=878bdaff438dab86298301fd1a210e14"
 SECTION = "x11/apps"
 
+PR = "r1"
+
 DEPENDS = "qt4-x11-free"
 
 SRC_URI = "http://qt-apps.org/CONTENT/content-files/80325-quicky-0.4.tar.gz"

@@ -1,8 +1,8 @@
 SECTION = "console/network"
 DESCRIPTION = "Enables PPP dial-in through a serial connection"
 DEPENDS = "ppp"
-RDEPENDS = "ppp"
-PR = "r5"
+RDEPENDS_${PN} = "ppp"
+PR = "r6"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"

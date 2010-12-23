@@ -2,12 +2,12 @@ DESCRIPTION = "Python GTK+ 2.17.x Bindings"
 SECTION = "devel/python"
 # needs gtk+ 2.17.x
 DEPENDS = "gtk+ libglade python-pycairo python-pygobject"
-RDEPENDS = "python-shell python-pycairo python-pygobject"
+RDEPENDS_${PN} = "python-shell python-pycairo python-pygobject"
 PROVIDES = "python-pygtk2"
 SRCNAME = "pygtk"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
-PR = "ml8.3"
+PR = "ml9"
 
 SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.17/${SRCNAME}-${PV}.tar.bz2 \
            file://fix-gtkunixprint.patch \

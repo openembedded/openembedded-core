@@ -1,10 +1,10 @@
 DESCRIPTION = "GNOME Structured File Library"
 LICENSE = "GPL"
 SECTION = "libs"
-PR = "r0"
+PR = "r1"
 
 DEPENDS= "libxml2 bzip2 glib-2.0 zlib"
-RDEPENDS = "gconf gnome-vfs"
+RDEPENDS_${PN} = "gconf gnome-vfs"
 
 
 PACKAGES =+ "${PN}-gnome ${PN}-gnome-dev "

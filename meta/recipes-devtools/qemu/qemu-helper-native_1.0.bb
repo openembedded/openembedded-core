@@ -1,7 +1,7 @@
 DESCRIPTION = "Qemu helper utilities from Poky"
 LICENSE = "GPLv2"
-RDEPENDS = "qemu-native"
-PR = "r0"
+RDEPENDS_${PN} = "qemu-native"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5=ff3a09996bc5fff6bc5d4e0b4c28f999"
 

@@ -8,8 +8,8 @@ SRC_URI = "${GNOME_MIRROR}/intltool/${URLV}/intltool-${PV}.tar.bz2"
 S = "${WORKDIR}/intltool-${PV}"
 
 DEPENDS = "libxml-parser-perl-native"
-#RDEPENDS = "libxml-parser-perl"
-RRECOMMENDS = "perl-modules"
+#RDEPENDS_${PN} = "libxml-parser-perl"
+RRECOMMENDS_${PN} = "perl-modules"
 
 inherit autotools pkgconfig
 

@@ -1,7 +1,7 @@
 DESCRIPTION = "Qemu helper scripts from Poky"
 LICENSE = "GPLv2"
-RDEPENDS = "qemu-nativesdk"
-PR = "r8"
+RDEPENDS_${PN} = "qemu-nativesdk"
+PR = "r9"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 

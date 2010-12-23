@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e7e289d90fc8bdceed5e3f142f98229e"
 
 SECTION = "x11/gnome"
 DEPENDS = "icon-naming-utils-native glib-2.0 intltool-native"
-RDEPENDS = "hicolor-icon-theme"
-RRECOMMENDS = "librsvg-gtk"
-PR = "r0"
+RDEPENDS_${PN} = "hicolor-icon-theme"
+RRECOMMENDS_${PN} = "librsvg-gtk"
+PR = "r1"
 
 FILES_${PN} += "${datadir}/*"
 

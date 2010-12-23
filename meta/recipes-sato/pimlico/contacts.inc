@@ -6,7 +6,7 @@ LICENSE = "GPLv2 & GPLv2+ & GPLv3+ "
 SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ eds-dbus"
 DEPENDS_append_poky = " libowl"
-RDEPENDS = "libedata-book"
+RDEPENDS_${PN} = "libedata-book"
 
 inherit autotools pkgconfig
 

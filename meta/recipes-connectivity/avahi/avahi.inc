@@ -16,7 +16,7 @@ PRIORITY = "optional"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0 gtk+ libglade"
-RRECOMMENDS = "libnss-mdns"
+RRECOMMENDS_${PN} = "libnss-mdns"
 RRECOMMENDS_avahi-daemon = "libnss-mdns"
 
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \

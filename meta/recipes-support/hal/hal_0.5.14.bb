@@ -1,6 +1,6 @@
 require hal.inc
 
-PR = "r2"
+PR = "r3"
 
 EXTRA_OECONF += "--with-linux-input-header=${STAGING_INCDIR}/linux/input.h"
 EXTRA_OEMAKE += "-e 'udevrulesdir=$(sysconfdir)/udev/rules.d'"

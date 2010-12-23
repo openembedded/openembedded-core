@@ -5,8 +5,8 @@ LICENSE  = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3201406e350b39e05a82e28b5020f413"
 
 DEPENDS  = "libzypp augeas"
-RRECOMMENDS = "procps"
-PR = "r1"
+RRECOMMENDS_${PN} = "procps"
+PR = "r2"
 
 inherit cmake
 

@@ -3,10 +3,10 @@ DESCRIPTION = "Initscripts provide the basic system startup initialization scrip
 SECTION = "base"
 PRIORITY = "required"
 DEPENDS = "makedevs"
-RDEPENDS = "makedevs"
+RDEPENDS_${PN} = "makedevs"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-PR = "r122"
+PR = "r123"
 
 SRC_URI = "file://functions \
            file://halt \

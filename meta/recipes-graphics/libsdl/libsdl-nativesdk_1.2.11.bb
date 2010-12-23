@@ -3,8 +3,8 @@ HOMEPAGE = "http://www.libsdl.org"
 SECTION = "libs"
 LICENSE = "LGPLv2.1"
 DEPENDS = "libx11-nativesdk libxext-nativesdk libxrandr-nativesdk libxrender-nativesdk"
-RDEPENDS = "libx11-nativesdk libxrandr-nativesdk libxrender-nativesdk libxext-nativesdk"
-PR = "r4"
+RDEPENDS_${PN} = "libx11-nativesdk libxrandr-nativesdk libxrender-nativesdk libxext-nativesdk"
+PR = "r5"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=27818cd7fd83877a8e3ef82b82798ef4"
 

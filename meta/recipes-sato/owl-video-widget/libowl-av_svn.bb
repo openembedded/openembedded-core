@@ -9,11 +9,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ac14b7ca45afea5af040da54db270eb0 \
 
 SECTION = "x11"
 DEPENDS = "gtk+ gstreamer gst-plugins-base"
-RDEPENDS = "gst-meta-base"
-RRECOMMENDS = "gst-meta-audio gst-meta-video"
+RDEPENDS_${PN} = "gst-meta-base"
+RRECOMMENDS_${PN} = "gst-meta-audio gst-meta-video"
 
 PV = "0.0+svnr${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 S = "${WORKDIR}/${PN}"
 

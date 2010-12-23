@@ -1,11 +1,11 @@
 DESCRIPTION = "The Subversion (svn) client"
 SECTION = "console/network"
 DEPENDS = "apr-util neon"
-RDEPENDS = "neon"
+RDEPENDS_${PN} = "neon"
 LICENSE = "Apache BSD"
 HOMEPAGE = "http://subversion.tigris.org"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://subversion.tigris.org/downloads/${P}.tar.bz2 \
            file://disable-revision-install.patch;patch=1 \

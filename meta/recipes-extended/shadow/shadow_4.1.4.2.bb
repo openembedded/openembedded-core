@@ -1,6 +1,6 @@
 require shadow.inc
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI += "file://shadow.automake-1.11.patch \
 	    file://shadow-4.1.3-dots-in-usernames.patch \

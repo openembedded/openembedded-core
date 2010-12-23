@@ -6,9 +6,9 @@ LICENSE="GPL"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=77ef83ab5f4af938a93edb61f7b74f2c"
 
 PV = "1.1.11+git${SRCREV}"
-PR = "r3"
+PR = "r4"
 
-RDEPENDS = "pm-utils"
+RDEPENDS_${PN} = "pm-utils"
 
 SRC_URI = "git://git.debian.org/git/debian-eeepc/eeepc-acpi-scripts.git;protocol=git \
 	   file://remove-doc-check.patch;patch=1 \

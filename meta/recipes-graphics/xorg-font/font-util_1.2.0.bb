@@ -12,10 +12,10 @@ PACKAGE_ARCH = "${BASE_PACKAGE_ARCH}"
 
 DEPENDS = "encodings util-macros"
 DEPENDS_virtclass-native = "util-macros-native"
-RDEPENDS = "mkfontdir mkfontscale encodings"
-RDEPENDS_virtclass-native = "mkfontdir-native mkfontscale-native"
+RDEPENDS_${PN} = "mkfontdir mkfontscale encodings"
+RDEPENDS_${PN}_virtclass-native = "mkfontdir-native mkfontscale-native"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 do_configure_prepend() {
         sed -i "s#MAPFILES_PATH=\`pkg-config#MAPFILES_PATH=\`PKG_CONFIG_PATH=\"${STAGING_LIBDIR_NATIVE}/pkg-config\" pkg-config#g" fontutil.m4.in
