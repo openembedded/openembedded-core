@@ -15,6 +15,8 @@ LICENSE = "BSD Sleepycat"
 VIRTUAL_NAME = "virtual/db"
 VIRTUAL_NAME_virtclass-native = "virtual/db-native"
 
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=6b31228067ad1236eceaaaf187ad6d1e"
+
 CONFLICTS = "db3"
 CONFLICTS_virtclass-native = "db3-native"
 PR = "r8"
