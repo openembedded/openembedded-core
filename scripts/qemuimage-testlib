@@ -204,8 +204,8 @@ Test_Kill_Qemu()
 # function to check if there is any qemu process
 Test_Check_Qemu_UP()
 {
-	local count=`ps -ef | grep -c qemu`
-	if [ ${count} -lt 2 ]; then
+	local count=`ps -eo command | cut -d " " -f 1 | grep -c \(^qemu\|.*/qemu\)`
+	if [ ${count} -lt 1 ]; then
 		Test_Info "There is no Qemu process"
 		return 1
 	else
@@ -402,9 +402,7 @@ Test_Create_Qemu()
 	# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 	PID=$!
 
-	sleep 5
-	
-	while [ ${up_time} -lt ${timeout} ]
+	while [ ${up_time} -lt 10 ]
 	do
 		Test_Check_Qemu_UP
 		if [ $? -ne 0 ]; then
