@@ -3,6 +3,8 @@ LICENSE = "GPLv2"
 RDEPENDS = "qemu-native"
 PR = "r0"
 
+LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5="
+
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 
 SRC_URI = "file://tunctl.c"
