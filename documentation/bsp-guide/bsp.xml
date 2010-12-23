@@ -481,7 +481,7 @@ meta-Emenlow/recipes-Emenlow/image-creator/image-creator-native_0.1.bb
                 This allows the BSP layer to do whatever it might want to do to customize the original recipe.
             </para>
             <para>
-                If your recipe needs to reference extra files it can use the FILESEXTRAPATH variable
+                If your recipe needs to reference extra files it can use the FILESEXTRAPATHS variable
                 to specify their location. 
                 The example below shows extra files contained in a folder called ${PN} (the package name).
             </para>
