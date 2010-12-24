@@ -204,7 +204,7 @@ Test_Kill_Qemu()
 # function to check if there is any qemu process
 Test_Check_Qemu_UP()
 {
-	local count=`ps -eo command | cut -d " " -f 1 | grep -c \(^qemu\|.*/qemu\)`
+	local count=`ps -eo command | cut -d " " -f 1 | grep -c "\(^qemu\|.*/qemu\)"`
 	if [ ${count} -lt 1 ]; then
 		Test_Info "There is no Qemu process"
 		return 1
