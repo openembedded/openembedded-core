@@ -2,6 +2,8 @@ DESCRIPTION = "A standalone native ldconfig build"
 
 LICENSE = "GPLv2"
 
+LIC_FILES_CHKSUM = "file://${S}/ldconfig.c;endline=16;md5=8b3df71ec5b0feeeeab79025096aa92c"
+
 SRC_URI = "file://ldconfig-native-2.5.tar.bz2 \
            file://ldconfig.patch;patch=1 \
            file://32and64bit.patch;patch=1"
