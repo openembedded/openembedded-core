@@ -5,6 +5,8 @@ SECTION = "bootloader"
 SRC_URI = "ftp://ftp.denx.de/pub/u-boot/u-boot-${PV}.tar.bz2 \
            file://fix-arm920t-eabi.patch;patch=1"
 
+LIC_FILES_CHKSUM = "file://COPYING;md5=4c6cde5df68eff615d36789dc18edd3b"
+
 S = "${WORKDIR}/u-boot-${PV}"
 
 inherit native
