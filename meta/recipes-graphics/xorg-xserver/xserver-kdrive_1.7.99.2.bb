@@ -1,6 +1,6 @@
 require xserver-kdrive.inc
 
-DEPENDS += "libxkbfile libxcalibrate font-util"
+DEPENDS += "libxkbfile libxcalibrate font-util pixman"
 
 RDEPENDS_${PN} += "xkeyboard-config"
 
