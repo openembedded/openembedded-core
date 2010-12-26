@@ -1,6 +1,5 @@
 require xserver-xf86-dri-lite.inc
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=3dd2bbe3563837f80ed8926b06c1c353"
 
 PROTO_DEPS += "xf86driproto dri2proto"
 
