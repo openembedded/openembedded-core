@@ -1,7 +1,7 @@
 require matchbox-theme-sato.inc
 
 DEPENDS = "matchbox-wm-2"
-PV = "0.1+svnr${SRCREV}"
+PV = "0.1+svnr${SRCPV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/sato/trunk;module=matchbox-sato;proto=http \
           file://png_rename.patch"

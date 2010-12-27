@@ -1,7 +1,7 @@
 DEFAULT_PREFERENCE = "-1"
 
 include libxcb.inc
-PV = "1.1.90.1+gitr${SRCREV}"
+PV = "1.1.90.1+gitr${SRCPV}"
 
 DEPENDS += "libpthread-stubs xcb-proto-native"
 

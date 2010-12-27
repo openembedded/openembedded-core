@@ -6,7 +6,7 @@ inherit kernel
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/${PN}-git/${MACHINE}"
 
-PV = "2.6.31-rc7+pm+${PR}+git${SRCREV}"
+PV = "2.6.31-rc7+pm+${PR}+git${SRCPV}"
 PR = "r3"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-omap-pm.git;branch=pm;protocol=git"

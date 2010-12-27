@@ -2,7 +2,7 @@ DESCRIPTION = "Matchbox window manager extra themes"
 LICENSE = "GPL"
 DEPENDS = "matchbox-wm"
 SECTION = "x11/wm"
-PV = "0.3+svnr${SRCREV}"
+PV = "0.3+svnr${SRCPV}"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-themes-extra;proto=http"
 S = "${WORKDIR}/${PN}"

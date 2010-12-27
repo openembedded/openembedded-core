@@ -1,6 +1,6 @@
 require libmatchbox.inc
 
-PV = "1.7+svnr${SRCREV}"
+PV = "1.7+svnr${SRCPV}"
 PR = "r5"
 DEFAULT_PREFERENCE = "-1"
 

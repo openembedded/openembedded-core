@@ -7,7 +7,7 @@ DEPENDS = "glib-2.0 gtk+ libglade libopensync avahi"
 RRECOMMENDS_${PN} = "\
 	libopensync-plugin-file \
 	"
-PV = "0.0+svnr${SRCREV}"
+PV = "0.0+svnr${SRCPV}"
 PR = "r1"
 
 SRC_URI = "svn://svn.o-hand.com/repos/sync/trunk;module=sync;proto=http"

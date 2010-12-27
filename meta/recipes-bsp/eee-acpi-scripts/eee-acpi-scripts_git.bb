@@ -5,7 +5,7 @@ SECTION = "base"
 LICENSE="GPL"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=77ef83ab5f4af938a93edb61f7b74f2c"
 
-PV = "1.1.11+git${SRCREV}"
+PV = "1.1.11+git${SRCPV}"
 PR = "r4"
 
 RDEPENDS_${PN} = "pm-utils"

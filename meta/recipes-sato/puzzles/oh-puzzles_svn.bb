@@ -11,7 +11,7 @@ SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 DEPENDS_append_poky = " libowl"
 
-PV = "0.1+svnr${SRCREV}"
+PV = "0.1+svnr${SRCPV}"
 PR = "r10"
 
 bindir = "/usr/games"

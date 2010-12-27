@@ -3,7 +3,7 @@ require linux-omap2.inc
 FILESPATH = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/linux-omap2-git/${MACHINE}:${@os.path.dirname(bb.data.getVar('FILE',d,1))}/linux-omap2-git"
 
 PV = "2.6.26"
-#PV = "2.6.26+2.6.27-rc1+${PR}+git${SRCREV}"
+#PV = "2.6.26+2.6.27-rc1+${PR}+git${SRCPV}"
 PR = "r53"
 
 SRC_URI = "git://source.mvista.com/git/linux-omap-2.6.git;protocol=git \

@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 DEPENDS = "gtk+ startup-notification dbus"
 SECTION = "x11/wm"
-PV = "2.0+svnr${SRCREV}"
+PV = "2.0+svnr${SRCPV}"
 PR = "r0"
 
 SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN}-2;proto=http"

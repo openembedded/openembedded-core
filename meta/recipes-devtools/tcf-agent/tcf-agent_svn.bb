@@ -6,7 +6,7 @@ LICENSE = "EPLv1.0 | EDLv1.0"
 LIC_FILES_CHKSUM = "file://../epl-v10.html;md5=7aa4215a330a0a4f6a1cbf8da1a0879f \
                     file://../agent/edl-v10.html;md5=522a390a83dc186513f0500543ad3679"
 
-PV = "0.3.0+svnr${SRCREV}"
+PV = "0.3.0+svnr${SRCPV}"
 PR = "r0"
 
 SRC_URI = "svn://dev.eclipse.org/svnroot/dsdp/org.eclipse.tm.tcf/;module=tags/0.3.0/;proto=http \

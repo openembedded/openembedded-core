@@ -12,7 +12,7 @@ DEPENDS = "gtk+ gstreamer gst-plugins-base"
 RDEPENDS_${PN} = "gst-meta-base"
 RRECOMMENDS_${PN} = "gst-meta-audio gst-meta-video"
 
-PV = "0.0+svnr${SRCREV}"
+PV = "0.0+svnr${SRCPV}"
 PR = "r6"
 
 S = "${WORKDIR}/${PN}"

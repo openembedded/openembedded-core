@@ -16,7 +16,7 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
 
 S = "${WORKDIR}/trunk"
 
-PV = "0.1.8+svnr${SRCREV}"
+PV = "0.1.8+svnr${SRCPV}"
 PR = "r1"
 
 PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
