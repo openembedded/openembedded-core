@@ -15,13 +15,11 @@ RECIPE_MAINTAINER_pn-gccmakedep = "Dexuan Cui <dexuan.cui@intel.com>"
 DISTRO_PN_ALIAS_pn-gccmakedep = "Mandriva=gccmakedep Ubuntu=xutils-dev"
 
 RECIPE_STATUS_pn-git = "green"
-RECIPE_LATEST_VERSION_pn-git = "1.7.3.2"
-RECIPE_LAST_UPDATE_pn-git = "Dec 1, 2010"
+RECIPE_LATEST_VERIONS_pn-git = "1.7.3.4"
 RECIPE_MAINTAINER_pn-git = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-gtk-theme-torturer = "red"
 RECIPE_LATEST_VERSION_pn-gtk-theme-torturer = "check"
-RECIPE_LAST_UPDATE_pn-git = "Dec 27, 2007"
 RECIPE_MAINTAINER_pn-gtk-theme-torturer = "Edwin Zhai <edwin.zhai@intel.com>"
 DISTRO_PN_ALIAS_pn-gtk-theme-torturer = "OSPDT upstream=http://wiki.laptop.org/go/GTK_for_OLPC"
 
@@ -2973,7 +2971,7 @@ RECIPE_LATEST_VERSION_pn-prelink="1.0+git0+0x909470ee441237563d6236c505cb2d02ddc
 RECIPE_LAST_UPDATE_pn-perl = "Jul 23, 2010"
 RECIPE_MAINTAINER_pn-prelink = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-python-dbus="green" 
+RECIPE_STATUS_pn-python-dbus="red" 
 RECIPE_LATEST_VERSION_pn-python-dbus="0.83.1"
 RECIPE_LAST_UPDATE_pn-python-dbus = "Jul 7, 2010"
 RECIPE_MAINTAINER_pn-python-dbus = "Nitin A Kamble <nitin.a.kamble@intel.com>"
@@ -3019,8 +3017,8 @@ DISTRO_PN_ALIAS_pn-python-scons = "Fedora=scons OpenSuSE=scons Ubuntu=scons Mand
 RECIPE_LAST_UPDATE_pn-python-scons = "Nov 8, 2010"
 RECIPE_MAINTAINER_pn-python-scons = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
-RECIPE_STATUS_pn-python="green"
-RECIPE_LATEST_VERSION_pn-python="2.6.6"
+RECIPE_STATUS_pn-python="red"
+RECIPE_LATEST_VERSION_pn-python="2.7.1"
 RECIPE_NO_OF_PATCHES_pn-python="8"
 RECIPE_LATEST_RELEASE_DATE_pn-python="2010/03/18"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-python="5 months"
@@ -3064,8 +3062,7 @@ RECIPE_MAINTAINER_pn-libmpc = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 DISTRO_PN_ALIAS_pn-libmpc = "Fedora=libmpc OpenSuse=libmpc2"
 
 RECIPE_STATUS_pn-byacc="green" 
-RECIPE_LATEST_VERSION_pn-byacc="20100610"
-RECIPE_LAST_UPDATE_pn-byacc = "Aug 13, 2010"
+RECIPE_LATEST_VERSION_pn-byacc="20101127"
 RECIPE_MAINTAINER_pn-byacc = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-libconvert-asn1-perl="green" # 0.22 version does not build, so created a recipe for version 0.21
