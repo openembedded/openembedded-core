@@ -25,8 +25,8 @@ SRC_URI = "\
   file://bluetooth.conf \
 "
 
-SRC_URI[md5sum] = "b3afea97981c1c6be04438930c57d891"
-SRC_URI[sha256sum] = "1b486824e486e7a7a17ebcbce99a417e724f42ebb17f9fe574bc4737fda6b7db"
+SRC_URI[md5sum] = "b9e5de607e5e43c868c35c68fe6f189f"
+SRC_URI[sha256sum] = "75dc506f5346e1eb803f44294ae02406e806e309d9c9bda1de7ed235ff794b6d"
 S = "${WORKDIR}/bluez-${PV}"
 
 inherit autotools
