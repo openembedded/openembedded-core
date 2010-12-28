@@ -2,6 +2,7 @@ inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
 KMACHINE_qemux86-64  = "common_pc_64"
+KMACHINE_atom-pc  = "atom-pc"
 
 LINUX_VERSION ?= "2.6.34"
 LINUX_KERNEL_TYPE = "preempt_rt"
@@ -11,7 +12,7 @@ PR = "r0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
-COMPATIBLE_MACHINE = "(qemux86-64)"
+COMPATIBLE_MACHINE = "(qemux86-64|atom-pc)"
 
 # this performs a fixup on the SRCREV for new/undefined BSPs
 python __anonymous () {
