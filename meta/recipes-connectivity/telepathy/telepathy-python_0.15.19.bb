@@ -8,12 +8,12 @@ RDEPENDS_${PN} += "python-dbus"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/${PN}/${P}.tar.gz "
 
-PR = "r1"
+PR = "r0"
 
 inherit autotools
 
-SRC_URI[md5sum] = "51da78a77681b0652d9b4ca941da0658"
-SRC_URI[sha256sum] = "f9f5c260188e9e27af9152bfc6d622cc5c0ea48d63d5fa9985abbdd69fda0e87"
+SRC_URI[md5sum] = "f7ca25ab3c88874015b7e9728f7f3017"
+SRC_URI[sha256sum] = "244c0e1bf4bbd78ae298ea659fe10bf3a73738db550156767cc2477aedf72376"
 
 FILES_${PN} += "\
     ${libdir}/python*/site-packages/telepathy/*.py \
