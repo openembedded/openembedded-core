@@ -18,5 +18,5 @@ do_configure_prepend() {
 	rm ${S}/m4/lib-link.m4 || true
 }
 
-SRC_URI[md5sum] = "d734bc866788d1d6fc74c4ff1318926c"
-SRC_URI[sha256sum] = "b5d5750c12412c47d85ba9391c842f6f02cad9511876695e48b15fb37e4699f6"
+SRC_URI[md5sum] = "e1ed191adbf81edff04f348f8ce8e198"
+SRC_URI[sha256sum] = "ceb3bbea5ce18463b8fe470d34786bc846469e800305c436d799af9fe22bdcc4"
