@@ -9,7 +9,7 @@ DEPENDS = "libogg"
 SRCDATE = "${PV}"
 PR = "r0"
 
-SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=17572;proto=http"
+SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=17636;proto=http"
 
 S = "${WORKDIR}/Tremor"
 
