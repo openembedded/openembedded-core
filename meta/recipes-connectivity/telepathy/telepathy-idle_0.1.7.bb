@@ -9,8 +9,8 @@ PR = "r0"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/${PN}/${P}.tar.gz"
 
-SRC_URI[md5sum] = "0efe17425cdc3490714947ff68003bf6"
-SRC_URI[sha256sum] = "fc05a1780499eab3b168b1826e2fe18dbe4bea3576ea0ff2b548b063336c61f5"
+SRC_URI[md5sum] = "5ee3aa5c6e1112922b11711e6a209331"
+SRC_URI[sha256sum] = "b65df4f8ebdf1039e1f1e406f53cc7b6106fab6c4d8e784e360709f8d85df0c3"
 
 inherit autotools pkgconfig
 
