@@ -3,3 +3,5 @@ sanity ssh
 sanity scp
 sanity dmesg
 sanity shutdown
+sanity zypper_help
+sanity zypper_search
