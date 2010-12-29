@@ -5,10 +5,10 @@ SRC_URI += "file://noman.patch;patch=1 \
             file://check_snprintf.patch \
             file://check_version.patch"
 
-SRC_URI[md5sum] = "b9b817389e655ec2c12465de5c619011"
-SRC_URI[sha256sum] = "2ef55e8eb6c1e8c3dfb54c8ccc9a883fec7540b705c5179ca7a198bebe2f18bc"
+SRC_URI[md5sum] = "d1731d4147c1ea3b537a4d094519a6dc"
+SRC_URI[sha256sum] = "1ec1376471b04717a4497e5d7a27cd545248c92116898ce0c53ced8ea94267b5"
 
-PR = "r3"
+PR = "r0"
 
 EXTRA_OECONF = "--without-static-progs \
 		--without-dselect \
