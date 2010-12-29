@@ -17,11 +17,11 @@ Index: git/Makefile
  
  btreplay/btrecord:
 -	$(MAKE) -C btreplay
-+	CC="${CC}" CFLAGS="${CFLAGS}" $(MAKE) -C btreplay CC="${CC}" CFLAGS="${CFLAGS}"
++	CC="${CC}" CFLAGS="${CFLAGS}" $(MAKE) -C btreplay CC="${CC}" CFLAGS="${CFLAGS}" btrecord
  
  btreplay/btreplay:
 -	$(MAKE) -C btreplay
-+	CC="${CC}" CFLAGS="${CFLAGS}" $(MAKE) -C btreplay CC="${CC}" CFLAGS="${CFLAGS}"
++	CC="${CC}" CFLAGS="${CFLAGS}" $(MAKE) -C btreplay CC="${CC}" CFLAGS="${CFLAGS}" btreplay
  
  %.o: %.c
  	$(CC) -o $*.o -c $(ALL_CFLAGS) $<
