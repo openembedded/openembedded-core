@@ -3,8 +3,6 @@ require conf/distro/include/distro_tracking_fields.inc
 
 addhandler distro_eventhandler
 python distro_eventhandler() {
-    from bb.event import Handled, NotHandled
-    # if bb.event.getName(e) == "TaskStarted":
 
     if bb.event.getName(e) == "BuildStarted":
 	"""initialize log files."""
@@ -25,7 +23,7 @@ python distro_eventhandler() {
         f.close()
         bb.utils.unlockfile(lf)
 
-    return NotHandled
+    return
 }
 
 addtask distrodata_np
@@ -213,9 +211,6 @@ do_distrodataall() {
 
 addhandler checkpkg_eventhandler
 python checkpkg_eventhandler() {
-    from bb.event import Handled, NotHandled
-    # if bb.event.getName(e) == "TaskStarted":
-
     if bb.event.getName(e) == "BuildStarted":
 	"""initialize log files."""
 	logpath = bb.data.getVar('LOG_DIR', e.data, 1)
@@ -235,7 +230,7 @@ python checkpkg_eventhandler() {
         f.close()
         bb.utils.unlockfile(lf)
 
-    return NotHandled
+    return
 }
 
 addtask checkpkg
@@ -625,9 +620,6 @@ do_checkpkgall() {
 
 #addhandler check_eventhandler
 python check_eventhandler() {
-    from bb.event import Handled, NotHandled
-    # if bb.event.getName(e) == "TaskStarted":
-
     if bb.event.getName(e) == "BuildStarted":
         import oe.distro_check as dc
         tmpdir = bb.data.getVar('TMPDIR', e.data, 1)
@@ -645,7 +637,7 @@ python check_eventhandler() {
                 os.symlink(logfile, slogfile)
                 bb.data.setVar('LOG_FILE', logfile, e.data)
 
-    return NotHandled
+    return
 }
 
 addtask distro_check

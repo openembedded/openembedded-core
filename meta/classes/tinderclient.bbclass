@@ -367,14 +367,14 @@ def tinder_do_tinder_report(event):
 addhandler tinderclient_eventhandler
 python tinderclient_eventhandler() {
     from bb import note, error, data
-    from bb.event import NotHandled, getName
+    from bb.event import getName
 
     if e.data is None or getName(e) == "MsgNote":
-        return NotHandled
+        return
 
     do_tinder_report = data.getVar('TINDER_REPORT', e.data, True)
     if do_tinder_report and do_tinder_report == "1":
         tinder_do_tinder_report(e)
 
-    return NotHandled
+    return
 }

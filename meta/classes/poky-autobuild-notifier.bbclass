@@ -48,15 +48,15 @@ def do_autobuilder_failure_report(event):
 addhandler poky_autobuilder_notifier_eventhandler
 python poky_autobuilder_notifier_eventhandler() {
     from bb import note, error, data
-    from bb.event import NotHandled, getName
+    from bb.event import getName
 
     if e.data is None:
-        return NotHandled
+        return
 
     name = getName(e)
 
     if name == "TaskFailed":
         do_autobuilder_failure_report(e)
 
-    return NotHandled
+    return
 }

@@ -312,9 +312,8 @@ def check_sanity(e):
 
 addhandler check_sanity_eventhandler
 python check_sanity_eventhandler() {
-    from bb.event import Handled, NotHandled
     if bb.event.getName(e) == "ConfigParsed" and bb.data.getVar("BB_WORKERCONTEXT", e.data, True) != "1":
         check_sanity(e)
 
-    return NotHandled
+    return
 }
