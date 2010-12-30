@@ -26,8 +26,8 @@ cpan_build_do_configure () {
 
 			perl Build.PL --installdirs vendor \
 				--destdir ${D} \
-				--install_path lib="${datadir}/perl5" \
-				--install_path arch="${libdir}/perl5" \
+				--install_path lib="${datadir}/perl" \
+				--install_path arch="${libdir}/perl" \
 				--install_path script=${bindir} \
 				--install_path bin=${bindir} \
 				--install_path bindoc=${mandir}/man1 \

@@ -2,7 +2,7 @@
 # cpan-base providers various perl related information needed for building
 # cpan modules
 #
-FILES_${PN} += "${libdir}/perl5 ${datadir}/perl5"
+FILES_${PN} += "${libdir}/perl ${datadir}/perl"
 
 DEPENDS  += "${@["perl", "perl-native"][(bb.data.inherits_class('native', d))]}"
 RDEPENDS  += "${@["perl", ""][(bb.data.inherits_class('native', d))]}"
@@ -27,7 +27,7 @@ def get_perl_version(d):
 # Determine where the library directories are
 def perl_get_libdirs(d):
 	libdir = bb.data.getVar('libdir', d, 1)
-	libdirs = libdir + '/perl5'
+	libdirs = libdir + '/perl'
 	return libdirs
 
 def is_target(d):
