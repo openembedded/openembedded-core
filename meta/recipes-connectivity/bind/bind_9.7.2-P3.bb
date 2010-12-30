@@ -13,6 +13,9 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${PN}-${PV}.tar.gz \
            file://cross-build-fix.patch \
 	   "
 
+SRC_URI[md5sum] = "b4537cbae38b2daef36775bf49f33db9"
+SRC_URI[sha256sum] = "cd945f4766be664f4528ec065df626ad3624481695316ec8e13ad272f4abfb7e"
+
 # --enable-exportlib is necessary for building dhcp
 EXTRA_OECONF = " --enable-ipv6=no --with-randomdev=/dev/random --disable-threads \
                  --disable-devpoll --disable-epoll \
@@ -50,5 +53,3 @@ CONFFILES_${PN} = " \
 	${sysconfdir}/bind/db.root \
 	"
 
-SRC_URI[md5sum] = "e74de6ec9c2cd27576794c873bd85f4a"
-SRC_URI[sha256sum] = "e6d5938184066fc793c28ff975e09e9721116aede2a2d6d93b1be5e8654a5c8a"
