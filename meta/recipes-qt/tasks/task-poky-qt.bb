@@ -6,7 +6,7 @@ DESCRIPTION = "Qt Tasks for Poky"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "\
     task-poky-qt-demos \
@@ -16,7 +16,7 @@ PACKAGES = "\
 
 ALLOW_EMPTY = "1"
 
-QTDEMOS ?= "quicky ${COMMERCIAL_QT}"
-QTDEMOS_disabled = "fotowall"
+QTDEMOS ?= "quicky ${COMMERCIAL_QT} fotowall"
+#QTDEMOS_disabled = "fotowall"
 
 RDEPENDS_task-poky-qt-demos = "${QTDEMOS}"
