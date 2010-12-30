@@ -1211,7 +1211,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                     self.rq.scenequeue_covered.add(task)
                     found = True
 
-        bb.debug("Full skip list %s" % self.rq.scenequeue_covered)
+        bb.debug(1, "Full skip list %s" % self.rq.scenequeue_covered)
 
         for task in self.rq.scenequeue_covered:
             self.task_skip(task)
@@ -1579,7 +1579,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         for task in oldcovered:
             self.rq.scenequeue_covered.add(self.rqdata.runq_setscene[task])
 
-        bb.debug("We can skip tasks %s" % self.rq.scenequeue_covered)
+        bb.debug(1, "We can skip tasks %s" % self.rq.scenequeue_covered)
 
         self.rq.state = runQueueRunInit
         return True
