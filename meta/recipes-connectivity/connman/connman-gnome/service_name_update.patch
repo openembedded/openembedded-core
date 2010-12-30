@@ -1,0 +1,36 @@
+diff -ruN connman-gnome-0.5-orig/common/connman-dbus.h connman-gnome-0.5/common/connman-dbus.h
+--- connman-gnome-0.5-orig/common/connman-dbus.h	2010-12-30 09:45:03.312043457 +0800
++++ connman-gnome-0.5/common/connman-dbus.h	2010-12-30 09:45:33.978499439 +0800
+@@ -22,7 +22,7 @@
+ #include <dbus/dbus-glib.h>
+ #include <gtk/gtk.h>
+ 
+-#define CONNMAN_SERVICE			"org.moblin.connman"
++#define CONNMAN_SERVICE			"net.connman"
+ 
+ #define CONNMAN_ERROR_INTERFACE		CONNMAN_SERVICE ".Error"
+ #define CONNMAN_AGENT_INTERFACE		CONNMAN_SERVICE ".Agent"
+diff -ruN connman-gnome-0.5-orig/common/instance.c connman-gnome-0.5/common/instance.c
+--- connman-gnome-0.5-orig/common/instance.c	2010-12-30 09:45:03.316085542 +0800
++++ connman-gnome-0.5/common/instance.c	2010-12-30 09:46:01.654479049 +0800
+@@ -29,7 +29,7 @@
+ 
+ #include "instance.h"
+ 
+-#define CONNMAN_SERVICE    "org.moblin.connman"
++#define CONNMAN_SERVICE    "net.connman"
+ #define CONNMAN_INSTANCE   CONNMAN_SERVICE ".Instance"
+ 
+ static DBusGConnection *connection;
+diff -ruN connman-gnome-0.5-orig/common/instance.xml connman-gnome-0.5/common/instance.xml
+--- connman-gnome-0.5-orig/common/instance.xml	2010-12-30 09:45:03.312043457 +0800
++++ connman-gnome-0.5/common/instance.xml	2010-12-30 09:45:49.868372780 +0800
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8" ?>
+ 
+ <node name="/">
+-  <interface name="org.moblin.connman.Instance">
++  <interface name="net.connman.Instance">
+     <method name="Present">
+     </method>
+   </interface>
