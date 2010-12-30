@@ -10,7 +10,7 @@ DEPENDS = "groff less"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-SRC_URI = "http://primates.ximian.com/~flucifredi/man/man-1.6e.tar.gz \
+SRC_URI = "http://primates.ximian.com/~flucifredi/${PN}/${PN}-${PV}.tar.gz \
            file://man-1.5k-confpath.patch;striplevel=0 \
            file://man-1.5h1-make.patch;striplevel=1 \
            file://man-1.5k-nonascii.patch;striplevel=1 \
@@ -38,8 +38,8 @@ SRC_URI = "http://primates.ximian.com/~flucifredi/man/man-1.6e.tar.gz \
            file://man-1.6e-lzma+xz-support.patch;striplevel=1 \
            file://man*"
 
-SRC_URI[md5sum] = "d8187cd756398baefc48ba7d60ff6a8a"
-SRC_URI[sha256sum] = "022faf23844eabb3662eabb105836925dd83bedda10271e2450a5bc5b61a5b5f"
+SRC_URI[md5sum] = "67aaaa6df35215e812fd7d89472c44b6"
+SRC_URI[sha256sum] = "9f208c7e1981371ad4481d6e6c2c566bc726a15778723f94136d220fb9375f6c"
 
 
 do_configure () {
