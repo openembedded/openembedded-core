@@ -10,7 +10,7 @@ SECTION = "libs/gsm"
 PROVIDES += "gsmd"
 RPROVIDES_${PN} = "libgsmd0 libgsmd gsmd gsmd-devel"
 PV = "0.1+svnr${SRCREV}"
-PR = "r0"
+PR = "r2"
 
 SRC_URI = "svn://svn.openmoko.org/trunk/src/target;module=gsm;proto=http \
            file://fix_machine_init.patch;patch=1 \
@@ -19,10 +19,8 @@ SRC_URI = "svn://svn.openmoko.org/trunk/src/target;module=gsm;proto=http \
 S = "${WORKDIR}/gsm"
 
 inherit autotools pkgconfig update-rc.d
-# handle update-rc.d RDEPENDS manually, we don't need it on
-# anything but gsmd
-RDEPENDS_append = ""
 
+UPDATERCPN = "gsmd"
 INITSCRIPT_NAME = "gsmd"
 INITSCRIPT_PARAMS = "defaults 35"
 

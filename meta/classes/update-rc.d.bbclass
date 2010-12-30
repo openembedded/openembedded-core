@@ -1,5 +1,7 @@
+UPDATERCPN ?= "${PN}"
+
 DEPENDS_append = " update-rc.d-native"
-RDEPENDS_${PN}_append = " update-rc.d"
+RDEPENDS_${UPDATERCPN}_append = " update-rc.d"
 
 INITSCRIPT_PARAMS ?= "defaults"
 
@@ -69,7 +71,7 @@ python populate_packages_prepend () {
 
 	pkgs = bb.data.getVar('INITSCRIPT_PACKAGES', d, 1)
 	if pkgs == None:
-		pkgs = bb.data.getVar('PN', d, 1)
+		pkgs = bb.data.getVar('UPDATERCPN', d, 1)
 		packages = (bb.data.getVar('PACKAGES', d, 1) or "").split()
 		if not pkgs in packages and packages != []:
 			pkgs = packages[0]
