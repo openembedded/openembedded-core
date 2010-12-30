@@ -1,3 +1,5 @@
+import bb, bb.data
+
 def read_file(filename):
     try:
         f = file( filename, "r" )
