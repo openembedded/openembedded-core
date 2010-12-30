@@ -4,12 +4,15 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 SECTION = "multimedia"
 
-PR = "r2"
+PR = "r0"
 
 DEPENDS = "qt4-x11-free taglib libmad libvorbis libogg alsa-lib"
 RDEPENDS_${PN} += "taglib alsa-lib curl"
 
-SRC_URI = "http://qmmp.ylsoftware.com/files/qmmp-0.4.1.tar.bz2"
+SRC_URI = "http://qmmp.ylsoftware.com/files/${PN}-${PV}.tar.bz2"
+
+SRC_URI[md5sum] = "b79ce55ed8aca31a29360ff828ce1881"
+SRC_URI[sha256sum] = "a75c2c676515182ecfbe811cba29ba4ca736912e52fde283db4d03eb116457a4"
 
 PARALLEL_MAKE = ""
 
