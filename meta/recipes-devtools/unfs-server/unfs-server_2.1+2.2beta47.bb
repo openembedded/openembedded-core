@@ -6,9 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 RDEPENDS_${PN} = "pseudo"
 RDEPENDS_${PN}_virtclass-native = "pseudo-native"
 RDEPENDS_${PN}_virtclass-nativesdk = "pseudo-nativesdk"
-PR = "r2"
+BASEPV = "2.2beta47"
+PR = "r0"
 
-SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir/nfs-server-${PV}.tar.gz \
+SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir/nfs-server-${BASEPV}.tar.gz \
            file://001-2.2b47-2.2b51.patch \
            file://002-destdir.patch \
            file://003-manpages.patch \
@@ -36,7 +37,7 @@ SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir
 SRC_URI[md5sum] = "79a29fe9f79b2f3241d4915767b8c511"
 SRC_URI[sha256sum] = "7eeaf3cf0b9d96167a5ba03bf1046e39b4585de1339a55b285e673c06ba415cb"
 
-S = "${WORKDIR}/nfs-server-${PV}/"
+S = "${WORKDIR}/nfs-server-${BASEPV}/"
 
 inherit autotools
 
