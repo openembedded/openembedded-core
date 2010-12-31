@@ -255,7 +255,7 @@ python base_do_unpack() {
 		local = os.path.realpath(local)
 		ret = oe_unpack_file(local, localdata, url)
 		if not ret:
-			raise bb.build.FuncFailed()
+			raise bb.build.FuncFailed("oe_unpack_file failed with return value %s" % ret)
 }
 
 GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
