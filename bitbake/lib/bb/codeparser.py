@@ -1,4 +1,4 @@
-from pysh import pyshyacc, pyshlex
+from bb.pysh import pyshyacc, pyshlex
 from itertools import chain
 from bb import msg, utils
 import ast
