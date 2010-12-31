@@ -1,0 +1,19 @@
+Date: 12/31/2010
+Didn't find 2.67 specific features, so lower the requirement
+to pass build
+
+Signed-off-by: Qing He <qing.he@intel.com>
+---
+diff --git a/configure.ac b/configure.ac
+index 650749a..2a78845 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -36,7 +36,7 @@ All Rights Reserved.
+ This configure script may be copied, distributed and modified under the
+ terms of the GNU General Public License; see COPYING for more details.])
+ 
+-AC_PREREQ(2.67)
++AC_PREREQ(2.65)
+ AC_INIT([LZO],[2.04],[markus@oberhumer.com],[lzo],[http://www.oberhumer.com/opensource/lzo/])
+ AC_MSG_NOTICE([Configuring LZO $PACKAGE_VERSION])
+ AC_CONFIG_SRCDIR(src/lzo_init.c)
