@@ -1,0 +1,52 @@
+#!/bin/bash
+# RPM Check Test Case for Sanity Test
+# The case boot up the Qemu target with `poky-qemu qemuxxx`.
+# Then check if rpm command can work in target.
+#
+# Author: Jiajun Xu <jiajun.xu@intel.com>
+#
+# This file is licensed under the GNU General Public License,
+# Version 2.
+#
+
+. $POKYBASE/scripts/qemuimage-testlib
+
+TIMEOUT=360
+RET=1
+
+# Start qemu and check its network
+Test_Create_Qemu ${TIMEOUT}
+
+# If qemu network is up, check ssh service in qemu
+if [ $? -eq 0 ]; then
+	Test_Info "Begin to Test SSH Service in Qemu"
+	Test_SSH_UP ${TARGET_IPADDR} ${TIMEOUT}
+	RET=$?
+else
+	RET=1
+fi
+
+# Check if rpm query can work in target
+if [ $RET -eq 0 -a -f $TOOLS/rpm_test.sh ]; then
+	# Copy rpm_test.sh into target
+	Test_Target_Pre ${TARGET_IPADDR} $TOOLS/rpm_test.sh
+	if [ $? -eq 0 ]; then
+		# Run rpm_test.sh to check if rpm query can work in target
+		Test_SSH ${TARGET_IPADDR} "sh $TARGET_TEST_DIR/rpm_test.sh -qa"
+		RET=$?
+	else
+		RET=1
+	fi
+fi
+
+if [ ${RET} -eq 0 ]; then
+	Test_Info "rpm query Test PASS"
+	Test_Kill_Qemu
+	Test_Print_Result "rpm_query" 0
+	exit 0
+else
+	Test_Info "rpm query FAIL, Pls. check above error log"
+	Test_Kill_Qemu
+	Test_Print_Result "rpm_query" 1
+	exit 1
+fi
