@@ -7,3 +7,4 @@ sanity zypper_help
 sanity zypper_search
 sanity rpm_query
 sanity compiler
+sanity connman
