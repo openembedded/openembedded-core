@@ -5,16 +5,14 @@ LIC_FILES_CHKSUM = "file://LGPL;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://src/canberra.h;endline=24;md5=8dd99ba690687f5816f711d9313c8967"
 
 DEPENDS = "gtk+ pulseaudio alsa-lib libtool"
-PR = "r3"
+PR = "r0"
 
 inherit gconf autotools
 
-SRC_URI = "http://0pointer.de/lennart/projects/libcanberra/libcanberra-${PV}.tar.gz \
-           file://nofallbackfix.patch;patch=1 \
-           file://autoconf_version.patch;patch=1"
+SRC_URI = "http://0pointer.de/lennart/projects/libcanberra/libcanberra-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "2623370bfcecaeecaeb85e5ec445f340"
-SRC_URI[sha256sum] = "b0e3cb59e605412a52352cf9cf36344b165463d4e65916c95deb73fc51838272"
+SRC_URI[md5sum] = "ee2c66ada7c851a4e7b6eb1682285a24"
+SRC_URI[sha256sum] = "4b5d8d2c2835133620adbc53745dd107b6e58b9a2963059e8f457143fee00982"
 
 EXTRA_OECONF = " --disable-oss --disable-ltdl-install" 
 
