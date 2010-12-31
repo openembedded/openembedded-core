@@ -6,7 +6,7 @@ HOMEPAGE = "http://www.kernel.org/pub/linux/docs/man-pages"
 LICENSE = "GPL"
 PR = "r1"
 
-LIC_FILES_CHKSUM = "file://README;md5=9dab010c5baa416669e5d17381799dd5"
+LIC_FILES_CHKSUM = "file://README;md5=0422377a748010b2b738342e24f141c1"
 SRC_URI = "http://www.kernel.org/pub/linux/docs/man-pages/Archive/${PN}-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "cc6c2d4d4eb364fd8da718c412db09d4"
