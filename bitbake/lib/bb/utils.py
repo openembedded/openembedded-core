@@ -311,10 +311,9 @@ def _print_trace(body, line):
     max_line = min(line + 4, len(body))
     for i in xrange(min_line, max_line + 1):
         if line == i:
-            logger.error(" *** %.4d:%s" % (i, body[i-1]) )
+            logger.error(' *** %.4d:%s', i, body[i-1])
         else:
-            logger.error("     %.4d:%s" % (i, body[i-1]) )
-
+            logger.error('     %.4d:%s', i, body[i-1])
 
 def better_compile(text, file, realfile, mode = "exec"):
     """
@@ -326,16 +325,17 @@ def better_compile(text, file, realfile, mode = "exec"):
     except Exception as e:
         # split the text into lines again
         body = text.split('\n')
-        logger.error("Error in compiling python function in: %s" % (realfile))
+        logger.error("Error in compiling python function in %s", realfile)
         logger.error(str(e))
         if e.lineno:
             logger.error("The lines leading to this error were:")
-            logger.error("\t%d:%s:'%s'" % (e.lineno, e.__class__.__name__, body[e.lineno-1]))
+            logger.error("\t%d:%s:'%s'", e.lineno, e.__class__.__name__, body[e.lineno-1])
             _print_trace(body, e.lineno)
         else:
             logger.error("The function causing this error was:")
             for line in body:
                 logger.error(line)
+
         raise
 
 def better_exec(code, context, text, realfile = "<code>"):
@@ -376,16 +376,16 @@ def better_exec(code, context, text, realfile = "<code>"):
 
         logger.error("The code that was being executed was:")
         _print_trace(textarray, linefailed)
-        logger.error("(file: '%s', lineno: %s, function: %s)" % (tbextract[0][0], tbextract[0][1], tbextract[0][2]))
+        logger.error("(file: '%s', lineno: %s, function: %s)", tbextract[0][0], tbextract[0][1], tbextract[0][2])
 
-        # See if this is a function we constructed and has calls back into other functions in 
+        # See if this is a function we constructed and has calls back into other functions in
         # "text". If so, try and improve the context of the error by diving down the trace
         level = 0
         nexttb = tb.tb_next
         while nexttb is not None:
             if tbextract[level][0] == tbextract[level+1][0] and tbextract[level+1][2] == tbextract[level][0]:
                 _print_trace(textarray, tbextract[level+1][1])
-                logger.error("(file: '%s', lineno: %s, function: %s)" % (tbextract[level+1][0], tbextract[level+1][1], tbextract[level+1][2]))
+                logger.error("(file: '%s', lineno: %s, function: %s)", tbextract[level+1][0], tbextract[level+1][1], tbextract[level+1][2])
             else:
                  break
             nexttb = tb.tb_next

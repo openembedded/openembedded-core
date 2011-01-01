@@ -31,8 +31,7 @@ import logging
 import bb
 import bb.utils
 import bb.siggen
-import bb.utils
- 
+
 logger = logging.getLogger("BitBake.Parsing")
 
 class ParseError(Exception):
@@ -85,8 +84,8 @@ def init(fn, data):
         if h['supports'](fn):
             return h['init'](data)
 
-def init_parser(d, dumpsigs):
-    bb.parse.siggen = bb.siggen.init(d, dumpsigs)
+def init_parser(d):
+    bb.parse.siggen = bb.siggen.init(d)
 
 def resolve_file(fn, d):
     if not os.path.isabs(fn):

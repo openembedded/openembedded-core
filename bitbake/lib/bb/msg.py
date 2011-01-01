@@ -93,12 +93,10 @@ domain = _NamedTuple("Domain", (
     "RunQueue",
     "TaskData",
     "Util"))
-
 logger = logging.getLogger("BitBake")
 loggers = Loggers()
 debug_level = DebugLevel()
 
-#
 # Message control functions
 #
 
@@ -191,4 +189,3 @@ def fatal(msgdomain, msg):
     else:
         loggers[msgdomain].critical(msg)
     sys.exit(1)
-

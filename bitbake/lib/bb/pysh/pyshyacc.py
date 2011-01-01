@@ -649,7 +649,6 @@ def p_error(p):
 try:
     import pyshtables
 except ImportError:
-    import os
     outputdir = os.path.dirname(__file__)
     if not os.access(outputdir, os.W_OK):
         outputdir = ''

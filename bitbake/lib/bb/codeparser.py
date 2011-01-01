@@ -1,16 +1,20 @@
-from bb.pysh import pyshyacc, pyshlex
-from itertools import chain
-from bb import msg, utils
 import ast
 import codegen
+import logging
+import os.path
+import bb.utils, bb.data
+from itertools import chain
+from bb.pysh import pyshyacc, pyshlex
 
+logger = logging.getLogger('BitBake.CodeParser')
 PARSERCACHE_VERSION = 2
 
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
-    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
+    logger.info('Importing cPickle failed.  Falling back to a very slow implementation.')
+
 
 def check_indent(codestr):
     """If the code is indented, add a top level piece of code to 'remove' the indentation"""
@@ -23,7 +27,7 @@ def check_indent(codestr):
         return codestr
 
     if codestr[i-1] is "	" or codestr[i-1] is " ":
-        return "if 1:\n" + codestr        
+        return "if 1:\n" + codestr
 
     return codestr
 
@@ -31,15 +35,18 @@ pythonparsecache = {}
 shellparsecache = {}
 
 def parser_cachefile(d):
-    cachedir = bb.data.getVar("PERSISTENT_DIR", d, True) or bb.data.getVar("CACHE", d, True)
+    cachedir = (bb.data.getVar("PERSISTENT_DIR", d, True) or
+                bb.data.getVar("CACHE", d, True))
     if cachedir in [None, '']:
         return None
     bb.utils.mkdirhier(cachedir)
     cachefile = os.path.join(cachedir, "bb_codeparser.dat")
-    bb.msg.debug(1, bb.msg.domain.Cache, "Using cache in '%s' for codeparser cache" % cachefile)
+    logger.debug(1, "Using cache in '%s' for codeparser cache", cachefile)
     return cachefile
 
 def parser_cache_init(d):
+    global pythonparsecache
+    global shellparsecache
 
     cachefile = parser_cachefile(d)
     if not cachefile:
@@ -54,17 +61,16 @@ def parser_cache_init(d):
     if version != PARSERCACHE_VERSION:
         return
 
-    bb.codeparser.pythonparsecache = data[0]
-    bb.codeparser.shellparsecache = data[1]
+    pythonparsecache = data[0]
+    shellparsecache = data[1]
 
 def parser_cache_save(d):
-
     cachefile = parser_cachefile(d)
     if not cachefile:
         return
 
     p = pickle.Pickler(file(cachefile, "wb"), -1)
-    p.dump([[bb.codeparser.pythonparsecache, bb.codeparser.shellparsecache], PARSERCACHE_VERSION])
+    p.dump([[pythonparsecache, shellparsecache], PARSERCACHE_VERSION])
 
 class PythonParser():
     class ValueVisitor():
@@ -129,10 +135,10 @@ class PythonParser():
                 funcstr = codegen.to_source(func)
                 argstr = codegen.to_source(arg)
             except TypeError:
-                msg.debug(2, None, "Failed to convert function and argument to source form")
+                logger.debug(2, 'Failed to convert function and argument to source form')
             else:
-                msg.debug(1, None, "Warning: in call to '%s', argument '%s' is not a literal" %
-                                     (funcstr, argstr))
+                logger.debug(1, "Warning: in call to '%s', argumen t'%s' is"
+                                "not a literal", funcstr, argstr)
 
         def visit_Call(self, node):
             if self.compare_name(self.getvars, node.func):
@@ -184,7 +190,7 @@ class PythonParser():
             self.execs = pythonparsecache[h]["execs"]
             return
 
-        code = compile(check_indent(str(node)), "<string>", "exec", 
+        code = compile(check_indent(str(node)), "<string>", "exec",
                        ast.PyCF_ONLY_AST)
 
         visitor = self.ValueVisitor(code)
@@ -319,11 +325,11 @@ class ShellParser():
 
                 cmd = word[1]
                 if cmd.startswith("$"):
-                    msg.debug(1, None, "Warning: execution of non-literal command '%s'" % cmd)
+                    logger.debug(1, "Warning: execution of non-literal"
+                                    "command '%s'", cmd)
                 elif cmd == "eval":
                     command = " ".join(word for _, word in words[1:])
                     self.parse_shell(command)
                 else:
                     self.allexecs.add(cmd)
                 break
-

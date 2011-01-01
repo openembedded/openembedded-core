@@ -992,7 +992,7 @@ class RunQueue:
 
         if self.state is runQueueComplete:
             # All done
-            logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed." % (self.rqexe.stats.completed, self.rqexe.stats.skipped, self.rqexe.stats.failed))
+            logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed.", self.rqexe.stats.completed, self.rqexe.stats.skipped, self.rqexe.stats.failed)
             return False
 
         if self.state is runQueueChildProcess:
@@ -1114,7 +1114,6 @@ class RunQueueExecute:
 
         sys.stdout.flush()
         sys.stderr.flush()
-
         try:
             pipeinfd, pipeoutfd = os.pipe()
             pipein = os.fdopen(pipeinfd, 'rb', 4096)
@@ -1125,6 +1124,7 @@ class RunQueueExecute:
             bb.msg.fatal(bb.msg.domain.RunQueue, "fork failed: %d (%s)" % (e.errno, e.strerror))
         if pid == 0:
             pipein.close()
+
             # Save out the PID so that the event can include it the
             # events
             bb.event.worker_pid = os.getpid()
@@ -1180,9 +1180,10 @@ class RunQueueExecuteDummy(RunQueueExecute):
     def __init__(self, rq):
         self.rq = rq
         self.stats = RunQueueStats(0)
+
     def finish(self):
         self.rq.state = runQueueComplete
-        return    
+        return
 
 class RunQueueExecuteTasks(RunQueueExecute):
     def __init__(self, rq):
@@ -1211,7 +1212,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                     self.rq.scenequeue_covered.add(task)
                     found = True
 
-        bb.debug(1, "Full skip list %s" % self.rq.scenequeue_covered)
+        logger.debug(1, 'Full skip list %s', self.rq.scenequeue_covered)
 
         for task in self.rq.scenequeue_covered:
             self.task_skip(task)
@@ -1221,7 +1222,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
         for scheduler in self.rqdata.schedulers:
             if self.scheduler == scheduler.name:
                 self.sched = scheduler(self, self.rqdata)
-                logger.debug(1, "Using runqueue scheduler '%s'" % scheduler.name)
+                logger.debug(1, "Using runqueue scheduler '%s'", scheduler.name)
                 break
         else:
             bb.fatal("Invalid scheduler '%s'. Available schedulers: %s" %
@@ -1247,7 +1248,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 self.runq_buildable[revdep] = 1
                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[revdep]]
                 taskname = self.rqdata.runq_task[revdep]
-                logger.debug(1, "Marking task %s (%s, %s) as buildable" % (revdep, fn, taskname))
+                logger.debug(1, "Marking task %s (%s, %s) as buildable", revdep, fn, taskname)
 
     def task_complete(self, task):
         self.stats.taskCompleted()
@@ -1295,7 +1296,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
 
             taskdep = self.rqdata.dataCache.task_deps[fn]
             if 'noexec' in taskdep and taskname in taskdep['noexec']:
-                startevent = runQueueTaskStarted(task, self.stats, self.rq, noexec=True)
+                startevent = runQueueTaskStarted(task, self.stats, self.rq,
+                                                 noexec=True)
                 bb.event.fire(startevent, self.cfgData)
                 self.runq_running[task] = 1
                 self.stats.taskActive()
@@ -1328,11 +1330,11 @@ class RunQueueExecuteTasks(RunQueueExecute):
         # Sanity Checks
         for task in xrange(self.stats.total):
             if self.runq_buildable[task] == 0:
-                logger.error("Task %s never buildable!" % task)
+                logger.error("Task %s never buildable!", task)
             if self.runq_running[task] == 0:
-                logger.error("Task %s never ran!" % task)
+                logger.error("Task %s never ran!", task)
             if self.runq_complete[task] == 0:
-                logger.error("Task %s never completed!" % task)
+                logger.error("Task %s never completed!", task)
         self.rq.state = runQueueComplete
         return True
 
@@ -1478,7 +1480,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
         """
 
         index = self.rqdata.runq_setscene[task]
-        logger.debug(1, "Found task %s could be accelerated" % self.rqdata.get_user_idstring(index))
+        logger.debug(1, 'Found task %s which could be accelerated',
+                        self.rqdata.get_user_idstring(index))
 
         self.scenequeue_covered.add(task)
         self.scenequeue_updatecounters(task)

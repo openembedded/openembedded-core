@@ -259,7 +259,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
     for key in keys:
         emit_var(key, o, d, False) and o.write('\n')
 
-    emit_var(func, o, d, False) and o.write('\n')    
+    emit_var(func, o, d, False) and o.write('\n')
     newdeps = bb.codeparser.ShellParser().parse_shell(d.getVar(func, True))
     seen = set()
     while newdeps:
@@ -299,7 +299,7 @@ def build_dependencies(key, keys, shelldeps, d):
         deps |= set((d.getVarFlag(key, "vardeps", True) or "").split())
         deps -= set((d.getVarFlag(key, "vardepsexclude", True) or "").split())
     except:
-        bb.note("Error expanding variable %s" % key) 
+        bb.note("Error expanding variable %s" % key)
         raise
     return deps
     #bb.note("Variable %s references %s and calls %s" % (key, str(deps), str(execs)))

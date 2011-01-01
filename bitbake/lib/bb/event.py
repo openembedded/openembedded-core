@@ -343,6 +343,7 @@ class CacheLoadCompleted(Event):
         self.total = total
         self.num_entries = num_entries
 
+
 class DepTreeGenerated(Event):
     """
     Event when a dependency tree has been generated
@@ -384,4 +385,3 @@ class LogHandler(logging.Handler):
         fire(record, None)
         if bb.event.useStdout:
             print(self.format(record))
-

@@ -1,35 +1,45 @@
 import hashlib
+import logging
 import re
+
+logger = logging.getLogger('BitBake.SigGen')
 
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
-    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
+    logger.info('Importing cPickle failed.  Falling back to a very slow implementation.')
 
-def init(d, dumpsigs):
+def init(d):
     siggens = [obj for obj in globals().itervalues()
                       if type(obj) is type and issubclass(obj, SignatureGenerator)]
 
     desired = bb.data.getVar("BB_SIGNATURE_HANDLER", d, True) or "noop"
     for sg in siggens:
         if desired == sg.name:
-            return sg(d, dumpsigs)
+            return sg(d)
             break
     else:
-        bb.error("Invalid signature generator '%s', using default 'noop' generator" % desired)
-        bb.error("Available generators: %s" % ", ".join(obj.name for obj in siggens))
-        return SignatureGenerator(d, dumpsigs)
+        logger.error("Invalid signature generator '%s', using default 'noop'\n"
+                     "Available generators: %s",
+                     ', '.join(obj.name for obj in siggens))
+        return SignatureGenerator(d)
 
 class SignatureGenerator(object):
     """
     """
     name = "noop"
 
-    def __init__(self, data, dumpsigs):
+    def __init__(self, data):
         return
 
     def finalise(self, fn, d, varient):
+        return
+
+    def get_taskhash(self, fn, task, deps, dataCache):
+        return 0
+
+    def set_taskdata(self, hashes, deps):
         return
 
     def stampfile(self, stampbase, taskname, taskhash):
@@ -40,7 +50,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
     """
     name = "basic"
 
-    def __init__(self, data, dumpsigs):
+    def __init__(self, data):
         self.basehash = {}
         self.taskhash = {}
         self.taskdeps = {}
@@ -78,7 +88,6 @@ class SignatureGeneratorBasic(SignatureGenerator):
             if data is None:
                 bb.error("Task %s from %s seems to be empty?!" % (task, fn))
             self.basehash[fn + "." + task] = hashlib.md5(data).hexdigest()
-            #bb.note("Hash for %s is %s" % (task, tashhash[task]))
 
         self.taskdeps[fn] = taskdeps
         self.gendeps[fn] = gendeps
@@ -110,7 +119,6 @@ class SignatureGeneratorBasic(SignatureGenerator):
                 # then process the actual dependencies
                 dep_fn = re.search("(?P<fn>.*)\..*", dep).group('fn')
                 if self.twl.search(dataCache.pkg_fn[dep_fn]):
-                    #bb.note("Skipping %s" % dep)
                     continue
             if dep not in self.taskhash:
                 bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
@@ -181,10 +189,6 @@ def compare_sigfiles(a, b):
     p2 = pickle.Unpickler(file(b, "rb"))
     b_data = p2.load()
 
-    #print "Checking"
-    #print str(a_data)
-    #print str(b_data)
-
     def dict_diff(a, b):
         sa = set(a.keys())
         sb = set(b.keys())
@@ -195,7 +199,7 @@ def compare_sigfiles(a, b):
                 changed.add(i)
         added = sa - sb
         removed = sb - sa
-        return changed, added, removed 
+        return changed, added, removed
 
     if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
         print "basewhitelist changed from %s to %s" % (a_data['basewhitelist'], b_data['basewhitelist'])
@@ -225,11 +229,6 @@ def compare_sigfiles(a, b):
     if changed:
         for dep in changed:
             print "Variable %s value changed from %s to %s" % (dep, a_data['varvals'][dep], b_data['varvals'][dep])
-    #if added:
-    #    print "Dependency on variable %s was added (value %s)" % (dep, b_data['gendeps'][dep])
-    #if removed:
-    #    print "Dependency on Variable %s was removed (value %s)" % (dep, a_data['gendeps'][dep])
-
     if 'runtaskdeps' in a_data and 'runtaskdeps' in b_data and sorted(a_data['runtaskdeps']) != sorted(b_data['runtaskdeps']):
         print "Tasks this task depends on changed from %s to %s" % (sorted(a_data['runtaskdeps']), sorted(b_data['runtaskdeps']))
 

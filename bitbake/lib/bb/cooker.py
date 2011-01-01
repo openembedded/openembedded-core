@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # ex:ts=4:sw=4:sts=4:et
 # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
 #
@@ -483,10 +484,9 @@ class BBCooker:
             except (IOError, bb.parse.ParseError) as exc:
                 parselog.critical("Unable to parse %s: %s" % (f, exc))
                 sys.exit(1)
- 
-        data = self.configuration.data
 
-        bb.parse.init_parser(data, self.configuration.dump_signatures)
+        data = self.configuration.data
+        bb.parse.init_parser(data)
         for f in files:
             data = _parse(f, data)
 
@@ -526,9 +526,7 @@ class BBCooker:
         if bb.data.getVar("BB_WORKERCONTEXT", self.configuration.data) is None:
             bb.fetch.fetcher_init(self.configuration.data)
         bb.codeparser.parser_cache_init(self.configuration.data)
-
-        bb.parse.init_parser(data, self.configuration.dump_signatures)
-
+        bb.parse.init_parser(data)
         bb.event.fire(bb.event.ConfigParsed(), self.configuration.data)
 
     def handleCollections( self, collections ):
@@ -1042,7 +1040,6 @@ class CookerParser(object):
         except Exception as exc:
             self.shutdown(clean=False)
             bb.fatal('Error parsing %s: %s' % (exc.recipe, exc))
-
 
         self.current += 1
         self.virtuals += len(result)

@@ -28,10 +28,10 @@ BitBake build tools.
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 # Based on functions from the base bb module, Copyright 2003 Holger Schurig
 
-import copy, re, sys
+import copy, re
 from collections import MutableMapping
 import logging
-import bb
+import bb, bb.codeparser
 from bb   import utils
 from bb.COW  import COWDictBase
 
@@ -41,6 +41,7 @@ __setvar_keyword__ = ["_append", "_prepend"]
 __setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?')
 __expand_var_regexp__ = re.compile(r"\${[^{}]+}")
 __expand_python_regexp__ = re.compile(r"\${@.+?}")
+
 
 class VariableParse:
     def __init__(self, varname, d, val = None):
@@ -72,11 +73,11 @@ class VariableParse:
             self.references |= parser.references
             self.execs |= parser.execs
 
-            value = utils.better_eval(codeobj, DataDict(self.d))
+            value = utils.better_eval(codeobj, DataContext(self.d))
             return str(value)
 
 
-class DataDict(dict):
+class DataContext(dict):
     def __init__(self, metadata, **kwargs):
         self.metadata = metadata
         dict.__init__(self, **kwargs)
@@ -129,7 +130,7 @@ class DataSmart(MutableMapping):
 
     def expand(self, s, varname):
         return self.expandWithRefs(s, varname).value
-    
+
 
     def finalize(self):
         """Performs final steps upon the datastore, including application of overrides"""
@@ -291,7 +292,7 @@ class DataSmart(MutableMapping):
             self._makeShadowCopy(var)
         self.dict[var][flag] = flagvalue
 
-    def getVarFlag(self, var, flag, expand = False):
+    def getVarFlag(self, var, flag, expand=False):
         local_var = self._findVar(var)
         value = None
         if local_var:
@@ -374,7 +375,7 @@ class DataSmart(MutableMapping):
         value = self.getVar(variable, False)
         for key in keys:
             referrervalue = self.getVar(key, False)
-            if ref in referrervalue:
+            if referrervalue and ref in referrervalue:
                 self.setVar(key, referrervalue.replace(ref, value))
 
     def localkeys(self):
