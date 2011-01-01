@@ -1295,15 +1295,16 @@ class RunQueueExecuteTasks(RunQueueExecute):
 
             taskdep = self.rqdata.dataCache.task_deps[fn]
             if 'noexec' in taskdep and taskname in taskdep['noexec']:
-                logger.info("Noexec task %d of %d (ID: %s, %s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
-                                                                self.stats.total,
-                                                                task,
-                                                                self.rqdata.get_user_idstring(task)))
+                startevent = runQueueTaskStarted(task, self.stats, self.rq, noexec=True)
+                bb.event.fire(startevent, self.cfgData)
                 self.runq_running[task] = 1
                 self.stats.taskActive()
                 bb.build.make_stamp(taskname, self.rqdata.dataCache, fn)
                 self.task_complete(task)
                 return True
+            else:
+                startevent = runQueueTaskStarted(task, self.stats, self.rq)
+                bb.event.fire(startevent, self.cfgData)
 
             pid, pipein, pipeout = self.fork_off_task(fn, task, taskname)
 
@@ -1610,9 +1611,9 @@ class runQueueTaskStarted(runQueueEvent):
     """
     Event notifing a task was started
     """
-    def __init__(self, task, stats, rq):
+    def __init__(self, task, stats, rq, noexec=False):
         runQueueEvent.__init__(self, task, stats, rq)
-        self.message = "Running task %s (%d of %d) (%s)" % (task, stats.completed + stats.active + 1, self.stats.total, self.taskstring)
+        self.noexec = noexec
 
 class runQueueTaskFailed(runQueueEvent):
     """
@@ -1621,15 +1622,11 @@ class runQueueTaskFailed(runQueueEvent):
     def __init__(self, task, stats, exitcode, rq):
         runQueueEvent.__init__(self, task, stats, rq)
         self.exitcode = exitcode
-        self.message = "Task %s failed (%s)" % (task, self.taskstring)
 
 class runQueueTaskCompleted(runQueueEvent):
     """
     Event notifing a task completed
     """
-    def __init__(self, task, stats, rq):
-        runQueueEvent.__init__(self, task, stats, rq)
-        self.message = "Task %s completed (%s)" % (task, self.taskstring)
 
 #def check_stamp_fn(fn, taskname, d):
 #    rq = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", d)
