@@ -24,3 +24,10 @@ S = "${WORKDIR}/ust-${PV}"
 
 inherit autotools
 
+# Due to liburcu not building on ARM or MIPS currently this recipe needs to
+# be limited also.
+# So here let us first suppport x86/powerpc platforms now.
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|powerpc.*)-linux'
+
+
+
