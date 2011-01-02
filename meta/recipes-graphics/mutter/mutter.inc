@@ -10,6 +10,9 @@ ALTERNATIVE_LINK = "${bindir}/x-window-manager"
 ALTERNATIVE_PATH = "${bindir}/mutter"
 ALTERNATIVE_PRIORITY = "11"
 
+COMPATIBLE_MACHINE = "(zylonite|mx31litekit|omap-3430ldp|omap-3430sdp|mx31ads|qemuarm|qemux86|ipodtouch|atom-pc|menlow)"
+
+
 EXTRA_OECONF += "--disable-verbose	\
 	         --disable-xinerama	\
 	         --without-introspection \
