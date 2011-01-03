@@ -1,6 +1,7 @@
 DESCRIPTION = "User interface to Ftrace"
-LICENSE = "GPL"
-LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
+                    file://trace-cmd.c;beginline=6;endline=8;md5=2c22c965a649ddd7973d7913c5634a5e"
 
 PR = r2
 PV = "1.0.4+git${SRCPV}"
