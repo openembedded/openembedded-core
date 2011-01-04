@@ -31,7 +31,6 @@ import itertools
 from bb import methodpool
 from bb.parse import logger
 
-__word__ = re.compile(r"\S+")
 __parsed_methods__ = bb.methodpool.get_parsed_dict()
 _bbversions_re = re.compile(r"\[(?P<from>[0-9]+)-(?P<to>[0-9]+)\]")
 
@@ -180,7 +179,7 @@ class MethodFlagsNode(AstNode):
 
 class ExportFuncsNode(AstNode):
     def __init__(self, fns, classes):
-        self.n = __word__.findall(fns)
+        self.n = fns.split()
         self.classes = classes
 
     def eval(self, data):
@@ -250,7 +249,7 @@ class AddTaskNode(AstNode):
 
 class BBHandlerNode(AstNode):
     def __init__(self, fns):
-        self.hs = __word__.findall(fns)
+        self.hs = fns.split()
 
     def eval(self, data):
         bbhands = bb.data.getVar('__BBHANDLERS', data) or []
@@ -301,7 +300,7 @@ def handleBBHandlers(statements, m):
 
 def handleInherit(statements, m):
     classes = m.group(1)
-    statements.append(InheritNode(__word__.findall(classes)))
+    statements.append(InheritNode(classes.split()))
 
 def finalize(fn, d, variant = None):
     for lazykey in bb.data.getVar("__lazy_assigned", d) or ():
