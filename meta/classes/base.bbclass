@@ -242,6 +242,8 @@ python base_do_unpack() {
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
 
+	urldata = bb.fetch.init([], localdata, True)
+
 	src_uri = bb.data.getVar('SRC_URI', localdata, True)
 	if not src_uri:
 		return
@@ -253,7 +255,9 @@ python base_do_unpack() {
 		if local is None:
 			continue
 		local = os.path.realpath(local)
+		lf = bb.utils.lockfile(urldata[url].lockfile)
 		ret = oe_unpack_file(local, localdata, url)
+		bb.utils.unlockfile(lf)
 		if not ret:
 			raise bb.build.FuncFailed("oe_unpack_file failed with return value %s" % ret)
 }
