@@ -121,7 +121,7 @@ do_kernel_configme() {
 	echo "[INFO] doing kernel configme"
 
 	cd ${S}
-	configme --reconfig
+	configme --reconfig --output ${B}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
