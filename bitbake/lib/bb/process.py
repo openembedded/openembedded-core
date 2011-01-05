@@ -92,7 +92,7 @@ def run(cmd, input=None, **options):
         options["shell"] = True
 
     log = options.get('log')
-    if log:
+    if 'log' in options:
         del options['log']
 
     try:
