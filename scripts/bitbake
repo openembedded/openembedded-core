@@ -1,7 +1,20 @@
 #!/bin/sh
+NO_BUILD_OPTS="--version -h --help -p --parse-only -s --show-versions -e --environment"
+no_build="0"
+for opt in $@; do
+for key in $NO_BUILD_OPTS; do
+    if [ $opt == $key ]
+    then
+        no_build="1"
+        break
+    fi
+done
+[ $no_build == "1" ] && break
+done
+
 OLDPATH=$PATH
 export PATH=`echo $PATH | sed s#[^:]*/scripts:##`
-if [ ! -e "$BUILDDIR/pseudodone" ]; then
+if [ ! -e "$BUILDDIR/pseudodone" -a $no_build == "0" ]; then
     echo "Pseudo has not been built, building this first before the main build"
     bitbake pseudo-native
     ret=$?
@@ -19,7 +32,12 @@ if [ ! -e "$BUILDDIR/pseudodone" ]; then
 fi
 BITBAKE=`which bitbake`
 export PATH=$OLDPATH
-PSEUDOBINDIR=`cat $BUILDDIR/pseudodone`
-PSEUDO_BINDIR=$PSEUDOBINDIR PSEUDO_LIBDIR=$PSEUDOBINDIR/../lib/pseudo/lib PSEUDO_PREFIX=$PSEUDOBINDIR/../../ PSEUDO_DISABLED=1 $PSEUDOBINDIR/pseudo $BITBAKE $@
+if [ $no_build == "0" ]
+then
+    PSEUDOBINDIR=`cat $BUILDDIR/pseudodone`
+    PSEUDO_BINDIR=$PSEUDOBINDIR PSEUDO_LIBDIR=$PSEUDOBINDIR/../lib/pseudo/lib PSEUDO_PREFIX=$PSEUDOBINDIR/../../ PSEUDO_DISABLED=1 $PSEUDOBINDIR/pseudo $BITBAKE $@
+else
+    $BITBAKE $@
+fi
 ret=$?
 exit $ret
