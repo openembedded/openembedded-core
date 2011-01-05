@@ -119,7 +119,7 @@ class LogTee(object):
         return '<LogTee {0}>'.format(self.name)
 
 
-def exec_func(func, d, dirs = None, logfile = NULL):
+def exec_func(func, d, dirs = None):
     """Execute an BB 'function'"""
 
     body = data.getVar(func, d)
@@ -163,9 +163,9 @@ def exec_func(func, d, dirs = None, logfile = NULL):
 
     with bb.utils.fileslocked(lockfiles):
         if ispython:
-            exec_func_python(func, d, runfile, logfile, cwd=adir)
+            exec_func_python(func, d, runfile, cwd=adir)
         else:
-            exec_func_shell(func, d, runfile, logfile, cwd=adir)
+            exec_func_shell(func, d, runfile, cwd=adir)
 
 _functionfmt = """
 def {function}(d):
@@ -174,7 +174,7 @@ def {function}(d):
 {function}(d)
 """
 logformatter = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
-def exec_func_python(func, d, runfile, logfile, cwd=None):
+def exec_func_python(func, d, runfile, cwd=None):
     """Execute a python BB 'function'"""
 
     bbfile = d.getVar('FILE', True)
@@ -190,10 +190,6 @@ def exec_func_python(func, d, runfile, logfile, cwd=None):
     if cwd:
         os.chdir(cwd)
 
-    handler = logging.StreamHandler(logfile)
-    handler.setFormatter(logformatter)
-    bblogger.addHandler(handler)
-
     try:
         comp = utils.better_compile(code, func, bbfile)
         utils.better_exec(comp, {"d": d}, code, bbfile)
@@ -203,11 +199,10 @@ def exec_func_python(func, d, runfile, logfile, cwd=None):
 
         raise FuncFailed(func, None)
     finally:
-        bblogger.removeHandler(handler)
         if olddir:
             os.chdir(olddir)
 
-def exec_func_shell(function, d, runfile, logfile, cwd=None):
+def exec_func_shell(function, d, runfile, cwd=None):
     """Execute a shell function from the metadata
 
     Note on directory behavior.  The 'dirs' varflag should contain a list
@@ -235,13 +230,16 @@ def exec_func_shell(function, d, runfile, logfile, cwd=None):
     cmd = runfile
 
     if logger.getEffectiveLevel() <= logging.DEBUG:
-        logfile = LogTee(logger, logfile)
+        logfile = LogTee(logger, sys.stdout)
+    else:
+        logfile = None
 
     try:
         bb.process.run(cmd, env=env, cwd=cwd, shell=False, stdin=NULL,
                        log=logfile)
     except bb.process.CmdError:
-        raise FuncFailed(function, logfile.name)
+        logfn = d.getVar('BB_LOGFILE', True)
+        raise FuncFailed(function, logfn)
 
 def _task_data(fn, task, d):
     localdata = data.createCopy(d)
@@ -308,21 +306,30 @@ def _exec_task(fn, task, d, quieterr):
     origstdout = bb.event.useStdout
     bb.event.useStdout = True
 
+    # Ensure python logging goes to the logfile
+    handler = logging.StreamHandler(logfile)
+    handler.setFormatter(logformatter)
+    bblogger.addHandler(handler)
+
+    localdata.setVar('BB_LOGFILE', logfn)
+
     event.fire(TaskStarted(task, localdata), localdata)
     try:
         for func in (prefuncs or '').split():
-            exec_func(func, localdata, logfile=logfile)
-        exec_func(task, localdata, logfile=logfile)
+            exec_func(func, localdata)
+        exec_func(task, localdata)
         for func in (postfuncs or '').split():
-            exec_func(func, localdata, logfile=logfile)
+            exec_func(func, localdata)
     except FuncFailed as exc:
         if not quieterr:
             logger.error(str(exc))
-            event.fire(TaskFailed(exc.name, exc.logfile, localdata), localdata)
+            event.fire(TaskFailed(exc.name, logfn, localdata), localdata)
         return 1
     finally:
         sys.stdout.flush()
         sys.stderr.flush()
+
+        bblogger.removeHandler(handler)
 
         bb.event.useStdout = origstdout
 
