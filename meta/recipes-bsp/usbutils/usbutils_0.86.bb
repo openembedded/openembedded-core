@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "libusb zlib"
 RDEPENDS_${PN} = "${PN}-ids"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/linux-usb/usbutils-${PV}.tar.gz"
 
@@ -20,9 +20,10 @@ inherit autotools
 
 do_install_append() {
 	ln -s ../sbin/lsusb ${D}${bindir}/lsusb
+	# We only need the compressed copy, remove the uncompressed version
+	rm -f ${D}${datadir}/usb.ids
 }
 
 PACKAGES += "${PN}-ids"
-
 FILES_${PN} += "${datadir}/pkgconfig"
 FILES_${PN}-ids = "${datadir}/usb*"
