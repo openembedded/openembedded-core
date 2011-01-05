@@ -4,6 +4,7 @@
 inherit cpan-base
 
 EXTRA_CPANFLAGS ?= ""
+EXTRA_PERLFLAGS ?= ""
 
 # Env var which tells perl if it should use host (no) or target (yes) settings
 export PERLCONFIGTARGET = "${@is_target(d)}"
@@ -15,7 +16,7 @@ export PERL_ARCHLIB = "${STAGING_LIBDIR}/perl/${@get_perl_version(d)}"
 
 cpan_do_configure () {
 	export PERL5LIB="${PERL_ARCHLIB}"
-	yes '' | perl Makefile.PL ${EXTRA_CPANFLAGS}
+	yes '' | perl ${EXTRA_PERLFLAGS} Makefile.PL ${EXTRA_CPANFLAGS}
 	if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
 		. ${STAGING_LIBDIR}/perl/config.sh
 		# Use find since there can be a Makefile generated for each Makefile.PL
