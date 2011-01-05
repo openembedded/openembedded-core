@@ -202,8 +202,11 @@ EOF
 	# remove lock files
 	rm -f ${IMAGE_ROOTFS}${rpmlibdir}/__db.*
 
-	# remove resolver files and manifests
-	rm -f ${IMAGE_ROOTFS}/install/install.manifest
+	# Move manifests into the directory with the logs
+	mv ${IMAGE_ROOTFS}/install/*.manifest ${T}/
+
+	# Remove all remaining resolver files
+	rm -f ${IMAGE_ROOTFS}/install
 
 	log_check rootfs
 
