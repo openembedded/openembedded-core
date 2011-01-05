@@ -11,7 +11,7 @@ PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db perl-native grep-native"
 DEPENDS += "gdbm"
-PR = "r21"
+PR = "r22"
 
 # Major part of version
 PVM = "5.8"
@@ -114,7 +114,7 @@ do_compile() {
             sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
         fi
         cd Cross
-        oe_runmake perl LD="${TARGET_SYS}-gcc"
+        oe_runmake perl LD="${CCLD}"
 }
 
 do_install() {
