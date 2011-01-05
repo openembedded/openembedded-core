@@ -40,6 +40,7 @@ logger = logging.getLogger('BitBake.Build')
 
 NULL = open(os.devnull, 'r+')
 
+
 # When we execute a python function we'd like certain things
 # in all namespaces, hence we add them to __builtins__
 # If we do not do this and use the exec globals, they will

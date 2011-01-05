@@ -99,7 +99,6 @@ class DepExplorer(gtk.Window):
         self.pkg_treeview.get_selection().connect("changed", self.on_cursor_changed)
         column = gtk.TreeViewColumn("Package", gtk.CellRendererText(), text=COL_PKG_NAME)
         self.pkg_treeview.append_column(column)
-        column.set_sort_column_id(COL_PKG_NAME)
         pane.add1(scrolled)
         scrolled.add(self.pkg_treeview)
 
@@ -264,7 +263,6 @@ def main(server, eventHandler):
                 gtk.gdk.threads_enter()
                 pbar.update(x, progress_total)
                 gtk.gdk.threads_leave()
-
                 continue
 
             if isinstance(event, bb.event.ParseCompleted):

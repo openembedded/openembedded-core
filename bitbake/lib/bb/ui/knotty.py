@@ -22,12 +22,10 @@ from __future__ import division
 
 import os
 import sys
-import itertools
 import xmlrpclib
 import logging
 import progressbar
 import bb.msg
-from bb import ui
 from bb.ui import uihelper
 
 logger = logging.getLogger("BitBake")
@@ -209,7 +207,6 @@ def main(server, eventHandler):
                             event.stats.completed + event.stats.active +
                                 event.stats.failed + 1,
                             event.stats.total, event.taskid, event.taskstring)
-
                 continue
 
             if isinstance(event, bb.runqueue.runQueueTaskFailed):
