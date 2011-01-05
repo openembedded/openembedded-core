@@ -10,7 +10,7 @@ SECTION = "devel"
 PRIORITY = "optional"
 DEPENDS = "gettext bison-native"
 
-PR = "r0"
+PR = "r1"
 
 BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
 	   file://m4.patch;patch=1"
@@ -27,4 +27,10 @@ SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 inherit autotools
 acpaths = "-I ${S}/m4"
 
+do_install_append_virtclass-native() {
+	create_wrapper ${D}/${bindir}/bison \
+		M4=${STAGING_BINDIR_NATIVE}/m4 \
+		BISON_PKGDATADIR=${STAGING_DATADIR_NATIVE}/bison
+}
+#bison-native encodes the staging M4 path
 BBCLASSEXTEND = "native"
