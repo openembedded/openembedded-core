@@ -5,8 +5,11 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eed49b78b15b436c933b6b8b054e3901 \
                     file://saverproto.h;endline=26;md5=a84c0637305159f3c0ab173aaeede48d"
 
-PR = "r1"
+PR = "r0"
 PE = "1"
 
-SRC_URI[md5sum] = "9040c991a56ee9b5976936f8c65d5c8a"
-SRC_URI[sha256sum] = "deaf0a3212617e0dab353a3c3a66e0a1f2398306eca0fd882ac15996b0e44d99"
+EXTRA_OECONF_append = " --enable-specs=no"
+
+SRC_URI[md5sum] = "6af0f2e3369f5f74e69345e214f5fd0d"
+SRC_URI[sha256sum] = "fad2f73cac136fcddd311d27a14ac7e519a9bec6ab272490d9c9b363556024f1"
+
