@@ -233,7 +233,7 @@ def exec_func_shell(function, d, runfile, cwd=None):
     if logger.getEffectiveLevel() <= logging.DEBUG:
         logfile = LogTee(logger, sys.stdout)
     else:
-        logfile = None
+        logfile = sys.stdout
 
     try:
         bb.process.run(cmd, env=env, cwd=cwd, shell=False, stdin=NULL,
