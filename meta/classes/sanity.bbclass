@@ -124,6 +124,14 @@ def check_sanity(e):
     if data.getVar('MACHINE', e.data, True):
         if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
             messages = messages + 'Please set a valid MACHINE in your local.conf\n'
+
+    # Check that DL_DIR is set, exists and is writable. In theory, we should never even hit the check if DL_DIR isn't 
+    # set, since so much relies on it being set.
+    dldir = data.getVar('DL_DIR', e.data, True)
+    if not dldir:
+        messages = messages + "DL_DIR is not set. Your environment is misconfigured, check that DL_DIR is set, and if the directory exists, that it is writable. \n"
+    if os.path.exists(dldir) and not os.access(dldir, os.W_OK):
+        messages = messages + "DL_DIR: %s exists but you do not appear to have write access to it. \n" % dldir
     
     # Check that the DISTRO is valid
     # need to take into account DISTRO renaming DISTRO
@@ -303,7 +311,7 @@ def check_sanity(e):
 
     oeroot = data.getVar('POKYBASE', e.data)
     if oeroot.find ('+') != -1:
-        messages = messages + "Error, you have an invalid character (+) in your POKYBASE directory path. Please more Poky to a directory which doesn't include a +."
+        messages = messages + "Error, you have an invalid character (+) in your POKYBASE directory path. Please move Poky to a directory which doesn't include a +."
     elif oeroot.find (' ') != -1:
         messages = messages + "Error, you have a space in your POKYBASE directory path. Please move Poky to a directory which doesn't include a space."
 
