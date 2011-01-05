@@ -75,8 +75,6 @@ export CC_FOR_BUILD = "${BUILD_CC}"
 export CPP_FOR_BUILD = "${BUILD_CPP}"
 export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
 
-export CC = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
-
 do_configure () {
 	(cd ${S}; gnu-configize) || die "Failed to run gnu-configize"
 	oe_runconf
