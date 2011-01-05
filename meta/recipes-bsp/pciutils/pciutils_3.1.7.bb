@@ -9,7 +9,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS = "zlib"
 RDEPENDS_${PN} = "${PN}-ids"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.kernel.org/pub/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
            file://configure.patch \
@@ -47,9 +47,6 @@ do_install () {
 
 	install -d ${D}${bindir}
 	ln -s ../sbin/lspci ${D}${bindir}/lspci
-
-	install -d ${D}${datadir}
-	install -m 644 ${S}/pci.ids ${D}${datadir}
 }
 
 PACKAGES =+ "pciutils-ids libpci libpci-dev libpci-dbg"
