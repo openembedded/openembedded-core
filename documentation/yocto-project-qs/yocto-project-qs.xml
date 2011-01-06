@@ -302,7 +302,7 @@
          <itemizedlist>
              <listitem>
                  <para>
-                     Install the standalone Yocto toolchain tarball
+                     Install the standalone Yocto toolchain tarball.
                  </para>
              </listitem>
              <listitem>
@@ -319,7 +319,7 @@
          </itemizedlist>
 
          <para>
-             You can download the pre-built toolchain which includes the poky-qemu script and support files from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/toolchain/'></ulink>.  These are available for i586 (32-bit) and x86_64 (64 bit) host machines, targeting each of the 5 supported target architectures. The tarballs are self contained and install into /opt/poky.
+             You can download the pre-built toolchain, which includes the poky-qemu script and support files, from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/toolchain/'></ulink>.  These are available for i586 (32-bit) and x86_64 (64 bit) host machines, targeting each of the five supported target architectures. The tarballs are self contained and install into <filename>/opt/poky</filename>.
              Use these commands to install the toolchain tarball (taking the 64 bit host, 32 bit i586 target as an example):
          </para>
 
@@ -331,13 +331,20 @@
          </para>
 
          <para>
-             You can download the pre-built Linux kernel and the file image system from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/'></ulink>.  
+             You can download the pre-built Linux kernel and the file image system suitable for 
+             running in the emulator QEMU from 
+             <ulink url='http://yoctoproject.org/downloads/yocto-0.9/qemu'></ulink>.
+             Be sure to use the kernel and file image system that matches the architecture you want 
+             to simulate.
+         </para>
+       
+         <para>  
              The kernel and file image system have the following forms, respectively:
          </para>
 
           <literallayout class='monospaced'>
      *zImage*qemu*.bin
-     poky-image-*-qemu*.ext2.bz2
+     yocto-image-*-qemu*.ext3.bz2
           </literallayout>
 
          <para>
