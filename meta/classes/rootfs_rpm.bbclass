@@ -206,7 +206,7 @@ EOF
 	mv ${IMAGE_ROOTFS}/install/*.manifest ${T}/
 
 	# Remove all remaining resolver files
-	rm -f ${IMAGE_ROOTFS}/install
+	rm -rf ${IMAGE_ROOTFS}/install
 
 	log_check rootfs
 
