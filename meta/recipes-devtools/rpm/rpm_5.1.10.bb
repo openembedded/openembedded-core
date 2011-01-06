@@ -5,7 +5,7 @@ LICENSE = "LGPL 2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "zlib perl popt beecrypt python libpcre elfutils"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.1/POKY/${BPN}-${PV}.tar.gz \
            file://hdraddorappend.patch \
