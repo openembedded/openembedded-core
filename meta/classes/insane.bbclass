@@ -427,11 +427,6 @@ def package_qa_check_staged(path,d):
             path = os.path.join(root,file)
             if file.endswith(".la"):
                 file_content = open(path).read()
-                # Don't check installed status for native/cross packages
-                if not bb.data.inherits_class("native", d) and not bb.data.inherits_class("cross", d):
-                    if installed in file_content:
-                        error_msg = "%s failed sanity test (installed) in path %s" % (file,root)
-                        sane = package_qa_handle_error(5, error_msg, "staging", path, d)
                 if workdir in file_content:
                     error_msg = "%s failed sanity test (workdir) in path %s" % (file,root)
                     sane = package_qa_handle_error(8, error_msg, "staging", path, d)
