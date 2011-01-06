@@ -107,7 +107,7 @@ python base_scenefunction () {
 python base_do_setscene () {
 	for f in (bb.data.getVar('SCENEFUNCS', d, 1) or '').split():
 		bb.build.exec_func(f, d)
-	if not os.path.exists(bb.data.getVar('STAMP', d, 1) + ".do_setscene"):
+	if not os.path.exists(bb.build.stampfile("do_setscene", d)):
 		bb.build.make_stamp("do_setscene", d)
 }
 do_setscene[selfstamp] = "1"
