@@ -349,7 +349,7 @@ def package_qa_check_license(workdir, d):
         # just throw a warning now. Once licensing data in entered for enough of the recipes,
         # this will be converted into error and False will be returned.
         bb.error(pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)")
-        return True
+        return False
 
     srcdir = bb.data.getVar('S', d, True)
 
@@ -357,10 +357,10 @@ def package_qa_check_license(workdir, d):
         (type, host, path, user, pswd, parm) = bb.decodeurl(url)
         srclicfile = os.path.join(srcdir, path)
         if not os.path.isfile(srclicfile):
-            raise bb.build.FuncFailed( "LIC_FILES_CHKSUM points to invalid file: " + path)
+            raise bb.build.FuncFailed( pn + ": LIC_FILES_CHKSUM points to invalid file: " + path)
 
         if 'md5' not in parm:
-            bb.error("md5 checksum is not specified for ", url)
+            bb.error(pn + ": md5 checksum is not specified for ", url)
             return False
         beginline, endline = 0, 0
         if 'beginline' in parm:
@@ -391,11 +391,11 @@ def package_qa_check_license(workdir, d):
             os.unlink(tmplicfile)
 
         if parm['md5'] == md5chksum:
-            bb.note ("md5 checksum matched for ", url)
+            bb.note (pn + ": md5 checksum matched for ", url)
         else:
-            bb.error ("md5 data is not matching for ", url)
-            bb.error ("The new md5 checksum is ", md5chksum)
-            bb.error ("Check if the license information has changed, and if it has update the .bb file with correct license")
+            bb.error (pn + ": md5 data is not matching for ", url)
+            bb.error (pn + ": The new md5 checksum is ", md5chksum)
+            bb.error (pn + ": Check if the license information has changed in")
             sane = False
 
     return sane
@@ -605,5 +605,5 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
 Missing inherit gettext?""" % config)
 
     if not package_qa_check_license(workdir, d):
-        bb.error("Licensing warning: LIC_FILES_CHKSUM does not match, please fix")
+        bb.fatal("Licensing Error: LIC_FILES_CHKSUM does not match, please fix")
 }
