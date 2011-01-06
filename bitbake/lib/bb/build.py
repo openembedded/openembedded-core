@@ -352,8 +352,8 @@ def _exec_task(fn, task, d, quieterr):
             bb.utils.remove(loglink)
     event.fire(TaskSucceeded(task, localdata), localdata)
 
-    if not d.getVarFlag(task, 'nostamp') and not d.getVarFlag(task, 'selfstamp'):
-        make_stamp(task, d)
+    if not localdata.getVarFlag(task, 'nostamp') and not localdata.getVarFlag(task, 'selfstamp'):
+        make_stamp(task, localdata)
 
     return 0
 
