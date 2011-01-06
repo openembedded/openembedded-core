@@ -1,6 +1,8 @@
---- modutils-2.4.27/depmod/depmod.c.old	2005-06-05 23:25:28.000000000 +0100
-+++ modutils-2.4.27/depmod/depmod.c	2005-06-05 23:25:38.000000000 +0100
-@@ -1133,7 +1133,7 @@
+Index: modutils-2.4.27/depmod/depmod.c
+===================================================================
+--- modutils-2.4.27.orig/depmod/depmod.c
++++ modutils-2.4.27/depmod/depmod.c
+@@ -1133,7 +1133,7 @@ static int addksyms(char *file_syms)
  
  		for (ksym = ksyms; so_far < nksyms; ++so_far, ksym++) {
  			if (strncmp((char *)ksym->name, "GPLONLY_", 8) == 0)
@@ -9,9 +11,11 @@
  			assert(n_syms < MAX_MAP_SYM);
  			symtab[n_syms++] = addsym((char *)ksym->name, mod, SYM_DEFINED, 0);
  		}
---- modutils-2.4.27/genksyms/genksyms.c.old	2005-06-05 23:24:16.000000000 +0100
-+++ modutils-2.4.27/genksyms/genksyms.c	2005-06-05 23:24:35.000000000 +0100
-@@ -45,7 +45,7 @@
+Index: modutils-2.4.27/genksyms/genksyms.c
+===================================================================
+--- modutils-2.4.27.orig/genksyms/genksyms.c
++++ modutils-2.4.27/genksyms/genksyms.c
+@@ -45,7 +45,7 @@ char *cur_filename, *output_directory;
  int flag_debug, flag_dump_defs, flag_warnings;
  int checksum_version = 1, kernel_version = version(2,0,0);
  
@@ -20,9 +24,11 @@
  static int nsyms;
  
  static struct symbol *expansion_trail;
---- modutils-2.4.27/insmod/insmod.c.old	2005-06-05 23:21:47.000000000 +0100
-+++ modutils-2.4.27/insmod/insmod.c	2005-06-05 23:22:34.000000000 +0100
-@@ -275,7 +275,7 @@
+Index: modutils-2.4.27/insmod/insmod.c
+===================================================================
+--- modutils-2.4.27.orig/insmod/insmod.c
++++ modutils-2.4.27/insmod/insmod.c
+@@ -275,7 +275,7 @@ static int add_symbols_from(struct obj_f
  		if (strncmp((char *)s->name, "GPLONLY_", 8) == 0) {
  			gplonly_seen = 1;
  			if (gpl)
@@ -31,9 +37,11 @@
  			else
  				continue;
  		}
---- modutils-2.4.27/obj/obj_kallsyms.c.old	2005-06-05 23:20:08.000000000 +0100
-+++ modutils-2.4.27/obj/obj_kallsyms.c	2005-06-05 23:20:24.000000000 +0100
-@@ -200,7 +200,7 @@
+Index: modutils-2.4.27/obj/obj_kallsyms.c
+===================================================================
+--- modutils-2.4.27.orig/obj/obj_kallsyms.c
++++ modutils-2.4.27/obj/obj_kallsyms.c
+@@ -200,7 +200,7 @@ obj_kallsyms (struct obj_file *fin, stru
  
      /* Initial contents, header + one entry per input section.  No strings. */
      osec->header.sh_size = sizeof(*a_hdr) + loaded*sizeof(*a_sec);
@@ -42,7 +50,7 @@
      	xmalloc(osec->header.sh_size);
      memset(osec->contents, 0, osec->header.sh_size);
      a_hdr->size = sizeof(*a_hdr);
-@@ -275,7 +275,7 @@
+@@ -275,7 +275,7 @@ obj_kallsyms (struct obj_file *fin, stru
  	a_hdr->symbol_off +
  	a_hdr->symbols*a_hdr->symbol_size +
  	strings_size - strings_left;
@@ -51,9 +59,11 @@
  	xrealloc(a_hdr, a_hdr->total_size);
      p = (char *)a_hdr + a_hdr->symbol_off;
      memcpy(p, symbols, a_hdr->symbols*a_hdr->symbol_size);
---- modutils-2.4.27/obj/obj_mips.c.orig	2003-04-05 00:47:17.000000000 +0200
-+++ modutils-2.4.27/obj/obj_mips.c	2005-07-21 12:51:48.000000000 +0200
-@@ -244,7 +244,9 @@
+Index: modutils-2.4.27/obj/obj_mips.c
+===================================================================
+--- modutils-2.4.27.orig/obj/obj_mips.c
++++ modutils-2.4.27/obj/obj_mips.c
+@@ -244,7 +244,9 @@ arch_archdata (struct obj_file *f, struc
    archdata_sec->header.sh_size = 0;
    sec = obj_find_section(f, "__dbe_table");
    if (sec) {
@@ -64,3 +74,18 @@
      memset(ad, 0, sizeof(*ad));
      archdata_sec->header.sh_size = sizeof(*ad);
      ad->__start___dbe_table = sec->header.sh_addr;
+Index: modutils-2.4.27/obj/obj_ppc.c
+===================================================================
+--- modutils-2.4.27.orig/obj/obj_ppc.c
++++ modutils-2.4.27/obj/obj_ppc.c
+@@ -255,7 +255,9 @@ arch_archdata (struct obj_file *f, struc
+   archdata_sec->header.sh_size = 0;
+   sec = obj_find_section(f, "__ftr_fixup");
+   if (sec) {
+-    ad = (struct archdata *) (archdata_sec->contents) = xmalloc(sizeof(*ad));
++    /* ad = (struct archdata *) (archdata_sec->contents) = xmalloc(sizeof(*ad)); */
++    archdata_sec->contents = xmalloc(sizeof(*ad));
++    ad = (struct archdata *) (archdata_sec->contents);
+     memset(ad, 0, sizeof(*ad));
+     archdata_sec->header.sh_size = sizeof(*ad);
+     ad->__start___ftr_fixup = sec->header.sh_addr;
