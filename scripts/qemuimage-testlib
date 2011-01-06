@@ -420,7 +420,7 @@ Test_Create_Qemu()
 		sleep 5
 		TARGET_IPADDR=`Test_Fetch_Target_IP $PID`
 		# If IP address is 0, means there is no qemu process found
-		if [ ${TARGET_IPADDR} -eq 0 ]; then
+		if [ ${TARGET_IPADDR} == "0" ]; then
 			Test_Info "There is no qemu process or qemu ip address found, return failed"
 			return $ret
 		fi
