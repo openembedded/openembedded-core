@@ -30,6 +30,7 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
            file://fedora/gcc43-rh341221.patch;striplevel=0 \
            file://fedora/gcc43-java-debug-iface-type.patch;striplevel=0 \
            file://fedora/gcc43-i386-libgomp.patch;striplevel=0 \
+           file://fedora/gcc45-no-add-needed.patch;striplevel=0 \
            file://103-uclibc-conf-noupstream.patch  \
            file://200-uclibc-locale.patch  \
            file://203-uclibc-locale-no__x.patch;striplevel=1 \
