@@ -29,7 +29,7 @@ do_configure () {
 
 export EXTRA_CFLAGS = "${CFLAGS}"
 do_compile () {
-	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+	unset CFLAGS CPPFLAGS CXXFLAGS
 	oe_runmake
 }
 
