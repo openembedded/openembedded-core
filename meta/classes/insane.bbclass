@@ -534,9 +534,9 @@ python do_package_qa () {
 
     checks = [package_qa_check_rpath, package_qa_check_dev,
               package_qa_check_perm, package_qa_check_arch,
-              package_qa_check_desktop, 
+              package_qa_check_desktop, package_qa_hash_style,
               package_qa_check_dbg]
-    #         package_qa_check_buildpaths, package_qa_hash_style
+    #         package_qa_check_buildpaths, 
     walk_sane = True
     rdepends_sane = True
     for package in packages.split():
