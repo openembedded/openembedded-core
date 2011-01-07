@@ -893,6 +893,11 @@ class BBCooker:
     def post_serve(self):
         bb.event.fire(CookerExit(), self.configuration.event_data)
 
+    def shutdown(self):
+        self.state = state.shutdown
+
+    def stop(self):
+        self.state = state.stop
 
 def server_main(cooker, func, *args):
     cooker.pre_serve()
@@ -934,12 +939,6 @@ def server_main(cooker, func, *args):
     cooker.post_serve()
 
     return ret
-
-    def shutdown(self):
-        self.state = state.shutdown
-
-    def stop(self):
-        self.state = state.stop
 
 class CookerExit(bb.event.Event):
     """
