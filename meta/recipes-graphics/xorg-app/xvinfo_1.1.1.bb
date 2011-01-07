@@ -1,7 +1,7 @@
 require xorg-app-common.inc
 
 DESCRIPTION = "Print out X-Video extension adaptor information"
-LIC_FILES_CHKSUM = "file://COPYING;md5=4641deddaa80fe7ca88e944e1fd94a94"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b664101ad7a1dc758a4c4109bf978e68"
 DEPENDS += " libxv"
 PE = "1"
 
