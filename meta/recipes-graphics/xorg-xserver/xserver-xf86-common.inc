@@ -34,4 +34,3 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
 
 SRC_URI += "file://macro_tweak.patch"
 
-COMPATIBLE_MACHINE = "(qemux86*|igep*)"
