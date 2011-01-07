@@ -106,22 +106,25 @@ class RecipeInfo(namedtuple('RecipeInfo', recipe_fields)):
         return metadata.getVar(var, True) or ''
 
     @classmethod
+    def make_optional(cls, default=None, **kwargs):
+        """Construct the namedtuple from the specified keyword arguments,
+        with every value considered optional, using the default value if
+        it was not specified."""
+        for field in cls._fields:
+            kwargs[field] = kwargs.get(field, default)
+        return cls(**kwargs)
+
+    @classmethod
     def from_metadata(cls, filename, metadata):
+        if cls.getvar('__SKIPPED', metadata):
+            return cls.make_optional(skipped=True)
+
         tasks = metadata.getVar('__BBTASKS', False)
 
         pn = cls.getvar('PN', metadata)
         packages = cls.listvar('PACKAGES', metadata)
         if not pn in packages:
             packages.append(pn)
-
-        skip = cls.getvar('__SKIPPED', metadata)
-        if skip:
-            return RecipeInfo(None, None, None, None, None, 
-                              None, None, None, None, None, 
-                              None, skip, None, None, None, 
-                              None, None, None, None, None, 
-                              None, None, None, None, None,
-                              None, None)
 
         return RecipeInfo(
             tasks            = tasks,
@@ -133,7 +136,7 @@ class RecipeInfo(namedtuple('RecipeInfo', recipe_fields)):
                                {'tasks': [], 'parents': {}},
             variants         = cls.listvar('__VARIANTS', metadata) + [''],
 
-            skipped          = skip,
+            skipped          = False,
             timestamp        = bb.parse.cached_mtime(filename),
             packages         = cls.listvar('PACKAGES', metadata),
             pn               = pn,
