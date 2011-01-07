@@ -1292,8 +1292,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
                 self.task_skip(task)
                 return True
 
-            bb.event.fire(runQueueTaskStarted(task, self.stats, self.rq), self.cfgData)
-
             taskdep = self.rqdata.dataCache.task_deps[fn]
             if 'noexec' in taskdep and taskname in taskdep['noexec']:
                 startevent = runQueueTaskStarted(task, self.stats, self.rq,
