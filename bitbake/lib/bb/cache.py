@@ -114,6 +114,15 @@ class RecipeInfo(namedtuple('RecipeInfo', recipe_fields)):
         if not pn in packages:
             packages.append(pn)
 
+        skip = cls.getvar('__SKIPPED', metadata)
+        if skip:
+            return RecipeInfo(None, None, None, None, None, 
+                              None, None, None, None, None, 
+                              None, skip, None, None, None, 
+                              None, None, None, None, None, 
+                              None, None, None, None, None,
+                              None, None)
+
         return RecipeInfo(
             tasks            = tasks,
             basetaskhashes   = cls.taskvar('BB_BASEHASH', tasks, metadata),
@@ -124,7 +133,7 @@ class RecipeInfo(namedtuple('RecipeInfo', recipe_fields)):
                                {'tasks': [], 'parents': {}},
             variants         = cls.listvar('__VARIANTS', metadata) + [''],
 
-            skipped          = cls.getvar('__SKIPPED', metadata),
+            skipped          = skip,
             timestamp        = bb.parse.cached_mtime(filename),
             packages         = cls.listvar('PACKAGES', metadata),
             pn               = pn,
