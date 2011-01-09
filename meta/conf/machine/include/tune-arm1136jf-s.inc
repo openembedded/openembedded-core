@@ -4,5 +4,6 @@ FEED_ARCH = "armv6"
 BASE_PACKAGE_ARCH = "armv6"
 
 ARM_INSTRUCTION_SET = "${@['thumb','arm'][bb.data.getVar('CPU_FEATURES', d, 1).find('thumb') == -1]}"
+PACKAGE_EXTRA_ARCHS += "armv4 armv4t armv5te armv6"
 
 require conf/machine/include/tune-thumb.inc
