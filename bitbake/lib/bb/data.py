@@ -161,7 +161,7 @@ def expandKeys(alterdata, readdata = None):
 
 def inheritFromOS(d):
     """Inherit variables from the environment."""
-    exportlist = bb.utils.preserved_envvars_export_list()
+    exportlist = bb.utils.preserved_envvars_exported()
     for s in os.environ.keys():
         try:
             setVar(s, os.environ[s], d)
