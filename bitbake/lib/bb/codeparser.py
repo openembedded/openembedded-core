@@ -4,7 +4,8 @@ import logging
 import os.path
 import bb.utils, bb.data
 from itertools import chain
-from bb.pysh import pyshyacc, pyshlex
+from pysh import pyshyacc, pyshlex
+
 
 logger = logging.getLogger('BitBake.CodeParser')
 PARSERCACHE_VERSION = 2
