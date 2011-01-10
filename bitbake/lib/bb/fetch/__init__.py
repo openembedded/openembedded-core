@@ -243,17 +243,20 @@ def verify_checksum(u, ud, d):
     sha256data = bb.utils.sha256_file(ud.localpath)
 
     if (ud.md5_expected == None or ud.sha256_expected == None):
-        bb.warn("Missing SRC_URI checksum for %s, consider to add\n" \
-                "SRC_URI[%s] = \"%s\"\nSRC_URI[%s] = \"%s\"" \
-                % (ud.localpath, ud.md5_name, md5data, ud.sha256_name, sha256data))
+        logger.warn('Missing SRC_URI checksum for %s, consider adding to the recipe:\n'
+                    'SRC_URI[%s] = "%s"\nSRC_URI[%s] = "%s"',
+                    ud.localpath, ud.md5_name, md5data,
+                    ud.sha256_name, sha256data)
         if bb.data.getVar("BB_STRICT_CHECKSUM", d, True) == "1":
             raise FetchError("No checksum specified for %s." % u)
         return
 
     if (ud.md5_expected != md5data or ud.sha256_expected != sha256data):
-        bb.error("The checksums for '%s' did not match." % ud.localpath)
-        bb.error("Expected MD5: '%s' and Got: '%s'" % (ud.md5_expected, md5data))
-        bb.error("Expected SHA256: '%s' and Got: '%s'" % (ud.sha256_expected, sha256data))
+        logger.error('The checksums for "%s" did not match.\n'
+                     '  MD5: expected "%s", got "%s"\n'
+                     '  SHA256: expected "%s", got "%s"\n',
+                     ud.localpath, ud.md5_expected, md5data,
+                     ud.sha256_expected, sha256data)
         raise FetchError("%s checksum mismatch." % u)
 
 def go(d, urls = None):
@@ -326,7 +329,7 @@ def checkstatus(d, urls = None):
     for u in urls:
         ud = urldata[u]
         m = ud.method
-        logger.debug(1, "Testing URL %s" % u)
+        logger.debug(1, "Testing URL %s", u)
         # First try checking uri, u, from PREMIRRORS
         mirrors = mirror_from_string(bb.data.getVar('PREMIRRORS', d, True))
         ret = try_mirrors(d, u, mirrors, True)
@@ -482,7 +485,7 @@ def try_mirrors(d, uri, mirrors, check = False, force = False):
     """
     fpath = os.path.join(data.getVar("DL_DIR", d, 1), os.path.basename(uri))
     if not check and os.access(fpath, os.R_OK) and not force:
-        logger.debug(1, "%s already exists, skipping checkout." % fpath)
+        logger.debug(1, "%s already exists, skipping checkout.", fpath)
         return fpath
 
     ld = d.createCopy()
@@ -510,7 +513,7 @@ def try_mirrors(d, uri, mirrors, check = False, force = False):
                     bb.fetch.MD5SumError):
                 import sys
                 (type, value, traceback) = sys.exc_info()
-                logger.debug(2, "Mirror fetch failure: %s" % value)
+                logger.debug(2, "Mirror fetch failure: %s", value)
                 removefile(ud.localpath)
                 continue
     return None
@@ -694,7 +697,7 @@ class Fetch(object):
             if not rev:
                 rev = data.getVar("SRCREV_pn-%s_%s" % (pn, ud.parm['name']), d, 1)
             if not rev:
-                rev = data.getVar("SRCREV_%s" % (ud.parm['name']), d, 1)           
+                rev = data.getVar("SRCREV_%s" % (ud.parm['name']), d, 1)
         if not rev:
             rev = data.getVar("SRCREV", d, 1)
         if rev == "INVALID":
