@@ -703,21 +703,18 @@ class RunQueueData:
                         procdep.append(self.taskData.fn_index[self.runq_fnid[dep]] + "." + self.runq_task[dep])
                     self.runq_hash[task] = bb.parse.siggen.get_taskhash(self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task], procdep, self.dataCache)
 
-        hashdata = {}
-        hashdata["hashes"] = {}
-        hashdata["deps"] = {}
+        self.hashes = {}
+        self.hash_deps = {}
         for task in xrange(len(self.runq_fnid)):
-            hashdata["hashes"][self.taskData.fn_index[self.runq_fnid[task]] + "." + self.runq_task[task]] = self.runq_hash[task]
+            identifier = '%s.%s' % (self.taskData.fn_index[self.runq_fnid[task]],
+                                    self.runq_task[task])
+            self.hashes[identifier] = self.runq_hash[task]
             deps = []
             for dep in self.runq_depends[task]:
-                deps.append(self.taskData.fn_index[self.runq_fnid[dep]] + "." + self.runq_task[dep])
-            hashdata["deps"][self.taskData.fn_index[self.runq_fnid[task]] + "." + self.runq_task[task]] = deps
-
-        hashdata["msg-debug"] = self.cooker.configuration.debug
-        hashdata["msg-debug-domains"] =  self.cooker.configuration.debug_domains
-        hashdata["verbose"] = self.cooker.configuration.verbose
-
-        self.hashdata = hashdata
+                depidentifier = '%s.%s' % (self.taskData.fn_index[self.runq_fnid[dep]],
+                                           self.runq_task[dep])
+                deps.append(depidentifier)
+            self.hash_deps[identifier] = deps
 
         # Remove stamps for targets if force mode active
         if self.cooker.configuration.force:
@@ -1119,12 +1116,12 @@ class RunQueueExecute:
                 the_data.setVarFlag(taskname, "quieterrors", "1")
 
             bb.data.setVar("BB_WORKERCONTEXT", "1", the_data)
-            bb.parse.siggen.set_taskdata(self.rqdata.hashdata["hashes"], self.rqdata.hashdata["deps"])
+            bb.parse.siggen.set_taskdata(self.rqdata.hashes, self.rqdata.hash_deps)
 
-            for h in self.rqdata.hashdata["hashes"]:
-                bb.data.setVar("BBHASH_%s" % h, self.rqdata.hashdata["hashes"][h], the_data)
-            for h in self.rqdata.hashdata["deps"]:
-                bb.data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hashdata["deps"][h], the_data)
+            for h in self.rqdata.hashes:
+                bb.data.setVar("BBHASH_%s" % h, self.rqdata.hashes[h], the_data)
+            for h in self.rqdata.hash_deps:
+                bb.data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hash_deps[h], the_data)
 
             bb.data.setVar("BB_TASKHASH", self.rqdata.runq_hash[task], the_data)
 
