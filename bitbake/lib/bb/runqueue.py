@@ -25,7 +25,6 @@ Handles preparation and execution of a queue of tasks
 import copy
 import os
 import sys
-import subprocess
 import signal
 import stat
 import fcntl
@@ -1055,7 +1054,7 @@ class RunQueueExecute:
         self.rq.state = runQueueComplete
         return
 
-    def fork_off_task(self, fn, task, taskname):
+    def fork_off_task(self, fn, task, taskname, quieterrors=False):
         the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.get_file_appends(fn), self.cooker.configuration.data)
 
         env = bb.data.export_vars(the_data)
@@ -1115,7 +1114,7 @@ class RunQueueExecute:
             #newso = open(logout, 'w')
             #os.dup2(newso.fileno(), sys.stdout.fileno())
             #os.dup2(newso.fileno(), sys.stderr.fileno())
-            if taskname.endswith("_setscene"):
+            if quieterrors:
                 the_data.setVarFlag(taskname, "quieterrors", "1")
 
             bb.data.setVar("BB_WORKERCONTEXT", "1", the_data)
@@ -1568,6 +1567,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
         self.rq.state = runQueueRunInit
         return True
+
+    def fork_off_task(self, fn, task, taskname):
+        return RunQueueExecute.fork_off_task(self, fn, task, taskname, quieterrors=True)
 
 class TaskFailure(Exception):
     """
