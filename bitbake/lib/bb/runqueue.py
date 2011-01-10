@@ -1106,15 +1106,11 @@ class RunQueueExecute:
             # No stdin
             newsi = os.open(os.devnull, os.O_RDWR)
             os.dup2(newsi, sys.stdin.fileno())
-            # Stdout to a logfile
-            #logout = data.expand("${TMPDIR}/log/stdout.%s" % os.getpid(), self.cfgData, True)
-            #mkdirhier(os.path.dirname(logout))
-            #newso = open(logout, 'w')
-            #os.dup2(newso.fileno(), sys.stdout.fileno())
-            #os.dup2(newso.fileno(), sys.stderr.fileno())
             if quieterrors:
                 the_data.setVarFlag(taskname, "quieterrors", "1")
 
+            bb.data.setVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", self, self.cooker.configuration.data)
+            bb.data.setVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY2", fn, self.cooker.configuration.data)
             bb.data.setVar("BB_WORKERCONTEXT", "1", the_data)
             bb.parse.siggen.set_taskdata(self.rqdata.hashes, self.rqdata.hash_deps)
 
@@ -1618,14 +1614,14 @@ class runQueueTaskCompleted(runQueueEvent):
     Event notifing a task completed
     """
 
-#def check_stamp_fn(fn, taskname, d):
-#    rqexe = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", d)
-#    fn = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY2", d)
-#    fnid = rqexe.rqdata.taskData.getfn_id(fn)
-#    taskid = rqexe.rqdata.get_task_id(fnid, taskname)
-#    if taskid is not None:
-#        return rqexe.rq.check_stamp_task(taskid)
-#    return None
+def check_stamp_fn(fn, taskname, d):
+    rqexe = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", d)
+    fn = bb.data.getVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY2", d)
+    fnid = rqexe.rqdata.taskData.getfn_id(fn)
+    taskid = rqexe.rqdata.get_task_id(fnid, taskname)
+    if taskid is not None:
+        return rqexe.rq.check_stamp_task(taskid)
+    return None
 
 class runQueuePipe():
     """
