@@ -1083,10 +1083,9 @@ class RunQueueExecute:
         sys.stdout.flush()
         sys.stderr.flush()
         try:
-            pipeinfd, pipeoutfd = os.pipe()
-            pipein = os.fdopen(pipeinfd, 'rb', 4096)
-            pipeout = os.fdopen(pipeoutfd, 'wb', 4096)
-
+            pipein, pipeout = os.pipe()
+            pipein = os.fdopen(pipein, 'rb', 4096)
+            pipeout = os.fdopen(pipeout, 'wb', 0)
             pid = os.fork()
         except OSError as e:
             bb.msg.fatal(bb.msg.domain.RunQueue, "fork failed: %d (%s)" % (e.errno, e.strerror))

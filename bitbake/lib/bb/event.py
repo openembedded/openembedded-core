@@ -129,13 +129,11 @@ def fire(event, d):
 def worker_fire(event, d):
     data = "<event>" + pickle.dumps(event) + "</event>"
     worker_pipe.write(data)
-    worker_pipe.flush()
 
 def fire_from_worker(event, d):
     if not event.startswith("<event>") or not event.endswith("</event>"):
         print("Error, not an event %s" % event)
         return
-    #print "Got event %s" % event
     event = pickle.loads(event[7:-8])
     fire_ui_handlers(event, d)
 
