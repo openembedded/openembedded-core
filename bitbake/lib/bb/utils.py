@@ -291,17 +291,6 @@ def join_deps(deps):
             result.append(dep)
     return ", ".join(result)
 
-def extend_deps(dest, src):
-    """
-    Extend the results from explode_dep_versions by appending all of the items
-    in the second list, avoiding duplicates.
-    """
-    for dep in src:
-        if dep not in dest:
-            dest[dep] = src[dep]
-        elif dest[dep] != src[dep]:
-            dest[dep] = src[dep]
-
 def _print_trace(body, line):
     """
     Print the Environment of a Text Body
