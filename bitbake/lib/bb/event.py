@@ -384,3 +384,7 @@ class LogHandler(logging.Handler):
         fire(record, None)
         if bb.event.useStdout:
             print(self.format(record))
+
+    def filter(self, record):
+        record.taskpid = worker_pid
+        return True
