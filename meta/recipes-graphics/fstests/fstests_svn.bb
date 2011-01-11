@@ -4,11 +4,12 @@ SECTION = "devel"
 LICENSE = "ZLIB"
 DEPENDS = "pango libxext libxft virtual/libx11 gtk+"
 PV = "0.0+svnr${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 inherit autotools
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=fstests;proto=http"
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=fstests;proto=http \
+	file://dso_linking_change_build_fix.patch"
 
 S = "${WORKDIR}/fstests/tests"
 
