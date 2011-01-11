@@ -9,11 +9,12 @@ SECTION = "x11/base"
 
 DEPENDS = "virtual/libx11 libxft libxcalibrate"
 
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "${GPE_MIRROR}/xtscal-${PV}.tar.bz2 \
            file://change-cross.patch;patch=1 \
            file://cleanup.patch;patch=1 \
+           file://dso_linking_change_build_fix.patch \
            file://30xTs_Calibrate.sh"
 
 SRC_URI[md5sum] = "9bcab80b474d5454477d1ca166a68c34"
