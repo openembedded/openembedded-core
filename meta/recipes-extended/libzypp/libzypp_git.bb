@@ -17,7 +17,9 @@ PR = "r6"
 
 SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
            file://no-doc.patch \
-           file://rpm5.patch "
+           file://rpm5.patch \
+           file://rpm5-no-rpmdbinit.patch \
+          "
 
 SRC_URI_append_mips = " file://mips-workaround-gcc-tribool-error.patch"
 
