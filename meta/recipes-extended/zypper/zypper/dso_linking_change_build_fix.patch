@@ -42,8 +42,8 @@ Index: git/src/CMakeLists.txt
  TARGET_LINK_LIBRARIES( zypper_lib ${ZYPP_LIBRARY} ${READLINE_LIBRARY} -laugeas ${AUGEAS_LIBRARY} )
  
  ADD_EXECUTABLE( zypper main.cc )
--TARGET_LINK_LIBRARIES( zypper zypper_lib ${ZYPP_LIBRARY} ${READLINE_LIBRARY} -laugeas ${AUGEAS_LIBRARY} )
-+TARGET_LINK_LIBRARIES( zypper zypper_lib ${ZYPP_LIBRARY} ${READLINE_LIBRARY} -laugeas ${AUGEAS_LIBRARY} pthread rt )
+-TARGET_LINK_LIBRARIES( zypper zypper_lib ${ZYPP_LIBRARY} ${READLINE_LIBRARY} -laugeas ${AUGEAS_LIBRARY} -lrt )
++TARGET_LINK_LIBRARIES( zypper zypper_lib ${ZYPP_LIBRARY} ${READLINE_LIBRARY} -laugeas ${AUGEAS_LIBRARY} -lrt -lpthread )
  
  
  INSTALL(
@@ -52,7 +52,7 @@ Index: git/src/CMakeLists.txt
  # zypp-refresh utility
  ADD_EXECUTABLE( zypp-refresh zypp-refresh.cc )
 -TARGET_LINK_LIBRARIES( zypp-refresh ${ZYPP_LIBRARY} )
-+TARGET_LINK_LIBRARIES( zypp-refresh ${ZYPP_LIBRARY} pthread )
++TARGET_LINK_LIBRARIES( zypp-refresh ${ZYPP_LIBRARY} -lpthread )
  INSTALL(
    TARGETS zypp-refresh
    RUNTIME DESTINATION ${INSTALL_PREFIX}/sbin

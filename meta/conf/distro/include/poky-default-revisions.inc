@@ -194,5 +194,5 @@ SRCREV_pn-x-load ??= "6f3a26101303051e0f91b6213735b68ce804e94e"
 SRCDATE_yaffs2-utils-native ??= "20071107"
 SRCDATE_yaffs2-utils ??= "20071107"
 SRCREV_pn-zaurusd ??= "426"
-SRCREV_pn-zypper ??= "9eb0e248e06c8d20ad054be2439149d9ede37531"
+SRCREV_pn-zypper ??= "2c5bb6ceb99ecd950ef993e43d77bf0569ea0582"
 
