@@ -1,0 +1,24 @@
+diff --git a/rpmdb/rpmdb.h b/rpmdb/rpmdb.h
+index 0e1bdd7..8b522bb 100644
+--- a/rpmdb/rpmdb.h
++++ b/rpmdb/rpmdb.h
+@@ -9,6 +9,7 @@
+ 
+ #include <assert.h>
+ #include <mire.h>
++#include <errno.h>
+ 
+ #include <rpmtypes.h>
+ #include <rpmtag.h>	/* XXX Header typedef */
+diff --git a/rpmdb/rpmtag.h b/rpmdb/rpmtag.h
+index 8af6480..2166b4c 100644
+--- a/rpmdb/rpmtag.h
++++ b/rpmdb/rpmtag.h
+@@ -7,6 +7,7 @@
+ 
+ #include <rpmiotypes.h>
+ #include <rpmsw.h>
++#include <stdint.h>
+ 
+ #ifdef __cplusplus
+ extern "C" {
