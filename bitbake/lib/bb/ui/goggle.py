@@ -32,8 +32,8 @@ def event_handle_idle_func (eventHandler, build, pbar):
     # Consume as many messages as we can in the time available to us
     event = eventHandler.getEvent()
     while event:
-        event = eventHandler.getEvent()
         build.handle_event (event, pbar)
+        event = eventHandler.getEvent()
 
     return True
 
