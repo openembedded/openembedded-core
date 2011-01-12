@@ -2,7 +2,7 @@ DESCRIPTION = "Packge of environment files for SDK"
 LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 LICENSE = "MIT"
-PR = "r0"
+PR = "r1"
 
 EXCLUDE_FROM_WORLD = "1"
 
@@ -15,8 +15,6 @@ SDK_OUTPUT = "${SDK_DIR}/image"
 SDKTARGETSYSROOT = "${SDKPATH}/sysroots/${TARGET_SYS}"
 
 inherit cross-canadian
-
-GXX_INCLUDEDIR := "${target_includedir}/c++"
 
 do_generate_content[nostamp] = "1"
 do_generate_content() {
