@@ -173,7 +173,7 @@ kernel_do_install() {
 		scripts/ihex2fw scripts/kallsyms scripts/pnmtologo scripts/basic/docproc \
 		scripts/basic/fixdep scripts/basic/hash scripts/dtc/dtc \
 		scripts/genksyms/genksyms scripts/kconfig/conf scripts/mod/mk_elfconfig \
-		scripts/mod/modpost"
+		scripts/mod/modpost scripts/recordmcount"
 	rm -rf $kerneldir/scripts/*.o
 	rm -rf $kerneldir/scripts/basic/*.o
 	rm -rf $kerneldir/scripts/kconfig/*.o
