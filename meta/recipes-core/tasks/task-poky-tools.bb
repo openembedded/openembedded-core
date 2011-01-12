@@ -51,6 +51,7 @@ RRECOMMENDS_task-poky-tools-profile = "\
     kernel-module-oprofile \
     blktrace \
     sysprof \
+    systemtap \
     "
 
 #    exmap-console
