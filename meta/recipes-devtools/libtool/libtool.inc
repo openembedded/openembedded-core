@@ -13,7 +13,8 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://prefix-manpage-fix.patch \
            file://rename-with-sysroot.patch \
            file://resolve-sysroot.patch \
-           file://use-sysroot-in-libpath.patch"
+           file://use-sysroot-in-libpath.patch \
+           file://fix-final-rpath.patch"
 
 do_compile_prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue
