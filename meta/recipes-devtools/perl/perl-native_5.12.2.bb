@@ -5,7 +5,7 @@ LICENSE = "Artistic|GPL"
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
 DEPENDS = "virtual/db-native gdbm-native"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
                     file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
@@ -88,6 +88,8 @@ do_install () {
 	         thread.h warnings.h; do
 		install $i ${D}${libdir}/perl/${PV}/CORE
 	done
+
+	create_wrapper ${D}${bindir}/perl PERL5LIB=${STAGING_LIBDIR}/perl/5.12.2:${STAGING_LIBDIR}/perl/
 }
 do_install_append_nylon() {
 	# get rid of definitions not supported by the gcc version we use for nylon...
@@ -97,8 +99,3 @@ do_install_append_nylon() {
 }
 
 PARALLEL_MAKE = ""
-
-# Perl encodes the staging path into the perl binary so we have to depend on this
-# as part of the checksum for now
-HARDPATH := "${STAGING_BINDIR}"
-do_populate_sysroot[vardeps] += "HARDPATH"
