@@ -153,8 +153,7 @@ def package_qa_handle_error(error_class, error_msg, name, path, d):
     if fatal:
         bb.error("QA Issue: %s" % error_msg)
     else:
-        # Use bb.warn here when it works
-        bb.note("QA Issue: %s" % error_msg)
+        bb.warn("QA Issue: %s" % error_msg)
     package_qa_write_error(error_class, name, path, d)
 
     return not fatal
