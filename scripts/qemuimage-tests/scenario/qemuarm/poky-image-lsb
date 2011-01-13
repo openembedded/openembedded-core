@@ -1,8 +1,8 @@
+sanity shutdown
 sanity boot
 sanity ssh
 sanity scp
 sanity dmesg
-sanity shutdown
 sanity zypper_help
 sanity zypper_search
 sanity rpm_query

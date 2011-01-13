@@ -5,6 +5,7 @@ TEST_LOG ?= "${LOG_DIR}/qemuimagetests"
 TEST_RESULT ?= "${TEST_DIR}/result"
 TEST_TMP ?= "${TEST_DIR}/tmp"
 TEST_SCEN ?= "sanity"
+SHARE_IMAGE ?= "1"
 
 python do_qemuimagetest() {
     qemuimagetest_main(d)
@@ -37,7 +38,7 @@ def qemuimagetest_main(d):
     """funtion to run each case under scenario"""
     def runtest(scen, case, fulltestpath):
         resultpath = bb.data.getVar('TEST_RESULT', d, 1)
-        testpath = bb.data.getVar('TEST_DIR', d, 1)
+        tmppath = bb.data.getVar('TEST_TMP', d, 1)
 
         """initialize log file for testcase"""
         logpath = bb.data.getVar('TEST_LOG', d, 1)
@@ -45,10 +46,9 @@ def qemuimagetest_main(d):
         caselog = os.path.join(logpath, "%s/log_%s.%s" % (scen, case, bb.data.getVar('DATETIME', d, 1)))
         os.system("touch %s" % caselog)
         
-
         """export TEST_TMP, TEST_RESULT, DEPLOY_DIR and QEMUARCH"""
         os.environ["PATH"] = bb.data.getVar("PATH", d, True)
-        os.environ["TEST_TMP"] = testpath
+        os.environ["TEST_TMP"] = tmppath
         os.environ["TEST_RESULT"] = resultpath
         os.environ["DEPLOY_DIR"] = bb.data.getVar("DEPLOY_DIR", d, True)
         os.environ["QEMUARCH"] = machine
@@ -56,6 +56,7 @@ def qemuimagetest_main(d):
         os.environ["DISPLAY"] = bb.data.getVar("DISPLAY", d, True)
         os.environ["POKYBASE"] = bb.data.getVar("POKYBASE", d, True)
         os.environ["TOPDIR"] = bb.data.getVar("TOPDIR", d, True)
+        os.environ["SHARE_IMAGE"] = bb.data.getVar("SHARE_IMAGE", d, True)
 
         """run Test Case"""
         bb.note("Run %s test in scenario %s" % (case, scen))
@@ -96,6 +97,18 @@ def qemuimagetest_main(d):
                             raise bb.build.FuncFailed("Testcase %s not found" % fulltestcase)
                        list.append((item, casefile, fulltestcase))
         return list
+
+    """Clean tmp folder for testing"""
+    def clean_tmp():
+        tmppath = bb.data.getVar('TEST_TMP', d, 1)
+
+        if os.path.isdir(tmppath):
+            for f in os.listdir(tmppath):
+                tmpfile = os.path.join(tmppath, f)
+                os.remove(tmpfile)
+
+    """Before running testing, clean temp folder first"""
+    clean_tmp()
 
     """check testcase folder and create test log folder"""
     testpath = bb.data.getVar('TEST_DIR', d, 1)
@@ -149,6 +162,9 @@ def qemuimagetest_main(d):
             line = line.strip('\n')
             bb.note(line)
     f.close()
+
+    """Clean temp files for testing"""
+    clean_tmp()
 
     if ret != 0:
         raise bb.build.FuncFailed("Some testcases fail, pls. check test result and test log!!!")

@@ -383,9 +383,16 @@ Test_Create_Qemu()
 	TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-test.ext3"
 	
 	CP=`which cp`
+
+	# When SHARE_IMAGE is set, we use the existing image under tmp folder
 	if [ -e "$TEST_ROOTFS_IMAGE" ]; then
+		if [ ${SHARE_IMAGE} -eq 1 ]; then
+			ROOTFS_IMAGE="$TEST_ROOTFS_IMAGE"
+			TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-shared-test.ext3"
+		fi
 		rm -rf $TEST_ROOTFS_IMAGE
 	fi
+
 	$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
 
 	if [ $? -ne 0 ]; then

@@ -11,7 +11,7 @@
 
 . $POKYBASE/scripts/qemuimage-testlib
 
-TIMEOUT=360
+TIMEOUT=200
 RET=1
 
 # Start qemu and check its network

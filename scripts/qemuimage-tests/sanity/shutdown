@@ -13,7 +13,12 @@
 
 . $POKYBASE/scripts/qemuimage-testlib
 
-TIMEOUT=360
+if [ $SHARE_IMAGE -eq 0 ]; then
+	TIMEOUT=200
+elif [ $SHARE_IMAGE -eq 1 ]; then
+	TIMEOUT=500
+fi
+
 RET=1
 i=0
 

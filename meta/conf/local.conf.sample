@@ -156,6 +156,14 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # list them like following.
 #TEST_SCEN = "sanity bat sanity:boot"
 
+#Because of the QEMU booting slowness issue(see bug #646 and #618), autobuilder
+#may suffer a timeout issue when running sanity test. We introduce variable
+#SHARE_IMAGE here to fix the issue. It is by default set to 1. Poky will copy
+#latest built-out image and keep using it in sanity testing. If it is set to 0,
+#latest built-out image will be copied and tested for each case, which will take
+#much time.
+#SHARE_IMAGE = "1"
+
 # Set GLIBC_GENERATE_LOCALES to the locales you wish to generate should you not
 # wish to perform the time-consuming step of generating all LIBC locales.
 # NOTE: If removing en_US.UTF-8 you will also need to uncomment, and set
