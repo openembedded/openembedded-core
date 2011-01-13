@@ -25,8 +25,10 @@ sysroot_stage_libdir() {
 	src="$1"
 	dest="$2"
 
+	sysroot_stage_dir $src $dest
+
 	olddir=`pwd`
-	cd $src
+	cd $dest
 	las=$(find . -name \*.la -type f)
 	cd $olddir
 	echo "Found la files: $las"		 
@@ -36,9 +38,8 @@ sysroot_stage_libdir() {
 		    -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
 		    -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
 		    -e "/^dependency_libs=/s,\([[:space:]']\)${base_libdir},\1${STAGING_DIR_HOST}${base_libdir},g" \
-		    -i $src/$i
+		    -i $dest/$i
 	done
-	sysroot_stage_dir $src $dest
 }
 
 sysroot_stage_dirs() {
