@@ -10,6 +10,7 @@ PR = "r16"
 
 SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
            file://static_sqlite.patch \
+	   file://pseudo-exec-crash.patch \
 	  "
 
 FILES_${PN} = "${libdir}/libpseudo.so ${bindir}/* ${localstatedir}/pseudo"
