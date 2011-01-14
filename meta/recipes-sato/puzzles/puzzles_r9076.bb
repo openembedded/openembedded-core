@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=9928b60f3b78be315b7ab699c1b03ff5"
 
 SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "69a3b81f5fe815f4e6fbb089af9c04f3"
-SRC_URI[sha256sum] = "26343db44dd656cc182e20c78dae0c013bb2f43f6c79c327510ea629a8eb7bbc"
+SRC_URI[md5sum] = "e8b4c7e2341264789f3cd6733857bf1c"
+SRC_URI[sha256sum] = "69f37e497e63b2f7ab44e7bbd50aee078269c16dbc2d78ec1b00257678f2cbd2"
 #SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV}"
 
 S = "${WORKDIR}/${PN}-${PV}"
