@@ -141,7 +141,7 @@
      unzip texi2html texinfo libsdl1.2-dev docbook-utils gawk \
      python-pysqlite2 diffstat help2man make gcc build-essential \
      g++ desktop-file-utils chrpath libgl1-mesa-dev libglu1-mesa-dev \
-     mercurial
+     mercurial autoconf automake
             </literallayout>
 
         <para>
@@ -156,7 +156,8 @@
      docbook-utils sed bc glibc-devel ccache pcre pcre-devel quilt \
      groff linuxdoc-tools patch linuxdoc-tools cmake help2man \
      perl-ExtUtils-MakeMaker tcl-devel gettext chrpath ncurses apr \
-     SDL-devel mesa-libGL-devel mesa-libGLU-devel gnome-doc-utils
+     SDL-devel mesa-libGL-devel mesa-libGLU-devel gnome-doc-utils \
+     autoconf automake
             </literallayout>
  
        <para>
