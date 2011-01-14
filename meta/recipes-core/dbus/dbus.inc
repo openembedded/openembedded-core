@@ -6,6 +6,7 @@ LICENSE = "AFL2.1 | GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
                     file://dbus/dbus.h;firstline=6;endline=20;md5=6eea2e0c7750dd8e620dcb1437312fa5"
 DEPENDS = "expat virtual/libintl virtual/libx11 libsm"
+DEPENDS_virtclass-nativesdk = "expat virtual/libintl virtual/libx11"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
@@ -88,4 +89,4 @@ do_install_virtclass-native() {
 	# dbus-glib-native and dbus-glib need this xml file
 	./bus/dbus-daemon --introspect > ${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml
 }
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
