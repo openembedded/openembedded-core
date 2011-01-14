@@ -10,7 +10,7 @@ PR = "r16"
 
 SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
            file://static_sqlite.patch \
-           file://895fa7e359e8026a608fba052c2994e42901e45f.patch"
+	  "
 
 FILES_${PN} = "${libdir}/libpseudo.so ${bindir}/* ${localstatedir}/pseudo"
 PROVIDES += "virtual/fakeroot"
