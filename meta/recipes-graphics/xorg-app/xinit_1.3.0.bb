@@ -7,5 +7,5 @@ PE = "1"
 
 FILES_${PN} += "${libdir}X11/xinit"
 
-SRC_URI[md5sum] = "56f2d202b3dc10fcd21931a67bb270f7"
-SRC_URI[sha256sum] = "16bcc73ae81b6d80fd1a9419ea757f38870d1043d440b6d56fcaa79d4c6c9b07"
+SRC_URI[md5sum] = "bc4e8b7d1919597cc37a0d24aa149dda"
+SRC_URI[sha256sum] = "ba76e36e1a42a7cf76505b7e6fc4777f5d14f45ddff74341abfb7dd10d5fe04c"
