@@ -39,7 +39,7 @@ python () {
 
     # If we don't do this we try and run the mapping hooks while parsing which is slow
     # bitbake should really provide something to let us know this...
-    if bb.data.getVar('__RUNQUEUE_DO_NOT_USE_EXTERNALLY', d, True) is not None:
+    if bb.data.getVar('BB_WORKERCONTEXT', d, True) is not None:
         runtime_mapping_rename("PACKAGE_INSTALL", d)
         runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", d)
 }
