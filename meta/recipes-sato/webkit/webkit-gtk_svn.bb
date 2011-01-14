@@ -12,7 +12,7 @@ DEPENDS_darwin8 = "curl icu libxml2 cairo libxslt libidn gnutls gtk+ gstreamer f
 
 SRCREV_FORMAT = "webcore-rwebkit"
 
-PV = "1.3.2+svnr${SRCPV}"
+PV = "1.3.7+svnr${SRCPV}"
 PR = "r0"
 
 SRC_URI = "\
@@ -29,6 +29,7 @@ SRC_URI = "\
   file://configure.ac \
   file://GNUmakefile.am \
   file://gtk-doc.make \
+  file://nodolt.patch \
  "
 
 S = "${WORKDIR}/"
@@ -59,6 +60,11 @@ do_compile_prepend() {
         cp dftables ${S}/Programs/        
 	cd ${S}
 }
+
+do_install_prepend() {
+        cp ${S}/Programs/.libs/jsc ${S}/Programs/jsc-1 || true
+}
+
 
 PACKAGES =+ "${PN}-webinspector ${PN}launcher-dbg ${PN}launcher libjavascriptcore"
 FILES_${PN}launcher = "${bindir}/GtkLauncher"
