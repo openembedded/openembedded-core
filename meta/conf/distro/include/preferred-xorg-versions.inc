@@ -3,9 +3,9 @@
 #
 
 PREFERRED_VERSION_applewmproto ?= "1.4.1"
-PREFERRED_VERSION_bigreqsproto ?= "1.1.0"
-PREFERRED_VERSION_bigreqsproto-native ?= "1.1.0"
-PREFERRED_VERSION_bigreqsproto-nativesdk ?= "1.1.0"
+PREFERRED_VERSION_bigreqsproto ?= "1.1.1"
+PREFERRED_VERSION_bigreqsproto-native ?= "1.1.1"
+PREFERRED_VERSION_bigreqsproto-nativesdk ?= "1.1.1"
 PREFERRED_VERSION_compositeproto ?= "0.4.2"
 PREFERRED_VERSION_damageproto ?= "1.2.1"
 PREFERRED_VERSION_dmxproto ?= "2.3"
