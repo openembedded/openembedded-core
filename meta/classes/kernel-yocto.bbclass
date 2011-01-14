@@ -24,7 +24,7 @@ python __anonymous () {
             bb.data.setVar("KMACHINE", "${MACHINE}", d)
             # track the global configuration on a bootstrapped BSP
             bb.data.setVar("SRCREV_machine", "${SRCREV_meta}", d)
-            bb.data.setVar("BOOTSTRAP", "t", d)
+            bb.data.setVar("BOOTSTRAP", bb.data.expand("${MACHINE}",d) + "-standard", d)
     else:
         # The branch for a build is:
         #    yocto/<kernel type>/${KMACHINE} or
@@ -44,10 +44,10 @@ python __anonymous () {
         bb.data.setVar('KMACHINE_' + bb.data.expand("${MACHINE}",d), kmachine, d)
 
         if mach == "UNDEFINED":
-            bb.data.setVar("KBRANCH", "yocto/standard/base", d)
             bb.data.setVar('KMACHINE_' + bb.data.expand("${MACHINE}",d), bb.data.expand("${MACHINE}",d), d)
+            bb.data.setVar("KBRANCH", "yocto/standard/base", d)
             bb.data.setVar("SRCREV_machine", "standard", d)
-            bb.data.setVar("BOOTSTRAP", "t", d)
+            bb.data.setVar("BOOTSTRAP", "yocto/standard/" + bb.data.expand("${MACHINE}",d), d)
 }
 
 do_patch() {
@@ -57,6 +57,11 @@ do_patch() {
 	fi
 
 	kbranch=${KBRANCH}
+	if [ -n "${BOOTSTRAP}" ]; then
+           # switch from a generic to a specific branch
+           kbranch=${BOOTSTRAP}
+	fi
+
 
 	# simply ensures that a branch of the right name has been created
 	createme ${ARCH} ${kbranch} ${defconfig}
