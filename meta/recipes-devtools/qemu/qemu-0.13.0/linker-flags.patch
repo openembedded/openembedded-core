@@ -7,16 +7,16 @@ More information is available on the Fedora Wiki:
 https://fedoraproject.org/wiki/UnderstandingDSOLinkChange
 
 JL - 15/06/10
-Index: qemu-0.12.4/Makefile.target
+Index: qemu-0.13.0/Makefile.target
 ===================================================================
---- qemu-0.12.4.orig/Makefile.target	2010-06-15 11:21:52.000000000 +0100
-+++ qemu-0.12.4/Makefile.target	2010-06-15 11:25:27.212852910 +0100
-@@ -178,7 +178,7 @@
- obj-y += virtio-blk.o virtio-balloon.o virtio-net.o virtio-console.o virtio-pci.o
+--- qemu-0.13.0.orig/Makefile.target	2011-01-15 17:30:45.000000000 +0800
++++ qemu-0.13.0/Makefile.target	2011-01-15 17:33:22.000000000 +0800
+@@ -193,7 +193,7 @@
+ obj-y += rwhandler.o
  obj-$(CONFIG_KVM) += kvm.o kvm-all.o
- obj-$(CONFIG_ISA_MMIO) += isa_mmio.o
+ obj-$(CONFIG_NO_KVM) += kvm-stub.o
 -LIBS+=-lz
 +LIBS+=-lz -lX11 -ldl
  
- sound-obj-y =
- sound-obj-$(CONFIG_SB16) += sb16.o
+ QEMU_CFLAGS += $(VNC_TLS_CFLAGS)
+ QEMU_CFLAGS += $(VNC_SASL_CFLAGS)

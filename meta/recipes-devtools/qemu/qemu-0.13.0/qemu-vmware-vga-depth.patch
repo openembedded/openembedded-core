@@ -1,11 +1,11 @@
 # fix VMware VGA driver depth calculation error, which may cause segmentation fault
 #
 # ktian1, 06/29/2010
-diff --git a/console.h b/console.h
-index dfc8ae4..05fbf17 100644
---- a/console.h
-+++ b/console.h
-@@ -122,6 +122,12 @@ struct DisplayAllocator {
+Index: qemu-0.13.0/console.h
+===================================================================
+--- qemu-0.13.0.orig/console.h	2011-01-17 16:41:58.000000000 +0800
++++ qemu-0.13.0/console.h	2011-01-17 16:48:00.000000000 +0800
+@@ -171,6 +171,12 @@
      void (*free_displaysurface)(DisplaySurface *surface);
  };
  
@@ -18,15 +18,15 @@ index dfc8ae4..05fbf17 100644
  struct DisplayState {
      struct DisplaySurface *surface;
      void *opaque;
-@@ -129,6 +135,7 @@ struct DisplayState {
+@@ -178,6 +184,7 @@
  
      struct DisplayAllocator* allocator;
      struct DisplayChangeListener* listeners;
 +    struct DisplayPostCallback* postcalls;
  
      void (*mouse_set)(int x, int y, int on);
-     void (*cursor_define)(int width, int height, int bpp, int hot_x, int hot_y,
-@@ -185,6 +192,12 @@ static inline void register_displaychangelistener(DisplayState *ds, DisplayChang
+     void (*cursor_define)(QEMUCursor *cursor);
+@@ -229,6 +236,12 @@
      ds->listeners = dcl;
  }
  
@@ -39,11 +39,11 @@ index dfc8ae4..05fbf17 100644
  static inline void dpy_update(DisplayState *s, int x, int y, int w, int h)
  {
      struct DisplayChangeListener *dcl = s->listeners;
-diff --git a/hw/vmware_vga.c b/hw/vmware_vga.c
-index 01bb85b..d73cca6 100644
---- a/hw/vmware_vga.c
-+++ b/hw/vmware_vga.c
-@@ -927,8 +927,9 @@ static void vmsvga_update_display(void *opaque)
+Index: qemu-0.13.0/hw/vmware_vga.c
+===================================================================
+--- qemu-0.13.0.orig/hw/vmware_vga.c	2011-01-17 16:42:36.000000000 +0800
++++ qemu-0.13.0/hw/vmware_vga.c	2011-01-17 16:48:00.000000000 +0800
+@@ -957,8 +957,9 @@
      }
  }
  
@@ -54,7 +54,7 @@ index 01bb85b..d73cca6 100644
      s->index = 0;
      s->enable = 0;
      s->config = 0;
-@@ -1133,6 +1134,8 @@ static const VMStateDescription vmstate_vmware_vga = {
+@@ -1163,6 +1164,8 @@
  
  static void vmsvga_init(struct vmsvga_state_s *s, int vga_ram_size)
  {
@@ -63,7 +63,7 @@ index 01bb85b..d73cca6 100644
      s->scratch_size = SVGA_SCRATCH_SIZE;
      s->scratch = qemu_malloc(s->scratch_size * 4);
  
-@@ -1160,7 +1163,10 @@ static void vmsvga_init(struct vmsvga_state_s *s, int vga_ram_size)
+@@ -1190,7 +1193,10 @@
  
      rom_add_vga(VGABIOS_FILENAME);
  
@@ -75,11 +75,11 @@ index 01bb85b..d73cca6 100644
  }
  
  static void pci_vmsvga_map_ioport(PCIDevice *pci_dev, int region_num,
-diff --git a/qemu-common.h b/qemu-common.h
-index a23afbc..19f107a 100644
---- a/qemu-common.h
-+++ b/qemu-common.h
-@@ -198,6 +198,7 @@ typedef struct DisplayState DisplayState;
+Index: qemu-0.13.0/qemu-common.h
+===================================================================
+--- qemu-0.13.0.orig/qemu-common.h	2011-01-17 16:41:58.000000000 +0800
++++ qemu-0.13.0/qemu-common.h	2011-01-17 16:48:00.000000000 +0800
+@@ -205,6 +205,7 @@
  typedef struct DisplayChangeListener DisplayChangeListener;
  typedef struct DisplaySurface DisplaySurface;
  typedef struct DisplayAllocator DisplayAllocator;
@@ -87,11 +87,11 @@ index a23afbc..19f107a 100644
  typedef struct PixelFormat PixelFormat;
  typedef struct TextConsole TextConsole;
  typedef TextConsole QEMUConsole;
-diff --git a/vl.c b/vl.c
-index 39182ea..9a3e9fd 100644
---- a/vl.c
-+++ b/vl.c
-@@ -4863,6 +4863,7 @@ int main(int argc, char **argv, char **envp)
+Index: qemu-0.13.0/vl.c
+===================================================================
+--- qemu-0.13.0.orig/vl.c	2011-01-17 16:42:36.000000000 +0800
++++ qemu-0.13.0/vl.c	2011-01-17 16:48:00.000000000 +0800
+@@ -1814,6 +1814,7 @@
      char boot_devices[33] = "cad"; /* default to HD->floppy->CD-ROM */
      DisplayState *ds;
      DisplayChangeListener *dcl;
@@ -99,7 +99,7 @@ index 39182ea..9a3e9fd 100644
      int cyls, heads, secs, translation;
      QemuOpts *hda_opts = NULL, *opts;
      int optind;
-@@ -6053,6 +6053,13 @@ int main(int argc, char **argv, char **envp)
+@@ -2960,6 +2961,13 @@
      }
      dpy_resize(ds);
  

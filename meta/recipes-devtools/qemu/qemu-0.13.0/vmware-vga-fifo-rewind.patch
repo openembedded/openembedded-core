@@ -14,11 +14,11 @@ Date:   Fri Sep 10 02:23:31 2010 +0200
     this should be relatively rare but it is suspected to have been the
     cause of the occasional FIFO overrun that killed the display.
 
-Index: qemu-0.12.4/hw/vmware_vga.c
+Index: qemu-0.13.0/hw/vmware_vga.c
 ===================================================================
---- qemu-0.12.4.orig/hw/vmware_vga.c	2010-09-30 23:04:34.000000000 +0800
-+++ qemu-0.12.4/hw/vmware_vga.c	2010-10-01 01:17:02.000000000 +0800
-@@ -491,27 +491,37 @@
+--- qemu-0.13.0.orig/hw/vmware_vga.c	2011-01-15 18:06:06.000000000 +0800
++++ qemu-0.13.0/hw/vmware_vga.c	2011-01-15 18:17:04.000000000 +0800
+@@ -521,27 +521,37 @@
  
  static uint32_t last_cmd;
  
@@ -64,7 +64,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
  }
  
  static inline uint32_t vmsvga_fifo_read(struct vmsvga_state_s *s)
-@@ -522,13 +532,23 @@
+@@ -552,13 +562,23 @@
  static void vmsvga_fifo_run(struct vmsvga_state_s *s)
  {
      uint32_t colour;
@@ -90,7 +90,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
              x = vmsvga_fifo_read(s);
              y = vmsvga_fifo_read(s);
              width = vmsvga_fifo_read(s);
-@@ -537,6 +557,10 @@
+@@ -567,6 +587,10 @@
              break;
  
          case SVGA_CMD_RECT_FILL:
@@ -101,7 +101,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
              colour = vmsvga_fifo_read(s);
              x = vmsvga_fifo_read(s);
              y = vmsvga_fifo_read(s);
-@@ -546,10 +570,15 @@
+@@ -576,10 +600,15 @@
              vmsvga_fill_rect(s, colour, x, y, width, height);
              break;
  #else
@@ -117,7 +117,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
              x = vmsvga_fifo_read(s);
              y = vmsvga_fifo_read(s);
              dx = vmsvga_fifo_read(s);
-@@ -560,10 +589,15 @@
+@@ -590,10 +619,15 @@
              vmsvga_copy_rect(s, x, y, dx, dy, width, height);
              break;
  #else
@@ -133,7 +133,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
              cursor.id = vmsvga_fifo_read(s);
              cursor.hot_x = vmsvga_fifo_read(s);
              cursor.hot_y = vmsvga_fifo_read(s);
-@@ -572,11 +606,14 @@
+@@ -602,11 +636,14 @@
              vmsvga_fifo_read(s);
              cursor.bpp = vmsvga_fifo_read(s);
  
@@ -151,7 +151,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
  
              for (args = 0; args < SVGA_BITMAP_SIZE(x, y); args ++)
                  cursor.mask[args] = vmsvga_fifo_read_raw(s);
-@@ -595,6 +632,10 @@
+@@ -625,6 +662,10 @@
           * for so we can avoid FIFO desync if driver uses them illegally.
           */
          case SVGA_CMD_DEFINE_ALPHA_CURSOR:
@@ -162,7 +162,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
              vmsvga_fifo_read(s);
              vmsvga_fifo_read(s);
              vmsvga_fifo_read(s);
-@@ -609,6 +650,10 @@
+@@ -639,6 +680,10 @@
              args = 7;
              goto badcmd;
          case SVGA_CMD_DRAW_GLYPH_CLIPPED:
@@ -173,7 +173,7 @@ Index: qemu-0.12.4/hw/vmware_vga.c
              vmsvga_fifo_read(s);
              vmsvga_fifo_read(s);
              args = 7 + (vmsvga_fifo_read(s) >> 2);
-@@ -629,14 +674,22 @@
+@@ -659,14 +704,22 @@
              break; /* Nop */
  
          default:

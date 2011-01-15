@@ -1,9 +1,9 @@
-Index: qemu/Makefile
+Index: qemu-0.13.0/Makefile
 ===================================================================
---- qemu.orig/Makefile	2010-05-11 17:17:06.416912704 -0400
-+++ qemu/Makefile	2010-05-11 17:17:17.051812402 -0400
-@@ -300,7 +300,7 @@ endif
- install: all $(if $(BUILD_DOCS),install-doc)
+--- qemu-0.13.0.orig/Makefile	2011-01-17 16:41:59.000000000 +0800
++++ qemu-0.13.0/Makefile	2011-01-17 16:44:57.000000000 +0800
+@@ -185,7 +185,7 @@
+ install: all $(if $(BUILD_DOCS),install-doc) install-sysconfig
  	$(INSTALL_DIR) "$(DESTDIR)$(bindir)"
  ifneq ($(TOOLS),)
 -	$(INSTALL_PROG) $(STRIP_OPT) $(TOOLS) "$(DESTDIR)$(bindir)"
@@ -11,11 +11,11 @@ Index: qemu/Makefile
  endif
  ifneq ($(BLOBS),)
  	$(INSTALL_DIR) "$(DESTDIR)$(datadir)"
-Index: qemu/Makefile.target
+Index: qemu-0.13.0/Makefile.target
 ===================================================================
---- qemu.orig/Makefile.target	2010-05-11 17:17:12.188784092 -0400
-+++ qemu/Makefile.target	2010-05-11 17:17:17.052808122 -0400
-@@ -351,7 +351,7 @@ clean:
+--- qemu-0.13.0.orig/Makefile.target	2011-01-17 16:42:36.000000000 +0800
++++ qemu-0.13.0/Makefile.target	2011-01-17 16:44:57.000000000 +0800
+@@ -351,7 +351,7 @@
  
  install: all
  ifneq ($(PROGS),)

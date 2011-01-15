@@ -1,0 +1,108 @@
+Quick fixes to get the ppc system model to boot a 603e based
+kernel.
+
+Index: qemu-0.13.0/hw/m48t59.c
+===================================================================
+--- qemu-0.13.0.orig/hw/m48t59.c	2010-10-16 04:56:09.000000000 +0800
++++ qemu-0.13.0/hw/m48t59.c	2011-01-17 16:40:09.000000000 +0800
+@@ -50,6 +50,7 @@
+  */
+ 
+ struct M48t59State {
++    SysBusDevice busdev;
+     /* Model parameters */
+     uint32_t type; // 2 = m48t02, 8 = m48t08, 59 = m48t59
+     /* Hardware parameters */
+@@ -74,11 +75,6 @@
+     M48t59State state;
+ } M48t59ISAState;
+ 
+-typedef struct M48t59SysBusState {
+-    SysBusDevice busdev;
+-    M48t59State state;
+-} M48t59SysBusState;
+-
+ /* Fake timer functions */
+ 
+ /* Alarm management */
+@@ -629,8 +625,7 @@
+ 
+ static void m48t59_reset_sysbus(DeviceState *d)
+ {
+-    M48t59SysBusState *sys = container_of(d, M48t59SysBusState, busdev.qdev);
+-    M48t59State *NVRAM = &sys->state;
++    M48t59State *NVRAM = container_of(d, M48t59State, busdev.qdev);
+ 
+     m48t59_reset_common(NVRAM);
+ }
+@@ -641,7 +636,7 @@
+ {
+     DeviceState *dev;
+     SysBusDevice *s;
+-    M48t59SysBusState *d;
++    M48t59State *d;
+ 
+     dev = qdev_create(NULL, "m48t59");
+     qdev_prop_set_uint32(dev, "type", type);
+@@ -658,9 +653,9 @@
+         sysbus_mmio_map(s, 0, mem_base);
+     }
+ 
+-    d = FROM_SYSBUS(M48t59SysBusState, s);
++    d = FROM_SYSBUS(M48t59State, s);
+ 
+-    return &d->state;
++    return d;
+ }
+ 
+ M48t59State *m48t59_init_isa(uint32_t io_base, uint16_t size, int type)
+@@ -710,8 +705,7 @@
+ 
+ static int m48t59_init1(SysBusDevice *dev)
+ {
+-    M48t59SysBusState *d = FROM_SYSBUS(M48t59SysBusState, dev);
+-    M48t59State *s = &d->state;
++    M48t59State *s = FROM_SYSBUS(M48t59State, dev);
+     int mem_index;
+ 
+     sysbus_init_irq(dev, &s->IRQ);
+@@ -740,12 +734,12 @@
+ static SysBusDeviceInfo m48t59_info = {
+     .init = m48t59_init1,
+     .qdev.name  = "m48t59",
+-    .qdev.size = sizeof(M48t59SysBusState),
++    .qdev.size  = sizeof(M48t59State),
+     .qdev.reset = m48t59_reset_sysbus,
+     .qdev.props = (Property[]) {
+-        DEFINE_PROP_UINT32("size",    M48t59SysBusState, state.size,    -1),
+-        DEFINE_PROP_UINT32("type",    M48t59SysBusState, state.type,    -1),
+-        DEFINE_PROP_HEX32( "io_base", M48t59SysBusState, state.io_base,  0),
++        DEFINE_PROP_UINT32("size",    M48t59State, size,    -1),
++        DEFINE_PROP_UINT32("type",    M48t59State, type,    -1),
++        DEFINE_PROP_HEX32( "io_base", M48t59State, io_base,  0),
+         DEFINE_PROP_END_OF_LIST(),
+     }
+ };
+Index: qemu-0.13.0/hw/ppc_prep.c
+===================================================================
+--- qemu-0.13.0.orig/hw/ppc_prep.c	2010-10-16 04:56:09.000000000 +0800
++++ qemu-0.13.0/hw/ppc_prep.c	2011-01-15 18:29:25.000000000 +0800
+@@ -74,7 +74,7 @@
+ /* Constants for devices init */
+ static const int ide_iobase[2] = { 0x1f0, 0x170 };
+ static const int ide_iobase2[2] = { 0x3f6, 0x376 };
+-static const int ide_irq[2] = { 13, 13 };
++static const int ide_irq[2] = { 13, 14 };
+ 
+ #define NE2000_NB_MAX 6
+ 
+@@ -631,9 +631,6 @@
+     if (filename) {
+         qemu_free(filename);
+     }
+-    if (env->nip < 0xFFF80000 && bios_size < 0x00100000) {
+-        hw_error("PowerPC 601 / 620 / 970 need a 1MB BIOS\n");
+-    }
+ 
+     if (linux_boot) {
+         kernel_base = KERNEL_LOAD_ADDR;

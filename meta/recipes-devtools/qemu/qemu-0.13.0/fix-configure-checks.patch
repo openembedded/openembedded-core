@@ -6,15 +6,15 @@ added and files in the sysroot can be found.
 
 Patch from Paul Eggleton, Comments by RP 28/11/10
 
-Index: qemu-0.12.4/configure
+Index: qemu-0.13.0/configure
 ===================================================================
---- qemu-0.12.4.orig/configure
-+++ qemu-0.12.4/configure
-@@ -99,6 +99,7 @@ QEMU_CFLAGS="-Wstrict-prototypes -Wredun
+--- qemu-0.13.0.orig/configure	2010-10-16 04:56:09.000000000 +0800
++++ qemu-0.13.0/configure	2011-01-15 18:19:41.000000000 +0800
+@@ -134,6 +134,7 @@
  QEMU_CFLAGS="-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE $QEMU_CFLAGS"
- QEMU_CFLAGS="-U_FORTIFY_SOURCE $QEMU_CFLAGS"
+ QEMU_CFLAGS="-D_FORTIFY_SOURCE=2 $QEMU_CFLAGS"
  QEMU_CFLAGS="-I. -I\$(SRC_PATH) $QEMU_CFLAGS"
 +QEMU_CFLAGS="$QEMU_CFLAGS $CFLAGS"
  LDFLAGS="-g $LDFLAGS"
  
- gcc_flags="-Wold-style-declaration -Wold-style-definition"
+ gcc_flags="-Wold-style-declaration -Wold-style-definition -fstack-protector-all"

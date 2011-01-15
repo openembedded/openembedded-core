@@ -2,11 +2,11 @@
  linux-user/syscall.c |   10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
-Index: qemu/linux-user/syscall.c
+Index: qemu-0.13.0/linux-user/syscall.c
 ===================================================================
---- qemu.orig/linux-user/syscall.c	2010-05-11 16:52:16.929785275 -0400
-+++ qemu/linux-user/syscall.c	2010-05-11 16:52:25.174783517 -0400
-@@ -94,6 +94,15 @@
+--- qemu-0.13.0.orig/linux-user/syscall.c	2011-01-17 16:52:18.000000000 +0800
++++ qemu-0.13.0/linux-user/syscall.c	2011-01-17 16:52:20.000000000 +0800
+@@ -99,6 +99,15 @@
  #define CLONE_NPTL_FLAGS2 0
  #endif
  
