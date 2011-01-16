@@ -16,7 +16,7 @@ SRC_URI += "file://nodolt.patch \
 # Misc build failure for master HEAD
 SRC_URI += "file://fix_open_max_preprocessor_error.patch"
 
-SRC_URI[md5sum] = "5c8773499a6a8c1ddaedf33577ec9634"
-SRC_URI[sha256sum] = "8b30800004c98fc7a8e6ff31a339f28451be5132e774443be22bf226e1791e34"
+SRC_URI[md5sum] = "5bef6839a76d029204ab31aa2fcb5201"
+SRC_URI[sha256sum] = "864831f51e841ff37f2445d1c85b86b559c8860a435fb496aead4f256a2b141d"
 
 EXTRA_OECONF += "--enable-dri --enable-dri2"
