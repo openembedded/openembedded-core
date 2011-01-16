@@ -11,5 +11,6 @@ ASNEEDED_pn-pciutils = ""
 ASNEEDED_pn-puzzles = ""
 ASNEEDED_pn-dialer = ""
 ASNEEDED_pn-pulseaudio = ""
+ASNEEDED_pn-rpm = ""
 
 TARGET_LDFLAGS += "${ASNEEDED}"

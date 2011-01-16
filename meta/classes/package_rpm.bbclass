@@ -46,8 +46,7 @@ package_update_index_rpm () {
 				-D "_dbpath $pkgdir/solvedb" --justdb \
 				--noaid --nodeps --noorder --noscripts --notriggers --noparentdirs --nolinktos --stats \
 				--ignoresize --nosignature --nodigest \
-				-D "_dbi_tags_3 Packages:Name:Basenames:Providename:Nvra" \
-				-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync" \
+				-D "__dbi_txn create nofsync" \
 				$pkgdir/solvedb/manifest
 			echo $pkgdir/solvedb >> ${DEPLOY_DIR_RPM}/solvedb.conf
 		fi
@@ -530,6 +529,8 @@ python do_package_rpm () {
 	cmd = cmd + " --define '_use_internal_dependency_generator 0'"
 	cmd = cmd + " --define '__find_requires " + outdepends + "'"
 	cmd = cmd + " --define '__find_provides " + outprovides + "'"
+	cmd = cmd + " --define '_unpackaged_files_terminate_build 0'"
+	cmd = cmd + " --define 'debug_package %{nil}'"
 	cmd = cmd + " -bb " + outspecfile
 
 	# Build the spec file!

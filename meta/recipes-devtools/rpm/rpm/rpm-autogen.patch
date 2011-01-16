@@ -1,0 +1,54 @@
+Remove the sanity checking from the rpm autogen.sh.  This is required because
+we may have slightly different, but yet compatible versions.  If we do end
+up breaking things, we'll deal with it at that time.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur rpm-5.4.0.orig/autogen.sh rpm-5.4.0/autogen.sh
+--- rpm-5.4.0.orig/autogen.sh	2010-11-02 11:55:53.000000000 -0500
++++ rpm-5.4.0/autogen.sh	2011-01-06 00:15:05.158946295 -0600
+@@ -34,12 +34,6 @@
+     eval $_libtoolize $_libtoolize_args
+ }
+ 
+-#   requirements sanity check
+-[ "`automake   --version | head -1`" != "$AMV" ] && echo "$USAGE" # && exit 1
+-[ "`autoconf   --version | head -1`" != "$ACV" ] && echo "$USAGE" # && exit 1
+-[ "`libtoolize --version | head -1`" != "$LTV" ] && echo "$USAGE" # && exit 1
+-[ "`gettextize --version | head -1 | sed -e 's;^.*/\\(gettextize\\);\\1;'`" != "$GTT" ] && echo "$USAGE" # && exit 1
+-
+ for dir in bash beecrypt file neon pcre popt rc syck xar xz; do
+ 
+   if [ -d $dir ]; then
+diff -ur rpm-5.4.0.orig/neon/autogen.sh rpm-5.4.0/neon/autogen.sh
+--- rpm-5.4.0.orig/neon/autogen.sh	2010-10-30 19:11:33.000000000 -0500
++++ rpm-5.4.0/neon/autogen.sh	2011-01-06 00:15:17.863962139 -0600
+@@ -34,12 +34,6 @@
+     eval $_libtoolize $_libtoolize_args
+ }
+ 
+-#   requirements sanity check
+-[ "`automake   --version | head -1`" != "$AMV" ] && echo "$USAGE" # && exit 1
+-[ "`autoconf   --version | head -1`" != "$ACV" ] && echo "$USAGE" # && exit 1
+-[ "`libtoolize --version | head -1`" != "$LTV" ] && echo "$USAGE" # && exit 1
+-[ "`gettextize --version | head -1 | sed -e 's;^.*/\\(gettextize\\);\\1;'`" != "$GTT" ] && echo "$USAGE" # && exit 1
+-
+ echo "---> generate files via GNU libtool (libtoolize)"
+ libtoolize --quiet --copy --force --install
+ echo "---> generate files via GNU autoconf (aclocal, autoheader)"
+diff -ur rpm-5.4.0.orig/syck/autogen.sh rpm-5.4.0/syck/autogen.sh
+--- rpm-5.4.0.orig/syck/autogen.sh	2010-11-02 11:55:56.000000000 -0500
++++ rpm-5.4.0/syck/autogen.sh	2011-01-06 00:15:27.103949601 -0600
+@@ -34,12 +34,6 @@
+     eval $_libtoolize $_libtoolize_args
+ }
+ 
+-#   requirements sanity check
+-[ "`automake   --version | head -1`" != "$AMV" ] && echo "$USAGE" # && exit 1
+-[ "`autoconf   --version | head -1`" != "$ACV" ] && echo "$USAGE" # && exit 1
+-[ "`libtoolize --version | head -1`" != "$LTV" ] && echo "$USAGE" # && exit 1
+-[ "`gettextize --version | head -1 | sed -e 's;^.*/\\(gettextize\\);\\1;'`" != "$GTT" ] && echo "$USAGE" # && exit 1
+-
+ echo "---> generate files via GNU libtool (libtoolize)"
+ libtoolize --quiet --copy --force --install
+ echo "---> generate files via GNU autoconf (aclocal, autoheader)"

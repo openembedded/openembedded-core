@@ -79,7 +79,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 	# Generate an install solution by doing a --justdb install, then recreate it with
 	# an actual package install!
 	${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${DEPLOY_DIR_RPM}/solvedb.macro`" \
-		-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync" \
+		-D "__dbi_txn create nofsync" \
 		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 		${IMAGE_ROOTFS}/install/install.manifest
 
@@ -94,7 +94,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 			fi
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_rootfs_attemptonly.${PID}"
 			${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${DEPLOY_DIR_RPM}/solvedb.macro`" \
-				-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
+				-D "__dbi_txn create nofsync private" \
 				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 			$pkg_name >> "${WORKDIR}/temp/log.do_rootfs_attemptonly.${PID}" || true
 		done
@@ -112,6 +112,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 	 while [ $loop -eq 1 ]; do
 		# Dump the full set of recommends...
 		${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${DEPLOY_DIR_RPM}/solvedb.macro`" \
+			-D "__dbi_txn create nofsync private" \
 			-qa --qf "[%{RECOMMENDS}\n]" | sort -u > ${IMAGE_ROOTFS}/install/recommend
 		# Did we add more to the list?
 		grep -v -x -F -f ${IMAGE_ROOTFS}/install/recommend.list ${IMAGE_ROOTFS}/install/recommend > ${IMAGE_ROOTFS}/install/recommend.new || true
@@ -129,7 +130,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 			fi
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_rootfs_recommend.${PID}"
 			${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${DEPLOY_DIR_RPM}/solvedb.macro`" \
-				-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
+				-D "__dbi_txn create nofsync private" \
 				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 				$pkg_name >> "${WORKDIR}/temp/log.do_rootfs_recommend.${PID}" 2>&1 || true
 		done
@@ -142,12 +143,13 @@ fakeroot rootfs_rpm_do_rootfs () {
 	# Now that we have a solution, pull out a list of what to install...
 	echo "Manifest: ${IMAGE_ROOTFS}/install/install.manifest"
 	${RPM} -D "_dbpath ${IMAGE_ROOTFS}/install" -qa --yaml \
+		-D "__dbi_txn create nofsync private" \
 		| grep -i 'Packageorigin' | cut -d : -f 2 > ${IMAGE_ROOTFS}/install/install_solution.manifest
 
 	# Attempt install
 	${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
 		--noscripts --notriggers --noparentdirs --nolinktos \
-		-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
+		-D "__dbi_txn create nofsync private" \
 		-Uhv ${IMAGE_ROOTFS}/install/install_solution.manifest
 
 	export D=${IMAGE_ROOTFS}
@@ -159,6 +161,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm-postinsts/
 	${RPM} --root ${IMAGE_ROOTFS} -D '_dbpath ${rpmlibdir}' -qa \
+		-D "__dbi_txn create nofsync private" \
 		--qf 'Name: %{NAME}\n%|POSTIN?{postinstall scriptlet%|POSTINPROG?{ (using %{POSTINPROG})}|:\n%{POSTIN}\n}:{%|POSTINPROG?{postinstall program: %{POSTINPROG}\n}|}|' \
 		> ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
 	awk -f ${AWKPOSTINSTSCRIPT} < ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
@@ -246,7 +249,7 @@ resolve_package() {
 	pkg="$1"
 	pkg_name=""
 	for solve in `cat ${DEPLOY_DIR_RPM}/solvedb.conf`; do
-		pkg_name=$(${RPM} -D "_dbpath $solve" -D "_dbi_tags_3 Packages:Name:Basenames:Providename:Nvra" -D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync" -q --yaml $pkg | grep -i 'Packageorigin' | cut -d : -f 2)
+		pkg_name=$(${RPM} -D "_dbpath $solve" -D "__dbi_txn create nofsync" -q --yaml $pkg | grep -i 'Packageorigin' | cut -d : -f 2)
 		if [ -n "$pkg_name" ]; then
 			break;
 		fi
@@ -260,7 +263,7 @@ install_all_locales() {
 	# Generate list of installed packages...
 	INSTALLED_PACKAGES=$( \
 		${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
-		-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
+		-D "__dbi_txn create nofsync private" \
 		-qa --qf "[%{NAME}\n]" | egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)" \
 	)
 
@@ -271,8 +274,8 @@ install_all_locales() {
 			pkg_name=$(resolve_package $pkg-locale-$lang)
 			if [ -n "$pkg_name" ]; then
 				${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
+					-D "__dbi_txn create nofsync private" \
 					--noscripts --notriggers --noparentdirs --nolinktos \
-					-D "__dbi_cdb create mp_mmapsize=128Mb mp_size=1Mb nofsync private" \
 					-Uhv $pkg_name || true
 			fi
 		done
