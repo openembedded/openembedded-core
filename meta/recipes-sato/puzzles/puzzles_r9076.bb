@@ -10,8 +10,9 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=9928b60f3b78be315b7ab699c1b03ff5"
 
 SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "e8b4c7e2341264789f3cd6733857bf1c"
-SRC_URI[sha256sum] = "69f37e497e63b2f7ab44e7bbd50aee078269c16dbc2d78ec1b00257678f2cbd2"
+# Checksums seem to be changing regularly right now, need to verify with upstream
+#SRC_URI[md5sum] = "e8b4c7e2341264789f3cd6733857bf1c"
+#SRC_URI[sha256sum] = "69f37e497e63b2f7ab44e7bbd50aee078269c16dbc2d78ec1b00257678f2cbd2"
 #SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV}"
 
 S = "${WORKDIR}/${PN}-${PV}"
