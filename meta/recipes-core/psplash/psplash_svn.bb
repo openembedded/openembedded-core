@@ -6,16 +6,21 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://psplash.h;md5=a87c39812c1e37f3451567cc29a29c8f"
 
 PV = "0.0+svnr${SRCPV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=psplash;proto=http \
-           file://psplash-init"
+           file://psplash-init \
+	   file://psplash-poky-img.h"
 
 S = "${WORKDIR}/psplash"
 
 inherit autotools pkgconfig update-rc.d
 
 FILES_${PN} += "/mnt/.psplash"
+
+do_configure_prepend () {
+	cp -f ${WORKDIR}/psplash-poky-img.h ${S}/
+}
 
 do_install_prepend() {
 	install -d ${D}/mnt/.psplash/
