@@ -2,6 +2,11 @@ fix rpm5 build
 
 8/19/2010 - created by Qing He <qing.he@intel.com>
 
+
+pgpDigNew/pgpDigFree has changed in RPM 5.4.0
+
+Signed-off-by: Qing He <qing.he@intel.com>
+
 diff --git a/ext/repo_rpmdb.c b/ext/repo_rpmdb.c
 index 34f2b65..3c6ab9a 100644
 --- a/ext/repo_rpmdb.c
@@ -33,7 +38,7 @@ index 34f2b65..3c6ab9a 100644
    /* only rpm knows how to do the release calculation, we don't dare
     * to recreate all the bugs */
 -  dig = pgpNewDig();
-+  dig = pgpDigNew(0);
++  dig = pgpDigNew(RPMVSF_DEFAULT, 0);
    (void) pgpPrtPkts(pkts, pktsl, dig, 0);
    btime = dig->pubkey.time[0] << 24 | dig->pubkey.time[1] << 16 | dig->pubkey.time[2] << 8 | dig->pubkey.signid[3];
    sprintf(evrbuf, "%02x%02x%02x%02x-%02x%02x%02x%02x", dig->pubkey.signid[4], dig->pubkey.signid[5], dig->pubkey.signid[6], dig->pubkey.signid[7], dig->pubkey.time[0], dig->pubkey.time[1], dig->pubkey.time[2], dig->pubkey.time[3]);
@@ -42,7 +47,7 @@ index 34f2b65..3c6ab9a 100644
    if (dig->pubkey.userid)
      setutf8string(data, s - s->repo->pool->solvables, SOLVABLE_SUMMARY, dig->pubkey.userid);
 -  pgpFreeDig(dig);
-+  (void) pgpDigFree(dig, "");
++  (void) pgpDigFree(dig);
    sat_free((void *)pkts);
    return 1;
  }

@@ -12,7 +12,7 @@ PR = "r3"
 SRC_URI = "git://gitorious.org/opensuse/sat-solver.git;protocol=git \
            file://cmake.patch \
            file://rpm5.patch \
-           file://dso_linking_change_build_fix.patch"
+	   file://db5.patch"
 
 S = "${WORKDIR}/git"
 
