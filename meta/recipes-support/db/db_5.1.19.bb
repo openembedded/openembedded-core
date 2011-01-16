@@ -1,7 +1,4 @@
-# Has issues with eds
-DEFAULT_PREFERENCE = "-1"
-
-# Version 4 of the Berkeley DB from Sleepycat
+# Version 5 of the Berkeley DB from Sleepycat
 #
 # At present this package only installs the DB code
 # itself (shared libraries, .a in the dev package),
@@ -9,19 +6,24 @@ DEFAULT_PREFERENCE = "-1"
 #
 # The headers have the same names as those as v3
 # of the DB, only one version can be used *for dev*
-# at once - DB3 and DB4 can both be installed on the
+# at once - DB3 and DB5 can both be installed on the
 # same system at the same time if really necessary.
 SECTION = "libs"
-DESCRIPTION = "Berkeley DB v4."
+DESCRIPTION = "Berkeley DB v5."
 HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "BSD Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r8"
+PR = "r1"
 
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
 #SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"
-SRC_URI += "file://arm-thumb-mutex.patch;patch=1"
+SRC_URI += "file://arm-thumb-mutex_db5.patch;patch=1"
+
+SRC_URI[md5sum] = "76fcbfeebfcd09ba0b4d96bfdf8d884d"
+SRC_URI[sha256sum] = "0194d4ca9266ba1a1c0bfbc233b18bfd05f63163453c81ebcdfdc7112d5ac850"
+
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=86f9294f39f38ef9e89690bcd2320e7a"
 
 inherit autotools
 
@@ -47,7 +49,7 @@ B = "${WORKDIR}/db-${PV}/build_unix"
 PACKAGES += " ${PN}-bin"
 
 # Package contents
-FILES_${PN} = "${libdir}/libdb-4*so*"
+FILES_${PN} = "${libdir}/libdb-5*so*"
 FILES_${PN}-bin = "${bindir}/*"
 # The dev package has the .so link (as in db3) and the .a's -
 # it is therefore incompatible (cannot be installed at the
@@ -56,9 +58,9 @@ FILES_${PN}-dev = "${includedir} ${libdir}/*"
 
 #configuration - set in local.conf to override
 # All the --disable-* options replace --enable-smallbuild, which breaks a bunch of stuff (eg. postfix)
-DB4_CONFIG ?= "--enable-o_direct --disable-cryptography --disable-queue --disable-replication --disable-statistics --disable-verify --enable-compat185"
+DB5_CONFIG ?= "--enable-o_direct --disable-cryptography --disable-queue --disable-replication --disable-statistics --disable-verify --disable-compat185 --disable-sql"
 
-EXTRA_OECONF = "${DB4_CONFIG}"
+EXTRA_OECONF = "${DB5_CONFIG}"
 
 # Override the MUTEX setting here, the POSIX library is
 # the default - "POSIX/pthreads/library".
@@ -79,11 +81,24 @@ do_configure() {
 }
 
 do_install_append() {
+	mkdir -p ${D}/${includedir}/db51
+	#mv ${D}/${includedir}/db_185.h ${D}/${includedir}/db51/.
+	mv ${D}/${includedir}/db.h ${D}/${includedir}/db51/.
+	mv ${D}/${includedir}/db_cxx.h ${D}/${includedir}/db51/.
+	#mv ${D}/${includedir}/dbsql.h ${D}/${includedir}/db51/.
+	#ln -s db51/db_185.h ${D}/${includedir}/db_185.h
+	ln -s db51/db.h ${D}/${includedir}/db.h
+	ln -s db51/db_cxx.h ${D}/${includedir}/db_cxx.h
+	#ln -s db51/dbsql.h ${D}/${includedir}/dbsql.h
+
 	# The docs end up in /usr/docs - not right.
 	if test -d "${D}/${prefix}/docs"
 	then
 		mkdir -p "${D}/${datadir}"
-		test ! -d "${D}/${docdir}" || rmdir "${D}/${docdir}"
+		test ! -d "${D}/${docdir}" || rm -rf "${D}/${docdir}"
 		mv "${D}/${prefix}/docs" "${D}/${docdir}"
 	fi
 }
+
+BBCLASSEXTEND = "native nativesdk"
+
