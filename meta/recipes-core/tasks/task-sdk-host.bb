@@ -21,6 +21,7 @@ RDEPENDS_${PN} = "\
     pseudo-nativesdk \
     unfs-server-nativesdk \
     opkg-nativesdk \
+    libtool-nativesdk \
     "
 
 RDEPENDS_${PN}_darwin8 = "\
