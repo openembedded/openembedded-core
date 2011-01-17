@@ -1,0 +1,29 @@
+dso build fix:
+With a dso patch for gcc, which prevents automatic linking of unspecified libraries, 
+this recipe fails to compile with this error:
+
+| Linking CXX executable cdlookup^M
+| cd /disk0/pokybuild/build1/tmp/work/i586-poky-linux/libmusicbrainz-3.0.3-r0/libmusicbrainz-3.0.3/examples && /disk0/pokybuild/build1/tmp/sysroots/x86_64-linux/usr/bin/cmake -E cmake_link_script CMakeFiles/cdlookup.dir/link.txt --verbose=1^M
+| /disk0/pokybuild/build1/tmp/sysroots/x86_64-linux/usr/bin/i586-poky-linux/i586-poky-linux-g++   -march=i586  --sysroot=/disk0/pokybuild/build1/tmp/sysroots/i586-poky-linux  -fpermissive  -Wl,-O1 -Wl,--as-needed CMakeFiles/cdlookup.dir/cdlookup.cpp.o  -o cdlookup -rdynamic ../src/libmusicbrainz3.so.6.3.0 -lneon -Wl,-rpath,/disk0/pokybuild/build1/tmp/work/i586-poky-linux/libmusicbrainz-3.0.3-r0/libmusicbrainz-3.0.3/src^M
+| /disk0/pokybuild/build1/tmp/sysroots/x86_64-linux/usr/libexec/i586-poky-linux/gcc/i586-poky-linux/4.5.1/ld: ~I: invalid DSO for symbol `pthread_cancel@@GLIBC_2.0' definition^M
+| /disk0/pokybuild/build1/tmp/sysroots/i586-poky-linux/lib/libpthread.so.0: could not read symbols: Bad value^M
+| collect2: ld returned 1 exit status^M
+| make[2]: *** [examples/cdlookup] Error 1^M
+| make[2]: Leaving directory `/disk0/pokybuild/build1/tmp/work/i586-poky-linux/libmusicbrainz-3.0.3-r0/libmusicbrainz-3.0.3'
+
+fixing the issue by making linking of libpthread explicit.
+
+Nitin A Kamble <nitin.a.kamble@intel.com>
+Date: 2011/01/10
+
+Index: libmusicbrainz-3.0.3/examples/CMakeLists.txt
+===================================================================
+--- libmusicbrainz-3.0.3.orig/examples/CMakeLists.txt
++++ libmusicbrainz-3.0.3/examples/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../include)
+-LINK_LIBRARIES(musicbrainz3 ${NEON_LIBRARIES})
++LINK_LIBRARIES(musicbrainz3 ${NEON_LIBRARIES} pthread)
+ ADD_EXECUTABLE(cdlookup cdlookup.cpp)
+ ADD_EXECUTABLE(findartist findartist.cpp)
+ ADD_EXECUTABLE(findtrack findtrack.cpp)
