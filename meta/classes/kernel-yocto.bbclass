@@ -161,30 +161,30 @@ do_validate_branches() {
 	current=`git branch |grep \*|sed 's/^\* //'`
 	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ]; then
 		if [ -n "${KERNEL_REVISION_CHECKING}" ]; then
-			git show ${target_branch_head} > /dev/null 2>&1
-			if [ $? -eq 0 ]; then
-				echo "Forcing branch $current to ${target_branch_head}"
-				git branch -m $current $current-orig
-				git checkout -b $current ${target_branch_head}
-			else
+			ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
+			if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
 				echo "ERROR ${target_branch_head} is not a valid commit ID."
 				echo "The kernel source tree may be out of sync"
 				exit 1
-			fi	       
+			else
+				echo "Forcing branch $current to ${target_branch_head}"
+				git branch -m $current $current-orig
+				git checkout -b $current ${target_branch_head}
+			fi
 		fi
 	fi
 
 	if [ "$meta_head" != "$target_meta_head" ]; then
 		if [ -n "${KERNEL_REVISION_CHECKING}" ]; then
-			git show ${target_meta_head} > /dev/null 2>&1
-			if [ $? -eq 0 ]; then
-				echo "Forcing branch meta to ${target_meta_head}"
-				git branch -m ${KMETA} ${KMETA}-orig
-				git checkout -b ${KMETA} ${target_meta_head}
-			else
+			ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
+			if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
 				echo "ERROR ${target_meta_head} is not a valid commit ID"
 				echo "The kernel source tree may be out of sync"
 				exit 1
+			else
+				echo "Forcing branch meta to ${target_meta_head}"
+				git branch -m ${KMETA} ${KMETA}-orig
+				git checkout -b ${KMETA} ${target_meta_head}
 			fi	   
 		fi
 	fi
