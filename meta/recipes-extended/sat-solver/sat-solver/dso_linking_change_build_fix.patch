@@ -1,0 +1,31 @@
+After adding dso patch to gcc, the linking of libraries has to be explicit.
+Following error caused by dso patch is fixed for this patch.
+
+| make[2]: Entering directory `/disk0/pokybuild/build1/tmp/work/i586-poky-linux/sat-solver-0.0-git0+aa799f7bae0ec055e0e527203635001bb7346dbc-r1/git'^M
+| Linking C executable findfileconflicts^M
+| cd /disk0/pokybuild/build1/tmp/work/i586-poky-linux/sat-solver-0.0-git0+aa799f7bae0ec055e0e527203635001bb7346dbc-r1/git/tools && /disk0/pokybuild/build1/tmp/sysroots/x86_64-linux/usr/bin/cmake -E cmake_link_script CMakeFiles/findfileconflicts.dir/link.txt --verbose=1^M
+| /disk0/pokybuild/build1/tmp/sysroots/x86_64-linux/usr/bin/i586-poky-linux/i586-poky-linux-gcc  -march=i586  --sysroot=/disk0/pokybuild/build1/tmp/sysroots/i586-poky-linux  -Werror -Wall  -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed CMakeFiles/findfileconflicts.dir/findfileconflicts.o  -o findfileconflicts -rdynamic ../ext/libsatsolverext.a ../src/libsatsolver.a -lrpmio -lrpmdb^M
+| /disk0/pokybuild/build1/tmp/sysroots/x86_64-linux/usr/libexec/i586-poky-linux/gcc/i586-poky-linux/4.5.1/ld: [: invalid DSO for symbol `db_env_create_rpmdb@@LIBRPMMISC_0' definition^M
+| /disk0/pokybuild/build1/tmp/sysroots/i586-poky-linux/usr/lib/librpmmisc-5.0.so: could not read symbols: Bad value^M
+| collect2: ld returned 1 exit status^M
+| make[2]: *** [tools/findfileconflicts] Error 1^M
+
+Nitin A Kamble <nitin.a.kamble@intel.com>
+Date: 2011/01/11
+
+
+Index: git/CMakeLists.txt
+===================================================================
+--- git.orig/CMakeLists.txt
++++ git/CMakeLists.txt
+@@ -63,6 +63,10 @@ FIND_LIBRARY(RPMIO_LIBRARY NAMES rpmio)
+ IF ( RPMIO_LIBRARY )
+ SET( RPMDB_LIBRARY ${RPMIO_LIBRARY} ${RPMDB_LIBRARY} )
+ ENDIF ( RPMIO_LIBRARY )
++FIND_LIBRARY(RPMMISC_LIBRARY NAMES rpmmisc)
++IF ( RPMMISC_LIBRARY )
++SET( RPMDB_LIBRARY ${RPMMISC_LIBRARY} ${RPMDB_LIBRARY} )
++ENDIF ( RPMMISC_LIBRARY )
+ IF ( FEDORA )
+ FIND_LIBRARY(DB_LIBRARY NAMES db)
+ IF ( DB_LIBRARY )
