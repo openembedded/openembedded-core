@@ -51,14 +51,14 @@ class FuncFailed(Exception):
     def __init__(self, name, logfile = None):
         self.logfile = logfile
         self.name = name
-        self.message = "Function '%s' failed" % name
+        self.msg = "Function '%s' failed" % name
 
     def __str__(self):
         if self.logfile and os.path.exists(self.logfile):
             msg = ("%s (see %s for further information)" %
-                   (self.message, self.logfile))
+                   (self.msg, self.logfile))
         else:
-            msg = self.message
+            msg = self.msg
         return msg
 
 class TaskBase(event.Event):
