@@ -37,11 +37,14 @@ EXTRA_OECONF = "--with-distro=debian \
              --disable-python \
              --disable-doxygen-doc"
 
-PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-gobject avahi-autoipd avahi-utils libavahi-ui avahi-ui-utils"
+PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-gobject avahi-autoipd avahi-ui-utils avahi-utils libavahi-ui libavahi-ui-dev"
 
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core = "${libdir}/libavahi-core.so.*"
 FILES_libavahi-ui = "${libdir}/libavahi-ui.so.*"
+FILES_libavahi-ui-dev = "${libdir}/libavahi-ui.* \
+                         ${includedir}/avahi-ui/* \
+                         ${libdir}/pkgconfig/avahi-ui.pc"
 FILES_avahi-daemon = "${sbindir}/avahi-daemon \
                       ${sysconfdir}/avahi/avahi-daemon.conf \
                       ${sysconfdir}/avahi/hosts \
@@ -59,8 +62,12 @@ FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
 FILES_libavahi-gobject = "${libdir}/libavahi-gobject.so.*"
 FILES_avahi-utils = "${bindir}/avahi-*"
 FILES_avahi-ui-utils = "${bindir}/bssh ${bindir}/bvnc ${bindir}/bshell \
+                        ${bindir}/avahi-discover-standalone \
                         ${datadir}/applications \
                         ${datadir}/avahi/interfaces"
+
+RRECOMMENDS_avahi-dev = "gettext-dev expat-dev libcap-dev libdaemon-dev dbus-dev glib-2.0-dev update-rc.d-dev"
+RRECOMMENDS_avahi-dev[nodeprrecs] = 1
 
 CONFFILES_avahi-daemon = "${sysconfdir}/avahi/avahi-daemon.conf"
 
