@@ -1041,6 +1041,8 @@ python package_depchains() {
 
 	for suffix in pkgs:
 		for pkg in pkgs[suffix]:
+			if bb.data.getVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs', d):
+				continue
 			(base, func) = pkgs[suffix][pkg]
 			if suffix == "-dev":
 				pkg_adddeprrecs(pkg, base, suffix, func, depends, d)
