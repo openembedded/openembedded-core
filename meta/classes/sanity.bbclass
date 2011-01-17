@@ -208,9 +208,6 @@ def check_sanity(e):
     if not oes_bb_conf:
         messages = messages + 'You do not include OpenEmbeddeds version of conf/bitbake.conf. This means your environment is misconfigured, in particular check BBPATH.\n'
 
-    if data.getVar('SDK_ARCH', e.data, True) == 'i686':
-        messages = messages + '"Please set SDKMACHINE to i586. It is currently defaulting to the build machine architecture of i686 and this is known to have issues (see local.conf).\n'
-
     nolibs = data.getVar('NO32LIBS', e.data, True)
     if not nolibs:
         lib32path = '/lib'
