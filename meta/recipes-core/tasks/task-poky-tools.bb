@@ -51,7 +51,6 @@ RRECOMMENDS_task-poky-tools-profile = "\
     kernel-module-oprofile \
     blktrace \
     sysprof \
-    systemtap \
     "
 
 #    exmap-console
@@ -61,11 +60,11 @@ RRECOMMENDS_task-poky-tools-profile = "\
 # qemux86/qemux86-64/qemuppc/emenlow/atom-pc since upstream liburcu
 # (which is required by lttng-ust) may not build on other platforms, like
 # MIPS and qemu ARMv5te that poky uses now.
-RDEPENDS_task-poky-tools-profile_append_qemux86 = " valgrind lttng-ust"
-RDEPENDS_task-poky-tools-profile_append_qemux86-64 = " lttng-ust"
-RDEPENDS_task-poky-tools-profile_append_qemuppc = " lttng-ust"
-RDEPENDS_task-poky-tools-profile_append_emenlow = " lttng-ust"
-RDEPENDS_task-poky-tools-profile_append_atom-pc = " lttng-ust"
+RDEPENDS_task-poky-tools-profile_append_qemux86 = " valgrind lttng-ust systemtap"
+RDEPENDS_task-poky-tools-profile_append_qemux86-64 = " lttng-ust systemtap"
+RDEPENDS_task-poky-tools-profile_append_qemuppc = " lttng-ust systemtap"
+RDEPENDS_task-poky-tools-profile_append_emenlow = " lttng-ust systemtap"
+RDEPENDS_task-poky-tools-profile_append_atom-pc = " lttng-ust systemtap"
 
 RDEPENDS_task-poky-tools-testapps = "\
     blktool \
