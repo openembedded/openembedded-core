@@ -1,4 +1,4 @@
-DESCRIPTION = "Packge of environment files for SDK"
+DESCRIPTION = "Package of environment files for SDK"
 LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 LICENSE = "MIT"
@@ -7,7 +7,7 @@ PR = "r1"
 EXCLUDE_FROM_WORLD = "1"
 
 inherit toolchain-scripts
-# get target config site before inheritting corss-canadian
+# get target config site before inheritting cross-canadian
 TARGET_CONFIG_SITE := "${@siteinfo_get_files(d)}"
 
 SDK_DIR = "${WORKDIR}/sdk"
