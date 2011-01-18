@@ -1,5 +1,9 @@
 require eglibc-common.inc
 
+STAGINGCC = "gcc-cross-intermediate"
+STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-intermediate"
+PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}.${STAGINGCC}:"
+
 # nptl needs unwind support in gcc, which can't be built without glibc.
 DEPENDS = "virtual/${TARGET_PREFIX}gcc-intermediate linux-libc-headers"
 #this leads to circular deps, so lets not add it yet

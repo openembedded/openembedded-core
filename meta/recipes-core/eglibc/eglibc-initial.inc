@@ -6,6 +6,9 @@ PROVIDES = "virtual/${TARGET_PREFIX}libc-initial"
 PACKAGES = ""
 PACKAGES_DYNAMIC = ""
 
+STAGINGCC = "gcc-cross-initial"
+STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-initial"
+
 do_configure () {
 	sed -ie 's,{ (exit 1); exit 1; }; },{ (exit 0); }; },g' ${S}/configure
 	chmod +x ${S}/configure

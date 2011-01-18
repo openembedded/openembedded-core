@@ -1,3 +1,3 @@
 require gcc-cross-initial_${PV}.bb
 require gcc-crosssdk-initial.inc
-PR = "r5"
+PR = "r6"

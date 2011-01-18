@@ -17,6 +17,10 @@ RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
 PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "virtual/libintl virtual/libiconv"
 
+STAGINGCC = "gcc-cross-intermediate"
+STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-intermediate"
+PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}.${STAGINGCC}:"
+
 inherit autotools
 
 GLIBC_EXTRA_OECONF ?= ""
