@@ -1,0 +1,2 @@
+PYTHON_DIR = "python${PYTHON_BASEVERSION}"
+PYTHON_SITEPACKAGES_DIR = "${libdir}/${PYTHON_DIR}/site-packages"
