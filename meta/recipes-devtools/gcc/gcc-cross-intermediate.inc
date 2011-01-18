@@ -3,6 +3,8 @@ DEPENDS += "virtual/${TARGET_PREFIX}libc-initial gettext-native"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-intermediate"
 PACKAGES = ""
 
+CROSS_TARGET_SYS_DIR_append = ".${PN}"
+
 # This is intended to be a -very- basic config
 # sysroot is needed in case we use libc-initial
 EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
@@ -28,4 +30,18 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	install -d ${D}${target_base_libdir}/
 	mv ${D}${exec_prefix}/${TARGET_SYS}/lib/* ${D}${target_base_libdir}/
+
+	# We don't really need this (here shares/ contains man/, info/, locale/).
+	rm -rf ${D}${datadir}/
+
+	# We use libiberty from binutils
+	rm -f ${D}${exec_prefix}/lib/lib/libiberty.a
+
+	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
+	# found. These need to be relative paths so they work in different locations.
+	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
+	install -d $dest
+	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
+	done
 }
