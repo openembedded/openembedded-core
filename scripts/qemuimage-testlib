@@ -39,6 +39,19 @@ Test_Info()
 	echo -e "\tTest_Info: $*"
 }
 
+# function to update target ip address
+# $1 is the process id of the process, which starts the qemu target
+# $2 is the ip address of the target
+Test_Update_IPSAVE()
+{
+	local pid=$1
+	local ip_addr=$2
+
+	if [ "$TEST_SERIALIZE" -eq 1 ]; then
+		echo "$pid $ip_addr" > $TARGET_IPSAVE
+	fi
+}
+
 # function to copy files from host into target
 # $1 is the ip address of target
 # $2 is the files, which need to be copied into target
@@ -99,6 +112,11 @@ Test_SSH_UP()
 	local timeout=$2
 	local interval=0
 
+	# If TEST_SERIALIZE is set, use existing running qemu for testing
+	if [ ${TEST_SERIALIZE} -eq 1 -a -e ${TARGET_IPSAVE} ]; then
+		timeout=50
+	fi
+
 	while [ ${interval} -lt ${timeout} ]
 	do
 		Test_SSH ${ip_addr} "hostname"
@@ -106,13 +124,13 @@ Test_SSH_UP()
 			interval=`expr $interval + 10`
 			sleep 10
 		else
-			Test_Info "We can ssh on ${ip_addr} now"
+			Test_Info "We can ssh on ${ip_addr} within ${interval} seconds"
 			return 0
 		fi
 
 	done
 
-	Test_Info "We can not ssh on ${ip_addr} in ${timeout}"
+	Test_Info "We can not ssh on ${ip_addr} in ${timeout} seconds"
 	return 1
 }
 
@@ -162,6 +180,8 @@ Test_Kill_Qemu()
 	local ret=0
 	local ppid=0
 	local i=0
+	local index=0
+	local total=0
 	declare local pid
 
 	# Check if $1 pid exists and is a qemu process
@@ -186,16 +206,39 @@ Test_Kill_Qemu()
 			ret=$?
 		done
 
-		# Kill these children pids from the last one
-		while [ $i -ne 0 ]
-		do
-			i=$((i-1))
-			kill ${pid[$i]}
-			sleep 2
-		done
+		# When TEST_SERIALIZE is set, qemu process will not be
+		# killed until all the cases are finished
+		if [ ${TEST_SERIALIZE} -eq 1 -a -e ${TEST_STATUS} ]; then
+			index=`sed -n 2p ${TEST_STATUS} | awk '{print $3}'`
+			total=`sed -n 2p ${TEST_STATUS} | awk '{print $4}'`
+			if [ ${index} != ${total} ]; then
+				Test_Info "Do not kill the qemu process and use it for later testing"
+				Test_Update_IPSAVE $PID $TARGET_IPADDR
+			else
+				# If it is the last case, let's kill it
+				while [ $i -ne 0 ]
+				do
+					i=$((i-1))
+					kill ${pid[$i]}
+					sleep 2
+				done
 
-		# Kill the parent id
-		kill $PID
+				# Kill the parent id
+				kill $PID
+			fi
+
+		else
+			# Kill these children pids from the last one
+			while [ $i -ne 0 ]
+			do
+				i=$((i-1))
+				kill ${pid[$i]}
+				sleep 2
+			done
+
+			# Kill the parent id
+			kill $PID
+		fi
 	fi
 
 	return
@@ -209,7 +252,7 @@ Test_Check_Qemu_UP()
 		Test_Info "There is no Qemu process"
 		return 1
 	else
-		Test_Info "There is at least Qemu process running"
+		Test_Info "There is at least one Qemu process running"
 		return 0
 	fi
 }
@@ -384,30 +427,28 @@ Test_Create_Qemu()
 	
 	CP=`which cp`
 
-	# When SHARE_IMAGE is set, we use the existing image under tmp folder
-	if [ -e "$TEST_ROOTFS_IMAGE" ]; then
-		if [ ${SHARE_IMAGE} -eq 1 ]; then
-			ROOTFS_IMAGE="$TEST_ROOTFS_IMAGE"
-			TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-shared-test.ext3"
-		fi
+	# When TEST_SERIALIZE is set, we use the existing image under tmp folder
+	if [ ${TEST_SERIALIZE} -eq 1 -a -e "$TARGET_IPSAVE" ]; then
+		# If TARGET_IPSAVE exists, check PID of the qemu process from it
+		PID=`awk '{print $1}' $TARGET_IPSAVE`
+		timeout=50
+	else
 		rm -rf $TEST_ROOTFS_IMAGE
+		$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
+		if [ $? -ne 0 ]; then
+			Test_Info "Image ${ROOTFS_IMAGE} copy to ${TEST_ROOTFS_IMAGE} failed, return fail"
+			return $ret
+		fi
+
+		export MACHINE=$QEMUARCH
+
+		# Create Qemu in localhost VNC Port 1
+		echo "Running xterm -display ${DISPLAY} -e 'BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}' &"
+	    	xterm -display ${DISPLAY} -e "BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}" &
+	
+		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
+		PID=$!
 	fi
-
-	$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
-
-	if [ $? -ne 0 ]; then
-		Test_Info "Image ${ROOTFS_IMAGE} copy to ${TEST_ROOTFS_IMAGE} failed, return fail"
-		return $ret
-	fi
-
-	export MACHINE=$QEMUARCH
-
-	# Create Qemu in localhost VNC Port 1
-	echo "Running xterm -display ${DISPLAY} -e 'BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}' &"
-    	xterm -display ${DISPLAY} -e "BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}" &
-
-	# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
-	PID=$!
 
 	while [ ${up_time} -lt 10 ]
 	do
@@ -437,7 +478,7 @@ Test_Create_Qemu()
 	do
 		Test_Check_IP_UP ${TARGET_IPADDR}
 		if [ $? -eq 0 ]; then
-			Test_Info "Qemu Network is up, ping with ${TARGET_IPADDR} is OK"
+			Test_Info "Qemu Network is up, ping with ${TARGET_IPADDR} is OK within ${up_time} seconds"
 			ret=0
 			break
 		else
@@ -451,7 +492,8 @@ Test_Create_Qemu()
 		Test_Info "Qemu and its network is up"
 		return $ret
 	else
-		Test_Info "Qemu or its network is not up in ${timeout}"
+		Test_Info "Qemu or its network is not up in ${timeout} seconds"
+		Test_Update_IPSAVE $PID $TARGET_IPADDR
 		return $ret
 	fi
 }

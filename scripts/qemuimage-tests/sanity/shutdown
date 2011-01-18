@@ -13,11 +13,7 @@
 
 . $POKYBASE/scripts/qemuimage-testlib
 
-if [ $SHARE_IMAGE -eq 0 ]; then
-	TIMEOUT=200
-elif [ $SHARE_IMAGE -eq 1 ]; then
-	TIMEOUT=500
-fi
+TIMEOUT=400
 
 RET=1
 i=0
@@ -66,6 +62,11 @@ fi
 if [ ${RET} -eq 0 ]; then
 	Test_Info "Shutdown Test PASS"
 	Test_Print_Result "shutdown" 0
+	
+	# Remove TARGET_IPSAVE since no existing qemu running now
+	if [ -e ${TARGET_IPSAVE} ]; then
+		rm -rf ${TARGET_IPSAVE}
+	fi
 	exit 0
 else
 	Test_Info "Shutdown Test FAIL"

@@ -5,7 +5,9 @@ TEST_LOG ?= "${LOG_DIR}/qemuimagetests"
 TEST_RESULT ?= "${TEST_DIR}/result"
 TEST_TMP ?= "${TEST_DIR}/tmp"
 TEST_SCEN ?= "sanity"
-SHARE_IMAGE ?= "1"
+TEST_STATUS ?= "${TEST_TMP}/status"
+TARGET_IPSAVE ?= "${TEST_TMP}/target_ip"
+TEST_SERIALIZE ?= "1"
 
 python do_qemuimagetest() {
     qemuimagetest_main(d)
@@ -35,6 +37,17 @@ def qemuimagetest_main(d):
     machine = bb.data.getVar('MACHINE', d, 1)
     pname = bb.data.getVar('PN', d, 1)
     
+    """function to save test cases running status"""
+    def teststatus(test, status, index, length):
+        test_status = bb.data.getVar('TEST_STATUS', d, 1)
+        if not os.path.exists(test_status):
+            raise bb.build.FuncFailed("No test status file existing under TEST_TMP")
+
+        f = open(test_status, "w")
+        f.write("\t%-15s%-15s%-15s%-15s\n" % ("Case", "Status", "Number", "Total"))
+        f.write("\t%-15s%-15s%-15s%-15s\n" % (case, status, index, length))
+        f.close()
+
     """funtion to run each case under scenario"""
     def runtest(scen, case, fulltestpath):
         resultpath = bb.data.getVar('TEST_RESULT', d, 1)
@@ -56,11 +69,13 @@ def qemuimagetest_main(d):
         os.environ["DISPLAY"] = bb.data.getVar("DISPLAY", d, True)
         os.environ["POKYBASE"] = bb.data.getVar("POKYBASE", d, True)
         os.environ["TOPDIR"] = bb.data.getVar("TOPDIR", d, True)
-        os.environ["SHARE_IMAGE"] = bb.data.getVar("SHARE_IMAGE", d, True)
+        os.environ["TEST_STATUS"] = bb.data.getVar("TEST_STATUS", d, True)
+        os.environ["TARGET_IPSAVE"] = bb.data.getVar("TARGET_IPSAVE", d, True)
+        os.environ["TEST_SERIALIZE"] = bb.data.getVar("TEST_SERIALIZE", d, True)
 
         """run Test Case"""
         bb.note("Run %s test in scenario %s" % (case, scen))
-        os.system("%s | tee -a %s" % (fulltestpath, caselog))
+        os.system("%s" % fulltestpath)
     
     """Generate testcase list in runtime"""
     def generate_list(testlist):
@@ -119,7 +134,13 @@ def qemuimagetest_main(d):
 
     tmppath = bb.data.getVar('TEST_TMP', d, 1)
     bb.utils.mkdirhier(tmppath)
-    
+
+    """initialize test status file"""
+    test_status = bb.data.getVar('TEST_STATUS', d, 1)
+    if os.path.exists(test_status):
+        os.remove(test_status)
+    os.system("touch %s" % test_status)
+
     """initialize result file"""
     resultpath = bb.data.getVar('TEST_RESULT', d, 1)
     bb.utils.mkdirhier(resultpath)
@@ -142,9 +163,11 @@ def qemuimagetest_main(d):
     fulllist = generate_list(testlist)
 
     """Begin testing"""
-    for test in fulllist:
+    for index,test in enumerate(fulllist):
         (scen, case, fullpath) = test
+        teststatus(case, "running", index, (len(fulllist) - 1))
         runtest(scen, case, fullpath)
+        teststatus(case, "finished", index, (len(fulllist) - 1))
     
     """Print Test Result"""
     ret = 0
