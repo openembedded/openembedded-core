@@ -1,12 +1,12 @@
 require libtool.inc
 DEPENDS = "libtool-native"
 
-PR = "r0"
+PR = "r1"
 
 PACKAGES =+ "libltdl libltdl-dev libltdl-dbg"
 FILES_${PN} += "${datadir}/aclocal*"
 FILES_libltdl = "${libdir}/libltdl.so.*"
-FILES_libltdl-dev = "${libdir}/libltdl.* ${includedir}/ltdl.h"
+FILES_libltdl-dev = "${libdir}/libltdl.* ${includedir}/ltdl.h ${includedir}/libltdl/* ${datadir}/aclocal/ltdl.m4 ${datadir}/libtool/libltdl/*"
 FILES_libltdl-dbg = "${libdir}/.debug/"
 
 inherit autotools
