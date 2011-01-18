@@ -1,6 +1,7 @@
 DESCRIPTION = "2.6 Linux Kernel for IGEP based platforms"
 SECTION = "kernel"
 LICENSE = "GPL"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7 "
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_igep0020 = "1"
