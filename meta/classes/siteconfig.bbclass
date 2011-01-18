@@ -13,10 +13,10 @@ python siteconfig_do_siteconfig () {
 EXTRASITECONFIG ?= ""
 
 siteconfig_do_siteconfig_gencache () {
-	mkdir -p ${WORKDIR}/site_config
+	mkdir -p ${WORKDIR}/site_config_${MACHINE}
 	gen-site-config ${FILE_DIRNAME}/site_config \
-		>${WORKDIR}/site_config/configure.ac
-	cd ${WORKDIR}/site_config
+		>${WORKDIR}/site_config_${MACHINE}/configure.ac
+	cd ${WORKDIR}/site_config_${MACHINE}
 	autoconf
         CONFIG_SITE="" ${EXTRASITECONFIG} ./configure ${CONFIGUREOPTS} --cache-file ${PN}_cache
 	sed -n -e "/ac_cv_c_bigendian/p" -e "/ac_cv_sizeof_/p" \

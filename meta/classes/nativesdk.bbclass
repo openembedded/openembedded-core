@@ -19,6 +19,8 @@ python () {
 
 #STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_SYS}-nativesdk"
 #STAGING_DIR_TARGET = "${STAGING_DIR}/${BASEPKG_TARGET_SYS}-nativesdk"
+STAGING_DIR_HOST = "${STAGING_DIR}/${BASEPKG_HOST_SYS}"
+STAGING_DIR_TARGET = "${STAGING_DIR}/${BASEPKG_TARGET_SYS}"
 
 HOST_ARCH = "${SDK_ARCH}"
 HOST_VENDOR = "${SDK_VENDOR}"
@@ -79,4 +81,5 @@ python __anonymous () {
     bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", d, False) + ":virtclass-nativesdk", d)
 }
 
-
+do_populate_sysroot[stamp-extra-info] = ""
+do_package[stamp-extra-info] = ""

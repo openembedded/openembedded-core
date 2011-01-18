@@ -49,8 +49,8 @@ toolchain_create_tree_env_script () {
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${BUILD_SYS}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
-		echo 'export TARGET_CFLAGS="-I${STAGING_DIR}${TARGET_SYS}${includedir}"' >> $script
-		echo 'export TARGET_LDFLAGS="-L${STAGING_DIR}${TARGET_SYS}${libdir}"' >> $script
+		echo 'export TARGET_CFLAGS="-I${STAGING_DIR}${MACHINE}${includedir}"' >> $script
+		echo 'export TARGET_LDFLAGS="-L${STAGING_DIR}${MACHINE}${libdir}"' >> $script
 		# Workaround darwin toolchain sysroot path problems
 		cd ${SDK_OUTPUT}${SDKTARGETSYSROOT}/usr
 		ln -s /usr/local local

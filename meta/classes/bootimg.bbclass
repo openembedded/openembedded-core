@@ -49,7 +49,7 @@ inherit syslinux
 		
 build_boot_bin() {
 	install -d ${HDDDIR}
-	install -m 0644 ${STAGING_DIR}/${MACHINE}${HOST_VENDOR}-${HOST_OS}/kernel/bzImage \
+	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage \
 	${HDDDIR}/vmlinuz
 
 	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then 
@@ -83,7 +83,7 @@ build_boot_bin() {
 
 		# Install the kernel
 
-		install -m 0644 ${STAGING_DIR}/${MACHINE}${HOST_VENDOR}-${HOST_OS}/kernel/bzImage \
+		install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage \
 		        ${ISODIR}/vmlinuz
 
 		# Install the configuration files

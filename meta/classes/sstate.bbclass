@@ -1,7 +1,7 @@
 SSTATE_VERSION = "1"
 
 SSTATE_MANIFESTS = "${TMPDIR}/sstate-control"
-SSTATE_MANFILEBASE = "${SSTATE_MANIFESTS}/manifest-${SSTATE_PKGARCH}-"
+SSTATE_MANFILEBASE = "${SSTATE_MANIFESTS}/manifest-${SSTATE_MANMACH}-"
 SSTATE_MANFILEPREFIX = "${SSTATE_MANFILEBASE}${PN}"
 
 
@@ -14,15 +14,22 @@ SSTATE_SCAN_CMD ?= "find ${SSTATE_BUILDDIR} \( -name "*.la" -o -name "*-config" 
 
 BB_HASHFILENAME = "${SSTATE_PKGNAME}"
 
+SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
+
 python () {
     if bb.data.inherits_class('native', d):
         bb.data.setVar('SSTATE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
-    elif bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d):
+    elif bb.data.inherits_class('cross', d):
+        bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${BUILD_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
+        bb.data.setVar('SSTATE_MANMACH', bb.data.expand("${BUILD_ARCH}_${MACHINE}", d), d)
+    elif bb.data.inherits_class('crosssdk', d):
         bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${BUILD_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
     elif bb.data.inherits_class('nativesdk', d):
         bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${SDK_ARCH}", d), d)
     elif bb.data.inherits_class('cross-canadian', d):
         bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${SDK_ARCH}_${BASE_PACKAGE_ARCH}", d), d)
+    else:
+        bb.data.setVar('SSTATE_MANMACH', bb.data.expand("${MACHINE}", d), d)
 
     # These classes encode staging paths into their scripts data so can only be
     # reused if we manipulate the paths
@@ -147,10 +154,14 @@ def sstate_installpkg(ss, d):
     fixmefn =  sstateinst + "fixmepath"
     if os.path.isfile(fixmefn):
         staging = bb.data.getVar('STAGING_DIR', d, True)
+        staging_target = bb.data.getVar('STAGING_DIR_TARGET', d, True)
+        staging_host = bb.data.getVar('STAGING_DIR_HOST', d, True)
         fixmefd = open(fixmefn, "r")
         fixmefiles = fixmefd.readlines()
         fixmefd.close()
         for file in fixmefiles:
+            os.system("sed -i -e s:FIXMESTAGINGDIRTARGET:%s:g %s" % (staging_target, sstateinst + file))
+            os.system("sed -i -e s:FIXMESTAGINGDIRHOST:%s:g %s" % (staging_host, sstateinst + file))
             os.system("sed -i -e s:FIXMESTAGINGDIR:%s:g %s" % (staging, sstateinst + file))
 
     for state in ss['dirs']:
@@ -248,6 +259,35 @@ python sstate_cleanall() {
              sstate_clean(shared_state, d)
 }
 
+def sstate_hardcode_path(d):
+	# Need to remove hardcoded paths and fix these when we install the
+	# staging packages.
+	sstate_scan_cmd = bb.data.getVar('SSTATE_SCAN_CMD', d, True)
+	p = os.popen("%s" % sstate_scan_cmd)
+	file_list = p.read()
+
+	if file_list == "":
+		p.close()
+		return
+
+	staging = bb.data.getVar('STAGING_DIR', d, True)
+	staging_target = bb.data.getVar('STAGING_DIR_TARGET', d, True)
+	staging_host = bb.data.getVar('STAGING_DIR_HOST', d, True)
+	sstate_builddir = bb.data.getVar('SSTATE_BUILDDIR', d, True)
+
+	for i in file_list.split('\n'):
+		if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross-canadian', d):
+			cmd = "sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging, i)
+		elif bb.data.inherits_class('cross', d):
+			cmd = "sed -i -e s:%s:FIXMESTAGINGDIRTARGET:g %s \
+				sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging_target, i, staging, i)
+		else:
+			cmd = "sed -i -e s:%s:FIXMESTAGINGDIRHOST:g %s" % (staging_host, i)
+
+		os.system(cmd)
+		os.system("echo %s | sed -e 's:%s::' >> %sfixmepath" % (i, sstate_builddir, sstate_builddir))
+	p.close()
+
 def sstate_package(ss, d):
     import oe.path
 
@@ -273,6 +313,7 @@ def sstate_package(ss, d):
 
     bb.data.setVar('SSTATE_BUILDDIR', sstatebuild, d)
     bb.data.setVar('SSTATE_PKG', sstatepkg, d)
+    sstate_hardcode_path(d)
     bb.build.exec_func('sstate_create_package', d)
     
     bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
@@ -337,13 +378,6 @@ python sstate_task_postfunc () {
 # set as SSTATE_BUILDDIR
 #
 sstate_create_package () {
-	# Need to remove hardcoded paths and fix these when we install the
-	# staging packages.
-	for i in `${SSTATE_SCAN_CMD}` ; do \
-		sed -i -e s:${STAGING_DIR}:FIXMESTAGINGDIR:g $i
-		echo $i | sed -e 's:${SSTATE_BUILDDIR}::' >> ${SSTATE_BUILDDIR}fixmepath
-	done
-
 	cd ${SSTATE_BUILDDIR}
 	tar -cvzf ${SSTATE_PKG} *
 

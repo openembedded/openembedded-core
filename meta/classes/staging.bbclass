@@ -92,6 +92,7 @@ SSTATETASKS += "do_populate_sysroot"
 do_populate_sysroot[sstate-name] = "populate-sysroot"
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}"
 do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_HOST}/"
+do_populate_sysroot[stamp-extra-info] = "${MACHINE}"
 
 python do_populate_sysroot_setscene () {
 	sstate_setscene(d)

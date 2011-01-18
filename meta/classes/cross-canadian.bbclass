@@ -30,7 +30,6 @@ MULTIMACH_TARGET_SYS = "${MULTIMACH_ARCH}${HOST_VENDOR}-${HOST_OS}"
 INHIBIT_DEFAULT_DEPS = "1"
 
 STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_SYS}-nativesdk"
-STAGING_DIR_TARGET = "${STAGING_DIR}/${OLD_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR}/${HOST_ARCH}-nativesdk${HOST_VENDOR}-${HOST_OS}"
 
@@ -82,3 +81,5 @@ export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 # Cross-canadian packages need to pull in nativesdk dynamic libs
 SHLIBSDIR = "${STAGING_DIR}/${SDK_ARCH}-nativesdk${SDK_VENDOR}-${BUILD_OS}/shlibs"
 
+do_populate_sysroot[stamp-extra-info] = ""
+do_package[stamp-extra-info] = ""

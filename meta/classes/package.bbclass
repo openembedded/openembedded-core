@@ -1094,6 +1094,7 @@ do_package[sstate-plaindirs] = "${PKGD} ${PKGDEST}"
 do_package[sstate-inputdirs] = "${PKGDESTWORK} ${SHLIBSWORKDIR}"
 do_package[sstate-outputdirs] = "${PKGDATA_DIR} ${SHLIBSDIR}"
 do_package[sstate-lockfile] = "${PACKAGELOCK}"
+do_package[stamp-extra-info] = "${MACHINE}"
 do_package_setscene[dirs] = "${STAGING_DIR}"
 
 python do_package_setscene () {

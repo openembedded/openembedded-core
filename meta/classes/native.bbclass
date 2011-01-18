@@ -120,3 +120,5 @@ do_package_write_ipk[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_package_write_rpm[noexec] = "1"
 
+do_populate_sysroot[stamp-extra-info] = ""
+do_package[stamp-extra-info] = ""
