@@ -422,7 +422,8 @@ python () {
 
     commercial_license = bb.data.getVar('COMMERCIAL_LICENSE', d, 1)
     import re
-    if commercial_license and re.search(pn, commercial_license):
+    pnr = pn.replace('+', "\+")
+    if commercial_license and re.search(pnr, commercial_license):
         bb.debug(1, "Skipping %s because it's commercially licensed" % pn)
         raise bb.parse.SkipPackage("because it requires commercial license to ship product")
 
