@@ -40,15 +40,16 @@ target_prefix := "${prefix}"
 target_exec_prefix := "${exec_prefix}"
 
 # Overrides for paths
+CROSS_TARGET_SYS_DIR = "${MULTIMACH_TARGET_SYS}"
 prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 base_prefix = "${STAGING_DIR_NATIVE}"
 exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
-bindir = "${exec_prefix}/bin/${MULTIMACH_TARGET_SYS}"
+bindir = "${exec_prefix}/bin/${CROSS_TARGET_SYS_DIR}"
 sbindir = "${bindir}"
 base_bindir = "${bindir}"
 base_sbindir = "${bindir}"
-libdir = "${exec_prefix}/lib/${MULTIMACH_TARGET_SYS}"
-libexecdir = "${exec_prefix}/libexec/${MULTIMACH_TARGET_SYS}"
+libdir = "${exec_prefix}/lib/${CROSS_TARGET_SYS_DIR}"
+libexecdir = "${exec_prefix}/libexec/${CROSS_TARGET_SYS_DIR}"
 
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}"
 
