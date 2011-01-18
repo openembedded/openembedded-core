@@ -28,6 +28,7 @@ SRC_URI = "\
      file://binutils-2.19.1-ld-sysroot.patch \
      file://libiberty_path_fix.patch \
      file://binutils-poison.patch \
+     file://libtool-rpath-fix.patch \
      "
 
 SRC_URI[md5sum] = "c84c5acc9d266f1a7044b51c85a823f5"
