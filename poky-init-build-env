@@ -38,6 +38,7 @@ else
    . $OEROOT/scripts/poky-env-internal
    $OEROOT/scripts/poky-setup-builddir
    unset OEROOT
+   unset BBPATH
    [ -n "$BUILDDIR" ] && cd $BUILDDIR
 fi
 
