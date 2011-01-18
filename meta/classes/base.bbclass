@@ -135,7 +135,10 @@ python base_do_fetch() {
 		raise bb.build.FuncFailed("Malformed URL: %s" % value)
 
 	try:
-		bb.fetch.go(localdata)
+		if bb.fetch.__version__ == "1":
+			bb.fetch.go(localdata)
+		else:
+			bb.fetch.download(localdata)
 	except bb.fetch.MissingParameterError:
 		(type, value, traceback) = sys.exc_info()
 		raise bb.build.FuncFailed("Missing parameters: %s" % value)

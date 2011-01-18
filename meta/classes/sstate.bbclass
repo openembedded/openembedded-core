@@ -344,7 +344,10 @@ def pstaging_fetch(sstatepkg, d):
         # we will build the package
         try:
             bb.fetch.init([srcuri], localdata)
-            bb.fetch.go(localdata, [srcuri])
+            if bb.fetch.__version__ == "1":
+                bb.fetch.go(localdata, [srcuri])
+            else:
+                bb.fetch.download(localdata, [srcuri])
             # Need to optimise this, if using file:// urls, the fetcher just changes the local path
             # For now work around by symlinking
             localpath = bb.data.expand(bb.fetch.localpath(srcuri, localdata), localdata)
