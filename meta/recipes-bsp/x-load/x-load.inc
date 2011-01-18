@@ -5,7 +5,7 @@ LICENSE = "GPL"
 
 inherit deploy
 
-DEPENDS = "signgp-native"
+DEPENDS = ""
 
 PARALLEL_MAKE=""
 
@@ -24,11 +24,10 @@ do_compile () {
 	unset CPPFLAGS
 	oe_runmake distclean
 	oe_runmake ${XLOAD_MACHINE}
-	oe_runmake
+	oe_runmake ift
 }
 
 do_deploy () {
-	signGP ${S}/x-load.bin
 	install ${S}/x-load.bin.ift ${DEPLOYDIR}/${XLOAD_IMAGE}
 	install ${S}/x-load.bin.ift ${DEPLOYDIR}/${MLO_IMAGE}
 
