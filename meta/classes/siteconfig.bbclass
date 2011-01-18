@@ -20,8 +20,9 @@ siteconfig_do_siteconfig_gencache () {
 	sed -n -e "/ac_cv_c_bigendian/p" -e "/ac_cv_sizeof_/p" \
 		-e "/ac_cv_type_/p" -e "/ac_cv_header_/p" -e "/ac_cv_func_/p" \
 		< ${PN}_cache > ${PN}_config
-	mkdir -p ${SYSROOT_DESTDIR}${SITECONFIG_SYSROOTCACHE}
-	cp ${PN}_config ${SYSROOT_DESTDIR}${SITECONFIG_SYSROOTCACHE}
+	mkdir -p ${SYSROOT_DESTDIR}${datadir}/${TARGET_SYS}_config_site.d
+	cp ${PN}_config ${SYSROOT_DESTDIR}${datadir}/${TARGET_SYS}_config_site.d
+
 }
 
 do_populate_sysroot[sstate-interceptfuncs] += "do_siteconfig "

@@ -26,6 +26,6 @@ do_install () {
 SYSROOT_PREPROCESS_FUNCS += "libtoolcross_sysroot_preprocess"
 
 libtoolcross_sysroot_preprocess () {
-	install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
-	install -m 755 ${D}${bindir}/${HOST_SYS}-libtool ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool
+	install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}
+	install -m 755 ${D}${bindir}/${HOST_SYS}-libtool ${SYSROOT_DESTDIR}${bindir_crossscripts}/${HOST_SYS}-libtool
 }

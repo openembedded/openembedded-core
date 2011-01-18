@@ -32,25 +32,25 @@ sysroot_stage_dirs() {
 	from="$1"
 	to="$2"
 
-	sysroot_stage_dir $from${includedir} $to${STAGING_INCDIR}
+	sysroot_stage_dir $from${includedir} $to${includedir}
 	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
-		sysroot_stage_dir $from${bindir} $to${STAGING_DIR_HOST}${bindir}
-		sysroot_stage_dir $from${sbindir} $to${STAGING_DIR_HOST}${sbindir}
-		sysroot_stage_dir $from${base_bindir} $to${STAGING_DIR_HOST}${base_bindir}
-		sysroot_stage_dir $from${base_sbindir} $to${STAGING_DIR_HOST}${base_sbindir}
-		sysroot_stage_dir $from${libexecdir} $to${STAGING_DIR_HOST}${libexecdir}
-		sysroot_stage_dir $from${sysconfdir} $to${STAGING_DIR_HOST}${sysconfdir}
-		sysroot_stage_dir $from${localstatedir} $to${STAGING_DIR_HOST}${localstatedir}
+		sysroot_stage_dir $from${bindir} $to${bindir}
+		sysroot_stage_dir $from${sbindir} $to${sbindir}
+		sysroot_stage_dir $from${base_bindir} $to${base_bindir}
+		sysroot_stage_dir $from${base_sbindir} $to${base_sbindir}
+		sysroot_stage_dir $from${libexecdir} $to${libexecdir}
+		sysroot_stage_dir $from${sysconfdir} $to${sysconfdir}
+		sysroot_stage_dir $from${localstatedir} $to${localstatedir}
 	fi
 	if [ -d $from${libdir} ]
 	then
-		sysroot_stage_libdir $from/${libdir} $to${STAGING_LIBDIR}
+		sysroot_stage_libdir $from/${libdir} $to${libdir}
 	fi
 	if [ -d $from${base_libdir} ]
 	then
-		sysroot_stage_libdir $from${base_libdir} $to${STAGING_DIR_HOST}${base_libdir}
+		sysroot_stage_libdir $from${base_libdir} $to${base_libdir}
 	fi
-	sysroot_stage_dir $from${datadir} $to${STAGING_DATADIR}
+	sysroot_stage_dir $from${datadir} $to${datadir}
 }
 
 sysroot_stage_all() {
@@ -90,8 +90,8 @@ python do_populate_sysroot () {
 
 SSTATETASKS += "do_populate_sysroot"
 do_populate_sysroot[sstate-name] = "populate-sysroot"
-do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR}"
-do_populate_sysroot[sstate-outputdirs] = "${TMPDIR}/sysroots"
+do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}"
+do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_HOST}/"
 
 python do_populate_sysroot_setscene () {
 	sstate_setscene(d)

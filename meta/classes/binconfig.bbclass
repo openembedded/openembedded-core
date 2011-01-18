@@ -47,8 +47,8 @@ SYSROOT_PREPROCESS_FUNCS += "binconfig_sysroot_preprocess"
 binconfig_sysroot_preprocess () {
 	for config in `find ${S} -name '${BINCONFIG_GLOB}'`; do
 		configname=`basename $config`
-		install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}
-		cat $config | sed ${@get_binconfig_mangle(d)} > ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/$configname
-		chmod u+x ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/$configname
+		install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}
+		cat $config | sed ${@get_binconfig_mangle(d)} > ${SYSROOT_DESTDIR}${bindir_crossscripts}/$configname
+		chmod u+x ${SYSROOT_DESTDIR}${bindir_crossscripts}/$configname
 	done
 }

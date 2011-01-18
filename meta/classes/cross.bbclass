@@ -50,6 +50,8 @@ base_sbindir = "${bindir}"
 libdir = "${exec_prefix}/lib/${MULTIMACH_TARGET_SYS}"
 libexecdir = "${exec_prefix}/libexec/${MULTIMACH_TARGET_SYS}"
 
+do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}"
+
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 }

@@ -8,8 +8,8 @@ PR = "r1"
 SYSROOT_PREPROCESS_FUNCS += "libtool_sysroot_preprocess"
 
 libtool_sysroot_preprocess () {
-	rm -rf ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${bindir}/*
-	rm -rf ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${datadir}/aclocal/*
-	rm -rf ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${datadir}/libtool/config/*
+	rm -rf ${SYSROOT_DESTDIR}${bindir}/*
+	rm -rf ${SYSROOT_DESTDIR}${datadir}/aclocal/*
+	rm -rf ${SYSROOT_DESTDIR}${datadir}/libtool/config/*
 }
 

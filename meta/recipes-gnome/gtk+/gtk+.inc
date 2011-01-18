@@ -64,8 +64,8 @@ SYSROOT_PREPROCESS_FUNCS += "gtk_sysroot_preprocess"
 
 gtk_sysroot_preprocess () {
 	if [ -e ${D}${bindir}/gtk-builder-convert ]; then
-		install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
-		install -m 755 ${D}${bindir}/gtk-builder-convert ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}/
+		install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
+		install -m 755 ${D}${bindir}/gtk-builder-convert ${SYSROOT_DESTDIR}${bindir_crossscripts}/
 	fi
 }
 
