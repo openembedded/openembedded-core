@@ -30,13 +30,16 @@ python () {
         scan_cmd = "grep -Irl ${STAGING_DIR} ${SSTATE_BUILDDIR}"
         bb.data.setVar('SSTATE_SCAN_CMD', scan_cmd, d)
 
+    namemap = []
     for task in (bb.data.getVar('SSTATETASKS', d, True) or "").split():
+        namemap.append(bb.data.getVarFlag(task, 'sstate-name', d))
         funcs = bb.data.getVarFlag(task, 'prefuncs', d) or ""
         funcs = "sstate_task_prefunc " + funcs
         bb.data.setVarFlag(task, 'prefuncs', funcs, d)
         funcs = bb.data.getVarFlag(task, 'postfuncs', d) or ""
         funcs = funcs + " sstate_task_postfunc"
         bb.data.setVarFlag(task, 'postfuncs', funcs, d)
+    d.setVar('SSTATETASKNAMES', " ".join(namemap))
 }
 
 def sstate_init(name, d):
@@ -261,7 +264,12 @@ python sstate_cleanall() {
 
     for manifest in (os.listdir(manifest_dir)):
         if fnmatch.fnmatch(manifest, manifest_pattern):
-             sstate_clean_manifest(manifest_dir + "/" + manifest, d)
+             name = manifest.replace(manifest_pattern[:-1], "")
+             namemap = d.getVar('SSTATETASKNAMES', True).split()
+             tasks = d.getVar('SSTATETASKS', True).split()
+             taskname = tasks[namemap.index(name)]
+             shared_state = sstate_state_fromvars(d, taskname[3:])
+             sstate_clean(shared_state, d)
 }
 
 def sstate_package(ss, d):
