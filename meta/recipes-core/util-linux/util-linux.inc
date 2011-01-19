@@ -27,7 +27,9 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v${MAJOR_VERSION}/u
            file://make_include \
            "
 
-PACKAGES_prepend = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-swaponoff util-linux-losetup util-linux-umount util-linux-mount util-linux-readprofile "
+PACKAGES_prepend = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-swaponoff \
+                    util-linux-losetup util-linux-umount util-linux-mount util-linux-readprofile \
+                    util-linux-libblkid util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev "
 
 PACKAGES_virtclass-native = ""
 
@@ -47,6 +49,11 @@ FILES_util-linux-losetup = "/sbin/losetup.${PN}"
 FILES_util-linux-mount = "/bin/mount.${PN}"
 FILES_util-linux-umount = "/bin/umount.${PN}"
 FILES_util-linux-readprofile = "/sbin/readprofile"
+
+FILES_util-linux-libblkid = "/usr/lib/libblkid.so.*"
+FILES_util-linux-libblkid-dev = "/usr/lib/libblkid.so /usr/lib/libblkid.a /usr/lib/libblkid.la /usr/include/blkid"
+FILES_util-linux-libuuid = "/usr/lib/libuuid.so.*"
+FILES_util-linux-libuuid-dev = "/usr/lib/libuuid.so /usr/lib/libuuid.a /usr/lib/libuuid.la /usr/include/uuid"
 
 RRECOMMENDS_${PN} = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-mount util-linux-readprofile "
 RDEPENDS_${PN} = "util-linux-umount util-linux-swaponoff util-linux-losetup"
