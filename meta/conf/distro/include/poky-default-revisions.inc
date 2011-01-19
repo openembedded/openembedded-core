@@ -173,6 +173,7 @@ SRCREV_pn-trace-cmd ??= ${TRACECMDREV}
 SRCREV_pn-kernelshark ??= ${TRACECMDREV}
 SRCREV_pn-tidy ??= "e25416e1293e1074bfa6727c80527dcff5b1f3cb"
 SRCREV_pn-u-boot-omap3 ??= "f40f6db278f602b55820693634a7256b0b4e4b80"
+SRCREV_pn-u-boot ??= "v2010.12"
 SRCREV_pn-ubootchart ??= "10"
 SRCREV_pn-webkit-gtk ??= "62027"
 SRCREV_pn-web-webkit ??= "130"
