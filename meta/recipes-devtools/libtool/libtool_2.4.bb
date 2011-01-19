@@ -9,16 +9,6 @@ FILES_libltdl = "${libdir}/libltdl.so.*"
 FILES_libltdl-dev = "${libdir}/libltdl.* ${includedir}/ltdl.h ${includedir}/libltdl/* ${datadir}/aclocal/ltdl.m4 ${datadir}/libtool/libltdl/*"
 FILES_libltdl-dbg = "${libdir}/.debug/"
 
-inherit autotools
-
-EXTRA_AUTORECONF = "--exclude=libtoolize"
-
-do_compile_prepend () {
-	# Sometimes this file doesn't get rebuilt, force the issue
-	rm -f ${S}/libltdl/config/ltmain.sh
-	make libltdl/config/ltmain.sh
-}
-
 #
 # We want the results of libtool-cross preserved - don't stage anything ourselves.
 #
