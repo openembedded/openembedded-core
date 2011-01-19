@@ -22,4 +22,14 @@ EXTRA_OECONF = "\
   --enable-shared \
 "
 
+EXTRA_OECONF_poky-lsb = "\
+  --with-threads \
+  --with-pymalloc \
+  --with-cyclic-gc \
+  --without-cxx \
+  --with-signal-module \
+  --enable-shared \
+  ac_cv_sizeof_off_t=8 \
+"
+
 PARALLEL_MAKE = ""
