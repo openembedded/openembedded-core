@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r19"
+PR = "r20"
 
 SRC_URI += "file://quotefix.patch;patch=1 \
             file://acinclude.m4"
