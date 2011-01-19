@@ -5,11 +5,15 @@ DEPENDS += "qt4-tools-native freetype jpeg libpng zlib dbus openssl glib-2.0 gst
 
 inherit qmake_base
 
-QT_CONFIG_FLAGS += "-release -no-cups -no-accessibility -reduce-relocations \
-                    -shared -no-nas-sound -no-sm -no-nis \
+QT_DISTRO_FLAGS ?= "-no-accessibility -no-sm"
+QT_DISTRO_FLAGS_poky-lsb = "-sm"
+
+QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
+                    -shared -no-nas-sound -no-nis \
                     -qt-gif -system-libjpeg -system-libpng -system-zlib \
                     -no-sql-ibase -no-sql-mysql -no-sql-psql -no-sql-odbc -plugin-sql-sqlite \
-                    -no-pch -dbus -stl -glib -phonon -webkit"
+                    -no-pch -dbus -stl -glib -phonon -webkit \
+                    ${QT_DISTRO_FLAGS} "
 
 EXTRA_OEMAKE = "-e"
 
