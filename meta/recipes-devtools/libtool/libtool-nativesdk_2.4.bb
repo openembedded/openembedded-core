@@ -1,4 +1,4 @@
-require libtool_${PV}.bb
+require libtool-${PV}.inc
 
 PR = "r1"
 SRC_URI_append = " file://cross_compile.patch \

@@ -1,11 +1,9 @@
-require libtool_${PV}.bb
+require libtool-${PV}.inc
 
 PR = "r1"
 PACKAGES = ""
 SRC_URI_append = " file://cross_compile.patch \
 		   file://prefix.patch "
-
-DEPENDS += "libtool-native"
 
 do_configure_prepend () {
 	# Remove any existing libtool m4 since old stale versions would break

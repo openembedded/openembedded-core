@@ -1,4 +1,4 @@
-require libtool_${PV}.bb
+require libtool-${PV}.inc
 
 DEPENDS = ""
 
