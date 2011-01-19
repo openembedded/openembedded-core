@@ -199,19 +199,8 @@ oe_libinstall() {
 		__runcmd install -m 0644 $dota $destpath/
 	fi
 	if [ -f "$dotlai" -a -n "$libtool" ]; then
-		if test -n "$staging_install"
-		then
-			# stop libtool using the final directory name for libraries
-			# in staging:
-			__runcmd rm -f $destpath/$libname.la
-			__runcmd sed -e 's/^installed=yes$/installed=no/' \
-				     -e '/^dependency_libs=/s,${WORKDIR}[[:alnum:]/\._+-]*/\([[:alnum:]\._+-]*\),${STAGING_LIBDIR}/\1,g' \
-				     -e "/^dependency_libs=/s,\([[:space:]']\)${libdir},\1${STAGING_LIBDIR},g" \
-				     $dotlai >$destpath/$libname.la
-		else
-			rm -f $destpath/$libname.la
-			__runcmd install -m 0644 $dotlai $destpath/$libname.la
-		fi
+		rm -f $destpath/$libname.la
+		__runcmd install -m 0644 $dotlai $destpath/$libname.la
 	fi
 
 	for name in $library_names; do
