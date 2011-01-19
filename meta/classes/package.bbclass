@@ -497,7 +497,8 @@ python emit_pkgdata() {
 	pkgdest = bb.data.getVar('PKGDEST', d, 1)
 	pkgdatadir = bb.data.getVar('PKGDESTWORK', d, True)
 
-	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
+	# Take shared lock since we're only reading, not writing
+	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d), True)
 
 	data_file = pkgdatadir + bb.data.expand("/${PN}" , d)
 	f = open(data_file, 'w')
@@ -649,6 +650,7 @@ python package_do_shlibs() {
 	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, True)
 	shlibswork_dir = bb.data.getVar('SHLIBSWORKDIR', d, True)
 
+	# Take shared lock since we're only reading, not writing
 	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
 
 	def linux_so(root, path, file):
@@ -878,6 +880,7 @@ python package_do_pkgconfig () {
 							if hdr == 'Requires':
 								pkgconfig_needed[pkg] += exp.replace(',', ' ').split()
 
+	# Take shared lock since we're only reading, not writing
 	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
 
 	for pkg in packages.split():
