@@ -302,13 +302,14 @@
          </mediaobject>
 
          <para>
-             For this scenario you need to do three things:
+             For this scenario you need to do several things:
          </para>
 
          <itemizedlist>
              <listitem>
                  <para>
-                     Install the stand-alone Yocto toolchain tarball.
+                     Install the stand-alone Yocto toolchain tarball and then set up the 
+                     environment to emulate the hardware.
                  </para>
              </listitem>
              <listitem>
@@ -323,6 +324,12 @@
                      Download the filesystem image for your target machine's architecture.
                  </para>
              </listitem>
+             <listitem>
+                 <para>
+                     Start the QEMU emulator.
+                 </para>
+             </listitem>
+
          </itemizedlist>
 
         <section id='installing-the-toolchain-and-setting-up-the-environment'>
