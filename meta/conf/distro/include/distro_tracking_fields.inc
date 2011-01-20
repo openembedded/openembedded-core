@@ -1804,9 +1804,9 @@ RECIPE_LATEST_VERSION_pn-parted = "2.3"
 RECIPE_LAST_UPDATE_pn-parted = "Dec 30, 2010"
 RECIPE_MAINTAINER_pn-parted = "Qing He <qing.he@intel.com>"
 
-RECIPE_STATUS_pn-resolvconf = "red"
-RECIPE_LATEST_VERSION_pn-resolvconf = "1.45"
-RECIPE_LAST_UPDATE_pn-resolvconf = "Dec 31, 2008"
+RECIPE_STATUS_pn-resolvconf = "green"
+RECIPE_LATEST_VERSION_pn-resolvconf = "1.48"
+RECIPE_LAST_UPDATE_pn-resolvconf = "Jan 20, 2011"
 RECIPE_MAINTAINER_pn-resolvconf = "Qing He <qing.he@intel.com>"
 
 RECIPE_STATUS_pn-openswan = "red"
