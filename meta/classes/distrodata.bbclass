@@ -257,8 +257,8 @@ python do_checkpkg() {
 	prefix1 = "[a-zA-Z][a-zA-Z0-9]*([\-_][a-zA-Z]\w+)*[\-_]"	# match most patterns which uses "-" as separator to version digits
 	prefix2 = "[a-zA-Z]+"			# a loose pattern such as for unzip552.tar.gz
 	prefix = "(%s|%s)" % (prefix1, prefix2)
-	suffix = "(tar\.gz|tgz|tar\.bz2|zip)"
-	suffixtuple = ("tar.gz", "tgz", "zip", "tar.bz2")
+	suffix = "(tar\.gz|tgz|tar\.bz2|zip|xz)"
+	suffixtuple = ("tar.gz", "tgz", "zip", "tar.bz2", "tar.xz")
 
 	sinterstr = "(?P<name>%s?)(?P<ver>.*)" % prefix
 	sdirstr = "(?P<name>%s)(?P<ver>.*)\.(?P<type>%s$)" % (prefix, suffix)
