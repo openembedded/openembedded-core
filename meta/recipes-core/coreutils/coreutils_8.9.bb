@@ -6,16 +6,17 @@ HOMEPAGE = "http://www.gnu.org/software/coreutils/"
 BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
-                    file://src/ls.c;startline=5;endline=16;md5=bb14ed3c4cda583abc85401304b5cd4e"
+                    file://src/ls.c;startline=5;endline=16;md5=e1a509558876db58fb6667ba140137ad"
 PR = "r0"
-DEPENDS = "perl-native"
+DEPENDS = "perl-native gmp"
+DEPENDS_virtclass-native = "perl-native gmp-native"
 
 inherit autotools gettext
 
 SRC_URI = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "c1ffe586d001e87d66cd80c4536ee823"
-SRC_URI[sha256sum] = "dd243e2ac7d0ed203b170ecfb8299643779e7501fec2b45ae1cea8a450fa8ca0"
+SRC_URI[md5sum] = "36909ae68840d73a800120cf74af794a"
+SRC_URI[sha256sum] = "aa991fa4296b22ff929a31a5cb5528bb783c84cdef4503c4ff311cfbeaebf50a"
 
 # [ gets a special treatment and is not included in this
 bindir_progs = "base64 basename chcon cksum comm csplit cut dir dircolors dirname du \
