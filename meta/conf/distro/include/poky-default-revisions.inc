@@ -192,6 +192,6 @@ SRCREV_pn-xvideo-tests ??= "270"
 SRCREV_pn-x-load ??= "65ed00323f3807197a83abc75d62ed2a8d3f60de"
 SRCDATE_yaffs2-utils-native ??= "20071107"
 SRCDATE_yaffs2-utils ??= "20071107"
-SRCREV_pn-zaurusd ??= "358"
+SRCREV_pn-zaurusd ??= "426"
 SRCREV_pn-zypper ??= "9eb0e248e06c8d20ad054be2439149d9ede37531"
 

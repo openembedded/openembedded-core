@@ -1821,10 +1821,10 @@ RECIPE_LATEST_VERSION_pn-u-boot-mkimage = "2010.03"
 RECIPE_LAST_UPDATE_pn-u-boot-mkimage = "Dec 15, 2009"
 RECIPE_MAINTAINER_pn-u-boot-mkimage = "Qing He <qing.he@intel.com>"
 
-RECIPE_STATUS_pn-zaurusd = "red"
-RECIPE_LATEST_VERSION_pn-zaurusd = "n/a"
+RECIPE_STATUS_pn-zaurusd = "green"
+RECIPE_LATEST_VERSION_pn-zaurusd = "0.0+svnr426"
 DISTRO_PN_ALIAS_pn-zaurusd = "OpenedHand"
-RECIPE_LAST_UPDATE_pn-zaurusd = "Feb 15, 2008"
+RECIPE_LAST_UPDATE_pn-zaurusd = "Jan 20, 2011"
 RECIPE_MAINTAINER_pn-zaurusd = "Qing He <qing.he@intel.com>"
 
 RECIPE_STATUS_pn-yaffs2-utils = "red"
