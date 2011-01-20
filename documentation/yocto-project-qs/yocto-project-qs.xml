@@ -308,8 +308,7 @@
          <itemizedlist>
              <listitem>
                  <para>
-                     Install the stand-alone Yocto toolchain tarball and then set up the 
-                     environment to emulate the hardware.
+                     Install the stand-alone Yocto toolchain tarball.
                  </para>
              </listitem>
              <listitem>
@@ -326,14 +325,14 @@
              </listitem>
              <listitem>
                  <para>
-                     Start the QEMU emulator.
+                     Set up the environment to emulate the hardware and then start the QEMU emulator.
                  </para>
              </listitem>
 
          </itemizedlist>
 
-        <section id='installing-the-toolchain-and-setting-up-the-environment'>
-        <title>Installing the Toolchain and Setting Up the Environment</title>
+        <section id='installing-the-toolchain'>
+        <title>Installing the Toolchain</title>
          <para>
              You can download the pre-built toolchain, which includes the poky-qemu script and 
              support files, from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/toolchain/'></ulink>.  
@@ -379,21 +378,6 @@
      $ sudo tar -xvjf yocto-eglibc-x86_64-i586-toolchain-sdk-0.9.tar.bz2
              </literallayout>
          </para>
-
-         <para>
-             The following command form sets up the emulation environment.
-         </para>
-
-         <literallayout class='monospaced'>
-     $ source /opt/poky/environment-setup-&lt;<emphasis>arch</emphasis>&gt;-poky-linux-&lt;<emphasis>if</emphasis>&gt; 
-
-     Where:
-         &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
-                i586, x86-64, ppc603e, mips, or armv5te.
-
-         &lt;<emphasis>if</emphasis>&gt; is a string representing an embedded application binary interface.
-                Not all setup scripts include this string.
-         </literallayout>
          </section>
 
         <section id='downloading-the-pre-built-linux-kernel'>
@@ -441,8 +425,24 @@
           </literallayout>
          </section>
 
-        <section id='starting-the-qemu-emulator'>
-        <title>Starting the QEMU Emulator</title>
+        <section id='setting-up-the-environment-and-starting-the-qemu-emulator'>
+        <title>Setting Up the Environment and Starting the QEMU Emulator</title>
+         <para>
+             Before you start the QEMU emulator you need to set up the emulation environment.
+             The following command form sets up the emulation environment.
+         </para>
+
+         <literallayout class='monospaced'>
+     $ source /opt/poky/environment-setup-&lt;<emphasis>arch</emphasis>&gt;-poky-linux-&lt;<emphasis>if</emphasis>&gt; 
+
+     Where:
+         &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
+                i586, x86_64, ppc603e, mips, or armv5te.
+
+         &lt;<emphasis>if</emphasis>&gt; is a string representing an embedded application binary interface.
+                Not all setup scripts include this string.
+         </literallayout>
+
          <para>
               Finally, this command form invokes the QEMU emulator 
          </para>
@@ -463,7 +463,7 @@
 
          <para>
              Continuing with the example, the following two commands setup the emulation 
-             environment and launch QEMu.  
+             environment and launch QEMU.  
              The kernel and filesystem are for a 32-bit target architecture.
          </para>
 
