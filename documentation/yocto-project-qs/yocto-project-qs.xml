@@ -415,11 +415,14 @@
          </para>
 
          <literallayout class='monospaced'>
-     $ source /opt/poky/environment-setup-&lt;<emphasis>arch</emphasis>&gt;-poky-linux 
+     $ source /opt/poky/environment-setup-&lt;<emphasis>arch</emphasis>&gt;-poky-linux-&lt;<emphasis>if</emphasis>&gt; 
 
      Where:
          &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
-                i586, x86-64, ppc, mips, or arm.
+                i586, x86-64, ppc603e, mips, or armv5te.
+
+         &lt;<emphasis>if</emphasis>&gt; is a string representing an embedded application binary interface.
+                Not all setup scripts include this string.
          </literallayout>
 
          <para>
