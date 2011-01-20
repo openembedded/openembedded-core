@@ -39,7 +39,6 @@ do_generate_content() {
     echo 'Metadata Revision: ${METADATA_REVISION}' >> $versionfile
     echo 'Timestamp: ${DATETIME}' >> $versionfile
 }
-do_generate_content[recrdeptask] = "do_compile"
 addtask generate_content before do_install after do_compile
 
 do_install[nostamp] = "1"
