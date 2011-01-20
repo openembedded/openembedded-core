@@ -1,7 +1,7 @@
 require gdk-pixbuf.inc
 inherit native
 
-DEPENDS = "libpng-native gettext-native glib-2.0-native"
+DEPENDS = "libpng-native gettext-native glib-2.0-native jpeg-native"
 PR = "r0"
 
 PACKAGES_DYNAMIC = ""
