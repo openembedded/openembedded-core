@@ -524,14 +524,11 @@ RECIPE_INTEL_SECTION_pn-libevent = "base libs"
 RECIPE_LATEST_RELEASE_DATE_pn-libevent = "06/2010"
 
 RECIPE_STATUS_pn-libnfsidmap = "green"
-RECIPE_LAST_UPDATE_pn-libnfsidmap = "Jul 7, 2010"
+RECIPE_LAST_UPDATE_pn-libnfsidmap = "Jan 20, 2011"
 RECIPE_MAINTAINER_pn-libnfsidmap = "Qing He <qing.he@intel.com>"
-RECIPE_DEPENDENCY_CHECK_pn-libnfsidmap = "done"
-RECIPE_LATEST_VERSION_pn-libnfsidmap = "0.23"
+RECIPE_LATEST_VERSION_pn-libnfsidmap = "0.24"
 RECIPE_INTEL_SECTION_pn-libnfsidmap = "base libs"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libnfsidmap = "4 months"
-RECIPE_LATEST_RELEASE_DATE_pn-libnfsidmap = "12/2009"
-RECIPE_COMMENTS_pn-libnfsidmap = ""
+RECIPE_LATEST_RELEASE_DATE_pn-libnfsidmap = "12/2010"
 
 RECIPE_STATUS_pn-acl = "yellow"   # hacky as attr
 RECIPE_LAST_UPDATE_pn-acl = "Jul 29, 2010"
