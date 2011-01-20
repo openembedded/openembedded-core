@@ -31,3 +31,6 @@ EXTRA_OECONF_virtclass-nativesdk = "--with-opkglibdir=${target_localstatedir}/li
 #RPROVIDES_${PN} += "update-alternatives-native"
 
 BBCLASSEXTEND = "native nativesdk"
+
+PKGSUFFIX = ""
+PKGSUFFIX_virtclass-nativesdk = "-nativesdk"

@@ -19,11 +19,11 @@ S = "${WORKDIR}/trunk"
 PV = "0.1.8+svnr${SRCPV}"
 PR = "r1"
 
-PACKAGES =+ "libopkg-dev libopkg update-alternatives-cworth"
+PACKAGES =+ "libopkg${PKGSUFFIX}-dev libopkg${PKGSUFFIX} update-alternatives-cworth${PKGSUFFIX}"
 
-FILES_update-alternatives-cworth = "${bindir}/update-alternatives"
-FILES_libopkg-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so"
-FILES_libopkg = "${libdir}/*.so.* ${localstatedir}/lib/opkg/"
+FILES_update-alternatives-cworth${PKGSUFFIX} = "${bindir}/update-alternatives"
+FILES_libopkg${PKGSUFFIX}-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so"
+FILES_libopkg${PKGSUFFIX} = "${libdir}/*.so.* ${localstatedir}/lib/opkg/"
 
 # We need to create the lock directory
 do_install_append() {
