@@ -471,8 +471,19 @@
      $ source /opt/poky/environment-setup-i586-poky-linux 
      $ poky-qemu qemui586 zImage-2.6.34-qemux86-0.9 yocto-image-sdk-qemux86-0.9.rootfs.ext3 ext3
          </literallayout>
-         </section>
-         
+
+         <para>
+             The environment in which QEMU launches varies depending on the filesystem image and on the 
+             target architecture.  For example, if you source the environment for the ARM target 
+             architecture and then boot the minimal QEMU image, the emulator comes up in a new 
+             shell in command-line mode.  However, if you boot the SDK image QEMU comes up with 
+             a GUI.
+         </para>
+ 
+         <note><para>
+             Booting the PPC image results in QEMU launching in the same shell in command-line mode.
+         </para></note>
+         </section>     
     </section>
 </section>
 
