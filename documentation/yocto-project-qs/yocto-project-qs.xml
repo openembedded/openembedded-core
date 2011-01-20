@@ -325,6 +325,8 @@
              </listitem>
          </itemizedlist>
 
+        <section id='installing-the-toolchain-and-setting-up-the-environment'>
+        <title>Installing the Toolchain and Setting Up the Environment</title>
          <para>
              You can download the pre-built toolchain, which includes the poky-qemu script and 
              support files, from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/toolchain/'></ulink>.  
@@ -372,6 +374,24 @@
          </para>
 
          <para>
+             The following command form sets up the emulation environment.
+         </para>
+
+         <literallayout class='monospaced'>
+     $ source /opt/poky/environment-setup-&lt;<emphasis>arch</emphasis>&gt;-poky-linux-&lt;<emphasis>if</emphasis>&gt; 
+
+     Where:
+         &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
+                i586, x86-64, ppc603e, mips, or armv5te.
+
+         &lt;<emphasis>if</emphasis>&gt; is a string representing an embedded application binary interface.
+                Not all setup scripts include this string.
+         </literallayout>
+         </section>
+
+        <section id='downloading-the-pre-built-linux-kernel'>
+        <title>Downloading the Pre-Built Linux Kernel</title>
+         <para>
              You can download the pre-built Linux kernel and the filesystem image suitable for 
              running in the emulator QEMU from 
              <ulink url='http://yoctoproject.org/downloads/yocto-0.9/qemu'></ulink>.
@@ -390,7 +410,10 @@
          &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
                 x86, x86-64, ppc, mips, or arm.
          </literallayout>
+         </section>
 
+        <section id='downloading-the-filesystem'>
+        <title>Downloading the Filesystem</title>
          <para>
              The filesystem image has two forms.
              One form is an <filename>ext3</filename> filesystem image.
@@ -409,22 +432,10 @@
          &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
                 x86, x86-64, ppc, mips, or arm.
           </literallayout>
+         </section>
 
-         <para>
-             The following command form sets up the emulation environment.
-         </para>
-
-         <literallayout class='monospaced'>
-     $ source /opt/poky/environment-setup-&lt;<emphasis>arch</emphasis>&gt;-poky-linux-&lt;<emphasis>if</emphasis>&gt; 
-
-     Where:
-         &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
-                i586, x86-64, ppc603e, mips, or armv5te.
-
-         &lt;<emphasis>if</emphasis>&gt; is a string representing an embedded application binary interface.
-                Not all setup scripts include this string.
-         </literallayout>
-
+        <section id='starting-the-qemu-emulator'>
+        <title>Starting the QEMU Emulator</title>
          <para>
               Finally, this command form invokes the QEMU emulator 
          </para>
@@ -453,6 +464,7 @@
      $ source /opt/poky/environment-setup-i586-poky-linux 
      $ poky-qemu qemui586 zImage-2.6.34-qemux86-0.9 yocto-image-sdk-qemux86-0.9.rootfs.ext3 ext3
          </literallayout>
+         </section>
          
     </section>
 </section>
