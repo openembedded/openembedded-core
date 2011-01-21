@@ -149,11 +149,19 @@ do_install () {
 	install -d ${D}${sysconfdir}/default/
 	echo 'MOUNTALL="-t nonfs,nosmbfs,noncpfs"' > ${D}${sysconfdir}/default/mountall
 
-	ln -sf ${sbindir}/swapon ${D}${sbindir}/swapoff.${PN}
-	ln -sf ${sbindir}/shutdown ${D}${sbindir}/reboot.${PN}
-	ln -sf ${sbindir}/shutdown ${D}${sbindir}/halt.${PN}
-	ln -sf ${sbindir}/shutdown ${D}${sbindir}/fastboot
-	ln -sf ${sbindir}/shutdown ${D}${sbindir}/fasthalt
+	# note ${PN} in swapon.${PN}, swapon is an alternative link that is
+	# not guaranteed to provide multiple functions, similar for shutdown
+	ln -sf swapon.${PN} ${D}${base_sbindir}/swapoff.${PN}
+	ln -sf shutdown.${PN} ${D}${base_sbindir}/reboot.${PN}
+	ln -sf shutdown.${PN} ${D}${base_sbindir}/halt.${PN}
+	ln -sf shutdown.${PN} ${D}${base_sbindir}/fastboot
+	ln -sf shutdown.${PN} ${D}${base_sbindir}/fasthalt
+
+	rm -f ${D}${sbindir}/halt
+	rm -f ${D}${sbindir}/reboot
+	rm -f ${D}${sbindir}/fastboot
+	rm -f ${D}${sbindir}/fasthalt
+	rm -f ${D}${sbindir}/swapoff
 }
 
 pkg_postinst_${PN} () {
