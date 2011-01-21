@@ -13,12 +13,11 @@ RDEPENDS_${PN} = "sat-solver"
 
 S = "${WORKDIR}/git"
 PV = "0.0-git${SRCPV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
            file://no-doc.patch \
-           file://rpm5.patch \
-           file://dso_linking_change_build_fix.patch"
+           file://rpm5.patch "
 
 SRC_URI_append_mips = " file://mips-workaround-gcc-tribool-error.patch"
 
