@@ -144,13 +144,18 @@ if [ "$cont" == "y" ] || [ "$cont" == "Y" ]; then
                 # appending them to the sendmail command as -- $TO $CC has
                 # proven to be an exercise in futility.
                 #
+                # Clear the From header, leaving it up to sendmail to insert an
+                # appropriate one. Insert the original sender (per git) into the
+                # body of the message.
+                #
                 # Use tail to remove the email envelope from git or formail as
                 # msmtp (sendmail) would choke on them.
                 #
                 # Modify the patch date for sequential delivery, but retain the
                 # original date as "Old-Date".
                 DATE=$(date +"%a, %d %b %Y %k:%M:%S %z")
-                cat $PATCH | formail -I "To: $TO" -I "CC: $CC" -i "Date: $DATE" | tail -n +2 | sendmail -t
+                GIT_FROM=$(cat $PATCH | formail -X "From:")
+                cat $PATCH | formail -I "To: $TO" -I "CC: $CC" -I "From:" -i "Date: $DATE" | sed "0,/^$/s/^$/\n$GIT_FROM\n/" | tail -n +2 | sendmail -t
                 if [ $? -eq 1 ]; then
                     ERROR=1
                 fi
