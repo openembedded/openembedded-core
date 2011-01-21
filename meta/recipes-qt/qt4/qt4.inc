@@ -1,9 +1,10 @@
-DESCRIPTION = "Qt is a comprehensive cross-platform C++ application framework"
-HOMEPAGE = "http://qt.nokia.com"
+inherit qmake_base
 
 DEPENDS += "qt4-tools-native freetype jpeg libpng zlib dbus openssl glib-2.0 gstreamer gst-plugins-base sqlite3"
 
-inherit qmake_base
+require qt4_arch.inc
+QT_ARCH := "${@qt_arch(d)}"
+QT_ENDIAN = "${@qt_endian(d)}"
 
 QT_DISTRO_FLAGS ?= "-no-accessibility -no-sm"
 QT_DISTRO_FLAGS_poky-lsb = "-sm"
@@ -12,7 +13,7 @@ QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -shared -no-nas-sound -no-nis \
                     -qt-gif -system-libjpeg -system-libpng -system-zlib \
                     -no-sql-ibase -no-sql-mysql -no-sql-psql -no-sql-odbc -plugin-sql-sqlite \
-                    -no-pch -dbus -stl -glib -phonon -webkit \
+                    -no-pch -qdbus -stl -glib -phonon -webkit \
                     ${QT_DISTRO_FLAGS} "
 
 EXTRA_OEMAKE = "-e"
@@ -26,7 +27,7 @@ EXTRA_ENV = 'QMAKE="${STAGING_BINDIR_NATIVE}/qmake2 -after \
 export QT_CONF_PATH="${WORKDIR}/qt.conf"
 
 # Library packages
-QT_LIB_NAMES = "Qt3Support QtAssistantClient QtCLucene QtCore QtDBus QtDesigner QtDesignerComponents QtGui QtHelp QtNetwork QtOpenGL QtScript QtScriptTools QtSql QtSvg QtTest QtUiTools QtWebKit QtXml QtXmlPatterns phonon QtMultimedia QtOpenVG QtMediaServices"
+QT_LIB_NAMES = "Qt3Support QtAssistantClient QtCLucene QtCore QtDBus QtDesigner QtDesignerComponents QtGui QtHelp QtNetwork QtOpenGL QtScript QtScriptTools QtSql QtSvg QtTest QtUiTools QtWebKit QtXml QtXmlPatterns phonon QtMultimedia QtOpenVG QtMediaServices QtDeclarative"
 
 QT_EXTRA_LIBS = "pvrQWSWSEGL"
 
@@ -37,7 +38,7 @@ python __anonymous () {
     dev_packages = []
     dbg_packages = []
     for name in bb.data.getVar("QT_LIB_NAMES", d, 1).split():
-        pkg = "${QT_BASE_LIB}" + name.lower().replace("qt", "") + "4"
+        pkg = "${QT_BASE_LIB}" + name.lower().replace("qt", "").replace("_", "-") + "4"
         # NOTE: the headers for QtAssistantClient are different
         incname = name.replace("QtAssistantClient", "QtAssistant")
         bb.data.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s${QT_LIBINFIX}.so.*" % locals(), d)
@@ -55,7 +56,7 @@ python __anonymous () {
         dbg_packages.append("%s-dbg" % name)
 
     for name in bb.data.getVar("QT_EXTRA_LIBS", d, 1).split():
-        pkg = "${QT_BASE_LIB}" + name.lower().replace("qt", "") + "4"
+        pkg = "${QT_BASE_LIB}" + name.lower().replace("qt", "").replace("_", "-") + "4"
         bb.data.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s.so.*" % locals(), d)
         bb.data.setVar("FILES_%s-dev" % pkg, """${libdir}/lib%(name)s.prl
                   ${libdir}/lib%(name)s.a
@@ -91,6 +92,8 @@ OTHER_PACKAGES = "\
              ${QT_BASE_NAME}-makeqpf \
              ${QT_BASE_NAME}-mkspecs \
              ${QT_BASE_NAME}-pixeltool \
+             ${QT_BASE_NAME}-qmlviewer \
+             ${QT_BASE_NAME}-xmlpatterns \
              ${QT_BASE_NAME}-qt3to4"
 
 PACKAGES += "${LIB_PACKAGES} ${DEV_PACKAGES} ${DBG_PACKAGES} ${OTHER_PACKAGES}"
@@ -112,6 +115,7 @@ RRECOMMENDS_${QT_BASE_NAME}-fonts = " \
              ${QT_BASE_NAME}-fonts-qpf"
 
 FILES_${QT_BASE_NAME}-tools                = "${bindir}/uic* ${bindir}/moc ${bindir}/rcc ${bindir}/qttracereplay ${bindir}/qdoc*"
+FILES_${QT_BASE_NAME}-tools-dbg            = "${bindir}/.debug/uic* ${bindir}/.debug/moc ${bindir}/.debug/rcc ${bindir}/.debug/qttracereplay ${bindir}/.debug/qdoc*"
 FILES_${QT_BASE_NAME}-assistant            = "${bindir}/*assistant* ${bindir}/qcollectiongenerator ${bindir}/qhelpconverter ${bindir}/qhelpgenerator"
 FILES_${QT_BASE_NAME}-assistant-dbg        = "${bindir}/.debug/*assistant* ${bindir}/.debug/qcollectiongenerator ${bindir}/.debug/qhelpconverter ${bindir}/.debug/qhelpgenerator"
 FILES_${QT_BASE_NAME}-common               = "${bindir}/qtconfig"
@@ -123,7 +127,7 @@ FILES_${QT_BASE_NAME}-demos-dbg            = "${bindir}/.debug/qtdemo* ${bindir}
 FILES_${QT_BASE_NAME}-designer             = "${bindir}/*designer*"
 FILES_${QT_BASE_NAME}-designer-dbg         = "${bindir}/.debug/*designer*"
 FILES_${QT_BASE_NAME}-examples             = "${bindir}/${QT_DIR_NAME}/examples/*"
-FILES_${QT_BASE_NAME}-examples-dbg         = "${bindir}/${QT_DIR_NAME}/examples/.debug ${bindir}/${QT_DIR_NAME}/examples/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/*/*/.debug"
+FILES_${QT_BASE_NAME}-examples-dbg         = "${bindir}/${QT_DIR_NAME}/examples/.debug ${bindir}/${QT_DIR_NAME}/examples/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/declarative/*/*/*/*/*/.debug/* ${bindir}/${QT_DIR_NAME}/examples/declarative/*/*/*/*/.debug/*"
 FILES_${QT_BASE_NAME}-fonts-ttf-vera       = "${libdir}/fonts/Vera*.ttf"
 FILES_${QT_BASE_NAME}-fonts-ttf-dejavu     = "${libdir}/fonts/DejaVu*.ttf"
 FILES_${QT_BASE_NAME}-fonts-pfa            = "${libdir}/fonts/*.pfa"
@@ -135,27 +139,18 @@ FILES_${QT_BASE_NAME}-pixeltool            = "${bindir}/pixeltool"
 FILES_${QT_BASE_NAME}-pixeltool-dbg        = "${bindir}/.debug/pixeltool"
 FILES_${QT_BASE_NAME}-qt3to4               = "${bindir}/qt3to4 ${datadir}/${QT_DIR_NAME}/q3porting.xml"
 FILES_${QT_BASE_NAME}-qt3to4-dbg           = "${bindir}/.debug/qt3to4"
+FILES_${QT_BASE_NAME}-qmlviewer            = "${bindir}/qmlviewer"
+FILES_${QT_BASE_NAME}-qmlviewer-dbg        = "${bindir}/.debug/qmlviewer"
 FILES_${QT_BASE_NAME}-makeqpf              = "${bindir}/makeqpf"
 FILES_${QT_BASE_NAME}-makeqpf-dbg          = "${bindir}/.debug/makeqpf"
 FILES_${QT_BASE_NAME}-mkspecs              = "${datadir}/${QT_DIR_NAME}/mkspecs/*"
+FILES_${QT_BASE_NAME}-xmlpatterns          = "${bindir}/xmlpatterns*"
+FILES_${QT_BASE_NAME}-xmlpatterns-dbg      = "${bindir}/.debug/xmlpatterns*"
 
-ARM_INSTRUCTION_SET = "arm"
-
-set_arch() {
-	case ${TARGET_ARCH} in
-		arm*)     QT_ARCH=arm ;;
-		i*86*)    QT_ARCH=i386 ;;
-		mips*)    QT_ARCH=mips ;;
-		powerpc*) QT_ARCH=powerpc ;;
-		x86_64*)  QT_ARCH=x86_64 ;;
-	esac
-}
 
 do_configure() {
 	unset QMAKESPEC
 	unset QTDIR
-
-	set_arch
 
 	if [ ! -e bin/qmake ]; then
 		ln -sf ${STAGING_BINDIR_NATIVE}/qmake2 bin/qmake
@@ -196,30 +191,22 @@ do_configure() {
 			-demosdir ${bindir}/${QT_DIR_NAME}/demos \
 			-platform ${TARGET_OS}-oe-g++ \
 			-xplatform ${TARGET_OS}-oe-g++ \
+			${QT_ENDIAN} \
 			-crossarch ${QT_ARCH} \
 			${QT_CONFIG_FLAGS} -no-fast \
 			-L${STAGING_LIBDIR} -I${STAGING_INCDIR} \
 			-I${STAGING_INCDIR}/freetype2
 }
 
-do_compile() {
-	unset CFLAGS CXXFLAGS
-	install -m 0755 ${STAGING_BINDIR_NATIVE}/rcc4 ${S}/bin/rcc
-	install -m 0755 ${STAGING_BINDIR_NATIVE}/moc4 ${S}/bin/moc
-	install -m 0755 ${STAGING_BINDIR_NATIVE}/uic4 ${S}/bin/uic
-
-	oe_runmake ${EXTRA_ENV}
-}
-
 python populate_packages_prepend() {
         translation_dir = bb.data.expand('${datadir}/${QT_DIR_NAME}/translations/', d)
         translation_name = bb.data.expand('${QT_BASE_NAME}-translation-%s', d)
         do_split_packages(d, translation_dir, '^(assistant|designer|linguist|qt|qtconfig|qvfb)_(.*)\.qm$', translation_name, '${PN} translation for %s', extra_depends='' )
-
+ 
         phrasebook_dir = bb.data.expand('${datadir}/${QT_DIR_NAME}/phrasebooks/', d)
         phrasebook_name = bb.data.expand('${QT_BASE_NAME}-phrasebook-%s', d)
         do_split_packages(d, phrasebook_dir, '^(.*)\.qph$', phrasebook_name, '${PN} phrasebook for %s', extra_depends='' )
-
+ 
         # Package all the plugins and their -dbg version and create a meta package
         import os
         def qtopia_split(path, name, glob):
@@ -231,7 +218,7 @@ python populate_packages_prepend() {
                 if not os.path.exists("%s%s" % (bb.data.expand('${D}',d), plugin_dir)):
                         bb.note("The path does not exist:", bb.data.expand('${D}', d), plugin_dir)
                         return
-
+ 
                 plugin_name = bb.data.expand('${QT_BASE_NAME}-plugin-%s-%%s' % name, d)
                 dev_packages = []
                 dev_hook = lambda file,pkg,b,c,d:dev_packages.append((file,pkg))
@@ -261,6 +248,7 @@ python populate_packages_prepend() {
         qtopia_split('script',        'script',        '^libqtscript(.*)\.so$')
         qtopia_split('styles',        'style',         '^libq(.*)\.so$')
         qtopia_split('phonon_backend','phonon-backend','^libphonon_(.*)\.so$')
+        qtopia_split('bearer',        'bearer',        '^libq(.*)bearer\.so$')
 }
 
 do_install() {
@@ -289,7 +277,7 @@ do_install() {
 			-e s#"uic_location=.*$"#"uic_location=${bindir}/uic4"# \
 			${D}${libdir}/pkgconfig/*.pc
 	for name in ${QT_LIB_NAMES}; do
-			sed -i -e /Requires/s#"${name}"#"${name}${QT_LIBINFIX}"#g ${D}${libdir}/pkgconfig/*.pc
+		sed -i -e /Requires/s#"${name}"#"${name}${QT_LIBINFIX}"#g ${D}${libdir}/pkgconfig/*.pc
 	done
 
 	# QT abuses $includedir to point to its headers, which breaks pkgconfig sysroot, so manually fix it up here:
@@ -301,4 +289,14 @@ do_install() {
 
 	install -d ${D}/${libdir}/fonts
 	touch ${D}/${libdir}/fonts/fontdir
+
+	install -d ${D}${bindir}
+	for i in rcc uic moc ; do
+		install -m 0755 ${S}/bin/$i ${D}${bindir}/
+	done
+
+	#Append an E to the qtdemo file
+	if [ -n "${QT_LIBINFIX}" ] ; then
+		mv ${D}${bindir}/qtdemo ${D}${bindir}/qtdemo${QT_LIBINFIX}
+	fi
 }

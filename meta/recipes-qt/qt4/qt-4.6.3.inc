@@ -19,6 +19,9 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://mips-relocate.patch \
            "
 
+SRC_URI[md5sum] = "5c69f16d452b0bb3d44bc3c10556c072"
+SRC_URI[sha256sum] = "f4e0ada8d4d516bbb8600a3ee7d9046c9c79e38cd781df9ffc46d8f16acd1768"
+
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
 do_configure_prepend() {
@@ -40,7 +43,7 @@ do_configure_append() {
 }
 
 QT_GLFLAGS ?= ""
-QT_CONFIG_FLAGS += " -no-rpath -qt3support -silent ${QT_GLFLAGS}"
+QT_CONFIG_FLAGS += " -no-rpath -qt3support -reduce-relocations -silent ${QT_GLFLAGS}"
 
 do_compile() {
 	# Fixup missing wsegl header in some SGX SDKs
@@ -51,16 +54,3 @@ do_compile() {
 	unset CFLAGS CXXFLAGS
 	oe_runmake ${EXTRA_ENV}
 }
-
-do_install_append() {
-	install -d ${D}${bindir}
-	for i in rcc uic moc ; do
-		install -m 0755 ${S}/bin/$i ${D}${bindir}/
-	done
-
-	#Append an E to the qtdemo file
-	if [ -n "${QT_LIBINFIX}" ] ; then
-		mv ${D}${bindir}/qtdemo ${D}${bindir}/qtdemo${QT_LIBINFIX}
-	fi
-}
-
