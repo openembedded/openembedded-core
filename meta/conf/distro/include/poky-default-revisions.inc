@@ -92,7 +92,7 @@ SRCREV_machine_pn-linux-yocto-stable_qemux86-64 ?= "35521a5a70316785a67aca1de1d3
 SRCREV_machine_pn-linux-yocto-stable_atom-pc ?= "35521a5a70316785a67aca1de1d39a7b84c49ccf"
 SRCREV_machine_pn-linux-yocto-stable_routerstationpro ?= "b323ab98f055df012277f09d444951619fda24e3"
 SRCREV_machine_pn-linux-yocto-stable_mpc8315e-rdb ?= "0d19c4ab6185b2e093beb5f366ccff4746197166"
-SRCREV_machine_pn-linux-yocto-stable_beagleboard ?= "ebbca8936c143b35b820d16cd7907d9a95178211"
+SRCREV_machine_pn-linux-yocto-stable_beagleboard ?= "8e15b884ecf768fd9f898da5acf24938dfe81a83"
 SRCREV_meta_pn-linux-yocto-stable ?= "e1f85a470934a0cf6abde5d95533e74501822c6b"
 # development SRCREVs
 SRCREV_machine_pn-linux-yocto_qemuarm ?= "4f86b5a0cb23faa4134cc004730d673f6640614b"
