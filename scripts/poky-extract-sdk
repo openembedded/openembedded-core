@@ -47,6 +47,11 @@ if [ ! -e "$ROOTFS_TARBALL" ]; then
    	exit 1
 fi
 
+# Convert SDK_ROOTFS_DIR to a full pathname
+if [[ ${SDK_ROOTFS_DIR:0:1} != "/" ]]; then
+	SDK_ROOTFS_DIR=$(pwd)/$SDK_ROOTFS_DIR
+fi
+
 TAR_OPTS=""
 if [[ "$ROOTFS_TARBALL" =~ tar\.bz2$ ]]; then
 	TAR_OPTS="-xjf"
