@@ -81,12 +81,6 @@ python do_package_deb () {
         bb.error("PKGWRITEDIRDEB not defined, unable to package")
         return
 
-    dvar = bb.data.getVar('D', d, True)
-    if not dvar:
-        bb.error("D not defined, unable to package")
-        return
-    bb.mkdirhier(dvar)
-
     packages = bb.data.getVar('PACKAGES', d, True)
     if not packages:
         bb.debug(1, "PACKAGES not defined, nothing to package")
@@ -101,9 +95,10 @@ python do_package_deb () {
         bb.debug(1, "No packages; nothing to do")
         return
 
+    pkgdest = bb.data.getVar('PKGDEST', d, True)
+
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
-        pkgdest = bb.data.getVar('PKGDEST', d, True)
         root = "%s/%s" % (pkgdest, pkg)
 
         lf = bb.utils.lockfile(root + ".lock")
