@@ -2,7 +2,7 @@ SUMMARY = "Miscellaneous files for the base system."
 DESCRIPTION = "The base-files package creates the basic system directory structure and provides a small set of key configuration files for the system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r65"
+PR = "r66"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://licenses/GPL-2;md5=94d55d512a9ba36caa9b7df079bae19f"
 SRC_URI = "file://rotation \
@@ -48,6 +48,12 @@ dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
            /mnt /media /media/card /media/cf /media/net /media/ram \
            /media/union /media/realroot /media/hdd \
            /media/mmc1"
+dirs3755 = "/srv  \
+            ${prefix}/local ${prefix}/local/bin ${prefix}/local/games \
+            ${prefix}/local/include ${prefix}/local/lib ${prefix}/local/sbin \
+            ${prefix}/local/share ${prefix}/local/src"
+dirs4775 = "/var/mail"
+
 volatiles = "cache run log lock tmp"
 conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
              ${sysconfdir}/inputrc ${sysconfdir}/issue /${sysconfdir}/issue.net \
@@ -154,6 +160,16 @@ do_install_append_slugos() {
 
 do_install_append_netbook-pro () {
 	mkdir -p ${D}/initrd
+}
+
+do_install_append_poky-lsb() {
+	for d in ${dirs3755}; do
+                install -m 0755 -d ${D}$d
+        done
+
+	for d in ${dirs4775}; do
+                install -m 2755 -d ${D}$d
+        done
 }
 
 PACKAGES = "${PN}-doc ${PN} ${PN}-dev ${PN}-dbg"
