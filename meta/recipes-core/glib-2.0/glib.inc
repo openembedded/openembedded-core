@@ -15,8 +15,8 @@ SECTION = "libs"
 
 require glib-2.0.inc
 
-DEPENDS = "glib-2.0-native gtk-doc-native virtual/libiconv virtual/libintl zip"
-DEPENDS_virtclass-native = "gtk-doc-native pkgconfig-native gettext-native"
+DEPENDS = "glib-2.0-native gtk-doc-native virtual/libiconv virtual/libintl zip dbus"
+DEPENDS_virtclass-native = "gtk-doc-native pkgconfig-native gettext-native dbus-native"
 PACKAGES =+ "glib-2.0-utils "
 
 LEAD_SONAME = "libglib-2.0.*"
