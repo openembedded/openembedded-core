@@ -133,15 +133,10 @@ python do_package_ipk () {
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
 	outdir = bb.data.getVar('PKGWRITEDIRIPK', d, True)
-	dvar = bb.data.getVar('D', d, True)
 	tmpdir = bb.data.getVar('TMPDIR', d, True)
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
-	if not workdir or not outdir or not dvar or not tmpdir:
+	if not workdir or not outdir or not tmpdir:
 		bb.error("Variables incorrectly set, unable to package")
-		return
-
-	if not os.path.exists(dvar):
-		bb.debug(1, "Nothing installed, nothing to do")
 		return
 
 	packages = bb.data.getVar('PACKAGES', d, True)
