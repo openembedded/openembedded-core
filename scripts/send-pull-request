@@ -6,6 +6,10 @@ if [ -z "$PULL_MTA" ]; then
     PULL_MTA="sendmail"
 fi
 
+# Prevent environment leakage to these vars.
+unset TO
+unset CC
+
 usage()
 {
 cat <<EOM
