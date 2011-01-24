@@ -64,7 +64,6 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.26.tar.bz2 \
            file://defconfig-qemuarmv6 \
            file://defconfig-qemuarmv7 \
            file://defconfig-qemux86 \
-           file://defconfig-bootcdx86 \
            file://defconfig-htcuniversal \
            file://defconfig-zylonite"
 # Disabled until the patchset is updated:

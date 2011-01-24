@@ -15,7 +15,7 @@ CHSRC = "http://oz.drigon.com/patches"
 TKSRC = "http://www.informatik.hu-berlin.de/~tkunze/zaurus/patches"
 
 COMPATIBLE_HOST = "(arm|i.86|mips).*-linux"
-COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|hx2000|qemuarm|qemux86|qemumips|bootcdx86|htcuniversal|zylonite)'
+COMPATIBLE_MACHINE = '(collie|poodle|c7x0|akita|spitz|tosa|hx2000|qemuarm|qemux86|qemumips|htcuniversal|zylonite)'
 
 KERNEL_CUSTOM_NAME ?= ""
 KERNEL_DEPLOY_NAME ?= "${KERNEL_IMAGETYPE}-${PV}-${KERNEL_CUSTOM_NAME}${MACHINE}-${DATETIME}.bin"

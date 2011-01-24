@@ -69,7 +69,6 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/v2.6/linux-2.6.23.tar.bz2 \
            file://defconfig-spitz \
            file://defconfig-qemuarm \
            file://defconfig-qemux86 \
-           file://defconfig-bootcdx86 \
            file://defconfig-htcuniversal \
            file://defconfig-zylonite \
            file://defconfig-tosa "

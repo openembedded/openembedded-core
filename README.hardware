@@ -46,14 +46,6 @@ The following consumer devices are supported by Poky:
 For more information see board's section below. The Poky MACHINE setting
 corresponding to the board is given in brackets.
 
-Poky Boot CD (bootcdx86)
-========================
-
-The Poky boot CD iso images are designed as a demonstration of the Poky 
-environment and to show the versatile image formats Poky can generate. It will
-run on Pentium2 or greater PC style computers. The iso image can be 
-burnt to CD and then booted from.
-
 
                           Hardware Reference Boards
                           =========================
