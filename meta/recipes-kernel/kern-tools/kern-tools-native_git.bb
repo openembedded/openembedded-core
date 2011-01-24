@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=e2bf4415f3d8
 
 DEPENDS = "git-native guilt-native"
 
-PR = r8
+PR = r9
 PV = "0.1+git${SRCPV}"
 
 inherit native

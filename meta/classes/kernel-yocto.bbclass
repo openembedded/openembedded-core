@@ -74,7 +74,7 @@ do_patch() {
 	if [ -n "${KERNEL_FEATURES}" ]; then
 	       addon_features="--features ${KERNEL_FEATURES}"
 	fi
-	updateme ${addon_features} ${ARCH} ${WORKDIR}
+	updateme ${addon_features} ${ARCH} ${MACHINE} ${WORKDIR}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${kbranch}"
 		exit 1
@@ -126,7 +126,7 @@ do_kernel_configme() {
 	echo "[INFO] doing kernel configme"
 
 	cd ${S}
-	configme --reconfig --output ${B}
+	configme --reconfig --output ${B} ${KBRANCH} ${MACHINE}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
