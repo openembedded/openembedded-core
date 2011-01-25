@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://README.licensing;md5=1530e36fe1304d4535513de90a290df9
                     file://getopt/COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
 DEPENDS = "zlib ncurses virtual/libintl"
-DEPENDS_virtclass-native = "zlib-native ncurses-native lzo-native"
+DEPENDS_virtclass-native = "zlib-native ncurses-native lzo-native gettext-native"
 
 inherit autotools gettext
 
