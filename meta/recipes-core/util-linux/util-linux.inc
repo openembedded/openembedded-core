@@ -15,10 +15,10 @@ LIC_FILES_CHKSUM = "file://README.licensing;md5=1530e36fe1304d4535513de90a290df9
                     file://licenses/COPYING.UCB;md5=263860f8968d8bafa5392cab74285262 \
                     file://getopt/COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-DEPENDS = "zlib ncurses virtual/libintl gettext"
-DEPENDS_virtclass-native = "zlib-native ncurses-native lzo-native gettext-native"
+DEPENDS = "zlib ncurses virtual/libintl"
+DEPENDS_virtclass-native = "zlib-native ncurses-native lzo-native"
 
-inherit autotools
+inherit autotools gettext
 
 SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v${MAJOR_VERSION}/util-linux-ng-${PV}.tar.bz2 \
            file://MCONFIG \
@@ -41,22 +41,22 @@ EXTRA_OECONF = "--disable-use-tty-group --disable-makeinstall-chown --enable-elv
  --enable-mesg --enable-partx --enable-raw --enable-rdev --enable-reset \
   --disable-login-utils --enable-write --enable-arch --enable-mount --with-fsprobe=builtin --enable-libuuid --enable-libblkid --enable-fsck"
 
-FILES_${PN}-doc += "/usr/share/getopt/getopt-*.*"
+FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
 
-FILES_util-linux-fdisk = "/sbin/fdisk.${PN}"
-FILES_util-linux-cfdisk = "/sbin/cfdisk"
-FILES_util-linux-sfdisk = "/usr/sbin/sfdisk"
-FILES_util-linux-swaponoff = "/sbin/swapon.${PN} /usr/sbin/swapoff.${PN}"
-FILES_util-linux-losetup = "/sbin/losetup.${PN}"
-FILES_util-linux-mount = "/bin/mount.${PN}"
-FILES_util-linux-umount = "/bin/umount.${PN}"
-FILES_util-linux-readprofile = "/sbin/readprofile"
-FILES_util-linux-lscpu = "/usr/bin/lscpu"
+FILES_util-linux-fdisk = "${base_sbindir}/fdisk.${PN}"
+FILES_util-linux-cfdisk = "${base_sbindir}/cfdisk"
+FILES_util-linux-sfdisk = "${sbindir}/sfdisk"
+FILES_util-linux-swaponoff = "${base_sbindir}/swapon.${PN} ${sbindir}/swapoff.${PN}"
+FILES_util-linux-losetup = "${base_sbindir}/losetup.${PN}"
+FILES_util-linux-mount = "${base_bindir}/mount.${PN}"
+FILES_util-linux-umount = "${base_bindir}/umount.${PN}"
+FILES_util-linux-readprofile = "${base_sbindir}/readprofile"
+FILES_util-linux-lscpu = "${bindir}/lscpu"
 
-FILES_util-linux-libblkid = "/usr/lib/libblkid.so.*"
-FILES_util-linux-libblkid-dev = "/usr/lib/libblkid.so /usr/lib/libblkid.a /usr/lib/libblkid.la /usr/include/blkid"
-FILES_util-linux-libuuid = "/usr/lib/libuuid.so.*"
-FILES_util-linux-libuuid-dev = "/usr/lib/libuuid.so /usr/lib/libuuid.a /usr/lib/libuuid.la /usr/include/uuid"
+FILES_util-linux-libblkid = "${libdir}/libblkid.so.*"
+FILES_util-linux-libblkid-dev = "${libdir}/libblkid.so ${libdir}/libblkid.a ${libdir}/libblkid.la ${includedir}/blkid"
+FILES_util-linux-libuuid = "${libdir}/libuuid.so.*"
+FILES_util-linux-libuuid-dev = "${libdir}/libuuid.so ${libdir}/libuuid.a ${libdir}/libuuid.la ${includedir}/uuid"
 
 RRECOMMENDS_${PN} = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-mount util-linux-readprofile "
 RDEPENDS_${PN} = "util-linux-umount util-linux-swaponoff util-linux-losetup"
