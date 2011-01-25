@@ -10,6 +10,10 @@ PR = "r1"
 PV = "0.1.1+git${SRCPV}"
 
 SRC_URI = "git://git.pingu.fi/xf86-video-omapfb.git;protocol=http \
+            file://omap-revert-set-CRTC-limit.patch \
+            file://omap-revert-set-virtual-size.patch \
+            file://omap-force-plain-mode.patch  \
+            file://omap-blacklist-tv-out.patch  \
 	"
 
 S = "${WORKDIR}/git"
