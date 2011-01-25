@@ -73,10 +73,20 @@ EXTRA_IMAGE_FEATURES_mx31ads = "tools-testapps debug-tweaks"
 #PACKAGE_CLASSES ?= "package_rpm package_deb package_ipk"
 PACKAGE_CLASSES ?= "package_rpm package_ipk"
 
+# mklibs library size optimization is more useful to smaller images, 
+# and less useful for bigger images. Also mklibs library optimization can break the ABI compatibility, so should not be applied to the images which are tobe
+# extended or upgraded later.
+#This enabled mklibs library size optimization just for the specified image.
+#MKLIBS_OPTIMIZED_IMAGES ?= "poky-image-minimal"
+#This enable mklibs library size optimization will be for all the images.
+#MKLIBS_OPTIMIZED_IMAGES ?= "all"
+
 # A list of additional classes to use when building the system
+# include 'image-mklibs' to reduce shared library files size for an image
 # include 'image-prelink' in order to prelink the filesystem image
 # include 'image-swab' to perform host system intrusion detection
-USER_CLASSES ?= "image-prelink"
+# NOTE: if listing mklibs & prelink both, then make sure mklibs is before prelink
+USER_CLASSES ?= "image-mklibs image-prelink"
 
 # POKYMODE controls the characteristics of the generated packages/images by
 # telling poky which type of toolchain to use.
