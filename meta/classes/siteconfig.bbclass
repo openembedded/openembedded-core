@@ -10,13 +10,15 @@ python siteconfig_do_siteconfig () {
 	sstate_install(shared_state, d)
 }
 
+EXTRASITECONFIG ?= ""
+
 siteconfig_do_siteconfig_gencache () {
 	mkdir -p ${WORKDIR}/site_config
 	gen-site-config ${FILE_DIRNAME}/site_config \
 		>${WORKDIR}/site_config/configure.ac
 	cd ${WORKDIR}/site_config
 	autoconf
-        CONFIG_SITE="" ./configure ${CONFIGUREOPTS} --cache-file ${PN}_cache
+        CONFIG_SITE="" ${EXTRASITECONFIG} ./configure ${CONFIGUREOPTS} --cache-file ${PN}_cache
 	sed -n -e "/ac_cv_c_bigendian/p" -e "/ac_cv_sizeof_/p" \
 		-e "/ac_cv_type_/p" -e "/ac_cv_header_/p" -e "/ac_cv_func_/p" \
 		< ${PN}_cache > ${PN}_config

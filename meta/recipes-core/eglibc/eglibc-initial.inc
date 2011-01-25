@@ -45,8 +45,15 @@ do_install () {
        install -m 644 csu/crt[1in].o ${D}${libdir}
        ${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
                -o ${D}${libdir}/libc.so
+
+	# add links to linux-libc-headers: gcc-{cross,crossdk}-intermediate need this.
+	for t in linux asm asm-generic; do
+		ln -s ${STAGING_DIR_TARGET}${includedir}/$t ${D}${includedir}/
+	done
 }
 
 do_siteconfig () {
 	:
 }
+
+do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_TCBOOTSTRAP}"
