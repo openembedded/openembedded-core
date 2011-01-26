@@ -109,9 +109,12 @@ autotools_do_configure() {
 			AUTOV=`automake --version |head -n 1 |sed "s/.* //;s/\.[0-9]\+$//"`
 			automake --version
 			echo "AUTOV is $AUTOV"
-			install -d ${STAGING_DATADIR}/aclocal
-			install -d ${STAGING_DATADIR}/aclocal-$AUTOV
-			acpaths="$acpaths -I${STAGING_DATADIR}/aclocal-$AUTOV -I ${STAGING_DATADIR}/aclocal"
+			if [ -d ${STAGING_DATADIR}/aclocal-$AUTOV ]; then
+				acpaths="$acpaths -I${STAGING_DATADIR}/aclocal-$AUTOV"
+			fi
+			if [ -d ${STAGING_DATADIR}/aclocal ]; then
+				acpaths="$acpaths -I ${STAGING_DATADIR}/aclocal"
+			fi
 			# autoreconf is too shy to overwrite aclocal.m4 if it doesn't look
 			# like it was auto-generated.  Work around this by blowing it away
 			# by hand, unless the package specifically asked not to run aclocal.
