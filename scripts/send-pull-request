@@ -9,6 +9,7 @@ fi
 # Prevent environment leakage to these vars.
 unset TO
 unset CC
+# allow the user to set FROM in the environment
 
 usage()
 {
@@ -17,6 +18,9 @@ Usage: $(basename $0) [-h] [-a] [[-t email]...] -p pull-dir
   -t email     Explicitly add email to the recipients
   -a           Automatically harvest recipients from "*-by: email" lines
                in the patches in the pull-dir
+  -f           Specify a FROM address, you can also use the FROM environment
+               variable. If you do not specify one, it will try to use the one
+               from your git config. This is ignored if -g is used.
   -g           Use git-send-email to send mail instead of sendmail
   -p pull-dir  Directory containing summary and patch files
 EOM
@@ -45,10 +49,13 @@ harvest_recipients()
 
 
 # Parse and verify arguments
-while getopts "aghp:t:" OPT; do
+while getopts "af:ghp:t:" OPT; do
     case $OPT in
         a)
             AUTO=1
+            ;;
+        f)
+            FROM="$OPTARG"
             ;;
         g)
             PULL_MTA="git"
@@ -108,13 +115,29 @@ if [ -z "$TO" ] && [ -z "$CC" ]; then
     exit 1
 fi
 
+case "$PULL_MTA" in
+    git)
+        FROM="$(git config sendemail.from)"
+        ;;
+    sendmail)
+        if [ -z "$FROM" ]; then
+            FROM="$(git config user.name) <$(git config user.email)>"
+            if [ -z "$FROM" ]; then
+                echo "ERROR: unable to determine a FROM address"
+                usage
+                exit 1
+            fi
+        fi
+        ;;
+esac
 
 # Generate report for the user and require confirmation before sending
 cat <<EOM
 The following patches:
 $(for PATCH in $PDIR/*.patch; do echo "    $PATCH"; done)
 
-will be sent to the following recipients:
+will be sent with the following headers:
+  From: $FROM
     To: $TO
     CC: $CC
 
@@ -155,7 +178,7 @@ if [ "$cont" == "y" ] || [ "$cont" == "Y" ]; then
                 # original date as "Old-Date".
                 DATE=$(date +"%a, %d %b %Y %k:%M:%S %z")
                 GIT_FROM=$(cat $PATCH | formail -X "From:")
-                cat $PATCH | formail -I "To: $TO" -I "CC: $CC" -I "From:" -i "Date: $DATE" | sed "0,/^$/s/^$/\n$GIT_FROM\n/" | tail -n +2 | sendmail -t
+                cat $PATCH | formail -I "To: $TO" -I "CC: $CC" -I "From: $FROM" -i "Date: $DATE" | sed "0,/^$/s/^$/\n$GIT_FROM\n/" | tail -n +2 | sendmail -t
                 if [ $? -eq 1 ]; then
                     ERROR=1
                 fi
