@@ -57,15 +57,8 @@ sysroot_stage_all() {
 	sysroot_stage_dirs ${D} ${SYSROOT_DESTDIR}
 }
 
-do_populate_sysroot[dirs] = "${STAGING_DIR_TARGET}/${bindir} ${STAGING_DIR_TARGET}/${libdir} \
-			     ${STAGING_DIR_TARGET}/${includedir} \
-			     ${STAGING_BINDIR_NATIVE} ${STAGING_LIBDIR_NATIVE} \
-			     ${STAGING_INCDIR_NATIVE} \
-			     ${STAGING_DATADIR} \
-                             ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET} \
-			     ${S} ${B}"
+do_populate_sysroot[dirs] = "${SYSROOT_DESTDIR}"
 
-# Could be compile but populate_sysroot and do_install shouldn't run at the same time
 addtask populate_sysroot after do_install
 
 SYSROOT_PREPROCESS_FUNCS ?= ""
