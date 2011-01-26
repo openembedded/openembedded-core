@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4325afd396febcb659c36b49533135d4"
 DEPENDS = "flex libpam initscripts"
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://configure.patch \
@@ -25,8 +25,8 @@ SRC_URI[sha256sum] = "7c55c6ab4fbe8add9e68f31b2b0ebf3fe805c9a4e7cfb2623a3d8a4789
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
                  --with-daemon_groupname=root \
-                 --with-jobdir=/var/spool/cron/atjobs \
-                 --with-atspool=/var/spool/cron/atspool"
+                 --with-jobdir=/var/spool/at/jobs \
+                 --with-atspool=/var/spool/at/spool"
 
 inherit autotools
 
@@ -39,8 +39,27 @@ do_install () {
 
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${sysconfdir}/rcS.d
-	install -m 0755    ${WORKDIR}/S99at		${D}${sysconfdir}/init.d/at
-	ln -sf		../init.d/at		${D}${sysconfdir}/rcS.d/S99at
+	install -m 0755    ${WORKDIR}/S99at		${D}${sysconfdir}/init.d/atd
+	ln -sf		../init.d/atd		${D}${sysconfdir}/rcS.d/S99at
+}
+
+pkg_postinst_${PN} () {
+	if [ "x$D" != "x" ] ; then
+		exit 1
+	fi
+
+	# below is necessary to allow at usable to normal users
+	# now at is has its own /var/spool/at instead of under /var/spool/cron
+	# this way is better to allow setgid on both sides
+	grep "^daemon" /etc/group || groupadd daemon
+	chown root:daemon /usr/bin/at
+	chmod 2755 /usr/bin/at
+
+	chown root:daemon -R /var/spool/at
+	chmod 770 -R /var/spool/at
+
+	chown root:daemon /etc/at.deny
+	chmod 640 /etc/at.deny
 }
 
 PARALLEL_MAKE = ""
