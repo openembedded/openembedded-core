@@ -12,8 +12,8 @@ DEPENDS_append_poky = " libowl"
 SRC_URI = "http://savannah.nongnu.org/download/${PN}/${PN}-${PV}.tar.gz \
 	   file://leafpad.desktop"
 
-SRC_URI[md5sum] = "d39acdf4d31de309d484511bdc9f5924"
-SRC_URI[sha256sum] = "8df8de7aaea26148225b6120631b4fe6b89d36d2b52962e7c9cc0ce07bfdbd4c"
+SRC_URI[md5sum] = "254a72fc67505e3aa52884c729cd7b97"
+SRC_URI[sha256sum] = "959d22ae07f22803bc66ff40d373a854532a6e4732680bf8a96a3fbcb9f80a2c"
 PR = "r0"
 
 SRC_URI_append_poky += " file://owl-menu.patch;apply=yes "
