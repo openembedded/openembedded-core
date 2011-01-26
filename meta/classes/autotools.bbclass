@@ -160,10 +160,6 @@ autotools_do_install() {
 	oe_runmake 'DESTDIR=${D}' install
 }
 
-autotools_stage_dir() {
- 	sysroot_stage_dir $1 $2
-}
-
 inherit siteconfig
 
 EXPORT_FUNCTIONS do_configure do_install
