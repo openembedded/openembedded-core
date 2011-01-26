@@ -17,6 +17,11 @@ sbindir = "/sbin"
 EXTRA_OECONF = "--enable-job-control"
 export CC_FOR_BUILD = "${BUILD_CC}"
 
+ALTERNATIVE_NAME = "sh"
+ALTERNATIVE_PATH = "${base_bindir}/bash"
+ALTERNATIVE_LINK = "${base_bindir}/sh"
+ALTERNATIVE_PRIORITY = "100"
+
 do_configure () {
 	gnu-configize
 	oe_runconf
