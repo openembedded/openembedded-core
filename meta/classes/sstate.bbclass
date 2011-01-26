@@ -382,7 +382,12 @@ python sstate_task_postfunc () {
 #
 sstate_create_package () {
 	cd ${SSTATE_BUILDDIR}
-	tar -cvzf ${SSTATE_PKG} *
+	# Need to handle empty directories
+	if [ "$(ls -A)" ]; then
+		tar -cvzf ${SSTATE_PKG} *
+	else
+		tar -cvz --file=${SSTATE_PKG} --files-from=/dev/null
+	fi
 
 	cd ${WORKDIR}
 	rm -rf ${SSTATE_BUILDDIR}
