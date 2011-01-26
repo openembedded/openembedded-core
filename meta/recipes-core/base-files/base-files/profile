@@ -12,7 +12,7 @@ if [ ! -e /etc/localtime ]; then
 fi
 
 if [ "$HOME" = "/home/root" ]; then
-   PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin:
+   PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 fi
 if [ "$PS1" ]; then
 # works for bash and ash (no other shells known to be in use here)
