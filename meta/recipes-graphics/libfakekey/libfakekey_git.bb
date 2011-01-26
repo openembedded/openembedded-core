@@ -9,11 +9,11 @@ LIC_FILES_CHKSUM = "file://src/libfakekey.c;endline=30;md5=602b5ccd48f6440751086
 
 DEPENDS = "libxtst"
 SECTION = "x11/wm"
-PV = "0.0+svnr${SRCPV}"
-PR = "r1"
+PV = "0.0+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http"
+SRC_URI = "git://git.pokylinux.org/${PN};protocol=git"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig gettext

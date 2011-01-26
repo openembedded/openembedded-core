@@ -2,10 +2,12 @@ DESCRIPTION = "Matchbox window manager extra themes"
 LICENSE = "GPL"
 DEPENDS = "matchbox-wm"
 SECTION = "x11/wm"
-PV = "0.3+svnr${SRCPV}"
+PV = "0.3+git${SRCPV}"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-themes-extra;proto=http"
-S = "${WORKDIR}/${PN}"
+LIC_FILES_CHKSUM = "file://configure.ac;endline=7;md5=3c4e087662e37f10e469425f3a0ad225"
+
+SRC_URI = "git://git.pokylinux.org/${PN};protocol=git"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 

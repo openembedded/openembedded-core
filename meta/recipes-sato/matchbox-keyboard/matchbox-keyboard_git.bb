@@ -10,15 +10,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
 RDEPENDS_${PN} = "formfactor dbus-wait"
 SECTION = "x11"
-PV = "0.0+svnr${SRCPV}"
-PR = "r5"
+PV = "0.0+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
+SRC_URI = "git://git.pokylinux.org/${PN};protocol=git \
            file://configure_fix.patch;patch=1;maxrev=1819 \
            file://single-instance.patch;patch=1 \
 	   file://80matchboxkeyboard.shbg"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig gettext
 

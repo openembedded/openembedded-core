@@ -6,16 +6,16 @@ LIC_FILES_CHKSUM = "file://xsettings-manager.h;endline=22;md5=7cfac9d2d4dc3694cc
                     file://xsettings-common.h;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b"
 DEPENDS = "gconf glib-2.0 gtk+"
 SECTION = "x11"
-PV = "0.0+svnr${SRCPV}"
+PV = "0.0+git${SRCPV}"
 
-PR = "r4"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
+SRC_URI = "git://git.pokylinux.org/xsettings-daemon;protocol=git \
            file://addsoundkeys.patch;apply=yes \
            file://70settings-daemon.sh \
            file://dso_linking_change_build_fix.patch"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig gconf
 

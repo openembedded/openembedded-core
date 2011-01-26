@@ -9,12 +9,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 DEPENDS = "gconf gtk+"
 RDEPENDS_${PN} = "settings-daemon"
 
-PV = "0.0+svnr${SRCPV}"
-PR = "r1"
+PV = "0.0+git${SRCPV}"
+PR = "r0"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/git"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN};proto=http \
+SRC_URI = "git://git.pokylinux.org/${PN};protocol=git \
         file://no-handed.patch;patch=1;pnum=0"
 
 inherit autotools pkgconfig

@@ -10,14 +10,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 DEPENDS = "gtk+ startup-notification dbus"
 SECTION = "x11/wm"
-PV = "2.0+svnr${SRCPV}"
-PR = "r1"
+PV = "2.0+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=${PN}-2;proto=http \
+SRC_URI = "git://git.pokylinux.org/${PN}-2;protocol=git \
            file://dso_linking_change_build_fix.patch"
 
 EXTRA_OECONF = "--enable-startup-notification --with-dbus"
 
-S = "${WORKDIR}/${PN}-2"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
