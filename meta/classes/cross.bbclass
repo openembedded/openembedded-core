@@ -62,16 +62,3 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 }
 
-#
-# Override the default sysroot staging copy since this won't look like a target system
-#
-sysroot_stage_all() {
-	sysroot_stage_dir ${D} ${SYSROOT_DESTDIR}
-	install -d ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_base_libdir}/
-	install -d ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_libdir}/  
-	mv ${SYSROOT_DESTDIR}${target_base_libdir}/* ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_base_libdir}/ || true
-	mv ${SYSROOT_DESTDIR}${target_libdir}/* ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_libdir}/ || true
-}
-
-
-
