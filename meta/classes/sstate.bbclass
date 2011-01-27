@@ -386,9 +386,9 @@ sstate_create_package () {
 	cd ${SSTATE_BUILDDIR}
 	# Need to handle empty directories
 	if [ "$(ls -A)" ]; then
-		tar -cvzf ${SSTATE_PKG} *
+		tar -czf ${SSTATE_PKG} *
 	else
-		tar -cvz --file=${SSTATE_PKG} --files-from=/dev/null
+		tar -cz --file=${SSTATE_PKG} --files-from=/dev/null
 	fi
 
 	cd ${WORKDIR}
