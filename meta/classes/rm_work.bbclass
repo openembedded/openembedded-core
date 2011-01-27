@@ -26,6 +26,31 @@ do_rm_work () {
     # Need to add pseudo back or subsqeuent work in this workdir
     # might fail since setscene may not rerun to recreate it
     mkdir ${WORKDIR}/pseudo/
+
+    # Change normal stamps into setscene stamps as they better reflect the
+    # fact WORKDIR is now empty
+    cd `dirname ${STAMP}`
+    for i in `basename ${STAMP}`*
+    do
+        for j in ${SSTATETASKS}
+        do
+            case $i in
+            *do_setscene*)
+                break
+                ;;
+            *_setscene*)
+                i=dummy
+                break
+                ;;
+            *$j|*$j.*)
+                mv $i `echo $i | sed -e "s#${j}#${j}_setscene#"`
+                i=dummy
+                break
+            ;;
+            esac
+        done
+        rm -f $i
+    done
 }
 addtask rm_work after do_${RMWORK_ORIG_TASK}
 
