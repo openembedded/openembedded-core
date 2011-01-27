@@ -49,8 +49,9 @@ python () {
     d.setVar('SSTATETASKNAMES', " ".join(namemap))
 }
 
-def sstate_init(name, d):
+def sstate_init(name, task, d):
     ss = {}
+    ss['task'] = task
     ss['name'] = name
     ss['dirs'] = []
     ss['plaindirs'] = []
@@ -73,7 +74,7 @@ def sstate_state_fromvars(d, task = None):
     if not name or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
 
-    ss = sstate_init(name, d)
+    ss = sstate_init(name, task, d)
     for i in range(len(inputs)):
         sstate_add(ss, inputs[i], outputs[i], d)
     ss['lockfiles'] = lockfiles
@@ -219,6 +220,7 @@ def sstate_clean_manifest(manifest, d):
     oe.path.remove(manifest)
 
 def sstate_clean(ss, d):
+    import oe.path
 
     manifest = bb.data.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'], d)
 
@@ -233,6 +235,8 @@ def sstate_clean(ss, d):
 
     for lock in locks:
         bb.utils.unlockfile(lock)
+
+    oe.path.remove(d.getVar("STAMP", True) + ".do_" + ss['task'] + "*")
 
 SCENEFUNCS += "sstate_cleanall"
 CLEANFUNCS += "sstate_cleanall"
