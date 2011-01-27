@@ -238,7 +238,6 @@ def sstate_clean(ss, d):
 
     oe.path.remove(d.getVar("STAMP", True) + ".do_" + ss['task'] + "*")
 
-SCENEFUNCS += "sstate_cleanall"
 CLEANFUNCS += "sstate_cleanall"
 
 python sstate_cleanall() {

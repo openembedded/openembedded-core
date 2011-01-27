@@ -65,6 +65,12 @@ SYSROOT_PREPROCESS_FUNCS ?= ""
 SYSROOT_DESTDIR = "${WORKDIR}/sysroot-destdir/"
 SYSROOT_LOCK = "${STAGING_DIR}/staging.lock"
 
+# We clean out any existing sstate from the sysroot if we rerun configure
+python sysroot_cleansstate () {
+     ss = sstate_state_fromvars(d, "populate_sysroot")
+     sstate_clean(ss, d)
+}
+do_configure[prefuncs] += "sysroot_cleansstate"
 
 python do_populate_sysroot () {
     #
@@ -91,7 +97,6 @@ python do_populate_sysroot_setscene () {
 	sstate_setscene(d)
 }
 addtask do_populate_sysroot_setscene
-
 
 python () {
     if bb.data.getVar('do_stage', d, True) is not None:
