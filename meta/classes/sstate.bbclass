@@ -196,9 +196,6 @@ def sstate_clean_cachefiles(d):
 def sstate_clean_manifest(manifest, d):
     import oe.path
 
-    if not os.path.exists(manifest):
-       return
-
     mfile = open(manifest)
     entries = mfile.readlines()
     mfile.close()
@@ -224,6 +221,9 @@ def sstate_clean_manifest(manifest, d):
 def sstate_clean(ss, d):
 
     manifest = bb.data.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'], d)
+
+    if not os.path.exists(manifest):
+       return
 
     locks = []
     for lock in ss['lockfiles']:
