@@ -151,12 +151,10 @@ do_configure() {
 }
 
 do_compile() {
-        if test "${MACHINE}" != "native"; then
-            sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
-            sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' cpan/Compress-Raw-Zlib/config.in
-            sed -i -e 's|/usr/lib|${STAGING_LIBDIR}|g' cpan/Compress-Raw-Zlib/config.in
+        sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
+        sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' cpan/Compress-Raw-Zlib/config.in
+        sed -i -e 's|/usr/lib|${STAGING_LIBDIR}|g' cpan/Compress-Raw-Zlib/config.in
 
-        fi
         cd Cross
         oe_runmake perl LD="${CCLD}"
 }
@@ -186,24 +184,22 @@ PACKAGE_PREPROCESS_FUNCS += "perl_package_preprocess"
 
 perl_package_preprocess () {
         # Fix up installed configuration
-        if test "${MACHINE}" != "native"; then
-            sed -i -e "s,${D},,g" \
-                   -e "s,-isystem${STAGING_INCDIR} ,,g" \
-                   -e "s,${STAGING_LIBDIR},${libdir},g" \
-                   -e "s,${STAGING_BINDIR},${bindir},g" \
-                   -e "s,${STAGING_INCDIR},${includedir},g" \
-                   -e "s,${STAGING_BINDIR_NATIVE}/,,g" \
-                ${PKGD}${bindir}/h2xs \
-                ${PKGD}${bindir}/h2ph \
-                ${PKGD}${libdir}/perl/${PV}/pod/*.pod \
-                ${PKGD}${libdir}/perl/${PV}/cacheout.pl \
-                ${PKGD}${libdir}/perl/${PV}/FileCache.pm \
-                ${PKGD}${libdir}/perl/config.sh \
-                ${PKGD}${libdir}/perl/${PV}/Config.pm \
-                ${PKGD}${libdir}/perl/${PV}/Config_heavy.pl \
-                ${PKGD}${libdir}/perl/${PV}/CORE/perl.h \
-                ${PKGD}${libdir}/perl/${PV}/CORE/pp.h
-        fi
+        sed -i -e "s,${D},,g" \
+               -e "s,-isystem${STAGING_INCDIR} ,,g" \
+               -e "s,${STAGING_LIBDIR},${libdir},g" \
+               -e "s,${STAGING_BINDIR},${bindir},g" \
+               -e "s,${STAGING_INCDIR},${includedir},g" \
+               -e "s,${STAGING_BINDIR_NATIVE}/,,g" \
+            ${PKGD}${bindir}/h2xs \
+            ${PKGD}${bindir}/h2ph \
+            ${PKGD}${libdir}/perl/${PV}/pod/*.pod \
+            ${PKGD}${libdir}/perl/${PV}/cacheout.pl \
+            ${PKGD}${libdir}/perl/${PV}/FileCache.pm \
+            ${PKGD}${libdir}/perl/config.sh \
+            ${PKGD}${libdir}/perl/${PV}/Config.pm \
+            ${PKGD}${libdir}/perl/${PV}/Config_heavy.pl \
+            ${PKGD}${libdir}/perl/${PV}/CORE/perl.h \
+            ${PKGD}${libdir}/perl/${PV}/CORE/pp.h
 }
 
 PACKAGES = "perl-dbg perl perl-misc perl-dev perl-pod perl-doc perl-lib \
