@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SECTION = "x11"
 RDEPENDS_${PN} = "xmodmap xdpyinfo xtscal xinit formfactor"
-PR = "r39"
+PR = "r40"
 
 SRC_URI = "file://etc \
            file://gplv2-license.patch"

@@ -2,7 +2,7 @@
 
 if [ -x /usr/bin/dbus-launch ]; then
     # As this is the X session script, always start a new DBus session.
-    eval `dbus-launch --sh-syntax --exit-with-session`
+    eval `dbus-launch --sh-syntax --exit-with-session </dev/null`
     echo "D-BUS per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS"
 fi
 
