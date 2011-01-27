@@ -11,8 +11,8 @@ PR = "r0"
 
 SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "408b67506808a1bff2313d83607dbcfe"
-SRC_URI[sha256sum] = "43783a298b5adcfe273878194b28b9dcb95cbe8948a918caaf492c7bcb8c2ff6"
+SRC_URI[md5sum] = "a2978395806eed5d9a2de1e22efe70e0"
+SRC_URI[sha256sum] = "2f22966fe4b00ef547976a31c1c6a7c7bea3449ffa838806d9610e7424e184dd"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 
