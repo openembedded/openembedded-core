@@ -6,9 +6,9 @@ LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
 SRC_URI = "http://people.freedesktop.org/~svu/xkeyboard-config-${PV}.tar.bz2"
+SRC_URI[md5sum] = "6ce65480445fb2d9c071ad1f002a7675"
+SRC_URI[sha256sum] = "e293aa4b0dd259dbb4f0e7f56fdd95db5047d052c7b3b80922fe5663923a805d"
 
-SRC_URI[md5sum] = "bb8a98ee61cdc4bd835fdfd2b5cee3e6"
-SRC_URI[sha256sum] = "175f275f5a041edda41fe0f27e59061d1d9c6615959475e4d68ad773b6a2e376"
 SECTION = "x11/libs"
 DEPENDS = "intltool xkbcomp-native glib-2.0"
 
