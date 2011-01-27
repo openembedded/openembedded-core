@@ -26,6 +26,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     python-nativesdk-fcntl \
     python-nativesdk-shell \
     python-nativesdk-misc \
+    python-nativesdk-multiprocessing \
     python-nativesdk-subprocess \
     python-nativesdk-xmlrpc \
     python-nativesdk-netclient \
