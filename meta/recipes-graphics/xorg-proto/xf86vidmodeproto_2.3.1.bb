@@ -8,5 +8,5 @@ CONFLICTS = "xxf86vmext"
 PR = "r0"
 PE = "1"
 
-SRC_URI[md5sum] = "4434894fc7d4eeb4a22e6b876d56fdaa"
-SRC_URI[sha256sum] = "8f704613a5407b31c594d05cf8e053f2b05777172a44e7cd2abd8090bd2ac247"
+SRC_URI[md5sum] = "e793ecefeaecfeabd1aed6a01095174e"
+SRC_URI[sha256sum] = "45d9499aa7b73203fd6b3505b0259624afed5c16b941bd04fcf123e5de698770"
