@@ -39,7 +39,13 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	# Setup base system configuration
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
-	echo "${TARGET_ARCH}-linux" >${IMAGE_ROOTFS}/etc/rpm/platform
+
+	# Default arch is the top..
+	echo "${TARGET_ARCH}-unknown-linux" >${IMAGE_ROOTFS}/etc/rpm/platform
+	# Add the rest in sort order..
+	for each in ${PACKAGE_ARCHS} ; do
+		echo "$each""-unknown-linux" >>${IMAGE_ROOTFS}/etc/rpm/platform
+	done
 
 	# Tell RPM that the "/" directory exist and is available
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/sysinfo
