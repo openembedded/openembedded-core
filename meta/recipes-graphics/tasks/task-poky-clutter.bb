@@ -24,7 +24,7 @@ PACKAGES = "\
 ALLOW_EMPTY = "1"
 
 RDEPENDS_task-poky-clutter-core = "\
-    clutter-1.0 \
+    clutter-1.4 \
     clutter-gst-1.0 \
     clutter-gtk-1.0"
 
