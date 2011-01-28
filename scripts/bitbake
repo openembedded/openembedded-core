@@ -16,7 +16,7 @@ OLDPATH=$PATH
 export PATH=`echo $PATH | sed s#[^:]*/scripts:##`
 if [ ! -e "$BUILDDIR/pseudodone" -a $no_build == "0" ]; then
     echo "Pseudo has not been built, building this first before the main build"
-    bitbake pseudo-native
+    bitbake pseudo-native -c populate_sysroot
     ret=$?
     if [ "$ret" != "0" ]; then
         exit 1
