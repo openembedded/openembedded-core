@@ -113,6 +113,16 @@ RRECOMMENDS_${QT_BASE_NAME}-fonts = " \
              ${QT_BASE_NAME}-fonts-pfa \
              ${QT_BASE_NAME}-fonts-pfb \
              ${QT_BASE_NAME}-fonts-qpf"
+RRECOMMENDS_${QT_BASE_NAME}-demos += " \
+            ${QT_BASE_NAME}-fonts \
+            ${QT_BASE_NAME}-examples \
+            ${QT_BASE_NAME}-plugin-sqldriver-sqlite \
+            ${QT_BASE_NAME}-plugin-imageformat-jpeg \
+            ${QT_BASE_NAME}-assistant \
+            ${PN}-doc"
+RRECOMMENDS_${QT_BASE_NAME}-examples += " \
+            ${QT_BASE_NAME}-plugin-sqldriver-sqlite \
+            ${QT_BASE_NAME}-plugin-imageformat-jpeg"
 
 FILES_${QT_BASE_NAME}-tools                = "${bindir}/uic* ${bindir}/moc ${bindir}/rcc ${bindir}/qttracereplay ${bindir}/qdoc*"
 FILES_${QT_BASE_NAME}-tools-dbg            = "${bindir}/.debug/uic* ${bindir}/.debug/moc ${bindir}/.debug/rcc ${bindir}/.debug/qttracereplay ${bindir}/.debug/qdoc*"
