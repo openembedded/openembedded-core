@@ -2,6 +2,9 @@
 # glibc specific configuration
 #
 
+# Add glibc to the overrides.
+OVERRIDES =. "libc-glibc:"
+
 #glibc
 PREFERRED_PROVIDER_virtual/libiconv ?= "glibc"
 PREFERRED_PROVIDER_virtual/libintl ?= "glibc"
