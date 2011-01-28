@@ -2,8 +2,9 @@
 # Creates a root filesystem out of rpm packages
 #
 
-ROOTFS_PKGMANAGE = "rpm zypper" 
-ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
+ROOTFS_PKGMANAGE = "rpm zypper"
+# Postinstalls on device are handled within this class at present
+ROOTFS_PKGMANAGE_BOOTSTRAP = ""
 
 do_rootfs[depends] += "rpm-native:do_populate_sysroot"
 
