@@ -192,7 +192,7 @@ python write_specfile () {
 
 		splitname    = pkgname
 
-		splitsummary = (bb.data.getVar('SUMMARY', d, True) or bb.data.getVar('DESCRIPTION', d, True) or ".")
+		splitsummary = (bb.data.getVar('SUMMARY', localdata, True) or bb.data.getVar('DESCRIPTION', localdata, True) or ".")
 		splitversion = (bb.data.getVar('PV', localdata, True) or "").replace('-', '+')
 		splitrelease = (bb.data.getVar('PR', localdata, True) or "")
 		splitepoch   = (bb.data.getVar('PE', localdata, True) or "")
