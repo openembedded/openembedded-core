@@ -1,9 +1,9 @@
 require clutter-box2d.inc
 
-LIC_FILES_CHKSUM = "file://box2d/License.txt;md5=d0a73d52dbe6da5d8cc0f28493defb26"
+LIC_FILES_CHKSUM = "file://box2d/License.txt;md5=e5d39ad91f7dc4692dcdb1d85139ec6b"
 
-PV = "0.0+git${SRCPV}"
-PR = "r3"
+PV = "0.10.1+git${SRCPV}"
+PR = "r0"
 
 SRC_URI = "git://git.clutter-project.org/clutter-box2d.git;protocol=git"
 
