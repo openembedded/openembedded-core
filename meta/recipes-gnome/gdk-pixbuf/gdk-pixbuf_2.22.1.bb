@@ -1,5 +1,7 @@
 require gdk-pixbuf.inc
 
+DEPENDS += "jpeg"
+
 PR = "r0"
 
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
