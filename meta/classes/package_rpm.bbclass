@@ -15,6 +15,8 @@ python package_rpm_install () {
 	bb.fatal("package_rpm_install not implemented!")
 }
 
+RPMCONF_TARGET_BASE = "${DEPLOY_DIR_RPM}/solvedb"
+RPMCONF_HOST_BASE = "${DEPLOY_DIR_RPM}/solvedb-sdk"
 #
 # Update the Packages depsolver db in ${DEPLOY_DIR_RPM}
 #
@@ -26,15 +28,18 @@ package_update_index_rpm () {
 	fi
 
 	packagedirs=""
+	packagedirs_sdk=""
 	for arch in $rpmarchs ; do
 		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
+		extension="-nativesdk"
+		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
+		    extension=""
+		fi
 		packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/$arch"
-		#packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/$sdkarch-nativesdk"
+		packagedirs_sdk="$packagedirs_sdk ${DEPLOY_DIR_RPM}/$sdkarch$extension"
 	done
 
-	#packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/${SDK_ARCH}-${TARGET_ARCH}-canadian"
-
-	cat /dev/null > ${DEPLOY_DIR_RPM}/solvedb.conf
+	cat /dev/null > ${RPMCONF_TARGET_BASE}.conf
 	for pkgdir in $packagedirs; do
 		if [ -e $pkgdir/ ]; then
 			echo "Generating solve db for $pkgdir..."
@@ -48,7 +53,25 @@ package_update_index_rpm () {
 				--ignoresize --nosignature --nodigest \
 				-D "__dbi_txn create nofsync" \
 				$pkgdir/solvedb/manifest
-			echo $pkgdir/solvedb >> ${DEPLOY_DIR_RPM}/solvedb.conf
+			echo $pkgdir/solvedb >> ${RPMCONF_TARGET_BASE}.conf
+		fi
+	done
+
+	cat /dev/null > ${RPMCONF_HOST_BASE}.conf
+	for pkgdir in $packagedirs_sdk; do
+		if [ -e $pkgdir/ ]; then
+			echo "Generating solve db for $pkgdir..."
+			rm -rf $pkgdir/solvedb
+			mkdir -p $pkgdir/solvedb
+			echo "# Dynamically generated solve manifest" >> $pkgdir/solvedb/manifest
+			find $pkgdir -maxdepth 1 -type f >> $pkgdir/solvedb/manifest
+			${RPM} -i --replacepkgs --replacefiles --oldpackage \
+				-D "_dbpath $pkgdir/solvedb" --justdb \
+				--noaid --nodeps --noorder --noscripts --notriggers --noparentdirs --nolinktos --stats \
+				--ignoresize --nosignature --nodigest \
+				-D "__dbi_txn create nofsync" \
+				$pkgdir/solvedb/manifest
+			echo $pkgdir/solvedb >> ${RPMCONF_HOST_BASE}.conf
 		fi
 	done
 }
@@ -58,16 +81,27 @@ package_update_index_rpm () {
 # generated depsolver db's...
 #
 package_generate_rpm_conf () {
-	printf "_solve_dbpath " > ${DEPLOY_DIR_RPM}/solvedb.macro
+	printf "_solve_dbpath " > ${RPMCONF_TARGET_BASE}.macro
 	colon=false
-	for each in `cat ${DEPLOY_DIR_RPM}/solvedb.conf` ; do
+	for each in `cat ${RPMCONF_TARGET_BASE}.conf` ; do
 		if [ "$colon" == true ]; then
-			printf ":" >> ${DEPLOY_DIR_RPM}/solvedb.macro
+			printf ":" >> ${RPMCONF_TARGET_BASE}.macro
 		fi
-		printf "%s" $each >> ${DEPLOY_DIR_RPM}/solvedb.macro
+		printf "%s" $each >> ${RPMCONF_TARGET_BASE}.macro
 		colon=true
 	done
-	printf "\n" >> ${DEPLOY_DIR_RPM}/solvedb.macro
+	printf "\n" >> ${RPMCONF_TARGET_BASE}.macro
+
+	printf "_solve_dbpath " > ${RPMCONF_HOST_BASE}.macro
+	colon=false
+	for each in `cat ${RPMCONF_HOST_BASE}.conf` ; do
+		if [ "$colon" == true ]; then
+			printf ":" >> ${RPMCONF_HOST_BASE}.macro
+		fi
+		printf "%s" $each >> ${RPMCONF_HOST_BASE}.macro
+		colon=true
+	done
+	printf "\n" >> ${RPMCONF_HOST_BASE}.macro
 }
 
 rpm_log_check() {
@@ -88,6 +122,182 @@ rpm_log_check() {
        done
        test "$do_exit" = 1 && exit 1
        true
+}
+
+
+#
+# Resolve package names to filepaths
+# resolve_pacakge <pkgname> <solvdb conffile>
+#
+resolve_package_rpm () {
+	local pkg="$1"
+	local conffile="$2"
+	local pkg_name=""
+	for solve in `cat ${conffile}`; do
+		pkg_name=$(${RPM} -D "_dbpath $solve" -D "__dbi_txn create nofsync" -q --yaml $pkg | grep -i 'Packageorigin' | cut -d : -f 2)
+		if [ -n "$pkg_name" ]; then
+			break;
+		fi
+	done
+	echo $pkg_name
+}
+
+#
+# install a bunch of packages using rpm
+# the following shell variables needs to be set before calling this func:
+# INSTALL_ROOTFS_RPM - install root dir
+# INSTALL_PLATFORM_RPM - main platform
+# INSTALL_PLATFORM_EXTRA_RPM - extra platform
+# INSTALL_CONFBASE_RPM - configuration file base name
+# INSTALL_PACKAGES_NORMAL_RPM - packages to be installed
+# INSTALL_PACKAGES_ATTEMPTONLY_RPM - packages attemped to be installed only
+# INSTALL_PACKAGES_LINGUAS_RPM - additional packages for uclibc
+# INSTALL_PROVIDENAME_RPM - content for provide name
+# INSTALL_TASK_RPM - task name
+
+package_install_internal_rpm () {
+
+	local target_rootfs="${INSTALL_ROOTFS_RPM}"
+	local platform="${INSTALL_PLATFORM_RPM}"
+	local platform_extra="${INSTALL_PLATFORM_EXTRA_RPM}"
+	local confbase="${INSTALL_CONFBASE_RPM}"
+	local package_to_install="${INSTALL_PACKAGES_NORMAL_RPM}"
+	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_RPM}"
+	local package_lingusa="${INSTALL_PACKAGES_LINGUAS_RPM}"
+	local providename="${INSTALL_PROVIDENAME_RPM}"
+	local task="${INSTALL_TASK_RPM}"
+
+	# Setup base system configuration
+	mkdir -p ${target_rootfs}/etc/rpm/
+	echo "${platform}-unknown-linux" >${target_rootfs}/etc/rpm/platform
+	if [ ! -z "$platform_extra" ]; then
+		for pt in $platform_extra ; do
+			echo "$pt-unknown-linux" >> ${target_rootfs}/etc/rpm/platform
+		done
+	fi
+
+	# Tell RPM that the "/" directory exist and is available
+	mkdir -p ${target_rootfs}/etc/rpm/sysinfo
+	echo "/" >${target_rootfs}/etc/rpm/sysinfo/Dirnames
+	if [ ! -z "$providename" ]; then
+		>>${target_rootfs}/etc/rpm/sysinfo/Providename
+		for provide in $providename ; do
+			echo $provide >> ${target_rootfs}/etc/rpm/sysinfo/Providename
+		done
+	fi
+
+	# Setup manifest of packages to install...
+	mkdir -p ${target_rootfs}/install
+	echo "# Install manifest" > ${target_rootfs}/install/install.manifest
+
+	# Uclibc builds don't provide this stuff...
+	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then
+		if [ ! -z "${package_lingusa}" ]; then
+			for pkg in ${package_lingusa}; do
+				echo "Processing $pkg..."
+				pkg_name=$(resolve_package_rpm $pkg ${confbase}.conf)
+				if [ -z "$pkg_name" ]; then
+					echo "Unable to find package $pkg!"
+					exit 1
+				fi
+				echo $pkg_name >> ${IMAGE_ROOTFS}/install/install.manifest
+			done
+		fi
+	fi
+
+	if [ ! -z "${package_to_install}" ]; then
+		for pkg in ${package_to_install} ; do
+			echo "Processing $pkg..."
+			pkg_name=$(resolve_package_rpm $pkg ${confbase}.conf)
+			if [ -z "$pkg_name" ]; then
+				echo "Unable to find package $pkg!"
+				exit 1
+			fi
+			echo $pkg_name >> ${target_rootfs}/install/install.manifest
+		done
+	fi
+
+	# Generate an install solution by doing a --justdb install, then recreate it with
+	# an actual package install!
+	${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+		-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
+		-D "__dbi_txn create nofsync" \
+		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+		${target_rootfs}/install/install.manifest
+
+	if [ ! -z "${package_attemptonly}" ]; then
+		echo "Adding attempt only packages..."
+		for pkg in ${package_attemptonly} ; do
+			echo "Processing $pkg..."
+			pkg_name=$(resolve_package_rpm $pkg ${confbase}.conf)
+			if [ -z "$pkg_name" ]; then
+				echo "Unable to find package $pkg!"
+				exit 1
+			fi
+			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}"
+			${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
+				-D "__dbi_txn create nofsync private" \
+				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+			$pkg_name >> "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}" || true
+		done
+	fi
+
+	#### Note: 'Recommends' is an arbitrary tag that means _SUGGESTS_ in Poky..
+	# Add any recommended packages to the image
+	# RPM does not solve for recommended packages because they are optional...
+	# So we query them and tree them like the ATTEMPTONLY packages above...
+	# Change the loop to "1" to run this code...
+	loop=0
+	if [ $loop -eq 1 ]; then
+	 echo "Processing recommended packages..."
+	 cat /dev/null >  ${target_rootfs}/install/recommend.list
+	 while [ $loop -eq 1 ]; do
+		# Dump the full set of recommends...
+		${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+			-D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${confbase}.macro`" \
+			-D "__dbi_txn create nofsync private" \
+			-qa --qf "[%{RECOMMENDS}\n]" | sort -u > ${target_rootfs}/install/recommend
+		# Did we add more to the list?
+		grep -v -x -F -f ${target_rootfs}/install/recommend.list ${target_rootfs}/install/recommend > ${target_rootfs}/install/recommend.new || true
+		# We don't want to loop unless there is a change to the list!
+		loop=0
+		cat ${target_rootfs}/install/recommend.new | \
+		 while read pkg ; do
+			# Ohh there was a new one, we'll need to loop again...
+			loop=1
+			echo "Processing $pkg..."
+			pkg_name=$(resolve_package $pkg ${confbase}.conf)
+			if [ -z "$pkg_name" ]; then
+				echo "Unable to find package $pkg." >> "${WORKDIR}/temp/log.do_${task}_recommend.${PID}"
+				continue
+			fi
+			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_{task}_recommend.${PID}"
+			${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
+				-D "__dbi_txn create nofsync private" \
+				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+				$pkg_name >> "${WORKDIR}/temp/log.do_${task}_recommend.${PID}" 2>&1 || true
+		done
+		cat ${target_rootfs}/install/recommend.list ${target_rootfs}/install/recommend.new | sort -u > ${target_rootfs}/install/recommend.new.list
+		mv -f ${target_rootfs}/install/recommend.new.list ${target_rootfs}/install/recommend.list
+		rm ${target_rootfs}/install/recommend ${target_rootfs}/install/recommend.new
+	 done
+	fi
+
+	# Now that we have a solution, pull out a list of what to install...
+	echo "Manifest: ${target_rootfs}/install/install.manifest"
+	${RPM} -D "_dbpath ${target_rootfs}/install" -qa --yaml \
+		-D "__dbi_txn create nofsync private" \
+		| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/install_solution.manifest
+
+	# Attempt install
+	${RPM} --root ${target_rootfs} \
+		-D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+		-D "_dbpath ${rpmlibdir}" \
+		--noscripts --notriggers --noparentdirs --nolinktos \
+		-D "__dbi_txn create nofsync private" \
+		-Uhv ${target_rootfs}/install/install_solution.manifest
 }
 
 python write_specfile () {
