@@ -67,6 +67,131 @@ python do_package_deb_install () {
     os.putenv('PATH', path)
 }
 
+#
+# Update the Packages index files in ${DEPLOY_DIR_DEB}
+#
+package_update_index_deb () {
+
+	local debarchs=""
+
+	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
+		return
+	fi
+
+	for arch in ${PACKAGE_ARCHS}; do
+		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
+		if [ -e ${DEPLOY_DIR_DEB}/$arch ]; then
+			debarchs="$debarchs $arch"
+		fi
+		if [ -e ${DEPLOY_DIR_DEB}/$sdkarch-nativesdk ]; then
+			debarchs="$debarchs $sdkarch-nativesdk"
+		fi
+	done
+
+	for arch in $debarchs; do
+		if [ ! -d ${DEPLOY_DIR_DEB}/$arch ]; then
+			continue;
+		fi
+		cd ${DEPLOY_DIR_DEB}/$arch
+		dpkg-scanpackages . | bzip2 > Packages.bz2
+		echo "Label: $arch" > Release
+	done
+}
+
+#
+# install a bunch of packages using apt
+# the following shell variables needs to be set before calling this func:
+# INSTALL_ROOTFS_DEB - install root dir
+# INSTALL_BASEARCH_DEB - install base architecutre
+# INSTALL_ARCHS_DEB - list of available archs
+# INSTALL_PACKAGES_NORMAL_DEB - packages to be installed
+# INSTALL_PACKAGES_ATTEMPTONLY_DEB - packages attemped to be installed only
+# INSTALL_PACKAGES_LINGUAS_DEB - additional packages for uclibc
+# INSTALL_TASK_DEB - task name
+
+package_install_internal_deb () {
+
+	local target_rootfs="${INSTALL_ROOTFS_DEB}"
+	local dpkg_arch="${INSTALL_BASEARCH_DEB}"
+	local archs="${INSTALL_ARCHS_DEB}"
+	local package_to_install="${INSTALL_PACKAGES_NORMAL_DEB}"
+	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_DEB}"
+	local package_lingusa="${INSTALL_PACKAGES_LINGUAS_DEB}"
+	local task="${INSTALL_TASK_DEB}"
+
+	rm -f ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
+	rm -f ${STAGING_ETCDIR_NATIVE}/apt/preferences
+
+	priority=1
+	for arch in $archs; do
+		if [ ! -d ${DEPLOY_DIR_DEB}/$arch ]; then
+			continue;
+		fi
+
+		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
+		(echo "Package: *"
+		echo "Pin: release l=$arch"
+		echo "Pin-Priority: $(expr 800 + $priority)"
+		echo) >> ${STAGING_ETCDIR_NATIVE}/apt/preferences
+		priority=$(expr $priority + 5)
+	done
+
+	tac ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev > ${STAGING_ETCDIR_NATIVE}/apt/sources.list
+
+	cat "${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample" \
+		| sed -e "s#Architecture \".*\";#Architecture \"${dpkg_arch}\";#" \
+		| sed -e "s:#ROOTFS#:${target_rootfs}:g" \
+		> "${STAGING_ETCDIR_NATIVE}/apt/apt-${task}.conf"
+
+	export APT_CONFIG="${STAGING_ETCDIR_NATIVE}/apt/apt-${task}.conf"
+
+	mkdir -p ${target_rootfs}/var/dpkg/info
+	mkdir -p ${target_rootfs}/var/dpkg/updates
+
+	> ${target_rootfs}/var/dpkg/status
+	> ${target_rootfs}/var/dpkg/available
+
+	apt-get update
+
+	# Uclibc builds don't provide this stuff..
+	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then
+		if [ ! -z "${package_lingusa}" ]; then
+			apt-get install glibc-localedata-i18n --force-yes --allow-unauthenticated
+			if [ $? -ne 0 ]; then
+				exit 1
+			fi
+			for i in ${package_lingusa}; do
+				apt-get install $i --force-yes --allow-unauthenticated
+				if [ $? -ne 0 ]; then
+					exit 1
+				fi
+			done
+		fi
+	fi
+
+	# normal install
+	for i in ${package_to_install}; do
+		apt-get install $i --force-yes --allow-unauthenticated
+		if [ $? -ne 0 ]; then
+			exit 1
+		fi
+	done
+
+	rm -f ${WORKDIR}/temp/log.do_${task}-attemptonly.${PID}
+	if [ ! -z "${package_attemptonly}" ]; then
+		for i in ${package_attemptonly}; do
+			apt-get install $i --force-yes --allow-unauthenticated >> ${WORKDIR}/temp/log.do_${task}-attemptonly.${PID} || true
+		done
+	fi
+
+	find ${target_rootfs} -name \*.dpkg-new | for i in `cat`; do
+		mv $i `echo $i | sed -e's,\.dpkg-new$,,'`
+	done
+
+	# Mark all packages installed
+	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" ${target_rootfs}/var/dpkg/status
+}
+
 deb_log_check() {
 	target="$1"
 	lf_path="$2"
