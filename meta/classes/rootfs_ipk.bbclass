@@ -29,26 +29,19 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${OPKG_PREPROCESS_COMMANDS}
 
 	mkdir -p ${T}/
-	mkdir -p ${IMAGE_ROOTFS}${opkglibdir}
 
-	opkg-cl ${IPKG_ARGS} update
+	#install
+	export INSTALL_PACKAGES_ATTEMPTONLY_IPK="${PACKAGE_INSTALL_ATTEMPTONLY}"
+	export INSTALL_PACKAGES_LINGUAS_IPK="${LINGUAS_INSTALL}"
+	export INSTALL_TASK_IPK="rootfs"
 
-	# Uclibc builds don't provide this stuff...
-	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then 
-		if [ ! -z "${LINGUAS_INSTALL}" ]; then
-			for i in ${LINGUAS_INSTALL}; do
-				opkg-cl ${IPKG_ARGS} install $i 
-			done
-		fi
-	fi
-	if [ ! -z "${PACKAGE_INSTALL}" ]; then
-		opkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL}
-	fi
+	export INSTALL_ROOTFS_IPK="${IMAGE_ROOTFS}"
+	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
+	export INSTALL_PACKAGES_NORMAL_IPK="${PACKAGE_INSTALL}"
 
-	if [ ! -z "${PACKAGE_INSTALL_ATTEMPTONLY}" ]; then
-		opkg-cl ${IPKG_ARGS} install ${PACKAGE_INSTALL_ATTEMPTONLY} > "${WORKDIR}/temp/log.do_rootfs_attemptonly.${PID}" || true
-	fi
+	package_install_internal_ipk
 
+	#post install
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}

@@ -61,6 +61,49 @@ python package_ipk_install () {
 		raise bb.build.FuncFailed
 }
 
+#
+# install a bunch of packages using opkg
+# the following shell variables needs to be set before calling this func:
+# INSTALL_ROOTFS_IPK - install root dir
+# INSTALL_CONF_IPK - configuration file
+# INSTALL_PACKAGES_NORMAL_IPK - packages to be installed
+# INSTALL_PACKAGES_ATTEMPTONLY_IPK - packages attemped to be installed only
+# INSTALL_PACKAGES_LINGUAS_IPK - additional packages for uclibc
+# INSTALL_TASK_IPK - task name
+
+package_install_internal_ipk() {
+
+	local target_rootfs="${INSTALL_ROOTFS_IPK}"
+	local conffile="${INSTALL_CONF_IPK}"
+	local package_to_install="${INSTALL_PACKAGES_NORMAL_IPK}"
+	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_IPK}"
+	local package_lingusa="${INSTALL_PACKAGES_LINGUAS_IPK}"
+	local task="${INSTALL_TASK_IPK}"
+
+	mkdir -p ${target_rootfs}${localstatedir}/lib/opkg/
+
+	local ipkg_args="-f ${conffile} -o ${target_rootfs} --force-overwrite"
+
+	opkg-cl ${ipkg_args} update
+
+	# Uclibc builds don't provide this stuff...
+	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then
+		if [ ! -z "${package_lingusa}" ]; then
+			for i in ${package_lingusa}; do
+				opkg-cl ${ipkg_args} install $i
+			done
+		fi
+	fi
+
+	if [ ! -z "${package_to_install}" ]; then
+		opkg-cl ${ipkg_args} install ${package_to_install}
+	fi
+
+	if [ ! -z "${package_attemptonly}" ]; then
+		opkg-cl ${ipkg_args} install ${package_attemptonly} > "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}" || true
+	fi
+}
+
 ipk_log_check() {
        target="$1"
        lf_path="$2"
