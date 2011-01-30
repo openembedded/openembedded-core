@@ -2,7 +2,7 @@ DESCRIPTION = "Table Clutter Demo"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPLv2.1 & GPLv2"
 
-DEPENDS = "clutter-gst-1.0 gnome-vfs"
+DEPENDS = "clutter-gst-1.4 gnome-vfs"
 
 inherit autotools pkgconfig
 

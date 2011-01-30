@@ -1,0 +1,15 @@
+Install example binary needed for poky-image-clutter
+
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+Index: git/examples/Makefile.am
+===================================================================
+--- git.orig/examples/Makefile.am	2011-01-31 10:14:23.000000000 +0800
++++ git/examples/Makefile.am	2011-01-31 10:14:34.000000000 +0800
+@@ -1,6 +1,6 @@
+ NULL = #
+ 
+-noinst_PROGRAMS = video-player video-sink
++bin_PROGRAMS = video-player video-sink
+ 
+ INCLUDES = -I$(top_srcdir) \
+ 	   $(MAINTAINER_CFLAGS) \

@@ -7,7 +7,7 @@ DEPENDS = "clutter-1.4 gstreamer gst-plugins-base"
 FILESPATH = "${FILE_DIRNAME}/clutter-gst"
 
 PACKAGES =+ "${PN}-examples"
-FILES_${PN}-examples = "${bindir}/video-player ${bindir}/video-sink ${bindir}/audio"
+FILES_${PN}-examples = "${bindir}/video-player ${bindir}/video-sink"
 
 inherit autotools pkgconfig gtk-doc
 
