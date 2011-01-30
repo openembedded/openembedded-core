@@ -155,7 +155,6 @@ insert_feed_uris () {
 }
 
 log_check() {
-	set +x
 	for target in $*
 	do
 		lf_path="${WORKDIR}/temp/log.do_$target.${PID}"
@@ -164,14 +163,12 @@ log_check() {
 		
 		if test -e "$lf_path"
 		then
-			rootfs_${IMAGE_PKGTYPE}_log_check $target $lf_path
+			${IMAGE_PKGTYPE}_log_check $target $lf_path
 		else
 			echo "Cannot find logfile [$lf_path]"
 		fi
 		echo "Logfile is clean"
 	done
-
-	set -x
 }
 
 # set '*' as the rootpassword so the images
