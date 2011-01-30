@@ -26,11 +26,11 @@ ALLOW_EMPTY = "1"
 RDEPENDS_task-poky-clutter-core = "\
     clutter-1.4 \
     clutter-gst-1.0 \
-    clutter-gtk-1.0"
+    clutter-gtk-1.4"
 
 RDEPENDS_task-poky-clutter-tests = "\
     clutter-gst-1.0-examples \
-    clutter-gtk-1.0-examples"
+    clutter-gtk-1.4-examples"
 
 #RDEPENDS_task-poky-clutter-apps = "\
 #    clutter-box2d "
