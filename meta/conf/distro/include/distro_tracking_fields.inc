@@ -108,7 +108,7 @@ RECIPE_LATEST_VERSION_pn-screen = "check"
 RECIPE_LAST_UPDATE_pn-screen = "Aug 31, 2010"
 RECIPE_MAINTAINER_pn-screen = "Qing He <qing.he@intel.com>"
 
-RECIPE_STATUS_pn-subversion = "red"
+RECIPE_STATUS_pn-subversion = "green"
 RECIPE_LATEST_VERSION_pn-subversion = "1.6.15"
 RECIPE_MANUAL_CHECK_DATE_pn-subversion = "Jan 25, 2011" 
 RECIPE_MAINTAINER_pn-subversion = "Nitin A Kamble <nitin.a.kamble@intel.com>"
