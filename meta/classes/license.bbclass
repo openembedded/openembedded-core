@@ -11,7 +11,6 @@
 LICENSE_DIRECTORY ??= "${DEPLOY_DIR_IMAGE}/licenses"
 
 addtask populate_lic after do_patch before do_package 
-do_populate_lic[nostamp] = "1"
 python do_populate_lic() {
     """
     Populate LICENSE_DIRECTORY with licenses.
