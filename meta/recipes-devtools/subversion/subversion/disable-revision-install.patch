@@ -1,6 +1,8 @@
---- subversion-1.2.0-r0/Makefile.in.old	2005-07-17 22:28:21.898728312 +0200
-+++ subversion-1.2.0-r0/Makefile.in	2005-07-17 22:30:05.361999504 +0200
-@@ -260,7 +260,7 @@
+Index: subversion-1.6.15/Makefile.in
+===================================================================
+--- subversion-1.6.15.orig/Makefile.in	2010-11-17 06:47:23.000000000 -0800
++++ subversion-1.6.15/Makefile.in	2011-01-31 10:11:07.358779686 -0800
+@@ -305,7 +305,7 @@
  clean: external-clean local-clean
  distclean: external-distclean local-distclean
  extraclean: external-extraclean local-extraclean
@@ -9,14 +11,24 @@
  
  @INCLUDE_OUTPUTS@
  
-@@ -320,8 +320,8 @@
+@@ -363,13 +363,13 @@
  local-install: @INSTALL_RULES@
  
  ### HACK!! Find a better way to do this
 -revision-install:
--	subversion/svnversion/svnversion $(top_srcdir) /repos/svn/trunk > $(DESTDIR)$(includedir)/subversion-1/svn-revision.txt
+-	test -d $(DESTDIR)$(includedir)/subversion-1 || \
+-	  $(MKDIR) $(DESTDIR)$(includedir)/subversion-1
+-	(subversion/svnversion/svnversion $(top_srcdir) ||  \
+-	 svnversion $(top_srcdir) ||                        \
+-	 echo "unknown";                                    \
+-	) > $(DESTDIR)$(includedir)/subversion-1/svn-revision.txt
 +#revision-install:
-+#	subversion/svnversion/svnversion $(top_srcdir) /repos/svn/trunk > $(DESTDIR)$(includedir)/subversion-1/svn-revision.txt
++#	test -d $(DESTDIR)$(includedir)/subversion-1 || \
++#	  $(MKDIR) $(DESTDIR)$(includedir)/subversion-1
++#	(subversion/svnversion/svnversion $(top_srcdir) ||  \
++#	 svnversion $(top_srcdir) ||                        \
++#	 echo "unknown";                                    \
++#	) > $(DESTDIR)$(includedir)/subversion-1/svn-revision.txt
  
  install-static: @INSTALL_STATIC_RULES@
  
