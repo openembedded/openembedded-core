@@ -38,5 +38,9 @@ do_install () {
 	fi
 }
 
+do_package_write_ipk[depends] += "virtual/libc:do_package"
+do_package_write_deb[depends] += "virtual/libc:do_package"
+do_package_write_rpm[depends] += "virtual/libc:do_package"
+
 BBCLASSEXTEND = "nativesdk"
 

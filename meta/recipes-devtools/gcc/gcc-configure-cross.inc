@@ -20,5 +20,3 @@ do_compile_prepend () {
 
 LIBGCCS_VAR = "-lgcc_s"
 LIBGCCS_VAR_avr32 = ""
-
-do_package_write_ipk[depends] += "virtual/libc:do_package"
