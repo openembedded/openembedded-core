@@ -1065,7 +1065,7 @@ PACKAGEFUNCS ?= "perform_packagecopy \
 		package_depchains \
 		emit_pkgdata"
 
-python package_do_package () {
+python do_package () {
 	packages = (bb.data.getVar('PACKAGES', d, True) or "").split()
 	if len(packages) < 1:
 		bb.debug(1, "No packages to build, skipping do_package")
@@ -1109,8 +1109,6 @@ do_package_write () {
 do_package_write[noexec] = "1"
 do_build[recrdeptask] += "do_package_write"
 addtask package_write before do_build after do_package
-
-EXPORT_FUNCTIONS do_package do_package_write
 
 #
 # Helper functions for the package writing classes
