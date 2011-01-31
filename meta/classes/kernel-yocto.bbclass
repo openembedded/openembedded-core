@@ -131,17 +131,22 @@ do_kernel_configme() {
 		echo "ERROR. Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
 	fi
-
+	
 	echo "# Global settings from linux recipe" >> ${B}/.config
 	echo "CONFIG_LOCALVERSION="\"${LINUX_VERSION_EXTENSION}\" >> ${B}/.config
 }
 
-do_kernel_configcheck() {
-	echo "[INFO] validating kernel configuration"
-	cd ${B}/..
-	kconf_check ${B}/.config ${B} ${S} ${B} ${LINUX_VERSION} ${KMACHINE}-${LINUX_KERNEL_TYPE}
-}
+python do_kernel_configcheck() {
+    import bb, re, string, sys, commands
 
+    bb.plain("NOTE: validating kernel configuration")
+
+    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
+    cmd = bb.data.expand("cd ${B}/..; kconf_check -${LINUX_KERNEL_TYPE}-config-${LINUX_VERSION} ${B} ${S} ${B} ${KBRANCH}",d )
+    ret, result = commands.getstatusoutput("%s%s" % (pathprefix, cmd))
+
+    bb.plain( "%s" % result )
+}
 
 # Ensure that the branches (BSP and meta) are on the locatios specified by
 # their SRCREV values. If they are NOT on the right commits, the branches

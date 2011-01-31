@@ -15,7 +15,6 @@ LINUX_KERNEL_TYPE ?= standard
 do_patch[depends] = "kern-tools-native:do_populate_sysroot"
 
 addtask kernel_configme before do_configure after do_patch
-addtask kernel_configcheck after do_configure before do_compile
 
 # Pick up shared functions
 inherit kernel-yocto
