@@ -1,8 +1,8 @@
 LICENSE = "GPL LGPL"
 DEPENDS = "libxml2 libxslt libxslt-native gnome-doc-utils-native"
-DEPENDS_virtclass-native = "libxml2-native libxslt-native gettext-native"
+DEPENDS_virtclass-native = "libxml2-native libxslt-native"
 
-inherit gnome
+inherit gnome gettext
 
 EXTRA_OECONF = "--disable-scrollkeeper"
 
