@@ -13,10 +13,9 @@ PE = "1"
 
 XORG_PN = "libXft"
 
-python do_package() {
+python () {
         if bb.data.getVar('DEBIAN_NAMES', d, 1):
             bb.data.setVar('PKG_${PN}', 'libxft2', d)
-        bb.build.exec_func('package_do_package', d)
 }
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS}"
