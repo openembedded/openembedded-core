@@ -292,13 +292,16 @@ module_conf_rfcomm = "alias bt-proto-3 rfcomm"
 
 python populate_packages_prepend () {
 	def extract_modinfo(file):
-		import re
-		tmpfile = os.tmpnam()
+		import tempfile, re
+		tempfile.tempdir = bb.data.getVar("WORKDIR", d, 1)
+		tf = tempfile.mkstemp()
+		tmpfile = tf[1]
 		cmd = "PATH=\"%s\" %sobjcopy -j .modinfo -O binary %s %s" % (bb.data.getVar("PATH", d, 1), bb.data.getVar("HOST_PREFIX", d, 1) or "", file, tmpfile)
 		os.system(cmd)
 		f = open(tmpfile)
 		l = f.read().split("\000")
 		f.close()
+		os.close(tf[0])
 		os.unlink(tmpfile)
 		exp = re.compile("([^=]+)=(.*)")
 		vals = {}
