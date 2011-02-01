@@ -43,7 +43,7 @@ LICENSE = "LGPL 2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "bzip2 zlib python perl db openssl elfutils expat libpcre attr acl popt"
-PR = "r9"
+PR = "r10"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -428,6 +428,32 @@ do_install_append() {
 	rm -f ${D}/${libdir}/rpm/dbconvert.sh
 
 	rm -f ${D}/${libdir}/rpm/libsqldb.*
+}
+
+do_install_append_virtclass-native() {
+        create_wrapper ${D}/${bindir}/rpm \
+		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
+		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
+		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+
+        create_wrapper ${D}/${bindir}/rpm2cpio \
+		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
+		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
+		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+
+        create_wrapper ${D}/${bindir}/rpmbuild \
+		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
+		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
+		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+
+        create_wrapper ${D}/${bindir}/rpmconstant \
+		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
+		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
+		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+
+	# Adjust popt macros to match...
+	cat ${D}/${libdir}/rpm/rpmpopt | sed -e "s,^\(rpm[^ 	]*\)\([ 	]\),\1.real\2," > ${D}/${libdir}/rpm/rpmpopt.new
+	mv ${D}/${libdir}/rpm/rpmpopt.new ${D}/${libdir}/rpm/rpmpopt
 }
 
 BBCLASSEXTEND = "native"
