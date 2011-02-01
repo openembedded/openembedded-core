@@ -694,7 +694,7 @@ BBFILE_PRIORITY_emenlow = "6"
                 .inc file must set INC_PR (initially to "r0"), and all recipes referring to it should set PR to 
                 "$(INC_PR).0" initially, incrementing the last number when the recipe is changed. If the
                 .inc file is changed then its INC_PR should be incremented.
-            </literallayout>
+            </para>
             <para> 
                 When upgrading the version of a package, assuming the <glossterm><link 
                 linkend='var-PV'>PV</link></glossterm> changes, the PR variable should be reset to "r0"
