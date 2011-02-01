@@ -11,7 +11,6 @@ PACKAGE_ARCH_update-alternatives-cworth = "all"
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
            file://add_vercmp.patch \
            file://headerfix.patch \
-           file://longlinksfix.patch \
 "
 
 S = "${WORKDIR}/trunk"
