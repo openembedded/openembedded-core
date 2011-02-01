@@ -8,9 +8,7 @@ SDK_SUFFIX = "toolchain-qte"
 
 QT_DIR_NAME = "qtopia"
 
-do_populate_sdk_append() {
-    script="${SDK_OUTPUT}/${SDKPATH}/environment-setup"
-    touch $script
+toolchain_create_sdk_env_script_append() {
     echo 'export OE_QMAKE_CC=${TARGET_SYS}-gcc' >> $script
     echo 'export OE_QMAKE_CXX=${TARGET_SYS}-g++' >> $script
     echo 'export OE_QMAKE_LINK=${TARGET_SYS}-g++' >> $script
@@ -25,8 +23,4 @@ do_populate_sdk_append() {
     echo 'export OE_QMAKE_QDBUSXML2CPP=${SDKPATH}/bin/qdbusxml2cpp4' >> $script
     echo 'export OE_QMAKE_QT_CONFIG=${SDKPATH}/${TARGET_SYS}/${datadir}/${QT_DIR_NAME}/mkspecs/qconfig.pri' >> $script
     echo 'export QMAKESPEC=${SDKPATH}/${TARGET_SYS}/${datadir}/${QT_DIR_NAME}/mkspecs/linux-g++' >> $script
-
-    # Repack SDK with new environment-setup
-    cd ${SDK_OUTPUT}
-    tar --owner=root --group=root -cj --file=${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
 }
