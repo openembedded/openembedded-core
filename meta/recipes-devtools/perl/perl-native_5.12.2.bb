@@ -4,7 +4,7 @@ SECTION = "libs"
 LICENSE = "Artistic|GPL"
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
-PR = "r3"
+PR = "r4"
 
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
                     file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
@@ -28,21 +28,19 @@ do_configure () {
 		-Dcflags="${CFLAGS}" \
 		-Dldflags="${LDFLAGS}" \
 		-Dcf_by="Open Embedded" \
-		\
 		-Dprefix=${prefix} \
 		-Dvendorprefix=${prefix} \
 		-Dvendorprefix=${prefix} \
 		-Dsiteprefix=${prefix} \
 		\
-		-Dprivlib=.../../lib/perl/${PV} \
-		-Darchlib=.../../lib/perl/${PV} \
-		-Dvendorlib=.../../lib/perl/${PV} \
-		-Dvendorarch=.../../lib/perl/${PV} \
-		-Dsitelib=.../../lib/perl/${PV} \
-		-Dsitearch=.../../lib/perl/${PV} \
-		-Duserelocatableinc="y" \
+		-Dprivlib=${STAGING_LIBDIR}/perl/${PV} \
+		-Darchlib=${STAGING_LIBDIR}/perl/${PV} \
+		-Dvendorlib=${STAGING_LIBDIR}/perl/${PV} \
+		-Dvendorarch=${STAGING_LIBDIR}/perl/${PV} \
+		-Dsitelib=${STAGING_LIBDIR}/perl/${PV} \
+		-Dsitearch=${STAGING_LIBDIR}/perl/${PV} \
 		\
-		-Uuseshrplib \
+		-Duseshrplib \
 		-Dusethreads \
 		-Duseithreads \
 		-Duselargefiles \
@@ -90,12 +88,8 @@ do_install () {
 		install $i ${D}${libdir}/perl/${PV}/CORE
 	done
 
-	# Make sure we use /usr/bin/env perl
-	for PERLSCRIPT in `grep -rIEl '#!.*/perl' ${D}${bindir}`; do
-		sed -i -e '1s|^#!.*|#!/usr/bin/env perl|' $PERLSCRIPT
-	done
+	create_wrapper ${D}${bindir}/perl PERL5LIB='$PERL5LIB:${STAGING_LIBDIR}/perl/5.12.2:${STAGING_LIBDIR}/perl/'
 }
-
 do_install_append_nylon() {
 	# get rid of definitions not supported by the gcc version we use for nylon...
 	for i in ${D}${libdir}/perl/${PV}/Config_heavy.pl ${D}${libdir}/perl/config.sh; do
