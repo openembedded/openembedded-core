@@ -289,6 +289,8 @@ python package_do_split_locales() {
 	if mainpkg.find('-dev'):
 		mainpkg = mainpkg.replace('-dev', '')
 
+	summary = bb.data.getVar('SUMMARY', d, True) or pn
+	description = bb.data.getVar('DESCRIPTION', d, True) or "" 
 	for l in locales:
 		ln = legitimize_package_name(l)
 		pkg = pn + '-locale-' + ln
@@ -296,7 +298,8 @@ python package_do_split_locales() {
 		bb.data.setVar('FILES_' + pkg, os.path.join(datadir, 'locale', l), d)
 		bb.data.setVar('RDEPENDS_' + pkg, '%s virtual-locale-%s' % (mainpkg, ln), d)
 		bb.data.setVar('RPROVIDES_' + pkg, '%s-locale %s-translation' % (pn, ln), d)
-		bb.data.setVar('DESCRIPTION_' + pkg, '%s translation for %s' % (l, pn), d)
+		bb.data.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l), d)
+		bb.data.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l), d)
 
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
