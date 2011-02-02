@@ -24,3 +24,5 @@ S = "${WORKDIR}/mailx-${PV}"
 inherit autotools
 
 CFLAGS_append = " -D_BSD_SOURCE -DDEBIAN -I${S}/EXT"
+
+PARALLEL_MAKE = ""
