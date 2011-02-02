@@ -515,6 +515,7 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'PV')
 		write_if_exists(sf, pkg, 'PR')
 		write_if_exists(sf, pkg, 'DESCRIPTION')
+		write_if_exists(sf, pkg, 'SUMMARY')
 		write_if_exists(sf, pkg, 'RDEPENDS')
 		write_if_exists(sf, pkg, 'RPROVIDES')
 		write_if_exists(sf, pkg, 'RRECOMMENDS')
