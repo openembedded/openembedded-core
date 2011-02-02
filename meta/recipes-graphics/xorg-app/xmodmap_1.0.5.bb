@@ -1,6 +1,13 @@
 require xorg-app-common.inc
 
-DESCRIPTION = "utility for modifying keymaps and pointer button mappings in X"
+SUMMARY = "Utility for modifying keymaps and pointer button mappings in X"
+
+DESCRIPTION = "The xmodmap program is used to edit and display the \
+keyboard modifier map and keymap table that are used by client \
+applications to convert event keycodes into keysyms. It is usually run \
+from the user's session startup script to configure the keyboard \
+according to personal tastes."
+
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eef098b27f09d0ac39268df0cc2c00b5"
 

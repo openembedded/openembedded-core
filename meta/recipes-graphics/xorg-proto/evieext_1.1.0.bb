@@ -1,6 +1,10 @@
 require xorg-proto-common.inc
 
-DESCRIPTION = "X EVIE extension headers"
+SUMMARY = "EvIE: X Event Interception Extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the X Event \
+Interception Extension.  This extension allows the interception of \
+keyboard and mouse events."
 
 PR = "r1"
 PE = "1"

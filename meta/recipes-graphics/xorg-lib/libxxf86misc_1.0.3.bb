@@ -1,4 +1,7 @@
-DESCRIPTION = "X11 XFree86 miscellaneous extension library"
+SUMMARY = "XFree86-Misc: XFree86 miscellaneous extension library"
+
+DESCRIPTION = "The XFree86-Misc extension, provides a means to access \
+input device configuration settings specific to the XFree86/Xorg DDX."
 
 require xorg-lib-common.inc
 

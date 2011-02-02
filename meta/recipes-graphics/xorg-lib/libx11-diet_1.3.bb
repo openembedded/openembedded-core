@@ -1,5 +1,8 @@
 require libx11.inc
 
+DESCRIPTION += " Support for XCB, UDC, XCMS and XLOCALE is disabled in \
+this version."
+
 PR = "r1"
 
 SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \

@@ -1,4 +1,7 @@
-DESCRIPTION = "X11 font encoding library"
+SUMMARY = "X font encoding library"
+
+DESCRIPTION = "libfontenc is a library which helps font libraries \
+portably determine and deal with different encodings of fonts."
 
 require xorg-lib-common.inc
 

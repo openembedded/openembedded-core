@@ -1,4 +1,8 @@
-DESCRIPTION = "tslib is a plugin-based flexible touchscreen access library."
+SUMMARY = "An abstraction layer for touchscreen panel events."
+DESCRIPTION = "Tslib is an abstraction layer for touchscreen panel \
+events, as well as a filter stack for the manipulation of those events. \
+Tslib is generally used on embedded devices to provide a common user \
+space interface to touchscreen functionality."
 HOMEPAGE = "http://tslib.berlios.de/"
 
 AUTHOR = "Russell King w/ plugins by Chris Larson et. al."

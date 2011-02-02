@@ -1,6 +1,12 @@
 require xorg-app-common.inc
 
-DESCRIPTION = "a program to create an index of scalable font files for X"
+SUMMARY = "A program to create an index of scalable font files for X"
+
+DESCRIPTION = "For each directory argument, mkfontscale reads all of the \
+scalable font files in the directory. For every font file found, an X11 \
+font name (XLFD) is generated, and is written together with the file \
+name to a file fonts.scale in the directory.  The resulting fonts.scale \
+is used by the mkfontdir program."
 
 DEPENDS += " zlib libfontenc freetype virtual/libx11"
 

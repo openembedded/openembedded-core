@@ -1,5 +1,11 @@
 require xorg-proto-common.inc
 
+SUMMARY = "XFontCache: X Font Cache extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the X Font \
+Cache extension.  This extension is used by X-TrueType to cache \
+information about fonts."
+
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ba9fcd8fe6d09af9f733daccc1a21857 \
                     file://fontcacheP.h;endline=28;md5=85c80bfa96c802ee85a570862ee60214"

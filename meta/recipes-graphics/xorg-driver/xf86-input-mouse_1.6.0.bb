@@ -1,6 +1,12 @@
 require xf86-input-common.inc
 
-DESCRIPTION = "X.Org X server -- mouse input driver"
+SUMMARY = "X.Org X server -- mouse input driver"
+
+DESCRIPTION = "mouse is an Xorg input driver for mice. The driver \
+supports most available mouse types and interfaces.  The mouse driver \
+functions as a pointer input device, and may be used as the X server's \
+core pointer. Multiple mice are supported by multiple instances of this \
+driver."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=237eb1d1a602d29ef2af62d8fba60f19"
 

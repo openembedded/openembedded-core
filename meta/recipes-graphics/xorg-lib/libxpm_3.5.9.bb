@@ -1,6 +1,12 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 Pixmap library"
+SUMMARY = "Xpm: X Pixmap extension library"
+
+DESCRIPTION = "libXpm provides support and common operation for the XPM \
+pixmap format, which is commonly used in legacy X applications.  XPM is \
+an extension of the monochrome XBM bitmap specificied in the X \
+protocol."
+
 LICENSE = "X-BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3e07763d16963c3af12db271a31abaa5"
 DEPENDS += "libxext libsm libxt"

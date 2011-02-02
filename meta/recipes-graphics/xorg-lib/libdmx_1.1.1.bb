@@ -1,6 +1,11 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 Distributed Multihead extension library"
+SUMMARY = "DMX: Distributed Multihead X extension library"
+
+DESCRIPTION = "The DMX extension provides support for communication with \
+and control of Xdmx(1) server. Attributes of the Xdmx(1) server and of \
+the back-end screens attached to the server can be queried and modified \
+via this protocol."
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a3c3499231a8035efd0e004cfbd3b72a \

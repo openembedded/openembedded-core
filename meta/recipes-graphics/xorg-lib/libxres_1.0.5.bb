@@ -1,4 +1,9 @@
-DESCRIPTION = "X11 Resource extension library"
+SUMMARY = "XRes: X Resource extension library"
+
+DESCRIPTION = "libXRes provides an X Window System client interface to \
+the Resource extension to the X protocol.  The Resource extension allows \
+for X clients to see and monitor the X resource usage of various clients \
+(pixmaps, et al)."
 
 require xorg-lib-common.inc
 

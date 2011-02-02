@@ -1,4 +1,7 @@
-DESCRIPTION = "X Video Motion Compensation extension library"
+SUMMARY = "XvMC: X Video Motion Compensation extension library"
+
+DESCRIPTION = "XvMC extends the X Video extension (Xv) and enables \
+hardware rendered motion compensation support."
 
 require xorg-lib-common.inc
 

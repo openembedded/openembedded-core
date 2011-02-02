@@ -1,5 +1,13 @@
-SUMMARY = "Font configuration and customization library"
-DESCRIPTION = "A library for configuring and customizing font access."
+SUMMARY = "Generic font configuration library"
+DESCRIPTION = "Fontconfig is a font configuration and customization library, which \
+does not depend on the X Window System. It is designed to locate \
+fonts within the system and select them according to requirements \
+specified by applications. \
+Fontconfig is not a rasterization library, nor does it impose a \
+particular rasterization library on the application. The X-specific \
+library 'Xft' uses fontconfig along with freetype to specify and \
+rasterize fonts."
+
 HOMEPAGE = "http://www.fontconfig.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 

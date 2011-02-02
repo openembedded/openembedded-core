@@ -1,4 +1,9 @@
-DESCRIPTION = "X11 Video extension library"
+SUMMARY = "Xv: X Video extension library"
+
+DESCRIPTION = "libXv provides an X Window System client interface to the \
+X Video extension to the X protocol. The X Video extension allows for \
+accelerated drawing of videos.  Hardware adaptors are exposed to \
+clients, which may draw in a number of colourspaces, including YUV."
 
 require xorg-lib-common.inc
 

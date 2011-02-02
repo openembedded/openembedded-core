@@ -1,4 +1,8 @@
-DESCRIPTION = "X11 font rasterisation library"
+SUMMARY = "XFont: X Font rasterisation library"
+
+DESCRIPTION = "libXfont provides various services for X servers, most \
+notably font selection and rasterisation (through external libraries \
+such as freetype)."
 
 require xorg-lib-common.inc
 

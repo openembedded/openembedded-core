@@ -1,5 +1,11 @@
 require xorg-proto-common.inc
 
+SUMMARY = "Xscrnsaver: X Screen Saver extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the X Screen \
+Saver extension.  This extension allows an external \"screen saver\" \
+client to detect when the alternative image is to be displayed and to \
+provide the graphics."
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eed49b78b15b436c933b6b8b054e3901 \

@@ -1,4 +1,7 @@
-DESCRIPTION = "Generic PCI access library"
+SUMMARY = "Generic PCI access library for X"
+
+DESCRIPTION = "libpciaccess provides functionality for X to access the \
+PCI bus and devices in a platform-independant way."
 
 require xorg-lib-common.inc
 

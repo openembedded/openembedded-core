@@ -1,4 +1,7 @@
-DESCRIPTION = "Touchscreen calibration utility"
+SUMMARY = "Touchscreen calibration utility"
+
+DESCRIPTION = "Basic touchscreen calibration utility"
+
 HOMEPAGE = "http://gpe.linuxtogo.org"
 BUGTRACKER = "http://bugs.linuxtogo.org"
 LICENSE = "GPLv2 & GPLv2+"

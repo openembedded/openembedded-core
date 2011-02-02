@@ -1,6 +1,10 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 Xinerama extension library"
+SUMMARY = "Xinerama: Xinerama extension library"
+
+DESCRIPTION = "Xinerama is a simple library designed to interface the \
+Xinerama Extension for retrieving information about physical output \
+devices which may be combined into a single logical X screen."
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6f4f634d1643a2e638bba3fcd19c2536 \

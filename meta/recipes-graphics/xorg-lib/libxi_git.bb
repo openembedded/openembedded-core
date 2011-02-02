@@ -1,6 +1,12 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 Input extension library"
+SUMMARY = "XI: X Input extension library"
+
+DESCRIPTION = "libxi is an extension to the X11 protocol to support \
+input devices other than the core X keyboard and pointer.  It allows \
+client programs to select input from these devices independently from \
+each other and independently from the core devices."
+
 DEPENDS += "libxext inputproto"
 PE = "1"
 PV = "1.2.99.5+gitr${SRCPV}"

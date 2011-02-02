@@ -1,5 +1,11 @@
 require xorg-proto-common.inc
 
+SUMMARY = "XFree86-Rush: XFree86 Rush extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the XFree86 \
+Rush extension.  This extension is there to allow Glide applications to \
+run."
+
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e01e66e4b317088cf869bc98e6af4fb6"
 

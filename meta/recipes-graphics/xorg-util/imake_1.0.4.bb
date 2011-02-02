@@ -1,6 +1,13 @@
 require xorg-util-common.inc
 
-DESCRIPTION = "C preprocessor interface to the make utility"
+SUMMARY = "C preprocessor interface to the make utility"
+
+DESCRIPTION = "Imake is used to generate Makefiles from a template, a \
+set of cpp macro functions, and a per-directory input file called an \
+Imakefile. This allows machine dependencies (such as compiler options, \
+alternate command names, and special make rules) to be kept separate \
+from the descriptions of the various items to be built."
+
 DEPENDS = "util-macros"
 RDEPENDS_${PN} = "perl xproto"
 

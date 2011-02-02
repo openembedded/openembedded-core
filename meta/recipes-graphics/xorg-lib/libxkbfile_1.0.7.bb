@@ -1,4 +1,7 @@
-DESCRIPTION = "X11 keyboard file manipulation library"
+SUMMARY = "XKB: X Keyboard File manipulation library"
+
+DESCRIPTION = "libxkbfile provides an interface to read and manipulate \
+description files for XKB, the X11 keyboard configuration extension."
 
 require xorg-lib-common.inc
 

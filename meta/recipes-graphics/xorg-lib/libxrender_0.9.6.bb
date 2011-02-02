@@ -1,4 +1,10 @@
-DESCRIPTION = "X11 Rendering Extension client library"
+SUMMARY = "XRender: X Rendering Extension library"
+
+DESCRIPTION = "The X Rendering Extension (Render) introduces digital \
+image composition as the foundation of a new rendering model within the \
+X Window System. Rendering geometric figures is accomplished by \
+client-side tessellation into either triangles or trapezoids.  Text is \
+drawn by loading glyphs into the server and rendering sets of them."
 
 require xorg-lib-common.inc
 

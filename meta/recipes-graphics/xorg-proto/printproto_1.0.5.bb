@@ -1,5 +1,10 @@
 require xorg-proto-common.inc
 
+SUMMARY = "XP: X Printing extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the X \
+Printing extension.  This extension provides a way for client \
+applications to render to non-display devices."
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=658463213f19b48b81f8672d2696069f \

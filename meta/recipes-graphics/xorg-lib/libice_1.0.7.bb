@@ -1,4 +1,10 @@
-DESCRIPTION = "X11 Inter-Client Exchange library"
+SUMMARY = "ICE: Inter-Client Exchange library"
+
+DESCRIPTION = "The Inter-Client Exchange (ICE) protocol provides a \
+generic framework for building protocols on top of reliable, byte-stream \
+transport connections. It provides basic mechanisms for setting up and \
+shutting down connections, for performing authentication, for \
+negotiating versions, and for reporting errors. "
 
 require xorg-lib-common.inc
 

@@ -1,6 +1,10 @@
 require xf86-driver-common.inc
 
-DESCRIPTION = "X.Org X server -- OMAP display driver"
+SUMMARY = "X.Org X server -- Texas Instruments OMAP framebuffer driver"
+
+DESCRIPTION = "omapfb driver supports the basic Texas Instruments OMAP \
+framebuffer."
+
 LICENSE = "MIT-X"
 LIC_FILES_CHKSUM = "file://src/omapfb-driver.c;beginline=1;endline=30;md5=a44c2a37e04d1c2c5f0313afb493f833"
 DEPENDS += "virtual/libx11"

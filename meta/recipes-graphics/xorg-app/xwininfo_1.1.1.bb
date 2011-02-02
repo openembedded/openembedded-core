@@ -1,6 +1,11 @@
 require xorg-app-common.inc
 
-DESCRIPTION = "window information utility for X"
+SUMMARY = "Window information utility for X"
+
+DESCRIPTION = "Xwininfo is a utility for displaying information about \
+windows.  Information may include window position, size, color depth, \
+and a number of other items."
+
 LIC_FILES_CHKSUM = "file://COPYING;md5=78976cd3115f6faf615accc4e094d90e"
 DEPENDS += "libxext libxmu"
 

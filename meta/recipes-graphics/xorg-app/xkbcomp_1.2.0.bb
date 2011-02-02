@@ -1,8 +1,11 @@
 require xorg-app-common.inc
 
-SUMMARY = "X Keyboard Extensions"
+SUMMARY = "A program to compile XKB keyboard description"
 
-DESCRIPTION = "The X Keyboard Extension essentially replaces the core protocol definition of keyboard."
+DESCRIPTION = "The xkbcomp keymap compiler converts a description of an \
+XKB keymap into one of several output formats. The most common use for \
+xkbcomp is to create a compiled keymap file (.xkm extension) which can \
+be read directly by XKB-capable X servers or utilities."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=08436e4f4476964e2e2dd7e7e41e076a"
 

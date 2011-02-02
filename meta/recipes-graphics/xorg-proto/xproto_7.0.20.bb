@@ -1,5 +1,10 @@
 require xorg-proto-common.inc
 
+SUMMARY = "Xlib: C Language X interface headers"
+
+DESCRIPTION = "This package provides the basic headers for the X Window \
+System."
+
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=93ae8952e7d02d855516fbf2efb9a0d2"
 

@@ -5,7 +5,11 @@ PE = "1"
 
 DEPENDS += "gettext"
 
-DESCRIPTION = "X.Org BigReqs extension headers"
+SUMMARY = "BigReqs: X Big Requests extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the \
+BIG-REQUESTS extension, used to send larger requests that usual in order \
+to avoid fragmentation."
 
 BBCLASSEXTEND = "native nativesdk"
 

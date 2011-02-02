@@ -1,4 +1,8 @@
-DESCRIPTION = "The XFree86/Xorg encoding files"
+SUMMARY = "The Xorg font encoding files"
+
+DESCRIPTION = "The encodings that map to specific characters for a \
+number of Xorg and common fonts."
+
 require xorg-font-common.inc
 LICENSE = "Public Domain"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9da93f2daf2d5572faa2bfaf0dbd9e76"

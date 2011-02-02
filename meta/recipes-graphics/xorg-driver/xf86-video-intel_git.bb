@@ -1,6 +1,12 @@
 require xf86-video-common.inc
 
-DESCRIPTION = "X.Org X server -- Intel i8xx, i9xx display driver"
+SUMMARY = "X.Org X server -- Intel integrated graphics chipsets driver"
+
+DESCRIPTION = "intel is an Xorg driver for Intel integrated graphics \
+chipsets. The driver supports depths 8, 15, 16 and 24. On some chipsets, \
+the driver supports hardware accelerated 3D via the Direct Rendering \
+Infrastructure (DRI)."
+
 DEPENDS += "virtual/libx11 libxvmc drm dri2proto glproto \
 	    virtual/libgl xineramaproto libpciaccess"
 

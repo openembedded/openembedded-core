@@ -1,4 +1,10 @@
-DESCRIPTION = "X11 Resize and Rotate extension library"
+SUMMARY = "XRandR: X Resize, Rotate and Reflect extension library"
+
+DESCRIPTION = "The X Resize, Rotate and Reflect Extension, called RandR \
+for short, brings the ability to resize, rotate and reflect the root \
+window of a screen. It is based on the X Resize and Rotate Extension as \
+specified in the Proceedings of the 2001 Usenix Technical Conference \
+[RANDR]."
 
 require xorg-lib-common.inc
 

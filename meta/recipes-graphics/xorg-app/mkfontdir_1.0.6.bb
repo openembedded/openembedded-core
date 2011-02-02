@@ -1,6 +1,12 @@
 require xorg-app-common.inc
 
-DESCRIPTION = "a program to create an index of X font files in a directory"
+SUMMARY = "A program to create an index of X font files in a directory"
+
+DESCRIPTION = "For each directory argument, mkfontdir reads all of the \
+font files in the directory. The font names and related data are written \
+out to the files \"fonts.dir\", \"fonts.scale\", and \"fonts.alias\".  \
+The X server and font server use these files to find the available font \
+files."
 
 PE = "1"
 PR = "r0"

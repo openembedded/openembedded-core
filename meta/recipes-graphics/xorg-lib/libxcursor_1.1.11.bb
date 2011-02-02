@@ -1,4 +1,10 @@
-DESCRIPTION = "X cursor management library"
+SUMMARY = "Xcursor: X Cursor management library"
+
+DESCRIPTION = "Xcursor is a simple library designed to help locate and \
+load cursors. Cursors can be loaded from files or memory. A library of \
+common cursors exists which map to the standard X cursor names. Cursors \
+can exist in several sizes and the library automatically picks the best \
+size."
 
 require xorg-lib-common.inc
 

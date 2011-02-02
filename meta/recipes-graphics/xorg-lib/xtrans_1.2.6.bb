@@ -1,7 +1,11 @@
-SUMMARY = "X transport library"
+SUMMARY = "XTrans: X Transport library"
 
-DESCRIPTION = "network API translation layer to insulate X applications and \
-libraries from OS network vageries."
+DESCRIPTION = "The X Transport Interface is intended to combine all \
+system and transport specific code into a single place.  This API should \
+be used by all libraries, clients and servers of the X Window System. \
+Use of this API should allow the addition of new types of transports and \
+support for new platforms without making any changes to the source \
+except in the X Transport Interface code."
 
 require xorg-lib-common.inc
 

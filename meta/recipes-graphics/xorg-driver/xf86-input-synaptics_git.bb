@@ -1,6 +1,12 @@
 require xf86-input-common.inc
 
-DESCRIPTION = "X.Org X server -- keyboard input driver"
+SUMMARY = "X.Org X server -- synaptics touchpad input driver"
+
+DESCRIPTION = "synaptics is an Xorg input driver for the touchpads from \
+Synaptics Incorporated. Even though these touchpads (by default, \
+operating in a compatibility mode emulating a standard mouse) can be \
+handled by the normal evdev or mouse drivers, this driver allows more \
+advanced features of the touchpad to become available."
 
 PV = "0.15.2+git${SRCPV}"
 

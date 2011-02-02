@@ -1,4 +1,12 @@
-DESCRIPTION = "X11 miscellaneous utility library"
+SUMMARY = "Xmu and Xmuu: X Miscellaneous Utility libraries"
+
+DESCRIPTION = "The Xmu Library is a collection of miscellaneous (some \
+might say random) utility functions that have been useful in building \
+various applications and widgets. This library is required by the Athena \
+Widgets. A subset of the functions that do not rely on the Athena \
+Widgets (libXaw) or X Toolkit Instrinsics (libXt) are provided in a \
+second library, libXmuu."
+
 
 require xorg-lib-common.inc
 

@@ -1,4 +1,13 @@
-DESCRIPTION = "X Composite extension library."
+SUMMARY = "Xcomposite: X Composite extension library"
+
+DESCRIPTION = "The composite extension provides three related \
+mechanisms: per-hierarchy storage, automatic shadow update, and external \
+parent.  In per-hierarchy storage, the rendering of an entire hierarchy \
+of windows is redirected to off-screen storage.  In automatic shadow \
+update, when a hierarchy is rendered off-screen, the X server provides \
+an automatic mechanism for presenting those contents within the parent \
+window.  In external parent, a mechanism for providing redirection of \
+compositing transformations through a client."
 
 require xorg-lib-common.inc
 

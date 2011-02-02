@@ -1,5 +1,10 @@
 require xorg-proto-common.inc
 
+SUMMARY = "Xv: X Video extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the X Video \
+extension.  This extension alows for accerlated drawing of videos."
+
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59d089e37bf57b5206602da38f58ca5d"
 

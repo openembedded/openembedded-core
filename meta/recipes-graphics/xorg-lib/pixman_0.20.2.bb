@@ -1,4 +1,9 @@
-DESCRIPTION = "Library for lowlevel pixel operations"
+SUMMARY = "Pixman: Pixel Manipulation library"
+
+DESCRIPTION = "Pixman provides a library for manipulating pixel regions \
+-- a set of Y-X banded rectangles, image compositing using the \
+Porter/Duff model and implicit mask generation for geometric primitives \
+including trapezoids, triangles, and rectangles."
 
 require xorg-lib-common.inc
 

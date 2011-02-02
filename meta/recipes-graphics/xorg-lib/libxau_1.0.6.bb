@@ -1,4 +1,8 @@
-DESCRIPTION = "A Sample Authorization Protocol for X"
+SUMMARY = "Xau: X Authority Database library"
+
+DESCRIPTION = "libxau provides the main interfaces to the X11 \
+authorisation handling, which controls authorisation for X connections, \
+both client-side and server-side."
 
 require xorg-lib-common.inc
 

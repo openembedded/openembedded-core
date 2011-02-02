@@ -1,6 +1,10 @@
-DESCRIPTION = "DRI2 extension headers"
-
 require xorg-proto-common.inc
+
+SUMMARY = "DRI2: Direct Rendering Infrastructure 2 headers"
+
+DESCRIPTION = "This package provides the wire protocol for the Direct \
+Rendering Ifnrastructure 2.  DIR is required for may hardware \
+accelerated OpenGL drivers."
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e396fa91834f8786032cad2da5638f3 \

@@ -25,9 +25,23 @@ PACKAGES =+ "libcairo2 libcairo2-dev libcairo2-dbg \
 		     cairo-perf-utils \
 			"
 
-DESCRIPTION_libcairo2 = "The Cairo 2D vector graphics library"
-DESCRIPTION_libcairo-gobject2 = "The Cairo library GObject wrapper library"
-DESCRIPTION_libcairo-script-interpreter2 = "The Cairo library script interpreter"
+SUMMARY_libcairo2 = "The Cairo 2D vector graphics library"
+DESCRIPTION_libcairo2 = "Cairo is a multi-platform library providing anti-aliased \
+vector-based rendering for multiple target backends. Paths consist \
+of line segments and cubic splines and can be rendered at any width \
+with various join and cap styles. All colors may be specified with \
+optional translucence (opacity/alpha) and combined using the \
+extended Porter/Duff compositing algebra as found in the X Render \
+Extension."
+
+SUMMARY_libcairo-gobject2 = "The Cairo library GObject wrapper library"
+DESCRIPTION_libcairo-gobject2 = "A GObject wrapper library for the Cairo API."
+
+SUMMARY_libcairo-script-interpreter2 = "The Cairo library script interpreter"
+DESCRIPTION_libcairo-script-interpreter2 = "The Cairo script interpreter implements \
+CairoScript.  CairoScript is used by tracing utilities to enable the ability \
+to replay rendering."
+
 DESCRIPTION_cairo-perf-utils = "The Cairo library performance utilities"
 
 FILES_libcairo2 = "${libdir}/libcairo.so*"

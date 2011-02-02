@@ -1,6 +1,8 @@
 require xf86-video-common.inc
 
-DESCRIPTION = "X.Org X server -- VMware SVGA II display driver"
+SUMMARY = "X.Org X server -- VMware SVGA display driver"
+
+DESCRIPTION = "vmware is an Xorg driver for VMware virtual video cards."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=5fcd7d437a959a15fbee8707747c6b53"
 

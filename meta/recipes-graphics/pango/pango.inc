@@ -1,7 +1,9 @@
 SUMMARY = "Framework for layout and rendering of internationalized text"
-DESCRIPTION = "The goal of the Pango project is to provide an \
-Open Source framework for the layout and rendering of \
-internationalized text."
+DESCRIPTION = "Pango is a library for laying out and rendering of text, \
+with an emphasis on internationalization. Pango can be used anywhere \
+that text layout is needed, though most of the work on Pango so far has \
+been done in the context of the GTK+ widget toolkit. Pango forms the \
+core of text and font handling for GTK+-2.x."
 HOMEPAGE = "http://www.pango.org/"
 BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "x11/libs"

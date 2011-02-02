@@ -1,5 +1,7 @@
 require libx11.inc
 
+DESCRIPTION += " Support for XCB, and XCMS is disabled in this version."
+
 LICENSE = "MIT & MIT-style & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=bf75bfe4d05068311b5e6862d4b5f2c5"
 

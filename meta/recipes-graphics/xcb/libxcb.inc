@@ -1,4 +1,7 @@
-DESCRIPTION = "XCB: an X protocol C binding"
+SUMMARY = "XCB: The X protocol C binding library"
+DESCRIPTION = "The X protocol C-language Binding (XCB) is a replacement \
+for Xlib featuring a small footprint, latency hiding, direct access to \
+the protocol, improved threading support, and extensibility."
 HOMEPAGE = "http://xcb.freedesktop.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=XCB"
 

@@ -1,6 +1,10 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X-TrueType font cache extension client library"
+SUMMARY = "XFontCache: X Font Cache extension library"
+
+DESCRIPTION = "FontCache is an extension that is used by X-TrueType to cache \
+information about fonts."
+
 DEPENDS += "libxext fontcacheproto"
 LIC_FILES_CHKSUM = "file://COPYING;md5=62a75d5d3da40f1f6eb1cbe3bcc0a5d0"
 PR = "r0"

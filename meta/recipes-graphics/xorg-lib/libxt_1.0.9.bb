@@ -1,4 +1,14 @@
-DESCRIPTION = "X11 toolkit intrinsics library"
+SUMMARY = "Xt: X Toolkit Intrinsics library"
+
+DESCRIPTION = "The Intrinsics are a programming library tailored to the \
+special requirements of user interface construction within a network \
+window system, specifically the X Window System. The Intrinsics and a \
+widget set make up an X Toolkit. The Intrinsics provide the base \
+mechanism necessary to build a wide variety of interoperating widget \
+sets and application environments. The Intrinsics are a layer on top of \
+Xlib, the C Library X Interface. They extend the fundamental \
+abstractions provided by the X Window System while still remaining \
+independent of any particular user interface policy or style."
 
 require xorg-lib-common.inc
 

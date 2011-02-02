@@ -1,4 +1,10 @@
-DESCRIPTION = "X11 Session management library"
+SUMMARY = "SM: Session Management library"
+
+DESCRIPTION = "The Session Management Library (SMlib) is a low-level \"C\" \
+language interface to XSMP.  The purpose of the X Session Management \
+Protocol (XSMP) is to provide a uniform mechanism for users to save and \
+restore their sessions.  A session is a group of clients, each of which \
+has a particular state."
 
 require xorg-lib-common.inc
 

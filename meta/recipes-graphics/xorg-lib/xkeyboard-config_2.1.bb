@@ -1,4 +1,11 @@
-DESCRIPTION = "Keyboard configuration database for X Window"
+SUMMARY = "Keyboard configuration database for X Window"
+
+DESCRIPTION = "The non-arch keyboard configuration database for X \
+Window.  The goal is to provide the consistent, well-structured, \
+frequently released open source of X keyboard configuration data for X \
+Window System implementations.  The project is targeted to XKB-based \
+systems."
+
 HOMEPAGE = "http://freedesktop.org/wiki/Software/XKeyboardConfig"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xkeyboard-config"
 

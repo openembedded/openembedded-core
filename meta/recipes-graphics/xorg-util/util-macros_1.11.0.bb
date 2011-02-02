@@ -1,4 +1,6 @@
-DESCRIPTION = "X autotools macros"
+SUMMARY = "X autotools macros"
+
+DESCRIPTION = "M4 autotools macros used by various X.org programs."
 
 require xorg-util-common.inc
 

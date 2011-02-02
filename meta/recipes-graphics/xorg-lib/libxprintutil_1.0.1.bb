@@ -1,7 +1,12 @@
 require xorg-lib-common.inc
 LIC_FILES_CHKSUM = "file://src/xprintutil.c;endline=29;md5=22d5a98494dd356a2c6c9c355886f3af"
 
-DESCRIPTION = "Xprint printer utility client library"
+SUMMARY = "Xprint: Xprint printer utility library"
+
+DESCRIPTION = "libxprintutil provides utility Xpu APIs allowing client \
+applications to access and manipulate information about printer \
+capabilities from an Xprint server."
+
 DEPENDS += "libxp libxt"
 PR = "r1"
 PE = "1"

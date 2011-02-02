@@ -1,4 +1,9 @@
-DESCRIPTION = "X11 XFree86 video mode extension library"
+SUMMARY = "XFree86-VM: XFree86 video mode extension library"
+
+DESCRIPTION = "libXxf86vm provides an interface to the \
+XFree86-VidModeExtension extension, which allows client applications to \
+get and set video mode timings in extensive detail.  It is used by the \
+xvidtune program in particular."
 
 require xorg-lib-common.inc
 

@@ -1,5 +1,13 @@
 require xorg-proto-common.inc
 
+SUMMARY = "XFixes: X Fixes extension headers"
+
+DESCRIPTION = "This package provides the wire protocol for the X Fixes \
+extension.  This extension is designed to provide server-side support \
+for application work arounds to shortcomings in the core X window \
+system."
+
+
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3bd0f26ecf86d0f24922125195d5b70a \
                     file://xfixesproto.h;endline=43;md5=27614675897bb1cdc611ba7de506cddc"

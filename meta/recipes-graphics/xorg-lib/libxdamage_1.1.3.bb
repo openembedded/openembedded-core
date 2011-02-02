@@ -1,4 +1,15 @@
-DESCRIPTION = "X11 damaged region extension library"
+SUMMARY = "Xdamage: X Damage extension library"
+
+DESCRIPTION = "'Damage' is a term that describes changes make to pixel \
+contents of windows and pixmaps.  Damage accumulates as drawing occurs \
+in the drawable.  Each drawing operation 'damages' one or more \
+rectangular areas within the drawable.  The rectangles are guaranteed to \
+include the set of pixels modified by each operation, but may include \
+significantly more than just those pixels.  The DAMAGE extension allows \
+applications to either receive the raw rectangles as a stream of events, \
+or to have them partially processed within the X server to reduce the \
+amount of data transmitted as well as reduce the processing latency once \
+the repaint operation has started."
 
 require xorg-lib-common.inc
 

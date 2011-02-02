@@ -1,5 +1,7 @@
 SUMMARY = "Liberation(tm) Fonts"
-DESCRIPTION = "The Liberation(tm) Fonts is a font family originally created by Ascender(c) which aims metric compatibility as usage of Arial, Times New Roman, Courier New"
+DESCRIPTION = "The Liberation(tm) Fonts is a font family originally \
+created by Ascender(c) which aims at metric compatibility with \
+Arial, Times New Roman, Courier New."
 HOMEPAGE = "https://fedorahosted.org/liberation-fonts/"
 BUGTRACKER = "https://bugzilla.redhat.com/"
 

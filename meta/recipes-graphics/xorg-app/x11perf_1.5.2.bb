@@ -1,6 +1,11 @@
 require xorg-app-common.inc
 
-DESCRIPTION = "X11 server performance test program"
+SUMMARY = "X11 server performance test program"
+
+DESCRIPTION = "The x11perf program runs one or more performance tests \
+and reports how fast an X server can execute the tests."
+
+
 DEPENDS += "libxmu libxrender libxft libxext fontconfig"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=428ca4d67a41fcd4fc3283dce9bbda7e \

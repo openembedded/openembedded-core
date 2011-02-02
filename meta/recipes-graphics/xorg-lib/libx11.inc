@@ -1,4 +1,8 @@
-DESCRIPTION = "X11 protocol and utility library"
+SUMMARY = "Xlib: C Language X Interface library"
+
+DESCRIPTION = "This package provides a client interface to the X Window \
+System, otherwise known as 'Xlib'.  It provides a complete API for the \
+basic functions of the window system."
 
 require xorg-lib-common.inc
 

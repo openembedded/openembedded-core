@@ -1,4 +1,7 @@
-DESCRIPTION = "Touchscreen calibration client library"
+SUMMARY = "XCalibrate: Touchscreen calibration library"
+
+DESCRIPTION = "libXCalibrate is a library for performing touchscreen \
+calibration with the kdrive tslib touchscreen driver."
 
 require xorg-lib-common.inc
 

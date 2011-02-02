@@ -1,4 +1,7 @@
+SUMMARY = "XRes: A top-like resource usage tool for X"
+
 DESCRIPTION = "top-like statistics of X11 server resource usage by clients"
+
 HOMEPAGE = "http://www.freedesktop.org/wiki/Software/xrestop"
 BUGTRACKER = "https://bugs.freedesktop.org/"
 

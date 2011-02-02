@@ -1,6 +1,12 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X11 Direct Graphics Access extension library"
+SUMMARY = "XFree86-DGA: XFree86 Direct Graphics Access extension library"
+
+DESCRIPTION = "libXxf86dga provides the XFree86-DGA extension, which \
+allows direct graphics access to a framebuffer-like region, and also \
+allows relative mouse reporting, et al.  It is mainly used by games and \
+emulators for games."
+
 DEPENDS += "libxext xf86dgaproto"
 PR = "r1"
 PE = "1"

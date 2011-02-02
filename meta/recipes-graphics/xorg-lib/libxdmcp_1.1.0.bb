@@ -1,4 +1,10 @@
-DESCRIPTION = "X Display Manager Control Protocol library"
+SUMMARY = "XDMCP: X Display Manager Control Protocol library"
+
+DESCRIPTION = "The purpose of the X Display Manager Control Protocol \
+(XDMCP) is to provide a uniform mechanism for an autonomous display to \
+request login service from a remote host. An X terminal (screen, \
+keyboard, mouse, processor, network interface) is a prime example of an \
+autonomous display."
 
 require xorg-lib-common.inc
 

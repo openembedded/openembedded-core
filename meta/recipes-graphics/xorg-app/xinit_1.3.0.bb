@@ -1,6 +1,13 @@
 require xorg-app-common.inc
 
-DESCRIPTION = "X Window System initializer"
+SUMMARY = "X Window System initializer"
+
+DESCRIPTION = "The xinit program is used to start the X Window System \
+server and a first client program on systems that cannot start X \
+directly from /etc/init or in environments that use multiple window \
+systems. When this first client exits, xinit will kill the X server and \
+then terminate."
+
 LIC_FILES_CHKSUM = "file://COPYING;md5=0d4b5eef75f1584ccbdc5e4a34314407"
 PR = "r0"
 PE = "1"

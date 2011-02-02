@@ -1,4 +1,9 @@
-DESCRIPTION = "The Bitstream Vera fonts - TTF Edition"
+SUMMARY = "The Bitstream Vera fonts - TTF Edition"
+DESCRIPTION = "The Bitstream Vera fonts include four monospace and sans \
+faces (normal, oblique, bold, bold oblique) and two serif faces (normal \
+and bold).  In addition Fontconfig/Xft2 can artificially oblique the \
+serif faces for you: this loses hinting and distorts the faces slightly, \
+but is visibly different than normal and bold, and reasonably pleasing."
 SECTION = "x11/fonts"
 PRIORITY = "optional"
 LICENSE = "Bitstream Vera"

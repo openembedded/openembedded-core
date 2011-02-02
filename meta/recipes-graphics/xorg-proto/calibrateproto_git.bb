@@ -1,6 +1,9 @@
 require xorg-proto-common.inc
 
-DESCRIPTION = "Touchscreen calibration protocol"
+SUMMARY = "XCalibrate: Touchscreen calibration headers"
+
+DESCRIPTION = "This package provides the wire protocol for the \
+Touchscreen calibration extension."
 
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://xcalibratewire.h;endline=23;md5=7f86ef7b03cce6c4c9ebd59d20ca485f \

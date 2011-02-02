@@ -1,6 +1,10 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X Test Extension: client side library"
+SUMMARY = "XTest: X Test extension library"
+
+DESCRIPTION = "This extension is a minimal set of client and server \
+extensions required to completely test the X11 server with no user \
+intervention."
 
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cba677ca25c42ad29ee8ff351b50ece8 \

@@ -1,6 +1,9 @@
 require xorg-lib-common.inc
 
-DESCRIPTION = "X Printing Extension (Xprint) client library"
+SUMMARY = "XP: X Printing extension library"
+
+DESCRIPTION = "libXp provides public APIs to allow client applications \
+to render to non-display devices, making use of the X Print Service."
 
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9504a1264f5ddd4949254a57c0f8d6bb \
