@@ -158,6 +158,10 @@ autotools_do_configure() {
 
 autotools_do_install() {
 	oe_runmake 'DESTDIR=${D}' install
+	# Info dir listing isn't interesting at this point so remove it if it exists.
+	if [ -e "${D}${infodir}/dir" ]; then
+		rm -f ${D}${infodir}/dir
+	fi
 }
 
 inherit siteconfig
