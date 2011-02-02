@@ -14,7 +14,7 @@ PR = "r3"
 S = "${WORKDIR}/git"
 
 DEPENDS = "libffi python-native gobject-introspection-native"
-DEPENDS_virtclass-native = "libffi-native python-native"
+DEPENDS_virtclass-native = "libffi-native python-native bison-native flex-native"
 
 inherit autotools
 
