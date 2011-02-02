@@ -26,8 +26,8 @@ do_unpack_append() {
 
 do_move_ports() {
         if test -d ${WORKDIR}/${EGLIBC_BRANCH}/ports ; then
-	    rm -rf ${S}../libc/ports
-	    mv ${WORKDIR}/${EGLIBC_BRANCH}/ports ${S}/../libc/
+	    rm -rf ${WORKDIR}/libc/ports
+	    mv ${WORKDIR}/${EGLIBC_BRANCH}/ports ${WORKDIR}/libc/
 	fi
 }
 
