@@ -6,12 +6,14 @@ PR = "r0"
 
 SRC_URI = "http://search.cpan.org/CPAN/authors/id/G/GB/GBARR/Convert-ASN1-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "6f5c45724db1b09911e489275d19d0f5"
-SRC_URI[sha256sum] = "94e37fcb52148355cf9a0e96518c82bbb80b0b97adcce88bdb87766ca1cf9e45"
+SRC_URI[md5sum] = "64a555e44adc79d92072b9fc7a6779c4"
+SRC_URI[sha256sum] = "be63d5cc715d7306e54b41d3c68c3617ca306289cff619a2ca43505e35f2f6ee"
 
 S = "${WORKDIR}/Convert-ASN1-${PV}"
 
 inherit cpan
+
+EXTRA_PERLFLAGS = "-I ${STAGING_LIBDIR_NATIVE}/perl/${@get_perl_version(d)}"
 
 BBCLASSEXTEND="native"
 
