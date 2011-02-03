@@ -9,8 +9,11 @@
 #  differences and that should be corrected.
 
 LICENSE_DIRECTORY ??= "${DEPLOY_DIR_IMAGE}/licenses"
+LICSSTATEDIR = "${WORKDIR}/license-destdir/"
 
 addtask populate_lic after do_patch before do_package 
+do_populate_lic[dirs] = "${LICSSTATEDIR}/${PN}"
+do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 python do_populate_lic() {
     """
     Populate LICENSE_DIRECTORY with licenses.
@@ -25,25 +28,13 @@ python do_populate_lic() {
     lic_files = bb.data.getVar('LIC_FILES_CHKSUM', d, True)
     pn = bb.data.getVar('PN', d, True)
     # The base directory we wrangle licenses to
-    destdir = os.path.join(bb.data.getVar('LICENSE_DIRECTORY', d, True), pn)
+    destdir = os.path.join(bb.data.getVar('LICSSTATEDIR', d, True), pn)
     # The license files are located in S/LIC_FILE_CHECKSUM.
     srcdir = bb.data.getVar('S', d, True)
     # Directory we store the generic licenses as set in poky.conf
     generic_directory = bb.data.getVar('COMMON_LICENSE_DIR', d, True)
     if not generic_directory:
         raise bb.build.FuncFailed("COMMON_LICENSE_DIR is unset. Please set this in your distro config")
-
-    try:
-        # Let's try to clean up the packages license directory
-        shutil.rmtree(destdir)
-    except:
-        pass 
-
-    try:
-        # Create the package license directory structure.
-        bb.mkdirhier(destdir)
-    except:
-        pass
 
     if not lic_files:
         # No recipe should have an invalid license file. This is checked else
@@ -98,3 +89,15 @@ python do_populate_lic() {
             bb.warn("This could be either because we do not have a generic for this license or the LICENSE field is incorrect")
             pass
 }
+
+SSTATETASKS += "do_populate_lic"
+do_populate_lic[sstate-name] = "populate-lic"
+do_populate_lic[sstate-inputdirs] = "${LICSSTATEDIR}"
+do_populate_lic[sstate-outputdirs] = "${LICENSE_DIRECTORY}/"
+
+python do_populate_lic_setscene () {
+	sstate_setscene(d)
+}
+addtask do_populate_lic_setscene
+
+

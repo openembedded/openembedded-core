@@ -415,6 +415,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
     # This needs to go away, FIXME
     mapping = {
         "do_populate_sysroot" : "populate-sysroot",
+        "do_populate_lic" : "populate-lic",
         "do_package_write_ipk" : "deploy-ipk",
         "do_package_write_deb" : "deploy-deb",
         "do_package_write_rpm" : "deploy-rpm",
