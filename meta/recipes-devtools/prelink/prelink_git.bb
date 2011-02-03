@@ -27,6 +27,11 @@ BBCLASSEXTEND = "native"
 EXTRA_OECONF = "--disable-selinux --with-pkgversion=${PV}-${PR} \
 	--with-bugurl=http://bugzilla.pokylinux.org/"
 
+do_configure_prepend () {
+        # Disable documentation!
+        echo "all:" > ${S}/doc/Makefile.am
+}
+
 do_install_append () {
 	install -d ${D}${sysconfdir}/cron.daily ${D}${sysconfdir}/default
 	install -m 0644 ${WORKDIR}/prelink.conf ${D}${sysconfdir}/prelink.conf
