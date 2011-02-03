@@ -245,7 +245,7 @@ python base_do_unpack() {
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
 
-	urldata = bb.fetch.init([], localdata, True)
+	urldata = bb.fetch.init([], localdata)
 
 	src_uri = bb.data.getVar('SRC_URI', localdata, True)
 	if not src_uri:
@@ -258,7 +258,10 @@ python base_do_unpack() {
 		if local is None:
 			continue
 		local = os.path.realpath(local)
-		lf = bb.utils.lockfile(urldata[url].lockfile)
+		lockfile = urldata[url].lockfile
+		if lockfile:
+			lf = bb.utils.lockfile(urldata[url].lockfile)
+
 		if bb.fetch.__version__ == "1":
 			ret = oe_unpack_file(local, localdata, url)
 		else:
@@ -266,7 +269,8 @@ python base_do_unpack() {
 			ud = urldata[url]
 			rootdir = bb.data.getVar('WORKDIR', localdata, True)
 			ret = ud.method.unpack(ud, rootdir, localdata)
-		bb.utils.unlockfile(lf)
+		if lockfile:
+			bb.utils.unlockfile(lf)
 		if not ret:
 			raise bb.build.FuncFailed("oe_unpack_file failed with return value %s" % ret)
 }
