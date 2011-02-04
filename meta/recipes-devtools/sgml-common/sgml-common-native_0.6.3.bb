@@ -7,12 +7,10 @@ add entries to (or remove entries from) centralized catalogs \
 whose entries are pointers to SGML open catalogs, \
 as defined by OASIS."
 HOMEPAGE = "http://sources.redhat.com/docbook-tools/"
-LICENSE = "GPLv2"
-# The COPYING file sgml-common ships with is just a symlink to
-# /usr/share/automake/COPYING, which means we can't verify it
-# using our normal means. :( Hash the README file instead as
-# LIC_FILES_CHKSUM is still required.
-LIC_FILES_CHKSUM = "file://README;md5=197bd940bf13548ac2198e4f77d3da92"
+LICENSE = "GPLv2+"
+# See the comments in license.patch when upgrading this recipe.
+# This is inteded to be a temporary workaround.
+LIC_FILES_CHKSUM = "file://LICENSE-GPLv2;md5=ab8a50abe86dfc859e148baae043c89b"
 SECTION = "base"
 
 PR = "r0"
