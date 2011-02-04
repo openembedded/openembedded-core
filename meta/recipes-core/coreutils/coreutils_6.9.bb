@@ -16,6 +16,11 @@ inherit autotools gettext
 SRC_URI = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.bz2 \
            file://gnulib_m4.patch \
            file://futimens.patch \
+           file://coreutils-ls-x.patch \
+           file://coreutils-6.9-cp-i-u.patch \
+           file://coreutils-i18n.patch \
+           file://coreutils-overflow.patch \
+           file://coreutils-fix-install.patch \
            file://man-touch.patch"
 
 # [ gets a special treatment and is not included in this
