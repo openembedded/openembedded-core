@@ -6,7 +6,7 @@ LICENSE = "LGPL2.1"
 DEPENDS = "sqlite3"
 
 PV = "0.0+git${SRCPV}"
-PR = "r17"
+PR = "r18"
 
 SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
            file://static_sqlite.patch \
@@ -25,7 +25,16 @@ do_configure () {
 
 NO32LIBS ??= "0"
 
+# Compile for the local machine arch...
 do_compile () {
+	${S}/configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=${SITEINFO_BITS}
+	oe_runmake 'LIB=lib/pseudo/lib$(MARK64)'
+}
+
+# Two below are the same
+# If necessary compile for the alternative machine arch.  This is only 
+# necessary in a native build.
+do_compile_prepend_virtclass-native () {
 	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		# We need the 32-bit libpseudo on a 64-bit machine...
 		./configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32
@@ -33,12 +42,33 @@ do_compile () {
 		# prevent it from removing the lib, but remove everything else
 		make 'LIB=foo' distclean 
 	fi
-	${S}/configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=${SITEINFO_BITS}
-	oe_runmake 'LIB=lib/pseudo/lib$(MARK64)'
+}
+
+do_compile_prepend_virtclass-nativesdk () {
+	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
+		# We need the 32-bit libpseudo on a 64-bit machine...
+		./configure --prefix=${prefix} --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32
+		oe_runmake 'CFLAGS=-m32' 'LIB=lib/pseudo/lib' libpseudo
+		# prevent it from removing the lib, but remove everything else
+		make 'LIB=foo' distclean 
+	fi
 }
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' 'LIB=lib/pseudo/lib$(MARK64)' install
+}
+
+# Two below are the same
+# If necessary install for the alternative machine arch.  This is only 
+# necessary in a native build.
+do_install_append_virtclass-native () {
+	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
+		mkdir -p ${D}${prefix}/lib/pseudo/lib
+		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
+	fi
+}
+
+do_install_append_virtclass-nativesdk () {
 	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		mkdir -p ${D}${prefix}/lib/pseudo/lib
 		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
@@ -46,5 +76,3 @@ do_install () {
 }
 
 BBCLASSEXTEND = "native nativesdk"
-
-

@@ -2,14 +2,14 @@ Due to disabling the LD_LIBRARY_PATH handling, we need to use a static
 libsqlite.
 
 diff -ur git.orig/Makefile.in git/Makefile.in
---- git.orig/Makefile.in	2010-07-20 17:13:56.000000000 -0700
-+++ git/Makefile.in	2010-07-20 17:12:14.000000000 -0700
-@@ -45,7 +45,7 @@
- GLOB_PATTERN=guts/*.c
- GUTS=$(filter-out "$(GLOB_PATTERN)",$(wildcard $(GLOB_PATTERN)))
+--- git.orig/Makefile.in
++++ git/Makefile.in
+@@ -55,7 +55,7 @@
  
--DBLDFLAGS=-lsqlite3
-+DBLDFLAGS=$(SQLITE)/lib/libsqlite3.a
- USE_64=wrapfuncs64.in
+ # needed for anything that links with pseduo_client.o, pretty much
+ CLIENT_LDFLAGS=-ldl -lpthread
+-DB_LDFLAGS=-lsqlite3 -lpthread
++DB_LDFLAGS=$(SQLITE)/lib/libsqlite3.a -lpthread
  
- SHOBJS=pseudo_table.o pseudo_util.o
+ PSEUDO=$(BIN)/pseudo
+ PSEUDODB=$(BIN)/pseudodb

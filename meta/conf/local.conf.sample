@@ -170,6 +170,15 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 #IMAGE_LINGUAS ?= "en-gb"
 #LIMIT_BUILT_LOCALES ?= "POSIX en_GB"
 
+# This value is currently used by PSEUDO to determine if the recipe should
+# build both the 32-bit and 64-bit wrapper libraries on a 64-bit build system.
+#
+# PSEUDO will attempt to determine if a 32-bit wrapper is necessary, but 
+# it doesn't always guess properly.  If you have 32-bit executables on 
+# your 64-bit build system, you likely want to set this to "0", 
+# otherwise you could end up with incorrect file attributes on the 
+# target filesystem.
+#
 # Default to not build 32 bit libs on 64 bit systems, comment this
 # out if that is desired
 NO32LIBS = "1"
