@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# (c) 2010-2011 Wind River Systems, Inc.
+#
+# Busybox udhcpc init script
+#
+# script to start the udpchc DHCP client on boots where
+# the parameter 'ip=dhcp' was included in the kernel parameters
+
+# ensure the required binaries are present
+[ -x /sbin/udhcpc ] || exit 1
+[ -x /bin/grep ] || exit 1
+[ -x /bin/mount ] || exit 1
+
+# ensure /proc is mounted
+if ! mount | grep -q "/proc "; then
+	exit 2
+fi
+
+rc=0
+if grep -q -E "\bip=dhcp\b" /proc/cmdline; then
+	/sbin/udhcpc -D -s /usr/share/udhcpc/default.script
+	rc=$?
+fi
+exit $rc

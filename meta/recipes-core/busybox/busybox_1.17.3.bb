@@ -1,5 +1,5 @@
 require busybox.inc
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://udhcpscript.patch \
@@ -9,10 +9,12 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://busybox-appletlib-dependency.patch \
            file://run-parts.in.usr-bin.patch \
            file://make-382-fix.patch \
+           file://busybox-udhcpc-no_deconfig.patch \
            file://find-touchscreen.sh \
            file://busybox-cron \
            file://busybox-httpd \
            file://busybox-udhcpd \
+           file://busybox-udhcpc \
            file://default.script \
            file://simple.script \
            file://hwclock.sh \

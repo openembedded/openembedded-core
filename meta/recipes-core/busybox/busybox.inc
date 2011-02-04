@@ -18,11 +18,12 @@ FILES_${PN}-httpd = "${sysconfdir}/init.d/busybox-httpd /srv/www"
 FILES_${PN}-udhcpd = "${sysconfdir}/init.d/busybox-udhcpd"
 
 FILES_${PN} += "${datadir}/udhcpc"
+FILES_${PN} += "${sysconfdir}/init.d/busybox-udhcpc"
 
 INITSCRIPT_PACKAGES = "${PN} ${PN}-httpd ${PN}-udhcpd"
 INITSCRIPT_NAME_${PN}-httpd = "busybox-httpd"
 INITSCRIPT_NAME_${PN}-udhcpd = "busybox-udhcpd" 
-INITSCRIPT_NAME_${PN} = "syslog"
+INITSCRIPT_NAME_${PN} = "syslog busybox-udhcpc"
 CONFFILES_${PN} = "${sysconfdir}/syslog.conf.${PN}"
 
 # This disables the syslog startup links in slugos (see slugos-init)
@@ -97,6 +98,7 @@ do_install () {
 		install -d ${D}${datadir}/udhcpc
 		install -m 0755 ${S}/examples/udhcp/simple.script ${D}${sysconfdir}/udhcpc.d/50default
 		install -m 0755 ${WORKDIR}/default.script ${D}${datadir}/udhcpc/default.script
+		install -m 0755 ${WORKDIR}/busybox-udhcpc ${D}${sysconfdir}/init.d/
 	fi
 
 	install -m 0644 ${S}/busybox.links ${D}${sysconfdir}
