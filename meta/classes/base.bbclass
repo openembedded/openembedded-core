@@ -116,163 +116,38 @@ addtask setscene before do_fetch
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
 python base_do_fetch() {
-	import sys
+
+	src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
+	if len(src_uri) == 0:
+		return
 
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
 
-	src_uri = bb.data.getVar('SRC_URI', localdata, 1)
-	if not src_uri:
-		return 1
-
-	try:
-		bb.fetch.init(src_uri.split(),d)
-	except bb.fetch.NoMethodError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("No method: %s" % value)
-	except bb.MalformedUrl:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("Malformed URL: %s" % value)
-
-	try:
-		if bb.fetch.__version__ == "1":
-			bb.fetch.go(localdata)
-		else:
-			bb.fetch.download(localdata)
-	except bb.fetch.MissingParameterError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("Missing parameters: %s" % value)
-	except bb.fetch.FetchError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("Fetch failed: %s" % value)
-	except bb.fetch.MD5SumError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("MD5  failed: %s" % value)
-	except:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("Unknown fetch Error: %s" % value)
+        try:
+            fetcher = bb.fetch2.Fetch(src_uri, localdata)
+            fetcher.download()
+        except bb.fetch2.BBFetchException, e:
+            raise bb.build.FuncFailed(e)
 }
-
-def subprocess_setup():
-	import signal
-	# Python installs a SIGPIPE handler by default. This is usually not what
-	# non-Python subprocesses expect.
-	# SIGPIPE errors are known issues with gzip/bash
-	signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-
-def oe_unpack_file(file, data, url = None):
-	import subprocess
-	if not url:
-		url = "file://%s" % file
-	dots = file.split(".")
-	if dots[-1] in ['gz', 'bz2', 'Z']:
-		efile = os.path.join(bb.data.getVar('WORKDIR', data, 1),os.path.basename('.'.join(dots[0:-1])))
-	else:
-		efile = file
-	cmd = None
-	if file.endswith('.tar'):
-		cmd = 'tar x --no-same-owner -f %s' % file
-	elif file.endswith('.tgz') or file.endswith('.tar.gz') or file.endswith('.tar.Z'):
-		cmd = 'tar xz --no-same-owner -f %s' % file
-	elif file.endswith('.tbz') or file.endswith('.tbz2') or file.endswith('.tar.bz2'):
-		cmd = 'bzip2 -dc %s | tar x --no-same-owner -f -' % file
-	elif file.endswith('.gz') or file.endswith('.Z') or file.endswith('.z'):
-		cmd = 'gzip -dc %s > %s' % (file, efile)
-	elif file.endswith('.bz2'):
-		cmd = 'bzip2 -dc %s > %s' % (file, efile)
-	elif file.endswith('.tar.xz'):
-		cmd = 'xz -dc %s | tar x --no-same-owner -f -' % file
-	elif file.endswith('.xz'):
-		cmd = 'xz -dc %s > %s' % (file, efile)
-	elif file.endswith('.zip') or file.endswith('.jar'):
-		cmd = 'unzip -q -o'
-		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
-		if 'dos' in parm:
-			cmd = '%s -a' % cmd
-		cmd = "%s '%s'" % (cmd, file)
-	elif os.path.isdir(file):
-		filesdir = os.path.realpath(bb.data.getVar("FILESDIR", data, 1))
-		destdir = "."
-		if file[0:len(filesdir)] == filesdir:
-			destdir = file[len(filesdir):file.rfind('/')]
-			destdir = destdir.strip('/')
-			if len(destdir) < 1:
-				destdir = "."
-			elif not os.access("%s/%s" % (os.getcwd(), destdir), os.F_OK):
-				os.makedirs("%s/%s" % (os.getcwd(), destdir))
-		cmd = 'cp -pPR %s %s/%s/' % (file, os.getcwd(), destdir)
-	else:
-		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
-		if not 'patch' in parm:
-			# The "destdir" handling was specifically done for FILESPATH
-			# items.  So, only do so for file:// entries.
-			if type == "file" and path.find("/") != -1:
-				destdir = path.rsplit("/", 1)[0]
-			else:
-				destdir = "."
-			bb.mkdirhier("%s/%s" % (os.getcwd(), destdir))
-			cmd = 'cp %s %s/%s/' % (file, os.getcwd(), destdir)
-
-	if not cmd:
-		return True
-
-	dest = os.path.join(os.getcwd(), os.path.basename(file))
-	if os.path.exists(dest):
-		if os.path.samefile(file, dest):
-			return True
-
-	# Change to subdir before executing command
-	save_cwd = os.getcwd();
-	parm = bb.decodeurl(url)[5]
-	if 'subdir' in parm:
-		newdir = ("%s/%s" % (os.getcwd(), parm['subdir']))
-		bb.mkdirhier(newdir)
-		os.chdir(newdir)
-
-	cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', data, 1), cmd)
-	bb.note("Unpacking %s to %s/" % (file, os.getcwd()))
-	ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True)
-
-	os.chdir(save_cwd)
-
-	return ret == 0
 
 addtask unpack after do_fetch
 do_unpack[dirs] = "${WORKDIR}"
 python base_do_unpack() {
-	import re
+	src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
+	if len(src_uri) == 0:
+		return
 
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
 
-	urldata = bb.fetch.init([], localdata)
+	rootdir = bb.data.getVar('WORKDIR', localdata, True)
 
-	src_uri = bb.data.getVar('SRC_URI', localdata, True)
-	if not src_uri:
-		return
-	for url in src_uri.split():
-		try:
-			local = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
-		except bb.MalformedUrl, e:
-			raise FuncFailed('Unable to generate local path for malformed uri: %s' % e)
-		if local is None:
-			continue
-		local = os.path.realpath(local)
-		lockfile = urldata[url].lockfile
-		if lockfile:
-			lf = bb.utils.lockfile(urldata[url].lockfile)
-
-		if bb.fetch.__version__ == "1":
-			ret = oe_unpack_file(local, localdata, url)
-		else:
-			# use bb.fetch2 unpack API
-			ud = urldata[url]
-			rootdir = bb.data.getVar('WORKDIR', localdata, True)
-			ret = ud.method.unpack(ud, rootdir, localdata)
-		if lockfile:
-			bb.utils.unlockfile(lf)
-		if not ret:
-			raise bb.build.FuncFailed("oe_unpack_file failed with return value %s" % ret)
+        try:
+            fetcher = bb.fetch2.Fetch(src_uri, localdata)
+            fetcher.unpack(rootdir)
+        except bb.fetch2.BBFetchException, e:
+            raise bb.build.FuncFailed(e)
 }
 
 GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
@@ -550,7 +425,8 @@ python () {
             for s in srcuri.split():
                 if not s.startswith("file://"):
                     continue
-                local = bb.data.expand(bb.fetch.localpath(s, d), d)
+                fetcher = bb.fetch2.Fetch([s], d)
+                local = fetcher.localpath(s)
                 for mp in paths:
                     if local.startswith(mp):
                         #bb.note("overriding PACKAGE_ARCH from %s to %s" % (pkg_arch, mach_arch))
@@ -594,14 +470,12 @@ python do_cleanall() {
 	dl_dir = bb.data.getVar('DL_DIR', localdata, True)
 	dl_dir = os.path.realpath(dl_dir)
 
-	src_uri = bb.data.getVar('SRC_URI', localdata, True)
-	if not src_uri:
+	src_uri = (bb.data.getVar('SRC_URI', localdata, True) or "").split()
+	if len(src_uri) == 0:
 		return
-	for url in src_uri.split():
-		try:
-			local = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
-		except bb.MalformedUrl, e:
-			raise FuncFailed('Unable to generate local path for malformed uri: %s' % e)
+        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+	for url in src_uri:
+                local = fetcher.localpath(url)
 		if local is None:
 			continue
 		local = os.path.realpath(local)

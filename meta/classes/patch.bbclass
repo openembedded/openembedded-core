@@ -58,9 +58,8 @@ python patch_do_patch() {
 			continue
 
 		if not local:
-			bb.fetch.init([url],d)
 			url = bb.encodeurl((type, host, path, user, pswd, []))
-			local = os.path.join('/', bb.fetch.localpath(url, d))
+			local = os.path.join('/', bb.fetch2.localpath(url, d))
 		local = bb.data.expand(local, d)
 
 		if "striplevel" in parm:

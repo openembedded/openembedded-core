@@ -72,14 +72,14 @@ class PatchSet(object):
             if not patch.get("remote"):
                 raise PatchError("Patch file must be specified in patch import.")
             else:
-                patch["file"] = bb.fetch.localpath(patch["remote"], self.d)
+                patch["file"] = bb.fetch2.localpath(patch["remote"], self.d)
 
         for param in PatchSet.defaults:
             if not patch.get(param):
                 patch[param] = PatchSet.defaults[param]
 
         if patch.get("remote"):
-            patch["file"] = bb.data.expand(bb.fetch.localpath(patch["remote"], self.d), self.d)
+            patch["file"] = bb.data.expand(bb.fetch2.localpath(patch["remote"], self.d), self.d)
 
         patch["filemd5"] = bb.utils.md5_file(patch["file"])
 
@@ -293,7 +293,7 @@ class QuiltTree(PatchSet):
             if type == "file":
                 import shutil
                 if not patch.get("file") and patch.get("remote"):
-                    patch["file"] = bb.fetch.localpath(patch["remote"], self.d)
+                    patch["file"] = bb.fetch2.localpath(patch["remote"], self.d)
 
                 shutil.copyfile(patch["quiltfile"], patch["file"])
             else:

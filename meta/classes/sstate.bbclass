@@ -326,40 +326,40 @@ def sstate_package(ss, d):
     return
 
 def pstaging_fetch(sstatepkg, d):
-    import bb.fetch
 
-    # only try and fetch if the user has configured a mirror
-
+    # Only try and fetch if the user has configured a mirror
     mirrors = bb.data.getVar('SSTATE_MIRRORS', d, True)
-    if mirrors:
-        # Copy the data object and override DL_DIR and SRC_URI
-        localdata = bb.data.createCopy(d)
-        bb.data.update_data(localdata)
+    if not mirrors:
+        return
 
-        dldir = bb.data.expand("${SSTATE_DIR}", localdata)
-        srcuri = "file://" + os.path.basename(sstatepkg)
+    import bb.fetch2
+    # Copy the data object and override DL_DIR and SRC_URI
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
 
-        bb.mkdirhier(dldir)
+    dldir = bb.data.expand("${SSTATE_DIR}", localdata)
+    srcuri = "file://" + os.path.basename(sstatepkg)
 
-        bb.data.setVar('DL_DIR', dldir, localdata)
-        bb.data.setVar('PREMIRRORS', mirrors, localdata)
-        bb.data.setVar('SRC_URI', srcuri, localdata)
+    bb.mkdirhier(dldir)
 
-        # Try a fetch from the sstate mirror, if it fails just return and
-        # we will build the package
-        try:
-            bb.fetch.init([srcuri], localdata)
-            if bb.fetch.__version__ == "1":
-                bb.fetch.go(localdata, [srcuri])
-            else:
-                bb.fetch.download(localdata, [srcuri])
-            # Need to optimise this, if using file:// urls, the fetcher just changes the local path
-            # For now work around by symlinking
-            localpath = bb.data.expand(bb.fetch.localpath(srcuri, localdata), localdata)
-            if localpath != sstatepkg and os.path.exists(localpath):
-                os.symlink(localpath, sstatepkg)
-        except:
-            pass
+    bb.data.setVar('DL_DIR', dldir, localdata)
+    bb.data.setVar('PREMIRRORS', mirrors, localdata)
+    bb.data.setVar('SRC_URI', srcuri, localdata)
+
+    # Try a fetch from the sstate mirror, if it fails just return and
+    # we will build the package
+    try:
+        fetcher = bb.fetch2.Fetch([srcuri], localdata)
+        fetcher.download()        
+
+        # Need to optimise this, if using file:// urls, the fetcher just changes the local path
+        # For now work around by symlinking
+        localpath = bb.data.expand(fetcher.localpath(srcuri), localdata)
+        if localpath != sstatepkg and os.path.exists(localpath) and not os.path.exists(sstatepkg):
+            os.symlink(localpath, sstatepkg)
+
+    except bb.fetch2.BBFetchException:
+        pass
 
 def sstate_setscene(d):
     shared_state = sstate_state_fromvars(d)

@@ -51,11 +51,12 @@ def machine_paths(d):
 def is_machine_specific(d):
     """Determine whether the current recipe is machine specific"""
     machinepaths = set(machine_paths(d))
-    urldatadict = bb.fetch.init(d.getVar("SRC_URI", True).split(), d, True)
-    for urldata in (urldata for urldata in urldatadict.itervalues()
-                    if urldata.type == "file"):
-        if any(urldata.localpath.startswith(mp + "/") for mp in machinepaths):
-            return True
+    srcuri = d.getVar("SRC_URI", True).split()
+    for url in srcuri:
+        fetcher = bb.fetch2.Fetch([srcuri], d)
+        if url.startswith("file://"):
+            if any(fetcher.localpath(url).startswith(mp + "/") for mp in machinepaths):
+                return True
 
 def oe_popen_env(d):
     env = d.getVar("__oe_popen_env", False)
