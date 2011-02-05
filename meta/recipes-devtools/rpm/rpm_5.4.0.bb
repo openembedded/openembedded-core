@@ -332,11 +332,8 @@ FILE_${PN}-dev = "${includedir}/rpm \
 python base_do_unpack_append() {
 	import subprocess
 
-	for url in src_uri.split():
-		try:
-			local = bb.data.expand(bb.fetch.localpath(url, localdata), localdata)
-		except bb.MalformedUrl, e:
-			raise FuncFailed('Unable to generate local path for malformed uri: %s' % e)
+	for url in src_uri:
+		local = bb.fetch2.localpath(url)
 		if local is None:
 			continue
 		local = os.path.realpath(local)
