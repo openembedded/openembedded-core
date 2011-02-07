@@ -309,42 +309,31 @@ python do_checkpkg() {
 	"""
 	def internal_fetch_wget(url, d, tmpf):
 		status = "ErrFetchUnknown"
-		try: 
-			"""
-			Clear internal url cache as it's a temporary check. Not doing so will have 
-			bitbake check url multiple times when looping through a single url
-			"""
-			fn = bb.data.getVar('FILE', d, 1)
-			bb.fetch.urldata_cache[fn] = {}
-			bb.fetch.init([url], d)
-		except bb.fetch.NoMethodError:
-			status = "ErrFetchNoMethod"
-		except:
-			status = "ErrInitUrlUnknown"
-		else:
-			"""
-			To avoid impacting bitbake build engine, this trick is required for reusing bitbake
-			interfaces. bb.fetch.go() is not appliable as it checks downloaded content in ${DL_DIR}
-			while we don't want to pollute that place. So bb.fetch.checkstatus() is borrowed here
-			which is designed for check purpose but we override check command for our own purpose
-			"""
-			ld = bb.data.createCopy(d)
-			bb.data.setVar('CHECKCOMMAND_wget', "/usr/bin/env wget -t 1 --passive-ftp -O %s --user-agent=\"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12\" '${URI}'" \
-					% tmpf.name, d)
-			bb.data.update_data(ld)
+		"""
+		Clear internal url cache as it's a temporary check. Not doing so will have 
+		bitbake check url multiple times when looping through a single url
+		"""
+		fn = bb.data.getVar('FILE', d, 1)
+		bb.fetch2.urldata_cache[fn] = {}
 
-			try:
-				bb.fetch.checkstatus(ld)
-			except bb.fetch.MissingParameterError:
-				status = "ErrMissParam"
-			except bb.fetch.FetchError:
-				status = "ErrFetch"
-			except bb.fetch.MD5SumError:
-				status = "ErrMD5Sum"
-			except:
-				status = "ErrFetchUnknown"
-			else:
-				status = "SUCC" 
+		"""
+		To avoid impacting bitbake build engine, this trick is required for reusing bitbake
+		interfaces. bb.fetch.go() is not appliable as it checks downloaded content in ${DL_DIR}
+		while we don't want to pollute that place. So bb.fetch2.checkstatus() is borrowed here
+		which is designed for check purpose but we override check command for our own purpose
+		"""
+		ld = bb.data.createCopy(d)
+		bb.data.setVar('CHECKCOMMAND_wget', "/usr/bin/env wget -t 1 --passive-ftp -O %s --user-agent=\"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12\" '${URI}'" \
+					% tmpf.name, d)
+		bb.data.update_data(ld)
+
+		try:
+			fetcher = bb.fetch2.Fetch([url], ld)
+			fetcher.checkstatus()
+			status = "SUCC"
+		except bb.fetch2.BBFetchException, e:
+			status = "ErrFetch"
+
 		return status
 
 	"""
