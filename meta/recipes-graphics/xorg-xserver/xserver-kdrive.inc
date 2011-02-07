@@ -2,7 +2,7 @@ LICENSE = "MIT"
 DEPENDS = "compositeproto damageproto fixesproto recordproto resourceproto \
         scrnsaverproto xineramaproto videoproto xextproto xproto libxau libxext \
         libxdmcp libxfont libxrandr tslib virtual/libx11 xtrans bigreqsproto \
-        xcmiscproto libdrm"
+        xcmiscproto libdrm openssl"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=3dd2bbe3563837f80ed8926b06c1c353"
 
