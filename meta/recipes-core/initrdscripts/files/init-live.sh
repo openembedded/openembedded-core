@@ -11,6 +11,7 @@ early_setup() {
     mount -t proc proc /proc
     mount -t sysfs sysfs /sys
     udevd --daemon
+    /sbin/udevadm trigger --action=add
 }
 
 read_args() {
