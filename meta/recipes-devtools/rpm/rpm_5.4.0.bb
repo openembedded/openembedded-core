@@ -328,12 +328,19 @@ FILE_${PN}-dev = "${includedir}/rpm \
 ###%{_rpmhome}/lib/librpmjsm.la
 ###%{_rpmhome}/lib/librpmjsm.so
 
+def subprocess_setup():
+    import signal
+    # Python installs a SIGPIPE handler by default. This is usually not what
+    # non-Python subprocesses expect.
+    # SIGPIPE errors are known issues with gzip/bash
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+
 # If base_do_unpack is refactored this may have to be adjusted
 python base_do_unpack_append() {
 	import subprocess
 
-	for url in src_uri:
-		local = bb.fetch2.localpath(url)
+	for url in bb.data.getVar("SRC_URI", d, True).split():
+		local = bb.fetch2.localpath(url, d)
 		if local is None:
 			continue
 		local = os.path.realpath(local)
@@ -344,7 +351,7 @@ python base_do_unpack_append() {
 			cmd = "%s %s | cpio -i" % (cmdname, efile)
 			cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', localdata, 1), cmd)
 			old_cwd = os.getcwd()
-			newdir = ("%s/%s" % (old_cwd, 'srpm-unpack'))
+			newdir = os.path.join(d.getVar("WORKDIR", True), 'srpm-unpack')
 			bb.mkdirhier(newdir)
 			os.chdir(newdir)
 			ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True)
@@ -352,16 +359,18 @@ python base_do_unpack_append() {
 			if ret != 0:
 				raise bb.build.FuncFailed('Unpack command failed: %s (%s)' % (cmd, ret))
 
-	srpm_uri = bb.data.getVar('SRPM_UNPACK', localdata, True)
-	if not srpm_uri:
+	srpm_uri = bb.data.getVar('SRPM_UNPACK', localdata, True).split()
+	if len(srpm_uri) == 0:
 		return
 
-	# Note, not really URI's!  Just a list of files
-	for url in srpm_uri.split():
-		local = os.path.join(bb.data.getVar('WORKDIR', localdata, 1), "srpm-unpack/" + url)
-		ret = oe_unpack_file(local, localdata, 'file://' + url)
-		if not ret:
-			raise bb.build.FuncFailed("oe_unpack_file failed with return value %s" % ret)
+	rootdir = bb.data.getVar('WORKDIR', localdata, True)
+	srpm_file_uri = [ "file://" + rootdir + "/srpm-unpack/" + uri for uri in srpm_uri]; 
+
+	try:
+		fetcher = bb.fetch2.Fetch(srpm_file_uri, localdata, cache=False)
+		fetcher.unpack(rootdir, srpm_file_uri)
+	except bb.fetch2.BBFetchException, e:
+		raise bb.build.FuncFailed(e)
 }
 
 do_configure() {
