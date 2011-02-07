@@ -50,33 +50,18 @@ python do_rebuild() {
 addtask checkuri
 do_checkuri[nostamp] = "1"
 python do_checkuri() {
-	import sys
+	src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
+	if len(src_uri) == 0:
+		return
 
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
 
-	src_uri = bb.data.getVar('SRC_URI', localdata, 1)
-
-	try:
-		bb.fetch.init(src_uri.split(),d)
-	except bb.fetch.NoMethodError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("No method: %s" % value)
-
-	try:
-		bb.fetch.checkstatus(localdata)
-	except bb.fetch.MissingParameterError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("Missing parameters: %s" % value)
-	except bb.fetch.FetchError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("Fetch failed: %s" % value)
-	except bb.fetch.MD5SumError:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("MD5  failed: %s" % value)
-	except:
-		(type, value, traceback) = sys.exc_info()
-		raise bb.build.FuncFailed("Unknown fetch Error: %s" % value)
+        try:
+            fetcher = bb.fetch2.Fetch(src_uri, localdata)
+            fetcher.checkstatus()
+        except bb.fetch2.BBFetchException, e:
+            raise bb.build.FuncFailed(e)
 }
 
 addtask checkuriall after do_checkuri
