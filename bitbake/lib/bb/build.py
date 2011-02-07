@@ -304,11 +304,6 @@ def _exec_task(fn, task, d, quieterr):
     os.dup2(logfile.fileno(), oso[1])
     os.dup2(logfile.fileno(), ose[1])
 
-    # Since we've remapped stdout and stderr, its safe for log messages to be printed there now
-    # exec_func can nest so we have to save state
-    origstdout = bb.event.useStdout
-    bb.event.useStdout = True
-
     # Ensure python logging goes to the logfile
     handler = logging.StreamHandler(logfile)
     handler.setFormatter(logformatter)
@@ -333,8 +328,6 @@ def _exec_task(fn, task, d, quieterr):
         sys.stderr.flush()
 
         bblogger.removeHandler(handler)
-
-        bb.event.useStdout = origstdout
 
         # Restore the backup fds
         os.dup2(osi[0], osi[1])

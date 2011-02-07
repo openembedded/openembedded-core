@@ -36,7 +36,6 @@ import bb.utils
 # the runqueue forks off.
 worker_pid = 0
 worker_pipe = None
-useStdout = True
 
 class Event(object):
     """Base class for events"""
@@ -162,7 +161,6 @@ def remove(name, handler):
 def register_UIHhandler(handler):
     bb.event._ui_handler_seq = bb.event._ui_handler_seq + 1
     _ui_handlers[_ui_handler_seq] = handler
-    bb.event.useStdout = False
     return _ui_handler_seq
 
 def unregister_UIHhandler(handlerNum):
@@ -382,8 +380,6 @@ class LogHandler(logging.Handler):
 
     def emit(self, record):
         fire(record, None)
-        if bb.event.useStdout:
-            print(self.format(record))
 
     def filter(self, record):
         record.taskpid = worker_pid
