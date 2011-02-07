@@ -21,7 +21,7 @@ PE = "1"
 
 XORG_PN = "libXext"
 
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "9bb236ff0193e9fc1c1fb504dd840331"
 SRC_URI[sha256sum] = "4aed3e211e41c47908c293515580e731c26048f61a1212bf0888d1f456de6ff7"
