@@ -43,12 +43,11 @@ LICENSE = "LGPL 2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "bzip2 zlib python perl db openssl elfutils expat libpcre attr acl popt"
-PR = "r10"
+PR = "r11"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
-SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm \
-	   file://rpm2cpio;md5=1850f9872a4803f5165bfd5816274275 \
+SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;unpack=rpm-5.4.0.tar.gz \
 	   file://perfile_rpmdeps.sh \
 	   file://rpm-autogen.patch \
 	   file://rpm-libsql-fix.patch \
@@ -65,8 +64,6 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm \
 
 SRC_URI[md5sum] = "19c1a7f68d7765eeb7615c9c4e54e380"
 SRC_URI[sha256sum] = "887e76218308b570c33c8c2fb10b5298b3afd5d602860d281befc85357b3b923"
-
-SRPM_UNPACK = "rpm-5.4.0.tar.gz"
 
 inherit autotools gettext
 
@@ -327,51 +324,6 @@ FILE_${PN}-dev = "${includedir}/rpm \
 ###%{_rpmhome}/lib/librpmjsm.a
 ###%{_rpmhome}/lib/librpmjsm.la
 ###%{_rpmhome}/lib/librpmjsm.so
-
-def subprocess_setup():
-    import signal
-    # Python installs a SIGPIPE handler by default. This is usually not what
-    # non-Python subprocesses expect.
-    # SIGPIPE errors are known issues with gzip/bash
-    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-
-# If base_do_unpack is refactored this may have to be adjusted
-python base_do_unpack_append() {
-	import subprocess
-
-	for url in bb.data.getVar("SRC_URI", d, True).split():
-		local = bb.fetch2.localpath(url, d)
-		if local is None:
-			continue
-		local = os.path.realpath(local)
-
-		if local.endswith('.src.rpm') or local.endswith('.srpm'):
-			cmdname = os.path.join(bb.data.getVar('WORKDIR', localdata, 1),'rpm2cpio')
-			efile = os.path.join(bb.data.getVar('WORKDIR', localdata, 1),os.path.basename(local))
-			cmd = "%s %s | cpio -i" % (cmdname, efile)
-			cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', localdata, 1), cmd)
-			old_cwd = os.getcwd()
-			newdir = os.path.join(d.getVar("WORKDIR", True), 'srpm-unpack')
-			bb.mkdirhier(newdir)
-			os.chdir(newdir)
-			ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True)
-			os.chdir(old_cwd)
-			if ret != 0:
-				raise bb.build.FuncFailed('Unpack command failed: %s (%s)' % (cmd, ret))
-
-	srpm_uri = bb.data.getVar('SRPM_UNPACK', localdata, True).split()
-	if len(srpm_uri) == 0:
-		return
-
-	rootdir = bb.data.getVar('WORKDIR', localdata, True)
-	srpm_file_uri = [ "file://" + rootdir + "/srpm-unpack/" + uri for uri in srpm_uri]; 
-
-	try:
-		fetcher = bb.fetch2.Fetch(srpm_file_uri, localdata, cache=False)
-		fetcher.unpack(rootdir, srpm_file_uri)
-	except bb.fetch2.BBFetchException, e:
-		raise bb.build.FuncFailed(e)
-}
 
 do_configure() {
 	# Disable tests!
