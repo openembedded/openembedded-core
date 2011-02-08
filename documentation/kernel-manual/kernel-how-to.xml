@@ -882,7 +882,7 @@ repository.
                     The following commands illustrate how you can condense and merge two BSPs into a second SCM:
                 <literallayout class='monospaced'>
      &gt; git checkout common_pc-standard
-     &gt; git merge cav_ebt5800-standard
+     &gt; git merge common_pc_64-standard
      # resolve any conflicts and commit them
      &gt; cd .. ; echo linux/.git &gt; .cvsignore
      &gt; cvs import -m "initial import" linux MY_COMPANY start
