@@ -23,7 +23,12 @@ do_compile () {
 	unset CFLAGS
 	unset CPPFLAGS
 	oe_runmake ${UBOOT_MACHINE}
-	oe_runmake all
+	# -Os is disabled on PowerPC
+	if [ ${TARGET_ARCH} == "powerpc" ] ; then
+		oe_runmake OPTFLAGS=-O2 all
+	else
+		oe_runmake all
+	fi
 }
 
 do_deploy () {
