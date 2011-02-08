@@ -575,7 +575,7 @@ python do_qa_configure() {
                     os.path.join(root,"config.log")
         if "config.log" in files:
             if os.system(statement) == 0:
-                bb.fatal("""This autoconf log indicates errors, it looked at host includes.
+                bb.fatal("""This autoconf log indicates errors, it looked at host include and/or library paths while determining system capabilities.
 Rerun configure task after fixing this. The path was '%s'""" % root)
 
         if "configure.ac" in files:
