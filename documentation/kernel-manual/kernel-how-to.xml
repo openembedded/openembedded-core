@@ -426,7 +426,7 @@ repository.
                 <literallayout class='monospaced'>
      # full description of the changes
      &gt; git whatchanged &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
-        &gt; eg: git whatchanged standard..common-pc-standard
+        &gt; eg: git whatchanged standard..common_pc-standard
 
      # summary of the changes
      &gt; git log --pretty=oneline --abbrev-commit &lt;kernel type&gt;..&lt;bsp&gt;-&lt;kernel type&gt;
@@ -733,10 +733,10 @@ repository.
 
                     <para>
                         For example, the following command pushes the changes from your local branch
-                        <filename>common-pc-standard</filename> to the remote branch with the same name 
+                        <filename>common_pc-standard</filename> to the remote branch with the same name 
                         in the master repository <filename>//git.mycompany.com/pub/git/kernel-2.6.27</filename>.
                     <literallayout class='monospaced'>
-     &gt; push ssh://git.mycompany.com/pub/git/kernel-2.6.27 common-pc-standard:common-pc-standard
+     &gt; push ssh://git.mycompany.com/pub/git/kernel-2.6.27 common_pc-standard:common_pc-standard
                     </literallayout>
                     </para>
 
@@ -866,9 +866,9 @@ repository.
 
                 <para>
                     The following commands illustrate some of the steps you could use to
-                    import the common-pc-standard kernel into a secondary SCM:
+                    import the common_pc-standard kernel into a secondary SCM:
                 <literallayout class='monospaced'>
-     &gt; git checkout common-pc-standard
+     &gt; git checkout common_pc-standard
      &gt; cd .. ; echo linux/.git &gt; .cvsignore
      &gt; cvs import -m "initial import" linux MY_COMPANY start
                 </literallayout>
@@ -881,7 +881,7 @@ repository.
                 <para>
                     The following commands illustrate how you can condense and merge two BSPs into a second SCM:
                 <literallayout class='monospaced'>
-     &gt; git checkout common-pc-standard
+     &gt; git checkout common_pc-standard
      &gt; git merge cav_ebt5800-standard
      # resolve any conflicts and commit them
      &gt; cd .. ; echo linux/.git &gt; .cvsignore
