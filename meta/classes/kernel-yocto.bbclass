@@ -46,7 +46,6 @@ python __anonymous () {
         if mach == "UNDEFINED":
             bb.data.setVar('KMACHINE_' + bb.data.expand("${MACHINE}",d), bb.data.expand("${MACHINE}",d), d)
             bb.data.setVar("KBRANCH", "yocto/standard/base", d)
-            bb.data.setVar("SRCREV_machine", "yocto/standard/base", d)
             bb.data.setVar("BOOTSTRAP", "yocto/standard/" + bb.data.expand("${MACHINE}",d), d)
 }
 

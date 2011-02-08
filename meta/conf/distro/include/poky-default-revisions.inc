@@ -95,6 +95,7 @@ SRCREV_machine_pn-linux-yocto-stable_atom-pc ?= "72ca49ab08b8eb475cec82a10049503
 SRCREV_machine_pn-linux-yocto-stable_routerstationpro ?= "49745cd45c92a89e70c6e2334caa80818c134562"
 SRCREV_machine_pn-linux-yocto-stable_mpc8315e-rdb ?= "a1c0ed6bf4060c10874b2a8547d81b3169dcf16a"
 SRCREV_machine_pn-linux-yocto-stable_beagleboard ?= "ef7f944e773950d4016b7643f9ecf052bbe250cd"
+SRCREV_machine_pn-linux-yocto-stable ?= "72ca49ab08b8eb475cec82a10049503602325791"
 SRCREV_meta_pn-linux-yocto-stable ?= "e1f85a470934a0cf6abde5d95533e74501822c6b"
 # development SRCREVs
 SRCREV_machine_pn-linux-yocto_qemuarm ?= "c6d1949b479118d027a6c0f0841247cc0ea697b2"
@@ -107,6 +108,7 @@ SRCREV_machine_pn-linux-yocto_atom-pc ?= "343c06b25b221aa7f7019aee83b2d976041fdd
 SRCREV_machine_pn-linux-yocto_routerstationpro ?= "4f1adb92fd08001ec76185c7febea7504c84f082"
 SRCREV_machine_pn-linux-yocto_mpc8315e-rdb ?= "68fb0b8d73bbb336ffa4a47bc70ec1eab021b7f6"
 SRCREV_machine_pn-linux-yocto_beagleboard ?= "343c06b25b221aa7f7019aee83b2d976041fddce"
+SRCREV_machine_pn-linux-yocto ?= "cb4faf3af527e25feee584f39c3956ca0c9448c8"
 SRCREV_meta_pn-linux-yocto ?= "5a32d7fe3b817868ebb697d2d883d743903685ae"
 SRCREV_pn-linux-libc-headers-yocto ??= "343c06b25b221aa7f7019aee83b2d976041fddce"
 SRCREV_pn-matchbox-config-gtk ??= "3ed74dfb7c57be088a5ab36e446c0ccde9fa1028"
