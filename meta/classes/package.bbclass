@@ -11,24 +11,27 @@
 #
 # b) package_do_split_locales - Split out the locale files, updates FILES and PACKAGES
 #
-# c) populate_packages - Split the files in PKGD into separate packages in PKGDEST/<pkgname>
+# c) split_and_strip_files - split the files into runtime and debug and strip them.
+#    Debug files include debug info split, and associated sources that end up in -dbg packages
+#
+# d) populate_packages - Split the files in PKGD into separate packages in PKGDEST/<pkgname>
 #    Also triggers the binary stripping code to put files in -dbg packages.
 #
-# d) package_do_filedeps - Collect perfile run-time dependency metadata
+# e) package_do_filedeps - Collect perfile run-time dependency metadata
 #    The data is stores in FILER{PROVIDES,DEPENDS}_file_pkg variables with
 #    a list of affected files in FILER{PROVIDES,DEPENDS}FLIST_pkg
 #
-# e) package_do_shlibs - Look at the shared libraries generated and autotmatically add any 
+# f) package_do_shlibs - Look at the shared libraries generated and autotmatically add any 
 #    depenedencies found. Also stores the package name so anyone else using this library 
 #    knows which package to depend on.
 #
-# f) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
+# g) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
 #
-# g) read_shlibdeps - Reads the stored shlibs information into the metadata
+# h) read_shlibdeps - Reads the stored shlibs information into the metadata
 #
-# h) package_depchains - Adds automatic dependencies to -dbg and -dev packages
+# i) package_depchains - Adds automatic dependencies to -dbg and -dev packages
 #
-# i) emit_pkgdata - saves the packaging data into PKGDATA_DIR for use in later 
+# j) emit_pkgdata - saves the packaging data into PKGDATA_DIR for use in later 
 #    packaging steps
 
 inherit packagedata
@@ -163,7 +166,7 @@ python () {
 }
 
 def runstrip(file, d):
-    # Function to strip a single file, called from populate_packages below
+    # Function to strip a single file, called from split_and_strip_files below
     # A working 'file' (one which works on the target architecture)
     # is necessary for this stuff to work, hence the addition to do_package[depends]
 
@@ -329,6 +332,30 @@ python perform_packagecopy () {
 	os.system('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar))
 }
 
+python split_and_strip_files () {
+	import stat
+
+	dvar = bb.data.getVar('PKGD', d, True)
+
+	os.chdir(dvar)
+
+	def isexec(path):
+		try:
+			s = os.stat(path)
+		except (os.error, AttributeError):
+			return 0
+		return (s[stat.ST_MODE] & stat.S_IEXEC)
+
+	# Figure out which packages we want to process
+	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, True) != '1'):
+		for root, dirs, files in os.walk(dvar):
+			for f in files:
+				file = os.path.join(root, f)
+				if not os.path.islink(file) and not os.path.isdir(file) and isexec(file):
+					runstrip(file, d)
+
+}
+
 python populate_packages () {
 	import glob, stat, errno, re
 
@@ -341,13 +368,6 @@ python populate_packages () {
 	bb.mkdirhier(outdir)
 	os.chdir(dvar)
 
-	def isexec(path):
-		try:
-			s = os.stat(path)
-		except (os.error, AttributeError):
-			return 0
-		return (s[stat.ST_MODE] & stat.S_IEXEC)
-
 	# Sanity check PACKAGES for duplicates - should be moved to 
 	# sanity.bbclass once we have the infrastucture
 	package_list = []
@@ -359,13 +379,6 @@ python populate_packages () {
 			bb.error("-------------------")
 		else:
 			package_list.append(pkg)
-
-	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, True) != '1'):
-		for root, dirs, files in os.walk(dvar):
-			for f in files:
-				file = os.path.join(root, f)
-				if not os.path.islink(file) and not os.path.isdir(file) and isexec(file):
-					runstrip(file, d)
 
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
 	os.system('rm -rf %s' % pkgdest)
@@ -1081,6 +1094,7 @@ PACKAGE_PREPROCESS_FUNCS ?= ""
 PACKAGEFUNCS ?= "perform_packagecopy \
                 ${PACKAGE_PREPROCESS_FUNCS} \
 		package_do_split_locales \
+		split_and_strip_files \
 		populate_packages \
 		package_do_filedeps \
 		package_do_shlibs \
