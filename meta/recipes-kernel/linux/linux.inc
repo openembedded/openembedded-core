@@ -80,7 +80,7 @@ do_configure_prepend() {
 
 
 do_install_prepend() {
-        if test -e arch/${ARCH}/boot/Image ; then
+        if [ -f arch/${ARCH}/boot/Image ] && [ ! -f arch/${ARCH}/boot/uImage ]; then
              ln -f arch/${ARCH}/boot/Image arch/${ARCH}/boot/uImage
         fi
 
