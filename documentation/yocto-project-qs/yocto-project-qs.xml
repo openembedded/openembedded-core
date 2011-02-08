@@ -234,6 +234,17 @@
      $ source poky-laverne-4.0/poky-init-build-env poky-4.0-build
              </literallayout>
          </para>
+
+         <tip><para>
+             To help conserve disk space during builds you can add the following statement
+             to your <filename>local.conf</filename> file.  
+             Adding this statement deletes the work directory used for building a package
+             once the package is built.
+             <literallayout class='monospaced'>
+     INHERIT += "rm_work"
+             </literallayout>
+         </para></tip>
+
          <itemizedlist>
              <listitem><para>The first two commands extract the Yocto Project files from the 
              release tarball and place them into a subdirectory of your current directory.</para></listitem>
