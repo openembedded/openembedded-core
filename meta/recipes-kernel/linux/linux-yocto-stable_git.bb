@@ -32,7 +32,7 @@ python __anonymous () {
     bb.data.setVar("LINUX_KERNEL_TYPE_EXTENSION", kerntype, d)
 }
 
-SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
+SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;nocheckout=1;branch=${KBRANCH},wrs_meta;name=machine,meta"
 
 # Functionality flags
 KERNEL_REVISION_CHECKING ?= "t"
