@@ -9,7 +9,13 @@ S = "${WORKDIR}/linux"
 # branch that is always present 'standard'. This sets the KBRANCH variable
 # and is used in the SRC_URI. The machine is then set back to ${MACHINE},
 # since futher processing will use that to create local branches
-python __anonymous () {
+
+SRCPV_prepend = "${@yoctokernel_variables_fixup(d)}"
+
+def yoctokernel_variables_fixup(d):
+    if d.getVar("PVFIXUPDONE", False) is "done":
+        return ""
+
     import bb, re, string
 
     version = bb.data.getVar("LINUX_VERSION", d, 1)
@@ -47,7 +53,8 @@ python __anonymous () {
             bb.data.setVar('KMACHINE_' + bb.data.expand("${MACHINE}",d), bb.data.expand("${MACHINE}",d), d)
             bb.data.setVar("KBRANCH", "yocto/standard/base", d)
             bb.data.setVar("BOOTSTRAP", "yocto/standard/" + bb.data.expand("${MACHINE}",d), d)
-}
+    d.setVar("PVFIXUPDONE", "done")
+    return ""
 
 do_patch() {
 	cd ${S}
