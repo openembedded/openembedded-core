@@ -3,6 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPL"
 
 inherit kernel
+require linux-dtb.inc
 
 DEPENDS_append_em-x270 = " mtd-utils "
 
@@ -14,21 +15,6 @@ RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
 CMDLINE_at91sam9263ek = "mem=64M console=ttyS0,115200 root=/dev/mmcblk0p1 rootfstype=ext2 rootdelay=5"
 #boot from nfs
 #CMDLINE_at91sam9263ek = "mem=64M console=ttyS0,115200 root=301 root=/dev/nfs nfsroot=172.20.3.1:/data/at91 ip=172.20.0.5:::255.255.0.0"
-
-# Support for device tree generation
-FILES_kernel_devicetree = "/boot/devicetree*"
-KERNEL_DEVICETREE_FLAGS = "-R 8 -p 0x3000"
-
-python __anonymous () {
-    import bb
-
-    devicetree = bb.data.getVar("KERNEL_DEVICETREE", d, 1) or ''
-    if devicetree:
-        depends = bb.data.getVar("DEPENDS", d, 1)
-        bb.data.setVar("DEPENDS", "%s dtc-native" % depends, d)
-        packages = bb.data.getVar("PACKAGES", d, 1)
-        bb.data.setVar("PACKAGES", "%s kernel-devicetree" % packages, d)
-}
 
 do_configure_prepend() {
         echo "" > ${S}/.config
@@ -105,14 +91,3 @@ do_install_prepend() {
         fi
 }
 
-do_install_append() {
-    if test -n "${KERNEL_DEVICETREE}"; then
-        dtc -I dts -O dtb ${KERNEL_DEVICETREE_FLAGS} -o devicetree ${KERNEL_DEVICETREE}
-        install -m 0644 devicetree ${D}/boot/devicetree-${KERNEL_VERSION}
-        install -d ${DEPLOY_DIR_IMAGE}
-        install -m 0644 devicetree ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.dtb
-        cd ${DEPLOY_DIR_IMAGE}
-        rm -f ${KERNEL_IMAGE_SYMLINK_NAME}.dtb
-        ln -sf ${KERNEL_IMAGE_BASE_NAME}.dtb ${KERNEL_IMAGE_SYMLINK_NAME}.dtb
-    fi
-}

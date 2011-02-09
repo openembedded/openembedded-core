@@ -18,5 +18,6 @@ addtask kernel_configme before do_configure after do_patch
 
 # Pick up shared functions
 inherit kernel-yocto
+require linux-dtb.inc
 
 B = "${WORKDIR}/linux-${MACHINE}-${LINUX_KERNEL_TYPE}-build"
