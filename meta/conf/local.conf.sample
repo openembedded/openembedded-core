@@ -132,10 +132,10 @@ BBINCLUDELOGS = "yes"
 ENABLE_BINARY_LOCALE_GENERATION = "1"
 
 # The architecture to build SDK items for, by setting this you can build SDK
-# packages for architectures other than the host i.e. building i586 packages
+# packages for architectures other than the host i.e. building i686 packages
 # on an x86_64 host.
-# Supported values are i586 and x86_64
-#SDKMACHINE ?= "i586"
+# Supported values are i686 and x86_64
+#SDKMACHINE ?= "i686"
 
 # Poky can try and fetch packaged-staging packages from a http, https or ftp
 # mirror. Set this variable to the root of a pstage directory on a server.
