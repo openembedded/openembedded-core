@@ -46,43 +46,23 @@ def format_display(path, metadata):
         return rel
 
 
-class Error(EnvironmentError):
+class CopyFailed(Exception):
     pass
 
-# Based on shutil.copytree but with features removed and 
-# No fatal error is dst already exists
-# Handle symlinks that already exist
 def copytree(src, dst):
-    names = os.listdir(src)
+    # We could use something like shutil.copytree here but it turns out to
+    # to be slow. It takes twice as long copying to an empty directory. 
+    # If dst already has contents performance can be 15 time slower
+    # This way we also preserve hardlinks between files in the tree.
+
+    import subprocess
 
     bb.mkdirhier(dst)
-
-    errors = []
-    for name in names:
-        srcname = os.path.join(src, name)
-        dstname = os.path.join(dst, name)
-        try:
-            if os.path.islink(srcname):
-                linkto = os.readlink(srcname)
-                if os.path.lexists(dstname):
-                    os.unlink(dstname)
-                os.symlink(linkto, dstname)
-            elif os.path.isdir(srcname):
-                copytree(srcname, dstname)
-            else:
-                bb.utils.copyfile(srcname, dstname)
-        except (IOError, os.error), why:
-            errors.append((srcname, dstname, str(why)))
-        # catch the Error from the recursive copytree so that we can
-        # continue with other files
-        except Error, err:
-            errors.extend(err.args[0])
-    try:
-        shutil.copystat(src, dst)
-    except OSError, why:
-        errors.extend((src, dst, str(why)))
-    if errors:
-        raise Error, errors
+    cmd = 'tar -cf - -C %s -ps . | tar -xf - -C %s' % (src, dst)
+    ret = subprocess.call(cmd, shell=True)
+    if ret != 0:
+        raise CopyFailed("Command %s failed with return value %s" % (cmd, ret))
+    return 
 
 def remove(path):
     """Equivalent to rm -f or rm -rf"""
