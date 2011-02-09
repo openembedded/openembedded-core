@@ -323,7 +323,8 @@ python perform_packagecopy () {
 	# Start by package population by taking a copy of the installed 
 	# files to operate on
 	os.system('rm -rf %s/*' % (dvar))
-	os.system('cp -pPR %s/* %s/' % (dest, dvar))
+	# Preserve sparse files and hard links
+	os.system('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar))
 }
 
 python populate_packages () {
@@ -383,6 +384,7 @@ python populate_packages () {
 
 		filesvar = bb.data.getVar('FILES', localdata, True) or ""
 		files = filesvar.split()
+		file_links = {}
 		for file in files:
 			if os.path.isabs(file):
 				file = '.' + file
@@ -406,9 +408,23 @@ python populate_packages () {
 				bb.mkdirhier(os.path.join(root,file))
 				os.chmod(os.path.join(root,file), os.stat(file).st_mode)
 				continue
+
 			fpath = os.path.join(root,file)
 			dpath = os.path.dirname(fpath)
 			bb.mkdirhier(dpath)
+
+			# Check if this is a hardlink to something... if it is
+			# attempt to preserve the link information, instead of copy.
+			if not os.path.islink(file):
+				s = os.stat(file)
+				if s.st_nlink > 1:
+					file_reference = "%d_%d" % (s.st_dev, s.st_ino)
+					if file_reference not in file_links:
+						# Save the reference for next time...
+						file_links[file_reference] = fpath
+					else:
+						os.link(file_links[file_reference], fpath)
+						continue
 			ret = bb.copyfile(file, fpath)
 			if ret is False or ret == 0:
 				raise bb.build.FuncFailed("File population failed")
