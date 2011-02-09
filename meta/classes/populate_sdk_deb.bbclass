@@ -6,7 +6,7 @@ populate_sdk_post_deb () {
 
 	local target_rootfs=$1
 
-	cp -r ${STAGING_ETCDIR_NATIVE}/apt ${target_rootfs}/etc
+	tar -cf -C ${STAGING_ETCDIR_NATIVE} -ps apt | tar -xf - -C ${target_rootfs}/etc
 }
 
 fakeroot populate_sdk_deb () {

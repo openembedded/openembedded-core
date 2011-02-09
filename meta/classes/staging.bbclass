@@ -17,7 +17,7 @@ sysroot_stage_dir() {
 	# However we always want to stage a $src itself, even if it's empty
 	mkdir -p "$dest"
 	if [ -d "$src" ]; then
-		cp -fpPR "$src"/* "$dest"
+		tar -cf - -C "$src" -ps . | tar -xf - -C "$dest"
 	fi
 }
 
