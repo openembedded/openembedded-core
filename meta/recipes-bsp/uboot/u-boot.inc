@@ -2,7 +2,7 @@ DESCRIPTION = "U-boot bootloader"
 HOMEPAGE = "http://u-boot.sf.net"
 SECTION = "bootloaders"
 PRIORITY = "optional"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 PROVIDES = "virtual/bootloader"
 
 inherit deploy
