@@ -192,8 +192,8 @@ def package_qa_check_dev(path, name,d, elf):
 
     sane = True
 
-    if not name.endswith("-dev") and path.endswith(".so") and os.path.islink(path):
-        error_msg = "non -dev package contains symlink .so: %s path '%s'" % \
+    if not name.endswith("-dev") and not name.endswith("-dbg") and path.endswith(".so") and os.path.islink(path):
+        error_msg = "non -dev/-dbg package contains symlink .so: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d))
         sane = package_qa_handle_error(0, error_msg, name, path, d)
 

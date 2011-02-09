@@ -165,32 +165,88 @@ python () {
         d.setVar("PACKAGERDEPTASK", "")
 }
 
+def splitfile(file, debugfile, debugsrcdir, d):
+    # Function to split a single file, called from split_and_strip_files below
+    # A working 'file' (one which works on the target architecture)
+    # is split and the split off portions go to debugfile.
+    #
+    # The debug information is then processed for src references.  These
+    # references are copied to debugsrcdir, if defined.
+
+    import commands, stat
+
+    dvar = bb.data.getVar('PKGD', d, True)
+    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
+    objcopy = bb.data.getVar("OBJCOPY", d, True)
+    debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
+    workdir = bb.data.expand("${WORKDIR}", d)
+    sourcefile = bb.data.expand("${WORKDIR}/debugsources.list", d)
+
+    # We ignore kernel modules, we don't generate debug info files.
+    if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
+	return 0
+
+    newmode = None
+    if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
+        origmode = os.stat(file)[stat.ST_MODE]
+        newmode = origmode | stat.S_IWRITE | stat.S_IREAD
+        os.chmod(file, newmode)
+
+    # We need to extract the debug src information here...
+    if debugsrcdir:
+	os.system("%s'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (pathprefix, debugedit, workdir, debugsrcdir, sourcefile, file))
+
+    bb.mkdirhier(os.path.dirname(debugfile))
+
+    os.system("%s'%s' --only-keep-debug '%s' '%s'" % (pathprefix, objcopy, file, debugfile))
+
+    # Set the debuglink to have the view of the file path on the target
+    os.system("%s'%s' --add-gnu-debuglink='%s' '%s'" % (pathprefix, objcopy, debugfile, file))
+
+    if newmode:
+        os.chmod(file, origmode)
+
+    return 0
+
+def splitfile2(debugsrcdir, d):
+    # Function to split a single file, called from split_and_strip_files below
+    #
+    # The debug src information processed in the splitfile2 is further procecessed
+    # and copied to the destination here.
+
+    import commands, stat
+
+    dvar = bb.data.getVar('PKGD', d, True)
+    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
+    strip = bb.data.getVar("STRIP", d, True)
+    objcopy = bb.data.getVar("OBJCOPY", d, True)
+    debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
+    workdir = bb.data.expand("${WORKDIR}", d)
+    sourcefile = bb.data.expand("${WORKDIR}/debugsources.list", d)
+
+    if debugsrcdir:
+       bb.mkdirhier(debugsrcdir)
+
+       processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
+       processdebugsrc += "(cd '%s' ; cpio -pd0mL '%s%s' 2>/dev/null)"
+
+       os.system(processdebugsrc % (sourcefile, workdir, dvar, debugsrcdir))
+
+       # The copy by cpio may have resulted in some empty directories!  Remove these
+       for root, dirs, files in os.walk("%s%s" % (dvar, debugsrcdir)):
+          for d in dirs:
+              dir = os.path.join(root, d)
+              #bb.note("rmdir -p %s" % dir)
+              os.system("rmdir -p %s 2>/dev/null" % dir)
+
 def runstrip(file, d):
     # Function to strip a single file, called from split_and_strip_files below
     # A working 'file' (one which works on the target architecture)
-    # is necessary for this stuff to work, hence the addition to do_package[depends]
 
     import commands, stat
 
     pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
-
-    ret, result = commands.getstatusoutput("%sfile '%s'" % (pathprefix, file))
-
-    if ret:
-        bb.error("runstrip: 'file %s' failed (forced strip)" % file)
-
-    if "not stripped" not in result:
-        bb.debug(1, "runstrip: skip %s" % file)
-        return 0
-
-    # If the file is in a .debug directory it was already stripped,
-    # don't do it again...
-    if os.path.dirname(file).endswith(".debug"):
-        bb.note("Already ran strip")
-        return 0
-
     strip = bb.data.getVar("STRIP", d, True)
-    objcopy = bb.data.getVar("OBJCOPY", d, True)
 
     # Handle kernel modules specifically - .debug directories here are pointless
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
@@ -202,21 +258,22 @@ def runstrip(file, d):
         newmode = origmode | stat.S_IWRITE | stat.S_IREAD
         os.chmod(file, newmode)
 
+    ret, result = commands.getstatusoutput("%sfile '%s'" % (pathprefix, file))
+
+    if ret:
+        bb.error("runstrip: 'file %s' failed" % file)
+        return 0
+
     extraflags = ""
     if ".so" in file and "shared" in result:
         extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
     elif "shared" in result or "executable" in result:
         extraflags = "--remove-section=.comment --remove-section=.note"
 
-    bb.mkdirhier(os.path.join(os.path.dirname(file), ".debug"))
-    debugfile=os.path.join(os.path.dirname(file), ".debug", os.path.basename(file))
-
     stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
     bb.debug(1, "runstrip: %s" % stripcmd)
 
-    os.system("%s'%s' --only-keep-debug '%s' '%s'" % (pathprefix, objcopy, file, debugfile))
     ret = os.system("%s%s" % (pathprefix, stripcmd))
-    os.system("%s'%s' --add-gnu-debuglink='%s' '%s'" % (pathprefix, objcopy, debugfile, file))
 
     if newmode:
         os.chmod(file, origmode)
@@ -224,7 +281,7 @@ def runstrip(file, d):
     if ret:
         bb.error("runstrip: '%s' strip command failed" % stripcmd)
 
-    return 1
+    return 0
 
 #
 # Package data handling routines
@@ -333,9 +390,23 @@ python perform_packagecopy () {
 }
 
 python split_and_strip_files () {
-	import stat
+	import commands, stat, errno
 
 	dvar = bb.data.getVar('PKGD', d, True)
+
+	# We default to '.debug' style
+	if bb.data.getVar('PACKAGE_DEBUG_SPLIT_STYLE', d, True) == 'debug-file-directory':
+		# Single debug-file-directory style debug info
+		debugappend = ".debug"
+		debugdir = ""
+		debuglibdir = "/usr/lib/debug"
+		debugsrcdir = "/usr/src/debug"
+	else:
+		# Original Poky, a.k.a. ".debug", style debug info
+		debugappend = ""
+		debugdir = "/.debug"
+		debuglibdir = ""
+		debugsrcdir = "/usr/src/debug"
 
 	os.chdir(dvar)
 
@@ -344,16 +415,124 @@ python split_and_strip_files () {
 			s = os.stat(path)
 		except (os.error, AttributeError):
 			return 0
-		return (s[stat.ST_MODE] & stat.S_IEXEC)
+		return ((s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH))
 
-	# Figure out which packages we want to process
-	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, True) != '1'):
+	# Return 0 - not elf, 1 - ELF & not stripped, 2 - ELF & stripped
+	def isELF(path):
+		pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
+		ret, result = commands.getstatusoutput("%sfile '%s'" % (pathprefix, path))
+
+		if ret:
+			bb.error("split_and_strip_files: 'file %s' failed" % path)
+			return 0
+
+		# Not stripped
+		if "ELF" in result and "not stripped" in result:
+			return 1
+
+		# Stripped
+		if "ELF" in result:
+			return 2
+
+		return 0;
+
+	#
+	# First lets process debug splitting
+	#
+	if (bb.data.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', d, True) != '1'):
+		file_links = {}
+
 		for root, dirs, files in os.walk(dvar):
 			for f in files:
 				file = os.path.join(root, f)
-				if not os.path.islink(file) and not os.path.isdir(file) and isexec(file):
-					runstrip(file, d)
+				# Skip debug files, it must be executable, and must be a file (or link)
+				if not (debugappend != "" and file.endswith(debugappend)) and not (debugdir != "" and debugdir in os.path.dirname(file[len(dvar):])) and isexec(file) and os.path.isfile(file):
+					src = file[len(dvar):]
+					dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
+					fpath = dvar + dest
+					# Preserve symlinks in debug area...
+					if os.path.islink(file):
+						target = os.readlink(file)
+						if not os.path.isabs(target):
+							target = os.path.join(os.path.dirname(file), target)
+						if isELF(target):
+							ltarget = os.readlink(file)
+							lpath = os.path.dirname(ltarget)
+							lbase = os.path.basename(ltarget)
+							ftarget = ""
+							if lpath and lpath != ".":
+								ftarget += lpath + debugdir + "/"
+							ftarget += lbase + debugappend
+							bb.mkdirhier(os.path.dirname(fpath))
+							#bb.note("Symlink %s -> %s" % (fpath, ftarget))
+							os.symlink(ftarget, fpath)
+						continue
 
+					# If the file is elf we need to check it for hard links
+					elf_file = isELF(file)
+					if elf_file:
+						# Preserve hard links in debug area...
+						s = os.stat(file)
+						if s.st_nlink > 1:
+							file_reference = "%d_%d" % (s.st_dev, s.st_ino)
+							if file_reference not in file_links:
+								# If this is new, and already stripped we avoid recording it
+								# as we'll be unable to set the hard link later, because it
+								# won't be split/stripped...
+								if elf_file != 2:
+									file_links[file_reference] = fpath
+							else:
+								bb.mkdirhier(os.path.dirname(fpath))
+								#bb.note("Link %s -> %s" % (fpath, file_links[file_reference]))
+								os.link(file_links[file_reference], fpath)
+								continue
+
+						if elf_file == 2:
+							bb.warn("File '%s' was already stripped, this will prevent future debugging!" % (src))
+							continue
+
+						# Split and Strip
+						bb.mkdirhier(os.path.dirname(fpath))
+						#bb.note("Split %s -> %s" % (file, fpath))
+						splitfile(file, fpath, debugsrcdir, d)
+
+		# Process the debugsrcdir if requested...
+		splitfile2(debugsrcdir, d)
+
+		# The above may have generated dangling symlinks 
+		for root, dirs, files in os.walk(dvar):
+			for f in files:
+				file = os.path.join(root, f)
+				# We ONLY strip dangling links if they're debug generated!
+				if (debugappend != "" and file.endswith(debugappend)) or (debugdir != "" and debugdir in os.path.dirname(file[len(dvar):])):
+					try:
+						s = os.stat(file)
+					except OSError, (err, strerror):
+						if err != errno.ENOENT:
+							raise
+						#bb.note("Remove dangling link %s" % file)
+						os.unlink(file)
+
+	#
+	# End of debug splitting
+	#
+
+	#
+	# Now lets go back over things and strip them
+	#
+	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, True) != '1'):	
+		for root, dirs, files in os.walk(dvar):
+			for f in files:
+				file = os.path.join(root, f)
+				# if not a debugfile, is executable, is a file, and not a symlink
+				if not (debugappend != "" and file.endswith(debugappend)) and not (debugdir != "" and debugdir in os.path.dirname(file[len(dvar):])) and isexec(file) and os.path.isfile(file) and not os.path.islink(file):
+					elf_file = isELF(file)
+					if elf_file and elf_file != 2:
+						#bb.note("Strip %s" % file)
+						runstrip(file, d)
+	#
+	# End of strip
+	#
 }
 
 python populate_packages () {
