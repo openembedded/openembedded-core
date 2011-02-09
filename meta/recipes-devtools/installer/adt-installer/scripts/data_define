@@ -35,6 +35,6 @@ YOCTOADT_SUPPORTED_ROOTFS="minimal sato sdk lsb"
 YOCTOADT_SUPPORTED_TARGETS="x86 x86_64 arm powerpc mips"
 # Different host (32 bit or 64 bit) will have different opkg
 # configuration files
-YOCTOADT_OPKG_CONF_FILE_32="./opkg/conf/opkg-sdk-i586.conf"
+YOCTOADT_OPKG_CONF_FILE_32="./opkg/conf/opkg-sdk-i686.conf"
 YOCTOADT_OPKG_CONF_FILE_64="./opkg/conf/opkg-sdk-x86_64.conf"
 INSTALL_FOLDER=/opt/poky/$YOCTOADT_VERSION
