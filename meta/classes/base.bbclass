@@ -464,24 +464,18 @@ addtask cleanall after do_clean
 python do_cleanall() {
         sstate_clean_cachefiles(d)
 
+        src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
+        if len(src_uri) == 0:
+            return
+
 	localdata = bb.data.createCopy(d)
 	bb.data.update_data(localdata)
 
-	dl_dir = bb.data.getVar('DL_DIR', localdata, True)
-	dl_dir = os.path.realpath(dl_dir)
-
-	src_uri = (bb.data.getVar('SRC_URI', localdata, True) or "").split()
-	if len(src_uri) == 0:
-		return
-        fetcher = bb.fetch2.Fetch(src_uri, localdata)
-	for url in src_uri:
-                local = fetcher.localpath(url)
-		if local is None:
-			continue
-		local = os.path.realpath(local)
-                if local.startswith(dl_dir):
-			bb.note("Removing %s*" % local)
-			oe.path.remove(local + "*")
+        try:
+            fetcher = bb.fetch2.Fetch(src_uri, localdata)
+            fetcher.clean()
+        except bb.fetch2.BBFetchException, e:
+            raise bb.build.FuncFailed(e)
 }
 do_cleanall[nostamp] = "1"
 

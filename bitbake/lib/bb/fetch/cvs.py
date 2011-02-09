@@ -170,3 +170,14 @@ class Cvs(Fetch):
             except OSError:
                 pass
             raise FetchError(ud.module)
+
+    def clean(self, ud, d):
+        """ clean the git directory """
+
+        pkg = data.expand('${PN}', d)
+        localdata = data.createCopy(d)
+        data.setVar('OVERRIDES', "cvs:%s" % data.getVar('OVERRIDES', localdata), localdata)
+        data.update_data(localdata)
+        pkgdir = os.path.join(data.expand('${CVSDIR}', localdata), pkg)
+        bb.utils.remove(pkgdir, True)
+        bb.utils.remove(ud.localpath)
