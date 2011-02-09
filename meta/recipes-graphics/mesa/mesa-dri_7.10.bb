@@ -4,13 +4,14 @@ LIC_FILES_CHKSUM = "file://docs/license.html;md5=7a3373c039b6b925c427755a4f779c1
 
 PROTO_DEPS = "xf86driproto glproto dri2proto"
 LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat \
-            libxml2-native talloc"
+            libxml2-native"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
+           file://talloc-removal.patch \
            file://crossfix.patch"
 
 SRC_URI[md5sum] = "33fb94eccc02cbb4d8d1365615e38e46"
