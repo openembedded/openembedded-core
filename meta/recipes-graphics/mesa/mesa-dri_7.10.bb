@@ -8,7 +8,7 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat 
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://talloc-removal.patch \
@@ -19,6 +19,9 @@ SRC_URI[sha256sum] = "bcf28f43f39c28da271c0f5857fb32898d4ade3e035e80a0ceece1c2df
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
+
+# Atom PCs have DRI support so use mesa-dri by default
+DEFAULT_PREFERENCE_atom-pc = "1"
 
 LEAD_SONAME = "libGL.so.1"
 

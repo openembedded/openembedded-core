@@ -7,7 +7,7 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS} mesa-dri-glsl-native"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI += "file://crossfix.patch"
 
@@ -19,9 +19,6 @@ SRC_URI[mesademos.sha256sum] = "ea7b9ebfb7a80de2b275c0c9124c8a505382ec48411a2794
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
-
-# Atom PCs have DRI support so use mesa-dri by default
-DEFAULT_PREFERENCE_atom-pc = "1"
 
 LEAD_SONAME = "libGL.so.1"
 
