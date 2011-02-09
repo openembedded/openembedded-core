@@ -110,6 +110,7 @@ SRCREV_machine_pn-linux-yocto_mpc8315e-rdb ?= "68fb0b8d73bbb336ffa4a47bc70ec1eab
 SRCREV_machine_pn-linux-yocto_beagleboard ?= "343c06b25b221aa7f7019aee83b2d976041fddce"
 SRCREV_machine_pn-linux-yocto ?= "cb4faf3af527e25feee584f39c3956ca0c9448c8"
 SRCREV_meta_pn-linux-yocto ?= "5a32d7fe3b817868ebb697d2d883d743903685ae"
+SRCREV_machine_pn-linux-yocto ?= "cb4faf3af527e25feee584f39c3956ca0c9448c8"
 SRCREV_pn-linux-libc-headers-yocto ??= "343c06b25b221aa7f7019aee83b2d976041fddce"
 SRCREV_pn-matchbox-config-gtk ??= "3ed74dfb7c57be088a5ab36e446c0ccde9fa1028"
 SRCREV_pn-matchbox-desktop-sato ??= "76"
