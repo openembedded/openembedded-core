@@ -237,20 +237,20 @@ get_qemu_image()
 {
   if [ "$1" == "x86" ]; then
     qemu_kernel="bzImage-qemu$1.bin"
-  elif [ "$1" == "arm" ]; then
-    qemu_kernel="zImage-qemu$1.bin"
+  elif [ "$1" == "mips" ]; then
+    qemu_kernel="vmlinux-qemu$1.bin"
   else
     qemu_kernel="zImage-qemu$1.bin"
   fi
 
   #echo_info "[ADT_INST] Downloading qemu kernel binary: $qemu_kernel"
-  download_file $qemu_kernel
+  download_file qemu$1/$qemu_kernel
   check_result
   
   for image_type in $select_rootfs; do
     #echo_info "[ADT_INST] Downloading rootfs file: poky-image-$image_type-qemu$1.tar.bz2"
     filename="poky-image-$image_type-qemu$1.tar.bz2"
-    download_file $filename
+    download_file qemu$1/$filename
     check_result
   done
 }
