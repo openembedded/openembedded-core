@@ -1,6 +1,7 @@
 inherit kernel
 require linux-yocto.inc
 
+KMACHINE = "yocto/standard/base"
 KMACHINE_qemux86  = "yocto/standard/common-pc/base"
 KMACHINE_qemux86-64  = "yocto/standard/common-pc-64/base"
 KMACHINE_qemuppc  = "yocto/standard/qemu-ppc32"
@@ -10,6 +11,9 @@ KMACHINE_atom-pc  = "yocto/standard/common-pc/atom-pc"
 KMACHINE_routerstationpro = "yocto/standard/routerstationpro"
 KMACHINE_mpc8315e-rdb = "yocto/standard/fsl-mpc8315e-rdb"
 KMACHINE_beagleboard = "yocto/standard/beagleboard"
+
+KBRANCH = ${KMACHINE}
+KMETA = meta
 
 LINUX_VERSION ?= "2.6.37"
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"

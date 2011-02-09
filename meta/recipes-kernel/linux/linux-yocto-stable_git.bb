@@ -1,6 +1,7 @@
 inherit kernel
 require linux-yocto.inc
 
+KMACHINE = "common_pc"
 KMACHINE_qemux86  = "common_pc"
 KMACHINE_qemux86-64  = "common_pc_64"
 KMACHINE_qemuppc  = "qemu_ppc32"
@@ -14,19 +15,18 @@ KMACHINE_beagleboard = "beagleboard"
 LINUX_VERSION ?= "2.6.34"
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE_EXTENSION}"
 
+KMETA = wrs_meta
+KBRANCH = ${KMACHINE}-${LINUX_KERNEL_TYPE_EXTENSION}
+
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|atom-pc|routerstationpro|mpc8315e-rdb|beagleboard)"
 
-# this performs a fixup on the SRCREV for new/undefined BSPs
+# this performs a fixup on historical kernel types with embedded _'s
 python __anonymous () {
     import bb, re, string
-
-    rev = bb.data.getVar("SRCREV_machine", d, 1)
-    if rev == "standard":
-        bb.data.setVar("SRCREV_machine", "${SRCREV_meta}", d)
 
     kerntype = string.replace(bb.data.expand("${LINUX_KERNEL_TYPE}", d), "_", "-")
     bb.data.setVar("LINUX_KERNEL_TYPE_EXTENSION", kerntype, d)

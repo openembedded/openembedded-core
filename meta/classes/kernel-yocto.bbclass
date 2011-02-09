@@ -1,61 +1,5 @@
 S = "${WORKDIR}/linux"
 
-# Determine which branch to fetch and build. Not all branches are in the
-# upstream repo (but will be locally created after the fetchers run) so 
-# a fallback branch needs to be chosen. 
-#
-# The default machine 'UNDEFINED'. If the machine is not set to a specific
-# branch in this recipe or in a recipe extension, then we fallback to a 
-# branch that is always present 'standard'. This sets the KBRANCH variable
-# and is used in the SRC_URI. The machine is then set back to ${MACHINE},
-# since futher processing will use that to create local branches
-
-SRCPV_prepend = "${@yoctokernel_variables_fixup(d)}"
-
-def yoctokernel_variables_fixup(d):
-    if d.getVar("PVFIXUPDONE", False) is "done":
-        return ""
-
-    import bb, re, string
-
-    version = bb.data.getVar("LINUX_VERSION", d, 1)
-    # 2.6.34 signifies the old-style tree, so we need some temporary
-    # conditional processing based on the kernel version.
-    if version == "2.6.34":
-        bb.data.setVar("KBRANCH", "${KMACHINE}-${LINUX_KERNEL_TYPE}", d)
-        bb.data.setVar("KMETA", "wrs_meta", d)
-        mach = bb.data.getVar("KMACHINE", d, 1)
-        if mach == "UNDEFINED":
-            bb.data.setVar("KBRANCH", "standard", d)
-            bb.data.setVar("KMACHINE", "${MACHINE}", d)
-            # track the global configuration on a bootstrapped BSP
-            bb.data.setVar("SRCREV_machine", "${SRCREV_meta}", d)
-            bb.data.setVar("BOOTSTRAP", bb.data.expand("${MACHINE}",d) + "-standard", d)
-    else:
-        # The branch for a build is:
-        #    yocto/<kernel type>/${KMACHINE} or
-        #    yocto/<kernel type>/${KMACHINE}/base
-        mach = bb.data.getVar("KMACHINE_" + bb.data.expand("${MACHINE}",d), d, 1)
-        if mach == None:
-             mach = bb.data.getVar("KMACHINE", d, 1)
-
-        bb.data.setVar("KBRANCH", mach, d)
-        bb.data.setVar("KMETA", "meta", d)
-
-        # drop the "/base" if it was on the KMACHINE
-        kmachine = mach.replace('/base','')
-        # drop everything but the last segment
-        kmachine = os.path.basename( kmachine )
-        # and then write KMACHINE back
-        bb.data.setVar('KMACHINE_' + bb.data.expand("${MACHINE}",d), kmachine, d)
-
-        if mach == "UNDEFINED":
-            bb.data.setVar('KMACHINE_' + bb.data.expand("${MACHINE}",d), bb.data.expand("${MACHINE}",d), d)
-            bb.data.setVar("KBRANCH", "yocto/standard/base", d)
-            bb.data.setVar("BOOTSTRAP", "yocto/standard/" + bb.data.expand("${MACHINE}",d), d)
-    d.setVar("PVFIXUPDONE", "done")
-    return ""
-
 do_patch() {
 	cd ${S}
 	if [ -f ${WORKDIR}/defconfig ]; then
@@ -63,11 +7,10 @@ do_patch() {
 	fi
 
 	kbranch=${KBRANCH}
-	if [ -n "${BOOTSTRAP}" ]; then
+	if [ -n "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
            # switch from a generic to a specific branch
-           kbranch=${BOOTSTRAP}
+           kbranch=${YOCTO_KERNEL_EXTERNAL_BRANCH}
 	fi
-
 
 	# simply ensures that a branch of the right name has been created
 	createme ${ARCH} ${kbranch} ${defconfig}
@@ -131,8 +74,14 @@ addtask kernel_checkout before do_patch after do_unpack
 do_kernel_configme() {
 	echo "[INFO] doing kernel configme"
 
+	kbranch=${KBRANCH}
+	if [ -n "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
+           # switch from a generic to a specific branch
+           kbranch=${YOCTO_KERNEL_EXTERNAL_BRANCH}
+	fi
+
 	cd ${S}
-	configme --reconfig --output ${B} ${KBRANCH} ${MACHINE}
+	configme --reconfig --output ${B} ${kbranch} ${MACHINE}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
@@ -165,7 +114,7 @@ do_validate_branches() {
  	target_meta_head="${SRCREV_meta}"
 
 	# nothing to do if bootstrapping
- 	if [ -n "${BOOTSTRAP}" ]; then
+ 	if [ -n "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
  	 	return
  	fi
 
