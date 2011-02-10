@@ -7,8 +7,8 @@ PATCHDATE = "20100501"
 PKGV = "${PV}+${PATCHDATE}"
 PR = "r0"
 
-DEPENDS = "ncurses-native unifdef-native"
-DEPENDS_virtclass-native = "unifdef-native"
+DEPENDS = "ncurses-native"
+DEPENDS_virtclass-native = ""
 
 inherit autotools binconfig
 
@@ -99,6 +99,7 @@ _unifdef_cleanup = " \
   -e '\!^/\* .* \*/!d' \
 "
 
+do_test[depends] = "unifdef-native:do_populate_sysroot"
 do_test[dirs] = "${S}"
 do_test() {
         ${ENABLE_WIDEC} || return 0
