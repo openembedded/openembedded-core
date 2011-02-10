@@ -17,9 +17,9 @@ SRC_URI[md5sum] = "6ce65480445fb2d9c071ad1f002a7675"
 SRC_URI[sha256sum] = "e293aa4b0dd259dbb4f0e7f56fdd95db5047d052c7b3b80922fe5663923a805d"
 
 SECTION = "x11/libs"
-DEPENDS = "intltool xkbcomp-native glib-2.0"
+DEPENDS = "intltool-native xkbcomp-native glib-2.0"
 
-PR = "r0"
+PR = "r1"
 
 EXTRA_OECONF = "--with-xkb-rules-symlink=xorg"
 
