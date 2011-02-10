@@ -32,7 +32,7 @@ do_install () {
 	install -m 0644 License.txt ${D}${datadir}/doc/${PN}/
 }
 
-pkg_postinst () {
+pkg_postinst_${PN} () {
 #!/bin/sh
 fc-cache
 }

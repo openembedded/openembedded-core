@@ -31,7 +31,7 @@ do_install () {
         done 
 } 
 
-pkg_postinst () {
+pkg_postinst_${PN} () {
 #!/bin/sh
 fc-cache
 }

@@ -31,7 +31,7 @@ do_compile_append() {
 
 FILES_sgml-common_append = " ${datadir}/sgml"
 
-pkg_postinst() {
+pkg_postinst_${PN}() {
 	install-catalog \
 		--add ${sysconfdir}/sgml/sgml-ent.cat \
 		${datadir}/sgml/sgml-iso-entities-8879.1986/catalog
@@ -41,7 +41,7 @@ pkg_postinst() {
 		${sysconfdir}/sgml/sgml-ent.cat
 }
 
-pkg_postrm() {
+pkg_postrm_${PN}() {
 	install-catalog \
 		--remove ${sysconfdir}/sgml/sgml-ent.cat \
 		${datadir}/sgml/sgml-iso-entities-8879.1986/catalog

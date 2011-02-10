@@ -28,13 +28,13 @@ do_install() {
 	install -m 0755 src/lrz src/lsz ${D}${bindir}/
 }
 
-pkg_postinst() {
+pkg_postinst_${PN}() {
 	for util in rz rx rb sz sx sb; do
 		update-alternatives --install ${bindir}/$util $util lrz 100
 	done
 }
 
-pkg_postrm() {
+pkg_postrm_${PN}() {
 	for util in rz rx rb sz sx sb; do
 		update-alternatives --remove $util ${bindir}/lrz
 	done

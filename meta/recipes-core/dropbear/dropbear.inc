@@ -63,12 +63,12 @@ do_install() {
 	chmod 755 ${D}${sysconfdir}/init.d/dropbear
 }
 
-pkg_postinst () {
+pkg_postinst_${PN} () {
 	update-alternatives --install ${bindir}/scp scp ${sbindir}/dropbearmulti 20
 	update-alternatives --install ${bindir}/ssh ssh ${sbindir}/dropbearmulti 20
 }
 
-pkg_postrm_append () {
+pkg_postrm_append_${PN} () {
   if [ -f "${sysconfdir}/dropbear/dropbear_rsa_host_key" ]; then
         rm ${sysconfdir}/dropbear/dropbear_rsa_host_key
   fi

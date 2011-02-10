@@ -15,13 +15,13 @@ do_install() {
         install -m 0644 ${WORKDIR}/orinoco_cs.conf ${D}${sysconfdir}/modutils/
 }
 
-pkg_postinst () {
+pkg_postinst_${PN} () {
 	if [ -n "$D" ]; then
 		exit 1
 	fi
 	update-modules || true
 }
 
-pkg_postrm () {
+pkg_postrm_${PN} () {
 	update-modules || true
 }

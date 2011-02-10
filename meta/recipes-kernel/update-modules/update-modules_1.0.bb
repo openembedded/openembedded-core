@@ -10,7 +10,7 @@ PR = "r8"
 SRC_URI = "file://update-modules \
            file://COPYING.GPL"
 
-pkg_postinst() {
+pkg_postinst_${PN} () {
 if [ "x$D" != "x" ]; then
 	exit 1
 fi

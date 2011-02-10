@@ -40,7 +40,7 @@ do_install_append_openmn() {
 }
 
 
-pkg_postinst () {
+pkg_postinst_${PN} () {
 	set -e
 
 	if [ ! -e $D${sysconfdir}/passwd ] ; then

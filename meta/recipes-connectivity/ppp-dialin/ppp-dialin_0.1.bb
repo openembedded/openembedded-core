@@ -20,7 +20,7 @@ do_install() {
 
 PACKAGE_ARCH = "all"
 
-pkg_postinst() {
+pkg_postinst_${PN} () {
 if test "x$D" != "x"; then
 	exit 1
 else
@@ -28,7 +28,7 @@ else
 fi
 }
 
-pkg_postrm() {
+pkg_postrm_${PN} () {
 if test "x$D" != "x"; then
 	exit 1
 else

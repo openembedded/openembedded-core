@@ -25,14 +25,14 @@ DEBIANNAME_${PN} = "libnss-mdns"
 EXTRA_OECONF = "--libdir=/lib --disable-lynx --enable-avahi"
 
 # TODO: pattern based configuration update
-pkg_postinst () {
+pkg_postinst_${PN} () {
 	cat /etc/nsswitch.conf | grep "hosts:\s*files dns$" > /dev/null && {
 		cat /etc/nsswitch.conf | sed 's/hosts:\s*files dns/& mdns4/' > /tmp/nsswitch.conf
 		mv /tmp/nsswitch.conf /etc/nsswitch.conf
 	}
 }
 
-pkg_prerm () {
+pkg_prerm_${PN} () {
 	cat /etc/nsswitch.conf | grep "hosts:\s*files dns mdns4$" > /dev/null && {
 		cat /etc/nsswitch.conf | sed 's/\(hosts:\s*files dns\) mdns4*/\1/' > /tmp/nsswitch.conf
 		mv /tmp/nsswitch.conf /etc/nsswitch.conf
