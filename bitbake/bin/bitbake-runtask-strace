@@ -1,8 +1,0 @@
-#!/bin/bash
-STRACE=`which strace`
-
-if [ ! -x "$STRACE" ]; then
-    bitbake-runtask $1 $2 $3 $4
-else
-    strace -f -o $TRACE_LOGFILE-$3.log -e trace=open,execve bitbake-runtask $1 $2 $3 $4
-fi

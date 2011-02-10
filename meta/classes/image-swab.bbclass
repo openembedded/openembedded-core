@@ -2,7 +2,7 @@ HOST_DATA ?= "${TMPDIR}/host-contamination-data/"
 SWABBER_REPORT ?= "${LOG_DIR}/swabber/"
 SWABBER_LOGS ?= "${LOG_DIR}/contamination-logs"
 TRACE_LOGDIR ?= "${SWABBER_LOGS}/${PACKAGE_ARCH}"
-export TRACE_LOGFILE = "${TRACE_LOGDIR}/${PN}-${PV}"
+TRACE_LOGFILE = "${TRACE_LOGDIR}/${PN}-${PV}"
 
 SWAB_ORIG_TASK := "${BB_DEFAULT_TASK}"
 BB_DEFAULT_TASK = "generate_swabber_report"
@@ -56,7 +56,22 @@ python() {
        bb.data.setVarFlag('do_setscene', 'depends', " ".join(deps), d)
        logdir = bb.data.expand("${TRACE_LOGDIR}", d)
        bb.utils.mkdirhier(logdir)
-       bb.data.setVar('BB_RUNTASK', 'bitbake-runtask-strace', d)
+    else:
+       bb.data.setVar('STRACEFUNC', '', d)
+}
+
+STRACEPID = "${@os.getpid()}"
+STRACEFUNC = "imageswab_attachstrace"
+
+do_configure[prefuncs] += "${STRACEFUNC}"
+do_compile[prefuncs] += "${STRACEFUNC}"
+
+imageswab_attachstrace () {
+	STRACE=`which strace`
+
+	if [ -x "$STRACE" ]; then
+		swabber-strace-attach "$STRACE -f -o ${TRACE_LOGFILE}-${BB_CURRENTTASK}.log -e trace=open,execve -p ${STRACEPID}" "${TRACE_LOGFILE}-traceattach-${BB_CURRENTTASK}.log"
+	fi
 }
 
 do_generate_swabber_report () {
