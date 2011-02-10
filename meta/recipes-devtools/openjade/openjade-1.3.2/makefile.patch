@@ -1,4 +1,5 @@
-Patch obtained from OpenEmbedded.
+This patch fixes libtool QA issues with WORKDIR creeping in to
+libospgrove.la and libostyle.la. Patch obtained from OpenEmbedded.
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 Index: openjade-1.3.2/spgrove/Makefile.sub

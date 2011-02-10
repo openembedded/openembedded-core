@@ -9,38 +9,26 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=641ff1e4511f0a87044ad42f87cb1045"
 
 PR = "r0"
 
-DEPENDS = "opensp"
+DEPENDS = "opensp-native sgml-common-native"
 RDEPENDS_${PN} = "sgml-common"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/openjade/openjade-${PV}.tar.gz \
-           file://configure.patch \
-           file://autoconf.patch \
-           file://makefile.patch \
-          "
+           file://makefile.patch"
 
 SRC_URI[md5sum] = "7df692e3186109cc00db6825b777201e"
 SRC_URI[sha256sum] = "1d2d7996cc94f9b87d0c51cf0e028070ac177c4123ecbfd7ac1cb8d0b7d322d1"
 
-SRC_URI_append_virtclass-native = " file://oj-native-libosp-fix.patch"
-
-inherit autotools
+inherit autotools native
 
 EXTRA_OECONF = "--enable-spincludedir=${STAGING_INCDIR}/OpenSP \
                 --enable-splibdir=${STAGING_LIBDIR}"
 
-acpaths = "-I ${S}/config"
+CFLAGS =+ "-I${S}/include"
 
-# Trailing whitespace is important. Otherwise compiler arguments will be messed
-# up, resulting in a fail in do_configure.
-CFLAGS_prepend = "-I${S}/include "
-
-do_configure_append () {
-	cp config/configure.in .
-}
-
-do_install_append () {
+do_install() {
 	# Refer to http://www.linuxfromscratch.org/blfs/view/stable/pst/openjade.html
 	# for details.
+	install -d ${D}${bindir}	
 	install -m 0755 ${S}/jade/.libs/openjade ${D}${bindir}/openjade
 	ln -sf openjade ${D}${bindir}/jade
 
@@ -62,5 +50,3 @@ do_install_append () {
 	install-catalog --add ${sysconfdir}/sgml/sgml-docbook.cat \
 		${sysconfdir}/sgml/openjade-${PV}.cat
 }
-
-BBCLASSEXTEND = "native"
