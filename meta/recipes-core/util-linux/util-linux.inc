@@ -27,13 +27,11 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v${MAJOR_VERSION}/u
            file://make_include \
            "
 
-PACKAGES_prepend = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-swaponoff \
+PACKAGES =+ "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-swaponoff \
                     util-linux-losetup util-linux-umount util-linux-mount util-linux-readprofile \
                     util-linux-libblkid util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
                     util-linux-lscpu \
                    "
-
-PACKAGES_virtclass-native = ""
 
 S = "${WORKDIR}/util-linux-ng-${PV}"
 
