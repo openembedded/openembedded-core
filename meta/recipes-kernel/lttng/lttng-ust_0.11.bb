@@ -10,9 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e647752e045a8c45b6f583771bd561ef \
 
 DEPENDS = "liburcu"
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "http://lttng.org/files/ust/releases/ust-${PV}.tar.gz"
+SRC_URI = "http://lttng.org/files/ust/releases/ust-${PV}.tar.gz \
+           file://remove_ppc_specific_time_reading_function.patch \
+           "
 
 SRC_URI[md5sum] = "0a23fa60df4da3fb5188e314001eb49c"
 SRC_URI[sha256sum] = "af8f699019ae260103bb401b6738d5e417e79732a509859b42a52e9a0f5edb35"
