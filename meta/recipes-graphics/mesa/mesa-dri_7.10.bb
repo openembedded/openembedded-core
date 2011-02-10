@@ -6,9 +6,9 @@ PROTO_DEPS = "xf86driproto glproto dri2proto"
 LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat \
             libxml2-native"
 
-DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
+DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS} makedepend-native"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://talloc-removal.patch \
