@@ -158,6 +158,8 @@ python () {
         # shlibs requires any DEPENDS to have already packaged for the *.list files
         deps.append("do_package")
         bb.data.setVarFlag('do_package', 'deptask', " ".join(deps), d)
+    else:
+        d.setVar("PACKAGERDEPTASK", "")
 }
 
 def runstrip(file, d):
@@ -1129,7 +1131,8 @@ do_package_write () {
 	:
 }
 do_package_write[noexec] = "1"
-do_build[recrdeptask] += "do_package_write"
+PACKAGERDEPTASK = "do_package_write"
+do_build[recrdeptask] += "${PACKAGERDEPTASK}"
 addtask package_write before do_build after do_package
 
 #
