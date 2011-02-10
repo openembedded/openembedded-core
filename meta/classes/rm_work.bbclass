@@ -19,10 +19,10 @@ do_rm_work () {
     do
         if [ `basename ${S}` = $dir ]; then
             rm -rf $dir
-        # The package and package-split directories are retained by sstate for 
+        # The package and packages-split directories are retained by sstate for 
         # do_package so we retain them here too. Anything in sstate 'plaindirs' 
         # should be retained. Also retain logs and other files in temp.
-        elif [ $dir != 'temp' ] && [ $dir != 'package' ]  && [ $dir != 'package-split' ]; then
+        elif [ $dir != 'temp' ] && [ $dir != 'package' ]  && [ $dir != 'packages-split' ]; then
             rm -rf $dir
         fi
     done
