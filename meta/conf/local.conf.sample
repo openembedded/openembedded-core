@@ -106,18 +106,6 @@ USER_CLASSES ?= "image-mklibs image-prelink"
 # <build directory>/tmp
 #TMPDIR = "${POKYBASE}/build/tmp"
 
-
-# Uncomment this if you are using the Openedhand provided qemu deb - see README
-# ASSUME_PROVIDED += "qemu-native"
-
-# Comment this out if you don't have a 3.x gcc version available and wish
-# poky to build one for you. The 3.x gcc is required to build qemu-native.
-# ASSUME_PROVIDED += "gcc3-native"
-
-# Uncomment these two if you want BitBake to build images useful for debugging.
-# DEBUG_BUILD = "1"
-# INHIBIT_PACKAGE_STRIP = "1"
-
 # Uncomment these to build a package such that you can use gprof to profile it.
 # NOTE: This will only work with 'linux' targets, not
 # 'linux-uclibc', as uClibc doesn't provide the necessary
