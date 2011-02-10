@@ -8,10 +8,16 @@
 #
 # Better expressed as ensure all RDEPENDS package before we package
 # This means we can't have circular RDEPENDS/RRECOMMENDS
-do_package_write_ipk[rdeptask] = "do_package"
-do_package_write_deb[rdeptask] = "do_package"
-do_package_write_tar[rdeptask] = "do_package"
-do_package_write_rpm[rdeptask] = "do_package"
+DEBIANRDEP = "do_package"
+do_package_write_ipk[rdeptask] = "${DEBIANRDEP}"
+do_package_write_deb[rdeptask] = "${DEBIANRDEP}"
+do_package_write_tar[rdeptask] = "${DEBIANRDEP}"
+do_package_write_rpm[rdeptask] = "${DEBIANRDEP}"
+
+python () {
+    if not d.getVar("PACKAGES", True):
+        d.setVar("DEBIANRDEP", "")
+}
 
 python debian_package_name_hook () {
 	import glob, copy, stat, errno, re
