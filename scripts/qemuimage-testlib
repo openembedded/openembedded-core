@@ -305,7 +305,8 @@ Test_Find_Image()
 		else
 			for i in `dir ${where}`
 			do
-				echo $i | grep -q "${kernel}.*${arch}.*\.${extension}"
+				# Exclude qemux86-64 when target is qemux86
+				echo $i | grep "${kernel}.*${arch}.*\.${extension}" | grep -qv "${kernel}.*${arch}-64.*\.${extension}"
 				if [ $? -eq 0 ]; then
 					echo ${where}/${i}
 					return 0
@@ -323,7 +324,8 @@ Test_Find_Image()
 		else
 			for i in `dir ${where}`
 			do
-				echo $i | grep -q "${target}-${arch}.*\.${extension}"
+				# Exclude qemux86-64 when target is qemux86
+				echo $i | grep "${target}-${arch}.*\.${extension}" | grep -qv "${target}-${arch}-64.*\.${extension}"
 				if [ $? -eq 0 ]; then
 					echo ${where}/${i}
 					return 0
