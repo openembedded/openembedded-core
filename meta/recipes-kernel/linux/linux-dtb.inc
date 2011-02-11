@@ -1,5 +1,5 @@
 # Support for device tree generation
-FILES_kernel_devicetree = "/boot/devicetree*"
+FILES_kernel-devicetree = "/boot/devicetree*"
 KERNEL_DEVICETREE_FLAGS = "-R 8 -p 0x3000"
 
 python __anonymous () {
