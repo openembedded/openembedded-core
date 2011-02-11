@@ -81,7 +81,8 @@ CONFIG_DRIVER_HOSTAP=y
 CONFIG_DRIVER_WEXT=y
 
 # Driver interface for Linux drivers using the nl80211 kernel interface
-#CONFIG_DRIVER_NL80211=y
+CONFIG_LIBNL20=y
+CONFIG_DRIVER_NL80211=y
 
 # Driver interface for FreeBSD net80211 layer (e.g., Atheros driver)
 #CONFIG_DRIVER_BSD=y
@@ -405,3 +406,4 @@ CONFIG_PEERKEY=y
 CONFIG_TLS = gnutls
 CONFIG_GNUTLS_EXTRA=y
 CONFIG_CTRL_IFACE_DBUS=y
+CONFIG_CTRL_IFACE_DBUS_NEW=y
