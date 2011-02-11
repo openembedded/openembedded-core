@@ -12,22 +12,25 @@ SECTION = "base"
 PRIORITY = "required"
 
 export EXTRA_CFLAGS = "${CFLAGS}"
-PACKAGES =+ "${PN}-httpd ${PN}-udhcpd"
+PACKAGES =+ "${PN}-httpd ${PN}-udhcpd ${PN}-udhcpc ${PN}-syslog"
 
 FILES_${PN}-httpd = "${sysconfdir}/init.d/busybox-httpd /srv/www"
+FILES_${PN}-syslog = "${sysconfdir}/init.d/syslog* ${sysconfdir}/syslog.conf*"
 FILES_${PN}-udhcpd = "${sysconfdir}/init.d/busybox-udhcpd"
+FILES_${PN}-udhcpc = "${sysconfdir}/udhcpc.d ${datadir}/udhcpc ${sysconfdir}/init.d/busybox-udhcpc"
 
-FILES_${PN} += "${datadir}/udhcpc"
-FILES_${PN} += "${sysconfdir}/init.d/busybox-udhcpc"
+INITSCRIPT_PACKAGES = "${PN}-httpd ${PN}-syslog ${PN}-udhcpd ${PN}-udhcpc"
 
-INITSCRIPT_PACKAGES = "${PN} ${PN}-httpd ${PN}-udhcpd"
 INITSCRIPT_NAME_${PN}-httpd = "busybox-httpd"
+INITSCRIPT_NAME_${PN}-syslog = "syslog"
 INITSCRIPT_NAME_${PN}-udhcpd = "busybox-udhcpd" 
-INITSCRIPT_NAME_${PN} = "syslog busybox-udhcpc"
-CONFFILES_${PN} = "${sysconfdir}/syslog.conf.${PN}"
+INITSCRIPT_NAME_${PN}-udhcpc = "busybox-udhcpc" 
+CONFFILES_${PN}-syslog = "${sysconfdir}/syslog.conf.${PN}"
+
+RRECOMMENDS_${PN} = "${PN}-syslog ${PN}-udhcpc"
 
 # This disables the syslog startup links in slugos (see slugos-init)
-INITSCRIPT_PARAMS_${PN}_slugos = "start 20 ."
+INITSCRIPT_PARAMS_${PN}-syslog_slugos = "start 20 ."
 
 inherit cml1 update-rc.d
 
@@ -116,7 +119,9 @@ pkg_postinst_${PN} () {
 	
 	# This adds the links, remember that this has to work when building an image too, hence the $D
 	while read link; do case "$link" in /*/*/*) to="../../bin/busybox";; /bin/*) to="busybox";; /*/*) to="../bin/busybox";; esac; bn=`basename $link`; update-alternatives --install $link $bn $to 50; done <$D/etc/busybox.links
+}
 
+pkg_postinst_${PN}-syslog () {
 	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${PN} 50
 	update-alternatives --install ${sysconfdir}/syslog.conf syslog-conf syslog.conf.${PN} 50
 }
@@ -150,7 +155,9 @@ pkg_prerm_${PN} () {
 		bn=`basename $link`
 		sh /usr/bin/update-alternatives --remove $bn $to
 	done </etc/busybox.links
+}
 
+pkg_prerm_${PN}-syslog () {
 	# remove syslog
 	if test "x$D" = "x"; then
 		if test "$1" = "upgrade" -o "$1" = "remove"; then
