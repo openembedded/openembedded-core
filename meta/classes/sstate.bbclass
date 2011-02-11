@@ -326,13 +326,13 @@ def sstate_package(ss, d):
     return
 
 def pstaging_fetch(sstatepkg, d):
+    import bb.fetch2
 
     # Only try and fetch if the user has configured a mirror
     mirrors = bb.data.getVar('SSTATE_MIRRORS', d, True)
     if not mirrors:
         return
 
-    import bb.fetch2
     # Copy the data object and override DL_DIR and SRC_URI
     localdata = bb.data.createCopy(d)
     bb.data.update_data(localdata)
@@ -453,8 +453,8 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
             #bb.note(str(srcuri))
 
             try:
-                bb.fetch.init(srcuri.split(), localdata)
-                bb.fetch.checkstatus(localdata, srcuri.split())
+                fetcher = bb.fetch2.Fetch(srcuri.split(), localdata)
+                fetcher.checkstatus()
                 ret.append(task)
             except:
                 pass     
