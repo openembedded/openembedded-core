@@ -53,7 +53,9 @@ pkg_postinst_dbus() {
 			--ingroup "$MESSAGEUSER" "$MESSAGEUSER"
 
 	grep -q netdev: /etc/group || addgroup netdev
-	chmod u+s /usr/libexec/dbus-daemon-launch-helper
+
+	chown root:"$MESSAGEUSER" /usr/libexec/dbus-daemon-launch-helper
+	chmod 4754 /usr/libexec/dbus-daemon-launch-helper
 
 	# add volatile after new user/grp are created
 	echo "d messagebus messagebus 0755 /var/run/dbus none" > /etc/default/volatiles/99_dbus
