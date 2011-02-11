@@ -25,12 +25,12 @@ SHLIBSDIR = "${STAGING_DIR_TARGET}/shlibs"
 
 DEBIANNAME_libgcc = "libgcc1"
 
-MIRRORS_prepend () {
-${GNU_MIRROR}/gcc/releases/    ftp://gcc.gnu.org/pub/gcc/releases/
-${GNU_MIRROR}/gcc/	http://mirrors.rcn.net/pub/sourceware/gcc/releases/
-${GNU_MIRROR}/gcc/releases/    http://gcc.get-software.com/releases/
-${GNU_MIRROR}/gcc/	http://gcc.get-software.com/releases/
-}
+MIRRORS =+ "\
+${GNU_MIRROR}/gcc/releases/    ftp://gcc.gnu.org/pub/gcc/releases/ \n \
+${GNU_MIRROR}/gcc/	http://mirrors.rcn.net/pub/sourceware/gcc/releases/ \n \
+${GNU_MIRROR}/gcc/releases/    http://gcc.get-software.com/releases/ \n \
+${GNU_MIRROR}/gcc/	http://gcc.get-software.com/releases/ \n \
+"
 
 #
 # Set some default values
