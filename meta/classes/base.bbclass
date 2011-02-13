@@ -7,6 +7,7 @@ inherit mirrors
 inherit utils
 inherit utility-tasks
 inherit metadata_scm
+inherit buildstats
 
 python sys_path_eh () {
     if isinstance(e, bb.event.ConfigParsed):
