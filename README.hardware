@@ -519,7 +519,7 @@ TODO: need someone with a Beagleboard C4 to verify these instructions.
 Due to the lack of NAND on the xM, the install and boot process varies a bit
 between boards.  The C4 can run the x-loader and u-boot binaries from NAND or
 the SD, while the xM can only run them from the SD. The following instructions
-apply to both the C4 and the xM, but te C4 can skip step 2 (as noted below),
+apply to both the C4 and the xM, but the C4 can skip step 2 (as noted below),
 and may require modification of the NAND environment.
 
   1. Partition and format an SD card:
@@ -564,11 +564,19 @@ and may require modification of the NAND environment.
 
      # (cat << EOF
      setenv bootcmd 'mmc init; fatload mmc 0:1 0x80300000 uImage; bootm 0x80300000'
-     setenv bootargs 'console=tty0 console=ttyS2,115200n8 root=/dev/mmcblk0p2 rootwait rootfstype=ext3 ro'
+     setenv bootargs 'console=tty0 console=ttyO2,115200n8 root=/dev/mmcblk0p2 rootwait rootfstype=ext3 ro'
      boot
      EOF
      ) > serial-boot.cmd
-     # mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "Poky Minimal" -d ./serial-boot.cmd ./user.scr
-     # cp user.scr /media/boot
+     # mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "Poky Minimal" -d ./serial-boot.cmd ./boot.scr
+     # cp boot.scr /media/boot
 
    6. Unmount the SD partitions and boot the Beagleboard
+
+Note: As of the 2.6.37 linux-yocto kernel recipe, the Beagleboard uses the
+      OMAP_SERIAL device (ttyO2). If you are using an older kernel, such as the
+      2.6.35 linux-yocto-stable, be sure replace ttyO2 with ttyS2 above. You
+      should also override the machine SERIAL_CONSOLE in your local.conf in
+      order to setup the getty on the serial line:
+
+      SERIAL_CONSOLE_beagleboard = "115200 ttyS2"
