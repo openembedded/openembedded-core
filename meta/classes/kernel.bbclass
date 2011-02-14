@@ -198,6 +198,9 @@ kernel_do_configure() {
 }
 
 do_menuconfig() {
+        export DISPLAY='${DISPLAY}'
+        export DBUS_SESSION_BUS_ADDRESS='${DBUS_SESSION_BUS_ADDRESS}'
+        export XAUTHORITY='${XAUTHORITY}'
 	export TERMWINDOWTITLE="${PN} Kernel Configuration"
 	export SHELLCMDS="make menuconfig"
 	${TERMCMDRUN}
