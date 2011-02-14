@@ -35,7 +35,7 @@ S = "${WORKDIR}/${PN}-${PV}/mesa"
 
 EXTRA_OEMAKE = "linux-dri-x86"
 
-DEPENDS += "libdrm-poulsbo libxxf86vm dri2proto libxmu libxi glproto makedepend-native"
+DEPENDS += "libxfixes libxdamage libdrm-poulsbo libxxf86vm dri2proto libxmu libxi glproto makedepend-native"
 
 FILES_${PN} = "${libdir}/* ${libdir}/xorg/modules/dri/* \
 	    ${libdir}/xorg/modules/drivers/*"
