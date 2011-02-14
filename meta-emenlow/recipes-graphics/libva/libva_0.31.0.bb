@@ -2,7 +2,7 @@ DESCRIPTION = "Video Acceleration (VA) API for Linux"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=efc13a0998e678466e556756613c582e"
 PR = "r1"
-DEPENDS = "libxext"
+DEPENDS = "libxfixes libxext"
 
 inherit autotools
 
