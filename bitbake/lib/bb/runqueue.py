@@ -1028,6 +1028,7 @@ class RunQueueExecute:
             self.task_fail(task, result[1]>>8)
         else:
             self.task_complete(task)
+        return True
 
     def finish_now(self):
         if self.stats.active:
