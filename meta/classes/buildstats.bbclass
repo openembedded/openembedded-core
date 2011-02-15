@@ -133,12 +133,13 @@ python run_buildstats () {
         timedata = get_timedata("__timedata_task", e.data)
         if not timedata:
             return
-        time, cpu = timedata
+        elapsedtime, cpu = timedata
         bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         file = open(os.path.join(taskdir, e.task), "a")
         file.write(bb.data.expand("${PF}: %s: Elapsed time: %0.2f seconds \n" %
-                               (e.task, time), e.data))
+                               (e.task, elapsedtime), e.data))
+        file.write("Ended: %0.2f \n" % time.time())
         if cpu:
             file.write("CPU usage: %0.1f%% \n" % cpu)
     	
