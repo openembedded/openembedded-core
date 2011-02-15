@@ -1089,7 +1089,7 @@ That's it. Configure and build.
                 </para></listitem>
                 
                 <listitem><para>
-                    In a layer, create a <filename>linux-yocto_git.bbappend</filename> 
+                    In a layer, create a <filename>linux-yocto-stable_git.bbappend</filename> 
                     file with the following:
                 </para>       
                 
