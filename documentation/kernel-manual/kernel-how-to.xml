@@ -1111,6 +1111,11 @@ That's it. Configure and build.
      # SRC_URI = "git://${KSRC};nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
                     </literallayout>
                 </para>
+
+                <para>
+                    In the previous sample file you need to update and remove the comment from 
+                    the KSRC assignment and also remove the comment from the SRC_URI line.
+                </para>
                 
                 <para>
                     After doing that, select the machine in <filename>build/conf/local.conf</filename>:
@@ -1177,7 +1182,7 @@ That's it. Configure and build.
                     Then, modify the code there, using quilt to save the changes, and recompile until 
                     it works:
                     <literallayout class='monospaced'>
-     $ bitbake -c compile -f linux-yocto
+     $ bitbake -c compile -f linux-yocto-stable
                     </literallayout>
                 </para></listitem>
                 
