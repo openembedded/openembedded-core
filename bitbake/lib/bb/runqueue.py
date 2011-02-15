@@ -748,6 +748,10 @@ class RunQueueData:
                            self.rqdata.runq_depends[task],
                            self.rqdata.runq_revdeps[task])
 
+# Dummy signal handler to ensure we break out of sleep upon SIGCHLD
+def chldhandler(signum, stackframe):
+    pass
+
 class RunQueue:
     def __init__(self, cooker, cfgData, dataCache, taskData, targets):
 
@@ -759,6 +763,8 @@ class RunQueue:
         self.hashvalidate = bb.data.getVar("BB_HASHCHECK_FUNCTION", cfgData, True) or None
 
         self.state = runQueuePrepare
+
+        signal.signal(signal.SIGCHLD, chldhandler)
 
     def check_stamps(self):
         unchecked = {}
