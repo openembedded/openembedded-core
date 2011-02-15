@@ -882,7 +882,7 @@ repository.
                     The following commands illustrate how you can condense and merge two BSPs into a second SCM:
                 <literallayout class='monospaced'>
      &gt; git checkout common_pc-standard
-     &gt; git merge cav_ebt5800-standard
+     &gt; git merge common_pc_64-standard
      # resolve any conflicts and commit them
      &gt; cd .. ; echo linux/.git &gt; .cvsignore
      &gt; cvs import -m "initial import" linux MY_COMPANY start
@@ -1054,7 +1054,7 @@ That's it. Configure and build.
                         For this example the only thing left was the kernel directory with a 
                         <filename>linux-yocto_git.bbappend</filename> file (linux-yocto is the kernel listed in 
                         <filename>meta-crownbay/conf/machine/crownbay.conf</filename></para></listitem>.
-                        <listitem><para>Add a new entry in the <filename>build/donf/bblayers.conf</filename> 
+                        <listitem><para>Add a new entry in the <filename>build/conf/bblayers.conf</filename> 
                         so the new layer can be found by Bitbake.</para></listitem>
                     </itemizedlist>
                 </para></listitem>
@@ -1088,21 +1088,26 @@ That's it. Configure and build.
                 </para></listitem>
                 
                 <listitem><para>
-                    Point the build at the new kernel git tree.
-                </para>
+                    In a layer, create a <filename>linux-yocto_git.bbappend</filename> 
+                    file with the following:
+                </para>       
                 
                 <para>
-                    You can do this by commenting out the SRC_URI variable in 
-                    <filename>meta/recipes-kernel/linux/linux-yocto_git.bb</filename> and using a SRC_URI 
-                    that points to your new bare git tree.
-                    You should also be able to do this in <filename>linux-yocto_git.bbappend</filename> in the layer:
                     <literallayout class='monospaced'>
-     # To use a staged, on-disk bare clone of a Wind River Kernel, use a variant of the 
-     # below SRC_URI = "git://///path/to/kernel/default_kernel.git;fullclone=1"
-     #
-     SRC_URI = "git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;fullclone=1;branch=${KBRANCH};name=machine
-\
-     git://git.pokylinux.org/linux-2.6-windriver.git;protocol=git;noclone=1;branch=wrs_meta;name=meta"
+     COMPATIBLE_MACHINE = ${MACHINE}
+
+     # It is often nice to have a local clone of the kernel repository, to
+     # allow patches to be staged, branches created, and so forth.  Modify
+     # KSRC to point to your local clone as appropriate.
+
+     # KSRC ?= /path/to/your/bare/clone/yocto-kernel
+
+     # KMACHINE is the branch to be built, or alternateively 
+     # KBRANCH can be directly set.
+
+     # KBRANCH ?= "${KMACHINE}-${LINUX_KERNEL_TYPE}"
+
+     # SRC_URI = "git://${KSRC};nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
                     </literallayout>
                 </para>
                 
