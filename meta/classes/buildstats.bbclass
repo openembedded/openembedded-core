@@ -91,8 +91,8 @@ python run_buildstats () {
         # write start of build into build_time
         file = open(build_time,"a")
         # We do this here because subprocess within BuildStarted is messy
-        host_info = subprocess.Popen(["uname", "-a"], stdout=subprocess.PIPE).stdout.read() 
-        file.write("Host Info: %s" % host_info)
+        #host_info = subprocess.Popen(["uname", "-a"], stdout=subprocess.PIPE).stdout.read() 
+        #file.write("Host Info: %s" % host_info)
         file.write("Build Started: %0.2f \n" % time.time())
         file.close()
                 
