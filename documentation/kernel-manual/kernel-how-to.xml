@@ -1052,7 +1052,8 @@ That's it. Configure and build.
                         <listitem><para>Copy meta-emenlow</para></listitem>
                         <listitem><para>Fix or remove anything you do not need.  
                         For this example the only thing left was the kernel directory with a 
-                        <filename>linux-yocto_git.bbappend</filename> file (linux-yocto is the kernel listed in 
+                        <filename>linux-yocto-stable_git.bbappend</filename> file 
+                        (linux-yocto-stable is the kernel listed in 
                         <filename>meta-crownbay/conf/machine/crownbay.conf</filename></para></listitem>.
                         <listitem><para>Add a new entry in the <filename>build/conf/bblayers.conf</filename> 
                         so the new layer can be found by Bitbake.</para></listitem>
