@@ -186,7 +186,7 @@ python run_buildstats () {
         ##############################################
         build_status = os.path.join(bsdir, "build_stats")
         file = open(build_status,"a")
-        file.write(bb.data.expand("Failed at: ${PF} at task: %s \n", e.task))
+        file.write(bb.data.expand("Failed at: ${PF} at task: %s \n" % e.task, e.data))
         file.close()
 
 }
