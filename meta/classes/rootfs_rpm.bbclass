@@ -48,14 +48,19 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	#install pacakges
 	export INSTALL_ROOTFS_RPM="${IMAGE_ROOTFS}"
-	export INSTALL_PLATFORM_RPM="${TARGET_ARCH}"
-	export INSTALL_PLATFORM_EXTRA_RPM="${PACKAGE_ARCHS}"
 	export INSTALL_CONFBASE_RPM="${RPMCONF_TARGET_BASE}"
 	export INSTALL_PACKAGES_NORMAL_RPM="${PACKAGE_INSTALL}"
 	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="${PACKAGE_INSTALL_ATTEMPTONLY}"
 	export INSTALL_PACKAGES_LINGUAS_RPM="${LINGUAS_INSTALL}"
 	export INSTALL_PROVIDENAME_RPM=""
 	export INSTALL_TASK_RPM="populate_sdk"
+
+	# List must be prefered to least preferred order
+	INSTALL_PLATFORM_RPM=""
+	for each_arch in ${PACKAGE_ARCHS} ; do
+		INSTALL_PLATFORM_RPM="$each_arch $INSTALL_PLATFORM_RPM"
+	done
+	export INSTALL_PLATFORM_RPM
 
 	package_install_internal_rpm
 

@@ -35,15 +35,22 @@ package_update_index_rpm () {
 		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
 		    extension=""
 		fi
-		packagedirs="$packagedirs ${DEPLOY_DIR_RPM}/$arch"
-		packagedirs_sdk="$packagedirs_sdk ${DEPLOY_DIR_RPM}/$sdkarch$extension"
+		packagedirs="${DEPLOY_DIR_RPM}/$arch $packagedirs"
+		packagedirs_sdk="${DEPLOY_DIR_RPM}/$sdkarch$extension $packagedirs_sdk"
+
+		rm -rf ${DEPLOY_DIR_RPM}/$arch/solvedb
+		rm -rf ${DEPLOY_DIR_RPM}/$sdkarch$extension/solvedb
 	done
 
 	cat /dev/null > ${RPMCONF_TARGET_BASE}.conf
 	for pkgdir in $packagedirs; do
 		if [ -e $pkgdir/ ]; then
 			echo "Generating solve db for $pkgdir..."
-			rm -rf $pkgdir/solvedb
+			echo $pkgdir/solvedb >> ${RPMCONF_TARGET_BASE}.conf
+			if [ -d $pkgdir/solvedb ]; then
+				# We've already processed this and it's a duplicate
+				continue
+			fi
 			mkdir -p $pkgdir/solvedb
 			echo "# Dynamically generated solve manifest" >> $pkgdir/solvedb/manifest
 			find $pkgdir -maxdepth 1 -type f >> $pkgdir/solvedb/manifest
@@ -53,7 +60,6 @@ package_update_index_rpm () {
 				--ignoresize --nosignature --nodigest \
 				-D "__dbi_txn create nofsync" \
 				$pkgdir/solvedb/manifest
-			echo $pkgdir/solvedb >> ${RPMCONF_TARGET_BASE}.conf
 		fi
 	done
 
@@ -61,7 +67,11 @@ package_update_index_rpm () {
 	for pkgdir in $packagedirs_sdk; do
 		if [ -e $pkgdir/ ]; then
 			echo "Generating solve db for $pkgdir..."
-			rm -rf $pkgdir/solvedb
+			echo $pkgdir/solvedb >> ${RPMCONF_HOST_BASE}.conf
+			if [ -d $pkgdir/solvedb ]; then
+				# We've already processed this and it's a duplicate
+				continue
+			fi	
 			mkdir -p $pkgdir/solvedb
 			echo "# Dynamically generated solve manifest" >> $pkgdir/solvedb/manifest
 			find $pkgdir -maxdepth 1 -type f >> $pkgdir/solvedb/manifest
@@ -71,7 +81,6 @@ package_update_index_rpm () {
 				--ignoresize --nosignature --nodigest \
 				-D "__dbi_txn create nofsync" \
 				$pkgdir/solvedb/manifest
-			echo $pkgdir/solvedb >> ${RPMCONF_HOST_BASE}.conf
 		fi
 	done
 }
@@ -146,8 +155,7 @@ resolve_package_rpm () {
 # install a bunch of packages using rpm
 # the following shell variables needs to be set before calling this func:
 # INSTALL_ROOTFS_RPM - install root dir
-# INSTALL_PLATFORM_RPM - main platform
-# INSTALL_PLATFORM_EXTRA_RPM - extra platform
+# INSTALL_PLATFORM_RPM - extra platform
 # INSTALL_CONFBASE_RPM - configuration file base name
 # INSTALL_PACKAGES_NORMAL_RPM - packages to be installed
 # INSTALL_PACKAGES_ATTEMPTONLY_RPM - packages attemped to be installed only
@@ -158,8 +166,7 @@ resolve_package_rpm () {
 package_install_internal_rpm () {
 
 	local target_rootfs="${INSTALL_ROOTFS_RPM}"
-	local platform="${INSTALL_PLATFORM_RPM}"
-	local platform_extra="${INSTALL_PLATFORM_EXTRA_RPM}"
+	local platforms="${INSTALL_PLATFORM_RPM}"
 	local confbase="${INSTALL_CONFBASE_RPM}"
 	local package_to_install="${INSTALL_PACKAGES_NORMAL_RPM}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_RPM}"
@@ -169,9 +176,8 @@ package_install_internal_rpm () {
 
 	# Setup base system configuration
 	mkdir -p ${target_rootfs}/etc/rpm/
-	echo "${platform}-unknown-linux" >${target_rootfs}/etc/rpm/platform
-	if [ ! -z "$platform_extra" ]; then
-		for pt in $platform_extra ; do
+	if [ ! -z "$platforms" ]; then
+		for pt in $platforms ; do
 			echo "$pt-unknown-linux" >> ${target_rootfs}/etc/rpm/platform
 		done
 	fi
