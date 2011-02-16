@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bf0158b89be493d523d69d9f29265038 \
 
 DEPENDS = "virtual/xserver font-util"
 RDEPENDS_${PN} = "encodings font-util"
-RDEPENDS_${PN}_virtclass-native = "font-util"
+RDEPENDS_${PN}_virtclass-native = "font-util-native"
 
 PE = "1"
 PR = "${INC_PR}.1"
