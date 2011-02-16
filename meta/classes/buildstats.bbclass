@@ -67,7 +67,7 @@ python run_buildstats () {
     import bb.build
     import bb.event
     import bb.data
-    import time, subprocess
+    import time, subprocess, platform
 
     if isinstance(e, bb.event.BuildStarted):
         ##############################################
@@ -90,9 +90,12 @@ python run_buildstats () {
         build_time = os.path.join(bsdir, "build_stats")
         # write start of build into build_time
         file = open(build_time,"a")
-        # We do this here because subprocess within BuildStarted is messy
-        #host_info = subprocess.Popen(["uname", "-a"], stdout=subprocess.PIPE).stdout.read() 
-        #file.write("Host Info: %s" % host_info)
+        host_info = platform.uname()
+        file.write("Host Info: ")
+        for x in host_info:
+            if x:
+                file.write(x + " ")
+        file.write("\n")
         file.write("Build Started: %0.2f \n" % time.time())
         file.close()
                 
