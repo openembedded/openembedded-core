@@ -96,5 +96,3 @@ do_install_append_nylon() {
 		perl -pi -e 's/-Wdeclaration-after-statement //g' ${i}
 	done
 }
-
-PARALLEL_MAKE = ""
