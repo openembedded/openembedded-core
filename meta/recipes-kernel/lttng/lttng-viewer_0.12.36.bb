@@ -27,6 +27,7 @@ inherit autotools
 LEAD_SONAME = "liblttvtraceread*"
 
 FILES_${PN} += "\
+    ${libdir}/liblttvtraceread*.so \
     ${libdir}/lttv/plugins/*.so \
     ${datadir}/LinuxTraceToolkitViewer/facilities/* \
     ${datadir}/LinuxTraceToolkitViewer/pixmaps/* "
