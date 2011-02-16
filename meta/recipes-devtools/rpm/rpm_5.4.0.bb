@@ -54,6 +54,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;ex
 	   file://header-include-fix.patch \
 	   file://rpm-platform.patch \
 	   file://rpm-showrc.patch \
+	   file://rpm-nofsync.patch \
 	  "
 
 #           file://hdraddorappend.patch \

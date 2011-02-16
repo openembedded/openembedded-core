@@ -1,0 +1,34 @@
+Backport from RPM 5.4.1 CVS, disabled fsync.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur rpm-5.4.0.orig/CHANGES rpm-5.4.0/CHANGES
+--- rpm-5.4.0.orig/CHANGES	2010-12-29 07:51:38.000000000 -0600
++++ rpm-5.4.0/CHANGES	2011-02-15 20:54:27.021926840 -0600
+@@ -1,4 +1,5 @@
+ 5.4.0 -> 5.4.1:
++    - jbj: remove fsync(2) after file install, its intolerably slow.
+ 
+ 5.3.7 -> 5.4.0:
+     - jbj: remove markReplacedFiles.
+diff -ur rpm-5.4.0.orig/lib/fsm.c rpm-5.4.0/lib/fsm.c
+--- rpm-5.4.0.orig/lib/fsm.c	2009-12-10 12:52:18.000000000 -0600
++++ rpm-5.4.0/lib/fsm.c	2011-02-15 20:55:04.372938221 -0600
+@@ -1017,7 +1017,17 @@
+ 	    (void) fsmNext(fsm, IOSM_NOTIFY);
+     }
+ 
++#ifdef DYING
++/* Measurements from installing kernel-source package:
++ * +fsync
++ *     total:               1      0.000000 MB    640.854524 secs
++ * +fdatasync
++ *     total:               1      0.000000 MB    419.983200 secs
++ * w/o fsync/fdsatasync:
++ *     total:               1      0.000000 MB     12.492918 secs
++ */
+     xx = fsync(Fileno(fsm->wfd));
++#endif
+ 
+     if (st->st_size > 0 && (fsm->fdigest || fsm->digest)) {
+ 	void * digest = NULL;
