@@ -24,4 +24,22 @@ S = "${WORKDIR}/OpenSP-${PV}"
 
 inherit autotools gettext
 
+EXTRA_OECONF_virtclass-native = "\
+	--enable-default-catalog=${sysconfdir}/sgml/catalog \
+	--enable-default-search-path=${datadir}/sgml \
+	"
+
+do_install_append() {
+	# Set up symlinks to often-used alternate names. See
+	# http://www.linuxfromscratch.org/blfs/view/stable/pst/opensp.html
+	cd ${D}${libdir}
+	ln -sf libosp.so libsp.so
+
+	cd ${D}${bindir}
+	for util in nsgmls sgmlnorm spam spcat spent sx; do
+		ln -sf o$util $util	
+	done
+	ln -sf osx sgml2xml
+}
+
 BBCLASSEXTEND = "native"
