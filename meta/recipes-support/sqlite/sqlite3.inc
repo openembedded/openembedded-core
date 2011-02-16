@@ -3,6 +3,7 @@ HOMEPAGE = "http://www.sqlite.org"
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "readline ncurses tcl-native"
+DEPENDS_virtclass-native = "tcl-native"
 LICENSE = "PD"
 
 SRC_URI = "http://www.sqlite.org/sqlite-${PV}.tar.gz \
@@ -12,8 +13,8 @@ S = "${WORKDIR}/sqlite-${PV}"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--disable-tcl --enable-shared \
-		--enable-threadsafe"
+EXTRA_OECONF = "--disable-tcl --enable-shared --enable-threadsafe"
+EXTRA_OECONF_virtclass-native = "--disable-tcl --enable-shared --enable-threadsafe --disable-readline --enable-tempstore"
 export config_BUILD_CC = "${BUILD_CC}"
 export config_BUILD_CFLAGS = "${BUILD_CFLAGS}"
 export config_BUILD_LIBS = "${BUILD_LDFLAGS}"
