@@ -1107,6 +1107,8 @@ class RunQueueExecute:
             # themselves
             bblogger.handlers = [bb.event.LogHandler()]
 
+            signal.signal(signal.SIGCHLD, signal.SIG_DFL)
+
             self.rq.state = runQueueChildProcess
             # Make the child the process group leader
             os.setpgid(0, 0)
