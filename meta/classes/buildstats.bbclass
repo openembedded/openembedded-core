@@ -80,7 +80,6 @@ python run_buildstats () {
             pass
         set_bn(e)
         bn = get_bn(e)
-        bb.warn(bn)
         bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
         try:
             bb.mkdirhier(bsdir)
