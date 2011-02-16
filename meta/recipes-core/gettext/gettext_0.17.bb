@@ -24,7 +24,7 @@ SRC_URI_append_linux-uclibcgnueabi = " file://gettext-error_print_progname.patch
 SRC_URI[md5sum] = "58a2bc6d39c0ba57823034d55d65d606"
 SRC_URI[sha256sum] = "209638bb8e162f22c281145a34e220c66f1f6e9ff5e4c50c6f2ef2ded59537ba"
 
-PARALLEL_MAKE = ""
+#PARALLEL_MAKE = ""
 
 inherit autotools
 
