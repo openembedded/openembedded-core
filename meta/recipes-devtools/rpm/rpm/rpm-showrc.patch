@@ -1,0 +1,23 @@
+Workaround for a memory leak in --showrc.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur rpm-5.4.0.orig/lib/rpmrc.c rpm-5.4.0/lib/rpmrc.c
+--- rpm-5.4.0.orig/lib/rpmrc.c	2011-02-15 20:40:13.006853913 -0600
++++ rpm-5.4.0/lib/rpmrc.c	2011-02-15 20:44:39.708972391 -0600
+@@ -1216,11 +1223,15 @@
+ 		if (DNEVR != NULL)
+ 		    fprintf(fp, "    %s\n", DNEVR+2);
+ 	    }
++#if 0
+ 	    (void)rpmdsFree(ds);
+ 	    ds = NULL;
++#endif
+ 	    fprintf(fp, "\n");
+ 	}
++#if 0
+ 	PRCO = rpmdsFreePRCO(PRCO);
++#endif
+     }
+ 
+     if (rpmIsVerbose()) {

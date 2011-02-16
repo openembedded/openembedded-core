@@ -219,7 +219,8 @@ package_install_internal_rpm () {
 
 	# Generate an install solution by doing a --justdb install, then recreate it with
 	# an actual package install!
-	${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+	${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
 		-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 		-D "__dbi_txn create nofsync" \
 		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -235,7 +236,8 @@ package_install_internal_rpm () {
 				exit 1
 			fi
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}"
-			${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+			${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+				--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
 				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync private" \
 				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -254,7 +256,8 @@ package_install_internal_rpm () {
 	 cat /dev/null >  ${target_rootfs}/install/recommend.list
 	 while [ $loop -eq 1 ]; do
 		# Dump the full set of recommends...
-		${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
 			-D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${confbase}.macro`" \
 			-D "__dbi_txn create nofsync private" \
 			-qa --qf "[%{RECOMMENDS}\n]" | sort -u > ${target_rootfs}/install/recommend
@@ -273,7 +276,8 @@ package_install_internal_rpm () {
 				continue
 			fi
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_{task}_recommend.${PID}"
-			${RPM} -D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+			${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+				--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
 				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync private" \
 				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -293,7 +297,8 @@ package_install_internal_rpm () {
 
 	# Attempt install
 	${RPM} --root ${target_rootfs} \
-		-D "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+		--predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
 		-D "_dbpath ${rpmlibdir}" \
 		--noscripts --notriggers --noparentdirs --nolinktos \
 		-D "__dbi_txn create nofsync private" \

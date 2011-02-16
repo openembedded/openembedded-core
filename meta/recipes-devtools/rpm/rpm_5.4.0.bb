@@ -43,7 +43,7 @@ LICENSE = "LGPL 2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "bzip2 zlib python perl db openssl elfutils expat libpcre attr acl popt"
-PR = "r11"
+PR = "r12"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -51,7 +51,9 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;ex
 	   file://perfile_rpmdeps.sh \
 	   file://rpm-autogen.patch \
 	   file://rpm-libsql-fix.patch \
-           file://header-include-fix.patch \
+	   file://header-include-fix.patch \
+	   file://rpm-platform.patch \
+	   file://rpm-showrc.patch \
 	  "
 
 #           file://hdraddorappend.patch \
@@ -155,7 +157,7 @@ EXTRA_OECONF = "--verbose \
 		--with-path-macros=${rpm_macros} \
 		--with-bugreport=http://bugzilla.pokylinux.org"
 
-CFLAGS_append = " -DRPM_VENDOR_WINDRIVER"
+CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY"
 
 PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-common ${PN}-build python-rpm-dbg python-rpm perl-module-rpm perl-module-rpm-dev ${PN}-locale"
 

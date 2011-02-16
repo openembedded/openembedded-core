@@ -1,0 +1,132 @@
+Fix up platform and related sysinfo file loading.
+
+This ensures that RPM knows the compatible set of package types at all times.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
+--- rpm-5.4.0.orig/lib/depends.c	2011-02-15 20:40:13.002849708 -0600
++++ rpm-5.4.0/lib/depends.c	2011-02-15 20:47:05.838981632 -0600
+@@ -248,7 +248,7 @@
+ 	    he->p.ptr = _free(he->p.ptr);
+ 	}
+ 
+-#if defined(RPM_VENDOR_WINDRIVER)
++#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_POKY)
+ 	/*
+ 	 * If we're capable of installing multiple colors
+ 	 * but at least one of the packages are white (0), we
+@@ -505,7 +505,7 @@
+     return 0;
+ }
+ 
+-#if defined(RPM_VENDOR_WINDRIVER)
++#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_POKY)
+ /* Is "compat" compatible w/ arch? */
+ int _isCompatibleArch(const char * arch, const char * compat)
+ {
+@@ -649,7 +649,7 @@
+ 
+ 	    if (arch == NULL || (parch = rpmteA(p)) == NULL)
+ 		continue;
+-#if defined(RPM_VENDOR_WINDRIVER)
++#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_POKY)
+ 	    /* XXX hackery for alias matching. */
+ 	    if (!_isCompatibleArch(arch, parch))
+ 		continue;
+@@ -815,6 +815,12 @@
+     return rc;
+ }
+ 
++#if defined(RPM_VENDOR_WINDRIVER)
++#define _ETC_RPM_SYSINFO        "%{_etcrpm}/sysinfo"
++#else
++#define _ETC_RPM_SYSINFO        SYSCONFIGDIR "/sysinfo"
++#endif
++
+ /*@only@*/ /*@null@*/ /*@unchecked@*/
+ static char *sysinfo_path = NULL;
+ 
+@@ -1296,7 +1302,7 @@
+ 	sysinfo_path = rpmExpand("%{?_rpmds_sysinfo_path}", NULL);
+ 	if (!(sysinfo_path != NULL && *sysinfo_path == '/')) {
+ 	    sysinfo_path = _free(sysinfo_path);
+-	    sysinfo_path = xstrdup(SYSCONFIGDIR "/sysinfo");
++	    sysinfo_path = rpmExpand(_ETC_RPM_SYSINFO, NULL);
+ 	}
+     }
+ 
+diff -ur rpm-5.4.0.orig/lib/rpmds.c rpm-5.4.0/lib/rpmds.c
+--- rpm-5.4.0.orig/lib/rpmds.c	2011-02-15 20:40:13.004855352 -0600
++++ rpm-5.4.0/lib/rpmds.c	2011-02-15 20:41:55.598846670 -0600
+@@ -1737,7 +1737,7 @@
+ /*@-observertrans @*/
+ 	    _sysinfo_path = _free(_sysinfo_path);
+ /*@=observertrans @*/
+-	    _sysinfo_path = xstrdup(_ETC_RPM_SYSINFO);
++	    _sysinfo_path = rpmExpand(_ETC_RPM_SYSINFO, NULL);
+ 	}
+     }
+ /*@=modobserver@*/
+diff -ur rpm-5.4.0.orig/lib/rpmrc.c rpm-5.4.0/lib/rpmrc.c
+--- rpm-5.4.0.orig/lib/rpmrc.c	2011-02-15 20:40:13.006853913 -0600
++++ rpm-5.4.0/lib/rpmrc.c	2011-02-15 20:44:39.708972391 -0600
+@@ -38,7 +38,13 @@
+ static const char * configTarget = NULL;
+ 
+ /*@observer@*/ /*@unchecked@*/
+-static const char * platform = SYSCONFIGDIR "/platform";
++#if defined(RPM_VENDOR_WINDRIVER)
++#define _ETC_RPM_PLATFORM        "%{_etcrpm}/platform"
++#else
++#define _ETC_RPM_PLATFORM        SYSCONFIGDIR "/platform"
++#endif
++
++static const char * _platform = NULL;
+ 
+ /*@only@*/ /*@relnull@*/ /*@unchecked@*/
+ void * platpat = NULL;
+@@ -685,16 +691,17 @@
+     int rc;
+ 
+     while (!gotDefaults) {
+-#if defined(RPM_VENDOR_WINDRIVER)
+-	const char * _platform = rpmGetPath(__etcrpm, "/platform", NULL);
+-#else
+-	const char * _platform = platform;
+-#endif
++	if (_platform == NULL) {
++	    _platform = rpmExpand("%{?_rpmrc_platform_path}", NULL);
++	    /* XXX may need to validate path existence somewhen. */
++	    if (!(_platform != NULL && *_platform == '/')) {
++		_platform = _free(_platform);
++		_platform = rpmExpand(_ETC_RPM_PLATFORM, NULL);
++	    }
++	}
+ 	CVOG_t cvog = NULL;
+ #if defined(RPM_VENDOR_OPENPKG) /* larger-utsname */
+ 	const char *cp;
+-#endif
+-#if defined(RPM_VENDOR_OPENPKG) /* larger-utsname */
+ 	/* utsname fields on some platforms (like HP-UX) are very small
+ 	   (just about 8 characters). This is too small for OpenPKG, so cheat! */
+ 	rc = uname(&un_real);
+@@ -771,9 +778,7 @@
+ 	if (cp != NULL && cp != _platform)
+ 	    cp = _free(cp);
+ #endif
+-#if defined(RPM_VENDOR_WINDRIVER)
+ 	_platform = _free(_platform);
+-#endif
+ 
+ 	if (configTarget && !parseCVOG(configTarget, &cvog) && cvog != NULL) {
+ 	    gotDefaults = 1;
+@@ -1096,6 +1101,8 @@
+ 
+ #ifdef PREMACROFILES
+     if (rpmReadRC(PREMACROFILES)) return -1;
++#else
++    if (rpmReadRC(NULL)) return -1;
+ #endif
+ 
+     /* Reset umask to its default umask(2) value. */
