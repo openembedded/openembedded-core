@@ -88,3 +88,27 @@ toolchain_create_sdk_env_script_for_installer () {
 	echo 'export POKY_DISTRO_VERSION="${DISTRO_VERSION}"' >> $script
 	echo 'export POKY_SDK_VERSION="${SDK_VERSION}"' >> $script
 }
+
+#This function create a site config file
+toolchain_create_sdk_siteconfig () {
+	local siteconfig=$1
+	shift
+	local files=$@
+
+	rm -f $siteconfig
+	touch $siteconfig
+	for sitefile in ${files} ; do
+		cat $sitefile >> $siteconfig
+	done
+}
+
+#This function create a version information file
+toolchain_create_sdk_version () {
+	local versionfile=$1
+	rm -f $versionfile
+	touch $versionfile
+	echo 'Distro: ${DISTRO}' >> $versionfile
+	echo 'Distro Version: ${DISTRO_VERSION}' >> $versionfile
+	echo 'Metadata Revision: ${METADATA_REVISION}' >> $versionfile
+	echo 'Timestamp: ${DATETIME}' >> $versionfile
+}

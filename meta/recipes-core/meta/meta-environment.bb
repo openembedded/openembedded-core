@@ -2,7 +2,7 @@ DESCRIPTION = "Package of environment files for SDK"
 LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 LICENSE = "MIT"
-PR = "r1"
+PR = "r2"
 
 EXCLUDE_FROM_WORLD = "1"
 
@@ -22,22 +22,12 @@ do_generate_content() {
     rm -rf ${SDK_OUTPUT}
     mkdir -p ${SDK_OUTPUT}/${SDKPATH}
 
-    siteconfig=${SDK_OUTPUT}/${SDKPATH}/site-config-${OLD_MULTIMACH_TARGET_SYS}
-
-    touch $siteconfig
-    for sitefile in ${TARGET_CONFIG_SITE} ; do
-        cat $sitefile >> $siteconfig
-    done
+    toolchain_create_sdk_siteconfig ${SDK_OUTPUT}/${SDKPATH}/site-config-${OLD_MULTIMACH_TARGET_SYS} ${TARGET_CONFIG_SITE}
 
     toolchain_create_sdk_env_script_for_installer
 
     # Add version information
-    versionfile=${SDK_OUTPUT}/${SDKPATH}/version-${OLD_MULTIMACH_TARGET_SYS}
-    touch $versionfile
-    echo 'Distro: ${DISTRO}' >> $versionfile
-    echo 'Distro Version: ${DISTRO_VERSION}' >> $versionfile
-    echo 'Metadata Revision: ${METADATA_REVISION}' >> $versionfile
-    echo 'Timestamp: ${DATETIME}' >> $versionfile
+    toolchain_create_sdk_version ${SDK_OUTPUT}/${SDKPATH}/version-${OLD_MULTIMACH_TARGET_SYS}
 }
 addtask generate_content before do_install after do_compile
 
