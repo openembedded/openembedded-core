@@ -10,8 +10,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 
 SECTION = "libs"
 PRIORITY = "optional"
-DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor gtk-doc-native libxrandr \
-           libgcrypt libxdamage libxrender libxcomposite cairo gdk-pixbuf"
+DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor \
+           gtk-doc-native docbook-utils-native libxrandr libgcrypt \
+           libxdamage libxrender libxcomposite cairo gdk-pixbuf"
 
 inherit autotools pkgconfig
 
