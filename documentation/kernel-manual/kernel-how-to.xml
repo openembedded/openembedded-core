@@ -1198,6 +1198,37 @@ That's it. Configure and build.
             </para>
         </section>
 
+        <section id='bsp-creating-bsp-without-a-local-kernel-repo'>
+        <title>Creating a BSP Based on an Existing Similar BSP Without a Local Kernel Repository</title>
+
+            <para>
+                If you are creating a BSP based on an existing similar BSP but you do not have
+                a local kernel repository, the process is very similar to the process in 
+                the previous section (<xref linkend='bsp-creating'/>). 
+            </para>
+
+            <para>
+                Follow the exact same process as described in the previous section with 
+                these slight modifications:
+            </para>
+            <orderedlist>
+                <listitem><para>Perform Step 1 as is from the previous section.</para></listitem>
+                <listitem><para>Perform Step 2 as is from the previous section.</para></listitem>
+                <listitem><para>Perform Step 3 but do not modify the 
+                    KSRC line in the bbappend file.</para></listitem>
+                <listitem><para>Edit the <filename>local.conf</filename> so 
+                    that it contains the following:
+                    <literallayout class='monospaced'>
+     YOCTO_KERNEL_EXTERNAL_BRANCH="&lt;your-machine&gt;-standard
+                    </literallayout></para>
+                    <para>Adding this statement to the file triggers BSP bootstrapping
+                    to occur and the correct branches and base configuration to be used.
+                </para></listitem>
+                <listitem><para>Perform Step 4 as is from the previous section.</para></listitem>
+                <listitem><para>Perform Step 5 as is from the previous section.</para></listitem>
+            </orderedlist>
+        </section>
+
 
 <!--        <section id='bsp-creating-a-new-bsp'>
             <title>BSP: Creating a New BSP</title>
