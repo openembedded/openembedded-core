@@ -10,7 +10,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=83d26c69f6f0172ee7f795790424b453"
 
 DEPENDS = "perl-native"
 
-SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz"
+SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
+           file://parallel-make-fix.patch \
+          "
 S = "${WORKDIR}/openssl-${PV}"
 
 AR_append = " r"
@@ -28,8 +30,6 @@ CFLAG_mtx-2 := "${@'${CFLAG}'.replace('-O2', '')}"
 export DIRS = "crypto ssl apps"
 export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
-
-PARALLEL_MAKE = ""
 
 inherit pkgconfig siteinfo
 
