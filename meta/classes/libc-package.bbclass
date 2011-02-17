@@ -12,6 +12,10 @@ GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "ondevice"
 python __anonymous () {
     enabled = bb.data.getVar("ENABLE_BINARY_LOCALE_GENERATION", d, 1)
 
+    pn = d.getVar("PN", True)
+    if pn.endswith("-initial"):
+        enabled = False
+
     if enabled and int(enabled):
         import re
 
