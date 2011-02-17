@@ -35,7 +35,7 @@ LANG=C awk "\$2 == \"/dev\" && \$4 == \"tmpfs\" { exit 1 }" /proc/mounts && {
 }
 
 if [ -e /etc/dev.tar ]; then
-	(cd /; tar xf /etc/dev.tar)
+	(cd /; tar xf /etc/dev.tar 2>&1 | grep -v 'time stamp')
 	not_first_boot=1
 fi
 
