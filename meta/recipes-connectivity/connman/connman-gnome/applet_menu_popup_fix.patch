@@ -1,0 +1,19 @@
+Even if all services are not available, we still need to let user have
+the ability to configure network, for example, online/offline, etc.
+Therefore enable the callback menu even when status is unavailable.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+diff --git a/applet/status.c b/applet/status.c
+index 13ec752..d817f22 100644
+--- a/applet/status.c
++++ b/applet/status.c
+@@ -231,8 +231,6 @@ void status_unavailable(void)
+ {
+ 	icon_animation_stop(animation);
+ 
+-	available = FALSE;
+-
+ 	gtk_status_icon_set_from_pixbuf(statusicon, pixbuf_notifier);
+ 	gtk_status_icon_set_tooltip(statusicon,
+ 				"Connection Manager daemon is not running");
