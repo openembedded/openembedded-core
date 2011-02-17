@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=41;endline=74;md5=875385159b2ee76ecf
 
 DEPENDS = "sgml-common-native"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/docbook/docbook-dsssl-${PV}.tar.bz2"
 
@@ -28,7 +28,7 @@ do_install () {
 
 	install -d ${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}
 	install -m 0644 catalog ${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}
-	cp -PpRr common ${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}
+	cp -v -R * ${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}
 
 	install-catalog --add ${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat \
 		${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}/catalog
