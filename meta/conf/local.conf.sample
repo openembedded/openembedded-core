@@ -18,22 +18,19 @@ CONF_VERSION = "1"
 # The machine to target
 MACHINE ?= "qemux86"
 
-# Other supported machines
+# Supported emulation machines
 #MACHINE ?= "qemuarm"
+#MACHINE ?= "qemumips"
+#MACHINE ?= "qemuppc"
+#MACHINE ?= "qemux86"
 #MACHINE ?= "qemux86-64"
+
+# Supported target hardware for demonstration purposes
 #MACHINE ?= "atom-pc"
-#MACHINE ?= "c7x0"
-#MACHINE ?= "akita"
-#MACHINE ?= "spitz"
-#MACHINE ?= "cm-x270"
-#MACHINE ?= "em-x270"
-#MACHINE ?= "htcuniversal"
-#MACHINE ?= "mx31ads"
-#MACHINE ?= "mx31litekit"
-#MACHINE ?= "mx31phy"
-#MACHINE ?= "zylonite"
-#MACHINE ?= "igep0020"
-#MACHINE ?= "igep0030"
+#MACHINE ?= "beagleboard"
+#MACHINE ?= "emenlow"
+#MACHINE ?= "mpc8315e-rdb"
+#MACHINE ?= "routerstationpro"
 
 DISTRO ?= "poky"
 # For bleeding edge / experimental / unstable package versions
