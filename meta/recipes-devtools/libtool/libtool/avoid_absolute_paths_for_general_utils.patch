@@ -1,0 +1,37 @@
+On some distro the path of utils like sed, grep etc are different than the
+buildhost system.
+ This was causing runtime issue while running libtoolize from the 
+libtool-nativesdk package.
+  This patch takes out the absolute paths of these utils, and put 
+responsibility on the end-user to set correct paths for these utilities to be 
+found out.
+
+Nitin A Kamble <nitin.a.kamble@intel.com>
+2011/02/18
+
+
+Index: libtool-2.4/libltdl/config/general.m4sh
+===================================================================
+--- libtool-2.4.orig/libltdl/config/general.m4sh	2010-08-31 23:02:45.000000000 -0700
++++ libtool-2.4/libltdl/config/general.m4sh	2011-02-18 09:59:09.482038240 -0800
+@@ -45,15 +45,15 @@
+ M4SH_VERBATIM([[
+ : ${CP="cp -f"}
+ test "${ECHO+set}" = set || ECHO=${as_echo-'printf %s\n'}
+-: ${EGREP="@EGREP@"}
+-: ${FGREP="@FGREP@"}
+-: ${GREP="@GREP@"}
+-: ${LN_S="@LN_S@"}
++: ${EGREP="egrep"}
++: ${FGREP="fgrep"}
++: ${GREP="grep"}
++: ${LN_S="ln -s"}
+ : ${MAKE="make"}
+ : ${MKDIR="mkdir"}
+ : ${MV="mv -f"}
+ : ${RM="rm -f"}
+-: ${SED="@SED@"}
++: ${SED="sed"}
+ : ${SHELL="${CONFIG_SHELL-/bin/sh}"}
+ : ${Xsed="$SED -e 1s/^X//"}
+ 

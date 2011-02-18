@@ -1,6 +1,6 @@
 require libtool-${PV}.inc
 
-PR = "r1"
+PR = "r2"
 
 #
 # We want the results of libtool-cross preserved - don't stage anything ourselves.
