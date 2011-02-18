@@ -20,6 +20,47 @@
             </para>
         </answer>
     </qandaentry>
+
+
+
+
+
+    <qandaentry>
+        <question>
+            <para>
+                I only have Python 2.4 or 2.5 but BitBake requires Python 2.6.
+                Can I still use Poky?
+            </para>
+        </question>
+        <answer>
+            <para>
+                You can use a stand-alone tarball to provide Python 2.6.
+                You can find pre-built 32 and 64-bit versions of Python 2.6 at the following locations:
+                <itemizedlist>
+                    <listitem><para><ulink url='http://autobuilder.yoctoproject.org/downloads/miscsupport/python-nativesdk-standalone-i586.tar.bz2'></ulink></para></listitem>
+                    <listitem><para><ulink url='http://autobuilder.yoctoproject.org/downloads/miscsupport/python-nativesdk-standalone-x86_64.tar.bz2'></ulink></para></listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                These tarballs are self-contained with all required libraries and should work 
+                on most Linux systems.  
+                To use the tarballs extract them into the root 
+                directory and run the appropriate command:
+                <literallayout class='monospaced'>
+     $ export PATH=/opt/poky/sysroots/i586-pokysdk-linux/usr/bin/:$PATH
+     $ export PATH=/opt/poky/sysroots/x86_64-pokysdk-linux/usr/bin/:$PATH
+                </literallayout>
+            </para>
+            <para>
+                Once you run the command, BitBake uses Python 2.6.
+            </para>
+        </answer>
+    </qandaentry>
+
+
+
+
+
     <qandaentry>
         <question>
             <para>
