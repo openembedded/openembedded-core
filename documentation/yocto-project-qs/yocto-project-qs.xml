@@ -278,6 +278,12 @@
      $ bitbake poky-image-sato
                  </literallayout>
              </para></note>
+             <note><para>
+                 BitBake requires Python 2.6.  For more information on this requirement, 
+                 see the FAQ appendix in the 
+                 <ulink url='http://www.yoctoproject.org/docs/poky-ref-manual/poky-ref-manual.html'>
+                 Poky Reference Manual</ulink>.
+             </para></note>
              The final command runs the image:
              <literallayout class='monospaced'>
      $ poky-qemu qemux86
