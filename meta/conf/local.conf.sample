@@ -15,8 +15,9 @@ CONF_VERSION = "1"
 # Also, make can be passed flags so it run parallel threads e.g.:
 # PARALLEL_MAKE = "-j 4"
 
-# The machine to target
-MACHINE ?= "qemux86"
+# Set a default machine to target unless a machine is selected from the 
+# lists below.
+MACHINE ??= "qemux86"
 
 # Supported emulation machines
 #MACHINE ?= "qemuarm"
