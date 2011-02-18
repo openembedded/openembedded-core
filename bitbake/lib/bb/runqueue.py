@@ -748,9 +748,6 @@ class RunQueueData:
                            self.rqdata.runq_depends[task],
                            self.rqdata.runq_revdeps[task])
 
-# Dummy signal handler to ensure we break out of sleep upon SIGCHLD
-def chldhandler(signum, stackframe):
-    pass
 
 class RunQueue:
     def __init__(self, cooker, cfgData, dataCache, taskData, targets):
@@ -763,8 +760,6 @@ class RunQueue:
         self.hashvalidate = bb.data.getVar("BB_HASHCHECK_FUNCTION", cfgData, True) or None
 
         self.state = runQueuePrepare
-
-        signal.signal(signal.SIGCHLD, chldhandler)
 
     def check_stamps(self):
         unchecked = {}
@@ -1106,8 +1101,6 @@ class RunQueueExecute:
             # process via the server process, not print them
             # themselves
             bblogger.handlers = [bb.event.LogHandler()]
-
-            signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 
             self.rq.state = runQueueChildProcess
             # Make the child the process group leader

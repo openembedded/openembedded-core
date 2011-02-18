@@ -36,6 +36,7 @@ import bb
 from bb.ui import uievent
 import xmlrpclib
 import pickle
+import signal
 
 DEBUG = False
 
@@ -105,6 +106,10 @@ class BBUIEventQueue:
     def system_quit( self ):
         bb.event.unregister_UIHhandler(self.EventHandle)
 
+# Dummy signal handler to ensure we break out of sleep upon SIGCHLD
+def chldhandler(signum, stackframe):
+    pass
+
 class BitBakeServer():
     # remove this when you're done with debugging
     # allow_reuse_address = True
@@ -144,7 +149,9 @@ class BitBakeServer():
                 pass
         if nextsleep is not None:
             #print "Sleeping for %s (%s)" % (nextsleep, delay)
+            signal.signal(signal.SIGCHLD, chldhandler)
             time.sleep(nextsleep)
+            signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 
     def server_exit(self):
         # Tell idle functions we're exiting
