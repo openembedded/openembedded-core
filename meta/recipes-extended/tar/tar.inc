@@ -17,8 +17,8 @@ do_install () {
 }
 
 do_install_extra () {
-    mv ${D}${bindir}/tar ${D}${base_bindir}/tar.${PN} \
-    mv ${D}${libexecdir}/rmt ${D}${libexecdir}/rmt.${PN} 
+    mv ${D}${bindir}/tar ${D}${base_bindir}/tar.${PN}
+    mv ${D}${libexecdir}/rmt ${D}${libexecdir}/rmt.${PN}
 }
 
 pkg_postinst_${PN} () {
