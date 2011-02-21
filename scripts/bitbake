@@ -15,7 +15,7 @@ done
 buildpseudo="1"
 if [ $needpseudo = "1" ] && [ -e "$BUILDDIR/pseudodone" ]; then
     PSEUDOBINDIR=`cat $BUILDDIR/pseudodone`
-    if [ -e "$PSEUDOBINDIR/pseudo" ]; then
+    if [ -e "$PSEUDOBINDIR/pseudo" -a -e "$PSEUDOBINDIR/tar" ]; then
         buildpseudo="0"
     fi
 fi
@@ -27,7 +27,7 @@ OLDPATH=$PATH
 export PATH=`echo $PATH | sed s#[^:]*/scripts:##`
 if [ $buildpseudo = "1" ]; then
     echo "Pseudo is not present but is required, building this first before the main build"
-    bitbake pseudo-native -c populate_sysroot
+    bitbake pseudo-native tar-replacement-native -c populate_sysroot
     ret=$?
     if [ "$ret" != "0" ]; then
         exit 1
