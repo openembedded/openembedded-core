@@ -32,6 +32,7 @@ do_rm_work () {
 
     # Change normal stamps into setscene stamps as they better reflect the
     # fact WORKDIR is now empty
+    # Also leave noexec stamps since setscene stamps don't cover them
     cd `dirname ${STAMP}`
     for i in `basename ${STAMP}`*
     do
@@ -39,6 +40,14 @@ do_rm_work () {
         do
             case $i in
             *do_setscene*)
+                break
+                ;;
+            *do_package_write*)
+                i=dummy
+                break
+                ;;
+            *do_build*)
+                i=dummy
                 break
                 ;;
             *_setscene*)
