@@ -9,7 +9,6 @@ SRC_URI = "${GNU_MIRROR}/tar/tar-${PV}.tar.bz2"
 inherit autotools gettext
 
 EXTRAINSTALL = "do_install_extra"
-EXTRAINSTALL_virtclass-native = ""
 
 do_install () {
     autotools_do_install
