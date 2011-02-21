@@ -84,13 +84,13 @@ done
 
 check_result()
 {
-  result="$?"
-  if [  "$result" == "-1" ]; then
+  result=$?
+  if [ $result -eq 1 ]; then
+    exit -1
+  elif [  $result -ne 0 ]; then
      echo_info "\n#############################################################################"
      echo_info "# Meet error(s) when installing Yocto ADT! Please check log file for details. "
      echo_info "#############################################################################\n"
-    exit -1
-  elif [ "$result" == "1" ]; then
     exit -1
   fi
 }
