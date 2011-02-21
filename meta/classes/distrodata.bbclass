@@ -1,4 +1,3 @@
-
 require conf/distro/include/distro_tracking_fields.inc
 
 addhandler distro_eventhandler
@@ -263,9 +262,10 @@ python do_checkpkg() {
 	"""
 	prefix1 = "[a-zA-Z][a-zA-Z0-9]*([\-_][a-zA-Z]\w+)*[\-_]"	# match most patterns which uses "-" as separator to version digits
 	prefix2 = "[a-zA-Z]+"			# a loose pattern such as for unzip552.tar.gz
-	prefix = "(%s|%s)" % (prefix1, prefix2)
-	suffix = "(tar\.gz|tgz|tar\.bz2|zip|xz)"
-	suffixtuple = ("tar.gz", "tgz", "zip", "tar.bz2", "tar.xz")
+	prefix3 = "[0-9a-zA-Z]+"			# a loose pattern such as for 80325-quicky-0.4.tar.gz
+	prefix = "(%s|%s|%s)" % (prefix1, prefix2, prefix3)
+	suffix = "(tar\.gz|tgz|tar\.bz2|zip|xz|rpm)"
+	suffixtuple = ("tar.gz", "tgz", "zip", "tar.bz2", "tar.xz", "src.rpm")
 
 	sinterstr = "(?P<name>%s?)(?P<ver>.*)" % prefix
 	sdirstr = "(?P<name>%s)(?P<ver>.*)\.(?P<type>%s$)" % (prefix, suffix)
@@ -294,9 +294,8 @@ python do_checkpkg() {
 		(en, ev, et) = new
 		if on != en or (et and et not in suffixtuple):
 			return 0
-
-		ov = re.search("\d+[^a-zA-Z]+", ov).group()
-		ev = re.search("\d+[^a-zA-Z]+", ev).group()
+		ov = re.search("[\d|\.]+[^a-zA-Z]+", ov).group()
+		ev = re.search("[\d|\.]+[^a-zA-Z]+", ev).group()
 		return bb.utils.vercmp(("0", ov, ""), ("0", ev, ""))
 
 	"""
@@ -415,6 +414,7 @@ python do_checkpkg() {
 
 			"""match "{PN}-5.21.1.tar.gz">{PN}-5.21.1.tar.gz """
 			pn1 = re.search("^%s" % prefix, curname).group()
+			
 			s = "[^\"]*%s[^\d\"]*?(\d+[\.\-_])+[^\"]*" % pn1
 			searchstr = "[hH][rR][eE][fF]=\"%s\".*>" % s
 			reg = re.compile(searchstr)
