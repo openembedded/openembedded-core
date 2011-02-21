@@ -80,6 +80,13 @@ def symlink(source, destination, force=False):
         if e.errno != errno.EEXIST or os.readlink(destination) != source:
             raise
 
+class CalledProcessError(Exception):
+    def __init__(self, retcode, cmd, output = None):
+        self.retcode = retcode
+        self.cmd = cmd
+        self.output = output
+    def __str__(self):
+        return "Command '%s' returned non-zero exit status %d with output %s" % (self.cmd, self.retcode, self.output)
 
 # Not needed when we move to python 2.7
 def check_output(*popenargs, **kwargs):
@@ -111,6 +118,6 @@ def check_output(*popenargs, **kwargs):
         cmd = kwargs.get("args")
         if cmd is None:
             cmd = popenargs[0]
-        raise subprocess.CalledProcessError(retcode, cmd, output=output)
+        raise CalledProcessError(retcode, cmd, output=output)
     return output
 
