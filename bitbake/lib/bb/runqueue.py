@@ -1076,8 +1076,6 @@ class RunQueueExecute:
                 bb.mkdirhier(p)
             logger.debug(2, "Running %s:%s under fakeroot, state dir is %s" % (fn, taskname, fakedirs))
 
-        env['PATH'] = self.cooker.configuration.initial_path
-
         envbackup = os.environ.copy()
         for e in envbackup:
             os.unsetenv(e)
