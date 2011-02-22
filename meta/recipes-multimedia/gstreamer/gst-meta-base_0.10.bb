@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 
-PR = "r8"
+PR = "r9"
 
 PACKAGES = "\
     gst-meta-base \
@@ -19,6 +19,7 @@ RDEPENDS_gst-meta-base = "\
     gstreamer \
     gst-plugins-base-playbin \
     gst-plugins-base-decodebin \
+    gst-plugins-base-decodebin2 \
     gst-plugins-base-gnomevfs \
     gst-plugins-base-alsa \
     gst-plugins-base-volume \
