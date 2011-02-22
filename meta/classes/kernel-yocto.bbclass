@@ -21,7 +21,9 @@ do_patch() {
 
 	# updates or generates the target description
 	if [ -n "${KERNEL_FEATURES}" ]; then
-	       addon_features="--features ${KERNEL_FEATURES}"
+		for feat in ${KERNEL_FEATURES}; do
+			addon_features="$addon_features --feature $feat"
+		done
 	fi
 	updateme ${addon_features} ${ARCH} ${MACHINE} ${WORKDIR}
 	if [ $? -ne 0 ]; then

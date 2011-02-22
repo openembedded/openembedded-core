@@ -17,7 +17,7 @@ KMETA = meta
 
 LINUX_VERSION ?= "2.6.37"
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
-PR = "r15"
+PR = "r16"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
@@ -28,7 +28,9 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|mpc8315e-rdb|
 
 # Functionality flags
 KERNEL_REVISION_CHECKING ?= "t"
-KERNEL_FEATURES=features/netfilter
+KERNEL_FEATURES="features/netfilter"
+KERNEL_FEATURES_append_qemux86=" cfg/sound"
+KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
 
 # extra tasks
 addtask kernel_link_vmlinux after do_compile before do_install
