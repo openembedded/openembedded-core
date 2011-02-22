@@ -30,6 +30,10 @@ case "$1" in
        echo "Starting Xserver"
        if [ -f /etc/X11/Xusername ]; then
            username=`cat /etc/X11/Xusername`
+           # setting for rootless X
+           chmod o+w /var/log
+           chmod g+r /dev/tty[0-3]
+           chmod o+rw /dev/input/*
        fi
        # Using sudo -i here has the nice side effect of making sire
        # HOME, USER and other previously problematic variables
