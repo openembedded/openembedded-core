@@ -17,7 +17,7 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://getline.m4.patch \
            file://disable_java.patch"
 
-#	   file://gettext-autoconf-lib-link-no-L.patch \
+#	   file://gettext-autoconf-lib-link-no-L.patch
 
 SRC_URI_append_linux-uclibc = " file://gettext-error_print_progname.patch"
 SRC_URI_append_linux-uclibceabi = " file://gettext-error_print_progname.patch"

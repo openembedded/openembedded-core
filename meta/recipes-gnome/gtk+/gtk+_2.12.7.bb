@@ -16,13 +16,14 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
            file://filechooser-props.patch;patch=1 \
            file://filechooser-default.patch;patch=1 \
            file://filechooser-sizefix.patch;patch=1 \
-# temporary
-#           file://gtklabel-resize-patch;patch=1 \
-#           file://menu-deactivate.patch;patch=1 \
-#        file://combo-arrow-size.patch;patch=1;pnum=0 \
-# die die die
-#           file://pangoxft2.10.6.diff;patch=1 \
 	  "
+# temporary
+#           file://gtklabel-resize-patch;patch=1
+#           file://menu-deactivate.patch;patch=1
+#        file://combo-arrow-size.patch;patch=1;pnum=0
+# die die die
+#           file://pangoxft2.10.6.diff;patch=1
+
 
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-display-migration"
 

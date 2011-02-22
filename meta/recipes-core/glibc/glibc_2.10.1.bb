@@ -37,10 +37,9 @@ RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
 
 #	   file://noinfo.patch;patch=1
 #	   file://ldconfig.patch;patch=1;pnum=0
-#	   file://arm-machine-gmon.patch;patch=1;pnum=0 \
-#	   \
-#	   file://arm-ioperm.patch;patch=1;pnum=0 \
-#	   file://ldd.patch;patch=1;pnum=0 \
+#	   file://arm-machine-gmon.patch;patch=1;pnum=0
+#	   file://arm-ioperm.patch;patch=1;pnum=0
+#	   file://ldd.patch;patch=1;pnum=0
 SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
            ftp://ftp.gnu.org/pub/gnu/glibc/glibc-ports-${PV}.tar.bz2 \
            ftp://ftp.gnu.org/pub/gnu/glibc/glibc-libidn-${PV}.tar.bz2 \

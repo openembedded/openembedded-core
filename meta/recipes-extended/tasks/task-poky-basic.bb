@@ -98,9 +98,9 @@ RDEPENDS_task-poky-basic-extended = "\
     iputils \
     iptables \
     module-init-tools \
-#    openssh \
     openssl \
     "
+#    openssh
 
 RDEPENDS_task-poky-dev-utils = "\
     byacc \

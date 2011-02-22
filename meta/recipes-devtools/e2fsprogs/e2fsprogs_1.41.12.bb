@@ -7,7 +7,7 @@ SRC_URI += "file://quotefix.patch;patch=1 \
 
 SRC_URI[md5sum] = "1b24a21fc0c2381ef420961cbfec733f"
 SRC_URI[sha256sum] = "9c26d0dc20bfdafd0f27f3564791d6121d1c1876549d4f2ff1e41955c9bb9f20"
-#file://no-hardlinks.patch;patch=1 \
+#file://no-hardlinks.patch;patch=1
 
 PARALLEL_MAKE = ""
 

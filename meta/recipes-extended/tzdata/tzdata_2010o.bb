@@ -22,8 +22,8 @@ S = "${WORKDIR}"
 
 TZONES= "africa antarctica asia australasia europe northamerica southamerica  \
          factory solar87 solar88 solar89 etcetera backward systemv \
-#        pacificnew \
         "
+# pacificnew 
 
 do_compile () {
         for zone in ${TZONES}; do \

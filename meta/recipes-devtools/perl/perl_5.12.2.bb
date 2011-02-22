@@ -37,7 +37,6 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
         file://debian/enc2xs_inc.diff \
         file://debian/errno_ver.diff \
         file://debian/extutils_hacks.diff \
-#        file://debian/fakeroot.diff \
         file://debian/instmodsh_doc.diff \
         file://debian/ld_run_path.diff \
         file://debian/libnet_config_path.diff \
@@ -69,6 +68,7 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
         file://config.sh-64 \
         file://config.sh-64-le \
         file://config.sh-64-be"
+#        file://debian/fakeroot.diff
 
 SRC_URI[md5sum] = "af2df531d46b77fdf0d97eecb03eddb2"
 SRC_URI[sha256sum] = "cf888340021d5a2d1238bbd9b8b55aaf420a848d46e4d317cb8567f86ceb1022"

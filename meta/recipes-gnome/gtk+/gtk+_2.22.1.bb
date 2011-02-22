@@ -15,18 +15,18 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.22/gtk+-${PV}.tar.bz2 \
            file://toggle-font.diff;patch=1;pnum=0 \
            file://0001-bgo-584832-Duplicate-the-exec-string-returned-by-gtk.patch;patch=1 \
            file://doc-fixes.patch \
-# TO MERGE
-#           file://entry-cairo.patch;patch=1;pnum=0 \
-#           file://filesystem-volumes.patch;patch=1 \
-#           file://filechooser-props.patch;patch=1 \
-#           file://filechooser-default.patch;patch=1 \
-#           file://filechooser-sizefix.patch;patch=1 \
-# temporary
-#           file://gtklabel-resize-patch;patch=1 \
-#           file://menu-deactivate.patch;patch=1 \
-#        file://combo-arrow-size.patch;patch=1;pnum=0 \
-#            file://configurefix.patch;patch=1 \
 	  "
+# TO MERGE
+#           file://entry-cairo.patch;patch=1;pnum=0
+#           file://filesystem-volumes.patch;patch=1
+#           file://filechooser-props.patch;patch=1
+#           file://filechooser-default.patch;patch=1
+#           file://filechooser-sizefix.patch;patch=1
+# temporary
+#           file://gtklabel-resize-patch;patch=1
+#           file://menu-deactivate.patch;patch=1
+#        file://combo-arrow-size.patch;patch=1;pnum=0
+#            file://configurefix.patch;patch=1
 
 SRC_URI[md5sum] = "fdce46ba354c155230b7d4090b17f7d9"
 SRC_URI[sha256sum] = "965bc124f0d25087c4cb2a64cbfd7e4f896e05be8d560fbba68dd8685ba24d07"

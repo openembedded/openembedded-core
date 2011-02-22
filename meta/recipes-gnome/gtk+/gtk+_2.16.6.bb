@@ -10,18 +10,20 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.16/gtk+-${PV}.tar.bz2 \
            file://cellrenderer-cairo.patch;patch=1;pnum=0 \
            file://toggle-font.diff;patch=1;pnum=0 \
 	   file://0001-bgo-584832-Duplicate-the-exec-string-returned-by-gtk.patch;patch=1 \
-# TO MERGE
-#           file://entry-cairo.patch;patch=1;pnum=0 \
-#           file://filesystem-volumes.patch;patch=1 \
-#           file://filechooser-props.patch;patch=1 \
-#           file://filechooser-default.patch;patch=1 \
-#           file://filechooser-sizefix.patch;patch=1 \
-# temporary
-#           file://gtklabel-resize-patch;patch=1 \
-#           file://menu-deactivate.patch;patch=1 \
-#        file://combo-arrow-size.patch;patch=1;pnum=0 \
             file://disable-gio-png-sniff-test.diff;patch=1 \
 	  "
+# TO MERGE
+#           file://entry-cairo.patch;patch=1;pnum=0
+#           file://filesystem-volumes.patch;patch=1
+#           file://filechooser-props.patch;patch=1
+#           file://filechooser-default.patch;patch=1
+#           file://filechooser-sizefix.patch;patch=1
+# temporary
+#           file://gtklabel-resize-patch;patch=1
+#           file://menu-deactivate.patch;patch=1
+#        file://combo-arrow-size.patch;patch=1;pnum=0
+
+
 
 EXTRA_OECONF = "--without-libtiff --without-libjasper --disable-xkb --disable-glibtest --disable-cups"
 

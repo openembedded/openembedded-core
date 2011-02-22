@@ -186,12 +186,12 @@ FILES_${PN} = "${bindir}/rpm \
 		${libdir}/rpm/bin/wget \
 		"
 
-#		${libdir}/rpm/magic \
-#		${libdir}/rpm/magic.mgc \
-#		${libdir}/rpm/magic.mime \
-#		${libdir}/rpm/magic.mime.mgc \
-#		${libdir}/rpm/bin/db_* \
-#		${libdir}/rpm/bin/grep \
+#		${libdir}/rpm/magic
+#		${libdir}/rpm/magic.mgc
+#		${libdir}/rpm/magic.mime
+#		${libdir}/rpm/magic.mime.mgc
+#		${libdir}/rpm/bin/db_*
+#		${libdir}/rpm/bin/grep
 
 FILES_${PN}-dbg = "${bindir}/.debug \
 		${libdir}/.debug \

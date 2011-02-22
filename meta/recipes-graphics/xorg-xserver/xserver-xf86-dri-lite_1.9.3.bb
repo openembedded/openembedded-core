@@ -10,8 +10,8 @@ PR = "r0"
 
 SRC_URI += "file://nodolt.patch \
             file://crosscompile.patch"
-#           file://libdri-xinerama-symbol.patch;patch=1 \
-#           file://xserver-boottime.patch;patch=1"
+#           file://libdri-xinerama-symbol.patch;patch=1
+#           file://xserver-boottime.patch;patch=1
 
 # Misc build failure for master HEAD
 SRC_URI += "file://fix_open_max_preprocessor_error.patch"
