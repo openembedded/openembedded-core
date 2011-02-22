@@ -129,6 +129,13 @@ while [ $i -le $# ]; do
             SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -serial stdio"
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT console=ttyS0"
             ;;
+        "audio")
+            if [[ "x$MACHINE" == "xqemux86" || "x$MACHINE" == "xqemux86-64" ]]; then
+                echo "Enable audio on qemu. Pls. install snd_intel8x0 or snd_ens1370 driver in linux guest.";
+                QEMU_AUDIO_DRV="alsa"
+                SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -soundhw ac97,es1370"
+            fi
+            ;;
         "kvm")
             KVM_ENABLED="yes"
             KVM_CAPABLE=`grep 'vmx\|smx' /proc/cpuinfo`
