@@ -394,7 +394,7 @@ python do_package_deb () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = os.system("PATH=\"%s\" %s dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, True), bb.data.getVar("FAKEROOT", localdata, True) or "fakeroot", root, pkgoutdir))
+        ret = os.system("PATH=\"%s\" dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, True), root, pkgoutdir))
         if ret != 0:
             bb.utils.prunedir(controldir)
             bb.utils.unlockfile(lf)
@@ -420,6 +420,8 @@ python () {
         deps.append('dpkg-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_deb', 'depends', " ".join(deps), d)
+        bb.data.setVarFlag('do_package_write_deb', 'fakeroot', "1", d)
+        bb.data.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1", d)
 }
 
 python do_package_write_deb () {
