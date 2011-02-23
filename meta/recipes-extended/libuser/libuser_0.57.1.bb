@@ -11,15 +11,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 
 SECTION = "base"
 
-SRC_URI = "https://fedorahosted.org/releases/l/i/libuser/libuser-${PV}.tar.xz \
-           file://disable-sgml-doc.patch;patch=1"
+SRC_URI = "https://fedorahosted.org/releases/l/i/libuser/libuser-${PV}.tar.xz"
 
 SRC_URI[md5sum] = "be82c6941264d0b4bd04f95fb342ec7d"
 SRC_URI[sha256sum] = "a61289867581fa715354a3fafe09c3e481173ce0a2dcb33b04588b6ac13cead5"
-PR = "r0"
+PR = "r1"
 
-DEPENDS = "gettext libpam glib-2.0 xz-native"
+DEPENDS = "gettext popt libpam glib-2.0 xz-native docbook-utils-native linuxdoc-tools-native"
 
-EXTRA_OECONF += "--disable-gtk-doc --without-python"
+EXTRA_OECONF += "--without-python"
 
 inherit autotools
