@@ -9,14 +9,14 @@ devshell_do_devshell() {
 	export XAUTHORITY='${XAUTHORITY}'
 	export TERMWINDOWTITLE="Bitbake Developer Shell"
 	export EXTRA_OEMAKE='${EXTRA_OEMAKE}'
-	${TERMCMD}
+	export SHELLCMDS="bash"
+	${TERMCMDRUN}
 	if [ $? -ne 0 ]; then
 	    echo "Fatal: '${TERMCMD}' not found. Check TERMCMD variable."
 	    exit 1
 	fi
 }
 addtask devshell after do_patch
-
 
 EXPORT_FUNCTIONS do_devshell
 
