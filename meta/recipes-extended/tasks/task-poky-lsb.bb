@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Small Image Tasks"
-PR = "r2"
+PR = "r3"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -28,7 +28,13 @@ PACKAGES = "\
     task-poky-tcl \
     task-poky-tcl-dbg \
     task-poky-tcl-dev \
+    task-poky-lsb-perl-add \
+    task-poky-lsb-python-add \
+    task-poky-lsb-graphic-add \
+    task-poky-lsb-runtime-add \
+    task-poky-lsb-command-add \
     "
+
 
 ALLOW_EMPTY = "1"
 
@@ -39,6 +45,11 @@ RDEPENDS_task-poky-lsb = "\
     task-poky-perl \
     task-poky-python \
     task-poky-tcl \
+    task-poky-lsb-perl-add \
+    task-poky-lsb-python-add \
+    task-poky-lsb-graphic-add \
+    task-poky-lsb-runtime-add \
+    task-poky-lsb-command-add \
     "
 
 #
@@ -111,3 +122,52 @@ RDEPENDS_task-poky-misc = "\
     usbutils \
     zlib \
     "
+
+RDEPENDS_task-poky-lsb-command-add = "\
+    localedef \
+    fontconfig-utils \
+    mailx \
+    msmtp \
+"
+#    cups
+
+RDEPENDS_task-poky-lsb-perl-add = "\
+    perl-modules \
+    perl-dev \
+    perl-misc \
+    perl-pod \
+"
+
+RDEPENDS_task-poky-lsb-python-add = "\
+    python-modules \
+"
+
+RDEPENDS_task-poky-lsb-graphic-add = "\
+    libqtcore4 \
+    libqtgui4 \
+    libqtsql4 \
+    libqtsvg4 \
+    libqtxml4 \
+    libqtnetwork4 \
+    libqtopengl4 \
+    libxt \
+    libxxf86vm \
+    libdrm \
+    libglu \
+    libxi \
+    libxtst \
+    qt4-plugin-sqldriver-sqlite \
+"
+
+#    mesa-dri 
+
+RDEPENDS_task-poky-lsb-runtime-add = "\
+    ldd \
+    pam-plugin-wheel \
+    e2fsprogs-mke2fs \
+    eglibc-localedata-posix \
+    mkfontdir \
+    liburi-perl \
+    libxml-parser-perl \
+    libxml-perl \
+"
