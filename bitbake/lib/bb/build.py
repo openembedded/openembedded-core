@@ -321,7 +321,7 @@ def _exec_task(fn, task, d, quieterr):
     except FuncFailed as exc:
         if not quieterr:
             logger.error(str(exc))
-            event.fire(TaskFailed(exc.name, logfn, localdata), localdata)
+            event.fire(TaskFailed(task, logfn, localdata), localdata)
         return 1
     finally:
         sys.stdout.flush()
@@ -364,7 +364,7 @@ def exec_task(fn, task, d):
         if not quieterr:
             logger.error("Build of %s failed" % (task))
             logger.error(format_exc())
-            failedevent = TaskFailed("Task Failed", None, task, d)
+            failedevent = TaskFailed(task, None, d)
             event.fire(failedevent, d)
         return 1
 
