@@ -29,6 +29,8 @@ CONFIGUREOPTS := "${@d.getVar('CONFIGUREOPTS', True).replace('--datadir=${datadi
 
 CFLAGS =+ "-I${S}/include"
 
+SSTATEPOSTINSTFUNCS += "openjade_sstate_postinst"
+
 do_install() {
 	# Refer to http://www.linuxfromscratch.org/blfs/view/stable/pst/openjade.html
 	# for details.
@@ -44,13 +46,18 @@ do_install() {
 	install -m 644 dsssl/catalog ${D}${datadir}/sgml/openjade-${PV}
 	install -m 644 dsssl/*.{dtd,dsl,sgm} ${D}${datadir}/sgml/openjade-${PV}
 
-	# The catalog must live in the sysroot and it must be there for
-	# install-catalog to do its thing.
 	install -d ${datadir}/sgml/openjade-${PV}
 	install -m 644 dsssl/catalog ${datadir}/sgml/openjade-${PV}/catalog
-	install-catalog --add ${sysconfdir}/sgml/openjade-${PV}.cat \
-		${datadir}/sgml/openjade-${PV}/catalog
 
-	install-catalog --add ${sysconfdir}/sgml/sgml-docbook.cat \
+	install -d ${D}${sysconfdir}/sgml
+	echo "CATALOG ${datadir}/sgml/openjade-${PV}/catalog" > \
+		${D}${sysconfdir}/sgml/openjade-${PV}.cat
+}
+
+openjade_sstate_postinst() {
+	# Ensure that the catalog file sgml-docbook.cat is properly
+	# updated when the package is installed from sstate cache.
+	install-catalog \
+		--add ${sysconfdir}/sgml/sgml-docbook.cat \
 		${sysconfdir}/sgml/openjade-${PV}.cat
 }
