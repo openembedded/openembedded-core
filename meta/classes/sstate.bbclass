@@ -16,6 +16,8 @@ BB_HASHFILENAME = "${SSTATE_PKGNAME}"
 
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
+SSTATEPOSTINSTFUNCS ?= ""
+
 python () {
     if bb.data.inherits_class('native', d):
         bb.data.setVar('SSTATE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
@@ -128,6 +130,9 @@ def sstate_install(ss, d):
     for di in reversed(dirs):
         f.write(di + "\n")
     f.close()
+
+    for postinst in (bb.data.getVar('SSTATEPOSTINSTFUNCS', d, True) or '').split():
+        bb.build.exec_func(postinst, d)
 
     for lock in locks:
         bb.utils.unlockfile(lock)
