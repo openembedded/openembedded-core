@@ -20,9 +20,9 @@ SRC_URI = "http://www.docbook.org/sgml/${DTD_VERSION}/docbook-${DTD_VERSION}.zip
 # The .zip file extracts to the current dir
 S = "${WORKDIR}"
 
-INC_PR = "r0"
+INC_PR = "r1"
 
-SYSROOT_PREPROCESS_FUNCS += "docbook_sgml_dtd_native_mangle"
+SSTATEPOSTINSTFUNCS += "docbook_sgml_dtd_sstate_postinst"
 
 inherit native
 
@@ -33,21 +33,15 @@ do_install () {
 	install docbook.cat ${D}${datadir}/sgml/docbook/sgml-dtd-${DTD_VERSION}/catalog
 	cp -PpRr *.dtd *.mod *.dcl ${D}${datadir}/sgml/docbook/sgml-dtd-${DTD_VERSION}
 
-	install-catalog \
-		--add ${sysconfdir}/sgml/sgml-docbook-dtd-${DTD_VERSION}.cat \
-		${D}${datadir}/sgml/docbook/sgml-dtd-${DTD_VERSION}/catalog
-
-	install-catalog \
-		--add ${sysconfdir}/sgml/sgml-docbook-dtd-${DTD_VERSION}.cat \
-		${sysconfdir}/sgml/sgml-docbook.cat
-
-	# Copy the generated catalog to the image directory for staging.
 	install -d ${D}${sysconfdir}/sgml
-	cp ${sysconfdir}/sgml/sgml-docbook-dtd-${DTD_VERSION}.cat ${D}${sysconfdir}/sgml/
+	echo "CATALOG ${datadir}/sgml/docbook/sgml-dtd-${DTD_VERSION}/catalog" > \
+		${D}${sysconfdir}/sgml/sgml-docbook-dtd-${DTD_VERSION}.cat
 }
 
-docbook_sgml_dtd_native_mangle () {
-	# Remove the image directory path ${D} from the .cat files.
-	sed -i -e "s|${D}||g" ${SYSROOT_DESTDIR}${sysconfdir}/sgml/sgml-docbook.cat || true
-	sed -i -e "s|${D}||g" ${SYSROOT_DESTDIR}${sysconfdir}/sgml/sgml-docbook-dtd-${DTD_VERSION}.cat
+docbook_sgml_dtd_sstate_postinst () {
+	# Ensure that the catalog file sgml-docbook.cat is properly
+	# updated when the package is installed from sstate cache.
+	install-catalog \
+		--add ${sysconfdir}/sgml/sgml-docbook.cat \
+		${sysconfdir}/sgml/sgml-docbook-dtd-${DTD_VERSION}.cat
 }
