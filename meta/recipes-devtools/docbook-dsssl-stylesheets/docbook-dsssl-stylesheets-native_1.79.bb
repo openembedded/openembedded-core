@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=41;endline=74;md5=875385159b2ee76ecf
 
 DEPENDS = "sgml-common-native"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/docbook/docbook-dsssl-${PV}.tar.bz2"
 
@@ -18,7 +18,7 @@ S = "${WORKDIR}/docbook-dsssl-${PV}"
 
 inherit native
 
-SYSROOT_PREPROCESS_FUNCS += "docbook_dssl_stylesheets_native_mangle"
+SSTATEPOSTINSTFUNCS += "docbook_dsssl_stylesheets_sstate_postinst"
 
 do_install () {
 	# Refer to http://www.linuxfromscratch.org/blfs/view/stable/pst/docbook-dsssl.html
@@ -30,23 +30,17 @@ do_install () {
 	install -m 0644 catalog ${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}
 	cp -v -R * ${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}
 
-	install-catalog --add ${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat \
-		${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}/catalog
-
-	install-catalog --add ${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat \
-		${D}${datadir}/sgml/docbook/dsssl-stylesheets-${PV}/common/catalog
-
-	install-catalog --add ${sysconfdir}/sgml/sgml-docbook.cat \
-		${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
-
-	# Move these to the image directory so they get staged properly.
 	install -d ${D}${sysconfdir}/sgml
-	cp ${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat ${D}${sysconfdir}/sgml/
-	cp ${sysconfdir}/sgml/sgml-docbook.cat ${D}${sysconfdir}/sgml/
-	cp ${sysconfdir}/sgml/catalog ${D}${sysconfdir}/sgml/
+	echo "CATALOG ${datadir}/sgml/docbook/dsssl-stylesheets-${PV}/catalog" > \
+		 ${D}${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
+	echo "CATALOG ${datadir}/sgml/docbook/dsssl-stylesheets-${PV}/common/catalog" >> \
+		${D}${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
 }
 
-docbook_dssl_stylesheets_native_mangle () {
-	# Remove the image directory path ${D} from the .cat file.
-	sed -i -e "s|${D}||g" ${SYSROOT_DESTDIR}${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
+docbook_dsssl_stylesheets_sstate_postinst () {
+	# Ensure that the catalog file sgml-docbook.cat is properly
+	# updated when the package is installed from sstate cache.
+	install-catalog \
+		--add ${sysconfdir}/sgml/sgml-docbook.cat \
+		${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
 }
