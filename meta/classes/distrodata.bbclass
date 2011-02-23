@@ -368,7 +368,6 @@ python do_checkpkg() {
 			for line in fhtml.split("\n"):
 				if line.find(curver) >= 0:
 					valid = 1
-
 				m = reg.search(line)
 				if m:
 					ver = m.group().split("\"")[1]
@@ -416,7 +415,7 @@ python do_checkpkg() {
 			pn1 = re.search("^%s" % prefix, curname).group()
 			
 			s = "[^\"]*%s[^\d\"]*?(\d+[\.\-_])+[^\"]*" % pn1
-			searchstr = "[hH][rR][eE][fF]=\"%s\".*>" % s
+			searchstr = "[hH][rR][eE][fF]=\"%s\".*[>\"]" % s
 			reg = re.compile(searchstr)
 	
 			valid = 0
@@ -425,6 +424,8 @@ python do_checkpkg() {
 				if m:
 					valid = 1
 					ver = m.group().split("\"")[1].split("/")[-1]
+					if ver == "download":
+						ver = m.group().split("\"")[1].split("/")[-2]
 					ver = parse_dir(ver)
 					if ver and __vercmp(newver, ver) < 0:
 						newver = ver
@@ -434,7 +435,7 @@ python do_checkpkg() {
 				status = "ErrParseDir"
 			else:
 				"""newver still contains a full package name string"""
-				status = re.search("(\d+[.\-_])*[0-9a-zA-Z]+", newver[1]).group()
+				status = re.search("(\d+[\.\-_])*(\d+[0-9a-zA-Z]*)", newver[1]).group()
 		elif not len(fhtml):
 			status = "ErrHostNoDir"
 
