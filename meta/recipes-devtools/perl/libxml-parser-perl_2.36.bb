@@ -3,6 +3,8 @@ LICENSE = "Artistic"
 LIC_FILES_CHKSUM = "file://README;endline=6;md5=fa7bbbd54d37d6ecf4ef33b7c98b9cd7"
 DEPENDS += "expat expat-native"
 
+PR = "r1"
+
 SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Parser-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "1b868962b658bd87e1563ecd56498ded"
@@ -19,7 +21,3 @@ do_compile() {
 	cpan_do_compile
 }
 
-
-
-FILES_${PN} = "${PERLLIBDIRS}/auto/XML/Parser/Expat/* \
-                ${PERLLIBDIRS}/XML"
