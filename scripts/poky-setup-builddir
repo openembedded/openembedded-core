@@ -66,8 +66,8 @@ you with some default values. You may wish to edit it to use a different MACHINE
 cores for example. See the file for more information as common configuration
 options are commented.
 
-Also, for more information see the Poky handbook:
-http://pokylinux.org/doc/poky-handbook.html
+Also, for more information see the Poky Reference Manual:
+    http://yoctoproject.org/community/documentation
 
 EOM
     cp -f $POKYLOCALCONF $BUILDDIR/conf/local.conf
@@ -82,8 +82,8 @@ You had no conf/bblayers.conf file. Poky has created this configuration file for
 you with some default values. To add additional metadata layers into your
 configuration please add entries to this file.
 
-For more information see the Poky handbook:
-    http://pokylinux.org/doc/poky-handbook.html
+For more information see the Poky Reference Manual:
+    http://yoctoproject.org/community/documentation
 
 EOM
 
