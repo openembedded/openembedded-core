@@ -113,6 +113,12 @@ while [ $i -le $# ]; do
             if [ -z "$ROOTFS" ]; then
                 if [ -f "$arg" ]; then
                     process_filename $arg
+                elif [ -d "$arg" ]; then
+                    # Handle the case where the nfsroot dir has -image-
+                    # in the pathname
+                    echo "Assuming $arg is an nfs rootfs"
+                    FSTYPE=nfs
+                    ROOTFS=$arg
                 else
                     ROOTFS=$arg
                     LAZY_ROOTFS="true"
