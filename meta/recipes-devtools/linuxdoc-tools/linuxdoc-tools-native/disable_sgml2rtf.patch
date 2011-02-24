@@ -1,0 +1,49 @@
+The build of sgml2rtf is problematic due to the way it wants to
+link to a shared library version of flex. Flex only ships with a
+static lib. Rather than diverging from upstream flex, simply skip
+building this un-needed utility.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+diff -urN linuxdoc-tools-0.9.66.orig//Makefile.in linuxdoc-tools-0.9.66/Makefile.in
+--- linuxdoc-tools-0.9.66.orig//Makefile.in	2009-11-09 11:58:25.000000000 -0800
++++ linuxdoc-tools-0.9.66/Makefile.in	2011-02-24 15:37:46.556937051 -0800
+@@ -40,7 +40,7 @@
+ pkgdata_ddir       = $(DESTDIR)$(pkgdatadir)
+ tex_ddir           = $(DESTDIR)$(texdir)
+ 
+-progs    := sgml2html sgml2info sgml2latex sgml2lyx sgml2rtf sgml2txt sgmlcheck
++progs    := sgml2html sgml2info sgml2latex sgml2lyx sgml2txt sgmlcheck
+ 
+ OPTIMIZE  = -O
+ 
+@@ -64,9 +64,9 @@
+ 	@echo "Compiling preprocessor (in sgmlpre/)..."
+ 	( cd sgmlpre ; \
+ 	  $(MAKE) CFLAGS="$(OPTIMIZE)" LEX=flex sgmlpre || exit -1 )
+-	@echo "Compiling RTF conversion tools (in rtf-fix/)..."
+-	( cd rtf-fix ; \
+-	  $(MAKE) CFLAGS="$(OPTIMIZE)" || exit -1 )
++#	@echo "Compiling RTF conversion tools (in rtf-fix/)..."
++#	( cd rtf-fix ; \
++#	  $(MAKE) CFLAGS="$(OPTIMIZE)" || exit -1 )
+ 	@echo "making man pages in genman ..."
+ 	if [ ! -d genman ]; then mkdir genman ; fi
+ 	for ii in man/* ; do \
+@@ -109,7 +109,7 @@
+ 
+ #    -- Install auxiliary programs
+ 	mkdir -p $(auxbin_ddir)
+-	for ii in sgmlpre/sgmlpre rtf-fix/rtf2rtf; do \
++	for ii in sgmlpre/sgmlpre; do \
+ 	  bn=`basename $$ii`; \
+ 	  $(INSTALL_PROGRAM) $$ii $(auxbin_ddir)/$$bn; \
+ 	done
+@@ -198,7 +198,7 @@
+ 
+ clean::
+ 	-rm -f *~ bin/*~ bin/linuxdoc
+-	for d in $(DDIRS) $(MDIRS) rtf-fix; do $(MAKE) -C $$d clean; done
++	for d in $(DDIRS) $(MDIRS); do $(MAKE) -C $$d clean; done
+ 	(cd sgmlpre ; rm -f sgmlpre.o sgmlpre)
+ 	-rm -rf genman/
+ 
