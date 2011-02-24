@@ -228,23 +228,23 @@ machine2=`echo $MACHINE | tr 'a-z' 'A-Z' | sed 's/-/_/'`
 # Defaults used when these vars need to be inferred
 QEMUX86_DEFAULT_KERNEL=bzImage-qemux86.bin
 QEMUX86_DEFAULT_FSTYPE=ext3
-QEMUX86_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+QEMUX86_DEFAULT_ROOTFS="poky-image-sato-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
 
 QEMUX86_64_DEFAULT_KERNEL=bzImage-qemux86-64.bin
 QEMUX86_64_DEFAULT_FSTYPE=ext3
-QEMUX86_64_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+QEMUX86_64_DEFAULT_ROOTFS="poky-image-sato-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
 
 QEMUARM_DEFAULT_KERNEL=zImage-qemuarm.bin
 QEMUARM_DEFAULT_FSTYPE=ext3
-QEMUARM_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+QEMUARM_DEFAULT_ROOTFS="poky-image-sato-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
 
 QEMUMIPS_DEFAULT_KERNEL=vmlinux-qemumips.bin
 QEMUMIPS_DEFAULT_FSTYPE=ext3
-QEMUMIPS_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+QEMUMIPS_DEFAULT_ROOTFS="poky-image-sato-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
 
 QEMUPPC_DEFAULT_KERNEL=zImage-qemuppc.bin
 QEMUPPC_DEFAULT_FSTYPE=ext3
-QEMUPPC_DEFAULT_ROOTFS="poky-image-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
+QEMUPPC_DEFAULT_ROOTFS="poky-image-sato-sdk poky-image-sato poky-image-lsb poky-image-basic poky-image-minimal"
 
 AKITA_DEFAULT_KERNEL=zImage-akita.bin
 AKITA_DEFAULT_FSTYPE=jffs2
