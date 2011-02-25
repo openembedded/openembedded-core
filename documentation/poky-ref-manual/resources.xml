@@ -149,7 +149,7 @@
 </programlisting>
 
     <para>
-        A Poky contributions tree (poky-contrib, git://git.pokylinux.org/poky-contrib.git)
+        A Poky contributions tree (poky-contrib, git://git.yoctoproject.org/poky-contrib.git)
         exists for people to stage contributions in, for regular contributors.
         If people desire such access, please ask on the mailing list. Usually
         access will be given to anyone with a proven track record of good patches.
