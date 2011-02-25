@@ -129,7 +129,7 @@
         <para>
             We make nightly builds of Poky for testing purposes and to make the
             latest developments available. The output from these builds is available
-            at <ulink url='http://autobuilder.pokylinux.org/'/>.
+            at <ulink url='http://autobuilder.yoctoproject.org/'/>.
             The numbers used in the builds increase for each subsequent build and can be used to 
             reference a specific build.
         </para>
