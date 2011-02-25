@@ -5,62 +5,71 @@
     <title>Reference: Images</title>
 
     <para>
-        Poky has several standard images covering most people's standard needs. A full 
-        list of image targets can be found by looking in the directories 
-        <filename class="directory">  meta/recipes-core/images/</filename>, 
-        <filename class="directory">  meta/recipes-extended/images/</filename>, 
-        <filename class="directory">  meta/recipes-sato/images/</filename> and 
-        <filename class="directory">  meta/recipes-tbd/meta/</filename>. The standard 
-        images are listed below along with details of what they contain:
+        Poky has several standard images covering most people's standard needs. 
+        Use the following command to list the supported images:
+        <literallayout class='monospaced'>
+     $ ls meta*/recipes*/images/*.bb
+        </literallayout>
+        Images are listed below along with details of what they contain:
     </para>
 
     <itemizedlist>
             <listitem>
                 <para>
-                    <emphasis>poky-image-minimal</emphasis> - A small image, just enough 
-                    to allow a device to boot
+                    <emphasis>poky-image-minimal</emphasis> - A small image just capable 
+                    of allowing a device to boot.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    <emphasis>poky-image-base</emphasis> - console only image with full
-                    support of target device hardware
+                    <emphasis>poky-image-base</emphasis> - A console-only image that fully 
+                    supports the target device hardware. 
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    <emphasis>poky-image-core</emphasis> - X11 image with simple apps like
-                    terminal, editor and file manager
+                    <emphasis>poky-image-core</emphasis> - An X11 image with simple 
+                    applications such as terminal, editor, and file manager.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    <emphasis>poky-image-sato</emphasis> - X11 image with Sato theme and
-                    Pimlico applications. Also contains terminal, editor and file manager.
+                    <emphasis>poky-image-sato</emphasis> - An X11 image with Sato theme and
+                    Pimlico applications. 
+                    The image also contains terminal, editor, and file manager.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    <emphasis>poky-image-sdk</emphasis> - X11 image like poky-image-sato but
-                    also include native toolchain and libraries needed to build applications 
-                    on the device itself. Also includes testing and profiling tools and debug
-                    symbols.
+                    <emphasis>poky-image-sato-dev</emphasis> - An X11 image similar to 
+                    poky-image-sato but
+                    also includes a native toolchain and libraries needed to build applications 
+                    on the device itself. The image also includes testing and profiling tools 
+                    as well as debug symbols.  This image was formerly poky-image-sdk.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    <emphasis>meta-toolchain</emphasis> - This generates a tarball containing
-                    a standalone toolchain which can be used externally to Poky. It is self
-                    contained and unpacks to the <filename class="directory">/opt/poky</filename>
-                    directory. It also contains a copy of QEMU and the scripts necessary to run 
+                    <emphasis>poky-image-lsb</emphasis> - An image suitable for implementations 
+                    that conform to Linux Standard Base (LSB).
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>meta-toolchain</emphasis> - This image generates a tarball 
+                    that contains a stand-alone toolchain that can be used externally to Poky. 
+                    The tarball is self-contained and unpacks to the 
+                    <filename class="directory">/opt/poky</filename> directory. 
+                    The tarball also contains a copy of QEMU and the scripts necessary to run 
                     poky QEMU images.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    <emphasis>meta-toolchain-sdk</emphasis> - This includes everything in 
+                    <emphasis>meta-toolchain-sdk</emphasis> - This image includes everything in 
                     meta-toolchain but also includes development headers and libraries
-                    forming a complete standalone SDK. See the <link linkend='platdev-appdev-external-sdk'> 
+                    to form a complete standalone SDK. 
+                    See the <link linkend='platdev-appdev-external-sdk'> 
                     External Development Using the Poky SDK</link> section for more information.
                 </para>
             </listitem>
