@@ -18,8 +18,8 @@
     <title>Bugtracker</title>
 
     <para>
-        Problems with Poky should be reported in the 
-        <ulink url='http://bugzilla.pokylinux.org/'>bug tracker</ulink>.
+        Problems with Poky should be reported using the Bugzilla application at 
+        <ulink url='http://bugzilla.yoctoproject.org/'></ulink>.
     </para>
 </section>
 
