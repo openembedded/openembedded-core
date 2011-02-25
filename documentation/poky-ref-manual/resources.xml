@@ -75,7 +75,8 @@
             for Yocto Project.
         </para></listitem>
         <listitem><para>
-            <ulink url='http://pokylinux.org'>The Poky website</ulink> 
+            <ulink url='http://pokylinux.org'>The Poky website</ulink> - The home site
+            for Poky Linux.
         </para></listitem>
         <listitem><para>
             <ulink url='http://www.openedhand.com/'>OpenedHand</ulink> - The
@@ -96,8 +97,8 @@
             - The tool used to process Poky metadata.
         </para></listitem>
         <listitem><para>
-            <ulink url='http://bitbake.berlios.de/manual/'>Bitbake User
-                Manual</ulink>
+            <ulink url='http://bitbake.berlios.de/manual/'>BitBake User
+                Manual</ulink> - A comprehensive guide to the BitBake tool.
         </para></listitem>
         <listitem><para>
             <ulink url='http://pimlico-project.org/'>Pimlico</ulink> - A
