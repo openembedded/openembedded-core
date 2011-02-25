@@ -478,7 +478,8 @@ python populate_packages () {
 					dangling_links[pkg].append(os.path.normpath(target))
 
 	for pkg in package_list:
-		rdepends = bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, True) or bb.data.getVar('RDEPENDS', d, True) or "")
+		rdepends = bb.utils.explode_dep_versions(bb.data.getVar('RDEPENDS_' + pkg, d, True) or bb.data.getVar('RDEPENDS', d, True) or "")
+
 		for l in dangling_links[pkg]:
 			found = False
 			bb.debug(1, "%s contains dangling link %s" % (pkg, l))
@@ -489,12 +490,12 @@ python populate_packages () {
 						bb.debug(1, "target found in %s" % p)
 						if p == pkg:
 							break
-						if not p in rdepends:
-							rdepends.append(p)
+						if p not in rdepends:
+							rdepends[p] = ""
 						break
 			if found == False:
 				bb.note("%s contains dangling symlink to %s" % (pkg, l))
-		bb.data.setVar('RDEPENDS_' + pkg, " " + " ".join(rdepends), d)
+		bb.data.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False), d)
 }
 populate_packages[dirs] = "${D}"
 
@@ -955,7 +956,8 @@ python package_do_pkgconfig () {
 python read_shlibdeps () {
 	packages = bb.data.getVar('PACKAGES', d, True).split()
 	for pkg in packages:
-		rdepends = bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
+		rdepends = bb.utils.explode_dep_versions(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
+
 		for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
 			depsfile = bb.data.expand("${PKGDEST}/" + pkg + extension, d)
 			if os.access(depsfile, os.R_OK):
@@ -963,8 +965,8 @@ python read_shlibdeps () {
 				lines = fd.readlines()
 				fd.close()
 				for l in lines:
-					rdepends.append(l.rstrip())
-		bb.data.setVar('RDEPENDS_' + pkg, " " + " ".join(rdepends), d)
+					rdepends[l.rstrip()] = ""
+		bb.data.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False), d)
 }
 
 python package_depchains() {
@@ -988,7 +990,7 @@ python package_depchains() {
 	def pkg_adddeprrecs(pkg, base, suffix, getname, depends, d):
 
 		#bb.note('depends for %s is %s' % (base, depends))
-		rreclist = bb.utils.explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, True) or bb.data.getVar('RRECOMMENDS', d, True) or "")
+		rreclist = bb.utils.explode_dep_versions(bb.data.getVar('RRECOMMENDS_' + pkg, d, True) or bb.data.getVar('RRECOMMENDS', d, True) or "")
 
 		for depend in depends:
 			if depend.find('-native') != -1 or depend.find('-cross') != -1 or depend.startswith('virtual/'):
@@ -1000,16 +1002,16 @@ python package_depchains() {
 				depend = depend.replace('-dbg', '')
 			pkgname = getname(depend, suffix)
 			#bb.note("Adding %s for %s" % (pkgname, depend))
-			if not pkgname in rreclist:
-				rreclist.append(pkgname)
+			if pkgname not in rreclist:
+				rreclist[pkgname] = ""
 
 		#bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
-		bb.data.setVar('RRECOMMENDS_%s' % pkg, ' '.join(rreclist), d)
+		bb.data.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False), d)
 
 	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
 
 		#bb.note('rdepends for %s is %s' % (base, rdepends))
-		rreclist = bb.utils.explode_deps(bb.data.getVar('RRECOMMENDS_' + pkg, d, True) or bb.data.getVar('RRECOMMENDS', d, True) or "")
+		rreclist = bb.utils.explode_dep_versions(bb.data.getVar('RRECOMMENDS_' + pkg, d, True) or bb.data.getVar('RRECOMMENDS', d, True) or "")
 
 		for depend in rdepends:
 			if depend.find('virtual-locale-') != -1:
@@ -1021,11 +1023,11 @@ python package_depchains() {
 				depend = depend.replace('-dbg', '')
 			pkgname = getname(depend, suffix)
 			#bb.note("Adding %s for %s" % (pkgname, depend))
-			if not pkgname in rreclist:
-				rreclist.append(pkgname)
+			if pkgname not in rreclist:
+				rreclist[pkgname] = ""
 
 		#bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
-		bb.data.setVar('RRECOMMENDS_%s' % pkg, ' '.join(rreclist), d)
+		bb.data.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False), d)
 
 	def add_dep(list, dep):
 		dep = dep.split(' (')[0].strip()
