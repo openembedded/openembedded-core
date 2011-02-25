@@ -822,55 +822,66 @@ RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps"
 #  FILERDEPENDS_filepath_pkg - per file dep
 
 python package_do_filedeps() {
-	import os
+	import os, re
 
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
 	packages = bb.data.getVar('PACKAGES', d, True)
 
-	cmd = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/perfile_rpmdeps.sh", d)
 	rpmdeps = bb.data.expand("${RPMDEPS}", d)
+	r = re.compile(r'[<>=]+ +[^ ]*')
 
 	# Quick routine to process the results of the rpmdeps call...
-	def process_deps(pipe, pkg, varname):
-		dep_files = ""
+	def process_deps(pipe, pkg, f, provides_files, requires_files):
+		provides = []
+		requires = []
+		file = f.replace(pkgdest + "/" + pkg, "")
+		file = file.replace("@", "@at@")
+		file = file.replace(" ", "@space@")
+		file = file.replace("\t", "@tab@")
+		file = file.replace("[", "@openbrace@")
+		file = file.replace("]", "@closebrace@")
+		file = file.replace("_", "@underscore@")
+
 		for line in pipe:
-			key = ""
-			value = ""
-			# We expect two items on each line
-			# 1 - filepath
-			# 2 - dep list
-			line_list = line.rstrip().split(None,1);
-			if len(line_list) <= 0 or len(line_list) > 2:
-				bb.error("deps list length error! " + len(line_list));
-			if len(line_list) == 2:
-				file = line_list[0];
-				value = line_list[1]
-				file = file.replace(pkgdest + "/" + pkg, "")
-				file = file.replace("@", "@at@")
-				file = file.replace(" ", "@space@")
-				file = file.replace("\t", "@tab@")
-				file = file.replace("[", "@openbrace@")
-				file = file.replace("]", "@closebrace@")
-				file = file.replace("_", "@underscore@")
-				dep_files = dep_files + " " + file
-				key = "FILE" + varname + "_" + file + "_" + pkg
-				bb.data.setVar(key, value, d)
-		bb.data.setVar("FILE" + varname + "FLIST_" + pkg, dep_files, d)
+			if line.startswith("Requires:"):
+				i = requires
+			elif line.startswith("Provides:"):
+				i = provides
+			else:
+				continue
+			value = line.split(":", 1)[1].strip()
+			value = r.sub(r'(\g<0>)', value)
+			if value.startswith("rpmlib("):
+				continue
+			i.append(value)
+
+		if len(provides) > 0:
+			provides_files.append(file)
+			key = "FILERPROVIDES_" + file + "_" + pkg
+			bb.data.setVar(key, " ".join(provides), d)
+
+		if len(requires) > 0:
+			requires_files.append(file)
+			key = "FILERDEPENDS_" + file + "_" + pkg
+			bb.data.setVar(key, " ".join(requires), d)
 
 	# Determine dependencies
 	for pkg in packages.split():
-		if pkg.endswith('-dbg') or pkg.endswith('-doc') or pkg.find('-locale-') != -1 or pkg.find('-localedata-') != -1 or pkg.find('-gconv-') != -1  or pkg.find('-charmap-') != -1 or pkg.startswith('kernel-module-'):
+		if pkg.endswith('-dbg') or pkg.endswith('-doc') or pkg.find('-locale-') != -1 or pkg.find('-localedata-') != -1 or pkg.find('-gconv-') != -1 or pkg.find('-charmap-') != -1 or pkg.startswith('kernel-module-'):
 			continue
 
-		# Process provides
-		dep_pipe = os.popen(cmd + " --rpmdeps " + rpmdeps + " --provides " + pkgdest + "/" + pkg)
+		provides_files = []
+		requires_files = []
+		for root, dirs, files in os.walk(pkgdest + "/" + pkg):
+			for file in files:
+				f = os.path.join(root, file)
 
-		process_deps(dep_pipe, pkg, 'RPROVIDES')
+				dep_pipe = os.popen(rpmdeps + " --provides --requires -v " + f)
 
-		# Process requirements
-		dep_pipe = os.popen(cmd + " --rpmdeps " + rpmdeps + " --requires " + pkgdest + "/" + pkg)
+				process_deps(dep_pipe, pkg, f, provides_files, requires_files)
 
-		process_deps(dep_pipe, pkg, 'RDEPENDS')
+		bb.data.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files), d)
+		bb.data.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files), d)
 }
 
 SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
