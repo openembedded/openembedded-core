@@ -118,7 +118,7 @@
         <title>Releases</title>
 
         <para>Periodically, we make releases of Poky available
-            at <ulink url='http://pokylinux.org/releases/'/>.
+            at <ulink url='http://yoctoproject.org/downloads/poky/'/>.
             These releases are more stable and more rigorously tested than the nightly development images.
         </para>
     </section>
