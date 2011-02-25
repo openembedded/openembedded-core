@@ -67,12 +67,13 @@
                 <literallayout class='monospaced'>
      Help -> Install New Software
                 </literallayout>
-                Specify the target URL as <ulink url='http://www.yoctoproject.org/downloads/eclipse-plug-in/'></ulink>.
+                Specify the target URL as 
+                <ulink url='http://www.yoctoproject.org/downloads/eclipse-plugin/'></ulink>.
             </para>
             <para>
                 If you want to download the source code for the plug-in you can find it in the Poky 
                 git repository, which has a web interface, and is located at
-                <ulink url="http://git.pokylinux.org/cgit.cgi/eclipse-poky"></ulink>.
+                <ulink url="http://git.yoctoproject.org"></ulink> under IDE Plugins.
             </para>
   
                 <section id="installing-and-setting-up-the-eclipse-ide">
