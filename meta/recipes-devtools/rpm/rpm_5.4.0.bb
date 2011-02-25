@@ -194,9 +194,7 @@ FILES_${PN} = "${bindir}/rpm \
 #		${libdir}/rpm/bin/db_*
 #		${libdir}/rpm/bin/grep
 
-FILES_${PN}-dbg = "${bindir}/.debug \
-		${libdir}/.debug \
-		${libdir}/rpm/.debug \
+FILES_${PN}-dbg += "${libdir}/rpm/.debug \
 		${libdir}/rpm/bin/.debug \
 		"
 
