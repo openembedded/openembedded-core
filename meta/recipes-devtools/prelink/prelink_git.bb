@@ -8,12 +8,13 @@ runtime and thus programs come up faster."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b"
 PV = "1.0+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.pokylinux.org/prelink-cross.git;protocol=git \
            file://prelink.conf \
            file://prelink.cron.daily \
-           file://prelink.default"
+           file://prelink.default \
+	   file://macros.prelink"
 
 TARGET_OS_ORIG := "${TARGET_OS}"
 OVERRIDES_append = ":${TARGET_OS_ORIG}"
@@ -33,10 +34,11 @@ do_configure_prepend () {
 }
 
 do_install_append () {
-	install -d ${D}${sysconfdir}/cron.daily ${D}${sysconfdir}/default
+	install -d ${D}${sysconfdir}/cron.daily ${D}${sysconfdir}/default ${D}${sysconfdir}/rpm
 	install -m 0644 ${WORKDIR}/prelink.conf ${D}${sysconfdir}/prelink.conf
 	install -m 0644 ${WORKDIR}/prelink.cron.daily ${D}${sysconfdir}/cron.daily/prelink
 	install -m 0644 ${WORKDIR}/prelink.default ${D}${sysconfdir}/default/prelink
+	install -m 0644 ${WORKDIR}/macros.prelink ${D}${sysconfdir}/rpm/macros.prelink
 }
 
 pkg_postinst_prelink() {

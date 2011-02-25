@@ -24,7 +24,7 @@ prelink_image () {
 	${STAGING_DIR_NATIVE}/usr/sbin/prelink --root ${IMAGE_ROOTFS} -amR
 
 	# Remove the prelink.conf if we had to add it.
-	if [ $dummy_prelink_conf ]; then
+	if [ "$dummy_prelink_conf" == "true" ]; then
 		rm -f ${IMAGE_ROOTFS}/etc/prelink.conf
 	fi
 
