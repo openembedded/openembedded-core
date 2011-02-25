@@ -33,9 +33,16 @@ fakeroot populate_sdk_rpm () {
 
 	#install target
 	export INSTALL_ROOTFS_RPM="${SDK_OUTPUT}/${SDKTARGETSYSROOT}"
-	export INSTALL_PLATFORM_RPM="${PACKAGE_ARCHS}"
+	export INSTALL_PLATFORM_RPM="${TARGET_ARCHS}"
 	export INSTALL_CONFBASE_RPM="${RPMCONF_TARGET_BASE}"
 	export INSTALL_PACKAGES_NORMAL_RPM="${TOOLCHAIN_TARGET_TASK}"
+
+	# List must be prefered to least preferred order
+	INSTALL_PLATFORM_RPM=""
+	for each_arch in ${PACKAGE_ARCHS} ; do
+		INSTALL_PLATFORM_RPM="$each_arch $INSTALL_PLATFORM_RPM"
+	done
+	export INSTALL_PLATFORM_RPM
 
 	package_install_internal_rpm
 	populate_sdk_post_rpm ${INSTALL_ROOTFS_RPM}
@@ -45,6 +52,7 @@ fakeroot populate_sdk_rpm () {
 	export INSTALL_PLATFORM_RPM="${SDK_ARCH}"
 	export INSTALL_CONFBASE_RPM="${RPMCONF_HOST_BASE}"
 	export INSTALL_PACKAGES_NORMAL_RPM="${TOOLCHAIN_HOST_TASK}"
+	export INSTALL_PLATFORM_EXTRA_RPM=""
 	for arch in ${PACKAGE_ARCHS}; do
 		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
 		extension="-nativesdk"
@@ -52,9 +60,10 @@ fakeroot populate_sdk_rpm () {
 		    extension=""
 		fi
 		if [ -e ${DEPLOY_DIR_RPM}/$sdkarch$extension ]; then
-			INSTALL_PLATFORM_RPM="$INSTALL_PLATFORM_RPM $sdkarch"
+			INSTALL_PLATFORM_EXTRA_RPM="$sdkarch $INSTALL_PLATFORM_EXTRA_RPM"
 		fi
 	done
+	export INSTALL_PLATFORM_EXTRA_RPM
 
 	package_install_internal_rpm
 	populate_sdk_post_rpm ${INSTALL_ROOTFS_RPM}

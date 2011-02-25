@@ -155,7 +155,8 @@ resolve_package_rpm () {
 # install a bunch of packages using rpm
 # the following shell variables needs to be set before calling this func:
 # INSTALL_ROOTFS_RPM - install root dir
-# INSTALL_PLATFORM_RPM - extra platform
+# INSTALL_PLATFORM_RPM - main platform
+# INSTALL_PLATFORM_EXTRA_RPM - extra platform
 # INSTALL_CONFBASE_RPM - configuration file base name
 # INSTALL_PACKAGES_NORMAL_RPM - packages to be installed
 # INSTALL_PACKAGES_ATTEMPTONLY_RPM - packages attemped to be installed only
@@ -166,7 +167,8 @@ resolve_package_rpm () {
 package_install_internal_rpm () {
 
 	local target_rootfs="${INSTALL_ROOTFS_RPM}"
-	local platforms="${INSTALL_PLATFORM_RPM}"
+	local platform="${INSTALL_PLATFORM_RPM}"
+	local platform_extra="${INSTALL_PLATFORM_EXTRA_RPM}"
 	local confbase="${INSTALL_CONFBASE_RPM}"
 	local package_to_install="${INSTALL_PACKAGES_NORMAL_RPM}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_RPM}"
@@ -176,9 +178,10 @@ package_install_internal_rpm () {
 
 	# Setup base system configuration
 	mkdir -p ${target_rootfs}/etc/rpm/
-	if [ ! -z "$platforms" ]; then
-		for pt in $platforms ; do
-			echo "$pt-unknown-linux" >> ${target_rootfs}/etc/rpm/platform
+	echo "${platform}-poky-linux-gnu" > ${target_rootfs}/etc/rpm/platform
+	if [ ! -z "$platform_extra" ]; then
+		for pt in $platform_extra ; do
+			echo "$pt-.*-linux.*" >> ${target_rootfs}/etc/rpm/platform
 		done
 	fi
 
@@ -764,7 +767,7 @@ python do_package_rpm () {
 	os.chmod(pkgwritedir, 0755)
 
 	cmd = rpmbuild
-	cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + " --buildroot " + pkgd
+	cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + "-poky-linux-gnu --buildroot " + pkgd
 	cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
 	cmd = cmd + " --define '_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'"
 	cmd = cmd + " --define '_use_internal_dependency_generator 0'"
