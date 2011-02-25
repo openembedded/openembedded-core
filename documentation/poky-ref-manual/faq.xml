@@ -248,7 +248,8 @@
     <qandaentry>
         <question>
             <para>
-                I see lots of 404 responses for files on http://pokylinux.org/sources/*. Is something wrong?
+                I see lots of 404 responses for files on 
+                http://autobuilder.yoctoproject.org/sources/*. Is something wrong?
             </para>
         </question>
         <answer>
