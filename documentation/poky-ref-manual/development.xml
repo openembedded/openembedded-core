@@ -302,10 +302,9 @@
                 Plug-in are all required. 
                 The Poky Anjuta Plug-in is available to download as a tarball at the OpenedHand 
                 labs <ulink url="http://labs.o-hand.com/anjuta-poky-sdk-plugin/"></ulink> page or 
-                directly from the Poky Git repository located at 
-                <ulink url="git://git.pokylinux.org/anjuta-poky"></ulink>.
-                You can also access a web interface to the repository at
-                <ulink url="http://git.pokylinux.org/?p=anjuta-poky.git;a=summary"></ulink>.
+                directly from the Poky Git repository located at git://git.yoctoproject.org/anjuta-poky.
+                You can access the source code from a web interface to the repository at
+                <ulink url="http://git.yoctoproject.org/"></ulink> under IDE Plugins.
              </para>
              <para>
                 See the README file contained in the project for more information on 
