@@ -225,7 +225,7 @@ def splitfile2(debugsrcdir, d):
     sourcefile = bb.data.expand("${WORKDIR}/debugsources.list", d)
 
     if debugsrcdir:
-       bb.mkdirhier(debugsrcdir)
+       bb.mkdirhier("%s%s" % (dvar, debugsrcdir))
 
        processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
        processdebugsrc += "(cd '%s' ; cpio -pd0mL '%s%s' 2>/dev/null)"
