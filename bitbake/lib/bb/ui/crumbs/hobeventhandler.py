@@ -123,7 +123,6 @@ class HobHandler(gobject.GObject):
     def set_machine(self, machine):
         self.server.runCommand(["setVariable", "MACHINE", machine])
         self.current_command = "findConfigFilesMachine"
-        self.emit("generating-data")
         self.run_next_command()
 
     def set_distro(self, distro):
