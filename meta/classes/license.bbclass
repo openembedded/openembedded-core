@@ -69,7 +69,7 @@ python do_populate_lic() {
     for license_type in ((license_types.replace('+', '').replace('|', '&')
                           .replace('(', '').replace(')', '').replace(';', '')
                           .replace(',', '').replace(" ", "").split("&"))):
-if os.path.isfile(os.path.join(generic_directory, license_type)):
+        if os.path.isfile(os.path.join(generic_directory, license_type)):
             gen_lic_dest = os.path.join(bb.data.getVar('LICENSE_DIRECTORY', d, True), "common-licenses")
             try:
                 bb.mkdirhier(gen_lic_dest)
