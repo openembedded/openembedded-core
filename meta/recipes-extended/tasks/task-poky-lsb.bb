@@ -149,7 +149,6 @@ RDEPENDS_task-poky-lsb-graphic-add = "\
     libqtsvg4 \
     libqtxml4 \
     libqtnetwork4 \
-    libqtopengl4 \
     libxt \
     libxxf86vm \
     libdrm \
@@ -157,6 +156,13 @@ RDEPENDS_task-poky-lsb-graphic-add = "\
     libxi \
     libxtst \
     qt4-plugin-sqldriver-sqlite \
+"
+
+RDEPENDS_task-poky-lsb-graphic-add_qemux86 = "\
+    libqtopengl4 \
+"
+RDEPENDS_task-poky-lsb-graphic-add_atom-pc = "\
+    libqtopengl4 \
 "
 
 #    mesa-dri 
