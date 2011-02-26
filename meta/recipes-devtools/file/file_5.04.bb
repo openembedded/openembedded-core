@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=6a7382872edb68d33e1a9398b6e03
 
 DEPENDS = "zlib file-native"
 DEPENDS_virtclass-native = "zlib-native"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://stringb-compat.patch \
@@ -29,5 +29,11 @@ do_configure_prepend() {
 }
 
 FILES_${PN} += "${datadir}/misc/*.mgc"
+
+do_install_append_virtclass-native() {
+	create_cmdline_wrapper ${D}/${bindir}/file \
+		--magic-file ${datadir}/misc/magic.mgc
+}
+
 
 BBCLASSEXTEND = "native"
