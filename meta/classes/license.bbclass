@@ -66,9 +66,10 @@ python do_populate_lic() {
     # I'm sure someone has written a logic parser for these fields, but if so, I don't know where it is. 
     # So what I do is just link to every license mentioned in the license field.
     
-    for license_type in (' '.join(license_types.replace('&', ' ').replace('+', ' ').replace('|', ' ')
-                         .replace('(', ' ').replace(')', ' ').replace(';', ' ').replace(',', ' ').split())):
-        if os.path.isfile(os.path.join(generic_directory, license_type)):
+    for license_type in ((license_types.replace('+', '').replace('|', '&')
+                          .replace('(', '').replace(')', '').replace(';', '')
+                          .replace(',', '').replace(" ", "").split("&"))):
+if os.path.isfile(os.path.join(generic_directory, license_type)):
             gen_lic_dest = os.path.join(bb.data.getVar('LICENSE_DIRECTORY', d, True), "common-licenses")
             try:
                 bb.mkdirhier(gen_lic_dest)
