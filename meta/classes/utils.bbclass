@@ -271,6 +271,29 @@ oe_machinstall() {
 	fi
 }
 
+create_cmdline_wrapper () {
+   # Create a wrapper script
+   #
+   # These are useful to work around relocation issues, by setting environment
+   # variables which point to paths in the filesystem.
+   #
+   # Usage: create_wrapper FILENAME [[VAR=VALUE]..]
+
+   cmd=$1
+   shift
+
+   # run echo via env to test syntactic validity of the variable arguments
+   echo "Generating wrapper script for $cmd"
+
+   mv $cmd $cmd.real
+   cmdname=`basename $cmd`.real
+   cat <<END >$cmd
+#!/bin/sh
+exec \`dirname \$0\`/$cmdname "\$@"
+END
+   chmod +x $cmd
+}
+
 create_wrapper () {
    # Create a wrapper script
    #
