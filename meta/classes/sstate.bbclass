@@ -229,17 +229,15 @@ def sstate_clean(ss, d):
 
     manifest = bb.data.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'], d)
 
-    if not os.path.exists(manifest):
-       return
+    if os.path.exists(manifest):
+        locks = []
+        for lock in ss['lockfiles']:
+            locks.append(bb.utils.lockfile(lock))
 
-    locks = []
-    for lock in ss['lockfiles']:
-        locks.append(bb.utils.lockfile(lock))
+        sstate_clean_manifest(manifest, d)
 
-    sstate_clean_manifest(manifest, d)
-
-    for lock in locks:
-        bb.utils.unlockfile(lock)
+        for lock in locks:
+            bb.utils.unlockfile(lock)
 
     stfile = d.getVar("STAMP", True) + ".do_" + ss['task']
     oe.path.remove(stfile)
