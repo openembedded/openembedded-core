@@ -241,7 +241,9 @@ def sstate_clean(ss, d):
     for lock in locks:
         bb.utils.unlockfile(lock)
 
-    oe.path.remove(d.getVar("STAMP", True) + ".do_" + ss['task'] + "*")
+    stfile = d.getVar("STAMP", True) + ".do_" + ss['task']
+    oe.path.remove(stfile)
+    oe.path.remove(stfile + ".*")
 
 CLEANFUNCS += "sstate_cleanall"
 
