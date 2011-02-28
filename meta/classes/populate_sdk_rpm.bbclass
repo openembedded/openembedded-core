@@ -5,6 +5,7 @@ rpmlibdir = "/var/lib/rpm"
 RPMOPTS="--dbpath ${rpmlibdir} --define='_openall_before_chroot 1'"
 RPM="rpm ${RPMOPTS}"
 
+do_populate_sdk[lockfiles] += "${DEPLOY_DIR_RPM}/rpm.lock"
 
 populate_sdk_post_rpm () {
 
