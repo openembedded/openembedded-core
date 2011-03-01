@@ -216,17 +216,18 @@ done
 
 download_file()
 {
-if [ -f "$LOCAL_DOWNLOAD/$1" ]; then
-  confirm_download $1
+local filename=`echo ${1##*/}`
+if [ -f "$LOCAL_DOWNLOAD/$filename" ]; then
+  confirm_download $filename
   result="$?"
   if [ ! "$result" == "0" ]; then
     return
   else
     echo "Removing old file [$1]"
-    rm -rf "$LOCAL_DOWNLOAD/$1" 
+    rm -rf "$LOCAL_DOWNLOAD/$filename" 
   fi
 fi
-echo_info "Downloading file: $1..."
+echo_info "Downloading file: $filename..."
 wget "$YOCTOADT_IPKG_REPO/$1" -P $LOCAL_DOWNLOAD --progress=bar:force 2>&1 | tee -a "$YOCTOADT_INSTALL_LOG_FILE" 
 }
 
