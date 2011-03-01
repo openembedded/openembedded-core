@@ -313,7 +313,9 @@ python () {
             import re
             this_machine = bb.data.getVar('MACHINE', d, 1)
             if this_machine and not re.match(need_machine, this_machine):
-                raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
+                this_soc_family = bb.data.getVar('SOC_FAMILY', d, 1)
+                if (this_soc_family and not re.match(need_machine, this_soc_family)) or not this_soc_family:
+                    raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
 
 
         dont_want_license = bb.data.getVar('INCOMPATIBLE_LICENSE', d, 1)
