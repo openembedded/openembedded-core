@@ -533,19 +533,22 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
             </para>
 
             <para>
-	      For cases where you can substitute something and still maintain functionality, the Poky website will make
-	      available a 'de-featured' BSP completely free of the encumbered IP.
-              In that case you can use the substitution directly and without any further licensing requirements.  
-              If present, this fully 'de-featured' BSP will be named meta-&lt;bsp_name&gt; (i.e. the
-	      normal default naming convention).  
-              If available, this is the simplest the most preferred option.
+	      For cases where you can substitute something and still maintain functionality, 
+              the Yocto Project website at 
+              <ulink url='http://yoctoproject.org/download/board-support-package-bsp-downloads'></ulink> 
+              will make available a 'de-featured' BSP completely free of the encumbered IP.
+              In that case you can use the substitution directly and without any further licensing
+              requirements.  
+              If present, this fully 'de-featured' BSP will be named appropiately different 
+              than the normal encumbered BSP.
+              If available, this substitution is the simplest and most preferred option.
               This, of course, assumes the resulting functionality meets requirements.
             </para>
 
             <para>
-	      If however, a non-encumbered version is unavailable or the 'free' version would provide unsuitable
-	      functionality or quality, an encumbered version can be used.  
-              Encumbered versions of a BSP are given names of the form meta-&lt;bsp_name&gt;-nonfree.
+	      If however, a non-encumbered version is unavailable or the 'free' version 
+              would provide unsuitable functionality or quality, you can use 
+              an encumbered version.  
             </para>
 
             <para>  
@@ -559,13 +562,22 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
 
 		<para>
 		  Get a license key (or keys) for the encumbered BSP by visiting 
+                  a website and providing the name of the BSB and your email address
+                  through a web form.
+                </para>
+ 
+<!--
                   <ulink url='https://pokylinux.org/bsp-keys.html'>https://pokylinux.org/bsp-keys.html</ulink>
 		  and give the name of the BSP and your e-mail address in the web form.
 		</para>
 
+                COMMENT:  This link is not implemented at this point.  
+
 		<programlisting>
 		  [screenshot of dialog box]
 		</programlisting>
+
+-->
 
 		<para>
 		  After agreeing to any applicable license terms, the
@@ -609,7 +621,8 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
 		  encumbered BSP.  
                   These prompts usually take the form of instructions
 		  needed to manually fetch the encumbered package(s)
-		  and md5 sums into the required directory (e.g. the poky/build/downloads)
+		  and md5 sums into the required directory 
+                  (e.g. the <filename>poky/build/downloads</filename>).
                   Once the manual package fetch has been
 		  completed, restart the build to continue where
 		  it left off.
@@ -619,25 +632,21 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
               </listitem>
               <listitem>
 		<para>
-		  Get a full-featured BSP recipe rather than a key, by
-		  visiting
-		  <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
-		  Accepting the license agreement(s) presented will
-		  subsequently allow you to download a tarball
-		  containing a full-featured BSP that is legally cleared for
-		  your use by the just-given license agreement(s).
-		  This method will also allow the encumbered image to
-		  be built with no change at all to the normal build
-		  process.
-		</para>
+		  Get a full-featured BSP recipe rather than a key.
+                  You can do this by visiting the applicable BSP download page from the Yocto 
+                  Project website at
+                  <ulink url='http://yoctoproject.org/download/board-support-package-bsp-downloads'></ulink>.
+		  BSP tarballs that have proprietary information can be downloaded after agreeing 
+                  to licensing requirements as part of the download process. 
+                  Obtaining the code this way allows you to build an encumbered image with 
+                  no changes at all as compared to the normal build. 
+                </para>
               </listitem>
 	    </orderedlist>
 	    <para>
 	      Note that the third method is also the only option available
-	      when downloading pre-compiled images generated from
-	      non-free BSPs.  
-              Those images are likewise available at
-	      <ulink url='https://pokylinux.org/bsps.html'>https://pokylinux.org/bsps.html</ulink>.
+	      when downloading pre-compiled images generated from non-free BSPs.  
+              Those images are likewise available at from the Yocto Project website.
             </para> 
         </section>
 
