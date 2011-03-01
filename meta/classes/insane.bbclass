@@ -32,58 +32,58 @@ PACKAGEFUNCS += " do_package_qa "
 def package_qa_get_machine_dict():
     return {
             "darwin9" : { 
-                        "arm" :       (40,     0,    0,          True,          True),
+                        "arm" :       (40,     0,    0,          True,          32),
                       },
             "linux" : { 
-                        "arm" :       (40,    97,    0,          True,          True),
-                        "armeb":      (40,    97,    0,          False,         True),
-                        "powerpc":    (20,     0,    0,          False,         True),
-                        "i386":       ( 3,     0,    0,          True,          True),
-                        "i486":       ( 3,     0,    0,          True,          True),
-                        "i586":       ( 3,     0,    0,          True,          True),
-                        "i686":       ( 3,     0,    0,          True,          True),
-                        "x86_64":     (62,     0,    0,          True,          False),
-                        "ia64":       (50,     0,    0,          True,          False),
-                        "alpha":      (36902,  0,    0,          True,          False),
-                        "hppa":       (15,     3,    0,          False,         True),
-                        "m68k":       ( 4,     0,    0,          False,         True),
-                        "mips":       ( 8,     0,    0,          False,         True),
-                        "mipsel":     ( 8,     0,    0,          True,          True),
-                        "s390":       (22,     0,    0,          False,         True),
-                        "sh4":        (42,     0,    0,          True,          True),
-                        "sparc":      ( 2,     0,    0,          False,         True),
+                        "arm" :       (40,    97,    0,          True,          32),
+                        "armeb":      (40,    97,    0,          False,         32),
+                        "powerpc":    (20,     0,    0,          False,         32),
+                        "i386":       ( 3,     0,    0,          True,          32),
+                        "i486":       ( 3,     0,    0,          True,          32),
+                        "i586":       ( 3,     0,    0,          True,          32),
+                        "i686":       ( 3,     0,    0,          True,          32),
+                        "x86_64":     (62,     0,    0,          True,          64),
+                        "ia64":       (50,     0,    0,          True,          64),
+                        "alpha":      (36902,  0,    0,          True,          64),
+                        "hppa":       (15,     3,    0,          False,         32),
+                        "m68k":       ( 4,     0,    0,          False,         32),
+                        "mips":       ( 8,     0,    0,          False,         32),
+                        "mipsel":     ( 8,     0,    0,          True,          32),
+                        "s390":       (22,     0,    0,          False,         32),
+                        "sh4":        (42,     0,    0,          True,          32),
+                        "sparc":      ( 2,     0,    0,          False,         32),
                       },
             "linux-uclibc" : { 
-                        "arm" :       (  40,    97,    0,          True,          True),
-                        "armeb":      (  40,    97,    0,          False,         True),
-                        "powerpc":    (  20,     0,    0,          False,         True),
-                        "i386":       (   3,     0,    0,          True,          True),
-                        "i486":       (   3,     0,    0,          True,          True),
-                        "i586":       (   3,     0,    0,          True,          True),
-                        "i686":       (   3,     0,    0,          True,          True),
-                        "x86_64":     (  62,     0,    0,          True,          False),
-                        "mips":       (   8,     0,    0,          False,         True),
-                        "mipsel":     (   8,     0,    0,          True,          True),
-                        "avr32":      (6317,     0,    0,          False,         True),
-			"sh4":        (42,	 0,    0,          True,          True),
+                        "arm" :       (  40,    97,    0,          True,          32),
+                        "armeb":      (  40,    97,    0,          False,         32),
+                        "powerpc":    (  20,     0,    0,          False,         32),
+                        "i386":       (   3,     0,    0,          True,          32),
+                        "i486":       (   3,     0,    0,          True,          32),
+                        "i586":       (   3,     0,    0,          True,          32),
+                        "i686":       (   3,     0,    0,          True,          32),
+                        "x86_64":     (  62,     0,    0,          True,          64),
+                        "mips":       (   8,     0,    0,          False,         32),
+                        "mipsel":     (   8,     0,    0,          True,          32),
+                        "avr32":      (6317,     0,    0,          False,         32),
+			"sh4":        (42,	 0,    0,          True,          32),
 
                       },
             "uclinux-uclibc" : {
-                        "bfin":       ( 106,     0,    0,          True,         True),
+                        "bfin":       ( 106,     0,    0,          True,         32),
                       }, 
             "linux-gnueabi" : {
-                        "arm" :       (40,     0,    0,          True,          True),
-                        "armeb" :     (40,     0,    0,          False,         True),
+                        "arm" :       (40,     0,    0,          True,          32),
+                        "armeb" :     (40,     0,    0,          False,         32),
                       },
             "linux-uclibcgnueabi" : {
-                        "arm" :       (40,     0,    0,          True,          True),
-                        "armeb" :     (40,     0,    0,          False,         True),
+                        "arm" :       (40,     0,    0,          True,          32),
+                        "armeb" :     (40,     0,    0,          False,         32),
                       },
             "linux-gnuspe" : {
-                        "powerpc":    (20,     0,    0,          False,         True),
+                        "powerpc":    (20,     0,    0,          False,         32),
                       },
             "linux-uclibcspe" : {
-                        "powerpc":    (20,     0,    0,          False,         True),
+                        "powerpc":    (20,     0,    0,          False,         32),
                       },
 
        }
@@ -243,13 +243,17 @@ def package_qa_check_arch(path,name,d, elf):
         return True
 
     #if this will throw an exception, then fix the dict above
-    (machine, osabi, abiversion, littleendian, bits32) \
+    (machine, osabi, abiversion, littleendian, bits) \
         = package_qa_get_machine_dict()[target_os][target_arch]
 
     # Check the architecture and endiannes of the binary
     if not machine == elf.machine():
         error_msg = "Architecture did not match (%d to %d) on %s" % \
                  (machine, elf.machine(), package_qa_clean_path(path,d))
+        sane = package_qa_handle_error(4, error_msg, name, path, d)
+    elif not bits == elf.abiSize():
+        error_msg = "Bit size did not match (%d to %d) on %s" % \
+                 (bits, elf.abiSize(), package_qa_clean_path(path,d))
         sane = package_qa_handle_error(4, error_msg, name, path, d)
     elif not littleendian == elf.isLittleEndian():
         error_msg = "Endiannes did not match (%d to %d) on %s" % \
@@ -445,14 +449,12 @@ def package_qa_walk(path, funcs, package,d):
     #if this will throw an exception, then fix the dict above
     target_os   = bb.data.getVar('TARGET_OS',   d, True)
     target_arch = bb.data.getVar('TARGET_ARCH', d, True)
-    (machine, osabi, abiversion, littleendian, bits32) \
-        = package_qa_get_machine_dict()[target_os][target_arch]
 
     sane = True
     for root, dirs, files in os.walk(path):
         for file in files:
             path = os.path.join(root,file)
-            elf = oe.qa.ELFFile(path, bits32)
+            elf = oe.qa.ELFFile(path)
             try:
                 elf.open()
             except:

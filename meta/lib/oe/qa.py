@@ -25,9 +25,9 @@ class ELFFile:
             #print "'%x','%x' %s" % (ord(expectation), ord(result), self.name)
             raise Exception("This does not work as expected")
 
-    def __init__(self, name, bits32):
+    def __init__(self, name, bits = 0):
         self.name = name
-        self.bits32 = bits32
+        self.bits = bits
 
     def open(self):
         self.file = file(self.name, "r")
@@ -38,10 +38,20 @@ class ELFFile:
         self.my_assert(self.data[1], 'E')
         self.my_assert(self.data[2], 'L')
         self.my_assert(self.data[3], 'F')
-        if self.bits32 :
+        if self.bits == 0:
+            if self.data[ELFFile.EI_CLASS] == chr(ELFFile.ELFCLASS32):
+                self.bits == 32
+            elif self.data[ELFFile.EI_CLASS] == chr(ELFFile.ELFCLASS64):
+                self.bits == 64
+            else:
+                # Not 32-bit or 64.. lets assert
+                raise Exception("ELF but not 32 or 64 bit.")
+        elif self.bits == 32:
             self.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS32))
-        else:
+        elif self.bits == 64:
             self.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS64))
+        else:
+            raise Exception("Must specify unknown, 32 or 64 bit size.")
         self.my_assert(self.data[ELFFile.EI_VERSION], chr(ELFFile.EV_CURRENT) )
 
         self.sex = self.data[ELFFile.EI_DATA]
@@ -59,6 +69,9 @@ class ELFFile:
 
     def abiVersion(self):
         return ord(self.data[ELFFile.EI_ABIVERSION])
+
+    def abiSize(self):
+	return self.bits
 
     def isLittleEndian(self):
         return self.sex == "<"
