@@ -86,6 +86,10 @@ do_install () {
 	# We don't care about the gcc-<version> ones for this
 	rm -f *gcc-?.?*
 
+	# We use libiberty from binutils
+	find -name libiberty.a ${D}${exec_prefix}/lib | xargs rm -f
+	find -name libiberty.h ${D}${exec_prefix}/lib | xargs rm -f
+
 	# Symlinks so we can use these trivially on the target
 	ln -sf ${TARGET_SYS}-g77 g77 || true
 	ln -sf ${TARGET_SYS}-gfortran gfortran || true

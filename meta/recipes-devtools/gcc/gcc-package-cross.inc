@@ -27,6 +27,10 @@ do_install () {
 		rm -rf ${D}${STAGING_DIR_NATIVE}${prefix_native}/$d
 	done
 
+	# We use libiberty from binutils
+	find -name libiberty.a ${D}${exec_prefix}/lib | xargs rm -f
+	find -name libiberty.h ${D}${exec_prefix}/lib | xargs rm -f
+
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	if [ "${PN}" == "gcc-cross" -o "${PN}" == "gcc-crosssdk" ]; then
 		dest=${D}/${includedir}/gcc-build-internal-${MULTIMACH_TARGET_SYS}
