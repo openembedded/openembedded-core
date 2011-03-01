@@ -31,8 +31,3 @@ do_deploy () {
 	ln -sf ${UBOOT_IMAGE} ${UBOOT_SYMLINK}
 }
 addtask deploy before do_build after do_compile
-
-do_install() {
-	install -d ${D}${bindir}
-	install -m 755 tools/mkimage ${D}${bindir}/
-}
