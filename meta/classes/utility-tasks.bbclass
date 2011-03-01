@@ -28,25 +28,6 @@ python do_clean() {
 		bb.build.exec_func(f, d)
 }
 
-addtask rebuild after do_${BB_DEFAULT_TASK}
-do_rebuild[dirs] = "${TOPDIR}"
-do_rebuild[nostamp] = "1"
-python do_rebuild() {
-	"""rebuild a package"""
-}
-
-#addtask mrproper
-#do_mrproper[dirs] = "${TOPDIR}"
-#do_mrproper[nostamp] = "1"
-#python do_mrproper() {
-#	"""clear downloaded sources, build and temp directories"""
-#	dir = bb.data.expand("${DL_DIR}", d)
-#	if dir == '/': bb.build.FuncFailed("wrong DATADIR")
-#	bb.debug(2, "removing " + dir)
-#	os.system('rm -rf ' + dir)
-#	bb.build.exec_func('do_clean', d)
-#}
-
 addtask checkuri
 do_checkuri[nostamp] = "1"
 python do_checkuri() {

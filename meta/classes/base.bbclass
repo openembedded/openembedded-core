@@ -97,23 +97,6 @@ FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/$
 # in the context of the location its used (:=)
 THISDIR = "${@os.path.dirname(bb.data.getVar('FILE', d, True))}"
 
-SCENEFUNCS += "base_scenefunction"
-	
-python base_scenefunction () {
-	stamp = bb.data.getVar('STAMP', d, 1) + ".needclean"
-	if os.path.exists(stamp):
-		bb.build.exec_func("do_clean", d)
-}
-
-python base_do_setscene () {
-	for f in (bb.data.getVar('SCENEFUNCS', d, 1) or '').split():
-		bb.build.exec_func(f, d)
-	if not os.path.exists(bb.build.stampfile("do_setscene", d)):
-		bb.build.make_stamp("do_setscene", d)
-}
-do_setscene[selfstamp] = "1"
-addtask setscene before do_fetch
-
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
 python base_do_fetch() {
@@ -218,18 +201,6 @@ python base_eventhandler() {
 				pesteruser.append(v)
 		if pesteruser:
 			bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
-
-	#
-	# Handle removing stamps for 'rebuild' task
-	#
-	if name.startswith("StampUpdate"):
-		for (fn, task) in e.targets:
-			#print "%s %s" % (task, fn)
-			if task == "do_rebuild":
-				dir = "%s.*" % e.stampPrefix[fn]
-				bb.note("Removing stamps: " + dir)
-				os.system('rm -f '+ dir)
-				os.system('touch ' + e.stampPrefix[fn] + '.needclean')
 
         if name == "ConfigParsed":
                 generate_git_config(e)
@@ -481,4 +452,4 @@ python do_cleanall() {
 do_cleanall[nostamp] = "1"
 
 
-EXPORT_FUNCTIONS do_setscene do_fetch do_unpack do_configure do_compile do_install do_package
+EXPORT_FUNCTIONS do_fetch do_unpack do_configure do_compile do_install do_package
