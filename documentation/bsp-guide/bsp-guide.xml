@@ -29,9 +29,14 @@
 
         <revhistory>
             <revision>
+                <revnumber>1.0</revnumber>
+                <date>1 April 2011</date>
+                <revremark>This release represents the initial full release for Yocto Project.</revremark>
+            </revision>
+            <revision>
                 <revnumber>0.9</revnumber>
                 <date>27 October 2010</date>
-                <revremark>Beta Draft</revremark>
+                <revremark>This release represents the Yocto Project Beta Draft.</revremark>
             </revision>
         </revhistory>
 
