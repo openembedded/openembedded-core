@@ -81,7 +81,7 @@ else
 fi
 
 #first update repository
-OPKG_CMD="sudo $LOCAL_OPKG_LOC/bin/opkg-cl"
+OPKG_CMD="sudo -E $LOCAL_OPKG_LOC/bin/opkg-cl"
 
 echo_info "Updating opkg..."
 $OPKG_CMD -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR update &>> $YOCTOADT_INSTALL_LOG_FILE
