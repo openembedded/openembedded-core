@@ -52,7 +52,7 @@ def copytree(src, dst):
     # If dst already has contents performance can be 15 time slower
     # This way we also preserve hardlinks between files in the tree.
 
-    bb.mkdirhier(dst)
+    bb.utils.mkdirhier(dst)
     cmd = 'tar -cf - -C %s -ps . | tar -xf - -C %s' % (src, dst)
     check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
