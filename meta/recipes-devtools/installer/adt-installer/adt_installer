@@ -152,7 +152,7 @@ if [ ! -x "$LOCAL_OPKG_LOC/bin/opkg-cl" ]; then
     rm -rf $LOCAL_OPKG_LOC
   fi
 
-  parent_folder=`eval echo $PWD`
+  parent_folder=`pwd`
   cd $LOCAL_OPKG_FOLDER
   check_result
 

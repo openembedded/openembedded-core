@@ -21,7 +21,5 @@ SRC_URI[sha256sum] = "775100a9d6f70fbd8f33ed24b560b6842161fc496c21b1fc6d2aed646f
 inherit autotools
 
 do_install_append() {
-#    mkdir -p ${D}/etc/rc.d/init.d
-#   mkdir -p  ${D}/etc/rc.d/rc{0,1,2,3,4,5,6}.d
     mkdir -p ${D}/etc/chkconfig.d
 }

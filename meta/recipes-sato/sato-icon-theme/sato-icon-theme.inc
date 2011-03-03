@@ -23,5 +23,5 @@ pkg_postinst_${PN} () {
                 exit 1
         fi
         gtk-update-icon-cache -q /usr/share/icons/Sato
-        echo 'gtk-icon-theme-name = "Sato"' > /etc/gtk-2.0/gtkrc
+        echo 'gtk-icon-theme-name = "Sato"' >> /etc/gtk-2.0/gtkrc
 }
