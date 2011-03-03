@@ -107,7 +107,13 @@ python debian_package_name_hook () {
 					if newpkg != pkg:
 						bb.data.setVar('PKG_' + pkg, newpkg, d)
 
-	for pkg in (bb.data.getVar('AUTO_LIBNAME_PKGS', d, 1) or "").split():
+	# reversed sort is needed when some package is substring of another
+	# ie in ncurses we get without reverse sort: 
+	# DEBUG: LIBNAMES: pkgname libtic5 devname libtic pkg ncurses-libtic orig_pkg ncurses-libtic debian_pn None newpkg libtic5
+	# and later
+	# DEBUG: LIBNAMES: pkgname libtic5 devname libtic pkg ncurses-libticw orig_pkg ncurses-libtic debian_pn None newpkg libticw
+	# so we need to handle ncurses-libticw->libticw5 before ncurses-libtic->libtic5
+	for pkg in sorted((bb.data.getVar('AUTO_LIBNAME_PKGS', d, 1) or "").split(), reverse=True):
 		auto_libname(packages, pkg)
 }
 
