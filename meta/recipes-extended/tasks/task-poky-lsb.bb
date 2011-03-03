@@ -55,6 +55,7 @@ RDEPENDS_task-poky-lsb = "\
 #
 # GPLv2 Should List
 RDEPENDS_task-poky-sys-extended = "\
+    chkconfig \
     curl \
     dhcp-client \
     diffutils \
