@@ -19,7 +19,7 @@ GCCVERSION ?= "4.5.1"
 SDKGCCVERSION ?= "4.5.1"
 BINUVERSION ?= "2.21"
 GLIBCVERSION ?= "2.10.1"
-LINUXLIBCVERSION ?= "2.6.36"
+LINUXLIBCVERSION ?= "2.6.37.2"
 
 # Temporary preferred version overrides for PPC
 PREFERRED_VERSION_u-boot-mkimage-native_powerpc ?= "2009.08"
