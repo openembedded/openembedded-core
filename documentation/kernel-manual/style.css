@@ -56,7 +56,7 @@ body {
 
 h1,h2,h3,h4,h5,h6,h7 {
   font-family: Arial, Sans;
-  color:#999999;
+  color: #00557D;
   clear: both;
 }
 
@@ -79,9 +79,8 @@ h2.subtitle {
 h2 {
   margin: 2em 0em 0.66em 0em;
   padding: 0.5em 0em 0em 0em;
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: bold;
-  color: black;
 }
 
 h3.subtitle {
@@ -94,29 +93,29 @@ h3.subtitle {
 h3 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 150%;
+  font-size: 140%;
   font-weight: bold;
-  color: black;
-  border-bottom: 2px solid black;
 }
 
 h4 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 130%;
-  border-bottom: 1px solid black;
+  font-size: 120%;
+  font-weight: bold;
 }
 
 h5 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 120%;
+  font-size: 110%;
+  font-weight: bold;
 }
 
 h6 {
   margin: 1em 0em 0em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 100%;
+  font-size: 80%;
+  font-weight: bold;
 }
 
 .authorgroup {
@@ -124,12 +123,12 @@ h6 {
   background-repeat: no-repeat;
   padding-top: 256px;
   background-image: url("figures/kernel-title.png");
-  background-position: top;
+  background-position: left top;
   margin-top: -256px;
   padding-right: 50px;
-  margin-left: 50px;
+  margin-left: 0px;
   text-align: right;
-  width: 700px;
+  width: 740px;
 }
 
 h3.author {
@@ -137,6 +136,7 @@ h3.author {
   padding: 0em 0em 0em 0em;
   font-weight: normal;
   font-size: 100%;
+  color: #333;
   clear: both;
 }
 
@@ -159,6 +159,7 @@ h3.author {
 .list-of-examples,
 .list-of-figures {
   padding: 1.33em 0em 2.5em 0em;
+  color: #00557D;
 }
 
 .toc p,
@@ -246,7 +247,6 @@ div.legalnotice p.legalnotice-title {
 p {
   line-height: 1.5em;
   margin-top: 0em;
-  color: black; font-size: 100%;
   
 }
 
@@ -946,7 +946,7 @@ table {
 
 .tip,
 .note {
-   background: #91ae35;
+   background: #666666;
    color: #fff;   
    padding: 20px;
    margin: 20px;
