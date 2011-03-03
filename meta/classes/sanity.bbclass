@@ -211,7 +211,7 @@ def check_sanity(e):
     nolibs = data.getVar('NO32LIBS', e.data, True)
     if not nolibs:
         lib32path = '/lib'
-        if os.path.exists('/lib64') and os.path.islink('/lib64'):
+        if os.path.exists('/lib64') and ( os.path.islink('/lib64') or os.path.islink('/lib') ):
            lib32path = '/lib32'
 
         if os.path.exists('%s/libc.so.6' % lib32path) and not os.path.exists('/usr/include/gnu/stubs-32.h'):
