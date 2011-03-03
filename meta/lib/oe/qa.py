@@ -40,9 +40,9 @@ class ELFFile:
         self.my_assert(self.data[3], 'F')
         if self.bits == 0:
             if self.data[ELFFile.EI_CLASS] == chr(ELFFile.ELFCLASS32):
-                self.bits == 32
+                self.bits = 32
             elif self.data[ELFFile.EI_CLASS] == chr(ELFFile.ELFCLASS64):
-                self.bits == 64
+                self.bits = 64
             else:
                 # Not 32-bit or 64.. lets assert
                 raise Exception("ELF but not 32 or 64 bit.")
