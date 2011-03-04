@@ -114,6 +114,7 @@ RDEPENDS_task-poky-misc = "\
     gettext \
     groff \
     lsb \
+    lsbsetup \
     lsof \
     man \
     man-pages \
@@ -129,6 +130,7 @@ RDEPENDS_task-poky-lsb-command-add = "\
     fontconfig-utils \
     mailx \
     msmtp \
+    chkconfig \
 "
 #    cups
 
@@ -158,6 +160,10 @@ RDEPENDS_task-poky-lsb-graphic-add = "\
     libxi \
     libxtst \
     qt4-plugin-sqldriver-sqlite \
+    libx11-locale \
+    xorg-minimal-fonts \
+    gdk-pixbuf \
+
 "
 
 RDEPENDS_task-poky-lsb-graphic-add_qemux86 = "\
@@ -173,9 +179,17 @@ RDEPENDS_task-poky-lsb-runtime-add = "\
     ldd \
     pam-plugin-wheel \
     e2fsprogs-mke2fs \
-    eglibc-localedata-posix \
     mkfontdir \
     liburi-perl \
     libxml-parser-perl \
     libxml-perl \
+    eglibc-extra-nss \
+    eglibc-localedatas \
+    eglibc-gconvs \
+    eglibc-charmaps \
+    eglibc-binarys \
+    eglibc-pcprofile \
+    eglibc-pic \
+    eglibc-utils \
+
 "
