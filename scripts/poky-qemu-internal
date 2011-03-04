@@ -268,13 +268,6 @@ if [ "$NFS_SERVER" = "" ]; then
 fi
 
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarmv7" ]; then
-    if [ -e /proc/sys/vm/mmap_min_addr ]; then
-        if [ `cat /proc/sys/vm/mmap_min_addr` != "0" ]; then
-            echo "Error, please set /proc/sys/vm/mmap_min_addr to 0 since otherwise it can cause problems with QEMU"
-            return
-        fi
-    fi
-
     QEMU=qemu-system-arm
     MACHINE_SUBTYPE=versatilepb
     QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
