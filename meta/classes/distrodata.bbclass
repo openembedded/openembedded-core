@@ -347,7 +347,6 @@ python do_checkpkg() {
 		f = tempfile.NamedTemporaryFile(delete=False, prefix="%s-1-" % pn)
 		status = internal_fetch_wget(url, d, f)
 		fhtml = f.read()
-
 		if status == "SUCC" and len(fhtml):
 			newver = parse_inter(curver)
 
@@ -436,6 +435,10 @@ python do_checkpkg() {
 			else:
 				"""newver still contains a full package name string"""
 				status = re.search("(\d+[\.\-_])*(\d+[0-9a-zA-Z]*)", newver[1]).group()
+				if "_" in status:
+					status = re.sub("_",".",status)
+				elif "-" in status:
+					status = re.sub("-",".",status)
 		elif not len(fhtml):
 			status = "ErrHostNoDir"
 
@@ -531,6 +534,12 @@ python do_checkpkg() {
 	
 			alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
 			newver = check_new_version(alturi, curname, d)
+			while(newver == "ErrHostNoDir"):
+				if alturi == "/download":
+					break
+				else:
+					alturi = "/".join(alturi.split("/")[0:-2]) + "/download"
+					newver = check_new_version(alturi, curname, d)
 			if not re.match("Err", newver):
 				pupver = newver
 				if pupver != pcurver:
@@ -550,13 +559,38 @@ python do_checkpkg() {
 			gitproto = parm['protocol']
 		else:
 			gitproto = "rsync"
-
-		gitcmd = "git ls-remote %s://%s%s%s HEAD 2>&1" % (gitproto, gituser, host, path)
-		print gitcmd
-		ver = os.popen(gitcmd).read()
-		if ver and re.search("HEAD", ver):
-			pupver = ver.split("\t")[0]
-			if pcurver == pupver:
+		gitcmd = "git ls-remote %s://%s%s%s *tag* 2>&1" % (gitproto, gituser, host, path)
+		gitcmd2 = "git ls-remote %s://%s%s%s HEAD 2>&1" % (gitproto, gituser, host, path)
+		tmp = os.popen(gitcmd).read()
+		tmp2 = os.popen(gitcmd2).read()
+		#This is for those repo have tag like: refs/tags/1.2.2
+		if tmp:
+			tmpline = tmp.split("\n")
+			verflag = 0
+			for line in tmpline:
+				if len(line)==0:
+					break;
+				puptag = line.split("/")[-1]
+				puptag = re.search("[0-9][0-9|\.|_]+[0-9]", puptag)
+				if puptag == None:
+					continue;
+				puptag = puptag.group()
+				puptag = re.sub("_",".",puptag)
+				plocaltag = pversion.split("+")[0]
+				if "git" in plocaltag:
+					plocaltag = plocaltag.split("-")[0]
+				result = bb.utils.vercmp(("0", puptag, ""), ("0", plocaltag, ""))
+				if result > 0:
+					verflag = 1
+					pstatus = "UPADTE"
+					pupver = puptag
+				elif verflag == 0 :
+					pupver = plocaltag
+					pstatus = "MATCH"
+		#This is for those no tag repo
+		elif tmp2:
+			pupver = tmp2.split("\t")[0]
+			if pupver in pversion:
 				pstatus = "MATCH"
 			else:
 				pstatus = "UPDATE"
@@ -580,7 +614,7 @@ python do_checkpkg() {
 		for line in svninfo.split("\n"):
 			if re.search("^Last Changed Rev:", line):
 				pupver = line.split(" ")[-1]
-				if pcurver == pupver:
+				if pupver in pversion:
 					pstatus = "MATCH"
 				else:
 					pstatus = "UPDATE"
