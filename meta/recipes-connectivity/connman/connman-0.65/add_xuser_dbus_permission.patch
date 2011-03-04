@@ -1,0 +1,21 @@
+Some platform (like atom-pc) enables rootless X,
+thus we need to add the xuser in the list.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+diff -ruN connman-0.65-orig/src/connman-dbus.conf connman-0.65/src/connman-dbus.conf
+--- connman-0.65-orig/src/connman-dbus.conf	2011-03-04 09:34:49.000000000 +0800
++++ connman-0.65/src/connman-dbus.conf	2011-03-04 09:35:21.000000000 +0800
+@@ -7,6 +7,12 @@
+         <allow send_interface="net.connman.Agent"/>
+         <allow send_interface="net.connman.Counter"/>
+     </policy>
++    <policy user="xuser">
++        <allow own="net.connman"/>
++        <allow send_destination="net.connman"/>
++        <allow send_interface="net.connman.Agent"/>
++        <allow send_interface="net.connman.Counter"/>
++    </policy>
+     <policy at_console="true">
+         <allow send_destination="net.connman"/>
+     </policy>
