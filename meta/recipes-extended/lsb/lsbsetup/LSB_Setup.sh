@@ -21,7 +21,7 @@
 if [ ! -f /opt/lsb/test/manager/bin/dist-checker-start.pl ]
 then
         if [ -d /lsb-dist-testkit ];then
-                cd /lsb-dist-testkit && sh install.sh
+                cd /lsb-dist-testkit && sh install.sh && cd ../lsb-Application && rpm -ivh *.rpm --nodeps --force
         else 
                 echo "Please install the realted LSB Packages"
                 exit 1
@@ -42,7 +42,7 @@ yes|y)
         if [ $? -eq 0 ] || [ $? -eq 6 ]
         then
                 echo "Success to delete user tester"
-        else
+       else
                 echo "Fail to delete user tester"
         fi
         ;;
@@ -177,21 +177,21 @@ ping -c 5 ftp.linux-foundation.org
 check
 
 #Step 7
-if [ -f /lib/modules/*-wr-standard/kernel/drivers/block/loop.ko ];then
-	inmod /lib/modules/*-wr-standard/kernel/drivers/block/loop.ko
+insmod /lib/modules/2.6.37.2-yocto-standard\+/kernel/drivers/block/loop.ko
+if [ $? != 0 ];then
+	echo "Please insmod loop.ko  manully"
 fi
-
 #Step 8
 echo ""
 if [ -f /opt/lsb/test/manager/bin/dist-checker-start.pl ];then
-        ./opt/lsb/test/manager/bin/dist-checker-start.pl
+        /opt/lsb/test/manager/bin/dist-checker-start.pl
 fi
 
-
 #Step 9 get ip address for target platform
-addr=`ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}'|sed s/[[:space:]]Bcast//g`
-echo -e "you should input ${addr}:8888 on your browse"
-#Step 8
+addr=`ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}'|sed s/[[:space:]][[:space:]]Bcast//g`
+echo -e "you should input ${addr}:8888 on your browser"
+
+#Step 10
 echo "Done!!"
 
 ###End
