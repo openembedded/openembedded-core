@@ -141,6 +141,7 @@ RDEPENDS_task-poky-lsb-perl-add = "\
 
 RDEPENDS_task-poky-lsb-python-add = "\
     python-modules \
+    python-misc \
 "
 
 RDEPENDS_task-poky-lsb-graphic-add = "\
