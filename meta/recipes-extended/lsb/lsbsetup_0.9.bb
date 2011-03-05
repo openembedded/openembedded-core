@@ -4,8 +4,7 @@ PRIORITY = "required"
 LICENSE = "GPLv2"
 PR = "r0"
 
-
-LIC_FILES_CHKSUM = "file://LSB_Setup.sh;md5=c7360d77e08a7f4f2fa66acf28012e7e"
+LIC_FILES_CHKSUM = "file://LSB_Setup.sh;md5=9cc166e6ee4b327fb94d6da63af9556c"
 
 SRC_URI = "file://LSB_Setup.sh"
 
