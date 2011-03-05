@@ -4,7 +4,7 @@ SECTION = "base"
 LICENSE = "GPLv2 with exceptions"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3\
                     file://EXCEPTION;md5=570adcb0c1218ab57f2249c67d0ce417"
-DEPENDS = "libtool zlib"
+DEPENDS = "libtool bzip2 zlib"
 
 PR = "r1"
 
