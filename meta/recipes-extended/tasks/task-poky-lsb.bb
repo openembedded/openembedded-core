@@ -163,7 +163,6 @@ RDEPENDS_task-poky-lsb-graphic-add = "\
     libx11-locale \
     xorg-minimal-fonts \
     gdk-pixbuf \
-
 "
 
 RDEPENDS_task-poky-lsb-graphic-add_qemux86 = "\
@@ -183,13 +182,15 @@ RDEPENDS_task-poky-lsb-runtime-add = "\
     liburi-perl \
     libxml-parser-perl \
     libxml-perl \
+    eglibc-localedata-posix \
     eglibc-extra-nss \
-    eglibc-localedatas \
-    eglibc-gconvs \
-    eglibc-charmaps \
-    eglibc-binarys \
     eglibc-pcprofile \
     eglibc-pic \
     eglibc-utils \
-
 "
+
+#    eglibc-localedatas \
+#    eglibc-gconvs \
+#    eglibc-charmaps \
+#    eglibc-binarys \
+#
