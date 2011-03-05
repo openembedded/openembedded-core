@@ -6,10 +6,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5fbccc46cff2379505ca4e09c7d6ccfe"
 
 DEPENDS = "openjade-native"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/l/linuxdoc-tools/linuxdoc-tools_${PV}.tar.gz \
            file://disable_sgml2rtf.patch \
+           file://disable_txt_doc.patch \
            file://disable_tex_doc.patch \
            file://disable_dvips_doc.patch"
 
