@@ -39,7 +39,8 @@ YOCTOADT_VERSION = "${SDK_VERSION}"
 
 inherit deploy
 
-SRC_URI = "http://opkg.googlecode.com/files/opkg-0.1.8.tar.gz \
+PV = "0.1.8+svnr${SRCPV}"
+SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
            file://adt_installer \
            file://scripts/adt_installer_internal \
            file://scripts/util \
@@ -49,8 +50,6 @@ SRC_URI = "http://opkg.googlecode.com/files/opkg-0.1.8.tar.gz \
            file://opkg/conf/opkg-sdk-x86_64.conf \
            file://opkg/conf/opkg-sdk-i686.conf \
 	  "
-SRC_URI[md5sum] = "c714ce0e4863bf1315e3b6913ffe3299"
-SRC_URI[sha256sum] = "ff94bf30bd662d49c4b5057e3a0818d062731adaa555d59abd677ec32a3c1c60"
 
 fakeroot do_deploy () {
 	cd ${WORKDIR}
@@ -59,7 +58,8 @@ fakeroot do_deploy () {
 	rm -rf ${ADT_DIR}
 	mkdir -p ${ADT_DIR}/opkg/build
 	cp -r opkg ${ADT_DIR}/
-	cp -r opkg-0.1.8 ${ADT_DIR}/opkg/build/
+	cp -r trunk ${ADT_DIR}/opkg/build/
+	mv ${ADT_DIR}/opkg/build/trunk ${ADT_DIR}/opkg/build/opkg-svn
 	cp -r scripts ${ADT_DIR}/
 	cp adt_installer ${ADT_DIR}
 	cp adt_installer.conf ${ADT_DIR}
