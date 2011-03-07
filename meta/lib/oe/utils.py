@@ -80,3 +80,7 @@ def param_bool(cfg, field, dflt = None):
     elif strvalue in ('no', 'n', 'false', 'f', '0'):
         return False
     raise ValueError("invalid value for boolean parameter '%s': '%s'" % (field, value))
+
+def inherits(d, *classes):
+    """Return True if the metadata inherits any of the specified classes"""
+    return any(bb.data.inherits_class(cls, d) for cls in classes)
