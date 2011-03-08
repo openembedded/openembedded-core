@@ -170,10 +170,12 @@ def check_sanity(e):
         # This path is no longer user-readable in modern (very recent) Linux
         try:
             if os.path.exists("/proc/sys/vm/mmap_min_addr"):
-                f = file("/proc/sys/vm/mmap_min_addr", "r")
-                if (f.read().strip() != "0"):
-                        messages = messages + "/proc/sys/vm/mmap_min_addr is not 0. This will cause problems with qemu so please fix the value (as root).\n\nTo fix this in later reboots, set vm.mmap_min_addr = 0 in /etc/sysctl.conf.\n"
-                f.close()
+                f = open("/proc/sys/vm/mmap_min_addr", "r")
+                try:
+                    if (int(f.read().strip()) < 65536):
+                        messages = messages + "/proc/sys/vm/mmap_min_addr is not >= 65536. This will cause problems with qemu so please fix the value (as root).\n\nTo fix this in later reboots, set vm.mmap_min_addr = 65536 in /etc/sysctl.conf.\n"
+                finally:
+                    f.close()
         except:
             pass
 
