@@ -354,7 +354,7 @@ def pstaging_fetch(sstatepkg, d):
     # Try a fetch from the sstate mirror, if it fails just return and
     # we will build the package
     try:
-        fetcher = bb.fetch2.Fetch([srcuri], localdata)
+        fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
         fetcher.download()        
 
         # Need to optimise this, if using file:// urls, the fetcher just changes the local path
