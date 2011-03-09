@@ -1,4 +1,5 @@
 PACKAGES = "\
+  ${PN}-dbg \
   libstdc++ \
   libstdc++-precompile-dev \
   libstdc++-dev \
@@ -11,6 +12,8 @@ PACKAGES = "\
   libmudflap \
   libmudflap-dev \
 "
+# The base package doesn't exist, so we clear the recommends.
+RRECOMMENDS_${PN}-dbg = ""
 
 FILES_libg2c = "${target_libdir}/libg2c.so.*"
 FILES_libg2c-dev = "\
