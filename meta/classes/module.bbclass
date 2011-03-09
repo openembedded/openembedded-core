@@ -3,14 +3,19 @@ DEPENDS += "virtual/kernel"
 
 inherit module-base
 
-# Ensure the hostprogs are available for module compilation
-module_do_compile_prepend() {
+#
+# Ensure the hostprogs are available for module compilation. Modules that
+# inherit this recipe and override do_compile() should be sure to call
+# do_make_scripts() or ensure the scripts are built independently.
+#
+do_make_scripts() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS 
 	oe_runmake CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
 	           -C ${STAGING_KERNEL_DIR} scripts
 }
 
 module_do_compile() {
+	do_make_scripts
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
 		   KERNEL_SRC=${STAGING_KERNEL_DIR}    \
