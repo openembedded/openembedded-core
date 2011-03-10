@@ -109,8 +109,8 @@ autotools_do_configure() {
 			AUTOV=`automake --version |head -n 1 |sed "s/.* //;s/\.[0-9]\+$//"`
 			automake --version
 			echo "AUTOV is $AUTOV"
-			if [ -d ${STAGING_DATADIR}/aclocal-$AUTOV ]; then
-				acpaths="$acpaths -I${STAGING_DATADIR}/aclocal-$AUTOV"
+			if [ -d ${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV ]; then
+				acpaths="$acpaths -I${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV"
 			fi
 			if [ -d ${STAGING_DATADIR}/aclocal ]; then
 				acpaths="$acpaths -I ${STAGING_DATADIR}/aclocal"
