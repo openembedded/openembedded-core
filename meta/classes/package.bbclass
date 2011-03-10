@@ -180,6 +180,7 @@ def splitfile(file, debugfile, debugsrcdir, d):
     objcopy = bb.data.getVar("OBJCOPY", d, True)
     debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
     workdir = bb.data.expand("${WORKDIR}", d)
+    workparentdir = os.path.dirname(workdir)
     sourcefile = bb.data.expand("${WORKDIR}/debugsources.list", d)
 
     # We ignore kernel modules, we don't generate debug info files.
@@ -194,7 +195,7 @@ def splitfile(file, debugfile, debugsrcdir, d):
 
     # We need to extract the debug src information here...
     if debugsrcdir:
-	os.system("%s'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (pathprefix, debugedit, workdir, debugsrcdir, sourcefile, file))
+	os.system("%s'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (pathprefix, debugedit, workparentdir, debugsrcdir, sourcefile, file))
 
     bb.mkdirhier(os.path.dirname(debugfile))
 
@@ -222,15 +223,20 @@ def splitfile2(debugsrcdir, d):
     objcopy = bb.data.getVar("OBJCOPY", d, True)
     debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
     workdir = bb.data.expand("${WORKDIR}", d)
+    workparentdir = os.path.dirname(workdir)
+    workbasedir = os.path.basename(workdir)
     sourcefile = bb.data.expand("${WORKDIR}/debugsources.list", d)
 
     if debugsrcdir:
        bb.mkdirhier("%s%s" % (dvar, debugsrcdir))
 
        processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
+       # We need to ignore files that are not actually ours
+       # we do this by only paying attention to items from this package
+       processdebugsrc += "egrep -z '%s' | "
        processdebugsrc += "(cd '%s' ; cpio -pd0mL '%s%s' 2>/dev/null)"
 
-       os.system(processdebugsrc % (sourcefile, workdir, dvar, debugsrcdir))
+       os.system(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir))
 
        # The copy by cpio may have resulted in some empty directories!  Remove these
        for root, dirs, files in os.walk("%s%s" % (dvar, debugsrcdir)):
