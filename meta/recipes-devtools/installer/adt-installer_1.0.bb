@@ -36,11 +36,13 @@ PR = "r0"
 ADT_DEPLOY = "${TMPDIR}/deploy/sdk/"
 ADT_DIR = "${WORKDIR}/adt-installer/"
 YOCTOADT_VERSION = "${SDK_VERSION}"
+S = "${WORKDIR}/trunk"
 
 inherit deploy
 
 PV = "0.1.8+svnr${SRCPV}"
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
+           file://wget_cache.patch \
            file://adt_installer \
            file://scripts/adt_installer_internal \
            file://scripts/util \
@@ -70,7 +72,6 @@ fakeroot do_deploy () {
 	cp ${WORKDIR}/adt_installer.tar.bz2 ${ADT_DEPLOY}
 }
 
-do_patch[noexec] = "1"
 do_install[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
