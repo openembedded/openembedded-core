@@ -1,0 +1,28 @@
+This patch adds the ${MACHINE_ARCH} and ${PACKAGE_ARCH} to
+sat-solver available archs, see do_archpatch in .bb for more
+details, this is the version for ${BASE_PACKAGE_ARCH} already
+recognized in sat-sovler.
+
+Signed-off-by: Qing He <qing.he@intel.com>
+
+diff --git a/src/poolarch.c b/src/poolarch.c
+index 34a14a3..660959b 100644
+--- a/src/poolarch.c
++++ b/src/poolarch.c
+@@ -21,6 +21,7 @@
+ #include "util.h"
+ 
+ const char *archpolicies[] = {
++  "@MACHINE_ARCH@",	"@MACHINE_ARCH@:@PKG_ARCH_TAIL@",
+   "x86_64",	"x86_64:i686:i586:i486:i386",
+   "i686",	"i686:i586:i486:i386",
+   "i586",	"i586:i486:i386",
+@@ -72,7 +74,7 @@ pool_setarch(Pool *pool, const char *arch)
+       return;
+     }
+ #ifndef DEBIAN_SEMANTICS
+-  id = ARCH_NOARCH;
++  id = ARCH_ALL;
+ #else
+   id = ARCH_ALL;
+ #endif
